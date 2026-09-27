@@ -229,7 +229,9 @@ export function* walkTexts(doc) {
   const glossTokens = (g) => arr(g).map((x) => String(x?.token ?? '')).filter(Boolean);
   if (doc.kind === 'unit') {
     if (isObj(d.start?.folge)) {
-      yield { kind: 'folge', de: joinLines(d.start.folge.lines), lines: arr(d.start.folge.lines), writtenText: '', path: 'start.folge', glosses: [], glossList: [], step: null };
+      // the Folge's optional glosses (SCHEMA §8 Start; a1.1-u04 r5 F03: „Heute ist Markt." on the start screen)
+      const folge = d.start.folge;
+      yield { kind: 'folge', de: joinLines(folge.lines), lines: arr(folge.lines), writtenText: '', path: 'start.folge', glosses: glossTokens(folge.glosses), glossList: arr(folge.glosses), step: null };
     }
     for (const { step, path } of walkSteps(doc)) {
       const input = step?.input;

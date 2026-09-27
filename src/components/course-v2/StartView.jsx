@@ -18,8 +18,9 @@ const LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] 
  *
  *   „Was bisher geschah" (U01 only) → the Lernziele box (3–5 can-dos in our own ich-Form
  *   wording) and the Prüfungsfokus chips → the B-skeleton Auftakt (a question and a 60-s
- *   spoken micro-output) → the serial episode (listen first, transcript after) with its one
- *   gist item → „Los geht's", or „Ich kann das schon" (the test-out, when offered).
+ *   spoken micro-output) → the serial episode (listen first, transcript after; its optional
+ *   `folge.glosses` are tappable like an input's) with its one gist item → „Los geht's", or
+ *   „Ich kann das schon" (the test-out, when offered).
  *
  * onDone({ stepId, correct, total, testOut }) once. „Ich kann das schon" runs the test-out
  * here — the unit's Lektions-Check items plus its proof items (BLUEPRINT §3.5) — and reports
@@ -42,6 +43,8 @@ export default function StartView({ unit, level, onDone, onAttempt, course = nul
   const minutes = unit.minutesPlanned?.total ?? null;
   const gistItem = start.folge?.gistItem || null;
   const folge = start.folge || null;
+  // the Folge's own tap glosses (SCHEMA §8 Start, optional): a word it uses before its unit glosses it
+  const folgeGlosses = Array.isArray(folge?.glosses) ? folge.glosses : [];
   const ready = auftaktDone && (!gistItem || gist);
 
   const finish = (testOut) => {
@@ -127,7 +130,7 @@ export default function StartView({ unit, level, onDone, onAttempt, course = nul
           <p className={LABEL}>{t('start.episode')}</p>
           <div className="mt-2">
             <InputView
-              input={{ title: folge.title, lines: folge.lines || [], glosses: [], transcriptAfterUnaidedListen: true }}
+              input={{ title: folge.title, lines: folge.lines || [], glosses: folgeGlosses, transcriptAfterUnaidedListen: true }}
               unitId={unit.id}
               names={names}
             />

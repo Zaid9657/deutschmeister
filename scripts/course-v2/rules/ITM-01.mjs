@@ -31,9 +31,27 @@
 //     an." → besetzt, SCHEMA §15), which only a reader or the solver gate can judge;
 //   - a first-letter cue with underscores shows exactly the missing letters (b2.2-u04 r1 F12);
 //   - a typed gap whose key begins with a preposition has that preposition in promptDe
-//     (a2.2-u04 r2 F04: „Emre wartet ___ Brücke" → „an der", „auf der", „vor der" all fit).
+//     (a2.2-u04 r2 F04: „Emre wartet ___ Brücke" → „an der", „auf der", „vor der" all fit);
+//   - an error_correction item names what to correct (a1.1-u04 r5 F01, the §9.4 fifth-round remedy; the
+//     same class as b2.2-u04 r1 F14 / r2 F04 and a2.2-u04 r1 F05, all MAJOR). When its errorTag (or
+//     errorTags[0]) is an article or case tag (gender-article, case-np, case-pp), a word-order tag
+//     (v2-inv, verb-final, connector-position, satzklammer), or it has no tag, promptDe names the corrected
+//     category outside the quoted sentence — „den Artikel", „die Endung", „das Pronomen" for the article
+//     tags; „die Wortstellung", „die Position" for the order tags; any of these or „die Verbform" without
+//     a tag — unless the item accepts its alternative corrections, each with acceptedWhy. A bare
+//     „Korrigieren Sie:" admits every other correct correction (deleting the article, deleting the
+//     connector for a verb-first clause) and the grader rejects it. Blocker. The SCHEMA §15 worked example
+//     trips it once (a2.1-u07-ls3-p10, verb-final, „Correct the word order." only in promptEn, and
+//     „Melden Sie sich bis zehn Uhr, ist …" is a correct second correction); §15.6 records it;
+//   - deleting the article is a correction too (the orchestrator's addendum to r5 F01: u04 keys a deletion
+//     under „Korrigieren Sie den Artikel" in ls3-p10 and ls3-r04). When the key only swaps one article
+//     („eine Brot" → „ein Brot") and the article-less sentence is German by the unit's own evidence — the
+//     noun is singular-only (mass) in the lexicon, is a plural form, or the unit writes the same verb +
+//     bare noun elsewhere („Wir brauchen Brot und Käse.") — the deletion is accepted with acceptedWhy, or
+//     the prompt asks for a category deletion cannot satisfy („die Endung"). Blocker.
 
-import { walkItems } from '../lib-validate/walk.mjs';
+import { walkItems, walkLines, walkProduction } from '../lib-validate/walk.mjs';
+import { stripQuoted } from '../lib-validate/metalanguage.mjs';
 import { norm, tokens } from '../lib-validate/text.mjs';
 import { compiledItem, CHOICE_TYPES, arr, isObj, blocker, advisory } from '../lib-validate/helpers.mjs';
 import { cumulativeLexicon } from '../lib-validate/context.mjs';
@@ -191,6 +209,124 @@ function cueFindings(doc, item, path, where, pos) {
   return out;
 }
 
+// ── error_correction: the prompt names what to correct (a1.1-u04 r5 F01) ─────────────────────────
+const ARTICLE_TAGS = new Set(['gender-article', 'case-np', 'case-pp']);
+const ORDER_TAGS = new Set(['v2-inv', 'verb-final', 'connector-position', 'satzklammer']);
+const ARTICLE_CATEGORY_RE = /\b(?:Artikel|Artikeln|Endung|Endungen|Kasus|Pronomen|Präposition|Form|Wortform|Nomen)\b/u;
+const ORDER_CATEGORY_RE = /\b(?:Wortstellung|Satzstellung|Stellung|Stelle|Position|Reihenfolge|Verbposition|Satzbau|Satzklammer)\b/u;
+const VERB_CATEGORY_RE = /\b(?:Verbform|Verb|Verben|Konjugation)\b/u;
+const ARTICLES = new Set(['der', 'die', 'das', 'den', 'dem', 'des', 'ein', 'eine', 'einen', 'einem', 'einer', 'eines']);
+
+/** The category family an error_correction item must name, or null when the rail does not apply. */
+export function correctionFamily(item) {
+  const tag = item?.errorTag || arr(item?.errorTags)[0] || null;
+  if (!tag) return 'any';
+  if (ARTICLE_TAGS.has(tag)) return 'article';
+  if (ORDER_TAGS.has(tag)) return 'order';
+  return null;
+}
+
+/** Does promptDe (outside its quoted sentence) name a correction category of `family`? */
+export function namesCategory(promptDe, family) {
+  const frame = stripQuoted(promptDe);
+  if (family === 'article') return ARTICLE_CATEGORY_RE.test(frame);
+  if (family === 'order') return ORDER_CATEGORY_RE.test(frame);
+  return ARTICLE_CATEGORY_RE.test(frame) || ORDER_CATEGORY_RE.test(frame) || VERB_CATEGORY_RE.test(frame);
+}
+
+/** Every alternative correction is accepted with acceptedWhy (≥ 1 alternative besides the key). */
+function alternativesExplained(item) {
+  const key = norm(item.answer);
+  const alts = [...new Set(arr(item.accepted).map(String).filter((a) => norm(a) !== key))];
+  const why = isObj(item.acceptedWhy) ? item.acceptedWhy : {};
+  return alts.length > 0 && alts.every((a) => typeof why[a] === 'string' && why[a].trim());
+}
+
+const words = (s) => String(s || '').trim().split(/\s+/).filter(Boolean);
+const bare = (w) => w.replace(/^[„“"‚‘(]+|[.,!?;:“”"‘)]+$/g, '');
+
+/**
+ * The article-deletion alternative of an error_correction item whose key swaps one article: the quoted
+ * sentence without that article, and the noun after it. null when the key is no one-article swap.
+ */
+export function deletionAlternative(item) {
+  const m = String(item?.promptDe || '').match(/[„"‚]([^“"‘]+)[“"‘]/);
+  if (!m) return null;
+  const src = words(m[1]);
+  const key = words(item.answer);
+  if (src.length !== key.length || src.length < 3) return null;
+  const diff = src.map((w, i) => (bare(w).toLowerCase() !== bare(key[i]).toLowerCase() ? i : -1)).filter((i) => i >= 0);
+  if (diff.length !== 1) return null;
+  const i = diff[0];
+  const a = bare(src[i]).toLowerCase();
+  const b = bare(key[i]).toLowerCase();
+  if (!ARTICLES.has(a) || !ARTICLES.has(b) || i === 0 || i + 1 >= src.length) return null;
+  const noun = bare(src[i + 1]);
+  if (!/^\p{Lu}/u.test(noun)) return null;
+  const out = [...key.slice(0, i), ...key.slice(i + 1)].join(' ');
+  return { sentence: out, noun, before: bare(src[i - 1]), article: b };
+}
+
+/** Is the bare noun German in this frame, by the lexicon or by the unit's own sentences? → reason | null. */
+function bareNounEvidence(alt, lexIndex, unitText) {
+  const e = lexIndex.get(alt.noun.toLowerCase());
+  if (e?.plural_kind === 'singular-only') return `${e.id} is singular-only (a mass noun)`;
+  if (e && typeof e.plural === 'string' && e.plural.replace(/^die\s+/i, '').toLowerCase() === alt.noun.toLowerCase() && e.plural.toLowerCase() !== String(e.lemma).toLowerCase()) return `„${alt.noun}" is the plural of ${e.id}`;
+  const esc = (w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const re = new RegExp(`(?:^|[^\\p{L}])${esc(alt.before)}\\s+${esc(alt.noun)}(?:[^\\p{L}]|$)`, 'iu');
+  const hit = unitText.find((t) => re.test(t));
+  return hit ? `the unit writes „${alt.before} ${alt.noun}" without an article („${hit.slice(0, 60)}")` : null;
+}
+
+function correctionFindings(ctx, doc, lexIndex) {
+  const out = [];
+  let unitText = null;
+  for (const { item, path } of walkItems(doc)) {
+    if (!isObj(item) || item.type !== 'error_correction') continue;
+    const family = correctionFamily(item);
+    if (!family) continue;
+    const named = namesCategory(item.promptDe, family);
+    const explained = alternativesExplained(item);
+    if (!named && !explained) {
+      const want = family === 'article' ? '„den Artikel", „die Endung", „das Pronomen"' : family === 'order' ? '„die Wortstellung", „die Position des Verbs"' : '„den Artikel", „die Endung", „die Wortstellung", „die Verbform"';
+      out.push(blocker(doc, `${path}.promptDe`, `error correction (${item.errorTag || arr(item.errorTags)[0] || 'no errorTag'}) with a bare prompt: name what to correct (${want}) outside the quoted sentence, or accept every other correct correction with acceptedWhy — „Korrigieren Sie:" alone admits corrections the grader rejects`, item.id));
+    }
+    if (family === 'order') continue;
+    // deleting the article: only a category deletion cannot satisfy rules it out
+    if (/\bEndung(?:en)?\b|\bKasus\b|\bPronomen\b/u.test(stripQuoted(item.promptDe))) continue;
+    const alt = deletionAlternative(item);
+    if (!alt) continue;
+    if (arr(item.accepted).some((a) => norm(a) === norm(alt.sentence))) continue;
+    if (unitText === null) {
+      unitText = [];
+      for (const { line } of walkLines(doc)) if (isObj(line) && line.de) unitText.push(String(line.de));
+      for (const p of walkProduction(doc)) unitText.push(p.de);
+    }
+    const own = new Set([item.answer, ...arr(item.accepted)].map((x) => norm(x)));
+    const evidence = bareNounEvidence(alt, lexIndex, unitText.filter((t) => !own.has(norm(t))));
+    if (evidence) out.push(blocker(doc, `${path}.accepted`, `deleting the article is also a correct correction: „${alt.sentence}" (${evidence}) — accept it with acceptedWhy, or ask for a category a deletion cannot satisfy („Korrigieren Sie die Endung: …")`, item.id));
+  }
+  return out;
+}
+
+/** bare lower-case noun (singular and plural) → its lexicon entry, over the cumulative lexicon. */
+function nounIndex(ctx, level, cache) {
+  const key = `nouns|${level}`;
+  if (cache.has(key)) return cache.get(key);
+  const m = new Map();
+  for (const e of cumulativeLexicon(ctx, level)) {
+    if (!isObj(e) || e.pos !== 'NOUN' || !e.lemma) continue;
+    const sg = String(e.lemma).replace(/^(?:der|die|das)\s+/i, '').toLowerCase();
+    if (!m.has(sg)) m.set(sg, e);
+    if (typeof e.plural === 'string') {
+      const pl = e.plural.replace(/^die\s+/i, '').toLowerCase();
+      if (!m.has(pl)) m.set(pl, e);
+    }
+  }
+  cache.set(key, m);
+  return m;
+}
+
 export function run({ ctx, docs }) {
   const findings = [];
   const notes = [];
@@ -200,6 +336,7 @@ export function run({ ctx, docs }) {
   let n = 0;
   for (const doc of docs) {
     const pos = posIndex(ctx, doc.level, posCache);
+    findings.push(...correctionFindings(ctx, doc, nounIndex(ctx, doc.level, posCache)));
     for (const { item, path, where, block, texts } of walkItems(doc)) {
       if (!isObj(item)) continue;
       n += 1;

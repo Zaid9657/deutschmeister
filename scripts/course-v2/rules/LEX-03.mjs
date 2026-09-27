@@ -8,8 +8,14 @@
 //   - generator sources are production (review a2.1-u04 r2 F09, minor, one round): a lex.articlePlural or
 //     lex.glossTyped source lemma is productive or core (the learner writes its article, plural or the
 //     word), and a dictation.fromInput line makes the learner spell none of the unit's receptive-only or
-//     off-list lemmas. Both ADVISORY: the finding was minor, the fix is either the source or the role
-//     (a promotion), and the SCHEMA §15 worked example dictates „Stau", „Buchhaltung" (receptive there);
+//     off-list lemmas. lex.glossTyped is a BLOCKER (a1.1-u04 r4 F02: typing the German word from an English
+//     gloss is recall, production by definition — the class came back a second time; the §15 example's
+//     glossTyped sources are all productive); lex.articlePlural and the dictation lines stay ADVISORY (the
+//     lemma is given or heard, only its inflection or spelling is produced — recognition-spelling, the
+//     review's route (a); the SCHEMA §15 worked example dictates „Stau", „Buchhaltung", receptive there);
+//   - an authored fill_blank that gives a receptive lemma in brackets and asks for another form of it
+//     („Eine Birne? Nein, drei ___, bitte. (die Birne)" → „Birnen", a1.1-u04 r4 F02) is the same act as
+//     lex.articlePlural: an ADVISORY naming the item;
 //   - a compound of two known forms („Radtour", „Möbelstücke") is an advisory — allocate it as
 //     `compound:a+b` — never a blocker (reviews b1.2-u04 r1 F01, b2.2-u04 r1 F05; compounds.mjs).
 
@@ -18,7 +24,7 @@ import { knownForms, lexiconComplete, readTokens, licensedForms, isKnown } from 
 import { arr, finding, blocker, list } from '../lib-validate/helpers.mjs';
 import { parseUnitId } from '../lib-validate/ids.mjs';
 import { unitDoc, cumulativeLexicon } from '../lib-validate/context.mjs';
-import { walkSteps } from '../lib-validate/walk.mjs';
+import { walkSteps, walkItems } from '../lib-validate/walk.mjs';
 import { entryForms } from '../lib-validate/lexicon.mjs';
 import { knownCompound } from '../lib-validate/compounds.mjs';
 import { FUNCTION_WORDS } from '../lib-validate/text.mjs';
@@ -57,6 +63,24 @@ function generatorFindings(ctx, doc) {
     if (!e?.lemma || (e.unit === doc.data?.id && (e.role === 'receptive' || /^off-list/.test(String(e.list_ref || ''))) && !promoted.has(e.id))) continue;
     if (e.unit === doc.data?.id || e.role === 'productive' || promoted.has(e.id)) for (const f of entryForms(e).forms) risky.delete(f);
   }
+  // authored fill_blank items that hand the learner a receptive lemma in brackets and key another form of it
+  const byLemma = new Map();
+  for (const e of lex) {
+    if (!e?.lemma || e.role === 'productive' || promoted.has(e.id) || CORE.has(String(e.lemma).toLowerCase())) continue;
+    const bareLemma = String(e.lemma).replace(/^(?:der|die|das|sich)\s+/i, '').toLowerCase();
+    if (!byLemma.has(bareLemma)) byLemma.set(bareLemma, e);
+  }
+  for (const { item, path } of walkItems(doc)) {
+    if (!item || item.type !== 'fill_blank' || arr(item.options).length) continue;
+    for (const m of String(item.promptDe || '').matchAll(/\(([^)]+)\)/g)) {
+      const cue = m[1].replace(/^(?:der|die|das|sich)\s+/i, '').trim().toLowerCase();
+      const e = byLemma.get(cue);
+      if (!e) continue;
+      const key = String(item.answer ?? '').trim().toLowerCase();
+      if (!key || key === cue || /\s/.test(key) || !entryForms(e).forms.has(key)) continue;
+      out.push(finding('advisory', doc, `${path}.answer`, `the learner writes „${item.answer}" from the bracketed lemma „${m[1]}", but ${e.id} is ${e.role} — cue a productive lemma, or promote it`, item.id));
+    }
+  }
   const lines = content ? content.lineIndex(doc.data) : new Map();
   for (const { step, path } of walkSteps(doc)) {
     arr(step?.pool?.generators).forEach((g, gi) => {
@@ -65,7 +89,11 @@ function generatorFindings(ctx, doc) {
       if (g.generator === 'lex.articlePlural' || g.generator === 'lex.glossTyped') {
         g.source.forEach((id, k) => {
           const e = byId.get(id);
-          if (e && e.role !== 'productive' && !promoted.has(id) && !CORE.has(String(e.lemma).toLowerCase())) out.push(finding('advisory', doc, `${gp}.source[${k}]`, `${g.generator} makes the learner write ${e.lemma}${g.generator === 'lex.articlePlural' ? "'s article and plural" : ''}, but ${id} is ${e.role} — use a productive lemma`, id));
+          if (e && e.role !== 'productive' && !promoted.has(id) && !CORE.has(String(e.lemma).toLowerCase())) {
+            // typed recall from a gloss is production (r4 F02): a blocker; the article/plural drill an advisory
+            const sev = g.generator === 'lex.glossTyped' ? 'blocker' : 'advisory';
+            out.push(finding(sev, doc, `${gp}.source[${k}]`, `${g.generator} makes the learner write ${e.lemma}${g.generator === 'lex.articlePlural' ? "'s article and plural" : ' from its English gloss'}, but ${id} is ${e.role} — use a productive lemma${sev === 'blocker' ? ' (or promote it through lexicon.json promotions)' : ''}`, id));
+          }
         });
       }
       if (g.generator === 'dictation.fromInput') {

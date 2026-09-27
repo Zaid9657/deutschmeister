@@ -181,7 +181,8 @@ function unitShape(stage) {
       lernziele: '[ref(cando)]{3..5}',
       pruefungsfokusChips: '[ref(template)]',
       'recapDe?': 'de',
-      folge: staged(stage, { title: 'de', lines: '[Line]{2..12}', gistItem: ['I', 'Item'] }),
+      // glosses (optional, S): a word the Folge introduces before its unit glosses it (a1.1-u04 r5 F03)
+      folge: staged(stage, { title: 'de', lines: '[Line]{2..12}', 'glosses?': 'Glosses', gistItem: ['I', 'Item'] }),
       'auftakt?': staged(stage, { 'assetRef?': 'ref(asset)', promptDe: 'de', microOutput: ['T', 'MicroOutput'] }),
       testOut: { offered: 'bool' },
     })],

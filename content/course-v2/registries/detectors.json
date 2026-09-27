@@ -179,7 +179,7 @@
           "g.trennbare-verben"
         ],
         "kind": "separable-bracket",
-        "notes": "Strukturell wie src/data/curricula/constructions.js (separable-verbs-intro): Vorsilbe aus der geschlossenen Klasse am Klauselende, davor ein finites Verb, das keine Form von sein ist.",
+        "notes": "Strukturell wie src/data/curricula/constructions.js (separable-verbs-intro): Vorsilbe aus der geschlossenen Klasse am Klauselende, davor ein finites Verb, das keine Form von sein ist. „Was macht das zusammen?\" / „Das macht zusammen 7,80 Euro.\" sind machen + zusammen (die Summe), kein trennbares Verb (skipClause; Review a1.1-u04 r4 F08 / r5 F05).",
         "examples": {
           "hit": [
             "Ich stehe um sechs Uhr auf.",
@@ -188,9 +188,13 @@
           "miss": [
             "Die Tür ist zu.",
             "Der Teppich ist auf der Terrasse.",
-            "Ich stehe um sechs Uhr."
+            "Ich stehe um sechs Uhr.",
+            "Was macht das zusammen?",
+            "Das macht zusammen 7,80 Euro.",
+            "Das macht zusammen 7 Euro."
           ]
-        }
+        },
+        "skipClause": "\\bmach(?:t|en|st)\\s+(?:(?:das|es|alles|dann)\\s+)*zusammen\\b"
       }
     },
     {
@@ -215,6 +219,92 @@
           "miss": [
             "Ich schwimme gut.",
             "Wir könnten schwimmen gehen."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.moechte-infinitiv",
+      "construction": "möchte + Infinitiv am Satzende (Satzklammer mit Modalverb)",
+      "precision": "exact",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.koennen"
+        ],
+        "kind": "aux-final",
+        "aux": [
+          "möchte",
+          "möchtest",
+          "möchten",
+          "möchtet"
+        ],
+        "final": "infinitive",
+        "notFinal": [
+          "einen",
+          "keinen",
+          "meinen",
+          "deinen",
+          "seinen",
+          "ihren",
+          "unseren",
+          "euren",
+          "denen",
+          "ihnen",
+          "morgen",
+          "gestern",
+          "vorgestern",
+          "übermorgen",
+          "oben",
+          "unten",
+          "hinten",
+          "innen",
+          "außen",
+          "zusammen",
+          "eben",
+          "gegen",
+          "neben",
+          "selten",
+          "wieder"
+        ],
+        "notes": "möchte als Vollverb (Ich möchte ein Brot.) ist g.moechte (a1.1-u04); möchte + Infinitiv ist die Satzklammer der Modalverben, eingeführt mit g.koennen (a1.1-u08). Liest auch Regelkarten-Prosa beim ersten Einsatz der Karte (GRM-04). Review a1.1-u04 r5 F04.",
+        "examples": {
+          "hit": [
+            "Ich möchte bezahlen.",
+            "Möchten Sie etwas trinken?",
+            "Ich weiß nicht, ob ich kommen möchte."
+          ],
+          "miss": [
+            "Ich möchte ein Kilo Tomaten, bitte.",
+            "Was möchten Sie?",
+            "Ich möchte einen.",
+            "Wir möchten morgen."
+          ],
+          "lexicon": [
+            {
+              "lemma": "bezahlen",
+              "pos": "VERB",
+              "verb_forms": {
+                "3sg": "bezahlt",
+                "perfekt": "hat bezahlt"
+              }
+            },
+            {
+              "lemma": "trinken",
+              "pos": "VERB",
+              "verb_forms": {
+                "3sg": "trinkt",
+                "perfekt": "hat getrunken"
+              }
+            },
+            {
+              "lemma": "kommen",
+              "pos": "VERB",
+              "verb_forms": {
+                "3sg": "kommt",
+                "perfekt": "ist gekommen"
+              }
+            }
           ]
         }
       }
@@ -361,9 +451,15 @@
             "Hier darf man nicht rauchen."
           ],
           "miss": [
-            "Hier rauche ich nicht."
+            "Hier rauche ich nicht.",
+            "Wie schreibt man das?"
           ]
-        }
+        },
+        "whitelist": [
+          "wie schreibt man das",
+          "wie sagt man",
+          "wie spricht man"
+        ]
       }
     },
     {
@@ -662,7 +758,10 @@
           "mir geht es sehr gut",
           "und dir",
           "und ihnen",
-          "danke, mir geht es gut"
+          "danke, mir geht es gut",
+          "tut mir leid",
+          "mir ist schlecht",
+          "mir ist kalt"
         ],
         "notes": "Die Begrüßungs-Chunks (Wie geht es dir/Ihnen? Mir geht es gut.) stehen auf der Whitelist.",
         "examples": {
@@ -752,9 +851,16 @@
             "Ich rufe ihn morgen an."
           ],
           "miss": [
-            "Ich rufe Jan morgen an."
+            "Ich rufe Jan morgen an.",
+            "Der Pullover ist schön. Ich nehme ihn."
           ]
-        }
+        },
+        "whitelist": [
+          "ich nehme ihn",
+          "wie finden sie ihn",
+          "wie findest du ihn",
+          "ich finde ihn"
+        ]
       }
     },
     {
@@ -1011,10 +1117,10 @@
         "spinePoints": [
           "g.adj-dekl-nullartikel"
         ],
-        "regex": "\\b(?:[Mm]it|[Bb]ei|[Aa]us|[Vv]on|[Zz]u|[Nn]ach|[Ss]eit|[Ff]ür|[Oo]hne|[Gg]egen|[Dd]urch|[Ii]n|[Aa]n|[Aa]uf|[Üü]ber|[Uu]nter|[Vv]or|[Tt]rotz|[Ww]egen|[Zz]wei|[Dd]rei|[Vv]ier|[Ff]ünf|[Ss]echs|[Ss]ieben|[Aa]cht|[Nn]eun|[Zz]ehn|[Vv]iele|[Vv]ielen|[Ee]inige|[Ee]inigen|[Mm]ehrere|[Mm]ehreren|[Ww]enige|[Ww]enigen|\\d+)\\s+([a-zäöüß]{3,}(?:e|en|er|es|em))\\s+[A-ZÄÖÜ][a-zäöüß]+",
+        "regex": "\\b(?:[Mm]it|[Bb]ei|[Aa]us|[Vv]on|[Zz]u|[Nn]ach|[Ss]eit|[Ff]ür|[Oo]hne|[Gg]egen|[Dd]urch|[Ii]n|[Aa]n|[Aa]uf|[Üü]ber|[Uu]nter|[Vv]or|[Tt]rotz|[Ww]egen|[Zz]wei|[Dd]rei|[Vv]ier|[Ff]ünf|[Ss]echs|[Ss]ieben|[Aa]cht|[Nn]eun|[Zz]ehn|[Vv]iele|[Vv]ielen|[Ee]inige|[Ee]inigen|[Mm]ehrere|[Mm]ehreren|[Ww]enige|[Ww]enigen|\\d+)\\s+([a-zäöüß]{3,}(?:e|en|er|es|em))\\s+(?!(?:Sie|Ihnen)\\b)[A-ZÄÖÜ][a-zäöüß]+",
         "group": 1,
         "skip": "^(?:heute|morgen|gestern|bitte|gerne|schon|noch|auch|nicht|immer|jetzt|oft|dann|sehr|ganz|leider|wieder|zuerst|allen|alle|beide|beiden|viele|vielen|andere|anderen|mehrere|mehreren|einige|einigen|wenige|wenigen|zwischen|gegen|unter|hinter|neben|oben|unten|wegen|außen|innen|meinen|deinen|seinen|ihren|unseren|euren|meine|deine|seine|ihre|unsere|eure|meinem|deinem|seinem|ihrem|unserem|eurem|meiner|deiner|seiner|ihrer|unserer|eurer|einen|einem|einer|keinen|keinem|keiner|diesen|diesem|dieser|jeden|jedem|jeder|welchen|welchem|welcher|ersten|letzten|nächsten|halbe|halben|paar)$",
-        "notes": "Nur nach Präposition oder Zahlwort (ohne Artikel dazwischen); am Satzanfang nicht erfasst.",
+        "notes": "Nur nach Präposition oder Zahlwort (ohne Artikel dazwischen); am Satzanfang nicht erfasst. Kein Adjektiv: Formen von möchte, haben, werden und den Modalverben (skipWords) und ein Wort vor „Sie\"/„Ihnen\" (Wie viele möchten Sie?; Review a1.1-u04 r4 F08 / r5 F05).",
         "examples": {
           "hit": [
             "Bei gutem Wetter gehen wir spazieren.",
@@ -1023,9 +1129,28 @@
           "miss": [
             "Ich wohne in einer großen Wohnung.",
             "Wir essen Pizza.",
-            "Vielen Dank!"
+            "Vielen Dank!",
+            "Wie viele möchten Sie?",
+            "Dann möchten wir zwei Kilo Kartoffeln.",
+            "Wie viele haben Sie?"
           ]
-        }
+        },
+        "skipWords": [
+          "möchte",
+          "möchten",
+          "möchtest",
+          "möchtet",
+          "haben",
+          "habe",
+          "werden",
+          "werde",
+          "können",
+          "müssen",
+          "dürfen",
+          "sollen",
+          "wollen",
+          "mögen"
+        ]
       }
     },
     {
@@ -1158,7 +1283,10 @@
         ],
         "whitelist": [
           "wir sehen uns",
-          "sehen wir uns"
+          "sehen wir uns",
+          "ich freue mich",
+          "wir freuen uns",
+          "ich möchte mich anmelden"
         ],
         "notes": "„sich\" ist immer reflexiv; mich/dich/uns/euch zählen nur mit dem passenden Subjekt in derselben Klausel oder im Imperativ eines Lexikonverbs mit reflexive: akk|dat.",
         "examples": {
@@ -2346,6 +2474,34 @@
           ],
           "miss": [
             "Das ist mein Vater."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.genitiv-feminin-attribut",
+      "construction": "Genitivattribut mit der (die Frage der Partnerin)",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.genitiv"
+        ],
+        "regex": "(?:^|[^\\p{L}])((?:[Dd](?:ie|er|as|en|em)|(?:[Ee]|[Kk]e|[Mm]e|[Dd]e|[Ss]e)in(?:e|en|em|er)?|[Ii]hr(?:e|en|em|er)?|[Uu]nser(?:e|en|em|er)?|[Aa]m|[Ii]m|[Vv]om|[Zz]um|[Zz]ur|[Bb]eim)\\s+(?:[a-zäöüß]+(?:e|en)\\s+)?[A-ZÄÖÜ][a-zäöüß]+\\s+der\\s+(?:[a-zäöüß]+(?:e|en)\\s+)?[A-ZÄÖÜ][a-zäöüß]+)",
+        "group": 1,
+        "skip": "^(?:am|im)\\s+(?:Ende|Anfang)\\s+der\\s",
+        "notes": "Heuristik: Artikel + Nomen + „der\" + Nomen. „der\" kann auch ein Dativobjekt einleiten (Ich gebe das Buch der Lehrerin.); „am Ende der Straße\" ist ein Wegbeschreibungs-Chunk (skip). Liest mit GRM-04 auch die deutschen Arbeitsanweisungen (instructionsDe, situationDe). Review a1.1-u04 r5 F05.",
+        "examples": {
+          "hit": [
+            "Antworten Sie auf die Frage der Partnerin.",
+            "Dann reagieren Sie auf die Bitte der Partnerin.",
+            "Das ist das Auto der Nachbarin."
+          ],
+          "miss": [
+            "Antworten Sie auf die Frage von Nora.",
+            "Die Frau fragt, der Mann antwortet.",
+            "Am Ende der Straße ist die Post.",
+            "Ich gebe der Lehrerin das Buch."
           ]
         }
       }

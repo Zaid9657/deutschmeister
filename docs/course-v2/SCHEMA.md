@@ -566,7 +566,7 @@ Start = {
   lernziele: [ref(cando)]{3..5},                     // = spec.canDos
   pruefungsfokusChips: [ref(template)],
   recapDe: de?,                                      // U01 only: the stand-alone recap line (casts/series.json beat)
-  folge: { title: de, lines: [Line]{2..12}, gistItem: Item },   // ≤ 90 s A1, ≤ 2 min above (TXT-03)
+  folge: { title: de, lines: [Line]{2..12}, glosses: [{ token: str, gloss: EnText }]{0..3}?, gistItem: Item },   // ≤ 90 s A1, ≤ 2 min above (TXT-03); glosses: words the Folge uses before their unit (StartView, LEX-01)
   auftakt: { assetRef: ref(asset)?, promptDe: de, microOutput: MicroOutput }?,   // B skeleton only; no photo → prompt only
   testOut: { offered: bool } }
 

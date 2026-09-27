@@ -18,7 +18,8 @@
 //   token    tokens[] | phrases[] (lower-case), clauseInitial?, requireVerbFinal?, notQuestion?,
 //            notPrecededBy[]?, notFollowedBy[]?, followedByCapital?, caseSensitive?
 //   pattern  regex, flags?, group?, skip? (regex on the match), skipSentence?, requireVerbFinal?, notQuestion?
-//   clause   kind: pair | subordinate | relative | aux-final | imperative (see the functions below)
+//   clause   kind: pair | subordinate | relative | aux-final (notFinal[]?) | imperative |
+//            separable-bracket (skipClause?: a regex on the clause, e.g. „macht (das) zusammen")
 //   lexicon  kind: participle-aux | praeteritum | reflexive | zu-infinitive | n-declension | stem-vowel-change
 // Every spec may carry whitelist[] (lower-case phrases inside which hits are ignored) and
 // examples { hit[], miss[], lexicon[]? } which the test suite runs.
@@ -144,12 +145,16 @@ function whitelistRanges(sentence, whitelist) {
 
 const inRanges = (index, length, ranges) => ranges.some(([a, b]) => index >= a && index + length <= b);
 
-/** Clause spans of a sentence with their char offset. */
+/**
+ * Clause spans of a sentence with their char offset. A comma or colon between two digits is part of a
+ * number („7,80 Euro", „8:30 Uhr"), never a clause boundary (review a1.1-u04 r4 F08: „Das macht zusammen
+ * 7,80 Euro." was cut after „zusammen 7" and read as a separable-verb clamp).
+ */
 function clauseSpans(sentence) {
   const out = [];
   let offset = 0;
   let sep = null; // the separator before the clause: ',' ';' ':' '(' … or null at the start
-  const parts = String(sentence).split(/([,;:()–—]|\s-\s)/);
+  const parts = String(sentence).split(/((?<!\d)[,:]|[,:](?!\d)|[;()–—]|\s-\s)/);
   for (const part of parts) {
     if (/^([,;:()–—]|\s-\s)$/.test(part)) sep = part.trim() || '-';
     else if (part.trim()) {
@@ -354,6 +359,8 @@ const isInfinitive = (w, env) => (env.available && env.infinitives.has(w)) || (I
 function clauseAuxFinal(det, sentence, env) {
   const spec = det.spec || {};
   const aux = new Set(arr(spec.aux).map(lc));
+  // words shaped like an infinitive that never close a verbal bracket („einen", „morgen", „zusammen")
+  const notFinal = new Set(arr(spec.notFinal).map(lc));
   const hits = [];
   if (spec.notQuestion && isQuestion(sentence)) return hits;
   for (const c of clauseSpans(sentence)) {
@@ -370,7 +377,11 @@ function clauseAuxFinal(det, sentence, env) {
     const lastIsCap = /^[A-ZÄÖÜ]/.test(toks[toks.length - 1].text);
     switch (spec.final) {
       case 'infinitive': {
-        const inf = (w) => isInfinitive(w, env) && !env.participles.has(w) && !PARTICIPLE_SHAPE.test(w) && !aux.has(w);
+        // an infinitive the lexicon knows (and that is no participle of it) wins over the participle SHAPE:
+        // „bezahlen", „verstehen", „erklären" are be-/ver-/er- infinitives (review a1.1-u04 r5 F04)
+        const knownInf = (w) => env.available && env.infinitives.has(w) && !env.participles.has(w);
+        const inf = (w) => !aux.has(w) && !notFinal.has(w)
+          && (knownInf(w) || (isInfinitive(w, env) && !env.participles.has(w) && !PARTICIPLE_SHAPE.test(w)));
         ok = !lastIsCap && toks.length - 1 > auxIdx && !aux.has(last) && inf(last);
         let w = last;
         if (!ok && aux.has(last) && toks.length >= 3 && prev && inf(prev) && !/^[A-ZÄÖÜ]/.test(toks[toks.length - 2].text)) {
@@ -686,8 +697,12 @@ const COPULA = new Set(['bin', 'bist', 'ist', 'sind', 'seid', 'war', 'warst', 'w
 function clauseSeparableBracket(det, sentence) {
   const spec = det.spec || {};
   const prefixes = new Set(arr(spec.prefixes).length ? arr(spec.prefixes).map(lc) : SEPARABLE_DEFAULT);
+  // a clause the detector leaves alone: „Was macht das zusammen?" is machen + zusammen (the sum), no
+  // separable verb (review a1.1-u04 r4 F08 / r5 F05)
+  const skipClause = spec.skipClause ? new RegExp(spec.skipClause, 'iu') : null;
   const hits = [];
   for (const c of clauseSpans(sentence)) {
+    if (skipClause && skipClause.test(c.text)) continue;
     const toks = tokens(c.text).filter((t) => !/^\d/.test(t.text));
     if (toks.length < 3) continue;
     const last = toks[toks.length - 1];
@@ -736,7 +751,15 @@ export function detectorProblem(det) {
       } catch (e) {
         return `bad regex: ${e.message}`;
       }
-    case 'clause': return CLAUSE_KINDS[spec.kind] ? null : `unknown clause kind ${spec.kind}`;
+    case 'clause':
+      if (spec.skipClause) {
+        try {
+          new RegExp(spec.skipClause, 'iu');
+        } catch (e) {
+          return `bad skipClause: ${e.message}`;
+        }
+      }
+      return CLAUSE_KINDS[spec.kind] ? null : `unknown clause kind ${spec.kind}`;
     case 'lexicon': return LEXICON_KINDS[spec.kind] ? null : `unknown lexicon kind ${spec.kind}`;
     default: return `unknown method ${det.method}`;
   }

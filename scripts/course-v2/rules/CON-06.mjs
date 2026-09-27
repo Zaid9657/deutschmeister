@@ -13,8 +13,25 @@
 // exception false): an exception that names no source of its own — a § / Art. citation, a law, a URL
 // or „laut …" — is an advisory. SCHEMA's exceptions are LText without a source field; once the SCHEMA
 // owner adds `exceptions[].source`, this becomes a blocker.
+//
+// A unit is not skipped because it has no facts (review a1.1-u04 r4 F05: the plan's „sonntags meist
+// geschlossen, Flaschenpfand" stood in the texts, facts [] made CON-06 print „skipped"). A unit needs
+// ≥ 1 facts[] record, or a spec.deviation.reason that says why its Landeskunde carries none (it names
+// „Landeskunde"), when
+//   - its German texts state a country-wide rule: „in Deutschland / Österreich / der Schweiz / D-A-CH"
+//     (or „hierzulande", „die Deutschen") with a rule word (man, muss, darf, Pflicht, Gesetz, verboten,
+//     erlaubt, gibt es, meist, normalerweise, immer, sonntags, geschlossen, offen, zu, kostet, zahlt …),
+//     in a sentence that is not a person's own account (no ich/wir/du/ihr). A stated claim without a
+//     record — BLOCKER at every status;
+//   - its plan entry (docs/course-v2/curriculum/<level>.json) names a `landeskunde` point. Every plan unit
+//     names one, and many are taught as a scene or a chunk („Zusammen oder getrennt?"), which a reader
+//     judges: a WARNING while the unit is a draft, a blocker from status "review" on (the promotion path,
+//     like a partial fact).
 
 import { arr, isObj, blocker, advisory } from '../lib-validate/helpers.mjs';
+import { walkTexts } from '../lib-validate/walk.mjs';
+import { sentences } from '../lib-validate/text.mjs';
+import { curriculumEntry } from '../lib-validate/curriculum.mjs';
 
 export const id = 'CON-06';
 export const title = 'Facts carry sources, a fresh check date and verification "verified"';
@@ -26,6 +43,27 @@ const MAX_AGE_DAYS = 180;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const days = (a, b) => Math.round((Date.parse(`${b}T00:00:00Z`) - Date.parse(`${a}T00:00:00Z`)) / 86400000);
 const FACTUAL_RE = /\d|§|%|\bEuro\b|€|\bGesetz|\bPflicht|\bRecht auf\b|\bmindestens\b|\bhöchstens\b/;
+const COUNTRY_RE = /(?:^|[^\p{L}])(?:in (?:Deutschland|Österreich|der Schweiz|D-A-CH|Liechtenstein|Luxemburg)|hierzulande|die (?:Deutschen|Österreicher|Schweizer))(?:[^\p{L}]|$)/u;
+const RULE_RE = /(?:^|[^\p{L}])(?:man|muss|müssen|darf|dürfen|Pflicht|Gesetz|verboten|erlaubt|gibt es|es gibt|meist|meistens|normalerweise|immer|nie|oft|sonntags|samstags|geschlossen|offen|zu|kostet|kosten|zahlt|zahlen|bezahlt|gilt|gelten)(?:[^\p{L}]|$)/u;
+const PERSONAL_RE = /(?:^|[^\p{L}])(?:ich|wir|du|ihr|mein|meine|unser|unsere)(?:[^\p{L}]|$)/iu;
+const LANDESKUNDE_REASON_RE = /Landeskunde|Fakt|facts?\b|CON-06/iu;
+
+/** Sentences of the unit's German texts that state a country-wide rule (r4 F05). */
+export function countryRules(doc) {
+  const d = doc.data || {};
+  const out = [];
+  const read = (text, path) => {
+    for (const s of sentences(text)) if (COUNTRY_RE.test(s) && RULE_RE.test(s) && !PERSONAL_RE.test(s) && !/\?\s*[“”"»]?\s*$/.test(s)) out.push({ sentence: s, path });
+  };
+  for (const t of walkTexts(doc)) {
+    if (t.lines.length) t.lines.forEach((l, i) => read(String(l?.de || ''), `${t.path}.lines[${i}]`));
+    if (t.writtenText) read(t.writtenText, `${t.path}.text`);
+  }
+  arr(d.check?.lines).forEach((l, i) => read(String(l?.de || ''), `check.lines[${i}]`));
+  arr(d.fokus).forEach((k, i) => read(String(k?.bodyDe || ''), `fokus[${i}].bodyDe`));
+  if (d.check?.portrait?.de) read(String(d.check.portrait.de), 'check.portrait.de');
+  return out;
+}
 
 export function run({ ctx, docs }) {
   const findings = [];
@@ -67,6 +105,24 @@ export function run({ ctx, docs }) {
         }
       }
     });
+    // a unit without facts is not skipped: a stated country-wide rule, or the plan's Landeskunde point (r4 F05)
+    if (!arr(d.facts).length) {
+      const reason = String(d.spec?.deviation?.reason || '');
+      const excused = LANDESKUNDE_REASON_RE.test(reason);
+      const rules = countryRules(doc);
+      const plan = curriculumEntry(ctx, doc.level, doc.nr);
+      const point = String(plan?.landeskunde || '').trim();
+      if (rules.length) facts += 1;
+      if (rules.length && !excused) {
+        const r = rules[0];
+        findings.push(blocker(doc, r.path, `the unit states a country-wide rule („${r.sentence.slice(0, 120)}")${rules.length > 1 ? ` and ${rules.length - 1} more` : ''} but has no facts[] record — add a sourced Fact (SCHEMA §3.4), reword it for the scene („hier"), or say in spec.deviation.reason why its Landeskunde carries none`, d.id));
+      } else if (point && !excused) {
+        facts += 1;
+        const draft = d.status === 'draft';
+        const msg = `the plan names the Landeskunde point „${point.slice(0, 120)}" but the unit has no facts[] record — add a sourced Fact for each claim it makes, or say in spec.deviation.reason (naming „Landeskunde") why it makes none`;
+        findings.push(draft ? advisory(doc, 'facts', `warning: ${msg} (blocks from status "review" on)`, d.id) : blocker(doc, 'facts', msg, d.id));
+      }
+    }
     // a Fokus-Karte stating figures or law without a fact record
     arr(d.fokus).forEach((k, i) => {
       if (isObj(k) && FACTUAL_RE.test(String(k.bodyDe || '')) && !arr(k.factRefs).length) {

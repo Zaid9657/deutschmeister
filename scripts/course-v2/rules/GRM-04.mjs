@@ -18,12 +18,22 @@
 // is left to review (noted).
 //
 // Metalanguage surfaces are read too, as receptive text and ADVISORY only (they name constructions
-// as well as use them): each step's strategyCards[].de (review a2.1-u04 r2 F07) and each rule card's
-// de prose at the card's first use (a2.1-u04 r2 F10 / r3 F12). A form a licensed spine point lists in
-// its label („kam, sagte, es gab") is licensed whatever later detector matches it (orchestrator
-// 2026-09-27: det.praeteritum-vollverb blocked g.praeteritum-kernverben's own forms).
+// as well as use them): each rule card's de prose at the card's first use (a2.1-u04 r2 F10 / r3 F12),
+// and ONE instruction scope (a1.1-u04 r4 F08 / r5 F05: „either all … or none") — strategy cards
+// (a2.1-u04 r2 F07), exam blocks' and speaking parts' instructionsDe, every situationDe and title.canDo,
+// read through lib-validate/metalanguage.mjs walkReadSurfaces (`instruction: true`), the walker LEX-01
+// uses for the same surfaces. A genitive attribute on a German-only speaking instruction („Antworten Sie
+// auf die Frage der Partnerin", det.genitiv-feminin-attribut) is reported there. A form a licensed spine
+// point lists in its label („kam, sagte, es gab") is licensed whatever later detector matches it
+// (orchestrator 2026-09-27: det.praeteritum-vollverb blocked g.praeteritum-kernverben's own forms).
+//
+// A construction the spine licenses as a chunk at the position (chunkFrom ≤ here) is not reported at
+// all (a1.1-u04 r4 F08 / r5 F05: „Lesen Sie zuerst die Frage." under chunkFrom a1.1-u01 raised an
+// advisory that itself said the chunk was licensed); the run's notes count what was suppressed. A
+// chunk is not a ceiling breach — LEX-07's ceiling check already skipped it.
 
 import { walkTexts, walkProduction, walkSteps } from '../lib-validate/walk.mjs';
+import { walkReadSurfaces } from '../lib-validate/metalanguage.mjs';
 import { positionOf, parseUnitId, LEVELS } from '../lib-validate/ids.mjs';
 import { allLexicon } from '../lib-validate/context.mjs';
 import { buildLexEnv, detectInText } from '../lib-validate/detectors.mjs';
@@ -76,6 +86,7 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
     return content.length > 0 && content.every((w) => exempt.has(w));
   };
 
+  let chunkSuppressed = 0;
   const check = (doc, pos, declared, text, path, surface, glosses = [], metalanguage = false) => {
     if (!text) return;
     const seen = new Set();
@@ -84,6 +95,11 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
       const licensedAt = surface === 'production' ? place.prod : place.rec;
       if (licensedAt === null || licensedAt <= pos) continue;
       if (place.points.some((p) => declared.has(p))) continue;
+      // licensed as a chunk here (chunkFrom ≤ position): no finding (a1.1-u04 r4 F08 / r5 F05)
+      if (place.chunk !== null && place.chunk <= pos) {
+        chunkSuppressed += detectInText(det, text, env).length ? 1 : 0;
+        continue;
+      }
       for (const hit of detectInText(det, text, env)) {
         const key = `${det.id}|${path}`;
         if (seen.has(key)) continue;
@@ -94,13 +110,12 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
           const hitTokens = tokens(hit.match).map((t) => t.lower);
           if (hitTokens.some((t) => glosses.includes(t))) continue;
         }
-        const chunk = place.chunk !== null && place.chunk <= pos;
         const exact = hit.precision === 'exact';
-        const severity = exact && !chunk && !metalanguage ? 'blocker' : 'advisory';
-        const why = chunk ? ` — licensed only as a chunk preview (chunkFrom ${describePosition(place.chunk)})` : '';
+        const severity = exact && !metalanguage ? 'blocker' : 'advisory';
         const prec = exact ? '' : ` [${hit.precision}${hit.fallback ? ', shape fallback' : ''}]`;
+        const verb = surface === 'production' ? 'produces' : surface === 'exam' ? 'exam text uses' : !metalanguage ? 'input uses' : /^cards\[/.test(path) ? 'rule-card prose uses' : 'instruction uses';
         findings.push(finding(severity, doc, path,
-          `${surface === 'production' ? 'produces' : surface === 'exam' ? 'exam text uses' : 'input uses'} „${hit.match}" (${det.construction}) — licensed ${surface === 'production' ? 'productively ' : ''}from ${describePosition(licensedAt)} (${list(place.points, 3)}), here ${describePosition(pos)}${why}${prec}`,
+          `${verb} „${hit.match}" (${det.construction}) — licensed ${surface === 'production' ? 'productively ' : ''}from ${describePosition(licensedAt)} (${list(place.points, 3)}), here ${describePosition(pos)}${prec}`,
           det.id));
       }
     }
@@ -119,10 +134,9 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
       if (t.writtenText) check(doc, pos, declared, t.writtenText, `${t.path}.text`, surface, t.glosses.map((x) => x.toLowerCase()));
       else if (!t.lines.length && t.de) check(doc, pos, declared, t.de, t.path, surface, t.glosses.map((x) => x.toLowerCase()));
     }
-    if (doc.kind === 'unit') {
-      for (const { step, path } of walkSteps(doc)) {
-        arr(step?.strategyCards).forEach((c, i) => check(doc, pos, declared, String(c?.de || ''), `${path}.strategyCards[${i}].de`, 'input', [], true));
-      }
+    // the one instruction scope: strategy cards, instructionsDe, situationDe, title.canDo (advisory)
+    for (const sf of walkReadSurfaces(doc)) {
+      if (sf.instruction) check(doc, pos, declared, sf.de, sf.path, 'input', [], true);
     }
     if (doc.kind === 'unit') {
       const shown = [...walkTexts(doc)].flatMap((t) => (t.kind === 'input' || t.kind === 'folge' ? [t.de] : []));
@@ -173,5 +187,6 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
       });
     }
   }
+  if (chunkSuppressed) notes.push(`${chunkSuppressed} hit(s) of constructions licensed as a chunk at their position not reported (chunkFrom ≤ here)`);
   return { findings, notes };
 }
