@@ -4,6 +4,12 @@
 // no-match key, every gap marker ⟦NN⟧ filled exactly once, and the play count its instruction
 // states (BLUEPRINT §9.1, SCHEMA §3.1/§3.6/§15.7). Text bands are TXT-02; word bands EXM-03;
 // preparation minutes EXM-04.
+//
+// The exam's worked example (review a2.2-u04 r1 F10, r2 F13, r3 F10 — three rounds): where a Teil
+// template's source says the example uses up an option („die Anzeige aus dem Beispiel ist verbraucht",
+// Goethe A2 Lesen Teil 4), a full block leaves options − items − 1 (+ 1 with a no-match item) choices
+// unused, as the exam does. ADVISORY until SCHEMA's ExamBlock can carry the example (SCH-01 rejects an
+// unknown `example` key today) — the SCHEMA owner adds `ExamBlock.example`, then this blocks.
 
 import { walkBlocks } from '../lib-validate/walk.mjs';
 import { arr, isObj, blocker, advisory } from '../lib-validate/helpers.mjs';
@@ -144,6 +150,14 @@ export function run({ ctx, docs }) {
           }
           for (const k of markers.keys()) if (!suffixes.includes(k)) findings.push(blocker(doc, `${path}.textRefs`, `gap marker ⟦${k}⟧ has no item`, id));
         }
+      }
+      if (choices.length && block.length === 'full' && /Beispiel[^.;)]*verbraucht|example[^.;)]*(?:uses up|consumes)/i.test(String(t.source || ''))) {
+        const usedKeys = new Set(items.map((it) => String(it.answer ?? '')).filter((a) => keySet.has(a)));
+        const withNoMatch = items.some((it) => nm !== undefined && nm !== null && String(it.answer ?? '') === String(nm));
+        const total = typeof t.options === 'number' ? t.options : typeof t.choices === 'number' ? t.choices : choices.length;
+        const want = total - items.length - 1 + (withNoMatch ? 1 : 0);
+        const unused = choices.length - usedKeys.size;
+        if (unused !== want) findings.push(advisory(doc, `${path}.choices`, `${unused} choice(s) left unused; in ${block.template} the example uses one up, so the exam leaves ${want} — carry the example (needs SCHEMA ExamBlock.example) or one more item`, id));
       }
       const noMatchItems = items.filter((it) => it.noMatch || (t.noMatch && String(it.answer).trim() === t.noMatch));
       if (t.noMatch && block.length === 'full' && !noMatchItems.length) findings.push(blocker(doc, `${path}.items`, `${block.template} has a no-match option (${t.noMatch}); no item uses it`, id));
