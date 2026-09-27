@@ -20,6 +20,10 @@
 //     match exactly, and a number word counts as its digits („zehn" = „10").
 //     The digits-only reading above never applies to a dictation — „10" alone
 //     is not a transcription of „Wir sind zehn Minuten von der Brücke.".
+//   - on every `exact: 'number'` item a German number word (0–9999, compounds
+//     like „dreiundzwanzig", „hundertzwanzig") equals its digit value: the key
+//     „9" accepts „neun"; a letter slip in the number word („nuen") is a TYPO
+//     like any word, a wrong value („zehn") is WRONG (review a1.1-u04 r3).
 //   - `exact: 'name'` (spelled names) — no one-letter tolerance: a letter slip
 //     is WRONG; a case-only miss stays the checker's own TYPO rule, and a spelled
 //     answer (H-A-L-L-O) folds its separators as check.js already does.
@@ -32,7 +36,9 @@
 // item without one falls back to check.js's descriptive tagError.
 import {
   RESULT, checkAnswer, checkOptionsFor, tagError, normalizeSpelling, normalizeDictation, foldNumberWords, isDictationTask,
+  cardinalValue, ordinalValue, spellCardinal,
 } from '../lesson/check.js';
+import { normalizeAnswer } from '../../utils/answerMatch.js';
 
 export { RESULT };
 
@@ -144,6 +150,67 @@ function checkDictationNumber(item, input) {
   return checkWholeNumber(item, input, acceptedOf(item), true);
 }
 
+/** One slip: a substitution, an insertion, a deletion or two neighbours swapped (Damerau ≤ 1). */
+function oneSlip(a, b) {
+  if (a === b) return false;
+  if (Math.abs(a.length - b.length) > 1) return false;
+  if (a.length === b.length) {
+    const diff = [...a].map((ch, i) => (ch === b[i] ? -1 : i)).filter((i) => i >= 0);
+    if (diff.length === 1) return true;
+    return diff.length === 2 && diff[1] === diff[0] + 1 && a[diff[0]] === b[diff[1]] && a[diff[1]] === b[diff[0]];
+  }
+  const [s, l] = a.length < b.length ? [a, b] : [b, a];
+  for (let i = 0; i < l.length; i += 1) if (l.slice(0, i) + l.slice(i + 1) === s) return true;
+  return false;
+}
+
+/**
+ * A letter slip in a number word („nuen" for „neun") is a TYPO like any word; a wrong VALUE stays
+ * WRONG (review a1.1-u04 r3, orchestrator 2026-09-27). Every word of the answer that is no number
+ * word itself but one slip away from the spelled value of a number the key holds is read as that
+ * number; the repaired answer is returned, or null when nothing was repaired. Only spelled values of
+ * ≥ 4 letters (neun, null, eins, zwei …): a slip in „elf" cannot be told from another word.
+ */
+function repairNumberSlips(input, accepted) {
+  const targets = new Map(); // normalised spelling → digits
+  const add = (value) => {
+    const w = spellCardinal(value);
+    if (w && w.length >= 4) targets.set(normalizeAnswer(w), String(value));
+  };
+  for (const a of accepted) {
+    for (const run of String(a).match(/\d+/g) || []) add(Number(run));
+    for (const m of String(a).matchAll(/\p{L}+/gu)) {
+      const v = cardinalValue(m[0]);
+      if (v !== null) add(v);
+    }
+  }
+  if (!targets.size) return null;
+  let changed = false;
+  const out = String(input ?? '').replace(/\p{L}+/gu, (word) => {
+    if (cardinalValue(word) !== null || ordinalValue(word) !== null) return word;
+    const w = normalizeAnswer(word);
+    for (const [spelled, digits] of targets) {
+      if (oneSlip(w, spelled)) {
+        changed = true;
+        return digits;
+      }
+    }
+    return word;
+  });
+  return changed ? out : null;
+}
+
+/** exact: 'number' — digits (dictation: the whole sentence), then the number-word slip rule. */
+function checkExactNumber(item, input) {
+  const grade = isDictationTask(item) ? checkDictationNumber : checkNumber;
+  const out = grade(item, input);
+  if (out.result !== RESULT.WRONG) return out;
+  const repaired = repairNumberSlips(input, acceptedOf(item));
+  if (!repaired) return out;
+  const again = grade(item, repaired);
+  return again.result === RESULT.WRONG ? out : { result: RESULT.TYPO, expected: again.expected };
+}
+
 function checkName(item, input) {
   const accepted = acceptedOf(item);
   const opts = checkOptionsFor({ ...item, accepted });
@@ -174,7 +241,7 @@ export function checkItem(item, input) {
   if (!item) return { result: RESULT.WRONG, correct: false, typo: false, expected: '', errorTag: null };
   let out;
   if (isChoiceItem(item)) out = checkChoice(item, input);
-  else if (item.exact === 'number') out = isDictationTask(item) ? checkDictationNumber(item, input) : checkNumber(item, input);
+  else if (item.exact === 'number') out = checkExactNumber(item, input);
   else if (item.exact === 'name') out = checkName(item, input);
   else {
     const accepted = acceptedOf(item);

@@ -11,6 +11,12 @@
 // inputs and exam texts by its RECEPTIVE intro. A point the unit itself declares (spec.grammar
 // new/chunk/review) is licensed in that unit — a misplacement is GRM-02's finding, reported once.
 // A spine chunkFrom at or before the position turns a finding into an advisory "chunk preview".
+//
+// Metalanguage surfaces are read too, as receptive text and ADVISORY only (they name constructions
+// as well as use them): each step's strategyCards[].de (review a2.1-u04 r2 F07) and each rule card's
+// de prose at the card's first use (a2.1-u04 r2 F10 / r3 F12). A form a licensed spine point lists in
+// its label („kam, sagte, es gab") is licensed whatever later detector matches it (orchestrator
+// 2026-09-27: det.praeteritum-vollverb blocked g.praeteritum-kernverben's own forms).
 
 import { walkTexts, walkProduction, walkSteps } from '../lib-validate/walk.mjs';
 import { positionOf, parseUnitId, LEVELS } from '../lib-validate/ids.mjs';
@@ -65,7 +71,7 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
     return content.length > 0 && content.every((w) => exempt.has(w));
   };
 
-  const check = (doc, pos, declared, text, path, surface, glosses = []) => {
+  const check = (doc, pos, declared, text, path, surface, glosses = [], metalanguage = false) => {
     if (!text) return;
     const seen = new Set();
     for (const det of detectors) {
@@ -85,7 +91,7 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
         }
         const chunk = place.chunk !== null && place.chunk <= pos;
         const exact = hit.precision === 'exact';
-        const severity = exact && !chunk ? 'blocker' : 'advisory';
+        const severity = exact && !chunk && !metalanguage ? 'blocker' : 'advisory';
         const why = chunk ? ` — licensed only as a chunk preview (chunkFrom ${describePosition(place.chunk)})` : '';
         const prec = exact ? '' : ` [${hit.precision}${hit.fallback ? ', shape fallback' : ''}]`;
         findings.push(finding(severity, doc, path,
@@ -107,6 +113,11 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
       if (t.lines.length) t.lines.forEach((l, i) => check(doc, pos, declared, String(l?.de || ''), `${t.path}.lines[${i}]`, surface, t.glosses.map((x) => x.toLowerCase())));
       if (t.writtenText) check(doc, pos, declared, t.writtenText, `${t.path}.text`, surface, t.glosses.map((x) => x.toLowerCase()));
       else if (!t.lines.length && t.de) check(doc, pos, declared, t.de, t.path, surface, t.glosses.map((x) => x.toLowerCase()));
+    }
+    if (doc.kind === 'unit') {
+      for (const { step, path } of walkSteps(doc)) {
+        arr(step?.strategyCards).forEach((c, i) => check(doc, pos, declared, String(c?.de || ''), `${path}.strategyCards[${i}].de`, 'input', [], true));
+      }
     }
     if (stageOf(doc) === 'S') continue; // stage S: texts only; items and expected answers arrive with I (BLUEPRINT §9)
     for (const p of walkProduction(doc)) check(doc, pos, declared, p.de, p.path, 'production');
@@ -136,6 +147,7 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
         const doc = { file: slot.ruleCards.file };
         const declared = new Set([card?.spine].filter(Boolean));
         check(doc, pos, declared, String(card?.modelSentence || ''), `cards[${i}].modelSentence`, 'production');
+        check(doc, pos, declared, String(card?.de || ''), `cards[${i}].de`, 'input', [], true);
       });
     }
   }

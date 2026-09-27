@@ -777,8 +777,7 @@
           "promptEn": "Name the document with the rules of the travel contract.",
           "answer": "Reisebedingungen",
           "accepted": [
-            "Reisebedingungen",
-            "Geschäftsbedingungen"
+            "Reisebedingungen"
           ],
           "errorTags": [],
           "banks": [
@@ -791,10 +790,7 @@
             "de": "Die Reisebedingungen sind die Regeln, die zum Reisevertrag gehören: Rechte und Pflichten bei einer Pauschalreise.",
             "en": "The terms of travel are the rules that belong to the travel contract: the rights and duties of a package holiday."
           },
-          "origin": "agent",
-          "acceptedWhy": {
-            "Geschäftsbedingungen": "sachlich richtig: Die Reisebedingungen sind die Allgemeinen Geschäftsbedingungen des Reiseveranstalters."
-          }
+          "origin": "agent"
         },
         {
           "id": "b2.1-u04-ls1-r03",
@@ -945,56 +941,32 @@
           {
             "id": "b2.1-u04-ls2-l03",
             "speaker": "cast.priya",
-            "de": "Wir haben ein Doppelzimmer in ruhiger Lage mit Blick auf das Meer gebucht. Diese Zimmerkategorie gehört zum Leistungsumfang, so steht es in unserer Buchungsbestätigung. Wir sehen aber direkt auf eine Baustelle, und der Baulärm fängt um sieben Uhr an. Außerdem ist das Zimmer renovierungsbedürftig: Die Möbel sind abgenutzt, die Dusche ist verschmutzt, und im Bad gibt es Ungeziefer.",
-            "en": "We booked a double room in a quiet location with a sea view. That room category is part of the services; it says so in our booking confirmation. But we look straight onto a building site, and the construction noise starts at seven. The room also needs renovating: the furniture is worn, the shower is dirty and there are insects in the bathroom."
+            "de": "Wir haben ein Doppelzimmer in ruhiger Lage mit Blick auf das Meer gebucht. Diese Zimmerkategorie gehört zum Leistungsumfang, so steht es in unserer Buchungsbestätigung. Wir sehen aber direkt auf eine Baustelle, und der Baulärm fängt um sieben Uhr an. Außerdem ist das Zimmer renovierungsbedürftig: Die Möbel sind abgenutzt, die Dusche ist verschmutzt, und im Bad gibt es Ungeziefer. Könnten Sie uns bitte ein anderes Zimmer geben?",
+            "en": "We booked a double room in a quiet location with a sea view. That room category is part of the services; it says so in our booking confirmation. But we look straight onto a building site, and the construction noise starts at seven. The room also needs renovating: the furniture is worn, the shower is dirty and there are insects in the bathroom. Could you please give us a different room?"
           },
           {
             "id": "b2.1-u04-ls2-l04",
             "speaker": "cast.ensemble-b2-6",
-            "de": "Die Baustelle gehört zu unserem neuen Wellnessbereich. Ehrlich gesagt hätte Ihr Reiseveranstalter Sie darüber informieren müssen. Wir haben ihm schon im Frühling Bescheid gegeben.",
-            "en": "The building site is for our new spa area. To be honest, your tour operator should have told you about it. We informed them back in the spring."
+            "de": "Ehrlich gesagt finde ich, dass Ihr Reiseveranstalter Sie über die Baustelle hätte informieren müssen, denn wir haben ihm schon im Frühling Bescheid gegeben.",
+            "en": "To be honest, I think your tour operator should have told you about the building site, because we informed them back in the spring."
           },
           {
             "id": "b2.1-u04-ls2-l05",
-            "speaker": "cast.priya",
-            "de": "Davon steht nichts in unseren Unterlagen.",
-            "en": "There is nothing about it in our documents."
-          },
-          {
-            "id": "b2.1-u04-ls2-l15",
-            "speaker": "cast.priya",
-            "de": "Ich finde, dass der Reiseveranstalter uns das vor der Buchung hätte sagen müssen.",
-            "en": "I think the tour operator should have told us that before we booked."
-          },
-          {
-            "id": "b2.1-u04-ls2-l16",
             "speaker": "cast.priya",
             "de": "Wenn wir das gewusst hätten, hätten wir dieses Hotel nie gebucht.",
             "en": "If we had known that, we would never have booked this hotel."
           },
           {
-            "id": "b2.1-u04-ls2-l17",
-            "speaker": "cast.priya",
-            "de": "Könnten Sie uns bitte ein anderes Zimmer geben?",
-            "en": "Could you please give us a different room?"
-          },
-          {
             "id": "b2.1-u04-ls2-l06",
             "speaker": "cast.ensemble-b2-6",
-            "de": "Leider sind wir zurzeit ausgebucht. Ab Donnerstag wird ein Zimmer zum Meer frei. Die Dusche lasse ich heute noch sauber machen.",
-            "en": "Unfortunately we are fully booked at the moment. From Thursday a sea-facing room will be free. I'll have the shower cleaned today."
+            "de": "Ein anderes Zimmer kann ich Ihnen leider noch nicht geben: Wir sind zurzeit ausgebucht. Ab Donnerstag wird ein Zimmer zum Meer frei. Die Dusche lasse ich heute noch sauber machen.",
+            "en": "I am afraid I cannot give you another room yet: we are fully booked at the moment. From Thursday a sea-facing room will be free. I will have the shower cleaned today."
           },
           {
             "id": "b2.1-u04-ls2-l07",
             "speaker": "cast.priya",
-            "de": "Am Donnerstag ist die halbe Reise schon vorbei.",
-            "en": "By Thursday half the trip will already be over."
-          },
-          {
-            "id": "b2.1-u04-ls2-l18",
-            "speaker": "cast.priya",
-            "de": "Gut, dann gehen wir so vor: Wir dokumentieren alles mit Beweisfotos und melden die Mängel trotzdem auch der Reiseleitung.",
-            "en": "All right, then this is what we'll do: we'll document everything with photos and report the defects to the tour guide as well."
+            "de": "Am Donnerstag ist die halbe Reise vorbei, also gehen wir so vor: Wir dokumentieren alles und melden die Mängel auch der Reiseleitung.",
+            "en": "By Thursday half the trip will be over, so this is what we will do: we will document everything and report the defects to the tour guide as well."
           },
           {
             "id": "b2.1-u04-ls2-l08",
@@ -1011,8 +983,8 @@
           {
             "id": "b2.1-u04-ls2-l10",
             "speaker": "cast.ensemble-b2-2",
-            "de": "Das tut mir leid. Bitte erklären Sie mir möglichst genau, was passiert ist.",
-            "en": "I'm sorry. Please explain to me as exactly as possible what has happened."
+            "de": "Bitte erklären Sie mir möglichst genau, was passiert ist, damit ich Ihnen helfen kann.",
+            "en": "Please explain to me as exactly as possible what has happened, so that I can help you."
           },
           {
             "id": "b2.1-u04-ls2-l11",
@@ -1040,14 +1012,7 @@
             "en": "I will pass your notice of defects to the tour guide right away, and we will look into your case thoroughly. I am afraid I cannot grant you a price reduction or compensation on the phone. Please send us a written complaint with photos and all receipts after the trip."
           }
         ],
-        "glosses": [
-          {
-            "token": "Wellnessbereich",
-            "gloss": {
-              "en": "spa area"
-            }
-          }
-        ],
+        "glosses": [],
         "transcriptAfterUnaidedListen": true
       },
       "inputItems": [
@@ -1129,8 +1094,8 @@
             "die Gäste über die Baustelle informieren"
           ],
           "explanation": {
-            "de": "Er sagt: Ihr Reiseveranstalter hätte Sie darüber informieren müssen. Das Hotel hat ihm im Frühling Bescheid gegeben.",
-            "en": "He says the tour operator should have informed them; the hotel had told the operator in spring."
+            "de": "Er sagt: Ihr Reiseveranstalter hätte Sie über die Baustelle informieren müssen. Das Hotel hat ihm im Frühling Bescheid gegeben.",
+            "en": "He says the tour operator should have told them about the building site; the hotel had informed the operator in spring."
           },
           "origin": "agent"
         },
@@ -1432,7 +1397,7 @@
             "count": 2,
             "source": [
               "b2.1-u04-ls2-l07",
-              "b2.1-u04-ls2-l18"
+              "b2.1-u04-ls2-l10"
             ]
           },
           {
@@ -1660,7 +1625,7 @@
           [
             "Vorwurf im Nebensatz",
             "hätte vor den beiden Infinitiven",
-            "Ich finde, dass der Reiseveranstalter uns das vor der Buchung hätte sagen müssen."
+            "Ehrlich gesagt finde ich, dass Ihr Reiseveranstalter Sie über die Baustelle hätte informieren müssen, …"
           ],
           [
             "höfliche Forderung",
@@ -1976,8 +1941,8 @@
             "generator": "dictation.fromInput",
             "count": 2,
             "source": [
-              "b2.1-u04-ls2-l15",
-              "b2.1-u04-ls2-l16"
+              "b2.1-u04-ls2-l04",
+              "b2.1-u04-ls2-l05"
             ]
           },
           {
@@ -2255,7 +2220,7 @@
           "id": "b2.1-u04-ls4-t1",
           "kind": "text",
           "title": "E-Mail an die Mitreisenden",
-          "text": "Betreff: Gemeinsame Beschwerde bei Blauwelle Reisen\n\nLiebe Mitreisende,\n\nseit einer Woche sind wir wieder zu Hause, und viele von Ihnen haben uns geschrieben, ⟦01⟧ sehr Sie sich über die Reise geärgert haben. Bisher will uns der Reiseveranstalter mit einem Gutschein über 50 Euro abwimmeln. Wir möchten aber unsere Rechte wahrnehmen und nachträglich eine Minderung einfordern. Deshalb schlagen wir Ihnen eine gemeinsame Vorgehensweise vor.\n\n⟦02⟧ wir uns zusammentun, ist unsere Beweislage besser. Wir haben viele Beweisfotos gemacht, ⟦03⟧ die Baustelle, das verschmutzte Bad und Ungeziefer zeigen. Neun Mitreisende haben sich mit uns zusammengetan, und wir haben uns ⟦04⟧ geeinigt, hartnäckig zu bleiben.\n\nWir finden, dass der Reiseveranstalter uns schon vor der Reise über die Baustelle ⟦05⟧ informieren müssen. Das war seine Informationspflicht. Mit dieser Information ⟦06⟧ viele von uns ein anderes Hotel gebucht.\n\nFür die Arbeitsteilung schlagen wir vor, ⟦07⟧ wir beide die Belege sammeln und jeder von Ihnen einen Beschwerdebrief schickt und sich darin auf die Leistungsbeschreibung beruft. Den Musterbrief der Verbraucherzentrale haben wir an unseren Fall angepasst. Es ist sinnvoll, alle Belege mit dem Brief ⟦08⟧. ⟦09⟧ der mangelhaften Unterbringung halten wir eine Minderung von 30 Prozent des Reisepreises für angemessen. Ein kleiner Preisnachlass reicht nicht.\n\nWir schreiben mit Fristsetzung bis Ende November. ⟦10⟧ der Reiseveranstalter bis dahin nicht reagiert, wenden wir uns gemeinsam an die Verbraucherzentrale. Weitere Schritte behalten wir uns vor, aber einen Rechtsbeistand brauchen wir noch nicht. Die Rechtslage ist klar: Wir sind im Recht, und eine gemeinsame Beschwerde ist aussichtsreich. Bitte antworten Sie uns bis Freitag, wenn Sie mitmachen möchten.\n\nViele Grüße\nPriya Nair und Amal Haddad",
+          "text": "Betreff: Gemeinsame Beschwerde bei Blauwelle Reisen\n\nLiebe Mitreisende,\n\nseit einer Woche sind wir wieder zu Hause, und viele von Ihnen haben uns geschrieben, ⟦01⟧ sehr Sie sich über die Reise geärgert haben. Bisher will uns der Reiseveranstalter mit einem Gutschein über 50 Euro abwimmeln. Wir möchten aber unsere Rechte wahrnehmen und nachträglich eine Minderung einfordern. Deshalb schlagen wir Ihnen eine gemeinsame Vorgehensweise vor.\n\n⟦02⟧ wir uns zusammentun, ist unsere Beweislage besser. Wir haben viele Beweisfotos gemacht, ⟦03⟧ die Baustelle, das verschmutzte Bad und Ungeziefer zeigen. Neun Mitreisende haben sich mit uns zusammengetan, und wir haben uns ⟦04⟧ geeinigt, hartnäckig zu bleiben.\n\nWir finden, dass der Reiseveranstalter uns schon vor der Reise über die Baustelle ⟦05⟧ informieren müssen. Das war seine Informationspflicht nach den Reisebedingungen. Mit dieser Information ⟦06⟧ viele von uns ein anderes Hotel gebucht.\n\nFür die Arbeitsteilung schlagen wir vor, ⟦07⟧ wir beide die Belege sammeln und jeder von Ihnen einen Beschwerdebrief schickt und sich darin auf die Leistungsbeschreibung beruft. Den Musterbrief der Verbraucherzentrale haben wir an unseren Fall angepasst. Es ist sinnvoll, alle Belege mit dem Brief ⟦08⟧. ⟦09⟧ der mangelhaften Unterbringung halten wir eine Minderung von 30 Prozent des Reisepreises für angemessen. Ein kleiner Preisnachlass reicht nicht.\n\nWir schreiben mit Fristsetzung bis Ende November. ⟦10⟧ der Reiseveranstalter bis dahin nicht reagiert, wenden wir uns an die Verbraucherzentrale. Weitere Schritte behalten wir uns vor, aber einen Rechtsbeistand brauchen wir noch nicht. Die Rechtslage ist klar: Wir sind im Recht, und eine gemeinsame Beschwerde ist aussichtsreich. Bitte antworten Sie bis Freitag, wenn Sie mitmachen möchten.\n\nViele Grüße\nPriya Nair und Amal Haddad",
           "glosses": []
         },
         {
@@ -2711,7 +2676,7 @@
         ],
         "aiRole": {
           "name": "Amal",
-          "personaDe": "Amal Haddad, Bauingenieurin aus Leipzig und Freundin deines Gegenübers; ihr wart zusammen auf der Gruppenreise nach Kreta. Du bist verärgert und willst hartnäckig bleiben. Die erste Forderung deines Gegenübers findest du zu hoch, und du schlägst etwa zwei Drittel davon vor. Du widersprichst einmal, lässt dich von guten Gründen überzeugen und fragst am Ende, wer was übernimmt. Ihr arbeitet mit demselben Planungsblatt: Belege, Forderung, Frist, Aufgaben und am Ende die Frage, ob ihr euch an die Verbraucherzentrale wendet oder einen Rechtsbeistand nehmt. Bei dieser Frage willst du Gründe hören: Aufwand, Kosten und Chancen. Wenn dein Gegenüber einen auswendig gelernten Text vorträgt, unterbrichst du mit einer Frage.",
+          "personaDe": "Amal Haddad, Bauingenieurin aus Leipzig und Freundin deines Gegenübers; ihr wart zusammen auf der Gruppenreise nach Kreta. Du bist verärgert und willst hartnäckig bleiben. Die erste Forderung deines Gegenübers findest du zu hoch, und du schlägst etwa zwei Drittel davon vor. Du widersprichst einmal, lässt dich von guten Gründen überzeugen und fragst am Ende, wer was übernimmt. Euer gemeinsames Planungsblatt hat fünf Punkte: Belege, Forderung, Frist, Aufgaben und die Frage, ob ihr euch an die Verbraucherzentrale wendet oder einen Rechtsbeistand nehmt. Bei dieser Frage willst du Gründe hören: Aufwand, Kosten und Chancen. Wenn dein Gegenüber einen auswendig gelernten Text vorträgt, unterbrichst du mit einer Frage.",
           "register": "du",
           "support": "interrupts"
         },

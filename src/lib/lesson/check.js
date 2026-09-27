@@ -170,6 +170,33 @@ export function foldNumberWords(text) {
   });
 }
 
+const UNIT_WORDS = ['null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun'];
+const TEEN_WORDS = Object.fromEntries(Object.entries(TEENS).map(([w, v]) => [v, w]));
+const TEN_WORDS = Object.fromEntries(Object.entries(TENS).map(([w, v]) => [v, w]));
+
+/** 1–99 spelled, with „ein" before „und" („einundzwanzig") and „eins" alone. */
+function spellBelow100(n) {
+  if (n < 10) return UNIT_WORDS[n];
+  if (n < 20) return TEEN_WORDS[n];
+  const t = Math.floor(n / 10) * 10;
+  const u = n % 10;
+  return u ? `${u === 1 ? 'ein' : UNIT_WORDS[u]}und${TEN_WORDS[t]}` : TEN_WORDS[t];
+}
+
+/** A number 0–9999 spelled as one German word („dreiundzwanzig", „hundertzwanzig"), else null. */
+export function spellCardinal(n) {
+  if (!Number.isInteger(n) || n < 0 || n > 9999) return null;
+  if (n === 0) return 'null';
+  const k = Math.floor(n / 1000);
+  const h = Math.floor((n % 1000) / 100);
+  const r = n % 100;
+  let out = '';
+  if (k) out += `${k === 1 ? '' : UNIT_WORDS[k]}tausend`;
+  if (h) out += `${h === 1 ? '' : UNIT_WORDS[h]}hundert`;
+  if (r) out += spellBelow100(r);
+  return out;
+}
+
 /** True when `text` holds a digit or a number word (ITM-07's test on a dictation). */
 export const hasNumber = (text) => /\d/.test(foldNumberWords(text));
 

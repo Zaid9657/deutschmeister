@@ -9,9 +9,13 @@
 //      from the audio (review a2.2-u04 r3 F02; „…" is folded since the same round);
 //   2. a faithful transcription of the audio — the line's `say` (the TTS text) when it has one, else
 //      its `de` — is graded CORRECT against the key: „… eins neunzehn." never matches the key
-//      „… 1,19 Euro." (review a1.1-u04 r2 F01); number words and digits already fold. Only for a
-//      sentence key (≥ 3 words): „Schreiben Sie das Datum" keys a part of the line („12.05.");
-//   3. length: at A levels ≤ 12 words and ≤ 2 sentences (review a2.1-u04 r3 F08), at B1 ≤ 15 words and
+//      „… 1,19 Euro." (review a1.1-u04 r2 F01); number words and digits already fold, and the
+//      commas of a `say` are pauses, not something a listener hears („null drei vier eins,
+//      achtundfünfzig" is „0341 58"). Only for a sentence key (≥ 3 words with letters): „Schreiben
+//      Sie das Datum" keys a part of the line („12.05.", „0341 44 20 17");
+//   3. length (ADVISORY — both findings were minor, and the SCHEMA §15 worked example dictates
+//      19–29-word lines; the SCHEMA owner decides whether the cap becomes hard): at A levels
+//      ≤ 12 words and ≤ 2 sentences (review a2.1-u04 r3 F08), at B1 ≤ 15 words and
 //      one sentence (review b1.1-u04 r2 F11); B2 has no cap (no review asked for one). A one-word
 //      exclamation („Gut!", „So.") is not counted as a sentence. One slip anywhere costs the whole
 //      item, so a paragraph measures stamina, not the target.
@@ -22,11 +26,11 @@
 import { walkSteps, walkItems } from '../lib-validate/walk.mjs';
 import { sentences, wordCount } from '../lib-validate/text.mjs';
 import { bandOfLevel } from '../lib-validate/ids.mjs';
-import { arr, isObj, blocker, list } from '../lib-validate/helpers.mjs';
+import { arr, isObj, blocker, advisory, list } from '../lib-validate/helpers.mjs';
 
 export const id = 'ITM-13';
 export const title = 'Audio keys: dictations typeable and graded as heard; Frage/Aussage follows the played text';
-export const type = 'hard';
+export const type = 'mixed';
 export const scope = 'unit';
 export const stage = 'I';
 
@@ -56,8 +60,9 @@ function dictationFindings(doc, item, line, path, where) {
   if (bad.length) {
     out.push(blocker(doc, path, `${where} key contains ${bad.map((c) => `„${c}"`).join(' ')} — the checker folds no such character, so no transcription of the audio can match it; write it as it is spoken`, item.id));
   }
-  if (line && checker && wordCount(item.answer) >= 3) {
-    const heard = String(line.say || line.de || '');
+  const letterWords = String(item.answer || '').split(/\s+/).filter((w) => /\p{L}/u.test(w)).length;
+  if (line && checker && letterWords >= 3) {
+    const heard = String(line.say || line.de || '').replace(/[,;]/g, ' ');
     const r = checker.checkItem(item, heard).result;
     if (heard && r !== checker.RESULT.CORRECT) {
       out.push(blocker(doc, path, `${where}: the audio says „${heard}"${line.say ? ' (say)' : ''}, and that transcription is graded ${r.toUpperCase()} against the key „${item.answer}"`, item.id));
@@ -69,7 +74,7 @@ function dictationFindings(doc, item, line, path, where) {
     const w = wordCount(key);
     const s = sentences(key).filter((x) => wordCount(x) >= 2).length;
     if (w > cap[0] || s > cap[1]) {
-      out.push(blocker(doc, path, `${where}: ${w} words in ${s} sentence(s) — a ${doc.level} dictation holds ≤ ${cap[0]} words in ≤ ${cap[1]} sentence(s)`, item.id));
+      out.push(advisory(doc, path, `${where}: ${w} words in ${s} sentence(s) — a ${doc.level} dictation should hold ≤ ${cap[0]} words in ≤ ${cap[1]} sentence(s)`, item.id));
     }
   }
   return out;

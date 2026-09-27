@@ -831,8 +831,8 @@
             "generator": "dictation.fromInput",
             "count": 2,
             "source": [
-              "a1.2-u04-ls1-l07",
-              "a1.2-u04-ls1-l10"
+              "a1.2-u04-ls1-l08",
+              "a1.2-u04-ls1-l11"
             ]
           },
           {
@@ -1639,7 +1639,7 @@
             "count": 2,
             "source": [
               "a1.2-u04-ls2-l06",
-              "a1.2-u04-ls2-l07"
+              "a1.2-u04-ls2-l04"
             ]
           },
           {
@@ -2852,7 +2852,7 @@
           "id": "a1.2-u04-ls4-t15",
           "kind": "sign",
           "title": "Im Bürgerbüro, 2. Stock",
-          "text": "Pass und Ausweis\nSie brauchen einen neuen Pass? Bitte bringen Sie Ihren alten Pass mit.\nDer neue Pass ist in drei Wochen da.",
+          "text": "Pass und Ausweis\nSie brauchen einen Pass? Bringen Sie bitte den Antrag mit.\nDer Pass ist dann in drei Wochen da.",
           "glosses": []
         },
         {
@@ -3139,15 +3139,15 @@
               "role": "exam",
               "topic": "hoeren",
               "textRef": "a1.2-u04-ls4-t3",
-              "promptDe": "Jonas fragt: Kann Priya …",
+              "promptDe": "Jonas fragt: „Kann Priya ___?“",
               "options": [
-                "am Montag seine Schicht machen?",
-                "am Montag zum Amt gehen?",
-                "am Samstag arbeiten?"
+                "am Montag seine Schicht machen",
+                "am Montag zum Amt gehen",
+                "am Samstag arbeiten"
               ],
-              "answer": "am Montag seine Schicht machen?",
+              "answer": "am Montag seine Schicht machen",
               "accepted": [
-                "am Montag seine Schicht machen?"
+                "am Montag seine Schicht machen"
               ],
               "explanation": {
                 "de": "Jonas fragt: „Kannst du am Montag meine Frühschicht machen?“ Er geht zum Amt, und am Samstag arbeitet er für Priya.",
@@ -3196,8 +3196,8 @@
               ],
               "exact": "number",
               "explanation": {
-                "de": "Am Samstag arbeitet Elif, und am Sonntag ist alles zu. Sie möchte am Freitag ab 17 Uhr einkaufen gehen.",
-                "en": "Elif works on Saturday and everything is closed on Sunday, so Friday from 5 pm."
+                "de": "Am Samstag muss Elif arbeiten, am Sonntag sind die Geschäfte zu. Also möchte sie am Freitag ab 17 Uhr einkaufen gehen.",
+                "en": "Elif works on Saturday and the shops are closed on Sunday, so Friday from 5 pm."
               },
               "origin": "agent"
             }
@@ -3298,7 +3298,7 @@
                 "richtig"
               ],
               "explanation": {
-                "de": "Auf dem Schild steht: „Der neue Pass ist in drei Wochen da.“ Sie warten also drei Wochen.",
+                "de": "Auf dem Schild steht: „Der Pass ist dann in drei Wochen da.“ Sie warten also drei Wochen.",
                 "en": "The sign says the new passport arrives in three weeks, so you wait three weeks."
               },
               "origin": "agent"
@@ -3335,8 +3335,8 @@
         },
         {
           "template": "sd1.l3",
-          "de": "Lesen Teil 3: Sie lesen fünf Schilder und Aushänge. Zu jedem Schild gibt es eine Aussage: richtig oder falsch? Lesen Sie zuerst die Aussage. Wo sind Sie? Das steht über dem Schild. Suchen Sie dann im Schild die Stelle für die Aussage. Achten Sie auf kleine Wörter wie „nur“, „heute“, „ohne“ und „nicht“.",
-          "en": "Reading part 3: five signs and notices, one true/false statement each. Read the statement first; the line above each sign tells you where you are. Then find the place in the sign that the statement is about. Watch small words like “nur”, “heute”, “ohne” and “nicht”."
+          "de": "Lesen Teil 3: Sie lesen fünf Schilder und Aushänge. Zu jedem Schild gibt es eine Aussage: richtig oder falsch? Lesen Sie zuerst die Aussage. Wo sind Sie? Das steht über dem Schild. Suchen Sie dann im Schild die Stelle für die Aussage. Achten Sie auf Wörter wie „nur“, „heute“, „nicht“ und „kein“.",
+          "en": "Reading part 3: five signs and notices, one true/false statement each. Read the statement first; the line above each sign tells you where you are. Then find the place in the sign that the statement is about. Watch words like “nur”, “heute”, “nicht” and “kein”."
         }
       ]
     },
@@ -3453,9 +3453,7 @@
                 "14.03.99",
                 "14.3.99",
                 "14. 03. 1999",
-                "14/03/1999",
-                "14/3/1999",
-                "14-03-1999"
+                "14/03/1999"
               ],
               "exact": "number"
             },
@@ -3474,21 +3472,11 @@
               "answer": "0176 23 45 67",
               "accepted": [
                 "0176 23 45 67",
-                "0176234567",
                 "0176 234567",
-                "0176 2345 67",
-                "0176 23 4567",
-                "0176 234 567",
-                "0176-23 45 67",
-                "0176-234567",
-                "0176-2345 67",
-                "0176-23 4567",
-                "0176-234 567",
-                "0176/23 45 67",
+                "0176234567",
                 "0176/234567",
-                "0176/2345 67",
-                "0176/23 4567",
-                "0176/234 567"
+                "0176 2345 67",
+                "0176-234567"
               ],
               "exact": "number"
             },
@@ -3755,7 +3743,7 @@
           "von 8 bis 12 Uhr"
         ],
         "explanation": {
-          "de": "Freitag 8–12 Uhr: Am Freitag ist das Rathaus von 8 bis 12 Uhr geöffnet.",
+          "de": "Auf dem Schild steht: „Freitag 8–12 Uhr“. Am Freitag ist das Rathaus von 8 bis 12 Uhr geöffnet.",
           "en": "Fri 8–12: on Friday the town hall is open from 8 to 12."
         },
         "origin": "agent",
@@ -3797,7 +3785,7 @@
           "zwanzigsten"
         ],
         "explanation": {
-          "de": "Ab 20: -ste. am zwanzigsten Mai.",
+          "de": "Ab 20: „-ste“. Also: „am zwanzigsten Mai“.",
           "en": "From 20 on: -ste, so “am zwanzigsten”."
         },
         "origin": "agent"
@@ -3823,7 +3811,9 @@
           "Wo finde ich die Anmeldung?",
           "Guten Tag, wo ist die Anmeldung?",
           "Hallo, wo ist die Anmeldung?",
-          "Wo ist die Anmeldung, Entschuldigung?"
+          "Wo ist die Anmeldung, Entschuldigung?",
+          "Entschuldigung, wo ist das Zimmer für die Anmeldung?",
+          "Wo ist das Zimmer für die Anmeldung?"
         ],
         "acceptedWhy": {
           "Wo ist die Anmeldung?": "auch richtig: ohne „Entschuldigung“ ist die Frage kurz, aber klar",
@@ -3837,10 +3827,12 @@
           "Wo finde ich die Anmeldung?": "auch richtig: „Wo finde ich …?“ fragt auch nach dem Ort",
           "Guten Tag, wo ist die Anmeldung?": "auch richtig: ein Gruß am Anfang ist auch höflich",
           "Hallo, wo ist die Anmeldung?": "auch richtig: ein Gruß am Anfang, etwas informell",
-          "Wo ist die Anmeldung, Entschuldigung?": "möglich: „Entschuldigung“ am Ende; vorne ist es üblicher"
+          "Wo ist die Anmeldung, Entschuldigung?": "möglich: „Entschuldigung“ am Ende; vorne ist es üblicher",
+          "Entschuldigung, wo ist das Zimmer für die Anmeldung?": "auch richtig: Sie fragen nach dem Zimmer für die Anmeldung",
+          "Wo ist das Zimmer für die Anmeldung?": "auch richtig: Sie fragen nach dem Zimmer für die Anmeldung"
         },
         "explanation": {
-          "de": "W-Frage: „wo“ + Verb + „die Anmeldung“? „Entschuldigung“ am Anfang macht die Frage höflich.",
+          "de": "W-Frage: „wo“ + Verb + „die Anmeldung“. „Entschuldigung“ am Anfang macht die Frage höflich.",
           "en": "W-question: “wo” + verb + subject; “Entschuldigung” first makes it polite."
         },
         "origin": "agent"
