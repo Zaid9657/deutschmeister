@@ -8,7 +8,7 @@
     "DTZ Deutsch-Test für Zuwanderer (B1-Bereich; nur im Integrationskurssystem)"
   ],
   "examLanes": {
-    "rule": "Die Prüfungs-Lane wird einmal beim Onboarding gewählt und über alle Produkte mitgenommen (A1.1 bis B2.2); jede Stufe hat genau einen dokumentierten Standard für Lernende ohne Wahl. Die Regel gehört in BLUEPRINT.md; bis dahin gilt sie hier.",
+    "rule": "Die Prüfungs-Lane wird einmal beim Onboarding gewählt und über alle Produkte mitgenommen; jede Stufe hat genau einen dokumentierten Standard für Lernende ohne Wahl, die Primär-Lane aus BLUEPRINT.md §1.4 (B1: telc Deutsch B1). Sekundär-Lanes erscheinen als Spur-Karten (hier: Feld laneVariants).",
     "default": "telc Deutsch B1",
     "defaultReason": "Nachfrage in Deutschland telc ≫ DTZ > Goethe (02-exams-b1 §5, Implikation 11). Der DTZ ist wegen des Zugangs (nur im Integrationskurssystem) nie Standard; die Goethe-/ÖSD-Lane bedient vor allem Lernende im Ausland. Gleicher Standard in B1.1 und B1.2.",
     "lanes": [
@@ -17,11 +17,11 @@
       "DTZ Deutsch-Test für Zuwanderer (B1-Bereich; nur im Integrationskurssystem)"
     ],
     "core": "Der Kern trainiert die sechs gemeinsamen Aufgabenfamilien aller drei Prüfungen (02-exams-b1 §6) und die Goethe- und telc-Formate; die gewählte Lane bestimmt, welche Variante zuerst erscheint und nach welcher Regel bewertet wird.",
-    "dtz": "DTZ-spezifische Formate (Brief mit A/B-Wahl, Foto + eigene Erfahrung + Heimatland ohne Vorbereitung) sind nie die Hauptaufgabe im Kern, sondern Lane-Varianten (Feld laneVariants). B1.1 behandelt den DTZ als bekanntes Format aus A2.2: in der DTZ-Lane volle Länge, jeder Hörtext einmal, keine Wiederholung; nur die B1-Anforderung steigt (Schreiben 15–20/20, Sprechen 75–100/100, Hören+Lesen 33–45/45)."
+    "dtz": "DTZ-spezifische Formate (Brief mit A/B-Wahl, Foto + eigene Erfahrung + Heimatland ohne Vorbereitung) sind nie die Hauptaufgabe im Kern, sondern Lane-Varianten (Feld laneVariants). Der DTZ ist ein skalierter A2–B1-Test mit einem einzigen Format: in der DTZ-Lane läuft er deshalb schon in B1.1 in voller Länge, jeder Hörtext einmal, ohne Wiederholung; nur die B1-Anforderung steigt (Schreiben 15–20/20, Sprechen 75–100/100, Hören+Lesen 33–45/45)."
   },
   "hours": {
-    "guided": 52,
-    "total": 64
+    "guided": 41,
+    "total": 52
   },
   "vocabTarget": {
     "newWords": 540,
@@ -1184,7 +1184,7 @@
     }
   ],
   "levelTest": {
-    "format": "Halb-Modelltest auf dem Stoff von B1.1 im Format der beim Onboarding gewählten Prüfungs-Lane (Standard ohne Wahl: telc Deutsch B1). telc Deutsch B1: Leseverstehen 1 + 3, Sprachbausteine 1, Hörverstehen 2 + 3, Schriftlicher Ausdruck, Mündlicher Ausdruck 1 + 3 (ca. 100 + 10 Min.). Goethe-/ÖSD-Zertifikat B1: Lesen Teil 1, 3 und 5, Hören Teil 1 und 3, Schreiben Teil 1 und 3, Sprechen Teil 1 und 2 nach 10 Minuten Vorbereitung (ca. 100 + 12 Min.). DTZ (B1-Bereich; nur im Integrationskurssystem): Hören 1–3, Lesen 2, 4 und 5, Schreiben, Sprechen 1–3 ohne Vorbereitung, in voller Länge und jeder Hörtext einmal. telc- und Goethe-Texte in ca. 85 % der Prüfungslänge. Die KI als Gesprächspartnerin und in der Rolle der Prüferin (automatische Übungsbewertung). Übungswerte je Prüfungsteil, kein Gesamturteil, keine Bestehensregel und nie eine Bestehensprognose; der Diagnose-Mini-Modelltest in Woche 1 von B1.2 ist ein Ausschnitt einer Parallelform (ein Teil je Modul).",
+    "format": "Abschluss nach Einheit 12: Halb-Modelltest auf dem Stoff von B1.1 im Format der beim Onboarding gewählten Prüfungs-Lane (Standard ohne Wahl: telc Deutsch B1). telc Deutsch B1: Leseverstehen 1 + 3, Sprachbausteine 1, Hörverstehen 2 + 3, Schriftlicher Ausdruck, Mündlicher Ausdruck 1 + 3 (ca. 100 + 10 Min.). Goethe-/ÖSD-Zertifikat B1: Lesen Teil 1, 3 und 5, Hören Teil 1 und 3, Schreiben Teil 1 und 3, Sprechen Teil 1 und 2 nach 10 Minuten Vorbereitung (ca. 100 + 12 Min.). DTZ (B1-Bereich; nur im Integrationskurssystem): Hören 1–3, Lesen 2, 4 und 5, Schreiben, Sprechen 1–3 ohne Vorbereitung, in voller Länge und jeder Hörtext einmal. telc- und Goethe-Texte in ca. 85 % der Prüfungslänge. Die KI als Gesprächspartnerin und in der Rolle der Prüferin (automatische Übungsbewertung). Ergebnis als Teil-Karte (Übungswerte je Prüfungsteil) mit datiertem Plan für B1.2: kein Gesamturteil, keine Bestehensregel, nie eine Bestehensprognose. Der Diagnose-Mini-Modelltest in Woche 1 von B1.2 ist ein Ausschnitt einer Parallelform (ein Teil je Modul).",
     "sections": [
       "Lesen",
       "Hören",

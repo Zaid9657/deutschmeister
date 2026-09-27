@@ -8,7 +8,7 @@
     "DTZ Deutsch-Test für Zuwanderer (B1-Bereich; nur im Integrationskurssystem)"
   ],
   "examLanes": {
-    "rule": "Die Prüfungs-Lane wird einmal beim Onboarding gewählt und über alle Produkte mitgenommen (A1.1 bis B2.2); jede Stufe hat genau einen dokumentierten Standard für Lernende ohne Wahl. Die Regel gehört in BLUEPRINT.md; bis dahin gilt sie hier.",
+    "rule": "Die Prüfungs-Lane wird einmal beim Onboarding gewählt und über alle Produkte mitgenommen; jede Stufe hat genau einen dokumentierten Standard für Lernende ohne Wahl, die Primär-Lane aus BLUEPRINT.md §1.4 (B1: telc Deutsch B1). Sekundär-Lanes erscheinen als Spur-Karten (hier: Feld laneVariants).",
     "default": "telc Deutsch B1",
     "defaultReason": "Nachfrage in Deutschland telc ≫ DTZ > Goethe (02-exams-b1 §5, Implikation 11). Der DTZ ist wegen des Zugangs (nur im Integrationskurssystem) nie Standard; die Goethe-/ÖSD-Lane bedient vor allem Lernende im Ausland. Gleicher Standard in B1.1 und B1.2.",
     "lanes": [
@@ -17,12 +17,12 @@
       "DTZ Deutsch-Test für Zuwanderer (B1-Bereich; nur im Integrationskurssystem)"
     ],
     "core": "Der Kern trainiert die sechs gemeinsamen Aufgabenfamilien aller drei Prüfungen (02-exams-b1 §6) und die Goethe- und telc-Formate; die gewählte Lane bestimmt, welche Variante zuerst erscheint und nach welcher Regel bewertet wird.",
-    "dtz": "DTZ-spezifische Formate (Brief mit A/B-Wahl, Foto + eigene Erfahrung + Heimatland ohne Vorbereitung) sind nie die Hauptaufgabe im Kern, sondern Lane-Varianten (Feld laneVariants). Die DTZ-Modelltests kommen aus einem gemeinsamen Pool für A2.2 und B1.2 (derselbe skalierte A2–B1-Test, der nur einmal abgelegt wird): ein Budgetposten in W3, keine Form zweimal für dieselbe Person.",
-    "examPath": "Vorlage für alle .2-Kurse: Diagnose-Mini-Modelltest in Woche 1 (CP0); voller Modelltest 1 = Checkpoint 3, voller Modelltest 2 = Checkpoint 4, voller Modelltest 3 = Abschlusstest in der letzten Woche ohne neuen Stoff; Einheit 12 ist Transfer und Wiederholung ohne neue Grammatik."
+    "dtz": "DTZ-spezifische Formate (Brief mit A/B-Wahl, Foto + eigene Erfahrung + Heimatland ohne Vorbereitung) sind nie die Hauptaufgabe im Kern, sondern Lane-Varianten (Feld laneVariants). DTZ-Lane: zwei volle Modelltest-Formen (BLUEPRINT.md §1.2). Der DTZ ist ein skalierter A2–B1-Test, der nur einmal abgelegt wird: Falls eine DTZ-Lane auf A2 bleibt oder kommt, zieht sie aus demselben Pool (ein Budgetposten in W3), und keine Form wird derselben Person zweimal vorgelegt.",
+    "examPath": "Vorlage für alle .2-Kurse (BLUEPRINT.md §2.1): kostenloser Diagnose-Mini-Modelltest in Woche 1; Plateaus nach Einheit 3, 6 und 9 mit Modulblöcken in voller Länge; nach Einheit 12 die Prüfungswochen: Modelltest A → Reparatur → Modelltest B → Reparatur → Modelltest C (= Abschlusstest) → Wiederholungswoche ohne neuen Stoff. Primär-Lane telc: drei Formen (A, B, C); DTZ- und Goethe-/ÖSD-Lane: zwei Formen (A, B = Abschlusstest). Einheit 12 ist Transfer und Wiederholung ohne neue Grammatik."
   },
   "hours": {
-    "guided": 60,
-    "total": 74
+    "guided": 59,
+    "total": 70
   },
   "vocabTarget": {
     "newWords": 540,
@@ -1217,7 +1217,7 @@
     }
   ],
   "levelTest": {
-    "format": "Vollständiger Modelltest, der dritte von drei vollen Modelltests als Parallelform (Modelltest 1 = Checkpoint 3, Modelltest 2 = Checkpoint 4; dazu der Diagnose-Mini-Modelltest in Woche 1), in der letzten Woche vor dem Prüfungstermin ohne neuen Stoff, im Format der beim Onboarding gewählten Prüfungs-Lane (Standard ohne Wahl: telc Deutsch B1). telc Deutsch B1: Leseverstehen, Sprachbausteine, Hörverstehen, Schriftlicher Ausdruck (150 Min.), Mündlicher Ausdruck 3 Teile nach 20 Min. Vorbereitung. Goethe-/ÖSD-Zertifikat B1: Lesen 65 Min., Hören ca. 40 Min., Schreiben 60 Min., Sprechen 3 Teile nach 15 Min. Vorbereitung. DTZ (B1-Bereich; nur im Integrationskurssystem; aus dem mit A2.2 geteilten DTZ-Pool): 100 Min. ohne Pause, Sprechen ca. 16 Min. ohne Vorbereitung. Abspielzahlen wie in der Prüfung; die KI als Gesprächspartnerin und in der Rolle der Prüferin (automatische Übungsbewertung). Übungswerte je Prüfungsteil, dazu je Modelltest der Satz »nach der Bewertungsregel von telc/Goethe/DTZ wäre dieses Übungsergebnis …«; kein Bereitschaftsurteil über mehrere Modelltests, nie eine Bestehensprognose.",
+    "format": "Prüfungswochen nach Einheit 12 im Format der beim Onboarding gewählten Prüfungs-Lane (Standard ohne Wahl: telc Deutsch B1): Modelltest A → Reparatur → Modelltest B → Reparatur → Modelltest C; der letzte Modelltest ist der Abschlusstest (Paralleltest, nie dieselben Items), danach eine Wiederholungswoche ohne neuen Stoff; dazu der Diagnose-Mini-Modelltest in Woche 1. telc Deutsch B1 (drei Formen): Leseverstehen, Sprachbausteine, Hörverstehen, Schriftlicher Ausdruck (150 Min.), Mündlicher Ausdruck 3 Teile nach 20 Min. Vorbereitung. Goethe-/ÖSD-Zertifikat B1 (zwei Formen): Lesen 65 Min., Hören ca. 40 Min., Schreiben 60 Min., Sprechen 3 Teile nach 15 Min. Vorbereitung. DTZ (B1-Bereich; nur im Integrationskurssystem; zwei Formen): 100 Min. ohne Pause, Sprechen ca. 16 Min. ohne Vorbereitung. Abspielzahlen wie in der Prüfung; die KI als Gesprächspartnerin und in der Rolle der Prüferin (automatische Übungsbewertung). Übungswerte je Prüfungsteil, dazu je Modelltest der Satz »nach der Bewertungsregel von telc/Goethe/DTZ wäre dieses Übungsergebnis …«; kein Bereitschaftsurteil über mehrere Modelltests, nie eine Bestehensprognose.",
     "sections": [
       "Lesen",
       "Hören",
