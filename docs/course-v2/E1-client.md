@@ -127,7 +127,7 @@ no `course-v2-fixture`, no `a2.1-u07` and no `preview` check. `tests/course-v2-p
 | `npm run lint` | clean (0 errors, 0 warnings) |
 | `npx vite build` | succeeds; `dist/` has no fixture or preview code; the v2 pages and renderers are their own lazy chunks |
 | `node --test tests/course-v2-player.test.mjs` | 29/29: E1-1's 20, 5 seam tests from the first pass, 4 from this pass |
-| `npm test` | 1449 tests: 1446 pass, 1 skipped, 1 todo, 1 fail. The fail is `course-v2-validate.test.mjs`, which cannot load; see §4 item 2. Not an E1 regression. |
+| `npm test` | 1469 tests: 1467 pass, 0 fail, 1 skipped, 1 todo. The todo is `completion.js` (§4 item 2). Mid-run, `course-v2-validate.test.mjs` failed for a while: another agent's `lib-validate/lexicon.mjs` imported `core-lexicon.mjs` before that file existed. It loads now. |
 | `node scripts/course-v2/compile.mjs --all` | refuses every level (§4 item 1), so `src/data/course-v2/` does not exist |
 | `node scripts/course-v2/lib/fixture.mjs --check` | the fixtures match SCHEMA.md §15 |
 | Playwright 360×640 | the fixture plays Start → LS1 … LS7 → recap in `de` and `en`, with no horizontal overflow and no page errors (the only console error is the blocked Supabase request) |
@@ -199,20 +199,17 @@ Ordered by what blocks first.
      `lanes/sd1.json` 41. These are other agents' files (RAILS §8).
    - Until the compiler can write a level with some units still missing (the manifest already has `chunk: null` rows
      for them), no authored unit can be previewed through the real routes.
-2. **`tests/course-v2-validate.test.mjs` cannot load.** `scripts/course-v2/lib-validate/lexicon.mjs` (modified
-   18:19 today, while this verify ran) imports `./core-lexicon.mjs`, which does not exist yet. This is another agent
-   mid-edit and not E1; it is the one failure in `npm test`.
-3. **`completion.js` (E1-7)** throws on the revised SCHEMA §5 closing entry `{ kind: 'halbtest' | 'modelltest', lane:
+2. **`completion.js` (E1-7)** throws on the revised SCHEMA §5 closing entry `{ kind: 'halbtest' | 'modelltest', lane:
    'learner' }`. Until it is fixed:
    - the player passes only `unitRules`;
    - the course home falls back to the default course rules, with a console warning;
    - the TODO in `course-v2-completion.test.mjs` tracks it.
-4. **The migration** `migrations/2026-10-01-course-v2.sql` must be hand-applied before three things work:
+3. **The migration** `migrations/2026-10-01-course-v2.sql` must be hand-applied before three things work:
    - status `tested_out` is stored (until then `lesson_progress` keeps `started`; the step markers still carry the
      credit);
    - `learner_goals` exists (until then the plan line uses the default pace);
    - `course_events` exists (until then `logCourseEvent` switches itself off after the first failure).
-5. **Generated items.** The compiler records generator ids but no item bodies. The renderer builds only
+4. **Generated items.** The compiler records generator ids but no item bodies. The renderer builds only
    `dictation.fromInput` and `perception.pairs`. Not built:
    - `numbers.dictation`
    - `lex.articlePlural`, `lex.glossMatch`, `lex.glossTyped`
@@ -220,25 +217,25 @@ Ordered by what blocks first.
 
    So fixture LS1 serves 9 authored and 2 generated items, 11 of the planned 12. The compiler, or the player core
    through StepView's `generated` prop, must provide the others.
-6. **Exam blocks carry no `plays`.** `content.js` `LANE_PLAYS` copies the four launch lanes. The compiler should emit
+5. **Exam blocks carry no `plays`.** `content.js` `LANE_PLAYS` copies the four launch lanes. The compiler should emit
    `plays` onto blocks, or a test should pin `LANE_PLAYS` against `registries/lanes/*.json`.
-7. **Warm-up** (6 due review items per Lernschritt). The client has no compiled content for v2 card keys (`word:lx.*`,
+6. **Warm-up** (6 due review items per Lernschritt). The client has no compiled content for v2 card keys (`word:lx.*`,
    `pattern:…`); it needs a compiled card-content index.
-8. **Submission trust.** A `sprechen`/`schreiben` step counts as submitted when StepView says `submitted: true` after a
+7. **Submission trust.** A `sprechen`/`schreiben` step counts as submitted when StepView says `submitted: true` after a
    real grader result. A server-side confirmation (`course_ai_usage` / `writing_submissions`) should replace that
    trust, so a modified client cannot claim it.
-9. **Proof results across visits.** The recap knows the Check's item proofs only in the visit where the Check was
+8. **Proof results across visits.** The recap knows the Check's item proofs only in the visit where the Check was
    taken. After a reload it falls back to unit completion for those can-dos, and to the stored status (`accuracy`
    for signed-in learners) for the Siegel. Reading the proof items' rows from `lesson_attempts` (stage `check`) would
    close this.
-10. **Signed-out progress** (free level a1.1) lives in localStorage and is not merged into Supabase on sign-up.
-11. **`/course/:level` → v2 switch** for levels in `COURSE_V2_LIVE` is not wired. `isCourseV2Live()` exists; the
+9. **Signed-out progress** (free level a1.1) lives in localStorage and is not merged into Supabase on sign-up.
+10. **`/course/:level` → v2 switch** for levels in `COURSE_V2_LIVE` is not wired. `isCourseV2Live()` exists; the
     legacy route line in `App.jsx` needs a small wrapper.
-12. **Language gaps.**
+11. **Language gaps.**
     - `CourseHomeV2Page` and `PlateauPage` are German-only. The legacy course home is too, so this is consistent, but
       it is still a gap.
     - The reused `SpeakingSession` has English chrome („Teacher", „Finish & get feedback").
-13. **Found at 360 px, not changed.**
+12. **Found at 360 px, not changed.**
     - StartView's „Los geht's" sits in the page flow, not pinned. That is deliberate: it stays disabled until the gist
       item right above it is answered.
     - Every step screen shows two progress bars, the Shell's (steps of the unit) and StepView's (segments of the step).
@@ -246,13 +243,13 @@ Ordered by what blocks first.
     - Content note for the SCHEMA fixture's author: LS1 `p04` („Der Techniker ___ sich heute.") and `p08` (sentence
       building) have the same target sentence. When the draw puts one in practice and the other in the exit, the
       exit item repeats a practised sentence.
-14. **Duplicate helper.** `attemptPayload()` exists twice: `src/lib/course-v2/checkItem.js` and `grade.js`. `grade.js`
+13. **Duplicate helper.** `attemptPayload()` exists twice: `src/lib/course-v2/checkItem.js` and `grade.js`. `grade.js`
     adds the retry and reveal flags. Both give the contract shape; merge them before a third caller appears.
-15. **Not rendered yet.**
+14. **Not rendered yet.**
     - Images (`assetRef`, `imageRef`, `photos`): no approved asset URLs exist.
     - Prüfungsmodus (timed, no feedback): blocks always run in Lernmodus.
     - Writing drafts live only in this device's localStorage (`dm_v2_writing_<bankKey>`).
-16. **Real devices.** All click-throughs ran in headless Chromium, signed out, with speech synthesis off, no
+15. **Real devices.** All click-throughs ran in headless Chromium, signed out, with speech synthesis off, no
     microphone and Supabase blocked. Before launch:
     - a signed-in run against a Supabase branch: attempt batches, resume across devices, card seeding;
     - a real microphone run of Sprechen and read-aloud;

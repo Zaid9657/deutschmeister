@@ -2753,6 +2753,23 @@
       "wordId": null
     },
     {
+      "id": "lx.betreff",
+      "lemma": "Betreff",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Betreffe",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "b1.1-u04",
+      "block": 4,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "subject line (of an e-mail or letter)"
+      },
+      "example": "Schreiben Sie Ihre Bestellnummer in den Betreff.",
+      "wordId": null
+    },
+    {
       "id": "lx.technik",
       "lemma": "Technik",
       "pos": "NOUN",

@@ -94,7 +94,8 @@
           "lx.anspruch",
           "lx.veraergert",
           "lx.enttaeuschend",
-          "lx.frechheit"
+          "lx.frechheit",
+          "lx.betreff"
         ]
       }
     ],
@@ -189,8 +190,8 @@
         {
           "id": "b1.1-u04-start-l02",
           "speaker": "cast.priya",
-          "de": "Nein, der Staubsauger ist schon wieder aus. Ein rotes Licht ist an, und sonst passiert nichts.",
-          "en": "No, the vacuum cleaner has switched off again. A red light is on, and nothing else happens."
+          "de": "Nein, der Staubsauger ist schon wieder aus. Ein rotes Licht ist an, und auf dem Display steht eine Fehlermeldung.",
+          "en": "No, the vacuum cleaner has switched off again. A red light is on, and there is an error message on the display."
         },
         {
           "id": "b1.1-u04-start-l03",
@@ -201,7 +202,7 @@
         {
           "id": "b1.1-u04-start-l04",
           "speaker": "cast.priya",
-          "de": "Eben. Der Akku war die ganze Nacht am Ladekabel. Trotzdem läuft das Gerät nur zwei Minuten. Es ist einfach defekt.",
+          "de": "Eben. Der Akku hing die ganze Nacht am Ladekabel. Trotzdem läuft das Gerät nur zwei Minuten. Es ist einfach defekt.",
           "en": "Exactly. The battery was on the charger all night. Even so, the device only runs for two minutes. It is simply faulty."
         },
         {
@@ -213,8 +214,8 @@
         {
           "id": "b1.1-u04-start-l06",
           "speaker": "cast.priya",
-          "de": "Ja, schon am Montag, eine richtige Reklamation. Aber bis heute habe ich keine Antwort bekommen. Das ist eine Frechheit!",
-          "en": "Yes, on Monday already, a proper complaint. But I haven't had an answer to this day. It's outrageous!"
+          "de": "Ja, schon am Montag, als er zum ersten Mal ausgegangen ist. Aber bis heute habe ich keine Antwort bekommen. Das ist eine Frechheit!",
+          "en": "Yes, on Monday already, when it first switched off. But I haven't had an answer to this day. It's outrageous!"
         },
         {
           "id": "b1.1-u04-start-l07",
@@ -225,8 +226,8 @@
         {
           "id": "b1.1-u04-start-l08",
           "speaker": "cast.priya",
-          "de": "Mache ich. Ich bin wirklich verärgert. Aber zuerst lese ich die Bedingungen für Rückgabe und Garantie. Ich will wissen, welche Rechte wir haben.",
-          "en": "I will. I'm really annoyed. But first I'll read the terms for returns and guarantee. I want to know what rights we have."
+          "de": "Mache ich. Das ist alles sehr enttäuschend, und ich bin wirklich verärgert. Aber zuerst lese ich die Bedingungen für Rückgabe und Garantie. Ich will wissen, welche Rechte wir haben.",
+          "en": "I will. It's all very disappointing, and I'm really annoyed. But first I'll read the terms for returns and guarantee. I want to know what rights we have."
         }
       ],
       "gistItem": {
@@ -237,8 +238,8 @@
         "promptDe": "Was ist Priyas Problem?",
         "promptEn": "What is Priya's problem?",
         "options": [
-          "Der neue Staubsauger funktioniert nicht richtig.",
           "Das Paket mit dem Staubsauger ist nicht gekommen.",
+          "Der neue Staubsauger funktioniert nicht richtig.",
           "Der Onlineshop will mehr Geld für den Staubsauger."
         ],
         "answer": "Der neue Staubsauger funktioniert nicht richtig.",
@@ -271,8 +272,8 @@
         "title": "Rückgabe, Umtausch und Garantie: Ihre Fragen – unsere Antworten",
         "textType": "tt.bedingungen",
         "text": {
-          "de": "Rückgabe, Umtausch und Garantie: Ihre Fragen – unsere Antworten\n\nKann ich eine Ware zurückgeben?\nJa. Sie können jede Ware 30 Tage lang ohne Grund zurückgeben. Die 30 Tage zählen ab dem Tag, an dem Sie das Paket bekommen. Melden Sie die Rückgabe bitte zuerst in Ihrem Kundenkonto an. Dort finden Sie auch ein Etikett für das Paket. Die Versandkosten für die Rücksendung zahlen wir.\n\nWann bekomme ich mein Geld zurück?\nWenn die Ware bei uns angekommen ist, erstatten wir Ihnen den Kaufpreis. Die Rückerstattung bekommen Sie in 14 Tagen, mit der Zahlungsart, mit der Sie bezahlt haben. Einen Umtausch gegen eine andere Ware bieten wir leider nicht an. Bestellen Sie in diesem Fall bitte einfach neu. Ihre Lieferadresse können Sie dabei im Kundenkonto ändern.\n\nWann kommt mein Paket?\nPakete stellen wir von Montag bis Samstag zu. Mit der Sendungsnummer aus Ihrer E-Mail sehen Sie, wo Ihr Paket ist.\n\nWas mache ich, wenn ein Gerät defekt ist?\nFür alle Geräte gilt die gesetzliche Gewährleistung von zwei Jahren. Wenn eine Ware fehlerhaft ist, haben Sie das Recht auf eine Reparatur oder ein neues Gerät. Das können Sie dann bei uns verlangen. Rufen Sie bitte zuerst unseren Kundendienst an: Die Telefonnummer steht auf Ihrer Rechnung. Sie brauchen dafür die Bestellnummer und die Seriennummer von Ihrem Gerät. Oft können wir Ihnen schon am Telefon weiterhelfen. Wenn nicht, schicken Sie das Gerät kostenlos zu uns ein.\n\nUnd die Garantie?\nViele Hersteller geben zusätzlich eine Garantie, zum Beispiel für drei Jahre. Diese Garantie ist ein Extra. Die Bedingungen finden Sie in der Anleitung von Ihrem Gerät. Die gesetzliche Gewährleistung beim Händler, also bei uns, haben Sie trotzdem immer.\n\nWas brauche ich für eine Reklamation?\nSie brauchen keinen Kassenbon. Die Rechnung in Ihrem Kundenkonto ist Ihr Beleg. Wenn ein Paket schon beschädigt bei Ihnen ankommt, nehmen Sie es bitte nicht an. Sagen Sie es gleich dem Zusteller.",
-          "en": "Returns, exchange and guarantee: your questions, our answers. You can return any item within 30 days without giving a reason; the 30 days count from the day you receive the parcel. Register the return in your customer account first; you will find a parcel label there. Returns are free. We deliver parcels Monday to Saturday; with the tracking number in your email you can see where your parcel is. Once the item has reached us, we refund the purchase price within 14 days, using the payment method you paid with. We do not offer exchanges for a different item; simply order again. The statutory warranty of two years applies to all devices: if an item is faulty, you have the right to a repair or a new device. Call our hotline first; you need the order number and the serial number. If we cannot help on the phone, send the device to us free of charge. Many manufacturers also give a guarantee, e.g. for three years; it is an extra, its terms are in the device manual, and your statutory rights stay the same. You do not need a till receipt: the invoice in your customer account is your proof. If a parcel arrives damaged, refuse it and tell the courier straight away."
+          "de": "Rückgabe, Umtausch und Garantie: Ihre Fragen – unsere Antworten\n\nKann ich eine Ware zurückgeben?\nJa. Sie können jede Ware 30 Tage lang ohne Grund zurückgeben. Die 30 Tage zählen ab dem Tag, an dem Sie das Paket bekommen. Melden Sie die Rückgabe bitte zuerst in Ihrem Kundenkonto an. Dort finden Sie auch ein Etikett für das Paket. Die Versandkosten für die Rücksendung zahlen wir.\n\nWann bekomme ich mein Geld zurück?\nWenn die Ware bei uns angekommen ist, erstatten wir Ihnen den Kaufpreis. Die Rückerstattung bekommen Sie spätestens nach 14 Tagen. Wir zahlen das Geld über die Zahlungsart zurück, mit der Sie bezahlt haben. Einen Umtausch gegen eine andere Ware bieten wir leider nicht an. Bestellen Sie in diesem Fall bitte einfach neu. Ihre Lieferadresse können Sie dabei im Kundenkonto ändern.\n\nWann kommt mein Paket?\nPakete stellen wir von Montag bis Samstag zu. Mit der Sendungsnummer aus Ihrer E-Mail sehen Sie, wo Ihr Paket ist.\n\nWas mache ich, wenn ein Gerät defekt ist?\nFür alle Geräte gilt die gesetzliche Gewährleistung von zwei Jahren. Wenn eine Ware fehlerhaft ist, haben Sie das Recht auf eine Reparatur oder ein neues Gerät. Das können Sie dann bei uns verlangen. Rufen Sie bitte zuerst unseren Kundendienst an: Die Telefonnummer steht auf Ihrer Rechnung. Sie brauchen dafür die Bestellnummer und die Seriennummer von Ihrem Gerät. Oft können wir Ihnen schon am Telefon weiterhelfen. Wenn nicht, schicken Sie das Gerät kostenlos zu uns ein.\n\nUnd die Garantie?\nViele Hersteller geben zusätzlich eine Garantie, zum Beispiel für drei Jahre. Diese Garantie ist ein Extra. Die Bedingungen finden Sie in der Anleitung von Ihrem Gerät. Die gesetzliche Gewährleistung beim Händler, also bei uns, haben Sie trotzdem immer.\n\nWas brauche ich für eine Reklamation?\nSie brauchen keinen Kassenbon. Die Rechnung in Ihrem Kundenkonto ist Ihr Beleg. Wenn Sie uns schreiben, nennen Sie bitte im Betreff Ihre Bestellnummer. Wenn ein Paket schon beschädigt bei Ihnen ankommt, nehmen Sie es bitte nicht an. Sagen Sie es gleich dem Zusteller.",
+          "en": "Returns, exchange and guarantee: your questions, our answers. You can return any item within 30 days without giving a reason; the 30 days count from the day you receive the parcel. Register the return in your customer account first; you will find a parcel label there. Returns are free. We deliver parcels Monday to Saturday; with the tracking number in your email you can see where your parcel is. Once the item has reached us, we refund the purchase price at the latest after 14 days, using the payment method you paid with. We do not offer exchanges for a different item; simply order again. The statutory warranty of two years applies to all devices: if an item is faulty, you have the right to a repair or a new device. Call our hotline first; you need the order number and the serial number. If we cannot help on the phone, send the device to us free of charge. Many manufacturers also give a guarantee, e.g. for three years; it is an extra, its terms are in the device manual, and your statutory rights stay the same. You do not need a till receipt: the invoice in your customer account is your proof. When you write to us, please give your order number in the subject line. If a parcel arrives damaged, refuse it and tell the courier straight away."
         },
         "glosses": [
           {
@@ -305,9 +306,9 @@
           "promptDe": "Worum geht es in dem Text?",
           "promptEn": "What is the text about?",
           "options": [
-            "um Rückgabe, Reparatur und Garantie",
             "um neue Angebote für Staubsauger",
-            "um die Lieferung von Paketen"
+            "um die Lieferung von Paketen",
+            "um Rückgabe, Reparatur und Garantie"
           ],
           "answer": "um Rückgabe, Reparatur und Garantie",
           "accepted": [
@@ -349,8 +350,8 @@
           "promptDe": "Wie lange können Sie eine Ware ohne Grund zurückgeben?",
           "promptEn": "How long can you return an item without a reason?",
           "options": [
-            "30 Tage lang",
             "14 Tage lang",
+            "30 Tage lang",
             "zwei Jahre lang"
           ],
           "answer": "30 Tage lang",
@@ -359,8 +360,8 @@
           ],
           "exact": "number",
           "explanation": {
-            "de": "Im Text steht: 30 Tage lang ohne Grund. 14 Tage: So lange dauert die Rückerstattung.",
-            "en": "Returns: 30 days. 14 days is how long the refund takes."
+            "de": "Im Text steht: 30 Tage lang ohne Grund. 14 Tage: Spätestens dann ist die Rückerstattung da.",
+            "en": "Returns: 30 days without a reason. 14 days is the latest the refund arrives."
           },
           "origin": "agent"
         },
@@ -372,9 +373,9 @@
           "promptDe": "Ihr Gerät ist defekt. Was sollen Sie zuerst tun?",
           "promptEn": "Your device is faulty. What should you do first?",
           "options": [
-            "den Kundendienst anrufen",
             "das Gerät zurückschicken",
-            "den Kassenbon suchen"
+            "den Kassenbon suchen",
+            "den Kundendienst anrufen"
           ],
           "answer": "den Kundendienst anrufen",
           "accepted": [
@@ -394,8 +395,8 @@
           "promptDe": "Was stimmt über die Garantie?",
           "promptEn": "What is true about the guarantee?",
           "options": [
-            "Es gibt sie zusätzlich zu den gesetzlichen Rechten.",
             "Sie gilt für alle Geräte zwei Jahre.",
+            "Es gibt sie zusätzlich zu den gesetzlichen Rechten.",
             "Sie ist wichtiger als die gesetzlichen Rechte."
           ],
           "answer": "Es gibt sie zusätzlich zu den gesetzlichen Rechten.",
@@ -450,7 +451,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.erstatten",
-            "promptDe": "Der Onlineshop ___ Ihnen den Kaufpreis in 14 Tagen. (erstatten)",
+            "promptDe": "Der Onlineshop ___ Ihnen den Kaufpreis spätestens nach 14 Tagen. (erstatten)",
             "promptEn": "er/sie/es form of erstatten.",
             "answer": "erstattet",
             "accepted": [
@@ -484,8 +485,8 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.beleg",
-            "promptDe": "Kassenbon oder Rechnung – beides ist ein ___ für Ihren Kauf.",
-            "promptEn": "A word for proof of purchase.",
+            "promptDe": "Kassenbon oder Rechnung – beides ist ein ___ (B…) für Ihren Kauf.",
+            "promptEn": "A word for proof of purchase (starts with B).",
             "answer": "Beleg",
             "accepted": [
               "Beleg"
@@ -620,8 +621,12 @@
             "promptEn": "Correct the sentence.",
             "answer": "Das Paket ist beschädigt, deshalb nehme ich es nicht an.",
             "accepted": [
-              "Das Paket ist beschädigt, deshalb nehme ich es nicht an."
+              "Das Paket ist beschädigt, deshalb nehme ich es nicht an.",
+              "Das Paket ist beschädigt, ich nehme es deshalb nicht an."
             ],
+            "acceptedWhy": {
+              "Das Paket ist beschädigt, ich nehme es deshalb nicht an.": "richtig: deshalb kann auch hinter dem Verb stehen"
+            },
             "intentionalError": true,
             "explanation": {
               "de": "Nach deshalb kommt das Verb direkt: deshalb nehme ich …",
@@ -640,10 +645,12 @@
             "answer": "Ich rufe an, weil ich eine Frage habe.",
             "accepted": [
               "Ich rufe an, weil ich eine Frage habe.",
-              "Ich rufe an, denn ich habe eine Frage."
+              "Ich rufe an, denn ich habe eine Frage.",
+              "Weil ich eine Frage habe, rufe ich an."
             ],
             "acceptedWhy": {
-              "Ich rufe an, denn ich habe eine Frage.": "richtig: mit denn steht das Verb auf Position 2"
+              "Ich rufe an, denn ich habe eine Frage.": "richtig: mit denn steht das Verb auf Position 2",
+              "Weil ich eine Frage habe, rufe ich an.": "richtig: der weil-Satz kann auch vorne stehen"
             },
             "intentionalError": true,
             "explanation": {
@@ -661,9 +668,9 @@
             "promptDe": "Die Hose ist zu groß. Ich möchte eine kleinere. Ich möchte einen ___.",
             "promptEn": "Choose the word.",
             "options": [
-              "Umtausch",
               "Beleg",
-              "Kaufpreis"
+              "Kaufpreis",
+              "Umtausch"
             ],
             "answer": "Umtausch",
             "accepted": [
@@ -717,8 +724,8 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "lx.rueckerstattung",
-          "promptDe": "Wir erstatten Ihnen das Geld. Die ___ dauert eine Woche.",
-          "promptEn": "The noun of erstatten.",
+          "promptDe": "Wir erstatten Ihnen das Geld. Die ___ dauert eine Woche. (Rück- + erstatten)",
+          "promptEn": "The noun: Rück- + erstatten.",
           "answer": "Rückerstattung",
           "accepted": [
             "Rückerstattung"
@@ -776,10 +783,12 @@
           "answer": "Ich habe keinen Kassenbon. Trotzdem bekomme ich mein Geld.",
           "accepted": [
             "Ich habe keinen Kassenbon. Trotzdem bekomme ich mein Geld.",
-            "Ich habe keinen Kassenbon. Ich bekomme trotzdem mein Geld."
+            "Ich habe keinen Kassenbon. Ich bekomme trotzdem mein Geld.",
+            "Ich habe keinen Kassenbon. Ich bekomme mein Geld trotzdem."
           ],
           "acceptedWhy": {
-            "Ich habe keinen Kassenbon. Ich bekomme trotzdem mein Geld.": "richtig: trotzdem kann auch hinter dem Verb stehen"
+            "Ich habe keinen Kassenbon. Ich bekomme trotzdem mein Geld.": "richtig: trotzdem kann auch hinter dem Verb stehen",
+            "Ich habe keinen Kassenbon. Ich bekomme mein Geld trotzdem.": "richtig: trotzdem kann auch hinter dem Objekt stehen"
           },
           "intentionalError": true,
           "explanation": {
@@ -827,8 +836,8 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "lx.kassenbon",
-          "promptDe": "Im Supermarkt bekommen Sie an der Kasse einen ___.",
-          "promptEn": "The slip you get at the till.",
+          "promptDe": "Im Supermarkt bekommen Sie an der Kasse einen ___ (K…n).",
+          "promptEn": "The slip you get at the till (K…n).",
           "answer": "Kassenbon",
           "accepted": [
             "Kassenbon",
@@ -895,8 +904,8 @@
           {
             "id": "b1.1-u04-ls2-l02",
             "speaker": "ansage",
-            "de": "Ein Tipp: Viele Fragen zu Lieferung und Rückgabe können Sie auch online in Ihrem Kundenkonto stellen. Für jedes Gespräch brauchen wir Ihre Bestellnummer.",
-            "en": "A tip: you can also ask many questions about delivery and returns online in your customer account. For every call we need your order number."
+            "de": "Ein Tipp: Viele Fragen zu Lieferung, Rückgabe und Zahlungsart können Sie auch online in Ihrem Kundenkonto stellen. Für jedes Gespräch brauchen wir Ihre Bestellnummer.",
+            "en": "A tip: you can also ask many questions about delivery, returns and payment method online in your customer account. For every call we need your order number."
           },
           {
             "id": "b1.1-u04-ls2-l03",
@@ -913,26 +922,26 @@
           {
             "id": "b1.1-u04-ls2-l05",
             "speaker": "cast.ensemble-b1-4",
-            "de": "Das tut mir leid, wir bekommen zurzeit sehr viele Anrufe. Sagen Sie mir bitte zuerst Ihre Bestellnummer.",
-            "en": "I'm sorry about that, we are getting a lot of calls at the moment. Please tell me your order number first."
+            "de": "Das tut mir leid, wir bekommen zurzeit sehr viele Anrufe. Sagen Sie mir bitte zuerst Ihre Bestellnummer und die Seriennummer. Sie steht unten am Gerät.",
+            "en": "I'm sorry about that, we are getting a lot of calls at the moment. Please tell me your order number and the serial number first. It is on the bottom of the device."
           },
           {
             "id": "b1.1-u04-ls2-l06",
             "speaker": "cast.priya",
-            "de": "Die Nummer ist 58213. Das Problem ist: Der Staubsauger geht nach zwei Minuten aus, obwohl ich den Akku ganz aufgeladen habe. Und auf dem Gerät steht eine Fehlermeldung.",
-            "en": "The number is 58213. The problem is: the vacuum cleaner switches off after two minutes, although I charged the battery fully. And there is an error message on the device.",
-            "say": "Die Nummer ist fünf, acht, zwei, eins, drei. Das Problem ist: Der Staubsauger geht nach zwei Minuten aus, obwohl ich den Akku ganz aufgeladen habe. Und auf dem Gerät steht eine Fehlermeldung."
+            "de": "Die Bestellnummer ist 58213, die Seriennummer ist 4471. Das Problem ist: Der Staubsauger geht nach zwei Minuten aus, obwohl ich den Akku ganz aufgeladen habe. Und auf dem Display steht eine Fehlermeldung.",
+            "en": "The order number is 58213, the serial number is 4471. The problem is: the vacuum cleaner switches off after two minutes, although I charged the battery fully. And there is an error message on the display.",
+            "say": "Die Bestellnummer ist fünf, acht, zwei, eins, drei, die Seriennummer ist vier, vier, sieben, eins. Das Problem ist: Der Staubsauger geht nach zwei Minuten aus, obwohl ich den Akku ganz aufgeladen habe. Und auf dem Display steht eine Fehlermeldung."
           },
           {
             "id": "b1.1-u04-ls2-l07",
             "speaker": "cast.ensemble-b1-4",
-            "de": "Bitte gedulden Sie sich kurz, ich sehe gleich nach. Stimmt, das Gerät ist noch ganz neu. Haben Sie den Akku noch mal ganz neu aufgeladen?",
-            "en": "Please bear with me a moment, I'll check right away. Right, the device is still brand new. Have you recharged the battery completely once more?"
+            "de": "Bitte gedulden Sie sich kurz, ich sehe gleich nach. Stimmt, das Gerät ist noch ganz neu. Haben Sie den Akku noch einmal ganz aufgeladen?",
+            "en": "Please bear with me a moment, I'll check right away. Right, the device is still brand new. Have you fully recharged the battery once more?"
           },
           {
             "id": "b1.1-u04-ls2-l08",
             "speaker": "cast.priya",
-            "de": "Ja, schon zwei Mal. Obwohl ich alles so gemacht habe wie in der Anleitung, funktioniert er nicht. Deshalb habe ich Ihnen schon am Montag eine Reklamation geschrieben, aber niemand hat geantwortet. Das finde ich enttäuschend.",
+            "de": "Ja, schon zweimal. Obwohl ich alles so gemacht habe wie in der Anleitung, funktioniert er nicht. Deshalb habe ich Ihnen schon am Montag eine Reklamation geschrieben, aber niemand hat geantwortet. Das finde ich enttäuschend.",
             "en": "Yes, twice already. Although I did everything as the manual says, it doesn't work. That's why I already sent you a complaint on Monday, but nobody answered. I find that disappointing."
           },
           {
@@ -962,8 +971,8 @@
           {
             "id": "b1.1-u04-ls2-l13",
             "speaker": "cast.ensemble-b1-4",
-            "de": "Gern. Sie bekommen heute noch eine E-Mail mit einem Etikett für das alte Gerät und mit der Sendungsnummer für das neue. Den Karton bringen Sie dann einfach zur Post.",
-            "en": "Of course. Today you'll get an email with a label for the old device and the tracking number for the new one. Then just take the box to the post office."
+            "de": "Gern. Sie bekommen heute noch eine E-Mail mit dem Betreff „Ihr Ersatzgerät“. Darin finden Sie ein Etikett für das alte Gerät und die Sendungsnummer für das neue. Den Karton bringen Sie dann einfach zur Post.",
+            "en": "Of course. Today you'll get an email with the subject line 'Your replacement'. In it you'll find a label for the old device and the tracking number for the new one. Then just take the box to the post office."
           },
           {
             "id": "b1.1-u04-ls2-l14",
@@ -1003,8 +1012,8 @@
           "promptDe": "Warum ruft Priya beim Kundenservice an?",
           "promptEn": "Why does Priya call customer service?",
           "options": [
-            "Ihr neuer Staubsauger ist defekt.",
             "Ihr Paket ist nicht angekommen.",
+            "Ihr neuer Staubsauger ist defekt.",
             "Sie möchte noch einen Staubsauger bestellen."
           ],
           "answer": "Ihr neuer Staubsauger ist defekt.",
@@ -1025,9 +1034,9 @@
           "promptDe": "Was ist am Ende die Lösung für Priya?",
           "promptEn": "What is Priya's solution in the end?",
           "options": [
-            "Sie bekommt ein Ersatzgerät.",
             "Sie schickt das Gerät zur Reparatur.",
-            "Sie bekommt ihr Geld zurück."
+            "Sie bekommt ihr Geld zurück.",
+            "Sie bekommt ein Ersatzgerät."
           ],
           "answer": "Sie bekommt ein Ersatzgerät.",
           "accepted": [
@@ -1070,17 +1079,17 @@
           "promptDe": "Was hat Priya am Montag gemacht?",
           "promptEn": "What did Priya do on Monday?",
           "options": [
-            "Sie hat dem Onlineshop eine E-Mail geschrieben.",
             "Sie hat das Gerät zurückgeschickt.",
-            "Sie hat einen neuen Akku gekauft."
+            "Sie hat einen neuen Akku gekauft.",
+            "Sie hat sich schriftlich beim Onlineshop beschwert."
           ],
-          "answer": "Sie hat dem Onlineshop eine E-Mail geschrieben.",
+          "answer": "Sie hat sich schriftlich beim Onlineshop beschwert.",
           "accepted": [
-            "Sie hat dem Onlineshop eine E-Mail geschrieben."
+            "Sie hat sich schriftlich beim Onlineshop beschwert."
           ],
           "explanation": {
-            "de": "„Deshalb habe ich Ihnen schon am Montag eine E-Mail geschrieben.“",
-            "en": "'That's why I already emailed you on Monday.'"
+            "de": "Priya sagt: „Deshalb habe ich Ihnen schon am Montag eine Reklamation geschrieben.“",
+            "en": "Priya says: 'That's why I already sent you a written complaint on Monday.'"
           },
           "origin": "agent"
         },
@@ -1116,9 +1125,9 @@
           "promptDe": "Welcher Satz passt? Priya ist überrascht:",
           "promptEn": "Which sentence fits? Priya is surprised:",
           "options": [
-            "Obwohl ich den Akku aufgeladen habe, geht er aus.",
             "Weil ich den Akku aufgeladen habe, geht er aus.",
-            "Ich habe den Akku aufgeladen, deshalb geht er aus."
+            "Ich habe den Akku aufgeladen, deshalb geht er aus.",
+            "Obwohl ich den Akku aufgeladen habe, geht er aus."
           ],
           "answer": "Obwohl ich den Akku aufgeladen habe, geht er aus.",
           "accepted": [
@@ -1135,20 +1144,20 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.obwohl",
-          "promptDe": "„Obwohl ich zwei Mal angerufen habe, hat niemand geantwortet.“ Was hat die Frau erwartet?",
+          "promptDe": "„Obwohl ich zweimal angerufen habe, hat niemand abgenommen.“ Was hat die Frau erwartet?",
           "promptEn": "What did the person expect?",
           "options": [
-            "eine Antwort",
-            "keine Antwort",
-            "einen Brief"
+            "dass jemand ans Telefon geht",
+            "dass niemand ans Telefon geht",
+            "dass der Shop einen Brief schickt"
           ],
-          "answer": "eine Antwort",
+          "answer": "dass jemand ans Telefon geht",
           "accepted": [
-            "eine Antwort"
+            "dass jemand ans Telefon geht"
           ],
           "explanation": {
-            "de": "Nach zwei Anrufen erwartet man eine Antwort. obwohl zeigt: Sie ist nicht gekommen.",
-            "en": "After two calls you expect an answer; obwohl shows that it did not come."
+            "de": "Nach zwei Anrufen erwartet man, dass jemand ans Telefon geht. obwohl zeigt: Das ist nicht passiert.",
+            "en": "After two calls you expect someone to pick up; obwohl shows that nobody did."
           },
           "origin": "agent"
         },
@@ -1160,8 +1169,8 @@
           "promptDe": "„Ich habe den Akku aufgeladen. Trotzdem geht das Gerät aus.“ Welcher Satz sagt dasselbe?",
           "promptEn": "Which sentence means the same?",
           "options": [
-            "Obwohl ich den Akku aufgeladen habe, geht das Gerät aus.",
             "Weil ich den Akku aufgeladen habe, geht das Gerät aus.",
+            "Obwohl ich den Akku aufgeladen habe, geht das Gerät aus.",
             "Wenn ich den Akku aufgeladen habe, geht das Gerät aus."
           ],
           "answer": "Obwohl ich den Akku aufgeladen habe, geht das Gerät aus.",
@@ -1169,8 +1178,8 @@
             "Obwohl ich den Akku aufgeladen habe, geht das Gerät aus."
           ],
           "explanation": {
-            "de": "trotzdem und obwohl sagen dasselbe. Nur die Satzstellung ist anders.",
-            "en": "trotzdem and obwohl mean the same; only the word order differs."
+            "de": "obwohl steht beim Gegengrund, trotzdem bei der Folge – die Bedeutung ist gleich.",
+            "en": "obwohl goes with the reason against, trotzdem with the consequence – the meaning is the same."
           },
           "origin": "agent"
         },
@@ -1204,7 +1213,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.obwohl",
-            "promptDe": "Der Staubsauger geht aus, ___ ich den Akku aufgeladen habe.",
+            "promptDe": "Der Staubsauger geht aus, ___ ich den Akku aufgeladen habe. (weil oder obwohl?)",
             "promptEn": "Although …",
             "answer": "obwohl",
             "accepted": [
@@ -1221,7 +1230,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.obwohl",
-            "promptDe": "Obwohl ich zwei Mal angerufen ___, hat sich niemand gemeldet.",
+            "promptDe": "Obwohl ich zweimal angerufen ___, hat sich niemand gemeldet.",
             "promptEn": "Auxiliary verb at the end.",
             "answer": "habe",
             "accepted": [
@@ -1278,8 +1287,8 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.hotline",
-            "promptDe": "Bei Fragen rufen Sie unsere ___ an: 0800 123 45 67.",
-            "promptEn": "The telephone service.",
+            "promptDe": "Bei Fragen rufen Sie unsere ___ (H…) an: 0800 123 45 67.",
+            "promptEn": "The telephone service (H…).",
             "answer": "Hotline",
             "accepted": [
               "Hotline"
@@ -1351,18 +1360,18 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.trotzdem",
-            "promptDe": "Der Mitarbeiter ist sehr freundlich. Bilden Sie den zweiten Satz.",
+            "promptDe": "Die Warteschleife war sehr lang. Bilden Sie den zweiten Satz.",
             "promptEn": "Build the second sentence.",
             "tiles": [
               "trotzdem",
               "ist",
               "Priya",
-              "verärgert"
+              "zufrieden"
             ],
-            "answer": "Trotzdem ist Priya verärgert.",
+            "answer": "Trotzdem ist Priya zufrieden.",
             "accepted": [
-              "Trotzdem ist Priya verärgert.",
-              "Priya ist trotzdem verärgert."
+              "Trotzdem ist Priya zufrieden.",
+              "Priya ist trotzdem zufrieden."
             ],
             "explanation": {
               "de": "trotzdem auf Position 1, dann das Verb ist.",
@@ -1405,8 +1414,12 @@
             "promptEn": "Correct the sentence.",
             "answer": "Obwohl ich den Akku aufgeladen habe, geht das Gerät aus.",
             "accepted": [
-              "Obwohl ich den Akku aufgeladen habe, geht das Gerät aus."
+              "Obwohl ich den Akku aufgeladen habe, geht das Gerät aus.",
+              "Das Gerät geht aus, obwohl ich den Akku aufgeladen habe."
             ],
+            "acceptedWhy": {
+              "Das Gerät geht aus, obwohl ich den Akku aufgeladen habe.": "richtig: der obwohl-Satz kann auch hinten stehen"
+            },
             "intentionalError": true,
             "explanation": {
               "de": "Nach obwohl steht das Hilfsverb am Ende: obwohl ich den Akku aufgeladen habe.",
@@ -1424,8 +1437,12 @@
             "promptEn": "Correct the sentence.",
             "answer": "Obwohl ich gewartet habe, hat niemand angerufen.",
             "accepted": [
-              "Obwohl ich gewartet habe, hat niemand angerufen."
+              "Obwohl ich gewartet habe, hat niemand angerufen.",
+              "Niemand hat angerufen, obwohl ich gewartet habe."
             ],
+            "acceptedWhy": {
+              "Niemand hat angerufen, obwohl ich gewartet habe.": "richtig: der obwohl-Satz kann auch hinten stehen"
+            },
             "intentionalError": true,
             "explanation": {
               "de": "Nach dem obwohl-Satz kommt sofort das Verb: …, hat niemand angerufen.",
@@ -1442,8 +1459,8 @@
             "promptDe": "Priya hat eine Reklamation geschrieben. ___ hat niemand geantwortet.",
             "promptEn": "Choose the word.",
             "options": [
-              "Trotzdem",
               "Obwohl",
+              "Trotzdem",
               "Deshalb"
             ],
             "answer": "Trotzdem",
@@ -1495,15 +1512,15 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "g.obwohl",
-          "promptDe": "Das Gerät muss zur Reparatur, ___ es noch ganz neu ist.",
+          "promptDe": "Das Gerät geht nicht an, ___ es noch ganz neu ist. (weil oder obwohl?)",
           "promptEn": "Although …",
           "answer": "obwohl",
           "accepted": [
             "obwohl"
           ],
           "explanation": {
-            "de": "Ein neues Gerät sollte funktionieren. Reparatur und neu passen nicht zusammen, deshalb: obwohl.",
-            "en": "A new device should work; repair and new clash, so: obwohl."
+            "de": "Ein neues Gerät sollte funktionieren. Neu und kaputt passen nicht zusammen, deshalb: obwohl.",
+            "en": "A new device should work; new and broken clash, so: obwohl."
           },
           "difficulty": 2,
           "banks": [
@@ -1557,8 +1574,12 @@
           "promptEn": "Correct the sentence.",
           "answer": "Die Ware ist beschädigt, obwohl die Verpackung gut war.",
           "accepted": [
-            "Die Ware ist beschädigt, obwohl die Verpackung gut war."
+            "Die Ware ist beschädigt, obwohl die Verpackung gut war.",
+            "Obwohl die Verpackung gut war, ist die Ware beschädigt."
           ],
+          "acceptedWhy": {
+            "Obwohl die Verpackung gut war, ist die Ware beschädigt.": "richtig: der obwohl-Satz kann auch vorne stehen"
+          },
           "intentionalError": true,
           "explanation": {
             "de": "Nach obwohl steht das Verb am Ende: …, obwohl die Verpackung gut war.",
@@ -1577,7 +1598,7 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "lx.kundendienst",
-          "promptDe": "Ich habe gestern beim ___ angerufen, aber niemand konnte mir helfen.",
+          "promptDe": "Ich habe beim ___ (= Service für Kunden) angerufen, aber niemand konnte helfen.",
           "promptEn": "The service department.",
           "answer": "Kundendienst",
           "accepted": [
@@ -1606,9 +1627,9 @@
           "promptDe": "Welcher Satz ist richtig?",
           "promptEn": "Which sentence is correct?",
           "options": [
-            "Obwohl ich gewartet habe, hat niemand angerufen.",
             "Obwohl ich habe gewartet, hat niemand angerufen.",
-            "Obwohl ich gewartet habe, niemand hat angerufen."
+            "Obwohl ich gewartet habe, niemand hat angerufen.",
+            "Obwohl ich gewartet habe, hat niemand angerufen."
           ],
           "answer": "Obwohl ich gewartet habe, hat niemand angerufen.",
           "accepted": [
@@ -1635,9 +1656,9 @@
         "bankKey": "b11-u04-mo2",
         "mode": "spoken",
         "profile": "course-micro-sp",
-        "situationDe": "Ihr neues Handy geht nach drei Tagen nicht mehr an. Sie rufen die Hotline vom Shop an.",
-        "promptDe": "Sagen Sie, was nicht funktioniert und was Sie schon versucht haben.",
-        "promptEn": "Say what doesn't work and what you have already tried.",
+        "situationDe": "Ihr neues Handy geht nach drei Tagen nicht mehr an. Sie rufen die Hotline vom Shop an und möchten einen Umtausch, eine Reparatur oder Ihr Geld zurück.",
+        "promptDe": "Sagen Sie: Was funktioniert nicht? Was haben Sie versucht? Was verlangen Sie jetzt?",
+        "promptEn": "Say what doesn't work, what you have already tried and what you now demand (exchange, repair or refund).",
         "planSeconds": 30,
         "seconds": [
           40,
@@ -1664,7 +1685,7 @@
           "lineDe": "Obwohl ich den Akku aufgeladen habe, geht der Staubsauger aus."
         }
       },
-      "endLine": "Sie können jetzt ein Gespräch mit der Hotline verstehen und sagen, was nicht funktioniert. Weiter mit der Sprache: obwohl oder trotzdem?"
+      "endLine": "Sie können jetzt ein Gespräch mit der Hotline verstehen und sagen, was nicht funktioniert und was Sie verlangen. Weiter mit der Sprache: obwohl oder trotzdem?"
     },
     {
       "id": "b1.1-u04-ls3",
@@ -1674,31 +1695,31 @@
           [
             "Bedeutung",
             "Wort",
-            "Beispiel aus Text B",
+            "Beispiel",
             "Wo steht das Verb?"
           ],
           [
             "Grund",
             "weil",
-            "…, weil das Gerät kaputt ist.",
+            "Ich rufe an, weil das Gerät kaputt ist.",
             "am Ende"
           ],
           [
             "Gegengrund",
             "obwohl",
-            "…, obwohl der Akku aufgeladen ist.",
+            "…, obwohl ich den Akku ganz aufgeladen habe.",
             "am Ende"
           ],
           [
-            "Gegengrund",
+            "unerwartete Folge",
             "trotzdem",
-            "Das Gerät ist neu. Trotzdem geht es aus.",
+            "Ich habe den Akku aufgeladen. Trotzdem geht der Staubsauger aus.",
             "auf Position 2"
           ],
           [
             "Folge",
             "deshalb",
-            "Niemand hat geantwortet. Deshalb rufe ich an.",
+            "Das Gerät ist fehlerhaft, deshalb haben Sie Anspruch auf Gewährleistung.",
             "auf Position 2"
           ],
           [
@@ -1768,7 +1789,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.reklamation",
-            "promptDe": "Die Ware ist fehlerhaft. Ich schreibe dem Shop eine ___.",
+            "promptDe": "Die Ware ist fehlerhaft. Ich schreibe dem Shop eine ___ (= Beschwerde über eine Ware).",
             "promptEn": "A written complaint about goods.",
             "answer": "Reklamation",
             "accepted": [
@@ -1789,15 +1810,15 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.trotzdem",
-            "promptDe": "Ich habe drei E-Mails geschrieben. ___ habe ich keine Antwort bekommen.",
-            "promptEn": "Although I did that …",
+            "promptDe": "Ich habe dreimal geschrieben. ___ habe ich keine Antwort bekommen. (trotzdem/deshalb?)",
+            "promptEn": "Connector in position 1.",
             "answer": "Trotzdem",
             "accepted": [
               "Trotzdem"
             ],
             "explanation": {
-              "de": "Nach der Lücke kommt das Verb habe. Gegengrund + Verb auf Position 2: Trotzdem.",
-              "en": "The verb follows the gap: a reason against with the verb in position 2 = Trotzdem."
+              "de": "Der Satz davor ist der Gegengrund. Hier kommt die unerwartete Folge, und das Verb habe folgt direkt: Trotzdem.",
+              "en": "The sentence before is the reason against; here comes the unexpected result, with the verb straight after: Trotzdem."
             },
             "errorTags": [
               "v2-inv"
@@ -1965,10 +1986,12 @@
             "answer": "Ich verlange mein Geld zurück, weil das Gerät defekt ist.",
             "accepted": [
               "Ich verlange mein Geld zurück, weil das Gerät defekt ist.",
-              "Ich verlange mein Geld zurück, denn das Gerät ist defekt."
+              "Ich verlange mein Geld zurück, denn das Gerät ist defekt.",
+              "Weil das Gerät defekt ist, verlange ich mein Geld zurück."
             ],
             "acceptedWhy": {
-              "Ich verlange mein Geld zurück, denn das Gerät ist defekt.": "richtig: mit denn bleibt das Verb auf Position 2"
+              "Ich verlange mein Geld zurück, denn das Gerät ist defekt.": "richtig: mit denn bleibt das Verb auf Position 2",
+              "Weil das Gerät defekt ist, verlange ich mein Geld zurück.": "richtig: der weil-Satz kann auch vorne stehen"
             },
             "intentionalError": true,
             "explanation": {
@@ -2108,8 +2131,12 @@
           "promptEn": "Correct the sentence.",
           "answer": "Obwohl ich den Beleg habe, tauscht der Händler die Ware nicht um.",
           "accepted": [
-            "Obwohl ich den Beleg habe, tauscht der Händler die Ware nicht um."
+            "Obwohl ich den Beleg habe, tauscht der Händler die Ware nicht um.",
+            "Der Händler tauscht die Ware nicht um, obwohl ich den Beleg habe."
           ],
+          "acceptedWhy": {
+            "Der Händler tauscht die Ware nicht um, obwohl ich den Beleg habe.": "richtig: der obwohl-Satz kann auch hinten stehen"
+          },
           "intentionalError": true,
           "explanation": {
             "de": "Nach dem obwohl-Satz steht das Verb vorne: tauscht der Händler …",
@@ -2128,15 +2155,17 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "lx.defekt",
-          "promptDe": "Mein Handy ist ___. Es geht nicht mehr an.",
+          "promptDe": "Mein Handy ist eine Woche alt. Es geht auch mit vollem Akku nicht an. Es ist ___.",
           "promptEn": "Not working.",
           "answer": "defekt",
           "accepted": [
             "defekt",
-            "kaputt"
+            "kaputt",
+            "fehlerhaft"
           ],
           "acceptedWhy": {
-            "kaputt": "richtig: kaputt bedeutet hier dasselbe wie defekt"
+            "kaputt": "richtig: kaputt bedeutet hier dasselbe wie defekt",
+            "fehlerhaft": "richtig: fehlerhaft passt hier auch"
           },
           "explanation": {
             "de": "defekt = kaputt: Das Gerät funktioniert nicht.",
@@ -2157,8 +2186,8 @@
           "promptDe": "Ich schreibe eine Reklamation, ___ die Ware ist beschädigt.",
           "promptEn": "Choose the word.",
           "options": [
-            "denn",
             "weil",
+            "denn",
             "obwohl"
           ],
           "answer": "denn",
@@ -2186,7 +2215,7 @@
         "tb1.sa",
         "tb1.m2"
       ],
-      "endLine": "Sie können jetzt mit obwohl und trotzdem einen Gegengrund nennen. Weiter mit dem Prüfungstraining."
+      "endLine": "Sie können jetzt mit obwohl einen Gegengrund und mit trotzdem eine unerwartete Folge nennen. Weiter mit dem Prüfungstraining."
     },
     {
       "id": "b1.1-u04-ls4",
@@ -2196,7 +2225,7 @@
           "id": "b1.1-u04-ls4-t1",
           "kind": "text",
           "title": "E-Mail von Priya an Olena",
-          "text": "Liebe Olena,\ndanke für deine lange E-Mail! Bei uns ist zurzeit viel los. Stell dir vor: Letzte Woche haben Arjun und ich online einen Staubsauger bestellt. Er war nicht billig, ⟦01⟧ wir wollten ein gutes Gerät. Aber schon nach fünf Tagen hat er nicht mehr richtig funktioniert, ⟦02⟧ ich den Akku jeden Abend aufgeladen habe. Ich habe dem Onlineshop sofort geschrieben. ⟦03⟧ hat niemand geantwortet! Ich war sehr verärgert. Gestern habe ich dann bei ⟦04⟧ Hotline angerufen. Ich musste zwanzig Minuten warten, aber der Mitarbeiter, mit ⟦05⟧ ich gesprochen habe, war sehr nett. Er hat gesagt, dass wir Anspruch auf ein neues Gerät haben. Das alte Gerät schicke ich ⟦06⟧ Montag zurück. Ich weiß noch nicht, ⟦07⟧ das neue Gerät besser ist. Und wie geht es dir? ⟦08⟧ du bald wieder nach Leipzig?\nLiebe Grüße\nPriya",
+          "text": "Liebe Olena,\ndanke für deine lange E-Mail! Bei uns ist zurzeit viel los. Stell dir vor: Letzte Woche haben Arjun und ich online einen Staubsauger bestellt. Er war nicht billig, ⟦01⟧ wir wollten ein gutes Gerät. Aber schon nach zwei Tagen hat er nicht mehr richtig funktioniert, ⟦02⟧ ich den Akku jeden Abend aufgeladen habe. Ich habe dem Onlineshop sofort geschrieben. ⟦03⟧ hat niemand geantwortet! So eine Frechheit! Ich war sehr verärgert. Gestern habe ich dann bei ⟦04⟧ Hotline angerufen. Ich musste zwanzig Minuten warten, aber der Mitarbeiter, mit ⟦05⟧ ich gesprochen habe, war sehr nett. Er hat gesagt, dass wir Anspruch auf ein neues Gerät haben. Das alte Gerät schicke ich ⟦06⟧ Montag zurück. Ich weiß noch nicht, ⟦07⟧ das Ersatzgerät besser ist. Hoffentlich funktioniert der ⟦08⟧ Staubsauger länger! Und wie geht es dir? Kommst du bald wieder nach Leipzig?\nLiebe Grüße\nPriya",
           "glosses": []
         },
         {
@@ -2222,7 +2251,7 @@
             {
               "id": "b1.1-u04-ls4-t3-l01",
               "speaker": "durchsage",
-              "de": "Liebe Kundinnen und Kunden, heute gibt es in unserer Elektroabteilung im ersten Stockwerk einen Service für Sie. Haben Sie Probleme mit einem Gerät, das Sie bei uns gekauft haben? Dann bringen Sie es einfach vorbei. Unsere Techniker sehen es sich an und verlangen kein Geld. Bitte bringen Sie einen Beleg mit, zum Beispiel den Kassenbon oder die Rechnung. Kleine Reparaturen machen wir gleich, Sie müssen nur kurz warten.",
+              "de": "Liebe Kundinnen und Kunden, heute gibt es in unserer Elektroabteilung in der ersten Etage einen Service für Sie. Haben Sie Probleme mit einem Gerät, das Sie bei uns gekauft haben? Dann bringen Sie es einfach vorbei. Unsere Techniker sehen es sich an und verlangen kein Geld. Bitte bringen Sie einen Beleg mit, zum Beispiel den Kassenbon oder die Rechnung. Kleine Reparaturen machen wir gleich, Sie müssen nur kurz warten.",
               "en": "Dear customers, today our electrical department on the first floor offers a service for you. Do you have problems with a device you bought from us? Then just bring it in. Our technicians will look at it and charge nothing. Please bring proof of purchase, e.g. your receipt or invoice. We do small repairs straight away; you only have to wait a short time."
             }
           ],
@@ -2236,9 +2265,9 @@
             {
               "id": "b1.1-u04-ls4-t4-l01",
               "speaker": "cast.ensemble-b1-1",
-              "de": "Guten Tag, hier ist die Werkstatt vom Kaufhaus. Es geht um Ihre Kaffeemaschine. Sie zeigt eine Fehlermeldung, und wir haben sie geprüft: Leider ist ein Teil kaputt, und wir müssen es bestellen. Eine Reparatur kostet 85 Euro. Das ist nur zehn Euro weniger als eine neue Kaffeemaschine. Bitte rufen Sie uns bis Donnerstag zurück und sagen Sie uns, was wir machen sollen. Vielen Dank.",
-              "en": "Hello, this is the department store workshop. It is about your coffee machine. It shows an error message and we have checked it: unfortunately a part is broken and we have to order it. A repair costs 85 euros. That is only ten euros less than a new coffee machine. Please call us back by Thursday and tell us what we should do. Thank you.",
-              "say": "Guten Tag, hier ist die Werkstatt vom Kaufhaus. Es geht um Ihre Kaffeemaschine. Sie zeigt eine Fehlermeldung, und wir haben sie geprüft: Leider ist ein Teil kaputt, und wir müssen es bestellen. Eine Reparatur kostet fünfundachtzig Euro. Das ist nur zehn Euro weniger als eine neue Kaffeemaschine. Bitte rufen Sie uns bis Donnerstag zurück und sagen Sie uns, was wir machen sollen. Vielen Dank."
+              "de": "Guten Tag, hier ist die Werkstatt vom Kaufhaus. Es geht um Ihre Kaffeemaschine. Sie zeigt eine Fehlermeldung, und wir haben sie geprüft: Leider ist ein Teil kaputt, und wir müssen ein neues bestellen. Eine Reparatur kostet 85 Euro. Das ist nur zehn Euro weniger als eine neue Kaffeemaschine. Bitte rufen Sie uns bis Donnerstag zurück und sagen Sie uns, was wir machen sollen. Vielen Dank.",
+              "en": "Hello, this is the department store workshop. It is about your coffee machine. It shows an error message and we have checked it: unfortunately a part is broken and we have to order a new one. A repair costs 85 euros. That is only ten euros less than a new coffee machine. Please call us back by Thursday and tell us what we should do. Thank you.",
+              "say": "Guten Tag, hier ist die Werkstatt vom Kaufhaus. Es geht um Ihre Kaffeemaschine. Sie zeigt eine Fehlermeldung, und wir haben sie geprüft: Leider ist ein Teil kaputt, und wir müssen ein neues bestellen. Eine Reparatur kostet fünfundachtzig Euro. Das ist nur zehn Euro weniger als eine neue Kaffeemaschine. Bitte rufen Sie uns bis Donnerstag zurück und sagen Sie uns, was wir machen sollen. Vielen Dank."
             }
           ],
           "glosses": []
@@ -2251,8 +2280,8 @@
             {
               "id": "b1.1-u04-ls4-t5-l01",
               "speaker": "radio",
-              "de": "Und jetzt unser Tipp für Kundinnen und Kunden: Viele bestellen Kleidung online und schicken einen Teil wieder zurück. Das ist praktisch, aber nicht immer kostenlos. Bei manchen Händlern müssen Sie die Rücksendung auch bezahlen, und auf die Rückerstattung vom Kaufpreis warten Sie oft zwei Wochen. Lesen Sie deshalb vor dem Bestellen die Bedingungen. Dort steht auch, wie lange Sie Zeit für die Rückgabe haben. Mehr Tipps finden Sie auf unserer Internetseite.",
-              "en": "And now our tip for customers: many people order clothes online and send some of them back. That is practical, but not always free. With some retailers you have to pay for the return too, and you often wait two weeks for the refund of the price. So read the terms before you order. They also say how long you have for the return. You will find more tips on our website."
+              "de": "Und jetzt unser Tipp für Kundinnen und Kunden: Viele bestellen Kleidung online und schicken einen Teil wieder zurück. Das ist praktisch, aber nicht immer kostenlos. Bei manchen Händlern müssen Sie die Rücksendung auch bezahlen, und auf die Rückerstattung warten Sie oft zwei Wochen. Lesen Sie deshalb vor dem Bestellen die Bedingungen. Dort steht auch, wie lange Sie Zeit für die Rückgabe haben. Mehr Tipps finden Sie auf unserer Internetseite.",
+              "en": "And now our tip for customers: many people order clothes online and send some of them back. That is practical, but not always free. With some retailers you have to pay for the return too, and you often wait two weeks for the refund. So read the terms before you order. They also say how long you have for the return. You will find more tips on our website."
             }
           ],
           "glosses": []
@@ -2315,9 +2344,9 @@
               "topic": "g.obwohl",
               "promptDe": "Lücke 2: Welches Wort passt?",
               "options": [
-                "obwohl",
                 "trotzdem",
-                "dass"
+                "dass",
+                "obwohl"
               ],
               "textRef": "b1.1-u04-ls4-t1",
               "answer": "obwohl",
@@ -2337,8 +2366,8 @@
               "topic": "g.trotzdem",
               "promptDe": "Lücke 3: Welches Wort passt?",
               "options": [
-                "Trotzdem",
                 "Obwohl",
+                "Trotzdem",
                 "Weil"
               ],
               "textRef": "b1.1-u04-ls4-t1",
@@ -2347,8 +2376,8 @@
                 "Trotzdem"
               ],
               "explanation": {
-                "de": "Danach kommt sofort das Verb „hat“. Mit Verb auf Position 2 und Gegengrund: Trotzdem.",
-                "en": "The verb follows directly: Trotzdem."
+                "de": "Der Satz davor ist der Gegengrund: Priya hat geschrieben. Hier kommt die unerwartete Folge, und das Verb „hat“ folgt sofort: Trotzdem.",
+                "en": "The sentence before is the reason against; here comes the unexpected result, with the verb straight after: Trotzdem."
               },
               "origin": "agent"
             },
@@ -2381,9 +2410,9 @@
               "topic": "g.relativsatz-dat-praep",
               "promptDe": "Lücke 5: Welches Wort passt?",
               "options": [
-                "dem",
                 "den",
-                "der"
+                "der",
+                "dem"
               ],
               "textRef": "b1.1-u04-ls4-t1",
               "answer": "dem",
@@ -2403,8 +2432,8 @@
               "topic": "g.zeitangaben-inversion",
               "promptDe": "Lücke 6: Welches Wort passt?",
               "options": [
-                "am",
                 "im",
+                "am",
                 "um"
               ],
               "textRef": "b1.1-u04-ls4-t1",
@@ -2425,8 +2454,8 @@
               "topic": "g.indirekte-frage",
               "promptDe": "Lücke 7: Welches Wort passt?",
               "options": [
-                "ob",
                 "dass",
+                "ob",
                 "wenn"
               ],
               "textRef": "b1.1-u04-ls4-t1",
@@ -2444,21 +2473,21 @@
               "id": "b1.1-u04-ls4-tb1-sb1-08",
               "type": "cloze",
               "role": "exam",
-              "topic": "g.praesens",
+              "topic": "g.adj-dekl-bestimmt",
               "promptDe": "Lücke 8: Welches Wort passt?",
               "options": [
-                "Kommst",
-                "Kommt",
-                "Kommen"
+                "neue",
+                "neuen",
+                "neuer"
               ],
               "textRef": "b1.1-u04-ls4-t1",
-              "answer": "Kommst",
+              "answer": "neue",
               "accepted": [
-                "Kommst"
+                "neue"
               ],
               "explanation": {
-                "de": "Das Subjekt ist du: du kommst.",
-                "en": "The subject is du: du kommst."
+                "de": "der Staubsauger ist hier Nominativ. Nach der endet das Adjektiv auf -e: der neue Staubsauger.",
+                "en": "Nominative after der: the adjective ends in -e – der neue Staubsauger."
               },
               "origin": "agent"
             }
@@ -2485,7 +2514,7 @@
               "type": "richtig_falsch",
               "role": "exam",
               "topic": "hoeren",
-              "promptDe": "„Wer ein kaputtes Gerät hat, soll am Telefon das Wort Rückgabe sagen.“",
+              "promptDe": "„Bei einem kaputten Gerät soll man am Telefon ‚Rückgabe‘ sagen.“",
               "options": [
                 "richtig",
                 "falsch"
@@ -2506,7 +2535,7 @@
               "type": "richtig_falsch",
               "role": "exam",
               "topic": "hoeren",
-              "promptDe": "„Im Kaufhaus kann man heute ein Gerät ohne Kosten prüfen lassen.“",
+              "promptDe": "„Im Kaufhaus kann man heute ein Gerät, das man dort gekauft hat, kostenlos prüfen lassen.“",
               "options": [
                 "richtig",
                 "falsch"
@@ -2517,8 +2546,8 @@
                 "richtig"
               ],
               "explanation": {
-                "de": "Die Techniker sehen sich die Geräte heute kostenlos an.",
-                "en": "The technicians check devices free of charge today."
+                "de": "Die Techniker sehen sich heute Geräte, die man im Kaufhaus gekauft hat, kostenlos an.",
+                "en": "Today the technicians check devices bought in the store free of charge."
               },
               "origin": "agent"
             },
@@ -2611,8 +2640,8 @@
         "mode": "discuss",
         "profile": "tb1-m2",
         "prepMinutes": 8,
-        "instructionsDe": "Berichten Sie die Meinung von Ihrem Blatt. Sagen Sie dann, was Sie selbst denken.",
-        "situationDe": "Mündlicher Ausdruck Teil 2 im Lernmodus. Thema: „Online einkaufen oder lieber im Geschäft?“ Sie und Ihre Partnerin haben je ein Blatt mit einer Meinung. Zuerst berichten Sie beide, dann diskutieren Sie und erzählen von eigenen Erfahrungen. In der Prüfung haben Sie 20 Minuten Vorbereitung für alle drei Teile, hier 8 Minuten für diesen Teil. Danach folgt eine Planungsrunde von 3 Minuten: Sie beide haben zusammen ein Geschenk online bestellt, und es ist kaputt angekommen. Planen Sie, wer beim Shop anruft, was Sie verlangen und wer was macht.",
+        "instructionsDe": "Geben Sie die Meinung auf Ihrem Blatt wieder. Sagen Sie dann, was Sie selbst denken.",
+        "situationDe": "Mündlicher Ausdruck Teil 2 im Lernmodus. Thema: „Online einkaufen oder lieber im Geschäft?“ Sie und Ihre Partnerin haben je ein Blatt mit einer Meinung. Zuerst geben Sie beide die Meinung auf Ihrem Blatt wieder, dann diskutieren Sie und erzählen von eigenen Erfahrungen. In der Prüfung haben Sie 20 Minuten Vorbereitung für alle drei Teile, hier 8 Minuten für diesen Teil. Danach folgt eine Planungsrunde mit eigener Zeit (4 Minuten): Sie beide haben zusammen eine Lampe als Geschenk online bestellt, und sie ist kaputt angekommen. Planen Sie, wer beim Shop anruft und wer was macht. Dann spielt Ihre Partnerin den Kundenservice: Rufen Sie an, sagen Sie, was nicht funktioniert und was Sie schon versucht haben, und verlangen Sie eine neue Lampe, eine Reparatur oder Ihr Geld zurück.",
         "stimulus": {
           "kind": "quotes",
           "de": "Online einkaufen oder lieber im Geschäft?",
@@ -2627,40 +2656,41 @@
         ],
         "moves": [],
         "planningRound": {
-          "minutes": 3,
+          "minutes": 4,
           "moves": [
             "vorschlagen",
             "reagieren",
             "widersprechen oder eine Alternative nennen",
             "sich einigen",
-            "Aufgaben verteilen: wer macht was?"
+            "Aufgaben verteilen: wer macht was?",
+            "anrufen und reklamieren: Problem, was Sie schon versucht haben, was Sie verlangen"
           ]
         },
         "aiRole": {
           "name": "Partnerin (KI)",
-          "personaDe": "Teilnehmerin in der Prüfung, Mitte vierzig; berichtet die Meinung von Monika, kauft selbst lieber im Geschäft, widerspricht höflich mit Gründen und lässt sich nur mit guten Argumenten überzeugen; in der Planungsrunde macht sie einen Gegenvorschlag",
+          "personaDe": "Teilnehmerin in der Prüfung, Mitte vierzig; berichtet die Meinung von Monika, kauft selbst lieber im Geschäft, widerspricht höflich mit Gründen und lässt sich nur mit guten Argumenten überzeugen; in der Planungsrunde macht sie einen Gegenvorschlag (zuerst eine E-Mail schreiben); danach spielt sie den Kundenservice vom Shop (Sie): fragt nach der Bestellnummer und danach, was die Person schon versucht hat, und bietet erst nach einer klaren Forderung (neue Lampe, Reparatur oder Geld zurück) eine Lösung an",
           "register": "Sie",
           "support": "examiner"
         },
         "openingLine": "Guten Tag! Unser Thema ist: Online einkaufen oder lieber im Geschäft? Möchten Sie anfangen? Was steht auf Ihrem Blatt?",
         "hintWords": [
           "Auf meinem Zettel steht, dass …",
-          "Thomas meint, …",
           "Das sehe ich nicht so, denn …",
           "Obwohl …",
-          "Da haben Sie recht.",
-          "Und wie ist das bei Ihnen?",
           "Trotzdem …",
-          "Wer macht was?"
+          "Und wie ist das bei Ihnen?",
+          "Ich schlage vor, …",
+          "Wer macht was?",
+          "Deshalb verlange ich …"
         ],
         "modelTurns": [
           {
             "speaker": "learner",
-            "de": "Auf meinem Zettel steht die Meinung von Thomas. Er kauft viel online, denn er arbeitet in Schichten und hat wenig Zeit. Er findet, im Internet sind die Preise oft günstiger."
+            "de": "Auf meinem Zettel steht die Meinung von Thomas. Er ist 34 und arbeitet als Pfleger im Krankenhaus. Er kauft viel online, denn er arbeitet in Schichten und hat wenig Zeit. Er findet, im Internet sind die Preise oft günstiger."
           },
           {
             "speaker": "partner",
-            "de": "Auf meinem Zettel steht die Meinung von Monika. Sie kauft lieber im Laden, weil sie die Ware sehen möchte und dort Hilfe bekommt."
+            "de": "Auf meinem Zettel steht die Meinung von Monika. Sie ist 58. Sie kauft lieber im Laden, weil sie die Ware sehen möchte und dort Hilfe bekommt."
           },
           {
             "speaker": "learner",
@@ -2680,7 +2710,47 @@
           },
           {
             "speaker": "learner",
-            "de": "Gut, dann machen wir es so: Ich rufe morgen beim Onlineshop an, und Sie schreiben die E-Mail. Wir verlangen ein neues Geschenk."
+            "de": "Jetzt zu unserem Geschenk: Die Lampe ist kaputt angekommen. Ich schlage vor, ich rufe gleich beim Shop an."
+          },
+          {
+            "speaker": "partner",
+            "de": "Ich mache einen anderen Vorschlag: Wir schreiben zuerst eine E-Mail. Dann haben wir alles schriftlich."
+          },
+          {
+            "speaker": "learner",
+            "de": "Das stimmt, aber am Telefon geht es schneller. Ich rufe an, und danach schreiben Sie die E-Mail. Wir verlangen eine neue Lampe oder unser Geld zurück."
+          },
+          {
+            "speaker": "partner",
+            "de": "Gut, dann machen wir es so. Und wer bringt das Paket zur Post?"
+          },
+          {
+            "speaker": "learner",
+            "de": "Das mache ich morgen. Und jetzt rufe ich an."
+          },
+          {
+            "speaker": "partner",
+            "de": "Kundenservice, guten Tag. Wie kann ich Ihnen helfen?"
+          },
+          {
+            "speaker": "learner",
+            "de": "Guten Tag! Ich rufe an, weil unsere Bestellung kaputt angekommen ist. Die Bestellnummer ist 40317. Wir haben eine Lampe als Geschenk bestellt. Obwohl der Karton nicht beschädigt war, ist die Lampe kaputt, und sie geht nicht an."
+          },
+          {
+            "speaker": "partner",
+            "de": "Das tut mir leid. Haben Sie die Lampe schon an einer anderen Steckdose ausprobiert?"
+          },
+          {
+            "speaker": "learner",
+            "de": "Ja, das habe ich schon gemacht. Trotzdem funktioniert sie nicht. Deshalb verlangen wir eine neue Lampe. Wenn das nicht geht, erstatten Sie uns bitte den Kaufpreis."
+          },
+          {
+            "speaker": "partner",
+            "de": "Natürlich. Wir schicken Ihnen eine neue Lampe, und Sie bekommen heute noch eine E-Mail für die Rücksendung."
+          },
+          {
+            "speaker": "learner",
+            "de": "Vielen Dank für Ihre Hilfe!"
           }
         ]
       }
@@ -2694,11 +2764,11 @@
         "template": "tb1.sa",
         "examKey": "telc_b1",
         "profile": "tb1-sa",
-        "register": "formell",
+        "register": "halbformell",
         "address": "Sie",
         "title": "Eine Reklamation schreiben",
-        "situationDe": "Sie haben bei einem Onlineshop einen Wasserkocher für 39 Euro bestellt (Bestellnummer 70412). Nach einer Woche funktioniert er nicht mehr richtig. Sie haben dem Shop kurz geschrieben. Jetzt bekommen Sie diese Antwort:\n\nBetreff: Ihre Nachricht zu Bestellung 70412\nSehr geehrte Kundin, sehr geehrter Kunde,\nvielen Dank für Ihre Nachricht. Es tut uns leid, dass Ihr Wasserkocher nicht richtig funktioniert. Wir möchten Ihnen gern helfen. Dafür brauchen wir aber noch ein paar Informationen. Bitte schreiben Sie uns: Wann haben Sie den Wasserkocher bestellt, und wann ist er angekommen? Was genau funktioniert nicht? Was haben Sie schon selbst versucht? Und was möchten Sie jetzt: eine Reparatur, einen neuen Wasserkocher oder Ihr Geld zurück?\nMit freundlichen Grüßen\nIhr Kundenservice von Hellwig Haushalt",
-        "taskDe": "Antworten Sie dem Onlineshop zu allen vier Punkten. Wir empfehlen etwa 80–100 Wörter.",
+        "situationDe": "Sie haben bei einem Onlineshop einen Wasserkocher für 39 Euro bestellt (Bestellnummer 70412). Nach einer Woche funktioniert er nicht mehr richtig. Sie haben dem Shop kurz geschrieben. Jetzt bekommen Sie diese Antwort:\n\nBetreff: Ihre Nachricht zu Bestellung 70412\nSehr geehrte Kundin, sehr geehrter Kunde,\nvielen Dank für Ihre Nachricht. Es tut uns leid, dass Ihr Wasserkocher nicht richtig funktioniert. Wir möchten Ihnen gern helfen. Dafür brauchen wir aber noch ein paar Informationen. Bitte schreiben Sie uns: Wann haben Sie den Wasserkocher bestellt, und wann ist er angekommen? Was genau funktioniert nicht? Was haben Sie schon selbst versucht? Und was möchten Sie jetzt: eine Reparatur, einen neuen Wasserkocher oder Ihr Geld zurück?\nMit freundlichen Grüßen\nSabine Lange\nKundenservice von Hellwig Haushalt",
+        "taskDe": "Antworten Sie zu allen 4 Punkten. telc nennt keine Wortzahl; wir empfehlen 80–120 Wörter.",
         "leitpunkte": [
           {
             "id": "lp1",
@@ -2761,7 +2831,7 @@
         "minSubmitWords": 40,
         "checklist": [
           "Betreff",
-          "Anrede: Sehr geehrte Damen und Herren,",
+          "Anrede: Sehr geehrte Frau Lange,",
           "Einleitung: ein Satz zu Ihrer Nachricht",
           "Punkt 1: Was haben Sie wann bestellt?",
           "Punkt 2: Was funktioniert nicht?",
@@ -2772,14 +2842,14 @@
           "nicht jeden Satz mit Ich beginnen",
           "mindestens ein Satz mit obwohl oder trotzdem"
         ],
-        "modelText": "Betreff: Reklamation – Bestellnummer 70412\n\nSehr geehrte Damen und Herren,\n\nvielen Dank für Ihre Antwort. Am 2. Oktober habe ich bei Ihnen einen Wasserkocher für 39 Euro bestellt, und zwei Tage später war das Paket da. Leider funktioniert er schon nach einer Woche nicht mehr richtig: Das Wasser wird nicht heiß, obwohl das Licht an ist.\n\nIch habe alles geprüft und den Wasserkocher an einer anderen Steckdose ausprobiert. Trotzdem ist das Problem nicht weg. Deshalb bitte ich Sie, mir einen neuen Wasserkocher zu schicken. Wenn das nicht geht, möchte ich mein Geld zurück.\n\nMit freundlichen Grüßen\nPriya Nair"
+        "modelText": "Betreff: Reklamation – Bestellnummer 70412\n\nSehr geehrte Frau Lange,\n\nvielen Dank für Ihre Antwort. Am 2. Oktober habe ich bei Ihnen einen Wasserkocher für 39 Euro bestellt, und zwei Tage später war das Paket da. Leider funktioniert er schon nach einer Woche nicht mehr richtig: Das Wasser wird nicht heiß, obwohl das Licht an ist.\n\nIch habe alles geprüft und den Wasserkocher an einer anderen Steckdose ausprobiert. Trotzdem ist das Problem nicht weg. Deshalb bitte ich Sie, mir einen neuen Wasserkocher zu schicken. Wenn das nicht geht, erstatten Sie mir bitte den Kaufpreis.\n\nMit freundlichen Grüßen\nPriya Nair"
       }
     },
     {
       "id": "b1.1-u04-ls7",
       "kind": "ueberarbeiten",
       "of": "b11-u04-w",
-      "endLine": "Gut überarbeitet! Ihre Reklamation hat jetzt alle vier Punkte. Weiter mit dem Lektions-Check."
+      "endLine": "Sie haben Ihre Reklamation überarbeitet. Vergleichen Sie sie jetzt mit dem Mustertext: Stehen alle vier Punkte drin? Weiter mit dem Lektions-Check."
     },
     {
       "id": "b1.1-u04-ls8",
@@ -2819,15 +2889,15 @@
         "type": "fill_blank",
         "role": "check",
         "topic": "g.trotzdem",
-        "promptDe": "Das Gerät ist neu. ___ geht es nach zwei Minuten aus.",
-        "promptEn": "Although it is new …",
+        "promptDe": "Das Gerät ist neu. ___ geht es nach zwei Minuten aus. (trotzdem oder deshalb?)",
+        "promptEn": "Connector in position 1.",
         "answer": "Trotzdem",
         "accepted": [
           "Trotzdem"
         ],
         "explanation": {
-          "de": "Gegengrund + Verb auf Position 2: Trotzdem geht es aus.",
-          "en": "A reason against with the verb in position 2: Trotzdem."
+          "de": "Der Satz davor ist der Gegengrund (das Gerät ist neu). Hier kommt die unerwartete Folge: Trotzdem + Verb.",
+          "en": "The first sentence is the reason against; here comes the unexpected result: Trotzdem + verb."
         },
         "origin": "agent"
       },
@@ -2871,9 +2941,9 @@
         "promptDe": "Die Schuhe sind zu klein. Ich möchte gern größere. Ich bitte um einen ___.",
         "promptEn": "Choose the word.",
         "options": [
-          "Umtausch",
           "Kassenbon",
-          "Anspruch"
+          "Anspruch",
+          "Umtausch"
         ],
         "answer": "Umtausch",
         "accepted": [
@@ -2929,8 +2999,12 @@
         "promptEn": "Correct the sentence.",
         "answer": "Die Ware ist fehlerhaft, obwohl sie neu ist.",
         "accepted": [
-          "Die Ware ist fehlerhaft, obwohl sie neu ist."
+          "Die Ware ist fehlerhaft, obwohl sie neu ist.",
+          "Obwohl sie neu ist, ist die Ware fehlerhaft."
         ],
+        "acceptedWhy": {
+          "Obwohl sie neu ist, ist die Ware fehlerhaft.": "richtig: der obwohl-Satz kann auch vorne stehen"
+        },
         "intentionalError": true,
         "explanation": {
           "de": "Nach obwohl steht das Verb am Ende: …, obwohl sie neu ist.",
@@ -2968,20 +3042,20 @@
         "type": "multiple_choice",
         "role": "proof",
         "topic": "lesen",
-        "promptDe": "„Rückgabe: 30 Tage ab Lieferung.“ Die Ware kam vor 20 Tagen. Was stimmt?",
-        "promptEn": "Returns: 30 days from delivery. The item came 20 days ago. What is true?",
+        "promptDe": "„Rückgabe: 30 Tage. Garantie: 3 Jahre.“ Ihr Gerät (2 Monate alt) ist kaputt. Was stimmt?",
+        "promptEn": "Returns: 30 days. Guarantee: 3 years. Your device (2 months old) is broken. What is true?",
         "options": [
-          "Ich kann sie noch zurückgeben.",
-          "Ich kann sie nicht mehr zurückgeben.",
-          "Ich brauche dafür einen Kassenbon."
+          "Die Zeit für die Rückgabe ist vorbei, aber die Garantie gilt noch.",
+          "Sie können das Gerät noch ohne Grund zurückgeben.",
+          "Sie haben keine Rechte mehr, weil die Rückgabe vorbei ist."
         ],
-        "answer": "Ich kann sie noch zurückgeben.",
+        "answer": "Die Zeit für die Rückgabe ist vorbei, aber die Garantie gilt noch.",
         "accepted": [
-          "Ich kann sie noch zurückgeben."
+          "Die Zeit für die Rückgabe ist vorbei, aber die Garantie gilt noch."
         ],
         "explanation": {
-          "de": "20 Tage sind weniger als 30 Tage. Die Frist ist noch nicht vorbei.",
-          "en": "20 days is less than 30, so you are still within the period."
+          "de": "2 Monate sind mehr als 30 Tage: Ohne Grund zurückgeben geht nicht mehr. Die Garantie von 3 Jahren gilt aber noch.",
+          "en": "Two months is more than 30 days, so a return without a reason is no longer possible; the 3-year guarantee still applies."
         },
         "origin": "agent"
       },
@@ -2989,21 +3063,21 @@
         "id": "b1.1-u04-q02",
         "type": "multiple_choice",
         "role": "proof",
-        "topic": "g.deshalb",
-        "promptDe": "„Die Ware kam kaputt an. ___ möchte ich mein Geld zurück.“ Welches Wort passt?",
-        "promptEn": "Which word fits?",
+        "topic": "g.obwohl",
+        "promptDe": "„Ich habe die Anleitung genau gelesen. ___ ich alles richtig mache, geht das Gerät aus.“",
+        "promptEn": "From a letter: which word fits?",
         "options": [
-          "Deshalb",
-          "Obwohl",
-          "Denn"
+          "Weil",
+          "Trotzdem",
+          "Obwohl"
         ],
-        "answer": "Deshalb",
+        "answer": "Obwohl",
         "accepted": [
-          "Deshalb"
+          "Obwohl"
         ],
         "explanation": {
-          "de": "Danach kommt sofort das Verb möchte, und es ist eine Folge: Deshalb.",
-          "en": "The verb follows directly and it is a consequence: Deshalb."
+          "de": "Wer alles richtig macht, erwartet: Das Gerät läuft. Es geht aber aus – ein Gegengrund, also Obwohl. Trotzdem passt nicht: „mache“ steht am Ende.",
+          "en": "Doing everything right, you expect the device to run, but it switches off – a reason against, so Obwohl. Trotzdem does not fit: the verb is at the end."
         },
         "origin": "agent"
       }
@@ -3033,8 +3107,8 @@
     ],
     "portrait": {
       "factRef": "b1.1-u04-f06",
-      "de": "Porträt: die Stiftung Warentest. Welcher Staubsauger ist gut? Viele Menschen in Deutschland lesen vor einem Kauf die Tests von der Stiftung Warentest in Berlin. Die Stiftung gibt es seit 1964. Sie kauft die Produkte anonym im Geschäft, so wie alle Kundinnen und Kunden. Dann prüfen unabhängige Institute die Produkte. In ihren Heften gibt es keine Werbung: Das Geld kommt vor allem aus dem Verkauf von den Heften und Tests.",
-      "en": "Portrait: Stiftung Warentest. Which vacuum cleaner is good? Many people in Germany read the Stiftung Warentest tests before buying. The foundation has existed since 1964. It buys products anonymously in shops, just like any customer; independent institutes then test them. Its magazines carry no advertising: its money comes mainly from selling its magazines and tests."
+      "de": "Porträt: die Stiftung Warentest. Welcher Staubsauger ist gut? Viele Menschen in Deutschland lesen vor einem Kauf die Tests von der Stiftung Warentest in Berlin. Die Stiftung gibt es seit 1964. Sie kauft die Produkte anonym im Geschäft, so wie alle Kundinnen und Kunden. Dann prüfen unabhängige Institute die Produkte. In ihren Heften gibt es keine Werbung: Das Geld kommt vor allem von den Menschen, die die Hefte und Tests kaufen.",
+      "en": "Portrait: Stiftung Warentest. Which vacuum cleaner is good? Many people in Germany read the Stiftung Warentest tests before buying. The foundation has existed since 1964. It buys products anonymously in shops, just like any customer; independent institutes then test them. Its magazines carry no advertising: its money comes mainly from the people who buy its magazines and tests."
     },
     "testOutThreshold": 0.8,
     "cumulativeShare": 0.35
@@ -3061,8 +3135,8 @@
     },
     {
       "id": "b1.1-u04-rm04",
-      "de": "Wenn das nicht geht, möchte ich mein Geld zurück.",
-      "en": "If that isn't possible, I'd like my money back.",
+      "de": "Wenn das nicht geht, erstatten Sie mir bitte den Kaufpreis.",
+      "en": "If that isn't possible, please refund the purchase price.",
       "function": "eine Alternative verlangen",
       "forTemplate": "tb1.sa"
     },
