@@ -8,9 +8,12 @@
 //     shows (wordBandLearning when present, else wordBand; WritingTaskView reads it so), except where
 //     the sentence names the exam („Prüfung: mindestens 150"), which is wordBand; the model text lies in
 //     the shown band (advisory when it lies in the exam band instead) (review a1.1-u04 r2 F05);
-//   - Leitpunkt cues are what the pre-check searches for as substrings: each has ≥ 4 letters („am"
-//     is inside „Reklamation"), and none is a connector the checklist already requires (obwohl,
-//     trotzdem …), which would tick the Leitpunkt for any text (review b1.1-u04 r2 F08).
+//   - Leitpunkt cues are what the pre-check searches for as substrings: each has ≥ 4 letters or digits
+//     („am" is inside „Reklamation"), and none is a connector the checklist already requires (obwohl,
+//     trotzdem …), which would tick the Leitpunkt for any text (review b1.1-u04 r2 F08). ADVISORY: the
+//     finding was minor, the SCHEMA §15 exemplar carries „am"/„um" cues, and the defect sits in the
+//     pre-check's substring match (WritingTaskView cueFound and its server twin) — whole-word matching
+//     there is the fix for every unit at once.
 
 import { walkTasks } from '../lib-validate/walk.mjs';
 import { LANE_EXAM_KEY } from '../lib-validate/ids.mjs';
@@ -19,7 +22,7 @@ import { norm, wordCount } from '../lib-validate/text.mjs';
 
 export const id = 'EXM-03';
 export const title = 'Writing tasks match their template (Leitpunkte, choose, register, words, rubric, exam key)';
-export const type = 'hard';
+export const type = 'mixed';
 export const scope = 'unit';
 export const stage = 'T';
 
@@ -128,9 +131,9 @@ export function run({ ctx, docs }) {
       lp.forEach((l, i) => {
         arr(l?.cues).forEach((c, k) => {
           const cue = String(c || '').trim();
-          const letters = cue.replace(/[^\p{L}]/gu, '').length;
-          if (letters < 4) findings.push(blocker(doc, `${path}.leitpunkte[${i}].cues[${k}]`, `cue „${cue}" has ${letters} letters — as a substring it is found in unrelated words; use ≥ 4 letters`, ref));
-          else if (CONNECTORS.has(cue.toLowerCase()) && arr(task.checklist).some((x) => new RegExp(`(^|[^\\p{L}])${cue}(?=$|[^\\p{L}])`, 'iu').test(String(x)))) findings.push(blocker(doc, `${path}.leitpunkte[${i}].cues[${k}]`, `cue „${cue}" is a connector the checklist already requires — it ticks the Leitpunkt for any text`, ref));
+          const letters = cue.replace(/[^\p{L}\p{N}]/gu, '').length;
+          if (letters < 4) findings.push(advisory(doc, `${path}.leitpunkte[${i}].cues[${k}]`, `cue „${cue}" has ${letters} letters — as a substring it is found in unrelated words; use ≥ 4 letters`, ref));
+          else if (CONNECTORS.has(cue.toLowerCase()) && arr(task.checklist).some((x) => new RegExp(`(^|[^\\p{L}])${cue}(?=$|[^\\p{L}])`, 'iu').test(String(x)))) findings.push(advisory(doc, `${path}.leitpunkte[${i}].cues[${k}]`, `cue „${cue}" is a connector the checklist already requires — it ticks the Leitpunkt for any text`, ref));
         });
       });
     }
