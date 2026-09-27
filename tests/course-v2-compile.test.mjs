@@ -6,7 +6,7 @@
 //      planned minutes taken from the level's specs.json bundle, and no chunk;
 //   3. a unit that fails its own check is skipped with its errors (never half-written): no chunk,
 //      no bank entry, no audio line, no reserve item — and its ids stay live in the ledger;
-//   4. deterministic and idempotent; the CLI prints the skip and exits 0.
+//   4. deterministic, idempotent and minified; the CLI prints the skip and exits 0.
 import test, { after } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -194,6 +194,16 @@ test('partial compile is deterministic and idempotent', () => {
   assert.deepEqual(strip(a.result, a.out), strip(b.result, b.out));
   assert.equal(writeOutputs(a.result).length, a.result.outputs.length);
   assert.deepEqual(writeOutputs(compile(root, a.out).result), [], 'a second compile changes nothing');
+});
+
+test('compiled files are minified JSON, one line each, and parse back to the same data', () => {
+  const { result } = compile(partialLevel());
+  assert.ok(result.outputs.length >= 7);
+  for (const o of result.outputs) {
+    assert.ok(o.text.endsWith('}\n') || o.text.endsWith(']\n'), o.file);
+    assert.equal(o.text.indexOf('\n'), o.text.length - 1, `${path.basename(o.file)}: one line`);
+    assert.equal(o.text, `${JSON.stringify(JSON.parse(o.text))}\n`, `${path.basename(o.file)}: minified`);
+  }
 });
 
 test('unitOfId: every id and bank key is owned by its unit', () => {
