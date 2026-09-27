@@ -10,10 +10,10 @@
   "stage": "T",
   "title": {
     "de": "Im Café",
-    "canDo": "Sie können im Café bestellen und bezahlen, eine Speisekarte lesen und sagen, was Sie gern essen und trinken."
+    "canDo": "Sie können im Café bestellen und bezahlen, eine Speisekarte lesen und sagen: Das mag ich, das mag ich nicht."
   },
   "spec": {
-    "situation": "Priya trifft Elif und Olena im Café: Sie lesen die Speisekarte, bestellen, sagen, was sie mögen und was nicht, und bezahlen. Danach füllt Priya für Olena das Online-Formular für eine Tischreservierung zu Olenas Geburtstag aus.",
+    "situation": "Priya trifft Elif und Olena im Café: Sie lesen die Speisekarte, sagen: Das mag ich, das mag ich nicht, bestellen, essen und bezahlen. Danach füllt Priya das Online-Formular für einen Tisch zum Geburtstag von Olena aus.",
     "handlungsfeld": [
       "7",
       "D"
@@ -63,7 +63,8 @@
           "lx.lecker",
           "lx.essen",
           "lx.restaurant",
-          "lx.voll"
+          "lx.voll",
+          "lx.cafe"
         ]
       },
       {
@@ -76,7 +77,8 @@
           "lx.nehmen",
           "lx.moegen",
           "lx.geburtstag",
-          "lx.hoeflich"
+          "lx.hoeflich",
+          "lx.getrennt"
         ]
       },
       {
@@ -128,13 +130,17 @@
       "N A1 K4 Guten Appetit!",
       "S1 L3 (möchte)"
     ],
-    "deviation": null,
+    "deviation": {
+      "reason": "Abweichungen vom Stoffplan a1-1 u09 (Review a1.1-u09 r1 F07). (1) Prüfungsteile: Der Plan nennt Sprechen Teil 3, Hören Teil 1, Lesen Teil 1 und Schreiben Teil 2. Lesen Teil 1 ist hier kein Prüfungsfokus; sd1.l1 ist Prüfungsfokus in u05 und u11. Schreiben Teil 2 (Antwort auf die Einladung, ≈ 30 Wörter) wird hier Schreiben Teil 1: Die Reservierung im Restaurant Kochi ist ein natürliches Formular (sd1.s1), und sd1.s2 ist Prüfungsfokus in u06, u07, u08, u10, u11 und u12; die Antwort auf die Einladung bleibt als Mikro-Output in LS3 (1–2 Sätze). (2) LS5 beginnt mit einer sd1.sp2-Runde mit zwei Themen, die cd.a1.essen-vorlieben trägt; sie steht als Chip, aber nicht im Prüfungsfokus, weil der Plan für u09 nur Sprechen Teil 3 nennt. (3) Komposita (Plan: neu) haben keinen Spine-Punkt und keine Regelkarte; die Regel „das letzte Wort bestimmt den Artikel“ steht in LS2 vor der ersten Aufgabe, die sie braucht (ls2-s01), und wird in LS3 geübt (ls3-p03, ls3-p04, ls3-r02) und in der Aussprache gehört. (4) Feste Wendungen: „Ich bin satt“ und die höfliche Ablehnung („Nein, danke, …“) stehen im LS2-Dialog. (5) Hören: Die Inputs sind kürzer als die geplanten ≈ 75 s (TXT-03-Minimum 60 s); die Café-Bestellung ist auf LS1 (Speisekarte) und LS2 (Bestellen, Essen, Bezahlen) verteilt. (6) Landeskunde: Trinkgeld hat einen Fact (a1.1-u09-f01, im LS2-Dialog: „Stimmt so!“); „Zusammen oder getrennt?“ ist eine Szene (LS2, t6); Frühstück, Kaffee und Kuchen zeigt die Speisekarte, ohne landesweite Sachaussage."
+    },
     "cast": [
       "cast.priya",
       "cast.elif",
       "cast.olena",
       "cast.ensemble-a1-1",
-      "cast.ensemble-a1-3"
+      "cast.ensemble-a1-3",
+      "cast.ensemble-a1-2",
+      "cast.ensemble-a1-4"
     ],
     "fokusPlan": [],
     "source": {
@@ -208,8 +214,8 @@
         {
           "id": "a1.1-u09-start-l09",
           "speaker": "cast.olena",
-          "de": "Super! Dann essen wir auch etwas. Laufen macht müde!",
-          "en": "Great! Then we’ll eat something too. Running makes you tired!"
+          "de": "Super! Dann essen wir auch etwas. Ich habe Hunger!",
+          "en": "Great! Then we’ll eat something too. I’m hungry!"
         }
       ],
       "gistItem": {
@@ -233,7 +239,15 @@
           "en": "The waiter asks what they’d like to drink; they order coffee, tea and orange juice. The running is already over."
         },
         "origin": "agent"
-      }
+      },
+      "glosses": [
+        {
+          "token": "Hunger",
+          "gloss": {
+            "en": "hunger (Ich habe Hunger = I’m hungry)"
+          }
+        }
+      ]
     },
     "testOut": {
       "offered": true
@@ -259,8 +273,8 @@
           {
             "id": "a1.1-u09-ls1-l01",
             "speaker": "cast.olena",
-            "de": "Die Speisekarte ist lang! Frühstück, Mittagessen, Kuchen und viele Getränke. Priya, was magst du?",
-            "en": "The menu is long! Breakfast, lunch, cake and lots of drinks. Priya, what do you like?"
+            "de": "So, die Speisekarte! Hier gibt es Frühstück, Mittagessen, Kuchen und viele Getränke. Priya, was magst du?",
+            "en": "Right, the menu! They have breakfast, lunch, cake and lots of drinks. Priya, what do you like?"
           },
           {
             "id": "a1.1-u09-ls1-l02",
@@ -272,8 +286,8 @@
           {
             "id": "a1.1-u09-ls1-l03",
             "speaker": "cast.elif",
-            "de": "Ich mag Obst. Der Obstsalat hier ist sehr lecker und nicht teuer.",
-            "en": "I like fruit. The fruit salad here is very tasty and not expensive."
+            "de": "Ich mag Obst. Der Obstsalat hier ist sehr lecker.",
+            "en": "I like fruit. The fruit salad here is very tasty."
           },
           {
             "id": "a1.1-u09-ls1-l04",
@@ -350,8 +364,8 @@
             "Sie lesen die Speisekarte."
           ],
           "explanation": {
-            "de": "Olena sagt: „Die Speisekarte ist lang!“ Die drei lesen die Speisekarte und sagen, was sie mögen.",
-            "en": "Olena says the menu is long; the three read it and say what they like."
+            "de": "Olena sagt: „So, die Speisekarte!“ Die drei lesen die Speisekarte und sagen: Das mag ich, das mag ich nicht.",
+            "en": "Olena opens the menu; the three read it and say what they like and don’t like."
           },
           "origin": "agent"
         },
@@ -491,17 +505,17 @@
           "promptDe": "Elif sagt: „Ich mag Obst.“ Was heißt das?",
           "promptEn": "What does “ich mag” mean here?",
           "options": [
-            "Elif kauft jetzt Obst.",
-            "Elif möchte jetzt kein Obst.",
-            "Obst findet Elif gut."
+            "Elif kauft Obst.",
+            "Elif möchte kein Obst.",
+            "Elif findet Obst gut."
           ],
-          "answer": "Obst findet Elif gut.",
+          "answer": "Elif findet Obst gut.",
           "accepted": [
-            "Obst findet Elif gut."
+            "Elif findet Obst gut."
           ],
           "explanation": {
-            "de": "„Ich mag Obst.“ heißt: Das findet Elif gut, immer. Das ist kein Wunsch für jetzt.",
-            "en": "“Ich mag Obst” means Elif likes fruit in general – it is not a wish for right now."
+            "de": "„Ich mag Obst.“ heißt: Elif findet Obst immer gut. Sie kauft kein Obst, und sie möchte Obst: einen Obstsalat.",
+            "en": "“Ich mag Obst” means Elif always likes fruit. She isn’t buying fruit, and she does want some: a fruit salad."
           },
           "origin": "agent"
         },
@@ -510,20 +524,20 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.moegen",
-          "promptDe": "Priya sagt: „Olena mag Fisch.“ Wer mag Fisch?",
-          "promptEn": "Who likes fish?",
+          "promptDe": "„… mag Fisch sehr.“ Wer kann das sein?",
+          "promptEn": "“… mag Fisch sehr.” Who can this be? Look at the verb.",
           "options": [
-            "Priya",
+            "Olena und Elif",
             "Olena",
-            "Priya und Olena"
+            "Priya und Arjun"
           ],
           "answer": "Olena",
           "accepted": [
             "Olena"
           ],
           "explanation": {
-            "de": "„Olena mag Fisch“: Olena ist das Subjekt. „mag“ ohne Endung passt zu einer Person.",
-            "en": "Olena is the subject; “mag” without an ending goes with one person."
+            "de": "„mag“ ohne Endung passt zu einer Person: Olena mag. Zwei Personen: „Olena und Elif mögen …“.",
+            "en": "“mag” without an ending goes with one person: Olena mag. Two people: “Olena und Elif mögen …”."
           },
           "origin": "agent"
         }
@@ -738,8 +752,8 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.akkusativ",
-            "promptDe": "Korrigieren Sie: „Ich mag kein Fisch.“",
-            "promptEn": "Correct the sentence.",
+            "promptDe": "Korrigieren Sie die Endung: „Ich mag kein Fisch.“",
+            "promptEn": "Correct the ending.",
             "answer": "Ich mag keinen Fisch.",
             "accepted": [
               "Ich mag keinen Fisch."
@@ -932,7 +946,7 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "g.moegen",
-          "promptDe": "Korrigieren Sie: „Olena mögt Fisch.“",
+          "promptDe": "Korrigieren Sie die Verbform: „Olena mögt Fisch.“",
           "promptEn": "Correct the verb form.",
           "answer": "Olena mag Fisch.",
           "accepted": [
@@ -970,7 +984,7 @@
         "register": "du"
       },
       "aussprache": {
-        "focus": "Lange und kurze Vokale: Tee, Salat, Brot sind lang – Bett, Stadt, Suppe sind kurz.",
+        "focus": "Vokale: lang oder kurz? Tee, Salat, Brot: lang – Bett, Stadt, Suppe: kurz.",
         "perception": {
           "generator": "perception.pairs",
           "count": 3,
@@ -986,7 +1000,7 @@
           "lineDe": "Einen Tee und einen Salat, bitte."
         }
       },
-      "endLine": "Sie können jetzt eine Speisekarte lesen und sagen, was Sie mögen und was nicht."
+      "endLine": "Sie können jetzt eine Speisekarte lesen und sagen: Das mag ich, das mag ich nicht."
     },
     {
       "id": "a1.1-u09-ls2",
@@ -1013,14 +1027,14 @@
           {
             "id": "a1.1-u09-ls2-l02",
             "speaker": "cast.priya",
-            "de": "Ja, gern. Ich nehme ein Käsebrot, bitte. Käse mag ich sehr. Und du, Elif? Was nimmst du?",
-            "en": "Yes, please. I’ll have a cheese sandwich, please. I really like cheese. And you, Elif? What are you having?"
+            "de": "Ja, gern. Ich nehme ein Käsebrot, bitte. Käse mag ich sehr.",
+            "en": "Yes, please. I’ll have a cheese sandwich, please. I really like cheese."
           },
           {
             "id": "a1.1-u09-ls2-l03",
             "speaker": "cast.elif",
-            "de": "Ich nehme einen Obstsalat. Der ist hier sehr lecker, und ich mag Obst sehr.",
-            "en": "I’ll have a fruit salad. It’s very tasty here, and I really like fruit."
+            "de": "Und ich nehme einen Obstsalat. Der ist hier sehr lecker, und ich mag Obst sehr.",
+            "en": "And I’ll have a fruit salad. It’s very tasty here, and I really like fruit."
           },
           {
             "id": "a1.1-u09-ls2-l04",
@@ -1031,14 +1045,26 @@
           {
             "id": "a1.1-u09-ls2-l05",
             "speaker": "cast.ensemble-a1-3",
-            "de": "Tut mir leid, wir haben nur noch einen Obstsalat. Möchten Sie vielleicht einen Apfelkuchen? Der ist heute sehr gut.",
-            "en": "I’m sorry, we only have one fruit salad left. Would you like an apple cake, perhaps? It’s very good today."
+            "de": "Tut mir leid, wir haben nur noch einen Obstsalat. Möchten Sie vielleicht ein Stück Apfelkuchen? Der ist heute sehr gut.",
+            "en": "I’m sorry, we only have one fruit salad left. Would you like a piece of apple cake, perhaps? It’s very good today."
           },
           {
             "id": "a1.1-u09-ls2-l06",
             "speaker": "cast.olena",
             "de": "Hm, am Morgen esse ich keinen Kuchen. Aber heute ist Samstag! Also gut, einen Apfelkuchen, bitte.",
             "en": "Hmm, I don’t eat cake in the morning. But today is Saturday! All right, an apple cake, please."
+          },
+          {
+            "id": "a1.1-u09-ls2-l11",
+            "speaker": "cast.olena",
+            "de": "Der Apfelkuchen ist wirklich lecker! Möchtet ihr auch ein Stück?",
+            "en": "The apple cake is really tasty! Would you like a piece too?"
+          },
+          {
+            "id": "a1.1-u09-ls2-l12",
+            "speaker": "cast.elif",
+            "de": "Nein, danke, ich bin satt.",
+            "en": "No, thank you, I’m full."
           },
           {
             "id": "a1.1-u09-ls2-l07",
@@ -1064,6 +1090,19 @@
             "de": "Gut. Das macht zusammen 20,90 Euro, bitte.",
             "en": "Fine. That comes to 20.90 euros altogether, please.",
             "say": "Gut. Das macht zusammen zwanzig Euro neunzig, bitte."
+          },
+          {
+            "id": "a1.1-u09-ls2-l13",
+            "speaker": "cast.elif",
+            "de": "Hier sind 22 Euro. Stimmt so!",
+            "en": "Here’s 22 euros. Keep the change!",
+            "say": "Hier sind zweiundzwanzig Euro. Stimmt so!"
+          },
+          {
+            "id": "a1.1-u09-ls2-l14",
+            "speaker": "cast.ensemble-a1-3",
+            "de": "Danke schön! Tschüss!",
+            "en": "Thank you very much! Bye!"
           }
         ],
         "glosses": [
@@ -1071,6 +1110,18 @@
             "token": "getrennt",
             "gloss": {
               "en": "separate(ly)"
+            }
+          },
+          {
+            "token": "satt",
+            "gloss": {
+              "en": "full (after eating)"
+            }
+          },
+          {
+            "token": "Stimmt so",
+            "gloss": {
+              "en": "keep the change (a small tip)"
             }
           }
         ],
@@ -1138,8 +1189,8 @@
             "einen Apfelkuchen"
           ],
           "explanation": {
-            "de": "Es gibt nur noch einen Obstsalat. Olena sagt: „Also gut, einen Apfelkuchen, bitte.“",
-            "en": "There is only one fruit salad left, so Olena orders an apple cake."
+            "de": "Es gibt nur noch einen Obstsalat. Der Kellner sagt: „ein Stück Apfelkuchen“. Olena sagt nur: „einen Apfelkuchen, bitte“.",
+            "en": "There is only one fruit salad left. The waiter offers a piece of apple cake; Olena just says “einen Apfelkuchen, bitte”."
           },
           "origin": "agent"
         },
@@ -1179,8 +1230,8 @@
           ],
           "exact": "number",
           "explanation": {
-            "de": "Der Kellner sagt: „Das macht zusammen 20,90 Euro, bitte.“",
-            "en": "The waiter says it comes to 20.90 euros altogether."
+            "de": "Der Kellner sagt: „Das macht zusammen 20,90 Euro, bitte.“ Elif gibt 22 Euro und sagt: „Stimmt so!“",
+            "en": "The waiter says it comes to 20.90 euros altogether; Elif hands over 22 euros and says “keep the change”."
           },
           "origin": "agent"
         }
@@ -1191,8 +1242,8 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.akkusativ",
-          "promptDe": "Olena sagt: „Ich nehme einen …“ Was nimmt Olena?",
-          "promptEn": "“einen” = a der-word. What does Olena take?",
+          "promptDe": "Das letzte Wort bestimmt den Artikel: das Wasser → das Mineralwasser. Olena sagt: „Ich nehme einen …“ Was nimmt Olena?",
+          "promptEn": "The last word decides the article (das Wasser → das Mineralwasser). “einen” = a der-word. What does Olena take?",
           "options": [
             "Käsebrot",
             "Tomatensuppe",
@@ -1203,8 +1254,8 @@
             "Apfelkuchen"
           ],
           "explanation": {
-            "de": "„einen“ passt nur zu einem Nomen mit „der“: der Apfelkuchen → einen Apfelkuchen.",
-            "en": "“einen” only fits a der-noun: der Apfelkuchen → einen Apfelkuchen."
+            "de": "„einen“ passt nur zu „der“. Das letzte Wort bestimmt den Artikel: der Kuchen → der Apfelkuchen → einen Apfelkuchen.",
+            "en": "“einen” only fits a der-noun; the last word decides: der Kuchen → der Apfelkuchen → einen Apfelkuchen."
           },
           "origin": "agent"
         },
@@ -1235,7 +1286,7 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.vokalwechsel",
-          "promptDe": "„Was nimmst du?“ Wer fragt wen?",
+          "promptDe": "Im Café fragt jemand: „Was nimmst du?“ Wer fragt wen?",
           "promptEn": "Who asks whom?",
           "options": [
             "Der Kellner fragt Elif.",
@@ -1247,7 +1298,7 @@
             "Priya fragt Elif."
           ],
           "explanation": {
-            "de": "„nimmst du“: So fragen Freunde. Der Kellner sagt „Sie“: „Was nehmen Sie?“",
+            "de": "„nimmst du“: So fragen Freunde, zum Beispiel Priya und Elif. Der Kellner sagt „Sie“: „Was nehmen Sie?“",
             "en": "“nimmst du” is informal – friends ask like this; the waiter says “Was nehmen Sie?”."
           },
           "origin": "agent"
@@ -1309,7 +1360,7 @@
               "ein"
             ],
             "explanation": {
-              "de": "„das Mineralwasser“ → „ein Mineralwasser“: Bei „das“ bleibt „ein“.",
+              "de": "„das Mineralwasser“ → „ein Mineralwasser“: Bei „das“ steht „ein“, ohne Endung.",
               "en": "das Mineralwasser → ein Mineralwasser: with das-nouns “ein” stays."
             },
             "origin": "agent"
@@ -1482,8 +1533,8 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.akkusativ",
-            "promptDe": "Korrigieren Sie: „Ich nehme ein Obstsalat.“",
-            "promptEn": "Correct the sentence.",
+            "promptDe": "Korrigieren Sie die Endung: „Ich nehme ein Obstsalat.“",
+            "promptEn": "Correct the ending.",
             "answer": "Ich nehme einen Obstsalat.",
             "accepted": [
               "Ich nehme einen Obstsalat."
@@ -1582,7 +1633,7 @@
           ],
           "difficulty": 1,
           "explanation": {
-            "de": "„die Tomatensuppe“ → „eine Tomatensuppe“: Bei „die“ bleibt „eine“.",
+            "de": "„die Tomatensuppe“ → „eine Tomatensuppe“: Bei „die“ steht auch hier „eine“.",
             "en": "die Tomatensuppe → eine Tomatensuppe."
           },
           "origin": "agent"
@@ -1682,11 +1733,12 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "g.moechte",
-          "promptDe": "Korrigieren Sie: „Wir möchten bezahlen die Rechnung.“",
+          "promptDe": "Korrigieren Sie die Wortstellung: „Wir möchten bezahlen die Rechnung.“",
           "promptEn": "Correct the word order.",
           "answer": "Wir möchten die Rechnung bezahlen.",
           "accepted": [
-            "Wir möchten die Rechnung bezahlen."
+            "Wir möchten die Rechnung bezahlen.",
+            "Die Rechnung möchten wir bezahlen."
           ],
           "intentionalError": true,
           "errorTag": "satzklammer",
@@ -1703,7 +1755,10 @@
             "de": "Mit „möchte“ steht das zweite Verb am Ende: „… die Rechnung bezahlen.“",
             "en": "With “möchte” the second verb goes to the end."
           },
-          "origin": "agent"
+          "origin": "agent",
+          "acceptedWhy": {
+            "Die Rechnung möchten wir bezahlen.": "grammatisch: „die Rechnung“ betont auf Position 1, „möchten“ auf Position 2, „bezahlen“ am Ende"
+          }
         }
       ],
       "microOutput": {
@@ -1712,8 +1767,8 @@
         "mode": "spoken",
         "profile": "course-micro-sp",
         "situationDe": "Sie sind im Café am Park. Der Kellner fragt: „Was möchten Sie?“",
-        "promptDe": "Bestellen Sie ein Getränk und einen Kuchen. Bitten Sie dann um die Rechnung.",
-        "promptEn": "Order a drink and a cake, then ask for the bill.",
+        "promptDe": "Bestellen Sie ein Getränk und ein Stück Kuchen. Bitten Sie dann um die Rechnung.",
+        "promptEn": "Order a drink and a piece of cake, then ask for the bill.",
         "planSeconds": 30,
         "seconds": [
           20,
@@ -1729,7 +1784,7 @@
     {
       "id": "a1.1-u09-ls3",
       "kind": "situation",
-      "title": "Olenas Geburtstag",
+      "title": "Olena hat Geburtstag",
       "structure": "g.moegen",
       "modelSentence": "Ich mag Fisch, aber heute möchte ich eine Suppe.",
       "ruleCard": "rc.moegen",
@@ -1763,8 +1818,8 @@
           {
             "id": "a1.1-u09-ls3-l04",
             "speaker": "cast.priya",
-            "de": "Ja, genau. Das Essen ist sehr lecker und nicht teuer. Und die Leute dort sind sehr höflich.",
-            "en": "Yes, exactly. The food is very tasty and not expensive. And the people there are very polite."
+            "de": "Ja, genau. Das Essen ist sehr lecker und nicht teuer. Und die Leute dort sind sehr nett.",
+            "en": "Yes, exactly. The food is very tasty and not expensive. And the people there are very nice."
           },
           {
             "id": "a1.1-u09-ls3-l05",
@@ -1781,8 +1836,8 @@
           {
             "id": "a1.1-u09-ls3-l07",
             "speaker": "cast.olena",
-            "de": "Super, dann essen wir alle im Restaurant Kochi! Priya, bestellst du den Tisch?",
-            "en": "Great, then we’ll all eat at the Restaurant Kochi! Priya, will you book the table?"
+            "de": "Super! Fleisch esse ich ja nicht. Dann essen wir alle im Restaurant Kochi! Priya, bestellst du den Tisch?",
+            "en": "Great! I don’t eat meat, you know. Then we’ll all eat at the Restaurant Kochi! Priya, will you book the table?"
           },
           {
             "id": "a1.1-u09-ls3-l08",
@@ -1799,15 +1854,28 @@
           {
             "id": "a1.1-u09-ls3-l10",
             "speaker": "cast.elif",
-            "de": "Danke, Olena! Am Freitag habe ich am Abend Zeit. Ich komme sehr gern.",
+            "de": "Danke, Olena! Am Freitagabend habe ich Zeit. Ich komme sehr gern.",
             "en": "Thanks, Olena! I’m free on Friday evening. I’d love to come."
+          },
+          {
+            "id": "a1.1-u09-ls3-l11",
+            "speaker": "cast.priya",
+            "de": "Und ich frage Arjun. Er kommt bestimmt auch.",
+            "en": "And I’ll ask Arjun. He’ll definitely come too."
           }
         ],
         "text": {
-          "de": "Hallo zusammen,\nam Freitag habe ich Geburtstag! Wir essen zusammen im Restaurant Kochi, um halb acht. Das Abendessen dort ist sehr lecker, und die Leute sind sehr höflich. Es gibt Fisch, Fleisch, Gemüse und Reis – für alle etwas! Priya bestellt den Tisch online. Wer kommt mit? Ich brauche die Antwort bis Mittwoch.\nViele Grüße\nOlena",
-          "en": "Hi everyone, it’s my birthday on Friday! We’re having dinner together at the Restaurant Kochi at half past seven. Dinner there is very good, and the people are very polite. There’s fish, meat, vegetables and rice – something for everyone! Priya is booking the table online. Who’s coming? I need your answer by Wednesday. Best wishes, Olena"
+          "de": "Hallo zusammen,\nam Freitag habe ich Geburtstag! Wir essen zusammen im Restaurant Kochi, um halb acht. Das Abendessen dort ist sehr lecker, und die Leute sind sehr nett. Es gibt Fisch, Fleisch, Gemüse und Reis – für alle etwas! Priya bestellt den Tisch online. Wer kommt mit? Ich brauche bis Mittwoch eine Antwort von allen.\nViele Grüße\nOlena",
+          "en": "Hi everyone, it’s my birthday on Friday! We’re having dinner together at the Restaurant Kochi at half past seven. Dinner there is very good, and the people are very nice. There’s fish, meat, vegetables and rice – something for everyone! Priya is booking the table online. Who’s coming? I need an answer from all of you by Wednesday. Best wishes, Olena"
         },
-        "glosses": [],
+        "glosses": [
+          {
+            "token": "nett",
+            "gloss": {
+              "en": "nice, friendly"
+            }
+          }
+        ],
         "transcriptAfterUnaidedListen": true
       },
       "inputItems": [
@@ -1850,7 +1918,7 @@
             "Wer kommt am Freitag?"
           ],
           "explanation": {
-            "de": "Olena fragt: „Wer kommt mit?“ Den Tisch bestellt Priya. Den Preis nennt Olena nicht.",
+            "de": "Olena fragt: „Wer kommt mit?“ Den Tisch bestellt Priya. Einen Preis schreibt Olena nicht.",
             "en": "Olena asks who is coming; Priya books the table; no price is given."
           },
           "origin": "agent"
@@ -1905,7 +1973,7 @@
           "type": "fill_blank",
           "role": "detail",
           "topic": "lesen",
-          "promptDe": "Olena braucht die Antwort bis ___. (Tag)",
+          "promptDe": "Olena braucht bis ___ eine Antwort. (Tag)",
           "promptEn": "Which day? Write the weekday.",
           "answer": "Mittwoch",
           "accepted": [
@@ -1913,8 +1981,8 @@
             "am Mittwoch"
           ],
           "explanation": {
-            "de": "In der E-Mail steht: „Ich brauche die Antwort bis Mittwoch.“",
-            "en": "The e-mail says: I need the answer by Wednesday."
+            "de": "In der E-Mail steht: „Ich brauche bis Mittwoch eine Antwort von allen.“",
+            "en": "The e-mail says: I need an answer from all of you by Wednesday."
           },
           "origin": "agent"
         }
@@ -1937,8 +2005,8 @@
             "Ich möchte einen Tee."
           ],
           "explanation": {
-            "de": "„möchte“ ist ein Wunsch jetzt. „mag“ und „gern“ sagen: Das finde ich immer gut.",
-            "en": "“möchte” is a wish for now; “mag” and “gern” say you always like it."
+            "de": "„möchte“: jetzt, hier im Café. „mag“ und „gern“: Das finde ich immer gut.",
+            "en": "“möchte”: now, here in the café; “mag” and “gern”: I always like that."
           },
           "origin": "agent"
         },
@@ -1959,7 +2027,7 @@
             "Ich mag Kuchen."
           ],
           "explanation": {
-            "de": "„Ich mag Kuchen.“ gilt immer. „möchte“ und „nehme“ sagen: jetzt, hier.",
+            "de": "„mag“: immer. „Ich mag Kuchen.“ heißt: Kuchen finde ich immer gut. „möchte“ und „nehme“: jetzt, hier.",
             "en": "“Ich mag Kuchen” is always true; “möchte” and “nehme” are about now."
           },
           "origin": "agent"
@@ -1972,17 +2040,17 @@
           "promptDe": "Der Kellner fragt: „Was möchten Sie?“ Was passt?",
           "promptEn": "The waiter asks what you’d like. What fits?",
           "options": [
-            "Ich möchte Fisch mit Kartoffeln.",
-            "Ich mag Fisch.",
-            "Ja, ich mag das."
+            "Ich mag Fisch mit Kartoffeln.",
+            "Fisch mit Kartoffeln, bitte.",
+            "Ja, Fisch mag ich."
           ],
-          "answer": "Ich möchte Fisch mit Kartoffeln.",
+          "answer": "Fisch mit Kartoffeln, bitte.",
           "accepted": [
-            "Ich möchte Fisch mit Kartoffeln."
+            "Fisch mit Kartoffeln, bitte."
           ],
           "explanation": {
-            "de": "„Was möchten Sie?“ fragt: Was bestellen Sie jetzt? „Ich mag Fisch“ sagt nur: Fisch finde ich gut.",
-            "en": "“Was möchten Sie?” asks for your order now; “Ich mag Fisch” only says you like fish."
+            "de": "„Was möchten Sie?“ fragt: Was bestellen Sie jetzt? Sie bestellen: „…, bitte.“ „Ich mag Fisch“ heißt nur: Fisch finde ich immer gut.",
+            "en": "“Was möchten Sie?” asks for your order now: “…, bitte.” “Ich mag Fisch” only says you like fish in general."
           },
           "origin": "agent"
         },
@@ -2040,8 +2108,8 @@
               "möchte"
             ],
             "explanation": {
-              "de": "„ich möchte“: ohne „-t“ am Ende. Das ist ein Wunsch für jetzt.",
-              "en": "ich möchte – no -t; it is a wish for now."
+              "de": "„ich möchte“: ohne „-t“ am Ende. „möchte“ heißt: jetzt, heute.",
+              "en": "ich möchte – no -t; “möchte” is about now, today."
             },
             "origin": "agent"
           },
@@ -2226,18 +2294,22 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.moechte",
-            "promptDe": "Der Kellner: „Was möchten Sie?“ Korrigieren Sie: „Ich mag einen Tee.“",
-            "promptEn": "Correct the answer to the waiter.",
+            "promptDe": "Der Kellner: „Was möchten Sie?“ Korrigieren Sie das Verb: „Ich mag einen Tee.“",
+            "promptEn": "Correct the verb in the answer to the waiter.",
             "answer": "Ich möchte einen Tee.",
             "accepted": [
-              "Ich möchte einen Tee."
+              "Ich möchte einen Tee.",
+              "Ich nehme einen Tee."
             ],
             "intentionalError": true,
             "explanation": {
               "de": "Beim Bestellen sagen Sie „möchte“ oder „nehme“, nicht „mag“. „mag“ heißt: Das finde ich immer gut.",
               "en": "When ordering you say “möchte” or “nehme”, not “mag”; “mag” means you like something in general."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "acceptedWhy": {
+              "Ich nehme einen Tee.": "grammatisch: beim Bestellen passt „nehme“ wie „möchte“"
+            }
           },
           {
             "id": "a1.1-u09-ls3-p11",
@@ -2256,7 +2328,7 @@
               "mag"
             ],
             "explanation": {
-              "de": "Kaffee finde ich immer gut: „mag“. Heute ist der Wunsch anders: „möchte“. „mögt“ ist die ihr-Form.",
+              "de": "Kaffee finde ich immer gut: „mag“. Heute, jetzt: „möchte“ – einen Tee. „mögt“ ist die ihr-Form.",
               "en": "Always: “mag”; the wish for today: “möchte”. “mögt” is the ihr-form."
             },
             "origin": "agent"
@@ -2403,7 +2475,7 @@
           ],
           "difficulty": 2,
           "explanation": {
-            "de": "„Was möchtest du?“ fragt nach einem Wunsch jetzt. Die Antwort: „Einen Orangensaft, bitte.“",
+            "de": "„Was möchtest du?“ fragt: Was nimmst du jetzt? Die Antwort: „Einen Orangensaft, bitte.“",
             "en": "“Was möchtest du?” asks for a wish now: “Einen Orangensaft, bitte.”"
           },
           "origin": "agent"
@@ -2466,26 +2538,26 @@
         "register": "du"
       },
       "aussprache": {
-        "focus": "Wortakzent in Komposita: Das erste Wort hat den Akzent – APFELkuchen, OBSTsalat, TOMATENsuppe.",
+        "focus": "Wortakzent in Komposita: Das erste Wort hat den Akzent – APFELkuchen, KÄSEbrot, ORANGENsaft.",
         "perception": [
           {
             "id": "a1.1-u09-ls3-x01",
             "type": "listen_select",
             "role": "perception",
             "topic": "aussprache",
-            "promptDe": "Hören Sie: „Apfelkuchen“. Welches Wort hat den Akzent?",
-            "promptEn": "Which part is stressed?",
+            "promptDe": "Hören Sie: „Salat“. Wo ist der Akzent?",
+            "promptEn": "Where is the stress?",
             "options": [
-              "Apfel",
-              "Kuchen"
+              "SAlat",
+              "saLAT"
             ],
-            "answer": "Apfel",
+            "answer": "saLAT",
             "accepted": [
-              "Apfel"
+              "saLAT"
             ],
             "explanation": {
-              "de": "„Apfelkuchen“: Das erste Wort „Apfel“ hat den Akzent.",
-              "en": "Apfelkuchen: the first part, Apfel, is stressed."
+              "de": "„Salat“ allein: Der Akzent ist am Ende, auf „lat“.",
+              "en": "Salat on its own: the stress is at the end, on “lat”."
             },
             "origin": "agent"
           },
@@ -2494,19 +2566,19 @@
             "type": "listen_select",
             "role": "perception",
             "topic": "aussprache",
-            "promptDe": "Hören Sie: „Tomatensuppe“. Welches Wort hat den Akzent?",
-            "promptEn": "Which part is stressed?",
+            "promptDe": "Hören Sie: „Obstsalat“. Wo ist der Akzent?",
+            "promptEn": "Where is the stress?",
             "options": [
-              "Suppe",
-              "Tomaten"
+              "obstSALAT",
+              "OBSTsalat"
             ],
-            "answer": "Tomaten",
+            "answer": "OBSTsalat",
             "accepted": [
-              "Tomaten"
+              "OBSTsalat"
             ],
             "explanation": {
-              "de": "„Tomatensuppe“: Das erste Wort „Tomaten“ hat den Akzent.",
-              "en": "Tomatensuppe: the first part, Tomaten, is stressed."
+              "de": "„Obstsalat“: Jetzt hat das erste Wort „Obst“ den Akzent, nicht „lat“.",
+              "en": "Obstsalat: now the first part, Obst, is stressed, not “lat”."
             },
             "origin": "agent"
           },
@@ -2515,19 +2587,19 @@
             "type": "listen_select",
             "role": "perception",
             "topic": "aussprache",
-            "promptDe": "Hören Sie: „Obstsalat“. Welches Wort hat den Akzent?",
-            "promptEn": "Which part is stressed?",
+            "promptDe": "Hören Sie: „Mineralwasser“. Wo ist der Akzent?",
+            "promptEn": "Where is the stress?",
             "options": [
-              "Obst",
-              "Salat"
+              "MINERALwasser",
+              "mineralWASSER"
             ],
-            "answer": "Obst",
+            "answer": "MINERALwasser",
             "accepted": [
-              "Obst"
+              "MINERALwasser"
             ],
             "explanation": {
-              "de": "„Obstsalat“: Das erste Wort „Obst“ hat den Akzent.",
-              "en": "Obstsalat: the first part, Obst, is stressed."
+              "de": "„Mineralwasser“: Das erste Wort „Mineral“ hat den Akzent, nicht „Wasser“.",
+              "en": "Mineralwasser: the first part, Mineral, is stressed, not Wasser."
             },
             "origin": "agent"
           },
@@ -2536,19 +2608,19 @@
             "type": "listen_select",
             "role": "perception",
             "topic": "aussprache",
-            "promptDe": "Hören Sie: „Käsebrot“. Welches Wort hat den Akzent?",
-            "promptEn": "Which part is stressed?",
+            "promptDe": "Hören Sie: „Wasser“. Wo ist der Akzent?",
+            "promptEn": "Where is the stress?",
             "options": [
-              "Brot",
-              "Käse"
+              "wasSER",
+              "WASser"
             ],
-            "answer": "Käse",
+            "answer": "WASser",
             "accepted": [
-              "Käse"
+              "WASser"
             ],
             "explanation": {
-              "de": "„Käsebrot“: Das erste Wort „Käse“ hat den Akzent.",
-              "en": "Käsebrot: the first part, Käse, is stressed."
+              "de": "„Wasser“ allein: Der Akzent ist am Anfang, auf „Was“.",
+              "en": "Wasser on its own: the stress is at the start, on “Was”."
             },
             "origin": "agent"
           }
@@ -2740,8 +2812,8 @@
             {
               "id": "a1.1-u09-ls4-t5-l01",
               "speaker": "cast.ensemble-a1-3",
-              "de": "Restaurant Kochi, guten Tag!",
-              "en": "Restaurant Kochi, good afternoon!"
+              "de": "Restaurant Wien, guten Tag!",
+              "en": "Restaurant Wien, good afternoon!"
             },
             {
               "id": "a1.1-u09-ls4-t5-l02",
@@ -2825,7 +2897,7 @@
           "length": "full",
           "scaffolded": true,
           "modeDefault": "lern",
-          "instructionsDe": "Sie hören sechs kurze Gespräche zweimal. Wählen Sie a, b oder c.",
+          "instructionsDe": "Sie hören sechs Gespräche zweimal. Wählen Sie a, b oder c.",
           "textRefs": [
             "a1.1-u09-ls4-t1",
             "a1.1-u09-ls4-t2",
@@ -2910,9 +2982,9 @@
               "topic": "hoeren",
               "promptDe": "Was isst die Frau?",
               "options": [
+                "Suppe",
                 "Fisch",
-                "Kuchen",
-                "Suppe"
+                "Kuchen"
               ],
               "textRef": "a1.1-u09-ls4-t4",
               "answer": "Suppe",
@@ -2952,20 +3024,20 @@
               "type": "abc",
               "role": "exam",
               "topic": "hoeren",
-              "promptDe": "Was bezahlt der Mann?",
+              "promptDe": "Was isst der Mann?",
               "options": [
-                "den Salat und das Bier",
-                "den Kuchen und den Tee",
-                "alles zusammen"
+                "Kuchen",
+                "Suppe",
+                "Salat"
               ],
               "textRef": "a1.1-u09-ls4-t6",
-              "answer": "den Salat und das Bier",
+              "answer": "Salat",
               "accepted": [
-                "den Salat und das Bier"
+                "Salat"
               ],
               "explanation": {
-                "de": "Der Mann sagt: „Getrennt, bitte. Ich bezahle den Salat und das Bier.“ Kuchen und Tee bezahlt seine Frau.",
-                "en": "They pay separately: he pays for the salad and the beer, his wife for the cake and tea."
+                "de": "Der Mann sagt: „Getrennt, bitte. Ich bezahle den Salat und das Bier.“ Er isst also Salat. Kuchen und Tee bezahlt die Frau.",
+                "en": "They pay separately: he pays for the salad and the beer, so he had the salad; his wife pays for the cake and the tea."
               },
               "origin": "agent"
             }
@@ -2993,7 +3065,7 @@
             "profile": "sd1-sp2",
             "prepMinutes": 0,
             "instructionsDe": "Zwei Themen: „Essen und Trinken“, dann „Getränke“. Fragen und antworten Sie mit den Karten.",
-            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin haben Wortkarten zu zwei Themen: zuerst „Essen und Trinken“, dann „Getränke“. Stellen Sie mit Ihrer Karte eine Frage. Antworten Sie auf die Frage der Partnerin. Sagen Sie auch: Was mögen Sie? Was mögen Sie nicht?",
+            "situationDe": "Sprechen Teil 2: Sie und Nora haben Wortkarten zu zwei Themen: zuerst „Essen und Trinken“, dann „Getränke“. Stellen Sie mit Ihrer Karte eine Frage. Antworten Sie auf die Frage von Nora. Sagen Sie auch: Was mögen Sie? Was mögen Sie nicht?",
             "cards": {
               "learner": [
                 "Essen und Trinken – Frühstück",
@@ -3015,8 +3087,8 @@
             "mode": "cards-request",
             "profile": "sd1-sp3",
             "prepMinutes": 0,
-            "instructionsDe": "Bitten Sie mit jeder Karte höflich um etwas. Dann reagieren Sie auf die Bitte der Partnerin.",
-            "situationDe": "Sprechen Teil 3: Sie und Ihre Partnerin sind im Café. Sie haben je zwei Karten. Mit Ihren Karten bestellen Sie etwas und bitten um die Rechnung. Ihre Partnerin bittet auch zweimal um etwas. In der Prüfung sind auf den Karten Bilder.",
+            "instructionsDe": "Bitten Sie mit jeder Karte höflich um etwas. Dann reagieren Sie auf die Bitte von Nora.",
+            "situationDe": "Sprechen Teil 3: Sie und Nora haben je zwei Karten. Bitten Sie Nora mit Ihren Karten um etwas. Nora bittet Sie auch zweimal um etwas. In der Prüfung sind auf den Karten Bilder.",
             "cards": {
               "learner": [
                 "Kaffee",
@@ -3040,13 +3112,14 @@
           "register": "Sie",
           "support": "slow-wordbank"
         },
-        "openingLine": "Hallo! Zuerst Teil 2: Fragen und Antworten, erst zum Thema „Essen und Trinken“, dann zum Thema „Getränke“. Dann Teil 3 im Café. Bitte, Sie zuerst!",
+        "openingLine": "Hallo! Zuerst Teil 2 mit zwei Themen: „Essen und Trinken“ und „Getränke“. Dann Teil 3 mit Karten. Sie fangen an!",
         "hintWords": [
           "Was essen Sie …?",
           "Mögen Sie …?",
           "Ich mag …",
           "… mag ich nicht.",
           "Einen …, bitte.",
+          "Kann ich bitte … haben?",
           "Die Rechnung, bitte.",
           "Ja, gern. Hier, bitte.",
           "Entschuldigung, …"
@@ -3066,7 +3139,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Ja, Fisch mag ich sehr."
+            "de": "Nein, Fisch mag ich nicht. Aber Käse mag ich sehr."
           },
           {
             "speaker": "learner",
@@ -3086,7 +3159,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Entschuldigung! Einen Kaffee, bitte."
+            "de": "Kann ich bitte einen Kaffee haben?"
           },
           {
             "speaker": "partner",
@@ -3102,11 +3175,11 @@
           },
           {
             "speaker": "learner",
-            "de": "Wir möchten bezahlen. Die Rechnung, bitte."
+            "de": "Kann ich bitte die Rechnung haben?"
           },
           {
             "speaker": "partner",
-            "de": "Gern. Hier ist die Rechnung."
+            "de": "Ja, hier, bitte."
           },
           {
             "speaker": "partner",
@@ -3131,7 +3204,7 @@
         "register": "formell",
         "address": "Sie",
         "title": "Ein Tisch im Restaurant Kochi: das Formular für Olena",
-        "situationDe": "Olena Kovalenko hat am Freitag Geburtstag. Am Abend isst sie mit Freunden im Restaurant Kochi. Priya und Arjun kommen, Elif, Sophie und Bilal auch. Sie essen um halb acht. Olenas Handynummer ist 0157 38 42 96 10. Priya bestellt den Tisch online.",
+        "situationDe": "Olena Kovalenko hat am Freitag Geburtstag. Am Abend isst sie mit Freunden im Restaurant Kochi. Priya und Arjun kommen, Elif, Sophie und Bilal auch. Sie essen um halb acht. Die Handynummer von Olena ist 0157 38 42 96 10. Priya bestellt den Tisch online.",
         "taskDe": "Priya bestellt den Tisch online. Füllen Sie das Formular für Olena aus.",
         "leitpunkte": [],
         "form": {
@@ -3143,8 +3216,7 @@
               "accepted": [
                 "Olena Kovalenko",
                 "Kovalenko, Olena",
-                "Kovalenko Olena",
-                "Kovalenko"
+                "Kovalenko Olena"
               ],
               "exact": "name"
             },
@@ -3185,8 +3257,28 @@
                 "19.30",
                 "19:30",
                 "19 Uhr 30",
+                "um 19.30 Uhr",
+                "um 19.30",
+                "19.30 Uhr abends",
+                "19.30 Uhr am Abend",
+                "7.30 Uhr",
+                "7:30 Uhr",
+                "7.30",
+                "7:30",
+                "um 7.30 Uhr",
+                "um 7.30",
+                "7.30 Uhr abends",
+                "um 7.30 Uhr abends",
+                "7.30 Uhr am Abend",
+                "um 7.30 Uhr am Abend",
+                "7.30 abends",
+                "um 7.30 abends",
                 "halb acht",
-                "halb acht am Abend"
+                "um halb acht",
+                "halb acht am Abend",
+                "um halb acht am Abend",
+                "halb acht abends",
+                "um halb acht abends"
               ],
               "exact": "number"
             },
@@ -3198,7 +3290,15 @@
                 "6",
                 "sechs",
                 "6 Leute",
-                "sechs Leute"
+                "sechs Leute",
+                "6 Personen",
+                "sechs Personen",
+                "für 6",
+                "für sechs",
+                "für 6 Leute",
+                "für sechs Leute",
+                "für 6 Personen",
+                "für sechs Personen"
               ],
               "exact": "number"
             }
@@ -3206,26 +3306,26 @@
           "documents": []
         },
         "checklist": [
-          "Name: Wie heißt Olena ganz?",
+          "Name: Vorname und Familienname",
           "Telefonnummer: Jede Zahl ist richtig.",
           "Tag: Wann hat Olena Geburtstag?",
-          "Uhrzeit: Sie essen am Abend. Schreiben Sie die Uhrzeit mit Zahlen.",
-          "Leute: Wer kommt? Zählen Sie genau."
+          "Uhrzeit: Wann essen sie?",
+          "Leute: Wer kommt? Wie viele sind es?"
         ],
-        "modelText": "Name: Olena Kovalenko\nTelefonnummer: 0157 38 42 96 10\nTag: Freitag\nUhrzeit: 19.30 Uhr\nTisch für wie viele Leute? 6"
+        "modelText": "Name: Olena Kovalenko\nTelefonnummer: 0157 38 42 96 10\nTag: Freitag\nUhrzeit: 19.30 Uhr (= halb acht am Abend)\nTisch für wie viele Leute? 6"
       }
     },
     {
       "id": "a1.1-u09-ls7",
       "kind": "check",
-      "endLine": "Geschafft! Sie können jetzt im Café bestellen und bezahlen, eine Speisekarte lesen und sagen, was Sie mögen."
+      "endLine": "Super! Sie können jetzt im Café bestellen und bezahlen, eine Speisekarte lesen und sagen: Das mag ich, das mag ich nicht."
     }
   ],
   "check": {
     "lines": [
       {
         "id": "a1.1-u09-ls7-l01",
-        "speaker": "cast.priya",
+        "speaker": "cast.ensemble-a1-4",
         "de": "Die Rechnung, bitte. Wir bezahlen zusammen.",
         "en": "The bill, please. We’re paying together."
       },
@@ -3363,8 +3463,8 @@
         "type": "error_correction",
         "role": "check",
         "topic": "g.akkusativ",
-        "promptDe": "Korrigieren Sie: „Ich nehme ein Salat.“",
-        "promptEn": "Correct the sentence.",
+        "promptDe": "Korrigieren Sie die Endung: „Ich nehme ein Salat.“",
+        "promptEn": "Correct the ending.",
         "answer": "Ich nehme einen Salat.",
         "accepted": [
           "Ich nehme einen Salat."
@@ -3537,13 +3637,28 @@
     }
   ],
   "story": {
-    "beat": "Nach dem Laufen sitzen Priya, Elif und Olena im Café am Park. Sie lesen die Speisekarte, sagen, was sie mögen, bestellen und bezahlen – heute bezahlt Elif. Olena hat am Freitag Geburtstag; Priya bestellt für Olena online einen Tisch im Restaurant Kochi.",
+    "beat": "Nach dem Laufen sitzen Priya, Elif und Olena im Café am Park. Sie lesen die Speisekarte und sagen: Das mag ich, das mag ich nicht. Sie bestellen, essen und bezahlen – heute bezahlt Elif. Olena hat am Freitag Geburtstag; Priya bestellt für Olena online einen Tisch im Restaurant Kochi.",
     "cliffhanger": "Am Mittwoch hat Olena alle Antworten: Am Freitag kommen alle. Da ruft Sophie an: „Hallo Priya, hier ist Sophie! Hast du am Samstag Zeit?“",
     "castIn": [
       "cast.ensemble-a1-3"
     ]
   },
   "fokus": [],
-  "facts": [],
+  "facts": [
+    {
+      "id": "a1.1-u09-f01",
+      "claimDe": "In Deutschland müssen die Preise auf der Speisekarte die Bedienung schon enthalten. Trinkgeld ist freiwillig: Der Gast gibt es zusätzlich und ohne Pflicht.",
+      "claimEn": "In Germany, the prices on a menu must already include service. A tip is voluntary: the guest gives it on top, with no obligation.",
+      "sources": [
+        "https://www.gesetze-im-internet.de/pangv_2022/__13.html",
+        "https://www.gesetze-im-internet.de/gewo/__107.html"
+      ],
+      "factsCheckedOn": "2026-09-27",
+      "currentAsOf": "2026-09-27",
+      "exceptions": [],
+      "verification": "verified",
+      "notes": "§ 13 Abs. 5 PAngV (Preisangabenverordnung 2022) read at gesetze-im-internet.de on 2026-09-27: the prices listed in the Preisverzeichnisse of Gaststätten „müssen das Bedienungsgeld und alle sonstigen Zuschläge einschließen“ (Abs. 1: Speisen und Getränke in Gaststätten; Abs. 2: the list is shown to every guest before the order). § 107 Abs. 3 Satz 2 GewO read the same day: „Trinkgeld ist ein Geldbetrag, den ein Dritter ohne rechtliche Verpflichtung dem Arbeitnehmer zusätzlich zu einer dem Arbeitgeber geschuldeten Leistung zahlt.“ Deliberately not claimed, because no primary source was read for it: how much guests usually tip (the often quoted 5–10 %) and that rounding up with „Stimmt so“ is the custom; the unit only shows it as a scene (LS2: Elif pays 22 Euro for 20,90 and says „Stimmt so!“; exam text t2: 10 Euro for 8,90). Austria and Switzerland were not read and are not claimed."
+    }
+  ],
   "assets": []
 }
