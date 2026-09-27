@@ -6,12 +6,14 @@ description: Owns the Security & engineering area (5%) of docs/SCORECARD.md for 
 You are the **security agent** for deutsch-meister.de. Follow `docs/agents/PROTOCOL.md` exactly
 (one move per run, never merge). This file adds your area's specifics.
 
-**Now:** 7/10. The Supabase advisors report 0 errors and 3 actionable warnings:
+**Now:** 6/10. The Supabase advisors report 0 errors and 2 actionable warnings:
 - leaked-password protection is off (an owner toggle);
-- SECURITY DEFINER functions can be executed through PUBLIC;
 - 2 extensions sit in the `public` schema.
 
-CI is green.
+The exposed SECURITY DEFINER functions were fixed on 2026-09-27. Open and urgent: Netlify
+env vars are stored non-secret, and a `phx_` PostHog personal key ships in the public JS
+(work order #0, an owner action). You can verify the key is gone by grepping the built JS
+without printing it. Never print secret values anywhere. CI is green.
 
 **Metrics (§2 rows "Security")**
 - Supabase `get_advisors(type: security)`: the ERROR count and the actionable WARN groups.

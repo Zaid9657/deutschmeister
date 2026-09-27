@@ -22,9 +22,11 @@ measuring the same week get the same number. The dated snapshot this started fro
 | Retention & email | 10% | **3** | — | 29,500 sends/30 d, 1.95% bounce, 0 complaints. Click tracking switched **on** 2026-09-27; the click rate isn't known yet. Launch email written, never sent. 3 of 6 live paid subs failing |
 | Website performance | 5% | **8** | — | Mobile Lighthouse median 89 (home 100 … login 68), local build. `/login` CLS 2.0. `vendor-ui` 757 KB raw (all of lucide-react) |
 | Support | 5% | **5** | — | 0 tickets ever from 1,685 accounts — no backlog, no signal |
-| Security & engineering | 5% | **7** | — | Advisors: 0 errors; 3 actionable warnings (leaked-password protection off; `course_reminder_candidates` callable by anon; 2 extensions in `public`). CI green, 1,126 tests |
+| Security & engineering | 5% | **6** | ↓ | Advisors: 0 errors; 2 actionable warnings (leaked-password protection off; 2 extensions in `public`). The exposed-function warning is fixed (2026-09-27). **New: every Netlify env var is stored non-secret, and a `phx_` PostHog personal API key ships in the public JS** (work order #0). CI green |
 
-Total = Σ(weight × score). 2026-09-27: 25+40+30+75+30+40+25+35 = **300 → 30/100**.
+Total = Σ(weight × score). First measurement, 2026-09-27: 25+40+30+75+30+40+25+35 = **300 → 30/100**.
+Same evening, after the secrets finding and the rubric line it added: security 7 → 6, so
+295 → **30/100** (rounded).
 
 ## 2. Metrics we track (the aspects)
 
@@ -45,7 +47,8 @@ Total = Σ(weight × score). 2026-09-27: 25+40+30+75+30+40+25+35 = **300 → 30/
 | Email | Offer/campaign emails sent / 30 d | 0 | 2 | Resend / `send-campaign` |
 | Web | Mobile Lighthouse median, 7 pages | 89 | 95 | Lighthouse §7 |
 | Web | Worst CLS | 2.0 | <0.1 | Lighthouse §7 |
-| Security | Actionable advisor warnings | 3 | 0 | Supabase `get_advisors` |
+| Security | Actionable advisor warnings | 2 (was 3) | 0 | Supabase `get_advisors` |
+| Security | Known exposed secrets | 2 (phx_ key in bundle; env vars non-secret) | 0 | agent-reported 2026-09-27; verify: grep the built JS for `phx_`; Netlify env `is_secret` |
 
 ## 3. Work order — one at a time, top first
 
@@ -56,17 +59,20 @@ item above is done or blocked on someone else.
 
 | # | Move | Area | Who | Status | Done when |
 |---|---|---|---|---|---|
+| 0 | **URGENT, secrets.** The revenue audit (2026-09-27) found every Netlify env var stored with `is_secret=false`, so the API returns them in plain text. `VITE_POSTHOG_KEY` is a `phx_` **personal** API key bundled into the public JS. Owner: revoke that key in PostHog and set `VITE_POSTHOG_KEY` to the `phc_` project key; mark every Netlify env var secret; rotate the Supabase service-role key and the other server secrets | Security | Owner | open | no `phx_` in the built JS; all env vars secret; keys rotated |
 | 1 | One 10-min dashboard sitting: ~~Resend click tracking on~~ (done 2026-09-27 via connector) · Lemon Squeezy failed-payment emails on · Supabase leaked-password protection on | Revenue, Security | Owner | 1 of 3 done | all three toggles on |
-| 2 | €0 test purchase of A2.1 (DMTEST100) → agent verifies → owner runs the launch email (`drafts/send-launch-email-1.sh`, test then live) | Revenue | Owner + agent | open | email sent to the confirmed list; clicks visible |
-| 3 | Sign-up + course offer under the X-Ray result; record X-Ray→signup; find the traffic source | Acquisition, Activation | Agent | open | X-Ray→signup measured, ≥2% |
-| 4 | Social pack live 2026-10-01: accounts created, IDs filled, posting Routine on | Acquisition | Owner, then agent | open | first attributed social signup |
-| 5 | Fix speaking starts that end with zero learner turns | Product | Agent | open | zero-turn rate <15% |
-| 6 | First-lesson path for new signups (land in a lesson, not a menu) | Activation | Agent | open | October cohort ≥18% |
-| 7 | Revoke anon/authenticated `EXECUTE` on `course_reminder_candidates` (migration) | Security | Agent, owner OK | open | advisor warning gone |
-| 8 | Measurement: verify `deutsch-meister.de` in GSC; allow `api.dataforseo.com` for this environment | Acquisition | Owner | open | both connectors return data |
-| 9 | Stop bundling all of lucide-react (`vite.config.js:13`); self-host the two fonts; fix `/login` CLS | Web | Agent | open | median ≥95, worst CLS <0.1 |
-| 10 | Visible support/contact entry in the app | Support | Agent | open | first ticket or reply received |
-| 11 | Earn real backlinks (r/German answers, VHS/university resource lists) | Acquisition | Owner/brother | ongoing | 5 non-spam referring domains |
+| 2 | **Launch the sub-level courses by email.** Do NOT run `drafts/send-launch-email-1.sh`: it is the old telc B1 email with code START49, which expired 2026-09-14. Steps: (a) owner creates a new 100% code in Lemon Squeezy restricted to the A2.1 product (DMTEST100 is tied to the retired product); (b) owner buys A2.1 for €0 on `/pricing/` with a **fresh** account; (c) agent verifies the `course_a2_1` purchase row and the 90-day `plan_type='course'` Pro row, and owner deactivates the code; (d) agent stages `drafts/send-launch-sublevel-1.sh` from Email 1 of `drafts/launch-sublevel-courses-2026-09.md`, excluding subscribers and buyers, and fixes 3 copy issues (unsourced quote, "Goethe exam format" → Goethe-*style*, "since Monday"); (e) owner runs `test`, then `live` **once** — nothing records sends, so a rerun re-mails everyone | Revenue | Owner + agent | open | email sent once; clicks visible; first real sale |
+| 3 | **Unpaid subscribers keep Pro.** The webhook copies the next renewal date into `subscription_end` even when the status is `unpaid`/`past_due`, so access rolls forward every month (e.g. last paid 06-03, Pro until 10-03). Fix: access must follow status, not only `subscription_end` | Revenue, Product | Agent (review) | open | an unpaid sub loses Pro at the end of its paid period; test pins it |
+| 4 | **Trial end sells only Pro.** 181 trials ended in 30 days and 0 converted. The day-6 and trial-ended emails offer only €9.99/mo, never the one-time courses. Draft course-offer versions | Revenue, Email | Agent draft + **owner decision** | open | a trial-end email offers the course; trial→paid measured |
+| 5 | Sign-up + course offer under the X-Ray result; record X-Ray→signup; find the traffic source | Acquisition, Activation | Agent | in PR | X-Ray→signup measured, ≥2% |
+| 6 | Social pack live 2026-10-01: accounts created, IDs filled, posting Routine on | Acquisition | Owner, then agent | open | first attributed social signup |
+| 7 | Fix speaking starts that end with zero learner turns (and 8 of 12 speaking users hit the free cap — an offer moment) | Product | Agent | in PR | zero-turn rate <15% |
+| 8 | First-lesson path for new signups (land in a lesson, not a menu) | Activation | Agent | in PR | October cohort ≥18% |
+| 9 | ~~Revoke EXECUTE on the exposed SECURITY DEFINER functions~~ — **done 2026-09-27**: `migrations/2026-09-27-revoke-public-execute.sql` applied via connector; 0 functions executable by anon/authenticated; `tests/function-grants.test.mjs` closes the class | Security | Agent | done | advisor warning gone |
+| 10 | Measurement: verify `deutsch-meister.de` in GSC; allow `api.dataforseo.com` for this environment | Acquisition | Owner | open | both connectors return data |
+| 11 | Stop bundling all of lucide-react (`vite.config.js:13`); self-host the two fonts; fix `/login` CLS | Web | Agent | in PR | median ≥95, worst CLS <0.1 |
+| 12 | Visible support/contact entry in the app | Support | Agent | in PR | first ticket or reply received |
+| 13 | Earn real backlinks (r/German answers, VHS/university resource lists) | Acquisition | Owner/brother | ongoing | 5 non-spam referring domains |
 
 ## 4. How the loop works (agents)
 
@@ -118,7 +124,9 @@ next move, and an idea logged as dropped does not come back without a new reason
   visible channel · 7 if the channel is visible and the median first response is <24 h ·
   10 if it is <4 h with nothing open past 48 h.
 - **Security & engineering** — start at 10. −3 per advisor ERROR. −1 per actionable
-  WARN group. −2 if CI is red on `main`.
+  WARN group. −2 if CI is red on `main`. −2 while any known secret is exposed (a private
+  key in the public bundle, or server secrets readable in plain text). This line was added
+  2026-09-27, when the revenue audit found both.
 
 Change a band only in a PR that says why, and re-score the history line it affects.
 
@@ -129,6 +137,8 @@ Change a band only in a PR that says why, and re-score the history line it affec
 | 2026-09-03 | Activation | A1.1 reordered: der/die/das first, alphabet moved to lesson 5 | grammar one-and-done (14 d): 1/9 (09-07) → 5/8 (09-21) → 1/4 (09-27) | inconclusive | cohorts of 4–9 can't show an effect; judge on a full month |
 | 2026-09-12→14 | Product | A1.1 rebuilt + 23 DaF review rounds | Lektionen finished: 0 → 0 | keep content, stop polishing | quality without traffic moved nothing |
 | 2026-09-27 | Email | Resend click tracking switched on for deutsch-meister.de (via connector) | click rate unknown → _next run_ | — | expected: click rate becomes measurable; required before any offer email |
+| 2026-09-27 | Security | Revoked PUBLIC/anon/authenticated EXECUTE on 3 SECURITY DEFINER functions (applied) + class test | exposed functions 2 → 0 | keep | `REVOKE … FROM anon, authenticated` is a no-op while PUBLIC holds EXECUTE; always name PUBLIC |
+| 2026-09-27 | Revenue | Launch-readiness audit | — | — | the staged launch script was the expired telc/START49 email; the precondition purchase never happened; audit before any send |
 
 ## 7. How to refresh (exact sources)
 
@@ -166,6 +176,7 @@ select status, count(*) from subscriptions where price_paid > 0 group by 1;
 | Date | Total | Rev | Act | Acq | Prod | Ret | Web | Sup | Sec | What changed |
 |---|---|---|---|---|---|---|---|---|---|---|
 | 2026-09-27 | **30** | 1 | 2 | 2 | 5 | 3 | 8 | 5 | 7 | First measurement |
+| 2026-09-27 (eve) | **30** | 1 | 2 | 2 | 5 | 3 | 8 | 5 | 6 | Exposed-function warning fixed (+1), but exposed secrets found (−2, new rubric line); click tracking on (the score moves once the click rate is measured) |
 
 ## 9. Can't measure yet
 
