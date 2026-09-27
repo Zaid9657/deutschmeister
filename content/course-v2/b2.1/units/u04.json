@@ -178,7 +178,7 @@
     "cast": [
       "cast.priya",
       "cast.amal",
-      "cast.ensemble-b2-1",
+      "cast.ensemble-b2-2",
       "cast.ensemble-b2-6"
     ],
     "fokusPlan": [],
@@ -301,7 +301,7 @@
         "title": "Reisebedingungen für Pauschalreisen (Auszug)",
         "textType": "tt.bedingungen",
         "text": {
-          "de": "Blauwelle Reisen – Reisebedingungen für Pauschalreisen\n\n1. Mit Ihrer Buchung kommt ein Reisevertrag zwischen Ihnen und uns als Reiseveranstalter zustande. Den Leistungsumfang Ihrer Pauschalreise finden Sie in der Leistungsbeschreibung und in Ihrer Buchungsbestätigung: Unterbringung, Zimmerkategorie, Verpflegung und Programm. Zusätzliche Wünsche gelten nur, wenn wir sie Ihnen ausdrücklich und schriftlich zugesichert haben.\n\n2. Wir dürfen das Programm nur aus wichtigem Grund ändern, zum Beispiel bei einem Unwetter. Über jede Programmänderung informieren wir Sie rechtzeitig; das ist unsere Informationspflicht. Wenn eine Leistung ausfällt, erhalten Sie nach Möglichkeit eine gleichwertige Ersatzleistung. Wenn auch das nicht möglich ist, erstatten wir Ihnen ersatzweise den Preis dieser Leistung.\n\n3. Wenn es während der Reise einen Reisemangel gibt, melden Sie ihn bitte sofort unserer Reiseleitung. Wenn die Reiseleitung nicht erreichbar ist, richten Sie Ihre Mängelanzeige direkt an unseren Kundenservice. Nur so können wir den Mangel beseitigen. Reisende, die einen Mangel nicht melden, können später oft keine Minderung verlangen.\n\n4. Solange ein Mangel besteht, haben Sie Anspruch auf eine Minderung des Reisepreises. Bei einem erheblichen Mangel können Sie uns eine angemessene Frist setzen. Eine Fristsetzung ist auch als E-Mail möglich. Wenn wir den Mangel in dieser Frist nicht beseitigen, dürfen Sie den Reisevertrag kündigen.\n\n5. Ihre Ansprüche richten Sie bitte nach der Reise schriftlich an unseren Kundenservice. Dafür reicht eine kurze Schilderung. Schicken Sie Belege und Beweisfotos mit, und heben Sie vorsorglich alle Quittungen auf. Eine Beschwerdefrist gibt es nicht. Ihre Ansprüche verjähren aber zwei Jahre nach dem vereinbarten Ende der Reise. Leistungen aus Kulanz, zum Beispiel ein Gutschein, sind freiwillig. Die gesetzlichen Regeln zum Verbraucherschutz gelten immer.\n\n6. Bei einem Rücktritt vor der Abreise zahlen Sie eine Entschädigung. Den Rücktritt erklären Sie bitte schriftlich. Die Kosten einer Stornierung finden Sie im Anhang: Je später die Stornierung, desto höher die Kosten.",
+          "de": "Blauwelle Reisen – Reisebedingungen für Pauschalreisen\n\n1. Mit Ihrer Buchung kommt ein Reisevertrag zwischen Ihnen und uns als Reiseveranstalter zustande. Den Leistungsumfang Ihrer Pauschalreise finden Sie in der Leistungsbeschreibung und in Ihrer Buchungsbestätigung: Unterbringung, Zimmerkategorie, Verpflegung und Programm. Zusätzliche Wünsche sind nur dann Teil des Vertrags, wenn wir sie Ihnen ausdrücklich und schriftlich zugesichert haben.\n\n2. Wir dürfen das Programm nur aus wichtigem Grund ändern, zum Beispiel bei einem Unwetter. Über jede Programmänderung informieren wir Sie rechtzeitig; das ist unsere Informationspflicht. Wenn eine Leistung ausfällt, erhalten Sie nach Möglichkeit eine gleichwertige Ersatzleistung. Wenn auch das nicht möglich ist, erstatten wir Ihnen ersatzweise den Preis dieser Leistung.\n\n3. Wenn es während der Reise einen Reisemangel gibt, melden Sie ihn bitte sofort unserer Reiseleitung. Wenn die Reiseleitung nicht erreichbar ist, richten Sie Ihre Mängelanzeige direkt an unseren Kundenservice. Nur so können wir den Mangel beseitigen. Reisende, die einen Mangel nicht melden, können später oft keine Minderung verlangen.\n\n4. Solange ein Mangel besteht, haben Sie Anspruch auf eine Minderung des Reisepreises. Bei einem erheblichen Mangel können Sie uns eine angemessene Frist setzen. Eine Fristsetzung ist auch als E-Mail möglich. Wenn wir den Mangel in dieser Frist nicht beseitigen, dürfen Sie den Reisevertrag kündigen.\n\n5. Ihre Ansprüche richten Sie bitte nach der Reise schriftlich an unseren Kundenservice. Dafür reicht eine kurze Schilderung. Schicken Sie Belege und Beweisfotos mit, und heben Sie vorsorglich alle Quittungen auf. Eine Beschwerdefrist gibt es nicht. Ihre Ansprüche verjähren aber zwei Jahre nach dem vereinbarten Ende der Reise. Leistungen aus Kulanz, zum Beispiel ein Gutschein, sind freiwillig. Die gesetzlichen Regeln zum Verbraucherschutz gelten immer.\n\n6. Bei einem Rücktritt vor der Abreise zahlen Sie eine Entschädigung. Den Rücktritt erklären Sie bitte schriftlich. Die Kosten einer Stornierung finden Sie im Anhang: Je später die Stornierung, desto höher die Kosten.",
           "en": "Blauwelle Reisen – terms and conditions for package holidays (extract): 1 travel contract and scope of services; 2 programme changes, duty to inform, substitute services or a refund instead; 3 report defects on site at once, otherwise a reduction may be lost; 4 price reduction, deadline for a remedy and termination; 5 claims in writing after the trip, no complaint deadline, limitation two years, goodwill is voluntary, statutory consumer protection always applies; 6 withdrawal and cancellation before departure."
         },
         "glosses": [
@@ -773,11 +773,12 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "lx.reisebedingungen",
-          "promptDe": "Die Regeln des Veranstalters für Ihre Reise stehen in den ___. (Reise + Bedingungen)",
-          "promptEn": "Where are the rules written?",
+          "promptDe": "Lesen Sie vor der Buchung die ___. (die Regeln, die zum Reisevertrag gehören)",
+          "promptEn": "Name the document with the rules of the travel contract.",
           "answer": "Reisebedingungen",
           "accepted": [
-            "Reisebedingungen"
+            "Reisebedingungen",
+            "Geschäftsbedingungen"
           ],
           "errorTags": [],
           "banks": [
@@ -787,10 +788,13 @@
           ],
           "difficulty": 2,
           "explanation": {
-            "de": "Die Allgemeinen Reisebedingungen regeln die Rechte und Pflichten bei einer Pauschalreise.",
-            "en": "The general terms of travel set out the rights and duties of a package holiday."
+            "de": "Die Reisebedingungen sind die Regeln, die zum Reisevertrag gehören: Rechte und Pflichten bei einer Pauschalreise.",
+            "en": "The terms of travel are the rules that belong to the travel contract: the rights and duties of a package holiday."
           },
-          "origin": "agent"
+          "origin": "agent",
+          "acceptedWhy": {
+            "Geschäftsbedingungen": "sachlich richtig: Die Reisebedingungen sind die Allgemeinen Geschäftsbedingungen des Reiseveranstalters."
+          }
         },
         {
           "id": "b2.1-u04-ls1-r03",
@@ -953,8 +957,26 @@
           {
             "id": "b2.1-u04-ls2-l05",
             "speaker": "cast.priya",
-            "de": "Davon steht nichts in unseren Unterlagen. Ich finde, dass der Reiseveranstalter uns das vor der Buchung hätte sagen müssen. Wenn wir das gewusst hätten, hätten wir dieses Hotel nie gebucht. Könnten Sie uns bitte ein anderes Zimmer geben?",
-            "en": "There is nothing about it in our documents. I think the operator should have told us before we booked. If we had known, we would never have booked this hotel. Could you please give us another room?"
+            "de": "Davon steht nichts in unseren Unterlagen.",
+            "en": "There is nothing about it in our documents."
+          },
+          {
+            "id": "b2.1-u04-ls2-l15",
+            "speaker": "cast.priya",
+            "de": "Ich finde, dass der Reiseveranstalter uns das vor der Buchung hätte sagen müssen.",
+            "en": "I think the tour operator should have told us that before we booked."
+          },
+          {
+            "id": "b2.1-u04-ls2-l16",
+            "speaker": "cast.priya",
+            "de": "Wenn wir das gewusst hätten, hätten wir dieses Hotel nie gebucht.",
+            "en": "If we had known that, we would never have booked this hotel."
+          },
+          {
+            "id": "b2.1-u04-ls2-l17",
+            "speaker": "cast.priya",
+            "de": "Könnten Sie uns bitte ein anderes Zimmer geben?",
+            "en": "Could you please give us a different room?"
           },
           {
             "id": "b2.1-u04-ls2-l06",
@@ -965,12 +987,18 @@
           {
             "id": "b2.1-u04-ls2-l07",
             "speaker": "cast.priya",
-            "de": "Am Donnerstag ist die halbe Reise schon vorbei. Gut, dann gehen wir so vor: Wir dokumentieren alles mit Beweisfotos und melden die Mängel trotzdem auch der Reiseleitung.",
-            "en": "By Thursday half the trip will be over. Fine, then this is what we will do: we will document everything with photos and report the defects to the tour guide as well."
+            "de": "Am Donnerstag ist die halbe Reise schon vorbei.",
+            "en": "By Thursday half the trip will already be over."
+          },
+          {
+            "id": "b2.1-u04-ls2-l18",
+            "speaker": "cast.priya",
+            "de": "Gut, dann gehen wir so vor: Wir dokumentieren alles mit Beweisfotos und melden die Mängel trotzdem auch der Reiseleitung.",
+            "en": "All right, then this is what we'll do: we'll document everything with photos and report the defects to the tour guide as well."
           },
           {
             "id": "b2.1-u04-ls2-l08",
-            "speaker": "cast.ensemble-b2-1",
+            "speaker": "cast.ensemble-b2-2",
             "de": "Blauwelle Reisen, Kundenservice, guten Tag. Was kann ich für Sie tun?",
             "en": "Blauwelle Reisen, customer service, good afternoon. What can I do for you?"
           },
@@ -982,8 +1010,8 @@
           },
           {
             "id": "b2.1-u04-ls2-l10",
-            "speaker": "cast.ensemble-b2-1",
-            "de": "Das tut mir leid. Bitte erklären Sie mir möglichst genau, was passiert ist.",
+            "speaker": "cast.ensemble-b2-2",
+            "de": "Das tut mir leid, erklären Sie mir bitte möglichst genau, was passiert ist.",
             "en": "I'm sorry. Please explain to me as exactly as possible what has happened."
           },
           {
@@ -994,7 +1022,7 @@
           },
           {
             "id": "b2.1-u04-ls2-l12",
-            "speaker": "cast.ensemble-b2-1",
+            "speaker": "cast.ensemble-b2-2",
             "de": "Danke für Ihre Schilderung, ich verstehe Ihren Ärger. Aus Kulanz kann ich Ihnen einen Gutschein über 50 Euro für eine weitere Buchung in Aussicht stellen.",
             "en": "Thank you for your account, I understand your annoyance. As a goodwill gesture I can offer you the prospect of a 50-euro voucher for another booking.",
             "say": "Danke für Ihre Schilderung, ich verstehe Ihren Ärger. Aus Kulanz kann ich Ihnen einen Gutschein über fünfzig Euro für eine weitere Buchung in Aussicht stellen."
@@ -1007,7 +1035,7 @@
           },
           {
             "id": "b2.1-u04-ls2-l14",
-            "speaker": "cast.ensemble-b2-1",
+            "speaker": "cast.ensemble-b2-2",
             "de": "Ich gebe Ihre Mängelanzeige sofort an die Reiseleitung weiter, und wir prüfen Ihren Fall eingehend. Einen Preisnachlass oder eine Ausgleichszahlung kann ich Ihnen am Telefon leider nicht gewähren. Bitte schicken Sie uns nach der Reise eine schriftliche Beschwerde mit Beweisfotos und allen Belegen.",
             "en": "I will pass your notice of defects to the tour guide right away, and we will look into your case thoroughly. I am afraid I cannot grant you a price reduction or compensation on the phone. Please send us a written complaint with photos and all receipts after the trip."
           }
@@ -1948,8 +1976,8 @@
             "generator": "dictation.fromInput",
             "count": 2,
             "source": [
-              "b2.1-u04-ls2-l05",
-              "b2.1-u04-ls2-l06"
+              "b2.1-u04-ls2-l15",
+              "b2.1-u04-ls2-l16"
             ]
           },
           {
@@ -2227,7 +2255,7 @@
           "id": "b2.1-u04-ls4-t1",
           "kind": "text",
           "title": "E-Mail an die Mitreisenden",
-          "text": "Betreff: Gemeinsame Beschwerde bei Blauwelle Reisen\n\nLiebe Mitreisende,\n\nseit einer Woche sind wir wieder zu Hause, und viele von Ihnen haben uns geschrieben, ⟦01⟧ sehr Sie sich über die Reise geärgert haben. Bis jetzt will uns der Reiseveranstalter mit einem Gutschein über 50 Euro abwimmeln. Wir möchten aber unsere Rechte wahrnehmen und nachträglich eine Minderung einfordern. Deshalb schlagen wir Ihnen eine gemeinsame Vorgehensweise vor.\n\n⟦02⟧ wir uns zusammentun, ist unsere Beweislage viel besser. Wir haben viele Beweisfotos gemacht, ⟦03⟧ die Baustelle, das verschmutzte Bad und sogar Ungeziefer zeigen. Neun Mitreisende haben sich schon mit uns zusammengetan, und wir haben uns ⟦04⟧ geeinigt, hartnäckig zu bleiben.\n\nWir finden, dass der Reiseveranstalter uns schon vor der Reise über die Baustelle ⟦05⟧ informieren müssen. Das war seine Informationspflicht, so steht es auch in den Reisebedingungen. Mit dieser Information ⟦06⟧ viele von uns sicher ein anderes Hotel gebucht.\n\nFür die Arbeitsteilung schlagen wir vor, ⟦07⟧ wir beide die Belege sammeln und jeder von Ihnen einen Beschwerdebrief schickt und sich darin auf die Leistungsbeschreibung beruft. Den Musterbrief der Verbraucherzentrale haben wir schon an unseren Fall angepasst. Es ist sinnvoll, alle Belege mit dem Brief ⟦08⟧. ⟦09⟧ der mangelhaften Unterbringung halten wir eine Minderung von 30 Prozent des Reisepreises für angemessen. Ein kleiner Preisnachlass reicht nicht.\n\nWir schreiben mit Fristsetzung bis Ende November. ⟦10⟧ der Reiseveranstalter bis dahin nicht reagiert, wenden wir uns gemeinsam an die Verbraucherzentrale. Weitere Schritte behalten wir uns vor, aber einen Rechtsbeistand brauchen wir noch nicht. Die Rechtslage ist klar: Wir sind im Recht, und eine gemeinsame Beschwerde ist aussichtsreich. Bitte antworten Sie uns bis Freitag, wenn Sie mitmachen möchten.\n\nViele Grüße\nPriya Nair und Amal Haddad",
+          "text": "Betreff: Gemeinsame Beschwerde bei Blauwelle Reisen\n\nLiebe Mitreisende,\n\nseit einer Woche sind wir wieder zu Hause, und viele von Ihnen haben uns geschrieben, ⟦01⟧ sehr Sie sich über die Reise geärgert haben. Bis jetzt will uns der Reiseveranstalter mit einem Gutschein über 50 Euro abwimmeln. Wir möchten aber unsere Rechte wahrnehmen und nachträglich eine Minderung einfordern. Deshalb schlagen wir Ihnen eine gemeinsame Vorgehensweise vor.\n\n⟦02⟧ wir uns zusammentun, ist unsere Beweislage besser. Wir haben viele Beweisfotos gemacht, ⟦03⟧ die Baustelle, das verschmutzte Bad und sogar Ungeziefer zeigen. Neun Mitreisende haben sich mit uns zusammengetan, und wir haben uns ⟦04⟧ geeinigt, hartnäckig zu bleiben.\n\nWir finden, dass der Reiseveranstalter uns schon vor der Reise über die Baustelle ⟦05⟧ informieren müssen. Das war seine Informationspflicht. Mit dieser Information ⟦06⟧ viele von uns ein anderes Hotel gebucht.\n\nFür die Arbeitsteilung schlagen wir vor, ⟦07⟧ wir beide die Belege sammeln und jeder von Ihnen einen Beschwerdebrief schickt und sich darin auf die Leistungsbeschreibung beruft. Den Musterbrief der Verbraucherzentrale haben wir an unseren Fall angepasst. Es ist sinnvoll, alle Belege mit dem Brief ⟦08⟧. ⟦09⟧ der mangelhaften Unterbringung halten wir eine Minderung von 30 Prozent des Reisepreises für angemessen. Ein kleiner Preisnachlass reicht nicht.\n\nWir schreiben mit Fristsetzung bis Ende November. ⟦10⟧ der Reiseveranstalter bis dahin nicht reagiert, wenden wir uns gemeinsam an die Verbraucherzentrale. Weitere Schritte behalten wir uns vor, aber einen Rechtsbeistand brauchen wir noch nicht. Die Rechtslage ist klar: Wir sind im Recht, und eine gemeinsame Beschwerde ist aussichtsreich. Bitte antworten Sie uns bis Freitag, wenn Sie mitmachen möchten.\n\nViele Grüße\nPriya Nair und Amal Haddad",
           "glosses": []
         },
         {
@@ -2274,7 +2302,7 @@
           "lines": [
             {
               "id": "b2.1-u04-ls4-t4-l01",
-              "speaker": "cast.ensemble-b2-6",
+              "speaker": "cast.ensemble-b2-2",
               "de": "Guten Tag, Frau Nair, hier ist der Kundenservice von Blauwelle Reisen. Wir haben Ihren Beschwerdebrief vom 3. November erhalten, vielen Dank. Zurzeit prüfen wir eingehend alle Mängel, die Sie beanstandet haben – gemeinsam mit dem Hotel und der Reiseleitung. Ob wir Ihnen eine Minderung gewähren können, entscheiden wir danach. Eine Antwort bekommen Sie innerhalb von drei Wochen. Wenn Sie weitere Beweisfotos haben, schicken Sie uns diese bitte als E-Mail. Vielen Dank und einen schönen Tag.",
               "en": "Hello, Ms Nair, this is Blauwelle Reisen customer service. We have received your letter of complaint of 3 November, thank you. We are currently looking thoroughly into all the defects you complained about, together with the hotel and the tour guide. We will decide afterwards whether we can grant you a price reduction. You will receive an answer within three weeks. If you have more photos, please send them to us by e-mail. Thank you and have a nice day.",
               "say": "Guten Tag, Frau Nair, hier ist der Kundenservice von Blauwelle Reisen. Wir haben Ihren Beschwerdebrief vom dritten November erhalten, vielen Dank. Zurzeit prüfen wir eingehend alle Mängel, die Sie beanstandet haben – gemeinsam mit dem Hotel und der Reiseleitung. Ob wir Ihnen eine Minderung gewähren können, entscheiden wir danach. Eine Antwort bekommen Sie innerhalb von drei Wochen. Wenn Sie weitere Beweisfotos haben, schicken Sie uns diese bitte als E-Mail. Vielen Dank und einen schönen Tag."
@@ -2683,7 +2711,7 @@
         ],
         "aiRole": {
           "name": "Amal",
-          "personaDe": "Ihre Freundin Amal Haddad, Bauingenieurin aus Leipzig, war mit auf der Reise. Sie ist verärgert und will hartnäckig bleiben, findet aber Ihre erste Forderung zu hoch und schlägt etwa zwei Drittel davon vor. Sie widerspricht einmal, lässt sich von guten Gründen überzeugen und fragt am Ende, wer was übernimmt. Bei der Frage Verbraucherzentrale oder Rechtsbeistand will sie Gründe hören: Aufwand, Kosten und Chancen. Wenn Sie einen auswendig gelernten Text vortragen, unterbricht sie Sie mit einer Frage.",
+          "personaDe": "Amal Haddad, Bauingenieurin aus Leipzig und Freundin deines Gegenübers; ihr wart zusammen auf der Gruppenreise nach Kreta. Du bist verärgert und willst hartnäckig bleiben. Die erste Forderung deines Gegenübers findest du zu hoch, und du schlägst etwa zwei Drittel davon vor. Du widersprichst einmal, lässt dich von guten Gründen überzeugen und fragst am Ende, wer was übernimmt. Ihr arbeitet mit demselben Planungsblatt: Belege, Forderung, Frist, Aufgaben und am Ende die Frage, ob ihr euch an die Verbraucherzentrale wendet oder einen Rechtsbeistand nehmt. Bei dieser Frage willst du Gründe hören: Aufwand, Kosten und Chancen. Wenn dein Gegenüber einen auswendig gelernten Text vorträgt, unterbrichst du mit einer Frage.",
           "register": "du",
           "support": "interrupts"
         },
@@ -2758,7 +2786,7 @@
         "register": "halbformell",
         "address": "Sie",
         "title": "Beschwerde an den Reiseveranstalter",
-        "situationDe": "Sie waren im Oktober mit diesem Angebot auf Kreta:\n„Blauwelle Reisen – Kreta für Entdecker. 8 Tage Gruppenreise im Herbst: ruhiges Vier-Sterne-Hotel direkt am Meer, alle Zimmer mit Meerblick, Halbpension mit kretischer Küche, jeden Tag ein Ausflug mit deutschsprachiger Reiseleitung. Ab 1.190 Euro pro Person.“\nAus Ihrer Buchungsbestätigung: „Blauwelle Reisen · Pauschalreise Kreta, 12.–19. Oktober · 2 Reisende · Doppelzimmer, ruhige Lage, Meerblick · Halbpension · tägliches Ausflugsprogramm mit deutschsprachiger Reiseleitung · Reisepreis: 1.190 Euro pro Person, gesamt 2.380 Euro“\nDie Reise hatte viele Mängel. Sie haben sich vor Ort beschwert, aber es hat sich kaum etwas geändert.",
+        "situationDe": "Sie haben dieses Angebot gebucht und waren im Oktober auf Kreta:\n„Blauwelle Reisen – Kreta für Entdecker. 8 Tage Gruppenreise im Herbst: ruhiges Vier-Sterne-Hotel direkt am Meer, alle Zimmer mit Meerblick, Halbpension mit kretischer Küche, jeden Tag ein Ausflug mit deutschsprachiger Reiseleitung. Ab 1.190 Euro pro Person.“\nAus Ihrer Buchungsbestätigung: „Blauwelle Reisen · Pauschalreise Kreta, 12.–19. Oktober · 2 Reisende · Doppelzimmer, ruhige Lage, Meerblick · Halbpension · tägliches Ausflugsprogramm mit deutschsprachiger Reiseleitung · Reisepreis: 1.190 Euro pro Person, gesamt 2.380 Euro“\nDie Reise hatte viele Mängel. Sie haben sich vor Ort beschwert, aber es hat sich kaum etwas geändert.",
         "taskDe": "Schreiben Sie eine Beschwerde an Blauwelle Reisen. Behandeln Sie drei der vier Punkte.",
         "leitpunkte": [
           {
@@ -2835,7 +2863,7 @@
           "Schluss und Gruß",
           "Lernmodus etwa 120 Wörter (Prüfung: mindestens 150)"
         ],
-        "modelText": "Betreff: Beschwerde über meine Pauschalreise vom 12. bis 19. Oktober\n\nSehr geehrte Damen und Herren,\n\nvom 12. bis 19. Oktober habe ich bei Ihnen eine Pauschalreise gemacht. Leider hatte die Reise erhebliche Mängel.\n\nSie haben ausdrücklich ein ruhiges Hotel mit Blick auf das Meer zugesichert. Neben unserem Zimmer war aber eine Baustelle, und der Baulärm fing jeden Morgen um sieben Uhr an. Außerdem ist ein Ausflug ohne Ersatzleistung ausgefallen.\n\nObwohl wir die Mängel sofort gemeldet haben, hat sich zwei Tage lang niemand um uns gekümmert: Ihre Reiseleitung war nicht erreichbar. Die Reiseleitung hätte uns spätestens am Dienstag ein anderes Zimmer anbieten müssen. Auch über die Baustelle hätten Sie uns schon vor der Reise informieren müssen.\n\nAufgrund dieser Mängel fordere ich eine Minderung des Reisepreises um 357 Euro. Ich würde Sie bitten, mir den Betrag bis zum 30. November zu überweisen. Andernfalls wende ich mich an die Verbraucherzentrale.\n\nMit freundlichen Grüßen\nPriya Nair"
+        "modelText": "Betreff: Beschwerde über meine Pauschalreise vom 12. bis 19. Oktober\n\nSehr geehrte Damen und Herren,\n\nvom 12. bis 19. Oktober habe ich bei Ihnen eine Pauschalreise gemacht. Leider hatte die Reise erhebliche Mängel.\n\nSie haben ausdrücklich ein ruhiges Hotel mit Blick auf das Meer zugesichert. Neben unserem Zimmer war aber eine Baustelle, und der Baulärm fing jeden Morgen um sieben Uhr an. Außerdem ist ein Ausflug ohne Ersatzleistung ausgefallen.\n\nObwohl wir die Mängel sofort gemeldet haben, hat sich zwei Tage lang niemand um uns gekümmert: Ihre Reiseleitung war nicht erreichbar. Die Reiseleitung hätte uns spätestens am Dienstag ein anderes Zimmer anbieten müssen. Auch über die Baustelle hätten Sie uns schon vor der Reise informieren müssen.\n\nAufgrund dieser Mängel fordere ich eine Minderung des Reisepreises um 30 Prozent, also 714 Euro. Ich würde Sie bitten, mir den Betrag bis zum 30. November zu überweisen. Andernfalls wende ich mich an die Verbraucherzentrale.\n\nMit freundlichen Grüßen\nPriya Nair"
       }
     },
     {

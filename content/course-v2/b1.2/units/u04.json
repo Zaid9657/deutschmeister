@@ -254,7 +254,7 @@
         "title": "Rundschreiben: Unser Teamtag",
         "textType": "tt.rundschreiben",
         "text": {
-          "de": "An alle Mitarbeiterinnen und Mitarbeiter\n\nUnser Teamtag im Juni\n\nLiebe Kolleginnen und Kollegen,\n\nin diesem Jahr sind viele neue Kolleginnen und Kollegen zu uns gekommen. Deshalb planen wir am Freitag, dem 19. Juni, einen gemeinsamen Teamtag. Der Zweck ist einfach: Wir wollen uns besser kennenlernen und einen Tag lang zusammen etwas unternehmen.\n\nFür das Projekt haben wir ein Budget von 1.200 Euro. Die Teilnehmerzahl liegt bei 18 Personen. Sie brauchen also nichts selbst zu bezahlen. Auch Urlaub brauchen Sie für diesen Tag nicht zu nehmen, denn der Teamtag ist Arbeitszeit.\n\nIm Intranet finden Sie unter „Teamtag“ Angebote aus Leipzig und Umgebung. Frau Nair vergleicht sie. Am Dienstag bereiten Herr Wolf, Herr Yıldız, Frau Nair und ich den Tag in einer Sitzung vor. Der Teamtag ist dort der einzige Tagesordnungspunkt. Frau Otto ist an diesem Tag leider abwesend, denn sie ist auf einer Fortbildung. Frau Nair stellt die Angebote vor, die infrage kommen. Ziel ist eine Einigung über Ort und Programm. Bis dahin ist alles noch vorläufig: Endgültig legen wir das Programm erst in der Sitzung fest. Ein Programmpunkt am Vormittag ist aber schon sicher: eine kurze Besprechung zum Zeitplan für das zweite Halbjahr.\n\nHaben Sie eine Idee oder einen Einwand, oder möchten Sie etwas ergänzen? Dann brauchen Sie nur eine kurze Nachricht an Frau Nair zu schreiben. In der Sitzung verteilen wir auch die Aufgaben. Für das Rahmenprogramm am Abend hat sich Frau Otto schon bereit erklärt. Bei der Aufgabenverteilung geht es also noch um zwei Zuständigkeiten: Wer übernimmt die Verantwortung für die Raumbuchung und wer für den Bus? Frau Nair fasst die Beschlüsse danach zusammen und schickt sie Ihnen per E-Mail. Bis zum Teamtag bekommen Sie dann jede Woche einen kurzen Zwischenstand.\n\nIch freue mich auf einen schönen Tag mit Ihnen!\n\nThomas Brandt\nGeschäftsführer",
+          "de": "An alle Mitarbeiterinnen und Mitarbeiter\n\nUnser Teamtag im Juni\n\nLiebe Kolleginnen und Kollegen,\n\nin diesem Jahr sind viele neue Kolleginnen und Kollegen zu uns gekommen. Deshalb planen wir am Freitag, dem 19. Juni, einen gemeinsamen Teamtag. Der Zweck ist einfach: Wir wollen uns besser kennenlernen und einen Tag lang zusammen etwas unternehmen.\n\nFür das Projekt haben wir ein Budget von 1.200 Euro. Die Teilnehmerzahl liegt bei 18 Personen. Sie brauchen also nichts selbst zu bezahlen. Auch Urlaub brauchen Sie für diesen Tag nicht zu nehmen, denn der Teamtag ist Arbeitszeit.\n\nIm Intranet finden Sie unter „Teamtag“ Angebote aus Leipzig und Umgebung. Frau Nair vergleicht sie. Am Dienstag bereiten Herr Wolf, Herr Yıldız, Frau Nair und ich den Tag in einer Sitzung vor. Der Teamtag ist dort der einzige Tagesordnungspunkt. Frau Otto ist an diesem Tag leider abwesend, denn sie ist auf einer Fortbildung. Frau Nair stellt die Angebote vor, die infrage kommen. Ziel ist eine Einigung über Ort und Programm. Bis dahin ist alles noch vorläufig: Endgültig legen wir das Programm erst in der Sitzung fest. Ein Programmpunkt am Vormittag ist aber schon sicher: eine kurze Besprechung zum Zeitplan für das zweite Halbjahr.\n\nHaben Sie eine Idee oder einen Einwand, oder möchten Sie etwas ergänzen? Sie können sich auch ohne Sitzung zu Wort melden. Dafür brauchen Sie nur eine kurze Nachricht an Frau Nair zu schreiben. In der Sitzung verteilen wir auch die Aufgaben. Für das Rahmenprogramm am Abend hat sich Frau Otto schon bereit erklärt. Bei der Aufgabenverteilung geht es also noch um zwei Zuständigkeiten: Wer übernimmt die Verantwortung für die Raumbuchung und wer für den Bus? Frau Nair fasst die Beschlüsse danach zusammen und schickt sie Ihnen per E-Mail. Bis zum Teamtag bekommen Sie dann jede Woche einen kurzen Zwischenstand.\n\nIch freue mich auf einen schönen Tag mit Ihnen!\n\nThomas Brandt\nGeschäftsführer",
           "en": "Circular from the managing director: a team day on Friday 19 June for 18 people with a budget of 1,200 euros; staff pay nothing and need not take leave; Ms Nair compares the offers on the intranet; on Tuesday a small group (Mr Wolf, Mr Yıldız, Ms Nair and Mr Brandt) meets to agree on the venue and programme and to share out the room booking and the bus – Ms Otto, who is away on a training course that day, has already volunteered for the evening programme; staff get a short progress update every week."
         },
         "glosses": [
@@ -404,7 +404,7 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.brauchen-zu",
-          "promptDe": "„Dann brauchen Sie nur eine kurze Nachricht zu schreiben.“ – Was müssen Sie tun?",
+          "promptDe": "„Dafür brauchen Sie nur eine kurze Nachricht zu schreiben.“ – Was müssen Sie tun?",
           "promptEn": "What do you have to do?",
           "options": [
             "nur eine Nachricht schreiben",
@@ -935,8 +935,8 @@
           {
             "id": "b1.2-u04-ls2-l01",
             "speaker": "cast.jan-wolf",
-            "de": "So, fangen wir an. Anwesend sind heute Herr Brandt, Emre, Priya und ich. Frau Otto ist abwesend, sie ist auf einer Fortbildung. Deshalb moderiere ich, und Emre protokolliert. Auf der Tagesordnung steht nur ein Punkt: unser Teamtag. Wer etwas sagen möchte, meldet sich bitte kurz zu Wort.",
-            "en": "Right, let’s start. Present today are Mr Brandt, Emre, Priya and me. Ms Otto is away on a training course, so I’m chairing and Emre is taking the minutes. There is only one item on the agenda: our team day. If you want to say something, please ask to speak."
+            "de": "So, fangen wir an. Anwesend sind heute Herr Brandt, Emre, Priya und ich. Frau Otto ist abwesend, sie ist auf einer Fortbildung. Deshalb moderiere ich, und Emre protokolliert. Auf der Tagesordnung steht nur ein Punkt: unser Teamtag.",
+            "en": "Right, let’s start. Present today are Mr Brandt, Emre, Priya and me. Ms Otto is away on a training course, so I’m chairing and Emre is taking the minutes. There is only one item on the agenda: our team day."
           },
           {
             "id": "b1.2-u04-ls2-l02",
@@ -995,8 +995,8 @@
           {
             "id": "b1.2-u04-ls2-l11",
             "speaker": "cast.herr-brandt",
-            "de": "Sehr gut, eine schnelle Einigung. Das findet meine Zustimmung. Frau Otto kümmert sich ja um das Rahmenprogramm am Abend, das hat sie mir schon letzte Woche angeboten. Sie soll bis Freitag zwei Vorschläge sammeln, aber noch nichts buchen. Am Freitag besprechen wir dann den Zwischenstand und den Zeitplan. Damit sind die Zuständigkeiten klar, und wir können den Tagesordnungspunkt abschließen. Frau Nair, schreiben Sie ihr bitte alles, was wir heute beschlossen haben. – Oh, das Empfangstelefon klingelt. Gehen Sie ruhig ran.",
-            "en": "Very good – quick agreement, and it has my approval. Ms Otto is looking after the evening programme anyway; she offered to do it last week. By Friday she should collect two suggestions, but not book anything yet. On Friday we’ll discuss where things stand and the schedule. That makes it clear who is responsible for what, and we can close this agenda item. Ms Nair, please write to her with everything we decided today. – Oh, the reception phone is ringing. Go ahead and answer it."
+            "de": "Sehr gut, eine schnelle Einigung. Das findet meine Zustimmung. Frau Otto kümmert sich um das Rahmenprogramm am Abend, das hat sie mir schon letzte Woche angeboten. Sie soll bis Freitag zwei Vorschläge sammeln, aber noch nichts buchen. Am Freitag besprechen wir dann den Zwischenstand und den Zeitplan. Damit sind die Zuständigkeiten klar, und wir können den Tagesordnungspunkt abschließen. Frau Nair, schreiben Sie ihr bitte alles, was wir heute beschlossen haben. – Oh, das Empfangstelefon klingelt. Gehen Sie bitte ans Telefon.",
+            "en": "Very good – quick agreement, and it has my approval. Ms Otto is looking after the evening programme; she offered to do it last week. By Friday she should collect two suggestions, but not book anything yet. On Friday we’ll discuss where things stand and the schedule. That makes it clear who is responsible for what, and we can close this agenda item. Ms Nair, please write to her with everything we decided today. – Oh, the reception phone is ringing. Please answer it."
           },
           {
             "id": "b1.2-u04-ls2-l12",
@@ -3097,7 +3097,7 @@
           "Sie-Form",
           "etwa 80 bis 120 Wörter"
         ],
-        "modelText": "Betreff: Ergebnisse der Sitzung vom Dienstag\n\nLiebe Frau Otto,\n\nschön, dass Sie wieder da sind! Hier ist alles, was wir beschlossen haben: Der Teamtag findet im Seminarhaus am See statt, vormittags mit Besprechung, nachmittags mit einer Radtour. Die Aufgaben haben wir so aufgeteilt: Ich kümmere mich um die Raumbuchung, Emre um den Bus und Sie um das Rahmenprogramm am Abend. Herr Brandt bittet Sie, bis Freitag zwei Vorschläge zu sammeln. Sie brauchen aber noch nichts zu buchen, denn am Freitag besprechen wir zuerst den Zwischenstand. Herr Lehmann vom Seminarhaus hat angerufen: Die Terrasse ist am 19. Juni bis 22 Uhr frei. Er hält sie bis Montag für uns frei. Wenn wir sie nehmen, braucht er bis dahin die Teilnehmerzahl. Er bittet Sie um Rückruf: 0341 22 58 90.\n\nViele Grüße\nPriya Nair"
+        "modelText": "Betreff: Ergebnisse der Sitzung vom Dienstag\n\nLiebe Frau Otto,\n\nwillkommen zurück! Hier ist alles, was wir beschlossen haben. Der Teamtag findet im Seminarhaus am See statt: vormittags Besprechung, nachmittags Radtour. Die Aufgaben haben wir so aufgeteilt: Ich kümmere mich um die Raumbuchung, Emre um den Bus und Sie um das Rahmenprogramm am Abend. Herr Brandt bittet Sie, bis Freitag zwei Vorschläge zu sammeln. Sie brauchen aber noch nichts zu buchen, denn am Freitag besprechen wir den Zwischenstand. Herr Lehmann vom Seminarhaus hat angerufen: Die Terrasse ist am 19. Juni bis 22 Uhr frei. Er reserviert sie vorläufig bis Montag und braucht bis dahin die Teilnehmerzahl. Er bittet um Rückruf: 0341 22 58 90. Bis Freitag!\n\nViele Grüße\nPriya Nair"
       }
     },
     {
@@ -3355,14 +3355,8 @@
         "audioLineRef": "b1.2-u04-ls8-l01",
         "answer": "Donnerstag",
         "accepted": [
-          "Donnerstag",
-          "Do.",
-          "Do"
+          "Donnerstag"
         ],
-        "acceptedWhy": {
-          "Do.": "übliche Abkürzung für Donnerstag in einer Notiz",
-          "Do": "übliche Abkürzung für Donnerstag in einer Notiz"
-        },
         "explanation": {
           "de": "Frau Wendt sagt: Bitte bestätigen Sie bis Donnerstag.",
           "en": "Ms Wendt asks for confirmation by Thursday."
@@ -3401,8 +3395,8 @@
         },
         "exact": "number",
         "explanation": {
-          "de": "Die Nummer von Frau Wendt ist 0341 47 11 30. Jede Ziffer zählt.",
-          "en": "Ms Wendt’s number is 0341 47 11 30 – every digit counts."
+          "de": "Die Nummer von Frau Wendt ist 0341 47 11 30. Achten Sie auf die Ziffern.",
+          "en": "Ms Wendt’s number is 0341 47 11 30 – watch the digits."
         },
         "origin": "agent"
       }
