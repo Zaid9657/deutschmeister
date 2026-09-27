@@ -162,26 +162,26 @@
         {
           "id": "a1.1-u08-start-l01",
           "speaker": "cast.emre",
-          "de": "Hallo Priya! Wie geht’s? Was machst du am Wochenende?",
-          "en": "Hi Priya! How are you? What are you doing at the weekend?"
+          "de": "Priya, meine Frau Elif wohnt auch in Leipzig. Hast du am Samstag Zeit?",
+          "en": "Priya, my wife Elif lives in Leipzig too. Are you free on Saturday?"
         },
         {
           "id": "a1.1-u08-start-l02",
           "speaker": "cast.priya",
-          "de": "Hallo Emre! Am Samstag habe ich Zeit. Warum?",
-          "en": "Hi Emre! I’m free on Saturday. Why?"
+          "de": "Am Samstag? Ja, da habe ich Zeit. Warum?",
+          "en": "On Saturday? Yes, I’m free then. Why?"
         },
         {
           "id": "a1.1-u08-start-l03",
           "speaker": "cast.emre",
-          "de": "Meine Frau Elif wohnt in Leipzig. Ich bin noch hier in İzmir.",
-          "en": "My wife Elif lives in Leipzig. I’m still here in İzmir."
+          "de": "Ich bin noch hier in İzmir. Aber Elif ist in Leipzig, und sie läuft sehr gern.",
+          "en": "I’m still here in İzmir. But Elif is in Leipzig, and she loves running."
         },
         {
           "id": "a1.1-u08-start-l04",
           "speaker": "cast.emre",
-          "de": "Elif läuft sehr gern. Sie läuft jeden Samstag im Park. Hast du Lust? Du kannst mitkommen.",
-          "en": "Elif loves running. She runs in the park every Saturday. Do you feel like it? You can come along."
+          "de": "Sie läuft jeden Samstag im Park. Hast du Lust? Du kannst mitkommen.",
+          "en": "She runs in the park every Saturday. Do you feel like it? You can come along."
         },
         {
           "id": "a1.1-u08-start-l05",
@@ -3228,7 +3228,7 @@
     }
   ],
   "story": {
-    "beat": "Über Emre lernt Priya seine Frau Elif kennen. Mit Olena, Sophie und Bilal spricht sie über Hobbys und plant den Samstag: Olena läuft mit, Sophie ist in Dresden, Bilal spielt Fußball und kommt am Abend ins Konzert.",
+    "beat": "Am Donnerstag im Kurs erzählt Emre von Elif, und am Freitag ruft Elif an: Priya lernt Emres Frau kennen. Mit Olena, Sophie und Bilal spricht sie über Hobbys und plant den Samstag: Olena läuft mit, Sophie ist in Dresden, Bilal spielt Fußball und kommt am Abend ins Konzert.",
     "cliffhanger": "Nach einer Stunde im Park ist Priya sehr müde. Da fragt Elif: „Priya, möchtest du jetzt einen Kaffee? Olena auch?“",
     "castIn": [
       "cast.elif"
