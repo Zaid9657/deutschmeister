@@ -3,6 +3,7 @@
 // and the audio call. No React here.
 
 import { playLine, speechAvailable, audioFor } from '../../lib/lesson/speech.js';
+import { hasNumber } from '../../lib/lesson/check.js';
 
 // ---------------------------------------------------------------------------
 // Labels
@@ -179,7 +180,14 @@ export const minutesOf = (unit, stepId) => unit?.minutesPlanned?.byStep?.[stepId
 // generator and are left to the player core; pass them in as `generated`.
 // ---------------------------------------------------------------------------
 
-function dictationItems(spec, lines) {
+/**
+ * dictation.fromInput: the source line as a typed dictation. The key is the line's `de`; what the
+ * learner hears is its `say` when it has one (ITM-13 requires both to grade alike). A line with a
+ * digit or a number word carries `exact: 'number'` (ITM-07), which checkItem grades as a whole
+ * sentence with exact digits and „zehn" = „10" (review a2.2-u04 r3 F04) — never digits alone.
+ * Exported for the validator (ITM-13 builds the generated items with this very function).
+ */
+export function dictationItems(spec, lines) {
   const ids = spec.ids || [];
   const out = [];
   (spec.source || []).slice(0, spec.count || ids.length).forEach((ref, i) => {
@@ -196,6 +204,7 @@ function dictationItems(spec, lines) {
       audioLineRef: line.id,
       answer: line.de,
       accepted: [line.de],
+      ...(hasNumber(line.de) ? { exact: 'number' } : {}),
       explanation: { de: line.de, en: line.en || '' },
     });
   });

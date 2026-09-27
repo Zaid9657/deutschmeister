@@ -231,7 +231,7 @@
         ],
         "exact": "number",
         "explanation": {
-          "de": "Priya sagt: fünfzig Euro. Das sind 50 Euro, nicht 15 Euro (fünfzehn).",
+          "de": "Priya sagt: „Fünfzig Euro.“ Das sind 50 Euro, nicht 15 Euro („fünfzehn“).",
           "en": "Priya says “fünfzig” – 50 euros, not 15 (“fünfzehn”)."
         },
         "origin": "agent"
@@ -390,7 +390,7 @@
             "Bananen"
           ],
           "explanation": {
-            "de": "Priya sagt: Bananen brauchen wir nicht.",
+            "de": "Priya sagt: „Bananen brauchen wir nicht.“",
             "en": "Priya says: we don’t need bananas."
           },
           "origin": "agent"
@@ -409,7 +409,7 @@
           ],
           "exact": "number",
           "explanation": {
-            "de": "Arjun sagt: 200 Gramm kosten nur 1,99 Euro.",
+            "de": "Arjun sagt: „200 Gramm kosten nur 1,99 Euro.“",
             "en": "Arjun says: 200 grams cost only 1.99 euros."
           },
           "origin": "agent"
@@ -431,7 +431,7 @@
             "zwei Flaschen"
           ],
           "explanation": {
-            "de": "Arjun sagt: Wir brauchen zwei Flaschen Milch. Sechs Flaschen sind Wasser.",
+            "de": "Arjun sagt: „Wir brauchen zwei Flaschen Milch.“ Die sechs Flaschen sind Wasser.",
             "en": "Two bottles of milk – the six bottles are water."
           },
           "origin": "agent"
@@ -450,7 +450,7 @@
           ],
           "exact": "number",
           "explanation": {
-            "de": "Im Prospekt steht: Butter, 250 Gramm: nur 1,59 Euro.",
+            "de": "Im Prospekt steht: „Butter, 250 Gramm: nur 1,59 Euro“.",
             "en": "The flyer says: butter, 250 g, only 1.59 euros."
           },
           "origin": "agent"
@@ -474,8 +474,8 @@
             "der Käse"
           ],
           "explanation": {
-            "de": "der zeigt auf ein Nomen mit der: der Käse.",
-            "en": "“der” points to a masculine noun: der Käse."
+            "de": "„Der“ steht für ein Nomen mit „der“: „der Käse“.",
+            "en": "“Der” stands for a masculine noun: der Käse."
           },
           "origin": "agent"
         },
@@ -496,7 +496,7 @@
             "die Äpfel"
           ],
           "explanation": {
-            "de": "die + sind: Das ist Plural. Nur die Äpfel sind Plural.",
+            "de": "„Die“ + „sind“ = Plural. Nur „die Äpfel“ ist Plural.",
             "en": "“die” with “sind” is plural – only “die Äpfel” is plural."
           },
           "origin": "agent"
@@ -518,7 +518,7 @@
             "Die Eier sind billig."
           ],
           "explanation": {
-            "de": "Eier + sind: Plural, also mehr als ein Ei. Das Ei und ein Ei sind Singular.",
+            "de": "„Eier“ + „sind“ = Plural: mehr als ein Ei. „Das Ei“ und „ein Ei“ sind Singular.",
             "en": "“Eier” with “sind” is plural – more than one egg. “das Ei” and “ein Ei” are singular."
           },
           "origin": "agent"
@@ -540,7 +540,7 @@
             "die Milch"
           ],
           "explanation": {
-            "de": "die + ist: ein Nomen mit die im Singular. Das ist die Milch.",
+            "de": "„Die“ + „ist“ = ein Nomen mit „die“ im Singular: „die Milch“.",
             "en": "“die” with “ist” is feminine singular: die Milch."
           },
           "origin": "agent"
@@ -560,7 +560,7 @@
               "Der"
             ],
             "explanation": {
-              "de": "Käse ist maskulin: der Käse.",
+              "de": "„Käse“ ist maskulin: „der Käse“.",
               "en": "“Käse” is masculine: der Käse."
             },
             "origin": "agent"
@@ -577,7 +577,7 @@
               "ein"
             ],
             "explanation": {
-              "de": "Brot ist neutral: das Brot, ein Brot.",
+              "de": "„Brot“ ist neutral: „das Brot“, „ein Brot“.",
               "en": "“Brot” is neuter: das Brot, ein Brot."
             },
             "origin": "agent"
@@ -594,7 +594,7 @@
               "Äpfel"
             ],
             "explanation": {
-              "de": "der Apfel, die Äpfel: Plural mit Umlaut.",
+              "de": "„der Apfel“ – „die Äpfel“: Plural mit Umlaut.",
               "en": "Plural with umlaut: der Apfel → die Äpfel."
             },
             "origin": "agent"
@@ -611,7 +611,7 @@
               "Die"
             ],
             "explanation": {
-              "de": "Im Plural ist der Artikel immer die.",
+              "de": "Im Plural ist der Artikel immer „die“.",
               "en": "In the plural the article is always “die”."
             },
             "origin": "agent"
@@ -637,7 +637,7 @@
               "Im Angebot ist der Käse.": "grammatisch: im Angebot auf Position 1, das Verb bleibt auf Position 2"
             },
             "explanation": {
-              "de": "Das Verb ist steht auf Position 2.",
+              "de": "Das Verb „ist“ steht auf Position 2.",
               "en": "The verb “ist” is in position 2."
             },
             "origin": "agent"
@@ -665,7 +665,7 @@
               "Ein Brot brauchen wir heute.": "grammatisch: ein Brot betont auf Position 1"
             },
             "explanation": {
-              "de": "Das Verb brauchen steht auf Position 2.",
+              "de": "Das Verb „brauchen“ steht auf Position 2.",
               "en": "The verb “brauchen” stays in position 2."
             },
             "origin": "agent"
@@ -691,8 +691,8 @@
               "1,29 Euro kostet das Brot.": "grammatisch: der Preis betont auf Position 1"
             },
             "explanation": {
-              "de": "Subjekt das Brot, dann das Verb kostet.",
-              "en": "Subject “das Brot”, then the verb “kostet”."
+              "de": "Das Verb „kostet“ steht auf Position 2 („das Brot“ = Singular).",
+              "en": "“kostet” is in position 2 (“das Brot” is singular)."
             },
             "origin": "agent"
           },
@@ -717,8 +717,8 @@
               "Billig sind heute die Äpfel."
             ],
             "explanation": {
-              "de": "die Äpfel ist Plural, deshalb sind.",
-              "en": "“die Äpfel” is plural, so the verb is “sind”."
+              "de": "Das Verb „sind“ steht auf Position 2 („die Äpfel“ = Plural).",
+              "en": "“sind” is in position 2 (“die Äpfel” is plural)."
             },
             "origin": "agent",
             "acceptedWhy": {
@@ -747,8 +747,8 @@
               "Billig ist die Milch auch."
             ],
             "explanation": {
-              "de": "die Milch ist Singular, deshalb ist.",
-              "en": "“die Milch” is singular, so the verb is “ist”."
+              "de": "Das Verb „ist“ steht auf Position 2 („die Milch“ = Singular).",
+              "en": "“ist” is in position 2 (“die Milch” is singular)."
             },
             "origin": "agent",
             "acceptedWhy": {
@@ -774,8 +774,8 @@
               "gender-article"
             ],
             "explanation": {
-              "de": "das Brot → ein Brot. eine steht nur bei die.",
-              "en": "das Brot → ein Brot; “eine” only goes with feminine nouns."
+              "de": "„das Brot“ → „ein Brot“. „Eine“ steht nur bei „die“ im Singular.",
+              "en": "das Brot → ein Brot; “eine” only goes with singular die-nouns."
             },
             "origin": "agent"
           },
@@ -796,7 +796,7 @@
               "das"
             ],
             "explanation": {
-              "de": "Wasser ist neutral: das Wasser.",
+              "de": "„Wasser“ ist neutral: „das Wasser“.",
               "en": "“Wasser” is neuter: das Wasser."
             },
             "origin": "agent"
@@ -823,9 +823,9 @@
             "count": 1,
             "source": [
               "lx.brot",
-              "lx.kaese",
-              "lx.milch",
-              "lx.apfel"
+              "lx.apfel",
+              "lx.banane",
+              "lx.birne"
             ]
           },
           {
@@ -864,7 +864,7 @@
           ],
           "difficulty": 1,
           "explanation": {
-            "de": "die Flasche → eine Flasche.",
+            "de": "„die Flasche“ → „eine Flasche“.",
             "en": "die Flasche → eine Flasche."
           },
           "origin": "agent"
@@ -887,7 +887,7 @@
           ],
           "difficulty": 2,
           "explanation": {
-            "de": "das Ei, die Eier: Plural mit -er.",
+            "de": "„das Ei“ – „die Eier“: Plural mit „-er“.",
             "en": "das Ei → die Eier (plural in -er)."
           },
           "origin": "agent"
@@ -922,7 +922,7 @@
           ],
           "difficulty": 2,
           "explanation": {
-            "de": "Das Verb ist steht auf Position 2.",
+            "de": "Das Verb „ist“ steht auf Position 2.",
             "en": "The verb “ist” is in position 2."
           },
           "origin": "agent",
@@ -956,7 +956,7 @@
           ],
           "difficulty": 1,
           "explanation": {
-            "de": "Kartoffeln ist Plural. Im Plural: die.",
+            "de": "„Kartoffeln“ ist Plural. Im Plural ist der Artikel „die“.",
             "en": "“Kartoffeln” is plural; the plural article is “die”."
           },
           "origin": "agent"
@@ -968,8 +968,8 @@
         "mode": "written",
         "profile": "course-micro",
         "situationDe": "Sie sind mit Priya und Arjun zu Hause und lesen den Prospekt. Priya fragt: „Was brauchen wir?“",
-        "promptDe": "Schreiben Sie die Einkaufsliste in 1–2 Sätzen: Wir brauchen … (Was? Wie viel?)",
-        "promptEn": "Write the shopping list in 1–2 sentences: what we need and how much.",
+        "promptDe": "Antworten Sie Priya in 1–2 Sätzen: Wir brauchen … (Was? Wie viel?)",
+        "promptEn": "Answer Priya in 1–2 sentences: what you need and how much.",
         "planSeconds": 30,
         "words": [
           3,
@@ -1002,7 +1002,7 @@
     {
       "id": "a1.1-u04-ls2",
       "kind": "situation",
-      "title": "Auf dem Markt: Was möchten Sie?",
+      "title": "Obst und Gemüse: Was möchten Sie?",
       "structure": "g.moechte",
       "modelSentence": "Ich möchte ein Kilo Tomaten, bitte.",
       "ruleCard": "rc.moechte",
@@ -1012,7 +1012,7 @@
       },
       "input": {
         "kind": "dialog",
-        "title": "Am Obst- und Gemüsestand",
+        "title": "Auf dem Markt",
         "textType": "tt.dialog",
         "lines": [
           {
@@ -1143,7 +1143,7 @@
             "Was kostet ein Kilo Tomaten?"
           ],
           "explanation": {
-            "de": "Zuerst fragt Priya nach dem Preis für Tomaten.",
+            "de": "Zuerst fragt Priya: „Was kostet ein Kilo Tomaten?“",
             "en": "First Priya asks the price of the tomatoes."
           },
           "origin": "agent"
@@ -1162,7 +1162,7 @@
           ],
           "exact": "number",
           "explanation": {
-            "de": "Der Verkäufer sagt: Ein Kilo kostet 2,20 Euro.",
+            "de": "Der Verkäufer sagt: „Ein Kilo kostet 2,20 Euro.“",
             "en": "The stallholder says a kilo costs 2.20 euros."
           },
           "origin": "agent"
@@ -1184,7 +1184,7 @@
             "drei"
           ],
           "explanation": {
-            "de": "Arjun sagt: Drei Stück, bitte.",
+            "de": "Arjun sagt: „Drei Stück, bitte.“",
             "en": "Arjun says “Drei Stück, bitte” – three."
           },
           "origin": "agent"
@@ -1200,14 +1200,18 @@
           "accepted": [
             "9",
             "9,00",
-            "9.00"
+            "9.00",
+            "neun"
           ],
           "exact": "number",
           "explanation": {
-            "de": "Der Verkäufer sagt: Das macht zusammen 9 Euro.",
-            "en": "The total is 9 euros."
+            "de": "Der Verkäufer sagt: „Das macht zusammen 9 Euro.“ „9“ und „neun“ sind richtig.",
+            "en": "The total is 9 euros – “9” and “neun” are both correct."
           },
-          "origin": "agent"
+          "origin": "agent",
+          "acceptedWhy": {
+            "neun": "Zahl als Wort: so hört man es"
+          }
         }
       ],
       "structuredInput": [
@@ -1228,7 +1232,7 @@
             "Priya und Arjun"
           ],
           "explanation": {
-            "de": "wir möchten: Priya spricht für Priya und Arjun.",
+            "de": "„Wir möchten“: Priya spricht für Priya und Arjun.",
             "en": "“wir möchten” – Priya speaks for herself and Arjun."
           },
           "origin": "agent"
@@ -1250,7 +1254,7 @@
             "Priya fragt Arjun."
           ],
           "explanation": {
-            "de": "möchtest du: So fragen Freunde. Der Verkäufer sagt Sie.",
+            "de": "„Möchtest du“: So fragen Freunde. Der Verkäufer sagt „Sie“.",
             "en": "“möchtest du” is informal – Priya asks Arjun; the stallholder uses Sie."
           },
           "origin": "agent"
@@ -1272,7 +1276,7 @@
             "Priya"
           ],
           "explanation": {
-            "de": "ich möchte: Priya spricht nur für Priya.",
+            "de": "„Ich möchte“: Priya spricht nur für Priya.",
             "en": "“ich möchte” – Priya speaks only for herself."
           },
           "origin": "agent"
@@ -1294,7 +1298,7 @@
             "Arjun"
           ],
           "explanation": {
-            "de": "Arjun möchte: Das Subjekt ist Arjun.",
+            "de": "„Arjun möchte“: Das Subjekt ist Arjun.",
             "en": "The subject of “möchte” is Arjun."
           },
           "origin": "agent"
@@ -1314,7 +1318,7 @@
               "möchte"
             ],
             "explanation": {
-              "de": "ich möchte: ohne -t am Ende.",
+              "de": "„ich möchte“: ohne „-t“ am Ende.",
               "en": "ich möchte – no -t at the end."
             },
             "origin": "agent"
@@ -1331,7 +1335,7 @@
               "möchten"
             ],
             "explanation": {
-              "de": "wir möchten: mit -n.",
+              "de": "„wir möchten“: mit „-n“.",
               "en": "wir möchten – with -n."
             },
             "origin": "agent"
@@ -1348,7 +1352,7 @@
               "möchtest"
             ],
             "explanation": {
-              "de": "du möchtest: mit -st.",
+              "de": "„du möchtest“: mit „-st“.",
               "en": "du möchtest – with -st."
             },
             "origin": "agent"
@@ -1365,7 +1369,7 @@
               "möchten"
             ],
             "explanation": {
-              "de": "Sie möchten: wie wir möchten.",
+              "de": "„Sie möchten“: wie „wir möchten“.",
               "en": "Sie möchten – the same form as wir möchten."
             },
             "origin": "agent"
@@ -1391,8 +1395,8 @@
               "Ein Kilo Tomaten möchte ich.": "grammatisch: die Menge betont auf Position 1"
             },
             "explanation": {
-              "de": "möchte steht auf Position 2.",
-              "en": "“möchte” is in position 2."
+              "de": "Das Verb „möchte“ steht auf Position 2.",
+              "en": "The verb “möchte” is in position 2."
             },
             "origin": "agent"
           },
@@ -1413,8 +1417,8 @@
               "Was möchten Sie?"
             ],
             "explanation": {
-              "de": "W-Frage: Was auf Position 1, das Verb auf Position 2.",
-              "en": "W-question: “Was” first, the verb second."
+              "de": "W-Frage: „Was“ auf Position 1, das Verb „möchten“ auf Position 2.",
+              "en": "W-question: “Was” first, the verb “möchten” second."
             },
             "origin": "agent"
           },
@@ -1441,7 +1445,7 @@
               "Drei Birnen möchten wir heute.": "grammatisch: die Menge betont auf Position 1"
             },
             "explanation": {
-              "de": "Das Verb möchten steht auf Position 2.",
+              "de": "Das Verb „möchten“ steht auf Position 2.",
               "en": "“möchten” stays in position 2."
             },
             "origin": "agent"
@@ -1463,8 +1467,8 @@
               "Haben Sie auch Birnen?"
             ],
             "explanation": {
-              "de": "Ja/Nein-Frage: Das Verb steht auf Position 1.",
-              "en": "Yes/no question: the verb comes first."
+              "de": "Ja/Nein-Frage: Das Verb „haben“ steht auf Position 1.",
+              "en": "Yes/no question: the verb “haben” comes first."
             },
             "origin": "agent"
           },
@@ -1485,8 +1489,8 @@
               "Was kosten die Kartoffeln?"
             ],
             "explanation": {
-              "de": "die Kartoffeln ist Plural, deshalb kosten.",
-              "en": "“die Kartoffeln” is plural, so “kosten”."
+              "de": "W-Frage: „Was“ auf Position 1, „kosten“ auf Position 2 („die Kartoffeln“ = Plural).",
+              "en": "W-question: “Was” first, “kosten” second (“die Kartoffeln” is plural)."
             },
             "origin": "agent"
           },
@@ -1507,8 +1511,8 @@
               "register"
             ],
             "explanation": {
-              "de": "Ein Verkäufer spricht mit Kunden mit Sie: Was möchten Sie?",
-              "en": "A stallholder addresses customers with Sie: Was möchten Sie?"
+              "de": "Der Verkäufer sagt „Sie“ zu Priya: „Was möchten Sie?“",
+              "en": "The stallholder uses Sie with Priya: Was möchten Sie?"
             },
             "origin": "agent"
           },
@@ -1530,7 +1534,7 @@
             ],
             "exact": "number",
             "explanation": {
-              "de": "Die Frage ist: Was kostet …? Die Antwort ist ein Preis.",
+              "de": "Die Frage ist „Was kostet …?“. Die Antwort ist ein Preis.",
               "en": "The question asks for a price, so the answer is a price."
             },
             "origin": "agent"
@@ -1596,7 +1600,7 @@
           ],
           "difficulty": 2,
           "explanation": {
-            "de": "er/sie möchte: wie ich möchte, ohne -t.",
+            "de": "„er/sie möchte“: wie „ich möchte“, ohne „-t“.",
             "en": "er/sie möchte – like ich möchte, no -t."
           },
           "origin": "agent"
@@ -1631,8 +1635,8 @@
           ],
           "difficulty": 2,
           "explanation": {
-            "de": "möchte steht auf Position 2.",
-            "en": "“möchte” is in position 2."
+            "de": "Das Verb „möchte“ steht auf Position 2.",
+            "en": "The verb “möchte” is in position 2."
           },
           "origin": "agent"
         },
@@ -1659,7 +1663,7 @@
           ],
           "difficulty": 1,
           "explanation": {
-            "de": "Sie möchten: mit -n.",
+            "de": "„Sie möchten“: mit „-n“.",
             "en": "Sie möchten – with -n."
           },
           "origin": "agent"
@@ -1681,7 +1685,7 @@
           ],
           "difficulty": 3,
           "explanation": {
-            "de": "ihr möchtet: mit -t.",
+            "de": "„ihr möchtet“: mit „-t“.",
             "en": "ihr möchtet – with -t."
           },
           "origin": "agent"
@@ -1692,7 +1696,7 @@
         "bankKey": "a11-u04-mo2",
         "mode": "spoken",
         "profile": "course-micro-sp",
-        "situationDe": "Sie sind auf dem Markt am Obst- und Gemüsestand. Der Verkäufer sagt: „Ein Kilo Äpfel kostet 2,40 Euro.“",
+        "situationDe": "Sie sind auf dem Markt. Der Verkäufer sagt: „Ein Kilo Äpfel kostet 2,40 Euro.“",
         "promptDe": "Wiederholen Sie den Preis. Nennen Sie zwei Sachen mit Menge. Fragen Sie nach einem Preis.",
         "promptEn": "Repeat the price to check it, say two things you want with a quantity, and ask a price.",
         "planSeconds": 30,
@@ -1733,9 +1737,9 @@
           {
             "id": "a1.1-u04-ls3-l03",
             "speaker": "cast.arjun",
-            "de": "Priya, die Eier sind im Angebot! Zehn Stück für 1,99 Euro, das ist billig. Wir brauchen Eier.",
-            "en": "Priya, the eggs are on offer! Ten for 1.99 euros – that’s cheap. We need eggs.",
-            "say": "Priya, die Eier sind im Angebot! Zehn Stück für eins neunundneunzig, das ist billig. Wir brauchen Eier."
+            "de": "Priya, die Durchsage! Die Eier sind im Angebot. Zehn Stück für 1,99 Euro, das ist billig. Wir brauchen Eier.",
+            "en": "Priya, the announcement! The eggs are on offer. Ten for 1.99 euros – that’s cheap. We need eggs.",
+            "say": "Priya, die Durchsage! Die Eier sind im Angebot. Zehn Stück für eins neunundneunzig, das ist billig. Wir brauchen Eier."
           },
           {
             "id": "a1.1-u04-ls3-l04",
@@ -1752,8 +1756,8 @@
           {
             "id": "a1.1-u04-ls3-l06",
             "speaker": "cast.ensemble-a1-1",
-            "de": "Die Eier sind dort, bei der Milch. Und die Butter ist auch dort.",
-            "en": "The eggs are over there, by the milk. And the butter is there too."
+            "de": "Die Eier sind dort hinten. Und die Butter ist auch dort.",
+            "en": "The eggs are over there at the back. And the butter is there too."
           },
           {
             "id": "a1.1-u04-ls3-l07",
@@ -1795,9 +1799,9 @@
             }
           },
           {
-            "token": "bei der Milch",
+            "token": "Durchsage",
             "gloss": {
-              "en": "next to the milk"
+              "en": "announcement"
             }
           },
           {
@@ -1815,20 +1819,20 @@
           "type": "multiple_choice",
           "role": "gist",
           "topic": "hoeren",
-          "promptDe": "Die Durchsage: Worum geht es?",
-          "promptEn": "The announcement: what is it about?",
+          "promptDe": "Was sagt die Durchsage?",
+          "promptEn": "What does the announcement say?",
           "options": [
-            "um Angebote für heute",
-            "um die Milch",
-            "um Zucker und Reis"
+            "Heute sind Eier und Butter im Angebot.",
+            "Heute ist die Milch im Angebot.",
+            "Heute sind Reis und Zucker im Angebot."
           ],
-          "answer": "um Angebote für heute",
+          "answer": "Heute sind Eier und Butter im Angebot.",
           "accepted": [
-            "um Angebote für heute"
+            "Heute sind Eier und Butter im Angebot."
           ],
           "explanation": {
-            "de": "Die Durchsage sagt: heute im Angebot – Eier und Butter.",
-            "en": "The announcement lists today’s offers: eggs and butter."
+            "de": "Die Durchsage sagt: „Heute im Angebot: Eier!“ Und: „die Butter“. Der Reis ist nicht im Angebot.",
+            "en": "The announcement: eggs and butter are on offer today. The rice is not on offer."
           },
           "origin": "agent"
         },
@@ -1849,7 +1853,7 @@
             "Wo sind die Eier?"
           ],
           "explanation": {
-            "de": "Arjun fragt: Entschuldigung, wo sind die Eier, bitte?",
+            "de": "Arjun fragt: „Entschuldigung, wo sind die Eier, bitte?“",
             "en": "Arjun asks where the eggs are."
           },
           "origin": "agent"
@@ -1868,7 +1872,7 @@
           ],
           "exact": "number",
           "explanation": {
-            "de": "Die Durchsage sagt: Zehn Stück kosten nur 1,99 Euro.",
+            "de": "Die Durchsage sagt: „Zehn Stück kosten nur 1,99 Euro.“",
             "en": "The announcement: ten eggs cost only 1.99 euros."
           },
           "origin": "agent"
@@ -1890,7 +1894,7 @@
             "die Butter"
           ],
           "explanation": {
-            "de": "Die Verkäuferin sagt: Die Butter ist auch dort.",
+            "de": "Die Verkäuferin sagt: „Und die Butter ist auch dort.“",
             "en": "The assistant says the butter is there too."
           },
           "origin": "agent"
@@ -1909,7 +1913,7 @@
           ],
           "exact": "number",
           "explanation": {
-            "de": "Die Verkäuferin sagt: Ein Kilo kostet 1,79 Euro.",
+            "de": "Die Verkäuferin sagt: „Ein Kilo kostet 1,79 Euro.“",
             "en": "The assistant says a kilo costs 1.79 euros."
           },
           "origin": "agent"
@@ -1933,7 +1937,7 @@
             "Zehn Eier"
           ],
           "explanation": {
-            "de": "kosten ist Plural. Nur zehn Eier ist Plural.",
+            "de": "„kosten“ = Plural: Nur „zehn Eier“ passt.",
             "en": "“kosten” is plural – only “zehn Eier” is plural."
           },
           "origin": "agent"
@@ -1955,7 +1959,7 @@
             "Der Reis"
           ],
           "explanation": {
-            "de": "kostet ist Singular. Der Reis ist Singular.",
+            "de": "„kostet“ = Singular: Nur „der Reis“ passt.",
             "en": "“kostet” is singular – “der Reis” is singular."
           },
           "origin": "agent"
@@ -1977,7 +1981,7 @@
             "die Eier"
           ],
           "explanation": {
-            "de": "die + sind: Plural. Das sind die Eier.",
+            "de": "„Die“ + „sind“ = Plural: „die Eier“.",
             "en": "“die” with “sind” is plural: die Eier."
           },
           "origin": "agent"
@@ -1999,8 +2003,8 @@
             "Eier"
           ],
           "explanation": {
-            "de": "Stück sagt man bei Sachen, die man zählt: Eier, Birnen, Brötchen. Reis und Milch zählt man nicht.",
-            "en": "“Stück” is for things you count – eggs, pears, rolls. You don’t count rice or milk."
+            "de": "„Stück“: für Eier, Birnen, Brötchen. Nicht für Reis oder Milch.",
+            "en": "“Stück” is for eggs, pears, rolls – not for rice or milk."
           },
           "origin": "agent"
         }
@@ -2019,7 +2023,7 @@
               "Eier"
             ],
             "explanation": {
-              "de": "das Ei, die Eier: Plural mit -er.",
+              "de": "„das Ei“ – „die Eier“: Plural mit „-er“.",
               "en": "das Ei → die Eier."
             },
             "origin": "agent"
@@ -2036,7 +2040,7 @@
               "Tomaten"
             ],
             "explanation": {
-              "de": "die Tomate, die Tomaten: Plural mit -n.",
+              "de": "„die Tomate“ – „die Tomaten“: Plural mit „-n“.",
               "en": "die Tomate → die Tomaten."
             },
             "origin": "agent"
@@ -2053,7 +2057,7 @@
               "Flaschen"
             ],
             "explanation": {
-              "de": "die Flasche, die Flaschen: Plural mit -n.",
+              "de": "„die Flasche“ – „die Flaschen“: Plural mit „-n“.",
               "en": "die Flasche → die Flaschen."
             },
             "origin": "agent"
@@ -2070,7 +2074,7 @@
               "Kartoffeln"
             ],
             "explanation": {
-              "de": "die Kartoffel, die Kartoffeln: Plural mit -n.",
+              "de": "„die Kartoffel“ – „die Kartoffeln“: Plural mit „-n“.",
               "en": "die Kartoffel → die Kartoffeln."
             },
             "origin": "agent"
@@ -2096,8 +2100,8 @@
               "1,99 Euro kosten zehn Eier.": "grammatisch: der Preis betont auf Position 1"
             },
             "explanation": {
-              "de": "zehn Eier ist Plural, deshalb kosten.",
-              "en": "“zehn Eier” is plural, so “kosten”."
+              "de": "Das Verb „kosten“ steht auf Position 2 („zehn Eier“ = Plural).",
+              "en": "“kosten” is in position 2 (“zehn Eier” is plural)."
             },
             "origin": "agent"
           },
@@ -2122,8 +2126,8 @@
               "Zwei Kilo Kartoffeln brauchen wir.": "grammatisch: die Menge betont auf Position 1"
             },
             "explanation": {
-              "de": "Menge ohne Artikel: zwei Kilo Kartoffeln.",
-              "en": "A quantity takes no article: zwei Kilo Kartoffeln."
+              "de": "Das Verb „brauchen“ steht auf Position 2.",
+              "en": "The verb “brauchen” stays in position 2."
             },
             "origin": "agent"
           },
@@ -2144,8 +2148,8 @@
               "Wo sind die Eier?"
             ],
             "explanation": {
-              "de": "die Eier ist Plural: Wo sind …?",
-              "en": "“die Eier” is plural: Wo sind …?"
+              "de": "W-Frage: „Wo“ auf Position 1, „sind“ auf Position 2 („die Eier“ = Plural).",
+              "en": "W-question: “Wo” first, “sind” second (“die Eier” is plural)."
             },
             "origin": "agent"
           },
@@ -2166,8 +2170,8 @@
               "Wo ist der Reis?"
             ],
             "explanation": {
-              "de": "der Reis ist Singular: Wo ist …?",
-              "en": "“der Reis” is singular: Wo ist …?"
+              "de": "W-Frage: „Wo“ auf Position 1, „ist“ auf Position 2 („der Reis“ = Singular).",
+              "en": "W-question: “Wo” first, “ist” second (“der Reis” is singular)."
             },
             "origin": "agent"
           },
@@ -2200,7 +2204,7 @@
               "Auch dort ist die Butter.": "grammatisch: auch dort zusammen auf Position 1"
             },
             "explanation": {
-              "de": "Das Verb ist steht auf Position 2.",
+              "de": "Das Verb „ist“ steht auf Position 2.",
               "en": "The verb “ist” is in position 2."
             },
             "origin": "agent"
@@ -2218,7 +2222,7 @@
             ],
             "intentionalError": true,
             "explanation": {
-              "de": "Mengen stehen ohne Artikel: ein Kilo Tomaten.",
+              "de": "Menge ohne Artikel: „ein Kilo Tomaten“, nicht „ein Kilo die Tomaten“.",
               "en": "After a quantity there is no article: ein Kilo Tomaten."
             },
             "origin": "agent"
@@ -2240,7 +2244,7 @@
               "Äpfel"
             ],
             "explanation": {
-              "de": "der Apfel, die Äpfel: Plural mit Umlaut.",
+              "de": "„der Apfel“ – „die Äpfel“: Plural mit Umlaut.",
               "en": "der Apfel → die Äpfel (umlaut)."
             },
             "origin": "agent"
@@ -2304,7 +2308,7 @@
           ],
           "difficulty": 2,
           "explanation": {
-            "de": "die Zwiebel, die Zwiebeln: Plural mit -n.",
+            "de": "„die Zwiebel“ – „die Zwiebeln“: Plural mit „-n“.",
             "en": "die Zwiebel → die Zwiebeln."
           },
           "origin": "agent"
@@ -2336,8 +2340,8 @@
           ],
           "difficulty": 2,
           "explanation": {
-            "de": "zwei Flaschen ist Plural, deshalb kosten.",
-            "en": "“zwei Flaschen” is plural, so “kosten”."
+            "de": "Das Verb „kosten“ steht auf Position 2 („zwei Flaschen“ = Plural).",
+            "en": "“kosten” is in position 2 (“zwei Flaschen” is plural)."
           },
           "origin": "agent"
         },
@@ -2363,7 +2367,7 @@
           ],
           "difficulty": 2,
           "explanation": {
-            "de": "das Brot, die Brote: Plural mit -e.",
+            "de": "„das Brot“ – „die Brote“: Plural mit „-e“.",
             "en": "das Brot → die Brote."
           },
           "origin": "agent"
@@ -2386,7 +2390,7 @@
           ],
           "difficulty": 3,
           "explanation": {
-            "de": "Mengen stehen ohne Artikel: 500 Gramm Käse.",
+            "de": "Menge ohne Artikel: „500 Gramm Käse“, nicht „500 Gramm der Käse“.",
             "en": "After a quantity there is no article: 500 Gramm Käse."
           },
           "origin": "agent"
@@ -2397,7 +2401,7 @@
         "bankKey": "a11-u04-mo3",
         "mode": "written",
         "profile": "course-micro",
-        "situationDe": "Sie sind im Supermarkt. Ein Freund fragt im Chat: „Was ist heute im Angebot?“",
+        "situationDe": "Sie sind im Supermarkt. Ein Freund schreibt: „Was ist heute im Angebot?“",
         "promptDe": "Antworten Sie in 1–2 Sätzen: Was ist im Angebot? Was kostet es?",
         "promptEn": "Answer in 1–2 sentences: what is on offer and what it costs.",
         "planSeconds": 30,
@@ -2761,12 +2765,18 @@
             {
               "id": "a1.1-u04-ls4-t9-l01",
               "speaker": "durchsage",
-              "de": "Liebe Kunden, heute ist der Supermarkt nur bis 18 Uhr geöffnet. Morgen ist der Supermarkt zu. Am Montag sind wir wieder von 8 bis 20 Uhr für Sie da. Danke und bis Montag!",
-              "en": "Dear customers, today the supermarket is only open until 6 pm. Tomorrow the supermarket is closed. On Monday we are here for you again from 8 am to 8 pm. Thank you, and see you on Monday!",
-              "say": "Liebe Kunden, heute ist der Supermarkt nur bis achtzehn Uhr geöffnet. Morgen ist der Supermarkt zu. Am Montag sind wir wieder von acht bis zwanzig Uhr für Sie da. Danke und bis Montag!"
+              "de": "Liebe Kunden, heute ist der Supermarkt nur bis 18 Uhr geöffnet. Morgen ist der Supermarkt zu. Danach sind wir wieder von 8 bis 20 Uhr für Sie da. Danke und bis bald!",
+              "en": "Dear customers, today the supermarket is only open until 6 pm. Tomorrow the supermarket is closed. After that we are here for you again from 8 am to 8 pm. Thank you, and see you soon!",
+              "say": "Liebe Kunden, heute ist der Supermarkt nur bis achtzehn Uhr geöffnet. Morgen ist der Supermarkt zu. Danach sind wir wieder von acht bis zwanzig Uhr für Sie da. Danke und bis bald!"
             }
           ],
           "glosses": [
+            {
+              "token": "Liebe Kunden",
+              "gloss": {
+                "en": "dear customers (sg. der Kunde)"
+              }
+            },
             {
               "token": "Uhr",
               "gloss": {
@@ -2777,12 +2787,6 @@
               "token": "geöffnet",
               "gloss": {
                 "en": "open"
-              }
-            },
-            {
-              "token": "Montag",
-              "gloss": {
-                "en": "Monday"
               }
             }
           ]
@@ -2840,7 +2844,7 @@
               "role": "exam",
               "topic": "hoeren",
               "textRef": "a1.1-u04-ls4-t1",
-              "promptDe": "Wie viel bezahlt der Mann?",
+              "promptDe": "Wie viel Geld braucht der Mann?",
               "options": [
                 "40 Cent",
                 "3,50 Euro",
@@ -2852,8 +2856,8 @@
               ],
               "exact": "number",
               "explanation": {
-                "de": "Der Mann kauft nur zehn Brötchen. Das Brot möchte er nicht: Das macht 3,50 Euro.",
-                "en": "The man only buys ten rolls and says no to the bread: 3.50 euros."
+                "de": "Der Mann kauft nur zehn Brötchen, das Brot nicht. Die Frau sagt: „Das macht 3,50 Euro.“",
+                "en": "The man only buys ten rolls, not the bread: 3.50 euros."
               },
               "origin": "agent"
             },
@@ -2875,7 +2879,7 @@
               ],
               "exact": "number",
               "explanation": {
-                "de": "Die Frau sagt: 300 Gramm, bitte. Die 200 Gramm sind Wurst.",
+                "de": "Die Frau sagt: „300 Gramm, bitte.“ Die 200 Gramm sind Wurst.",
                 "en": "The woman asks for 300 grams of cheese; the 200 grams are cold cuts."
               },
               "origin": "agent"
@@ -2897,7 +2901,7 @@
                 "sechs Eier"
               ],
               "explanation": {
-                "de": "Die Frau sagt: Sechs, bitte. Zwei Eier haben sie noch zu Hause.",
+                "de": "Die Frau sagt: „Sechs, bitte.“ Zwei Eier haben sie noch zu Hause.",
                 "en": "The woman says six; the two eggs are what they still have at home."
               },
               "origin": "agent"
@@ -2920,7 +2924,7 @@
               ],
               "exact": "number",
               "explanation": {
-                "de": "Die Bananen sind im Angebot: ein Kilo nur 1,20 Euro. 2,40 Euro kosten die Äpfel, 2,10 Euro die Birnen.",
+                "de": "Die Bananen sind im Angebot: „ein Kilo nur 1,20 Euro“. 2,40 Euro kosten die Äpfel, 2,10 Euro die Birnen.",
                 "en": "Bananas are 1.20 euros a kilo; 2.40 is the apples, 2.10 the pears."
               },
               "origin": "agent"
@@ -2942,7 +2946,7 @@
                 "eine Flasche Wasser"
               ],
               "explanation": {
-                "de": "Die Frau sagt: Nur eine Flasche, bitte. Milch haben sie heute nicht.",
+                "de": "Die Frau sagt: „Nur eine Flasche, bitte.“ Milch haben sie heute nicht.",
                 "en": "The woman takes just one bottle of water; there is no milk today."
               },
               "origin": "agent"
@@ -2964,7 +2968,7 @@
                 "Birnen"
               ],
               "explanation": {
-                "de": "Der Mann sagt: Wir brauchen nur Birnen. Tomaten haben sie noch.",
+                "de": "Der Mann sagt: „Wir brauchen nur Birnen.“ Tomaten haben sie noch.",
                 "en": "They only need pears; they still have tomatoes."
               },
               "origin": "agent"
@@ -3023,7 +3027,7 @@
                 "richtig"
               ],
               "explanation": {
-                "de": "Die Durchsage sagt: Brot und Brötchen sind im Angebot – nur heute.",
+                "de": "Die Durchsage sagt: „Heute sind Brot und Brötchen im Angebot.“ Und: „Nur heute“.",
                 "en": "The announcement says the bread and rolls are on offer today only."
               },
               "origin": "agent"
@@ -3044,8 +3048,8 @@
                 "falsch"
               ],
               "explanation": {
-                "de": "Heute ist der Supermarkt nur bis 18 Uhr geöffnet. Bis 20 Uhr ist der Supermarkt am Montag geöffnet.",
-                "en": "Today it is only open until 6 pm; 8 pm is Monday’s closing time."
+                "de": "Die Durchsage sagt: heute „nur bis 18 Uhr“. Bis 20 Uhr ist der Supermarkt erst danach wieder geöffnet.",
+                "en": "Today it is only open until 6 pm; it is open until 8 pm again only after tomorrow."
               },
               "origin": "agent"
             },
@@ -3065,7 +3069,7 @@
                 "richtig"
               ],
               "explanation": {
-                "de": "Der Käse ist im Angebot: 100 Gramm für 99 Cent. 1,49 Euro kostet die Wurst.",
+                "de": "Der Käse ist im Angebot: „100 Gramm für 99 Cent“. 1,49 Euro kostet die Wurst.",
                 "en": "Cheese is 99 cents per 100 g; 1.49 euros is the price of the cold cuts."
               },
               "origin": "agent"
@@ -3098,16 +3102,16 @@
             "mode": "cards-ask",
             "profile": "sd1-sp2",
             "prepMinutes": 0,
-            "instructionsDe": "Zwei Themen: Einkaufen, dann Essen und Trinken. Fragen und antworten Sie mit Ihren Karten.",
-            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin haben Wortkarten zu zwei Themen: zuerst Einkaufen, dann Essen und Trinken. Fragen Sie: Was kostet …? Wie viel …? Wo ist …? Antworten Sie auf die Fragen der Partnerin.",
+            "instructionsDe": "Zwei Themen: „Einkaufen“, dann „Im Supermarkt“. Fragen und antworten Sie mit den Karten.",
+            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin haben Wortkarten zu zwei Themen: zuerst „Einkaufen“, dann „Im Supermarkt“. Fragen Sie: Was kostet …? Wie viel …? Wo ist …? Antworten Sie auf die Fragen der Partnerin.",
             "cards": {
               "learner": [
                 "Einkaufen – Preis",
-                "Essen und Trinken – Reis"
+                "Im Supermarkt – Reis"
               ],
               "partner": [
                 "Einkaufen – Gramm",
-                "Essen und Trinken – Milch"
+                "Im Supermarkt – Milch"
               ]
             },
             "turns": [
@@ -3121,7 +3125,7 @@
             "mode": "cards-request",
             "profile": "sd1-sp3",
             "prepMinutes": 0,
-            "instructionsDe": "Bitten Sie mit jeder Karte um etwas. Dann reagieren Sie auf die Bitte der Partnerin.",
+            "instructionsDe": "Bitten Sie mit jeder Karte um etwas. Dann antworten Sie auf die Bitte der Partnerin.",
             "situationDe": "Sprechen Teil 3: Sie und Ihre Partnerin haben je zwei Karten zum Thema Einkaufen. In der Prüfung sind auf den Karten Bilder.",
             "cards": {
               "learner": [
@@ -3146,7 +3150,7 @@
           "register": "Sie",
           "support": "slow-wordbank"
         },
-        "openingLine": "Hallo! Zuerst Teil 2: Fragen und Antworten, erst zum Thema Einkaufen, dann zum Thema Essen und Trinken. Dann Teil 3. Bitte, Sie zuerst!",
+        "openingLine": "Hallo! Zuerst Teil 2: Fragen und Antworten, erst zum Thema „Einkaufen“, dann zum Thema „Im Supermarkt“. Dann Teil 3. Bitte, Sie zuerst!",
         "hintWords": [
           "Was kostet …?",
           "Wie viel …?",
@@ -3316,9 +3320,9 @@
       {
         "id": "a1.1-u04-ls7-l02",
         "speaker": "durchsage",
-        "de": "Liebe Kunden, heute sind die Bananen im Angebot. Ein Kilo kostet nur 99 Cent.",
-        "en": "Dear customers, bananas are on offer today. A kilo costs only 99 cents.",
-        "say": "Liebe Kunden, heute sind die Bananen im Angebot. Ein Kilo kostet nur neunundneunzig Cent."
+        "de": "Heute im Angebot: Bananen! Ein Kilo kostet nur 99 Cent. Nur heute in Ihrem Supermarkt!",
+        "en": "On offer today: bananas! A kilo costs only 99 cents. Today only in your supermarket!",
+        "say": "Heute im Angebot: Bananen! Ein Kilo kostet nur neunundneunzig Cent. Nur heute in Ihrem Supermarkt!"
       },
       {
         "id": "a1.1-u04-ls7-l03",
@@ -3346,7 +3350,7 @@
           "Die"
         ],
         "explanation": {
-          "de": "Milch ist feminin: die Milch.",
+          "de": "„Milch“ ist feminin: „die Milch“.",
           "en": "“Milch” is feminine: die Milch."
         },
         "origin": "agent"
@@ -3363,7 +3367,7 @@
           "Birnen"
         ],
         "explanation": {
-          "de": "die Birne, die Birnen: Plural mit -n.",
+          "de": "„die Birne“ – „die Birnen“: Plural mit „-n“.",
           "en": "die Birne → die Birnen."
         },
         "origin": "agent"
@@ -3380,7 +3384,7 @@
           "möchten"
         ],
         "explanation": {
-          "de": "Sie möchten: mit -n.",
+          "de": "„Sie möchten“: mit „-n“.",
           "en": "Sie möchten – with -n."
         },
         "origin": "agent"
@@ -3406,8 +3410,8 @@
           "Zwei Flaschen Wasser möchte ich.": "grammatisch: die Menge betont auf Position 1"
         },
         "explanation": {
-          "de": "möchte steht auf Position 2.",
-          "en": "“möchte” is in position 2."
+          "de": "Das Verb „möchte“ steht auf Position 2.",
+          "en": "The verb “möchte” is in position 2."
         },
         "origin": "agent"
       },
@@ -3428,7 +3432,7 @@
           "teuer"
         ],
         "explanation": {
-          "de": "9 Euro für 100 Gramm Käse ist viel Geld: teuer.",
+          "de": "9 Euro für 100 Gramm Käse: Das ist viel Geld, also „teuer“.",
           "en": "9 euros for 100 grams of cheese is a lot: expensive."
         },
         "origin": "agent"
@@ -3446,7 +3450,7 @@
           "Wir brauchen Brot und Käse."
         ],
         "explanation": {
-          "de": "Wir brauchen Brot und Käse. Nomen schreibt man groß.",
+          "de": "„Brot“ und „Käse“ sind Nomen. Nomen schreibt man groß.",
           "en": "Nouns are capitalised: Brot, Käse."
         },
         "origin": "agent"
@@ -3468,8 +3472,8 @@
           "gender-article"
         ],
         "explanation": {
-          "de": "das Kilo → ein Kilo.",
-          "en": "das Kilo → ein Kilo."
+          "de": "„das Kilo“ → „ein Kilo“, nicht „eine Kilo“.",
+          "en": "das Kilo → ein Kilo, not “eine Kilo”."
         },
         "origin": "agent"
       },
@@ -3491,7 +3495,7 @@
         ],
         "exact": "number",
         "explanation": {
-          "de": "Die Frage ist: Was kosten …? Die Antwort nennt einen Preis.",
+          "de": "Die Frage ist „Was kosten …?“. Die Antwort ist ein Preis.",
           "en": "The question asks for a price."
         },
         "origin": "agent"
@@ -3522,7 +3526,7 @@
         ],
         "exact": "number",
         "explanation": {
-          "de": "Die Verkäuferin sagt: sieben Euro vierzig. Das sind 7,40 Euro.",
+          "de": "Die Verkäuferin sagt: „sieben Euro vierzig“. Das sind 7,40 Euro.",
           "en": "She says “sieben Euro vierzig” – 7.40 euros."
         },
         "origin": "agent"
@@ -3545,7 +3549,7 @@
         ],
         "exact": "number",
         "explanation": {
-          "de": "Im Prospekt steht: Zucker 0,89 €. 1,79 € kostet der Reis, 1,49 € die Wurst.",
+          "de": "Im Prospekt steht: „Zucker 0,89 €“. 1,79 € kostet der Reis, 1,49 € die Wurst.",
           "en": "Sugar is 0.89 €; 1.79 € is the rice and 1.49 € the cold cuts."
         },
         "origin": "agent"
@@ -3568,7 +3572,7 @@
           "Bananen"
         ],
         "explanation": {
-          "de": "Die Durchsage sagt: Heute sind die Bananen im Angebot.",
+          "de": "Die Durchsage sagt: „Heute im Angebot: Bananen!“",
           "en": "The announcement: bananas are on offer today."
         },
         "origin": "agent"
@@ -3588,7 +3592,7 @@
         ],
         "exact": "number",
         "explanation": {
-          "de": "Arjun sagt: zehn Eier und zwei Flaschen Milch.",
+          "de": "Arjun sagt: „zehn Eier und zwei Flaschen Milch“.",
           "en": "Arjun asks for ten eggs and two bottles of milk."
         },
         "origin": "agent"

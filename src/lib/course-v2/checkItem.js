@@ -65,74 +65,83 @@ function checkChoice(item, input) {
 }
 
 const digitsOf = (s) => String(s ?? '').replace(/\D+/g, '');
-const wordsOf = (s) => squash(String(s ?? '').replace(/[\d]+(?:[\s.,:/-]+\d+)*/g, ' ').replace(/[.,:;!?]/g, ' '));
-/** A form that is nothing but a number once its number words are read as digits („zweihundert"). */
-const pureNumber = (s) => {
-  const f = foldNumberWords(s);
-  return /\d/.test(f) && !/\p{L}/u.test(f) ? digitsOf(f) : '';
-};
+const wordsOf = (s) => squash(String(s ?? '').replace(/[\d]+(?:[\s.,:/-]+\d+)*/g, ' ').replace(/[.,:;!?()[\]/]/g, ' '));
 const RANK = { [RESULT.CORRECT]: 2, [RESULT.TYPO]: 1, [RESULT.WRONG]: 0 };
-
-function checkNumber(item, input) {
-  const accepted = acceptedOf(item);
-  const rawDigits = digitsOf(input);
-  let worded = null;
-  if (!rawDigits) {
-    // A time or number written in words („halb zehn") is judged like a name:
-    // exactly, with only the checker's case rule as a retry.
-    const wordedForms = accepted.filter((a) => !digitsOf(a));
-    worded = wordedForms.length ? checkName({ ...item, accepted: wordedForms }, input) : null;
-    if (worded && worded.result !== RESULT.WRONG) return worded;
-  }
-  // „zweihundert" typed where „200" is accepted: the number word counts as its digits
-  const userInput = rawDigits ? input : foldNumberWords(input);
-  const userDigits = digitsOf(userInput);
-  if (!userDigits) return worded || { result: RESULT.WRONG, expected: accepted[0] || '' };
-  let typo = null;
-  for (const a of accepted) {
-    // a purely worded key („zweihundert") is answered by its digits too; „halb zehn" is not
-    // a pure number and keeps its name-like comparison above
-    if ((digitsOf(a) || pureNumber(a)) !== userDigits) continue;
-    const userWords = wordsOf(userInput);
-    const want = digitsOf(a) ? wordsOf(a) : '';
-    // „0341 90 12 33" for „0341 90 12 33": digits are the task; the words around
-    // them may be left out, never wrong.
-    if (!userWords || userWords.toLowerCase() === want.toLowerCase()) return { result: RESULT.CORRECT, expected: a };
-    const words = checkAnswer(userWords, want, { caseSensitive: item.caseSensitive === true });
-    if (words.result === RESULT.CORRECT) return { result: RESULT.CORRECT, expected: a };
-    if (words.result === RESULT.TYPO && !typo) typo = { result: RESULT.TYPO, expected: a };
-  }
-  return typo || worded || { result: RESULT.WRONG, expected: accepted[0] || '' };
-}
+const better = (a, b) => (b && (!a || RANK[b.result] > RANK[a.result]) ? b : a);
 
 /** A run of digits with its separators („8.30", „0341/22 58 90" after the dictation fold). */
 const DIGIT_RUN_RE = /\d+(?:[.,:/]\d+)*/g;
 
-/** The dictation fold with every number word read as digits: „zehn Minuten" → „10 Minuten". */
-const foldDictationNumbers = (s) => normalizeDictation(foldNumberWords(normalizeDictation(s)));
+/** Every number word read as digits, dashes and digit grouping folded: „zehn Minuten" → „10 Minuten". */
+const foldNumbers = (s) => normalizeDictation(foldNumberWords(normalizeDictation(s)));
 
 /**
- * `exact: 'number'` on a dictation: the whole sentence, the digits exact (a2.2-u04 r3 F04).
- * Each accepted form: the digit runs of both sides must be the same numbers in the same order,
- * else the form does not match; the sentence with every run masked is then graded by the
- * dictation check (one typo-class slip in a word stays a TYPO). There is no words-may-be-left-out
- * shortcut: „10" alone answers nothing.
+ * The whole answer against `forms`, digits exact: the digit runs of both sides (number words read
+ * as digits) must be the same numbers in the same order, and the answer with every run masked is
+ * then graded by the checker (`dictation` adds its folds; one typo-class slip in a word stays a
+ * TYPO). There is no words-may-be-left-out shortcut: „10" alone answers neither „halb zehn" nor
+ * „Wir sind zehn Minuten von der Brücke.".
  */
-function checkDictationNumber(item, input) {
-  const accepted = acceptedOf(item);
-  const user = foldDictationNumbers(input);
+function checkWholeNumber(item, input, forms, dictation) {
+  let best = { result: RESULT.WRONG, expected: forms[0] || '' };
+  if (!squash(input)) return best;
   const runs = (s) => (s.match(DIGIT_RUN_RE) || []).map(digitsOf).join('|');
   const mask = (s) => s.replace(DIGIT_RUN_RE, ' # ');
-  let best = { result: RESULT.WRONG, expected: accepted[0] || '' };
-  if (!squash(input)) return best;
-  for (const a of accepted) {
-    const want = foldDictationNumbers(a);
+  const user = foldNumbers(input);
+  for (const a of forms) {
+    const want = foldNumbers(a);
     if (runs(want) !== runs(user)) continue;
-    const out = checkAnswer(mask(user), [mask(want)], { dictation: true, caseSensitive: item.caseSensitive === true });
+    const out = checkAnswer(mask(user), [mask(want)], { dictation, caseSensitive: item.caseSensitive === true });
     if (RANK[out.result] > RANK[best.result]) best = { result: out.result, expected: a, ...(out.reason ? { reason: out.reason } : {}) };
     if (best.result === RESULT.CORRECT) break;
   }
   return best;
+}
+
+function checkNumber(item, input) {
+  const accepted = acceptedOf(item);
+  const rawDigits = digitsOf(input);
+  let best = null;
+  if (!rawDigits) {
+    // A time or number written in words („halb zehn") is judged like a name:
+    // exactly, with only the checker's case rule as a retry.
+    const wordedForms = accepted.filter((a) => !digitsOf(a));
+    best = wordedForms.length ? checkName({ ...item, accepted: wordedForms }, input) : null;
+    if (best && best.result !== RESULT.WRONG) return best;
+  }
+  // a worded key with number words („halb zehn", „zweihundert") is also answered in digits
+  // („halb 10", „200") — as a whole, never by its digits alone
+  const wordedNumbers = accepted.filter((a) => !digitsOf(a) && /\d/.test(foldNumberWords(a)));
+  if (wordedNumbers.length) {
+    best = better(best, checkWholeNumber(item, input, wordedNumbers, false));
+    if (best.result === RESULT.CORRECT) return best;
+  }
+  // „zweihundert" typed where „200" is accepted: the number word counts as its digits
+  const userInput = rawDigits ? input : foldNumberWords(input);
+  const userDigits = digitsOf(userInput);
+  let typo = null;
+  if (userDigits) {
+    for (const a of accepted) {
+      if (!digitsOf(a) || digitsOf(a) !== userDigits) continue;
+      const userWords = wordsOf(userInput);
+      const want = wordsOf(a);
+      // „0341 90 12 33" for „0341 90 12 33": digits are the task; the words around
+      // them may be left out, never wrong.
+      if (!userWords || userWords.toLowerCase() === want.toLowerCase()) return { result: RESULT.CORRECT, expected: a };
+      const words = checkAnswer(userWords, want, { caseSensitive: item.caseSensitive === true });
+      if (words.result === RESULT.CORRECT) return { result: RESULT.CORRECT, expected: a };
+      if (words.result === RESULT.TYPO && !typo) typo = { result: RESULT.TYPO, expected: a };
+    }
+  }
+  return better(best, typo) || { result: RESULT.WRONG, expected: accepted[0] || '' };
+}
+
+/**
+ * `exact: 'number'` on a dictation: the whole sentence, digits exact (review a2.2-u04 r3 F04) —
+ * checkWholeNumber with the dictation folds.
+ */
+function checkDictationNumber(item, input) {
+  return checkWholeNumber(item, input, acceptedOf(item), true);
 }
 
 function checkName(item, input) {
