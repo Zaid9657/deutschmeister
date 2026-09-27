@@ -2,7 +2,8 @@
 // DeutschMeister tokens. 4:5 is the tallest ratio the Instagram publishing API
 // accepts (Zapier uses it), and the 3:4 profile grid only trims the sides, so
 // every card keeps a 90px side safe zone.
-// Usage: node render.mjs posts.json outDir
+// Usage: node render.mjs [posts.json] [outDir]  (default: posts.json → public/social/ig)
+// Output is JPEG: the only still format every channel in the Zap accepts natively.
 import { createRequire } from 'node:module';
 import { execSync } from 'node:child_process';
 import { readFileSync, mkdirSync } from 'node:fs';
@@ -12,7 +13,7 @@ import { color, kasus, accent } from '../../src/data/design-tokens.js';
 // playwright is the global install in the agent sandbox (no project dep)
 const { chromium } = createRequire(execSync('npm root -g').toString().trim() + '/')('playwright');
 
-const [, , input = 'posts.json', out = 'samples'] = process.argv;
+const [, , input = 'posts.json', out = '../../public/social/ig'] = process.argv;
 const posts = JSON.parse(readFileSync(new URL(input, import.meta.url)));
 mkdirSync(new URL(out + '/', import.meta.url), { recursive: true });
 
@@ -57,7 +58,7 @@ body{width:1080px;height:1350px;background:${color.paper};color:${color.ink};fon
 .top{display:flex;justify-content:space-between;align-items:center;padding-bottom:28px;border-bottom:2px solid ${color.rule}}
 .series{font-family:ui-monospace,Menlo,monospace;font-weight:700;font-size:24px;letter-spacing:.13em;text-transform:uppercase;background:${a.wash};color:${a.ink};padding:12px 20px;border-radius:999px;box-shadow:0 4px 0 0 ${a.edge}}
 .lvl{font-family:ui-monospace,Menlo,monospace;font-size:26px;font-weight:600;color:${color.graphite};letter-spacing:.06em}
-main{flex:1;display:flex;flex-direction:column;justify-content:center;gap:44px}
+main{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:44px}
 h1{font-family:Fraunces,Georgia,serif;font-weight:680;font-size:78px;line-height:1.1;letter-spacing:-.01em}
 .chip{display:inline-block;padding:0 14px 2px;border-radius:14px;line-height:1.15}
 .chip sup{font-family:ui-monospace,monospace;font-size:22px;font-weight:700;letter-spacing:.1em;margin-left:8px;vertical-align:super}
@@ -96,7 +97,15 @@ for (const p of posts) {
   await page.setContent(html(p), { waitUntil: 'networkidle' });
   const loaded = await page.evaluate(async () => { await document.fonts.ready; return [...document.fonts].filter((f) => f.status === 'loaded').map((f) => f.family); });
   if (!loaded.some((f) => f.includes('Fraunces')) || !loaded.some((f) => f.includes('Nunito'))) throw new Error('brand fonts missing: ' + loaded);
-  await page.screenshot({ path: new URL(`${out}/${p.id}.png`, import.meta.url).pathname });
-  console.log('rendered', p.id);
+  // Shrink-to-fit: a long headline or list must never spill into the footer.
+  const zoom = await page.evaluate(() => {
+    const m = document.querySelector('main');
+    let z = 1;
+    while (m.scrollHeight > m.clientHeight + 1 && z > 0.6) { z -= 0.03; m.style.zoom = z; }
+    return z;
+  });
+  if (zoom <= 0.6) throw new Error(`${p.id} does not fit`);
+  await page.screenshot({ path: new URL(`${out}/${p.id}.jpg`, import.meta.url).pathname, type: 'jpeg', quality: 90 });
+  console.log('rendered', p.id, zoom < 1 ? `(zoom ${zoom.toFixed(2)})` : '');
 }
 await browser.close();
