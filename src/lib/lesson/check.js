@@ -37,8 +37,19 @@ export function levenshtein(a, b) {
   return prev[n];
 }
 
-const stripPunct = (s) =>
-  s.replace(/[“”„‟«»‹›]/g, '"').replace(/[‘’‚‛ʼ´`]/g, "'")
+/** An ellipsis, typographic (U+2026) or typed as three or more dots: a pause, never a word. */
+const ELLIPSIS_RE = /…|\.{3,}/g;
+
+/**
+ * Punctuation folding for every check. An ellipsis becomes a space first
+ * (course-v2 review a2.2-u04 r3 F02, a plain bug fix: „…" survived this fold, so
+ * the key „Mir wird schlecht… und ein bisschen kalt." rejected every typed
+ * transcription — the pause is heard, the character is not; „...", typed, lost
+ * its dots here but glued the neighbouring words together).
+ */
+export const stripPunct = (s) =>
+  String(s ?? '').replace(ELLIPSIS_RE, ' ')
+    .replace(/[“”„‟«»‹›]/g, '"').replace(/[‘’‚‛ʼ´`]/g, "'")
     .replace(/[.,!?;:"']/g, '').replace(/\s+/g, ' ').trim();
 
 /**
@@ -47,15 +58,120 @@ const stripPunct = (s) =>
  * choice of the writer, not of the speaker, and a dash is unhearable. So for a
  * dictation — and only there — every dash form becomes a space, the separators
  * inside a run of digits are removed, and the run is compared as one number.
- * Typographic quotes are folded by stripPunct above, for every check.
+ * An ellipsis is a pause and becomes a space like a dash (course-v2 a2.2-u04 r3
+ * F02). Typographic quotes are folded by stripPunct above, for every check.
  */
 export function normalizeDictation(text) {
   return String(text ?? '')
-    .replace(/[\u2010-\u2015\u2212\uFF0D-]/g, ' ')
+    .replace(ELLIPSIS_RE, ' ')
+    .replace(/[‐-―−－-]/g, ' ')
     .replace(/(\d)[\s./]+(?=\d)/g, '$1')
     .replace(/\s+/g, ' ')
     .trim();
 }
+
+/**
+ * The characters of `text` that no dictation fold removes and that are neither a
+ * letter, a digit nor whitespace — „(", „)", „/" between words, „%", „€", „&" …
+ * A dictation key containing one can never be typed from what is heard
+ * (course-v2 rule ITM-13, review a2.2-u04 r3 F02). De-duplicated, in order.
+ */
+export function unfoldedDictationChars(text) {
+  const rest = stripPunct(normalizeDictation(text)).replace(/[\p{L}\p{M}\p{N}\s]/gu, '');
+  return [...new Set(rest)];
+}
+
+// ── number words ↔ digits (dictation) ──────────────────────────────────────────
+//
+// A dictation hears „fünfzehn Euro"; „15 Euro" is the same transcription. The
+// course-v2 reviews found the class three times (a2.2-u04 r2 F07, b1.1-u04 r2
+// F05, a1.1-u04 r2 F01), and the live A1.1 course dictates „Der Tisch kostet
+// fünfzehn Euro." and „Die Pause ist um eins." as well. foldNumberWords turns
+// every cardinal (null … 9999) and ordinal word (erste … neunundneunzigste) into
+// digits, so both spellings compare equal. „ein/eine/einen" are articles and
+// never fold; only the counting form „eins" is a number.
+
+const UNITS = { null: 0, eins: 1, zwei: 2, drei: 3, vier: 4, fünf: 5, sechs: 6, sieben: 7, acht: 8, neun: 9 };
+const TEENS = { zehn: 10, elf: 11, zwölf: 12, dreizehn: 13, vierzehn: 14, fünfzehn: 15, sechzehn: 16, siebzehn: 17, achtzehn: 18, neunzehn: 19 };
+const TENS = { zwanzig: 20, dreißig: 30, vierzig: 40, fünfzig: 50, sechzig: 60, siebzig: 70, achtzig: 80, neunzig: 90 };
+/** The first element of „einundzwanzig", „einhundert", „eintausend". */
+const UNIT_PREFIX = { ein: 1, zwei: 2, drei: 3, vier: 4, fünf: 5, sechs: 6, sieben: 7, acht: 8, neun: 9 };
+const TENS_ALT = Object.keys(TENS).join('|');
+
+/** 1–99: „drei", „dreizehn", „dreiundzwanzig", „dreißig". */
+function below100(w) {
+  if (!w) return null;
+  if (w in TEENS) return TEENS[w];
+  if (w in TENS) return TENS[w];
+  if (w !== 'null' && w in UNITS) return UNITS[w];
+  const m = new RegExp(`^(ein|zwei|drei|vier|fünf|sechs|sieben|acht|neun)und(${TENS_ALT})$`).exec(w);
+  return m ? UNIT_PREFIX[m[1]] + TENS[m[2]] : null;
+}
+
+/** 1–999: „hundert", „zweihundertfünf", „hundertelf". */
+function below1000(w) {
+  const i = w.indexOf('hundert');
+  if (i < 0) return below100(w);
+  const head = w.slice(0, i);
+  const tail = w.slice(i + 'hundert'.length);
+  const h = head === '' ? 1 : UNIT_PREFIX[head];
+  if (!h) return null;
+  if (!tail) return h * 100;
+  const t = below100(tail);
+  return t === null ? null : h * 100 + t;
+}
+
+/** Spelling variants a learner types without German letters: ss → ß, ue/oe → ü/ö. */
+const germanLetters = (word) => String(word ?? '').toLowerCase()
+  .replace(/ss/g, 'ß').replace(/ue/g, 'ü').replace(/oe/g, 'ö');
+
+/** A cardinal word (0–9999) as a number, or null: „zweitausendvierundzwanzig" → 2024. */
+export function cardinalValue(word) {
+  const w = germanLetters(word);
+  if (!w) return null;
+  if (w === 'null') return 0;
+  const i = w.indexOf('tausend');
+  if (i < 0) return below1000(w);
+  const head = w.slice(0, i);
+  const tail = w.slice(i + 'tausend'.length);
+  const k = head === '' ? 1 : UNIT_PREFIX[head];
+  if (!k) return null;
+  if (!tail) return k * 1000;
+  const r = below1000(tail);
+  return r === null ? null : k * 1000 + r;
+}
+
+const ORDINAL_SPECIAL = { erst: 1, dritt: 3, siebt: 7, siebent: 7, acht: 8 };
+
+/** An ordinal word as a number, or null: „dritten" → 3, „zwanzigste" → 20. */
+export function ordinalValue(word) {
+  const m = /^(\p{L}+?)(e|en|er|es|em)$/u.exec(germanLetters(word));
+  if (!m) return null;
+  const stem = m[1];
+  if (stem in ORDINAL_SPECIAL) return ORDINAL_SPECIAL[stem];
+  if (stem.endsWith('st')) {
+    const v = cardinalValue(stem.slice(0, -2));
+    if (v !== null && v >= 20) return v;
+  }
+  if (stem.endsWith('t')) {
+    const v = cardinalValue(stem.slice(0, -1));
+    if (v !== null && v >= 2 && v < 20) return v;
+  }
+  return null;
+}
+
+/** Every cardinal and ordinal word of `text` as digits („am dritten Juni" → „am 3. Juni"). */
+export function foldNumberWords(text) {
+  return String(text ?? '').replace(/\p{L}+/gu, (word) => {
+    const c = cardinalValue(word);
+    if (c !== null) return String(c);
+    const o = ordinalValue(word);
+    return o !== null ? `${o}.` : word;
+  });
+}
+
+/** True when `text` holds a digit or a number word (ITM-07's test on a dictation). */
+export const hasNumber = (text) => /\d/.test(foldNumberWords(text));
 
 /**
  * Spelled-out-word normalisation (REVIEW #4 BLOCKER 1). "Buchstabieren Sie den
