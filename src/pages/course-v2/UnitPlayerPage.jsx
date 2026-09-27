@@ -161,7 +161,7 @@ function StartFallback({ unit, row, steps, finished, onOpen }) {
     <div className="space-y-5">
       <header>
         <Chip tone="label">{t('player.unit', { n: unit.nr })}</Chip>
-        <h1 className="mt-3 font-display text-2xl leading-tight text-ink [hyphens:auto] sm:text-3xl">{unit.title && unit.title.de}</h1>
+        <h1 className="mt-3 font-display text-2xl font-semibold leading-tight tracking-[-0.018em] text-ink [hyphens:auto] sm:text-3xl">{unit.title && unit.title.de}</h1>
         {unit.title && unit.title.canDo && <p className="mt-2 text-graphite">{unit.title.canDo}</p>}
       </header>
       {canDos.length > 0 && (
@@ -416,7 +416,7 @@ export function UnitPlayer({ level, unit, manifest, user }) {
         <div className="space-y-5">
           <header>
             <Chip tone="label">{t('player.unit', { n: unit.nr })}</Chip>
-            <h1 className="mt-3 font-display text-2xl leading-tight text-ink [hyphens:auto] sm:text-3xl">{unit.title && unit.title.de}</h1>
+            <h1 className="mt-3 font-display text-2xl font-semibold leading-tight tracking-[-0.018em] text-ink [hyphens:auto] sm:text-3xl">{unit.title && unit.title.de}</h1>
             <p className="mt-2 text-graphite">{t('player.welcomeBack', { d: doneCount, t: steps.length })}</p>
           </header>
           <StepList unit={unit} steps={steps} finished={finished} currentIndex={stepIndex} onOpen={goTo} />
@@ -481,7 +481,7 @@ export function UnitPlayer({ level, unit, manifest, user }) {
             </div>
           )}
           <Chip tone="label">{t('player.unit', { n: unit.nr })}</Chip>
-          <h1 className="mt-3 font-display text-2xl leading-tight text-ink [hyphens:auto] sm:text-3xl">
+          <h1 className="mt-3 font-display text-2xl font-semibold leading-tight tracking-[-0.018em] text-ink [hyphens:auto] sm:text-3xl">
             {complete ? t('player.complete') : t('player.almost')}
           </h1>
           <p className="mt-2 text-graphite">{unit.title && unit.title.de}</p>
@@ -565,7 +565,7 @@ export default function UnitPlayerPage() {
       <Shell level={level} progress={0} footer={<Button size="lg" className="w-full" to={v2Paths.home(level)}>{t('player.home')}</Button>}>
         <Card className="p-5">
           <Chip tone="quiet">{t('player.unit', { n: pad2(nr) })}</Chip>
-          <h1 className="mt-3 font-display text-xl text-ink">{t('player.soonTitle')}</h1>
+          <h1 className="mt-3 font-display text-xl font-semibold tracking-[-0.018em] text-ink">{t('player.soonTitle')}</h1>
           <p className="mt-2 text-sm text-graphite">{t('player.soonBody')}</p>
         </Card>
       </Shell>

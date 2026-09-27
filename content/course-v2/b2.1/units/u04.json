@@ -1046,16 +1046,16 @@
           "type": "multiple_choice",
           "role": "gist",
           "topic": "hoeren",
-          "promptDe": "Wie reagiert der Kundenservice zuerst auf die Beschwerde?",
-          "promptEn": "How does customer service react first?",
+          "promptDe": "Was bietet der Kundenservice Priya am Telefon an?",
+          "promptEn": "What does customer service offer Priya on the phone?",
           "options": [
-            "Er bietet einen Gutschein an.",
-            "Er bietet sofort eine Minderung an.",
-            "Er sagt, dass nur das Hotel zuständig ist."
+            "einen Gutschein für eine weitere Buchung",
+            "eine Minderung des Reisepreises",
+            "ein Zimmer in einem anderen Hotel"
           ],
-          "answer": "Er bietet einen Gutschein an.",
+          "answer": "einen Gutschein für eine weitere Buchung",
           "accepted": [
-            "Er bietet einen Gutschein an."
+            "einen Gutschein für eine weitere Buchung"
           ],
           "explanation": {
             "de": "Die Mitarbeiterin stellt aus Kulanz einen Gutschein über 50 Euro in Aussicht.",
@@ -2219,9 +2219,9 @@
             {
               "id": "b2.1-u04-ls4-t2-l01",
               "speaker": "cast.ensemble-b2-1",
-              "de": "Hallo, hier spricht die Reiseleitung von Blauwelle Reisen, eine Nachricht für alle Gäste hier im Hotel. Es gibt eine kleine Programmänderung: Der Ausflug in die Berge morgen findet statt, aber der Bus fährt schon um 7.30 Uhr am Hotel ab, nicht wie im Programm um 8.30 Uhr. Am Nachmittag soll es nämlich sehr heiß werden. Das Frühstück gibt es deshalb ausnahmsweise schon ab 6.45 Uhr. Falls Sie nicht mitkommen möchten, sagen Sie bitte bis heute Abend an der Rezeption Bescheid. Ersatzweise können Sie am Freitag an einer Bootsfahrt teilnehmen. Vielen Dank!",
-              "en": "Hello, this is the Blauwelle Reisen tour guide with a message for all guests here at the hotel. There is a small change to the programme: tomorrow's trip into the mountains will take place, but the bus leaves the hotel at 7:30, not at 8:30 as in the programme. It is going to be very hot in the afternoon. Breakfast is therefore served from 6:45 as an exception. If you do not want to come along, please tell reception by this evening. Instead, you can join a boat trip on Friday. Thank you!",
-              "say": "Hallo, hier spricht die Reiseleitung von Blauwelle Reisen, eine Nachricht für alle Gäste hier im Hotel. Es gibt eine kleine Programmänderung: Der Ausflug in die Berge morgen findet statt, aber der Bus fährt schon um halb acht am Hotel ab, nicht wie im Programm um halb neun. Am Nachmittag soll es nämlich sehr heiß werden. Das Frühstück gibt es deshalb ausnahmsweise schon ab Viertel vor sieben. Falls Sie nicht mitkommen möchten, sagen Sie bitte bis heute Abend an der Rezeption Bescheid. Ersatzweise können Sie am Freitag an einer Bootsfahrt teilnehmen. Vielen Dank!"
+              "de": "Hallo, hier spricht die Reiseleitung von Blauwelle Reisen, eine Nachricht für alle Gäste hier im Hotel. Es gibt eine kleine Programmänderung. Der Ausflug in die Berge morgen findet statt, aber der Bus fährt schon um 7.30 Uhr am Hotel ab, nicht wie im Programm um 8.30 Uhr. Am Nachmittag soll es nämlich sehr heiß werden. Das Frühstück gibt es deshalb ausnahmsweise schon ab 6.45 Uhr. Falls Sie nicht mitkommen möchten, sagen Sie bitte bis heute Abend an der Rezeption Bescheid. Ersatzweise können Sie am Freitag an einer Bootsfahrt teilnehmen. Vielen Dank!",
+              "en": "Hello, this is the Blauwelle Reisen tour guide with a message for all guests here at the hotel. There is a small change to the programme. Tomorrow's trip into the mountains will take place, but the bus leaves the hotel at 7:30, not at 8:30 as in the programme. It is going to be very hot in the afternoon. Breakfast is therefore served from 6:45 as an exception. If you do not want to come along, please tell reception by this evening. Instead, you can join a boat trip on Friday. Thank you!",
+              "say": "Hallo, hier spricht die Reiseleitung von Blauwelle Reisen, eine Nachricht für alle Gäste hier im Hotel. Es gibt eine kleine Programmänderung. Der Ausflug in die Berge morgen findet statt, aber der Bus fährt schon um halb acht am Hotel ab, nicht wie im Programm um halb neun. Am Nachmittag soll es nämlich sehr heiß werden. Das Frühstück gibt es deshalb ausnahmsweise schon ab Viertel vor sieben. Falls Sie nicht mitkommen möchten, sagen Sie bitte bis heute Abend an der Rezeption Bescheid. Ersatzweise können Sie am Freitag an einer Bootsfahrt teilnehmen. Vielen Dank!"
             }
           ],
           "glosses": [
@@ -2256,9 +2256,9 @@
             {
               "id": "b2.1-u04-ls4-t4-l01",
               "speaker": "cast.ensemble-b2-6",
-              "de": "Guten Tag, Frau Nair, hier ist der Kundenservice von Blauwelle Reisen. Wir haben Ihren Beschwerdebrief vom 3. November erhalten, vielen Dank. Zurzeit prüfen wir alle Mängel, die Sie beanstandet haben, eingehend, gemeinsam mit dem Hotel und der Reiseleitung. Ob wir Ihnen eine Minderung gewähren können, entscheiden wir danach. Eine Antwort bekommen Sie innerhalb von drei Wochen. Wenn Sie weitere Beweisfotos haben, schicken Sie uns diese bitte als E-Mail. Vielen Dank und einen schönen Tag.",
+              "de": "Guten Tag, Frau Nair, hier ist der Kundenservice von Blauwelle Reisen. Wir haben Ihren Beschwerdebrief vom 3. November erhalten, vielen Dank. Zurzeit prüfen wir eingehend alle Mängel, die Sie beanstandet haben – gemeinsam mit dem Hotel und der Reiseleitung. Ob wir Ihnen eine Minderung gewähren können, entscheiden wir danach. Eine Antwort bekommen Sie innerhalb von drei Wochen. Wenn Sie weitere Beweisfotos haben, schicken Sie uns diese bitte als E-Mail. Vielen Dank und einen schönen Tag.",
               "en": "Hello, Ms Nair, this is Blauwelle Reisen customer service. We have received your letter of complaint of 3 November, thank you. We are currently looking thoroughly into all the defects you complained about, together with the hotel and the tour guide. We will decide afterwards whether we can grant you a price reduction. You will receive an answer within three weeks. If you have more photos, please send them to us by e-mail. Thank you and have a nice day.",
-              "say": "Guten Tag, Frau Nair, hier ist der Kundenservice von Blauwelle Reisen. Wir haben Ihren Beschwerdebrief vom dritten November erhalten, vielen Dank. Zurzeit prüfen wir alle Mängel, die Sie beanstandet haben, eingehend, gemeinsam mit dem Hotel und der Reiseleitung. Ob wir Ihnen eine Minderung gewähren können, entscheiden wir danach. Eine Antwort bekommen Sie innerhalb von drei Wochen. Wenn Sie weitere Beweisfotos haben, schicken Sie uns diese bitte als E-Mail. Vielen Dank und einen schönen Tag."
+              "say": "Guten Tag, Frau Nair, hier ist der Kundenservice von Blauwelle Reisen. Wir haben Ihren Beschwerdebrief vom dritten November erhalten, vielen Dank. Zurzeit prüfen wir eingehend alle Mängel, die Sie beanstandet haben – gemeinsam mit dem Hotel und der Reiseleitung. Ob wir Ihnen eine Minderung gewähren können, entscheiden wir danach. Eine Antwort bekommen Sie innerhalb von drei Wochen. Wenn Sie weitere Beweisfotos haben, schicken Sie uns diese bitte als E-Mail. Vielen Dank und einen schönen Tag."
             }
           ],
           "glosses": []
