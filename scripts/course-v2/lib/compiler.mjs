@@ -12,8 +12,13 @@
 //                                     minutes and counts (syllabus rows), Etappen, completion, review,
 //                                     pace, counts for copy, contentHash
 //   <out>/<level>/ids.ledger.json     every live id of the level + tombstones of removed ids (ID-01)
-//   <banks>/<level>.banks.json        writing + speaking bank: every WritingTask / SpeakingTask /
-//                                     MicroOutput keyed by bankKey (grader input only)
+//   <out>/<level>/rule-cards.json     the level's rule cards (when authored)
+//   <out>/<level>/lines.json          every spoken line with its cast voice — the audio run's input
+//   <banks>/<level>.banks.json        grader input only, every entry keyed by bankKey:
+//                                       writing  = WritingTasks + written MicroOutputs (SCHEMA §15.5)
+//                                       speaking = SpeakingTasks + spoken MicroOutputs
+//                                       micro    = every MicroOutput, with its `mode` (the lookup
+//                                                  table of _shared/rubrics/data.mjs bankEntry(…, 'micro', key))
 //
 // Nothing here reads a clock, the environment or the network: the same content gives the same bytes.
 import fs from 'node:fs';
@@ -266,7 +271,7 @@ function minutesOf(u, profile) {
 
 // ── the level ───────────────────────────────────────────────────────────────────────────
 /**
- * Compile one level. Returns { outputs: [{ file, text }], syncDirs: [dir], errors: [str], warnings: [str] }.
+ * Compile one level. Returns { outputs: [{ file, text }], syncDirs: [dir], optionalFiles: [file], errors: [str], warnings: [str] }.
  * Nothing is written; see writeOutputs().
  */
 export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAULT_OUT, banksRoot = DEFAULT_BANKS, refs = true } = {}) {
@@ -315,7 +320,7 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
   const outputs = [];
   const levelOut = path.join(outRoot, level);
   const ids = new Map();
-  const bank = { writing: new Map(), speaking: new Map() };
+  const bank = { writing: new Map(), speaking: new Map(), micro: new Map() };
   const addBank = (tasks, owner, file) => {
     for (const { kind, task } of tasks) {
       if (!task.bankKey.startsWith(`${prefix}-`)) {
@@ -332,6 +337,7 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
           : kind === 'speaking' ? speakingEntry(task, level, owner)
             : microEntry(task, level, owner);
       target.set(task.bankKey, entry);
+      if (kind.startsWith('micro')) bank.micro.set(task.bankKey, entry);
     }
   };
 
@@ -509,11 +515,33 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
   };
   outputs.push({ file: path.join(levelOut, 'manifest.json'), text: json(manifest) });
 
+  // Rule cards (Form segment, repair cards) and the audio line list (input of generate-course-audio:
+  // voice from the cast bible, text from `say` when present, else `de`).
+  if (ruleCards) outputs.push({ file: path.join(levelOut, 'rule-cards.json'), text: json({ $generated: GENERATED_MARK, level, cards: ruleCards.cards }) });
+  const voices = new Map(docs('casts').flatMap((t) => Object.entries(t.doc.members)));
+  const audio = [];
+  const addLines = (doc) => eachNode(doc, (x) => {
+    if (!isLine(x)) return;
+    const member = voices.get(x.speaker);
+    audio.push({ id: x.id, speaker: x.speaker, voice: member ? member.voice.azure : null, rate: member ? member.voice.rate : null, text: x.say || x.de });
+  });
+  units.forEach((u) => addLines(u.doc));
+  for (const kind of ['plateau', 'closing']) mine(kind).sort((a, b) => a.doc.id.localeCompare(b.doc.id)).forEach((t) => addLines(t.doc));
+  outputs.push({ file: path.join(levelOut, 'lines.json'), text: json(audio) });
+
   // Banks: grader input, keyed by bankKey (sorted for stable diffs).
   const sortedObj = (m) => Object.fromEntries([...m.entries()].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)));
   outputs.push({
     file: path.join(banksRoot, `${level}.banks.json`),
-    text: json({ $generated: GENERATED_MARK, level, prefix, scope: `${prefix}-`, writing: sortedObj(bank.writing), speaking: sortedObj(bank.speaking) }),
+    text: json({
+      $generated: GENERATED_MARK,
+      level,
+      prefix,
+      scope: `${prefix}-`,
+      writing: sortedObj(bank.writing),
+      speaking: sortedObj(bank.speaking),
+      micro: sortedObj(bank.micro),
+    }),
   });
 
   // Ids ledger (ID-01): live ids of this level; ids that were live before and are gone now become
@@ -541,14 +569,20 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
   const tomb = Object.fromEntries(Object.entries(tombstones).sort(([a], [b]) => (a < b ? -1 : 1)));
   outputs.push({ file: ledgerFile, text: json({ $generated: GENERATED_MARK, level, ids: liveIds, tombstones: tomb }) });
 
-  return { outputs, syncDirs: [path.join(levelOut, 'units'), path.join(levelOut, 'plateaus'), path.join(levelOut, 'closing')], errors, warnings };
+  return {
+    outputs,
+    syncDirs: [path.join(levelOut, 'units'), path.join(levelOut, 'plateaus'), path.join(levelOut, 'closing')],
+    optionalFiles: [path.join(levelOut, 'rule-cards.json')],
+    errors,
+    warnings,
+  };
 }
 
 /**
- * Write outputs, delete generated files in syncDirs that are no longer produced.
+ * Write outputs; delete generated files in syncDirs, and optionalFiles, that are no longer produced.
  * With check: true nothing is written; returns the files that would change.
  */
-export function writeOutputs({ outputs, syncDirs }, { check = false } = {}) {
+export function writeOutputs({ outputs, syncDirs = [], optionalFiles = [] }, { check = false } = {}) {
   const changed = [];
   const produced = new Set(outputs.map((o) => path.resolve(o.file)));
   for (const o of outputs) {
@@ -559,6 +593,12 @@ export function writeOutputs({ outputs, syncDirs }, { check = false } = {}) {
       fs.mkdirSync(path.dirname(o.file), { recursive: true });
       fs.writeFileSync(o.file, o.text);
     }
+  }
+  for (const f of optionalFiles) {
+    const p = path.resolve(f);
+    if (produced.has(p) || !fs.existsSync(p)) continue;
+    changed.push(p);
+    if (!check) fs.unlinkSync(p);
   }
   for (const dir of syncDirs) {
     if (!fs.existsSync(dir)) continue;

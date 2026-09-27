@@ -1,0 +1,27 @@
+{
+  "$schema": "course-v2/rubric@1",
+  "id": "tb1-sa",
+  "kind": "writing",
+  "lane": "tb1",
+  "max": 45,
+  "criteria": [
+    { "id": "aufgabe", "label": "Kriterium I – Aufgabenbewältigung: wie viele der vier Leitpunkte inhaltlich angemessen bearbeitet sind (4 = A, 3 = B, 2 = C, 1 oder 0 = D)", "per": "task", "levels": [5, 3, 1, 0], "weight": 3 },
+    { "id": "gestaltung", "label": "Kriterium II – Kommunikative Gestaltung: Textsorte, Register, Verknüpfung der Leitpunkte, Spektrum der Redemittel", "per": "task", "levels": [5, 3, 1, 0], "weight": 3 },
+    { "id": "richtigkeit", "label": "Kriterium III – Formale Richtigkeit: Grammatik, Rechtschreibung und Zeichensetzung, gemessen an der Verständlichkeit", "per": "task", "levels": [5, 3, 1, 0], "weight": 3 }
+  ],
+  "zeroRules": ["telc-topic-missed-d-all"],
+  "capRules": [
+    "telc-situation-missed-d-crit1",
+    "telc-b1-crit1-by-leitpunkt-count",
+    "telc-b1-no-a-crit2-textsorte-missing",
+    "telc-b1-no-a-crit2-register-mixed",
+    "telc-b1-no-a-crit2-leitpunkte-unconnected",
+    "telc-b1-no-a-crit2-ich-wir-starts"
+  ],
+  "spelling": "scored",
+  "feedbackLanguage": ["de"],
+  "modelId": "config:writing-full",
+  "splitVerified": true,
+  "calibration": { "status": "pending", "rangeBands": 1 },
+  "source": "https://shop.telc.net/media/catalog/product/file/telc_deutsch_b1_zd_uebungstest_1.pdf"
+}

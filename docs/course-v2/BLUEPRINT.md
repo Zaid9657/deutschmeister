@@ -40,15 +40,20 @@ written against one Teil template. *Spur-Karte* (lane card) = a block written fo
    one speaking and one writing task in the format of the learner's exam, scored instantly on that exam's published
    criteria and always labelled as an automated practice score, never an exam result or a teacher's correction.
 2. **One primary exam per level at launch:** Start Deutsch 1 (A1), Goethe A2, telc B1, telc B2. telc A2, DTZ (only for
-   Integrationskurs participants), Goethe/ÖSD B1 and Goethe B2 follow as add-on "lane packs" in the same waves.
+   Integrationskurs participants), Goethe/ÖSD B1 and Goethe B2 are designed as add-on "lane packs" but are **not in
+   the v1 cut** (§1.4): they are built only once onboarding shows learners choosing those exams.
 3. The **.1 courses** introduce every exam part and end with a *Teil-Karte* and a dated plan (no demoralising partial
-   score). The **.2 courses** end with three full practice exams (two in the add-on lanes), scored by the real pass
-   rule, then a review-only week. Progress is shown per exam module on the exam's own scale, never as "bestanden".
+   score). The **.2 courses** end with two full practice exams in v1 (a third in v1.1), scored deterministically where
+   the exam part is closed-answer, then a review-only week. Progress is shown per exam module on the exam's own scale,
+   never as "bestanden"; until counsel answers, paid courses draw no pass line against AI-scored parts (§5.6).
 4. Content is written by AI agents against frozen registries and fast machine checks (spelling, level, a blind
    solver, exam formats) and leaves review only at **0 BLOCKER / 0 MAJOR** per unit.
-5. **Before any paid v2 course promises AI grading** three things must be true: purchase-aware AI entitlement on the
-   server, counsel's answer on the FernUSG question, and **your decision whether a trial or Pro subscription still
-   opens paid levels** (today it does, which undercuts every half-level price). See §1.5 and §13.
+5. **Before any paid v2 course promises AI grading** these must be true: purchase-aware AI entitlement on the
+   server, counsel's answer on the FernUSG question (including the Prüfungsstand, §5.6), **your decision whether a
+   trial or Pro subscription still opens paid levels** (today it does, which undercuts every half-level price), a
+   Datenschutzerklärung that covers recorded speech and the AI processors, and measured speaking cost. See §1.5, §1.6
+   and §13. DECISIONS says reviewed B-levels become buyable; the blueprint asks you to add a DECISIONS row that makes
+   entitlement and counsel explicit prerequisites (§13 D14).
 6. Engineering starts now in parallel with curriculum. A1 and B1 are authored together, then A2, then B2. Designed
    hours are 38–72 per half-level; nothing about hours is published until measured.
 
@@ -77,16 +82,19 @@ Prices are from `src/data/pricing.js` (`SUBLEVEL_PRICES_EUR`). Counts are **(des
 | Course | Price | Role on the exam path | Closing block | Lanes at launch (+ packs) | Designed hours (§2.1) |
 |---|---|---|---|---|---|
 | **A1.1** | free | first half of SD1; every SD1 Teil in miniature, untimed | Halbtest (untimed) → **Teil-Karte** + dated plan | SD1 | ≈38 |
-| **A1.2** | €40 | completes SD1; closes the Goethe A1 grammar inventory ([m06] F2) | Diagnose (week 1) · **3 Modelltests** · review week · Wiederholungsplan | SD1 (+ ÖSD ZA1 pack v1.1) | ≈46 |
-| **A2.1** | €50 | first half of A2 | Halbtest per lane → Teil-Karte + plan | Goethe A2 (+ telc A2 pack) | ≈44 |
-| **A2.2** | €50 | completes A2 (A2+ conversation, connected writing) | Diagnose · 3 Modelltests (Goethe A2), 2 (telc A2) · review week | Goethe A2 (+ telc A2 pack) | ≈52 |
-| **B1.1** | €60 | first half of B1 | Halbtest per lane → Teil-Karte + plan | telc B1 (+ DTZ pack, + Goethe/ÖSD B1 pack) | ≈52 |
-| **B1.2** | €60 | completes B1; every B1 Teil at full length | Diagnose · 3 Modelltests (telc B1), 2 (DTZ, Goethe/ÖSD B1) · review week · Wiederholungsplan | telc B1 (+ DTZ, + Goethe/ÖSD B1) | ≈70 |
-| **B2.1** | €65 | first half of B2; both B2 genres at reduced length | Halbtest per lane → Teil-Karte + plan | telc B2 (+ Goethe B2 pack) | ≈55 |
-| **B2.2** | €65 | completes B2; exam-length texts and timings | Diagnose · 3 Modelltests (telc B2), 2 (Goethe B2) · review week | telc B2 (+ Goethe B2; DTB B2 v1.1) | ≈72 |
+| **A1.2** | €40 | completes SD1; closes the Goethe A1 grammar inventory ([m06] F2) | Diagnose (week 1) · **2 Modelltests** (v1; C in v1.1) · review week · Wiederholungsplan | SD1 (+ ÖSD ZA1 pack v1.1) | ≈46 |
+| **A2.1** | €50 | first half of A2 | Halbtest per lane → Teil-Karte + plan | Goethe A2 (telc A2 pack after demand) | ≈44 |
+| **A2.2** | €50 | completes A2 (A2+ conversation, connected writing) | Diagnose · 2 Modelltests (v1) · review week | Goethe A2 (telc A2 pack after demand) | ≈52 |
+| **B1.1** | €60 | first half of B1 | Halbtest per lane → Teil-Karte + plan | telc B1 (DTZ, Goethe/ÖSD B1 packs after demand) | ≈52 |
+| **B1.2** | €60 | completes B1; every B1 Teil at full length | Diagnose · 2 Modelltests (v1) · review week · Wiederholungsplan | telc B1 (DTZ, Goethe/ÖSD B1 packs after demand) | ≈70 |
+| **B2.1** | €65 | first half of B2; both B2 genres at reduced length | Halbtest per lane → Teil-Karte + plan | telc B2 (Goethe B2 pack after demand) | ≈55 |
+| **B2.2** | €65 | completes B2; exam-length texts and timings | Diagnose · 2 Modelltests (v1) · review week | telc B2 (Goethe B2 pack after demand; DTB B2 later) | ≈72 |
 
-Every course has the same shape: 12 units, 3 Plateaus, a closing block, ≥ 24 exam-format AI-scored Aufgaben (two per
-unit) plus 36 AI-scored micro-outputs, a published Inhaltsverzeichnis and a Teilnahmebescheinigung. **Honesty line
+Every course has the same shape: 12 units, 3 Plateaus, a closing block, 24 exam-format Aufgaben (two per unit) plus
+36 AI-scored micro-outputs, a published Inhaltsverzeichnis and a Teilnahmebescheinigung. **Not every Aufgabe is
+AI-scored:** form tasks (`sd1-s1`, `ta2-s1`) are checked deterministically per field, so the copy states the number of
+*KI-ausgewertete Aufgaben* that `courseFacts` derives from each task's `rubric.method` (`ai` vs `deterministic`,
+SCHEMA §4.5) and never retypes it. **Honesty line
 for every .1 course, first screen of its page:** „A2.1 ist die erste Hälfte des Wegs zur A2-Prüfung. Alle
 Prüfungsteile lernen Sie hier kennen; die komplette Prüfung üben Sie in A2.2." ([m10] impl. 1, [m03] impl. 10).
 
@@ -110,7 +118,7 @@ human raters has been measured and published ([m13] impl. 10). Mock counts are p
 
 ### 1.4 Launch scope: one primary lane per band, secondary lanes as packs
 
-| Band | Primary lane (3 Modelltest forms) | Secondary lanes (2 forms, ship as packs) | Later (v1.1) | Why |
+| Band | Primary lane (v1: 2 Modelltest forms; C in v1.1) | Secondary lanes (designed; built after demand, 2 forms) | Later | Why |
 |---|---|---|---|---|
 | A1 | **SD1** = Goethe A1 = telc A1 (one item bank) | — | ÖSD ZA1 pack (own task types, 10-min prep oral) | one format serves Goethe and telc ([m01]) |
 | A2 | **Goethe A2** | telc A2 | ÖSD ZA2 not planned | India/abroad buyers sit Goethe; telc A2 formats do not transfer (phone notes, 3-of-4 letter, joker cards, [m01] §4) |
@@ -119,14 +127,32 @@ human raters has been measured and published ([m13] impl. 10). Mock counts are p
 
 **Rules.**
 - A lane is **live** only when its whole pack has passed review: every lane-exact block the coverage rules need
-  (§2.4), its Plateau Teile, its Halbtest or Diagnose, its Modelltest forms, and calibrated rubric profiles (§4.6).
-  Product pages, onboarding and the lane picker list live lanes only.
+  (§2.4), its Plateau Teile, its Halbtest or Diagnose, its Modelltest forms, its approved images for pictorial Teile
+  (§4.9), and — defined precisely — **CAL-01 passing on human-verified anchors for every writing profile the lane
+  uses** (§4.6). Speaking profiles do not block a lane: until pilot recordings exist they run as labelled wide ranges
+  (§4.6 step 5). Neither waits for the D3 examiner hire. Product pages, onboarding and the lane picker list live lanes
+  only.
 - The DTZ lane is offered only after an explicit question („Sind Sie in einem Integrationskurs oder haben Sie einen
   besucht?"), carries the fixed label, and is never sold as its own product ([m02] §3, [m08] impl. 4).
 - **Nothing is "rendered" across lanes.** Item counts, text sizes, play counts and preparation modes differ per
   lane (telc LV3 10:12 with x, Goethe L3 7:10 with 0, DTZ L2 5 items; prep 20 / 15 / 0 min), so every block is
   authored against one lane's Teil template. Task families (§2.3) group teaching; they do not generate items.
 - No DTB-format task appears outside the DTB lane.
+
+**The v1 cut (binding for launch; demand today is 2 course sales ever, both €0, and 0 AI writing uses in 7 days, db
+snapshot).** The full design stays specified so nothing has to be re-planned, but v1 builds only:
+- **Primary lanes only:** sd1, ga2, tb1, tb2. Secondary packs (ta2, dtz, gb1, gb2; oza1, dtb2 later) are built only
+  after onboarding lane-choice data (§7.8 `plan_set` with lane) shows learners choosing that exam; the owner sets the
+  threshold (§13 D15). COV rules apply to live lanes only, so a .1 course with one live lane is complete.
+- **Two Modelltest forms (A, B)** per primary lane; form C is v1.1.
+- **No group simulation:** A1.2 speaking rounds use one AI partner who also reads the instructions (§4.4), unless the
+  learner pilot shows group mode matters.
+- **No graded serial reader** (§3.7); the Plateau Lesemagazin/Hörmagazin stay.
+- **A fixed-form Einstufung** with deterministic routing (§5.7), not an adaptive test.
+- **Calibration:** writing ground truth from the MERLIN learner corpus plus a small examiner sample (§4.6); speaking at
+  labelled ranges until pilot recordings exist.
+- Consequence for the counts in §10.5: ≈ 36 primary mock modules instead of 86, 7 writing profiles (`sd1-s1`, `sd1-s2`, `ga2-s1`,
+  `ga2-s2`, `tb1-sa`, `tb2-sa`, `course-micro`) and 13 speaking profiles instead of ≈ 37, and no Spur-Karten in the first waves.
 
 ### 1.5 Entitlement: the prerequisite that decides whether per-level pricing holds
 
@@ -146,7 +172,8 @@ human raters has been measured and published ([m13] impl. 10). Mock counts are p
 **Required before the first paid v2 sale (build, §10):**
 1. A server-side, purchase-aware **course AI allowance** per bought half-level, lifetime, in `evaluate-writing`,
    `speaking-session`/`speaking-turn`/`evaluate-speaking` and `score-readaloud`. It counts first attempts, revisions,
-   micro-outputs and mock parts, and has a daily fair-use cap (§4.8).
+   micro-outputs and mock parts, meters speaking in minutes, and has a daily fair-use cap (§4.7). It is recorded in
+   one server-written ledger, `course_ai_usage` (SCHEMA §14), which the client can read but never write.
 2. The v2 task-key scheme and a new key regex, fixed together, with a test over all eight prefixes (SCHEMA §2).
 3. A v2 content gate `hasCourseAccess(level)` = level free (A1.1) **or** a purchase whose product covers the level
    (`course_a1_2` … `course_b2_2` and the legacy band keys `course_a1` … `course_alle` keep resolving).
@@ -154,9 +181,13 @@ human raters has been measured and published ([m13] impl. 10). Mock counts are p
    v2 paid content and its AI allowance follow the purchase only; trial and Pro keep the existing tools (X-Ray,
    open speaking with the wallet, the old course while it lives). Either way the "3 Monate Pro inklusive" claim in
    `pricing.js`/`marketing.js` must be reconciled in the same PR (keep it as a bonus for the existing tools, or drop it).
-5. B-levels leave `COMING_SOON_LEVELS` (both `pricing.js` twins) only when (a) review passed (DECISIONS 2026-09-26),
-   (b) items 1–3 are live, and (c) counsel has answered §1.6 rule 1. (b) and (c) are prerequisites, not owner sample
-   checks, so DECISIONS stands.
+5. **B-levels and DECISIONS.** DECISIONS 2026-09-26 governs: the integration PR removes each reviewed B-level from
+   `COMING_SOON_LEVELS` (both `pricing.js` twins), and a card stays hidden until its Lemon Squeezy variant id is set.
+   This blueprint cannot add conditions to that row. It **recommends** that the owner add a DECISIONS row making
+   (b) items 1–3 live and (c) counsel's answer on §1.6 rule 1 explicit prerequisites for B-level sale, or rejecting
+   them (§13 D14). Until such a row exists, the integration agent follows DECISIONS as written, states in its PR
+   description which of (b) and (c) are not yet true, and names the variant ids — the owner's real on-switch — that
+   should stay unset until they are.
 
 **Content delivery is not the boundary.** All deterministic content (items, keys, texts) reaches the client in any
 design (the Astro grammar pages are already ungated). The enforceable product boundary is the **server-side AI
@@ -201,6 +232,21 @@ first-lesson-leak decision (`docs/HANDOFF-2026-09-03.md` §11) stays the owner's
     the notice is sent (§ 327r BGB, [m13] impl. 15).
 12. Legal pages (complete Impressum, Nutzungsbedingungen with a § 327r change clause and the AI tools described as
     software) before B-levels go live ([m13] impl. 16).
+13. **Data protection before any v2 launch that records audio** (§13 D13). The v2 course records speech (before
+    sign-up too, §4.7), sends learner audio and texts to STT and LLM providers (today OpenAI STT and TTS, Anthropic
+    models; [m12] §3 table row `speaking-session`), stores transcripts and texts, and adds learner-state tables
+    (SCHEMA §14). `/privacy/` is still a noindex draft pending legal review (CLAUDE.md). Required: (a) a
+    Datenschutzerklärung covering each AI processor, third-country transfer, the purpose and legal basis of scoring,
+    retention periods for raw audio, transcripts and texts, and the IP-based caps; (b) a notice-and-consent screen
+    before the first microphone use, on the anonymous path as well, linking the Datenschutzerklärung; (c) a scheduled
+    retention job that deletes raw audio (design default: immediately after scoring unless the learner keeps a
+    recording for replay, and at the latest after 30 days; counsel sets the final periods); (d) IP addresses used for
+    caps stored only as keyed hashes with a 48-hour retention (design). Azure TTS is build-time only and receives no
+    learner data.
+14. **Withdrawal button.** Since 19 June 2026 § 356a BGB requires a „Vertrag widerrufen" function for online distance
+    contracts ([m13] §7, via [Noerr](https://www.noerr.com/de/insights/umsetzungsgesetz-zum-widerrufsbutton-veroeffentlicht));
+    whether Lemon Squeezy's checkout provides it for German consumers is unverified ([m13] open q. 4). It is on the
+    checkout checklist (§8.3, §13 D10) and is a prerequisite for any paid v2 sale.
 
 ### 1.7 The free-to-paid bridge
 
@@ -221,10 +267,14 @@ first-lesson-leak decision (`docs/HANDOFF-2026-09-03.md` §11) stays the owner's
 | Net per €60 sale, German buyer | 60 − 9.58 − 3.00 − 0.50 ≈ **€46.9** | derived |
 | Net per €60 sale, international buyer | local VAT/GST handled by the merchant of record; if 18 % (unverified): 60/1.18 − 3.50 − 0.90 ≈ **€46.4** | derived |
 | AI writing cost per fully engaged learner | ≈ 54 full-rubric calls (Aufgaben + revisions + Plateaus + mocks) × ≈ $0.014 + ≈ 54 micro calls × ≈ $0.002 ≈ **$0.9** on Sonnet 4.6 list prices with prefix caching | derived from C §3.5 (pricing page read 2026-09-27) |
-| AI speaking cost | **unmeasured** (STT ≈ $0.003/min per [m12] §4, snippet) | measure in the pilot |
+| AI speaking cost | **unmeasured** (STT ≈ $0.003/min per [m12] §4, snippet); speaking scales with *minutes* (STT, an LLM call per turn, TTS, then an evaluation, [m12] §3 `speaking-session` row) | measure in the pilot |
+| Speaking exposure at today's wallet **price** (a price, not our cost) | €1 per 5 min ([m12] §4: 5/10/15 min = 100/200/300 cents). A fully engaged learner: 12 speaking Aufgaben × 3 graded attempts × 3–15 min + 3 mock Sprechen modules ≈ 108–585 min ≈ **€22–117** | derived |
+| Net per sale, the range of v2 prices | A1.2 €40 → 33.61 − 2.00 − 0.50 ≈ **€31**; B2 €65 → 54.62 − 3.25 − 0.50 ≈ **€51** (German buyer) | derived |
 
-**Rule:** no copy says „unbegrenzt"; the terms state a fair-use cap (§4.8) whose numbers the owner sets after the
-pilot measures real cost per engaged learner (§13 D8).
+**Rules:** no copy says „unbegrenzt"; the terms state a fair-use cap (§4.7) whose numbers the owner sets after the
+pilot measures real cost per engaged learner (§13 D8). The speaking allowance is set in **minutes per slot** as well as
+attempts (§4.7), and no paid page promises graded speaking before the pilot's cost measurement exists; **D8 is a gate
+for B-level launch.**
 
 ---
 
@@ -236,7 +286,8 @@ pilot measures real cost per engaged learner (§13 D8).
   (12 Lektionen per Teilband, a Modul-Plus every 3), Lingoda's 12 chapters and Netzwerk neu's Plateau cadence
   ([m14] §B1, §B3, §B9, §G1).
 - **Plateau P1–P3 after units 3, 6, 9** (Modul-Plus style, §5.2). After unit 12: the .1 **Abschluss** (Halbtest →
-  Teil-Karte → plan) or the .2 **Prüfungswochen** (Modelltest A → repair → B → repair → C → review week).
+  Teil-Karte → plan) or the .2 **Prüfungswochen** (Modelltest A → repair → B → repair → review week in v1; form C and
+  its repair slot in before the review week in v1.1).
 - **One unit ≈ one week at the Standard pace** ([m09] impl. A1). Pace presets: *Leicht* (1 unit per 2 weeks),
   *Standard* (1 unit per week, default 4 learning days), *Intensiv* (2 units per week). A near exam date adds
   sessions, never longer sessions.
@@ -244,8 +295,9 @@ pilot measures real cost per engaged learner (§13 D8).
   Exam-mode sessions of a .2 course may run the lane's real time (e.g. telc B2 Schreiben 30 min) and are marked as
   such (§3.4).
 - **Required core vs optional depth.** Required: the 12 units (all Lernschritte incl. both Aufgaben), the Plateaus
-  and the closing block's first form. Optional, never gating: Fokus-Karten, „Mehr üben" pools, Lesemagazin /
-  Hörmagazin (the extensive strand, §3.7), Modelltests B/C, extra Teil-Trainer.
+  and the closing block's first form (.1: the Halbtest of the learner's lane; .2: Modelltest A of the learner's lane —
+  the free week-1 Diagnose never counts, SCHEMA §5). Optional, never gating: Fokus-Karten, „Mehr üben" pools,
+  Lesemagazin / Hörmagazin (the extensive strand, §3.7), Modelltests B/C, extra Teil-Trainer.
 - **Designed hours = the floor from Proposal A (≈ 38–65 h per half-level, ≈ 287 h A1.1→B1.2),** because the core
   must bring learners to the level, not merely through it: the BAMF course needs 600 UE (≈ 450 h) for A1→B1 and only
   55 % reach B1 ([Drs. 21/5716](https://dserver.bundestag.de/btd/21/057/2105716.pdf)). The anatomy in §3 yields:
@@ -259,7 +311,9 @@ pilot measures real cost per engaged learner (§13 D8).
 | **Total ≈** | **38** | **46** | **44** | **52** | **52** | **70** | **55** | **72** |
 | Proposal A floor | 38 | 46 | 44 | 51 | 48 | 60 | 52 | 65 |
 
-Cumulative A1.1→B1.2 ≈ 301 h (floor 287). Benchmarks: Menschen ≈ 48 UE (≈ 36 h) per Teilband ([m14] §B1); BAMF
+The closing row assumes three Modelltest forms; the v1 cut ships two, which removes one mock of 80–185 min (sd1
+65 + 15, ga2 90 + 15, tb1 150 + 15 + 20, tb2 140 + 15 + 20) ≈ 1.3–3.1 h per .2 course (derived). Cumulative
+A1.1→B1.2 ≈ 301 h (floor 287). Benchmarks: Menschen ≈ 48 UE (≈ 36 h) per Teilband ([m14] §B1); BAMF
 100 UE ≈ 75 h per half-level (derived, [m08] §2.13). **Publish only measured hours**, as „Richtwert: ca. N Stunden,
 gemessen an … Lernenden" ([m13] impl. 9). Post-launch rule: a Lernschritt whose measured p50 exceeds 25 min is
 **split, never lengthened** (B).
@@ -281,7 +335,10 @@ gemessen an … Lernenden" ([m13] impl. 9). Post-launch rule: a Lernschritt whos
    (SD1 gives 2 points per question/request and 1 per answer, so every A1 unit drills question and request forms;
    planning is 30/75 of telc B1 oral and 20/50 DTZ task points, so a planning round runs in every B1 unit).
 6. **DaF-neutral core; DaZ-only situations (Amt, Kita, Jobcenter) and DaF alternatives (Hotel, Reise) live in
-   optional Fokus-Karten** of the same unit ([m14] §E8, §F6). Every unit carries a BAMF Handlungsfeld tag.
+   optional Fokus-Karten** of the same unit ([m14] §E8, §F6). Every unit carries a BAMF Handlungsfeld tag. A
+   Fokus-Karte is optional for the learner (never counted toward completion) but its *existence* is planned: the
+   §2.8 *Fokus* column names each card that covers a Handlungsfeld the band's units miss, and ALL-04 counts planned
+   cards present in the unit files.
 
 ### 2.3 The exam layer: families, lanes, Teil templates
 
@@ -300,9 +357,9 @@ SCHEMA §4.3). Launch facts (primary sources in [m01]–[m03]):
 | **ga2** Goethe A2 | 90 min, no break. Lesen 4 × 5; Hören 4 × 5 (**H2, H3 once**); Schreiben: SMS 20–30 + E-Mail 30–40 words | ≈ 15 min, pair, no preparation (≈ 20 s to read cards) | ≥ 60/100 **and** ≥ 45/75 written **and** ≥ 15/25 oral; < 50 % of the words → E → task 0 | [DB-A2](https://www.goethe.de/pro/relaunch/prf/de/Durchfuehrungsbestimmungen_A2.pdf), [US-A2](https://www.goethe.de/pro/relaunch/prf/materialien/A2/A2_Uebungssatz_Erwachsene.pdf) |
 | **ta2** telc A2 | Hören ≈ 20 (H1 phone notes 2×, **H2 once**, H3 2×); Lesen + Schreiben 50: form from documents + ≈ 40-word letter, 3 of 4 points; paper only | ≈ 15 min, pair, no preparation; 3 + 6 + 6 | 36/60; numbers in H1/S1 must be exact | [UT-A2](https://shop.telc.net/media/catalog/product/file//2/0/20201226_5090-b00-010106_web_1.pdf) |
 | **tb1** telc B1 | 150 min: Lesen + Sprachbausteine 90 (LV 5/5/10, SB 10/10), Hören ≈ 30 (**HV1 once**, HV2/HV3 twice), Schreiben 30 (4 Leitpunkte, 45 pts) | ≈ 15 min, pair, **20 min preparation**; 15 + 30 + 30 | ≥ 135/225 written **and** ≥ 45/75 oral; compensation inside the written part | [telc UT B1](https://shop.telc.net/media/catalog/product/file/telc_deutsch_b1_zd_uebungstest_1.pdf) |
-| **dtz** DTZ | 100 min, no break: Hören 4/5/8/3 (**all once**), Lesen 5/5/6/3/6, Schreiben 30 (A or B, 4 Leitpunkte) | ≈ 16 min, pair, **no preparation**; photo + home country; Teil 3 = 20 of 50 task points | B1: H+L ≥ 33/45, Schreiben ≥ 15/20, Sprechen ≥ 75/100; certificate = Sprechen B1 + one of the other two; Sprechen below A2 = no certificate | [g.a.s.t. Übungssatz 1](https://www.gast.de/fileadmin/gast.de/GAST/5_DTZ/PDF/gast_DTZ_UEbungssatz_1.pdf) |
+| **dtz** DTZ | 100 min, no break: Hören 4/5/8/3 (**all once**), Lesen 5/5/6/3/6, Schreiben 30 (A or B, 4 Leitpunkte) | ≈ 16 min, pair, **no preparation**; photo + home country; Teil 3 = 20 of 50 task points | B1: H+L ≥ 33/45, Schreiben ≥ 15/20, Sprechen ≥ 75/100; certificate = Sprechen B1 + one of the other two; Sprechen below A2 = no certificate. **A2 bands** (a level outcome of the scaled test, never shown as a pass): H+L 20–32, Schreiben 7–14, Sprechen 35–74.5 ([m02] §3) | [g.a.s.t. Übungssatz 1](https://www.gast.de/fileadmin/gast.de/GAST/5_DTZ/PDF/gast_DTZ_UEbungssatz_1.pdf) |
 | **gb1** Goethe/ÖSD B1 (modular) | Lesen 65 (6/6/7/7/4), Hören ≈ 40 (10/5/7/8; **H2, H3 once**), Schreiben 60 (≈ 80 + ≈ 80 + ≈ 40 words; 40 + 40 + 20 pts) | ≈ 15 min, pair, **15 min preparation**; 28 + 40 + 16 + Aussprache 16; Teil 2 = 5 fixed slides | each module ≥ 60/100; Lesen/Hören raw × 3.33 (18/30 passes); E zeroes a writing task | [DFB B1](https://www.goethe.de/pro/relaunch/prf/de/Durchfuehrungsbestimmungen_B1.pdf), [Modellsatz B1](https://www.goethe.de/pro/relaunch/prf/materialien/B1/b1_modellsatz_erwachsene.pdf) |
-| **tb2** telc B2 | 140 min: Lesen + SB 90, Hören ≈ 20 (**all once**), Schreiben 30: (halb)formelle E-Mail ≥ 150 words, 3 of 4 Leitpunkte (or 2 + own), Betreff | ≈ 15 min, pair, 20 min preparation; 3 × 25 (7/7/7/4) | ≥ 135/225 written **and** ≥ 45/75 oral | [telc UT B2](https://shop.telc.net/media/catalog/product/file/2/0/20201223_5023-b00-010201_web.pdf) |
+| **tb2** telc B2 | 140 min: Lesen + SB 90, Hören ≈ 20 (**all once**), Schreiben 30: (halb)formelle E-Mail ≥ 150 words, 3 of 4 Leitpunkte (or 2 + own), Betreff | ≈ 15 min, pair, 20 min preparation; **M1 topic chosen from 7 and prepared at home** ([m03] §2); 3 × 25 (7/7/7/4) | ≥ 135/225 written **and** ≥ 45/75 oral | [telc UT B2](https://shop.telc.net/media/catalog/product/file/2/0/20201223_5023-b00-010201_web.pdf) |
 | **gb2** Goethe B2 (modular) | Lesen 65 (9/6/6/6/3), Hören ≈ 40 (10/6/6/8; **H1, H3 once**), Schreiben 75: forum post ≈ 150 words (60 pts) + message to a superior ≈ 100 words (40 pts) | ≈ 15 min, pair, 15 min preparation; Vortrag ≈ 4 min + questions; pro/contra discussion; Aussprache 16 | each module ≥ 60/100; E zeroes a writing task | [DFB B2](https://www.goethe.de/pro/relaunch/prf/de/Durchfuehrungsbestimmungen_B2.pdf), [Modellsatz B2](https://www.goethe.de/pro/relaunch/prf/materialien/B2/b2_modellsatz_erwachsene.pdf) |
 | oza1 ÖSD ZA1 (v1.1) | 55 min; Lesen 16, Hören 15 (H1, H3 once), Schreiben form + reply ≥ 25 words | ≈ 10 min, **10 min preparation with notes** | written ≥ 38/75 with Lesen ≥ 6, Hören ≥ 6, Schreiben ≥ 4; oral ≥ 12/25; modular | [DB-ZA1](https://osd.at/wp-content/uploads/2023/09/ZA1-Durchfuhrungsbestimmungen_10_2023.pdf) |
 | dtb2 DTB B2 (v1.1) | see [m03] §3 | no preparation; restating a partner's point | ≥ 144/240, 3 of 4 skills ≥ 60 % | [BAMF DTB Übungstest](https://www.bamf.de/SharedDocs/Anlagen/DE/Integration/Berufsbezsprachf-ESF-BAMF/BSK-Konzepte/b2-modelltest-bsk.pdf?__blob=publicationFile&v=10) |
@@ -312,9 +369,15 @@ Known open format questions stay flagged in the lane files: telc B1 has no offic
 per-Teil split is reconstructed (unverified, [m01]).
 
 **Teil templates** (`<lane>.<teil>`, e.g. `tb1.lv3`, `dtz.s2`, `gb1.sch2`) are the unit of exam fidelity: module,
-item count, options, no-match option, plays, reading time, time box, text-type and text-length band, word band,
-rubric profile, preparation minutes, `scaffoldAllowedIn` (which .1 courses may simplify it), and
-`transfersTo` — the list of other lanes' templates this one counts for **in appearance counting only** (§2.4). The
+item count, options per item, **the block-level choice set** (`choices`: how many texts, headings, ads, words or
+sentences the items are matched to, whether a choice may be used twice, and the no-match key; e.g. `tb1.lv3` 10
+situations → 12 ads + „x", `gb1.l3` 7 → 10 ads + „0", `tb1.sb2` 10 gaps from 15 words, `gb2.l2` 6 gaps from 8
+sentences, `gb2.l1` 9 statements → 4 people with reuse), plays, reading time, time box, text-type and text-length
+band, word band, rubric profile, preparation minutes (and `prepAtHome` for `tb2.m1`), our own paraphrase of the
+instructions (`instructionsDe` + `paraphraseOf`, never the official wording, LGL-05), whether the Teil is
+**pictorial** (§4.9), the `scaffold` limits a reduced or mini block must respect, `scaffoldAllowedIn` (which .1
+courses may simplify it), and `transfersTo` — the list of other lanes' templates this one counts for **in appearance
+counting only** (§2.4). The lane profile also records `delivery` (paper / digital / both). The
 five lane agents author `transfersTo`; the Prüferin reviewer confirms it. Examples: `ga2.l2 → ta2.l1` (directory with
 "anderes Stockwerk"), `ga2.l4 → ta2.l3` (ads with a no-match option), `ga2.sp3 ↔ ta2.sp3` (calendar planning),
 `tb1.lv3 ↔ gb1.l3 ↔ dtz.l2` (situations → ads), `tb1.m3 ↔ gb1.sp1 ↔ dtz.s3` (planning), `tb1.sb1 → dtz.l5` (letter
@@ -328,8 +391,8 @@ cloze). Lane-only Teile have no inbound transfer: e.g. `ta2.h1` phone notes, `ta
 | Audio | replay, 0.85× speed, transcript after the first unaided listen ([m09] §7) | the Teil's play count and reading time (e.g. 60 s before Goethe B1 Hören 2), natural tempo; transcript only after submission |
 | Feedback | after each item, one retry | at the end, per Teil |
 | Time | untimed; minutes shown per step | Teil/lane timer; auto-submit at zero |
-| Writing editor | word counter, Leitpunkt checklist, umlaut keys | word counter (Goethe's digital exams offer one, (snippet) <https://www.goethe.de/de/spr/prf/ddp.html>), **no spellcheck/autocorrect/autocapitalise**, umlaut keys, checklist hidden |
-| Speaking | hints, word bank (A1.1 only), repeat on request | the lane's preparation time and notes (sd1 0, ga2 0, ta2 0, dtz 0, gb1 15, tb1 20, tb2 20, gb2 15, oza1 10 min); notes collapse to ≤ 5 keywords while speaking |
+| Writing editor | word counter, Leitpunkt checklist, umlaut keys | word counter **only where the learner sits the exam digitally** (Goethe's digital exams offer one, (snippet) <https://www.goethe.de/de/spr/prf/ddp.html>); **hidden for paper lanes** (telc A1/A2 are paper only, [m01] §1, §4; DTZ `delivery: paper` per the critic's reading of [m02] §3, (unverified); telc B1/B2 set by the lane agents) and for sd1 unless the learner says the exam is on a computer; **no spellcheck/autocorrect/autocapitalise**, umlaut keys, checklist hidden |
+| Speaking | hints, word bank (A1.1 only), repeat on request | the lane's preparation time and notes (sd1 0, ga2 0, ta2 0, dtz 0, gb1 15, tb1 20, tb2 20, gb2 15, oza1 10 min; `tb2.m1`: topic chosen from 7 and prepared before the session, [m03] §2); notes collapse to ≤ 5 keywords while speaking |
 | Paper lanes (telc A1/A2) | — | optional 3–5 min answer-sheet transfer step in one Modelltest form ([m01] impl. 11) |
 | Feeds the Prüfungsstand (§5.6) | never | only if the block is **full length** |
 
@@ -339,7 +402,7 @@ cloze). Lane-only Teile have no inbound transfer: e.g. `ta2.h1` phone notes, `ta
 |---|---|
 | **COV-1 Appearance** | For every **live** lane L of a course and every Teil T of L: (lane-exact blocks of T) + (blocks whose template lists T in `transfersTo`) **≥ 2 in a .1 course, ≥ 3 in a .2 course**; and lane-exact blocks of T **≥ 1 (.1) / ≥ 2 (.2)**. A lane-only Teil (no inbound transfer) counts lane-exact blocks only, so it needs ≥ 2 / ≥ 3 of its own. |
 | **COV-2 Full length before Modelltest A** | For every live lane of a .2 course and every Teil: **≥ 2 lane-exact blocks at full length, runnable in Prüfungsmodus**, located in the paired .1 course or in the .2 course before Modelltest A (LS4 blocks, Aufgaben, Plateau Teile, Diagnose). |
-| **COV-3 Prüfungsfokus per unit** | 2–4 Teile of the primary lane per unit; in a .2 unit ≥ 1 of them at full length in Prüfungsmodus by default. |
+| **COV-3 Prüfungsfokus per unit** | 2–4 Teile of the primary lane per unit; in a .2 unit ≥ 1 of them at full length in Prüfungsmodus by default. Each Prüfungsfokus Teil maps to **exactly one slot** (SCHEMA `pruefungsfokus[].slot`): `ls4` (≤ 2 receptive blocks), `sprechen`, `schreiben`, or — for a third receptive Teil — the LS3 exam text type (A skeleton, `ls3-text`) or Text B (B skeleton, `text-b`), where the Teil's items are authored against its template and counted (EXM-11). |
 | **COV-4 Module balance** | Each module (Hören, Lesen, Schreiben, Sprechen; plus Sprachbausteine for telc) holds ≥ 15 % of the course's Prüfungsfokus slots in the primary lane. |
 | **COV-5 Productive rotation** | Every productive Teil of the primary lane recurs at least every 4th unit (task repetition after about a week pays, [m09] §8). |
 | **COV-6 .2 lane-exactness** | In a .2 course every block and Aufgabe a learner of lane L meets is lane-exact for L (Spur-Karten fill every slot whose primary block is not L's template). In a .1 course a non-exact block shown to an L learner carries its origin label („im Format: telc Deutsch B1, Leseverstehen 3 – in Ihrer Prüfung: Goethe-Zertifikat B1, Lesen 3"). |
@@ -354,15 +417,18 @@ construction detectors, its contrast partner, its error tags and its Lehrwerk pl
 **Rules (validator GRM, §9.1).**
 1. **≤ 2 new spine points per unit** (a receptive-only first introduction counts as new), plus **≤ 1 chunk preview**
    (a lexicalised form taught as a phrase, e.g. *Ich habe … gemacht* before the Perfekt is systematic). A
-   *Wiederholung* is not new. A proposal's rule must not contradict its own tables: the tables in §2.8 obey this rule
-   and the validator enforces it on the specs.
+   *Wiederholung* is not new, and **each spine point has exactly one `intro`** (GRM-02): a later unit that returns to
+   it is labelled „(Wiederholung/Erweiterung)" in §2.8; where the later unit teaches a genuinely different function or
+   form it gets its **own spine id** (e.g. `g.partizip-attr-einfach` B1.2 U2 vs `g.partizip-attr-erweitert` B2.1 U6)
+   ([m06] impl. 12). A proposal's rule must not contradict its own tables: the tables in §2.8 obey this rule and the
+   validator enforces it on the specs.
 2. **Receptive before productive** where the spine says so (Passiv A2.2 rec → B1.2 prod; Konjunktiv II Vergangenheit
    B1.2 rec → B2.1 prod; Präteritum A2.2 rec → B1.1 narrative).
 3. **Interleave contrast partners** from the second Lernschritt that uses a point (Akkusativ/Dativ, Perfekt
    haben/sein, weil/denn, wenn/als, deshalb/trotzdem); the UI warns that scores dip while contrasts are mixed
    ([m09] §3).
 4. **Presentation:** A levels deductive — each Situation-LS headed by one model sentence (Schritte A–C, [m14] §E2),
-   rule card ≤ 60 words at A1 / ≤ 80 at A2, English twin. B levels inductive — the learner fills the rule table from
+   rule card ≤ 60 words at A1 / ≤ 80 at A2 (design, inherited from A1.1 — the pilot re-measures it), English twin. B levels inductive — the learner fills the rule table from
    the text, then the card; a Grammatik-Rückschau closes the unit ([m14] §E16).
 5. **Inventory floors:** the full Goethe A1 inventory by the end of A1.2 (all six modal verbs, Imperativ Sie/du/ihr,
    war/hatte, Perfekt of the listed verbs, danken/gehören/helfen, dies-/welch-, Genitiv-s with names, Wortbildung
@@ -373,8 +439,10 @@ construction detectors, its contrast partner, its error tags and its Lehrwerk pl
 6. **The systematic Perfekt is placed early in A1.2 and never in exam weeks:** chunks A1.1 U11 → haben with regular
    and irregular participles A1.2 U5 → sein A1.2 U8 → trennbar/untrennbar/-ieren A1.2 U10.
 
-**Hinge decisions (recorded once in the spine):** Dativ first through fixed-case prepositions (A1.2 U3), then dative
-verbs and pronouns (A1.2 U7) ([m06] impl. 4). Wechselpräpositionen through verb pairs stellen/stehen, legen/liegen,
+**Hinge decisions (recorded once in the spine):** Verben mit Vokalwechsel in A1.1 U2, with *sprichst/spricht* as a
+U1 chunk (MEN L3, SCH1 L3/L6, NWN K2, [m06] F3 row 8 "strong"; [m06] impl. 2). Dativ first through fixed-case
+prepositions (A1.2 U2), then temporal prepositions with Dativ and the Datum (A1.2 U3, Menschen's order L13 → L16),
+then dative verbs and pronouns (A1.2 U7) ([m06] impl. 4). Wechselpräpositionen through verb pairs stellen/stehen, legen/liegen,
 hängen (A2.1 U2); feedback names the verb ([m06] impl. 5). weil/dass/wenn in A2.1 ([m06] impl. 6). Relativsatz
 Nom/Akk A2.2 U9 → Dat/Präp B1.1 U3 → wo/was B1.2 U4 → wer/was B2.1 U5 ([m06] impl. 8). Futur I in B1.1 U6
 ([m06] impl. 9). Konjunktiv II ladder: chunks A1.2 → sollte/könnte (Rat) A2.1 U8 → wäre/hätte/würde A2.2 U2 → unreal
@@ -386,7 +454,9 @@ B2.2 ([m06] open q. 2 decided).
 **Error tags shared with the AI graders** ([m06] impl. 15): `v2-inv`, `verb-final`, `satzklammer`, `case-np`,
 `case-pp`, `gender-article`, `adj-ending`, `perfekt-aux-participle`, `connector-position`, `n-dekl`, `reflexive`,
 `register`, `spelling-meaning`. Weighting by level: an inversion error at B1 is flagged, not scored as a level
-failure (MERLIN via [m06] F4).
+failure (MERLIN via [m06] F4). The weighting is data, not prose: each rubric profile carries an `errorPolicy` per
+band (`flag` = named in feedback, `score` = counts toward the language criterion; SCHEMA §4.5), and practice items
+carry `errorTags` so every tag has a repair pool (ITM-12).
 
 ### 2.6 Vocabulary allocation and the SRS arithmetic
 
@@ -404,6 +474,19 @@ mini-blocks of 6–10 words, blocked in the unit, interleaved only in review; fe
 ≤ 3 glossed receptive extras per text. Every new word ≥ 2× in its unit's inputs and in ≥ 2 later units; every input
 text ≥ 95 % known tokens, extensive reading ≥ 98 %. The Goethe lists never enter the repo; `list_ref` tags come from
 a private reference table ([m07] impl. 6–7).
+
+**One lemma, one id, across all eight levels.** A global registry `registries/lemmas.json` holds one id per lemma
+(`lx.<lemma>`; so `word:lx.anruf` is unique course-wide); each level's `lexicon.json` is an **allocation** of registry
+ids to its units. Allocation runs **sequentially A1 → A2 → B1 → B2 in P0**, one allocator per band, each followed by a
+deterministic dedupe step (`scripts/course-v2/lex/register.mjs`, run by the orchestrator, the registry's only writer)
+that rejects a lemma already allocated at a lower level unless it is a **promotion**: `promotions: [{lemma, from:
+receptive, to: productive, unit}]` in the higher level's file (a receptive A2 word can become productive at B1). So B1
+units, authored in Wave 1, already have a frozen A1 + A2 allocation, and LEX-01 reads the **cumulative** allocation
+(all lower levels + earlier units + this unit). **The private `list_ref` table** lives outside git as
+`private/list-ref.json` (lemma → `A1|A2|B1` only, no list text); the owner stores it as an environment secret that
+the session-start hook materialises into the working tree, as it does for the GSC credentials (CLAUDE.md), and
+`private/` is git-ignored with a CI check that it is never committed. Agents query it only through
+`node scripts/course-v2/lex/list-ref.mjs <lemma…>`, which prints tags, never the list.
 
 **SRS arithmetic (fixes the judges' must-fix: B's 12-new-cards/day cap gives 432 < 520, and 5–7 min/day cannot meet
 the B-level retrieval targets).** Model (design; seconds per review to be measured):
@@ -434,13 +517,30 @@ introduced in U12 of a .2 course cannot reach its retrieval target with the exam
 7 days after (minimum supported). If SRS-01 fails, the curriculum agent lowers the productive share toward the
 lower bound or moves receptive words to the extensive strand — never raises the budget silently.
 
+**The carry-over deck (the table above covers only the current course).** The deck carries across half-levels (§6.4),
+and without an end to the ladder the load grows: by B2.2 the targets imply ≈ 3,000–3,400 carried lemmas plus
+≈ 550 pattern and sentence cards; at one review per 60 days that is ≈ 59–66 reviews a day ≈ 10–11 min at 10 s
+(derived: 3,550–3,950 ÷ 60 × 10 s), on top of the 9.3 min the current B2 course needs. Two binding rules fix it:
+(1) **Graduation** — a card retires from the scheduled queue after a successful +60-day retrieval, unless it lapses
+later (a miss in content, a check or a sampled review puts it back on +1) or is flagged **exam-critical** (Redemittel
+and `teil` cards of the learner's lane stay on +60 until the exam date has passed). (2) **A carry-over budget** —
+cards from earlier half-levels are reviewed within a separate, fixed daily budget (design: 1 min at A1.2, 1.5 at A2,
+2 at B1 and B2), lapsed and exam-critical cards first, then a random sample; they never displace the current course's
+cards. **SRS-01 is extended** to simulate the cumulative deck of a learner on the A1.1 → B2.2 path at Standard pace
+and to publish the combined daily minutes (current budget + carry-over budget) per half-level in `.build/` for the
+plan, which shows the sum.
+
 ### 2.7 The serial cast (one continuing story, A1.1 → B2.2)
 
 One cast bible per band (`casts/a1.json` …) plus one series arc (`casts/series.json`), owned by one story architect.
 **Every main character is preparing an exam**, so the story models the plan, the nerves, the mock and the retake;
 each B-level co-protagonist sits a different lane. Scenes ≤ 90 s at A1, ≤ 2 min above; **every scene carries a task**;
-every unit ends on a one-line cliffhanger resolved in the next unit's Start, including across course boundaries
-([m14] §E3, §F5; B §6.6). Persona facts are checked by CON-01.
+every unit ends on a one-line cliffhanger resolved in the next unit's Start ([m14] §E3, §F5; B §6.6). **Across course
+boundaries** the beat is fixed in P0 by `casts/series.json` (the U12 cliffhanger of each course and the matching U1
+resolution of the next), so B1.1 U1 (Wave 1) never waits for A2.2 U12 (Wave 2); and because most B1 and B2 buyers
+enter without the earlier courses, **every course's U1 Start stands alone** with a one-line recap for new buyers.
+Persona facts are checked by CON-01; every named speaker who is not in a cast bible is declared as a file-level
+*extra* (SCHEMA §3.3), so CON-01 and AUD-01 cover one-off voices too.
 
 | Band | Cast (design) | Exam arcs |
 |---|---|---|
@@ -458,9 +558,16 @@ No stereotypes; names, countries, languages and du/Sie relationships are registr
 5 Banken/Versicherungen, 6 Betreuung/Kinder, 7 Einkaufen, 8 Gesundheit, 9 Medien, 10 Mobilität, 11 Unterricht,
 12 Wohnen; A–E cross-cutting: A Migration, B Gefühle/Meinungen, C Konflikte, D Soziale Kontakte, E Lernen).
 *Grammatik neu* lists the ≤ 2 new spine points (· separates them; parentheses = chunk preview or Wiederholung).
-*Prüfungsteile* = primary-lane Teile of the unit's Prüfungsfokus; in .2 tables **bold** = full length in
-Prüfungsmodus by default. *Spur* = the secondary-lane blocks this row already plans (the curriculum agent adds more
-until COV-1/COV-2 hold). *Leaders* = Lehrwerk placements ([m14] §C).
+*Grammatik neu* marks a return to an earlier point „(Wiederholung)" or „(Wiederholung/Erweiterung)" and names a
+distinct spine id only where the function really differs (§2.5 rule 1); GRM-01 was recounted on every row after the
+critic pass. *Prüfungsteile* = primary-lane Teile of the unit's Prüfungsfokus; in .2 tables **bold** = full length in
+Prüfungsmodus by default; a third receptive Teil is carried by the LS3 exam text type (A) or Text B (B), never by a
+third LS4 block (COV-3). *Spur* = the secondary-lane blocks this row already plans for when the pack is built (the
+curriculum agent adds more until COV-1/COV-2 hold). *Leaders* = Lehrwerk placements ([m14] §C); S5 = Schritte Neu 5
+and Si = Sicher! (B1+ in the B1 tables, Sicher! aktuell B2 in the B2 tables), read at source 2026-09-27; a row with
+fewer than two verified placements carries a `deviation` (ALL-03 rejects placements tagged (unverified) or
+(snippet)). *Fokus* = the planned Fokus-Karte that covers a BAMF Handlungsfeld the band's unit tags miss (ALL-04);
+empty where none is needed.
 
 **The W2 drafts** (`docs/course-v2/curriculum/*.json|md`) are input, not law: curriculum agents carry their can-do
 texts, source tags, text types, vocabulary sets and exam mappings **onto these rows**. Row order, grammar placement
@@ -470,41 +577,41 @@ last new content), this blueprint's rule wins: Modelltests come after unit 12 (�
 
 #### A1.1 — „Erste Kontakte" (free · lane SD1 · untimed miniatures in Lernmodus; board opt-in)
 
-| # | Titel | Situation · HF | Kern-Kann-Beschreibungen | Grammatik neu | Prüfungsteile (SD1) | Leaders |
-|---|---|---|---|---|---|---|
-| 1 | Hallo, ich bin Priya | begrüßen, sich vorstellen, Herkunft, Sprachen · D | sich begrüßen/verabschieden; Name, Herkunft, Sprachen nennen und erfragen | Präsens Sg. inkl. *sein*, du/Sie · W-Frage, Verb auf Position 2 | Sp1, H1 | M1, S1, N1 |
-| 2 | Wie schreibt man das? | buchstabieren, Zahlen, Telefonnummer, Anmeldung · 1 | Namen buchstabieren; Nummern sagen und verstehen; ein Formular ausfüllen | Präsens Pl. inkl. *haben* | S1, Sp1, H1 | M2, S1-E, N2 |
-| 3 | Meine Familie | Familie vorstellen, Fotos · D | Familie vorstellen; nach der Familie fragen | mein/dein/Ihr · Ja/Nein-Frage, ja/nein/doch | Sp2, L1 | M3, S2, N5 |
-| 4 | Was kostet das? | Lebensmittel, Preise, Supermarkt · 7 | nach Preisen fragen; einkaufen; Durchsagen im Laden | Artikel, Genus, Plural, er/es/sie · kein/nicht (*möchte* als Chunk) | H1, H2, Sp3, L2 | M4–5, S3, N4 |
-| 5 | Das brauche ich | Dinge im Kurs und im Büro, bitten · 11, 2 | Gegenstände benennen; um etwas bitten | Akkusativ (den/einen/keinen) | Sp3, S2 (2 Leitpunkte) | M5–6 |
-| 6 | Hier wohne ich | Wohnung, Wohnungsanzeigen, Nachbarn grüßen · 12 | die Wohnung beschreiben; kurze Anzeigen verstehen | *es gibt* + Akk. · Adjektiv prädikativ | L2, L1 | S4 — **deviation:** M14/N9 put Wohnen in A1.2; kept here with Schritte because SD1 Lesen 2 uses housing ads |
-| 7 | Mein Tag | Uhrzeit, Tagesablauf, Öffnungszeiten · 11, 2 | Uhrzeit sagen/verstehen; den Tag beschreiben; Öffnungszeiten lesen | Uhrzeit, am/um/von … bis + Inversion · trennbare Verben | L3, H3 | M8, S5, N5 |
-| 8 | Hast du am Samstag Zeit? | Freizeit, sich verabreden · D | Vorschläge machen; zu- und absagen | *können*, *wollen* + Satzklammer | S2, Sp2, H3 | M7–8, S6, N6 |
-| 9 | Im Café | bestellen, bezahlen, Vorlieben · 7 | bestellen; sagen, was man (nicht) mag | *mögen/möchte* · Verben mit Vokalwechsel | Sp3, H1 | M9, N4 |
-| 10 | Mit Bus und Bahn | Fahrkarte, Gleis, Durchsagen · 10 | Fahrkarte kaufen; Durchsagen verstehen | *müssen* (Imperativ *Sie* als Chunk) | H2, L3 | M10, N3 |
-| 11 | Wie war dein Wochenende? | vom Wochenende erzählen, Online-Gruß · D | sagen, was man gemacht hat; einen kurzen Gruß schreiben | Perfekt als Chunks (8–10 Verben; *war/hatte* als Chunk) | S2, L1, Sp2 | M11–12, S7 (all families end A1.1 with the Perfekt) |
-| 12 | Deutsch lernen – mein Plan | Kurs, Lernziele, Lernwege · 11, E | über Lernziele sprechen; sich für einen Kurs anmelden | — (Wiederholung) | Sp1, S1, H2, L3 → **Halbtest** | RC Unterricht — **deviation:** S7 Kinder/Schule (DaZ) and M12 Feste (DaF) split by audience; the neutral field is chosen, Kita-Anmeldung becomes a Fokus-DaZ card, Feste go to A1.2 U12 |
+| # | Titel | Situation · HF | Kern-Kann-Beschreibungen | Grammatik neu | Prüfungsteile (SD1) | Leaders | Fokus (HF) |
+|---|---|---|---|---|---|---|---|
+| 1 | Hallo, ich bin Priya | begrüßen, sich vorstellen, Herkunft, Sprachen · D | sich begrüßen/verabschieden; Name, Herkunft, Sprachen nennen und erfragen | Präsens Sg. inkl. *sein*, du/Sie · W-Frage, Verb auf Position 2 (*sprichst/spricht* als Chunk) | Sp1, H1 | M1, S1, N1 | |
+| 2 | Wie schreibt man das? | buchstabieren, Zahlen, Telefonnummer, Anmeldung · 1 | Namen buchstabieren; Nummern sagen und verstehen; ein Formular ausfüllen | Präsens Pl. inkl. *haben* · Verben mit Vokalwechsel (*sprechen, lesen, essen, fahren, schlafen*; nur du und er/sie/es) | S1, Sp1, H1 | M2, S1-E, N2 | |
+| 3 | Meine Familie | Familie vorstellen, Fotos · D | Familie vorstellen; nach der Familie fragen | mein/dein/Ihr · Ja/Nein-Frage, ja/nein/doch | Sp2, L1 | M3, S2, N5 | |
+| 4 | Was kostet das? | Lebensmittel, Preise, Supermarkt · 7 | nach Preisen fragen; einkaufen; Durchsagen im Laden | Artikel, Genus, Plural, er/es/sie · kein/nicht (*möchte* als Chunk) | H1, H2, Sp3, L2 | M4–5, S3, N4 | |
+| 5 | Das brauche ich | Dinge im Kurs und im Büro, bitten · 11, 2 | Gegenstände benennen; um etwas bitten | Akkusativ (den/einen/keinen) | Sp3, S2 (2 Leitpunkte) | M5–6 | |
+| 6 | Hier wohne ich | Wohnung, Wohnungsanzeigen, Nachbarn grüßen · 12 | die Wohnung beschreiben; kurze Anzeigen verstehen | *es gibt* + Akk. · Adjektiv prädikativ | L2, L1 | S4 — **deviation:** M14/N9 put Wohnen in A1.2; kept here with Schritte because SD1 Lesen 2 uses housing ads | |
+| 7 | Mein Tag | Uhrzeit, Tagesablauf, Öffnungszeiten · 11, 2 | Uhrzeit sagen/verstehen; den Tag beschreiben; Öffnungszeiten lesen | Uhrzeit, am/um/von … bis + Inversion · trennbare Verben | L3, H3 | M8, S5, N5 | |
+| 8 | Hast du am Samstag Zeit? | Freizeit, sich verabreden · D | Vorschläge machen; zu- und absagen | *können*, *wollen* + Satzklammer | S2, Sp2, H3 | M7–8, S6, N6 | |
+| 9 | Im Café | bestellen, bezahlen, Vorlieben · 7 | bestellen; sagen, was man (nicht) mag | *mögen/möchte* (Vokalwechsel: Wiederholung) | Sp3, H1 | M9, N4 | |
+| 10 | Mit Bus und Bahn | Fahrkarte, Gleis, Durchsagen · 10 | Fahrkarte kaufen; Durchsagen verstehen | *müssen* (Imperativ *Sie* als Chunk) | H2, L3 | M10, N3 | |
+| 11 | Wie war dein Wochenende? | vom Wochenende erzählen, Online-Gruß · D | sagen, was man gemacht hat; einen kurzen Gruß schreiben | Perfekt als Chunks (8–10 Verben; *war/hatte* als Chunk) | S2, L1, Sp2 | M11–12, S7 (all families end A1.1 with the Perfekt) | |
+| 12 | Deutsch lernen – mein Plan | Kurs, Lernziele, Lernwege · 11, E | über Lernziele sprechen; sich für einen Kurs anmelden | — (Wiederholung) | Sp1, S1, H2, L3 → **Halbtest** | RC Unterricht — **deviation:** S7 Kinder/Schule (DaZ) and M12 Feste (DaF) split by audience; the neutral field is chosen, Kita-Anmeldung becomes a Fokus-DaZ card (see Fokus), Feste go to A1.2 U12 | Fokus-DaZ „Kita-Anmeldung" (HF 6) |
 
 Coverage check (miniature appearances): H1 4, H2 3, H3 2, L1 3, L2 2, L3 3, S1 2, S2 3, Sp1 3, Sp2 3, Sp3 3.
 
 #### A1.2 — „Den Alltag organisieren" (€40 · lane SD1; ÖSD ZA1 pack v1.1)
 
-| # | Titel | Situation · HF | Kern-Kann-Beschreibungen | Grammatik neu | Prüfungsteile (SD1) | Leaders |
-|---|---|---|---|---|---|---|
-| — | *Diagnose* (week 1, free) | SD1 mini-mock: one full Teil per module | — | — | H1, L2, S2, Sp2 | — |
-| 1 | Mein Arbeitsalltag | Beruf, Arbeitszeiten, Kollegen, früher · 2 | über die Arbeit sprechen; sagen, was man früher war und hatte | *war/hatte* (Präteritum sein/haben) | **L1**, Sp1, S1 | S8, N7, M19 |
-| 2 | Einen Termin machen | Termine in Praxis und Amt · 8, 1 | Termine vereinbaren und verschieben; Datum verstehen | temporale Präp. vor/nach/in/seit/ab/bis · Ordinalzahlen, Datum | **H3**, S1 | S9, M16, M24 |
-| 3 | Wie komme ich zum Rathaus? | Weg fragen und beschreiben · 10 | nach dem Weg fragen; Wegbeschreibungen verstehen | Dativ nach mit/zu/bei/aus/von/nach; *Wo?* + Dativ | **L3**, H1 | M13, M15, S11 |
-| 4 | Beim Arzt | Körper, Beschwerden, Anweisungen · 8 | Beschwerden nennen; Anweisungen verstehen | *sollen* · Imperativ *Sie* (systematisch) | **Sp3**, L3, H3 | M18, S10, N8 |
-| 5 | Ich bin krank – ich sage ab | krankmelden, entschuldigen, neuer Termin · 2, 11 | sich krankmelden; sich entschuldigen und einen Grund nennen | *denn* · Perfekt mit *haben* (Partizip regelmäßig/unregelmäßig) | **S2**, H3, Sp3 | M23, S14 (denn); RC 84, 149 (worked example §3.8) |
-| 6 | Wohnung und Nachbarn | Anzeigen, Hausordnung, Nachbarn · 12 | Anzeigen und Hausordnungen verstehen; sich vorstellen | sein/ihr/unser/euer + Genitiv-s bei Namen · *dürfen* (*man* als Chunk) | **L2**, L3, Sp1, Sp2 | M14, N9, M21 |
-| 7 | Die Jacke gefällt mir | Kleidung, Kaufhaus · 7 | Kleidung kaufen; Gefallen ausdrücken; Durchsagen im Kaufhaus | Dativverben + Dativpronomen (gefallen, passen, stehen, helfen, danken, gehören) · welch-/dies- | **Sp2**, H1, H2 | M22, S13, N11 |
-| 8 | Bahnhof und Flughafen | Reise, Verspätung, Durchsagen · 10 | Durchsagen verstehen; von einer Reise berichten | Perfekt mit *sein* | **H2**, L2 | N12, RC 142–145 |
-| 9 | Kannst du mir helfen? | Haushalt, Nachbarschaftshilfe · 12, D | um Hilfe bitten; Anweisungen geben | Imperativ du/ihr · Akkusativpronomen | **Sp3**, L1 | M20–21 |
-| 10 | Online bestellen | Bestellung, Kundenservice, Problem melden · 7 | etwas bestellen; höflich bitten; ein Problem melden | Perfekt trennbar/untrennbar/*-ieren* (*würde/könnte* als Chunk) | **S1**, H1, L1 | S12, RC 110–111 |
-| 11 | Wetter und Wochenende | Wetter, Ausflug, Einladung · D, 9 | über das Wetter sprechen; vergleichen; auf Einladungen antworten | Komparation (gut/besser/am besten, gern/lieber, als/wie) | **H1**, H2, S2, L2, Sp2 | M23, N12; M22 (Komparation) |
-| 12 | Feste und Glückwünsche | Einladung, gratulieren, das Du anbieten · D | gratulieren; Einladungen annehmen/absagen | Wortbildung -er/-in/-ung (un-/-los/-bar rezeptiv) (*würde gern* als Chunk) | **Sp1–Sp3** (group round), S2 | M24, S14 |
-| — | *Prüfungswochen* | Modelltest A, B, C (65 + 15 min) + repair + review week | — | — | all 11 Teile | — |
+| # | Titel | Situation · HF | Kern-Kann-Beschreibungen | Grammatik neu | Prüfungsteile (SD1) | Leaders | Fokus (HF) |
+|---|---|---|---|---|---|---|---|
+| — | *Diagnose* (week 1, free) | SD1 mini-mock: one full Teil per module | — | — | H1, L2, S2, Sp2 | — | |
+| 1 | Mein Arbeitsalltag | Beruf, Arbeitszeiten, Kollegen, früher · 2 | über die Arbeit sprechen; sagen, was man früher war und hatte | *war/hatte* (Präteritum sein/haben) | **L1**, Sp1, S1 | S8, N7, M19 | Fokus-Beruf „Minijob-Anzeigen lesen" (HF 3) |
+| 2 | Wie komme ich zum Rathaus? | Weg fragen und beschreiben · 10 | nach dem Weg fragen; Wegbeschreibungen verstehen | Dativ nach mit/zu/bei/aus/von/nach; *Wo?* + Dativ | **L3**, H1 | M13, M15, S11 | |
+| 3 | Einen Termin machen | Termine in Praxis und Amt · 8, 1 | Termine vereinbaren und verschieben; Datum verstehen | temporale Präp. + Dativ (vor/nach/in/seit/ab/bis) · Ordinalzahlen, Datum (*am dritten Mai*) | **H3**, S1 | S9, M16, M24 (Dativ before temporal, as Menschen L13 → L16) | |
+| 4 | Beim Arzt | Körper, Beschwerden, Anweisungen · 8 | Beschwerden nennen; Anweisungen verstehen | *sollen* · Imperativ *Sie* (systematisch) | **Sp3**, L3, H3 | M18, S10, N8 | |
+| 5 | Ich bin krank – ich sage ab | krankmelden, entschuldigen, neuer Termin · 2, 11 | sich krankmelden; sich entschuldigen und einen Grund nennen | *denn* · Perfekt mit *haben* (Partizip regelmäßig/unregelmäßig) | **S2**, H3, Sp3 | M23, S14 (denn); RC 84, 149 (worked example §3.8) | Fokus-DaZ „Krankmeldung bei der Arbeit" (Landeskunde, §3.8) |
+| 6 | Wohnung und Nachbarn | Anzeigen, Hausordnung, Nachbarn · 12 | Anzeigen und Hausordnungen verstehen; sich vorstellen | sein/ihr/unser/euer + Genitiv-s bei Namen · *dürfen* (*man* als Chunk) | **L2**, L3, Sp1, Sp2 | M14, N9, M21 | |
+| 7 | Die Jacke gefällt mir | Kleidung, Kaufhaus · 7 | Kleidung kaufen; Gefallen ausdrücken; Durchsagen im Kaufhaus | Dativverben + Dativpronomen (gefallen, passen, stehen, helfen, danken, gehören) · welch-/dies- | **Sp2**, H1, H2 | M22, S13, N11 | |
+| 8 | Bahnhof und Flughafen | Reise, Verspätung, Durchsagen · 10 | Durchsagen verstehen; von einer Reise berichten | Perfekt mit *sein* | **H2**, L2 | N12, RC 142–145 | |
+| 9 | Kannst du mir helfen? | Haushalt, Nachbarschaftshilfe · 12, D | um Hilfe bitten; Anweisungen geben | Imperativ du/ihr · Akkusativpronomen | **Sp3**, L1 | M20–21 | |
+| 10 | Online bestellen | Bestellung, Kundenservice, Problem melden · 7 | etwas bestellen; höflich bitten; ein Problem melden | Perfekt trennbar/untrennbar/*-ieren* (*würde/könnte* als Chunk) | **S1**, H1, L1 | S12, RC 110–111 | Fokus-DaZ „Bezahlen: Karte, Überweisung, Kontoauszug" (HF 5) |
+| 11 | Wetter und Wochenende | Wetter, Ausflug, Einladung · D, 9 | über das Wetter sprechen; vergleichen; auf Einladungen antworten | Komparation (gut/besser/am besten, gern/lieber, als/wie) | **H1**, H2, S2, Sp2 | M23, N12; M22 (Komparation) | |
+| 12 | Feste und Glückwünsche | Einladung, gratulieren, das Du anbieten · D | gratulieren; Einladungen annehmen/absagen | Wortbildung -er/-in/-ung (un-/-los/-bar rezeptiv) (*würde gern* als Chunk) | **Sp1–Sp3** (one round with one AI partner, v1), S2 | M24, S14 | Fokus-DaZ „Kurse an der Volkshochschule" (HF 4) |
+| — | *Prüfungswochen* | Modelltest A, B, C (65 + 15 min) + repair + review week | — | — | all 11 Teile | — | |
 
 Goethe A1 inventory closed: modal verbs (A1.1 U8–U10, A1.2 U4, U6), Imperativ Sie/du/ihr (U4, U9), war/hatte (U1),
 Perfekt (A1.1 U11 chunks; U5, U8, U10), danken/gehören/helfen (U7), dies-/welch- (U7), Genitiv-s (U6), Wortbildung
@@ -513,41 +620,41 @@ prep-with-notes oral with photo and role play) and one ZA1 mock per form, scored
 
 #### A2.1 — „Kontakte pflegen, Dinge erledigen" (€50 · lane Goethe A2; telc A2 pack)
 
-| # | Titel | Situation · HF | Kern-Kann-Beschreibungen | Grammatik neu | Prüfungsteile (GA2) | Spur (ta2) | Leaders |
-|---|---|---|---|---|---|---|---|
-| 1 | Neu hier: Kontakte knüpfen | Smalltalk mit neuen Kollegen, über sich erzählen · D, A | von sich und dem eigenen Weg erzählen; Gründe nennen | *weil* (Perfekt-Wiederholung) | Sp1, Sp2, L3 | Sp1 | M1, S3-L1, N1 |
-| 2 | Die neue Wohnung | Umzug, Möbel stellen, Nachbarn · 12 | sagen, wohin etwas kommt und wo es steht | Wechselpräpositionen über stellen/stehen, legen/liegen, hängen | H2, Sp3, L4 | H3 | M2, S3-L2 |
-| 3 | Kommst du zu meiner Feier? | einladen, zu-/absagen, schenken · D | einladen; zu- und absagen; über Geschenke sprechen | Dativ + Akkusativ im Satz (Stellung der Pronomen) | S1, Sp3, H3 | S2 (3 von 4) | S3-L7 (split M15) |
-| 4 | Einkaufen: vergleichen und bestellen | Gerät kaufen, Kaufhaus-Wegweiser · 7 | Produkte vergleichen und beschreiben; sich orientieren | Adjektivendungen nach ein-/kein-/mein- | L2, L4, S2 | L1, L3 | M4, S3-L3 |
-| 5 | Im Restaurant | reservieren, bestellen, reklamieren · 7 | reservieren; bestellen; höflich reklamieren | Adjektivendungen nach der/die/das | H3, S2, Sp1 | H2 | M10, M5 |
-| 6 | Mit der Bahn unterwegs | Buchung, Durchsage, Verspätung · 10 | Durchsagen verstehen; Reisepläne ändern | *wenn* | H1, L2 | H3 | M3, N5; RC 143–144 |
-| 7 | Am Telefon im Job | Mailbox, Rückruf, Termin verschieben · 2 | Mailbox-Nachrichten verstehen und notieren; Nachrichten weitergeben | reflexive Verben (Akkusativ) | H1, S2, Sp1 | H1 (Telefonnotiz) | M9, M11, S3-L4, N6 — **worked example in SCHEMA.md** |
-| 8 | Gesund bleiben | Arzt, Ratschläge · 8 | Beschwerden beschreiben; Ratschläge geben | *sollte/könnte* (Rat) · *deshalb* | H4, Sp2, S1 | Sp2 | M7–8, S3-L5 |
-| 9 | Immer online? | Medien, Handy, Fehlermeldungen · 9 | über Mediennutzung sprechen; Meinung sagen | *dass* | L1, S1 | L2 (R/F) | N3 (split M15) |
-| 10 | Schule, Ausbildung, Kurse | Schulzeit, Bildungswege, Kursanmeldung · 4, A | über die Schulzeit erzählen; Bildungswege vergleichen | Modalverben im Präteritum | L3, Sp2 | S1, H1, Sp1 | N2, S3-L6 |
-| 11 | Gefühle, auch online | gratulieren, trösten, sich ärgern · B | Freude, Ärger, Mitgefühl ausdrücken; auf Posts reagieren | Verben mit Präposition + wo(r)-/da(r)- (Einstieg) | S1, L1, H4 | Sp2, S2 | N4; M18 (split) |
-| 12 | Hier und dort | Leben vergleichen, Reisebericht · A | vergleichen; von einer Reise erzählen | *einer/keiner/welche* | H2, L4, Sp3 → **Halbtest** | L2, S1, Sp3 → Halbtest | S3-L3 (split N12), M22 |
+| # | Titel | Situation · HF | Kern-Kann-Beschreibungen | Grammatik neu | Prüfungsteile (GA2) | Spur (ta2) | Leaders | Fokus (HF) |
+|---|---|---|---|---|---|---|---|---|
+| 1 | Neu hier: Kontakte knüpfen | Smalltalk mit neuen Kollegen, über sich erzählen · D, A | von sich und dem eigenen Weg erzählen; Gründe nennen | *weil* (Perfekt-Wiederholung) | Sp1, Sp2, L3 | Sp1 | M1, S3-L1, N1 | |
+| 2 | Die neue Wohnung | Umzug, Möbel stellen, Nachbarn · 12 | sagen, wohin etwas kommt und wo es steht | Wechselpräpositionen über stellen/stehen, legen/liegen, hängen | H2, Sp3, L4 | H3 | M2, S3-L2 | |
+| 3 | Kommst du zu meiner Feier? | einladen, zu-/absagen, schenken · D | einladen; zu- und absagen; über Geschenke sprechen | Dativ + Akkusativ im Satz (Stellung der Pronomen) | S1, Sp3, H3 | S2 (3 von 4) | S3-L7 (split M15) | |
+| 4 | Einkaufen: vergleichen und bestellen | Gerät kaufen, Kaufhaus-Wegweiser · 7 | Produkte vergleichen und beschreiben; sich orientieren | Adjektivendungen nach ein-/kein-/mein- | L2, L4, S2 | L1, L3 | M4, S3-L3 | |
+| 5 | Im Restaurant | reservieren, bestellen, reklamieren · 7 | reservieren; bestellen; höflich reklamieren | Adjektivendungen nach der/die/das | H3, S2, Sp1 | H2 | M10, M5 | |
+| 6 | Mit der Bahn unterwegs | Buchung, Durchsage, Verspätung · 10 | Durchsagen verstehen; Reisepläne ändern | *wenn* | H1, L2 | H3 | M3, N5; RC 143–144 | |
+| 7 | Am Telefon im Job | Mailbox, Rückruf, Termin verschieben · 2 | Mailbox-Nachrichten verstehen und notieren; Nachrichten weitergeben | reflexive Verben (Akkusativ) | H1, S2, Sp1 | H1 (Telefonnotiz) | M9, M11, S3-L4, N6 — **worked example in SCHEMA.md** | |
+| 8 | Gesund bleiben | Arzt, Ratschläge · 8 | Beschwerden beschreiben; Ratschläge geben | *sollte/könnte* (Rat) · *deshalb* | H4, Sp2, S1 | Sp2 | M7–8, S3-L5 | |
+| 9 | Immer online? | Medien, Handy, Fehlermeldungen · 9 | über Mediennutzung sprechen; Meinung sagen | *dass* | L1, S1 | L2 (R/F) | N3 (split M15) | |
+| 10 | Schule, Ausbildung, Kurse | Schulzeit, Bildungswege, Kursanmeldung · 4, A | über die Schulzeit erzählen; Bildungswege vergleichen | Modalverben im Präteritum | L3, Sp2 | S1, H1, Sp1 | N2, S3-L6 | Fokus-DaZ „Ein Elternbrief aus Kita und Schule" (HF 6) |
+| 11 | Gefühle, auch online | gratulieren, trösten, sich ärgern · B | Freude, Ärger, Mitgefühl ausdrücken; auf Posts reagieren | Verben mit Präposition + wo(r)-/da(r)- (Einstieg) | S1, L1, H4 | Sp2, S2 | N4; M18 (split) | |
+| 12 | Hier und dort | Leben vergleichen, Reisebericht · A | vergleichen; von einer Reise erzählen | *einer/keiner/welche* | H2, L4, Sp3 → **Halbtest** | L2, S1, Sp3 → Halbtest | S3-L3 (split N12), M22 | |
 
 Coverage check GA2 (appearances): L1 2, L2 2, L3 2, L4 3, H1 2, H2 2, H3 2, H4 2, S1 4, S2 3, Sp1 3, Sp2 3, Sp3 3.
 
 #### A2.2 — „Gespräche führen, Probleme lösen" (€50 · lane Goethe A2; telc A2 pack)
 
-| # | Titel | Situation · HF | Kern-Kann-Beschreibungen | Grammatik neu | Prüfungsteile (GA2) | Spur (ta2) | Leaders |
-|---|---|---|---|---|---|---|---|
-| — | *Diagnose* (free) | lane mini-mock | — | — | H1, L4, S1, Sp1 | Diagnose ta2 | — |
-| 1 | Sprachen lernen | Sprachcafé, Lernbiografie · 11, E | ein Gespräch beginnen, in Gang halten, beenden | *als* (temporal) | **Sp1**, L1, H3 | Sp1 | M13, N8 |
-| 2 | Wir planen einen Ausflug | gemeinsam planen, Kompromiss · D | vorschlagen, ablehnen, sich einigen | Konjunktiv II *wäre/hätte/würde* (Vorschlag, Wunsch) | **Sp3**, H2, L4 | Sp3 | S4-L8, N12 |
-| 3 | Im Hotel | buchen, umbuchen, Probleme · 10 | höflich nachfragen; eine Buchung ändern | indirekte Fragen mit *ob*/W-Wort | **S2**, L2, H1 | L1 | M16, S4-L11/12, N7 |
-| 4 | Unterwegs: Wege und Zwischenfälle | Treffpunkt, Weg, kleiner Unfall · 10, 8 | Wege genau beschreiben; von einem Zwischenfall berichten | lokale Präp. (gegenüber, durch, an … vorbei) · woher/wo/wohin | **H1**, L4, S1 | H3 | M17, M22 |
-| 5 | Handy, Vertrag, Kündigung | Tarif wählen, kündigen · 7, 5 | Angebote vergleichen; einen Vertrag ändern oder kündigen | Passiv Präsens (rezeptiv) | **L1**, S2 | S2 | M14, S4-L10 |
-| 6 | Mein Geld | Bank, Karte verloren · 5 | Bankgeschäfte erledigen; einen Verlust melden | Adjektivendungen ohne Artikel, *Was für ein?* (+ Komparativ attributiv) | **Sp2**, H3, L3, H2 | L3 | S4-L9/L13, RC 112 |
-| 7 | Die Heizung ist kaputt | Mängel melden, Vermieter, Handwerker · 12 | ein Problem schildern; um Reparatur bitten | *lassen* · *trotzdem* | **S2**, H4, L3, Sp3 | H1 | S4-L13, M21; RC 156–157 |
-| 8 | Wetter, Klima, Umwelt | Wetterbericht, Umwelt im Alltag · 9 | Wetterberichte verstehen; über Umwelt sprechen | Verben mit Präposition + worauf/darauf (produktiv) | **H4**, H1, L1, Sp2 | H2 | M18 |
-| 9 | Mein Weg | Schule, Ausbildung, Lebenslauf · 3, 4 | einen Lebenslauf verstehen und erzählen | Relativsatz Nominativ/Akkusativ | **L3**, Sp2, H4 | L2 | M23; N K12 (split S5/LIN = B1.1) |
-| 10 | Bewerbung und Vorstellungsgespräch | Stellenanzeige, Gespräch · 3 | Stellenanzeigen verstehen; im Gespräch Auskunft geben | Präteritum (rezeptiv: regelmäßig/unregelmäßig) | **L4**, Sp1, H2 | Sp2 | M24, RC 100 |
-| 11 | Post vom Amt *(tauschbar: Fokus-DaF Reiseplanung)* | Fristen, Nachfragen · 1 | Behördenbriefe verstehen; nachfragen | *seit/seitdem*, *bis* (Konnektor) | **L2**, S1, H3, Sp3 | S1 | M21, RC 76–77; M22 |
-| 12 | Lebensstationen | zusammenhängend erzählen · A, D | eine Lebensgeschichte gegliedert erzählen | — (Textkonnektoren zuerst/danach/zum Schluss: Wiederholung) | **S1**, **H2**, **H3**, Sp2 | Sp1, S2 | N10–11, S4-L14 |
-| — | *Prüfungswochen* | Modelltest A, B, C (Goethe A2, 90 + 15 min); telc A2 A, B | — | — | all Teile | — | — |
+| # | Titel | Situation · HF | Kern-Kann-Beschreibungen | Grammatik neu | Prüfungsteile (GA2) | Spur (ta2) | Leaders | Fokus (HF) |
+|---|---|---|---|---|---|---|---|---|
+| — | *Diagnose* (free) | lane mini-mock | — | — | H1, L4, S1, Sp1 | Diagnose ta2 | — | |
+| 1 | Sprachen lernen | Sprachcafé, Lernbiografie · 11, E | ein Gespräch beginnen, in Gang halten, beenden | *als* (temporal) | **Sp1**, L1, H3 | Sp1 | M13, N8 | |
+| 2 | Wir planen einen Ausflug | gemeinsam planen, Kompromiss · D | vorschlagen, ablehnen, sich einigen | Konjunktiv II *wäre/hätte/würde* (Vorschlag, Wunsch) | **Sp3**, H2, L4 | Sp3 | S4-L8, N12 | |
+| 3 | Im Hotel | buchen, umbuchen, Probleme · 10 | höflich nachfragen; eine Buchung ändern | indirekte Fragen mit *ob*/W-Wort | **S2**, L2, H1 | L1 | M16, S4-L11/12, N7 | |
+| 4 | Unterwegs: Wege und Zwischenfälle | Treffpunkt, Weg, kleiner Unfall · 10, 8 | Wege genau beschreiben; von einem Zwischenfall berichten | lokale Präp. (gegenüber, durch, an … vorbei) · woher/wo/wohin | **H1**, L4, S1 | H3 | M17, M22 | |
+| 5 | Handy, Vertrag, Kündigung | Tarif wählen, kündigen · 7, 5 | Angebote vergleichen; einen Vertrag ändern oder kündigen | Passiv Präsens (rezeptiv) | **L1**, S2 | S2 | M14, S4-L10 | |
+| 6 | Mein Geld | Bank, Karte verloren · 5 | Bankgeschäfte erledigen; einen Verlust melden | Adjektivendungen ohne Artikel, *Was für ein?* (+ Komparativ attributiv) | **Sp2**, H3, L3, H2 | L3 | S4-L9/L13, RC 112 | |
+| 7 | Die Heizung ist kaputt | Mängel melden, Vermieter, Handwerker · 12 | ein Problem schildern; um Reparatur bitten | *lassen* · *trotzdem* | **S2**, H4, L3, Sp3 | H1 | S4-L13, M21; RC 156–157 | |
+| 8 | Wetter, Klima, Umwelt | Wetterbericht, Umwelt im Alltag · 9 | Wetterberichte verstehen; über Umwelt sprechen | Verben mit Präposition + worauf/darauf (produktiv) | **H4**, H1, L1, Sp2 | H2 | M18 | |
+| 9 | Mein Weg | Schule, Ausbildung, Lebenslauf · 3, 4 | einen Lebenslauf verstehen und erzählen | Relativsatz Nominativ/Akkusativ | **L3**, Sp2, H4 | L2 | M23; N K12 (split S5/LIN = B1.1) | |
+| 10 | Bewerbung und Vorstellungsgespräch | Stellenanzeige, Gespräch · 3 | Stellenanzeigen verstehen; im Gespräch Auskunft geben | Präteritum (rezeptiv: regelmäßig/unregelmäßig) | **L4**, Sp1, H2 | Sp2 | M24, RC 100 | |
+| 11 | Post vom Amt *(tauschbar: Fokus-DaF Reiseplanung)* | Fristen, Nachfragen · 1 | Behördenbriefe verstehen; nachfragen | *seit/seitdem*, *bis* (Konnektor) | **L2**, S1, H3, Sp3 | S1 | M21, RC 76–77; M22 | |
+| 12 | Lebensstationen | zusammenhängend erzählen · A, D | eine Lebensgeschichte gegliedert erzählen | — (Textkonnektoren zuerst/danach/zum Schluss: Wiederholung) | **S1**, **H2**, **H3**, Sp2 | Sp1, S2 | N10–11, S4-L14 | |
+| — | *Prüfungswochen* | Modelltest A, B, C (Goethe A2, 90 + 15 min); telc A2 A, B | — | — | all Teile | — | — | |
 
 #### B1.1 — „Im Alltag mitreden" (€60 · lane telc B1; DTZ and Goethe/ÖSD B1 packs)
 
@@ -555,20 +662,20 @@ B skeleton from here (§3.2). **Every B1 unit's Sprechen session contains a plan
 checklist** (vorschlagen · reagieren · widersprechen/Alternative · sich einigen · wer macht was), because planning
 is 28/100 (Goethe Sp1), 30/75 (telc M3) and 20/50 DTZ task points ([m02] §6).
 
-| # | Titel | Situation · HF | Kern-Kann-Beschreibungen | Grammatik neu | Prüfungsteile (tB1) | Spur (dtz · gb1) | Leaders |
-|---|---|---|---|---|---|---|---|
-| 1 | Was gibt's Neues? | Freundschaft, Neuigkeiten · D | von Erlebnissen erzählen; eine persönliche E-Mail schreiben | Präteritum als Erzähltempus | SA, M1, LV2, HV2 | dtz S1 · gb1 Sch1 | M1–2, Si1, S5-L1 |
-| 2 | Wir organisieren ein Fest | planen, wer macht was · D | gemeinsam planen; Aufgaben verteilen | *falls* | M3, HV2 | dtz S3 · gb1 Sp1 | M6, M12, Si2 |
-| 3 | Wenn die Bahn nicht fährt | Verspätung, Umbuchung, Durchsagen · 10 | Durchsagen verstehen; umbuchen; sich beschweren | Relativsatz Dativ / mit Präposition | HV3, LV3 | dtz H1 · gb1 H1 | N1, Si3, S5-L2 |
-| 4 | Ärger mit der Wohnung | Mängel, Vermieter, Nachbarn · 12 | Probleme schriftlich melden; Details erfragen | Genitiv + wegen/trotz/während (Präp.) | LV3, SA, SB1 | dtz Schreiben · gb1 L3 | M3, Si4, RC 155–156 |
-| 5 | Das Gerät ist kaputt | reklamieren, Kundenservice · 7 | reklamieren; eine Lösung verlangen | *obwohl / trotzdem* | SB1, SA, M3 | dtz L5 · gb1 Sch3 | M4, N2 (clip) |
-| 6 | Alles digital? | Technik, Medien, Zukunft · 9 | Vermutungen und Pläne äußern; Meinungen zuordnen | Futur I (Vermutung, Plan, Versprechen) | HV1, LV1, M2 | dtz H4 · gb1 H4 | M5, N6 |
-| 7 | Unter Kollegen | Schichten tauschen, Absprachen · 2 | Absprachen treffen; Ziele begründen | *um … zu / damit* | M3, HV3, SB2 | dtz S3 · gb1 Sch3 | S5-L6, RC 84–85 |
-| 8 | Welcher Kurs passt zu mir? | Beratung, Weiterbildung · 4 | sich beraten lassen; Angebote vergleichen | Infinitiv mit *zu* | LV3, M1, LV2 | dtz L2 · gb1 L3 | M7–8, Si5 |
-| 9 | Beim Arzt und in der Apotheke | Beschwerden, Beipackzettel · 8 | erklären, was fehlt; Anweisungen verstehen; Rat geben | Konjunktiv II: Ratschlag, irreale Bedingung (Gegenwart) | LV2, M2, SB2 | dtz L4, S2 · gb1 L5 | M9, ÖIF B1 |
-| 10 | Glück gehabt! | Erlebnisse, Wendepunkte · B | Erlebnisse in der richtigen Reihenfolge erzählen | Plusquamperfekt · *nachdem / bevor* | HV2, SA | dtz H3 · gb1 H3, L1 | M10–11, N3 |
-| 11 | Menschen, die mir wichtig sind | Porträt, Vereinsblog · D | eine Person porträtieren; Menschen beschreiben | n-Deklination · Adjektive als Nomen | LV1, SB2, M1 | dtz L3 · gb1 Sch2 | M1, As B1+ K2 |
-| 12 | Meine Ziele mit Deutsch | Lernziele, kurze Präsentation · E | Ziele begründen; kurz präsentieren | *da* (kausal) | HV1, LV1, M2 → **Halbtest** | dtz S2 · gb1 Sp2 (2-Min.-Version) → Halbtest je Spur | ÖIF B1, RC 36; M9 |
+| # | Titel | Situation · HF | Kern-Kann-Beschreibungen | Grammatik neu | Prüfungsteile (tB1) | Spur (dtz · gb1) | Leaders | Fokus (HF) |
+|---|---|---|---|---|---|---|---|---|
+| 1 | Was gibt's Neues? | Freundschaft, Neuigkeiten · D | von Erlebnissen erzählen; eine persönliche E-Mail schreiben | Präteritum als Erzähltempus | SA, M1, LV2, HV2 | dtz S1 · gb1 Sch1 | M1–2, Si1, S5-L1 (über Vergangenes berichten, Präteritum) | |
+| 2 | Wir organisieren ein Fest | planen, wer macht was · D | gemeinsam planen; Aufgaben verteilen | *falls* | M3, HV2 | dtz S3 · gb1 Sp1 | M6, M12, Si2 | |
+| 3 | Wenn die Bahn nicht fährt | Verspätung auf dem Weg zur Arbeit, Umbuchung, Durchsagen; dem Team die Durchsage weitergeben (Mediation) · 10, 2 | Durchsagen verstehen; umbuchen; **eine Durchsage für das Team zusammenfassen und weitergeben** (Mediation: Zuhören und weitergeben, [m05] impl. 3) | Relativsatz Dativ / mit Präposition | HV3, LV3 | dtz H1 · gb1 H1 | N1, Si3, S5-L2 (Relativsatz mit Präposition) | |
+| 4 | Ärger mit der Wohnung | Mängel, Vermieter, Nachbarn · 12 | Probleme schriftlich melden; Details erfragen | Genitiv + wegen/trotz/während (Präp.) | LV3, SA, SB1 | dtz Schreiben · gb1 L3 | M3, Si4, S5-L7 (Hausordnung, Konflikte mit Nachbarn), RC 155–156 | |
+| 5 | Das Gerät ist kaputt | reklamieren, Kundenservice · 7 | reklamieren; eine Lösung verlangen | *obwohl* (*trotzdem* aus A2.2 U7: Wiederholung als Kontrastpartner) | SB1, SA, M3 | dtz L5 · gb1 Sch3 | M4, N2 (clip), S5-L6 (sich beschweren), S5-L2 (obwohl) | |
+| 6 | Alles digital? | Technik, Medien, Zukunft · 9 | Vermutungen und Pläne äußern; Meinungen zuordnen | Futur I (Vermutung, Plan, Versprechen) | HV1, LV1, M2 | dtz H4 · gb1 H4 | M5, N6 | |
+| 7 | Unter Kollegen | Schichten tauschen, Absprachen · 2 | Absprachen treffen; Ziele begründen | *um … zu / damit* | M3, HV3, SB2 | dtz S3 · gb1 Sch3 | S5-L6 (um … zu, damit; Probleme im Arbeitsalltag), Si5 (Finalsatz), RC 84–85 | |
+| 8 | Weiterbildung im Betrieb | Beratungsgespräch mit der Personalabteilung, Kurs wählen · 2, 4 | sich am Arbeitsplatz beraten lassen; Angebote vergleichen | Infinitiv mit *zu* | LV3, M1, LV2 | dtz L2 · gb1 L3 | M7–8, Si5, S5-L5 (Infinitiv mit zu, Berufsberatung), Si8 (Lebenslang lernen) | |
+| 9 | Beim Arzt und in der Apotheke | Beschwerden, Beipackzettel · 8 | erklären, was fehlt; Anweisungen verstehen; Rat geben | Konjunktiv II: Ratschlag, irreale Bedingung (Gegenwart) | LV2, M2, SB2 | dtz L4, S2 · gb1 L5 | M9, S5-L3 (Untersuchung beim Arzt, Rat geben), S5-L4 (Konjunktiv II irreal), ÖIF B1 | |
+| 10 | Glück gehabt! | Erlebnisse, Wendepunkte · B | Erlebnisse in der richtigen Reihenfolge erzählen | Plusquamperfekt · *nachdem / bevor* | HV2, SA | dtz H3 · gb1 H3, L1 | M10–11, N3, S5-L1 (Glück im Alltag, Plusquamperfekt) | |
+| 11 | Menschen, die mir wichtig sind | Porträt, Vereinsblog · D | eine Person porträtieren; Menschen beschreiben | n-Deklination · Adjektive als Nomen | LV1, SB2, M1 | dtz L3 · gb1 Sch2 | M1, As B1+ K2 | |
+| 12 | Meine Ziele mit Deutsch | Lernziele im Kurs, kurze Präsentation · 11, E | Ziele begründen; kurz präsentieren | *da* (kausal) | HV1, LV1, M2 → **Halbtest** | dtz S2 · gb1 Sp2 (2-Min.-Version) → Halbtest je Spur | ÖIF B1, RC 36; M9 | |
 
 Coverage check tB1: LV1 3, LV2 3, LV3 3, SB1 2, SB2 3, HV1 2, HV2 3, HV3 2, SA 4, M1 3, M2 3, M3 3 (+ a planning round
 in every unit). The overloaded Lektion of Proposal A (zu + Infinitiv, um … zu, da, während, bevor in one) is split
@@ -576,66 +683,73 @@ across U7, U8, U10 and U12.
 
 #### B1.2 — „Selbstständig handeln und Stellung nehmen" (€60 · lane telc B1; DTZ and Goethe/ÖSD B1 packs)
 
-| # | Titel | Situation · HF | Kern-Kann-Beschreibungen | Grammatik neu | Prüfungsteile (tB1) | Spur (dtz · gb1) | Leaders |
-|---|---|---|---|---|---|---|---|
-| — | *Diagnose* (free) | lane mini-mock | — | — | one Teil per module | per lane | — |
-| 1 | Missverständnisse | Sprache, Missverständnisse klären · B, C | Missverständnisse klären; Meinung begründen | *darum/deswegen/nämlich* | **M2**, LV1 | dtz S1 · **gb1 Sch2**, L4 | M13 |
-| 2 | Weiterbildung | Kurse vergleichen, Thema präsentieren · 4 | Angebote vergleichen; ein Thema präsentieren | Partizip I/II als Adjektiv | **LV3**, M1 | **dtz L2** · **gb1 Sp2 + Sp3**, H2 | M14, Si8 (compressed example §3.9) |
-| 3 | Die Bewerbung | Stellenanzeige, Anschreiben, Nachfrage · 3 | sich schriftlich bewerben; telefonisch nachfragen | *nicht nur … sondern auch* · *sowohl … als auch* | **SA**, HV3 | **dtz Schreiben** · gb1 L3 | M15, S6-L8, RC 98–99 |
-| 4 | Konflikt im Team | Besprechung, Standpunkte · 2, C | den eigenen Standpunkt einbringen; einen Kompromiss finden | Relativsatz mit *wo/was* · Ausdrücke mit *es* | **M3**, HV2 | dtz S3 · **gb1 Sp1** | N7 (clip), S6-L10, RC 100 |
-| 5 | Werbung, Konsum, Geld | Kaufentscheidungen, Werbung · 7, 9 | Werbung kritisch lesen; Kaufentscheidungen begründen | Passiv Präsens (produktiv) · Passiv mit Modalverb | **LV2**, LV1 | dtz L1 · **gb1 L2** | S6-L9/10, N12, Si7 |
-| 6 | Einspruch! | falsche Rechnung, Versicherung, Fristen · 1, 5 | schriftlich widersprechen; einen Schaden melden | Passiv Präteritum/Perfekt · *innerhalb/außerhalb* + Gen. | **SB1**, SA | **dtz L5**, L3 · gb1 Sch3 | RC 78, 111; M22 |
-| 7 | Mitreden | Gesellschaft, Engagement, Meinungen wiedergeben (Mediation) · A, B | Meinungen wiedergeben und zwischen Positionen vermitteln | *weder … noch* · *entweder … oder* | **HV1**, M2 | **dtz H4** · **gb1 H4** | M18, S6-L11/12, N10 |
-| 8 | Regeln und Anleitungen | Hausordnung, Anleitungen, Abläufe · 12 | Regeln genau verstehen; Abläufe erklären | *indem* · *sodass* | **SB2**, HV3 | **dtz L4** · **gb1 L5** | M20; ZM B1+ |
-| 9 | Stadt oder Land? | Wohnort wählen, Führung · 12, 10 | Vor- und Nachteile abwägen; einer Führung folgen | *je … desto* · *brauchen … zu* | **HV3**, LV2 | dtz H2 · **gb1 H2** | M19, N11 |
-| 10 | Geschichten von früher | Biografie, Heimat, Vergleich · A | über früher berichten; ein Foto beschreiben und vergleichen | *während* (Konjunktion) · Konjunktiv II Vergangenheit (rezeptiv) | **HV2**, M1 | **dtz S2** · **gb1 L1** | M22, S6-L13, M16–17 |
-| 11 | Klima und Zukunft | Umwelt, Radiodebatte · 9 | Meinungen in einer Debatte zuordnen; begründet Stellung nehmen | *(an)statt / ohne … zu* · *als ob* | **LV1**, SA | dtz H2 · **gb1 H4**, Sch2 | M23–24 |
-| 12 | Zurückblicken, weitergeben | Besprechung, Informationen weitergeben (Mediation) · 2, E | Informationen zusammenfassen und weitergeben | — (Modalpartikeln rezeptiv; Wiederholung) | **M1**, **SA**, SB2 | dtz S1 · gb1 Sch1, Sp3 | RC 86; S6-L14 |
-| — | *Prüfungswochen* | Modelltest A, B, C (telc B1 150 + 15 min + 20 prep); DTZ A, B; Goethe/ÖSD B1 A, B (per module) | — | — | all Teile | — | — |
+| # | Titel | Situation · HF | Kern-Kann-Beschreibungen | Grammatik neu | Prüfungsteile (tB1) | Spur (dtz · gb1) | Leaders | Fokus (HF) |
+|---|---|---|---|---|---|---|---|---|
+| — | *Diagnose* (free) | lane mini-mock | — | — | one Teil per module | per lane | — | |
+| 1 | Missverständnisse | Sprache, Missverständnisse klären · B, C | Missverständnisse klären; Meinung begründen | *darum/deswegen/nämlich* | **M2**, LV1 | dtz S1 · **gb1 Sch2**, L4 | M13 | |
+| 2 | Weiterbildung | Kurse vergleichen, Thema präsentieren · 4 | Angebote vergleichen; ein Thema präsentieren | Partizip I/II als Adjektiv (`g.partizip-attr-einfach`: *die angebotenen Kurse*) | **LV3**, M1 | **dtz L2** · **gb1 Sp2 + Sp3**, H2 | M14, Si8 (compressed example §3.9) | |
+| 3 | Die Bewerbung | Stellenanzeige, Anschreiben, Nachfrage · 3 | sich schriftlich bewerben; telefonisch nachfragen | *nicht nur … sondern auch* · *sowohl … als auch* | **SA**, HV3 | **dtz Schreiben** · gb1 L3 | M15, S6-L8, RC 98–99 | |
+| 4 | Konflikt im Team | Besprechung, Standpunkte · 2, C | den eigenen Standpunkt einbringen; einen Kompromiss finden | Relativsatz mit *wo/was* · Ausdrücke mit *es* | **M3**, HV2 | dtz S3 · **gb1 Sp1** | N7 (clip), S6-L10, RC 100 | |
+| 5 | Werbung, Konsum, Geld | Kaufentscheidungen, Werbung · 7, 9 | Werbung kritisch lesen; Kaufentscheidungen begründen | Passiv Präsens (produktiv) · Passiv mit Modalverb | **LV2**, LV1 | dtz L1 · **gb1 L2** | S6-L9/10, N12, Si7 | |
+| 6 | Einspruch! | falsche Rechnung, Versicherung, Fristen · 1, 5 | schriftlich widersprechen; einen Schaden melden | Passiv Präteritum/Perfekt · *innerhalb/außerhalb* + Gen. | **SB1**, SA | **dtz L5**, L3 · gb1 Sch3 | RC 78, 111; M22 | |
+| 7 | Mitreden | Gesellschaft, Engagement, Meinungen wiedergeben (Mediation) · A, B | Meinungen wiedergeben und zwischen Positionen vermitteln | *weder … noch* · *entweder … oder* | **HV1**, M2 | **dtz H4** · **gb1 H4** | M18, S6-L11/12, N10 | |
+| 8 | Regeln und Anleitungen | Hausordnung, Anleitungen, Abläufe · 12 | Regeln genau verstehen; Abläufe erklären | *indem* · *sodass* | **SB2**, HV3 | **dtz L4** · **gb1 L5** | M20; ZM B1+ | Fokus-DaZ „Betreuungsvertrag und Kita-Ordnung" (HF 6) |
+| 9 | Stadt oder Land? | Wohnort wählen, Führung · 12, 10 | Vor- und Nachteile abwägen; einer Führung folgen | *je … desto* · *brauchen … zu* | **HV3**, LV2 | dtz H2 · **gb1 H2** | M19, N11 | |
+| 10 | Geschichten von früher | Biografie, Heimat, Vergleich · A | über früher berichten; ein Foto beschreiben und vergleichen | *während* (Konjunktion) · Konjunktiv II Vergangenheit (rezeptiv) | **HV2**, M1 | **dtz S2** · **gb1 L1** | M22, S6-L13, M16–17 | |
+| 11 | Klima und Zukunft | Umwelt, Radiodebatte · 9 | Meinungen in einer Debatte zuordnen; begründet Stellung nehmen | *(an)statt / ohne … zu* · *als ob* | **LV1**, SA | dtz H2 · **gb1 H4**, Sch2 | M23–24 | |
+| 12 | Zurückblicken, weitergeben | Besprechung, Informationen weitergeben (Mediation) · 2, E | Informationen zusammenfassen und weitergeben | — (Modalpartikeln rezeptiv; Wiederholung) | **M1**, **SA**, SB2 | dtz S1 · gb1 Sch1, Sp3 | RC 86; S6-L14 | |
+| — | *Prüfungswochen* | Modelltest A, B, C (telc B1 150 + 15 min + 20 prep); DTZ A, B; Goethe/ÖSD B1 A, B (per module) | — | — | all Teile | — | — | |
 
 #### B2.1 — „Argumentieren und im Detail verstehen" (€65 · lane telc B2; Goethe B2 pack)
 
 Genres at reduced length (telc SA ≈ 120 words, Goethe S1 ≈ 110, S2 ≈ 70); single play by default from here
-([m03] impl. 8, 10). Topics follow Aspekte neu B2 K1–5 (the only verified per-Kapitel B2 titles); Sicher! aktuell
-B2.1 titles are (unverified) ([m14] §B6).
+([m03] impl. 8, 10). Topics follow Aspekte neu B2 K1–5 and Sicher! aktuell B2.1 L1–6 / B2.2 L7–12, whose tables of
+contents were read on 2026-09-27 from Hueber's Inhalt PDFs (header of this document); memo 14 had marked the B2.1
+titles (unverified) ([m14] §B6), and those rows now cite verified lessons.
 
-| # | Titel | Situation · HF | Kern-Kann-Beschreibungen | Grammatik neu | Prüfungsteile (tB2) | Spur (gb2) | Leaders |
-|---|---|---|---|---|---|---|---|
-| 1 | Heimat ist … | Identität, Ankommen · A | Standpunkte erläutern; über Erfahrungen berichten | Wortstellung im Mittelfeld · Stellung von *nicht* | M1, LV1 | L1 | As1, Si L1 |
-| 2 | Wie wir miteinander reden | Gesprächskultur im Job · C, 2 | sich an Diskussionen beteiligen; nachfragen | Infinitivsatz vs. *dass*-Satz | M2, HV2 | Sp2 (verkürzt), H3 | As2 |
-| 3 | Arbeit ist das halbe Leben? | Arbeitszeitmodelle · 2 | Vor- und Nachteile darstellen; Vorgesetzte informieren | Nomen-Verb-Verbindungen | LV2, SB2, HV3 | S2, H1 | As3, Si L5 |
-| 4 | Beschwerde mit Anspruch | mangelhafte Dienstleistung · 7, C | sich formell beschweren; eine Forderung stellen | Passiv + Passiversatz (*lässt sich*, *ist zu*, *-bar*) | SA (B), SB1 | L3 | ZM B2 — **deviation vs Si L10**: the complaint genre needs it here |
-| 5 | Zusammen wohnen | WG, Nachbarschaft · 12 | Probleme erörtern; gemeinsam Lösungen planen | Relativsatz mit *wer/was* (verallgemeinernd) | M3, LV3 | L4 | As4 (split Si L7) |
-| 6 | Presse mit Haltung | Kommentare, Nachrichten · 9 | Standpunkte in Texten erkennen | Partizip I/II als erweitertes Adjektiv | LV1, HV1 | L4, S1 | Si L2 (split As10) |
-| 7 | An die Vorgesetzte *(Pflege 1)* | Pflegeheim: Dienstplan, Überlastung · 2 | Probleme sachlich darstellen; Vorschläge machen | Konjunktiv II Vergangenheit (produktiv) | SA, M3, SB1 | S2 | [m06] ladder; [m10] impl. 5 |
-| 8 | Anerkennung und Bewerbung | Anerkennung, qualifizierte Bewerbung · 3, 4 | Qualifikationen darstellen; Informationen erfragen | Zustandspassiv · *von/durch* im Passiv | SA (A), LV3, M1 | L5, Sp1 (verkürzt) | Si L2 (split As6); BSK |
-| 9 | Ursachen und Folgen | Konsum, Klima: Hypothesen · B | Ursachen und Folgen erklären; Vermutungen äußern | Futur II (Vermutung) · Bedeutungen des Konjunktiv II | M2, HV2 | H2 | Si L5–6 (unverified) |
-| 10 | Radio und Podcast | Interviews, einmal gehört · 9 | Standpunkte in Gesprächen erkennen | Verweiswörter (*es*, *da(r)-*) | HV1, HV3 | H1, H3 | As2, Si L3 |
-| 11 | Wissenschaft im Alltag | Forschung verständlich · 4 | Sachtexte verstehen und zusammenfassen | Vergleichssätze (*je … desto*, *je nachdem*, als/wie) · Nominalstil (rezeptiv) | LV2, SB2 | L2 (Textlücke), H4 | As5 |
-| 12 | Online zusammenarbeiten | Projekt, eigene Fehler kontrollieren · E | online im Team kommunizieren; eigene Fehler erkennen | *lassen* (veranlassen) | M1, SA → **Halbtest** | S1, Sp1 → Halbtest | Si L5 (unverified) |
+| # | Titel | Situation · HF | Kern-Kann-Beschreibungen | Grammatik neu | Prüfungsteile (tB2) | Spur (gb2) | Leaders | Fokus (HF) |
+|---|---|---|---|---|---|---|---|---|
+| 1 | Heimat ist … | Identität, Ankommen · A | Standpunkte erläutern; über Erfahrungen berichten | Wortstellung im Mittelfeld · Stellung von *nicht* | M1, LV1 | L1 | As1, Si L1 | |
+| 2 | Wie wir miteinander reden | Gesprächskultur im Job · C, 2 | sich an Diskussionen beteiligen; nachfragen | Infinitivsatz vs. *dass*-Satz | M2, HV2 | Sp2 (verkürzt), H3 | As2, Si L3 (dass-Sätze und ihre Entsprechungen) | |
+| 3 | Arbeit ist das halbe Leben? | Arbeitszeitmodelle · 2 | Vor- und Nachteile darstellen; Vorgesetzte informieren | Nomen-Verb-Verbindungen | LV2, SB2, HV3 | S2, H1 | As3, Si L2 (In der Firma), Si L5 (Verbverbindungen) | |
+| 4 | Beschwerde mit Anspruch | mangelhafte Dienstleistung · 7, C | sich formell beschweren; eine Forderung stellen | Passiv + Passiversatz (*lässt sich*, *ist zu*, *-bar*) | SA (B), SB1 | L3 | ZM B2 — **deviation vs Si L10**: the complaint genre needs it here | |
+| 5 | Zusammen wohnen | WG, Nachbarschaft · 12 | Probleme erörtern; gemeinsam Lösungen planen | Relativsatz mit *wer/was* (verallgemeinernd) | M3, LV3 | L4 | As4 (split: Si L7 generalisierende Relativsätze) | Fokus-DaZ „Elternabend: mit der Schule sprechen" (HF 6, advisory) |
+| 6 | Presse mit Haltung | Kommentare, Nachrichten · 9 | Standpunkte in Texten erkennen | erweitertes Partizipialattribut, rezeptiv (`g.partizip-attr-erweitert`; einfaches Partizipialattribut B1.2 U2: Wiederholung) | LV1, HV1 | L4, S1 | Si L2 (Partizip I und II als Adjektive), Si L3 (Medien) (split As10) | |
+| 7 | An die Vorgesetzte *(Pflege 1)* | Pflegeheim: Dienstplan, Überlastung · 2 | Probleme sachlich darstellen; Vorschläge machen | Konjunktiv II Vergangenheit (produktiv) | SA, M3, SB1 | S2 | Si L2 (In der Firma: geschäftliche E-Mail), Si L6 (Bedeutungen des Konjunktiv II) — **deviation:** the care setting serves the B2 care segment ([m10] impl. 5); the productive past follows the [m06] ladder | |
+| 8 | Anerkennung und Bewerbung | Anerkennung, qualifizierte Bewerbung · 3, 4 | Qualifikationen darstellen; Informationen erfragen | Zustandspassiv · *von/durch* im Passiv | SA (A), LV3, M1 | L5, Sp1 (verkürzt) | Si L2 (Zustandspassiv; von oder durch), Si L4 (Berufseinstieg, Berufsmesse) (split As6); BSK | |
+| 9 | Ursachen und Folgen | Konsum, Klima: Hypothesen · B | Ursachen und Folgen erklären; Vermutungen äußern | Futur II (Vermutung) · Bedeutungen des Konjunktiv II | M2, HV2 | H2 | Si L5 (Futur II – Vermutungen), Si L6 (Bedeutungen des Konjunktiv II) | |
+| 10 | Radio und Podcast | Interviews, einmal gehört · 9 | Standpunkte in Gesprächen erkennen | Verweiswörter (*es*, *da(r)-*) | HV1, HV3 | H1, H3 | As2, Si L3 | |
+| 11 | Wissenschaft im Alltag | Forschung verständlich · 4 | Sachtexte verstehen und für andere zusammenfassen (Mediation) | Vergleichssätze *je nachdem (ob)*, *als/wie* + Nebensatz (`g.vergleichssatz-erweitert`; *je … desto* B1.2 U9: Wiederholung) · Nominalstil (rezeptiv) | LV2, SB2 | L2 (Textlücke), H4 | As5, Si L7 (Vergleichssätze) | |
+| 12 | Online zusammenarbeiten | Projekt, eigene Fehler kontrollieren · E | online im Team kommunizieren; eigene Fehler erkennen | *lassen*: Bedeutungen und Perfekt (*hat … prüfen lassen*) (`g.lassen-bedeutungen`; *lassen* = veranlassen A2.2 U7: Wiederholung) | M1, SA → **Halbtest** | S1, Sp1 → Halbtest | Si L5 (Das Verb lassen) — **deviation:** online collaboration is placed here for the online-interaction can-do (ALL-06); no verified B2 book places the topic | |
 
 #### B2.2 — „Wirkungsvoll diskutieren, vortragen, vermitteln" (€65 · lane telc B2; Goethe B2 pack)
 
-| # | Titel | Situation · HF | Kern-Kann-Beschreibungen | Grammatik neu | Prüfungsteile (tB2) | Spur (gb2) | Leaders |
-|---|---|---|---|---|---|---|---|
-| — | *Diagnose* (free) | lane mini-mock | — | — | one Teil per module | Diagnose gb2 | — |
-| 1 | Beziehungen | Freundschaft, Einstellungen · B | Einstellungen vergleichen; Gehörtes wiedergeben | subjektive Modalverben (*soll … haben*, *will … sein*) | **LV1**, HV1 | **L1** | Si7, As9 |
-| 2 | Ein Vortrag | Vortrag halten, Fragen beantworten · E | einen Vortrag gliedern und halten | Nominalisierung ↔ Verbalisierung | **M1**, HV2 | **Sp1** | ZM B2 |
-| 3 | Dafür oder dagegen? | Pro/Contra · C | argumentieren, widersprechen, zusammenfassen | konzessive und adversative Konnektoren (*zwar … aber*, *obgleich*, *wohingegen*, *während*) | **M2**, LV2 | **Sp2** | Si8–9, As10 |
-| 4 | Service und Schadensersatz | verhandeln, Grenzen setzen · 7 | einen Schaden darlegen; Forderungen verhandeln | indirekte Rede: Konjunktiv I (Einstieg) | **SA** (B, ≥ 150 W), M3 | L3 | Si10, ZM B2+ |
-| 5 | Essen, Gesundheit, Fitness | Studien, Ernährung · 8 | Informationen aus Vorträgen verarbeiten; Stellung nehmen | Modalsätze (*dadurch … dass*, *indem*) | **HV2**, LV2 | **S1** (≈ 150 W), **H2** | Si8, Si11, As6 |
-| 6 | An der Uni | Studienordnung, Vorlesung · 4 | Regeln und Vorlesungen verstehen | Nomen, Verben, Adjektive mit Präpositionen | **LV2**, HV2 | **L5**, **H4** | Si9; [m03] impl. 11 |
-| 7 | Kultur und Kunst | Kritiken, Kulturberichte · 9 | Kritiken verstehen und verfassen | erweitertes Partizipialattribut | **LV1**, SB2 | **L2** | As7 |
-| 8 | Aus der Geschichte | Erinnerung, Berichte weitergeben (Mediation) · A | Berichte zusammenfassen und weitergeben | Konjunktiv I (Vergangenheit, produktiv) | **HV1**, M2 | H3 | As8 |
-| 9 | Das Mitarbeitergespräch *(Pflege 2)* | Ziele, Kritik, Fortbildung · 2 | Kritik begründen und annehmen; Ziele vereinbaren | konditionale/konsekutive Konnektoren (*sofern*, *falls*, *sodass*, *folglich*) · Modalpartikeln | **M3**, SB1 | **S2** (≈ 100 W) | BSK 20.4, 52.1; Si L8 |
-| 10 | Widerspruch einlegen | Bescheid, formell begründen · 1 | Bescheide verstehen; formell widersprechen | Präpositionen mit Genitiv (*aufgrund*, *hinsichtlich*, *bezüglich*) | **SA** (A/B), **SB1** | L4 | As10; BSK 39.3 |
-| 11 | Sprache und Regionen | Dialekte, Reportagen, D-A-CH · 9 | Reportagen verstehen; Varietäten erkennen | Textkohäsion: Verweiswörter und Konnektoren | **HV3**, **LV3** | **H1** | Si12 |
-| 12 | Ein Blick in die Zukunft | Szenarien, lebhafte Diskussion · B | Szenarien diskutieren | — (Futur II, Wiederholung) | **SB2**, **M2**, LV3 | **L3**, **L4**, **Sp2** | As10 |
-| — | *Prüfungswochen* | Modelltest A, B, C (telc B2 140 + 15 min + 20 prep); Goethe B2 A, B (per module) | — | — | all Teile | — | — |
+| # | Titel | Situation · HF | Kern-Kann-Beschreibungen | Grammatik neu | Prüfungsteile (tB2) | Spur (gb2) | Leaders | Fokus (HF) |
+|---|---|---|---|---|---|---|---|---|
+| — | *Diagnose* (free) | lane mini-mock | — | — | one Teil per module | Diagnose gb2 | — | |
+| 1 | Beziehungen | Freundschaft, Einstellungen · B | Einstellungen vergleichen; Gehörtes wiedergeben | subjektive Modalverben (*soll … haben*, *will … sein*) | **LV1**, HV1 | **L1** | Si7, As9 | |
+| 2 | Ein Vortrag | Vortrag halten, Fragen beantworten · E | einen Vortrag gliedern und halten | Nominalisierung ↔ Verbalisierung | **M1**, HV2 | **Sp1** | ZM B2, Si8 (Nominalisierung von Verben) | Fokus „Im Kurs: einem Vortrag Feedback geben" (HF 11, advisory) |
+| 3 | Dafür oder dagegen? | Pro/Contra im Team: Vier-Tage-Woche · C, 2 | argumentieren, widersprechen, zusammenfassen | konzessive und adversative Konnektoren (*obgleich*, *wohingegen*, *während* adversativ; *zwar … aber* B1: Wiederholung) | **M2**, LV2 | **Sp2** | Si8 (konzessiv), Si12 (Adversativsätze), As10 | |
+| 4 | Service und Schadensersatz | verhandeln, Grenzen setzen · 7 | einen Schaden darlegen; Forderungen verhandeln | indirekte Rede: Konjunktiv I (Einstieg) | **SA** (B, ≥ 150 W), M3 | L3 | Si10, ZM B2+ | Fokus „Einen Schaden der Versicherung melden" (HF 5, advisory) |
+| 5 | Essen, Gesundheit, Fitness | Studien, Ernährung · 8 | Informationen aus Vorträgen verarbeiten; Stellung nehmen | Modalsätze *dadurch … dass*, *ohne dass*, *(an)statt dass* (`g.modalsatz-erweitert`; *indem* B1.2 U8: Wiederholung) | **HV2**, LV2 | **S1** (≈ 150 W), **H2** | Si8, Si11, As6 | |
+| 6 | An der Uni | Studienordnung, Vorlesung · 4 | Regeln und Vorlesungen verstehen | Nomen, Verben, Adjektive mit Präpositionen | **LV2**, HV2 | **L5**, **H4** | Si9; [m03] impl. 11 | |
+| 7 | Kultur und Kunst | Kritiken, Kulturberichte · 9 | Kritiken verstehen und verfassen | erweitertes Partizipialattribut, produktiv (`g.partizip-attr-erweitert`, rezeptiv seit B2.1 U6: Wiederholung/Erweiterung) · Partizipien als Nomen | **LV1**, SB2 | **L2** | As7, Si12 (Erweitertes Partizip; Partizipien als Nomen) | |
+| 8 | Aus der Geschichte | Erinnerung, Berichte weitergeben (Mediation) · A | Berichte zusammenfassen und weitergeben | Konjunktiv I (Vergangenheit, produktiv) | **HV1**, M2 | H3 | As8, Si7 (Indirekte Rede) | |
+| 9 | Das Mitarbeitergespräch *(Pflege 2)* | Ziele, Kritik, Fortbildung · 2 | Kritik begründen und annehmen; Ziele vereinbaren | konditionale/konsekutive Konnektoren *sofern*, *vorausgesetzt, dass*, *folglich*, *so … dass* (*falls* B1.1 U2, *sodass* B1.2 U8: Wiederholung) · Modalpartikeln (produktiv; rezeptiv seit B1.2 U12) | **M3**, SB1 | **S2** (≈ 100 W) | BSK 20.4, 52.1; Si8 (konditional), Si9 (konsekutiv) | |
+| 10 | Widerspruch einlegen | Bescheid, formell begründen · 1 | Bescheide verstehen; formell widersprechen | Präpositionen mit Genitiv (*aufgrund*, *hinsichtlich*, *bezüglich*) | **SA** (A/B), **SB1** | L4 | As10; BSK 39.3 | |
+| 11 | Sprache und Regionen | Dialekte, Reportagen, D-A-CH · 9 | Reportagen verstehen; Varietäten erkennen | Textkohäsion: Verweiswörter und Konnektoren | **HV3**, **LV3** | **H1** | Si12 | Fokus-DaF „Unterwegs in Österreich und der Schweiz" (HF 10, advisory) |
+| 12 | Ein Blick in die Zukunft | Arbeitswelt der Zukunft: Szenarien, lebhafte Diskussion · B, 2 | Szenarien diskutieren | — (Futur II, Wiederholung) | **SB2**, **M2**, LV3 | **L3**, **L4**, **Sp2** | As10 | |
+| — | *Prüfungswochen* | Modelltest A, B, C (telc B2 140 + 15 min + 20 prep); Goethe B2 A, B (per module) | — | — | all Teile | — | — | |
 
-**Quotas the validator checks on the specs (ALL-06):** ≥ 1 online-interaction can-do per half-level; from B1.1
-≥ 1 mediation can-do and ≥ 3 work units; B2 ≥ 2 care/health workplace units at general-language level; spiral
-threads B1.1 → B2.2 (Beschwerde, Meinung, Konsultation, Weitergeben) each name their band step ([m05] §3).
+**Quotas the validator checks on the specs (ALL-06):** ≥ 1 online-interaction can-do per half-level; from B1.1,
+**per half-level**, ≥ 1 mediation can-do and ≥ 3 work units (a unit tagged HF 2 or 3) ([m05] impl. 3); B2 ≥ 2
+care/health workplace units at general-language level; spiral threads B1.1 → B2.2 (Beschwerde, Meinung, Konsultation,
+Weitergeben) each name their band step ([m05] §3). **Recount after the critic pass (2026-09-26):** work units B1.1
+U3, U7, U8 · B1.2 U3, U4, U12 · B2.1 U2, U3, U7, U8 · B2.2 U3, U9, U12; mediation B1.1 U3 · B1.2 U7, U12 · B2.1 U11 ·
+B2.2 U8; care units B2.1 U7, B2.2 U9. **Handlungsfelder (ALL-04), units + planned Fokus-Karten:** A1 all 12 (HF 3
+A1.2 U1, HF 4 A1.2 U12, HF 5 A1.2 U10, HF 6 A1.1 U12 via Fokus); A2 all 12 (HF 6 A2.1 U10 via Fokus); B1 all 12 (HF 6
+B1.2 U8 via Fokus, HF 11 B1.1 U12 by tag); B2 advisory (HF 5, 6, 10, 11 via Fokus). The curriculum agents **re-run
+ALL-04 and ALL-06 on the specs before the W2 freeze** (§10.3).
 
 ---
 
@@ -651,14 +765,14 @@ The A skeleton is **not** reused from B1.1 on.
 | Slot | Min A1 / A2 (design) | What happens | Authored | Scored |
 |---|---|---|---|---|
 | **Start** (opens LS1) | 2 | Lernziele box (3–5 can-dos, own ich-Form wording); Prüfungsfokus chips („Hören Teil 3 · Schreiben Teil 2"); serial scene (≤ 90 s A1, ≤ 2 min A2) with one gist item; „Ich kann das schon" offer | refs, scene lines, 1 item | 1 |
-| **LS1 Situation 1** | 20 / 22 | the six segments of §3.3; structure 1 headed by its model sentence; **in U1 of every course the micro-output is spoken and scored within the first three screens** | input, 5 input items, 4 structured-input, pool of 16, micro-output | ≈ 28 + micro |
+| **LS1 Situation 1** | 20 / 22 | the six segments of §3.3; structure 1 headed by its model sentence; **in U1 of every course the micro-output is spoken and scored within the first three screens** | input, 5 input items, 4 structured-input, pool of 16 + reserve of 4–6, micro-output | ≈ 28 + micro |
 | **LS2 Situation 2** | 20 / 22 | structure 2 or Wortfeld block 2; contrast interleaving from here | same | same |
-| **LS3 Situation 3** | 20 / 22 | an exam text type (note, ad, sign, e-mail, announcement) + Wortfeld block 3 | same | same |
+| **LS3 Situation 3** | 20 / 22 | an exam text type (note, ad, sign, e-mail, announcement) + Wortfeld block 3; where the unit has a third receptive Prüfungsfokus Teil, this input is written against that Teil's template and its input items are a `mini` block of it (COV-3) | same | same |
 | Aussprache (inside LS1 and LS3) | 2 each | 4 perception items with ≥ 4 voices (HVPT, [m09] §9), then read-aloud of the model sentence, scored as *Verständlichkeit* with segment feedback (ü/u, vowel length, ich-Laut), never a global accent score | 1 line + generated perception items | 1 |
-| **LS4 Prüfungstraining** | 20 / 25 | 1–2 primary-lane blocks against their Teil templates + strategy card (≤ 60 words, e.g. „Sie hören den Text nur einmal. Lesen Sie zuerst die Aussage."); .1: Lernmodus, „Im Prüfungsmodus wiederholen" offered (A1.1: only after the learner set an exam date); .2: ≥ 1 block full length in Prüfungsmodus; the learner's Spur-Karte where COV-6 requires it | blocks + card | block items |
-| **LS5 Sprechen** | 20 / 22 (.2: 25) | the unit's exam-format speaking Teil with the AI partner (A1.1 slow, repeats, word bank; A1.2 group simulation with an AI examiner and 1–3 AI candidates): plan → attempt → automatic result → one retry | speaking task (bank) | 1 Aufgabe |
+| **LS4 Prüfungstraining** | 20 / 25 | 1–2 primary-lane blocks against their Teil templates + strategy card (≤ 60 words, design, e.g. „Sie hören den Text nur einmal. Lesen Sie zuerst die Aussage."); .1: Lernmodus, „Im Prüfungsmodus wiederholen" offered (A1.1: only after the learner set an exam date); .2: ≥ 1 block full length in Prüfungsmodus; the learner's Spur-Karte where COV-6 requires it | blocks + card | block items |
+| **LS5 Sprechen** | 20 / 22 (.2: 25) | the unit's exam-format speaking Teil with the AI partner (A1.1 slow, repeats, word bank; A1.2 one AI partner who also reads the instructions — the group simulation with 1–3 AI candidates is v1.1, only if the pilot shows it matters): plan → attempt → automatic result → one retry; the session has a hard length from the template (§4.7) | speaking task (bank) | 1 Aufgabe |
 | **LS6 Schreiben** | 20 / 22 | the unit's exam-format writing Teil: plan → draft with live pre-check → AI result → self-correction prompts → revision → reformulation + model text | writing task (bank) | 1 Aufgabe + revision |
-| **LS7 Lektions-Check** | 15 | 12 deterministic items (≈ 65 % this unit, 35 % earlier); one proof per can-do; „Das kann ich" ticks confirmed by proofs; Lernwortschatz into the SRS; gold Siegel; cliffhanger + next unit's title and minutes | 12 items + proofs | 12 |
+| **LS7 Lektions-Check** | 15 | 12 deterministic items (≈ 65 % this unit; ≈ 35 % drawn at runtime from the reserves of the previous three units by a rule, never by item id); one proof per can-do; „Das kann ich" ticks confirmed by proofs; Lernwortschatz into the SRS; gold Siegel; cliffhanger + next unit's title and minutes | 12 items + proofs | 12 |
 | Daily review | 6 (A1) / 7 (A2) × 6 days | §6 | generated | — |
 | Fokus-Karte (optional) | 10 | §3.7 | 0–2 cards | optional |
 
@@ -669,14 +783,14 @@ Teile; if the unit has none, the next productive Teil in rotation (COV-5).
 
 | Slot | Min .1 / .2 (design) | What happens |
 |---|---|---|
-| **LS1 Auftakt + Text A** | 25 | ambiguous photo or question („Was passiert hier? Was würden Sie tun?"), 60 s free speaking scored for fluency and task only (course-micro); Lernziele + Prüfungsfokus; **Text A** (usually Lesen) in one exam text type at the half-level's length; gist → detail; Wortfeld block 1 |
-| **LS2 Text B** | 25 | usually Hören (announcement, interview, tour, radio debate) in one text type; the serial scene; single play by default from B2.1 in exam-shaped items |
+| **LS1 Auftakt + Text A** | 25 | ambiguous photo (an approved `Asset`, §4.9; until one exists, the question alone) or question („Was passiert hier? Was würden Sie tun?"), 60 s free speaking scored for fluency and task only (course-micro); Lernziele + Prüfungsfokus; **Text A** (usually Lesen) in one exam text type at the half-level's length; gist → detail; Wortfeld block 1 |
+| **LS2 Text B** | 25 | usually Hören (announcement, interview, tour, radio debate) in one text type; the serial scene; single play by default from B2.1 in exam-shaped items; carries a third receptive Prüfungsfokus Teil as a `mini`/`reduced` block where the unit has one (COV-3) |
 | **LS3 Sprache** | 25 | inductive grammar from Texts A/B (learner fills the rule table → rule card), recall practice, Wortschatz & Präzision (blocks 2–3, a Sprachbausteine-style cloze from B1.2), Redemittel for the Aufgaben |
 | **LS4 Prüfungstraining** | 25 / 30 | 1–2 lane blocks; .2 ≥ 1 full length in Prüfungsmodus |
 | **LS5 Sprechen** | 25 / ≤ 45 | the discourse task with the lane's interaction mode; **a planning round of ≥ 3 min in every B1 unit**; .1 Lernmodus with shortened preparation labelled „in der Prüfung: 20 Min. Vorbereitung"; .2 full preparation in Prüfungsmodus in ≥ 6 of 12 units, with a save point after the preparation |
 | **LS6 Schreiben** | 25 / ≤ lane time + 5 | the writing Teil; .1 reduced length (B2.1: telc ≈ 120, Goethe S1 ≈ 110, S2 ≈ 70 words); .2 full length in the lane's time (telc B2 30 min, Goethe B2 S1 ≈ 50 min per [m03] §1 via Klett) |
 | **LS7 Überarbeiten** | 12 | on the next learning day: self-correction prompts → revision → second result → reformulation (≤ 3 points) + model text |
-| **LS8 Lektions-Check** | 15 | as at A, plus a Grammatik-Rückschau and a 60-s *Porträt* of a real, sourced person or place as the reward screen ([m14] §E19) |
+| **LS8 Lektions-Check** | 15 | as at A, plus a Grammatik-Rückschau (`check.rueckschau`: the unit's rule cards) and a 60-s *Porträt* of a real, sourced person or place as the reward screen ([m14] §E19; `check.portrait` with a CON-06 fact). A Porträt of a real person is **text-only** unless a licensed image with the right to depict exists (AST-02) |
 | Daily review | 9 (B1) / 11 (B2) × 6 days | §6 |
 
 In-lesson time: .1 ≈ 177 min, .2 ≈ 199 min on average. This fixes the impossible budget of a single 25-minute B
@@ -690,11 +804,18 @@ is its own spaced session.
 | 1 | Aufwärmen | 3 | 6 due SRS items in recall format; contrast partners mixed in from the point's second LS | 6 (generated) |
 | 2 | Input | 5 / 7 | A: dialogue 8–14 lines, 60–120 s (A1.1: 6–10 lines); B: 150–450 words or 2–4 min audio in an exam text type; ≥ 95 % known tokens; gist → detail → transcript only after the first unaided listen | 2 gist + 3 detail |
 | 3 | Form | 3 / 4 | A: model sentence + rule card + 4 structured-input items where the form carries the meaning; B: rule table filled from the text, then the card | 4 |
-| 4 | Üben | 5 / 6 | 12 items served from a pool of 16, one per screen, feedback + one retry; a miss returns once as a *different* item of the same topic (`requeue.js`) | pool 16 |
+| 4 | Üben | 5 / 6 | 12 items served from a pool of 16 (design, inherited from A1.1), one per screen, feedback + one retry; a miss returns once as a *different* item of the same topic (`requeue.js`), drawn from the unused pool items or the reserve | pool 16 + reserve 4–6 |
 | 5 | Micro-output | 3–4 / 4–5 | 30 s plan → A: 20–40 s spoken or 1–3 typed sentences; B: 40–60 s or 40–60 words → automatic mini-result (`course-micro`) → one revision; spoken and written alternate across LS1–LS3 | 1 |
 | 6 | Abschluss | 1 | 3 unseen pool items; next review date shown | 3 (from pool) |
 
-≈ 28 scored interactions per LS, **≥ 70 % recall formats** ([m09] impl. A3). **Stuck-point repair:** after 2 misses of
+≈ 28 scored interactions per LS, **≥ 70 % recall formats** ([m09] impl. A3). **The reserve (defined).** Every
+Situation-LS and Text-LS carries an authored `reserve` of 4–6 items, written to the same spec, key rules and gates as
+the pool but **never served in that LS's 12 or its 3 exit items**. The reserve is the only source for: requeue
+alternates once the pool's 4 unserved items are spent, `Check.earlierDraw` of later units (§3.1 LS7), the Plateau
+review sets (§5.2), „Mehr üben" (§3.7), `repair` cards (§6.2) and the Einstufung (§5.7). Arithmetic per LS: pool 16 =
+12 served + 3 exit + 1 spare; reserve 4–6; per unit ≈ 12–18 reserve items (A: 3 Situation-LS; B: LS1–LS2 + LS3's
+Sprache pool), per course ≈ 144–216, against ≈ 60 needed by three Plateau review sets and ≈ 44 by the Lektions-Checks
+(derived). ITM-06 checks the reserve size and that no reserve item duplicates a pool item's POS-masked key. **Stuck-point repair:** after 2 misses of
 the same item class (topic × type) in one LS, a 3-item repair drill with the rule card, then „Weiter – das kommt in
 Ihre Wiederholung"; never a third failure in a row without help (B). **Resume** at item level („Weiter bei Frage 9
 von 26").
@@ -704,7 +825,7 @@ von 26").
 | Type | Renderer (exists unless **new**) | Checked by | Used in |
 |---|---|---|---|
 | `fill_blank` | `PracticeItem` | `check.js` (`accepted`, `caseSensitive`, strict topics) + **new** `exact` | practice, exit, proofs |
-| `multiple_choice` (3 options) | `PracticeItem` | key | structured input, gist/detail |
+| `multiple_choice` (3 options; non-exam items only) | `PracticeItem` | key | structured input, gist/detail |
 | `error_correction` | `PracticeItem` | `check.js` + `tagError` | practice (≤ 2 per pool) |
 | `sentence_building` | `WordOrderItem` | `check.js`; **every grammatical order** in `accepted` | practice |
 | `match` | `MatchItem` | key | Wortschatz (often generated) |
@@ -712,12 +833,12 @@ von 26").
 | `dictation` | `DictationItem` | `check.js` dictation mode | Hören |
 | `read_aloud` | `ReadAloudLine` + `score-readaloud` | STT alignment, *Verständlichkeit* | Aussprache, no-mic fallback = listen_select |
 | `richtig_falsch`, `ja_nein` | **new** 2-option shell | key | exam blocks |
-| `abc` | Modelltest `mc-group` | key | exam blocks |
-| `zuordnen` (with a no-match option X/0/x) | Modelltest `matching` | key per slot; the no-match counts as an answer | exam blocks |
-| `cloze` (Sprachbausteine) | Modelltest `cloze` | key | B1.2–B2.2 practice, exam blocks |
+| `abc` | Modelltest `mc-group` | key; per-item options = template `options` (3 in every launch lane) | exam blocks |
+| `zuordnen` (with a no-match option X/0/x) | Modelltest `matching` | the answer is a **key of the block's `choices`** (texts, ads, headings, people, pictures) or the block's `noMatchKey`; the no-match counts as an answer; reuse only where the template allows it | exam blocks |
+| `cloze` (Sprachbausteine) | Modelltest `cloze` | per-gap a/b/c options (`tb1.sb1`) or a key of the block's word bank `choices` (`tb1.sb2`, `tb2.sb2`: 10 gaps from 15 words) | B1.2–B2.2 practice, exam blocks |
 | `notes` | **new** `DictationItem` variant | numbers and spelled names **exact**, words spelling-tolerant (telc accepts „Donerstach", [m01] impl. 8) | ta2 H1, oza1 H2, B2 notes |
 | `form_fill` | `WritingStage` (Formular) generalised | per field; numbers exact | sd1 S1, ta2 S1 |
-| `insert` | **new** | key | gb2 L2 |
+| `insert` | **new** | a key of the block's sentence `choices` (`gb2.l2`: 6 gaps, 8 sentences) | gb2 L2 |
 | `micro_output` | `GradedWriting` / **new in-lesson speaking** | pre-check + `course-micro` | LS micro-outputs |
 | `exam_writing` | `GradedWriting` + writing bank | pre-check + lane rubric | LS6, Plateaus, mocks |
 | `exam_speaking` | **new in-lesson speaking** + speaking bank | lane rubric | LS5, Plateaus, mocks |
@@ -746,10 +867,14 @@ B1–B2 25 / 25 / 20 / 15 / 15 %.
   Teilnahmebescheinigung, the reminders and `weekly_truth_metrics()`:
   - a Lernschritt is *finished* when every item was answered (right or wrong);
   - an Aufgabe is *submitted* only as a **real attempt**: writing ≥ 50 % of the lower word bound (never an empty or
-    pasted-prompt text), speaking ≥ 20 s of detected speech or ≥ 2 turns in a card mode;
+    pasted-prompt text); a **form** task (`form_fill`, e.g. `sd1-s1`, `ta2-s1`) when every field is non-empty;
+    speaking ≥ 20 s of detected speech, **measured server-side and recorded in `course_ai_usage`** (SCHEMA §14), or
+    ≥ 2 turns in a card mode;
   - a unit is *complete* when all its Lernschritte are finished or tested out **and** both Aufgaben are submitted;
   - a course is *complete* when 12 units are complete, P1–P3 are submitted and the closing block's first form is
-    submitted. **No score is ever required.** B's „übersprungen" Aufgaben do not exist here.
+    submitted — for a **.1 course the Halbtest of the learner's lane**, for a **.2 course Modelltest A of the learner's
+    lane**; the free week-1 Diagnose never satisfies it (SCHEMA §5 pins both). **No score is ever required.** B's
+    „übersprungen" Aufgaben do not exist here.
 - **Gates:** the next unit opens when the previous unit's Lernschritte are finished; „Trotzdem öffnen" is always
   available. A deterministic Lektions-Check below 60 % *suggests* repeating one LS; the learner can override.
   **No gate reads an AI score** (PRG-01; [m13] impl. 4).
@@ -768,13 +893,15 @@ B1–B2 25 / 25 / 20 / 15 / 15 %.
 
 ### 3.7 Fokus-Karten and optional depth
 
-- **Fokus-Karten** (0–2 per unit, ≈ 10 min, optional, never counted): Fokus-DaZ (Amt, Kita, Jobcenter, Krankmeldung
+- **Fokus-Karten** (0–2 per unit, ≈ 10 min, optional, never counted toward completion; the planned ones count for
+  Handlungsfeld coverage, ALL-04): Fokus-DaZ (Amt, Kita, Jobcenter, Krankmeldung
   bei der Arbeit), Fokus-DaF (Hotel, Reise, Studium abroad), Fokus-Beruf. Recommended by the onboarding purpose
   question ([m14] §E8). Swappable units are marked (A2.2 U11).
-- **„Mehr üben"**: the reserve items of each pool.
+- **„Mehr üben"**: the reserve items of each LS (§3.3).
 - **Extensive strand at B1/B2** (where self-study learners most lack input volume): a *Lesemagazin* text and a
-  *Hörmagazin* piece per Plateau (≥ 98 % known tokens), and one optional chapter per Etappe of a graded serial
-  reader tied to the cast. Never gates; the plan recommends it when the exam date leaves room.
+  *Hörmagazin* piece per Plateau (≥ 98 % known tokens). A graded serial reader tied to the cast (one optional
+  chapter per Etappe) is **not in the v1 cut** (§1.4). Never gates; the plan recommends it when the exam date leaves
+  room.
 
 ### 3.8 Worked example: A1.2 U5 „Ich bin krank – ich sage ab"
 
@@ -788,17 +915,18 @@ B1–B2 25 / 25 / 20 / 15 / 15 %.
   Husten, wehtun …), *Termine* (absagen, verschieben, zurückrufen, Bescheid sagen …), *Arbeit und Kurs* (die Chefin,
   die Kollegin, die Hausaufgabe …).
 - **LS1 „Auf dem Anrufbeantworter"** — model sentence *„Ich kann heute nicht kommen, denn ich bin krank."*; Priya's
-  message to Frau Lindner (her part-time job in the Café Lindner) and to Frau Schulz; structured input „Emre kommt
-  heute nicht, denn sein Sohn ist krank. — Wer ist krank?"; spoken micro-output: a sick call to the boss (who, why,
-  when back).
+  message to Frau Schulz (course leader, Sie) and Emre's message to Priya (du) — every speaker is in the A1 cast
+  bible (§2.7; CON-01); structured input „Priya kommt heute nicht, denn Arjun ist krank. — Wer ist krank?"; spoken
+  micro-output: the learner's own sick call to a course leader or a boss (who, why, when back).
 - **LS2 „Was haben Sie gestern gemacht?"** — participle formation, *haben* + participle in the Satzklammer; the A1.1
   chunk verbs return as the known half of the contrast.
 - **LS3 „Eine Nachricht an Frau Schulz"** — Emre's 32-word Absage as the model text type (checked by the same
   pre-check the learner's text will get); „Was steht wo?": Anrede, Grund, Bitte, Gruß.
-- **LS4** SD1 Hören Teil 3, full (5 items, played twice, Prüfungsmodus): voicemails from the Praxis Dr. Albers;
-  CON-04 checks *halb elf* = 10.30 on every time item.
-- **LS5** SD1 Sprechen Teil 3 as a group round with two AI candidates: picture cards (Tee, Tablette, Taschentuch,
-  Fenster); 2 requests + 2 reactions; 2 points per request, 1 per reaction, full/half/0 by intelligibility,
+- **LS4** SD1 Hören Teil 3, full (5 items, played twice, Prüfungsmodus): voicemails from the Praxis Dr. Albers,
+  spoken by file-level extras with their own voices (SCHEMA §3.3); CON-04 checks *halb elf* = 10.30 on every time item.
+- **LS5** SD1 Sprechen Teil 3 with one AI partner (v1; §4.4): picture cards (Tee, Tablette, Taschentuch, Fenster —
+  approved image assets, §4.9 — A1.2 is a .2 course, which never uses a scaffolded text variant, so its lane goes live
+  only once these images are approved); 2 requests + 2 reactions; 2 points per request, 1 per reaction, full/half/0 by intelligibility,
   „nicht die Zahl der Fehler" ([TB-A1](https://www.goethe.de/pro/relaunch/prf/de/Pruefungsziele_Testbeschreibung_A1_SD1.pdf) p. 46).
 - **LS6** SD1 Schreiben Teil 2: „Sie haben morgen um 10 Uhr einen Termin in der Praxis Dr. Albers. Sie können nicht
   kommen. Schreiben Sie an die Praxis: – Entschuldigen Sie sich. – Nennen Sie einen Grund. – Fragen Sie nach einem
@@ -825,17 +953,21 @@ B1–B2 25 / 25 / 20 / 15 / 15 %.
 
 ### 3.9 Compressed example: B1.2 U2 „Weiterbildung" (three lanes)
 
+The DTZ and Goethe/ÖSD lanes are shown to prove the full design; the v1 cut ships the telc B1 lane only (§1.4).
+
 - **Auftakt:** photo of an evening class, 60 s „Was passiert hier? Würden Sie so einen Kurs machen?".
-- **LS1 Text A:** a Volkshochschule programme (12 short course ads). Primary block `tb1.lv3` (10 situations → 12 ads,
-  „x"), full length, Prüfungsmodus by default. Spur-Karten: `dtz.l2` (5 situations) and `gb1.l3` (7 situations → 10
+- **LS1 Text A:** a Volkshochschule programme (12 short course ads, stored once as the step's `texts`). Primary block
+  `tb1.lv3` (10 situations → 12 ads as block `choices` a–l, no-match key „x"; SCHEMA §15.7), full length, Prüfungsmodus
+  by default. Spur-Karten: `dtz.l2` (5 situations) and `gb1.l3` (7 situations → 10
   ads, „0"), each its own item set; the ad texts are a shared asset, the items are not.
 - **LS2 Text B:** an information evening (≈ 400 words). Goethe learners get `gb1.h2` (5 MC, played once, 60 s
   reading time); telc learners get a Lernmodus detail block on the same recording.
 - **LS3 Sprache:** *Partizip als Adjektiv* found in the programme (*die angebotenen Kurse, ein laufender Kurs*) → rule
   table → card.
-- **LS5 Sprechen:** telc `tb1.m1` + the planning round; DTZ `dtz.s1` (no preparation) + planning round; Goethe
-  `gb1.sp2` + `gb1.sp3` (15 min preparation, 5 fixed slides: topic and structure, own experience, home country,
-  pros/cons + opinion, close; [m02] §1).
+- **LS5 Sprechen:** telc `tb1.m1` (mode `get-to-know`: both partners ask each other from a cue list) + the planning
+  round; DTZ `dtz.s1` (mode `monologue` with examiner follow-ups, no preparation) + planning round; Goethe `gb1.sp2` +
+  `gb1.sp3` as one task with two `parts` (15 min preparation, 5 fixed slides: topic and structure, own experience,
+  home country, pros/cons + opinion, close; [m02] §1).
 - **LS6 Schreiben:** telc `tb1.sa` e-mail to a language school (4 Leitpunkte); DTZ `dtz.schreiben` A or B (Anfrage
   an den Kursanbieter / Beschwerde über einen Kurs); Goethe `gb1.sch3` (formal, ≈ 40 words).
 - **LS7** revision next day; **LS8** check + Porträt (a sourced fact card, CON-06).
@@ -849,7 +981,7 @@ B1–B2 25 / 25 / 20 / 15 / 15 %.
 | Level | Schreiben (primary lane · packs) | Sprechen (primary lane · packs) | Micro-outputs |
 |---|---|---|---|
 | A1.1 | sd1 S1 form (5 fields); sd1 S2 message, 2–3 Leitpunkte, ≈ 20–30 words, untimed | sd1 Sp1 vorstellen (+ spell, number), Sp2 Fragekarten, Sp3 Bitten; AI slow, repeats, word bank | spoken 20–30 s / 1–2 sentences |
-| A1.2 | sd1 S1, S2 full (≈ 30 words, 3 Leitpunkte) | sd1 Sp1–Sp3 as a group simulation (AI examiner + 1–3 AI candidates); repeats on request | 20–40 s / 1–3 sentences |
+| A1.2 | sd1 S1, S2 full (≈ 30 words, 3 Leitpunkte) | sd1 Sp1–Sp3 with one AI partner who also reads the instructions (v1; group simulation v1.1 only if the pilot shows it matters); repeats on request | 20–40 s / 1–3 sentences |
 | A2.1 | ga2 S1 SMS 20–30, S2 E-Mail 30–40 · ta2 S1 form from documents, S2 3 of 4 points ≈ 40 | ga2 Sp1 cards, Sp2 über sich (+ follow-ups), Sp3 planen · ta2 Sp1–Sp3 (incl. joker card); normal pace with clarification | 30–40 s / 2–3 sentences |
 | A2.2 | same, Prüfungsmodus | same; the learner keeps the conversation going (A2+) | same |
 | B1.1 | tb1 SA (4 Leitpunkte; Lernmodus) · gb1 Sch1/Sch2 at ≈ 60 words, Sch3 ≈ 40 · dtz Schreiben A/B | tb1 M1–M3 (+ planning round every unit) · gb1 Sp1, Sp2 (2-min version), Sp3 · dtz S1–S3 (no preparation); partner disagrees and must be convinced | 40–60 s / 40–60 words |
@@ -866,14 +998,18 @@ Bewerbung → Forumsbeitrag/Kommentar → formelle Beschwerde/Stellungnahme); sp
    profile band; the official zero-rule warning in the exam's own words („Nach der Bewertungsregel von Goethe bekäme
    dieser Text 0 Punkte: weniger als die Hälfte der Wörter."); Anrede/Gruß/Betreff present per text type; du/Sie
    drift; share of sentences starting with *Ich/Wir* (telc); Leitpunkt cue coverage from author-given cue lemmas
-   (advisory; the AI decides).
+   (advisory; the AI decides). The server twin needs the same inputs, so the compiled bank entry carries each
+   Leitpunkt's `cues` and the task's `choose` (SCHEMA §15.5); they inform the pre-check only, never the score.
 2. **Server-side zero and cap rules before the AI, which the AI cannot override:** Goethe E rule (< 50 % of words or
    topic missed → task 0); telc B2 „no A on criterion II without Betreff, Anrede, Schlussformel"; telc „Thema
    verfehlt → D on all criteria", „Situierung verfehlt → D on criterion I"; telc B1 „no A on II with mixed register,
    unconnected Leitpunkte or mostly Ich/Wir starts"; ÖSD length deductions.
 3. **Rubric-profile call** (`evaluate-writing` generalised): the task's `rubricProfile` selects criteria, scales,
    feedback language (A1–A2: simple German ≤ 60 words + English twin; B1+: German) and the pinned model id. The system
-   block (profile text + our own anchor descriptions) is identical per profile and prefix-cached. Output (JSON,
+   block (profile text + each criterion's descriptors in our own wording + the band thresholds of scaled lanes + the
+   profile's `errorPolicy`, SCHEMA §4.5) is identical per profile and prefix-cached. Only criteria with
+   `scoredBy: ai` are sent to the model; `deterministic` criteria are computed on the server and `notAutoScored`
+   criteria (Aussprache/Intonation) are never scored (§4.4). Output (JSON,
    response schema v2): points per criterion on the exam's scale, `leitpunkt_check[]` with the covering sentence,
    ≤ 3 errors `{span, tag, ruleCardId, hint}` with §2.5 tags, `strengths[2]`, one `nextStep`. **Official texts never
    sit in runtime prompts.**
@@ -891,11 +1027,11 @@ reading schema 1 for bank tasks without a `rubricProfile` (today's fixed 4 × 0�
 | Profile | Criteria and scale | Deterministic rules | Source |
 |---|---|---|---|
 | `sd1-s2` | 3 Leitpunkte × 3 / 1.5 / 0 + Kommunikative Gestaltung (Anrede, Gruß) 1 / 0.5 / 0 = 10; spelling only if it harms understanding | ≈ 30 words (guide) | [TB-A1](https://www.goethe.de/pro/relaunch/prf/de/Pruefungsziele_Testbeschreibung_A1_SD1.pdf) p. 38 |
-| `sd1-s1`, `ta2-s1` | per field correct / wrong; numbers exact | exactly the template's fields | [m01] §1, §4 |
+| `sd1-s1`, `ta2-s1` (**method: deterministic**, no AI call) | per field correct / wrong; numbers exact | exactly the template's fields; submitted when every field is non-empty | [m01] §1, §4 |
 | `ta2-s2` | 3 chosen points × 3 / 1.5 / 0 + Textsorte 1 / 0.5 / 0 | exactly 3 of 4 points chosen | [UT-A2](https://shop.telc.net/media/catalog/product/file//2/0/20201226_5090-b00-010106_web_1.pdf) |
 | `ga2-s1`, `ga2-s2` | Aufgabenerfüllung and Sprache, each 5 / 3.5 / 2 / 0.5 / 0 | < 50 % of the words (10 / 15) → E → 0 | [US-A2](https://www.goethe.de/pro/relaunch/prf/materialien/A2/A2_Uebungssatz_Erwachsene.pdf) p. 37 |
 | `tb1-sa` | Aufgabenbewältigung, Kommunikative Gestaltung, Formale Richtigkeit at 5 / 3 / 1 / 0, × 3 = 45 | no A on II with mixed register, unconnected Leitpunkte or mostly Ich/Wir starts; topic missed → D on all | [telc UT B1](https://shop.telc.net/media/catalog/product/file/telc_deutsch_b1_zd_uebungstest_1.pdf) pp. 36–38 |
-| `dtz-s` | Inhalt, Kommunikative Gestaltung, Korrektheit, Wortschatz at 5–0 = 20; 15–20 = B1 band | 4 Leitpunkte; Anrede and Gruß; (semi)formal register | [g.a.s.t.](https://www.gast.de/fileadmin/gast.de/GAST/5_DTZ/PDF/gast_DTZ_UEbungssatz_1.pdf) pp. 47–49 |
+| `dtz-s` | Inhalt, Kommunikative Gestaltung, Korrektheit, Wortschatz at 5–0 = 20; `bands`: 15–20 = B1, 7–14 = A2 (a level outcome, never a pass, [m02] §3) | 4 Leitpunkte; Anrede and Gruß; (semi)formal register | [g.a.s.t.](https://www.gast.de/fileadmin/gast.de/GAST/5_DTZ/PDF/gast_DTZ_UEbungssatz_1.pdf) pp. 47–49 |
 | `gb1-sch1`, `gb1-sch2` | Erfüllung, Kohärenz, Wortschatz, Strukturen at 10 / 7.5 / 5 / 2.5 / 0 = 40 | < 40 words or topic missed → E → 0 | [Modellsatz B1](https://www.goethe.de/pro/relaunch/prf/materialien/B1/b1_modellsatz_erwachsene.pdf) |
 | `gb1-sch3` | 4 / 4 / 6 / 6 = 20 | < 20 words → E → 0 | same |
 | `tb2-sa` | 3 criteria at 5 / 3 / 1 / 0, × 3 = 45 | ≥ 150 words; a Leitpunkt needs more than one clause; no A on II without Betreff, Anrede, Schlussformel | [telc UT B2](https://shop.telc.net/media/catalog/product/file/2/0/20201223_5023-b00-010201_web.pdf) |
@@ -903,6 +1039,12 @@ reading schema 1 for bank tasks without a `rubricProfile` (today's fixed 4 × 0�
 | `gb2-s2` | 40 (10 × 4) | as above; Anrede and Gruß | same |
 | `oza1-s2` (v1.1) | length and content deductions (20–24 words −1, 15–19 −2, < 15 → 0) + 4 criteria (tops inferred, unverified) | word bands | [AB-ZA1-W](https://www.osd.at/wp-content/uploads/2019/01/za1_auswertungsbogen_schreiben.pdf) |
 | `course-micro` | Aufgabe erfüllt 2/1/0 · Zielstruktur benutzt 1/0 · verständlich 2/1/0 = 5, Richtwert | length band per level | design |
+
+**What a profile must contain to drive the grader** (SCHEMA §4.5): `method` (`ai` or `deterministic`); per criterion
+`scoredBy` (`ai`, `deterministic` or `notAutoScored`) and **descriptors for every scale level in our own wording**
+(never the official descriptor text); `bands` for scaled lanes (DTZ Schreiben 15–20 = B1, 7–14 = A2; DTZ Sprechen
+75–100 = B1, 35–74.5 = A2, [m02] §3); and an `errorPolicy` per band (§2.5). The W2 rubric agents author descriptors,
+bands and error policies; the calibration reviewer approves them before CAL-01 runs.
 
 ### 4.4 Speaking: one server-owned speaking bank, exam interaction modes
 
@@ -915,20 +1057,38 @@ twin (`src/data/speakingTasks/<level>.js` ↔ `netlify/functions/_shared/speakin
 |---|---|---|---|
 | `cards-ask` | sd1 Sp2, ga2 Sp1, ta2 Sp2 | shows a word card, answers the learner's question, asks back | per question 2 / per answer 1 (sd1), full / half / 0 by intelligibility |
 | `cards-request` | sd1 Sp3 | picture cards; learner requests; AI requests, learner reacts | 2 per request, 1 per reaction |
-| `group` | sd1 Sp1–3 (A1.2), ga2/ta2 pairs | AI examiner reads the instructions; 1–3 AI candidates take turns | per Teil as above |
-| `monologue` | sd1 Sp1, ga2 Sp2, tb1 M1, tb2 M1, gb1 Sp2 (5 slides), gb2 Sp1 (alternatives → one in detail → pros/cons + evaluation) | timer, then 1–2 follow-up questions; from B2 interrupts a memorised speech | lane criteria; gb1 Sp2 band A needs all 5 slides ([m02] §1) |
-| `plan-together` | ga2 Sp3, ta2 Sp3, tb1 M3, gb1 Sp1, dtz S3, tb2 M3 | proposes, disagrees once, accepts a compromise, asks „wer macht was?" | a **moves checklist** (vorschlagen · reagieren · widersprechen/Alternative · sich einigen · Aufgaben verteilen) + lane criteria |
-| `discuss` | tb1 M2 (report a quoted opinion, then discuss), gb2 Sp2, tb2 M2 | takes the other side; asks for a summary at the end | lane criteria; Interaktion incl. du/Sie (gb2) |
+| `group` (**v1.1**, only if the pilot shows it matters) | sd1 Sp1–3 (A1.2), ga2/ta2 pairs | the AI exam lead (UI: „Gesprächsleitung (KI)") reads the instructions; 1–3 AI candidates take turns. **v1:** one AI partner plays both the exam lead and the other candidate | per Teil as above |
+| `get-to-know` (**new**) | tb1 M1 „Einander kennenlernen" ([m02] §2: a pair interaction from a cue list, ≈ 3 min, 15 points) | the AI is the second candidate: both ask each other from their cue lists, the AI answers and asks back | `tb1-m1`: three criteria at 4/3/1/0 + Aussprache 3/2/1/0 (`notAutoScored`) |
+| `monologue` | sd1 Sp1, ga2 Sp2, **ta2 Sp1** (self-introduction + the examiner's follow-ups), **dtz S1** (talk about yourself from cues + follow-ups, [m02] §3), tb2 M1 (topic prepared at home), gb1 Sp2 (5 slides), gb2 Sp1 (alternatives → one in detail → pros/cons + evaluation) | timer, then 1–2 follow-up questions from the exam lead; from B2 interrupts a memorised speech | lane criteria; gb1 Sp2 band A needs all 5 slides ([m02] §1) |
+| `plan-together` | ga2 Sp3, ta2 Sp3 (each candidate has a different calendar: `partnerData`), tb1 M3, gb1 Sp1, dtz S3, tb2 M3 | proposes, disagrees once, accepts a compromise, asks „wer macht was?" | a **moves checklist** (vorschlagen · reagieren · widersprechen/Alternative · sich einigen · Aufgaben verteilen) + lane criteria |
+| `discuss` | tb1 M2 (report one of two quoted opinions: `stimulus.kind: quotes`, then discuss), gb2 Sp2, tb2 M2 (summarise a text read in the preparation: `stimulus.kind: text`) | takes the other side; asks for a summary at the end | lane criteria; Interaktion incl. du/Sie (gb2) |
 | `photo` | dtz S2 (photo + experience + home country, no preparation) | asks about the learner's home country | DTZ task + language points |
 | `feedback-question` | gb1 Sp3 | the AI presents; the learner gives feedback and asks one question | gb1 Sp3 Erfüllung 16 |
-| `mediate` | B1.2 U7/U12, B2.2 U8 | gives a message; the learner relays it to a third person | coverage of the key points + register |
+| `mediate` | B1.1 U3, B1.2 U7/U12, B2.2 U8 | gives a message; the learner relays it to a third person | coverage of the authored `keyPoints` (required for this mode) + register |
 | `read-aloud` | Aussprache slots | none | word alignment, *Verständlichkeit* |
 
+**Every template's `interaction` value is signed off by the Prüferin W2 reviewer before the freeze** (EXM-04 then
+checks mode = template interaction for every task and every part of a multi-part task). A multi-Teil round (A1.2 U12
+Sp1–Sp3, B1.2 U2 gb1 Sp2 + Sp3) is **one SpeakingTask with `parts`**, each part checked against its own template.
+Each part also carries what its Teil needs (SCHEMA §8 `SpeakingPart`): a `stimulus` (quoted opinions, a text, a
+calendar), `partnerData` for information gaps, `keyPoints` for mediation, a `topicChoice` (gb1 Sp2 and gb2 Sp1: 1 of 2;
+tb2 M1: 1 of 7, prepared at home) and a target length in `seconds` or `turns` (e.g. the gb2 Vortrag ≈ 4 min); the
+completion minimum of ≥ 20 s (§3.5) is a floor, not the target.
+
 **Speaking profiles** copy the published scales: `sd1-sp1/2/3` 3 / 6 / 6; `ga2-sp1…3` + Aussprache (per-Teil split
-reconstructed, **unverified**, [m01]); `ta2-sp` 3 + 6 + 6; `tb1-m1` 15 (4/3/1/0), `tb1-m2`, `tb1-m3` 30 (8/6/2/0,
-Aussprache 6/4/2/0); `dtz-sp` task 50 (Teil 3 = 20) + language 50 with the A2/B1 bands; `gb1-sp1` 28, `gb1-sp2` 40,
-`gb1-sp3` 16, Aussprache 16; `tb2-m1…3` 7/7/7/4 each; `gb2-sp1` 4 × 8 + Fragen/Antworten 12, `gb2-sp2` 4 × 10,
-Aussprache 16 ([m01]–[m03]). **Partner support fades by level:** A1.1 slow + word bank → A1.2 repeats on request →
+reconstructed, **unverified**, [m01]); `ta2-sp` 3 + 6 + 6; `tb1-m1` 15 (4/3/1/0, Aussprache 3/2/1/0), `tb1-m2`,
+`tb1-m3` 30 (8/6/2/0, Aussprache 6/4/2/0); `dtz-sp` task 50 (Teil 3 = 20) + language 50 (Aussprache 10, Flüssigkeit
+10, Korrektheit 15, Wortschatz 15) with the A2/B1 bands; `gb1-sp1` 28, `gb1-sp2` 40, `gb1-sp3` 16, Aussprache 16;
+`tb2-m1…3` 7/7/7/4 each (4 = Aussprache); `gb2-sp1` 4 × 8 + Fragen/Antworten 12, `gb2-sp2` 4 × 10, Aussprache 16
+([m01]–[m03]).
+
+**Aussprache is not scored by the pipeline.** The speaking stack is STT transcript → LLM ([m12] §3), and read-aloud
+is labelled *Verständlichkeit*, never pronunciation. Every Aussprache/Intonation criterion is therefore
+`scoredBy: notAutoScored`: the result card shows it as „Aussprache: nicht automatisch bewertet", it is **excluded from
+the point total**, and wherever a module value appears (§5.6) its range is widened by the criterion's full span (e.g.
+telc B1 oral: the AI range over 60 points + 0–15 for Aussprache; Goethe B1: + 0–16). The „Wie bewertet die KI?" page
+explains this. Segment-level pronunciation feedback (ü/u, vowel length, ich-Laut) stays a separate practice aid and
+never becomes exam points. **Partner support fades by level:** A1.1 slow + word bank → A1.2 repeats on request →
 A2.1 normal pace with clarification → A2.2 learner keeps the talk going → B1 examiner-like, disagrees → B2 interrupts
 memorised speech ([m04] impl. 4). Exam-mode rounds always use the exam's own behaviour. Pronunciation feedback names
 segments, never a global accent score ([m09] impl. A4).
@@ -948,35 +1108,103 @@ segments, never a global accent score ([m09] impl. A4).
 
 Proposal C's anchors scored only by AI personas are circular. Binding protocol (gate CAL, run as a pipeline step
 with committed results, §9.2):
-1. **Ground truth from humans.** (a) Official rated performance samples (Goethe/telc Bewertungsbeispiele) kept in
-   `private/` outside the repo as evaluation data only, never shipped, never in prompts — **subject to counsel on
-   copyright** (§13 D2). (b) A **human DaF examiner** (Goethe/telc licensed) rates a sample per profile: ≥ 30 texts
-   or transcripts per profile spread across the bands, including error-heavy texts that deserve passing bands
-   (Goethe's B2 Modellsatz prints uncorrected learner texts as B2 samples, [m03] §1). Hiring is §13 D3.
+1. **Ground truth from humans, in the order it can be had.**
+   (a) **Writing, from launch: the MERLIN learner corpus** — German A1–C1 learner texts from standardised language
+   certifications, related to the CEFR by professional assessors, about 1,000 German texts, licensed CC BY-SA 4.0
+   ([CLARIN blog](https://www.clarin.eu/blog/clarin-it-presents-merlin-written-learner-corpus-czech-german-and-italian);
+   licence and level range (snippet): [Eurac CLARIN repository](https://clarin.eurac.edu/repository/xmlui/handle/20.500.12124/59);
+   ≈ 200 German texts per level (snippet, unverified): [PORTA](https://www.porta.eurac.edu/lci/merlin/)). MERLIN rates
+   CEFR level and criteria, not our exam points, so it calibrates **band placement and the error-heavy-but-passing
+   subset**, not point totals; the texts stay in `private/` as evaluation data (never shipped, never in prompts;
+   share-alike terms reviewed under §13 D2).
+   (b) **A small examiner sample:** a human DaF examiner (Goethe/telc licensed, §13 D3) rates ≥ 30 texts per AI-scored
+   writing profile (6 in the v1 cut: `sd1-s2`, `ga2-s1`, `ga2-s2`, `tb1-sa`, `tb2-sa`, `course-micro` ≈ 180 ratings,
+   not ≈ 1,100), spread across the bands, including
+   error-heavy texts that deserve passing bands (Goethe's B2 Modellsatz prints uncorrected learner texts as B2
+   samples, [m03] §1).
+   (c) Official rated samples (Goethe/telc Bewertungsbeispiele) only if counsel clears their private use for
+   evaluation (§13 D2).
+   (d) **Speaking: no learner speech corpus exists**, so speaking profiles run at labelled wide ranges from launch;
+   CAL-02 for speaking runs after the learner pilot has collected consented recordings (§1.6 rule 13) and the
+   examiner has rated them.
 2. **Our anchors** (`content/course-v2/anchors/<profile>/`, ≥ 12 per profile, written by anchor authors) are
-   calibrated against 1 before they serve as regression anchors.
+   **human-verified** before they serve as regression anchors: each anchor's expected band is confirmed by the
+   examiner or matched to a MERLIN text of the same band. "CAL-01 passes on human-verified anchors" is the definition
+   a lane's writing profiles must meet to go live (§1.4).
 3. **Thresholds (design):** each anchor runs 3 times on the pinned model id; ≥ 80 % of human-rated texts within one
    band of the human score on every criterion, exact band agreement ≥ 60 %, run-to-run spread ≤ 1 band, zero rules
    100 % (they are deterministic), and no systematic under-scoring of error-heavy but communicative texts (mean
    signed error ≥ −0.5 band on that subset).
-4. **Re-run** on any change of prompt, model id or profile. A profile that fails is not used by any live task.
-5. Until 1 passes for a profile, that profile's Teile show wider ranges on the board and the copy may describe only
-   the method.
+4. **Re-run** on any change of prompt, model id, descriptors or profile. A writing profile that fails CAL-01 is not
+   used by any live task.
+5. Until CAL-02 passes for a profile (writing: the examiner sample; speaking: after the pilot), that profile's Teile
+   show wider ranges on the board and the copy may describe only the method. This is the only state speaking
+   profiles can be in at launch, and it does not block a lane (§1.4).
 
 ### 4.7 Allowances, fair use, failure states
 
 - **Allowance (design; owner sets numbers after the pilot, §13 D8):** per purchased half-level, lifetime: each
   Aufgabe slot 1 attempt + 2 graded revisions; each micro-output 2 graded attempts; each Plateau/mock productive part
-  2 graded attempts; plus a daily cap of 25 AI evaluations across tasks. Deterministic pre-checks catch zero-rule
-  failures before any AI call. The free A1.1 has the same per-slot allowance; the free Diagnose one attempt per part.
+  2 graded attempts; plus a daily cap of 25 AI evaluations across tasks. **Speaking is also metered in minutes:**
+  every speaking slot has a hard session length taken from its template (`seconds`/`turns` of the part, plus the
+  lane's preparation time, which costs nothing), the session ends there, and the slot's minutes (length × graded
+  attempts) are the ceiling — so cost is bounded per slot, not only per attempt. Deterministic pre-checks catch
+  zero-rule failures before any AI call. Everything is counted in `course_ai_usage` (SCHEMA §14), written only by the
+  AI functions through `_shared/entitlement.mjs`.
+- **Measure before promising.** The learner pilot (§10.4) measures cost per engaged learner (AI calls, speaking
+  minutes, $ per learner per unit); no paid page promises graded speaking until that number exists, and the owner's
+  fair-use numbers (§13 D8) are a gate for B-level launch. At today's wallet *price* a fully engaged learner's speaking
+  would be worth ≈ €22–117 against ≈ €31–51 net per sale (§1.8, derived), which is why minutes are capped per slot.
+- **The free A1.1's cap is stated.** A1.1 has the same per-slot allowance; the free Diagnose one attempt per part.
+  The live `COURSE_WRITING_FREE_LIFETIME = 12` (`netlify/functions/evaluate-writing.mjs`, pinned by
+  `tests/claims.test.mjs`) contradicts the v2 A1.1 allowance (24 Aufgaben × 3 + 36 micro-outputs × 2), and UWG
+  Annex Nr. 20 requires a „kostenlos" product's cap to be stated ([m13] §5). The PR that switches A1.1 to v2 updates
+  the constant, `marketing.js`, the claims test and the A1.1 page copy to state the v2 free allowance in one place.
 - **No dead ends:** microphone denied → settings steps + „ohne Mikrofon weiter" (speaking becomes a typed script,
   read-aloud becomes listen-and-select); offline → „Gespeichert – wird ausgewertet, sobald Sie online sind"; AI
   slower than 10 s → staged progress; after 20 s „Weiter – das Ergebnis erscheint in Ihrer Übersicht" (B;
   [m11] impl. 17–18).
 - **The anonymous first sentence** (A1.1 U1 LS1 without an account): scored through a Supabase anonymous session
-  (owner enables it, §13 D7) with caps of 3 read-aloud scorings per anonymous user and 10 per IP per day, upgraded
-  in place on sign-up. If anonymous sessions stay off, the pre-sign-up sentence is an unscored „Nachsprechen" with
+  (owner enables it, §13 D7) with caps of 3 read-aloud scorings per anonymous user and 10 per IP per day (the IP held
+  only as a keyed hash for 48 hours, §1.6 rule 13), upgraded in place on sign-up. **The privacy notice and consent
+  screen (§4.8) comes before the microphone opens, on this path too.** If anonymous sessions stay off, the pre-sign-up sentence is an unscored „Nachsprechen" with
   model audio, and the first scored sentence follows right after sign-up.
+
+### 4.8 Privacy in the AI flows (prerequisite for any v2 launch that records audio)
+
+- **Before the first microphone use** (and before the first AI-graded text), a one-screen notice in plain German
+  with an English twin: what is recorded, which processors receive it (the STT, LLM and TTS providers by name), where
+  they process it (third-country transfer), how long raw audio, transcripts and texts are kept, and a link to the
+  Datenschutzerklärung; the learner confirms once, and can withdraw in Einstellungen (S15), which switches the course to
+  its no-mic path (§4.7). The AI-interaction notice of §1.6 rule 3 is part of the same screen.
+- **Retention:** a scheduled job deletes raw audio (§1.6 rule 13 defaults; counsel sets the final periods);
+  transcripts, texts and results stay while the account exists and are deleted with it (`on delete cascade`,
+  SCHEMA §14); learner-state rows hold no audio.
+- **Minimisation:** the AI functions receive the bank key, the learner's text or audio and nothing identifying beyond
+  what the provider call needs; IPs for caps only as keyed hashes (48 h).
+- The Datenschutzerklärung is owner decision D13 and a launch prerequisite for every v2 course that records audio,
+  the free A1.1 included.
+
+### 4.9 Images and visual assets
+
+Several official Teile are pictorial: SD1 Hören 1 (MC with pictures) and Sprechen 3 (picture cards), Goethe A2 Hören 2
+and 3 (pictures; Hören 2 matches days to pictures a–i), telc A2 Schreiben 1 (a form filled from documents such as an ID
+card or a bank card), DTZ Sprechen 2 (a different photo per candidate) and ÖSD ZA1 (sign → picture) (per the critic's
+reading of [m01]–[m03]; each lane agent confirms per template and sets `pictorial: true`). The B-level Auftakt uses a
+photo and the B-level Porträt may show a real person or place.
+- **Data:** every image is an `Asset` (SCHEMA §3.5) with alt text, source (`generated`, `licensed`, `own`), a licence
+  record and, for generated images, the prompt; choices, speaking cards, DTZ photos, the Auftakt and the Porträt
+  reference assets by id.
+- **Production:** an **image pipeline step** runs next to the owner's Azure TTS run, per level: generated images
+  from the authored prompts (fictional people, fictional documents — never a real ID card design, a real brand or a
+  real exam sheet), a licensed stock image only where a real place is shown, and the owner approves the batch and
+  its budget (§13 D16).
+- **Gates:** AST-01 (every asset has `altDe` and a licence record), AST-02 (a real, identifiable person is shown
+  only from a `licensed` asset whose licence covers the depiction; otherwise the Porträt is text-only) (§9.1).
+- **Until images exist:** in a .1 course a pictorial Teil runs as a **text variant** (the picture replaced by a short
+  label, block `scaffolded: true`, labelled „In der Prüfung mit Bildern"), which EXM-02 allows because the template
+  lists that course in `scaffoldAllowedIn`; a .2 course never uses the text variant, so **its lane goes live only when
+  the pictorial Teile's images are approved** (§1.4).
 
 ---
 
@@ -995,9 +1223,9 @@ with committed results, §9.2):
 | **Plateau** P1–P3 | §5.2 | after U3, U6, U9 | A 50–70 min, B 75–90 min | Prüfungsmodus for its exam Teile | Prüfungsstand (full-length Teile) |
 | **Halbtest** (.1 closing) | every Teil of the lane, ≈ half the items, lane-exact, .1 content only; untimed in A1.1 | after U12 of a .1 course | A ≈ 40 min, B ≈ 90–105 min | A1.1 Lernmodus; A2.1–B2.1 Prüfungsmodus | **Teil-Karte** (§5.3) |
 | **Diagnose** (free) | one full-length Teil per module in the lane | week 1 of a .2 course, or before purchase | 30–60 min | Prüfungsmodus | starting values + plan |
-| **Modelltest** A/B(/C) | full mock in the official format and timing, parallel forms | after U12, at exam −21/−14/−7 days by default | per lane (§2.3) | Prüfungsmodus | Prüfungsstand (weight 1.5) |
+| **Modelltest** A/B (C in v1.1) | full mock in the official format and timing, parallel forms | after U12, at exam −21/−10 days by default (with C: −21/−14/−7) | per lane (§2.3) | Prüfungsmodus | Prüfungsstand (weight 1.5) |
 | **Wiederholungsplan** | the learner enters the official per-part result of a failed attempt → 4-week plan weighted to the weak parts + remaining forms | A1.2 (sd1), B1.2 (tb1, dtz, gb1) at launch; A2.2, B2.2 v1.1 | — | — | plan |
-| **Einstufung** | adaptive over the Plateau banks | before purchase / at start | ≤ 10 min + 1 spoken item | — | course + starting unit recommendation |
+| **Einstufung** | fixed form per band (v1), deterministic routing; adaptive later | before purchase / at start | ≤ 12 min + 1 spoken item (feedback only) | — | course + starting unit recommendation (deterministic items only) |
 
 No separate Abschlusstest exists where a course has mocks; the .1 Halbtest is the .1 end test.
 
@@ -1025,12 +1253,13 @@ appears only in .2 Modelltests, once the whole level has been taught. The Teil-K
 - **Diagnose** in week 1 (free, and offered before purchase as the Einstiegscheck): labelled as starting values; it
   may contain untaught material because it is diagnostic.
 - **Modelltests come after the last new content.** The course path places Modelltest A after U12. The plan
-  schedules A/B/C at exam −21/−14/−7 days, never before U12 is scheduled to be complete; if the date is too close it
+  schedules A/B at exam −21/−10 days (A/B/C at −21/−14/−7 once C exists), never before U12 is scheduled to be complete; if the date is too close it
   adds learning days (up to Intensiv) rather than moving a mock forward. A Modelltest opened before U12 via „Trotzdem
   öffnen" is stored with `beforeCourseEnd: true` and the board labels it „vor Kursende geübt".
 - **Mock forms use only the half-level's taught inventory plus the exam's receptive tolerance** (EXM-06): every text
   ≥ 95 % known tokens; no construction introduced after the course's U12.
-- **Forms:** primary lane 3 (A, B, C), secondary lanes 2 (A, B; C in v1.1). **Parallel forms only:** no text or item
+- **Forms:** v1: 2 (A, B) per live primary lane; form C and the secondary lanes' forms (2 each) follow with v1.1 and
+  the packs (§1.4). **Parallel forms only:** no text or item
   reused across forms; lengths within ±10 % of each other and ±15 % of the official sample sizes; same item-type
   counts; generated from the lane's form blueprint, never from a previous form (C). Retest effects inflate mock
   scores (d = .26, [Hausknecht et al. 2007](https://doi.org/10.1037/0021-9010.92.2.373)), so a mock score is never
@@ -1039,7 +1268,7 @@ appears only in .2 Modelltests, once the whole level has been taught. The Teil-K
   to the lane rubric profiles (today mock writing parts are ungraded textareas, [m12] §2.6). Audio at natural tempo,
   several voices, „Computerstimme".
 - **Repair weeks** between mocks draw on the error tags and on the Teile with the fewest full-length attempts; **the
-  final 7 days carry no new content** — daily review, Teil-Trainer cards, Modelltest C (or B) and its repair
+  final 7 days carry no new content** — daily review, Teil-Trainer cards, the last Modelltest (B in v1) and its repair
   ([m09] impl. B11).
 - **Wiederholungsplan:** the learner types the official per-part result (fields follow each lane's certificate, e.g.
   DTZ Hören/Lesen, Schreiben, Sprechen levels); the plan is a query over blocks tagged with the weak Teile across all
@@ -1055,20 +1284,29 @@ appears only in .2 Modelltests, once the whole level has been taught. The Teil-K
 | ga2 | ≥ 60/100 **and** ≥ 45/75 written **and** ≥ 15/25 oral |
 | tb1, tb2 | ≥ 135/225 written **and** ≥ 45/75 oral; tb1 item points 5 / 2.5 / 1.5 |
 | gb1, gb2 | each module ≥ 60/100 on its own; Lesen/Hören raw × 3.33 rounded (18/30 = 60; 17 = 57) |
-| dtz | H+L ≥ 33/45, Schreiben ≥ 15/20, Sprechen ≥ 75/100; B1 = Sprechen B1 + one of the other two; Sprechen below A2 = no certificate |
+| dtz | H+L ≥ 33/45, Schreiben ≥ 15/20, Sprechen ≥ 75/100; B1 = Sprechen B1 + one of the other two; Sprechen below A2 = no certificate; **A2 bands** H+L 20–32, Schreiben 7–14, Sprechen 35–74.5, reported as „Stufe nach der Bewertungsregel: A2", never as a pass ([m02] §3) |
 | oza1 (v1.1) | written ≥ 38/75 with Lesen ≥ 6, Hören ≥ 6, Schreiben ≥ 4; oral ≥ 12/25; modules separate |
 
 Tests pin boundaries: Goethe B1 17 vs 18; telc 134.5 vs 135; the DTZ one-of-two rule and the Sprechen gate; Goethe A1
-34 written; Goethe A2 44 written with 70 total (EXM-07).
+34 written; Goethe A2 44 written with 70 total; DTZ H+L 19/20 and 32/33, Schreiben 6/7 and 14/15, Sprechen 34.5/35 and
+74.5/75 (EXM-07).
 
 ### 5.6 The Prüfungsstand (readiness per module)
 
 **What it is.** A board per lane showing, for each module of the learner's exam, the practice value on that exam's
-own scale, which Teile have been practised in full length, and where the official pass rule sits. It answers „Wo
-stehe ich in jedem Prüfungsteil?", never „Werde ich bestehen?". It is **opt-in in A1.1** (appears once an exam date is
-set) and default in paid courses once a lane is chosen. The course home pairs it with a **four-line checklist**:
-Lektionen 12/12 · every Teil ≥ 2× in full length (11/11) · Modelltests 2/3 · Übungswerte je Teil (bars with a
-hairline).
+own scale, which Teile have been practised in full length, and — where allowed (rule 5) — where the official pass rule
+sits. It answers „Wo stehe ich in jedem Prüfungsteil?", never „Werde ich bestehen?". It is **opt-in in A1.1** (appears
+once an exam date is set) and default in paid courses once a lane is chosen. The course home pairs it with a
+**four-line checklist**: Lektionen 12/12 · every Teil ≥ 2× in full length (11/11) · Modelltests 1/2 · Übungswerte je
+Teil (bars, with a hairline only where rule 5 allows one).
+
+**Why it is fenced.** This is the highest legal-exposure surface of the product. It combines AI-scored ranges with
+deterministic values into module values and can draw the official pass line against them. Under the reported
+FernUSG position, automatically scored tests are „programmierte Unterweisung", but the answer changes where the
+provider „sich die Ergebnisse zu eigen macht und darauf aufbauend individualisierte … Rückmeldungen erteilt" ([m13] §2,
+via [Dogan Pfahler](https://doganpfahler.de/faq-bgh-fernunterricht-fernusg-online-coaching/)); a per-module readiness
+comparison is also the UWG risk R3. §1.6 rule 5 governs only the suggestions. So the Prüfungsstand, the Teil-Karte
+(§5.3) and the Halbtest view are **named items of the D2 counsel brief** (`docs/course-v2/legal/counsel-questions.md`).
 
 **Rules.**
 1. **Numbers come only from full-length Prüfungsmodus attempts** (LS4/Aufgaben run full length in Prüfungsmodus,
@@ -1076,29 +1314,45 @@ hairline).
 2. Teil value = weighted mean of the last five qualifying attempts (Modelltest 1.5, others 1.0; attempts older than
    21 days × 0.5) (design).
 3. AI-graded Teile carry a **range**: ± one band per criterion until the profile's human-agreement study (§4.6)
-   sets a measured width.
+   sets a measured width. A `notAutoScored` criterion (Aussprache) is never estimated: the range is widened by its
+   full span (§4.4).
 4. A module value appears only when every Teil of the module has a qualifying attempt; it is the Teil values
    combined with the lane's official weights and converted to the lane's scale.
-5. The lane's real pass rule runs on both ends of every range and is drawn as a hairline with the rule sentence, in
-   the rule's own words („Grenze nach der Bestehensregel von telc: 135"). telc written AND oral, the DTZ Sprechen gate
-   and one-of-two rule, Goethe per module — each exactly as §5.5.
+5. **Pass lines — interim rule until counsel answers (§13 D2).** In **paid** courses a pass line is drawn only for a
+   module, or an aggregate the pass rule uses, that contains **no AI-scored Teil**: Goethe/ÖSD Lesen and Hören, DTZ
+   Hören + Lesen, and the deterministic Teile of telc (Lesen, Sprachbausteine, Hören) shown without a line, because
+   telc's rule is an aggregate that includes Schreiben. AI-scored Teile (Schreiben, Sprechen) are shown **on their own**
+   as ranges with no pass-line comparison. The **free A1.1 and the free Diagnose** keep the full board: the lane's real
+   pass rule runs on both ends of every range and is drawn as a hairline with the rule sentence, in the rule's own words
+   („Grenze nach der Bestehensregel von telc: 135") — telc written AND oral, the DTZ Sprechen gate and one-of-two rule,
+   Goethe per module, each exactly as §5.5. Once counsel has answered, the owner decides whether paid courses get the
+   full board (§13 D2).
 6. The board's „Vorschlag" is computed only from deterministic inputs (receptive Teil values, counts of full-length
    attempts), labelled and dismissible (§1.6 rule 5).
 7. **Allowed words:** „Übungswert", „Grenze nach der Bestehensregel von …", „in voller Länge geübt", „im Kleinen
-   geübt", „Vorschlag". **Banned:** „bestanden" (about our tests), „bereit für die Prüfung", „prüfungsreif", „Bestehenschance", any
-   percentage presented as a likelihood, „in X Wochen" (LGL-01).
+   geübt", „Vorschlag", „nicht automatisch bewertet", „Stufe nach der Bewertungsregel" (DTZ). **Banned:** „bestanden"
+   (about our tests), „bereit für die Prüfung", „prüfungsreif", „Bestehenschance", any percentage presented as a
+   likelihood, „in X Wochen" (LGL-01).
+
+Paid course, interim rule (telc B1; telc Leseverstehen items are worth 5 or 2.5 points, so values move in steps of
+2.5; Sprachbausteine in steps of 1.5):
 
 ```
 telc Deutsch B1 · Ihr Prüfungstermin: 14.11. (noch 48 Tage)
-Schriftlicher Teil   Übungswert 146–152 von 225 ─┤ Grenze nach der Bestehensregel von telc: 135
-   Leseverstehen 62/75 · Sprachbausteine 18/30 · Hörverstehen 45/75 · Schreiben 21–27/45 (KI-Richtwert)
-Mündlicher Teil      Übungswert 38–44 von 75  ─┤ Grenze nach der Bestehensregel von telc: 45
+Leseverstehen 62,5 von 75 · Sprachbausteine 18 von 30 · Hörverstehen 45 von 75   (automatisch ausgewertet)
+Schreiben            Übungswert 21–27 von 45 (KI-Richtwert)
+Mündlicher Teil      Teil 1: 8–10 von 12 · Teil 2: 14–18 von 24 · Teil 3: 14–18 von 24 (KI-Richtwert)
+                     Aussprache: nicht automatisch bewertet (in der Prüfung bis zu 15 Punkte)
 In voller Länge geübt: 11 von 12 Teilen · Modelltest A: 24.10. (geplant)
 Vorschlag: Mündlich Teil 2 – bisher einmal in voller Länge geübt.
 Übungswerte aus Ihren Übungsprüfungen bei uns. Keine Prognose Ihres Prüfungsergebnisses.
 ```
 
-Evidence lives in one table, `exam_practice_results` (SCHEMA §14).
+The full board (free A1.1 and free Diagnose; paid courses only after counsel), on the same evidence: „Schriftlicher Teil · Übungswert 146,5–152,5 von 225 ─┤ Grenze nach der
+Bestehensregel von telc: 135" and „Mündlicher Teil · Übungswert 36–61 von 75 ─┤ Grenze nach der Bestehensregel von
+telc: 45" (the oral range spans the 15 Aussprache points the pipeline does not score).
+
+Evidence lives in one table, `exam_practice_results` (SCHEMA §14); AI-scored rows are written by the server only.
 
 ### 5.7 Einstufung (placement)
 

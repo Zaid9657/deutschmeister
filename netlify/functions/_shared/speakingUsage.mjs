@@ -1,4 +1,5 @@
 import { supabase } from './supabase.mjs';
+import { checkCourseAiAllowance, recordCourseAiUse } from './entitlement.mjs';
 
 // Tiers: premium | pro | free_trial | free_expired
 // premium  — unlimited sessions
@@ -58,7 +59,40 @@ async function getTotalSessionCount(userId) {
   return count || 0;
 }
 
-export async function checkUsage(userId) {
+// PURCHASE-AWARE PATH (course v2, docs/course-v2/ENTITLEMENT.md). A v2 course
+// speaking task — identified by its bank key, never by client task text — is
+// billed against the course AI allowance of the level it belongs to (lifetime
+// per slot + a daily fair-use cap), not against the tiers below: a buyer
+// whose included Pro window has lapsed keeps the speaking of the course they
+// bought, and a trial or Pro user does not get paid v2 speaking unless
+// V2_TRIAL_PRO_OPENS_PAID says so. Calls without a courseTaskKey take the
+// legacy tier path unchanged.
+//
+// Returns the checkUsage() shape with tier 'course' plus the allowance
+// fields: { allowed, tier, reason, remaining, used, limit, dailyUsed, dailyCap, courseTaskKey }.
+export async function checkCourseUsage(userId, courseTaskKey) {
+  const r = await checkCourseAiAllowance(supabase, userId, courseTaskKey);
+  return {
+    allowed: r.allowed,
+    tier: 'course',
+    reason: r.reason,
+    remaining: r.remaining,
+    used: r.used ?? null,
+    limit: r.limit ?? null,
+    dailyUsed: r.dailyUsed ?? null,
+    dailyCap: r.dailyCap ?? null,
+    ...(r.degraded && { degraded: true }),
+    courseTaskKey,
+  };
+}
+
+/** Count one graded v2 course speaking attempt (once per session, after the session row exists). */
+export async function incrementCourseUsage(userId, courseTaskKey) {
+  return recordCourseAiUse(supabase, userId, courseTaskKey, 'speaking');
+}
+
+export async function checkUsage(userId, opts) {
+  if (opts?.courseTaskKey != null) return checkCourseUsage(userId, opts.courseTaskKey);
   console.log('[checkUsage] Checking usage for user:', userId);
   const tier = await getTier(userId);
   console.log('[checkUsage] User tier:', tier);
@@ -95,7 +129,8 @@ export async function checkUsage(userId) {
   };
 }
 
-export async function incrementUsage(userId) {
+export async function incrementUsage(userId, opts) {
+  if (opts?.courseTaskKey != null) return incrementCourseUsage(userId, opts.courseTaskKey);
   console.log('[incrementUsage] Recording session for user:', userId);
   const { error } = await supabase
     .from('speaking_usage')

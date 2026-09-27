@@ -1,0 +1,3435 @@
+{
+  "$schema": "course-v2/spine@1",
+  "points": [
+    {
+      "id": "g.verbposition-2",
+      "label": "Aussagesatz und W-Frage: das Verb auf Position 2 (Wie heißen Sie? Ich heiße Priya.)",
+      "intro": {
+        "receptive": "a1.1-u01",
+        "productive": "a1.1-u01"
+      },
+      "detectors": [],
+      "errorTags": [
+        "v2-inv"
+      ],
+      "lehrwerk": [
+        "M A1 L1",
+        "S1 L1",
+        "N A1 K1",
+        "LIN A1 K1"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.verbposition-2"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.praesens",
+      "label": "Präsens: regelmäßige Verben, sein und haben; du und Sie (ich wohne, du wohnst, wir haben)",
+      "intro": {
+        "receptive": "a1.1-u01",
+        "productive": "a1.1-u01"
+      },
+      "detectors": [],
+      "errorTags": [
+        "register"
+      ],
+      "lehrwerk": [
+        "M A1 L1–2",
+        "S1 L1–2",
+        "N A1 K1–2",
+        "LIN A1 K1–2"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.praesens",
+        "rc.praesens-2"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.negation-nicht",
+      "label": "Verneinung mit nicht (Ich bin nicht Lehrerin.)",
+      "intro": {
+        "receptive": "a1.1-u02",
+        "productive": "a1.1-u02"
+      },
+      "detectors": [],
+      "errorTags": [],
+      "lehrwerk": [
+        "M A1 L2",
+        "S1 L4",
+        "N A1 K3",
+        "LIN A1 K3"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.negation-nicht"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.ja-nein-frage",
+      "label": "Ja/Nein-Frage: das Verb auf Position 1; Antwort mit ja, nein, doch",
+      "intro": {
+        "receptive": "a1.1-u02",
+        "productive": "a1.1-u02"
+      },
+      "detectors": [],
+      "contrast": "g.verbposition-2",
+      "errorTags": [
+        "v2-inv"
+      ],
+      "lehrwerk": [
+        "M A1 L3",
+        "S1 L3/L6",
+        "N A1 K2",
+        "LIN A1 K2"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.ja-nein-frage"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.possessiv-mein-dein",
+      "label": "Possessivartikel mein, dein, Ihr im Nominativ (Das ist meine Mutter.)",
+      "intro": {
+        "receptive": "a1.1-u03",
+        "productive": "a1.1-u03"
+      },
+      "detectors": [],
+      "errorTags": [
+        "gender-article",
+        "register"
+      ],
+      "lehrwerk": [
+        "M A1 L3",
+        "S1 L2",
+        "N A1 K5",
+        "LIN A1 K3"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.possessiv-mein-dein"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.vokalwechsel",
+      "label": "Verben mit Vokalwechsel: e → i/ie, a → ä (du sprichst, er liest, du fährst, du nimmst)",
+      "intro": {
+        "receptive": "a1.1-u03",
+        "productive": "a1.1-u03"
+      },
+      "detectors": [],
+      "contrast": "g.praesens",
+      "errorTags": [
+        "spelling-meaning"
+      ],
+      "lehrwerk": [
+        "M A1 L3",
+        "S1 L3/L6",
+        "N A1 K2",
+        "LIN A1 K5"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.vokalwechsel"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.artikel-genus-plural",
+      "label": "Artikel und Genus (der, das, die; ein, eine), Plural der Nomen, Nullartikel bei Mengen",
+      "intro": {
+        "receptive": "a1.1-u04",
+        "productive": "a1.1-u04"
+      },
+      "detectors": [],
+      "contrast": "g.possessiv-mein-dein",
+      "errorTags": [
+        "gender-article"
+      ],
+      "lehrwerk": [
+        "M A1 L4–6",
+        "S1 L3",
+        "N A1 K2",
+        "LIN A1 K3–4"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.artikel-genus-plural"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.moechte",
+      "label": "möchte: ich möchte, Sie möchten (Ich möchte ein Brot.)",
+      "intro": {
+        "receptive": "a1.1-u04",
+        "productive": "a1.1-u04"
+      },
+      "detectors": [],
+      "errorTags": [
+        "satzklammer"
+      ],
+      "lehrwerk": [
+        "S1 L3",
+        "M A1 L9",
+        "N A1 K4"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.moechte"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.pronomen-er-es-sie",
+      "label": "Personalpronomen er, es, sie für Sachen (Der Tisch? Er ist neu.)",
+      "intro": {
+        "receptive": "a1.1-u05",
+        "productive": "a1.1-u05"
+      },
+      "detectors": [],
+      "contrast": "g.artikel-genus-plural",
+      "errorTags": [
+        "gender-article"
+      ],
+      "lehrwerk": [
+        "M A1 L4",
+        "S1 L4",
+        "N A1 K2–3",
+        "LIN A1 K3–4"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.pronomen-er-es-sie"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.adjektiv-praedikativ",
+      "label": "Adjektive nach sein, mit sehr, zu und nicht (Die Küche ist zu klein.)",
+      "intro": {
+        "receptive": "a1.1-u05",
+        "productive": "a1.1-u05"
+      },
+      "detectors": [],
+      "errorTags": [],
+      "lehrwerk": [
+        "M A1 L4",
+        "S1 L4"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.adjektiv-praedikativ"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.akkusativ",
+      "label": "Akkusativ: den, einen, keinen (Ich brauche einen Laptop.)",
+      "intro": {
+        "receptive": "a1.1-u06",
+        "productive": "a1.1-u06"
+      },
+      "chunkFrom": "a1.1-u04",
+      "detectors": [],
+      "contrast": "g.artikel-genus-plural",
+      "errorTags": [
+        "case-np",
+        "gender-article"
+      ],
+      "lehrwerk": [
+        "M A1 L6",
+        "S1 L6",
+        "N A1 K4",
+        "LIN A1 K4/K6"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.akkusativ"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.kein",
+      "label": "ein und kein im Nominativ und Akkusativ; nicht oder kein?",
+      "intro": {
+        "receptive": "a1.1-u06",
+        "productive": "a1.1-u06"
+      },
+      "detectors": [],
+      "contrast": "g.negation-nicht",
+      "errorTags": [
+        "gender-article",
+        "case-np"
+      ],
+      "lehrwerk": [
+        "M A1 L5",
+        "S1 L3–4",
+        "N A1 K3",
+        "LIN A1 K3"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.kein"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.trennbare-verben",
+      "label": "Trennbare Verben: Ich stehe um sieben Uhr auf.",
+      "intro": {
+        "receptive": "a1.1-u07",
+        "productive": "a1.1-u07"
+      },
+      "detectors": [],
+      "contrast": "g.verbposition-2",
+      "errorTags": [
+        "satzklammer"
+      ],
+      "lehrwerk": [
+        "M A1 L10",
+        "S1 L5",
+        "N A1 K6",
+        "LIN A1 K5"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.trennbare-verben"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.zeitangaben-inversion",
+      "label": "Uhrzeit, am/um/von … bis; Verb auf Position 2 nach Zeitangabe und nach zuerst/dann; und, aber, oder",
+      "intro": {
+        "receptive": "a1.1-u07",
+        "productive": "a1.1-u07"
+      },
+      "detectors": [],
+      "contrast": "g.verbposition-2",
+      "errorTags": [
+        "v2-inv",
+        "connector-position"
+      ],
+      "lehrwerk": [
+        "M A1 L8",
+        "S1 L5",
+        "N A1 K5"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.zeitangaben-inversion"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.koennen",
+      "label": "können: Fähigkeit und Möglichkeit; die Satzklammer (Ich kann gut schwimmen.)",
+      "intro": {
+        "receptive": "a1.1-u08",
+        "productive": "a1.1-u08"
+      },
+      "detectors": [],
+      "contrast": "g.trennbare-verben",
+      "errorTags": [
+        "satzklammer"
+      ],
+      "lehrwerk": [
+        "M A1 L7",
+        "S1 L6–7",
+        "N A1 K4–5",
+        "LIN A1 K4/K7–8"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.koennen"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.nicht-position-gern",
+      "label": "gern und nicht gern; die Position von nicht im Satz",
+      "intro": {
+        "receptive": "a1.1-u08",
+        "productive": "a1.1-u08"
+      },
+      "detectors": [],
+      "contrast": "g.negation-nicht",
+      "errorTags": [],
+      "lehrwerk": [
+        "M A1 L7–8",
+        "S1 L6"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.nicht-position-gern"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.moegen",
+      "label": "mögen: Vorlieben und Abneigungen (Ich mag Kaffee. Magst du Fisch?)",
+      "intro": {
+        "receptive": "a1.1-u09",
+        "productive": "a1.1-u09"
+      },
+      "detectors": [],
+      "contrast": "g.moechte",
+      "errorTags": [
+        "case-np"
+      ],
+      "lehrwerk": [
+        "M A1 L9",
+        "N A1 K4"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.moegen"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.komposita",
+      "label": "Komposita: Das letzte Wort bestimmt den Artikel (der Apfelkuchen).",
+      "intro": {
+        "receptive": "a1.1-u09",
+        "productive": "a1.1-u09"
+      },
+      "detectors": [],
+      "contrast": "g.artikel-genus-plural",
+      "errorTags": [
+        "gender-article"
+      ],
+      "lehrwerk": [
+        "M A1 L9"
+      ],
+      "consensus": "single",
+      "ruleCards": [
+        "rc.komposita"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.wortbildung-er-in",
+      "label": "Wortbildung Personen: -in für Frauen, -er aus Verben (Lehrerin; fahren → der Fahrer, die Fahrerin)",
+      "intro": {
+        "receptive": "a1.1-u10",
+        "productive": "a1.1-u10"
+      },
+      "chunkFrom": "a1.1-u02",
+      "detectors": [],
+      "contrast": "g.komposita",
+      "errorTags": [
+        "gender-article"
+      ],
+      "lehrwerk": [
+        "M A1 L2",
+        "M A2 L3"
+      ],
+      "consensus": "single",
+      "ruleCards": [
+        "rc.wortbildung-er-in"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.perfekt-haben",
+      "label": "Perfekt mit haben: ge-…-t und ge-…-en (Ich habe Pizza gemacht. Wir haben einen Film gesehen.)",
+      "intro": {
+        "receptive": "a1.1-u11",
+        "productive": "a1.1-u11"
+      },
+      "detectors": [],
+      "contrast": "g.koennen",
+      "errorTags": [
+        "perfekt-aux-participle",
+        "satzklammer"
+      ],
+      "lehrwerk": [
+        "M A1 L11",
+        "S1 L7",
+        "N A1 K10"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.perfekt-haben"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.zeitangaben-vergangenheit",
+      "label": "Zeitangaben der Vergangenheit: gestern, letzte Woche, am Wochenende",
+      "intro": {
+        "receptive": "a1.1-u11",
+        "productive": "a1.1-u11"
+      },
+      "detectors": [],
+      "contrast": "g.zeitangaben-inversion",
+      "errorTags": [
+        "v2-inv"
+      ],
+      "lehrwerk": [
+        "M A1 L11"
+      ],
+      "consensus": "single",
+      "ruleCards": [
+        "rc.zeitangaben-vergangenheit"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.perfekt-sein",
+      "label": "Perfekt mit sein: Bewegung und Veränderung (Ich bin nach Köln gefahren.)",
+      "intro": {
+        "receptive": "a1.1-u12",
+        "productive": "a1.1-u12"
+      },
+      "detectors": [],
+      "contrast": "g.perfekt-haben",
+      "errorTags": [
+        "perfekt-aux-participle"
+      ],
+      "lehrwerk": [
+        "M A1 L12",
+        "S1 L7",
+        "N A1 K10"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.perfekt-sein"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.wollen",
+      "label": "wollen: Pläne und Absichten (Ich will im Sommer die Prüfung machen.)",
+      "intro": {
+        "receptive": "a1.1-u12",
+        "productive": "a1.1-u12"
+      },
+      "detectors": [],
+      "contrast": "g.moechte",
+      "errorTags": [
+        "satzklammer"
+      ],
+      "lehrwerk": [
+        "S1 L6–7",
+        "M A1 L17"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.wollen"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.imperativ-sie",
+      "label": "Imperativ mit Sie: Gehen Sie geradeaus! Nehmen Sie die U2!",
+      "intro": {
+        "receptive": "a1.2-u01",
+        "productive": "a1.2-u01"
+      },
+      "chunkFrom": "a1.1-u01",
+      "detectors": [],
+      "contrast": "g.ja-nein-frage",
+      "errorTags": [
+        "v2-inv",
+        "register"
+      ],
+      "lehrwerk": [
+        "M A1 L18",
+        "S2 L9",
+        "N A1 K3",
+        "LIN A1 K3"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.imperativ-sie"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.praep-dativ",
+      "label": "Dativ nach Präpositionen: mit, zu, bei, von, aus, nach; Wo? in, an, auf, neben + Dativ",
+      "intro": {
+        "receptive": "a1.2-u01",
+        "productive": "a1.2-u01"
+      },
+      "chunkFrom": "a1.1-u05",
+      "detectors": [],
+      "contrast": "g.akkusativ",
+      "errorTags": [
+        "case-pp"
+      ],
+      "lehrwerk": [
+        "M A1 L13",
+        "M A1 L15",
+        "S2 L11",
+        "N A1 K7/K9"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.praep-dativ"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.praeteritum-sein-haben",
+      "label": "Präteritum von sein und haben: war, hatte (Früher war ich Verkäuferin.)",
+      "intro": {
+        "receptive": "a1.2-u02",
+        "productive": "a1.2-u02"
+      },
+      "chunkFrom": "a1.1-u11",
+      "detectors": [],
+      "contrast": "g.perfekt-haben",
+      "errorTags": [],
+      "lehrwerk": [
+        "M A1 L19",
+        "S2 L8",
+        "N A1 K6"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.praeteritum-sein-haben"
+      ],
+      "inventory": [
+        "gz-a1",
+        "gz-a2"
+      ]
+    },
+    {
+      "id": "g.temporal-seit-vor",
+      "label": "seit und vor + Dativ (seit einem Jahr, vor zwei Monaten)",
+      "intro": {
+        "receptive": "a1.2-u02",
+        "productive": "a1.2-u02"
+      },
+      "chunkFrom": "a1.1-u12",
+      "detectors": [],
+      "contrast": "g.zeitangaben-vergangenheit",
+      "errorTags": [
+        "case-pp"
+      ],
+      "lehrwerk": [
+        "M A1 L16",
+        "S2 L8",
+        "N A1 K12"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.temporal-seit-vor"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.muessen-duerfen-man",
+      "label": "müssen und dürfen; man (Man darf hier nicht parken.)",
+      "intro": {
+        "receptive": "a1.2-u03",
+        "productive": "a1.2-u03"
+      },
+      "chunkFrom": "a1.1-u08",
+      "detectors": [],
+      "contrast": "g.koennen",
+      "errorTags": [
+        "satzklammer"
+      ],
+      "lehrwerk": [
+        "M A1 L21",
+        "S2 L9–10",
+        "N A1 K8"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.muessen-duerfen-man"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.possessiv-sein-ihr",
+      "label": "Possessivartikel sein, ihr, unser, euer; Genitiv-s bei Namen (Annas Fahrrad)",
+      "intro": {
+        "receptive": "a1.2-u03",
+        "productive": "a1.2-u03"
+      },
+      "detectors": [],
+      "contrast": "g.possessiv-mein-dein",
+      "errorTags": [
+        "gender-article"
+      ],
+      "lehrwerk": [
+        "M A1 L14",
+        "S2 L10"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.possessiv-sein-ihr"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.temporal-praepositionen",
+      "label": "Zeitangaben mit nach, in, ab, bis, für (in zwei Wochen, ab Montag, bis Freitag)",
+      "intro": {
+        "receptive": "a1.2-u04",
+        "productive": "a1.2-u04"
+      },
+      "detectors": [],
+      "contrast": "g.temporal-seit-vor",
+      "errorTags": [
+        "case-pp"
+      ],
+      "lehrwerk": [
+        "M A1 L16",
+        "S2 L8/L12",
+        "N A1 K12"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.temporal-praepositionen"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.ordinalzahlen-datum",
+      "label": "Ordinalzahlen und Datum (am dritten Mai, vom 3. bis 5. Juni)",
+      "intro": {
+        "receptive": "a1.2-u04",
+        "productive": "a1.2-u04"
+      },
+      "detectors": [],
+      "contrast": "g.zeitangaben-inversion",
+      "errorTags": [],
+      "lehrwerk": [
+        "M A1 L24",
+        "S2 L14",
+        "N A1 K12"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.ordinalzahlen-datum"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.sollen",
+      "label": "sollen: Anweisungen weitergeben (Sie sollen zweimal am Tag eine Tablette nehmen.)",
+      "intro": {
+        "receptive": "a1.2-u05",
+        "productive": "a1.2-u05"
+      },
+      "detectors": [],
+      "contrast": "g.muessen-duerfen-man",
+      "errorTags": [
+        "satzklammer"
+      ],
+      "lehrwerk": [
+        "M A1 L18",
+        "S2 L10"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.sollen"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.dativverben-pronomen",
+      "label": "Verben mit Dativ (gefallen, passen, stehen, gehören, helfen, danken) und mir, dir, ihm, ihr, Ihnen",
+      "intro": {
+        "receptive": "a1.2-u06",
+        "productive": "a1.2-u06"
+      },
+      "chunkFrom": "a1.1-u06",
+      "detectors": [],
+      "contrast": "g.akkusativ",
+      "errorTags": [
+        "case-np"
+      ],
+      "lehrwerk": [
+        "M A1 L15",
+        "S2 L13",
+        "N A1 K11"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.dativverben-pronomen"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.welch-dies",
+      "label": "welch- und dies- (Welche Jacke? – Diese hier.)",
+      "intro": {
+        "receptive": "a1.2-u06",
+        "productive": "a1.2-u06"
+      },
+      "detectors": [],
+      "contrast": "g.artikel-genus-plural",
+      "errorTags": [
+        "gender-article"
+      ],
+      "lehrwerk": [
+        "S2 L13",
+        "N A1 K11",
+        "M A2 L21"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.welch-dies"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.perfekt-trennbar-untrennbar",
+      "label": "Perfekt trennbarer und untrennbarer Verben und der Verben auf -ieren (abgeholt, bezahlt, repariert)",
+      "intro": {
+        "receptive": "a1.2-u07",
+        "productive": "a1.2-u07"
+      },
+      "detectors": [],
+      "contrast": "g.perfekt-haben",
+      "errorTags": [
+        "perfekt-aux-participle"
+      ],
+      "lehrwerk": [
+        "M A1 L19",
+        "S2 L8",
+        "N A1 K10–11"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.perfekt-trennbar-untrennbar"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.konj2-hoeflichkeit",
+      "label": "Höfliche Formeln mit Konjunktiv II: Ich hätte gern …, Könnten Sie …?, Würden Sie …?, Ich würde gern …",
+      "intro": {
+        "receptive": "a1.2-u07",
+        "productive": "a1.2-u07"
+      },
+      "chunkFrom": "a1.2-u04",
+      "detectors": [],
+      "contrast": "g.moechte",
+      "errorTags": [
+        "register"
+      ],
+      "lehrwerk": [
+        "S2 L12",
+        "M A1 L24"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.konj2-hoeflichkeit"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.denn",
+      "label": "denn: einen Grund nennen (Ich mag den Sommer, denn es ist warm.)",
+      "intro": {
+        "receptive": "a1.2-u08",
+        "productive": "a1.2-u08"
+      },
+      "detectors": [],
+      "contrast": "g.zeitangaben-inversion",
+      "errorTags": [
+        "connector-position"
+      ],
+      "lehrwerk": [
+        "M A1 L23",
+        "S2 L14",
+        "N A1 K12"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.denn"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.wetter-es",
+      "label": "Wetter mit es: Es regnet. Es ist kalt.",
+      "intro": {
+        "receptive": "a1.2-u08",
+        "productive": "a1.2-u08"
+      },
+      "detectors": [],
+      "contrast": "g.pronomen-er-es-sie",
+      "errorTags": [],
+      "lehrwerk": [
+        "M A1 L23"
+      ],
+      "consensus": "single",
+      "ruleCards": [
+        "rc.wetter-es"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.imperativ-du-ihr",
+      "label": "Imperativ mit du und ihr (Kauf bitte Milch! Räumt bitte die Küche auf!)",
+      "intro": {
+        "receptive": "a1.2-u09",
+        "productive": "a1.2-u09"
+      },
+      "detectors": [],
+      "contrast": "g.imperativ-sie",
+      "errorTags": [
+        "v2-inv",
+        "register"
+      ],
+      "lehrwerk": [
+        "M A1 L18/L20",
+        "S2 L9",
+        "N A1 K8"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.imperativ-du-ihr"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.akk-personalpronomen",
+      "label": "Personalpronomen im Akkusativ: mich, dich, ihn, sie, es, uns, euch",
+      "intro": {
+        "receptive": "a1.2-u09",
+        "productive": "a1.2-u09"
+      },
+      "detectors": [],
+      "contrast": "g.dativverben-pronomen",
+      "errorTags": [
+        "case-np"
+      ],
+      "lehrwerk": [
+        "M A1 L20",
+        "S2 L14",
+        "N A1 K6"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.akk-personalpronomen"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.komparation",
+      "label": "Komparation: größer als, so groß wie; gut – besser – am besten, gern – lieber – am liebsten",
+      "intro": {
+        "receptive": "a1.2-u10",
+        "productive": "a1.2-u10"
+      },
+      "chunkFrom": "a1.2-u08",
+      "detectors": [],
+      "contrast": "g.adjektiv-praedikativ",
+      "errorTags": [
+        "spelling-meaning"
+      ],
+      "lehrwerk": [
+        "M A1 L22",
+        "S2 L13",
+        "N A2 K3"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.komparation",
+        "rc.komparation-2"
+      ],
+      "inventory": [
+        "gz-a2"
+      ]
+    },
+    {
+      "id": "g.wortbildung-un-los",
+      "label": "Wortbildung: Adjektive mit un- und -los (unfreundlich, kostenlos)",
+      "intro": {
+        "receptive": "a1.2-u10",
+        "productive": "a1.2-u10"
+      },
+      "detectors": [],
+      "contrast": "g.negation-nicht",
+      "errorTags": [],
+      "lehrwerk": [
+        "M A1 L19",
+        "M A1 L23"
+      ],
+      "consensus": "single",
+      "ruleCards": [
+        "rc.wortbildung-un-los"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.praep-akkusativ",
+      "label": "Präpositionen mit Akkusativ: für, ohne, um, durch, bis (ein Ticket für Samstag)",
+      "intro": {
+        "receptive": "a1.2-u11",
+        "productive": "a1.2-u11"
+      },
+      "detectors": [],
+      "contrast": "g.praep-dativ",
+      "errorTags": [
+        "case-pp"
+      ],
+      "lehrwerk": [
+        "M A1 L16",
+        "M A1 L17"
+      ],
+      "consensus": "single",
+      "ruleCards": [
+        "rc.praep-akkusativ"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.wortbildung-ung-bar",
+      "label": "Wortbildung: Nomen auf -ung, Adjektive auf -bar (die Anmeldung; erreichbar)",
+      "intro": {
+        "receptive": "a1.2-u11",
+        "productive": "a1.2-u11"
+      },
+      "detectors": [],
+      "contrast": "g.wortbildung-un-los",
+      "errorTags": [
+        "gender-article"
+      ],
+      "lehrwerk": [
+        "M A2 L3"
+      ],
+      "consensus": "single",
+      "ruleCards": [
+        "rc.wortbildung-ung-bar"
+      ],
+      "inventory": [
+        "gz-a1"
+      ]
+    },
+    {
+      "id": "g.weil",
+      "label": "Nebensatz mit weil: das Verb am Ende (…, weil ich neu hier bin.)",
+      "intro": {
+        "receptive": "a2.1-u01",
+        "productive": "a2.1-u01"
+      },
+      "detectors": [],
+      "contrast": "g.denn",
+      "errorTags": [
+        "verb-final"
+      ],
+      "lehrwerk": [
+        "S3 L1",
+        "N A2 K1",
+        "M A2 L8"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.weil"
+      ],
+      "inventory": [
+        "gz-a2"
+      ]
+    },
+    {
+      "id": "g.wechselpraep",
+      "label": "Wechselpräpositionen: Wohin? + Akkusativ, Wo? + Dativ (in die Küche – in der Küche)",
+      "intro": {
+        "receptive": "a2.1-u02",
+        "productive": "a2.1-u02"
+      },
+      "detectors": [],
+      "contrast": "g.praep-dativ",
+      "errorTags": [
+        "case-pp"
+      ],
+      "lehrwerk": [
+        "M A2 L2",
+        "S3 L2",
+        "N A2 K10"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.wechselpraep"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.positionsverben",
+      "label": "Verben der Position: stellen/stehen, legen/liegen, hängen",
+      "intro": {
+        "receptive": "a2.1-u02",
+        "productive": "a2.1-u02"
+      },
+      "detectors": [],
+      "contrast": "g.wechselpraep",
+      "errorTags": [
+        "case-pp"
+      ],
+      "lehrwerk": [
+        "S3 L2",
+        "M A2 L2"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.positionsverben"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.dass",
+      "label": "Nebensatz mit dass (Ich finde, dass … / Ich glaube, dass …)",
+      "intro": {
+        "receptive": "a2.1-u03",
+        "productive": "a2.1-u03"
+      },
+      "detectors": [],
+      "contrast": "g.weil",
+      "errorTags": [
+        "verb-final"
+      ],
+      "lehrwerk": [
+        "M A2 L10",
+        "S3 L6",
+        "N A2 K3"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.dass"
+      ],
+      "inventory": [
+        "gz-a2"
+      ]
+    },
+    {
+      "id": "g.dat-akk-objekte",
+      "label": "Verben mit Dativ und Akkusativ: Ich schicke meiner Schwester ein Foto.",
+      "intro": {
+        "receptive": "a2.1-u03",
+        "productive": "a2.1-u03"
+      },
+      "detectors": [],
+      "contrast": "g.dativverben-pronomen",
+      "errorTags": [
+        "case-np"
+      ],
+      "lehrwerk": [
+        "M A1 L15",
+        "S2 L13",
+        "S3 L7"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.dat-akk-objekte"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.adj-dekl-unbestimmt",
+      "label": "Adjektivendungen nach ein-, kein- und mein- (ein neuer Kühlschrank, mit einer kleinen Küche)",
+      "intro": {
+        "receptive": "a2.1-u04",
+        "productive": "a2.1-u04"
+      },
+      "chunkFrom": "a1.2-u10",
+      "detectors": [],
+      "contrast": "g.adjektiv-praedikativ",
+      "errorTags": [
+        "adj-ending"
+      ],
+      "lehrwerk": [
+        "M A2 L4",
+        "N A2 K5–6",
+        "S4 L9–10"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.adj-dekl-unbestimmt"
+      ],
+      "inventory": [
+        "gz-a2"
+      ]
+    },
+    {
+      "id": "g.indefinitpronomen",
+      "label": "Indefinitpronomen einer, eins, eine, keiner, welche (Hast du einen? – Ja, ich habe einen.)",
+      "intro": {
+        "receptive": "a2.1-u04",
+        "productive": "a2.1-u04"
+      },
+      "detectors": [],
+      "contrast": "g.kein",
+      "errorTags": [
+        "gender-article",
+        "case-np"
+      ],
+      "lehrwerk": [
+        "S3 L3",
+        "N A2 K12"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.indefinitpronomen"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.adj-dekl-bestimmt",
+      "label": "Adjektivendungen nach der, das, die (der kleine Tisch, mit dem großen Fenster)",
+      "intro": {
+        "receptive": "a2.1-u05",
+        "productive": "a2.1-u05"
+      },
+      "detectors": [],
+      "contrast": "g.adj-dekl-unbestimmt",
+      "errorTags": [
+        "adj-ending"
+      ],
+      "lehrwerk": [
+        "M A2 L5",
+        "N A2 K5–6",
+        "S4 L10"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.adj-dekl-bestimmt"
+      ],
+      "inventory": [
+        "gz-a2"
+      ]
+    },
+    {
+      "id": "g.wenn",
+      "label": "Nebensatz mit wenn: Bedingung und Zeitpunkt; Nebensatz zuerst (Wenn der Zug Verspätung hat, …)",
+      "intro": {
+        "receptive": "a2.1-u06",
+        "productive": "a2.1-u06"
+      },
+      "detectors": [],
+      "contrast": "g.weil",
+      "errorTags": [
+        "verb-final",
+        "v2-inv"
+      ],
+      "lehrwerk": [
+        "M A2 L12",
+        "S3 L4",
+        "N A2 K4"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.wenn"
+      ],
+      "inventory": [
+        "gz-a2"
+      ]
+    },
+    {
+      "id": "g.wortbildung-t-kunft",
+      "label": "Wortbildung: Nomen aus Verben (abfahren → die Abfahrt, ankommen → die Ankunft)",
+      "intro": {
+        "receptive": "a2.1-u06",
+        "productive": "a2.1-u06"
+      },
+      "detectors": [],
+      "contrast": "g.wortbildung-ung-bar",
+      "errorTags": [
+        "gender-article"
+      ],
+      "lehrwerk": [
+        "M A2 L3"
+      ],
+      "consensus": "single",
+      "ruleCards": [
+        "rc.wortbildung-t-kunft"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.konj2-koennte",
+      "label": "Konjunktiv II: könnte für Vorschläge (Wir könnten am Samstag trainieren.)",
+      "intro": {
+        "receptive": "a2.1-u07",
+        "productive": "a2.1-u07"
+      },
+      "detectors": [],
+      "contrast": "g.konj2-hoeflichkeit",
+      "errorTags": [
+        "satzklammer",
+        "spelling-meaning"
+      ],
+      "lehrwerk": [
+        "M A2 L7",
+        "S3 L4",
+        "N A2 K5"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.konj2-koennte"
+      ],
+      "inventory": [
+        "gz-a2"
+      ]
+    },
+    {
+      "id": "g.zeitangaben-akkusativ",
+      "label": "Zeitangaben: von … an, über; jeden, letzten, nächsten + Akkusativ (jeden Montag)",
+      "intro": {
+        "receptive": "a2.1-u07",
+        "productive": "a2.1-u07"
+      },
+      "detectors": [],
+      "contrast": "g.temporal-praepositionen",
+      "errorTags": [
+        "case-np"
+      ],
+      "lehrwerk": [
+        "M A2 L6"
+      ],
+      "consensus": "single",
+      "ruleCards": [
+        "rc.zeitangaben-akkusativ"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.reflexiv-akk",
+      "label": "Reflexive Verben mit Akkusativ: ich melde mich, du beeilst dich",
+      "intro": {
+        "receptive": "a2.1-u08",
+        "productive": "a2.1-u08"
+      },
+      "detectors": [],
+      "contrast": "g.akk-personalpronomen",
+      "errorTags": [
+        "reflexive"
+      ],
+      "lehrwerk": [
+        "M A2 L11",
+        "S3 L5",
+        "N A2 K4"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.reflexiv-akk"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.konj2-sollte",
+      "label": "Konjunktiv II: sollte für Ratschläge (Du solltest mehr schlafen.)",
+      "intro": {
+        "receptive": "a2.1-u09",
+        "productive": "a2.1-u09"
+      },
+      "detectors": [],
+      "contrast": "g.konj2-koennte",
+      "errorTags": [
+        "satzklammer"
+      ],
+      "lehrwerk": [
+        "M A2 L7",
+        "S3 L4",
+        "N A2 K8"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.konj2-sollte"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.deshalb",
+      "label": "deshalb: Verb auf Position 2 (Ich habe Fieber, deshalb bleibe ich zu Hause.)",
+      "intro": {
+        "receptive": "a2.1-u09",
+        "productive": "a2.1-u09"
+      },
+      "detectors": [],
+      "contrast": "g.weil",
+      "errorTags": [
+        "v2-inv",
+        "connector-position"
+      ],
+      "lehrwerk": [
+        "M A2 L8",
+        "S4 L8",
+        "N A2 K9"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.deshalb"
+      ],
+      "inventory": [
+        "gz-a2"
+      ]
+    },
+    {
+      "id": "g.verben-praeposition",
+      "label": "Verben mit festen Präpositionen: sich freuen auf/über, warten auf, Angst haben vor",
+      "intro": {
+        "receptive": "a2.1-u10",
+        "productive": "a2.1-u10"
+      },
+      "detectors": [],
+      "contrast": "g.wechselpraep",
+      "errorTags": [
+        "case-pp"
+      ],
+      "lehrwerk": [
+        "S3 L5",
+        "M A2 L18",
+        "N A2 K11"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.verben-praeposition"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.praeteritum-modalverben",
+      "label": "Präteritum der Modalverben: musste, konnte, durfte, wollte, sollte",
+      "intro": {
+        "receptive": "a2.1-u11",
+        "productive": "a2.1-u11"
+      },
+      "detectors": [],
+      "contrast": "g.konj2-koennte",
+      "errorTags": [
+        "spelling-meaning"
+      ],
+      "lehrwerk": [
+        "S3 L6",
+        "N A2 K2",
+        "M A2 L20"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.praeteritum-modalverben"
+      ],
+      "inventory": [
+        "gz-a2"
+      ]
+    },
+    {
+      "id": "g.dat-akk-stellung",
+      "label": "Dativ und Akkusativ mit Pronomen: Ich schenke es ihr. Ich schenke ihr ein Buch.",
+      "intro": {
+        "receptive": "a2.1-u12",
+        "productive": "a2.1-u12"
+      },
+      "detectors": [],
+      "contrast": "g.dat-akk-objekte",
+      "errorTags": [
+        "case-np"
+      ],
+      "lehrwerk": [
+        "S3 L7",
+        "M A2 L15",
+        "N A2 K9"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.dat-akk-stellung"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.als-temporal",
+      "label": "Nebensatz mit als (einmal in der Vergangenheit) und wenn (immer wieder)",
+      "intro": {
+        "receptive": "a2.2-u01",
+        "productive": "a2.2-u01"
+      },
+      "detectors": [],
+      "contrast": "g.wenn",
+      "errorTags": [
+        "verb-final"
+      ],
+      "lehrwerk": [
+        "M A2 L13",
+        "N A2 K10",
+        "S5 L1"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.als-temporal"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.praeteritum",
+      "label": "Präteritum regelmäßiger und unregelmäßiger Verben (kam, ging, sagte, fand): erst verstehen, dann erzählen",
+      "intro": {
+        "receptive": "a2.2-u01",
+        "productive": "b1.1-u01"
+      },
+      "detectors": [],
+      "contrast": "g.perfekt-haben",
+      "errorTags": [
+        "spelling-meaning"
+      ],
+      "lehrwerk": [
+        "M A2 L24",
+        "S5 L1",
+        "M B1 L2",
+        "LIN B1 K4",
+        "NW B1 K3",
+        "As B1+ K1"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.praeteritum",
+        "rc.praeteritum-2"
+      ],
+      "inventory": [
+        "gz-a2"
+      ]
+    },
+    {
+      "id": "g.konj2-waere-haette-wuerde",
+      "label": "Konjunktiv II für Wünsche und Träume: wäre, hätte, würde + Infinitiv",
+      "intro": {
+        "receptive": "a2.2-u02",
+        "productive": "a2.2-u02"
+      },
+      "detectors": [],
+      "contrast": "g.konj2-koennte",
+      "errorTags": [
+        "satzklammer",
+        "spelling-meaning"
+      ],
+      "lehrwerk": [
+        "S4 L8",
+        "N A2 K8/K11",
+        "M A1 L24"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.konj2-waere-haette-wuerde"
+      ],
+      "inventory": [
+        "gz-a2"
+      ]
+    },
+    {
+      "id": "g.reflexiv-dat",
+      "label": "Reflexivpronomen im Dativ: Ich wünsche mir … Stell dir vor …",
+      "intro": {
+        "receptive": "a2.2-u02",
+        "productive": "a2.2-u02"
+      },
+      "detectors": [],
+      "contrast": "g.reflexiv-akk",
+      "errorTags": [
+        "reflexive",
+        "case-np"
+      ],
+      "lehrwerk": [
+        "M A2 L11",
+        "S3 L5"
+      ],
+      "consensus": "single",
+      "ruleCards": [
+        "rc.reflexiv-dat"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.indirekte-frage",
+      "label": "Indirekte Fragen mit ob und W-Wort (Können Sie mir sagen, wann …? Ich möchte wissen, ob …)",
+      "intro": {
+        "receptive": "a2.2-u03",
+        "productive": "a2.2-u03"
+      },
+      "detectors": [],
+      "contrast": "g.wenn",
+      "errorTags": [
+        "verb-final"
+      ],
+      "lehrwerk": [
+        "M A2 L16",
+        "S4 L13",
+        "N A2 K7"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.indirekte-frage"
+      ],
+      "inventory": [
+        "gz-a2"
+      ]
+    },
+    {
+      "id": "g.lokale-praep-weg",
+      "label": "Wege beschreiben: gegenüber, an … vorbei, bis zu, durch; woher? wo? wohin?",
+      "intro": {
+        "receptive": "a2.2-u04",
+        "productive": "a2.2-u04"
+      },
+      "chunkFrom": "a1.2-u01",
+      "detectors": [],
+      "contrast": "g.wechselpraep",
+      "errorTags": [
+        "case-pp"
+      ],
+      "lehrwerk": [
+        "M A2 L16–17",
+        "M A2 L19",
+        "S4 L11–12",
+        "N A2 K7"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.lokale-praep-weg"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.werden-vollverb",
+      "label": "werden als Vollverb: ich werde, du wirst, es wird (Es wird dunkel. Sie wird Erzieherin.)",
+      "intro": {
+        "receptive": "a2.2-u04",
+        "productive": "a2.2-u04"
+      },
+      "detectors": [],
+      "contrast": "g.konj2-waere-haette-wuerde",
+      "errorTags": [
+        "spelling-meaning"
+      ],
+      "lehrwerk": [
+        "M A1 L17"
+      ],
+      "consensus": "single",
+      "ruleCards": [
+        "rc.werden-vollverb"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.komparation-attributiv",
+      "label": "Komparativ und Superlativ vor dem Nomen (der günstigere Tarif, das beste Angebot)",
+      "intro": {
+        "receptive": "a2.2-u05",
+        "productive": "a2.2-u05"
+      },
+      "detectors": [],
+      "contrast": "g.komparation",
+      "errorTags": [
+        "adj-ending"
+      ],
+      "lehrwerk": [
+        "S4 L9",
+        "M B1 L9"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.komparation-attributiv"
+      ],
+      "inventory": [
+        "gz-a2"
+      ]
+    },
+    {
+      "id": "g.adj-dekl-nullartikel",
+      "label": "Adjektivendungen ohne Artikel; Was für ein …? (frische Brötchen, mit gutem Service)",
+      "intro": {
+        "receptive": "a2.2-u05",
+        "productive": "a2.2-u05"
+      },
+      "detectors": [],
+      "contrast": "g.adj-dekl-bestimmt",
+      "errorTags": [
+        "adj-ending"
+      ],
+      "lehrwerk": [
+        "S4 L9–12",
+        "M A2 L9",
+        "N A2 K8"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.adj-dekl-nullartikel"
+      ],
+      "inventory": [
+        "gz-a2"
+      ]
+    },
+    {
+      "id": "g.lassen",
+      "label": "lassen: etwas reparieren lassen, jemanden etwas machen lassen",
+      "intro": {
+        "receptive": "a2.2-u06",
+        "productive": "a2.2-u06"
+      },
+      "detectors": [],
+      "contrast": "g.muessen-duerfen-man",
+      "errorTags": [
+        "satzklammer"
+      ],
+      "lehrwerk": [
+        "M A2 L21",
+        "S4 L13"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.lassen"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.trotzdem",
+      "label": "trotzdem: Verb auf Position 2, im Kontrast zu deshalb",
+      "intro": {
+        "receptive": "a2.2-u06",
+        "productive": "a2.2-u06"
+      },
+      "detectors": [],
+      "contrast": "g.deshalb",
+      "errorTags": [
+        "v2-inv",
+        "connector-position"
+      ],
+      "lehrwerk": [
+        "S4 L8",
+        "N A2 K9",
+        "M B1 L4"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.trotzdem"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.passiv-praesens",
+      "label": "Passiv Präsens: wird + Partizip II (Ihr Antrag wird bearbeitet.) – erst verstehen, dann selbst bilden",
+      "intro": {
+        "receptive": "a2.2-u07",
+        "productive": "b1.2-u06"
+      },
+      "detectors": [],
+      "contrast": "g.werden-vollverb",
+      "errorTags": [
+        "satzklammer"
+      ],
+      "lehrwerk": [
+        "M A2 L14",
+        "S4 L10",
+        "NW B1 K10",
+        "N B1 K10",
+        "Si B1+ L7"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.passiv-praesens",
+        "rc.passiv-praesens-2"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.praepositionaladverb",
+      "label": "Präpositionaladverbien: worauf? – darauf, wofür? – dafür, auch mit dass-Satz",
+      "intro": {
+        "receptive": "a2.2-u08",
+        "productive": "a2.2-u08"
+      },
+      "detectors": [],
+      "contrast": "g.verben-praeposition",
+      "errorTags": [
+        "case-pp"
+      ],
+      "lehrwerk": [
+        "M A2 L18",
+        "N A2 K11",
+        "S3 L5"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.praepositionaladverb"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.relativsatz-nom",
+      "label": "Relativsatz im Nominativ (ein Kurs, der abends stattfindet)",
+      "intro": {
+        "receptive": "a2.2-u09",
+        "productive": "a2.2-u09"
+      },
+      "detectors": [],
+      "contrast": "g.artikel-genus-plural",
+      "errorTags": [
+        "verb-final",
+        "case-np"
+      ],
+      "lehrwerk": [
+        "M A2 L23",
+        "N A2 K12",
+        "S5 L2",
+        "LIN B1 K2"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.relativsatz-nom"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.zeitadverbien-erzaehlen",
+      "label": "Zeitadverbien beim Erzählen: danach, später, damals, inzwischen, schließlich",
+      "intro": {
+        "receptive": "a2.2-u09",
+        "productive": "a2.2-u09"
+      },
+      "detectors": [],
+      "contrast": "g.zeitangaben-inversion",
+      "errorTags": [
+        "v2-inv"
+      ],
+      "lehrwerk": [
+        "S4 L14",
+        "N A2 K11"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.zeitadverbien-erzaehlen"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.relativsatz-akk",
+      "label": "Relativsatz im Akkusativ (die Stelle, die ich suche; der Kollege, den ich kenne)",
+      "intro": {
+        "receptive": "a2.2-u10",
+        "productive": "a2.2-u10"
+      },
+      "detectors": [],
+      "contrast": "g.relativsatz-nom",
+      "errorTags": [
+        "verb-final",
+        "case-np"
+      ],
+      "lehrwerk": [
+        "M A2 L23",
+        "N A2 K12",
+        "S5 L2"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.relativsatz-akk"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.bis-seitdem",
+      "label": "Nebensätze mit bis und seit(dem) (Bis die Kollegin zurück ist, …)",
+      "intro": {
+        "receptive": "a2.2-u11",
+        "productive": "a2.2-u11"
+      },
+      "detectors": [],
+      "contrast": "g.temporal-seit-vor",
+      "errorTags": [
+        "verb-final"
+      ],
+      "lehrwerk": [
+        "M A2 L22",
+        "N A2 K10"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.bis-seitdem"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.adjektiv-nomen",
+      "label": "Adjektive als Nomen (der/die Bekannte, ein Bekannter, die Verwandten)",
+      "intro": {
+        "receptive": "b1.1-u01",
+        "productive": "b1.1-u01"
+      },
+      "detectors": [],
+      "contrast": "g.adj-dekl-bestimmt",
+      "errorTags": [
+        "adj-ending"
+      ],
+      "lehrwerk": [
+        "M B1 L1",
+        "As B1+ K2"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.adjektiv-nomen"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.n-deklination",
+      "label": "n-Deklination (der Kollege – den/dem Kollegen; der Kunde, Herr)",
+      "intro": {
+        "receptive": "b1.1-u02",
+        "productive": "b1.1-u02"
+      },
+      "detectors": [],
+      "contrast": "g.akkusativ",
+      "errorTags": [
+        "n-dekl"
+      ],
+      "lehrwerk": [
+        "M B1 L1",
+        "As B1+ K2",
+        "S6 L8",
+        "LIN B1 K14"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.n-deklination"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.relativsatz-dat-praep",
+      "label": "Relativsatz im Dativ und mit Präposition (die Wohnung, in die ich einziehe)",
+      "intro": {
+        "receptive": "b1.1-u03",
+        "productive": "b1.1-u03"
+      },
+      "detectors": [],
+      "contrast": "g.relativsatz-akk",
+      "errorTags": [
+        "verb-final",
+        "case-pp"
+      ],
+      "lehrwerk": [
+        "M B1 L3",
+        "S5 L2",
+        "NW B1 K6",
+        "LIN B1 K14"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.relativsatz-dat-praep"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.obwohl",
+      "label": "obwohl: Nebensatz, im Kontrast zu trotzdem",
+      "intro": {
+        "receptive": "b1.1-u04",
+        "productive": "b1.1-u04"
+      },
+      "detectors": [],
+      "contrast": "g.trotzdem",
+      "errorTags": [
+        "verb-final",
+        "connector-position"
+      ],
+      "lehrwerk": [
+        "M B1 L4",
+        "S5 L2",
+        "LIN B1 K3–4",
+        "NW B1 K1"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.obwohl"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.futur1",
+      "label": "Futur I: Vorhersage, Vermutung, Versprechen (Das wird schon klappen.)",
+      "intro": {
+        "receptive": "b1.1-u05",
+        "productive": "b1.1-u05"
+      },
+      "detectors": [],
+      "contrast": "g.werden-vollverb",
+      "errorTags": [
+        "satzklammer"
+      ],
+      "lehrwerk": [
+        "M B1 L5",
+        "LIN B1 K5",
+        "NW B1 K6",
+        "As B1+ K6",
+        "S6 L11"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.futur1"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.vermutung-modalwoerter",
+      "label": "Vermutungen mit wahrscheinlich, vermutlich, vielleicht, sicher, wohl",
+      "intro": {
+        "receptive": "b1.1-u05",
+        "productive": "b1.1-u05"
+      },
+      "detectors": [],
+      "contrast": "g.futur1",
+      "errorTags": [
+        "v2-inv"
+      ],
+      "lehrwerk": [
+        "M B1 L5",
+        "NW B1 K6"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.vermutung-modalwoerter"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.falls",
+      "label": "Bedingungen mit falls, im Vergleich zu wenn",
+      "intro": {
+        "receptive": "b1.1-u06",
+        "productive": "b1.1-u06"
+      },
+      "detectors": [],
+      "contrast": "g.wenn",
+      "errorTags": [
+        "verb-final"
+      ],
+      "lehrwerk": [
+        "M B1 L6",
+        "LIN B1 K10–11"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.falls"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.zu-infinitiv",
+      "label": "Infinitiv mit zu nach Verben, Nomen und Adjektiven (Es ist wichtig, genug zu schlafen.)",
+      "intro": {
+        "receptive": "b1.1-u07",
+        "productive": "b1.1-u07"
+      },
+      "chunkFrom": "a2.1-u07",
+      "detectors": [],
+      "contrast": "g.koennen",
+      "errorTags": [
+        "satzklammer"
+      ],
+      "lehrwerk": [
+        "M B1 L7",
+        "S5 L5",
+        "NW B1 K1",
+        "MOT L17"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.zu-infinitiv"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.um-zu-damit",
+      "label": "Finalsätze mit um … zu und damit",
+      "intro": {
+        "receptive": "b1.1-u08",
+        "productive": "b1.1-u08"
+      },
+      "detectors": [],
+      "contrast": "g.weil",
+      "errorTags": [
+        "verb-final",
+        "satzklammer"
+      ],
+      "lehrwerk": [
+        "S5 L6",
+        "LIN B1 K6",
+        "M B1 L23–24"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.um-zu-damit"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.da-kausal",
+      "label": "Kausalsatz mit da (Da ich abends arbeite, suche ich einen Onlinekurs.)",
+      "intro": {
+        "receptive": "b1.1-u08",
+        "productive": "b1.1-u08"
+      },
+      "detectors": [],
+      "contrast": "g.weil",
+      "errorTags": [
+        "verb-final"
+      ],
+      "lehrwerk": [
+        "M B1 L8",
+        "LIN B1 K10–11"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.da-kausal"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.plusquamperfekt",
+      "label": "Plusquamperfekt: hatte/war + Partizip II",
+      "intro": {
+        "receptive": "b1.1-u09",
+        "productive": "b1.1-u09"
+      },
+      "detectors": [],
+      "contrast": "g.praeteritum",
+      "errorTags": [
+        "perfekt-aux-participle"
+      ],
+      "lehrwerk": [
+        "M B1 L11",
+        "S5 L1",
+        "NW B1 K7",
+        "LIN B1 K12",
+        "S6 L9"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.plusquamperfekt"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.nachdem-bevor",
+      "label": "Temporalsätze mit nachdem und bevor",
+      "intro": {
+        "receptive": "b1.1-u09",
+        "productive": "b1.1-u09"
+      },
+      "detectors": [],
+      "contrast": "g.als-temporal",
+      "errorTags": [
+        "verb-final"
+      ],
+      "lehrwerk": [
+        "M B1 L8",
+        "M B1 L11",
+        "S5 L1"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.nachdem-bevor"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.konj2-irreal-gegenwart",
+      "label": "Konjunktiv II: irreale Bedingungen in der Gegenwart (Wenn ich mehr Zeit hätte, würde ich …)",
+      "intro": {
+        "receptive": "b1.1-u10",
+        "productive": "b1.1-u10"
+      },
+      "detectors": [],
+      "contrast": "g.wenn",
+      "errorTags": [
+        "verb-final",
+        "satzklammer"
+      ],
+      "lehrwerk": [
+        "S5 L4",
+        "NW B1 K4",
+        "Si B1+ L5",
+        "LIN B1 K9"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.konj2-irreal-gegenwart"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.genitiv",
+      "label": "Genitiv: Artikel, Nomen, Genitivattribut (das Jubiläum unserer Kollegin)",
+      "intro": {
+        "receptive": "b1.1-u11",
+        "productive": "b1.1-u11"
+      },
+      "detectors": [],
+      "contrast": "g.praep-dativ",
+      "errorTags": [
+        "case-np"
+      ],
+      "lehrwerk": [
+        "M B1 L12",
+        "NW B1 K2",
+        "LIN B1 K3",
+        "S5 L3"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.genitiv"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.praep-genitiv",
+      "label": "Präpositionen mit Genitiv: wegen, trotz, während",
+      "intro": {
+        "receptive": "b1.1-u12",
+        "productive": "b1.1-u12"
+      },
+      "detectors": [],
+      "contrast": "g.weil",
+      "errorTags": [
+        "case-pp"
+      ],
+      "lehrwerk": [
+        "M B1 L12",
+        "S5 L3–7",
+        "LIN B1 K3",
+        "NW B1 K2"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.praep-genitiv"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.kausaladverbien-naemlich",
+      "label": "darum, deswegen, daher (Verb auf Position 2) und nämlich",
+      "intro": {
+        "receptive": "b1.2-u01",
+        "productive": "b1.2-u01"
+      },
+      "detectors": [],
+      "contrast": "g.deshalb",
+      "errorTags": [
+        "v2-inv",
+        "connector-position"
+      ],
+      "lehrwerk": [
+        "M B1 L13",
+        "S6 L12",
+        "NW B1 K3"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.kausaladverbien-naemlich"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.partizip-adjektiv",
+      "label": "Partizip I und II als Adjektiv (steigende Preise, die reduzierte Ware)",
+      "intro": {
+        "receptive": "b1.2-u02",
+        "productive": "b1.2-u02"
+      },
+      "detectors": [],
+      "contrast": "g.adj-dekl-bestimmt",
+      "errorTags": [
+        "adj-ending"
+      ],
+      "lehrwerk": [
+        "M B1 L14",
+        "S6 L10",
+        "NW B1 K11–12",
+        "N B1 K12"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.partizip-adjektiv"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.nicht-nur-sowohl",
+      "label": "nicht nur … sondern auch; sowohl … als auch",
+      "intro": {
+        "receptive": "b1.2-u03",
+        "productive": "b1.2-u03"
+      },
+      "detectors": [],
+      "contrast": "g.zeitangaben-inversion",
+      "errorTags": [
+        "connector-position"
+      ],
+      "lehrwerk": [
+        "M B1 L15",
+        "S6 L8/L10",
+        "NW B1 K8",
+        "LIN B1 K16"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.nicht-nur-sowohl"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.relativsatz-was-wo",
+      "label": "Relativsatz mit was und wo (alles, was wir beschlossen haben; die Stadt, wo …)",
+      "intro": {
+        "receptive": "b1.2-u04",
+        "productive": "b1.2-u04"
+      },
+      "detectors": [],
+      "contrast": "g.relativsatz-dat-praep",
+      "errorTags": [
+        "verb-final"
+      ],
+      "lehrwerk": [
+        "S6 L10",
+        "NW B1 K11",
+        "LIN B1 K14"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.relativsatz-was-wo"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.brauchen-zu",
+      "label": "nicht/nur brauchen + zu (Sie brauchen den Plan nicht auszudrucken.)",
+      "intro": {
+        "receptive": "b1.2-u04",
+        "productive": "b1.2-u04"
+      },
+      "detectors": [],
+      "contrast": "g.muessen-duerfen-man",
+      "errorTags": [
+        "satzklammer"
+      ],
+      "lehrwerk": [
+        "M B1 L16",
+        "LIN B1 K11",
+        "NW B1 K8"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.brauchen-zu"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.sodass",
+      "label": "Folgen ausdrücken: sodass und so …, dass",
+      "intro": {
+        "receptive": "b1.2-u05",
+        "productive": "b1.2-u05"
+      },
+      "detectors": [],
+      "contrast": "g.deshalb",
+      "errorTags": [
+        "verb-final"
+      ],
+      "lehrwerk": [
+        "M B1 L20",
+        "S6 L12",
+        "NW B1 K3"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.sodass"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.modalpartikeln",
+      "label": "Modalpartikeln doch, mal, ja, eben in Bitten und Vorwürfen (Könnten Sie doch mal …?)",
+      "intro": {
+        "receptive": "b1.2-u05",
+        "productive": "b1.2-u05"
+      },
+      "detectors": [],
+      "contrast": "g.imperativ-sie",
+      "errorTags": [
+        "register"
+      ],
+      "lehrwerk": [
+        "Si B1+ L2",
+        "M B1 L19–21",
+        "As B2 K9"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.modalpartikeln"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.passiv-modalverb",
+      "label": "Passiv mit Modalverben (Die Tür muss geschlossen werden.)",
+      "intro": {
+        "receptive": "b1.2-u06",
+        "productive": "b1.2-u06"
+      },
+      "detectors": [],
+      "contrast": "g.passiv-praesens",
+      "errorTags": [
+        "satzklammer"
+      ],
+      "lehrwerk": [
+        "M B1 L21",
+        "NW B1 K10"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.passiv-modalverb"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.passiv-vergangenheit",
+      "label": "Passiv Präteritum und Perfekt: wurde … / ist … worden (worden oder geworden?)",
+      "intro": {
+        "receptive": "b1.2-u07",
+        "productive": "b1.2-u07"
+      },
+      "detectors": [],
+      "contrast": "g.passiv-praesens",
+      "errorTags": [
+        "perfekt-aux-participle",
+        "spelling-meaning"
+      ],
+      "lehrwerk": [
+        "M B1 L22",
+        "S6 L13",
+        "NW B1 K10"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.passiv-vergangenheit"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.temporal-waehrend-sobald",
+      "label": "Temporalsätze mit während, sobald und solange",
+      "intro": {
+        "receptive": "b1.2-u07",
+        "productive": "b1.2-u07"
+      },
+      "detectors": [],
+      "contrast": "g.praep-genitiv",
+      "errorTags": [
+        "verb-final"
+      ],
+      "lehrwerk": [
+        "S6 L9",
+        "NW B1 K7",
+        "LIN B1 K11–12",
+        "M B1 L8"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.temporal-waehrend-sobald"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.praep-innerhalb-ausserhalb",
+      "label": "innerhalb und außerhalb + Genitiv (innerhalb eines Monats; innerhalb von zwei Wochen)",
+      "intro": {
+        "receptive": "b1.2-u08",
+        "productive": "b1.2-u08"
+      },
+      "detectors": [],
+      "contrast": "g.praep-genitiv",
+      "errorTags": [
+        "case-pp"
+      ],
+      "lehrwerk": [
+        "M B1 L21",
+        "NW B1 K10",
+        "LIN B1 K13"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.praep-innerhalb-ausserhalb"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.indem",
+      "label": "indem: Mittel und Weg (…, indem Sie der Lastschrift widersprechen.)",
+      "intro": {
+        "receptive": "b1.2-u08",
+        "productive": "b1.2-u08"
+      },
+      "detectors": [],
+      "contrast": "g.um-zu-damit",
+      "errorTags": [
+        "verb-final"
+      ],
+      "lehrwerk": [
+        "M B1 L20",
+        "S6 L12"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.indem"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.je-desto",
+      "label": "je … desto / umso (Je größer die Stadt ist, desto teurer sind die Wohnungen.)",
+      "intro": {
+        "receptive": "b1.2-u09",
+        "productive": "b1.2-u09"
+      },
+      "detectors": [],
+      "contrast": "g.komparation",
+      "errorTags": [
+        "verb-final",
+        "v2-inv"
+      ],
+      "lehrwerk": [
+        "M B1 L19",
+        "S6 L8",
+        "NW B1 K11"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.je-desto"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.praep-entlang-herum",
+      "label": "entlang und um … herum (den Fluss entlang, um den Marktplatz herum)",
+      "intro": {
+        "receptive": "b1.2-u09",
+        "productive": "b1.2-u09"
+      },
+      "detectors": [],
+      "contrast": "g.lokale-praep-weg",
+      "errorTags": [
+        "case-pp"
+      ],
+      "lehrwerk": [
+        "M B1 L21",
+        "NW B1 K10",
+        "LIN B1 K13"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.praep-entlang-herum"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.statt-ohne",
+      "label": "(an)statt … zu, ohne … zu; (an)statt dass, ohne dass",
+      "intro": {
+        "receptive": "b1.2-u10",
+        "productive": "b1.2-u10"
+      },
+      "detectors": [],
+      "contrast": "g.um-zu-damit",
+      "errorTags": [
+        "satzklammer",
+        "verb-final"
+      ],
+      "lehrwerk": [
+        "M B1 L23",
+        "S6 L9/L12",
+        "S5 L6"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.statt-ohne"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.als-ob",
+      "label": "als ob + Konjunktiv II (Er tut so, als ob er alles wüsste.)",
+      "intro": {
+        "receptive": "b1.2-u10",
+        "productive": "b1.2-u10"
+      },
+      "detectors": [],
+      "contrast": "g.konj2-irreal-gegenwart",
+      "errorTags": [
+        "verb-final"
+      ],
+      "lehrwerk": [
+        "M B1 L24",
+        "S6 L9"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.als-ob"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.weder-entweder-zwar",
+      "label": "weder … noch, entweder … oder, zwar … aber",
+      "intro": {
+        "receptive": "b1.2-u11",
+        "productive": "b1.2-u11"
+      },
+      "detectors": [],
+      "contrast": "g.nicht-nur-sowohl",
+      "errorTags": [
+        "connector-position"
+      ],
+      "lehrwerk": [
+        "M B1 L18",
+        "S6 L8/L10",
+        "NW B1 K8"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.weder-entweder-zwar"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.konj2-vergangenheit",
+      "label": "Konjunktiv II der Vergangenheit: hätte/wäre + Partizip II – erst verstehen, dann selbst bilden",
+      "intro": {
+        "receptive": "b1.2-u11",
+        "productive": "b2.1-u04"
+      },
+      "detectors": [],
+      "contrast": "g.konj2-irreal-gegenwart",
+      "errorTags": [
+        "perfekt-aux-participle"
+      ],
+      "lehrwerk": [
+        "M B1 L10",
+        "S5 L7",
+        "Si B2 L5–6"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.konj2-vergangenheit",
+        "rc.konj2-vergangenheit-2"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.mittelfeld-angaben",
+      "label": "Wortstellung im Mittelfeld: Angaben temporal – kausal – modal – lokal",
+      "intro": {
+        "receptive": "b2.1-u01",
+        "productive": "b2.1-u01"
+      },
+      "detectors": [],
+      "contrast": "g.dat-akk-stellung",
+      "errorTags": [
+        "v2-inv"
+      ],
+      "lehrwerk": [
+        "As B2 K1",
+        "Si B2 L1"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.mittelfeld-angaben"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.negation-system",
+      "label": "Negation als System: Satz- und Teilnegation, nicht mehr, noch nicht, gar nicht",
+      "intro": {
+        "receptive": "b2.1-u01",
+        "productive": "b2.1-u01"
+      },
+      "detectors": [],
+      "contrast": "g.nicht-position-gern",
+      "errorTags": [],
+      "lehrwerk": [
+        "As B2 K1",
+        "Si B2 L1",
+        "NW B1 K9"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.negation-system"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.korrelat-es-da",
+      "label": "Verweiswörter: es und da(r)- + Präposition vor dass- und zu-Sätzen (Ich lege Wert darauf, dass …)",
+      "intro": {
+        "receptive": "b2.1-u02",
+        "productive": "b2.1-u02"
+      },
+      "detectors": [],
+      "contrast": "g.praepositionaladverb",
+      "errorTags": [
+        "case-pp"
+      ],
+      "lehrwerk": [
+        "As B2 K2",
+        "Si B2 L3"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.korrelat-es-da"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.textverweise",
+      "label": "Textkohärenz: Rück- und Vorverweise (dies, dabei, daraufhin, Letzteres)",
+      "intro": {
+        "receptive": "b2.1-u02",
+        "productive": "b2.1-u02"
+      },
+      "detectors": [],
+      "contrast": "g.korrelat-es-da",
+      "errorTags": [
+        "register"
+      ],
+      "lehrwerk": [
+        "Si B2 L3",
+        "As B2 K7"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.textverweise"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.infinitiv-oder-dass",
+      "label": "Infinitivsatz oder dass-Satz: wann beide möglich sind, wann nur einer",
+      "intro": {
+        "receptive": "b2.1-u03",
+        "productive": "b2.1-u03"
+      },
+      "detectors": [],
+      "contrast": "g.zu-infinitiv",
+      "errorTags": [
+        "verb-final",
+        "satzklammer"
+      ],
+      "lehrwerk": [
+        "As B2 K3",
+        "Si B2 L3"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.infinitiv-oder-dass"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.infinitiv-passiv-perfekt",
+      "label": "Infinitiv Passiv und Infinitiv Perfekt im zu-Satz (übernommen zu werden; bestanden zu haben)",
+      "intro": {
+        "receptive": "b2.1-u03",
+        "productive": "b2.1-u03"
+      },
+      "detectors": [],
+      "contrast": "g.passiv-modalverb",
+      "errorTags": [
+        "perfekt-aux-participle",
+        "satzklammer"
+      ],
+      "lehrwerk": [
+        "As B2 K3",
+        "Si B2 L3"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.infinitiv-passiv-perfekt"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.konj2-bedeutungen",
+      "label": "Bedeutungen des Konjunktiv II: höfliche Forderung und Vorwurf (Sie hätten uns informieren müssen.)",
+      "intro": {
+        "receptive": "b2.1-u04",
+        "productive": "b2.1-u04"
+      },
+      "detectors": [],
+      "contrast": "g.konj2-vergangenheit",
+      "errorTags": [
+        "register"
+      ],
+      "lehrwerk": [
+        "Si B2 L5–6"
+      ],
+      "consensus": "single",
+      "ruleCards": [
+        "rc.konj2-bedeutungen"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.einerseits-andererseits",
+      "label": "einerseits … andererseits, zum einen … zum anderen",
+      "intro": {
+        "receptive": "b2.1-u05",
+        "productive": "b2.1-u05"
+      },
+      "detectors": [],
+      "contrast": "g.weder-entweder-zwar",
+      "errorTags": [
+        "connector-position",
+        "v2-inv"
+      ],
+      "lehrwerk": [
+        "As B2 K3",
+        "Si B2 L1"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.einerseits-andererseits"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.passiversatz",
+      "label": "Passiversatz: man, sich lassen, sein + zu; -bar/-lich mit passivischer Bedeutung (Das lässt sich messen.)",
+      "intro": {
+        "receptive": "b2.1-u06",
+        "productive": "b2.1-u06"
+      },
+      "detectors": [],
+      "contrast": "g.passiv-modalverb",
+      "errorTags": [
+        "reflexive",
+        "satzklammer"
+      ],
+      "lehrwerk": [
+        "As B2 K5",
+        "Si B2 L10"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.passiversatz"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.haben-zu",
+      "label": "haben + zu + Infinitiv als Pflicht, neben sein + zu (Sie haben den Fragebogen auszufüllen.)",
+      "intro": {
+        "receptive": "b2.1-u06",
+        "productive": "b2.1-u06"
+      },
+      "detectors": [],
+      "contrast": "g.passiversatz",
+      "errorTags": [
+        "satzklammer"
+      ],
+      "lehrwerk": [
+        "As B2 K5"
+      ],
+      "consensus": "single",
+      "ruleCards": [
+        "rc.haben-zu"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.relativsatz-wer-was",
+      "label": "Verallgemeinernde Relativsätze: Wer hier wohnt, (der) …; Was mich stört, (das) ist …",
+      "intro": {
+        "receptive": "b2.1-u07",
+        "productive": "b2.1-u07"
+      },
+      "detectors": [],
+      "contrast": "g.relativsatz-was-wo",
+      "errorTags": [
+        "verb-final",
+        "case-np"
+      ],
+      "lehrwerk": [
+        "As B2 K4",
+        "Si B2 L7"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.relativsatz-wer-was"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.relativpronomen-genitiv",
+      "label": "Relativpronomen im Genitiv: dessen, deren (die Nachbarin, deren Garten wir nutzen)",
+      "intro": {
+        "receptive": "b2.1-u07",
+        "productive": "b2.1-u07"
+      },
+      "detectors": [],
+      "contrast": "g.relativsatz-dat-praep",
+      "errorTags": [
+        "case-np"
+      ],
+      "lehrwerk": [
+        "MOT L30",
+        "As B2 K4"
+      ],
+      "consensus": "single",
+      "ruleCards": [
+        "rc.relativpronomen-genitiv"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.nomen-verb-verbindungen",
+      "label": "Nomen-Verb-Verbindungen (einen Antrag stellen, in Anspruch nehmen, zur Verfügung stehen)",
+      "intro": {
+        "receptive": "b2.1-u08",
+        "productive": "b2.1-u08"
+      },
+      "chunkFrom": "a2.2-u07",
+      "detectors": [],
+      "contrast": "g.verben-praeposition",
+      "errorTags": [
+        "register"
+      ],
+      "lehrwerk": [
+        "As B2 K4",
+        "Si B2 L5"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.nomen-verb-verbindungen"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.zustandspassiv",
+      "label": "Zustandspassiv: Vorgang und Zustand (Der Antrag wird geprüft. – Der Antrag ist eingereicht.)",
+      "intro": {
+        "receptive": "b2.1-u08",
+        "productive": "b2.1-u08"
+      },
+      "detectors": [],
+      "contrast": "g.passiv-praesens",
+      "errorTags": [
+        "perfekt-aux-participle"
+      ],
+      "lehrwerk": [
+        "Si B2 L2",
+        "As B2 K6"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.zustandspassiv"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.wortbildung-adjektive",
+      "label": "Wortbildung Adjektive: -fähig, -sam, -ig (konfliktfähig, sparsam, sorgfältig)",
+      "intro": {
+        "receptive": "b2.1-u09",
+        "productive": "b2.1-u09"
+      },
+      "detectors": [],
+      "contrast": "g.wortbildung-ung-bar",
+      "errorTags": [],
+      "lehrwerk": [
+        "Si B1+ L4"
+      ],
+      "consensus": "single",
+      "ruleCards": [
+        "rc.wortbildung-adjektive"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.futur2",
+      "label": "Vermutungen mit Futur I und Futur II (Er wird schlecht geschlafen haben.)",
+      "intro": {
+        "receptive": "b2.1-u10",
+        "productive": "b2.1-u10"
+      },
+      "detectors": [],
+      "contrast": "g.futur1",
+      "errorTags": [
+        "perfekt-aux-participle",
+        "satzklammer"
+      ],
+      "lehrwerk": [
+        "Si B2 L5–6"
+      ],
+      "consensus": "single",
+      "ruleCards": [
+        "rc.futur2"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.redewiedergabe",
+      "label": "Redewiedergabe ohne Konjunktiv I: laut, zufolge, nach Angaben von; behaupten, betonen, einräumen",
+      "intro": {
+        "receptive": "b2.1-u11",
+        "productive": "b2.1-u11"
+      },
+      "detectors": [],
+      "contrast": "g.dass",
+      "errorTags": [
+        "case-pp",
+        "register"
+      ],
+      "lehrwerk": [
+        "As B2 K8",
+        "Si B2 L7"
+      ],
+      "consensus": "single",
+      "ruleCards": [
+        "rc.redewiedergabe"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.vergleichssaetze",
+      "label": "Vergleichssätze mit als und wie (länger, als wir geplant hatten; so gut, wie wir erwartet hatten)",
+      "intro": {
+        "receptive": "b2.1-u12",
+        "productive": "b2.1-u12"
+      },
+      "detectors": [],
+      "contrast": "g.komparation",
+      "errorTags": [
+        "verb-final"
+      ],
+      "lehrwerk": [
+        "As B2 K2",
+        "Si B2 L3"
+      ],
+      "consensus": "majority",
+      "ruleCards": [
+        "rc.vergleichssaetze"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.als-irreal",
+      "label": "Irreale Vergleichssätze mit als + Verb (Es sah aus, als wäre alles fertig.)",
+      "intro": {
+        "receptive": "b2.1-u12",
+        "productive": "b2.1-u12"
+      },
+      "detectors": [],
+      "contrast": "g.als-ob",
+      "errorTags": [
+        "v2-inv"
+      ],
+      "lehrwerk": [
+        "As B2"
+      ],
+      "consensus": "single",
+      "ruleCards": [
+        "rc.als-irreal"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.konj1-gegenwart",
+      "label": "Konjunktiv I in der indirekten Rede und Ersatz durch Konjunktiv II (Sie sagt, sie habe keine Zeit.)",
+      "intro": {
+        "receptive": "b2.2-u01",
+        "productive": "b2.2-u01"
+      },
+      "chunkFrom": "b2.1-u11",
+      "detectors": [],
+      "contrast": "g.redewiedergabe",
+      "errorTags": [
+        "register"
+      ],
+      "lehrwerk": [
+        "As B2 K8",
+        "Si B2 L7"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.konj1-gegenwart"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.dadurch-dass",
+      "label": "Modalsätze mit dadurch, dass (neben indem)",
+      "intro": {
+        "receptive": "b2.2-u02",
+        "productive": "b2.2-u02"
+      },
+      "detectors": [],
+      "contrast": "g.indem",
+      "errorTags": [
+        "verb-final"
+      ],
+      "lehrwerk": [
+        "As B2 K7",
+        "Si B2 L11"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.dadurch-dass"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.modalpartikeln-system",
+      "label": "Modalpartikeln als System: doch, ja, eben, halt, mal, eigentlich, wohl, schon",
+      "intro": {
+        "receptive": "b2.2-u03",
+        "productive": "b2.2-u03"
+      },
+      "detectors": [],
+      "contrast": "g.modalpartikeln",
+      "errorTags": [
+        "register"
+      ],
+      "lehrwerk": [
+        "Si B2 L8",
+        "As B2 K9"
+      ],
+      "consensus": "single",
+      "ruleCards": [
+        "rc.modalpartikeln-system"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.konditional-konnektoren",
+      "label": "Bedingungen: sofern, vorausgesetzt, dass, es sei denn, im Fall, dass; Sollten Sie …, …",
+      "intro": {
+        "receptive": "b2.2-u04",
+        "productive": "b2.2-u04"
+      },
+      "detectors": [],
+      "contrast": "g.falls",
+      "errorTags": [
+        "verb-final",
+        "v2-inv"
+      ],
+      "lehrwerk": [
+        "As B2 K10",
+        "Si B2 L8–9/L12"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.konditional-konnektoren"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.nominalisierung",
+      "label": "Nominalisierung: Verbalstil und Nominalstil (weil die Gebühren steigen → wegen der steigenden Gebühren)",
+      "intro": {
+        "receptive": "b2.2-u05",
+        "productive": "b2.2-u05"
+      },
+      "detectors": [],
+      "contrast": "g.praep-genitiv",
+      "errorTags": [
+        "register",
+        "case-np"
+      ],
+      "lehrwerk": [
+        "As B2 K9",
+        "Si B2 L5/L8"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.nominalisierung"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.nominalgruppen",
+      "label": "Nominalgruppen mit Genitivattribut und Präposition (die Anmeldung zur Prüfung, die Abgabe der Hausarbeit)",
+      "intro": {
+        "receptive": "b2.2-u05",
+        "productive": "b2.2-u05"
+      },
+      "detectors": [],
+      "contrast": "g.genitiv",
+      "errorTags": [
+        "case-np",
+        "case-pp"
+      ],
+      "lehrwerk": [
+        "As B2 K9"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.nominalgruppen"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.nomen-adjektiv-praeposition",
+      "label": "Nomen und Adjektive mit Präpositionen (die Kritik an, der Einfluss auf; angewiesen auf)",
+      "intro": {
+        "receptive": "b2.2-u06",
+        "productive": "b2.2-u06"
+      },
+      "detectors": [],
+      "contrast": "g.verben-praeposition",
+      "errorTags": [
+        "case-pp"
+      ],
+      "lehrwerk": [
+        "As B2 K8",
+        "Si B2 L6–7"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.nomen-adjektiv-praeposition"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.konj1-vergangenheit",
+      "label": "Konjunktiv I der Vergangenheit (Er sagte, er sei 1961 nach Berlin gekommen.)",
+      "intro": {
+        "receptive": "b2.2-u07",
+        "productive": "b2.2-u07"
+      },
+      "detectors": [],
+      "contrast": "g.konj1-gegenwart",
+      "errorTags": [
+        "perfekt-aux-participle",
+        "register"
+      ],
+      "lehrwerk": [
+        "As B2 K8"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.konj1-vergangenheit"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.modalverben-subjektiv",
+      "label": "Subjektive Modalverben: soll/will … gewesen sein; muss, dürfte, kann für Vermutungen",
+      "intro": {
+        "receptive": "b2.2-u07",
+        "productive": "b2.2-u07"
+      },
+      "detectors": [],
+      "contrast": "g.vermutung-modalwoerter",
+      "errorTags": [
+        "satzklammer",
+        "perfekt-aux-participle"
+      ],
+      "lehrwerk": [
+        "Si B2 L8",
+        "As B2 K9"
+      ],
+      "consensus": "single",
+      "ruleCards": [
+        "rc.modalverben-subjektiv"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.konzessive-konnektoren",
+      "label": "Konzessive Konnektoren: obgleich, wenngleich, selbst wenn, auch wenn; dennoch, gleichwohl",
+      "intro": {
+        "receptive": "b2.2-u09",
+        "productive": "b2.2-u09"
+      },
+      "detectors": [],
+      "contrast": "g.obwohl",
+      "errorTags": [
+        "verb-final",
+        "connector-position"
+      ],
+      "lehrwerk": [
+        "As B2 K10",
+        "Si B2 L8–9/L12"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.konzessive-konnektoren"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.konsekutiv-adversativ",
+      "label": "Konsekutive und adversative Konnektoren: folglich, infolgedessen; wohingegen, hingegen, während",
+      "intro": {
+        "receptive": "b2.2-u09",
+        "productive": "b2.2-u09"
+      },
+      "detectors": [],
+      "contrast": "g.sodass",
+      "errorTags": [
+        "connector-position",
+        "v2-inv"
+      ],
+      "lehrwerk": [
+        "As B2 K10",
+        "Si B2 L8–9/L12"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.konsekutiv-adversativ"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.partizipialattribut",
+      "label": "Erweiterte Partizipialattribute (die von der Firma eingeführten Werkzeuge) und ihre Auflösung in Relativsätze",
+      "intro": {
+        "receptive": "b2.2-u10",
+        "productive": "b2.2-u10"
+      },
+      "detectors": [],
+      "contrast": "g.partizip-adjektiv",
+      "errorTags": [
+        "adj-ending"
+      ],
+      "lehrwerk": [
+        "As B2 K10",
+        "Si B2 L12"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.partizipialattribut"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.partizip-nomen",
+      "label": "Partizipien als Nomen (die Beschäftigten, die Auszubildenden, das Erreichte)",
+      "intro": {
+        "receptive": "b2.2-u10",
+        "productive": "b2.2-u10"
+      },
+      "detectors": [],
+      "contrast": "g.adjektiv-nomen",
+      "errorTags": [
+        "adj-ending"
+      ],
+      "lehrwerk": [
+        "As B2 K10",
+        "Si B2 L12"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.partizip-nomen"
+      ],
+      "inventory": []
+    },
+    {
+      "id": "g.praep-genitiv-formell",
+      "label": "Präpositionen mit Genitiv im formellen Stil: aufgrund, infolge, angesichts, hinsichtlich, bezüglich; gemäß + Dativ",
+      "intro": {
+        "receptive": "b2.2-u11",
+        "productive": "b2.2-u11"
+      },
+      "chunkFrom": "b2.1-u04",
+      "detectors": [],
+      "contrast": "g.praep-genitiv",
+      "errorTags": [
+        "case-pp",
+        "register"
+      ],
+      "lehrwerk": [
+        "As B2 K10",
+        "Si B2 L8–9/L12"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.praep-genitiv-formell"
+      ],
+      "inventory": []
+    }
+  ]
+}

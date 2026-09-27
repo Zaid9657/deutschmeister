@@ -19,7 +19,9 @@
     "check:legal-release": "node scripts/check-legal-release.mjs",
     "check:duplicates": "node scripts/check-duplicates.mjs",
     "test": "node --test tests/*.test.mjs",
-    "check:html": "node scripts/check-built-html.mjs dist"
+    "check:html": "node scripts/check-built-html.mjs dist",
+    "course:check": "node scripts/course-v2/check.mjs --all",
+    "course:compile": "node scripts/course-v2/compile.mjs --all"
   },
   "dependencies": {
     "@netlify/functions": "^5.1.5",

@@ -8,6 +8,7 @@
 
 [functions]
   node_bundler = "esbuild"
+  included_files = ["netlify/functions/_shared/course-v2/**"]
 
 # 07:00 UTC daily (09:00 CET / 08:00 GMT)
 [functions."daily-sentence"]

@@ -1,0 +1,193 @@
+{
+  "$schema": "course-v2/families@1",
+  "families": [
+    {
+      "id": "fam.h-detail",
+      "label": "H-DETAIL",
+      "skill": "Hören: aus kurzen Alltagstexten (Dialog, Ansage, Mailbox) eine Einzelinformation wie Zeit, Ort, Preis oder Zahl heraushören.",
+      "templates": [
+        "sd1.h1",
+        "sd1.h3",
+        "ga2.h1",
+        "tb1.hv3"
+      ]
+    },
+    {
+      "id": "fam.h-durchsage",
+      "label": "H-DURCHSAGE",
+      "skill": "Hören: öffentliche Durchsagen und kurze Meldungen (Bahnhof, Kaufhaus, Radio) verstehen und prüfen, ob eine Aussage stimmt.",
+      "templates": [
+        "sd1.h2",
+        "tb2.hv3"
+      ]
+    },
+    {
+      "id": "fam.h-gespraech",
+      "label": "H-GESPRÄCH",
+      "skill": "Hören: ein längeres Gespräch zwischen zwei Personen verfolgen und Details oder Zuordnungen richtig erkennen.",
+      "templates": [
+        "ga2.h2",
+        "ga2.h3",
+        "tb1.hv2"
+      ]
+    },
+    {
+      "id": "fam.h-meinung",
+      "label": "H-MEINUNG",
+      "skill": "Hören: kurze Meinungsäußerungen mehrerer Personen verstehen und die jeweilige Haltung erkennen.",
+      "templates": [
+        "tb1.hv1"
+      ]
+    },
+    {
+      "id": "fam.h-vortrag",
+      "label": "H-VORTRAG",
+      "skill": "Hören: ein Interview, einen Radiobeitrag oder eine Meldung mit mehreren Sprechern im Zusammenhang verstehen.",
+      "templates": [
+        "ga2.h4",
+        "tb2.hv1",
+        "tb2.hv2"
+      ]
+    },
+    {
+      "id": "fam.l-kurztext",
+      "label": "L-KURZTEXT",
+      "skill": "Lesen: kurze persönliche Mitteilungen (Notiz, SMS, E-Mail) verstehen und Aussagen dazu prüfen.",
+      "templates": [
+        "sd1.l1"
+      ]
+    },
+    {
+      "id": "fam.l-anzeigen",
+      "label": "L-ANZEIGEN",
+      "skill": "Lesen: Anzeigen und Angebote schnell durchsuchen und der passenden Person oder Situation zuordnen.",
+      "templates": [
+        "sd1.l2",
+        "ga2.l4",
+        "tb1.lv3",
+        "tb2.lv3"
+      ]
+    },
+    {
+      "id": "fam.l-orientierung",
+      "label": "L-ORIENTIERUNG",
+      "skill": "Lesen: Schilder, Aushänge und Wegweiser verstehen und sich damit im Alltag orientieren.",
+      "templates": [
+        "sd1.l3",
+        "ga2.l2"
+      ]
+    },
+    {
+      "id": "fam.l-artikel",
+      "label": "L-ARTIKEL",
+      "skill": "Lesen: einen längeren Text (Artikel, E-Mail) im Detail verstehen und Fragen dazu beantworten.",
+      "templates": [
+        "ga2.l1",
+        "ga2.l3",
+        "tb1.lv2",
+        "tb2.lv2"
+      ]
+    },
+    {
+      "id": "fam.l-ueberschrift",
+      "label": "L-ÜBERSCHRIFT",
+      "skill": "Lesen: das Thema kurzer Texte global erfassen und die passende Überschrift zuordnen.",
+      "templates": [
+        "tb1.lv1",
+        "tb2.lv1"
+      ]
+    },
+    {
+      "id": "fam.sb-luecke",
+      "label": "SB-LÜCKE",
+      "skill": "Sprachbausteine: Lücken in einem Brief oder Text grammatisch und lexikalisch richtig füllen.",
+      "templates": [
+        "tb1.sb1",
+        "tb1.sb2",
+        "tb2.sb1",
+        "tb2.sb2"
+      ]
+    },
+    {
+      "id": "fam.w-formular",
+      "label": "W-FORMULAR",
+      "skill": "Schreiben: persönliche Angaben aus einem Text in ein Formular übertragen.",
+      "templates": [
+        "sd1.s1"
+      ]
+    },
+    {
+      "id": "fam.w-nachricht",
+      "label": "W-NACHRICHT",
+      "skill": "Schreiben: eine kurze Nachricht (SMS, Notiz, kurze E-Mail) zu vorgegebenen Leitpunkten schreiben.",
+      "templates": [
+        "sd1.s2",
+        "ga2.s1",
+        "ga2.s2"
+      ]
+    },
+    {
+      "id": "fam.w-mail",
+      "label": "W-MAIL",
+      "skill": "Schreiben: eine längere persönliche oder halbformelle E-Mail mit Betreff, Anrede, Leitpunkten und Gruß verfassen.",
+      "templates": [
+        "tb1.sa",
+        "tb2.sa"
+      ]
+    },
+    {
+      "id": "fam.s-vorstellen",
+      "label": "S-VORSTELLEN",
+      "skill": "Sprechen: sich selbst vorstellen und im Gespräch über die eigene Person Auskunft geben.",
+      "templates": [
+        "sd1.sp1",
+        "tb1.m1"
+      ]
+    },
+    {
+      "id": "fam.s-fragekarten",
+      "label": "S-FRAGEKARTEN",
+      "skill": "Sprechen: mit einer Wortkarte eine Frage stellen und auf die Frage der Partnerin antworten.",
+      "templates": [
+        "sd1.sp2",
+        "ga2.sp1"
+      ]
+    },
+    {
+      "id": "fam.s-bitten",
+      "label": "S-BITTEN",
+      "skill": "Sprechen: mit einer Bildkarte eine Bitte formulieren und passend darauf reagieren.",
+      "templates": [
+        "sd1.sp3"
+      ]
+    },
+    {
+      "id": "fam.s-erzaehlen",
+      "label": "S-ERZÄHLEN",
+      "skill": "Sprechen: zusammenhängend über ein Thema aus dem eigenen Leben erzählen oder berichten.",
+      "templates": [
+        "ga2.sp2",
+        "tb2.m1"
+      ]
+    },
+    {
+      "id": "fam.s-planen",
+      "label": "S-PLANEN",
+      "skill": "Sprechen: mit einer Partnerin gemeinsam etwas planen, Vorschläge machen und sich einigen.",
+      "templates": [
+        "ga2.sp3",
+        "tb1.m3",
+        "tb2.m3"
+      ]
+    },
+    {
+      "id": "fam.s-diskutieren",
+      "label": "S-DISKUTIEREN",
+      "skill": "Sprechen: die eigene Meinung zu einem Thema äußern, begründen und auf Argumente reagieren.",
+      "templates": [
+        "tb1.m2",
+        "tb2.m2"
+      ]
+    }
+  ]
+}

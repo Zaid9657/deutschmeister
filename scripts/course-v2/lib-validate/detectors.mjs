@@ -228,7 +228,10 @@ function clauseSubordinate(det, sentence) {
   const want = new Set(arr(spec.tokens).map(lc));
   const hits = [];
   if (spec.notQuestion && isQuestion(sentence)) return hits;
-  for (const c of clauseSpans(sentence)) {
+  const spans = clauseSpans(sentence);
+  for (let ci = 0; ci < spans.length; ci += 1) {
+    const c = spans[ci];
+    if (spec.notFirstClause && ci === 0) continue;
     const toks = tokens(c.text);
     let k = 0;
     if (toks[0] && ['und', 'oder', 'aber', 'erst', 'nur', 'schon', 'gerade', 'genau'].includes(toks[0].lower) && toks.length > 1) k = 1;
@@ -241,6 +244,8 @@ function clauseSubordinate(det, sentence) {
     if (next && arr(spec.notFollowedBy).map(lc).includes(next.lower)) continue;
     if (!endsVerbFinal(c.text.slice(t.index))) continue;
     if (toks.length - k < (spec.minTokens || 3)) continue;
+    // a main clause after a fronted phrase has its finite verb inside („Während der Fahrt habe ich geschlafen")
+    if (spec.noMidFinite && toks.slice(k + 1, -1).some((x) => AUX_MODAL_FORMS.has(x.lower))) continue;
     hits.push({ index: c.start + t.index, match: c.text.slice(t.index) });
   }
   return hits;
@@ -249,7 +254,8 @@ function clauseSubordinate(det, sentence) {
 /** A relative clause: (comma) (preposition) d-pronoun … verb-final. */
 function clauseRelative(det, sentence) {
   const spec = det.spec || {};
-  const pronouns = new Set(arr(spec.pronouns).map(lc));
+  const pronouns = new Set(arr(spec.pronouns).map(lc)); // after a preposition
+  const bare = new Set(arr(spec.barePronouns).map(lc)); // without one
   const preps = new Set(arr(spec.prepositions).map(lc));
   const hits = [];
   const spans = clauseSpans(sentence);
@@ -258,12 +264,10 @@ function clauseRelative(det, sentence) {
     if (ci === 0 && spec.requireComma !== false) continue; // a relative clause follows its head
     const toks = tokens(c.text);
     let k = 0;
-    if (preps.size) {
-      if (!toks[0] || !preps.has(toks[0].lower)) continue;
-      k = 1;
-    } else if (spec.prepositionsOnly) continue;
+    if (toks[0] && preps.has(toks[0].lower) && toks[1] && pronouns.has(toks[1].lower)) k = 1;
+    else if (!(toks[0] && bare.has(toks[0].lower))) continue;
     const t = toks[k];
-    if (!t || !pronouns.has(t.lower)) continue;
+    if (!t) continue;
     // „…, die Kollegin kommt" is a main clause: a pronoun directly followed by a noun is an article
     const next = toks[k + 1];
     if (next && /^[A-ZÄÖÜ]/.test(next.text) && !arr(spec.allowCapitalNext).includes(t.lower)) {
@@ -310,18 +314,28 @@ function clauseAuxFinal(det, sentence, env) {
     let fallback = false;
     const lastIsCap = /^[A-ZÄÖÜ]/.test(toks[toks.length - 1].text);
     switch (spec.final) {
-      case 'infinitive':
-        ok = !lastIsCap && toks.length - 1 > auxIdx && !aux.has(last) && isInfinitive(last, env) && !env.participles.has(last) && !PARTICIPLE_SHAPE.test(last);
-        fallback = ok && !(env.available && env.infinitives.has(last));
-        break;
-      case 'participle':
-        ok = !lastIsCap && toks.length - 1 > auxIdx && isParticiple(last, env) && !(env.available && env.infinitives.has(last) && !env.participles.has(last));
-        fallback = ok && !env.participles.has(last);
-        if (!ok && toks.length - 2 > auxIdx && aux.has(last) && isParticiple(prev, env)) {
-          ok = true; // subordinate order: „…, dass der Antrag geprüft wird"
-          fallback = !env.participles.has(prev);
+      case 'infinitive': {
+        const inf = (w) => isInfinitive(w, env) && !env.participles.has(w) && !PARTICIPLE_SHAPE.test(w) && !aux.has(w);
+        ok = !lastIsCap && toks.length - 1 > auxIdx && !aux.has(last) && inf(last);
+        let w = last;
+        if (!ok && aux.has(last) && toks.length >= 3 && prev && inf(prev) && !/^[A-ZÄÖÜ]/.test(toks[toks.length - 2].text)) {
+          ok = true; // subordinate order: „…, dass es morgen regnen wird"
+          w = prev;
         }
+        fallback = ok && !(env.available && env.infinitives.has(w));
         break;
+      }
+      case 'participle': {
+        const part = (w) => isParticiple(w, env) && !(env.available && env.infinitives.has(w) && !env.participles.has(w));
+        ok = !lastIsCap && toks.length - 1 > auxIdx && part(last);
+        let w = last;
+        if (!ok && aux.has(last) && toks.length >= 3 && prev && part(prev)) {
+          ok = true; // subordinate order: „…, dass der Antrag geprüft wird"
+          w = prev;
+        }
+        fallback = ok && !env.participles.has(w);
+        break;
+      }
       case 'participle+werden':
         ok = last === 'werden' && prev && isParticiple(prev, env);
         if (!ok && aux.has(last) && prev === 'werden' && prev2 && isParticiple(prev2, env)) ok = true; // „…, weil sie geprüft werden muss"
@@ -401,14 +415,16 @@ function lexParticipleAux(det, sentence, env) {
       if (!known && !shape) continue;
       // the participle closes the clause (only auxiliaries/infinitives may follow it)
       if (!words.slice(i + 1).every((x) => TRAILING_OK.has(x))) continue;
-      if (spec.participleAux && spec.participleAux !== 'any' && known) {
-        const want = spec.participleAux === 'sein' ? 'ist' : 'hat';
-        if (known.aux !== want) continue;
-      }
-      if (spec.participleAux && spec.participleAux !== 'any' && !known && spec.shapeAux !== 'any') {
-        // without a lexicon we cannot tell haben- from sein-verbs: only the haben reading is guessed
-        if (spec.participleAux === 'sein') continue;
-      }
+      if (words[i - 1] === 'zu') continue; // „… etwas zu erzählen": a zu-infinitive, not a participle
+      if (spec.requireKnown && !known) continue;
+      // which auxiliary the participle's verb takes: 'hat' or 'ist'
+      let want = null;
+      if (spec.participleAux === 'haben') want = 'hat';
+      else if (spec.participleAux === 'sein') want = 'ist';
+      else if (spec.participleAux === 'match-aux') want = /^(?:hat|hät|hab)/.test(words[auxIdx]) ? 'hat' : 'ist';
+      if (want && known && known.aux !== want) continue;
+      // without a lexicon a sein-reading cannot be told from an adjective („ist geschlossen", „bin verheiratet")
+      if (want === 'ist' && !known) continue;
       if (spec.shape === 'trennbar-untrennbar' && !/^(?:[a-zäöüß]+ge[a-zäöüß]+(?:t|en)|(?:be|ver|er|ent|zer|emp|miss|über|unter|hinter)[a-zäöüß]+(?:t|en)|[a-zäöüß]+iert)$/.test(w)) continue;
       if (spec.shape === 'trennbar-untrennbar' && /^ge/.test(w) && !/iert$/.test(w)) continue;
       hits.push({ index: c.start + toks[auxIdx].index, match: `${toks[auxIdx].text} … ${toks[i].text}`, fallback: !known });
@@ -525,13 +541,44 @@ function lexNDeclension(det, sentence, env) {
     const d1 = toks[i - 1]?.lower;
     const d2 = toks[i - 2]?.lower;
     if (dets.has(d1) || (d2 && dets.has(d2) && /(?:en|em)$/.test(d1 || ''))) {
-      hits.push({ index: t.index, match: `${toks[dets.has(d1) ? i - 1 : i - 2].text} … ${t.text}`, fallback: !env.weakNouns.has(base) });
+      hits.push({ index: t.index, match: t.text, fallback: !env.weakNouns.has(base) && !arr(spec.nouns).map(lc).includes(base) });
     }
   }
   return hits;
 }
 
+const SEPARABLE_DEFAULT = ['an', 'auf', 'aus', 'ein', 'mit', 'ab', 'zu', 'los', 'weg', 'vor', 'zurück', 'nach', 'her', 'hin', 'fern', 'fest', 'weiter', 'kennen', 'statt', 'teil', 'vorbei', 'zusammen'];
+const FINITE_VERB_RE = /^[a-zäöüß]{2,}(?:e|st|t|en|et)$/;
+const COPULA = new Set(['bin', 'bist', 'ist', 'sind', 'seid', 'war', 'warst', 'waren', 'wart', 'wäre', 'wären']);
+
+/**
+ * Satzklammer of a separable verb (src/data/curricula/constructions.js, generalised): the clause
+ * ends in a separable prefix and carries, before it, a token shaped like a finite verb that is not
+ * the copula („Die Tür ist zu." is a predicate, not a clamp).
+ */
+function clauseSeparableBracket(det, sentence) {
+  const spec = det.spec || {};
+  const prefixes = new Set(arr(spec.prefixes).length ? arr(spec.prefixes).map(lc) : SEPARABLE_DEFAULT);
+  const hits = [];
+  for (const c of clauseSpans(sentence)) {
+    const toks = tokens(c.text).filter((t) => !/^\d/.test(t.text));
+    if (toks.length < 3) continue;
+    const last = toks[toks.length - 1];
+    if (!prefixes.has(last.lower) || /^[A-ZÄÖÜ]/.test(last.text)) continue;
+    const finite = toks.slice(0, -1).some((t, i) => {
+      const w = i === 0 ? t.lower : t.text;
+      const low = t.lower;
+      return FINITE_VERB_RE.test(w) && !FUNCTION_WORDS.has(low) && !COPULA.has(low);
+    });
+    if (!finite) continue;
+    if (toks.slice(0, -1).some((t) => COPULA.has(t.lower)) && spec.copulaBlocks !== false) continue;
+    hits.push({ index: c.start + last.index, match: c.text });
+  }
+  return hits;
+}
+
 const CLAUSE_KINDS = {
+  'separable-bracket': clauseSeparableBracket,
   pair: clausePair,
   subordinate: clauseSubordinate,
   relative: clauseRelative,

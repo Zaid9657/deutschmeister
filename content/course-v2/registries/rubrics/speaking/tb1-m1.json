@@ -1,0 +1,21 @@
+{
+  "$schema": "course-v2/rubric@1",
+  "id": "tb1-m1",
+  "kind": "speaking",
+  "lane": "tb1",
+  "max": 15,
+  "criteria": [
+    { "id": "ausdruck", "label": "Ausdrucksfähigkeit: Wortschatz, passende Ausdrucksweise, Sprechabsicht umgesetzt", "per": "part", "levels": [4, 3, 1, 0] },
+    { "id": "aufgabe", "label": "Aufgabenbewältigung: Gesprächsbeteiligung, Strategien (auch Nachfragen und Hilfestellung), Flüssigkeit", "per": "part", "levels": [4, 3, 1, 0] },
+    { "id": "richtigkeit", "label": "Formale Richtigkeit: Satzbau und Formen", "per": "part", "levels": [4, 3, 1, 0] },
+    { "id": "aussprache", "label": "Aussprache und Intonation", "per": "part", "levels": [3, 2, 1, 0] }
+  ],
+  "zeroRules": [],
+  "capRules": [],
+  "spelling": "not-scored",
+  "feedbackLanguage": ["de"],
+  "modelId": "config:speaking-full",
+  "splitVerified": true,
+  "calibration": { "status": "pending", "rangeBands": 1 },
+  "source": "https://shop.telc.net/media/catalog/product/file/telc_deutsch_b1_zd_uebungstest_1.pdf"
+}

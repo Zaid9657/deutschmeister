@@ -4,6 +4,10 @@ import { getAuthHeaders } from '../utils/supabase';
 import { withTimeout } from '../utils/withTimeout';
 import { isLevelFree } from '../config/freeTier';
 import { levelsForProduct } from '../data/pricing.js';
+// Namespace import on purpose: src/config/courseV2.js (COURSE_V2_LIVE and
+// V2_TRIAL_PRO_OPENS_PAID) is owned by the v2 routes; a flag it does not (yet)
+// export reads as undefined here, i.e. the recommended default "false".
+import * as courseV2Config from '../config/courseV2.js';
 import {
   getSubscription,
   getUserProfile,
@@ -155,6 +159,21 @@ export const SubscriptionProvider = ({ children }) => {
     return purchases.some((p) => levelsForProduct(p.product_key).includes(l));
   };
 
+  // Course v2 content gate (docs/course-v2/ENTITLEMENT.md, BLUEPRINT §1.5) —
+  // the client twin of hasCourseAccess() in
+  // netlify/functions/_shared/entitlement.mjs. A v2 level is open when it is
+  // free, or when a bought course covers it (current per-level keys and the
+  // retired band keys, via levelsForProduct). Trial and Pro open paid v2
+  // levels ONLY while V2_TRIAL_PRO_OPENS_PAID is true (owner decision D1,
+  // default false). hasLevelAccess above is deliberately left as it is: it
+  // keeps governing the legacy courses and every other level surface.
+  const hasCourseAccess = (level) => {
+    const l = (level || '').toLowerCase();
+    if (isLevelFree(l)) return true;
+    if (purchases.some((p) => levelsForProduct(p.product_key).includes(l))) return true;
+    return courseV2Config.V2_TRIAL_PRO_OPENS_PAID === true && (isInFreeTrial() || hasActiveSubscription());
+  };
+
   // NOTE: there is deliberately no client-side createSubscription here.
   // Paid access is granted server-side only, by the Lemon Squeezy webhook
   // (netlify/functions/lemonsqueezy-webhook.mjs) using the service role.
@@ -191,6 +210,7 @@ export const SubscriptionProvider = ({ children }) => {
     purchases,
     hasProduct,
     hasLevelAccess,
+    hasCourseAccess,
     loading,
     hasAccess,
     isInFreeTrial,

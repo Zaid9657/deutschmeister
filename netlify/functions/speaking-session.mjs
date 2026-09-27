@@ -9,7 +9,17 @@ import {
   parseCourseTask,
   teacherReply,
   synthesizeSpeech,
+  parseV2CourseTaskKey,
+  loadV2SpeakingTask,
+  v2TaskColumns,
+  buildCoursePartnerPrompt,
+  partnerMaxTokens,
 } from './_shared/speakingAI.mjs';
+import { dbLevel } from './_shared/rubrics/keys.mjs';
+import { rubricProfile } from './_shared/rubrics/data.mjs';
+import { unknownRuleIds } from './_shared/rubrics/rules.mjs';
+import { checkCourseAi, recordCourseAi, useKindFor } from './_shared/rubrics/courseAi.mjs';
+import { SCORE_LABEL_DE } from './_shared/rubrics/defaults.mjs';
 
 // Session pricing (cents). 10/15-min always cost; 5-min may be free (see below).
 const PRICE_CENTS = { 5: 100, 10: 200, 15: 300 };
@@ -79,6 +89,116 @@ async function creditWallet(userId, amount) {
     if (updated) return true;
   }
   return false;
+}
+
+// ---------------------------------------------------------------------------
+// COURSE v2 session start (BLUEPRINT §1.5, §4.4). The task is the server-owned
+// SpeakingTask behind the bank key; the gate is the purchase-aware course AI
+// allowance, not the wallet or the trial (a v2 task costs no wallet cents). The
+// session row carries only the key, so speaking-turn and evaluate-speaking
+// reload the same task. Planned minutes are 10 or 15 — never 5, so a course
+// session is never counted as a subscriber's free 5-minute practice session.
+// ---------------------------------------------------------------------------
+const V2_ALLOWED_MINUTES = [10, 15];
+
+async function startCourseV2Session({ user_id, key, parsed, minutes, providedToken, headers }) {
+  const loaded = loadV2SpeakingTask(key);
+  if (!loaded) {
+    return { statusCode: 404, headers, body: JSON.stringify({ error: 'unknown task' }) };
+  }
+  const { level, task } = loaded;
+
+  // Refuse up front when the task could not be graded afterwards — no allowance
+  // is spent on a session whose evaluation would fail.
+  const profileId = task.profile || (task.micro ? 'course-micro-sp' : null);
+  const profile = rubricProfile(profileId);
+  if (!profile || profile.kind !== 'speaking' || unknownRuleIds(profile).length) {
+    console.error('[speaking-session v2] rubric profile unavailable:', profileId, key);
+    return { statusCode: 503, headers, body: JSON.stringify({ error: 'rubric_unavailable', profile: profileId || null }) };
+  }
+
+  const gate = await checkCourseAi(supabase, user_id, key, level);
+  if (!gate.allowed) {
+    return {
+      statusCode: gate.status || 429,
+      headers,
+      body: JSON.stringify({ error: gate.error || 'limit_reached', reason: gate.reason || null, remaining: gate.remaining ?? 0, scope: 'course-v2', courseTaskKey: key }),
+    };
+  }
+
+  const plannedMinutes = V2_ALLOWED_MINUTES.includes(Number(minutes)) ? Number(minutes) : 10;
+  const sessionLevel = dbLevel(level);
+
+  // The authored opening line is spoken verbatim; only a task without one asks the model.
+  let openingText = task.openingLine;
+  let openingAudio;
+  try {
+    if (!openingText) {
+      openingText = await teacherReply({
+        system: `${buildCoursePartnerPrompt({ level: sessionLevel, task })}\n\nBEGINN: Eröffne die Übung mit einem kurzen Satz in deiner Rolle.`,
+        history: [],
+        userText: '',
+        maxTokens: partnerMaxTokens(level),
+      });
+    }
+    if (!openingText) openingText = 'Guten Tag! Wir beginnen.';
+    openingAudio = await synthesizeSpeech({ text: openingText });
+  } catch (aiErr) {
+    if (aiErr instanceof AIError) {
+      return { statusCode: aiErr.status || 502, headers, body: JSON.stringify({ error: aiErr.message, stage: aiErr.stage }) };
+    }
+    throw aiErr;
+  }
+
+  const sessionToken = providedToken || `sp_${randomUUID()}`;
+  const { error: insertError } = await supabase
+    .from('speaking_sessions')
+    .insert({
+      user_id,
+      session_token: sessionToken,
+      level: sessionLevel,
+      mission_id: null,
+      mode: 'free',
+      status: 'active',
+      started_at: new Date().toISOString(),
+      planned_minutes: plannedMinutes,
+      cost_cents: 0,
+      ...v2TaskColumns(key, task),
+    });
+  if (insertError) {
+    console.error('[speaking-session v2] Session insert failed:', JSON.stringify(insertError));
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Sitzung konnte nicht erstellt werden' }) };
+  }
+
+  // One attempt = one session: recorded once the session exists.
+  await recordCourseAi(supabase, user_id, key, useKindFor(parsed));
+
+  try {
+    const { error: msgError } = await supabase
+      .from('speaking_messages')
+      .insert({ session_token: sessionToken, user_id, role: 'assistant', content: openingText, level: sessionLevel, created_at: new Date().toISOString() });
+    if (msgError) console.error('[speaking-session v2] opening message insert failed:', JSON.stringify(msgError));
+  } catch (err) {
+    console.error('[speaking-session v2] opening message insert threw:', err.message);
+  }
+
+  return {
+    statusCode: 200,
+    headers,
+    body: JSON.stringify({
+      session_token: sessionToken,
+      level: sessionLevel,
+      planned_minutes: plannedMinutes,
+      cost_cents: 0,
+      replyText: openingText,
+      replyAudioBase64: openingAudio,
+      courseTaskKey: key,
+      taskMode: task.mode,
+      prepMinutes: task.prepMinutes,
+      scoreLabelDe: SCORE_LABEL_DE,
+      remaining: Number.isFinite(gate.remaining) ? Math.max(0, gate.remaining - 1) : null,
+    }),
+  };
 }
 
 export const handler = async (event) => {
@@ -158,6 +278,16 @@ export const handler = async (event) => {
     // action 'start' — price, debit, create the session, speak first.
     // -----------------------------------------------------------------------
     const isPlacement = mode === 'placement';
+
+    // COURSE v2: `{ courseTaskKey }` selects a server-owned SpeakingTask from the
+    // compiled bank. A malformed key is refused — never a silent free chat.
+    const v2Request = isPlacement ? null : parseV2CourseTaskKey(body);
+    if (v2Request?.error) {
+      return { statusCode: 400, headers, body: JSON.stringify({ error: v2Request.error }) };
+    }
+    if (v2Request) {
+      return await startCourseV2Session({ user_id, key: v2Request.key, parsed: v2Request.parsed, minutes, providedToken, headers });
+    }
 
     // Mission lookup (server-owned prompt fields + opening line).
     let mission = null;
