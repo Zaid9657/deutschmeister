@@ -167,14 +167,16 @@
    The .reveal hidden state needs no html.js gate here — React only renders it
    while it is running. ───────────────────────────────────────────────── */
 
-/* Hero entrance: staggered rise-and-settle */
+/* Hero entrance: staggered rise-and-settle. TRANSFORM ONLY — no fade, no
+   blur: hero text painted at opacity 0 is not counted as contentful, so the
+   fade held the page's LCP back (see the twin in astro-site's showtime.css). */
 .hero-line {
   animation: dmRise 0.7s cubic-bezier(0.2, 1, 0.36, 1) both;
   animation-delay: var(--d, 0ms);
 }
 @keyframes dmRise {
-  from { opacity: 0; transform: translateY(18px); filter: blur(4px); }
-  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+  from { transform: translateY(18px); }
+  to { transform: translateY(0); }
 }
 .underline-swash path {
   stroke-dasharray: 230;

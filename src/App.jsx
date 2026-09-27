@@ -128,7 +128,12 @@ function Shell() {
                     (docs/evaluation/screenshots/a11-w1-home.jpg). */}
                 {!focused && chrome !== 'course' && <OutsideAdmin><FloatingIntroButton /></OutsideAdmin>}
                 <SessionTimeoutWrapper />
-                <main id="main">
+                {/* min-h-screen reserves the page's height across route swaps. A
+                    guard that redirects (ProtectedRoute's <Navigate>) commits an
+                    EMPTY main for a frame; without the floor the footer jumped
+                    from below the fold to 80px under the navbar and back — two
+                    full-viewport shifts, CLS 2.0 on /dashboard → /login. */}
+                <main id="main" className="min-h-screen">
                 <Suspense fallback={<PageLoader />}>
                   <Routes>
                     {/* Public routes */}

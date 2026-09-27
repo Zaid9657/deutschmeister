@@ -14,6 +14,7 @@ import { readFileSync } from 'node:fs';
 import * as lucideIcons from 'lucide-react';
 import { A11_META, LANDESKUNDE, chapterGroups, charactersOf, weeklyEstimate, WORTFELD_ICONS, WORTFELD_ICON_FALLBACK } from '../src/data/curricula/a11.meta.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
+import { WORTFELD_ICON_COMPONENTS } from '../src/components/lesson/wortfeldIcons.js';
 import { curriculumPath } from '../src/data/curricula/index.js';
 import { SUSTAINABLE_PER_WEEK } from '../src/lib/course/plan.js';
 
@@ -297,6 +298,18 @@ test('every WORTFELD_ICONS value, and the fallback, resolve to a real lucide-rea
       typeof icon === 'function' || (typeof icon === 'object' && icon !== null),
       `"${name}" does not resolve in lucide-react`,
     );
+  }
+});
+
+test('every WORTFELD_ICONS value, and the fallback, is in the by-name icon map WortfeldStage draws from', () => {
+  // The map exists so lucide-react can be tree-shaken (a namespace import put
+  // all ~1,300 icons in the lesson player chunk). A name missing here would
+  // silently render the fallback icon instead of the word's own.
+  const names = new Set([...Object.values(WORTFELD_ICONS), WORTFELD_ICON_FALLBACK]);
+  const missing = [...names].filter((name) => !Object.prototype.hasOwnProperty.call(WORTFELD_ICON_COMPONENTS, name));
+  assert.deepEqual(missing, [], `add to src/components/lesson/wortfeldIcons.js: ${missing.join(', ')}`);
+  for (const [name, icon] of Object.entries(WORTFELD_ICON_COMPONENTS)) {
+    assert.equal(icon, lucideIcons[name], `"${name}" in wortfeldIcons.js must be lucide-react's ${name}`);
   }
 });
 

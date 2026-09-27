@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import * as LucideIcons from 'lucide-react';
 import { Volume2, Mic, Cpu } from 'lucide-react';
 import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
@@ -9,6 +8,7 @@ import { playWord } from '../../lib/lesson/speech.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 import { WORTFELD_ICONS, WORTFELD_ICON_FALLBACK } from '../../data/curricula/a11.meta.js';
 import { CURRICULUM_A11 } from '../../data/curricula/a11.js';
+import { WORTFELD_ICON_COMPONENTS } from './wortfeldIcons.js';
 
 /**
  * Stage 2b — the new words as picture cards: icon, article, plural, English
@@ -56,7 +56,7 @@ function lektionIdFromWords(words) {
 
 function iconFor(word) {
   const name = (word && WORTFELD_ICONS[word]) || WORTFELD_ICON_FALLBACK;
-  return LucideIcons[name] || LucideIcons[WORTFELD_ICON_FALLBACK];
+  return WORTFELD_ICON_COMPONENTS[name] || WORTFELD_ICON_COMPONENTS[WORTFELD_ICON_FALLBACK];
 }
 
 function WordCard({ w, lang, flipped, onToggle }) {

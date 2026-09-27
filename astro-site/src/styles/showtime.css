@@ -5,14 +5,19 @@
    ─────────────────────────────────────────────────────────────────────── */
 
 
-/* Hero entrance: staggered rise-and-settle */
+/* Hero entrance: staggered rise-and-settle. TRANSFORM ONLY, never a fade:
+   the hero headline and lead are the page's largest paint, and Chrome does not
+   count text painted at opacity 0 — the fade this replaced held LCP back until
+   something repainted the text (the web-font swap, ~3 s on a throttled phone).
+   The text is readable from the first frame and still arrives with the
+   stagger. Same rule in src/index.css; tests/web-performance.test.mjs pins it. */
 .hero-line {
   animation: dmRise 0.7s cubic-bezier(0.2, 1, 0.36, 1) both;
   animation-delay: var(--d, 0ms);
 }
 @keyframes dmRise {
-  from { opacity: 0; transform: translateY(18px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { transform: translateY(18px); }
+  to { transform: translateY(0); }
 }
 .underline-swash path {
   stroke-dasharray: 230;
