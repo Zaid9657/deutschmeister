@@ -23,8 +23,8 @@ const LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] 
  *      step's end line.
  *
  * No AI anywhere; below 60 % the screen SUGGESTS repeating a Lernschritt and never blocks
- * (BLUEPRINT §3.5: no gate reads a score). `onDone({ stepId, correct, total })` counts the
- * 12 only.
+ * (BLUEPRINT §3.5: no gate reads a score). `onDone({ stepId, correct, total, proofs })` counts
+ * the 12 only; `proofs` = { canDoId: proven } as „Das kann ich" showed it (additive).
  */
 export default function CheckView({ unit, level, stepId, endLine = null, earlierItems = [], aufgaben = null, course = null, canDos = null, ruleCards = null, lines, names, onAttempt, onDone }) {
   const [lang, t] = useV2Strings();
@@ -101,6 +101,11 @@ export default function CheckView({ unit, level, stepId, endLine = null, earlier
 
   const pct = score.total ? score.correct / score.total : null;
   const rueckschau = (check.rueckschau || []).map((id) => cardsById.get(id)).filter(Boolean);
+  // { canDoId: proven } — reported with onDone so the player's recap ticks exactly what
+  // „Das kann ich" ticked here, and the closing line („Sie können jetzt …") is said only
+  // when every can-do of the unit is proven.
+  const proofs = Object.fromEntries((check.proofs || []).map((p) => [p.canDo, proofStatus(p).ok]));
+  const allProven = Object.values(proofs).every(Boolean);
 
   return (
     <div className="space-y-4">
@@ -155,10 +160,10 @@ export default function CheckView({ unit, level, stepId, endLine = null, earlier
         </Card>
       )}
 
-      {endLine && <p className="text-[1rem] font-bold text-ink" lang="de">{endLine}</p>}
+      {endLine && allProven && <p className="text-[1rem] font-bold text-ink" lang="de">{endLine}</p>}
 
       <div className="flex justify-end">
-        <Button onClick={() => onDone && onDone({ stepId, correct: score.correct, total: score.total })} size="lg" className="w-full sm:w-auto">
+        <Button onClick={() => onDone && onDone({ stepId, correct: score.correct, total: score.total, proofs })} size="lg" className="w-full sm:w-auto">
           {t('check.done')}
         </Button>
       </div>

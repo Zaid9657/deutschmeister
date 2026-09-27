@@ -79,6 +79,7 @@ function segmentsFor(step, extras) {
  *
  *   onAttempt({ itemId, stepId, correct, answer, errorTag, typo })   every answered item
  *   onDone({ stepId, correct, total, … })                           once, at the end
+ *                                                    (the Check adds `proofs`: { canDoId: proven })
  *
  * `correct`/`total` count first presentations of the scored items (input items, Form,
  * Üben, Aussprache perception, Abschluss, exam items, check items); the Aufgaben report
@@ -363,7 +364,7 @@ export default function StepView({
           lines={lines}
           names={names}
           onAttempt={attempt}
-          onDone={(r) => { count(r); finishStep(); }}
+          onDone={(r) => { count(r); finishStep(r && r.proofs ? { proofs: r.proofs } : {}); }}
         />
       );
       break;

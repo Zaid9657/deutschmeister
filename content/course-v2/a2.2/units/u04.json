@@ -42,7 +42,6 @@
       {
         "title": "Wege und Orte",
         "lemmas": [
-          "lx.treffpunkt",
           "lx.folgen",
           "lx.abbiegen",
           "lx.ueberqueren",
@@ -465,17 +464,17 @@
           "promptDe": "Lina steht vor dem Rathaus. Die Tankstelle ist gegenüber. Wo ist die Tankstelle?",
           "promptEn": "Where is the petrol station?",
           "options": [
-            "auf der anderen Seite der Straße",
+            "auf der anderen Straßenseite",
             "hinter dem Rathaus",
             "neben dem Rathaus"
           ],
-          "answer": "auf der anderen Seite der Straße",
+          "answer": "auf der anderen Straßenseite",
           "accepted": [
-            "auf der anderen Seite der Straße"
+            "auf der anderen Straßenseite"
           ],
           "explanation": {
-            "de": "gegenüber = auf der anderen Seite, direkt vor Lina.",
-            "en": "'gegenüber' means on the other side, facing her."
+            "de": "gegenüber = auf der anderen Straßenseite, direkt vor Lina.",
+            "en": "'gegenüber' means on the other side of the street, facing her."
           },
           "origin": "agent"
         },
@@ -548,7 +547,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.lokale-praep-weg",
-            "promptDe": "Wir warten an der Brücke. Du gehst bis ___ Brücke.",
+            "promptDe": "Wir warten an der Brücke. Du gehst bis ___ Brücke. (zu)",
             "promptEn": "bis zu + die Brücke: one word.",
             "answer": "zur",
             "accepted": [
@@ -942,7 +941,7 @@
         "bankKey": "a22-u04-mo1",
         "mode": "spoken",
         "profile": "course-micro-sp",
-        "situationDe": "Eine Freundin steht an der Haltestelle vor Ihrem Haus. Sie findet Ihre Wohnung nicht.",
+        "situationDe": "Eine Freundin steht an der Haltestelle am Marktplatz. Von dort sind es fünf Minuten zu Fuß bis zu Ihrer Wohnung. Sie findet den Weg nicht.",
         "promptDe": "Erklären Sie ihr am Telefon den Weg: Wo geht sie vorbei? Wo biegt sie ab?",
         "promptEn": "Explain the way on the phone: what does she walk past, where does she turn?",
         "planSeconds": 30,
@@ -956,14 +955,14 @@
         "register": "du"
       },
       "aussprache": {
-        "focus": "pf am Wortanfang und im Wort: Pferd, Apfel",
+        "focus": "pf am Wortanfang und im Wort: Pfund, Pfanne, Apfel",
         "perception": {
           "generator": "perception.pairs",
           "count": 3,
           "source": [
-            "Pferd|fährt",
-            "Pfanne|Fahne",
-            "Pfund|Fund"
+            "Pfund|Fund",
+            "Pfand|fand",
+            "Pfanne|Panne"
           ],
           "voices": 4
         },
@@ -2026,20 +2025,30 @@
             "promptEn": "The vehicle that takes injured people to hospital.",
             "answer": "Krankenwagen",
             "accepted": [
-              "Krankenwagen"
+              "Krankenwagen",
+              "Rettungswagen",
+              "Rettungsdienst"
             ],
             "explanation": {
-              "de": "Der Krankenwagen bringt Verletzte ins Krankenhaus.",
-              "en": "The ambulance takes injured people to hospital."
+              "de": "Der Krankenwagen (auch: Rettungswagen) bringt Verletzte ins Krankenhaus.",
+              "en": "The ambulance (Krankenwagen, also Rettungswagen) takes injured people to hospital."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "acceptedWhy": {
+              "Rettungswagen": "auch richtig: So heißt der Wagen im Notfall, das Wort steht auf dem Auto.",
+              "Rettungsdienst": "auch richtig: Der Rettungsdienst kommt und bringt Lina ins Krankenhaus."
+            },
+            "reviewerConfirmed": [
+              "Rettungswagen",
+              "Rettungsdienst"
+            ]
           },
           {
             "id": "a2.2-u04-ls3-p04",
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.passieren",
-            "promptDe": "Was ist ___? – Meine Freundin ist ausgerutscht.",
+            "promptDe": "Was ist ___? – Meine Freundin ist ausgerutscht. (passieren)",
             "promptEn": "Perfekt participle of passieren.",
             "answer": "passiert",
             "accepted": [
@@ -2207,7 +2216,7 @@
               "wo Sie sind"
             ],
             "explanation": {
-              "de": "Am Notruf fragt man Sie zuerst: Wo sind Sie?",
+              "de": "Beim Notruf fragt man Sie zuerst: Wo sind Sie?",
               "en": "The dispatcher first asks where you are."
             },
             "origin": "agent"
@@ -2219,7 +2228,7 @@
             "count": 2,
             "source": [
               "a2.2-u04-ls3-l04",
-              "a2.2-u04-ls3-l09"
+              "a2.2-u04-ls3-l12"
             ]
           },
           {
@@ -2317,7 +2326,7 @@
           "type": "multiple_choice",
           "role": "practice",
           "topic": "redemittel",
-          "promptDe": "Am Notruf fragt man: „Wie viele Personen sind verletzt?“ Sie antworten:",
+          "promptDe": "Beim Notruf fragt man: „Wie viele Personen sind verletzt?“ Sie antworten:",
           "promptEn": "Choose the answer.",
           "options": [
             "Nur eine Person.",
@@ -2344,7 +2353,7 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "g.lokale-praep-weg",
-          "promptDe": "Emre wartet ___ Brücke auf den Krankenwagen.",
+          "promptDe": "Emre wartet ___ Brücke auf den Krankenwagen. (an)",
           "promptEn": "Wo? an + die Brücke.",
           "answer": "an der",
           "accepted": [
@@ -2611,8 +2620,8 @@
         {
           "id": "a2.2-u04-ls4-t8",
           "kind": "ad",
-          "title": "Erste Hilfe am Samstag",
-          "text": "Erste Hilfe – Kurs an einem Tag\nWas tun bei einem Unfall? In unserem Kurs lernen Sie, wie Sie helfen können. Samstag, 9 bis 16 Uhr, im Rathaus, Raum 12. Der Kurs ist auch für Anfänger. Bitte melden Sie sich online an.",
+          "title": "Erste-Hilfe-Kurs an einem Tag",
+          "text": "Erste-Hilfe-Kurs an einem Tag\nWas tun bei einem Unfall? In unserem Kurs lernen Sie, wie Sie helfen können. Samstag, 9 bis 16 Uhr, im Rathaus, Raum 12. Der Kurs ist auch für Anfänger. Bitte melden Sie sich online an.",
           "glosses": []
         },
         {
@@ -2625,8 +2634,8 @@
         {
           "id": "a2.2-u04-ls4-t10",
           "kind": "ad",
-          "title": "Große Wanderung",
-          "text": "Große Wanderung\nDie Wanderung geht acht Stunden über Hügel und steile Wege. Wir treffen uns um 7 Uhr am Bahnhof und sind am Abend wieder zurück. Bitte bringen Sie gute Schuhe mit! Nur für Personen ab 18 Jahren.",
+          "title": "Die große Wanderung",
+          "text": "Die große Wanderung\nDie Wanderung dauert acht Stunden. Die Wege sind oft steil, und es geht über viele Hügel. Wir treffen uns um 7 Uhr am Bahnhof und sind am Abend wieder zurück. Nur für Personen ab 18 Jahren.",
           "glosses": []
         },
         {
@@ -2924,11 +2933,11 @@
           "de": "Ihr Kalender: Sonntag",
           "items": [
             "8.00–9.30 Uhr: im Park joggen",
-            "10.00–11.00 Uhr: mit den Eltern telefonieren",
             "11.00–13.00 Uhr: einem Nachbarn beim Umzug helfen",
             "13.00–14.00 Uhr: Mittagessen mit einer Freundin",
             "17.30–19.00 Uhr: Hausaufgaben für den Deutschkurs",
-            "19.00–20.00 Uhr: die Wohnung aufräumen"
+            "19.00–20.00 Uhr: die Wohnung aufräumen",
+            "20.00–20.30 Uhr: mit den Eltern telefonieren"
           ]
         },
         "partnerData": {
@@ -2955,7 +2964,7 @@
         ],
         "aiRole": {
           "name": "Amal",
-          "personaDe": "Freundin aus dem Sprachcafé; hat am Sonntag nur von 14 bis 17 Uhr Zeit und sagt das erst, wenn die Lernenden nach Uhrzeiten fragen; lehnt eine Uhrzeit und einen Vorschlag freundlich ab (Lina kann noch nicht weit laufen), macht einen Gegenvorschlag und einigt sich dann; lässt die Lernenden das Gespräch führen",
+          "personaDe": "Freundin aus dem Sprachcafé; hat am Sonntag nur von 14 bis 17 Uhr Zeit und sagt das erst, wenn die Lernenden nach Uhrzeiten fragen; lehnt eine Uhrzeit mit Grund ab (vormittags Ranias Schwimmkurs), lehnt einen Vorschlag freundlich ab (Lina kann noch nicht weit laufen), macht einen Gegenvorschlag und einigt sich dann; lässt die Lernenden das Gespräch führen",
           "register": "du",
           "support": "learner-leads"
         },
@@ -2973,23 +2982,31 @@
         "modelTurns": [
           {
             "speaker": "learner",
-            "de": "Am Vormittag kann ich leider nicht. Ab 14 Uhr habe ich Zeit. Und du?"
+            "de": "Hast du am Sonntag um 10 Uhr Zeit?"
           },
           {
             "speaker": "partner",
-            "de": "Ab 14 Uhr passt es bei mir. Aber um 17 Uhr muss ich wieder zu Hause sein."
+            "de": "Um 10 Uhr kann ich leider nicht, da bringe ich Rania zum Schwimmkurs. Und am Nachmittag?"
           },
           {
             "speaker": "learner",
-            "de": "Gut, dann von 14 bis 17 Uhr. Wollen wir eine Wanderung am Fluss machen?"
+            "de": "Am Nachmittag habe ich ab 14 Uhr Zeit. Geht es um 14 Uhr?"
           },
           {
             "speaker": "partner",
-            "de": "Nein, das geht leider nicht. Lina kann noch nicht weit laufen. Wollen wir lieber die Tour mit dem Boot um 15 Uhr machen?"
+            "de": "Ja, um 14 Uhr geht es. Aber um 17 Uhr muss ich wieder zu Hause sein."
           },
           {
             "speaker": "learner",
-            "de": "Super! Dann muss Lina nicht laufen. Fahren wir mit der Straßenbahn zum Boot?"
+            "de": "Gut, dann von 14 bis 17 Uhr. Wollen wir ein Picknick im Park machen?"
+          },
+          {
+            "speaker": "partner",
+            "de": "Hm, der Park ist groß, und Lina kann noch nicht weit laufen. Wollen wir lieber die Tour mit dem Boot um 15 Uhr machen?"
+          },
+          {
+            "speaker": "learner",
+            "de": "Das ist eine gute Idee! Dann muss Lina nicht laufen. Fahren wir mit der Straßenbahn zum Boot?"
           },
           {
             "speaker": "partner",
@@ -3018,7 +3035,7 @@
         "register": "informell",
         "address": "du",
         "title": "Den Weg zum Treffpunkt beschreiben",
-        "situationDe": "Sie grillen nächsten Samstag mit Freunden am Fluss. Treffpunkt: 12 Uhr an der Brücke. Arjun, ein Freund von Priya, kommt zum ersten Mal mit. Er fährt mit der Straßenbahn und kennt den Weg nicht. Der Weg: Haltestelle Rathaus – Tankstelle – Kiosk – Park – Brücke.",
+        "situationDe": "Sie grillen am nächsten Samstag mit Freunden am Fluss. Treffpunkt: 12 Uhr an der Brücke. Arjun, der Mann von Priya, kommt zum ersten Mal mit. Er fährt mit der Straßenbahn und kennt den Weg nicht. Der Weg: Haltestelle Rathaus – Tankstelle – Kiosk – Park – Brücke.",
         "taskDe": "Schreiben Sie Arjun eine SMS zu allen drei Punkten (20 bis 30 Wörter).",
         "leitpunkte": [
           {
@@ -3083,7 +3100,7 @@
     {
       "id": "a2.2-u04-ls7",
       "kind": "check",
-      "endLine": "Geschafft! Sie können jetzt Wege beschreiben, einen Unfall melden und den Anweisungen am Notruf folgen."
+      "endLine": "Geschafft! Sie können jetzt Wege beschreiben, einen Unfall melden und beim Notruf den Anweisungen folgen."
     }
   ],
   "check": {
@@ -3239,13 +3256,21 @@
         "audioLineRef": "a2.2-u04-ls7-l03",
         "answer": "Wir sind am Ufer hinter dem Hügel, zehn Minuten von der Brücke.",
         "accepted": [
-          "Wir sind am Ufer hinter dem Hügel, zehn Minuten von der Brücke."
+          "Wir sind am Ufer hinter dem Hügel, zehn Minuten von der Brücke.",
+          "Wir sind am Ufer hinter dem Hügel, 10 Minuten von der Brücke."
         ],
         "explanation": {
           "de": "am Ufer, hinter dem Hügel, von der Brücke: alle mit Dativ.",
           "en": "All three phrases take the dative."
         },
-        "origin": "agent"
+        "origin": "agent",
+        "acceptedWhy": {
+          "Wir sind am Ufer hinter dem Hügel, 10 Minuten von der Brücke.": "auch richtig: Die Zahl als Ziffer (10) ist auch richtig."
+        },
+        "reviewerConfirmed": [
+          "Wir sind am Ufer hinter dem Hügel, 10 Minuten von der Brücke."
+        ],
+        "exact": "number"
       },
       {
         "id": "a2.2-u04-c08",
@@ -3278,7 +3303,7 @@
         "type": "fill_blank",
         "role": "proof",
         "topic": "g.lokale-praep-weg",
-        "promptDe": "Ein Mann fragt nach dem Bahnhof. Sie sagen: „Gehen Sie bis ___ Ampel und dann rechts.“",
+        "promptDe": "Ein Mann sucht den Bahnhof. Sie sagen: „Gehen Sie bis ___ Ampel und dann rechts.“ (zu)",
         "promptEn": "bis zu + die Ampel: one word.",
         "answer": "zur",
         "accepted": [
@@ -3344,8 +3369,8 @@
         "type": "sentence_building",
         "role": "proof",
         "topic": "lx.unfall",
-        "promptDe": "Sie rufen die 112 an. Sagen Sie, was passiert ist.",
-        "promptEn": "Report the accident on the emergency call.",
+        "promptDe": "Sie rufen für Ihren Nachbarn die 112 an. Sagen Sie zuerst, was passiert ist.",
+        "promptEn": "Report the accident on the emergency call: first what happened.",
         "tiles": [
           "mein Nachbar",
           "ist",
@@ -3371,8 +3396,8 @@
         "type": "sentence_building",
         "role": "proof",
         "topic": "g.lokale-praep-weg",
-        "promptDe": "Eine Frau fragt Sie nach dem Weg zur Brücke. Erklären Sie ihn.",
-        "promptEn": "Explain the way to the bridge.",
+        "promptDe": "Eine Frau sucht die Brücke: zuerst die Tankstelle, dann der Kiosk. Erklären Sie den Weg.",
+        "promptEn": "Explain the way to the bridge: first the petrol station, then the kiosk.",
         "tiles": [
           "gehen Sie",
           "an der Tankstelle",
@@ -3384,13 +3409,26 @@
         ],
         "answer": "Gehen Sie an der Tankstelle vorbei und biegen Sie am Kiosk links ab.",
         "accepted": [
-          "Gehen Sie an der Tankstelle vorbei und biegen Sie am Kiosk links ab."
+          "Gehen Sie an der Tankstelle vorbei und biegen Sie am Kiosk links ab.",
+          "Gehen Sie an der Tankstelle vorbei und am Kiosk biegen Sie links ab.",
+          "An der Tankstelle gehen Sie vorbei und am Kiosk biegen Sie links ab.",
+          "An der Tankstelle gehen Sie vorbei und biegen Sie am Kiosk links ab."
         ],
         "explanation": {
-          "de": "Imperativ mit Sie: das Verb vorne. vorbei und ab stehen am Ende.",
-          "en": "Sie-imperative: verb first; vorbei and ab go to the end."
+          "de": "Imperativ mit Sie: das Verb vorne, vorbei und ab am Ende. Auch richtig: Am Kiosk biegen Sie links ab.",
+          "en": "Sie-imperative: verb first, vorbei and ab at the end. 'Am Kiosk biegen Sie links ab' is also correct."
         },
-        "origin": "agent"
+        "origin": "agent",
+        "acceptedWhy": {
+          "Gehen Sie an der Tankstelle vorbei und am Kiosk biegen Sie links ab.": "auch richtig: im zweiten Teil ein Aussagesatz mit Sie (Am Kiosk biegen Sie links ab.)",
+          "An der Tankstelle gehen Sie vorbei und am Kiosk biegen Sie links ab.": "auch richtig: zwei Aussagesätze mit Sie, der Ort steht jeweils vorne",
+          "An der Tankstelle gehen Sie vorbei und biegen Sie am Kiosk links ab.": "auch richtig: zuerst ein Aussagesatz mit Sie, dann der Imperativ"
+        },
+        "reviewerConfirmed": [
+          "Gehen Sie an der Tankstelle vorbei und am Kiosk biegen Sie links ab.",
+          "An der Tankstelle gehen Sie vorbei und am Kiosk biegen Sie links ab.",
+          "An der Tankstelle gehen Sie vorbei und biegen Sie am Kiosk links ab."
+        ]
       }
     ],
     "proofs": [
@@ -3494,8 +3532,8 @@
   "facts": [
     {
       "id": "a2.2-u04-f01",
-      "claimDe": "Ein Unfall auf dem unmittelbaren Weg zur Arbeit und zurück (Wegeunfall) ist über die gesetzliche Unfallversicherung (Berufsgenossenschaft oder Unfallkasse) versichert. Zum Durchgangsarzt muss man, wenn die Verletzung über den Unfalltag hinaus arbeitsunfähig macht oder die Behandlung voraussichtlich länger als eine Woche dauert.",
-      "claimEn": "An accident on the direct way to and from work (commuting accident) is covered by the statutory accident insurance (Berufsgenossenschaft or Unfallkasse). A Durchgangsarzt must be seen when the injury causes incapacity for work beyond the day of the accident or treatment is expected to last more than a week.",
+      "claimDe": "Ein Unfall auf dem unmittelbaren Weg zur Arbeit und zurück (Wegeunfall) ist über die gesetzliche Unfallversicherung (Berufsgenossenschaft oder Unfallkasse) versichert. Zum Durchgangsarzt muss man unter anderem, wenn die Verletzung über den Unfalltag hinaus arbeitsunfähig macht oder die Behandlung voraussichtlich länger als eine Woche dauert.",
+      "claimEn": "An accident on the direct way to and from work (commuting accident) is covered by the statutory accident insurance (Berufsgenossenschaft or Unfallkasse). A Durchgangsarzt must be seen, among other cases, when the injury causes incapacity for work beyond the day of the accident or treatment is expected to last more than a week.",
       "sources": [
         "https://www.dguv.de/de/versicherung/wegeunfaelle/index.jsp",
         "https://www.dguv.de/de/ihr_partner/arbeitnehmer/arbeitsunfall/index.jsp",
@@ -3509,17 +3547,17 @@
           "en": "Some detours are covered too, for example taking your child to day care on the way to work."
         },
         {
-          "de": "Bei nur leichten Verletzungen ohne Arbeitsunfähigkeit nach dem Unfalltag müssen Sie nicht zum Durchgangsarzt.",
-          "en": "Minor injuries without incapacity for work beyond the day of the accident do not require a Durchgangsarzt."
+          "de": "Ist die Verletzung nur leicht und sind Sie nach dem Unfalltag wieder arbeitsfähig, müssen Sie in der Regel nicht zum Durchgangsarzt.",
+          "en": "If the injury is minor and you are fit for work again after the day of the accident, you usually do not need to see a Durchgangsarzt."
         }
       ],
       "verification": "verified",
-      "notes": "Read on 2026-09-27: DGUV „Wegeunfälle\" (unmittelbarer Weg versichert, Umwege z. B. für Kinderbetreuung), DGUV „Arbeitsunfall: Was nun?\" (D-Arzt-Vorstellung bei Arbeitsunfähigkeit über den Unfalltag hinaus oder Behandlung > 1 Woche; Unfallanzeige durch das Unternehmen ab > 3 Kalendertagen), § 8 Abs. 2 Nr. 1 SGB VII at gesetze-im-internet.de."
+      "notes": "Read on 2026-09-27: DGUV „Wegeunfälle\" (unmittelbarer Weg versichert, Umwege z. B. für Kinderbetreuung), DGUV „Arbeitsunfall: Was nun?\" (D-Arzt-Vorstellung bei Arbeitsunfähigkeit über den Unfalltag hinaus oder Behandlung > 1 Woche; Unfallanzeige durch das Unternehmen ab > 3 Kalendertagen), § 8 Abs. 2 Nr. 1 SGB VII at gesetze-im-internet.de. Re-checked 2026-09-27 (review r2 F14): the D-Arzt triggers are not exhaustive — § 26 Vertrag Ärzte/Unfallversicherungsträger also names e.g. the prescription of Heil- oder Hilfsmittel and a recurrence of accident-related illness. The claim now says „unter anderem\" and the exception „in der Regel\"; those further triggers are not stated as facts here because § 26 ÄV/UV was not re-opened in this session. The hedged claim rests on the DGUV pages above."
     }
   ],
   "extras": {
     "x.leitstelle": {
-      "role": "Mitarbeiterin der Rettungsleitstelle am Notruf",
+      "role": "Mitarbeiterin der Rettungsleitstelle (Notruf 112)",
       "gender": "f",
       "age": 45,
       "voice": "de-DE-KatjaNeural",
