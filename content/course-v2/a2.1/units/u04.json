@@ -1,0 +1,3316 @@
+{
+  "$schema": "course-v2/unit@1",
+  "id": "a2.1-u04",
+  "level": "a2.1",
+  "nr": 4,
+  "etappe": 2,
+  "version": 1,
+  "status": "draft",
+  "reviewedIn": null,
+  "stage": "T",
+  "title": {
+    "de": "Einkaufen: fragen, vergleichen, bestellen",
+    "canDo": "Sie können nach Produkten fragen, Angebote vergleichen und bei Problemen mit einer Bestellung schreiben."
+  },
+  "spec": {
+    "situation": "Priya und Arjun brauchen eine neue Kaffeemaschine. Priya sucht im Kaufhaus die richtige Abteilung, fragt nach Modellen und Garantie, vergleicht zwei Angebote und bestellt online. Dann kommt das falsche Gerät, und sie schreibt dem Kundenservice.",
+    "handlungsfeld": [
+      "7"
+    ],
+    "canDos": [
+      "cd.a2.produktinfos-erfragen",
+      "cd.a2.alltagsdinge-bewerten",
+      "cd.a2.wegweiser-nutzen",
+      "cd.a2.alltagstexte-durchsuchen",
+      "cd.a2.online-bestellung-klaeren"
+    ],
+    "grammar": {
+      "new": [
+        "g.adj-dekl-unbestimmt",
+        "g.indefinitpronomen"
+      ],
+      "chunk": [],
+      "review": [
+        "g.komparation",
+        "g.kein",
+        "g.welch-dies"
+      ]
+    },
+    "lexiconBlocks": [
+      {
+        "title": "Geräte und Produkte",
+        "lemmas": [
+          "lx.vorteil",
+          "lx.marke",
+          "lx.modell",
+          "lx.qualitaet",
+          "lx.praktisch",
+          "lx.nuetzlich",
+          "lx.foehn",
+          "lx.kaffeemaschine",
+          "lx.mikrowelle",
+          "lx.wasserkocher"
+        ]
+      },
+      {
+        "title": "Im Kaufhaus",
+        "lemmas": [
+          "lx.abteilung",
+          "lx.stockwerk",
+          "lx.beratung",
+          "lx.guenstig",
+          "lx.vergleichen",
+          "lx.rolltreppe",
+          "lx.sonderangebot",
+          "lx.wegweiser",
+          "lx.vorraetig"
+        ]
+      },
+      {
+        "title": "Online bestellen und liefern",
+        "lemmas": [
+          "lx.lieferung",
+          "lx.ruecksendung",
+          "lx.zurueckschicken",
+          "lx.versand",
+          "lx.kundenkonto",
+          "lx.bewertung",
+          "lx.artikel",
+          "lx.zahlung",
+          "lx.lieferzeit"
+        ]
+      }
+    ],
+    "textTypes": [
+      "tt.informationstafel",
+      "tt.prospekt",
+      "tt.internetanzeige",
+      "tt.dialog",
+      "tt.telefonat",
+      "tt.email-halbformell",
+      "tt.wortkarte"
+    ],
+    "lanes": {
+      "primary": "ga2",
+      "pruefungsfokus": [
+        {
+          "template": "ga2.l2",
+          "length": "reduced",
+          "modeDefault": "lern",
+          "slot": "ls4"
+        },
+        {
+          "template": "ga2.h3",
+          "length": "full",
+          "modeDefault": "lern",
+          "slot": "ls4"
+        },
+        {
+          "template": "ga2.s2",
+          "length": "full",
+          "modeDefault": "lern",
+          "slot": "schreiben"
+        },
+        {
+          "template": "ga2.sp1",
+          "length": "full",
+          "modeDefault": "lern",
+          "slot": "sprechen"
+        }
+      ],
+      "spur": {}
+    },
+    "lehrwerk": [
+      "M A2 L4",
+      "S3 L3",
+      "N A2 K5–6",
+      "S4 L9"
+    ],
+    "deviation": null,
+    "cast": [
+      "cast.priya",
+      "cast.arjun",
+      "cast.ensemble-a2-1",
+      "cast.ensemble-a2-3",
+      "cast.ensemble-a2-4"
+    ],
+    "fokusPlan": [],
+    "source": {
+      "w2Draft": "curriculum/a2-1.md E4"
+    }
+  },
+  "start": {
+    "lernziele": [
+      "cd.a2.produktinfos-erfragen",
+      "cd.a2.alltagsdinge-bewerten",
+      "cd.a2.wegweiser-nutzen",
+      "cd.a2.alltagstexte-durchsuchen",
+      "cd.a2.online-bestellung-klaeren"
+    ],
+    "pruefungsfokusChips": [
+      "ga2.l2",
+      "ga2.h3",
+      "ga2.s2",
+      "ga2.sp1"
+    ],
+    "folge": {
+      "title": "Samstag, 8 Uhr: kein Kaffee",
+      "lines": [
+        {
+          "id": "a2.1-u04-start-l01",
+          "speaker": "cast.arjun",
+          "de": "Priya, unsere Kaffeemaschine funktioniert nicht mehr!",
+          "en": "Priya, our coffee machine has stopped working!"
+        },
+        {
+          "id": "a2.1-u04-start-l02",
+          "speaker": "cast.priya",
+          "de": "Was? Sie ist nur drei Jahre alt!",
+          "en": "What? It is only three years old!"
+        },
+        {
+          "id": "a2.1-u04-start-l03",
+          "speaker": "cast.arjun",
+          "de": "Ohne Kaffee kann ich nicht arbeiten. Wir brauchen eine neue.",
+          "en": "I can't work without coffee. We need a new one."
+        },
+        {
+          "id": "a2.1-u04-start-l04",
+          "speaker": "cast.priya",
+          "de": "Heute Nachmittag gehe ich ins Kaufhaus. Dort gibt es eine gute Beratung.",
+          "en": "This afternoon I'll go to the department store. They give good advice there."
+        },
+        {
+          "id": "a2.1-u04-start-l05",
+          "speaker": "cast.arjun",
+          "de": "Oder wir bestellen online. Das ist oft günstiger.",
+          "en": "Or we order online. That is often cheaper."
+        },
+        {
+          "id": "a2.1-u04-start-l06",
+          "speaker": "cast.priya",
+          "de": "Ich möchte die Kaffeemaschine aber zuerst sehen. Kommst du mit?",
+          "en": "But I want to see the coffee machine first. Are you coming along?"
+        },
+        {
+          "id": "a2.1-u04-start-l07",
+          "speaker": "cast.arjun",
+          "de": "Leider nicht, ich spiele um drei Fußball. Schick mir bitte Fotos!",
+          "en": "Sorry, no – I'm playing football at three. Please send me photos!"
+        }
+      ],
+      "gistItem": {
+        "id": "a2.1-u04-start-i01",
+        "type": "multiple_choice",
+        "role": "gist",
+        "topic": "hoeren",
+        "promptDe": "Was brauchen Priya und Arjun?",
+        "promptEn": "What do Priya and Arjun need?",
+        "options": [
+          "eine neue Kaffeemaschine",
+          "einen neuen Wasserkocher",
+          "eine neue Mikrowelle"
+        ],
+        "answer": "eine neue Kaffeemaschine",
+        "accepted": [
+          "eine neue Kaffeemaschine"
+        ],
+        "explanation": {
+          "de": "Die Kaffeemaschine funktioniert nicht mehr. Arjun sagt: Wir brauchen eine neue.",
+          "en": "The coffee machine has stopped working, so they need a new one."
+        },
+        "origin": "agent"
+      }
+    },
+    "testOut": {
+      "offered": true
+    }
+  },
+  "steps": [
+    {
+      "id": "a2.1-u04-ls1",
+      "kind": "situation",
+      "title": "Im Kaufhaus: Welches Modell?",
+      "structure": "g.adj-dekl-unbestimmt",
+      "modelSentence": "Ich suche eine kleine Kaffeemaschine.",
+      "ruleCard": "rc.adj-dekl-unbestimmt",
+      "warmup": {
+        "draw": 6,
+        "contrastWith": "g.adjektiv-praedikativ"
+      },
+      "input": {
+        "kind": "dialog",
+        "title": "Im Kaufhaus am Markt",
+        "textType": "tt.dialog",
+        "lines": [
+          {
+            "id": "a2.1-u04-ls1-l01",
+            "speaker": "cast.priya",
+            "de": "Entschuldigung, wo finde ich Kaffeemaschinen?",
+            "en": "Excuse me, where can I find coffee machines?"
+          },
+          {
+            "id": "a2.1-u04-ls1-l02",
+            "speaker": "cast.ensemble-a2-1",
+            "de": "Die Abteilung Haushalt ist im 3. Stockwerk. Nehmen Sie die Rolltreppe. Auf dem Wegweiser sehen Sie alle Abteilungen.",
+            "en": "The household department is on the third floor. Take the escalator. The directory shows all departments.",
+            "say": "Die Abteilung Haushalt ist im dritten Stockwerk. Nehmen Sie die Rolltreppe. Auf dem Wegweiser sehen Sie alle Abteilungen."
+          },
+          {
+            "id": "a2.1-u04-ls1-l03",
+            "speaker": "cast.ensemble-a2-3",
+            "de": "Guten Tag! Kann ich Ihnen helfen?",
+            "en": "Hello! Can I help you?"
+          },
+          {
+            "id": "a2.1-u04-ls1-l04",
+            "speaker": "cast.priya",
+            "de": "Ja, bitte. Ich suche eine neue Kaffeemaschine. Unsere alte ist kaputt.",
+            "en": "Yes, please. I am looking for a new coffee machine. Our old one is broken."
+          },
+          {
+            "id": "a2.1-u04-ls1-l05",
+            "speaker": "cast.ensemble-a2-3",
+            "de": "Möchten Sie ein großes Gerät oder ein kleines Modell?",
+            "en": "Would you like a big machine or a small model?"
+          },
+          {
+            "id": "a2.1-u04-ls1-l06",
+            "speaker": "cast.priya",
+            "de": "Ein kleines Modell, bitte. Unsere Küche ist nicht groß. Und das Gerät soll leise und praktisch sein.",
+            "en": "A small model, please. Our kitchen is not big. And the machine should be quiet and practical."
+          },
+          {
+            "id": "a2.1-u04-ls1-l07",
+            "speaker": "cast.ensemble-a2-3",
+            "de": "Dann ist das hier gut: ein neues Modell aus der Schweiz. Die Marke hat eine gute Qualität.",
+            "en": "Then this one is good: a new model from Switzerland. The brand has good quality."
+          },
+          {
+            "id": "a2.1-u04-ls1-l08",
+            "speaker": "cast.priya",
+            "de": "Das sieht gut aus. Wie lange hat es Garantie?",
+            "en": "That looks good. How long is the guarantee?"
+          },
+          {
+            "id": "a2.1-u04-ls1-l09",
+            "speaker": "cast.ensemble-a2-3",
+            "de": "Zwei Jahre. Es ist sehr leise, und die Bewertungen im Internet sind gut. Es kostet 89 Euro.",
+            "en": "Two years. It is very quiet, and the online reviews are good. It costs 89 euros.",
+            "say": "Zwei Jahre. Es ist sehr leise, und die Bewertungen im Internet sind gut. Es kostet neunundachtzig Euro."
+          },
+          {
+            "id": "a2.1-u04-ls1-l10",
+            "speaker": "cast.priya",
+            "de": "Das ist nicht billig. Haben Sie auch ein günstiges Modell?",
+            "en": "That isn't cheap. Do you also have a less expensive model?"
+          },
+          {
+            "id": "a2.1-u04-ls1-l11",
+            "speaker": "cast.ensemble-a2-3",
+            "de": "Ja, hier: ein praktisches Gerät für 59 Euro. Es ist klein und sehr nützlich. Und es ist im Sonderangebot.",
+            "en": "Yes, here: a practical machine for 59 euros. It is small and very useful. And it is on special offer.",
+            "say": "Ja, hier: ein praktisches Gerät für neunundfünfzig Euro. Es ist klein und sehr nützlich. Und es ist im Sonderangebot."
+          },
+          {
+            "id": "a2.1-u04-ls1-l12",
+            "speaker": "cast.priya",
+            "de": "Gibt es das auch in Weiß? Schwarz gefällt mir nicht so.",
+            "en": "Is it also available in white? I don't really like black."
+          },
+          {
+            "id": "a2.1-u04-ls1-l13",
+            "speaker": "cast.ensemble-a2-3",
+            "de": "In Weiß ist es leider nicht vorrätig. Aber Sie können es online bestellen. Die Lieferzeit ist nur drei Tage.",
+            "en": "Unfortunately it isn't in stock in white. But you can order it online. Delivery only takes three days."
+          },
+          {
+            "id": "a2.1-u04-ls1-l14",
+            "speaker": "cast.priya",
+            "de": "Gut, dann vergleiche ich zu Hause. Vielen Dank für die Beratung!",
+            "en": "Fine, then I'll compare at home. Thank you for your advice!"
+          }
+        ],
+        "glosses": [],
+        "transcriptAfterUnaidedListen": true
+      },
+      "inputItems": [
+        {
+          "id": "a2.1-u04-ls1-i01",
+          "type": "multiple_choice",
+          "role": "gist",
+          "topic": "hoeren",
+          "promptDe": "Wo ist Priya?",
+          "promptEn": "Where is Priya?",
+          "options": [
+            "im Kaufhaus",
+            "im Supermarkt",
+            "bei der Post"
+          ],
+          "answer": "im Kaufhaus",
+          "accepted": [
+            "im Kaufhaus"
+          ],
+          "explanation": {
+            "de": "Priya fragt nach der Abteilung Haushalt. Sie ist im Kaufhaus.",
+            "en": "She asks for the household department – she is in a department store."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls1-i02",
+          "type": "multiple_choice",
+          "role": "gist",
+          "topic": "hoeren",
+          "promptDe": "Was macht Priya am Ende?",
+          "promptEn": "What does Priya do at the end?",
+          "options": [
+            "Sie vergleicht zu Hause.",
+            "Sie kauft ein Gerät.",
+            "Sie bestellt sofort online."
+          ],
+          "answer": "Sie vergleicht zu Hause.",
+          "accepted": [
+            "Sie vergleicht zu Hause."
+          ],
+          "explanation": {
+            "de": "Priya sagt: Dann vergleiche ich zu Hause.",
+            "en": "She says she'll compare at home first."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls1-i03",
+          "type": "fill_blank",
+          "role": "detail",
+          "topic": "hoeren",
+          "promptDe": "Das Modell aus der Schweiz kostet ___ Euro.",
+          "promptEn": "Write the price.",
+          "answer": "89",
+          "accepted": [
+            "89"
+          ],
+          "exact": "number",
+          "explanation": {
+            "de": "Der Verkäufer sagt: Es kostet 89 Euro.",
+            "en": "The salesman says it costs 89 euros."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls1-i04",
+          "type": "fill_blank",
+          "role": "detail",
+          "topic": "hoeren",
+          "promptDe": "Das Modell aus der Schweiz hat zwei Jahre ___.",
+          "promptEn": "What does it have for two years?",
+          "answer": "Garantie",
+          "accepted": [
+            "Garantie"
+          ],
+          "explanation": {
+            "de": "Priya fragt nach der Garantie. Antwort: zwei Jahre.",
+            "en": "Priya asks about the guarantee: two years."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls1-i05",
+          "type": "multiple_choice",
+          "role": "detail",
+          "topic": "hoeren",
+          "promptDe": "Warum kauft Priya das Gerät für 59 Euro nicht?",
+          "promptEn": "Why does Priya not buy the 59-euro machine?",
+          "options": [
+            "Es ist nicht in Weiß vorrätig.",
+            "Es ist zu teuer.",
+            "Es ist zu groß."
+          ],
+          "answer": "Es ist nicht in Weiß vorrätig.",
+          "accepted": [
+            "Es ist nicht in Weiß vorrätig."
+          ],
+          "explanation": {
+            "de": "Priya möchte das Gerät in Weiß. In Weiß ist es nicht vorrätig.",
+            "en": "She wants it in white, and it is not in stock in white."
+          },
+          "origin": "agent"
+        }
+      ],
+      "structuredInput": [
+        {
+          "id": "a2.1-u04-ls1-s01",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.adj-dekl-unbestimmt",
+          "promptDe": "Welches Wort passt? „Das ist ein kleines ___.“",
+          "promptEn": "Which noun fits the ending?",
+          "options": [
+            "Modell",
+            "Kaffeemaschine",
+            "Föhn"
+          ],
+          "answer": "Modell",
+          "accepted": [
+            "Modell"
+          ],
+          "explanation": {
+            "de": "kleines: Die Endung -es zeigt das Neutrum, also das Modell.",
+            "en": "The ending -es after ein shows a neuter noun: das Modell."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls1-s02",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.adj-dekl-unbestimmt",
+          "promptDe": "Welches Wort passt? „Hier ist ein neuer ___.“",
+          "promptEn": "Which noun fits the ending?",
+          "options": [
+            "Föhn",
+            "Mikrowelle",
+            "Gerät"
+          ],
+          "answer": "Föhn",
+          "accepted": [
+            "Föhn"
+          ],
+          "explanation": {
+            "de": "neuer: Die Endung -er zeigt maskulin, also der Föhn.",
+            "en": "The ending -er after ein shows a masculine noun: der Föhn."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls1-s03",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.adj-dekl-unbestimmt",
+          "promptDe": "Welches Wort passt? „Priya kauft ein praktisches ___.“",
+          "promptEn": "Which noun fits the ending?",
+          "options": [
+            "Gerät",
+            "Wasserkocher",
+            "Kaffeemaschine"
+          ],
+          "answer": "Gerät",
+          "accepted": [
+            "Gerät"
+          ],
+          "explanation": {
+            "de": "ein praktisches: Neutrum, also das Gerät. Maskulin heißt es einen praktischen.",
+            "en": "ein + -es is neuter (das Gerät); a masculine noun would need einen praktischen."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls1-s04",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.adj-dekl-unbestimmt",
+          "promptDe": "Welches Wort passt? „Das Kaufhaus hat eine gute ___.“",
+          "promptEn": "Which noun fits the ending?",
+          "options": [
+            "Beratung",
+            "Modell",
+            "Vorteil"
+          ],
+          "answer": "Beratung",
+          "accepted": [
+            "Beratung"
+          ],
+          "explanation": {
+            "de": "eine gute: feminin, also die Beratung.",
+            "en": "eine gute is feminine: die Beratung."
+          },
+          "origin": "agent"
+        }
+      ],
+      "pool": {
+        "items": [
+          {
+            "id": "a2.1-u04-ls1-p01",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.adj-dekl-unbestimmt",
+            "promptDe": "Ich suche eine ___ Kaffeemaschine. (klein)",
+            "promptEn": "Adjective ending, feminine.",
+            "answer": "kleine",
+            "accepted": [
+              "kleine"
+            ],
+            "explanation": {
+              "de": "eine + feminin: die Endung ist -e.",
+              "en": "After eine (feminine) the adjective ends in -e."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls1-p02",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.adj-dekl-unbestimmt",
+            "promptDe": "Wir brauchen einen ___ Wasserkocher. (neu)",
+            "promptEn": "Adjective ending, masculine accusative.",
+            "answer": "neuen",
+            "accepted": [
+              "neuen"
+            ],
+            "explanation": {
+              "de": "einen + maskulin im Akkusativ: -en.",
+              "en": "Masculine accusative after einen: -en."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls1-p03",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.adj-dekl-unbestimmt",
+            "promptDe": "Das ist ein ___ Modell. (praktisch)",
+            "promptEn": "Adjective ending, neuter.",
+            "answer": "praktisches",
+            "accepted": [
+              "praktisches"
+            ],
+            "explanation": {
+              "de": "ein + Neutrum: Das Adjektiv zeigt das Genus mit -es.",
+              "en": "After ein with a neuter noun the adjective shows the gender: -es."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls1-p04",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.adj-dekl-unbestimmt",
+            "promptDe": "Hier ist ein ___ Föhn. (günstig)",
+            "promptEn": "Adjective ending, masculine nominative.",
+            "answer": "günstiger",
+            "accepted": [
+              "günstiger"
+            ],
+            "explanation": {
+              "de": "der Föhn ist hier Subjekt (Nominativ). Nach ein zeigt -er das Maskulinum.",
+              "en": "After ein with a masculine subject the adjective ends in -er."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls1-p05",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.adj-dekl-unbestimmt",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "ich",
+              "suche",
+              "einen",
+              "leisen Föhn"
+            ],
+            "answer": "Ich suche einen leisen Föhn.",
+            "accepted": [
+              "Ich suche einen leisen Föhn.",
+              "Einen leisen Föhn suche ich."
+            ],
+            "acceptedWhy": {
+              "Einen leisen Föhn suche ich.": "grammatisch: das Objekt steht betont vorne"
+            },
+            "explanation": {
+              "de": "Das Verb steht auf Position 2. einen leisen: Akkusativ maskulin.",
+              "en": "Verb in second position; einen leisen is masculine accusative."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls1-p06",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.adj-dekl-unbestimmt",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "Priya",
+              "kauft",
+              "heute",
+              "ein neues Gerät"
+            ],
+            "answer": "Priya kauft heute ein neues Gerät.",
+            "accepted": [
+              "Priya kauft heute ein neues Gerät.",
+              "Heute kauft Priya ein neues Gerät.",
+              "Ein neues Gerät kauft Priya heute."
+            ],
+            "acceptedWhy": {
+              "Ein neues Gerät kauft Priya heute.": "grammatisch: das Objekt steht betont vorne"
+            },
+            "explanation": {
+              "de": "kauft steht auf Position 2. ein neues Gerät: Neutrum im Akkusativ.",
+              "en": "kauft stays in second position; ein neues Gerät is neuter accusative."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls1-p07",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.adj-dekl-unbestimmt",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "das",
+              "ist",
+              "eine",
+              "gute Marke"
+            ],
+            "answer": "Das ist eine gute Marke.",
+            "accepted": [
+              "Das ist eine gute Marke.",
+              "Eine gute Marke ist das."
+            ],
+            "acceptedWhy": {
+              "Eine gute Marke ist das.": "grammatisch: betont, zum Beispiel als Antwort"
+            },
+            "explanation": {
+              "de": "eine gute Marke: feminin, die Endung ist -e.",
+              "en": "eine gute Marke: feminine, ending -e."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls1-p08",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.adj-dekl-unbestimmt",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "wir",
+              "brauchen",
+              "keinen",
+              "großen Wasserkocher"
+            ],
+            "answer": "Wir brauchen keinen großen Wasserkocher.",
+            "accepted": [
+              "Wir brauchen keinen großen Wasserkocher.",
+              "Keinen großen Wasserkocher brauchen wir."
+            ],
+            "acceptedWhy": {
+              "Keinen großen Wasserkocher brauchen wir.": "grammatisch: das Objekt steht betont vorne"
+            },
+            "explanation": {
+              "de": "keinen großen: Akkusativ maskulin, die Endung ist -en.",
+              "en": "keinen großen: masculine accusative, ending -en."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls1-p09",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.adj-dekl-unbestimmt",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "Arjun",
+              "möchte",
+              "einen",
+              "schwarzen Föhn"
+            ],
+            "answer": "Arjun möchte einen schwarzen Föhn.",
+            "accepted": [
+              "Arjun möchte einen schwarzen Föhn.",
+              "Einen schwarzen Föhn möchte Arjun."
+            ],
+            "acceptedWhy": {
+              "Einen schwarzen Föhn möchte Arjun.": "grammatisch: das Objekt steht betont vorne"
+            },
+            "explanation": {
+              "de": "möchte auf Position 2. einen schwarzen: Akkusativ maskulin.",
+              "en": "möchte in second position; einen schwarzen is masculine accusative."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls1-p10",
+            "type": "error_correction",
+            "role": "practice",
+            "topic": "g.adj-dekl-unbestimmt",
+            "promptDe": "Korrigieren Sie: „Ich suche einen kleine Wasserkocher.“",
+            "promptEn": "Correct the sentence.",
+            "answer": "Ich suche einen kleinen Wasserkocher.",
+            "accepted": [
+              "Ich suche einen kleinen Wasserkocher."
+            ],
+            "intentionalError": true,
+            "explanation": {
+              "de": "einen + maskulin im Akkusativ: kleinen, nicht kleine.",
+              "en": "Masculine accusative after einen needs -en: kleinen."
+            },
+            "errorTag": "adj-ending",
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls1-p11",
+            "type": "multiple_choice",
+            "role": "practice",
+            "topic": "g.adj-dekl-unbestimmt",
+            "promptDe": "Welche Form passt? „Das ist ein ___ Gerät.“",
+            "promptEn": "Choose the adjective form.",
+            "options": [
+              "neues",
+              "neuer",
+              "neue"
+            ],
+            "answer": "neues",
+            "accepted": [
+              "neues"
+            ],
+            "explanation": {
+              "de": "das Gerät: Neutrum. Nach ein zeigt das Adjektiv -es.",
+              "en": "das Gerät is neuter: after ein the adjective takes -es."
+            },
+            "origin": "agent"
+          }
+        ],
+        "generators": [
+          {
+            "generator": "dictation.fromInput",
+            "count": 2,
+            "source": [
+              "a2.1-u04-ls1-l06",
+              "a2.1-u04-ls1-l13"
+            ]
+          },
+          {
+            "generator": "lex.articlePlural",
+            "count": 1,
+            "source": [
+              "lx.abteilung",
+              "lx.stockwerk",
+              "lx.modell"
+            ]
+          },
+          {
+            "generator": "lex.glossTyped",
+            "count": 1,
+            "source": [
+              "lx.marke",
+              "lx.qualitaet",
+              "lx.beratung"
+            ]
+          },
+          {
+            "generator": "lex.glossMatch",
+            "count": 1,
+            "source": [
+              "lx.praktisch",
+              "lx.nuetzlich",
+              "lx.guenstig",
+              "lx.rolltreppe"
+            ]
+          }
+        ]
+      },
+      "reserve": [
+        {
+          "id": "a2.1-u04-ls1-r01",
+          "type": "fill_blank",
+          "role": "practice",
+          "topic": "g.adj-dekl-unbestimmt",
+          "promptDe": "Anna hat ein ___ Handy. (neu)",
+          "promptEn": "Adjective ending, neuter accusative.",
+          "answer": "neues",
+          "accepted": [
+            "neues"
+          ],
+          "explanation": {
+            "de": "ein + Neutrum: -es. Das Handy, ein neues Handy.",
+            "en": "Neuter after ein: ein neues Handy."
+          },
+          "errorTags": [
+            "adj-ending"
+          ],
+          "difficulty": 1,
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls1-r02",
+          "type": "fill_blank",
+          "role": "practice",
+          "topic": "g.adj-dekl-unbestimmt",
+          "promptDe": "Priya möchte einen ___ Staubsauger. (leise)",
+          "promptEn": "Adjective ending, masculine accusative.",
+          "answer": "leisen",
+          "accepted": [
+            "leisen"
+          ],
+          "explanation": {
+            "de": "einen + maskulin im Akkusativ: leisen.",
+            "en": "Masculine accusative after einen: leisen."
+          },
+          "errorTags": [
+            "adj-ending"
+          ],
+          "difficulty": 2,
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair",
+            "einstufung"
+          ],
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls1-r03",
+          "type": "sentence_building",
+          "role": "practice",
+          "topic": "g.adj-dekl-unbestimmt",
+          "promptDe": "Bilden Sie den Satz.",
+          "promptEn": "Build the sentence.",
+          "tiles": [
+            "ist",
+            "das",
+            "ein",
+            "nützliches Gerät"
+          ],
+          "answer": "Das ist ein nützliches Gerät.",
+          "accepted": [
+            "Das ist ein nützliches Gerät.",
+            "Ein nützliches Gerät ist das."
+          ],
+          "acceptedWhy": {
+            "Ein nützliches Gerät ist das.": "grammatisch: betont, zum Beispiel als Antwort"
+          },
+          "explanation": {
+            "de": "ein nützliches Gerät: Neutrum, die Endung ist -es.",
+            "en": "ein nützliches Gerät: neuter, ending -es."
+          },
+          "errorTags": [
+            "adj-ending"
+          ],
+          "difficulty": 2,
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls1-r04",
+          "type": "multiple_choice",
+          "role": "practice",
+          "topic": "g.adj-dekl-unbestimmt",
+          "promptDe": "Welche Form passt? „Wir haben keinen ___ Föhn.“",
+          "promptEn": "Choose the adjective form.",
+          "options": [
+            "alten",
+            "alter",
+            "altes"
+          ],
+          "answer": "alten",
+          "accepted": [
+            "alten"
+          ],
+          "explanation": {
+            "de": "keinen + maskulin im Akkusativ: alten.",
+            "en": "Masculine accusative after keinen: alten."
+          },
+          "errorTags": [
+            "adj-ending"
+          ],
+          "difficulty": 2,
+          "banks": [
+            "plateau",
+            "mehr-ueben"
+          ],
+          "origin": "agent"
+        }
+      ],
+      "microOutput": {
+        "id": "a2.1-u04-ls1-mo",
+        "bankKey": "a21-u04-mo1",
+        "mode": "spoken",
+        "profile": "course-micro-sp",
+        "situationDe": "Sie sind im Kaufhaus und suchen ein neues Gerät für Ihre Küche.",
+        "promptDe": "Sagen Sie dem Verkäufer: Welches Gerät suchen Sie? Fragen Sie nach dem Preis.",
+        "promptEn": "Tell the salesperson what kind of appliance you are looking for and ask about the price.",
+        "planSeconds": 30,
+        "seconds": [
+          30,
+          40
+        ],
+        "targets": [
+          "g.adj-dekl-unbestimmt"
+        ],
+        "register": "Sie"
+      },
+      "aussprache": {
+        "focus": "Endungen deutlich sprechen: -e oder -en? (eine neue – einen neuen)",
+        "perception": {
+          "generator": "perception.pairs",
+          "count": 3,
+          "source": [
+            "neue|neuen",
+            "kleine|kleinen",
+            "gute|guten",
+            "alte|alten"
+          ],
+          "voices": 4
+        },
+        "readAloud": {
+          "lineDe": "Ich suche eine kleine Kaffeemaschine."
+        }
+      },
+      "endLine": "Sie können jetzt im Kaufhaus nach einem Gerät fragen."
+    },
+    {
+      "id": "a2.1-u04-ls2",
+      "kind": "situation",
+      "title": "Zwei Angebote vergleichen",
+      "structure": "g.indefinitpronomen",
+      "modelSentence": "Brauchen wir Tassen? – Nein, wir haben noch welche.",
+      "ruleCard": "rc.indefinitpronomen",
+      "warmup": {
+        "draw": 6,
+        "contrastWith": "g.kein"
+      },
+      "input": {
+        "kind": "dialog",
+        "title": "Kaufhaus oder Internet?",
+        "textType": "tt.dialog",
+        "lines": [
+          {
+            "id": "a2.1-u04-ls2-l01",
+            "speaker": "cast.priya",
+            "de": "Arjun, hier sind zwei Angebote. Welches ist besser?",
+            "en": "Arjun, here are two offers. Which one is better?"
+          },
+          {
+            "id": "a2.1-u04-ls2-l02",
+            "speaker": "cast.arjun",
+            "de": "Zwei Kaffeemaschinen? Wir brauchen nur eine!",
+            "en": "Two coffee machines? We only need one!"
+          },
+          {
+            "id": "a2.1-u04-ls2-l03",
+            "speaker": "cast.priya",
+            "de": "Ja, aber ich vergleiche gern. Im Kaufhaus kostet das Modell aus der Schweiz 89 Euro. Das ist eine gute Marke.",
+            "en": "Yes, but I like to compare. In the department store the Swiss model costs 89 euros. It is a good brand.",
+            "say": "Ja, aber ich vergleiche gern. Im Kaufhaus kostet das Modell aus der Schweiz neunundachtzig Euro. Das ist eine gute Marke."
+          },
+          {
+            "id": "a2.1-u04-ls2-l04",
+            "speaker": "cast.arjun",
+            "de": "Und im Internet? Gibt es da auch eins?",
+            "en": "And online? Is there one there too?"
+          },
+          {
+            "id": "a2.1-u04-ls2-l05",
+            "speaker": "cast.priya",
+            "de": "Ja, hier ist eins für 79 Euro, und es ist weiß. Der Versand kostet 4,95 Euro, die Lieferzeit ist drei Tage.",
+            "en": "Yes, here is one for 79 euros, and it is white. Shipping costs 4.95 euros, delivery takes three days.",
+            "say": "Ja, hier ist eins für neunundsiebzig Euro, und es ist weiß. Der Versand kostet vier Euro fünfundneunzig, die Lieferzeit ist drei Tage."
+          },
+          {
+            "id": "a2.1-u04-ls2-l06",
+            "speaker": "cast.arjun",
+            "de": "Dann ist das Internet günstiger als das Kaufhaus. Gibt es online auch andere?",
+            "en": "Then the internet is cheaper than the department store. Are there other ones online, too?"
+          },
+          {
+            "id": "a2.1-u04-ls2-l07",
+            "speaker": "cast.priya",
+            "de": "Ja, viele. Am günstigsten ist ein Modell für 65 Euro. Aber es ist sehr laut. Das steht in den Bewertungen.",
+            "en": "Yes, lots. The cheapest is a model for 65 euros. But it is very loud – that is in the reviews.",
+            "say": "Ja, viele. Am günstigsten ist ein Modell für fünfundsechzig Euro. Aber es ist sehr laut. Das steht in den Bewertungen."
+          },
+          {
+            "id": "a2.1-u04-ls2-l08",
+            "speaker": "cast.arjun",
+            "de": "So laut am Morgen? Nein, danke! Welche ist am leisesten?",
+            "en": "That loud in the morning? No, thanks! Which one is the quietest?"
+          },
+          {
+            "id": "a2.1-u04-ls2-l09",
+            "speaker": "cast.priya",
+            "de": "Das Modell aus der Schweiz. Es ist am leisesten, und die Qualität ist gut. Zwei Jahre Garantie sind auch ein großer Vorteil.",
+            "en": "The Swiss model. It is the quietest, and the quality is good. A two-year guarantee is a big advantage, too."
+          },
+          {
+            "id": "a2.1-u04-ls2-l10",
+            "speaker": "cast.arjun",
+            "de": "Super, dann bestell es online. Brauchen wir auch Tassen?",
+            "en": "Great, then order it online. Do we need cups too?"
+          },
+          {
+            "id": "a2.1-u04-ls2-l11",
+            "speaker": "cast.priya",
+            "de": "Nein, wir haben noch welche. Aber ich brauche einen Föhn. Mein Föhn ist sehr alt.",
+            "en": "No, we still have some. But I need a hairdryer. Mine is very old."
+          },
+          {
+            "id": "a2.1-u04-ls2-l12",
+            "speaker": "cast.arjun",
+            "de": "Ich habe keinen. Aber Anna hat einen. Frag sie!",
+            "en": "I don't have one. But Anna has one. Ask her!"
+          }
+        ],
+        "glosses": [],
+        "transcriptAfterUnaidedListen": true
+      },
+      "inputItems": [
+        {
+          "id": "a2.1-u04-ls2-i01",
+          "type": "multiple_choice",
+          "role": "gist",
+          "topic": "hoeren",
+          "promptDe": "Was vergleicht Priya?",
+          "promptEn": "What does Priya compare?",
+          "options": [
+            "zwei Angebote",
+            "zwei Föhne",
+            "zwei Kaufhäuser"
+          ],
+          "answer": "zwei Angebote",
+          "accepted": [
+            "zwei Angebote"
+          ],
+          "explanation": {
+            "de": "Priya sagt: Hier sind zwei Angebote. Es geht um eine Kaffeemaschine.",
+            "en": "She has two offers for a coffee machine."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls2-i02",
+          "type": "multiple_choice",
+          "role": "gist",
+          "topic": "hoeren",
+          "promptDe": "Welches Modell möchten Priya und Arjun?",
+          "promptEn": "Which model do Priya and Arjun want?",
+          "options": [
+            "das Modell aus der Schweiz",
+            "das Modell für 65 Euro",
+            "ein Modell in Schwarz"
+          ],
+          "answer": "das Modell aus der Schweiz",
+          "accepted": [
+            "das Modell aus der Schweiz"
+          ],
+          "explanation": {
+            "de": "Es ist am leisesten und hat zwei Jahre Garantie. Arjun sagt: Dann bestell es.",
+            "en": "It is the quietest with a two-year guarantee, so Arjun says to order it."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls2-i03",
+          "type": "fill_blank",
+          "role": "detail",
+          "topic": "hoeren",
+          "promptDe": "Im Internet kostet das Modell aus der Schweiz ___ Euro.",
+          "promptEn": "Write the price.",
+          "answer": "79",
+          "accepted": [
+            "79"
+          ],
+          "exact": "number",
+          "explanation": {
+            "de": "Priya sagt: Hier ist eins für 79 Euro.",
+            "en": "Online it costs 79 euros."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls2-i04",
+          "type": "fill_blank",
+          "role": "detail",
+          "topic": "hoeren",
+          "promptDe": "Das Modell für 65 Euro ist am ___.",
+          "promptEn": "Which superlative does Priya use?",
+          "answer": "günstigsten",
+          "accepted": [
+            "günstigsten"
+          ],
+          "explanation": {
+            "de": "Priya sagt: Am günstigsten ist ein Modell für 65 Euro.",
+            "en": "The 65-euro model is the cheapest."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls2-i05",
+          "type": "multiple_choice",
+          "role": "detail",
+          "topic": "hoeren",
+          "promptDe": "Wer hat einen Föhn?",
+          "promptEn": "Who has a hairdryer?",
+          "options": [
+            "Anna",
+            "Arjun",
+            "Priya"
+          ],
+          "answer": "Anna",
+          "accepted": [
+            "Anna"
+          ],
+          "explanation": {
+            "de": "Arjun hat keinen Föhn, aber Anna hat einen.",
+            "en": "Arjun doesn't have one, but Anna does."
+          },
+          "origin": "agent"
+        }
+      ],
+      "structuredInput": [
+        {
+          "id": "a2.1-u04-ls2-s01",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.indefinitpronomen",
+          "promptDe": "„Ich habe keinen.“ Was hat Arjun nicht?",
+          "promptEn": "What does Arjun not have?",
+          "options": [
+            "einen Föhn",
+            "eine Tasse",
+            "ein Modell"
+          ],
+          "answer": "einen Föhn",
+          "accepted": [
+            "einen Föhn"
+          ],
+          "explanation": {
+            "de": "keinen: maskulin im Akkusativ, also der Föhn.",
+            "en": "keinen is masculine accusative, so it stands for der Föhn."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls2-s02",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.indefinitpronomen",
+          "promptDe": "„Gibt es da auch eins?“ Was sucht Arjun?",
+          "promptEn": "What is Arjun asking about?",
+          "options": [
+            "ein Modell",
+            "eine Kaffeemaschine",
+            "einen Föhn"
+          ],
+          "answer": "ein Modell",
+          "accepted": [
+            "ein Modell"
+          ],
+          "explanation": {
+            "de": "eins steht für ein Nomen im Neutrum: das Modell.",
+            "en": "eins stands for a neuter noun: das Modell."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls2-s03",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.indefinitpronomen",
+          "promptDe": "„Wir brauchen nur eine.“ Was brauchen sie?",
+          "promptEn": "What do they need?",
+          "options": [
+            "eine Kaffeemaschine",
+            "einen Wasserkocher",
+            "ein Gerät"
+          ],
+          "answer": "eine Kaffeemaschine",
+          "accepted": [
+            "eine Kaffeemaschine"
+          ],
+          "explanation": {
+            "de": "eine steht für ein Nomen im Femininum: die Kaffeemaschine.",
+            "en": "eine stands for a feminine noun: die Kaffeemaschine."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls2-s04",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.indefinitpronomen",
+          "promptDe": "„Wir haben noch welche.“ Was haben sie noch?",
+          "promptEn": "What do they still have?",
+          "options": [
+            "Tassen",
+            "einen Föhn",
+            "eine Kaffeemaschine"
+          ],
+          "answer": "Tassen",
+          "accepted": [
+            "Tassen"
+          ],
+          "explanation": {
+            "de": "welche steht für ein Nomen im Plural: Tassen.",
+            "en": "welche stands for a plural noun: Tassen."
+          },
+          "origin": "agent"
+        }
+      ],
+      "pool": {
+        "items": [
+          {
+            "id": "a2.1-u04-ls2-p01",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.indefinitpronomen",
+            "promptDe": "Ist hier ein Aufzug? – Ja, dort ist ___. (der Aufzug)",
+            "promptEn": "Pronoun for der Aufzug (nominative).",
+            "answer": "einer",
+            "accepted": [
+              "einer"
+            ],
+            "explanation": {
+              "de": "der Aufzug ist maskulin, hier im Nominativ: einer.",
+              "en": "Masculine nominative: einer."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls2-p02",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.indefinitpronomen",
+            "promptDe": "Brauchst du ein Kabel? – Nein, ich habe schon ___.",
+            "promptEn": "Pronoun for das Kabel.",
+            "answer": "eins",
+            "accepted": [
+              "eins",
+              "eines"
+            ],
+            "acceptedWhy": {
+              "eines": "auch richtig, aber seltener als eins"
+            },
+            "explanation": {
+              "de": "das Kabel: Neutrum. Ich habe schon eins.",
+              "en": "Neuter noun: eins."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls2-p03",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.indefinitpronomen",
+            "promptDe": "Gibt es hier eine Rolltreppe? – Nein, hier gibt es ___.",
+            "promptEn": "Negative pronoun for die Rolltreppe.",
+            "answer": "keine",
+            "accepted": [
+              "keine"
+            ],
+            "explanation": {
+              "de": "die Rolltreppe: feminin. Nein, hier gibt es keine.",
+              "en": "Feminine noun, negative: keine."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls2-p04",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.indefinitpronomen",
+            "promptDe": "Haben wir noch Tassen? – Ja, wir haben ___.",
+            "promptEn": "Pronoun for a plural noun.",
+            "answer": "welche",
+            "accepted": [
+              "welche"
+            ],
+            "explanation": {
+              "de": "Tassen: Plural. Ja, wir haben welche.",
+              "en": "Plural noun, positive answer: welche."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls2-p05",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.indefinitpronomen",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "ich",
+              "habe",
+              "leider",
+              "keinen"
+            ],
+            "answer": "Ich habe leider keinen.",
+            "accepted": [
+              "Ich habe leider keinen.",
+              "Leider habe ich keinen."
+            ],
+            "explanation": {
+              "de": "habe steht auf Position 2. keinen steht am Ende.",
+              "en": "habe in second position; keinen at the end."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls2-p06",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.indefinitpronomen",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "wir",
+              "haben",
+              "zu Hause",
+              "welche"
+            ],
+            "answer": "Wir haben zu Hause welche.",
+            "accepted": [
+              "Wir haben zu Hause welche.",
+              "Zu Hause haben wir welche."
+            ],
+            "explanation": {
+              "de": "haben steht auf Position 2. welche steht am Ende.",
+              "en": "haben in second position; welche at the end."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls2-p07",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.komparation",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "diese Kaffeemaschine",
+              "ist",
+              "am leisesten"
+            ],
+            "answer": "Diese Kaffeemaschine ist am leisesten.",
+            "accepted": [
+              "Diese Kaffeemaschine ist am leisesten.",
+              "Am leisesten ist diese Kaffeemaschine."
+            ],
+            "explanation": {
+              "de": "Superlativ nach sein: am + leise + -sten.",
+              "en": "Superlative after sein: am leisesten."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls2-p08",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.indefinitpronomen",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "Anna",
+              "hat",
+              "auch",
+              "einen"
+            ],
+            "answer": "Anna hat auch einen.",
+            "accepted": [
+              "Anna hat auch einen.",
+              "Auch Anna hat einen."
+            ],
+            "acceptedWhy": {
+              "Auch Anna hat einen.": "grammatisch: auch bezieht sich hier auf Anna"
+            },
+            "explanation": {
+              "de": "einen steht für einen Föhn: maskulin, Akkusativ.",
+              "en": "einen stands for a masculine noun in the accusative."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls2-p09",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.komparation",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "der Föhn",
+              "ist",
+              "am teuersten"
+            ],
+            "answer": "Der Föhn ist am teuersten.",
+            "accepted": [
+              "Der Föhn ist am teuersten.",
+              "Am teuersten ist der Föhn."
+            ],
+            "explanation": {
+              "de": "teuer: teurer, am teuersten.",
+              "en": "teuer – teurer – am teuersten."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls2-p10",
+            "type": "error_correction",
+            "role": "practice",
+            "topic": "g.indefinitpronomen",
+            "promptDe": "Korrigieren Sie: „Ich brauche einen Föhn. Hast du ein?“",
+            "promptEn": "Correct the sentence.",
+            "answer": "Ich brauche einen Föhn. Hast du einen?",
+            "accepted": [
+              "Ich brauche einen Föhn. Hast du einen?"
+            ],
+            "intentionalError": true,
+            "explanation": {
+              "de": "Ohne Nomen heißt es für der Föhn im Akkusativ: einen.",
+              "en": "Standing alone for a masculine noun in the accusative: einen."
+            },
+            "errorTag": "case-np",
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls2-p11",
+            "type": "multiple_choice",
+            "role": "practice",
+            "topic": "g.komparation",
+            "promptDe": "Welche Form passt? „Das Angebot ist am ___.“",
+            "promptEn": "Choose the superlative.",
+            "options": [
+              "günstigsten",
+              "günstiger",
+              "günstig"
+            ],
+            "answer": "günstigsten",
+            "accepted": [
+              "günstigsten"
+            ],
+            "explanation": {
+              "de": "Nach am steht der Superlativ: am günstigsten.",
+              "en": "After am comes the superlative: am günstigsten."
+            },
+            "origin": "agent"
+          }
+        ],
+        "generators": [
+          {
+            "generator": "dictation.fromInput",
+            "count": 2,
+            "source": [
+              "a2.1-u04-ls2-l02",
+              "a2.1-u04-ls2-l11"
+            ]
+          },
+          {
+            "generator": "lex.articlePlural",
+            "count": 1,
+            "source": [
+              "lx.vorteil",
+              "lx.marke",
+              "lx.bewertung"
+            ]
+          },
+          {
+            "generator": "lex.glossTyped",
+            "count": 1,
+            "source": [
+              "lx.vergleichen",
+              "lx.vorteil"
+            ]
+          },
+          {
+            "generator": "lex.glossMatch",
+            "count": 1,
+            "source": [
+              "lx.versand",
+              "lx.bewertung",
+              "lx.sonderangebot",
+              "lx.lieferzeit"
+            ]
+          }
+        ]
+      },
+      "reserve": [
+        {
+          "id": "a2.1-u04-ls2-r01",
+          "type": "fill_blank",
+          "role": "practice",
+          "topic": "g.indefinitpronomen",
+          "promptDe": "Die Tasse ist kaputt? Hier ist noch ___. (die Tasse)",
+          "promptEn": "Pronoun for die Tasse.",
+          "answer": "eine",
+          "accepted": [
+            "eine"
+          ],
+          "explanation": {
+            "de": "die Tasse ist feminin: Hier ist noch eine.",
+            "en": "Feminine noun: eine."
+          },
+          "errorTags": [
+            "gender-article"
+          ],
+          "difficulty": 1,
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls2-r02",
+          "type": "fill_blank",
+          "role": "practice",
+          "topic": "g.indefinitpronomen",
+          "promptDe": "Gibt es hier einen Aufzug? – Nein, leider gibt es ___.",
+          "promptEn": "Negative pronoun for der Aufzug.",
+          "answer": "keinen",
+          "accepted": [
+            "keinen"
+          ],
+          "explanation": {
+            "de": "der Aufzug, Akkusativ nach es gibt: keinen.",
+            "en": "es gibt takes the accusative: keinen."
+          },
+          "errorTags": [
+            "case-np"
+          ],
+          "difficulty": 2,
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair",
+            "einstufung"
+          ],
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls2-r03",
+          "type": "sentence_building",
+          "role": "practice",
+          "topic": "g.komparation",
+          "promptDe": "Bilden Sie den Satz.",
+          "promptEn": "Build the sentence.",
+          "tiles": [
+            "ist",
+            "am günstigsten",
+            "das Angebot im Internet"
+          ],
+          "answer": "Das Angebot im Internet ist am günstigsten.",
+          "accepted": [
+            "Das Angebot im Internet ist am günstigsten.",
+            "Am günstigsten ist das Angebot im Internet."
+          ],
+          "explanation": {
+            "de": "Superlativ nach sein: am günstigsten.",
+            "en": "Superlative after sein: am günstigsten."
+          },
+          "errorTags": [
+            "spelling-meaning"
+          ],
+          "difficulty": 2,
+          "banks": [
+            "plateau",
+            "mehr-ueben"
+          ],
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls2-r04",
+          "type": "multiple_choice",
+          "role": "practice",
+          "topic": "g.indefinitpronomen",
+          "promptDe": "Welches Wort passt? „Ich brauche Briefmarken. Hast du ___?“",
+          "promptEn": "Choose the pronoun.",
+          "options": [
+            "welche",
+            "eine",
+            "eins"
+          ],
+          "answer": "welche",
+          "accepted": [
+            "welche"
+          ],
+          "explanation": {
+            "de": "Briefmarken: Plural. Die Frage heißt: Hast du welche?",
+            "en": "Plural noun: welche."
+          },
+          "errorTags": [
+            "gender-article"
+          ],
+          "difficulty": 2,
+          "banks": [
+            "plateau",
+            "mehr-ueben"
+          ],
+          "origin": "agent"
+        }
+      ],
+      "microOutput": {
+        "id": "a2.1-u04-ls2-mo",
+        "bankKey": "a21-u04-mo2",
+        "mode": "written",
+        "profile": "course-micro",
+        "situationDe": "Ihre Freundin Anna schreibt: „Hast du einen Föhn für mich?“",
+        "promptDe": "Antworten Sie Anna in 1–3 Sätzen: Haben Sie einen? Wer hat noch einen?",
+        "promptEn": "Reply to Anna in 1–3 sentences: do you have one, and who else has one?",
+        "planSeconds": 30,
+        "words": [
+          8,
+          30
+        ],
+        "targets": [
+          "g.indefinitpronomen"
+        ],
+        "register": "du"
+      },
+      "endLine": "Sie können jetzt Angebote vergleichen und sagen, was Sie schon haben."
+    },
+    {
+      "id": "a2.1-u04-ls3",
+      "kind": "situation",
+      "title": "Das Paket ist da – aber falsch",
+      "structure": "g.adj-dekl-unbestimmt",
+      "modelSentence": "Ich habe eine weiße Kaffeemaschine bestellt, keinen roten Wasserkocher.",
+      "ruleCard": "rc.adj-dekl-unbestimmt",
+      "warmup": {
+        "draw": 6,
+        "contrastWith": "g.indefinitpronomen"
+      },
+      "input": {
+        "kind": "mixed",
+        "title": "Die E-Mail vom Online-Shop und das Paket",
+        "textType": "tt.email-halbformell",
+        "text": {
+          "de": "Ihre Bestellung bei „Küche und mehr“\n\nLiebe Frau Nair,\nvielen Dank für Ihre Bestellung! Heute schicken wir Ihnen das Paket.\n\nArtikel: 1 Kaffeemaschine, Modell aus der Schweiz, Farbe: Weiß\nPreis: 79,00 Euro · Versand: 4,95 Euro\nZahlung: auf Rechnung. Bitte bezahlen Sie in 14 Tagen.\nLieferung: am Donnerstag zwischen 10 und 14 Uhr\n\nSie sind am Donnerstag nicht zu Hause? Dann bekommt Ihr Nachbar das Paket.\nDer Artikel gefällt Ihnen nicht, oder er ist kaputt? Dann können Sie ihn zurückschicken. Ihr Vorteil: Die Rücksendung ist 30 Tage lang kostenlos. Das Formular für die Rücksendung finden Sie in Ihrem Kundenkonto.\n\nHaben Sie Fragen? Unser Kundenservice ist von Montag bis Freitag von 8 bis 18 Uhr für Sie da.\n\nViele Grüße\nIhr Team von „Küche und mehr“",
+          "en": "Your order from \"Küche und mehr\". Dear Ms Nair, thank you for your order! We are sending you the parcel today. Item: 1 coffee machine, Swiss model, colour: white. Price: 79.00 euros · shipping: 4.95 euros. Payment: by invoice – please pay within 14 days. Delivery: Thursday between 10 am and 2 pm. Not at home on Thursday? Then your neighbour will receive the parcel. You don't like the item or it is broken? Then you can send it back. Your advantage: returns are free for 30 days. You will find the returns form in your customer account. Questions? Our customer service is there for you Monday to Friday from 8 am to 6 pm. Best regards, your \"Küche und mehr\" team"
+        },
+        "lines": [
+          {
+            "id": "a2.1-u04-ls3-l01",
+            "speaker": "cast.priya",
+            "de": "Arjun, das Paket von „Küche und mehr“ ist da! Es ist ziemlich groß.",
+            "en": "Arjun, the parcel from 'Küche und mehr' is here! It's quite big."
+          },
+          {
+            "id": "a2.1-u04-ls3-l02",
+            "speaker": "cast.arjun",
+            "de": "Super! Ich möchte jetzt einen Kaffee.",
+            "en": "Great! I want a coffee now."
+          },
+          {
+            "id": "a2.1-u04-ls3-l03",
+            "speaker": "cast.priya",
+            "de": "Warte … Was ist das? Das ist ein Wasserkocher!",
+            "en": "Wait … what's this? It's a kettle!"
+          },
+          {
+            "id": "a2.1-u04-ls3-l04",
+            "speaker": "cast.arjun",
+            "de": "Ein roter Wasserkocher? Aber wir haben schon einen.",
+            "en": "A red kettle? But we already have one."
+          },
+          {
+            "id": "a2.1-u04-ls3-l05",
+            "speaker": "cast.priya",
+            "de": "Und im Paket ist keine Kaffeemaschine. Ich habe eine weiße Kaffeemaschine bestellt!",
+            "en": "And there's no coffee machine in the parcel. I ordered a white coffee machine!"
+          },
+          {
+            "id": "a2.1-u04-ls3-l06",
+            "speaker": "cast.arjun",
+            "de": "Das ist nicht gut. Was machen wir jetzt? Was steht in der E-Mail zur Rücksendung?",
+            "en": "That's not good. What do we do now? What does the e-mail say about returns?"
+          },
+          {
+            "id": "a2.1-u04-ls3-l07",
+            "speaker": "cast.priya",
+            "de": "Hier: Die Rücksendung ist kostenlos. Das Formular ist in meinem Kundenkonto.",
+            "en": "Here: returns are free. The form is in my customer account."
+          },
+          {
+            "id": "a2.1-u04-ls3-l08",
+            "speaker": "cast.arjun",
+            "de": "Dann schreib dem Kundenservice: Die Lieferung ist falsch! Wir brauchen die Kaffeemaschine bis Samstag. Meine Eltern kommen.",
+            "en": "Then write to customer service: the delivery is wrong! We need the coffee machine by Saturday. My parents are coming."
+          },
+          {
+            "id": "a2.1-u04-ls3-l09",
+            "speaker": "cast.priya",
+            "de": "Gut, ich schreibe heute noch eine E-Mail. Und den Wasserkocher schicke ich zurück.",
+            "en": "OK, I'll write an e-mail today. And I'll send the kettle back."
+          },
+          {
+            "id": "a2.1-u04-ls3-l10",
+            "speaker": "cast.arjun",
+            "de": "Gute Idee. Und heute trinke ich Tee.",
+            "en": "Good idea. And today I'll drink tea."
+          }
+        ],
+        "glosses": [
+          {
+            "token": "ziemlich",
+            "gloss": {
+              "en": "quite, rather"
+            }
+          }
+        ],
+        "transcriptAfterUnaidedListen": true
+      },
+      "inputItems": [
+        {
+          "id": "a2.1-u04-ls3-i01",
+          "type": "multiple_choice",
+          "role": "gist",
+          "topic": "hoeren",
+          "promptDe": "Was ist im Paket?",
+          "promptEn": "What is in the parcel?",
+          "options": [
+            "ein roter Wasserkocher",
+            "eine weiße Kaffeemaschine",
+            "ein schwarzer Föhn"
+          ],
+          "answer": "ein roter Wasserkocher",
+          "accepted": [
+            "ein roter Wasserkocher"
+          ],
+          "explanation": {
+            "de": "Priya sagt: Das ist ein Wasserkocher. Arjun: Ein roter Wasserkocher?",
+            "en": "The parcel contains a red kettle."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls3-i02",
+          "type": "multiple_choice",
+          "role": "gist",
+          "topic": "hoeren",
+          "promptDe": "Was ist das Problem?",
+          "promptEn": "What is the problem?",
+          "options": [
+            "Die Lieferung ist falsch.",
+            "Das Paket kommt zu spät.",
+            "Die Rechnung ist zu teuer."
+          ],
+          "answer": "Die Lieferung ist falsch.",
+          "accepted": [
+            "Die Lieferung ist falsch."
+          ],
+          "explanation": {
+            "de": "Priya hat eine Kaffeemaschine bestellt, aber im Paket ist ein Wasserkocher.",
+            "en": "She ordered a coffee machine but got a kettle – the delivery is wrong."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls3-i03",
+          "type": "fill_blank",
+          "role": "detail",
+          "topic": "lesen",
+          "promptDe": "E-Mail: Die Kaffeemaschine kostet ___ Euro.",
+          "promptEn": "Find the price in the e-mail.",
+          "answer": "79",
+          "accepted": [
+            "79",
+            "79,00"
+          ],
+          "exact": "number",
+          "explanation": {
+            "de": "In der E-Mail steht: Preis: 79,00 Euro.",
+            "en": "The e-mail says: price 79.00 euros."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls3-i04",
+          "type": "fill_blank",
+          "role": "detail",
+          "topic": "lesen",
+          "promptDe": "E-Mail: Die Lieferung kommt am ___.",
+          "promptEn": "Which day is the delivery?",
+          "answer": "Donnerstag",
+          "accepted": [
+            "Donnerstag"
+          ],
+          "explanation": {
+            "de": "In der E-Mail steht: Lieferung am Donnerstag zwischen 10 und 14 Uhr.",
+            "en": "Delivery is on Thursday between 10 am and 2 pm."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls3-i05",
+          "type": "multiple_choice",
+          "role": "detail",
+          "topic": "lesen",
+          "promptDe": "Wo findet Priya das Formular für die Rücksendung?",
+          "promptEn": "Where is the returns form?",
+          "options": [
+            "im Kundenkonto",
+            "im Paket",
+            "in der Rechnung"
+          ],
+          "answer": "im Kundenkonto",
+          "accepted": [
+            "im Kundenkonto"
+          ],
+          "explanation": {
+            "de": "In der E-Mail steht: Das Formular finden Sie in Ihrem Kundenkonto.",
+            "en": "The form is in her customer account."
+          },
+          "origin": "agent"
+        }
+      ],
+      "structuredInput": [
+        {
+          "id": "a2.1-u04-ls3-s01",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.adj-dekl-unbestimmt",
+          "promptDe": "Welches Wort passt? „Im Paket ist ein roter ___.“",
+          "promptEn": "Which noun fits the ending?",
+          "options": [
+            "Wasserkocher",
+            "Gerät",
+            "Kaffeemaschine"
+          ],
+          "answer": "Wasserkocher",
+          "accepted": [
+            "Wasserkocher"
+          ],
+          "explanation": {
+            "de": "roter: -er nach ein zeigt maskulin, also der Wasserkocher.",
+            "en": "The ending -er after ein shows a masculine noun."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls3-s02",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.adj-dekl-unbestimmt",
+          "promptDe": "Welches Wort passt? „Arjun bestellt ein kleines ___.“",
+          "promptEn": "Which noun fits the ending?",
+          "options": [
+            "Gerät",
+            "Föhn",
+            "Mikrowelle"
+          ],
+          "answer": "Gerät",
+          "accepted": [
+            "Gerät"
+          ],
+          "explanation": {
+            "de": "kleines: -es zeigt das Neutrum, also das Gerät.",
+            "en": "The ending -es shows a neuter noun: das Gerät."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls3-s03",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.adj-dekl-unbestimmt",
+          "promptDe": "Welches Wort passt? „Priya ist mit einem neuen ___ zufrieden.“",
+          "promptEn": "Which noun fits the article?",
+          "options": [
+            "Föhn",
+            "Mikrowelle",
+            "Tasse"
+          ],
+          "answer": "Föhn",
+          "accepted": [
+            "Föhn"
+          ],
+          "explanation": {
+            "de": "mit einem neuen: Dativ, maskulin oder Neutrum. Der Föhn passt.",
+            "en": "mit einem neuen is dative masculine or neuter: der Föhn."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls3-s04",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.adj-dekl-unbestimmt",
+          "promptDe": "Welches Wort passt? „Wir wohnen in einer kleinen ___.“",
+          "promptEn": "Which noun fits the article?",
+          "options": [
+            "Wohnung",
+            "Haus",
+            "Zimmer"
+          ],
+          "answer": "Wohnung",
+          "accepted": [
+            "Wohnung"
+          ],
+          "explanation": {
+            "de": "in einer kleinen: Dativ feminin. Die Wohnung passt.",
+            "en": "in einer kleinen is dative feminine: die Wohnung."
+          },
+          "origin": "agent"
+        }
+      ],
+      "pool": {
+        "items": [
+          {
+            "id": "a2.1-u04-ls3-p01",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.adj-dekl-unbestimmt",
+            "promptDe": "Das Paket ist bei einer ___ Nachbarin. (nett)",
+            "promptEn": "Adjective ending in the dative.",
+            "answer": "netten",
+            "accepted": [
+              "netten"
+            ],
+            "explanation": {
+              "de": "Im Dativ endet das Adjektiv auf -en: bei einer netten Nachbarin.",
+              "en": "In the dative the adjective ends in -en."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls3-p02",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.adj-dekl-unbestimmt",
+            "promptDe": "Priya spricht mit einem ___ Mitarbeiter. (freundlich)",
+            "promptEn": "Adjective ending in the dative.",
+            "answer": "freundlichen",
+            "accepted": [
+              "freundlichen"
+            ],
+            "explanation": {
+              "de": "mit + Dativ: mit einem freundlichen Mitarbeiter.",
+              "en": "mit takes the dative: -en."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls3-p03",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.adj-dekl-unbestimmt",
+            "promptDe": "Im Paket ist ein ___ Wasserkocher. (rot)",
+            "promptEn": "Adjective ending, masculine nominative.",
+            "answer": "roter",
+            "accepted": [
+              "roter"
+            ],
+            "explanation": {
+              "de": "ein + maskulin im Nominativ: roter.",
+              "en": "Masculine nominative after ein: -er."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls3-p04",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.adj-dekl-unbestimmt",
+            "promptDe": "Ich habe eine ___ Kaffeemaschine bestellt. (weiß)",
+            "promptEn": "Adjective ending, feminine accusative.",
+            "answer": "weiße",
+            "accepted": [
+              "weiße"
+            ],
+            "explanation": {
+              "de": "eine + feminin: weiße. Nominativ und Akkusativ sind gleich.",
+              "en": "Feminine after eine: -e in the nominative and accusative."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls3-p05",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "lx.zurueckschicken",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "schickt",
+              "Priya",
+              "zurück",
+              "den Wasserkocher"
+            ],
+            "answer": "Priya schickt den Wasserkocher zurück.",
+            "accepted": [
+              "Priya schickt den Wasserkocher zurück.",
+              "Den Wasserkocher schickt Priya zurück."
+            ],
+            "explanation": {
+              "de": "zurückschicken ist trennbar: schickt auf Position 2, zurück am Ende.",
+              "en": "zurückschicken is separable: zurück goes to the end."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls3-p06",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.adj-dekl-unbestimmt",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "ich",
+              "wohne",
+              "in",
+              "einer kleinen Wohnung"
+            ],
+            "answer": "Ich wohne in einer kleinen Wohnung.",
+            "accepted": [
+              "Ich wohne in einer kleinen Wohnung.",
+              "In einer kleinen Wohnung wohne ich."
+            ],
+            "explanation": {
+              "de": "in einer kleinen Wohnung: Dativ, die Endung ist -en.",
+              "en": "Dative after in (where?): -en."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls3-p07",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.adj-dekl-unbestimmt",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "Priya",
+              "hat",
+              "eine weiße Kaffeemaschine",
+              "bestellt"
+            ],
+            "answer": "Priya hat eine weiße Kaffeemaschine bestellt.",
+            "accepted": [
+              "Priya hat eine weiße Kaffeemaschine bestellt.",
+              "Eine weiße Kaffeemaschine hat Priya bestellt."
+            ],
+            "acceptedWhy": {
+              "Eine weiße Kaffeemaschine hat Priya bestellt.": "grammatisch: das Objekt steht betont vorne"
+            },
+            "explanation": {
+              "de": "hat auf Position 2, bestellt am Ende.",
+              "en": "hat in second position, bestellt at the end."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls3-p08",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.adj-dekl-unbestimmt",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "ist",
+              "im Paket",
+              "ein roter Wasserkocher"
+            ],
+            "answer": "Im Paket ist ein roter Wasserkocher.",
+            "accepted": [
+              "Im Paket ist ein roter Wasserkocher.",
+              "Ein roter Wasserkocher ist im Paket."
+            ],
+            "explanation": {
+              "de": "ein roter Wasserkocher ist das Subjekt: Nominativ, -er.",
+              "en": "ein roter Wasserkocher is the subject: nominative -er."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls3-p09",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.adj-dekl-unbestimmt",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "Arjun",
+              "arbeitet",
+              "mit",
+              "einem neuen Laptop"
+            ],
+            "answer": "Arjun arbeitet mit einem neuen Laptop.",
+            "accepted": [
+              "Arjun arbeitet mit einem neuen Laptop.",
+              "Mit einem neuen Laptop arbeitet Arjun."
+            ],
+            "explanation": {
+              "de": "mit einem neuen Laptop: Dativ, die Endung ist -en.",
+              "en": "Dative after mit: -en."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls3-p10",
+            "type": "error_correction",
+            "role": "practice",
+            "topic": "g.adj-dekl-unbestimmt",
+            "promptDe": "Korrigieren Sie: „Wir haben einen roter Wasserkocher bekommen.“",
+            "promptEn": "Correct the sentence.",
+            "answer": "Wir haben einen roten Wasserkocher bekommen.",
+            "accepted": [
+              "Wir haben einen roten Wasserkocher bekommen."
+            ],
+            "intentionalError": true,
+            "explanation": {
+              "de": "einen: Akkusativ maskulin. Dann heißt es roten, nicht roter.",
+              "en": "After einen (masculine accusative) the adjective needs -en."
+            },
+            "errorTag": "adj-ending",
+            "origin": "agent"
+          },
+          {
+            "id": "a2.1-u04-ls3-p11",
+            "type": "multiple_choice",
+            "role": "practice",
+            "topic": "g.adj-dekl-unbestimmt",
+            "promptDe": "Welche Form passt? „Der Föhn kommt in einem ___ Paket.“",
+            "promptEn": "Choose the adjective form.",
+            "options": [
+              "kleinen",
+              "kleines",
+              "kleiner"
+            ],
+            "answer": "kleinen",
+            "accepted": [
+              "kleinen"
+            ],
+            "explanation": {
+              "de": "in einem: Dativ. Im Dativ endet das Adjektiv auf -en.",
+              "en": "in einem is dative: the adjective ends in -en."
+            },
+            "origin": "agent"
+          }
+        ],
+        "generators": [
+          {
+            "generator": "dictation.fromInput",
+            "count": 2,
+            "source": [
+              "a2.1-u04-ls3-l05",
+              "a2.1-u04-ls3-l07"
+            ]
+          },
+          {
+            "generator": "lex.articlePlural",
+            "count": 1,
+            "source": [
+              "lx.lieferung",
+              "lx.ruecksendung",
+              "lx.artikel"
+            ]
+          },
+          {
+            "generator": "lex.glossTyped",
+            "count": 1,
+            "source": [
+              "lx.zurueckschicken",
+              "lx.lieferung",
+              "lx.ruecksendung"
+            ]
+          },
+          {
+            "generator": "lex.glossMatch",
+            "count": 1,
+            "source": [
+              "lx.versand",
+              "lx.kundenkonto",
+              "lx.zahlung",
+              "lx.artikel"
+            ]
+          }
+        ]
+      },
+      "reserve": [
+        {
+          "id": "a2.1-u04-ls3-r01",
+          "type": "fill_blank",
+          "role": "practice",
+          "topic": "g.adj-dekl-unbestimmt",
+          "promptDe": "Sie wohnt in einem ___ Haus. (alt)",
+          "promptEn": "Adjective ending in the dative.",
+          "answer": "alten",
+          "accepted": [
+            "alten"
+          ],
+          "explanation": {
+            "de": "in einem + Dativ: alten.",
+            "en": "Dative after in einem: -en."
+          },
+          "errorTags": [
+            "adj-ending"
+          ],
+          "difficulty": 2,
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair",
+            "einstufung"
+          ],
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls3-r02",
+          "type": "fill_blank",
+          "role": "practice",
+          "topic": "g.adj-dekl-unbestimmt",
+          "promptDe": "Er kommt mit einer ___ Tasche. (groß)",
+          "promptEn": "Adjective ending in the dative.",
+          "answer": "großen",
+          "accepted": [
+            "großen"
+          ],
+          "explanation": {
+            "de": "mit einer + Dativ: großen.",
+            "en": "Dative after mit einer: -en."
+          },
+          "errorTags": [
+            "adj-ending"
+          ],
+          "difficulty": 2,
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls3-r03",
+          "type": "sentence_building",
+          "role": "practice",
+          "topic": "g.adj-dekl-unbestimmt",
+          "promptDe": "Bilden Sie den Satz.",
+          "promptEn": "Build the sentence.",
+          "tiles": [
+            "Priya",
+            "schreibt",
+            "einer",
+            "netten Mitarbeiterin"
+          ],
+          "answer": "Priya schreibt einer netten Mitarbeiterin.",
+          "accepted": [
+            "Priya schreibt einer netten Mitarbeiterin.",
+            "Einer netten Mitarbeiterin schreibt Priya."
+          ],
+          "acceptedWhy": {
+            "Einer netten Mitarbeiterin schreibt Priya.": "grammatisch: das Dativobjekt steht betont vorne"
+          },
+          "explanation": {
+            "de": "schreiben + Dativ: einer netten Mitarbeiterin, die Endung ist -en.",
+            "en": "schreiben + dative person: einer netten, ending -en."
+          },
+          "errorTags": [
+            "adj-ending",
+            "case-np"
+          ],
+          "difficulty": 3,
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls3-r04",
+          "type": "multiple_choice",
+          "role": "practice",
+          "topic": "g.adj-dekl-unbestimmt",
+          "promptDe": "Welche Form passt? „Ich komme mit meinem ___ Fahrrad.“",
+          "promptEn": "Choose the adjective form.",
+          "options": [
+            "neuen",
+            "neues",
+            "neuer"
+          ],
+          "answer": "neuen",
+          "accepted": [
+            "neuen"
+          ],
+          "explanation": {
+            "de": "mit meinem: Dativ. Das Adjektiv endet auf -en.",
+            "en": "mit meinem is dative: -en."
+          },
+          "errorTags": [
+            "adj-ending"
+          ],
+          "difficulty": 2,
+          "banks": [
+            "plateau",
+            "mehr-ueben"
+          ],
+          "origin": "agent"
+        }
+      ],
+      "microOutput": {
+        "id": "a2.1-u04-ls3-mo",
+        "bankKey": "a21-u04-mo3",
+        "mode": "spoken",
+        "profile": "course-micro-sp",
+        "situationDe": "Sie haben online eine Kaffeemaschine bestellt. Im Paket ist ein anderes Gerät.",
+        "promptDe": "Rufen Sie den Kundenservice an: Was haben Sie bestellt? Was ist im Paket?",
+        "promptEn": "Call customer service: say what you ordered and what is in the parcel.",
+        "planSeconds": 30,
+        "seconds": [
+          30,
+          40
+        ],
+        "targets": [
+          "g.adj-dekl-unbestimmt"
+        ],
+        "register": "Sie"
+      },
+      "aussprache": {
+        "focus": "-em oder -en? Das Ende deutlich sprechen (mit einem neuen Föhn)",
+        "perception": {
+          "generator": "perception.pairs",
+          "count": 3,
+          "source": [
+            "einem|einen",
+            "keinem|keinen",
+            "meinem|meinen",
+            "kleinem|kleinen"
+          ],
+          "voices": 4
+        },
+        "readAloud": {
+          "lineDe": "Ich habe eine weiße Kaffeemaschine bestellt, keinen roten Wasserkocher."
+        }
+      },
+      "endLine": "Sie können jetzt eine Bestellung lesen und ein Problem mit der Lieferung beschreiben."
+    },
+    {
+      "id": "a2.1-u04-ls4",
+      "kind": "pruefung",
+      "texts": [
+        {
+          "id": "a2.1-u04-ls4-t1",
+          "kind": "sign",
+          "title": "Kaufhaus am Markt – Wegweiser",
+          "text": "Kaufhaus am Markt – Wegweiser\n\n4. Stockwerk: Möbel · Betten · Teppiche · Lampen · Kundenservice (Reparaturen)\n3. Stockwerk: Haushalt: Kaffeemaschinen, Wasserkocher, Staubsauger, Mikrowellen · Küche: Tassen, Gläser, Geschirr\n2. Stockwerk: Kleidung für Männer und Kinder · Sport: Schuhe, Fahrräder\n1. Stockwerk: Kleidung für Frauen: Kleider, Röcke, Mäntel · Taschen · Brillen\nErdgeschoss: Information · Handys, Laptops und Kabel · Bücher und Hefte · Kaffee und Kuchen\n\nAufzug und Rolltreppe: neben der Information\nÖffnungszeiten: Montag bis Samstag 9.30 bis 20 Uhr · Sonntag geschlossen",
+          "glosses": []
+        },
+        {
+          "id": "a2.1-u04-ls4-t2",
+          "kind": "audio",
+          "title": "Gespräch 1: Im Kaufhaus",
+          "lines": [
+            {
+              "id": "a2.1-u04-ls4-t2-l01",
+              "speaker": "cast.ensemble-a2-3",
+              "de": "Guten Tag. Suchen Sie einen Wasserkocher? Hier ist ein weißer für 25 Euro und ein roter für 30 Euro.",
+              "en": "Hello. Are you looking for a kettle? Here is a white one for 25 euros and a red one for 30 euros.",
+              "say": "Guten Tag. Suchen Sie einen Wasserkocher? Hier ist ein weißer für fünfundzwanzig Euro und ein roter für dreißig Euro."
+            },
+            {
+              "id": "a2.1-u04-ls4-t2-l02",
+              "speaker": "cast.ensemble-a2-1",
+              "de": "Einen weißen habe ich schon zu Hause. Haben Sie auch einen schwarzen?",
+              "en": "I already have a white one at home. Do you also have a black one?"
+            },
+            {
+              "id": "a2.1-u04-ls4-t2-l03",
+              "speaker": "cast.ensemble-a2-3",
+              "de": "Nein, leider nicht. Schwarz ist nicht mehr vorrätig.",
+              "en": "No, I'm afraid not. Black is no longer in stock."
+            },
+            {
+              "id": "a2.1-u04-ls4-t2-l04",
+              "speaker": "cast.ensemble-a2-1",
+              "de": "Gut, dann nehme ich einen roten. Rot ist auch schön.",
+              "en": "OK, then I'll take a red one. Red is nice too."
+            }
+          ],
+          "glosses": []
+        },
+        {
+          "id": "a2.1-u04-ls4-t3",
+          "kind": "audio",
+          "title": "Gespräch 2: Am Telefon",
+          "lines": [
+            {
+              "id": "a2.1-u04-ls4-t3-l01",
+              "speaker": "cast.ensemble-a2-1",
+              "de": "Kaufhaus am Markt, Abteilung Haushalt, guten Tag.",
+              "en": "Kaufhaus am Markt, household department, good morning."
+            },
+            {
+              "id": "a2.1-u04-ls4-t3-l02",
+              "speaker": "cast.ensemble-a2-4",
+              "de": "Guten Tag. Ich möchte den Staubsauger im Sonderangebot kaufen. Ist er vorrätig?",
+              "en": "Hello. I'd like to buy the vacuum cleaner that is on special offer. Is it in stock?"
+            },
+            {
+              "id": "a2.1-u04-ls4-t3-l03",
+              "speaker": "cast.ensemble-a2-1",
+              "de": "Heute leider nicht. Er kommt am Freitag. Sie können ihn am Samstag abholen.",
+              "en": "Not today, I'm afraid. It arrives on Friday. You can pick it up on Saturday."
+            },
+            {
+              "id": "a2.1-u04-ls4-t3-l04",
+              "speaker": "cast.ensemble-a2-4",
+              "de": "Am Samstag arbeite ich. Geht es auch am Montag?",
+              "en": "I work on Saturday. Is Monday possible too?"
+            },
+            {
+              "id": "a2.1-u04-ls4-t3-l05",
+              "speaker": "cast.ensemble-a2-1",
+              "de": "Ja, gern. Wir sind ab 9.30 Uhr da.",
+              "en": "Yes, of course. We're open from 9.30.",
+              "say": "Ja, gern. Wir sind ab neun Uhr dreißig da."
+            },
+            {
+              "id": "a2.1-u04-ls4-t3-l06",
+              "speaker": "cast.ensemble-a2-4",
+              "de": "Gut, dann komme ich am Montag.",
+              "en": "Good, then I'll come on Monday."
+            }
+          ],
+          "glosses": []
+        },
+        {
+          "id": "a2.1-u04-ls4-t4",
+          "kind": "audio",
+          "title": "Gespräch 3: Ein Geschenk",
+          "lines": [
+            {
+              "id": "a2.1-u04-ls4-t4-l01",
+              "speaker": "cast.ensemble-a2-4",
+              "de": "Meine Mutter hat am Sonntag Geburtstag. Ich suche noch ein Geschenk.",
+              "en": "My mother's birthday is on Sunday. I'm still looking for a present."
+            },
+            {
+              "id": "a2.1-u04-ls4-t4-l02",
+              "speaker": "cast.ensemble-a2-1",
+              "de": "Braucht sie einen neuen Föhn? Ein Föhn ist immer nützlich.",
+              "en": "Does she need a new hairdryer? A hairdryer is always useful."
+            },
+            {
+              "id": "a2.1-u04-ls4-t4-l03",
+              "speaker": "cast.ensemble-a2-4",
+              "de": "Nein, sie hat schon einen. Aber ihre Mikrowelle ist sehr alt.",
+              "en": "No, she already has one. But her microwave is very old."
+            },
+            {
+              "id": "a2.1-u04-ls4-t4-l04",
+              "speaker": "cast.ensemble-a2-1",
+              "de": "Eine Mikrowelle ist teuer. Kauf ihr eine schöne Tasse!",
+              "en": "A microwave is expensive. Buy her a nice cup!"
+            },
+            {
+              "id": "a2.1-u04-ls4-t4-l05",
+              "speaker": "cast.ensemble-a2-4",
+              "de": "Eine Tasse? Nein. Sie braucht die Mikrowelle jeden Tag. Ich kaufe ihr eine.",
+              "en": "A cup? No. She uses the microwave every day. I'll buy her one."
+            }
+          ],
+          "glosses": []
+        },
+        {
+          "id": "a2.1-u04-ls4-t5",
+          "kind": "audio",
+          "title": "Gespräch 4: Ein Paket",
+          "lines": [
+            {
+              "id": "a2.1-u04-ls4-t5-l01",
+              "speaker": "cast.ensemble-a2-3",
+              "de": "Guten Tag! Ich habe ein Paket für Frau Berger. Ist sie zu Hause?",
+              "en": "Hello! I have a parcel for Ms Berger. Is she at home?"
+            },
+            {
+              "id": "a2.1-u04-ls4-t5-l02",
+              "speaker": "cast.ensemble-a2-1",
+              "de": "Nein, Frau Berger arbeitet heute bis 18 Uhr. Ich bin ihre Nachbarin.",
+              "en": "No, Ms Berger is working until 6 pm today. I'm her neighbour.",
+              "say": "Nein, Frau Berger arbeitet heute bis achtzehn Uhr. Ich bin ihre Nachbarin."
+            },
+            {
+              "id": "a2.1-u04-ls4-t5-l03",
+              "speaker": "cast.ensemble-a2-3",
+              "de": "Kann ich Ihnen das Paket geben?",
+              "en": "Can I give you the parcel?"
+            },
+            {
+              "id": "a2.1-u04-ls4-t5-l04",
+              "speaker": "cast.ensemble-a2-1",
+              "de": "Ja, gern. Ich gebe es ihr heute Abend.",
+              "en": "Yes, sure. I'll give it to her this evening."
+            },
+            {
+              "id": "a2.1-u04-ls4-t5-l05",
+              "speaker": "cast.ensemble-a2-3",
+              "de": "Vielen Dank! Bitte unterschreiben Sie hier.",
+              "en": "Thank you very much! Please sign here."
+            }
+          ],
+          "glosses": []
+        },
+        {
+          "id": "a2.1-u04-ls4-t6",
+          "kind": "audio",
+          "title": "Gespräch 5: Beim Kundenservice",
+          "lines": [
+            {
+              "id": "a2.1-u04-ls4-t6-l01",
+              "speaker": "cast.ensemble-a2-3",
+              "de": "Kundenservice, guten Tag. Was kann ich für Sie tun?",
+              "en": "Customer service, hello. What can I do for you?"
+            },
+            {
+              "id": "a2.1-u04-ls4-t6-l02",
+              "speaker": "cast.ensemble-a2-1",
+              "de": "Guten Tag. Ich möchte einen Staubsauger bestellen. Kann ich mit meiner Bankkarte bezahlen?",
+              "en": "Hello. I'd like to order a vacuum cleaner. Can I pay with my bank card?"
+            },
+            {
+              "id": "a2.1-u04-ls4-t6-l03",
+              "speaker": "cast.ensemble-a2-3",
+              "de": "Am Telefon leider nicht. Die Zahlung ist dann auf Rechnung. Online geht es auch mit Bankkarte.",
+              "en": "Not on the phone, I'm afraid. Payment is then by invoice. Online, a bank card works too."
+            },
+            {
+              "id": "a2.1-u04-ls4-t6-l04",
+              "speaker": "cast.ensemble-a2-1",
+              "de": "Online bestellen möchte ich nicht. Dann bezahle ich auf Rechnung.",
+              "en": "I don't want to order online. Then I'll pay by invoice."
+            }
+          ],
+          "glosses": []
+        }
+      ],
+      "blocks": [
+        {
+          "id": "a2.1-u04-ls4-ga2-l2",
+          "template": "ga2.l2",
+          "lane": "ga2",
+          "length": "reduced",
+          "scaffolded": true,
+          "modeDefault": "lern",
+          "instructionsDe": "Lesen Sie den Wegweiser. In welches Stockwerk gehen Sie? Wählen Sie a, b oder c.",
+          "textRefs": [
+            "a2.1-u04-ls4-t1"
+          ],
+          "items": [
+            {
+              "id": "a2.1-u04-ls4-ga2-l2-01",
+              "type": "abc",
+              "role": "exam",
+              "topic": "lesen",
+              "promptDe": "Ihr Sohn braucht eine Jacke für den Winter. Wohin gehen Sie?",
+              "options": [
+                "Erdgeschoss",
+                "2. Stockwerk",
+                "anderes Stockwerk"
+              ],
+              "textRef": "a2.1-u04-ls4-t1",
+              "answer": "2. Stockwerk",
+              "accepted": [
+                "2. Stockwerk"
+              ],
+              "exact": "number",
+              "explanation": {
+                "de": "Kleidung für Kinder gibt es im 2. Stockwerk.",
+                "en": "Children's clothing is on the second floor."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "a2.1-u04-ls4-ga2-l2-02",
+              "type": "abc",
+              "role": "exam",
+              "topic": "lesen",
+              "promptDe": "Sie brauchen Gläser für Ihre Küche. Wohin gehen Sie?",
+              "options": [
+                "1. Stockwerk",
+                "3. Stockwerk",
+                "anderes Stockwerk"
+              ],
+              "textRef": "a2.1-u04-ls4-t1",
+              "answer": "3. Stockwerk",
+              "accepted": [
+                "3. Stockwerk"
+              ],
+              "exact": "number",
+              "explanation": {
+                "de": "Küche: Tassen, Gläser, Geschirr – das ist im 3. Stockwerk.",
+                "en": "Glasses are listed under Küche on the third floor."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "a2.1-u04-ls4-ga2-l2-03",
+              "type": "abc",
+              "role": "exam",
+              "topic": "lesen",
+              "promptDe": "Ihr Staubsauger ist kaputt. Sie möchten eine Reparatur. Wohin gehen Sie?",
+              "options": [
+                "3. Stockwerk",
+                "Erdgeschoss",
+                "anderes Stockwerk"
+              ],
+              "textRef": "a2.1-u04-ls4-t1",
+              "answer": "anderes Stockwerk",
+              "accepted": [
+                "anderes Stockwerk"
+              ],
+              "explanation": {
+                "de": "Staubsauger kauft man im 3. Stockwerk. Reparaturen macht der Kundenservice im 4. Stockwerk.",
+                "en": "Vacuum cleaners are sold on floor 3, but repairs are at customer service on floor 4."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "a2.1-u04-ls4-ga2-l2-04",
+              "type": "abc",
+              "role": "exam",
+              "topic": "lesen",
+              "promptDe": "Sie möchten ein Kabel für Ihr Handy kaufen. Wohin gehen Sie?",
+              "options": [
+                "Erdgeschoss",
+                "1. Stockwerk",
+                "anderes Stockwerk"
+              ],
+              "textRef": "a2.1-u04-ls4-t1",
+              "answer": "Erdgeschoss",
+              "accepted": [
+                "Erdgeschoss"
+              ],
+              "explanation": {
+                "de": "Handys, Laptops und Kabel gibt es im Erdgeschoss.",
+                "en": "Phones, laptops and cables are on the ground floor."
+              },
+              "origin": "agent"
+            }
+          ]
+        },
+        {
+          "id": "a2.1-u04-ls4-ga2-h3",
+          "template": "ga2.h3",
+          "lane": "ga2",
+          "length": "full",
+          "scaffolded": false,
+          "modeDefault": "lern",
+          "instructionsDe": "Sie hören fünf kurze Gespräche. Sie hören jeden Text einmal. Wählen Sie a, b oder c.",
+          "textRefs": [
+            "a2.1-u04-ls4-t2",
+            "a2.1-u04-ls4-t3",
+            "a2.1-u04-ls4-t4",
+            "a2.1-u04-ls4-t5",
+            "a2.1-u04-ls4-t6"
+          ],
+          "items": [
+            {
+              "id": "a2.1-u04-ls4-ga2-h3-01",
+              "type": "abc",
+              "role": "exam",
+              "topic": "hoeren",
+              "promptDe": "Welchen Wasserkocher kauft die Frau?",
+              "options": [
+                "einen weißen",
+                "einen roten",
+                "einen schwarzen"
+              ],
+              "textRef": "a2.1-u04-ls4-t2",
+              "answer": "einen roten",
+              "accepted": [
+                "einen roten"
+              ],
+              "explanation": {
+                "de": "Einen weißen hat sie schon, Schwarz ist nicht vorrätig. Sie sagt: Dann nehme ich einen roten.",
+                "en": "She already has a white one and black is out of stock, so she takes a red one."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "a2.1-u04-ls4-ga2-h3-02",
+              "type": "abc",
+              "role": "exam",
+              "topic": "hoeren",
+              "promptDe": "Wann holt der Mann den Staubsauger ab?",
+              "options": [
+                "am Freitag",
+                "am Samstag",
+                "am Montag"
+              ],
+              "textRef": "a2.1-u04-ls4-t3",
+              "answer": "am Montag",
+              "accepted": [
+                "am Montag"
+              ],
+              "explanation": {
+                "de": "Am Samstag arbeitet er. Er sagt: Dann komme ich am Montag.",
+                "en": "He works on Saturday, so he will come on Monday."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "a2.1-u04-ls4-ga2-h3-03",
+              "type": "abc",
+              "role": "exam",
+              "topic": "hoeren",
+              "promptDe": "Was kauft der Mann für seine Mutter?",
+              "options": [
+                "eine Mikrowelle",
+                "einen Föhn",
+                "eine Tasse"
+              ],
+              "textRef": "a2.1-u04-ls4-t4",
+              "answer": "eine Mikrowelle",
+              "accepted": [
+                "eine Mikrowelle"
+              ],
+              "explanation": {
+                "de": "Einen Föhn hat sie schon. Die Tasse möchte er nicht. Er kauft eine Mikrowelle.",
+                "en": "She already has a hairdryer and he rejects the cup: he buys a microwave."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "a2.1-u04-ls4-ga2-h3-04",
+              "type": "abc",
+              "role": "exam",
+              "topic": "hoeren",
+              "promptDe": "Wer bekommt das Paket jetzt?",
+              "options": [
+                "die Nachbarin",
+                "Frau Berger",
+                "die Post"
+              ],
+              "textRef": "a2.1-u04-ls4-t5",
+              "answer": "die Nachbarin",
+              "accepted": [
+                "die Nachbarin"
+              ],
+              "explanation": {
+                "de": "Frau Berger ist nicht da. Der Mann gibt das Paket der Nachbarin.",
+                "en": "Ms Berger is out, so the neighbour takes the parcel."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "a2.1-u04-ls4-ga2-h3-05",
+              "type": "abc",
+              "role": "exam",
+              "topic": "hoeren",
+              "promptDe": "Wie bezahlt die Frau?",
+              "options": [
+                "mit der Bankkarte",
+                "auf Rechnung",
+                "mit dem Handy"
+              ],
+              "textRef": "a2.1-u04-ls4-t6",
+              "answer": "auf Rechnung",
+              "accepted": [
+                "auf Rechnung"
+              ],
+              "explanation": {
+                "de": "Am Telefon geht keine Bankkarte. Sie sagt: Dann bezahle ich auf Rechnung.",
+                "en": "A bank card is not possible by phone, so she pays by invoice."
+              },
+              "origin": "agent"
+            }
+          ]
+        }
+      ],
+      "strategyCards": [
+        {
+          "template": "ga2.l2",
+          "de": "Lesen Teil 2: Lesen Sie zuerst die Situation. Was brauchen Sie genau? Suchen Sie dann das passende Wort im Wegweiser. Eine Jacke für ein Kind finden Sie bei „Kleidung für Kinder“. Achtung: Ein Wort steht manchmal zweimal da. Passt keine Lösung, wählen Sie „anderes Stockwerk“.",
+          "en": "Reading part 2: read the situation first and decide what exactly you need, then look for the matching category on the directory. Careful: a word may appear twice. If no floor fits, choose \"anderes Stockwerk\"."
+        },
+        {
+          "template": "ga2.h3",
+          "de": "Hören Teil 3: Sie hören jedes Gespräch nur einmal. Lesen Sie vorher die Frage und die drei Antworten. Oft hören Sie alle drei Antworten im Gespräch. Achten Sie auf das Ende: „Dann nehme ich …“, „Dann komme ich …“.",
+          "en": "Listening part 3: each conversation is played only once. Read the question and the three options first. You often hear all three options – listen for the decision at the end."
+        }
+      ]
+    },
+    {
+      "id": "a2.1-u04-ls5",
+      "kind": "sprechen",
+      "task": {
+        "bankKey": "a21-u04-s",
+        "lane": "ga2",
+        "template": "ga2.sp1",
+        "mode": "cards-ask",
+        "profile": "ga2-sp1",
+        "prepMinutes": 0,
+        "instructionsDe": "Fragen Sie mit jeder Karte. Ihre Partnerin antwortet. Dann fragt sie, Sie antworten.",
+        "situationDe": "Sprechen Teil 1: Sie und Ihre Partnerin haben je vier Karten zum Thema „Einkaufen“.",
+        "cards": {
+          "learner": [
+            "Einkaufen: Supermarkt?",
+            "Einkaufen: Internet?",
+            "Einkaufen: Geschenk?",
+            "Einkaufen: Küche?"
+          ],
+          "partner": [
+            "Einkaufen: Samstag?",
+            "Einkaufen: Preis?",
+            "Einkaufen: Marke?",
+            "Einkaufen: Kaufhaus?"
+          ]
+        },
+        "turns": [
+          8,
+          8
+        ],
+        "moves": [],
+        "aiRole": {
+          "name": "Marta",
+          "personaDe": "Teilnehmerin in der Prüfung, kauft gern im Internet und vergleicht Preise, antwortet in einfachen, ganzen Sätzen",
+          "register": "Sie",
+          "support": "clarify"
+        },
+        "openingLine": "Guten Tag! Wir beginnen mit Teil 1. Stellen Sie bitte Ihre erste Frage.",
+        "hintWords": [
+          "Wo …?",
+          "Was …?",
+          "Welche …?",
+          "Wie oft …?",
+          "Supermarkt",
+          "Internet",
+          "Geschenk",
+          "Küche"
+        ],
+        "modelTurns": [
+          {
+            "speaker": "learner",
+            "de": "Wie oft gehen Sie in den Supermarkt?"
+          },
+          {
+            "speaker": "partner",
+            "de": "Ich gehe jeden Samstag in den Supermarkt."
+          },
+          {
+            "speaker": "partner",
+            "de": "Wo kaufen Sie gern Kleidung?"
+          },
+          {
+            "speaker": "learner",
+            "de": "Ich kaufe gern im Kaufhaus ein. Dort gibt es eine gute Beratung."
+          },
+          {
+            "speaker": "partner",
+            "de": "Welche Marke finden Sie gut?"
+          },
+          {
+            "speaker": "learner",
+            "de": "Ich habe eine Kaffeemaschine aus der Schweiz. Die Marke finde ich sehr gut."
+          },
+          {
+            "speaker": "learner",
+            "de": "Welches Gerät in Ihrer Küche finden Sie am praktischsten?"
+          },
+          {
+            "speaker": "partner",
+            "de": "Meinen Wasserkocher. Er ist klein und sehr praktisch."
+          }
+        ]
+      }
+    },
+    {
+      "id": "a2.1-u04-ls6",
+      "kind": "schreiben",
+      "task": {
+        "bankKey": "a21-u04-w",
+        "lane": "ga2",
+        "template": "ga2.s2",
+        "examKey": "goethe_a2",
+        "profile": "ga2-s2",
+        "register": "halbformell",
+        "address": "Sie",
+        "title": "Die falsche Lieferung",
+        "situationDe": "Sie haben im Online-Shop „Küche und mehr“ eine weiße Kaffeemaschine bestellt. Heute ist das Paket gekommen. Im Paket ist ein roter Wasserkocher.",
+        "taskDe": "Schreiben Sie dem Kundenservice eine E-Mail zu allen drei Punkten (30 bis 40 Wörter).",
+        "leitpunkte": [
+          {
+            "id": "lp1",
+            "de": "Beschreiben Sie das Problem mit Ihrer Lieferung.",
+            "cues": [
+              "bestellt",
+              "Paket",
+              "Wasserkocher",
+              "Kaffeemaschine",
+              "falsch"
+            ]
+          },
+          {
+            "id": "lp2",
+            "de": "Fragen Sie nach der Rücksendung.",
+            "cues": [
+              "Rücksendung",
+              "zurückschicken",
+              "kostenlos",
+              "Wie",
+              "Formular"
+            ]
+          },
+          {
+            "id": "lp3",
+            "de": "Sagen Sie, bis wann Sie die Kaffeemaschine brauchen.",
+            "cues": [
+              "bis",
+              "brauche",
+              "Samstag",
+              "Freitag",
+              "bitte"
+            ]
+          }
+        ],
+        "wordBand": [
+          30,
+          40
+        ],
+        "minSubmitWords": 15,
+        "checklist": [
+          "Anrede",
+          "Punkt 1: das Problem",
+          "Punkt 2: Frage zur Rücksendung",
+          "Punkt 3: bis wann?",
+          "Gruß",
+          "Sie-Form",
+          "30 bis 40 Wörter"
+        ],
+        "modelText": "Guten Tag,\nich habe bei Ihnen eine weiße Kaffeemaschine bestellt. Aber im Paket ist ein roter Wasserkocher. Wie kann ich den Wasserkocher zurückschicken? Ist das kostenlos? Ich brauche die Kaffeemaschine bitte bis Samstag.\nViele Grüße\nPriya Nair"
+      }
+    },
+    {
+      "id": "a2.1-u04-ls7",
+      "kind": "check",
+      "endLine": "Geschafft! Sie können jetzt nach Produkten fragen, Angebote vergleichen und bei einer falschen Lieferung schreiben."
+    }
+  ],
+  "check": {
+    "lines": [
+      {
+        "id": "a2.1-u04-ls7-l01",
+        "speaker": "ansage",
+        "de": "Die Rücksendung ist kostenlos.",
+        "en": "Returns are free."
+      },
+      {
+        "id": "a2.1-u04-ls7-l02",
+        "speaker": "ansage",
+        "de": "Haben Sie das Modell auch in Weiß?",
+        "en": "Do you also have the model in white?"
+      }
+    ],
+    "items": [
+      {
+        "id": "a2.1-u04-c01",
+        "type": "fill_blank",
+        "role": "check",
+        "topic": "g.adj-dekl-unbestimmt",
+        "promptDe": "Ich brauche einen ___ Föhn. (neu)",
+        "promptEn": "Adjective ending, masculine accusative.",
+        "answer": "neuen",
+        "accepted": [
+          "neuen"
+        ],
+        "explanation": {
+          "de": "einen + maskulin im Akkusativ: neuen.",
+          "en": "Masculine accusative after einen: -en."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a2.1-u04-c02",
+        "type": "fill_blank",
+        "role": "check",
+        "topic": "g.adj-dekl-unbestimmt",
+        "promptDe": "Wir wohnen in einer ___ Wohnung. (klein)",
+        "promptEn": "Adjective ending in the dative.",
+        "answer": "kleinen",
+        "accepted": [
+          "kleinen"
+        ],
+        "explanation": {
+          "de": "in einer + Dativ: kleinen.",
+          "en": "Dative after in einer: -en."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a2.1-u04-c03",
+        "type": "fill_blank",
+        "role": "check",
+        "topic": "g.indefinitpronomen",
+        "promptDe": "Hast du einen Wasserkocher? – Nein, ich habe ___.",
+        "promptEn": "Negative pronoun for der Wasserkocher.",
+        "answer": "keinen",
+        "accepted": [
+          "keinen"
+        ],
+        "explanation": {
+          "de": "der Wasserkocher, Akkusativ, negativ: keinen.",
+          "en": "Masculine accusative, negative: keinen."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a2.1-u04-c04",
+        "type": "sentence_building",
+        "role": "check",
+        "topic": "g.komparation",
+        "promptDe": "Bilden Sie den Satz.",
+        "promptEn": "Build the sentence.",
+        "tiles": [
+          "das Modell aus der Schweiz",
+          "ist",
+          "am teuersten"
+        ],
+        "answer": "Das Modell aus der Schweiz ist am teuersten.",
+        "accepted": [
+          "Das Modell aus der Schweiz ist am teuersten.",
+          "Am teuersten ist das Modell aus der Schweiz."
+        ],
+        "explanation": {
+          "de": "Superlativ nach sein: am teuersten.",
+          "en": "Superlative after sein: am teuersten."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a2.1-u04-c05",
+        "type": "multiple_choice",
+        "role": "check",
+        "topic": "lx.abteilung",
+        "promptDe": "Kleidung für Kinder? Die ___ ist im 2. Stockwerk.",
+        "promptEn": "Choose the word.",
+        "options": [
+          "Abteilung",
+          "Lieferung",
+          "Beratung"
+        ],
+        "answer": "Abteilung",
+        "accepted": [
+          "Abteilung"
+        ],
+        "explanation": {
+          "de": "Im Kaufhaus gibt es Abteilungen, zum Beispiel für Kleidung.",
+          "en": "A department store is divided into departments (Abteilungen)."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a2.1-u04-c06",
+        "type": "error_correction",
+        "role": "check",
+        "topic": "g.adj-dekl-unbestimmt",
+        "promptDe": "Korrigieren Sie: „Priya kauft eine neuer Kaffeemaschine.“",
+        "promptEn": "Correct the sentence.",
+        "answer": "Priya kauft eine neue Kaffeemaschine.",
+        "accepted": [
+          "Priya kauft eine neue Kaffeemaschine."
+        ],
+        "intentionalError": true,
+        "explanation": {
+          "de": "eine + feminin: neue, nicht neuer.",
+          "en": "Feminine after eine: -e, not -er."
+        },
+        "errorTag": "adj-ending",
+        "origin": "agent"
+      },
+      {
+        "id": "a2.1-u04-c07",
+        "type": "dictation",
+        "role": "check",
+        "topic": "hoeren",
+        "promptDe": "Hören Sie und schreiben Sie den Satz.",
+        "promptEn": "Listen and write the sentence.",
+        "audioLineRef": "a2.1-u04-ls7-l01",
+        "answer": "Die Rücksendung ist kostenlos.",
+        "accepted": [
+          "Die Rücksendung ist kostenlos."
+        ],
+        "explanation": {
+          "de": "die Rücksendung: Nomen, also groß. kostenlos: klein.",
+          "en": "Rücksendung is a noun (capital R); kostenlos is written in lower case."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a2.1-u04-c08",
+        "type": "dictation",
+        "role": "check",
+        "topic": "hoeren",
+        "promptDe": "Hören Sie und schreiben Sie die Frage.",
+        "promptEn": "Listen and write the question.",
+        "audioLineRef": "a2.1-u04-ls7-l02",
+        "answer": "Haben Sie das Modell auch in Weiß?",
+        "accepted": [
+          "Haben Sie das Modell auch in Weiß?"
+        ],
+        "explanation": {
+          "de": "Ja/Nein-Frage: Das Verb steht vorne. Weiß als Farbe schreibt man hier groß.",
+          "en": "Yes/no question: the verb comes first; the colour Weiß is a noun here."
+        },
+        "origin": "agent"
+      }
+    ],
+    "earlierDraw": {
+      "count": 4,
+      "from": "previous-3",
+      "pool": "reserve"
+    },
+    "proofItems": [
+      {
+        "id": "a2.1-u04-q01",
+        "type": "multiple_choice",
+        "role": "proof",
+        "topic": "lesen",
+        "promptDe": "Wegweiser: „EG Taschen · 1. Stockwerk Sport · 2. Stockwerk Haushalt“. Wo sind Staubsauger?",
+        "promptEn": "Where are vacuum cleaners?",
+        "options": [
+          "im 2. Stockwerk",
+          "im 1. Stockwerk",
+          "im Erdgeschoss"
+        ],
+        "answer": "im 2. Stockwerk",
+        "accepted": [
+          "im 2. Stockwerk"
+        ],
+        "explanation": {
+          "de": "Staubsauger sind Haushaltsgeräte. Haushalt ist im 2. Stockwerk.",
+          "en": "Vacuum cleaners belong to Haushalt, on the second floor."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a2.1-u04-q02",
+        "type": "multiple_choice",
+        "role": "proof",
+        "topic": "lesen",
+        "promptDe": "Prospekt: „Wasserkocher 19 € · Föhn 24 € · Mikrowelle 89 €“. Was kostet der Föhn?",
+        "promptEn": "How much is the hairdryer?",
+        "options": [
+          "24 Euro",
+          "19 Euro",
+          "89 Euro"
+        ],
+        "answer": "24 Euro",
+        "accepted": [
+          "24 Euro"
+        ],
+        "exact": "number",
+        "explanation": {
+          "de": "Im Prospekt steht: Föhn 24 €.",
+          "en": "The leaflet says: hairdryer 24 euros."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a2.1-u04-q03",
+        "type": "multiple_choice",
+        "role": "proof",
+        "topic": "redemittel",
+        "promptDe": "Sie möchten die Kaffeemaschine in Weiß. Was fragen Sie im Geschäft?",
+        "promptEn": "What do you ask in the shop?",
+        "options": [
+          "Haben Sie das Modell auch in Weiß?",
+          "Ist das Modell im Sonderangebot?",
+          "Wie lange hat das Modell Garantie?"
+        ],
+        "answer": "Haben Sie das Modell auch in Weiß?",
+        "accepted": [
+          "Haben Sie das Modell auch in Weiß?"
+        ],
+        "explanation": {
+          "de": "Sie fragen nach der Farbe: Haben Sie das Modell auch in Weiß?",
+          "en": "You ask about the colour."
+        },
+        "origin": "agent"
+      }
+    ],
+    "proofs": [
+      {
+        "canDo": "cd.a2.produktinfos-erfragen",
+        "item": "a2.1-u04-q03"
+      },
+      {
+        "canDo": "cd.a2.alltagsdinge-bewerten",
+        "aufgabe": "sprechen"
+      },
+      {
+        "canDo": "cd.a2.wegweiser-nutzen",
+        "item": "a2.1-u04-q01"
+      },
+      {
+        "canDo": "cd.a2.alltagstexte-durchsuchen",
+        "item": "a2.1-u04-q02"
+      },
+      {
+        "canDo": "cd.a2.online-bestellung-klaeren",
+        "aufgabe": "schreiben"
+      }
+    ],
+    "testOutThreshold": 0.8,
+    "cumulativeShare": 0.35
+  },
+  "redemittel": [
+    {
+      "id": "a2.1-u04-rm01",
+      "de": "Entschuldigung, wo finde ich Kaffeemaschinen?",
+      "en": "Excuse me, where can I find coffee machines?",
+      "function": "nach der Abteilung fragen"
+    },
+    {
+      "id": "a2.1-u04-rm02",
+      "de": "Haben Sie das Modell auch in Weiß?",
+      "en": "Do you also have this model in white?",
+      "function": "nach einem Produkt fragen"
+    },
+    {
+      "id": "a2.1-u04-rm03",
+      "de": "Wie lange hat das Gerät Garantie?",
+      "en": "How long is the guarantee on the appliance?",
+      "function": "nach Einzelheiten fragen"
+    },
+    {
+      "id": "a2.1-u04-rm04",
+      "de": "Ich finde das Modell sehr praktisch.",
+      "en": "I find this model very practical.",
+      "function": "ein Gerät bewerten"
+    },
+    {
+      "id": "a2.1-u04-rm05",
+      "de": "Online ist es am günstigsten.",
+      "en": "It is cheapest online.",
+      "function": "Angebote vergleichen"
+    },
+    {
+      "id": "a2.1-u04-rm06",
+      "de": "Ich habe eine weiße Kaffeemaschine bestellt, aber im Paket ist ein Wasserkocher.",
+      "en": "I ordered a white coffee machine, but there is a kettle in the parcel.",
+      "function": "ein Problem mit einer Lieferung beschreiben",
+      "forTemplate": "ga2.s2"
+    },
+    {
+      "id": "a2.1-u04-rm07",
+      "de": "Welche Marke finden Sie gut?",
+      "en": "Which brand do you like?",
+      "function": "mit einer Karte fragen",
+      "forTemplate": "ga2.sp1"
+    }
+  ],
+  "story": {
+    "beat": "Priya vergleicht zwei Angebote und bestellt die Kaffeemaschine online. Aber im Paket ist ein roter Wasserkocher, und sie schreibt dem Kundenservice.",
+    "cliffhanger": "Am Freitag kommt das Paket mit der Kaffeemaschine. Am Abend schreibt Anna: „Nächste Woche habe ich Geburtstag. Ich möchte mit euch essen gehen – aber wo?“",
+    "castIn": [
+      "cast.anna"
+    ]
+  },
+  "fokus": [],
+  "facts": [],
+  "assets": []
+}

@@ -1,0 +1,193 @@
+{
+  "$schema": "course-v2/unit@1",
+  "id": "b2.1-u04",
+  "level": "b2.1",
+  "nr": 4,
+  "etappe": 2,
+  "version": 1,
+  "status": "draft",
+  "reviewedIn": null,
+  "stage": "spec",
+  "title": {
+    "de": "Beschwerde mit Anspruch",
+    "canDo": "Sie können sich über eine mangelhafte Reise beschweren, eine klare Forderung stellen und mit einer Mitreisenden das weitere Vorgehen planen."
+  },
+  "spec": {
+    "situation": "Priya und Amal haben sich für eine gebuchte Gruppenreise verabredet, doch Hotel, Programm und Reiseleitung halten nicht, was der Veranstalter versprochen hat. Sie hören kurze Gespräche an der Rezeption und am Telefon, prüfen die Reisebedingungen, schreiben eine Beschwerde mit klarer Forderung und planen zusammen, wie sie ihren Anspruch durchsetzen.",
+    "handlungsfeld": [
+      "7",
+      "C"
+    ],
+    "canDos": [
+      "cd.b2.zugestaendnisse-einfordern",
+      "cd.b2.schriftlich-reklamieren",
+      "cd.b2.reisebedingungen-verstehen",
+      "cd.b2.vorgehen-gemeinsam-planen",
+      "cd.b2.brief-grammatik-kontext"
+    ],
+    "grammar": {
+      "new": [
+        "g.konj2-vergangenheit",
+        "g.konj2-bedeutungen"
+      ],
+      "chunk": [
+        "g.praep-genitiv-formell"
+      ],
+      "review": [
+        "g.konj2-irreal-gegenwart",
+        "g.modalpartikeln",
+        "g.praep-genitiv"
+      ]
+    },
+    "lexiconBlocks": [
+      {
+        "title": "Reisemängel",
+        "target": 17,
+        "lemmas": [
+          "lx.reisemangel",
+          "lx.unterbringung",
+          "lx.mangelhaft",
+          "lx.baulaerm",
+          "lx.verschmutzt",
+          "lx.verpflegung",
+          "lx.renovierungsbeduerftig",
+          "lx.abgenutzt",
+          "lx.ungeziefer",
+          "lx.unzumutbar",
+          "lx.laermpegel",
+          "lx.programmaenderung",
+          "lx.reiseleitung",
+          "lx.dokumentieren",
+          "lx.beweisfoto",
+          "lx.erheblich",
+          "lx.zimmerkategorie"
+        ]
+      },
+      {
+        "title": "Rechte und Bedingungen",
+        "target": 17,
+        "lemmas": [
+          "lx.pauschalreise",
+          "lx.reiseveranstalter",
+          "lx.reisevertrag",
+          "lx.informationspflicht",
+          "lx.minderung",
+          "lx.leistungsbeschreibung",
+          "lx.ruecktritt",
+          "lx.reisebedingungen",
+          "lx.stornierung",
+          "lx.leistungsumfang",
+          "lx.verbraucherschutz",
+          "lx.beschwerdefrist",
+          "lx.ersatzleistung",
+          "lx.kulanz",
+          "lx.rechtslage",
+          "lx.zusichern",
+          "lx.ausdruecklich"
+        ]
+      },
+      {
+        "title": "Forderungen stellen",
+        "target": 17,
+        "lemmas": [
+          "lx.einfordern",
+          "lx.beanstanden",
+          "lx.maengelanzeige",
+          "lx.ausgleichszahlung",
+          "lx.preisnachlass",
+          "lx.sich-berufen",
+          "lx.nachtraeglich",
+          "lx.gewaehren",
+          "lx.fristsetzung",
+          "lx.andernfalls",
+          "lx.rechtliche-schritte-einleiten",
+          "lx.reisepreis",
+          "lx.in-aussicht-stellen",
+          "lx.ersatzweise",
+          "lx.sich-vorbehalten",
+          "lx.eingehend",
+          "lx.schilderung"
+        ]
+      },
+      {
+        "title": "Gemeinsam vorgehen",
+        "target": 16,
+        "lemmas": [
+          "lx.vorgehen",
+          "lx.vorgehensweise",
+          "lx.wahrnehmen",
+          "lx.verbraucherzentrale",
+          "lx.musterbrief",
+          "lx.sich-zusammentun",
+          "lx.arbeitsteilung",
+          "lx.beschwerdebrief",
+          "lx.rechtsbeistand",
+          "lx.aussichtsreich",
+          "lx.abwimmeln",
+          "lx.hartnaeckig",
+          "lx.beweislage",
+          "lx.im-nachhinein",
+          "lx.im-recht-sein",
+          "lx.vorsorglich"
+        ]
+      }
+    ],
+    "textTypes": [
+      "tt.bedingungen",
+      "tt.beleg",
+      "tt.telefonat",
+      "tt.kurzansage",
+      "tt.email-formell",
+      "tt.email-informell",
+      "tt.planungsblatt"
+    ],
+    "lanes": {
+      "primary": "tb2",
+      "pruefungsfokus": [
+        {
+          "template": "tb2.m3",
+          "length": "reduced",
+          "modeDefault": "lern",
+          "slot": "sprechen"
+        },
+        {
+          "template": "tb2.sa",
+          "length": "reduced",
+          "modeDefault": "lern",
+          "slot": "schreiben"
+        },
+        {
+          "template": "tb2.sb1",
+          "length": "full",
+          "modeDefault": "lern",
+          "slot": "ls4"
+        },
+        {
+          "template": "tb2.hv3",
+          "length": "reduced",
+          "modeDefault": "lern",
+          "slot": "ls4"
+        }
+      ],
+      "spur": {}
+    },
+    "lehrwerk": [
+      "Si B2 L6 Bedeutungen des Konjunktiv II",
+      "Si B2 L10 Service (B2.2)",
+      "M B1 L4 Kundenservice (B1-Vorläufer)"
+    ],
+    "deviation": {
+      "reason": "Die Dienstleistungsbeschwerde steht bei Sicher! aktuell B2 erst in L10 (B2.2). Sie wird nach B2.1 vorgezogen, weil der ZM-B2-Schritt des Beschwerde-Strangs (Zugeständnisse einfordern) und die telc-B2-Schreibaufgabe Typ Beschwerde hier gebraucht werden (BLUEPRINT §2.8, B2.1 Zeile 4)."
+    },
+    "cast": [
+      "cast.priya",
+      "cast.amal",
+      "cast.ensemble-b2-1",
+      "cast.ensemble-b2-6"
+    ],
+    "fokusPlan": [],
+    "source": {
+      "w2Draft": "curriculum/b2-1.md E4"
+    }
+  }
+}

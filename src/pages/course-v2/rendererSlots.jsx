@@ -83,26 +83,30 @@ function PendingRenderer({ title, kind, onSkip }) {
   );
 }
 
-/** One step through the renderer's StepView, or the fallback. `onSkip` never records completion. */
-export function StepViewSlot({ unit, step, level, onAttempt, onDone, onSkip, title }) {
+/**
+ * One step through the renderer's StepView, or the fallback. `onSkip` never records
+ * completion. `extra` = StepView's optional, additive props (ruleCards, course,
+ * earlierItems, aufgaben, …) — spread after the contract props, never replacing them.
+ */
+export function StepViewSlot({ unit, step, level, onAttempt, onDone, onSkip, title, extra = null }) {
   const fallback = <PendingRenderer title={title} kind={step && step.kind} onSkip={onSkip} />;
   if (!LazyStepView) return fallback;
   return (
     <SlotBoundary resetKey={step && step.id} fallback={fallback}>
       <Suspense fallback={<Loading />}>
-        <LazyStepView key={step && step.id} unit={unit} step={step} level={level} onAttempt={onAttempt} onDone={onDone} />
+        <LazyStepView key={step && step.id} {...(extra || {})} unit={unit} step={step} level={level} onAttempt={onAttempt} onDone={onDone} />
       </Suspense>
     </SlotBoundary>
   );
 }
 
-/** The unit's Start through the renderer's StartView; `fallback` is the player's own Start screen. */
-export function StartViewSlot({ unit, level, onDone, fallback }) {
+/** The unit's Start through the renderer's StartView; `fallback` is the player's own Start screen. `extra` as above (course). */
+export function StartViewSlot({ unit, level, onDone, fallback, extra = null }) {
   if (!LazyStartView) return fallback;
   return (
     <SlotBoundary resetKey={unit && unit.id} fallback={fallback}>
       <Suspense fallback={<Loading />}>
-        <LazyStartView unit={unit} level={level} onDone={onDone} />
+        <LazyStartView {...(extra || {})} unit={unit} level={level} onDone={onDone} />
       </Suspense>
     </SlotBoundary>
   );

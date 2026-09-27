@@ -117,18 +117,32 @@ export default function StepView({
   const unitId = unit?.id || null;
   const lines = useMemo(() => lineIndex(unit), [unit]);
   const skeleton = skeletonOf(level || unit?.level);
+  // The player core hands the level's rule cards on the unit (`unit.ruleCards`, additive);
+  // an explicit `ruleCards` prop wins.
+  const cards = ruleCards ?? unit?.ruleCards ?? null;
   const cardsById = useMemo(() => {
     const m = new Map();
-    const list = Array.isArray(ruleCards) ? ruleCards : Array.isArray(ruleCards?.cards) ? ruleCards.cards : Object.values(ruleCards || {});
+    const list = Array.isArray(cards) ? cards : Array.isArray(cards?.cards) ? cards.cards : Object.values(cards || {});
     for (const c of list) if (c && c.id) m.set(c.id, c);
     return m;
-  }, [ruleCards]);
+  }, [cards]);
   const ruleCard = step?.ruleCard ? cardsById.get(step.ruleCard) || null : null;
 
   const pool = useMemo(() => {
-    const authored = step?.pool?.items || [];
     const gen = materialize(step?.pool?.generators, unit, generated);
-    const split = splitPool(interleave(authored, gen));
+    const plan = step?.plan;
+    if (plan && Array.isArray(plan.practice)) {
+      // The player core's draw (src/lib/course-v2/unitPlan.js) decides what is served:
+      // seeded per unit/step/attempt, last attempt's items to the back, exit items held
+      // out. Generated items join the practice; spare + reserve feed the requeue.
+      const merged = interleave(plan.practice, gen);
+      return {
+        served: merged.slice(0, SERVED_MAX),
+        exit: plan.exit || [],
+        spare: [...merged.slice(SERVED_MAX), ...(plan.spare || []), ...(plan.reserve || [])],
+      };
+    }
+    const split = splitPool(interleave(step?.pool?.items || [], gen));
     return { ...split, spare: [...split.spare, ...(step?.reserve || [])] };
   }, [step, unit, generated]);
   const perception = useMemo(() => {
@@ -341,11 +355,11 @@ export default function StepView({
           level={level}
           stepId={step.id}
           endLine={step.endLine}
-          earlierItems={earlierItems || []}
+          earlierItems={earlierItems || planEarlier(step.plan)}
           aufgaben={aufgaben}
           course={course}
           canDos={canDos}
-          ruleCards={ruleCards}
+          ruleCards={cards}
           lines={lines}
           names={names}
           onAttempt={attempt}
@@ -414,6 +428,13 @@ export default function StepView({
       <div key={seg.id}>{body}</div>
     </section>
   );
+}
+
+/** The Check's earlier-unit items as the player core's plan drew them (plan.items minus the unit's own). */
+function planEarlier(plan) {
+  if (!plan || !Array.isArray(plan.items)) return [];
+  const ids = new Set(plan.earlierIds || []);
+  return plan.items.filter((it) => it && ids.has(it.id));
 }
 
 function NextBar({ onNext, label }) {

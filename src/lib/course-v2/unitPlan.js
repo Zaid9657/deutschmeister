@@ -165,6 +165,97 @@ export function alternateFor(missed, plan, usedIds = []) {
   return spare.find(sameTopic) || reserve.find(sameTopic) || spare[0] || null;
 }
 
+/**
+ * A compiled reserve-index entry back in the SCHEMA §3.1 Item shape the renderers read.
+ * The compiler strips `reserve` from every unit chunk and writes the reserve items only
+ * to `<level>/reserve.json`, in the live lessonPools shape (scripts/course-v2/lib/
+ * compiler.mjs toPoolItem/toReserveItem: questionDe, explanationDe/En, hint as a string,
+ * sentence-building tiles folded into the question). An entry already in Item shape
+ * (it has promptDe) is returned as it is.
+ */
+export function itemFromReserve(entry) {
+  if (!entry || !entry.id) return null;
+  if (entry.promptDe !== undefined) return entry;
+  let promptDe = entry.questionDe;
+  let tiles;
+  if (entry.type === 'sentence_building') {
+    const m = /^([\s\S]*?) \[(.+)\]$/.exec(String(entry.questionDe || ''));
+    if (m) {
+      promptDe = m[1].replace(/:$/, '.');
+      tiles = m[2].split(' / ');
+    }
+  }
+  const out = {
+    id: entry.id,
+    type: entry.type,
+    role: 'reserve',
+    topic: entry.topic,
+    promptDe,
+    promptEn: entry.questionEn ?? null,
+    answer: entry.answer,
+    accepted: entry.accepted,
+    explanation: { de: entry.explanationDe || '', en: entry.explanationEn || '' },
+  };
+  if (Array.isArray(entry.options)) out.options = entry.options;
+  if (tiles) out.tiles = tiles;
+  if (entry.caseSensitive === true) out.caseSensitive = true;
+  if (entry.hint) out.hint = { de: entry.hint };
+  if (entry.exact) out.exact = entry.exact;
+  if (Array.isArray(entry.errorTags) && entry.errorTags.length) {
+    out.errorTags = entry.errorTags;
+    if (entry.errorTags.length === 1) out.errorTag = entry.errorTags[0];
+  }
+  for (const k of ['pairs', 'audioLineRef', 'textRef', 'noMatch', 'difficulty', 'banks', 'step', 'unit']) {
+    if (entry[k] !== undefined) out[k] = entry[k];
+  }
+  return out;
+}
+
+/**
+ * The Items of the reserve index for some units: `index` is the compiled reserve.json
+ * ({ items: Entry[], byUnit: { [unitId]: itemId[] } }); older/alternative shapes whose
+ * byUnit maps straight to item arrays are accepted too.
+ */
+export function reserveItemsFor(index, unitIds = []) {
+  if (!index) return [];
+  const byId = new Map((Array.isArray(index.items) ? index.items : []).filter((x) => x && x.id).map((x) => [x.id, x]));
+  const byUnit = index.byUnit || index;
+  const out = [];
+  for (const uid of unitIds || []) {
+    for (const ref of Array.isArray(byUnit[uid]) ? byUnit[uid] : []) {
+      const item = itemFromReserve(typeof ref === 'string' ? byId.get(ref) : ref);
+      if (item) out.push(item);
+    }
+  }
+  return out;
+}
+
+/**
+ * The unit with each step's `reserve` put back from the reserve index (the requeue's
+ * second source, BLUEPRINT §3.3). A step that already carries a reserve keeps it.
+ */
+export function withReserves(unit, index) {
+  if (!unit || !index) return unit;
+  const items = reserveItemsFor(index, [unit.id]);
+  if (!items.length) return unit;
+  const byStep = new Map();
+  for (const it of items) {
+    const sid = it.step || stepIdOf(it.id);
+    if (!sid) continue;
+    if (!byStep.has(sid)) byStep.set(sid, []);
+    byStep.get(sid).push(it);
+  }
+  return {
+    ...unit,
+    steps: (unit.steps || []).map((s) => (Array.isArray(s.reserve) && s.reserve.length) || !byStep.has(s.id) ? s : { ...s, reserve: byStep.get(s.id) }),
+  };
+}
+
+const stepIdOf = (itemId) => {
+  const m = /^(.+-ls\d)-/.exec(String(itemId || ''));
+  return m ? m[1] : null;
+};
+
 /** Reserve items of earlier units' chunks (the fallback until a compiled reserve index exists). */
 export function reservesOf(units = []) {
   const out = [];

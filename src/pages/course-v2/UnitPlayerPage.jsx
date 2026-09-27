@@ -14,7 +14,7 @@ import {
   seedUnitCards, logCourseEvent,
 } from '../../lib/course-v2/progress.js';
 import { localStepDone, localTestOut, localUnitState, localUnitStatus } from '../../lib/course-v2/localState.js';
-import { loadEarlierItems, loadManifest, loadRuleCards, loadUnit } from '../../lib/course-v2/loaders.js';
+import { loadEarlierItems, loadManifest, loadPlayableUnit, loadRuleCards } from '../../lib/course-v2/loaders.js';
 import ActionBar from './ActionBar.jsx';
 import { StartViewSlot, StepViewSlot, KIND_LABEL_DE, hasStartRenderer } from './rendererSlots.jsx';
 
@@ -48,7 +48,7 @@ function useUnitData(level, nr) {
   useEffect(() => {
     let cancelled = false;
     setData({ status: 'loading' });
-    Promise.all([loadUnit(level, nr), loadManifest(level), loadRuleCards(level)])
+    Promise.all([loadPlayableUnit(level, nr), loadManifest(level), loadRuleCards(level)])
       .then(([unit, manifest, ruleCards]) => {
         if (cancelled) return;
         if (!unit) { setData({ status: 'missing', manifest }); return; }
@@ -262,6 +262,15 @@ export function UnitPlayer({ level, unit, manifest, user }) {
     if (!step) return;
     const list = pending.current.get(step.id) || [];
     pending.current.set(step.id, []);
+    // An Aufgabe the learner moved on from without submitting (StepView reports
+    // `submitted: false`) stays open: no step marker, so completion.js does not count
+    // it as submitted and the recap lists it under „Noch offen". (Überarbeiten is
+    // optional — skipping it is finishing it, so it keeps its marker.)
+    if (AUFGABE_KINDS.includes(step.kind) && result && result.submitted === false) {
+      if (user && list.length) flushAttempts(user.id, { level, unitId, stepKind: step.kind }, list);
+      nextAfter(stepIndex, finished);
+      return;
+    }
     const minutes = Math.round(((Date.now() - stepStarted.current) / 60000) * 10) / 10;
     if (user) {
       recordStepDone(user.id, { level, unitId, step }, list);
@@ -330,6 +339,22 @@ export function UnitPlayer({ level, unit, manifest, user }) {
     }
   }, [phase, completion, user, finalStatus, storedStatus, level, unitId, accuracy, checkDone, unit]);
 
+  // The renderers' optional, additive props (StepView's doc comment): the level's
+  // rule cards and the manifest (can-do wording), the Check's earlier items as the
+  // plan drew them, and which Aufgaben are submitted (the Check's „Das kann ich").
+  const rendererExtras = useMemo(() => {
+    const checkPlan = (steps.find((s) => s.kind === 'check') || {}).plan;
+    const earlierIds = new Set((checkPlan && checkPlan.earlierIds) || []);
+    const aufgaben = {};
+    for (const s of unit.steps || []) if (AUFGABE_KINDS.includes(s.kind)) aufgaben[s.kind] = aufgaben[s.kind] || finished.has(s.id);
+    return {
+      ruleCards: unit.ruleCards || null,
+      course: manifest || null,
+      earlierItems: checkPlan ? (checkPlan.items || []).filter((it) => earlierIds.has(it.id)) : null,
+      aufgaben,
+    };
+  }, [steps, unit.steps, unit.ruleCards, manifest, finished]);
+
   const doneCount = steps.filter((s) => finished.has(s.id)).length;
   const progress = steps.length ? doneCount / steps.length : 0;
 
@@ -346,7 +371,7 @@ export function UnitPlayer({ level, unit, manifest, user }) {
         title={`Lektion ${unit.nr}`}
         footer={hasStartRenderer ? null : <Button size="lg" className="w-full" onClick={() => onStartDone(null)}>Los geht’s</Button>}
       >
-        <StartViewSlot unit={unit} level={level} onDone={onStartDone} fallback={fallback} />
+        <StartViewSlot unit={unit} level={level} onDone={onStartDone} fallback={fallback} extra={{ course: manifest }} />
       </Shell>
     );
   }
@@ -391,6 +416,7 @@ export function UnitPlayer({ level, unit, manifest, user }) {
           onAttempt={onAttempt}
           onDone={onDone}
           onSkip={() => nextAfter(stepIndex, finished)}
+          extra={rendererExtras}
         />
       </Shell>
     );

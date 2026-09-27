@@ -1,0 +1,3544 @@
+{
+  "$schema": "course-v2/unit@1",
+  "id": "a1.1-u04",
+  "level": "a1.1",
+  "nr": 4,
+  "etappe": 2,
+  "version": 1,
+  "status": "draft",
+  "reviewedIn": null,
+  "stage": "T",
+  "title": {
+    "de": "Was kostet das?",
+    "canDo": "Sie können nach Preisen und Mengen fragen, im Geschäft einkaufen und kurze Durchsagen im Supermarkt verstehen."
+  },
+  "spec": {
+    "situation": "Priya und Arjun kaufen für die Woche ein: Sie schreiben einen Einkaufszettel, fragen auf dem Wochenmarkt nach Preisen und Mengen, vergleichen Angebote im Prospekt und hören eine Durchsage im Supermarkt.",
+    "handlungsfeld": [
+      "7"
+    ],
+    "canDos": [
+      "cd.a1.produkt-infos",
+      "cd.a1.preise",
+      "cd.a1.prospekt-preise",
+      "cd.a1.durchsage-geschaeft",
+      "cd.a1.gespraech-details"
+    ],
+    "grammar": {
+      "new": [
+        "g.artikel-genus-plural",
+        "g.moechte"
+      ],
+      "chunk": [
+        "g.akkusativ"
+      ],
+      "review": [
+        "g.verbposition-2",
+        "g.ja-nein-frage"
+      ]
+    },
+    "lexiconBlocks": [
+      {
+        "title": "Lebensmittel",
+        "lemmas": [
+          "lx.brot",
+          "lx.broetchen",
+          "lx.kaese",
+          "lx.milch",
+          "lx.wasser",
+          "lx.butter",
+          "lx.ei",
+          "lx.reis",
+          "lx.zucker",
+          "lx.wurst"
+        ]
+      },
+      {
+        "title": "Obst und Gemüse",
+        "lemmas": [
+          "lx.obst",
+          "lx.gemuese",
+          "lx.apfel",
+          "lx.banane",
+          "lx.tomate",
+          "lx.kartoffel",
+          "lx.birne",
+          "lx.zwiebel"
+        ]
+      },
+      {
+        "title": "Mengen, Verpackungen und Preise",
+        "lemmas": [
+          "lx.kilo",
+          "lx.gramm",
+          "lx.flasche",
+          "lx.stueck",
+          "lx.preis",
+          "lx.euro",
+          "lx.geld",
+          "lx.angebot"
+        ]
+      },
+      {
+        "title": "Im Geschäft",
+        "lemmas": [
+          "lx.kosten",
+          "lx.kaufen",
+          "lx.brauchen",
+          "lx.billig",
+          "lx.teuer",
+          "lx.supermarkt"
+        ]
+      }
+    ],
+    "textTypes": [
+      "tt.dialog",
+      "tt.kurzdialog",
+      "tt.durchsage",
+      "tt.prospekt",
+      "tt.notiz",
+      "tt.kurzmitteilung",
+      "tt.bildkarte"
+    ],
+    "lanes": {
+      "primary": "sd1",
+      "pruefungsfokus": [
+        {
+          "template": "sd1.h1",
+          "length": "full",
+          "modeDefault": "lern",
+          "slot": "ls4"
+        },
+        {
+          "template": "sd1.h2",
+          "length": "full",
+          "modeDefault": "lern",
+          "slot": "ls4"
+        },
+        {
+          "template": "sd1.sp3",
+          "length": "full",
+          "modeDefault": "lern",
+          "slot": "sprechen"
+        },
+        {
+          "template": "sd1.s2",
+          "length": "reduced",
+          "modeDefault": "lern",
+          "slot": "schreiben"
+        }
+      ],
+      "spur": {}
+    },
+    "lehrwerk": [
+      "S1 L3 Einkaufen",
+      "N A1 K4 Guten Appetit!",
+      "M A1 L4–5 (Preise, Gegenstände)",
+      "Linie 1 A1 K3–4 (Grammatik: Artikel; nach memo 06)"
+    ],
+    "deviation": null,
+    "cast": [
+      "cast.priya",
+      "cast.arjun",
+      "cast.ensemble-a1-1",
+      "cast.ensemble-a1-3"
+    ],
+    "fokusPlan": [],
+    "source": {
+      "w2Draft": "curriculum/a1-1.md §6 Unit 4 (a1.1-u04 „Was kostet das?“)"
+    }
+  },
+  "start": {
+    "lernziele": [
+      "cd.a1.produkt-infos",
+      "cd.a1.preise",
+      "cd.a1.prospekt-preise",
+      "cd.a1.durchsage-geschaeft",
+      "cd.a1.gespraech-details"
+    ],
+    "pruefungsfokusChips": [
+      "sd1.h1",
+      "sd1.h2",
+      "sd1.sp3",
+      "sd1.s2"
+    ],
+    "folge": {
+      "title": "Samstagmorgen in der WG",
+      "lines": [
+        {
+          "id": "a1.1-u04-start-l01",
+          "speaker": "cast.arjun",
+          "de": "Guten Morgen, Priya! Wir haben nur noch ein Ei und ein bisschen Milch.",
+          "en": "Good morning, Priya! We only have one egg and a little milk left."
+        },
+        {
+          "id": "a1.1-u04-start-l02",
+          "speaker": "cast.priya",
+          "de": "Und das Brot ist alt. Wir brauchen viel: Brot, Käse, Obst und Gemüse.",
+          "en": "And the bread is old. We need a lot: bread, cheese, fruit and vegetables."
+        },
+        {
+          "id": "a1.1-u04-start-l03",
+          "speaker": "cast.arjun",
+          "de": "Heute ist Markt. Das Obst und das Gemüse sind da gut und billig.",
+          "en": "It’s market day today. The fruit and vegetables there are good and cheap."
+        },
+        {
+          "id": "a1.1-u04-start-l04",
+          "speaker": "cast.priya",
+          "de": "Gut! Und im Supermarkt ist heute auch viel im Angebot.",
+          "en": "Good! And a lot is on special offer at the supermarket today too."
+        },
+        {
+          "id": "a1.1-u04-start-l05",
+          "speaker": "cast.arjun",
+          "de": "Wie viel Geld haben wir?",
+          "en": "How much money do we have?"
+        },
+        {
+          "id": "a1.1-u04-start-l06",
+          "speaker": "cast.priya",
+          "de": "Fünfzig Euro. Das ist nicht viel.",
+          "en": "Fifty euros. That isn’t much."
+        },
+        {
+          "id": "a1.1-u04-start-l07",
+          "speaker": "cast.arjun",
+          "de": "Fünfzig Euro für alles? Gut, dann kaufen wir nur Angebote!",
+          "en": "Fifty euros for everything? Fine – then we only buy special offers!"
+        }
+      ],
+      "gistItem": {
+        "id": "a1.1-u04-start-i01",
+        "type": "multiple_choice",
+        "role": "gist",
+        "topic": "hoeren",
+        "promptDe": "Wie viel Geld haben Priya und Arjun?",
+        "promptEn": "How much money do Priya and Arjun have?",
+        "options": [
+          "15 Euro",
+          "50 Euro",
+          "5 Euro"
+        ],
+        "answer": "50 Euro",
+        "accepted": [
+          "50 Euro"
+        ],
+        "exact": "number",
+        "explanation": {
+          "de": "Priya sagt: fünfzig Euro. Das sind 50 Euro, nicht 15 Euro (fünfzehn).",
+          "en": "Priya says “fünfzig” – 50 euros, not 15 (“fünfzehn”)."
+        },
+        "origin": "agent"
+      }
+    },
+    "testOut": {
+      "offered": true
+    }
+  },
+  "steps": [
+    {
+      "id": "a1.1-u04-ls1",
+      "kind": "situation",
+      "title": "Was brauchen wir?",
+      "structure": "g.artikel-genus-plural",
+      "modelSentence": "Der Käse, das Brot und die Milch sind im Angebot.",
+      "ruleCard": "rc.artikel-genus-plural",
+      "warmup": {
+        "draw": 6,
+        "contrastWith": "g.possessiv-mein-dein"
+      },
+      "input": {
+        "kind": "mixed",
+        "title": "Der Prospekt vom Supermarkt",
+        "textType": "tt.prospekt",
+        "lines": [
+          {
+            "id": "a1.1-u04-ls1-l01",
+            "speaker": "cast.arjun",
+            "de": "Priya, hier ist der Prospekt vom Supermarkt. Der Käse ist im Angebot!",
+            "en": "Priya, here’s the supermarket flyer. The cheese is on special offer!"
+          },
+          {
+            "id": "a1.1-u04-ls1-l02",
+            "speaker": "cast.priya",
+            "de": "Gut! Der Käse ist oft teuer. Was kostet der Käse heute?",
+            "en": "Good! Cheese is often expensive. How much is the cheese today?"
+          },
+          {
+            "id": "a1.1-u04-ls1-l03",
+            "speaker": "cast.arjun",
+            "de": "200 Gramm kosten nur 1,99 Euro. Der Preis ist gut.",
+            "en": "200 grams cost only 1.99 euros. That’s a good price.",
+            "say": "Zweihundert Gramm kosten nur eins neunundneunzig. Der Preis ist gut."
+          },
+          {
+            "id": "a1.1-u04-ls1-l04",
+            "speaker": "cast.priya",
+            "de": "Dann kaufen wir Käse. Und das Brot? Das Brot hier ist alt. Brauchen wir ein Brot?",
+            "en": "Then we’ll buy cheese. And the bread? The bread here is old. Do we need a loaf?"
+          },
+          {
+            "id": "a1.1-u04-ls1-l05",
+            "speaker": "cast.arjun",
+            "de": "Ja, wir brauchen ein Brot. Das Brot ist auch im Angebot: 1,29 Euro.",
+            "en": "Yes, we need a loaf. The bread is on offer too: 1.29 euros.",
+            "say": "Ja, wir brauchen ein Brot. Das Brot ist auch im Angebot: eins neunundzwanzig."
+          },
+          {
+            "id": "a1.1-u04-ls1-l06",
+            "speaker": "cast.priya",
+            "de": "Und die Milch? Wir brauchen auch Milch. Die Milch ist auch billig, oder?",
+            "en": "And the milk? We need milk too. The milk is cheap too, isn’t it?"
+          },
+          {
+            "id": "a1.1-u04-ls1-l07",
+            "speaker": "cast.arjun",
+            "de": "Ja, eine Flasche kostet nur 99 Cent. Wir brauchen zwei Flaschen Milch.",
+            "en": "Yes, a bottle costs only 99 cents. We need two bottles of milk.",
+            "say": "Ja, eine Flasche kostet nur neunundneunzig Cent. Wir brauchen zwei Flaschen Milch."
+          },
+          {
+            "id": "a1.1-u04-ls1-l08",
+            "speaker": "cast.priya",
+            "de": "Und die Äpfel sind billig: ein Kilo für 1,49 Euro. Die kaufen wir auch.",
+            "en": "And the apples are cheap: a kilo for 1.49 euros. We’ll buy those too.",
+            "say": "Und die Äpfel sind billig: ein Kilo für eins neunundvierzig. Die kaufen wir auch."
+          },
+          {
+            "id": "a1.1-u04-ls1-l09",
+            "speaker": "cast.arjun",
+            "de": "Und die Bananen? Die sind auch im Angebot. Ein Kilo kostet nur 1,19 Euro.",
+            "en": "And the bananas? They’re on offer too. A kilo costs only 1.19 euros.",
+            "say": "Und die Bananen? Die sind auch im Angebot. Ein Kilo kostet nur eins neunzehn."
+          },
+          {
+            "id": "a1.1-u04-ls1-l10",
+            "speaker": "cast.priya",
+            "de": "Nein, Bananen brauchen wir nicht. Aber Wasser brauchen wir: sechs Flaschen. Das Wasser ist auch nicht teuer.",
+            "en": "No, we don’t need bananas. But we do need water: six bottles. The water isn’t expensive either."
+          }
+        ],
+        "text": {
+          "de": "Heute im Angebot!\nBrot, 500 Gramm: nur 1,29 Euro\nKäse, 200 Gramm: nur 1,99 Euro\nMilch, 1 Flasche: nur 0,99 Euro\nButter, 250 Gramm: nur 1,59 Euro\nÄpfel, 1 Kilo: nur 1,49 Euro\nBananen, 1 Kilo: nur 1,19 Euro\nWasser, 6 Flaschen: nur 2,49 Euro",
+          "en": "On special offer today! Bread, 500 g: only 1.29 euros · Cheese, 200 g: only 1.99 · Milk, 1 bottle: only 0.99 · Butter, 250 g: only 1.59 · Apples, 1 kg: only 1.49 · Bananas, 1 kg: only 1.19 · Water, 6 bottles: only 2.49"
+        },
+        "glosses": [
+          {
+            "token": "Prospekt",
+            "gloss": {
+              "en": "advertising flyer"
+            }
+          },
+          {
+            "token": "Cent",
+            "gloss": {
+              "en": "cent (100 Cent = 1 Euro)"
+            }
+          }
+        ],
+        "transcriptAfterUnaidedListen": true
+      },
+      "inputItems": [
+        {
+          "id": "a1.1-u04-ls1-i01",
+          "type": "multiple_choice",
+          "role": "gist",
+          "topic": "hoeren",
+          "promptDe": "Was machen Priya und Arjun?",
+          "promptEn": "What are Priya and Arjun doing?",
+          "options": [
+            "Sie lesen Angebote.",
+            "Sie verkaufen Brot.",
+            "Sie arbeiten im Supermarkt."
+          ],
+          "answer": "Sie lesen Angebote.",
+          "accepted": [
+            "Sie lesen Angebote."
+          ],
+          "explanation": {
+            "de": "Arjun hat den Prospekt vom Supermarkt. Priya und Arjun lesen die Angebote.",
+            "en": "Arjun has the supermarket flyer; they read the special offers together."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls1-i02",
+          "type": "multiple_choice",
+          "role": "gist",
+          "topic": "hoeren",
+          "promptDe": "Was brauchen Priya und Arjun nicht?",
+          "promptEn": "What do Priya and Arjun not need?",
+          "options": [
+            "Brot",
+            "Bananen",
+            "Wasser"
+          ],
+          "answer": "Bananen",
+          "accepted": [
+            "Bananen"
+          ],
+          "explanation": {
+            "de": "Priya sagt: Bananen brauchen wir nicht.",
+            "en": "Priya says: we don’t need bananas."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls1-i03",
+          "type": "fill_blank",
+          "role": "detail",
+          "topic": "hoeren",
+          "promptDe": "200 Gramm Käse kosten ___ Euro.",
+          "promptEn": "Write the price.",
+          "answer": "1,99",
+          "accepted": [
+            "1,99",
+            "1.99"
+          ],
+          "exact": "number",
+          "explanation": {
+            "de": "Arjun sagt: 200 Gramm kosten nur 1,99 Euro.",
+            "en": "Arjun says: 200 grams cost only 1.99 euros."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls1-i04",
+          "type": "multiple_choice",
+          "role": "detail",
+          "topic": "hoeren",
+          "promptDe": "Wie viele Flaschen Milch brauchen sie?",
+          "promptEn": "How many bottles of milk do they need?",
+          "options": [
+            "eine Flasche",
+            "sechs Flaschen",
+            "zwei Flaschen"
+          ],
+          "answer": "zwei Flaschen",
+          "accepted": [
+            "zwei Flaschen"
+          ],
+          "explanation": {
+            "de": "Arjun sagt: Wir brauchen zwei Flaschen Milch. Sechs Flaschen sind Wasser.",
+            "en": "Two bottles of milk – the six bottles are water."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls1-i05",
+          "type": "fill_blank",
+          "role": "detail",
+          "topic": "hoeren",
+          "promptDe": "Ein Kilo Äpfel kostet ___ Euro.",
+          "promptEn": "Write the price.",
+          "answer": "1,49",
+          "accepted": [
+            "1,49",
+            "1.49"
+          ],
+          "exact": "number",
+          "explanation": {
+            "de": "Priya sagt: ein Kilo für 1,49 Euro.",
+            "en": "Priya says: a kilo for 1.49 euros."
+          },
+          "origin": "agent"
+        }
+      ],
+      "structuredInput": [
+        {
+          "id": "a1.1-u04-ls1-s01",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.artikel-genus-plural",
+          "promptDe": "Arjun sagt: „Der ist billig.“ Was ist billig?",
+          "promptEn": "der = a masculine noun. What is cheap?",
+          "options": [
+            "die Butter",
+            "der Käse",
+            "das Wasser"
+          ],
+          "answer": "der Käse",
+          "accepted": [
+            "der Käse"
+          ],
+          "explanation": {
+            "de": "der zeigt auf ein Nomen mit der: der Käse.",
+            "en": "“der” points to a masculine noun: der Käse."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls1-s02",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.artikel-genus-plural",
+          "promptDe": "Priya sagt: „Die sind billig.“ Was ist billig?",
+          "promptEn": "“sind” = plural. What is cheap?",
+          "options": [
+            "das Brot",
+            "die Milch",
+            "die Äpfel"
+          ],
+          "answer": "die Äpfel",
+          "accepted": [
+            "die Äpfel"
+          ],
+          "explanation": {
+            "de": "die + sind: Das ist Plural. Nur die Äpfel sind Plural.",
+            "en": "“die” with “sind” is plural – only “die Äpfel” is plural."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls1-s03",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.artikel-genus-plural",
+          "promptDe": "Arjun sagt: „Wir brauchen ein Ei.“ Wie viele Eier?",
+          "promptEn": "How many eggs?",
+          "options": [
+            "ein Ei",
+            "zwei Eier",
+            "zehn Eier"
+          ],
+          "answer": "ein Ei",
+          "accepted": [
+            "ein Ei"
+          ],
+          "explanation": {
+            "de": "ein Ei ist Singular: ein Stück. Der Plural ist Eier.",
+            "en": "“ein Ei” is singular – one egg. The plural is “Eier”."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls1-s04",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.artikel-genus-plural",
+          "promptDe": "Priya sagt: „Die ist teuer.“ Was ist teuer?",
+          "promptEn": "“die” with “ist” = feminine singular. What is expensive?",
+          "options": [
+            "der Käse",
+            "die Milch",
+            "die Äpfel"
+          ],
+          "answer": "die Milch",
+          "accepted": [
+            "die Milch"
+          ],
+          "explanation": {
+            "de": "die + ist: ein Nomen mit die im Singular. Das ist die Milch.",
+            "en": "“die” with “ist” is feminine singular: die Milch."
+          },
+          "origin": "agent"
+        }
+      ],
+      "pool": {
+        "items": [
+          {
+            "id": "a1.1-u04-ls1-p01",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.artikel-genus-plural",
+            "promptDe": "___ Käse ist im Angebot. (bestimmter Artikel)",
+            "promptEn": "Definite article.",
+            "answer": "Der",
+            "accepted": [
+              "Der"
+            ],
+            "explanation": {
+              "de": "Käse ist maskulin: der Käse.",
+              "en": "“Käse” is masculine: der Käse."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls1-p02",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.artikel-genus-plural",
+            "promptDe": "Wir brauchen zwei Flaschen Wasser und ___ Brot. (ein oder eine?)",
+            "promptEn": "ein or eine?",
+            "answer": "ein",
+            "accepted": [
+              "ein"
+            ],
+            "explanation": {
+              "de": "das Brot → ein Brot. Mit der und das: ein.",
+              "en": "das Brot → ein Brot: masculine and neuter nouns take “ein”."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls1-p03",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.artikel-genus-plural",
+            "promptDe": "Ein Apfel? Nein, drei ___, bitte. (der Apfel)",
+            "promptEn": "Plural of Apfel.",
+            "answer": "Äpfel",
+            "accepted": [
+              "Äpfel"
+            ],
+            "explanation": {
+              "de": "der Apfel, die Äpfel: Plural mit Umlaut.",
+              "en": "Plural with umlaut: der Apfel → die Äpfel."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls1-p04",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.artikel-genus-plural",
+            "promptDe": "___ Bananen sind billig. (bestimmter Artikel)",
+            "promptEn": "Definite article, plural.",
+            "answer": "Die",
+            "accepted": [
+              "Die"
+            ],
+            "explanation": {
+              "de": "Im Plural ist der Artikel immer die.",
+              "en": "In the plural the article is always “die”."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls1-p05",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.artikel-genus-plural",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "ist",
+              "der Käse",
+              "im Angebot"
+            ],
+            "answer": "Der Käse ist im Angebot.",
+            "accepted": [
+              "Der Käse ist im Angebot.",
+              "Im Angebot ist der Käse."
+            ],
+            "acceptedWhy": {
+              "Im Angebot ist der Käse.": "grammatisch: im Angebot auf Position 1, das Verb bleibt auf Position 2"
+            },
+            "explanation": {
+              "de": "Das Verb ist steht auf Position 2.",
+              "en": "The verb “ist” is in position 2."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls1-p06",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.artikel-genus-plural",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "brauchen",
+              "wir",
+              "ein Brot",
+              "heute"
+            ],
+            "answer": "Wir brauchen heute ein Brot.",
+            "accepted": [
+              "Wir brauchen heute ein Brot.",
+              "Heute brauchen wir ein Brot.",
+              "Ein Brot brauchen wir heute."
+            ],
+            "acceptedWhy": {
+              "Ein Brot brauchen wir heute.": "grammatisch: ein Brot betont auf Position 1"
+            },
+            "explanation": {
+              "de": "Das Verb brauchen steht auf Position 2.",
+              "en": "The verb “brauchen” stays in position 2."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls1-p07",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.artikel-genus-plural",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "kostet",
+              "das Brot",
+              "1,29 Euro"
+            ],
+            "answer": "Das Brot kostet 1,29 Euro.",
+            "accepted": [
+              "Das Brot kostet 1,29 Euro.",
+              "1,29 Euro kostet das Brot."
+            ],
+            "acceptedWhy": {
+              "1,29 Euro kostet das Brot.": "grammatisch: der Preis betont auf Position 1"
+            },
+            "explanation": {
+              "de": "Subjekt das Brot, dann das Verb kostet.",
+              "en": "Subject “das Brot”, then the verb “kostet”."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls1-p08",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.artikel-genus-plural",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "sind",
+              "die Äpfel",
+              "billig",
+              "heute"
+            ],
+            "answer": "Die Äpfel sind heute billig.",
+            "accepted": [
+              "Die Äpfel sind heute billig.",
+              "Heute sind die Äpfel billig."
+            ],
+            "explanation": {
+              "de": "die Äpfel ist Plural, deshalb sind.",
+              "en": "“die Äpfel” is plural, so the verb is “sind”."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls1-p09",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.artikel-genus-plural",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "die Milch",
+              "auch",
+              "ist",
+              "billig"
+            ],
+            "answer": "Die Milch ist auch billig.",
+            "accepted": [
+              "Die Milch ist auch billig."
+            ],
+            "explanation": {
+              "de": "die Milch ist Singular, deshalb ist.",
+              "en": "“die Milch” is singular, so the verb is “ist”."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls1-p10",
+            "type": "error_correction",
+            "role": "practice",
+            "topic": "g.artikel-genus-plural",
+            "promptDe": "Korrigieren Sie: „Wir brauchen eine Brot.“",
+            "promptEn": "Correct the sentence.",
+            "answer": "Wir brauchen ein Brot.",
+            "accepted": [
+              "Wir brauchen ein Brot."
+            ],
+            "intentionalError": true,
+            "errorTag": "gender-article",
+            "errorTags": [
+              "gender-article"
+            ],
+            "explanation": {
+              "de": "das Brot → ein Brot. eine steht nur bei die.",
+              "en": "das Brot → ein Brot; “eine” only goes with feminine nouns."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls1-p11",
+            "type": "multiple_choice",
+            "role": "practice",
+            "topic": "g.artikel-genus-plural",
+            "promptDe": "Welcher Artikel passt? ___ Wasser",
+            "promptEn": "Choose the article.",
+            "options": [
+              "der",
+              "das",
+              "die"
+            ],
+            "answer": "das",
+            "accepted": [
+              "das"
+            ],
+            "explanation": {
+              "de": "Wasser ist neutral: das Wasser.",
+              "en": "“Wasser” is neuter: das Wasser."
+            },
+            "origin": "agent"
+          }
+        ],
+        "generators": [
+          {
+            "generator": "dictation.fromInput",
+            "count": 2,
+            "source": [
+              "a1.1-u04-ls1-l02",
+              "a1.1-u04-ls1-l09"
+            ]
+          },
+          {
+            "generator": "numbers.dictation",
+            "count": 1,
+            "source": [
+              "price-euro"
+            ]
+          },
+          {
+            "generator": "lex.articlePlural",
+            "count": 1,
+            "source": [
+              "lx.brot",
+              "lx.kaese",
+              "lx.milch",
+              "lx.apfel"
+            ]
+          },
+          {
+            "generator": "lex.glossMatch",
+            "count": 1,
+            "source": [
+              "lx.brot",
+              "lx.kaese",
+              "lx.milch",
+              "lx.wasser",
+              "lx.butter"
+            ]
+          }
+        ]
+      },
+      "reserve": [
+        {
+          "id": "a1.1-u04-ls1-r01",
+          "type": "fill_blank",
+          "role": "practice",
+          "topic": "g.artikel-genus-plural",
+          "promptDe": "Priya möchte ein Brot und ___ Flasche Milch. (ein oder eine?)",
+          "promptEn": "ein or eine?",
+          "answer": "eine",
+          "accepted": [
+            "eine"
+          ],
+          "errorTags": [
+            "gender-article"
+          ],
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair",
+            "einstufung"
+          ],
+          "difficulty": 1,
+          "explanation": {
+            "de": "die Flasche → eine Flasche.",
+            "en": "die Flasche → eine Flasche."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls1-r02",
+          "type": "fill_blank",
+          "role": "practice",
+          "topic": "g.artikel-genus-plural",
+          "promptDe": "Zehn ___ kosten nur 1,99 Euro. (das Ei)",
+          "promptEn": "Plural of Ei.",
+          "answer": "Eier",
+          "accepted": [
+            "Eier"
+          ],
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "einstufung"
+          ],
+          "difficulty": 2,
+          "explanation": {
+            "de": "das Ei, die Eier: Plural mit -er.",
+            "en": "das Ei → die Eier (plural in -er)."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls1-r03",
+          "type": "sentence_building",
+          "role": "practice",
+          "topic": "g.artikel-genus-plural",
+          "promptDe": "Bilden Sie den Satz.",
+          "promptEn": "Build the sentence.",
+          "tiles": [
+            "ist",
+            "das Wasser",
+            "heute",
+            "billig"
+          ],
+          "answer": "Das Wasser ist heute billig.",
+          "accepted": [
+            "Das Wasser ist heute billig.",
+            "Heute ist das Wasser billig."
+          ],
+          "errorTags": [
+            "v2-inv"
+          ],
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "difficulty": 2,
+          "explanation": {
+            "de": "Das Verb ist steht auf Position 2.",
+            "en": "The verb “ist” is in position 2."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls1-r04",
+          "type": "multiple_choice",
+          "role": "practice",
+          "topic": "g.artikel-genus-plural",
+          "promptDe": "Welcher Artikel passt? ___ Kartoffeln kosten 1,80 Euro.",
+          "promptEn": "Choose the article.",
+          "options": [
+            "Der",
+            "Das",
+            "Die"
+          ],
+          "answer": "Die",
+          "accepted": [
+            "Die"
+          ],
+          "errorTags": [
+            "gender-article"
+          ],
+          "banks": [
+            "plateau",
+            "mehr-ueben"
+          ],
+          "difficulty": 1,
+          "explanation": {
+            "de": "Kartoffeln ist Plural. Im Plural: die.",
+            "en": "“Kartoffeln” is plural; the plural article is “die”."
+          },
+          "origin": "agent"
+        }
+      ],
+      "microOutput": {
+        "id": "a1.1-u04-ls1-mo",
+        "bankKey": "a11-u04-mo1",
+        "mode": "written",
+        "profile": "course-micro",
+        "situationDe": "Arjun ist im Supermarkt. Er schreibt: „Was brauchen wir?“",
+        "promptDe": "Antworten Sie Arjun in 1–2 Sätzen: Was brauchen Sie? Wie viel?",
+        "promptEn": "Answer Arjun in 1–2 sentences: what you need and how much.",
+        "planSeconds": 30,
+        "words": [
+          3,
+          16
+        ],
+        "targets": [
+          "g.artikel-genus-plural"
+        ],
+        "register": "du"
+      },
+      "aussprache": {
+        "focus": "Zahlen: -zehn und -zig (vierzehn – vierzig, fünfzehn – fünfzig)",
+        "perception": {
+          "generator": "perception.pairs",
+          "count": 3,
+          "source": [
+            "vierzehn|vierzig",
+            "fünfzehn|fünfzig",
+            "sechzehn|sechzig",
+            "dreizehn|dreißig"
+          ],
+          "voices": 4
+        },
+        "readAloud": {
+          "lineDe": "Wir haben fünfzig Euro."
+        }
+      },
+      "endLine": "Sie können jetzt Angebote im Prospekt lesen und sagen, was Sie brauchen."
+    },
+    {
+      "id": "a1.1-u04-ls2",
+      "kind": "situation",
+      "title": "Auf dem Markt: Was möchten Sie?",
+      "structure": "g.moechte",
+      "modelSentence": "Ich möchte ein Kilo Tomaten, bitte.",
+      "ruleCard": "rc.moechte",
+      "warmup": {
+        "draw": 6,
+        "contrastWith": "g.artikel-genus-plural"
+      },
+      "input": {
+        "kind": "dialog",
+        "title": "Am Obst- und Gemüsestand",
+        "textType": "tt.dialog",
+        "lines": [
+          {
+            "id": "a1.1-u04-ls2-l01",
+            "speaker": "cast.ensemble-a1-3",
+            "de": "Guten Morgen! Was möchten Sie? Die Tomaten sind heute sehr gut, und die Kartoffeln auch.",
+            "en": "Good morning! What would you like? The tomatoes are very good today, and so are the potatoes."
+          },
+          {
+            "id": "a1.1-u04-ls2-l02",
+            "speaker": "cast.priya",
+            "de": "Guten Morgen. Was kostet ein Kilo Tomaten?",
+            "en": "Good morning. How much is a kilo of tomatoes?"
+          },
+          {
+            "id": "a1.1-u04-ls2-l03",
+            "speaker": "cast.ensemble-a1-3",
+            "de": "Ein Kilo kostet 2,20 Euro. Der Preis ist gut, die Tomaten sind nicht teuer.",
+            "en": "A kilo costs 2.20 euros. That’s a good price – the tomatoes aren’t expensive.",
+            "say": "Ein Kilo kostet zwei Euro zwanzig. Der Preis ist gut, die Tomaten sind nicht teuer."
+          },
+          {
+            "id": "a1.1-u04-ls2-l04",
+            "speaker": "cast.priya",
+            "de": "Gut, ich möchte ein Kilo Tomaten, bitte. Und was kosten die Kartoffeln?",
+            "en": "Fine, I’d like a kilo of tomatoes, please. And how much are the potatoes?"
+          },
+          {
+            "id": "a1.1-u04-ls2-l05",
+            "speaker": "cast.ensemble-a1-3",
+            "de": "Die Kartoffeln kosten 1,80 Euro das Kilo. Und die Zwiebeln sind im Angebot: 500 Gramm für 90 Cent.",
+            "en": "The potatoes are 1.80 euros a kilo. And the onions are on offer: 500 grams for 90 cents.",
+            "say": "Die Kartoffeln kosten einen Euro achtzig das Kilo. Und die Zwiebeln sind im Angebot: fünfhundert Gramm für neunzig Cent."
+          },
+          {
+            "id": "a1.1-u04-ls2-l06",
+            "speaker": "cast.arjun",
+            "de": "Priya, wir brauchen zwei Kilo Kartoffeln. Und Zwiebeln brauchen wir auch. Die Zwiebeln sind billig.",
+            "en": "Priya, we need two kilos of potatoes. And we need onions too. The onions are cheap."
+          },
+          {
+            "id": "a1.1-u04-ls2-l07",
+            "speaker": "cast.priya",
+            "de": "Dann möchten wir zwei Kilo Kartoffeln und 500 Gramm Zwiebeln, bitte. Haben Sie auch Birnen?",
+            "en": "Then we’d like two kilos of potatoes and 500 grams of onions, please. Do you have pears too?",
+            "say": "Dann möchten wir zwei Kilo Kartoffeln und fünfhundert Gramm Zwiebeln, bitte. Haben Sie auch Birnen?"
+          },
+          {
+            "id": "a1.1-u04-ls2-l08",
+            "speaker": "cast.ensemble-a1-3",
+            "de": "Ja, hier. Die Birnen sind sehr gut. Eine Birne kostet 60 Cent. Wie viele möchten Sie?",
+            "en": "Yes, here. The pears are very good. One pear costs 60 cents. How many would you like?",
+            "say": "Ja, hier. Die Birnen sind sehr gut. Eine Birne kostet sechzig Cent. Wie viele möchten Sie?"
+          },
+          {
+            "id": "a1.1-u04-ls2-l09",
+            "speaker": "cast.arjun",
+            "de": "Drei Stück, bitte. Was macht das zusammen?",
+            "en": "Three, please. How much is that altogether?"
+          },
+          {
+            "id": "a1.1-u04-ls2-l10",
+            "speaker": "cast.ensemble-a1-3",
+            "de": "Das macht zusammen 8,50 Euro. Danke und auf Wiedersehen!",
+            "en": "That comes to 8.50 euros altogether. Thank you and goodbye!",
+            "say": "Das macht zusammen acht Euro fünfzig. Danke und auf Wiedersehen!"
+          }
+        ],
+        "glosses": [
+          {
+            "token": "Cent",
+            "gloss": {
+              "en": "cent (100 Cent = 1 Euro)"
+            }
+          }
+        ],
+        "transcriptAfterUnaidedListen": true
+      },
+      "inputItems": [
+        {
+          "id": "a1.1-u04-ls2-i01",
+          "type": "multiple_choice",
+          "role": "gist",
+          "topic": "hoeren",
+          "promptDe": "Was kaufen Priya und Arjun?",
+          "promptEn": "What do Priya and Arjun buy?",
+          "options": [
+            "Brot und Käse",
+            "Obst und Gemüse",
+            "Milch und Wasser"
+          ],
+          "answer": "Obst und Gemüse",
+          "accepted": [
+            "Obst und Gemüse"
+          ],
+          "explanation": {
+            "de": "Sie kaufen Tomaten, Kartoffeln, Zwiebeln und Birnen: Obst und Gemüse.",
+            "en": "Tomatoes, potatoes, onions and pears – fruit and vegetables."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls2-i02",
+          "type": "multiple_choice",
+          "role": "gist",
+          "topic": "hoeren",
+          "promptDe": "Was fragt Priya zuerst?",
+          "promptEn": "What does Priya ask first?",
+          "options": [
+            "Haben Sie auch Birnen?",
+            "Was macht das zusammen?",
+            "Was kostet ein Kilo Tomaten?"
+          ],
+          "answer": "Was kostet ein Kilo Tomaten?",
+          "accepted": [
+            "Was kostet ein Kilo Tomaten?"
+          ],
+          "explanation": {
+            "de": "Zuerst fragt Priya nach dem Preis für Tomaten.",
+            "en": "First Priya asks the price of the tomatoes."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls2-i03",
+          "type": "fill_blank",
+          "role": "detail",
+          "topic": "hoeren",
+          "promptDe": "Ein Kilo Tomaten kostet ___ Euro.",
+          "promptEn": "Write the price.",
+          "answer": "2,20",
+          "accepted": [
+            "2,20",
+            "2.20"
+          ],
+          "exact": "number",
+          "explanation": {
+            "de": "Der Verkäufer sagt: Ein Kilo kostet 2,20 Euro.",
+            "en": "The stallholder says a kilo costs 2.20 euros."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls2-i04",
+          "type": "multiple_choice",
+          "role": "detail",
+          "topic": "hoeren",
+          "promptDe": "Wie viele Birnen kauft Arjun?",
+          "promptEn": "How many pears does Arjun buy?",
+          "options": [
+            "zwei",
+            "drei",
+            "sechs"
+          ],
+          "answer": "drei",
+          "accepted": [
+            "drei"
+          ],
+          "explanation": {
+            "de": "Arjun sagt: Drei Stück, bitte.",
+            "en": "Arjun says “Drei Stück, bitte” – three."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls2-i05",
+          "type": "fill_blank",
+          "role": "detail",
+          "topic": "hoeren",
+          "promptDe": "Alles zusammen kostet ___ Euro.",
+          "promptEn": "Write the total.",
+          "answer": "8,50",
+          "accepted": [
+            "8,50",
+            "8.50"
+          ],
+          "exact": "number",
+          "explanation": {
+            "de": "Der Verkäufer sagt: Das macht zusammen 8,50 Euro.",
+            "en": "The total is 8.50 euros."
+          },
+          "origin": "agent"
+        }
+      ],
+      "structuredInput": [
+        {
+          "id": "a1.1-u04-ls2-s01",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.moechte",
+          "promptDe": "Priya: „Wir möchten Kartoffeln.“ Wer möchte Kartoffeln?",
+          "promptEn": "“wir möchten” – who wants potatoes?",
+          "options": [
+            "nur Priya",
+            "Priya und Arjun",
+            "der Verkäufer"
+          ],
+          "answer": "Priya und Arjun",
+          "accepted": [
+            "Priya und Arjun"
+          ],
+          "explanation": {
+            "de": "wir möchten: Priya spricht für Priya und Arjun.",
+            "en": "“wir möchten” – Priya speaks for herself and Arjun."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls2-s02",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.moechte",
+          "promptDe": "„Möchtest du Birnen?“ Wer fragt wen?",
+          "promptEn": "Who asks whom?",
+          "options": [
+            "Priya fragt Arjun.",
+            "Der Verkäufer fragt Priya.",
+            "Priya fragt den Verkäufer."
+          ],
+          "answer": "Priya fragt Arjun.",
+          "accepted": [
+            "Priya fragt Arjun."
+          ],
+          "explanation": {
+            "de": "möchtest du: So fragen Freunde. Der Verkäufer sagt Sie.",
+            "en": "“möchtest du” is informal – Priya asks Arjun; the stallholder uses Sie."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls2-s03",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.moechte",
+          "promptDe": "Priya sagt: „Ich möchte ein Kilo Tomaten.“ Wer möchte Tomaten?",
+          "promptEn": "“ich möchte” – who wants tomatoes?",
+          "options": [
+            "Arjun",
+            "Priya",
+            "Priya und Arjun"
+          ],
+          "answer": "Priya",
+          "accepted": [
+            "Priya"
+          ],
+          "explanation": {
+            "de": "ich möchte: Priya spricht nur für Priya.",
+            "en": "“ich möchte” – Priya speaks only for herself."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls2-s04",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.moechte",
+          "promptDe": "Priya sagt: „Arjun möchte Birnen.“ Wer möchte Birnen?",
+          "promptEn": "Who wants pears?",
+          "options": [
+            "Priya und Arjun",
+            "Priya",
+            "Arjun"
+          ],
+          "answer": "Arjun",
+          "accepted": [
+            "Arjun"
+          ],
+          "explanation": {
+            "de": "Arjun möchte: Das Subjekt ist Arjun.",
+            "en": "The subject of “möchte” is Arjun."
+          },
+          "origin": "agent"
+        }
+      ],
+      "pool": {
+        "items": [
+          {
+            "id": "a1.1-u04-ls2-p01",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.moechte",
+            "promptDe": "Ich ___ ein Kilo Tomaten, bitte. (möcht-)",
+            "promptEn": "möchte: ich-form.",
+            "answer": "möchte",
+            "accepted": [
+              "möchte"
+            ],
+            "explanation": {
+              "de": "ich möchte: ohne -t am Ende.",
+              "en": "ich möchte – no -t at the end."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls2-p02",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.moechte",
+            "promptDe": "Wir ___ zwei Kilo Kartoffeln. (möcht-)",
+            "promptEn": "möchte: wir-form.",
+            "answer": "möchten",
+            "accepted": [
+              "möchten"
+            ],
+            "explanation": {
+              "de": "wir möchten: mit -n.",
+              "en": "wir möchten – with -n."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls2-p03",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.moechte",
+            "promptDe": "Arjun, was ___ du? (möcht-)",
+            "promptEn": "möchte: du-form.",
+            "answer": "möchtest",
+            "accepted": [
+              "möchtest"
+            ],
+            "explanation": {
+              "de": "du möchtest: mit -st.",
+              "en": "du möchtest – with -st."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls2-p04",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.moechte",
+            "promptDe": "Der Verkäufer fragt: „Was ___ Sie?“ (möcht-)",
+            "promptEn": "möchte: Sie-form.",
+            "answer": "möchten",
+            "accepted": [
+              "möchten"
+            ],
+            "explanation": {
+              "de": "Sie möchten: wie wir möchten.",
+              "en": "Sie möchten – the same form as wir möchten."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls2-p05",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.moechte",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "möchte",
+              "ich",
+              "ein Kilo Tomaten"
+            ],
+            "answer": "Ich möchte ein Kilo Tomaten.",
+            "accepted": [
+              "Ich möchte ein Kilo Tomaten.",
+              "Ein Kilo Tomaten möchte ich."
+            ],
+            "acceptedWhy": {
+              "Ein Kilo Tomaten möchte ich.": "grammatisch: die Menge betont auf Position 1"
+            },
+            "explanation": {
+              "de": "möchte steht auf Position 2.",
+              "en": "“möchte” is in position 2."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls2-p06",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.moechte",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the question.",
+            "tiles": [
+              "möchten",
+              "Sie",
+              "was"
+            ],
+            "answer": "Was möchten Sie?",
+            "accepted": [
+              "Was möchten Sie?"
+            ],
+            "explanation": {
+              "de": "W-Frage: Was auf Position 1, das Verb auf Position 2.",
+              "en": "W-question: “Was” first, the verb second."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls2-p07",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.moechte",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "möchten",
+              "wir",
+              "drei Birnen",
+              "heute"
+            ],
+            "answer": "Wir möchten heute drei Birnen.",
+            "accepted": [
+              "Wir möchten heute drei Birnen.",
+              "Heute möchten wir drei Birnen.",
+              "Drei Birnen möchten wir heute."
+            ],
+            "acceptedWhy": {
+              "Drei Birnen möchten wir heute.": "grammatisch: die Menge betont auf Position 1"
+            },
+            "explanation": {
+              "de": "Das Verb möchten steht auf Position 2.",
+              "en": "“möchten” stays in position 2."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls2-p08",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.ja-nein-frage",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the question.",
+            "tiles": [
+              "Sie",
+              "haben",
+              "auch Birnen"
+            ],
+            "answer": "Haben Sie auch Birnen?",
+            "accepted": [
+              "Haben Sie auch Birnen?"
+            ],
+            "explanation": {
+              "de": "Ja/Nein-Frage: Das Verb steht auf Position 1.",
+              "en": "Yes/no question: the verb comes first."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls2-p09",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "lx.kosten",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the question.",
+            "tiles": [
+              "kosten",
+              "was",
+              "die Kartoffeln"
+            ],
+            "answer": "Was kosten die Kartoffeln?",
+            "accepted": [
+              "Was kosten die Kartoffeln?"
+            ],
+            "explanation": {
+              "de": "die Kartoffeln ist Plural, deshalb kosten.",
+              "en": "“die Kartoffeln” is plural, so “kosten”."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls2-p10",
+            "type": "error_correction",
+            "role": "practice",
+            "topic": "g.moechte",
+            "promptDe": "Der Verkäufer zu Priya. Korrigieren Sie: „Was möchtest du?“",
+            "promptEn": "The stallholder to Priya – correct the register.",
+            "answer": "Was möchten Sie?",
+            "accepted": [
+              "Was möchten Sie?"
+            ],
+            "intentionalError": true,
+            "errorTag": "register",
+            "errorTags": [
+              "register"
+            ],
+            "explanation": {
+              "de": "Ein Verkäufer spricht mit Kunden mit Sie: Was möchten Sie?",
+              "en": "A stallholder addresses customers with Sie: Was möchten Sie?"
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls2-p11",
+            "type": "multiple_choice",
+            "role": "practice",
+            "topic": "lx.kosten",
+            "promptDe": "„Was kostet ein Kilo Tomaten?“ – Was passt?",
+            "promptEn": "Choose the right answer.",
+            "options": [
+              "Ein Kilo, bitte.",
+              "Ja, gern.",
+              "2,20 Euro."
+            ],
+            "answer": "2,20 Euro.",
+            "accepted": [
+              "2,20 Euro."
+            ],
+            "exact": "number",
+            "explanation": {
+              "de": "Die Frage ist: Was kostet …? Die Antwort ist ein Preis.",
+              "en": "The question asks for a price, so the answer is a price."
+            },
+            "origin": "agent"
+          }
+        ],
+        "generators": [
+          {
+            "generator": "dictation.fromInput",
+            "count": 2,
+            "source": [
+              "a1.1-u04-ls2-l02",
+              "a1.1-u04-ls2-l09"
+            ]
+          },
+          {
+            "generator": "numbers.dictation",
+            "count": 1,
+            "source": [
+              "price-euro"
+            ]
+          },
+          {
+            "generator": "lex.glossTyped",
+            "count": 1,
+            "source": [
+              "lx.kartoffel",
+              "lx.zwiebel",
+              "lx.tomate",
+              "lx.birne"
+            ]
+          },
+          {
+            "generator": "lex.glossMatch",
+            "count": 1,
+            "source": [
+              "lx.tomate",
+              "lx.kartoffel",
+              "lx.zwiebel",
+              "lx.birne",
+              "lx.obst",
+              "lx.gemuese"
+            ]
+          }
+        ]
+      },
+      "reserve": [
+        {
+          "id": "a1.1-u04-ls2-r01",
+          "type": "fill_blank",
+          "role": "practice",
+          "topic": "g.moechte",
+          "promptDe": "Priya ___ drei Birnen. (möcht-)",
+          "promptEn": "möchte: sie-form.",
+          "answer": "möchte",
+          "accepted": [
+            "möchte"
+          ],
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair",
+            "einstufung"
+          ],
+          "difficulty": 2,
+          "explanation": {
+            "de": "er/sie möchte: wie ich möchte, ohne -t.",
+            "en": "er/sie möchte – like ich möchte, no -t."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls2-r02",
+          "type": "sentence_building",
+          "role": "practice",
+          "topic": "g.moechte",
+          "promptDe": "Bilden Sie den Satz.",
+          "promptEn": "Build the sentence.",
+          "tiles": [
+            "möchte",
+            "Arjun",
+            "zwei Kilo Kartoffeln"
+          ],
+          "answer": "Arjun möchte zwei Kilo Kartoffeln.",
+          "accepted": [
+            "Arjun möchte zwei Kilo Kartoffeln.",
+            "Zwei Kilo Kartoffeln möchte Arjun."
+          ],
+          "acceptedWhy": {
+            "Zwei Kilo Kartoffeln möchte Arjun.": "grammatisch: die Menge betont auf Position 1"
+          },
+          "errorTags": [
+            "v2-inv"
+          ],
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "difficulty": 2,
+          "explanation": {
+            "de": "möchte steht auf Position 2.",
+            "en": "“möchte” is in position 2."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls2-r03",
+          "type": "multiple_choice",
+          "role": "practice",
+          "topic": "g.moechte",
+          "promptDe": "Der Verkäufer: „___ Sie noch etwas?“",
+          "promptEn": "Choose the verb form.",
+          "options": [
+            "Möchte",
+            "Möchtest",
+            "Möchten"
+          ],
+          "answer": "Möchten",
+          "accepted": [
+            "Möchten"
+          ],
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "einstufung"
+          ],
+          "difficulty": 1,
+          "explanation": {
+            "de": "Sie möchten: mit -n.",
+            "en": "Sie möchten – with -n."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls2-r04",
+          "type": "fill_blank",
+          "role": "practice",
+          "topic": "g.moechte",
+          "promptDe": "Olena und Sophie, was ___ ihr? (möcht-)",
+          "promptEn": "möchte: ihr-form.",
+          "answer": "möchtet",
+          "accepted": [
+            "möchtet"
+          ],
+          "banks": [
+            "plateau",
+            "mehr-ueben"
+          ],
+          "difficulty": 3,
+          "explanation": {
+            "de": "ihr möchtet: mit -t.",
+            "en": "ihr möchtet – with -t."
+          },
+          "origin": "agent"
+        }
+      ],
+      "microOutput": {
+        "id": "a1.1-u04-ls2-mo",
+        "bankKey": "a11-u04-mo2",
+        "mode": "spoken",
+        "profile": "course-micro-sp",
+        "situationDe": "Sie sind auf dem Markt am Obst- und Gemüsestand.",
+        "promptDe": "Sagen Sie, was Sie möchten: zwei Sachen mit Menge. Fragen Sie: Was kostet das?",
+        "promptEn": "Say what you would like – two things with a quantity – and ask the price.",
+        "planSeconds": 30,
+        "seconds": [
+          20,
+          30
+        ],
+        "targets": [
+          "g.moechte"
+        ],
+        "register": "Sie"
+      },
+      "endLine": "Sie können jetzt auf dem Markt sagen, was Sie möchten, und nach Preisen fragen."
+    },
+    {
+      "id": "a1.1-u04-ls3",
+      "kind": "situation",
+      "title": "Im Supermarkt: Wo sind die Eier?",
+      "structure": "g.artikel-genus-plural",
+      "modelSentence": "Zehn Eier kosten nur 1,99 Euro.",
+      "ruleCard": "rc.artikel-genus-plural",
+      "warmup": {
+        "draw": 6,
+        "contrastWith": "g.moechte"
+      },
+      "input": {
+        "kind": "mixed",
+        "title": "Eine Durchsage im Supermarkt",
+        "textType": "tt.durchsage",
+        "lines": [
+          {
+            "id": "a1.1-u04-ls3-l01",
+            "speaker": "durchsage",
+            "de": "Liebe Kunden, heute im Angebot: Eier! Zehn Stück kosten nur 1,99 Euro.",
+            "en": "Dear customers, on special offer today: eggs! Ten cost only 1.99 euros.",
+            "say": "Liebe Kunden, heute im Angebot: Eier! Zehn Stück kosten nur eins neunundneunzig."
+          },
+          {
+            "id": "a1.1-u04-ls3-l02",
+            "speaker": "durchsage",
+            "de": "Und die Butter: 250 Gramm für 1,19 Euro. Nur heute!",
+            "en": "And the butter: 250 grams for 1.19 euros. Today only!",
+            "say": "Und die Butter: zweihundertfünfzig Gramm für eins neunzehn. Nur heute!"
+          },
+          {
+            "id": "a1.1-u04-ls3-l03",
+            "speaker": "cast.arjun",
+            "de": "Priya, die Eier sind im Angebot! Zehn Stück für 1,99 Euro, das ist billig. Wir brauchen Eier.",
+            "en": "Priya, the eggs are on offer! Ten for 1.99 euros – that’s cheap. We need eggs.",
+            "say": "Priya, die Eier sind im Angebot! Zehn Stück für eins neunundneunzig, das ist billig. Wir brauchen Eier."
+          },
+          {
+            "id": "a1.1-u04-ls3-l04",
+            "speaker": "cast.priya",
+            "de": "Und Butter brauchen wir auch. Aber wo sind die Eier? Und wo ist die Butter?",
+            "en": "And we need butter too. But where are the eggs? And where is the butter?"
+          },
+          {
+            "id": "a1.1-u04-ls3-l05",
+            "speaker": "cast.arjun",
+            "de": "Entschuldigung, wo sind die Eier, bitte?",
+            "en": "Excuse me, where are the eggs, please?"
+          },
+          {
+            "id": "a1.1-u04-ls3-l06",
+            "speaker": "cast.ensemble-a1-1",
+            "de": "Die Eier sind dort, bei der Milch. Die Butter ist auch dort. Das Angebot ist nur heute.",
+            "en": "The eggs are over there, by the milk. The butter is there too. The offer is today only."
+          },
+          {
+            "id": "a1.1-u04-ls3-l07",
+            "speaker": "cast.priya",
+            "de": "Danke! Und wo ist der Reis?",
+            "en": "Thank you! And where is the rice?"
+          },
+          {
+            "id": "a1.1-u04-ls3-l08",
+            "speaker": "cast.ensemble-a1-1",
+            "de": "Der Reis ist hier. Ein Kilo kostet 1,79 Euro. Der Reis ist heute nicht im Angebot.",
+            "en": "The rice is here. A kilo costs 1.79 euros. The rice isn’t on offer today.",
+            "say": "Der Reis ist hier. Ein Kilo kostet eins neunundsiebzig. Der Reis ist heute nicht im Angebot."
+          },
+          {
+            "id": "a1.1-u04-ls3-l09",
+            "speaker": "cast.arjun",
+            "de": "Das ist ein bisschen teuer. Aber gut, wir kaufen ein Kilo Reis. Brauchen wir auch Zucker?",
+            "en": "That’s a bit expensive. But fine, we’ll buy a kilo of rice. Do we need sugar too?"
+          },
+          {
+            "id": "a1.1-u04-ls3-l10",
+            "speaker": "cast.priya",
+            "de": "Nein, Zucker haben wir noch. Und wir haben noch Geld für morgen! Das ist gut.",
+            "en": "No, we still have sugar. And we still have money left for tomorrow! That’s good."
+          }
+        ],
+        "glosses": [
+          {
+            "token": "Kunden",
+            "gloss": {
+              "en": "customer"
+            }
+          }
+        ],
+        "transcriptAfterUnaidedListen": true
+      },
+      "inputItems": [
+        {
+          "id": "a1.1-u04-ls3-i01",
+          "type": "multiple_choice",
+          "role": "gist",
+          "topic": "hoeren",
+          "promptDe": "Die Durchsage: Worum geht es?",
+          "promptEn": "The announcement: what is it about?",
+          "options": [
+            "um Angebote für heute",
+            "um die Milch",
+            "um Zucker und Reis"
+          ],
+          "answer": "um Angebote für heute",
+          "accepted": [
+            "um Angebote für heute"
+          ],
+          "explanation": {
+            "de": "Die Durchsage sagt: heute im Angebot – Eier und Butter.",
+            "en": "The announcement lists today’s offers: eggs and butter."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls3-i02",
+          "type": "multiple_choice",
+          "role": "gist",
+          "topic": "hoeren",
+          "promptDe": "Was fragt Arjun die Verkäuferin?",
+          "promptEn": "What does Arjun ask the shop assistant?",
+          "options": [
+            "Was kostet die Milch?",
+            "Wo sind die Eier?",
+            "Haben Sie Brot?"
+          ],
+          "answer": "Wo sind die Eier?",
+          "accepted": [
+            "Wo sind die Eier?"
+          ],
+          "explanation": {
+            "de": "Arjun fragt: Entschuldigung, wo sind die Eier, bitte?",
+            "en": "Arjun asks where the eggs are."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls3-i03",
+          "type": "fill_blank",
+          "role": "detail",
+          "topic": "hoeren",
+          "promptDe": "Zehn Eier kosten heute ___ Euro.",
+          "promptEn": "Write the price.",
+          "answer": "1,99",
+          "accepted": [
+            "1,99",
+            "1.99"
+          ],
+          "exact": "number",
+          "explanation": {
+            "de": "Die Durchsage sagt: Zehn Stück kosten nur 1,99 Euro.",
+            "en": "The announcement: ten eggs cost only 1.99 euros."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls3-i04",
+          "type": "multiple_choice",
+          "role": "detail",
+          "topic": "hoeren",
+          "promptDe": "Wo ist die Butter?",
+          "promptEn": "Where is the butter?",
+          "options": [
+            "beim Reis",
+            "bei der Milch",
+            "beim Wasser"
+          ],
+          "answer": "bei der Milch",
+          "accepted": [
+            "bei der Milch"
+          ],
+          "explanation": {
+            "de": "Die Verkäuferin sagt: Die Eier sind bei der Milch. Die Butter ist auch dort.",
+            "en": "Eggs and butter are both by the milk."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls3-i05",
+          "type": "fill_blank",
+          "role": "detail",
+          "topic": "hoeren",
+          "promptDe": "Ein Kilo Reis kostet ___ Euro.",
+          "promptEn": "Write the price.",
+          "answer": "1,79",
+          "accepted": [
+            "1,79",
+            "1.79"
+          ],
+          "exact": "number",
+          "explanation": {
+            "de": "Die Verkäuferin sagt: Ein Kilo kostet 1,79 Euro.",
+            "en": "The assistant says a kilo costs 1.79 euros."
+          },
+          "origin": "agent"
+        }
+      ],
+      "structuredInput": [
+        {
+          "id": "a1.1-u04-ls3-s01",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.artikel-genus-plural",
+          "promptDe": "„___ kosten 1,99 Euro.“ Was passt?",
+          "promptEn": "“kosten” = plural. What fits?",
+          "options": [
+            "Das Brot",
+            "Zehn Eier",
+            "Der Käse"
+          ],
+          "answer": "Zehn Eier",
+          "accepted": [
+            "Zehn Eier"
+          ],
+          "explanation": {
+            "de": "kosten ist Plural. Nur zehn Eier ist Plural.",
+            "en": "“kosten” is plural – only “zehn Eier” is plural."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls3-s02",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.artikel-genus-plural",
+          "promptDe": "„___ kostet 1,79 Euro.“ Was passt?",
+          "promptEn": "“kostet” = singular. What fits?",
+          "options": [
+            "Die Eier",
+            "Die Äpfel",
+            "Der Reis"
+          ],
+          "answer": "Der Reis",
+          "accepted": [
+            "Der Reis"
+          ],
+          "explanation": {
+            "de": "kostet ist Singular. Der Reis ist Singular.",
+            "en": "“kostet” is singular – “der Reis” is singular."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls3-s03",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.artikel-genus-plural",
+          "promptDe": "Die Verkäuferin: „Die sind dort.“ Was ist dort?",
+          "promptEn": "“sind” = plural. What is there?",
+          "options": [
+            "der Reis",
+            "die Butter",
+            "die Eier"
+          ],
+          "answer": "die Eier",
+          "accepted": [
+            "die Eier"
+          ],
+          "explanation": {
+            "de": "die + sind: Plural. Das sind die Eier.",
+            "en": "“die” with “sind” is plural: die Eier."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls3-s04",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.artikel-genus-plural",
+          "promptDe": "Arjun: „Zehn Stück, bitte.“ Was kauft er?",
+          "promptEn": "What is he buying?",
+          "options": [
+            "zehn Kilo Reis",
+            "zehn Eier",
+            "zehn Flaschen Wasser"
+          ],
+          "answer": "zehn Eier",
+          "accepted": [
+            "zehn Eier"
+          ],
+          "explanation": {
+            "de": "Stück sagt man bei Eiern, nicht bei Reis oder Wasser.",
+            "en": "You count eggs in “Stück” – not rice or water."
+          },
+          "origin": "agent"
+        }
+      ],
+      "pool": {
+        "items": [
+          {
+            "id": "a1.1-u04-ls3-p01",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.artikel-genus-plural",
+            "promptDe": "Ein Ei, zwei ___. (Plural)",
+            "promptEn": "Plural of Ei.",
+            "answer": "Eier",
+            "accepted": [
+              "Eier"
+            ],
+            "explanation": {
+              "de": "das Ei, die Eier: Plural mit -er.",
+              "en": "das Ei → die Eier."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls3-p02",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.artikel-genus-plural",
+            "promptDe": "Arjun möchte drei ___. (die Tomate)",
+            "promptEn": "Plural of Tomate.",
+            "answer": "Tomaten",
+            "accepted": [
+              "Tomaten"
+            ],
+            "explanation": {
+              "de": "die Tomate, die Tomaten: Plural mit -n.",
+              "en": "die Tomate → die Tomaten."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls3-p03",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.artikel-genus-plural",
+            "promptDe": "Wir brauchen sechs ___ Wasser. (die Flasche)",
+            "promptEn": "Plural of Flasche.",
+            "answer": "Flaschen",
+            "accepted": [
+              "Flaschen"
+            ],
+            "explanation": {
+              "de": "die Flasche, die Flaschen: Plural mit -n.",
+              "en": "die Flasche → die Flaschen."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls3-p04",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.artikel-genus-plural",
+            "promptDe": "Die ___ sind heute im Angebot. (die Kartoffel)",
+            "promptEn": "Plural of Kartoffel.",
+            "answer": "Kartoffeln",
+            "accepted": [
+              "Kartoffeln"
+            ],
+            "explanation": {
+              "de": "die Kartoffel, die Kartoffeln: Plural mit -n.",
+              "en": "die Kartoffel → die Kartoffeln."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls3-p05",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.artikel-genus-plural",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "kosten",
+              "zehn Eier",
+              "1,99 Euro"
+            ],
+            "answer": "Zehn Eier kosten 1,99 Euro.",
+            "accepted": [
+              "Zehn Eier kosten 1,99 Euro.",
+              "1,99 Euro kosten zehn Eier."
+            ],
+            "acceptedWhy": {
+              "1,99 Euro kosten zehn Eier.": "grammatisch: der Preis betont auf Position 1"
+            },
+            "explanation": {
+              "de": "zehn Eier ist Plural, deshalb kosten.",
+              "en": "“zehn Eier” is plural, so “kosten”."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls3-p06",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.artikel-genus-plural",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "wir",
+              "zwei Kilo Kartoffeln",
+              "brauchen"
+            ],
+            "answer": "Wir brauchen zwei Kilo Kartoffeln.",
+            "accepted": [
+              "Wir brauchen zwei Kilo Kartoffeln.",
+              "Zwei Kilo Kartoffeln brauchen wir."
+            ],
+            "acceptedWhy": {
+              "Zwei Kilo Kartoffeln brauchen wir.": "grammatisch: die Menge betont auf Position 1"
+            },
+            "explanation": {
+              "de": "Menge ohne Artikel: zwei Kilo Kartoffeln.",
+              "en": "A quantity takes no article: zwei Kilo Kartoffeln."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls3-p07",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.artikel-genus-plural",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the question.",
+            "tiles": [
+              "sind",
+              "die Eier",
+              "wo"
+            ],
+            "answer": "Wo sind die Eier?",
+            "accepted": [
+              "Wo sind die Eier?"
+            ],
+            "explanation": {
+              "de": "die Eier ist Plural: Wo sind …?",
+              "en": "“die Eier” is plural: Wo sind …?"
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls3-p08",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.artikel-genus-plural",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the question.",
+            "tiles": [
+              "ist",
+              "der Reis",
+              "wo"
+            ],
+            "answer": "Wo ist der Reis?",
+            "accepted": [
+              "Wo ist der Reis?"
+            ],
+            "explanation": {
+              "de": "der Reis ist Singular: Wo ist …?",
+              "en": "“der Reis” is singular: Wo ist …?"
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls3-p09",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.artikel-genus-plural",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "die Butter",
+              "auch",
+              "ist",
+              "dort"
+            ],
+            "answer": "Die Butter ist auch dort.",
+            "accepted": [
+              "Die Butter ist auch dort.",
+              "Dort ist auch die Butter.",
+              "Dort ist die Butter auch."
+            ],
+            "acceptedWhy": {
+              "Dort ist die Butter auch.": "grammatisch: auch nach dem Subjekt, das Verb bleibt auf Position 2"
+            },
+            "explanation": {
+              "de": "Das Verb ist steht auf Position 2.",
+              "en": "The verb “ist” is in position 2."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls3-p10",
+            "type": "error_correction",
+            "role": "practice",
+            "topic": "g.artikel-genus-plural",
+            "promptDe": "Korrigieren Sie: „Ich möchte ein Kilo die Tomaten.“",
+            "promptEn": "Correct the sentence.",
+            "answer": "Ich möchte ein Kilo Tomaten.",
+            "accepted": [
+              "Ich möchte ein Kilo Tomaten."
+            ],
+            "intentionalError": true,
+            "errorTag": "gender-article",
+            "errorTags": [
+              "gender-article"
+            ],
+            "explanation": {
+              "de": "Nach einer Menge steht kein Artikel: ein Kilo Tomaten.",
+              "en": "After a quantity there is no article: ein Kilo Tomaten."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u04-ls3-p11",
+            "type": "multiple_choice",
+            "role": "practice",
+            "topic": "g.artikel-genus-plural",
+            "promptDe": "Welcher Plural ist richtig? der Apfel – die ___",
+            "promptEn": "Choose the plural.",
+            "options": [
+              "Apfels",
+              "Äpfel",
+              "Apfeln"
+            ],
+            "answer": "Äpfel",
+            "accepted": [
+              "Äpfel"
+            ],
+            "explanation": {
+              "de": "der Apfel, die Äpfel: Plural mit Umlaut.",
+              "en": "der Apfel → die Äpfel (umlaut)."
+            },
+            "origin": "agent"
+          }
+        ],
+        "generators": [
+          {
+            "generator": "dictation.fromInput",
+            "count": 2,
+            "source": [
+              "a1.1-u04-ls3-l05",
+              "a1.1-u04-ls3-l07"
+            ]
+          },
+          {
+            "generator": "numbers.dictation",
+            "count": 1,
+            "source": [
+              "price-euro"
+            ]
+          },
+          {
+            "generator": "lex.articlePlural",
+            "count": 1,
+            "source": [
+              "lx.ei",
+              "lx.tomate",
+              "lx.kartoffel",
+              "lx.flasche"
+            ]
+          },
+          {
+            "generator": "lex.glossMatch",
+            "count": 1,
+            "source": [
+              "lx.reis",
+              "lx.zucker",
+              "lx.butter",
+              "lx.ei",
+              "lx.supermarkt"
+            ]
+          }
+        ]
+      },
+      "reserve": [
+        {
+          "id": "a1.1-u04-ls3-r01",
+          "type": "fill_blank",
+          "role": "practice",
+          "topic": "g.artikel-genus-plural",
+          "promptDe": "Wir brauchen vier ___. (die Zwiebel)",
+          "promptEn": "Plural of Zwiebel.",
+          "answer": "Zwiebeln",
+          "accepted": [
+            "Zwiebeln"
+          ],
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "einstufung"
+          ],
+          "difficulty": 2,
+          "explanation": {
+            "de": "die Zwiebel, die Zwiebeln: Plural mit -n.",
+            "en": "die Zwiebel → die Zwiebeln."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls3-r02",
+          "type": "sentence_building",
+          "role": "practice",
+          "topic": "g.artikel-genus-plural",
+          "promptDe": "Bilden Sie den Satz.",
+          "promptEn": "Build the sentence.",
+          "tiles": [
+            "zwei Flaschen Milch",
+            "kosten",
+            "1,98 Euro"
+          ],
+          "answer": "Zwei Flaschen Milch kosten 1,98 Euro.",
+          "accepted": [
+            "Zwei Flaschen Milch kosten 1,98 Euro.",
+            "1,98 Euro kosten zwei Flaschen Milch."
+          ],
+          "acceptedWhy": {
+            "1,98 Euro kosten zwei Flaschen Milch.": "grammatisch: der Preis betont auf Position 1"
+          },
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "difficulty": 2,
+          "explanation": {
+            "de": "zwei Flaschen ist Plural, deshalb kosten.",
+            "en": "“zwei Flaschen” is plural, so “kosten”."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls3-r03",
+          "type": "multiple_choice",
+          "role": "practice",
+          "topic": "g.artikel-genus-plural",
+          "promptDe": "Plural: das Brot – die ___",
+          "promptEn": "Choose the plural.",
+          "options": [
+            "Brots",
+            "Brote",
+            "Broten"
+          ],
+          "answer": "Brote",
+          "accepted": [
+            "Brote"
+          ],
+          "banks": [
+            "plateau",
+            "mehr-ueben"
+          ],
+          "difficulty": 2,
+          "explanation": {
+            "de": "das Brot, die Brote: Plural mit -e.",
+            "en": "das Brot → die Brote."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u04-ls3-r04",
+          "type": "error_correction",
+          "role": "practice",
+          "topic": "g.artikel-genus-plural",
+          "promptDe": "Korrigieren Sie: „Wir brauchen 500 Gramm der Käse.“",
+          "promptEn": "Correct the sentence.",
+          "answer": "Wir brauchen 500 Gramm Käse.",
+          "accepted": [
+            "Wir brauchen 500 Gramm Käse."
+          ],
+          "intentionalError": true,
+          "errorTag": "gender-article",
+          "errorTags": [
+            "gender-article"
+          ],
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "difficulty": 3,
+          "explanation": {
+            "de": "Nach einer Menge steht kein Artikel: 500 Gramm Käse.",
+            "en": "After a quantity there is no article: 500 Gramm Käse."
+          },
+          "origin": "agent"
+        }
+      ],
+      "microOutput": {
+        "id": "a1.1-u04-ls3-mo",
+        "bankKey": "a11-u04-mo3",
+        "mode": "written",
+        "profile": "course-micro",
+        "situationDe": "Sie sind im Supermarkt. Ein Freund fragt im Chat: „Was ist heute im Angebot?“",
+        "promptDe": "Antworten Sie in 1–2 Sätzen: Was ist im Angebot? Was kostet es?",
+        "promptEn": "Answer in 1–2 sentences: what is on offer and what it costs.",
+        "planSeconds": 30,
+        "words": [
+          3,
+          16
+        ],
+        "targets": [
+          "g.artikel-genus-plural"
+        ],
+        "register": "du"
+      },
+      "aussprache": {
+        "focus": "ei und ie: drei, Eier, Preis – vier, die, wie",
+        "perception": {
+          "generator": "perception.pairs",
+          "count": 3,
+          "source": [
+            "Wein|Wien",
+            "Leid|Lied",
+            "leider|Lieder",
+            "Schein|schien"
+          ],
+          "voices": 4
+        },
+        "readAloud": {
+          "lineDe": "Drei Eier und vier Birnen, bitte."
+        }
+      },
+      "endLine": "Sie können jetzt Durchsagen im Supermarkt verstehen und fragen, wo etwas ist."
+    },
+    {
+      "id": "a1.1-u04-ls4",
+      "kind": "pruefung",
+      "texts": [
+        {
+          "id": "a1.1-u04-ls4-t1",
+          "kind": "audio",
+          "title": "Gespräch 1",
+          "lines": [
+            {
+              "id": "a1.1-u04-ls4-t1-l01",
+              "speaker": "cast.ensemble-a1-1",
+              "de": "Guten Tag! Was möchten Sie?",
+              "en": "Hello! What would you like?"
+            },
+            {
+              "id": "a1.1-u04-ls4-t1-l02",
+              "speaker": "cast.priya",
+              "de": "Ich möchte Brötchen. Was kostet ein Brötchen?",
+              "en": "I’d like bread rolls. How much is one roll?"
+            },
+            {
+              "id": "a1.1-u04-ls4-t1-l03",
+              "speaker": "cast.ensemble-a1-1",
+              "de": "Ein Brötchen kostet 40 Cent. Zehn Brötchen kosten nur 3,50 Euro.",
+              "en": "One roll costs 40 cents. Ten rolls cost only 3.50 euros.",
+              "say": "Ein Brötchen kostet vierzig Cent. Zehn Brötchen kosten nur drei Euro fünfzig."
+            },
+            {
+              "id": "a1.1-u04-ls4-t1-l04",
+              "speaker": "cast.priya",
+              "de": "Gut, dann möchte ich zehn Brötchen, bitte.",
+              "en": "Fine, then I’d like ten rolls, please."
+            },
+            {
+              "id": "a1.1-u04-ls4-t1-l05",
+              "speaker": "cast.ensemble-a1-1",
+              "de": "Gern. Das macht 3,50 Euro.",
+              "en": "Sure. That’s 3.50 euros.",
+              "say": "Gern. Das macht drei Euro fünfzig."
+            }
+          ],
+          "glosses": [
+            {
+              "token": "Cent",
+              "gloss": {
+                "en": "cent (100 Cent = 1 Euro)"
+              }
+            }
+          ]
+        },
+        {
+          "id": "a1.1-u04-ls4-t2",
+          "kind": "audio",
+          "title": "Gespräch 2",
+          "lines": [
+            {
+              "id": "a1.1-u04-ls4-t2-l01",
+              "speaker": "cast.ensemble-a1-3",
+              "de": "Guten Morgen! Was möchten Sie?",
+              "en": "Good morning! What would you like?"
+            },
+            {
+              "id": "a1.1-u04-ls4-t2-l02",
+              "speaker": "cast.arjun",
+              "de": "Ich möchte Käse, bitte. 300 Gramm.",
+              "en": "I’d like some cheese, please. 300 grams.",
+              "say": "Ich möchte Käse, bitte. Dreihundert Gramm."
+            },
+            {
+              "id": "a1.1-u04-ls4-t2-l03",
+              "speaker": "cast.ensemble-a1-3",
+              "de": "300 Gramm Käse, gern. Noch etwas?",
+              "en": "300 grams of cheese, certainly. Anything else?",
+              "say": "Dreihundert Gramm Käse, gern. Noch etwas?"
+            },
+            {
+              "id": "a1.1-u04-ls4-t2-l04",
+              "speaker": "cast.arjun",
+              "de": "Ja, 200 Gramm Wurst, bitte.",
+              "en": "Yes, 200 grams of cold cuts, please.",
+              "say": "Ja, zweihundert Gramm Wurst, bitte."
+            },
+            {
+              "id": "a1.1-u04-ls4-t2-l05",
+              "speaker": "cast.ensemble-a1-3",
+              "de": "Gern. Das macht 7,80 Euro.",
+              "en": "Sure. That’s 7.80 euros.",
+              "say": "Gern. Das macht sieben Euro achtzig."
+            }
+          ],
+          "glosses": []
+        },
+        {
+          "id": "a1.1-u04-ls4-t3",
+          "kind": "audio",
+          "title": "Gespräch 3",
+          "lines": [
+            {
+              "id": "a1.1-u04-ls4-t3-l01",
+              "speaker": "cast.arjun",
+              "de": "Priya, ich bin im Supermarkt. Brauchen wir Eier?",
+              "en": "Priya, I’m at the supermarket. Do we need eggs?"
+            },
+            {
+              "id": "a1.1-u04-ls4-t3-l02",
+              "speaker": "cast.priya",
+              "de": "Ja, bitte. Wir haben nur noch zwei Eier.",
+              "en": "Yes, please. We only have two eggs left."
+            },
+            {
+              "id": "a1.1-u04-ls4-t3-l03",
+              "speaker": "cast.arjun",
+              "de": "Sechs oder zehn Stück?",
+              "en": "Six or ten?"
+            },
+            {
+              "id": "a1.1-u04-ls4-t3-l04",
+              "speaker": "cast.priya",
+              "de": "Zehn, bitte. Und eine Flasche Milch.",
+              "en": "Ten, please. And a bottle of milk."
+            },
+            {
+              "id": "a1.1-u04-ls4-t3-l05",
+              "speaker": "cast.arjun",
+              "de": "Gut: zehn Eier und eine Flasche Milch. Bis gleich!",
+              "en": "OK: ten eggs and a bottle of milk. See you soon!"
+            }
+          ],
+          "glosses": []
+        },
+        {
+          "id": "a1.1-u04-ls4-t4",
+          "kind": "audio",
+          "title": "Gespräch 4",
+          "lines": [
+            {
+              "id": "a1.1-u04-ls4-t4-l01",
+              "speaker": "cast.priya",
+              "de": "Entschuldigung, was kosten die Äpfel?",
+              "en": "Excuse me, how much are the apples?"
+            },
+            {
+              "id": "a1.1-u04-ls4-t4-l02",
+              "speaker": "cast.ensemble-a1-3",
+              "de": "Die Äpfel? Ein Kilo kostet 2,40 Euro.",
+              "en": "The apples? A kilo costs 2.40 euros.",
+              "say": "Die Äpfel? Ein Kilo kostet zwei Euro vierzig."
+            },
+            {
+              "id": "a1.1-u04-ls4-t4-l03",
+              "speaker": "cast.priya",
+              "de": "Und die Bananen?",
+              "en": "And the bananas?"
+            },
+            {
+              "id": "a1.1-u04-ls4-t4-l04",
+              "speaker": "cast.ensemble-a1-3",
+              "de": "Die Bananen sind heute im Angebot: ein Kilo nur 1,20 Euro.",
+              "en": "The bananas are on offer today: only 1.20 euros a kilo.",
+              "say": "Die Bananen sind heute im Angebot: ein Kilo nur einen Euro zwanzig."
+            },
+            {
+              "id": "a1.1-u04-ls4-t4-l05",
+              "speaker": "cast.priya",
+              "de": "Gut, dann ein Kilo Bananen, bitte.",
+              "en": "Good, a kilo of bananas then, please."
+            }
+          ],
+          "glosses": []
+        },
+        {
+          "id": "a1.1-u04-ls4-t5",
+          "kind": "audio",
+          "title": "Gespräch 5",
+          "lines": [
+            {
+              "id": "a1.1-u04-ls4-t5-l01",
+              "speaker": "cast.ensemble-a1-1",
+              "de": "Hallo! Was möchten Sie?",
+              "en": "Hello! What would you like?"
+            },
+            {
+              "id": "a1.1-u04-ls4-t5-l02",
+              "speaker": "cast.arjun",
+              "de": "Haben Sie Wasser?",
+              "en": "Do you have water?"
+            },
+            {
+              "id": "a1.1-u04-ls4-t5-l03",
+              "speaker": "cast.ensemble-a1-1",
+              "de": "Ja, hier. Eine Flasche kostet 90 Cent, und sechs Flaschen kosten 4 Euro.",
+              "en": "Yes, here. One bottle costs 90 cents, and six bottles cost 4 euros.",
+              "say": "Ja, hier. Eine Flasche kostet neunzig Cent, und sechs Flaschen kosten vier Euro."
+            },
+            {
+              "id": "a1.1-u04-ls4-t5-l04",
+              "speaker": "cast.arjun",
+              "de": "Dann sechs Flaschen, bitte. Haben Sie auch Milch?",
+              "en": "Six bottles then, please. Do you have milk too?"
+            },
+            {
+              "id": "a1.1-u04-ls4-t5-l05",
+              "speaker": "cast.ensemble-a1-1",
+              "de": "Milch? Nein, Milch haben wir heute nicht.",
+              "en": "Milk? No, we don’t have milk today."
+            }
+          ],
+          "glosses": [
+            {
+              "token": "Cent",
+              "gloss": {
+                "en": "cent (100 Cent = 1 Euro)"
+              }
+            }
+          ]
+        },
+        {
+          "id": "a1.1-u04-ls4-t6",
+          "kind": "audio",
+          "title": "Gespräch 6",
+          "lines": [
+            {
+              "id": "a1.1-u04-ls4-t6-l01",
+              "speaker": "cast.priya",
+              "de": "Arjun, möchtest du Äpfel oder Birnen?",
+              "en": "Arjun, would you like apples or pears?"
+            },
+            {
+              "id": "a1.1-u04-ls4-t6-l02",
+              "speaker": "cast.arjun",
+              "de": "Birnen, bitte. Die Äpfel hier sind sehr teuer.",
+              "en": "Pears, please. The apples here are very expensive."
+            },
+            {
+              "id": "a1.1-u04-ls4-t6-l03",
+              "speaker": "cast.priya",
+              "de": "Und Tomaten? Brauchen wir Tomaten?",
+              "en": "And tomatoes? Do we need tomatoes?"
+            },
+            {
+              "id": "a1.1-u04-ls4-t6-l04",
+              "speaker": "cast.arjun",
+              "de": "Nein, wir haben noch drei Tomaten. Wir brauchen nur Birnen.",
+              "en": "No, we still have three tomatoes. We only need pears."
+            }
+          ],
+          "glosses": []
+        },
+        {
+          "id": "a1.1-u04-ls4-t7",
+          "kind": "audio",
+          "title": "Durchsage 1",
+          "lines": [
+            {
+              "id": "a1.1-u04-ls4-t7-l01",
+              "speaker": "durchsage",
+              "de": "Liebe Kunden, heute ist das Obst im Angebot! Ein Kilo Äpfel kostet nur 1,29 Euro. Die Bananen kosten nur 99 Cent das Kilo. Und die Birnen: ein Kilo für 1,79 Euro.",
+              "en": "Dear customers, fruit is on special offer today! A kilo of apples costs only 1.29 euros. Bananas cost only 99 cents a kilo. And pears: a kilo for 1.79 euros.",
+              "say": "Liebe Kunden, heute ist das Obst im Angebot! Ein Kilo Äpfel kostet nur eins neunundzwanzig. Die Bananen kosten nur neunundneunzig Cent das Kilo. Und die Birnen: ein Kilo für eins neunundsiebzig."
+            }
+          ],
+          "glosses": [
+            {
+              "token": "Kunden",
+              "gloss": {
+                "en": "customer"
+              }
+            },
+            {
+              "token": "Cent",
+              "gloss": {
+                "en": "cent (100 Cent = 1 Euro)"
+              }
+            }
+          ]
+        },
+        {
+          "id": "a1.1-u04-ls4-t8",
+          "kind": "audio",
+          "title": "Durchsage 2",
+          "lines": [
+            {
+              "id": "a1.1-u04-ls4-t8-l01",
+              "speaker": "durchsage",
+              "de": "Achtung, bitte! Heute im Angebot: Brot und Brötchen. Zehn Brötchen kosten nur 2,50 Euro. Und das Brot: 750 Gramm für 1,99 Euro. Das Angebot ist nur heute!",
+              "en": "Attention, please! On offer today: bread and rolls. Ten rolls cost only 2.50 euros. And the bread: 750 grams for 1.99 euros. The offer is today only!",
+              "say": "Achtung, bitte! Heute im Angebot: Brot und Brötchen. Zehn Brötchen kosten nur zwei Euro fünfzig. Und das Brot: siebenhundertfünfzig Gramm für eins neunundneunzig. Das Angebot ist nur heute!"
+            }
+          ],
+          "glosses": [
+            {
+              "token": "Achtung",
+              "gloss": {
+                "en": "attention"
+              }
+            }
+          ]
+        },
+        {
+          "id": "a1.1-u04-ls4-t9",
+          "kind": "audio",
+          "title": "Durchsage 3",
+          "lines": [
+            {
+              "id": "a1.1-u04-ls4-t9-l01",
+              "speaker": "durchsage",
+              "de": "Liebe Kunden, heute ist der Supermarkt nur bis 18 Uhr offen. Morgen ist der Supermarkt wieder von 8 bis 20 Uhr offen. Vielen Dank und bis morgen!",
+              "en": "Dear customers, today the supermarket is only open until 6 pm. Tomorrow the supermarket is open again from 8 am to 8 pm. Thank you and see you tomorrow!",
+              "say": "Liebe Kunden, heute ist der Supermarkt nur bis achtzehn Uhr offen. Morgen ist der Supermarkt wieder von acht bis zwanzig Uhr offen. Vielen Dank und bis morgen!"
+            }
+          ],
+          "glosses": [
+            {
+              "token": "Kunden",
+              "gloss": {
+                "en": "customer"
+              }
+            },
+            {
+              "token": "Uhr",
+              "gloss": {
+                "en": "clock, watch; o’clock"
+              }
+            },
+            {
+              "token": "offen",
+              "gloss": {
+                "en": "open"
+              }
+            }
+          ]
+        },
+        {
+          "id": "a1.1-u04-ls4-t10",
+          "kind": "audio",
+          "title": "Durchsage 4",
+          "lines": [
+            {
+              "id": "a1.1-u04-ls4-t10-l01",
+              "speaker": "durchsage",
+              "de": "Liebe Kunden, heute ist die Wurst im Angebot: 200 Gramm nur 1,49 Euro. Und der Käse ist auch im Angebot: 100 Gramm für 99 Cent. Nur heute in Ihrem Supermarkt!",
+              "en": "Dear customers, the cold cuts are on offer today: 200 grams for only 1.49 euros. And the cheese is on offer too: 100 grams for 99 cents. Today only in your supermarket!",
+              "say": "Liebe Kunden, heute ist die Wurst im Angebot: zweihundert Gramm nur eins neunundvierzig. Und der Käse ist auch im Angebot: hundert Gramm für neunundneunzig Cent. Nur heute in Ihrem Supermarkt!"
+            }
+          ],
+          "glosses": [
+            {
+              "token": "Kunden",
+              "gloss": {
+                "en": "customer"
+              }
+            },
+            {
+              "token": "Cent",
+              "gloss": {
+                "en": "cent (100 Cent = 1 Euro)"
+              }
+            }
+          ]
+        }
+      ],
+      "blocks": [
+        {
+          "id": "a1.1-u04-ls4-sd1-h1",
+          "template": "sd1.h1",
+          "lane": "sd1",
+          "length": "full",
+          "scaffolded": true,
+          "modeDefault": "lern",
+          "instructionsDe": "Sie hören sechs kurze Gespräche zweimal. Wählen Sie a, b oder c.",
+          "textRefs": [
+            "a1.1-u04-ls4-t1",
+            "a1.1-u04-ls4-t2",
+            "a1.1-u04-ls4-t3",
+            "a1.1-u04-ls4-t4",
+            "a1.1-u04-ls4-t5",
+            "a1.1-u04-ls4-t6"
+          ],
+          "items": [
+            {
+              "id": "a1.1-u04-ls4-sd1-h1-01",
+              "type": "abc",
+              "role": "exam",
+              "topic": "hoeren",
+              "textRef": "a1.1-u04-ls4-t1",
+              "promptDe": "Wie viel kosten die Brötchen für Priya?",
+              "options": [
+                "40 Cent",
+                "3,50 Euro",
+                "4 Euro"
+              ],
+              "answer": "3,50 Euro",
+              "accepted": [
+                "3,50 Euro"
+              ],
+              "exact": "number",
+              "explanation": {
+                "de": "Priya möchte zehn Brötchen. Zehn Brötchen kosten 3,50 Euro.",
+                "en": "Priya takes ten rolls, and ten rolls cost 3.50 euros."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "a1.1-u04-ls4-sd1-h1-02",
+              "type": "abc",
+              "role": "exam",
+              "topic": "hoeren",
+              "textRef": "a1.1-u04-ls4-t2",
+              "promptDe": "Wie viel Käse kauft Arjun?",
+              "options": [
+                "100 Gramm",
+                "200 Gramm",
+                "300 Gramm"
+              ],
+              "answer": "300 Gramm",
+              "accepted": [
+                "300 Gramm"
+              ],
+              "exact": "number",
+              "explanation": {
+                "de": "Arjun sagt: Käse, 300 Gramm. Die 200 Gramm sind Wurst.",
+                "en": "Arjun asks for 300 grams of cheese; the 200 grams are cold cuts."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "a1.1-u04-ls4-sd1-h1-03",
+              "type": "abc",
+              "role": "exam",
+              "topic": "hoeren",
+              "textRef": "a1.1-u04-ls4-t3",
+              "promptDe": "Wie viele Eier kauft Arjun?",
+              "options": [
+                "zwei Eier",
+                "sechs Eier",
+                "zehn Eier"
+              ],
+              "answer": "zehn Eier",
+              "accepted": [
+                "zehn Eier"
+              ],
+              "explanation": {
+                "de": "Priya sagt: Zehn, bitte. Zwei Eier haben sie noch zu Hause.",
+                "en": "Priya says ten; the two eggs are the ones they still have."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "a1.1-u04-ls4-sd1-h1-04",
+              "type": "abc",
+              "role": "exam",
+              "topic": "hoeren",
+              "textRef": "a1.1-u04-ls4-t4",
+              "promptDe": "Was kostet ein Kilo Bananen?",
+              "options": [
+                "1,20 Euro",
+                "2,40 Euro",
+                "2,20 Euro"
+              ],
+              "answer": "1,20 Euro",
+              "accepted": [
+                "1,20 Euro"
+              ],
+              "exact": "number",
+              "explanation": {
+                "de": "Die Bananen sind im Angebot: ein Kilo nur 1,20 Euro. 2,40 Euro kosten die Äpfel.",
+                "en": "Bananas are 1.20 euros a kilo; 2.40 is the price of the apples."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "a1.1-u04-ls4-sd1-h1-05",
+              "type": "abc",
+              "role": "exam",
+              "topic": "hoeren",
+              "textRef": "a1.1-u04-ls4-t5",
+              "promptDe": "Was kauft Arjun?",
+              "options": [
+                "sechs Flaschen Wasser",
+                "eine Flasche Wasser",
+                "Wasser und Milch"
+              ],
+              "answer": "sechs Flaschen Wasser",
+              "accepted": [
+                "sechs Flaschen Wasser"
+              ],
+              "explanation": {
+                "de": "Arjun sagt: Dann sechs Flaschen, bitte. Milch haben sie heute nicht.",
+                "en": "Arjun takes six bottles of water; there is no milk today."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "a1.1-u04-ls4-sd1-h1-06",
+              "type": "abc",
+              "role": "exam",
+              "topic": "hoeren",
+              "textRef": "a1.1-u04-ls4-t6",
+              "promptDe": "Was brauchen Priya und Arjun?",
+              "options": [
+                "Äpfel",
+                "Birnen",
+                "Tomaten"
+              ],
+              "answer": "Birnen",
+              "accepted": [
+                "Birnen"
+              ],
+              "explanation": {
+                "de": "Arjun sagt: Wir brauchen nur Birnen. Tomaten haben sie noch.",
+                "en": "They only need pears; they still have tomatoes."
+              },
+              "origin": "agent"
+            }
+          ]
+        },
+        {
+          "id": "a1.1-u04-ls4-sd1-h2",
+          "template": "sd1.h2",
+          "lane": "sd1",
+          "length": "full",
+          "scaffolded": false,
+          "modeDefault": "lern",
+          "instructionsDe": "Sie hören vier Durchsagen nur einmal. Ist die Aussage richtig oder falsch?",
+          "textRefs": [
+            "a1.1-u04-ls4-t7",
+            "a1.1-u04-ls4-t8",
+            "a1.1-u04-ls4-t9",
+            "a1.1-u04-ls4-t10"
+          ],
+          "items": [
+            {
+              "id": "a1.1-u04-ls4-sd1-h2-01",
+              "type": "richtig_falsch",
+              "role": "exam",
+              "topic": "hoeren",
+              "textRef": "a1.1-u04-ls4-t7",
+              "promptDe": "„Ein Kilo Äpfel kostet heute 1,79 Euro.“",
+              "options": [
+                "richtig",
+                "falsch"
+              ],
+              "answer": "falsch",
+              "accepted": [
+                "falsch"
+              ],
+              "explanation": {
+                "de": "Ein Kilo Äpfel kostet 1,29 Euro. 1,79 Euro kosten die Birnen.",
+                "en": "Apples are 1.29 euros a kilo; 1.79 is the price of the pears."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "a1.1-u04-ls4-sd1-h2-02",
+              "type": "richtig_falsch",
+              "role": "exam",
+              "topic": "hoeren",
+              "textRef": "a1.1-u04-ls4-t8",
+              "promptDe": "„Die Brötchen sind nur heute billig.“",
+              "options": [
+                "richtig",
+                "falsch"
+              ],
+              "answer": "richtig",
+              "accepted": [
+                "richtig"
+              ],
+              "explanation": {
+                "de": "Die Durchsage sagt: Das Angebot ist nur heute.",
+                "en": "The announcement says the offer is for today only."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "a1.1-u04-ls4-sd1-h2-03",
+              "type": "richtig_falsch",
+              "role": "exam",
+              "topic": "hoeren",
+              "textRef": "a1.1-u04-ls4-t9",
+              "promptDe": "„Der Supermarkt ist heute bis 20 Uhr offen.“",
+              "options": [
+                "richtig",
+                "falsch"
+              ],
+              "answer": "falsch",
+              "accepted": [
+                "falsch"
+              ],
+              "explanation": {
+                "de": "Heute ist der Supermarkt nur bis 18 Uhr offen. Bis 20 Uhr ist er morgen offen.",
+                "en": "Today it closes at 6 pm; 8 pm is tomorrow’s closing time."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "a1.1-u04-ls4-sd1-h2-04",
+              "type": "richtig_falsch",
+              "role": "exam",
+              "topic": "hoeren",
+              "textRef": "a1.1-u04-ls4-t10",
+              "promptDe": "„Wurst und Käse sind heute im Angebot.“",
+              "options": [
+                "richtig",
+                "falsch"
+              ],
+              "answer": "richtig",
+              "accepted": [
+                "richtig"
+              ],
+              "explanation": {
+                "de": "Die Wurst ist im Angebot, und der Käse ist auch im Angebot.",
+                "en": "The cold cuts are on offer, and so is the cheese."
+              },
+              "origin": "agent"
+            }
+          ]
+        }
+      ],
+      "strategyCards": [
+        {
+          "template": "sd1.h1",
+          "de": "Hören Teil 1: Sie hören sechs kurze Gespräche zweimal. Lesen Sie zuerst die Frage und a, b, c. Oft hören Sie alle drei Antworten – aber nur eine passt zur Frage. In der Prüfung sind a, b und c Bilder.",
+          "en": "Listening part 1: six short conversations, each played twice. Read the question and options first. You often hear all three options, but only one answers the question. In the exam the options are pictures."
+        },
+        {
+          "template": "sd1.h2",
+          "de": "Hören Teil 2: Sie hören jede Durchsage nur einmal. Lesen Sie zuerst die Aussage. Achten Sie auf Zahlen und Preise: Was kostet was?",
+          "en": "Listening part 2: you hear each announcement only once. Read the statement first and listen for numbers and prices – which price belongs to what?"
+        }
+      ]
+    },
+    {
+      "id": "a1.1-u04-ls5",
+      "kind": "sprechen",
+      "task": {
+        "bankKey": "a11-u04-s",
+        "lane": "sd1",
+        "template": "sd1.sp3",
+        "mode": "cards-request",
+        "profile": "sd1-sp3",
+        "prepMinutes": 0,
+        "instructionsDe": "Bitten Sie mit jeder Karte um etwas. Dann reagieren Sie auf die Bitte der Partnerin.",
+        "situationDe": "Sprechen Teil 3: Sie und Ihre Partnerin haben je zwei Karten zum Thema Einkaufen. In der Prüfung sind auf den Karten Bilder.",
+        "cards": {
+          "learner": [
+            "Brot",
+            "Wasser"
+          ],
+          "partner": [
+            "Äpfel",
+            "Milch"
+          ]
+        },
+        "turns": [
+          4,
+          4
+        ],
+        "moves": [],
+        "aiRole": {
+          "name": "Nora",
+          "personaDe": "Teilnehmerin in der Prüfung; spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste",
+          "register": "Sie",
+          "support": "slow-wordbank"
+        },
+        "openingLine": "Hallo! Das ist Teil 3. Sie haben zwei Karten, ich habe zwei Karten. Bitte, Sie zuerst!",
+        "hintWords": [
+          "Ich möchte …, bitte.",
+          "Haben Sie …?",
+          "Ein … / Eine …, bitte.",
+          "Ja, hier, bitte.",
+          "Danke!"
+        ],
+        "modelTurns": [
+          {
+            "speaker": "learner",
+            "de": "Ich möchte ein Brot, bitte."
+          },
+          {
+            "speaker": "partner",
+            "de": "Ja, hier, bitte."
+          },
+          {
+            "speaker": "partner",
+            "de": "Haben Sie Äpfel?"
+          },
+          {
+            "speaker": "learner",
+            "de": "Ja, hier, bitte. Drei Äpfel."
+          },
+          {
+            "speaker": "learner",
+            "de": "Ich möchte eine Flasche Wasser, bitte."
+          },
+          {
+            "speaker": "partner",
+            "de": "Hier, bitte."
+          },
+          {
+            "speaker": "partner",
+            "de": "Eine Flasche Milch, bitte."
+          },
+          {
+            "speaker": "learner",
+            "de": "Ja, gern. Hier, bitte."
+          }
+        ]
+      }
+    },
+    {
+      "id": "a1.1-u04-ls6",
+      "kind": "schreiben",
+      "task": {
+        "bankKey": "a11-u04-w",
+        "lane": "sd1",
+        "template": "sd1.s2",
+        "examKey": "goethe_a1",
+        "profile": "sd1-s2",
+        "register": "informell",
+        "address": "du",
+        "title": "Eine Nachricht an Arjun: Was brauchen wir?",
+        "situationDe": "Sie wohnen mit Priya und Arjun zusammen. Arjun ist jetzt im Supermarkt. Sie brauchen auch etwas.",
+        "taskDe": "Schreiben Sie Arjun eine Nachricht zu allen drei Punkten (20 bis 30 Wörter).",
+        "leitpunkte": [
+          {
+            "id": "lp1",
+            "de": "Was brauchen Sie? Nennen Sie zwei oder drei Sachen.",
+            "cues": [
+              "brauche",
+              "brauchen",
+              "möchte",
+              "Brot",
+              "Milch",
+              "Käse",
+              "Äpfel",
+              "Wasser"
+            ]
+          },
+          {
+            "id": "lp2",
+            "de": "Wie viel brauchen Sie? (Kilo, Gramm, Flasche, Stück)",
+            "cues": [
+              "Kilo",
+              "Gramm",
+              "Flasche",
+              "Flaschen",
+              "Stück",
+              "zwei",
+              "drei"
+            ]
+          },
+          {
+            "id": "lp3",
+            "de": "Fragen Sie nach einem Preis.",
+            "cues": [
+              "Was kostet",
+              "Was kosten",
+              "Wie viel kostet",
+              "Preis",
+              "Euro",
+              "Angebot"
+            ]
+          }
+        ],
+        "wordBand": [
+          20,
+          30
+        ],
+        "wordBandLearning": [
+          15,
+          25
+        ],
+        "minSubmitWords": 10,
+        "checklist": [
+          "Anrede: Hallo Arjun,",
+          "Punkt 1: Was brauchen Sie?",
+          "Punkt 2: Wie viel?",
+          "Punkt 3: eine Frage nach dem Preis",
+          "Gruß",
+          "du-Form",
+          "20 bis 30 Wörter"
+        ],
+        "modelText": "Hallo Arjun,\nich brauche ein Brot und 200 Gramm Käse. Ich möchte auch zwei Flaschen Milch und ein Kilo Äpfel. Was kosten die Äpfel heute?\nViele Grüße"
+      }
+    },
+    {
+      "id": "a1.1-u04-ls7",
+      "kind": "check",
+      "endLine": "Geschafft! Sie können jetzt einkaufen, nach Preisen fragen und Durchsagen im Supermarkt verstehen."
+    }
+  ],
+  "check": {
+    "lines": [
+      {
+        "id": "a1.1-u04-ls7-l01",
+        "speaker": "cast.ensemble-a1-1",
+        "de": "Das macht 7,40 Euro, bitte.",
+        "en": "That’s 7.40 euros, please.",
+        "say": "Das macht sieben Euro vierzig, bitte."
+      },
+      {
+        "id": "a1.1-u04-ls7-l02",
+        "speaker": "durchsage",
+        "de": "Liebe Kunden, heute sind die Bananen im Angebot. Ein Kilo kostet nur 99 Cent.",
+        "en": "Dear customers, bananas are on offer today. A kilo costs only 99 cents.",
+        "say": "Liebe Kunden, heute sind die Bananen im Angebot. Ein Kilo kostet nur neunundneunzig Cent."
+      },
+      {
+        "id": "a1.1-u04-ls7-l03",
+        "speaker": "cast.arjun",
+        "de": "Ich möchte zehn Eier und zwei Flaschen Wasser, bitte.",
+        "en": "I’d like ten eggs and two bottles of water, please."
+      },
+      {
+        "id": "a1.1-u04-ls7-l04",
+        "speaker": "cast.priya",
+        "de": "Wir brauchen Brot und Käse.",
+        "en": "We need bread and cheese."
+      }
+    ],
+    "items": [
+      {
+        "id": "a1.1-u04-c01",
+        "type": "fill_blank",
+        "role": "check",
+        "topic": "g.artikel-genus-plural",
+        "promptDe": "___ Milch ist heute im Angebot. (bestimmter Artikel)",
+        "promptEn": "Definite article.",
+        "answer": "Die",
+        "accepted": [
+          "Die"
+        ],
+        "explanation": {
+          "de": "Milch ist feminin: die Milch.",
+          "en": "“Milch” is feminine: die Milch."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a1.1-u04-c02",
+        "type": "fill_blank",
+        "role": "check",
+        "topic": "g.artikel-genus-plural",
+        "promptDe": "Eine Birne? Nein, drei ___, bitte. (die Birne)",
+        "promptEn": "Plural of Birne.",
+        "answer": "Birnen",
+        "accepted": [
+          "Birnen"
+        ],
+        "explanation": {
+          "de": "die Birne, die Birnen: Plural mit -n.",
+          "en": "die Birne → die Birnen."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a1.1-u04-c03",
+        "type": "fill_blank",
+        "role": "check",
+        "topic": "g.moechte",
+        "promptDe": "Was ___ Sie? – Ein Kilo Tomaten, bitte. (möcht-)",
+        "promptEn": "möchte: Sie-form.",
+        "answer": "möchten",
+        "accepted": [
+          "möchten"
+        ],
+        "explanation": {
+          "de": "Sie möchten: mit -n.",
+          "en": "Sie möchten – with -n."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a1.1-u04-c04",
+        "type": "sentence_building",
+        "role": "check",
+        "topic": "g.moechte",
+        "promptDe": "Bilden Sie den Satz.",
+        "promptEn": "Build the sentence.",
+        "tiles": [
+          "ich",
+          "möchte",
+          "zwei Flaschen Wasser"
+        ],
+        "answer": "Ich möchte zwei Flaschen Wasser.",
+        "accepted": [
+          "Ich möchte zwei Flaschen Wasser.",
+          "Zwei Flaschen Wasser möchte ich."
+        ],
+        "acceptedWhy": {
+          "Zwei Flaschen Wasser möchte ich.": "grammatisch: die Menge betont auf Position 1"
+        },
+        "explanation": {
+          "de": "möchte steht auf Position 2.",
+          "en": "“möchte” is in position 2."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a1.1-u04-c05",
+        "type": "multiple_choice",
+        "role": "check",
+        "topic": "lx.teuer",
+        "promptDe": "100 Gramm Käse für 9 Euro? Das ist ___!",
+        "promptEn": "Choose the word.",
+        "options": [
+          "billig",
+          "teuer",
+          "alt"
+        ],
+        "answer": "teuer",
+        "accepted": [
+          "teuer"
+        ],
+        "explanation": {
+          "de": "9 Euro für 100 Gramm Käse ist viel Geld: teuer.",
+          "en": "9 euros for 100 grams of cheese is a lot: expensive."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a1.1-u04-c06",
+        "type": "dictation",
+        "role": "check",
+        "topic": "hoeren",
+        "audioLineRef": "a1.1-u04-ls7-l04",
+        "promptDe": "Hören Sie und schreiben Sie den Satz.",
+        "promptEn": "Listen and write the sentence.",
+        "answer": "Wir brauchen Brot und Käse.",
+        "accepted": [
+          "Wir brauchen Brot und Käse."
+        ],
+        "explanation": {
+          "de": "Wir brauchen Brot und Käse. Nomen schreibt man groß.",
+          "en": "Nouns are capitalised: Brot, Käse."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a1.1-u04-c07",
+        "type": "error_correction",
+        "role": "check",
+        "topic": "g.artikel-genus-plural",
+        "promptDe": "Korrigieren Sie: „Ich brauche eine Kilo Äpfel.“",
+        "promptEn": "Correct the sentence.",
+        "answer": "Ich brauche ein Kilo Äpfel.",
+        "accepted": [
+          "Ich brauche ein Kilo Äpfel."
+        ],
+        "intentionalError": true,
+        "errorTag": "gender-article",
+        "errorTags": [
+          "gender-article"
+        ],
+        "explanation": {
+          "de": "das Kilo → ein Kilo.",
+          "en": "das Kilo → ein Kilo."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a1.1-u04-c08",
+        "type": "multiple_choice",
+        "role": "check",
+        "topic": "lx.kosten",
+        "promptDe": "„Was kosten die Tomaten?“ – Was passt?",
+        "promptEn": "Choose the right answer.",
+        "options": [
+          "Ja, bitte.",
+          "Ein Kilo kostet 2,20 Euro.",
+          "Ich möchte Tomaten."
+        ],
+        "answer": "Ein Kilo kostet 2,20 Euro.",
+        "accepted": [
+          "Ein Kilo kostet 2,20 Euro."
+        ],
+        "exact": "number",
+        "explanation": {
+          "de": "Die Frage ist: Was kosten …? Die Antwort nennt einen Preis.",
+          "en": "The question asks for a price."
+        },
+        "origin": "agent"
+      }
+    ],
+    "earlierDraw": {
+      "count": 4,
+      "from": "previous-3",
+      "pool": "reserve"
+    },
+    "proofItems": [
+      {
+        "id": "a1.1-u04-q01",
+        "type": "multiple_choice",
+        "role": "proof",
+        "topic": "hoeren",
+        "audioLineRef": "a1.1-u04-ls7-l01",
+        "promptDe": "Hören Sie. Wie viel kostet alles zusammen?",
+        "promptEn": "How much is it altogether?",
+        "options": [
+          "4,70 Euro",
+          "7,40 Euro",
+          "7,14 Euro"
+        ],
+        "answer": "7,40 Euro",
+        "accepted": [
+          "7,40 Euro"
+        ],
+        "exact": "number",
+        "explanation": {
+          "de": "Die Verkäuferin sagt: sieben Euro vierzig. Das sind 7,40 Euro.",
+          "en": "She says “sieben Euro vierzig” – 7.40 euros."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a1.1-u04-q02",
+        "type": "multiple_choice",
+        "role": "proof",
+        "topic": "lesen",
+        "promptDe": "Prospekt: „Angebot! Butter, 250 Gramm: nur 1,19 Euro“. Was kostet die Butter?",
+        "promptEn": "Read the flyer: how much is the butter?",
+        "options": [
+          "2,50 Euro",
+          "1,90 Euro",
+          "1,19 Euro"
+        ],
+        "answer": "1,19 Euro",
+        "accepted": [
+          "1,19 Euro"
+        ],
+        "exact": "number",
+        "explanation": {
+          "de": "Im Prospekt steht: Butter, 250 Gramm, nur 1,19 Euro.",
+          "en": "The flyer says 250 g of butter for only 1.19 euros."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a1.1-u04-q03",
+        "type": "multiple_choice",
+        "role": "proof",
+        "topic": "hoeren",
+        "audioLineRef": "a1.1-u04-ls7-l02",
+        "promptDe": "Hören Sie die Durchsage. Was ist heute im Angebot?",
+        "promptEn": "What is on offer today?",
+        "options": [
+          "Bananen",
+          "Birnen",
+          "Äpfel"
+        ],
+        "answer": "Bananen",
+        "accepted": [
+          "Bananen"
+        ],
+        "explanation": {
+          "de": "Die Durchsage sagt: Heute sind die Bananen im Angebot.",
+          "en": "The announcement: bananas are on offer today."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a1.1-u04-q04",
+        "type": "fill_blank",
+        "role": "proof",
+        "topic": "hoeren",
+        "audioLineRef": "a1.1-u04-ls7-l03",
+        "promptDe": "Hören Sie. Arjun möchte ___ Eier.",
+        "promptEn": "How many eggs? Write the number.",
+        "answer": "zehn",
+        "accepted": [
+          "zehn",
+          "10"
+        ],
+        "exact": "number",
+        "explanation": {
+          "de": "Arjun sagt: zehn Eier und zwei Flaschen Wasser.",
+          "en": "Arjun asks for ten eggs and two bottles of water."
+        },
+        "origin": "agent"
+      }
+    ],
+    "proofs": [
+      {
+        "canDo": "cd.a1.produkt-infos",
+        "aufgabe": "sprechen"
+      },
+      {
+        "canDo": "cd.a1.preise",
+        "item": "a1.1-u04-q01"
+      },
+      {
+        "canDo": "cd.a1.prospekt-preise",
+        "item": "a1.1-u04-q02"
+      },
+      {
+        "canDo": "cd.a1.durchsage-geschaeft",
+        "item": "a1.1-u04-q03"
+      },
+      {
+        "canDo": "cd.a1.gespraech-details",
+        "item": "a1.1-u04-q04"
+      }
+    ],
+    "testOutThreshold": 0.8,
+    "cumulativeShare": 0.35
+  },
+  "redemittel": [
+    {
+      "id": "a1.1-u04-rm01",
+      "de": "Was kostet das?",
+      "en": "How much is that?",
+      "function": "nach dem Preis fragen"
+    },
+    {
+      "id": "a1.1-u04-rm02",
+      "de": "Ich möchte ein Kilo Tomaten, bitte.",
+      "en": "I’d like a kilo of tomatoes, please.",
+      "function": "um etwas bitten",
+      "forTemplate": "sd1.sp3"
+    },
+    {
+      "id": "a1.1-u04-rm03",
+      "de": "Haben Sie auch Birnen?",
+      "en": "Do you have pears too?",
+      "function": "nach einem Produkt fragen",
+      "forTemplate": "sd1.sp3"
+    },
+    {
+      "id": "a1.1-u04-rm04",
+      "de": "Ja, hier, bitte.",
+      "en": "Yes, here you are.",
+      "function": "auf eine Bitte reagieren",
+      "forTemplate": "sd1.sp3"
+    },
+    {
+      "id": "a1.1-u04-rm05",
+      "de": "Entschuldigung, wo ist der Reis?",
+      "en": "Excuse me, where is the rice?",
+      "function": "fragen, wo etwas ist"
+    },
+    {
+      "id": "a1.1-u04-rm06",
+      "de": "Das macht 8,50 Euro.",
+      "en": "That’s 8.50 euros.",
+      "function": "den Preis nennen"
+    },
+    {
+      "id": "a1.1-u04-rm07",
+      "de": "Noch etwas?",
+      "en": "Anything else?",
+      "function": "nachfragen (im Geschäft)"
+    }
+  ],
+  "story": {
+    "beat": "Priya und Arjun kaufen mit 50 Euro für die ganze Woche ein: Mit dem Prospekt, dem Markt und den Angeboten reicht das Geld.",
+    "cliffhanger": "Zu Hause liest Arjun den Prospekt noch einmal. Auf der letzten Seite steht eine Anzeige: „2 Zimmer, Küche, Bad – in Leipzig, ab sofort frei.“ Arjun ruft: „Priya, schau mal!“",
+    "castIn": [
+      "cast.ensemble-a1-1",
+      "cast.ensemble-a1-3"
+    ]
+  },
+  "fokus": [],
+  "facts": [],
+  "assets": []
+}

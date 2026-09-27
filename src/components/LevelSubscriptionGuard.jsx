@@ -39,6 +39,14 @@ const LevelSubscriptionGuard = ({ children, level: levelProp, courseV2: courseV2
     return children;
   }
 
+  // DEV ONLY: `?preview` opens a v2 route signed out on the Vite dev server, so the
+  // player can be clicked through against the compiled fixture without an account
+  // (docs/course-v2/E1-client.md). import.meta.env.DEV is false in every production
+  // build, so this branch does not exist there.
+  if (import.meta.env.DEV && COURSE_V2_PATH_RE.test(location.pathname || '') && new URLSearchParams(location.search).has('preview')) {
+    return children;
+  }
+
   // For non-free levels, check auth and subscription
   if (authLoading || subLoading) {
     return (

@@ -29,6 +29,9 @@ test('chromeFor: player routes are focused, the course home is slim, everything 
   }
   assert.equal(chromeFor('/course/a1.1'), 'course');
   assert.equal(chromeFor('/course/a1.1/'), 'course');
+  // Course v2: the unit player and the Plateau are stages, the v2 home is the course home.
+  for (const p of ['/course/a2.1/u/7', '/course/a2.1/u/7/', '/course/b1.2/p/2']) assert.equal(chromeFor(p), 'player', p);
+  for (const p of ['/course/a2.1/v2', '/course/a2.1/v2/']) assert.equal(chromeFor(p), 'course', p);
   for (const p of ['/', '/dashboard', '/course/a1.1/complete', '/course/a1.1/certificate', '/course/a1.1/a11-w1-d1-lesson', '/courses/', '/level/a1.1', '/modelltest/abschlusstest-a1-1', '']) {
     assert.equal(chromeFor(p), 'full', p);
   }

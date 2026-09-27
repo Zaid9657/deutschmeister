@@ -16,8 +16,12 @@
 // The regexes are the /course/* URL shapes App.jsx routes; /course/:level/:itemId
 // (the legacy per-item lesson page) and complete/certificate keep the full
 // chrome on purpose — they are reading pages, not a stage.
-const PLAYER_ROUTE = /^\/course\/[^/]+\/(l\/[^/]+|checkpoint\/[^/]+|review)\/?$/;
-const COURSE_HOME_ROUTE = /^\/course\/[^/]+\/?$/;
+//
+// Course v2 (docs/course-v2/BLUEPRINT.md §7.1): the unit player /course/:level/u/:nr
+// and the Plateau /course/:level/p/:nr are stages ('player'); the v2 course home
+// /course/:level/v2 is the learner's home screen like /course/:level ('course').
+const PLAYER_ROUTE = /^\/course\/[^/]+\/(l\/[^/]+|checkpoint\/[^/]+|review|u\/[^/]+|p\/[^/]+)\/?$/;
+const COURSE_HOME_ROUTE = /^\/course\/[^/]+(\/v2)?\/?$/;
 
 export const chromeFor = (pathname) => {
   const p = String(pathname || '');

@@ -12,14 +12,43 @@
 // A glob over a directory that does not exist yet is simply empty, so every loader
 // here answers null / [] until the content is compiled — the pages then say so.
 import { normalizeLevel, LEVEL_RE } from './ids.js';
-import { reservesOf, earlierSourceNrs } from './unitPlan.js';
+import { reservesOf, earlierSourceNrs, reserveItemsFor, withReserves } from './unitPlan.js';
 
-const UNITS = import.meta.glob('../../data/course-v2/*/units/*.json');
-const MANIFESTS = import.meta.glob('../../data/course-v2/*/manifest.json');
+// DEV ONLY — the SCHEMA §15 fixture as a dev preview (docs/course-v2/E1-client.md):
+//   node scripts/course-v2/compile.mjs a2.1 --fixture --out .cache/course-v2-fixture/data \
+//        --banks-out .cache/course-v2-fixture/banks
+// writes it into the gitignored .cache/, and on the Vite dev server its files stand in
+// for a level that has no compiled content of its own (real content always wins). In a
+// production build import.meta.env.DEV is false, the glob is dead code, and nothing of
+// the fixture reaches dist/ (tests/course-v2-player.test.mjs pins the guard).
+const DEV_FIXTURE = import.meta.env.DEV ? import.meta.glob('../../../.cache/course-v2-fixture/data/*/**/*.json') : {};
+const DEV_PREFIX = '../../../.cache/course-v2-fixture/data/';
+
+const REAL_UNITS = import.meta.glob('../../data/course-v2/*/units/*.json');
+const REAL_MANIFESTS = import.meta.glob('../../data/course-v2/*/manifest.json');
 const COURSE_FILES = import.meta.glob('../../data/course-v2/*/course.json');
-const RULE_CARDS = import.meta.glob('../../data/course-v2/*/rule-cards.json');
-const PLATEAUS = import.meta.glob('../../data/course-v2/*/plateaus/*.json');
-const RESERVES = import.meta.glob('../../data/course-v2/*/reserve.json');
+// A level with any real compiled manifest never takes a fixture file.
+const REAL_LEVELS = new Set(
+  [...Object.keys(REAL_MANIFESTS), ...Object.keys(COURSE_FILES)].map((k) => (k.match(/course-v2\/([^/]+)\//) || [])[1]).filter(Boolean),
+);
+
+/** A glob table plus the dev fixture's files of the same shape, for levels without real content. */
+function withDevFixture(table, suffixRe) {
+  const out = { ...table };
+  for (const [key, loader] of Object.entries(DEV_FIXTURE)) {
+    if (!key.startsWith(DEV_PREFIX)) continue;
+    const rest = key.slice(DEV_PREFIX.length);
+    if (!suffixRe.test(rest) || REAL_LEVELS.has(rest.split('/')[0])) continue;
+    out[`../../data/course-v2/${rest}`] = loader;
+  }
+  return out;
+}
+
+const UNITS = withDevFixture(REAL_UNITS, /^[^/]+\/units\/[^/]+\.json$/);
+const MANIFESTS = withDevFixture(REAL_MANIFESTS, /^[^/]+\/manifest\.json$/);
+const RULE_CARDS = withDevFixture(import.meta.glob('../../data/course-v2/*/rule-cards.json'), /^[^/]+\/rule-cards\.json$/);
+const PLATEAUS = withDevFixture(import.meta.glob('../../data/course-v2/*/plateaus/*.json'), /^[^/]+\/plateaus\/[^/]+\.json$/);
+const RESERVES = withDevFixture(import.meta.glob('../../data/course-v2/*/reserve.json'), /^[^/]+\/reserve\.json$/);
 
 const base = (level) => `../../data/course-v2/${level}`;
 const pad2 = (n) => String(Number(n)).padStart(2, '0');
@@ -90,6 +119,26 @@ export async function loadUnit(level, nr) {
   return l ? load(UNITS, `${base(l)}/units/u${pad2(nr)}.json`) : null;
 }
 
+/** The level's compiled reserve index (reserve.json), or null. Loaded once per level. */
+const reserveCache = new Map();
+export function loadReserveIndex(level) {
+  const l = normalizeLevel(level);
+  if (!l) return Promise.resolve(null);
+  if (!reserveCache.has(l)) reserveCache.set(l, load(RESERVES, `${base(l)}/reserve.json`));
+  return reserveCache.get(l);
+}
+
+/**
+ * The unit the player plays: the chunk with its steps' reserves put back from the
+ * reserve index (the compiler keeps reserves out of the chunk), so the requeue can
+ * reach them. The bare chunk when there is no index.
+ */
+export async function loadPlayableUnit(level, nr) {
+  const unit = await loadUnit(level, nr);
+  if (!unit) return null;
+  return withReserves(unit, await loadReserveIndex(level));
+}
+
 export async function loadPlateau(level, nr) {
   const l = normalizeLevel(level);
   return l ? load(PLATEAUS, `${base(l)}/plateaus/p${Number(nr)}.json`) : null;
@@ -107,11 +156,8 @@ export async function loadEarlierItems(level, unit, etappen = []) {
   const nrs = earlierSourceNrs(unit, etappen);
   if (!nrs.length) return [];
   const ids = nrs.map((n) => `${l}-u${pad2(n)}`);
-  const index = await load(RESERVES, `${base(l)}/reserve.json`);
-  if (index) {
-    const byUnit = index.byUnit || index;
-    return ids.flatMap((id) => (Array.isArray(byUnit[id]) ? byUnit[id] : []));
-  }
+  const index = await loadReserveIndex(l);
+  if (index) return reserveItemsFor(index, ids);
   const chunks = await Promise.all(nrs.map((n) => loadUnit(l, n)));
   return reservesOf(chunks.filter(Boolean));
 }
