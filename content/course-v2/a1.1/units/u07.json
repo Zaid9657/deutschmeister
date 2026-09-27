@@ -137,7 +137,7 @@
       "Linie 1 A1 K5 (Grammatik: trennbare Verben; nach memo 06)"
     ],
     "deviation": {
-      "reason": "Landeskunde: Die Einheit macht keine landesweite Sachaussage und hat darum keinen Fact. Vom Plan-Punkt „Zeit in D-A-CH“ zeigt sie die 24-Stunden-Uhr auf Schildern und Terminen (17 Uhr, 20 Uhr, 8.15 Uhr) und sagt sie in einem Satz (Strategiekarte Lesen Teil 3: „Auf Schildern steht oft 17 Uhr. Das ist fünf Uhr am Nachmittag.“); ls1-i05 akzeptiert „20“ für „acht Uhr am Abend“. „halb drei“ üben LS1–LS3, die Prüfungsteile und der Check. Pünktlichkeit ist eine Szene ohne landesweite Aussage (LS3: Termin um 8.15 Uhr, „Bitte kommen Sie pünktlich.“ – Priya: „Gut, dann sind wir pünktlich!“, glossiert). Die Mittagspause kommt nicht vor: Sie gehört zum Arbeitsalltag in a2.1-u01 (lx.mittagspause); Pünktlichkeit als Wort und Thema lernt a1.1-u10 (lx.puenktlich, Bus und Bahn). Szene: Die Plan-Zeile „Fokus Alltag: Sprechzeiten einer Arztpraxis lesen“ ist hier keine Fokus-Karte, sondern das Anliegen von LS2–LS3 (erster Termin in der Praxis von Frau Doktor Sommer, cast.dr-sommer); die Anmeldung im Bürgerbüro bleibt in a1.2-u04 (Review a1.1-u07 r1 F01)."
+      "reason": "Landeskunde: Die Einheit macht keine landesweite Sachaussage und hat darum keinen Fact. Vom Plan-Punkt „Zeit in D-A-CH“ zeigt sie die 24-Stunden-Uhr auf Schildern und Terminen (17 Uhr, 20 Uhr, 8.15 Uhr) und sagt sie in einem Satz (Strategiekarte Lesen Teil 3: „Auf Schildern steht oft 17 Uhr. Das ist fünf Uhr am Nachmittag.“); ls1-i05 akzeptiert „20“ für „acht Uhr am Abend“. „halb drei“ üben LS1–LS3, die Prüfungsteile und der Check. Pünktlichkeit ist eine Szene ohne landesweite Aussage (LS3: Termin um 8.15 Uhr, „Bitte kommen Sie pünktlich.“ – Priya: „Wir sind um acht da, dann sind wir pünktlich.“, glossiert). Die Mittagspause kommt nicht vor: Sie gehört zum Arbeitsalltag in a2.1-u01 (lx.mittagspause); Pünktlichkeit als Wort und Thema lernt a1.1-u10 (lx.puenktlich, Bus und Bahn). Szene: Die Plan-Zeile „Fokus Alltag: Sprechzeiten einer Arztpraxis lesen“ ist hier keine Fokus-Karte, sondern das Anliegen von LS2–LS3 (erster Termin in der Praxis von Frau Doktor Sommer, cast.dr-sommer); die Anmeldung im Bürgerbüro bleibt in a1.2-u04 (Review a1.1-u07 r1 F01)."
     },
     "cast": [
       "cast.priya",
@@ -1895,8 +1895,8 @@
           {
             "id": "a1.1-u07-ls3-l10",
             "speaker": "cast.priya",
-            "de": "Stimmt. Aber Termine gibt es auch online. Moment … Tag: Donnerstag. Uhrzeit: Viertel nach acht. Gut, dann sind wir pünktlich!",
-            "en": "True. But you can book appointments online too. Just a moment … Day: Thursday. Time: a quarter past eight. Good – then we’ll be on time!"
+            "de": "Stimmt. Aber Termine gibt es auch online. Moment … Tag: Donnerstag. Uhrzeit: Viertel nach acht. Wir sind um acht da, dann sind wir pünktlich.",
+            "en": "True. But you can book appointments online too. Just a moment … Day: Thursday. Time: a quarter past eight. We’ll be there at eight – then we’re on time."
           }
         ],
         "text": {
@@ -3034,7 +3034,7 @@
         {
           "template": "sd1.l3",
           "de": "Lesen Teil 3: Lesen Sie zuerst die Aussage. Suchen Sie dann auf dem Schild den Tag und die Uhrzeit. Auf Schildern steht oft 17 Uhr. Das ist fünf Uhr am Nachmittag. Achtung: „zu“ ist „geschlossen“, und „offen“ ist „geöffnet“.",
-          "en": "Reading part 3: read the statement first, then look for the day and the time on the sign. Signs often use the 24-hour clock: 17 Uhr – in speech also “fünf Uhr”. Note: “zu” means “geschlossen” (closed) and “offen” means “geöffnet” (open)."
+          "en": "Reading part 3: read the statement first, then look for the day and the time on the sign. Signs often use the 24-hour clock: 17 Uhr is five o’clock in the afternoon. Note: “zu” means “geschlossen” (closed) and “offen” means “geöffnet” (open)."
         },
         {
           "template": "sd1.h3",
@@ -3072,7 +3072,7 @@
         "moves": [],
         "aiRole": {
           "name": "Nora",
-          "personaDe": "Teilnehmerin in der Prüfung; spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste. Sagt auf „Wie spät ist es?“ eine Uhrzeit. Fragt mit ihren Karten: „Wie spät ist es jetzt?“ und „Wann stehen Sie am Montag auf?“; akzeptiert jede richtige Uhrzeit.",
+          "personaDe": "Teilnehmerin in der Prüfung; spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste. Sagt auf „Wie spät ist es?“ eine Uhrzeit. Fragt mit ihren Karten: „Und jetzt? Wie spät ist es?“ und „Wann stehen Sie am Montag auf?“; akzeptiert jede richtige Uhrzeit.",
           "register": "Sie",
           "support": "slow-wordbank"
         },
@@ -3098,7 +3098,7 @@
           },
           {
             "speaker": "partner",
-            "de": "Und jetzt? Wie spät ist es jetzt?"
+            "de": "Und jetzt? Wie spät ist es?"
           },
           {
             "speaker": "learner",
