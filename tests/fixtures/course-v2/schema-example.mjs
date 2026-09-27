@@ -33,7 +33,7 @@ export function schemaExample() {
     cando: j('`registries/cando/a2.json`'),
     spinePoint: j('`registries/grammar-spine.json` (one point'),
     ga2Lane: j('`registries/lanes/ga2.json` (excerpt'),
-    ta2Teile: j('`registries/lanes/ta2.json` (excerpt)'),
+    ta2Teile: j('`registries/lanes/ta2.json` (excerpt'),
     rubrics: j('`registries/rubrics/writing/ga2-s2.json`'),
     levelProfile: j('`registries/level-profiles.json` (the A2.1 entry)'),
     casts: j('`casts/series.json` and `casts/a2.json`'),

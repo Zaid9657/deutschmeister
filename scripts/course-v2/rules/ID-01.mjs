@@ -8,7 +8,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { walkSteps, walkIds } from '../lib-validate/walk.mjs';
-import { PATTERNS, parseUnitId, LANES } from '../lib-validate/ids.mjs';
+import { PATTERNS, SCHEMA_PATTERNS, parseUnitId, LANES } from '../lib-validate/ids.mjs';
 import { arr, isObj, blocker, advisory } from '../lib-validate/helpers.mjs';
 
 export const id = 'ID-01';
@@ -85,8 +85,9 @@ function tombstonesOf(ctx, slot) {
 }
 
 const KIND_PATTERN = (kind) => ({
-  item: PATTERNS.item, block: PATTERNS.block, mo: PATTERNS.mo, rm: PATTERNS.rm, fact: PATTERNS.fact,
-  fokus: PATTERNS.fokus, step: PATTERNS.STEP, text: PATTERNS.text, asset: PATTERNS.asset,
+  item: SCHEMA_PATTERNS.item, block: SCHEMA_PATTERNS.block, mo: SCHEMA_PATTERNS.mo, rm: SCHEMA_PATTERNS.rm,
+  fact: SCHEMA_PATTERNS.fact, fokus: SCHEMA_PATTERNS.fokus, step: SCHEMA_PATTERNS.STEP, text: SCHEMA_PATTERNS.text,
+  asset: SCHEMA_PATTERNS.asset, line: SCHEMA_PATTERNS.line,
 }[kind]);
 
 export function run({ ctx, docs }) {
