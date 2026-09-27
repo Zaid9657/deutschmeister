@@ -1780,7 +1780,7 @@
       },
       "input": {
         "kind": "mixed",
-        "title": "Eine Nachricht von Herrn Richter",
+        "title": "Herr Richter ruft an",
         "textType": "tt.telefonansage",
         "lines": [
           {
@@ -3025,7 +3025,7 @@
           },
           {
             "speaker": "partner",
-            "de": "Um halb acht. Dann fahre ich zur Arbeit."
+            "de": "Um halb acht. Dann arbeite ich."
           },
           {
             "speaker": "partner",
@@ -3447,7 +3447,7 @@
     }
   ],
   "story": {
-    "beat": "Priya und Emre erzählen im Videochat vom Tag in Leipzig und in İzmir. Priya und Arjun brauchen einen Termin im Bürgerbüro, aber es ist nur am Morgen offen, und da hat Priya Kurs. Eine Nachricht von Herrn Richter hilft: Am Donnerstag fängt der Kurs erst um elf Uhr an.",
+    "beat": "Priya und Emre erzählen im Videochat vom Tag in Leipzig und in İzmir. Priya und Arjun brauchen einen Termin im Bürgerbüro, aber es ist nur am Morgen offen, und da hat Priya Kurs. Da ruft Herr Richter an: Am Donnerstag fängt der Kurs erst um elf Uhr an.",
     "cliffhanger": "Am Donnerstag um elf Uhr im Kurs: Emre ist online. Er sagt: „Priya, meine Frau Elif wohnt auch in Leipzig. Hast du am Samstag Zeit?“",
     "castIn": [
       "cast.emre",

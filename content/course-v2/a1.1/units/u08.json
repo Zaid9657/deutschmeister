@@ -481,8 +481,8 @@
           "promptDe": "Olena: „Ich kann gut schwimmen.“ Was stimmt?",
           "promptEn": "“kann gut” = is good at. What is true?",
           "options": [
-            "Olena schwimmt nicht.",
-            "Olena möchte schwimmen.",
+            "Olena schwimmt nicht gut.",
+            "Olena schwimmt gern.",
             "Olena schwimmt gut."
           ],
           "answer": "Olena schwimmt gut.",
@@ -490,8 +490,8 @@
             "Olena schwimmt gut."
           ],
           "explanation": {
-            "de": "„Ich kann gut schwimmen“ heißt: Olena schwimmt gut.",
-            "en": "“Ich kann gut schwimmen” means Olena swims well."
+            "de": "„Ich kann gut schwimmen“ heißt: Olena schwimmt gut. „gern“ sagt der Satz nicht.",
+            "en": "“Ich kann gut schwimmen” means Olena swims well; it says nothing about liking it."
           },
           "origin": "agent"
         },
@@ -1207,15 +1207,15 @@
           "options": [
             "Olena tanzt nicht gern.",
             "Olena tanzt gern.",
-            "Olena tanzt am Samstag."
+            "Olena tanzt am Samstag nicht."
           ],
           "answer": "Olena tanzt nicht gern.",
           "accepted": [
             "Olena tanzt nicht gern."
           ],
           "explanation": {
-            "de": "„nicht gern“ heißt: Das findet Olena nicht so toll.",
-            "en": "“nicht gern” means she doesn’t like it."
+            "de": "„nicht gern“ heißt: Das findet Olena nicht so toll. „am Samstag nicht“ sagt nur, wann.",
+            "en": "“nicht gern” means she doesn’t like it; “am Samstag nicht” only says when."
           },
           "origin": "agent"
         },
@@ -1250,16 +1250,16 @@
           "promptEn": "“nicht gut” – what is true?",
           "options": [
             "Olena läuft nicht gern.",
-            "Olena läuft heute nicht.",
-            "Olena läuft nicht gut."
+            "Olena läuft gut, aber nicht gern.",
+            "Olena läuft nicht so gut."
           ],
-          "answer": "Olena läuft nicht gut.",
+          "answer": "Olena läuft nicht so gut.",
           "accepted": [
-            "Olena läuft nicht gut."
+            "Olena läuft nicht so gut."
           ],
           "explanation": {
-            "de": "„nicht gut“ heißt: nicht so gut, nicht schnell. „nicht gern“ ist etwas anderes.",
-            "en": "“nicht gut” is about how well, not about liking it."
+            "de": "„nicht gut“ sagt, wie Olena läuft: nicht so gut. „nicht gern“ ist etwas anderes.",
+            "en": "“nicht gut” is about how well she runs, not about liking it."
           },
           "origin": "agent"
         },
@@ -1738,7 +1738,7 @@
     {
       "id": "a1.1-u08-ls3",
       "kind": "situation",
-      "title": "Hast du am Samstag Zeit?",
+      "title": "Kommst du mit?",
       "structure": "g.koennen",
       "modelSentence": "Am Samstag kann ich leider nicht kommen.",
       "ruleCard": "rc.koennen",
@@ -1994,16 +1994,16 @@
           "promptEn": "Which sentence means Priya is free on Saturday?",
           "options": [
             "Am Samstag kann Priya kommen.",
-            "Priya kann gut laufen.",
-            "Priya läuft gern."
+            "Am Samstag hat Priya keine Zeit.",
+            "Priya kann gut laufen."
           ],
           "answer": "Am Samstag kann Priya kommen.",
           "accepted": [
             "Am Samstag kann Priya kommen."
           ],
           "explanation": {
-            "de": "„kann kommen“ mit „am Samstag“: Das geht am Samstag.",
-            "en": "“kann kommen” with a day: it is possible then."
+            "de": "„kann kommen“ mit „am Samstag“: Am Samstag geht es. „kann gut laufen“ sagt nichts über Zeit.",
+            "en": "“kann kommen” with a day: it is possible then; “kann gut laufen” is about ability."
           },
           "origin": "agent"
         },
@@ -2016,7 +2016,7 @@
           "promptEn": "Which sentence means Olena swims well?",
           "options": [
             "Olena kann am Montag schwimmen.",
-            "Olena schwimmt am Montag.",
+            "Olena findet Schwimmen gut.",
             "Olena kann gut schwimmen."
           ],
           "answer": "Olena kann gut schwimmen.",
@@ -2024,8 +2024,8 @@
             "Olena kann gut schwimmen."
           ],
           "explanation": {
-            "de": "„kann gut schwimmen“: Olena schwimmt gut. „am Montag“ sagt nur, wann.",
-            "en": "“kann gut” is about ability; “am Montag” only says when."
+            "de": "„kann gut schwimmen“: Olena schwimmt gut. „findet Schwimmen gut“: Sie schwimmt gern.",
+            "en": "“kann gut” is about ability; “findet … gut” is about liking it."
           },
           "origin": "agent"
         }
@@ -2977,8 +2977,8 @@
       {
         "id": "a1.1-u08-ls7-l02",
         "speaker": "cast.sophie",
-        "de": "Am Freitag kann ich nicht, aber am Montag. Wir können schwimmen gehen.",
-        "en": "I can’t on Friday, but on Monday I can. We can go swimming."
+        "de": "Am Montag kann ich nicht, aber am Mittwoch. Wir können schwimmen gehen.",
+        "en": "I can’t on Monday, but on Wednesday I can. We can go swimming."
       }
     ],
     "items": [
@@ -3129,17 +3129,17 @@
         "promptDe": "Hören Sie. Wann hat Sophie Zeit?",
         "promptEn": "When is Sophie free?",
         "options": [
+          "am Montag",
           "am Freitag",
-          "am Samstag",
-          "am Montag"
+          "am Mittwoch"
         ],
-        "answer": "am Montag",
+        "answer": "am Mittwoch",
         "accepted": [
-          "am Montag"
+          "am Mittwoch"
         ],
         "explanation": {
-          "de": "Sophie sagt: „Am Freitag kann ich nicht, aber am Montag.“",
-          "en": "Sophie can’t on Friday, but she can on Monday."
+          "de": "Sophie sagt: „Am Montag kann ich nicht, aber am Mittwoch.“",
+          "en": "Sophie can’t on Monday, but she can on Wednesday."
         },
         "origin": "agent"
       }
