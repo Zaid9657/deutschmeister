@@ -281,9 +281,9 @@
           {
             "id": "a1.1-u02-ls1-l03",
             "speaker": "cast.herr-richter",
-            "de": "N – E – I – R. Ist das richtig, Frau Nair?",
-            "en": "N – E – I – R. Is that right, Ms Nair?",
-            "say": "Enn – E – I – Err. Ist das richtig, Frau Nair?"
+            "de": "N – E – I – R. Ist das so richtig, Frau Nair?",
+            "en": "N – E – I – R. Is that right like that, Ms Nair?",
+            "say": "Enn – E – I – Err. Ist das so richtig, Frau Nair?"
           },
           {
             "id": "a1.1-u02-ls1-l04",
@@ -301,15 +301,15 @@
           {
             "id": "a1.1-u02-ls1-l06",
             "speaker": "cast.priya",
-            "de": "Mit Y: P – R – I – Y – A. Nicht mit J.",
-            "en": "With a Y: P – R – I – Y – A. Not with a J.",
-            "say": "Mit Ypsilon: Pe – Err – I – Ypsilon – A. Nicht mit Jott."
+            "de": "Mit Y: P – R – I – Y – A. Nicht mit J, bitte.",
+            "en": "With a Y: P – R – I – Y – A. Not with a J, please.",
+            "say": "Mit Ypsilon: Pe – Err – I – Ypsilon – A. Nicht mit Jott, bitte."
           },
           {
             "id": "a1.1-u02-ls1-l07",
             "speaker": "cast.herr-richter",
-            "de": "Alles klar, mit Y. Und wie ist die Adresse hier in Leipzig?",
-            "en": "All right, with a Y. And what is your address here in Leipzig?"
+            "de": "Alles klar, Priya mit Y. Und wie ist die Adresse hier in Leipzig?",
+            "en": "All right, Priya with a Y. And what is your address here in Leipzig?"
           },
           {
             "id": "a1.1-u02-ls1-l08",
@@ -328,8 +328,9 @@
           {
             "id": "a1.1-u02-ls1-l10",
             "speaker": "cast.priya",
-            "de": "Nein, die Hausnummer ist nicht zwanzig. Die Zahl ist einundzwanzig: zwei, eins!",
-            "en": "No, the house number isn’t twenty. The number is twenty-one: two, one!"
+            "de": "Nein, die Hausnummer ist nicht zwanzig. Die Zahl ist einundzwanzig: zwei, eins! Also Berliner Straße 21.",
+            "en": "No, the house number isn’t twenty. The number is twenty-one: two, one! So Berliner Straße 21.",
+            "say": "Nein, die Hausnummer ist nicht zwanzig. Die Zahl ist einundzwanzig: zwei, eins! Also Berliner Straße einundzwanzig."
           }
         ],
         "glosses": [],
@@ -1016,14 +1017,14 @@
           {
             "id": "a1.1-u02-ls2-l01",
             "speaker": "cast.herr-richter",
-            "de": "Hallo? Herr Yıldız? Hier ist Richter, Sprachschule Leipzig.",
-            "en": "Hello? Mr Yıldız? This is Richter, Leipzig Language School."
+            "de": "Hallo? Hallo, Herr Yıldız? Hier ist Richter, Sprachschule Leipzig.",
+            "en": "Hello? Hello, Mr Yıldız? This is Richter, Leipzig Language School."
           },
           {
             "id": "a1.1-u02-ls2-l02",
             "speaker": "cast.emre",
-            "de": "Ja, hallo, Herr Richter! Hier ist Emre. Verstehen Sie mich nicht?",
-            "en": "Yes, hello, Mr Richter! This is Emre. Can’t you understand me?"
+            "de": "Ja, hallo, Herr Richter! Verstehen Sie mich nicht?",
+            "en": "Yes, hello, Mr Richter! Can’t you understand me?"
           },
           {
             "id": "a1.1-u02-ls2-l03",
@@ -1046,33 +1047,33 @@
           {
             "id": "a1.1-u02-ls2-l06",
             "speaker": "cast.emre",
-            "de": "Die Nummer ist 0090 532 418 30 60.",
-            "en": "The number is 0090 532 418 30 60.",
-            "say": "Die Nummer ist null null neun null, fünf drei zwei, vier eins acht, dreißig, sechzig."
+            "de": "Die Nummer ist 0090 532 418 30 60. Das ist eine Nummer in der Türkei.",
+            "en": "The number is 0090 532 418 30 60. It’s a Turkish number.",
+            "say": "Die Nummer ist null null neun null, fünf drei zwei, vier eins acht, dreißig, sechzig. Das ist eine Nummer in der Türkei."
           },
           {
             "id": "a1.1-u02-ls2-l07",
             "speaker": "cast.herr-richter",
-            "de": "Wie bitte? Ich verstehe nicht. Langsam, bitte. Noch einmal!",
-            "en": "Sorry? I don’t understand. Slowly, please. Once more!"
+            "de": "Wie bitte? Ich verstehe Sie nicht. Langsam, bitte. Noch einmal!",
+            "en": "Sorry? I can’t understand you. Slowly, please. Once more!"
           },
           {
             "id": "a1.1-u02-ls2-l08",
             "speaker": "cast.emre",
-            "de": "Null, null, neun, null – fünf, drei, zwei – vier, eins, acht – dreißig – sechzig.",
-            "en": "Zero, zero, nine, zero – five, three, two – four, one, eight – thirty – sixty."
+            "de": "Okay, langsam. Null, null, neun, null – fünf, drei, zwei – vier, eins, acht – dreißig – sechzig.",
+            "en": "OK, slowly. Zero, zero, nine, zero – five, three, two – four, one, eight – thirty – sixty."
           },
           {
             "id": "a1.1-u02-ls2-l09",
             "speaker": "cast.herr-richter",
-            "de": "Null null neun null, fünf drei zwo, vier eins acht, dreißig, sechzehn?",
-            "en": "Zero zero nine zero, five three two, four one eight, thirty, sixteen?"
+            "de": "Also: Null null neun null, fünf drei zwo, vier eins acht, dreißig, sechzehn?",
+            "en": "So: zero zero nine zero, five three two, four one eight, thirty, sixteen?"
           },
           {
             "id": "a1.1-u02-ls2-l10",
             "speaker": "cast.emre",
-            "de": "Zwo? Ah, zwei! Ja. Aber die Zahl am Ende ist falsch. Nicht sechzehn – sechzig!",
-            "en": "“Zwo”? Ah, two! Yes. But the number at the end is wrong. Not sixteen – sixty!"
+            "de": "Zwo? Ah, zwei! Ja, das ist richtig. Aber die Zahl am Ende ist falsch. Nicht sechzehn – sechzig!",
+            "en": "“Zwo”? Ah, two! Yes, that’s right. But the number at the end is wrong. Not sixteen – sixty!"
           }
         ],
         "glosses": [
@@ -1729,8 +1730,8 @@
           {
             "id": "a1.1-u02-ls3-l01",
             "speaker": "cast.priya",
-            "de": "Ich fülle das Formular aus. Herr Richter, hier steht „Beruf“. Was schreibe ich da?",
-            "en": "I’m filling in the form. Mr Richter, it says “Beruf” here. What do I write there?"
+            "de": "Ich fülle das Formular aus. Herr Richter, hier steht „Beruf“. Was schreibe ich da, bitte?",
+            "en": "I’m filling in the form. Mr Richter, it says “Beruf” here. What do I write there, please?"
           },
           {
             "id": "a1.1-u02-ls3-l02",
@@ -1741,14 +1742,14 @@
           {
             "id": "a1.1-u02-ls3-l03",
             "speaker": "cast.priya",
-            "de": "Ich bin Rezeptionistin. Ich arbeite am Empfang – wie Sie!",
-            "en": "I’m a receptionist. I work at a reception desk – like you!"
+            "de": "Ich bin Rezeptionistin. Ich arbeite am Empfang – wie Sie, Herr Richter!",
+            "en": "I’m a receptionist. I work at a reception desk – like you, Mr Richter!"
           },
           {
             "id": "a1.1-u02-ls3-l04",
             "speaker": "cast.herr-richter",
-            "de": "Ah, wie ich! Und arbeiten Sie hier in Leipzig?",
-            "en": "Ah, like me! And do you work here in Leipzig?"
+            "de": "Ah, am Empfang, wie ich! Und arbeiten Sie hier in Leipzig?",
+            "en": "Ah, at a reception desk, like me! And do you work here in Leipzig?"
           },
           {
             "id": "a1.1-u02-ls3-l05",
@@ -1777,14 +1778,14 @@
           {
             "id": "a1.1-u02-ls3-l09",
             "speaker": "cast.frau-schulz",
-            "de": "Hundert! Wir haben Schüler, Studenten, Kellner und Informatiker. Und jetzt eine Rezeptionistin!",
-            "en": "A hundred! We have school students, university students, waiters and IT specialists. And now a receptionist!"
+            "de": "Wirklich? Hundert! Wir haben Schüler, Studenten, Kellner und Informatiker. Und jetzt eine Rezeptionistin!",
+            "en": "Really? A hundred! We have school students, university students, waiters and IT specialists. And now a receptionist!"
           },
           {
             "id": "a1.1-u02-ls3-l10",
             "speaker": "cast.herr-richter",
-            "de": "Nur Herr Yıldız ist nicht fertig. Das Formular fülle ich noch aus.",
-            "en": "Only Mr Yıldız isn’t done. I’ll fill in his form myself."
+            "de": "Ja. Nur Herr Yıldız ist nicht fertig. Er ist in İzmir. Das Formular fülle ich noch aus.",
+            "en": "Yes. Only Mr Yıldız isn’t done. He is in İzmir. I’ll fill in his form myself."
           }
         ],
         "text": {

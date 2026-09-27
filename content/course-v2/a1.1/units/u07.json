@@ -2793,7 +2793,7 @@
               "role": "exam",
               "topic": "lesen",
               "textRef": "a1.1-u07-ls4-t3",
-              "promptDe": "An der Tür: „Morgen um 10 Uhr kann man dort einkaufen.“",
+              "promptDe": "An der Tür: „Morgen um 10 Uhr ist das Geschäft offen.“",
               "options": [
                 "richtig",
                 "falsch"
