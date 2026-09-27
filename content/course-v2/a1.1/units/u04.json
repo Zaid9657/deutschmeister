@@ -610,8 +610,8 @@
               "Die"
             ],
             "explanation": {
-              "de": "Im Plural ist der Artikel immer „die“.",
-              "en": "In the plural the article is always “die”."
+              "de": "„Bananen“ ist Plural. Im Plural ist der Artikel „die“: die Bananen, die Äpfel.",
+              "en": "“Bananen” is plural; plural nouns take die here: die Bananen, die Äpfel."
             },
             "origin": "agent"
           },
@@ -761,20 +761,24 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.artikel-genus-plural",
-            "promptDe": "Korrigieren Sie: „Wir brauchen eine Brot.“",
-            "promptEn": "Correct the sentence.",
+            "promptDe": "Korrigieren Sie den Artikel: „Wir brauchen eine Brot.“",
+            "promptEn": "Correct the article.",
             "answer": "Wir brauchen ein Brot.",
             "accepted": [
-              "Wir brauchen ein Brot."
+              "Wir brauchen ein Brot.",
+              "Wir brauchen Brot."
             ],
+            "acceptedWhy": {
+              "Wir brauchen Brot.": "grammatisch: Brot ohne Artikel, wie in „Wir brauchen Brot und Käse.“"
+            },
             "intentionalError": true,
             "errorTag": "gender-article",
             "errorTags": [
               "gender-article"
             ],
             "explanation": {
-              "de": "„das Brot“ → „ein Brot“. „Eine“ steht nur bei „die“ im Singular.",
-              "en": "das Brot → ein Brot; “eine” only goes with singular die-nouns."
+              "de": "„das Brot“ → „ein Brot“. „Eine“ steht nur bei „die“ im Singular. Auch richtig: „Wir brauchen Brot.“",
+              "en": "das Brot → ein Brot; “eine” only goes with singular die-nouns. “Wir brauchen Brot.” (no article) is also correct."
             },
             "origin": "agent"
           },
@@ -1161,7 +1165,7 @@
           ],
           "exact": "number",
           "explanation": {
-            "de": "Der Mann am Markt sagt: „Ein Kilo kostet 2,20 Euro.“",
+            "de": "Der Mann auf dem Markt sagt: „Ein Kilo kostet 2,20 Euro.“",
             "en": "The stallholder says a kilo costs 2.20 euros."
           },
           "origin": "agent"
@@ -1204,7 +1208,7 @@
           ],
           "exact": "number",
           "explanation": {
-            "de": "Der Mann am Markt sagt: „Das macht zusammen 9 Euro.“ „9“ und „neun“ sind richtig.",
+            "de": "Der Mann auf dem Markt sagt: „Das macht zusammen 9 Euro.“ „9“ und „neun“ sind richtig.",
             "en": "The total is 9 euros – “9” and “neun” are both correct."
           },
           "origin": "agent",
@@ -1224,7 +1228,7 @@
           "options": [
             "nur Priya",
             "Priya und Arjun",
-            "der Mann am Markt"
+            "der Mann auf dem Markt"
           ],
           "answer": "Priya und Arjun",
           "accepted": [
@@ -1245,15 +1249,15 @@
           "promptEn": "Who asks whom?",
           "options": [
             "Priya fragt Arjun.",
-            "Der Mann am Markt fragt Priya.",
-            "Priya fragt den Mann am Markt."
+            "Der Mann auf dem Markt fragt Priya.",
+            "Priya fragt den Mann auf dem Markt."
           ],
           "answer": "Priya fragt Arjun.",
           "accepted": [
             "Priya fragt Arjun."
           ],
           "explanation": {
-            "de": "„Möchtest du“: So fragen Freunde. Der Mann am Markt sagt „Sie“.",
+            "de": "„Möchtest du“: So fragen Freunde. Der Mann auf dem Markt sagt „Sie“.",
             "en": "“möchtest du” is informal – Priya asks Arjun; the stallholder uses Sie."
           },
           "origin": "agent"
@@ -1361,7 +1365,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.moechte",
-            "promptDe": "Der Mann am Markt fragt: „Was ___ Sie?“ (möcht-)",
+            "promptDe": "Der Mann auf dem Markt fragt: „Was ___ Sie?“ (möcht-)",
             "promptEn": "möchte: Sie-form.",
             "answer": "möchten",
             "accepted": [
@@ -1498,7 +1502,7 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.moechte",
-            "promptDe": "Der Mann am Markt zu Priya. Korrigieren Sie: „Was möchtest du?“",
+            "promptDe": "Der Mann auf dem Markt zu Priya. Korrigieren Sie: „Was möchtest du?“",
             "promptEn": "The stallholder to Priya – correct the register.",
             "answer": "Was möchten Sie?",
             "accepted": [
@@ -1510,7 +1514,7 @@
               "register"
             ],
             "explanation": {
-              "de": "Der Mann am Markt sagt „Sie“ zu Priya: „Was möchten Sie?“",
+              "de": "Der Mann auf dem Markt sagt „Sie“ zu Priya: „Was möchten Sie?“",
               "en": "The stallholder uses Sie with Priya: Was möchten Sie?"
             },
             "origin": "agent"
@@ -1645,7 +1649,7 @@
           "type": "multiple_choice",
           "role": "practice",
           "topic": "g.moechte",
-          "promptDe": "Der Mann am Markt: „___ Sie noch etwas?“",
+          "promptDe": "Der Mann auf dem Markt: „___ Sie noch etwas?“",
           "promptEn": "Choose the verb form.",
           "options": [
             "Möchte",
@@ -2214,8 +2218,8 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.artikel-genus-plural",
-            "promptDe": "Korrigieren Sie: „Ich möchte ein Kilo die Tomaten.“",
-            "promptEn": "Correct the sentence.",
+            "promptDe": "Korrigieren Sie den Artikel: „Ich möchte ein Kilo die Tomaten.“",
+            "promptEn": "Correct the article.",
             "answer": "Ich möchte ein Kilo Tomaten.",
             "accepted": [
               "Ich möchte ein Kilo Tomaten."
@@ -2380,8 +2384,8 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "g.artikel-genus-plural",
-          "promptDe": "Korrigieren Sie: „Wir brauchen 500 Gramm der Käse.“",
-          "promptEn": "Correct the sentence.",
+          "promptDe": "Korrigieren Sie den Artikel: „Wir brauchen 500 Gramm der Käse.“",
+          "promptEn": "Correct the article.",
           "answer": "Wir brauchen 500 Gramm Käse.",
           "accepted": [
             "Wir brauchen 500 Gramm Käse."
@@ -3106,7 +3110,7 @@
             "profile": "sd1-sp2",
             "prepMinutes": 0,
             "instructionsDe": "Zwei Themen: „Einkaufen“, dann „Im Supermarkt“. Fragen und antworten Sie mit den Karten.",
-            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin haben Wortkarten zu zwei Themen: zuerst „Einkaufen“, dann „Im Supermarkt“. Fragen Sie: Was kostet …? Wie viel …? Wo ist …? Antworten Sie auf die Fragen der Partnerin.",
+            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin Nora haben Wortkarten zu zwei Themen: zuerst „Einkaufen“, dann „Im Supermarkt“. Fragen Sie: Was kostet …? Wie viel …? Wo ist …? Antworten Sie auf die Fragen von Nora.",
             "cards": {
               "learner": [
                 "Einkaufen – Preis",
@@ -3128,8 +3132,8 @@
             "mode": "cards-request",
             "profile": "sd1-sp3",
             "prepMinutes": 0,
-            "instructionsDe": "Bitten Sie mit jeder Karte um etwas. Dann antworten Sie auf die Bitte der Partnerin.",
-            "situationDe": "Sprechen Teil 3: Sie und Ihre Partnerin haben je zwei Karten zum Thema Einkaufen. In der Prüfung sind auf den Karten Bilder.",
+            "instructionsDe": "Bitten Sie mit jeder Karte um etwas. Dann antworten Sie auf die Bitte von Nora.",
+            "situationDe": "Sprechen Teil 3: Sie und Ihre Partnerin Nora haben je zwei Karten zum Thema Einkaufen. In der Prüfung sind auf den Karten Bilder.",
             "cards": {
               "learner": [
                 "Brot",
@@ -3463,8 +3467,8 @@
         "type": "error_correction",
         "role": "check",
         "topic": "g.artikel-genus-plural",
-        "promptDe": "Korrigieren Sie: „Ich brauche eine Kilo Äpfel.“",
-        "promptEn": "Correct the sentence.",
+        "promptDe": "Korrigieren Sie den Artikel: „Ich brauche eine Kilo Äpfel.“",
+        "promptEn": "Correct the article.",
         "answer": "Ich brauche ein Kilo Äpfel.",
         "accepted": [
           "Ich brauche ein Kilo Äpfel."
@@ -3539,10 +3543,10 @@
         "type": "multiple_choice",
         "role": "proof",
         "topic": "lesen",
-        "promptDe": "Angebote: Reis 1,79 € · Zucker 0,89 € · Wurst 1,49 €. Was kostet der Zucker?",
+        "promptDe": "Angebote: Butter 1,59 € · Zucker 0,89 € · Wurst 1,49 €. Was kostet der Zucker?",
         "promptEn": "Read the offers: how much is the sugar?",
         "options": [
-          "1,79 Euro",
+          "1,59 Euro",
           "1,49 Euro",
           "0,89 Euro"
         ],
@@ -3552,8 +3556,8 @@
         ],
         "exact": "number",
         "explanation": {
-          "de": "Dort steht: „Zucker 0,89 €“. 1,79 € kostet der Reis, 1,49 € die Wurst.",
-          "en": "It says: sugar 0.89 €; 1.79 € is the rice and 1.49 € the cold cuts."
+          "de": "Dort steht: „Zucker 0,89 €“. 1,59 € kostet die Butter, 1,49 € die Wurst.",
+          "en": "It says: sugar 0.89 €; 1.59 € is the butter and 1.49 € the cold cuts."
         },
         "origin": "agent"
       },

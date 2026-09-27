@@ -281,8 +281,8 @@
       "spine": "g.artikel-genus-plural",
       "depth": 1,
       "modelSentence": "Der Apfel kostet 50 Cent. Die Äpfel kosten 2 Euro.",
-      "de": "Jedes Nomen hat ein Genus: der (maskulin), das (neutral) oder die (feminin). Lernen Sie jedes Nomen mit Artikel. Unbestimmt heißt es ein (der, das) und eine (die). Im Plural ist der Artikel immer die. Plural-Endungen: -e, -er, -n, -en, -s oder keine, oft mit Umlaut. Mengen stehen ohne Artikel: 200 Gramm Käse.",
-      "en": "Every noun has a gender: der (masculine), das (neuter) or die (feminine). Learn each noun with its article. The indefinite article is ein (der, das) and eine (die). In the plural the article is always die. Plural endings: -e, -er, -n, -en, -s or none, often with an umlaut. Quantities take no article: 200 Gramm Käse.",
+      "de": "Jedes Nomen hat ein Genus: der (maskulin), das (neutral) oder die (feminin). Lernen Sie jedes Nomen mit Artikel. Unbestimmt (Nominativ): ein (der, das), eine (die). Achtung: Ich möchte einen Apfel. (der → den, ein → einen: Einheit 6) Im Plural: die Äpfel, die Brote. Plural-Endungen: -e, -er, -n, -en, -s oder keine, oft mit Umlaut. Mengen ohne Artikel: 200 Gramm Käse.",
+      "en": "Every noun has a gender: der (masculine), das (neuter) or die (feminine). Learn each noun with its article. Indefinite (nominative): ein (der, das), eine (die). Note: Ich möchte einen Apfel. (der → den, ein → einen: unit 6) In the plural: die Äpfel, die Brote. Plural endings: -e, -er, -n, -en, -s or none, often with an umlaut. Quantities take no article: 200 Gramm Käse.",
       "table": [
         [
           "Artikel",
@@ -292,14 +292,14 @@
           "Plural"
         ],
         [
-          "bestimmt",
+          "bestimmt (Nominativ)",
           "der Apfel",
           "das Brot",
           "die Tomate",
           "die Äpfel"
         ],
         [
-          "unbestimmt",
+          "unbestimmt (Nominativ)",
           "ein Apfel",
           "ein Brot",
           "eine Tomate",
@@ -313,8 +313,8 @@
       "spine": "g.moechte",
       "depth": 1,
       "modelSentence": "Ich möchte ein Kilo Tomaten, bitte.",
-      "de": "möchte ist höflich: beim Einkaufen, im Café und am Schalter. Die Formen: ich möchte, du möchtest, er/sie möchte, wir möchten, ihr möchtet, sie/Sie möchten. Achtung: ich und er/sie haben die gleiche Form, ohne -t. Mit einem zweiten Verb steht der Infinitiv am Ende: Ich möchte bezahlen.",
-      "en": "möchte is polite: when shopping, in a café or at a counter. Forms: ich möchte, du möchtest, er/sie möchte, wir möchten, ihr möchtet, sie/Sie möchten. Note: ich and er/sie share one form, without -t. With a second verb, the infinitive goes to the end: Ich möchte bezahlen.",
+      "de": "möchte ist höflich: im Supermarkt und auf dem Markt. Die Formen: ich möchte, du möchtest, er/sie möchte, wir möchten, ihr möchtet, sie/Sie möchten. Achtung: ich und er/sie haben die gleiche Form, ohne -t. Was möchten Sie? – Ich möchte ein Kilo Äpfel, bitte.",
+      "en": "möchte is polite: in the supermarket and at the market. Forms: ich möchte, du möchtest, er/sie möchte, wir möchten, ihr möchtet, sie/Sie möchten. Note: ich and er/sie share one form, without -t. Was möchten Sie? – Ich möchte ein Kilo Äpfel, bitte.",
       "table": [
         [
           "ich",

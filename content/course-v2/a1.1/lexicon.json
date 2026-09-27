@@ -2334,6 +2334,60 @@
       "wordId": null
     },
     {
+      "id": "lx.markt",
+      "lemma": "Markt",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Märkte",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.1-u04",
+      "block": 4,
+      "list_ref": "freq:top-2000",
+      "gloss": {
+        "en": "market"
+      },
+      "example": "Heute ist Markt.",
+      "exampleEn": "Today is market day.",
+      "wordId": null
+    },
+    {
+      "id": "lx.prospekt",
+      "lemma": "Prospekt",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Prospekte",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.1-u04",
+      "block": 4,
+      "list_ref": "freq:top-10000",
+      "gloss": {
+        "en": "advertising flyer"
+      },
+      "example": "Hier ist der Prospekt.",
+      "exampleEn": "Here is the advertising flyer.",
+      "wordId": null
+    },
+    {
+      "id": "lx.durchsage",
+      "lemma": "Durchsage",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Durchsagen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.1-u04",
+      "block": 4,
+      "list_ref": "freq:top-10000",
+      "gloss": {
+        "en": "announcement"
+      },
+      "example": "Achtung, eine Durchsage!",
+      "exampleEn": "Attention, an announcement!",
+      "wordId": null
+    },
+    {
       "id": "lx.wohnung",
       "lemma": "Wohnung",
       "pos": "NOUN",
@@ -5550,24 +5604,6 @@
       },
       "example": "Der Zug hat zehn Minuten Verspätung.",
       "exampleEn": "The train is ten minutes late.",
-      "wordId": null
-    },
-    {
-      "id": "lx.durchsage",
-      "lemma": "Durchsage",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": "Durchsagen",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "a1.1-u10",
-      "block": 1,
-      "list_ref": "freq:top-10000",
-      "gloss": {
-        "en": "announcement"
-      },
-      "example": "Achtung, eine Durchsage!",
-      "exampleEn": "Attention, an announcement!",
       "wordId": null
     },
     {

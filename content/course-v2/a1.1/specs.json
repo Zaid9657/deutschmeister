@@ -504,7 +504,10 @@
             "lx.brauchen",
             "lx.billig",
             "lx.teuer",
-            "lx.supermarkt"
+            "lx.supermarkt",
+            "lx.markt",
+            "lx.prospekt",
+            "lx.durchsage"
           ]
         }
       ],
@@ -1340,7 +1343,6 @@
             "lx.abfahrt",
             "lx.ankunft",
             "lx.verspaetung",
-            "lx.durchsage",
             "lx.information",
             "lx.hauptbahnhof",
             "lx.anzeigetafel"
