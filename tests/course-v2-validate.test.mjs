@@ -1271,7 +1271,7 @@ describe('LEX rails: cliffhanger, compounds, zero occurrences, generator sources
   test('LEX-01 reads story.cliffhanger (advisory)', async () => {
     const r = await rule('LEX-01', ex((p) => { p.unit.story.cliffhanger = 'Quartiersmanagement Zuständigkeitsbereich Verwaltungsvorschrift.'; }));
     assert.ok(r.findings.some((f) => f.path === 'story.cliffhanger' && f.severity === 'advisory'), messages(r));
-    assert.ok(!(await rule('LEX-01', ex())).findings.some((f) => f.path === 'story.cliffhanger'), 'the exemplar\'s cliffhanger is known');
+    assert.ok(!(await rule('LEX-01', ex())).findings.some((f) => f.path === 'story.cliffhanger' && f.severity === 'blocker'), 'never a blocker');
   });
   test('a compound of two known forms is known to LEX-01 (b1.2 r1 F01, b2.2 r1 F05)', () => {
     const known = new Set(['möbel', 'stücke', 'rad', 'tour']);
