@@ -272,7 +272,7 @@
         "title": "Rückgabe, Umtausch und Garantie: Ihre Fragen – unsere Antworten",
         "textType": "tt.bedingungen",
         "text": {
-          "de": "Rückgabe, Umtausch und Garantie: Ihre Fragen – unsere Antworten\n\nKann ich eine Ware zurückgeben?\nJa. Sie können jede Ware 30 Tage lang ohne Grund zurückgeben. Die 30 Tage zählen ab dem Tag, an dem Sie das Paket bekommen. Melden Sie die Rückgabe bitte zuerst in Ihrem Kundenkonto an. Dort finden Sie auch ein Etikett für das Paket. Die Versandkosten für die Rücksendung zahlen wir.\n\nWann bekomme ich mein Geld zurück?\nWenn die Ware bei uns angekommen ist, erstatten wir Ihnen den Kaufpreis. Die Rückerstattung bekommen Sie spätestens nach 14 Tagen. Wir zahlen das Geld über die Zahlungsart zurück, mit der Sie bezahlt haben. Einen Umtausch gegen eine andere Ware bieten wir leider nicht an. Bestellen Sie in diesem Fall bitte einfach neu. Ihre Lieferadresse können Sie dabei im Kundenkonto ändern.\n\nWann kommt mein Paket?\nPakete stellen wir von Montag bis Samstag zu. Mit der Sendungsnummer aus Ihrer E-Mail sehen Sie, wo Ihr Paket ist.\n\nWas mache ich, wenn ein Gerät defekt ist?\nFür alle Geräte gilt die gesetzliche Gewährleistung von zwei Jahren. Wenn eine Ware fehlerhaft ist, haben Sie das Recht auf eine Reparatur oder ein neues Gerät. Das können Sie dann bei uns verlangen. Rufen Sie bitte zuerst unseren Kundendienst an: Die Telefonnummer steht auf Ihrer Rechnung. Sie brauchen dafür die Bestellnummer und die Seriennummer von Ihrem Gerät. Oft können wir Ihnen schon am Telefon weiterhelfen. Wenn nicht, schicken Sie das Gerät kostenlos zu uns ein.\n\nUnd die Garantie?\nViele Hersteller geben zusätzlich eine Garantie, zum Beispiel für drei Jahre. Diese Garantie ist ein Extra. Die Bedingungen finden Sie in der Anleitung von Ihrem Gerät. Die gesetzliche Gewährleistung beim Händler, also bei uns, haben Sie trotzdem immer.\n\nWas brauche ich für eine Reklamation?\nSie brauchen keinen Kassenbon. Die Rechnung in Ihrem Kundenkonto ist Ihr Beleg. Wenn Sie uns schreiben, nennen Sie bitte im Betreff Ihre Bestellnummer. Wenn ein Paket schon beschädigt bei Ihnen ankommt, nehmen Sie es bitte nicht an. Sagen Sie es gleich dem Zusteller.",
+          "de": "Rückgabe, Umtausch und Garantie: Ihre Fragen – unsere Antworten\n\nKann ich eine Ware zurückgeben?\nJa. Sie können jede Ware 30 Tage lang ohne Grund zurückgeben. Die 30 Tage zählen ab dem Tag, an dem Sie das Paket bekommen. Melden Sie die Rückgabe bitte zuerst in Ihrem Kundenkonto an. Dort finden Sie auch ein Etikett für das Paket. Die Versandkosten für die Rücksendung zahlen wir.\n\nWann bekomme ich mein Geld zurück?\nWenn die Ware bei uns angekommen ist, erstatten wir Ihnen den Kaufpreis. Die Rückerstattung bekommen Sie spätestens nach 14 Tagen. Wir zahlen das Geld über die Zahlungsart zurück, mit der Sie bezahlt haben. Einen Umtausch gegen eine andere Ware bieten wir leider nicht an. Bestellen Sie in diesem Fall bitte einfach neu. Ihre Lieferadresse können Sie dabei im Kundenkonto ändern.\n\nWann kommt mein Paket?\nPakete stellen wir von Montag bis Samstag zu. Mit der Sendungsnummer aus Ihrer E-Mail sehen Sie, wo Ihr Paket ist.\n\nWas mache ich, wenn ein Gerät defekt ist?\nFür alle Geräte gilt die gesetzliche Gewährleistung von zwei Jahren. Wenn eine Ware fehlerhaft ist, haben Sie das Recht auf eine Reparatur oder ein neues Gerät. Das können Sie dann bei uns verlangen. Rufen Sie bitte zuerst unseren Kundendienst an: Die Telefonnummer steht auf Ihrer Rechnung. Sie brauchen dafür die Bestellnummer und die Seriennummer auf Ihrem Gerät. Oft können wir Ihnen schon am Telefon weiterhelfen. Wenn nicht, schicken Sie das Gerät kostenlos zu uns ein.\n\nUnd die Garantie?\nViele Hersteller geben zusätzlich eine Garantie, zum Beispiel für drei Jahre. Diese Garantie ist ein Extra. Die Bedingungen finden Sie in der Anleitung zu Ihrem Gerät. Die gesetzliche Gewährleistung beim Händler, also bei uns, haben Sie trotzdem immer.\n\nWas brauche ich für eine Reklamation?\nSie brauchen keinen Kassenbon. Die Rechnung in Ihrem Kundenkonto ist Ihr Beleg. Wenn Sie uns schreiben, nennen Sie bitte im Betreff Ihre Bestellnummer. Wenn ein Paket schon beschädigt bei Ihnen ankommt, nehmen Sie es bitte nicht an. Sagen Sie es gleich dem Zusteller.",
           "en": "Returns, exchange and guarantee: your questions, our answers. You can return any item within 30 days without giving a reason; the 30 days count from the day you receive the parcel. Register the return in your customer account first; you will find a parcel label there. Returns are free. We deliver parcels Monday to Saturday; with the tracking number in your email you can see where your parcel is. Once the item has reached us, we refund the purchase price at the latest after 14 days, using the payment method you paid with. We do not offer exchanges for a different item; simply order again. The statutory warranty of two years applies to all devices: if an item is faulty, you have the right to a repair or a new device. Call our hotline first; you need the order number and the serial number. If we cannot help on the phone, send the device to us free of charge. Many manufacturers also give a guarantee, e.g. for three years; it is an extra, its terms are in the device manual, and your statutory rights stay the same. You do not need a till receipt: the invoice in your customer account is your proof. When you write to us, please give your order number in the subject line. If a parcel arrives damaged, refuse it and tell the courier straight away."
         },
         "glosses": [
@@ -395,9 +395,9 @@
           "promptDe": "Was stimmt über die Garantie?",
           "promptEn": "What is true about the guarantee?",
           "options": [
-            "Sie gilt für alle Geräte zwei Jahre.",
+            "Sie gilt beim Shop für alle Geräte zwei Jahre lang.",
             "Es gibt sie zusätzlich zu den gesetzlichen Rechten.",
-            "Sie ist wichtiger als die gesetzlichen Rechte."
+            "Sie ist wichtiger als die gesetzlichen Rechte beim Händler."
           ],
           "answer": "Es gibt sie zusätzlich zu den gesetzlichen Rechten.",
           "accepted": [
@@ -547,10 +547,12 @@
               "Trotzdem kann ich die Ware zurückgeben.",
               "Ich kann trotzdem die Ware zurückgeben.",
               "Ich kann die Ware trotzdem zurückgeben.",
-              "Die Ware kann ich trotzdem zurückgeben."
+              "Die Ware kann ich trotzdem zurückgeben.",
+              "Zurückgeben kann ich die Ware trotzdem."
             ],
             "acceptedWhy": {
-              "Die Ware kann ich trotzdem zurückgeben.": "grammatisch: das Objekt steht betont auf Position 1"
+              "Die Ware kann ich trotzdem zurückgeben.": "grammatisch: das Objekt steht betont auf Position 1",
+              "Zurückgeben kann ich die Ware trotzdem.": "grammatisch: der Infinitiv steht betont auf Position 1"
             },
             "explanation": {
               "de": "trotzdem auf Position 1, dann das Verb kann. zurückgeben steht am Ende.",
@@ -574,10 +576,12 @@
             "answer": "Wir erstatten Ihnen den Kaufpreis.",
             "accepted": [
               "Wir erstatten Ihnen den Kaufpreis.",
-              "Den Kaufpreis erstatten wir Ihnen."
+              "Den Kaufpreis erstatten wir Ihnen.",
+              "Ihnen erstatten wir den Kaufpreis."
             ],
             "acceptedWhy": {
-              "Den Kaufpreis erstatten wir Ihnen.": "grammatisch: das Objekt steht betont auf Position 1"
+              "Den Kaufpreis erstatten wir Ihnen.": "grammatisch: das Objekt steht betont auf Position 1",
+              "Ihnen erstatten wir den Kaufpreis.": "grammatisch: Ihnen steht betont auf Position 1"
             },
             "explanation": {
               "de": "Das Verb erstatten steht auf Position 2. Wem? Ihnen. Was? den Kaufpreis.",
@@ -604,8 +608,12 @@
             "answer": "Ich schicke die Jacke zurück, weil sie zu klein ist.",
             "accepted": [
               "Ich schicke die Jacke zurück, weil sie zu klein ist.",
-              "Weil sie zu klein ist, schicke ich die Jacke zurück."
+              "Weil sie zu klein ist, schicke ich die Jacke zurück.",
+              "Die Jacke schicke ich zurück, weil sie zu klein ist."
             ],
+            "acceptedWhy": {
+              "Die Jacke schicke ich zurück, weil sie zu klein ist.": "grammatisch: das Objekt steht betont auf Position 1"
+            },
             "explanation": {
               "de": "Nach weil steht das Verb am Ende: …, weil sie zu klein ist.",
               "en": "After weil the verb goes to the end."
@@ -1079,8 +1087,8 @@
           "promptDe": "Was hat Priya am Montag gemacht?",
           "promptEn": "What did Priya do on Monday?",
           "options": [
-            "Sie hat das Gerät zurückgeschickt.",
-            "Sie hat einen neuen Akku gekauft.",
+            "Sie hat das Gerät mit der Post an den Shop zurückgeschickt.",
+            "Sie hat in einem Geschäft einen neuen Akku gekauft.",
             "Sie hat sich schriftlich beim Onlineshop beschwert."
           ],
           "answer": "Sie hat sich schriftlich beim Onlineshop beschwert.",
@@ -1178,8 +1186,8 @@
             "Obwohl ich den Akku aufgeladen habe, geht das Gerät aus."
           ],
           "explanation": {
-            "de": "obwohl steht beim Gegengrund, trotzdem bei der Folge – die Bedeutung ist gleich.",
-            "en": "obwohl goes with the reason against, trotzdem with the consequence – the meaning is the same."
+            "de": "obwohl steht beim Gegengrund, trotzdem beim unerwarteten Ergebnis – die Bedeutung ist gleich.",
+            "en": "obwohl goes with the reason against, trotzdem with the unexpected result – the meaning is the same."
           },
           "origin": "agent"
         },
@@ -1294,7 +1302,7 @@
               "Hotline"
             ],
             "explanation": {
-              "de": "Die Hotline ist die Telefonnummer vom Kundenservice.",
+              "de": "Über die Hotline erreichen Sie den Kundenservice am Telefon.",
               "en": "The hotline is the customer service phone number."
             },
             "origin": "agent"
@@ -1347,8 +1355,12 @@
             "answer": "Niemand hat geantwortet, obwohl ich eine E-Mail geschrieben habe.",
             "accepted": [
               "Niemand hat geantwortet, obwohl ich eine E-Mail geschrieben habe.",
-              "Obwohl ich eine E-Mail geschrieben habe, hat niemand geantwortet."
+              "Obwohl ich eine E-Mail geschrieben habe, hat niemand geantwortet.",
+              "Geantwortet hat niemand, obwohl ich eine E-Mail geschrieben habe."
             ],
+            "acceptedWhy": {
+              "Geantwortet hat niemand, obwohl ich eine E-Mail geschrieben habe.": "grammatisch: das Partizip steht betont auf Position 1"
+            },
             "explanation": {
               "de": "Im obwohl-Satz steht habe am Ende. Danach: hat niemand geantwortet.",
               "en": "In the obwohl clause habe goes to the end; then: hat niemand geantwortet."
@@ -1371,8 +1383,12 @@
             "answer": "Trotzdem ist Priya zufrieden.",
             "accepted": [
               "Trotzdem ist Priya zufrieden.",
-              "Priya ist trotzdem zufrieden."
+              "Priya ist trotzdem zufrieden.",
+              "Zufrieden ist Priya trotzdem."
             ],
+            "acceptedWhy": {
+              "Zufrieden ist Priya trotzdem.": "grammatisch: zufrieden steht betont auf Position 1"
+            },
             "explanation": {
               "de": "trotzdem auf Position 1, dann das Verb ist.",
               "en": "trotzdem in position 1, then the verb ist."
@@ -1547,8 +1563,12 @@
           "answer": "Ich bin zufrieden, obwohl das Paket spät angekommen ist.",
           "accepted": [
             "Ich bin zufrieden, obwohl das Paket spät angekommen ist.",
-            "Obwohl das Paket spät angekommen ist, bin ich zufrieden."
+            "Obwohl das Paket spät angekommen ist, bin ich zufrieden.",
+            "Zufrieden bin ich, obwohl das Paket spät angekommen ist."
           ],
+          "acceptedWhy": {
+            "Zufrieden bin ich, obwohl das Paket spät angekommen ist.": "grammatisch: zufrieden steht betont auf Position 1"
+          },
           "explanation": {
             "de": "Im obwohl-Satz steht ist am Ende.",
             "en": "In the obwohl clause ist goes to the end."
@@ -1635,7 +1655,7 @@
             "Obwohl ich gewartet habe, hat niemand angerufen."
           ],
           "explanation": {
-            "de": "Im obwohl-Satz steht das Verb am Ende. Danach kommt sofort das Verb vom Hauptsatz.",
+            "de": "Im obwohl-Satz steht das Verb am Ende. Danach kommt sofort das Verb im Hauptsatz.",
             "en": "Verb at the end of the obwohl clause; then the main-clause verb."
           },
           "errorTags": [
@@ -1655,7 +1675,7 @@
         "bankKey": "b11-u04-mo2",
         "mode": "spoken",
         "profile": "course-micro-sp",
-        "situationDe": "Ihr neues Handy geht nach drei Tagen nicht mehr an. Sie rufen die Hotline vom Shop an und möchten einen Umtausch, eine Reparatur oder Ihr Geld zurück.",
+        "situationDe": "Ihr neues Handy geht nach drei Tagen nicht mehr an. Sie rufen beim Shop an und möchten einen Umtausch, eine Reparatur oder Ihr Geld zurück.",
         "promptDe": "Sagen Sie: Was funktioniert nicht? Was haben Sie versucht? Was verlangen Sie jetzt?",
         "promptEn": "Say what doesn't work, what you have already tried and what you now demand (exchange, repair or refund).",
         "planSeconds": 30,
@@ -1948,8 +1968,12 @@
             "answer": "Ich bin verärgert, weil niemand antwortet.",
             "accepted": [
               "Ich bin verärgert, weil niemand antwortet.",
-              "Weil niemand antwortet, bin ich verärgert."
+              "Weil niemand antwortet, bin ich verärgert.",
+              "Verärgert bin ich, weil niemand antwortet."
             ],
+            "acceptedWhy": {
+              "Verärgert bin ich, weil niemand antwortet.": "grammatisch: verärgert steht betont auf Position 1"
+            },
             "explanation": {
               "de": "weil nennt den Grund. Das Verb antwortet steht am Ende.",
               "en": "weil gives the reason; antwortet goes to the end."
@@ -2268,9 +2292,9 @@
             {
               "id": "b1.1-u04-ls4-t4-l01",
               "speaker": "cast.ensemble-b1-1",
-              "de": "Guten Tag, hier ist die Werkstatt vom Kaufhaus. Es geht um Ihre Kaffeemaschine. Sie zeigt eine Fehlermeldung, und wir haben sie geprüft: Leider ist ein Teil kaputt, und wir müssen ein neues bestellen. Eine Reparatur kostet 85 Euro. Das ist nur zehn Euro weniger als eine neue Kaffeemaschine. Bitte rufen Sie uns bis Donnerstag zurück und sagen Sie uns, was wir machen sollen. Vielen Dank.",
-              "en": "Hello, this is the department store workshop. It is about your coffee machine. It shows an error message and we have checked it: unfortunately a part is broken and we have to order a new one. A repair costs 85 euros. That is only ten euros less than a new coffee machine. Please call us back by Thursday and tell us what we should do. Thank you.",
-              "say": "Guten Tag, hier ist die Werkstatt vom Kaufhaus. Es geht um Ihre Kaffeemaschine. Sie zeigt eine Fehlermeldung, und wir haben sie geprüft: Leider ist ein Teil kaputt, und wir müssen ein neues bestellen. Eine Reparatur kostet fünfundachtzig Euro. Das ist nur zehn Euro weniger als eine neue Kaffeemaschine. Bitte rufen Sie uns bis Donnerstag zurück und sagen Sie uns, was wir machen sollen. Vielen Dank."
+              "de": "Guten Tag, hier ist die Werkstatt im Kaufhaus. Es geht um Ihre Kaffeemaschine. Sie zeigt eine Fehlermeldung, und wir haben sie geprüft: Leider ist ein Teil kaputt, und wir müssen ein neues bestellen. Eine Reparatur kostet 85 Euro. Das ist nur zehn Euro weniger als eine neue Kaffeemaschine. Bitte rufen Sie uns bis Donnerstag zurück und sagen Sie uns, was wir machen sollen. Vielen Dank.",
+              "en": "Hello, this is the workshop in the department store. It is about your coffee machine. It shows an error message and we have checked it: unfortunately a part is broken and we have to order a new one. A repair costs 85 euros. That is only ten euros less than a new coffee machine. Please call us back by Thursday and tell us what we should do. Thank you.",
+              "say": "Guten Tag, hier ist die Werkstatt im Kaufhaus. Es geht um Ihre Kaffeemaschine. Sie zeigt eine Fehlermeldung, und wir haben sie geprüft: Leider ist ein Teil kaputt, und wir müssen ein neues bestellen. Eine Reparatur kostet fünfundachtzig Euro. Das ist nur zehn Euro weniger als eine neue Kaffeemaschine. Bitte rufen Sie uns bis Donnerstag zurück und sagen Sie uns, was wir machen sollen. Vielen Dank."
             }
           ],
           "glosses": []
@@ -2559,7 +2583,7 @@
               "type": "richtig_falsch",
               "role": "exam",
               "topic": "hoeren",
-              "promptDe": "„Die Reparatur von der Kaffeemaschine ist teurer als eine neue Maschine.“",
+              "promptDe": "„Die Reparatur kostet mehr als eine neue Kaffeemaschine.“",
               "options": [
                 "richtig",
                 "falsch"
@@ -2644,7 +2668,7 @@
         "profile": "tb1-m2",
         "prepMinutes": 8,
         "instructionsDe": "Geben Sie die Meinung auf Ihrem Blatt wieder. Sagen Sie dann, was Sie selbst denken.",
-        "situationDe": "Teil 2 – Thema: Online einkaufen oder lieber im Geschäft? Sie und Ihre Partnerin haben je ein Blatt mit einer Meinung. Berichten Sie zuerst beide, was auf Ihrem Blatt steht. Diskutieren Sie dann und erzählen Sie von eigenen Erfahrungen.\nDanach: Planungsrunde und Anruf beim Kundenservice. Sie haben zusammen eine Lampe als Geschenk online bestellt, und sie ist kaputt angekommen. Planen Sie: Wer ruft an, wer macht was? Dann spielt Ihre Partnerin den Kundenservice. Rufen Sie an und sagen Sie, was nicht funktioniert und was Sie schon versucht haben. Verlangen Sie eine neue Lampe, eine Reparatur oder Ihr Geld zurück.",
+        "situationDe": "Teil 2 – Thema: Online einkaufen oder lieber im Geschäft? Sie und Ihre Partnerin haben je ein Blatt mit einer Meinung. Berichten Sie zuerst beide, was auf Ihrem Blatt steht. Diskutieren Sie dann und erzählen Sie von eigenen Erfahrungen.\nDanach: Planungsrunde und Anruf beim Kundenservice. Sie haben zusammen eine Lampe als Geschenk online bestellt, und sie ist kaputt angekommen. Sie rufen gleich beim Shop an. Planen Sie vorher zusammen: Was verlangen Sie – eine neue Lampe, eine Reparatur oder Ihr Geld zurück? Wer schreibt danach eine E-Mail an den Shop, und wer bringt das Paket zur Post? Dann rufen Sie an, und Ihre Partnerin spielt den Kundenservice. Sagen Sie, was nicht funktioniert und was Sie schon versucht haben, und verlangen Sie, was Sie zusammen geplant haben.",
         "stimulus": {
           "kind": "quotes",
           "de": "Thema: Online einkaufen oder lieber im Geschäft?\nIhr Blatt – Thomas, 34, Krankenpfleger:",
@@ -2670,7 +2694,7 @@
         },
         "aiRole": {
           "name": "Partnerin (KI)",
-          "personaDe": "Teilnehmerin in der Prüfung, Mitte vierzig. Dein Blatt – Monika, 58, Bibliothekarin: Ich kaufe lieber im Geschäft. Dort kann ich die Ware sehen und anfassen, und eine Verkäuferin berät mich. Wenn etwas kaputt ist, gehe ich einfach zurück in den Laden. Bei Onlineshops hängt man oft lange in der Warteschleife, und die vielen Pakete sind schlecht für die Umwelt. Ablauf: Zuerst gibst du Monikas Meinung mit eigenen Worten wieder. Du kaufst selbst lieber im Geschäft, widersprichst höflich mit Gründen und lässt dich nur mit guten Argumenten überzeugen. Nach der Diskussion planst du mit deinem Gegenüber den Anruf beim Shop (ihr habt zusammen eine Lampe als Geschenk online bestellt, und sie ist kaputt angekommen) und machst einen Gegenvorschlag: zuerst eine E-Mail schreiben. Wenn ihr euch geeinigt habt, sagst du kurz: „Gut, dann los!“ Danach bist du der Kundenservice vom Shop (Sie) und meldest dich so: „Kundenservice, guten Tag!“ Dein Gegenüber ruft an, auch wenn ihr in der Planung etwas anderes verteilt habt. Du fragst nach der Bestellnummer und danach, was die Person schon versucht hat, und bietest erst nach einer klaren Forderung (neue Lampe, Reparatur oder Geld zurück) eine Lösung an.",
+          "personaDe": "Teilnehmerin in der Prüfung, Mitte vierzig. Dein Blatt – Monika, 58, Bibliothekarin: Ich kaufe lieber im Geschäft. Dort kann ich die Ware sehen und anfassen, und eine Verkäuferin berät mich. Wenn etwas kaputt ist, gehe ich einfach zurück in den Laden. Bei Onlineshops hängt man oft lange in der Warteschleife, und die vielen Pakete sind schlecht für die Umwelt. Ablauf: Zuerst gibst du Monikas Meinung mit eigenen Worten wieder. Du kaufst selbst lieber im Geschäft, widersprichst höflich mit Gründen und lässt dich nur mit guten Argumenten überzeugen. Nach der Diskussion plant ihr zusammen den Anruf beim Shop: Ihr habt zusammen eine Lampe als Geschenk online bestellt, und sie ist kaputt angekommen. Dein Gegenüber ruft an, das steht schon fest. Ihr plant, was ihr verlangt, wer danach eine E-Mail an den Shop schreibt und wer das Paket zur Post bringt. Du machst einen Gegenvorschlag: lieber das Geld zurück als eine neue Lampe, denn der Geburtstag ist schon am Samstag. Wenn dein Gegenüber einen guten Grund nennt, bist du einverstanden und übernimmst eine Aufgabe. Wenn ihr euch geeinigt habt, sagst du kurz: „Gut, dann los!“ Danach spielst du eine Mitarbeiterin im Kundenservice (Sie) und meldest dich so: „Kundenservice, guten Tag!“ Du fragst nach der Bestellnummer und danach, was die Person schon versucht hat, und bietest erst nach einer klaren Forderung (neue Lampe, Reparatur oder Geld zurück) eine Lösung an.",
           "register": "Sie",
           "support": "examiner"
         },
@@ -2712,23 +2736,23 @@
           },
           {
             "speaker": "learner",
-            "de": "Jetzt zu unserem Geschenk: Die Lampe ist kaputt angekommen. Ich schlage vor, ich rufe gleich beim Shop an."
+            "de": "Jetzt zu unserem Geschenk: Die Lampe ist kaputt angekommen, und ich rufe gleich beim Shop an. Ich schlage vor, wir verlangen eine neue Lampe."
           },
           {
             "speaker": "partner",
-            "de": "Ich mache einen anderen Vorschlag: Wir schreiben zuerst eine E-Mail. Dann haben wir alles schriftlich."
+            "de": "Ich mache einen anderen Vorschlag: Wir verlangen lieber unser Geld zurück. Der Geburtstag ist schon am Samstag, und vielleicht kommt die neue Lampe zu spät."
           },
           {
             "speaker": "learner",
-            "de": "Das stimmt, aber am Telefon geht es schneller. Ich rufe an, und danach schreiben Sie die E-Mail. Wir verlangen eine neue Lampe oder unser Geld zurück."
+            "de": "Das stimmt, aber die Lampe ist wirklich schön, und so schnell finden wir keine andere. Wenn der Shop keine neue Lampe schicken kann, verlangen wir das Geld zurück. Einverstanden?"
           },
           {
             "speaker": "partner",
-            "de": "Gut, dann machen wir es so. Und wer bringt das Paket zur Post?"
+            "de": "Einverstanden. Und wer macht was? Ich schreibe danach eine E-Mail an den Shop. Dann haben wir alles schriftlich."
           },
           {
             "speaker": "learner",
-            "de": "Das mache ich morgen. Und jetzt rufe ich an."
+            "de": "Und ich bringe das Paket mit der Lampe morgen zur Post. Jetzt rufe ich an."
           },
           {
             "speaker": "partner",
@@ -2922,10 +2946,12 @@
         "accepted": [
           "Obwohl ich den Beleg habe, hilft mir der Händler nicht.",
           "Obwohl ich den Beleg habe, hilft der Händler mir nicht.",
-          "Der Händler hilft mir nicht, obwohl ich den Beleg habe."
+          "Der Händler hilft mir nicht, obwohl ich den Beleg habe.",
+          "Mir hilft der Händler nicht, obwohl ich den Beleg habe."
         ],
         "acceptedWhy": {
-          "Obwohl ich den Beleg habe, hilft der Händler mir nicht.": "grammatisch: das Pronomen mir kann auch hinter dem Subjekt stehen"
+          "Obwohl ich den Beleg habe, hilft der Händler mir nicht.": "grammatisch: das Pronomen mir kann auch hinter dem Subjekt stehen",
+          "Mir hilft der Händler nicht, obwohl ich den Beleg habe.": "grammatisch: mir steht betont auf Position 1"
         },
         "explanation": {
           "de": "Im obwohl-Satz steht habe am Ende. Danach kommt sofort das Verb hilft.",
@@ -3046,8 +3072,8 @@
         "promptEn": "Returns: 30 days. Guarantee: 3 years. Your device (2 months old) is broken. What is true?",
         "options": [
           "Die Zeit für die Rückgabe ist vorbei, aber die Garantie gilt noch.",
-          "Sie können das Gerät noch ohne Grund zurückgeben.",
-          "Sie haben keine Rechte mehr, weil die Rückgabe vorbei ist."
+          "Sie können das Gerät noch ohne Grund zurückgeben, weil es erst zwei Monate alt ist.",
+          "Sie haben keine Rechte mehr, weil die 30 Tage für die Rückgabe vorbei sind."
         ],
         "answer": "Die Zeit für die Rückgabe ist vorbei, aber die Garantie gilt noch.",
         "accepted": [
@@ -3080,12 +3106,34 @@
           "en": "„Ich mache alles richtig“ is the reason against: you would then expect the device to run. obwohl goes with the reason against, with the verb mache at the end. Weil does not fit the meaning; Trotzdem does not fit, because the verb must follow it directly."
         },
         "origin": "agent"
+      },
+      {
+        "id": "b1.1-u04-q03",
+        "type": "multiple_choice",
+        "role": "proof",
+        "topic": "redemittel",
+        "promptDe": "Welcher Anruf sagt alles: Was ist kaputt? Was haben Sie versucht? Was verlangen Sie?",
+        "promptEn": "Which call says it all: what is broken, what have you tried, what do you demand?",
+        "options": [
+          "Meine neue Kaffeemaschine macht kein heißes Wasser, obwohl ich sie schon an zwei Steckdosen ausprobiert habe. Was soll ich jetzt machen?",
+          "Die Kaffeemaschine ist neu, aber das Wasser wird nicht heiß. Eine andere Steckdose habe ich schon probiert. Deshalb verlange ich ein neues Gerät.",
+          "Ich habe vor einer Woche eine Kaffeemaschine bei Ihnen bestellt, und sie funktioniert nicht richtig. Bitte schicken Sie mir sofort eine neue."
+        ],
+        "answer": "Die Kaffeemaschine ist neu, aber das Wasser wird nicht heiß. Eine andere Steckdose habe ich schon probiert. Deshalb verlange ich ein neues Gerät.",
+        "accepted": [
+          "Die Kaffeemaschine ist neu, aber das Wasser wird nicht heiß. Eine andere Steckdose habe ich schon probiert. Deshalb verlange ich ein neues Gerät."
+        ],
+        "explanation": {
+          "de": "Nur ein Anruf nennt alles: das Problem (das Wasser wird nicht heiß), den Versuch (eine andere Steckdose) und die Forderung (ein neues Gerät). Einer fragt nur, was man machen soll. Einer sagt nicht, was Sie schon versucht haben.",
+          "en": "Only one call covers everything: the problem (the water does not heat), what was tried (another socket) and the demand (a new device). One only asks what to do; one does not say what you have already tried."
+        },
+        "origin": "agent"
       }
     ],
     "proofs": [
       {
         "canDo": "cd.b1.reklamieren",
-        "aufgabe": "sprechen"
+        "item": "b1.1-u04-q03"
       },
       {
         "canDo": "cd.b1.agb-verstehen",
@@ -3107,8 +3155,8 @@
     ],
     "portrait": {
       "factRef": "b1.1-u04-f06",
-      "de": "Porträt: die Stiftung Warentest. Welcher Staubsauger ist gut? Viele Menschen in Deutschland lesen vor einem Kauf die Tests von der Stiftung Warentest in Berlin. Die Stiftung gibt es seit 1964. Sie kauft die Produkte anonym im Geschäft, so wie alle Kundinnen und Kunden. Dann prüfen unabhängige Institute die Produkte. In ihren Heften gibt es keine Werbung: Das Geld kommt vor allem von den Menschen, die die Hefte und Tests kaufen.",
-      "en": "Portrait: Stiftung Warentest. Which vacuum cleaner is good? Many people in Germany read the Stiftung Warentest tests before buying. The foundation has existed since 1964. It buys products anonymously in shops, just like any customer; independent institutes then test them. Its magazines carry no advertising: its money comes mainly from the people who buy its magazines and tests."
+      "de": "Porträt: die Stiftung Warentest. Welcher Staubsauger ist gut? Viele Menschen in Deutschland lesen vor einem Kauf, was die Stiftung Warentest in Berlin getestet hat. Die Stiftung gibt es seit 1964. Sie kauft die Produkte anonym im Geschäft, so wie alle Kundinnen und Kunden. Dann prüfen unabhängige Institute die Produkte. In ihren Heften gibt es keine Werbung: Das Geld kommt vor allem von den Menschen, die die Hefte und Tests kaufen.",
+      "en": "Portrait: Stiftung Warentest. Which vacuum cleaner is good? Many people in Germany read what Stiftung Warentest in Berlin has tested before they buy. The foundation has existed since 1964. It buys products anonymously in shops, just like any customer; independent institutes then test them. Its magazines carry no advertising: its money comes mainly from the people who buy its magazines and tests."
     },
     "testOutThreshold": 0.8,
     "cumulativeShare": 0.35

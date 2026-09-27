@@ -12,10 +12,31 @@
 // set (zuordnen, insert, word-bank cloze: the answer is a KEY, SCHEMA §3.6) has no German answer
 // form, and its promptDe is a situation or „Lücke N" whose task is the block instruction; only the
 // language-of-prompt reasons apply to it (the fit of each key is SOL-02's, not a string rule).
+//
+// Rail extensions (rule-smith 2026-09-27; every one a class the u04 reviews found on ≥ 2 rounds or
+// levels — the German prompt, not promptEn, must decide the key):
+//   - a non-exam choice item whose key (or its digits) stands verbatim in the stem while no distractor
+//     does gives itself away (a1.1-u04 r1 F06);
+//   - a cue promptEn names — „the polite form of können", „(können)", „as a word", „starts with …" —
+//     stands in promptDe too (a1.2-u04 r1 F08, b2.2-u04 r1 F12);
+//   - a typed gap whose key is an ordinal word says „Wort" in promptDe, accepts the digit form, or
+//     carries exact: "number" (the checker then accepts „4." for „vierte") (a1.2-u04 r1 F10);
+//   - a typed gap without options whose key is a noun, an adjective, or a sentence adverb at the
+//     start of the sentence carries a German cue — a bracketed base form or choice, „= …", „→", the
+//     first letters — because another word of the same class fits the frame (b1.1-u04 r1 F05 / r2 F01,
+//     b1.2-u04 r1 F12, b2.2-u04 r1 F12, a2.1-u04 r1);
+//   - a first-letter cue with underscores shows exactly the missing letters (b2.2-u04 r1 F12);
+//   - a typed gap whose key begins with a preposition has that preposition in promptDe
+//     (a2.2-u04 r2 F04: „Emre wartet ___ Brücke" → „an der", „auf der", „vor der" all fit).
 
 import { walkItems } from '../lib-validate/walk.mjs';
 import { norm, tokens } from '../lib-validate/text.mjs';
 import { compiledItem, CHOICE_TYPES, arr, isObj, blocker, advisory } from '../lib-validate/helpers.mjs';
+import { cumulativeLexicon } from '../lib-validate/context.mjs';
+import { entryForms } from '../lib-validate/lexicon.mjs';
+import { SENTENCE_ADVERBS } from '../lib-validate/orders.mjs';
+
+const { ordinalValue } = await import('../../../src/lib/lesson/check.js');
 
 export const id = 'ITM-01';
 export const title = 'The answer follows from the German prompt (quality.js reasons + v2 task shape)';
@@ -66,13 +87,97 @@ function predicates() {
   return list;
 }
 
-export function run({ docs }) {
+const PREPOSITIONS = new Set('an am ans auf aufs aus bei beim bis durch für gegen gegenüber hinter in im ins mit nach neben ohne seit über um unter von vom vor zu zum zur zwischen trotz wegen während'.split(' '));
+/** A German cue in a prompt: a bracket, „= …", an arrow, first letters („B…", „Re___"), a word-class name. */
+const CUE_RE = /[(=→]|\p{L}(?:…|\.{3}|_{2,})|\b(?:Nomen|Verb|Adjektiv|Gegenteil|beginnt mit|Anfang)\b/u;
+const WORD_CUE_RE = /\bWort\b|\bWörter|\bausgeschrieben|\bBuchstaben/i;
+const flat = (s) => norm(s).replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
+const hasWord = (text, word) => new RegExp(`(?:^|[^\\p{L}])${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:$|[^\\p{L}])`, 'iu').test(text);
+
+/** Lower-case form → the POS its lexicon entries give it, over the cumulative lexicon of a level. */
+function posIndex(ctx, level, cache) {
+  if (cache.has(level)) return cache.get(level);
+  const m = new Map();
+  for (const e of cumulativeLexicon(ctx, level)) {
+    if (!isObj(e) || !e.pos) continue;
+    for (const f of entryForms(e).forms) {
+      if (!m.has(f)) m.set(f, new Set());
+      m.get(f).add(e.pos);
+    }
+  }
+  cache.set(level, m);
+  return m;
+}
+
+/** The rail-extension findings of one item (see the header). */
+function cueFindings(doc, item, path, where, pos) {
+  const out = [];
+  const id = item.id;
+  const de = String(item.promptDe || '');
+  const en = String(item.promptEn || '');
+  const key = String(item.answer ?? '').trim();
+  const accepted = [key, ...arr(item.accepted).map(String)];
+  const typed = item.type === 'fill_blank' && !arr(item.options).length;
+  // the key given away by the stem
+  if (where !== 'exam' && item.role !== 'exam' && arr(item.options).length >= 3 && key) {
+    const distractors = arr(item.options).map(String).filter((o) => norm(o) !== norm(key));
+    const digits = (x) => x.replace(/\D+/g, '');
+    const inStem = (x) => (digits(x).length >= 2 && digits(x) === digits(x.replace(/[^\d\s.,:]/g, '')) ? de.replace(/\D+/g, ' ').split(' ').includes(digits(x)) : norm(x).length >= 3 && hasWord(norm(de), norm(x)));
+    if (inStem(key) && !distractors.some(inStem)) out.push(blocker(doc, `${path}.promptDe`, `the key „${key}" stands in the stem and no distractor does — the item answers itself`, id));
+  }
+  // a cue only promptEn gives
+  const cueWords = [];
+  for (const m of en.matchAll(/\b(?:polite form|form|plural|past|participle|noun|verb|opposite|comparative|superlative) (?:of|from) ["„“']?(\p{L}+)/giu)) cueWords.push(m[1]);
+  for (const m of en.matchAll(/\(([\p{L}-]+)\)/gu)) cueWords.push(m[1]);
+  for (const w of cueWords) {
+    if (w.length >= 3 && !hasWord(de, w)) out.push(blocker(doc, `${path}.promptDe`, `promptEn names „${w}", promptDe does not — the German prompt must carry the cue`, id));
+  }
+  if (/\b(?:as an? (?:ordinal )?word|in words|written out|spell(?:ed)? out)\b/i.test(en) && !WORD_CUE_RE.test(de)) out.push(blocker(doc, `${path}.promptDe`, 'promptEn asks for a word, promptDe does not („in Wörtern", „als Wort")', id));
+  const starts = en.match(/\bstarts? with ["„“']?(\p{L}+)/iu);
+  if (starts && !de.toLowerCase().includes(starts[1].toLowerCase())) out.push(blocker(doc, `${path}.promptDe`, `promptEn gives the first letters „${starts[1]}", promptDe does not`, id));
+  if (!typed || !key) return out;
+  // an ordinal word as the key
+  if (key.split(/\s+/).some((w) => ordinalValue(w.replace(/[^\p{L}]/gu, '')) !== null) && !accepted.some((a) => /\d/.test(a)) && item.exact !== 'number' && !WORD_CUE_RE.test(de)) {
+    out.push(blocker(doc, `${path}.accepted`, `the key „${key}" is an ordinal word: say „Wort" in promptDe, accept the digit form, or set exact: "number" (the checker then takes „4." for „vierte")`, id));
+  }
+  // first letters with underscores: exactly the missing letters
+  for (const m of de.matchAll(/(\p{L}+)(_{2,})/gu)) {
+    const [, head, gaps] = m;
+    const target = accepted.find((a) => !/\s/.test(a.trim()) && a.toLowerCase().startsWith(head.toLowerCase()));
+    if (target && head.length + gaps.length !== target.replace(/[^\p{L}]/gu, '').length) out.push(blocker(doc, `${path}.promptDe`, `„${head}${gaps}" shows ${head.length + gaps.length} letters, the key „${target}" has ${target.replace(/[^\p{L}]/gu, '').length}`, id));
+  }
+  if (CUE_RE.test(de.replace(/_{2,}/g, (g, i) => (i > 0 && /\p{L}/u.test(de[i - 1]) ? g : ' ')))) return out;
+  const words = key.replace(/[.,!?;:„“"]/g, '').split(/\s+/).filter(Boolean);
+  // a preposition the prompt does not give
+  const gapAt = de.search(/_{2,}/);
+  if (words.length && PREPOSITIONS.has(words[0].toLowerCase()) && !hasWord(de, words[0]) && !/Präposition/i.test(de)) {
+    out.push(blocker(doc, `${path}.promptDe`, `the key „${key}" begins with the preposition „${words[0]}", which promptDe does not give — another preposition fits the frame; cue it („(${words[0]})")`, id));
+    return out;
+  }
+  if (words.length !== 1) return out;
+  // an open lexical gap: noun, adjective, or sentence adverb at the start
+  const w = words[0];
+  const before = gapAt > 0 ? de.slice(0, gapAt) : '';
+  const initial = !before.trim() || /[.!?:„“"]\s*$/.test(before.trim());
+  const cls = pos.get(w.toLowerCase()) || new Set();
+  const noun = (cls.has('NOUN') || (/^\p{Lu}/u.test(w) && !initial)) && !/^\p{Lu}/u.test(w) === false;
+  const adj = cls.has('ADJ') && !cls.has('VERB');
+  const sadv = initial && SENTENCE_ADVERBS.has(w.toLowerCase());
+  if (noun || adj || sadv) {
+    out.push(blocker(doc, `${path}.promptDe`, `open ${noun ? 'noun' : adj ? 'adjective' : 'sentence-adverb'} gap („${key}") without a German cue — another word of its class fits the frame; add a bracketed base form or choice, „= …", or the first letters`, id));
+  }
+  return out;
+}
+
+export function run({ ctx, docs }) {
   const findings = [];
   const notes = [];
   if (!Q) notes.push(`quality.js not importable (${qError}); only the v2 task-shape checks ran`);
   const preds = predicates();
+  const posCache = new Map();
   let n = 0;
   for (const doc of docs) {
+    const pos = posIndex(ctx, doc.level, posCache);
     for (const { item, path, where, block, texts } of walkItems(doc)) {
       if (!isObj(item)) continue;
       n += 1;
@@ -95,6 +200,7 @@ export function run({ docs }) {
       if (CHOICE_TYPES.has(item.type) && !arr(item.options).length && item.type !== 'zuordnen' && item.type !== 'match') {
         findings.push(blocker(doc, `${path}.options`, `${item.type} item without options`, id));
       }
+      if (!item.intentionalError || item.type !== 'error_correction') findings.push(...cueFindings(doc, item, path, where, pos));
       // quality.js
       const c = compiledItem(item);
       const keyAnswer = choiceBlock && where === 'exam';
