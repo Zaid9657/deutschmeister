@@ -10,7 +10,7 @@
   "stage": "T",
   "title": {
     "de": "Hier wohne ich",
-    "canDo": "Sie können Ihre Wohnung beschreiben, kurze Wohnungsanzeigen verstehen und sich im Haus als neue Nachbarin oder neuer Nachbar vorstellen."
+    "canDo": "Sie können Ihre Wohnung zeigen, Wohnungsanzeigen lesen und im Haus sagen: „Ich bin neu hier.“"
   },
   "spec": {
     "situation": "Priya und Arjun ziehen aus Arjuns WG in eine eigene Wohnung in Leipzig: Sie lesen Wohnungsanzeigen, zeigen Olena die neue Wohnung per Video und stellen sich im Haus bei Herrn Krause, Frau Lehmann und Frau Haddad vor.",
@@ -92,11 +92,11 @@
       "tt.internetanzeige",
       "tt.kleinanzeige",
       "tt.telefonat",
-      "tt.dialog",
       "tt.notiz",
       "tt.kurzmitteilung",
       "tt.formular",
-      "tt.stichwortblatt"
+      "tt.stichwortblatt",
+      "tt.wortkarte"
     ],
     "lanes": {
       "primary": "sd1",
@@ -134,7 +134,7 @@
       "Linie 1 A1 K3–4 (Grammatik: er/es/sie; nach memo 06)"
     ],
     "deviation": {
-      "reason": "Menschen (L14) und Netzwerk neu (K9) setzen Wohnen erst in A1.2; die Einheit bleibt mit Schritte plus Neu 1 L4 in A1.1, weil Start Deutsch 1 Lesen Teil 2 Wohnungsanzeigen nutzt (BLUEPRINT §2.8, Zeile 6). Sie steht an Position 5 statt 6 (Tausch mit „Das brauche ich“), weil die Grammatik-Spine g.pronomen-er-es-sie und g.adjektiv-praedikativ an a1.1-u05 einführt (spine.md §6); siehe docs/course-v2/curriculum/a1-1.specs-notes.md."
+      "reason": "Menschen (L14) und Netzwerk neu (K9) setzen Wohnen erst in A1.2; die Einheit bleibt mit Schritte plus Neu 1 L4 in A1.1, weil Start Deutsch 1 Lesen Teil 2 Wohnungsanzeigen nutzt (BLUEPRINT §2.8, Zeile 6). Sie steht an Position 5 statt 6 (Tausch mit „Das brauche ich“), weil die Grammatik-Spine g.pronomen-er-es-sie und g.adjektiv-praedikativ an a1.1-u05 einführt (spine.md §6); siehe docs/course-v2/curriculum/a1-1.specs-notes.md. Prüfungsteile: Der Stoffplan nennt Lesen Teil 2, Sprechen Teil 2 und Schreiben Teil 2. Die Einheit übt Schreiben Teil 1 (ein Formular für die Wohnung) statt Teil 2, weil S1 sonst nur in u01, u02 und u09 steht, S2 aber in acht Einheiten; Lesen Teil 1 und Sprechen Teil 1 kommen dazu. LS5 hängt an Teil 1 eine sd1.sp2-Runde mit zwei Themen an („Wohnung“, „Möbel“). Sie trägt cd.a1.wohnung-beschreiben (Nora fragt „Wie viele Zimmer hat Ihre Wohnung?“ und „Wo steht Ihr Schreibtisch?“, Review r1 F03) und steht als Chip, aber nicht im Prüfungsfokus, weil COV-3 höchstens vier Teile erlaubt. Die geplante E-Mail über die neue Wohnung übernimmt der Chat mit Olena in LS2 (Mikro-Ausgabe: Zimmer und Möbel). Landeskunde: WG und Name an der Tür zeigt die Einheit nur als Szene, ohne Sachaussage, und hat darum keinen Fact; das Erdgeschoss als Stockwerk null kommt mit lx.erdgeschoss in a1.2-u03 (Frau Lehmann wohnt hier nur „hier unten“). Aussprache: ö/o und ü/u wie geplant; die Hörpaare trennen den Vokal von Länge und ach-/ich-Laut (Review r1 F17)."
     },
     "cast": [
       "cast.priya",
@@ -249,7 +249,21 @@
           "en": "Priya says the flat-share is really too small for two – and it is never quiet there."
         },
         "origin": "agent"
-      }
+      },
+      "glosses": [
+        {
+          "token": "ziehen in",
+          "gloss": {
+            "en": "move into (a new home): wir ziehen in die … = we are moving to …"
+          }
+        },
+        {
+          "token": "eigene",
+          "gloss": {
+            "en": "own: eine eigene Wohnung = a flat of their own"
+          }
+        }
+      ]
     },
     "testOut": {
       "offered": true
@@ -314,8 +328,8 @@
           {
             "id": "a1.1-u05-ls1-l07",
             "speaker": "cast.arjun",
-            "de": "Stimmt. Dann die Nummer eins: zwei Zimmer, Küche, Bad und Balkon. Hier sind die Fotos.",
-            "en": "True. Then number one: two rooms, kitchen, bathroom and balcony. Here are the photos."
+            "de": "Stimmt. Dann die Nummer eins: zwei Zimmer, Küche, Bad und Balkon. Und hinten ist ein Garten für alle. Hier sind die Fotos.",
+            "en": "True. Then number one: two rooms, kitchen, bathroom and balcony. And at the back there’s a garden for everyone. Here are the photos."
           },
           {
             "id": "a1.1-u05-ls1-l08",
@@ -462,7 +476,7 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.adjektiv-praedikativ",
-          "promptDe": "Priya: „Nein, das ist zu teuer für uns.“ Möchte Priya die Nummer zwei?",
+          "promptDe": "Priya: „Das ist zu teuer für uns.“ Möchte Priya die Nummer zwei?",
           "promptEn": "“zu teuer” – does Priya want flat number two?",
           "options": [
             "Nein, sie möchte die Wohnung nicht.",
@@ -666,8 +680,8 @@
               "Einen Balkon hat die Wohnung.": "grammatisch: „einen Balkon“ betont auf Position 1"
             },
             "explanation": {
-              "de": "„hat“ steht auf Position 2. „Die Wohnung hat einen Balkon“ ist eine feste Wendung.",
-              "en": "“hat” is in position 2; “hat einen Balkon” is a fixed phrase."
+              "de": "„hat“ steht auf Position 2.",
+              "en": "“hat” is in position 2."
             },
             "origin": "agent"
           },
@@ -784,8 +798,8 @@
               "Das Sofa ist nicht gut für das Wohnzimmer."
             ],
             "explanation": {
-              "de": "„zu groß“ heißt: mehr als gut. Das Sofa ist für das Wohnzimmer nicht gut.",
-              "en": "“zu groß” = too big: the sofa is a problem for the living room."
+              "de": "„zu groß“: Das ist nicht gut. Das Sofa ist für das Wohnzimmer zu groß.",
+              "en": "“zu groß” = too big – that is a problem: the sofa is too big for the living room."
             },
             "origin": "agent"
           }
@@ -965,14 +979,14 @@
         "register": "du"
       },
       "aussprache": {
-        "focus": "ö und o: schon – schön, Tochter – Töchter",
+        "focus": "ö und o: schon – schön, Sohn – Söhne",
         "perception": {
           "generator": "perception.pairs",
           "count": 3,
           "source": [
             "schon|schön",
             "Ofen|Öfen",
-            "Tochter|Töchter",
+            "losen|lösen",
             "konnte|könnte"
           ],
           "voices": 4
@@ -981,7 +995,7 @@
           "lineDe": "Das Sofa ist schon alt, aber sehr schön."
         }
       },
-      "endLine": "Sie können jetzt Wohnungsanzeigen lesen und sagen, wie eine Wohnung ist."
+      "endLine": "Sie können jetzt Wohnungsanzeigen lesen und sagen: Die Wohnung ist groß, aber zu teuer."
     },
     {
       "id": "a1.1-u05-ls2",
@@ -1008,8 +1022,8 @@
           {
             "id": "a1.1-u05-ls2-l02",
             "speaker": "cast.priya",
-            "de": "Hallo, Olena! Ja, sie ist wirklich schön. Hier, per Video: Das ist das Wohnzimmer.",
-            "en": "Hi, Olena! Yes, it’s really lovely. Here, on video: this is the living room."
+            "de": "Hallo, Olena! Ja, sie ist wirklich schön. Hier, das ist das Wohnzimmer.",
+            "en": "Hi, Olena! Yes, it’s really lovely. Look, this is the living room."
           },
           {
             "id": "a1.1-u05-ls2-l03",
@@ -1032,8 +1046,8 @@
           {
             "id": "a1.1-u05-ls2-l06",
             "speaker": "cast.priya",
-            "de": "Er steht hier im Wohnzimmer, am Fenster. Arjun arbeitet oft hier.",
-            "en": "It’s here in the living room, by the window. Arjun often works here."
+            "de": "Er steht hier im Wohnzimmer, am Fenster. Hier arbeitet Arjun.",
+            "en": "It’s here in the living room, by the window. This is where Arjun works."
           },
           {
             "id": "a1.1-u05-ls2-l07",
@@ -1065,6 +1079,12 @@
             "token": "per Video",
             "gloss": {
               "en": "by video (call)"
+            }
+          },
+          {
+            "token": "eigene",
+            "gloss": {
+              "en": "own: eine eigene Wohnung = a flat of your own"
             }
           }
         ],
@@ -1659,7 +1679,7 @@
           "type": "multiple_choice",
           "role": "practice",
           "topic": "g.pronomen-er-es-sie",
-          "promptDe": "Die Stühle sind neu. ___ sind sehr schön. Was passt?",
+          "promptDe": "Die Stühle sind alt. ___ sind aus der WG. Was passt?",
           "promptEn": "Choose the pronoun.",
           "options": [
             "Er",
@@ -1688,9 +1708,9 @@
         "bankKey": "a11-u05-mo2",
         "mode": "written",
         "profile": "course-micro",
-        "situationDe": "Sie sind im Chat mit Olena. Olena fragt: „Und du? Wie ist dein Zimmer?“",
-        "promptDe": "Antworten Sie Olena in 1–2 Sätzen: Wie ist Ihr Zimmer? Und wie ist Ihr Bett?",
-        "promptEn": "Answer Olena in 1–2 sentences: what is your room like, and your bed?",
+        "situationDe": "Sie sind im Chat mit Olena. Olena fragt: „Und du? Wie ist deine Wohnung?“",
+        "promptDe": "Antworten Sie Olena in 1–2 Sätzen: Wie viele Zimmer hat Ihre Wohnung? Was steht im Zimmer?",
+        "promptEn": "Answer Olena in 1–2 sentences: how many rooms does your flat have, and what furniture is in the room?",
         "planSeconds": 30,
         "words": [
           3,
@@ -1701,7 +1721,7 @@
         ],
         "register": "du"
       },
-      "endLine": "Sie können jetzt Ihre Wohnung zeigen und sagen, wie die Zimmer und die Möbel sind."
+      "endLine": "Sie können jetzt Ihre Wohnung zeigen und über die Zimmer und die Möbel sprechen."
     },
     {
       "id": "a1.1-u05-ls3",
@@ -1722,8 +1742,8 @@
           {
             "id": "a1.1-u05-ls3-l01",
             "speaker": "cast.frau-lehmann",
-            "de": "Guten Tag! Ziehen Sie hier ins Haus?",
-            "en": "Hello! Are you moving into the building?"
+            "de": "Guten Tag! Wohnen Sie jetzt hier im Haus?",
+            "en": "Hello! Do you live here in the building now?"
           },
           {
             "id": "a1.1-u05-ls3-l02",
@@ -1781,8 +1801,8 @@
           }
         ],
         "text": {
-          "de": "Liebe Frau Nair, lieber Herr Nair,\nwillkommen im Haus! Ich bin Amal Haddad, Ihre Nachbarin. Ich wohne auch ganz oben. Mein Mann, meine Tochter und ich sind oft zu Hause. Brauchen Sie etwas? Dann kommen Sie gern!\nHerr Krause ist der Hausmeister. Er wohnt unten.\nViele Grüße\nAmal Haddad",
-          "en": "Dear Mrs Nair, dear Mr Nair, welcome to the building! I’m Amal Haddad, your neighbour. I live right at the top too. My husband, my daughter and I are often at home. Do you need anything? Then do come round! Mr Krause is the caretaker. He lives downstairs. Best wishes, Amal Haddad"
+          "de": "Liebe Frau Nair, lieber Herr Nair,\nwillkommen im Haus! Mein Mann, meine Tochter und ich sind oft zu Hause. Brauchen Sie etwas? Dann kommen Sie gern!\nHerr Krause ist der Hausmeister. Er wohnt unten.\nViele Grüße\nAmal Haddad",
+          "en": "Dear Mrs Nair, dear Mr Nair, welcome to the building! My husband, my daughter and I are often at home. Do you need anything? Then do come round! Mr Krause is the caretaker. He lives downstairs. Best wishes, Amal Haddad"
         },
         "glosses": [
           {
@@ -1894,8 +1914,8 @@
           "type": "multiple_choice",
           "role": "detail",
           "topic": "lesen",
-          "promptDe": "Lesen Sie die Nachricht. Wie viele Leute wohnen bei Familie Haddad?",
-          "promptEn": "Read the note: how many people live in the Haddads’ flat?",
+          "promptDe": "Lesen Sie die Nachricht. Familie Haddad: Wie viele Leute sind das?",
+          "promptEn": "Read the note: how many people are in the Haddad family?",
           "options": [
             "zwei",
             "vier",
@@ -2268,7 +2288,7 @@
             "count": 2,
             "source": [
               "a1.1-u05-ls3-l07",
-              "a1.1-u05-ls3-l08"
+              "a1.1-u05-ls3-l09"
             ]
           },
           {
@@ -2284,7 +2304,7 @@
             "source": [
               "lx.wohnung",
               "lx.kueche",
-              "lx.balkon",
+              "lx.bad",
               "lx.nachbar"
             ]
           },
@@ -2452,7 +2472,7 @@
         "bankKey": "a11-u05-mo3",
         "mode": "spoken",
         "profile": "course-micro-sp",
-        "situationDe": "Sie ziehen in ein Haus in Leipzig. An der Tür steht Frau Lehmann und fragt: „Ziehen Sie hier ins Haus? Und wie ist die Wohnung?“",
+        "situationDe": "Sie sind neu in einem Haus in Leipzig. An der Tür steht Frau Lehmann und fragt: „Wohnen Sie jetzt hier im Haus? Und wie ist die Wohnung?“",
         "promptDe": "Antworten Sie Frau Lehmann: Wer sind Sie? Wo wohnen Sie? Wie ist die Wohnung?",
         "promptEn": "Answer Mrs Lehmann: who you are, where you live in the building and what the flat is like.",
         "planSeconds": 30,
@@ -2466,15 +2486,15 @@
         "register": "Sie"
       },
       "aussprache": {
-        "focus": "ü und u: Stuhl – Stühle, Kuchen – Küche",
+        "focus": "ü und u: Stuhl – Stühle, Mutter – Mütter",
         "perception": {
           "generator": "perception.pairs",
           "count": 3,
           "source": [
-            "Kuchen|Küchen",
             "Mutter|Mütter",
             "Bruder|Brüder",
-            "fuhr|für"
+            "fuhr|für",
+            "Tour|Tür"
           ],
           "voices": 4
         },
@@ -2482,7 +2502,7 @@
           "lineDe": "Ein Stuhl ist hier, zwei Stühle sind in der Küche."
         }
       },
-      "endLine": "Sie können sich jetzt im Haus vorstellen und über das Haus und die Wohnung sprechen."
+      "endLine": "Sie können jetzt im Haus sagen: „Ich bin neu hier.“ Und Sie können über das Haus und die Wohnung sprechen."
     },
     {
       "id": "a1.1-u05-ls4",
@@ -2492,14 +2512,14 @@
           "id": "a1.1-u05-ls4-t1",
           "kind": "ad",
           "title": "Wohnungen in Leipzig",
-          "text": "a) 2 Zimmer, Küche, Bad, Balkon. Hell und ruhig. Miete: 690 Euro.\nb) 2 Zimmer, Küche, Bad, Balkon. Nicht groß, aber hell. Miete: 570 Euro.",
+          "text": "a) 2 Zimmer, Balkon, hell und ruhig. Münchner Straße 30. Miete: 690 Euro.\nb) 2 Zimmer, Balkon, nicht groß. Supermarkt neben dem Haus. Miete: 570 Euro.",
           "glosses": []
         },
         {
           "id": "a1.1-u05-ls4-t2",
           "kind": "ad",
           "title": "Drei Zimmer",
-          "text": "a) 3 Zimmer: Wohnzimmer, Schlafzimmer, Arbeitszimmer mit Schreibtisch. Küche, Bad. 790 Euro.\nb) 3 Zimmer: Wohnzimmer, Schlafzimmer, Kinderzimmer. Küche, Bad. 760 Euro.",
+          "text": "a) 3 Zimmer: Wohnzimmer, Schlafzimmer, Arbeitszimmer mit Schreibtisch. Küche, Bad. 790 Euro.\nb) 3 Zimmer: Wohnzimmer, Schlafzimmer, Kinderzimmer mit Schreibtisch und Bett. Küche, Bad. 760 Euro.",
           "glosses": [
             {
               "token": "Arbeitszimmer",
@@ -2513,28 +2533,28 @@
           "id": "a1.1-u05-ls4-t3",
           "kind": "ad",
           "title": "Möbel",
-          "text": "a) Sofa und Sessel, alt, aber sehr gut. Nur 90 Euro!\nb) Sofa, neu und sehr schön. Nur 390 Euro!",
+          "text": "a) Sofa und Sessel, alt, aber gut. Nur 90 Euro! Telefonnummer: 0341 441820\nb) Sofa, neu und sehr schön. Nur 390 Euro! Wiener Straße 5, Leipzig.",
           "glosses": []
         },
         {
           "id": "a1.1-u05-ls4-t4",
           "kind": "ad",
           "title": "Zimmer in Leipzig",
-          "text": "a) Zimmer in einer WG, Küche und Bad für alle. Miete: 350 Euro.\nb) 1 Zimmer, Küche, Bad mit Toilette. Miete: 420 Euro.",
+          "text": "a) Zimmer in einer WG, Hamburger Straße 12. Miete: 350 Euro.\nb) 1 Zimmer, Küche und Bad. Hinten ist ein Garten. Miete: 420 Euro.",
           "glosses": []
         },
         {
           "id": "a1.1-u05-ls4-t5",
           "kind": "ad",
           "title": "Wohnungen",
-          "text": "a) 2 Zimmer, Küche, Bad. Sehr hell, aber ein bisschen laut. 590 Euro.\nb) 2 Zimmer, Küche, Bad. Ein bisschen dunkel, aber ruhig. 610 Euro.",
+          "text": "a) 2 Zimmer mit Balkon. Sehr hell, aber ein bisschen laut. 590 Euro.\nb) 2 Zimmer mit Garten. Ein bisschen dunkel, aber ruhig. 610 Euro.",
           "glosses": []
         },
         {
           "id": "a1.1-u05-ls4-t6",
           "kind": "text",
           "title": "Eine Nachricht vom Hausmeister",
-          "text": "Liebe Frau Nair, lieber Herr Nair,\nwillkommen in der Kölner Straße 18! Die Haustür ist abends zu. Hinten ist ein Garten. Er ist für alle im Haus. Ihr Name ist noch nicht an der Tür. Das mache ich morgen. Brauchen Sie etwas? Ich wohne unten, gleich neben der Haustür. Meine Telefonnummer ist 0341 58 27 90.\nViele Grüße\nDieter Krause, Hausmeister",
+          "text": "Liebe Frau Nair, lieber Herr Nair,\nwillkommen in der Kölner Straße 18! Die Haustür ist abends zu. Hinten ist ein Garten. Er ist für alle im Haus. Ihr Name steht noch nicht an der Tür. Das mache ich morgen. Brauchen Sie etwas? Ich wohne unten, gleich neben der Haustür. Meine Telefonnummer ist 0341 58 27 90.\nViele Grüße\nDieter Krause, Hausmeister",
           "glosses": [
             {
               "token": "Hausmeister",
@@ -2560,7 +2580,7 @@
           "length": "full",
           "scaffolded": false,
           "modeDefault": "lern",
-          "instructionsDe": "Lesen Sie die fünf Situationen. Was passt: Anzeige a oder b?",
+          "instructionsDe": "Lesen Sie die Sätze 1–5. Was passt: Anzeige a oder b?",
           "textRefs": [
             "a1.1-u05-ls4-t1",
             "a1.1-u05-ls4-t2",
@@ -2596,7 +2616,7 @@
               "role": "exam",
               "topic": "lesen",
               "textRef": "a1.1-u05-ls4-t2",
-              "promptDe": "Sie arbeiten oft zu Hause und brauchen ein Zimmer für die Arbeit. Was passt?",
+              "promptDe": "Sie arbeiten oft zu Hause und brauchen ein Zimmer mit Schreibtisch. Was passt?",
               "options": [
                 "a",
                 "b"
@@ -2606,8 +2626,8 @@
                 "a"
               ],
               "explanation": {
-                "de": "Beide Wohnungen haben drei Zimmer. Nur a hat ein Arbeitszimmer: ein Zimmer für die Arbeit.",
-                "en": "Both have three rooms; only a has a study – a room for work."
+                "de": "Beide Wohnungen haben einen Schreibtisch. Aber nur a hat ein Arbeitszimmer: ein Zimmer für die Arbeit. b hat ein Kinderzimmer.",
+                "en": "Both flats have a desk, but only a has a study – a room for work. In b the desk is in a child’s room."
               },
               "origin": "agent"
             },
@@ -2638,7 +2658,7 @@
               "role": "exam",
               "topic": "lesen",
               "textRef": "a1.1-u05-ls4-t4",
-              "promptDe": "Sie haben wenig Geld und möchten mit anderen zusammen wohnen. Was passt?",
+              "promptDe": "Sie haben wenig Geld und wohnen gern zusammen mit Freunden. Was passt?",
               "options": [
                 "a",
                 "b"
@@ -2648,8 +2668,8 @@
                 "a"
               ],
               "explanation": {
-                "de": "a ist ein Zimmer in einer WG: Sie wohnen mit anderen zusammen. Und a kostet nur 350 Euro.",
-                "en": "a is a room in a flat-share (kitchen and bathroom shared), and it is cheaper."
+                "de": "a ist ein Zimmer in einer WG: Dort wohnen Leute zusammen. Und a kostet nur 350 Euro.",
+                "en": "a is a room in a flat-share, where people live together, and it is cheaper (350 euros)."
               },
               "origin": "agent"
             },
@@ -2716,7 +2736,7 @@
               "role": "exam",
               "topic": "lesen",
               "textRef": "a1.1-u05-ls4-t6",
-              "promptDe": "„Der Name Nair ist schon an der Tür.“",
+              "promptDe": "„Der Name Nair steht schon an der Tür.“",
               "options": [
                 "richtig",
                 "falsch"
@@ -2726,7 +2746,7 @@
                 "falsch"
               ],
               "explanation": {
-                "de": "Der Name ist noch nicht an der Tür. Herr Krause macht das morgen.",
+                "de": "Der Name steht noch nicht an der Tür. Herr Krause macht das morgen.",
                 "en": "The name is not on the door yet – Mr Krause will do it tomorrow."
               },
               "origin": "agent"
@@ -2823,7 +2843,7 @@
             "profile": "sd1-sp1",
             "prepMinutes": 0,
             "instructionsDe": "Stellen Sie sich vor. Dann buchstabieren Sie Ihre Straße und sagen Ihre Postleitzahl.",
-            "situationDe": "Sprechen Teil 1: Priya und Arjun sind bei Frau Haddad, der Nachbarin. Priya stellt sich vor. Jetzt Sie: Name, Alter, Land, Wohnort, Sprachen, Beruf, Hobby. Sagen Sie beim Wohnort auch: Sie sind neu im Haus. Wo wohnen Sie genau? Wie ist es dort? Dann bittet die Gesprächsleitung (KI): Buchstabieren Sie bitte Ihre Straße. Wie ist Ihre Postleitzahl?",
+            "situationDe": "Sprechen Teil 1: Stellen Sie sich vor wie in der Prüfung: Name, Alter, Land, Wohnort, Sprachen, Beruf. Sagen Sie beim Wohnort auch: „Ich bin neu im Haus.“ Wie ist die Wohnung? Dann sagt Nora: „Buchstabieren Sie bitte Ihre Straße.“ Und sie fragt: „Wie ist Ihre Postleitzahl?“",
             "cards": {
               "learner": [
                 "Name?",
@@ -2831,8 +2851,7 @@
                 "Land?",
                 "Wohnort?",
                 "Sprachen?",
-                "Beruf?",
-                "Hobby?"
+                "Beruf?"
               ],
               "partner": []
             },
@@ -2848,14 +2867,14 @@
             "profile": "sd1-sp2",
             "prepMinutes": 0,
             "instructionsDe": "Zwei Themen: „Wohnung“, dann „Möbel“. Fragen und antworten Sie mit den Karten.",
-            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin haben Wortkarten zu zwei Themen: zuerst „Wohnung“, dann „Möbel“. Fragen Sie mit Ihrer Karte: Wie ist …? Haben Sie …? Wo steht …? Antworten Sie auf die Frage der Partnerin: Wie ist Ihre Wohnung? Wie sind Ihre Möbel?",
+            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin Nora haben Wortkarten zu zwei Themen: zuerst „Wohnung“, dann „Möbel“. Fragen Sie mit der Karte: Wie ist …? Ist … neu? Wo steht …? Antworten Sie auf die Fragen von Nora.",
             "cards": {
               "learner": [
                 "Wohnung – Küche",
                 "Möbel – Sofa"
               ],
               "partner": [
-                "Wohnung – Balkon",
+                "Wohnung – Zimmer",
                 "Möbel – Schreibtisch"
               ]
             },
@@ -2868,18 +2887,18 @@
         ],
         "aiRole": {
           "name": "Nora",
-          "personaDe": "In Teil 1 Gesprächsleitung (KI): hört zu, bittet dann: „Buchstabieren Sie bitte Ihre Straße.“ und fragt: „Wie ist Ihre Postleitzahl?“ In Teil 2 Teilnehmerin in der Prüfung: wohnt in einer kleinen Wohnung mit Balkon; ihre Küche ist klein, aber schön; ihr Sofa ist alt; ihr Schreibtisch steht im Wohnzimmer am Fenster. Spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste.",
+          "personaDe": "In Teil 1 Gesprächsleitung (KI): hört zu, sagt dann: „Buchstabieren Sie bitte Ihre Straße.“ und fragt: „Wie ist Ihre Postleitzahl?“ In Teil 2 Teilnehmerin in der Prüfung: fragt mit ihren Karten „Wie viele Zimmer hat Ihre Wohnung?“ und „Wo steht Ihr Schreibtisch?“; ihre Wohnung ist klein und hat einen Balkon; ihre Küche ist klein, aber schön; ihr Sofa ist alt; ihr Schreibtisch steht im Wohnzimmer am Fenster. Spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste.",
           "register": "Sie",
           "support": "slow-wordbank"
         },
         "openingLine": "Guten Tag! Wir beginnen mit Teil 1. Bitte stellen Sie sich vor. Danach kommt Teil 2 mit den Karten.",
         "hintWords": [
           "Ich wohne in …",
+          "Ich bin neu im Haus.",
           "Meine Wohnung ist …",
-          "Die Wohnung hat …",
-          "Der Stadtteil ist …",
+          "Sie hat … Zimmer: …",
           "Wie ist Ihre …?",
-          "Haben Sie einen …?",
+          "Ist Ihr … neu?",
           "Er / Es / Sie ist …",
           "Er / Es / Sie steht im …"
         ],
@@ -2898,7 +2917,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Ich spreche Englisch und ein bisschen Deutsch. Ich lerne Deutsch im Kurs."
+            "de": "Ich spreche Malayalam, Englisch und ein bisschen Deutsch. Ich lerne Deutsch im Kurs."
           },
           {
             "speaker": "partner",
@@ -2926,11 +2945,11 @@
           },
           {
             "speaker": "partner",
-            "de": "Haben Sie einen Balkon?"
+            "de": "Wie viele Zimmer hat Ihre Wohnung?"
           },
           {
             "speaker": "learner",
-            "de": "Ja. Er ist klein, aber sehr schön."
+            "de": "Sie hat zwei Zimmer: ein Wohnzimmer und ein Schlafzimmer. Und sie hat eine Küche, ein Bad und einen Balkon."
           },
           {
             "speaker": "learner",
@@ -2963,7 +2982,7 @@
         "register": "formell",
         "address": "Sie",
         "title": "Ein Formular für die Wohnung",
-        "situationDe": "Arjun Nair ist 31 Jahre alt. Er ist mit Priya verheiratet. Die beiden wohnen jetzt in einer WG, Berliner Straße 21. Aber die WG ist zu klein. Arjun und Priya möchten die Wohnung in der Kölner Straße 18. Die Telefonnummer von Arjun ist 0176 52 83 91 40.",
+        "situationDe": "Arjun und Priya möchten die Wohnung in der Kölner Straße 18. Arjun ist 31 Jahre alt und mit Priya verheiratet. Die beiden wohnen noch in einer WG, Berliner Straße 21. Aber die WG ist zu klein. Die Telefonnummer von Arjun ist 0176 52 83 91 40.",
         "taskDe": "Füllen Sie das Formular für Arjun aus. Schreiben Sie fünf Angaben.",
         "leitpunkte": [],
         "form": {
@@ -2989,7 +3008,7 @@
             },
             {
               "id": "f3",
-              "labelDe": "Wie viele Leute ziehen in die Wohnung?",
+              "labelDe": "Wie viele Leute wohnen dann in der Wohnung?",
               "answer": "2",
               "accepted": [
                 "2",
@@ -3032,17 +3051,17 @@
         "checklist": [
           "Alle fünf Angaben sind ausgefüllt.",
           "Die Angaben sind von Arjun, nicht von Ihnen.",
-          "Wie viele Leute ziehen in die Wohnung? Lesen Sie genau.",
-          "Adresse jetzt: Wo wohnt Arjun heute?",
+          "Wie viele Leute wohnen dann in der Wohnung? Lesen Sie genau.",
+          "Adresse jetzt: Wo wohnt Arjun noch?",
           "Die Telefonnummer: Jede Zahl ist richtig."
         ],
-        "modelText": "Alter: 31\nFamilienstand: verheiratet\nWie viele Leute ziehen in die Wohnung? 2\nAdresse jetzt: Berliner Straße 21\nTelefonnummer: 0176 52 83 91 40"
+        "modelText": "Alter: 31\nFamilienstand: verheiratet\nWie viele Leute wohnen dann in der Wohnung? 2\nAdresse jetzt: Berliner Straße 21\nTelefonnummer: 0176 52 83 91 40"
       }
     },
     {
       "id": "a1.1-u05-ls7",
       "kind": "check",
-      "endLine": "Geschafft! Sie können jetzt Wohnungsanzeigen lesen, Ihre Wohnung beschreiben und sich im Haus vorstellen."
+      "endLine": "Sehr gut! Sie können jetzt Wohnungsanzeigen lesen, Ihre Wohnung zeigen und im Haus sagen: „Ich bin neu hier.“"
     }
   ],
   "check": {
@@ -3141,7 +3160,7 @@
         "promptEn": "What does “zu teuer” mean?",
         "options": [
           "Die Miete ist billig.",
-          "Die Miete ist okay.",
+          "Das ist nicht zu viel Geld.",
           "Das ist zu viel Geld."
         ],
         "answer": "Das ist zu viel Geld.",
@@ -3211,8 +3230,8 @@
           "im"
         ],
         "explanation": {
-          "de": "Feste Wendung: „im Wohnzimmer“. Aber: „in der Küche“.",
-          "en": "Fixed phrase: im Wohnzimmer (but: in der Küche)."
+          "de": "„im“ = „in dem“: das Wohnzimmer → im Wohnzimmer. Aber: die Küche → in der Küche.",
+          "en": "“im” = “in dem”: das Wohnzimmer → im Wohnzimmer. But: die Küche → in der Küche."
         },
         "origin": "agent"
       }
@@ -3228,20 +3247,20 @@
         "type": "multiple_choice",
         "role": "proof",
         "topic": "lesen",
-        "promptDe": "Anzeige: 3 Zimmer, Küche, 2 Balkone, Miete 750 €. Wie viele Zimmer hat die Wohnung?",
+        "promptDe": "Anzeige: Wohnzimmer, Schlafzimmer, Kinderzimmer, Küche, Bad, Balkon. Miete: 750 €. Wie viele Zimmer hat die Wohnung?",
         "promptEn": "Read the ad: how many rooms does the flat have?",
         "options": [
-          "zwei",
           "drei",
-          "fünf"
+          "fünf",
+          "sechs"
         ],
         "answer": "drei",
         "accepted": [
           "drei"
         ],
         "explanation": {
-          "de": "In der Anzeige steht: „3 Zimmer“. Die „2“ sind Balkone.",
-          "en": "The ad says 3 rooms; the 2 are balconies."
+          "de": "Küche, Bad und Balkon sind keine Zimmer. Wohnzimmer, Schlafzimmer, Kinderzimmer: Das sind 3 Zimmer.",
+          "en": "In a German flat ad, kitchen, bathroom and balcony are not counted as rooms: living room, bedroom and child’s room make 3 rooms."
         },
         "origin": "agent"
       },
@@ -3250,21 +3269,21 @@
         "type": "multiple_choice",
         "role": "proof",
         "topic": "lesen",
-        "promptDe": "Sie möchten eine Wohnung mit Garten. Sie haben 700 Euro für die Miete. Was passt?",
-        "promptEn": "You want a flat with a garden and have 700 euros for rent. Which ad fits?",
+        "promptDe": "Sie haben 700 Euro für die Miete. Wichtig für Sie: Die Wohnung ist nicht laut. Was passt?",
+        "promptEn": "You have 700 euros for rent, and the flat must not be noisy. Which ad fits?",
         "options": [
-          "2 Zimmer, Balkon, 590 Euro",
-          "2 Zimmer, Garten, 640 Euro",
-          "2 Zimmer, Garten, 1.350 Euro"
+          "Sehr hell, aber laut. 590 Euro",
+          "Hell und ruhig. 640 Euro",
+          "Ruhig, mit Garten. 790 Euro"
         ],
-        "answer": "2 Zimmer, Garten, 640 Euro",
+        "answer": "Hell und ruhig. 640 Euro",
         "accepted": [
-          "2 Zimmer, Garten, 640 Euro"
+          "Hell und ruhig. 640 Euro"
         ],
         "exact": "number",
         "explanation": {
-          "de": "Nur zwei Wohnungen haben einen Garten. 1.350 Euro sind zu teuer. 640 Euro passt.",
-          "en": "Two flats have a garden; 1,350 euros is too much, 640 fits."
+          "de": "„nicht laut“ = ruhig. a ist laut. c ist ruhig, aber 790 Euro: zu teuer. b passt.",
+          "en": "“nicht laut” means quiet. a is noisy; c is quiet but 790 euros is too much. b fits."
         },
         "origin": "agent"
       }
@@ -3327,21 +3346,21 @@
       "id": "a1.1-u05-rm05",
       "de": "Im Wohnzimmer steht ein Sofa.",
       "en": "There’s a sofa in the living room.",
-      "function": "sagen, wo etwas steht (feste Wendung: im Wohnzimmer)",
+      "function": "über Möbel im Zimmer sprechen",
       "forTemplate": "sd1.sp2"
     },
     {
       "id": "a1.1-u05-rm06",
       "de": "Guten Tag! Ich bin neu hier. Ich wohne jetzt ganz oben.",
       "en": "Hello! I’m new here. I live right at the top now.",
-      "function": "sich als neue Nachbarin oder neuer Nachbar vorstellen",
+      "function": "im Haus sagen: Ich bin neu hier.",
       "forTemplate": "sd1.sp1"
     },
     {
       "id": "a1.1-u05-rm07",
       "de": "Ich wohne in Leipzig, in der Kölner Straße.",
       "en": "I live in Leipzig, on Kölner Straße.",
-      "function": "sagen, wo man wohnt",
+      "function": "den Wohnort nennen",
       "forTemplate": "sd1.sp1"
     },
     {
@@ -3355,7 +3374,6 @@
     "beat": "Priya und Arjun ziehen aus Arjuns WG in eine eigene Wohnung: Kölner Straße 18, zwei Zimmer, Küche, Bad und Balkon. Priya zeigt Olena die Wohnung per Video. Im Haus lernen die beiden Frau Lehmann, Herrn Krause und Frau Haddad kennen.",
     "cliffhanger": "Am Abend sitzt Priya am Schreibtisch und ruft: „Arjun! Morgen ist Kurs, und mein Heft ist nicht hier. Wo ist es?“",
     "castIn": [
-      "cast.olena",
       "cast.frau-lehmann",
       "cast.herr-krause",
       "cast.amal"
