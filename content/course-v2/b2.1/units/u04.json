@@ -1011,7 +1011,7 @@
           {
             "id": "b2.1-u04-ls2-l10",
             "speaker": "cast.ensemble-b2-2",
-            "de": "Das tut mir leid, erklären Sie mir bitte möglichst genau, was passiert ist.",
+            "de": "Das tut mir leid. Bitte erklären Sie mir möglichst genau, was passiert ist.",
             "en": "I'm sorry. Please explain to me as exactly as possible what has happened."
           },
           {
@@ -1432,7 +1432,7 @@
             "count": 2,
             "source": [
               "b2.1-u04-ls2-l07",
-              "b2.1-u04-ls2-l10"
+              "b2.1-u04-ls2-l18"
             ]
           },
           {

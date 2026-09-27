@@ -203,6 +203,9 @@ function runToken(det, sentence) {
   return hits;
 }
 
+/** Leading quotation marks, brackets and blanks before a quoted sentence („Wer …, soll …“). */
+const LEADING_QUOTES_RE = /^[\s„“”"»«‚‘’'(]+/u;
+
 function runPattern(det, sentence) {
   const spec = det.spec || {};
   if (!spec.regex) return [];
@@ -210,12 +213,29 @@ function runPattern(det, sentence) {
   if (spec.notQuestion && isQuestion(sentence)) return [];
   const re = new RegExp(spec.regex, spec.flags || 'gu');
   const flagsG = re.flags.includes('g') ? re : new RegExp(re.source, `${re.flags}g`);
+  // a ^-anchored detector reads the sentence behind its opening quote (review b1.1-u04 r1 F08:
+  // „„Wer ein kaputtes Gerät hat, soll …“" never reached det.relativsatz-wer)
+  const offset = spec.regex.startsWith('^') ? (sentence.match(LEADING_QUOTES_RE) || [''])[0].length : 0;
+  const body = sentence.slice(offset);
+  const skipWords = new Set(arr(spec.skipWords).map(lc));
+  const notFollowedBy = new Set(arr(spec.notFollowedBy).map(lc));
+  const notPrecededBy = new Set(arr(spec.notPrecededBy).map(lc));
+  const toks = notFollowedBy.size || notPrecededBy.size ? tokens(sentence) : [];
   const hits = [];
-  for (const m of sentence.matchAll(flagsG)) {
+  for (const m of body.matchAll(flagsG)) {
     const g = spec.group || 0;
     const text = m[g] ?? m[0];
-    const index = m.index + (g ? m[0].indexOf(text) : 0);
+    const index = offset + m.index + (g ? m[0].indexOf(text) : 0);
     if (spec.skip && new RegExp(spec.skip, 'iu').test(text)) continue;
+    if (spec.skipAlso && new RegExp(spec.skipAlso, 'iu').test(text)) continue;
+    if (skipWords.has(lc(text))) continue;
+    if (toks.length) {
+      const end = offset + m.index + m[0].length;
+      const next = toks.find((t) => t.index >= end);
+      const prev = [...toks].reverse().find((t) => t.index + t.text.length <= index);
+      if (next && notFollowedBy.has(next.lower)) continue;
+      if (prev && notPrecededBy.has(prev.lower)) continue;
+    }
     if (spec.requireVerbFinal) {
       const clause = clauseAt(sentence, index);
       if (!endsVerbFinal(sentence.slice(index, clause.start + clause.text.length))) continue;
