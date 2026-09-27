@@ -16,7 +16,12 @@
 //         gern/lieber/liebst, hoch/höher/höchst, nah/näher/nächst), -el/-er stems (dunkle, teure).
 // Number words (cardinals 0–999 999 in their spelled forms, ordinals with every ending, -ens adverbs)
 // and the closed core list of `core-lexicon.mjs` are known from A1.1 on.
+// Proper names (SCHEMA §4.9, `registries/names.json`) are known from their `level` on, each with its
+// genitive -s and adjectival -er form (Leipzigs, Leipziger, Cospudener); an adjective inside a
+// multi-word name also takes its endings (die Sächsische Schweiz → in der Sächsischen Schweiz).
 
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { tokens, FUNCTION_WORDS } from './text.mjs';
 import { LEVELS, positionOf, parseUnitId, unitPosition } from './ids.mjs';
 import { CORE_FIXED, CORE_ENTRIES, NUMBER_WORDS } from './core-lexicon.mjs';
@@ -231,9 +236,48 @@ function allocatedAt(ctx) {
 }
 
 /**
+ * The surface forms of one proper name ({ form }): every token of the name, its genitive -s and its
+ * adjectival -er form (Leipzig → Leipzigs, Leipziger; Cospuden → Cospudener). In a multi-word name a
+ * token ending in -e is an adjective and takes its endings (Sächsische → Sächsischen). Irregular
+ * derivations (München → Münchner) are names of their own. Returns [{ base, forms }] per token.
+ */
+export function nameForms(name) {
+  const toks = readTokens(name?.form).map((t) => t.lower);
+  return toks.map((base) => {
+    const forms = new Set([base, `${base}s`, `${base}er`]);
+    if (toks.length > 1 && /[^aeiouäöü]e$/.test(base)) for (const e of ['n', 'r', 's', 'm']) forms.add(`${base}${e}`);
+    return { base, forms: [...forms] };
+  });
+}
+
+const namesCache = new WeakMap();
+/**
+ * The proper-name registry (SCHEMA §4.9): `ctx.registries.names` when a loader supplies it (an array
+ * or the file's object), else `registries/names.json` under the content root. [] when there is none.
+ */
+export function namesOf(ctx) {
+  if (!ctx || typeof ctx !== 'object') return [];
+  if (namesCache.has(ctx)) return namesCache.get(ctx);
+  let data = ctx.registries?.names ?? null;
+  if (data === null && ctx.root) {
+    const file = join(ctx.root, 'registries', 'names.json');
+    try {
+      data = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : null;
+    } catch {
+      data = null; // a broken file is the checker's finding (SCH-01), not a crash here
+    }
+  }
+  const list = arr(Array.isArray(data) ? data : data?.names).filter((n) => n && typeof n.form === 'string' && LEVELS.includes(n.level));
+  namesCache.set(ctx, list);
+  return list;
+}
+
+/**
  * The known-token set at a course position: function words, particles, number words; the core list
  * (except a lemma some lexicon allocates to a LATER unit — the lexicon outranks the core); lexicon
- * entries of every earlier level and of this level's units ≤ nr, every inflected form; cast names.
+ * entries of every earlier level and of this level's units ≤ nr, every inflected form; cast names;
+ * the proper names of registries/names.json whose level is ≤ this level (again except a token some
+ * lexicon allocates to a later unit: „Schweiz" is taught at a1.1-u12, the name list cannot bring it forward).
  */
 export function knownForms(ctx, level, nr) {
   const { always, lemmas } = coreForms();
@@ -255,6 +299,15 @@ export function knownForms(ctx, level, nr) {
   }
   for (const [, { member }] of ctx.registries.casts?.members || []) {
     for (const t of readTokens(`${member?.name || ''} ${member?.from || ''}`)) known.add(t.lower);
+  }
+  const rank = LEVELS.indexOf(level);
+  for (const name of namesOf(ctx)) {
+    if (LEVELS.indexOf(name.level) > rank) continue;
+    for (const { base, forms } of nameForms(name)) {
+      const at = alloc.get(base);
+      if (at !== undefined && here !== null && at > here) continue;
+      for (const f of forms) known.add(f);
+    }
   }
   return known;
 }

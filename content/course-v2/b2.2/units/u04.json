@@ -2421,9 +2421,9 @@
             {
               "id": "b2.2-u04-ls4-t1-l02",
               "speaker": "x.frau-jessen",
-              "de": "Die Reparatur kostet 380 Euro, der Kostenvoranschlag gilt bis zum Ende des Monats. Sollte die Rechnung am Ende davon abweichen, sage ich Ihnen vorher Bescheid. Sofern Sie zustimmen, holen wir die Kommode am Montag bei Ihnen ab. Die Rechnung begleichen Sie bitte erst nach der Reparatur. Rufen Sie mich bitte kurz zurück. Danke!",
-              "en": "The repair costs 380 euros; the estimate is valid until the end of the month. Should the invoice end up differing from it, I’ll let you know beforehand. If you agree, we’ll collect the chest from you on Monday. Please settle the invoice only after the repair. Please give me a quick call back. Thanks!",
-              "say": "Die Reparatur kostet dreihundertachtzig Euro, der Kostenvoranschlag gilt bis zum Ende des Monats. Sollte die Rechnung am Ende davon abweichen, sage ich Ihnen vorher Bescheid. Sofern Sie zustimmen, holen wir die Kommode am Montag bei Ihnen ab. Die Rechnung begleichen Sie bitte erst nach der Reparatur. Rufen Sie mich bitte kurz zurück. Danke!"
+              "de": "Die Reparatur kostet 380 Euro, der Kostenvoranschlag gilt bis zum Ende des Monats. Sollte der Preis davon abweichen, sage ich Ihnen vorher Bescheid. Sofern Sie zustimmen, holen wir die Kommode am Montag bei Ihnen ab. Die Rechnung begleichen Sie bitte erst nach der Reparatur. Rufen Sie mich bitte kurz zurück. Danke!",
+              "en": "The repair costs 380 euros; the estimate is valid until the end of the month. Should the price differ from it, I’ll let you know beforehand. If you agree, we’ll collect the chest from you on Monday. Please settle the invoice only after the repair. Please give me a quick call back. Thanks!",
+              "say": "Die Reparatur kostet dreihundertachtzig Euro, der Kostenvoranschlag gilt bis zum Ende des Monats. Sollte der Preis davon abweichen, sage ich Ihnen vorher Bescheid. Sofern Sie zustimmen, holen wir die Kommode am Montag bei Ihnen ab. Die Rechnung begleichen Sie bitte erst nach der Reparatur. Rufen Sie mich bitte kurz zurück. Danke!"
             }
           ],
           "glosses": [
@@ -2502,8 +2502,8 @@
             {
               "id": "b2.2-u04-ls4-t4-l02",
               "speaker": "x.herr-matthiesen",
-              "de": "Diesen Schaden muss nicht die Genossenschaft bezahlen, sondern der Verursacher, also das Umzugsunternehmen. Bitte schicken Sie mir bis Freitag den Namen der Firma und Ihre Auftragsnummer. Alles Weitere klären wir dann direkt mit der Firma. Einen schönen Tag noch!",
-              "en": "It is not the cooperative that has to pay for this damage but whoever caused it, that is, the removal firm. Please send me the name of the firm and your order number by Friday. We’ll then sort out everything else directly with the firm. Have a nice day!"
+              "de": "Diesen Schaden muss nicht die Genossenschaft bezahlen, sondern der Verursacher, also das Umzugsunternehmen. Bitte schicken Sie mir bis Freitag den Namen der Firma und Ihre Auftragsnummer. Alles Weitere klären wir dann direkt mit der Firma. Sollte sie sich weigern, melde ich mich wieder bei Ihnen. Einen schönen Tag noch!",
+              "en": "It is not the cooperative that has to pay for this damage but whoever caused it, that is, the removal firm. Please send me the name of the firm and your order number by Friday. We’ll then sort out everything else directly with the firm. Should it refuse, I’ll get back to you. Have a nice day!"
             }
           ],
           "glosses": []
@@ -2534,7 +2534,7 @@
           "id": "b2.2-u04-ls4-t6",
           "kind": "text",
           "title": "E-Mail von Priya an Amal",
-          "text": "Liebe Amal,\nwir wohnen jetzt endlich in der Wohnung von der Genossenschaft! Leider war der Umzug ein kleines Drama. Die Möbelpacker sind einen Tag zu spät gekommen, ⟦01⟧ ihr Wagen eine Panne hatte. Arjun musste deshalb noch einen Tag Urlaub nehmen, ⟦02⟧ er eigentlich keinen mehr hatte. Am Freitag haben wir dann die Kommode ausgepackt, ⟦03⟧ wir in Leipzig auf dem Flohmarkt gekauft haben. Sie hat jetzt eine große Delle, und auch der Spiegel aus dem Flur ist ⟦04⟧ worden. Die Möbelpacker haben einfach fahrlässig gearbeitet.\nIch habe mich sofort ⟦05⟧ den Kundenservice gewandt. Die Beraterin war eine freundliche Verhandlungspartnerin, aber sie hat zuerst nur 200 Euro angeboten, ⟦06⟧ wir auf alle anderen Forderungen verzichten. Die 10 % für die Verspätung findet sie unverhältnismäßig, und sie weigert sich, sie zu zahlen. Ich habe ihr gesagt, dass das viel zu wenig ist, denn allein der Spiegel hat 120 Euro gekostet.\nMorgen kommt eine Handwerkerin, um die Kommode ⟦07⟧. Mit ihrem Kostenvoranschlag ist meine Verhandlungsposition gut. Sobald ich ihn habe, mache ich der Firma schriftlich ein Gegenangebot, fordere Schadensersatz und setze ⟦08⟧ eine Frist bis zum 20. November. ⟦09⟧ sie bis zu diesem Tag nicht zahlen, wende ich mich an eine Schlichtungsstelle. Arjun meint, ich soll nicht um jeden Euro feilschen. Aber ich finde: Der Verursacher eines Schadens muss auch für ihn aufkommen. Ich hoffe, ⟦10⟧ die Firma noch ein Zugeständnis macht und wir uns bald einigen.\nWie geht es dir in Leipzig? Kommst du uns im Dezember besuchen? Dein Zimmer ist schon fertig, nur der Spiegel fehlt noch.\nLiebe Grüße\nPriya",
+          "text": "Liebe Amal,\nwir wohnen jetzt endlich in unserer Genossenschaftswohnung! Leider war der Umzug ein kleines Drama. Die Möbelpacker sind einen Tag zu spät gekommen, ⟦01⟧ ihr Wagen eine Panne hatte. Arjun musste deshalb noch einen Tag Urlaub nehmen, ⟦02⟧ er eigentlich keinen mehr hatte. Am Freitag haben wir dann die Kommode ausgepackt, ⟦03⟧ wir in Leipzig auf dem Flohmarkt gekauft haben. Sie hat jetzt eine große Delle, und auch der Spiegel aus dem Flur ist ⟦04⟧ worden. Die Möbelpacker haben einfach fahrlässig gearbeitet.\nIch habe mich sofort ⟦05⟧ den Kundenservice gewandt. Die Beraterin war eine freundliche Verhandlungspartnerin, aber sie hat zuerst nur 200 Euro angeboten, ⟦06⟧ wir auf alle anderen Forderungen verzichten. Ich habe ihr gesagt, dass das viel zu wenig ist, denn allein der Spiegel hat 120 Euro gekostet. Die 10 % für die Verspätung findet sie unverhältnismäßig: Statt Geld will sie uns nur einen Gutschein geben.\nMorgen kommt eine Handwerkerin, um die Kommode ⟦07⟧. Mit ihrem Kostenvoranschlag ist meine Verhandlungsposition gut. Sobald ich ihn habe, mache ich der Firma schriftlich ein Gegenangebot, fordere Schadensersatz und setze ⟦08⟧ eine Frist bis zum 20. November. ⟦09⟧ sie bis zu diesem Tag nicht zahlen, wende ich mich an eine Schlichtungsstelle. Arjun meint, ich soll nicht um jeden Euro feilschen. Aber ich finde: Der Verursacher eines Schadens muss auch für ihn aufkommen. Ich hoffe, ⟦10⟧ die Firma noch ein Zugeständnis macht und wir uns bald einigen.\nWie geht es dir in Leipzig? Kommst du uns im Dezember besuchen? Dein Zimmer ist schon fertig, nur der Spiegel fehlt noch.\nLiebe Grüße\nPriya",
           "glosses": []
         }
       ],
@@ -2941,7 +2941,7 @@
           "de": "Für die KI-Gesprächspartnerin. Alle Zahlen und beide Wünsche stehen auch in der Situation der Lernenden; es gibt keine versteckte Grenze.",
           "items": [
             "Die Firma bietet zuerst 450 Euro für alles an, wenn die Kundin auf die 10 % für die Verspätung verzichtet (so steht es auch in der Situation).",
-            "Wunsch der Firma: Die Kommode repariert ihre Partnerwerkstatt, die sie am Mittwoch abholen kann.",
+            "Wunsch der Firma: Ihre Partnerwerkstatt repariert die Kommode; sie kann sie am Mittwoch abholen.",
             "Wunsch der Firma: Für die Verspätung gibt sie lieber einen Gutschein als Geld.",
             "Die Firma zahlt spätestens 14 Tage nach der schriftlichen Einigung (AGB § 5).",
             "Die Kundenberaterin hat Verhandlungsspielraum und sagt das offen: Bei guten Argumenten gibt sie nach und schlägt selbst Kompromisse vor."
@@ -2980,7 +2980,7 @@
         "modelTurns": [
           {
             "speaker": "learner",
-            "de": "Am wichtigsten ist mir, dass die Kommode gut repariert wird. Ich schlage vor, dass die Werkstatt aus dem Kostenvoranschlag das macht. Die Handwerkerin hat die Kommode schon geprüft, und der Preis steht fest: 380 Euro."
+            "de": "Am wichtigsten ist mir, dass die Kommode gut repariert wird. Ich schlage vor, dass die Werkstatt, die den Kostenvoranschlag gemacht hat, die Reparatur übernimmt. Die Handwerkerin hat die Kommode schon geprüft, und der Preis steht fest: 380 Euro."
           },
           {
             "speaker": "partner",
@@ -3300,20 +3300,20 @@
         "type": "multiple_choice",
         "role": "proof",
         "topic": "lesen",
-        "promptDe": "Andere AGB: „Für Glas haften wir, es sei denn, Sie haben es selbst verpackt.“ Was folgt?",
-        "promptEn": "Another firm’s terms on glass: what follows for you?",
+        "promptDe": "„Für Glas haften wir, es sei denn, der Schaden kommt von Ihrer Verpackung.“ Was folgt?",
+        "promptEn": "A clause from another firm’s terms on glass: what follows for you?",
         "options": [
-          "Glas selbst verpackt und kaputt: Die Firma zahlt nichts.",
-          "Glas selbst verpackt und kaputt: Die Firma zahlt den vollen Preis.",
-          "Glas von der Firma verpackt und kaputt: Die Firma zahlt nichts."
+          "Sie haben schlecht verpackt, das Glas ist kaputt: Die Firma zahlt nichts.",
+          "Sie haben schlecht verpackt, das Glas ist kaputt: Die Firma zahlt alles.",
+          "Die Firma hat verpackt, das Glas ist kaputt: Die Firma zahlt nichts."
         ],
-        "answer": "Glas selbst verpackt und kaputt: Die Firma zahlt nichts.",
+        "answer": "Sie haben schlecht verpackt, das Glas ist kaputt: Die Firma zahlt nichts.",
         "accepted": [
-          "Glas selbst verpackt und kaputt: Die Firma zahlt nichts."
+          "Sie haben schlecht verpackt, das Glas ist kaputt: Die Firma zahlt nichts."
         ],
         "explanation": {
-          "de": "es sei denn = außer wenn: Die Firma haftet für Glas, außer Sie haben es selbst verpackt. Dann steht Ihnen nichts zu; hat die Firma verpackt, zahlt sie.",
-          "en": "es sei denn = unless: self-packed glass is excluded, glass the firm packed is covered."
+          "de": "es sei denn = außer wenn: Die Firma haftet für Glas, außer der Schaden kommt von Ihrer Verpackung. Dann steht Ihnen nichts zu; hat die Firma verpackt, zahlt sie.",
+          "en": "es sei denn = unless: damage from your own packing is excluded; glass the firm packed is covered."
         },
         "origin": "agent"
       }

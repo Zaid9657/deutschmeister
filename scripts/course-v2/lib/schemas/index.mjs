@@ -1,7 +1,8 @@
 // File kinds of content/course-v2 and how a file is matched to its schema.
 //
 // A file is matched by its `$schema` literal; the registry files SCHEMA §4.7 writes without one
-// (text-types.json, detectors.json, voices.json, style.json, casts/*.json) are matched by path.
+// (text-types.json, detectors.json, voices.json, style.json, casts/*.json) are matched by path;
+// registries/names.json (§4.9) carries one and is matched by either.
 import path from 'node:path';
 import { candoSchema } from './cando.mjs';
 import { spineSchema } from './spine.mjs';
@@ -21,6 +22,7 @@ import { plateauSchema, plateauLanePackSchema, closingSchema, mockModuleSchema }
 import { voicesSchema, styleSchema, lemmasSchema } from './registries.mjs';
 import { anchorSchema, qaSchema } from './qa.mjs';
 import { stubsSchema } from './stubs.mjs';
+import { namesSchema } from './names.mjs';
 
 export const KINDS = {
   cando: { schemaId: 'course-v2/cando@1', schema: candoSchema },
@@ -35,6 +37,7 @@ export const KINDS = {
   voices: { schemaId: 'course-v2/voices@1', schema: voicesSchema, fileName: 'voices.json' },
   style: { schemaId: 'course-v2/style@1', schema: styleSchema, fileName: 'style.json' },
   lemmas: { schemaId: 'course-v2/lemmas@1', schema: lemmasSchema },
+  names: { schemaId: 'course-v2/names@1', schema: namesSchema, fileName: 'names.json' },
   course: { schemaId: 'course-v2/course@1', schema: courseSchema },
   lexicon: { schemaId: 'course-v2/lexicon@1', schema: lexiconSchema },
   rulecards: { schemaId: 'course-v2/rulecards@1', schema: ruleCardsSchema },

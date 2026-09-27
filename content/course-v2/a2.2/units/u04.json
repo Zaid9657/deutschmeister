@@ -13,7 +13,7 @@
     "canDo": "Sie können Wege genau beschreiben und von einem Unfall berichten."
   },
   "spec": {
-    "situation": "Am Tag des Ausflugs erklärt Emre den anderen den Weg zum Treffpunkt. Unterwegs rutscht Lina aus und verletzt sich; Tomasz ruft den Notruf, und später erzählen alle, wie es passiert ist.",
+    "situation": "Am Tag des Ausflugs erklärt Emre den anderen den Weg zum Treffpunkt. Unterwegs rutscht Lina aus und verletzt sich; Tomasz ruft die 112 an, und später erzählen alle, wie es passiert ist.",
     "handlungsfeld": [
       "10",
       "8"
@@ -1509,7 +1509,7 @@
             "count": 2,
             "source": [
               "a2.2-u04-ls2-l08",
-              "a2.2-u04-ls2-l10"
+              "a2.2-u04-ls2-l04"
             ]
           },
           {
@@ -2001,7 +2001,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.sich-verletzen",
-            "promptDe": "Lina hat ___ am Fuß verletzt.",
+            "promptDe": "Lina ist ausgerutscht. Sie hat ___ am Fuß verletzt. (sich verletzen)",
             "promptEn": "Reflexive pronoun for sie (Lina).",
             "answer": "sich",
             "accepted": [
@@ -2011,8 +2011,8 @@
               "reflexive"
             ],
             "explanation": {
-              "de": "sich verletzen: Lina hat sich verletzt.",
-              "en": "'sich verletzen' – Lina hat sich verletzt."
+              "de": "sich verletzen: Sie (Lina) hat sich verletzt.",
+              "en": "'sich verletzen' – Sie hat sich verletzt."
             },
             "origin": "agent"
           },
@@ -2256,8 +2256,8 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "g.perfekt-sein",
-          "promptDe": "Wir ___ zu spät an der Brücke angekommen. (sein)",
-          "promptEn": "Auxiliary for ankommen.",
+          "promptDe": "Wir ___ zu spät an der Brücke angekommen. (Perfekt: haben oder sein?)",
+          "promptEn": "Perfekt of ankommen: haben or sein?",
           "answer": "sind",
           "accepted": [
             "sind"
@@ -2535,9 +2535,9 @@
             {
               "id": "a2.2-u04-ls4-t3-l01",
               "speaker": "durchsage",
-              "de": "Liebe Fahrgäste, eine Information: Heute fährt die Linie 4 nur bis zum Rathaus, denn auf der Brücke am Fluss ist eine Baustelle. Zum Bahnhof fahren Busse. Bitte steigen Sie am Rathaus aus und überqueren Sie die Straße am Zebrastreifen. Die Haltestelle für die Busse ist gegenüber vom Rathaus. Die Busse fahren alle zehn Minuten.",
+              "de": "Liebe Fahrgäste, eine Information: Heute fährt die Linie 4 nur bis zum Rathaus, denn auf der Brücke über den Fluss ist eine Baustelle. Zum Bahnhof fahren Busse. Bitte steigen Sie am Rathaus aus und überqueren Sie die Straße am Zebrastreifen. Die Haltestelle für die Busse ist gegenüber vom Rathaus. Die Busse fahren alle zehn Minuten.",
               "en": "Dear passengers, for your information: today line 4 only runs as far as the town hall, because there are roadworks on the bridge over the river. Buses run to the station. Please get off at the town hall and cross the road at the zebra crossing. The bus stop is opposite the town hall. The buses run every ten minutes.",
-              "say": "Liebe Fahrgäste, eine Information: Heute fährt die Linie vier nur bis zum Rathaus, denn auf der Brücke am Fluss ist eine Baustelle. Zum Bahnhof fahren Busse. Bitte steigen Sie am Rathaus aus und überqueren Sie die Straße am Zebrastreifen. Die Haltestelle für die Busse ist gegenüber vom Rathaus. Die Busse fahren alle zehn Minuten."
+              "say": "Liebe Fahrgäste, eine Information: Heute fährt die Linie vier nur bis zum Rathaus, denn auf der Brücke über den Fluss ist eine Baustelle. Zum Bahnhof fahren Busse. Bitte steigen Sie am Rathaus aus und überqueren Sie die Straße am Zebrastreifen. Die Haltestelle für die Busse ist gegenüber vom Rathaus. Die Busse fahren alle zehn Minuten."
             }
           ],
           "glosses": [
@@ -2604,7 +2604,7 @@
           "id": "a2.2-u04-ls4-t7",
           "kind": "ad",
           "title": "Leipzig vom Wasser aus",
-          "text": "Leipzig vom Wasser aus\nSie möchten die Stadt sehen, aber nicht laufen? Dann kommen Sie auf unser Boot! Die Tour ist eine Stunde lang. Das Boot fährt unter vielen Brücken hindurch. Jeden Sonntag um 11 und um 15 Uhr.",
+          "text": "Leipzig vom Wasser aus\nSie möchten die Stadt sehen, aber nicht laufen? Dann kommen Sie auf unser Boot! Die Tour ist eine Stunde lang. Das Boot fährt unter vielen Brücken durch. Jeden Sonntag um 11 und um 15 Uhr.",
           "glosses": []
         },
         {
@@ -2705,7 +2705,7 @@
               "textRef": "a2.2-u04-ls4-t3",
               "promptDe": "Wo fahren die Busse zum Bahnhof ab?",
               "options": [
-                "an der Brücke am Fluss",
+                "an der Brücke über den Fluss",
                 "gegenüber vom Rathaus",
                 "am Bahnhof"
               ],
@@ -3110,8 +3110,8 @@
       {
         "id": "a2.2-u04-ls7-l03",
         "speaker": "cast.tomasz",
-        "de": "Wir sind am Ufer hinter dem Hügel, zehn Minuten von der Brücke.",
-        "en": "We're on the riverbank behind the hill, ten minutes from the bridge."
+        "de": "Wir sind am Ufer hinter dem Hügel, nicht weit von der Brücke.",
+        "en": "We're on the riverbank behind the hill, not far from the bridge."
       }
     ],
     "items": [
@@ -3244,23 +3244,15 @@
         "promptDe": "Hören Sie und schreiben Sie den Satz.",
         "promptEn": "Listen and write the sentence.",
         "audioLineRef": "a2.2-u04-ls7-l03",
-        "answer": "Wir sind am Ufer hinter dem Hügel, zehn Minuten von der Brücke.",
+        "answer": "Wir sind am Ufer hinter dem Hügel, nicht weit von der Brücke.",
         "accepted": [
-          "Wir sind am Ufer hinter dem Hügel, zehn Minuten von der Brücke.",
-          "Wir sind am Ufer hinter dem Hügel, 10 Minuten von der Brücke."
+          "Wir sind am Ufer hinter dem Hügel, nicht weit von der Brücke."
         ],
         "explanation": {
           "de": "am Ufer, hinter dem Hügel, von der Brücke: alle mit Dativ.",
           "en": "All three phrases take the dative."
         },
-        "origin": "agent",
-        "acceptedWhy": {
-          "Wir sind am Ufer hinter dem Hügel, 10 Minuten von der Brücke.": "auch richtig: Die Zahl als Ziffer (10) ist auch richtig."
-        },
-        "reviewerConfirmed": [
-          "Wir sind am Ufer hinter dem Hügel, 10 Minuten von der Brücke."
-        ],
-        "exact": "number"
+        "origin": "agent"
       },
       {
         "id": "a2.2-u04-c08",
@@ -3498,7 +3490,7 @@
     }
   ],
   "story": {
-    "beat": "Der Ausflug endet in der Notaufnahme – aber die Gruppe hält zusammen: Emre zeigt den Weg, Tomasz ruft den Notruf, Amal hilft Lina.",
+    "beat": "Der Ausflug endet in der Notaufnahme – aber die Gruppe hält zusammen: Emre zeigt den Weg, Tomasz ruft die 112 an, Amal hilft Lina.",
     "cliffhanger": "Am Abend schreibt Lina noch einmal in die Gruppe: „Das Display von meinem Handy ist bei dem Unfall kaputtgegangen. Ich kann kaum etwas lesen. Ich brauche ein neues Handy – und einen günstigen Vertrag!“",
     "castIn": [
       "cast.lina"

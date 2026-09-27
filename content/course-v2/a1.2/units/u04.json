@@ -2012,20 +2012,20 @@
           "type": "multiple_choice",
           "role": "detail",
           "topic": "lesen",
-          "promptDe": "Lesen Sie die Tafel im Bürgerbüro. Wo ist die Anmeldung?",
-          "promptEn": "Read the board: where is registration?",
+          "promptDe": "Lesen Sie die Tafel im Bürgerbüro. Was ist im zweiten Stock?",
+          "promptEn": "Read the board: what is on the second floor?",
           "options": [
-            "im ersten Stock",
-            "im Erdgeschoss",
-            "im zweiten Stock"
+            "Pass, Ausweis und Anträge",
+            "die Anmeldung",
+            "die Information"
           ],
-          "answer": "im ersten Stock",
+          "answer": "Pass, Ausweis und Anträge",
           "accepted": [
-            "im ersten Stock"
+            "Pass, Ausweis und Anträge"
           ],
           "explanation": {
-            "de": "Auf der Tafel steht: 1. Stock: Anmeldung, Zimmer 11 bis 16.",
-            "en": "The board says: 1st floor – registration, rooms 11 to 16."
+            "de": "Auf der Tafel steht: 2. Stock: Pass, Ausweis und Anträge. Die Anmeldung ist im 1. Stock.",
+            "en": "The board says: 2nd floor – passport, ID card and applications; registration is on the 1st floor."
           },
           "origin": "agent"
         },
@@ -2163,19 +2163,24 @@
           },
           {
             "id": "a1.2-u04-ls3-p13",
-            "type": "fill_blank",
+            "type": "error_correction",
             "role": "practice",
             "topic": "g.imperativ-sie",
-            "promptDe": "Sie nehmen eine Wartenummer. Als Bitte: „___ Sie bitte eine Wartenummer.“",
-            "promptEn": "Turn it into a request (Sie imperative).",
-            "answer": "Nehmen",
+            "promptDe": "Korrigieren Sie die Bitte: „Bitte Sie warten hier.“",
+            "promptEn": "Correct the request (Sie imperative).",
+            "answer": "Bitte warten Sie hier.",
             "accepted": [
-              "Nehmen",
-              "nehmen"
+              "Bitte warten Sie hier.",
+              "Warten Sie bitte hier."
             ],
+            "acceptedWhy": {
+              "Warten Sie bitte hier.": "auch richtig: bitte kann nach Sie stehen"
+            },
+            "intentionalError": true,
+            "errorTag": "v2-inv",
             "explanation": {
-              "de": "Imperativ mit Sie: Das Verb steht vorne, dann Sie: Nehmen Sie bitte …",
-              "en": "Sie imperative: the verb first, then “Sie”."
+              "de": "Imperativ mit Sie: erst das Verb, dann Sie: Bitte warten Sie hier.",
+              "en": "Sie imperative: the verb comes before “Sie”."
             },
             "origin": "agent"
           },
@@ -2764,9 +2769,9 @@
             {
               "id": "a1.2-u04-ls4-t4-l01",
               "speaker": "cast.ensemble-a1-3",
-              "de": "Guten Tag, hier ist der Paketshop am Marktplatz. Frau Nair, ein Paket für Sie ist seit dem 29. Mai hier. Das Paket bleibt bis zum 5. Juni bei uns.",
-              "en": "Hello, this is the parcel shop on Marktplatz. Ms Nair, a parcel for you has been here since 29 May. The parcel stays with us until 5 June.",
-              "say": "Guten Tag, hier ist der Paketshop am Marktplatz. Frau Nair, ein Paket für Sie ist seit dem neunundzwanzigsten Mai hier. Das Paket bleibt bis zum fünften Juni bei uns."
+              "de": "Guten Tag, hier ist der Paketshop am Marktplatz. Frau Nair, ein Paket für Sie ist seit dem 22. Mai hier. Das Paket bleibt bis zum 29. Mai bei uns.",
+              "en": "Hello, this is the parcel shop on Marktplatz. Ms Nair, a parcel for you has been here since 22 May. The parcel stays with us until 29 May.",
+              "say": "Guten Tag, hier ist der Paketshop am Marktplatz. Frau Nair, ein Paket für Sie ist seit dem zweiundzwanzigsten Mai hier. Das Paket bleibt bis zum neunundzwanzigsten Mai bei uns."
             },
             {
               "id": "a1.2-u04-ls4-t4-l02",
@@ -2814,30 +2819,26 @@
             {
               "id": "a1.2-u04-ls4-t6-l01",
               "speaker": "cast.priya",
-              "de": "Entschuldigung, wo ist Zimmer 21?",
-              "en": "Excuse me, where is room 21?",
-              "say": "Entschuldigung, wo ist Zimmer einundzwanzig?"
+              "de": "Entschuldigung, wo ist hier der Automat für die Wartenummern?",
+              "en": "Excuse me, where is the queue-number machine here?"
             },
             {
               "id": "a1.2-u04-ls4-t6-l02",
               "speaker": "cast.ensemble-a1-4",
-              "de": "Zimmer 12? Das ist im ersten Stock, links.",
-              "en": "Room 12? That’s on the first floor, on the left.",
-              "say": "Zimmer zwölf? Das ist im ersten Stock, links."
+              "de": "Der Automat? Der ist hier im Erdgeschoss, links neben dem Eingang.",
+              "en": "The machine? It’s here on the ground floor, to the left of the entrance."
             },
             {
               "id": "a1.2-u04-ls4-t6-l03",
               "speaker": "cast.priya",
-              "de": "Nein, Zimmer 21. Zwei, eins.",
-              "en": "No, room 21. Two, one.",
-              "say": "Nein, Zimmer einundzwanzig. Zwei, eins."
+              "de": "Rechts neben dem Eingang?",
+              "en": "To the right of the entrance?"
             },
             {
               "id": "a1.2-u04-ls4-t6-l04",
               "speaker": "cast.ensemble-a1-4",
-              "de": "Ach so, Zimmer 21. Das ist im zweiten Stock. Der Aufzug ist heute kaputt. Bitte nehmen Sie die Treppe.",
-              "en": "Oh, room 21. That’s on the second floor. The lift is broken today. Please take the stairs.",
-              "say": "Ach so, Zimmer einundzwanzig. Das ist im zweiten Stock. Der Aufzug ist heute kaputt. Bitte nehmen Sie die Treppe."
+              "de": "Nein, links. Rechts ist der Ausgang. Und dann warten Sie bitte vor Ihrem Zimmer.",
+              "en": "No, on the left. On the right is the exit. And then please wait outside your room."
             },
             {
               "id": "a1.2-u04-ls4-t6-l05",
@@ -2846,14 +2847,7 @@
               "en": "OK, thank you!"
             }
           ],
-          "glosses": [
-            {
-              "token": "Treppe",
-              "gloss": {
-                "en": "stairs"
-              }
-            }
-          ]
+          "glosses": []
         },
         {
           "id": "a1.2-u04-ls4-t7",
@@ -3112,18 +3106,18 @@
               "textRef": "a1.2-u04-ls4-t4",
               "promptDe": "Bis wann ist das Paket im Paketshop?",
               "options": [
+                "bis zum 22. Mai",
                 "bis zum 29. Mai",
-                "bis zum 5. Juni",
                 "bis Samstag"
               ],
-              "answer": "bis zum 5. Juni",
+              "answer": "bis zum 29. Mai",
               "accepted": [
-                "bis zum 5. Juni"
+                "bis zum 29. Mai"
               ],
               "exact": "number",
               "explanation": {
-                "de": "Das Paket ist seit dem 29. Mai da. Es bleibt bis zum 5. Juni.",
-                "en": "It has been there since 29 May; it stays until 5 June."
+                "de": "Das Paket ist seit dem 22. Mai da. Es bleibt bis zum 29. Mai.",
+                "en": "It has been there since 22 May; it stays until 29 May."
               },
               "origin": "agent"
             },
@@ -3175,19 +3169,19 @@
               "role": "exam",
               "topic": "hoeren",
               "textRef": "a1.2-u04-ls4-t6",
-              "promptDe": "Was macht die Frau jetzt?",
+              "promptDe": "Wo ist der Automat für die Wartenummern?",
               "options": [
-                "Sie geht nach links.",
-                "Sie nimmt die Treppe.",
-                "Sie nimmt den Aufzug."
+                "rechts neben dem Eingang",
+                "links neben dem Eingang",
+                "neben dem Ausgang"
               ],
-              "answer": "Sie nimmt die Treppe.",
+              "answer": "links neben dem Eingang",
               "accepted": [
-                "Sie nimmt die Treppe."
+                "links neben dem Eingang"
               ],
               "explanation": {
-                "de": "Zimmer 21 ist im zweiten Stock. Der Aufzug ist kaputt. Sie nimmt die Treppe.",
-                "en": "Room 21 is on the second floor and the lift is broken, so she takes the stairs."
+                "de": "Priya hört zuerst „rechts“. Der Mann korrigiert: links neben dem Eingang. Rechts ist der Ausgang.",
+                "en": "Priya first hears “right”; the man corrects her: left of the entrance; the exit is on the right."
               },
               "origin": "agent"
             },
@@ -3706,7 +3700,7 @@
         "type": "multiple_choice",
         "role": "proof",
         "topic": "lesen",
-        "promptDe": "Das Rathaus im Internet: „Mo–Do 8–16 Uhr, Fr 8–12 Uhr“. Wann ist es am Freitag geöffnet?",
+        "promptDe": "Rathaus: „Montag–Donnerstag 8–16 Uhr, Freitag 8–12 Uhr“. Wann ist es am Freitag geöffnet?",
         "promptEn": "Read the town hall’s opening hours: when is it open on Friday?",
         "options": [
           "von 8 bis 12 Uhr",
@@ -3718,7 +3712,7 @@
           "von 8 bis 12 Uhr"
         ],
         "explanation": {
-          "de": "Fr 8–12 Uhr: Am Freitag ist das Rathaus von 8 bis 12 Uhr geöffnet.",
+          "de": "Freitag 8–12 Uhr: Am Freitag ist das Rathaus von 8 bis 12 Uhr geöffnet.",
           "en": "Fri 8–12: on Friday the town hall is open from 8 to 12."
         },
         "origin": "agent",
