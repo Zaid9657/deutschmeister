@@ -176,7 +176,8 @@ A token is known at a unit when it is one of:
 4. **Licensed by the unit's grammar:** the example forms of every spine point the unit names
    (`spec.grammar.new/chunk/review`) or that entered at or before it (`intro`, `chunkFrom`) — the spine label's
    examples (after its colon, inside brackets) and its rule cards' model sentence, table rows below the header and
-   `caseMarks` tokens. Card prose is metalanguage and licenses nothing.
+   `caseMarks` tokens. Card prose is metalanguage and licenses nothing, and — as with the core — a card example
+   the lexicon allocates to a later unit (`Montag` on the A1.1-U1 Präsens card, allocated to U7) is not licensed early.
 5. Cast names, the file's `extras` names, glossed extras (LEX-01) — and a **one-letter token** is an option key
    (`c`, `X`), never a word.
 
