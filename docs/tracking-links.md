@@ -39,6 +39,37 @@ by referrer — but a tag is the only way to tell posts apart, so tag them.
 `untracked` = signed up before 2026-09-20, or came direct / from an unknown
 referrer with no tag. It is not "direct traffic".
 
+## On-site doors (`utm_medium = onsite`)
+
+Some of the site's own signup links carry a tag too, so a signup can be traced to
+the page that converted it even when the visitor arrived with no referrer. They
+are pages, not channels.
+
+| `ref` (source) | Where | `utm_content` |
+|---|---|---|
+| `xray` | the offer under an X-Ray result and at the anonymous limit (`src/lib/xray.js`) | — |
+| `grammar` | every grammar lesson (both signup doors, the locked-exercise door, the signed-out finish line, the free-course door on A1 pages), the `/grammar/` hub, the nav trial button on `/grammar/**` | the topic slug, `index`, or `nav` |
+| `leitfaden` | every guide's CTA (level test, account, prices), the `/leitfaden/` hub, the nav trial button on `/leitfaden/**` | the guide slug, `index`, or `nav` |
+
+Built only with `onsiteHref()` in `astro-site/src/lib/onsiteLinks.js`;
+`tests/onsite-attribution.test.mjs` fails on a bare door on those pages.
+
+How to read them: when `acquisition_source` is an on-site source, the visitor
+had no earlier touch, i.e. arrived untracked and converted on that page. When
+the first touch is a channel (say `google`), the channel stays in
+`acquisition_source` and the page shows in `acquisition_last_source`. Leave
+`medium = 'onsite'` out of any channel share (the scorecard's non-brand share):
+
+```sql
+select acquisition_last_source, acquisition_content, count(*) from profiles
+where created_at > now() - interval '30 days'
+  and acquisition_last_source in ('grammar', 'leitfaden', 'xray')
+group by 1, 2 order by 3 desc;
+```
+
+`acquisition_content` is the FIRST touch's `utm_content`, so it names the page
+only when the on-site door was the first touch.
+
 ## What is deliberately not stored
 
 Click ids (`gclid`, `fbclid`, …) and full referrer URLs. Only the labels typed

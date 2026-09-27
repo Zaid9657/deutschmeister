@@ -24,7 +24,8 @@ import Aurora from '../../components/Aurora.astro';
 import LanguageNotice from '../../components/LanguageNotice.astro';
 import { BUILD_DATE, ORGANIZATION } from '../../lib/siteMeta.js';
 import { GUIDES, guideToc, guideJsonLd, guideReadingMinutes, guideUrl } from '../../data/guides/index.js';
-import { FOUNDER_LINE_DE } from '../../data/marketing.js';
+import { FOUNDER_LINE_DE, TRIAL_DAYS } from '../../data/marketing.js';
+import { onsiteHref } from '../../lib/onsiteLinks.js';
 
 export function getStaticPaths() {
   return GUIDES.map((guide) => ({ params: { slug: guide.slug }, props: { guide } }));
@@ -44,6 +45,18 @@ const de = (iso) => {
 // was 0/64 on the grammar side and one-directional here; this makes every guide
 // a hub for the others.
 const others = GUIDES.filter((g) => g.slug !== guide.slug);
+
+// The CTA used to offer the level test and the prices, and no account at all,
+// with none of the three links attributed: a guide reader who signed up was
+// "untracked". Every door now carries the guide (src/lib/onsiteLinks.js), and
+// the free account is offered next to the level test. The level test stays
+// primary: its results screen has its own signup door, and the tag recorded on
+// arrival at /level-test/ survives the SPA navigation to /signup.
+const doors = {
+  levelTest: onsiteHref('levelTest', 'leitfaden', guide.slug),
+  signup: onsiteHref('signup', 'leitfaden', guide.slug),
+  pricing: onsiteHref('pricing', 'leitfaden', guide.slug),
+};
 
 // Playbook class strings (docs/design/playbook.md §1) — same treatment as the
 // homepage, so both pages render one button.
@@ -235,9 +248,13 @@ const CARD_INTERACTIVE =
         <h2 class="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.018em] text-ink sm:text-[1.75rem]">{guide.cta.heading}</h2>
         <p class="mx-auto mt-3 max-w-md text-[0.9375rem] leading-relaxed text-graphite sm:text-base">{guide.cta.body}</p>
         <div class="mt-7 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <a href="/level-test/" class={BTN_PRIMARY}><span class="relative z-10">Einstufungstest starten</span></a>
-          <a href="/pricing/" class={BTN_SECONDARY}>Preise ansehen</a>
+          <a href={doors.levelTest} class={BTN_PRIMARY}><span class="relative z-10">Einstufungstest starten</span></a>
+          <a href={doors.signup} class={BTN_SECONDARY}>Kostenloses Konto erstellen</a>
         </div>
+        <p class="mt-4 text-[0.8125rem] leading-relaxed text-graphite">
+          Mit Konto: {TRIAL_DAYS} Tage Pro inklusive, keine Kreditkarte ·
+          <a href={doors.pricing} class="font-bold text-siegel underline-offset-2 hover:underline">Preise ansehen</a>
+        </p>
       </section>
 
       <!-- Other guides — clickable clay cards -->
