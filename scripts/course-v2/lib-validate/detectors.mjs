@@ -540,6 +540,9 @@ function lexPraeteritum(det, sentence, env) {
   const toks = tokens(sentence);
   toks.forEach((t, i) => {
     if (isCapitalMidSentence(t, i)) return;
+    // „Parken verboten!": a plural Präteritum form that is also a known Partizip II is read as the
+    // participle (verboten, geboten, gelitten …); the Perfekt detectors own that reading
+    if (env.participles.has(t.lower) && !arr(spec.forms).map(lc).includes(t.lower)) return;
     if (forms.has(t.lower)) hits.push({ index: t.index, match: t.text, fallback: false });
   });
   return hits;
