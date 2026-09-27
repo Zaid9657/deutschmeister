@@ -1,5 +1,5 @@
 ---
-import { NAV_GROUPS, FOOTER_GROUPS, LEGAL_LINKS, SOCIAL_LINKS } from '../data/navigation.js';
+import { NAV_GROUPS, FOOTER_GROUPS, LEGAL_LINKS, SOCIAL_LINKS, SUPPORT_LINK } from '../data/navigation.js';
 import Showtime from '../components/Showtime.astro';
 import 'atropos/css';
 import '../styles/showtime.css';
@@ -281,6 +281,19 @@ const authAttrs = (item) =>
                 </li>
               ))}
             </ul>
+            <!-- The one way to reach a human (same registry entry as the SPA
+                 footer). /support is an SPA route: signed in it opens the
+                 ticket form, signed out it offers sign-in or the contact
+                 address — so a static-page visitor is never a dead end. -->
+            <p class="mt-3 text-sm">
+              <a href={SUPPORT_LINK.href} class="inline-flex items-center gap-2 font-semibold text-white hover:text-siegel-wash transition-colors">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="4" />
+                  <path d="m4.93 4.93 4.24 4.24M14.83 9.17l4.24-4.24M14.83 14.83l4.24 4.24M9.17 14.83l-4.24 4.24" />
+                </svg>
+                {SUPPORT_LINK.labelEn}
+              </a>
+            </p>
           </div>
           {FOOTER_GROUPS.map((group) => (
             <div>

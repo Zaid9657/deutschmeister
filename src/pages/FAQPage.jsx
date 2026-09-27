@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ChevronDown, ArrowRight, BookOpen, MessageSquare, CreditCard, GraduationCap, Monitor } from 'lucide-react';
 import SEO from '../components/SEO';
@@ -10,6 +11,7 @@ import Card from '../components/ui/Card.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
 import SectionHeading from '../components/ui/SectionHeading.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
+import { SUPPORT_LINK } from '../data/navigation';
 
 // Content lives in src/data/faqContent.js so the prerender renders the same 21
 // answers a crawler needs — the accordion only shows an answer on click, which
@@ -103,6 +105,13 @@ const FAQPage = () => {
             Start for free
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Button>
+          {/* Several answers say "contact support" — this is where that happens. */}
+          <p className="mt-6 text-sm text-graphite">
+            Your question isn&apos;t here?{' '}
+            <Link to={SUPPORT_LINK.href} className="font-bold text-siegel hover:text-siegel-deep">
+              {SUPPORT_LINK.labelEn}
+            </Link>
+          </p>
         </Reveal>
       </div>
     </div>

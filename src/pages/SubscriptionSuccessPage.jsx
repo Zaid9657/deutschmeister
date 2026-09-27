@@ -7,6 +7,7 @@ import SEO from '../components/SEO';
 import Button from '../components/ui/Button.jsx';
 import Card from '../components/ui/Card.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
+import ReportProblemLink from '../components/ReportProblemLink.jsx';
 import confettiBurst from '../lib/confetti.js';
 import { COURSE_PRO_MONTHS, courseForProduct } from '../data/pricing.js';
 
@@ -137,6 +138,9 @@ const SubscriptionSuccessPage = () => {
                 {courseBought ? `Start ${courseBought.levels[0].toUpperCase()}` : telcBought ? 'Open the plan' : 'Start Learning'}
                 <ArrowRight className="w-5 h-5" aria-hidden="true" />
               </Button>
+              <div className="mt-6">
+                <ReportProblemLink topic="payment" />
+              </div>
             </>
           ) : (
             <>
@@ -179,6 +183,7 @@ const SubscriptionSuccessPage = () => {
                   Go to Dashboard
                   <ArrowRight className="w-5 h-5" aria-hidden="true" />
                 </Button>
+                <ReportProblemLink topic="payment" />
               </div>
             </>
           )}

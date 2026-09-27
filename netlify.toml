@@ -367,6 +367,12 @@
   from = "/analyze"
   to = "/app.html"
   status = 200
+# Help & feedback (the support-ticket form). Linked from both footers and the
+# account menu; not crawlable (noindex), so not prerendered and not in the sitemap.
+[[redirects]]
+  from = "/support"
+  to = "/app.html"
+  status = 200
 
 # --- Route families (bare route + params/sub-paths) ---
 [[redirects]]

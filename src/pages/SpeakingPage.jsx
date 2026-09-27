@@ -17,6 +17,7 @@ import SpeakingEvaluationResults from '../components/SpeakingEvaluationResults';
 import { LEVEL_ORDER } from '../config/levels';
 import { readCourseContext } from '../lib/courseFlow.js';
 import Button from '../components/ui/Button.jsx';
+import ReportProblemLink from '../components/ReportProblemLink.jsx';
 import Card from '../components/ui/Card.jsx';
 import Chip from '../components/ui/Chip.jsx';
 import SectionHeading from '../components/ui/SectionHeading.jsx';
@@ -614,7 +615,10 @@ const SpeakingPage = () => {
         {startError?.type === 'error' && (
           <div className="mb-4 p-3.5 rounded-clay border border-accent-himbeer/30 bg-accent-himbeer-wash text-sm text-accent-himbeer-ink flex items-start justify-center gap-2">
             <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />
-            <span>{startError.message}</span>
+            <span>
+              {startError.message}{' '}
+              <ReportProblemLink topic="technical" />
+            </span>
           </div>
         )}
         {!canAfford && !startError && (

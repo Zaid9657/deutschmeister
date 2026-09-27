@@ -6,6 +6,7 @@ import { pickAudioMimeType, blobToBase64, micErrorMessage } from './mediaSupport
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
+import ReportProblemLink from '../ReportProblemLink.jsx';
 
 function formatTime(seconds) {
   const m = Math.floor(seconds / 60);
@@ -381,6 +382,8 @@ const SpeakingSession = ({
                     <RotateCcw className="w-3.5 h-3.5" /> Send again
                   </button>
                 )}
+                {/* New tab: leaving this screen would end the running session. */}
+                <div className="mt-2"><ReportProblemLink topic="technical" newTab /></div>
               </div>
             </div>
           </div>

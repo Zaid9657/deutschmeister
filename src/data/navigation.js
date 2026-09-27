@@ -127,6 +127,23 @@ export const SOCIAL_LINKS = [
   },
 ];
 
+// ─────────────────────────────────────────────────────────────────────────────
+// THE way to reach a human. A ticket system shipped on 2026-09-13 and drew 0
+// tickets from 1,685 accounts: its only form sat at the bottom of /profile,
+// behind SubscriptionGuard, so ~97% of accounts (trial over, never paid) and
+// every signed-out visitor could not reach it. /support is guard-free: signed
+// in it shows the ticket form, signed out it offers sign-in or the published
+// contact address. Rendered in both footers, the navbar account menu and the
+// course home's own footer (tests/support.test.mjs pins every placement).
+// ─────────────────────────────────────────────────────────────────────────────
+export const SUPPORT_LINK = {
+  key: 'support',
+  labelEn: 'Help & feedback',
+  labelDe: 'Hilfe & Feedback',
+  href: '/support',
+  kind: 'spa',
+};
+
 export const LEGAL_LINKS = [
   { labelEn: 'Privacy Policy', labelDe: 'Datenschutz', href: '/privacy/', kind: 'static' },
   { labelEn: 'Impressum', labelDe: 'Impressum', href: '/impressum/', kind: 'static' },
@@ -136,5 +153,6 @@ export const LEGAL_LINKS = [
 export const ALL_NAV_ITEMS = [
   ...NAV_GROUPS.flatMap((g) => g.items),
   ...FOOTER_GROUPS.flatMap((g) => g.items),
+  SUPPORT_LINK,
   ...LEGAL_LINKS,
 ];

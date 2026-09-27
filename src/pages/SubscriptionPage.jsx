@@ -13,6 +13,7 @@ import { PLANS, num, levelsForProduct } from '../data/pricing.js';
 import { LEVEL_COUNT, READING_LESSON_COUNT } from '../data/marketing.js';
 import Button from '../components/ui/Button.jsx';
 import CouponField from '../components/CouponField.jsx';
+import ReportProblemLink from '../components/ReportProblemLink.jsx';
 import Card from '../components/ui/Card.jsx';
 import Chip from '../components/ui/Chip.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
@@ -372,10 +373,16 @@ const SubscriptionPage = () => {
               {isGerman ? 'Bereits bezahlt? Abonnement überprüfen' : 'Already paid? Verify my subscription'}
             </button>
             {verifyMessage && (
-              <p className="mt-2 inline-flex items-center justify-center gap-2 rounded-clay bg-accent-himbeer-wash px-3 py-2 text-sm font-semibold text-accent-himbeer-ink">
-                <AlertCircle className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
-                {verifyMessage}
-              </p>
+              <>
+                <p className="mt-2 inline-flex items-center justify-center gap-2 rounded-clay bg-accent-himbeer-wash px-3 py-2 text-sm font-semibold text-accent-himbeer-ink">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+                  {verifyMessage}
+                </p>
+                {/* Paid but no access is exactly when a learner needs a human. */}
+                <div className="mt-2">
+                  <ReportProblemLink topic="payment" />
+                </div>
+              </>
             )}
           </div>
         )}
