@@ -187,8 +187,8 @@
         {
           "id": "a1.1-u02-start-l05",
           "speaker": "cast.herr-richter",
-          "de": "Ah, Herr Yıldız! Moment, bitte.",
-          "en": "Ah, Mr Yıldız! One moment, please."
+          "de": "Ach, Herr Yıldız! Moment, bitte.",
+          "en": "Oh, Mr Yıldız! One moment, please."
         },
         {
           "id": "a1.1-u02-start-l06",
@@ -295,8 +295,8 @@
           {
             "id": "a1.1-u02-ls1-l05",
             "speaker": "cast.herr-richter",
-            "de": "Ah, mit A, danke! Und jetzt der Vorname: Wie schreiben Sie Priya?",
-            "en": "Ah, with an A, thank you! And now your first name: how do you spell Priya?"
+            "de": "Aha, mit A, danke! Und jetzt der Vorname: Wie schreiben Sie Priya?",
+            "en": "I see, with an A, thank you! And now your first name: how do you spell Priya?"
           },
           {
             "id": "a1.1-u02-ls1-l06",
@@ -1072,8 +1072,8 @@
           {
             "id": "a1.1-u02-ls2-l10",
             "speaker": "cast.emre",
-            "de": "Zwo? Ah, zwei! Ja, das ist richtig. Aber die Zahl am Ende ist falsch. Nicht sechzehn – sechzig!",
-            "en": "“Zwo”? Ah, two! Yes, that’s right. But the number at the end is wrong. Not sixteen – sixty!"
+            "de": "Zwo? Ach so, zwei! Ja, das ist richtig. Aber die Zahl am Ende ist falsch. Nicht sechzehn – sechzig!",
+            "en": "“Zwo”? Oh I see, two! Yes, that’s right. But the number at the end is wrong. Not sixteen – sixty!"
           }
         ],
         "glosses": [
@@ -1170,7 +1170,7 @@
             "zwei"
           ],
           "explanation": {
-            "de": "Emre fragt: „Zwo?“ und sagt dann: „Ah, zwei!“ Am Telefon ist „zwo“ oft „zwei“.",
+            "de": "Emre fragt: „Zwo?“ und sagt dann: „Ach so, zwei!“ Am Telefon ist „zwo“ oft „zwei“.",
             "en": "On the phone Germans often say “zwo” for “zwei”, so it isn’t confused with “drei”."
           },
           "origin": "agent"
@@ -2505,9 +2505,9 @@
             {
               "id": "a1.1-u02-ls4-t1-l05",
               "speaker": "cast.ensemble-a1-2",
-              "de": "Ah, siebzehn. Also 0341 26 58 17. Danke!",
-              "en": "Ah, seventeen. So 0341 26 58 17. Thank you!",
-              "say": "Ah, siebzehn. Also null drei vier eins, sechsundzwanzig, achtundfünfzig, siebzehn. Danke!"
+              "de": "Aha, siebzehn. Also 0341 26 58 17. Danke!",
+              "en": "I see, seventeen. So 0341 26 58 17. Thank you!",
+              "say": "Aha, siebzehn. Also null drei vier eins, sechsundzwanzig, achtundfünfzig, siebzehn. Danke!"
             },
             {
               "id": "a1.1-u02-ls4-t1-l06",
@@ -2599,9 +2599,9 @@
             {
               "id": "a1.1-u02-ls4-t3-l05",
               "speaker": "cast.ensemble-a1-3",
-              "de": "Ah, 43. Alles klar. Und wie ist die Telefonnummer?",
-              "en": "Ah, 43. All right. And what is the phone number?",
-              "say": "Ah, dreiundvierzig. Alles klar. Und wie ist die Telefonnummer?"
+              "de": "Aha, 43. Alles klar. Und wie ist die Telefonnummer?",
+              "en": "I see, 43. All right. And what is the phone number?",
+              "say": "Aha, dreiundvierzig. Alles klar. Und wie ist die Telefonnummer?"
             },
             {
               "id": "a1.1-u02-ls4-t3-l06",
@@ -2639,8 +2639,8 @@
             {
               "id": "a1.1-u02-ls4-t4-l04",
               "speaker": "cast.ensemble-a1-1",
-              "de": "Ah, du bist Student und Kellner!",
-              "en": "Ah, you’re a student and a waiter!"
+              "de": "Aha, du bist Student und Kellner!",
+              "en": "I see, you’re a student and a waiter!"
             },
             {
               "id": "a1.1-u02-ls4-t4-l05",
