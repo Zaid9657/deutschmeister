@@ -131,7 +131,8 @@ Item = {
 The compiler maps an `Item` onto the existing pool shape consumed by `check.js`, `requeue.js`, `mastery.js` and
 `reviewGrading` (`id, topic, type, questionDe, questionEn, options, answer, accepted, caseSensitive, explanationDe,
 explanationEn, hint, minLektion`) and adds `exact`, which `checkOptionsFor(item)` passes to `checkAnswer()` once E1
-extends the checker. For `sentence_building` it renders the live form `questionDe = promptDe + ' [' + tiles.join(' / ') + ']'`,
+extends the checker. For `sentence_building` it renders the live form
+`questionDe = promptDe.replace(/\.$/, ':') + ' [' + tiles.join(' / ') + ']'` („Bilden Sie den Satz: [sich / Jan / …]"),
 so the tile list is written once. **TXT-04 scope:** `promptDe`, `instructionsDe`, `taskDe` and a micro-output's
 `promptDe` are instructions (≤ 90 characters); scene-setting goes into the separate `situationDe` fields.
 
@@ -454,8 +455,9 @@ WritingTask = {
 
 Check = {
   lines: [Line]*,                                      // audio for dictation / proof items; ids = the check step's STEP-lNN
-  items: [Item]{7..9},                                 // this unit: check items (c) + proof items (q) together
+  items: [Item]{7..9},                                 // this unit's check items (c); items + earlier = 12 (BLUEPRINT §3.1)
   earlier: [{ ref: ref(item) }]{3..5},                 // reserve items of earlier units (≈ 35 %)
+  proofItems: [Item]{0..5},                            // proof items (q): one per receptive can-do, scored apart from the 12
   proofs: [{ canDo: ref(cando), item: ref(item)? , aufgabe: enum(sprechen|schreiben)? }]{3..5},
   testOutThreshold: num, cumulativeShare: num }
 
@@ -1194,21 +1196,23 @@ from the rating sheet and **unverified** ([m01] Unverified); hence `splitVerifie
     ],
     "items": [
       { "id": "a2.1-u07-c01", "type": "fill_blank", "role": "check", "topic": "g.reflexiv-akk", "promptDe": "Wir melden ___ morgen bei Ihnen.", "promptEn": "Reflexive pronoun for wir.", "answer": "uns", "accepted": ["uns"], "explanation": { "de": "wir melden uns.", "en": "With wir: uns." }, "origin": "agent" },
-      { "id": "a2.1-u07-c02", "type": "sentence_building", "role": "check", "topic": "g.reflexiv-akk", "promptDe": "Bilden Sie den Satz.", "promptEn": "Build the sentence.", "tiles": ["sich", "verspätet", "der Zug"], "answer": "Der Zug verspätet sich.", "accepted": ["Der Zug verspätet sich."], "explanation": { "de": "Subjekt, Verb, sich.", "en": "Subject, verb, sich." }, "origin": "agent" },
-      { "id": "a2.1-u07-c03", "type": "multiple_choice", "role": "check", "topic": "lx.besetzt", "promptDe": "Die Leitung ist ___.", "promptEn": "Choose the word.", "options": ["besetzt", "beschäftigt", "dringend"], "answer": "besetzt", "accepted": ["besetzt"], "explanation": { "de": "Eine Leitung ist besetzt. Eine Person ist beschäftigt.", "en": "A line is 'besetzt'; a person is 'beschäftigt'." }, "origin": "agent" },
-      { "id": "a2.1-u07-c04", "type": "fill_blank", "role": "check", "topic": "lx.verbinden", "promptDe": "Einen Moment bitte, ich ___ Sie mit der Buchhaltung.", "promptEn": "Put the caller through.", "answer": "verbinde", "accepted": ["verbinde"], "explanation": { "de": "ich verbinde Sie mit …", "en": "'ich verbinde Sie mit …'" }, "origin": "agent" },
-      { "id": "a2.1-u07-c05", "type": "dictation", "role": "check", "topic": "hoeren", "promptDe": "Hören Sie und schreiben Sie den Satz.", "promptEn": "Listen and write the sentence.", "audioLineRef": "a2.1-u07-ls7-l02", "answer": "Bitte rufen Sie mich zurück.", "accepted": ["Bitte rufen Sie mich zurück."], "explanation": { "de": "zurückrufen: Das zurück steht am Ende.", "en": "zurückrufen is separable: zurück goes to the end." }, "origin": "agent" },
-      { "id": "a2.1-u07-c06", "type": "dictation", "role": "check", "topic": "hoeren", "promptDe": "Hören Sie die Nummer und schreiben Sie sie auf.", "promptEn": "Write the number you hear.", "audioLineRef": "a2.1-u07-ls7-l03", "answer": "0341 44 20 17", "accepted": ["0341 44 20 17"], "exact": "number", "explanation": { "de": "0341 44 20 17 – jede Ziffer zählt.", "en": "0341 44 20 17 – every digit counts." }, "origin": "agent" },
-      { "id": "a2.1-u07-c07", "type": "error_correction", "role": "check", "topic": "g.reflexiv-akk", "promptDe": "Korrigieren Sie: „Beeil dich, wir verspäten sich!“", "promptEn": "Correct the sentence.", "answer": "Beeil dich, wir verspäten uns!", "accepted": ["Beeil dich, wir verspäten uns!"], "intentionalError": true, "errorTag": "reflexive", "explanation": { "de": "Zu wir passt uns.", "en": "With wir the pronoun is uns." }, "origin": "agent" },
-      { "id": "a2.1-u07-q01", "type": "multiple_choice", "role": "proof", "topic": "hoeren", "audioLineRef": "a2.1-u07-ls7-l01", "promptDe": "Hören Sie die Nachricht. Welche Notiz ist richtig?", "promptEn": "Which note is correct?", "options": ["Herr Winter – bis 16 Uhr zurückrufen – 0341 90 12 33", "Herr Lange – bis 16 Uhr zurückrufen – 0341 90 12 33", "Herr Winter – morgen zurückrufen – 0341 90 12 33"], "answer": "Herr Winter – bis 16 Uhr zurückrufen – 0341 90 12 33", "accepted": ["Herr Winter – bis 16 Uhr zurückrufen – 0341 90 12 33"], "exact": "number", "explanation": { "de": "Herr Winter ist von der Firma Lange. Er möchte heute bis 16 Uhr einen Rückruf.", "en": "Mr Winter is from the company Lange and wants a call back by 4 pm today." }, "origin": "agent" },
-      { "id": "a2.1-u07-q02", "type": "fill_blank", "role": "proof", "topic": "lx.ausrichten", "promptDe": "Der Chef ist nicht da. Sie fragen den Anrufer: „Kann ich ihm etwas ___?“", "promptEn": "Offer to take a message.", "answer": "ausrichten", "accepted": ["ausrichten"], "explanation": { "de": "Kann ich ihm etwas ausrichten?", "en": "'Kann ich ihm etwas ausrichten?'" }, "origin": "agent" }
+      { "id": "a2.1-u07-c02", "type": "fill_blank", "role": "check", "topic": "g.reflexiv-akk", "promptDe": "Setz ___ doch, Jan!", "promptEn": "Reflexive pronoun in the du imperative.", "answer": "dich", "accepted": ["dich"], "explanation": { "de": "Imperativ mit du: Setz dich!", "en": "du imperative: Setz dich!" }, "origin": "agent" },
+      { "id": "a2.1-u07-c03", "type": "sentence_building", "role": "check", "topic": "g.reflexiv-akk", "promptDe": "Bilden Sie den Satz.", "promptEn": "Build the sentence.", "tiles": ["sich", "verspätet", "der Zug"], "answer": "Der Zug verspätet sich.", "accepted": ["Der Zug verspätet sich."], "explanation": { "de": "Subjekt, Verb, sich.", "en": "Subject, verb, sich." }, "origin": "agent" },
+      { "id": "a2.1-u07-c04", "type": "multiple_choice", "role": "check", "topic": "lx.besetzt", "promptDe": "Die Leitung ist ___.", "promptEn": "Choose the word.", "options": ["besetzt", "beschäftigt", "dringend"], "answer": "besetzt", "accepted": ["besetzt"], "explanation": { "de": "Eine Leitung ist besetzt. Eine Person ist beschäftigt.", "en": "A line is 'besetzt'; a person is 'beschäftigt'." }, "origin": "agent" },
+      { "id": "a2.1-u07-c05", "type": "fill_blank", "role": "check", "topic": "lx.verbinden", "promptDe": "Einen Moment bitte, ich ___ Sie mit der Buchhaltung.", "promptEn": "Put the caller through.", "answer": "verbinde", "accepted": ["verbinde"], "explanation": { "de": "ich verbinde Sie mit …", "en": "'ich verbinde Sie mit …'" }, "origin": "agent" },
+      { "id": "a2.1-u07-c06", "type": "dictation", "role": "check", "topic": "hoeren", "promptDe": "Hören Sie und schreiben Sie den Satz.", "promptEn": "Listen and write the sentence.", "audioLineRef": "a2.1-u07-ls7-l02", "answer": "Bitte rufen Sie mich zurück.", "accepted": ["Bitte rufen Sie mich zurück."], "explanation": { "de": "zurückrufen: Das zurück steht am Ende.", "en": "zurückrufen is separable: zurück goes to the end." }, "origin": "agent" },
+      { "id": "a2.1-u07-c07", "type": "dictation", "role": "check", "topic": "hoeren", "promptDe": "Hören Sie die Nummer und schreiben Sie sie auf.", "promptEn": "Write the number you hear.", "audioLineRef": "a2.1-u07-ls7-l03", "answer": "0341 44 20 17", "accepted": ["0341 44 20 17"], "exact": "number", "explanation": { "de": "0341 44 20 17 – jede Ziffer zählt.", "en": "0341 44 20 17 – every digit counts." }, "origin": "agent" },
+      { "id": "a2.1-u07-c08", "type": "error_correction", "role": "check", "topic": "g.reflexiv-akk", "promptDe": "Korrigieren Sie: „Beeil dich, wir verspäten sich!“", "promptEn": "Correct the sentence.", "answer": "Beeil dich, wir verspäten uns!", "accepted": ["Beeil dich, wir verspäten uns!"], "intentionalError": true, "errorTag": "reflexive", "explanation": { "de": "Zu wir passt uns.", "en": "With wir the pronoun is uns." }, "origin": "agent" }
     ],
     "earlier": [
       { "ref": "a2.1-u06-ls2-p03" },
       { "ref": "a2.1-u05-ls1-p06" },
       { "ref": "a2.1-u04-ls2-p02" },
-      { "ref": "a2.1-u03-ls3-p04" },
       { "ref": "a2.1-u02-ls1-p05" }
+    ],
+    "proofItems": [
+      { "id": "a2.1-u07-q01", "type": "multiple_choice", "role": "proof", "topic": "hoeren", "audioLineRef": "a2.1-u07-ls7-l01", "promptDe": "Hören Sie die Nachricht. Welche Notiz ist richtig?", "promptEn": "Which note is correct?", "options": ["Herr Winter – bis 16 Uhr zurückrufen – 0341 90 12 33", "Herr Lange – bis 16 Uhr zurückrufen – 0341 90 12 33", "Herr Winter – morgen zurückrufen – 0341 90 12 33"], "answer": "Herr Winter – bis 16 Uhr zurückrufen – 0341 90 12 33", "accepted": ["Herr Winter – bis 16 Uhr zurückrufen – 0341 90 12 33"], "exact": "number", "explanation": { "de": "Herr Winter ist von der Firma Lange. Er möchte heute bis 16 Uhr einen Rückruf.", "en": "Mr Winter is from the company Lange and wants a call back by 4 pm today." }, "origin": "agent" },
+      { "id": "a2.1-u07-q02", "type": "fill_blank", "role": "proof", "topic": "lx.ausrichten", "promptDe": "Der Chef ist nicht da. Sie fragen den Anrufer: „Kann ich ihm etwas ___?“", "promptEn": "Offer to take a message.", "answer": "ausrichten", "accepted": ["ausrichten"], "explanation": { "de": "Kann ich ihm etwas ausrichten?", "en": "'Kann ich ihm etwas ausrichten?'" }, "origin": "agent" }
     ],
     "proofs": [
       { "canDo": "cd.a2.mailbox-verstehen", "item": "a2.1-u07-q01" },
