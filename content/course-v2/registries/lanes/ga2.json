@@ -12,6 +12,7 @@
     "https://www.goethe.de/pro/relaunch/prf/materialien/A2/A2_Modellsatz_Erwachsene.pdf"
   ],
   "access": { "gate": "none" },
+  "delivery": "both",
   "modules": {
     "lesen": { "minutes": 30, "teile": ["l1", "l2", "l3", "l4"] },
     "hoeren": { "minutes": 30, "teile": ["h1", "h2", "h3", "h4"] },
@@ -34,6 +35,10 @@
       "points": 5,
       "scaffoldAllowedIn": ["a2.1"],
       "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Lesen Sie den Artikel aus der Zeitung. Zu jeder der fünf Aufgaben passt eine Lösung: a, b oder c.",
+      "paraphraseOf": "US-A2 S. 6 (Lesen Teil 1, Aufgabenanweisung), paraphrasiert, nicht übernommen",
+      "scaffold": { "minItems": 3, "textWords": [100, 250], "playsFixed": true, "optionsFixed": true },
       "source": "US-A2 S. 3 (Überblick: Medientext, Mehrfachauswahl 3-gliedrig, 5 Items) und S. 6-7; MS-A2 Lesen Teil 1; DB-A2 §4.1 (1 Messpunkt je Item). textWords: ±15 % um die Beispieltexte aus US-A2 und MS-A2 (≈ 183 und ≈ 220 Wörter mit Überschrift). minutes: Designanteil am 30-Minuten-Modul.",
       "stand": "2026-09-27"
     },
@@ -51,6 +56,10 @@
       "points": 5,
       "scaffoldAllowedIn": ["a2.1"],
       "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Lesen Sie die Informationstafel. Wohin gehen Sie in jeder Situation? Wählen Sie a, b oder c (c: ein anderer Ort).",
+      "paraphraseOf": "US-A2 S. 8 (Lesen Teil 2, Aufgabenanweisung), paraphrasiert, nicht übernommen",
+      "scaffold": { "minItems": 3, "textWords": [70, 270], "playsFixed": true, "optionsFixed": true },
       "source": "US-A2 S. 3 und S. 8-9 (Informationstafel/Programm, „Wohin gehen Sie?“, Option c = „andere …“); MS-A2 Lesen Teil 2 (Kaufhaus-Wegweiser). textWords: Wegweiser ≈ 120, Programm ≈ 200 Wörter, memo 01 zählt ≈ 235 Wörter für die Beispieltafel; Obergrenze 270 = ca. +15 % darüber. minutes: Designanteil am 30-Minuten-Modul.",
       "stand": "2026-09-27"
     },
@@ -68,6 +77,10 @@
       "points": 5,
       "scaffoldAllowedIn": ["a2.1"],
       "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Lesen Sie die E-Mail. Welche Lösung passt zu jeder der fünf Aufgaben: a, b oder c?",
+      "paraphraseOf": "US-A2 S. 10 (Lesen Teil 3, Aufgabenanweisung), paraphrasiert, nicht übernommen",
+      "scaffold": { "minItems": 3, "textWords": [140, 295], "playsFixed": true, "optionsFixed": true },
       "source": "US-A2 S. 3 und S. 10-11 (Korrespondenz verstehen, Mehrfachauswahl 3-gliedrig); MS-A2 Lesen Teil 3. textWords: die E-Mails in US-A2 und MS-A2 haben je ≈ 256 Wörter. minutes: Designanteil am 30-Minuten-Modul.",
       "stand": "2026-09-27"
     },
@@ -86,6 +99,10 @@
       "points": 5,
       "scaffoldAllowedIn": ["a2.1"],
       "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Fünf Personen suchen etwas. Welche Anzeige passt zu wem? Jede Anzeige nur einmal; passt keine, wählen Sie X.",
+      "paraphraseOf": "US-A2 S. 12 (Lesen Teil 4, Aufgabenanweisung), paraphrasiert, nicht übernommen",
+      "scaffold": { "minItems": 3, "textWords": [25, 45], "playsFixed": true, "optionsFixed": true },
       "source": "US-A2 S. 3 und S. 12-13 (Anzeigen a-f zu Personen zuordnen; die Anzeige aus dem Beispiel ist verbraucht; für eine Aufgabe gibt es keine Lösung = X); MS-A2 Lesen Teil 4. textWords je Anzeige (≈ 30-40 Wörter, ≈ 220 Wörter für alle sechs). minutes: Designanteil am 30-Minuten-Modul.",
       "stand": "2026-09-27"
     },
@@ -104,6 +121,10 @@
       "points": 5,
       "scaffoldAllowedIn": ["a2.1"],
       "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Zu jedem der fünf kurzen Texte gibt es eine Aufgabe. Jeden Text hören Sie zweimal. Welche Lösung passt: a, b oder c?",
+      "paraphraseOf": "US-A2 S. 16 (Hören Teil 1, Aufgabenanweisung), paraphrasiert, nicht übernommen",
+      "scaffold": { "minItems": 3, "textWords": [25, 75], "playsFixed": true, "optionsFixed": true },
       "source": "US-A2 S. 3 und S. 16 (fünf kurze Texte: Radio, Anrufbeantworter, Durchsage; jeder Text zweimal; Mehrfachauswahl 3-gliedrig); DB-A2 §3. textWords: die Beispieltexte in US-A2 und MS-A2 haben ≈ 43-64 Wörter; Band [35, 75] = ca. -15 % unter dem kürzesten und ca. +15 % über dem längsten Beispieltext. minutes: Designanteil am Modul (ca. 30 Min.).",
       "stand": "2026-09-27"
     },
@@ -122,6 +143,11 @@
       "points": 5,
       "scaffoldAllowedIn": ["a2.1"],
       "transfersTo": [],
+      "pictorial": true,
+      "textVariantDe": "Statt der Bilder a–i stehen kurze Beschriftungen mit ein bis drei Wörtern zur Wahl.",
+      "instructionsDe": "Sie hören ein Gespräch nur einmal. Was passt zu welchem Tag? Wählen Sie für jeden Tag ein Bild; jedes Bild passt nur einmal.",
+      "paraphraseOf": "US-A2 S. 17 (Hören Teil 2, Aufgabenanweisung), paraphrasiert, nicht übernommen",
+      "scaffold": { "minItems": 3, "textWords": [140, 300], "playsFixed": true, "optionsFixed": true },
       "source": "US-A2 S. 3 und S. 17 (ein zusammenhängendes Gespräch, nur einmal; passendes Bild a-i, jeder Buchstabe nur einmal, ein Bild im Beispiel verbraucht); MS-A2 Hören Teil 2. textWords: Transkripte ≈ 247 und ≈ 263 Wörter. minutes: Designanteil am Modul (ca. 30 Min.).",
       "stand": "2026-09-27"
     },
@@ -140,6 +166,11 @@
       "points": 5,
       "scaffoldAllowedIn": ["a2.1"],
       "transfersTo": [],
+      "pictorial": true,
+      "textVariantDe": "Statt der drei Bilder stehen drei kurze Antworten in Worten zur Wahl.",
+      "instructionsDe": "Zu jedem der fünf kurzen Gespräche gibt es eine Frage. Jedes Gespräch hören Sie nur einmal. Welches Bild passt: a, b oder c?",
+      "paraphraseOf": "US-A2 S. 18 (Hören Teil 3, Aufgabenanweisung), paraphrasiert, nicht übernommen",
+      "scaffold": { "minItems": 3, "textWords": [25, 75], "playsFixed": true, "optionsFixed": true },
       "source": "US-A2 S. 3 und S. 18 (fünf kurze Gespräche, jeder Text nur einmal; Mehrfachauswahl 3-gliedrig, Bild/Text); MS-A2 Hören Teil 3. textWords je Gespräch (Transkripte ≈ 42-66 Wörter). minutes: Designanteil am Modul (ca. 30 Min.).",
       "stand": "2026-09-27"
     },
@@ -158,6 +189,10 @@
       "points": 5,
       "scaffoldAllowedIn": ["a2.1"],
       "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Sie hören ein Interview aus dem Radio zweimal. Entscheiden Sie bei jeder der fünf Aussagen: Ja oder Nein?",
+      "paraphraseOf": "US-A2 S. 19 (Hören Teil 4, Aufgabenanweisung), paraphrasiert, nicht übernommen",
+      "scaffold": { "minItems": 3, "textWords": [120, 260], "playsFixed": true, "optionsFixed": true },
       "source": "US-A2 S. 3 und S. 19 (ein Radiointerview, zweimal; Ja/Nein); MS-A2 Hören Teil 4. textWords: Transkripte ≈ 209 und ≈ 226 Wörter. minutes: Designanteil am Modul (ca. 30 Min.).",
       "stand": "2026-09-27"
     },
@@ -175,6 +210,9 @@
       "points": 10,
       "scaffoldAllowedIn": [],
       "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Schreiben Sie eine SMS mit 20 bis 30 Wörtern. Schreiben Sie etwas zu allen drei Punkten.",
+      "paraphraseOf": "US-A2 S. 22 (Schreiben Teil 1, Aufgabenanweisung), paraphrasiert, nicht übernommen",
       "source": "US-A2 S. 3 und S. 22 (persönliche Mitteilung zur Kontaktpflege, SMS, 20-30 Wörter, zu allen drei Punkten); US-A2 S. 37-38 (Aufgabenerfüllung 5 + Sprache 5 Messpunkte; unter 50 % = 10 Wörter oder Thema verfehlt → E → Aufgabe 0). minutes: Designanteil am 30-Minuten-Modul.",
       "stand": "2026-09-27"
     },
@@ -192,6 +230,9 @@
       "points": 10,
       "scaffoldAllowedIn": [],
       "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Schreiben Sie eine E-Mail mit 30 bis 40 Wörtern. Gehen Sie auf alle drei Punkte ein.",
+      "paraphraseOf": "US-A2 S. 22 (Schreiben Teil 2, Aufgabenanweisung), paraphrasiert, nicht übernommen",
       "source": "US-A2 S. 3 und S. 22 (halbformelle Mitteilung zur Handlungsregulierung, E-Mail, 30-40 Wörter, zu allen drei Punkten); US-A2 S. 37-38 (Aufgabenerfüllung 5 + Sprache 5 Messpunkte; unter 50 % = 15 Wörter oder Thema verfehlt → E → Aufgabe 0). minutes: Designanteil am 30-Minuten-Modul.",
       "stand": "2026-09-27"
     },
@@ -209,6 +250,9 @@
       "points": 4,
       "scaffoldAllowedIn": ["a2.1"],
       "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Ziehen Sie vier Karten mit Stichwörtern. Stellen Sie zu jeder Karte eine Frage und beantworten Sie die Fragen der anderen Person.",
+      "paraphraseOf": "US-A2 S. 23-24 (Sprechen Teil 1, Aufgabenblatt), paraphrasiert, nicht übernommen",
       "source": "US-A2 S. 3, S. 23-24 (Fragen zur Person: vier Wortkarten, vier Fragen stellen, vier Fragen beantworten), S. 41 (ca. 20 Sekunden, um die Karten anzusehen); DB-A2 §3 (Teil 1 ca. 3 Minuten, keine Vorbereitungszeit). points: Aufgabenerfüllung 2 + Sprache 2, Teil-Zuordnung rekonstruiert (openQuestions).",
       "stand": "2026-09-27"
     },
@@ -226,6 +270,9 @@
       "points": 8,
       "scaffoldAllowedIn": ["a2.1"],
       "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Auf Ihrer Karte stehen eine Frage und vier Stichpunkte. Erzählen Sie von sich. Danach stellt die prüfende Person ein bis zwei Fragen.",
+      "paraphraseOf": "US-A2 S. 25 (Sprechen Teil 2, Aufgabenblatt), paraphrasiert, nicht übernommen",
       "source": "US-A2 S. 3, S. 25 (Aufgabenkarte mit Frage und vier Stichpunkten: von sich erzählen), S. 41 (ca. 20 Sekunden Lesezeit; die prüfende Person stellt ein bis zwei Zusatzfragen); DB-A2 §3 (Teil 2 ca. 3 Minuten pro Teilnehmenden; minutes = 6 für das Paar, wie die Paar- bzw. Gruppenminuten von sp1 und sp3, Summe 3 + 6 + 5 = 14 von ca. 15 Minuten). points: Aufgabenerfüllung 4 + Sprache 4, Teil-Zuordnung rekonstruiert (openQuestions).",
       "stand": "2026-09-27"
     },
@@ -243,6 +290,9 @@
       "points": 8,
       "scaffoldAllowedIn": ["a2.1"],
       "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Planen Sie zu zweit etwas. Machen Sie Vorschläge, reagieren Sie auf die Vorschläge der anderen Person und finden Sie gemeinsam eine Lösung.",
+      "paraphraseOf": "US-A2 S. 26-27 (Sprechen Teil 3, Aufgabenblatt), paraphrasiert, nicht übernommen",
       "source": "US-A2 S. 3, S. 26-27 (gemeinsam etwas planen: Stichwortblatt); MS-A2 Sprechen Teil 3 (zwei verschiedene Tageskalender, einen Termin finden); US-A2 S. 41 (ca. 20 Sekunden Lesezeit); DB-A2 §3 (Teil 3 ca. 5 Minuten). points: Aufgabenerfüllung 4 + Sprache 4, Teil-Zuordnung rekonstruiert (openQuestions).",
       "stand": "2026-09-27"
     }

@@ -2163,24 +2163,18 @@
           },
           {
             "id": "a1.2-u04-ls3-p13",
-            "type": "error_correction",
+            "type": "fill_blank",
             "role": "practice",
             "topic": "g.imperativ-sie",
-            "promptDe": "Korrigieren Sie die Bitte: „Bitte Sie warten hier.“",
-            "promptEn": "Correct the request (Sie imperative).",
-            "answer": "Bitte warten Sie hier.",
+            "promptDe": "Vor Zimmer 14 warten viele Leute. „Bitte ___ Sie leise.“ (sein)",
+            "promptEn": "The Sie imperative of “sein”.",
+            "answer": "seien",
             "accepted": [
-              "Bitte warten Sie hier.",
-              "Warten Sie bitte hier."
+              "seien"
             ],
-            "acceptedWhy": {
-              "Warten Sie bitte hier.": "auch richtig: bitte kann nach Sie stehen"
-            },
-            "intentionalError": true,
-            "errorTag": "v2-inv",
             "explanation": {
-              "de": "Imperativ mit Sie: erst das Verb, dann Sie: Bitte warten Sie hier.",
-              "en": "Sie imperative: the verb comes before “Sie”."
+              "de": "Imperativ von sein mit Sie: Seien Sie … Also: Bitte seien Sie leise.",
+              "en": "The Sie imperative of “sein” is “seien Sie”."
             },
             "origin": "agent"
           },

@@ -14,6 +14,7 @@
     "https://shop.telc.net/media/catalog/product/file/2/0/20210103_5070-b00-010106_web_1.pdf"
   ],
   "access": { "gate": "none" },
+  "delivery": "both",
   "modules": {
     "hoeren": { "minutes": 20, "teile": ["h1", "h2", "h3"] },
     "lesen": { "minutes": 25, "teile": ["l1", "l2", "l3"] },
@@ -27,6 +28,11 @@
       "items": 6, "options": 3, "plays": 2, "minutes": 7,
       "textType": "tt.kurzdialog", "textWords": [32, 53], "textWordsSource": "official-sample",
       "points": 6, "scaffoldAllowedIn": ["a1.1"], "transfersTo": [],
+      "pictorial": true,
+      "textVariantDe": "Statt der drei Bilder stehen drei kurze Antworten (ein Wort, eine Zahl oder eine Uhrzeit) zur Wahl.",
+      "instructionsDe": "Zu jedem der sechs kurzen Gespräche gibt es eine Frage. Jedes Gespräch hören Sie zweimal. Welche Antwort passt: a, b oder c?",
+      "paraphraseOf": "US-A1 Hören Teil 1, task instruction (page not recorded in memo 01); format TB-A1 p. 27 — paraphrased, not copied",
+      "scaffold": { "minItems": 3, "textWords": [20, 53], "playsFixed": true, "optionsFixed": true },
       "source": "TB-A1 p. 27; DB-A1 §4.1; US-A1 Hören Teil 1 — short everyday dialogues between two people, one picture-supported a/b/c item per text, played twice; the example item (0) is not counted; textWords = ±15 % of the 6 sample dialogues (38–46 words)",
       "stand": "2026-09-27"
     },
@@ -35,6 +41,10 @@
       "items": 4, "options": 2, "plays": 1, "minutes": 3,
       "textType": "tt.durchsage", "textWords": [29, 47], "textWordsSource": "official-sample",
       "points": 4, "scaffoldAllowedIn": ["a1.1"], "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Zu jeder der vier Durchsagen gibt es eine Aussage. Jede Durchsage hören Sie nur einmal. Stimmt die Aussage: richtig oder falsch?",
+      "paraphraseOf": "US-A1 Hören Teil 2, task instruction (page not recorded in memo 01); format TB-A1 p. 27 — paraphrased, not copied",
+      "scaffold": { "minItems": 2, "textWords": [20, 47], "playsFixed": true, "optionsFixed": true },
       "source": "TB-A1 p. 27; DB-A1 §4.1; US-A1 Hören Teil 2 — public announcements (airport, station, train, shop, coach tour), the instruction understood globally, richtig/falsch, each text played ONCE; textWords = ±15 % of the 4 sample texts (34–41 words)",
       "stand": "2026-09-27"
     },
@@ -43,6 +53,10 @@
       "items": 5, "options": 3, "plays": 2, "minutes": 5,
       "textType": "tt.telefonansage", "textWords": [28, 54], "textWordsSource": "official-sample",
       "points": 5, "scaffoldAllowedIn": ["a1.1"], "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Zu jeder der fünf Nachrichten auf dem Anrufbeantworter gibt es eine Frage. Jede Nachricht hören Sie zweimal. Welche Antwort passt: a, b oder c?",
+      "paraphraseOf": "US-A1 Hören Teil 3, task instruction (page not recorded in memo 01); format TB-A1 p. 27 — paraphrased, not copied",
+      "scaffold": { "minItems": 3, "textWords": [20, 54], "playsFixed": true, "optionsFixed": true },
       "source": "TB-A1 p. 27; DB-A1 §4.1; US-A1 Hören Teil 3 — answering-machine messages, partly private, partly official (practice, company), one a/b/c item per text, played twice; textWords = ±15 % of the 5 sample texts (33–47 words)",
       "stand": "2026-09-27"
     },
@@ -51,6 +65,10 @@
       "items": 5, "options": 2, "minutes": 9,
       "textType": "tt.kurzmitteilung", "textWords": [56, 92], "textWordsSource": "official-sample",
       "points": 5, "scaffoldAllowedIn": ["a1.1"], "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Zu zwei kurzen Nachrichten gibt es fünf Aussagen. Lesen Sie die Texte. Stimmt jede Aussage: richtig oder falsch?",
+      "paraphraseOf": "US-A1 Lesen Teil 1, task instruction (page not recorded in memo 01); format TB-A1 p. 32 — paraphrased, not copied",
+      "scaffold": { "minItems": 3, "textWords": [35, 92], "playsFixed": true, "optionsFixed": true },
       "source": "TB-A1 p. 32; DB-A1 §4.2; US-A1 Lesen Teil 1 — two short notes or e-mails from private or working life (messages, instructions, invitations), 5 statements richtig/falsch across both texts; textWords per text = ±15 % of 66 words (sample text 1) to 80 words (memo 01)",
       "stand": "2026-09-27"
     },
@@ -59,6 +77,10 @@
       "items": 5, "options": 2, "minutes": 9,
       "textType": "tt.internetanzeige", "textWords": [9, 26], "textWordsSource": "official-sample",
       "points": 5, "scaffoldAllowedIn": ["a1.1"], "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Für jede Situation gibt es zwei Anzeigen oder Internetseiten. Welche passt zu der Person: a oder b?",
+      "paraphraseOf": "US-A1 Lesen Teil 2, task instruction (page not recorded in memo 01); format TB-A1 pp. 32–34 — paraphrased, not copied",
+      "scaffold": { "minItems": 3, "textWords": [9, 26], "playsFixed": true, "optionsFixed": true },
       "source": "TB-A1 pp. 32–34; DB-A1 §4.2; US-A1 Lesen Teil 2 — genau zwei Optionen a/b: ten small ads or website snippets, two per situation, choose the one (a or b) that meets the stated need; options = 2 is authoritative — task 'abc' only names the single-choice family (SCHEMA §4.3 has no 'ab' value), so generators, renderers and EXM-01/ITM-02 must read options and never infer three options from task; textWords per ad = ±15 % of the sample ads (11–23 words)",
       "stand": "2026-09-27"
     },
@@ -67,6 +89,10 @@
       "items": 5, "options": 2, "minutes": 7,
       "textType": "tt.schild", "textWords": [10, 25], "textWordsSource": "official-sample",
       "points": 5, "scaffoldAllowedIn": ["a1.1"], "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Zu fünf Schildern und Aushängen gibt es je eine Aussage. Stimmt die Aussage: richtig oder falsch?",
+      "paraphraseOf": "US-A1 Lesen Teil 3, task instruction (page not recorded in memo 01); format TB-A1 p. 32 — paraphrased, not copied",
+      "scaffold": { "minItems": 3, "textWords": [10, 25], "playsFixed": true, "optionsFixed": true },
       "source": "TB-A1 p. 32; DB-A1 §4.2; US-A1 Lesen Teil 3 — five very short signs or notices with their location (station, hotel, club, ticket machine), one statement each, richtig/falsch; textWords per sign = ±15 % of the sample signs (12–22 words)",
       "stand": "2026-09-27"
     },
@@ -75,6 +101,10 @@
       "items": 5, "minutes": 5,
       "textType": "tt.formular", "textWords": [36, 48], "textWordsSource": "official-sample",
       "rubric": "sd1-s1", "points": 5, "scaffoldAllowedIn": ["a1.1"], "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Lesen Sie den kurzen Text über eine Person. Tragen Sie die fehlenden Angaben in die fünf Lücken des Formulars ein.",
+      "paraphraseOf": "US-A1 Schreiben Teil 1, task instruction (page not recorded in memo 01); format TB-A1 p. 37 — paraphrased, not copied",
+      "scaffold": { "minItems": 3, "textWords": [25, 48], "playsFixed": true, "optionsFixed": true },
       "source": "TB-A1 p. 37; DB-A1 §4.3.1; US-A1 Schreiben Teil 1 — a form (registration, booking, order) with exactly 5 gaps, filled from a short situation text about another person; 1 or 0 points per field; textWords = the situation text, ±15 % of the sample (42 words)",
       "stand": "2026-09-27"
     },
@@ -83,6 +113,9 @@
       "minutes": 15,
       "textType": "tt.kurzmitteilung", "words": { "target": 30 }, "leitpunkte": 3,
       "rubric": "sd1-s2", "points": 10, "scaffoldAllowedIn": ["a1.1"], "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Schreiben Sie eine kurze Nachricht mit etwa 30 Wörtern. Schreiben Sie etwas zu jedem der drei Punkte.",
+      "paraphraseOf": "US-A1 Schreiben Teil 2, task instruction (page not recorded in memo 01); format TB-A1 pp. 37–38 — paraphrased, not copied",
       "source": "TB-A1 pp. 37–38; DB-A1 §4.3.2; US-A1 Schreiben Teil 2 — a short message (note or e-mail: apology, invitation, enquiry) on 3 Leitpunkte given in the situation text, about 30 words; Anrede and Gruß are scored as the text-type criterion, never as a Leitpunkt; register is set per task (US-A1: informal to a friend; TB-A1 sample: formal to a tourist office)",
       "stand": "2026-09-27"
     },
@@ -91,6 +124,9 @@
       "minutes": 5,
       "textType": "tt.stichwortblatt", "interaction": "monologue", "prepMinutes": 0,
       "rubric": "sd1-sp1", "points": 3, "scaffoldAllowedIn": ["a1.1"], "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Stellen Sie sich mit Hilfe der Stichwörter vor. Buchstabieren Sie danach ein Wort und sagen Sie eine Zahl.",
+      "paraphraseOf": "US-A1 Sprechen Teil 1, task sheet (page not recorded in memo 01); format TB-A1 pp. 44–49 — paraphrased, not copied",
       "source": "TB-A1 pp. 44–49; DB-A1 §3, §5; US-A1 Sprechen Teil 1 — introduce yourself in several sentences from a keyword sheet (Name, Alter, Land, Wohnort, Sprachen, Beruf, Hobby; not all needed), about 80 s per candidate, then spell a word and give a number of at least two digits; 1 point each for introduction, spelling, number",
       "stand": "2026-09-27"
     },
@@ -99,6 +135,9 @@
       "items": 2, "minutes": 5,
       "textType": "tt.wortkarte", "interaction": "cards-ask", "prepMinutes": 0,
       "rubric": "sd1-sp2", "points": 6, "scaffoldAllowedIn": ["a1.1"], "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Sie haben eine Karte mit einem Wort zum Thema. Stellen Sie damit eine Frage. Antworten Sie auch auf eine Frage.",
+      "paraphraseOf": "US-A1 Sprechen Teil 2, task sheet (page not recorded in memo 01); format TB-A1 pp. 44–51 — paraphrased, not copied",
       "source": "TB-A1 pp. 44–51; DB-A1 §3, §5; US-A1 Sprechen Teil 2 — two topics (items = 2 rounds); per topic each candidate draws a word card, asks one question on the topic and answers one question from another candidate, about 60 s per candidate; 2 points per question, 1 per answer",
       "stand": "2026-09-27"
     },
@@ -107,6 +146,10 @@
       "items": 2, "minutes": 5,
       "textType": "tt.bildkarte", "interaction": "cards-request", "prepMinutes": 0,
       "rubric": "sd1-sp3", "points": 6, "scaffoldAllowedIn": ["a1.1"], "transfersTo": [],
+      "pictorial": true,
+      "textVariantDe": "Statt des Bildes steht der Gegenstand als Wort auf der Karte, zum Beispiel „Tee“ oder „Fenster“.",
+      "instructionsDe": "Auf Ihrer Karte ist ein Gegenstand. Bitten Sie eine andere Person darum. Reagieren Sie auch auf eine Bitte.",
+      "paraphraseOf": "US-A1 Sprechen Teil 3, task sheet (page not recorded in memo 01); format TB-A1 pp. 44–52 — paraphrased, not copied",
       "source": "TB-A1 pp. 44–52; DB-A1 §3, §5; US-A1 Sprechen Teil 3 — two picture cards with everyday objects (items = 2 rounds); per round each candidate makes one request to another candidate and reacts to one, a non-verbal reaction counts; an information question instead of a request is sent back for a new attempt; about 60 s per candidate; 2 points per request, 1 per reaction",
       "stand": "2026-09-27"
     }

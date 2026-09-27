@@ -12,6 +12,7 @@
     "https://www.telc.net/en/language-examinations/certificate-exams/german/telc-german-b2/"
   ],
   "access": { "gate": "none" },
+  "delivery": "both",
   "modules": {
     "lesen": { "minutes": 65, "teile": ["lv1", "lv2", "lv3"] },
     "sprachbausteine": { "minutes": 25, "teile": ["sb1", "sb2"] },
@@ -35,6 +36,10 @@
       "points": 25,
       "scaffoldAllowedIn": ["b2.1"],
       "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Lesen Sie die fünf Texte und die zehn Überschriften. Welche Überschrift passt zu welchem Text? Fünf Überschriften bleiben übrig.",
+      "paraphraseOf": "UT-B2 S. 6 (Leseverstehen Teil 1, Aufgabenanweisung), paraphrasiert, nicht übernommen",
+      "scaffold": { "minItems": 3, "textWords": [125, 320], "playsFixed": true, "optionsFixed": true },
       "source": "UT-B2 S. 5 (Globalverstehen, 5 Zuordnungsaufgaben) und S. 6-7 (zehn Überschriften a-j, fünf Texte 1-5, fünf Überschriften bleiben übrig); HB-B2 S. 34 (fünf kurze Zeitungs-/Zeitschriftenberichte oder Broschürenauszüge aus zwei Themenbereichen; 5 Punkte je Item = 25). textWords je Text: ±15 % um die Beispieltexte in UT-B2 (eigene Zählung 146-277 Wörter). minutes: Designanteil am gemeinsamen 90-Minuten-Block Lesen + Sprachbausteine.",
       "stand": "2026-09-27"
     },
@@ -52,6 +57,10 @@
       "points": 25,
       "scaffoldAllowedIn": ["b2.1"],
       "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Lesen Sie den Artikel. Wählen Sie zu jeder der fünf Aufgaben die Antwort, die dem Text entspricht: a, b oder c.",
+      "paraphraseOf": "UT-B2 S. 8 (Leseverstehen Teil 2, Aufgabenanweisung), paraphrasiert, nicht übernommen",
+      "scaffold": { "minItems": 3, "textWords": [300, 630], "playsFixed": true, "optionsFixed": true },
       "source": "UT-B2 S. 5 (Detailverstehen, 5 Multiple-Choice-Aufgaben) und S. 8-9 (Items 6-10, je a/b/c); HB-B2 S. 35 (ein authentischer Artikel von allgemeinem Interesse; 5 Punkte je Item = 25). textWords für den ganzen Leseinput des Teils: UT-B2 zeigt zwei Artikel zu einem Thema (eigene Zählung ≈ 300 + 249 = 549 Wörter), HB-B2 spricht von einem Text; Band ±15 %. minutes: Designanteil am 90-Minuten-Block.",
       "stand": "2026-09-27"
     },
@@ -70,6 +79,10 @@
       "points": 25,
       "scaffoldAllowedIn": ["b2.1"],
       "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Zehn Personen suchen Informationen, zwölf Anzeigen stehen zur Wahl. Welche passt zu wem? Jede nur einmal; passt keine, wählen Sie x.",
+      "paraphraseOf": "UT-B2 S. 10 (Leseverstehen Teil 3, Aufgabenanweisung), paraphrasiert, nicht übernommen",
+      "scaffold": { "minItems": 5, "textWords": [60, 125], "playsFixed": true, "optionsFixed": true },
       "source": "UT-B2 S. 5 (Selektives Verstehen, 10 Zuordnungsaufgaben) und S. 10-12 (zehn Situationen 11-20, zwölf Info-Texte a-l, jeder Text nur einmal; manchmal keine Lösung = x); HB-B2 S. 36 (Anzeigen und kurze Informationstexte aus Blättern/Broschüren; 2,5 Punkte je Item = 25). textWords je Anzeige: ±15 % um UT-B2 (eigene Zählung 68-107 Wörter). minutes: Designanteil am 90-Minuten-Block.",
       "stand": "2026-09-27"
     },
@@ -87,6 +100,10 @@
       "points": 15,
       "scaffoldAllowedIn": ["b2.1"],
       "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "In dem Brief fehlen zehn Wörter oder Wendungen. Welche der drei Möglichkeiten passt in jede Lücke: a, b oder c?",
+      "paraphraseOf": "UT-B2 S. 13 (Sprachbausteine Teil 1, Aufgabenanweisung), paraphrasiert, nicht übernommen",
+      "scaffold": { "minItems": 5, "textWords": [110, 265], "playsFixed": true, "optionsFixed": true },
       "source": "UT-B2 S. 5 (Grammatik, 10 Multiple-Choice-Aufgaben) und S. 13 (Lücken 21-30, je a/b/c, persönlicher Brief); HB-B2 S. 37 (halbformelle oder informelle Korrespondenz, Briefe oder E-Mails, Schwerpunkt Grammatik; 1,5 Punkte je Item = 15). textWords: ±15 % um den Beispieltext (eigene Zählung ≈ 229 Wörter). textType nennt das Register des Beispiels; ein Block darf halbformell sein. minutes: Designanteil am 90-Minuten-Block.",
       "stand": "2026-09-27"
     },
@@ -104,6 +121,10 @@
       "points": 15,
       "scaffoldAllowedIn": ["b2.1"],
       "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "In dem Text fehlen zehn Wörter. Setzen Sie Wörter aus der Liste ein; jedes höchstens einmal, einige bleiben übrig.",
+      "paraphraseOf": "UT-B2 S. 14 (Sprachbausteine Teil 2, Aufgabenanweisung), paraphrasiert, nicht übernommen",
+      "scaffold": { "minItems": 5, "textWords": [140, 335], "playsFixed": true, "optionsFixed": true },
       "source": "UT-B2 S. 5 (Lexik, 10 Zuordnungsaufgaben) und S. 14 (Lücken 31-40, Wortkasten a-o, jedes Wort nur einmal, nicht alle Wörter passen); HB-B2 S. 38 (einfacher Zeitungs- oder Zeitschriftenartikel, fünfzehn Optionen, Schwerpunkt Lexik; 1,5 Punkte je Item = 15). textWords: ±15 % um den Beispieltext (eigene Zählung ≈ 289 Wörter; Untergrenze auf das B2.2-Minimum von tt.zeitungsartikel angehoben). minutes: Designanteil am 90-Minuten-Block.",
       "stand": "2026-09-27"
     },
@@ -123,6 +144,10 @@
       "points": 25,
       "scaffoldAllowedIn": ["b2.1"],
       "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Sie hören eine Nachrichtensendung nur einmal. Vorher lesen Sie die fünf Aussagen. Sind sie richtig oder falsch?",
+      "paraphraseOf": "UT-B2 S. 15 (Hörverstehen Teil 1, Aufgabenanweisung), paraphrasiert, nicht übernommen",
+      "scaffold": { "minItems": 3, "textWords": [200, 460], "playsFixed": true, "optionsFixed": true },
       "source": "UT-B2 S. 5 (Globalverstehen, 5 Richtig-Falsch-Aufgaben) und S. 15 (Nachrichtensendung, nur einmal gehört, 30 Sekunden Lesezeit); HB-B2 S. 39 (Radionachrichten mit sechs Meldungen, kurze Einführung; eine Meldung ohne Item; falsch heißt nie ‚steht nicht im Text‘; 5 Punkte je Item = 25). textWords für die ganze Sendung: ±15 % um das Transkript UT-B2 S. 48 (eigene Zählung ≈ 400 Wörter). minutes: Designanteil am Modul (ca. 20 Min.).",
       "stand": "2026-09-27"
     },
@@ -142,6 +167,10 @@
       "points": 25,
       "scaffoldAllowedIn": ["b2.1"],
       "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Sie hören ein Interview aus dem Radio nur einmal. Entscheiden Sie bei jeder der zehn Aussagen: richtig oder falsch?",
+      "paraphraseOf": "UT-B2 S. 16 (Hörverstehen Teil 2, Aufgabenanweisung), paraphrasiert, nicht übernommen",
+      "scaffold": { "minItems": 5, "textWords": [400, 900], "playsFixed": true, "optionsFixed": true },
       "source": "UT-B2 S. 5 (Detailverstehen, 10 Richtig-Falsch-Aufgaben) und S. 16 (Rundfunk-Interview, nur einmal gehört, 60 Sekunden Lesezeit); HB-B2 S. 40 (Radiointerview oder Gespräch mit Erzählcharakter; 2,5 Punkte je Item = 25). textWords: ±15 % um das Transkript UT-B2 S. 48-49 (eigene Zählung ≈ 820 Wörter; Obergrenze auf das B2.1-Maximum von tt.radiointerview gesenkt). minutes: Designanteil am Modul (ca. 20 Min.).",
       "stand": "2026-09-27"
     },
@@ -160,6 +189,10 @@
       "points": 25,
       "scaffoldAllowedIn": ["b2.1"],
       "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Sie hören fünf kurze Texte, jeden nur einmal. Ist die Aussage zu jedem Text richtig oder falsch?",
+      "paraphraseOf": "UT-B2 S. 17 (Hörverstehen Teil 3, Aufgabenanweisung), paraphrasiert, nicht übernommen",
+      "scaffold": { "minItems": 3, "textWords": [40, 130], "playsFixed": true, "optionsFixed": true },
       "source": "UT-B2 S. 5 (Selektives Verstehen, 5 Richtig-Falsch-Aufgaben) und S. 17 (fünf kurze Texte, nur einmal gehört); HB-B2 S. 41 (Durchsagen, Radioansagen, Sprach- und Voicemail-Nachrichten, jeder Text mit kurzer Einführung; ein Item je Text; 5 Punkte je Item = 25). textWords je Text: ±15 % um UT-B2 S. 49 (eigene Zählung 49-112 Wörter). Lesezeit in UT-B2 und HB-B2 nicht angegeben. minutes: Designanteil am Modul (ca. 20 Min.).",
       "stand": "2026-09-27"
     },
@@ -178,6 +211,9 @@
       "points": 45,
       "scaffoldAllowedIn": ["b2.1"],
       "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Wählen Sie eine von zwei Aufgaben. Schreiben Sie eine E-Mail mit mindestens 150 Wörtern, die auf vier Punkte eingeht.",
+      "paraphraseOf": "UT-B2 S. 18-20 (Schriftlicher Ausdruck, Aufgabenanweisung), paraphrasiert, nicht übernommen",
       "source": "UT-B2 S. 5 und S. 18-20 (Aufgabe A oder B wählen, 30 Minuten; E-Mail auf eine Anzeige; vier Leitpunkte, davon drei oder zwei plus ein eigener Aspekt; Reihenfolge, Betreff, Anrede, Einleitung und Schluss selbst wählen; mindestens 150 Wörter); HB-B2 S. 42 (halbformelle E-Mail an Firma, Person oder Büro als Antwort auf eine Anzeige, eine aus zwei Aufgaben, Minimum 150 Wörter, 45 Punkte); UT-B2 S. 42-44 (drei Kriterien je 5/3/1/0, Summe × 3). B2.1-Gerüst: ≈ 120 Wörter (BLUEPRINT §4.1).",
       "stand": "2026-09-27"
     },
@@ -194,6 +230,11 @@
       "points": 25,
       "scaffoldAllowedIn": ["b2.1"],
       "transfersTo": [],
+      "prepAtHome": true,
+      "speaking": { "stimulus": "topicChoice", "topicChoice": { "from": 7, "pick": 1 } },
+      "pictorial": false,
+      "instructionsDe": "Sie haben vorab eines von sieben Themen gewählt. Erzählen Sie höchstens anderthalb Minuten davon; danach fragen Sie sich gegenseitig.",
+      "paraphraseOf": "UT-B2 S. 22 (Mündlicher Ausdruck Teil 1, Aufgabenblatt) und S. 33-34, paraphrasiert, nicht übernommen",
       "source": "UT-B2 S. 22 und S. 33-34 (Über Erfahrungen sprechen: eines von sieben Themen, höchstens 1½ Minuten frei sprechen, danach Fragen der Partnerin/des Partners beantworten und selbst Anschlussfragen stellen; ca. 5 Minuten für das Paar; zu Hause vorbereitet, deshalb keine Vorbereitungszeit im Raum; Soll-Werte prepAtHome true und speaking.topicChoice {from 7, pick 1}, siehe openQuestions ‚Schema-Nachzug‘); UT-B2 S. 36 (auswendig gelernte Beiträge werden unterbrochen); HB-B2 S. 43 (Monolog und Dialog, 25 Punkte); UT-B2 S. 40-41 (Kriterien 7/7/7/4; die Zwischenstufen 7/5/3/0 und 4/2/1/0 der Profile sind nicht verifiziert, splitVerified false).",
       "stand": "2026-09-27"
     },
@@ -212,6 +253,9 @@
       "points": 25,
       "scaffoldAllowedIn": ["b2.1"],
       "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Geben Sie den Artikel aus der Vorbereitung kurz wieder. Tauschen Sie dann Argumente und Erfahrungen aus und suchen Sie gemeinsam Lösungen.",
+      "paraphraseOf": "UT-B2 S. 23 (Mündlicher Ausdruck Teil 2, Aufgabenblatt) und S. 35, paraphrasiert, nicht übernommen",
       "source": "UT-B2 S. 23 und S. 35 (Diskussion, ca. 5 Minuten: einen in der Vorbereitung gelesenen Zeitungsartikel zu einem kontroversen Thema kurz wiedergeben, höchstens eine Minute, dann Argumente, Meinungen und Erfahrungen austauschen und Lösungen vorschlagen); HB-B2 S. 44 (alle erhalten denselben Text; 25 Punkte). textWords: Lesetext der Vorbereitung, ±15 % um UT-B2 S. 23 (eigene Zählung ≈ 279 Wörter; Untergrenze auf das B2.2-Minimum von tt.zeitungsartikel angehoben). prepMinutes: Designanteil an den 20 Minuten für Teil 2 und 3.",
       "stand": "2026-09-27"
     },
@@ -228,6 +272,9 @@
       "points": 25,
       "scaffoldAllowedIn": ["b2.1"],
       "transfersTo": [],
+      "pictorial": false,
+      "instructionsDe": "Planen Sie gemeinsam ein Vorhaben: Bringen Sie Ideen ein, gehen Sie auf Vorschläge ein und einigen Sie sich auf einen Plan.",
+      "paraphraseOf": "UT-B2 S. 24 (Mündlicher Ausdruck Teil 3, Aufgabenblatt) und S. 35, paraphrasiert, nicht übernommen",
       "source": "UT-B2 S. 24 und S. 35 (Gemeinsam etwas planen, ca. 5 Minuten: ein vorgegebenes Vorhaben organisieren, Ideen einbringen, auf Vorschläge reagieren; Nachfragen und gegenseitige Hilfe zählen positiv); HB-B2 S. 45 (kurze Beschreibung der Situation, gemeinsam ein Konzept erarbeiten; 25 Punkte). prepMinutes: Designanteil an den 20 Minuten für Teil 2 und 3.",
       "stand": "2026-09-27"
     }

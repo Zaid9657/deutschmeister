@@ -3110,8 +3110,8 @@
       {
         "id": "a2.2-u04-ls7-l03",
         "speaker": "cast.tomasz",
-        "de": "Wir sind am Ufer hinter dem Hügel, nicht weit von der Brücke.",
-        "en": "We're on the riverbank behind the hill, not far from the bridge."
+        "de": "Wir sind am Ufer hinter dem Hügel, auf dem Weg zur Brücke.",
+        "en": "We are on the riverbank behind the hill, on the path to the bridge."
       }
     ],
     "items": [
@@ -3244,13 +3244,13 @@
         "promptDe": "Hören Sie und schreiben Sie den Satz.",
         "promptEn": "Listen and write the sentence.",
         "audioLineRef": "a2.2-u04-ls7-l03",
-        "answer": "Wir sind am Ufer hinter dem Hügel, nicht weit von der Brücke.",
+        "answer": "Wir sind am Ufer hinter dem Hügel, auf dem Weg zur Brücke.",
         "accepted": [
-          "Wir sind am Ufer hinter dem Hügel, nicht weit von der Brücke."
+          "Wir sind am Ufer hinter dem Hügel, auf dem Weg zur Brücke."
         ],
         "explanation": {
-          "de": "am Ufer, hinter dem Hügel, von der Brücke: alle mit Dativ.",
-          "en": "All three phrases take the dative."
+          "de": "am Ufer, hinter dem Hügel, auf dem Weg, zur Brücke: alle mit Dativ.",
+          "en": "All four phrases take the dative (zur = zu der)."
         },
         "origin": "agent"
       },
