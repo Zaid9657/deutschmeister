@@ -3,7 +3,7 @@
 // Prüfungsfokus Teil or as the unit's Aufgabe (BLUEPRINT §2.4). Blocking with 12 units; advisory
 // on a partial level (windows over the units present).
 
-import { walkTasks } from '../lib-validate/walk.mjs';
+import { walkTasks, speakingParts } from '../lib-validate/walk.mjs';
 import { primaryLane } from '../lib-validate/context.mjs';
 import { arr, finding } from '../lib-validate/helpers.mjs';
 
@@ -30,7 +30,9 @@ export function run({ ctx, levels }) {
     checked += 1;
     const used = new Map(units.map((u) => {
       const s = new Set(arr(u.data.spec?.lanes?.pruefungsfokus).map((p) => p?.template));
-      for (const { task } of walkTasks(u)) if (task?.template) s.add(task.template);
+      for (const { task, kind } of walkTasks(u)) {
+        for (const p of kind === 'speaking' ? speakingParts(task).map((x) => x.part) : [task]) if (p?.template) s.add(p.template);
+      }
       return [u.nr, s];
     }));
     const nrs = units.map((u) => u.nr);

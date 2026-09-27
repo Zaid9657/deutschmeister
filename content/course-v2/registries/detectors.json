@@ -1397,11 +1397,14 @@
         ],
         "whitelist": [
           "sprichst",
-          "spricht",
-          "es gibt",
-          "gibt es"
+          "spricht"
         ],
-        "notes": "Geschlossene Liste ∪ verb_forms.2sg/3sg des Lexikons, wo der Stammvokal wechselt. sprichst/spricht sind der A1.1-U1-Chunk („Sprichst du Deutsch?\"), es gibt ist ein eigener Chunk; hat/wird/weiß und die Modalverben gehören anderen Spine-Punkten.",
+        "unlessInClause": {
+          "gibt": [
+            "es"
+          ]
+        },
+        "notes": "Geschlossene Liste ∪ verb_forms.2sg/3sg des Lexikons, wo der Stammvokal wechselt. sprichst/spricht sind der A1.1-U1-Chunk („Sprichst du Deutsch?\"), es gibt ist ein eigener Chunk (gibt mit es im selben Teilsatz trifft nicht); hat/wird/weiß und die Modalverben gehören anderen Spine-Punkten.",
         "examples": {
           "lexicon": [
             {
@@ -1423,6 +1426,7 @@
           ],
           "miss": [
             "Sprichst du Deutsch?",
+            "Ich frage, ob es hier etwas gibt.",
             "Ich fahre mit dem Bus.",
             "Hier gibt es einen Supermarkt.",
             "Er macht eine Pause.",

@@ -499,17 +499,15 @@ function lexStemVowel(det, sentence, env) {
   for (const f of env.vowelChange) if (!exclude.has(f)) forms.set(f, false);
   const unless = spec.unlessInClause || {}; // { form: [tokens] }: „gibt" is the es-gibt chunk when „es" is in its clause
   const hits = [];
-  for (const c of clauseSpans(sentence)) {
-    const toks = tokens(c.text);
-    const words = new Set(toks.map((t) => t.lower));
-    toks.forEach((t) => {
-      const i = tokens(sentence).findIndex((x) => x.index === c.start + t.index);
-      if (isCapitalMidSentence({ ...t, index: c.start + t.index }, i)) return;
-      if (!forms.has(t.lower)) return;
-      if (arr(unless[t.lower]).some((w) => words.has(w))) return;
-      hits.push({ index: c.start + t.index, match: t.text, fallback: false });
-    });
-  }
+  tokens(sentence).forEach((t, i) => {
+    if (isCapitalMidSentence(t, i) || !forms.has(t.lower)) return;
+    const guard = arr(unless[t.lower]);
+    if (guard.length) {
+      const words = new Set(tokens(clauseAt(sentence, t.index).text).map((x) => x.lower));
+      if (guard.some((w) => words.has(w))) return;
+    }
+    hits.push({ index: t.index, match: t.text, fallback: false });
+  });
   return hits;
 }
 

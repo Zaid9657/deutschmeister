@@ -5,7 +5,7 @@
 // the closing block. Blocking once the level holds its 12 units; a partial level gets the same
 // measurement as advisories.
 
-import { walkBlocks, walkTasks } from '../lib-validate/walk.mjs';
+import { walkBlocks, walkTasks, speakingParts } from '../lib-validate/walk.mjs';
 import { docsOfLevel, liveLanes } from '../lib-validate/context.mjs';
 import { arr, finding } from '../lib-validate/helpers.mjs';
 
@@ -20,7 +20,10 @@ export function templateUses(slot) {
   const uses = [];
   for (const doc of docsOfLevel(slot)) {
     for (const { block } of walkBlocks(doc)) if (block?.template) uses.push(block.template);
-    for (const { task } of walkTasks(doc)) if (task?.template) uses.push(task.template);
+    for (const { task, kind } of walkTasks(doc)) {
+      const parts = kind === 'speaking' ? speakingParts(task).map((x) => x.part) : [task];
+      for (const p of parts) if (p?.template) uses.push(p.template);
+    }
   }
   return uses;
 }
