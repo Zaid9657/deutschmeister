@@ -1116,13 +1116,13 @@
           {
             "id": "a1.1-u07-ls2-l10",
             "speaker": "cast.priya",
-            "de": "Nein, der Kurs ist wichtig. Ich frage morgen Frau Schulz. Vielleicht weiß sie etwas.",
-            "en": "No, the course is important. I’ll ask Ms Schulz tomorrow. Maybe she has an idea."
+            "de": "Nein, der Kurs ist wichtig. Ich frage morgen im Kurs Frau Schulz. Vielleicht weiß sie etwas.",
+            "en": "No, the course is important. I’ll ask Ms Schulz in class tomorrow. Maybe she has an idea."
           }
         ],
         "text": {
-          "de": "Bürgerbüro\nÖffnungszeiten\nMontag bis Freitag: 8 bis 12 Uhr\nnachmittags und am Wochenende geschlossen\nTermine bitte online oder am Telefon",
-          "en": "Citizens’ office · Opening hours: Monday to Friday 8 am–12 noon · closed in the afternoons and at the weekend · Appointments online or by phone, please"
+          "de": "Bürgerbüro\nÖffnungszeiten\nMontag bis Freitag: 8 bis 12 Uhr\nnachmittags und am Wochenende geschlossen\nNur mit Termin (online oder am Telefon)",
+          "en": "Citizens’ office · Opening hours: Monday to Friday 8 am–12 noon · closed in the afternoons and at the weekend · By appointment only (online or by phone)"
         },
         "glosses": [
           {
@@ -1840,8 +1840,8 @@
           {
             "id": "a1.1-u07-ls3-l10",
             "speaker": "cast.priya",
-            "de": "Stimmt. Aber Termine gibt es auch online. Moment … hier: Donnerstag, Viertel nach acht! Das ist gut.",
-            "en": "True. But you can book appointments online too. Just a moment … here: Thursday, quarter past eight! That’s good."
+            "de": "Stimmt. Aber Termine gibt es auch online. Moment … Tag: Donnerstag. Uhrzeit: Viertel nach acht. Gut!",
+            "en": "True. But you can book appointments online too. Just a moment … Day: Thursday. Time: a quarter past eight. Good!"
           }
         ],
         "text": {
@@ -2615,7 +2615,7 @@
           "id": "a1.1-u07-ls4-t4",
           "kind": "sign",
           "title": "Am Bürgerbüro",
-          "text": "Bürgerbüro\nÖffnungszeiten: Montag bis Freitag 8 bis 12 Uhr\nnachmittags geschlossen\nTermine bitte online",
+          "text": "Bürgerbüro\nÖffnungszeiten: Montag bis Freitag 8 bis 12 Uhr\nnachmittags geschlossen\nNur mit Termin",
           "glosses": [
             {
               "token": "Bürgerbüro",
@@ -2721,8 +2721,8 @@
             {
               "id": "a1.1-u07-ls4-t9-l01",
               "speaker": "cast.sophie",
-              "de": "Hallo, hier ist Sophie. Wir kaufen am Mittwoch zusammen ein, ja? Ich lerne bis fünf Uhr. Um halb sechs bin ich am Supermarkt. Bis Mittwoch!",
-              "en": "Hi, it’s Sophie. We’re going shopping together on Wednesday, right? I’m studying until five. I’ll be at the supermarket at half past five. See you on Wednesday!"
+              "de": "Hallo, hier ist Sophie. Schon wieder der Anrufbeantworter! Wir kaufen am Mittwoch zusammen ein, ja? Ich lerne bis fünf Uhr. Um halb sechs bin ich am Supermarkt. Bis Mittwoch!",
+              "en": "Hi, it’s Sophie. The answering machine again! We’re going shopping together on Wednesday, right? I’m studying until five. I’ll be at the supermarket at half past five. See you on Wednesday!"
             }
           ],
           "glosses": []

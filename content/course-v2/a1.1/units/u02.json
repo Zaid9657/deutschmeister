@@ -268,8 +268,8 @@
           {
             "id": "a1.1-u02-ls1-l01",
             "speaker": "cast.herr-richter",
-            "de": "So, Frau Nair, jetzt das Formular. Ich frage, und ich schreibe. Zuerst der Familienname: Wie schreiben Sie Nair?",
-            "en": "Right, Ms Nair, now the form. I ask, and I write. First your surname: how do you spell Nair?"
+            "de": "So, Frau Nair, jetzt das Formular. Ich frage, und ich schreibe. Zuerst der Familienname: Wie schreiben Sie Nair, bitte?",
+            "en": "Right, Ms Nair, now the form. I ask, and I write. First your surname: how do you spell Nair, please?"
           },
           {
             "id": "a1.1-u02-ls1-l02",
@@ -295,8 +295,8 @@
           {
             "id": "a1.1-u02-ls1-l05",
             "speaker": "cast.herr-richter",
-            "de": "Ah, mit A, danke! Und der Vorname: Wie schreiben Sie Priya?",
-            "en": "Ah, with an A, thank you! And your first name: how do you spell Priya?"
+            "de": "Ah, mit A, danke! Und jetzt der Vorname: Wie schreiben Sie Priya?",
+            "en": "Ah, with an A, thank you! And now your first name: how do you spell Priya?"
           },
           {
             "id": "a1.1-u02-ls1-l06",
@@ -308,8 +308,8 @@
           {
             "id": "a1.1-u02-ls1-l07",
             "speaker": "cast.herr-richter",
-            "de": "Alles klar, Priya mit Y. Und wie ist die Adresse hier in Leipzig?",
-            "en": "All right, Priya with a Y. And what is your address here in Leipzig?"
+            "de": "Alles klar, mit Y. Und wie ist die Adresse hier in Leipzig?",
+            "en": "All right, with a Y. And what is your address here in Leipzig?"
           },
           {
             "id": "a1.1-u02-ls1-l08",
@@ -1029,14 +1029,14 @@
           {
             "id": "a1.1-u02-ls2-l03",
             "speaker": "cast.herr-richter",
-            "de": "Doch, jetzt verstehe ich Sie. Ich habe das Formular hier. Wohnen Sie nicht in Leipzig?",
-            "en": "Yes, now I can understand you. I have the form here. Don’t you live in Leipzig?"
+            "de": "Doch, doch, jetzt verstehe ich Sie. Ich habe das Formular hier. Wohnen Sie nicht in Leipzig?",
+            "en": "Yes, yes, now I can understand you. I have the form here. Don’t you live in Leipzig?"
           },
           {
             "id": "a1.1-u02-ls2-l04",
             "speaker": "cast.emre",
-            "de": "Nein, ich wohne in İzmir, in der Türkei. Ich lerne online, im Kurs A1.",
-            "en": "No, I live in İzmir, in Turkey. I study online, in the A1 course."
+            "de": "Nein, ich wohne nicht in Leipzig. Ich wohne in İzmir, in der Türkei. Ich lerne online, im Kurs A1.",
+            "en": "No, I don’t live in Leipzig. I live in İzmir, in Turkey. I study online, in the A1 course."
           },
           {
             "id": "a1.1-u02-ls2-l05",
@@ -1736,8 +1736,8 @@
           {
             "id": "a1.1-u02-ls3-l02",
             "speaker": "cast.herr-richter",
-            "de": "Was sind Sie von Beruf, Frau Nair?",
-            "en": "What do you do for a living, Ms Nair?"
+            "de": "Beruf? Was sind Sie von Beruf, Frau Nair?",
+            "en": "Profession? What do you do for a living, Ms Nair?"
           },
           {
             "id": "a1.1-u02-ls3-l03",
@@ -1748,14 +1748,14 @@
           {
             "id": "a1.1-u02-ls3-l04",
             "speaker": "cast.herr-richter",
-            "de": "Ah, am Empfang, wie ich! Und arbeiten Sie hier in Leipzig?",
-            "en": "Ah, at a reception desk, like me! And do you work here in Leipzig?"
+            "de": "Ah, am Empfang, wie ich! Und arbeiten Sie jetzt hier in Leipzig?",
+            "en": "Ah, at a reception desk, like me! And do you work here in Leipzig now?"
           },
           {
             "id": "a1.1-u02-ls3-l05",
             "speaker": "cast.priya",
-            "de": "Nein, hier arbeite ich nicht. Ich lerne jetzt Deutsch, hier im Kurs.",
-            "en": "No, I don’t work here. I’m learning German now, here in the course."
+            "de": "Nein, hier arbeite ich nicht. Ich lerne jetzt Deutsch.",
+            "en": "No, I don’t work here. I’m learning German now."
           },
           {
             "id": "a1.1-u02-ls3-l06",
@@ -1778,14 +1778,14 @@
           {
             "id": "a1.1-u02-ls3-l09",
             "speaker": "cast.frau-schulz",
-            "de": "Wirklich? Hundert! Wir haben Schüler, Studenten, Kellner und Informatiker. Und jetzt eine Rezeptionistin!",
-            "en": "Really? A hundred! We have school students, university students, waiters and IT specialists. And now a receptionist!"
+            "de": "Wirklich? Hundert! Wir haben Schüler, Studenten, Kellner und Informatiker im Kurs. Und jetzt eine Rezeptionistin!",
+            "en": "Really? A hundred! We have school students, university students, waiters and IT specialists in the course. And now a receptionist!"
           },
           {
             "id": "a1.1-u02-ls3-l10",
             "speaker": "cast.herr-richter",
-            "de": "Ja. Nur Herr Yıldız ist nicht fertig. Er ist in İzmir. Das Formular fülle ich noch aus.",
-            "en": "Yes. Only Mr Yıldız isn’t done. He is in İzmir. I’ll fill in his form myself."
+            "de": "Ja. Nur Herr Yıldız ist nicht fertig. Er ist in İzmir und lernt online. Das Formular fülle ich noch aus.",
+            "en": "Yes. Only Mr Yıldız isn’t done. He is in İzmir and studies online. I’ll fill in his form myself."
           }
         ],
         "text": {
@@ -2258,7 +2258,7 @@
             "count": 2,
             "source": [
               "a1.1-u02-ls3-l02",
-              "a1.1-u02-ls3-l04"
+              "a1.1-u02-ls3-l05"
             ]
           },
           {
