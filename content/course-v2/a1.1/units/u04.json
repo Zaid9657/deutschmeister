@@ -10,10 +10,10 @@
   "stage": "T",
   "title": {
     "de": "Was kostet das?",
-    "canDo": "Sie können nach Preisen und Mengen fragen, im Geschäft einkaufen und kurze Durchsagen im Supermarkt verstehen."
+    "canDo": "Sie können nach Preisen fragen, Angebote lesen und Durchsagen im Supermarkt verstehen."
   },
   "spec": {
-    "situation": "Priya und Arjun kaufen für die Woche ein: Sie schreiben einen Einkaufszettel, fragen auf dem Wochenmarkt nach Preisen und Mengen, lesen Angebote im Prospekt und hören eine Durchsage im Supermarkt.",
+    "situation": "Priya und Arjun kaufen für die Woche ein: Sie lesen Angebote im Prospekt, fragen auf dem Wochenmarkt nach Preisen und Mengen und hören eine Durchsage im Supermarkt.",
     "handlungsfeld": [
       "7"
     ],
@@ -96,7 +96,6 @@
       "tt.kurzdialog",
       "tt.durchsage",
       "tt.prospekt",
-      "tt.notiz",
       "tt.kurzmitteilung",
       "tt.bildkarte"
     ],
@@ -325,8 +324,8 @@
           }
         ],
         "text": {
-          "de": "Heute im Angebot!\nBrot, 500 Gramm: nur 1,29 Euro\nKäse, 200 Gramm: nur 1,99 Euro\nMilch, 1 Flasche: nur 0,99 Euro\nButter, 250 Gramm: nur 1,59 Euro\nÄpfel, 1 Kilo: nur 1,49 Euro\nBananen, 1 Kilo: nur 1,19 Euro\nWasser, 6 Flaschen: nur 2,49 Euro plus Pfand",
-          "en": "On special offer today! Bread, 500 g: only 1.29 euros · Cheese, 200 g: only 1.99 · Milk, 1 bottle: only 0.99 · Butter, 250 g: only 1.59 · Apples, 1 kg: only 1.49 · Bananas, 1 kg: only 1.19 · Water, 6 bottles: only 2.49 plus deposit"
+          "de": "Heute im Angebot!\nBrot, 500 Gramm: nur 1,29 Euro\nKäse, 200 Gramm: nur 1,99 Euro\nMilch, 1 Flasche: nur 0,99 Euro plus Pfand\nButter, 250 Gramm: nur 1,59 Euro\nÄpfel, 1 Kilo: nur 1,49 Euro\nBananen, 1 Kilo: nur 1,19 Euro\nWasser, 6 Flaschen: nur 2,49 Euro plus Pfand",
+          "en": "On special offer today! Bread, 500 g: only 1.29 euros · Cheese, 200 g: only 1.99 · Milk, 1 bottle: only 0.99 plus deposit · Butter, 250 g: only 1.59 · Apples, 1 kg: only 1.49 · Bananas, 1 kg: only 1.19 · Water, 6 bottles: only 2.49 plus deposit"
         },
         "glosses": [
           {
@@ -441,8 +440,8 @@
           "type": "fill_blank",
           "role": "detail",
           "topic": "lesen",
-          "promptDe": "Lesen Sie den Prospekt. 250 Gramm Butter kosten ___ Euro.",
-          "promptEn": "Read the flyer: write the price of the butter.",
+          "promptDe": "Lesen Sie die Angebote. 250 Gramm Butter kosten ___ Euro.",
+          "promptEn": "Read the special offers: write the price of the butter.",
           "answer": "1,59",
           "accepted": [
             "1,59",
@@ -450,8 +449,8 @@
           ],
           "exact": "number",
           "explanation": {
-            "de": "Im Prospekt steht: „Butter, 250 Gramm: nur 1,59 Euro“.",
-            "en": "The flyer says: butter, 250 g, only 1.59 euros."
+            "de": "Die Butter ist im Angebot: „250 Gramm: nur 1,59 Euro“.",
+            "en": "The butter is on offer: 250 g for only 1.59 euros."
           },
           "origin": "agent"
         }
@@ -465,8 +464,8 @@
           "promptDe": "Arjun sagt: „Der ist billig.“ Was ist billig?",
           "promptEn": "der = a masculine noun. What is cheap?",
           "options": [
-            "die Butter",
             "der Käse",
+            "die Butter",
             "das Wasser"
           ],
           "answer": "der Käse",
@@ -509,8 +508,8 @@
           "promptDe": "Welcher Satz sagt: mehr als ein Ei?",
           "promptEn": "Which sentence means: more than one egg?",
           "options": [
-            "Das Ei ist billig.",
             "Die Eier sind billig.",
+            "Das Ei ist billig.",
             "Ein Ei ist billig."
           ],
           "answer": "Die Eier sind billig.",
@@ -824,8 +823,8 @@
             "source": [
               "lx.brot",
               "lx.apfel",
-              "lx.banane",
-              "lx.birne"
+              "lx.flasche",
+              "lx.preis"
             ]
           },
           {
@@ -874,11 +873,11 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "g.artikel-genus-plural",
-          "promptDe": "Zehn ___ kosten nur 1,99 Euro. (das Ei)",
-          "promptEn": "Plural of Ei.",
-          "answer": "Eier",
+          "promptDe": "Zwei ___ kosten nur 2,58 Euro. (das Brot)",
+          "promptEn": "Plural of Brot.",
+          "answer": "Brote",
           "accepted": [
-            "Eier"
+            "Brote"
           ],
           "banks": [
             "plateau",
@@ -887,8 +886,8 @@
           ],
           "difficulty": 2,
           "explanation": {
-            "de": "„das Ei“ – „die Eier“: Plural mit „-er“.",
-            "en": "das Ei → die Eier (plural in -er)."
+            "de": "„das Brot“ – „die Brote“: Plural mit „-e“.",
+            "en": "das Brot → die Brote (plural in -e)."
           },
           "origin": "agent"
         },
@@ -967,7 +966,7 @@
         "bankKey": "a11-u04-mo1",
         "mode": "written",
         "profile": "course-micro",
-        "situationDe": "Sie sind mit Priya und Arjun zu Hause und lesen den Prospekt. Priya fragt: „Was brauchen wir?“",
+        "situationDe": "Sie sind mit Priya und Arjun zu Hause und lesen die Angebote. Priya fragt: „Was brauchen wir?“",
         "promptDe": "Antworten Sie Priya in 1–2 Sätzen: Wir brauchen … (Was? Wie viel?)",
         "promptEn": "Answer Priya in 1–2 sentences: what you need and how much.",
         "planSeconds": 30,
@@ -997,7 +996,7 @@
           "lineDe": "Vierzig Cent? Nicht vierzehn? Gut, vierzig Cent."
         }
       },
-      "endLine": "Sie können jetzt Angebote im Prospekt lesen und sagen, was Sie brauchen."
+      "endLine": "Sie können jetzt Angebote lesen und sagen, was Sie brauchen."
     },
     {
       "id": "a1.1-u04-ls2",
@@ -1112,8 +1111,8 @@
           "promptDe": "Was kaufen Priya und Arjun?",
           "promptEn": "What do Priya and Arjun buy?",
           "options": [
-            "Brot und Käse",
             "Obst und Gemüse",
+            "Brot und Käse",
             "Milch und Wasser"
           ],
           "answer": "Obst und Gemüse",
@@ -1162,7 +1161,7 @@
           ],
           "exact": "number",
           "explanation": {
-            "de": "Der Verkäufer sagt: „Ein Kilo kostet 2,20 Euro.“",
+            "de": "Der Mann am Markt sagt: „Ein Kilo kostet 2,20 Euro.“",
             "en": "The stallholder says a kilo costs 2.20 euros."
           },
           "origin": "agent"
@@ -1205,7 +1204,7 @@
           ],
           "exact": "number",
           "explanation": {
-            "de": "Der Verkäufer sagt: „Das macht zusammen 9 Euro.“ „9“ und „neun“ sind richtig.",
+            "de": "Der Mann am Markt sagt: „Das macht zusammen 9 Euro.“ „9“ und „neun“ sind richtig.",
             "en": "The total is 9 euros – “9” and “neun” are both correct."
           },
           "origin": "agent",
@@ -1225,7 +1224,7 @@
           "options": [
             "nur Priya",
             "Priya und Arjun",
-            "der Verkäufer"
+            "der Mann am Markt"
           ],
           "answer": "Priya und Arjun",
           "accepted": [
@@ -1246,15 +1245,15 @@
           "promptEn": "Who asks whom?",
           "options": [
             "Priya fragt Arjun.",
-            "Der Verkäufer fragt Priya.",
-            "Priya fragt den Verkäufer."
+            "Der Mann am Markt fragt Priya.",
+            "Priya fragt den Mann am Markt."
           ],
           "answer": "Priya fragt Arjun.",
           "accepted": [
             "Priya fragt Arjun."
           ],
           "explanation": {
-            "de": "„Möchtest du“: So fragen Freunde. Der Verkäufer sagt „Sie“.",
+            "de": "„Möchtest du“: So fragen Freunde. Der Mann am Markt sagt „Sie“.",
             "en": "“möchtest du” is informal – Priya asks Arjun; the stallholder uses Sie."
           },
           "origin": "agent"
@@ -1362,7 +1361,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.moechte",
-            "promptDe": "Der Verkäufer fragt: „Was ___ Sie?“ (möcht-)",
+            "promptDe": "Der Mann am Markt fragt: „Was ___ Sie?“ (möcht-)",
             "promptEn": "möchte: Sie-form.",
             "answer": "möchten",
             "accepted": [
@@ -1499,7 +1498,7 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.moechte",
-            "promptDe": "Der Verkäufer zu Priya. Korrigieren Sie: „Was möchtest du?“",
+            "promptDe": "Der Mann am Markt zu Priya. Korrigieren Sie: „Was möchtest du?“",
             "promptEn": "The stallholder to Priya – correct the register.",
             "answer": "Was möchten Sie?",
             "accepted": [
@@ -1511,7 +1510,7 @@
               "register"
             ],
             "explanation": {
-              "de": "Der Verkäufer sagt „Sie“ zu Priya: „Was möchten Sie?“",
+              "de": "Der Mann am Markt sagt „Sie“ zu Priya: „Was möchten Sie?“",
               "en": "The stallholder uses Sie with Priya: Was möchten Sie?"
             },
             "origin": "agent"
@@ -1524,9 +1523,9 @@
             "promptDe": "„Was kostet ein Kilo Tomaten?“ – Was passt?",
             "promptEn": "Choose the right answer.",
             "options": [
+              "2,20 Euro.",
               "Ein Kilo, bitte.",
-              "Ja, gern.",
-              "2,20 Euro."
+              "Ja, gern."
             ],
             "answer": "2,20 Euro.",
             "accepted": [
@@ -1560,10 +1559,11 @@
             "generator": "lex.glossTyped",
             "count": 1,
             "source": [
-              "lx.kartoffel",
-              "lx.zwiebel",
-              "lx.tomate",
-              "lx.birne"
+              "lx.kaese",
+              "lx.milch",
+              "lx.wasser",
+              "lx.obst",
+              "lx.gemuese"
             ]
           },
           {
@@ -1645,7 +1645,7 @@
           "type": "multiple_choice",
           "role": "practice",
           "topic": "g.moechte",
-          "promptDe": "Der Verkäufer: „___ Sie noch etwas?“",
+          "promptDe": "Der Mann am Markt: „___ Sie noch etwas?“",
           "promptEn": "Choose the verb form.",
           "options": [
             "Möchte",
@@ -1696,9 +1696,9 @@
         "bankKey": "a11-u04-mo2",
         "mode": "spoken",
         "profile": "course-micro-sp",
-        "situationDe": "Sie sind auf dem Markt. Der Verkäufer sagt: „Ein Kilo Äpfel kostet 2,40 Euro.“",
-        "promptDe": "Wiederholen Sie den Preis. Nennen Sie zwei Sachen mit Menge. Fragen Sie nach einem Preis.",
-        "promptEn": "Repeat the price to check it, say two things you want with a quantity, and ask a price.",
+        "situationDe": "Sie sind auf dem Markt. Ein Mann sagt: „Ein Kilo Äpfel kostet 2,40 Euro.“",
+        "promptDe": "Sagen Sie den Preis noch einmal. Was möchten Sie? Wie viel? Fragen Sie nach einem Preis.",
+        "promptEn": "Say the price again to check it, say what you would like and how much, and ask a price.",
         "planSeconds": 30,
         "seconds": [
           20,
@@ -1787,8 +1787,8 @@
           {
             "id": "a1.1-u04-ls3-l11",
             "speaker": "cast.arjun",
-            "de": "Ja, und wir haben jetzt alles. Morgen ist Sonntag, da sind die Supermärkte in Deutschland zu.",
-            "en": "Yes, and now we have everything. Tomorrow is Sunday – supermarkets in Germany are closed then."
+            "de": "Ja, und wir haben jetzt alles. Morgen ist Sonntag, da sind die Supermärkte hier zu.",
+            "en": "Yes, and now we have everything. Tomorrow is Sunday – the supermarkets here are closed then."
           }
         ],
         "glosses": [
@@ -1841,8 +1841,8 @@
           "type": "multiple_choice",
           "role": "gist",
           "topic": "hoeren",
-          "promptDe": "Was fragt Arjun die Verkäuferin?",
-          "promptEn": "What does Arjun ask the shop assistant?",
+          "promptDe": "Was fragt Arjun die Frau im Supermarkt?",
+          "promptEn": "What does Arjun ask the woman at the supermarket?",
           "options": [
             "Was kostet die Milch?",
             "Wo sind die Eier?",
@@ -1885,8 +1885,8 @@
           "promptDe": "Die Eier sind dort. Was ist auch dort?",
           "promptEn": "The eggs are over there. What else is there?",
           "options": [
-            "der Reis",
             "die Butter",
+            "der Reis",
             "der Zucker"
           ],
           "answer": "die Butter",
@@ -1894,7 +1894,7 @@
             "die Butter"
           ],
           "explanation": {
-            "de": "Die Verkäuferin sagt: „Und die Butter ist auch dort.“",
+            "de": "Die Frau im Supermarkt sagt: „Und die Butter ist auch dort.“",
             "en": "The assistant says the butter is there too."
           },
           "origin": "agent"
@@ -1913,7 +1913,7 @@
           ],
           "exact": "number",
           "explanation": {
-            "de": "Die Verkäuferin sagt: „Ein Kilo kostet 1,79 Euro.“",
+            "de": "Die Frau im Supermarkt sagt: „Ein Kilo kostet 1,79 Euro.“",
             "en": "The assistant says a kilo costs 1.79 euros."
           },
           "origin": "agent"
@@ -1969,7 +1969,7 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.artikel-genus-plural",
-          "promptDe": "Die Verkäuferin: „Die sind dort.“ Was ist dort?",
+          "promptDe": "Die Frau im Supermarkt: „Die sind dort.“ Was ist dort?",
           "promptEn": "“sind” = plural. What is there?",
           "options": [
             "der Reis",
@@ -2016,15 +2016,15 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.artikel-genus-plural",
-            "promptDe": "Ein Ei, zwei ___. (Plural)",
-            "promptEn": "Plural of Ei.",
-            "answer": "Eier",
+            "promptDe": "___ Obst ist heute im Angebot. (bestimmter Artikel)",
+            "promptEn": "Definite article.",
+            "answer": "Das",
             "accepted": [
-              "Eier"
+              "Das"
             ],
             "explanation": {
-              "de": "„das Ei“ – „die Eier“: Plural mit „-er“.",
-              "en": "das Ei → die Eier."
+              "de": "„Obst“ ist neutral: „das Obst“.",
+              "en": "“Obst” is neuter: das Obst."
             },
             "origin": "agent"
           },
@@ -2033,15 +2033,15 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.artikel-genus-plural",
-            "promptDe": "Arjun möchte drei ___. (die Tomate)",
-            "promptEn": "Plural of Tomate.",
-            "answer": "Tomaten",
+            "promptDe": "Arjun möchte zwei ___. (das Brot)",
+            "promptEn": "Plural of Brot.",
+            "answer": "Brote",
             "accepted": [
-              "Tomaten"
+              "Brote"
             ],
             "explanation": {
-              "de": "„die Tomate“ – „die Tomaten“: Plural mit „-n“.",
-              "en": "die Tomate → die Tomaten."
+              "de": "„das Brot“ – „die Brote“: Plural mit „-e“.",
+              "en": "das Brot → die Brote."
             },
             "origin": "agent"
           },
@@ -2067,15 +2067,15 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.artikel-genus-plural",
-            "promptDe": "Die ___ sind heute im Angebot. (die Kartoffel)",
-            "promptEn": "Plural of Kartoffel.",
-            "answer": "Kartoffeln",
+            "promptDe": "Die ___ sind heute gut. (der Preis)",
+            "promptEn": "Plural of Preis.",
+            "answer": "Preise",
             "accepted": [
-              "Kartoffeln"
+              "Preise"
             ],
             "explanation": {
-              "de": "„die Kartoffel“ – „die Kartoffeln“: Plural mit „-n“.",
-              "en": "die Kartoffel → die Kartoffeln."
+              "de": "„der Preis“ – „die Preise“: Plural mit „-e“.",
+              "en": "der Preis → die Preise."
             },
             "origin": "agent"
           },
@@ -2270,10 +2270,10 @@
             "generator": "lex.articlePlural",
             "count": 1,
             "source": [
-              "lx.ei",
-              "lx.tomate",
-              "lx.kartoffel",
-              "lx.flasche"
+              "lx.brot",
+              "lx.apfel",
+              "lx.flasche",
+              "lx.preis"
             ]
           },
           {
@@ -2295,11 +2295,11 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "g.artikel-genus-plural",
-          "promptDe": "Wir brauchen vier ___. (die Zwiebel)",
-          "promptEn": "Plural of Zwiebel.",
-          "answer": "Zwiebeln",
+          "promptDe": "Arjun kauft ___ Kilo Reis. (ein oder eine?)",
+          "promptEn": "ein or eine?",
+          "answer": "ein",
           "accepted": [
-            "Zwiebeln"
+            "ein"
           ],
           "banks": [
             "plateau",
@@ -2308,10 +2308,13 @@
           ],
           "difficulty": 2,
           "explanation": {
-            "de": "„die Zwiebel“ – „die Zwiebeln“: Plural mit „-n“.",
-            "en": "die Zwiebel → die Zwiebeln."
+            "de": "„Kilo“ ist neutral: „das Kilo“ → „ein Kilo“.",
+            "en": "“Kilo” is neuter: das Kilo → ein Kilo."
           },
-          "origin": "agent"
+          "origin": "agent",
+          "errorTags": [
+            "gender-article"
+          ]
         },
         {
           "id": "a1.1-u04-ls3-r02",
@@ -2354,8 +2357,8 @@
           "promptEn": "Choose the plural.",
           "options": [
             "Brots",
-            "Brote",
-            "Broten"
+            "Broten",
+            "Brote"
           ],
           "answer": "Brote",
           "accepted": [
@@ -2828,7 +2831,7 @@
           "length": "full",
           "scaffolded": true,
           "modeDefault": "lern",
-          "instructionsDe": "Sie hören sechs kurze Gespräche zweimal. Wählen Sie a, b oder c.",
+          "instructionsDe": "Sie hören sechs Gespräche zweimal. Wählen Sie a, b oder c.",
           "textRefs": [
             "a1.1-u04-ls4-t1",
             "a1.1-u04-ls4-t2",
@@ -3080,8 +3083,8 @@
       "strategyCards": [
         {
           "template": "sd1.h1",
-          "de": "Hören Teil 1: Sie hören sechs kurze Gespräche zweimal. Lesen Sie zuerst die Frage und a, b, c. Oft hören Sie alle drei Antworten – aber nur eine passt zur Frage. In der Prüfung sind a, b und c Bilder.",
-          "en": "Listening part 1: six short conversations, each played twice. Read the question and options first. You often hear all three options, but only one answers the question. In the exam the options are pictures."
+          "de": "Hören Teil 1: Sie hören sechs Gespräche zweimal. Lesen Sie zuerst die Frage und a, b, c. Oft hören Sie alle drei Antworten – aber nur eine passt zur Frage. In der Prüfung sind a, b und c Bilder.",
+          "en": "Listening part 1: six conversations, each played twice. Read the question and options first. You often hear all three options, but only one answers the question. In the exam the options are pictures."
         },
         {
           "template": "sd1.h2",
@@ -3246,7 +3249,7 @@
         "leitpunkte": [
           {
             "id": "lp1",
-            "de": "Was brauchen Sie? Wie viel? Nennen Sie zwei oder drei Sachen.",
+            "de": "Was brauchen Sie, und wie viel? (zwei oder drei)",
             "cues": [
               "brauche",
               "brauchen",
@@ -3265,7 +3268,7 @@
           },
           {
             "id": "lp2",
-            "de": "Was haben Sie noch zu Hause? Nennen Sie eine Sache.",
+            "de": "Was haben Sie noch zu Hause?",
             "cues": [
               "noch",
               "haben wir",
@@ -3305,7 +3308,7 @@
     {
       "id": "a1.1-u04-ls7",
       "kind": "check",
-      "endLine": "Geschafft! Sie können jetzt einkaufen, nach Preisen fragen und Durchsagen im Supermarkt verstehen."
+      "endLine": "Geschafft! Sie können jetzt nach Preisen fragen, Angebote lesen und Durchsagen im Supermarkt verstehen."
     }
   ],
   "check": {
@@ -3360,15 +3363,15 @@
         "type": "fill_blank",
         "role": "check",
         "topic": "g.artikel-genus-plural",
-        "promptDe": "Eine Birne? Nein, drei ___, bitte. (die Birne)",
-        "promptEn": "Plural of Birne.",
-        "answer": "Birnen",
+        "promptDe": "Eine Flasche? Nein, zwei ___, bitte. (die Flasche)",
+        "promptEn": "Plural of Flasche.",
+        "answer": "Flaschen",
         "accepted": [
-          "Birnen"
+          "Flaschen"
         ],
         "explanation": {
-          "de": "„die Birne“ – „die Birnen“: Plural mit „-n“.",
-          "en": "die Birne → die Birnen."
+          "de": "„die Flasche“ – „die Flaschen“: Plural mit „-n“.",
+          "en": "die Flasche → die Flaschen."
         },
         "origin": "agent"
       },
@@ -3423,8 +3426,8 @@
         "promptDe": "100 Gramm Käse für 9 Euro? Das ist ___!",
         "promptEn": "Choose the word.",
         "options": [
-          "billig",
           "teuer",
+          "billig",
           "alt"
         ],
         "answer": "teuer",
@@ -3450,7 +3453,7 @@
           "Wir brauchen Brot und Käse."
         ],
         "explanation": {
-          "de": "„Brot“ und „Käse“ sind Nomen. Nomen schreibt man groß.",
+          "de": "„Brot“ und „Käse“ sind Nomen. Nomen schreiben Sie groß.",
           "en": "Nouns are capitalised: Brot, Käse."
         },
         "origin": "agent"
@@ -3486,8 +3489,8 @@
         "promptEn": "Choose the right answer.",
         "options": [
           "Ja, bitte.",
-          "Ein Kilo kostet 2,20 Euro.",
-          "Ich möchte Tomaten."
+          "Ich möchte Tomaten.",
+          "Ein Kilo kostet 2,20 Euro."
         ],
         "answer": "Ein Kilo kostet 2,20 Euro.",
         "accepted": [
@@ -3526,7 +3529,7 @@
         ],
         "exact": "number",
         "explanation": {
-          "de": "Die Verkäuferin sagt: „sieben Euro vierzig“. Das sind 7,40 Euro.",
+          "de": "Die Frau sagt: „sieben Euro vierzig“. Das sind 7,40 Euro.",
           "en": "She says “sieben Euro vierzig” – 7.40 euros."
         },
         "origin": "agent"
@@ -3536,12 +3539,12 @@
         "type": "multiple_choice",
         "role": "proof",
         "topic": "lesen",
-        "promptDe": "Prospekt: Reis 1,79 € · Zucker 0,89 € · Wurst 1,49 €. Was kostet der Zucker?",
-        "promptEn": "Read the flyer: how much is the sugar?",
+        "promptDe": "Angebote: Reis 1,79 € · Zucker 0,89 € · Wurst 1,49 €. Was kostet der Zucker?",
+        "promptEn": "Read the offers: how much is the sugar?",
         "options": [
           "1,79 Euro",
-          "0,89 Euro",
-          "1,49 Euro"
+          "1,49 Euro",
+          "0,89 Euro"
         ],
         "answer": "0,89 Euro",
         "accepted": [
@@ -3549,8 +3552,8 @@
         ],
         "exact": "number",
         "explanation": {
-          "de": "Im Prospekt steht: „Zucker 0,89 €“. 1,79 € kostet der Reis, 1,49 € die Wurst.",
-          "en": "Sugar is 0.89 €; 1.79 € is the rice and 1.49 € the cold cuts."
+          "de": "Dort steht: „Zucker 0,89 €“. 1,79 € kostet der Reis, 1,49 € die Wurst.",
+          "en": "It says: sugar 0.89 €; 1.79 € is the rice and 1.49 € the cold cuts."
         },
         "origin": "agent"
       },
@@ -3688,6 +3691,68 @@
     ]
   },
   "fokus": [],
-  "facts": [],
+  "facts": [
+    {
+      "id": "a1.1-u04-f01",
+      "claimDe": "Für Getränke in Einwegflaschen aus Kunststoff, zum Beispiel Wasser, zahlt man in Deutschland beim Kauf mindestens 0,25 Euro Pfand pro Flasche. Das gilt auch für Milch in Einwegflaschen aus Kunststoff.",
+      "claimEn": "In Germany, drinks in single-use plastic bottles, for example water, carry a deposit of at least 0.25 euros per bottle, charged at purchase. This also applies to milk in single-use plastic bottles.",
+      "sources": [
+        "https://www.gesetze-im-internet.de/verpackdg/__46.html",
+        "https://www.gesetze-im-internet.de/verpackdg/__68.html"
+      ],
+      "factsCheckedOn": "2026-09-27",
+      "currentAsOf": "2026-09-27",
+      "exceptions": [
+        {
+          "de": "Milch im Getränkekarton (Block-, Giebel- oder Zylinderpackung) hat kein Pfand (§ 46 Abs. 4 Satz 1 Nr. 4 VerpackDG).",
+          "en": "Milk in a beverage carton (brick, gable-top or cylinder pack) carries no deposit (s. 46(4) sentence 1 no. 4 VerpackDG)."
+        },
+        {
+          "de": "Milch in Einwegflaschen aus Glas hat kein Pfand: Die Ausnahme für Milch gilt nur nicht für Kunststoffflaschen und Dosen (§ 46 Abs. 4 Satz 1 Nr. 7 Buchst. f und Satz 2 VerpackDG).",
+          "en": "Milk in single-use glass bottles carries no deposit: the milk exemption is lifted only for plastic bottles and cans (s. 46(4) sentence 1 no. 7(f) and sentence 2 VerpackDG)."
+        },
+        {
+          "de": "Flaschen mit weniger als 0,1 Litern oder mehr als 3 Litern haben kein Pfand (§ 46 Abs. 4 Satz 1 Nr. 2 und 3 VerpackDG).",
+          "en": "Bottles holding less than 0.1 litres or more than 3 litres carry no deposit (s. 46(4) sentence 1 nos. 2 and 3 VerpackDG)."
+        }
+      ],
+      "verification": "verified",
+      "notes": "§ 46 VerpackDG (Verpackungsrecht-Durchführungsgesetz) read at gesetze-im-internet.de on 2026-09-27: Abs. 1 (Pfand mindestens 0,25 Euro je Einweggetränkeverpackung), Abs. 4 Satz 1 Nr. 2, 3, 4 und 7 Buchst. f, Abs. 4 Satz 2 (the Nr. 7 exemptions do not apply to single-use plastic bottles and cans). § 68 VerpackDG read the same day: the Verpackungsgesetz applied only until 11 August 2026, so the citation „VerpackG § 31“ proposed in review r4 F05 is out of date and was replaced by § 46 VerpackDG. Deliberately not claimed because not re-read in this session: the date from which milk in plastic bottles became subject to the deposit (1 January 2024 under the old VerpackG), and any deposit on Mehrweg (reusable) bottles, which § 46 does not regulate. The unit states the claim in the LS1 flyer („Milch, 1 Flasche: nur 0,99 Euro plus Pfand“, „Wasser, 6 Flaschen: nur 2,49 Euro plus Pfand“)."
+    },
+    {
+      "id": "a1.1-u04-f02",
+      "claimDe": "In Sachsen, also auch in Leipzig, dürfen Geschäfte montags bis samstags von 6 bis 22 Uhr öffnen. An Sonn- und Feiertagen müssen sie grundsätzlich geschlossen bleiben; das gilt auch für Supermärkte.",
+      "claimEn": "In Saxony, and so in Leipzig, shops may open Monday to Saturday from 6 am to 10 pm. On Sundays and public holidays they must in principle stay closed; this includes supermarkets.",
+      "sources": [
+        "https://www.revosax.sachsen.de/vorschrift/11548"
+      ],
+      "factsCheckedOn": "2026-09-27",
+      "currentAsOf": "2026-09-27",
+      "exceptions": [
+        {
+          "de": "Tankstellen dürfen an allen Tagen öffnen und dann auch Reisebedarf verkaufen; dazu gehören Lebensmittel in kleineren Mengen (§ 5 und § 2 Abs. 4 SächsLadÖffG).",
+          "en": "Petrol stations may open every day and then also sell travel needs, which include food in small quantities (ss. 5 and 2(4) SächsLadÖffG)."
+        },
+        {
+          "de": "Geschäfte in Bahnhöfen und Flughäfen dürfen an allen Tagen Reisebedarf verkaufen, am Flughafen Leipzig/Halle auch Waren des täglichen Bedarfs (§ 6 SächsLadÖffG).",
+          "en": "Shops in railway stations and airports may sell travel needs every day, and at Leipzig/Halle airport also everyday goods (s. 6 SächsLadÖffG)."
+        },
+        {
+          "de": "Geschäfte, die vor allem Backwaren, Blumen, Zeitungen oder frische Milch verkaufen, dürfen diese Waren an Sonn- und Feiertagen zwischen 7 und 18 Uhr bis zu sechs Stunden verkaufen, aber nicht an einigen hohen Feiertagen (§ 7 Abs. 1 SächsLadÖffG).",
+          "en": "Shops selling mainly baked goods, flowers, newspapers or fresh milk may sell these goods on Sundays and public holidays for up to six hours between 7 am and 6 pm, but not on certain major holidays (s. 7(1) SächsLadÖffG)."
+        },
+        {
+          "de": "Die Gemeinde kann Geschäfte an bis zu vier Sonntagen im Jahr von 12 bis 18 Uhr öffnen lassen (verkaufsoffene Sonntage), dazu an Sonntagen mit besonderen regionalen Ereignissen (§ 8 Abs. 1 und 2 SächsLadÖffG).",
+          "en": "The municipality may let shops open on up to four Sundays a year from noon to 6 pm (verkaufsoffene Sonntage), plus on Sundays with special regional events (s. 8(1) and (2) SächsLadÖffG)."
+        },
+        {
+          "de": "In anerkannten Kur-, Erholungs-, Wallfahrts- und Ausflugsorten dürfen bestimmte Geschäfte sonntags von 11 bis 20 Uhr bis zu acht Stunden öffnen; Apotheken dürfen an allen Tagen öffnen (§ 7 Abs. 2 und § 4 SächsLadÖffG).",
+          "en": "In recognised spa, recreation, pilgrimage and excursion towns certain shops may open on Sundays for up to eight hours between 11 am and 8 pm; pharmacies may open every day (ss. 7(2) and 4 SächsLadÖffG)."
+        }
+      ],
+      "verification": "verified",
+      "notes": "Sächsisches Ladenöffnungsgesetz (zuletzt geändert durch Gesetz vom 5. November 2020, rechtsbereinigt Stand 1. Dezember 2020; the current version shown by REVOSax) read at revosax.sachsen.de on 2026-09-27: § 2 Abs. 4, § 3 Abs. 1 und 2, § 4, § 5, § 6, § 7 Abs. 1 und 2, § 8 Abs. 1 und 2. The claim is limited to Saxony because only this Land law was read; the unit's line a1.1-u04-ls3-l11 therefore says „da sind die Supermärkte hier zu“ (Leipzig), not „in Deutschland“. The other Länder have their own Ladenöffnungsgesetze, which were not re-read and are not claimed. Staff-free digital mini-markets, named in review r4 F05, fall under no exception read here and are not claimed. The unit also states the closure in exam text a1.1-u04-ls4-t9 („Morgen ist der Supermarkt zu.“), which is about one shop and needs no further source."
+    }
+  ],
   "assets": []
 }
