@@ -1,7 +1,11 @@
 # Course v2 — SCHEMA (binding content data model)
 
-**Date:** 2026-09-27 · **Status:** BINDING. Companion of [`BLUEPRINT.md`](BLUEPRINT.md); where the two differ on a data
-question, this file wins; on a product or pedagogy question, the blueprint wins. · **Implements:** BLUEPRINT §2–§10.
+**Date:** 2026-09-27 (critic pass applied, see the BLUEPRINT changelog) · **Status:** BINDING. Companion of
+[`BLUEPRINT.md`](BLUEPRINT.md). **Precedence (one rule, stated identically in the blueprint):** `DECISIONS.md` >
+BLUEPRINT > SCHEMA; this file is authoritative **only on field shapes, id patterns and file layout** and never
+overrides a count, a rule, a threshold or product behaviour stated in the blueprint. Counts that appear in a type
+below (e.g. `{4..6}`) transcribe the blueprint; if they ever differ, the blueprint wins and this file is corrected.
+· **Implements:** BLUEPRINT §2–§10.
 **Implementation:** plain JSON content files authored by agents, a zero-dependency schema checker and a deterministic
 compiler written in JavaScript (`scripts/course-v2/lib/`, `scripts/course-v2/compile.mjs`), JS/JSON runtime modules.
 No TypeScript, no ajv/zod (no lockfile churn), **no new content tables** in Supabase.
@@ -21,10 +25,16 @@ No TypeScript, no ajv/zod (no lockfile churn), **no new content tables** in Supa
    across re-authoring.
 4. **Static text for everything a paid course explains** (BLUEPRINT §1.6 rule 4): every authored item carries its
    explanation as data.
-5. **Authors write; the compiler derives.** Fields marked `// generated` (minutes, content hashes, word ids, card
-   lists, counts for copy) are never typed by an author; the checker rejects them in authored files.
+5. **Authors write; the compiler derives — into separate files.** Derived values (minutes, content hashes, card
+   lists, counts for copy, SRS minutes, the Einstufung form, calibrated difficulty) are **never stored in an authored
+   file**. They live in build artefacts under `content/course-v2/<level>/.build/`, written only by the orchestrator's
+   `compile.mjs` run after a lease is released (§13); the checker rejects any such field in an authored file. The one
+   authored placeholder is the lexicon's `wordId: null`, filled at integration in the compiled output, never in the
+   source.
 6. **German where the learner reads German**, English twins for explanations and glosses (`LText`), and room for an
    L1 layer (`tr`, `ar`) without touching German content.
+7. **Staged authoring.** A unit file is written by S, then I, then T (BLUEPRINT §10.5) and declares its `stage`; the
+   checker applies the stage schema of §8.1, so a file is valid for the role that last wrote it.
 
 ## 1. Notation used in this file
 
@@ -40,7 +50,7 @@ into JS objects in `scripts/course-v2/lib/schemas/*.mjs` by the E0-1 agent.
 | `int[a..b]`, `num`, `bool`, `date` (`YYYY-MM-DD`), `url` (https) | scalars |
 | `enum(a\|b)` | one of the listed literals |
 | `re(NAME)` | string matching the named regex of §2 |
-| `ref(kind)` | an id that must resolve (REF-01) in: `cando`, `spine`, `lexicon`, `template`, `lane`, `rubric`, `rulecard`, `cast`, `texttype`, `detector`, `family`, `unit`, `item`, `line`, `fact`, `bank` |
+| `ref(kind)` | an id that must resolve (REF-01) in: `cando`, `spine`, `lexicon` (the global lemma registry), `template`, `lane`, `rubric`, `rulecard`, `cast`, `extra` (the same file's `extras`), `voice`, `texttype`, `detector`, `family`, `unit`, `step`, `item`, `line`, `text`, `asset`, `fact`, `bank` |
 | `[T]`, `[T]*`, `[T]{n}`, `[T]{a..b}` | non-empty array / possibly empty / exactly n / a to b items |
 | `{…}` | object; **unknown keys are an error** |
 | `T \| U` | union |

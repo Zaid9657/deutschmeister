@@ -1,60 +1,12 @@
-// Built-in rubric profiles and model pins for course v2 grading.
+// Model pins, feedback language and the fixed result labels for course v2 grading.
 //
-// Only the two DESIGN profiles live here — `course-micro` (written micro-output,
-// SCHEMA §15.1, BLUEPRINT §4.3: Aufgabe erfüllt 2/1/0 · Zielstruktur benutzt 1/0 ·
-// verständlich 2/1/0 = 5, Richtwert) and its spoken twin `course-micro-sp`. They
-// are not exam scales, so a copy here cannot misstate an exam; the registry
-// (content/course-v2/registries/rubrics/**) wins as soon as it carries them.
-// Exam profiles (ga2-s2, tb1-sa, …) are NEVER defaulted: an uncompiled exam
-// profile makes the grader refuse, it does not invent a scale.
+// Rubric profiles themselves live ONLY in the registry
+// (content/course-v2/registries/rubrics/**, compiled into
+// netlify/functions/_shared/course-v2/rubrics.json by
+// scripts/course-v2/compile-rubrics.mjs). Nothing here defaults a profile: an
+// uncompiled profile makes the grader refuse, it never invents a scale.
 
-export const BUILTIN_PROFILES = {
-  'course-micro': {
-    $schema: 'course-v2/rubric@1',
-    id: 'course-micro',
-    kind: 'writing',
-    lane: null,
-    max: 5,
-    criteria: [
-      { id: 'task', label: 'Aufgabe erfüllt', per: 'task', levels: [2, 1, 0] },
-      { id: 'target', label: 'Zielstruktur benutzt', per: 'task', levels: [1, 0] },
-      { id: 'clear', label: 'verständlich', per: 'task', levels: [2, 1, 0] },
-    ],
-    zeroRules: [],
-    capRules: [],
-    spelling: 'only-if-meaning-suffers',
-    feedbackLanguage: ['de-a2', 'en'], // replaced by the level's language, see feedbackLanguageFor()
-    modelId: 'config:micro',
-    splitVerified: true,
-    calibration: { status: 'pending', rangeBands: 1 },
-    source: 'https://www.goethe.de/pro/relaunch/prf/materialien/A2/A2_Uebungssatz_Erwachsene.pdf',
-    origin: 'builtin',
-  },
-  'course-micro-sp': {
-    $schema: 'course-v2/rubric@1',
-    id: 'course-micro-sp',
-    kind: 'speaking',
-    lane: null,
-    max: 5,
-    criteria: [
-      { id: 'task', label: 'Aufgabe erfüllt', per: 'task', levels: [2, 1, 0] },
-      { id: 'target', label: 'Zielstruktur benutzt', per: 'task', levels: [1, 0] },
-      { id: 'clear', label: 'verständlich', per: 'task', levels: [2, 1, 0] },
-    ],
-    zeroRules: [],
-    capRules: [],
-    spelling: 'not-scored',
-    feedbackLanguage: ['de-a2', 'en'],
-    modelId: 'config:micro',
-    splitVerified: true,
-    calibration: { status: 'pending', rangeBands: 1 },
-    source: 'https://www.goethe.de/pro/relaunch/prf/materialien/A2/A2_Uebungssatz_Erwachsene.pdf',
-    origin: 'builtin',
-  },
-};
-
-/** Profiles whose feedback language follows the LEVEL, not the profile (they serve every level). */
-const LEVEL_NEUTRAL_PROFILES = new Set(['course-micro', 'course-micro-sp']);
+const GERMAN_VARIANTS = ['de-a1', 'de-a2', 'de'];
 
 /** The level profile's feedback language (BLUEPRINT §4.2 step 3: A1–A2 simple German + English twin; B1+ German). */
 export function levelFeedbackLanguage(level) {
@@ -64,11 +16,17 @@ export function levelFeedbackLanguage(level) {
   return ['de'];
 }
 
+/**
+ * The feedback language of one grading. A profile that names ONE German variant
+ * (ga2-s2: de-a2 + en) is used as written; a profile that serves several levels
+ * names several (course-micro: de-a1, de-a2, de, en) — then the level picks its
+ * variant, and the English twin stays only at A levels (BLUEPRINT §4.2 step 3).
+ */
 export function feedbackLanguageFor(profile, level) {
-  if (!profile || LEVEL_NEUTRAL_PROFILES.has(profile.id) || !Array.isArray(profile.feedbackLanguage) || !profile.feedbackLanguage.length) {
-    return levelFeedbackLanguage(level);
-  }
-  return profile.feedbackLanguage;
+  const listed = Array.isArray(profile?.feedbackLanguage) ? profile.feedbackLanguage : [];
+  if (listed.filter((l) => GERMAN_VARIANTS.includes(l)).length === 1) return listed;
+  const byLevel = levelFeedbackLanguage(level);
+  return listed.length && !listed.includes('en') ? byLevel.filter((l) => l !== 'en') : byLevel;
 }
 
 // Model pins. A profile's `modelId` is either a literal model id or a `config:`
@@ -79,6 +37,7 @@ export const MODEL_CONFIG = {
   'config:writing-full': 'claude-sonnet-4-6',
   'config:speaking-full': 'claude-sonnet-4-6',
   'config:micro': 'claude-haiku-4-5-20251001',
+  'config:micro-sp': 'claude-haiku-4-5-20251001',
 };
 
 /** The concrete model id for a profile, or null for `deterministic` profiles (no model call). */

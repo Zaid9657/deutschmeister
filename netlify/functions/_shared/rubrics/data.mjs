@@ -20,7 +20,6 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { BUILTIN_PROFILES } from './defaults.mjs';
 
 const REL_DIR = 'netlify/functions/_shared/course-v2';
 
@@ -83,17 +82,13 @@ function loadRubricFile() {
 }
 
 /**
- * A rubric profile by id. The compiled registry wins; the two design profiles
- * of SCHEMA §15.1 / BLUEPRINT §4.3 (`course-micro`, `course-micro-sp`) fall back
- * to their built-in copies until the registry carries them. An exam profile that
- * is not compiled resolves to null — the caller refuses to grade rather than
- * inventing a scale.
+ * A rubric profile by id, from the compiled registry. A profile that is not
+ * compiled resolves to null — the caller refuses to grade rather than inventing
+ * a scale.
  */
 export function rubricProfile(id) {
   if (typeof id !== 'string' || !id) return null;
-  const compiled = loadRubricFile()?.profiles?.[id];
-  if (compiled) return compiled;
-  return BUILTIN_PROFILES[id] ?? null;
+  return loadRubricFile()?.profiles?.[id] ?? null;
 }
 
 /** Human label of a grammar spine point ('g.reflexiv-akk' → its registry label), else a readable fallback. */

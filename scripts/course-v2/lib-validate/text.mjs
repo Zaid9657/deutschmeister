@@ -140,6 +140,15 @@ unten oben hinten vorne draußen drinnen ungefähr etwas nichts selbst ebenfalls
 gut sehr mehr hier dort jetzt oft noch nie nur auch ganz gleich später früher lange kurz spät
 `.split(/\s+/).filter(Boolean));
 
+/** Finite verb forms that end in a consonant other than -t/-n (strong Präteritum, weiß). */
+const CONSONANT_FINAL_VERBS = new Set(`
+kam ging gab fand sah nahm las schrieb sprach stand lag saß fuhr fiel hielt ließ lief rief trug trank aß traf bekam
+verstand begann blieb stieg zog flog sang schwamm gewann schlief fing hing half starb warf erhielt erfuhr verlor vergaß
+verließ entschied beschrieb bot bat trat schloss riet lud wuchs wusch weiß tat geschah gefiel gelang verschwand
+entstand bestand wies schien lieh fror brach sprang griff schwieg litt stritt empfahl bewarb unterschrieb zwang floh
+schob hob log roch goss genoss schoss band sank klang erschien bog wog stach betrug vertrat zerbrach mag
+`.split(/\s+/).filter(Boolean));
+
 /**
  * Does `clause` end in a token shaped like a verb? (lower-case, verb ending or aux/modal form or a
  * participle shape.) A heuristic for the ambiguous-subordinator and relative-clause detectors.
@@ -150,7 +159,7 @@ export function endsVerbFinal(clause) {
   const last = toks[toks.length - 1];
   if (/^[A-ZÄÖÜ]/.test(last.text) && toks.length > 1) return false; // a noun or a name
   const w = last.lower;
-  if (AUX_MODAL_FORMS.has(w)) return true;
+  if (AUX_MODAL_FORMS.has(w) || CONSONANT_FINAL_VERBS.has(w)) return true;
   if (NOT_VERB_FINAL.has(w)) return false;
   if (FUNCTION_WORDS.has(w)) return false;
   return /(?:en|ern|eln|t|e|st|n)$/.test(w) && w.length > 2;

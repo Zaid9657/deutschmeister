@@ -1098,11 +1098,12 @@ segments, never a global accent score ([m09] impl. A4).
 - Every graded surface: the fixed label; points on the exam's own scale per criterion („7,5 von 10 Punkten
   (Richtwert)"); never a bare percentage, never „bestanden".
 - The AI-interaction notice at first contact (Art. 50(1) AI Act) and a „Wie bewertet die KI?" page per course with
-  profiles, scales, zero rules, the calibration method and known limits, **with no accuracy figure** until an
-  agreement study with human raters is published ([m13] impl. 10).
+  profiles, scales, zero rules, the calibration method and known limits — including that **Aussprache/Intonation is
+  not scored automatically** and is left out of every total (§4.4) — **with no accuracy figure** until an agreement
+  study with human raters is published ([m13] impl. 10).
 - Results are private to the learner and never gate progress; unlimited retries within the fair-use cap.
 - Productive Teile appear on the Prüfungsstand as **ranges** until measured agreement with human raters narrows
-  them (§5.6).
+  them, and in paid courses without any pass-line comparison until counsel answers (§5.6).
 
 ### 4.6 Calibration: human ground truth, not AI personas
 
@@ -1242,8 +1243,9 @@ repair list („Hören Teil 2: 2 von 4 — 3 Übungen in Ihrer Wiederholung").
 ### 5.3 The end of a .1 course: Halbtest → Teil-Karte → plan
 
 The Halbtest is lane-exact (every Teil of the learner's lane, about half the items, only .1 content). It is shown as
-a **Teil-Karte**, never as a 60/100 total: each Teil reads either „in voller Länge geübt – Übungswert 11/15" (only
-where a full-length Prüfungsmodus attempt exists), „im Kleinen geübt" (with the raw count of the miniature in the
+a **Teil-Karte**, never as a 60/100 total and never with a pass line (the Teil-Karte is on the D2 counsel brief,
+§5.6): each Teil reads either „in voller Länge geübt – Übungswert 11/15" (only where a full-length Prüfungsmodus attempt
+exists; AI-scored Teile as a range with the KI-Richtwert label), „im Kleinen geübt" (with the raw count of the miniature in the
 detail view, never scaled to the Teil's full item count), or „kommt in A1.2, Lektion 2". The 60/100 calculation
 appears only in .2 Modelltests, once the whole level has been taught. The Teil-Karte ends in the dated plan into the
 .2 course.
@@ -1356,11 +1358,19 @@ Evidence lives in one table, `exam_practice_results` (SCHEMA §14); AI-scored ro
 
 ### 5.7 Einstufung (placement)
 
-A ≤ 10-minute adaptive test with partial credit over the **Plateau item banks** (24 banks tagged by half-level; no
-separate authoring), plus one spoken item and a can-do self-check (self-rating alone correlates only r = .466 with
-measured proficiency, [m11] §4). It recommends a course and a starting unit, credits earlier units as tested out
-(deterministic parts only), and routes near-level learners to the .2 course. It replaces `levelTestQuestions.json`
-(band-only, 89 % grammar, [m12] §2.9).
+**v1: a fixed-form entry check per band, routed deterministically.** An adaptive test with partial credit needs item
+difficulty estimates, and the banks have no calibration data yet, so v1 does not pretend to adapt. Per band (A1, A2,
+B1, B2) the compiler assembles one fixed form from `course.json.einstufung` of both half-levels: the Lektions-Check
+items of U4, U8 and U12 (4 items each, deterministic types only) = 24 items per half-level, 48 per band, ≤ 12 min
+(design). **Routing thresholds (design, deterministic, pinned by a test):** a half-level's form ≥ 80 % → its units
+up to the last passed block (U4/U8/U12) are credited as tested out (deterministic Lernschritte only; Aufgaben stay open,
+§3.5); the whole .1 section ≥ 80 % → the .2 course is recommended, starting after its last credited block; otherwise
+the .1 course, starting at the first block (U1, U5 or U9) whose items fell below 80 %. A can-do self-check is shown alongside, never used for routing
+(self-rating alone correlates only r = .466 with measured proficiency, [m11] §4). **The spoken item is feedback
+only**: it is scored and shown with the fixed AI label, and it is **outside routing** (§1.6 rule 5; PRG-04 covers the
+Einstufung selector). Items carry an authored `difficulty` estimate and `banks` tags (SCHEMA §3.1) so that an adaptive
+version can be calibrated later on `lesson_attempts` (v1.1+). It replaces `levelTestQuestions.json` (band-only, 89 %
+grammar, [m12] §2.9).
 
 ---
 
@@ -1369,7 +1379,10 @@ measured proficiency, [m11] §4). It recommends a course and a starting unit, cr
 ### 6.1 The ladder
 
 **+1, +3, +7, +14, +30, +60 days; a lapse returns to +1; every interval capped at max(1 day, 15 % of the days left
-to the exam date); the cap lifts once the exam date has passed** ([m09] impl. B7, Cepeda's ridge). The ladder and the
+to the exam date); the cap lifts once the exam date has passed** ([m09] impl. B7, Cepeda's ridge). **After a
+successful +60 retrieval a card graduates** (leaves the scheduled queue) unless it is exam-critical for the learner's
+lane before the exam date; a graduated card that is missed anywhere later returns to +1 (§2.6). Graduation is stored
+on the card's existing row (E1-7 chooses the column; a hand-applied migration if one is needed). The ladder and the
 cap share are course parameters in `course.json` (`review.ladderDays`, `review.examCapShare`); the live A1.1 keeps
 today's `LADDER_DAYS = [1, 4, 7, 14, 60, 180]` (`src/lib/review/ladder.js`) until it is retired. Expanding and uniform
 schedules do not differ (g = 0.034, [Latimier et al. 2021](https://doi.org/10.1007/s10648-020-09572-8)), so a fixed
@@ -1385,7 +1398,7 @@ New grammar gets short lags first (its Lernschritte 1–3 days apart), then cont
 | `pattern` | `pattern:<spineId>:<unitId>` | the model sentence / contrast pair of a Situation-LS | recall, interleaved with its contrast partner |
 | `sentence` | `sentence:<itemId>` | a Redemittel sentence or a missed typed item | cloze → full recall → spoken |
 | **`teil`** (new) | `teil:<templateId>` | a 2–3-minute Teil-Trainer: 2–3 items of one Teil in Prüfungsmodus, only from completed units | one per day in .2 courses (and in .1 once an exam date is set) |
-| **`repair`** (new) | `repair:<errorTag>:<ruleCardId>` | created from a graded production's error list; the teach → test → repair loop ([m08] impl. 6) | rule card + 3 items; shown as a dismissible suggestion |
+| **`repair`** (new) | `repair:<errorTag>:<ruleCardId>` | created from a graded production's error list; the teach → test → repair loop ([m08] impl. 6) | rule card + 3 items drawn from pool and reserve items whose `errorTag`/`errorTags` carry that tag, at or below the learner's position (ITM-12 guarantees ≥ 3 per tag and level); shown as a dismissible suggestion |
 
 `review_cards.kind` has `CHECK (kind IN ('word','pattern','sentence'))` (`migrations/2026-09-12-lesson-engine.sql`);
 a hand-applied migration extends it to `teil` and `repair` (SCHEMA §14). **Orphan policy:** old A1.1 `word:` cards
@@ -1395,7 +1408,8 @@ destructive migration). Stable hierarchical ids (SCHEMA §2) keep v2 card keys v
 
 ### 6.3 Budgets, priority and no review debt
 
-- **Daily budget** (design, §2.6): A1 6, A2 7, B1 9, B2 11 minutes; the plan shows the pace-specific figure.
+- **Daily budget** (design, §2.6): A1 6, A2 7, B1 9, B2 11 minutes for the current course, plus the carry-over
+  budget (A1.2 1, A2 1.5, B1 2, B2 2 min); the plan shows the pace-specific sum.
 - **When due cards exceed the budget:** priority lapsed productive items → due items of the current Etappe →
   exam-critical Redemittel and `teil` cards → receptive items. The overflow is re-scheduled by stretching intervals
   by ≤ 1 day per card per day, **never shown as a debt**; the counter only shrinks within a session; never „243
@@ -1410,7 +1424,8 @@ destructive migration). Stable hierarchical ids (SCHEMA §2) keep v2 card keys v
   „Plan anpassen?", then silence; on return a 10-minute re-entry check of the last Etappe recommends where to resume.
 - **Final 7 days before the exam:** no new content; review, `teil` cards, the last Modelltest and its repair.
 - **The deck carries over** across half-levels (A1.1 → A1.2 → …), so retention continues and the next course starts
-  with familiar cards.
+  with familiar cards — bounded by graduation and the separate carry-over budget (§2.6), so carried cards never
+  crowd out the current course.
 - **AI error tags create `repair` and `pattern` suggestions** (three `verb-final` errors in a week suggest the
   *weil/dass* pattern card); the learner sees and may dismiss them; AI output schedules nothing on its own.
 
@@ -1454,26 +1469,26 @@ Lernschritt shows its minutes („≈ 18 Min.", labelled *geplant* until measure
 | S3a | Input (dialogue / text) | audio loading · playing · „Computerstimme" · no audio | scrolls; replay and 0.85×; gloss taps; flat reference styling |
 | S3b | Rule card / rule table | deductive (A) · table to fill (B) | flat, hairlines; kasus chips only where a case is named |
 | S3c | Practice item | idle → selected → checking → correct / typo (retry) / wrong / revealed → continue · re-queued | bottom-sheet feedback (text + icon + colour), one „Weiter", static explanation |
-| S3d | Micro-output / Sprechen (Lernmodus) | mic pre-prompt · denied · recording · submitting · staged grading · result · retry · offline-queued | record button ≥ 64 px; result card with the fixed label |
+| S3d | Micro-output / Sprechen (Lernmodus) | privacy notice + consent (first use, §4.8) · mic pre-prompt · denied · recording · submitting · staged grading · result · retry · offline-queued | record button ≥ 64 px; result card with the fixed label; „Aussprache: nicht automatisch bewertet" where the profile has it |
 | S3e | Schreiben | drafting (counter, checklist) · submitting · grading · result · revise · model text (after revision only) | sticky checklist, „Überarbeiten" |
 | S4 | **Prüfungsmodus runner** (LS4 blocks, Plateau Teile, Diagnose, Modelltests) | reading time · playing („Sie hören den Text einmal.") · answering · time warning · auto-submit · answer-sheet transfer (telc paper lanes) · results per Teil | play count and timer from the lane profile; transcript after submission |
-| S5 | **Sprechprüfung** simulation | card draw · preparation (timer + notes) · examiner instructions · own turn · partner turn · staged grading · result per criterion | notes collapse to ≤ 5 keywords while speaking; „ohne Mikrofon weiter" |
+| S5 | **Sprechprüfung** simulation | card draw / topic choice · preparation (timer + notes) · instructions from the „Gesprächsleitung (KI)" · own turn · partner turn · hard end at the slot's length · staged grading · result per criterion | notes collapse to ≤ 5 keywords while speaking; „ohne Mikrofon weiter" |
 | S6 | Lektion geschafft | normal · first ever · weekly goal met | can-dos gained, words, gold Siegel (reduced-motion safe), cliffhanger, next step with minutes |
 | S7 | Tägliche Wiederholung | due > 0 · nothing due · re-entry after ≥ 3 days | S3c shell; count only shrinks |
 | S8 | Plateau | review set · exam Teil · productive task · reward block | per-Teil results turn into a repair list |
-| S9 | **Prüfungsstand** | opt-in (A1.1) · no attempts · miniatures only · values · ranges · after a mock | §5.6 |
+| S9 | **Prüfungsstand** | opt-in (A1.1) · no attempts · miniatures only · values · ranges · after a mock · paid interim (no pass line on AI-scored parts) · full board (free A1.1, Diagnose) | §5.6 |
 | S10 | **Teil-Karte** (.1 end) | per Teil: full length / im Kleinen / kommt in … | then the dated plan into the .2 course |
 | S11 | Prüfungswochen | mock due · repair week · final week · exam day passed | home switches its primary action |
 | S12 | Wiederholungsplan | enter official result · plan generated · running | fields follow each lane's certificate |
 | S13 | Fortschritt / Wochenbericht | this week · history | in-app only with scores; no share link until counsel |
 | S14 | Teilnahmebescheinigung | not yet · available | German, completion only, fixed disclaimer |
-| S15 | Einstellungen | reminders (e-mail/time/off) · pace · explanation language · sound | — |
+| S15 | Einstellungen | reminders (e-mail/time/off) · pace · explanation language · sound · microphone and AI consent (withdraw → no-mic path) · delete my recordings | §4.8 |
 
 ### 7.4 The first week is the product
 
 | Day | What happens (design) |
 |---|---|
-| 0 | A1.1 only: U1 LS1 playable **without an account**; the scored spoken sentence within the first 3 screens (§4.7 for the anonymous path); saved on sign-up (delayed sign-up ≈ +20 % DAU at Duolingo, company-reported, B [S21]) |
+| 0 | A1.1 only: U1 LS1 playable **without an account**; the scored spoken sentence within the first 3 screens, the privacy notice before the microphone opens (§4.7, §4.8 for the anonymous path); saved on sign-up (delayed sign-up ≈ +20 % DAU at Duolingo, company-reported, B [S21]) |
 | 1 | LS1 ends with the scored sentence → goal screen S1 (exam, date or none, pace, reminder time) |
 | 2–5 | one or two Lernschritte per learning day; the first daily review appears on day 2 |
 | 6–7 | unit complete → gold Siegel, first Wochenbericht preview, first cliffhanger |
@@ -1493,11 +1508,16 @@ Novelty at weeks 4–6: P1's reward block, and from Etappe 2 a new speaking mode
 
 ### 7.6 The plan
 
-Arithmetic, never a gate (the `src/lib/course/plan.js` principle, `SUSTAINABLE_PER_WEEK = 5`). **Inputs:** lane, exam
-date or none, pace, learning days per week, reminder time (stored in `learner_goals`, SCHEMA §14). **Outputs:**
-Lernschritte per week, weekly minutes, the review minutes per day for the chosen pace (from SRS-01), and the dates of
-the Plateaus, the Modelltests (exam −21/−14/−7, never before U12 is scheduled) and the review-only week. **Always
-phrased forward:** „Diese Woche 4 Lernschritte – dann sind Sie im Plan." Never „hinter dem Plan". **When the date is
+Arithmetic, never a gate. The live `src/lib/course/plan.js` keeps serving the old A1.1; **v2 does not inherit its
+`SUSTAINABLE_PER_WEEK = 5`** (5 counted 12–15-minute Lektionen per week, while a v2 unit is ≈ 3 h and Intensiv is 2
+units a week) **nor its `behindBy` / `'behind'` status**. The v2 plan computes capacity from the **pace preset in
+Lernschritte per week** (a unit has 7 Lernschritte at A and 8 at B, §3.1–§3.2: Leicht ≈ 3.5 / 4, Standard 7 / 8,
+Intensiv 14 / 16, plus a Plateau every third week; derived from `course.json.pace`), and its only statuses are `on-track`, `needs-more-days` (the date is too
+close at the chosen pace) and `no-date`. **Inputs:** lane, exam date or none, pace, learning days per week, reminder
+time (stored in `learner_goals`, SCHEMA §14). **Outputs:** Lernschritte per week, weekly minutes, the review minutes per
+day for the chosen pace (current + carry-over, from SRS-01), and the dates of the Plateaus, the Modelltests (exam
+−21/−10 in v1, never before U12 is scheduled) and the review-only week. **Always phrased forward:** „Diese Woche 4
+Lernschritte – dann sind Sie im Plan." Never „hinter dem Plan". **When the date is
 too close,** the plan states the arithmetic and offers only options that keep the progression intact: more learning
 days (up to Intensiv), Einstufung or „Ich kann das schon" to credit what the learner already knows, optional depth
 off, or a later date. **There is no Kompaktweg:** units are never reordered by weak Teil, because later units assume
@@ -1516,10 +1536,13 @@ list), Aufgaben submitted and revised, Übungswerte per Teil, next week in minut
 
 ### 7.8 Instrumentation (proves or disproves the moat)
 
-Events persisted where `weekly_truth_metrics()` can read them: `lernschritt_completed` (unit, LS, minutes — feeds
+Events persisted in `course_events` (SCHEMA §14; written by the client for its own user through an RLS insert
+policy, except AI-derived events, which the AI functions write), where `weekly_truth_metrics()` can read them:
+`lernschritt_completed` (unit, LS, minutes — feeds
 `minutesMeasured`), `micro_output_submitted`, `aufgabe_submitted`, `revision_submitted`, `ai_grade_shown`,
 `teil_attempt` (lane, Teil, source, mode, full length → `exam_practice_results`), `modelltest_completed`, `plan_set`,
-`retake_plan_created`, `mic_denied`, `ai_latency_ms`. Weekly truth adds: AI writing and speaking uses per active
+`retake_plan_created`, `mic_denied`, `ai_latency_ms`, `speaking_minutes` (server), `ai_cost_estimate` (server, per
+call, from token and audio counts). Weekly truth adds: AI writing and speaking uses per active
 learner, Aufgaben per active learner per unit, learning days in week 1, share reaching day 7, completion by Etappe,
 .1 completers buying the .2 within 30 days, and the learner-pilot metrics (§10.4). PostHog stays behind the existing
 consent gate (`public/consent.js`).
@@ -1546,15 +1569,28 @@ consent gate (`public/consent.js`).
 6. German copy in Sie; explanations in plain English ≤ B1, stored apart from the German so an L1 layer (Turkish,
    Arabic) can be added ([m10] impl. 6). Voice: calm, concrete, factual; the learner's exam and date are the subject,
    never our brand; no hype, no exclamation chains.
+7. **No exam fees on course pages.** Fees are set per exam centre and change — the reason the repo already bans fee
+   figures in guides (`tests/guides.test.mjs`, „no guide makes an outcome promise or states a fee"). A fee may appear
+   only from a first-party exam-centre page, with a „Stand" date and a CON-06 fact record, and never next to retake
+   wording, which would be an indirect outcome claim (§ 5 UWG). LGL-10 extends the guides' fee lint to course pages.
+8. **Page URL scheme (fixed before W5; the routing agent owns it, §10.8).** DE course page `/courses/<level-slug>/`
+   (the existing `astro-site/src/pages/courses/[level].astro` route, e.g. `/courses/b1-2/`); one page per **live** lane
+   below it (`/courses/b1-2/telc-b1/`, later `/courses/b1-2/dtz/`, `/courses/b1-2/goethe-oesd-b1/`); EN twins under a
+   new top-level `/en/courses/<level-slug>/` (a new top-level segment needs its own copy step in the Netlify build
+   command, CLAUDE.md) with `hreflang` de/en pairs; trailing slashes as every Astro page (CLAUDE.md case 1); each new
+   page is added to the `check-built-html.mjs` MANIFEST and the sitemap filter in the same PR.
 
 ### 8.2 Pages per half-level (titles and headlines are drafts; each must pass LGL)
+
+Lane pages exist only for **live** lanes (§1.4); in the v1 cut that is one lane per band, so the DTZ, Goethe/ÖSD B1,
+telc A2 and Goethe B2 titles below are specified for when their packs go live.
 
 | Course | Page(s) · language | Title (purpose first) | Headline | Proof points (derived) | Honesty line |
 |---|---|---|---|---|---|
 | A1.1 | `/courses/a1-1/` DE+EN; EN landing for India | EN "Preparation for the Goethe-Zertifikat A1 (Start Deutsch 1): free German course, part 1" | "Start German for your A1 exam — free. From lesson 1 you speak and write, and every task gets an instant automated score." | 12 units · every SD1 part practised · scored tasks count · dated plan | "A1.1 is the first half of A1; the full exam format comes in A1.2. Automated feedback, not an exam result." |
-| A1.2 | `/courses/a1-2/` EN+DE | EN "Preparation for the Goethe-Zertifikat A1 and telc Deutsch A1 — online course A1.2" | "Finish A1 and practise every part of Start Deutsch 1: each speaking and writing task scored instantly against the published criteria, with a plan to your exam date." | 3 practice exams in the Start Deutsch 1 format · Wiederholungsplan · price vs one exam fee (India ₹9,400 ≈ €86, Germany €155, [m10] §2.1, [m08]) derived in `marketing.js` with provenance | "A practice score, never an exam result. Not official exam material. €40 once — no subscription." |
+| A1.2 | `/courses/a1-2/` EN+DE | EN "Preparation for the Goethe-Zertifikat A1 and telc Deutsch A1 — online course A1.2" | "Finish A1 and practise every part of Start Deutsch 1: each speaking and writing task scored instantly against the published criteria, with a plan to your exam date." | the lane's Modelltest count in the Start Deutsch 1 format (derived; 2 in v1) · Wiederholungsplan · **no exam-fee figures** (LGL-10) | "A practice score, never an exam result. Not official exam material. €40 once — no subscription." |
 | A2.1 | DE+EN | „Vorbereitung auf das Goethe-Zertifikat A2 – Online-Kurs A2.1" | „Alle Teile der A2-Prüfung kennenlernen – jede Schreib- und Sprechaufgabe sofort automatisch ausgewertet." | live lanes · Aufgaben count | „A2.1 ist die erste Hälfte. Die komplette Prüfung üben Sie in A2.2." |
-| A2.2 | DE+EN; one page per live lane | „Vorbereitung auf das Goethe-Zertifikat A2 – Online-Kurs A2.2" · „Vorbereitung auf telc Deutsch A2 – …" | „A2 abschließen und jeden Prüfungsteil im Format Ihrer Prüfung üben – sofort ausgewertet, mit Plan bis zum Termin." | that lane's mock count (3 or 2) · 90 + 15 min format | „Übungswert, keine Prognose. Kein offizielles Prüfungsmaterial." |
+| A2.2 | DE+EN; one page per live lane | „Vorbereitung auf das Goethe-Zertifikat A2 – Online-Kurs A2.2" · „Vorbereitung auf telc Deutsch A2 – …" | „A2 abschließen und jeden Prüfungsteil im Format Ihrer Prüfung üben – sofort ausgewertet, mit Plan bis zum Termin." | that lane's mock count (derived; 2 in v1) · 90 + 15 min format | „Übungswert, keine Prognose. Kein offizielles Prüfungsmaterial." |
 | B1.1 | DE | „Vorbereitung auf die B1-Prüfung – Online-Kurs B1.1" | „Mitreden, planen, reklamieren: B1 Schritt für Schritt – jede Schreib- und Sprechaufgabe sofort im Format Ihrer Prüfung ausgewertet." | live lanes · planning round in every unit | „B1.1 ist die erste Hälfte des Wegs zur B1-Prüfung." |
 | B1.2 | DE (EN page for the Goethe/ÖSD lane for India); one page per live lane | „Vorbereitung auf telc Deutsch B1 – Online-Kurs B1.2" · „Vorbereitung auf den DTZ – Online-Kurs B1.2 (nur für Teilnehmende am Integrationskurs)" · „Vorbereitung auf das Goethe-/ÖSD-Zertifikat B1 – …" | „Jeder Prüfungsteil gelernt und geübt, jede Schreib- und Sprechaufgabe sofort ausgewertet – nach den veröffentlichten Kriterien Ihrer Prüfung, mit Plan bis zum Termin." | that lane's mock count · Wiederholungsplan · DTZ page may cite 55.0 % B1 in 2025 ([Drs. 21/5716](https://dserver.bundestag.de/btd/21/057/2105716.pdf)) as context, never as a rate for our learners | „Automatische KI-Auswertung. Kein Prüfungsergebnis, keine Bestehensgarantie." |
 | B2.1 | DE | „Vorbereitung auf die B2-Prüfung – Online-Kurs B2.1" | „Argumentieren, formell schreiben, im Detail verstehen – mit sofortiger automatischer Auswertung." | live lanes | „B2.1 bereitet die Prüfung vor, erreicht sie aber nicht allein." |
@@ -1565,11 +1601,14 @@ consent gate (`public/consent.js`).
 - The **Inhaltsverzeichnis** generated from `course.json` (Nr · Titel · Handlungsfeld · Kann-Beschreibungen ·
   Grammatik · Textsorte · Prüfungsteil · Minuten), the way Hueber and Klett publish theirs ([m14] §G7), plus the
   **Teil-Matrix** (which unit practises which Teil, at what length, per lane).
-- „**Wie bewertet die KI?**": profiles, scales, zero rules, calibration method, known limits, „Die KI ersetzt keine
-  Prüferin und keine Lehrkraft.", no accuracy figure.
+- „**Wie bewertet die KI?**": profiles, scales, zero rules, calibration method, known limits (Aussprache not scored
+  automatically), „Die KI ersetzt keine Prüferin und keine Lehrkraft.", no accuracy figure.
 - The **Teilnahmebescheinigung** explained with its fixed line; the **pre-checkout box** with the unticked
   § 356 Abs. 6 BGB consent in one sentence, and the voluntary refund line with linked terms if the owner adopts it
-  ([m13] impl. 13–14); „Computerstimme" wherever TTS plays; „native speaker" removed site-wide.
+  ([m13] impl. 13–14); the **§ 356a BGB „Vertrag widerrufen" function** (required since 19 June 2026, [m13] §7;
+  whether Lemon Squeezy provides it is unverified, so the owner confirms it in the dashboard or the site provides
+  it, §13 D10); „Computerstimme" wherever TTS plays; „native speaker" removed site-wide.
+- The **Datenschutzerklärung** linked from the course page, the checkout box and the first-microphone notice (§4.8).
 
 ### 8.4 E-mails and in-app copy
 
@@ -1578,9 +1617,11 @@ consent gate (`public/consent.js`).
   („Ihre Teil-Karte und Ihr Plan für A1.2" — link to the in-app card, no numbers), purchase confirmation (what the
   product is, the AI tool described as software, the Teilnahmebescheinigung's nature), and the owner-approved
   learner-pilot invitation to existing users.
-- **In-app examples:** mock result „Modelltest B · Schriftlicher Teil: Übungswert 152 von 225. Nach der
-  Bestehensregel von telc liegt dieser Übungswert über der Grenze von 135 Punkten. Übungswert aus unserer
-  Übungsprüfung – keine Prognose Ihres Prüfungsergebnisses." · miniature „Hören Teil 4 haben Sie bisher nur im Kleinen
+- **In-app examples:** mock result in a paid course under the interim rule (§5.6) „Modelltest B · Leseverstehen,
+  Sprachbausteine, Hörverstehen: 125,5 von 180 (automatisch ausgewertet). Schreiben: Übungswert 21–27 von 45
+  (KI-Richtwert). Übungswerte aus unserer Übungsprüfung – keine Prognose Ihres Prüfungsergebnisses."; in the free
+  Diagnose the same card may add „Nach der Bestehensregel von telc liegt die Grenze für den schriftlichen Teil bei 135
+  Punkten." · miniature „Hören Teil 4 haben Sie bisher nur im Kleinen
   geübt. In voller Länge kommt er in Plateau 2." · plan „Bis zu Ihrer Prüfung bleiben 19 Tage. Bei 5 Lerntagen pro
   Woche schaffen Sie die Lektionen 10–12 und Modelltest A bis zum 3.11. Möglich: ‚Ich kann das schon' für Lektion 10."
 
@@ -1591,8 +1632,15 @@ consent gate (`public/consent.js`).
 Gates are split by what they need. **Deterministic gates run in CI in seconds** (`node scripts/course-v2/validate.mjs
 <level> [--unit N]`; LanguageTool ≈ 1 min per level against a warm self-hosted server). **Model-calling gates run as
 pinned-model pipeline steps** whose results are committed with the content hash they checked; CI verifies the hashes
-(QA-FRESH-01) and never calls a model or needs an API key. An author run's definition of done is **exit 0 on every
-deterministic gate for its file**; a run that returns a red unit is a failed run, not a draft. **Hard** = 0 findings;
+(QA-FRESH-01) and never calls a model or needs an API key. **Gates are staged to match the three-run rail (§10.5).**
+`validate.mjs <level> --unit N --stage S|I|T` runs only the rules the named role can satisfy, against the stage schema
+(SCHEMA §8.1): **S** (texts) — SCH-01 at stage S, REF-01, ID-01, TXT-01…03, LEX-01/02/04 on texts, LNG-01…03,
+CON-01/02/04/05/06, AUD-01…05, AST-01/02, GRM-04 on texts, TIM-03 (story beat, cliffhanger); **I** (items) — the S set
+plus ITM-01…12, LEX-03, GRM-04 on items and expected answers, ALL-02 proofs, TIM-05; **T** (exam blocks and
+Aufgaben) — **every** deterministic rule (`--stage all` = `--stage T`). An author run's definition of done is **exit 0
+on its own stage**; a run that returns a red file at its stage is a failed run, not a draft. The full gate set is
+required only after T and for every later fix run. Validation is read-only: `validate.mjs` computes minutes, hashes and
+card lists in memory and never writes into a content file (§10.5, SCHEMA §0). **Hard** = 0 findings;
 **ratchet** = only goes down and must equal its measurement (test), as the A1.1 validator's ratchets do; **advisory**
 = routed to reviewers.
 
@@ -1600,18 +1648,18 @@ deterministic gate for its file**; a run that returns a red unit is a failed run
 
 | Id | Rule (precise) | Type |
 |---|---|---|
-| **SCH-01** | Every file validates against its SCHEMA.md spec, using a zero-dependency checker in `scripts/course-v2/lib/` (no ajv/zod, no lockfile churn) | hard |
+| **SCH-01** | Every file validates against its SCHEMA.md spec **at its declared `stage`** (SCHEMA §8.1), using a zero-dependency checker in `scripts/course-v2/lib/` (no ajv/zod, no lockfile churn); authored files contain no generated field | hard |
 | **REF-01** | Every can-do, spine point, lemma, Teil template, rubric profile, rule card, cast member, text type, detector, fokus and fact id referenced anywhere resolves | hard |
-| **ID-01** | Ids unique and well-formed per SCHEMA §2; each child id starts with its parent id; `ids.ledger.json` per level tombstones removed ids — a removed id is never reused, a meaning change gets a new id | hard |
-| **KEY-01** | Writing, speaking and micro-output bank keys match `BANK_KEY_RE` (SCHEMA §2); the legacy `^(a\d\d)-l\d\d$` keys stay valid; a test covers all 8 prefixes × every slot kind and `courseTaskKeyPrefix()` | hard |
+| **ID-01** | Ids unique and well-formed per SCHEMA §2 (unit, Plateau, Halbtest, Diagnose and Modelltest block ids included); each child id starts with its parent id; `ids.ledger.json` per level is **append-only** and written only by the orchestrator's compile step after a lease is released; it tombstones removed ids — a removed id is never reused, a meaning change gets a new id | hard |
+| **KEY-01** | Writing, speaking and micro-output bank keys match `BANK_KEY_RE` (SCHEMA §2); the legacy `^(a\d\d)-l\d\d$` keys stay valid; a test covers all 8 prefixes × every slot kind (units, `p1–p3`, `ht`, `dx`, `ma–mc`, with and without a lane suffix) and `courseTaskKeyPrefix()` | hard |
 | **ALL-01** | 12 units, P1–P3, the closing block of the course kind (.1 Halbtest per live lane; .2 Diagnose + forms per lane), Etappen 4 × 3 | hard |
 | **ALL-02** | 3–5 registry can-dos per unit, each with source tags and band; ≥ 1 productive can-do per unit proven by an Aufgabe; „Das kann ich" lists exactly the unit's can-dos, each linked to a proof | hard |
-| **ALL-03** | ≥ 2 Lehrwerk placements per unit or a `deviation.reason` | hard |
-| **ALL-04** | Every unit tagged with ≥ 1 Handlungsfeld; each band (.1 + .2) covers all 12 BAMF Handlungsfelder in units or Fokus-Karten | hard |
+| **ALL-03** | ≥ 2 **verified** Lehrwerk placements per unit or a `deviation.reason`; a placement tagged „(unverified)" or „(snippet)" does not count (DECISIONS 2026-09-27; [m14] G13) | hard |
+| **ALL-04** | Every unit tagged with ≥ 1 Handlungsfeld; each band (.1 + .2) covers all 12 BAMF Handlungsfelder in unit tags or **planned Fokus-Karten present in the unit files** (the §2.8 Fokus column). **Hard for A1–B1, advisory at B2**: the Rahmencurriculum tags only A1/A2/B1 ([m04] F2) | hard (A1–B1) / advisory (B2) |
 | **ALL-05** | Situation per unit is registry-unique within a band (no repeated topic without a new function, [m14] §F4) | hard |
-| **ALL-06** | Quotas: ≥ 1 online-interaction can-do per half-level; from B1.1 ≥ 1 mediation can-do and ≥ 3 work units; B2 ≥ 2 care units; spiral threads B1.1→B2.2 name their band step | hard |
+| **ALL-06** | Quotas: ≥ 1 online-interaction can-do per half-level; from B1.1, per half-level, ≥ 1 mediation can-do and ≥ 3 work units (tagged HF 2 or 3); B2 ≥ 2 care units; spiral threads B1.1→B2.2 name their band step ([m05] impl. 3) | hard |
 | **GRM-01** | ≤ 2 new spine points + ≤ 1 chunk preview per unit; a receptive first introduction counts as new | hard |
-| **GRM-02** | Every spine point enters at its registry position, receptive before productive; an earlier placement carries a written reason | hard |
+| **GRM-02** | Every spine point has **exactly one `intro`** and enters at its registry position, receptive before productive; an earlier placement carries a written reason; a unit that lists a point as new after its intro fails (a return is `review`, a new function is a new spine id) | hard |
 | **GRM-03** | Inventory floors: Goethe A1 inventory complete by A1.2 U12; A1.2 Perfekt milestones (haben ≤ U5, sein ≤ U8, trennbar/untrennbar/-ieren ≤ U10); Goethe A2 inventory complete by A2.2 U12 | hard |
 | **GRM-04** | Grammar ceiling: production lines, model texts, rule-card examples, expected answers and exam texts use no construction introduced after the current position (detectors §9.3); inputs exceed it only via whitelisted chunks or glossed receptive exposure | hard for exact detectors, advisory for heuristic ones |
 | **GRM-05** | Rule cards ≤ 60 words (A1) / ≤ 80 (A2+), model sentence first, English twin, no unconditioned claim (`quality.js` `unconditionedRule`) | hard |
@@ -1622,43 +1670,45 @@ deterministic gate for its file**; a run that returns a red unit is a failed run
 | **LEX-04** | Off-list share ≤ 15 % (A) / ≤ 25 % (B1) per unit; B2 per the frequency-band rule; extension words receptive unless justified | hard |
 | **LEX-05** | New entries within ±10 % of the level target (§2.6); productive share within ±5 points of the level profile | hard |
 | **LEX-07** | One gloss per lemma across surfaces; feminine pairs one entry; `plural_kind` set; `wordId` null in authoring | hard |
-| **SRS-01** | Daily review minutes at Standard pace, recomputed from the course's lexicon, card counts, productive share and the level's seconds per review, ≤ the level budget (A1 6, A2 7, B1 9, B2 11); Leicht/Intensiv values written to `course.json` for the plan | hard |
+| **SRS-01** | Daily review minutes at Standard pace, recomputed from the course's lexicon, card counts, productive share and the level's seconds per review, ≤ the level budget (A1 6, A2 7, B1 9, B2 11); **plus a simulation of the cumulative deck on the A1.1 → B2.2 path with graduation (§2.6)**, whose carried minutes must stay ≤ the carry-over budget; Leicht/Intensiv and combined (current + carry-over) values written to `.build/course.facts.json` for the plan | hard |
 | **SRS-02** | Simulated capped ladder: every card introduced in U12 of a .2 course reaches ≥ 5 (productive) / ≥ 3 (receptive) spaced retrievals with the exam 28 days after U12 and with the exam 7 days after U12 | hard |
 | **TXT-01** | Sentence metrics of non-exam texts within the level profile (mean/max words, subordinate clauses) | ratchet for dialogues, hard for instructions and rule cards |
-| **TXT-02** | Exam texts within the Teil template's length band (±15 % of the official sample size) | hard |
+| **TXT-02** | Exam texts within the Teil template's length band (±15 % of the official sample size) for `length: full`; `reduced` and `mini` blocks within the template's `scaffold.textWords` | hard |
 | **TXT-03** | Input sizes: A dialogues 8–14 lines (A1.1 6–10), 60–120 s; B texts 150–450 words or 2–4 min; scenes ≤ 90 s (A1) / ≤ 2 min | hard |
-| **TXT-04** | Every instruction fits ≤ 2 lines at 360 px (≤ 90 characters, design) | hard |
+| **TXT-04** | Every instruction fits ≤ 2 lines at 360 px (≤ 90 characters, design). **Exempt:** exam item stems (`role: 'exam'`), which follow the level profile's `examStemChars` band instead, because official B-level statements and MC stems (e.g. Goethe B2 Lesen 1) routinely exceed 90 characters and EXM-01 fidelity wins | hard |
 | **LNG-01** | Hunspell `de_DE` (`nspell` + `dictionary-de`, GPL, build-time only) ∪ lexicon ∪ cast names: 0 unknown tokens outside `intentionalError` items | hard |
 | **LNG-02** | Self-hosted LanguageTool (LGPL-2.1; the public API allows 20 requests/min): 0 unresolved GRAMMAR, TYPOS, CASING, PUNCTUATION matches outside a per-rule allowlist with reasons | hard |
 | **LNG-03** | Determiner/adjective + noun agreement against lexicon genders for listed nouns | hard |
 | **LNG-04** | spaCy `de_core_news_sm` morphology checks (morphology accuracy 90.66 % per its model card) | advisory |
 | **ITM-01** | Every `quality.js` exclusion reason and repair predicate, generalised from `SCOPED_LEVEL = 'a1.1'` to all levels without changing A1.1 output (its tests stay green): answer in prompt, cue only in the English gloss, article-cue mismatch, ambiguous correction, missing fronted orders, agreement ambiguity, gender-pair ambiguity, missing determiner cue, metalinguistic prompt, statement without a task, English in German fields, unconditioned rule | hard |
-| **ITM-02** | MC: 3 options, one key, distractors in the key's form class | hard |
+| **ITM-02** | Non-exam MC: 3 options, one key, distractors in the key's form class. Exam items take their per-item options or block choices from the template (EXM-01) | hard |
 | **ITM-03** | R/F and Ja/Nein sets 40–60 % true, no run > 3; a/b/c keys balanced ±1 per block | hard |
-| **ITM-04** | No R/F statement is a substring of its text or differs from a text sentence by one token (A1.1 review #9) | hard |
-| **ITM-05** | `MAX_SAME_TASK_SHAPE` holds on the POS-masked key (review #9) | hard |
-| **ITM-06** | Per LS: pool of 16, mix per §3.4, ≥ 70 % recall formats, generated ≤ the level cap | hard |
+| **ITM-04** | No R/F statement is a substring of its text or differs from a text sentence by one token (design, inherited from A1.1 review #9) | hard |
+| **ITM-05** | `MAX_SAME_TASK_SHAPE` holds on the POS-masked key (design, inherited from A1.1 review #9) | hard |
+| **ITM-06** | Per LS: pool of 16, mix per §3.4, ≥ 70 % recall formats, generated ≤ the level cap; **reserve of 4–6** authored items (§3.3), none duplicating a pool item's POS-masked key | hard |
 | **ITM-07** | Every answer containing a digit, time, date, price, phone number or spelled name carries `exact` | hard |
 | **ITM-08** | `caseSensitive: true` only where capitalisation is the task (polite Sie/Ihnen/Ihr, capitalisation drills) | advisory |
 | **ITM-09** | `sentence_building`: every grammatical order is in `accepted` (`missingFrontedOrder`) | hard |
 | **ITM-10** | Every `accepted` form added after solver triage carries `acceptedWhy` and a reviewer-confirmed flag | hard |
 | **ITM-11** | Every authored item has a static explanation `{de, en}`; nothing in a paid course depends on a runtime explanation call | hard |
-| **CON-01** | Persona facts vs the cast bible (name, age, city, job, languages, relationships, du/Sie) | hard |
+| **ITM-12** | Every error tag of §2.5 that a level's rubric profiles can report has ≥ 3 pool or reserve items carrying it (`errorTag` or `errorTags`) at or below each unit where it can first be reported, so every `repair` card has a pool | hard |
+| **CON-01** | Persona facts vs the cast bible (name, age, city, job, languages, relationships, du/Sie); every named person who speaks or is named as a character is a cast member or a file-level extra (SCHEMA §3.3) | hard |
 | **CON-02** | Model texts do not contradict the dialogues they summarise (entities, times, places) | hard + advisory |
 | **CON-04** | Calendar, time and arithmetic sanity: weekday ↔ date in the story calendar, *halb elf* = 10.30, prices add up, opening hours consistent within a unit | hard |
 | **CON-05** | Register per relationship: Sie in all instructions and with strangers; du only where the cast bible marks it | hard |
 | **CON-06** | Every factual claim (Landeskunde, legal, administrative, statistic, Porträt) sits in a `facts[]` record with `sources`, `factsCheckedOn` ≤ 180 days before promotion, `currentAsOf`, `exceptions` and `verification: "verified"` | hard |
-| **EXM-01** | Every block matches its Teil template: items, options, no-match option, plays, reading time, time box, text band, word band, preparation minutes | hard |
-| **EXM-02** | `scaffolded` only where the template allows it for this course; never in a .2 course; A1.1 blocks untimed | hard |
+| **EXM-01** | Every block matches its Teil template: items, per-item options, **block `choices` count, choice kind, reuse and `noMatchKey`**, every item's answer ∈ the block's choice keys ∪ {noMatchKey} for `zuordnen`/`insert`/word-bank `cloze`, plays, reading time, time box, text band, word band, preparation minutes. `length: full` checks against the template; `reduced` and `mini` against the template's `scaffold` (min items, text band, plays fixed, options fixed) | hard |
+| **EXM-02** | `scaffolded` only where the template allows it for this course; never in a .2 course; A1.1 blocks untimed. A **pictorial** Teil without approved image assets is allowed only as its scaffolded text variant in a .1 course; in a .2 course it blocks the lane from going live (§4.9) | hard |
 | **EXM-03** | Writing tasks: Leitpunkt count = template; `choose` for 3-of-4 lanes; Anrede/Gruß never a Leitpunkt; register per template; sd1 S1 form exactly 5 fields | hard |
-| **EXM-04** | Speaking tasks: mode = template interaction; preparation minutes = lane; cards/moves present | hard |
+| **EXM-04** | Speaking tasks, **per part** (a multi-Teil task checks every part): mode = template interaction (signed off by the Prüferin W2 reviewer); preparation minutes and `prepAtHome` = template; cards/moves present; `stimulus`, `partnerData`, `topicChoice` present where the template requires them; `keyPoints` present for `mediate`; `seconds`/`turns` within the template's band | hard |
 | **EXM-05** | Mock forms match the lane blueprint; parallel forms share no 8-gram; lengths within ±10 % of each other; same item-type counts; key balance | hard |
 | **EXM-06** | Mocks, Plateaus and Halbtests use only the taught inventory (LEX-01 ≥ 95 %, no construction after the course's last unit; the Diagnose is exempt and labelled) | hard |
 | **EXM-07** | Per-lane scorers pinned at their boundaries (§5.5) | hard |
 | **EXM-08** | Deterministic zero/cap rules win over any AI output (tests with stubbed AI responses) | hard |
 | **EXM-09** | Coverage COV-1…COV-7 (§2.4) per live lane | hard |
 | **EXM-10** | No DTB-format block outside `dtb2`; the DTZ lane carries its label and gate question | hard |
-| **LGL-01** | Banned strings in course data, pages and e-mails: „bestanden" (about our tests), „bereit für die Prüfung"/„prüfungsbereit", „prüfungsreif", „prüfungssicher", „Bestehenschance", „garantiert", „in … Wochen zu", „offiziell/anerkannt/zertifiziert/Partner" (about us), „persönliches Feedback", „Tutor", „Coach", „Lehrkraft korrigiert", „Korrektur deiner Texte", „Zertifikat" outside the fixed disclaimer, „Muttersprachler/native speaker" on TTS, „unbegrenzt/unlimited" (until §13 D8), „Prüfer/Prüferin" for the AI (the anti-recitation line names the human examiner and is allowlisted) | hard |
+| **EXM-11** | Every `pruefungsfokus` entry maps to exactly one slot (`ls4`, `sprechen`, `schreiben`, `ls3-text`, `text-b`), and that slot holds a block or task of that template; LS4 holds ≤ 2 blocks (COV-3) | hard |
+| **LGL-01** | **A claims rule over learner-visible strings** (course data fields shown to learners, pages, e-mails, in-app strings, `courseFacts`); internal enum ids and keys (`pruefer`, `examiner`, lane ids) are not linted. Banned: „bestanden" (about our tests), „bereit für die Prüfung"/„prüfungsbereit", „prüfungsreif", „prüfungssicher", „Bestehenschance", „garantiert", „in … Wochen zu", „offiziell/anerkannt/zertifiziert/Partner" (about us), „persönliches Feedback", „Tutor", „Coach"/„coach" (the live pricing page's „speaking coach" gets a copy pass in the first v2 integration PR, §10.7), „Lehrkraft korrigiert", „Korrektur deiner Texte", „Muttersprachler/native speaker" on TTS, „unbegrenzt/unlimited" (until §13 D8). **„Zertifikat"** is banned only as a description of *our* output („Ihr Zertifikat", „mit Zertifikat", „Zertifikat erhalten"); exam proper names are allowlisted (Goethe-Zertifikat, ÖSD-Zertifikat, Zertifikat Deutsch, Zertifikat Integrationskurs, Zertifikat B1/ZB1) and so is the fixed Teilnahmebescheinigung disclaimer. **„Prüfer/Prüferin"** is allowed only where it names the human examiner of the real exam (the anti-recitation line, strategy cards, „Die KI ersetzt keine Prüferin"); the AI's role in exam simulations is shown as **„Gesprächsleitung (KI)"** | hard |
 | **LGL-02** | No page or product title begins with an exam mark | hard |
 | **LGL-03** | The fixed AI label in every graded-result component and the AI notice at first contact (component tests) | hard |
 | **LGL-04** | Sie in every instruction, notice and e-mail; du only in marked peer dialogues | hard |
@@ -1666,11 +1716,15 @@ deterministic gate for its file**; a run that returns a red unit is a failed run
 | **LGL-07** | No score, Übungswert or share link in any e-mail template until counsel clears it | hard |
 | **LGL-08** | Mock counts per lane on lane pages, never summed; no mock count in a page H1 | hard |
 | **LGL-09** | Hours only from `minutesMeasured` with n ≥ 30 learners per course (design) | hard |
-| **AUD-01** | Every spoken line has a speaker → voice from the cast bible | hard |
+| **LGL-10** | No exam-fee figure on course pages, lane pages or course e-mails unless it cites a first-party exam-centre page through a CON-06 fact with a „Stand" date, and never within the same block as retake wording (extends the fee lint of `tests/guides.test.mjs`) | hard |
+| **AST-01** | Every `Asset` has `altDe`, a `source` and a licence record (for `generated`: model and prompt; for `licensed`: licence name, holder, URL); every `imageRef`/`assetRef` resolves | hard |
+| **AST-02** | An asset depicting a real, identifiable person is `source: licensed` with a licence that covers the depiction; otherwise the Porträt is text-only; generated images never show a real person, brand, ID document design or exam sheet | hard |
+| **AUD-01** | Every spoken line has a speaker → voice from the cast bible or the file's `extras` (SCHEMA §3.3) | hard |
 | **AUD-02** | Numbers, times, prices and phone numbers in canonical form with a `say` override where written ≠ spoken („10.30" → „halb elf") | hard |
 | **AUD-03** | Line length ≤ 250 characters; no unsupported characters | hard |
-| **AUD-04** | ≥ 2 voices per dialogue; ≥ 4 voices per perception drill | hard |
-| **TIM-01** | `minutesPlanned` from the time model (reading speed per level, audio × 1.5 in Lernmodus, ≈ 12 s per closed item, ≈ 30 s per typed item, task timers) ≤ the slot limit (§3.1–3.2); Prüfungsmodus sessions ≤ template time + 5 min | hard |
+| **AUD-04** | ≥ 2 voices per dialogue; ≥ 4 voices per perception drill; the texts of one Hören Teil use as many distinct voices as they have distinct speakers | hard |
+| **AUD-05** | A named speaker's gender matches the voice's gender in `registries/voices.json`; a line in which a speaker names themself („hier spricht Frau Klein", „ich bin …") has a cast or extra speaker, never `ansage`/`radio`/`durchsage`; `variety` (D/A/CH) matches the voice's locale where the text is marked Austrian or Swiss | hard |
+| **TIM-01** | `minutesPlanned` (computed in memory; written only to `.build/`) from the time model (reading speed per level, audio × 1.5 in Lernmodus, ≈ 12 s per closed item, ≈ 30 s per typed item, task timers) ≤ the slot limit (§3.1–3.2); Prüfungsmodus sessions ≤ template time + 5 min | hard |
 | **TIM-02** | U1 LS1 of every course has a scored item within the first 3 screens | hard |
 | **TIM-03** | Every LS has an `endLine` and a next-step reference; every unit a cliffhanger | hard |
 | **TIM-04** | Payload per LS ≤ 150 KB JSON and ≤ 1.5 MB including its audio (design) | hard |
@@ -1678,7 +1732,7 @@ deterministic gate for its file**; a run that returns a red unit is a failed run
 | **PRG-01** | No progression gate reads an AI score (static test over the gate code) | hard |
 | **PRG-02** | Completion is defined once in `course.json`; course home, certificate, reminders and weekly truth import the one function (test) | hard |
 | **PRG-03** | An Aufgabe counts as submitted only as a real attempt (§3.5) (test) | hard |
-| **PRG-04** | Plan suggestions, the board's Vorschlag and `teil`-card selection read deterministic inputs only (test on the selector inputs) | hard |
+| **PRG-04** | Plan suggestions, the board's Vorschlag, `teil`-card selection and the **Einstufung routing** read deterministic inputs only (test on the selector inputs) | hard |
 | **QA-FRESH-01** | Every committed model-gate result carries the content hash it checked; CI fails when the current hash differs | hard |
 
 ### 9.2 Model-calling gates (pipeline steps, pinned model ids, results committed under `content/course-v2/qa/`)
@@ -1690,7 +1744,7 @@ deterministic gate for its file**; a run that returns a red unit is a failed run
 | **SOL-03 Text-blind probe** | Each R/F, Ja/Nein or a/b/c set answered without its text | accuracy ≤ 60 % over the set (else the set leaks) |
 | **CAL-01 Anchor regression** | Each rubric profile's anchors, 3 runs each, pinned model | §4.6 thresholds |
 | **CAL-02 Human agreement** | Profile output vs the human DaF examiner's ratings (§4.6) | ≥ 80 % within one band per criterion; mean signed error on error-heavy texts ≥ −0.5 band |
-| **LGL-05 Official-overlap** | 8-gram shingle hashes of the official model sets (kept in `private/`) vs all our texts | 0 matches |
+| **LGL-05 Official-overlap** | 8-gram shingle hashes of the official model sets (kept in `private/`) vs all our texts, including each template's `instructionsDe` (our paraphrase, never the official wording) | 0 matches outside an allowlist of generic rubric boilerplate („Wählen Sie a, b oder c.", „Kreuzen Sie an.") that counsel reviews under §13 D2 |
 | **LEX-06 List coverage** | Cumulative list gates at A1.2 / A2.2 / B1.2 (≥ 95 % of the list headwords) from the private `list_ref` table | report committed with its hash |
 
 ### 9.3 Construction detectors (GRM-04)
@@ -1716,6 +1770,7 @@ introducing unit is read from the spine, never typed into the detector.
 | imperative du/ihr | clause-initial verb form without subject | heuristic |
 | attributive adjective endings | determiner + adjective + noun from lexicon | heuristic |
 | comparison (*-er als*, *am -sten*) | pattern | exact |
+| stem-vowel change in the present (*sprichst, spricht, liest, isst, fährt, schläft, nimmt, gibt* …) | lexicon `verb_forms.2sg` / `3sg` where they differ from the stem; *sprichst/spricht* whitelisted as the A1.1 U1 chunk | exact (lexicon-driven) |
 | Konjunktiv I, extended participial attribute | pattern | advisory |
 
 ### 9.4 The DaF review rubric
@@ -1753,8 +1808,8 @@ Two reviewers per unit with different personas, plus specialists:
   missing lane-exact block in a .2 course; a gate hole that lets a finding class through.
 - **MINOR:** style, gloss wording, a weak distractor, a scene that could be livelier.
 
-**Exit per unit:** 0 BLOCKER, 0 MAJOR, every criterion ≥ 4, ≤ 5 logged MINOR. **Per level:** mean ≥ 29/35 (for
-reference, A1.1 closed at 21.6/25 ≈ 86 % in `REVIEW-daf-23`). Up to 4 rounds per unit are planned; **a 5th round
+**Exit per unit:** 0 BLOCKER, 0 MAJOR, every criterion ≥ 4, ≤ 5 logged MINOR. **Per level:** mean ≥ 29/35 (design,
+inherited from A1.1: its closing 21.6/25 ≈ 86 % in `REVIEW-daf-23`; the agent pilot re-measures it). Up to 4 rounds per unit are planned; **a 5th round
 triggers a rail fix** (template, exemplar or rule), never more rounds and never more authors. Proposal A's "≤ 1 MAJOR
 per Lektion" and B's "≤ 2 MAJOR per course" are rejected: at 8× the A1.1 volume they would ship known MAJORs.
 
@@ -1789,13 +1844,13 @@ unit by C's estimate, to be measured in the pilot). No date is promised; the pla
 
 | Phase | Content | Runs in parallel with | Gate to leave |
 |---|---|---|---|
-| **P0** | E0 rails · W2 registries → specs, lexicon, casts · design and copy strategy | — | registries frozen by the W2 reviewers; E0 back-test passes (§10.2) |
+| **P0** | E0 rails · W2 registries → specs → **lexicon allocation A1 → A2 → B1 → B2 in sequence** (§2.6), casts incl. every cross-course beat in `casts/series.json` · design, copy strategy, style sheet · counsel brief | — | registries frozen by the W2 reviewers; ALL-04/ALL-06 re-run green on the specs; E0 back-test passes (§10.2) |
 | **P1 Agent pilot** | U4 of every level (8 units) through the full loop | E1 player/exam/AI build | go/no-go (§10.4) |
 | **P2 Wave 1** | **A1 (A1.1 + A1.2, SD1) and B1 (B1.1 + B1.2, telc B1 primary) together** — B1 is the revenue core and is not held behind A1 | learner pilot on A1.1 Etappe 1 (3 weeks, never a blocker); E1 finishing | per unit: 0/0 exit; mass authoring beyond the pilot units starts only when the **SCHEMA fixture unit plays end to end at 360 px** (E1 exit) |
-| **P3 Wave 2** | A2 (Goethe A2 + telc A2 pack) and the B1 lane packs (DTZ, Goethe/ÖSD B1) | W4 on Wave 1 | per unit/pack exit |
+| **P3 Wave 2** | A2 (Goethe A2); the telc A2, DTZ and Goethe/ÖSD B1 packs **only if** onboarding lane-choice data meets the owner's threshold (§13 D15) | W4 on Wave 1 | per unit/pack exit |
 | **Decision point (moat)** | learner-pilot results (§10.4) | — | if the first-session AI metrics miss, fix the UX before Wave 3 |
-| **P4 Wave 3** | B2 (telc B2 + Goethe B2 pack) | W4/W5 on Waves 1–2 | per unit/pack exit |
-| **Integration** | one PR per level, one per lane pack (§10.7) | rolling | CI green incl. `validate.mjs --all`; §1.5 conditions for paid/B levels |
+| **P4 Wave 3** | B2 (telc B2; the Goethe B2 pack only after demand, §13 D15) | W4/W5 on Waves 1–2 | per unit/pack exit |
+| **Integration** | one PR per level, one per lane pack (§10.7) | rolling | CI green incl. `validate.mjs --all`; §1.5 and §1.6 rules 13–14 for paid/B levels and for any course that records audio; D8 for B-levels |
 
 ### 10.2 Track E — engineering (honestly re-estimated)
 
@@ -1808,33 +1863,39 @@ enforcement, ungraded writing). Proposal C's "2 days of rails" and A's 13 build 
 estimate: **E0 ≈ 30–40 agent-days, E1 ≈ 60–80 agent-days**, E2 ≈ 5–8 agent-days per level; with 6–8 concurrent
 engineering agents E0 ≈ 1–1.5 weeks and E1 ≈ 2–3 weeks, overlapping.
 
-**E0 rails (6 agents, P0):**
+**E0 rails (7 agents, P0).** Tests are split by owner prefix so no two agents write the same test file:
+`tests/course-v2/<agent>-*.test.mjs` (e.g. `tests/course-v2/e0-3-quality.test.mjs`); E1-8 alone re-points the 34
+legacy A1.1-pinned files.
 
 | Agent | Builds | Owns |
 |---|---|---|
-| E0-1 | schema checker, ids ledger, compiler v0 | `scripts/course-v2/lib/*`, `scripts/course-v2/compile.mjs` |
-| E0-2 | validator core; generic rules ported from `validate-curriculum.mjs` (no A1.1 personas or ratchet numbers) | `scripts/course-v2/validate.mjs`, `scripts/course-v2/rules/<RULE-ID>.mjs` (one file per rule) |
-| E0-3 | `quality.js` generalised to a level parameter, A1.1 output unchanged | `src/data/lessonPools/quality.js` + its tests |
-| E0-4 | Hunspell/LanguageTool CI job, detectors | `scripts/course-v2/lang/*`, `content/course-v2/registries/detectors.json`, `.github/workflows/course-v2.yml` |
-| E0-5 | model-gate harness: solver, probes, calibration runner, shingle check, QA-FRESH hashes | `scripts/course-v2/qa/*` |
-| E0-6 | generators, time model, SRS-01/02 calculators | `scripts/course-v2/generators/*`, `scripts/course-v2/models/*` |
+| E0-1 | schema checker (stage-aware, SCHEMA §8.1), ids ledger (append-only), compiler v0 writing only to `.build/` | `scripts/course-v2/lib/*`, `scripts/course-v2/compile.mjs`, `tests/course-v2/e0-1-*` |
+| E0-2 | validator core with `--stage S\|I\|T\|all`; generic rules ported from `validate-curriculum.mjs` (no A1.1 personas or ratchet numbers) | `scripts/course-v2/validate.mjs`, `scripts/course-v2/rules/<RULE-ID>.mjs` (one file per rule), `tests/course-v2/e0-2-*` |
+| E0-3 | `quality.js` generalised to a level parameter, A1.1 output unchanged; **`check.js` `exact` extension** (the solver, generators and ITM-07 depend on it, so it lands in E0) | `src/data/lessonPools/quality.js`, `src/lib/lesson/check.js`, `tests/course-v2/e0-3-*` |
+| E0-4 | Hunspell/LanguageTool CI job, detectors (incl. the Vokalwechsel detector) | `scripts/course-v2/lang/*`, `content/course-v2/registries/detectors.json`, `.github/workflows/course-v2.yml`, `tests/course-v2/e0-4-*` |
+| E0-5 | model-gate harness: solver, probes, calibration runner (MERLIN loader for `private/`), shingle check with the LGL-05 allowlist, QA-FRESH hashes | `scripts/course-v2/qa/*`, `tests/course-v2/e0-5-*` |
+| E0-6 | generators, time model, SRS-01/02 calculators (incl. the cumulative-deck simulation), the lemma registrar and `list-ref.mjs`, the image-prompt manifest for the image pipeline | `scripts/course-v2/generators/*`, `scripts/course-v2/models/*`, `scripts/course-v2/lex/*`, `scripts/course-v2/assets/*`, `tests/course-v2/e0-6-*` |
+| E0-7 | **repo plumbing and dependencies:** `nspell` + `dictionary-de` and any other new dependency in one lockfile change (the steward lockfile trap), the new twins in the duplicate check (speaking tasks, writing-task shards, `courseFacts`, syllabus), the course-v2 step in the main CI workflow, `private/` in `.gitignore` plus the CI check that it is never committed | `package.json`, `package-lock.json`, `scripts/check-duplicates.mjs`, `.github/workflows/ci.yml`, `.gitignore`, `tests/course-v2/e0-7-*` |
 
 **E0 exit:** unit tests green; **back-test** — an old A1.1 Lektion at its review-#1 state (from git history),
 converted to the v2 schema, reproduces the known review-#1 finding classes through the gates; the SCHEMA example
 unit validates with exit 0.
 
-**E1 player, exam layer, AI, learner state (8 agents, P1–P2):**
+**E1 player, exam layer, AI, learner state (9 agents, P1–P2).** **Sequence:** E1-5 lands first and publishes the
+`_shared/entitlement.mjs` API (`hasCourseAccess`, `reserveAllowance`, `recordUsage`); E1-4 and E1-6 call it inside
+their own functions and never edit it.
 
 | Agent | Builds | Owns |
 |---|---|---|
-| E1-1 | v2 unit builder (stage plan from unit JSON; reuses the seeded draw and earlier-attempt exclusion), lazy unit loader, resume at item level, course home | `src/lib/course-v2/*` (except board/completion), `src/pages/course-v2/*` |
-| E1-2 | renderers for the new item types, in-lesson speaking, micro-output, no-mic path, player primitives into `ui/` | `src/components/course-v2/*`, `src/components/ui/*` (new primitives only) |
-| E1-3 | lane loader, Prüfungsmodus runner (extends the Modelltest runner), per-lane scorers + boundary tests | `src/lib/exam/*`, `src/services/examRules/*`, `src/pages/Modelltest/*`, `src/services/examScoring.js` |
-| E1-4 | `evaluate-writing` v2: rubric profiles, server zero/cap rules, response schema 2, `BANK_KEY_RE`, sharded writing bank twins | `netlify/functions/evaluate-writing.mjs`, `netlify/functions/_shared/rubrics/*`, `src/data/writingTasks/*` ↔ `netlify/functions/_shared/writingTasks/*` |
-| E1-5 | entitlement: server `hasCourseAccess`, purchase-aware lifetime allowance + daily cap across AI functions, anonymous-session caps; client `hasCourseAccess` | `netlify/functions/_shared/entitlement.mjs`, `_shared/speakingUsage.mjs`, `score-readaloud.mjs`, `src/contexts/SubscriptionContext.jsx`, `src/components/LevelSubscriptionGuard.jsx` |
-| E1-6 | speaking bank twins and modes (group, plan-together moves, photo, feedback-question, mediate), preparation timer, collapsing notes, anti-recitation note | `netlify/functions/speaking-*.mjs`, `evaluate-speaking.mjs`, `_shared/speakingAI.mjs`, `src/data/speakingTasks/*` ↔ `_shared/speakingTasks/*` |
-| E1-7 | migrations (`exam_practice_results`, `learner_goals`, `review_cards` kinds), ladder parameter + exam cap, plan, Prüfungsstand, Teil-Karte, the one completion function, funnel and reminder SQL updated in the same PR | `migrations/2026-10-*.sql`, `src/lib/review/ladder.js`, `src/lib/course/plan.js`, `src/lib/course-v2/board/*`, `src/lib/course-v2/completion.js`, `netlify/functions/course-reminder.mjs` |
-| E1-8 | tests: the 34 A1.1-pinned files re-pointed as class tests over every registered course; KEY/PRG/EXM tests | `tests/*` |
+| E1-1 | v2 unit builder (stage plan from unit JSON; reuses the seeded draw and earlier-attempt exclusion; `earlierDraw` from the compiled reserve index), lazy unit loader, resume at item level, course home | `src/lib/course-v2/*` (except board/completion), `src/pages/course-v2/*`, `tests/course-v2/e1-1-*` |
+| E1-2 | renderers for the new item types (block-level choices, image choices), in-lesson speaking, micro-output, no-mic path, the first-microphone privacy notice (§4.8), player primitives into `ui/` | `src/components/course-v2/*`, `src/components/ui/*` (new primitives only), `tests/course-v2/e1-2-*` |
+| E1-3 | lane loader, Prüfungsmodus runner (extends the Modelltest runner; word counter per `delivery`), per-lane scorers incl. DTZ A2 bands + boundary tests | `src/lib/exam/*`, `src/services/examRules/*`, `src/pages/Modelltest/*`, `src/services/examScoring.js`, `tests/course-v2/e1-3-*` |
+| E1-4 | `evaluate-writing` v2: rubric profiles (`scoredBy`, descriptors, bands, `errorPolicy`), server zero/cap rules, response schema 2, `BANK_KEY_RE`, sharded writing bank twins; calls `entitlement.mjs`; writes AI-scored `exam_practice_results` rows | `netlify/functions/evaluate-writing.mjs`, `netlify/functions/_shared/rubrics/*`, `src/data/writingTasks/*` ↔ `netlify/functions/_shared/writingTasks/*`, `tests/course-v2/e1-4-*` |
+| E1-5 | entitlement: server `hasCourseAccess`, the purchase-aware lifetime allowance in attempts **and speaking minutes** + daily cap, `course_ai_usage` writes, anonymous-session caps with hashed IPs; client `hasCourseAccess` | `netlify/functions/_shared/entitlement.mjs`, `_shared/speakingUsage.mjs`, `score-readaloud.mjs`, `src/contexts/SubscriptionContext.jsx`, `src/components/LevelSubscriptionGuard.jsx`, `tests/course-v2/e1-5-*` |
+| E1-6 | speaking bank twins and modes (`get-to-know`, plan-together moves, photo, feedback-question, mediate; `parts`, `stimulus`, `partnerData`, `topicChoice`; single AI partner for A1.2; group mode v1.1), preparation timer, hard session length, collapsing notes, anti-recitation note, **raw-audio retention job**; calls `entitlement.mjs` | `netlify/functions/speaking-*.mjs`, `evaluate-speaking.mjs`, `_shared/speakingAI.mjs`, `netlify/functions/audio-retention.mjs`, `src/data/speakingTasks/*` ↔ `_shared/speakingTasks/*`, `tests/course-v2/e1-6-*` |
+| E1-7 | migrations (`exam_practice_results` with server-only AI rows, `learner_goals` keyed by user and band with the `profiles.exam_date` migration and the re-pointed Dashboard/Profile/ExamDatePlan readers, `course_ai_usage`, `course_events`, `review_cards` kinds and graduation), ladder parameter + exam cap + graduation, the v2 plan (pace presets, no `behind`), Prüfungsstand with the interim rule, Teil-Karte, the one completion function, funnel and reminder SQL updated in the same PR | `migrations/2026-10-*.sql`, `src/lib/review/ladder.js`, `src/lib/course/plan.js` (v2 module beside the legacy one), `src/lib/course-v2/board/*`, `src/lib/course-v2/completion.js`, `netlify/functions/course-reminder.mjs`, `src/components/course/ExamDatePlan.jsx`, the exam-date fields of `src/pages/DashboardPage.jsx` and `src/pages/ProfilePage.jsx`, `tests/course-v2/e1-7-*` |
+| E1-8 | tests: the 34 A1.1-pinned files re-pointed as class tests over every registered course; cross-agent KEY/PRG/EXM suites | the 34 legacy files in `tests/`, `tests/course-v2/e1-8-*` |
+| E1-9 | **routing and crawl surface:** the v2 routes (Plateau, Modelltest, Prüfungsstand, Einstufung, Teilnahmebescheinigung) in all three places of CLAUDE.md's route rule, the page URL scheme of §8.1 rule 8 incl. `/en/` and `hreflang`, the Netlify copy step for a new top-level segment | `src/App.jsx`, `netlify.toml`, `scripts/prerender-spa-routes.mjs`, `public/sitemap-spa.xml`, `scripts/check-built-html.mjs` (MANIFEST), the Astro sitemap config, `tests/course-v2/e1-9-*` |
 
 **E1 exit:** the SCHEMA fixture unit (A2.1 U7) plays end to end at 360 × 640 in Playwright Chrome device emulation,
 including one graded writing task and one graded speaking task against dev functions; CI green.
@@ -1847,18 +1908,27 @@ including one graded writing task and one graded speaking task against dev funct
 | Grammar spine | 1 | `registries/grammar-spine.json` |
 | Lane profiles, Teil templates, form blueprints, pass-rule ids | 5 (sd1+oza1 · ga2+ta2 · tb1+dtz · gb1 · tb2+gb2) | `registries/lanes/<lane>.json` |
 | Families and transfer map | 1 | `registries/families.json` |
-| Rubric profiles | 2 (writing, speaking) | `registries/rubrics/writing/*.json`, `registries/rubrics/speaking/*.json` |
-| Level profiles, text types | 1 | `registries/level-profiles.json`, `registries/text-types.json` |
-| Story architect + band casts | 1 + 4 | `casts/series.json`, `casts/<band>.json` |
+| Rubric profiles (incl. descriptors in our own wording, `scoredBy`, bands, `errorPolicy`) | 2 (writing, speaking) | `registries/rubrics/writing/*.json`, `registries/rubrics/speaking/*.json` |
+| Level profiles, text types, **German style sheet** | 1 | `registries/level-profiles.json`, `registries/text-types.json`, `registries/style.json` + the one-page `docs/course-v2/style.md` (§10.3 note) |
+| Story architect + band casts | 1 + 4 | `casts/series.json` (incl. every cross-course beat), `casts/<band>.json`, `registries/voices.json` (Azure voice id → gender, locale) |
 | Curriculum (one per level): converts the W2 draft onto the §2.8 rows | 8 | `<level>/course.json`, the `spec` block of each `units/uNN.json` (created by this agent), `<level>/rule-cards.json` |
-| Lexicon (one per level, after the level's specs) | 8 | `<level>/lexicon.json` |
+| Lexicon allocators (one per band, run **in sequence A1 → A2 → B1 → B2** after that band's specs; each followed by the dedupe step) | 4 | `<level>/lexicon.json` of their band's two levels; `registries/lemmas.json` is written only by the orchestrator's `lex/register.mjs` run |
 | UX design | 1 | `docs/course-v2/design/player.md` |
 | Copy strategy | 1 | `docs/course-v2/copy/<level>.md`, `docs/course-v2/copy/emails.md` |
-| Counsel brief | 1 | `docs/course-v2/legal/counsel-questions.md` |
-| W2 reviewers (Prüferin: lanes + rubrics · DaF: spine + can-dos · progression: all 8 specs · cast/Landeskunde) | 4 | `docs/course-v2/reviews/w2/<reviewer>.json` |
+| Counsel brief (must name: AI grading in paid courses incl. A1.2; **the Prüfungsstand, the Teil-Karte and the Halbtest view**; e-mail and share wording; the 90-day Pro window; private evaluation use of official samples and of MERLIN (share-alike); the LGL-05 boilerplate allowlist; the Datenschutzerklärung incl. AI processors and third-country transfer; § 356a with Lemon Squeezy; Rome I for buyers abroad) | 1 | `docs/course-v2/legal/counsel-questions.md` |
+| W2 reviewers (Prüferin: lanes + rubrics, **signs off every template's `interaction`, choice set and pictorial flag** · DaF: spine + can-dos · progression: all 8 specs, ALL-04/ALL-06 recount · cast/Landeskunde) + calibration reviewer (approves the rubric descriptors) | 5 | `docs/course-v2/reviews/w2/<reviewer>.json` |
 
-≈ 43 runs, peak ≈ 24 concurrent. Order: registries → W2 reviewers → **freeze** → specs → lexicon and casts → review →
-freeze. After a freeze a registry changes only through its owner agent, on a rule-smith's or reviewer's finding.
+≈ 40 runs, peak ≈ 24 concurrent. Order: registries → W2 reviewers → **freeze** → specs → **ALL-04/ALL-06 re-run on
+the specs** → lexicon allocation band by band and casts → review → freeze. After a freeze a registry changes only
+through its owner agent, on a rule-smith's or reviewer's finding.
+
+**The German style sheet** (`registries/style.json`, read by LNG-02's allowlists, the `accepted` generators and the
+graders' pre-check; defaults are design until the W2 DaF reviewer confirms them): times „11.15 Uhr" in running text
+and exam texts, with „11:15" always in `accepted`; German quotation marks „…" and ‚…'; „Sie/Ihnen/Ihr" capitalised,
+„du/dich/dein" lower-case also in letters (Duden permits both; one form is fixed so the checker is consistent);
+gender-inclusive forms as pair forms („Kolleginnen und Kollegen", „Teilnehmende") — no asterisk or colon forms in
+course texts; ß in D/A texts, ss only in texts marked `variety: CH`; phone numbers grouped „0341 58 27 90", prices
+„12,50 €" in running text; dates „14.11." and „14. November".
 
 ### 10.4 Pilots (run in parallel)
 
@@ -1874,7 +1944,9 @@ units become the **exemplars** every later author prompt carries.
 beta path beside the live A1.1 (feature flag; the live A1.1 keeps serving), with existing users invited by an
 owner-approved e-mail so the sample is not limited to ≈ 23 new sign-ups a week. Three weeks. Measures: minutes per
 Lernschritt (p50/p95), week-1 learning days, share reaching day 7, AI Aufgaben per active learner, first-session
-scored sentence rate, abandonment hotspots, mic denials, AI latency. Internal targets (design, never copy): ≥ 70 % of
+scored sentence rate, abandonment hotspots, mic denials, AI latency, **AI cost per engaged learner** (calls, speaking
+minutes, $ per learner per unit — the input to §13 D8), and, with the learner's explicit consent (§4.8), **speaking
+recordings for the examiner to rate** (the first speaking ground truth, CAL-02). Internal targets (design, never copy): ≥ 70 % of
 starters finish LS1 with its scored sentence; ≥ 40 % have ≥ 3 learning days in week 1; ≥ 1.5 AI Aufgaben per active
 learner per unit. **It never blocks B1.** Its results freeze anatomy v1.1 (split rule, time-model recalibration),
 applied by rule to every unit; the moat decision point uses its AI metrics.
@@ -1882,25 +1954,35 @@ applied by rule to every unit; the moat decision point uses its AI metrics.
 ### 10.5 W3 — materials
 
 **Lease rule:** exactly one agent holds a content file at a time; the orchestrator grants and releases leases;
-reviewers never edit content (they write findings files). A unit file is authored in three sequential runs (C's split):
+reviewers never edit content (they write findings files). A unit file is authored in three sequential runs (C's split);
+each run sets the file's `stage` and must exit 0 on `validate.mjs --stage <its stage>` (§9), never on rules a later
+role owns:
 
-| Role | Writes into `units/uNN.json` |
-|---|---|
-| **S „Szene & Text"** | Start, LS1–LS3 inputs (B: text types), LS4 texts, dialogue lines with voices and `say` overrides, story beat and cliffhanger, Fokus-Karten, `facts[]` |
-| **I „Items"** | input items, structured input, practice pools (incl. generator declarations), exit, Lektions-Check, proofs, static explanations |
-| **T „Prüfungsaufgaben"** | LS4 blocks against their templates, strategy cards, micro-outputs, both Aufgaben (writing and speaking bank entries inline), checklists, moves, model texts |
+| Role | Writes into `units/uNN.json` | Ends with |
+|---|---|---|
+| **S „Szene & Text"** | Start, LS1–LS3 inputs (B: text types), **LS4 source texts at step level (`PruefungStep.texts`)**, dialogue lines with voices and `say` overrides, file-level `extras` for one-off speakers, `assets` (alt text, prompt, licence record), story beat and cliffhanger, Fokus-Karten, `facts[]` | `stage: "S"`, `--stage S` green |
+| **I „Items"** | input items, structured input, practice pools (incl. generator declarations) **and reserves**, exit, Lektions-Check with its `earlierDraw` rule, proofs, static explanations, `errorTags` | `stage: "I"`, `--stage I` green |
+| **T „Prüfungsaufgaben"** | LS4 blocks against their templates, **referencing the S texts by id** (`textRefs`) and carrying the block `choices`, strategy cards, micro-outputs, both Aufgaben (writing and speaking bank entries inline), checklists, moves, model texts | `stage: "T"`, the full gate set green |
 
-| Work package | Files (one writer each) | Author runs |
+**Generated fields never enter an authored file.** After a lease is released, the **orchestrator** (and only it) runs
+`compile.mjs <level>`, which writes every derived value — `minutesPlanned`, `reviewCards`, content hashes, counts,
+SRS minutes, the Einstufung form — into build artefacts under `content/course-v2/<level>/.build/` and appends new or
+tombstoned ids to `<level>/ids.ledger.json` (append-only, SCHEMA §13). Author agents run only the read-only
+`validate.mjs`, so parallel leases on one level never write the same file.
+
+| Work package | Files (one writer each) | Author runs (v1 cut; full design in brackets) |
 |---|---|---|
 | Units (96 − 8 pilots) | `<level>/units/uNN.json` | 88 × 3 = 264 |
-| Spur-Karten (secondary lanes) | `<level>/units/uNN.lane-<lane>.json` | ≈ 96 (A2 24 ta2; B1 24 dtz + 24 gb1; B2 24 gb2) |
-| Plateaus | `<level>/plateaus/pN.json` + `pN.lane-<lane>.json` | 24 + 24 |
-| Closing blocks | `<level>/closing/halbtest-<lane>.json` (.1), `diagnose-<lane>.json` (.2) | 8 + 8 |
-| Modelltest modules (one agent per module, never one per whole mock) | `<level>/mocks/<lane>/<form>/<module>.json` | primary: sd1 12, ga2 12, tb1 15, tb2 15; secondary: ta2 8, dtz 8, gb1 8, gb2 8 → 86 |
-| Calibration anchors | `content/course-v2/anchors/<profile>/*.json` | ≈ 30 profiles |
-| Lexicon and rule-card fixes | the level's `lexicon.json`, `rule-cards.json` | on call (the 8 W2 owners) |
+| Spur-Karten (secondary lanes) | `<level>/units/uNN.lane-<lane>.json` | 0 in v1 (≈ 96 once the packs are built: A2 24 ta2; B1 24 dtz + 24 gb1; B2 24 gb2) |
+| Plateaus | `<level>/plateaus/pN.json` + `pN.lane-<lane>.json` | 24 (+ 24 with the packs) |
+| Closing blocks | `<level>/closing/halbtest-<lane>.json` (.1), `diagnose-<lane>.json` (.2) | 4 + 4 for the primary lanes (8 + 8 with the packs) |
+| Modelltest modules (one agent per module, never one per whole mock) | `<level>/mocks/<lane>/<form>/<module>.json` | v1 primary, forms A–B: sd1 8, ga2 8, tb1 10, tb2 10 → 36 (86 with form C and the packs) |
+| Calibration anchors | `content/course-v2/anchors/<profile>/*.json` | 19 profiles in v1 (6 AI-scored writing, human-verified; 13 speaking, regression-only until pilot recordings) |
+| Lexicon and rule-card fixes | the level's `lexicon.json`, `rule-cards.json` | on call (the W2 owners) |
+| Images | `assets` entries in the files above; binaries from the image pipeline | owner-approved batch per level (§4.9, §13 D16) |
 
-≈ 540 author runs + ≈ 340 pipeline runs (solver/probes/calibration); peak ≈ 36–40 concurrent. **Every author prompt
+≈ 350 author runs in the v1 cut (≈ 540 with every pack) + ≈ 250–340 pipeline runs (solver/probes/calibration); peak
+≈ 36–40 concurrent. **Every author prompt
 carries:** the unit spec, the level profile, the cast bible, one pilot exemplar at the same level, the gate list, and
 the reviewers' brief (§9.5). **Authors write lemmas, never database ids**; `wordId` is filled by the orchestrator with
 one SQL match at integration (db snapshot header). **Generators are code**, not agents.
@@ -1912,15 +1994,16 @@ one SQL match at integration (db snapshot header). **Generators are code**, not 
 | R1 Prüferin + R2 Kursleiterin | every unit and Spur file | ≈ 192 unit reviews (+ Spur files reviewed with their unit) |
 | Level reviewer | all 12 units of a level | 8 |
 | Exam-fidelity reviewer | Plateaus, Halbtests, Diagnosen per band | 4 |
-| Mock-module reviewer (Prüferin persona) | each mock module file | ≈ 86 |
-| Calibration reviewer | each rubric profile (CAL-01/02 results) | ≈ 30 |
+| Mock-module reviewer (Prüferin persona) | each mock module file | 36 in v1 (≈ 86 with every pack) |
+| Calibration reviewer | each rubric profile (descriptors, CAL-01/02 results) | 19 in v1 |
 | Walkthrough reviewer | pilots, first 2 units per level, all Plateaus | ≈ 40 |
 | Copy/legal reviewer | pages, e-mails, in-app strings per level | 8 |
 | Fresh-eyes auditor | random 20 % of exited units | ≈ 20 |
 | Rule-smiths | class findings → rule + fixture + test | 2–3 standing |
 
 Findings files: `docs/course-v2/reviews/<level>/<unitId>.<reviewer>.r<N>.json`. Fixes: the original role under a new
-lease (S for texts, I for items, T for blocks). Re-review covers only failed criteria plus the fresh-eyes sample.
+lease (S for texts, I for items, T for blocks); a fix run on a file already at stage T must leave the **full** gate set
+green. Re-review covers only failed criteria plus the fresh-eyes sample.
 
 ### 10.7 W5 — build and integrate
 
@@ -1928,10 +2011,18 @@ lease (S for texts, I for items, T for blocks). Re-review covers only failed cri
   exited: compiled outputs committed (unit chunks, pool items, writing and speaking bank shards, syllabus twins,
   `courseFacts` twins, audio line files), the `words` JSON batch as guarded SQL for the owner, the audio lines for the
   owner's Azure run, pages (Astro course page, lane pages, SPA), `llms.txt` regenerated, steward conventions (squash;
-  the lockfile trap; the non-idempotent prerender — build from scratch). **Secondary lane packs** ship in follow-up
-  PRs, one per pack. Shared: 1 pages/copy agent, 1 e2e agent.
-- **Paid levels become buyable** only with §1.5 conditions met and the owner's Lemon Squeezy variant set (the real
-  on-switch, DECISIONS 2026-09-26).
+  the lockfile trap; the non-idempotent prerender — build from scratch), the approved image assets. **Secondary lane
+  packs** ship in follow-up PRs, one per pack, only after demand (§13 D15). Shared: 1 pages/copy agent (owns the Astro
+  course and lane pages under the §8.1 rule 8 URL scheme), 1 e2e agent; routes, `netlify.toml`, prerender, sitemap and
+  the `check-built-html.mjs` MANIFEST stay with the routing agent (E1-9) — the pages agent requests entries, it does
+  not edit those files.
+- **The first v2 integration PR also carries two copy passes:** „Coach"/„speaking coach" out of the live pricing page,
+  `pricing.js`/`marketing.js` twins and `lemonsqueezy.js` copy (LGL-01), and the A1.1 free allowance stated in one place
+  (`COURSE_WRITING_FREE_LIFETIME`, `marketing.js`, `tests/claims.test.mjs`, the A1.1 page; §4.7).
+- **Paid levels become buyable** with the owner's Lemon Squeezy variant set (the real on-switch, DECISIONS 2026-09-26);
+  the integration PR lists which §1.5 conditions and §1.6 rules 13–14 are not yet true (§1.5 item 5). **No v2 course
+  that records audio launches** — the free A1.1 included — before the Datenschutzerklärung (D13), the first-microphone
+  notice and the audio retention job are live.
 - **Replacing the live A1.1:** after v2 A1.1 has exited review and the learner pilot has run. Old A1.1 progress stays
   visible as history, is never counted as v2 completion, and still counts as activity for the reminder view; the funnel
   SQL (`migrations/2026-09-19-course-funnel.sql` hard-codes `'a1.1-l01'`, `'a1.1-cp1'`) and the reminder view are
@@ -1943,29 +2034,44 @@ lease (S for texts, I for items, T for blocks). Re-review covers only failed cri
 
 | Path | Sole writer | Phase |
 |---|---|---|
-| `content/course-v2/registries/**` | the W2 registry owner of that file | P0; later only on findings |
+| `content/course-v2/registries/**` (except `lemmas.json`) | the W2 registry owner of that file | P0; later only on findings |
+| `content/course-v2/registries/lemmas.json` | the orchestrator's `lex/register.mjs` run (dedupe step) | P0; on allocation changes |
 | `content/course-v2/casts/**` | story architect / band cast agent | P0 |
 | `content/course-v2/<level>/course.json`, `rule-cards.json` | that level's curriculum agent | P0 |
-| `content/course-v2/<level>/lexicon.json` | that level's lexicon agent | P0; fixes on call |
+| `content/course-v2/<level>/lexicon.json` | that band's lexicon allocator | P0; fixes on call |
 | `content/course-v2/<level>/units/uNN.json` | the lease holder (curriculum agent for `spec`, then S → I → T, then fixers) | P0–P4 |
-| `content/course-v2/<level>/units/uNN.lane-<lane>.json` | that lane's Spur author | P2–P4 |
+| `content/course-v2/<level>/units/uNN.lane-<lane>.json` | that lane's Spur author | after demand |
 | `content/course-v2/<level>/plateaus/**`, `closing/**`, `mocks/**` | the assigned assessment author per file | P2–P4 |
+| `content/course-v2/<level>/.build/**`, `content/course-v2/<level>/ids.ledger.json` (append-only) | the orchestrator's `compile.mjs` run, only after a lease is released | continuous |
 | `content/course-v2/anchors/**` | anchor author per profile | P2–P4 |
 | `content/course-v2/qa/**` | pipeline runners (generated) | continuous |
+| `private/**` (never committed) | the owner (environment secret) and the orchestrator | — |
 | `docs/course-v2/reviews/**` | the reviewer who wrote the file | continuous |
-| `scripts/course-v2/**`, `src/**`, `netlify/**`, `migrations/**`, `tests/**`, `astro-site/**` | Track E agents per §10.2, integration agents per §10.7 | E0–W5 |
+| `scripts/course-v2/**` | the E0 agent named in §10.2 per subfolder | E0–W5 |
+| `src/lib/lesson/check.js` | E0-3 | E0 |
+| `package.json`, `package-lock.json`, `scripts/check-duplicates.mjs`, `.github/workflows/ci.yml`, `.gitignore` | E0-7 (later the integration agent of the level being shipped, one at a time) | E0–W5 |
+| `src/App.jsx`, `netlify.toml`, `scripts/prerender-spa-routes.mjs`, `public/sitemap-spa.xml`, `scripts/check-built-html.mjs`, the Astro sitemap config | E1-9 (routing agent); integration agents request entries | E1–W5 |
+| `netlify/functions/_shared/entitlement.mjs` | E1-5 (E1-4 and E1-6 call it, never edit it) | E1 |
+| `tests/course-v2/<agent>-*` | the agent named in the prefix | E0–W5 |
+| the 34 legacy A1.1-pinned files in `tests/` | E1-8 | E1 |
+| other files in `src/**`, `netlify/**`, `migrations/**`, `astro-site/**` | the Track E agent that owns them in §10.2; Astro course and lane pages the W5 pages/copy agent | E0–W5 |
 | `src/data/pricing.js` twins, `src/data/marketing.js` twins | integration agent of the level being shipped, one at a time | W5 |
 
 ### 10.9 Owner touchpoints and decision points
 
 - **Decision points:** (1) agent-pilot go/no-go (orchestrator, §10.4); (2) before the first paid v2 sale — §1.5
-  entitlement live, counsel's answer, §13 D1; (3) **moat check** after the learner pilot — if fewer than 50 % of
-  starters submit the first Aufgabe or AI Aufgaben per active learner per unit stay below 1.5, fix the UX before Wave 3;
-  (4) before B-levels go buyable — Impressum and Nutzungsbedingungen, Lemon Squeezy variants.
+  entitlement live, counsel's answer (incl. the Prüfungsstand, §5.6), §13 D1, the § 356a button (D10); (3) before any
+  v2 course that records audio goes live, the free A1.1 included — the Datenschutzerklärung and the first-microphone
+  notice (D13); (4) **moat check** after the learner pilot — if fewer than 50 % of starters submit the first Aufgabe or
+  AI Aufgaben per active learner per unit stay below 1.5, fix the UX before Wave 3; (5) before B-levels go buyable —
+  Impressum and Nutzungsbedingungen, the fair-use numbers from the measured cost (D8), Lemon Squeezy variants, and the
+  DECISIONS row of D14; (6) per secondary lane — the demand threshold (D15).
 - **Owner actions that agents cannot do:** one Azure TTS run per level and per lane pack (≈ $20 in total by C's
-  derivation; owner time is the constraint); applying the `words` SQL batches and the migrations; Lemon Squeezy
-  variants; booking counsel; hiring the DaF examiner(s); enabling Supabase anonymous sign-ins (if chosen); approving
-  the pilot invitation e-mail; the legal pages.
+  derivation; owner time is the constraint) and, next to it, **one approved image batch per level** (§4.9, D16);
+  applying the `words` SQL batches and the migrations; Lemon Squeezy variants and checking its § 356a function;
+  booking counsel; hiring the DaF examiner(s); storing the private `list_ref` table as an environment secret (§2.6);
+  enabling Supabase anonymous sign-ins (if chosen); approving the pilot invitation e-mail; the legal pages incl. the
+  Datenschutzerklärung; adding the D14 row to `DECISIONS.md`.
 
 ---
 
@@ -1984,7 +2090,7 @@ lease (S for texts, I for items, T for blocks). Re-review covers only failed cri
 | `buildCheckpoint.js`, `checkpoint/lexis.js` | **replace** for v2 | Plateaus compiled from unit data; known-word sets emitted per unit |
 | `speech.js`, `generate-course-audio.mjs` | **generalise** | a manifest per level; voices from the cast bible |
 | `evaluate-writing` + `writingTasks.js` twins (893 lines) | **generalise** | rubric profiles, zero rules, response schema 2, `BANK_KEY_RE`, purchase-aware allowance; bank sharded per level with lazy imports (≈ 200–400 new tasks) to hold the player JS budget; `SchreibenPage`/`GradedWriting` keep working on schema 1 |
-| `speaking-session`/`-turn`/`evaluate-speaking`, `_shared/speakingAI.mjs` | **reuse + speaking bank** | server-owned tasks, exam modes, in-lesson stage; the client `courseTask` path stays for legacy only |
+| `speaking-session`/`-turn`/`evaluate-speaking`, `_shared/speakingAI.mjs` | **reuse + speaking bank** | server-owned tasks, exam modes, in-lesson stage, hard session length, minutes metered in `course_ai_usage`; the client `courseTask` path stays for legacy only; the wallet stays for open speaking outside courses |
 | `explain-answer` | **off in paid v2 courses** | static explanations; allowed in the free A1.1 only |
 | Modelltest runner + `examScoring.js` | **reuse, extend** | lane profiles, play counts, reading times, answer-sheet step, per-lane scorers, graded productive parts, new part types (`richtig-falsch`, `notes`, `form`, `speaking`) |
 | `src/data/mockExams/*` (Kurzversionen) | **replace** | full-format forms; keep `examKey` values; the 14 listening exercises they consume stay untouched until those consumers are re-pointed in the same PR ([m12] §2.4) |
@@ -1995,10 +2101,11 @@ lease (S for texts, I for items, T for blocks). Re-review covers only failed cri
 | `listening_exercises`, `reading_lessons` | transcripts and A1–A2 lessons with checks as **quarry** (Lesemagazin candidates); B-level essays **replace** | re-render per line with course voices |
 | `programs/*` + `src/data/courses/index.js` | **retire** per level when its v2 course ships | legacy 28-day player |
 | `CourseCertificatePage.jsx` | **replace** | Teilnahmebescheinigung with the fixed line |
-| `levelTestQuestions.json` | **replace** | Einstufung over the Plateau banks |
+| `levelTestQuestions.json` | **replace** | the fixed-form Einstufung per band (§5.7) |
 | curricula registry (LIVE vs DRAFT) | **reuse the pattern** | a level is promoted only after review; the paused A1.2 draft is a quarry, not a template |
-| `plan.js`, `course-reminder.mjs`, `lifecycle_emails` | **reuse, extend** | plan places mocks; reminders name the next step; claim-before-send |
+| `plan.js`, `course-reminder.mjs`, `lifecycle_emails` | `plan.js` **kept for the live A1.1**, v2 gets its own plan module (pace presets in Lernschritte, no `SUSTAINABLE_PER_WEEK`, no `behind`); reminders and ledger **reuse, extend** | plan places mocks; reminders name the next step; claim-before-send |
 | `hasLevelAccess` / purchases | **reuse client; add server twin and `hasCourseAccess`** | build prerequisite (§1.5) |
+| `profiles.exam_date` / `exam_track` (read by `plan.js`, `ExamDatePlan`, Dashboard, Profile) | **migrate** into `learner_goals` (keyed by user and band) in the E1-7 PR; the profile columns stop being written | one source of truth (SCHEMA §14) |
 | product keys `course_a1_2` … `course_b2_2`, legacy `course_a1` … `course_alle`, `/course/:level` routes, `LevelSubscriptionGuard` | **keep resolving** | the v2 player mounts behind the same routes and guard (extended) |
 | `telc_b1_komplett` (no `levels` today) | **owner decision** §13 D9 | — |
 | the live A1.1 (`src/data/curricula/a11.js`, `lessonPools/a11*`, A1.1 routes) | **keep serving** until v2 A1.1 exits review | then replace (§10.7) |
@@ -2012,14 +2119,14 @@ lease (S for texts, I for items, T for blocks). Re-review covers only failed cri
 | # | Risk | L / I | Mitigation | Owner |
 |---|---|---|---|---|
 | R1 | **FernUSG:** AI rubric grading in a paid course may count as „Überwachung des Lernerfolgs"; void contracts, repayment, fines up to €10,000 ([m13] §1–2) | M / H | formative, private, retryable, never a gate; no human in the loop; no Fragerecht; no score on any document or e-mail; counsel before any paid v2 course incl. A1.2; the free A1.1 carries the moat | owner |
-| R2 | **Entitlement leakage:** trial/Pro opens every level; a €40 buyer opens B-level mocks for 90 days | certain until fixed / H | §1.5 build + §13 D1 before any paid v2 page promises AI grading; B-levels stay coming-soon until then | owner + engineering |
-| R3 | **UWG:** the Prüfungsstand read as a pass prediction | M / H | module values vs the official rule only; ranges for AI parts; LGL lint; no single percentage | design |
+| R2 | **Entitlement leakage:** trial/Pro opens every level; a €40 buyer opens B-level mocks for 90 days | certain until fixed / H | §1.5 build + §13 D1 before any paid v2 page promises AI grading; the D14 DECISIONS row (recommended) makes entitlement a B-level prerequisite; until then the variant ids stay unset | owner + engineering |
+| R3 | **UWG:** the Prüfungsstand read as a pass prediction | M / H | interim rule: no pass line against any AI-scored part in paid courses until counsel answers (§5.6); the board, Teil-Karte and Halbtest view on the counsel brief; ranges for AI parts; Aussprache never estimated; LGL lint; no single percentage | design + owner |
 | R4 | **AI Act Annex III 3(b)** from 2 Dec 2027: AI scores steering the path | M / M | deterministic plan and suggestion inputs (PRG-04); re-review before Dec 2027 | engineering |
 | R5 | **Grader validity** unmeasured; German morphology is hard for automated feedback ([m09] §5); B2 anchors are error-heavy | H / H | human ground truth (§4.6); ranges; no accuracy copy; pinned models with re-runs | engineering + owner (raters) |
 | R6 | **Review does not converge** at 8× A1.1 volume (A1.1 took 23 rounds) | M / H | rails first; pilot go/no-go; rule-smiths; stop-the-line; exemplars; a 5th round fixes rails, never adds authors | orchestrator |
 | R7 | **Engine work larger than estimated** | M / M | honest E0/E1 estimate; fixture gate before mass authoring; compile into existing shapes where possible | engineering |
 | R8 | **The moat is unused** (0 AI writing uses in 7 days, 2 sales ever) | H / H | scored sentence in the first 3 screens; an Aufgabe per unit; events; learner pilot; the moat decision point before B2 | owner |
-| R9 | **AI cost vs one-time price** (speaking unmeasured) | M / M | measure in the pilot; fair-use cap in the terms; no „unbegrenzt"; cheaper model for `course-micro` only if CAL passes | owner |
+| R9 | **AI cost vs one-time price** (speaking unmeasured; at wallet price a fully engaged learner's speaking ≈ €22–117 vs ≈ €31–51 net per sale, §1.8) | M / H | speaking metered in minutes per slot with a hard session length; single AI partner instead of group mode in v1; cost per engaged learner measured in the pilot; D8 a gate for B-levels; no „unbegrenzt"; cheaper model for `course-micro` only if CAL passes | owner |
 | R10 | **Fluent but wrong or bland German** passes every gate | M / H | two personas with the §9.5 brief; LanguageTool; exemplars; H scores blandness; fresh-eyes audit | orchestrator |
 | R11 | **Teaching to the test / washback**, esp. for beginners and DaF learners without an exam | M / M | situational spine; A1.1 miniatures untimed, board opt-in; ≥ 75 % teaching items; parallel forms; full-length-only board | design |
 | R12 | **Format drift** at the providers | M / M | lane profiles with `stand` and sources; quarterly re-check; EXM tests; mocks regenerate from blueprints | orchestrator |
@@ -2031,6 +2138,9 @@ lease (S for texts, I for items, T for blocks). Re-review covers only failed cri
 | R18 | **Progress and legacy migration** (old A1.1 progress, A1.2 buyers, § 327r) | M / M | distinct v2 ids; history view; reminder counts both; free upgrade + notice; funnel SQL in the same PR | engineering |
 | R19 | **Learner pilot underpowered** at ≈ 23 sign-ups a week | H / M | invite existing users; pre-registered thresholds; qualitative walkthroughs; it informs, never blocks | orchestrator |
 | R20 | **Client-side content** (keys reachable) | certain / L | server AI allowance and progress are the boundary; no predictable public URLs; owner decides previews (D6) | owner |
+| R21 | **Data protection:** recorded speech (also before sign-up), texts and transcripts sent to STT/LLM processors outside the EU; `/privacy/` still a draft | H / H | §1.6 rule 13, §4.8: Datenschutzerklärung (D13), first-microphone notice and consent, raw-audio retention job, hashed IPs; a launch prerequisite for every course that records audio | owner + engineering |
+| R22 | **Image rights and format fidelity:** pictorial Teile need images; a real person's photo needs a licence | M / M | `Asset` records with licence and alt text (AST-01/02); generated images show no real person, brand or ID design; Porträts text-only without a licence; .2 lanes wait for approved images (§4.9) | owner + orchestrator |
+| R23 | **Scope out of proportion to demand** (2 course sales ever, both €0) | H / H | the v1 cut (§1.4): primary lanes, 2 forms, no group mode, no serial reader, fixed-form Einstufung; packs only after demand (D15) | owner |
 
 ---
 
@@ -2039,17 +2149,21 @@ lease (S for texts, I for items, T for blocks). Re-review covers only failed cri
 | # | Decision | Recommendation | Blocks |
 |---|---|---|---|
 | **D1** | Do trial and Pro subscriptions still open **paid v2 levels** (today `hasLevelAccess` returns true for any live trial/subscription, and every course purchase grants a 90-day Pro window)? And what happens to the „3 Monate Pro inklusive" claim? | v2 paid content and its AI allowance follow the purchase only; trial/Pro keep the existing tools; keep „Pro inklusive" as a bonus for the existing tools or drop it — reconcile `pricing.js`/`marketing.js` in the same PR | first paid v2 sale |
-| **D2** | **Counsel** (FernUSG and more): AI grading in paid courses incl. A1.2; reminders, plan and Wochenbericht wording and any share link; the existing 90-day Pro window with AI tools; private use of official rated samples for calibration (copyright); Teilnahmebescheinigung wording; the voluntary refund promise; FernUSG for buyers abroad (Rome I) | book counsel now; the counsel brief is produced in W2 | first paid v2 sale; share link; calibration ground truth |
+| **D2** | **Counsel** (FernUSG and more): AI grading in paid courses incl. A1.2; **the Prüfungsstand (AI ranges combined with pass lines), the Teil-Karte and the Halbtest view** (§5.6); reminders, plan and Wochenbericht wording and any share link; the existing 90-day Pro window with AI tools; private use of official rated samples and of MERLIN (CC BY-SA) for calibration; the LGL-05 boilerplate allowlist; Teilnahmebescheinigung wording; the voluntary refund promise; the Datenschutzerklärung (D13); FernUSG for buyers abroad (Rome I) | book counsel now; the counsel brief is produced in W2 (§10.3 lists its required items) | first paid v2 sale; the full board in paid courses; share link; calibration ground truth |
 | **D3** | **Hire human DaF examiner(s)** (Goethe/telc licensed) to rate ≥ 30 samples per rubric profile as calibration ground truth; optionally a spot check of 2 units per level (internal QA, never a learner entitlement) | yes; without it no accuracy statement is ever possible and AI parts stay ranges | CAL-02 |
 | **D4** | **Voice budget:** keep Azure TTS („Computerstimme") at launch, or commission human recordings for mocks and scenes later | TTS at launch (≈ $20 total, owner time); revisit human recordings for Modelltests after revenue | none at launch |
 | **D5** | **Pair offer** (.1 + .2) at checkout, and its price | offer it; the .1 courses are weak standalone buys | .1 conversion |
 | **D6** | **Paid previews / first-lesson leak:** is U1 of each paid course playable before purchase? | yes for U1 LS1–LS3 without Aufgaben; the free Diagnose covers the taste of scoring | page copy |
 | **D7** | **Supabase anonymous sign-ins** for the scored first sentence without an account | enable, with the caps of §4.7; otherwise the unscored fallback | A1.1 first session |
-| **D8** | **Fair-use numbers** and whether any copy may ever say „unbegrenzt" | set after the pilot's cost measurement; never „unbegrenzt" | terms, copy |
+| **D8** | **Fair-use numbers** (attempts **and speaking minutes** per slot, daily cap) and whether any copy may ever say „unbegrenzt" | set after the pilot's measured cost per engaged learner; never „unbegrenzt" | terms, copy, any paid page promising graded speaking, **B-level launch** |
 | **D9** | What **`telc_b1_komplett`** buyers (no `levels` today) receive in v2 | grant v2 B1.1 + B1.2 access as the successor product | B1 integration PR |
-| **D10** | **Lemon Squeezy:** variants for the B-level products, the checkout consent box, the voluntary refund in the dashboard | variants when B1 passes review; refund „30 Tage Geld zurück" with linked terms | B-levels buyable |
+| **D10** | **Lemon Squeezy:** variants for the B-level products, the checkout consent box, **the § 356a „Vertrag widerrufen" function** (confirm LS provides it for German consumers, else the site provides it), the voluntary refund in the dashboard | variants when B1 passes review; refund „30 Tage Geld zurück" with linked terms | any paid v2 sale; B-levels buyable |
 | **D11** | **Legal pages:** complete Impressum and publish Nutzungsbedingungen | before B-levels go live | B-levels buyable |
 | **D12** | **L1 explanation layer** (Turkish, Arabic): when and with which translator budget | after A1 revenue; the schema stores `{en, tr?, ar?}` from day one | none at launch |
+| **D13** | **Datenschutzerklärung** for v2: each AI processor (STT, LLM, TTS) and third-country transfer, purpose and legal basis of automated scoring, retention of raw audio, transcripts and texts, the IP-based caps, the anonymous path | have counsel finalise it with D2; design defaults in §1.6 rule 13 | **any v2 launch that records audio**, the free A1.1 included |
+| **D14** | **A DECISIONS row on B-level sale:** make (b) purchase-aware entitlement live and (c) counsel's answer explicit prerequisites for removing a B-level from `COMING_SOON_LEVELS` — or reject them | add the row (the blueprint cannot amend DECISIONS 2026-09-26, §1.5 item 5) | B-levels buyable |
+| **D15** | **Demand threshold for secondary lane packs** (telc A2, DTZ, Goethe/ÖSD B1, Goethe B2): which share of onboarding lane choices, over how many weeks, starts a pack | e.g. ≥ 15 % of a band's lane choices over 4 weeks (design, the owner sets it) | Wave 2/3 packs |
+| **D16** | **Image budget and source:** generated images for pictorial Teile, speaking cards and Auftakt photos, licensed stock only for real places, and who approves each level's batch | generated (fictional people and documents) + owner approval per level, next to the Azure TTS run | .2 lanes with pictorial Teile going live |
 
 ---
 
@@ -2082,7 +2196,19 @@ Goethe digital exams word counter (snippet): <https://www.goethe.de/de/spr/prf/d
 [Bund-Verlag on the eAU](https://www.bund-verlag.de/aktuelles~Die-neue-eAU-Das-Ende-des-gelben-Scheins~.html) ·
 § 4 ArbZG (read 2026-09-27): <https://dejure.org/gesetze/ArbZG/4.html> ·
 [§ 23 MarkenG](https://www.gesetze-im-internet.de/markeng/__23.html) ·
-Lemon Squeezy pricing (snippet): <https://www.lemonsqueezy.com/pricing>.
+Lemon Squeezy pricing (snippet): <https://www.lemonsqueezy.com/pricing> ·
+§ 356a BGB withdrawal button (via [m13] §7): [Noerr](https://www.noerr.com/de/insights/umsetzungsgesetz-zum-widerrufsbutton-veroeffentlicht) ·
+FernUSG position on automated feedback (via [m13] §2): [Dogan Pfahler](https://doganpfahler.de/faq-bgh-fernunterricht-fernusg-online-coaching/).
+
+**Lehrwerke read at source (2026-09-27, PDF with a browser User-Agent):**
+[Schritte Neu 5 Inhalt](https://shop.hueber.de/media/hueber_dateien/Internet_Inhaltsverz/Red1/9783193010865_Inhalt.pdf) ·
+[Sicher! aktuell B2.1 Inhalt](https://shop.hueber.de/media/hueber_dateien/Internet_Inhaltsverz/Red1/9783196412079_Inhalt.pdf) ·
+[Sicher! aktuell B2.2 Inhalt](https://shop.hueber.de/media/hueber_dateien/Internet_Inhaltsverz/Red1/9783196612073_Inhalt.pdf).
+
+**Calibration corpus:** MERLIN — [CLARIN blog](https://www.clarin.eu/blog/clarin-it-presents-merlin-written-learner-corpus-czech-german-and-italian)
+(read 2026-09-27: „about 1000 in German") · licence CC BY-SA 4.0 and A1–C1 range (snippet):
+[Eurac CLARIN repository](https://clarin.eurac.edu/repository/xmlui/handle/20.500.12124/59) · per-level counts (snippet,
+unverified): [PORTA](https://www.porta.eurac.edu/lci/merlin/).
 
 **Learning science:** [Latimier et al. 2021](https://doi.org/10.1007/s10648-020-09572-8) ·
 [Hausknecht et al. 2007](https://doi.org/10.1037/0021-9010.92.2.373) · the rest via [m09], [m11] and Proposal B's
@@ -2097,4 +2223,51 @@ proposals A, B, C and the three judge verdicts; `src/contexts/SubscriptionContex
 `src/data/marketing.js`; `netlify/functions/evaluate-writing.mjs`; `netlify/functions/lemonsqueezy-webhook.mjs`;
 `netlify/functions/_shared/speakingUsage.mjs`; `migrations/2026-09-12-lesson-engine.sql`;
 `migrations/2026-09-19-course-funnel.sql`; `src/lib/lesson/check.js`; `src/data/lessonPools/quality.js`;
-`src/data/design-tokens.js`; `src/data/writingTasks.js`.
+`src/data/design-tokens.js`; `src/data/writingTasks.js`; `src/lib/course/plan.js` (`SUSTAINABLE_PER_WEEK`, `behindBy`);
+`tests/guides.test.mjs` (fee lint); `tests/claims.test.mjs` (`COURSE_WRITING_FREE_LIFETIME`);
+`src/components/course/ExamDatePlan.jsx`, `src/pages/DashboardPage.jsx`, `src/pages/ProfilePage.jsx` (`profiles.exam_date`);
+`astro-site/src/pages/courses/[level].astro`.
+
+---
+
+## Changelog 2026-09-26 (critic pass)
+
+Applied to BLUEPRINT.md and SCHEMA.md together; SCHEMA carries the matching field and fixture changes.
+
+- **Blockers.** (1) Block-level choice sets for matching, insertion and word-bank Teile (`ExamBlock.choices`,
+  `noMatchKey`, `TeilTemplate.choices`; `Item.options {2..3}` limited to non-exam MC; fixtures for `tb1.lv3` and
+  `gb2.l2`) — §2.3, §3.4, EXM-01. (2) An `Asset` type, an image pipeline next to the TTS run, AST-01/02, text-only
+  Porträts without a licence, pictorial Teile as scaffolded text variants in .1 courses only — §4.9, D16. (3) Staged
+  gates `validate.mjs --stage S|I|T`, LS4 source texts at step level, every generated field moved to `.build/`, an
+  append-only ids ledger written only by the orchestrator's compile step — §9, §10.5, §10.8.
+- **Legal and product.** LGL-01 rescoped as a claims rule over learner-visible strings (exam proper names allowlisted,
+  „Gesprächsleitung (KI)", „Coach" copy pass); the Prüfungsstand, Teil-Karte and Halbtest on the counsel brief with an
+  interim no-pass-line rule for AI-scored parts in paid courses — §5.6; data protection (D13, §1.6 rule 13, §4.8) and
+  the § 356a button (§1.6 rule 14, D10); the DECISIONS conflict turned into a recommended owner row (D14) and one
+  precedence rule in both documents; no exam fees on course pages (LGL-10).
+- **Exam fidelity.** `get-to-know` mode for telc B1 M1; ta2 Sp1 and dtz S1 mapped to `monologue`; Prüferin sign-off of
+  every `interaction`; Aussprache `notAutoScored` and excluded from totals; `SpeakingTask.parts`, `stimulus`,
+  `partnerData`, `keyPoints`, `topicChoice`, `seconds/turns`; rubric `descriptors`, `bands`, `errorPolicy`, `scoredBy`,
+  `method`; `delivery` and the paper-lane word counter; `prepAtHome` for tb2 M1; DTZ A2 bands; corrected board values;
+  `TeilTemplate.scaffold` for reduced and mini blocks; `instructionsDe` as our paraphrase and the LGL-05 allowlist;
+  exam stems exempt from TXT-04.
+- **Curriculum.** Fokus column and ALL-04 (hard A1–B1, advisory B2); B1.1 mediation and third work unit (U3, U8);
+  B2.2 work units U3 and U12; Vokalwechsel moved to A1.1 U2 with a U1 chunk and a detector; A1.2 U2/U3 swapped so the
+  Dativ precedes temporal prepositions; every repeated grammar point relabelled with distinct spine ids where the
+  function differs; A1.2 U11 trimmed to 4 Teile; slot mapping for a third receptive Teil (EXM-11); Schritte Neu 5 and
+  Sicher! aktuell B2.1/B2.2 placements verified at source; ALL-03 rejects unverified placements; the §3.8 example
+  rewritten against the A1 cast; cross-course beats fixed in P0 and a stand-alone U1 Start.
+- **Engine and data.** SRS graduation and a carry-over budget, SRS-01 simulating the cumulative deck; speaking metered in
+  minutes per slot, single AI partner in A1.2, D8 a B-level gate; learner state keyed by band with `course_ai_usage`,
+  `course_events` and server-only AI results; authored reserves and a rule-based `earlierDraw`; a global lemma registry
+  with sequential allocation, promotions and a private `list_ref` path; a fixed-form Einstufung with deterministic
+  routing (PRG-04); owners for every shared file (E0-7, E1-9, test prefixes, E1-5 first); the v1 cut (primary lanes,
+  2 forms, no group mode, no serial reader) with MERLIN plus a small examiner sample as writing ground truth;
+  completion pinned to the Halbtest (.1) or Modelltest A (.2); counts derived from `rubric.method`; plan.js defaults not
+  inherited; `(design, inherited from A1.1)` labels; a German style sheet; file-level `extras` for one-off voices
+  (AUD-05).
+- **Still open after this pass (not closable in these documents):** the owner decisions D13–D16 and the D14 row in
+  `DECISIONS.md`; measurements (cost per engaged learner, CAL-02 for speaking, the inherited constants); facts the lane
+  agents confirm per template (DTZ and telc B1/B2 `delivery`, the list of pictorial Teile, the Goethe A2 oral split);
+  the MERLIN per-level counts (snippet only).
+

@@ -1,0 +1,38 @@
+{
+  "$schema": "course-v2/casts@1",
+  "members": {
+    "cast.priya": { "name": "Priya Nair", "age": 28, "from": "Kochi, Indien", "languages": ["Malayalam", "Englisch", "Deutsch"], "role": "Hotelrezeptionistin aus Kochi, zieht zu ihrem Mann Arjun nach Leipzig. A1: Deutschkurs, Praktikum und Minijob in einem Hotel · A2 und B1: arbeitet am Empfang von Brandt Elektrotechnik in Leipzig · B2: Teamassistentin bei Kranich Logistik in Hamburg", "exam": { "lane": "sd1", "arc": "A1.2: Start Deutsch 1 im ersten Versuch, für ihre Bewerbungen; Zahlen beim Hören sind ihre Schwäche · A2.2: Goethe A2 im Frühjahr, damit Herr Brandt ihren befristeten Vertrag verlängert · B1.2: telc Deutsch B1, für eine Stelle als Büroassistentin · B2.2: telc Deutsch B2, für die Weiterbildung zur Office-Managerin, die ihre Firma in Hamburg bezahlt" }, "voice": { "azure": "de-DE-AmalaNeural", "rate": "-10%" }, "bands": ["a1", "a2", "b1", "b2"] },
+    "cast.arjun": { "name": "Arjun Nair", "age": 31, "from": "Kochi, Indien", "languages": ["Malayalam", "Englisch", "Hindi", "Deutsch"], "role": "Priyas Mann; Softwareentwickler mit Blauer Karte, arbeitet im Team auf Englisch; lebt schon ein Jahr in Leipzig, als Priya kommt, zuerst in einer WG · B2: neue Stelle in Hamburg", "exam": { "lane": "sd1", "arc": "A1.2: Start Deutsch 1 zusammen mit Priya; mit dem A1-Nachweis kann er die Niederlassungserlaubnis beantragen. Er fängt zu spät an zu üben und stellt seinen Plan auf Intensiv um · danach lernt er langsamer als Priya und will in B2 im neuen Team endlich Deutsch sprechen" }, "voice": { "azure": "de-DE-KasperNeural", "rate": "-5%" }, "bands": ["a1", "a2", "b1", "b2"] },
+    "cast.emre": { "name": "Emre Yıldız", "age": 30, "from": "İzmir, Türkei", "languages": ["Türkisch", "Deutsch"], "role": "lernt im A1-Kurs zusammen mit Priya, zuerst online aus der Türkei, wo er in einem Elektrogeschäft gearbeitet hat · A2: zieht zu seiner Frau Elif nach Leipzig und bewirbt sich bei Brandt Elektrotechnik um eine Ausbildung zum Elektroniker · B1: Auszubildender im ersten Jahr", "exam": { "lane": "sd1", "arc": "A1.2: Start Deutsch 1 zum zweiten Mal, für das Visum zum Ehegattennachzug; beim ersten Versuch fehlten ihm vier Punkte, vor allem im Sprechen, deshalb übt er mit einem Wiederholungsplan · A2.2: Goethe A2 vor dem Ausbildungsstart im Herbst; jetzt ist das Schreiben seine Schwäche · B1.2: telc Deutsch B1, weil er in der Berufsschule mehr Deutsch braucht" }, "voice": { "azure": "de-DE-KillianNeural", "rate": "-5%" }, "bands": ["a1", "a2", "b1"] },
+    "cast.amal": { "name": "Amal Haddad", "age": 41, "from": "Damaskus, Syrien", "languages": ["Arabisch", "Englisch", "Deutsch"], "role": "Nachbarin von Priya und Arjun in Leipzig; Bauingenieurin, arbeitet als Bauzeichnerin in einem Architekturbüro; lebt mit ihrem Mann Samir und ihrer Tochter Rania seit sechs Jahren in Deutschland; hilft ehrenamtlich bei der Tafel", "exam": { "lane": "tb1", "arc": "B1.2: telc Deutsch B1 für die Einbürgerung; den Einbürgerungstest hat sie schon. Im Alltag spricht sie sicher, aber Schreiben fällt ihr schwer: Beim ersten Versuch schafft sie den mündlichen Teil, im schriftlichen fehlen Punkte. Sie wiederholt nur den schriftlichen Teil (Ergebnis in B2.1)" }, "voice": { "azure": "de-DE-TanjaNeural", "rate": "-5%" }, "bands": ["a1", "a2", "b1", "b2"] },
+    "cast.tomasz": { "name": "Tomasz Zieliński", "age": 46, "from": "Poznań, Polen", "languages": ["Polnisch", "Russisch", "Deutsch"], "role": "Busfahrer in Leipzig; lebt seit vier Jahren mit seiner Frau und seinem Sohn in Deutschland und hat den Integrationskurs besucht; wechselt in B1.1 zu einem größeren Verkehrsbetrieb", "exam": { "lane": "tb1", "arc": "B1.2: telc Deutsch B1. Im Deutsch-Test für Zuwanderer hat er nur A2 erreicht; sein neuer Betrieb verlangt B1 für die Weiterbildung zum Verkehrsmeister. Seine Schwäche ist das Hören, weil manche Texte nur einmal kommen" }, "voice": { "azure": "de-DE-RalfNeural", "rate": "-5%" }, "bands": ["a2", "b1"] },
+    "cast.lina": { "name": "Lina Ekambi", "age": 23, "from": "Douala, Kamerun", "languages": ["Französisch", "Duala", "Englisch", "Deutsch"], "role": "kommt in A2.2 als Au-pair zu Familie Weber nach Leipzig und will Pflegefachfrau werden; beginnt nach B1 ihre Ausbildung im Pflegeheim Haus am Kanal in Hamburg und wohnt dort mit Sara in einer WG", "exam": { "lane": "tb1", "arc": "B1.2: telc Deutsch B1. Ihre Pflegeschule in Hamburg verlangt B1 vor dem Ausbildungsstart im Herbst, und ihr Au-pair-Jahr endet im Sommer. Deshalb lernt sie im Tempo Intensiv und macht vor der Prüfung zwei Modelltests" }, "voice": { "azure": "de-DE-KlarissaNeural", "rate": "-5%" }, "bands": ["a2", "b1", "b2"] },
+    "cast.daniel": { "name": "Daniel Reyes", "age": 32, "from": "Iloilo, Philippinen", "languages": ["Tagalog", "Hiligaynon", "Englisch", "Deutsch"], "role": "Pflegefachmann von den Philippinen; arbeitet im Pflegeheim Haus am Kanal in Hamburg als Pflegehelfer, bis seine Anerkennung abgeschlossen ist; Kollege von Thu und später von Lina", "exam": { "lane": "tb2", "arc": "B2.2: telc Deutsch B2 für die Anerkennung als Pflegefachmann; sein Arbeitgeber bezahlt die Prüfung. Fachlich ist er sicher, aber in der mündlichen Prüfung wird er nervös; er übt mit Modelltests und mit Lina" }, "voice": { "azure": "de-DE-ChristophNeural", "rate": "0%" }, "bands": ["b2"] },
+    "cast.sara": { "name": "Sara Mansour", "age": 21, "from": "Alexandria, Ägypten", "languages": ["Arabisch", "Englisch", "Französisch", "Deutsch"], "role": "will in Hamburg Architektur studieren und bereitet sich auf das Studienkolleg vor; jobbt am Empfang der Hausarztpraxis von Frau Doktor Carstens; wohnt mit Lina in einer WG", "exam": { "lane": "tb2", "arc": "B2.2: telc Deutsch B2 für ihre Bewerbung am Studienkolleg. Lesen ist ihre Stärke; formelle Briefe und die Zeit im schriftlichen Teil sind ihre Schwäche" }, "voice": { "azure": "de-DE-MajaNeural", "rate": "0%" }, "bands": ["b2"] }
+  },
+  "relations": [
+    { "a": "cast.priya", "b": "cast.arjun", "address": "du" },
+    { "a": "cast.priya", "b": "cast.emre", "address": "du" },
+    { "a": "cast.arjun", "b": "cast.emre", "address": "du" },
+    { "a": "cast.priya", "b": "cast.amal", "address": "Sie" },
+    { "a": "cast.priya", "b": "cast.amal", "address": "du", "since": "a2.1-u01" },
+    { "a": "cast.arjun", "b": "cast.amal", "address": "Sie" },
+    { "a": "cast.arjun", "b": "cast.amal", "address": "du", "since": "a2.1-u01" },
+    { "a": "cast.emre", "b": "cast.amal", "address": "du" },
+    { "a": "cast.priya", "b": "cast.tomasz", "address": "du" },
+    { "a": "cast.emre", "b": "cast.tomasz", "address": "du" },
+    { "a": "cast.amal", "b": "cast.tomasz", "address": "du" },
+    { "a": "cast.priya", "b": "cast.lina", "address": "du" },
+    { "a": "cast.arjun", "b": "cast.lina", "address": "du" },
+    { "a": "cast.emre", "b": "cast.lina", "address": "du" },
+    { "a": "cast.amal", "b": "cast.lina", "address": "du" },
+    { "a": "cast.tomasz", "b": "cast.lina", "address": "du" },
+    { "a": "cast.priya", "b": "cast.daniel", "address": "du" },
+    { "a": "cast.arjun", "b": "cast.daniel", "address": "du" },
+    { "a": "cast.lina", "b": "cast.daniel", "address": "du" },
+    { "a": "cast.priya", "b": "cast.sara", "address": "du" },
+    { "a": "cast.arjun", "b": "cast.sara", "address": "du" },
+    { "a": "cast.lina", "b": "cast.sara", "address": "du" },
+    { "a": "cast.daniel", "b": "cast.sara", "address": "du" }
+  ]
+}

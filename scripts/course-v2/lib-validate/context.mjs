@@ -37,6 +37,8 @@ export function emptyContext({ root = null, repoRoot = null, today = null } = {}
       casts: null, // { members: Map, relations: [], files: [] }
     },
     levels: new Map(),
+    stubs: new Map(), // ref kind → Set(ids): ids a fixture declares to exist in the full registries
+    unclassified: [], // files the loader could not match to a kind (the schema checker reports them)
   };
 }
 
@@ -75,25 +77,6 @@ function readJson(ctx, file) {
     return undefined;
   }
 }
-
-const listJson = (dir) => {
-  if (!existsSync(dir)) return [];
-  return readdirSync(dir)
-    .filter((f) => f.endsWith('.json'))
-    .sort()
-    .map((f) => join(dir, f));
-};
-
-const listJsonDeep = (dir) => {
-  if (!existsSync(dir)) return [];
-  const out = [];
-  for (const f of readdirSync(dir).sort()) {
-    const p = join(dir, f);
-    if (statSync(p).isDirectory()) out.push(...listJsonDeep(p));
-    else if (f.endsWith('.json')) out.push(p);
-  }
-  return out;
-};
 
 // ── ingestion: one JSON value into the context ────────────────────────────────────────────
 
@@ -272,7 +255,7 @@ export function ingest(ctx, value, file, { levelHint = null, key = null, depth =
     case 'families': addFamilies(ctx, value.families, file); return added;
     case 'rubric': addRubric(ctx, value, file); return added;
     case 'levels': addLevelProfiles(ctx, value.levels, file); return added;
-    case 'texttypes': addTextTypes(ctx, value.types, file); return added;
+    case 'texttypes': case 'text-types': addTextTypes(ctx, value.types, file); return added;
     case 'detectors': addDetectors(ctx, value.detectors, file); return added;
     case 'casts': addCasts(ctx, value, file); return added;
     case 'course': {
@@ -282,6 +265,14 @@ export function ingest(ctx, value, file, { levelHint = null, key = null, depth =
     }
     case 'lexicon': addLexiconEntries(ctx, value.entries, file, levelOfDoc(value, levelHint)); return added;
     case 'rulecards': addRuleCards(ctx, value.cards, file, levelOfDoc(value, levelHint)); return added;
+    case 'stubs':
+      for (const [k, ids] of Object.entries(value.ids || {})) {
+        if (!ctx.stubs.has(k)) ctx.stubs.set(k, new Set());
+        for (const id of arr(ids)) if (typeof id === 'string') ctx.stubs.get(k).add(id);
+      }
+      return added;
+    case 'anchor': case 'qa':
+      return added;
     case 'unit': case 'lanepack': case 'plateau': case 'closing': case 'mockmodule': {
       const doc = addDoc(ctx, kind === 'mockmodule' ? 'mock' : kind, value, file);
       if (doc) added.push(doc);
@@ -357,82 +348,105 @@ function levelOfCards(cards, ctx) {
 
 // ── loading from disk ─────────────────────────────────────────────────────────────────────
 
-/** Load every registry and every level under `root` (content/course-v2). */
-export function loadContext({ root, repoRoot = null, today = null } = {}) {
+const within = (p, dir) => p === dir || p.startsWith(dir + sep);
+
+/**
+ * The root a file belongs to (the rule of scripts/course-v2/lib/tree.mjs): a fixtures tree is its
+ * own world; everything else under content/course-v2 shares one root with the fixtures excluded.
+ */
+export function rootFor(file, contentRoot) {
+  const fixtures = join(contentRoot, 'fixtures');
+  if (within(file, fixtures)) return { root: fixtures, exclude: [] };
+  if (within(file, contentRoot)) return { root: contentRoot, exclude: [fixtures] };
+  return { root: contentRoot, exclude: [fixtures], outside: true };
+}
+
+function listJsonDeepExcluding(dir, exclude) {
+  if (!existsSync(dir)) return [];
+  const out = [];
+  const visit = (d) => {
+    if (exclude.some((x) => within(d, x))) return;
+    for (const f of readdirSync(d).sort()) {
+      const p = join(d, f);
+      if (statSync(p).isDirectory()) visit(p);
+      else if (f.endsWith('.json')) out.push(p);
+    }
+  };
+  visit(dir);
+  return out;
+}
+
+/** Classify and ingest one file of a content tree. Returns the docs it added. */
+function ingestFile(ctx, file) {
+  const data = readJson(ctx, file);
+  if (data === undefined) return [];
+  const r = rel(ctx, file);
+  const base = basename(file);
+  const parent = basename(dirname(file));
+  if (isObj(data) && !Object.prototype.hasOwnProperty.call(data, '$schema')) {
+    if (base === 'text-types.json') { addTextTypes(ctx, Array.isArray(data) ? data : data.types, r); return []; }
+    if (base === 'detectors.json') { addDetectors(ctx, data.detectors, r); return []; }
+    if (parent === 'casts') { addCasts(ctx, data, r); return []; }
+    if (base === 'ids.ledger.json') {
+      const lv = PATTERNS.LEVEL.test(parent) ? parent : levelOfDoc(data, null);
+      if (lv) levelSlot(ctx, lv).ledger = { data, file: r };
+      return [];
+    }
+  }
+  if (base === 'ids.ledger.json') {
+    const lv = levelOfDoc(data, PATTERNS.LEVEL.test(parent) ? parent : null);
+    if (lv) levelSlot(ctx, lv).ledger = { data, file: r };
+    return [];
+  }
+  // a unit file under <level>/units/ may rely on its directory for the level
+  const levelHint = PATTERNS.LEVEL.test(basename(dirname(dirname(file)))) ? basename(dirname(dirname(file)))
+    : PATTERNS.LEVEL.test(parent) ? parent : null;
+  if (isObj(data) && data.$schema === 'course-v2/unit@1' && !data.level && levelHint) data.level = levelHint;
+  const before = ctx.unclassified.length;
+  const docs = ingest(ctx, data, r, { levelHint });
+  if (!docs.length && isObj(data) && !data.$schema && ctx.unclassified.length === before && !looksLikeRegistry(data)) {
+    ctx.unclassified.push(r);
+  }
+  return docs;
+}
+
+const looksLikeRegistry = (d) => Boolean(d.types || d.detectors || d.members || d.points || d.teile || d.entries || d.cards);
+
+/** Load every JSON file under `root` (minus `exclude`) into a fresh context. */
+export function loadContext({ root, exclude = [], repoRoot = null, today = null } = {}) {
   const ctx = emptyContext({ root, repoRoot, today });
   if (!root || !existsSync(root)) return ctx;
-  const reg = join(root, 'registries');
-  for (const f of listJson(join(reg, 'cando'))) {
-    const d = readJson(ctx, f);
-    if (d) addCandos(ctx, d, rel(ctx, f));
-  }
-  const loadOne = (f, fn) => {
-    if (!existsSync(f)) return;
-    const d = readJson(ctx, f);
-    if (d !== undefined) fn(d, rel(ctx, f));
-  };
-  loadOne(join(reg, 'grammar-spine.json'), (d, f) => addSpinePoints(ctx, Array.isArray(d) ? d : d.points, f));
-  for (const f of listJson(join(reg, 'lanes'))) loadOne(f, (d, ff) => addLane(ctx, d, ff));
-  loadOne(join(reg, 'families.json'), (d, f) => addFamilies(ctx, Array.isArray(d) ? d : d.families, f));
-  for (const f of [...listJson(join(reg, 'rubrics')), ...listJson(join(reg, 'rubrics', 'writing')), ...listJson(join(reg, 'rubrics', 'speaking'))]) {
-    loadOne(f, (d, ff) => (Array.isArray(d) ? d.forEach((x) => addRubric(ctx, x, ff)) : addRubric(ctx, d, ff)));
-  }
-  loadOne(join(reg, 'level-profiles.json'), (d, f) => addLevelProfiles(ctx, Array.isArray(d) ? d : d.levels, f));
-  loadOne(join(reg, 'text-types.json'), (d, f) => addTextTypes(ctx, Array.isArray(d) ? d : d.types, f));
-  loadOne(join(reg, 'detectors.json'), (d, f) => addDetectors(ctx, Array.isArray(d) ? d : d.detectors, f));
-  for (const dir of [join(root, 'casts'), join(reg, 'casts')]) {
-    for (const f of listJson(dir)) loadOne(f, (d, ff) => addCasts(ctx, d, ff));
-  }
-
-  for (const level of LEVELS) {
-    const dir = join(root, level);
-    if (!existsSync(dir)) continue;
-    const slot = levelSlot(ctx, level);
-    loadOne(join(dir, 'course.json'), (d, f) => { slot.course = { data: d, file: f }; });
-    loadOne(join(dir, 'lexicon.json'), (d, f) => addLexiconEntries(ctx, Array.isArray(d) ? d : d.entries, f, level));
-    loadOne(join(dir, 'rule-cards.json'), (d, f) => addRuleCards(ctx, Array.isArray(d) ? d : d.cards, f, level));
-    loadOne(join(dir, 'ids.ledger.json'), (d, f) => { slot.ledger = { data: d, file: f }; });
-    for (const f of listJson(join(dir, 'units'))) {
-      const name = basename(f);
-      const d = readJson(ctx, f);
-      if (d === undefined || !isObj(d)) continue;
-      if (/^u\d\d\.lane-[a-z0-9]+\.json$/.test(name)) addDoc(ctx, 'lanepack', d, rel(ctx, f));
-      else if (/^u\d\d\.json$/.test(name)) addDoc(ctx, 'unit', { ...d, level: d.level || level }, rel(ctx, f));
-    }
-    for (const f of listJson(join(dir, 'plateaus'))) loadOne(f, (d, ff) => isObj(d) && addDoc(ctx, 'plateau', { ...d, level: d.level || level }, ff));
-    for (const f of listJson(join(dir, 'closing'))) loadOne(f, (d, ff) => isObj(d) && addDoc(ctx, 'closing', { ...d, level: d.level || level }, ff));
-    for (const f of listJsonDeep(join(dir, 'mocks'))) loadOne(f, (d, ff) => isObj(d) && addDoc(ctx, 'mock', { ...d, level: d.level || level }, ff));
-  }
+  for (const f of listJsonDeepExcluding(root, exclude)) ingestFile(ctx, f);
   return ctx;
 }
 
 /**
- * Load a single file the CLI was pointed at. Inside `<root>/<level>/units/` it is a doc of the
- * loaded context; anywhere else (a fixture, a bundle) it is ingested on top of the context and its
- * documents override same-id ones. Returns the target docs.
+ * Load the context a file belongs to and mark the file's documents as targets. A file outside
+ * content/course-v2 (a bundle) is ingested on top of the content tree; its documents override
+ * same-id ones.
  */
-export function loadTargetFile(ctx, file) {
-  const abs = file;
-  const r = rel(ctx, abs);
-  for (const slot of ctx.levels.values()) {
-    for (const doc of [...slot.units.values(), ...slot.lanePacks, ...slot.plateaus, ...slot.closing, ...slot.mocks]) {
-      if (doc.file === r) {
-        doc.target = true;
-        return [doc];
-      }
+export function loadForFile(file, { contentRoot, repoRoot = null, today = null } = {}) {
+  const { root, exclude, outside } = rootFor(file, contentRoot);
+  const ctx = loadContext({ root, exclude, repoRoot, today });
+  const r = rel(ctx, file);
+  let targets = [];
+  if (!outside) {
+    for (const slot of ctx.levels.values()) {
+      for (const doc of docsOfLevel(slot)) if (doc.file === r) targets.push(doc);
     }
+  } else {
+    targets = ingestFile(ctx, file);
   }
-  const data = readJson(ctx, abs);
-  if (data === undefined) return [];
-  const docs = ingest(ctx, data, r);
-  for (const d of docs) d.target = true;
-  return docs;
+  for (const d of targets) d.target = true;
+  return { ctx, targets, root };
 }
 
 // ── lookups used by the rules ─────────────────────────────────────────────────────────────
 
 /** All docs of a level slot. */
-export const docsOfLevel = (slot) => [...[...slot.units.values()].sort((a, b) => a.nr - b.nr), ...slot.lanePacks, ...slot.plateaus, ...slot.closing, ...slot.mocks];
+export function docsOfLevel(slot) {
+  return [...[...slot.units.values()].sort((a, b) => a.nr - b.nr), ...slot.lanePacks, ...slot.plateaus, ...slot.closing, ...slot.mocks];
+}
 
 /** The unit doc for a unit id, or null. */
 export function unitDoc(ctx, unitId) {
@@ -482,4 +496,4 @@ export function primaryLane(ctx, level) {
   return ctx.levels.get(level)?.course?.data?.lanes?.primary || LEAN_PRIMARY_LANE[bandOfLevel(level)] || null;
 }
 
-export { rel as relPath, dirname };
+export { rel as relPath };
