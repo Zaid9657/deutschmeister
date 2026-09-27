@@ -22,6 +22,7 @@ import { emptyContext, ingest, addDoc, levelSlot, addDetectors } from '../script
 import { detectInText, detectorProblem, buildLexEnv, EMPTY_ENV, stemVowelChanged, LEXICALISED_STATES, DETECTOR_OVERLAYS } from '../scripts/course-v2/lib-validate/detectors.mjs';
 import { tokens } from '../scripts/course-v2/lib-validate/text.mjs';
 import { missingOrders } from '../scripts/course-v2/lib-validate/orders.mjs';
+import { knownCompound } from '../scripts/course-v2/lib-validate/compounds.mjs';
 import { BANK_KEY_RE, SCHEMA_PATTERNS } from '../scripts/course-v2/lib-validate/ids.mjs';
 import { coverage } from '../scripts/course-v2/rules/LEX-01.mjs';
 import { entryForms, knownForms, licensedForms, umlaut } from '../scripts/course-v2/lib-validate/lexicon.mjs';
@@ -1131,5 +1132,209 @@ describe('ITM-09 tile orders and question prompts (a1.1 r1 F01/F04, a1.2 r1 F12,
   });
   test('the orders module leaves clause-combining items alone', () => {
     assert.deepEqual(missingOrders({ tiles: ['der Staubsauger', 'geht', 'aus', 'obwohl', 'ich', 'den Akku aufgeladen habe'], answer: 'Der Staubsauger geht aus, obwohl ich den Akku aufgeladen habe.', accepted: [] }), []);
+  });
+});
+
+describe('ITM-03 key balance extensions (a1.1 r2 F04, b1.1 r1 F02 / r2 F01, b2.1 r1 F01, b2.2 r1 F01/F02)', () => {
+  const block = (p) => step(p, 3).blocks[0].items;
+  test('fail: cloze items with three options count in the block balance', async () => assertFail(await rule('ITM-03', ex((p) => {
+    for (const it of block(p)) { it.type = 'cloze'; it.answer = it.options[0]; it.accepted = [it.options[0]]; }
+  })), /a\/b\/c keys 5\/0\/0/));
+  test('fail: three equal keys in a row in an exam block', async () => assertFail(await rule('ITM-03', ex((p) => {
+    block(p).forEach((it, i) => { const k = [0, 0, 0, 1, 2][i]; it.answer = it.options[k]; it.accepted = [it.options[k]]; });
+  })), /3 equal a\/b\/c keys in a row/));
+  test('fail: the key is always the highest number', async () => assertFail(await rule('ITM-03', ex((p) => {
+    block(p).forEach((it, i) => {
+      const k = [1, 2, 0, 2, 1][i];
+      it.options = ['9 Uhr', '10 Uhr', '11 Uhr'];
+      it.options.splice(k, 0, it.options.splice(2, 1)[0]);
+      it.answer = it.options[k];
+      it.accepted = [it.answer];
+    });
+  })), /the key is the highest option/));
+  test('advisory: non-exam keys all at options[0] (the player does not shuffle); the example passes', async () => {
+    const r = await rule('ITM-03', ex());
+    assertPass(r);
+    assert.ok(r.findings.some((f) => f.severity === 'advisory' && /non-exam 3-option keys/.test(f.message)), messages(r));
+  });
+});
+
+describe('ITM-01 German cues (a1.1 r1 F06, a1.2 r1 F08/F10, a2.2 r2 F04, b1.1 r1 F05, b2.2 r1 F12)', () => {
+  const pool0 = (fields) => (p) => { step(p, 0).pool.items[0] = { ...step(p, 0).pool.items[0], options: undefined, exact: undefined, ...fields }; };
+  const typed = (promptDe, answer, extra = {}) => pool0({ type: 'fill_blank', promptDe, answer, accepted: [answer], ...extra });
+  test('the key copied from the stem, no distractor there (fail); a flyer with every price (pass)', async () => {
+    const mc = (promptDe) => pool0({ type: 'multiple_choice', promptDe, options: ['2,50 Euro', '1,90 Euro', '1,19 Euro'], answer: '1,19 Euro', accepted: ['1,19 Euro'] });
+    assertFail(await rule('ITM-01', ex(mc('Prospekt: „Butter nur 1,19 Euro“. Was kostet die Butter?'))), /stands in the stem/);
+    assertPass(await rule('ITM-01', ex(mc('Prospekt: „Käse 2,50 Euro · Butter 1,19 Euro · Milch 1,90 Euro“. Was kostet die Butter?'))));
+  });
+  test('a cue only promptEn gives (fail) or promptDe carries too (pass)', async () => {
+    assertFail(await rule('ITM-01', ex(typed('Können Sie das wiederholen? Höflicher: ___ Sie das bitte wiederholen?', 'Könnten', { promptEn: 'the polite form of können' }))), /promptEn names „können" as the cue/);
+    assertPass(await rule('ITM-01', ex(typed('Können Sie das wiederholen? Höflicher: ___ Sie das bitte wiederholen? (können)', 'Könnten', { promptEn: 'the polite form of können' }))));
+  });
+  test('an ordinal word key: fail without „Wort", digits or exact; pass with exact: number', async () => {
+    assertFail(await rule('ITM-01', ex(typed('Der 3. Juni ist ein Mittwoch. Der ___ Juni ist ein Donnerstag.', 'vierte'))), /ordinal word/);
+    assertPass(await rule('ITM-01', ex(typed('Der 3. Juni ist ein Mittwoch. Der ___ Juni ist ein Donnerstag.', 'vierte', { exact: 'number' }))));
+  });
+  test('first letters with underscores show the exact count', async () => {
+    assertFail(await rule('ITM-01', ex(typed('Sie haben f________ gehandelt.', 'fahrlässig'))), /shows 9 letters, the key „fahrlässig" has 10/);
+    assertPass(await rule('ITM-01', ex(typed('Sie haben f_________ gehandelt.', 'fahrlässig'))));
+  });
+  test('a preposition phrase the prompt does not give (fail); cued (pass); framed by „gegenüber ___" (pass)', async () => {
+    assertFail(await rule('ITM-01', ex(typed('Emre wartet ___ Brücke auf den Krankenwagen.', 'an der'))), /preposition „an"/);
+    assertPass(await rule('ITM-01', ex(typed('Emre wartet ___ Brücke auf den Krankenwagen. (an)', 'an der'))));
+    assertPass(await rule('ITM-01', ex(typed('Die Tankstelle ist gegenüber ___ Rathaus.', 'vom'))));
+  });
+  test('an open sentence-adverb gap blocks; an open noun gap is an advisory', async () => {
+    assertFail(await rule('ITM-01', ex(typed('Ich habe drei E-Mails geschrieben. ___ habe ich keine Antwort bekommen.', 'Trotzdem'))), /sentence-adverb gap/);
+    assertPass(await rule('ITM-01', ex(typed('Ich habe drei E-Mails geschrieben. ___ habe ich keine Antwort bekommen. (trotzdem / deshalb)', 'Trotzdem'))));
+    const r = await rule('ITM-01', ex(typed('Die Firma schickt uns ein ___ über den Schaden.', 'Gutachten')));
+    assertPass(r);
+    assert.ok(r.findings.some((f) => f.severity === 'advisory' && /open noun gap/.test(f.message)), messages(r));
+  });
+});
+
+describe('ITM-10 contractions and „gegenüber" (a2.2-u04 r1 F03 / F05)', () => {
+  const unit = (ecAccepted, gapAccepted) => (p) => {
+    Object.assign(step(p, 0).pool.items[0], { type: 'fill_blank', promptDe: 'Ich gehe ___ Post.', answer: 'zur', accepted: gapAccepted });
+    const c = p.unit.check.items.find((i) => i.id === 'a2.1-u07-c08');
+    Object.assign(c, { answer: 'Ich gehe heute zur Post.', accepted: ecAccepted, promptDe: 'Korrigieren Sie: „Ich gehe heute zu die Post.“' });
+  };
+  test('fail: the unit accepts „zu der", the correction not', async () => assertFail(await rule('ITM-10', ex(unit(['Ich gehe heute zur Post.'], ['zur', 'zu der']))), /must accept „Ich gehe heute zu der Post\."/));
+  test('pass: both accept it', async () => assertPass(await rule('ITM-10', ex(unit(['Ich gehe heute zur Post.', 'Ich gehe heute zu der Post.'], ['zur', 'zu der'])))));
+  test('fail / pass: „gegenüber ___" keyed „vom" owes the bare dative', async () => {
+    const g = (accepted) => (p) => Object.assign(step(p, 0).pool.items[0], { type: 'fill_blank', promptDe: 'Die Tankstelle ist gegenüber ___ Rathaus.', answer: 'vom', accepted });
+    assertFail(await rule('ITM-10', ex(g(['vom']))), /bare dative „dem"/);
+    assertPass(await rule('ITM-10', ex(g(['vom', 'dem']))));
+  });
+});
+
+describe('ITM-02 a plural antecedent (a2.1-u04 r2 F02)', () => {
+  const mc = (promptDe) => (p) => {
+    const it = step(p, 0).inputItems.find((i) => i.type === 'multiple_choice');
+    Object.assign(it, { promptDe, options: ['welche', 'eine', 'eins'], answer: 'welche', accepted: ['welche'] });
+  };
+  test('fail: „Ja, wir haben ___." admits „eine"', async () => assertFail(await rule('ITM-02', ex(mc('„Haben wir noch Tassen? – Ja, wir haben ___.“'))), /nothing in the frame fixes the plural/));
+  test('pass: a plural copula fixes it', async () => assertPass(await rule('ITM-02', ex(mc('„Haben wir noch Tassen? – Ja, im Schrank sind noch ___.“')))));
+});
+
+describe('EXM-01 the example uses up an option (a2.2-u04 r1 F10, r2 F13, r3 F10; advisory until SCHEMA ExamBlock.example)', () => {
+  test('advisory when the template says so and the block leaves the wrong number unused', async () => {
+    const with_ = await rule('EXM-01', choiceContext((p) => { p.templates.lv3.source = `${p.templates.lv3.source}; die Anzeige aus dem Beispiel ist verbraucht`; }));
+    assertPass(with_);
+    assert.ok(with_.findings.some((f) => f.severity === 'advisory' && /the example uses one up/.test(f.message)), messages(with_));
+    const without = await rule('EXM-01', choiceContext());
+    assert.ok(!without.findings.some((f) => /the example uses one up/.test(f.message)));
+  });
+});
+
+describe('EXM-03 one number on the screen; cues (a1.1-u04 r2 F05, b1.1-u04 r2 F08)', () => {
+  test('fail: the task line says another band than the player shows; the model text outside it', async () => {
+    assertFail(await rule('EXM-03', ex((p) => { step(p, 5).task.wordBandLearning = [20, 30]; })), /„30 bis 40 Wört" — the band the player shows is 20–30/);
+    assertFail(await rule('EXM-03', ex((p) => { step(p, 5).task.modelText = `${step(p, 5).task.modelText} ${'Viele Grüße und bis bald. '.repeat(3)}`; })), /model text of \d+ words outside/);
+  });
+  test('pass: an exam figure named as the exam („Prüfung: mindestens 30")', async () => assertPass(await rule('EXM-03', ex((p) => { step(p, 5).task.checklist.push('Prüfung: mindestens 30 Wörter'); }))));
+  test('advisory: a two-letter cue (the SCHEMA exemplar\'s „am")', async () => {
+    const r = await rule('EXM-03', ex());
+    assert.ok(r.findings.some((f) => f.severity === 'advisory' && /cue „am" has 2 letters/.test(f.message)), messages(r));
+  });
+});
+
+describe('EXM-04 cards, calendars, tb1.m2 (a2.1-u04 r1, a2.2-u04 r1 F07, b1.1-u04 r2 F02)', () => {
+  test('fail: a ga2.sp1 card with a topic prefix; advisory: the exemplar\'s Thema', async () => {
+    assertFail(await rule('EXM-04', ex((p) => { step(p, 4).task.cards.learner[0] = 'Thema Arbeit: Arbeitszeit?'; })), /no topic prefix/);
+    const r = await rule('EXM-04', ex());
+    assert.ok(r.findings.some((f) => f.severity === 'advisory' && /has no Thema/.test(f.message)), messages(r));
+  });
+  test('calendars: exactly one common free window of ≥ 90 minutes', async () => {
+    const cal = (mine, theirs) => (p) => {
+      step(p, 4).task.template = 'ga2.sp3'; // not in the §15 lane excerpt: only the calendar rule speaks
+      step(p, 4).task.stimulus = { kind: 'calendar', de: 'Ihr Kalender: Sonntag', items: mine };
+      step(p, 4).task.partnerData = { kind: 'calendar', de: 'Kalender: Sonntag', items: theirs };
+    };
+    const mine = ['8.00–9.30 Uhr: joggen', '11.00–13.00 Uhr: helfen', '13.00–14.00 Uhr: essen', '17.30–19.00 Uhr: lernen', '19.00–20.00 Uhr: aufräumen'];
+    const theirs = ['8.00–10.00 Uhr: Frühstück', '10.00–12.00 Uhr: Schwimmkurs', '12.00–14.00 Uhr: Mittagessen', '17.00–18.30 Uhr: Hausaufgaben', '18.30–20.00 Uhr: Abendessen'];
+    assertPass(await rule('EXM-04', ex(cal(mine, theirs))));
+    assertFail(await rule('EXM-04', ex(cal(mine, theirs.slice(0, 3).concat(['18.30–20.00 Uhr: Abendessen', '8.00–8.30 Uhr: Zeitung'])))), /2 common free windows|common free windows/);
+    assertFail(await rule('EXM-04', ex(cal(mine.slice(0, 3), theirs))), /timed entries/);
+  });
+  test('tb1.m2: the learner\'s sheet holds one quote', async () => {
+    const b = ex((p) => {
+      Object.assign(step(p, 4).task, { template: 'tb1.m2', mode: 'discuss', stimulus: { kind: 'quotes', de: 'Thema', items: ['Meine Meinung.', 'Die Meinung der Partnerin.'] } });
+    });
+    ingest(b.ctx, JSON.parse(readFileSync(join(REPO, 'content', 'course-v2', 'registries', 'lanes', 'tb1.json'), 'utf8')), 'registries/lanes/tb1.json');
+    assertFail(await rule('EXM-04', b), /2 quotes on the learner's sheet/);
+  });
+});
+
+describe('LEX rails: cliffhanger, compounds, zero occurrences, generator sources, plural glosses', () => {
+  test('LEX-01 reads story.cliffhanger', async () => {
+    const r = await rule('LEX-01', ex((p) => { p.unit.story.cliffhanger = 'Quartiersmanagement Zuständigkeitsbereich Verwaltungsvorschrift.'; }));
+    assert.ok(r.findings.some((f) => f.path === 'story.cliffhanger'), messages(r));
+  });
+  test('a compound of two known forms is known to LEX-01 (b1.2 r1 F01, b2.2 r1 F05)', () => {
+    const known = new Set(['möbel', 'stücke', 'rad', 'tour']);
+    assert.equal(coverage('Die Möbelstücke und die Radtour.', new Set([...known, 'die', 'und'])).unknown.length, 0);
+    assert.deepEqual(knownCompound('möbelstücke', (w) => known.has(w)), ['möbel', 'stücke']);
+    assert.deepEqual(knownCompound('arbeitszeit', (w) => ['arbeit', 'zeit'].includes(w)), ['arbeit', 'zeit'], 'linking s');
+    assert.equal(knownCompound('rechtsbehelf', (w) => known.has(w)), null);
+  });
+  test('LEX-02: a lemma the unit never uses blocks (a2.2 r1 F08, b1.2 r1 F09)', async () => assertFail(await rule('LEX-02', ex((p) => {
+    p.lexicon.push({ ...p.lexicon[0], id: 'lx.zzz-test', lemma: 'Quittung', plural: 'Quittungen', role: 'receptive' });
+    p.unit.spec.lexiconBlocks[0].lemmas.push('lx.zzz-test');
+  })), /„Quittung" is allocated to a2\.1-u07 but occurs in none/));
+  test('LEX-03: a receptive lemma as a lex.articlePlural source blocks (a2.1 r2 F09)', async () => assertFail(await rule('LEX-03', ex((p) => {
+    step(p, 0).pool.generators.find((g) => g.generator === 'lex.articlePlural').source = ['lx.leitung'];
+  })), /lx\.leitung is receptive/));
+  test('LEX-07: a plural token glossed in the singular is an advisory (a1.1 r1 F21)', async () => {
+    const r = await rule('LEX-07', ex((p) => { step(p, 0).input.glosses = [{ token: 'Anrufe', gloss: { en: 'phone call' } }]; }));
+    assert.ok(r.findings.some((f) => f.severity === 'advisory' && /plural of Anruf/.test(f.message)), messages(r));
+  });
+});
+
+describe('TXT-02, CON-06, GRM-02, GRM-04, ALL-02, COV-3, ITM-04 rail extensions', () => {
+  test('TXT-02 applies the tolerance once where the template says its band has it (a1.1 r1 F10, a1.2 r1 F26)', async () => {
+    const long = (p) => { const t = step(p, 3).texts[0]; t.lines = [{ ...t.lines[0], de: `${'Das ist ein Test. '.repeat(16)}` }]; delete t.lines[0].say; };
+    assertPass(await rule('TXT-02', ex(long)));
+    assertFail(await rule('TXT-02', ex((p) => { long(p); p.ga2Lane.teile.h1.source = `${p.ga2Lane.teile.h1.source}; Band ±15 %`; })), /already in the band/);
+  });
+  test('CON-06: an exception without a source of its own is an advisory', async () => {
+    const r = await rule('CON-06', ex((p) => { p.unit.facts[0].exceptions = [{ de: 'Für manche Berufe gilt etwas anderes.', en: 'Some jobs differ.' }]; }));
+    assertPass(r);
+    assert.ok(r.findings.some((f) => /exceptions\[0\]/.test(f.path) && f.severity === 'advisory'), messages(r));
+    const ok = await rule('CON-06', ex());
+    assert.ok(!ok.findings.some((f) => /exceptions/.test(f.path)), 'a law name or § counts as a source');
+  });
+  test('GRM-02: a chunk preview is never a Lernschritt structure (a1.2 r1 F06)', async () => assertFail(await rule('GRM-02', ex((p) => {
+    p.unit.spec.grammar.review = p.unit.spec.grammar.review.filter((x) => x !== 'g.wenn');
+    p.unit.spec.grammar.chunk = ['g.wenn'];
+    step(p, 1).structure = 'g.wenn';
+  })), /only a chunk preview/));
+  test('GRM-04: a declared chunk is presented in an input or Redemittel (a1.1 r1 F05)', async () => {
+    const chunk = (p) => { p.unit.spec.grammar.review = p.unit.spec.grammar.review.filter((x) => x !== 'g.wenn'); p.unit.spec.grammar.chunk = ['g.wenn']; };
+    const none = (p) => { chunk(p); for (const s of p.unit.steps) for (const l of s.input?.lines || []) l.de = l.de.replace(/\bwenn\b/gi, 'und'); for (const r of p.unit.redemittel || []) r.de = r.de.replace(/\bwenn\b/gi, 'und'); for (const l of p.unit.start.folge.lines) l.de = l.de.replace(/\bwenn\b/gi, 'und'); };
+    assertFail(await rule('GRM-04', ex(none)), /declares the chunk g\.wenn/);
+    assertPass(await rule('GRM-04', ex((p) => { none(p); p.unit.redemittel[0].de = 'Wenn Sie Zeit haben, rufen Sie mich an.'; })));
+  });
+  test('ALL-02: a proof key the Check hands out blocks; the exemplar\'s item-proven interaction can-do is an advisory', async () => {
+    assertFail(await rule('ALL-02', ex((p) => { p.unit.check.proofItems[0].answer = p.unit.check.items[2].answer; p.unit.check.proofItems[0].options[0] = p.unit.check.items[2].answer; })), /the Check hands the learner the proof/);
+    const r = await rule('ALL-02', ex());
+    assertPass(r);
+    assert.ok(r.findings.some((f) => f.severity === 'advisory' && /interaction-spoken, proven by an item alone/.test(f.message)), messages(r));
+  });
+  test('ALL-02: a listed text type nothing in the unit has is an advisory (a2.1 r3 F09)', async () => {
+    const r = await rule('ALL-02', ex((p) => { p.unit.spec.textTypes.push('tt.radiomeldung'); }));
+    assert.ok(r.findings.some((f) => f.severity === 'advisory' && /tt\.radiomeldung is listed/.test(f.message)), messages(r));
+  });
+  test('COV-3: spec.lanes equals the specs.json entry, and the message names the owner (a2.1 r3 F10)', async () => {
+    const b = ex();
+    const lanes = JSON.parse(JSON.stringify(b.parts.unit.spec.lanes));
+    lanes.pruefungsfokus[0].length = 'reduced';
+    b.ctx.levels.get('a2.1').specs.set(7, { id: 'a2.1-u07', spec: { lanes } });
+    assertFail(await rule('COV-3', b), /specs\.json \(pruefungsfokus\[0\]\).*curriculum owner/);
+    assertPass(await rule('COV-3', ex()));
+  });
+  test('ITM-04: a strategy card that names a key noun phrase of its step (a2.1-u04 r1)', async () => {
+    assertFail(await rule('ITM-04', ex((p) => { step(p, 3).strategyCards[0].de = 'Achten Sie auf Orte, zum Beispiel im Konferenzraum.'; })), /„im konferenzraum", the key of a2\.1-u07-ls4-ga2-h1-03/);
+    assertPass(await rule('ITM-04', ex()));
   });
 });

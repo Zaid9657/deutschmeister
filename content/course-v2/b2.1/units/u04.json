@@ -218,8 +218,8 @@
         {
           "id": "b2.1-u04-start-l03",
           "speaker": "cast.amal",
-          "de": "In der Anzeige steht: „Ruhige Lage, alle Zimmer mit Blick auf das Meer.“ Genau dafür haben wir diese Reise gebucht.",
-          "en": "The advert says: \"Quiet location, all rooms with a sea view.\" That is exactly why we booked this trip."
+          "de": "In der Anzeige steht: „Ruhiges Hotel direkt am Meer, alle Zimmer mit Meerblick.“ Genau dafür haben wir diese Reise gebucht.",
+          "en": "The advert says: \"Quiet hotel right by the sea, all rooms with a sea view.\" That is exactly why we booked this trip."
         },
         {
           "id": "b2.1-u04-start-l04",
@@ -267,16 +267,16 @@
         "promptEn": "Why are Priya and Amal annoyed?",
         "options": [
           "Das Hotel ist weit weg vom Flughafen.",
-          "Das Zimmer ist nicht so wie in der Anzeige.",
-          "Die Reiseleitung hat sie nicht abgeholt."
+          "Die Reiseleitung hat sie nicht abgeholt.",
+          "Das Zimmer ist nicht so wie in der Anzeige."
         ],
         "answer": "Das Zimmer ist nicht so wie in der Anzeige.",
         "accepted": [
           "Das Zimmer ist nicht so wie in der Anzeige."
         ],
         "explanation": {
-          "de": "Die Anzeige verspricht eine ruhige Lage und Blick auf das Meer. Sie sehen aber eine Baustelle, und das Zimmer ist abgenutzt.",
-          "en": "The advert promised a quiet location and a sea view; instead they look at a building site and the room is worn out."
+          "de": "Die Anzeige verspricht ein ruhiges Hotel und Meerblick. Sie sehen aber eine Baustelle, und das Zimmer ist abgenutzt.",
+          "en": "The advert promised a quiet hotel and a sea view; instead they look at a building site and the room is worn out."
         },
         "origin": "agent"
       }
@@ -301,7 +301,7 @@
         "title": "Reisebedingungen für Pauschalreisen (Auszug)",
         "textType": "tt.bedingungen",
         "text": {
-          "de": "Blauwelle Reisen – Reisebedingungen für Pauschalreisen\n\n1. Mit Ihrer Buchung kommt ein Reisevertrag zwischen Ihnen und uns als Reiseveranstalter zustande. Den Leistungsumfang Ihrer Pauschalreise finden Sie in der Leistungsbeschreibung und in Ihrer Buchungsbestätigung: Unterbringung, Zimmerkategorie, Verpflegung und Programm. Zusätzliche Wünsche sind nur dann Teil des Vertrags, wenn wir sie Ihnen ausdrücklich und schriftlich zugesichert haben.\n\n2. Wir dürfen das Programm nur aus wichtigem Grund ändern, zum Beispiel bei einem Unwetter. Über jede Programmänderung informieren wir Sie rechtzeitig; das ist unsere Informationspflicht. Wenn eine Leistung ausfällt, erhalten Sie nach Möglichkeit eine gleichwertige Ersatzleistung. Wenn auch das nicht möglich ist, erstatten wir Ihnen ersatzweise den Preis dieser Leistung.\n\n3. Wenn es während der Reise einen Reisemangel gibt, melden Sie ihn bitte sofort unserer Reiseleitung. Wenn die Reiseleitung nicht erreichbar ist, richten Sie Ihre Mängelanzeige direkt an unseren Kundenservice. Nur so können wir den Mangel beseitigen. Reisende, die einen Mangel nicht melden, können später oft keine Minderung verlangen.\n\n4. Solange ein Mangel besteht, haben Sie Anspruch auf eine Minderung des Reisepreises. Bei einem erheblichen Mangel können Sie uns eine angemessene Frist setzen. Eine Fristsetzung ist auch als E-Mail möglich. Wenn wir den Mangel in dieser Frist nicht beseitigen, dürfen Sie den Reisevertrag kündigen.\n\n5. Ihre Ansprüche richten Sie bitte nach der Reise schriftlich an unseren Kundenservice. Dafür reicht eine kurze Schilderung. Schicken Sie Belege und Beweisfotos mit, und heben Sie vorsorglich alle Quittungen auf. Eine Beschwerdefrist gibt es nicht. Ihre Ansprüche verjähren aber zwei Jahre nach dem vereinbarten Ende der Reise. Leistungen aus Kulanz, zum Beispiel ein Gutschein, sind freiwillig. Die gesetzlichen Regeln zum Verbraucherschutz gelten immer.\n\n6. Bei einem Rücktritt vor der Abreise zahlen Sie eine Entschädigung. Den Rücktritt erklären Sie bitte schriftlich. Die Kosten einer Stornierung finden Sie im Anhang: Je später die Stornierung, desto höher die Kosten.",
+          "de": "Blauwelle Reisen – Reisebedingungen für Pauschalreisen\n\n1. Mit Ihrer Buchung kommt ein Reisevertrag zwischen Ihnen und uns als Reiseveranstalter zustande. Den Leistungsumfang Ihrer Pauschalreise finden Sie in der Leistungsbeschreibung und in Ihrer Buchungsbestätigung: Unterbringung, Zimmerkategorie, Verpflegung und Programm. Zusätzliche Wünsche sind nur dann Teil des Vertrags, wenn wir sie Ihnen ausdrücklich und schriftlich zugesichert haben.\n\n2. Wir dürfen das Programm nur aus wichtigem Grund ändern, zum Beispiel bei einem Unwetter. Über jede Programmänderung informieren wir Sie rechtzeitig; das ist unsere Informationspflicht. Wenn eine Leistung ausfällt, erhalten Sie nach Möglichkeit eine gleichwertige Ersatzleistung. Wenn auch das nicht möglich ist, erstatten wir Ihnen ersatzweise den Preis dieser Leistung.\n\n3. Wenn es während der Reise einen Reisemangel gibt, melden Sie ihn bitte sofort unserer Reiseleitung. Wenn die Reiseleitung nicht erreichbar ist, richten Sie Ihre Mängelanzeige direkt an unseren Kundenservice. Nur so können wir den Mangel beseitigen. Reisende, die einen Mangel nicht melden, können später oft keine Minderung verlangen.\n\n4. Solange ein Mangel besteht, haben Sie Anspruch auf eine Minderung des Reisepreises. Bei einem erheblichen Mangel können Sie uns eine angemessene Frist setzen. Eine Fristsetzung ist auch per E-Mail möglich. Wenn wir den Mangel in dieser Frist nicht beseitigen, dürfen Sie den Reisevertrag kündigen.\n\n5. Ihre Ansprüche richten Sie bitte nach der Reise schriftlich an unseren Kundenservice. Dafür reicht eine kurze Schilderung. Schicken Sie Belege und Beweisfotos mit, und heben Sie vorsorglich alle Quittungen auf. Eine Beschwerdefrist gibt es nicht. Ihre Ansprüche verjähren aber zwei Jahre nach dem vereinbarten Ende der Reise. Leistungen aus Kulanz, zum Beispiel ein Gutschein, sind freiwillig. Die gesetzlichen Regeln zum Verbraucherschutz gelten immer.\n\n6. Bei einem Rücktritt vor der Abreise zahlen Sie eine Entschädigung. Den Rücktritt erklären Sie bitte schriftlich. Die Kosten einer Stornierung finden Sie im Anhang: Je später die Stornierung, desto höher die Kosten.",
           "en": "Blauwelle Reisen – terms and conditions for package holidays (extract): 1 travel contract and scope of services; 2 programme changes, duty to inform, substitute services or a refund instead; 3 report defects on site at once, otherwise a reduction may be lost; 4 price reduction, deadline for a remedy and termination; 5 claims in writing after the trip, no complaint deadline, limitation two years, goodwill is voluntary, statutory consumer protection always applies; 6 withdrawal and cancellation before departure."
         },
         "glosses": [
@@ -392,15 +392,15 @@
           "type": "fill_blank",
           "role": "detail",
           "topic": "lesen",
-          "promptDe": "Eine Leistung fällt aus. Dann erhalten Sie nach Möglichkeit eine gleichwertige ___.",
-          "promptEn": "Section 2: what do you get instead?",
+          "promptDe": "Fällt ein Ausflug aus, gibt es möglichst eine gleich gute ___. (Wort aus dem Text: Er…)",
+          "promptEn": "Section 2: the word for what you get instead (it starts with Er…).",
           "answer": "Ersatzleistung",
           "accepted": [
             "Ersatzleistung"
           ],
           "explanation": {
-            "de": "Abschnitt 2: Eine Ersatzleistung ist das, was Sie statt der ausgefallenen Leistung bekommen.",
-            "en": "Section 2: a substitute service is what you get instead of the cancelled one."
+            "de": "Abschnitt 2: Fällt eine Leistung aus, erhalten Sie nach Möglichkeit eine gleichwertige Ersatzleistung – etwas anderes, das genauso gut ist.",
+            "en": "Section 2: if a service is cancelled, you get an equivalent substitute service where possible – something else that is just as good."
           },
           "origin": "agent"
         },
@@ -712,10 +712,9 @@
             "generator": "lex.articlePlural",
             "count": 2,
             "source": [
-              "lx.reisemangel",
               "lx.unterbringung",
               "lx.pauschalreise",
-              "lx.stornierung"
+              "lx.reiseveranstalter"
             ]
           },
           {
@@ -773,8 +772,8 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "lx.reisebedingungen",
-          "promptDe": "Lesen Sie vor der Buchung die ___. (die Regeln, die zum Reisevertrag gehören)",
-          "promptEn": "Name the document with the rules of the travel contract.",
+          "promptDe": "Lesen Sie vor der Buchung die ___. (die Regeln zum Reisevertrag; ein Wort: Reise…)",
+          "promptEn": "Name the travel terms: one word beginning with Reise….",
           "answer": "Reisebedingungen",
           "accepted": [
             "Reisebedingungen"
@@ -787,8 +786,8 @@
           ],
           "difficulty": 2,
           "explanation": {
-            "de": "Die Reisebedingungen sind die Regeln, die zum Reisevertrag gehören: Rechte und Pflichten bei einer Pauschalreise.",
-            "en": "The terms of travel are the rules that belong to the travel contract: the rights and duties of a package holiday."
+            "de": "Die Reisebedingungen sind die Regeln, die zum Reisevertrag gehören: Rechte und Pflichten bei einer Pauschalreise. Allgemein sagt man auch AGB.",
+            "en": "The terms of travel are the rules that belong to the travel contract; the general word for such terms is AGB."
           },
           "origin": "agent"
         },
@@ -1405,8 +1404,8 @@
             "count": 1,
             "source": [
               "lx.preisnachlass",
-              "lx.ausgleichszahlung",
-              "lx.maengelanzeige"
+              "lx.beanstanden",
+              "lx.unzumutbar"
             ]
           },
           {
@@ -1922,7 +1921,7 @@
             "promptEn": "Which sentence is a polite but clear demand?",
             "options": [
               "Antworten Sie uns endlich!",
-              "Vielleicht antworten Sie uns irgendwann.",
+              "Könnten Sie uns vielleicht irgendwann antworten?",
               "Ich würde Sie bitten, uns bis Freitag zu antworten."
             ],
             "answer": "Ich würde Sie bitten, uns bis Freitag zu antworten.",
@@ -1930,8 +1929,8 @@
               "Ich würde Sie bitten, uns bis Freitag zu antworten."
             ],
             "explanation": {
-              "de": "Der Konjunktiv macht die Bitte höflich, die Frist bis Freitag macht sie klar.",
-              "en": "The subjunctive makes it polite; the Friday deadline makes it clear."
+              "de": "Der Konjunktiv macht die Bitte höflich, die Frist bis Freitag macht sie klar. „Irgendwann“ ist höflich, aber nicht klar; „endlich!“ ist klar, aber unhöflich.",
+              "en": "The subjunctive makes it polite and the Friday deadline makes it clear; „irgendwann“ is polite but vague, „endlich!“ is clear but rude."
             },
             "origin": "agent"
           }
@@ -1949,9 +1948,9 @@
             "generator": "lex.glossTyped",
             "count": 1,
             "source": [
-              "lx.maengelanzeige",
-              "lx.fristsetzung",
-              "lx.ausgleichszahlung"
+              "lx.zusichern",
+              "lx.erheblich",
+              "lx.nachtraeglich"
             ]
           },
           {
@@ -2067,8 +2066,8 @@
           "promptEn": "Which sentence means: we arrived on time?",
           "options": [
             "Ohne dein Handy wären wir zu spät gekommen.",
-            "Wir sind zu spät gekommen.",
-            "Wir kommen heute zu spät."
+            "Mit deinem Handy wären wir pünktlich gekommen.",
+            "Ohne dein Handy wären wir pünktlich gekommen."
           ],
           "answer": "Ohne dein Handy wären wir zu spät gekommen.",
           "accepted": [
@@ -2082,8 +2081,8 @@
           ],
           "difficulty": 2,
           "explanation": {
-            "de": "wären … gekommen ist irreal: Das Handy hat geholfen, wir sind nicht zu spät gekommen.",
-            "en": "wären … gekommen is unreal: thanks to the phone they were not late."
+            "de": "wären … gekommen ist irreal: Das Handy hat geholfen, wir sind pünktlich gekommen. Die beiden anderen Sätze bedeuten: Wir sind zu spät gekommen.",
+            "en": "wären … gekommen is unreal: the phone helped, so we were on time. The other two sentences both mean that we were late."
           },
           "origin": "agent"
         },
@@ -2210,7 +2209,7 @@
         "tb2.sa",
         "tb2.m3"
       ],
-      "endLine": "Sie können jetzt sagen, was hätte anders sein müssen – höflich und bestimmt."
+      "endLine": "Sie können jetzt sagen, was anders hätte sein müssen – höflich und bestimmt."
     },
     {
       "id": "b2.1-u04-ls4",
@@ -2268,9 +2267,9 @@
             {
               "id": "b2.1-u04-ls4-t4-l01",
               "speaker": "cast.ensemble-b2-2",
-              "de": "Guten Tag, Frau Nair, hier ist der Kundenservice von Blauwelle Reisen. Wir haben Ihren Beschwerdebrief vom 3. November erhalten, vielen Dank. Zurzeit prüfen wir eingehend alle Mängel, die Sie beanstandet haben – gemeinsam mit dem Hotel und der Reiseleitung. Ob wir Ihnen eine Minderung gewähren können, entscheiden wir danach. Eine Antwort bekommen Sie innerhalb von drei Wochen. Wenn Sie weitere Beweisfotos haben, schicken Sie uns diese bitte als E-Mail. Vielen Dank und einen schönen Tag.",
+              "de": "Guten Tag, Frau Nair, hier ist der Kundenservice von Blauwelle Reisen. Wir haben Ihren Beschwerdebrief vom 3. November erhalten, vielen Dank. Zurzeit prüfen wir eingehend alle Mängel, die Sie beanstandet haben – gemeinsam mit dem Hotel und der Reiseleitung. Ob wir Ihnen eine Minderung gewähren können, entscheiden wir danach. Eine Antwort bekommen Sie innerhalb von drei Wochen. Wenn Sie weitere Beweisfotos haben, schicken Sie uns diese bitte per E-Mail. Vielen Dank und einen schönen Tag.",
               "en": "Hello, Ms Nair, this is Blauwelle Reisen customer service. We have received your letter of complaint of 3 November, thank you. We are currently looking thoroughly into all the defects you complained about, together with the hotel and the tour guide. We will decide afterwards whether we can grant you a price reduction. You will receive an answer within three weeks. If you have more photos, please send them to us by e-mail. Thank you and have a nice day.",
-              "say": "Guten Tag, Frau Nair, hier ist der Kundenservice von Blauwelle Reisen. Wir haben Ihren Beschwerdebrief vom dritten November erhalten, vielen Dank. Zurzeit prüfen wir eingehend alle Mängel, die Sie beanstandet haben – gemeinsam mit dem Hotel und der Reiseleitung. Ob wir Ihnen eine Minderung gewähren können, entscheiden wir danach. Eine Antwort bekommen Sie innerhalb von drei Wochen. Wenn Sie weitere Beweisfotos haben, schicken Sie uns diese bitte als E-Mail. Vielen Dank und einen schönen Tag."
+              "say": "Guten Tag, Frau Nair, hier ist der Kundenservice von Blauwelle Reisen. Wir haben Ihren Beschwerdebrief vom dritten November erhalten, vielen Dank. Zurzeit prüfen wir eingehend alle Mängel, die Sie beanstandet haben – gemeinsam mit dem Hotel und der Reiseleitung. Ob wir Ihnen eine Minderung gewähren können, entscheiden wir danach. Eine Antwort bekommen Sie innerhalb von drei Wochen. Wenn Sie weitere Beweisfotos haben, schicken Sie uns diese bitte per E-Mail. Vielen Dank und einen schönen Tag."
             }
           ],
           "glosses": []
@@ -2773,20 +2772,19 @@
             "cues": [
               "schlafen",
               "erholen",
+              "Erholung",
               "geärgert",
-              "Zeit",
-              "verloren",
-              "deshalb"
+              "verloren"
             ]
           },
           {
             "id": "lp3",
             "de": "Verhalten vor Ort: Was hätten Reiseleitung oder Veranstalter tun müssen?",
             "cues": [
-              "hätte",
-              "hätten",
-              "müssen",
-              "informieren",
+              "informieren müssen",
+              "kümmern müssen",
+              "anbieten müssen",
+              "Reiseleitung",
               "gemeldet",
               "Mängelanzeige"
             ]
@@ -2798,7 +2796,7 @@
               "Minderung",
               "Erstattung",
               "Prozent",
-              "bis zum",
+              "spätestens",
               "Frist",
               "fordern",
               "andernfalls"
@@ -2828,7 +2826,7 @@
           "Schluss und Gruß",
           "Lernmodus etwa 120 Wörter (Prüfung: mindestens 150)"
         ],
-        "modelText": "Betreff: Beschwerde über meine Pauschalreise vom 12. bis 19. Oktober\n\nSehr geehrte Damen und Herren,\n\nvom 12. bis 19. Oktober habe ich bei Ihnen eine Pauschalreise gemacht. Leider hatte die Reise erhebliche Mängel.\n\nSie haben ausdrücklich ein ruhiges Hotel mit Blick auf das Meer zugesichert. Neben unserem Zimmer war aber eine Baustelle, und der Baulärm fing jeden Morgen um sieben Uhr an. Außerdem ist ein Ausflug ohne Ersatzleistung ausgefallen.\n\nObwohl wir die Mängel sofort gemeldet haben, hat sich zwei Tage lang niemand um uns gekümmert: Ihre Reiseleitung war nicht erreichbar. Die Reiseleitung hätte uns spätestens am Dienstag ein anderes Zimmer anbieten müssen. Auch über die Baustelle hätten Sie uns schon vor der Reise informieren müssen.\n\nAufgrund dieser Mängel fordere ich eine Minderung des Reisepreises um 30 Prozent, also 714 Euro. Ich würde Sie bitten, mir den Betrag bis zum 30. November zu überweisen. Andernfalls wende ich mich an die Verbraucherzentrale.\n\nMit freundlichen Grüßen\nPriya Nair"
+        "modelText": "Betreff: Beschwerde – Pauschalreise Kreta, 12.–19. Oktober\n\nSehr geehrte Damen und Herren,\n\nim Oktober war ich mit einer Freundin auf Ihrer Pauschalreise nach Kreta, die leider erhebliche Mängel hatte.\n\nSie haben ausdrücklich ein ruhiges Hotel mit Blick auf das Meer zugesichert. Neben unserem Zimmer war aber eine Baustelle, und der Baulärm fing jeden Morgen um sieben Uhr an.\n\nObwohl wir die Mängel sofort gemeldet haben, war Ihre Reiseleitung zwei Tage lang nicht erreichbar. Dabei hätte sie uns ein anderes Zimmer anbieten müssen. Außerdem hätten Sie uns schon vor der Reise über die Baustelle informieren müssen.\n\nAufgrund dieser Mängel fordere ich eine Minderung des Reisepreises um 30 Prozent, also 714 Euro. Ich würde Sie bitten, mir den Betrag bis zum 30. November zu überweisen. Andernfalls wende ich mich an die Verbraucherzentrale.\n\nMit freundlichen Grüßen\nPriya Nair"
       }
     },
     {

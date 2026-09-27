@@ -125,7 +125,8 @@ function cueFindings(doc, item, path, where, pos) {
   if (['pool', 'reserve', 'check', 'proof'].includes(where) && arr(item.options).length >= 3 && key) {
     const distractors = arr(item.options).map(String).filter((o) => norm(o) !== norm(key));
     const digits = (x) => x.replace(/\D+/g, '');
-    const inStem = (x) => (digits(x).length >= 2 && digits(x) === digits(x.replace(/[^\d\s.,:]/g, '')) ? de.replace(/\D+/g, ' ').split(' ').includes(digits(x)) : norm(x).length >= 3 && hasWord(norm(de), norm(x)));
+    const stemNumbers = new Set((de.match(/\d+(?:[.,:]\d+)*/g) || []).map(digits));
+    const inStem = (x) => (digits(x).length >= 2 ? stemNumbers.has(digits(x)) : norm(x).length >= 3 && hasWord(norm(de), norm(x)));
     // a1.1-u04 r1 F06: „the digits 1,19 appear in the stem and in exactly one option" — a flyer with the
     // other prices as options is fine, the key alone copied from the stem is not
     if (inStem(key) && !distractors.some(inStem)) out.push(blocker(doc, `${path}.promptDe`, `the key „${key}" stands in the stem and no distractor does — the item answers itself`, id));
@@ -136,9 +137,13 @@ function cueFindings(doc, item, path, where, pos) {
   for (const m of en.matchAll(/\(([\p{L}-]+)\)/gu)) cueWords.push(m[1]);
   for (const m of en.matchAll(/[„“"]([\p{L}-]+)[“”"]/gu)) cueWords.push(m[1]);
   // only a German word is a cue (a form the lexicon knows, or one with ä/ö/ü/ß): „nominative" is metalanguage
+  // the cue stands in promptDe AS a cue: in brackets, after „von/zu/aus" („die Form von können") or before
+  // an arrow — the word merely occurring in the prompt's sentence („Können Sie …? Höflicher: ___") is no cue
+  const esc = (w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const cued = (w) => new RegExp(`\\([^)]*${esc(w)}[^)]*\\)|(?:von|zu|aus)\\s+[„"]?${esc(w)}|${esc(w)}[“"]?\\s*→`, 'iu').test(de);
   for (const w of new Set(cueWords)) {
     const german = pos.has(w.toLowerCase()) || /[äöüß]/i.test(w);
-    if (german && w.length >= 3 && !hasWord(de, w)) out.push(blocker(doc, `${path}.promptDe`, `promptEn names „${w}", promptDe does not — the German prompt must carry the cue`, id));
+    if (german && w.length >= 3 && !cued(w)) out.push(blocker(doc, `${path}.promptDe`, `promptEn names „${w}" as the cue, promptDe does not („(${w})") — the German prompt must carry the cue`, id));
   }
   if (/\b(?:as an? (?:ordinal )?word|in words|written out|spell(?:ed)? out)\b/i.test(en) && !WORD_CUE_RE.test(de)) out.push(blocker(doc, `${path}.promptDe`, 'promptEn asks for a word, promptDe does not („in Wörtern", „als Wort")', id));
   const starts = en.match(/\bstarts? with ["„“']?(\p{L}+)/iu);
