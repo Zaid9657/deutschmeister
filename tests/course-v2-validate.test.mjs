@@ -1021,15 +1021,16 @@ describe('GRM-04: forms a licensed spine point lists are licensed (orchestrator:
     ] }, 'fixture:grammar-spine.json');
     addDetectors(ctx, [det('det.praeteritum-vollverb')], 'detectors.json');
     const [level, nr] = [unitId.slice(0, 4), Number(unitId.slice(-2))];
-    const doc = addDoc(ctx, 'unit', { $schema: 'course-v2/unit@1', id: unitId, level, nr, stage: 'T', spec: { grammar: { new: [], chunk: [], review: [] } }, steps: [{ id: `${unitId}-ls1`, kind: 'situation', input: { kind: 'dialog', lines: [{ id: `${unitId}-ls1-l01`, speaker: 'cast.priya', de: 'Gestern kam Tomasz spät, und er sagte nichts.' }] } }] }, `fixture:${level}/units/u${String(nr).padStart(2, '0')}.json`, { target: true });
+    const line = 'Gestern kam Tomasz spät, und er sagte nichts.';
+    const doc = addDoc(ctx, 'unit', { $schema: 'course-v2/unit@1', id: unitId, level, nr, stage: 'T', spec: { grammar: { new: [], chunk: [], review: [] } }, steps: [{ id: `${unitId}-ls1`, kind: 'situation', modelSentence: line, input: { kind: 'dialog', lines: [{ id: `${unitId}-ls1-l01`, speaker: 'cast.priya', de: line }] } }] }, `fixture:${level}/units/u${String(nr).padStart(2, '0')}.json`, { target: true });
     return { ctx, docs: [doc], levels: [ctx.levels.get(level)] };
   };
-  test('pass: „kam", „sagte" at a2.2-u02 (after g.praeteritum-kernverben)', async () => assertPass(await rule('GRM-04', build('a2.2-u02'))));
+  test('pass: „kam", „sagte" in an input and a model sentence at a2.2-u02 (after g.praeteritum-kernverben)', async () => assertPass(await rule('GRM-04', build('a2.2-u02'))));
   test('fail: the same line at a2.1-u07 (receptive Präteritum only from a2.1-u11)', async () => assertFail(await rule('GRM-04', build('a2.1-u07')), /kam/));
-  test('a form outside the point\'s list still blocks at a2.2-u02 („ging")', async () => {
+  test('a form outside the point\'s list still blocks production at a2.2-u02 („ging", productive from b1.1-u01)', async () => {
     const b = build('a2.2-u02');
-    b.docs[0].data.steps[0].input.lines[0].de = 'Gestern ging Tomasz früh.';
-    assertFail(await rule('GRM-04', { ...b, ctx: b.ctx }), /ging/);
+    b.docs[0].data.steps[0].modelSentence = 'Gestern ging Tomasz früh.';
+    assertFail(await rule('GRM-04', b), /modelSentence.*ging/);
   });
 });
 

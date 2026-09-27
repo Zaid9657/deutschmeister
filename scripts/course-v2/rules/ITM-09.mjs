@@ -13,7 +13,7 @@
 import { walkItems } from '../lib-validate/walk.mjs';
 import { tokens } from '../lib-validate/text.mjs';
 import { compiledItem, arr, isObj, blocker } from '../lib-validate/helpers.mjs';
-import { missingOrders } from '../lib-validate/orders.mjs';
+import { missingOrders, fixesFirstTile } from '../lib-validate/orders.mjs';
 
 export const id = 'ITM-09';
 export const title = 'Sentence building: every order accepted, every accepted order built from the tiles';
@@ -52,7 +52,7 @@ export function run({ docs }) {
       if (owed.length) {
         findings.push(blocker(doc, `${path}.accepted`, `order(s) the tiles build and German allows, not accepted: ${owed.slice(0, 4).map((o) => `„${o.order}" (${o.why})`).join('; ')}${owed.length > 4 ? ` … (+${owed.length - 4})` : ''} — accept them, or fix the first tile in promptDe („Beginnen Sie mit …")`, item.id));
       }
-      if (Q?.missingFrontedOrder) {
+      if (Q?.missingFrontedOrder && !fixesFirstTile(item)) {
         let missing = null;
         try {
           missing = Q.missingFrontedOrder(compiledItem(item));

@@ -113,6 +113,9 @@ function uncap(tile) {
   return ws.join(' ');
 }
 
+/** Does the prompt fix the first tile („Beginnen Sie mit „ich"."), so no Vorfeld order is owed? */
+export const fixesFirstTile = (item) => /Beginnen Sie mit|Fangen Sie mit|am Satzanfang|mit „[^“]+“ am Anfang/i.test(String(item?.promptDe || ''));
+
 /** Normalised form for comparing sentences: lower case, punctuation and quotes out. */
 export const flatOrder = (s) => lc(s).replace(/[.,!?;:„“”"»«]/g, ' ').replace(/\s+/g, ' ').trim();
 
@@ -142,7 +145,7 @@ export function missingOrders(item) {
   if (subj < 0 && kinds[0] === 'np') subj = 0;
   if (subj < 0 && kinds[2] === 'np') subj = 2;
   if (subj < 0) return [];
-  const promptFixesFirst = /Beginnen Sie mit|Fangen Sie mit|am Satzanfang|mit „[^“]+“ am Anfang/i.test(String(item.promptDe || ''));
+  const promptFixesFirst = fixesFirstTile(item);
   const out = [];
   const want = (parts, why) => {
     const s = `${cap(parts.filter(Boolean).join(' '))}${end}`;
