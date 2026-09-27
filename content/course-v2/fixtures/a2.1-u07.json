@@ -7,6 +7,7 @@
   "version": 1,
   "status": "review",
   "reviewedIn": null,
+  "stage": "T",
   "title": { "de": "Am Telefon im Job", "canDo": "Sie können Nachrichten am Telefon verstehen, notieren und weitergeben." },
 
   "spec": {
@@ -23,15 +24,16 @@
     "lanes": {
       "primary": "ga2",
       "pruefungsfokus": [
-        { "template": "ga2.h1", "length": "full", "modeDefault": "lern" },
-        { "template": "ga2.s2", "length": "full", "modeDefault": "lern" },
-        { "template": "ga2.sp1", "length": "full", "modeDefault": "lern" }
+        { "template": "ga2.h1", "length": "full", "modeDefault": "lern", "slot": "ls4" },
+        { "template": "ga2.s2", "length": "full", "modeDefault": "lern", "slot": "schreiben" },
+        { "template": "ga2.sp1", "length": "full", "modeDefault": "lern", "slot": "sprechen" }
       ],
       "spur": { "ta2": ["ta2.h1"] }
     },
     "lehrwerk": ["M A2 L9 Arbeitsleben", "M A2 L11 reflexive Verben", "S3 L4 Telefon am Arbeitsplatz", "N A2 K6 Arbeitswelten"],
     "deviation": null,
     "cast": ["cast.priya", "cast.jan-wolf", "cast.herr-brandt", "cast.frau-otto", "cast.monika-kowalski", "cast.herr-seidel", "cast.anna", "cast.emre"],
+    "fokusPlan": [{ "kind": "beruf", "title": "Pausen bei der Arbeit", "hf": "2" }],
     "source": { "w2Draft": "curriculum/a2-1.md E8" }
   },
 
@@ -105,6 +107,12 @@
           { "generator": "lex.glossMatch", "count": 1, "source": ["lx.anruf", "lx.rueckruf", "lx.mailbox", "lx.stau"] }
         ]
       },
+      "reserve": [
+        { "id": "a2.1-u07-ls1-r01", "type": "fill_blank", "role": "practice", "topic": "g.reflexiv-akk", "promptDe": "Frau Kowalski wartet. Der Techniker meldet ___ gleich bei ihr.", "promptEn": "Reflexive pronoun for er.", "answer": "sich", "accepted": ["sich"], "errorTags": ["reflexive"], "banks": ["plateau", "mehr-ueben", "repair"], "difficulty": 1, "explanation": { "de": "er meldet sich: Zu er passt sich.", "en": "With er the reflexive pronoun is sich." }, "origin": "agent" },
+        { "id": "a2.1-u07-ls1-r02", "type": "fill_blank", "role": "practice", "topic": "g.reflexiv-akk", "promptDe": "Ich verspäte ___ leider ein bisschen.", "promptEn": "Reflexive pronoun for ich.", "answer": "mich", "accepted": ["mich"], "errorTags": ["reflexive"], "banks": ["plateau", "mehr-ueben", "repair", "einstufung"], "difficulty": 1, "explanation": { "de": "ich verspäte mich: Zu ich passt mich.", "en": "With ich the reflexive pronoun is mich." }, "origin": "agent" },
+        { "id": "a2.1-u07-ls1-r03", "type": "sentence_building", "role": "practice", "topic": "g.reflexiv-akk", "promptDe": "Bilden Sie den Satz.", "promptEn": "Build the sentence.", "tiles": ["sich", "Frau Kowalski", "heute", "meldet"], "answer": "Frau Kowalski meldet sich heute.", "accepted": ["Frau Kowalski meldet sich heute.", "Heute meldet sich Frau Kowalski.", "Heute meldet Frau Kowalski sich."], "acceptedWhy": { "Heute meldet Frau Kowalski sich.": "grammatisch: sich nach dem Subjekt ist möglich, vor dem Subjekt ist häufiger" }, "errorTags": ["v2-inv", "reflexive"], "banks": ["plateau", "mehr-ueben", "repair"], "difficulty": 2, "explanation": { "de": "Das Verb meldet steht auf Position 2.", "en": "meldet stays in second position." }, "origin": "agent" },
+        { "id": "a2.1-u07-ls1-r04", "type": "multiple_choice", "role": "practice", "topic": "g.reflexiv-akk", "promptDe": "„Herr Brandt und Frau Otto melden ___ morgen.“", "promptEn": "Choose the pronoun.", "options": ["sich", "uns", "euch"], "answer": "sich", "accepted": ["sich"], "errorTags": ["reflexive"], "banks": ["plateau", "mehr-ueben"], "difficulty": 2, "explanation": { "de": "Herr Brandt und Frau Otto = sie. Zu sie passt sich.", "en": "Two people = sie, and the pronoun is sich." }, "origin": "agent" }
+      ],
       "microOutput": { "id": "a2.1-u07-ls1-mo", "bankKey": "a21-u07-mo1", "mode": "spoken", "profile": "course-micro-sp", "situationDe": "Sie stehen im Stau und kommen zu spät zur Arbeit.", "promptDe": "Sprechen Sie Ihrer Kollegin auf die Mailbox: Warum rufen Sie an? Wann sind Sie da?", "promptEn": "Leave your colleague a voicemail: why you are calling, when you will be in.", "planSeconds": 30, "seconds": [30, 40], "targets": ["g.reflexiv-akk"], "register": "du" },
       "aussprache": {
         "focus": "vokalisiertes r am Wortende: bitte – bitter",
@@ -169,6 +177,12 @@
           { "generator": "lex.glossMatch", "count": 1, "source": ["lx.sich-beeilen", "lx.sich-entschuldigen", "lx.sich-setzen", "lx.feierabend"] }
         ]
       },
+      "reserve": [
+        { "id": "a2.1-u07-ls2-r01", "type": "fill_blank", "role": "practice", "topic": "g.reflexiv-akk", "promptDe": "Jan hat ___ bei Frau Otto entschuldigt.", "promptEn": "Reflexive pronoun in the Perfekt.", "answer": "sich", "accepted": ["sich"], "errorTags": ["reflexive"], "banks": ["plateau", "mehr-ueben", "repair"], "difficulty": 2, "explanation": { "de": "Jan hat sich entschuldigt: sich steht nach hat.", "en": "Jan hat sich entschuldigt: sich follows hat." }, "origin": "agent" },
+        { "id": "a2.1-u07-ls2-r02", "type": "fill_blank", "role": "practice", "topic": "g.reflexiv-akk", "promptDe": "Du hast ___ heute verspätet.", "promptEn": "Reflexive pronoun for du.", "answer": "dich", "accepted": ["dich"], "errorTags": ["reflexive"], "banks": ["plateau", "mehr-ueben", "repair", "einstufung"], "difficulty": 2, "explanation": { "de": "du hast dich verspätet: Zu du passt dich.", "en": "With du the reflexive pronoun is dich." }, "origin": "agent" },
+        { "id": "a2.1-u07-ls2-r03", "type": "sentence_building", "role": "practice", "topic": "g.reflexiv-akk", "promptDe": "Bilden Sie den Satz.", "promptEn": "Build the sentence in the Perfekt.", "tiles": ["hat", "sich", "Frau Otto", "gesetzt"], "answer": "Frau Otto hat sich gesetzt.", "accepted": ["Frau Otto hat sich gesetzt.", "Gesetzt hat sich Frau Otto."], "acceptedWhy": { "Gesetzt hat sich Frau Otto.": "grammatisch (Partizip im Vorfeld betont), aber selten" }, "errorTags": ["perfekt-aux-participle", "reflexive"], "banks": ["plateau", "mehr-ueben", "repair"], "difficulty": 3, "explanation": { "de": "hat auf Position 2, gesetzt am Ende, sich dazwischen.", "en": "hat in second position, gesetzt at the end, sich in between." }, "origin": "agent" },
+        { "id": "a2.1-u07-ls2-r04", "type": "multiple_choice", "role": "practice", "topic": "g.reflexiv-akk", "promptDe": "Jan und Priya, ihr kommt zu spät! ___ euch!", "promptEn": "Choose the verb form.", "options": ["Beeilt", "Beeil", "Beeilen"], "answer": "Beeilt", "accepted": ["Beeilt"], "banks": ["plateau", "mehr-ueben"], "difficulty": 2, "explanation": { "de": "Imperativ mit ihr: Beeilt euch!", "en": "The ihr imperative: Beeilt euch!" }, "origin": "agent" }
+      ],
       "microOutput": { "id": "a2.1-u07-ls2-mo", "bankKey": "a21-u07-mo2", "mode": "written", "profile": "course-micro", "situationDe": "Sie sind zu spät zum Deutschkurs gekommen.", "promptDe": "Schreiben Sie Ihrer Lehrerin 1–3 Sätze: Entschuldigen Sie sich. Nennen Sie einen Grund.", "promptEn": "Write a short apology to your teacher with a reason.", "planSeconds": 30, "words": [8, 30], "targets": ["g.reflexiv-akk"], "register": "Sie" },
       "endLine": "Sie können sich jetzt entschuldigen, wenn Sie zu spät kommen."
     },
@@ -228,6 +242,12 @@
           { "generator": "lex.glossMatch", "count": 1, "source": ["lx.buchhaltung", "lx.leitung", "lx.durchwahl", "lx.empfang"] }
         ]
       },
+      "reserve": [
+        { "id": "a2.1-u07-ls3-r01", "type": "fill_blank", "role": "practice", "topic": "g.reflexiv-akk", "promptDe": "Wenn Frau Otto ___ meldet, verbinde ich sie mit Ihnen.", "promptEn": "Reflexive pronoun in the wenn-clause.", "answer": "sich", "accepted": ["sich"], "errorTags": ["reflexive"], "banks": ["plateau", "mehr-ueben", "repair"], "difficulty": 2, "explanation": { "de": "Frau Otto meldet sich – auch im Nebensatz.", "en": "Frau Otto meldet sich – also in the wenn-clause." }, "origin": "agent" },
+        { "id": "a2.1-u07-ls3-r02", "type": "sentence_building", "role": "practice", "topic": "g.wenn", "promptDe": "Bilden Sie den Nebensatz: „Ich rufe Sie an, ___.“", "promptEn": "Build the wenn-clause.", "tiles": ["wenn", "ich", "mich", "verspäte"], "answer": "wenn ich mich verspäte", "accepted": ["wenn ich mich verspäte"], "errorTags": ["verb-final"], "banks": ["plateau", "mehr-ueben", "repair", "einstufung"], "difficulty": 3, "explanation": { "de": "wenn … Verb am Ende; mich direkt nach ich.", "en": "wenn sends the verb to the end; mich follows ich." }, "origin": "agent" },
+        { "id": "a2.1-u07-ls3-r03", "type": "fill_blank", "role": "practice", "topic": "lx.ausrichten", "promptDe": "Herr Brandt ist nicht da. Ich ___ ihm Ihre Nachricht aus.", "promptEn": "Verb form of ausrichten for ich.", "answer": "richte", "accepted": ["richte"], "banks": ["plateau", "mehr-ueben"], "difficulty": 2, "explanation": { "de": "ausrichten ist trennbar: Ich richte … aus.", "en": "ausrichten is separable: Ich richte … aus." }, "origin": "agent" },
+        { "id": "a2.1-u07-ls3-r04", "type": "multiple_choice", "role": "practice", "topic": "lx.rueckruf", "promptDe": "Herr Seidel möchte, dass Herr Brandt ihn anruft. Was steht auf der Notiz?", "promptEn": "What goes on the phone note?", "options": ["Bitte zurückrufen", "Bitte verbinden", "Bitte weiterleiten"], "answer": "Bitte zurückrufen", "accepted": ["Bitte zurückrufen"], "banks": ["plateau", "mehr-ueben"], "difficulty": 1, "explanation": { "de": "Herr Brandt soll anrufen: Er soll zurückrufen.", "en": "Mr Brandt should call back: 'zurückrufen'." }, "origin": "agent" }
+      ],
       "microOutput": { "id": "a2.1-u07-ls3-mo", "bankKey": "a21-u07-mo3", "mode": "spoken", "profile": "course-micro-sp", "situationDe": "Herr Seidel hat für Ihre Kollegin angerufen. Sie ist nicht im Büro.", "promptDe": "Sprechen Sie ihr auf die Mailbox: Worum geht es? Was soll sie tun?", "promptEn": "Leave your colleague a voicemail: what the call was about and what she should do.", "planSeconds": 30, "seconds": [30, 40], "targets": ["g.reflexiv-akk"], "register": "du" },
       "aussprache": {
         "focus": "Satzmelodie: Frage oder Aussage?",
@@ -244,23 +264,24 @@
 
     {
       "id": "a2.1-u07-ls4", "kind": "pruefung",
+      "texts": [
+        { "id": "a2.1-u07-ls4-t1", "kind": "audio", "title": "Anrufbeantworter", "lines": [{ "id": "a2.1-u07-ls4-t1-l01", "speaker": "ansage", "de": "Hier ist die Praxis Dr. Albers. Frau Nair, Ihr Termin am Donnerstag um 15 Uhr muss leider ausfallen. Können Sie am Freitag um 8.30 Uhr kommen? Bitte rufen Sie uns kurz zurück.", "en": "This is Dr Albers' practice. Ms Nair, your appointment on Thursday at 3 pm has to be cancelled. Can you come on Friday at 8:30? Please call us back.", "say": "Hier ist die Praxis Doktor Albers. Frau Nair, Ihr Termin am Donnerstag um fünfzehn Uhr muss leider ausfallen. Können Sie am Freitag um acht Uhr dreißig kommen? Bitte rufen Sie uns kurz zurück." }], "glosses": [] },
+        { "id": "a2.1-u07-ls4-t2", "kind": "audio", "title": "Radio", "lines": [{ "id": "a2.1-u07-ls4-t2-l01", "speaker": "radio", "de": "Und jetzt der Verkehr: Auf der Autobahn A 9 zwischen Leipzig und Halle gibt es nach einem Unfall zehn Kilometer Stau. Fahren Sie bitte über die A 14.", "en": "And now the traffic: on the A9 motorway between Leipzig and Halle there is a ten-kilometre jam after an accident. Please take the A14.", "say": "Und jetzt der Verkehr: Auf der Autobahn A neun zwischen Leipzig und Halle gibt es nach einem Unfall zehn Kilometer Stau. Fahren Sie bitte über die A vierzehn." }], "glosses": [{ "token": "Unfall", "gloss": { "en": "accident" } }] },
+        { "id": "a2.1-u07-ls4-t3", "kind": "audio", "title": "Durchsage in der Firma", "lines": [{ "id": "a2.1-u07-ls4-t3-l01", "speaker": "durchsage", "de": "Liebe Kolleginnen und Kollegen, heute ist die Kantine zu. Die Küche ist kaputt. Mittagessen gibt es im Konferenzraum im zweiten Stock: Suppe und Brötchen. Morgen ist die Kantine wieder offen.", "en": "Dear colleagues, the canteen is closed today. The kitchen is broken. Lunch is in the meeting room on the second floor: soup and rolls. The canteen reopens tomorrow." }], "glosses": [] },
+        { "id": "a2.1-u07-ls4-t4", "kind": "audio", "title": "Mailbox", "lines": [{ "id": "a2.1-u07-ls4-t4-l01", "speaker": "cast.anna", "de": "Hallo Priya, hier ist Anna. Das Schwimmbad ist am Samstag leider geschlossen. Wollen wir lieber ins Kino gehen? Der Film fängt um acht an. Melde dich!", "en": "Hi Priya, it's Anna. The swimming pool is closed on Saturday, unfortunately. Shall we go to the cinema instead? The film starts at eight. Let me know!" }], "glosses": [] },
+        { "id": "a2.1-u07-ls4-t5", "kind": "audio", "title": "Wetter", "lines": [{ "id": "a2.1-u07-ls4-t5-l01", "speaker": "radio", "de": "Das Wetter für morgen: Am Vormittag regnet es noch, am Nachmittag scheint dann die Sonne. Die Temperaturen liegen bei 18 Grad. Am Abend gibt es wieder Wolken.", "en": "The weather for tomorrow: rain in the morning, then sunshine in the afternoon. Temperatures around 18 degrees. Clouds return in the evening.", "say": "Das Wetter für morgen: Am Vormittag regnet es noch, am Nachmittag scheint dann die Sonne. Die Temperaturen liegen bei achtzehn Grad. Am Abend gibt es wieder Wolken." }], "glosses": [] }
+      ],
       "blocks": [
         {
           "id": "a2.1-u07-ls4-ga2-h1", "template": "ga2.h1", "lane": "ga2", "length": "full", "scaffolded": false, "modeDefault": "lern",
           "instructionsDe": "Sie hören fünf kurze Texte zweimal. Wählen Sie a, b oder c.",
-          "texts": [
-            { "id": "t1", "kind": "audio", "title": "Anrufbeantworter", "lines": [{ "id": "a2.1-u07-ls4-ga2-h1-t1-l01", "speaker": "ansage", "de": "Hier ist die Praxis Dr. Albers. Frau Nair, Ihr Termin am Donnerstag um 15 Uhr muss leider ausfallen. Können Sie am Freitag um 8.30 Uhr kommen? Bitte rufen Sie uns kurz zurück.", "en": "This is Dr Albers' practice. Ms Nair, your appointment on Thursday at 3 pm has to be cancelled. Can you come on Friday at 8:30? Please call us back.", "say": "Hier ist die Praxis Doktor Albers. Frau Nair, Ihr Termin am Donnerstag um fünfzehn Uhr muss leider ausfallen. Können Sie am Freitag um acht Uhr dreißig kommen? Bitte rufen Sie uns kurz zurück." }], "glosses": [] },
-            { "id": "t2", "kind": "audio", "title": "Radio", "lines": [{ "id": "a2.1-u07-ls4-ga2-h1-t2-l01", "speaker": "radio", "de": "Und jetzt der Verkehr: Auf der Autobahn A 9 zwischen Leipzig und Halle gibt es nach einem Unfall zehn Kilometer Stau. Fahren Sie bitte über die A 14.", "en": "And now the traffic: on the A9 motorway between Leipzig and Halle there is a ten-kilometre jam after an accident. Please take the A14.", "say": "Und jetzt der Verkehr: Auf der Autobahn A neun zwischen Leipzig und Halle gibt es nach einem Unfall zehn Kilometer Stau. Fahren Sie bitte über die A vierzehn." }], "glosses": [{ "token": "Unfall", "gloss": { "en": "accident" } }] },
-            { "id": "t3", "kind": "audio", "title": "Durchsage in der Firma", "lines": [{ "id": "a2.1-u07-ls4-ga2-h1-t3-l01", "speaker": "durchsage", "de": "Liebe Kolleginnen und Kollegen, heute ist die Kantine zu. Die Küche ist kaputt. Mittagessen gibt es im Konferenzraum im zweiten Stock: Suppe und Brötchen. Morgen ist die Kantine wieder offen.", "en": "Dear colleagues, the canteen is closed today. The kitchen is broken. Lunch is in the meeting room on the second floor: soup and rolls. The canteen reopens tomorrow." }], "glosses": [] },
-            { "id": "t4", "kind": "audio", "title": "Mailbox", "lines": [{ "id": "a2.1-u07-ls4-ga2-h1-t4-l01", "speaker": "cast.anna", "de": "Hallo Priya, hier ist Anna. Das Schwimmbad ist am Samstag leider geschlossen. Wollen wir lieber ins Kino gehen? Der Film fängt um acht an. Melde dich!", "en": "Hi Priya, it's Anna. The swimming pool is closed on Saturday, unfortunately. Shall we go to the cinema instead? The film starts at eight. Let me know!" }], "glosses": [] },
-            { "id": "t5", "kind": "audio", "title": "Wetter", "lines": [{ "id": "a2.1-u07-ls4-ga2-h1-t5-l01", "speaker": "radio", "de": "Das Wetter für morgen: Am Vormittag regnet es noch, am Nachmittag scheint dann die Sonne. Die Temperaturen liegen bei 18 Grad. Am Abend gibt es wieder Wolken.", "en": "The weather for tomorrow: rain in the morning, then sunshine in the afternoon. Temperatures around 18 degrees. Clouds return in the evening.", "say": "Das Wetter für morgen: Am Vormittag regnet es noch, am Nachmittag scheint dann die Sonne. Die Temperaturen liegen bei achtzehn Grad. Am Abend gibt es wieder Wolken." }], "glosses": [] }
-          ],
+          "textRefs": ["a2.1-u07-ls4-t1", "a2.1-u07-ls4-t2", "a2.1-u07-ls4-t3", "a2.1-u07-ls4-t4", "a2.1-u07-ls4-t5"],
           "items": [
-            { "id": "a2.1-u07-ls4-ga2-h1-01", "type": "abc", "role": "exam", "topic": "hoeren", "textRef": "t1", "promptDe": "Wann soll Frau Nair in die Praxis kommen?", "options": ["am Donnerstag um 15 Uhr", "am Freitag um 8.30 Uhr", "am Freitag um 15 Uhr"], "answer": "am Freitag um 8.30 Uhr", "accepted": ["am Freitag um 8.30 Uhr"], "exact": "number", "explanation": { "de": "Der Termin am Donnerstag fällt aus. Neu: Freitag, 8.30 Uhr.", "en": "Thursday is cancelled; the new time is Friday at 8:30." }, "origin": "agent" },
-            { "id": "a2.1-u07-ls4-ga2-h1-02", "type": "abc", "role": "exam", "topic": "hoeren", "textRef": "t2", "promptDe": "Was sollen die Autofahrer tun?", "options": ["zehn Kilometer warten", "nach Halle fahren", "die A 14 nehmen"], "answer": "die A 14 nehmen", "accepted": ["die A 14 nehmen"], "exact": "number", "explanation": { "de": "Im Radio hören Sie: Fahren Sie bitte über die A 14.", "en": "The radio says: please take the A14." }, "origin": "agent" },
-            { "id": "a2.1-u07-ls4-ga2-h1-03", "type": "abc", "role": "exam", "topic": "hoeren", "textRef": "t3", "promptDe": "Wo gibt es heute Mittagessen?", "options": ["im Konferenzraum", "in der Kantine", "im Erdgeschoss"], "answer": "im Konferenzraum", "accepted": ["im Konferenzraum"], "explanation": { "de": "Die Kantine ist zu. Mittagessen gibt es im Konferenzraum.", "en": "The canteen is closed; lunch is in the meeting room." }, "origin": "agent" },
-            { "id": "a2.1-u07-ls4-ga2-h1-04", "type": "abc", "role": "exam", "topic": "hoeren", "textRef": "t4", "promptDe": "Was möchte Anna am Samstag machen?", "options": ["schwimmen gehen", "um acht Uhr telefonieren", "ins Kino gehen"], "answer": "ins Kino gehen", "accepted": ["ins Kino gehen"], "explanation": { "de": "Das Schwimmbad ist geschlossen. Anna fragt: Wollen wir lieber ins Kino gehen?", "en": "The pool is closed, so Anna suggests the cinema." }, "origin": "agent" },
-            { "id": "a2.1-u07-ls4-ga2-h1-05", "type": "abc", "role": "exam", "topic": "hoeren", "textRef": "t5", "promptDe": "Wie wird das Wetter morgen Nachmittag?", "options": ["Es regnet.", "Es ist sonnig.", "Es ist kalt."], "answer": "Es ist sonnig.", "accepted": ["Es ist sonnig."], "explanation": { "de": "Am Nachmittag scheint die Sonne. Regen gibt es nur am Vormittag.", "en": "Rain only in the morning; sunshine in the afternoon." }, "origin": "agent" }
+            { "id": "a2.1-u07-ls4-ga2-h1-01", "type": "abc", "role": "exam", "topic": "hoeren", "textRef": "a2.1-u07-ls4-t1", "promptDe": "Wann soll Frau Nair in die Praxis kommen?", "options": ["am Donnerstag um 15 Uhr", "am Freitag um 8.30 Uhr", "am Freitag um 15 Uhr"], "answer": "am Freitag um 8.30 Uhr", "accepted": ["am Freitag um 8.30 Uhr"], "exact": "number", "explanation": { "de": "Der Termin am Donnerstag fällt aus. Neu: Freitag, 8.30 Uhr.", "en": "Thursday is cancelled; the new time is Friday at 8:30." }, "origin": "agent" },
+            { "id": "a2.1-u07-ls4-ga2-h1-02", "type": "abc", "role": "exam", "topic": "hoeren", "textRef": "a2.1-u07-ls4-t2", "promptDe": "Was sollen die Autofahrer tun?", "options": ["zehn Kilometer warten", "nach Halle fahren", "die A 14 nehmen"], "answer": "die A 14 nehmen", "accepted": ["die A 14 nehmen"], "exact": "number", "explanation": { "de": "Im Radio hören Sie: Fahren Sie bitte über die A 14.", "en": "The radio says: please take the A14." }, "origin": "agent" },
+            { "id": "a2.1-u07-ls4-ga2-h1-03", "type": "abc", "role": "exam", "topic": "hoeren", "textRef": "a2.1-u07-ls4-t3", "promptDe": "Wo gibt es heute Mittagessen?", "options": ["im Konferenzraum", "in der Kantine", "im Erdgeschoss"], "answer": "im Konferenzraum", "accepted": ["im Konferenzraum"], "explanation": { "de": "Die Kantine ist zu. Mittagessen gibt es im Konferenzraum.", "en": "The canteen is closed; lunch is in the meeting room." }, "origin": "agent" },
+            { "id": "a2.1-u07-ls4-ga2-h1-04", "type": "abc", "role": "exam", "topic": "hoeren", "textRef": "a2.1-u07-ls4-t4", "promptDe": "Was möchte Anna am Samstag machen?", "options": ["schwimmen gehen", "um acht Uhr telefonieren", "ins Kino gehen"], "answer": "ins Kino gehen", "accepted": ["ins Kino gehen"], "explanation": { "de": "Das Schwimmbad ist geschlossen. Anna fragt: Wollen wir lieber ins Kino gehen?", "en": "The pool is closed, so Anna suggests the cinema." }, "origin": "agent" },
+            { "id": "a2.1-u07-ls4-ga2-h1-05", "type": "abc", "role": "exam", "topic": "hoeren", "textRef": "a2.1-u07-ls4-t5", "promptDe": "Wie wird das Wetter morgen Nachmittag?", "options": ["Es regnet.", "Es ist sonnig.", "Es ist kalt."], "answer": "Es ist sonnig.", "accepted": ["Es ist sonnig."], "explanation": { "de": "Am Nachmittag scheint die Sonne. Regen gibt es nur am Vormittag.", "en": "Rain only in the morning; sunshine in the afternoon." }, "origin": "agent" }
           ]
         }
       ],
@@ -276,6 +297,7 @@
         "instructionsDe": "Fragen Sie mit jeder Karte. Ihre Partnerin antwortet. Dann fragt sie, Sie antworten.",
         "situationDe": "Sprechen Teil 1: Sie und Ihre Partnerin haben je vier Karten zum Thema Arbeit.",
         "cards": { "learner": ["Arbeitszeit?", "Kollegen?", "Weg zur Arbeit?", "Mittagspause?"], "partner": ["Beruf?", "Telefon?", "Feierabend?", "Überstunden?"] },
+        "turns": [8, 8],
         "moves": [],
         "aiRole": { "name": "Sofia", "personaDe": "Teilnehmerin in der Prüfung, arbeitet in einem Hotel in Leipzig, antwortet in einfachen, vollständigen Sätzen", "register": "Sie", "support": "clarify" },
         "openingLine": "Guten Tag! Wir beginnen mit Teil 1. Stellen Sie bitte Ihre erste Frage.",
@@ -314,7 +336,7 @@
 
   "check": {
     "lines": [
-      { "id": "a2.1-u07-ls7-l01", "speaker": "ansage", "de": "Hallo, hier ist Herr Winter von der Firma Lange. Bitte rufen Sie mich heute bis 16 Uhr zurück. Meine Nummer ist 0341 90 12 33.", "en": "Hello, this is Mr Winter from Lange. Please call me back today by 4 pm. My number is 0341 90 12 33.", "say": "Hallo, hier ist Herr Winter von der Firma Lange. Bitte rufen Sie mich heute bis sechzehn Uhr zurück. Meine Nummer ist null drei vier eins, neunzig, zwölf, dreiunddreißig." },
+      { "id": "a2.1-u07-ls7-l01", "speaker": "x.herr-winter", "de": "Hallo, hier ist Herr Winter von der Firma Lange. Bitte rufen Sie mich heute bis 16 Uhr zurück. Meine Nummer ist 0341 90 12 33.", "en": "Hello, this is Mr Winter from Lange. Please call me back today by 4 pm. My number is 0341 90 12 33.", "say": "Hallo, hier ist Herr Winter von der Firma Lange. Bitte rufen Sie mich heute bis sechzehn Uhr zurück. Meine Nummer ist null drei vier eins, neunzig, zwölf, dreiunddreißig." },
       { "id": "a2.1-u07-ls7-l02", "speaker": "ansage", "de": "Bitte rufen Sie mich zurück.", "en": "Please call me back." },
       { "id": "a2.1-u07-ls7-l03", "speaker": "ansage", "de": "Meine Nummer ist 0341 44 20 17.", "en": "My number is 0341 44 20 17.", "say": "Meine Nummer ist null drei vier eins, vierundvierzig, zwanzig, siebzehn." }
     ],
@@ -328,12 +350,7 @@
       { "id": "a2.1-u07-c07", "type": "dictation", "role": "check", "topic": "hoeren", "promptDe": "Hören Sie die Nummer und schreiben Sie sie auf.", "promptEn": "Write the number you hear.", "audioLineRef": "a2.1-u07-ls7-l03", "answer": "0341 44 20 17", "accepted": ["0341 44 20 17"], "exact": "number", "explanation": { "de": "0341 44 20 17 – jede Ziffer zählt.", "en": "0341 44 20 17 – every digit counts." }, "origin": "agent" },
       { "id": "a2.1-u07-c08", "type": "error_correction", "role": "check", "topic": "g.reflexiv-akk", "promptDe": "Korrigieren Sie: „Beeil dich, wir verspäten sich!“", "promptEn": "Correct the sentence.", "answer": "Beeil dich, wir verspäten uns!", "accepted": ["Beeil dich, wir verspäten uns!"], "intentionalError": true, "errorTag": "reflexive", "explanation": { "de": "Zu wir passt uns.", "en": "With wir the pronoun is uns." }, "origin": "agent" }
     ],
-    "earlier": [
-      { "ref": "a2.1-u06-ls2-p03" },
-      { "ref": "a2.1-u05-ls1-p06" },
-      { "ref": "a2.1-u04-ls2-p02" },
-      { "ref": "a2.1-u02-ls1-p05" }
-    ],
+    "earlierDraw": { "count": 4, "from": "previous-3", "pool": "reserve" },
     "proofItems": [
       { "id": "a2.1-u07-q01", "type": "multiple_choice", "role": "proof", "topic": "hoeren", "audioLineRef": "a2.1-u07-ls7-l01", "promptDe": "Hören Sie die Nachricht. Welche Notiz ist richtig?", "promptEn": "Which note is correct?", "options": ["Herr Winter – bis 16 Uhr zurückrufen – 0341 90 12 33", "Herr Lange – bis 16 Uhr zurückrufen – 0341 90 12 33", "Herr Winter – morgen zurückrufen – 0341 90 12 33"], "answer": "Herr Winter – bis 16 Uhr zurückrufen – 0341 90 12 33", "accepted": ["Herr Winter – bis 16 Uhr zurückrufen – 0341 90 12 33"], "exact": "number", "explanation": { "de": "Herr Winter ist von der Firma Lange. Er möchte heute bis 16 Uhr einen Rückruf.", "en": "Mr Winter is from the company Lange and wants a call back by 4 pm today." }, "origin": "agent" },
       { "id": "a2.1-u07-q02", "type": "fill_blank", "role": "proof", "topic": "lx.ausrichten", "promptDe": "Der Chef ist nicht da. Sie fragen den Anrufer: „Kann ich ihm etwas ___?“", "promptEn": "Offer to take a message.", "answer": "ausrichten", "accepted": ["ausrichten"], "explanation": { "de": "Kann ich ihm etwas ausrichten?", "en": "'Kann ich ihm etwas ausrichten?'" }, "origin": "agent" }
@@ -386,5 +403,10 @@
       "verification": "partial",
       "notes": "§ 4 ArbZG read at dejure.org on 2026-09-27. The JArbSchG and § 7 ArbZG exceptions were not re-read in this session (gesetze-im-internet.de returned 503, buzer.de 403) and are (unverified): a reviewer confirms both before promotion (CON-06)."
     }
-  ]
+  ],
+
+  "extras": {
+    "x.herr-winter": { "role": "Anrufer von der Firma Lange", "gender": "m", "age": 50, "voice": "de-DE-ChristophNeural", "rate": "-5%", "variety": "D" }
+  },
+  "assets": []
 }

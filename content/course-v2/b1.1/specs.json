@@ -1,0 +1,1978 @@
+[
+  {
+    "id": "b1.1-u01",
+    "nr": 1,
+    "etappe": 1,
+    "title": {
+      "de": "Lange nicht gesehen!",
+      "canDo": "Sie können in einer persönlichen E-Mail Neuigkeiten austauschen, von Erlebnissen erzählen und eine neue Person kennenlernen."
+    },
+    "spec": {
+      "situation": "Olena, Priyas erste Freundin aus dem Deutschkurs, meldet sich nach zwei Jahren aus München: Priya liest Olenas Blog, erzählt ihr per E-Mail, was sie inzwischen erlebt hat, und die beiden treffen sich in Leipzig im Café.",
+      "handlungsfeld": [
+        "D",
+        "9"
+      ],
+      "canDos": [
+        "cd.b1.neuigkeiten-austauschen",
+        "cd.b1.online-austausch",
+        "cd.b1.persoenliche-mail",
+        "cd.b1.kennenlernen-gespraech"
+      ],
+      "grammar": {
+        "new": [
+          "g.praeteritum",
+          "g.adjektiv-nomen"
+        ],
+        "chunk": [],
+        "review": [
+          "g.perfekt-haben",
+          "g.praeteritum-kernverben",
+          "g.adj-dekl-bestimmt"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Kontakte und Freundschaft",
+          "target": 11,
+          "lemmas": [
+            "lx.bekannte",
+            "lx.verwandte",
+            "lx.sich-verstehen",
+            "lx.vertraut",
+            "lx.vertrauen",
+            "lx.freundeskreis",
+            "lx.sich-anfreunden",
+            "lx.befreundet",
+            "lx.kumpel",
+            "lx.das-du-anbieten"
+          ]
+        },
+        {
+          "title": "Neuigkeiten und Erlebnisse",
+          "target": 11,
+          "lemmas": [
+            "lx.erlebnis",
+            "lx.sich-aendern",
+            "lx.aufregend",
+            "lx.berichten",
+            "lx.neulich",
+            "lx.ereignis",
+            "lx.unglaublich",
+            "lx.erfahren",
+            "lx.unvergesslich",
+            "lx.vorkommen"
+          ]
+        },
+        {
+          "title": "Online schreiben: Blog und Kommentare",
+          "target": 11,
+          "lemmas": [
+            "lx.blog",
+            "lx.uebrigens",
+            "lx.blogbeitrag",
+            "lx.kommentieren",
+            "lx.eintrag",
+            "lx.veroeffentlichen",
+            "lx.leser",
+            "lx.meinung",
+            "lx.problem",
+            "lx.abonnieren"
+          ]
+        },
+        {
+          "title": "Sich wiedersehen und verabreden",
+          "target": 11,
+          "lemmas": [
+            "lx.vorbeikommen",
+            "lx.gelegenheit",
+            "lx.zufaellig",
+            "lx.wiedersehen",
+            "lx.sich-veraendern",
+            "lx.verbringen",
+            "lx.sich-wiedersehen",
+            "lx.ausfuehrlich",
+            "lx.umarmung",
+            "lx.begruessung"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.blogbeitrag",
+        "tt.post",
+        "tt.email-informell",
+        "tt.dialog",
+        "tt.radiointerview",
+        "tt.email-antwort",
+        "tt.stichwortblatt"
+      ],
+      "lanes": {
+        "primary": "tb1",
+        "pruefungsfokus": [
+          {
+            "template": "tb1.sb1",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.hv2",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.sa",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "tb1.m1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M B1 L1 Freundschaft (Adjektive als Nomen)",
+        "M B1 L2 (Präteritum)",
+        "S5 L1 (Präteritum)",
+        "NW B1 K3 (Präteritum)",
+        "LIN B1 K4 (Präteritum)",
+        "As B1+ K1 Leute heute (Präteritum)",
+        "Si B1+ L1 In Kontakt"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.olena",
+        "cast.arjun"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b1-1.md E1"
+      }
+    }
+  },
+  {
+    "id": "b1.1-u02",
+    "nr": 2,
+    "etappe": 1,
+    "title": {
+      "de": "Neu im Team",
+      "canDo": "Sie können mit Kolleginnen und Kollegen Schichten absprechen, sich krankmelden und gemeinsam einen Plan machen."
+    },
+    "spec": {
+      "situation": "Tomasz fährt seit einem Monat Bus für einen größeren Verkehrsbetrieb in Leipzig: Er schreibt für die Mitarbeiterzeitung über seinen ersten Monat, tauscht mit seinem Kollegen Rico eine Schicht, plant mit ihm die Ferienschichten und meldet sich bei Frau Kühn krank.",
+      "handlungsfeld": [
+        "2"
+      ],
+      "canDos": [
+        "cd.b1.absprachen-kollegen",
+        "cd.b1.krankmeldung-uebergabe",
+        "cd.b1.formelle-kurznachricht",
+        "cd.b1.gemeinsam-planen"
+      ],
+      "grammar": {
+        "new": [
+          "g.n-deklination"
+        ],
+        "chunk": [],
+        "review": [
+          "g.praeteritum",
+          "g.praeteritum-modalverben"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Arbeitsalltag und Team",
+          "target": 12,
+          "lemmas": [
+            "lx.praktikant",
+            "lx.einarbeitung",
+            "lx.kollegial",
+            "lx.selbststaendig",
+            "lx.verkehrsbetrieb",
+            "lx.mitarbeiterzeitung",
+            "lx.ansprechpartner",
+            "lx.dienst",
+            "lx.sich-einarbeiten",
+            "lx.belegschaft"
+          ]
+        },
+        {
+          "title": "Schichten, Urlaub und Vertretung",
+          "target": 12,
+          "lemmas": [
+            "lx.schichtplan",
+            "lx.tauschen",
+            "lx.einspringen",
+            "lx.schichtarbeit",
+            "lx.nachtschicht",
+            "lx.schichtwechsel",
+            "lx.freinehmen",
+            "lx.absprechen",
+            "lx.vertretung",
+            "lx.brueckentag"
+          ]
+        },
+        {
+          "title": "Krankmeldung und Übergabe",
+          "target": 11,
+          "lemmas": [
+            "lx.krankmeldung",
+            "lx.krankgeschrieben",
+            "lx.benachrichtigen",
+            "lx.leitung-2",
+            "lx.arbeitsunfaehigkeitsbescheinigung",
+            "lx.bescheid-geben",
+            "lx.rueckkehr",
+            "lx.uebergabe",
+            "lx.vertreten",
+            "lx.genesung"
+          ]
+        },
+        {
+          "title": "Im Betrieb: Durchsagen und Nachrichten",
+          "target": 11,
+          "lemmas": [
+            "lx.betriebsrat",
+            "lx.mitteilung",
+            "lx.betriebsversammlung",
+            "lx.intranet",
+            "lx.verzeichnis",
+            "lx.gelten",
+            "lx.regelung",
+            "lx.das-schwarze-brett",
+            "lx.leitstelle",
+            "lx.ansage"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.zeitungsartikel",
+        "tt.bericht",
+        "tt.informationstafel",
+        "tt.mailbox",
+        "tt.kurzansage",
+        "tt.durchsage",
+        "tt.terminkalender",
+        "tt.email-halbformell-b",
+        "tt.email-antwort",
+        "tt.stichwortblatt",
+        "tt.planungsblatt"
+      ],
+      "lanes": {
+        "primary": "tb1",
+        "pruefungsfokus": [
+          {
+            "template": "tb1.lv2",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.hv3",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "input",
+            "step": "b1.1-u02-ls2"
+          },
+          {
+            "template": "tb1.m1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb1.m3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M B1 L2 Beruf und Arbeit (Praktikumsbericht)",
+        "M B1 L1 (n-Deklination)",
+        "As B1+ K2 (n-Deklination)",
+        "Si B1+ L5 Berufseinstieg",
+        "N B1 K4 Arbeitswelt (snippet)",
+        "S6 L8 (n-Deklination, in B1.2)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.tomasz",
+        "cast.rico",
+        "cast.frau-kuehn"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "beruf",
+          "title": "Krank bei der Arbeit: Krankmeldung und elektronische Arbeitsunfähigkeitsbescheinigung",
+          "hf": "2"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/b1-1.md E2"
+      }
+    }
+  },
+  {
+    "id": "b1.1-u03",
+    "nr": 3,
+    "etappe": 1,
+    "title": {
+      "de": "Die Wohnung, in die ich einziehe",
+      "canDo": "Sie können einen Mietvertrag und eine Hausordnung genau verstehen, bei der Vermieterin nachfragen und einen Mangel schriftlich melden."
+    },
+    "spec": {
+      "situation": "Emre und Elif haben eine größere Wohnung gefunden: Sie lesen den Mietvertrag und die Hausordnung genau, fragen die Vermieterin nach Nebenkosten und Kaution, suchen in Kleinanzeigen Umzugshilfe, planen mit Priya den Umzug und melden nach der Wohnungsübergabe einen Mangel.",
+      "handlungsfeld": [
+        "12"
+      ],
+      "canDos": [
+        "cd.b1.vermieter-details-erfragen",
+        "cd.b1.mietvertrag-verstehen",
+        "cd.b1.mangel-melden",
+        "cd.b1.mail-vier-leitpunkte",
+        "cd.b1.anzeigen-gezielt"
+      ],
+      "grammar": {
+        "new": [
+          "g.relativsatz-dat-praep",
+          "g.zu-infinitiv"
+        ],
+        "chunk": [],
+        "review": [
+          "g.relativsatz-nom",
+          "g.relativsatz-akk"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Der Mietvertrag",
+          "target": 12,
+          "lemmas": [
+            "lx.eigentuemer",
+            "lx.vermieten",
+            "lx.befristet",
+            "lx.wohnflaeche",
+            "lx.haustier",
+            "lx.kuendigungsfrist",
+            "lx.vereinbarung",
+            "lx.erlaubnis",
+            "lx.mieten",
+            "lx.unbefristet"
+          ]
+        },
+        {
+          "title": "Nebenkosten und Kaution",
+          "target": 11,
+          "lemmas": [
+            "lx.nebenkostenabrechnung",
+            "lx.vorauszahlung",
+            "lx.mieterhoehung",
+            "lx.abrechnung",
+            "lx.nachzahlung",
+            "lx.pauschale",
+            "lx.heizkosten",
+            "lx.sparsam",
+            "lx.anteil",
+            "lx.betriebskosten"
+          ]
+        },
+        {
+          "title": "Umzug und Einzug",
+          "target": 12,
+          "lemmas": [
+            "lx.nachmieter",
+            "lx.untermiete",
+            "lx.umzugskarton",
+            "lx.transporter",
+            "lx.kleinanzeige",
+            "lx.umzugshilfe",
+            "lx.ummelden",
+            "lx.einzug",
+            "lx.packen",
+            "lx.umziehen"
+          ]
+        },
+        {
+          "title": "Wohnungsübergabe und Mängel",
+          "target": 11,
+          "lemmas": [
+            "lx.wohnungsuebergabe",
+            "lx.zustand",
+            "lx.ablesen",
+            "lx.abziehen",
+            "lx.mangel",
+            "lx.uebergabeprotokoll",
+            "lx.zaehlerstand",
+            "lx.kratzer",
+            "lx.fleck",
+            "lx.beseitigen"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.bedingungen",
+        "tt.regeln",
+        "tt.kleinanzeige",
+        "tt.telefonat",
+        "tt.formular",
+        "tt.email-formell",
+        "tt.email-antwort",
+        "tt.planungsblatt"
+      ],
+      "lanes": {
+        "primary": "tb1",
+        "pruefungsfokus": [
+          {
+            "template": "tb1.lv3",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.sb2",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.sa",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "tb1.m3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M B1 L3 Wohnen (Relativsätze im Dativ und mit Präposition)",
+        "S5 L2 (Relativsatz)",
+        "NW B1 K6 (Relativsatz)",
+        "As B1+ K2 Wohnwelten",
+        "Si B1+ L4 Wohnen",
+        "M B1 L7 (Infinitiv mit zu)",
+        "S5 L5 (Infinitiv mit zu)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.emre",
+        "cast.elif",
+        "cast.priya",
+        "cast.ensemble-b1-1"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daz",
+          "title": "Die Kaution: Mietkautionskonto, Bürgschaft und Rückzahlung",
+          "hf": "5"
+        },
+        {
+          "kind": "daz",
+          "title": "Nach dem Umzug: Wohnsitz anmelden mit der Wohnungsgeberbestätigung",
+          "hf": "1"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/b1-1.md E3"
+      }
+    }
+  },
+  {
+    "id": "b1.1-u04",
+    "nr": 4,
+    "etappe": 2,
+    "title": {
+      "de": "Das ist nicht in Ordnung!",
+      "canDo": "Sie können Geschäftsbedingungen verstehen und sich am Telefon und schriftlich über eine kaputte Ware beschweren."
+    },
+    "spec": {
+      "situation": "Der Staubsauger, den Priya und Arjun online bestellt haben, ist nach einer Woche kaputt, und der Shop antwortet nicht: Priya liest die Garantiebedingungen, ruft die Hotline an, erzählt einer Freundin davon und reklamiert schriftlich.",
+      "handlungsfeld": [
+        "7",
+        "C"
+      ],
+      "canDos": [
+        "cd.b1.reklamieren",
+        "cd.b1.agb-verstehen",
+        "cd.b1.beschwerde-schriftlich",
+        "cd.b1.brief-formen-erkennen"
+      ],
+      "grammar": {
+        "new": [
+          "g.obwohl"
+        ],
+        "chunk": [],
+        "review": [
+          "g.trotzdem",
+          "g.deshalb",
+          "g.weil",
+          "g.denn"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Bestellen und Liefern",
+          "target": 11,
+          "lemmas": [
+            "lx.ware",
+            "lx.bestellnummer",
+            "lx.onlineshop",
+            "lx.versandkosten",
+            "lx.zusteller",
+            "lx.haendler",
+            "lx.sendungsnummer",
+            "lx.zustellen",
+            "lx.lieferadresse",
+            "lx.zahlungsart"
+          ]
+        },
+        {
+          "title": "Garantie und Rückgabe",
+          "target": 11,
+          "lemmas": [
+            "lx.umtausch",
+            "lx.zurueckgeben",
+            "lx.kassenbon",
+            "lx.beleg",
+            "lx.erstatten",
+            "lx.rueckerstattung",
+            "lx.gewaehrleistung",
+            "lx.rueckgabe",
+            "lx.gesetzlich",
+            "lx.recht"
+          ]
+        },
+        {
+          "title": "Am Telefon mit dem Kundenservice",
+          "target": 11,
+          "lemmas": [
+            "lx.hotline",
+            "lx.kundendienst",
+            "lx.warteschleife",
+            "lx.sich-gedulden",
+            "lx.weiterhelfen",
+            "lx.ersatzgeraet",
+            "lx.fall",
+            "lx.seriennummer",
+            "lx.fehlermeldung",
+            "lx.einschicken"
+          ]
+        },
+        {
+          "title": "Sich beschweren und etwas verlangen",
+          "target": 11,
+          "lemmas": [
+            "lx.reklamation",
+            "lx.verlangen",
+            "lx.defekt",
+            "lx.fehlerhaft",
+            "lx.beschaedigt",
+            "lx.kaufpreis",
+            "lx.anspruch",
+            "lx.veraergert",
+            "lx.enttaeuschend",
+            "lx.frechheit"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.bedingungen",
+        "tt.telefonansage",
+        "tt.kurzansage",
+        "tt.telefonat",
+        "tt.email-informell",
+        "tt.email-formell",
+        "tt.email-antwort",
+        "tt.meinungsblatt"
+      ],
+      "lanes": {
+        "primary": "tb1",
+        "pruefungsfokus": [
+          {
+            "template": "tb1.sb1",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.hv3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.sa",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "tb1.m2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M B1 L4 Kundenservice (obwohl, trotzdem; Reklamation)",
+        "S5 L2 (obwohl)",
+        "NW B1 K1 (obwohl)",
+        "N B1 K2 (Clip reklamieren und umtauschen)",
+        "LIN B1 K3–4 (obwohl)",
+        "As B1+ K8 Kaufen, kaufen, kaufen"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.ensemble-b1-4",
+        "cast.ensemble-b1-1"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daz",
+          "title": "Gewährleistung oder Garantie? Und wie die Verbraucherzentrale hilft",
+          "hf": "7"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/b1-1.md E4"
+      }
+    }
+  },
+  {
+    "id": "b1.1-u05",
+    "nr": 5,
+    "etappe": 2,
+    "title": {
+      "de": "Wie werden wir morgen leben?",
+      "canDo": "Sie können kurzen Beiträgen im Radio das Wichtigste entnehmen, über Medien sprechen und sagen, was Sie für die Zukunft erwarten."
+    },
+    "spec": {
+      "situation": "In der Zeitung und im Radio geht es um Technik im Alltag von morgen: Emre und Priya lesen kurze Meldungen, hören eine Straßenumfrage zu Robotern im Haushalt und sprechen darüber, welche Medien sie nutzen und was sich in Zukunft wohl ändern wird.",
+      "handlungsfeld": [
+        "9",
+        "B"
+      ],
+      "canDos": [
+        "cd.b1.radio-kurzbeitraege",
+        "cd.b1.plaene-vermutungen",
+        "cd.b1.medienerfahrungen"
+      ],
+      "grammar": {
+        "new": [
+          "g.futur1",
+          "g.vermutung-modalwoerter"
+        ],
+        "chunk": [],
+        "review": [
+          "g.werden-vollverb",
+          "g.dass"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Technik im Alltag",
+          "target": 12,
+          "lemmas": [
+            "lx.technik",
+            "lx.roboter",
+            "lx.steuern",
+            "lx.digital",
+            "lx.ersetzen",
+            "lx.erleichterung",
+            "lx.automatisch",
+            "lx.vernetzt",
+            "lx.selbstfahrend",
+            "lx.programmieren"
+          ]
+        },
+        {
+          "title": "Nachrichten und Medien",
+          "target": 11,
+          "lemmas": [
+            "lx.sendung",
+            "lx.bericht",
+            "lx.umfrage",
+            "lx.ueberschrift",
+            "lx.strassenumfrage",
+            "lx.medien",
+            "lx.sender",
+            "lx.presse",
+            "lx.kurzmeldung",
+            "lx.journalist"
+          ]
+        },
+        {
+          "title": "Zukunft und Vermutungen",
+          "target": 12,
+          "lemmas": [
+            "lx.vorhersagen",
+            "lx.vermuten",
+            "lx.vermutlich",
+            "lx.wahrscheinlich",
+            "lx.sich-entwickeln",
+            "lx.entwicklung",
+            "lx.prognose",
+            "lx.vermutung",
+            "lx.wohl",
+            "lx.jahrzehnt"
+          ]
+        },
+        {
+          "title": "Meinungen äußern",
+          "target": 11,
+          "lemmas": [
+            "lx.fortschritt",
+            "lx.erfindung",
+            "lx.erfinden",
+            "lx.forschung",
+            "lx.kuenstliche-intelligenz",
+            "lx.aeussern",
+            "lx.ansicht",
+            "lx.skeptisch",
+            "lx.risiko",
+            "lx.kritisch"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.kurzmeldung",
+        "tt.zeitungsartikel",
+        "tt.radiomeldung",
+        "tt.umfrage",
+        "tt.leserkommentar",
+        "tt.forumsbeitrag",
+        "tt.email-antwort",
+        "tt.meinungsblatt"
+      ],
+      "lanes": {
+        "primary": "tb1",
+        "pruefungsfokus": [
+          {
+            "template": "tb1.lv1",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.hv1",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "input",
+            "step": "b1.1-u05-ls2"
+          },
+          {
+            "template": "tb1.sa",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "tb1.m2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M B1 L5 Zukunft (Futur I)",
+        "NW B1 K6 (Futur I)",
+        "LIN B1 K5 (Futur I)",
+        "As B1+ K6 (Futur I)",
+        "N B1 K6 Blick nach vorn (snippet)",
+        "S6 L11 (Futur I, in B1.2)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.emre",
+        "cast.priya",
+        "cast.ensemble-b1-2",
+        "cast.ensemble-b1-3",
+        "cast.ensemble-b1-5",
+        "cast.ensemble-b1-6"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daf",
+          "title": "Nachrichten in D-A-CH: öffentlich-rechtliche Sender und Nachrichten in einfacher Sprache",
+          "hf": "9"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/b1-1.md E5"
+      }
+    }
+  },
+  {
+    "id": "b1.1-u06",
+    "nr": 6,
+    "etappe": 2,
+    "title": {
+      "de": "Kino, Konzert oder Kabarett?",
+      "canDo": "Sie können einer Rede auf einem Fest die wichtigen Informationen entnehmen, von einem Film erzählen und sagen, wenn Sie enttäuscht sind."
+    },
+    "spec": {
+      "situation": "In Leipzig ist Stadtfest: Priya und Lina lesen Veranstaltungstipps und eine Filmkritik, hören die Eröffnungsrede, lernen am Nachbartisch neue Leute kennen und planen den Abend – auch für den Fall, dass das Konzert ausverkauft ist.",
+      "handlungsfeld": [
+        "D",
+        "B"
+      ],
+      "canDos": [
+        "cd.b1.film-buch-wiedergeben",
+        "cd.b1.rede-publikum",
+        "cd.b1.enttaeuschung"
+      ],
+      "grammar": {
+        "new": [
+          "g.falls"
+        ],
+        "chunk": [],
+        "review": [
+          "g.wenn",
+          "g.adj-dekl-bestimmt",
+          "g.adj-dekl-unbestimmt",
+          "g.komparation-attributiv"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Kultur und Veranstaltungen",
+          "target": 11,
+          "lemmas": [
+            "lx.kabarett",
+            "lx.buehne",
+            "lx.auftritt",
+            "lx.auftreten",
+            "lx.publikum",
+            "lx.eroeffnung",
+            "lx.kuenstler",
+            "lx.festival",
+            "lx.veranstalten",
+            "lx.veranstaltungstipp"
+          ]
+        },
+        {
+          "title": "Film und Kritik",
+          "target": 11,
+          "lemmas": [
+            "lx.handlung",
+            "lx.szene",
+            "lx.rolle",
+            "lx.schauspieler",
+            "lx.regisseur",
+            "lx.kritik",
+            "lx.filmkritik",
+            "lx.hauptrolle",
+            "lx.krimi",
+            "lx.komoedie"
+          ]
+        },
+        {
+          "title": "Ausgehen und Tickets",
+          "target": 11,
+          "lemmas": [
+            "lx.ausverkauft",
+            "lx.falls",
+            "lx.vorstellung",
+            "lx.auffuehrung",
+            "lx.abendkasse",
+            "lx.vorverkauf",
+            "lx.warteliste",
+            "lx.reihe",
+            "lx.einlass",
+            "lx.stattdessen"
+          ]
+        },
+        {
+          "title": "Gefühle: Freude und Enttäuschung",
+          "target": 11,
+          "lemmas": [
+            "lx.spannend",
+            "lx.witzig",
+            "lx.unterhaltsam",
+            "lx.beeindruckend",
+            "lx.humor",
+            "lx.begeistert",
+            "lx.begeisterung",
+            "lx.sich-amuesieren",
+            "lx.gelangweilt",
+            "lx.mitreissend"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.programm",
+        "tt.kleinanzeige",
+        "tt.kritik",
+        "tt.vortrag",
+        "tt.dialog",
+        "tt.email-informell",
+        "tt.email-antwort",
+        "tt.stichwortblatt"
+      ],
+      "lanes": {
+        "primary": "tb1",
+        "pruefungsfokus": [
+          {
+            "template": "tb1.lv3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.sb1",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.sa",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "tb1.m1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M B1 L6 Einladungen (falls)",
+        "As B1+ K4 Viel Spaß!",
+        "Si B1+ L6 Musik",
+        "N B1 K9 Kunststücke (snippet)",
+        "M A2 L4–5 (Adjektivdeklination, Wiederholung)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.lina",
+        "cast.tomasz",
+        "cast.ensemble-b1-5"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b1-1.md E6"
+      }
+    }
+  },
+  {
+    "id": "b1.1-u07",
+    "nr": 7,
+    "etappe": 3,
+    "title": {
+      "de": "Was fehlt Ihnen genau?",
+      "canDo": "Sie können beim Arzt Ihre Beschwerden erklären, einen Beipackzettel verstehen und einer Person, der es nicht gut geht, einen Rat geben."
+    },
+    "spec": {
+      "situation": "Nach einer Grippe geht Tomasz zu seiner Hausärztin Frau Doktor Sommer und versteht den Beipackzettel seines Medikaments; danach plant er mit Amal, wie sie einer kranken Nachbarin helfen, und schreibt der Praxis wegen eines Termins.",
+      "handlungsfeld": [
+        "8"
+      ],
+      "canDos": [
+        "cd.b1.beim-arzt-erklaeren",
+        "cd.b1.beipackzettel",
+        "cd.b1.rat-geben",
+        "cd.b1.wortwahl-brief"
+      ],
+      "grammar": {
+        "new": [],
+        "chunk": [],
+        "review": [
+          "g.zu-infinitiv",
+          "g.passiv-praesens",
+          "g.konj2-sollte",
+          "g.konj2-waere-haette-wuerde"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Beschwerden und Krankheit",
+          "target": 12,
+          "lemmas": [
+            "lx.beschwerden",
+            "lx.symptom",
+            "lx.entzuendung",
+            "lx.ursache",
+            "lx.infektion",
+            "lx.sich-anstecken",
+            "lx.gliederschmerzen",
+            "lx.diagnose",
+            "lx.schuettelfrost",
+            "lx.sich-uebergeben"
+          ]
+        },
+        {
+          "title": "Medikamente und Beipackzettel",
+          "target": 11,
+          "lemmas": [
+            "lx.beipackzettel",
+            "lx.dosierung",
+            "lx.einnahme",
+            "lx.wirkung",
+            "lx.wirken",
+            "lx.packungsbeilage",
+            "lx.wechselwirkung",
+            "lx.arzneimittel",
+            "lx.antibiotikum",
+            "lx.packung"
+          ]
+        },
+        {
+          "title": "In der Praxis und in der Apotheke",
+          "target": 11,
+          "lemmas": [
+            "lx.notdienst",
+            "lx.rezeptfrei",
+            "lx.gesundheitskarte",
+            "lx.verschreibungspflichtig",
+            "lx.apotheker",
+            "lx.wartezeit",
+            "lx.pflaster",
+            "lx.ueberweisung-2",
+            "lx.untersuchung",
+            "lx.bereitschaftsdienst"
+          ]
+        },
+        {
+          "title": "Gesund leben",
+          "target": 11,
+          "lemmas": [
+            "lx.sich-erholen",
+            "lx.vorbeugen",
+            "lx.schaedlich",
+            "lx.vortrag",
+            "lx.folie",
+            "lx.immunsystem",
+            "lx.abwehrkraefte",
+            "lx.vitamin",
+            "lx.erholung",
+            "lx.staerken"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.anleitung",
+        "tt.broschuere",
+        "tt.zeitungsartikel",
+        "tt.dialog",
+        "tt.vortrag",
+        "tt.email-formell",
+        "tt.email-antwort",
+        "tt.planungsblatt"
+      ],
+      "lanes": {
+        "primary": "tb1",
+        "pruefungsfokus": [
+          {
+            "template": "tb1.lv2",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.sb2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.sa",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "tb1.m3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M B1 L9 Gesundheit (Präsentation halten)",
+        "M B1 L7 (Infinitiv mit zu)",
+        "S5 L5 (Infinitiv mit zu)",
+        "NW B1 K1 (Infinitiv mit zu)",
+        "As B1+ K3 Wie geht's denn so?",
+        "N B1 K8 Rund um Körper und Geist (snippet)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.tomasz",
+        "cast.dr-sommer",
+        "cast.amal",
+        "cast.ensemble-b1-3"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daz",
+          "title": "Hausarztpraxis, Apotheke und ärztlicher Bereitschaftsdienst 116 117",
+          "hf": "8"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/b1-1.md E7"
+      }
+    }
+  },
+  {
+    "id": "b1.1-u08",
+    "nr": 8,
+    "etappe": 3,
+    "title": {
+      "de": "Weiterkommen: Kurse und Ziele",
+      "canDo": "Sie können sich zu einer Weiterbildung beraten lassen, Ihre Lernziele erklären und schriftlich nach einem Kurs fragen."
+    },
+    "spec": {
+      "situation": "Tomasz möchte sich zum Verkehrsmeister weiterbilden und Priya ihr Deutsch für den Beruf verbessern: Sie lesen das Kursprogramm der Volkshochschule und einen Artikel über Lernen im Beruf, lassen sich beraten, lernen beim Infoabend den Kursleiter Herrn Vogel und andere Teilnehmende kennen und schreiben eine Anfrage.",
+      "handlungsfeld": [
+        "4",
+        "2",
+        "11",
+        "E"
+      ],
+      "canDos": [
+        "cd.b1.beratung-gespraech",
+        "cd.b1.kursanfrage-schreiben",
+        "cd.b1.lernziele-beschreiben",
+        "cd.b1.gefuehle-lernen",
+        "cd.b1.artikel-details"
+      ],
+      "grammar": {
+        "new": [
+          "g.um-zu-damit",
+          "g.da-kausal"
+        ],
+        "chunk": [],
+        "review": [
+          "g.weil",
+          "g.zu-infinitiv"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Kurse und Weiterbildung",
+          "target": 12,
+          "lemmas": [
+            "lx.fortbildung",
+            "lx.qualifikation",
+            "lx.sich-weiterbilden",
+            "lx.beruflich",
+            "lx.kursprogramm",
+            "lx.lehrgang",
+            "lx.verkehrsmeister",
+            "lx.seminar",
+            "lx.onlinekurs",
+            "lx.infoabend"
+          ]
+        },
+        {
+          "title": "Beratung und Förderung",
+          "target": 11,
+          "lemmas": [
+            "lx.foerderung",
+            "lx.foerdern",
+            "lx.umschulung",
+            "lx.gebuehr",
+            "lx.zuschuss",
+            "lx.agentur-fuer-arbeit",
+            "lx.bildungsgutschein",
+            "lx.beraten",
+            "lx.berater",
+            "lx.finanzieren"
+          ]
+        },
+        {
+          "title": "Lernziele und Lernwege",
+          "target": 12,
+          "lemmas": [
+            "lx.motivation",
+            "lx.motiviert",
+            "lx.herausforderung",
+            "lx.unsicher",
+            "lx.aufsteigen",
+            "lx.lernerfolg",
+            "lx.lebenslang",
+            "lx.karriere",
+            "lx.selbstvertrauen",
+            "lx.lernziel"
+          ]
+        },
+        {
+          "title": "Anfragen und Anmelden",
+          "target": 11,
+          "lemmas": [
+            "lx.teilnahme",
+            "lx.nachweis",
+            "lx.erforderlich",
+            "lx.anerkennen",
+            "lx.vorkenntnisse",
+            "lx.anfrage",
+            "lx.niveau",
+            "lx.kursbeginn",
+            "lx.belegen",
+            "lx.anmeldefrist"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.programm",
+        "tt.zeitungsartikel",
+        "tt.radiointerview",
+        "tt.dialog",
+        "tt.email-halbformell-b",
+        "tt.email-antwort",
+        "tt.stichwortblatt"
+      ],
+      "lanes": {
+        "primary": "tb1",
+        "pruefungsfokus": [
+          {
+            "template": "tb1.lv2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "input",
+            "step": "b1.1-u08-ls1"
+          },
+          {
+            "template": "tb1.hv2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.sa",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "tb1.m1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M B1 L7 Beratung",
+        "M B1 L8 Berufsfindung (da)",
+        "S5 L6 (um … zu, damit)",
+        "LIN B1 K6 (um … zu)",
+        "As B1+ K5 Alles will gelernt sein",
+        "Si B1+ L8 Lebenslang lernen"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.tomasz",
+        "cast.priya",
+        "cast.herr-vogel",
+        "cast.frau-kuehn",
+        "cast.ensemble-b1-3"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "beruf",
+          "title": "Berufsabschluss aus dem Ausland: Anerkennung und Beratung",
+          "hf": "3"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/b1-1.md E8"
+      }
+    }
+  },
+  {
+    "id": "b1.1-u09",
+    "nr": 9,
+    "etappe": 3,
+    "title": {
+      "de": "Neu anfangen",
+      "canDo": "Sie können von einem Wendepunkt in Ihrem Leben erzählen, Lebensgeschichten genau verstehen und ein vertrautes Thema kurz vorstellen."
+    },
+    "spec": {
+      "situation": "Für den Blog des Vereins, in dem Amal und Priya ehrenamtlich helfen, erzählen Menschen, wie sich ihr Leben verändert hat: Priya liest die Geschichten, hört ein Radiointerview über Neuanfänge, antwortet einer Freundin und spricht über einen Neuanfang – auch darüber, wie das in ihrem Herkunftsland ist.",
+      "handlungsfeld": [
+        "A",
+        "D"
+      ],
+      "canDos": [
+        "cd.b1.erfahrungen-erzaehlen",
+        "cd.b1.familiengeschichte",
+        "cd.b1.blog-im-detail",
+        "cd.b1.gespraech-details",
+        "cd.b1.kurz-praesentieren"
+      ],
+      "grammar": {
+        "new": [
+          "g.plusquamperfekt",
+          "g.nachdem-bevor"
+        ],
+        "chunk": [],
+        "review": [
+          "g.praeteritum",
+          "g.als-temporal",
+          "g.zeitadverbien-erzaehlen"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Lebenswege",
+          "target": 11,
+          "lemmas": [
+            "lx.neuanfang",
+            "lx.schritt",
+            "lx.zurueckblicken",
+            "lx.ploetzlich",
+            "lx.lebensweg",
+            "lx.biografie",
+            "lx.abschnitt",
+            "lx.lebensgeschichte",
+            "lx.arbeitssuche",
+            "lx.einwandern"
+          ]
+        },
+        {
+          "title": "Wendepunkte und Entscheidungen",
+          "target": 11,
+          "lemmas": [
+            "lx.wendepunkt",
+            "lx.sich-entscheiden",
+            "lx.zufall",
+            "lx.aufgeben",
+            "lx.nachdem",
+            "lx.bevor",
+            "lx.arbeitslosigkeit",
+            "lx.entschluss",
+            "lx.zoegern",
+            "lx.ueberlegen"
+          ]
+        },
+        {
+          "title": "Familie und Herkunft",
+          "target": 11,
+          "lemmas": [
+            "lx.schicksal",
+            "lx.sich-zurechtfinden",
+            "lx.herkunftsland",
+            "lx.grossfamilie",
+            "lx.verwandtschaft",
+            "lx.fluechtling",
+            "lx.sehnsucht",
+            "lx.wurzel",
+            "lx.zurueckkehren",
+            "lx.fremde"
+          ]
+        },
+        {
+          "title": "Gefühle beim Neuanfang",
+          "target": 11,
+          "lemmas": [
+            "lx.mut",
+            "lx.mutig",
+            "lx.wagen-2",
+            "lx.sich-trauen",
+            "lx.gelingen",
+            "lx.unsicherheit",
+            "lx.einsam",
+            "lx.einsamkeit",
+            "lx.zweifel",
+            "lx.zuversicht"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.blogbeitrag",
+        "tt.erzaehltext",
+        "tt.email-informell",
+        "tt.radiointerview",
+        "tt.email-antwort",
+        "tt.meinungsblatt"
+      ],
+      "lanes": {
+        "primary": "tb1",
+        "pruefungsfokus": [
+          {
+            "template": "tb1.sb1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.hv2",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.sa",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "tb1.m2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M B1 L11 Glücksmomente (Plusquamperfekt, nachdem)",
+        "S5 L1 (Plusquamperfekt, nachdem)",
+        "NW B1 K7 (Plusquamperfekt)",
+        "LIN B1 K12 (Plusquamperfekt)",
+        "As B1+ K7 Für immer und ewig",
+        "N B1 K3 Veränderungen (snippet)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.amal",
+        "cast.samir",
+        "cast.herr-jung",
+        "cast.lina",
+        "cast.ensemble-b1-2"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b1-1.md E9"
+      }
+    }
+  },
+  {
+    "id": "b1.1-u10",
+    "nr": 10,
+    "etappe": 4,
+    "title": {
+      "de": "Vier Tage arbeiten, drei Tage frei?",
+      "canDo": "Sie können in Kommentaren erkennen, wer wofür ist, Ihre Meinung begründen und mit anderen darüber diskutieren."
+    },
+    "spec": {
+      "situation": "Bei Brandt Elektrotechnik diskutiert das Team über eine Vier-Tage-Woche: Priya liest die Kommentare in einem Online-Forum und ein Rundschreiben der Geschäftsleitung, hört eine Straßenumfrage und bringt ihre eigene Meinung ein.",
+      "handlungsfeld": [
+        "2",
+        "B"
+      ],
+      "canDos": [
+        "cd.b1.meinungen-austauschen",
+        "cd.b1.kommentare-haltung",
+        "cd.b1.meinung-forum"
+      ],
+      "grammar": {
+        "new": [
+          "g.konj2-irreal-gegenwart"
+        ],
+        "chunk": [],
+        "review": [
+          "g.dass",
+          "g.konj2-waere-haette-wuerde",
+          "g.praepositionaladverb"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Arbeitszeit und Arbeitsmodelle",
+          "target": 12,
+          "lemmas": [
+            "lx.gleitzeit",
+            "lx.homeoffice",
+            "lx.arbeitsbedingungen",
+            "lx.einfuehrung",
+            "lx.unternehmer",
+            "lx.vier-tage-woche",
+            "lx.arbeitsmodell",
+            "lx.wochenarbeitszeit",
+            "lx.geschaeftsleitung",
+            "lx.rundschreiben"
+          ]
+        },
+        {
+          "title": "Vor- und Nachteile",
+          "target": 11,
+          "lemmas": [
+            "lx.nachteil",
+            "lx.belastung",
+            "lx.leistung",
+            "lx.sich-lohnen",
+            "lx.produktivitaet",
+            "lx.erschoepfung",
+            "lx.effizient",
+            "lx.ausgleich",
+            "lx.druck",
+            "lx.flexibilitaet"
+          ]
+        },
+        {
+          "title": "Meinungen und Argumente",
+          "target": 11,
+          "lemmas": [
+            "lx.argument",
+            "lx.standpunkt",
+            "lx.diskussion",
+            "lx.zustimmen",
+            "lx.halten-2",
+            "lx.gewerkschaft",
+            "lx.einerseits-andererseits",
+            "lx.abstimmung",
+            "lx.argumentieren",
+            "lx.gegenargument"
+          ]
+        },
+        {
+          "title": "Freizeit und Familie",
+          "target": 11,
+          "lemmas": [
+            "lx.gerecht",
+            "lx.ausgeglichen",
+            "lx.sinnvoll",
+            "lx.forum",
+            "lx.work-life-balance",
+            "lx.kinderbetreuung",
+            "lx.privatleben",
+            "lx.vereinbarkeit",
+            "lx.verkuerzen",
+            "lx.unbezahlt"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.leserkommentar",
+        "tt.forumsbeitrag",
+        "tt.diskussion",
+        "tt.umfrage",
+        "tt.rundschreiben",
+        "tt.email-formell",
+        "tt.email-antwort",
+        "tt.meinungsblatt"
+      ],
+      "lanes": {
+        "primary": "tb1",
+        "pruefungsfokus": [
+          {
+            "template": "tb1.hv1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.sb2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.sa",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "tb1.m2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "S5 L4 (Konjunktiv II: irreale Bedingung)",
+        "NW B1 K4 (Konjunktiv II)",
+        "Si B1+ L5 (Konjunktiv II: irreale Bedingung)",
+        "LIN B1 K9 (Konjunktiv II)",
+        "N B1 K4 Arbeitswelt (snippet)",
+        "M B1 L18 (Meinung mit dass-Satz)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.jan-wolf",
+        "cast.frau-otto",
+        "cast.herr-brandt",
+        "cast.emre",
+        "cast.ensemble-b1-1",
+        "cast.ensemble-b1-2",
+        "cast.ensemble-b1-5"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "beruf",
+          "title": "Teilzeit, Gleitzeit, Vier-Tage-Woche: Arbeitszeitmodelle in D-A-CH",
+          "hf": "2"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/b1-1.md E10"
+      }
+    }
+  },
+  {
+    "id": "b1.1-u11",
+    "nr": 11,
+    "etappe": 4,
+    "title": {
+      "de": "Im Namen des ganzen Teams",
+      "canDo": "Sie können kurze Meldungen schnell verstehen, eine Feier mit anderen organisieren, eine Person vorstellen und Ihr Beileid ausdrücken."
+    },
+    "spec": {
+      "situation": "Frau Schubert geht nach dreißig Jahren im Lager von Brandt Elektrotechnik in den Ruhestand, und Jan hat einen Trauerfall in der Familie: Priya liest die Meldungen der Firmenzeitung, plant mit Kolleginnen und Kollegen die Abschiedsfeier, stellt Frau Schubert in einem kurzen Text vor und schreibt Jan eine Karte.",
+      "handlungsfeld": [
+        "2",
+        "D",
+        "B"
+      ],
+      "canDos": [
+        "cd.b1.beileid",
+        "cd.b1.aufgaben-verteilen",
+        "cd.b1.kurzmeldungen-thema",
+        "cd.b1.person-portraetieren"
+      ],
+      "grammar": {
+        "new": [
+          "g.genitiv"
+        ],
+        "chunk": [],
+        "review": [
+          "g.praep-dativ"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Feste im Betrieb",
+          "target": 11,
+          "lemmas": [
+            "lx.ruhestand",
+            "lx.tradition",
+            "lx.verabschieden",
+            "lx.abschiedsfeier",
+            "lx.firmenzeitung",
+            "lx.lager",
+            "lx.buffet",
+            "lx.feierlich",
+            "lx.planung",
+            "lx.abschiedsgeschenk"
+          ]
+        },
+        {
+          "title": "Glückwünsche und Dank",
+          "target": 11,
+          "lemmas": [
+            "lx.ansprache",
+            "lx.dank",
+            "lx.glueckwunschkarte",
+            "lx.langjaehrig",
+            "lx.geruehrt",
+            "lx.zusammenarbeit",
+            "lx.einsatz",
+            "lx.unterstuetzung",
+            "lx.im-namen-von",
+            "lx.ueberreichen"
+          ]
+        },
+        {
+          "title": "Trauer und Beileid",
+          "target": 11,
+          "lemmas": [
+            "lx.beileid",
+            "lx.mitgefuehl",
+            "lx.trauer",
+            "lx.trauerfall",
+            "lx.verlust",
+            "lx.trauern",
+            "lx.bedauern",
+            "lx.beerdigung",
+            "lx.beileidskarte",
+            "lx.verstorben"
+          ]
+        },
+        {
+          "title": "Eine Person beschreiben",
+          "target": 11,
+          "lemmas": [
+            "lx.ehemalig",
+            "lx.enttaeuscht",
+            "lx.geduldig",
+            "lx.grosszuegig",
+            "lx.humorvoll",
+            "lx.eigenschaft",
+            "lx.charakter",
+            "lx.ehrgeizig",
+            "lx.bescheiden",
+            "lx.sorgfaeltig"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.kurzmeldung",
+        "tt.rundschreiben",
+        "tt.einladung",
+        "tt.email-formell",
+        "tt.postkarte",
+        "tt.portraet",
+        "tt.vortrag",
+        "tt.email-antwort",
+        "tt.planungsblatt"
+      ],
+      "lanes": {
+        "primary": "tb1",
+        "pruefungsfokus": [
+          {
+            "template": "tb1.lv1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "input",
+            "step": "b1.1-u11-ls1"
+          },
+          {
+            "template": "tb1.sb2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.sa",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "tb1.m3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M B1 L12 Feiern im Betrieb (Genitiv)",
+        "S5 L3 (Genitiv)",
+        "NW B1 K2 (Genitiv)",
+        "LIN B1 K3 (Genitiv)",
+        "Si B1+ L2 Feste"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.frau-schubert",
+        "cast.herr-brandt",
+        "cast.frau-otto",
+        "cast.jan-wolf",
+        "cast.nadine",
+        "cast.emre"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "beruf",
+          "title": "Jubiläum, Abschied, Kondolenz: Konventionen im Betrieb",
+          "hf": "2"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/b1-1.md E11"
+      }
+    }
+  },
+  {
+    "id": "b1.1-u12",
+    "nr": 12,
+    "etappe": 4,
+    "title": {
+      "de": "Leider fällt der Zug aus",
+      "canDo": "Sie können Durchsagen bei einer Störung verstehen, Ihre Fahrt umbuchen und die Informationen an andere weitergeben."
+    },
+    "spec": {
+      "situation": "Auf der Rückfahrt von einer Familienfeier fällt der Zug von Priya und Arjun aus: Sie verstehen die Durchsagen, erklären einer Mitreisenden, die wenig Deutsch versteht, was los ist, schicken dem Team eine Sprachnachricht zum Dienstbeginn, organisieren die Weiterfahrt und verlangen später eine Entschädigung.",
+      "handlungsfeld": [
+        "10",
+        "2"
+      ],
+      "canDos": [
+        "cd.b1.stoerung-umbuchen",
+        "cd.b1.durchsagen-stoerung",
+        "cd.b1.durchsage-weitergeben"
+      ],
+      "grammar": {
+        "new": [
+          "g.praep-genitiv"
+        ],
+        "chunk": [],
+        "review": [
+          "g.genitiv",
+          "g.weil",
+          "g.obwohl"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Bahn und Verbindungen",
+          "target": 12,
+          "lemmas": [
+            "lx.reisezentrum",
+            "lx.fernverkehr",
+            "lx.regionalbahn",
+            "lx.mitreisende",
+            "lx.abteil",
+            "lx.zugbindung",
+            "lx.familienfeier",
+            "lx.anschlusszug",
+            "lx.hauptbahnhof",
+            "lx.sitzplatz"
+          ]
+        },
+        {
+          "title": "Störungen und Durchsagen",
+          "target": 12,
+          "lemmas": [
+            "lx.stoerung",
+            "lx.panne",
+            "lx.bauarbeiten",
+            "lx.umleitung",
+            "lx.streik",
+            "lx.ankuendigen",
+            "lx.signalstoerung",
+            "lx.entfallen",
+            "lx.gesperrt",
+            "lx.zugausfall"
+          ]
+        },
+        {
+          "title": "Fahrgastrechte und Entschädigung",
+          "target": 11,
+          "lemmas": [
+            "lx.entschaedigung",
+            "lx.fahrgastrechte",
+            "lx.trotz",
+            "lx.wegen",
+            "lx.waehrend",
+            "lx.fahrgastrechteformular",
+            "lx.erstattung",
+            "lx.fahrpreis",
+            "lx.taxikosten",
+            "lx.zustehen"
+          ]
+        },
+        {
+          "title": "Informationen weitergeben",
+          "target": 11,
+          "lemmas": [
+            "lx.voruebergehend",
+            "lx.eingeschraenkt",
+            "lx.aergerlich",
+            "lx.dienstbeginn",
+            "lx.weitergeben",
+            "lx.dolmetschen",
+            "lx.sich-erkundigen",
+            "lx.betroffen",
+            "lx.erklaeren",
+            "lx.anzeigetafel"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.durchsage",
+        "tt.kurzansage",
+        "tt.kurzmeldung",
+        "tt.broschuere",
+        "tt.schild",
+        "tt.telefonat",
+        "tt.mailbox",
+        "tt.email-formell",
+        "tt.email-antwort",
+        "tt.stichwortblatt",
+        "tt.planungsblatt"
+      ],
+      "lanes": {
+        "primary": "tb1",
+        "pruefungsfokus": [
+          {
+            "template": "tb1.hv3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "input",
+            "step": "b1.1-u12-ls2"
+          },
+          {
+            "template": "tb1.lv1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.m1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb1.m3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M B1 L12 (trotz)",
+        "S5 L3 (wegen, trotz, während)",
+        "NW B1 K2 (Präpositionen mit Genitiv)",
+        "LIN B1 K3 (Präpositionen mit Genitiv)",
+        "Si B1+ L3 Unterwegs",
+        "As B1+ K9 Endlich Urlaub",
+        "N B1 K1 Gute Reise! (snippet)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.ensemble-b1-2",
+        "cast.ensemble-b1-5",
+        "cast.ensemble-b1-4",
+        "cast.jan-wolf",
+        "cast.herr-brandt"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daz",
+          "title": "Fahrgastrechte bei Verspätung und Zugausfall",
+          "hf": "10"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/b1-1.md E12"
+      }
+    }
+  }
+]

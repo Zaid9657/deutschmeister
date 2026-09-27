@@ -73,7 +73,6 @@ export const FIXTURE_STUBS = {
     lane: ['ta2'],
     template: ['ta2.h1', 'ta2.sp2'],
     unit: ['a2.1-u01', 'a2.1-u02', 'a2.1-u03', 'a2.1-u04', 'a2.1-u05', 'a2.1-u06', 'a2.1-u08', 'a2.1-u09', 'a2.1-u10', 'a2.1-u11', 'a2.1-u12'],
-    item: ['a2.1-u02-ls1-p05', 'a2.1-u04-ls2-p02', 'a2.1-u05-ls1-p06', 'a2.1-u06-ls2-p03'],
   },
 };
 
@@ -93,7 +92,7 @@ export function fixtureFiles(ex = schemaExamples()) {
     { path: 'registries/level-profiles.json', text: json({ $schema: 'course-v2/levels@1', levels: [ex.levelProfile.json] }) },
     { path: 'registries/casts/a2.json', text: `${ex.casts.text}\n` },
     { path: 'registries/a2.1/course.json', text: `${ex.course.text}\n` },
-    { path: 'registries/a2.1/lexicon.json', text: json({ $schema: 'course-v2/lexicon@1', level: 'a2.1', entries: ex.lexiconEntries.json }) },
+    { path: 'registries/a2.1/lexicon.json', text: json({ $schema: 'course-v2/lexicon@1', level: 'a2.1', entries: ex.lexiconEntries.json, promotions: [] }) },
     { path: 'registries/a2.1/rule-cards.json', text: json({ $schema: 'course-v2/rulecards@1', level: 'a2.1', cards: [ex.ruleCard.json] }) },
     { path: 'registries/stubs.json', text: json(FIXTURE_STUBS) },
   ];

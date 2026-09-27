@@ -3,7 +3,9 @@
   "id": "course-micro",
   "kind": "writing",
   "lane": null,
+  "method": "ai",
   "max": 5,
+  "examMax": 5,
   "criteria": [
     {
       "id": "task",
@@ -13,6 +15,21 @@
         2,
         1,
         0
+      ],
+      "scoredBy": "ai",
+      "descriptors": [
+        {
+          "points": 2,
+          "de": "Alles, was die Aufgabe verlangt, steht im Text."
+        },
+        {
+          "points": 1,
+          "de": "Ein Teil der Aufgabe fehlt."
+        },
+        {
+          "points": 0,
+          "de": "Der Text passt nicht zur Aufgabe."
+        }
       ]
     },
     {
@@ -22,6 +39,17 @@
       "levels": [
         1,
         0
+      ],
+      "scoredBy": "ai",
+      "descriptors": [
+        {
+          "points": 1,
+          "de": "Die Struktur der Lektion steht mindestens einmal richtig im Text."
+        },
+        {
+          "points": 0,
+          "de": "Die Struktur der Lektion fehlt oder ist falsch gebildet."
+        }
       ]
     },
     {
@@ -32,9 +60,43 @@
         2,
         1,
         0
+      ],
+      "scoredBy": "ai",
+      "descriptors": [
+        {
+          "points": 2,
+          "de": "Man versteht alles beim ersten Lesen."
+        },
+        {
+          "points": 1,
+          "de": "Man versteht das Wichtigste, muss aber manchmal raten."
+        },
+        {
+          "points": 0,
+          "de": "Man versteht die Nachricht nicht."
+        }
       ]
     }
   ],
+  "errorPolicy": {
+    "a1": {
+      "v2-inv": "flag",
+      "verb-final": "flag",
+      "case-np": "flag",
+      "gender-article": "flag"
+    },
+    "a2": {
+      "verb-final": "flag",
+      "adj-ending": "flag"
+    },
+    "b1": {
+      "v2-inv": "flag",
+      "adj-ending": "flag"
+    },
+    "b2": {
+      "adj-ending": "score"
+    }
+  },
   "zeroRules": [],
   "capRules": [],
   "spelling": "only-if-meaning-suffers",

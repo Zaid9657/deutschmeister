@@ -12,7 +12,7 @@ export const lexiconSchema = obj({
     'plural?': 'str | null',
     'plural_kind?': 'enum(regular|singular-only|plural-only)',
     'feminine?': 'str', // one entry for the pair, as Goethe counts
-    'verb_forms?': { '3sg': 'str', 'praet?': 'str', 'perfekt?': 'str' },
+    'verb_forms?': { '2sg?': 'str', '3sg': 'str', 'praet?': 'str', 'perfekt?': 'str' }, // 2sg where the stem vowel changes
     'separable?': 'bool',
     'reflexive?': 'enum(akk|dat)',
     'rection?': 'str',
@@ -27,4 +27,5 @@ export const lexiconSchema = obj({
     'exampleEn?': 'en',
     wordId: 'null', // set at integration (one SQL lemma match); null in authoring (LEX-07)
   }),
+  promotions: arr({ lemma: 'ref(lexicon)', from: "'receptive'", to: "'productive'", unit: 'ref(unit)' }, '*'),
 });

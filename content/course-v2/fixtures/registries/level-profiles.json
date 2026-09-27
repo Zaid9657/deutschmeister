@@ -39,11 +39,16 @@
       "review": {
         "budgetMinutes": 7,
         "secondsPerReview": 9,
-        "firstReviewCeiling": 30
+        "firstReviewCeiling": 30,
+        "carryOverMinutes": 1.5
       },
       "pool": {
         "size": 16,
         "served": 12,
+        "reserve": [
+          4,
+          6
+        ],
         "generatedMax": 0.4,
         "mix": {
           "typedGapDictation": [
@@ -55,6 +60,10 @@
           "choiceMax": 0.2
         }
       },
+      "examStemChars": [
+        20,
+        110
+      ],
       "microOutput": {
         "seconds": [
           30,

@@ -10,7 +10,10 @@ export const FIXTURES_ROOT = path.join(CONTENT_ROOT, 'fixtures');
 
 const within = (p, dir) => p === dir || p.startsWith(dir + path.sep);
 
-/** Every *.json file under `dir` (sorted, deterministic), skipping `exclude` directories. */
+/**
+ * Every *.json file under `dir` (sorted, deterministic), skipping `exclude` directories and dot
+ * directories (the compiler's `.build/` artefacts are never authored files, SCHEMA §0.5).
+ */
 export function listJsonFiles(dir, { exclude = [] } = {}) {
   const out = [];
   const abs = path.resolve(dir);
@@ -21,7 +24,9 @@ export function listJsonFiles(dir, { exclude = [] } = {}) {
     for (const name of fs.readdirSync(d).sort()) {
       const p = path.join(d, name);
       const st = fs.statSync(p);
-      if (st.isDirectory()) visit(p);
+      if (st.isDirectory()) {
+        if (!name.startsWith('.')) visit(p);
+      }
       else if (name.endsWith('.json')) out.push(p);
     }
   };

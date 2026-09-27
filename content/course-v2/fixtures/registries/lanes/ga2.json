@@ -11,6 +11,7 @@
     "https://www.goethe.de/pro/relaunch/prf/materialien/A2/A2_Uebungssatz_Erwachsene.pdf"
   ],
   "access": { "gate": "none" },
+  "delivery": "both",
   "modules": {
     "lesen": { "minutes": 30, "teile": ["l1", "l2", "l3", "l4"] },
     "hoeren": { "minutes": 30, "teile": ["h1", "h2", "h3", "h4"] },
@@ -19,9 +20,9 @@
   },
   "writtenBlock": { "minutes": 90, "breaks": false },
   "teile": {
-    "h1": { "id": "ga2.h1", "module": "hoeren", "family": "fam.h-detail", "task": "abc", "items": 5, "options": 3, "plays": 2, "textType": "tt.kurzansage", "textWords": [25, 60], "textWordsSource": "design", "points": 5, "scaffoldAllowedIn": ["a2.1"], "transfersTo": [], "source": "US-A2 p. 3 and Hören Teil 1", "stand": "2026-09-26" },
-    "s2": { "id": "ga2.s2", "module": "schreiben", "family": "fam.w-nachricht", "task": "writing", "textType": "tt.email-halbformell", "words": { "min": 30, "max": 40 }, "leitpunkte": 3, "register": "halbformell", "rubric": "ga2-s2", "points": 10, "scaffoldAllowedIn": [], "transfersTo": [], "source": "US-A2 p. 37", "stand": "2026-09-26" },
-    "sp1": { "id": "ga2.sp1", "module": "sprechen", "family": "fam.s-fragekarten", "task": "speaking", "textType": "tt.wortkarte", "interaction": "cards-ask", "prepMinutes": 0, "rubric": "ga2-sp1", "points": 4, "scaffoldAllowedIn": ["a2.1"], "transfersTo": ["ta2.sp2"], "source": "US-A2 Sprechen Teil 1; DB-A2 §1.4", "stand": "2026-09-26" }
+    "h1": { "id": "ga2.h1", "module": "hoeren", "family": "fam.h-detail", "task": "abc", "items": 5, "options": 3, "plays": 2, "textType": "tt.kurzansage", "textWords": [25, 60], "textWordsSource": "design", "points": 5, "pictorial": false, "instructionsDe": "Sie hören fünf kurze Texte zweimal. Zu jedem Text gibt es eine Aufgabe. Wählen Sie a, b oder c.", "paraphraseOf": "US-A2 Hören Teil 1, Aufgabenstellung (paraphrased, not copied)", "scaffold": { "minItems": 3, "textWords": [20, 50], "playsFixed": true, "optionsFixed": true }, "scaffoldAllowedIn": ["a2.1"], "transfersTo": [], "source": "US-A2 p. 3 and Hören Teil 1", "stand": "2026-09-26" },
+    "s2": { "id": "ga2.s2", "module": "schreiben", "family": "fam.w-nachricht", "task": "writing", "textType": "tt.email-halbformell", "words": { "min": 30, "max": 40 }, "leitpunkte": 3, "register": "halbformell", "rubric": "ga2-s2", "points": 10, "pictorial": false, "instructionsDe": "Schreiben Sie eine kurze E-Mail zu allen drei Punkten, 30 bis 40 Wörter.", "paraphraseOf": "US-A2 Schreiben Teil 2, p. 37 (paraphrased)", "scaffoldAllowedIn": [], "transfersTo": [], "source": "US-A2 p. 37", "stand": "2026-09-26" },
+    "sp1": { "id": "ga2.sp1", "module": "sprechen", "family": "fam.s-fragekarten", "task": "speaking", "textType": "tt.wortkarte", "interaction": "cards-ask", "speaking": { "stimulus": "none", "turns": [8, 8] }, "prepMinutes": 0, "rubric": "ga2-sp1", "points": 4, "pictorial": false, "instructionsDe": "Sie ziehen vier Karten. Fragen Sie mit jeder Karte, antworten Sie auf die Fragen Ihrer Partnerin.", "paraphraseOf": "US-A2 Sprechen Teil 1 (paraphrased)", "scaffoldAllowedIn": ["a2.1"], "transfersTo": ["ta2.sp2"], "source": "US-A2 Sprechen Teil 1; DB-A2 §1.4", "stand": "2026-09-26" }
   },
   "blueprint": { "modules": { "lesen": ["l1", "l2", "l3", "l4"], "hoeren": ["h1", "h2", "h3", "h4"], "schreiben": ["s1", "s2"], "sprechen": ["sp1", "sp2", "sp3"] }, "totalMinutes": 105, "answerSheetStep": false },
   "scale": { "kind": "scaled", "max": 100, "parts": { "lesen": 25, "hoeren": 25, "schreiben": 25, "sprechen": 25 } },

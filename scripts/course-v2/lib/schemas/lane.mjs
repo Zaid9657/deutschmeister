@@ -10,6 +10,9 @@ define('TeilTemplate', obj({
   task: 'enum(abc|richtig_falsch|ja_nein|zuordnen|cloze|notes|form_fill|insert|writing|speaking)',
   'items?': 'int',
   'options?': 'int',
+  'choices?': 'int', // block-level choice set, excluding the no-match key
+  'choiceKind?': 'enum(text|heading|ad|person|word|sentence|picture|place|opinion)',
+  'choiceReuse?': 'bool',
   'noMatch?': 'enum(X|0|x)',
   'plays?': 'int[1..2]',
   'readingSeconds?': 'int',
@@ -24,10 +27,23 @@ define('TeilTemplate', obj({
   'leitpunkte?': 'int',
   'choose?': { from: 'int', pick: 'int' },
   'register?': 'enum(informell|halbformell|formell)',
-  'interaction?': 'enum(cards-ask|cards-request|group|monologue|plan-together|discuss|photo|feedback-question|mediate)',
+  'interaction?': 'enum(cards-ask|cards-request|group|get-to-know|monologue|plan-together|discuss|photo|feedback-question|mediate)',
+  'speaking?': {
+    'stimulus?': 'enum(none|text|quotes|calendar|topicChoice)',
+    'partnerData?': 'bool',
+    'topicChoice?': { from: 'int', pick: 'int' },
+    'seconds?': '[int, int]',
+    'turns?': '[int, int]',
+  },
   'prepMinutes?': 'int',
+  'prepAtHome?': 'bool',
   'rubric?': 'ref(rubric)',
   points: 'num',
+  pictorial: 'bool',
+  'textVariantDe?': 'de', // pictorial only: how the .1 text variant replaces the picture
+  instructionsDe: 'de', // OUR paraphrase of the official instructions (LGL-05)
+  paraphraseOf: 'str',
+  'scaffold?': { minItems: 'int', textWords: '[int, int]', playsFixed: 'bool', optionsFixed: 'bool', 'choicesMin?': 'int' },
   scaffoldAllowedIn: '[re(LEVEL)]*',
   transfersTo: '[ref(template)]*',
   source: 'str',
@@ -37,6 +53,14 @@ define('TeilTemplate', obj({
     if (t.textWords !== undefined && t.textWordsSource === undefined) {
       emit('', 'missing required field "textWordsSource" (required with textWords)');
     }
+    // SCHEMA: `scaffold` is „required if scaffoldAllowedIn ≠ []"; its limits (minItems, textWords,
+    // plays, options, choices) describe receptive Teile only, and the §15.1 speaking template
+    // ga2.sp1 is scaffoldable without one — so the requirement applies to receptive Teile.
+    const productive = t.task === 'writing' || t.task === 'speaking';
+    if (!productive && Array.isArray(t.scaffoldAllowedIn) && t.scaffoldAllowedIn.length > 0 && t.scaffold === undefined) {
+      emit('', 'missing required field "scaffold" (required when scaffoldAllowedIn is not empty)');
+    }
+    if (t.textVariantDe !== undefined && t.pictorial === false) emit('textVariantDe', 'only a pictorial Teil has a text variant');
   },
 }));
 
@@ -50,6 +74,7 @@ export const laneSchema = obj({
   stand: 'date',
   sources: '[url]',
   access: { gate: 'enum(none|integrationskurs)', 'labelDe?': 'de' },
+  delivery: 'enum(paper|digital|both)', // paper: no word counter in Prüfungsmodus
   modules: map(MODULE, {
     minutes: 'num',
     teile: '[str]',

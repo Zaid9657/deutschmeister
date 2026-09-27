@@ -10,6 +10,7 @@ import { spawnSync } from 'node:child_process';
 import { BANK_KEY_RE, LEGACY_COURSE_TASK_KEY_RE, bankKeyScope, parseBankKey, LANES, PATTERNS } from '../scripts/course-v2/lib/ids.mjs';
 import { check, assertTypesResolve, parse, describe } from '../scripts/course-v2/lib/schema.mjs';
 import { KINDS, kindOf } from '../scripts/course-v2/lib/schemas/index.mjs';
+import { stripToStage, STAGES } from '../scripts/course-v2/lib/schemas/unit.mjs';
 import { checkDocument, checkFiles } from '../scripts/course-v2/lib/checker.mjs';
 import { loadTree, listJsonFiles, FIXTURES_ROOT, REPO_ROOT } from '../scripts/course-v2/lib/tree.mjs';
 import { buildIndex } from '../scripts/course-v2/lib/refindex.mjs';
@@ -61,16 +62,80 @@ test('the SCHEMA fixture passes SCH-01 / REF-01 / KEY-01 with every reference re
   const lines = result.files.flatMap((r) => r.errors.map((e) => `${r.file}:${e.path}: ${e.message}`));
   assert.deepEqual(lines, []);
   // resolution really ran: every ref kind the fixture uses has a loaded source
-  for (const kind of ['cando', 'spine', 'lexicon', 'template', 'lane', 'rubric', 'rulecard', 'cast', 'texttype', 'detector', 'family', 'unit', 'item', 'line', 'fact', 'plateau']) {
+  for (const kind of ['cando', 'spine', 'lexicon', 'template', 'lane', 'rubric', 'rulecard', 'cast', 'texttype', 'detector', 'family', 'unit', 'step', 'item', 'line', 'text', 'asset', 'fact', 'plateau']) {
     assert.ok(INDEX.loaded.has(kind), `ref kind ${kind} not loaded`);
   }
   assert.equal(INDEX.has('lexicon', 'lx.besetzt'), true);
   assert.equal(INDEX.has('lexicon', 'lx.gibt-es-nicht'), false);
+  assert.equal(INDEX.has('text', 'a2.1-u07-ls4-t1'), true);
+  assert.equal(INDEX.has('step', 'a2.1-u07-ls4'), true);
+});
+
+test('SCHEMA §15.6: the fixture passes the stage schema of §8.1 at every stage it is stripped to', () => {
+  const u = unit();
+  assert.equal(u.stage, 'T');
+  for (const stage of STAGES) {
+    const copy = stripToStage(u, stage);
+    assert.deepEqual(checkDocument(copy, { kind: 'unit', index: INDEX }), [], `stage ${stage}`);
+  }
+  const s = stripToStage(u, 'S');
+  // S: texts, lines, extras, facts and story present; items, reserves, blocks and tasks absent
+  assert.ok(s.steps[3].texts.length === 5 && s.extras && s.facts.length && s.story);
+  assert.equal(s.start.folge.gistItem, undefined);
+  for (const k of ['inputItems', 'structuredInput', 'pool', 'reserve', 'microOutput']) assert.equal(s.steps[0][k], undefined, k);
+  assert.equal(s.steps[3].blocks, undefined);
+  assert.equal(s.steps[4].task, undefined);
+  assert.equal(s.check, undefined);
+  const spec = stripToStage(u, 'spec');
+  assert.deepEqual(Object.keys(spec).sort(), ['$schema', 'etappe', 'id', 'level', 'nr', 'reviewedIn', 'spec', 'stage', 'status', 'title', 'version']);
+});
+
+test('the stage schema rejects a later role\'s sections and requires the current role\'s', () => {
+  // items at stage S
+  const early = unit();
+  early.stage = 'S';
+  const e1 = checkDocument(early, { kind: 'unit', index: INDEX });
+  assert.ok(e1.some((e) => e.path === '$.steps[0].pool' && /"pool" must be absent at stage S/.test(e.message)));
+  assert.ok(e1.some((e) => e.path === '$.check' && /must be absent at stage S/.test(e.message)));
+  assert.ok(e1.some((e) => e.path === '$.steps[4].task' && /written from stage T/.test(e.message)));
+  // an I unit without its reserves
+  const i = stripToStage(unit(), 'I');
+  delete i.steps[1].reserve;
+  assert.ok(checkDocument(i, { kind: 'unit', index: INDEX }).some((e) => e.path === '$.steps[1]' && /missing required field "reserve"/.test(e.message)));
+  // a T unit without its LS4 blocks; the --stage override judges the file at another stage
+  const t = unit();
+  delete t.steps[3].blocks;
+  assert.ok(checkDocument(t, { kind: 'unit', index: INDEX }).some((e) => e.path === '$.steps[3]' && /missing required field "blocks"/.test(e.message)));
+  assert.deepEqual(checkDocument(stripToStage(unit(), 'I'), { kind: 'unit', index: INDEX, stage: 'I' }), []);
+  // a unit without a stage is judged at T and told so
+  const none = unit();
+  delete none.stage;
+  assert.deepEqual(checkDocument(none, { kind: 'unit', index: INDEX }).map((e) => e.message), ['missing required field "stage"']);
 });
 
 test('§15.4 lane pack and the ta2 Teil excerpt validate against their schemas (in memory; lane packs are deferred)', () => {
   assert.deepEqual(check(KINDS.lanepack.schema, EX.lanePack.json), []);
   assert.deepEqual(check('TeilTemplate', EX.ta2Teile.json.h1), []);
+});
+
+test('§15.7 choice fixtures: tb1.lv3 and gb2.l2 pass their shapes (templates, texts, block-level choice sets)', () => {
+  const md = fs.readFileSync(path.join(REPO_ROOT, 'docs/course-v2/SCHEMA.md'), 'utf8');
+  const s157 = md.indexOf('### 15.7');
+  const blocks = [...md.slice(s157).matchAll(/```json\n([\s\S]*?)\n```/g)].map((m) => JSON.parse(m[1]));
+  const [templates, tb1Step, gb2Slot] = blocks;
+  assert.deepEqual(check('TeilTemplate', templates.lv3), []);
+  assert.deepEqual(check('TeilTemplate', templates.l2), []);
+  assert.deepEqual(check('[ExamText]*', tb1Step.texts), []);
+  assert.deepEqual(check('ExamBlock', tb1Step.examBlock), []);
+  assert.deepEqual(check('[ExamText]*', gb2Slot.texts), []);
+  assert.deepEqual(check('[ExamBlock]', gb2Slot.blocks), []);
+  // the block-level choice set is where a zuordnen/insert item answers from: 12 ads, key x = no match
+  assert.equal(tb1Step.examBlock.choices.length, 12);
+  assert.equal(tb1Step.examBlock.noMatchKey, 'x');
+  // a slot-'input' Prüfungsfokus entry names its step; any other slot may not
+  const spec = unit().spec;
+  spec.lanes.pruefungsfokus[0] = { template: 'tb1.lv3', length: 'full', modeDefault: 'pruefung', slot: 'input' };
+  assert.ok(check('UnitSpec', spec).some((e) => /"step" \(required when slot is input\)/.test(e.message)));
 });
 
 // ── mutations: each must fail with the right path, rule and message ─────────────────────
@@ -102,7 +167,13 @@ const MUTATIONS = [
   ['a malformed can-do id', (u) => { u.spec.canDos[0] = 'mailbox-verstehen'; }, { path: '$.spec.canDos[0]', message: /is not a well-formed ref\(cando\)/ }],
   ['a typo in an item topic (ref inside a union with an enum)', (u) => { u.check.items[3].topic = 'lx.besezt'; }, { path: '$.check.items[3].topic', rule: 'REF-01', message: /ref\(lexicon\) "lx\.besezt" does not resolve/ }],
   ['a typo in a generator source (ref inside a union with str)', (u) => { u.steps[0].pool.generators[3].source[0] = 'lx.anrfu'; }, { path: '$.steps[0].pool.generators[3].source[0]', rule: 'REF-01', message: /does not resolve/ }],
-  ['an earlier-unit item that does not exist', (u) => { u.check.earlier[0].ref = 'a2.1-u06-ls2-p99'; }, { path: '$.check.earlier[0].ref', rule: 'REF-01', message: /ref\(item\)/ }],
+  ['an earlierDraw of six (3..5)', (u) => { u.check.earlierDraw.count = 6; }, { path: '$.check.earlierDraw.count', message: /expected int\[3\.\.5\], got 6/ }],
+  ['a reserve of three items', (u) => u.steps[0].reserve.splice(0, 1), { path: '$.steps[0].reserve', message: /expected 4\.\.6 items/ }],
+  ['a reserve item id with the wrong letter', (u) => { u.steps[0].reserve[0].id = 'a2.1-u07-ls1-y01'; }, { path: '$.steps[0].reserve[0].id', message: /does not match re\(item\)/ }],
+  ['an extra speaker the file does not declare (REF-01, file-scoped)', (u) => { u.check.lines[0].speaker = 'x.frau-sommer'; }, { path: '$.check.lines[0].speaker', rule: 'REF-01', message: /ref\(extra\) "x\.frau-sommer" does not resolve/ }],
+  ['a block textRef to a missing text', (u) => { u.steps[3].blocks[0].textRefs[0] = 'a2.1-u07-ls4-t9'; }, { path: '$.steps[3].blocks[0].textRefs[0]', rule: 'REF-01', message: /ref\(text\) "a2\.1-u07-ls4-t9" does not resolve/ }],
+  ['a Prüfungsfokus entry without its slot', (u) => delete u.spec.lanes.pruefungsfokus[1].slot, { path: '$.spec.lanes.pruefungsfokus[1]', message: /missing required field "slot"/ }],
+  ['a stage outside spec|S|I|T', (u) => { u.stage = 'W'; }, { path: '$.stage', message: /expected one of spec\|S\|I\|T/ }],
   ['a rule card that does not exist', (u) => { u.steps[1].ruleCard = 'rc.gibt-es-nicht'; }, { path: '$.steps[1].ruleCard', rule: 'REF-01', message: /ref\(rulecard\)/ }],
   ['an http source', (u) => { u.facts[0].sources[0] = 'http://dejure.org/gesetze/ArbZG/4.html'; }, { path: '$.facts[0].sources[0]', message: /expected url \(https/ }],
   ['an impossible date', (u) => { u.facts[0].factsCheckedOn = '2026-02-30'; }, { path: '$.facts[0].factsCheckedOn', message: /expected date/ }],
@@ -118,27 +189,32 @@ for (const [name, mutate, want] of MUTATIONS) {
   test(`mutated fixture fails: ${name}`, () => expectError(mutate, want));
 }
 
-test('the notation accepts what it should: optional reviewerConfirmed, a perception GeneratorSpec, 8 steps', () => {
+test('the notation accepts what it should: optional reviewerConfirmed, a perception GeneratorSpec, 8 steps, a multi-Teil speaking round', () => {
   const u = unit();
   u.steps[0].pool.items[0].reviewerConfirmed = [];
+  const task = u.steps[4].task;
+  const { bankKey, lane, aiRole, openingLine, hintWords, modelTurns, ...part } = task;
+  u.steps[4].task = { parts: [part, { ...part, template: 'ga2.sp1' }], bankKey, lane, aiRole, openingLine, hintWords, modelTurns };
   assert.deepEqual(errorsOf(u), []);
+  u.steps[4].task.parts[1].mode = 'mediate';
+  assert.ok(errorsOf(u).some((e) => e.path === '$.steps[4].task.parts[1]' && /keyPoints/.test(e.message)));
   const v = unit();
   v.steps.splice(6, 0, { id: 'a2.1-u07-ls8', kind: 'check', endLine: 'Fertig.' });
   assert.equal(errorsOf(v).filter((e) => e.path === '$.steps').length, 0);
 });
 
-test('a draft unit may be spec-only; a unit in review may not', () => {
-  const draft = unit();
-  draft.status = 'draft';
-  for (const k of ['start', 'steps', 'check', 'redemittel', 'story', 'fokus', 'facts']) delete draft[k];
-  assert.deepEqual(errorsOf(draft), []);
+test('a spec-stage unit is the curriculum agent\'s file; everything after spec is absent there', () => {
+  const spec = stripToStage(unit(), 'spec');
+  spec.status = 'draft';
+  assert.deepEqual(errorsOf(spec), []);
+  spec.redemittel = unit().redemittel;
+  assert.ok(errorsOf(spec).some((e) => e.path === '$.redemittel' && /must be absent at stage spec/.test(e.message)));
+  // a T unit may not drop a section
   const review = unit();
   delete review.steps;
   assert.ok(errorsOf(review).some((e) => e.path === '$' && /missing required field "steps"/.test(e.message)));
-  // a draft section that IS present is checked in full
-  const partial = unit();
-  partial.status = 'draft';
-  delete partial.check;
+  // a section that IS present is checked in full at any stage
+  const partial = stripToStage(unit(), 'I');
   partial.steps[0].inputItems.pop();
   assert.ok(errorsOf(partial).some((e) => e.path === '$.steps[0].inputItems'));
 });
@@ -158,7 +234,7 @@ test('registry mutations fail with the right message', () => {
   lane.teile.h1.id = 'ga2.h2';
   assert.ok(check(KINDS.lane.schema, lane).some((e) => /must be "ga2\.h1"/.test(e.message)));
 
-  const lex = { $schema: 'course-v2/lexicon@1', level: 'a2.1', entries: structuredClone(EX.lexiconEntries.json) };
+  const lex = { $schema: 'course-v2/lexicon@1', level: 'a2.1', entries: structuredClone(EX.lexiconEntries.json), promotions: [] };
   lex.entries[0].wordId = 17;
   lex.entries[1].list_ref = 'C1';
   const lexErrors = check(KINDS.lexicon.schema, lex);
@@ -169,7 +245,20 @@ test('registry mutations fail with the right message', () => {
   cando.items[0].id = 'cd.b1.mailbox-verstehen';
   assert.ok(check(KINDS.cando.schema, cando).some((e) => /not in band "a2"/.test(e.message)));
 
+  course.completion.unit.testOutThreshold = 0.8;
+  course.completion.course.required[2] = { kind: 'modelltest', form: 'a', lane: 'learner', status: 'submitted' };
+  assert.ok(check(KINDS.course.schema, course).some((e) => e.path === '$.completion.course.required[2]' && /"halbtest"/.test(e.message)), 'a .1 course closes with the Halbtest');
+  course.kind = 'dot2';
+  course.level = 'a2.2';
+  course.units = course.units.map((u) => u.replace('a2.1', 'a2.2'));
+  assert.ok(!check(KINDS.course.schema, course).some((e) => e.path.startsWith('$.completion.course.required')), 'a .2 course closes with Modelltest A');
+
+  const sp1 = structuredClone(EX.ga2Lane.json.teile.h1);
+  delete sp1.scaffold;
+  assert.ok(check('TeilTemplate', sp1).some((e) => /"scaffold" \(required when scaffoldAllowedIn is not empty\)/.test(e.message)));
+
   assert.match(kindOf({ types: [] }, '/x/text-types.json').kind, /texttypes/);
+  assert.match(kindOf({ voices: {} }, '/x/voices.json').kind, /voices/);
   assert.match(kindOf({ members: {}, relations: [] }, '/x/casts/b1.json').kind, /casts/);
   assert.match(kindOf({ foo: 1 }, '/x/y.json').error, /missing \$schema/);
 });
@@ -244,7 +333,7 @@ test('compile is deterministic and idempotent', () => {
   assert.deepEqual(strip(a.result, a.outDir), strip(b.result, b.outDir));
   const first = writeOutputs(a.result);
   assert.deepEqual(first.map((f) => path.relative(a.outDir, f)).sort(), [
-    'banks/a2.1.banks.json', 'src/a2.1/ids.ledger.json', 'src/a2.1/lines.json', 'src/a2.1/manifest.json', 'src/a2.1/rule-cards.json', 'src/a2.1/units/u07.json',
+    'banks/a2.1.banks.json', 'src/a2.1/ids.ledger.json', 'src/a2.1/lines.json', 'src/a2.1/manifest.json', 'src/a2.1/reserve.json', 'src/a2.1/rule-cards.json', 'src/a2.1/units/u07.json',
   ]);
   const again = compileFixture(FIXTURES_ROOT, a.outDir);
   assert.deepEqual(writeOutputs(again.result), [], 'a second compile changes nothing');
@@ -280,6 +369,8 @@ test('the audio line list matches SCHEMA §15.5 (voice from the cast bible, text
   for (const want of EX.audioLines.json) assert.deepEqual(lines.find((l) => l.id === want.id), want);
   assert.equal(lines.length, 39);
   assert.ok(lines.filter((l) => l.speaker.startsWith('cast.')).every((l) => l.voice && l.rate));
+  // a one-off speaker takes the voice of the file's own extras (SCHEMA §3.3)
+  assert.deepEqual(lines.filter((l) => l.speaker.startsWith('x.')).map((l) => [l.speaker, l.voice]), [['x.herr-winter', 'de-DE-ChristophNeural']]);
   const cards = readOut(outDir, 'src/a2.1/rule-cards.json');
   assert.deepEqual(cards.cards, [EX.ruleCard.json]);
 });
@@ -308,9 +399,32 @@ test('the unit chunk strips learner-invisible fields and adds line seconds', () 
   assert.equal(chunk.facts[0].notes, undefined);
   assert.equal(chunk.spec.source, undefined);
   assert.ok(chunk.check.lines.every((l) => typeof l.seconds === 'number' && l.seconds > 0));
-  // cues and the model text stay in the chunk (learner-facing), and out of the grader bank
+  // cues and the model text stay in the chunk (learner-facing)
   assert.ok(chunk.steps[5].task.leitpunkte[0].cues.length > 0);
   assert.ok(chunk.steps[5].task.modelText);
+  // reserves leave the chunk for the reserve index; the pool items do not include them
+  assert.ok(chunk.steps.every((s) => s.reserve === undefined));
+  assert.ok(!chunk.poolItems.some((p) => /-r\d{2}$/.test(p.id)));
+  assert.equal(chunk.spec.fokusPlan, undefined);
+  assert.equal(chunk.stage, undefined);
+});
+
+test('the reserve index holds every reserve item in the pool shape, by unit, topic and error tag', () => {
+  const { result, outDir } = compileFixture();
+  writeOutputs(result);
+  const reserve = readOut(outDir, 'src/a2.1/reserve.json');
+  const authored = unit().steps.flatMap((s) => (s.reserve || []).map((r) => r.id));
+  assert.equal(authored.length, 12, '4 reserve items in each of LS1–LS3 (§15.6 ITM-06)');
+  assert.deepEqual(reserve.items.map((r) => r.id), authored);
+  assert.deepEqual(reserve.byUnit, { 'a2.1-u07': authored });
+  for (const r of reserve.items) {
+    assert.equal(r.unit, 'a2.1-u07');
+    assert.match(r.step, /^a2\.1-u07-ls[1-3]$/);
+    assert.ok(Array.isArray(r.errorTags) && Array.isArray(r.banks));
+    assert.equal(r.minLektion, 7);
+    assert.equal(r.origin, undefined);
+  }
+  assert.ok(Object.keys(reserve.byErrorTag).includes('reflexive'));
 });
 
 test('the writing bank matches SCHEMA §15.5; the speaking bank holds the speaking task and spoken micro-outputs', () => {
@@ -342,6 +456,7 @@ test('the writing bank matches SCHEMA §15.5; the speaking bank holds the speaki
   assert.equal(s.mode, 'cards-ask');
   assert.equal(s.prepMinutes, 0);
   assert.equal(s.modelTurns, undefined, 'model turns are shown after the attempt, never grader input');
+  assert.deepEqual(s.turns, [8, 8], 'the speaking bank carries seconds/turns (SCHEMA §12)');
   for (const key of [...Object.keys(banks.writing), ...Object.keys(banks.speaking)]) assert.ok(BANK_KEY_RE.test(key), key);
 });
 
@@ -360,6 +475,7 @@ test('the ids ledger tombstones a removed id and refuses its reuse (ID-01)', () 
   const unitPath = path.join(content, 'a2.1-u07.json');
   const u = JSON.parse(fs.readFileSync(unitPath, 'utf8'));
   const removed = u.steps[0].pool.items.pop();
+  u.steps[0].pool.generators.push({ generator: 'lex.glossTyped', count: 1, source: ['lx.anruf', 'lx.rueckruf'] }); // keep items + generated = 16
   fs.writeFileSync(unitPath, JSON.stringify(u, null, 2));
   const second = compileFixture(content, out);
   assert.deepEqual(second.result.errors, []);

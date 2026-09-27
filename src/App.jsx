@@ -67,6 +67,10 @@ const CheckpointPage = lazy(() => import('./pages/lesson/CheckpointPage'));
 const ReviewPage = lazy(() => import('./pages/lesson/ReviewPage'));
 const CourseCompletePage = lazy(() => import('./pages/CourseCompletePage'));
 const CourseCertificatePage = lazy(() => import('./pages/CourseCertificatePage'));
+// Course v2 player (docs/course-v2/BLUEPRINT.md §7.3): course home, unit player, Plateau.
+const CourseHomeV2Page = lazy(() => import('./pages/course-v2/CourseHomeV2Page.jsx'));
+const UnitPlayerPage = lazy(() => import('./pages/course-v2/UnitPlayerPage.jsx'));
+const PlateauPage = lazy(() => import('./pages/course-v2/PlateauPage.jsx'));
 const ModelltestHub = lazy(() => import('./pages/Modelltest/ModelltestHub'));
 const ModelltestOverview = lazy(() => import('./pages/Modelltest/ModelltestOverview'));
 const ModelltestRun = lazy(() => import('./pages/Modelltest/ModelltestRun'));
@@ -336,6 +340,14 @@ function Shell() {
                     <Route path="/course/:level/l/:nr" element={<LevelSubscriptionGuard><EmailVerificationGate><LessonPlayerPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
                     <Route path="/course/:level/checkpoint/:nr" element={<LevelSubscriptionGuard><EmailVerificationGate><CheckpointPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
                     <Route path="/course/:level/review" element={<LevelSubscriptionGuard><EmailVerificationGate><ReviewPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
+                    {/* Course v2 (docs/course-v2/BLUEPRINT.md, SCHEMA.md): preview routes that work
+                        whenever compiled v2 content exists for the level; all three sit inside the
+                        netlify.toml "/course/*" rewrite, and LevelSubscriptionGuard asks the v2
+                        access question (hasCourseAccess) for these paths. They must stay ABOVE the
+                        legacy catch-all /course/:level/:itemId. */}
+                    <Route path="/course/:level/v2" element={<LevelSubscriptionGuard><EmailVerificationGate><CourseHomeV2Page /></EmailVerificationGate></LevelSubscriptionGuard>} />
+                    <Route path="/course/:level/u/:nr" element={<LevelSubscriptionGuard><EmailVerificationGate><UnitPlayerPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
+                    <Route path="/course/:level/p/:nr" element={<LevelSubscriptionGuard><EmailVerificationGate><PlateauPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
                     <Route path="/course/:level/:itemId" element={<LevelSubscriptionGuard><EmailVerificationGate><CourseLessonPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
 
                     {/* Level-aware routes — A1.1 is free, others require auth + email verification + subscription */}

@@ -17,18 +17,19 @@
   "closing": { "halbtest": { "ga2": "a2.1-ht-ga2", "ta2": "a2.1-ht-ta2" }, "wiederholungsplan": false },
   "completion": {
     "lernschritt": { "finishedWhen": "all-items-answered" },
-    "aufgabe": { "submittedWhen": { "writingMinShareOfLowerBound": 0.5, "speakingMinSeconds": 20, "cardModeMinTurns": 2 } },
+    "aufgabe": { "submittedWhen": { "writingMinShareOfLowerBound": 0.5, "formAllFieldsNonEmpty": true, "speakingMinSeconds": 20, "cardModeMinTurns": 2 } },
     "unit": { "completeWhen": ["lernschritte-finished-or-tested-out", "aufgaben-submitted"], "testOutThreshold": 0.8 },
     "course": {
       "required": [
         { "kind": "unit", "status": "complete", "count": 12 },
         { "kind": "plateau", "status": "submitted", "count": 3 },
-        { "kind": "closing", "status": "submitted", "count": 1 }
+        { "kind": "halbtest", "lane": "learner", "status": "submitted" }
       ],
-      "neverRequired": ["score", "fokus", "mehr-ueben", "extensive", "modelltest:b", "modelltest:c"]
+      "neverRequired": ["score", "fokus", "mehr-ueben", "extensive", "diagnose", "modelltest:b", "modelltest:c"]
     }
   },
-  "review": { "ladderDays": [1, 3, 7, 14, 30, 60], "examCapShare": 0.15, "budgetMinutes": 7, "firstReviewCeiling": 30, "secondsPerReview": 9 },
+  "review": { "ladderDays": [1, 3, 7, 14, 30, 60], "examCapShare": 0.15, "budgetMinutes": 7, "firstReviewCeiling": 30, "secondsPerReview": 9, "graduateAfterDays": 60, "examCriticalKinds": ["teil", "sentence"], "carryOverMinutes": 1.5 },
   "pace": { "leicht": { "unitsPerWeek": 0.5, "learningDays": 3 }, "standard": { "unitsPerWeek": 1, "learningDays": 4 }, "intensiv": { "unitsPerWeek": 2, "learningDays": 6 } },
-  "targets": { "newWords": [330, 360], "productiveShare": 0.5, "aufgaben": 24, "microOutputs": 36 }
+  "targets": { "newWords": [330, 360], "productiveShare": 0.5, "aufgaben": 24, "microOutputs": 36 },
+  "einstufung": { "fromUnits": [4, 8, 12], "itemsPerUnit": 4, "itemTypes": "deterministic", "routing": { "testOutMin": 0.8, "recommendDot2Min": 0.8 } }
 }

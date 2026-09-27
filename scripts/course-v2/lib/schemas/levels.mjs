@@ -1,5 +1,5 @@
 // SCHEMA §4.6 — level profiles `registries/level-profiles.json` (`course-v2/levels@1`).
-import { obj, arr } from '../schema.mjs';
+import { obj, arr, lit } from '../schema.mjs';
 
 const STEP_KIND = 'enum(situation|text|sprache|pruefung|sprechen|schreiben|ueberarbeiten|check)';
 
@@ -17,8 +17,9 @@ export const levelsSchema = obj({
     },
     sentence: { meanWordsMax: 'num', maxWords: 'int', 'subordinateClausesMax?': 'int' },
     lexis: { newPerUnit: '[int, int]', productiveShare: 'num', offListMax: 'num', coverageMin: 'num' },
-    review: { budgetMinutes: 'int', secondsPerReview: 'int', firstReviewCeiling: 'int' },
-    pool: { size: '16', served: '12', generatedMax: 'num', mix: 'object' },
+    review: { budgetMinutes: 'int', secondsPerReview: 'int', firstReviewCeiling: 'int', carryOverMinutes: 'num' },
+    pool: { size: '16', served: '12', reserve: lit([4, 6]), generatedMax: 'num', mix: 'object' },
+    examStemChars: '[int, int]', // exam item stems (the TXT-04 exemption)
     microOutput: { seconds: '[int, int]', words: '[int, int]' },
     ruleCardMaxWords: 'int',
     partnerSupport: 'str',

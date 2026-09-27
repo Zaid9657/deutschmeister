@@ -4,8 +4,9 @@
 //   node scripts/course-v2/check.mjs <file|dir> [...]   check those files / every *.json below a dir
 //   node scripts/course-v2/check.mjs --all              check content/course-v2/** (fixtures included,
 //                                                       each tree against its own reference index)
-//   options: --no-refs   format-check references but do not resolve them
-//            --quiet     print errors only, no summary line
+//   options: --no-refs     format-check references but do not resolve them
+//            --stage=S     check every unit at that stage (spec|S|I|T) instead of its declared `stage`
+//            --quiet       print errors only, no summary line
 //
 // Prints one line per error — `file:path: RULE message (near <id>)` — and exits 1 on any error.
 // A file under content/course-v2/fixtures/ resolves its references inside the fixtures tree; any
@@ -15,15 +16,27 @@ import path from 'node:path';
 import { checkFiles, formatResults } from './lib/checker.mjs';
 import { listJsonFiles, CONTENT_ROOT } from './lib/tree.mjs';
 
-const args = process.argv.slice(2);
+const STAGES = ['spec', 'S', 'I', 'T'];
+const argv = process.argv.slice(2);
+// `--stage S` and `--stage=S` are both accepted
+const args = [];
+let stage;
+for (let i = 0; i < argv.length; i++) {
+  const a = argv[i];
+  if (a === '--stage') stage = argv[++i];
+  else if (a.startsWith('--stage=')) stage = a.slice('--stage='.length);
+  else args.push(a);
+}
 const flags = new Set(args.filter((a) => a.startsWith('--')));
 const targets = args.filter((a) => !a.startsWith('--'));
 const known = new Set(['--all', '--no-refs', '--quiet']);
 const unknown = [...flags].filter((f) => !known.has(f));
+const badStage = stage !== undefined && !STAGES.includes(stage);
 
-if (unknown.length || (!flags.has('--all') && targets.length === 0)) {
+if (unknown.length || badStage || (!flags.has('--all') && targets.length === 0)) {
   if (unknown.length) console.error(`unknown option(s): ${unknown.join(', ')}`);
-  console.error('usage: node scripts/course-v2/check.mjs <file|dir|--all> [--no-refs] [--quiet]');
+  if (badStage) console.error(`--stage must be one of ${STAGES.join('|')}, got ${JSON.stringify(stage)}`);
+  console.error('usage: node scripts/course-v2/check.mjs <file|dir|--all> [--no-refs] [--stage spec|S|I|T] [--quiet]');
   process.exit(2);
 }
 
@@ -43,7 +56,7 @@ if (unique.length === 0) {
   process.exit(0);
 }
 
-const result = checkFiles(unique, { refs: !flags.has('--no-refs') });
+const result = checkFiles(unique, { refs: !flags.has('--no-refs'), stage });
 for (const line of formatResults(result)) console.log(line);
 if (!flags.has('--quiet')) {
   const bad = result.files.filter((r) => r.errors.length).length;

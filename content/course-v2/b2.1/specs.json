@@ -1,0 +1,1338 @@
+[
+  {
+    "id": "b2.1-u01",
+    "nr": 1,
+    "etappe": 1,
+    "title": {
+      "de": "Heimat ist …",
+      "canDo": "Sie können sagen und schreiben, was Heimat für Sie bedeutet, und in Forumsbeiträgen erkennen, wie andere darüber denken."
+    },
+    "spec": {
+      "situation": "Priya ist mit Arjun von Leipzig nach Hamburg gezogen und fängt bei Kranich Logistik an. Ein Kulturmagazin fragt in seinem Leserforum, ob Heimat ein Ort, ein Gefühl oder ein Kreis von Menschen ist. Priya liest Erfahrungsberichte und Forumsbeiträge, schreibt selbst einen begründeten Beitrag und erzählt Arjun von einem Ort, der ihr wichtig ist; aus Leipzig kommt Amals gute Nachricht.",
+      "handlungsfeld": [
+        "A",
+        "B"
+      ],
+      "canDos": [
+        "cd.b2.heimat-stellung-nehmen",
+        "cd.b2.erfahrung-erzaehlen",
+        "cd.b2.forum-einstellungen-erkennen",
+        "cd.b2.erfahrungsberichte-ueberschriften"
+      ],
+      "grammar": {
+        "new": [
+          "g.mittelfeld-angaben",
+          "g.negation-system"
+        ],
+        "chunk": [],
+        "review": [
+          "g.dat-akk-stellung",
+          "g.nicht-position-gern",
+          "g.praeteritum"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Heimat und Zugehörigkeit",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Erinnerungen und Traditionen",
+          "target": 16,
+          "lemmas": []
+        },
+        {
+          "title": "Ankommen und Fuß fassen",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Stellung nehmen im Forum",
+          "target": 16,
+          "lemmas": []
+        }
+      ],
+      "textTypes": [
+        "tt.forumsbeitrag",
+        "tt.blogbeitrag",
+        "tt.bericht",
+        "tt.email-informell",
+        "tt.dialog",
+        "tt.aufgabenkarte"
+      ],
+      "lanes": {
+        "primary": "tb2",
+        "pruefungsfokus": [
+          {
+            "template": "tb2.m1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb2.lv1",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.sb1",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "As B2 K1 Heimat ist …",
+        "Si B2 L1 (Wortstellung im Mittelfeld)",
+        "S6 L14 Alte und neue Heimat (B1-Vorläufer)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.amal",
+        "cast.ensemble-b2-1",
+        "cast.ensemble-b2-4"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b2-1.md E1"
+      }
+    }
+  },
+  {
+    "id": "b2.1-u02",
+    "nr": 2,
+    "etappe": 1,
+    "title": {
+      "de": "Wie wir miteinander reden",
+      "canDo": "Sie können im Team über Umgangsformen diskutieren, Ihre Meinung gegen Einwände vertreten und ein Missverständnis schriftlich klären."
+    },
+    "spec": {
+      "situation": "In Priyas neuem Team bei Kranich Logistik gibt es ein Missverständnis mit der Teamleiterin Katharina Vogt. Priya hört ein Radiointerview mit einer Kommunikationstrainerin, schreibt Frau Vogt eine Nachricht, die das Missverständnis klärt, und diskutiert mit Malte über einen Artikel zur Frage, ob sich im Büro alle duzen sollten.",
+      "handlungsfeld": [
+        "2",
+        "C"
+      ],
+      "canDos": [
+        "cd.b2.du-oder-sie-diskutieren",
+        "cd.b2.ansicht-verteidigen",
+        "cd.b2.luecken-umschreiben",
+        "cd.b2.missverstaendnis-klaeren-schriftlich"
+      ],
+      "grammar": {
+        "new": [
+          "g.korrelat-es-da",
+          "g.textverweise"
+        ],
+        "chunk": [],
+        "review": [
+          "g.praepositionaladverb",
+          "g.zu-infinitiv",
+          "g.dass"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Gesprächsverhalten",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Missverständnisse klären",
+          "target": 16,
+          "lemmas": []
+        },
+        {
+          "title": "Umgangston und Register",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "In der Diskussion",
+          "target": 16,
+          "lemmas": []
+        }
+      ],
+      "textTypes": [
+        "tt.zeitungsartikel",
+        "tt.radiointerview",
+        "tt.email-antwort",
+        "tt.dialog"
+      ],
+      "lanes": {
+        "primary": "tb2",
+        "pruefungsfokus": [
+          {
+            "template": "tb2.m2",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb2.sa",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "tb2.hv2",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "As B2 K2 Sprich mit mir!",
+        "Si B2 L3 (dass-Sätze und ihre Entsprechungen)",
+        "S6 L8 Unter Kollegen (B1-Vorläufer)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.katharina-vogt",
+        "cast.malte",
+        "cast.ensemble-b2-2",
+        "cast.ensemble-b2-6"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b2-1.md E2"
+      }
+    }
+  },
+  {
+    "id": "b2.1-u03",
+    "nr": 3,
+    "etappe": 1,
+    "title": {
+      "de": "Arbeit ist das halbe Leben?",
+      "canDo": "Sie können Arbeitsvertrag und Gehaltsabrechnung prüfen, gezielt nachfragen und über Arbeitszeitmodelle und Gehälter diskutieren."
+    },
+    "spec": {
+      "situation": "Priyas erste Gehaltsabrechnung ist da, und die Überstunden fehlen. Sie fragt Herrn Wendt in der Personalabteilung nach Probezeit, Arbeitszeit und Urlaub, schreibt eine Nachricht mit der Bitte um Prüfung und liest einen Zeitungsartikel über Arbeitszeitmodelle im Detail. Im Team, das sich ab jetzt duzt, diskutiert sie über einen Artikel zur Frage, ob Gehälter im Betrieb offen sein sollten.",
+      "handlungsfeld": [
+        "2",
+        "5"
+      ],
+      "canDos": [
+        "cd.b2.gehaltsabrechnung-verstehen",
+        "cd.b2.arbeitsvertrag-nachfragen",
+        "cd.b2.artikel-zusammenfassen-diskutieren",
+        "cd.b2.abrechnung-reklamieren-schriftlich",
+        "cd.b2.artikel-im-detail"
+      ],
+      "grammar": {
+        "new": [
+          "g.infinitiv-oder-dass",
+          "g.infinitiv-passiv-perfekt"
+        ],
+        "chunk": [],
+        "review": [
+          "g.zu-infinitiv",
+          "g.dass",
+          "g.passiv-modalverb",
+          "g.korrelat-es-da"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Arbeitsvertrag",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Gehaltsabrechnung",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Arbeitszeitmodelle",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Nachfragen und reklamieren",
+          "target": 16,
+          "lemmas": []
+        }
+      ],
+      "textTypes": [
+        "tt.zeitungsartikel",
+        "tt.beleg",
+        "tt.bedingungen",
+        "tt.dialog",
+        "tt.radiomeldung",
+        "tt.email-antwort"
+      ],
+      "lanes": {
+        "primary": "tb2",
+        "pruefungsfokus": [
+          {
+            "template": "tb2.m2",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb2.sa",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "tb2.lv2",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.sb2",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "As B2 K3 Arbeit ist das halbe Leben?",
+        "Si B2 L2 In der Firma",
+        "Si B2 L3 (Infinitivsätze und dass-Sätze)",
+        "M B1 L2 Beruf und Arbeit (B1-Vorläufer)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.herr-wendt",
+        "cast.katharina-vogt",
+        "cast.malte",
+        "cast.ensemble-b2-6"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b2-1.md E3"
+      }
+    }
+  },
+  {
+    "id": "b2.1-u04",
+    "nr": 4,
+    "etappe": 2,
+    "title": {
+      "de": "Beschwerde mit Anspruch",
+      "canDo": "Sie können sich über eine mangelhafte Reise beschweren, eine klare Forderung stellen und mit einer Mitreisenden das weitere Vorgehen planen."
+    },
+    "spec": {
+      "situation": "Priya und Amal haben sich für eine gebuchte Gruppenreise verabredet, doch Hotel, Programm und Reiseleitung halten nicht, was der Veranstalter versprochen hat. Sie hören kurze Gespräche an der Rezeption und am Telefon, prüfen die Reisebedingungen, schreiben eine Beschwerde mit klarer Forderung und planen zusammen, wie sie ihren Anspruch durchsetzen.",
+      "handlungsfeld": [
+        "7",
+        "C"
+      ],
+      "canDos": [
+        "cd.b2.zugestaendnisse-einfordern",
+        "cd.b2.schriftlich-reklamieren",
+        "cd.b2.reisebedingungen-verstehen",
+        "cd.b2.vorgehen-gemeinsam-planen",
+        "cd.b2.brief-grammatik-kontext"
+      ],
+      "grammar": {
+        "new": [
+          "g.konj2-vergangenheit",
+          "g.konj2-bedeutungen"
+        ],
+        "chunk": [
+          "g.praep-genitiv-formell"
+        ],
+        "review": [
+          "g.konj2-irreal-gegenwart",
+          "g.modalpartikeln",
+          "g.praep-genitiv"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Reisemängel",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Rechte und Bedingungen",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Forderungen stellen",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Gemeinsam vorgehen",
+          "target": 16,
+          "lemmas": []
+        }
+      ],
+      "textTypes": [
+        "tt.bedingungen",
+        "tt.beleg",
+        "tt.telefonat",
+        "tt.kurzansage",
+        "tt.email-formell",
+        "tt.email-informell",
+        "tt.planungsblatt"
+      ],
+      "lanes": {
+        "primary": "tb2",
+        "pruefungsfokus": [
+          {
+            "template": "tb2.m3",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb2.sa",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "tb2.sb1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.hv3",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "Si B2 L6 Bedeutungen des Konjunktiv II",
+        "Si B2 L10 Service (B2.2)",
+        "M B1 L4 Kundenservice (B1-Vorläufer)"
+      ],
+      "deviation": {
+        "reason": "Die Dienstleistungsbeschwerde steht bei Sicher! aktuell B2 erst in L10 (B2.2). Sie wird nach B2.1 vorgezogen, weil der ZM-B2-Schritt des Beschwerde-Strangs (Zugeständnisse einfordern) und die telc-B2-Schreibaufgabe Typ Beschwerde hier gebraucht werden (BLUEPRINT §2.8, B2.1 Zeile 4)."
+      },
+      "cast": [
+        "cast.priya",
+        "cast.amal",
+        "cast.ensemble-b2-1",
+        "cast.ensemble-b2-6"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b2-1.md E4"
+      }
+    }
+  },
+  {
+    "id": "b2.1-u05",
+    "nr": 5,
+    "etappe": 2,
+    "title": {
+      "de": "Zusammen wohnen",
+      "canDo": "Sie können über Wohnformen und Nachbarschaft sprechen, Haltungen in Kommentaren erkennen und mit anderen ein Fest unter festen Vorgaben planen."
+    },
+    "spec": {
+      "situation": "In Priyas Straße in Hamburg entsteht ein Mehrgenerationenhaus. Priya liest Leserkommentare der Anwohner, hört ein Radiointerview mit der Projektleiterin und erzählt, wie sie selbst bisher gewohnt hat. Mit ihrer Nachbarin Frau Brodersen plant sie ein Hoffest zum Kennenlernen – mit kleinem Budget und nach der Hausordnung – und schreibt Amal einen persönlichen Brief über das neue Leben im Viertel.",
+      "handlungsfeld": [
+        "12",
+        "D"
+      ],
+      "canDos": [
+        "cd.b2.informell-mitdiskutieren",
+        "cd.b2.fest-planen-kompromiss",
+        "cd.b2.leserkommentare-haltung",
+        "cd.b2.interview-wohnprojekt-einmal",
+        "cd.b2.brief-gefuehle-abstufen"
+      ],
+      "grammar": {
+        "new": [
+          "g.einerseits-andererseits"
+        ],
+        "chunk": [],
+        "review": [
+          "g.weder-entweder-zwar",
+          "g.nicht-nur-sowohl",
+          "g.konj2-irreal-gegenwart",
+          "g.relativsatz-was-wo"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Wohnformen",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Nachbarschaft und Gemeinschaft",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Gefühle abstufen",
+          "target": 16,
+          "lemmas": []
+        },
+        {
+          "title": "Ein Fest planen",
+          "target": 17,
+          "lemmas": []
+        }
+      ],
+      "textTypes": [
+        "tt.leserkommentar",
+        "tt.radiointerview",
+        "tt.kleinanzeige",
+        "tt.brief-persoenlich",
+        "tt.aufgabenkarte",
+        "tt.planungsblatt"
+      ],
+      "lanes": {
+        "primary": "tb2",
+        "pruefungsfokus": [
+          {
+            "template": "tb2.m1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb2.m3",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb2.lv3",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.hv2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "As B2 K4 Zusammen leben",
+        "As B2 K3 (zweiteilige Konnektoren)",
+        "Si B2 L7 (generalisierende Relativsätze, B2.2)",
+        "S6 L11 Miteinander (B1-Vorläufer)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.frau-brodersen",
+        "cast.amal",
+        "cast.ensemble-b2-3",
+        "cast.ensemble-b2-4"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daz",
+          "title": "Elternabend: mit der Schule sprechen",
+          "hf": "6"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/b2-1.md E7"
+      }
+    }
+  },
+  {
+    "id": "b2.1-u06",
+    "nr": 6,
+    "etappe": 2,
+    "title": {
+      "de": "Presse mit Haltung",
+      "canDo": "Sie können Berichte und Kommentare zu Streitfragen verstehen, wiedergeben, was andere sagen, und im Leserforum Stellung nehmen."
+    },
+    "spec": {
+      "situation": "Die Hamburger Lokalpresse streitet über eine autofreie Zone in Priyas Stadtteil. Priya liest Kurzberichte und einen Kommentar, hört die Lokalnachrichten im Radio und erklärt Arjun, was die Befürworter und die Gegner jeweils sagen – ohne ihre eigene Meinung einzumischen. Danach reagiert sie im Leserforum der Zeitung auf den Kommentar.",
+      "handlungsfeld": [
+        "9",
+        "B"
+      ],
+      "canDos": [
+        "cd.b2.artikel-mit-haltung-lesen",
+        "cd.b2.zu-artikel-stellung-nehmen",
+        "cd.b2.aussagen-anderer-wiedergeben"
+      ],
+      "grammar": {
+        "new": [
+          "g.passiversatz",
+          "g.haben-zu"
+        ],
+        "chunk": [],
+        "review": [
+          "g.passiv-modalverb",
+          "g.passiv-vergangenheit",
+          "g.partizip-adjektiv"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Presse und Berichterstattung",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Haltung und Kommentar",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Streitfragen in der Stadt",
+          "target": 16,
+          "lemmas": []
+        },
+        {
+          "title": "Wiedergeben, was andere sagen",
+          "target": 16,
+          "lemmas": []
+        }
+      ],
+      "textTypes": [
+        "tt.kommentar",
+        "tt.zeitungsartikel",
+        "tt.bericht",
+        "tt.radiomeldung",
+        "tt.leserkommentar",
+        "tt.forumsbeitrag"
+      ],
+      "lanes": {
+        "primary": "tb2",
+        "pruefungsfokus": [
+          {
+            "template": "tb2.m2",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb2.lv2",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "input",
+            "step": "b2.1-u06-ls1"
+          },
+          {
+            "template": "tb2.lv1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.hv1",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "Si B2 L3 Medien",
+        "Si B2 L2 (Partizip I und II als Adjektive)",
+        "As B2 K5 (Passiversatz)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.ensemble-b2-1",
+        "cast.ensemble-b2-4",
+        "cast.ensemble-b2-5"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b2-1.md E11"
+      }
+    }
+  },
+  {
+    "id": "b2.1-u07",
+    "nr": 7,
+    "etappe": 3,
+    "title": {
+      "de": "An die Vorgesetzte: Engpass in der Pflege",
+      "canDo": "Sie können bei der Übergabe Veränderungen einschätzen, Anrufe als Notiz weitergeben und einen Engpass im Dienstplan mündlich und schriftlich lösen."
+    },
+    "spec": {
+      "situation": "Im Pflegeheim Haus am Kanal übergibt Thu den Frühdienst an Daniel und Lina: Herr Albers hat schlecht geschlafen und wirkt unruhig. Seine Tochter Kerstin ruft zweimal an. Daniel ordnet die Anrufe in einer Telefonnotiz, bekommt von Thu eine Rückmeldung zu seiner Dokumentation und handelt mit ihr eine Lösung aus, weil am Wochenende zwei Kolleginnen ausfallen; dann schreibt er der Pflegedienstleitung.",
+      "handlungsfeld": [
+        "2",
+        "8"
+      ],
+      "canDos": [
+        "cd.b2.uebergabe-einschaetzen",
+        "cd.b2.telefonnotiz-weitergeben",
+        "cd.b2.rueckmeldung-arbeit",
+        "cd.b2.dienstplan-loesung-aushandeln",
+        "cd.b2.engpass-an-leitung-schreiben"
+      ],
+      "grammar": {
+        "new": [
+          "g.relativsatz-wer-was",
+          "g.relativpronomen-genitiv"
+        ],
+        "chunk": [],
+        "review": [
+          "g.relativsatz-dat-praep",
+          "g.vermutung-modalwoerter",
+          "g.temporal-waehrend-sobald",
+          "g.konj2-vergangenheit"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Übergabe und Befinden",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Am Telefon mit Angehörigen",
+          "target": 16,
+          "lemmas": []
+        },
+        {
+          "title": "Dienstplan und Engpass",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Rückmeldung im Team",
+          "target": 17,
+          "lemmas": []
+        }
+      ],
+      "textTypes": [
+        "tt.dialog",
+        "tt.telefonat",
+        "tt.telefonnotiz",
+        "tt.zeitungsartikel",
+        "tt.terminkalender",
+        "tt.email-antwort",
+        "tt.email-informell"
+      ],
+      "lanes": {
+        "primary": "tb2",
+        "pruefungsfokus": [
+          {
+            "template": "tb2.m3",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb2.sa",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "tb2.sb1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.hv3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "Si B2 L2 In der Firma (geschäftliche E-Mail)",
+        "Si B2 L6 Bedeutungen des Konjunktiv II",
+        "M B1 L9 Gesundheit (B1-Vorläufer)"
+      ],
+      "deviation": {
+        "reason": "Kein B2-Lehrwerk setzt eine Pflegeeinrichtung als Kapitel. Die Pflege-Situation steht hier, weil Pflegekräfte B2 für die Anerkennung brauchen und das Band zwei Einheiten im Pflege- und Gesundheitsberuf auf allgemeinsprachlichem Niveau verlangt (BLUEPRINT §2.8 B2.1 Zeile 7, ALL-06; memo 10 impl. 5)."
+      },
+      "cast": [
+        "cast.daniel",
+        "cast.thu",
+        "cast.lina",
+        "cast.herr-albers",
+        "cast.kerstin-albers"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b2-1.md E10"
+      }
+    }
+  },
+  {
+    "id": "b2.1-u08",
+    "nr": 8,
+    "etappe": 3,
+    "title": {
+      "de": "Anerkennung und Bewerbung",
+      "canDo": "Sie können sich zur Anerkennung Ihres Abschlusses beraten lassen, passende Weiterbildungen finden und Ihre Qualifikationen mündlich und schriftlich darstellen."
+    },
+    "spec": {
+      "situation": "Daniel will als Pflegefachmann anerkannt werden. In einer Beratung erfährt er, welche Unterlagen fehlen und warum sein Abschluss noch nicht als gleichwertig gilt; er sucht in Kursanzeigen eine Anpassungsqualifizierung und fragt beim Anbieter nach. Priya denkt über eine Weiterbildung nach, die Frau Claussen unterstützen könnte. Beide üben, im Vorstellungsgespräch von ihrem Berufsweg zu erzählen und ein Anschreiben zu verfassen.",
+      "handlungsfeld": [
+        "3",
+        "4"
+      ],
+      "canDos": [
+        "cd.b2.anerkennung-beratung",
+        "cd.b2.qualifikationen-darstellen",
+        "cd.b2.anfrage-weiterbildung-mail",
+        "cd.b2.kursanzeigen-auswaehlen",
+        "cd.b2.anschreiben-verfassen"
+      ],
+      "grammar": {
+        "new": [
+          "g.nomen-verb-verbindungen",
+          "g.zustandspassiv"
+        ],
+        "chunk": [],
+        "review": [
+          "g.passiv-praesens",
+          "g.partizip-adjektiv",
+          "g.verben-praeposition"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Anerkennung des Abschlusses",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Weiterbildung und Förderung",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Bewerbung und Anschreiben",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Qualifikationen darstellen",
+          "target": 16,
+          "lemmas": []
+        }
+      ],
+      "textTypes": [
+        "tt.broschuere",
+        "tt.kleinanzeige",
+        "tt.dialog",
+        "tt.stellenanzeige",
+        "tt.anschreiben",
+        "tt.email-antwort",
+        "tt.aufgabenkarte"
+      ],
+      "lanes": {
+        "primary": "tb2",
+        "pruefungsfokus": [
+          {
+            "template": "tb2.m1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb2.sa",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "tb2.lv3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "Si B2 L2 (Zustandspassiv)",
+        "Si B2 L4 Berufseinstieg, Berufsmesse",
+        "As B2 K4 (Nomen-Verb-Verbindungen)",
+        "M B1 L15 Bewerbungen (B1-Vorläufer)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.daniel",
+        "cast.thu",
+        "cast.priya",
+        "cast.frau-claussen",
+        "cast.ensemble-b2-2"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b2-1.md E8 + E9"
+      }
+    }
+  },
+  {
+    "id": "b2.1-u09",
+    "nr": 9,
+    "etappe": 3,
+    "title": {
+      "de": "Ursachen und Folgen",
+      "canDo": "Sie können über Konsum und Nachhaltigkeit diskutieren, begründete Annahmen über Ursachen und Folgen äußern und Pro und Contra schriftlich abwägen."
+    },
+    "spec": {
+      "situation": "Bei Kranich Logistik kommen immer mehr Retouren aus dem Online-Modehandel an. Priya und Malte fragen sich, woher das Problem kommt und wohin es führt: Sie verfolgen eine Radiodiskussion über Billigmode und Kleidertausch, diskutieren über einen Zeitungsartikel zur Frage, ob Händler unverkaufte Kleidung spenden müssen, statt sie zu vernichten, und Priya schreibt einen gegliederten Beitrag für das Forum eines Verbrauchermagazins.",
+      "handlungsfeld": [
+        "B",
+        "7"
+      ],
+      "canDos": [
+        "cd.b2.konsum-annahmen-aeussern",
+        "cd.b2.radiodiskussion-meinungen-zuordnen",
+        "cd.b2.pro-contra-schriftlich",
+        "cd.b2.forumsbeitrag-gliedern"
+      ],
+      "grammar": {
+        "new": [
+          "g.wortbildung-adjektive"
+        ],
+        "chunk": [],
+        "review": [
+          "g.einerseits-andererseits",
+          "g.sodass",
+          "g.kausaladverbien-naemlich",
+          "g.futur1"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Konsum und Mode",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Ursachen und Folgen",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Nachhaltigkeit",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Argumente abwägen",
+          "target": 16,
+          "lemmas": []
+        }
+      ],
+      "textTypes": [
+        "tt.zeitungsartikel",
+        "tt.diskussion",
+        "tt.radiointerview",
+        "tt.forumsbeitrag",
+        "tt.umfrage"
+      ],
+      "lanes": {
+        "primary": "tb2",
+        "pruefungsfokus": [
+          {
+            "template": "tb2.m2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb2.hv2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.sb2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "Si B2 L5 (Futur II – Vermutungen)",
+        "Si B2 L6 (Bedeutungen des Konjunktiv II)",
+        "As B1+ K8 Kaufen, kaufen, kaufen (B1+-Vorläufer)",
+        "S6 L10 Werbung und Konsum (B1-Vorläufer)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.malte",
+        "cast.ensemble-b2-1",
+        "cast.ensemble-b2-2",
+        "cast.ensemble-b2-5"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b2-1.md E5"
+      }
+    }
+  },
+  {
+    "id": "b2.1-u10",
+    "nr": 10,
+    "etappe": 4,
+    "title": {
+      "de": "Radio und Podcast",
+      "canDo": "Sie können Nachrichten, Ansagen und Interviews beim ersten Hören verstehen, Haltungen heraushören und selbst ein Interview führen."
+    },
+    "spec": {
+      "situation": "Esther Adeyemi möchte für ihr Sprachcafé in der Bücherhalle einen Podcast starten und bittet Priya und Sara um Hilfe. Die beiden hören Lokalnachrichten, Verkehrs- und Reisehinweise und eine Radiosendung, in der die Gäste klar Stellung beziehen. Dann planen sie gemeinsam die erste Folge, Priya führt das Interview mit einem Gast und fragt bei den Veranstaltern eines Podcast-Workshops nach.",
+      "handlungsfeld": [
+        "9"
+      ],
+      "canDos": [
+        "cd.b2.radio-standpunkte-erfassen",
+        "cd.b2.nachrichten-einmal-hoeren",
+        "cd.b2.reise-ansagen-einmal",
+        "cd.b2.podcast-interview-fuehren"
+      ],
+      "grammar": {
+        "new": [
+          "g.futur2"
+        ],
+        "chunk": [],
+        "review": [
+          "g.futur1",
+          "g.vermutung-modalwoerter",
+          "g.indirekte-frage",
+          "g.korrelat-es-da",
+          "g.textverweise"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Radio und Nachrichten",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Podcast und Interview",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Verkehrs- und Reisehinweise",
+          "target": 16,
+          "lemmas": []
+        },
+        {
+          "title": "Haltungen heraushören",
+          "target": 16,
+          "lemmas": []
+        }
+      ],
+      "textTypes": [
+        "tt.radiomeldung",
+        "tt.kurzansage",
+        "tt.radiointerview",
+        "tt.diskussion",
+        "tt.planungsblatt",
+        "tt.email-antwort"
+      ],
+      "lanes": {
+        "primary": "tb2",
+        "pruefungsfokus": [
+          {
+            "template": "tb2.m3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb2.sa",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "tb2.hv1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.hv3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "As B2 K2 Sprich mit mir! (Radio und Gesprächsverhalten)",
+        "Si B2 L3 Medien",
+        "Si B2 L5 (Futur II – Vermutungen)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.sara",
+        "cast.esther-adeyemi",
+        "cast.ensemble-b2-1",
+        "cast.ensemble-b2-4",
+        "cast.ensemble-b2-6"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b2-1.md E2 #1 + E11 #2 + E4 HV3-Zusatz (Zeile 10 hat keine eigene Entwurfseinheit; cando-b2.md §8)"
+      }
+    }
+  },
+  {
+    "id": "b2.1-u11",
+    "nr": 11,
+    "etappe": 4,
+    "title": {
+      "de": "Wissenschaft im Alltag",
+      "canDo": "Sie können Vorträge und populärwissenschaftliche Texte gezielt verstehen, die Ergebnisse für andere zusammenfassen und schriftlich nach einer Studie fragen."
+    },
+    "spec": {
+      "situation": "Am Studienkolleg bereitet Herr Lorenz Sara auf Fachtexte vor. Sara hört einen Kurzvortrag einer Schlafforscherin, liest einen populärwissenschaftlichen Artikel und einen Bericht über eine Schlafstudie und fasst die Ergebnisse für Lina zusammen, die nach Nachtdiensten schlecht schläft. Die beiden diskutieren einen Zeitungsartikel über die Studie, und Sara fragt per E-Mail nach den Bedingungen einer Studienteilnahme.",
+      "handlungsfeld": [
+        "4",
+        "8"
+      ],
+      "canDos": [
+        "cd.b2.vortrag-gezielt-hoeren",
+        "cd.b2.sachtext-verweise-verstehen",
+        "cd.b2.sachtext-fuer-andere-zusammenfassen",
+        "cd.b2.anfrage-studie-mail",
+        "cd.b2.bericht-lueckentext"
+      ],
+      "grammar": {
+        "new": [
+          "g.redewiedergabe"
+        ],
+        "chunk": [
+          "g.konj1-gegenwart"
+        ],
+        "review": [
+          "g.passiversatz",
+          "g.passiv-vergangenheit",
+          "g.textverweise",
+          "g.je-desto"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Forschung und Studie",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Schlaf und Gesundheit",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Zusammenfassen und weitergeben",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Berichte und Belege",
+          "target": 16,
+          "lemmas": []
+        }
+      ],
+      "textTypes": [
+        "tt.vortrag",
+        "tt.zeitungsartikel",
+        "tt.bericht",
+        "tt.zusammenfassung",
+        "tt.email-antwort"
+      ],
+      "lanes": {
+        "primary": "tb2",
+        "pruefungsfokus": [
+          {
+            "template": "tb2.m2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb2.sa",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "tb2.lv2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.sb2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "As B2 K5 Wer Wissen schafft, …",
+        "Si B2 L7 (Vergleichssätze)",
+        "M B1 L9 Gesundheit (B1-Vorläufer)",
+        "N B1 K8 Rund um Körper und Geist (B1-Vorläufer)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.sara",
+        "cast.herr-lorenz",
+        "cast.lina",
+        "cast.ensemble-b2-2"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b2-1.md E6"
+      }
+    }
+  },
+  {
+    "id": "b2.1-u12",
+    "nr": 12,
+    "etappe": 4,
+    "title": {
+      "de": "Online zusammenarbeiten",
+      "canDo": "Sie können online im Team zusammenarbeiten, Ihre Ideen begründen, ein Projekt präsentieren und die Kernaussagen eines Vortrags für andere zusammenfassen."
+    },
+    "spec": {
+      "situation": "Priyas Team hat ein Projekt mit Kolleginnen und Kollegen an zwei anderen Standorten per Videokonferenz und Chat organisiert. Priya klärt im Chat einen Streit über die Rollenverteilung, hört einen Vortrag über virtuelle Teamarbeit und fasst ihn für Frau Claussen zusammen, die nicht dabei war. Zum Schluss präsentiert sie dem Team, was besser und was schlechter lief als geplant, und prüft vorher in ihrem Fehlerprotokoll, worauf sie achten will; nach der Präsentation schickt Amal eine Sprachnachricht.",
+      "handlungsfeld": [
+        "E",
+        "2",
+        "9"
+      ],
+      "canDos": [
+        "cd.b2.online-gruppe-zusammenarbeiten",
+        "cd.b2.online-ideen-rechtfertigen",
+        "cd.b2.projekt-praesentieren",
+        "cd.b2.vortrag-schriftlich-weitergeben",
+        "cd.b2.eigene-fehler-kontrollieren"
+      ],
+      "grammar": {
+        "new": [
+          "g.vergleichssaetze",
+          "g.als-irreal"
+        ],
+        "chunk": [],
+        "review": [
+          "g.komparation",
+          "g.als-ob",
+          "g.plusquamperfekt",
+          "g.lassen"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Virtuelle Zusammenarbeit",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Projekt und Auswertung",
+          "target": 17,
+          "lemmas": []
+        },
+        {
+          "title": "Präsentieren",
+          "target": 16,
+          "lemmas": []
+        },
+        {
+          "title": "Sprachbewusstsein und Selbstkorrektur",
+          "target": 16,
+          "lemmas": []
+        }
+      ],
+      "textTypes": [
+        "tt.vortrag",
+        "tt.sms",
+        "tt.bericht",
+        "tt.zusammenfassung",
+        "tt.praesentation",
+        "tt.email-antwort",
+        "tt.zeitungsartikel"
+      ],
+      "lanes": {
+        "primary": "tb2",
+        "pruefungsfokus": [
+          {
+            "template": "tb2.m1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb2.sa",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "tb2.sb2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "As B2 K2 (Vergleichssätze)",
+        "Si B2 L3 (Vergleichssätze)",
+        "Si B2 L5 (Das Verb lassen)"
+      ],
+      "deviation": {
+        "reason": "Kein geprüftes B2-Lehrwerk setzt Online-Zusammenarbeit als Thema. Die Einheit steht hier für die Online-Interaktion, die jede Halbstufe braucht (ALL-06; Begleitband B2 Online-Interaktion), und bereitet den Halbtest vor (BLUEPRINT §2.8 B2.1 Zeile 12)."
+      },
+      "cast": [
+        "cast.priya",
+        "cast.katharina-vogt",
+        "cast.malte",
+        "cast.frau-claussen",
+        "cast.amal",
+        "cast.ensemble-b2-2",
+        "cast.ensemble-b2-3"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b2-1.md E12 (+ E1 #4 Fehlerprotokoll)"
+      }
+    }
+  }
+]

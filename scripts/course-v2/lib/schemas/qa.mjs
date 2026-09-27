@@ -13,6 +13,8 @@ export const anchorSchema = obj({
   errorHeavy: 'bool',
   expected: map('str', 'num'),
   'humanRatingRef?': 'str', // key into the private human-rating store
+  verifiedBy: 'enum(examiner|merlin|none)', // CAL-01 counts only anchors with verifiedBy ≠ 'none'
+  'merlinRef?': 'str', // key into private/merlin/ (evaluation data, never shipped)
   author: 'str',
 });
 

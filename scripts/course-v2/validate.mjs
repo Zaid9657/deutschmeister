@@ -9,7 +9,8 @@
 //                content/course-v2/fixtures/ is validated inside the fixtures tree
 //   --all        every level present under content/course-v2 (fixtures excluded)
 //   --stage X    judge every target file at stage X (S texts, I items, T = all = the full gate set);
-//                without it each unit is judged at its declared `stage` (absent = T), lane packs at T
+//                without it each unit is judged at its declared `stage` (absent = T, or spec for a
+//                stage-less spec-only unit), lane packs at T
 //   --root DIR   use DIR instead of content/course-v2 as the content root
 //
 // Exit 1 when any rule reports a BLOCKER finding (a hard rule failed); ratchet and advisory

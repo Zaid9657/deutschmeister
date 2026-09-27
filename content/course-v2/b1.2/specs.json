@@ -1,0 +1,1417 @@
+[
+  {
+    "id": "b1.2-u01",
+    "nr": 1,
+    "etappe": 1,
+    "title": {
+      "de": "Missverständnisse",
+      "canDo": "Sie können Missverständnisse ansprechen und klären und in einem Online-Forum begründet Stellung nehmen."
+    },
+    "spec": {
+      "situation": "Priya hat eine knappe Nachricht ihres Chefs falsch verstanden. In einem Online-Forum für Zugezogene erzählen Menschen von Missverständnissen im Alltag und im Beruf: Sie lesen die Beiträge und kurze Meldungen, hören kurze Meinungen zu Höflichkeit und Pünktlichkeit, diskutieren über Direktheit im Beruf und antworten selbst.",
+      "handlungsfeld": [
+        "A",
+        "B",
+        "9"
+      ],
+      "canDos": [
+        "cd.b1.missverstaendnis-klaeren",
+        "cd.b1.interkulturelle-erfahrungen",
+        "cd.b1.forum-stellung-nehmen",
+        "cd.b1.online-konversation"
+      ],
+      "grammar": {
+        "new": [
+          "g.kausaladverbien-naemlich"
+        ],
+        "chunk": [],
+        "review": [
+          "g.deshalb",
+          "g.weil",
+          "g.denn",
+          "g.da-kausal",
+          "g.praep-genitiv"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Höflichkeit und Direktheit",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Missverständnisse und Gefühle",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Gewohnheiten und Herkunft",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Gründe nennen, im Forum schreiben",
+          "target": 10,
+          "lemmas": []
+        }
+      ],
+      "textTypes": [
+        "tt.forumsbeitrag",
+        "tt.leserkommentar",
+        "tt.kurzmeldung",
+        "tt.umfrage",
+        "tt.sms",
+        "tt.email-antwort",
+        "tt.meinungsblatt"
+      ],
+      "lanes": {
+        "primary": "tb1",
+        "pruefungsfokus": [
+          {
+            "template": "tb1.lv1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.hv1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "input",
+            "step": "b1.2-u01-ls2"
+          },
+          {
+            "template": "tb1.sa",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "tb1.m2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M B1 L13 Sprache",
+        "S6 L12",
+        "N B1 K7 Zwischenmenschliches",
+        "NW B1 K3"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.herr-brandt",
+        "cast.amal",
+        "cast.tomasz",
+        "cast.herr-vogel",
+        "cast.ensemble-b1-1",
+        "cast.ensemble-b1-4"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b1-2.md E1"
+      }
+    }
+  },
+  {
+    "id": "b1.2-u02",
+    "nr": 2,
+    "etappe": 1,
+    "title": {
+      "de": "Kaufen, vergleichen, sparen",
+      "canDo": "Sie können Angebote vergleichen, einen Verbraucherartikel für andere zusammenfassen und eine Kaufentscheidung begründen."
+    },
+    "spec": {
+      "situation": "Priyas Freundin Anna will eine neue Waschmaschine auf Raten kaufen: Sie lesen einen Verbraucherartikel, vergleichen Angebote für Haushaltsgeräte, hören Werbung und Verbrauchertipps im Radio, fassen die wichtigsten Tipps für Anna zusammen und diskutieren, ob Kaufen auf Raten eine gute Idee ist.",
+      "handlungsfeld": [
+        "7",
+        "5"
+      ],
+      "canDos": [
+        "cd.b1.infotext-zusammenfassen",
+        "cd.b1.angebot-fuer-andere",
+        "cd.b1.artikel-argumente",
+        "cd.b1.werbung-kritisch",
+        "cd.b1.kaufentscheidung-begruenden"
+      ],
+      "grammar": {
+        "new": [
+          "g.partizip-adjektiv"
+        ],
+        "chunk": [],
+        "review": [
+          "g.adj-dekl-bestimmt",
+          "g.adj-dekl-unbestimmt",
+          "g.adj-dekl-nullartikel",
+          "g.komparation-attributiv"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Kaufen und Konsum",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Geld, Raten und Kredit",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Werbung und Angebote",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Haushaltsgeräte vergleichen",
+          "target": 10,
+          "lemmas": []
+        }
+      ],
+      "textTypes": [
+        "tt.zeitungsartikel",
+        "tt.kleinanzeige",
+        "tt.prospekt",
+        "tt.radiomeldung",
+        "tt.durchsage",
+        "tt.zusammenfassung",
+        "tt.email-antwort",
+        "tt.meinungsblatt"
+      ],
+      "lanes": {
+        "primary": "tb1",
+        "pruefungsfokus": [
+          {
+            "template": "tb1.lv2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "input",
+            "step": "b1.2-u02-ls1"
+          },
+          {
+            "template": "tb1.lv3",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.sa",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "schreiben"
+          },
+          {
+            "template": "tb1.m2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "S6 L10 Werbung und Konsum",
+        "N B1 K12 Geld regiert die Welt?",
+        "Si B1+ L7 Geld",
+        "M B1 L14",
+        "As B1+ K8"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.anna",
+        "cast.felix",
+        "cast.ensemble-b1-2",
+        "cast.ensemble-b1-4"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b1-2.md E2"
+      }
+    }
+  },
+  {
+    "id": "b1.2-u03",
+    "nr": 3,
+    "etappe": 1,
+    "title": {
+      "de": "Die Bewerbung",
+      "canDo": "Sie können am Telefon nach einer Stelle fragen, sich schriftlich bewerben und im Vorstellungsgespräch über Ihre Erfahrung sprechen."
+    },
+    "spec": {
+      "situation": "Lina bewirbt sich im Pflegeheim Haus am Kanal in Hamburg, und Sie bewerben sich um eine Stelle in Ihrem Beruf: Sie fragen am Telefon nach Einzelheiten der Stelle, schreiben mit einer Vorlage die Bewerbung und führen das Vorstellungsgespräch, auch über Gehalt und Arbeitszeit.",
+      "handlungsfeld": [
+        "3"
+      ],
+      "canDos": [
+        "cd.b1.stelle-telefonisch-erfragen",
+        "cd.b1.bewerbung-schreiben",
+        "cd.b1.vorstellungsgespraech-erfahrung",
+        "cd.b1.gehalt-verhandeln"
+      ],
+      "grammar": {
+        "new": [
+          "g.nicht-nur-sowohl"
+        ],
+        "chunk": [],
+        "review": [
+          "g.konj2-hoeflichkeit",
+          "g.konj2-waere-haette-wuerde",
+          "g.zeitangaben-inversion"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Stellensuche",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Bewerbungsunterlagen",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Im Vorstellungsgespräch",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Stärken und Qualifikationen",
+          "target": 10,
+          "lemmas": []
+        }
+      ],
+      "textTypes": [
+        "tt.stellenanzeige",
+        "tt.telefonat",
+        "tt.anschreiben",
+        "tt.lebenslauf",
+        "tt.email-informell",
+        "tt.radiointerview",
+        "tt.email-antwort",
+        "tt.stichwortblatt"
+      ],
+      "lanes": {
+        "primary": "tb1",
+        "pruefungsfokus": [
+          {
+            "template": "tb1.sb1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.hv2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.sa",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "schreiben"
+          },
+          {
+            "template": "tb1.m1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M B1 L15 Bewerbungen",
+        "S6 L8",
+        "NW B1 K8",
+        "L1 B1 K16",
+        "Si B1+ L5 Berufseinstieg"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.lina",
+        "cast.frau-jansen",
+        "cast.priya",
+        "cast.katrin-weber"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daz",
+          "title": "Termin im Jobcenter: über die Stellensuche sprechen",
+          "hf": "3"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/b1-2.md E3"
+      }
+    }
+  },
+  {
+    "id": "b1.2-u04",
+    "nr": 4,
+    "etappe": 2,
+    "title": {
+      "de": "Was haben wir beschlossen?",
+      "canDo": "Sie können in einer Besprechung mitplanen, eine Nachricht notieren und Ergebnisse an Kolleginnen und Kollegen weitergeben."
+    },
+    "spec": {
+      "situation": "Bei Brandt Elektrotechnik plant das Team einen Teamtag: Priya vergleicht Angebote im Intranet, notiert während der Besprechung eine telefonische Nachricht für Frau Otto, schreibt einer Kollegin, die gefehlt hat, was das Team entschieden hat, und plant mit Jan, wer was übernimmt.",
+      "handlungsfeld": [
+        "2",
+        "D"
+      ],
+      "canDos": [
+        "cd.b1.projekt-planen-einwaende",
+        "cd.b1.nachricht-notieren",
+        "cd.b1.besprechung-ergebnisse-weitergeben"
+      ],
+      "grammar": {
+        "new": [
+          "g.relativsatz-was-wo",
+          "g.brauchen-zu"
+        ],
+        "chunk": [],
+        "review": [
+          "g.relativsatz-dat-praep",
+          "g.relativsatz-akk",
+          "g.muessen-duerfen-man"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Besprechung und Tagesordnung",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Ergebnisse und Beschlüsse",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Aufgaben verteilen",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Der Teamtag",
+          "target": 10,
+          "lemmas": []
+        }
+      ],
+      "textTypes": [
+        "tt.rundschreiben",
+        "tt.kleinanzeige",
+        "tt.dialog",
+        "tt.telefonnotiz",
+        "tt.zusammenfassung",
+        "tt.email-formell",
+        "tt.email-antwort",
+        "tt.planungsblatt"
+      ],
+      "lanes": {
+        "primary": "tb1",
+        "pruefungsfokus": [
+          {
+            "template": "tb1.lv3",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "input",
+            "step": "b1.2-u04-ls1"
+          },
+          {
+            "template": "tb1.sb2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.m3",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "S6 L8 Unter Kollegen",
+        "S6 L10",
+        "NW B1 K11",
+        "L1 B1 K14",
+        "M B1 L16",
+        "L1 B1 K11"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.frau-otto",
+        "cast.jan-wolf",
+        "cast.herr-brandt",
+        "cast.emre"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b1-2.md E4"
+      }
+    }
+  },
+  {
+    "id": "b1.2-u05",
+    "nr": 5,
+    "etappe": 2,
+    "title": {
+      "de": "Ärger im Haus",
+      "canDo": "Sie können in einem Streit Ihren Standpunkt vertreten, sich entschuldigen und einen Kompromiss vorschlagen."
+    },
+    "spec": {
+      "situation": "Im Haus von Priya, Arjun und Familie Haddad gibt es seit Wochen Streit mit dem neuen Nachbarn Herrn Böhm, wegen Lärm, Fahrrädern und Müll: Sie lesen einen Ratgeberartikel, sprechen mit dem Nachbarn, entschuldigen sich für Ihren Teil und legen gemeinsam Regeln für den Hof fest.",
+      "handlungsfeld": [
+        "12",
+        "C"
+      ],
+      "canDos": [
+        "cd.b1.kompromiss-vorschlagen",
+        "cd.b1.entschuldigen-erklaeren",
+        "cd.b1.standpunkt-einbringen"
+      ],
+      "grammar": {
+        "new": [
+          "g.sodass",
+          "g.modalpartikeln"
+        ],
+        "chunk": [],
+        "review": [
+          "g.deshalb",
+          "g.imperativ-sie",
+          "g.konj2-hoeflichkeit",
+          "g.kausaladverbien-naemlich"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Nachbarschaft und Hausordnung",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Streit und Ärger",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Entschuldigen und nachgeben",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Eine Lösung finden",
+          "target": 10,
+          "lemmas": []
+        }
+      ],
+      "textTypes": [
+        "tt.zeitungsartikel",
+        "tt.regeln",
+        "tt.email-formell",
+        "tt.dialog",
+        "tt.email-antwort",
+        "tt.planungsblatt"
+      ],
+      "lanes": {
+        "primary": "tb1",
+        "pruefungsfokus": [
+          {
+            "template": "tb1.lv2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "input",
+            "step": "b1.2-u05-ls1"
+          },
+          {
+            "template": "tb1.sb2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.sa",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "tb1.m3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "S6 L11 Miteinander",
+        "S6 L12",
+        "N B1 K7 Zwischenmenschliches",
+        "NW B1 K3",
+        "Si B1+ L2",
+        "M B1 L19–21 (unverified)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.amal",
+        "cast.samir",
+        "cast.rania",
+        "cast.herr-boehm",
+        "cast.herr-krause"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b1-2.md E5"
+      }
+    }
+  },
+  {
+    "id": "b1.2-u06",
+    "nr": 6,
+    "etappe": 2,
+    "title": {
+      "de": "So wird das gemacht",
+      "canDo": "Sie können Arbeitsabläufe genau erklären, Regeln im Detail verstehen und Informationen übersichtlich darstellen."
+    },
+    "spec": {
+      "situation": "Priya arbeitet die neue Auszubildende Nadine ein: Sie erklärt ihr die Abläufe und die Betriebsordnung, macht mit ihr die Betriebsführung, beantwortet ihre Fragen und diskutiert mit ihr, wie wichtig Pünktlichkeit ist. Im Sprechen lernen sich beide zuerst kennen (Mündlicher Ausdruck Teil 1) und sprechen dann über das Thema (Teil 2).",
+      "handlungsfeld": [
+        "2",
+        "12"
+      ],
+      "canDos": [
+        "cd.b1.ablaeufe-erklaeren",
+        "cd.b1.regeln-detail",
+        "cd.b1.grafik-organiser"
+      ],
+      "grammar": {
+        "new": [
+          "g.passiv-praesens",
+          "g.passiv-modalverb"
+        ],
+        "chunk": [],
+        "review": [
+          "g.werden-vollverb",
+          "g.brauchen-zu",
+          "g.muessen-duerfen-man"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Abläufe im Betrieb",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Regeln und Pflichten",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Sicherheit am Arbeitsplatz",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Pünktlichkeit und Zuverlässigkeit",
+          "target": 10,
+          "lemmas": []
+        }
+      ],
+      "textTypes": [
+        "tt.regeln",
+        "tt.broschuere",
+        "tt.fuehrung",
+        "tt.kurzansage",
+        "tt.email-formell",
+        "tt.praesentation",
+        "tt.email-antwort",
+        "tt.stichwortblatt",
+        "tt.meinungsblatt"
+      ],
+      "lanes": {
+        "primary": "tb1",
+        "pruefungsfokus": [
+          {
+            "template": "tb1.hv3",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.sb2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.m2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M B1 L20 Regeln",
+        "M B1 L21",
+        "N B1 K10 Miteinander",
+        "NW B1 K10",
+        "Si B1+ L7",
+        "S4 L10"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.nadine",
+        "cast.frau-otto",
+        "cast.jan-wolf",
+        "cast.emre"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daz",
+          "title": "Betreuungsvertrag und Kita-Ordnung",
+          "hf": "6"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/b1-2.md E6"
+      }
+    }
+  },
+  {
+    "id": "b1.2-u07",
+    "nr": 7,
+    "etappe": 3,
+    "title": {
+      "de": "Ein Unfall mit dem Fahrrad",
+      "canDo": "Sie können einen Unfall schildern, Ihre Beschwerden genau beschreiben und einen Schaden schriftlich melden."
+    },
+    "spec": {
+      "situation": "Emre wird auf dem Weg zur Arbeit mit dem Fahrrad von einem Auto gestreift: Er erzählt der Polizei, wie der Unfall passiert ist, beschreibt der Ärztin seine Beschwerden, versteht am Telefon, was die Versicherung zahlt, und meldet den Schaden schriftlich.",
+      "handlungsfeld": [
+        "10",
+        "5",
+        "8"
+      ],
+      "canDos": [
+        "cd.b1.unfall-schildern",
+        "cd.b1.symptome-genau",
+        "cd.b1.versicherung-gespraech",
+        "cd.b1.schaden-melden"
+      ],
+      "grammar": {
+        "new": [
+          "g.passiv-vergangenheit",
+          "g.temporal-waehrend-sobald"
+        ],
+        "chunk": [],
+        "review": [
+          "g.passiv-praesens",
+          "g.praep-genitiv",
+          "g.praeteritum",
+          "g.nachdem-bevor"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Im Straßenverkehr",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Der Unfall",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Verletzungen und Beschwerden",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Versicherung und Schaden",
+          "target": 10,
+          "lemmas": []
+        }
+      ],
+      "textTypes": [
+        "tt.blogbeitrag",
+        "tt.broschuere",
+        "tt.kurzmeldung",
+        "tt.email-informell",
+        "tt.mailbox",
+        "tt.telefonansage",
+        "tt.dialog",
+        "tt.telefonat",
+        "tt.email-antwort",
+        "tt.meinungsblatt"
+      ],
+      "lanes": {
+        "primary": "tb1",
+        "pruefungsfokus": [
+          {
+            "template": "tb1.lv1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.sb1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.sa",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "schreiben"
+          },
+          {
+            "template": "tb1.m2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M B1 L22",
+        "S6 L13",
+        "NW B1 K10",
+        "NW B1 K7",
+        "S6 L9",
+        "L1 B1 K11–12"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.emre",
+        "cast.elif",
+        "cast.dr-sommer",
+        "cast.jan-wolf",
+        "cast.ensemble-b1-1",
+        "cast.ensemble-b1-2"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b1-2.md E7"
+      }
+    }
+  },
+  {
+    "id": "b1.2-u08",
+    "nr": 8,
+    "etappe": 3,
+    "title": {
+      "de": "Diese Rechnung stimmt nicht",
+      "canDo": "Sie können einer falschen Forderung schriftlich widersprechen und am Telefon erklären, wie das Problem gelöst werden soll."
+    },
+    "spec": {
+      "situation": "Tomasz hat seinen Vertrag im Fitnessstudio gekündigt, aber das Studio bucht weiter Geld ab und schickt eine Mahnung: Er liest die Vertragsbedingungen, hört die Ansagen der Hotline, erklärt am Telefon das Problem und legt schriftlich Widerspruch ein.",
+      "handlungsfeld": [
+        "5",
+        "7",
+        "C"
+      ],
+      "canDos": [
+        "cd.b1.einspruch-schriftlich",
+        "cd.b1.problem-erklaeren-loesung",
+        "cd.b1.formelle-wendungen",
+        "cd.b1.ansagen-handeln"
+      ],
+      "grammar": {
+        "new": [
+          "g.praep-innerhalb-ausserhalb",
+          "g.indem"
+        ],
+        "chunk": [
+          "g.nomen-verb-verbindungen"
+        ],
+        "review": [
+          "g.passiv-vergangenheit",
+          "g.praep-genitiv",
+          "g.um-zu-damit"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Rechnung und Mahnung",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Verträge und Kündigung",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Widerspruch einlegen",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Konto und Zahlung",
+          "target": 10,
+          "lemmas": []
+        }
+      ],
+      "textTypes": [
+        "tt.brief-formell",
+        "tt.bedingungen",
+        "tt.beleg",
+        "tt.email-informell",
+        "tt.kurzansage",
+        "tt.telefonansage",
+        "tt.telefonat",
+        "tt.email-formell",
+        "tt.email-antwort",
+        "tt.meinungsblatt"
+      ],
+      "lanes": {
+        "primary": "tb1",
+        "pruefungsfokus": [
+          {
+            "template": "tb1.sb1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.hv3",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "input",
+            "step": "b1.2-u08-ls2"
+          },
+          {
+            "template": "tb1.sa",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "schreiben"
+          },
+          {
+            "template": "tb1.m2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M B1 L21",
+        "NW B1 K10",
+        "L1 B1 K13",
+        "S6 L10",
+        "S6 L12",
+        "M B1 L20 (unverified)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.tomasz",
+        "cast.priya",
+        "cast.ensemble-b1-1",
+        "cast.ensemble-b1-5"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daz",
+          "title": "Widerspruch gegen einen Bescheid der Familienkasse",
+          "hf": "1"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/b1-2.md E8"
+      }
+    }
+  },
+  {
+    "id": "b1.2-u09",
+    "nr": 9,
+    "etappe": 3,
+    "title": {
+      "de": "Stadt oder Land?",
+      "canDo": "Sie können einer Führung folgen, Vor- und Nachteile von zwei Wohnorten abwägen und Ihre Entscheidung begründen."
+    },
+    "spec": {
+      "situation": "Familie Haddad überlegt, aus Leipzig in eine Kleinstadt zu ziehen: Amal liest Zeitungsartikel und Regionalmeldungen, macht mit Samir und Rania eine Stadtführung, lernt dort Einheimische kennen, plant mit Samir ein Probewochenende und wägt Vor- und Nachteile ab. Im Sprechen lernen Sie zuerst jemanden kennen (Mündlicher Ausdruck Teil 1) und planen dann gemeinsam (Teil 3).",
+      "handlungsfeld": [
+        "12",
+        "10"
+      ],
+      "canDos": [
+        "cd.b1.fuehrung-verstehen",
+        "cd.b1.vor-nachteile-abwaegen",
+        "cd.b1.pressemeldungen-ueberschriften"
+      ],
+      "grammar": {
+        "new": [
+          "g.je-desto",
+          "g.praep-entlang-herum"
+        ],
+        "chunk": [],
+        "review": [
+          "g.komparation",
+          "g.komparation-attributiv",
+          "g.lokale-praep-weg"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Stadt und Land",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Infrastruktur und Pendeln",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Bei einer Führung",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Vor- und Nachteile",
+          "target": 10,
+          "lemmas": []
+        }
+      ],
+      "textTypes": [
+        "tt.zeitungsartikel",
+        "tt.kurzmeldung",
+        "tt.fuehrung",
+        "tt.kurzansage",
+        "tt.radiomeldung",
+        "tt.email-antwort",
+        "tt.stichwortblatt",
+        "tt.planungsblatt"
+      ],
+      "lanes": {
+        "primary": "tb1",
+        "pruefungsfokus": [
+          {
+            "template": "tb1.lv1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.hv3",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.sa",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "schreiben"
+          },
+          {
+            "template": "tb1.m1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M B1 L19 Tourismus",
+        "M B1 L21",
+        "S6 L8",
+        "N B1 K11 Stadt, Land, Fluss",
+        "NW B1 K10–11",
+        "L1 B1 K13",
+        "Si B1+ L3 Unterwegs"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.amal",
+        "cast.samir",
+        "cast.rania",
+        "cast.priya",
+        "cast.ensemble-b1-6"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b1-2.md E9"
+      }
+    }
+  },
+  {
+    "id": "b1.2-u10",
+    "nr": 10,
+    "etappe": 4,
+    "title": {
+      "de": "Reparieren statt wegwerfen",
+      "canDo": "Sie können einen Artikel zusammenfassen, in einer Diskussion erkennen, wer was meint, und gelesene Meinungen wiedergeben."
+    },
+    "spec": {
+      "situation": "In Leipzig wird über Klimaschutz im Alltag diskutiert: Priya liest einen Artikel über ein Repair-Café und Leserkommentare zu Kurzstreckenflügen, hört kurze Meinungen, ein Interview und eine Radiodiskussion, fasst den Artikel zusammen und diskutiert mit Arjun über Klimaschutz im Alltag.",
+      "handlungsfeld": [
+        "9",
+        "B"
+      ],
+      "canDos": [
+        "cd.b1.artikel-zusammenfassen-stellung",
+        "cd.b1.debatte-wer-meint-was",
+        "cd.b1.kommentare-einschraenkungen",
+        "cd.b1.meinungen-wiedergeben-vergleichen"
+      ],
+      "grammar": {
+        "new": [
+          "g.statt-ohne",
+          "g.als-ob"
+        ],
+        "chunk": [],
+        "review": [
+          "g.um-zu-damit",
+          "g.konj2-irreal-gegenwart",
+          "g.zu-infinitiv"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Umwelt und Klima",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Reparieren und Wegwerfen",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Verbrauch und Nachhaltigkeit",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Meinungen in der Diskussion",
+          "target": 10,
+          "lemmas": []
+        }
+      ],
+      "textTypes": [
+        "tt.zeitungsartikel",
+        "tt.leserkommentar",
+        "tt.diskussion",
+        "tt.umfrage",
+        "tt.radiointerview",
+        "tt.zusammenfassung",
+        "tt.email-antwort",
+        "tt.meinungsblatt"
+      ],
+      "lanes": {
+        "primary": "tb1",
+        "pruefungsfokus": [
+          {
+            "template": "tb1.lv2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "input",
+            "step": "b1.2-u10-ls1"
+          },
+          {
+            "template": "tb1.hv1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.hv2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.m2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M B1 L23 Umwelt und Klima",
+        "M B1 L24",
+        "S6 L9",
+        "S6 L12",
+        "N B1 K5 Umweltfreundlich?",
+        "As B1+ K10 Natürlich Natur!"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.ensemble-b1-2",
+        "cast.ensemble-b1-3",
+        "cast.ensemble-b1-6"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b1-2.md E10"
+      }
+    }
+  },
+  {
+    "id": "b1.2-u11",
+    "nr": 11,
+    "etappe": 4,
+    "title": {
+      "de": "Sich engagieren",
+      "canDo": "Sie können Ihre Position zu gesellschaftlichen Fragen begründen und in einer Diskussion zwischen zwei Seiten vermitteln."
+    },
+    "spec": {
+      "situation": "Amal und Priya helfen ehrenamtlich bei der Tafel: Sie suchen in der Ehrenamtsbörse passende Angebote für Bekannte, hören ein Interview mit einer Ehrenamtlichen und kurze Stellungnahmen im Radio, vermitteln im Verein zwischen zwei Positionen und planen mit Herrn Jung einen Flohmarkt für die Tafel.",
+      "handlungsfeld": [
+        "A",
+        "D",
+        "B"
+      ],
+      "canDos": [
+        "cd.b1.position-werte",
+        "cd.b1.zwischen-positionen-vermitteln",
+        "cd.b1.interview-details",
+        "cd.b1.meinungsbeitraege-einmal"
+      ],
+      "grammar": {
+        "new": [
+          "g.weder-entweder-zwar",
+          "g.konj2-vergangenheit"
+        ],
+        "chunk": [],
+        "review": [
+          "g.nicht-nur-sowohl",
+          "g.konj2-irreal-gegenwart",
+          "g.relativsatz-dat-praep"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Ehrenamt und Engagement",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Gesellschaft und Politik",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Im Verein",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Spenden und helfen",
+          "target": 10,
+          "lemmas": []
+        }
+      ],
+      "textTypes": [
+        "tt.kleinanzeige",
+        "tt.informationstafel",
+        "tt.radiointerview",
+        "tt.umfrage",
+        "tt.dialog",
+        "tt.email-antwort",
+        "tt.planungsblatt"
+      ],
+      "lanes": {
+        "primary": "tb1",
+        "pruefungsfokus": [
+          {
+            "template": "tb1.lv3",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "input",
+            "step": "b1.2-u11-ls1"
+          },
+          {
+            "template": "tb1.hv2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "input",
+            "step": "b1.2-u11-ls2"
+          },
+          {
+            "template": "tb1.hv1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.m3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M B1 L18 Politik und Gesellschaft",
+        "M B1 L10 Verpasste Gelegenheiten",
+        "S6 L12 Soziales Engagement",
+        "S5 L7",
+        "N B1 K10 Miteinander",
+        "N B1 K11",
+        "L1 B1 K16"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.amal",
+        "cast.priya",
+        "cast.herr-jung",
+        "cast.tomasz",
+        "cast.ensemble-b1-1",
+        "cast.ensemble-b1-2"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daz",
+          "title": "Im Elternbeirat von Kita und Schule mitreden",
+          "hf": "6"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/b1-2.md E11"
+      }
+    }
+  },
+  {
+    "id": "b1.2-u12",
+    "nr": 12,
+    "etappe": 4,
+    "title": {
+      "de": "Zukunftsvisionen",
+      "canDo": "Sie können frühere Zukunftsvisionen mit heute vergleichen, ausführlich über sich und Ihre Pläne sprechen und eine zusammenhängende E-Mail schreiben."
+    },
+    "spec": {
+      "situation": "Die Stadtbibliothek zeigt die Ausstellung „Die Zukunft von gestern“: Priya liest den Blog einer Besucherin, vergleicht alte Visionen und Plakate mit der Wirklichkeit, meldet sich zur Zukunftswerkstatt der Bibliothek an, lernt dort andere Teilnehmende kennen und schreibt einem Freund, welche alte Vorhersage sie überrascht hat und wie sie sich ihr Leben in zehn Jahren vorstellt. Keine neue Grammatik; die Einheit endet mit der Generalprobe Mündlicher Ausdruck Teil 1–3.",
+      "handlungsfeld": [
+        "B",
+        "D"
+      ],
+      "canDos": [
+        "cd.b1.frueher-heute-vergleichen",
+        "cd.b1.foto-beschreiben-vergleichen",
+        "cd.b1.ueber-mich-ausfuehrlich",
+        "cd.b1.mail-zusammenhaengend"
+      ],
+      "grammar": {
+        "new": [],
+        "chunk": [],
+        "review": [
+          "g.als-ob",
+          "g.konj2-vergangenheit",
+          "g.futur1",
+          "g.um-zu-damit"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Zukunft und Visionen",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Früher und heute",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "Pläne und Ziele",
+          "target": 10,
+          "lemmas": []
+        },
+        {
+          "title": "In der Ausstellung",
+          "target": 10,
+          "lemmas": []
+        }
+      ],
+      "textTypes": [
+        "tt.blogbeitrag",
+        "tt.programm",
+        "tt.email-formell",
+        "tt.dialog",
+        "tt.foto",
+        "tt.email-antwort",
+        "tt.stichwortblatt",
+        "tt.meinungsblatt",
+        "tt.planungsblatt"
+      ],
+      "lanes": {
+        "primary": "tb1",
+        "pruefungsfokus": [
+          {
+            "template": "tb1.sb2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb1.m1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb1.m2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb1.m3",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M B1 L24 Zukunftsvisionen",
+        "N B1 K6 Blick nach vorn"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.amal",
+        "cast.lina",
+        "cast.herr-vogel",
+        "cast.ensemble-b1-4"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b1-2.md E12"
+      }
+    }
+  }
+]

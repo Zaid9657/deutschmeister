@@ -1,7 +1,7 @@
 // COV-5 — productive rotation: every productive Teil (Schreiben, Sprechen) of the primary lane
 // recurs at least every 4th unit — in every window of 4 consecutive units it appears once, as a
-// Prüfungsfokus Teil or as the unit's Aufgabe (BLUEPRINT §2.4). Blocking with 12 units; advisory
-// on a partial level (windows over the units present).
+// Prüfungsfokus Teil or as the unit's Aufgabe (BLUEPRINT §2.4). Blocking with 12 units at stage T;
+// advisory on a partial level or one still before T (windows over the units present).
 
 import { walkTasks, speakingParts } from '../lib-validate/walk.mjs';
 import { primaryLane } from '../lib-validate/context.mjs';
@@ -11,11 +11,11 @@ export const id = 'COV-5';
 export const title = 'Productive Teile recur at least every 4th unit';
 export const type = 'hard';
 export const scope = 'level';
-export const stage = 'T';
+export const stage = 'spec'; // Prüfungsfokus is spec data; Aufgaben (stage T) are counted when present, blocking only at 12 units at T
 
 const WINDOW = 4;
 
-export function run({ ctx, levels }) {
+export function run({ ctx, levels, stageOf = () => 'T' }) {
   const findings = [];
   let checked = 0;
   for (const slot of levels) {
@@ -36,7 +36,8 @@ export function run({ ctx, levels }) {
       return [u.nr, s];
     }));
     const nrs = units.map((u) => u.nr);
-    const severity = units.length >= 12 ? 'blocker' : 'advisory';
+    // Aufgaben exist from stage T on (SCHEMA §8.1): blocking only when all 12 units are at T
+    const severity = units.filter((u) => stageOf(u) === 'T').length >= 12 ? 'blocker' : 'advisory';
     for (const T of productive) {
       for (let i = 0; i + WINDOW <= nrs.length; i += 1) {
         const win = nrs.slice(i, i + WINDOW);

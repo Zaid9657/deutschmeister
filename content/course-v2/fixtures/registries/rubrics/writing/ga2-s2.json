@@ -3,7 +3,9 @@
   "id": "ga2-s2",
   "kind": "writing",
   "lane": "ga2",
+  "method": "ai",
   "max": 10,
+  "examMax": 10,
   "criteria": [
     {
       "id": "af",
@@ -15,6 +17,29 @@
         2,
         0.5,
         0
+      ],
+      "scoredBy": "ai",
+      "descriptors": [
+        {
+          "points": 5,
+          "de": "Alle drei Punkte sind klar behandelt; Anrede, Gruß und Sie-Form passen durchgehend."
+        },
+        {
+          "points": 3.5,
+          "de": "Alle drei Punkte sind behandelt, einer nur knapp oder etwas unklar; das Register passt meistens."
+        },
+        {
+          "points": 2,
+          "de": "Zwei Punkte sind erkennbar behandelt, oder das Register wechselt mehrmals."
+        },
+        {
+          "points": 0.5,
+          "de": "Nur ein Punkt ist erkennbar; der Text erfüllt die Aufgabe kaum."
+        },
+        {
+          "points": 0,
+          "de": "Kein Punkt ist erkennbar behandelt."
+        }
       ]
     },
     {
@@ -27,9 +52,48 @@
         2,
         0.5,
         0
+      ],
+      "scoredBy": "ai",
+      "descriptors": [
+        {
+          "points": 5,
+          "de": "Passende Wörter und Strukturen der Stufe A2; Fehler stören das Verständnis nicht."
+        },
+        {
+          "points": 3.5,
+          "de": "Meist passende Wörter und Strukturen; einzelne Fehler stören das Verständnis kurz."
+        },
+        {
+          "points": 2,
+          "de": "Einfache Wörter und Strukturen mit häufigen Fehlern; der Text bleibt aber verständlich."
+        },
+        {
+          "points": 0.5,
+          "de": "Sehr wenige sprachliche Mittel; viele Stellen sind nur schwer zu verstehen."
+        },
+        {
+          "points": 0,
+          "de": "Der Text ist kaum zu verstehen."
+        }
       ]
     }
   ],
+  "errorPolicy": {
+    "a2": {
+      "verb-final": "flag",
+      "adj-ending": "flag",
+      "connector-position": "flag",
+      "v2-inv": "score",
+      "satzklammer": "score",
+      "case-np": "score",
+      "case-pp": "score",
+      "gender-article": "score",
+      "perfekt-aux-participle": "score",
+      "reflexive": "score",
+      "register": "score",
+      "spelling-meaning": "score"
+    }
+  },
   "zeroRules": [
     "goethe-e-under-half-words",
     "goethe-e-topic-missed"

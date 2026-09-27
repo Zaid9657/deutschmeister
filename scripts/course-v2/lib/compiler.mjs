@@ -3,10 +3,13 @@
 // For one level it reads content/course-v2/** (registries shared, the level's own files) and
 // produces, after a clean SCH-01/REF-01/KEY-01 check:
 //
-//   <out>/<level>/units/uNN.json      the unit chunk the player lazy-loads: learner-invisible fields
-//                                     stripped, generated fields added (poolItems in the live
-//                                     lessonPools shape, generated-item ids, line seconds,
-//                                     minutesPlanned, reviewCards, contentHash)
+//   <out>/<level>/units/uNN.json      the unit chunk the player lazy-loads (units at stage T only):
+//                                     learner-invisible fields stripped, generated fields added
+//                                     (poolItems in the live lessonPools shape, generated-item ids,
+//                                     line seconds, minutesPlanned, reviewCards, contentHash)
+//   <out>/<level>/reserve.json        the reserve index (SCHEMA §13): every Lernschritt's reserve items
+//                                     in the pool shape, by unit, step, topic and error tag — read by
+//                                     requeue, earlierDraw, Plateau review sets, Mehr üben, repair cards
 //   <out>/<level>/plateaus/pN.json, closing/<id>.json   the same treatment for Plateau/closing files
 //   <out>/<level>/manifest.json       course manifest: units with titles, can-dos, grammar, Prüfungsfokus,
 //                                     minutes and counts (syllabus rows), Etappen, completion, review,
@@ -15,7 +18,8 @@
 //   <out>/<level>/rule-cards.json     the level's rule cards (when authored)
 //   <out>/<level>/lines.json          every spoken line with its cast voice — the audio run's input
 //   <banks>/<level>.banks.json        grader input only, every entry keyed by bankKey:
-//                                       writing  = WritingTasks + written MicroOutputs (SCHEMA §15.5)
+//                                       writing  = WritingTasks (Leitpunkt cues and `choose` included,
+//                                                  SCHEMA §15.5) + written MicroOutputs
 //                                       speaking = SpeakingTasks + spoken MicroOutputs
 //                                       micro    = every MicroOutput, with its `mode` (the lookup
 //                                                  table of _shared/rubrics/data.mjs bankEntry(…, 'micro', key))
@@ -37,8 +41,8 @@ export const DEFAULT_BANKS = path.join(REPO_ROOT, 'netlify/functions/_shared/cou
 const MODULE_LABEL = { hoeren: 'Hören', lesen: 'Lesen', sprachbausteine: 'Sprachbausteine', schreiben: 'Schreiben', sprechen: 'Sprechen' };
 // Fields no learner sees: reviewer rationale, authoring provenance, validator flags.
 const STRIP_ITEM_KEYS = ['origin', 'reviewerConfirmed', 'acceptedWhy', 'intentionalError', 'perceptionOnly'];
-const STRIP_SPEC_KEYS = ['lehrwerk', 'deviation', 'source'];
-const STRIP_TOP_KEYS = ['$schema', 'version', 'status', 'reviewedIn'];
+const STRIP_SPEC_KEYS = ['lehrwerk', 'deviation', 'source', 'fokusPlan'];
+const STRIP_TOP_KEYS = ['$schema', 'version', 'status', 'reviewedIn', 'stage'];
 const WORDS_PER_SECOND = 2.5; // line-length estimate (150 words/min) until the audio run measures it
 
 const json = (x) => `${JSON.stringify(x, null, 2)}\n`;
@@ -61,6 +65,8 @@ function levelOfDoc({ doc, kind }) {
       return typeof doc.level === 'string' ? doc.level : null;
     case 'lanepack':
       return typeof doc.unit === 'string' ? doc.unit.split('-')[0] : null;
+    case 'plateaulanepack':
+      return typeof doc.plateau === 'string' ? doc.plateau.split('-')[0] : null;
     default:
       return null; // registries, casts, stubs: shared by every level
   }
@@ -108,6 +114,17 @@ export function toPoolItem(item, minLektion) {
   return out;
 }
 
+/** A reserve item in the pool shape plus what the reserve index draws by (SCHEMA §3.1 banks/errorTags). */
+function toReserveItem(item, minLektion, step) {
+  const out = toPoolItem(item, minLektion);
+  out.step = step;
+  const tags = [...(item.errorTag ? [item.errorTag] : []), ...(Array.isArray(item.errorTags) ? item.errorTags : [])];
+  out.errorTags = [...new Set(tags)];
+  out.banks = Array.isArray(item.banks) ? item.banks : [];
+  if (Number.isInteger(item.difficulty)) out.difficulty = item.difficulty;
+  return out;
+}
+
 // ── generated ids, stripping, line seconds ──────────────────────────────────────────────
 /** Give every GeneratorSpec of a step its compiler-assigned item ids (STEP-gNN, in document order). */
 function assignGeneratedIds(step) {
@@ -128,11 +145,15 @@ function estimateSeconds(line) {
   return round1(words / WORDS_PER_SECOND);
 }
 
-/** Learner-facing copy of an authored file (deep clone; the input is not touched). */
+/**
+ * Learner-facing copy of an authored file (deep clone; the input is not touched). Reserves leave
+ * the chunk: they are never served in their Lernschritt and live in the reserve index instead.
+ */
 function learnerCopy(doc) {
   const c = structuredClone(doc);
   for (const k of STRIP_TOP_KEYS) delete c[k];
   if (isObj(c.spec)) for (const k of STRIP_SPEC_KEYS) delete c.spec[k];
+  if (Array.isArray(c.steps)) for (const st of c.steps) if (isObj(st)) delete st.reserve;
   eachNode(c, (x) => {
     if (isItem(x)) for (const k of STRIP_ITEM_KEYS) delete x[k];
     if (isLine(x) && x.seconds === undefined) x.seconds = estimateSeconds(x);
@@ -142,7 +163,9 @@ function learnerCopy(doc) {
 }
 
 // ── ids (ID-01 ledger) ──────────────────────────────────────────────────────────────────
-const ID_KINDS = ['UNIT', 'STEP', 'item', 'line', 'block', 'mo', 'rm', 'fact', 'fokus', 'plateau'];
+// order matters where SCHEMA §2 patterns overlap: a lane-infixed exam text (…-ls4-ta2-t3) also has
+// the shape of a block id, so `text` is tried first
+const ID_KINDS = ['UNIT', 'STEP', 'item', 'line', 'text', 'asset', 'block', 'mo', 'rm', 'fact', 'fokus', 'plateau'];
 function collectIds(doc, into, errors, where) {
   const add = (id, kind) => {
     if (into.has(id)) errors.push(`${where}: ID-01 duplicate id "${id}" (also ${into.get(id).where})`);
@@ -179,28 +202,32 @@ function writingEntry(t, level, owner) {
     address: t.address,
     situationDe: t.situationDe,
     taskDe: t.taskDe,
-    leitpunkte: t.leitpunkte.map((lp) => ({ id: lp.id, de: lp.de })), // cues stay in the unit chunk
-    ...pick(t, ['choose']),
-    wordBand: t.wordBand,
-    ...pick(t, ['wordBandLearning']),
-    minSubmitWords: t.minSubmitWords,
+    // cues and `choose` feed the server twin of the pre-check (advisory cue coverage, never the score)
+    leitpunkte: t.leitpunkte.map((lp) => ({ id: lp.id, de: lp.de, cues: lp.cues })),
+    choose: t.choose ?? null,
+    // form tasks (method deterministic): the fields and their keys are scored in code
+    ...(t.form ? { form: { fields: t.form.fields } } : {}),
+    ...pick(t, ['wordBand', 'wordBandLearning', 'minSubmitWords']),
   });
 }
 
+// SpeakingPart fields the speaking functions read (SCHEMA §12: parts, stimulus, partnerData,
+// keyPoints, seconds/turns); modelTurns stay in the unit chunk (shown after the attempt only)
+const SPEAKING_PART_KEYS = ['template', 'mode', 'profile', 'prepMinutes', 'prepAtHome', 'instructionsDe', 'situationDe', 'cards', 'photos', 'slides',
+  'stimulus', 'partnerData', 'topicChoice', 'keyPoints', 'seconds', 'turns', 'moves', 'planningRound'];
+
 function speakingEntry(t, level, owner) {
+  const parts = Array.isArray(t.parts) ? t.parts : null;
   return withHash({
     level,
     ...owner,
     lane: t.lane,
-    template: t.template,
     examKey: LANE_EXAM_KEY[t.lane] || null,
-    mode: t.mode,
-    profile: t.profile,
-    prepMinutes: t.prepMinutes,
-    instructionsDe: t.instructionsDe,
-    ...pick(t, ['situationDe', 'cards', 'slides']),
-    moves: t.moves,
-    ...pick(t, ['planningRound']),
+    // a one-Teil task carries its part fields at the top (as normalizeSpeakingTask reads them);
+    // a multi-Teil round carries `parts` and the first part's template/mode/profile for the session row
+    ...(parts
+      ? { ...pick(parts[0], ['template', 'mode', 'profile', 'prepMinutes']), parts: parts.map((p) => pick(p, SPEAKING_PART_KEYS)) }
+      : pick(t, SPEAKING_PART_KEYS)),
     aiRole: t.aiRole,
     openingLine: t.openingLine,
     hintWords: t.hintWords,
@@ -343,20 +370,30 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
 
   const rows = [];
   const unitHashes = {};
-  const totals = { lernschritte: 0, items: 0, generatedItems: 0, examBlocks: 0, writingTasks: 0, speakingTasks: 0, microOutputs: 0, redemittel: 0, audioLines: 0, reviewCards: 0 };
+  const totals = { lernschritte: 0, items: 0, reserveItems: 0, generatedItems: 0, examBlocks: 0, writingTasks: 0, speakingTasks: 0, microOutputs: 0, redemittel: 0, audioLines: 0, reviewCards: 0 };
   const rowById = new Map();
 
+  const reserveIndex = [];
   for (const { file, doc: u } of units) {
     const hash = contentHash(u);
     unitHashes[u.id] = hash;
     const chunk = learnerCopy(u);
     const generated = [];
     if (Array.isArray(chunk.steps)) for (const s of chunk.steps) generated.push(...assignGeneratedIds(s));
-    collectIds({ ...u, steps: chunk.steps || u.steps }, ids, errors, rel(file));
+    collectIds({ ...u, steps: (chunk.steps || u.steps || []).map((s, i) => ({ ...s, reserve: u.steps[i]?.reserve })) }, ids, errors, rel(file));
 
+    // pool items: every authored item except the reserves (the reserve index carries those)
+    const reserveIds = new Set();
+    for (const st of Array.isArray(u.steps) ? u.steps : []) {
+      for (const it of Array.isArray(st.reserve) ? st.reserve : []) {
+        if (!isItem(it)) continue;
+        reserveIds.add(it.id);
+        reserveIndex.push({ unit: u.id, ...toReserveItem(it, u.nr, st.id) });
+      }
+    }
     const poolItems = [];
     eachNode(u, (x) => {
-      if (isItem(x)) poolItems.push(toPoolItem(x, u.nr));
+      if (isItem(x) && !reserveIds.has(x.id)) poolItems.push(toPoolItem(x, u.nr));
     });
     const lines = [];
     eachNode(u, (x) => {
@@ -376,12 +413,17 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
 
     const minutesPlanned = minutesOf(u, profile);
     const reviewCards = reviewCardsOf(u);
-    const hasContent = Array.isArray(u.steps);
+    // Only a unit at stage T is complete enough to play (SCHEMA §8.1); earlier stages get a
+    // syllabus row only, and their items are not counted as served content yet.
+    const hasContent = u.stage === 'T' && Array.isArray(u.steps);
     const counts = {
       lernschritte: hasContent ? u.steps.length : 0,
-      items: poolItems.length,
-      generatedItems: generated.length,
-      examBlocks: hasContent ? u.steps.filter((s) => s.kind === 'pruefung').reduce((n, s) => n + s.blocks.length, 0) : 0,
+      items: hasContent ? poolItems.length : 0,
+      reserveItems: hasContent ? reserveIds.size : 0,
+      generatedItems: hasContent ? generated.length : 0,
+      examBlocks: hasContent
+        ? u.steps.reduce((n, s) => n + (Array.isArray(s.blocks) ? s.blocks.length : 0) + (isObj(s.examBlock) ? 1 : 0), 0)
+        : 0,
       writingTasks: tasks.filter((t) => t.kind === 'writing').length,
       speakingTasks: tasks.filter((t) => t.kind === 'speaking').length,
       microOutputs: tasks.filter((t) => t.kind.startsWith('micro')).length,
@@ -426,6 +468,7 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
       minutesPlanned: minutesPlanned ? minutesPlanned.total : null,
       minutesMeasured: null,
       status: u.status,
+      stage: u.stage ?? null,
       canDoIds: u.spec.canDos,
       chunk: hasContent ? `units/u${pad2(u.nr)}.json` : null,
       counts,
@@ -457,7 +500,7 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
   const etappeOf = (id) => (course.etappen.find((e) => e.units.includes(id)) || {}).nr || null;
   const rowsInOrder = course.units.map((id) => rowById.get(id) || {
     unit: id, nr: Number(id.slice(-2)), etappe: etappeOf(id), title: null, canDoTitle: null, handlungsfeld: [], canDos: [],
-    grammar: [], pruefungsfokus: {}, minutesPlanned: null, minutesMeasured: null, status: 'missing', canDoIds: [], chunk: null, counts: null,
+    grammar: [], pruefungsfokus: {}, minutesPlanned: null, minutesMeasured: null, status: 'missing', stage: null, canDoIds: [], chunk: null, counts: null,
   });
   const lexEntries = lexicon ? lexicon.entries : [];
   const counts = {
@@ -518,12 +561,30 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
   // Rule cards (Form segment, repair cards) and the audio line list (input of generate-course-audio:
   // voice from the cast bible, text from `say` when present, else `de`).
   if (ruleCards) outputs.push({ file: path.join(levelOut, 'rule-cards.json'), text: json({ $generated: GENERATED_MARK, level, cards: ruleCards.cards }) });
+  // The reserve index (SCHEMA §13 `reserve.js`, JSON here like every v0 output): by unit, step, topic
+  // and error tag. Only units at stage T contribute — an earlier stage has no finished reserve.
+  const servable = new Set(units.filter((u) => u.doc.stage === 'T').map((u) => u.doc.id));
+  const reserve = reserveIndex.filter((r) => servable.has(r.unit));
+  const byKey = (key) => {
+    const o = {};
+    for (const r of reserve) for (const k of [].concat(r[key])) (o[k] ||= []).push(r.id);
+    return Object.fromEntries(Object.entries(o).sort(([a], [b]) => (a < b ? -1 : 1)));
+  };
+  outputs.push({
+    file: path.join(levelOut, 'reserve.json'),
+    text: json({ $generated: GENERATED_MARK, level, items: reserve, byUnit: byKey('unit'), byTopic: byKey('topic'), byErrorTag: byKey('errorTags') }),
+  });
   const voices = new Map(docs('casts').flatMap((t) => Object.entries(t.doc.members)));
   const audio = [];
+  // voice: the cast bible for cast members, the file's own `extras` for one-off speakers (SCHEMA §3.3);
+  // anonymous speakers (ansage, radio, durchsage, pruefer) get their voice in the audio run
   const addLines = (doc) => eachNode(doc, (x) => {
     if (!isLine(x)) return;
     const member = voices.get(x.speaker);
-    audio.push({ id: x.id, speaker: x.speaker, voice: member ? member.voice.azure : null, rate: member ? member.voice.rate : null, text: x.say || x.de });
+    const extra = isObj(doc.extras) ? doc.extras[x.speaker] : undefined;
+    const voice = member ? member.voice.azure : extra ? extra.voice : null;
+    const rate = member ? member.voice.rate : extra ? extra.rate ?? null : null;
+    audio.push({ id: x.id, speaker: x.speaker, voice, rate, text: x.say || x.de });
   });
   units.forEach((u) => addLines(u.doc));
   for (const kind of ['plateau', 'closing']) mine(kind).sort((a, b) => a.doc.id.localeCompare(b.doc.id)).forEach((t) => addLines(t.doc));

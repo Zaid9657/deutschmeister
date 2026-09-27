@@ -2,8 +2,8 @@
 // the lane, lane-exact blocks of T + blocks whose template lists T in transfersTo ≥ 2 (.1) / ≥ 3
 // (.2), and lane-exact blocks ≥ 1 (.1) / ≥ 2 (.2); a lane-only Teil (no inbound transfer) needs
 // ≥ 2 / ≥ 3 lane-exact blocks. Counted over LS4 blocks, Aufgaben, lane packs, Plateau Teile and
-// the closing block. Blocking once the level holds its 12 units; a partial level gets the same
-// measurement as advisories.
+// the closing block. Blocking once the level holds its 12 units at stage T; a partial level (or
+// one whose units are still at spec/S/I) gets the same measurement as advisories.
 
 import { walkBlocks, walkTasks, speakingParts } from '../lib-validate/walk.mjs';
 import { docsOfLevel, liveLanes } from '../lib-validate/context.mjs';
@@ -28,7 +28,7 @@ export function templateUses(slot) {
   return uses;
 }
 
-export function run({ ctx, levels }) {
+export function run({ ctx, levels, stageOf = () => 'T' }) {
   const findings = [];
   const notes = [];
   let lanesChecked = 0;
@@ -43,7 +43,10 @@ export function run({ ctx, levels }) {
     const dot2 = slot.level.endsWith('.2');
     const needTotal = dot2 ? 3 : 2;
     const needExact = dot2 ? 2 : 1;
-    const complete = slot.units.size >= 12;
+    // blocks and Aufgaben exist from stage T on (SCHEMA §8.1): the count is final only when all 12
+    // units have reached T; before that the same measurement is advisory
+    const atT = [...slot.units.values()].filter((u) => stageOf(u) === 'T').length;
+    const complete = atT >= 12;
     const severity = complete ? 'blocker' : 'advisory';
     const uses = templateUses(slot);
     const doc = { file: slot.course?.file || `content/course-v2/${slot.level}` };
@@ -62,8 +65,8 @@ export function run({ ctx, levels }) {
         const transfer = uses.filter((u) => from.includes(u)).length;
         const laneOnly = from.length === 0;
         const total = exact + transfer;
-        if (laneOnly && exact < needTotal) findings.push(finding(severity, doc, `lanes.${lane}.${teil}`, `${T} (lane-only) appears ${exact}× lane-exact (need ≥ ${needTotal})${complete ? '' : ` — level has ${slot.units.size}/12 units`}`, T));
-        else if (!laneOnly && (total < needTotal || exact < needExact)) findings.push(finding(severity, doc, `lanes.${lane}.${teil}`, `${T} appears ${exact}× lane-exact + ${transfer}× by transfer (need ≥ ${needTotal} in all, ≥ ${needExact} lane-exact)${complete ? '' : ` — level has ${slot.units.size}/12 units`}`, T));
+        if (laneOnly && exact < needTotal) findings.push(finding(severity, doc, `lanes.${lane}.${teil}`, `${T} (lane-only) appears ${exact}× lane-exact (need ≥ ${needTotal})${complete ? '' : ` — level has ${atT}/12 units at stage T`}`, T));
+        else if (!laneOnly && (total < needTotal || exact < needExact)) findings.push(finding(severity, doc, `lanes.${lane}.${teil}`, `${T} appears ${exact}× lane-exact + ${transfer}× by transfer (need ≥ ${needTotal} in all, ≥ ${needExact} lane-exact)${complete ? '' : ` — level has ${atT}/12 units at stage T`}`, T));
       }
     }
   }

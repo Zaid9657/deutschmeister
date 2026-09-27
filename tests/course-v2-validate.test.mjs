@@ -17,7 +17,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { exampleContext, choiceContext } from './fixtures/course-v2/schema-example.mjs';
-import { runRules, loadRules, RULE_ORDER, normalizeStage } from '../scripts/course-v2/lib-validate/runner.mjs';
+import { runRules, loadRules, RULE_ORDER, normalizeStage, stageOfDoc } from '../scripts/course-v2/lib-validate/runner.mjs';
 import { emptyContext, ingest, addDoc, levelSlot } from '../scripts/course-v2/lib-validate/context.mjs';
 import { detectInText, detectorProblem, buildLexEnv, EMPTY_ENV, stemVowelChanged } from '../scripts/course-v2/lib-validate/detectors.mjs';
 import { BANK_KEY_RE, SCHEMA_PATTERNS } from '../scripts/course-v2/lib-validate/ids.mjs';
@@ -500,6 +500,13 @@ describe('COV-1 appearance coverage per live lane', () => {
   test('pass: every ga2 Teil ≥ 2× over twelve units', async () => assertPass(await rule('COV-1', syntheticLevel(balanced), { mode: 'level' })));
   test('fail: Lesen never practised', async () => assertFail(await rule('COV-1', syntheticLevel(lopsided), { mode: 'level' }), /ga2\.l1/));
   test('a file target skips the level-scope rule', async () => assert.equal((await rule('COV-1', syntheticLevel(balanced))).status, 'skip'));
+  test('the count blocks only when all twelve units are at stage T; before that it is advisory', async () => {
+    const lvl = syntheticLevel(lopsided);
+    lvl.docs[4].data.stage = 'I';
+    const rep = await rule('COV-1', lvl, { mode: 'level' });
+    assert.equal(rep.status, 'warn');
+    assert.ok(rep.findings.every((f) => f.severity === 'advisory' && /11\/12 units at stage T/.test(f.message)));
+  });
 });
 
 describe('COV-3 Prüfungsfokus per unit', () => {
@@ -554,6 +561,16 @@ describe('stage gates (BLUEPRINT §9, SCHEMA §8.1)', () => {
     for (const id of ['REF-01', 'ID-01', 'TXT-02', 'TXT-03', 'CON-06']) assert.notEqual(status[id], 'skip', id);
     for (const id of ['ITM-01', 'ITM-06', 'EXM-01', 'EXM-11', 'KEY-01']) assert.equal(status[id], 'skip', id);
     assert.equal(status['CON-06'], 'fail');
+  });
+  test('a stage-less unit is judged as a spec when it holds only its spec, else at T (integration 2026-09-27)', () => {
+    const spec = { kind: 'unit', data: { id: 'a2.1-u01', spec: {} } };
+    assert.equal(stageOfDoc(spec), 'spec');
+    assert.equal(stageOfDoc({ kind: 'unit', data: { id: 'a2.1-u01', spec: {}, steps: [] } }), 'T');
+    assert.equal(stageOfDoc({ kind: 'unit', data: { id: 'a2.1-u01', stage: 'S', spec: {} } }), 'S');
+    assert.equal(stageOfDoc(spec, 'I'), 'I', '--stage overrides');
+    // spec-judging rules run on a spec; item and exam rules do not
+    for (const id of ['GRM-01', 'ALL-03', 'COV-3', 'COV-4', 'COV-5', 'LEX-05']) assert.equal(RULES.find((r) => r.id === id).stage, 'spec', id);
+    assert.equal(RULES.find((r) => r.id === 'COV-1').stage, 'T');
   });
   test('a unit declaring stage I is judged on the I set without --stage', async () => {
     const b = ex((p) => { p.unit.stage = 'I'; });

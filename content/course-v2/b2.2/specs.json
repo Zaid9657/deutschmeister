@@ -1,0 +1,1665 @@
+[
+  {
+    "id": "b2.2-u01",
+    "nr": 1,
+    "etappe": 1,
+    "title": {
+      "de": "Mit viel Gefühl: Freundschaft im digitalen Zeitalter",
+      "canDo": "Sie können differenziert über Freundschaft und Gefühle sprechen und wiedergeben, was Fachleute dazu sagen."
+    },
+    "spec": {
+      "situation": "Amal hat im Radio eine Diskussion darüber gehört, ob Freundschaften einen Umzug überstehen, und fragt Priya um Rat. Priya liest einen Magazinartikel, hört die Sendung nach, gibt Amal wieder, was die Psychologin und der Blogger wirklich sagen, und reagiert schriftlich auf die Sendung.",
+      "handlungsfeld": [
+        "D",
+        "B"
+      ],
+      "canDos": [
+        "cd.b2.fachleute-muendlich-weitergeben",
+        "cd.b2.freundschaft-gefuehle",
+        "cd.b2.radiodiskussion-drei-stimmen",
+        "cd.b2.magazinartikel-im-detail"
+      ],
+      "grammar": {
+        "new": [
+          "g.konj1-gegenwart"
+        ],
+        "chunk": [],
+        "review": [
+          "g.redewiedergabe"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Nähe und Distanz",
+          "lemmas": [
+            "lx.bindung",
+            "lx.geborgenheit",
+            "lx.distanz",
+            "lx.rueckhalt",
+            "lx.sich-anvertrauen",
+            "lx.sich-entfremden",
+            "lx.sich-zurueckziehen"
+          ]
+        },
+        {
+          "title": "Gefühle in Beziehungen",
+          "lemmas": [
+            "lx.zuneigung",
+            "lx.eifersucht",
+            "lx.uebelnehmen",
+            "lx.einfuehlsam",
+            "lx.aufrichtig",
+            "lx.einsamkeit"
+          ]
+        },
+        {
+          "title": "Freundschaft pflegen",
+          "lemmas": [
+            "lx.loyalitaet",
+            "lx.gegenseitigkeit",
+            "lx.zuwendung",
+            "lx.kontakte-pflegen",
+            "lx.beistehen",
+            "lx.verlaesslich"
+          ]
+        },
+        {
+          "title": "Kontakte im Netz",
+          "lemmas": [
+            "lx.freundschaftsanfrage",
+            "lx.kontaktabbruch",
+            "lx.vernachlaessigen",
+            "lx.oberflaechlich",
+            "lx.zwanglos",
+            "lx.freundeskreis"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.zeitungsartikel",
+        "tt.diskussion",
+        "tt.kurzansage",
+        "tt.email-informell",
+        "tt.email-antwort"
+      ],
+      "lanes": {
+        "primary": "tb2",
+        "pruefungsfokus": [
+          {
+            "template": "tb2.lv2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "input",
+            "step": "b2.2-u01-ls1"
+          },
+          {
+            "template": "tb2.sb1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.hv3",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.m2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "As B2 K9 Mit viel Gefühl",
+        "As B2 K8 Konjunktiv I",
+        "Si B2 L7 Konjunktiv I",
+        "Si B2 L7 Beziehungen (snippet)",
+        "M B1 L1 Freundschaft",
+        "N B1 K7 Zwischenmenschliches"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.amal",
+        "cast.arjun",
+        "cast.ensemble-b2-1",
+        "cast.ensemble-b2-4",
+        "cast.ensemble-b2-5"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b2-2.md E1"
+      }
+    }
+  },
+  {
+    "id": "b2.2-u02",
+    "nr": 2,
+    "etappe": 1,
+    "title": {
+      "de": "Fit für die Zukunft? Ernährung und Prävention",
+      "canDo": "Sie können einem Vortrag über Prävention folgen, Wege zu einem Gesundheitsziel vergleichen und bei Ihrer Krankenkasse schriftlich nachfragen."
+    },
+    "spec": {
+      "situation": "Priyas Krankenkasse wirbt für Präventionskurse, und in der Zeitung wird über eine Zuckersteuer gestritten. Priya hört den Vortrag einer Ernährungswissenschaftlerin, erzählt, wie sie selbst gesünder zu leben versucht, und fragt bei der Kasse nach Kursen und Zuschuss.",
+      "handlungsfeld": [
+        "8",
+        "5"
+      ],
+      "canDos": [
+        "cd.b2.vortrag-argumentation-folgen",
+        "cd.b2.wege-zum-ziel-vergleichen",
+        "cd.b2.anfrage-krankenkasse-mail",
+        "cd.b2.zeitungsartikel-wortwahl"
+      ],
+      "grammar": {
+        "new": [
+          "g.dadurch-dass"
+        ],
+        "chunk": [],
+        "review": [
+          "g.indem",
+          "g.statt-ohne"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Ernährung und Nährstoffe",
+          "lemmas": [
+            "lx.naehrstoff",
+            "lx.zuckergehalt",
+            "lx.kalorienzufuhr",
+            "lx.ernaehrungsweise",
+            "lx.verzehr",
+            "lx.ausgewogen",
+            "lx.verarbeitet"
+          ]
+        },
+        {
+          "title": "Vorsorge und Früherkennung",
+          "lemmas": [
+            "lx.praevention",
+            "lx.frueherkennung",
+            "lx.lebenserwartung",
+            "lx.wirksamkeit",
+            "lx.senken",
+            "lx.zuschuss"
+          ]
+        },
+        {
+          "title": "Gesundheitspolitik",
+          "lemmas": [
+            "lx.zuckersteuer",
+            "lx.kennzeichnung",
+            "lx.aufklaerung",
+            "lx.eingreifen",
+            "lx.bevormunden",
+            "lx.verpflichtend"
+          ]
+        },
+        {
+          "title": "Gesund leben im Alltag",
+          "lemmas": [
+            "lx.uebergewicht",
+            "lx.portionsgroesse",
+            "lx.gegensteuern",
+            "lx.verringern",
+            "lx.gesundheitsbewusst",
+            "lx.zuckerhaltig"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.zeitungsartikel",
+        "tt.vortrag",
+        "tt.email-antwort",
+        "tt.aufgabenkarte"
+      ],
+      "lanes": {
+        "primary": "tb2",
+        "pruefungsfokus": [
+          {
+            "template": "tb2.lv2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.sb2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.m1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb2.sa",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "As B2 K6 Fit für …",
+        "As B2 K7 Modalsätze",
+        "Si B2 L11 indem, dadurch dass",
+        "Si B2 L8 Ernährung (snippet)",
+        "M B1 L9 Gesundheit",
+        "M B1 L20 indem"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.ensemble-b2-2",
+        "cast.ensemble-b2-1"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b2-2.md E2"
+      }
+    }
+  },
+  {
+    "id": "b2.2-u03",
+    "nr": 3,
+    "etappe": 1,
+    "title": {
+      "de": "Kritik, Konflikt, Kompromiss: Feedback im Team",
+      "canDo": "Sie können im Team Kritik äußern und darauf reagieren, einen Streit von beiden Seiten sehen und Ihrer Vorgesetzten sachlich schreiben."
+    },
+    "spec": {
+      "situation": "Im Team von Katharina Vogt wird über die Urlaubsplanung und die Verteilung der Aufgaben gestritten. Priya liest Meinungen zur Feedbackkultur, hört ein Interview mit einem Coach, handelt mit Malte einen neuen Plan aus und schreibt der Bereichsleiterin Birgit Claussen.",
+      "handlungsfeld": [
+        "2",
+        "C"
+      ],
+      "canDos": [
+        "cd.b2.problem-benennen-verbessern",
+        "cd.b2.auf-kritik-reagieren",
+        "cd.b2.konflikt-beide-seiten",
+        "cd.b2.konflikt-nachricht-vorgesetzte"
+      ],
+      "grammar": {
+        "new": [
+          "g.modalpartikeln-system"
+        ],
+        "chunk": [],
+        "review": [
+          "g.modalpartikeln",
+          "g.konj2-bedeutungen"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Feedback geben und nehmen",
+          "lemmas": [
+            "lx.feedback",
+            "lx.kritikfaehigkeit",
+            "lx.kritikpunkt",
+            "lx.wertschaetzung",
+            "lx.mitarbeitergespraech",
+            "lx.konstruktiv",
+            "lx.zugeben"
+          ]
+        },
+        {
+          "title": "Konflikte im Team",
+          "lemmas": [
+            "lx.schuldzuweisung",
+            "lx.kraenkung",
+            "lx.eskalation",
+            "lx.unzufriedenheit",
+            "lx.verletzend",
+            "lx.angespannt"
+          ]
+        },
+        {
+          "title": "Aufgaben und Urlaub planen",
+          "lemmas": [
+            "lx.arbeitsverteilung",
+            "lx.urlaubsplanung",
+            "lx.dienstbesprechung",
+            "lx.vorbehalt",
+            "lx.sich-durchsetzen",
+            "lx.beharren"
+          ]
+        },
+        {
+          "title": "Einlenken und sich einigen",
+          "lemmas": [
+            "lx.einlenken",
+            "lx.entgegenkommen",
+            "lx.sich-zuruecknehmen",
+            "lx.sich-rechtfertigen",
+            "lx.kompromissbereit",
+            "lx.verstaendnisvoll"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.leserkommentar",
+        "tt.radiointerview",
+        "tt.kleinanzeige",
+        "tt.email-antwort",
+        "tt.aufgabenkarte"
+      ],
+      "lanes": {
+        "primary": "tb2",
+        "pruefungsfokus": [
+          {
+            "template": "tb2.hv2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "input",
+            "step": "b2.2-u03-ls2"
+          },
+          {
+            "template": "tb2.lv3",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.m3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb2.sa",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "Si B2 L8 Modalpartikeln",
+        "As B2 K9 Modalpartikeln",
+        "N B1 K7 Konfliktgespräche führen",
+        "S6 L8 Unter Kollegen"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.katharina-vogt",
+        "cast.malte",
+        "cast.frau-claussen",
+        "cast.ensemble-b2-6"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "beruf",
+          "title": "Smalltalk nach der Besprechung und das Mitarbeitergespräch",
+          "hf": "2"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/b2-2.md E3"
+      }
+    }
+  },
+  {
+    "id": "b2.2-u04",
+    "nr": 4,
+    "etappe": 2,
+    "title": {
+      "de": "Verhandeln: Schaden, Ersatz, Einigung",
+      "canDo": "Sie können einen Schaden darlegen, über Schadensersatz verhandeln und sich formell mit einer Frist beschweren."
+    },
+    "spec": {
+      "situation": "Beim Umzug von Priya und Arjun hat das Umzugsunternehmen Möbel beschädigt und ist einen Tag zu spät gekommen. Priya prüft die Geschäftsbedingungen, fordert schriftlich Schadensersatz mit Frist und verhandelt mit der Kundenberaterin über eine Einigung.",
+      "handlungsfeld": [
+        "7",
+        "C"
+      ],
+      "canDos": [
+        "cd.b2.schadensersatz-grenzen",
+        "cd.b2.verhandeln-punkte-betonen",
+        "cd.b2.vertragsbedingungen-ansprueche",
+        "cd.b2.formelle-beschwerde-frist"
+      ],
+      "grammar": {
+        "new": [
+          "g.konditional-konnektoren"
+        ],
+        "chunk": [],
+        "review": [
+          "g.falls"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Schaden und Haftung",
+          "lemmas": [
+            "lx.schadensersatz",
+            "lx.haftung",
+            "lx.schadenshoehe",
+            "lx.gutachten",
+            "lx.umzugsunternehmen",
+            "lx.fahrlaessig",
+            "lx.kratzer"
+          ]
+        },
+        {
+          "title": "Vertrag und Bedingungen",
+          "lemmas": [
+            "lx.vertragsbedingung",
+            "lx.kostenvoranschlag",
+            "lx.verbindlich",
+            "lx.abweichen",
+            "lx.aufkommen",
+            "lx.pauschale"
+          ]
+        },
+        {
+          "title": "Verhandeln und nachgeben",
+          "lemmas": [
+            "lx.zugestaendnis",
+            "lx.gegenangebot",
+            "lx.kompensation",
+            "lx.nachverhandeln",
+            "lx.angemessen",
+            "lx.unverhaeltnismaessig"
+          ]
+        },
+        {
+          "title": "Forderungen und Fristen",
+          "lemmas": [
+            "lx.wiedergutmachung",
+            "lx.schlichtungsstelle",
+            "lx.begleichen",
+            "lx.geltend-machen",
+            "lx.bestehen-auf",
+            "lx.sich-weigern"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.bedingungen",
+        "tt.kurzdialog",
+        "tt.telefonansage",
+        "tt.email-informell",
+        "tt.email-formell",
+        "tt.aufgabenkarte"
+      ],
+      "lanes": {
+        "primary": "tb2",
+        "pruefungsfokus": [
+          {
+            "template": "tb2.hv3",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.sb1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.m3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb2.sa",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "As B2 K10 konditionale Konnektoren",
+        "Si B2 L8–9/L12 Konnektoren",
+        "Si B2 L10 Service (snippet)",
+        "M B1 L4 Kundenservice",
+        "M B1 L6 falls"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.ensemble-b2-4",
+        "cast.ensemble-b2-1"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "beruf",
+          "title": "Einen Rückruf in einer Telefonnotiz festhalten",
+          "hf": "2"
+        },
+        {
+          "kind": "daz",
+          "title": "Einen Schaden der Versicherung melden",
+          "hf": "5"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/b2-2.md E4"
+      }
+    }
+  },
+  {
+    "id": "b2.2-u05",
+    "nr": 5,
+    "etappe": 2,
+    "title": {
+      "de": "An der Uni: Vorlesung, Studienordnung, Referat",
+      "canDo": "Sie können eine Studienordnung und eine Vorlesung verstehen und Inhalte im Nominalstil festhalten und wieder erklären."
+    },
+    "spec": {
+      "situation": "Sara bereitet sich auf das Studienkolleg und ihr Studium vor. Sie liest die Studienordnung, hört eine Einführungsvorlesung, bespricht einen Zeitungsartikel über studentisches Wohnen und bittet ihren Dozenten Herrn Lorenz um einen späteren Abgabetermin.",
+      "handlungsfeld": [
+        "4",
+        "11"
+      ],
+      "canDos": [
+        "cd.b2.studienordnung-verstehen",
+        "cd.b2.vorlesung-notieren",
+        "cd.b2.nominalstil-umformen"
+      ],
+      "grammar": {
+        "new": [
+          "g.nominalisierung",
+          "g.nominalgruppen"
+        ],
+        "chunk": [],
+        "review": [
+          "g.praep-genitiv",
+          "g.genitiv"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Studium und Hochschule",
+          "lemmas": [
+            "lx.studiengang",
+            "lx.studienordnung",
+            "lx.einschreibung",
+            "lx.studienkolleg",
+            "lx.sich-immatrikulieren",
+            "lx.zulassungsbeschraenkt",
+            "lx.akademisch"
+          ]
+        },
+        {
+          "title": "Prüfungen und Fristen",
+          "lemmas": [
+            "lx.modulpruefung",
+            "lx.leistungsnachweis",
+            "lx.regelstudienzeit",
+            "lx.abgabetermin",
+            "lx.fristverlaengerung",
+            "lx.anrechnen"
+          ]
+        },
+        {
+          "title": "Wissenschaftlich arbeiten",
+          "lemmas": [
+            "lx.hausarbeit",
+            "lx.referat",
+            "lx.gliederung",
+            "lx.zitat",
+            "lx.fachspezifisch",
+            "lx.vorzeitig"
+          ]
+        },
+        {
+          "title": "Wohnen im Studium",
+          "lemmas": [
+            "lx.studentenwohnheim",
+            "lx.zwischenmiete",
+            "lx.studiengebuehr",
+            "lx.stipendium",
+            "lx.studienberatung",
+            "lx.erschwinglich"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.regeln",
+        "tt.vortrag",
+        "tt.zeitungsartikel",
+        "tt.radiomeldung",
+        "tt.email-antwort"
+      ],
+      "lanes": {
+        "primary": "tb2",
+        "pruefungsfokus": [
+          {
+            "template": "tb2.sb2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.hv1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.m2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb2.sa",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "As B2 K9 Nominalisierung",
+        "Si B2 L5/L8 Nominalisierung",
+        "Si B2 L9 An der Uni (snippet)",
+        "Si B1+ L8 Lebenslang lernen",
+        "M B1 L14"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.sara",
+        "cast.herr-lorenz",
+        "cast.lina",
+        "cast.ensemble-b2-2"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daf",
+          "title": "Im Seminar: ein Referat halten und Feedback geben",
+          "hf": "11"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/b2-2.md E5"
+      }
+    }
+  },
+  {
+    "id": "b2.2-u06",
+    "nr": 6,
+    "etappe": 2,
+    "title": {
+      "de": "Kulturwelten: Film, Buch, Festival",
+      "canDo": "Sie können Kulturmeldungen, Kritiken und Kulturnachrichten verstehen und von einem Film oder Buch erzählen, das Sie bewegt hat."
+    },
+    "spec": {
+      "situation": "In Hamburg beginnt das Filmfestival. Priya und Arjun lesen Kulturmeldungen und Kritiken, hören die Kulturnachrichten im Radio, erzählen einander von einem Film und einem Buch, die sie bewegt haben, und schreiben einer Freundin über das Festival.",
+      "handlungsfeld": [
+        "9",
+        "D"
+      ],
+      "canDos": [
+        "cd.b2.film-buch-erzaehlen",
+        "cd.b2.meldungen-ueberschriften",
+        "cd.b2.kulturnachrichten-hoeren",
+        "cd.b2.kritik-verstehen"
+      ],
+      "grammar": {
+        "new": [
+          "g.nomen-adjektiv-praeposition"
+        ],
+        "chunk": [],
+        "review": [
+          "g.korrelat-es-da",
+          "g.verben-praeposition"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Film und Kino",
+          "lemmas": [
+            "lx.verfilmung",
+            "lx.drehbuch",
+            "lx.besetzung",
+            "lx.filmmusik",
+            "lx.leinwand",
+            "lx.kulisse",
+            "lx.fesseln"
+          ]
+        },
+        {
+          "title": "Literatur und Theater",
+          "lemmas": [
+            "lx.inszenierung",
+            "lx.urauffuehrung",
+            "lx.hauptfigur",
+            "lx.gattung",
+            "lx.schriftsteller",
+            "lx.darstellen"
+          ]
+        },
+        {
+          "title": "Kritik und Bewertung",
+          "lemmas": [
+            "lx.rezension",
+            "lx.spannung",
+            "lx.beruehrend",
+            "lx.langatmig",
+            "lx.gelungen",
+            "lx.sehenswert"
+          ]
+        },
+        {
+          "title": "Kulturbetrieb",
+          "lemmas": [
+            "lx.kulturangebot",
+            "lx.subvention",
+            "lx.begeistern",
+            "lx.sich-auseinandersetzen",
+            "lx.anspruchsvoll",
+            "lx.empfehlenswert"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.bericht",
+        "tt.kurzmeldung",
+        "tt.kritik",
+        "tt.radiomeldung",
+        "tt.email-informell",
+        "tt.aufgabenkarte",
+        "tt.email-antwort"
+      ],
+      "lanes": {
+        "primary": "tb2",
+        "pruefungsfokus": [
+          {
+            "template": "tb2.lv1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "input",
+            "step": "b2.2-u06-ls1"
+          },
+          {
+            "template": "tb2.hv1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.sb1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.m1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "As B2 K7 Kulturwelten",
+        "As B2 K8 Nomen und Adjektive mit Präpositionen",
+        "Si B2 L6–7 Rektion",
+        "M B1 L21 Konzerte und Veranstaltungen",
+        "N B1 K9 Kunststücke"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.sara",
+        "cast.lina",
+        "cast.ensemble-b2-3"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b2-2.md E6"
+      }
+    }
+  },
+  {
+    "id": "b2.2-u07",
+    "nr": 7,
+    "etappe": 3,
+    "title": {
+      "de": "Das macht(e) Geschichte: Zeitzeugen und Quellen",
+      "canDo": "Sie können einem Interview mit einer Zeitzeugin folgen, prüfen, was belegt ist, und das Gehörte wiedergeben."
+    },
+    "spec": {
+      "situation": "Das Haus am Kanal macht beim Erinnerungsprojekt der Stadt mit. Lina und Daniel lesen einen Bericht über das Projekt, hören ein langes Radiointerview mit einer Zeitzeugin, gleichen ihre Aussagen mit Quellen ab, planen ein Erzählcafé mit Herrn Albers und fragen beim Stadtarchiv nach einer Führung.",
+      "handlungsfeld": [
+        "A",
+        "9"
+      ],
+      "canDos": [
+        "cd.b2.zeitzeugin-wiedergeben",
+        "cd.b2.zeitzeugen-interview-einmal",
+        "cd.b2.sachverhalt-darstellen",
+        "cd.b2.anfrage-archiv-mail"
+      ],
+      "grammar": {
+        "new": [
+          "g.konj1-vergangenheit",
+          "g.modalverben-subjektiv"
+        ],
+        "chunk": [],
+        "review": [
+          "g.konj1-gegenwart",
+          "g.vermutung-modalwoerter"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Epochen und Ereignisse",
+          "lemmas": [
+            "lx.epoche",
+            "lx.zaesur",
+            "lx.nachkriegszeit",
+            "lx.sich-ereignen",
+            "lx.damalig",
+            "lx.jahrzehnt",
+            "lx.zeitraum"
+          ]
+        },
+        {
+          "title": "Erinnern und gedenken",
+          "lemmas": [
+            "lx.erinnerungskultur",
+            "lx.gedenkstaette",
+            "lx.zeitzeuge",
+            "lx.opfer",
+            "lx.aufarbeitung",
+            "lx.verschweigen"
+          ]
+        },
+        {
+          "title": "Quellen prüfen",
+          "lemmas": [
+            "lx.ueberlieferung",
+            "lx.archiv",
+            "lx.angeblich",
+            "lx.glaubhaft",
+            "lx.fragwuerdig",
+            "lx.zeitgeschichtlich"
+          ]
+        },
+        {
+          "title": "Teilung und Wiedervereinigung",
+          "lemmas": [
+            "lx.teilung",
+            "lx.wiedervereinigung",
+            "lx.mauerfall",
+            "lx.diktatur",
+            "lx.verfolgung",
+            "lx.historisch"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.bericht",
+        "tt.radiointerview",
+        "tt.email-antwort",
+        "tt.aufgabenkarte"
+      ],
+      "lanes": {
+        "primary": "tb2",
+        "pruefungsfokus": [
+          {
+            "template": "tb2.hv2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "input",
+            "step": "b2.2-u07-ls2"
+          },
+          {
+            "template": "tb2.lv1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.m3",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb2.sa",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "As B2 K8 Das macht(e) Geschichte",
+        "As B2 K9 subjektive Modalverben",
+        "Si B2 L8 subjektive Modalverben",
+        "M B1 L22 Geschichte",
+        "S6 L13 Aus Politik und Geschichte"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.lina",
+        "cast.daniel",
+        "cast.herr-albers",
+        "cast.thu",
+        "cast.ensemble-b2-1",
+        "cast.ensemble-b2-6"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b2-2.md E7"
+      }
+    }
+  },
+  {
+    "id": "b2.2-u08",
+    "nr": 8,
+    "etappe": 3,
+    "title": {
+      "de": "Patienten gut informieren: Anfragen, Beschwerden, Merkblätter",
+      "canDo": "Sie können am Empfang einer Praxis Beschwerden im Auftrag beantworten und ein Merkblatt in einfachen Worten erklären."
+    },
+    "spec": {
+      "situation": "Die Hausarztpraxis von Frau Doktor Carstens stellt auf Online-Termine und Videosprechstunde um. Sara arbeitet am Empfang: Die Patientin Frau Wiese erreicht telefonisch niemanden und versteht das neue Merkblatt nicht. Sara beantwortet ihre Beschwerde im Auftrag der Praxisleitung und erklärt ihr das Merkblatt in einfachen Worten.",
+      "handlungsfeld": [
+        "2",
+        "8"
+      ],
+      "canDos": [
+        "cd.b2.merkblatt-muendlich-erklaeren",
+        "cd.b2.beschwerde-beantworten",
+        "cd.b2.empfang-telefon-einmal",
+        "cd.b2.vor-nachteile-erlaeutern-patienten",
+        "cd.b2.beratungsangebote-auswaehlen"
+      ],
+      "grammar": {
+        "new": [],
+        "chunk": [],
+        "review": [
+          "g.nominalisierung",
+          "g.passiversatz",
+          "g.haben-zu"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Termine und Sprechstunden",
+          "lemmas": [
+            "lx.terminvergabe",
+            "lx.videosprechstunde",
+            "lx.hausbesuch",
+            "lx.dringlichkeit",
+            "lx.vorrangig",
+            "lx.zeitnah",
+            "lx.wartezeit"
+          ]
+        },
+        {
+          "title": "Am Empfang",
+          "lemmas": [
+            "lx.krankschreibung",
+            "lx.folgerezept",
+            "lx.zuzahlung",
+            "lx.rueckrufbitte",
+            "lx.entgegennehmen",
+            "lx.gesundheitskarte"
+          ]
+        },
+        {
+          "title": "Patientenrechte und Datenschutz",
+          "lemmas": [
+            "lx.einwilligung",
+            "lx.datenschutz",
+            "lx.patientenakte",
+            "lx.merkblatt",
+            "lx.ambulant",
+            "lx.stationaer"
+          ]
+        },
+        {
+          "title": "Erklären und beruhigen",
+          "lemmas": [
+            "lx.praxisleitung",
+            "lx.erlaeutern",
+            "lx.vertroesten",
+            "lx.verweisen",
+            "lx.barrierefrei",
+            "lx.sich-gedulden"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.kleinanzeige",
+        "tt.kurzdialog",
+        "tt.telefonat",
+        "tt.broschuere",
+        "tt.zeitungsartikel",
+        "tt.email-antwort"
+      ],
+      "lanes": {
+        "primary": "tb2",
+        "pruefungsfokus": [
+          {
+            "template": "tb2.lv3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "input",
+            "step": "b2.2-u08-ls1"
+          },
+          {
+            "template": "tb2.sb2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.m2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb2.sa",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "As B2 K9 Nominalisierung (Transfer)",
+        "Si B2 L11 Gesundheit (snippet)",
+        "M B1 L9 Gesundheit",
+        "S6 L8 Unter Kollegen"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.sara",
+        "cast.dr-carstens",
+        "cast.frau-wiese",
+        "cast.ensemble-b2-3",
+        "cast.ensemble-b2-5"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "beruf",
+          "title": "Eine Rückrufbitte für die Ärztin notieren",
+          "hf": "2"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/b2-2.md E8"
+      }
+    }
+  },
+  {
+    "id": "b2.2-u09",
+    "nr": 9,
+    "etappe": 3,
+    "title": {
+      "de": "Stadt, Land, Zukunft: lebhaft diskutieren",
+      "canDo": "Sie können in einer lebhaften Debatte an andere anknüpfen, das Wort behalten und Ihre Position begründet vertreten."
+    },
+    "spec": {
+      "situation": "In einer Bürgerversammlung in Priyas Stadtteil wird über eine autofreie Innenstadt gestritten. Priya liest Forumsbeiträge, hört eine Radiodiskussion mit einem Einzelhändler und einer Verkehrsplanerin, plant mit ihrer Nachbarin Frau Brodersen einen autofreien Aktionstag und bringt ihre Position in die Debatte ein.",
+      "handlungsfeld": [
+        "10",
+        "C",
+        "B"
+      ],
+      "canDos": [
+        "cd.b2.an-andere-anknuepfen",
+        "cd.b2.rederecht-behalten",
+        "cd.b2.fliessend-mitreden",
+        "cd.b2.pro-contra-diskutieren",
+        "cd.b2.forum-aussagen-zuordnen"
+      ],
+      "grammar": {
+        "new": [
+          "g.konzessive-konnektoren",
+          "g.konsekutiv-adversativ"
+        ],
+        "chunk": [],
+        "review": [
+          "g.weder-entweder-zwar",
+          "g.sodass",
+          "g.obwohl"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Verkehr in der Stadt",
+          "lemmas": [
+            "lx.verkehrswende",
+            "lx.individualverkehr",
+            "lx.durchgangsverkehr",
+            "lx.lieferverkehr",
+            "lx.verkehrsberuhigung",
+            "lx.mobilitaet",
+            "lx.autofrei"
+          ]
+        },
+        {
+          "title": "Stadtentwicklung",
+          "lemmas": [
+            "lx.aufenthaltsqualitaet",
+            "lx.leerstand",
+            "lx.umgestaltung",
+            "lx.einzelhandel",
+            "lx.beleben",
+            "lx.veroeden"
+          ]
+        },
+        {
+          "title": "Bürgerbeteiligung",
+          "lemmas": [
+            "lx.buergerbeteiligung",
+            "lx.verkehrsplanung",
+            "lx.laermbelastung",
+            "lx.einschraenkung",
+            "lx.zugaenglich",
+            "lx.lebenswert"
+          ]
+        },
+        {
+          "title": "Abwägen und streiten",
+          "lemmas": [
+            "lx.abwanderung",
+            "lx.laendliche-raum",
+            "lx.verdraengen",
+            "lx.ausbauen",
+            "lx.gefaehrden",
+            "lx.abwaegen"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.forumsbeitrag",
+        "tt.diskussion",
+        "tt.zeitungsartikel",
+        "tt.radiointerview",
+        "tt.email-antwort",
+        "tt.aufgabenkarte"
+      ],
+      "lanes": {
+        "primary": "tb2",
+        "pruefungsfokus": [
+          {
+            "template": "tb2.sb2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.hv2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.m3",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb2.sa",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "As B2 K10 Konnektoren",
+        "Si B2 L8–9/L12 Konnektoren",
+        "N B1 K11 Stadt, Land, Fluss",
+        "M B1 L19 Tourismus"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.frau-brodersen",
+        "cast.ensemble-b2-3",
+        "cast.ensemble-b2-5",
+        "cast.ensemble-b2-6"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b2-2.md E9"
+      }
+    }
+  },
+  {
+    "id": "b2.2-u10",
+    "nr": 10,
+    "etappe": 4,
+    "title": {
+      "de": "Ein Blick in die Zukunft: Arbeiten mit KI",
+      "canDo": "Sie können Ihrer Abteilung ein Thema präsentieren, dichte Fachtexte erschließen und im Intranet mitdiskutieren."
+    },
+    "spec": {
+      "situation": "Kranich Logistik führt KI-Werkzeuge ein. Priya liest einen Fachartikel, hört ein Interview mit einer Arbeitsmarktforscherin, diskutiert im Intranet-Forum mit Malte und anderen, stellt der Abteilung ihre Erfahrungen mit einem Werkzeug vor und schreibt Frau Claussen wegen einer Schulung.",
+      "handlungsfeld": [
+        "2",
+        "9"
+      ],
+      "canDos": [
+        "cd.b2.praesentation-abteilung",
+        "cd.b2.partizipialattribute-aufloesen",
+        "cd.b2.arbeitsmarkt-interview-details",
+        "cd.b2.intranet-forum-diskutieren"
+      ],
+      "grammar": {
+        "new": [
+          "g.partizipialattribut",
+          "g.partizip-nomen"
+        ],
+        "chunk": [],
+        "review": [
+          "g.partizip-adjektiv",
+          "g.adjektiv-nomen"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Digitalisierung und KI",
+          "lemmas": [
+            "lx.ki-anwendung",
+            "lx.sprachmodell",
+            "lx.automatisierung",
+            "lx.umstellung",
+            "lx.einsetzen",
+            "lx.generieren",
+            "lx.zukunftsfaehig"
+          ]
+        },
+        {
+          "title": "Daten und Algorithmen",
+          "lemmas": [
+            "lx.algorithmus",
+            "lx.datenmenge",
+            "lx.fehlerquote",
+            "lx.analysieren",
+            "lx.fehleranfaellig",
+            "lx.datenbasiert"
+          ]
+        },
+        {
+          "title": "Arbeit im Wandel",
+          "lemmas": [
+            "lx.routineaufgabe",
+            "lx.arbeitserleichterung",
+            "lx.schulung",
+            "lx.effizienz",
+            "lx.arbeitsplatzverlust",
+            "lx.vereinfachen"
+          ]
+        },
+        {
+          "title": "Chancen und Risiken",
+          "lemmas": [
+            "lx.transparenz",
+            "lx.akzeptanz",
+            "lx.regulierung",
+            "lx.ueberwachen",
+            "lx.riskant",
+            "lx.absehbar"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.zeitungsartikel",
+        "tt.radiointerview",
+        "tt.kurzansage",
+        "tt.forumsbeitrag",
+        "tt.praesentation",
+        "tt.aufgabenkarte",
+        "tt.email-antwort"
+      ],
+      "lanes": {
+        "primary": "tb2",
+        "pruefungsfokus": [
+          {
+            "template": "tb2.lv2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.hv3",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.m1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb2.sa",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "As B2 K10 Ein Blick in die Zukunft",
+        "Si B2 L12 Partizipialattribute",
+        "M B1 L5 Zukunft",
+        "M B1 L24 Zukunftsvisionen",
+        "N B1 K6 Blick nach vorn"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.malte",
+        "cast.katharina-vogt",
+        "cast.frau-claussen",
+        "cast.ensemble-b2-2"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b2-2.md E10"
+      }
+    }
+  },
+  {
+    "id": "b2.2-u11",
+    "nr": 11,
+    "etappe": 4,
+    "title": {
+      "de": "Bescheid, Widerspruch, Kündigung: formell schreiben",
+      "canDo": "Sie können einen Bescheid verstehen und formell, klar gegliedert und begründet Widerspruch einlegen."
+    },
+    "spec": {
+      "situation": "Eine Behörde lehnt Priyas Antrag auf einen Zuschuss für ihre Weiterbildung ab, weil angeblich ein Nachweis fehlt. Priya liest den Bescheid und Meinungen zum Amtsdeutsch, hört die Lokalnachrichten, sucht eine Beratungsstelle und legt fristgerecht und begründet Widerspruch ein.",
+      "handlungsfeld": [
+        "1",
+        "5"
+      ],
+      "canDos": [
+        "cd.b2.bescheid-verstehen",
+        "cd.b2.widerspruch-begruenden",
+        "cd.b2.formelle-konventionen",
+        "cd.b2.brief-sprachbausteine",
+        "cd.b2.stellungnahmen-einordnen"
+      ],
+      "grammar": {
+        "new": [
+          "g.praep-genitiv-formell"
+        ],
+        "chunk": [],
+        "review": [
+          "g.nominalisierung",
+          "g.praep-genitiv"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Bescheid und Antrag",
+          "lemmas": [
+            "lx.ablehnungsbescheid",
+            "lx.antragsteller",
+            "lx.ablehnung",
+            "lx.sachverhalt",
+            "lx.ueberpruefung",
+            "lx.beifuegen",
+            "lx.aktenzeichen"
+          ]
+        },
+        {
+          "title": "Widerspruch einlegen",
+          "lemmas": [
+            "lx.widerspruchsfrist",
+            "lx.abhilfe",
+            "lx.einlegen",
+            "lx.anfechten",
+            "lx.nachreichen",
+            "lx.fristgerecht"
+          ]
+        },
+        {
+          "title": "Verträge und Kündigung",
+          "lemmas": [
+            "lx.vertragslaufzeit",
+            "lx.sonderkuendigungsrecht",
+            "lx.kuendigungsbestaetigung",
+            "lx.zurueckfordern",
+            "lx.ordnungsgemaess",
+            "lx.unverzueglich"
+          ]
+        },
+        {
+          "title": "Amtsdeutsch",
+          "lemmas": [
+            "lx.amtsdeutsch",
+            "lx.buerokratie",
+            "lx.berichtigen",
+            "lx.nachvollziehbar",
+            "lx.hiermit",
+            "lx.versehen"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.brief-formell",
+        "tt.leserkommentar",
+        "tt.radiomeldung",
+        "tt.kleinanzeige",
+        "tt.email-formell",
+        "tt.zeitungsartikel",
+        "tt.aufgabenkarte"
+      ],
+      "lanes": {
+        "primary": "tb2",
+        "pruefungsfokus": [
+          {
+            "template": "tb2.hv1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "input",
+            "step": "b2.2-u11-ls2"
+          },
+          {
+            "template": "tb2.lv3",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.m2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb2.sa",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "As B2 K10 Präpositionen mit Genitiv",
+        "Si B2 L8–9/L12 Präpositionen mit Genitiv",
+        "M A2 L21 Staat und Verwaltung",
+        "M B1 L12 wegen und trotz"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.ensemble-b2-3",
+        "cast.ensemble-b2-4"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/b2-2.md E11"
+      }
+    }
+  },
+  {
+    "id": "b2.2-u12",
+    "nr": 12,
+    "etappe": 4,
+    "title": {
+      "de": "Sprache und Regionen: vermitteln und moderieren",
+      "canDo": "Sie können eine Gesprächsrunde moderieren und zusammenfassen und über Sprachen und Dialekte in Ihrem Leben sprechen."
+    },
+    "spec": {
+      "situation": "Im Sprachcafé von Esther Adeyemi moderiert Priya einen Abend über Dialekte und Mehrsprachigkeit. Sie liest Forumsbeiträge, hört ein Interview mit einer Sprachwissenschaftlerin, erzählt von ihren eigenen Sprachen, holt stille Gäste ins Gespräch, fasst die Runde zusammen und schreibt der Organisatorin.",
+      "handlungsfeld": [
+        "D",
+        "E"
+      ],
+      "canDos": [
+        "cd.b2.zur-beteiligung-einladen",
+        "cd.b2.diskussion-buendeln",
+        "cd.b2.sprachen-dialekte-erzaehlen",
+        "cd.b2.sprachforschung-interview",
+        "cd.b2.varietaeten-erkennen"
+      ],
+      "grammar": {
+        "new": [],
+        "chunk": [],
+        "review": [
+          "g.konj1-gegenwart",
+          "g.redewiedergabe",
+          "g.einerseits-andererseits",
+          "g.konsekutiv-adversativ"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Dialekt und Standardsprache",
+          "lemmas": [
+            "lx.mundart",
+            "lx.standardsprache",
+            "lx.varietaet",
+            "lx.umgangssprache",
+            "lx.eigenart",
+            "lx.klischee",
+            "lx.regional",
+            "lx.dialekt"
+          ]
+        },
+        {
+          "title": "Mehrsprachig leben",
+          "lemmas": [
+            "lx.mehrsprachigkeit",
+            "lx.sprachgemeinschaft",
+            "lx.sprachgrenze",
+            "lx.sprachpolitik",
+            "lx.sich-verstaendigen",
+            "lx.vermitteln",
+            "lx.verbreitet"
+          ]
+        },
+        {
+          "title": "Moderieren und zusammenfassen",
+          "lemmas": [
+            "lx.redebeitrag",
+            "lx.wortmeldung",
+            "lx.moderieren",
+            "lx.ueberleiten",
+            "lx.aufgreifen",
+            "lx.einbeziehen",
+            "lx.zu-wort-kommen"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.forumsbeitrag",
+        "tt.radiointerview",
+        "tt.email-informell",
+        "tt.bericht",
+        "tt.email-antwort",
+        "tt.aufgabenkarte"
+      ],
+      "lanes": {
+        "primary": "tb2",
+        "pruefungsfokus": [
+          {
+            "template": "tb2.sb1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.lv1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "tb2.m1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "sprechen"
+          },
+          {
+            "template": "tb2.sa",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "Si B2 L12 Sprache und Regionen (snippet)",
+        "As B2 K2 Sprich mit mir!",
+        "M B1 L13 Sprache",
+        "S6 L14 Alte und neue Heimat"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.esther-adeyemi",
+        "cast.sara",
+        "cast.amal",
+        "cast.ensemble-b2-2"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daf",
+          "title": "Unterwegs in Österreich und der Schweiz",
+          "hf": "10"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/b2-2.md E12"
+      }
+    }
+  }
+]

@@ -55,12 +55,19 @@ if (levels.length === 0) {
 }
 
 let failed = false;
+// Shared registries are checked with every level; an error in one is printed once, not per level.
+const printed = new Set();
 for (const level of levels) {
   const result = compileLevel(level, { contentRoot, exclude, outRoot: opts.out || DEFAULT_OUT, banksRoot: opts.banksOut || DEFAULT_BANKS, refs: opts.refs });
   for (const w of result.warnings) console.log(`warning: ${w}`);
   if (result.errors.length) {
-    for (const e of result.errors) console.log(e);
-    console.log(`course-v2 compile ${level}: ${result.errors.length} error(s) — nothing written`);
+    const fresh = result.errors.filter((e) => !printed.has(e));
+    for (const e of fresh) {
+      printed.add(e);
+      console.log(e);
+    }
+    const repeated = result.errors.length - fresh.length;
+    console.log(`course-v2 compile ${level}: ${result.errors.length} error(s)${repeated ? ` (${repeated} printed above for another level)` : ''} — nothing written`);
     failed = true;
     continue;
   }

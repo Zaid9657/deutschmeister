@@ -3,7 +3,8 @@
 // A kind counts as LOADED once any file that defines ids of that kind has been indexed. A ref
 // to a loaded kind that is not in the index fails REF-01; a ref to a kind with no file loaded
 // yet (a registry not authored so far) is only checked for its format — `has()` returns
-// undefined, and the checker reports nothing.
+// undefined, and the checker reports nothing. `ref(extra)` is file-scoped (SCHEMA §1: „the same
+// file's `extras`"): fileScoped() overlays the checked file's own extras on the shared index.
 import { PATTERNS } from './ids.mjs';
 
 // file kind → the ref kinds it defines (even when it defines zero ids of that kind)
@@ -16,14 +17,17 @@ const DEFINES = {
   texttypes: ['texttype'],
   detectors: ['detector'],
   casts: ['cast'],
+  voices: ['voice'],
+  lemmas: ['lexicon'],
   course: ['plateau'],
   lexicon: ['lexicon'],
   rulecards: ['rulecard'],
-  unit: ['unit', 'item', 'line', 'fact', 'fokus', 'bank'],
-  lanepack: ['item', 'line', 'bank'],
-  plateau: ['plateau', 'item', 'line', 'bank'],
-  closing: ['item', 'line', 'bank'],
-  mockmodule: ['item', 'line', 'bank'],
+  unit: ['unit', 'step', 'item', 'line', 'text', 'asset', 'fact', 'fokus', 'bank'],
+  lanepack: ['item', 'line', 'text', 'asset', 'bank'],
+  plateau: ['plateau', 'item', 'line', 'text', 'asset', 'bank'],
+  plateaulanepack: ['item', 'line', 'text', 'asset', 'bank'],
+  closing: ['item', 'line', 'text', 'asset', 'bank'],
+  mockmodule: ['item', 'line', 'text', 'asset', 'bank'],
 };
 
 export function createIndex() {
@@ -61,6 +65,9 @@ function collectNested(index, node) {
       else if (typeof x.speaker === 'string' && PATTERNS.line.test(x.id)) index.add('line', x.id);
       else if (typeof x.claimDe === 'string' && PATTERNS.fact.test(x.id)) index.add('fact', x.id);
       else if (typeof x.bodyDe === 'string' && PATTERNS.fokus.test(x.id)) index.add('fokus', x.id);
+      else if (typeof x.altDe === 'string' && PATTERNS.asset.test(x.id)) index.add('asset', x.id);
+      else if (typeof x.kind === 'string' && PATTERNS.STEP.test(x.id)) index.add('step', x.id);
+      else if (typeof x.kind === 'string' && Array.isArray(x.glosses) && PATTERNS.text.test(x.id)) index.add('text', x.id);
     }
     if (typeof x.bankKey === 'string') index.add('bank', x.bankKey);
     for (const v of Object.values(x)) visit(v);
@@ -101,6 +108,12 @@ export function indexDocument(index, { doc, kind }) {
     case 'casts':
       if (doc.members && typeof doc.members === 'object') for (const id of Object.keys(doc.members)) index.add('cast', id);
       break;
+    case 'voices':
+      if (doc.voices && typeof doc.voices === 'object') for (const id of Object.keys(doc.voices)) index.add('voice', id);
+      break;
+    case 'lemmas':
+      if (doc.lemmas && typeof doc.lemmas === 'object') for (const id of Object.keys(doc.lemmas)) index.add('lexicon', id);
+      break;
     case 'course':
       // a course declares its Plateaus; closedBy resolves against the declaration
       each(doc.plateaus, (p) => typeof p === 'string' && PATTERNS.plateau.test(p) && index.add('plateau', p));
@@ -120,6 +133,7 @@ export function indexDocument(index, { doc, kind }) {
       collectNested(index, doc);
       break;
     case 'lanepack':
+    case 'plateaulanepack':
     case 'closing':
     case 'mockmodule':
       collectNested(index, doc);
@@ -142,4 +156,21 @@ export function buildIndex(loadedFiles) {
   const index = createIndex();
   for (const f of loadedFiles) indexDocument(index, f);
   return index;
+}
+
+/**
+ * The index a single document is checked against: the shared index plus the document's own
+ * `extras` (ref(extra) resolves only inside the file that declares the speaker). A file with no
+ * `extras` resolves no extra at all.
+ */
+export function fileScoped(index, doc) {
+  if (!index) return null;
+  const extras = doc && doc.extras && typeof doc.extras === 'object' && !Array.isArray(doc.extras) ? doc.extras : {};
+  return {
+    ...index,
+    has(kind, id) {
+      if (kind === 'extra') return Object.prototype.hasOwnProperty.call(extras, id);
+      return index.has(kind, id);
+    },
+  };
 }

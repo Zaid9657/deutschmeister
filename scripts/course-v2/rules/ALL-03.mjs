@@ -7,7 +7,7 @@ export const id = 'ALL-03';
 export const title = '≥ 2 Lehrwerk placements per unit, or a deviation.reason';
 export const type = 'hard';
 export const scope = 'unit';
-export const stage = 'T';
+export const stage = 'spec'; // judges spec fields only (SCHEMA §8.1: present from stage spec)
 
 export function run({ docs }) {
   const findings = [];

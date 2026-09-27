@@ -1,0 +1,295 @@
+{
+  "$schema": "course-v2/rulecards@1",
+  "level": "b2.1",
+  "cards": [
+    {
+      "id": "rc.mittelfeld-angaben",
+      "spine": "g.mittelfeld-angaben",
+      "depth": 1,
+      "modelSentence": "Ich bin damals aus Heimweh mit dem Zug nach Kochi gefahren.",
+      "de": "Das Mittelfeld liegt zwischen dem konjugierten Verb und dem Satzende. Angaben stehen dort meist in dieser Reihenfolge: temporal (wann?), kausal (warum?), modal (wie?), lokal (wo? wohin?). Merkhilfe: te-ka-mo-lo. Das ist eine Tendenz, keine feste Regel: Was neu oder wichtig ist, rückt nach rechts, näher ans Satzende. Pronomen stehen vor den Angaben: Ich habe es ihr damals sofort erzählt.",
+      "en": "The middle field lies between the finite verb and the end of the clause. Adverbials there tend to follow the order time – reason – manner – place (te-ka-mo-lo). It is a tendency, not a fixed rule: new or important information moves to the right, towards the end. Pronouns come before the adverbials.",
+      "table": [
+        ["temporal (wann?)", "kausal (warum?)", "modal (wie?)", "lokal (wo? wohin?)"],
+        ["damals", "aus Heimweh", "mit dem Zug", "nach Kochi"]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.negation-system",
+      "spine": "g.negation-system",
+      "depth": 1,
+      "modelSentence": "Mir fehlt nicht die Stadt, sondern mir fehlen die Menschen.",
+      "de": "Satznegation verneint die ganze Aussage. nicht steht dann möglichst weit rechts im Mittelfeld, aber vor dem zweiten Verbteil und vor einer Ergänzung mit Präposition: Ich habe ihn gestern nicht angerufen. Ich denke nicht an früher. Teilnegation verneint nur ein Satzglied. nicht steht direkt davor, oft folgt sondern: Ich rufe nicht ihn an, sondern seine Schwester. Verstärkt: gar nicht, keineswegs, keinesfalls.",
+      "en": "Sentence negation negates the whole statement: nicht goes as far right in the middle field as possible, but before the second verb part and before a prepositional complement. Partial negation negates one element only: nicht stands directly before it, often followed by sondern. Stronger forms: gar nicht, keineswegs, keinesfalls.",
+      "table": [
+        ["Satznegation", "Ich rufe ihn heute nicht an."],
+        ["Teilnegation", "Ich rufe nicht ihn an, sondern seine Schwester."],
+        ["verstärkt", "Das ist keineswegs selbstverständlich."]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.korrelat-es-da",
+      "spine": "g.korrelat-es-da",
+      "depth": 1,
+      "modelSentence": "Es fällt mir schwer, Kritik direkt anzusprechen.",
+      "de": "Ein Korrelat im Hauptsatz kündigt einen dass-Satz oder zu-Satz an. es steht, wenn der Nebensatz Subjekt oder Objekt ist: Es freut mich, dass du nachfragst. Steht der Nebensatz vorn, fällt es weg: Kritik anzusprechen, fällt mir schwer. Bei Verben mit Präposition steht da(r)- + Präposition, auch vor einem zu-Satz: Ich achte darauf, niemanden zu unterbrechen. Bei manchen Verben muss das Korrelat stehen, bei anderen kann es wegfallen.",
+      "en": "A correlate in the main clause announces a dass- or zu-clause. es is used when the clause is the subject or object; it disappears when the clause comes first. Verbs with a preposition use da(r)- + preposition, also before a zu-clause. With some verbs the correlate is required, with others it is optional.",
+      "table": [
+        ["es", "Es ärgert mich, dass niemand nachfragt."],
+        ["da(r)- + Präposition", "Ich achte darauf, niemanden zu unterbrechen."],
+        ["Nebensatz vorn: ohne es", "Dass niemand nachfragt, ärgert mich."]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.textverweise",
+      "spine": "g.textverweise",
+      "depth": 1,
+      "modelSentence": "Frau Vogt hat die Frist verlängert. Dies hat dem ganzen Team geholfen.",
+      "de": "Texte verweisen zurück und voraus. Zurück zeigen dies, das, dabei, dadurch, daraufhin und Letzteres: Sie nehmen eine Aussage des vorigen Satzes auf. Voraus zeigt zum Beispiel Folgendes. Letzteres meint das zweite von zwei genannten Dingen, Ersteres das erste. In Lückentexten mit Satzeinschub fragen Sie: Worauf zeigt das Verweiswort? Passt das zum Satz davor und zum Satz danach?",
+      "en": "Texts refer back and forward. dies, das, dabei, dadurch, daraufhin and Letzteres pick up a statement from the previous sentence; Folgendes points ahead. Letzteres means the second of two things mentioned, Ersteres the first. In gap texts with missing sentences, ask what the reference word points to and whether it fits the sentences before and after.",
+      "table": [
+        ["dies / das", "die ganze vorige Aussage"],
+        ["dabei", "in dieser Situation, gleichzeitig"],
+        ["daraufhin", "als Reaktion darauf"],
+        ["Ersteres / Letzteres", "das erste / das zweite von zwei Dingen"]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.infinitiv-oder-dass",
+      "spine": "g.infinitiv-oder-dass",
+      "depth": 1,
+      "modelSentence": "Ich bitte Sie, die Abrechnung noch einmal zu prüfen.",
+      "de": "Ein zu-Satz geht nur, wenn sein Subjekt schon im Hauptsatz steht. Oft ist es das Subjekt: Ich hoffe, bald eine Antwort zu bekommen (ich hoffe, ich bekomme). Bei bitten, raten oder empfehlen ist es das Objekt: Ich bitte Sie, die Abrechnung zu prüfen (Sie prüfen). Ist das Subjekt des Nebensatzes eine andere Person oder Sache, brauchen Sie einen dass-Satz: Ich hoffe, dass die Personalabteilung bald antwortet.",
+      "en": "A zu-clause is only possible when its subject already appears in the main clause – usually as the subject, with verbs like bitten, raten or empfehlen as the object. If the subordinate clause has a different subject, you need a dass-clause.",
+      "table": [
+        ["gleiches Subjekt", "Ich hoffe, die Stelle zu behalten.", "Ich hoffe, dass ich die Stelle behalte."],
+        ["anderes Subjekt", "—", "Ich hoffe, dass die Personalabteilung bald antwortet."]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.infinitiv-passiv-perfekt",
+      "spine": "g.infinitiv-passiv-perfekt",
+      "depth": 1,
+      "modelSentence": "Ich hoffe, nach der Probezeit übernommen zu werden.",
+      "de": "Auch ein zu-Satz kann im Passiv oder in der Vergangenheit stehen. Infinitiv Passiv: Partizip II + zu werden – Ich hoffe, unbefristet übernommen zu werden. Infinitiv Perfekt: Partizip II + zu haben oder zu sein – das Geschehen liegt vor dem Hauptsatz: Ich bin froh, die Probezeit bestanden zu haben. Er ist froh, rechtzeitig angekommen zu sein. haben oder sein wählen Sie wie im Perfekt.",
+      "en": "A zu-clause can also be passive or refer to the past. Passive infinitive: past participle + zu werden. Perfect infinitive: past participle + zu haben or zu sein, for something that happened before the main clause; choose haben or sein as in the Perfekt.",
+      "table": [
+        ["Aktiv", "zu prüfen"],
+        ["Passiv", "geprüft zu werden"],
+        ["Perfekt", "geprüft zu haben / angekommen zu sein"]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.konj2-vergangenheit-2",
+      "spine": "g.konj2-vergangenheit",
+      "depth": 2,
+      "modelSentence": "Sie hätten uns vor der Reise informieren müssen.",
+      "de": "Jetzt bilden Sie den Konjunktiv II der Vergangenheit selbst: hätte oder wäre + Partizip II. Mit Modalverb stehen am Ende zwei Infinitive: Sie hätten uns informieren müssen. Im Nebensatz steht hätte vor den beiden Infinitiven: …, dass Sie uns hätten informieren müssen. So sagen Sie, was anders gewesen wäre: Wenn das Hotel sauber gewesen wäre, hätten wir uns nicht beschwert.",
+      "en": "Now you form the past subjunctive yourself: hätte or wäre + past participle. With a modal verb, two infinitives stand at the end (hätten … informieren müssen); in a subordinate clause hätte comes before them. Use it to say what would have been different.",
+      "table": [
+        ["hätte + Partizip II", "Wir hätten ein anderes Hotel gebucht."],
+        ["wäre + Partizip II", "Wir wären früher abgereist."],
+        ["hätte + Infinitiv + Modalverb", "Sie hätten uns informieren müssen."]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.konj2-bedeutungen",
+      "spine": "g.konj2-bedeutungen",
+      "depth": 1,
+      "modelSentence": "Ich würde Sie bitten, uns einen Teil des Reisepreises zu erstatten.",
+      "de": "Der Konjunktiv II hat mehrere Aufgaben. Höfliche Bitte oder Forderung: Ich würde Sie bitten, … Könnten Sie uns bis Freitag antworten? Vorwurf über etwas Vergangenes: Sie hätten uns informieren müssen. Das hätten Sie uns sagen können. Irreale Aussage: Mit einem anderen Veranstalter wäre das nicht passiert. In einer Beschwerde klingt der Konjunktiv bestimmt und bleibt trotzdem sachlich.",
+      "en": "Konjunktiv II has several functions: a polite request or demand, a reproach about something in the past (Sie hätten … müssen), and an unreal statement. In a complaint it sounds firm but stays factual.",
+      "table": [
+        ["höfliche Forderung", "Ich würde Sie bitten, …"],
+        ["Vorwurf", "Sie hätten uns informieren müssen."],
+        ["irreal", "Ohne die Mängel wäre die Reise schön gewesen."]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.einerseits-andererseits",
+      "spine": "g.einerseits-andererseits",
+      "depth": 1,
+      "modelSentence": "Einerseits ist die Miete günstig, andererseits gibt es wenig Privatsphäre.",
+      "de": "Mit einerseits … andererseits stellen Sie zwei Seiten einer Sache gegenüber. Mit zum einen … zum anderen zählen Sie eher zwei Gründe oder Punkte auf. Beide Teile können auf Position 1 stehen oder im Mittelfeld: Einerseits ist das Haus lebendig. Das Haus ist einerseits lebendig. Das Verb bleibt auf Position 2. Zwischen den beiden Sätzen steht meist ein Komma.",
+      "en": "einerseits … andererseits contrasts two sides of a matter; zum einen … zum anderen rather lists two reasons or points. Each part can stand in position 1 or in the middle field; the verb stays in position 2.",
+      "table": [
+        ["Position 1", "Einerseits ist das Haus lebendig, andererseits ist es oft laut."],
+        ["Mittelfeld", "Das Haus ist einerseits lebendig, andererseits ist es oft laut."],
+        ["Aufzählung", "Zum einen spart man Miete, zum anderen hilft man sich."]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.passiversatz",
+      "spine": "g.passiversatz",
+      "depth": 1,
+      "modelSentence": "Der Streit lässt sich nicht so einfach lösen.",
+      "de": "Statt Passiv mit können oder müssen gibt es kürzere Formen. man: Man muss die Pläne prüfen. sich lassen + Infinitiv heißt „kann … werden“: Das lässt sich lösen. sein + zu + Infinitiv heißt „kann“ oder „muss … werden“: Die Pläne sind noch zu prüfen. Adjektive auf -bar oder -lich haben oft dieselbe Bedeutung: Das Problem ist lösbar. Der Text ist verständlich. Zeitungen verwenden diese Formen oft.",
+      "en": "Instead of a passive with können or müssen there are shorter forms: man; sich lassen + infinitive (= can be done); sein + zu + infinitive (= can or must be done); adjectives in -bar or -lich (lösbar, verständlich). Newspapers use them a lot.",
+      "table": [
+        ["Passiv mit Modalverb", "Das Problem kann gelöst werden."],
+        ["sich lassen", "Das Problem lässt sich lösen."],
+        ["sein + zu", "Das Problem ist zu lösen."],
+        ["-bar / -lich", "Das Problem ist lösbar. Der Text ist verständlich."]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.haben-zu",
+      "spine": "g.haben-zu",
+      "depth": 1,
+      "modelSentence": "Die Baufirma hat die Nachtruhe einzuhalten.",
+      "de": "haben + zu + Infinitiv drückt eine Pflicht aus und hat aktive Bedeutung: Die Firma hat die Ruhezeiten einzuhalten (= muss sie einhalten). sein + zu + Infinitiv hat passive Bedeutung: Die Ruhezeiten sind einzuhalten (= müssen eingehalten werden). Bei trennbaren Verben steht zu zwischen Präfix und Verb: einzuhalten. Die Form klingt amtlich; Sie finden sie in Regeln, Bescheiden und Zeitungstexten.",
+      "en": "haben + zu + infinitive expresses an obligation with an active meaning (= must do); sein + zu + infinitive has a passive meaning (= must be done). With separable verbs, zu goes between prefix and verb. The form sounds official and appears in rules and newspaper texts.",
+      "table": [
+        ["haben + zu (aktiv)", "Die Firma hat die Regeln einzuhalten."],
+        ["sein + zu (passiv)", "Die Regeln sind einzuhalten."]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.relativsatz-wer-was",
+      "spine": "g.relativsatz-wer-was",
+      "depth": 1,
+      "modelSentence": "Wer Nachtdienst hat, schreibt die Übergabe.",
+      "de": "Ein Relativsatz mit wer oder was kann ohne Bezugswort stehen: wer bedeutet „jede Person, die“, was bedeutet „alles, was“. Der Relativsatz steht oft vorn. Im Hauptsatz kann ein der oder das folgen. Es muss stehen, wenn der Kasus wechselt: Wer Hilfe braucht, dem helfen wir. Gleicher Kasus: Wer Fragen hat, (der) ruft mich an. Was Herrn Albers beunruhigt, (das) notieren wir.",
+      "en": "A relative clause with wer (whoever) or was (whatever) can stand without an antecedent, often at the start. The main clause may pick it up with der or das; this is required when the case changes (Wer Hilfe braucht, dem helfen wir).",
+      "table": [
+        ["Nominativ – Nominativ", "Wer Fragen hat, (der) ruft mich an."],
+        ["Nominativ – Dativ", "Wer Hilfe braucht, dem helfen wir."],
+        ["was – das", "Was ihn beunruhigt, (das) notieren wir."]
+      ],
+      "caseMarks": [
+        { "token": "der", "kasus": "nominativ" },
+        { "token": "dem", "kasus": "dativ" }
+      ]
+    },
+    {
+      "id": "rc.relativpronomen-genitiv",
+      "spine": "g.relativpronomen-genitiv",
+      "depth": 1,
+      "modelSentence": "Herr Albers, dessen Tochter oft anruft, schläft schlecht.",
+      "de": "Das Relativpronomen im Genitiv zeigt Zugehörigkeit: dessen nach maskulinen und neutralen Bezugswörtern, deren nach femininen und im Plural. Das Nomen danach hat keinen Artikel: der Bewohner, dessen Tochter anruft; die Kollegin, deren Dienst ausfällt; die Angehörigen, deren Fragen offen sind. Ein Adjektiv danach hat die Endung wie ohne Artikel: der Bewohner, dessen neuer Arzt …",
+      "en": "The genitive relative pronoun shows belonging: dessen after masculine and neuter nouns, deren after feminine nouns and in the plural. The following noun has no article, and an adjective takes the ending it would have without an article.",
+      "table": [
+        ["maskulin / neutral", "dessen", "der Bewohner, dessen Tochter anruft"],
+        ["feminin", "deren", "die Kollegin, deren Dienst ausfällt"],
+        ["Plural", "deren", "die Angehörigen, deren Fragen offen sind"]
+      ],
+      "caseMarks": [
+        { "token": "dessen", "kasus": "genitiv" },
+        { "token": "deren", "kasus": "genitiv" }
+      ]
+    },
+    {
+      "id": "rc.nomen-verb-verbindungen",
+      "spine": "g.nomen-verb-verbindungen",
+      "depth": 1,
+      "modelSentence": "Ich möchte eine Beratung zur Anerkennung in Anspruch nehmen.",
+      "de": "In einer Nomen-Verb-Verbindung trägt das Nomen die Bedeutung, das Verb sagt fast nichts: einen Antrag stellen (= beantragen), eine Entscheidung treffen (= entscheiden), in Anspruch nehmen (= nutzen), zur Verfügung stehen, in Frage kommen. Die Verbindungen klingen formeller als das einfache Verb und sind feste Wendungen. Lernen Sie Nomen, Verb und Präposition deshalb immer zusammen.",
+      "en": "In a noun-verb combination the noun carries the meaning and the verb adds little (einen Antrag stellen = beantragen). These fixed expressions sound more formal than the simple verb, so learn noun, verb and preposition together.",
+      "table": [
+        ["einen Antrag stellen", "beantragen"],
+        ["eine Entscheidung treffen", "entscheiden"],
+        ["in Anspruch nehmen", "nutzen"],
+        ["zur Verfügung stehen", "verfügbar sein"]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.zustandspassiv",
+      "spine": "g.zustandspassiv",
+      "depth": 1,
+      "modelSentence": "Mein Abschluss ist inzwischen anerkannt.",
+      "de": "Das Vorgangspassiv mit werden + Partizip II beschreibt eine Handlung, die gerade passiert: Der Antrag wird geprüft. Das Zustandspassiv mit sein + Partizip II beschreibt das Ergebnis danach: Der Antrag ist geprüft. In der Vergangenheit: Der Antrag wurde geprüft. – Der Antrag war geprüft. Fragen Sie sich: Läuft der Vorgang noch, oder ist er schon abgeschlossen?",
+      "en": "The process passive (werden + past participle) describes an action in progress; the state passive (sein + past participle) describes the result afterwards. Ask yourself: is the process still going on, or is it already finished?",
+      "table": [
+        ["Vorgang", "Der Antrag wird geprüft.", "Der Antrag wurde geprüft."],
+        ["Zustand", "Der Antrag ist geprüft.", "Der Antrag war geprüft."]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.wortbildung-adjektive",
+      "spine": "g.wortbildung-adjektive",
+      "depth": 1,
+      "modelSentence": "Gute Kleidung ist langlebig und oft reparaturfähig.",
+      "de": "Mit Endungen bilden Sie Adjektive aus Nomen und Verben. -fähig: kann etwas oder eignet sich für etwas (konfliktfähig, reparaturfähig). -sam: hat diese Eigenschaft (sparsam, wirksam). -ig: aus Nomen oder Wortgruppen (langlebig, nachhaltig, vorsichtig). Die Endung trägt nie den Akzent. Aus vielen dieser Adjektive werden Nomen auf -keit: die Sparsamkeit, die Nachhaltigkeit.",
+      "en": "Suffixes turn nouns and verbs into adjectives: -fähig (able to, suitable for), -sam (having that quality), -ig (from nouns or phrases). The suffix is never stressed. Many of these adjectives form nouns in -keit.",
+      "table": [
+        ["-fähig", "die Reparatur → reparaturfähig"],
+        ["-sam", "sparen → sparsam"],
+        ["-ig", "ein langes Leben → langlebig"]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.futur2",
+      "spine": "g.futur2",
+      "depth": 1,
+      "modelSentence": "Sara wird den Beitrag schon gehört haben.",
+      "de": "Mit Futur I vermuten Sie etwas über die Gegenwart: Sie wird im Studio sein. Mit Futur II vermuten Sie etwas über Vergangenes: werden + Partizip II + haben oder sein. Sie wird den Beitrag schon gehört haben. Er wird im Stau gestanden haben. Oft stehen wohl, sicher oder bestimmt dabei. Futur II sagt auch, dass etwas in der Zukunft abgeschlossen ist: Bis Freitag werden wir die Folge aufgenommen haben.",
+      "en": "Futur I expresses a supposition about the present; Futur II (werden + past participle + haben/sein) a supposition about the past, often with wohl, sicher or bestimmt. Futur II can also say that something will be completed by a point in the future.",
+      "table": [
+        ["Vermutung: Gegenwart", "Er wird krank sein."],
+        ["Vermutung: Vergangenheit", "Er wird krank gewesen sein."],
+        ["abgeschlossen in der Zukunft", "Bis Freitag werden wir alles aufgenommen haben."]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.redewiedergabe",
+      "spine": "g.redewiedergabe",
+      "depth": 1,
+      "modelSentence": "Dem Bericht zufolge schlafen viele Erwachsene zu wenig.",
+      "de": "So zeigen Sie, dass Sie nur wiedergeben, was andere sagen. laut: laut dem Bericht. zufolge + Dativ, meist nachgestellt: der Forscherin zufolge. nach Angaben von: nach Angaben der Klinik. Verben des Sagens zeigen die Haltung: behaupten (vielleicht nicht wahr), betonen (wichtig), einräumen (zugeben), bestreiten (für falsch halten). In Meldungen lesen Sie auch sei oder habe: Sie sagt, die Ergebnisse seien eindeutig.",
+      "en": "These forms show that you are only reporting what others say: laut, zufolge (+ dative, usually after the noun), nach Angaben von. Verbs of saying show the speaker's stance: behaupten, betonen, einräumen, bestreiten. In news reports you will also meet sei and habe.",
+      "table": [
+        ["laut", "laut dem Bericht"],
+        ["zufolge (nachgestellt)", "der Forscherin zufolge"],
+        ["nach Angaben von", "nach Angaben der Klinik"],
+        ["Verb des Sagens", "Sie betont, dass die Studie klein war."]
+      ],
+      "caseMarks": [
+        { "token": "Dem Bericht", "kasus": "dativ" },
+        { "token": "der Forscherin", "kasus": "dativ" }
+      ]
+    },
+    {
+      "id": "rc.vergleichssaetze",
+      "spine": "g.vergleichssaetze",
+      "depth": 1,
+      "modelSentence": "Das Projekt hat länger gedauert, als wir geplant hatten.",
+      "de": "Nach einem Komparativ steht als + Nebensatz: Es war teurer, als wir gedacht hatten. Bei Gleichheit steht so + Adjektiv + wie + Nebensatz: Es lief so gut, wie wir gehofft hatten. Auch nach anders steht als: Es kam anders, als wir erwartet hatten. Das Verb steht am Ende des Nebensatzes. Weil die Erwartung vor dem Ergebnis lag, steht im Nebensatz oft das Plusquamperfekt.",
+      "en": "After a comparative, use als + subordinate clause; for equality, so + adjective + wie + clause; after anders, als. The verb goes to the end of the clause, and because the expectation came before the result, the clause is often in the Plusquamperfekt.",
+      "table": [
+        ["Komparativ + als", "schneller, als wir erwartet hatten"],
+        ["so + Adjektiv + wie", "so reibungslos, wie wir gehofft hatten"],
+        ["anders + als", "anders, als wir geplant hatten"]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.als-irreal",
+      "spine": "g.als-irreal",
+      "depth": 1,
+      "modelSentence": "Es sah aus, als wäre alles schon fertig.",
+      "de": "Irreale Vergleiche kennen Sie mit als ob: Es sah aus, als ob alles fertig wäre. Kürzer geht es mit als ohne ob: Dann steht das konjugierte Verb direkt nach als, im Konjunktiv II: Es sah aus, als wäre alles fertig. Für Vergangenes: Er tat so, als hätte er nichts gewusst. Beide Formen bedeuten dasselbe; die Form mit als klingt knapper und etwas gehobener.",
+      "en": "Unreal comparisons with als ob are familiar. A shorter form drops ob: the finite verb, in Konjunktiv II, follows als directly. Both mean the same; the als form sounds more concise and slightly more formal.",
+      "table": [
+        ["als ob … Verb am Ende", "als ob alles fertig wäre"],
+        ["als + Verb", "als wäre alles fertig"],
+        ["Vergangenheit", "als hätte niemand etwas gemerkt"]
+      ],
+      "caseMarks": []
+    }
+  ]
+}

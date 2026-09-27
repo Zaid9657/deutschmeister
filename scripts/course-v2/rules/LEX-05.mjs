@@ -8,7 +8,7 @@ export const id = 'LEX-05';
 export const title = 'New-word counts and productive share per unit; lexiconBlocks = lexicon allocation';
 export const type = 'hard';
 export const scope = 'unit';
-export const stage = 'T';
+export const stage = 'spec'; // judges spec fields only (SCHEMA §8.1: present from stage spec)
 
 export function run({ ctx, docs, levels, mode }) {
   const findings = [];

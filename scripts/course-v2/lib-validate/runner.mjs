@@ -133,7 +133,7 @@ const SEV_ORDER = { blocker: 0, ratchet: 1, advisory: 2 };
 /**
  * Stages (SCHEMA §8.1, BLUEPRINT §9): a rule declares the earliest stage whose content it can judge
  * (`export const stage = 'spec'|'S'|'I'|'T'`; absent = 'T'). A unit is judged at its declared
- * `stage` (absent = 'T', the full gate set); `--stage` overrides it; a lane pack has no stages and
+ * `stage` (absent = 'T', the full gate set — or 'spec' for a stage-less spec-only unit); `--stage` overrides it; a lane pack has no stages and
  * is always judged at 'T' unless `--stage` lowers it.
  */
 export const STAGES = ['spec', 'S', 'I', 'T'];
@@ -148,7 +148,15 @@ export function normalizeStage(raw) {
 }
 export function stageOfDoc(doc, override = null) {
   if (override) return override;
-  if (doc.kind === 'unit') return normalizeStage(doc.data?.stage) || 'T';
+  if (doc.kind === 'unit') {
+    const declared = normalizeStage(doc.data?.stage);
+    if (declared) return declared;
+    // SCHEMA §8 requires `stage` (the checker reports its absence, SCH-01). A stage-less unit that
+    // holds only its spec — a curriculum agent's spec file written before the field existed — is
+    // judged as what it is, a spec, never at T; any other stage-less unit gets the full gate set.
+    const d = doc.data || {};
+    return d.steps === undefined && d.start === undefined && d.check === undefined ? 'spec' : 'T';
+  }
   return 'T';
 }
 

@@ -15,4 +15,6 @@ export const castsSchema = obj({
     bands: '[str]',
   }),
   relations: arr({ a: 'ref(cast)', b: 'ref(cast)', address: 'enum(du|Sie)', 'since?': 'ref(unit)' }),
+  // casts/series.json only: every cross-course beat (from = a course's U12, to = the next course's U01)
+  'beats?': arr({ from: 'ref(unit)', to: 'ref(unit)', cliffhanger: 'de', resolution: 'de', recapDe: 'de' }, '*'),
 });

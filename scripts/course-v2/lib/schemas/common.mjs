@@ -1,9 +1,13 @@
 // SCHEMA §1 text types and §3 common types, plus the task/block types that units, lane
 // packs, Plateaus, closing blocks and Modelltest modules share (SCHEMA §8).
-import { define, obj, map, arr, gen } from '../schema.mjs';
+import { define, obj, map, arr, gen, union, ifHas } from '../schema.mjs';
 
 define('LText', { de: 'de', en: 'en', 'tr?': 'str', 'ar?': 'str' });
 define('EnText', { en: 'en', 'tr?': 'str', 'ar?': 'str' });
+
+export const ERROR_TAG =
+  'enum(v2-inv|verb-final|satzklammer|case-np|case-pp|gender-article|adj-ending|perfekt-aux-participle|connector-position|n-dekl|reflexive|register|spelling-meaning)';
+define('ErrorTag', ERROR_TAG);
 
 // §3.1 Item
 define('Item', {
@@ -17,7 +21,7 @@ define('Item', {
   'tiles?': '[str]{2..8}',
   'pairs?': '[[str, str]]{3..6}',
   'audioLineRef?': 'ref(line)',
-  'textRef?': 'str',
+  'textRef?': 'ref(text)',
   answer: 'str',
   accepted: '[str]',
   'acceptedWhy?': map('str', 'de'),
@@ -28,10 +32,14 @@ define('Item', {
   'perceptionOnly?': 'bool',
   explanation: 'LText',
   'hint?': 'LText',
-  'errorTag?': 'enum(v2-inv|verb-final|satzklammer|case-np|case-pp|gender-article|adj-ending|perfekt-aux-participle|connector-position|n-dekl|reflexive|register|spelling-meaning)',
+  'errorTag?': 'ErrorTag',
+  // SCHEMA writes `errorTags`, `banks` and `reviewerConfirmed` as `[T]*` without `?`, but most
+  // items of the §15 fixture omit them and §15.6 requires SCH-01 to pass there, so all three are
+  // transcribed as optional (an absent list = an empty list).
+  'errorTags?': '[ErrorTag]*',
+  'difficulty?': 'int[1..5]',
+  'banks?': '[enum(einstufung|plateau|mehr-ueben|repair)]*',
   origin: 'enum(agent|generator)',
-  // SCHEMA writes `reviewerConfirmed: [str]*` without `?`, but no item of the §15 fixture
-  // carries it and §15.6 requires SCH-01 to pass there, so it is transcribed as optional.
   'reviewerConfirmed?': '[str]*',
 });
 
@@ -43,15 +51,23 @@ define('GeneratorSpec', {
   'voices?': 'int[1..6]',
 });
 
-// §3.3 Line
+// §3.3 Line and the file-level Extras
 define('Line', {
   id: 're(line)',
-  speaker: 'ref(cast) | enum(ansage|radio|durchsage|pruefer)',
+  speaker: 'ref(cast) | ref(extra) | enum(ansage|radio|durchsage|pruefer)',
   de: 'de',
   en: 'en',
   'say?': 'str',
   seconds: gen('num'),
 });
+define('Extras', map('re(extra)', {
+  role: 'de',
+  gender: 'enum(f|m|d)',
+  'age?': 'int',
+  voice: 'ref(voice)',
+  'rate?': 'str',
+  'variety?': 'enum(D|A|CH)',
+}));
 
 // §3.4 Fact
 define('Fact', {
@@ -66,8 +82,41 @@ define('Fact', {
   'notes?': 'str',
 });
 
+// §3.5 Asset (images and documents)
+define('Asset', obj({
+  id: 're(asset)',
+  kind: 'enum(image|document)',
+  altDe: 'de',
+  'altEn?': 'en',
+  depicts: 'enum(fictional-person|real-person|real-place|object|document|scene)',
+  source: 'enum(generated|licensed|own)',
+  licence: { name: 'str', 'holder?': 'str', 'url?': 'url', 'attribution?': 'str', 'coversDepiction?': 'bool' },
+  'prompt?': 'str',
+  status: 'enum(planned|produced|approved)',
+  // generated (.build/ only)
+  url: gen('url'),
+  width: gen('int'),
+  height: gen('int'),
+  bytes: gen('int'),
+}, {
+  refine(a, emit) {
+    if (a.source === 'generated' && a.prompt === undefined) emit('', 'missing required field "prompt" (required when source is generated)');
+  },
+}));
+
 const gloss = { token: 'str', gloss: 'EnText' };
 define('Glosses', arr(gloss, '{0..3}'));
+
+// §3.6 ExamText — the source texts an exam block refers to (step or file level)
+define('ExamText', {
+  id: 're(text)',
+  kind: 'enum(audio|text|ad|sign|form|image|document)',
+  'title?': 'de',
+  'lines?': '[Line]',
+  'text?': 'de',
+  'assetRef?': 'ref(asset)',
+  glosses: 'Glosses',
+});
 
 // §8 MicroOutput
 define('MicroOutput', obj({
@@ -94,32 +143,47 @@ define('ExamBlock', {
   scaffolded: 'bool',
   modeDefault: 'enum(lern|pruefung)',
   instructionsDe: 'de',
-  texts: arr({
-    id: 'str',
-    kind: 'enum(audio|text|ad|sign|form)',
-    'title?': 'de',
-    'lines?': '[Line]',
-    'text?': 'de',
-    glosses: 'Glosses',
-  }),
+  textRefs: '[ref(text)]',
+  'choices?': arr({ key: 'str', 'de?': 'de', 'textRef?': 'ref(text)', 'imageRef?': 'ref(asset)' }, '*'),
+  'noMatchKey?': 'str',
   items: '[Item]',
   'answerSheet?': 'bool',
 });
 
-// §8 SpeakingTask
-define('SpeakingTask', {
-  bankKey: 're(BANK_KEY)',
-  lane: 'ref(lane)',
+// §8 SpeakingTask = SpeakingPart & SpeakingCommon | { parts: [SpeakingPart]{2..3} } & SpeakingCommon
+const SPEAKING_MODE = 'enum(cards-ask|cards-request|group|get-to-know|monologue|plan-together|discuss|photo|feedback-question|mediate)';
+define('Card', union('de', obj({ 'de?': 'de', imageRef: 'ref(asset)' })));
+const speakingPart = {
   template: 'ref(template)',
-  mode: 'enum(cards-ask|cards-request|group|monologue|plan-together|discuss|photo|feedback-question|mediate)',
+  mode: SPEAKING_MODE,
   profile: 'ref(rubric)',
   prepMinutes: 'int',
+  'prepAtHome?': 'bool',
   instructionsDe: 'de',
   'situationDe?': 'de',
-  'cards?': { learner: '[de]*', partner: '[de]*' },
+  'cards?': { learner: '[Card]*', partner: '[Card]*' },
+  'photos?': { learner: 'ref(asset)', 'partner?': 'ref(asset)' },
   'slides?': '[de]{5}',
+  'stimulus?': { kind: 'enum(text|quotes|calendar)', 'de?': 'de', items: '[de]*' },
+  'partnerData?': { kind: 'enum(calendar|notes|card)', 'de?': 'de', items: '[de]*' },
+  'topicChoice?': { from: 'int', pick: 'int', topics: '[de]' },
+  // SCHEMA writes `keyPoints: [de]*` without `?`; the §15 speaking task omits it (it is required
+  // for mode 'mediate' only), so it is optional here and required for 'mediate' by the refine.
+  'keyPoints?': '[de]*',
+  'seconds?': '[int, int]',
+  'turns?': '[int, int]',
   moves: '[enum(vorschlagen|reagieren|widersprechen|einigen|verteilen)]*',
   'planningRound?': { minutes: 'int', moves: '[str]' },
+};
+const refinePart = (p, emit) => {
+  if (p.mode === 'mediate' && (!Array.isArray(p.keyPoints) || p.keyPoints.length === 0)) {
+    emit('', 'missing required field "keyPoints" (required for mode mediate)');
+  }
+};
+define('SpeakingPart', obj(speakingPart, { refine: refinePart }));
+const speakingCommon = {
+  bankKey: 're(BANK_KEY)',
+  lane: 'ref(lane)',
   aiRole: {
     name: 'str',
     personaDe: 'de',
@@ -130,10 +194,15 @@ define('SpeakingTask', {
   hintWords: '[str]{0..8}',
   modelTurns: arr({ speaker: 'enum(learner|partner)', de: 'de' }),
   'originLabelDe?': 'de',
-});
+};
+define('SpeakingTask', ifHas(
+  'parts',
+  obj({ parts: '[SpeakingPart]{2..3}', ...speakingCommon }),
+  obj({ ...speakingPart, ...speakingCommon }, { refine: refinePart }),
+));
 
 // §8 WritingTask
-define('WritingTask', {
+define('WritingTask', obj({
   bankKey: 're(BANK_KEY)',
   lane: 'ref(lane)',
   template: 'ref(template)',
@@ -144,15 +213,27 @@ define('WritingTask', {
   title: 'de',
   situationDe: 'de',
   taskDe: 'de',
-  leitpunkte: arr({ id: 'str', de: 'de', cues: '[str]' }),
+  leitpunkte: arr({ id: 'str', de: 'de', cues: '[str]' }, '*'),
   'choose?': { from: 'int', pick: 'int' },
-  wordBand: '[int, int]',
+  'form?': {
+    fields: arr({ id: 'str', labelDe: 'de', answer: 'str', accepted: '[str]', 'exact?': 'enum(number|name)' }),
+    documents: '[ref(asset)]*',
+  },
+  'wordBand?': '[int, int]',
   'wordBandLearning?': '[int, int]',
-  minSubmitWords: 'int',
+  'minSubmitWords?': 'int',
   checklist: '[de]',
   modelText: 'de',
   'originLabelDe?': 'de',
-});
+}, {
+  refine(t, emit) {
+    // `wordBand … minSubmitWords: required unless form`; a writing (non-form) task has Leitpunkte
+    if (t.form === undefined) {
+      for (const k of ['wordBand', 'minSubmitWords']) if (t[k] === undefined) emit('', `missing required field "${k}" (required unless form)`);
+      if (Array.isArray(t.leitpunkte) && t.leitpunkte.length === 0) emit('leitpunkte', 'a writing task without form has at least one Leitpunkt');
+    }
+  },
+}));
 
 // §8 strategy card (PruefungStep, lane pack ls4 slot)
 define('StrategyCard', { template: 'ref(template)', de: 'de', en: 'en' });

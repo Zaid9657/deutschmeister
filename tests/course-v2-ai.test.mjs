@@ -426,7 +426,10 @@ test('the rubric profile, not a fixed scale, shapes the prompt; the learner text
   assert.ok(user.includes(GOOD_TEXT) && !system.includes('Kowalski'), 'task and text go in the user message only');
   assert.ok(user.indexOf('TEXT DES LERNENDEN') < user.indexOf(GOOD_TEXT), 'the learner text is fenced as the submission');
   assert.equal(GA2_TASK().modelText, undefined, 'the server bank carries no model text');
-  assert.ok(!GA2_TASK().leitpunkte.some((l) => 'cues' in l), 'nor the cue lemmas');
+  // SCHEMA §15.5 compiles each Leitpunkt's cues into the bank for the server twin of the pre-check
+  // (advisory cue coverage only); they never reach the model
+  assert.ok(GA2_TASK().leitpunkte.every((l) => Array.isArray(l.cues) && l.cues.length > 0), 'the bank carries the cues');
+  assert.ok(!user.includes('Wie wäre es') && !system.includes('Wie wäre es'), 'nor do the cue lemmas reach the prompt');
 });
 
 test('the profile\'s own descriptors and its error policy reach the system block (SCHEMA §4.5)', () => {
