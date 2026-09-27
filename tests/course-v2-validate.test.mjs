@@ -736,6 +736,12 @@ describe('licensed forms: the grammar a unit teaches licenses its rule-card exam
     for (const w of ['besonders', 'höflich', 'formen', 'neutral']) assert.ok(!l4.has(w), w);
     assert.ok(!licensedForms(ctx, unitAt(3, { new: [], chunk: [], review: [] })).forms.has('würden'), 'not before the point enters');
   });
+  test('a card example the lexicon allocates to a later unit is not licensed early', () => {
+    const { ctx } = lexCtx({ spine, cards, lexicon: { 'a1.2': [lx('lx.helfen', 'helfen', 'VERB', 'a1.2-u09', { verb_forms: { '3sg': 'hilft', perfekt: 'hat geholfen' } })] } });
+    const unit = unitAt(4, { new: [], chunk: ['g.konj2-test'], review: [] });
+    assert.ok(!licensedForms(ctx, unit).forms.has('helfen'));
+    assert.ok(licensedForms(ctx, { ...unit, id: 'a1.2-u09', nr: 9 }).forms.has('helfen'));
+  });
 });
 
 describe('LEX-03 on a complete cumulative lexicon (A1.1 U1): real blockers stay, false ones are gone', () => {

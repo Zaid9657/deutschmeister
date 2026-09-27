@@ -274,7 +274,8 @@ function labelExamples(label) {
  * spine point the unit names (spec.grammar new/chunk/review) and of every spine point introduced
  * (receptively, productively or as a chunk) at or before the unit — the spine label's examples and
  * the point's rule cards (model sentence, paradigm table below its header row, caseMarks tokens).
- * The explanatory prose of a card is metalanguage and licenses nothing.
+ * The explanatory prose of a card is metalanguage and licenses nothing, and a form of a lemma some
+ * lexicon allocates to a later unit is not licensed before that unit.
  * Returns { forms: Set, points: [ids] }.
  */
 export function licensedForms(ctx, unitData) {
@@ -292,7 +293,19 @@ export function licensedForms(ctx, unitData) {
   }
   const cards = [];
   for (const slot of ctx.levels.values()) for (const c of arr(slot.ruleCards?.cards)) cards.push(c);
-  const add = (text) => { for (const t of readTokens(text)) forms.add(t.lower); };
+  // the lexicon outranks a card, as it outranks the core: a word some lexicon allocates to a later unit
+  // („Montag" on an A1.1-U1 Präsens card, allocated to U7) is not licensed before that unit
+  const later = new Set();
+  if (here !== null) {
+    const alloc = allocatedAt(ctx);
+    for (const l of LEVELS) {
+      for (const e of ctx.levels.get(l)?.lexicon?.entries || []) {
+        const at = alloc.get(lc(e?.lemma).replace(/^(der|die|das)\s+/, ''));
+        if (at !== undefined && at > here) for (const f of entryForms(e).forms) later.add(f);
+      }
+    }
+  }
+  const add = (text) => { for (const t of readTokens(text)) if (!later.has(t.lower)) forms.add(t.lower); };
   for (const pid of ids) {
     const point = spine?.get(pid)?.point;
     if (point) add(labelExamples(point.label));
