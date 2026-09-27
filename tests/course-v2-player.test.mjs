@@ -385,6 +385,22 @@ test('a step finished in this visit re-draws itself for a repeat, and a weak Che
   assert.match(page, /accuracy !== null && accuracy < 0\.6 && \([\s\S]{0,400}<StepList /, 'the repeat tip comes with the step list');
 });
 
+test('the recap ticks exactly what the Check proved, and the Check says „Sie können jetzt" only when all is proven', () => {
+  const cv = read('src/components/course-v2/CheckView.jsx');
+  assert.match(cv, /onDone\(\{ stepId, correct: score\.correct, total: score\.total, proofs \}\)/, 'the Check reports its proofs');
+  assert.match(cv, /\{endLine && allProven && /, 'the closing line waits for every proof');
+  assert.match(read('src/components/course-v2/StepView.jsx'), /finishStep\(r && r\.proofs \? \{ proofs: r\.proofs \} : \{\}\)/, 'StepView passes the proofs on');
+  const page = read('src/pages/course-v2/UnitPlayerPage.jsx');
+  assert.match(page, /proofs: result\.proofs \|\| null/);
+  assert.match(page, /\{allProven \? t\('player\.canNow'\) : t\('player\.goalsUnit'\)\}/);
+  assert.match(page, /\{proven\(i\)\s*\n?\s*\? <Check /, 'a tick per proven can-do');
+  // the fixture's proof rules are the ones the recap reads: two by item, two by Aufgabe
+  const kinds = unit.check.proofs.map((p) => (p.item ? 'item' : p.aufgabe));
+  assert.deepEqual(kinds.sort(), ['item', 'item', 'schreiben', 'sprechen']);
+  const row = manifest.units.find((r) => r.unit === unit.id);
+  assert.deepEqual([...row.canDoIds].sort(), unit.check.proofs.map((p) => p.canDo).sort(), 'every manifest can-do has a proof rule');
+});
+
 test('the Check announces the number of items it will actually ask', () => {
   const strings = read('src/components/course-v2/strings.js');
   for (const line of strings.split('\n').filter((l) => l.includes("'check.lead'"))) {
