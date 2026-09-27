@@ -6,8 +6,10 @@
 //
 // Rail extensions (rule-smith 2026-09-27):
 //   - generator sources are production (review a2.1-u04 r2 F09): a lex.articlePlural or lex.glossTyped
-//     source lemma is productive (the learner writes its article, plural or the word), and a
-//     dictation.fromInput line contains no receptive-only or off-list lemma (the learner spells it);
+//     source lemma is productive (the learner writes its article, plural or the word) — blocker; a
+//     dictation.fromInput line that makes the learner spell one of the unit's receptive-only or off-list
+//     lemmas is an ADVISORY (the finding was minor, and the SCHEMA §15 worked example dictates „Stau",
+//     „Autobahn" and „Buchhaltung", all receptive there);
 //   - a compound of two known forms („Radtour", „Möbelstücke") is an advisory — allocate it as
 //     `compound:a+b` — never a blocker (reviews b1.2-u04 r1 F01, b2.2-u04 r1 F05; compounds.mjs).
 
@@ -19,6 +21,7 @@ import { unitDoc, cumulativeLexicon } from '../lib-validate/context.mjs';
 import { walkSteps } from '../lib-validate/walk.mjs';
 import { entryForms } from '../lib-validate/lexicon.mjs';
 import { knownCompound } from '../lib-validate/compounds.mjs';
+import { FUNCTION_WORDS } from '../lib-validate/text.mjs';
 
 const content = await import('../../../src/components/course-v2/content.js').catch(() => null);
 
@@ -35,14 +38,21 @@ function generatorFindings(ctx, doc, nr) {
   const byId = new Map(lex.map((e) => [e?.id, e]));
   const promoted = new Set();
   for (const l of ctx.levels.values()) for (const pr of arr(l.lexicon?.promotions)) promoted.add(pr?.lemma);
-  // forms of receptive-only and off-list lemmas, for the dictation lines
+  // forms of the unit's own receptive-only and off-list lemmas (one-word lemmas; function words are
+  // everybody's), for the dictation lines — what the unit teaches only to be recognised is not spelled
   const risky = new Map();
   for (const e of lex) {
-    if (!e?.lemma) continue;
+    if (!e?.lemma || e.unit !== doc.data?.id) continue;
+    if (/\s/.test(String(e.lemma).replace(/^(?:sich|der|die|das)\s+/i, '').trim())) continue;
     const offList = /^off-list/.test(String(e.list_ref || ''));
     const receptiveOnly = e.role === 'receptive' && !promoted.has(e.id);
     if (!offList && !receptiveOnly) continue;
-    for (const f of entryForms(e).forms) if (f.length > 2 && !risky.has(f)) risky.set(f, { e, why: offList ? 'off-list' : 'receptive' });
+    for (const f of entryForms(e).forms) if (f.length > 2 && !FUNCTION_WORDS.has(f) && !risky.has(f)) risky.set(f, { e, why: offList ? 'off-list' : 'receptive' });
+  }
+  // a form that is also a form of a lemma the learner may produce („melden": sich melden) is safe
+  for (const e of lex) {
+    if (!e?.lemma || (e.unit === doc.data?.id && (e.role === 'receptive' || /^off-list/.test(String(e.list_ref || ''))) && !promoted.has(e.id))) continue;
+    if (e.unit === doc.data?.id || e.role === 'productive' || promoted.has(e.id)) for (const f of entryForms(e).forms) risky.delete(f);
   }
   const lines = content ? content.lineIndex(doc.data) : new Map();
   for (const { step, path } of walkSteps(doc)) {
@@ -60,7 +70,7 @@ function generatorFindings(ctx, doc, nr) {
           const line = lines.get(ref);
           if (!line) return;
           const hits = [...new Set(readTokens(line.de).map((t) => t.lower).filter((w) => risky.has(w)))];
-          if (hits.length) out.push(blocker(doc, `${gp}.source[${k}]`, `dictation source ${ref} makes the learner spell ${hits.map((w) => `„${w}" (${risky.get(w).why}: ${risky.get(w).e.id})`).join(', ')} — dictate a line with productive words only`, ref));
+          if (hits.length) out.push(finding('advisory', doc, `${gp}.source[${k}]`, `dictation source ${ref} makes the learner spell ${hits.map((w) => `„${w}" (${risky.get(w).why}: ${risky.get(w).e.id})`).join(', ')} — dictate a line with productive words only`, ref));
         });
       }
     });
