@@ -9,7 +9,8 @@
 // closed-class words the text.mjs FUNCTION_WORDS list lacks (pronominal adverbs, indefinites,
 // interjections), A1 time/place adverbs, and a small set of A1 everyday content words that classroom
 // German presupposes (Moment, Tür, fertig, bringen, beginnen …). NEVER an A2/B1/B2 word, never a word a
-// unit allocates as a teaching target, never a proper name: a missing higher-level lemma is a lexicon
+// unit allocates as a teaching target, never a proper name (those live in registries/names.json, SCHEMA §4.9,
+// read by lexicon.mjs): a missing higher-level lemma is a lexicon
 // gap for its allocator, and this file must not become the way around LEX-01. The list is closed at
 // ≤ 400 entries (a test pins the count and bans the B-level words that have been proposed so far);
 // a new entry needs its A1 justification in the commit that adds it.

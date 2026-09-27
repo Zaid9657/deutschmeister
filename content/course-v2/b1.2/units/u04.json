@@ -127,12 +127,6 @@
           "length": "full",
           "modeDefault": "pruefung",
           "slot": "sprechen"
-        },
-        {
-          "template": "tb1.sa",
-          "length": "full",
-          "modeDefault": "pruefung",
-          "slot": "schreiben"
         }
       ],
       "spur": {}
@@ -167,8 +161,7 @@
     "pruefungsfokusChips": [
       "tb1.lv3",
       "tb1.sb2",
-      "tb1.m3",
-      "tb1.sa"
+      "tb1.m3"
     ],
     "folge": {
       "title": "Montag, kurz vor der Mittagspause",

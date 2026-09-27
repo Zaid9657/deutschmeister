@@ -418,6 +418,32 @@ their descriptors, the bands and the error policy to the model; `deterministic` 
 Written only by the orchestrator's `scripts/course-v2/lex/register.mjs` after each band's allocation (BLUEPRINT
 §2.6); one id per lemma across all eight levels, so `word:<lexiconId>` card keys never collide.
 
+### 4.9 Proper names — `names.json`
+
+```js
+{ $schema: 'course-v2/names@1', version: 1,
+  names: [{ form: de,                               // as written: 'Leipzig', 'Cospudener See', 'Elster-Reisen'
+            kind: enum(place|person|org|brand|event),
+            level: re(LEVEL),                      // the first level whose texts may use the name
+            note: str? }]* }                       // `form` unique (case-insensitive)
+```
+
+The places, people, organisations, brands and events a text may name that are **not** cast members (a cast
+member's `name` and `from` are known anyway) and not a file's one-off speakers (`extras`, §3.5). LEX-01 and
+LEX-03 count every token of a listed name as known from its `level` on, with its genitive -s (*Leipzigs*) and
+adjectival -er (*Leipziger*, *Cospudener*); a token ending in -e inside a multi-word name takes the adjective
+endings (*in der Sächsischen Schweiz*). An irregular derivative is a name of its own (*Münchner*).
+- **The lexicon outranks the list**, as it outranks the core: a token some `lexicon.json` allocates is known only
+  from that unit on (*Österreich*, *Schweiz*: a1.1-u12).
+- **Only the proper part.** Where a name's other words are common nouns, list the proper part (*Warentest*, not
+  *Stiftung Warentest*): the list must never become the way around LEX-01.
+- `level`: `a1.1` for countries, German states, the D-A-CH capitals and major cities and the series city
+  (Leipzig); otherwise the level at which a plan or a unit first uses the name.
+
+Checked by `scripts/course-v2/lib/schemas/names.mjs` (matched by `$schema` or by file name); read by
+`scripts/course-v2/lib-validate/lexicon.mjs` (`namesOf`, `nameForms`). Content agents propose additions; the
+lexicon owner adds them.
+
 ## 5. `course.json` (one per level)
 
 ```js

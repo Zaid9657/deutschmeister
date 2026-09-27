@@ -2761,9 +2761,9 @@
             {
               "id": "a1.1-u04-ls4-t9-l01",
               "speaker": "durchsage",
-              "de": "Liebe Kunden, heute ist unser Supermarkt nur bis 18 Uhr geöffnet. Morgen ist Sonntag, da ist der Supermarkt zu. Am Montag sind wir wieder von 8 bis 20 Uhr für Sie da. Danke und bis Montag!",
-              "en": "Dear customers, today our supermarket is only open until 6 pm. Tomorrow is Sunday – the supermarket is closed then. On Monday we are here for you again from 8 am to 8 pm. Thank you, and see you on Monday!",
-              "say": "Liebe Kunden, heute ist unser Supermarkt nur bis achtzehn Uhr geöffnet. Morgen ist Sonntag, da ist der Supermarkt zu. Am Montag sind wir wieder von acht bis zwanzig Uhr für Sie da. Danke und bis Montag!"
+              "de": "Liebe Kunden, heute ist der Supermarkt nur bis 18 Uhr geöffnet. Morgen ist der Supermarkt zu. Am Montag sind wir wieder von 8 bis 20 Uhr für Sie da. Danke und bis Montag!",
+              "en": "Dear customers, today the supermarket is only open until 6 pm. Tomorrow the supermarket is closed. On Monday we are here for you again from 8 am to 8 pm. Thank you, and see you on Monday!",
+              "say": "Liebe Kunden, heute ist der Supermarkt nur bis achtzehn Uhr geöffnet. Morgen ist der Supermarkt zu. Am Montag sind wir wieder von acht bis zwanzig Uhr für Sie da. Danke und bis Montag!"
             }
           ],
           "glosses": [
@@ -2774,9 +2774,9 @@
               }
             },
             {
-              "token": "Sonntag",
+              "token": "geöffnet",
               "gloss": {
-                "en": "Sunday"
+                "en": "open"
               }
             },
             {
@@ -3098,7 +3098,7 @@
             "mode": "cards-ask",
             "profile": "sd1-sp2",
             "prepMinutes": 0,
-            "instructionsDe": "Zwei Themen: Einkaufen, dann Essen und Trinken. Fragen Sie mit Ihren Karten und antworten Sie.",
+            "instructionsDe": "Zwei Themen: Einkaufen, dann Essen und Trinken. Fragen und antworten Sie mit Ihren Karten.",
             "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin haben Wortkarten zu zwei Themen: zuerst Einkaufen, dann Essen und Trinken. Fragen Sie: Was kostet …? Wie viel …? Wo ist …? Antworten Sie auf die Fragen der Partnerin.",
             "cards": {
               "learner": [

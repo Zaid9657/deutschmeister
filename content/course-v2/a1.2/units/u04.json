@@ -2841,7 +2841,8 @@
               "en": "OK, thank you!"
             }
           ],
-          "glosses": []
+          "glosses": [],
+          "assetRef": "a1.2-u04-a01"
         },
         {
           "id": "a1.2-u04-ls4-t7",
@@ -2875,7 +2876,8 @@
               "en": "No problem. You’ll get the passport in April then."
             }
           ],
-          "glosses": []
+          "glosses": [],
+          "assetRef": "a1.2-u04-a02"
         },
         {
           "id": "a1.2-u04-ls4-t8",
@@ -2908,7 +2910,8 @@
               "en": "Lovely! And you have a new flat now. She’ll have lots of room there."
             }
           ],
-          "glosses": []
+          "glosses": [],
+          "assetRef": "a1.2-u04-a03"
         },
         {
           "id": "a1.2-u04-ls4-t9",
@@ -2940,7 +2943,8 @@
               "en": "No, it’s open from nine to twelve on Wednesday. On Saturday it’s open from ten to one."
             }
           ],
-          "glosses": []
+          "glosses": [],
+          "assetRef": "a1.2-u04-a04"
         },
         {
           "id": "a1.2-u04-ls4-t10",
@@ -2980,7 +2984,8 @@
               "en": "Good, that works. Thanks!"
             }
           ],
-          "glosses": []
+          "glosses": [],
+          "assetRef": "a1.2-u04-a05"
         },
         {
           "id": "a1.2-u04-ls4-t11",
@@ -3006,7 +3011,8 @@
               "en": "Dresden, good. Then the form is correct now. Thank you."
             }
           ],
-          "glosses": []
+          "glosses": [],
+          "assetRef": "a1.2-u04-a06"
         }
       ],
       "blocks": [
@@ -3865,7 +3871,7 @@
       "kind": "daf",
       "title": "Der Prüfungstag: Was bringe ich mit?",
       "hf": "11",
-      "bodyDe": "Sie machen bald die Prüfung „Start Deutsch 1“? Kommen Sie am Prüfungstag pünktlich. Bringen Sie einen Ausweis mit Foto mit, zum Beispiel Ihren Pass: Vor der Prüfung zeigen alle Teilnehmenden ihren Ausweis. Wichtig: Sie können die Prüfung nur ganz wiederholen, nicht nur einen Teil.",
+      "bodyDe": "Sie machen bald die Prüfung „Start Deutsch 1“? Kommen Sie am Prüfungstag pünktlich. Bringen Sie einen Ausweis mit Foto mit, zum Beispiel Ihren Pass: Vor der Prüfung zeigen alle ihren Ausweis. Wichtig: Sie können die Prüfung nur ganz wiederholen, nicht nur einen Teil.",
       "bodyEn": "Taking the Goethe-Zertifikat A1: Start Deutsch 1 soon? Arrive on time on the exam day. Bring an ID with a photo, for example your passport: before the exam begins, every candidate identifies themselves. Important: the exam can only be retaken as a whole, not part by part.",
       "factRefs": [
         "a1.2-u04-f01",
@@ -3935,5 +3941,84 @@
       "notes": "Backs the LS1 web page line „das Formular von Ihrem Vermieter“ and LS1 l13 / LS3 l07 (Wohnungsgeberbestätigung). § 19 Abs. 1 BMG re-read at the source on 2026-09-27 by review a1.2-u04.r1 (F21) and re-checked in this fix against the copy of the page saved that day: „Der Wohnungsgeber ist verpflichtet, bei der Anmeldung mitzuwirken. Hierzu hat der Wohnungsgeber … den Einzug schriftlich oder … auch elektronisch … zu bestätigen.“"
     }
   ],
-  "assets": []
+  "assets": [
+    {
+      "id": "a1.2-u04-a01",
+      "kind": "image",
+      "altDe": "Drei Bilder: a) ein Automat für Wartenummern rechts neben dem Eingang, b) der Automat links neben dem Eingang, c) der Automat neben dem Ausgang.",
+      "altEn": "Three pictures: a) a queue-number machine to the right of the entrance, b) to the left of the entrance, c) next to the exit.",
+      "depicts": "scene",
+      "source": "generated",
+      "licence": {
+        "name": "own-generated"
+      },
+      "prompt": "Simple flat illustration, three panels side by side labelled a, b and c, the same style in each panel; no people, no real logos or brands, no readable text except what is stated. The ground-floor entrance area of a generic municipal office: (a) a queue-ticket machine standing to the right of the entrance door; (b) the same machine standing to the left of the entrance door; (c) the machine standing next to a second door marked with a green exit pictogram. Only the letters a, b, c.",
+      "status": "planned"
+    },
+    {
+      "id": "a1.2-u04-a02",
+      "kind": "image",
+      "altDe": "Drei Kalenderblätter: a) März, der 2. ist markiert, b) März, der 23. ist markiert, c) das Blatt für April.",
+      "altEn": "Three calendar pages: a) March with the 2nd marked, b) March with the 23rd marked, c) the April page.",
+      "depicts": "object",
+      "source": "generated",
+      "licence": {
+        "name": "own-generated"
+      },
+      "prompt": "Simple flat illustration, three panels side by side labelled a, b and c, the same style in each panel; no people, no real logos or brands, no readable text except what is stated. Wall-calendar pages: (a) a March page with day 2 circled; (b) a March page with day 23 circled; (c) an April page with no day circled. Show the months as the numerals 03 and 04; only numerals and the letters a, b, c.",
+      "status": "planned"
+    },
+    {
+      "id": "a1.2-u04-a03",
+      "kind": "image",
+      "altDe": "Drei Kalender: a) eine Woche ist markiert, b) zwei Wochen sind markiert, c) drei Wochen sind markiert.",
+      "altEn": "Three calendars: a) one week marked, b) two weeks marked, c) three weeks marked.",
+      "depicts": "object",
+      "source": "generated",
+      "licence": {
+        "name": "own-generated"
+      },
+      "prompt": "Simple flat illustration, three panels side by side labelled a, b and c, the same style in each panel; no people, no real logos or brands, no readable text except what is stated. The same month calendar grid (month shown as the numeral 01) with a coloured bar marking (a) one week, (b) two weeks, (c) three weeks. Only numerals and the letters a, b, c.",
+      "status": "planned"
+    },
+    {
+      "id": "a1.2-u04-a04",
+      "kind": "image",
+      "altDe": "Drei Schilder mit Öffnungszeiten für Samstag: a) 10–13 Uhr, b) 9–12 Uhr, c) 9–13 Uhr.",
+      "altEn": "Three Saturday opening-hours signs: a) 10–13, b) 9–12, c) 9–13.",
+      "depicts": "object",
+      "source": "generated",
+      "licence": {
+        "name": "own-generated"
+      },
+      "prompt": "Simple flat illustration, three panels side by side labelled a, b and c, the same style in each panel; no people, no real logos or brands, no readable text except what is stated. A small opening-hours sign on the glass door of a generic bank branch (no bank name, no logo), each with a clock pictogram and the hours (a) 10–13, (b) 9–12, (c) 9–13. Only these numerals and the letters a, b, c.",
+      "status": "planned"
+    },
+    {
+      "id": "a1.2-u04-a05",
+      "kind": "image",
+      "altDe": "Drei Kalenderblätter: a) Februar, der 2. ist markiert, b) März, der 27. ist markiert, c) Februar, der 12. ist markiert.",
+      "altEn": "Three calendar pages: a) February with the 2nd marked, b) March with the 27th marked, c) February with the 12th marked.",
+      "depicts": "object",
+      "source": "generated",
+      "licence": {
+        "name": "own-generated"
+      },
+      "prompt": "Simple flat illustration, three panels side by side labelled a, b and c, the same style in each panel; no people, no real logos or brands, no readable text except what is stated. Wall-calendar pages: (a) a February page with day 2 circled; (b) a March page with day 27 circled; (c) a February page with day 12 circled. Show the months as the numerals 02 and 03; only numerals and the letters a, b, c.",
+      "status": "planned"
+    },
+    {
+      "id": "a1.2-u04-a06",
+      "kind": "image",
+      "altDe": "Drei Formulare: a) das Feld für die Unterschrift ist leer, b) das Feld für den Geburtsort ist leer, c) das Feld für die Staatsangehörigkeit ist leer.",
+      "altEn": "Three forms: a) the signature field is empty, b) the place-of-birth field is empty, c) the nationality field is empty.",
+      "depicts": "document",
+      "source": "generated",
+      "licence": {
+        "name": "own-generated"
+      },
+      "prompt": "Simple flat illustration, three panels side by side labelled a, b and c, the same style in each panel; no people, no real logos or brands, no readable text except what is stated. The same generic, fictional registration form (not a real official form: no coat of arms, no seal, no logo) with filled fields shown as grey lines and one empty field highlighted in yellow: (a) the signature line at the bottom, marked with a pen pictogram; (b) the place-of-birth field, marked with a house-and-pin pictogram; (c) the nationality field, marked with a plain flag-outline pictogram. Only the letters a, b, c.",
+      "status": "planned"
+    }
+  ]
 }
