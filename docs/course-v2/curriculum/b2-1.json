@@ -8,12 +8,12 @@
     "Deutsch-Test für den Beruf B2 (DTB, telc) – Beruf-Lane, nur Hinweise und Fokus-Aufgaben"
   ],
   "hours": {
-    "guided": 47,
-    "total": 62
+    "guided": 50,
+    "total": 65
   },
   "vocabTarget": {
     "newWords": 800,
-    "cumulative": 3200
+    "cumulative": 3202
   },
   "units": [
     {
@@ -49,18 +49,18 @@
           "lehrwerk": "Aspekte neu B2 K1; Sicher! aktuell B2 L1 (06 F3 B2.1 #1, strong)"
         },
         {
-          "point": "Negation: Satz- und Teilnegation, Stellung von nicht, nicht mehr / noch nicht / gar nicht (Wiederholung und Ausbau)",
-          "new": false,
-          "lehrwerk": "Aspekte neu B2 K1; Sicher! aktuell B2 L1; Vorstufe Netzwerk B1 K9 (Stellung von nicht)"
+          "point": "Negation als System: Satz- und Teilnegation, Stellung von nicht im Mittelfeld, nicht mehr / noch nicht / gar nicht (Grundregel seit A1.1 E8)",
+          "new": true,
+          "lehrwerk": "Aspekte neu B2 K1; Sicher! aktuell B2 L1 (06 F3 B2.1 #1); Netzwerk B1 K9 (Stellung von nicht); laut b1-2.md §8 noch nicht als System gelehrt"
         }
       ],
       "vocabTheme": "Heimat, Identität, Zugehörigkeit",
       "vocabTarget": 66,
       "keyWords": [
         "die Zugehörigkeit",
-        "die Herkunft",
-        "das Heimweh",
-        "die Sehnsucht",
+        "die Selbstwahrnehmung",
+        "die Entwurzelung",
+        "die Fremdheit",
         "die Verbundenheit",
         "die Wurzel",
         "die Prägung",
@@ -69,7 +69,7 @@
         "das Ritual",
         "sich einleben",
         "sich verbunden fühlen",
-        "prägen",
+        "sich identifizieren mit",
         "verwurzelt",
         "heimisch",
         "befremdlich"
@@ -146,14 +146,14 @@
         "der Tonfall",
         "die Körpersprache",
         "der Blickkontakt",
-        "die Rückmeldung",
+        "der Gesprächsverlauf",
         "der Umgangston",
         "die Höflichkeitsform",
         "das Anliegen",
-        "der Einwand",
+        "der Redeanteil",
         "unterbrechen",
         "nachhaken",
-        "missverstehen",
+        "aneinander vorbeireden",
         "ansprechen",
         "sich ausdrücken",
         "taktvoll",
@@ -227,12 +227,12 @@
       "vocabTheme": "Arbeitszeit, Arbeitsmodelle, Work-Life-Balance",
       "vocabTarget": 67,
       "keyWords": [
-        "die Gleitzeit",
+        "die Vertrauensarbeitszeit",
         "die Kernarbeitszeit",
         "die Arbeitszeiterfassung",
         "der Freizeitausgleich",
         "die Erreichbarkeit",
-        "die Belastung",
+        "die Entgrenzung",
         "die Vereinbarkeit",
         "die Präsenzpflicht",
         "die Produktivität",
@@ -258,7 +258,7 @@
         "examTeil": "Goethe B2 Schreiben Teil 2"
       },
       "speaking": {
-        "task": "Einen Zeitungsartikel zur Vier-Tage-Woche in einer Minute zusammenfassen, dann mit der Partnerin diskutieren",
+        "task": "Einen Zeitungsartikel zum Recht auf Nichterreichbarkeit nach Feierabend in einer Minute zusammenfassen, dann mit der Partnerin diskutieren",
         "examTeil": "telc B2 Mündlicher Ausdruck Teil 2"
       },
       "pronunciation": "Wortakzent in Komposita und Fremdwörtern (die ARbeitszeit, die ProduktiviTÄT, fleXIbel)",
@@ -270,7 +270,7 @@
         "telc B2 Mündlicher Ausdruck Teil 2",
         "DTB B2 Sprechen Teil 2 (Beruf-Lane)"
       ],
-      "landeskunde": "Arbeitszeit in Deutschland: Arbeitszeitgesetz, Pflicht zur Zeiterfassung, Debatte über die Vier-Tage-Woche (Stand und Quelle beim Schreiben prüfen)"
+      "landeskunde": "Arbeitszeit in Deutschland: Arbeitszeitgesetz, Pflicht zur Zeiterfassung, Debatte über Erreichbarkeit nach Feierabend (Stand und Quelle beim Schreiben prüfen)"
     },
     {
       "nr": 4,
@@ -302,7 +302,7 @@
         {
           "point": "Konjunktiv II der Vergangenheit produktiv, auch mit Modalverb (Hätten Sie uns informiert, hätten wir umgebucht. Das Hotel hätte uns ein anderes Zimmer geben müssen.)",
           "new": true,
-          "lehrwerk": "rezeptive Vorstufe Menschen B1 L10, Schritte plus Neu 5 L7; produktiv hier nach 06 impl. 11; Sicher! aktuell B2 L5–6"
+          "lehrwerk": "rezeptiv mit festen Rahmen in b1-2 E12; Menschen B1 L10, Schritte plus Neu 5 L7; produktiv hier nach 06 impl. 11; Sicher! aktuell B2 L5–6"
         },
         {
           "point": "Bedeutungen des Konjunktiv II: höfliche Forderung und Vorwurf (Ich würde Sie bitten, … / Sie hätten uns vorher informieren müssen.)",
@@ -319,15 +319,15 @@
       "vocabTheme": "Reisemängel, Verbraucherrechte, Beschwerde",
       "vocabTarget": 67,
       "keyWords": [
-        "der Mangel",
+        "die Pauschalreise",
         "die Minderung",
         "die Erstattung",
-        "die Entschädigung",
+        "die Ausgleichszahlung",
         "der Reiseveranstalter",
         "die Ersatzleistung",
         "der Anspruch",
         "die Kulanz",
-        "der Beleg",
+        "die Mängelanzeige",
         "die Beanstandung",
         "zusichern",
         "beanstanden",
@@ -392,14 +392,14 @@
       ],
       "grammar": [
         {
-          "point": "zwar … aber: Zugeständnis und Gegenargument (Einwegbecher sind zwar praktisch, aber sie …)",
+          "point": "Zweiteilige Konnektoren der Argumentation: einerseits … andererseits, zum einen … zum anderen (Einerseits sind Einwegbecher praktisch, andererseits …)",
           "new": true,
-          "lehrwerk": "Aspekte neu B2 K3; Sicher! aktuell B2 L1 (06 F3 B2.1 #2); Profile deutsch B2"
+          "lehrwerk": "Aspekte neu B2 K3; Sicher! aktuell B2 L1 (06 F3 B2.1 #2)"
         },
         {
-          "point": "Zweiteilige Konnektoren im Argumentationstext: nicht nur … sondern auch, weder … noch, entweder … oder, sowohl … als auch (Wiederholung)",
+          "point": "zwar … aber, nicht nur … sondern auch, weder … noch im Argumentationstext (Wiederholung aus b1-2 E3/E11)",
           "new": false,
-          "lehrwerk": "Menschen B1 L15/L18; Schritte plus Neu 6 L8/L10; Netzwerk B1 K8"
+          "lehrwerk": "b1-2 E3, E11; Menschen B1 L15/L18; Schritte plus Neu 6 L8/L10; Netzwerk B1 K8"
         }
       ],
       "vocabTheme": "Konsum, Verpackung, Nachhaltigkeit",
@@ -407,16 +407,16 @@
       "keyWords": [
         "die Einwegverpackung",
         "das Mehrwegsystem",
-        "das Pfand",
+        "der Einwegbecher",
         "die Wegwerfgesellschaft",
-        "der Verbrauch",
+        "der Konsumverzicht",
         "die Ressource",
-        "der Rohstoff",
+        "die Ökobilanz",
         "die Verschwendung",
-        "das Verbot",
+        "die Verpackungsflut",
         "der Anreiz",
         "die Kreislaufwirtschaft",
-        "vermeiden",
+        "eindämmen",
         "verzichten auf",
         "wiederverwerten",
         "verursachen",
@@ -440,7 +440,7 @@
         "task": "Diskussion: Sollen Einwegverpackungen verboten werden? Argumente austauschen, auf Gegenargumente reagieren, am Ende Position nennen",
         "examTeil": "Goethe B2 Sprechen Teil 2"
       },
-      "pronunciation": "Kontrastakzent bei zwar … aber und nicht … sondern (ZWAR praktisch, aber TEUer)",
+      "pronunciation": "Kontrastakzent bei einerseits … andererseits und zwar … aber (EINerseits praktisch, ANdererseits teuer)",
       "examTeile": [
         "Goethe B2 Lesen Teil 3",
         "telc B2 Leseverstehen Teil 2",
@@ -577,16 +577,16 @@
       "vocabTarget": 67,
       "keyWords": [
         "das Mehrgenerationenhaus",
-        "die Hausgemeinschaft",
+        "die Wohnform",
         "das Wohnprojekt",
         "der Anwohner",
         "der Gemeinschaftsraum",
         "die Nachbarschaftshilfe",
-        "die Rücksicht",
+        "die Vereinsamung",
         "der Zusammenhalt",
         "die Genossenschaft",
         "die Mitbestimmung",
-        "sich engagieren",
+        "mitgestalten",
         "sich einbringen",
         "sich austauschen",
         "sich vernetzen",
@@ -649,7 +649,7 @@
         {
           "point": "Nomen-Verb-Verbindungen: vom A2.2-Chunk einen Antrag stellen zu Anspruch haben auf, in Anspruch nehmen, zur Verfügung stehen, in Frage kommen, eine Entscheidung treffen",
           "new": true,
-          "lehrwerk": "Aspekte neu B2 K4; Sicher! aktuell B2 L5 (06 F3 B2.1 #5, strong)"
+          "lehrwerk": "Aspekte neu B2 K4; Sicher! aktuell B2 L5 (06 F3 B2.1 #5, strong); in b1-2 E8 nur als Chunks"
         },
         {
           "point": "Zustandspassiv: Vorgang und Zustand (Der Antrag wird geprüft. / Der Antrag ist eingereicht. Die Unterlagen sind beglaubigt.)",
@@ -746,12 +746,12 @@
       "vocabTheme": "Bewerbung, Qualifikation, Arbeitsvertrag",
       "vocabTarget": 67,
       "keyWords": [
-        "das Anschreiben",
+        "das Motivationsschreiben",
         "die Stellenausschreibung",
         "das Anforderungsprofil",
         "die Eignung",
         "die Kompetenz",
-        "die Gehaltsvorstellung",
+        "die Vergütung",
         "der Werdegang",
         "die Befristung",
         "die Kündigungsfrist",
@@ -759,7 +759,7 @@
         "sich auszeichnen durch",
         "überzeugen",
         "mitbringen",
-        "belastbar",
+        "durchsetzungsfähig",
         "kommunikationsstark",
         "eigenverantwortlich",
         "lösungsorientiert"
@@ -825,9 +825,9 @@
           "lehrwerk": "Sicher! aktuell B2 L5–6 (06 F3 B2.1 #10, SIC only); Profile deutsch B2; Futur I Menschen B1 L5"
         },
         {
-          "point": "Modalwörter der Vermutung: wahrscheinlich, vermutlich, wohl, sicherlich, möglicherweise",
-          "new": true,
-          "lehrwerk": "Sicher! aktuell B2 L5–6; Aspekte neu B2 K9 (split)"
+          "point": "Modalwörter der Vermutung: wahrscheinlich, vermutlich (Wiederholung aus b1-1 E5), neu wohl, sicherlich, möglicherweise, zweifellos",
+          "new": false,
+          "lehrwerk": "b1-1 E5; Sicher! aktuell B2 L5–6"
         }
       ],
       "vocabTheme": "Pflegealltag, Übergabe, Befinden",
@@ -848,7 +848,7 @@
         "verabreichen",
         "beobachten",
         "dokumentieren",
-        "einspringen",
+        "umlagern",
         "bettlägerig",
         "verwirrt"
       ],

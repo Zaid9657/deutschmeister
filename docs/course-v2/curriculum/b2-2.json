@@ -8,11 +8,11 @@
     "Deutsch-Test für den Beruf B2 (DTB, telc) – Beruf-Lane, Hinweise und ein optionaler Modelltest"
   ],
   "hours": {
-    "guided": 53,
-    "total": 68
+    "guided": 56,
+    "total": 71
   },
   "vocabTarget": {
-    "newWords": 800,
+    "newWords": 798,
     "cumulative": 4000
   },
   "units": [
@@ -132,7 +132,7 @@
         {
           "point": "Modalsätze: indem (Wiederholung) und neu dadurch, dass … (Man senkt das Risiko dadurch, dass man sich mehr bewegt.)",
           "new": true,
-          "lehrwerk": "Aspekte neu B2 K7; Sicher! aktuell B2 L11 (06 F3 B2.2 #3, strong); indem Menschen B1 L20 (B1.2)"
+          "lehrwerk": "Aspekte neu B2 K7; Sicher! aktuell B2 L11 (06 F3 B2.2 #3, strong); indem in b1-2 E10; Menschen B1 L20"
         },
         {
           "point": "ohne dass / ohne … zu und (an)statt dass / (an)statt … zu im Kontrast (Wiederholung)",
@@ -154,9 +154,9 @@
         "die Zuckersteuer",
         "der Verzehr",
         "der Zuschuss",
-        "vorbeugen",
+        "vorsorgen",
         "senken",
-        "fördern",
+        "bezuschussen",
         "ausgewogen",
         "gesundheitsbewusst",
         "verarbeitet"
@@ -218,7 +218,7 @@
         {
           "point": "Modalpartikeln im Gespräch: doch, ja, eben, halt, mal, eigentlich, wohl – Kritik abschwächen oder verstärken (Das war doch so abgesprochen. Könnten Sie mal …?)",
           "new": true,
-          "lehrwerk": "Sicher! aktuell B2 L8; Aspekte neu B2 K9 (06 F3 B2.2 #8); rezeptiv Menschen B1 L19–20 (split)"
+          "lehrwerk": "Sicher! aktuell B2 L8; Aspekte neu B2 K9 (06 F3 B2.2 #8); doch/mal/ja/eben eingeführt in b1-2 E5; hier als System mit halt, eigentlich, wohl, schon"
         },
         {
           "point": "Konjunktiv II für höfliche Kritik und Vorschläge (Es wäre besser gewesen, wenn …) – Wiederholung",
@@ -231,7 +231,7 @@
       "keyWords": [
         "das Feedback",
         "die Kritikfähigkeit",
-        "der Vorwurf",
+        "die Schuldzuweisung",
         "die Kränkung",
         "das Mitarbeitergespräch",
         "die Arbeitsverteilung",
@@ -242,7 +242,7 @@
         "sich rechtfertigen",
         "einlenken",
         "entgegenkommen",
-        "nachgeben",
+        "sich zurücknehmen",
         "konstruktiv",
         "verletzend",
         "kompromissbereit"
@@ -320,13 +320,13 @@
         "die Wiedergutmachung",
         "das Umzugsunternehmen",
         "der Kostenvoranschlag",
-        "die Schadensmeldung",
+        "die Schadensregulierung",
         "das Gutachten",
         "die Einigung",
         "das Zugeständnis",
-        "die Forderung",
-        "haften",
-        "ersetzen",
+        "die Schadenshöhe",
+        "aufkommen für",
+        "begleichen",
         "geltend machen",
         "sich einigen auf",
         "abweichen",
@@ -492,7 +492,7 @@
         "die Hauptfigur",
         "der Regisseur",
         "die Rezension",
-        "das Publikum",
+        "die Besetzung",
         "die Uraufführung",
         "das Kulturangebot",
         "die Gattung",
@@ -750,19 +750,19 @@
         "die Innenstadt",
         "die Fußgängerzone",
         "der Individualverkehr",
-        "die Anbindung",
-        "die Lebensqualität",
+        "die Verkehrsberuhigung",
+        "die Aufenthaltsqualität",
         "die Bürgerbeteiligung",
         "der Einzelhandel",
         "die Abwanderung",
-        "die Infrastruktur",
+        "der Lieferverkehr",
         "der ländliche Raum",
         "verdrängen",
         "beleben",
         "ausbauen",
         "zugänglich",
         "autofrei",
-        "abgelegen"
+        "lebenswert"
       ],
       "reading": {
         "textType": "Vier Forumsbeiträge zur autofreien Innenstadt: 9 Aussagen Personen zuordnen",
@@ -923,19 +923,19 @@
         "der Energieversorger",
         "die Preiserhöhung",
         "das Sonderkündigungsrecht",
-        "der Widerspruch",
+        "die Widerspruchsfrist",
         "die Nachzahlung",
         "der Abschlag",
         "der Zählerstand",
-        "die Rückerstattung",
+        "die Verbrauchsabrechnung",
         "die Fristsetzung",
         "die Vertragslaufzeit",
-        "widersprechen",
+        "zurückfordern",
         "berichtigen",
         "anfechten",
         "fristgerecht",
         "unverzüglich",
-        "fehlerhaft"
+        "nachvollziehbar"
       ],
       "reading": {
         "textType": "Stellungnahmen von Verbraucherinnen und Verbrauchern zu Preiserhöhungen: Überschriften zuordnen",
@@ -1004,7 +1004,7 @@
         }
       ],
       "vocabTheme": "Sprache, Dialekt, Mehrsprachigkeit",
-      "vocabTarget": 59,
+      "vocabTarget": 57,
       "keyWords": [
         "der Dialekt",
         "die Mundart",
@@ -1012,9 +1012,9 @@
         "die Mehrsprachigkeit",
         "die Varietät",
         "die Sprachgemeinschaft",
-        "das Vorurteil",
+        "das Klischee",
         "die Umgangssprache",
-        "die Identität",
+        "die Sprachpolitik",
         "die Moderation",
         "der Redebeitrag",
         "moderieren",
