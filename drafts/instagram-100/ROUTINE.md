@@ -4,8 +4,21 @@ Kept in the repo (not only in the Routines UI) so it cannot drift silently — s
 rule as `docs/seo-routines/`. One fire = one post on up to three channels, through
 the owner's existing Zapier connections. Nothing else.
 
-Schedule: `CRON_TZ=Europe/Berlin 52 17 * * *` (17:52 — off the hour, per the
-scheduler's advice; the post is timestamped for 18:00 in the sheet only for humans).
+Live Routine: **`trig_01T4HY5Q35TXnUj1qnk33Pp4`** "DeutschMeister daily post (Oct–Nov 2026)",
+created 2026-09-27, schedule `CRON_TZ=Europe/Berlin 52 17 * 10,11 *` (17:52, off the hour;
+October and November only, so it stops by itself after the last post on 11-19). The
+Routine's own prompt is the source that runs; keep this file in step with it.
+
+**Needs from the owner (the API could not attach them):** in claude.ai → Routines, edit
+the Routine and add the **Zapier** connector and the **Zaid9657/deutschmeister**
+repository. Without them the fired session has no Zapier tools and no CSV.
+
+Target IDs (checked 2026-09-27 through the Zapier connector):
+- Facebook: connection `66517282`, page `1232346926638010` "Deutsch Meister". **Live.**
+- Instagram: not yet possible. The Graph API shows the Deutsch Meister page with **no**
+  `instagram_business_account`. The IG account must be a Business account and linked to
+  that page first. After that, add the account id to the Routine.
+- Telegram: deferred by the owner until the week of 2026-10-05.
 
 ---
 
