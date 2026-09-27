@@ -464,17 +464,17 @@
           "promptDe": "Lina steht vor dem Rathaus. Die Tankstelle ist gegenüber. Wo ist die Tankstelle?",
           "promptEn": "Where is the petrol station?",
           "options": [
-            "auf der anderen Straßenseite",
+            "auf der anderen Seite",
             "hinter dem Rathaus",
             "neben dem Rathaus"
           ],
-          "answer": "auf der anderen Straßenseite",
+          "answer": "auf der anderen Seite",
           "accepted": [
-            "auf der anderen Straßenseite"
+            "auf der anderen Seite"
           ],
           "explanation": {
-            "de": "gegenüber = auf der anderen Straßenseite, direkt vor Lina.",
-            "en": "'gegenüber' means on the other side of the street, facing her."
+            "de": "gegenüber = auf der anderen Seite, direkt vor Lina.",
+            "en": "'gegenüber' means on the other side, facing her."
           },
           "origin": "agent"
         },
@@ -2021,27 +2021,17 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.krankenwagen",
-            "promptDe": "Tomasz ruft die 112 an. Bald kommt der ___ und bringt Lina ins Krankenhaus.",
-            "promptEn": "The vehicle that takes injured people to hospital.",
+            "promptDe": "Tomasz ruft die 112 an. Bald kommt der ___ (K…) und bringt Lina ins Krankenhaus.",
+            "promptEn": "The vehicle that takes injured people to hospital (starts with K).",
             "answer": "Krankenwagen",
             "accepted": [
-              "Krankenwagen",
-              "Rettungswagen",
-              "Rettungsdienst"
+              "Krankenwagen"
             ],
             "explanation": {
-              "de": "Der Krankenwagen (auch: Rettungswagen) bringt Verletzte ins Krankenhaus.",
-              "en": "The ambulance (Krankenwagen, also Rettungswagen) takes injured people to hospital."
+              "de": "Der Krankenwagen bringt Verletzte ins Krankenhaus. Auf dem Auto steht oft: Rettungswagen oder Rettungsdienst.",
+              "en": "The ambulance takes injured people to hospital. The vehicle often says Rettungswagen or Rettungsdienst."
             },
-            "origin": "agent",
-            "acceptedWhy": {
-              "Rettungswagen": "auch richtig: So heißt der Wagen im Notfall, das Wort steht auf dem Auto.",
-              "Rettungsdienst": "auch richtig: Der Rettungsdienst kommt und bringt Lina ins Krankenhaus."
-            },
-            "reviewerConfirmed": [
-              "Rettungswagen",
-              "Rettungsdienst"
-            ]
+            "origin": "agent"
           },
           {
             "id": "a2.2-u04-ls3-p04",
@@ -2621,7 +2611,7 @@
           "id": "a2.2-u04-ls4-t8",
           "kind": "ad",
           "title": "Erste-Hilfe-Kurs an einem Tag",
-          "text": "Erste-Hilfe-Kurs an einem Tag\nWas tun bei einem Unfall? In unserem Kurs lernen Sie, wie Sie helfen können. Samstag, 9 bis 16 Uhr, im Rathaus, Raum 12. Der Kurs ist auch für Anfänger. Bitte melden Sie sich online an.",
+          "text": "Erste-Hilfe-Kurs an einem Tag\nWas tun bei einem Unfall? In unserem Kurs lernen Sie, wie Sie helfen können. Samstag, 9 bis 16 Uhr, im Rathaus, Zimmer 12. Der Kurs ist auch für Anfänger. Bitte melden Sie sich online an.",
           "glosses": []
         },
         {
@@ -2986,11 +2976,11 @@
           },
           {
             "speaker": "partner",
-            "de": "Um 10 Uhr kann ich leider nicht, da bringe ich Rania zum Schwimmkurs. Und am Nachmittag?"
+            "de": "Um 10 Uhr kann ich leider nicht, da bringe ich Rania zum Schwimmen. Und am Nachmittag?"
           },
           {
             "speaker": "learner",
-            "de": "Am Nachmittag habe ich ab 14 Uhr Zeit. Geht es um 14 Uhr?"
+            "de": "Ich habe ab 14 Uhr Zeit. Geht es bei dir um 14 Uhr?"
           },
           {
             "speaker": "partner",
@@ -3006,7 +2996,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Das ist eine gute Idee! Dann muss Lina nicht laufen. Fahren wir mit der Straßenbahn zum Boot?"
+            "de": "Ja, gern! Dann muss Lina nicht laufen. Fahren wir mit der Straßenbahn zum Boot?"
           },
           {
             "speaker": "partner",
@@ -3552,7 +3542,7 @@
         }
       ],
       "verification": "verified",
-      "notes": "Read on 2026-09-27: DGUV „Wegeunfälle\" (unmittelbarer Weg versichert, Umwege z. B. für Kinderbetreuung), DGUV „Arbeitsunfall: Was nun?\" (D-Arzt-Vorstellung bei Arbeitsunfähigkeit über den Unfalltag hinaus oder Behandlung > 1 Woche; Unfallanzeige durch das Unternehmen ab > 3 Kalendertagen), § 8 Abs. 2 Nr. 1 SGB VII at gesetze-im-internet.de. Re-checked 2026-09-27 (review r2 F14): the D-Arzt triggers are not exhaustive — § 26 Vertrag Ärzte/Unfallversicherungsträger also names e.g. the prescription of Heil- oder Hilfsmittel and a recurrence of accident-related illness. The claim now says „unter anderem\" and the exception „in der Regel\"; those further triggers are not stated as facts here because § 26 ÄV/UV was not re-opened in this session. The hedged claim rests on the DGUV pages above."
+      "notes": "Read on 2026-09-27: DGUV „Wegeunfälle\" (unmittelbarer Weg versichert, Umwege z. B. für Kinderbetreuung), DGUV „Arbeitsunfall: Was nun?\" (D-Arzt-Vorstellung bei Arbeitsunfähigkeit über den Unfalltag hinaus oder Behandlung > 1 Woche; Unfallanzeige durch das Unternehmen ab > 3 Kalendertagen), § 8 Abs. 2 Nr. 1 SGB VII at gesetze-im-internet.de. 2026-09-27, review r2 F14: the reviewers report that § 26 Vertrag Ärzte/Unfallversicherungsträger names further D-Arzt triggers (e.g. the prescription of Heil- oder Hilfsmittel, a recurrence of accident-related illness). § 26 ÄV/UV was not re-opened in this session, so the claim is hedged („unter anderem\", exception „in der Regel\") rather than extended; the hedged claim rests only on the DGUV pages above."
     }
   ],
   "extras": {
