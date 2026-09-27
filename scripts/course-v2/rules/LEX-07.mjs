@@ -1,5 +1,12 @@
 // LEX-07 — one gloss per lemma across surfaces; feminine pairs one entry; plural_kind set on
 // nouns; wordId null in authoring (BLUEPRINT §9.1, SCHEMA §6).
+//
+// Duplicates (SCHEMA §6: „an entry may only allocate a lemma that no lower level has allocated"; a
+// receptive → productive change is a `promotions` record): the SAME id allocated again at a higher level
+// is reported on the higher entry only — the lower file is right. The same lemma under two plain ids is
+// reported on the later one. A homograph (`lx.x-2`) is legitimate beside `lx.x` when its gloss differs;
+// it is reported only when it repeats a gloss of the same lemma (rule-smith 2026-09-27: the rule used to
+// report the plain entry of every valid homograph pair, e.g. a1.2 lx.ueberweisung beside b1.1 lx.ueberweisung-2).
 
 import { walkTexts } from '../lib-validate/walk.mjs';
 import { LEVELS } from '../lib-validate/ids.mjs';
@@ -74,24 +81,26 @@ export function run({ ctx, docs, levels, mode }) {
     });
   }
   // glosses on surfaces must repeat the lexicon gloss
-  const lexIndex = new Map(); // surface form → { gloss, id }: the entry whose lemma IS the token wins over one it inflects
+  // glosses on surfaces must repeat the lexicon gloss. Candidates: the entries whose lemma IS the token
+  // (every homograph of it); only when there is none, the entries one of whose forms it is.
+  const exact = new Map();
+  const byForm = new Map();
+  const push = (m, k, x) => { if (!m.has(k)) m.set(k, []); m.get(k).push(x); };
   for (const x of all) {
     if (!isObj(x.e) || !x.e.gloss?.en) continue;
-    const k = bare(x.e.lemma);
-    if (!lexIndex.has(k) || !lexIndex.get(k).exact) lexIndex.set(k, { gloss: x.e.gloss.en, id: x.e.id, exact: true });
-  }
-  for (const x of all) {
-    if (!isObj(x.e) || !x.e.gloss?.en) continue;
-    for (const f of entryForms(x.e).forms) if (!lexIndex.has(f)) lexIndex.set(f, { gloss: x.e.gloss.en, id: x.e.id, exact: false });
+    push(exact, bare(x.e.lemma), x);
+    for (const f of entryForms(x.e).forms) push(byForm, f, x);
   }
   for (const d of docs) {
     for (const t of walkTexts(d)) {
       const src = t.kind === 'exam' ? t.block?.texts?.find((x) => x?.id === t.textId)?.glosses : t.step?.input?.glosses;
       arr(src).forEach((g, gi) => {
-        const hit = lexIndex.get(String(g?.token || '').toLowerCase());
-        if (hit && String(g?.gloss?.en || '').trim() && String(g.gloss.en).trim() !== String(hit.gloss).trim()) {
-          findings.push(blocker(d, `${t.path}.glosses[${gi}]`, `gloss „${g.gloss.en}" for „${g.token}" differs from the lexicon gloss „${hit.gloss}" (${hit.id})`, hit.id));
-        }
+        const tok = String(g?.token || '').toLowerCase();
+        const cands = exact.get(tok) || byForm.get(tok) || [];
+        const said = String(g?.gloss?.en || '').trim();
+        if (!cands.length || !said || cands.some((x) => String(x.e.gloss.en).trim() === said)) return;
+        const hit = cands[0].e;
+        findings.push(blocker(d, `${t.path}.glosses[${gi}]`, `gloss „${g.gloss.en}" for „${g.token}" differs from the lexicon gloss „${hit.gloss.en}" (${hit.id})`, hit.id));
       });
     }
   }

@@ -1,6 +1,13 @@
 // CON-06 — every factual claim sits in a facts[] record with sources, factsCheckedOn ≤ 180 days
 // old, currentAsOf, exceptions and verification "verified" (BLUEPRINT §9.1). A partial or pending
-// verification blocks promotion: the SCHEMA §15 fixture fails here on purpose.
+// verification blocks promotion: the SCHEMA §15 fixture (status "review") fails here on purpose.
+//
+// Authoring vs promotion (rule-smith 2026-09-27). Agents write units in a sandbox whose proxy blocks most
+// primary sources, so a fact is often sourced but not re-read. While the unit is `status: "draft"`, a
+// `partial`/`pending` fact that carries https source(s) AND says in `notes` what was not re-read and why is
+// a WARNING (advisory, the reason quoted) — it is the reviewer's to-do, not an authoring error. From
+// `status: "review"` on (the promotion path, SCHEMA §15.6) it is a blocker again. A fact without a source,
+// with a non-https source or without a reason stays a blocker at every status.
 
 import { arr, isObj, blocker, advisory } from '../lib-validate/helpers.mjs';
 
@@ -38,7 +45,16 @@ export function run({ ctx, docs }) {
       if (!DATE_RE.test(String(f.currentAsOf || ''))) findings.push(blocker(doc, `${p}.currentAsOf`, 'currentAsOf missing or not YYYY-MM-DD', f.id));
       if (!Array.isArray(f.exceptions)) findings.push(blocker(doc, `${p}.exceptions`, 'exceptions[] missing (write [] when there are none)', f.id));
       if (f.verification !== 'verified') {
-        findings.push(blocker(doc, `${p}.verification`, `verification is "${f.verification ?? 'missing'}", not "verified" — blocks promotion until a reviewer confirms every part at a primary source${f.notes ? ` (notes: ${String(f.notes).slice(0, 140)}${String(f.notes).length > 140 ? '…' : ''})` : ''}`, f.id));
+        const why = String(f.notes || '').trim();
+        const short = why ? ` (notes: ${why.slice(0, 140)}${why.length > 140 ? '…' : ''})` : '';
+        const sourced = sources.length > 0 && sources.every((s) => /^https:\/\/\S+$/.test(String(s)));
+        const draft = d.status === 'draft';
+        if (draft && sourced && why && (f.verification === 'partial' || f.verification === 'pending')) {
+          findings.push(advisory(doc, `${p}.verification`, `warning: verification is "${f.verification}" — the source was not re-read${short}; a reviewer confirms it at ${sources[0]} before the unit leaves draft (it blocks from status "review" on)`, f.id));
+        } else {
+          const tail = !why && sourced && draft ? ' — say in notes what was not re-read and why, or verify it' : ' — blocks promotion until a reviewer confirms every part at a primary source';
+          findings.push(blocker(doc, `${p}.verification`, `verification is "${f.verification ?? 'missing'}", not "verified"${tail}${short}`, f.id));
+        }
       }
     });
     // a Fokus-Karte stating figures or law without a fact record
