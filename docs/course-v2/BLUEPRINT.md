@@ -1100,3 +1100,225 @@ separate authoring), plus one spoken item and a can-do self-check (self-rating a
 measured proficiency, [m11] §4). It recommends a course and a starting unit, credits earlier units as tested out
 (deterministic parts only), and routes near-level learners to the .2 course. It replaces `levelTestQuestions.json`
 (band-only, 89 % grammar, [m12] §2.9).
+
+---
+
+## 6. Review and retention
+
+### 6.1 The ladder
+
+**+1, +3, +7, +14, +30, +60 days; a lapse returns to +1; every interval capped at max(1 day, 15 % of the days left
+to the exam date); the cap lifts once the exam date has passed** ([m09] impl. B7, Cepeda's ridge). The ladder and the
+cap share are course parameters in `course.json` (`review.ladderDays`, `review.examCapShare`); the live A1.1 keeps
+today's `LADDER_DAYS = [1, 4, 7, 14, 60, 180]` (`src/lib/review/ladder.js`) until it is retired. Expanding and uniform
+schedules do not differ (g = 0.034, [Latimier et al. 2021](https://doi.org/10.1007/s10648-020-09572-8)), so a fixed
+ladder is defensible; an A/B test against an adaptive scheduler (HLR/FSRS) comes after launch ([m09] impl. D23).
+New grammar gets short lags first (its Lernschritte 1–3 days apart), then contrast review at the Plateau and at about
++2 and +4 weeks ([m09] impl. B9).
+
+### 6.2 Card kinds and keys
+
+| Kind | Key | Content | Directions |
+|---|---|---|---|
+| `word` | `word:<lexiconId>` | a Lernwortschatz entry | productive: both directions + one production item; receptive: recognition only ([m07] impl. 10) |
+| `pattern` | `pattern:<spineId>:<unitId>` | the model sentence / contrast pair of a Situation-LS | recall, interleaved with its contrast partner |
+| `sentence` | `sentence:<itemId>` | a Redemittel sentence or a missed typed item | cloze → full recall → spoken |
+| **`teil`** (new) | `teil:<templateId>` | a 2–3-minute Teil-Trainer: 2–3 items of one Teil in Prüfungsmodus, only from completed units | one per day in .2 courses (and in .1 once an exam date is set) |
+| **`repair`** (new) | `repair:<errorTag>:<ruleCardId>` | created from a graded production's error list; the teach → test → repair loop ([m08] impl. 6) | rule card + 3 items; shown as a dismissible suggestion |
+
+`review_cards.kind` has `CHECK (kind IN ('word','pattern','sentence'))` (`migrations/2026-09-12-lesson-engine.sql`);
+a hand-applied migration extends it to `teil` and `repair` (SCHEMA §14). **Orphan policy:** old A1.1 `word:` cards
+are mapped to v2 lexicon ids by lemma (an orchestrator script, one SQL batch the owner applies); old `pattern:` and
+`sentence:<lektionId>:<idx>` cards are skipped by the v2 queue and never shown; they are left in place (no
+destructive migration). Stable hierarchical ids (SCHEMA §2) keep v2 card keys valid across re-authoring.
+
+### 6.3 Budgets, priority and no review debt
+
+- **Daily budget** (design, §2.6): A1 6, A2 7, B1 9, B2 11 minutes; the plan shows the pace-specific figure.
+- **When due cards exceed the budget:** priority lapsed productive items → due items of the current Etappe →
+  exam-critical Redemittel and `teil` cards → receptive items. The overflow is re-scheduled by stretching intervals
+  by ≤ 1 day per card per day, **never shown as a debt**; the counter only shrinks within a session; never „243
+  fällig" ([m11] S5). If stretching would make a card miss its retrieval target before the exam date (SRS-02 logic at
+  runtime), the plan says so arithmetically and suggests one more review day — it never hides the words.
+- **First-review stagger ceiling:** 30 (A) / 40 (B1) / 50 (B2) new cards per day (§2.6).
+
+### 6.4 Re-entry, the final week, carry-over
+
+- ≥ 3 days away → „Willkommen zurück – 5 Minuten Wiederholung", then resume where the learner stopped, never at a
+  backlog ([m09] impl. D22). ≥ 7 days → reminders switch to weekly on Mondays with „Neu planen". ≥ 30 days → one last
+  „Plan anpassen?", then silence; on return a 10-minute re-entry check of the last Etappe recommends where to resume.
+- **Final 7 days before the exam:** no new content; review, `teil` cards, the last Modelltest and its repair.
+- **The deck carries over** across half-levels (A1.1 → A1.2 → …), so retention continues and the next course starts
+  with familiar cards.
+- **AI error tags create `repair` and `pattern` suggestions** (three `verb-final` errors in a week suggest the
+  *weil/dass* pattern card); the learner sees and may dismiss them; AI output schedules nothing on its own.
+
+---
+
+## 7. Engagement and player UX
+
+### 7.1 Principles (from [m11] impl. 1–6, 20)
+
+One practice item per screen; input screens scroll. One primary action, pinned in the thumb zone, full width,
+≥ 48 px (`Button size="lg"`). Floor 360 × 640 with reflow at 320 px; the player route stays within ≈ 0.62 MiB of JS
+(Galaxy A24-class budget); unit data lazy-loaded per unit; the next Lernschritt's text and audio prefetched on Wi-Fi.
+The progress bar counts first presentations only; a re-queued miss shows as „+1 Wiederholung". Nested goals: item →
+LS bar → unit ring → Etappe → course map (units with can-do titles) → Prüfungsstand. **No XP, points, levels,
+leagues, hearts, gems, loot, random rewards or public leaderboards**; the in-lesson `ComboChip` may stay as a flourish
+only. The whole syllabus is always visible; unbought half-levels appear as locked chapters on the same map. Every
+Lernschritt shows its minutes („≈ 18 Min.", labelled *geplant* until measured).
+
+### 7.2 Brand tokens in the player (`src/data/design-tokens.js` is the only place a colour is written)
+
+- **`siegel` teal is the only interactive colour** (buttons, links, focus ring, selected tiles). **`gold`** marks the
+  seal: the unit-complete Siegel and at most one recommended marker per page.
+- **`kasus` colours only where a case is named**: rule cards and highlights that teach Nominativ/Akkusativ/Dativ/
+  Genitiv; never on a CTA, a progress fill or a board.
+- **Accents are energy, not interaction:** `limette` for the weekly-goal fill and progress, `aprikose` for chips
+  („12 fällig" is not shown; „+1 Wiederholung" is), `himbeer` for one celebration moment (course complete).
+- **Depth means "you can press this":** buttons and clickable cards rest raised and depress on press; reference
+  material (texts, rule cards, tables, the Prüfungsstand bars) stays flat with hairlines. The pass-rule hairline on the
+  board is `ink`/`graphite`, never a case colour and never the operator-only `viz` palette ([m11] §10).
+- Fraunces for display titles (`hyphens: auto`), the data mono stack for level codes, points and prices; inputs
+  ≥ 16 px. Token work adopted from [m11] impl. 21: a `prompt` role, the six player primitives promoted into
+  `src/components/ui/`, and `tests/brand.test.mjs` extended to them.
+
+### 7.3 Screens and states
+
+| # | Screen | Key states | Notes |
+|---|---|---|---|
+| S0 | **Kursplan** (course home) | first visit · in progress · plan on/off · review due · locked chapters · Prüfungswochen mode · complete | one primary action („Weiter mit Lektion 4" / „Modelltest B starten"); weekly-goal widget; four-line checklist; unit list as interactive cards (can-do title, ring, minutes, Prüfungsfokus chips) |
+| S1 | **Prüfungsziel & Einstufung** (onboarding) | exam known/unknown · date set/„noch kein Termin" · purpose · lane picked · DTZ question · placement taken/skipped · recommendation | three questions, nothing pre-selected, „Später" is real, CTA „Plan festlegen"; exam picker per [m02] impl. 10 shown as information with a „Stand" date; purpose stored next to `dm_attribution` |
+| S2 | **Lektion-Start** | new · resume at item n · tested out | Lernziele, Lernschritte with minutes, „Ich kann das schon" |
+| S3a | Input (dialogue / text) | audio loading · playing · „Computerstimme" · no audio | scrolls; replay and 0.85×; gloss taps; flat reference styling |
+| S3b | Rule card / rule table | deductive (A) · table to fill (B) | flat, hairlines; kasus chips only where a case is named |
+| S3c | Practice item | idle → selected → checking → correct / typo (retry) / wrong / revealed → continue · re-queued | bottom-sheet feedback (text + icon + colour), one „Weiter", static explanation |
+| S3d | Micro-output / Sprechen (Lernmodus) | mic pre-prompt · denied · recording · submitting · staged grading · result · retry · offline-queued | record button ≥ 64 px; result card with the fixed label |
+| S3e | Schreiben | drafting (counter, checklist) · submitting · grading · result · revise · model text (after revision only) | sticky checklist, „Überarbeiten" |
+| S4 | **Prüfungsmodus runner** (LS4 blocks, Plateau Teile, Diagnose, Modelltests) | reading time · playing („Sie hören den Text einmal.") · answering · time warning · auto-submit · answer-sheet transfer (telc paper lanes) · results per Teil | play count and timer from the lane profile; transcript after submission |
+| S5 | **Sprechprüfung** simulation | card draw · preparation (timer + notes) · examiner instructions · own turn · partner turn · staged grading · result per criterion | notes collapse to ≤ 5 keywords while speaking; „ohne Mikrofon weiter" |
+| S6 | Lektion geschafft | normal · first ever · weekly goal met | can-dos gained, words, gold Siegel (reduced-motion safe), cliffhanger, next step with minutes |
+| S7 | Tägliche Wiederholung | due > 0 · nothing due · re-entry after ≥ 3 days | S3c shell; count only shrinks |
+| S8 | Plateau | review set · exam Teil · productive task · reward block | per-Teil results turn into a repair list |
+| S9 | **Prüfungsstand** | opt-in (A1.1) · no attempts · miniatures only · values · ranges · after a mock | §5.6 |
+| S10 | **Teil-Karte** (.1 end) | per Teil: full length / im Kleinen / kommt in … | then the dated plan into the .2 course |
+| S11 | Prüfungswochen | mock due · repair week · final week · exam day passed | home switches its primary action |
+| S12 | Wiederholungsplan | enter official result · plan generated · running | fields follow each lane's certificate |
+| S13 | Fortschritt / Wochenbericht | this week · history | in-app only with scores; no share link until counsel |
+| S14 | Teilnahmebescheinigung | not yet · available | German, completion only, fixed disclaimer |
+| S15 | Einstellungen | reminders (e-mail/time/off) · pace · explanation language · sound | — |
+
+### 7.4 The first week is the product
+
+| Day | What happens (design) |
+|---|---|
+| 0 | A1.1 only: U1 LS1 playable **without an account**; the scored spoken sentence within the first 3 screens (§4.7 for the anonymous path); saved on sign-up (delayed sign-up ≈ +20 % DAU at Duolingo, company-reported, B [S21]) |
+| 1 | LS1 ends with the scored sentence → goal screen S1 (exam, date or none, pace, reminder time) |
+| 2–5 | one or two Lernschritte per learning day; the first daily review appears on day 2 |
+| 6–7 | unit complete → gold Siegel, first Wochenbericht preview, first cliffhanger |
+
+No extra mechanic appears before day 7 (streak concepts shown earlier "pretty universally … lose", B [S4]); each
+mechanic gets a one-line explanation at first contact („Pausentage: Zwei Tage pro Woche zählen automatisch – Ihre
+Serie bleibt."). Paid courses reuse the same week-1 shape (Diagnose placed after the first win, never before it).
+Novelty at weeks 4–6: P1's reward block, and from Etappe 2 a new speaking mode ([m09] impl. D19).
+
+### 7.5 The habit system
+
+- **Weekly goal is the headline** („3 von 4 Lerntagen"); a learning day = one Lernschritt or the daily review.
+- **Streak** counts learning days, shown as a number, never a flame and **never as 0**: two automatic *Pausentage*
+  per week, earn-back by one review within 48 h, a quiet „lückenlos" mark for weeks without a pause day; after a
+  break the screen shows the week's goal, the longest run and „Willkommen zurück" ([m11] impl. 10–13).
+- **Scores never block progress** (§3.5).
+
+### 7.6 The plan
+
+Arithmetic, never a gate (the `src/lib/course/plan.js` principle, `SUSTAINABLE_PER_WEEK = 5`). **Inputs:** lane, exam
+date or none, pace, learning days per week, reminder time (stored in `learner_goals`, SCHEMA §14). **Outputs:**
+Lernschritte per week, weekly minutes, the review minutes per day for the chosen pace (from SRS-01), and the dates of
+the Plateaus, the Modelltests (exam −21/−14/−7, never before U12 is scheduled) and the review-only week. **Always
+phrased forward:** „Diese Woche 4 Lernschritte – dann sind Sie im Plan." Never „hinter dem Plan". **When the date is
+too close,** the plan states the arithmetic and offers only options that keep the progression intact: more learning
+days (up to Intensiv), Einstufung or „Ich kann das schon" to credit what the learner already knows, optional depth
+off, or a later date. **There is no Kompaktweg:** units are never reordered by weak Teil, because later units assume
+the lexis and grammar of earlier ones (≈ 95 % known-token inputs). An `.ics` export is an A/B candidate after launch.
+
+### 7.7 Reminders and the Wochenbericht
+
+At most one reminder a day at the learner's time; e-mail by default through `lifecycle_emails` (claim before send,
+as the live course-reminder mailer does); ≥ 6 rotating templates per kind; after 7 idle days weekly on Mondays
+(fresh-start effect, B [S11]); stop after 30. Copy names the next step and its minutes („Ihr nächster Schritt: *Beim
+Arzt – Termine* (≈ 18 Min.)"); **never tells someone they have not done a lesson when they have** (the reminder view
+counts old `a1.1-lNN` and new `-uNN` activity alike). **No scores, no Übungswerte, no share link in any e-mail**
+until counsel clears it (§1.6 rule 6). The **Wochenbericht** is in-app every Monday: learning days vs goal,
+Lernschritte and units done, can-dos confirmed, words („412 von ≈ 650 Wörtern der A1-Liste" — a number, never the
+list), Aufgaben submitted and revised, Übungswerte per Teil, next week in minutes. Web Push (Android only) is v1.1.
+
+### 7.8 Instrumentation (proves or disproves the moat)
+
+Events persisted where `weekly_truth_metrics()` can read them: `lernschritt_completed` (unit, LS, minutes — feeds
+`minutesMeasured`), `micro_output_submitted`, `aufgabe_submitted`, `revision_submitted`, `ai_grade_shown`,
+`teil_attempt` (lane, Teil, source, mode, full length → `exam_practice_results`), `modelltest_completed`, `plan_set`,
+`retake_plan_created`, `mic_denied`, `ai_latency_ms`. Weekly truth adds: AI writing and speaking uses per active
+learner, Aufgaben per active learner per unit, learning days in week 1, share reaching day 7, completion by Etappe,
+.1 completers buying the .2 within 30 days, and the learner-pilot metrics (§10.4). PostHog stays behind the existing
+consent gate (`public/consent.js`).
+
+---
+
+## 8. Copy and marketing surfaces per level
+
+### 8.1 Rules (enforced by LGL gates, §9.1)
+
+1. **Derive, never retype.** Every count (units, Lernschritte, Aufgaben, micro-outputs, new words, mock forms per
+   lane) is computed by the compiler from `course.json` into a generated facts module
+   (`src/data/courseFacts.js` ↔ `astro-site/src/data/courseFacts.js`, byte-identical, `check-duplicates`), read by the
+   Astro pages, the SPA, `public/llms.txt` (regenerated by `scripts/build-llms.mjs`) and the checkout box, and pinned
+   by `tests/claims.test.mjs`.
+2. **Purpose phrase first; never a title that begins with an exam mark** („Vorbereitung auf das Goethe-Zertifikat
+   B1 – Online-Kurs B1.2", not „Goethe B1 Vorbereitung"). The keyword stays in the title.
+3. **Lead with teaching + instant scoring on the booked exam's criteria + the dated plan.** Mocks are proof points.
+   **Mock counts are per chosen lane** — a lane's page states that lane's count; counts are never summed across lanes.
+4. No comparative copy against Goethe DOI's „30 offene Aufgaben" (snippet only, [m08] §2.5) until read at source
+   (§§ 5–6 UWG).
+5. Hours only as measured Richtwert; prices gross; strike prices only against a price actually charged; no fake
+   countdowns ([m13] impl. 12).
+6. German copy in Sie; explanations in plain English ≤ B1, stored apart from the German so an L1 layer (Turkish,
+   Arabic) can be added ([m10] impl. 6). Voice: calm, concrete, factual; the learner's exam and date are the subject,
+   never our brand; no hype, no exclamation chains.
+
+### 8.2 Pages per half-level (titles and headlines are drafts; each must pass LGL)
+
+| Course | Page(s) · language | Title (purpose first) | Headline | Proof points (derived) | Honesty line |
+|---|---|---|---|---|---|
+| A1.1 | `/courses/a1-1/` DE+EN; EN landing for India | EN "Preparation for the Goethe-Zertifikat A1 (Start Deutsch 1): free German course, part 1" | "Start German for your A1 exam — free. From lesson 1 you speak and write, and every task gets an instant automated score." | 12 units · every SD1 part practised · scored tasks count · dated plan | "A1.1 is the first half of A1; the full exam format comes in A1.2. Automated feedback, not an exam result." |
+| A1.2 | `/courses/a1-2/` EN+DE | EN "Preparation for the Goethe-Zertifikat A1 and telc Deutsch A1 — online course A1.2" | "Finish A1 and practise every part of Start Deutsch 1: each speaking and writing task scored instantly against the published criteria, with a plan to your exam date." | 3 practice exams in the Start Deutsch 1 format · Wiederholungsplan · price vs one exam fee (India ₹9,400 ≈ €86, Germany €155, [m10] §2.1, [m08]) derived in `marketing.js` with provenance | "A practice score, never an exam result. Not official exam material. €40 once — no subscription." |
+| A2.1 | DE+EN | „Vorbereitung auf das Goethe-Zertifikat A2 – Online-Kurs A2.1" | „Alle Teile der A2-Prüfung kennenlernen – jede Schreib- und Sprechaufgabe sofort automatisch ausgewertet." | live lanes · Aufgaben count | „A2.1 ist die erste Hälfte. Die komplette Prüfung üben Sie in A2.2." |
+| A2.2 | DE+EN; one page per live lane | „Vorbereitung auf das Goethe-Zertifikat A2 – Online-Kurs A2.2" · „Vorbereitung auf telc Deutsch A2 – …" | „A2 abschließen und jeden Prüfungsteil im Format Ihrer Prüfung üben – sofort ausgewertet, mit Plan bis zum Termin." | that lane's mock count (3 or 2) · 90 + 15 min format | „Übungswert, keine Prognose. Kein offizielles Prüfungsmaterial." |
+| B1.1 | DE | „Vorbereitung auf die B1-Prüfung – Online-Kurs B1.1" | „Mitreden, planen, reklamieren: B1 Schritt für Schritt – jede Schreib- und Sprechaufgabe sofort im Format Ihrer Prüfung ausgewertet." | live lanes · planning round in every unit | „B1.1 ist die erste Hälfte des Wegs zur B1-Prüfung." |
+| B1.2 | DE (EN page for the Goethe/ÖSD lane for India); one page per live lane | „Vorbereitung auf telc Deutsch B1 – Online-Kurs B1.2" · „Vorbereitung auf den DTZ – Online-Kurs B1.2 (nur für Teilnehmende am Integrationskurs)" · „Vorbereitung auf das Goethe-/ÖSD-Zertifikat B1 – …" | „Jeder Prüfungsteil gelernt und geübt, jede Schreib- und Sprechaufgabe sofort ausgewertet – nach den veröffentlichten Kriterien Ihrer Prüfung, mit Plan bis zum Termin." | that lane's mock count · Wiederholungsplan · DTZ page may cite 55.0 % B1 in 2025 ([Drs. 21/5716](https://dserver.bundestag.de/btd/21/057/2105716.pdf)) as context, never as a rate for our learners | „Automatische KI-Auswertung. Kein Prüfungsergebnis, keine Bestehensgarantie." |
+| B2.1 | DE | „Vorbereitung auf die B2-Prüfung – Online-Kurs B2.1" | „Argumentieren, formell schreiben, im Detail verstehen – mit sofortiger automatischer Auswertung." | live lanes | „B2.1 bereitet die Prüfung vor, erreicht sie aber nicht allein." |
+| B2.2 | DE; one page per live lane | „Vorbereitung auf telc Deutsch B2 – Online-Kurs B2.2" · „Vorbereitung auf das Goethe-Zertifikat B2 – …" | „Vortrag, Diskussion, Beschwerde, Forumsbeitrag: jede Aufgabe sofort nach den veröffentlichten Kriterien ausgewertet – in Originallänge und Originalzeit." | that lane's mock count | „Für ein Studium verlangen Hochschulen DSH-2 oder TestDaF TDN 4 in allen Teilen." ([RO-DT](https://www.goethe.de/pro/relaunch/prf/rahmenordnung/Rahmenordnung-ueber-Deutsche-Sprachpruefungen-fuer-das-Studium-an-deutschen-Hochschulen.pdf)) |
+
+### 8.3 Surfaces every course carries
+
+- The **Inhaltsverzeichnis** generated from `course.json` (Nr · Titel · Handlungsfeld · Kann-Beschreibungen ·
+  Grammatik · Textsorte · Prüfungsteil · Minuten), the way Hueber and Klett publish theirs ([m14] §G7), plus the
+  **Teil-Matrix** (which unit practises which Teil, at what length, per lane).
+- „**Wie bewertet die KI?**": profiles, scales, zero rules, calibration method, known limits, „Die KI ersetzt keine
+  Prüferin und keine Lehrkraft.", no accuracy figure.
+- The **Teilnahmebescheinigung** explained with its fixed line; the **pre-checkout box** with the unticked
+  § 356 Abs. 6 BGB consent in one sentence, and the voluntary refund line with linked terms if the owner adopts it
+  ([m13] impl. 13–14); „Computerstimme" wherever TTS plays; „native speaker" removed site-wide.
+
+### 8.4 E-mails and in-app copy
+
+- **E-mails** (all via `lifecycle_emails`, claim-before-send, dry-run and canary like the existing mailers): daily
+  course reminder (next step + minutes), Monday week start, re-entry after 7 idle days, the .1-completion bridge
+  („Ihre Teil-Karte und Ihr Plan für A1.2" — link to the in-app card, no numbers), purchase confirmation (what the
+  product is, the AI tool described as software, the Teilnahmebescheinigung's nature), and the owner-approved
+  learner-pilot invitation to existing users.
+- **In-app examples:** mock result „Modelltest B · Schriftlicher Teil: Übungswert 152 von 225. Nach der
+  Bestehensregel von telc liegt dieser Übungswert über der Grenze von 135 Punkten. Übungswert aus unserer
+  Übungsprüfung – keine Prognose Ihres Prüfungsergebnisses." · miniature „Hören Teil 4 haben Sie bisher nur im Kleinen
+  geübt. In voller Länge kommt er in Plateau 2." · plan „Bis zu Ihrer Prüfung bleiben 19 Tage. Bei 5 Lerntagen pro
+  Woche schaffen Sie die Lektionen 10–12 und Modelltest A bis zum 3.11. Möglich: ‚Ich kann das schon' für Lektion 10."
