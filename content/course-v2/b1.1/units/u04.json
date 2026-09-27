@@ -2486,7 +2486,7 @@
                 "neue"
               ],
               "explanation": {
-                "de": "der Staubsauger ist hier Nominativ. Nach der endet das Adjektiv auf -e: der neue Staubsauger.",
+                "de": "Nominativ mit der: Das Adjektiv endet auf -e – der neue Staubsauger.",
                 "en": "Nominative after der: the adjective ends in -e – der neue Staubsauger."
               },
               "origin": "agent"
@@ -2641,7 +2641,7 @@
         "profile": "tb1-m2",
         "prepMinutes": 8,
         "instructionsDe": "Geben Sie die Meinung auf Ihrem Blatt wieder. Sagen Sie dann, was Sie selbst denken.",
-        "situationDe": "Mündlicher Ausdruck Teil 2 im Lernmodus. Thema: „Online einkaufen oder lieber im Geschäft?“ Sie und Ihre Partnerin haben je ein Blatt mit einer Meinung. Zuerst geben Sie beide die Meinung auf Ihrem Blatt wieder, dann diskutieren Sie und erzählen von eigenen Erfahrungen. In der Prüfung haben Sie 20 Minuten Vorbereitung für alle drei Teile, hier 8 Minuten für diesen Teil. Danach folgt eine Planungsrunde mit eigener Zeit (4 Minuten): Sie beide haben zusammen eine Lampe als Geschenk online bestellt, und sie ist kaputt angekommen. Planen Sie, wer beim Shop anruft und wer was macht. Dann spielt Ihre Partnerin den Kundenservice: Rufen Sie an, sagen Sie, was nicht funktioniert und was Sie schon versucht haben, und verlangen Sie eine neue Lampe, eine Reparatur oder Ihr Geld zurück.",
+        "situationDe": "Mündlicher Ausdruck Teil 2 im Lernmodus. Thema: „Online einkaufen oder lieber im Geschäft?“ Sie und Ihre Partnerin haben je ein Blatt mit einer Meinung. Zuerst geben Sie beide die Meinung auf Ihrem Blatt wieder, dann diskutieren Sie und erzählen von eigenen Erfahrungen. In der Prüfung haben Sie 20 Minuten Vorbereitung für alle drei Teile, hier 8 Minuten für diesen Teil. Danach folgt eine Planungsrunde mit eigener Zeit (4 Minuten): Sie beide haben zusammen eine Lampe als Geschenk online bestellt, und sie ist kaputt angekommen. Planen Sie, wer beim Shop anruft und wer was macht. Dann spielt Ihre Partnerin den Kundenservice. Rufen Sie an und sagen Sie, was nicht funktioniert und was Sie schon versucht haben. Verlangen Sie dann eine neue Lampe, eine Reparatur oder Ihr Geld zurück.",
         "stimulus": {
           "kind": "quotes",
           "de": "Online einkaufen oder lieber im Geschäft?",
@@ -2730,7 +2730,7 @@
           },
           {
             "speaker": "partner",
-            "de": "Kundenservice, guten Tag. Wie kann ich Ihnen helfen?"
+            "de": "Gut, jetzt spiele ich den Kundenservice. Kundenservice, guten Tag! Wie kann ich Ihnen helfen?"
           },
           {
             "speaker": "learner",
