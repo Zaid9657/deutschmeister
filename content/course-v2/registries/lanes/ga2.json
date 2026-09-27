@@ -211,7 +211,7 @@
       "scaffoldAllowedIn": [],
       "transfersTo": [],
       "pictorial": false,
-      "instructionsDe": "Schreiben Sie eine SMS mit 20 bis 30 Wörtern. Schreiben Sie etwas zu allen drei Punkten.",
+      "instructionsDe": "Ihre SMS hat 20 bis 30 Wörter und geht auf alle drei Punkte der Aufgabe ein.",
       "paraphraseOf": "US-A2 S. 22 (Schreiben Teil 1, Aufgabenanweisung), paraphrasiert, nicht übernommen",
       "source": "US-A2 S. 3 und S. 22 (persönliche Mitteilung zur Kontaktpflege, SMS, 20-30 Wörter, zu allen drei Punkten); US-A2 S. 37-38 (Aufgabenerfüllung 5 + Sprache 5 Messpunkte; unter 50 % = 10 Wörter oder Thema verfehlt → E → Aufgabe 0). minutes: Designanteil am 30-Minuten-Modul.",
       "stand": "2026-09-27"
@@ -231,7 +231,7 @@
       "scaffoldAllowedIn": [],
       "transfersTo": [],
       "pictorial": false,
-      "instructionsDe": "Schreiben Sie eine E-Mail mit 30 bis 40 Wörtern. Gehen Sie auf alle drei Punkte ein.",
+      "instructionsDe": "Ihre E-Mail hat 30 bis 40 Wörter und geht auf alle drei Punkte der Aufgabe ein.",
       "paraphraseOf": "US-A2 S. 22 (Schreiben Teil 2, Aufgabenanweisung), paraphrasiert, nicht übernommen",
       "source": "US-A2 S. 3 und S. 22 (halbformelle Mitteilung zur Handlungsregulierung, E-Mail, 30-40 Wörter, zu allen drei Punkten); US-A2 S. 37-38 (Aufgabenerfüllung 5 + Sprache 5 Messpunkte; unter 50 % = 15 Wörter oder Thema verfehlt → E → Aufgabe 0). minutes: Designanteil am 30-Minuten-Modul.",
       "stand": "2026-09-27"
@@ -251,7 +251,7 @@
       "scaffoldAllowedIn": ["a2.1"],
       "transfersTo": [],
       "pictorial": false,
-      "instructionsDe": "Ziehen Sie vier Karten mit Stichwörtern. Stellen Sie zu jeder Karte eine Frage und beantworten Sie die Fragen der anderen Person.",
+      "instructionsDe": "Zu jeder Ihrer vier Stichwortkarten fragen Sie die andere Person etwas; danach antworten Sie auf deren Fragen.",
       "paraphraseOf": "US-A2 S. 23-24 (Sprechen Teil 1, Aufgabenblatt), paraphrasiert, nicht übernommen",
       "source": "US-A2 S. 3, S. 23-24 (Fragen zur Person: vier Wortkarten, vier Fragen stellen, vier Fragen beantworten), S. 41 (ca. 20 Sekunden, um die Karten anzusehen); DB-A2 §3 (Teil 1 ca. 3 Minuten, keine Vorbereitungszeit). points: Aufgabenerfüllung 2 + Sprache 2, Teil-Zuordnung rekonstruiert (openQuestions).",
       "stand": "2026-09-27"
