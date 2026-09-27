@@ -14,8 +14,9 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { compileLevel, writeOutputs, unitOfId } from '../scripts/course-v2/lib/compiler.mjs';
-import { checkFiles } from '../scripts/course-v2/lib/checker.mjs';
-import { listJsonFiles, FIXTURES_ROOT, REPO_ROOT } from '../scripts/course-v2/lib/tree.mjs';
+import { checkLoaded } from '../scripts/course-v2/lib/checker.mjs';
+import { buildIndex } from '../scripts/course-v2/lib/refindex.mjs';
+import { loadTree, FIXTURES_ROOT, REPO_ROOT } from '../scripts/course-v2/lib/tree.mjs';
 
 const TMP = [];
 const tmp = (name) => {
@@ -51,7 +52,7 @@ function partialLevel({ specs = true } = {}) {
         title: { de: 'Beim Arzt', canDo: 'Sie können einen Termin beim Arzt vereinbaren.' },
         spec: {
           handlungsfeld: ['4'],
-          canDos: ['cd.a2.telefon-termin', 'cd.a2.gibt-es-nicht-im-register'],
+          canDos: ['cd.a2.mailbox-verstehen', 'cd.a2.gibt-es-nicht-im-register'],
           grammar: { new: ['g.reflexiv-akk'], chunk: [], review: [] },
           lanes: { primary: 'ga2', pruefungsfokus: [{ template: 'ga2.h1', slot: 'ls4' }, { template: 'ga2.s2', slot: 'schreiben' }], spur: {} },
         },
@@ -70,10 +71,12 @@ function compile(root, out = tmp('out')) {
 
 test('a level with 1 of 12 units compiles; the checker still reports the eleven missing units (REF-01 unchanged)', () => {
   const root = partialLevel();
-  const check = checkFiles(listJsonFiles(root));
-  const courseErrors = check.files.find((f) => f.file.endsWith(path.join('a2.1', 'course.json'))).errors;
-  assert.ok(courseErrors.some((e) => e.rule === 'REF-01' && /ref\(unit\) "a2\.1-u01" does not resolve/.test(e.message)), 'the checker keeps REF-01');
-  assert.ok(check.files.some((f) => f.file.endsWith('specs.json') && f.errors.length), 'the checker keeps rejecting the spec bundle');
+  // the checker, on the same tree (one index for the whole root, as check.mjs --all builds it)
+  const tree = loadTree(root);
+  const index = buildIndex(tree.filter((t) => !t.error));
+  const errorsOf = (suffix) => checkLoaded(tree.find((t) => t.file.endsWith(suffix)), index);
+  assert.ok(errorsOf(path.join('a2.1', 'course.json')).some((e) => e.rule === 'REF-01' && /ref\(unit\) "a2\.1-u01" does not resolve/.test(e.message)), 'the checker keeps REF-01');
+  assert.ok(errorsOf('specs.json').length > 0, 'the checker keeps rejecting the spec bundle');
 
   const { result, out } = compile(root);
   assert.deepEqual(result.errors, []);
@@ -104,8 +107,8 @@ test('a missing unit is a „coming" row: title, can-dos, Prüfungsfokus and min
   assert.equal(row.title, 'Beim Arzt');
   assert.equal(row.canDoTitle, 'Sie können einen Termin beim Arzt vereinbaren.');
   assert.deepEqual(row.handlungsfeld, ['4']);
-  assert.deepEqual(row.canDoIds, ['cd.a2.telefon-termin', 'cd.a2.gibt-es-nicht-im-register']);
-  assert.notEqual(row.canDos[0], 'cd.a2.telefon-termin', 'a registry can-do is shown in its wording');
+  assert.deepEqual(row.canDoIds, ['cd.a2.mailbox-verstehen', 'cd.a2.gibt-es-nicht-im-register']);
+  assert.notEqual(row.canDos[0], 'cd.a2.mailbox-verstehen', 'a registry can-do is shown in its wording');
   assert.equal(row.canDos[1], 'cd.a2.gibt-es-nicht-im-register', 'an unknown can-do falls back to its id…');
   assert.ok(result.warnings.some((w) => /a2\.1-u08: can-do cd\.a2\.gibt-es-nicht-im-register has no registry text/.test(w)), '…with a warning');
   assert.deepEqual(row.pruefungsfokus, { ga2: ['Hören Teil 1', 'Schreiben Teil 2'] });
