@@ -446,8 +446,8 @@
             "Sophie"
           ],
           "explanation": {
-            "de": "„kann“ passt zu einer Person: „Sophie kann …“. Zwei Personen: „können“.",
-            "en": "“kann” goes with one person; two people take “können”."
+            "de": "„kann“ passt zu „Sophie“: „Sophie kann …“. „Sophie und Priya“ und „wir“ brauchen „können“.",
+            "en": "“kann” goes with one person; two people and “wir” take “können”."
           },
           "origin": "agent"
         },
@@ -468,8 +468,8 @@
             "Priya und Sophie"
           ],
           "explanation": {
-            "de": "„können“ passt zu zwei Personen: „Priya und Sophie können …“.",
-            "en": "“können” goes with two people: Priya und Sophie."
+            "de": "„können“ passt zu „Priya und Sophie“. „Priya“ oder „Sophie“ allein: „kann“.",
+            "en": "“können” goes with two people; one person takes “kann”."
           },
           "origin": "agent"
         },
@@ -566,8 +566,8 @@
               "können"
             ],
             "explanation": {
-              "de": "Zwei Personen: „sie können“.",
-              "en": "Two people: sie können."
+              "de": "„Olena und Priya“ = „sie“: „sie können“.",
+              "en": "Olena und Priya = sie: sie können."
             },
             "origin": "agent"
           },
@@ -1096,7 +1096,7 @@
             "eine Webseite vom Park"
           ],
           "explanation": {
-            "de": "Olena fragt: „Hast du die Webseite vom Park?“ Dort steht das Programm für Samstag.",
+            "de": "Olena fragt: „Hast du die Webseite vom Park?“ Dort stehen die Angebote für Samstag.",
             "en": "They read the park’s website with the Saturday programme."
           },
           "origin": "agent"
@@ -1664,7 +1664,7 @@
           ],
           "difficulty": 1,
           "explanation": {
-            "de": "„Wie findest du …?“ fragt nach der Meinung: „Super!“",
+            "de": "Auf „Wie findest du …?“ antwortet man: „Super!“ oder „Nicht so toll.“",
             "en": "“Wie findest du …?” asks for your opinion."
           },
           "origin": "agent"
@@ -2471,8 +2471,8 @@
         "mode": "spoken",
         "profile": "course-micro-sp",
         "situationDe": "Sie möchten am Samstag mit Olena im Park laufen. Sie rufen Olena an.",
-        "promptDe": "Laden Sie Olena ein: Was? Wann? Wo? Fragen Sie: Hast du Zeit?",
-        "promptEn": "Invite Olena: what, when and where – and ask if she’s free.",
+        "promptDe": "Fragen Sie Olena: Kommst du mit? Sagen Sie: was und wo. Fragen Sie: Wann kannst du?",
+        "promptEn": "Invite Olena: say what and where, and ask when she can come.",
         "planSeconds": 30,
         "seconds": [
           20,
@@ -2716,7 +2716,7 @@
                 "Wasser und Brot"
               ],
               "explanation": {
-                "de": "Lisa sagt: „Ich bringe Wasser und Brot mit.“ Das Obst bringt die andere Person mit.",
+                "de": "Lisa sagt: „Ich bringe Wasser und Brot mit.“ Und sie fragt: „Kannst du Obst mitbringen?“",
                 "en": "Lisa brings water and bread; the listener is to bring the fruit."
               },
               "origin": "agent"
@@ -2793,7 +2793,7 @@
             "profile": "sd1-sp2",
             "prepMinutes": 0,
             "instructionsDe": "Zwei Themen: „Freizeit“, dann „Wochenende“. Fragen und antworten Sie mit den Karten.",
-            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin haben Wortkarten zu zwei Themen. Zuerst „Freizeit“, dann „Wochenende“. Stellen Sie mit Ihrer Karte eine Frage. Antworten Sie auf die Frage der Partnerin. Bei „Freizeit“ sagen Sie auch: Wie finden Sie das? Bei „Wochenende“ laden Sie ein, und Sie sagen zu oder ab.",
+            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin haben Wortkarten zu zwei Themen. Zuerst „Freizeit“, dann „Wochenende“. Stellen Sie mit Ihrer Karte eine Frage. Antworten Sie auf die Frage der Partnerin. Bei „Freizeit“ sagen Sie auch: Wie finden Sie das? Bei „Wochenende“ fragen Sie: Kommen Sie mit? Wann haben Sie Zeit? Und Sie sagen zu oder ab.",
             "cards": {
               "learner": [
                 "Freizeit – Musik",
@@ -2875,7 +2875,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Gehen Sie am Wochenende ins Kino? Kommen Sie mit?"
+            "de": "Gehen Sie gern ins Kino? Wann haben Sie Zeit?"
           },
           {
             "speaker": "partner",
@@ -3115,7 +3115,7 @@
           "Super, die Musik ist toll!"
         ],
         "explanation": {
-          "de": "„Wie findest du …?“ fragt nach der Meinung: „Super!“",
+          "de": "Auf „Wie findest du …?“ antwortet man: „Super!“ oder „Nicht so toll.“",
           "en": "“Wie findest du …?” asks for your opinion."
         },
         "origin": "agent"

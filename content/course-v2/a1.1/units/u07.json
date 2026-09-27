@@ -1798,8 +1798,8 @@
           {
             "id": "a1.1-u07-ls3-l03",
             "speaker": "cast.herr-richter",
-            "de": "Am Donnerstag fängt der Kurs später an: erst um elf Uhr, nicht um neun.",
-            "en": "On Thursday the class starts later: not until eleven, not at nine."
+            "de": "Am Donnerstag fängt der Kurs später an. Nicht um neun, erst um elf Uhr.",
+            "en": "On Thursday the class starts later. Not at nine – not until eleven."
           },
           {
             "id": "a1.1-u07-ls3-l04",
@@ -1926,8 +1926,8 @@
           },
           "exact": "number",
           "explanation": {
-            "de": "Herr Richter sagt: „erst um elf Uhr, nicht um neun“.",
-            "en": "Mr Richter says: not until eleven, not at nine."
+            "de": "Herr Richter sagt: „Nicht um neun, erst um elf Uhr.“",
+            "en": "Mr Richter says: not at nine, not until eleven."
           },
           "origin": "agent"
         },
@@ -3118,7 +3118,7 @@
           "Gruß mit Ihrem Namen",
           "25 bis 35 Wörter"
         ],
-        "modelText": "Hallo Bilal,\nam Donnerstag fängt der Kurs erst um elf Uhr an, nicht um neun. Am Morgen kaufe ich ein. Wann hast du Zeit? Lernen wir am Freitag zusammen?\nViele Grüße\n(Ihr Name)"
+        "modelText": "Hallo Bilal,\nam Donnerstag fängt der Kurs erst um elf Uhr an. Am Morgen kaufe ich ein. Wann hast du Zeit? Lernen wir am Freitag zusammen?\nViele Grüße\n(Ihr Name)"
       }
     },
     {
