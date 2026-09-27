@@ -917,8 +917,8 @@ from the rating sheet and **unverified** ([m01] Unverified); hence `splitVerifie
       "lines": [
         { "id": "a2.1-u07-start-l01", "speaker": "cast.priya", "de": "Guten Morgen! Hallo? Ist niemand da?", "en": "Good morning! Hello? Is nobody here?" },
         { "id": "a2.1-u07-start-l02", "speaker": "cast.frau-otto", "de": "Guten Morgen, Frau Nair. Herr Brandt ist heute Vormittag beim Kunden in Halle. Und Jan ist noch nicht da.", "en": "Good morning, Ms Nair. Mr Brandt is at a customer's in Halle this morning. And Jan isn't here yet." },
-        { "id": "a2.1-u07-start-l03", "speaker": "cast.priya", "de": "Oh, das Telefon blinkt. Drei neue Nachrichten!", "en": "Oh, the phone is flashing. Three new messages!" },
-        { "id": "a2.1-u07-start-l04", "speaker": "cast.frau-otto", "de": "Na dann – viel Glück am Empfang! Ich bin heute auch sehr beschäftigt.", "en": "Well then – good luck at the front desk! I'm very busy today too." }
+        { "id": "a2.1-u07-start-l03", "speaker": "cast.priya", "de": "Oh, das Telefon blinkt. Drei neue Nachrichten auf der Mailbox!", "en": "Oh, the phone is flashing. Three new messages on the voicemail!" },
+        { "id": "a2.1-u07-start-l04", "speaker": "cast.frau-otto", "de": "Na dann – viel Glück am Empfang! Ich bin heute auch sehr beschäftigt. Wenn es dringend ist, verbinden Sie die Leute mit mir.", "en": "Well then – good luck at the front desk! I'm very busy today too. If it's urgent, put people through to me." }
       ],
       "gistItem": { "id": "a2.1-u07-start-i01", "type": "multiple_choice", "role": "gist", "topic": "hoeren", "promptDe": "Wer ist heute Vormittag nicht im Büro?", "promptEn": "Who is not in the office this morning?", "options": ["Herr Brandt", "Frau Otto", "Priya"], "answer": "Herr Brandt", "accepted": ["Herr Brandt"], "explanation": { "de": "Frau Otto sagt: Herr Brandt ist beim Kunden in Halle.", "en": "Ms Otto says Mr Brandt is at a customer's in Halle." }, "origin": "agent" }
     },
@@ -933,7 +933,7 @@ from the rating sheet and **unverified** ([m01] Unverified); hence `splitVerifie
       "input": {
         "kind": "monolog", "title": "Die Mailbox am Empfang", "textType": "tt.mailbox",
         "lines": [
-          { "id": "a2.1-u07-ls1-l01", "speaker": "ansage", "de": "Sie haben drei neue Nachrichten. Erste Nachricht:", "en": "You have three new messages. First message:" },
+          { "id": "a2.1-u07-ls1-l01", "speaker": "ansage", "de": "Hier ist die Mailbox von Brandt Elektrotechnik. Sie haben drei neue Nachrichten. Erste Nachricht:", "en": "This is the voicemail of Brandt Elektrotechnik. You have three new messages. First message:" },
           { "id": "a2.1-u07-ls1-l02", "speaker": "cast.monika-kowalski", "de": "Guten Tag, hier spricht Monika Kowalski von der Firma Hansen Bau. Es geht um unseren Auftrag. Der Techniker hatte heute um acht Uhr einen Termin bei uns. Aber er ist noch nicht da.", "en": "Hello, this is Monika Kowalski from Hansen Bau. It's about our order. The technician had an appointment with us at eight today. But he isn't here yet." },
           { "id": "a2.1-u07-ls1-l03", "speaker": "cast.monika-kowalski", "de": "Bitte melden Sie sich so schnell wie möglich bei mir. Meine Nummer ist 0341 58 27 90. Vielen Dank!", "en": "Please get in touch with me as soon as possible. My number is 0341 58 27 90. Thank you!", "say": "Bitte melden Sie sich so schnell wie möglich bei mir. Meine Nummer ist null drei vier eins, achtundfünfzig, siebenundzwanzig, neunzig. Vielen Dank!" },
           { "id": "a2.1-u07-ls1-l04", "speaker": "ansage", "de": "Zweite Nachricht:", "en": "Second message:" },
@@ -996,13 +996,13 @@ from the rating sheet and **unverified** ([m01] Unverified); hence `splitVerifie
         "kind": "dialog", "title": "Jan kommt ins Büro", "textType": "tt.dialog",
         "lines": [
           { "id": "a2.1-u07-ls2-l01", "speaker": "cast.jan-wolf", "de": "Guten Morgen, Priya! Tut mir leid, ich bin zu spät. Der Stau war furchtbar.", "en": "Morning, Priya! Sorry I'm late. The traffic was terrible." },
-          { "id": "a2.1-u07-ls2-l02", "speaker": "cast.priya", "de": "Kein Problem. Die Teambesprechung hat gerade angefangen. Beeil dich!", "en": "No problem. The team meeting has just started. Hurry up!" },
+          { "id": "a2.1-u07-ls2-l02", "speaker": "cast.priya", "de": "Kein Problem. Die Teambesprechung im Konferenzraum hat gerade angefangen. Beeil dich!", "en": "No problem. The team meeting in the meeting room has just started. Hurry up!" },
           { "id": "a2.1-u07-ls2-l03", "speaker": "cast.jan-wolf", "de": "Ja, ich beeile mich. Hat jemand für mich angerufen?", "en": "Yes, I'm hurrying. Did anyone call for me?" },
-          { "id": "a2.1-u07-ls2-l04", "speaker": "cast.priya", "de": "Ja, Frau Kowalski von Hansen Bau. Der Techniker ist noch nicht bei ihr. Du sollst dich bei ihr melden.", "en": "Yes, Ms Kowalski from Hansen Bau. The technician hasn't arrived. You should get in touch with her." },
-          { "id": "a2.1-u07-ls2-l05", "speaker": "cast.jan-wolf", "de": "Oh nein! Ich melde mich sofort bei ihr. Und dann entschuldige ich mich bei Frau Otto.", "en": "Oh no! I'll call her right away. And then I'll apologise to Ms Otto." },
+          { "id": "a2.1-u07-ls2-l04", "speaker": "cast.priya", "de": "Ja, Frau Kowalski von Hansen Bau. Es geht um ihren Auftrag. Der Techniker ist noch nicht bei ihr. Du sollst dich bei ihr melden.", "en": "Yes, Ms Kowalski from Hansen Bau. It's about her order. The technician hasn't arrived. You should get in touch with her." },
+          { "id": "a2.1-u07-ls2-l05", "speaker": "cast.jan-wolf", "de": "Oh nein! Ich melde mich sofort bei ihr. … Die Leitung ist besetzt. Dann entschuldige ich mich zuerst bei Frau Otto.", "en": "Oh no! I'll call her right away. … The line is busy. Then I'll apologise to Ms Otto first." },
           { "id": "a2.1-u07-ls2-l06", "speaker": "cast.frau-otto", "de": "Herr Wolf, da sind Sie ja! Wir warten schon.", "en": "Mr Wolf, there you are! We're already waiting." },
           { "id": "a2.1-u07-ls2-l07", "speaker": "cast.jan-wolf", "de": "Entschuldigung, Frau Otto. Ich habe mich verspätet – der Stau! Heute mache ich eine Überstunde.", "en": "Sorry, Ms Otto. I'm late – the traffic! I'll work an extra hour today." },
-          { "id": "a2.1-u07-ls2-l08", "speaker": "cast.frau-otto", "de": "Schon gut. Setzen Sie sich, wir fangen jetzt an.", "en": "That's fine. Sit down, we're starting now." },
+          { "id": "a2.1-u07-ls2-l08", "speaker": "cast.frau-otto", "de": "Schon gut, Sie müssen sich nicht entschuldigen. Setzen Sie sich, wir fangen jetzt an.", "en": "That's fine, you don't need to apologise. Sit down, we're starting now." },
           { "id": "a2.1-u07-ls2-l09", "speaker": "cast.frau-otto", "de": "Ach, Frau Nair: Bitte melden Sie sich heute noch für den Computerkurs an.", "en": "Oh, Ms Nair: please sign up for the computer course today." },
           { "id": "a2.1-u07-ls2-l10", "speaker": "cast.priya", "de": "Gut, das mache ich. Jetzt gehe ich ans Telefon – bis zum Feierabend!", "en": "Fine, I'll do that. Now I'm going to answer the phone – until the end of the day!" }
         ],
@@ -1054,15 +1054,15 @@ from the rating sheet and **unverified** ([m01] Unverified); hence `splitVerifie
       "input": {
         "kind": "mixed", "title": "Ein Anruf für Herrn Brandt", "textType": "tt.telefonnotiz",
         "lines": [
-          { "id": "a2.1-u07-ls3-l01", "speaker": "cast.priya", "de": "Brandt Elektrotechnik, Priya Nair, guten Tag.", "en": "Brandt Elektrotechnik, Priya Nair speaking, hello." },
-          { "id": "a2.1-u07-ls3-l02", "speaker": "cast.herr-seidel", "de": "Guten Tag, Seidel hier. Kann ich bitte Herrn Brandt sprechen?", "en": "Hello, Seidel here. May I speak to Mr Brandt, please?" },
+          { "id": "a2.1-u07-ls3-l01", "speaker": "cast.priya", "de": "Brandt Elektrotechnik, Empfang, Priya Nair, guten Tag.", "en": "Brandt Elektrotechnik, reception, Priya Nair speaking, hello." },
+          { "id": "a2.1-u07-ls3-l02", "speaker": "cast.herr-seidel", "de": "Guten Tag, Seidel hier. Endlich! Die Leitung war lange besetzt. Kann ich bitte Herrn Brandt sprechen?", "en": "Hello, Seidel here. At last! The line was busy for a long time. May I speak to Mr Brandt, please?" },
           { "id": "a2.1-u07-ls3-l03", "speaker": "cast.priya", "de": "Herr Brandt ist heute Vormittag leider nicht im Haus. Kann ich ihm etwas ausrichten?", "en": "Unfortunately Mr Brandt is out this morning. Can I give him a message?" },
           { "id": "a2.1-u07-ls3-l04", "speaker": "cast.herr-seidel", "de": "Ja, bitte. Es geht um die Rechnung vom 12. März. Da stimmt etwas nicht.", "en": "Yes, please. It's about the invoice of 12 March. Something is wrong with it.", "say": "Ja, bitte. Es geht um die Rechnung vom zwölften März. Da stimmt etwas nicht." },
           { "id": "a2.1-u07-ls3-l05", "speaker": "cast.priya", "de": "Moment, ich schreibe mit. Wie ist Ihre Telefonnummer?", "en": "One moment, I'll take a note. What's your phone number?" },
           { "id": "a2.1-u07-ls3-l06", "speaker": "cast.herr-seidel", "de": "0341 33 18 42. Das ist meine Durchwahl.", "en": "0341 33 18 42. That's my direct line.", "say": "null drei vier eins, dreiunddreißig, achtzehn, zweiundvierzig. Das ist meine Durchwahl." },
           { "id": "a2.1-u07-ls3-l07", "speaker": "cast.priya", "de": "Danke. Ich leite Ihre Nachricht an Herrn Brandt weiter. Er meldet sich morgen früh bei Ihnen. Wenn es dringend ist, verbinde ich Sie mit Frau Otto aus der Buchhaltung.", "en": "Thank you. I'll pass your message on to Mr Brandt. He will get in touch with you tomorrow morning. If it's urgent, I can put you through to Ms Otto in accounts." },
-          { "id": "a2.1-u07-ls3-l08", "speaker": "cast.herr-seidel", "de": "Nein danke, morgen ist in Ordnung. Aber bitte früh: Wenn er sich nach zehn Uhr meldet, bin ich nicht mehr im Büro. Auf Wiederhören!", "en": "No thanks, tomorrow is fine. But early, please: if he calls after ten, I won't be in the office any more. Goodbye!" },
-          { "id": "a2.1-u07-ls3-l09", "speaker": "cast.priya", "de": "Auf Wiederhören, Herr Seidel!", "en": "Goodbye, Mr Seidel!" }
+          { "id": "a2.1-u07-ls3-l08", "speaker": "cast.herr-seidel", "de": "Nein danke, so dringend ist es nicht. Ein Rückruf morgen ist in Ordnung. Aber bitte früh: Wenn er sich nach zehn Uhr meldet, bin ich nicht mehr im Büro. Auf Wiederhören!", "en": "No thanks, it's not that urgent. A call back tomorrow is fine. But early, please: if he calls after ten, I won't be in the office any more. Goodbye!" },
+          { "id": "a2.1-u07-ls3-l09", "speaker": "cast.priya", "de": "Ich richte es ihm aus. Auf Wiederhören, Herr Seidel!", "en": "I'll tell him. Goodbye, Mr Seidel!" }
         ],
         "text": { "de": "TELEFONNOTIZ\nAnruf für: Herrn Brandt\nAnrufer: Herr Seidel\nTelefon: 0341 33 18 42\nDatum, Uhrzeit: Montag, 9.40 Uhr\nWorum geht es? Rechnung vom 12. März – da stimmt etwas nicht.\nBitte: morgen früh zurückrufen, vor 10 Uhr!\nNotiert von: Priya Nair\nWeitergeleitet an Herrn Brandt: per E-Mail, 9.45 Uhr", "en": "PHONE NOTE — For: Mr Brandt · Caller: Mr Seidel · Phone: 0341 33 18 42 · Monday, 9:40 · About: invoice of 12 March, something is wrong · Please call back tomorrow morning, before 10 · Noted by: Priya Nair · Forwarded to Mr Brandt by e-mail, 9:45" },
         "glosses": [],
@@ -1207,6 +1207,7 @@ from the rating sheet and **unverified** ([m01] Unverified); hence `splitVerifie
       { "ref": "a2.1-u06-ls2-p03" },
       { "ref": "a2.1-u05-ls1-p06" },
       { "ref": "a2.1-u04-ls2-p02" },
+      { "ref": "a2.1-u03-ls3-p04" },
       { "ref": "a2.1-u02-ls1-p05" }
     ],
     "proofs": [
