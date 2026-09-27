@@ -304,7 +304,9 @@ export function UnitPlayer({ level, unit, manifest, user }) {
         props: { kind: step.kind, minutes, correct: result && result.correct, total: result && result.total },
       });
     } else localStepDone(unitId, level, step.id);
-    if (step.kind === 'check' && result) setCheckResult({ correct: Number(result.correct) || 0, total: Number(result.total) || 0 });
+    if (step.kind === 'check' && result) {
+      setCheckResult({ correct: Number(result.correct) || 0, total: Number(result.total) || 0, proofs: result.proofs || null });
+    }
     setSessionRuns((m) => new Map(m).set(step.id, (m.get(step.id) || 0) + 1));
     const done = new Set(finished);
     done.add(step.id);
@@ -460,6 +462,20 @@ export function UnitPlayer({ level, unit, manifest, user }) {
   const openSteps = steps.map((s, i) => ({ s, i })).filter(({ s }) => !finished.has(s.id) && s.kind !== 'ueberarbeiten');
   const words = Array.isArray(unit.reviewCards) ? unit.reviewCards.filter((k) => String(k).startsWith('word:')).length : 0;
   const canDos = (manifestRow && manifestRow.canDos) || [];
+  // Which can-do is proven, by the unit's own proof rule (check.proofs): an Aufgabe proof
+  // by that Aufgabe being submitted now; an item proof by the Check's „Das kann ich" of
+  // this visit (CheckView's onDone `proofs`); without either (no proof rule, or the Check
+  // was done in an earlier visit) by the unit being complete. So the recap never ticks a
+  // can-do the Check has just shown as open.
+  const canDoIds = (manifestRow && manifestRow.canDoIds) || [];
+  const proofRules = (unit.check && unit.check.proofs) || [];
+  const proven = (i) => {
+    const rule = proofRules.find((p) => p && p.canDo === canDoIds[i]);
+    if (rule && rule.aufgabe) return (unit.steps || []).some((s) => s.kind === rule.aufgabe && finished.has(s.id));
+    if (rule && checkResult && checkResult.proofs && rule.canDo in checkResult.proofs) return Boolean(checkResult.proofs[rule.canDo]);
+    return complete;
+  };
+  const allProven = canDos.length > 0 && canDos.every((_, i) => proven(i));
   const units = (manifest && manifest.units) || [];
   const nextRow = units.find((r) => r && nrOfId(r.unit || r.id) === unit.nr + 1) || null;
   const etappe = ((manifest && manifest.etappen) || []).find((e) => (e.units || []).includes(unitId));
@@ -516,19 +532,19 @@ export function UnitPlayer({ level, unit, manifest, user }) {
         )}
 
         {canDos.length > 0 && (
-          // Ticked only when the unit is complete: before that an open Aufgabe still
-          // proves one of these can-dos, and the Check's „Das kann ich" has just said so.
+          // A tick per proven can-do (see `proven`), the same verdict as the Check's
+          // „Das kann ich"; „Das können Sie jetzt" only when every one is proven.
           <Card className="p-4">
             <h2 className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
-              {complete ? t('player.canNow') : t('player.goalsUnit')}
+              {allProven ? t('player.canNow') : t('player.goalsUnit')}
             </h2>
             <ul className="mt-2 space-y-1.5 text-sm text-ink">
-              {canDos.map((c) => (
+              {canDos.map((c, i) => (
                 <li key={c} className="flex gap-2">
-                  {complete
+                  {proven(i)
                     ? <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent-limette-ink" aria-hidden="true" />
                     : <span className="mt-0.5 w-4 shrink-0 text-center text-graphite" aria-hidden="true">›</span>}
-                  <span>{c}</span>
+                  <span>{c}{proven(i) && <span className="sr-only"> ({t('player.doneMark')})</span>}</span>
                 </li>
               ))}
             </ul>
