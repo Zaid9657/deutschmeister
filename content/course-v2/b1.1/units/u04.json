@@ -252,27 +252,6 @@
         "origin": "agent"
       }
     },
-    "auftakt": {
-      "promptDe": "Was passiert hier? Sie haben etwas online gekauft, und nach einer Woche ist es kaputt. Was würden Sie tun?",
-      "microOutput": {
-        "id": "b1.1-u04-start-mo",
-        "bankKey": "b11-u04-mo",
-        "mode": "spoken",
-        "profile": "course-micro-sp",
-        "situationDe": "Sie sprechen frei, ohne Vorbereitung auf Papier. Es gibt keine falschen Antworten.",
-        "promptDe": "Erzählen Sie: Haben Sie schon einmal etwas reklamiert? Was ist passiert?",
-        "promptEn": "Tell us: have you ever complained about something you bought? What happened?",
-        "planSeconds": 30,
-        "seconds": [
-          40,
-          60
-        ],
-        "targets": [
-          "g.trotzdem"
-        ],
-        "register": "Sie"
-      }
-    },
     "testOut": {
       "offered": true
     }
@@ -292,8 +271,8 @@
         "title": "Rückgabe, Umtausch und Garantie: Ihre Fragen – unsere Antworten",
         "textType": "tt.bedingungen",
         "text": {
-          "de": "Rückgabe, Umtausch und Garantie: Ihre Fragen – unsere Antworten\n\nKann ich eine Ware zurückgeben?\nJa. Sie können jede Ware 30 Tage lang ohne Grund zurückgeben. Die 30 Tage zählen ab dem Tag, an dem Sie das Paket bekommen. Pakete stellen wir von Montag bis Samstag zu. Melden Sie die Rückgabe bitte zuerst in Ihrem Kundenkonto an. Dort finden Sie auch ein Etikett für das Paket. Die Versandkosten für die Rücksendung zahlen wir.\n\nWann bekomme ich mein Geld zurück?\nWenn die Ware bei uns angekommen ist, erstatten wir Ihnen den Kaufpreis. Die Rückerstattung bekommen Sie in 14 Tagen, mit der Zahlungsart, mit der Sie bezahlt haben. Einen Umtausch gegen eine andere Ware bieten wir leider nicht an. Bestellen Sie in diesem Fall bitte einfach neu. Ihre Lieferadresse können Sie dabei im Kundenkonto ändern.\n\nWas mache ich, wenn ein Gerät defekt ist?\nFür alle Geräte gilt die gesetzliche Gewährleistung von zwei Jahren. Wenn eine Ware fehlerhaft ist, haben Sie das Recht auf eine Reparatur oder ein neues Gerät. Das können Sie dann bei uns verlangen. Rufen Sie bitte zuerst unseren Kundendienst an: Die Nummer der Hotline steht auf Ihrer Rechnung. Sie brauchen dafür die Bestellnummer und die Seriennummer von Ihrem Gerät. Oft können wir Ihnen schon am Telefon weiterhelfen. Wenn nicht, schicken Sie das Gerät kostenlos zu uns ein.\n\nUnd die Garantie?\nViele Hersteller geben zusätzlich eine Garantie, zum Beispiel für drei Jahre. Diese Garantie ist ein Extra. Die Bedingungen finden Sie in der Anleitung von Ihrem Gerät. Die gesetzliche Gewährleistung beim Händler, also bei uns, haben Sie trotzdem immer.\n\nWas brauche ich für eine Reklamation?\nSie brauchen keinen Kassenbon. Die Rechnung in Ihrem Kundenkonto ist Ihr Beleg. Wenn ein Paket schon beschädigt bei Ihnen ankommt, nehmen Sie es bitte nicht an. Sagen Sie es gleich dem Zusteller.",
-          "en": "Returns, exchange and guarantee: your questions, our answers. You can return any item within 30 days without giving a reason; the 30 days count from the day you receive the parcel. Register the return in your customer account first; you will find a parcel label there. Returns are free. Once the item has reached us, we refund the purchase price within 14 days, using the payment method you paid with. We do not offer exchanges for a different item; simply order again. The statutory warranty of two years applies to all devices: if an item is faulty, you have the right to a repair or a new device. Call our hotline first; you need the order number and the serial number. If we cannot help on the phone, send the device to us free of charge. Many manufacturers also give a guarantee, e.g. for three years; it is an extra, its terms are in the device manual, and your statutory rights stay the same. You do not need a till receipt: the invoice in your customer account is your proof. If a parcel arrives damaged, refuse it and tell the courier straight away."
+          "de": "Rückgabe, Umtausch und Garantie: Ihre Fragen – unsere Antworten\n\nKann ich eine Ware zurückgeben?\nJa. Sie können jede Ware 30 Tage lang ohne Grund zurückgeben. Die 30 Tage zählen ab dem Tag, an dem Sie das Paket bekommen. Melden Sie die Rückgabe bitte zuerst in Ihrem Kundenkonto an. Dort finden Sie auch ein Etikett für das Paket. Die Versandkosten für die Rücksendung zahlen wir.\n\nWann bekomme ich mein Geld zurück?\nWenn die Ware bei uns angekommen ist, erstatten wir Ihnen den Kaufpreis. Die Rückerstattung bekommen Sie in 14 Tagen, mit der Zahlungsart, mit der Sie bezahlt haben. Einen Umtausch gegen eine andere Ware bieten wir leider nicht an. Bestellen Sie in diesem Fall bitte einfach neu. Ihre Lieferadresse können Sie dabei im Kundenkonto ändern.\n\nWann kommt mein Paket?\nPakete stellen wir von Montag bis Samstag zu. Mit der Sendungsnummer aus Ihrer E-Mail sehen Sie, wo Ihr Paket ist.\n\nWas mache ich, wenn ein Gerät defekt ist?\nFür alle Geräte gilt die gesetzliche Gewährleistung von zwei Jahren. Wenn eine Ware fehlerhaft ist, haben Sie das Recht auf eine Reparatur oder ein neues Gerät. Das können Sie dann bei uns verlangen. Rufen Sie bitte zuerst unseren Kundendienst an: Die Telefonnummer steht auf Ihrer Rechnung. Sie brauchen dafür die Bestellnummer und die Seriennummer von Ihrem Gerät. Oft können wir Ihnen schon am Telefon weiterhelfen. Wenn nicht, schicken Sie das Gerät kostenlos zu uns ein.\n\nUnd die Garantie?\nViele Hersteller geben zusätzlich eine Garantie, zum Beispiel für drei Jahre. Diese Garantie ist ein Extra. Die Bedingungen finden Sie in der Anleitung von Ihrem Gerät. Die gesetzliche Gewährleistung beim Händler, also bei uns, haben Sie trotzdem immer.\n\nWas brauche ich für eine Reklamation?\nSie brauchen keinen Kassenbon. Die Rechnung in Ihrem Kundenkonto ist Ihr Beleg. Wenn ein Paket schon beschädigt bei Ihnen ankommt, nehmen Sie es bitte nicht an. Sagen Sie es gleich dem Zusteller.",
+          "en": "Returns, exchange and guarantee: your questions, our answers. You can return any item within 30 days without giving a reason; the 30 days count from the day you receive the parcel. Register the return in your customer account first; you will find a parcel label there. Returns are free. We deliver parcels Monday to Saturday; with the tracking number in your email you can see where your parcel is. Once the item has reached us, we refund the purchase price within 14 days, using the payment method you paid with. We do not offer exchanges for a different item; simply order again. The statutory warranty of two years applies to all devices: if an item is faulty, you have the right to a repair or a new device. Call our hotline first; you need the order number and the serial number. If we cannot help on the phone, send the device to us free of charge. Many manufacturers also give a guarantee, e.g. for three years; it is an extra, its terms are in the device manual, and your statutory rights stay the same. You do not need a till receipt: the invoice in your customer account is your proof. If a parcel arrives damaged, refuse it and tell the courier straight away."
         },
         "glosses": [
           {
@@ -357,8 +336,8 @@
             "ein Onlineshop"
           ],
           "explanation": {
-            "de": "Der Text sagt „unsere Hotline“ und „zu uns“: Der Shop spricht mit seinen Kunden.",
-            "en": "The text says 'our hotline' and 'to us': the shop is addressing its customers."
+            "de": "Der Text sagt „unseren Kundendienst“ und „bei uns“: Der Onlineshop spricht mit seinen Kunden.",
+            "en": "The text says 'our customer service' and 'with us': the shop is addressing its customers."
           },
           "origin": "agent"
         },
@@ -393,17 +372,17 @@
           "promptDe": "Ihr Gerät ist defekt. Was sollen Sie zuerst tun?",
           "promptEn": "Your device is faulty. What should you do first?",
           "options": [
-            "die Hotline anrufen",
+            "den Kundendienst anrufen",
             "das Gerät zurückschicken",
             "den Kassenbon suchen"
           ],
-          "answer": "die Hotline anrufen",
+          "answer": "den Kundendienst anrufen",
           "accepted": [
-            "die Hotline anrufen"
+            "den Kundendienst anrufen"
           ],
           "explanation": {
-            "de": "„Rufen Sie bitte zuerst unsere Hotline an.“ Einschicken kommt erst später.",
-            "en": "'Please call our hotline first.' Sending it in comes later."
+            "de": "„Rufen Sie bitte zuerst unseren Kundendienst an.“ Einschicken kommt erst später.",
+            "en": "'Please call our customer service first.' Sending it in comes later."
           },
           "origin": "agent"
         },
@@ -471,7 +450,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.erstatten",
-            "promptDe": "Der Shop ___ Ihnen den Kaufpreis in 14 Tagen. (erstatten)",
+            "promptDe": "Der Onlineshop ___ Ihnen den Kaufpreis in 14 Tagen. (erstatten)",
             "promptEn": "er/sie/es form of erstatten.",
             "answer": "erstattet",
             "accepted": [
@@ -959,8 +938,8 @@
           {
             "id": "b1.1-u04-ls2-l09",
             "speaker": "cast.ensemble-b1-4",
-            "de": "Entschuldigen Sie bitte. Das Gerät ist fehlerhaft, also haben Sie Anspruch auf Hilfe. In Ihrem Fall gibt es zwei Möglichkeiten: Sie schicken das Gerät zur Reparatur ein, oder Sie bekommen ein Ersatzgerät.",
-            "en": "Please excuse us. The device is faulty, so you are entitled to help. In your case there are two options: you send the device in for repair, or you get a replacement."
+            "de": "Entschuldigen Sie bitte. Das Gerät ist fehlerhaft, deshalb haben Sie Anspruch auf Gewährleistung. In Ihrem Fall gibt es zwei Möglichkeiten: Sie schicken das Gerät zur Reparatur ein, oder Sie bekommen ein Ersatzgerät.",
+            "en": "Please excuse us. The device is faulty, so you are covered by the statutory warranty. In your case there are two options: you send the device in for repair, or you get a replacement."
           },
           {
             "id": "b1.1-u04-ls2-l10",
@@ -1156,7 +1135,7 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.obwohl",
-          "promptDe": "„Obwohl ich zwei Mal angerufen habe, hat niemand geantwortet.“ Was hat sie erwartet?",
+          "promptDe": "„Obwohl ich zwei Mal angerufen habe, hat niemand geantwortet.“ Was hat die Frau erwartet?",
           "promptEn": "What did the person expect?",
           "options": [
             "eine Antwort",
@@ -1460,7 +1439,7 @@
             "type": "multiple_choice",
             "role": "practice",
             "topic": "g.trotzdem",
-            "promptDe": "Der Mitarbeiter ist freundlich. ___ ist Priya verärgert.",
+            "promptDe": "Priya hat eine Reklamation geschrieben. ___ hat niemand geantwortet.",
             "promptEn": "Choose the word.",
             "options": [
               "Trotzdem",
@@ -1472,7 +1451,7 @@
               "Trotzdem"
             ],
             "explanation": {
-              "de": "Nach der Lücke kommt das Verb (ist). Das geht mit trotzdem, nicht mit obwohl. Deshalb passt nicht zur Bedeutung.",
+              "de": "Nach der Lücke kommt das Verb (hat). Das geht mit trotzdem, nicht mit obwohl. Deshalb passt nicht zur Bedeutung.",
               "en": "The verb follows the gap, so trotzdem, not obwohl; deshalb does not fit the meaning."
             },
             "origin": "agent"
@@ -1516,15 +1495,15 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "g.obwohl",
-          "promptDe": "Die Reparatur dauert drei Wochen, ___ das Gerät neu ist.",
+          "promptDe": "Das Gerät muss zur Reparatur, ___ es noch ganz neu ist.",
           "promptEn": "Although …",
           "answer": "obwohl",
           "accepted": [
             "obwohl"
           ],
           "explanation": {
-            "de": "Ein neues Gerät, aber eine lange Reparatur: Das passt nicht zusammen. Deshalb: obwohl.",
-            "en": "A new device but a long repair: obwohl."
+            "de": "Ein neues Gerät sollte funktionieren. Reparatur und neu passen nicht zusammen, deshalb: obwohl.",
+            "en": "A new device should work; repair and new clash, so: obwohl."
           },
           "difficulty": 2,
           "banks": [
@@ -2243,8 +2222,8 @@
             {
               "id": "b1.1-u04-ls4-t3-l01",
               "speaker": "durchsage",
-              "de": "Liebe Kundinnen und Kunden, heute gibt es in unserer Abteilung im ersten Stockwerk einen Service für Sie. Haben Sie Probleme mit einem Gerät, das Sie bei uns gekauft haben? Dann bringen Sie es einfach vorbei. Unsere Techniker sehen es sich an und verlangen kein Geld. Bitte bringen Sie einen Beleg mit, zum Beispiel den Kassenbon oder die Rechnung. Kleine Reparaturen machen wir gleich, Sie müssen nur kurz warten.",
-              "en": "Dear customers, today our department on the first floor offers a service for you. Do you have problems with a device you bought from us? Then just bring it in. Our technicians will look at it and charge nothing. Please bring proof of purchase, e.g. your receipt or invoice. We do small repairs straight away; you only have to wait a short time."
+              "de": "Liebe Kundinnen und Kunden, heute gibt es in unserer Elektroabteilung im ersten Stockwerk einen Service für Sie. Haben Sie Probleme mit einem Gerät, das Sie bei uns gekauft haben? Dann bringen Sie es einfach vorbei. Unsere Techniker sehen es sich an und verlangen kein Geld. Bitte bringen Sie einen Beleg mit, zum Beispiel den Kassenbon oder die Rechnung. Kleine Reparaturen machen wir gleich, Sie müssen nur kurz warten.",
+              "en": "Dear customers, today our electrical department on the first floor offers a service for you. Do you have problems with a device you bought from us? Then just bring it in. Our technicians will look at it and charge nothing. Please bring proof of purchase, e.g. your receipt or invoice. We do small repairs straight away; you only have to wait a short time."
             }
           ],
           "glosses": []
@@ -2338,7 +2317,7 @@
               "options": [
                 "obwohl",
                 "trotzdem",
-                "weil"
+                "dass"
               ],
               "textRef": "b1.1-u04-ls4-t1",
               "answer": "obwohl",
@@ -2665,9 +2644,9 @@
         },
         "openingLine": "Guten Tag! Unser Thema ist: Online einkaufen oder lieber im Geschäft? Möchten Sie anfangen? Was steht auf Ihrem Blatt?",
         "hintWords": [
-          "Auf meinem Blatt steht, dass …",
+          "Auf meinem Zettel steht, dass …",
           "Thomas meint, …",
-          "Ich sehe das anders, denn …",
+          "Das sehe ich nicht so, denn …",
           "Obwohl …",
           "Da haben Sie recht.",
           "Und wie ist das bei Ihnen?",
@@ -2823,14 +2802,14 @@
         "type": "fill_blank",
         "role": "check",
         "topic": "g.obwohl",
-        "promptDe": "Man wartet lange, obwohl die Hotline jeden Tag erreichbar ___.",
-        "promptEn": "Form of sein at the end.",
-        "answer": "ist",
+        "promptDe": "Man wartet lange, obwohl die Hotline viele Mitarbeiter ___. (haben)",
+        "promptEn": "Form of haben at the end.",
+        "answer": "hat",
         "accepted": [
-          "ist"
+          "hat"
         ],
         "explanation": {
-          "de": "Im obwohl-Satz steht das Verb am Ende: …, obwohl die Hotline erreichbar ist.",
+          "de": "Im obwohl-Satz steht das Verb am Ende: …, obwohl die Hotline viele Mitarbeiter hat.",
           "en": "In the obwohl clause the verb goes to the end."
         },
         "origin": "agent"
@@ -3115,7 +3094,7 @@
       "kind": "daz",
       "title": "Gewährleistung oder Garantie? Und wie die Verbraucherzentrale hilft",
       "hf": "7",
-      "bodyDe": "Gewährleistung: Das ist Ihr gesetzliches Recht. Wenn Sie bei einem Händler etwas Neues kaufen und die Ware einen Fehler hat, muss der Händler helfen – zwei Jahre lang ab der Lieferung. Sie können wählen: Reparatur oder eine neue Ware. Die Kosten dafür, zum Beispiel für den Versand, zahlt der Händler. Wenn sich der Fehler im ersten Jahr zeigt, geht man davon aus, dass er schon beim Kauf da war. Bei gebrauchten Waren darf die Frist kürzer sein, aber nicht kürzer als ein Jahr, und nur, wenn das extra im Vertrag steht.\n\nGarantie: Das ist ein Extra vom Hersteller oder vom Händler. Die Bedingungen stehen in der Garantieerklärung. Ihre gesetzlichen Rechte bleiben daneben bestehen.\n\nVerbraucherzentrale: In allen 16 Bundesländern gibt es eine Verbraucherzentrale, zusammen mit rund 200 Beratungsstellen. Dort, am Telefon und online bekommen Sie unabhängige Beratung, zum Beispiel bei Problemen mit einem Kauf. Manche Beratungen kosten etwas, und die Angebote sind in jedem Bundesland ein bisschen anders.",
+      "bodyDe": "Gewährleistung: Das ist Ihr gesetzliches Recht. Wenn Sie bei einem Händler etwas Neues kaufen und die Ware einen Fehler hat, muss der Händler helfen – zwei Jahre lang ab der Lieferung. Sie können wählen: Reparatur oder eine neue Ware. Die Kosten dafür, zum Beispiel für den Versand, zahlt der Händler. Wenn sich der Fehler im ersten Jahr zeigt, geht man davon aus, dass er schon bei der Lieferung da war. Bei gebrauchten Waren darf die Frist kürzer sein, aber nicht kürzer als ein Jahr, und nur, wenn das extra im Vertrag steht.\n\nGarantie: Das ist ein Extra vom Hersteller oder vom Händler. Die Bedingungen stehen in der Garantieerklärung. Ihre gesetzlichen Rechte bleiben daneben bestehen.\n\nVerbraucherzentrale: In allen 16 Bundesländern gibt es eine Verbraucherzentrale; zusammen haben sie rund 200 Beratungsstellen. Dort, am Telefon und online bekommen Sie unabhängige Beratung, zum Beispiel bei Problemen mit einem Kauf. Manche Beratungen kosten etwas, und die Angebote sind in jedem Bundesland ein bisschen anders.",
       "bodyEn": "Statutory warranty (Gewährleistung): your legal right. If you buy something new from a trader and it is faulty, the trader must put it right for two years from delivery. You choose: repair or a replacement; the trader pays the costs, e.g. shipping. If the fault appears within the first year, it is presumed to have existed at the time of sale. For used goods the period may be shortened, but not below one year, and only if the contract says so explicitly and separately.\n\nGuarantee (Garantie): a voluntary extra from the manufacturer or trader, on the terms of its guarantee statement. Your statutory rights continue to apply alongside it.\n\nConsumer advice centres: every one of the 16 federal states has a Verbraucherzentrale, with about 200 advice points in total, offering independent advice in person, by phone and online, e.g. on purchase problems. Some advice is charged, and the services differ from state to state.",
       "factRefs": [
         "b1.1-u04-f01",

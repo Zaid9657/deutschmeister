@@ -42,7 +42,7 @@
       {
         "title": "Wege und Orte",
         "lemmas": [
-          "lx.entlang",
+          "lx.treffpunkt",
           "lx.folgen",
           "lx.abbiegen",
           "lx.ueberqueren",
@@ -135,8 +135,7 @@
       "cast.lina",
       "cast.tomasz",
       "cast.priya",
-      "cast.amal",
-      "cast.ensemble-a2-4"
+      "cast.amal"
     ],
     "fokusPlan": [
       {
@@ -168,8 +167,8 @@
         {
           "id": "a2.2-u04-start-l01",
           "speaker": "cast.priya",
-          "de": "Wir warten schon zehn Minuten. Wo sind denn die anderen?",
-          "en": "We have been waiting for ten minutes. Where are the others?"
+          "de": "Wir laufen schon zehn Minuten. Wo ist denn diese Brücke?",
+          "en": "We've been walking for ten minutes. Where is this bridge?"
         },
         {
           "id": "a2.2-u04-start-l02",
@@ -186,20 +185,20 @@
         {
           "id": "a2.2-u04-start-l04",
           "speaker": "cast.amal",
-          "de": "Wir sind an der Haltestelle vor dem Rathaus. Aber hier sehe ich keine Brücke.",
-          "en": "We're at the stop in front of the town hall. But I can't see a bridge here."
+          "de": "Wir sind am Kiosk. Aber hier sehe ich keine Brücke.",
+          "en": "We're at the kiosk. But I can't see a bridge here."
         },
         {
           "id": "a2.2-u04-start-l05",
           "speaker": "cast.emre",
-          "de": "Ihr seid ganz in der Nähe. Geht an der Tankstelle vorbei und biegt am Kiosk links ab. Dann folgt ihr einfach dem Weg zum Fluss.",
-          "en": "You're very close. Walk past the petrol station and turn left at the kiosk. Then just follow the path to the river."
+          "de": "Ihr seid ganz in der Nähe. Biegt am Kiosk links ab und geht durch den Park. Dann folgt ihr einfach dem Weg bis zur Brücke.",
+          "en": "You're very close. Turn left at the kiosk and walk through the park. Then just follow the path to the bridge."
         },
         {
           "id": "a2.2-u04-start-l06",
           "speaker": "cast.priya",
-          "de": "Und Lina? Sie ist neu in Leipzig. Sie kennt den Weg sicher nicht.",
-          "en": "And Lina? She's new in Leipzig. She surely doesn't know the way."
+          "de": "Und Lina? Sie kommt später mit der Straßenbahn. Sie ist neu in Leipzig und kennt den Weg sicher nicht.",
+          "en": "And Lina? She's coming later by tram. She's new in Leipzig and surely doesn't know the way."
         },
         {
           "id": "a2.2-u04-start-l07",
@@ -217,8 +216,8 @@
         "promptEn": "Where are Emre and Tomasz waiting?",
         "options": [
           "am Treffpunkt an der Brücke",
-          "an der Haltestelle",
-          "an der Tankstelle"
+          "am Kiosk",
+          "an der Haltestelle"
         ],
         "answer": "am Treffpunkt an der Brücke",
         "accepted": [
@@ -463,7 +462,7 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.lokale-praep-weg",
-          "promptDe": "Lina steht vor dem Rathaus. Die Tankstelle ist gegenüber. Wo ist sie?",
+          "promptDe": "Lina steht vor dem Rathaus. Die Tankstelle ist gegenüber. Wo ist die Tankstelle?",
           "promptEn": "Where is the petrol station?",
           "options": [
             "auf der anderen Seite der Straße",
@@ -575,14 +574,16 @@
             "answer": "vom",
             "accepted": [
               "vom",
-              "von dem"
+              "von dem",
+              "dem"
             ],
             "acceptedWhy": {
-              "von dem": "grammatisch richtig, man sagt aber fast immer vom"
+              "von dem": "grammatisch richtig, man sagt aber fast immer vom",
+              "dem": "auch richtig: gegenüber + Dativ ohne von (gegenüber dem …)"
             },
             "explanation": {
-              "de": "gegenüber von + Dativ: von dem Rathaus = vom Rathaus.",
-              "en": "'gegenüber von' takes the dative: von dem → vom Rathaus."
+              "de": "gegenüber (von) + Dativ: vom Rathaus oder gegenüber dem Rathaus.",
+              "en": "'gegenüber (von)' takes the dative: vom Rathaus, or gegenüber dem Rathaus."
             },
             "origin": "agent"
           },
@@ -741,15 +742,19 @@
             "promptEn": "Correct the sentence.",
             "answer": "Du gehst bis zur Brücke.",
             "accepted": [
-              "Du gehst bis zur Brücke."
+              "Du gehst bis zur Brücke.",
+              "Du gehst bis zu der Brücke."
             ],
             "intentionalError": true,
             "errorTag": "case-pp",
             "explanation": {
               "de": "bis zu + Dativ: zu der Brücke = zur Brücke.",
-              "en": "'bis zu' takes the dative: zur Brücke."
+              "en": "'bis zu' takes the dative: zu der Brücke = zur Brücke."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "acceptedWhy": {
+              "Du gehst bis zu der Brücke.": "grammatisch richtig, man sagt aber fast immer zur"
+            }
           },
           {
             "id": "a2.2-u04-ls1-p11",
@@ -823,10 +828,12 @@
           "answer": "vom",
           "accepted": [
             "vom",
-            "von dem"
+            "von dem",
+            "dem"
           ],
           "acceptedWhy": {
-            "von dem": "grammatisch richtig, man sagt aber fast immer vom"
+            "von dem": "grammatisch richtig, man sagt aber fast immer vom",
+            "dem": "auch richtig: gegenüber + Dativ ohne von (gegenüber dem …)"
           },
           "banks": [
             "plateau",
@@ -839,8 +846,8 @@
             "case-pp"
           ],
           "explanation": {
-            "de": "gegenüber von + Dativ: von dem Kiosk = vom Kiosk.",
-            "en": "'gegenüber von' + dative: vom Kiosk."
+            "de": "gegenüber (von) + Dativ: vom Kiosk oder gegenüber dem Kiosk.",
+            "en": "'gegenüber (von)' + dative: vom Kiosk, or gegenüber dem Kiosk."
           },
           "origin": "agent"
         },
@@ -949,20 +956,19 @@
         "register": "du"
       },
       "aussprache": {
-        "focus": "pf am Wortanfang: Pfund – Fund",
+        "focus": "pf am Wortanfang und im Wort: Pferd, Apfel",
         "perception": {
           "generator": "perception.pairs",
           "count": 3,
           "source": [
-            "Pfund|Fund",
-            "Pfad|fad",
-            "Pflug|Flug",
-            "Pfeil|feil"
+            "Pferd|fährt",
+            "Pfanne|Fahne",
+            "Pfund|Fund"
           ],
           "voices": 4
         },
         "readAloud": {
-          "lineDe": "Du gehst über die Straße und dann bis zur Brücke."
+          "lineDe": "Am Kiosk kaufst du einen Apfel und gehst dann bis zur Brücke."
         }
       },
       "endLine": "Sie können jetzt einen Weg genau beschreiben."
@@ -1034,7 +1040,7 @@
           {
             "id": "a2.2-u04-ls2-l09",
             "speaker": "cast.amal",
-            "de": "Dein Bein blutet ein bisschen. Bleib hier, ich helfe dir. Ich habe einen Kurs in Erster Hilfe gemacht.",
+            "de": "Dein Bein blutet ein bisschen. Bleib hier, ich helfe dir. Ich habe einen Erste-Hilfe-Kurs gemacht.",
             "en": "Your leg is bleeding a little. Stay here, I'll help you. I've done a first-aid course."
           },
           {
@@ -1281,8 +1287,8 @@
               "spelling-meaning"
             ],
             "explanation": {
-              "de": "es wird – ohne d am Ende.",
-              "en": "es wird – no d at the end."
+              "de": "es wird – mit d am Ende, aber ohne t.",
+              "en": "es wird – with d at the end, but no t."
             },
             "origin": "agent"
           },
@@ -1559,8 +1565,8 @@
             "spelling-meaning"
           ],
           "explanation": {
-            "de": "es wird dunkel – ohne d.",
-            "en": "es wird dunkel – no d."
+            "de": "es wird dunkel – mit d am Ende, aber ohne t.",
+            "en": "es wird dunkel – with d at the end, but no t."
           },
           "origin": "agent"
         },
@@ -1581,9 +1587,6 @@
             "repair"
           ],
           "difficulty": 2,
-          "errorTags": [
-            "spelling-meaning"
-          ],
           "explanation": {
             "de": "ich werde – mit -e.",
             "en": "ich werde – ending -e."
@@ -1645,7 +1648,7 @@
           ],
           "difficulty": 2,
           "errorTags": [
-            "spelling-meaning"
+            "case-np"
           ],
           "explanation": {
             "de": "Mir wird kalt: Das Verb steht in der es-Form.",
@@ -1679,7 +1682,7 @@
       "kind": "situation",
       "title": "Notruf 112",
       "structure": "g.lokale-praep-weg",
-      "modelSentence": "Wir sind an der Brücke, gegenüber vom Kiosk.",
+      "modelSentence": "Wir sind am Ufer hinter dem Hügel, zehn Minuten von der Brücke.",
       "ruleCard": "rc.lokale-praep-weg",
       "warmup": {
         "draw": 6,
@@ -1700,8 +1703,8 @@
           {
             "id": "a2.2-u04-ls3-l02",
             "speaker": "cast.tomasz",
-            "de": "Wir sind in Leipzig am Fluss. Wir stehen an der Brücke für Fußgänger, gegenüber vom Kiosk.",
-            "en": "We're in Leipzig by the river. We're at the pedestrian bridge, opposite the kiosk."
+            "de": "Wir sind in Leipzig am Fluss, am Ufer hinter dem Hügel. Das ist zehn Minuten von der Brücke für Fußgänger.",
+            "en": "We're in Leipzig by the river, on the bank behind the hill. That's ten minutes from the pedestrian bridge."
           },
           {
             "id": "a2.2-u04-ls3-l03",
@@ -1748,14 +1751,14 @@
           {
             "id": "a2.2-u04-ls3-l10",
             "speaker": "x.leitstelle",
-            "de": "Die Frau soll nicht aufstehen. Und schicken Sie bitte jemanden zur Straße. Er soll dort auf den Krankenwagen warten.",
-            "en": "The woman should not get up. And please send someone to the road. They should wait for the ambulance there."
+            "de": "Die Frau soll nicht aufstehen. Und schicken Sie bitte jemanden zur Brücke. Er soll dort auf den Krankenwagen warten.",
+            "en": "The woman should not get up. And please send someone to the bridge. They should wait for the ambulance there."
           },
           {
             "id": "a2.2-u04-ls3-l11",
             "speaker": "cast.tomasz",
-            "de": "Mache ich. Mein Freund geht zur Tankstelle an der Straße und wartet dort.",
-            "en": "Will do. My friend is going to the petrol station on the road and will wait there."
+            "de": "Mache ich. Mein Freund geht zurück zur Brücke. Von dort zeigt er den Weg: am Hügel vorbei bis zu uns.",
+            "en": "Will do. My friend is going back to the bridge. From there he'll show the way: past the hill and on to us."
           },
           {
             "id": "a2.2-u04-ls3-l12",
@@ -1765,8 +1768,8 @@
           }
         ],
         "text": {
-          "de": "Lina (18.30 Uhr): Hallo ihr Lieben! Ich bin noch in der Notaufnahme. Im Krankenwagen war auch ein Notarzt. Eine Ärztin hat meinen Fuß untersucht: Er ist nicht gebrochen. Die Verletzung am Bein ist auch nicht schlimm. Ich muss aber eine Woche zu Hause bleiben. Danke für eure Hilfe, besonders an Amal, Tomasz und Emre!",
-          "en": "Lina (6.30 pm): Hi everyone! I'm still in A&E. There was an emergency doctor in the ambulance too. A doctor examined my foot: it isn't broken. The injury on my leg isn't bad either. But I have to stay at home for a week. Thanks for your help, especially Amal, Tomasz and Emre!"
+          "de": "Lina (18.30 Uhr): Hallo ihr Lieben! Ich bin noch in der Notaufnahme. Ich bin am Ufer auf einem Stein ausgerutscht, und dann ist alles ganz schnell gegangen. Im Krankenwagen war auch ein Notarzt. Eine Ärztin hat meinen Fuß untersucht: Er ist nicht gebrochen. Die Verletzung am Bein ist auch nicht schlimm. Ich muss aber eine Woche zu Hause bleiben. Danke für eure Hilfe – ihr wart super!",
+          "en": "Lina (6.30 pm): Hi everyone! I'm still in A&E. I slipped on a stone by the river, and then everything happened very fast. There was an emergency doctor in the ambulance too. A doctor examined my foot: it isn't broken. The injury on my leg isn't bad either. But I have to stay at home for a week. Thanks for your help – you were great!"
         },
         "glosses": [
           {
@@ -1850,17 +1853,17 @@
           "promptDe": "Was soll eine Person machen?",
           "promptEn": "What should one person do?",
           "options": [
-            "zur Straße gehen und dort warten",
+            "zur Brücke gehen und dort warten",
             "Lina nach Hause bringen",
             "noch einmal anrufen"
           ],
-          "answer": "zur Straße gehen und dort warten",
+          "answer": "zur Brücke gehen und dort warten",
           "accepted": [
-            "zur Straße gehen und dort warten"
+            "zur Brücke gehen und dort warten"
           ],
           "explanation": {
-            "de": "Die Frau vom Notruf sagt: Schicken Sie jemanden zur Straße. Er soll dort warten.",
-            "en": "The dispatcher asks for someone to wait at the road."
+            "de": "Die Frau vom Notruf sagt: Schicken Sie jemanden zur Brücke. Er soll dort warten.",
+            "en": "The dispatcher asks for someone to wait at the bridge."
           },
           "origin": "agent"
         },
@@ -1869,15 +1872,15 @@
           "type": "fill_blank",
           "role": "detail",
           "topic": "hoeren",
-          "promptDe": "Der Freund wartet an der ___ auf den Krankenwagen.",
+          "promptDe": "Der Freund geht zurück zur ___ und wartet dort.",
           "promptEn": "Where does the friend wait?",
-          "answer": "Tankstelle",
+          "answer": "Brücke",
           "accepted": [
-            "Tankstelle"
+            "Brücke"
           ],
           "explanation": {
-            "de": "Tomasz sagt: Mein Freund geht zur Tankstelle an der Straße.",
-            "en": "Tomasz says his friend is going to the petrol station."
+            "de": "Tomasz sagt: Mein Freund geht zurück zur Brücke.",
+            "en": "Tomasz says his friend is going back to the bridge."
           },
           "origin": "agent"
         }
@@ -1888,20 +1891,20 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.lokale-praep-weg",
-          "promptDe": "„Wir stehen an der Brücke, gegenüber vom Kiosk.“ – Wo ist der Kiosk?",
-          "promptEn": "Where is the kiosk?",
+          "promptDe": "„Wir sind am Ufer hinter dem Hügel, zehn Minuten von der Brücke.“ – Wo ist Tomasz?",
+          "promptEn": "Where is Tomasz?",
           "options": [
-            "auf der anderen Seite",
-            "unter der Brücke",
-            "hinter Tomasz"
+            "am Fluss, nicht direkt an der Brücke",
+            "auf der Brücke",
+            "auf dem Hügel"
           ],
-          "answer": "auf der anderen Seite",
+          "answer": "am Fluss, nicht direkt an der Brücke",
           "accepted": [
-            "auf der anderen Seite"
+            "am Fluss, nicht direkt an der Brücke"
           ],
           "explanation": {
-            "de": "gegenüber vom Kiosk: Der Kiosk ist auf der anderen Seite.",
-            "en": "'gegenüber vom Kiosk': the kiosk is across from them."
+            "de": "am Ufer = am Fluss. Die Brücke ist zehn Minuten weit weg.",
+            "en": "'am Ufer' is by the river; the bridge is ten minutes away."
           },
           "origin": "agent"
         },
@@ -1910,7 +1913,7 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.lokale-praep-weg",
-          "promptDe": "„Mein Freund geht zur Tankstelle.“ – Welche Frage passt?",
+          "promptDe": "„Mein Freund geht zurück zur Brücke.“ – Welche Frage passt?",
           "promptEn": "Which question fits?",
           "options": [
             "Wohin?",
@@ -1922,8 +1925,8 @@
             "Wohin?"
           ],
           "explanation": {
-            "de": "zur Tankstelle ist eine Richtung. Die Frage ist Wohin?",
-            "en": "'zur Tankstelle' is a direction: Wohin?"
+            "de": "zur Brücke ist eine Richtung. Die Frage ist Wohin?",
+            "en": "'zur Brücke' is a direction: Wohin?"
           },
           "origin": "agent"
         },
@@ -1954,7 +1957,7 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.lokale-praep-weg",
-          "promptDe": "„Er soll an der Straße warten.“ – Wo, woher oder wohin?",
+          "promptDe": "„Er soll an der Brücke warten.“ – Wo, woher oder wohin?",
           "promptEn": "Place, origin or direction?",
           "options": [
             "wo",
@@ -1966,8 +1969,8 @@
             "wo"
           ],
           "explanation": {
-            "de": "an der Straße + warten: ein Ort. Die Frage ist Wo?",
-            "en": "'an der Straße' + warten is a place: Wo?"
+            "de": "an der Brücke + warten: ein Ort. Die Frage ist Wo?",
+            "en": "'an der Brücke' + warten is a place: Wo?"
           },
           "origin": "agent"
         }
@@ -2019,15 +2022,15 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.krankenwagen",
-            "promptDe": "Tomasz ruft die 112 an. Bald kommt der ___.",
+            "promptDe": "Tomasz ruft die 112 an. Bald kommt der ___ und bringt Lina ins Krankenhaus.",
             "promptEn": "The vehicle that takes injured people to hospital.",
             "answer": "Krankenwagen",
             "accepted": [
               "Krankenwagen"
             ],
             "explanation": {
-              "de": "Nach dem Notruf kommt der Krankenwagen.",
-              "en": "After the emergency call the ambulance comes."
+              "de": "Der Krankenwagen bringt Verletzte ins Krankenhaus.",
+              "en": "The ambulance takes injured people to hospital."
             },
             "origin": "agent"
           },
@@ -2085,16 +2088,16 @@
             "tiles": [
               "wir",
               "sind",
-              "gegenüber vom Kiosk"
+              "gegenüber vom Bahnhof"
             ],
-            "answer": "Wir sind gegenüber vom Kiosk.",
+            "answer": "Wir sind gegenüber vom Bahnhof.",
             "accepted": [
-              "Wir sind gegenüber vom Kiosk.",
-              "Gegenüber vom Kiosk sind wir."
+              "Wir sind gegenüber vom Bahnhof.",
+              "Gegenüber vom Bahnhof sind wir."
             ],
             "explanation": {
-              "de": "sind auf Position 2. gegenüber vom Kiosk bleibt zusammen.",
-              "en": "sind is second; 'gegenüber vom Kiosk' stays together."
+              "de": "sind auf Position 2. gegenüber vom Bahnhof bleibt zusammen.",
+              "en": "sind is second; 'gegenüber vom Bahnhof' stays together."
             },
             "origin": "agent"
           },
@@ -2341,8 +2344,8 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "g.lokale-praep-weg",
-          "promptDe": "Emre wartet ___ Tankstelle auf den Krankenwagen.",
-          "promptEn": "Wo? an + die Tankstelle.",
+          "promptDe": "Emre wartet ___ Brücke auf den Krankenwagen.",
+          "promptEn": "Wo? an + die Brücke.",
           "answer": "an der",
           "accepted": [
             "an der"
@@ -2357,8 +2360,8 @@
             "case-pp"
           ],
           "explanation": {
-            "de": "Wo? an + Dativ: an der Tankstelle.",
-            "en": "Wo? an + dative: an der Tankstelle."
+            "de": "Wo? an + Dativ: an der Brücke.",
+            "en": "Wo? an + dative: an der Brücke."
           },
           "origin": "agent"
         }
@@ -2383,7 +2386,7 @@
         "register": "Sie"
       },
       "aussprache": {
-        "focus": "st und sp: am Wortanfang wie scht (Straße, Stein), im Wort wie st (Fenster)",
+        "focus": "st und sp: am Wort- oder Silbenanfang wie scht, schp (Stein, aufstehen, sprechen), sonst wie st (Fenster)",
         "perception": [
           {
             "id": "a2.2-u04-ls3-x01",
@@ -2424,8 +2427,8 @@
             ],
             "perceptionOnly": true,
             "explanation": {
-              "de": "Im Wort spricht man st wie st: gestern.",
-              "en": "Inside a word st sounds like st."
+              "de": "In gestern beginnt st keine Silbe: ges-tern. Man spricht st.",
+              "en": "In ges-tern st does not start a syllable, so it sounds like st."
             },
             "origin": "agent"
           },
@@ -2434,7 +2437,7 @@
             "type": "listen_select",
             "role": "perception",
             "topic": "aussprache",
-            "promptDe": "Hören Sie „Stau“: st wie in Straße oder wie in Fenster?",
+            "promptDe": "Hören Sie „aufstehen“: st wie in Straße oder wie in Fenster?",
             "promptEn": "How is st pronounced here?",
             "options": [
               "wie in Fenster",
@@ -2446,36 +2449,36 @@
             ],
             "perceptionOnly": true,
             "explanation": {
-              "de": "Am Wortanfang: scht – Stau.",
-              "en": "Word-initial: scht – Stau."
+              "de": "stehen beginnt eine Silbe: auf-stehen. Am Silbenanfang spricht man st wie scht.",
+              "en": "'stehen' starts a syllable in auf-stehen, so st sounds like scht."
             },
             "origin": "agent"
           },
           {
-            "id": "a2.2-u04-ls3-x04",
+            "id": "a2.2-u04-ls3-x05",
             "type": "listen_select",
             "role": "perception",
             "topic": "aussprache",
-            "promptDe": "Hören Sie „Kosten“: st wie in Straße oder wie in Fenster?",
-            "promptEn": "How is st pronounced here?",
+            "promptDe": "Hören Sie „sprechen“: sp wie in Sport oder wie in Espresso?",
+            "promptEn": "How is sp pronounced here?",
             "options": [
-              "wie in Straße",
-              "wie in Fenster"
+              "wie in Sport",
+              "wie in Espresso"
             ],
-            "answer": "wie in Fenster",
+            "answer": "wie in Sport",
             "accepted": [
-              "wie in Fenster"
+              "wie in Sport"
             ],
             "perceptionOnly": true,
             "explanation": {
-              "de": "Im Wort: st – Kosten.",
-              "en": "Inside the word: st – Kosten."
+              "de": "Am Wortanfang spricht man sp wie schp: sprechen, Sport.",
+              "en": "At the start of a word sp sounds like schp."
             },
             "origin": "agent"
           }
         ],
         "readAloud": {
-          "lineDe": "Wir stehen an der Brücke, gegenüber vom Kiosk."
+          "lineDe": "Wir stehen am Ufer, und meine Freundin kann nicht aufstehen."
         }
       },
       "endLine": "Sie können jetzt einen Unfall am Telefon melden."
@@ -2491,7 +2494,7 @@
           "lines": [
             {
               "id": "a2.2-u04-ls4-t1-l01",
-              "speaker": "cast.ensemble-a2-4",
+              "speaker": "radio",
               "de": "Und jetzt Informationen für Autofahrer in Leipzig: Auf der Brücke am Bahnhof hat es heute Morgen einen Unfall gegeben. Die Brücke ist bis zum Nachmittag gesperrt. Fahren Sie bitte über die Brücke am Zoo. Das ist ein kleiner Umweg, aber dort gibt es keinen Stau. Für Fußgänger ist die Brücke am Bahnhof nicht gesperrt.",
               "en": "And now information for drivers in Leipzig: there was an accident on the bridge by the station this morning. The bridge is closed until the afternoon. Please drive over the bridge by the zoo. It is a small detour, but there are no queues there. The bridge by the station is not closed to pedestrians."
             }
@@ -2595,14 +2598,14 @@
           "id": "a2.2-u04-ls4-t6",
           "kind": "ad",
           "title": "Mit dem Fahrrad am Fluss",
-          "text": "Mit dem Fahrrad am Fluss\nJeden Samstag um 10 Uhr: Wir fahren mit dem Fahrrad immer am Ufer und machen am Mittag ein Picknick auf einer Wiese. Sie haben kein Fahrrad? Dann können Sie bei uns eins mieten.",
+          "text": "Mit dem Fahrrad am Fluss\nJeden Samstag um 10 Uhr: Wir fahren mit dem Fahrrad auf dem Weg am Fluss und machen am Mittag ein Picknick auf einer Wiese. Sie haben kein Fahrrad? Dann können Sie bei uns eins mieten.",
           "glosses": []
         },
         {
           "id": "a2.2-u04-ls4-t7",
           "kind": "ad",
           "title": "Leipzig vom Wasser aus",
-          "text": "Leipzig vom Wasser aus\nSie möchten die Stadt sehen, aber nicht laufen? Dann kommen Sie auf unser Boot! Die Tour ist eine Stunde lang und fährt unter vielen Brücken durch. Jeden Sonntag um 11 und um 15 Uhr.",
+          "text": "Leipzig vom Wasser aus\nSie möchten die Stadt sehen, aber nicht laufen? Dann kommen Sie auf unser Boot! Die Tour ist eine Stunde lang. Das Boot fährt unter vielen Brücken hindurch. Jeden Sonntag um 11 und um 15 Uhr.",
           "glosses": []
         },
         {
@@ -2616,7 +2619,7 @@
           "id": "a2.2-u04-ls4-t9",
           "kind": "ad",
           "title": "Erste Hilfe für Eltern",
-          "text": "Erste Hilfe für Eltern\nIhr Baby hat Fieber oder hat sich verletzt – was jetzt? Unser Kurs für Mütter und Väter mit kleinen Kindern: jeden Mittwoch von 9 bis 12 Uhr. Babys können gern mitkommen.",
+          "text": "Erste Hilfe für Eltern\nIhr Baby hat Fieber oder hat sich verletzt – was jetzt? Unser Kurs für Mütter und Väter mit Babys und Kleinkindern: jeden Mittwoch von 9 bis 12 Uhr. Babys können gern mitkommen.",
           "glosses": []
         },
         {
@@ -2914,26 +2917,29 @@
         "mode": "plan-together",
         "profile": "ga2-sp3",
         "prepMinutes": 0,
-        "instructionsDe": "Planen Sie zusammen einen Ausflug. Finden Sie zuerst einen freien Tag.",
-        "situationDe": "Sprechen Teil 3: Lina geht es wieder gut. Sie und Amal wollen für die Gruppe aus dem Sprachcafé am Wochenende einen neuen Ausflug planen. Jede Person hat einen eigenen Kalender. Klären Sie danach: Wohin? Wie fahren Sie? Was nehmen Sie mit? Wer macht was?",
+        "instructionsDe": "Planen Sie zusammen einen Ausflug. Finden Sie zuerst eine freie Zeit am Sonntag.",
+        "situationDe": "Sprechen Teil 3: Lina geht es schon besser, aber sie kann noch nicht weit laufen. Sie und Amal wollen am Sonntag mit der Gruppe aus dem Sprachcafé einen Ausflug machen. Jede Person hat ihren Kalender für Sonntag. Finden Sie eine Zeit. Klären Sie danach: Wohin? Wie fahren Sie? Was nehmen Sie mit? Wer macht was?",
         "stimulus": {
           "kind": "calendar",
-          "de": "Ihr Kalender",
+          "de": "Ihr Kalender: Sonntag",
           "items": [
-            "Freitag, 17 Uhr: Deutschkurs",
-            "Samstag, 9–14 Uhr: arbeiten",
-            "Samstag, 19 Uhr: Geburtstag bei einer Freundin",
-            "Sonntag: frei"
+            "8.00–9.30 Uhr: im Park joggen",
+            "10.00–11.00 Uhr: mit den Eltern telefonieren",
+            "11.00–13.00 Uhr: einem Nachbarn beim Umzug helfen",
+            "13.00–14.00 Uhr: Mittagessen mit einer Freundin",
+            "17.30–19.00 Uhr: Hausaufgaben für den Deutschkurs",
+            "19.00–20.00 Uhr: die Wohnung aufräumen"
           ]
         },
         "partnerData": {
           "kind": "calendar",
-          "de": "Kalender von Amal (nur für die KI)",
+          "de": "Kalender von Amal: Sonntag (nur für die KI)",
           "items": [
-            "Freitag, 16–20 Uhr: Sprachcafé",
-            "Samstag, 10–13 Uhr: Rania zum Schwimmkurs bringen",
-            "Samstag, ab 14 Uhr: Familie besuchen",
-            "Sonntag: frei, ab 18 Uhr zu Hause"
+            "8.00–10.00 Uhr: Frühstück mit der Familie",
+            "10.00–12.00 Uhr: Rania zum Schwimmkurs bringen",
+            "12.00–14.00 Uhr: Mittagessen bei den Nachbarn",
+            "17.00–18.30 Uhr: Hausaufgaben mit Rania",
+            "18.30–20.00 Uhr: Abendessen mit der Familie"
           ]
         },
         "seconds": [
@@ -2949,17 +2955,17 @@
         ],
         "aiRole": {
           "name": "Amal",
-          "personaDe": "Freundin aus dem Sprachcafé; macht eigene Vorschläge, widerspricht einmal freundlich (zum Beispiel: Lina kann noch nicht weit laufen) und einigt sich dann; lässt die Lernenden das Gespräch führen",
+          "personaDe": "Freundin aus dem Sprachcafé; hat am Sonntag nur von 14 bis 17 Uhr Zeit und sagt das erst, wenn die Lernenden nach Uhrzeiten fragen; lehnt eine Uhrzeit und einen Vorschlag freundlich ab (Lina kann noch nicht weit laufen), macht einen Gegenvorschlag und einigt sich dann; lässt die Lernenden das Gespräch führen",
           "register": "du",
           "support": "learner-leads"
         },
-        "openingLine": "Hallo! Schön, dass es Lina wieder gut geht. Wollen wir für die Gruppe einen Ausflug planen? Wann hast du am Wochenende Zeit?",
+        "openingLine": "Hallo! Lina geht es schon besser. Wollen wir am Sonntag mit der Gruppe einen Ausflug machen? Wann hast du Zeit?",
         "hintWords": [
-          "Wann hast du Zeit?",
-          "Am … kann ich nicht.",
+          "Wann hast du am Sonntag Zeit?",
+          "Um … Uhr kann ich leider nicht.",
+          "Geht es um … Uhr?",
           "Wie wäre es mit …?",
-          "Wohin fahren wir?",
-          "Wie fahren wir?",
+          "Wohin fahren wir? Wie fahren wir?",
           "Was nehmen wir mit?",
           "Wer macht was?",
           "Gut, so machen wir es."
@@ -2967,35 +2973,35 @@
         "modelTurns": [
           {
             "speaker": "learner",
-            "de": "Wann hast du am Wochenende Zeit? Am Samstag muss ich bis 14 Uhr arbeiten."
+            "de": "Am Vormittag kann ich leider nicht. Ab 14 Uhr habe ich Zeit. Und du?"
           },
           {
             "speaker": "partner",
-            "de": "Am Samstag geht es bei mir auch nicht. Wie ist es mit Sonntag?"
+            "de": "Ab 14 Uhr passt es bei mir. Aber um 17 Uhr muss ich wieder zu Hause sein."
           },
           {
             "speaker": "learner",
-            "de": "Am Sonntag habe ich frei. Wollen wir ein Picknick am Fluss machen?"
+            "de": "Gut, dann von 14 bis 17 Uhr. Wollen wir eine Wanderung am Fluss machen?"
           },
           {
             "speaker": "partner",
-            "de": "Lina kann aber noch nicht gut laufen. Der Weg zum Fluss ist lang."
+            "de": "Nein, das geht leider nicht. Lina kann noch nicht weit laufen. Wollen wir lieber die Tour mit dem Boot um 15 Uhr machen?"
           },
           {
             "speaker": "learner",
-            "de": "Dann fahren wir mit der Straßenbahn bis zum Park. Von dort ist es nicht weit."
+            "de": "Super! Dann muss Lina nicht laufen. Fahren wir mit der Straßenbahn zum Boot?"
           },
           {
             "speaker": "partner",
-            "de": "Gut, so machen wir es. Wer bringt was mit?"
+            "de": "Ja, das ist gut. Was nehmen wir mit?"
           },
           {
             "speaker": "learner",
-            "de": "Ich bringe Brot und Obst mit. Kannst du einen Salat machen?"
+            "de": "Ich bringe einen Kuchen mit. Kannst du Tomasz anrufen? Er kann Lina abholen."
           },
           {
             "speaker": "partner",
-            "de": "Ja, gern. Und ich frage Tomasz nach den Getränken."
+            "de": "Gut, so machen wir es. Ich rufe Tomasz heute Abend an."
           }
         ]
       }
@@ -3012,8 +3018,8 @@
         "register": "informell",
         "address": "du",
         "title": "Den Weg zum Treffpunkt beschreiben",
-        "situationDe": "Sie grillen nächsten Samstag mit Freunden am Fluss. Treffpunkt: 12 Uhr an der Brücke. Ihre Freundin Amal kommt mit der Straßenbahn und kennt den Weg von der Haltestelle nicht.",
-        "taskDe": "Schreiben Sie Amal eine SMS zu allen drei Punkten (20 bis 30 Wörter).",
+        "situationDe": "Sie grillen nächsten Samstag mit Freunden am Fluss. Treffpunkt: 12 Uhr an der Brücke. Arjun, ein Freund von Priya, kommt zum ersten Mal mit. Er fährt mit der Straßenbahn und kennt den Weg nicht. Der Weg: Haltestelle Rathaus – Tankstelle – Kiosk – Park – Brücke.",
+        "taskDe": "Schreiben Sie Arjun eine SMS zu allen drei Punkten (20 bis 30 Wörter).",
         "leitpunkte": [
           {
             "id": "lp1",
@@ -3044,7 +3050,7 @@
           },
           {
             "id": "lp3",
-            "de": "Schreiben Sie, was Amal mitbringen soll.",
+            "de": "Schreiben Sie, was Arjun mitbringen soll.",
             "cues": [
               "bring",
               "bringst",
@@ -3066,12 +3072,12 @@
           "Anrede",
           "Punkt 1: der Weg zum Treffpunkt",
           "Punkt 2: die Uhrzeit",
-          "Punkt 3: was Amal mitbringt",
+          "Punkt 3: was Arjun mitbringt",
           "Gruß",
           "du-Form",
           "20 bis 30 Wörter"
         ],
-        "modelText": "Hallo Amal,\nvon der Haltestelle gehst du an der Tankstelle vorbei bis zur Brücke. Da ist der Treffpunkt. Es bleibt bei 12 Uhr. Bringst du Brot mit?\nLiebe Grüße"
+        "modelText": "Hallo Arjun,\ndu gehst an der Tankstelle vorbei, am Kiosk links und durch den Park bis zur Brücke. Es bleibt bei 12 Uhr. Bringst du Brot mit?\nLiebe Grüße"
       }
     },
     {
@@ -3097,8 +3103,8 @@
       {
         "id": "a2.2-u04-ls7-l03",
         "speaker": "cast.tomasz",
-        "de": "Wir sind an der Brücke, gegenüber vom Kiosk.",
-        "en": "We're at the bridge, opposite the kiosk."
+        "de": "Wir sind am Ufer hinter dem Hügel, zehn Minuten von der Brücke.",
+        "en": "We're on the riverbank behind the hill, ten minutes from the bridge."
       }
     ],
     "items": [
@@ -3129,14 +3135,16 @@
         "answer": "vom",
         "accepted": [
           "vom",
-          "von dem"
+          "von dem",
+          "dem"
         ],
         "acceptedWhy": {
-          "von dem": "grammatisch richtig, man sagt aber fast immer vom"
+          "von dem": "grammatisch richtig, man sagt aber fast immer vom",
+          "dem": "auch richtig: gegenüber + Dativ ohne von (gegenüber dem …)"
         },
         "explanation": {
-          "de": "gegenüber von + Dativ: vom Bahnhof.",
-          "en": "'gegenüber von' + dative: vom Bahnhof."
+          "de": "gegenüber (von) + Dativ: vom Bahnhof oder gegenüber dem Bahnhof.",
+          "en": "'gegenüber (von)' + dative: vom Bahnhof, or gegenüber dem Bahnhof."
         },
         "origin": "agent"
       },
@@ -3152,8 +3160,8 @@
           "wird"
         ],
         "explanation": {
-          "de": "es wird – ohne d.",
-          "en": "es wird – no d."
+          "de": "es wird – mit d am Ende, aber ohne t.",
+          "en": "es wird – with d at the end, but no t."
         },
         "origin": "agent"
       },
@@ -3229,13 +3237,13 @@
         "promptDe": "Hören Sie und schreiben Sie den Satz.",
         "promptEn": "Listen and write the sentence.",
         "audioLineRef": "a2.2-u04-ls7-l03",
-        "answer": "Wir sind an der Brücke, gegenüber vom Kiosk.",
+        "answer": "Wir sind am Ufer hinter dem Hügel, zehn Minuten von der Brücke.",
         "accepted": [
-          "Wir sind an der Brücke, gegenüber vom Kiosk."
+          "Wir sind am Ufer hinter dem Hügel, zehn Minuten von der Brücke."
         ],
         "explanation": {
-          "de": "an der Brücke und gegenüber vom Kiosk: beide mit Dativ.",
-          "en": "Both phrases take the dative."
+          "de": "am Ufer, hinter dem Hügel, von der Brücke: alle mit Dativ.",
+          "en": "All three phrases take the dative."
         },
         "origin": "agent"
       },
@@ -3251,10 +3259,10 @@
           "Mir wird schlecht."
         ],
         "intentionalError": true,
-        "errorTag": "spelling-meaning",
+        "errorTag": "case-np",
         "explanation": {
-          "de": "Mir wird schlecht: Das Verb steht in der es-Form.",
-          "en": "'Mir wird schlecht' – the verb takes the es form."
+          "de": "mir ist Dativ, nicht das Subjekt. Das Verb steht in der es-Form: Mir wird schlecht.",
+          "en": "'mir' is dative, not the subject; the verb takes the es form: Mir wird schlecht."
         },
         "origin": "agent"
       }
@@ -3295,7 +3303,7 @@
         "promptEn": "Which sentence reports the accident best?",
         "options": [
           "Mein Nachbar ist ausgerutscht und hat sich am Arm verletzt.",
-          "Mein Nachbar ist heute nicht so gut.",
+          "Meinem Nachbarn geht es heute nicht so gut.",
           "Bitte kommen Sie schnell, danke."
         ],
         "answer": "Mein Nachbar ist ausgerutscht und hat sich am Arm verletzt.",
@@ -3330,12 +3338,65 @@
         },
         "origin": "agent",
         "audioLineRef": "a2.2-u04-ls7-l01"
+      },
+      {
+        "id": "a2.2-u04-q04",
+        "type": "sentence_building",
+        "role": "proof",
+        "topic": "lx.unfall",
+        "promptDe": "Sie rufen die 112 an. Sagen Sie, was passiert ist.",
+        "promptEn": "Report the accident on the emergency call.",
+        "tiles": [
+          "mein Nachbar",
+          "ist",
+          "auf der Straße",
+          "ausgerutscht",
+          "und",
+          "kann",
+          "nicht aufstehen"
+        ],
+        "answer": "Mein Nachbar ist auf der Straße ausgerutscht und kann nicht aufstehen.",
+        "accepted": [
+          "Mein Nachbar ist auf der Straße ausgerutscht und kann nicht aufstehen.",
+          "Auf der Straße ist mein Nachbar ausgerutscht und kann nicht aufstehen."
+        ],
+        "explanation": {
+          "de": "Was ist passiert? Perfekt mit sein: ist … ausgerutscht. Dann: kann nicht aufstehen.",
+          "en": "What happened: Perfekt with sein, then what he cannot do."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a2.2-u04-q05",
+        "type": "sentence_building",
+        "role": "proof",
+        "topic": "g.lokale-praep-weg",
+        "promptDe": "Eine Frau fragt Sie nach dem Weg zur Brücke. Erklären Sie ihn.",
+        "promptEn": "Explain the way to the bridge.",
+        "tiles": [
+          "gehen Sie",
+          "an der Tankstelle",
+          "vorbei",
+          "und",
+          "biegen Sie",
+          "am Kiosk",
+          "links ab"
+        ],
+        "answer": "Gehen Sie an der Tankstelle vorbei und biegen Sie am Kiosk links ab.",
+        "accepted": [
+          "Gehen Sie an der Tankstelle vorbei und biegen Sie am Kiosk links ab."
+        ],
+        "explanation": {
+          "de": "Imperativ mit Sie: das Verb vorne. vorbei und ab stehen am Ende.",
+          "en": "Sie-imperative: verb first; vorbei and ab go to the end."
+        },
+        "origin": "agent"
       }
     ],
     "proofs": [
       {
         "canDo": "cd.a2.weg-erklaeren",
-        "item": "a2.2-u04-q01"
+        "item": "a2.2-u04-q05"
       },
       {
         "canDo": "cd.a2.wegbeschreibung-schreiben",
@@ -3343,7 +3404,7 @@
       },
       {
         "canDo": "cd.a2.unfall-melden",
-        "item": "a2.2-u04-q02"
+        "item": "a2.2-u04-q04"
       },
       {
         "canDo": "cd.a2.notruf-anweisungen-folgen",
@@ -3369,8 +3430,8 @@
     },
     {
       "id": "a2.2-u04-rm03",
-      "de": "Wir sind an der Brücke, gegenüber vom Kiosk.",
-      "en": "We're at the bridge, opposite the kiosk.",
+      "de": "Wir sind am Ufer hinter dem Hügel, zehn Minuten von der Brücke.",
+      "en": "We're on the riverbank behind the hill, ten minutes from the bridge.",
       "function": "beim Notruf den Ort nennen"
     },
     {
@@ -3381,16 +3442,23 @@
     },
     {
       "id": "a2.2-u04-rm05",
-      "de": "Wann hast du am Wochenende Zeit?",
-      "en": "When are you free at the weekend?",
+      "de": "Wann hast du am Sonntag Zeit?",
+      "en": "When are you free on Sunday?",
       "function": "einen Termin finden",
       "forTemplate": "ga2.sp3"
     },
     {
       "id": "a2.2-u04-rm06",
-      "de": "Wollen wir am Sonntag fahren?",
-      "en": "Shall we go on Sunday?",
-      "function": "etwas vorschlagen",
+      "de": "Wollen wir lieber die Tour mit dem Boot um 15 Uhr machen?",
+      "en": "Shall we do the boat tour at 3 pm instead?",
+      "function": "einen Gegenvorschlag machen",
+      "forTemplate": "ga2.sp3"
+    },
+    {
+      "id": "a2.2-u04-rm08",
+      "de": "Um 13 Uhr kann ich leider nicht. Geht es um 14 Uhr?",
+      "en": "I'm afraid I can't at 1 pm. Does 2 pm work?",
+      "function": "ablehnen und eine andere Zeit vorschlagen",
       "forTemplate": "ga2.sp3"
     },
     {
@@ -3403,7 +3471,7 @@
   ],
   "story": {
     "beat": "Der Ausflug endet in der Notaufnahme – aber die Gruppe hält zusammen: Emre zeigt den Weg, Tomasz ruft den Notruf, Amal hilft Lina.",
-    "cliffhanger": "Am Abend schreibt Lina noch einmal in die Gruppe: „Mein Handy ist bei dem Unfall kaputtgegangen. Ich brauche ein neues – und einen günstigen Vertrag!“",
+    "cliffhanger": "Am Abend schreibt Lina noch einmal in die Gruppe: „Das Display von meinem Handy ist bei dem Unfall kaputtgegangen. Ich kann kaum etwas lesen. Ich brauche ein neues Handy – und einen günstigen Vertrag!“",
     "castIn": [
       "cast.lina"
     ]
@@ -3414,14 +3482,41 @@
       "kind": "beruf",
       "title": "Ein Unfall auf dem Weg zur Arbeit: kurz berichten",
       "hf": "8",
-      "bodyDe": "Sie hatten auf dem Weg zur Arbeit einen Unfall? Sagen Sie in Ihrer Firma schnell Bescheid. Erzählen Sie kurz und in dieser Reihenfolge: Wann und wo ist es passiert? Was ist passiert? Wie geht es Ihnen jetzt? Waren Sie beim Arzt? Ein Beispiel: „Heute Morgen bin ich an der Haltestelle ausgerutscht. Ich habe mich am Fuß verletzt und war in der Notaufnahme.“ Fragen Sie dann: „Was muss ich jetzt machen?“ Die Regeln sind nicht in jeder Firma gleich.",
-      "bodyEn": "Had an accident on the way to work? Tell your employer quickly. Report briefly and in this order: when and where did it happen, what happened, how are you now, did you see a doctor? Example: \"This morning I slipped at the tram stop. I hurt my foot and went to A&E.\" Then ask: \"What do I need to do now?\" The procedure differs from employer to employer.",
-      "factRefs": [],
+      "bodyDe": "Sie hatten auf dem Weg zur Arbeit einen Unfall? Sagen Sie in Ihrer Firma schnell Bescheid. Erzählen Sie kurz und in dieser Reihenfolge: Wann und wo ist es passiert? Was ist passiert? Wie geht es Ihnen jetzt? Waren Sie beim Arzt? Ein Beispiel: „Heute Morgen bin ich an der Haltestelle ausgerutscht. Ich habe mich am Fuß verletzt und war in der Notaufnahme.“ Sagen Sie auch beim Arzt: „Es war ein Unfall auf dem Weg zur Arbeit.“ Dann ist die gesetzliche Unfallversicherung zuständig, nicht Ihre Krankenkasse. Oft behandelt Sie dann ein Durchgangsarzt (D-Arzt).",
+      "bodyEn": "Had an accident on the way to work? Tell your employer quickly. Report briefly and in this order: when and where did it happen, what happened, how are you now, did you see a doctor? Example: \"This morning I slipped at the tram stop. I hurt my foot and went to A&E.\" Also tell the doctor: \"It was an accident on my way to work.\" The statutory accident insurance then covers it, not your health insurer. Often a specially approved accident doctor (Durchgangsarzt) treats you.",
+      "factRefs": [
+        "a2.2-u04-f01"
+      ],
       "minutes": 10,
       "optional": true
     }
   ],
-  "facts": [],
+  "facts": [
+    {
+      "id": "a2.2-u04-f01",
+      "claimDe": "Ein Unfall auf dem unmittelbaren Weg zur Arbeit und zurück (Wegeunfall) ist über die gesetzliche Unfallversicherung (Berufsgenossenschaft oder Unfallkasse) versichert. Zum Durchgangsarzt muss man, wenn die Verletzung über den Unfalltag hinaus arbeitsunfähig macht oder die Behandlung voraussichtlich länger als eine Woche dauert.",
+      "claimEn": "An accident on the direct way to and from work (commuting accident) is covered by the statutory accident insurance (Berufsgenossenschaft or Unfallkasse). A Durchgangsarzt must be seen when the injury causes incapacity for work beyond the day of the accident or treatment is expected to last more than a week.",
+      "sources": [
+        "https://www.dguv.de/de/versicherung/wegeunfaelle/index.jsp",
+        "https://www.dguv.de/de/ihr_partner/arbeitnehmer/arbeitsunfall/index.jsp",
+        "https://www.gesetze-im-internet.de/sgb_7/__8.html"
+      ],
+      "factsCheckedOn": "2026-09-27",
+      "currentAsOf": "2026-09-27",
+      "exceptions": [
+        {
+          "de": "Auch manche Umwege sind versichert, zum Beispiel wenn Sie Ihr Kind auf dem Weg zur Arbeit in die Kita bringen.",
+          "en": "Some detours are covered too, for example taking your child to day care on the way to work."
+        },
+        {
+          "de": "Bei nur leichten Verletzungen ohne Arbeitsunfähigkeit nach dem Unfalltag müssen Sie nicht zum Durchgangsarzt.",
+          "en": "Minor injuries without incapacity for work beyond the day of the accident do not require a Durchgangsarzt."
+        }
+      ],
+      "verification": "verified",
+      "notes": "Read on 2026-09-27: DGUV „Wegeunfälle\" (unmittelbarer Weg versichert, Umwege z. B. für Kinderbetreuung), DGUV „Arbeitsunfall: Was nun?\" (D-Arzt-Vorstellung bei Arbeitsunfähigkeit über den Unfalltag hinaus oder Behandlung > 1 Woche; Unfallanzeige durch das Unternehmen ab > 3 Kalendertagen), § 8 Abs. 2 Nr. 1 SGB VII at gesetze-im-internet.de."
+    }
+  ],
   "extras": {
     "x.leitstelle": {
       "role": "Mitarbeiterin der Rettungsleitstelle am Notruf",
