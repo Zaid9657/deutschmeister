@@ -13,7 +13,7 @@
     "canDo": "Sie können nach Preisen und Mengen fragen, im Geschäft einkaufen und kurze Durchsagen im Supermarkt verstehen."
   },
   "spec": {
-    "situation": "Priya und Arjun kaufen für die Woche ein: Sie schreiben einen Einkaufszettel, fragen auf dem Wochenmarkt nach Preisen und Mengen, vergleichen Angebote im Prospekt und hören eine Durchsage im Supermarkt.",
+    "situation": "Priya und Arjun kaufen für die Woche ein: Sie schreiben einen Einkaufszettel, fragen auf dem Wochenmarkt nach Preisen und Mengen, lesen Angebote im Prospekt und hören eine Durchsage im Supermarkt.",
     "handlungsfeld": [
       "7"
     ],
@@ -136,12 +136,16 @@
       "M A1 L4–5 (Preise, Gegenstände)",
       "Linie 1 A1 K3–4 (Grammatik: Artikel; nach memo 06)"
     ],
-    "deviation": null,
+    "deviation": {
+      "reason": "Lesen Teil 2 (Stoffplan a1-1 §4: Prospekt, zwei Anzeigen vergleichen) ist nach u05 verschoben: u04 liest einen Prospekt ohne a/b-Vergleich; sd1.l2 ist Prüfungsfokus in u05 und u06 und wird laut Stoffplan auch in u08 und u12 geübt (COV-1 nicht gefährdet). LS5 beginnt mit einer sd1.sp2-Runde mit zwei Themen, die cd.a1.produkt-infos trägt (r1-F07); sie steht als Chip, aber nicht im Prüfungsfokus, weil COV-3 höchstens vier Teile erlaubt."
+    },
     "cast": [
       "cast.priya",
       "cast.arjun",
       "cast.ensemble-a1-1",
-      "cast.ensemble-a1-3"
+      "cast.ensemble-a1-3",
+      "cast.ensemble-a1-2",
+      "cast.ensemble-a1-4"
     ],
     "fokusPlan": [],
     "source": {
@@ -159,11 +163,12 @@
     "pruefungsfokusChips": [
       "sd1.h1",
       "sd1.h2",
+      "sd1.sp2",
       "sd1.sp3",
       "sd1.s2"
     ],
     "folge": {
-      "title": "Samstagmorgen in der WG",
+      "title": "Fünfzig Euro für alles",
       "lines": [
         {
           "id": "a1.1-u04-start-l01",
@@ -501,20 +506,20 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.artikel-genus-plural",
-          "promptDe": "Priya sagt: „Die Eier sind billig.“ Wie viele Eier sind das?",
-          "promptEn": "“Eier” + “sind”: one egg or more?",
+          "promptDe": "Welcher Satz sagt: mehr als ein Ei?",
+          "promptEn": "Which sentence means: more than one egg?",
           "options": [
-            "ein Ei",
-            "zwei oder mehr Eier",
-            "kein Ei"
+            "Das Ei ist billig.",
+            "Die Eier sind billig.",
+            "Ein Ei ist billig."
           ],
-          "answer": "zwei oder mehr Eier",
+          "answer": "Die Eier sind billig.",
           "accepted": [
-            "zwei oder mehr Eier"
+            "Die Eier sind billig."
           ],
           "explanation": {
-            "de": "Eier und sind: Das ist Plural, also zwei oder mehr Eier. Singular: das Ei.",
-            "en": "“Eier” with “sind” is plural – two or more eggs. Singular: das Ei."
+            "de": "Eier + sind: Plural, also mehr als ein Ei. Das Ei und ein Ei sind Singular.",
+            "en": "“Eier” with “sind” is plural – more than one egg. “das Ei” and “ein Ei” are singular."
           },
           "origin": "agent"
         },
@@ -803,7 +808,7 @@
             "count": 2,
             "source": [
               "a1.1-u04-ls1-l02",
-              "a1.1-u04-ls1-l09"
+              "a1.1-u04-ls1-l06"
             ]
           },
           {
@@ -1045,8 +1050,8 @@
           {
             "id": "a1.1-u04-ls2-l06",
             "speaker": "cast.arjun",
-            "de": "Priya, wir brauchen zwei Kilo Kartoffeln. Und Zwiebeln brauchen wir auch. Die Zwiebeln sind billig.",
-            "en": "Priya, we need two kilos of potatoes. And we need onions too. The onions are cheap."
+            "de": "Priya, wir brauchen zwei Kilo Kartoffeln. Und Zwiebeln brauchen wir auch. Der Markt hier ist gut und billig!",
+            "en": "Priya, we need two kilos of potatoes. And we need onions too. The market here is good and cheap!"
           },
           {
             "id": "a1.1-u04-ls2-l07",
@@ -1087,6 +1092,12 @@
             "token": "einen Apfel",
             "gloss": {
               "en": "an apple – fixed phrase: Ich möchte einen Apfel (der Apfel → einen)"
+            }
+          },
+          {
+            "token": "Markt",
+            "gloss": {
+              "en": "market"
             }
           }
         ],
@@ -1766,8 +1777,8 @@
           {
             "id": "a1.1-u04-ls3-l10",
             "speaker": "cast.priya",
-            "de": "Nein, Zucker haben wir noch. Und wir haben noch Geld für die Woche! Das ist gut.",
-            "en": "No, we still have sugar. And we still have money for the week! That’s good."
+            "de": "Nein, Zucker haben wir noch. Und wir haben auch noch Geld! Das ist gut.",
+            "en": "No, we still have sugar. And we still have money left too! That’s good."
           },
           {
             "id": "a1.1-u04-ls3-l11",
@@ -2178,11 +2189,13 @@
               "Die Butter ist auch dort.",
               "Dort ist auch die Butter.",
               "Dort ist die Butter auch.",
+              "Die Butter ist dort auch.",
               "Auch die Butter ist dort.",
               "Auch dort ist die Butter."
             ],
             "acceptedWhy": {
-              "Dort ist die Butter auch.": "grammatisch: auch nach dem Subjekt, das Verb bleibt auf Position 2",
+              "Dort ist die Butter auch.": "umgangssprachlich: auch am Satzende, das Verb bleibt auf Position 2",
+              "Die Butter ist dort auch.": "umgangssprachlich: auch am Satzende, das Verb bleibt auf Position 2",
               "Auch die Butter ist dort.": "grammatisch: auch die Butter zusammen auf Position 1",
               "Auch dort ist die Butter.": "grammatisch: auch dort zusammen auf Position 1"
             },
@@ -2205,7 +2218,7 @@
             ],
             "intentionalError": true,
             "explanation": {
-              "de": "Nach einer Menge steht kein Artikel: ein Kilo Tomaten.",
+              "de": "Mengen stehen ohne Artikel: ein Kilo Tomaten.",
               "en": "After a quantity there is no article: ein Kilo Tomaten."
             },
             "origin": "agent"
@@ -2373,7 +2386,7 @@
           ],
           "difficulty": 3,
           "explanation": {
-            "de": "Nach einer Menge steht kein Artikel: 500 Gramm Käse.",
+            "de": "Mengen stehen ohne Artikel: 500 Gramm Käse.",
             "en": "After a quantity there is no article: 500 Gramm Käse."
           },
           "origin": "agent"
@@ -2433,7 +2446,7 @@
             },
             {
               "id": "a1.1-u04-ls4-t1-l02",
-              "speaker": "cast.priya",
+              "speaker": "cast.ensemble-a1-4",
               "de": "Ich möchte Brötchen. Was kostet ein Brötchen?",
               "en": "I’d like bread rolls. How much is one roll?"
             },
@@ -2446,16 +2459,29 @@
             },
             {
               "id": "a1.1-u04-ls4-t1-l04",
-              "speaker": "cast.priya",
-              "de": "Gut, dann zehn Brötchen, bitte. Und ein Brot.",
-              "en": "Fine, ten rolls then, please. And a loaf of bread."
+              "speaker": "cast.ensemble-a1-4",
+              "de": "Gut, dann zehn Brötchen, bitte.",
+              "en": "Fine, ten rolls then, please."
             },
             {
               "id": "a1.1-u04-ls4-t1-l05",
               "speaker": "cast.ensemble-a1-1",
-              "de": "Gern. Das Brot kostet 2 Euro. Das macht zusammen 5,50 Euro.",
-              "en": "Sure. The bread is 2 euros. That comes to 5.50 euros altogether.",
-              "say": "Gern. Das Brot kostet zwei Euro. Das macht zusammen fünf Euro fünfzig."
+              "de": "Möchten Sie auch ein Brot? Das Brot kostet heute nur 2 Euro.",
+              "en": "Would you like a loaf of bread too? The bread is only 2 euros today.",
+              "say": "Möchten Sie auch ein Brot? Das Brot kostet heute nur zwei Euro."
+            },
+            {
+              "id": "a1.1-u04-ls4-t1-l06",
+              "speaker": "cast.ensemble-a1-4",
+              "de": "Nein, danke. Nur die Brötchen.",
+              "en": "No, thank you. Just the rolls."
+            },
+            {
+              "id": "a1.1-u04-ls4-t1-l07",
+              "speaker": "cast.ensemble-a1-1",
+              "de": "Gern. Das macht 3,50 Euro.",
+              "en": "Sure. That’s 3.50 euros.",
+              "say": "Gern. Das macht drei Euro fünfzig."
             }
           ],
           "glosses": [
@@ -2480,7 +2506,7 @@
             },
             {
               "id": "a1.1-u04-ls4-t2-l02",
-              "speaker": "cast.arjun",
+              "speaker": "cast.ensemble-a1-2",
               "de": "Ich möchte Käse, bitte. Was kosten 100 Gramm?",
               "en": "I’d like some cheese, please. How much are 100 grams?",
               "say": "Ich möchte Käse, bitte. Was kosten hundert Gramm?"
@@ -2494,7 +2520,7 @@
             },
             {
               "id": "a1.1-u04-ls4-t2-l04",
-              "speaker": "cast.arjun",
+              "speaker": "cast.ensemble-a1-2",
               "de": "300 Gramm, bitte. Und 200 Gramm Wurst.",
               "en": "300 grams, please. And 200 grams of cold cuts.",
               "say": "Dreihundert Gramm, bitte. Und zweihundert Gramm Wurst."
@@ -2508,7 +2534,7 @@
             },
             {
               "id": "a1.1-u04-ls4-t2-l06",
-              "speaker": "cast.arjun",
+              "speaker": "cast.ensemble-a1-2",
               "de": "Hier, bitte. Danke und auf Wiedersehen!",
               "en": "Here you are. Thank you and goodbye!"
             }
@@ -2522,33 +2548,33 @@
           "lines": [
             {
               "id": "a1.1-u04-ls4-t3-l01",
-              "speaker": "cast.arjun",
-              "de": "Hallo Priya, ich bin jetzt im Supermarkt. Brauchen wir Eier?",
-              "en": "Hi Priya, I’m at the supermarket now. Do we need eggs?"
+              "speaker": "cast.ensemble-a1-4",
+              "de": "Hallo, ich bin jetzt im Supermarkt. Brauchen wir Eier?",
+              "en": "Hi, I’m at the supermarket now. Do we need eggs?"
             },
             {
               "id": "a1.1-u04-ls4-t3-l02",
-              "speaker": "cast.priya",
-              "de": "Ja, bitte. Wir haben nur noch ein Ei.",
-              "en": "Yes, please. We only have one egg left."
+              "speaker": "cast.ensemble-a1-2",
+              "de": "Ja, bitte. Wir haben nur noch zwei Eier.",
+              "en": "Yes, please. We only have two eggs left."
             },
             {
               "id": "a1.1-u04-ls4-t3-l03",
-              "speaker": "cast.arjun",
+              "speaker": "cast.ensemble-a1-4",
               "de": "Gut. Sechs oder zehn Stück?",
               "en": "Fine. Six or ten?"
             },
             {
               "id": "a1.1-u04-ls4-t3-l04",
-              "speaker": "cast.priya",
-              "de": "Zehn, bitte. Und eine Flasche Milch.",
-              "en": "Ten, please. And a bottle of milk."
+              "speaker": "cast.ensemble-a1-2",
+              "de": "Sechs, bitte. Und eine Flasche Milch.",
+              "en": "Six, please. And a bottle of milk."
             },
             {
               "id": "a1.1-u04-ls4-t3-l05",
-              "speaker": "cast.arjun",
-              "de": "Gut: zehn Eier und eine Flasche Milch. Bis gleich!",
-              "en": "OK: ten eggs and a bottle of milk. See you soon!"
+              "speaker": "cast.ensemble-a1-4",
+              "de": "Gut: sechs Eier und eine Flasche Milch. Bis gleich!",
+              "en": "OK: six eggs and a bottle of milk. See you soon!"
             }
           ],
           "glosses": []
@@ -2560,33 +2586,33 @@
           "lines": [
             {
               "id": "a1.1-u04-ls4-t4-l01",
-              "speaker": "cast.priya",
+              "speaker": "cast.ensemble-a1-4",
               "de": "Entschuldigung, was kosten die Äpfel?",
               "en": "Excuse me, how much are the apples?"
             },
             {
               "id": "a1.1-u04-ls4-t4-l02",
-              "speaker": "cast.ensemble-a1-3",
+              "speaker": "cast.ensemble-a1-1",
               "de": "Die Äpfel? Ein Kilo kostet 2,40 Euro.",
               "en": "The apples? A kilo costs 2.40 euros.",
               "say": "Die Äpfel? Ein Kilo kostet zwei Euro vierzig."
             },
             {
               "id": "a1.1-u04-ls4-t4-l03",
-              "speaker": "cast.priya",
+              "speaker": "cast.ensemble-a1-4",
               "de": "Und die Birnen? Und die Bananen?",
               "en": "And the pears? And the bananas?"
             },
             {
               "id": "a1.1-u04-ls4-t4-l04",
-              "speaker": "cast.ensemble-a1-3",
+              "speaker": "cast.ensemble-a1-1",
               "de": "Ein Kilo Birnen kostet 2,10 Euro. Die Bananen sind heute im Angebot: ein Kilo nur 1,20 Euro.",
               "en": "A kilo of pears costs 2.10 euros. The bananas are on offer today: only 1.20 euros a kilo.",
               "say": "Ein Kilo Birnen kostet zwei Euro zehn. Die Bananen sind heute im Angebot: ein Kilo nur einen Euro zwanzig."
             },
             {
               "id": "a1.1-u04-ls4-t4-l05",
-              "speaker": "cast.priya",
+              "speaker": "cast.ensemble-a1-4",
               "de": "Gut, dann ein Kilo Bananen, bitte.",
               "en": "Good, a kilo of bananas then, please."
             }
@@ -2600,32 +2626,32 @@
           "lines": [
             {
               "id": "a1.1-u04-ls4-t5-l01",
-              "speaker": "cast.ensemble-a1-1",
+              "speaker": "cast.ensemble-a1-3",
               "de": "Hallo! Was möchten Sie?",
               "en": "Hello! What would you like?"
             },
             {
               "id": "a1.1-u04-ls4-t5-l02",
-              "speaker": "cast.arjun",
+              "speaker": "cast.ensemble-a1-2",
               "de": "Guten Tag. Haben Sie Wasser?",
               "en": "Hello. Do you have water?"
             },
             {
               "id": "a1.1-u04-ls4-t5-l03",
-              "speaker": "cast.ensemble-a1-1",
+              "speaker": "cast.ensemble-a1-3",
               "de": "Ja, hier. Eine Flasche kostet 90 Cent, und sechs Flaschen kosten 4 Euro.",
               "en": "Yes, here. One bottle costs 90 cents, and six bottles cost 4 euros.",
               "say": "Ja, hier. Eine Flasche kostet neunzig Cent, und sechs Flaschen kosten vier Euro."
             },
             {
               "id": "a1.1-u04-ls4-t5-l04",
-              "speaker": "cast.arjun",
-              "de": "Dann sechs Flaschen, bitte. Haben Sie auch Milch?",
-              "en": "Six bottles then, please. Do you have milk too?"
+              "speaker": "cast.ensemble-a1-2",
+              "de": "Nur eine Flasche, bitte. Haben Sie auch Milch?",
+              "en": "Just one bottle, please. Do you have milk too?"
             },
             {
               "id": "a1.1-u04-ls4-t5-l05",
-              "speaker": "cast.ensemble-a1-1",
+              "speaker": "cast.ensemble-a1-3",
               "de": "Milch? Nein, Milch haben wir heute nicht.",
               "en": "Milk? No, we don’t have milk today."
             }
@@ -2646,31 +2672,31 @@
           "lines": [
             {
               "id": "a1.1-u04-ls4-t6-l01",
-              "speaker": "cast.priya",
-              "de": "Arjun, möchtest du Äpfel oder Birnen?",
-              "en": "Arjun, would you like apples or pears?"
+              "speaker": "cast.ensemble-a1-2",
+              "de": "Möchtest du Äpfel oder Birnen?",
+              "en": "Would you like apples or pears?"
             },
             {
               "id": "a1.1-u04-ls4-t6-l02",
-              "speaker": "cast.arjun",
+              "speaker": "cast.ensemble-a1-4",
               "de": "Birnen, bitte. Die Äpfel hier sind sehr teuer.",
               "en": "Pears, please. The apples here are very expensive."
             },
             {
               "id": "a1.1-u04-ls4-t6-l03",
-              "speaker": "cast.priya",
+              "speaker": "cast.ensemble-a1-2",
               "de": "Und Tomaten? Brauchen wir Tomaten?",
               "en": "And tomatoes? Do we need tomatoes?"
             },
             {
               "id": "a1.1-u04-ls4-t6-l04",
-              "speaker": "cast.arjun",
+              "speaker": "cast.ensemble-a1-4",
               "de": "Nein, wir haben noch drei Tomaten. Wir brauchen nur Birnen.",
               "en": "No, we still have three tomatoes. We only need pears."
             },
             {
               "id": "a1.1-u04-ls4-t6-l05",
-              "speaker": "cast.priya",
+              "speaker": "cast.ensemble-a1-2",
               "de": "Gut, dann kaufen wir vier Birnen. Die sind heute billig.",
               "en": "Fine, then we’ll buy four pears. They’re cheap today."
             }
@@ -2735,9 +2761,9 @@
             {
               "id": "a1.1-u04-ls4-t9-l01",
               "speaker": "durchsage",
-              "de": "Guten Tag! Heute ist der Supermarkt nur bis 18 Uhr geöffnet. Morgen ist Sonntag, da ist alles zu. Am Montag sind wir wieder von 8 bis 20 Uhr für Sie da. Danke und bis Montag!",
-              "en": "Hello! Today the supermarket is only open until 6 pm. Tomorrow is Sunday – everything is closed then. On Monday we are here for you again from 8 am to 8 pm. Thank you, and see you on Monday!",
-              "say": "Guten Tag! Heute ist der Supermarkt nur bis achtzehn Uhr geöffnet. Morgen ist Sonntag, da ist alles zu. Am Montag sind wir wieder von acht bis zwanzig Uhr für Sie da. Danke und bis Montag!"
+              "de": "Liebe Kunden, heute ist unser Supermarkt nur bis 18 Uhr geöffnet. Morgen ist Sonntag, da ist der Supermarkt zu. Am Montag sind wir wieder von 8 bis 20 Uhr für Sie da. Danke und bis Montag!",
+              "en": "Dear customers, today our supermarket is only open until 6 pm. Tomorrow is Sunday – the supermarket is closed then. On Monday we are here for you again from 8 am to 8 pm. Thank you, and see you on Monday!",
+              "say": "Liebe Kunden, heute ist unser Supermarkt nur bis achtzehn Uhr geöffnet. Morgen ist Sonntag, da ist der Supermarkt zu. Am Montag sind wir wieder von acht bis zwanzig Uhr für Sie da. Danke und bis Montag!"
             }
           ],
           "glosses": [
@@ -2748,15 +2774,15 @@
               }
             },
             {
-              "token": "geöffnet",
-              "gloss": {
-                "en": "open"
-              }
-            },
-            {
               "token": "Sonntag",
               "gloss": {
                 "en": "Sunday"
+              }
+            },
+            {
+              "token": "Montag",
+              "gloss": {
+                "en": "Monday"
               }
             }
           ]
@@ -2814,20 +2840,20 @@
               "role": "exam",
               "topic": "hoeren",
               "textRef": "a1.1-u04-ls4-t1",
-              "promptDe": "Wie viel bezahlt Priya?",
+              "promptDe": "Wie viel bezahlt der Mann?",
               "options": [
                 "40 Cent",
                 "3,50 Euro",
                 "5,50 Euro"
               ],
-              "answer": "5,50 Euro",
+              "answer": "3,50 Euro",
               "accepted": [
-                "5,50 Euro"
+                "3,50 Euro"
               ],
               "exact": "number",
               "explanation": {
-                "de": "Priya kauft zehn Brötchen und ein Brot. Das macht zusammen 5,50 Euro.",
-                "en": "Priya buys ten rolls and a loaf: 5.50 euros altogether."
+                "de": "Der Mann kauft nur zehn Brötchen. Das Brot möchte er nicht: Das macht 3,50 Euro.",
+                "en": "The man only buys ten rolls and says no to the bread: 3.50 euros."
               },
               "origin": "agent"
             },
@@ -2837,10 +2863,10 @@
               "role": "exam",
               "topic": "hoeren",
               "textRef": "a1.1-u04-ls4-t2",
-              "promptDe": "Wie viel Käse kauft Arjun?",
+              "promptDe": "Wie viel Käse kauft die Frau?",
               "options": [
-                "100 Gramm",
                 "200 Gramm",
+                "100 Gramm",
                 "300 Gramm"
               ],
               "answer": "300 Gramm",
@@ -2849,8 +2875,8 @@
               ],
               "exact": "number",
               "explanation": {
-                "de": "Arjun sagt: 300 Gramm, bitte. Die 200 Gramm sind Wurst.",
-                "en": "Arjun asks for 300 grams of cheese; the 200 grams are cold cuts."
+                "de": "Die Frau sagt: 300 Gramm, bitte. Die 200 Gramm sind Wurst.",
+                "en": "The woman asks for 300 grams of cheese; the 200 grams are cold cuts."
               },
               "origin": "agent"
             },
@@ -2860,19 +2886,19 @@
               "role": "exam",
               "topic": "hoeren",
               "textRef": "a1.1-u04-ls4-t3",
-              "promptDe": "Wie viele Eier kauft Arjun?",
+              "promptDe": "Wie viele Eier kauft der Mann?",
               "options": [
-                "ein Ei",
                 "sechs Eier",
+                "zwei Eier",
                 "zehn Eier"
               ],
-              "answer": "zehn Eier",
+              "answer": "sechs Eier",
               "accepted": [
-                "zehn Eier"
+                "sechs Eier"
               ],
               "explanation": {
-                "de": "Priya sagt: Zehn, bitte. Ein Ei haben sie noch zu Hause.",
-                "en": "Priya says ten; the one egg is what they still have at home."
+                "de": "Die Frau sagt: Sechs, bitte. Zwei Eier haben sie noch zu Hause.",
+                "en": "The woman says six; the two eggs are what they still have at home."
               },
               "origin": "agent"
             },
@@ -2884,9 +2910,9 @@
               "textRef": "a1.1-u04-ls4-t4",
               "promptDe": "Was kostet ein Kilo Bananen?",
               "options": [
-                "1,20 Euro",
                 "2,40 Euro",
-                "2,10 Euro"
+                "2,10 Euro",
+                "1,20 Euro"
               ],
               "answer": "1,20 Euro",
               "accepted": [
@@ -2905,19 +2931,19 @@
               "role": "exam",
               "topic": "hoeren",
               "textRef": "a1.1-u04-ls4-t5",
-              "promptDe": "Was kauft Arjun?",
+              "promptDe": "Was kauft die Frau?",
               "options": [
-                "sechs Flaschen Wasser",
                 "eine Flasche Wasser",
+                "sechs Flaschen Wasser",
                 "Wasser und Milch"
               ],
-              "answer": "sechs Flaschen Wasser",
+              "answer": "eine Flasche Wasser",
               "accepted": [
-                "sechs Flaschen Wasser"
+                "eine Flasche Wasser"
               ],
               "explanation": {
-                "de": "Arjun sagt: Dann sechs Flaschen, bitte. Milch haben sie heute nicht.",
-                "en": "Arjun takes six bottles of water; there is no milk today."
+                "de": "Die Frau sagt: Nur eine Flasche, bitte. Milch haben sie heute nicht.",
+                "en": "The woman takes just one bottle of water; there is no milk today."
               },
               "origin": "agent"
             },
@@ -2927,7 +2953,7 @@
               "role": "exam",
               "topic": "hoeren",
               "textRef": "a1.1-u04-ls4-t6",
-              "promptDe": "Was brauchen Priya und Arjun?",
+              "promptDe": "Was brauchen die Frau und der Mann?",
               "options": [
                 "Äpfel",
                 "Birnen",
@@ -2938,7 +2964,7 @@
                 "Birnen"
               ],
               "explanation": {
-                "de": "Arjun sagt: Wir brauchen nur Birnen. Tomaten haben sie noch.",
+                "de": "Der Mann sagt: Wir brauchen nur Birnen. Tomaten haben sie noch.",
                 "en": "They only need pears; they still have tomatoes."
               },
               "origin": "agent"
@@ -3072,16 +3098,16 @@
             "mode": "cards-ask",
             "profile": "sd1-sp2",
             "prepMinutes": 0,
-            "instructionsDe": "Thema Einkaufen: Fragen Sie mit Ihren Karten. Antworten Sie auf die Fragen der Partnerin.",
-            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin haben Wortkarten zum Thema Einkaufen. Fragen Sie: Was kostet …? Wo ist …? Antworten Sie auf die Fragen der Partnerin.",
+            "instructionsDe": "Zwei Themen: Einkaufen, dann Essen und Trinken. Fragen Sie mit Ihren Karten und antworten Sie.",
+            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin haben Wortkarten zu zwei Themen: zuerst Einkaufen, dann Essen und Trinken. Fragen Sie: Was kostet …? Wie viel …? Wo ist …? Antworten Sie auf die Fragen der Partnerin.",
             "cards": {
               "learner": [
                 "Einkaufen – Preis",
-                "Einkaufen – Reis"
+                "Essen und Trinken – Reis"
               ],
               "partner": [
                 "Einkaufen – Gramm",
-                "Einkaufen – Milch"
+                "Essen und Trinken – Milch"
               ]
             },
             "turns": [
@@ -3120,7 +3146,7 @@
           "register": "Sie",
           "support": "slow-wordbank"
         },
-        "openingLine": "Hallo! Zuerst Teil 2: Fragen und Antworten zum Thema Einkaufen. Dann Teil 3. Bitte, Sie zuerst!",
+        "openingLine": "Hallo! Zuerst Teil 2: Fragen und Antworten, erst zum Thema Einkaufen, dann zum Thema Essen und Trinken. Dann Teil 3. Bitte, Sie zuerst!",
         "hintWords": [
           "Was kostet …?",
           "Wie viel …?",
@@ -3141,20 +3167,20 @@
             "de": "Ein Kilo kostet 2,20 Euro."
           },
           {
-            "speaker": "learner",
-            "de": "Entschuldigung, wo ist der Reis?"
-          },
-          {
-            "speaker": "partner",
-            "de": "Der Reis ist dort."
-          },
-          {
             "speaker": "partner",
             "de": "Wie viel Gramm Käse möchten Sie?"
           },
           {
             "speaker": "learner",
             "de": "200 Gramm, bitte."
+          },
+          {
+            "speaker": "learner",
+            "de": "Entschuldigung, wo ist der Reis?"
+          },
+          {
+            "speaker": "partner",
+            "de": "Der Reis ist dort."
           },
           {
             "speaker": "partner",
@@ -3260,10 +3286,6 @@
           20,
           30
         ],
-        "wordBandLearning": [
-          15,
-          25
-        ],
         "minSubmitWords": 10,
         "checklist": [
           "Anrede: Hallo Arjun,",
@@ -3273,7 +3295,7 @@
           "Gruß mit Ihrem Namen",
           "20 bis 30 Wörter"
         ],
-        "modelText": "Hallo Arjun,\nwir brauchen ein Brot, 200 Gramm Käse und zwei Flaschen Milch. Zucker und Reis haben wir noch. Was kostet der Käse heute?\nViele Grüße\n(Ihr Name)"
+        "modelText": "Hallo Arjun,\nwir brauchen ein Brot, 200 Gramm Käse und zwei Flaschen Milch. Zucker haben wir noch. Was kostet der Käse heute?\nViele Grüße\n(Ihr Name)"
       }
     },
     {
@@ -3301,8 +3323,8 @@
       {
         "id": "a1.1-u04-ls7-l03",
         "speaker": "cast.arjun",
-        "de": "Ich möchte zehn Eier und zwei Flaschen Wasser, bitte.",
-        "en": "I’d like ten eggs and two bottles of water, please."
+        "de": "Ich möchte zehn Eier und zwei Flaschen Milch, bitte.",
+        "en": "I’d like ten eggs and two bottles of milk, please."
       },
       {
         "id": "a1.1-u04-ls7-l04",
@@ -3566,8 +3588,8 @@
         ],
         "exact": "number",
         "explanation": {
-          "de": "Arjun sagt: zehn Eier und zwei Flaschen Wasser.",
-          "en": "Arjun asks for ten eggs and two bottles of water."
+          "de": "Arjun sagt: zehn Eier und zwei Flaschen Milch.",
+          "en": "Arjun asks for ten eggs and two bottles of milk."
         },
         "origin": "agent"
       }
@@ -3655,7 +3677,7 @@
   ],
   "story": {
     "beat": "Priya und Arjun kaufen mit 50 Euro für die ganze Woche ein, denn sie sparen für eine eigene Wohnung. Mit dem Prospekt, dem Markt und den Angeboten reicht das Geld.",
-    "cliffhanger": "Zu Hause liest Arjun die Zeitung. Dort steht eine Anzeige: „Wohnung in Leipzig: 2 Zimmer, Küche, Bad. Jetzt frei!“ Arjun ruft: „Priya, hier! Eine Wohnung für uns!“",
+    "cliffhanger": "Am Abend liest Arjun eine Nachricht. Dann ruft er laut: „Priya, hier! Eine Wohnung in Leipzig, und nicht teuer! Vielleicht ist das etwas für uns?“",
     "castIn": [
       "cast.ensemble-a1-1",
       "cast.ensemble-a1-3"

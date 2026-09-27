@@ -382,8 +382,12 @@ their descriptors, the bands and the error policy to the model; `deterministic` 
 
 ```js
 // text-types.json
-{ types: [{ id: re(texttype), label: de, parts: [enum(betreff|anrede|gruss|einleitung|schluss|datum|unterschrift)]*,
-            lengthByLevel: { [level]: [int, int] } }] }
+{ notes: [str]?,
+  types: [{ id: re(texttype), label: de, parts: [enum(betreff|anrede|gruss|einleitung|schluss|datum|unterschrift)]*,
+            lengthByLevel: { [level]: { input: [int, int], writing: [int, int]? } } }] }
+      // words; input = a course input of this type (capped at TXT-03), writing = the editor's recommended band for a
+      // learner text (absent: input only at that level); exam texts follow the Teil template's textWords (TXT-02).
+      // Amended 2026-09-27 on the W2 DaF-progression review (split input/writing, semantics in `notes`), RAILS §7.9.
 // detectors.json  (extends src/data/curricula/constructions.js; E0-4 owns it)
 { detectors: [{ id: re(detector), construction: str, precision: enum(exact|heuristic|advisory),
                 method: enum(token|pattern|lexicon|clause), spec: object }] }

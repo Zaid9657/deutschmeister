@@ -26,7 +26,7 @@ import { entryForms, knownForms, licensedForms, umlaut } from '../scripts/course
 import { CORE_SIZE, CORE_LEMMAS, CORE_ENTRIES, NUMBER_WORDS } from '../scripts/course-v2/lib-validate/core-lexicon.mjs';
 import { strongPraet } from '../scripts/course-v2/lib-validate/strong-verbs.mjs';
 import { check } from '../scripts/course-v2/lib/schema.mjs';
-import '../scripts/course-v2/lib/schemas/index.mjs';
+import { KINDS, kindOf } from '../scripts/course-v2/lib/schemas/index.mjs';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..');
 const VALIDATE = join(REPO, 'scripts', 'course-v2', 'validate.mjs');
@@ -754,6 +754,49 @@ describe('LEX-03 on a complete cumulative lexicon (A1.1 U1): real blockers stay,
   });
   test('an unallocated word still blocks', async () => {
     assertFail(await rule('LEX-03', build('Die Rechtsbehelfsbelehrung liegt bei.')), /Rechtsbehelfsbelehrung/);
+  });
+});
+
+describe('proper names (registries/names.json, SCHEMA §4.9): known from their level on', () => {
+  const NAMES = [
+    { form: 'Leipzig', kind: 'place', level: 'a1.1' },
+    { form: 'Cospuden', kind: 'place', level: 'a1.1' },
+    { form: 'Sächsische Schweiz', kind: 'place', level: 'a1.1' },
+    { form: 'Plagwitz', kind: 'place', level: 'b1.2' },
+    { form: 'Deutschland', kind: 'place', level: 'a1.1' },
+  ];
+  const build = (answer, names = NAMES, lexicon = []) => {
+    const b = lexCtx({
+      lexicon: { 'a1.1': [lx('lx.termin', 'Termin', 'NOUN', 'a1.1-u01', { article: 'der', plural: 'Termine', plural_kind: 'regular' }), ...lexicon] },
+      unit: { $schema: 'course-v2/unit@1', id: 'a1.1-u01', level: 'a1.1', nr: 1, stage: 'I', spec: { grammar: { new: [], chunk: [], review: [] } }, steps: [{ id: 'a1.1-u01-ls1', pool: { items: [{ id: 'a1.1-u01-ls1-p01', type: 'fill_blank', answer }] } }] },
+    });
+    b.ctx.registries.names = names;
+    return b;
+  };
+  test('pass: a listed name, its genitive -s and adjectival -er form, an adjective inside a name', async () => {
+    assertPass(await rule('LEX-03', build('Der Termin ist in Leipzig, nicht in der Sächsischen Schweiz. Leipzigs Termin? Der Leipziger Termin? Der Cospudener Termin?')));
+    const known = knownForms(build('x').ctx, 'a1.1', 1);
+    for (const w of ['leipzig', 'leipzigs', 'leipziger', 'cospudener', 'sächsische', 'sächsischen', 'schweiz', 'schweizer']) assert.ok(known.has(w), w);
+  });
+  test('fail: a name before its level, and a name that is not listed at all', async () => {
+    assertFail(await rule('LEX-03', build('Der Termin ist in Plagwitz.')), /Plagwitz/);
+    assertFail(await rule('LEX-03', build('Der Termin ist in Leipzig.', [])), /Leipzig/);
+  });
+  test('precedence: a name some lexicon allocates to a later unit is unknown before that unit', () => {
+    const later = [lx('lx.deutschland', 'Deutschland', 'NOUN', 'a1.1-u05', { article: 'das', plural: null, plural_kind: 'singular-only' })];
+    const { ctx } = build('x', NAMES, later);
+    assert.ok(!knownForms(ctx, 'a1.1', 1).has('deutschland'));
+    assert.ok(knownForms(ctx, 'a1.1', 5).has('deutschland'));
+    assert.ok(knownForms(ctx, 'a1.1', 1).has('leipzig'), 'unallocated names stay known');
+  });
+  test('the committed registry passes its schema; a duplicate form, an unknown kind or level does not', () => {
+    const doc = JSON.parse(readFileSync(join(REPO, 'content', 'course-v2', 'registries', 'names.json'), 'utf8'));
+    assert.deepEqual(check(KINDS.names.schema, doc), []);
+    assert.ok(doc.names.some((n) => n.form === 'Leipzig' && n.level === 'a1.1'));
+    const bad = { ...doc, names: [...doc.names, { form: 'Leipzig', kind: 'city', level: 'a3.1' }] };
+    const errs = check(KINDS.names.schema, bad).map((e) => `${e.path} ${e.message}`).join('\n');
+    for (const re of [/listed twice/, /place\|person\|org\|brand\|event/, /re\(LEVEL\)/]) assert.match(errs, re);
+    assert.equal(kindOf(doc, '/x/registries/names.json').kind, 'names');
   });
 });
 

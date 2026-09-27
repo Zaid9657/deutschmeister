@@ -4079,6 +4079,25 @@
       "wordId": null
     },
     {
+      "id": "lx.planen",
+      "lemma": "planen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "plant",
+        "perfekt": "hat geplant"
+      },
+      "role": "receptive",
+      "unit": "a1.1-u08",
+      "block": 2,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "to plan"
+      },
+      "example": "Was planst du am Wochenende?",
+      "exampleEn": "What are you planning for the weekend?",
+      "wordId": null
+    },
+    {
       "id": "lx.gern",
       "lemma": "gern",
       "pos": "ADV",

@@ -188,8 +188,8 @@
         {
           "id": "b1.2-u04-start-l03",
           "speaker": "cast.jan-wolf",
-          "de": "Morgen um zehn ist die Sitzung dazu: erst das Programm, dann die Aufgabenverteilung. Frau Otto ist auf einer Fortbildung in Dresden und nicht anwesend. Deshalb moderiere ich, und Emre protokolliert.",
-          "en": "The meeting about it is tomorrow at ten: first the programme, then who does which task. Ms Otto is on a training course in Dresden and won’t be there, so I’m chairing and Emre is taking the minutes."
+          "de": "Morgen um zehn ist die Sitzung dazu. Auf der Tagesordnung steht nur der Teamtag: erst das Programm, dann die Aufgabenverteilung. Frau Otto ist auf einer Fortbildung in Dresden und nicht anwesend. Deshalb moderiere ich, und Emre protokolliert.",
+          "en": "The meeting about it is tomorrow at ten. The team day is the only item on the agenda: first the programme, then who does which task. Ms Otto is on a training course in Dresden and won’t be there, so I’m chairing and Emre is taking the minutes."
         },
         {
           "id": "b1.2-u04-start-l04",
@@ -254,7 +254,7 @@
         "title": "Rundschreiben: Unser Teamtag",
         "textType": "tt.rundschreiben",
         "text": {
-          "de": "An alle Mitarbeiterinnen und Mitarbeiter\n\nUnser Teamtag im Juni\n\nLiebe Kolleginnen und Kollegen,\n\nin diesem Jahr sind viele neue Kolleginnen und Kollegen zu uns gekommen. Deshalb planen wir am Freitag, dem 19. Juni, einen gemeinsamen Teamtag. Der Zweck ist einfach: Wir wollen uns besser kennenlernen und einen Tag lang zusammen etwas unternehmen.\n\nFür das Projekt haben wir ein Budget von 1.200 Euro. Die Teilnehmerzahl liegt bei 18 Personen. Sie brauchen also nichts selbst zu bezahlen. Auch Urlaub brauchen Sie für diesen Tag nicht zu nehmen, denn der Teamtag ist Arbeitszeit.\n\nIm Intranet finden Sie unter „Teamtag“ Angebote aus Leipzig und Umgebung. Frau Nair vergleicht sie. Am Dienstag bereiten Herr Wolf, Frau Otto, Herr Yıldız, Frau Nair und ich den Tag in einer Sitzung vor. Der Teamtag ist dort der einzige Tagesordnungspunkt. Frau Nair stellt die Angebote vor, die infrage kommen. Ziel ist eine Einigung über Ort und Programm. Bis dahin ist alles noch vorläufig, endgültig legen wir das Programm erst in der Sitzung fest. Ein Programmpunkt am Vormittag ist aber schon sicher: eine kurze Besprechung zum Zeitplan für das zweite Halbjahr.\n\nHaben Sie eine Idee, einen Einwand, oder möchten Sie etwas ergänzen? Dann brauchen Sie nur eine kurze Nachricht an Frau Nair zu schreiben. In der Sitzung verteilen wir auch die Aufgaben: Wer übernimmt die Verantwortung für die Raumbuchung, wer für den Bus? Frau Nair fasst die Beschlüsse danach zusammen und schickt sie Ihnen per E-Mail.\n\nIch freue mich auf einen schönen Tag mit Ihnen!\n\nThomas Brandt\nGeschäftsführer",
+          "de": "An alle Mitarbeiterinnen und Mitarbeiter\n\nUnser Teamtag im Juni\n\nLiebe Kolleginnen und Kollegen,\n\nin diesem Jahr sind viele neue Kolleginnen und Kollegen zu uns gekommen. Deshalb planen wir am Freitag, dem 19. Juni, einen gemeinsamen Teamtag. Der Zweck ist einfach: Wir wollen uns besser kennenlernen und einen Tag lang zusammen etwas unternehmen.\n\nFür das Projekt haben wir ein Budget von 1.200 Euro. Die Teilnehmerzahl liegt bei 18 Personen. Sie brauchen also nichts selbst zu bezahlen. Auch Urlaub brauchen Sie für diesen Tag nicht zu nehmen, denn der Teamtag ist Arbeitszeit.\n\nIm Intranet finden Sie unter „Teamtag“ Angebote aus Leipzig und Umgebung. Frau Nair vergleicht sie. Am Dienstag bereiten Herr Wolf, Frau Otto, Herr Yıldız, Frau Nair und ich den Tag in einer Sitzung vor. Der Teamtag ist dort der einzige Tagesordnungspunkt. Frau Nair stellt die Angebote vor, die infrage kommen. Ziel ist eine Einigung über Ort und Programm. Bis dahin ist alles noch vorläufig: Endgültig legen wir das Programm erst in der Sitzung fest. Ein Programmpunkt am Vormittag ist aber schon sicher: eine kurze Besprechung zum Zeitplan für das zweite Halbjahr.\n\nHaben Sie eine Idee oder einen Einwand, oder möchten Sie etwas ergänzen? Dann brauchen Sie nur eine kurze Nachricht an Frau Nair zu schreiben. In der Sitzung verteilen wir auch die Aufgaben: Wer übernimmt die Verantwortung für die Raumbuchung, wer für den Bus und wer für das Rahmenprogramm am Abend? Frau Nair fasst die Beschlüsse danach zusammen und schickt sie Ihnen per E-Mail.\n\nIch freue mich auf einen schönen Tag mit Ihnen!\n\nThomas Brandt\nGeschäftsführer",
           "en": "Circular from the managing director: a team day on Friday 19 June for 18 people with a budget of 1,200 euros; staff pay nothing and need not take leave; Ms Nair compares the offers on the intranet; on Tuesday a small group (Mr Wolf, Ms Otto, Mr Yıldız, Ms Nair and Mr Brandt) meets to agree on the venue and programme and to share out the tasks."
         },
         "glosses": [
@@ -995,8 +995,8 @@
           {
             "id": "b1.2-u04-ls2-l11",
             "speaker": "cast.herr-brandt",
-            "de": "Sehr gut, das findet meine Zustimmung. Damit sind die Zuständigkeiten klar. Frau Otto übernimmt die Verantwortung für das Rahmenprogramm am Abend. Sie soll bis Freitag zwei Vorschläge sammeln, aber noch nichts buchen. Am Freitag besprechen wir dann den Zwischenstand. Frau Nair, schreiben Sie ihr bitte alles, was wir heute beschlossen haben. – Oh, Ihr Telefon klingelt. Sie machen heute auch den Empfang, also gehen Sie bitte ans Telefon.",
-            "en": "Very good, you have my approval. That makes it clear who is responsible for what. Ms Otto will be responsible for the evening programme: by Friday she should collect two suggestions, but not book anything yet. On Friday we’ll discuss where things stand. Ms Nair, please write to her with everything we decided today. – Oh, your phone is ringing. You’re covering reception today too, so please answer it."
+            "de": "Sehr gut, das findet meine Zustimmung. Damit sind die Zuständigkeiten klar. Frau Otto übernimmt die Verantwortung für das Rahmenprogramm am Abend. Sie soll bis Freitag zwei Vorschläge sammeln, aber noch nichts buchen. Am Freitag besprechen wir dann den Zwischenstand und den Zeitplan. Frau Nair, schreiben Sie ihr bitte alles, was wir heute beschlossen haben. – Oh, Ihr Telefon klingelt. Sie machen heute auch den Empfang, also gehen Sie bitte ans Telefon.",
+            "en": "Very good, you have my approval. That makes it clear who is responsible for what. Ms Otto will be responsible for the evening programme: by Friday she should collect two suggestions, but not book anything yet. On Friday we’ll discuss where things stand and the schedule. Ms Nair, please write to her with everything we decided today. – Oh, your phone is ringing. You’re covering reception today too, so please answer it."
           },
           {
             "id": "b1.2-u04-ls2-l12",
@@ -1014,9 +1014,9 @@
           {
             "id": "b1.2-u04-ls2-l14",
             "speaker": "x.herr-lehmann",
-            "de": "Ja, gern. Die Terrasse ist am 19. Juni frei, aber nur bis 22 Uhr. Ich habe sie vorläufig für Sie reserviert. Für das Essen brauchen wir bis Mittwoch die Teilnehmerzahl. Frau Otto soll mich bitte zurückrufen: 0341 22 58 90.",
-            "en": "Yes, please. The terrace is free on 19 June, but only until 10 pm. I’ve reserved it for you provisionally. For the food we need the number of participants by Wednesday. Ms Otto should call me back, please: 0341 22 58 90.",
-            "say": "Ja, gern. Die Terrasse ist am neunzehnten Juni frei, aber nur bis zweiundzwanzig Uhr. Ich habe sie vorläufig für Sie reserviert. Für das Essen brauchen wir bis Mittwoch die Teilnehmerzahl. Frau Otto soll mich bitte zurückrufen: null drei vier eins, zweiundzwanzig, achtundfünfzig, neunzig."
+            "de": "Ja, gern. Die Terrasse ist am 19. Juni frei, aber nur bis 22 Uhr. Ich habe sie vorläufig für Ihre Firma reserviert. Für das Essen brauchen wir bis Mittwoch die Teilnehmerzahl. Frau Otto soll mich bitte zurückrufen: 0341 22 58 90.",
+            "en": "Yes, please. The terrace is free on 19 June, but only until 10 pm. I’ve reserved it provisionally for your company. For the food we need the number of participants by Wednesday. Ms Otto should call me back, please: 0341 22 58 90.",
+            "say": "Ja, gern. Die Terrasse ist am neunzehnten Juni frei, aber nur bis zweiundzwanzig Uhr. Ich habe sie vorläufig für Ihre Firma reserviert. Für das Essen brauchen wir bis Mittwoch die Teilnehmerzahl. Frau Otto soll mich bitte zurückrufen: null drei vier eins, zweiundzwanzig, achtundfünfzig, neunzig."
           }
         ],
         "glosses": [
@@ -1178,7 +1178,7 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.relativsatz-was-wo",
-          "promptDe": "„Ein Ort, wo wir die Besprechung machen und essen können.“ – Was geht dort?",
+          "promptDe": "„Ein Ort, wo wir die Besprechung machen und essen können.“ – Was kann man dort machen?",
           "promptEn": "What can you do there?",
           "options": [
             "nur die Besprechung",
@@ -1976,11 +1976,11 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.relativsatz-was-wo",
-            "promptDe": "Korrigieren Sie: „Das ist alles, das wir für den Teamtag geplant haben.“",
+            "promptDe": "Korrigieren Sie: „Das ist alles, das wir heute besprochen haben.“",
             "promptEn": "Correct the sentence.",
-            "answer": "Das ist alles, was wir für den Teamtag geplant haben.",
+            "answer": "Das ist alles, was wir heute besprochen haben.",
             "accepted": [
-              "Das ist alles, was wir für den Teamtag geplant haben."
+              "Das ist alles, was wir heute besprochen haben."
             ],
             "intentionalError": true,
             "explanation": {
@@ -2326,84 +2326,84 @@
           "id": "b1.2-u04-ls4-t2",
           "kind": "ad",
           "title": "Leipzig zu Fuß – Stadtführungen",
-          "text": "Unsere Stadtführerinnen zeigen Ihnen die Altstadt, die Nikolaikirche und die schönsten Passagen. Für Gruppen bis 25 Personen, Dauer zwei Stunden. Führungen auch auf Englisch und Spanisch. Bitte buchen Sie mindestens eine Woche vorher.",
+          "text": "Wir zeigen Ihnen die Altstadt, die Nikolaikirche und die schönsten Plätze. Für Gruppen bis 25 Personen, Dauer zwei Stunden. Führungen auch auf Englisch und Spanisch. Bitte buchen Sie mindestens eine Woche vorher.",
           "glosses": []
         },
         {
           "id": "b1.2-u04-ls4-t3",
           "kind": "ad",
           "title": "Kletterpark Nordwald",
-          "text": "Teamtraining in bis zu zwölf Metern Höhe! Für Gruppen ab acht Personen, immer mit Trainerin oder Trainer. Sie brauchen keine Erfahrung, nur feste Schuhe. Täglich von 10 bis 18 Uhr. Kinder unter 12 Jahren dürfen leider nicht mitklettern.",
+          "text": "Training für Teams in bis zu zwölf Metern Höhe! Für Gruppen ab acht Personen, immer mit Trainerin oder Trainer. Sie brauchen keine Erfahrung, nur feste Schuhe. Täglich von 10 bis 18 Uhr. Kinder unter 12 Jahren dürfen leider nicht mitmachen.",
           "glosses": []
         },
         {
           "id": "b1.2-u04-ls4-t4",
           "kind": "ad",
           "title": "Kochen im Team",
-          "text": "In unserer Kochschule in Plagwitz kochen Sie zusammen ein Menü mit drei Gängen und essen danach gemeinsam an einem langen Tisch. Für Gruppen von 10 bis 20 Personen, auf Wunsch vegetarisch. Getränke sind im Preis enthalten.",
+          "text": "In unserer Küche in Plagwitz kochen Sie zusammen ein großes Menü und essen danach gemeinsam an einem langen Tisch. Für Gruppen von 10 bis 20 Personen, auf Wunsch vegetarisch. Getränke sind im Preis enthalten.",
           "glosses": []
         },
         {
           "id": "b1.2-u04-ls4-t5",
           "kind": "ad",
           "title": "Kanutouren im Auwald",
-          "text": "Mit dem Kanu durch den Leipziger Auwald: drei Stunden mit Guide, auch für Anfänger. Alle Teilnehmenden müssen schwimmen können. Boote und Schwimmwesten sind im Preis enthalten. Start am Bootshaus, von April bis Oktober.",
+          "text": "Mit dem Boot durch den Auwald: drei Stunden mit Führung, auch für Anfänger. Alle Teilnehmenden müssen schwimmen können. Die Boote sind im Preis enthalten. Treffpunkt am Wasser, von April bis Oktober.",
           "glosses": []
         },
         {
           "id": "b1.2-u04-ls4-t6",
           "kind": "ad",
           "title": "Seminarhaus am Cospudener See",
-          "text": "Helle Räume für 10 bis 40 Personen mit Beamer, Leinwand und WLAN. Mittagessen und Kaffee aus unserer eigenen Küche. Direkt am Wasser, vom Hauptbahnhof 25 Minuten mit dem Bus. Fahrradverleih im Haus.",
+          "text": "Helle Räume für 10 bis 40 Personen mit Beamer und WLAN. Mittagessen und Kaffee aus unserer eigenen Küche. Direkt am Wasser, vom Hauptbahnhof 25 Minuten mit dem Bus. Fahrräder kann man bei uns leihen.",
           "glosses": []
         },
         {
           "id": "b1.2-u04-ls4-t7",
           "kind": "ad",
           "title": "Rätselraum Innenstadt",
-          "text": "Finden Sie gemeinsam in 60 Minuten den Weg aus unserem Rätselraum! Für vier bis sechs Personen pro Raum; größere Teams spielen in zwei Räumen gegeneinander. Mitten in der Innenstadt, täglich ab 12 Uhr.",
+          "text": "Finden Sie gemeinsam in 60 Minuten den Weg aus unserem Rätselraum! Für vier bis sechs Personen pro Raum; größere Teams spielen in zwei Räumen. Mitten in der Innenstadt, täglich ab 12 Uhr.",
           "glosses": []
         },
         {
           "id": "b1.2-u04-ls4-t8",
           "kind": "ad",
           "title": "Reisebus mit Fahrer",
-          "text": "Sie planen einen Ausflug mit Ihrer Firma oder Ihrem Verein? Wir vermieten Reisebusse mit 20 bis 50 Plätzen, immer mit erfahrenem Fahrer. Ziele in ganz Sachsen und Thüringen. Tagespreis ab 450 Euro.",
+          "text": "Sie planen einen Ausflug mit Ihrer Firma oder Ihrem Verein? Wir vermieten Busse mit 20 bis 50 Plätzen, immer mit erfahrenem Fahrer. Ziele in ganz Sachsen. Preis pro Tag: ab 450 Euro.",
           "glosses": []
         },
         {
           "id": "b1.2-u04-ls4-t9",
           "kind": "ad",
           "title": "Buffet-Service für Firmen",
-          "text": "Warme und kalte Speisen für Ihre Firmenfeier, auch vegetarisch und vegan. Wir liefern ab 15 Personen direkt zu Ihnen ins Büro und bringen Geschirr und Besteck mit. Bestellung bis drei Tage vorher.",
+          "text": "Warme und kalte Speisen für Ihre Feier in der Firma, auch vegetarisch. Wir liefern ab 15 Personen direkt zu Ihnen ins Büro und bringen Geschirr und Gläser mit. Bestellung bis drei Tage vorher.",
           "glosses": []
         },
         {
           "id": "b1.2-u04-ls4-t10",
           "kind": "ad",
           "title": "Fotografin für Firmen",
-          "text": "Ich mache professionelle Teamfotos für Ihre Internetseite oder begleite Ihre Veranstaltung mit der Kamera. Die fertigen Bilder bekommen Sie nach einer Woche zum Herunterladen. Fotostudio Lichtblick, Gohlis.",
+          "text": "Ich mache professionelle Fotos von Ihrem Team für Ihre Internetseite oder begleite Ihre Veranstaltung mit der Kamera. Die fertigen Bilder bekommen Sie nach einer Woche zum Herunterladen. Sie finden mich in Gohlis.",
           "glosses": []
         },
         {
           "id": "b1.2-u04-ls4-t11",
           "kind": "ad",
           "title": "Grillplatz im Grünen",
-          "text": "Unser Gartenverein vermietet einen Grillplatz mit Tischen und Bänken für bis zu 30 Personen, 40 Euro pro Tag. Essen, Getränke und Holzkohle bringen Sie selbst mit. Von Mai bis September, Reservierung per E-Mail.",
+          "text": "Unser Verein vermietet einen Platz zum Grillen mit Tischen und Stühlen für bis zu 30 Personen, 40 Euro pro Tag. Essen und Getränke bringen Sie selbst mit. Von Mai bis September, Reservierung per E-Mail.",
           "glosses": []
         },
         {
           "id": "b1.2-u04-ls4-t12",
           "kind": "ad",
           "title": "Bowling am Nordplatz",
-          "text": "Zwölf moderne Bahnen und unser Firmenpaket: zwei Stunden Bowling, Getränke und ein kleines Buffet. Täglich ab 16 Uhr geöffnet. Von Montag bis Donnerstag zahlen Gruppen 20 Prozent weniger.",
+          "text": "Zwölf moderne Bahnen und unser Angebot für Firmen: zwei Stunden Bowling, Getränke und ein kleines Buffet. Täglich ab 16 Uhr geöffnet. Von Montag bis Donnerstag zahlen Gruppen 20 Prozent weniger.",
           "glosses": []
         },
         {
           "id": "b1.2-u04-ls4-t13",
           "kind": "ad",
           "title": "Radtouren mit Führung",
-          "text": "Entdecken Sie die Seen im Süden von Leipzig: 30 Kilometer auf flachen Wegen, mit Pause in einem Gasthof. Jeden Samstag und Sonntag um 10 Uhr ab Connewitzer Kreuz. Leihräder gegen Gebühr.",
+          "text": "Lernen Sie die Seen im Süden von Leipzig kennen: 30 Kilometer auf leichten Wegen, mit Pause in einem Restaurant. Jeden Samstag und Sonntag um 10 Uhr ab Connewitzer Kreuz. Fahrräder kann man gegen Gebühr leihen.",
           "glosses": []
         }
       ],
@@ -2525,8 +2525,8 @@
                 "i"
               ],
               "explanation": {
-                "de": "Anzeige i: Die Fotografin macht Teamfotos für die Internetseite.",
-                "en": "Ad i: the photographer takes team photos for your website."
+                "de": "Anzeige i: Die Fotografin macht Fotos von Ihrem Team für die Internetseite.",
+                "en": "Ad i: the photographer takes photos of your team for your website."
               },
               "origin": "agent"
             },
@@ -2917,7 +2917,7 @@
         "profile": "tb1-m3",
         "prepMinutes": 9,
         "instructionsDe": "Planen Sie mit Jan den Ablauf des Teamtags: Vorschläge, Einwände, Einigung, Aufgaben.",
-        "situationDe": "Mündlicher Ausdruck Teil 3: Der Teamtag am 19. Juni ist beschlossen: Seminarhaus am Cospudener See, vormittags Besprechung, nachmittags Radtour. Wer den Raum und den Bus bucht, steht auch schon fest. Planen Sie jetzt mit Ihrem Kollegen Jan den Ablauf des Tages. Sprechen Sie über die Punkte auf dem Planungsblatt, machen Sie Vorschläge, reagieren Sie auf die Vorschläge von Jan und einigen Sie sich, wer was übernimmt.",
+        "situationDe": "Mündlicher Ausdruck Teil 3: Ihr Team hat den Teamtag am 19. Juni schon beschlossen: Seminarhaus am Cospudener See, vormittags Besprechung, nachmittags Radtour. Wer den Raum und den Bus bucht, steht auch schon fest. Planen Sie jetzt mit Ihrem Kollegen Jan den Ablauf des Tages. Sprechen Sie über die Punkte auf dem Planungsblatt, machen Sie Vorschläge, reagieren Sie auf die Vorschläge von Jan und einigen Sie sich, wer was übernimmt.",
         "cards": {
           "learner": [
             "Treffpunkt und Abfahrt",
@@ -2980,7 +2980,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Ins Museum? Das finde ich nicht so gut, denn dann brauchen wir wieder einen Bus in die Stadt. Ich schlage vor, dass wir bei Regen im Haus bleiben und zusammen Spiele machen. Dort gibt es genug Platz."
+            "de": "Ins Museum? Das finde ich nicht so gut, denn dann brauchen wir wieder einen Bus in die Stadt. Ich schlage vor, dass wir bei Regen im Seminarhaus bleiben und zusammen Spiele machen. Dort gibt es genug Platz."
           },
           {
             "speaker": "partner",
@@ -2992,11 +2992,11 @@
           },
           {
             "speaker": "partner",
-            "de": "Gut, so machen wir es. Mittags essen wir dort, und die Tour machen wir von zwei bis fünf. Was machen wir mit den Getränken für die Tour?"
+            "de": "Gut, so machen wir es. Mittags essen wir im Seminarhaus, und die Radtour machen wir von zwei bis fünf. Was machen wir mit den Getränken für die Radtour?"
           },
           {
             "speaker": "learner",
-            "de": "Die brauchen wir nicht selbst zu kaufen. Ich frage im Haus, ob sie uns Wasser für die Tour geben können. Das Einzige, was dann noch fehlt, ist die Einladung an das Team. Wer übernimmt das?"
+            "de": "Ich frage im Seminarhaus, ob sie uns Wasser für die Radtour geben können. Dann brauchen wir nichts selbst zu kaufen. Das Einzige, was dann noch fehlt, ist die Einladung an das Team. Wer übernimmt das?"
           },
           {
             "speaker": "partner",
@@ -3021,7 +3021,7 @@
         "register": "halbformell",
         "address": "Sie",
         "title": "Ergebnisse der Sitzung weitergeben",
-        "situationDe": "Sie arbeiten bei Brandt Elektrotechnik. Ihre Kollegin Sabine Otto war auf einer Fortbildung und hat die Teambesprechung am Dienstag verpasst. Sie schreibt Ihnen:\n\n„Hallo Frau Nair,\nich bin wieder zurück aus Dresden – die Fortbildung war sehr interessant! Leider war ich bei unserer Sitzung am Dienstag nicht dabei. Können Sie mir kurz schreiben, was Sie für den Teamtag beschlossen haben? Herr Brandt hat gesagt, dass ich auch eine Aufgabe übernehmen soll. Was genau soll ich machen, und muss ich dafür schon etwas buchen? Und noch etwas: Hat jemand vom Seminarhaus am See für mich angerufen? Ich habe dort nach der Terrasse für einen Grillabend gefragt.\nVielen Dank und viele Grüße\nSabine Otto“\n\nIhre Notizen aus der Sitzung: Seminarhaus am Cospudener See · vormittags Besprechung, nachmittags Radtour · Raumbuchung: ich · Bus: Emre · Rahmenprogramm am Abend: Frau Otto – bis Freitag zwei Vorschläge sammeln, noch nichts buchen · Zwischenstand: Freitag · Gesprächsnotiz, Anruf Herr Lehmann (Seminarhaus): Terrasse am 19. Juni frei, nur bis 22 Uhr, vorläufig reserviert · Teilnehmerzahl bis Mittwoch · Rückruf: 0341 22 58 90",
+        "situationDe": "Sie sind Priya Nair und arbeiten bei Brandt Elektrotechnik. Ihre Kollegin Sabine Otto war auf einer Fortbildung und hat die Teambesprechung am Dienstag verpasst. Sie schreibt Ihnen:\n\n„Hallo Frau Nair,\nich bin wieder zurück aus Dresden – die Fortbildung war sehr interessant! Leider war ich bei unserer Sitzung am Dienstag nicht dabei. Können Sie mir kurz schreiben, was Sie für den Teamtag beschlossen haben? Herr Brandt hat gesagt, dass ich auch eine Aufgabe übernehmen soll. Was genau soll ich machen, und muss ich dafür schon etwas buchen? Und noch etwas: Hat jemand vom Seminarhaus am See für mich angerufen? Ich habe dort nach der Terrasse für einen Grillabend gefragt.\nVielen Dank und viele Grüße\nSabine Otto“\n\nIhre Notizen aus der Sitzung: Seminarhaus am Cospudener See · vormittags Besprechung, nachmittags Radtour · Raumbuchung: ich · Bus: Emre · Rahmenprogramm am Abend: Frau Otto – bis Freitag zwei Vorschläge sammeln, noch nichts buchen · Zwischenstand: Freitag · Gesprächsnotiz, Anruf Herr Lehmann (Seminarhaus): Terrasse am 19. Juni frei, nur bis 22 Uhr, vorläufig reserviert · Teilnehmerzahl bis Mittwoch · Rückruf: 0341 22 58 90",
         "taskDe": "Antworten Sie Frau Otto. Schreiben Sie etwas zu allen vier Punkten.",
         "leitpunkte": [
           {
@@ -3096,7 +3096,7 @@
           "Sie-Form",
           "etwa 80 bis 120 Wörter"
         ],
-        "modelText": "Betreff: Ergebnisse der Sitzung vom Dienstag\n\nLiebe Frau Otto,\n\nschön, dass Sie wieder da sind! Hier ist alles, was wir beschlossen haben: Der Teamtag findet im Seminarhaus am Cospudener See statt, vormittags mit Besprechung, nachmittags mit einer Radtour. Wir haben die Aufgaben so aufgeteilt: Ich kümmere mich um die Raumbuchung und Emre um den Bus. Sie übernehmen das Rahmenprogramm am Abend. Sammeln Sie bitte bis Freitag zwei Vorschläge. Sie brauchen aber noch nichts zu buchen, denn am Freitag sprechen wir zuerst über den Zwischenstand. Herr Lehmann vom Seminarhaus hat auch angerufen: Die Terrasse ist am 19. Juni frei, aber nur bis 22 Uhr. Er braucht bis Mittwoch die Teilnehmerzahl. Bitte rufen Sie ihn zurück: 0341 22 58 90.\n\nViele Grüße\nPriya Nair"
+        "modelText": "Betreff: Ergebnisse der Sitzung vom Dienstag\n\nLiebe Frau Otto,\n\nschön, dass Sie wieder da sind! Hier ist alles, was wir beschlossen haben: Der Teamtag findet im Seminarhaus am See statt, vormittags mit Besprechung, nachmittags mit einer Radtour. Wir haben die Aufgaben so aufgeteilt: Ich kümmere mich um die Raumbuchung und Emre um den Bus. Sie übernehmen das Rahmenprogramm am Abend. Sammeln Sie bitte bis Freitag zwei Vorschläge. Sie brauchen aber noch nichts zu buchen, denn am Freitag sprechen wir zuerst über den Zwischenstand. Herr Lehmann vom Seminarhaus hat auch angerufen: Die Terrasse ist am 19. Juni frei, aber nur bis 22 Uhr. Er braucht bis Mittwoch die Teilnehmerzahl. Bitte rufen Sie ihn zurück: 0341 22 58 90.\n\nViele Grüße\nPriya Nair"
       }
     },
     {

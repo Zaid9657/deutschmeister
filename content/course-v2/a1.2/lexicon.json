@@ -5718,6 +5718,12 @@
       "from": "receptive",
       "to": "productive",
       "unit": "a1.2-u11"
+    },
+    {
+      "lemma": "lx.planen",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.2-u12"
     }
   ]
 }

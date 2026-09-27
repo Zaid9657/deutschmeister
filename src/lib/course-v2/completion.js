@@ -14,7 +14,8 @@
 //   - a unit is COMPLETE when all its Lernschritte are finished or tested out AND both
 //     Aufgaben are submitted;
 //   - a course is COMPLETE when 12 units are complete, P1–P3 are submitted and the
-//     closing block's first form is submitted.
+//     closing block's first form OF THE LEARNER'S LANE is submitted: the Halbtest (.1) or
+//     Modelltest A (.2) — SCHEMA §5 `CLOSING`; the free week-1 Diagnose never counts.
 // NO SCORE IS EVER REQUIRED, and nothing here reads one (PRG-01: no gate reads an AI
 // score). The Überarbeiten step (B: LS7) improves the Schreiben Aufgabe and is never a
 // completion requirement — the Aufgabe counts from its first real attempt.
@@ -27,28 +28,43 @@
 //   submitted      bank keys (or slot keys) of Aufgaben with a real attempt, e.g. one per
 //                  writing_submissions row or graded speaking session (array or Set)
 //   attempts       { [bankKey]: [Attempt] } — raw evidence, judged here by isAufgabeSubmitted
+//   lane           the lane of the learner's learner_goals row for this course's band (SCHEMA §14),
+//                  which `lane: 'learner'` in a CLOSING entry names. Absent, or a lane the course
+//                  has no closing form for: the course's primary lane (then its first closing lane).
 // For a .2 course whose Modelltests still run on the legacy src/data/mockExams runner,
 // the caller maps a submitted exam_attempts row to progress[<Modelltest form id>] = 'complete'.
 
-/** SCHEMA §5 defaults — used only for keys a course.json leaves out. */
-export const DEFAULT_COMPLETION = Object.freeze({
-  lernschritt: Object.freeze({ finishedWhen: 'all-items-answered' }),
-  aufgabe: Object.freeze({
-    submittedWhen: Object.freeze({ writingMinShareOfLowerBound: 0.5, speakingMinSeconds: 20, cardModeMinTurns: 2 }),
-  }),
-  unit: Object.freeze({
-    completeWhen: Object.freeze(['lernschritte-finished-or-tested-out', 'aufgaben-submitted']),
-    testOutThreshold: 0.8,
-  }),
-  course: Object.freeze({
-    required: Object.freeze([
-      Object.freeze({ kind: 'unit', status: 'complete', count: 12 }),
-      Object.freeze({ kind: 'plateau', status: 'submitted', count: 3 }),
-      Object.freeze({ kind: 'closing', status: 'submitted', count: 1 }),
-    ]),
-    neverRequired: Object.freeze(['score', 'fokus', 'mehr-ueben', 'extensive', 'modelltest:b', 'modelltest:c']),
-  }),
-});
+// SCHEMA §5 `CLOSING` — the third entry of `completion.course.required`, by course kind.
+export const CLOSING_DOT1 = Object.freeze({ kind: 'halbtest', lane: 'learner', status: 'submitted' });
+export const CLOSING_DOT2 = Object.freeze({ kind: 'modelltest', form: 'a', lane: 'learner', status: 'submitted' });
+
+function schemaBlock(closing) {
+  return Object.freeze({
+    lernschritt: Object.freeze({ finishedWhen: 'all-items-answered' }),
+    aufgabe: Object.freeze({
+      submittedWhen: Object.freeze({ writingMinShareOfLowerBound: 0.5, formAllFieldsNonEmpty: true, speakingMinSeconds: 20, cardModeMinTurns: 2 }),
+    }),
+    unit: Object.freeze({
+      completeWhen: Object.freeze(['lernschritte-finished-or-tested-out', 'aufgaben-submitted']),
+      testOutThreshold: 0.8,
+    }),
+    course: Object.freeze({
+      required: Object.freeze([
+        Object.freeze({ kind: 'unit', status: 'complete', count: 12 }),
+        Object.freeze({ kind: 'plateau', status: 'submitted', count: 3 }),
+        closing,
+      ]),
+      neverRequired: Object.freeze(['score', 'fokus', 'mehr-ueben', 'extensive', 'diagnose', 'modelltest:b', 'modelltest:c']),
+    }),
+  });
+}
+
+/** SCHEMA §5 defaults of a .1 course (kind 'dot1') — used only for keys a course.json leaves out. */
+export const DEFAULT_COMPLETION = schemaBlock(CLOSING_DOT1);
+/** SCHEMA §5 defaults of a .2 course (kind 'dot2'): the same block closed by Modelltest A. */
+export const DEFAULT_COMPLETION_DOT2 = schemaBlock(CLOSING_DOT2);
+/** The SCHEMA §5 default block for a course kind ('dot1' | 'dot2'; anything else: 'dot1'). */
+export const defaultCompletion = (kind) => (kind === 'dot2' ? DEFAULT_COMPLETION_DOT2 : DEFAULT_COMPLETION);
 
 /** Step kinds finished by answering their items (credited by a passed test-out). */
 export const LERNSCHRITT_KINDS = Object.freeze(['situation', 'text', 'sprache', 'pruefung', 'check']);
@@ -64,7 +80,13 @@ export const DONE_STATUSES = Object.freeze(['complete', 'gold']);
 export const PASTED_PROMPT_SHARE = 0.8;
 
 const STATUS_SATISFIES = { complete: DONE_STATUSES, submitted: DONE_STATUSES };
-const COURSE_REQUIRED_KINDS = ['unit', 'plateau', 'closing'];
+/** Kinds counted over the course's own lists (`count` required). */
+const COUNTED_KINDS = ['unit', 'plateau'];
+/** Closing kinds (SCHEMA §5 CLOSING): one form of one lane, `count` 1 unless stated. */
+const CLOSING_KINDS = ['halbtest', 'modelltest'];
+const COURSE_REQUIRED_KINDS = [...COUNTED_KINDS, ...CLOSING_KINDS];
+const MODELLTEST_FORMS = ['a', 'b', 'c'];
+const LANE_RE = /^(?:sd1|ga2|ta2|tb1|dtz|gb1|tb2|gb2|oza1|dtb2)$/;
 const UNIT_CONDITIONS = {
   'lernschritte-finished-or-tested-out': (u) => u.lernschritteFinished,
   'aufgaben-submitted': (u) => u.aufgabenSubmitted,
@@ -73,23 +95,54 @@ const LANE_SUFFIX_RE = /-(?:sd1|ga2|ta2|tb1|dtz|gb1|tb2|gb2|oza1|dtb2)$/;
 
 // ── rules ────────────────────────────────────────────────────────────────────
 
+/** One `completion.course.required` entry, checked and normalised (closing kinds get count 1, form 'a'). */
+function requiredEntry(req, neverRequired) {
+  if (!req || typeof req !== 'object') throw new Error('completion: a required entry must be an object');
+  if (!COURSE_REQUIRED_KINDS.includes(req.kind)) throw new Error(`completion: unknown required kind '${req.kind}'`);
+  if (!STATUS_SATISFIES[req.status]) throw new Error(`completion: unknown required status '${req.status}'`);
+  if (neverRequired.includes(req.kind)) throw new Error(`completion: '${req.kind}' is both required and never required`);
+  if (COUNTED_KINDS.includes(req.kind)) {
+    if (!Number.isInteger(req.count) || req.count < 0) throw new Error(`completion: bad count for '${req.kind}'`);
+    return { kind: req.kind, status: req.status, count: req.count };
+  }
+  // CLOSING: { kind: 'halbtest', lane, status } | { kind: 'modelltest', form, lane, status }
+  const count = req.count === undefined ? 1 : req.count;
+  if (!Number.isInteger(count) || count < 0) throw new Error(`completion: bad count for '${req.kind}'`);
+  if (req.lane !== 'learner' && !LANE_RE.test(String(req.lane))) {
+    throw new Error(`completion: unknown required lane '${req.lane}' for '${req.kind}' (expected 'learner' or a lane id)`);
+  }
+  const out = { kind: req.kind, lane: req.lane, status: req.status, count };
+  if (req.kind === 'modelltest') {
+    const form = req.form === undefined ? 'a' : req.form;
+    if (!MODELLTEST_FORMS.includes(form)) throw new Error(`completion: unknown Modelltest form '${form}'`);
+    if (neverRequired.includes(`modelltest:${form}`)) throw new Error(`completion: 'modelltest:${form}' is both required and never required`);
+    out.form = form;
+  } else if (req.form !== undefined) {
+    throw new Error(`completion: '${req.kind}' takes no form`);
+  }
+  return out;
+}
+
 /**
  * The completion rules of a course: its course.json `completion` block, with the
- * SCHEMA defaults for anything left out. Throws on a block this module cannot honour
- * (an unknown unit condition, required kind or status, or a kind that is both required
- * and never-required) — a schema change must fail loudly, never pass silently.
+ * SCHEMA defaults of its kind for anything left out. Throws on a block this module
+ * cannot honour (an unknown unit condition, required kind, status, lane or form, or a
+ * kind that is both required and never-required) — a schema change must fail loudly,
+ * never pass silently.
  */
 export function completionRules(course) {
   const c = (course && course.completion) || {};
+  const defaults = defaultCompletion(course && course.kind);
+  const neverRequired = [...((c.course && c.course.neverRequired) || defaults.course.neverRequired)];
   const rules = {
-    lernschritt: { ...DEFAULT_COMPLETION.lernschritt, ...(c.lernschritt || {}) },
+    lernschritt: { ...defaults.lernschritt, ...(c.lernschritt || {}) },
     aufgabe: {
-      submittedWhen: { ...DEFAULT_COMPLETION.aufgabe.submittedWhen, ...((c.aufgabe && c.aufgabe.submittedWhen) || {}) },
+      submittedWhen: { ...defaults.aufgabe.submittedWhen, ...((c.aufgabe && c.aufgabe.submittedWhen) || {}) },
     },
-    unit: { ...DEFAULT_COMPLETION.unit, ...(c.unit || {}) },
+    unit: { ...defaults.unit, ...(c.unit || {}) },
     course: {
-      required: (c.course && c.course.required) || DEFAULT_COMPLETION.course.required,
-      neverRequired: (c.course && c.course.neverRequired) || DEFAULT_COMPLETION.course.neverRequired,
+      required: ((c.course && c.course.required) || defaults.course.required).map((req) => requiredEntry(req, neverRequired)),
+      neverRequired,
     },
   };
   if (rules.lernschritt.finishedWhen !== 'all-items-answered') {
@@ -97,14 +150,6 @@ export function completionRules(course) {
   }
   for (const token of rules.unit.completeWhen) {
     if (!UNIT_CONDITIONS[token]) throw new Error(`completion: unknown unit condition '${token}'`);
-  }
-  for (const req of rules.course.required) {
-    if (!COURSE_REQUIRED_KINDS.includes(req.kind)) throw new Error(`completion: unknown required kind '${req.kind}'`);
-    if (!STATUS_SATISFIES[req.status]) throw new Error(`completion: unknown required status '${req.status}'`);
-    if (!Number.isInteger(req.count) || req.count < 0) throw new Error(`completion: bad count for '${req.kind}'`);
-    if (rules.course.neverRequired.includes(req.kind)) {
-      throw new Error(`completion: '${req.kind}' is both required and never required`);
-    }
   }
   return rules;
 }
@@ -141,6 +186,7 @@ export function normalizeLearnerState(state) {
     finishedSteps: new Set(s.finishedSteps || []),
     submittedSlots: new Set([...(s.submitted || [])].map(slotOfBankKey)),
     attempts,
+    lane: typeof s.lane === 'string' && LANE_RE.test(s.lane) ? s.lane : null,
   };
 }
 
@@ -210,6 +256,7 @@ function promptTextsOf(task) {
 
 function taskShape(task) {
   if (!task) return null;
+  if (task.form && Array.isArray(task.form.fields)) return 'form';
   if (task.mode === 'written') return 'written-micro';
   if (task.mode === 'spoken') return 'spoken-micro';
   if (Array.isArray(task.wordBand)) return 'writing';
@@ -224,12 +271,20 @@ function taskShape(task) {
  *     the learner was actually given always suffices.
  *   SpeakingTask / spoken MicroOutput: Attempt { speechSeconds, turns } — turns count only
  *     in a card mode.
+ *   Form task (`form_fill`: sd1.s1, ta2.s1): Attempt { fields: { [fieldId]: value } } (or
+ *     `values`); formAllFieldsNonEmpty — every field non-empty, right or wrong (SCHEMA §5).
  */
 export function isAufgabeSubmitted(task, attempt, rules = DEFAULT_COMPLETION) {
   if (!task || !attempt) return false;
   const sw = { ...DEFAULT_COMPLETION.aufgabe.submittedWhen, ...((rules.aufgabe && rules.aufgabe.submittedWhen) || {}) };
   const shape = taskShape(task);
 
+  if (shape === 'form') {
+    const values = (attempt.fields && typeof attempt.fields === 'object' && attempt.fields) || (attempt.values && typeof attempt.values === 'object' && attempt.values) || {};
+    const filled = task.form.fields.map((f) => String((f && values[f.id]) ?? '').trim() !== '');
+    if (filled.length === 0) return false;
+    return sw.formAllFieldsNonEmpty === false ? filled.some(Boolean) : filled.every(Boolean);
+  }
   if (shape === 'writing' || shape === 'written-micro') {
     if (attempt.pastedPrompt === true) return false;
     const text = typeof attempt.text === 'string' ? attempt.text : null;
@@ -319,9 +374,9 @@ export function unitCompletion(unit, state, rules = DEFAULT_COMPLETION) {
 // ── course ───────────────────────────────────────────────────────────────────
 
 /**
- * The closing ids whose submission satisfies the 'closing' requirement: the first form
- * of every lane — the Halbtest (.1) and Modelltest A (.2). Never the Diagnose, never
- * Modelltest B/C (neverRequired). Any lane counts: a learner who switched lanes is done.
+ * Every closing block's first form, per lane: the Halbtest (.1) and Modelltest A (.2). Never
+ * the Diagnose, never Modelltest B/C (neverRequired). Which ONE of them a learner needs is
+ * decided by `closingFormFor` (the learner's lane).
  */
 export function closingFirstForms(course) {
   const c = (course && course.closing) || {};
@@ -333,6 +388,44 @@ export function closingFirstForms(course) {
   return [...new Set(ids)];
 }
 
+/** The closing forms a course offers for one CLOSING kind: { [lane]: id }. */
+function closingFormsOf(course, req) {
+  const c = (course && course.closing) || {};
+  const out = {};
+  if (req.kind === 'halbtest') {
+    for (const [lane, id] of Object.entries(c.halbtest || {})) if (typeof id === 'string') out[lane] = id;
+  } else {
+    const at = MODELLTEST_FORMS.indexOf(req.form);
+    for (const [lane, forms] of Object.entries(c.modelltests || {})) {
+      if (!Array.isArray(forms)) continue;
+      // `<level>-m<form>-<lane>` (SCHEMA §2); a list without that pattern is read by position
+      const id = forms.find((f) => typeof f === 'string' && new RegExp(`-m${req.form}-${lane}$`).test(f)) || forms[at];
+      if (typeof id === 'string') out[lane] = id;
+    }
+  }
+  return out;
+}
+
+/**
+ * The lane a CLOSING entry resolves to. `lane: 'learner'` (SCHEMA §5) is the lane of the
+ * learner's learner_goals row for this band (state.lane); when it is unknown, or the course has
+ * no closing form for it, the course's primary lane — then the first lane with a form.
+ */
+export function closingLane(course, req, learnerLane = null) {
+  const forms = closingFormsOf(course, req);
+  if (req.lane !== 'learner') return req.lane;
+  if (learnerLane && forms[learnerLane]) return learnerLane;
+  const primary = course && course.lanes && course.lanes.primary;
+  if (primary && forms[primary]) return primary;
+  return Object.keys(forms)[0] || learnerLane || primary || null;
+}
+
+/** The one closing id that satisfies a CLOSING entry for this learner, or null. */
+export function closingFormFor(course, req, learnerLane = null) {
+  const lane = closingLane(course, req, learnerLane);
+  return (lane && closingFormsOf(course, req)[lane]) || null;
+}
+
 // The authored course.json lists ids; the compiled manifest (src/data/course-v2/<level>)
 // lists entries such as { unit: 'a2.1-u01', nr, … }. Both read the same here.
 function idOf(entry) {
@@ -341,31 +434,36 @@ function idOf(entry) {
   return null;
 }
 
-function candidatesFor(kind, course) {
-  if (kind === 'unit') return (course.units || []).map(idOf).filter(Boolean);
-  if (kind === 'plateau') return (course.plateaus || []).map(idOf).filter(Boolean);
-  return closingFirstForms(course);
+function candidatesFor(req, course, learnerLane) {
+  if (req.kind === 'unit') return (course.units || []).map(idOf).filter(Boolean);
+  if (req.kind === 'plateau') return (course.plateaus || []).map(idOf).filter(Boolean);
+  const id = closingFormFor(course, req, learnerLane);
+  return id ? [id] : [];
 }
 
 /**
  * Completion of a course (SCHEMA §5 course.json, authored or as the compiled manifest).
- * → { level, complete, parts: [{ kind, status, count, done, doneIds, missing, satisfied }],
+ * → { level, complete, parts: [{ kind, status, count, lane?, form?, done, doneIds, missing, satisfied }],
  *     done, total, share }
  * `done`/`total` sum the required counts (12 + 3 + 1), `share` is done / total — the one
- * progress figure a course surface may show.
+ * progress figure a course surface may show. The closing part names the lane it resolved
+ * to; only that lane's first form counts (a Diagnose or Modelltest B/C never does).
  */
 export function courseCompletion(course, state) {
   const rules = completionRules(course);
   const st = normalizeLearnerState(state);
   const parts = rules.course.required.map((req) => {
     const ok = STATUS_SATISFIES[req.status];
-    const ids = candidatesFor(req.kind, course);
+    const ids = candidatesFor(req, course || {}, st.lane);
     const doneIds = ids.filter((id) => ok.includes(st.progress.get(id)));
     const satisfied = doneIds.length >= req.count;
+    const part = { kind: req.kind, status: req.status, count: req.count };
+    if (CLOSING_KINDS.includes(req.kind)) {
+      part.lane = closingLane(course || {}, req, st.lane);
+      if (req.form) part.form = req.form;
+    }
     return {
-      kind: req.kind,
-      status: req.status,
-      count: req.count,
+      ...part,
       done: Math.min(doneIds.length, req.count),
       doneIds,
       missing: satisfied ? [] : ids.filter((id) => !doneIds.includes(id)),

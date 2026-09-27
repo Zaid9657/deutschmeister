@@ -2102,8 +2102,8 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.imperativ-sie",
-          "promptDe": "Die Sachbearbeiterin bittet Sie: Sie sollen hier warten. Was sagt sie?",
-          "promptEn": "The clerk asks you to wait here. What does she say?",
+          "promptDe": "Die Sachbearbeiterin bittet Sie um etwas. Was sagt sie?",
+          "promptEn": "The clerk makes a request. What does she say?",
           "options": [
             "Warten Sie bitte hier.",
             "Warten Sie hier?",
@@ -3768,10 +3768,14 @@
         ],
         "answer": "Entschuldigung, wo ist die Anmeldung?",
         "accepted": [
-          "Entschuldigung, wo ist die Anmeldung?"
+          "Entschuldigung, wo ist die Anmeldung?",
+          "Wo ist die Anmeldung, Entschuldigung?"
         ],
+        "acceptedWhy": {
+          "Wo ist die Anmeldung, Entschuldigung?": "möglich: Entschuldigung am Ende; vorne ist es üblicher"
+        },
         "explanation": {
-          "de": "W-Frage: wo + Verb + die Anmeldung. Entschuldigung steht vorne.",
+          "de": "W-Frage: wo + Verb + die Anmeldung. Entschuldigung steht meist vorne.",
           "en": "W-question: wo + verb + subject; “Entschuldigung” opens it."
         },
         "origin": "agent"
@@ -3849,7 +3853,7 @@
     }
   ],
   "story": {
-    "beat": "Priya und Arjun melden ihre neue Adresse im Bürgerbüro an – zu spät, denn sie wohnen schon seit Monaten in der Wohnung. Der Termin ist verschoben, aber am Ende haben sie ihre Meldebestätigung.",
+    "beat": "Priya und Arjun melden ihre neue Adresse im Bürgerbüro an. Sie sind zu spät: Sie wohnen schon seit Monaten in der Wohnung. Der Termin ist verschoben, aber am Ende haben sie ihre Meldebestätigung.",
     "cliffhanger": "Auf dem Weg nach Hause regnet es stark. Am Abend hat Priya Kopfschmerzen und Fieber. Arjun sagt: „Morgen rufst du bei Frau Doktor Sommer an.“",
     "castIn": [
       "cast.dr-sommer"
@@ -3883,7 +3887,7 @@
       "currentAsOf": "2025-09-01",
       "exceptions": [],
       "verification": "verified",
-      "notes": "Verified at the source on 2026-09-27 (review a1.2-u04.r1, F03): Durchführungsbestimmungen A1 § 7 (Stand 1. September 2025): „Die Prüfung kann nur als Ganzes wiederholt werden.“"
+      "notes": "Verified at the source on 2026-09-27 (review a1.2-u04.r1, F03; wording re-checked in this fix against the copy of the PDF saved that day): Durchführungsbestimmungen A1 § 7 (Stand 1. September 2025): „Die Prüfung kann nur als Ganzes wiederholt werden.“"
     },
     {
       "id": "a1.2-u04-f02",
@@ -3896,7 +3900,7 @@
       "currentAsOf": "2025-09-01",
       "exceptions": [],
       "verification": "verified",
-      "notes": "Narrowed to the source wording and verified on 2026-09-27 (review a1.2-u04.r1, F03): Durchführungsbestimmungen A1 § 2.2 „Vor Beginn der Prüfung weisen sich alle Teilnehmenden aus“; § 3.1 „Wie in der schriftlichen Prüfung muss die Identität der Teilnehmenden … zweifelsfrei festgestellt werden.“ The source names no document type, so the claim names none; the Fokus mentions a passport only as an example of an ID with a photo."
+      "notes": "Narrowed to the source wording and verified on 2026-09-27 (review a1.2-u04.r1, F03; wording re-checked in this fix against the copy of the PDF saved that day): Durchführungsbestimmungen A1 § 2.2 „Vor Beginn der Prüfung weisen sich alle Teilnehmenden aus“; § 3.1 „Wie in der schriftlichen Prüfung muss die Identität der Teilnehmenden … zweifelsfrei festgestellt werden.“ The source names no document type, so the claim names none; the Fokus mentions a passport only as an example of an ID with a photo."
     },
     {
       "id": "a1.2-u04-f03",
@@ -3915,7 +3919,7 @@
         }
       ],
       "verification": "verified",
-      "notes": "Verified at the source on 2026-09-27 (review a1.2-u04.r1, F02/F03): § 17 Abs. 1 BMG (register within two weeks of moving in) and § 27 Abs. 2 BMG (no registration for a stay of up to six months by people already registered in Germany; for people who otherwise live abroad and are not registered, the duty arises after three months). The exception was corrected from „drei Monate“ in this fix."
+      "notes": "Verified at the source on 2026-09-27 (review a1.2-u04.r1, F02/F03; § 17 and § 27 re-checked in this fix against the copies of the pages saved that day): § 17 Abs. 1 BMG (register within two weeks of moving in) and § 27 Abs. 2 BMG (no registration for a stay of up to six months by people already registered in Germany; for people who otherwise live abroad and are not registered, the duty arises after three months). The exception was corrected from „drei Monate“ in this fix."
     },
     {
       "id": "a1.2-u04-f04",
@@ -3928,7 +3932,7 @@
       "currentAsOf": "2026-09-27",
       "exceptions": [],
       "verification": "verified",
-      "notes": "Backs the LS1 web page line „das Formular von Ihrem Vermieter“ and LS1 l13 / LS3 l07 (Wohnungsgeberbestätigung). § 19 Abs. 1 BMG re-read at the source on 2026-09-27 by review a1.2-u04.r1 (F21)."
+      "notes": "Backs the LS1 web page line „das Formular von Ihrem Vermieter“ and LS1 l13 / LS3 l07 (Wohnungsgeberbestätigung). § 19 Abs. 1 BMG re-read at the source on 2026-09-27 by review a1.2-u04.r1 (F21) and re-checked in this fix against the copy of the page saved that day: „Der Wohnungsgeber ist verpflichtet, bei der Anmeldung mitzuwirken. Hierzu hat der Wohnungsgeber … den Einzug schriftlich oder … auch elektronisch … zu bestätigen.“"
     }
   ],
   "assets": []
