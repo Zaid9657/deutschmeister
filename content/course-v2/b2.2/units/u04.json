@@ -501,7 +501,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.kostenvoranschlag",
-            "promptDe": "Bevor die Werkstatt repariert, schickt sie uns einen ___ mit dem Preis. (Kost…, 17 Buchstaben)",
+            "promptDe": "Vor der Reparatur schickt die Werkstatt einen ___ mit dem Preis. (Kost…, 17 Buchstaben)",
             "promptEn": "What does the joiner send before repairing?",
             "answer": "Kostenvoranschlag",
             "accepted": [
