@@ -43,7 +43,17 @@
           "lx.gutachten",
           "lx.umzugsunternehmen",
           "lx.fahrlaessig",
-          "lx.kratzer"
+          "lx.kratzer",
+          "lx.delle",
+          "lx.transportschaden",
+          "lx.moebelpacker",
+          "lx.schadensprotokoll",
+          "lx.sachverstaendige",
+          "lx.transportversicherung",
+          "lx.verursacher",
+          "lx.glasbruch",
+          "lx.zerkratzt",
+          "lx.unsachgemaess"
         ]
       },
       {
@@ -54,7 +64,14 @@
           "lx.verbindlich",
           "lx.abweichen",
           "lx.aufkommen",
-          "lx.pauschale"
+          "lx.pauschale",
+          "lx.haftungsgrenze",
+          "lx.haftungsausschluss",
+          "lx.versicherungssumme",
+          "lx.auftraggeber",
+          "lx.auftragnehmer",
+          "lx.haftbar",
+          "lx.ersatzpflichtig"
         ]
       },
       {
@@ -65,7 +82,16 @@
           "lx.kompensation",
           "lx.nachverhandeln",
           "lx.angemessen",
-          "lx.unverhaeltnismaessig"
+          "lx.unverhaeltnismaessig",
+          "lx.verhandlungsspielraum",
+          "lx.schmerzgrenze",
+          "lx.verhandlungspartner",
+          "lx.verhandlungsposition",
+          "lx.gegenleistung",
+          "lx.teilerstattung",
+          "lx.feilschen",
+          "lx.einwilligen",
+          "lx.kulant"
         ]
       },
       {
@@ -76,7 +102,15 @@
           "lx.begleichen",
           "lx.geltend-machen",
           "lx.bestehen-auf",
-          "lx.sich-weigern"
+          "lx.sich-weigern",
+          "lx.nachfrist",
+          "lx.rechtsweg",
+          "lx.rechtsschutzversicherung",
+          "lx.kostenerstattung",
+          "lx.einklagen",
+          "lx.androhen",
+          "lx.ausstehend",
+          "lx.anderenfalls"
         ]
       }
     ],
@@ -167,8 +201,8 @@
         {
           "id": "b2.2-u04-start-l01",
           "speaker": "cast.arjun",
-          "de": "Schon Viertel nach acht, und immer noch kein Wagen vor der Tür. Um acht wollte das Umzugsunternehmen doch hier sein.",
-          "en": "Already quarter past eight and still no van outside. The removal company was supposed to be here at eight."
+          "de": "Ein halbes Jahr haben wir auf eine Wohnung bei der Genossenschaft gewartet, und jetzt das: schon Viertel nach acht und immer noch kein Wagen vor der Tür! Um acht wollte das Umzugsunternehmen doch hier sein.",
+          "en": "We waited half a year for a flat from the housing cooperative, and now this: already quarter past eight and still no van outside! The removal company was supposed to be here at eight."
         },
         {
           "id": "b2.2-u04-start-l02",
@@ -203,8 +237,8 @@
         {
           "id": "b2.2-u04-start-l07",
           "speaker": "cast.priya",
-          "de": "Arjun, komm mal her! Die Kommode hat an der Seite eine große Delle, und die Tür ist ganz zerkratzt.",
-          "en": "Arjun, come here! The chest of drawers has a big dent on the side, and the door is scratched all over."
+          "de": "Heute hat es endlich geklappt, alles ist in der neuen Wohnung. Aber Arjun, komm mal her! Die Kommode hat an der Seite eine große Delle, und die Tür ist ganz zerkratzt.",
+          "en": "Today it finally worked – everything is in the new flat. But Arjun, come here! The chest of drawers has a big dent on the side, and the door is scratched all over."
         },
         {
           "id": "b2.2-u04-start-l08",
@@ -215,8 +249,8 @@
         {
           "id": "b2.2-u04-start-l09",
           "speaker": "cast.priya",
-          "de": "Eben. Heute Abend lese ich das Kleingedruckte im Vertrag. Für diesen Schaden muss die Firma aufkommen.",
-          "en": "Exactly. Tonight I’ll read the small print in the contract. The company has to pay for this damage."
+          "de": "Eben. Heute Abend lese ich das Kleingedruckte in den Vertragsbedingungen. Für diesen Schaden muss die Firma aufkommen, und ich erwarte eine Wiedergutmachung.",
+          "en": "Exactly. Tonight I’ll read the small print in the terms and conditions. The company has to pay for this damage, and I expect it to make amends."
         }
       ],
       "gistItem": {
@@ -227,8 +261,8 @@
         "promptDe": "Warum kommen die Möbelpacker nicht pünktlich?",
         "promptEn": "Why are the movers not on time?",
         "options": [
-          "Ihr Wagen hatte eine Panne.",
           "Sie stehen im Stau.",
+          "Ihr Wagen hatte eine Panne.",
           "Sie haben den Termin vergessen."
         ],
         "answer": "Ihr Wagen hatte eine Panne.",
@@ -249,7 +283,7 @@
         "bankKey": "b22-u04-mo1",
         "mode": "spoken",
         "profile": "course-micro-sp",
-        "situationDe": "Nach Ihrem Umzug: Die Firma kam einen Tag zu spät, und zwei Möbelstücke sind beschädigt.",
+        "situationDe": "Nach Ihrem Umzug: Die Firma kam einen Tag zu spät, und eine Kommode und ein Spiegel sind beschädigt.",
         "promptDe": "Was würden Sie jetzt tun? Sprechen Sie etwa eine Minute frei.",
         "promptEn": "What would you do now? Speak freely for about a minute.",
         "planSeconds": 30,
@@ -283,8 +317,8 @@
         "title": "Allgemeine Geschäftsbedingungen von Blitz Umzüge (Auszug)",
         "textType": "tt.bedingungen",
         "text": {
-          "de": "§ 1 Leistungsumfang\nDer Leistungsumfang steht im Auftrag. Geschirr, Glas und Spiegel verpackt der Auftragnehmer nur, sofern der Auftraggeber diese Leistung bestellt hat.\n§ 2 Termine\nDer vereinbarte Termin ist für beide Seiten verbindlich. Kommt der Auftragnehmer mehr als drei Stunden später als vertraglich vereinbart, erstattet er dem Auftraggeber 10 % des Preises, es sei denn, der Grund für die Verspätung ist höhere Gewalt, zum Beispiel ein Unwetter oder eine gesperrte Straße.\n§ 3 Haftung\nFür Schäden, die seine Mitarbeiter beim Tragen, beim Laden oder während der Fahrt verursachen, ist der Auftragnehmer haftbar. Die Haftungsgrenze ist nach dem Gesetz 620 Euro je Kubikmeter Laderaum, den der Umzug braucht. Hat der Auftraggeber Kartons ohne Hilfe gepackt, gilt ein Haftungsausschluss für Schäden durch eine unsachgemäße Verpackung.\n§ 4 Schadensmeldung\nSchäden, die man sehen kann, gehören sofort bei der Lieferung ins Schadensprotokoll. Spätestens sind sie am Tag nach der Lieferung zu melden. Schäden, die man nicht sofort sieht, sind innerhalb von 14 Tagen zu melden. Nach der Lieferung ist die Meldung in Textform zu machen, zum Beispiel mit einer E-Mail. Anderenfalls kann der Auftraggeber keinen Schadensersatz mehr geltend machen.\n§ 5 Schadenshöhe\nDie Schadenshöhe weist der Auftraggeber mit einem Kostenvoranschlag oder einer Rechnung nach. Im Fall, dass man den Schaden reparieren kann, ersetzt der Auftragnehmer die Kosten der Reparatur. Ab einer Schadenshöhe von 1.000 Euro kann er das Gutachten eines Sachverständigen verlangen. Die Kosten für das Gutachten trägt der Auftragnehmer.\n§ 6 Streit\nKönnen sich beide Seiten nicht einigen, ist der Auftragnehmer bereit, an einer Schlichtung für Verbraucher teilzunehmen.",
-          "en": "§ 1 Scope of services\nThe scope of services is stated in the order. The contractor packs dishes, glass and mirrors only if the client has ordered this service.\n§ 2 Dates\nThe agreed date is binding for both sides. If the contractor arrives more than three hours later than contractually agreed, it refunds the client 10 % of the price, unless the delay is due to force majeure, for example a storm or a closed road.\n§ 3 Liability\nThe contractor is liable for damage its staff cause while carrying, loading or driving. By law the liability limit is 620 euros per cubic metre of loading space the move needs. If the client packed boxes without help, liability is excluded for damage caused by improper packing.\n§ 4 Reporting damage\nVisible damage belongs in the damage report at delivery. It must be reported no later than the day after delivery. Damage that cannot be seen at once must be reported within 14 days. After delivery the report must be made in text form, for example by e-mail. Otherwise the client can no longer claim compensation.\n§ 5 Amount of damage\nThe client proves the amount of the damage with a cost estimate or an invoice. If the damage can be repaired, the contractor pays the cost of the repair. From a damage amount of 1,000 euros it may request an expert’s report. The contractor bears the cost of the report.\n§ 6 Disputes\nIf the two sides cannot agree, the contractor is prepared to take part in consumer arbitration."
+          "de": "§ 1 Leistungsumfang\nDer Leistungsumfang steht im Auftrag. Geschirr, Glas und Spiegel verpackt der Auftragnehmer nur, sofern der Auftraggeber diese Leistung bestellt hat.\n§ 2 Termine\nDer vereinbarte Termin ist für beide Seiten verbindlich. Kommt der Auftragnehmer mehr als drei Stunden später als vertraglich vereinbart, erhält der Auftraggeber eine Teilerstattung von 10 % des Preises, es sei denn, der Grund für die Verspätung ist höhere Gewalt, zum Beispiel ein Unwetter oder eine gesperrte Straße.\n§ 3 Haftung\nFür Schäden, die seine Mitarbeiter beim Tragen, beim Laden oder während der Fahrt verursachen, ist der Auftragnehmer haftbar. Die Haftungsgrenze ist nach dem Gesetz 620 Euro je Kubikmeter Laderaum, den der Umzug braucht. Der Auftraggeber kann zusätzlich eine Transportversicherung mit einer größeren Versicherungssumme bestellen. Hat der Auftraggeber Kartons ohne Hilfe gepackt, gilt ein Haftungsausschluss für Schäden durch eine unsachgemäße Verpackung.\n§ 4 Schadensmeldung\nSchäden, die man sehen kann, gehören sofort bei der Lieferung ins Schadensprotokoll. Spätestens sind sie am Tag nach der Lieferung zu melden. Schäden, die man nicht sofort sieht, sind innerhalb von 14 Tagen zu melden. Nach der Lieferung ist die Meldung in Textform zu machen, zum Beispiel mit einer E-Mail. Anderenfalls kann der Auftraggeber keinen Schadensersatz mehr geltend machen.\n§ 5 Schadenshöhe\nDie Schadenshöhe weist der Auftraggeber mit einem Kostenvoranschlag oder einer Rechnung nach. Im Fall, dass man den Schaden reparieren kann, ist der Auftragnehmer für die Kosten der Reparatur ersatzpflichtig. Weicht die Rechnung der Werkstatt vom Kostenvoranschlag ab, gilt die Rechnung. Ab einer Schadenshöhe von 1.000 Euro kann der Auftragnehmer das Gutachten eines Sachverständigen verlangen; die Kosten dafür trägt er selbst. Die Kostenerstattung erhält der Auftraggeber spätestens 14 Tage nach der Einigung.\n§ 6 Streit\nKönnen sich beide Seiten nicht einigen, ist der Auftragnehmer bereit, an einer Schlichtung für Verbraucher teilzunehmen. Der Rechtsweg bleibt beiden Seiten offen.",
+          "en": "§ 1 Scope of services\nThe scope of services is stated in the order. The contractor packs dishes, glass and mirrors only if the client has ordered this service.\n§ 2 Dates\nThe agreed date is binding for both sides. If the contractor arrives more than three hours later than contractually agreed, the client receives a partial refund of 10 % of the price, unless the delay is due to force majeure, for example a storm or a closed road.\n§ 3 Liability\nThe contractor is liable for damage its staff cause while carrying, loading or driving. By law the liability limit is 620 euros per cubic metre of loading space the move needs. The client can additionally order transit insurance with a higher sum insured. If the client packed boxes without help, liability is excluded for damage caused by improper packing.\n§ 4 Reporting damage\nVisible damage belongs in the damage report at delivery. It must be reported no later than the day after delivery. Damage that cannot be seen at once must be reported within 14 days. After delivery the report must be made in text form, for example by e-mail. Otherwise the client can no longer claim compensation.\n§ 5 Amount of damage\nThe client proves the amount of the damage with a cost estimate or an invoice. If the damage can be repaired, the contractor is liable for the cost of the repair. If the workshop’s invoice differs from the cost estimate, the invoice applies. From a damage amount of 1,000 euros the contractor may request an expert’s report; it bears the cost itself. The client receives the reimbursement no later than 14 days after the agreement.\n§ 6 Disputes\nIf the two sides cannot agree, the contractor is prepared to take part in consumer arbitration. Legal action remains open to both sides."
         },
         "glosses": [
           {
@@ -317,17 +351,17 @@
           "promptDe": "Worum geht es in § 2?",
           "promptEn": "What is § 2 about?",
           "options": [
-            "um Termine und Verspätungen",
-            "um die Verpackung von Glas",
-            "um die Höhe der Haftung"
+            "wie man einen neuen Termin vereinbart",
+            "was gilt, wenn die Firma zu spät kommt",
+            "wann der Kunde den Umzug bezahlen muss"
           ],
-          "answer": "um Termine und Verspätungen",
+          "answer": "was gilt, wenn die Firma zu spät kommt",
           "accepted": [
-            "um Termine und Verspätungen"
+            "was gilt, wenn die Firma zu spät kommt"
           ],
           "explanation": {
-            "de": "§ 2 heißt „Termine und Pünktlichkeitsgarantie“: Es geht um den Umzugstermin und um Verspätungen.",
-            "en": "§ 2 covers the moving date and what happens if the firm is late."
+            "de": "§ 2 heißt „Termine“: Der Termin ist verbindlich, und der Paragraf regelt, was gilt, wenn die Firma zu spät kommt.",
+            "en": "§ 2 („Termine“) makes the date binding and says what applies if the firm is late."
           },
           "origin": "agent"
         },
@@ -339,8 +373,8 @@
           "promptDe": "In welchem Paragrafen steht, wie und bis wann man einen Schaden meldet?",
           "promptEn": "Which section says how and by when to report damage?",
           "options": [
-            "in § 4",
             "in § 3",
+            "in § 4",
             "in § 5"
           ],
           "answer": "in § 4",
@@ -359,7 +393,7 @@
           "type": "fill_blank",
           "role": "detail",
           "topic": "lesen",
-          "promptDe": "Die Firma erstattet 10 Prozent, wenn sie mehr als ___ Stunden zu spät kommt.",
+          "promptDe": "Die Firma erstattet 10 %, wenn sie mehr als ___ Stunden zu spät kommt.",
           "promptEn": "How many hours late before money comes back?",
           "answer": "drei",
           "accepted": [
@@ -381,9 +415,9 @@
           "promptDe": "Die Möbelpacker haben einen Spiegel verpackt. Er ist zerbrochen. Was gilt?",
           "promptEn": "The movers packed a mirror and it broke. What applies?",
           "options": [
-            "Die Firma kommt für den Schaden auf.",
             "Die Firma haftet nie für Glas.",
-            "Der Kunde muss ein Gutachten bezahlen."
+            "Der Kunde muss ein Gutachten bezahlen.",
+            "Die Firma kommt für den Schaden auf."
           ],
           "answer": "Die Firma kommt für den Schaden auf.",
           "accepted": [
@@ -444,9 +478,9 @@
           "promptDe": "„Wir erstatten 10 %, es sei denn, es gab ein Unwetter.“ Wann gibt es nichts zurück?",
           "promptEn": "When is there no refund?",
           "options": [
-            "nach einem Unwetter",
             "bei jeder Verspätung",
-            "nach einer Panne"
+            "nach einer Panne",
+            "nach einem Unwetter"
           ],
           "answer": "nach einem Unwetter",
           "accepted": [
@@ -466,8 +500,8 @@
           "promptDe": "„Hat der Auftraggeber Kartons ohne Hilfe gepackt, …“ – Was bedeutet der Satzanfang?",
           "promptEn": "What does the opening mean?",
           "options": [
-            "Wenn der Auftraggeber Kartons ohne Hilfe gepackt hat, …",
             "Weil der Auftraggeber Kartons ohne Hilfe gepackt hat, …",
+            "Wenn der Auftraggeber Kartons ohne Hilfe gepackt hat, …",
             "Obwohl der Auftraggeber Kartons ohne Hilfe gepackt hat, …"
           ],
           "answer": "Wenn der Auftraggeber Kartons ohne Hilfe gepackt hat, …",
@@ -522,8 +556,8 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.verbindlich",
-            "promptDe": "Keine Seite kann den Termin einfach absagen. Er ist v________. (Adjektiv auf -lich)",
-            "promptEn": "Adjective: binding.",
+            "promptDe": "Keine Seite kann den Termin einfach absagen. Er ist ___. (v…lich, 11 Buchstaben)",
+            "promptEn": "Adjective: binding (11 letters, v…lich).",
             "answer": "verbindlich",
             "accepted": [
               "verbindlich"
@@ -556,8 +590,8 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.fahrlaessig",
-            "promptDe": "Die Möbelpacker haben nicht aufgepasst. Sie haben f________ gehandelt.",
-            "promptEn": "How did the movers act? (starts with f)",
+            "promptDe": "Die Möbelpacker haben nicht aufgepasst. Sie haben ___ gehandelt. (f…, 10 Buchstaben)",
+            "promptEn": "How did the movers act? The legal word: f…, 10 letters.",
             "answer": "fahrlässig",
             "accepted": [
               "fahrlässig"
@@ -573,7 +607,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.haftung",
-            "promptDe": "Die Firma haftet höchstens mit 620 Euro je Kubikmeter. Ihre ___ hat eine Grenze.",
+            "promptDe": "Die Firma haftet höchstens mit 620 € je m³. Ihre ___ (Nomen zu haften) hat eine Grenze.",
             "promptEn": "Noun of haften.",
             "answer": "Haftung",
             "accepted": [
@@ -602,10 +636,14 @@
             "accepted": [
               "Wir fordern Schadensersatz für die Kommode.",
               "Für die Kommode fordern wir Schadensersatz.",
-              "Wir fordern für die Kommode Schadensersatz."
+              "Wir fordern für die Kommode Schadensersatz.",
+              "Schadensersatz fordern wir für die Kommode.",
+              "Schadensersatz für die Kommode fordern wir."
             ],
             "acceptedWhy": {
-              "Wir fordern für die Kommode Schadensersatz.": "grammatisch: die Angabe für die Kommode darf auch vor dem Objekt stehen"
+              "Wir fordern für die Kommode Schadensersatz.": "grammatisch: die Angabe für die Kommode darf auch vor dem Objekt stehen",
+              "Schadensersatz fordern wir für die Kommode.": "grammatisch: das Objekt kann betont vorne stehen; das Verb bleibt auf Position 2",
+              "Schadensersatz für die Kommode fordern wir.": "grammatisch: Schadensersatz für die Kommode ist hier eine Einheit und steht betont vorne"
             },
             "explanation": {
               "de": "Das Verb fordern steht auf Position 2.",
@@ -629,13 +667,18 @@
             "answer": "Wir haben die Vertragsbedingungen genau gelesen.",
             "accepted": [
               "Wir haben die Vertragsbedingungen genau gelesen.",
-              "Die Vertragsbedingungen haben wir genau gelesen."
+              "Die Vertragsbedingungen haben wir genau gelesen.",
+              "Genau gelesen haben wir die Vertragsbedingungen."
             ],
             "explanation": {
               "de": "Perfekt: haben auf Position 2, gelesen am Ende.",
               "en": "Perfekt: haben second, the participle last."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "acceptedWhy": {
+              "Die Vertragsbedingungen haben wir genau gelesen.": "grammatisch: das Objekt kann betont vorne stehen",
+              "Genau gelesen haben wir die Vertragsbedingungen.": "grammatisch: genau gelesen steht betont vorne; selten, aber richtig"
+            }
           },
           {
             "id": "b2.2-u04-ls1-p09",
@@ -713,9 +756,9 @@
             "promptDe": "Auf der Tür der Kommode sieht man viele feine Linien. Was sind das?",
             "promptEn": "Fine lines on the door: what are they?",
             "options": [
-              "Kratzer",
               "Dellen",
-              "Glasbruch"
+              "Glasbruch",
+              "Kratzer"
             ],
             "answer": "Kratzer",
             "accepted": [
@@ -735,13 +778,13 @@
             "promptDe": "„Die Schadenshöhe beträgt 500 Euro.“ Was bedeutet das?",
             "promptEn": "What does the sentence mean?",
             "options": [
-              "Der Schaden kostet 500 Euro.",
+              "Der Schaden liegt bei 500 Euro.",
               "Die Firma zahlt sofort 500 Euro.",
               "Das Gutachten kostet 500 Euro."
             ],
-            "answer": "Der Schaden kostet 500 Euro.",
+            "answer": "Der Schaden liegt bei 500 Euro.",
             "accepted": [
-              "Der Schaden kostet 500 Euro."
+              "Der Schaden liegt bei 500 Euro."
             ],
             "explanation": {
               "de": "Die Schadenshöhe ist der Wert des Schadens in Euro.",
@@ -896,8 +939,8 @@
           "promptDe": "„Das Angebot ist unverbindlich.“ Was heißt das für Sie?",
           "promptEn": "What does a non-binding offer mean for you?",
           "options": [
-            "Sie müssen es nicht annehmen.",
             "Sie müssen sofort bezahlen.",
+            "Sie müssen es nicht annehmen.",
             "Der Preis kann nie steigen."
           ],
           "answer": "Sie müssen es nicht annehmen.",
@@ -915,11 +958,40 @@
             "repair"
           ],
           "origin": "agent"
+        },
+        {
+          "id": "b2.2-u04-ls1-r06",
+          "type": "multiple_choice",
+          "role": "practice",
+          "topic": "lesen",
+          "promptDe": "Sichtbare Schäden: bis zum Tag nach der Lieferung melden. Lieferung Freitag – bis wann?",
+          "promptEn": "Visible damage, delivered on Friday: by when must you report it?",
+          "options": [
+            "bis Samstag",
+            "bis Freitag in einer Woche",
+            "innerhalb von 14 Tagen"
+          ],
+          "answer": "bis Samstag",
+          "accepted": [
+            "bis Samstag"
+          ],
+          "explanation": {
+            "de": "Tag nach der Lieferung: Lieferung Freitag, also spätestens Samstag. 14 Tage gelten nur für Schäden, die man nicht sofort sieht.",
+            "en": "The day after a Friday delivery is Saturday; 14 days apply only to hidden damage."
+          },
+          "difficulty": 2,
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair",
+            "einstufung"
+          ],
+          "origin": "agent"
         }
       ],
       "microOutput": {
         "id": "b2.2-u04-ls1-mo",
-        "bankKey": "b22-u04-mo1",
+        "bankKey": "b22-u04-mo2",
         "mode": "written",
         "profile": "course-micro",
         "situationDe": "Eine Freundin zieht nächsten Monat um und will die AGB der Umzugsfirma nicht lesen.",
@@ -991,9 +1063,9 @@
           {
             "id": "b2.2-u04-ls2-l07",
             "speaker": "cast.ensemble-b2-1",
-            "de": "Gut, dann haften wir für den Spiegel. Für die Kommode brauche ich einen Kostenvoranschlag, es sei denn, Sie nehmen eine Pauschale. Ich kann Ihnen sofort 200 Euro für alles anbieten.",
-            "en": "Fine, then we are liable for the mirror. For the chest I need a cost estimate, unless you accept a flat sum. I can offer you 200 euros for everything right away.",
-            "say": "Gut, dann haften wir für den Spiegel. Für die Kommode brauche ich einen Kostenvoranschlag, es sei denn, Sie nehmen eine Pauschale. Ich kann Ihnen sofort zweihundert Euro für alles anbieten."
+            "de": "Gut, dann übernehmen wir die Haftung für den Spiegel. Für die Kommode brauche ich einen Kostenvoranschlag, es sei denn, Sie nehmen eine Pauschale. Ich kann Ihnen sofort 200 Euro für alles anbieten.",
+            "en": "Fine, then we accept liability for the mirror. For the chest I need a cost estimate, unless you accept a flat sum. I can offer you 200 euros for everything right away.",
+            "say": "Gut, dann übernehmen wir die Haftung für den Spiegel. Für die Kommode brauche ich einen Kostenvoranschlag, es sei denn, Sie nehmen eine Pauschale. Ich kann Ihnen sofort zweihundert Euro für alles anbieten."
           },
           {
             "id": "b2.2-u04-ls2-l08",
@@ -1005,22 +1077,22 @@
           {
             "id": "b2.2-u04-ls2-l09",
             "speaker": "cast.ensemble-b2-1",
-            "de": "Der Grund für die Verspätung war eine Panne. Da konnten wir leider nichts machen. Deshalb finde ich 10 % des Preises unverhältnismäßig. Als Kompensation kann ich Ihnen aber einen Gutschein anbieten.",
-            "en": "The reason for the delay was a breakdown; unfortunately there was nothing we could do. That’s why I find 10 % of the price disproportionate. As compensation, though, I can offer you a voucher.",
-            "say": "Der Grund für die Verspätung war eine Panne. Da konnten wir leider nichts machen. Deshalb finde ich zehn Prozent des Preises unverhältnismäßig. Als Kompensation kann ich Ihnen aber einen Gutschein anbieten."
+            "de": "Der Grund für die Verspätung war eine Panne. Da konnten wir leider nichts machen. Deshalb finde ich eine Teilerstattung von 10 % des Preises unverhältnismäßig. Als Kompensation kann ich Ihnen aber einen Gutschein anbieten.",
+            "en": "The reason for the delay was a breakdown; unfortunately there was nothing we could do. That’s why I find a partial refund of 10 % of the price disproportionate. As compensation, though, I can offer you a voucher.",
+            "say": "Der Grund für die Verspätung war eine Panne. Da konnten wir leider nichts machen. Deshalb finde ich eine Teilerstattung von zehn Prozent des Preises unverhältnismäßig. Als Kompensation kann ich Ihnen aber einen Gutschein anbieten."
           },
           {
             "id": "b2.2-u04-ls2-l10",
             "speaker": "cast.priya",
-            "de": "Eine Panne ist aber keine höhere Gewalt. In Ihren Vertragsbedingungen steht: Kommen Sie mehr als drei Stunden zu spät, erstatten Sie 10 % des Preises. Darauf bestehe ich. Einen Gutschein brauche ich nicht.",
-            "en": "But a breakdown is not force majeure. Your terms say: if you are more than three hours late, you refund 10 % of the price. I insist on that. I don’t need a voucher.",
-            "say": "Eine Panne ist aber keine höhere Gewalt. In Ihren Vertragsbedingungen steht: Kommen Sie mehr als drei Stunden zu spät, erstatten Sie zehn Prozent des Preises. Darauf bestehe ich. Einen Gutschein brauche ich nicht."
+            "de": "Eine Panne ist aber keine höhere Gewalt. In Ihren Vertragsbedingungen steht: Kommen Sie mehr als drei Stunden zu spät, erstatten Sie 10 % des Preises. Darauf bestehe ich. Ein Gutschein ist für mich keine Kompensation.",
+            "en": "But a breakdown is not force majeure. Your terms say: if you are more than three hours late, you refund 10 % of the price. I insist on that. A voucher is no compensation for me.",
+            "say": "Eine Panne ist aber keine höhere Gewalt. In Ihren Vertragsbedingungen steht: Kommen Sie mehr als drei Stunden zu spät, erstatten Sie zehn Prozent des Preises. Darauf bestehe ich. Ein Gutschein ist für mich keine Kompensation."
           },
           {
             "id": "b2.2-u04-ls2-l11",
             "speaker": "cast.ensemble-b2-1",
-            "de": "Ich verstehe Ihren Standpunkt. Schicken Sie mir den Kostenvoranschlag, dann prüfen wir alles noch mal. Vorausgesetzt, dass die Summe angemessen ist, kommen wir Ihnen entgegen. Wir sind da kulant.",
-            "en": "I understand your point. Send me the cost estimate and we’ll check everything again. Provided the amount is reasonable, we’ll meet you halfway. We are accommodating there."
+            "de": "Ich verstehe Ihren Standpunkt. Schicken Sie mir den Kostenvoranschlag, dann prüfen wir alles noch mal. Vorausgesetzt, dass die Summe angemessen ist, kommen wir Ihnen entgegen. Beim Betrag haben wir noch Verhandlungsspielraum, wir sind da kulant.",
+            "en": "I understand your point. Send me the cost estimate and we’ll check everything again. Provided the amount is reasonable, we’ll meet you halfway. We still have room for negotiation on the amount; we are accommodating there."
           },
           {
             "id": "b2.2-u04-ls2-l12",
@@ -1031,8 +1103,9 @@
           {
             "id": "b2.2-u04-ls2-l13",
             "speaker": "cast.ensemble-b2-1",
-            "de": "Das mache ich gern. Sollten Sie noch Fragen haben, erreichen Sie uns montags bis freitags von acht bis sechs Uhr.",
-            "en": "I’ll be glad to. Should you have any further questions, you can reach us Monday to Friday from eight to six."
+            "de": "Das mache ich gern. Den ausstehenden Betrag begleichen wir dann innerhalb von 14 Tagen. Sollten Sie noch Fragen haben, erreichen Sie uns montags bis freitags von acht bis sechs Uhr.",
+            "en": "I’ll be glad to. We will then settle the outstanding amount within 14 days. Should you have any further questions, you can reach us Monday to Friday from eight to six.",
+            "say": "Das mache ich gern. Den ausstehenden Betrag begleichen wir dann innerhalb von vierzehn Tagen. Sollten Sie noch Fragen haben, erreichen Sie uns montags bis freitags von acht bis sechs Uhr."
           },
           {
             "id": "b2.2-u04-ls2-l14",
@@ -1060,9 +1133,9 @@
           "promptDe": "Warum ruft Priya beim Kundenservice an?",
           "promptEn": "Why does Priya call customer service?",
           "options": [
-            "Sie meldet Schäden und fordert Schadensersatz.",
             "Sie will einen neuen Termin für den Umzug.",
-            "Sie will das Verpacken später noch bestellen."
+            "Sie will das Verpacken später noch bestellen.",
+            "Sie meldet Schäden und fordert Schadensersatz."
           ],
           "answer": "Sie meldet Schäden und fordert Schadensersatz.",
           "accepted": [
@@ -1105,7 +1178,8 @@
           "promptEn": "Write the first offer.",
           "answer": "200",
           "accepted": [
-            "200"
+            "200",
+            "zweihundert"
           ],
           "exact": "number",
           "explanation": {
@@ -1122,8 +1196,8 @@
           "promptDe": "Warum muss die Firma auch für den Spiegel aufkommen?",
           "promptEn": "Why must the firm also pay for the mirror?",
           "options": [
-            "Ihre Mitarbeiter haben ihn verpackt.",
             "Er hat mehr als 100 Euro gekostet.",
+            "Ihre Mitarbeiter haben ihn verpackt.",
             "Priya hat ihn fotografiert."
           ],
           "answer": "Ihre Mitarbeiter haben ihn verpackt.",
@@ -1144,17 +1218,17 @@
           "promptDe": "Wie begründet Priya ihre Forderung wegen der Verspätung?",
           "promptEn": "How does Priya justify her claim for the delay?",
           "options": [
-            "Eine Panne ist kein Grund wie ein Unwetter.",
             "Die Firma hat vorher nicht angerufen.",
-            "Der Umzug war teurer als geplant."
+            "Der Umzug war teurer als geplant.",
+            "Eine Panne ist, anders als ein Unwetter, das Risiko der Firma."
           ],
-          "answer": "Eine Panne ist kein Grund wie ein Unwetter.",
+          "answer": "Eine Panne ist, anders als ein Unwetter, das Risiko der Firma.",
           "accepted": [
-            "Eine Panne ist kein Grund wie ein Unwetter."
+            "Eine Panne ist, anders als ein Unwetter, das Risiko der Firma."
           ],
           "explanation": {
-            "de": "Priya sagt: Eine Panne ist keine höhere Gewalt. Nur höhere Gewalt wie ein Unwetter ist laut Vertrag eine Ausnahme.",
-            "en": "She argues a breakdown is not force majeure such as a storm."
+            "de": "Priya sagt: Eine Panne ist keine höhere Gewalt. Laut Vertrag ist nur höhere Gewalt wie ein Unwetter eine Ausnahme; eine Panne ist das Risiko der Firma.",
+            "en": "She argues a breakdown is not force majeure such as a storm, so it is the firm’s risk."
           },
           "origin": "agent"
         }
@@ -1168,8 +1242,8 @@
           "promptDe": "„Ich brauche einen Kostenvoranschlag, es sei denn, Sie nehmen die Pauschale.“ Also:",
           "promptEn": "What follows from the sentence?",
           "options": [
-            "Mit Pauschale braucht die Firma keinen Kostenvoranschlag.",
             "Ohne Pauschale braucht die Firma keinen Kostenvoranschlag.",
+            "Mit Pauschale braucht die Firma keinen Kostenvoranschlag.",
             "Die Pauschale gibt es nur mit Kostenvoranschlag."
           ],
           "answer": "Mit Pauschale braucht die Firma keinen Kostenvoranschlag.",
@@ -1187,7 +1261,7 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.konditional-konnektoren",
-          "promptDe": "„Vorausgesetzt, dass die Summe angemessen ist, kommen wir entgegen.“ Die Bedingung?",
+          "promptDe": "„Vorausgesetzt, dass die Summe angemessen ist, kommen wir Ihnen entgegen.“ Die Bedingung?",
           "promptEn": "What is the condition?",
           "options": [
             "eine angemessene Summe",
@@ -1212,8 +1286,8 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.zugestaendnis",
-            "promptDe": "Beide Seiten geben ein bisschen nach: Jede Seite macht ein ___.",
-            "promptEn": "Both sides give a little: each makes a …",
+            "promptDe": "Beide Seiten geben ein bisschen nach: Jede Seite macht ein ___. (beginnt mit Z)",
+            "promptEn": "Both sides give a little: each makes a … (starts with Z).",
             "answer": "Zugeständnis",
             "accepted": [
               "Zugeständnis"
@@ -1229,8 +1303,8 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.gegenangebot",
-            "promptDe": "200 Euro sind zu wenig. Priya antwortet mit einem ___: 648 Euro.",
-            "promptEn": "Priya answers with a …",
+            "promptDe": "200 Euro sind zu wenig. Priya antwortet mit einem ___: 648 Euro. (Nomen mit gegen-)",
+            "promptEn": "Priya answers with a … (noun with gegen-).",
             "answer": "Gegenangebot",
             "accepted": [
               "Gegenangebot"
@@ -1246,8 +1320,8 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.bestehen-auf",
-            "promptDe": "Ich ___ auf einer schriftlichen Bestätigung der Einigung.",
-            "promptEn": "Verb for ich: insist on.",
+            "promptDe": "Ich ___ auf einer schriftlichen Bestätigung der Einigung. (bestehen)",
+            "promptEn": "Form of bestehen for ich: insist on.",
             "answer": "bestehe",
             "accepted": [
               "bestehe"
@@ -1297,7 +1371,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.geltend-machen",
-            "promptDe": "Den Schaden müssen Sie rechtzeitig schriftlich ___ machen.",
+            "promptDe": "Ihren Anspruch auf Schadensersatz müssen Sie rechtzeitig ___ machen.",
             "promptEn": "Assert a claim: … machen.",
             "answer": "geltend",
             "accepted": [
@@ -1459,8 +1533,8 @@
             "promptDe": "Welches Wort passt? „Als ___ bietet die Firma einen Gutschein an.“",
             "promptEn": "Which word fits?",
             "options": [
-              "Kompensation",
               "Haftung",
+              "Kompensation",
               "Frist"
             ],
             "answer": "Kompensation",
@@ -1480,7 +1554,7 @@
             "count": 2,
             "source": [
               "b2.2-u04-ls2-l09",
-              "b2.2-u04-ls2-l14",
+              "b2.2-u04-ls2-l13",
               "b2.2-u04-ls2-l03"
             ]
           },
@@ -1525,7 +1599,7 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "lx.wiedergutmachung",
-          "promptDe": "Die Firma soll den Schaden wiedergutmachen. Wir erwarten eine ___.",
+          "promptDe": "Die Firma soll den Schaden wiedergutmachen. Wir erwarten eine ___. (Nomen zum Verb)",
           "promptEn": "Noun from wiedergutmachen.",
           "answer": "Wiedergutmachung",
           "accepted": [
@@ -1633,7 +1707,7 @@
       ],
       "microOutput": {
         "id": "b2.2-u04-ls2-mo",
-        "bankKey": "b22-u04-mo2",
+        "bankKey": "b22-u04-mo3",
         "mode": "spoken",
         "profile": "course-micro-sp",
         "situationDe": "Nach Ihrem Umzug fehlt ein Karton, und ein Stuhl ist kaputt.",
@@ -1662,7 +1736,7 @@
           "voices": 4
         },
         "readAloud": {
-          "lineDe": "Unter 500 Euro kann ich mich leider nicht einigen."
+          "lineDe": "Unter 500 Euro können wir uns leider nicht einigen."
         }
       },
       "endLine": "Sie können jetzt einem Gespräch über einen Schaden folgen und hören, welche Bedingungen genannt werden. Weiter in der Sprachwerkstatt: Bedingungen genau formulieren."
@@ -1687,7 +1761,7 @@
           [
             "vorausgesetzt, dass",
             "nur unter dieser Bedingung",
-            "am Ende",
+            "am Ende (ohne dass: Position 2)",
             "Vorausgesetzt, dass die Summe angemessen ist, …"
           ],
           [
@@ -1780,8 +1854,8 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.konditional-konnektoren",
-            "promptDe": "Formell, ohne wenn: „___ Sie nicht zahlen, wenden wir uns an ein Gericht.“",
-            "promptEn": "Formal conditional without wenn.",
+            "promptDe": "Formell, Verb zuerst: „___ Sie nicht zahlen, wenden wir uns an ein Gericht.“",
+            "promptEn": "Formal conditional without a connector: the verb comes first.",
             "answer": "Sollten",
             "accepted": [
               "Sollten",
@@ -1942,10 +2016,14 @@
             "answer": "Sollten Sie nicht zahlen, wenden wir uns an die Schlichtungsstelle.",
             "accepted": [
               "Sollten Sie nicht zahlen, wenden wir uns an die Schlichtungsstelle.",
-              "Wir wenden uns an die Schlichtungsstelle, sollten Sie nicht zahlen."
+              "Wir wenden uns an die Schlichtungsstelle, sollten Sie nicht zahlen.",
+              "An die Schlichtungsstelle wenden wir uns, sollten Sie nicht zahlen.",
+              "Wir wenden uns, sollten Sie nicht zahlen, an die Schlichtungsstelle."
             ],
             "acceptedWhy": {
-              "Wir wenden uns an die Schlichtungsstelle, sollten Sie nicht zahlen.": "grammatisch: Der Bedingungssatz ohne Konnektor darf auch nach dem Hauptsatz stehen."
+              "Wir wenden uns an die Schlichtungsstelle, sollten Sie nicht zahlen.": "grammatisch: Der Bedingungssatz ohne Konnektor darf auch nach dem Hauptsatz stehen.",
+              "An die Schlichtungsstelle wenden wir uns, sollten Sie nicht zahlen.": "grammatisch: an die Schlichtungsstelle steht betont vorne, der Bedingungssatz folgt.",
+              "Wir wenden uns, sollten Sie nicht zahlen, an die Schlichtungsstelle.": "grammatisch: Der Bedingungssatz darf auch in der Mitte stehen, mit Kommas davor und danach."
             },
             "explanation": {
               "de": "Bedingung ohne Konnektor: Sollten zuerst. Der Hauptsatz beginnt dann mit dem Verb wenden.",
@@ -2005,9 +2083,9 @@
             "promptDe": "Welcher Konnektor bedeutet „außer wenn“?",
             "promptEn": "Which connector means “unless”?",
             "options": [
-              "es sei denn",
               "sofern",
-              "vorausgesetzt, dass"
+              "vorausgesetzt, dass",
+              "es sei denn"
             ],
             "answer": "es sei denn",
             "accepted": [
@@ -2098,8 +2176,8 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "g.konditional-konnektoren",
-          "promptDe": "Formell, ohne wenn: „___ die Kommode nicht zu reparieren sein, ersetzen wir sie.“",
-          "promptEn": "Formal conditional, singular subject.",
+          "promptDe": "Formell, Verb zuerst: „___ die Kommode nicht zu reparieren sein, ersetzen wir sie.“",
+          "promptEn": "Formal conditional without a connector, singular subject.",
           "answer": "Sollte",
           "accepted": [
             "Sollte",
@@ -2212,12 +2290,12 @@
           "id": "b2.2-u04-ls3-p15",
           "type": "cloze",
           "role": "practice",
-          "topic": "g.konditional-konnektoren",
+          "topic": "g.verben-praeposition",
           "promptDe": "Sehr geehrte Damen und Herren, ich wende mich ___ Sie wegen eines Schadens.",
           "promptEn": "Choose the preposition.",
           "options": [
-            "an",
             "bei",
+            "an",
             "für"
           ],
           "answer": "an",
@@ -2238,9 +2316,9 @@
           "promptDe": "Ich schalte eine Schlichtungsstelle ein, ___ Sie die Kosten nicht übernehmen.",
           "promptEn": "Choose the connector.",
           "options": [
-            "falls",
             "obwohl",
-            "damit"
+            "damit",
+            "falls"
           ],
           "answer": "falls",
           "accepted": [
@@ -2282,8 +2360,8 @@
           "promptDe": "Ich nehme Ihr Angebot an, vorausgesetzt, ___ Sie auch den Spiegel ersetzen.",
           "promptEn": "Complete the connector.",
           "options": [
-            "dass",
             "ob",
+            "dass",
             "wenn"
           ],
           "answer": "dass",
@@ -2300,21 +2378,21 @@
           "id": "b2.2-u04-ls3-p19",
           "type": "cloze",
           "role": "practice",
-          "topic": "g.konditional-konnektoren",
-          "promptDe": "Die Firma haftet nicht, es sei denn, ihre Mitarbeiter ___ fahrlässig gehandelt.",
+          "topic": "g.perfekt-haben",
+          "promptDe": "Die Firma haftet nicht für Glas, es sei denn, ihre Mitarbeiter ___ es verpackt.",
           "promptEn": "Choose the auxiliary.",
           "options": [
-            "haben",
             "sind",
-            "werden"
+            "werden",
+            "haben"
           ],
           "answer": "haben",
           "accepted": [
             "haben"
           ],
           "explanation": {
-            "de": "handeln bildet das Perfekt mit haben: haben gehandelt.",
-            "en": "handeln takes haben in the Perfekt."
+            "de": "verpacken bildet das Perfekt mit haben: Die Mitarbeiter haben es verpackt. Nach es sei denn steht das Verb auf Position 2.",
+            "en": "verpacken takes haben in the Perfekt; after es sei denn the verb is second."
           },
           "origin": "agent"
         }
@@ -2337,18 +2415,25 @@
             {
               "id": "b2.2-u04-ls4-t1-l01",
               "speaker": "x.frau-jessen",
-              "de": "Guten Tag, Frau Nair, hier ist Jessen von der Werkstatt Jessen. Ich habe die Fotos von Ihrer Kommode bekommen. Die Delle an der Seite können wir reparieren, und die Tür bekommt eine neue Farbe.",
-              "en": "Hello Ms Nair, this is Jessen from the Jessen workshop. I’ve received the photos of your chest of drawers. We can repair the dent on the side, and the door will get a new coat of paint."
+              "de": "Guten Tag, Frau Nair, hier ist Jessen von der Werkstatt Jessen. Ich habe mir Ihre Kommode heute bei Ihnen angesehen. Die Delle an der Seite können wir reparieren, und die Tür lackieren wir neu.",
+              "en": "Hello Ms Nair, this is Jessen from the Jessen workshop. I looked at your chest of drawers at your place today. We can repair the dent on the side, and we’ll re-lacquer the door."
             },
             {
               "id": "b2.2-u04-ls4-t1-l02",
               "speaker": "x.frau-jessen",
-              "de": "Die Reparatur kostet 380 Euro, der Kostenvoranschlag gilt bis zum Ende des Monats. Sofern Sie zustimmen, holen wir die Kommode am Montag bei Ihnen ab. Rufen Sie mich bitte kurz zurück. Danke!",
-              "en": "The repair costs 380 euros; the estimate is valid until the end of the month. If you agree, we’ll collect the chest from you on Monday. Please give me a quick call back. Thanks!",
-              "say": "Die Reparatur kostet dreihundertachtzig Euro, der Kostenvoranschlag gilt bis zum Ende des Monats. Sofern Sie zustimmen, holen wir die Kommode am Montag bei Ihnen ab. Rufen Sie mich bitte kurz zurück. Danke!"
+              "de": "Die Reparatur kostet 380 Euro, der Kostenvoranschlag gilt bis zum Ende des Monats. Sollte die Rechnung am Ende davon abweichen, sage ich Ihnen vorher Bescheid. Sofern Sie zustimmen, holen wir die Kommode am Montag bei Ihnen ab. Die Rechnung begleichen Sie bitte erst nach der Reparatur. Rufen Sie mich bitte kurz zurück. Danke!",
+              "en": "The repair costs 380 euros; the estimate is valid until the end of the month. Should the invoice end up differing from it, I’ll let you know beforehand. If you agree, we’ll collect the chest from you on Monday. Please settle the invoice only after the repair. Please give me a quick call back. Thanks!",
+              "say": "Die Reparatur kostet dreihundertachtzig Euro, der Kostenvoranschlag gilt bis zum Ende des Monats. Sollte die Rechnung am Ende davon abweichen, sage ich Ihnen vorher Bescheid. Sofern Sie zustimmen, holen wir die Kommode am Montag bei Ihnen ab. Die Rechnung begleichen Sie bitte erst nach der Reparatur. Rufen Sie mich bitte kurz zurück. Danke!"
             }
           ],
-          "glosses": []
+          "glosses": [
+            {
+              "token": "lackieren",
+              "gloss": {
+                "en": "to varnish, lacquer"
+              }
+            }
+          ]
         },
         {
           "id": "b2.2-u04-ls4-t2",
@@ -2370,8 +2455,8 @@
             {
               "id": "b2.2-u04-ls4-t2-l03",
               "speaker": "ansage",
-              "de": "Haben Sie eine Frage zu Ihrer Rechnung, wählen Sie bitte die Eins. Für alle anderen Fragen bleiben Sie bitte in der Leitung. Gleich ist ein Mitarbeiter für Sie da.",
-              "en": "If you have a question about your invoice, please press one. For all other questions, please stay on the line. A member of staff will be with you shortly."
+              "de": "Haben Sie eine Frage zu Ihrer Rechnung oder zu einer Kostenerstattung, wählen Sie bitte die Eins. Für alle anderen Fragen bleiben Sie bitte in der Leitung. Gleich ist ein Mitarbeiter für Sie da.",
+              "en": "If you have a question about your invoice or a reimbursement, please press one. For all other questions, please stay on the line. A member of staff will be with you shortly."
             }
           ],
           "glosses": []
@@ -2384,8 +2469,8 @@
             {
               "id": "b2.2-u04-ls4-t3-l01",
               "speaker": "radio",
-              "de": "Und jetzt unser Tipp für Verbraucher: Beim Umzug geht leicht etwas kaputt. Dann müssen Sie den Schaden rechtzeitig melden. Was Sie sofort sehen, zum Beispiel einen kaputten Spiegel, melden Sie spätestens am Tag nach der Lieferung.",
-              "en": "And now our tip for consumers: things easily get broken during a move. Then you must report the damage in time. What you can see straight away, such as a broken mirror, you report no later than the day after delivery."
+              "de": "Und jetzt unser Tipp für Verbraucher: Beim Umzug geht leicht etwas kaputt. Einen solchen Transportschaden müssen Sie rechtzeitig melden. Was Sie sofort sehen, zum Beispiel einen kaputten Spiegel, melden Sie spätestens am Tag nach der Lieferung.",
+              "en": "And now our tip for consumers: things easily get broken during a move. You must report such damage in transit in time. What you can see straight away, such as a broken mirror, you report no later than the day after delivery."
             },
             {
               "id": "b2.2-u04-ls4-t3-l02",
@@ -2397,8 +2482,8 @@
             {
               "id": "b2.2-u04-ls4-t3-l03",
               "speaker": "radio",
-              "de": "Weigert sich die Firma zu zahlen, hilft Ihnen die Verbraucherzentrale oder eine Schlichtungsstelle.",
-              "en": "If the company refuses to pay, the consumer advice centre or an arbitration board can help."
+              "de": "Weigert sich die Firma zu zahlen, setzen Sie ihr schriftlich eine Nachfrist. Sie müssen nicht gleich rechtliche Schritte androhen: Oft helfen schon die Verbraucherzentrale oder eine Schlichtungsstelle. Erst wenn das nicht hilft, können Sie das Geld einklagen. Wer eine Rechtsschutzversicherung hat, fragt am besten vorher dort nach.",
+              "en": "If the company refuses to pay, give it a further deadline in writing. You don’t have to threaten legal action straight away: the consumer advice centre or an arbitration board often helps. Only if that does not help can you sue for the money. If you have legal expenses insurance, ask them first."
             }
           ],
           "glosses": []
@@ -2417,8 +2502,8 @@
             {
               "id": "b2.2-u04-ls4-t4-l02",
               "speaker": "x.herr-matthiesen",
-              "de": "Diesen Schaden muss nicht die Genossenschaft bezahlen, sondern das Umzugsunternehmen. Bitte schicken Sie mir bis Freitag den Namen der Firma und die Nummer von Ihrem Auftrag. Alles Weitere klären wir dann direkt mit der Firma. Einen schönen Tag noch!",
-              "en": "It is not the cooperative that has to pay for this damage but the removal firm. Please send me the name of the firm and your order number by Friday. We’ll then sort out everything else directly with the firm. Have a nice day!"
+              "de": "Diesen Schaden muss nicht die Genossenschaft bezahlen, sondern der Verursacher, also das Umzugsunternehmen. Bitte schicken Sie mir bis Freitag den Namen der Firma und Ihre Auftragsnummer. Alles Weitere klären wir dann direkt mit der Firma. Einen schönen Tag noch!",
+              "en": "It is not the cooperative that has to pay for this damage but whoever caused it, that is, the removal firm. Please send me the name of the firm and your order number by Friday. We’ll then sort out everything else directly with the firm. Have a nice day!"
             }
           ],
           "glosses": []
@@ -2431,16 +2516,16 @@
             {
               "id": "b2.2-u04-ls4-t5-l01",
               "speaker": "cast.arjun",
-              "de": "Hallo Priya, ich bin es. Die Beraterin von Blitz Umzüge hat mich gerade angerufen, weil sie dich nicht erreicht hat. Sie bietet jetzt 450 Euro an, nicht mehr nur 200. Das ist schon ein Zugeständnis.",
-              "en": "Hi Priya, it’s me. The adviser from Blitz Umzüge has just called me because she couldn’t reach you. She’s now offering 450 euros, no longer just 200. That’s already a concession.",
-              "say": "Hallo Priya, ich bin es. Die Beraterin von Blitz Umzüge hat mich gerade angerufen, weil sie dich nicht erreicht hat. Sie bietet jetzt vierhundertfünfzig Euro an, nicht mehr nur zweihundert. Das ist schon ein Zugeständnis."
+              "de": "Hallo Priya, ich bin es. Die Beraterin von Blitz Umzüge hat mich gerade angerufen, weil sie dich nicht erreicht hat. Sie hat deine E-Mail bekommen und bietet jetzt 450 Euro an, nicht mehr nur 200. Das ist schon ein Zugeständnis, sie hat also noch Verhandlungsspielraum.",
+              "en": "Hi Priya, it’s me. The adviser from Blitz Umzüge has just called me because she couldn’t reach you. She got your e-mail and is now offering 450 euros, no longer just 200. That’s already a concession, so she still has room to negotiate.",
+              "say": "Hallo Priya, ich bin es. Die Beraterin von Blitz Umzüge hat mich gerade angerufen, weil sie dich nicht erreicht hat. Sie hat deine E-Mail bekommen und bietet jetzt vierhundertfünfzig Euro an, nicht mehr nur zweihundert. Das ist schon ein Zugeständnis, sie hat also noch Verhandlungsspielraum."
             },
             {
               "id": "b2.2-u04-ls4-t5-l02",
               "speaker": "cast.arjun",
-              "de": "Aber nur, wenn wir auf die 10 % für die Verspätung verzichten. Ich habe ihr gesagt, dass du das entscheidest. Ich finde, wir sollten noch nachverhandeln. Sie wartet bis morgen um zwölf auf deine Antwort. Ruf mich an!",
-              "en": "But only if we give up the 10 % for the delay. I told her you’d decide. I think we should renegotiate. She’s waiting for your answer until twelve tomorrow. Call me!",
-              "say": "Aber nur, wenn wir auf die zehn Prozent für die Verspätung verzichten. Ich habe ihr gesagt, dass du das entscheidest. Ich finde, wir sollten noch nachverhandeln. Sie wartet bis morgen um zwölf auf deine Antwort. Ruf mich an!"
+              "de": "Als Gegenleistung sollen wir aber auf die 10 % für die Verspätung verzichten. Eingewilligt habe ich in nichts, das entscheidest du. Ich finde, wir sollten noch nachverhandeln. Überleg dir, wo deine Schmerzgrenze liegt. Sie wartet bis morgen um zwölf auf deine Antwort. Ruf mich an!",
+              "en": "In return, though, we’re supposed to give up the 10 % for the delay. I haven’t agreed to anything – that’s your decision. I think we should renegotiate. Think about where your limit is. She’s waiting for your answer until twelve tomorrow. Call me!",
+              "say": "Als Gegenleistung sollen wir aber auf die zehn Prozent für die Verspätung verzichten. Eingewilligt habe ich in nichts, das entscheidest du. Ich finde, wir sollten noch nachverhandeln. Überleg dir, wo deine Schmerzgrenze liegt. Sie wartet bis morgen um zwölf auf deine Antwort. Ruf mich an!"
             }
           ],
           "glosses": []
@@ -2449,7 +2534,7 @@
           "id": "b2.2-u04-ls4-t6",
           "kind": "text",
           "title": "E-Mail von Priya an Amal",
-          "text": "Liebe Amal,\nwir wohnen jetzt in der neuen Wohnung! Leider war der Umzug ein kleines Drama. Die Möbelpacker sind einen Tag zu spät gekommen, ⟦01⟧ ihr Wagen eine Panne hatte. Arjun musste deshalb noch einen Tag Urlaub nehmen, ⟦02⟧ er eigentlich keinen mehr hatte. Am Freitag haben wir dann die Kommode ausgepackt, ⟦03⟧ ich von meiner Großmutter habe. Sie hat jetzt eine große Delle, und auch der Spiegel aus dem Flur ist ⟦04⟧ worden.\nIch habe mich sofort ⟦05⟧ den Kundenservice gewandt. Die Beraterin war freundlich, aber sie hat zuerst nur 200 Euro angeboten, ⟦06⟧ wir auf alle anderen Forderungen verzichten. Das ist viel zu wenig, denn allein der Spiegel hat 120 Euro gekostet. Ich habe ihr ein Gegenangebot gemacht, aber sie hat sich geweigert, mehr zu zahlen.\nMorgen kommt eine Handwerkerin, um die Kommode ⟦07⟧. Wenn ich den Kostenvoranschlag habe, schreibe ich der Firma, fordere Schadensersatz und setze ⟦08⟧ eine Frist von zwei Wochen. ⟦09⟧ sie bis zu diesem Tag nicht zahlen, wende ich mich an eine Schlichtungsstelle. Arjun meint, ich soll nicht so streng sein. Aber ich finde: Wer einen Schaden verursacht, muss auch für ihn aufkommen. Ich hoffe, ⟦10⟧ wir uns bald einigen. Dann kann ich die Wohnung endlich genießen.\nWie geht es dir in Leipzig? Kommst du uns im Dezember besuchen? Dein Zimmer ist schon fertig, nur der Spiegel fehlt noch.\nLiebe Grüße\nPriya",
+          "text": "Liebe Amal,\nwir wohnen jetzt endlich in der Wohnung von der Genossenschaft! Leider war der Umzug ein kleines Drama. Die Möbelpacker sind einen Tag zu spät gekommen, ⟦01⟧ ihr Wagen eine Panne hatte. Arjun musste deshalb noch einen Tag Urlaub nehmen, ⟦02⟧ er eigentlich keinen mehr hatte. Am Freitag haben wir dann die Kommode ausgepackt, ⟦03⟧ wir in Leipzig auf dem Flohmarkt gekauft haben. Sie hat jetzt eine große Delle, und auch der Spiegel aus dem Flur ist ⟦04⟧ worden. Die Möbelpacker haben einfach fahrlässig gearbeitet.\nIch habe mich sofort ⟦05⟧ den Kundenservice gewandt. Die Beraterin war eine freundliche Verhandlungspartnerin, aber sie hat zuerst nur 200 Euro angeboten, ⟦06⟧ wir auf alle anderen Forderungen verzichten. Die 10 % für die Verspätung findet sie unverhältnismäßig. Ich habe ihr gesagt, dass das viel zu wenig ist, denn allein der Spiegel hat 120 Euro gekostet.\nMorgen kommt eine Handwerkerin, um die Kommode ⟦07⟧. Mit ihrem Kostenvoranschlag ist meine Verhandlungsposition gut. Sobald ich ihn habe, mache ich der Firma schriftlich ein Gegenangebot, fordere Schadensersatz und setze ⟦08⟧ eine Frist bis zum 20. November. ⟦09⟧ sie bis zu diesem Tag nicht zahlen, wende ich mich an eine Schlichtungsstelle. Arjun meint, ich soll nicht um jeden Euro feilschen. Aber ich finde: Der Verursacher eines Schadens muss auch für ihn aufkommen. Ich hoffe, ⟦10⟧ die Firma noch ein Zugeständnis macht und wir uns bald einigen.\nWie geht es dir in Leipzig? Kommst du uns im Dezember besuchen? Dein Zimmer ist schon fertig, nur der Spiegel fehlt noch.\nLiebe Grüße\nPriya",
           "glosses": []
         }
       ],
@@ -2549,7 +2634,7 @@
                 "falsch"
               ],
               "explanation": {
-                "de": "Herr Matthiesen sagt: Diesen Schaden muss das Umzugsunternehmen bezahlen. Er will nur den Namen der Firma und die Nummer.",
+                "de": "Herr Matthiesen sagt: Diesen Schaden muss der Verursacher bezahlen, also das Umzugsunternehmen. Er will nur den Namen der Firma und die Auftragsnummer.",
                 "en": "The removal firm must pay; he only needs its details."
               },
               "origin": "agent"
@@ -2570,7 +2655,7 @@
                 "richtig"
               ],
               "explanation": {
-                "de": "Arjun sagt: 450 statt 200 Euro, aber nur, wenn wir auf die zehn Prozent für die Verspätung verzichten.",
+                "de": "Arjun sagt: 450 statt 200 Euro, aber als Gegenleistung sollen wir auf die zehn Prozent für die Verspätung verzichten.",
                 "en": "The higher offer requires waiving the delay refund."
               },
               "origin": "agent"
@@ -2593,7 +2678,7 @@
               "id": "b2.2-u04-ls4-tb2-sb1-01",
               "type": "cloze",
               "role": "exam",
-              "topic": "redemittel",
+              "topic": "g.weil",
               "promptDe": "Lücke 1: Welches Wort passt?",
               "options": [
                 "weil",
@@ -2615,11 +2700,11 @@
               "id": "b2.2-u04-ls4-tb2-sb1-02",
               "type": "cloze",
               "role": "exam",
-              "topic": "redemittel",
+              "topic": "g.obwohl",
               "promptDe": "Lücke 2: Welches Wort passt?",
               "options": [
-                "obwohl",
                 "trotzdem",
+                "obwohl",
                 "deshalb"
               ],
               "textRef": "b2.2-u04-ls4-t6",
@@ -2637,12 +2722,12 @@
               "id": "b2.2-u04-ls4-tb2-sb1-03",
               "type": "cloze",
               "role": "exam",
-              "topic": "redemittel",
+              "topic": "g.relativsatz-akk",
               "promptDe": "Lücke 3: Welches Wort passt?",
               "options": [
-                "die",
                 "der",
-                "deren"
+                "deren",
+                "die"
               ],
               "textRef": "b2.2-u04-ls4-t6",
               "answer": "die",
@@ -2650,8 +2735,8 @@
                 "die"
               ],
               "explanation": {
-                "de": "Relativpronomen für die Kommode (feminin, Akkusativ): die.",
-                "en": "Relative pronoun for die Kommode."
+                "de": "Relativpronomen für die Kommode (feminin, Akkusativ: wir haben sie gekauft): die.",
+                "en": "Relative pronoun for die Kommode, accusative."
               },
               "origin": "agent"
             },
@@ -2659,11 +2744,11 @@
               "id": "b2.2-u04-ls4-tb2-sb1-04",
               "type": "cloze",
               "role": "exam",
-              "topic": "redemittel",
+              "topic": "g.passiv-vergangenheit",
               "promptDe": "Lücke 4: Welches Wort passt?",
               "options": [
-                "beschädigt",
                 "beschädigen",
+                "beschädigt",
                 "beschädigte"
               ],
               "textRef": "b2.2-u04-ls4-t6",
@@ -2681,7 +2766,7 @@
               "id": "b2.2-u04-ls4-tb2-sb1-05",
               "type": "cloze",
               "role": "exam",
-              "topic": "redemittel",
+              "topic": "g.verben-praeposition",
               "promptDe": "Lücke 5: Welches Wort passt?",
               "options": [
                 "an",
@@ -2703,12 +2788,12 @@
               "id": "b2.2-u04-ls4-tb2-sb1-06",
               "type": "cloze",
               "role": "exam",
-              "topic": "redemittel",
+              "topic": "g.konditional-konnektoren",
               "promptDe": "Lücke 6: Welches Wort passt?",
               "options": [
-                "sofern",
                 "es sei denn",
-                "trotzdem"
+                "trotzdem",
+                "sofern"
               ],
               "textRef": "b2.2-u04-ls4-t6",
               "answer": "sofern",
@@ -2725,11 +2810,11 @@
               "id": "b2.2-u04-ls4-tb2-sb1-07",
               "type": "cloze",
               "role": "exam",
-              "topic": "redemittel",
+              "topic": "g.um-zu-damit",
               "promptDe": "Lücke 7: Welches Wort passt?",
               "options": [
-                "zu prüfen",
                 "prüfen",
+                "zu prüfen",
                 "geprüft"
               ],
               "textRef": "b2.2-u04-ls4-t6",
@@ -2747,7 +2832,7 @@
               "id": "b2.2-u04-ls4-tb2-sb1-08",
               "type": "cloze",
               "role": "exam",
-              "topic": "redemittel",
+              "topic": "g.dativverben-pronomen",
               "promptDe": "Lücke 8: Welches Wort passt?",
               "options": [
                 "ihr",
@@ -2769,12 +2854,12 @@
               "id": "b2.2-u04-ls4-tb2-sb1-09",
               "type": "cloze",
               "role": "exam",
-              "topic": "redemittel",
+              "topic": "g.konditional-konnektoren",
               "promptDe": "Lücke 9: Welches Wort passt?",
               "options": [
-                "Sollte",
                 "Wäre",
-                "Hätte"
+                "Hätte",
+                "Sollte"
               ],
               "textRef": "b2.2-u04-ls4-t6",
               "answer": "Sollte",
@@ -2791,11 +2876,11 @@
               "id": "b2.2-u04-ls4-tb2-sb1-10",
               "type": "cloze",
               "role": "exam",
-              "topic": "redemittel",
+              "topic": "g.dass",
               "promptDe": "Lücke 10: Welches Wort passt?",
               "options": [
-                "dass",
                 "ob",
+                "dass",
                 "damit"
               ],
               "textRef": "b2.2-u04-ls4-t6",
@@ -2833,27 +2918,33 @@
         "mode": "plan-together",
         "profile": "tb2-m3",
         "prepMinutes": 10,
-        "instructionsDe": "Handeln Sie mit der Kundenberaterin eine Einigung aus. Klären Sie alle Punkte der Karte.",
-        "situationDe": "Mündlicher Ausdruck Teil 3: Ihre Umzugsfirma kam einen Tag zu spät (Umzugspreis 1.480 Euro, Pünktlichkeitsgarantie: 10 Prozent zurück). Eine Kommode ist beschädigt (Kostenvoranschlag einer Tischlerei: 380 Euro), ein Spiegel ist zerbrochen (Wert: 120 Euro). Die Kundenberaterin ruft Sie an. Planen Sie gemeinsam eine Lösung, mit der beide Seiten leben können.",
+        "instructionsDe": "Planen Sie mit der Kundenberaterin gemeinsam, wie der Schaden geregelt wird.",
+        "situationDe": "Mündlicher Ausdruck Teil 3 (Gemeinsam etwas planen): Nach Ihrer E-Mail ruft Sie die Kundenberaterin von Blitz Umzüge an. Sie beide kennen dieselben Zahlen: Umzugspreis 1.480 Euro; einen Tag Verspätung wegen einer Panne (laut Vertrag 10 % zurück, also 148 Euro); Reparatur der Kommode 380 Euro (Kostenvoranschlag der Werkstatt Jessen); Spiegel 120 Euro. Sie haben 648 Euro bis zum 20. November gefordert, die Firma bietet 450 Euro, wenn Sie auf die 10 % verzichten. Die Firma möchte die Kommode lieber in ihrer Partnerwerkstatt reparieren lassen und die Verspätung mit einem Gutschein ausgleichen; Sie möchten die Werkstatt Jessen und Geld. Planen Sie gemeinsam eine Lösung, mit der beide Seiten leben können: Klären Sie alle Punkte der Karte und wer was übernimmt. In der Prüfung haben Sie für Teil 2 und Teil 3 zusammen 20 Minuten Vorbereitung.",
         "cards": {
           "learner": [
-            "Welche Schäden ersetzt die Firma?",
-            "Reparatur durch Ihre Werkstatt oder durch eine Werkstatt der Firma?",
-            "Was gilt für die Verspätung?",
+            "Welche Schäden ersetzt die Firma, und wie viel?",
+            "Welche Werkstatt repariert die Kommode, und wann wird sie abgeholt?",
+            "Was gilt für die Verspätung: Geld oder Gutschein?",
             "Bis wann wird gezahlt?",
             "Wer schickt was, und wie halten Sie die Einigung fest?"
           ],
-          "partner": []
+          "partner": [
+            "Welche Schäden ersetzt die Firma, und wie viel?",
+            "Welche Werkstatt repariert die Kommode, und wann wird sie abgeholt?",
+            "Was gilt für die Verspätung: Geld oder Gutschein?",
+            "Bis wann wird gezahlt?",
+            "Wer schickt was, und wie halten Sie die Einigung fest?"
+          ]
         },
         "partnerData": {
           "kind": "notes",
-          "de": "Nur für die KI-Gesprächspartnerin, den Lernenden nicht zeigen.",
+          "de": "Für die KI-Gesprächspartnerin. Alle Zahlen und beide Wünsche stehen auch in der Situation der Lernenden; es gibt keine versteckte Grenze.",
           "items": [
-            "Erstes Angebot: 450 Euro für alles, vorausgesetzt, dass die Kundin auf die 10 Prozent für die Verspätung verzichtet.",
-            "Die Firma würde die Kommode lieber in einer eigenen Partnerwerkstatt reparieren lassen.",
-            "Die Verspätung kam durch eine Panne; die Firma möchte nicht die vollen 148 Euro zahlen.",
-            "Grenze der Kundenberaterin: höchstens 600 Euro insgesamt.",
-            "Zahlung innerhalb von 14 Tagen nach schriftlicher Einigung ist möglich."
+            "Die Firma bietet zuerst 450 Euro für alles an, wenn die Kundin auf die 10 % für die Verspätung verzichtet (so steht es auch in der Situation).",
+            "Wunsch der Firma: Die Kommode repariert ihre Partnerwerkstatt, die sie am Mittwoch abholen kann.",
+            "Wunsch der Firma: Für die Verspätung gibt sie lieber einen Gutschein als Geld.",
+            "Die Firma zahlt spätestens 14 Tage nach der schriftlichen Einigung (AGB § 5).",
+            "Die Kundenberaterin hat Verhandlungsspielraum und sagt das offen: Bei guten Argumenten gibt sie nach und schlägt selbst Kompromisse vor."
           ]
         },
         "seconds": [
@@ -2871,53 +2962,53 @@
         "lane": "tb2",
         "aiRole": {
           "name": "Kundenberaterin",
-          "personaDe": "Kundenberaterin von Blitz Umzüge: freundlich, aber hart in der Sache; bietet zuerst wenig an und gibt nur bei guten Argumenten nach; unterbricht, wenn jemand einen auswendig gelernten Text vorträgt.",
+          "personaDe": "Kundenberaterin von Blitz Umzüge: freundlich und kooperativ; plant mit Ihnen gemeinsam eine Lösung, bringt eigene Vorschläge ein (Partnerwerkstatt, Gutschein), reagiert auf Ihre Vorschläge, fragt nach und sucht einen Kompromiss; unterbricht mit einer Frage, wenn jemand einen auswendig gelernten Text vorträgt.",
           "register": "Sie",
           "support": "interrupts"
         },
-        "openingLine": "Guten Tag, hier ist der Kundenservice von Blitz Umzüge. Ich rufe wegen Ihrer Schadensmeldung an. Wir möchten gern eine Lösung finden – wie stellen Sie sich das vor?",
+        "openingLine": "Guten Tag, hier ist der Kundenservice von Blitz Umzüge. Ich rufe wegen Ihrer E-Mail an: Sie fordern 648 Euro bis zum 20. November. Lassen Sie uns gemeinsam eine Lösung planen – was ist Ihnen dabei am wichtigsten?",
         "hintWords": [
           "Ich schlage vor, dass …",
-          "sofern Sie …",
+          "Was halten Sie davon, wenn …?",
           "vorausgesetzt, dass …",
-          "es sei denn, …",
-          "Darauf bestehe ich.",
-          "Da komme ich Ihnen entgegen.",
-          "Unter … kann ich mich nicht einigen.",
+          "Da komme ich Ihnen entgegen, sofern …",
+          "Unter … Euro können wir uns leider nicht einigen.",
+          "Meine Schmerzgrenze liegt bei … Euro.",
+          "Wer übernimmt …?",
           "Halten wir fest: …"
         ],
         "modelTurns": [
           {
-            "speaker": "partner",
-            "de": "Wir bieten Ihnen 450 Euro für alles an – vorausgesetzt, dass Sie auf die 10 % für die Verspätung verzichten."
-          },
-          {
             "speaker": "learner",
-            "de": "Das reicht leider nicht. Die Reparatur der Kommode kostet laut Kostenvoranschlag 380 Euro, und der Spiegel hat 120 Euro gekostet. Beide Schäden haben Ihre Mitarbeiter verursacht."
+            "de": "Am wichtigsten ist mir, dass die Kommode gut repariert wird. Ich schlage vor, dass die Werkstatt aus dem Kostenvoranschlag das macht. Die Handwerkerin hat die Kommode schon geprüft, und der Preis steht fest: 380 Euro."
           },
           {
             "speaker": "partner",
-            "de": "Beim Spiegel gebe ich Ihnen recht. Die Kommode kann aber auch unsere Werkstatt reparieren. Das ist für uns günstiger."
+            "de": "Das verstehe ich. Eine Werkstatt, mit der wir zusammenarbeiten, wäre für uns aber günstiger. Was halten Sie davon, wenn wir die Kommode am Mittwoch abholen und dort reparieren lassen?"
           },
           {
             "speaker": "learner",
-            "de": "Die Kommode ist ein Erbstück von meiner Großmutter. Eine Handwerkerin hat sie schon geprüft, und ihr Kostenvoranschlag ist da. Ich möchte, dass diese Werkstatt sie repariert."
+            "de": "Meine Werkstatt kann die Kommode schon am Montag abholen, das spart uns beiden Zeit. Für die beiden Schäden brauche ich 500 Euro: 380 Euro für die Kommode und 120 Euro für den Spiegel, den Ihre Mitarbeiter verpackt haben. Unter 500 Euro können wir uns leider nicht einigen."
           },
           {
             "speaker": "partner",
-            "de": "Gut, dann übernehmen wir die 380 Euro. Für die Verspätung zahlen wir aber keine 148 Euro."
+            "de": "Gut, dann übernehmen wir die 380 Euro für die Kommode und die 120 Euro für den Spiegel. Für die Verspätung würden wir Ihnen aber lieber einen Gutschein geben als Geld."
           },
           {
             "speaker": "learner",
-            "de": "Eine Panne ist Ihr Risiko, kein Unwetter. Ich komme Ihnen aber entgegen: 74 Euro für die Verspätung akzeptiere ich – sofern Sie alles bis zum 20. November überweisen."
+            "de": "Einen Gutschein brauchen wir nach dem Umzug nicht. Eine Panne ist Ihr Risiko, kein Unwetter. Ich komme Ihnen aber entgegen: 74 Euro für die Verspätung akzeptiere ich – sofern Sie alles bis zum 20. November überweisen."
           },
           {
             "speaker": "partner",
-            "de": "Das geht. Dann halten wir fest: 380 Euro für die Kommode, 120 Euro für den Spiegel und 74 Euro für die Verspätung, insgesamt 574 Euro."
+            "de": "Das geht. Dann halten wir fest: 380 Euro für die Kommode, 120 Euro für den Spiegel und 74 Euro für die Verspätung, insgesamt 574 Euro bis zum 20. November. Wer übernimmt was?"
           },
           {
             "speaker": "learner",
-            "de": "Genau. Ich schicke Ihnen heute den Kostenvoranschlag und unsere Bankverbindung, und Sie bestätigen mir die Einigung bitte mit einer E-Mail."
+            "de": "Ich schicke Ihnen heute unsere Bankverbindung, und die Werkstatt holt die Kommode am Montag ab. Sie bestätigen mir die Einigung bitte mit einer E-Mail."
+          },
+          {
+            "speaker": "partner",
+            "de": "Gern, die E-Mail bekommen Sie noch heute."
           }
         ]
       }
@@ -2934,7 +3025,7 @@
         "register": "halbformell",
         "address": "Sie",
         "title": "Beschwerde an das Umzugsunternehmen",
-        "situationDe": "Schriftlicher Ausdruck: Sie haben Ihren Umzug bei einer Firma gebucht, die so wirbt: „Blitz Umzüge – pünktlich, sorgfältig, voll versichert. Mit Pünktlichkeitsgarantie!“ Die Möbelpacker kamen einen Tag zu spät. Eine Kommode wurde beschädigt (Kostenvoranschlag: 380 Euro), ein Spiegel ist zerbrochen (Wert: 120 Euro). Laut Vertragsbedingungen erstattet die Firma bei mehr als drei Stunden Verspätung 10 % des Umzugspreises von 1.480 Euro. Ein erstes Angebot von 200 Euro haben Sie abgelehnt.",
+        "situationDe": "Schriftlicher Ausdruck – vor dem Telefonat mit der Kundenberaterin: Sie haben Ihren Umzug bei einer Firma gebucht, die so wirbt: „Blitz Umzüge – pünktlich, sorgfältig, voll versichert. Mit Pünktlichkeitsgarantie!“ Die Möbelpacker kamen einen Tag zu spät. Eine Kommode wurde beschädigt, ein Spiegel ist zerbrochen (Wert: 120 Euro). Jetzt ist der Kostenvoranschlag der Werkstatt da: 380 Euro. Laut Vertragsbedingungen erstattet die Firma bei mehr als drei Stunden Verspätung 10 % des Umzugspreises von 1.480 Euro. Ein erstes Angebot von 200 Euro haben Sie am Telefon abgelehnt.",
         "taskDe": "Schreiben Sie der Firma eine E-Mail (mind. 150 Wörter) zu drei der vier Punkte.",
         "leitpunkte": [
           {
@@ -2983,7 +3074,8 @@
               "Sollten Sie",
               "anderenfalls",
               "Schlichtungsstelle",
-              "Verbraucherzentrale"
+              "Verbraucherzentrale",
+              "vorbehalten"
             ]
           }
         ],
@@ -3007,7 +3099,7 @@
           "mindestens 150 Wörter",
           "durchgehend Sie-Form"
         ],
-        "modelText": "Betreff: Beschwerde über unseren Umzug am 5. November – Schadensersatz\n\nSehr geehrte Damen und Herren,\n\nhiermit beschwere ich mich über unseren Umzug mit Ihrer Firma.\n\nVereinbart war der Umzug für Donnerstag, den 5. November, um 8 Uhr. Ihre Möbelpacker sind aber einen Tag zu spät gekommen, weil Ihr Wagen eine Panne hatte. In Ihrer Werbung versprechen Sie Pünktlichkeit. Eine Panne ist aber kein Unwetter und keine gesperrte Straße, sondern Ihr Risiko. Laut Ihren Vertragsbedingungen erstatten Sie deshalb 10 % des Preises, also 148 Euro.\n\nAußerdem sind beim Umzug zwei Möbelstücke beschädigt worden: Unsere Kommode hat eine große Delle und viele Kratzer. Die Reparatur kostet laut Kostenvoranschlag einer Werkstatt 380 Euro. Der Spiegel aus dem Flur, den Ihre Mitarbeiter verpackt hatten, ist kaputt. Er hat 120 Euro gekostet. Fotos und Kostenvoranschlag finden Sie im Anhang. Ihr Angebot von 200 Euro lehne ich deshalb ab.\n\nIch fordere von Ihnen Schadensersatz von insgesamt 648 Euro. Bitte überweisen Sie den Betrag bis zum 20. November auf unser Konto. Sollten Sie bis zu diesem Tag nicht zahlen, wende ich mich an eine Schlichtungsstelle für Verbraucher.\n\nMit freundlichen Grüßen\nPriya Nair"
+        "modelText": "Betreff: Beschwerde über unseren Umzug am 5. November – Schadensersatz\n\nSehr geehrte Damen und Herren,\n\nhiermit beschwere ich mich über unseren Umzug mit Ihrer Firma.\n\nVereinbart war der Umzug für Donnerstag, den 5. November, um 8 Uhr. Ihre Möbelpacker sind aber einen Tag zu spät gekommen, weil Ihr Wagen eine Panne hatte. In Ihrer Werbung versprechen Sie Pünktlichkeit. Eine Panne ist aber kein Unwetter und keine gesperrte Straße, sondern Ihr Risiko. Laut Ihren Vertragsbedingungen erstatten Sie deshalb 10 % des Preises, also 148 Euro.\n\nAußerdem haben Ihre Mitarbeiter beim Umzug unsere Kommode und einen Spiegel beschädigt: Die Kommode hat eine große Delle und viele Kratzer. Die Reparatur kostet laut Kostenvoranschlag einer Werkstatt 380 Euro. Der Spiegel aus dem Flur, den Ihre Mitarbeiter verpackt hatten, ist kaputt. Er hat 120 Euro gekostet. Fotos und Kostenvoranschlag finden Sie im Anhang. Ihr Angebot von 200 Euro lehne ich deshalb ab.\n\nIch fordere Schadensersatz von 500 Euro für die Kommode und den Spiegel sowie die Erstattung von 148 Euro für die Verspätung, insgesamt 648 Euro. Bitte überweisen Sie den Betrag bis zum 20. November auf unser Konto. Sollten Sie bis zu diesem Tag nicht zahlen, wende ich mich an eine Schlichtungsstelle für Verbraucher. Weitere Schritte behalte ich mir vor.\n\nMit freundlichen Grüßen\nPriya Nair"
       }
     },
     {
@@ -3027,8 +3119,8 @@
       {
         "id": "b2.2-u04-ls8-l01",
         "speaker": "ansage",
-        "de": "Sollten Sie Fragen haben, wenden Sie sich bitte an unseren Kundenservice.",
-        "en": "Should you have any questions, please contact our customer service."
+        "de": "Sollte die Reparatur teurer werden, informieren wir Sie vorher.",
+        "en": "Should the repair become more expensive, we will let you know in advance."
       }
     ],
     "items": [
@@ -3037,8 +3129,8 @@
         "type": "fill_blank",
         "role": "check",
         "topic": "g.konditional-konnektoren",
-        "promptDe": "Wir ersetzen den Schaden, s___ Sie ihn rechtzeitig melden. (nur unter dieser Bedingung)",
-        "promptEn": "Connector starting with s: only on this condition.",
+        "promptDe": "Wir ersetzen den Schaden, ___ Sie ihn rechtzeitig melden. (s…, 6 Buchstaben: nur falls)",
+        "promptEn": "Connector: s…, 6 letters, only on this condition.",
         "answer": "sofern",
         "accepted": [
           "sofern"
@@ -3054,8 +3146,8 @@
         "type": "fill_blank",
         "role": "check",
         "topic": "g.konditional-konnektoren",
-        "promptDe": "Formell, ohne wenn: „___ Sie Fragen haben, melden Sie sich bitte bei uns.“",
-        "promptEn": "Formal verb-first condition.",
+        "promptDe": "Formell, Verb zuerst: „___ Sie Fragen haben, melden Sie sich bitte bei uns.“",
+        "promptEn": "Formal conditional without a connector: the verb comes first.",
         "answer": "Sollten",
         "accepted": [
           "Sollten",
@@ -3099,9 +3191,9 @@
         "promptDe": "Was schickt die Werkstatt, bevor sie die Kommode repariert?",
         "promptEn": "What does the joiner send before the repair?",
         "options": [
-          "einen Kostenvoranschlag",
           "ein Gutachten",
-          "eine Pauschale"
+          "eine Pauschale",
+          "einen Kostenvoranschlag"
         ],
         "answer": "einen Kostenvoranschlag",
         "accepted": [
@@ -3118,8 +3210,8 @@
         "type": "fill_blank",
         "role": "check",
         "topic": "lx.bestehen-auf",
-        "promptDe": "Die Einigung soll schriftlich sein. Darauf ___ wir.",
-        "promptEn": "We insist on it: verb for wir.",
+        "promptDe": "Die Einigung muss schriftlich sein. Darauf ___ wir. (auf etwas bestehen)",
+        "promptEn": "We insist on it: form of bestehen for wir.",
         "answer": "bestehen",
         "accepted": [
           "bestehen"
@@ -3138,12 +3230,12 @@
         "promptDe": "Hören Sie und schreiben Sie den Satz.",
         "promptEn": "Listen and write the sentence.",
         "audioLineRef": "b2.2-u04-ls8-l01",
-        "answer": "Sollten Sie Fragen haben, wenden Sie sich bitte an unseren Kundenservice.",
+        "answer": "Sollte die Reparatur teurer werden, informieren wir Sie vorher.",
         "accepted": [
-          "Sollten Sie Fragen haben, wenden Sie sich bitte an unseren Kundenservice."
+          "Sollte die Reparatur teurer werden, informieren wir Sie vorher."
         ],
         "explanation": {
-          "de": "Bedingung ohne Konnektor: Sollten Sie …, dann beginnt der Hauptsatz mit dem Verb wenden.",
+          "de": "Bedingung ohne Konnektor: Sollte die Reparatur …, dann beginnt der Hauptsatz mit dem Verb informieren.",
           "en": "Verb-first condition, then the main clause starts with its verb."
         },
         "origin": "agent"
@@ -3157,18 +3249,22 @@
         "promptEn": "Correct the word order.",
         "answer": "Wir zahlen, vorausgesetzt, dass die Summe angemessen ist.",
         "accepted": [
-          "Wir zahlen, vorausgesetzt, dass die Summe angemessen ist."
+          "Wir zahlen, vorausgesetzt, dass die Summe angemessen ist.",
+          "Wir zahlen, vorausgesetzt, die Summe ist angemessen."
         ],
         "intentionalError": true,
         "explanation": {
-          "de": "Nach vorausgesetzt, dass steht das Verb am Ende: angemessen ist.",
-          "en": "After vorausgesetzt, dass the verb goes last."
+          "de": "Nach vorausgesetzt, dass steht das Verb am Ende: angemessen ist. Ohne dass steht es auf Position 2: vorausgesetzt, die Summe ist angemessen.",
+          "en": "After vorausgesetzt, dass the verb goes last; without dass it is second."
         },
         "errorTag": "verb-final",
         "errorTags": [
           "verb-final"
         ],
-        "origin": "agent"
+        "origin": "agent",
+        "acceptedWhy": {
+          "Wir zahlen, vorausgesetzt, die Summe ist angemessen.": "grammatisch: vorausgesetzt ohne dass, dann steht das Verb auf Position 2"
+        }
       },
       {
         "id": "b2.2-u04-c08",
@@ -3178,8 +3274,8 @@
         "promptDe": "„Gut, wir zahlen auch den Spiegel.“ Was macht die Firma damit?",
         "promptEn": "What is the firm doing?",
         "options": [
-          "ein Zugeständnis",
           "ein Gutachten",
+          "ein Zugeständnis",
           "eine Frist"
         ],
         "answer": "ein Zugeständnis",
@@ -3200,24 +3296,24 @@
     },
     "proofItems": [
       {
-        "id": "b2.2-u04-q01",
+        "id": "b2.2-u04-q02",
         "type": "multiple_choice",
         "role": "proof",
         "topic": "lesen",
-        "promptDe": "Laut Vertrag: Schäden bis zum Tag nach der Lieferung melden. Lieferung Freitag – bis wann?",
-        "promptEn": "Visible damage, delivered on Friday: by when must you report it?",
+        "promptDe": "Andere AGB: „Für Glas haften wir, es sei denn, Sie haben es selbst verpackt.“ Was folgt?",
+        "promptEn": "Another firm’s terms on glass: what follows for you?",
         "options": [
-          "bis Samstag",
-          "bis Freitag in einer Woche",
-          "innerhalb von 14 Tagen"
+          "Glas selbst verpackt und kaputt: Die Firma zahlt nichts.",
+          "Glas selbst verpackt und kaputt: Die Firma zahlt den vollen Preis.",
+          "Glas von der Firma verpackt und kaputt: Die Firma zahlt nichts."
         ],
-        "answer": "bis Samstag",
+        "answer": "Glas selbst verpackt und kaputt: Die Firma zahlt nichts.",
         "accepted": [
-          "bis Samstag"
+          "Glas selbst verpackt und kaputt: Die Firma zahlt nichts."
         ],
         "explanation": {
-          "de": "Tag nach der Lieferung: Lieferung Freitag, also spätestens Samstag. 14 Tage gelten nur für Schäden, die man nicht sofort sieht.",
-          "en": "The day after a Friday delivery is Saturday; 14 days apply only to hidden damage."
+          "de": "es sei denn = außer wenn: Die Firma haftet für Glas, außer Sie haben es selbst verpackt. Dann steht Ihnen nichts zu; hat die Firma verpackt, zahlt sie.",
+          "en": "es sei denn = unless: self-packed glass is excluded, glass the firm packed is covered."
         },
         "origin": "agent"
       }
@@ -3233,7 +3329,7 @@
       },
       {
         "canDo": "cd.b2.vertragsbedingungen-ansprueche",
-        "item": "b2.2-u04-q01"
+        "item": "b2.2-u04-q02"
       },
       {
         "canDo": "cd.b2.formelle-beschwerde-frist",
@@ -3283,8 +3379,8 @@
     },
     {
       "id": "b2.2-u04-rm05",
-      "de": "Unter 500 Euro kann ich mich leider nicht einigen.",
-      "en": "I’m afraid I can’t agree to anything under 500 euros.",
+      "de": "Unter 500 Euro können wir uns leider nicht einigen.",
+      "en": "I’m afraid we can’t agree on anything under 500 euros.",
       "function": "eine Grenze setzen",
       "forTemplate": "tb2.m3"
     },
@@ -3311,7 +3407,7 @@
     }
   ],
   "story": {
-    "beat": "Priya nimmt die 200 Euro nicht an. Mit den AGB, den Fotos und dem Kostenvoranschlag verhandelt sie, bis die Firma 574 Euro zahlt – schriftlich bestätigt.",
+    "beat": "Priya nimmt die 200 Euro nicht an und fordert schriftlich 648 Euro. Am Telefon plant sie mit der Kundenberaterin eine Lösung: 574 Euro, schriftlich bestätigt.",
     "cliffhanger": "Kaum ist die Einigung per E-Mail bestätigt, schreibt Sara: „Priya, hast du heute Abend Zeit? Ich habe die Studienordnung für mein Studium bekommen und verstehe nur die Hälfte.“",
     "castIn": [
       "cast.sara"
@@ -3367,7 +3463,7 @@
         }
       ],
       "verification": "verified",
-      "notes": "§§ 451e, 451g, 451h HGB read at gesetze-im-internet.de on 2026-09-27. Used in LS1 (AGB § 3, fictional company) and Fokus fk2."
+      "notes": "§§ 451e, 451g, 451h HGB read at gesetze-im-internet.de on 2026-09-27. Used in LS1 (AGB § 3, fictional company, incl. the offer of a transit insurance that § 451g makes the firm mention) and Fokus fk2."
     },
     {
       "id": "b2.2-u04-f02",
@@ -3386,7 +3482,7 @@
         }
       ],
       "verification": "verified",
-      "notes": "§§ 451f, 451g HGB read at gesetze-im-internet.de on 2026-09-27. Used in LS1 (AGB § 4), LS4 text t3 (radio tip: 14 Tage = zwei Wochen) and proof item q01."
+      "notes": "§§ 451f, 451g HGB read at gesetze-im-internet.de on 2026-09-27. Used in LS1 (AGB § 4 and reserve item ls1-r06) and LS4 text t3 (radio tip: 14 Tage = zwei Wochen)."
     },
     {
       "id": "b2.2-u04-f03",
@@ -3422,7 +3518,7 @@
         }
       ],
       "verification": "verified",
-      "notes": "§ 451d HGB read at gesetze-im-internet.de on 2026-09-27. Used in LS1 (AGB § 3, last sentence)."
+      "notes": "§ 451d HGB read at gesetze-im-internet.de on 2026-09-27. Used in LS1 (AGB § 3, last sentence) and in the proof item q02 (another firm’s clause on self-packed glass)."
     },
     {
       "id": "b2.2-u04-f05",

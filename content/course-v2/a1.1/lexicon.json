@@ -449,6 +449,24 @@
       "wordId": null
     },
     {
+      "id": "lx.spanisch",
+      "lemma": "Spanisch",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": null,
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "a1.1-u01",
+      "block": 3,
+      "list_ref": "freq:top-5000",
+      "gloss": {
+        "en": "Spanish (language)"
+      },
+      "example": "Sprechen Sie Spanisch?",
+      "exampleEn": "Do you speak Spanish?",
+      "wordId": null
+    },
+    {
       "id": "lx.zahl",
       "lemma": "Zahl",
       "pos": "NOUN",
@@ -1005,6 +1023,26 @@
       "wordId": null
     },
     {
+      "id": "lx.ausfuellen",
+      "lemma": "ausfüllen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "füllt aus",
+        "perfekt": "hat ausgefüllt"
+      },
+      "separable": true,
+      "role": "receptive",
+      "unit": "a1.1-u02",
+      "block": 4,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "to fill in (a form)"
+      },
+      "example": "Bitte füllen Sie das Formular aus.",
+      "exampleEn": "Please fill in the form.",
+      "wordId": null
+    },
+    {
       "id": "lx.familie",
       "lemma": "Familie",
       "pos": "NOUN",
@@ -1180,6 +1218,25 @@
       },
       "example": "Hast du Geschwister?",
       "exampleEn": "Do you have brothers or sisters?",
+      "wordId": null
+    },
+    {
+      "id": "lx.zeigen",
+      "lemma": "zeigen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "zeigt",
+        "perfekt": "hat gezeigt"
+      },
+      "role": "receptive",
+      "unit": "a1.1-u03",
+      "block": 1,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "to show"
+      },
+      "example": "Priya zeigt ein Foto von ihrer Familie.",
+      "exampleEn": "Priya shows a photo of her family.",
       "wordId": null
     },
     {
@@ -2887,6 +2944,25 @@
       "wordId": null
     },
     {
+      "id": "lx.kollege",
+      "lemma": "Kollege",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Kollegen",
+      "plural_kind": "regular",
+      "feminine": "die Kollegin",
+      "role": "productive",
+      "unit": "a1.1-u06",
+      "block": 2,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "colleague"
+      },
+      "example": "Mein Kollege heißt Jonas.",
+      "exampleEn": "My colleague is called Jonas.",
+      "wordId": null
+    },
+    {
       "id": "lx.suchen",
       "lemma": "suchen",
       "pos": "VERB",
@@ -3048,6 +3124,24 @@
       },
       "example": "Das weiß ich nicht.",
       "exampleEn": "I don’t know that.",
+      "wordId": null
+    },
+    {
+      "id": "lx.problem",
+      "lemma": "Problem",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Probleme",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a1.1-u06",
+      "block": 3,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "problem"
+      },
+      "example": "Der Laptop ist kaputt. Das ist ein Problem.",
+      "exampleEn": "The laptop is broken. That is a problem.",
       "wordId": null
     },
     {
@@ -3592,6 +3686,21 @@
       "wordId": null
     },
     {
+      "id": "lx.offen",
+      "lemma": "offen",
+      "pos": "ADJ",
+      "role": "productive",
+      "unit": "a1.1-u07",
+      "block": 4,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "open"
+      },
+      "example": "Der Supermarkt ist bis 20 Uhr offen.",
+      "exampleEn": "The supermarket is open until 8 pm.",
+      "wordId": null
+    },
+    {
       "id": "lx.hobby",
       "lemma": "Hobby",
       "pos": "NOUN",
@@ -3777,6 +3886,24 @@
       "wordId": null
     },
     {
+      "id": "lx.rad",
+      "lemma": "Rad",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Räder",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.1-u08",
+      "block": 1,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "bike; wheel"
+      },
+      "example": "Am Wochenende fahre ich gern Rad.",
+      "exampleEn": "At the weekend I like to go cycling.",
+      "wordId": null
+    },
+    {
       "id": "lx.samstag",
       "lemma": "Samstag",
       "pos": "NOUN",
@@ -3934,6 +4061,24 @@
       "wordId": null
     },
     {
+      "id": "lx.idee",
+      "lemma": "Idee",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Ideen",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a1.1-u08",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "idea"
+      },
+      "example": "Gehen wir ins Kino? – Gute Idee!",
+      "exampleEn": "Shall we go to the cinema? – Good idea!",
+      "wordId": null
+    },
+    {
       "id": "lx.gern",
       "lemma": "gern",
       "pos": "ADV",
@@ -4083,6 +4228,25 @@
       },
       "example": "Der Film fängt um acht an.",
       "exampleEn": "The film starts at eight.",
+      "wordId": null
+    },
+    {
+      "id": "lx.meinen",
+      "lemma": "meinen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "meint",
+        "perfekt": "hat gemeint"
+      },
+      "role": "productive",
+      "unit": "a1.1-u08",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to think, to mean"
+      },
+      "example": "Was meinst du? Ist der Film gut?",
+      "exampleEn": "What do you think? Is the film good?",
       "wordId": null
     },
     {
@@ -4407,6 +4571,24 @@
       },
       "example": "Was isst du gern?",
       "exampleEn": "What do you like to eat?",
+      "wordId": null
+    },
+    {
+      "id": "lx.restaurant",
+      "lemma": "Restaurant",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Restaurants",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a1.1-u09",
+      "block": 2,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "restaurant"
+      },
+      "example": "Heute Abend gehen wir ins Restaurant.",
+      "exampleEn": "Tonight we are going to a restaurant.",
       "wordId": null
     },
     {
@@ -5137,6 +5319,24 @@
       "wordId": null
     },
     {
+      "id": "lx.kilometer",
+      "lemma": "Kilometer",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Kilometer",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.1-u10",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "kilometre"
+      },
+      "example": "Bis zum Bahnhof sind es zwei Kilometer.",
+      "exampleEn": "It is two kilometres to the station.",
+      "wordId": null
+    },
+    {
       "id": "lx.ausflug",
       "lemma": "Ausflug",
       "pos": "NOUN",
@@ -5297,6 +5497,24 @@
       },
       "example": "Am Samstag war ich auf dem Flohmarkt.",
       "exampleEn": "On Saturday I was at the flea market.",
+      "wordId": null
+    },
+    {
+      "id": "lx.see",
+      "lemma": "See",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Seen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.1-u11",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "lake"
+      },
+      "example": "Am Samstag waren wir am See.",
+      "exampleEn": "On Saturday we were at the lake.",
       "wordId": null
     },
     {

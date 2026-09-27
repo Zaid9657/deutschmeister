@@ -114,8 +114,7 @@
           "template": "tb1.lv3",
           "length": "full",
           "modeDefault": "pruefung",
-          "slot": "input",
-          "step": "b1.2-u04-ls1"
+          "slot": "ls4"
         },
         {
           "template": "tb1.sb2",
@@ -128,6 +127,12 @@
           "length": "full",
           "modeDefault": "pruefung",
           "slot": "sprechen"
+        },
+        {
+          "template": "tb1.sa",
+          "length": "full",
+          "modeDefault": "pruefung",
+          "slot": "schreiben"
         }
       ],
       "spur": {}
@@ -162,7 +167,8 @@
     "pruefungsfokusChips": [
       "tb1.lv3",
       "tb1.sb2",
-      "tb1.m3"
+      "tb1.m3",
+      "tb1.sa"
     ],
     "folge": {
       "title": "Montag, kurz vor der Mittagspause",
@@ -176,14 +182,14 @@
         {
           "id": "b1.2-u04-start-l02",
           "speaker": "cast.priya",
-          "de": "Ja, gerade. Herr Brandt möchte, dass ich die Angebote im Intranet vergleiche. Bis morgen!",
-          "en": "Yes, just now. Mr Brandt wants me to compare the offers on the intranet. By tomorrow!"
+          "de": "Ja, gerade. Herr Brandt möchte, dass ich die Angebote im Intranet vergleiche – und zwar schon bis morgen!",
+          "en": "Yes, just now. Mr Brandt wants me to compare the offers on the intranet – and by tomorrow, no less!"
         },
         {
           "id": "b1.2-u04-start-l03",
           "speaker": "cast.jan-wolf",
-          "de": "Morgen um zehn ist die Sitzung dazu. Frau Otto ist auf einer Fortbildung in Dresden und nicht anwesend, deshalb moderiere ich.",
-          "en": "The meeting about it is tomorrow at ten. Ms Otto is on a training course in Dresden and won’t be there, so I’m chairing."
+          "de": "Morgen um zehn ist die Sitzung dazu: erst das Programm, dann die Aufgabenverteilung. Frau Otto ist auf einer Fortbildung in Dresden und nicht anwesend. Deshalb moderiere ich, und Emre protokolliert.",
+          "en": "The meeting about it is tomorrow at ten: first the programme, then who does which task. Ms Otto is on a training course in Dresden and won’t be there, so I’m chairing and Emre is taking the minutes."
         },
         {
           "id": "b1.2-u04-start-l04",
@@ -194,14 +200,14 @@
         {
           "id": "b1.2-u04-start-l05",
           "speaker": "cast.priya",
-          "de": "Das entscheiden wir morgen zusammen. Und Frau Otto bekommt danach von mir alle Ergebnisse per E-Mail.",
-          "en": "We’ll decide that together tomorrow. And afterwards I’ll send Ms Otto all the results by e-mail."
+          "de": "Das entscheiden wir morgen zusammen. Und Frau Otto bekommt danach von mir alle Ergebnisse und Beschlüsse per E-Mail.",
+          "en": "We’ll decide that together tomorrow. And afterwards I’ll send Ms Otto all the results and decisions by e-mail."
         },
         {
           "id": "b1.2-u04-start-l06",
           "speaker": "cast.jan-wolf",
-          "de": "Gut. Dann bring morgen bitte zwei, drei Vorschläge mit, Priya. Aber nicht zu teuer!",
-          "en": "Good. Then please bring two or three suggestions tomorrow, Priya. But nothing too expensive!"
+          "de": "Gut. Dann bring morgen bitte zwei, drei Vorschläge mit, Priya. Aber denk an das Budget: Das Projekt darf nicht zu teuer werden!",
+          "en": "Good. Then please bring two or three suggestions tomorrow, Priya. But mind the budget – the project mustn’t get too expensive!"
         }
       ],
       "gistItem": {
@@ -248,8 +254,8 @@
         "title": "Rundschreiben: Unser Teamtag",
         "textType": "tt.rundschreiben",
         "text": {
-          "de": "An alle Mitarbeiterinnen und Mitarbeiter\n\nUnser Teamtag im Juni\n\nLiebe Kolleginnen und Kollegen,\n\nin diesem Jahr sind viele neue Kolleginnen und Kollegen zu uns gekommen. Deshalb planen wir am Freitag, dem 19. Juni, einen gemeinsamen Teamtag. Der Zweck ist einfach: Wir wollen uns besser kennenlernen und einen Tag lang zusammen etwas unternehmen.\n\nFür das Projekt haben wir ein Budget von 1.200 Euro. Die Teilnehmerzahl liegt bei 18 Personen. Sie brauchen also nichts selbst zu bezahlen. Auch Urlaub brauchen Sie für diesen Tag nicht zu nehmen, denn der Teamtag ist Arbeitszeit.\n\nIm Intranet finden Sie unter „Teamtag“ Angebote aus Leipzig und Umgebung. Frau Nair vergleicht sie und stellt die Angebote, die infrage kommen, in der Sitzung am Dienstag vor. Der Teamtag ist dort der einzige Punkt auf der Tagesordnung. Das Programm legen wir dann gemeinsam fest. Bis dahin ist alles noch vorläufig, endgültig entscheiden wir erst in der Sitzung. Ein Programmpunkt am Vormittag ist schon sicher: eine kurze Besprechung zum Zeitplan für das zweite Halbjahr.\n\nHaben Sie eine Idee oder möchten Sie etwas ergänzen? Dann brauchen Sie nur eine kurze Nachricht an Frau Nair zu schreiben. In der Sitzung verteilen wir auch die Aufgaben: Wer übernimmt die Verantwortung für die Raumbuchung, wer für den Bus? Frau Nair fasst die Beschlüsse danach zusammen und schickt sie Ihnen per E-Mail.\n\nIch freue mich auf einen schönen Tag mit Ihnen!\n\nThomas Brandt\nGeschäftsführer",
-          "en": "Circular from the managing director: a team day on Friday 19 June for 18 people with a budget of 1,200 euros; staff pay nothing and need not take leave; Ms Nair compares the offers on the intranet and presents them at Tuesday’s meeting, where the programme and the tasks are decided."
+          "de": "An alle Mitarbeiterinnen und Mitarbeiter\n\nUnser Teamtag im Juni\n\nLiebe Kolleginnen und Kollegen,\n\nin diesem Jahr sind viele neue Kolleginnen und Kollegen zu uns gekommen. Deshalb planen wir am Freitag, dem 19. Juni, einen gemeinsamen Teamtag. Der Zweck ist einfach: Wir wollen uns besser kennenlernen und einen Tag lang zusammen etwas unternehmen.\n\nFür das Projekt haben wir ein Budget von 1.200 Euro. Die Teilnehmerzahl liegt bei 18 Personen. Sie brauchen also nichts selbst zu bezahlen. Auch Urlaub brauchen Sie für diesen Tag nicht zu nehmen, denn der Teamtag ist Arbeitszeit.\n\nIm Intranet finden Sie unter „Teamtag“ Angebote aus Leipzig und Umgebung. Frau Nair vergleicht sie. Am Dienstag bereiten Herr Wolf, Frau Otto, Herr Yıldız, Frau Nair und ich den Tag in einer Sitzung vor. Der Teamtag ist dort der einzige Tagesordnungspunkt. Frau Nair stellt die Angebote vor, die infrage kommen. Ziel ist eine Einigung über Ort und Programm. Bis dahin ist alles noch vorläufig, endgültig legen wir das Programm erst in der Sitzung fest. Ein Programmpunkt am Vormittag ist aber schon sicher: eine kurze Besprechung zum Zeitplan für das zweite Halbjahr.\n\nHaben Sie eine Idee, einen Einwand, oder möchten Sie etwas ergänzen? Dann brauchen Sie nur eine kurze Nachricht an Frau Nair zu schreiben. In der Sitzung verteilen wir auch die Aufgaben: Wer übernimmt die Verantwortung für die Raumbuchung, wer für den Bus? Frau Nair fasst die Beschlüsse danach zusammen und schickt sie Ihnen per E-Mail.\n\nIch freue mich auf einen schönen Tag mit Ihnen!\n\nThomas Brandt\nGeschäftsführer",
+          "en": "Circular from the managing director: a team day on Friday 19 June for 18 people with a budget of 1,200 euros; staff pay nothing and need not take leave; Ms Nair compares the offers on the intranet; on Tuesday a small group (Mr Wolf, Ms Otto, Mr Yıldız, Ms Nair and Mr Brandt) meets to agree on the venue and programme and to share out the tasks."
         },
         "glosses": [
           {
@@ -261,330 +267,115 @@
         ],
         "transcriptAfterUnaidedListen": false
       },
-      "texts": [
+      "inputItems": [
         {
-          "id": "b1.2-u04-ls1-t1",
-          "kind": "ad",
-          "title": "Leipzig zu Fuß – Stadtführungen",
-          "text": "Unsere Stadtführerinnen zeigen Ihnen die Altstadt, die Nikolaikirche und die schönsten Passagen. Für Gruppen bis 25 Personen, Dauer zwei Stunden. Führungen auch auf Englisch und Spanisch. Bitte buchen Sie mindestens eine Woche vorher.",
-          "glosses": []
+          "id": "b1.2-u04-ls1-i01",
+          "type": "multiple_choice",
+          "role": "gist",
+          "topic": "lesen",
+          "promptDe": "Worum geht es im Rundschreiben?",
+          "promptEn": "What is the circular about?",
+          "options": [
+            "um einen gemeinsamen Tag für alle im Juni",
+            "um neue Arbeitszeiten im zweiten Halbjahr",
+            "um eine Fortbildung für neue Kollegen"
+          ],
+          "answer": "um einen gemeinsamen Tag für alle im Juni",
+          "accepted": [
+            "um einen gemeinsamen Tag für alle im Juni"
+          ],
+          "explanation": {
+            "de": "Herr Brandt plant am 19. Juni einen Teamtag für alle Mitarbeiterinnen und Mitarbeiter.",
+            "en": "Mr Brandt is planning a team day for all staff on 19 June."
+          },
+          "origin": "agent"
         },
         {
-          "id": "b1.2-u04-ls1-t2",
-          "kind": "ad",
-          "title": "Kletterpark Nordwald",
-          "text": "Teamtraining in bis zu zwölf Metern Höhe! Für Gruppen ab acht Personen, immer mit Trainerin oder Trainer. Sie brauchen keine Erfahrung, nur feste Schuhe. Täglich von 10 bis 18 Uhr. Kinder unter 12 Jahren dürfen leider nicht mitklettern.",
-          "glosses": []
+          "id": "b1.2-u04-ls1-i02",
+          "type": "multiple_choice",
+          "role": "gist",
+          "topic": "lesen",
+          "promptDe": "Warum macht die Firma den Teamtag?",
+          "promptEn": "Why is the company holding the team day?",
+          "options": [
+            "Das Team soll ein neues Projekt planen.",
+            "Die Kolleginnen und Kollegen sollen sich besser kennenlernen.",
+            "Die Firma möchte Geld sparen."
+          ],
+          "answer": "Die Kolleginnen und Kollegen sollen sich besser kennenlernen.",
+          "accepted": [
+            "Die Kolleginnen und Kollegen sollen sich besser kennenlernen."
+          ],
+          "explanation": {
+            "de": "Viele Kollegen sind neu. Der Zweck des Tages: Alle sollen sich besser kennenlernen.",
+            "en": "Many colleagues are new; the purpose of the day is for everyone to get to know each other better."
+          },
+          "origin": "agent"
         },
         {
-          "id": "b1.2-u04-ls1-t3",
-          "kind": "ad",
-          "title": "Kochen im Team",
-          "text": "In unserer Kochschule in Plagwitz kochen Sie zusammen ein Menü mit drei Gängen und essen danach gemeinsam an einem langen Tisch. Für Gruppen von 10 bis 20 Personen, auf Wunsch vegetarisch. Getränke sind im Preis enthalten.",
-          "glosses": []
+          "id": "b1.2-u04-ls1-i03",
+          "type": "richtig_falsch",
+          "role": "detail",
+          "topic": "lesen",
+          "promptDe": "„Für den Teamtag muss man einen Tag Urlaub nehmen.“",
+          "promptEn": "True or false?",
+          "options": [
+            "richtig",
+            "falsch"
+          ],
+          "answer": "falsch",
+          "accepted": [
+            "falsch"
+          ],
+          "explanation": {
+            "de": "Der Teamtag ist Arbeitszeit. Urlaub brauchen Sie nicht zu nehmen.",
+            "en": "The team day counts as working time, so you don’t need to take leave."
+          },
+          "origin": "agent"
         },
         {
-          "id": "b1.2-u04-ls1-t4",
-          "kind": "ad",
-          "title": "Kanutouren im Auwald",
-          "text": "Mit dem Kanu durch den Leipziger Auwald: drei Stunden mit Guide, auch für Anfänger. Alle Teilnehmenden müssen schwimmen können. Boote und Schwimmwesten sind im Preis enthalten. Start am Bootshaus, von April bis Oktober.",
-          "glosses": []
+          "id": "b1.2-u04-ls1-i04",
+          "type": "richtig_falsch",
+          "role": "detail",
+          "topic": "lesen",
+          "promptDe": "„Die Firma bezahlt den Teamtag.“",
+          "promptEn": "True or false?",
+          "options": [
+            "richtig",
+            "falsch"
+          ],
+          "answer": "richtig",
+          "accepted": [
+            "richtig"
+          ],
+          "explanation": {
+            "de": "Die Firma hat ein Budget von 1.200 Euro. Sie brauchen nichts selbst zu bezahlen.",
+            "en": "The company has a budget of 1,200 euros; you don’t pay anything yourself."
+          },
+          "origin": "agent"
         },
         {
-          "id": "b1.2-u04-ls1-t5",
-          "kind": "ad",
-          "title": "Seminarhaus am Cospudener See",
-          "text": "Helle Räume für 10 bis 40 Personen mit Beamer, Leinwand und WLAN. Mittagessen und Kaffee aus unserer eigenen Küche. Direkt am Wasser, vom Hauptbahnhof 25 Minuten mit dem Bus. Fahrradverleih im Haus.",
-          "glosses": []
-        },
-        {
-          "id": "b1.2-u04-ls1-t6",
-          "kind": "ad",
-          "title": "Rätselraum Innenstadt",
-          "text": "Finden Sie gemeinsam in 60 Minuten den Weg aus unserem Rätselraum! Für vier bis sechs Personen pro Raum; größere Teams spielen in zwei Räumen gegeneinander. Mitten in der Innenstadt, täglich ab 12 Uhr.",
-          "glosses": []
-        },
-        {
-          "id": "b1.2-u04-ls1-t7",
-          "kind": "ad",
-          "title": "Reisebus mit Fahrer",
-          "text": "Sie planen einen Ausflug mit Ihrer Firma oder Ihrem Verein? Wir vermieten Reisebusse mit 20 bis 50 Plätzen, immer mit erfahrenem Fahrer. Ziele in ganz Sachsen und Thüringen. Tagespreis ab 450 Euro.",
-          "glosses": []
-        },
-        {
-          "id": "b1.2-u04-ls1-t8",
-          "kind": "ad",
-          "title": "Buffet-Service für Firmen",
-          "text": "Warme und kalte Speisen für Ihre Firmenfeier, auch vegetarisch und vegan. Wir liefern ab 15 Personen direkt zu Ihnen ins Büro und bringen Geschirr und Besteck mit. Bestellung bis drei Tage vorher.",
-          "glosses": []
-        },
-        {
-          "id": "b1.2-u04-ls1-t9",
-          "kind": "ad",
-          "title": "Fotografin für Firmen",
-          "text": "Ich mache professionelle Teamfotos für Ihre Internetseite oder begleite Ihre Veranstaltung mit der Kamera. Die fertigen Bilder bekommen Sie nach einer Woche zum Herunterladen. Fotostudio Lichtblick, Gohlis.",
-          "glosses": []
-        },
-        {
-          "id": "b1.2-u04-ls1-t10",
-          "kind": "ad",
-          "title": "Grillplatz im Grünen",
-          "text": "Unser Gartenverein vermietet einen Grillplatz mit Tischen und Bänken für bis zu 30 Personen, 40 Euro pro Tag. Essen, Getränke und Holzkohle bringen Sie selbst mit. Von Mai bis September, Reservierung per E-Mail.",
-          "glosses": []
-        },
-        {
-          "id": "b1.2-u04-ls1-t11",
-          "kind": "ad",
-          "title": "Bowling am Nordplatz",
-          "text": "Zwölf moderne Bahnen und unser Firmenpaket: zwei Stunden Bowling, Getränke und ein kleines Buffet. Täglich ab 16 Uhr geöffnet. Von Montag bis Donnerstag zahlen Gruppen 20 Prozent weniger.",
-          "glosses": []
-        },
-        {
-          "id": "b1.2-u04-ls1-t12",
-          "kind": "ad",
-          "title": "Radtouren mit Führung",
-          "text": "Entdecken Sie die Seen im Süden von Leipzig: 30 Kilometer auf flachen Wegen, mit Pause in einem Gasthof. Jeden Samstag und Sonntag um 10 Uhr ab Connewitzer Kreuz. Leihräder gegen Gebühr.",
-          "glosses": []
+          "id": "b1.2-u04-ls1-i05",
+          "type": "richtig_falsch",
+          "role": "detail",
+          "topic": "lesen",
+          "promptDe": "„Wer welche Aufgabe übernimmt, entscheidet man erst in der Sitzung.“",
+          "promptEn": "True or false?",
+          "options": [
+            "richtig",
+            "falsch"
+          ],
+          "answer": "richtig",
+          "accepted": [
+            "richtig"
+          ],
+          "explanation": {
+            "de": "In der Sitzung verteilt man auch die Aufgaben, zum Beispiel die Raumbuchung und den Bus.",
+            "en": "The tasks, e.g. the room booking and the bus, are shared out at the meeting."
+          },
+          "origin": "agent"
         }
       ],
-      "examBlock": {
-        "id": "b1.2-u04-ls1-tb1-lv3",
-        "template": "tb1.lv3",
-        "lane": "tb1",
-        "length": "full",
-        "scaffolded": false,
-        "modeDefault": "pruefung",
-        "instructionsDe": "Welche Anzeige passt zu welcher Situation? Jede nur einmal; passt keine, wählen Sie x.",
-        "textRefs": [
-          "b1.2-u04-ls1-t1",
-          "b1.2-u04-ls1-t2",
-          "b1.2-u04-ls1-t3",
-          "b1.2-u04-ls1-t4",
-          "b1.2-u04-ls1-t5",
-          "b1.2-u04-ls1-t6",
-          "b1.2-u04-ls1-t7",
-          "b1.2-u04-ls1-t8",
-          "b1.2-u04-ls1-t9",
-          "b1.2-u04-ls1-t10",
-          "b1.2-u04-ls1-t11",
-          "b1.2-u04-ls1-t12"
-        ],
-        "choices": [
-          {
-            "key": "a",
-            "textRef": "b1.2-u04-ls1-t1"
-          },
-          {
-            "key": "b",
-            "textRef": "b1.2-u04-ls1-t2"
-          },
-          {
-            "key": "c",
-            "textRef": "b1.2-u04-ls1-t3"
-          },
-          {
-            "key": "d",
-            "textRef": "b1.2-u04-ls1-t4"
-          },
-          {
-            "key": "e",
-            "textRef": "b1.2-u04-ls1-t5"
-          },
-          {
-            "key": "f",
-            "textRef": "b1.2-u04-ls1-t6"
-          },
-          {
-            "key": "g",
-            "textRef": "b1.2-u04-ls1-t7"
-          },
-          {
-            "key": "h",
-            "textRef": "b1.2-u04-ls1-t8"
-          },
-          {
-            "key": "i",
-            "textRef": "b1.2-u04-ls1-t9"
-          },
-          {
-            "key": "j",
-            "textRef": "b1.2-u04-ls1-t10"
-          },
-          {
-            "key": "k",
-            "textRef": "b1.2-u04-ls1-t11"
-          },
-          {
-            "key": "l",
-            "textRef": "b1.2-u04-ls1-t12"
-          }
-        ],
-        "noMatchKey": "x",
-        "items": [
-          {
-            "id": "b1.2-u04-ls1-tb1-lv3-01",
-            "type": "zuordnen",
-            "role": "exam",
-            "topic": "lesen",
-            "promptDe": "Ihr Team möchte zusammen ein Essen zubereiten und danach gemeinsam am Tisch sitzen.",
-            "answer": "c",
-            "accepted": [
-              "c"
-            ],
-            "explanation": {
-              "de": "Anzeige c: Sie kochen zusammen ein Menü und essen danach gemeinsam.",
-              "en": "Ad c: you cook a menu together and then eat together."
-            },
-            "origin": "agent"
-          },
-          {
-            "id": "b1.2-u04-ls1-tb1-lv3-02",
-            "type": "zuordnen",
-            "role": "exam",
-            "topic": "lesen",
-            "promptDe": "Sie brauchen für eine Besprechung einen Raum mit Beamer. Mittags soll es im selben Haus ein Essen geben.",
-            "answer": "e",
-            "accepted": [
-              "e"
-            ],
-            "explanation": {
-              "de": "Anzeige e: Räume mit Beamer und Mittagessen aus der eigenen Küche.",
-              "en": "Ad e: rooms with a projector and lunch from their own kitchen."
-            },
-            "origin": "agent"
-          },
-          {
-            "id": "b1.2-u04-ls1-tb1-lv3-03",
-            "type": "zuordnen",
-            "role": "exam",
-            "topic": "lesen",
-            "promptDe": "Ihre Chefin möchte neue Fotos von allen Mitarbeitern für die Internetseite der Firma.",
-            "answer": "i",
-            "accepted": [
-              "i"
-            ],
-            "explanation": {
-              "de": "Anzeige i: Die Fotografin macht Teamfotos für die Internetseite.",
-              "en": "Ad i: the photographer takes team photos for your website."
-            },
-            "origin": "agent"
-          },
-          {
-            "id": "b1.2-u04-ls1-tb1-lv3-04",
-            "type": "zuordnen",
-            "role": "exam",
-            "topic": "lesen",
-            "promptDe": "Das Team feiert im Büro. Niemand möchte kochen, und das Essen soll direkt ins Büro kommen.",
-            "answer": "h",
-            "accepted": [
-              "h"
-            ],
-            "explanation": {
-              "de": "Anzeige h: Der Buffet-Service liefert das Essen direkt ins Büro.",
-              "en": "Ad h: the buffet service delivers food straight to the office."
-            },
-            "origin": "agent"
-          },
-          {
-            "id": "b1.2-u04-ls1-tb1-lv3-05",
-            "type": "zuordnen",
-            "role": "exam",
-            "topic": "lesen",
-            "promptDe": "Eine Kollegin möchte am Wochenende mit ihren Kindern (acht und zehn Jahre) klettern gehen.",
-            "answer": "x",
-            "accepted": [
-              "x"
-            ],
-            "noMatch": true,
-            "explanation": {
-              "de": "Im Kletterpark (b) dürfen Kinder unter 12 Jahren nicht klettern. Keine Anzeige passt: x.",
-              "en": "The climbing park (b) excludes children under 12, so no ad fits: x."
-            },
-            "origin": "agent"
-          },
-          {
-            "id": "b1.2-u04-ls1-tb1-lv3-06",
-            "type": "zuordnen",
-            "role": "exam",
-            "topic": "lesen",
-            "promptDe": "Ihr Team möchte einen Tagesausflug nach Dresden machen, aber niemand möchte selbst Auto fahren.",
-            "answer": "g",
-            "accepted": [
-              "g"
-            ],
-            "explanation": {
-              "de": "Anzeige g: ein Reisebus mit Fahrer für Ziele in ganz Sachsen.",
-              "en": "Ad g: a coach with a driver for trips all over Saxony."
-            },
-            "origin": "agent"
-          },
-          {
-            "id": "b1.2-u04-ls1-tb1-lv3-07",
-            "type": "zuordnen",
-            "role": "exam",
-            "topic": "lesen",
-            "promptDe": "Ihr Team möchte im Sommer draußen feiern. Alle bringen das Essen selbst mit, und es soll wenig kosten.",
-            "answer": "j",
-            "accepted": [
-              "j"
-            ],
-            "explanation": {
-              "de": "Anzeige j: ein Grillplatz für 40 Euro, das Essen bringen Sie selbst mit.",
-              "en": "Ad j: a barbecue site for 40 euros; you bring your own food."
-            },
-            "origin": "agent"
-          },
-          {
-            "id": "b1.2-u04-ls1-tb1-lv3-08",
-            "type": "zuordnen",
-            "role": "exam",
-            "topic": "lesen",
-            "promptDe": "Ein neuer Kollege aus Irland spricht noch wenig Deutsch und möchte die Altstadt kennenlernen.",
-            "answer": "a",
-            "accepted": [
-              "a"
-            ],
-            "explanation": {
-              "de": "Anzeige a: Stadtführungen durch die Altstadt, auch auf Englisch.",
-              "en": "Ad a: old-town tours, also in English."
-            },
-            "origin": "agent"
-          },
-          {
-            "id": "b1.2-u04-ls1-tb1-lv3-09",
-            "type": "zuordnen",
-            "role": "exam",
-            "topic": "lesen",
-            "promptDe": "Das Team möchte den Teamtag am Abend mit Live-Musik und Tanz beenden.",
-            "answer": "x",
-            "accepted": [
-              "x"
-            ],
-            "noMatch": true,
-            "explanation": {
-              "de": "Keine Anzeige bietet Musik oder Tanz an: x.",
-              "en": "No ad offers music or dancing, so x."
-            },
-            "origin": "agent"
-          },
-          {
-            "id": "b1.2-u04-ls1-tb1-lv3-10",
-            "type": "zuordnen",
-            "role": "exam",
-            "topic": "lesen",
-            "promptDe": "Einige Kollegen möchten an einem Dienstagabend zusammen Sport machen und danach eine Kleinigkeit essen.",
-            "answer": "k",
-            "accepted": [
-              "k"
-            ],
-            "explanation": {
-              "de": "Anzeige k: Bowling ab 16 Uhr, mit Buffet; Radtouren (l) gibt es nur am Wochenende.",
-              "en": "Ad k: bowling from 4 pm with a buffet; the bike tours (l) are weekends only."
-            },
-            "origin": "agent"
-          }
-        ]
-      },
       "structuredInput": [
         {
           "id": "b1.2-u04-ls1-s01",
@@ -871,10 +662,14 @@
             "answer": "Sie brauchen nur kurz zu antworten.",
             "accepted": [
               "Sie brauchen nur kurz zu antworten.",
-              "Zu antworten brauchen Sie nur kurz."
+              "Zu antworten brauchen Sie nur kurz.",
+              "Nur kurz brauchen Sie zu antworten.",
+              "Kurz brauchen Sie nur zu antworten."
             ],
             "acceptedWhy": {
-              "Zu antworten brauchen Sie nur kurz.": "grammatisch: der Infinitiv mit zu im Vorfeld betont die Handlung, aber selten"
+              "Zu antworten brauchen Sie nur kurz.": "grammatisch: der Infinitiv mit zu im Vorfeld betont die Handlung, aber selten",
+              "Nur kurz brauchen Sie zu antworten.": "grammatisch: „nur kurz“ steht zusammen im Vorfeld und wird betont",
+              "Kurz brauchen Sie nur zu antworten.": "grammatisch: kurz im Vorfeld; nur bezieht sich auf das Antworten"
             },
             "explanation": {
               "de": "nur steht vor dem Teil, um den es geht; zu antworten steht am Ende.",
@@ -931,7 +726,7 @@
             "type": "multiple_choice",
             "role": "practice",
             "topic": "lx.budget",
-            "promptDe": "Für den Teamtag hat die Firma 1.200 Euro. Das ist das ___ für das Projekt.",
+            "promptDe": "Für den Teamtag hat die Firma 1.200 Euro. Das ist unser ___ für das Projekt.",
             "promptEn": "Choose the word.",
             "options": [
               "Budget",
@@ -1025,7 +820,9 @@
           ],
           "answer": "Du brauchst mich nicht abzuholen.",
           "accepted": [
-            "Du brauchst mich nicht abzuholen."
+            "Du brauchst mich nicht abzuholen.",
+            "Mich brauchst du nicht abzuholen.",
+            "Abzuholen brauchst du mich nicht."
           ],
           "explanation": {
             "de": "abholen ist trennbar: abzuholen steht am Ende.",
@@ -1040,7 +837,15 @@
             "mehr-ueben",
             "repair"
           ],
-          "origin": "agent"
+          "origin": "agent",
+          "acceptedWhy": {
+            "Mich brauchst du nicht abzuholen.": "grammatisch: das Objekt mich im Vorfeld wird betont",
+            "Abzuholen brauchst du mich nicht.": "grammatisch: der Infinitiv mit zu im Vorfeld betont die Handlung, aber selten"
+          },
+          "reviewerConfirmed": [
+            "Mich brauchst du nicht abzuholen.",
+            "Abzuholen brauchst du mich nicht."
+          ]
         },
         {
           "id": "b1.2-u04-ls1-r03",
@@ -1074,8 +879,8 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "lx.teilnehmerzahl",
-          "promptDe": "Es kommen 18 Personen. Die ___ ist also 18.",
-          "promptEn": "Choose the noun from the circular.",
+          "promptDe": "Es nehmen 18 Personen teil. Die ___ (Teilnehmer + Zahl) ist also 18.",
+          "promptEn": "Compound noun: participants + number.",
           "answer": "Teilnehmerzahl",
           "accepted": [
             "Teilnehmerzahl"
@@ -1096,9 +901,9 @@
         "bankKey": "b12-u04-mo1",
         "mode": "spoken",
         "profile": "course-micro-sp",
-        "situationDe": "In der Sitzung fragt Jan: „Welches Angebot aus dem Intranet kommt für unseren Teamtag infrage?“",
-        "promptDe": "Schlagen Sie ein Angebot vor, begründen Sie es und sagen Sie, was niemand zu tun braucht.",
-        "promptEn": "Suggest one offer, give reasons and say what people won’t need to do.",
+        "situationDe": "Vor der Sitzung fragt Jan: „Ich habe das Rundschreiben nur kurz gelesen. Was ist am 19. Juni, und was müssen die Kollegen tun?“",
+        "promptDe": "Erklären Sie Jan den Teamtag und sagen Sie, was niemand zu tun braucht.",
+        "promptEn": "Explain the team day to Jan and say what nobody will need to do.",
         "planSeconds": 30,
         "seconds": [
           40,
@@ -1107,9 +912,9 @@
         "targets": [
           "g.brauchen-zu"
         ],
-        "register": "Sie"
+        "register": "du"
       },
-      "endLine": "Sie können jetzt Angebote vergleichen und die passende Anzeige finden."
+      "endLine": "Sie können jetzt ein Rundschreiben verstehen und sagen, was man nicht zu tun braucht."
     },
     {
       "id": "b1.2-u04-ls2",
@@ -1130,20 +935,20 @@
           {
             "id": "b1.2-u04-ls2-l01",
             "speaker": "cast.jan-wolf",
-            "de": "So, fangen wir an. Anwesend sind Herr Brandt, Emre, Priya und ich; Frau Otto ist auf einer Fortbildung, deshalb moderiere ich. Auf der Tagesordnung steht nur ein Punkt: unser Teamtag.",
-            "en": "Right, let’s start. Present are Mr Brandt, Emre, Priya and me; Ms Otto is on a training course, so I’m chairing. There is only one item on the agenda: our team day."
+            "de": "So, fangen wir an. Anwesend sind heute Herr Brandt, Emre, Priya und ich. Frau Otto ist abwesend, sie ist auf einer Fortbildung. Deshalb moderiere ich, und Emre protokolliert. Auf der Tagesordnung steht nur ein Punkt: unser Teamtag.",
+            "en": "Right, let’s start. Present today are Mr Brandt, Emre, Priya and me. Ms Otto is away on a training course, so I’m chairing and Emre is taking the minutes. There is only one item on the agenda: our team day."
           },
           {
             "id": "b1.2-u04-ls2-l02",
             "speaker": "cast.priya",
-            "de": "Ich habe die Angebote verglichen und schlage das Seminarhaus am Cospudener See vor. Das ist ein Ort, wo wir vormittags die Besprechung machen und mittags zusammen essen können.",
-            "en": "I’ve compared the offers and I suggest the seminar house on Lake Cospuden. It’s a place where we can hold the meeting in the morning and have lunch together."
+            "de": "Ich habe die Angebote verglichen. Für unseren Zweck passt das Seminarhaus am Cospudener See am besten: Das ist ein Ort, wo wir vormittags die Besprechung machen und mittags zusammen essen können.",
+            "en": "I’ve compared the offers. For our purpose the seminar house on Lake Cospuden fits best: it’s a place where we can hold the meeting in the morning and have lunch together."
           },
           {
             "id": "b1.2-u04-ls2-l03",
             "speaker": "cast.priya",
-            "de": "Am Nachmittag könnten wir eine Kanutour im Auwald machen.",
-            "en": "In the afternoon we could go on a canoe tour in the riverside forest."
+            "de": "Als Programmpunkt am Nachmittag könnten wir eine Kanutour im Auwald machen. Das Budget reicht dafür.",
+            "en": "As the afternoon activity we could go on a canoe tour in the riverside forest. The budget covers it."
           },
           {
             "id": "b1.2-u04-ls2-l04",
@@ -1166,14 +971,14 @@
           {
             "id": "b1.2-u04-ls2-l07",
             "speaker": "cast.jan-wolf",
-            "de": "Gut, ich fasse zusammen: Seminarhaus am See, vormittags Besprechung, nachmittags Radtour. Gibt es Gegenstimmen? … Nein. Dann haben wir das einstimmig beschlossen, und der Ort ist endgültig.",
-            "en": "Good, let me sum up: seminar house by the lake, meeting in the morning, bike tour in the afternoon. Any votes against? … No. Then we’ve decided that unanimously, and the venue is final."
+            "de": "Ich würde die Radtour auch vorziehen. Gut, ich fasse die Ergebnisse zusammen: Seminarhaus am See, vormittags Besprechung, nachmittags Radtour. Gibt es Gegenstimmen? … Nein. Dann ist das einstimmig beschlossen, und wir legen den Ort endgültig fest.",
+            "en": "I’d prefer the bike tour too. Good, let me sum up the results: seminar house by the lake, meeting in the morning, bike tour in the afternoon. Any votes against? … No. Then that’s decided unanimously, and the venue is fixed for good."
           },
           {
             "id": "b1.2-u04-ls2-l08",
             "speaker": "cast.jan-wolf",
-            "de": "Jetzt verteilen wir die Aufgaben. Priya, übernimmst du die Raumbuchung? Das Einzige, was dann noch fehlt, ist der Bus zum See.",
-            "en": "Now let’s share out the tasks. Priya, will you take the room booking? The only thing still missing then is the bus to the lake."
+            "de": "Jetzt verteilen wir die Aufgaben. Wer erklärt sich bereit, die Raumbuchung zu übernehmen? Das Einzige, was dann noch fehlt, ist der Bus zum See.",
+            "en": "Now let’s share out the tasks. Who is willing to take on the room booking? The only thing still missing then is the bus to the lake."
           },
           {
             "id": "b1.2-u04-ls2-l09",
@@ -1184,34 +989,34 @@
           {
             "id": "b1.2-u04-ls2-l10",
             "speaker": "cast.emre",
-            "de": "Dann kümmere ich mich um den Bus. Ich frage bei zwei Firmen nach und sage bis Freitag Bescheid, was die Fahrt kostet.",
-            "en": "Then I’ll take care of the bus. I’ll ask two companies and let you know by Friday what the trip costs."
+            "de": "Dann kümmere ich mich um den Bus, so teilen wir die Arbeit auf. Ich frage bei zwei Firmen nach und sage bis Freitag Bescheid, was die Fahrt kostet.",
+            "en": "Then I’ll take care of the bus – that way we share the work. I’ll ask two companies and let you know by Friday what the trip costs."
           },
           {
             "id": "b1.2-u04-ls2-l11",
             "speaker": "cast.herr-brandt",
-            "de": "Sehr gut. Frau Otto übernimmt die Verantwortung für das Rahmenprogramm am Abend. Frau Nair, schreiben Sie ihr bitte alles, was wir heute beschlossen haben. – Oh, Ihr Telefon klingelt.",
-            "en": "Very good. Ms Otto will be responsible for the evening programme. Ms Nair, please write to her with everything we decided today. – Oh, your phone is ringing."
+            "de": "Sehr gut, das findet meine Zustimmung. Damit sind die Zuständigkeiten klar. Frau Otto übernimmt die Verantwortung für das Rahmenprogramm am Abend. Sie soll bis Freitag zwei Vorschläge sammeln, aber noch nichts buchen. Am Freitag besprechen wir dann den Zwischenstand. Frau Nair, schreiben Sie ihr bitte alles, was wir heute beschlossen haben. – Oh, Ihr Telefon klingelt. Sie machen heute ja auch den Empfang, gehen Sie ruhig ans Telefon.",
+            "en": "Very good, you have my approval. That makes it clear who is responsible for what. Ms Otto will be responsible for the evening programme: by Friday she should collect two suggestions, but not book anything yet. On Friday we’ll discuss where things stand. Ms Nair, please write to her with everything we decided today. – Oh, your phone is ringing. You’re covering reception today, so do take it."
           },
           {
             "id": "b1.2-u04-ls2-l12",
             "speaker": "x.herr-lehmann",
-            "de": "Guten Tag, hier ist Markus Lehmann vom Seminarhaus am See. Ich möchte bitte Frau Otto sprechen. Sie hat bei uns nach einem Raum für den 19. Juni gefragt.",
-            "en": "Hello, this is Markus Lehmann from the seminar house by the lake. I’d like to speak to Ms Otto, please. She asked us about a room for 19 June.",
-            "say": "Guten Tag, hier ist Markus Lehmann vom Seminarhaus am See. Ich möchte bitte Frau Otto sprechen. Sie hat bei uns nach einem Raum für den neunzehnten Juni gefragt."
+            "de": "Guten Tag, hier ist Markus Lehmann vom Seminarhaus am See. Ich möchte bitte Frau Otto sprechen. Sie hat bei uns nach der Terrasse für einen Grillabend am 19. Juni gefragt.",
+            "en": "Hello, this is Markus Lehmann from the seminar house by the lake. I’d like to speak to Ms Otto, please. She asked us about the terrace for a barbecue evening on 19 June.",
+            "say": "Guten Tag, hier ist Markus Lehmann vom Seminarhaus am See. Ich möchte bitte Frau Otto sprechen. Sie hat bei uns nach der Terrasse für einen Grillabend am neunzehnten Juni gefragt."
           },
           {
             "id": "b1.2-u04-ls2-l13",
             "speaker": "cast.priya",
-            "de": "Frau Otto ist heute leider nicht im Haus. Kann ich ihr etwas ausrichten?",
-            "en": "Unfortunately Ms Otto isn’t in today. Can I take a message for her?"
+            "de": "Frau Otto ist heute leider nicht im Haus. Kann ich ihr etwas ausrichten? Ich schreibe ihr gern eine Gesprächsnotiz.",
+            "en": "Unfortunately Ms Otto isn’t in today. Can I take a message for her? I’ll gladly write her a note of the call."
           },
           {
             "id": "b1.2-u04-ls2-l14",
             "speaker": "x.herr-lehmann",
-            "de": "Ja, gern. Unser großer Raum ist am 19. Juni leider nicht mehr frei, aber der kleine Raum für 20 Personen ist noch frei. Frau Otto soll mich bitte bis Mittwoch zurückrufen: 0341 22 58 90.",
-            "en": "Yes, please. Our large room is no longer free on 19 June, but the small room for 20 people is still free. Ms Otto should call me back by Wednesday, please: 0341 22 58 90.",
-            "say": "Ja, gern. Unser großer Raum ist am neunzehnten Juni leider nicht mehr frei, aber der kleine Raum für zwanzig Personen ist noch frei. Frau Otto soll mich bitte bis Mittwoch zurückrufen: null drei vier eins, zweiundzwanzig, achtundfünfzig, neunzig."
+            "de": "Ja, gern. Die Terrasse ist am 19. Juni frei, aber nur bis 22 Uhr. Ich habe sie vorläufig für Sie reserviert. Für das Essen brauchen wir bis Mittwoch die Teilnehmerzahl. Frau Otto soll mich bitte zurückrufen: 0341 22 58 90.",
+            "en": "Yes, please. The terrace is free on 19 June, but only until 10 pm. I’ve reserved it for you provisionally. For the food we need the number of participants by Wednesday. Ms Otto should call me back, please: 0341 22 58 90.",
+            "say": "Ja, gern. Die Terrasse ist am neunzehnten Juni frei, aber nur bis zweiundzwanzig Uhr. Ich habe sie vorläufig für Sie reserviert. Für das Essen brauchen wir bis Mittwoch die Teilnehmerzahl. Frau Otto soll mich bitte zurückrufen: null drei vier eins, zweiundzwanzig, achtundfünfzig, neunzig."
           }
         ],
         "glosses": [
@@ -1242,8 +1047,8 @@
             "um den Teamtag im Juni"
           ],
           "explanation": {
-            "de": "Jan sagt: Auf der Tagesordnung steht nur der Teamtag im Juni.",
-            "en": "Jan says the only item on the agenda is the team day in June."
+            "de": "Jan sagt: Auf der Tagesordnung steht nur ein Punkt – der Teamtag.",
+            "en": "Jan says there is only one item on the agenda: the team day."
           },
           "origin": "agent"
         },
@@ -1313,20 +1118,36 @@
           "type": "fill_blank",
           "role": "detail",
           "topic": "hoeren",
-          "promptDe": "Herr Lehmann: Rückruf bis Mittwoch unter der Nummer ___.",
+          "promptDe": "Herr Lehmann bittet um Rückruf unter der Nummer ___.",
           "promptEn": "Write the phone number.",
           "answer": "0341 22 58 90",
           "accepted": [
             "0341 22 58 90",
             "0341 225890",
-            "0341225890"
+            "0341225890",
+            "0341/225890",
+            "0341/22 58 90",
+            "0341 / 22 58 90",
+            "0341-225890",
+            "0341-22 58 90",
+            "(0341) 225890",
+            "(0341) 22 58 90"
           ],
           "exact": "number",
           "explanation": {
-            "de": "Die Nummer von Herrn Lehmann ist 0341 22 58 90.",
-            "en": "Mr Lehmann’s number is 0341 22 58 90."
+            "de": "Die Nummer von Herrn Lehmann ist 0341 22 58 90. Jede Ziffer zählt.",
+            "en": "Mr Lehmann’s number is 0341 22 58 90 – every digit counts."
           },
-          "origin": "agent"
+          "origin": "agent",
+          "acceptedWhy": {
+            "0341/225890": "übliche Schreibweise: Vorwahl mit Schrägstrich, dieselben Ziffern",
+            "0341/22 58 90": "übliche Schreibweise: Vorwahl mit Schrägstrich, dieselben Ziffern",
+            "0341 / 22 58 90": "übliche Schreibweise: Vorwahl mit Schrägstrich, dieselben Ziffern",
+            "0341-225890": "übliche Schreibweise: Vorwahl mit Bindestrich, dieselben Ziffern",
+            "0341-22 58 90": "übliche Schreibweise: Vorwahl mit Bindestrich, dieselben Ziffern",
+            "(0341) 225890": "übliche Schreibweise: Vorwahl in Klammern, dieselben Ziffern",
+            "(0341) 22 58 90": "übliche Schreibweise: Vorwahl in Klammern, dieselben Ziffern"
+          }
         }
       ],
       "structuredInput": [
@@ -1357,20 +1178,20 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.relativsatz-was-wo",
-          "promptDe": "Priya: „Das Seminarhaus ist ein Ort, wo wir mittags essen können.“ – Wo essen sie?",
-          "promptEn": "Where do they eat?",
+          "promptDe": "„Ein Ort, wo wir die Besprechung machen und essen können.“ – Was geht dort?",
+          "promptEn": "What can you do there?",
           "options": [
-            "im Seminarhaus",
-            "im Büro",
-            "im Bus"
+            "nur die Besprechung",
+            "die Besprechung und das Mittagessen",
+            "nur das Mittagessen"
           ],
-          "answer": "im Seminarhaus",
+          "answer": "die Besprechung und das Mittagessen",
           "accepted": [
-            "im Seminarhaus"
+            "die Besprechung und das Mittagessen"
           ],
           "explanation": {
-            "de": "wo zeigt auf den Ort: das Seminarhaus.",
-            "en": "„wo“ refers back to the place: the seminar house."
+            "de": "wo zeigt auf den Ort. Dort kann man beides: die Besprechung machen und essen.",
+            "en": "„wo“ refers back to the place: you can do both there – hold the meeting and eat."
           },
           "origin": "agent"
         },
@@ -1466,15 +1287,15 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.relativsatz-was-wo",
-            "promptDe": "Gibt es noch etwas, ___ Sie ergänzen möchten?",
-            "promptEn": "Relative word after „etwas“.",
+            "promptDe": "Ist das alles, ___ Sie ergänzen möchten?",
+            "promptEn": "Relative word after „alles“.",
             "answer": "was",
             "accepted": [
               "was"
             ],
             "explanation": {
-              "de": "Nach etwas beginnt der Relativsatz mit was.",
-              "en": "After etwas the relative clause starts with was."
+              "de": "Nach alles beginnt der Relativsatz mit was.",
+              "en": "After alles the relative clause starts with was."
             },
             "origin": "agent"
           },
@@ -1613,13 +1434,20 @@
             ],
             "answer": "Darf ich kurz etwas ergänzen?",
             "accepted": [
-              "Darf ich kurz etwas ergänzen?"
+              "Darf ich kurz etwas ergänzen?",
+              "Ich darf kurz etwas ergänzen."
             ],
             "explanation": {
               "de": "Höfliche Frage: darf vorne, ergänzen am Ende.",
               "en": "Polite question: darf first, ergänzen last."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "acceptedWhy": {
+              "Ich darf kurz etwas ergänzen.": "grammatisch: Aussagesatz, höflich angekündigt statt gefragt"
+            },
+            "reviewerConfirmed": [
+              "Ich darf kurz etwas ergänzen."
+            ]
           },
           {
             "id": "b1.2-u04-ls2-p10",
@@ -1673,7 +1501,7 @@
             "promptDe": "„Ein klarer Plan ist das Beste, ___ wir jetzt machen können.“",
             "promptEn": "Choose the relative word.",
             "options": [
-              "das",
+              "der",
               "was",
               "wo"
             ],
@@ -1748,7 +1576,7 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "g.relativsatz-was-wo",
-          "promptDe": "Leipzig ist die Stadt, ___ Priya seit drei Jahren wohnt.",
+          "promptDe": "Leipzig ist die Stadt, ___ Priya seit gut zwei Jahren wohnt.",
           "promptEn": "Relative word for a place.",
           "answer": "wo",
           "accepted": [
@@ -1787,10 +1615,12 @@
           "answer": "Ich fasse die Ergebnisse kurz zusammen.",
           "accepted": [
             "Ich fasse die Ergebnisse kurz zusammen.",
+            "Ich fasse kurz die Ergebnisse zusammen.",
             "Die Ergebnisse fasse ich kurz zusammen.",
             "Kurz fasse ich die Ergebnisse zusammen."
           ],
           "acceptedWhy": {
+            "Ich fasse kurz die Ergebnisse zusammen.": "grammatisch: kurz vor dem Objekt, genauso üblich",
             "Kurz fasse ich die Ergebnisse zusammen.": "grammatisch: kurz im Vorfeld, seltener"
           },
           "explanation": {
@@ -1806,7 +1636,10 @@
             "mehr-ueben",
             "repair"
           ],
-          "origin": "agent"
+          "origin": "agent",
+          "reviewerConfirmed": [
+            "Ich fasse kurz die Ergebnisse zusammen."
+          ]
         },
         {
           "id": "b1.2-u04-ls2-r04",
@@ -1841,8 +1674,8 @@
         "mode": "written",
         "profile": "course-micro",
         "situationDe": "Herr Lehmann vom Seminarhaus am See hat für Frau Otto angerufen. Sie ist heute nicht im Haus.",
-        "promptDe": "Schreiben Sie Frau Otto eine Notiz: Wer hat angerufen, warum, und was soll sie tun?",
-        "promptEn": "Write Ms Otto a note: who called, why, and what she should do.",
+        "promptDe": "Schreiben Sie Frau Otto eine Gesprächsnotiz: Wer hat angerufen, warum, was soll sie tun?",
+        "promptEn": "Write Ms Otto a note of the call: who called, why, and what she should do.",
         "planSeconds": 30,
         "words": [
           40,
@@ -1878,29 +1711,29 @@
       "ruleTable": {
         "rows": [
           [
-            "Wort vor dem Relativsatz",
-            "Relativwort",
+            "Signal",
+            "dann kommt",
             "Beispiel aus der Sitzung"
           ],
           [
             "alles, etwas, nichts, vieles",
             "was",
-            "Schreiben Sie ihr alles, was wir beschlossen haben."
+            "Schreiben Sie ihr bitte alles, was wir heute beschlossen haben."
           ],
           [
             "das Einzige, das Beste",
             "was",
-            "Das Einzige, was noch fehlt, ist der Bus."
+            "Das Einzige, was dann noch fehlt, ist der Bus zum See."
           ],
           [
             "ein Ort, eine Stadt",
             "wo",
-            "Das ist ein Ort, wo wir mittags essen können."
+            "Das ist ein Ort, wo wir mittags zusammen essen können."
           ],
           [
-            "nicht / nur brauchen",
+            "nicht / kein / nur brauchen",
             "zu + Infinitiv",
-            "Wir brauchen keine Räder mitzubringen."
+            "Wir brauchen keine eigenen Räder mitzubringen."
           ]
         ],
         "blanks": [
@@ -1947,7 +1780,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.aufteilen",
-            "promptDe": "Wir teilen die Kosten für den Bus unter uns ___. (aufteilen)",
+            "promptDe": "Wir teilen die Aufgaben für den Teamtag unter uns ___. (aufteilen)",
             "promptEn": "The separable prefix.",
             "answer": "auf",
             "accepted": [
@@ -2002,7 +1835,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.alternative",
-            "promptDe": "Gibt es eine ___? – Ja, statt der Kanutour machen wir eine Radtour.",
+            "promptDe": "Gibt es eine ___ (= andere Möglichkeit)? – Ja, wir machen eine Radtour.",
             "promptEn": "Noun: another possibility.",
             "answer": "Alternative",
             "accepted": [
@@ -2088,7 +1921,8 @@
             "answer": "Sie brauchen das Protokoll nicht auszudrucken.",
             "accepted": [
               "Sie brauchen das Protokoll nicht auszudrucken.",
-              "Das Protokoll brauchen Sie nicht auszudrucken."
+              "Das Protokoll brauchen Sie nicht auszudrucken.",
+              "Auszudrucken brauchen Sie das Protokoll nicht."
             ],
             "explanation": {
               "de": "brauchen auf Position 2, auszudrucken am Ende.",
@@ -2097,7 +1931,14 @@
             "errorTags": [
               "satzklammer"
             ],
-            "origin": "agent"
+            "origin": "agent",
+            "acceptedWhy": {
+              "Das Protokoll brauchen Sie nicht auszudrucken.": "grammatisch: das Objekt im Vorfeld wird betont",
+              "Auszudrucken brauchen Sie das Protokoll nicht.": "grammatisch: der Infinitiv mit zu im Vorfeld betont die Handlung, aber selten"
+            },
+            "reviewerConfirmed": [
+              "Auszudrucken brauchen Sie das Protokoll nicht."
+            ]
           },
           {
             "id": "b1.2-u04-ls3-p09",
@@ -2115,29 +1956,36 @@
             ],
             "answer": "Wer übernimmt die Verantwortung für das Essen?",
             "accepted": [
-              "Wer übernimmt die Verantwortung für das Essen?"
+              "Wer übernimmt die Verantwortung für das Essen?",
+              "Wer übernimmt für das Essen die Verantwortung?"
             ],
             "explanation": {
               "de": "W-Frage: übernimmt steht auf Position 2.",
               "en": "Wh-question: übernimmt in second position."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "acceptedWhy": {
+              "Wer übernimmt für das Essen die Verantwortung?": "grammatisch: „für das Essen“ vor dem Objekt betont die Verantwortung"
+            },
+            "reviewerConfirmed": [
+              "Wer übernimmt für das Essen die Verantwortung?"
+            ]
           },
           {
             "id": "b1.2-u04-ls3-p10",
             "type": "error_correction",
             "role": "practice",
             "topic": "g.relativsatz-was-wo",
-            "promptDe": "Korrigieren Sie: „Das ist das Einzige, das mir nicht gefällt.“",
+            "promptDe": "Korrigieren Sie: „Das ist alles, das wir besprochen haben.“",
             "promptEn": "Correct the sentence.",
-            "answer": "Das ist das Einzige, was mir nicht gefällt.",
+            "answer": "Das ist alles, was wir besprochen haben.",
             "accepted": [
-              "Das ist das Einzige, was mir nicht gefällt."
+              "Das ist alles, was wir besprochen haben."
             ],
             "intentionalError": true,
             "explanation": {
-              "de": "Nach das Einzige beginnt der Relativsatz mit was.",
-              "en": "After das Einzige the relative clause starts with was."
+              "de": "Nach alles beginnt der Relativsatz mit was, nicht mit das.",
+              "en": "After alles the relative clause starts with was, not das."
             },
             "origin": "agent"
           },
@@ -2286,9 +2134,15 @@
           "answer": "Wir brauchen nur den Raum zu buchen.",
           "accepted": [
             "Wir brauchen nur den Raum zu buchen.",
+            "Wir brauchen den Raum nur zu buchen.",
+            "Den Raum brauchen wir nur zu buchen.",
+            "Nur den Raum brauchen wir zu buchen.",
             "Zu buchen brauchen wir nur den Raum."
           ],
           "acceptedWhy": {
+            "Wir brauchen den Raum nur zu buchen.": "grammatisch: nur bezieht sich hier auf das Buchen, nicht auf den Raum",
+            "Den Raum brauchen wir nur zu buchen.": "grammatisch: das Objekt im Vorfeld; nur bezieht sich auf das Buchen",
+            "Nur den Raum brauchen wir zu buchen.": "grammatisch: „nur den Raum“ steht zusammen im Vorfeld und wird betont",
             "Zu buchen brauchen wir nur den Raum.": "grammatisch: der Infinitiv mit zu im Vorfeld betont die Handlung, aber selten"
           },
           "explanation": {
@@ -2304,7 +2158,12 @@
             "mehr-ueben",
             "repair"
           ],
-          "origin": "agent"
+          "origin": "agent",
+          "reviewerConfirmed": [
+            "Wir brauchen den Raum nur zu buchen.",
+            "Den Raum brauchen wir nur zu buchen.",
+            "Nur den Raum brauchen wir zu buchen."
+          ]
         },
         {
           "id": "b1.2-u04-ls3-r04",
@@ -2340,7 +2199,7 @@
           "type": "cloze",
           "role": "practice",
           "topic": "lesen",
-          "promptDe": "Heute schreibt Priya das Protokoll, ___ Frau Otto nicht da ist.",
+          "promptDe": "Heute moderiert Jan die Sitzung, ___ Frau Otto nicht da ist.",
           "promptEn": "Choose the word for the gap.",
           "options": [
             "obwohl",
@@ -2384,20 +2243,20 @@
           "type": "cloze",
           "role": "practice",
           "topic": "lesen",
-          "promptDe": "Am Freitag treffen wir uns ___ Zwischenstand im Konferenzraum.",
+          "promptDe": "Am Freitag besprechen wir ___ Konferenzraum den Zwischenstand.",
           "promptEn": "Choose the word for the gap.",
           "options": [
-            "zum",
-            "vom",
-            "am"
-          ],
-          "answer": "zum",
-          "accepted": [
+            "im",
+            "am",
             "zum"
           ],
+          "answer": "im",
+          "accepted": [
+            "im"
+          ],
           "explanation": {
-            "de": "sich zum Zwischenstand treffen: zu + dem = zum.",
-            "en": "sich zum Zwischenstand treffen: zu + dem = zum."
+            "de": "Wo? in + dem = im Konferenzraum.",
+            "en": "Where? in + dem = im Konferenzraum."
           },
           "origin": "agent"
         },
@@ -2406,7 +2265,7 @@
           "type": "cloze",
           "role": "practice",
           "topic": "lesen",
-          "promptDe": "Emre fragt zwei Busfirmen, ___ sie am 19. Juni noch frei sind.",
+          "promptDe": "Emre fragt zwei Busfirmen, ___ sie am 19. Juni noch einen Bus frei haben.",
           "promptEn": "Choose the word for the gap.",
           "options": [
             "dass",
@@ -2450,7 +2309,7 @@
         "tb1.m3",
         "tb1.sa"
       ],
-      "endLine": "Sie können jetzt Relativsätze mit was und wo und nicht/nur brauchen + zu benutzen."
+      "endLine": "Sie können jetzt Relativsätze mit was und wo und brauchen + zu mit nicht, kein oder nur benutzen."
     },
     {
       "id": "b1.2-u04-ls4",
@@ -2460,11 +2319,333 @@
           "id": "b1.2-u04-ls4-t1",
           "kind": "text",
           "title": "Anfrage an das Seminarhaus am See",
-          "text": "Betreff: Anfrage für einen Teamtag am 19. Juni\n\nSehr geehrte Damen und Herren,\n\nauf Ihrer Internetseite habe ich gelesen, ⟦01⟧ Sie Räume für Firmen vermieten. Wir sind ein Team von 18 Personen und planen am Freitag, dem 19. Juni, einen Teamtag. Ihr Haus liegt direkt am See, und genau das ist es, ⟦02⟧ uns besonders gefällt.\n\nAm Vormittag möchten wir eine Besprechung machen. ⟦03⟧ brauchen wir einen Raum mit Beamer und Platz für alle. Einen Laptop brauchen Sie nicht ⟦04⟧ besorgen, den bringen wir selbst mit. Am Nachmittag möchten wir eine Radtour machen. Können Sie mir sagen, ⟦05⟧ die Fahrräder im Preis enthalten sind?\n\nMittags hätten wir gern ein warmes Essen. Zwei Kolleginnen essen ⟦06⟧ Fleisch. Gibt es bei Ihnen auch vegetarische Gerichte?\n\nBitte schicken Sie mir ein Angebot, ⟦07⟧ wir die Kosten vergleichen können. ⟦08⟧ der große Raum nicht mehr frei ist, reicht uns auch ein kleiner Raum. Kennen Sie außerdem ein Restaurant in der Nähe, ⟦09⟧ wir am Abend feiern können?\n\nÜber eine schnelle Antwort ⟦10⟧ ich mich sehr freuen.\n\nMit freundlichen Grüßen\nPriya Nair\nBrandt Elektrotechnik",
+          "text": "Betreff: Anfrage für einen Teamtag am 19. Juni\n\nSehr geehrte Damen und Herren,\n\nauf Ihrer Internetseite habe ich gelesen, ⟦01⟧ Sie Räume für Firmen vermieten. Wir sind ein Team von 18 Personen und planen am Freitag, dem 19. Juni, einen Teamtag. Ihr Haus liegt direkt am See, und genau das ist es, ⟦02⟧ uns besonders gefällt. Deshalb hat sich unser Team einstimmig für Sie entschieden.\n\nAm Vormittag möchten wir eine Besprechung machen. ⟦03⟧ brauchen wir einen Raum mit Beamer und Platz für alle. Einen Laptop brauchen Sie nicht ⟦04⟧ besorgen, den bringen wir selbst mit. Am Nachmittag möchten wir eine Radtour machen. Können Sie mir sagen, ⟦05⟧ die Fahrräder im Preis enthalten sind?\n\nMittags hätten wir gern ein warmes Essen. Zwei Kolleginnen essen ⟦06⟧ Fleisch. Gibt es bei Ihnen auch vegetarische Gerichte?\n\nBitte schicken Sie mir ein Angebot, ⟦07⟧ wir die Kosten vergleichen können. ⟦08⟧ der große Raum nicht mehr frei ist, reicht uns auch ein kleiner Raum. Kennen Sie außerdem einen Ort am See, ⟦09⟧ wir während der Radtour eine Pause machen können?\n\nÜber eine schnelle Antwort ⟦10⟧ ich mich sehr freuen.\n\nMit freundlichen Grüßen\nPriya Nair\nBrandt Elektrotechnik",
+          "glosses": []
+        },
+        {
+          "id": "b1.2-u04-ls4-t2",
+          "kind": "ad",
+          "title": "Leipzig zu Fuß – Stadtführungen",
+          "text": "Unsere Stadtführerinnen zeigen Ihnen die Altstadt, die Nikolaikirche und die schönsten Passagen. Für Gruppen bis 25 Personen, Dauer zwei Stunden. Führungen auch auf Englisch und Spanisch. Bitte buchen Sie mindestens eine Woche vorher.",
+          "glosses": []
+        },
+        {
+          "id": "b1.2-u04-ls4-t3",
+          "kind": "ad",
+          "title": "Kletterpark Nordwald",
+          "text": "Teamtraining in bis zu zwölf Metern Höhe! Für Gruppen ab acht Personen, immer mit Trainerin oder Trainer. Sie brauchen keine Erfahrung, nur feste Schuhe. Täglich von 10 bis 18 Uhr. Kinder unter 12 Jahren dürfen leider nicht mitklettern.",
+          "glosses": []
+        },
+        {
+          "id": "b1.2-u04-ls4-t4",
+          "kind": "ad",
+          "title": "Kochen im Team",
+          "text": "In unserer Kochschule in Plagwitz kochen Sie zusammen ein Menü mit drei Gängen und essen danach gemeinsam an einem langen Tisch. Für Gruppen von 10 bis 20 Personen, auf Wunsch vegetarisch. Getränke sind im Preis enthalten.",
+          "glosses": []
+        },
+        {
+          "id": "b1.2-u04-ls4-t5",
+          "kind": "ad",
+          "title": "Kanutouren im Auwald",
+          "text": "Mit dem Kanu durch den Leipziger Auwald: drei Stunden mit Guide, auch für Anfänger. Alle Teilnehmenden müssen schwimmen können. Boote und Schwimmwesten sind im Preis enthalten. Start am Bootshaus, von April bis Oktober.",
+          "glosses": []
+        },
+        {
+          "id": "b1.2-u04-ls4-t6",
+          "kind": "ad",
+          "title": "Seminarhaus am Cospudener See",
+          "text": "Helle Räume für 10 bis 40 Personen mit Beamer, Leinwand und WLAN. Mittagessen und Kaffee aus unserer eigenen Küche. Direkt am Wasser, vom Hauptbahnhof 25 Minuten mit dem Bus. Fahrradverleih im Haus.",
+          "glosses": []
+        },
+        {
+          "id": "b1.2-u04-ls4-t7",
+          "kind": "ad",
+          "title": "Rätselraum Innenstadt",
+          "text": "Finden Sie gemeinsam in 60 Minuten den Weg aus unserem Rätselraum! Für vier bis sechs Personen pro Raum; größere Teams spielen in zwei Räumen gegeneinander. Mitten in der Innenstadt, täglich ab 12 Uhr.",
+          "glosses": []
+        },
+        {
+          "id": "b1.2-u04-ls4-t8",
+          "kind": "ad",
+          "title": "Reisebus mit Fahrer",
+          "text": "Sie planen einen Ausflug mit Ihrer Firma oder Ihrem Verein? Wir vermieten Reisebusse mit 20 bis 50 Plätzen, immer mit erfahrenem Fahrer. Ziele in ganz Sachsen und Thüringen. Tagespreis ab 450 Euro.",
+          "glosses": []
+        },
+        {
+          "id": "b1.2-u04-ls4-t9",
+          "kind": "ad",
+          "title": "Buffet-Service für Firmen",
+          "text": "Warme und kalte Speisen für Ihre Firmenfeier, auch vegetarisch und vegan. Wir liefern ab 15 Personen direkt zu Ihnen ins Büro und bringen Geschirr und Besteck mit. Bestellung bis drei Tage vorher.",
+          "glosses": []
+        },
+        {
+          "id": "b1.2-u04-ls4-t10",
+          "kind": "ad",
+          "title": "Fotografin für Firmen",
+          "text": "Ich mache professionelle Teamfotos für Ihre Internetseite oder begleite Ihre Veranstaltung mit der Kamera. Die fertigen Bilder bekommen Sie nach einer Woche zum Herunterladen. Fotostudio Lichtblick, Gohlis.",
+          "glosses": []
+        },
+        {
+          "id": "b1.2-u04-ls4-t11",
+          "kind": "ad",
+          "title": "Grillplatz im Grünen",
+          "text": "Unser Gartenverein vermietet einen Grillplatz mit Tischen und Bänken für bis zu 30 Personen, 40 Euro pro Tag. Essen, Getränke und Holzkohle bringen Sie selbst mit. Von Mai bis September, Reservierung per E-Mail.",
+          "glosses": []
+        },
+        {
+          "id": "b1.2-u04-ls4-t12",
+          "kind": "ad",
+          "title": "Bowling am Nordplatz",
+          "text": "Zwölf moderne Bahnen und unser Firmenpaket: zwei Stunden Bowling, Getränke und ein kleines Buffet. Täglich ab 16 Uhr geöffnet. Von Montag bis Donnerstag zahlen Gruppen 20 Prozent weniger.",
+          "glosses": []
+        },
+        {
+          "id": "b1.2-u04-ls4-t13",
+          "kind": "ad",
+          "title": "Radtouren mit Führung",
+          "text": "Entdecken Sie die Seen im Süden von Leipzig: 30 Kilometer auf flachen Wegen, mit Pause in einem Gasthof. Jeden Samstag und Sonntag um 10 Uhr ab Connewitzer Kreuz. Leihräder gegen Gebühr.",
           "glosses": []
         }
       ],
       "blocks": [
+        {
+          "id": "b1.2-u04-ls4-tb1-lv3",
+          "template": "tb1.lv3",
+          "lane": "tb1",
+          "length": "full",
+          "scaffolded": false,
+          "modeDefault": "pruefung",
+          "instructionsDe": "Welche Anzeige passt zu welcher Situation? Jede nur einmal; passt keine, wählen Sie x.",
+          "textRefs": [
+            "b1.2-u04-ls4-t2",
+            "b1.2-u04-ls4-t3",
+            "b1.2-u04-ls4-t4",
+            "b1.2-u04-ls4-t5",
+            "b1.2-u04-ls4-t6",
+            "b1.2-u04-ls4-t7",
+            "b1.2-u04-ls4-t8",
+            "b1.2-u04-ls4-t9",
+            "b1.2-u04-ls4-t10",
+            "b1.2-u04-ls4-t11",
+            "b1.2-u04-ls4-t12",
+            "b1.2-u04-ls4-t13"
+          ],
+          "choices": [
+            {
+              "key": "a",
+              "textRef": "b1.2-u04-ls4-t2"
+            },
+            {
+              "key": "b",
+              "textRef": "b1.2-u04-ls4-t3"
+            },
+            {
+              "key": "c",
+              "textRef": "b1.2-u04-ls4-t4"
+            },
+            {
+              "key": "d",
+              "textRef": "b1.2-u04-ls4-t5"
+            },
+            {
+              "key": "e",
+              "textRef": "b1.2-u04-ls4-t6"
+            },
+            {
+              "key": "f",
+              "textRef": "b1.2-u04-ls4-t7"
+            },
+            {
+              "key": "g",
+              "textRef": "b1.2-u04-ls4-t8"
+            },
+            {
+              "key": "h",
+              "textRef": "b1.2-u04-ls4-t9"
+            },
+            {
+              "key": "i",
+              "textRef": "b1.2-u04-ls4-t10"
+            },
+            {
+              "key": "j",
+              "textRef": "b1.2-u04-ls4-t11"
+            },
+            {
+              "key": "k",
+              "textRef": "b1.2-u04-ls4-t12"
+            },
+            {
+              "key": "l",
+              "textRef": "b1.2-u04-ls4-t13"
+            }
+          ],
+          "noMatchKey": "x",
+          "items": [
+            {
+              "id": "b1.2-u04-ls4-tb1-lv3-01",
+              "type": "zuordnen",
+              "role": "exam",
+              "topic": "lesen",
+              "promptDe": "Ihr Team (18 Personen) möchte zusammen ein Essen zubereiten und danach gemeinsam am Tisch sitzen.",
+              "answer": "c",
+              "accepted": [
+                "c"
+              ],
+              "explanation": {
+                "de": "Anzeige c: Gruppen von 10 bis 20 Personen kochen zusammen ein Menü und essen danach gemeinsam.",
+                "en": "Ad c: groups of 10 to 20 cook a menu together and then eat together."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "b1.2-u04-ls4-tb1-lv3-02",
+              "type": "zuordnen",
+              "role": "exam",
+              "topic": "lesen",
+              "promptDe": "Sie brauchen für eine Besprechung einen Raum mit Beamer. Mittags soll es im selben Haus ein Essen geben.",
+              "answer": "e",
+              "accepted": [
+                "e"
+              ],
+              "explanation": {
+                "de": "Anzeige e: Räume mit Beamer und Mittagessen aus der eigenen Küche.",
+                "en": "Ad e: rooms with a projector and lunch from their own kitchen."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "b1.2-u04-ls4-tb1-lv3-03",
+              "type": "zuordnen",
+              "role": "exam",
+              "topic": "lesen",
+              "promptDe": "Ihre Chefin möchte neue Fotos von allen Mitarbeitern für die Internetseite der Firma.",
+              "answer": "i",
+              "accepted": [
+                "i"
+              ],
+              "explanation": {
+                "de": "Anzeige i: Die Fotografin macht Teamfotos für die Internetseite.",
+                "en": "Ad i: the photographer takes team photos for your website."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "b1.2-u04-ls4-tb1-lv3-04",
+              "type": "zuordnen",
+              "role": "exam",
+              "topic": "lesen",
+              "promptDe": "Ihr Team (18 Personen) feiert im Büro. Niemand möchte kochen, und das Essen soll direkt ins Büro kommen.",
+              "answer": "h",
+              "accepted": [
+                "h"
+              ],
+              "explanation": {
+                "de": "Anzeige h: Der Buffet-Service liefert ab 15 Personen direkt ins Büro.",
+                "en": "Ad h: the buffet service delivers straight to the office for 15 people or more."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "b1.2-u04-ls4-tb1-lv3-05",
+              "type": "zuordnen",
+              "role": "exam",
+              "topic": "lesen",
+              "promptDe": "Eine Kollegin möchte am Wochenende mit ihren Kindern (acht und zehn Jahre) klettern gehen.",
+              "answer": "x",
+              "accepted": [
+                "x"
+              ],
+              "noMatch": true,
+              "explanation": {
+                "de": "Im Kletterpark (b) dürfen Kinder unter 12 Jahren nicht klettern. Keine Anzeige passt: x.",
+                "en": "The climbing park (b) excludes children under 12, so no ad fits: x."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "b1.2-u04-ls4-tb1-lv3-06",
+              "type": "zuordnen",
+              "role": "exam",
+              "topic": "lesen",
+              "promptDe": "Ihr Team möchte einen Tagesausflug nach Dresden machen, aber niemand möchte selbst Auto fahren.",
+              "answer": "g",
+              "accepted": [
+                "g"
+              ],
+              "explanation": {
+                "de": "Anzeige g: ein Reisebus mit Fahrer für Ziele in ganz Sachsen.",
+                "en": "Ad g: a coach with a driver for trips all over Saxony."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "b1.2-u04-ls4-tb1-lv3-07",
+              "type": "zuordnen",
+              "role": "exam",
+              "topic": "lesen",
+              "promptDe": "Ihr Team möchte im Sommer draußen feiern. Alle bringen das Essen selbst mit, und es soll wenig kosten.",
+              "answer": "j",
+              "accepted": [
+                "j"
+              ],
+              "explanation": {
+                "de": "Anzeige j: ein Grillplatz für 40 Euro, das Essen bringen Sie selbst mit.",
+                "en": "Ad j: a barbecue site for 40 euros; you bring your own food."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "b1.2-u04-ls4-tb1-lv3-08",
+              "type": "zuordnen",
+              "role": "exam",
+              "topic": "lesen",
+              "promptDe": "Zwei neue Kollegen aus Irland sprechen noch wenig Deutsch und möchten mit ihren Familien die Altstadt kennenlernen.",
+              "answer": "a",
+              "accepted": [
+                "a"
+              ],
+              "explanation": {
+                "de": "Anzeige a: Stadtführungen durch die Altstadt für Gruppen, auch auf Englisch.",
+                "en": "Ad a: guided old-town tours for groups, also in English."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "b1.2-u04-ls4-tb1-lv3-09",
+              "type": "zuordnen",
+              "role": "exam",
+              "topic": "lesen",
+              "promptDe": "Das Team möchte den Teamtag am Abend mit Live-Musik und Tanz beenden.",
+              "answer": "x",
+              "accepted": [
+                "x"
+              ],
+              "noMatch": true,
+              "explanation": {
+                "de": "Keine Anzeige bietet Musik oder Tanz an: x.",
+                "en": "No ad offers music or dancing, so x."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "b1.2-u04-ls4-tb1-lv3-10",
+              "type": "zuordnen",
+              "role": "exam",
+              "topic": "lesen",
+              "promptDe": "Einige Kollegen möchten an einem Dienstagabend zusammen Sport machen und danach eine Kleinigkeit essen.",
+              "answer": "k",
+              "accepted": [
+                "k"
+              ],
+              "explanation": {
+                "de": "Anzeige k: Bowling ab 16 Uhr, mit Buffet; Radtouren (l) gibt es nur am Wochenende.",
+                "en": "Ad k: bowling from 4 pm with a buffet; the bike tours (l) are weekends only."
+              },
+              "origin": "agent"
+            }
+          ]
+        },
         {
           "id": "b1.2-u04-ls4-tb1-sb2",
           "template": "tb1.sb2",
@@ -2636,7 +2817,7 @@
                 "f"
               ],
               "explanation": {
-                "de": "das Fleisch (neutral): kein Fleisch, nicht keine.",
+                "de": "das Fleisch (Neutrum): kein Fleisch, nicht keine.",
                 "en": "Fleisch is neuter: kein Fleisch."
               },
               "origin": "agent"
@@ -2687,8 +2868,8 @@
                 "m"
               ],
               "explanation": {
-                "de": "Nach einem Ort (ein Restaurant) kann der Relativsatz mit wo beginnen.",
-                "en": "After a place (a restaurant) the relative clause can start with wo."
+                "de": "Nach einem Ort (einen Ort am See) kann der Relativsatz mit wo beginnen.",
+                "en": "After a place (a spot by the lake) the relative clause can start with wo."
               },
               "origin": "agent"
             },
@@ -2714,6 +2895,11 @@
       ],
       "strategyCards": [
         {
+          "template": "tb1.lv3",
+          "de": "Leseverstehen Teil 3: Lesen Sie zuerst alle Situationen und markieren Sie die Bedingungen: wer, wie viele, wann, was genau. Suchen Sie dann in den Anzeigen genau diese Bedingungen. Passt eine Anzeige nur zum Teil, ist sie falsch. Jede Anzeige passt nur einmal. Passt keine, wählen Sie x.",
+          "en": "Reading part 3: first read all the situations and mark the conditions: who, how many, when, what exactly. Then look for exactly these conditions in the ads. If an ad only partly fits, it is wrong. Each ad fits only once; if none fits, choose x."
+        },
+        {
           "template": "tb1.sb2",
           "de": "Sprachbausteine Teil 2: Lesen Sie zuerst den ganzen Brief. Schauen Sie bei jeder Lücke auf die Wörter davor und danach: Fehlt ein Konnektor, ein Relativwort, eine Präposition? Steht das Verb am Ende, brauchen Sie oft ein Nebensatzwort. Streichen Sie benutzte Wörter durch. Fünf Wörter bleiben übrig.",
           "en": "Language elements part 2: read the whole letter first. At each gap look at the words before and after: is a connector, a relative word or a preposition missing? If the verb is at the end, you often need a subordinating word. Cross out words you have used; five are left over."
@@ -2730,25 +2916,23 @@
         "mode": "plan-together",
         "profile": "tb1-m3",
         "prepMinutes": 9,
-        "instructionsDe": "Planen Sie mit Jan den Teamtag: Vorschläge, Einwände, Einigung und wer was macht.",
-        "situationDe": "Mündlicher Ausdruck Teil 3: Ihre Firma macht im Juni einen Teamtag für 18 Personen, das Budget ist 1.200 Euro. Sie und Ihr Kollege Jan sollen den Tag organisieren. Sprechen Sie über die Punkte auf dem Planungsblatt, machen Sie Vorschläge, reagieren Sie auf die Vorschläge von Jan und einigen Sie sich.",
+        "instructionsDe": "Planen Sie mit Jan den Ablauf des Teamtags: Vorschläge, Einwände, Einigung, Aufgaben.",
+        "situationDe": "Mündlicher Ausdruck Teil 3: Der Teamtag am 19. Juni ist beschlossen: Seminarhaus am Cospudener See, vormittags Besprechung, nachmittags Radtour. Wer den Raum und den Bus bucht, steht auch schon fest. Planen Sie jetzt mit Ihrem Kollegen Jan den Ablauf des Tages. Sprechen Sie über die Punkte auf dem Planungsblatt, machen Sie Vorschläge, reagieren Sie auf die Vorschläge von Jan und einigen Sie sich, wer was übernimmt.",
         "cards": {
           "learner": [
-            "Wann? (Datum, Uhrzeit)",
-            "Wohin? (Ort)",
-            "Programm am Vormittag und am Nachmittag",
-            "Essen und Getränke",
-            "Anreise",
-            "Wer übernimmt welche Aufgabe?",
+            "Treffpunkt und Abfahrt",
+            "Zeitplan für den Tag",
+            "Was machen wir bei Regen?",
+            "Getränke und Pausen",
+            "Wer informiert das Team?",
             "…"
           ],
           "partner": [
-            "Wann? (Datum, Uhrzeit)",
-            "Wohin? (Ort)",
-            "Programm am Vormittag und am Nachmittag",
-            "Essen und Getränke",
-            "Anreise",
-            "Wer übernimmt welche Aufgabe?",
+            "Treffpunkt und Abfahrt",
+            "Zeitplan für den Tag",
+            "Was machen wir bei Regen?",
+            "Getränke und Pausen",
+            "Wer informiert das Team?",
             "…"
           ]
         },
@@ -2774,11 +2958,11 @@
         },
         "aiRole": {
           "name": "Jan Wolf",
-          "personaDe": "Kollege aus der Techniker-Disposition; hat eigene Ideen, bringt Einwände zu Kosten, Zeit und Sport und ist mit guten Gründen einverstanden",
+          "personaDe": "Kollege aus der Techniker-Disposition; hat eigene Ideen, bringt Einwände zu Kosten, Zeit und Wetter und ist mit guten Gründen einverstanden",
           "register": "du",
           "support": "examiner"
         },
-        "openingLine": "Also, wir sollen den Teamtag planen. Ich würde gern mit allen in die Sächsische Schweiz fahren und wandern. Was meinst du?",
+        "openingLine": "Also, Ort und Radtour stehen fest. Aber was machen wir, wenn es am 19. Juni regnet? Ich würde dann gern mit allen ins Museum gehen. Was sagst du?",
         "hintWords": [
           "Ich schlage vor, …",
           "Wie wäre es mit …?",
@@ -2792,35 +2976,35 @@
         "modelTurns": [
           {
             "speaker": "partner",
-            "de": "Also, wir sollen den Teamtag planen. Ich würde gern mit allen in die Sächsische Schweiz fahren und wandern. Was meinst du?"
+            "de": "Also, Ort und Radtour stehen fest. Aber was machen wir, wenn es am 19. Juni regnet? Ich würde dann gern mit allen ins Museum gehen. Was sagst du?"
           },
           {
             "speaker": "learner",
-            "de": "Die Idee ist schön, aber die Fahrt dauert lange und kostet viel. Ich schlage vor, dass wir in Leipzig bleiben, zum Beispiel am Cospudener See."
+            "de": "Ins Museum? Das finde ich nicht so gut, denn dann brauchen wir wieder einen Bus in die Stadt. Ich schlage vor, dass wir bei Regen im Haus bleiben und zusammen Spiele machen. Dort gibt es genug Platz."
           },
           {
             "speaker": "partner",
-            "de": "Hm, am See? Und was machen wir da den ganzen Tag?"
+            "de": "Gut, das ist einfacher und kostet kein Geld. Und wo treffen wir uns am Morgen?"
           },
           {
             "speaker": "learner",
-            "de": "Am Vormittag können wir im Seminarhaus die Besprechung machen, und am Nachmittag machen wir eine Radtour. Die Räder kann man dort leihen, wir brauchen also nichts mitzubringen."
+            "de": "Wie wäre es mit halb neun am Hauptbahnhof? Das ist ein Ort, wo sich alle gut treffen können. Um neun fährt der Bus ab, und um zehn beginnt die Besprechung."
           },
           {
             "speaker": "partner",
-            "de": "Gut, einverstanden. Und das Essen?"
+            "de": "Gut, so machen wir es. Mittags essen wir dort, und die Tour machen wir von zwei bis fünf. Was machen wir mit den Getränken für die Tour?"
           },
           {
             "speaker": "learner",
-            "de": "Das Seminarhaus hat eine eigene Küche. Das ist das Einfachste, was wir machen können. Wer übernimmt die Raumbuchung?"
+            "de": "Die brauchen wir nicht selbst zu kaufen. Ich frage im Haus, ob sie uns Wasser für die Tour geben können. Das Einzige, was dann noch fehlt, ist die Einladung an das Team. Wer übernimmt das?"
           },
           {
             "speaker": "partner",
-            "de": "Das mache ich. Kümmerst du dich um den Bus?"
+            "de": "Die Einladung schreibe ich, mit dem Zeitplan und dem Treffpunkt. Kümmerst du dich um das Programm bei Regen?"
           },
           {
             "speaker": "learner",
-            "de": "Ja, ich frage bei zwei Busfirmen nach und sage dir bis Freitag Bescheid. Dann haben wir alles, was wir brauchen."
+            "de": "Ja, ich suche bis Freitag zwei Spiele aus. Dann halten wir fest: Treffpunkt um halb neun am Hauptbahnhof, du schreibst die Einladung, und ich kümmere mich um die Getränke und das Programm bei Regen."
           }
         ]
       }
@@ -2837,7 +3021,7 @@
         "register": "halbformell",
         "address": "Sie",
         "title": "Ergebnisse der Sitzung weitergeben",
-        "situationDe": "Sie arbeiten bei Brandt Elektrotechnik. Ihre Kollegin Sabine Otto war auf einer Fortbildung und hat die Teambesprechung am Dienstag verpasst. Sie schreibt Ihnen:\n\n„Hallo,\nich bin wieder zurück aus Dresden – die Fortbildung war sehr interessant! Leider war ich bei unserer Sitzung am Dienstag nicht dabei. Können Sie mir kurz schreiben, was Sie für den Teamtag beschlossen haben? Herr Brandt hat gesagt, dass ich auch eine Aufgabe übernehmen soll. Was genau soll ich machen, und muss ich dafür schon etwas buchen? Und noch etwas: Hat in den letzten Tagen jemand für mich angerufen? Ich warte nämlich auf eine Antwort vom Seminarhaus am See.\nVielen Dank und viele Grüße\nSabine Otto“\n\nIhre Notizen aus der Sitzung: Seminarhaus am Cospudener See · vormittags Besprechung, nachmittags Radtour · Raumbuchung: Priya · Bus: Emre · Rahmenprogramm am Abend: Frau Otto · Zwischenstand: Freitag · Anruf Herr Lehmann: großer Raum am 19. Juni nicht frei, kleiner Raum frei, Rückruf bis Mittwoch, 0341 22 58 90",
+        "situationDe": "Sie arbeiten bei Brandt Elektrotechnik. Ihre Kollegin Sabine Otto war auf einer Fortbildung und hat die Teambesprechung am Dienstag verpasst. Sie schreibt Ihnen:\n\n„Hallo Frau Nair,\nich bin wieder zurück aus Dresden – die Fortbildung war sehr interessant! Leider war ich bei unserer Sitzung am Dienstag nicht dabei. Können Sie mir kurz schreiben, was Sie für den Teamtag beschlossen haben? Herr Brandt hat gesagt, dass ich auch eine Aufgabe übernehmen soll. Was genau soll ich machen, und muss ich dafür schon etwas buchen? Und noch etwas: Hat jemand vom Seminarhaus am See für mich angerufen? Ich habe dort nach der Terrasse für einen Grillabend gefragt.\nVielen Dank und viele Grüße\nSabine Otto“\n\nIhre Notizen aus der Sitzung: Seminarhaus am Cospudener See · vormittags Besprechung, nachmittags Radtour · Raumbuchung: ich · Bus: Emre · Rahmenprogramm am Abend: Frau Otto – bis Freitag zwei Vorschläge sammeln, noch nichts buchen · Zwischenstand: Freitag · Gesprächsnotiz, Anruf Herr Lehmann (Seminarhaus): Terrasse am 19. Juni frei, nur bis 22 Uhr, vorläufig reserviert · Teilnehmerzahl bis Mittwoch · Rückruf: 0341 22 58 90",
         "taskDe": "Antworten Sie Frau Otto. Schreiben Sie etwas zu allen vier Punkten.",
         "leitpunkte": [
           {
@@ -2858,22 +3042,25 @@
             "cues": [
               "Rahmenprogramm",
               "Abend",
-              "übernimmt",
+              "übernehmen",
               "Raumbuchung",
+              "ich",
               "Bus",
-              "kümmert sich"
+              "Emre",
+              "kümmern"
             ]
           },
           {
             "id": "lp3",
             "de": "Was muss Frau Otto jetzt tun und was noch nicht?",
             "cues": [
+              "bis Freitag",
+              "zwei Vorschläge",
+              "sammeln",
               "brauchen",
-              "nicht",
-              "zu",
               "noch nichts",
-              "Zwischenstand",
-              "Freitag"
+              "zu buchen",
+              "Zwischenstand"
             ]
           },
           {
@@ -2882,10 +3069,12 @@
             "cues": [
               "Lehmann",
               "angerufen",
-              "nicht frei",
-              "kleiner Raum",
-              "zurückrufen",
+              "Terrasse",
+              "frei",
+              "22 Uhr",
+              "Teilnehmerzahl",
               "Mittwoch",
+              "zurückrufen",
               "0341 22 58 90"
             ]
           }
@@ -2907,7 +3096,7 @@
           "Sie-Form",
           "etwa 80 bis 120 Wörter"
         ],
-        "modelText": "Betreff: Ergebnisse der Sitzung vom Dienstag\n\nLiebe Frau Otto,\n\nschön, dass Sie wieder da sind! Hier ist alles, was wir am Dienstag beschlossen haben: Der Teamtag findet im Seminarhaus am Cospudener See statt. Vormittags machen wir dort die Besprechung, nachmittags eine Radtour um den See. Priya kümmert sich um die Raumbuchung und Emre um den Bus. Sie übernehmen das Rahmenprogramm am Abend. Sie brauchen aber noch nichts zu buchen, denn am Freitag besprechen wir zuerst den Zwischenstand. Außerdem hat Herr Lehmann vom Seminarhaus angerufen: Der große Raum ist am 19. Juni nicht mehr frei, aber der kleine. Bitte rufen Sie ihn bis Mittwoch zurück: 0341 22 58 90.\n\nViele Grüße\nAlex Berger"
+        "modelText": "Betreff: Ergebnisse der Sitzung vom Dienstag\n\nLiebe Frau Otto,\n\nschön, dass Sie wieder da sind! Hier ist alles, was wir beschlossen haben: Der Teamtag findet im Seminarhaus am Cospudener See statt, vormittags mit Besprechung, nachmittags mit einer Radtour. Wir haben die Aufgaben so aufgeteilt: Ich kümmere mich um die Raumbuchung und Emre um den Bus. Sie übernehmen das Rahmenprogramm am Abend. Sammeln Sie bitte bis Freitag zwei Vorschläge. Sie brauchen aber noch nichts zu buchen, denn am Freitag sprechen wir zuerst über den Zwischenstand. Herr Lehmann vom Seminarhaus hat auch angerufen: Die Terrasse ist am 19. Juni frei, aber nur bis 22 Uhr. Er braucht bis Mittwoch die Teilnehmerzahl. Bitte rufen Sie ihn zurück: 0341 22 58 90.\n\nViele Grüße\nPriya Nair"
       }
     },
     {
@@ -2950,15 +3139,15 @@
         "type": "fill_blank",
         "role": "check",
         "topic": "g.relativsatz-was-wo",
-        "promptDe": "Das Einzige, ___ mir an dem Plan nicht gefällt, ist der Preis.",
-        "promptEn": "Relative word after „das Einzige“.",
+        "promptDe": "An dem Plan gibt es nichts, ___ mir nicht gefällt.",
+        "promptEn": "Relative word after „nichts“.",
         "answer": "was",
         "accepted": [
           "was"
         ],
         "explanation": {
-          "de": "Nach das Einzige: was.",
-          "en": "After das Einzige: was."
+          "de": "Nach nichts beginnt der Relativsatz mit was.",
+          "en": "After nichts the relative clause starts with was."
         },
         "origin": "agent"
       },
@@ -3016,13 +3205,28 @@
         ],
         "answer": "Sie brauchen nur das Formular auszufüllen.",
         "accepted": [
-          "Sie brauchen nur das Formular auszufüllen."
+          "Sie brauchen nur das Formular auszufüllen.",
+          "Sie brauchen das Formular nur auszufüllen.",
+          "Das Formular brauchen Sie nur auszufüllen.",
+          "Nur das Formular brauchen Sie auszufüllen.",
+          "Auszufüllen brauchen Sie nur das Formular."
         ],
         "explanation": {
           "de": "brauchen auf Position 2, auszufüllen am Ende.",
           "en": "brauchen second, auszufüllen last."
         },
-        "origin": "agent"
+        "origin": "agent",
+        "acceptedWhy": {
+          "Sie brauchen das Formular nur auszufüllen.": "grammatisch: nur bezieht sich hier auf das Ausfüllen, nicht auf das Formular",
+          "Das Formular brauchen Sie nur auszufüllen.": "grammatisch: das Objekt im Vorfeld; nur bezieht sich auf das Ausfüllen",
+          "Nur das Formular brauchen Sie auszufüllen.": "grammatisch: „nur das Formular“ steht zusammen im Vorfeld und wird betont",
+          "Auszufüllen brauchen Sie nur das Formular.": "grammatisch: der Infinitiv mit zu im Vorfeld betont die Handlung, aber selten"
+        },
+        "reviewerConfirmed": [
+          "Sie brauchen das Formular nur auszufüllen.",
+          "Das Formular brauchen Sie nur auszufüllen.",
+          "Nur das Formular brauchen Sie auszufüllen."
+        ]
       },
       {
         "id": "b1.2-u04-c05",
@@ -3113,25 +3317,30 @@
     "proofItems": [
       {
         "id": "b1.2-u04-q01",
-        "type": "multiple_choice",
+        "type": "notes",
         "role": "proof",
         "topic": "hoeren",
-        "promptDe": "Hören Sie die Nachricht für Emre. Welche Notiz ist richtig?",
-        "promptEn": "Which note is correct?",
-        "options": [
-          "Frau Wendt: Bus am 19.6., 280 Euro, bis Dienstag bestätigen, 0341 47 11 30",
-          "Frau Wendt: Bus am 19.6., 180 Euro, bis Donnerstag bestätigen, 0341 47 11 30",
-          "Frau Wendt: Bus am 19.6., 280 Euro, bis Donnerstag bestätigen, 0341 47 11 30"
-        ],
+        "promptDe": "Notiz für Emre – Frau Wendt, Elster-Reisen: Bus am 19.6., Preis ___ Euro, bis Donnerstag bestätigen.",
+        "promptEn": "Complete the note: the price.",
         "audioLineRef": "b1.2-u04-ls8-l01",
-        "answer": "Frau Wendt: Bus am 19.6., 280 Euro, bis Donnerstag bestätigen, 0341 47 11 30",
+        "answer": "280",
         "accepted": [
-          "Frau Wendt: Bus am 19.6., 280 Euro, bis Donnerstag bestätigen, 0341 47 11 30"
+          "280",
+          "280,00",
+          "280 Euro",
+          "280,00 Euro",
+          "280 €"
         ],
+        "acceptedWhy": {
+          "280,00": "derselbe Preis mit Cent",
+          "280 Euro": "derselbe Preis mit Währung",
+          "280,00 Euro": "derselbe Preis mit Cent und Währung",
+          "280 €": "derselbe Preis mit Währungszeichen"
+        },
         "exact": "number",
         "explanation": {
-          "de": "Frau Wendt sagt: 280 Euro, bitte bis Donnerstag bestätigen.",
-          "en": "Ms Wendt says 280 euros, please confirm by Thursday."
+          "de": "Frau Wendt sagt: Für 18 Personen kostet die Fahrt 280 Euro.",
+          "en": "Ms Wendt says the trip costs 280 euros for 18 people."
         },
         "origin": "agent"
       }
@@ -3156,8 +3365,8 @@
     ],
     "portrait": {
       "factRef": "b1.2-u04-f01",
-      "de": "Der Cospudener See: Wo heute Menschen baden, segeln und Rad fahren, war bis 1992 ein Tagebau. Danach ist das große Loch langsam voll Wasser gelaufen. Am 1. Juni 2000 hat man den See zur Expo 2000 eröffnet. Er liegt südlich von Leipzig, ist etwa 4,4 Quadratkilometer groß und bis zu 55 Meter tief. Am Ostufer gibt es einen Hafen mit Platz für ungefähr 200 Boote.",
-      "en": "Lake Cospuden: where people now swim, sail and cycle there used to be an open-cast mine. Mining here stopped in 1992; afterwards the pit slowly filled with water. The lake was opened on 1 June 2000 as part of Expo 2000. It lies south of Leipzig, covers about 4.4 km² and is up to 55 m deep. On the eastern shore a marina has berths for about 200 boats."
+      "de": "Der Cospudener See: Dort, wo heute Menschen baden, segeln und Rad fahren, war bis 1992 ein Tagebau. Danach hat man das Loch mit Wasser gefüllt, mit Grundwasser und mit Wasser aus anderen Tagebauen. Im Jahr 2000 war der See voll, pünktlich zur Expo 2000. Er liegt am Stadtrand im Süden von Leipzig und ist etwa 4,4 Quadratkilometer groß. Im Hafen am Ostufer gibt es Platz für fast 200 Boote.",
+      "en": "Lake Cospuden: where people now swim, sail and cycle, there was an open-cast mine until 1992. After that the pit was filled with water – groundwater and water from other mines. In 2000 the lake was full, just in time for Expo 2000. It lies on the southern edge of Leipzig and covers about 4.4 km². The harbour on the eastern shore has room for almost 200 boats."
     },
     "testOutThreshold": 0.8,
     "cumulativeShare": 0.35
@@ -3223,16 +3432,17 @@
   "facts": [
     {
       "id": "b1.2-u04-f01",
-      "claimDe": "Der Cospudener See südlich von Leipzig (Städte Leipzig und Markkleeberg) ist ein ehemaliger Tagebau: Im Tagebau Cospuden endete die Förderung 1992; im Frühjahr 2000 hatte der See seinen Endwasserstand. Die offizielle Eröffnung war am 1. Juni 2000 im Rahmen der Expo 2000. Der See ist 4,36 km² groß und bis zu 55 m tief. Am Ostufer liegt eine Marina mit Liegeplätzen für ungefähr 200 Boote.",
-      "claimEn": "Lake Cospuden south of Leipzig (in Leipzig and Markkleeberg) is a former open-cast mine: extraction at the Cospuden mine stopped in 1992 and the lake reached its final water level in spring 2000. It was opened on 1 June 2000 as part of Expo 2000, covers 4.36 km² and is up to 55 m deep. A marina on the eastern shore has berths for about 200 boats.",
+      "claimDe": "Der Cospudener See am südlichen Stadtrand von Leipzig ist ein ehemaliger Braunkohletagebau: Im Tagebau Cospuden wurde von 1981 bis 1992 Kohle gefördert. Ab 1993 wurde er mit Grundwasser und mit Wasser aus den Tagebauen Zwenkau, Profen und Schleenhain geflutet; die Flutung endete im Jahr 2000, zur Expo 2000. Die Wasserfläche beträgt rund 436 Hektar (4,36 km²). Am Hafen Pier 1 am Ostufer (Markkleeberg) gibt es fast 200 Bootsliegeplätze.",
+      "claimEn": "Lake Cospuden on the southern edge of Leipzig is a former lignite open-cast mine: coal was extracted at the Cospuden mine from 1981 to 1992. From 1993 it was flooded with groundwater and with water from the Zwenkau, Profen and Schleenhain mines; flooding ended in 2000, in time for Expo 2000. The water surface is about 436 hectares (4.36 km²). The Pier 1 harbour on the eastern shore (Markkleeberg) has almost 200 boat berths.",
       "sources": [
-        "https://de.wikipedia.org/wiki/Cospudener_See"
+        "https://www.leipzig.travel/blog/cospudener-see-leipzig",
+        "https://www.leipzigseen.de/die-seen/cospudener-see"
       ],
       "factsCheckedOn": "2026-09-27",
       "currentAsOf": "2026-09-27",
       "exceptions": [],
-      "verification": "partial",
-      "notes": "Read on de.wikipedia.org on 2026-09-27 (a secondary source). The primary sources tried in this session were unreachable or silent (leipzig.de and leipzig.travel pages 404, lmbv.de without a Cospuden page). A reviewer confirms every part at a primary source (LMBV, Stadt Markkleeberg) before promotion (CON-06)."
+      "verification": "verified",
+      "notes": "Re-read on 2026-09-27 at two primary sources. Leipzig Tourismus und Marketing (leipzig.travel blog „Cospudener See“): coal extracted 1981–1992; flooded from 1993 with groundwater and water from the Zwenkau, Profen and Schleenhain mines until 2000, finished with Expo 2000; about 436 ha water surface; south edge of Leipzig. Pier1 GmbH & Co. KG, the harbour operator (leipzigseen.de, Hafenstraße 23, Markkleeberg): Braunkohletagebau 1981–1992, Flutung 1993–2000, 4,36 km², „fast 200 Bootsliegeplätze“ at Pier 1, the harbour on the east shore. Dropped because unconfirmed or conflicting: the exact opening date (1 June 2000, Wikipedia only) and the maximum depth (54 m at leipzigseen.de, 55 m at Wikipedia, 32 m in the „Checkliste“ on leipzig.travel/erleben/leipziger-seen, which also gives 150 ha against the 436 ha of the same publisher’s blog — the Checkliste figures look like another lake and were not used)."
     }
   ],
   "extras": {

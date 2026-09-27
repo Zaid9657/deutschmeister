@@ -165,6 +165,21 @@
       "wordId": null
     },
     {
+      "id": "lx.mitten",
+      "lemma": "mitten",
+      "pos": "ADV",
+      "role": "receptive",
+      "unit": "a1.2-u01",
+      "block": 1,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "in the middle (of)"
+      },
+      "example": "Das Hotel liegt mitten in der Stadt.",
+      "exampleEn": "The hotel is right in the middle of the city.",
+      "wordId": null
+    },
+    {
       "id": "lx.weg",
       "lemma": "Weg",
       "pos": "NOUN",
@@ -310,6 +325,43 @@
       },
       "example": "Die Apotheke ist gegenüber vom Hotel.",
       "exampleEn": "The pharmacy is opposite the hotel.",
+      "wordId": null
+    },
+    {
+      "id": "lx.erklaeren",
+      "lemma": "erklären",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "erklärt",
+        "perfekt": "hat erklärt"
+      },
+      "role": "productive",
+      "unit": "a1.2-u01",
+      "block": 2,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "to explain"
+      },
+      "example": "Können Sie mir den Weg erklären?",
+      "exampleEn": "Can you explain the way to me?",
+      "wordId": null
+    },
+    {
+      "id": "lx.meter",
+      "lemma": "Meter",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Meter",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.2-u01",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "metre"
+      },
+      "example": "Nach 200 Metern sehen Sie die Post.",
+      "exampleEn": "After 200 metres you will see the post office.",
       "wordId": null
     },
     {
@@ -1331,28 +1383,6 @@
       "wordId": null
     },
     {
-      "id": "lx.helfen",
-      "lemma": "helfen",
-      "pos": "VERB",
-      "verb_forms": {
-        "2sg": "hilfst",
-        "3sg": "hilft",
-        "praet": "half",
-        "perfekt": "hat geholfen"
-      },
-      "rection": "jmdm. (Dat.)",
-      "role": "productive",
-      "unit": "a1.2-u03",
-      "block": 3,
-      "list_ref": "A1",
-      "gloss": {
-        "en": "to help"
-      },
-      "example": "Können Sie mir bitte helfen?",
-      "exampleEn": "Can you help me, please?",
-      "wordId": null
-    },
-    {
       "id": "lx.annehmen",
       "lemma": "annehmen",
       "pos": "VERB",
@@ -1446,6 +1476,24 @@
       },
       "example": "Sagen Sie mir bitte Bescheid.",
       "exampleEn": "Please let me know.",
+      "wordId": null
+    },
+    {
+      "id": "lx.dank",
+      "lemma": "Dank",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": null,
+      "plural_kind": "singular-only",
+      "role": "productive",
+      "unit": "a1.2-u03",
+      "block": 3,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "thanks"
+      },
+      "example": "Vielen Dank für Ihre Hilfe!",
+      "exampleEn": "Thank you very much for your help!",
       "wordId": null
     },
     {
@@ -2994,6 +3042,24 @@
       "wordId": null
     },
     {
+      "id": "lx.prozent",
+      "lemma": "Prozent",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Prozente",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.2-u06",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "percent"
+      },
+      "example": "Alle Jacken kosten heute 30 Prozent weniger.",
+      "exampleEn": "All jackets cost 30 percent less today.",
+      "wordId": null
+    },
+    {
       "id": "lx.brief",
       "lemma": "Brief",
       "pos": "NOUN",
@@ -3847,6 +3913,78 @@
       },
       "example": "Am Nachmittag kommen Wolken.",
       "exampleEn": "Clouds are coming in the afternoon.",
+      "wordId": null
+    },
+    {
+      "id": "lx.norden",
+      "lemma": "Norden",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": null,
+      "plural_kind": "singular-only",
+      "role": "productive",
+      "unit": "a1.2-u08",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "north"
+      },
+      "example": "Im Norden regnet es heute.",
+      "exampleEn": "It is raining in the north today.",
+      "wordId": null
+    },
+    {
+      "id": "lx.sueden",
+      "lemma": "Süden",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": null,
+      "plural_kind": "singular-only",
+      "role": "productive",
+      "unit": "a1.2-u08",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "south"
+      },
+      "example": "Im Süden scheint die Sonne.",
+      "exampleEn": "The sun is shining in the south.",
+      "wordId": null
+    },
+    {
+      "id": "lx.osten",
+      "lemma": "Osten",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": null,
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "a1.2-u08",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "east"
+      },
+      "example": "Im Osten ist es kalt.",
+      "exampleEn": "It is cold in the east.",
+      "wordId": null
+    },
+    {
+      "id": "lx.westen",
+      "lemma": "Westen",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": null,
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "a1.2-u08",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "west"
+      },
+      "example": "Im Westen ist es windig.",
+      "exampleEn": "It is windy in the west.",
       "wordId": null
     },
     {
@@ -5162,27 +5300,6 @@
       "wordId": null
     },
     {
-      "id": "lx.mitkommen",
-      "lemma": "mitkommen",
-      "pos": "VERB",
-      "verb_forms": {
-        "3sg": "kommt mit",
-        "praet": "kam mit",
-        "perfekt": "ist mitgekommen"
-      },
-      "separable": true,
-      "role": "productive",
-      "unit": "a1.2-u11",
-      "block": 3,
-      "list_ref": "A1",
-      "gloss": {
-        "en": "to come along"
-      },
-      "example": "Kommst du mit zum Stadtfest?",
-      "exampleEn": "Are you coming along to the town festival?",
-      "wordId": null
-    },
-    {
       "id": "lx.schade",
       "lemma": "schade",
       "pos": "ADJ",
@@ -5583,5 +5700,24 @@
       "wordId": null
     }
   ],
-  "promotions": []
+  "promotions": [
+    {
+      "lemma": "lx.helfen",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.2-u03"
+    },
+    {
+      "lemma": "lx.ausfuellen",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.2-u04"
+    },
+    {
+      "lemma": "lx.mitkommen",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.2-u11"
+    }
+  ]
 }
