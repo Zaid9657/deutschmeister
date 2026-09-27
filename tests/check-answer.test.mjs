@@ -303,3 +303,55 @@ test('word_order grades a rebuilt sentence through checkAnswer, punctuation and 
   assert.equal(checkAnswer('Ich bin Ana', item.accepted, opts).result, RESULT.CORRECT, 'a missing final period is still correct');
   assert.equal(checkAnswer('Ana bin ich.', item.accepted, opts).result, RESULT.WRONG, 'the wrong order is wrong');
 });
+
+// --- course-v2 u04 reviews (2026-09-27): ellipses and number words -----------
+
+import {
+  normalizeDictation, stripPunct, unfoldedDictationChars, foldNumberWords, cardinalValue, ordinalValue,
+  spellCardinal, hasNumber,
+} from '../src/lib/lesson/check.js';
+
+test('an ellipsis is punctuation: folded in every check, a space in a dictation (a2.2-u04 r3 F02)', () => {
+  const key = 'Mir wird schlecht… und ein bisschen kalt.';
+  for (const typed of ['Mir wird schlecht und ein bisschen kalt.', 'Mir wird schlecht... und ein bisschen kalt.', 'Mir wird schlecht...und ein bisschen kalt', 'Mir wird schlecht… und ein bisschen kalt.']) {
+    assert.equal(checkAnswer(typed, [key], { dictation: true }).result, RESULT.CORRECT, typed);
+    assert.equal(checkAnswer(typed, [key]).result, RESULT.CORRECT, `${typed} (not a dictation)`);
+  }
+  assert.equal(normalizeDictation('schlecht…und'), 'schlecht und');
+  assert.equal(stripPunct('Na ja … gut.'), 'Na ja gut');
+  assert.equal(stripPunct('z.B. 8.30'), 'zB 830', 'single dots are unchanged');
+  // a wrong word is still wrong
+  assert.equal(checkAnswer('Mir wird warm und ein bisschen kalt.', [key], { dictation: true }).result, RESULT.WRONG);
+});
+
+test('unfoldedDictationChars names what no transcription can type', () => {
+  assert.deepEqual(unfoldedDictationChars('Mir wird schlecht… und kalt – „ja“, 0341/22 58.'), []);
+  assert.deepEqual(unfoldedDictationChars('10 % (netto) oder/und 5 €'), ['%', '(', ')', '/', '€']);
+});
+
+test('number words: cardinals 0–9999, ordinals, never the article „ein"', () => {
+  const cases = { null: 0, eins: 1, zwölf: 12, sechzehn: 16, siebzehn: 17, einundzwanzig: 21, dreiundzwanzig: 23, dreissig: 30, hundertzwanzig: 120, zweihundert: 200, zweitausendvierundzwanzig: 2024, fuenf: 5 };
+  for (const [w, v] of Object.entries(cases)) assert.equal(cardinalValue(w), v, w);
+  for (const w of ['ein', 'eine', 'einen', 'Hund', 'neu', 'nein']) assert.equal(cardinalValue(w), null, w);
+  const ords = { ersten: 1, dritte: 3, siebten: 7, achten: 8, zwanzigsten: 20, einundzwanzigste: 21, zwölfter: 12 };
+  for (const [w, v] of Object.entries(ords)) assert.equal(ordinalValue(w), v, w);
+  for (const w of ['letzte', 'beste', 'nächste', 'leichte']) assert.equal(ordinalValue(w), null, w);
+  assert.equal(foldNumberWords('Ich habe einen Apfel, eins, zwei am dritten Juni um halb zehn.'), 'Ich habe einen Apfel, 1, 2 am 3. Juni um halb 10.');
+  for (const n of [0, 1, 9, 11, 17, 21, 99, 101, 120, 1001, 2024, 9999]) assert.equal(cardinalValue(spellCardinal(n)), n, String(n));
+  assert.equal(hasNumber('in zehn Minuten'), true);
+  assert.equal(hasNumber('ein bisschen'), false);
+});
+
+test('a dictation hears „fünfzehn" and „15" alike; the fold only ever helps (live A1.1 L4 bug fix)', () => {
+  const key = ['Der Tisch kostet fünfzehn Euro.'];
+  assert.equal(checkAnswer('Der Tisch kostet 15 Euro.', key, { dictation: true }).result, RESULT.CORRECT);
+  assert.equal(checkAnswer('Der Tisch kostet fünfzehn Euro.', key, { dictation: true }).result, RESULT.CORRECT);
+  assert.equal(checkAnswer('Am Freitag, dem fünften Juni?', ['Am Freitag, dem 5. Juni?'], { dictation: true }).result, RESULT.CORRECT);
+  assert.equal(checkAnswer('Der Tisch kostet 16 Euro.', key, { dictation: true }).result, RESULT.WRONG);
+  // a slip that was a TYPO stays a TYPO, and outside a dictation nothing folds
+  assert.equal(checkAnswer('Der Tisch kostet funfzehn Euro.', key, { dictation: true }).result, RESULT.TYPO);
+  assert.equal(checkAnswer('Der Tisch kostet 15 Euro.', key).result, RESULT.WRONG);
+  // the phone number of REVIEW #2 is untouched
+  assert.equal(checkAnswer('0176 234567', ['0176-2345 67'], { dictation: true }).result, RESULT.CORRECT);
+  assert.equal(checkAnswer('Null eins sieben sechs zwei drei vier fünf sechs sieben', ['0176 234567'], { dictation: true }).result, RESULT.CORRECT);
+});

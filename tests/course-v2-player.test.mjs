@@ -21,6 +21,7 @@ import {
   itemFromReserve, reserveItemsFor, withReserves,
 } from '../src/lib/course-v2/unitPlan.js';
 import { checkItem, attemptPayload, RESULT } from '../src/lib/course-v2/checkItem.js';
+import { dictationItems, materialize } from '../src/components/course-v2/content.js';
 import {
   foldMarkers, statusToStore, reviewCardKeys, recordStepDone, STEP_MARKER_STAGE, TESTOUT_MARKER_STAGE,
 } from '../src/lib/course-v2/progress.js';
@@ -160,6 +161,59 @@ test('checkItem: exact numbers, exact names, choice keys, typed answers through 
   assert.equal(miss.errorTag, 'reflexive', 'the SCHEMA tag of the item wins');
   const p = attemptPayload(typed, 'a2.1-u07-ls1', 'mich');
   assert.deepEqual(p, { itemId: 'x-i06', stepId: 'a2.1-u07-ls1', correct: false, answer: 'mich', errorTag: 'reflexive', typo: false });
+});
+
+test('checkItem exact number on a dictation: the whole sentence, digits exact (a2.2-u04 r3 F04)', () => {
+  const c07 = {
+    id: 'a2.2-u04-c07', type: 'dictation', exact: 'number',
+    answer: 'Wir sind am Ufer hinter dem Hügel, zehn Minuten von der Brücke.',
+    accepted: ['Wir sind am Ufer hinter dem Hügel, zehn Minuten von der Brücke.', 'Wir sind am Ufer hinter dem Hügel, 10 Minuten von der Brücke.'],
+  };
+  assert.equal(checkItem(c07, '10').result, RESULT.WRONG, 'the digits alone transcribe nothing');
+  assert.equal(checkItem(c07, 'Wir sind am Ufer hinter dem Hugel, zehn Minuten von der Brücke.').result, RESULT.TYPO, 'a letter slip keeps the dictation typo rule');
+  assert.equal(checkItem(c07, 'Wir sind am Ufer hinter dem Hügel, 10 Minuten von der Brücke').result, RESULT.CORRECT);
+  assert.equal(checkItem({ ...c07, accepted: [c07.answer] }, 'Wir sind am Ufer hinter dem Hügel, 10 Minuten von der Brücke.').result, RESULT.CORRECT, 'a number word counts as its digits');
+  assert.equal(checkItem(c07, 'Wir sind am Ufer hinter dem Hügel, elf Minuten von der Brücke.').result, RESULT.WRONG, 'a wrong number is never a typo');
+  assert.equal(checkItem(c07, '').result, RESULT.WRONG);
+  // a1.2-u04-c08 (re-run as the review asked): a date dictation still grades its digit forms
+  const c08 = { id: 'a1.2-u04-c08', type: 'dictation', exact: 'number', answer: '12.05.', accepted: ['12.05.', '12.5.', '12.05', '12.5', '12. Mai'] };
+  for (const typed of ['12.05.', '12.5', '12. Mai', 'zwölfter Mai']) assert.equal(checkItem(c08, typed).result, RESULT.CORRECT, typed);
+  assert.equal(checkItem(c08, '12.06.').result, RESULT.WRONG);
+});
+
+test('checkItem exact number: a number word equals its value, a slip in it is a TYPO (a1.1-u04 r3, b2.2-u04 r1 F16)', () => {
+  const nine = { id: 'x-n9', type: 'fill_blank', exact: 'number', answer: '9', accepted: ['9'] };
+  assert.equal(checkItem(nine, 'neun').result, RESULT.CORRECT);
+  assert.equal(checkItem(nine, 'nuen').result, RESULT.TYPO);
+  assert.equal(checkItem(nine, 'zehn').result, RESULT.WRONG);
+  const t23 = { id: 'x-n23', type: 'fill_blank', exact: 'number', answer: '23', accepted: ['23'] };
+  assert.equal(checkItem(t23, 'dreiundzwanzig').result, RESULT.CORRECT);
+  assert.equal(checkItem(t23, 'zweiundzwanzig').result, RESULT.WRONG);
+  const two = { id: 'x-n200', type: 'fill_blank', exact: 'number', answer: '200', accepted: ['200'] };
+  assert.equal(checkItem(two, 'zweihundert').result, RESULT.CORRECT);
+  assert.equal(checkItem({ ...two, answer: 'zweihundert', accepted: ['zweihundert'] }, '200').result, RESULT.CORRECT, 'and vice versa');
+  // a worded time is not a number: „10" does not answer „halb zehn", „halb 10" does
+  const time = { id: 'x-t', type: 'fill_blank', exact: 'number', answer: 'halb zehn', accepted: ['halb zehn', '9.30 Uhr'] };
+  assert.equal(checkItem(time, '10').result, RESULT.WRONG);
+  assert.equal(checkItem(time, 'halb 10').result, RESULT.CORRECT);
+  assert.equal(checkItem(time, '9:30').result, RESULT.CORRECT);
+  // b1.2-u04 r1 F23: a phone number is compared on its digits, whatever the notation
+  const phone = { id: 'x-p', type: 'fill_blank', exact: 'number', answer: '0341 225890', accepted: ['0341 225890'] };
+  for (const typed of ['0341/225890', '(0341) 225890', '0341-225890', '0341/22 58 90']) assert.equal(checkItem(phone, typed).result, RESULT.CORRECT, typed);
+});
+
+test('dictation.fromInput: a line with a number is generated with exact number; an ellipsis key is typeable', () => {
+  const lines = new Map([
+    ['l1', { id: 'l1', de: 'Am 9. Juni? Da muss ich arbeiten.', say: 'Am neunten Juni? Da muss ich arbeiten.' }],
+    ['l2', { id: 'l2', de: 'Mir wird schlecht… und ein bisschen kalt.' }],
+  ]);
+  const [a, b] = dictationItems({ generator: 'dictation.fromInput', count: 2, source: ['l1', 'l2'], ids: ['g1', 'g2'] }, lines);
+  assert.equal(a.exact, 'number');
+  assert.equal(b.exact, undefined);
+  assert.equal(checkItem(a, lines.get('l1').say).result, RESULT.CORRECT, 'what the learner hears grades correct');
+  assert.equal(checkItem(b, 'Mir wird schlecht und ein bisschen kalt.').result, RESULT.CORRECT);
+  const unit = { steps: [{ input: { lines: [...lines.values()] } }] };
+  assert.equal(materialize([{ generator: 'dictation.fromInput', count: 1, source: ['l2'], ids: ['g9'] }], unit)[0].answer, lines.get('l2').de);
 });
 
 test('every fixture item grades its own answer as correct', () => {
