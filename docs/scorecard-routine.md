@@ -22,12 +22,36 @@ never merge them. Each area's specifics are in `.claude/agents/<name>.md`.
 | Saturday | 10:47 | `security-agent` | |
 | Sunday | 07:47 | `support-agent` | |
 
-## Routine prompt, the same for all nine apart from the agent name
+## How the Routines are wired (created 2026-09-27)
 
-> You are the `<agent-name>` for deutsch-meister.de. From the latest `main`, read
-> `.claude/agents/<agent-name>.md` and `docs/agents/PROTOCOL.md`, and do exactly one run
-> of that loop. Open one PR and stop. Never merge, never send email, never apply a
-> migration.
+A Routine that starts a fresh session cannot carry connectors on this account (measured:
+`create_trigger` refused the `connectors` parameter). Such a session would have no Supabase,
+so it could measure nothing. So each of the nine Routines **wakes the orchestrating Claude
+Code session** that holds the Supabase, GitHub, Netlify and Resend connectors
+(`session_014ddD3p7VmAqaTAWKQVHJBt`). That session:
+1. Brings its designated branch up to date with `main`.
+2. Spawns the named agent with the Agent tool in an isolated worktree.
+3. Reviews the diff, runs the steward gates, pushes, and opens or updates the one PR.
+4. Reports three lines to the owner.
+
+The week's agent work therefore collects in **one PR for the owner to review**. The Routines
+are named `DM agent: <area> (<day>)` in the Routines list. A first attempt, the
+fresh-session `DM scorecard steward (Mon)`, is disabled.
+
+If that session is ever archived, re-create the nine Routines from a new session that holds
+the connectors, using this prompt with the agent name swapped:
+
+> Scheduled scorecard run: `<agent-name>`.
+> 1. `git fetch origin main`. If the branch's last PR is merged, restart the designated
+>    branch from `origin/main`; otherwise merge `origin/main` into it.
+> 2. Spawn one agent with the Agent tool: subagent_type `<agent-name>`. If that type isn't
+>    listed, use general-purpose and tell it to act as defined in
+>    `.claude/agents/<agent-name>.md`. Use a worktree, and tell it to do exactly one run
+>    per its file and `docs/agents/PROTOCOL.md`, commit in its worktree, and not push.
+> 3. Review its diff, run the steward-skill gates, cherry-pick onto the designated branch,
+>    push, and open or update the PR (draft → ready when CI is green).
+> 4. Never merge, never send email, never apply migrations.
+> 5. Tell the owner in 3 lines: score change, what changed, owner actions.
 
 ## What the owner does each week
 
