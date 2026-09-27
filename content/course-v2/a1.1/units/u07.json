@@ -583,7 +583,7 @@
               "spelling-meaning"
             ],
             "explanation": {
-              "de": "„fernsehen“: „er sieht … fern“. Der Vokal ändert sich: e → ie.",
+              "de": "„fernsehen“: „er sieht … fern“, mit „ie“ (e → ie).",
               "en": "fernsehen: er sieht … fern (e → ie)."
             },
             "origin": "agent"
@@ -766,7 +766,7 @@
               "auf"
             ],
             "explanation": {
-              "de": "„aufstehen“: „Ich stehe … auf.“ „an“ gehört zu „anfangen“, „ein“ zu „einkaufen“.",
+              "de": "„aufstehen“: „Ich stehe … auf.“ Mit „an“: „anfangen“. Mit „ein“: „einkaufen“.",
               "en": "aufstehen: ich stehe … auf. “an” belongs to anfangen, “ein” to einkaufen."
             },
             "origin": "agent"
@@ -1753,7 +1753,7 @@
         "mode": "written",
         "profile": "course-micro",
         "situationDe": "Emre schreibt im Chat vom Kurs: „Wie ist deine Woche? Wann hast du Kurs oder Arbeit?“",
-        "promptDe": "Antworten Sie Emre in 1–2 Sätzen. Nennen Sie Tage und Uhrzeiten.",
+        "promptDe": "Antworten Sie Emre in 1–2 Sätzen, mit Tagen und Uhrzeiten.",
         "promptEn": "Answer Emre in 1–2 sentences, with days and times.",
         "planSeconds": 30,
         "words": [
@@ -1904,8 +1904,8 @@
             "Sie haben am Donnerstag einen Termin."
           ],
           "explanation": {
-            "de": "Priya findet online einen Termin: Donnerstag, Viertel nach acht. Dann geht sie um elf in den Kurs.",
-            "en": "Priya books an appointment online for Thursday at 8:15 and still gets to class at eleven."
+            "de": "Priya macht online einen Termin: Donnerstag, Viertel nach acht. Der Kurs fängt erst um elf an.",
+            "en": "Priya books an appointment online for Thursday at 8:15; class does not start until eleven."
           },
           "origin": "agent"
         },
@@ -2259,7 +2259,7 @@
               "Wie spät ist es?"
             ],
             "explanation": {
-              "de": "Feste Frage: „Wie spät“ auf Position 1, „ist“ auf Position 2.",
+              "de": "„Wie spät“ steht auf Position 1, „ist“ auf Position 2.",
               "en": "Fixed question: “Wie spät” first, “ist” second."
             },
             "origin": "agent"
@@ -2436,8 +2436,8 @@
           ],
           "difficulty": 2,
           "explanation": {
-            "de": "16.30 Uhr ist „halb fünf“: 30 Minuten nach vier.",
-            "en": "16:30 is “halb fünf” (half to five)."
+            "de": "16.30 Uhr ist „halb fünf“. „Halb vier“ ist 15.30 Uhr.",
+            "en": "16:30 is “halb fünf” (half to five); “halb vier” is 15:30."
           },
           "origin": "agent"
         },
@@ -2930,7 +2930,7 @@
               ],
               "exact": "number",
               "explanation": {
-                "de": "Die Ansage sagt: „Samstags sind wir von sieben bis zwölf Uhr da.“ Von 6 bis 18 Uhr ist Montag bis Freitag.",
+                "de": "In der Nachricht hören Sie: „Samstags sind wir von sieben bis zwölf Uhr da.“ Von 6 bis 18 Uhr ist Montag bis Freitag.",
                 "en": "On Saturdays it is open 7–12; 6 am – 6 pm is Monday to Friday."
               },
               "origin": "agent"
@@ -3305,6 +3305,10 @@
           "de": "„geschlossen“ heißt „zu“: Am Wochenende ist das Geschäft zu.",
           "en": "“geschlossen” means closed: at the weekend the shop is closed."
         },
+        "hint": {
+          "de": "das Schild: ein Text an der Tür, z. B. mit Öffnungszeiten",
+          "en": "Schild = a sign (e.g. with opening hours on a door)"
+        },
         "origin": "agent"
       }
     ],
@@ -3333,6 +3337,10 @@
         "explanation": {
           "de": "Auf dem Schild steht: „samstags 10–14 Uhr“. 19 Uhr ist von Montag bis Freitag.",
           "en": "On Saturdays it is open 10–14; 19:00 is Monday to Friday."
+        },
+        "hint": {
+          "de": "das Schild: ein Text an der Tür, z. B. mit Öffnungszeiten",
+          "en": "Schild = a sign (e.g. with opening hours on a door)"
         },
         "origin": "agent"
       },
@@ -3434,12 +3442,12 @@
       "id": "a1.1-u07-rm08",
       "de": "Am Donnerstag fängt der Kurs erst um elf Uhr an.",
       "en": "On Thursday the class doesn’t start until eleven.",
-      "function": "eine Terminänderung weitergeben",
+      "function": "sagen: Der Termin ist später",
       "forTemplate": "sd1.s2"
     }
   ],
   "story": {
-    "beat": "Priya und Emre erzählen im Videochat vom Tag in Leipzig und in İzmir. Priya und Arjun brauchen einen Termin im Bürgerbüro, aber das Amt ist nur am Morgen offen, und da hat Priya Kurs. Eine Nachricht von Herrn Richter hilft: Am Donnerstag fängt der Kurs erst um elf Uhr an.",
+    "beat": "Priya und Emre erzählen im Videochat vom Tag in Leipzig und in İzmir. Priya und Arjun brauchen einen Termin im Bürgerbüro, aber es ist nur am Morgen offen, und da hat Priya Kurs. Eine Nachricht von Herrn Richter hilft: Am Donnerstag fängt der Kurs erst um elf Uhr an.",
     "cliffhanger": "Am Donnerstag um elf Uhr im Kurs: Emre ist online. Er sagt: „Priya, meine Frau Elif wohnt auch in Leipzig. Hast du am Samstag Zeit?“",
     "castIn": [
       "cast.emre",
