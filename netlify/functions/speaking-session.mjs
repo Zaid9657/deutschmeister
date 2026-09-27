@@ -1,6 +1,13 @@
 import { randomUUID } from 'node:crypto';
 import { supabase, supabaseKey } from './_shared/supabase.mjs';
 import { checkUsage, incrementUsage } from './_shared/speakingUsage.mjs';
+import {
+  CLOSEOUT_COLUMNS,
+  closeOutSession,
+  closeOutStaleSessions,
+  creditWallet,
+  usageIdForToken,
+} from './_shared/speakingCloseout.mjs';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 import {
   AIError,
@@ -32,6 +39,8 @@ async function isActiveSubscriber(userId) {
 }
 
 // Count today's (UTC day) free 5-minute practice sessions for a subscriber.
+// A 'cancelled' session ended with zero learner turns and costs nothing
+// (_shared/speakingCloseout.mjs), so it does not use up a free session.
 async function freeFiveMinuteSessionsToday(userId) {
   const now = new Date();
   const dayStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())).toISOString();
@@ -42,6 +51,7 @@ async function freeFiveMinuteSessionsToday(userId) {
     .eq('planned_minutes', 5)
     .eq('cost_cents', 0)
     .neq('mode', 'placement')
+    .neq('status', 'cancelled')
     .gte('started_at', dayStart);
   if (error) {
     console.error('[speaking-session] free-session count error:', JSON.stringify(error));
@@ -58,27 +68,6 @@ async function walletBalance(userId) {
     .eq('user_id', userId)
     .maybeSingle();
   return data?.balance_cents ?? 0;
-}
-
-// Best-effort refund if the session couldn't be created after a debit.
-async function creditWallet(userId, amount) {
-  for (let attempt = 0; attempt < 5; attempt++) {
-    const { data: row } = await supabase
-      .from('speaking_wallet')
-      .select('balance_cents')
-      .eq('user_id', userId)
-      .maybeSingle();
-    const balance = row?.balance_cents ?? 0;
-    const { data: updated } = await supabase
-      .from('speaking_wallet')
-      .update({ balance_cents: balance + amount, updated_at: new Date().toISOString() })
-      .eq('user_id', userId)
-      .eq('balance_cents', balance)
-      .select('balance_cents')
-      .maybeSingle();
-    if (updated) return true;
-  }
-  return false;
 }
 
 export const handler = async (event) => {
@@ -122,36 +111,45 @@ export const handler = async (event) => {
       mode,
       session_token: providedToken,
       duration_seconds,
-      user_turns,
-      status: endStatus,
     } = body;
 
     // -----------------------------------------------------------------------
-    // action 'end' — unchanged. The client reports final metrics; evaluation
-    // still runs via evaluate-speaking.mjs.
+    // action 'end' — Finish, the timer, or Cancel. The server closes the
+    // session on the learner turns IT counted (never a client-reported count
+    // or status): any turn → 'completed'; zero → 'cancelled' and the
+    // reservation made at start is released. See _shared/speakingCloseout.mjs.
+    // Evaluation still runs via evaluate-speaking.mjs.
     // -----------------------------------------------------------------------
     if (action === 'end') {
       if (!providedToken) {
         return { statusCode: 400, headers, body: JSON.stringify({ error: 'session_token is required to end a session' }) };
       }
+      let outcome = null;
       try {
-        const { error: endError } = await supabase
+        const { data: row, error: rowError } = await supabase
           .from('speaking_sessions')
-          .update({
-            duration_seconds: Number.isFinite(duration_seconds) ? duration_seconds : 0,
-            user_turns: Number.isFinite(user_turns) ? user_turns : 0,
-            completed_at: new Date().toISOString(),
-            status: endStatus || 'completed',
-          })
+          .select(CLOSEOUT_COLUMNS)
           .eq('session_token', providedToken)
-          .eq('user_id', user_id);
-        if (endError) {
-          console.error('[speaking-session] Failed to log session end:', JSON.stringify(endError));
+          .eq('user_id', user_id)
+          .maybeSingle();
+        if (rowError) {
+          console.error('[speaking-session] end lookup failed:', JSON.stringify(rowError));
+        } else if (row && row.status === 'active') {
+          outcome = await closeOutSession(supabase, row, {
+            durationSeconds: Number.isFinite(duration_seconds) ? duration_seconds : 0,
+          });
         }
       } catch (err) {
-        console.error('[speaking-session] Session end update threw:', err.message);
+        console.error('[speaking-session] Session end threw:', err.message);
       }
-      return { statusCode: 200, headers, body: JSON.stringify({ ok: true }) };
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          ok: true,
+          ...(outcome?.closed ? { status: outcome.status, user_turns: outcome.userTurns, released: outcome.released } : {}),
+        }),
+      };
     }
 
     // -----------------------------------------------------------------------
@@ -206,6 +204,15 @@ export const handler = async (event) => {
       if (!ALLOWED_MINUTES.includes(plannedMinutes)) {
         return { statusCode: 400, headers, body: JSON.stringify({ error: 'minutes must be 5, 10 or 15' }) };
       }
+    }
+
+    // Settle the caller's own abandoned sessions first (tab closed, phone
+    // locked): a stale session with zero learner turns gives its allowance
+    // back BEFORE the allowance is checked below. Never blocks a start.
+    try {
+      await closeOutStaleSessions(supabase, { userId: user_id });
+    } catch (err) {
+      console.error('[speaking-session] stale close-out threw:', err.message);
     }
 
     // -------- Pricing decision (skipped entirely for placement) --------
@@ -285,7 +292,10 @@ export const handler = async (event) => {
     }
 
     // -------- Create the session row. --------
-    const sessionToken = providedToken || `sp_${randomUUID()}`;
+    // Always minted here: the uuid inside the token is also the id of the
+    // trial's speaking_usage row (usageIdForToken), which is how a zero-turn
+    // close-out releases exactly that row — so the client never chooses it.
+    const sessionToken = `sp_${randomUUID()}`;
     const { error: insertError } = await supabase
       .from('speaking_sessions')
       .insert({
@@ -304,7 +314,7 @@ export const handler = async (event) => {
     if (insertError) {
       console.error('[speaking-session] Session insert failed:', JSON.stringify(insertError));
       if (costCents > 0) {
-        const refunded = await creditWallet(user_id, costCents);
+        const refunded = await creditWallet(supabase, user_id, costCents);
         console.error('[speaking-session] refund after failed insert:', refunded ? 'ok' : 'FAILED');
       }
       return { statusCode: 500, headers, body: JSON.stringify({ error: 'Sitzung konnte nicht erstellt werden' }) };
@@ -322,8 +332,9 @@ export const handler = async (event) => {
         });
       if (txError) console.error('[speaking-session] wallet transaction insert failed:', JSON.stringify(txError));
     } else if (freeTrialConsumed) {
-      // Non-subscriber free session counts against the trial allowance.
-      try { await incrementUsage(user_id); } catch (err) { console.error('[speaking-session] incrementUsage failed:', err.message); }
+      // Non-subscriber free session counts against the trial allowance —
+      // reserved under the session's own id, released if no turn arrives.
+      try { await incrementUsage(user_id, { id: usageIdForToken(sessionToken) }); } catch (err) { console.error('[speaking-session] incrementUsage failed:', err.message); }
     }
 
     // -------- Persist the opening line so the record starts with the teacher. --

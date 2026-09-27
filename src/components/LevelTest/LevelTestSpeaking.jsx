@@ -3,6 +3,7 @@ import { Mic, Loader2, AlertCircle, Phone, Sparkles, Hand } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { getAuthHeaders } from '../../utils/supabase';
 import SpeakingSession from '../speaking/SpeakingSession';
+import { acquireMicrophone, releaseMicrophone, micErrorMessage } from '../speaking/mediaSupport';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
@@ -31,6 +32,17 @@ const LevelTestSpeaking = ({ onComplete, onSkip }) => {
     if (!user) { setError('Please log in to take the speaking test.'); return; }
     setStage('connecting');
     setError(null);
+    // Microphone before the session exists: a denied mic used to leave an
+    // 'active' placement session behind that nobody could speak in.
+    let mic;
+    try {
+      mic = await acquireMicrophone();
+    } catch (err) {
+      console.error('Placement mic error:', err);
+      setError(micErrorMessage(err));
+      setStage('error');
+      return;
+    }
     try {
       const res = await fetch('/api/speaking/speaking-session', {
         method: 'POST',
@@ -44,9 +56,11 @@ const LevelTestSpeaking = ({ onComplete, onSkip }) => {
         sessionToken: data.session_token,
         plannedMinutes: data.planned_minutes || 5,
         opening: { text: data.replyText, audioBase64: data.replyAudioBase64 },
+        micStream: mic,
       });
       setStage('session');
     } catch (err) {
+      releaseMicrophone(mic);
       console.error('Placement speaking error:', err);
       setError(err.message || 'Failed to start speaking session');
       setStage('error');
@@ -62,6 +76,7 @@ const LevelTestSpeaking = ({ onComplete, onSkip }) => {
         sessionToken={session.sessionToken}
         plannedMinutes={session.plannedMinutes}
         opening={session.opening}
+        micStream={session.micStream}
         onComplete={onComplete}
         onCancel={onSkip}
       />

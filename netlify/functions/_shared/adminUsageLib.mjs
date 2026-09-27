@@ -3,13 +3,17 @@
 /**
  * Failure classification for a speaking session. `null` means "records no
  * technical fault" — which is NOT the same as "went well".
- *   cancelled                       → the learner or the client ended it early
- *   active and older than 2 h       → abandoned: never completed, never cancelled
+ *   cancelled                       → ended with zero learner turns; since
+ *                                     2026-09-27 that is the ONLY way a session
+ *                                     is cancelled, and its allowance was given
+ *                                     back (_shared/speakingCloseout.mjs)
+ *   active and older than 2 h       → abandoned: the hourly speaking-closeout
+ *                                     sweep has not reached it (should be rare)
  *   completed, 0 user turns         → no speech reached the server
  *   completed, not evaluated        → the evaluator never ran
  */
 export function classifyFailure(s, now = Date.now()) {
-  if (s.status === 'cancelled') return { kind: 'cancelled', label: 'Abgebrochen' };
+  if (s.status === 'cancelled') return { kind: 'cancelled', label: 'Abgebrochen (keine Sprache)' };
   if (s.status === 'active' && s.created_at && now - Date.parse(s.created_at) > 2 * 3600000) return { kind: 'abandoned', label: 'Verwaist (nie beendet)' };
   if (s.status === 'completed' && (s.user_turns === 0 || s.user_turns === null) && s.mode !== 'placement') return { kind: 'no_speech', label: 'Keine Sprache empfangen' };
   if (s.status === 'completed' && s.evaluated === false) return { kind: 'not_evaluated', label: 'Nicht bewertet' };

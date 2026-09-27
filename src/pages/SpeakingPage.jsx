@@ -11,7 +11,7 @@ import SEO from '../components/SEO';
 import { seoProps } from '../data/seoRoutes.js';
 import { TRIAL_SPEAKING_SESSIONS } from '../data/marketing.js';
 import { getConfigForLevel } from '../constants/speakingPrompts';
-import { checkSpeakingSupport } from '../components/speaking/mediaSupport';
+import { checkSpeakingSupport, acquireMicrophone, releaseMicrophone, micErrorMessage } from '../components/speaking/mediaSupport';
 import SpeakingSession from '../components/speaking/SpeakingSession';
 import SpeakingEvaluationResults from '../components/SpeakingEvaluationResults';
 import { LEVEL_ORDER } from '../config/levels';
@@ -186,8 +186,11 @@ const SpeakingPage = () => {
     try {
       const [{ data: wallet }, { count }, usageRes] = await Promise.all([
         supabase.from('speaking_wallet').select('balance_cents').eq('user_id', user.id).maybeSingle(),
+        // Mirrors freeFiveMinuteSessionsToday in speaking-session.mjs: a
+        // 'cancelled' session got no learner turn and used nothing up.
         supabase.from('speaking_sessions').select('id', { count: 'exact', head: true })
           .eq('user_id', user.id).eq('planned_minutes', 5).eq('cost_cents', 0).neq('mode', 'placement')
+          .neq('status', 'cancelled')
           .gte('started_at', utcMidnightISO()),
         fetch('/api/speaking/check-speaking-usage', {
           method: 'POST', headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) }, body: '{}',
@@ -259,6 +262,20 @@ const SpeakingPage = () => {
     if (startDisabled) return;
     setStarting(true);
     setStartError(null);
+    // Microphone FIRST. The start call reserves the learner's allowance (a
+    // trial session, a wallet debit, a free subscriber session); it used to
+    // run before the permission prompt, so a denied or missing mic cost a
+    // session the learner could never speak in.
+    let mic;
+    try {
+      mic = await acquireMicrophone();
+    } catch (err) {
+      console.error('Mic error:', err);
+      setStartError({ type: 'error', message: micErrorMessage(err) });
+      setStarting(false);
+      return;
+    }
+    let handedOver = false;
     try {
       const res = await fetch('/api/speaking/speaking-session', {
         method: 'POST',
@@ -305,13 +322,16 @@ const SpeakingPage = () => {
           ? { title_de: courseTask.promptDe, hint_words: courseTask.hintWords }
           : null,
         opening: { text: data.replyText, audioBase64: data.replyAudioBase64 },
+        micStream: mic,
       });
+      handedOver = true;
       setEvaluation(null);
       setPhase('session');
     } catch (err) {
       console.error('start error:', err);
       setStartError({ type: 'error', message: 'Network error — please try again.' });
     } finally {
+      if (!handedOver) releaseMicrophone(mic);
       setStarting(false);
     }
   };
@@ -324,6 +344,9 @@ const SpeakingPage = () => {
   };
 
   const backToSetup = () => { setSession(null); setEvaluation(null); setPhase('setup'); };
+  // A cancelled session with no learner turn gives its allowance back once the
+  // server has closed it — refresh the allowance shown on the setup screen then.
+  const handleCancel = (ended) => { backToSetup(); Promise.resolve(ended).then(() => loadMeta()); };
   const retrySession = () => { setEvaluation(null); setPhase('setup'); };
 
   // ---- guest gate ----
@@ -402,8 +425,9 @@ const SpeakingPage = () => {
         sessionToken={session.sessionToken}
         plannedMinutes={session.plannedMinutes}
         opening={session.opening}
+        micStream={session.micStream}
         onComplete={handleComplete}
-        onCancel={backToSetup}
+        onCancel={handleCancel}
       />
     );
   }
