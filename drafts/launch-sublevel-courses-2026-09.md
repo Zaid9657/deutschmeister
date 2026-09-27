@@ -4,6 +4,17 @@
 2026-09-08 for the owner decision "stop building, sell what is finished" (tracker
 decisions log; `docs/monetization-2026-09-03.md` addendum).
 
+**Status 2026-09-27: Email 1 is staged, not sent** — `drafts/send-launch-sublevel-1.sh`
+(`preview` → `test` → `live` once), built by `drafts/launch-sublevel-1.mjs`, which is now
+the canonical Email 1 copy. The 2026-09-27 launch audit (docs/SCORECARD.md work order #2)
+fixed: the unsourced customer quote that opened Email 1; the claim that B1/B2 are being
+"rebuilt to the same standard as A1 and A2" (A1.2 is paused; the paid levels are not on the
+course standard); the level-test duration (its page says 15–20 min, not ten); "as it always
+was"; Email 3's "format of the Goethe exam" (the final tests are half-length, Goethe-*style*
+practice tests we wrote); and Email 3's "Since Monday" (Day 0 is not necessarily a Monday).
+Prices in the email bodies below are `{{…}}` placeholders: a send script fills them from
+`src/data/pricing.js`, the way `launch-sublevel-1.mjs` does. Never type a price into a body.
+
 **Audience for the emails:** the 1,085 confirmed-email DeutschMeister accounts (measured
 2026-09-08; 7 are Pro subscribers and are excluded by the `exclude` rule). English, like
 every transactional email the site has sent so far. Sent through the site's own
@@ -17,18 +28,21 @@ B1 requirement actually needs), and mention the level courses once, as a footnot
 partners and family. du-Form, exam-deadline energy, same as
 `drafts/social-content-atoms-2026-09.md`.
 
-**Claims discipline:** every price below is what `src/data/pricing.js` charges after
-PR #108 — A1.2 €40, A2.1 €50, A2.2 €50 (B1 €60 / B2 €65 listed as coming soon, not
-buyable, so never sold in copy). Included Pro window = `COURSE_PRO_MONTHS` (3 months).
+**Claims discipline:** every price is what `src/data/pricing.js` charges
+(`SUBLEVEL_PRICES_EUR` for the `SELLABLE_LEVELS`; B1/B2 are `COMING_SOON_LEVELS`, not
+buyable, so never sold in copy). The figures in the Telegram posts were typed on
+2026-09-08; re-derive them from `pricing.js` before posting. Included Pro window = `COURSE_PRO_MONTHS` (3 months).
 No outcome promises, no exam fees, no usage numbers. Content counts only if quoted:
 12 grammar topics per A-level (`GRAMMAR_TOPIC_COUNT` provenance in `marketing.js`).
 
-**Preconditions (do NOT send before all three):**
-1. PR #108 merged and the production deploy verified (cards visible on `/pricing/`).
-2. The three Lemon Squeezy variants live and their nine env vars set — the buy buttons
-   render only then.
-3. One €0 test purchase of `course_a2_1` verified end to end (purchases row → `/level/a2.1`
-   opens without Pro).
+**Preconditions (do NOT send before all of them; docs/SCORECARD.md work order #2):**
+1. A new 100% code in Lemon Squeezy, restricted to the A2.1 product (DMTEST100 is tied to
+   the retired band product).
+2. The owner buys A2.1 for €0 on `/pricing/` with a **fresh** account, and sees a Buy button
+   on every card the email prices (A1.2, A2.1, A2.2 — a card whose checkout id is unset is
+   hidden).
+3. The agent verifies the `course_a2_1` purchases row and the 90-day `plan_type='course'` Pro
+   row; the owner deactivates the code. Only then `LAUNCH_PRECONDITION_VERIFIED=yes`.
 
 **Send days:** Day 0 → Day 3 → Day 7. Every send first with `"testMode": true`.
 
@@ -36,12 +50,12 @@ No outcome promises, no exam fees, no usage numbers. Content counts only if quot
 (Telegram: `utm_source=telegram`). GA4 and PostHog are consent-gated, so treat the numbers
 as a floor, not the truth; the `purchases` table is the truth.
 
-```bash
-curl -X POST https://deutsch-meister.de/.netlify/functions/send-campaign \
-  -H "Content-Type: application/json" \
-  -H "x-campaign-secret: $CAMPAIGN_SECRET" \
-  -d '{"subject": "<SUBJECT>", "body": "<HTML BODY>", "exclude": ["subscribed", "purchased:course_a1_2", "purchased:course_a2_1", "purchased:course_a2_2"], "testMode": true}'
-```
+Email 1 goes out only through `drafts/send-launch-sublevel-1.sh`. Its exclude list is
+derived: `subscribed` plus `purchased:<key>` for every product that already owns a level the
+email sells (`course_a1_2`, `course_a2_1`, `course_a2_2`, and the retired `course_a1`,
+`course_a2`, `course_alle`). Emails 2 and 3 get their own staged scripts on the same
+pattern, never a hand-typed curl. **Nothing records campaign recipients: a second live
+run of any of them re-mails everyone.**
 
 Pricing page: `https://deutsch-meister.de/pricing/?utm_source=email&utm_medium=launch&utm_campaign=sublevel-2026-09`
 
@@ -53,21 +67,22 @@ Pricing page: `https://deutsch-meister.de/pricing/?utm_source=email&utm_medium=l
 
 **Body (HTML paragraphs):**
 
-<p>A lot of you told us the same thing in different words: "I don't want a subscription, I want to finish A2." Fair. From today you can.</p>
+*Canonical copy: `drafts/launch-sublevel-1.mjs` (edit it there; this is a mirror). Run
+`./drafts/send-launch-sublevel-1.sh preview` to see the filled-in email.*
 
-<p>Every DeutschMeister level is now its own one-time course. Pay once, keep it for life — every grammar lesson with typed practice, the reading texts with checks, the listening exercises, the vocabulary list, the level's final test — plus <strong>3 months of Pro</strong> included, so the AI speaking coach, writing feedback and Sentence X-Ray run while you work through it.</p>
+<p>Not everyone wants a subscription to learn German. If you would rather pay once for the level you are working on and keep it, you now can.</p>
 
-<p><strong>A1.1 stays free</strong>, as it always was. Then:</p>
+<p>Each DeutschMeister level from {{first sellable level}} to {{last sellable level}} is now its own one-time course. Pay once, keep it for life: every grammar lesson with typed practice, the reading texts with checks, the listening exercises, the vocabulary list and the level's final test, plus <strong>{{COURSE_PRO_MONTHS}} months of Pro</strong> included, so the AI speaking coach, writing feedback and Sentence X-Ray run while you work through it.</p>
 
-<p>A1.2 — <strong>€40</strong><br />
-A2.1 — <strong>€50</strong><br />
-A2.2 — <strong>€50</strong></p>
+<p><strong>{{FREE_LEVELS}} stays free.</strong> Then:</p>
 
-<p>B1 and B2 are listed on the pricing page as coming soon. They are not for sale yet, on purpose: they are being rebuilt to the same standard as A1 and A2, and we would rather you wait than pay for the old version.</p>
+<p>{{one line per sellable level: code — price, from SUBLEVEL_PRICES_EUR}}</p>
+
+<p>{{coming-soon bands}} are listed on the pricing page as coming soon and cannot be bought yet.</p>
 
 <p><a href="https://deutsch-meister.de/pricing/?utm_source=email&amp;utm_medium=launch&amp;utm_campaign=sublevel-2026-09"><strong>See the levels →</strong></a></p>
 
-<p>Not sure which level you are? The <a href="https://deutsch-meister.de/level-test/?utm_source=email&amp;utm_medium=launch&amp;utm_campaign=sublevel-2026-09">level test is free</a> and takes ten minutes. And if none of this is for you, nothing changes: the free daily sentence and A1.1 stay exactly as they are.</p>
+<p>Not sure which level you are? The <a href="https://deutsch-meister.de/level-test/?utm_source=email&amp;utm_medium=launch&amp;utm_campaign=sublevel-2026-09">level test is free</a> and takes about 15–20 minutes. And if none of this is for you, nothing changes: the free daily sentence and {{FREE_LEVELS}} stay exactly as they are.</p>
 
 <p>— Zaid</p>
 
@@ -93,7 +108,7 @@ A2.2 — <strong>€50</strong></p>
 
 <p>If 1–4 feel easy, you are ready for B1 material. If one of them made you wince, that is your gap — and it is a specific, learnable one, not "my German is bad".</p>
 
-<p>Every A2 grammar topic on DeutschMeister now has typed exercises for exactly these points (not multiple choice — you write the ending, the verb, the sentence). The free <a href="https://deutsch-meister.de/level-test/?utm_source=email&amp;utm_medium=launch&amp;utm_campaign=sublevel-2026-09">level test</a> tells you which half of A2 to start in; the <a href="https://deutsch-meister.de/pricing/?utm_source=email&amp;utm_medium=launch&amp;utm_campaign=sublevel-2026-09">A2.1 and A2.2 courses</a> are €50 each, one time, with 3 months of Pro included.</p>
+<p>Every A2 grammar topic on DeutschMeister now has typed exercises for exactly these points (not multiple choice — you write the ending, the verb, the sentence). The free <a href="https://deutsch-meister.de/level-test/?utm_source=email&amp;utm_medium=launch&amp;utm_campaign=sublevel-2026-09">level test</a> tells you which half of A2 to start in; the <a href="https://deutsch-meister.de/pricing/?utm_source=email&amp;utm_medium=launch&amp;utm_campaign=sublevel-2026-09">A2.1 and A2.2 courses</a> are {{price a2.1 / a2.2, from SUBLEVEL_PRICES_EUR}}, one time, with {{COURSE_PRO_MONTHS}} months of Pro included.</p>
 
 <p>— Zaid</p>
 
@@ -105,7 +120,7 @@ A2.2 — <strong>€50</strong></p>
 
 **Body:**
 
-<p>Short one. Since Monday you can buy a single German level on DeutschMeister and keep it — A1.2 for €40, A2.1 or A2.2 for €50 each, 3 months of Pro included with each.</p>
+<p>Short one. Last week I wrote that you can now buy a single German level on DeutschMeister and keep it: {{one clause per sellable level: code for price, from SUBLEVEL_PRICES_EUR}}, {{COURSE_PRO_MONTHS}} months of Pro included with each.</p>
 
 <p>There is no discount code and no countdown in this email. The price is the price; it is the same next month. I am writing because three things are worth knowing before you decide:</p>
 
@@ -113,7 +128,7 @@ A2.2 — <strong>€50</strong></p>
 
 <p><strong>You can buy half a level.</strong> If the level test puts you at A2.2, you do not pay for A2.1.</p>
 
-<p><strong>It ends with a real test.</strong> Each level closes with a timed final test in the format of the Goethe exam for that level, so you know whether you are done rather than hoping.</p>
+<p><strong>It ends with a timed test.</strong> Each level closes with a final test in the style of the Goethe-Zertifikat (A1 for A1.2, A2 for A2.1 and A2.2): a half-length practice test we wrote ourselves, not an official Goethe exam. So you know whether you are done rather than hoping.</p>
 
 <p><a href="https://deutsch-meister.de/pricing/?utm_source=email&amp;utm_medium=launch&amp;utm_campaign=sublevel-2026-09"><strong>Pick your level →</strong></a></p>
 
