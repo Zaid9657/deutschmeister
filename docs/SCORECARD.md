@@ -19,7 +19,7 @@ measuring the same week get the same number. The dated snapshot this started fro
 | Activation | 20% | **2** | ↓ | Signup→first lesson: Jun 15%, Jul 16%, Aug 10%, **Sep 10%**. Rebuilt A1.1: 4 learners, 0 Lektionen finished. Writing 0 ever, mock exams 5 ever |
 | Acquisition | 15% | **2** | ↓ | Signups: 205 (Jun) → 147 (Sep). Search signups are brand searches (13 of 14 land on `/`). 22 keywords in DE, 0/20 targets in top 30, 11 referring domains (10 spam). No social running. X-Ray anon use ~25× since 09-14, source unknown |
 | Product & reliability | 15% | **5** | — | A1.1 at 0 blocker/major after 23 DaF reviews; 84 grammar topics; 3 mock exams. **Speaking: 24/45 starts (53%) got zero learner turns.** Paid levels still on older content. Webhooks: 0 failed in 30 days |
-| Retention & email | 10% | **3** | — | 29,500 sends/30 d, 1.95% bounce, 0 complaints. Open/click tracking **off**. Launch email written, never sent. 3 of 6 live paid subs failing |
+| Retention & email | 10% | **3** | — | 29,500 sends/30 d, 1.95% bounce, 0 complaints. Click tracking switched **on** 2026-09-27; the click rate isn't known yet. Launch email written, never sent. 3 of 6 live paid subs failing |
 | Website performance | 5% | **8** | — | Mobile Lighthouse median 89 (home 100 … login 68), local build. `/login` CLS 2.0. `vendor-ui` 757 KB raw (all of lucide-react) |
 | Support | 5% | **5** | — | 0 tickets ever from 1,685 accounts — no backlog, no signal |
 | Security & engineering | 5% | **7** | — | Advisors: 0 errors; 3 actionable warnings (leaked-password protection off; `course_reminder_candidates` callable by anon; 2 extensions in `public`). CI green, 1,126 tests |
@@ -41,7 +41,7 @@ Total = Σ(weight × score). 2026-09-27: 25+40+30+75+30+40+25+35 = **300 → 30/
 | Acquisition | X-Ray → signup rate | unknown | measured | needs tracking (work order #3) |
 | Acquisition | Target keywords in top 30 | 0/20 | 3/20 | DataForSEO (`docs/seo-routines/`) |
 | Product | Speaking zero-turn rate / 30 d | 53% | <15% | `speaking_sessions.user_turns` |
-| Email | Click tracking on | no | yes | Resend |
+| Email | Click tracking on | yes (2026-09-27) | click rate ≥3% | Resend |
 | Email | Offer/campaign emails sent / 30 d | 0 | 2 | Resend / `send-campaign` |
 | Web | Mobile Lighthouse median, 7 pages | 89 | 95 | Lighthouse §7 |
 | Web | Worst CLS | 2.0 | <0.1 | Lighthouse §7 |
@@ -56,7 +56,7 @@ item above is done or blocked on someone else.
 
 | # | Move | Area | Who | Status | Done when |
 |---|---|---|---|---|---|
-| 1 | One 15-min dashboard sitting: Resend click tracking on · Lemon Squeezy failed-payment emails on · Supabase leaked-password protection on | Email, Revenue, Security | Owner | open | all three toggles on |
+| 1 | One 10-min dashboard sitting: ~~Resend click tracking on~~ (done 2026-09-27 via connector) · Lemon Squeezy failed-payment emails on · Supabase leaked-password protection on | Revenue, Security | Owner | 1 of 3 done | all three toggles on |
 | 2 | €0 test purchase of A2.1 (DMTEST100) → agent verifies → owner runs the launch email (`drafts/send-launch-email-1.sh`, test then live) | Revenue | Owner + agent | open | email sent to the confirmed list; clicks visible |
 | 3 | Sign-up + course offer under the X-Ray result; record X-Ray→signup; find the traffic source | Acquisition, Activation | Agent | open | X-Ray→signup measured, ≥2% |
 | 4 | Social pack live 2026-10-01: accounts created, IDs filled, posting Routine on | Acquisition | Owner, then agent | open | first attributed social signup |
@@ -70,17 +70,27 @@ item above is done or blocked on someone else.
 
 ## 4. How the loop works (agents)
 
-One loop, not one agent per area. Every Monday the **scorecard steward** Routine
-(`docs/scorecard-routine.md`) re-measures §2, re-scores with §5 and writes the row changes.
-It then takes the **top open item in §3**. If an agent can do it, it builds it as one PR.
-If it needs the owner, it writes the one owner action. It also adds an experiment line to §6.
+There is **one agent per area**, and each one is defined in `.claude/agents/<area>-agent.md`.
+The **scorecard steward** (`.claude/agents/scorecard-steward.md`) owns the whole card.
 
-Specialist agents are spawned **only for the item at the top of the queue**, never for
-every area at once. Eight loops polishing eight areas would repeat the A1.1 pattern at
-scale: 23 review rounds on a free level while revenue stayed at €0.
+All of them follow `docs/agents/PROTOCOL.md`:
+1. Close the last experiment.
+2. Measure.
+3. Re-score with §5.
+4. Make **one** move: the area's top §3 item, or a new one.
+5. Log it in §6.
+6. Open a PR.
 
-The "learning" is §6. A session reads what was tried and what it moved before it proposes
-anything. An idea that already failed does not come back without a new reason.
+Agents never merge. The owner reviews and merges. The weekly schedule and the Routine
+prompts are in `docs/scorecard-routine.md`. On Monday the steward re-scores everything,
+writes §8 and lists the PRs waiting for review.
+
+Two rules keep eight loops from turning into eight polishing machines:
+- An area that meets its §2 target does nothing that week.
+- Every move needs a measurable "done when".
+
+The learning is §6. Each run fills in the previous move's "after" value before choosing the
+next move, and an idea logged as dropped does not come back without a new reason.
 
 ## 5. Rubric (how a score is decided)
 
@@ -114,10 +124,11 @@ Change a band only in a PR that says why, and re-score the history line it affec
 
 ## 6. Experiments log (what was tried, what it moved)
 
-| Date | Move | Metric before → after | Keep / drop | Lesson |
-|---|---|---|---|---|
-| 2026-09-03 | A1.1 reordered: der/die/das first, alphabet moved to lesson 5 | grammar one-and-done (14 d): 1/9 (09-07) → 5/8 (09-21) → 1/4 (09-27) | inconclusive | cohorts of 4–9 can't show an effect; judge on a full month |
-| 2026-09-12→14 | A1.1 rebuilt + 23 DaF review rounds | Lektionen finished: 0 → 0 | keep content, stop polishing | quality without traffic moved nothing |
+| Date | Area | Move | Metric before → after | Keep / drop | Lesson |
+|---|---|---|---|---|---|
+| 2026-09-03 | Activation | A1.1 reordered: der/die/das first, alphabet moved to lesson 5 | grammar one-and-done (14 d): 1/9 (09-07) → 5/8 (09-21) → 1/4 (09-27) | inconclusive | cohorts of 4–9 can't show an effect; judge on a full month |
+| 2026-09-12→14 | Product | A1.1 rebuilt + 23 DaF review rounds | Lektionen finished: 0 → 0 | keep content, stop polishing | quality without traffic moved nothing |
+| 2026-09-27 | Email | Resend click tracking switched on for deutsch-meister.de (via connector) | click rate unknown → _next run_ | — | expected: click rate becomes measurable; required before any offer email |
 
 ## 7. How to refresh (exact sources)
 
@@ -163,5 +174,6 @@ select status, count(*) from subscriptions where price_paid > 0 group by 1;
 - Search Console: the `deutsch-meister.de` property is not verified on the connected
   account.
 - DataForSEO: `api.dataforseo.com` is not on this environment's network allowlist.
-- Email opens and clicks: tracking is off in Resend.
+- Email opens: open tracking is off by choice; pixels are unreliable. Clicks have been
+  tracked since 2026-09-27.
 - X-Ray traffic source: no referrer is stored.
