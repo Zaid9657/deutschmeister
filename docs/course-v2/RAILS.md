@@ -178,11 +178,14 @@ A token is known at a unit when it is one of:
    examples (after its colon, inside brackets) and its rule cards' model sentence, table rows below the header and
    `caseMarks` tokens. Card prose is metalanguage and licenses nothing, and — as with the core — a card example
    the lexicon allocates to a later unit (`Montag` on the A1.1-U1 Präsens card, allocated to U7) is not licensed early.
-5. Cast names, the file's `extras` names, glossed extras (LEX-01) — and a **one-letter token** is an option key
-   (`c`, `X`), never a word.
+5. Cast names, proper names from `registries/names.json` (below), the file's `extras` names, glossed extras
+   (LEX-01) — and a **one-letter token** is an option key (`c`, `X`), never a word.
 
 Compounds are **not** decomposed: a compound is a lexicon entry of its own (`list_ref: compound:a+b`, SCHEMA §6).
-Place names have no registry yet and count as unknown (see §8).
+**Proper names** that are not cast members come from `registries/names.json` (SCHEMA §4.9): every token of a listed
+name is known from the name's `level` on, with its genitive -s and adjectival -er (`Leipzigs`, `Leipziger`,
+`Cospudener`) and, inside a multi-word name, adjective endings (`in der Sächsischen Schweiz`); a token some lexicon
+allocates stays unknown before that unit (the lexicon outranks the list, as it outranks the core).
 
 **CON-06 while drafting.** Agents cannot re-read most primary sources through the proxy. While a unit is
 `status: "draft"`, a `partial`/`pending` fact that carries https source(s) **and** says in `notes` what was not
@@ -301,14 +304,13 @@ node scripts/course-v2/compile.mjs <level|--all> [--check] [--content <dir>] [--
 
 ## 8. Open issues at the time of writing (2026-09-27)
 
-- **Lexicon errors LEX-07 reports (lexicon owners, 2026-09-27):** `a1.2/lexicon.json` re-allocates `lx.helfen` and
-  `lx.mitkommen` (receptive in A1.1): remove both entries, add `promotions` records. `b2.2/lexicon.json` re-allocates
-  77 lemmas already allocated at B1.2 (27) or B2.1 (50): remove them (12 of the B1.2 ones become `promotions`). The
-  B1.2 and B2.1 files are right; the rule used to report both sides.
-- **A1 words allocated late** make earlier units fail LEX-01/03 by design (the lexicon outranks the core):
-  `Problem` (b1.1-u01), `Dank` (b1.1-u11), `offen` (b1.2-u08). The A1/A2 allocators should move them down.
-- **Place names** (Leipziger, Cospudener, Nikolaikirche, Kreta …) have no registry and count as unknown in LEX-01/03;
-  the SCHEMA owner should decide between an `extras`-like `names` list per file and a `registries/places.json`.
+- ~~Lexicon errors LEX-07 reports~~ — **resolved 2026-09-27** (lexicon owner): `lx.helfen`/`lx.mitkommen` left
+  a1.2 for `promotions`; the 77 b2.2 duplicates were removed (12 became `promotions`) and b2.2 refilled with 68 new
+  lemmas; `Problem`, `Dank`, `offen` and `erklären` moved down to A1 (a1.1-u06, a1.2-u03, a1.1-u07, a1.2-u01).
+  LEX-07 reports 0 blockers on all eight levels.
+- ~~Place names~~ — **resolved 2026-09-27**: `registries/names.json` (SCHEMA §4.9, 57 names at the start), read by
+  `lib-validate/lexicon.mjs` for LEX-01/LEX-03 (§3.1a) and checked by `lib/schemas/names.mjs`. A name a unit needs
+  that is not listed is still unknown: the unit's author asks the lexicon owner to add it (proper part only).
 
 - **`src/lib/course-v2/completion.js` lags the revised SCHEMA §5**: it accepts only `{ kind: 'closing' }` in
   `completion.course.required` and throws on the new `{ kind: 'halbtest' | 'modelltest', lane: 'learner', … }`
