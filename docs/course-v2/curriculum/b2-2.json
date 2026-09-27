@@ -3,13 +3,12 @@
   "code": "B2.2",
   "cefr": "B2",
   "targetExams": [
-    "Goethe-Zertifikat B2",
     "telc Deutsch B2",
-    "Deutsch-Test für den Beruf B2 (DTB, telc) – Beruf-Lane, Hinweise und ein optionaler Modelltest"
+    "Goethe-Zertifikat B2"
   ],
   "hours": {
-    "guided": 56,
-    "total": 71
+    "guided": 58,
+    "total": 72
   },
   "vocabTarget": {
     "newWords": 798,
@@ -57,22 +56,31 @@
       "vocabTheme": "Freundschaft, Nähe, digitale Beziehungen",
       "vocabTarget": 67,
       "keyWords": [
-        "die Vertrautheit",
+        "die Zuwendung",
         "die Einsamkeit",
         "die Zuneigung",
         "die Eifersucht",
         "die Bindung",
         "die Geborgenheit",
         "der Rückhalt",
-        "die Oberflächlichkeit",
         "der Freundeskreis",
+        "die Distanz",
+        "die Freundschaftsanfrage",
+        "die Loyalität",
+        "die Gegenseitigkeit",
+        "der Kontaktabbruch",
         "sich anvertrauen",
         "sich entfremden",
         "Kontakte pflegen",
         "vernachlässigen",
+        "sich zurückziehen",
+        "übelnehmen",
+        "trösten",
         "aufrichtig",
         "oberflächlich",
-        "verlässlich"
+        "verlässlich",
+        "einfühlsam",
+        "zwanglos"
       ],
       "reading": {
         "textType": "Magazinartikel: Wie viele Freunde braucht der Mensch? (6 Fragen, Mehrfachauswahl)",
@@ -149,17 +157,25 @@
         "der Zuckergehalt",
         "die Kalorienzufuhr",
         "das Übergewicht",
-        "die Zivilisationskrankheit",
         "die Lebenserwartung",
         "die Zuckersteuer",
         "der Verzehr",
         "der Zuschuss",
-        "vorsorgen",
+        "die Ernährungsweise",
+        "die Aufklärung",
+        "die Kennzeichnung",
+        "die Wirksamkeit",
+        "der Anteil",
+        "gegensteuern",
         "senken",
-        "bezuschussen",
+        "verringern",
+        "eingreifen",
+        "bevormunden",
         "ausgewogen",
         "gesundheitsbewusst",
-        "verarbeitet"
+        "verarbeitet",
+        "zuckerhaltig",
+        "verpflichtend"
       ],
       "reading": {
         "textType": "Ratgeberartikel mit Satzlücken: Kleine Schritte, große Wirkung (6 Lücken, 8 Sätze)",
@@ -236,16 +252,24 @@
         "das Mitarbeitergespräch",
         "die Arbeitsverteilung",
         "die Unzufriedenheit",
-        "die Vereinbarung",
+        "die Dienstbesprechung",
         "die Eskalation",
         "die Wertschätzung",
+        "der Vorbehalt",
+        "die Urlaubsplanung",
+        "der Kritikpunkt",
         "sich rechtfertigen",
         "einlenken",
         "entgegenkommen",
         "sich zurücknehmen",
+        "zugeben",
+        "sich durchsetzen",
+        "beharren auf",
         "konstruktiv",
         "verletzend",
-        "kompromissbereit"
+        "kompromissbereit",
+        "angespannt",
+        "verständnisvoll"
       ],
       "reading": {
         "textType": "Meinungen von Beschäftigten zur Feedbackkultur: Überschriften zuordnen",
@@ -269,8 +293,7 @@
         "Goethe B2 Lesen Teil 4",
         "telc B2 Hörverstehen Teil 2",
         "Goethe B2 Schreiben Teil 2",
-        "telc B2 Mündlicher Ausdruck Teil 3",
-        "DTB B2 Sprechen Teil 2 (Beruf-Lane)"
+        "telc B2 Mündlicher Ausdruck Teil 3"
       ],
       "landeskunde": "Betriebsrat und Mitarbeitergespräch in deutschen Betrieben"
     },
@@ -320,18 +343,26 @@
         "die Wiedergutmachung",
         "das Umzugsunternehmen",
         "der Kostenvoranschlag",
-        "die Schadensregulierung",
         "das Gutachten",
-        "die Einigung",
         "das Zugeständnis",
         "die Schadenshöhe",
+        "das Gegenangebot",
+        "die Schlichtung",
+        "die Kompensation",
+        "die Pauschale",
+        "der Kratzer",
+        "die Vertragsbedingung",
         "aufkommen für",
         "begleichen",
         "geltend machen",
-        "sich einigen auf",
+        "nachverhandeln",
         "abweichen",
+        "bestehen auf",
+        "sich weigern",
         "verbindlich",
-        "fahrlässig"
+        "fahrlässig",
+        "angemessen",
+        "unverhältnismäßig"
       ],
       "reading": {
         "textType": "Allgemeine Geschäftsbedingungen eines Umzugsunternehmens: Abschnitten Überschriften zuordnen",
@@ -348,7 +379,7 @@
       },
       "speaking": {
         "task": "Mit der Kundenberaterin eine Einigung über den Schadensersatz aushandeln: Angebot, Gegenangebot, Grenze, Ergebnis festhalten",
-        "examTeil": "telc B2 Mündlicher Ausdruck Teil 3; telc B2+ Beruf Verhandeln"
+        "examTeil": "telc B2 Mündlicher Ausdruck Teil 3"
       },
       "pronunciation": "Bestimmt und höflich: fallende Intonation bei Grenzen (Unter 400 Euro können wir uns nicht einigen.)",
       "examTeile": [
@@ -356,8 +387,7 @@
         "Goethe B2 Hören Teil 1",
         "telc B2 Hörverstehen Teil 3",
         "telc B2 Schriftlicher Ausdruck",
-        "telc B2 Mündlicher Ausdruck Teil 3",
-        "DTB B2 Hören und Schreiben (Beruf-Lane)"
+        "telc B2 Mündlicher Ausdruck Teil 3"
       ],
       "landeskunde": "Verbraucherzentralen und Schlichtungsstellen (Stand und Quelle prüfen)"
     },
@@ -366,7 +396,7 @@
       "id": "b2.2-u05",
       "title": "An der Uni: Vorlesung, Studienordnung, Referat",
       "titleEn": "At university: lecture, regulations, presentation",
-      "situation": "Sie bereiten sich auf ein Studium oder den Studienkolleg vor; Sie lesen eine Studienordnung, hören eine Einführungsvorlesung und halten ein Referat darüber, wie man ein Studium finanzieren kann.",
+      "situation": "Sie bereiten sich auf ein Studium oder den Studienkolleg vor; Sie lesen eine Studienordnung, hören eine Einführungsvorlesung und halten ein Referat darüber, wie man während des Studiums am besten wohnt.",
       "handlungsfeld": "Aus- und Weiterbildung (RC 4) · Studium (Sicher! aktuell B2 L9) · Goethe-B2-Thema Bildung",
       "unitType": "texttype",
       "canDo": [
@@ -399,11 +429,11 @@
           "lehrwerk": "Aspekte neu B2 K9"
         }
       ],
-      "vocabTheme": "Studium, Hochschule, Studienfinanzierung",
+      "vocabTheme": "Studium, Hochschule, studentisches Wohnen",
       "vocabTarget": 68,
       "keyWords": [
         "die Studienordnung",
-        "die Einschreibung",
+        "die Einschreibung (Hochschule)",
         "der Leistungsnachweis",
         "die Hausarbeit",
         "das Referat",
@@ -413,11 +443,20 @@
         "die Regelstudienzeit",
         "der Abgabetermin",
         "die Modulprüfung",
-        "sich einschreiben",
+        "der Studiengang",
+        "die Gliederung",
+        "das Zitat",
+        "die Fristverlängerung",
+        "das Studentenwohnheim",
+        "die Zwischenmiete",
+        "die Studienberatung",
         "sich immatrikulieren",
         "anrechnen",
         "zulassungsbeschränkt",
-        "fachspezifisch"
+        "fachspezifisch",
+        "akademisch",
+        "erschwinglich",
+        "vorzeitig"
       ],
       "reading": {
         "textType": "Auszug aus einer Studienordnung: Abschnitten Überschriften zuordnen",
@@ -433,7 +472,7 @@
         "examTeil": "Goethe B2 Schreiben Teil 2"
       },
       "speaking": {
-        "task": "Referat (≈ 4 Min.): Wie finanziert man ein Studium? Mehrere Möglichkeiten, eine genauer, Vor- und Nachteile, Bewertung; danach Fragen beantworten",
+        "task": "Referat (≈ 4 Min.): Wohnen im Studium – Wohnheim, Wohngemeinschaft, eigene Wohnung oder bei den Eltern? Mehrere Möglichkeiten, eine genauer, Vor- und Nachteile, Bewertung; danach Fragen beantworten",
         "examTeil": "Goethe B2 Sprechen Teil 1"
       },
       "pronunciation": "Lange Nominalgruppen gliedern: Wortgruppenakzent und Pausen (die Finanzierung | des Studiums | durch ein Stipendium)",
@@ -490,19 +529,28 @@
         "die Inszenierung",
         "die Verfilmung",
         "die Hauptfigur",
-        "der Regisseur",
+        "das Drehbuch",
         "die Rezension",
         "die Besetzung",
         "die Uraufführung",
         "das Kulturangebot",
         "die Gattung",
         "die Spannung",
-        "beeindrucken",
+        "die Filmmusik",
+        "die Kulisse",
+        "die Subvention",
+        "der Schriftsteller",
+        "die Leinwand",
+        "begeistern",
         "sich auseinandersetzen mit",
         "darstellen",
+        "fesseln",
         "berührend",
         "anspruchsvoll",
-        "sehenswert"
+        "sehenswert",
+        "langatmig",
+        "gelungen",
+        "empfehlenswert"
       ],
       "reading": {
         "textType": "Fünf Kulturmeldungen und zehn Überschriften (zuordnen)",
@@ -574,7 +622,6 @@
       "keyWords": [
         "der Zeitzeuge",
         "die Erinnerungskultur",
-        "das Gedenken",
         "die Gedenkstätte",
         "die Überlieferung",
         "die Epoche",
@@ -583,13 +630,21 @@
         "der Mauerfall",
         "die Aufarbeitung",
         "das Archiv",
-        "überliefern",
-        "aufarbeiten",
-        "gedenken",
-        "bezeugen",
+        "das Opfer",
+        "der Zeitraum",
+        "die Diktatur",
+        "die Verfolgung",
+        "die Zäsur",
+        "die Nachkriegszeit",
+        "das Jahrzehnt",
+        "verschweigen",
+        "sich ereignen",
         "zeitgeschichtlich",
         "angeblich",
-        "nachweislich"
+        "historisch",
+        "glaubhaft",
+        "fragwürdig",
+        "damalig"
       ],
       "reading": {
         "textType": "Zeitungsbericht über ein Zeitzeugenprojekt (6 Fragen, Mehrfachauswahl)",
@@ -621,10 +676,10 @@
     {
       "nr": 8,
       "id": "b2.2-u08",
-      "title": "Angehörige informieren: Merkblätter verständlich machen",
-      "titleEn": "Informing relatives: making leaflets understandable",
-      "situation": "Sie arbeiten in einem ambulanten Pflegedienst; eine Angehörige beschwert sich, ruft an und versteht ein Merkblatt zur Pflegeversicherung nicht – Sie antworten im Auftrag der Leitung und erklären das Merkblatt in einfachen Worten.",
-      "handlungsfeld": "Arbeit (RC 2) · Gesundheit (RC 8) · Banken/Versicherungen (RC 5) · Pflege als Arbeitsfeld (memo 10 impl. 5) · Mediation",
+      "title": "Patienten gut informieren: Anfragen, Beschwerden, Merkblätter",
+      "titleEn": "Informing patients well: enquiries, complaints, leaflets",
+      "situation": "Sie arbeiten am Empfang einer Hausarztpraxis, die auf Online-Terminvergabe und Videosprechstunde umstellt; eine ältere Patientin beschwert sich, dass sie telefonisch niemanden erreicht, und versteht das neue Merkblatt nicht – Sie antworten im Auftrag der Praxisleitung und erklären das Merkblatt in einfachen Worten.",
+      "handlungsfeld": "Arbeit (RC 2) · Gesundheit (RC 8) · Gesundheit als Arbeitsfeld (memo 10 impl. 5; Blueprint ALL-06) · Mediation",
       "unitType": "texttype",
       "canDo": [
         {
@@ -632,78 +687,84 @@
           "source": "05-cando-b1-b2 B2.2 #9 · SB B2 Mediation"
         },
         {
-          "de": "Ich kann eine Kundenbeschwerde im Auftrag meiner Vorgesetzten schriftlich beantworten und dabei alle Anweisungen umsetzen.",
-          "source": "≈ 03-exams-b2 §3 · DTB Lesen und Schreiben"
+          "de": "Ich kann eine Beschwerde im Auftrag meiner Vorgesetzten schriftlich beantworten und dabei alle Vorgaben umsetzen.",
+          "source": "≈ 03-exams-b2 §7 (formelle E-Mail: Antwort an eine Kundin) · telc B2 Schriftlicher Ausdruck"
         },
         {
-          "de": "Ich kann einem Telefonat die wichtigen Informationen entnehmen und eine Telefonnotiz schreiben.",
-          "source": "≈ 03-exams-b2 §3 · DTB Hören und Schreiben"
+          "de": "Ich kann kurze Gespräche am Empfang und am Telefon verstehen, auch wenn ich sie nur einmal höre.",
+          "source": "≈ 05-cando-b1-b2 B2.1 #7 · GI-B2 Hören T1"
         },
         {
-          "de": "Ich kann in einem Kundengespräch Vor- und Nachteile erläutern und meine Vorgehensweise begründen.",
+          "de": "Ich kann in einem Gespräch mit Patientinnen und Kunden Vor- und Nachteile erläutern und meine Vorgehensweise begründen.",
           "source": "05-cando-b1-b2 B2.2 #7 · KK-B2 Groblernziel 35"
         }
       ],
       "grammar": [
         {
-          "point": "Nominalstil in Verbalstil zurückführen: Merkblatt- und Amtssprache für Laien umformulieren (Bei Beantragung der Leistung … → Wenn Sie die Leistung beantragen, …)",
+          "point": "Nominalstil in Verbalstil zurückführen: Merkblatt- und Amtssprache für Laien umformulieren (Bei Nichterscheinen ohne Absage … → Wenn Sie nicht kommen und nicht absagen, …)",
           "new": false,
           "lehrwerk": "Transfer von E5 (Aspekte neu B2 K9; Sicher! aktuell B2 L5/L8)"
         },
         {
-          "point": "Handlungsanweisungen wiedergeben: sein + zu, haben + zu, sollen (Der Antrag ist bis … zu stellen → Sie müssen den Antrag bis … stellen.) – Wiederholung",
+          "point": "Handlungsanweisungen wiedergeben: sein + zu, haben + zu, sollen (Termine sind bis 24 Stunden vorher abzusagen. → Sie müssen den Termin einen Tag vorher absagen.) – Wiederholung",
           "new": false,
           "lehrwerk": "B2.1 E6 (Aspekte neu B2 K5)"
         }
       ],
-      "vocabTheme": "Pflegeversicherung, ambulante Pflege, Kundenkontakt",
+      "vocabTheme": "Praxisalltag, Patientenkontakt, digitale Terminvergabe",
       "vocabTarget": 67,
       "keyWords": [
-        "die Pflegeversicherung",
-        "der Pflegegrad",
-        "die Pflegeleistung",
-        "der Pflegedienst",
-        "die Kurzzeitpflege",
-        "die Entlastung",
         "das Merkblatt",
         "der Hausbesuch",
-        "die Begutachtung",
-        "der Eigenanteil",
-        "die Kostenübernahme",
-        "entlasten",
-        "zuzahlen",
+        "die Terminvergabe",
+        "die Videosprechstunde",
+        "die Warteschleife",
+        "die Praxisleitung",
+        "die Versichertenkarte",
+        "die Krankschreibung",
+        "das Folgerezept",
+        "die Einwilligung",
+        "der Datenschutz",
+        "die Dringlichkeit",
+        "die Wartezeit",
+        "die Patientenakte",
+        "die Zuzahlung",
         "erläutern",
+        "vertrösten",
+        "sich gedulden",
+        "verweisen an",
+        "entgegennehmen",
         "ambulant",
         "stationär",
-        "pflegebedürftig"
+        "telefonisch",
+        "barrierefrei",
+        "vorrangig"
       ],
       "reading": {
-        "textType": "Anzeigen mit Entlastungsangeboten für pflegende Angehörige (10 Situationen, 12 Anzeigen, „x“ möglich)",
+        "textType": "Anzeigen mit Kursen, Beratungs- und Selbsthilfeangeboten für Patientinnen und Patienten (10 Situationen, 12 Anzeigen, „x“ möglich)",
         "words": 1000
       },
       "listening": {
-        "textType": "Anruf einer Angehörigen beim Pflegedienst → Telefonnotiz; dazu fünf kurze Alltagsgespräche (einmal gehört)",
+        "textType": "Fünf kurze Gespräche am Empfang und am Telefon der Praxis (einmal gehört)",
         "seconds": 300
       },
       "writing": {
-        "task": "Antwort-E-Mail an eine Angehörige, die sich beschwert, im Auftrag der Pflegedienstleitung: alle Anweisungen umsetzen, eine Lösung anbieten",
+        "task": "Halbformelle E-Mail an eine Patientin im Auftrag der Praxisleitung: 3 von 4 Leitpunkten (Entschuldigung, die neue Terminvergabe erklären, telefonische Sprechzeiten anbieten, um Rückmeldung bitten), mit Betreff, Anrede und Gruß",
         "words": 150,
-        "examTeil": "DTB B2 Lesen und Schreiben; Register und Aufbau wie telc B2 Schriftlicher Ausdruck"
+        "examTeil": "telc B2 Schriftlicher Ausdruck"
       },
       "speaking": {
-        "task": "Ein Merkblatt zur Pflegeversicherung in höchstens einer Minute für eine Angehörige zusammenfassen, dann die Möglichkeiten mit ihr abwägen",
-        "examTeil": "telc B2 Mündlicher Ausdruck Teil 2; DTB B2 Sprechen Teil 1C"
+        "task": "Das Merkblatt zur Online-Terminvergabe und Videosprechstunde in höchstens einer Minute für die Patientin zusammenfassen, dann die Möglichkeiten mit ihr abwägen",
+        "examTeil": "telc B2 Mündlicher Ausdruck Teil 2"
       },
       "pronunciation": "Erklärstil: langsamer, Akzent auf Schlüsselwörtern, kurze Sinneinheiten",
       "examTeile": [
         "telc B2 Leseverstehen Teil 3",
         "Goethe B2 Hören Teil 1",
-        "DTB B2 Lesen und Schreiben (Beruf-Lane)",
-        "DTB B2 Hören und Schreiben (Beruf-Lane)",
-        "telc B2 Mündlicher Ausdruck Teil 2",
-        "DTB B2 Sprechen Teil 1C (Beruf-Lane)"
+        "telc B2 Schriftlicher Ausdruck",
+        "telc B2 Mündlicher Ausdruck Teil 2"
       ],
-      "landeskunde": "Pflegeversicherung und Pflegegrade (Stand prüfen; keine Rechts- oder Leistungsberatung)"
+      "landeskunde": "Terminvergabe, Videosprechstunde und elektronische Krankschreibung in der Hausarztpraxis (Quelle, Stand und Ausnahmen prüfen; keine medizinische oder Leistungsberatung)"
     },
     {
       "nr": 9,
@@ -738,9 +799,9 @@
           "lehrwerk": "Aspekte neu B2 K10; Sicher! aktuell B2 L8–9/L12 (06 F3 B2.2 #6, strong)"
         },
         {
-          "point": "Konsekutive und adversative Konnektoren: folglich, infolgedessen, so … dass; wohingegen, während, hingegen",
+          "point": "Konsekutive und adversative Konnektoren: folglich, infolgedessen; wohingegen, hingegen, adversatives während (so … dass / sodass sind Wiederholung aus B1.2 E5)",
           "new": true,
-          "lehrwerk": "Aspekte neu B2 K10; Sicher! aktuell B2 L8–9/L12; sodass Menschen B1 L20"
+          "lehrwerk": "Aspekte neu B2 K10; Sicher! aktuell B2 L8–9/L12; sodass: Menschen B1 L20, b1-2 E5"
         }
       ],
       "vocabTheme": "Stadtentwicklung, Verkehr, Bürgerbeteiligung",
@@ -757,9 +818,17 @@
         "die Abwanderung",
         "der Lieferverkehr",
         "der ländliche Raum",
+        "der Leerstand",
+        "die Lärmbelastung",
+        "die Mobilität",
+        "die Einschränkung",
+        "die Umgestaltung",
         "verdrängen",
         "beleben",
         "ausbauen",
+        "gefährden",
+        "abwägen",
+        "veröden",
         "zugänglich",
         "autofrei",
         "lebenswert"
@@ -814,7 +883,7 @@
         },
         {
           "de": "Ich kann in einem Diskussionsforum im Intranet einen Vorschlag begründen, meine Beiträge mit denen anderer verbinden und mit Meinungsverschiedenheiten umgehen.",
-          "source": "≈ 05-cando-b1-b2 B2.1 #14 · SB B2 Online-Interaktion; DTB Schreiben (Forumsbeitrag)"
+          "source": "≈ 05-cando-b1-b2 B2.1 #14 · SB B2 Online-Interaktion; GI-B2 Schreiben T1"
         }
       ],
       "grammar": [
@@ -842,13 +911,21 @@
         "der Arbeitsplatzverlust",
         "die Transparenz",
         "die Arbeitserleichterung",
-        "automatisieren",
+        "die Akzeptanz",
+        "die Regulierung",
+        "das Werkzeug",
+        "die Routineaufgabe",
+        "die Umstellung",
         "überwachen",
-        "einsetzen",
+        "einsetzen (Werkzeuge)",
         "vereinfachen",
+        "generieren",
+        "analysieren",
         "fehleranfällig",
         "datenbasiert",
-        "zukunftsfähig"
+        "zukunftsfähig",
+        "riskant",
+        "absehbar"
       ],
       "reading": {
         "textType": "Fachartikel mit Satzlücken: Wie KI die Büroarbeit verändert (6 Lücken, 8 Sätze)",
@@ -859,32 +936,31 @@
         "seconds": 210
       },
       "writing": {
-        "task": "Beitrag im Intranet: Welche KI-Werkzeuge soll die Abteilung einführen? Vorschlag, Begründung, Einwände, Fazit",
+        "task": "Beitrag im Intranet-Forum: Welche KI-Werkzeuge soll die Abteilung einführen? Vorschlag, Begründung, Einwände, Fazit (4 Leitpunkte, Einleitung und Schluss)",
         "words": 150,
-        "examTeil": "DTB B2 Schreiben (Forumsbeitrag im Intranet); Aufbau wie Goethe B2 Schreiben Teil 1"
+        "examTeil": "Goethe B2 Schreiben Teil 1"
       },
       "speaking": {
         "task": "Präsentation (≈ 4 Min.) für die Abteilung: drei KI-Werkzeuge, eines genauer, Vor- und Nachteile, Empfehlung; dann Fragen beantworten",
-        "examTeil": "Goethe B2 Sprechen Teil 1; DTB B2 Sprechen Teil 1A"
+        "examTeil": "Goethe B2 Sprechen Teil 1"
       },
       "pronunciation": "Lange Attributgruppen sprechen: den Spannungsbogen vom Artikel bis zum Nomen halten",
       "examTeile": [
         "Goethe B2 Lesen Teil 2",
         "telc B2 Leseverstehen Teil 2",
         "Goethe B2 Hören Teil 2",
-        "Goethe B2 Sprechen Teil 1",
-        "DTB B2 Schreiben Forumsbeitrag (Beruf-Lane)",
-        "DTB B2 Sprechen Teil 1A (Beruf-Lane)"
+        "Goethe B2 Schreiben Teil 1",
+        "Goethe B2 Sprechen Teil 1"
       ],
       "landeskunde": "Mitbestimmung bei neuer Technik: die Rolle des Betriebsrats"
     },
     {
       "nr": 11,
       "id": "b2.2-u11",
-      "title": "Abrechnung, Widerspruch, Kündigung: formell schreiben",
-      "titleEn": "Bills, objections, cancellations: writing formally",
-      "situation": "Ihr Energieversorger schickt eine fehlerhafte Jahresabrechnung und kündigt eine Preiserhöhung an; Sie lesen Stellungnahmen, hören die Nachrichten, beschweren sich formell mit Forderung und kündigen fristgerecht.",
-      "handlungsfeld": "Wohnen (RC 12) · Verträge, Banken/Versicherungen (RC 5) · Ämter und Behörden (RC 1)",
+      "title": "Bescheid, Widerspruch, Kündigung: formell schreiben",
+      "titleEn": "Official decisions, objections, cancellations: writing formally",
+      "situation": "Eine Behörde lehnt Ihren Antrag auf einen Zuschuss ab, weil angeblich ein Nachweis fehlt, und Sie wollen außerdem einen Vertrag fristgerecht kündigen; Sie lesen Meinungen zum Amtsdeutsch, hören die Lokalnachrichten, legen begründet Widerspruch ein und formulieren eine Kündigung.",
+      "handlungsfeld": "Ämter und Behörden (RC 1) · Verträge (RC 5) · Goethe-B2-Thema Politik/Gesellschaft",
       "unitType": "texttype",
       "canDo": [
         {
@@ -911,50 +987,58 @@
           "lehrwerk": "Aspekte neu B2 K10; Sicher! aktuell B2 L8–9/L12 (06 F3 B2.2 #6, strong); wegen/trotz/während Menschen B1 L12"
         },
         {
-          "point": "Nominalstil im Geschäftsbrief (Um Prüfung der Abrechnung wird gebeten.) – Wiederholung aus E5",
+          "point": "Nominalstil im formellen Schreiben (Um erneute Prüfung des Antrags wird gebeten.) – Wiederholung aus E5",
           "new": false,
           "lehrwerk": "Aspekte neu B2 K9"
         }
       ],
-      "vocabTheme": "Verträge, Abrechnungen, Behördensprache",
+      "vocabTheme": "Bescheide, Widerspruch, Behördensprache",
       "vocabTarget": 68,
       "keyWords": [
-        "die Jahresabrechnung",
-        "der Energieversorger",
-        "die Preiserhöhung",
-        "das Sonderkündigungsrecht",
+        "der Bescheid",
+        "das Aktenzeichen",
+        "die Überprüfung",
+        "die Anlage",
+        "der Antragsteller",
         "die Widerspruchsfrist",
-        "die Nachzahlung",
-        "der Abschlag",
-        "der Zählerstand",
-        "die Verbrauchsabrechnung",
-        "die Fristsetzung",
         "die Vertragslaufzeit",
-        "zurückfordern",
+        "das Sonderkündigungsrecht",
+        "die Kündigungsbestätigung",
+        "das Amtsdeutsch",
+        "die Ablehnung",
+        "der Sachverhalt",
+        "das Versehen",
+        "die Bürokratie",
+        "einlegen",
+        "beifügen",
+        "nachreichen",
         "berichtigen",
         "anfechten",
+        "zurückfordern",
         "fristgerecht",
         "unverzüglich",
-        "nachvollziehbar"
+        "nachvollziehbar",
+        "ordnungsgemäß",
+        "hiermit"
       ],
       "reading": {
-        "textType": "Stellungnahmen von Verbraucherinnen und Verbrauchern zu Preiserhöhungen: Überschriften zuordnen",
+        "textType": "Meinungen zum Amtsdeutsch: Sollen Behörden in einfacher Sprache schreiben? (Überschriften zuordnen)",
         "words": 360
       },
       "listening": {
-        "textType": "Wirtschaftsnachrichten im Radio (Richtig/Falsch, einmal gehört)",
+        "textType": "Lokalnachrichten im Radio: Bürgeramt, Online-Anträge, Bearbeitungszeiten (Richtig/Falsch, einmal gehört)",
         "seconds": 220
       },
       "writing": {
-        "task": "Formelle Beschwerde-E-Mail an den Energieversorger: Fehler darlegen, Berichtigung fordern, Frist setzen (3 von 4 Leitpunkten oder 2 + eigener, mindestens 150 Wörter)",
+        "task": "Widerspruch gegen einen Ablehnungsbescheid, formelle E-Mail an die Sachbearbeiterin: Aktenzeichen nennen, den Sachverhalt richtigstellen, den fehlenden Nachweis nachreichen, um Abhilfe und erneute Prüfung bitten (3 von 4 Leitpunkten oder 2 + eigener, mindestens 150 Wörter); wo die Behörde eine E-Mail nicht als Widerspruch annimmt, geht dasselbe Schreiben unterschrieben als Brief",
         "words": 160,
         "examTeil": "telc B2 Schriftlicher Ausdruck"
       },
       "speaking": {
-        "task": "Einen Zeitungstext über steigende Energiepreise in höchstens einer Minute zusammenfassen, dann Maßnahmen diskutieren",
+        "task": "Einen Zeitungstext über Amtsdeutsch und einfache Sprache in Behörden in höchstens einer Minute zusammenfassen, dann Maßnahmen diskutieren",
         "examTeil": "telc B2 Mündlicher Ausdruck Teil 2"
       },
-      "pronunciation": "Formelle Texte vorlesen: Genitivendungen und Präpositionen deutlich (aufgrund der hohen Kosten)",
+      "pronunciation": "Formelle Texte vorlesen: Genitivendungen und Präpositionen deutlich (aufgrund des fehlenden Nachweises)",
       "examTeile": [
         "Goethe B2 Lesen Teil 4",
         "telc B2 Leseverstehen Teil 3",
@@ -963,7 +1047,7 @@
         "telc B2 Schriftlicher Ausdruck",
         "telc B2 Mündlicher Ausdruck Teil 2"
       ],
-      "landeskunde": "Widerspruch und Kündigungsfristen bei Energieverträgen (keine Rechtsberatung; Stand prüfen)"
+      "landeskunde": "Bescheid und Widerspruch: Frist, Form (schriftlich mit Unterschrift oder über den elektronischen Weg, den die Behörde anbietet; eine einfache E-Mail genügt oft nicht), Beratungsstellen; Kündigungsfristen bei Verträgen (Quelle, Stand und Ausnahmen prüfen; keine Rechtsberatung)"
     },
     {
       "nr": 12,
@@ -1013,15 +1097,21 @@
         "die Varietät",
         "die Sprachgemeinschaft",
         "das Klischee",
+        "die Sprachgrenze",
         "die Umgangssprache",
         "die Sprachpolitik",
-        "die Moderation",
         "der Redebeitrag",
+        "die Wortmeldung",
+        "die Eigenart",
         "moderieren",
         "vermitteln",
         "sich verständigen",
+        "überleiten",
+        "aufgreifen",
+        "einbeziehen",
+        "zu Wort kommen",
         "regional",
-        "mehrsprachig"
+        "verbreitet"
       ],
       "reading": {
         "textType": "Vier Forumsbeiträge: Soll Dialekt in der Schule Platz haben? (9 Aussagen Personen zuordnen)",
@@ -1086,7 +1176,7 @@
     }
   ],
   "levelTest": {
-    "format": "Vollständiger Modelltest im Format Goethe-Zertifikat B2 (Lesen 5 Teile/65 Min., Hören 4 Teile/≈ 40 Min., Schreiben 2 Teile/75 Min., ohne Pause; Sprechen 2 Teile nach 15 Min. Vorbereitung, mit KI-Partner); im telc-Track vollständig im Format telc Deutsch B2 (Leseverstehen + Sprachbausteine 90 Min., Hörverstehen ≈ 20 Min., Schriftlicher Ausdruck 30 Min.; Mündlicher Ausdruck 3 Teile nach 20 Min. Vorbereitung). Dritter voller Modelltest der Stufe; DTB B2 als optionaler Beruf-Satz. Ergebnis als Übungswert nach der Bestehensregel der gewählten Prüfung (Goethe: je Modul ≥ 60; telc: ≥ 135/225 schriftlich und ≥ 45/75 mündlich), nie als Prüfungsergebnis.",
+    "format": "Modelltest C: dritter voller Modelltest der Prüfungswochen (Parallelform) im Format der Prüfungsspur, die beim Onboarding einmal gewählt wird und für alle Kurse gilt; ohne Wahl: telc Deutsch B2 (Primärspur): Leseverstehen + Sprachbausteine 90 Min., Hörverstehen ≈ 20 Min. (alles einmal gehört), Schriftlicher Ausdruck 30 Min. (E-Mail, 3 von 4 Leitpunkten oder 2 + eigener, mindestens 150 Wörter), Mündlicher Ausdruck 3 Teile nach 20 Min. Vorbereitung. Spur Goethe-Zertifikat B2 (Spur-Paket mit Modelltest A und B; C folgt in v1.1): Lesen 65 Min., Hören ≈ 40 Min., Schreiben 75 Min., Sprechen 2 Teile nach 15 Min. Vorbereitung. Prüfungspfad (Blueprint §5.4): Diagnose in Woche 1, Modelltest A nach Lektion 12, Reparaturwoche, Modelltest B, Reparaturwoche, Modelltest C; standardmäßig 21, 14 und 7 Tage vor dem Prüfungstermin; in den letzten 7 Tagen kein neuer Stoff. Im Sprechen übernimmt die KI die Rolle der Prüferin und der Partnerin; die Auswertung ist eine automatische Übungsbewertung. Ergebnis als Übungswerte je Prüfungsteil und je Modul mit der Grenze nach der Bestehensregel der Spur (telc: 135 von 225 schriftlich und 45 von 75 mündlich; Goethe: je Modul 60 von 100), ohne Gesamturteil und ohne Prognose, nie als Prüfungsergebnis.",
     "sections": [
       "Lesen",
       "Hören",

@@ -3,13 +3,12 @@
   "code": "B2.1",
   "cefr": "B2",
   "targetExams": [
-    "Goethe-Zertifikat B2",
     "telc Deutsch B2",
-    "Deutsch-Test für den Beruf B2 (DTB, telc) – Beruf-Lane, nur Hinweise und Fokus-Aufgaben"
+    "Goethe-Zertifikat B2"
   ],
   "hours": {
-    "guided": 50,
-    "total": 65
+    "guided": 42,
+    "total": 55
   },
   "vocabTarget": {
     "newWords": 800,
@@ -21,8 +20,8 @@
       "id": "b2.1-u01",
       "title": "Heimat ist …: Forumsbeiträge über das Ankommen",
       "titleEn": "Home is …: forum posts about settling in",
-      "situation": "In einem Online-Forum für Zugezogene diskutieren Menschen, was Heimat für sie bedeutet; Sie lesen die Beiträge, antworten mit einem eigenen Beitrag und erzählen im Gespräch von einem Ort, der Ihnen wichtig ist.",
-      "handlungsfeld": "Soziale Kontakte (BSK A) · Umgang mit der Migrationssituation (RC) · Goethe-B2-Thema Persönliches",
+      "situation": "Ein Kulturmagazin fragt in seinem Leserforum: Braucht der Mensch eine Heimat – und ist sie ein Ort, ein Gefühl oder ein Kreis von Menschen? Sie lesen die Beiträge, antworten mit einem eigenen, begründeten Beitrag und erzählen im Gespräch von einem Ort, der Ihnen wichtig ist.",
+      "handlungsfeld": "Soziale Kontakte (BSK A) · Gefühle und Meinungen (HF B) · Goethe-B2-Thema Persönliches",
       "unitType": "texttype",
       "canDo": [
         {
@@ -30,7 +29,7 @@
           "source": "05-cando-b1-b2 B2.1 #3 · ≈ GI-B2 Lesen T1/T4"
         },
         {
-          "de": "Ich kann in einem Forumsbeitrag meine Meinung zu einem persönlichen Thema äußern, begründen und auf andere Beiträge Bezug nehmen.",
+          "de": "Ich kann in einem Forumsbeitrag zu einem abstrakten Begriff wie „Heimat“ Stellung nehmen, meine Meinung begründen und auf andere Beiträge Bezug nehmen.",
           "source": "05-cando-b1-b2 B2.1 #2 (≈, auf B2.1-Länge verkürzt) · GI-B2 Schreiben T1"
         },
         {
@@ -44,9 +43,14 @@
       ],
       "grammar": [
         {
-          "point": "Wortstellung im Mittelfeld: temporal – kausal – modal – lokal; Pronomen vor Nomen; Dativ vor Akkusativ (Ich habe es ihr damals aus Heimweh sofort erzählt.)",
+          "point": "Wortstellung im Mittelfeld: Angaben in der Reihenfolge temporal – kausal – modal – lokal (Ich bin damals aus Heimweh mit dem Zug nach Hause gefahren.)",
           "new": true,
           "lehrwerk": "Aspekte neu B2 K1; Sicher! aktuell B2 L1 (06 F3 B2.1 #1, strong)"
+        },
+        {
+          "point": "Objekte im Mittelfeld: Pronomen vor Nomen, Dativ vor Akkusativ, jetzt zusammen mit Angaben (Ich habe es ihr damals sofort erzählt.) – Wiederholung aus A2.1 E12",
+          "new": false,
+          "lehrwerk": "A2.1 E12; Aspekte neu B2 K1"
         },
         {
           "point": "Negation als System: Satz- und Teilnegation, Stellung von nicht im Mittelfeld, nicht mehr / noch nicht / gar nicht (Grundregel seit A1.1 E8)",
@@ -59,7 +63,6 @@
       "keyWords": [
         "die Zugehörigkeit",
         "die Selbstwahrnehmung",
-        "die Entwurzelung",
         "die Fremdheit",
         "die Verbundenheit",
         "die Wurzel",
@@ -67,23 +70,33 @@
         "die Anpassung",
         "die Mentalität",
         "das Ritual",
-        "sich einleben",
-        "sich verbunden fühlen",
+        "die Sehnsucht",
+        "das Heimatgefühl",
+        "der Ursprung",
+        "das Brauchtum",
+        "die Kindheitserinnerung",
         "sich identifizieren mit",
+        "Bezug nehmen auf",
+        "bewahren",
+        "loslassen",
+        "Fuß fassen",
         "verwurzelt",
-        "heimisch",
-        "befremdlich"
+        "zwiespältig",
+        "weltoffen",
+        "überholt",
+        "ortsgebunden",
+        "vielschichtig"
       ],
       "reading": {
-        "textType": "Forumsbeiträge: Was ist für Sie Heimat? (4 Personen, 9 Aussagen zuordnen)",
+        "textType": "Leserforum eines Kulturmagazins: Braucht der Mensch eine Heimat? (4 Personen, 9 Aussagen zuordnen)",
         "words": 440
       },
       "listening": {
-        "textType": "Fünf kurze Alltagsgespräche beim Umzug und im neuen Viertel (einmal gehört)",
+        "textType": "Fünf kurze Alltagsgespräche über Heimatbesuche, Lieblingsorte und Traditionen (einmal gehört)",
         "seconds": 240
       },
       "writing": {
-        "task": "Forumsbeitrag: Heimat – ein Ort oder ein Gefühl? (3 Leitpunkte, Einleitung und Schluss)",
+        "task": "Beitrag im Leserforum: Heimat – ein Ort, ein Gefühl oder Menschen? Stellung nehmen, auf einen anderen Beitrag Bezug nehmen, eine Gegenposition nennen (3 Leitpunkte, Einleitung und Schluss)",
         "words": 100,
         "examTeil": "Goethe B2 Schreiben Teil 1"
       },
@@ -151,13 +164,22 @@
         "die Höflichkeitsform",
         "das Anliegen",
         "der Redeanteil",
+        "die Klarstellung",
+        "die Rückfrage",
+        "die Wortwahl",
+        "die Andeutung",
+        "die Zurückhaltung",
         "unterbrechen",
         "nachhaken",
         "aneinander vorbeireden",
         "ansprechen",
         "sich ausdrücken",
+        "umschreiben",
+        "sich verständlich machen",
         "taktvoll",
-        "respektvoll"
+        "respektvoll",
+        "vorwurfsvoll",
+        "zweideutig"
       ],
       "reading": {
         "textType": "Magazinartikel mit Satzlücken: Warum wir aneinander vorbeireden (4 Lücken, 6 Sätze)",
@@ -189,88 +211,96 @@
     {
       "nr": 3,
       "id": "b2.1-u03",
-      "title": "Arbeit ist das halbe Leben? Neue Arbeitszeitmodelle",
-      "titleEn": "Is work half of life? New working-time models",
-      "situation": "Ihr Betrieb testet flexible Arbeitszeiten und Homeoffice; Sie lesen Berichte aus anderen Firmen, hören die Wirtschaftsnachrichten und bitten Ihren Vorgesetzten schriftlich um eine Regelung für Ihre Situation.",
-      "handlungsfeld": "Arbeit (RC 2 · BSK IV Arbeitsplatz) · Goethe-B2-Thema Alltag/Arbeit",
+      "title": "Arbeit ist das halbe Leben? Vertrag, Gehalt, Abrechnung",
+      "titleEn": "Is work half of life? Contract, pay and pay slip",
+      "situation": "Sie haben eine neue Stelle und prüfen Arbeitsvertrag und erste Gehaltsabrechnung; Sie lesen Erfahrungsberichte, hören die Wirtschaftsnachrichten, fragen schriftlich in der Personalabteilung nach und diskutieren, ob Gehälter im Betrieb offen sein sollten.",
+      "handlungsfeld": "Arbeit (RC 2 · BSK IV Arbeitsplatz) · Banken/Versicherungen (RC 5: Lohnabrechnung) · Goethe-B2-Thema Alltag/Arbeit",
       "unitType": "texttype",
       "canDo": [
         {
-          "de": "Ich kann einen Standpunkt zu einer aktuellen Frage erläutern und Vor- und Nachteile verschiedener Möglichkeiten angeben.",
-          "source": "05-cando-b1-b2 B2.1 #1 · SB B2"
+          "de": "Ich kann einer Lohn- oder Gehaltsabrechnung Detailinformationen entnehmen.",
+          "source": "05-cando-b1-b2 B2.1 #11 · BSK 38.1 B1/B2"
         },
         {
-          "de": "Ich kann kurzen Berichten die Hauptaussage entnehmen und passende Überschriften zuordnen.",
-          "source": "≈ 03-exams-b2 §2 · telc B2 Leseverstehen T1"
+          "de": "Ich kann relativ spontan und fließend Nachfragen zu einem Arbeitsvertrag stellen.",
+          "source": "05-cando-b1-b2 B2.1 #11 · BSK 36.2 B2"
         },
         {
-          "de": "Ich kann den Inhalt eines Zeitungsartikels kurz zusammenfassen und anschließend darüber diskutieren.",
-          "source": "≈ 03-exams-b2 §2 · telc B2 Mündlicher Ausdruck T2"
+          "de": "Ich kann den Inhalt eines Zeitungsartikels kurz zusammenfassen, einen Standpunkt dazu erläutern und Vor- und Nachteile verschiedener Möglichkeiten angeben.",
+          "source": "05-cando-b1-b2 B2.1 #1 · SB B2; ≈ 03-exams-b2 §2 · telc B2 Mündlicher Ausdruck T2"
         },
         {
-          "de": "Ich kann einem Vorgesetzten meine Lage beschreiben, um eine Lösung bitten und den Grad an Formalität den Umständen anpassen.",
-          "source": "05-cando-b1-b2 B2.1 #10 · BSK-Qualifikator B2 (05 §2.3)"
+          "de": "Ich kann der Personalabteilung schriftlich ein Problem mit meiner Abrechnung schildern, um Prüfung bitten und den Grad an Formalität den Umständen anpassen.",
+          "source": "≈ 05-cando-b1-b2 B2.1 #10 · GI-B2 Schreiben T2; BSK-Qualifikator B2 (05 §2.3)"
         }
       ],
       "grammar": [
         {
-          "point": "Infinitivsätze und dass-Sätze: wann beide möglich sind, wann nur einer (Ich hoffe, früher gehen zu können. / Ich hoffe, dass die Regel bleibt.)",
+          "point": "Infinitivsätze und dass-Sätze: wann beide möglich sind, wann nur einer (Ich bitte Sie, die Abrechnung zu prüfen. / Ich gehe davon aus, dass die Überstunden ausgezahlt werden.)",
           "new": true,
           "lehrwerk": "Aspekte neu B2 K3; Sicher! aktuell B2 L3 (06 F3 B2.1 #4, strong); zu-Infinitiv Menschen B1 L7, Schritte plus Neu 5 L5"
         },
         {
-          "point": "Infinitiv Perfekt und Infinitiv Passiv (Ich bin froh, die Probezeit bestanden zu haben. Die Aufgabe muss bis Freitag erledigt werden.)",
+          "point": "Infinitiv Passiv und Infinitiv Perfekt im zu-Satz (Ich hoffe, unbefristet übernommen zu werden. Ich bin froh, die Probezeit bestanden zu haben.); das Passiv mit Modalverb (Die Überstunden müssen ausgezahlt werden.) ist Wiederholung aus B1.2 E6",
           "new": true,
-          "lehrwerk": "Aspekte neu B2 K3; Sicher! aktuell B2 L3"
+          "lehrwerk": "Aspekte neu B2 K3; Sicher! aktuell B2 L3; Passiv mit Modalverb: b1-2 E6"
         }
       ],
-      "vocabTheme": "Arbeitszeit, Arbeitsmodelle, Work-Life-Balance",
+      "vocabTheme": "Arbeitsvertrag, Gehalt, Abrechnung",
       "vocabTarget": 67,
       "keyWords": [
-        "die Vertrauensarbeitszeit",
-        "die Kernarbeitszeit",
-        "die Arbeitszeiterfassung",
+        "die Vertragsklausel",
+        "die Gehaltsabrechnung",
+        "die Vergütung",
+        "die Nebentätigkeit",
+        "die Kündigungsfrist",
+        "der Mindestlohn",
+        "der Tarifvertrag",
+        "das Bruttogehalt",
+        "die Lohnsteuer",
+        "die Sozialabgaben",
+        "der Abzug",
+        "die Zulage",
+        "der Urlaubsanspruch",
         "der Freizeitausgleich",
-        "die Erreichbarkeit",
-        "die Entgrenzung",
+        "die Unstimmigkeit",
+        "die Freistellung",
         "die Vereinbarkeit",
-        "die Präsenzpflicht",
-        "die Produktivität",
-        "die Auszeit",
-        "abschalten",
-        "ausgleichen",
-        "sich abgrenzen",
+        "auszahlen",
+        "einbehalten",
+        "sich erkundigen nach",
         "sich überfordert fühlen",
-        "ausgelastet",
-        "familienfreundlich"
+        "tariflich",
+        "rückwirkend",
+        "anteilig",
+        "ausgelastet"
       ],
       "reading": {
-        "textType": "Fünf kurze Berichte aus Unternehmen über Arbeitszeitmodelle (Überschriften zuordnen)",
+        "textType": "Fünf kurze Erfahrungsberichte zum ersten Arbeitsvertrag in Deutschland (zehn Überschriften zuordnen)",
         "words": 900
       },
       "listening": {
-        "textType": "Wirtschaftsnachrichten im Radio (Richtig/Falsch, einmal gehört)",
+        "textType": "Wirtschaftsnachrichten im Radio: Mindestlohn, Tarifabschluss, Fachkräfte (Richtig/Falsch, einmal gehört)",
         "seconds": 180
       },
       "writing": {
-        "task": "Nachricht an den Vorgesetzten: Überlastung schildern, um Verständnis bitten, zwei Homeoffice-Tage vorschlagen, Übergabe anbieten",
+        "task": "Nachricht an die Personalabteilung: In der Gehaltsabrechnung fehlen Überstunden – Lage schildern, um Prüfung bitten, Belege anbieten, um Rückmeldung bis zu einem Termin bitten",
         "words": 80,
         "examTeil": "Goethe B2 Schreiben Teil 2"
       },
       "speaking": {
-        "task": "Einen Zeitungsartikel zum Recht auf Nichterreichbarkeit nach Feierabend in einer Minute zusammenfassen, dann mit der Partnerin diskutieren",
+        "task": "Einen Zeitungsartikel zur Frage „Sollen alle im Betrieb wissen, was die anderen verdienen?“ in einer Minute zusammenfassen, dann mit der Partnerin diskutieren",
         "examTeil": "telc B2 Mündlicher Ausdruck Teil 2"
       },
-      "pronunciation": "Wortakzent in Komposita und Fremdwörtern (die ARbeitszeit, die ProduktiviTÄT, fleXIbel)",
+      "pronunciation": "Wortakzent in Komposita und Fremdwörtern (der ARbeitsvertrag, die GeHALTSabrechnung, die SoziALabgaben, taRIFlich)",
       "examTeile": [
         "telc B2 Leseverstehen Teil 1",
         "Goethe B2 Lesen Teil 4",
         "telc B2 Hörverstehen Teil 1",
         "Goethe B2 Schreiben Teil 2",
-        "telc B2 Mündlicher Ausdruck Teil 2",
-        "DTB B2 Sprechen Teil 2 (Beruf-Lane)"
+        "telc B2 Mündlicher Ausdruck Teil 2"
       ],
-      "landeskunde": "Arbeitszeit in Deutschland: Arbeitszeitgesetz, Pflicht zur Zeiterfassung, Debatte über Erreichbarkeit nach Feierabend (Stand und Quelle beim Schreiben prüfen)"
+      "landeskunde": "Arbeitsvertrag und Gehaltsabrechnung in Deutschland: brutto und netto, Sozialabgaben, Probezeit, Kündigungsfristen, Mindestlohn; Entgelttransparenz (Quelle, Stand und Ausnahmen beim Schreiben prüfen; keine Rechtsberatung)"
     },
     {
       "nr": 4,
@@ -302,7 +332,7 @@
         {
           "point": "Konjunktiv II der Vergangenheit produktiv, auch mit Modalverb (Hätten Sie uns informiert, hätten wir umgebucht. Das Hotel hätte uns ein anderes Zimmer geben müssen.)",
           "new": true,
-          "lehrwerk": "rezeptiv mit festen Rahmen in b1-2 E12; Menschen B1 L10, Schritte plus Neu 5 L7; produktiv hier nach 06 impl. 11; Sicher! aktuell B2 L5–6"
+          "lehrwerk": "rezeptiv in B1.2 (Blueprint §2.5: B1.2 U10; im Entwurf b1-2 nach dem Kontinuitätsdurchgang E10/E11, vorher E12); Menschen B1 L10, Schritte plus Neu 5 L7; produktiv hier nach 06 impl. 11; Sicher! aktuell B2 L5–6"
         },
         {
           "point": "Bedeutungen des Konjunktiv II: höfliche Forderung und Vorwurf (Ich würde Sie bitten, … / Sie hätten uns vorher informieren müssen.)",
@@ -321,21 +351,29 @@
       "keyWords": [
         "die Pauschalreise",
         "die Minderung",
-        "die Erstattung",
+        "die Stornierung",
         "die Ausgleichszahlung",
         "der Reiseveranstalter",
         "die Ersatzleistung",
         "der Anspruch",
         "die Kulanz",
         "die Mängelanzeige",
-        "die Beanstandung",
+        "die Beschwerdefrist",
+        "die Unterbringung",
+        "die Reiseleitung",
+        "die Buchungsbestätigung",
+        "die Leistungsbeschreibung",
+        "der Preisnachlass",
         "zusichern",
         "beanstanden",
         "einfordern",
         "zustehen",
         "sich berufen auf",
         "mangelhaft",
-        "unzumutbar"
+        "unzumutbar",
+        "ausdrücklich",
+        "nachträglich",
+        "erheblich"
       ],
       "reading": {
         "textType": "Allgemeine Reisebedingungen: Abschnitten Überschriften zuordnen (Regeln verstehen)",
@@ -367,9 +405,9 @@
     {
       "nr": 5,
       "id": "b2.1-u05",
-      "title": "Weniger ist mehr? Verpackung, Konsum und Verantwortung",
-      "titleEn": "Less is more? Packaging, consumption and responsibility",
-      "situation": "Ihre Stadt diskutiert ein Verbot von Einwegverpackungen; Sie lesen einen Zeitungsartikel, verfolgen eine Radiodiskussion und schreiben einen Beitrag im Bürgerforum der Stadt.",
+      "title": "Weniger ist mehr? Mode, Konsum und Verantwortung",
+      "titleEn": "Less is more? Fashion, consumption and responsibility",
+      "situation": "Ihre Stadt diskutiert über Billigmode, Kleidertausch und die Frage, was mit unverkaufter Ware geschieht; Sie lesen einen Zeitungsartikel, verfolgen eine Radiodiskussion und schreiben einen Beitrag im Forum eines Verbrauchermagazins.",
       "handlungsfeld": "Einkaufen/Konsum (RC 7) · Umwelt · Goethe-B2-Themen Konsum, Wohnen/Umwelt, Klima",
       "unitType": "texttype",
       "canDo": [
@@ -382,7 +420,7 @@
           "source": "05-cando-b1-b2 B2.1 #2 · SB B2"
         },
         {
-          "de": "Ich kann Vermutungen über Ursachen und Folgen anstellen und zu Themen wie Konsum Beispiele geben und vergleichen.",
+          "de": "Ich kann Vermutungen über Ursachen und Folgen anstellen und zu Themen wie Konsum und Mode Beispiele geben und vergleichen.",
           "source": "05-cando-b1-b2 B2.1 #5 · ZM B2; PZ-B2 4.2.2"
         },
         {
@@ -392,7 +430,7 @@
       ],
       "grammar": [
         {
-          "point": "Zweiteilige Konnektoren der Argumentation: einerseits … andererseits, zum einen … zum anderen (Einerseits sind Einwegbecher praktisch, andererseits …)",
+          "point": "Zweiteilige Konnektoren der Argumentation: einerseits … andererseits, zum einen … zum anderen (Einerseits ist Billigmode günstig, andererseits hält sie oft nur eine Saison.)",
           "new": true,
           "lehrwerk": "Aspekte neu B2 K3; Sicher! aktuell B2 L1 (06 F3 B2.1 #2)"
         },
@@ -402,45 +440,53 @@
           "lehrwerk": "b1-2 E3, E11; Menschen B1 L15/L18; Schritte plus Neu 6 L8/L10; Netzwerk B1 K8"
         }
       ],
-      "vocabTheme": "Konsum, Verpackung, Nachhaltigkeit",
+      "vocabTheme": "Konsum, Mode, Nachhaltigkeit",
       "vocabTarget": 67,
       "keyWords": [
-        "die Einwegverpackung",
-        "das Mehrwegsystem",
-        "der Einwegbecher",
         "die Wegwerfgesellschaft",
         "der Konsumverzicht",
         "die Ressource",
         "die Ökobilanz",
-        "die Verschwendung",
-        "die Verpackungsflut",
+        "der Überfluss",
         "der Anreiz",
         "die Kreislaufwirtschaft",
+        "die Lieferkette",
+        "die Produktionsbedingungen",
+        "der Kleidertausch",
+        "das Schnäppchen",
+        "die Kaufentscheidung",
+        "die Haltbarkeit",
+        "die Überproduktion",
+        "das Siegel",
+        "das Kaufverhalten",
         "eindämmen",
-        "verzichten auf",
+        "ausbeuten",
         "wiederverwerten",
         "verursachen",
+        "vernichten",
         "umweltschädlich",
-        "kostspielig"
+        "kostspielig",
+        "kurzlebig",
+        "hochwertig"
       ],
       "reading": {
-        "textType": "Zeitungsartikel: Eine Stadt ohne Einwegbecher? (6 Fragen, Mehrfachauswahl)",
+        "textType": "Zeitungsartikel: Was kostet ein T-Shirt wirklich? (6 Fragen, Mehrfachauswahl)",
         "words": 350
       },
       "listening": {
-        "textType": "Radiodiskussion mit Moderatorin, Händler und Umweltexpertin: Wer sagt was? (einmal gehört)",
+        "textType": "Radiodiskussion mit Moderatorin, Modehändlerin und Umweltexpertin: Wer sagt was? (einmal gehört)",
         "seconds": 240
       },
       "writing": {
-        "task": "Beitrag im Bürgerforum der Stadt: Verbot von Einwegverpackungen (4 Leitpunkte, Einleitung und Schluss)",
+        "task": "Beitrag im Forum eines Verbrauchermagazins: Billigmode – Schnäppchen oder Wegwerfware? (4 Leitpunkte, Einleitung und Schluss)",
         "words": 120,
         "examTeil": "Goethe B2 Schreiben Teil 1"
       },
       "speaking": {
-        "task": "Diskussion: Sollen Einwegverpackungen verboten werden? Argumente austauschen, auf Gegenargumente reagieren, am Ende Position nennen",
+        "task": "Diskussion: Sollten Modeketten unverkaufte Kleidung spenden müssen, statt sie zu vernichten? Argumente austauschen, auf Gegenargumente reagieren, am Ende Position nennen",
         "examTeil": "Goethe B2 Sprechen Teil 2"
       },
-      "pronunciation": "Kontrastakzent bei einerseits … andererseits und zwar … aber (EINerseits praktisch, ANdererseits teuer)",
+      "pronunciation": "Kontrastakzent bei einerseits … andererseits und zwar … aber (EINerseits billig, ANdererseits kurzlebig)",
       "examTeile": [
         "Goethe B2 Lesen Teil 3",
         "telc B2 Leseverstehen Teil 2",
@@ -448,7 +494,7 @@
         "Goethe B2 Schreiben Teil 1",
         "Goethe B2 Sprechen Teil 2"
       ],
-      "landeskunde": "Pfandsystem und Mehrwegangebotspflicht in der Gastronomie (Stand und Quelle prüfen)"
+      "landeskunde": "Altkleidersammlung, Textilsiegel und Secondhand in D-A-CH; Regeln zur Vernichtung unverkaufter Ware (Quelle, Stand und Ausnahmen prüfen)"
     },
     {
       "nr": 6,
@@ -478,7 +524,7 @@
       ],
       "grammar": [
         {
-          "point": "Passiversatzformen: man, sich lassen + Infinitiv, sein + zu + Infinitiv, Adjektive auf -bar/-lich (Das lässt sich messen. Der Effekt ist nachweisbar.)",
+          "point": "Passiversatzformen: man, sich lassen + Infinitiv, sein + zu + Infinitiv; Adjektive auf -bar/-lich in passivischer Bedeutung (Das lässt sich messen. Der Effekt ist nachweisbar. = kann nachgewiesen werden). -bar/-lich als Wortbildung sind seit A1.2 bekannt; neu ist die Passivbedeutung",
           "new": true,
           "lehrwerk": "Aspekte neu B2 K5 (06 F3 B2.1 #6; Sicher! aktuell B2 L10: split)"
         },
@@ -486,6 +532,11 @@
           "point": "Passiv mit Modalverb und im Perfekt im Sachtext (Es wurde nachgewiesen, dass …) – Wiederholung",
           "new": false,
           "lehrwerk": "Menschen B1 L21–22; Schritte plus Neu 6 L13; Netzwerk B1 K10"
+        },
+        {
+          "point": "haben + zu + Infinitiv als Pflicht (Die Teilnehmenden haben den Fragebogen bis Montag auszufüllen.) neben sein + zu (Der Fragebogen ist bis Montag auszufüllen.)",
+          "new": true,
+          "lehrwerk": "Aspekte neu B2 K5 (Passiversatz, sein/haben + zu); in B2.2 E8 als Wiederholung"
         }
       ],
       "vocabTheme": "Forschung, Schlaf, Gesundheit",
@@ -495,18 +546,27 @@
         "die Versuchsperson",
         "die Hypothese",
         "der Befund",
-        "die Stichprobe",
         "der Schlafrhythmus",
         "die Schlafstörung",
-        "die Tiefschlafphase",
         "die Erholung",
-        "nachweisen",
+        "die Auswirkung",
+        "die Leistungsfähigkeit",
+        "der Zusammenhang",
+        "die Methode",
+        "die Aussagekraft",
+        "die Konzentration",
+        "widerlegen",
         "belegen",
         "untersuchen",
         "beeinträchtigen",
-        "messbar",
-        "nachweisbar",
-        "wissenschaftlich"
+        "beeinflussen",
+        "zurückführen auf",
+        "feststellen",
+        "verzerren",
+        "wissenschaftlich",
+        "signifikant",
+        "dauerhaft",
+        "eindeutig"
       ],
       "reading": {
         "textType": "Populärwissenschaftlicher Artikel mit Satzlücken: Warum wir schlafen",
@@ -563,9 +623,9 @@
       ],
       "grammar": [
         {
-          "point": "Relativsätze mit wer und was (verallgemeinernd): Wer hier wohnt, (der) kennt … ; alles, was …; das Beste, was …",
+          "point": "Verallgemeinernde Relativsätze ohne Bezugswort: Wer hier wohnt, (der) kennt …; Was mich stört, (das) ist … (alles, was / das Beste, was ist Wiederholung aus B1.2 E4)",
           "new": true,
-          "lehrwerk": "Aspekte neu B2 K4 (06 F3 B2.1 #9; Sicher! aktuell B2 L7: split); was nach alles/das: Schritte plus Neu 6 L10 (B1.2)"
+          "lehrwerk": "Aspekte neu B2 K4 (06 F3 B2.1 #9; Sicher! aktuell B2 L7: split); alles/das Beste, was: b1-2 E4, Schritte plus Neu 6 L10"
         },
         {
           "point": "Relativpronomen im Genitiv: dessen, deren (die Nachbarin, deren Garten wir nutzen)",
@@ -582,16 +642,25 @@
         "der Anwohner",
         "der Gemeinschaftsraum",
         "die Nachbarschaftshilfe",
-        "die Vereinsamung",
+        "die Anonymität",
         "der Zusammenhalt",
         "die Genossenschaft",
         "die Mitbestimmung",
+        "die Hilfsbereitschaft",
+        "die Wohnungsnot",
+        "die Privatsphäre",
+        "die Toleranz",
+        "die Teilhabe",
         "mitgestalten",
         "sich einbringen",
         "sich austauschen",
         "sich vernetzen",
-        "gemeinschaftlich",
-        "generationenübergreifend"
+        "betreuen",
+        "solidarisch",
+        "generationenübergreifend",
+        "bezahlbar",
+        "inklusiv",
+        "vielfältig"
       ],
       "reading": {
         "textType": "Leserkommentare zum geplanten Mehrgenerationenhaus: Standpunkten Überschriften zuordnen",
@@ -663,20 +732,28 @@
         "das Anerkennungsverfahren",
         "die Gleichwertigkeit",
         "die Beglaubigung",
-        "die Anpassungsqualifizierung",
         "die Zulassung",
         "die Fördermöglichkeit",
-        "der Bildungsgutschein",
-        "die Nachqualifizierung",
         "die Zusatzqualifikation",
         "der Lehrgang",
-        "beglaubigen",
+        "der Berufsabschluss",
+        "die Praxisphase",
+        "die Beratungsstelle",
+        "die Kursgebühr",
+        "die Bearbeitungsdauer",
+        "die Fachkraft",
+        "die Teilnahmebescheinigung",
+        "die Ausbildungsdauer",
         "einstufen",
         "sich weiterqualifizieren",
         "absolvieren",
+        "vorlegen",
+        "anfordern",
         "berufsbegleitend",
-        "gleichwertig",
-        "reglementiert"
+        "reglementiert",
+        "fachlich",
+        "gleichgestellt",
+        "vollständig"
       ],
       "reading": {
         "textType": "Kursanzeigen von Weiterbildungsanbietern: Situationen zuordnen, eine passt zu keiner Anzeige",
@@ -723,8 +800,8 @@
           "source": "05-cando-b1-b2 B2.1 #8 · BSK 6.4 B2"
         },
         {
-          "de": "Ich kann relativ spontan und fließend Nachfragen zu einem Arbeitsvertrag stellen.",
-          "source": "05-cando-b1-b2 B2.1 #11 · BSK 36.2 B2"
+          "de": "Ich kann in Diskussionen meine Ansichten durch relevante Erklärungen, Argumente und Kommentare begründen und verteidigen.",
+          "source": "05-cando-b1-b2 B2.1 #6 · GER S. 81 B2"
         },
         {
           "de": "Ich kann in Erfahrungsberichten erkennen, welche Haltung die Schreibenden zum Bewerbungsverfahren haben.",
@@ -738,12 +815,12 @@
           "lehrwerk": "Menschen B1 L14; Schritte plus Neu 6 L10; Netzwerk neu B1 K12; Sicher! aktuell B2 L2 (06 F3 B2.1 #8)"
         },
         {
-          "point": "Wortbildung Adjektive: -bar, -fähig, -sam, -lich, -ig (belastbar, teamfähig, sorgfältig, lösungsorientiert)",
+          "point": "Wortbildung Adjektive: -fähig, -sam, -ig (konfliktfähig, sparsam, sorgfältig, zielstrebig); -bar und -lich (belastbar, eigenverantwortlich) sind Wiederholung aus A1.2 und B2.1 E6",
           "new": true,
-          "lehrwerk": "Sicher! B1+ L4 (Wortbildung); Goethe-Inventare A1/A2 (06 impl. 13: Wortbildungsstrang)"
+          "lehrwerk": "Sicher! B1+ L4 (Wortbildung); Goethe-Inventare A1/A2 (06 impl. 13: Wortbildungsstrang); -bar/-lich: A1.2, B2.1 E6"
         }
       ],
-      "vocabTheme": "Bewerbung, Qualifikation, Arbeitsvertrag",
+      "vocabTheme": "Bewerbung, Qualifikation, Vorstellungsgespräch",
       "vocabTarget": 67,
       "keyWords": [
         "das Motivationsschreiben",
@@ -751,18 +828,26 @@
         "das Anforderungsprofil",
         "die Eignung",
         "die Kompetenz",
-        "die Vergütung",
         "der Werdegang",
-        "die Befristung",
-        "die Kündigungsfrist",
         "die Referenz",
+        "die Personalverantwortung",
+        "der Quereinstieg",
+        "die Weiterentwicklung",
+        "die Initiativbewerbung",
+        "die Führungserfahrung",
         "sich auszeichnen durch",
-        "überzeugen",
+        "vorweisen",
         "mitbringen",
+        "hervorheben",
         "durchsetzungsfähig",
         "kommunikationsstark",
         "eigenverantwortlich",
-        "lösungsorientiert"
+        "lösungsorientiert",
+        "konfliktfähig",
+        "strukturiert",
+        "sorgfältig",
+        "gewissenhaft",
+        "zielstrebig"
       ],
       "reading": {
         "textType": "Erfahrungsberichte in einem Karriereforum: Wer denkt wie über das Bewerbungsverfahren? (Aussagen Personen zuordnen)",
@@ -787,8 +872,7 @@
         "telc B2 Leseverstehen Teil 3",
         "Goethe B2 Hören Teil 3",
         "telc B2 Hörverstehen Teil 2",
-        "Goethe B2 Sprechen Teil 2",
-        "DTB B2 Sprechen Teil 1B (Beruf-Lane)"
+        "Goethe B2 Sprechen Teil 2"
       ],
       "landeskunde": "Bewerbungsgepflogenheiten in D-A-CH: Lebenslauf mit oder ohne Foto, das Arbeitszeugnis"
     },
@@ -807,7 +891,7 @@
         },
         {
           "de": "Ich kann einem Telefongespräch die wichtigen Informationen entnehmen und sie in einer Telefonnotiz für Kolleginnen festhalten.",
-          "source": "≈ 03-exams-b2 §3 · DTB Hören und Schreiben; ZM B1+ (05 §2.2)"
+          "source": "≈ ZM B1+ (05 §2.2); Arbeitsplatzaufgabe, kein Prüfungsformat"
         },
         {
           "de": "Ich kann Rückmeldungen zu meiner Arbeit verstehen, auch wenn komplexere Zusammenhänge dargestellt werden, und angemessen reagieren.",
@@ -815,7 +899,7 @@
         },
         {
           "de": "Ich kann mit einer Kollegin ein Problem im Arbeitsablauf besprechen und gemeinsam eine Lösung aushandeln.",
-          "source": "≈ 03-exams-b2 §3 · DTB Sprechen T3; telc B2 Mündlicher Ausdruck T3"
+          "source": "≈ 03-exams-b2 §2 · telc B2 Mündlicher Ausdruck T3"
         }
       ],
       "grammar": [
@@ -825,32 +909,44 @@
           "lehrwerk": "Sicher! aktuell B2 L5–6 (06 F3 B2.1 #10, SIC only); Profile deutsch B2; Futur I Menschen B1 L5"
         },
         {
-          "point": "Modalwörter der Vermutung: wahrscheinlich, vermutlich (Wiederholung aus b1-1 E5), neu wohl, sicherlich, möglicherweise, zweifellos",
+          "point": "Modalwörter der Vermutung: wahrscheinlich, vermutlich, wohl (Wiederholung aus b1-1 E5); neu nur sicherlich, möglicherweise, zweifellos",
           "new": false,
           "lehrwerk": "b1-1 E5; Sicher! aktuell B2 L5–6"
+        },
+        {
+          "point": "Temporale Konnektoren sobald und solange (Sobald die Ärztin da ist, rufe ich Sie an. Solange das Fieber anhält, bleibt Frau K. im Bett.)",
+          "new": true,
+          "lehrwerk": "Profile deutsch B2 (06 F1: sobald = B2); Lehrwerk-Kapitel nicht verifiziert; b1-2.md §8 übergibt sobald/solange als noch nicht gelehrt"
         }
       ],
       "vocabTheme": "Pflegealltag, Übergabe, Befinden",
       "vocabTarget": 67,
       "keyWords": [
-        "das Übergabeprotokoll",
+        "die Schichtübergabe",
         "die Pflegekraft",
         "die Bewohnerin",
         "der Angehörige",
         "die Pflegedienstleitung",
         "die Dokumentation",
-        "die Pflegeplanung",
         "der Personalengpass",
+        "die Überlastung",
+        "der Pflegebedarf",
+        "die Rücksprache",
         "das Befinden",
-        "die Medikamentengabe",
+        "die Priorität",
         "der Sturz",
         "die Unruhe",
+        "die Telefonnotiz",
         "verabreichen",
         "beobachten",
-        "dokumentieren",
-        "umlagern",
+        "absichern",
+        "abklären",
+        "umorganisieren",
+        "einschätzen",
+        "sich verschlechtern",
         "bettlägerig",
-        "verwirrt"
+        "verwirrt",
+        "unterbesetzt"
       ],
       "reading": {
         "textType": "Zwei Artikel über Personalmangel und Technik in der Pflege (Mehrfachauswahl)",
@@ -861,23 +957,20 @@
         "seconds": 120
       },
       "writing": {
-        "task": "Nachricht an die Pflegedienstleitung: Engpass am Wochenende schildern, um Verständnis bitten, Lösung vorschlagen, Rückmeldung erbitten",
+        "task": "Nachricht an die Pflegedienstleitung: Zwei Kolleginnen fallen am Wochenende aus – Lage schildern, einen Tauschvorschlag machen, um Zustimmung bitten, Rückmeldung erbitten",
         "words": 90,
         "examTeil": "Goethe B2 Schreiben Teil 2"
       },
       "speaking": {
         "task": "Mit einer Kollegin eine Lösung für den Personalengpass am Wochenende aushandeln: Aufgaben, Dienste, Prioritäten",
-        "examTeil": "telc B2 Mündlicher Ausdruck Teil 3; DTB B2 Sprechen Teil 3"
+        "examTeil": "telc B2 Mündlicher Ausdruck Teil 3"
       },
       "pronunciation": "Deutlich am Telefon: Zahlen, Uhrzeiten und Namen buchstabieren; Knacklaut vor Vokal (um | acht | Uhr)",
       "examTeile": [
         "telc B2 Leseverstehen Teil 2",
         "telc B2 Hörverstehen Teil 3",
-        "DTB B2 Hören und Schreiben (Beruf-Lane)",
         "Goethe B2 Schreiben Teil 2",
-        "telc B2 Mündlicher Ausdruck Teil 3",
-        "DTB B2 Sprechen Teil 3 (Beruf-Lane)",
-        "DTB B2 Lesen und Schreiben (Beruf-Lane)"
+        "telc B2 Mündlicher Ausdruck Teil 3"
       ],
       "landeskunde": "Pflegeberufe in Deutschland: Pflegefachfrau/Pflegefachmann, Anerkennung und Sprachnachweis B2 (memo 10 §2.3; Stand prüfen)"
     },
@@ -917,7 +1010,8 @@
           "point": "Konjunktiv I in Meldungen erkennen: sei, habe, werde, gebe (Der Bürgermeister sagte, das Projekt sei finanziert.)",
           "new": false,
           "lehrwerk": "systematisch in B2.2 E1 (Aspekte neu B2 K8; Sicher! aktuell B2 L7)",
-          "chunk": true
+          "chunk": true,
+          "receptive": true
         }
       ],
       "vocabTheme": "Presse, Nachrichten, Lokalpolitik",
@@ -934,13 +1028,20 @@
         "der Stadtrat",
         "das Bauvorhaben",
         "die Bürgerinitiative",
+        "die Falschmeldung",
+        "die Glaubwürdigkeit",
+        "die Pressefreiheit",
+        "der Widerstand",
         "behaupten",
         "betonen",
         "einräumen",
         "bestreiten",
+        "zitieren",
+        "sich aussprechen für",
         "umstritten",
         "sachlich",
-        "einseitig"
+        "einseitig",
+        "kritisch"
       ],
       "reading": {
         "textType": "Zeitungsartikel mit Kommentar zu einem umstrittenen Bauprojekt (6 Fragen, Mehrfachauswahl)",
@@ -1013,19 +1114,28 @@
         "die Videokonferenz",
         "der Standort",
         "die Zeitverschiebung",
-        "die Abstimmung",
         "der Meilenstein",
-        "die Zuständigkeit",
+        "die Rollenverteilung",
         "die Auswertung",
         "die Zwischenbilanz",
         "der Mehraufwand",
         "die Erkenntnis",
+        "die Verzögerung",
+        "die Ergebnissicherung",
+        "die Plattform",
+        "die Arbeitsweise",
         "koordinieren",
         "delegieren",
         "priorisieren",
         "sich abstimmen",
+        "umsetzen",
+        "nachsteuern",
+        "vorankommen",
         "zeitaufwendig",
-        "reibungslos"
+        "reibungslos",
+        "virtuell",
+        "termingerecht",
+        "überschaubar"
       ],
       "reading": {
         "textType": "Seite im Team-Wiki: Projektbericht als Lückentext mit Wortkasten",
@@ -1038,7 +1148,7 @@
       "writing": {
         "task": "Beitrag im Team-Wiki: die wichtigsten Punkte des Vortrags für abwesende Kolleginnen zusammenfassen und kurz Stellung nehmen",
         "words": 130,
-        "examTeil": "DTB B2 Schreiben (Forumsbeitrag im Intranet); Mediation (Begleitband B2)"
+        "examTeil": "kein eigener Prüfungsteil – Mediation (Begleitband B2); bewertet mit dem Schreibprofil der gewählten Spur (telc B2 Schriftlicher Ausdruck bzw. Goethe B2 Schreiben Teil 1)"
       },
       "speaking": {
         "task": "Projektvortrag (≈ 3–4 Min.): Arbeitsweisen vergleichen, eine genauer, Vor- und Nachteile bewerten; Fragen des Teams beantworten",
@@ -1048,9 +1158,7 @@
       "examTeile": [
         "telc B2 Sprachbausteine Teil 2",
         "Goethe B2 Hören Teil 4",
-        "DTB B2 Schreiben Forumsbeitrag (Beruf-Lane)",
-        "Goethe B2 Sprechen Teil 1",
-        "DTB B2 Sprechen Teil 1C (Beruf-Lane)"
+        "Goethe B2 Sprechen Teil 1"
       ],
       "landeskunde": "Arbeiten über Grenzen: Teams in D-A-CH, Zeitzonen und regionale Feiertage"
     }
@@ -1090,7 +1198,7 @@
     }
   ],
   "levelTest": {
-    "format": "Halbtest im Format Goethe-Zertifikat B2 auf B2.1-Stoff: Lesen Teile 1, 3 und 5 (≈ 38 Min.), Hören Teile 1 und 2 (≈ 18 Min.), Schreiben Teil 1 (≈ 130 Wörter) und Teil 2 (≈ 90 Wörter, zusammen ≈ 60 Min.), Sprechen Teile 1 und 2 mit KI-Partner (Vortrag ≈ 3 Min., 15 Min. Vorbereitung); im telc-Track alternativ Leseverstehen 1 + 3, Sprachbausteine 1, Hörverstehen 1 + 3, Schriftlicher Ausdruck (≈ 130 Wörter, 30 Min.), Mündlicher Ausdruck 1 + 3. Ergebnis als Übungswert je Teil nach der Bestehensregel der gewählten Prüfung, nie als Prüfungsergebnis; B2.1 allein bereitet nicht auf die ganze Prüfung vor.",
+    "format": "Halbtest (Abschluss von B2.1) auf dem Stoff von B2.1 im Format der Prüfungsspur, die beim Onboarding einmal gewählt wird und für alle Kurse gilt; ohne Wahl: telc Deutsch B2 (Primärspur). Spur telc Deutsch B2: alle Teile mit etwa der Hälfte der Items – Leseverstehen 1–3, Sprachbausteine 1–2, Hörverstehen 1–3 (einmal gehört), Schriftlicher Ausdruck (≈ 120 Wörter, 30 Min.), Mündlicher Ausdruck 1–3 nach 20 Min. Vorbereitung. Spur Goethe-Zertifikat B2: alle Teile mit etwa der Hälfte der Items – Lesen 1–5, Hören 1–4 mit den Abspielzahlen der Prüfung, Schreiben 1 (≈ 110 Wörter) und 2 (≈ 70 Wörter), Sprechen 1 (Vortrag ≈ 3 Min.) und 2 nach 15 Min. Vorbereitung. Zusammen ≈ 90–105 Min. im Prüfungsmodus. Im Sprechen übernimmt die KI die Rolle der Prüferin und der Partnerin; die Auswertung ist eine automatische Übungsbewertung. Ergebnis als Teil-Karte mit Übungswerten je Prüfungsteil („in voller Länge geübt“ oder „im Kleinen geübt“), ohne Gesamtpunktzahl, ohne Gesamturteil und ohne Prognose, nie als Prüfungsergebnis; danach der datierte Plan in B2.2. B2.1 allein bereitet nicht auf die ganze Prüfung vor.",
     "sections": [
       "Lesen",
       "Hören",
