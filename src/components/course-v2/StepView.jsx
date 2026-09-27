@@ -185,7 +185,10 @@ export default function StepView({
     reported.current = true;
     if (typeof onDone === 'function') onDone({ stepId: step.id, correct: tally.current.correct, total: tally.current.total, ...extra });
   };
-  const runProps = { unitId, lines, stepId: step.id, level, names, onAttempt: attempt };
+  // The player core's attempt of this step (unitPlan: pool steps and the Check): it seeds the
+  // option order of non-exam choice items, so a repeat may reorder and a re-render never does.
+  const drawAttempt = Number(step.plan && step.plan.attempt) || 1;
+  const runProps = { unitId, lines, stepId: step.id, level, names, attempt: drawAttempt, onAttempt: attempt };
 
   let body = null;
   if (seg.block) {
@@ -357,6 +360,7 @@ export default function StepView({
           stepId={step.id}
           endLine={step.endLine}
           earlierItems={earlierItems || planEarlier(step.plan)}
+          attempt={drawAttempt}
           aufgaben={aufgaben}
           course={course}
           canDos={canDos}

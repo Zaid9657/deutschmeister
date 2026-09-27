@@ -1155,7 +1155,7 @@ describe('ITM-03 key balance extensions (a1.1 r2 F04, b1.1 r1 F02 / r2 F01, b2.1
       it.accepted = [it.answer];
     });
   })), /the key is the highest option/));
-  test('advisory: non-exam keys all at options[0] (the player does not shuffle); the example passes', async () => {
+  test('advisory (informational — the player shuffles non-exam options): non-exam keys all at options[0]; the example passes', async () => {
     const r = await rule('ITM-03', ex());
     assertPass(r);
     assert.ok(r.findings.some((f) => f.severity === 'advisory' && /non-exam 3-option keys/.test(f.message)), messages(r));

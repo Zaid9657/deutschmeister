@@ -136,7 +136,7 @@
       "gloss": {
         "en": "language school"
       },
-      "example": "Ich habe Deutsch an einer Sprachschule gelernt.",
+      "example": "Ich lerne Deutsch in einer Sprachschule in Leipzig.",
       "wordId": null
     },
     {
@@ -371,8 +371,8 @@
       "gloss": {
         "en": "to introduce oneself"
       },
-      "example": "Ich stelle mich kurz vor: Ich heiße Priya.",
-      "exampleEn": "Let me briefly introduce myself: my name is Priya.",
+      "example": "Hallo, ich heiße Priya, ich komme aus Indien und ich wohne in Leipzig.",
+      "exampleEn": "Hello, my name is Priya, I’m from India and I live in Leipzig.",
       "wordId": null
     },
     {
@@ -425,8 +425,8 @@
       "gloss": {
         "en": "language"
       },
-      "example": "Welche Sprachen sprechen Sie?",
-      "exampleEn": "Which languages do you speak?",
+      "example": "Ich spreche drei Sprachen: Englisch, Spanisch und ein bisschen Deutsch.",
+      "exampleEn": "I speak three languages: English, Spanish and a little German.",
       "wordId": null
     },
     {
@@ -605,8 +605,8 @@
       "gloss": {
         "en": "number (figure)"
       },
-      "example": "Welche Zahl ist das?",
-      "exampleEn": "Which number is that?",
+      "example": "Ist die Zahl richtig?",
+      "exampleEn": "Is the number right?",
       "wordId": null
     },
     {
@@ -686,8 +686,8 @@
       "gloss": {
         "en": "two (on the phone also: zwo)"
       },
-      "example": "Zwei – am Telefon sagt man oft „zwo“.",
-      "exampleEn": "Two – on the phone people often say “zwo”.",
+      "example": "Die Hausnummer ist zwei, nicht zwölf.",
+      "exampleEn": "The house number is two, not twelve.",
       "wordId": null
     },
     {
@@ -891,7 +891,7 @@
       "gloss": {
         "en": "to write"
       },
-      "example": "Wie schreibt man das?",
+      "example": "Wie schreiben Sie das?",
       "exampleEn": "How do you spell that?",
       "wordId": null
     },
@@ -2506,8 +2506,8 @@
       "gloss": {
         "en": "by, via (per E-Mail)"
       },
-      "example": "Ich schicke dir die Adresse per E-Mail.",
-      "exampleEn": "I will send you the address by e-mail.",
+      "example": "Priya fragt per E-Mail nach der Wohnung.",
+      "exampleEn": "Priya asks about the flat by e-mail.",
       "wordId": null
     },
     {
@@ -3440,8 +3440,8 @@
       "gloss": {
         "en": "to help"
       },
-      "example": "Können Sie mir helfen?",
-      "exampleEn": "Can you help me?",
+      "example": "Hilfst du mir bitte?",
+      "exampleEn": "Can you help me, please?",
       "wordId": null
     },
     {
@@ -3461,7 +3461,7 @@
       "gloss": {
         "en": "to give"
       },
-      "example": "Kannst du mir bitte den Kuli geben?",
+      "example": "Gibst du mir bitte den Kuli?",
       "exampleEn": "Can you give me the pen, please?",
       "wordId": null
     },
@@ -4582,7 +4582,7 @@
       "gloss": {
         "en": "to arrange to meet"
       },
-      "example": "Ich habe mich mit Amal zum Joggen verabredet.",
+      "example": "Ich bin am Samstag mit Elif verabredet.",
       "wordId": null
     },
     {
@@ -4882,8 +4882,8 @@
       "gloss": {
         "en": "drink, beverage"
       },
-      "example": "Welche Getränke gibt es?",
-      "exampleEn": "What drinks are there?",
+      "example": "Was kosten die Getränke?",
+      "exampleEn": "How much are the drinks?",
       "wordId": null
     },
     {
@@ -6027,8 +6027,8 @@
       "gloss": {
         "en": "museum"
       },
-      "example": "Am Samstag haben wir ein Museum besucht.",
-      "exampleEn": "On Saturday we visited a museum.",
+      "example": "Am Samstag waren wir im Museum.",
+      "exampleEn": "On Saturday we were at the museum.",
       "wordId": null
     },
     {
@@ -6082,8 +6082,8 @@
       "gloss": {
         "en": "to visit"
       },
-      "example": "Wir haben Sophies Familie besucht.",
-      "exampleEn": "We visited Sophie’s family.",
+      "example": "Am Wochenende besuche ich Olena und Sophie in der WG.",
+      "exampleEn": "At the weekend I’m visiting Olena and Sophie in their flat share.",
       "wordId": null
     },
     {
@@ -6413,8 +6413,8 @@
       "gloss": {
         "en": "to go for a walk"
       },
-      "example": "Am Sonntag sind wir im Park spazieren gegangen.",
-      "exampleEn": "On Sunday we went for a walk in the park.",
+      "example": "Am Sonntag gehen wir im Park spazieren.",
+      "exampleEn": "On Sunday we go for a walk in the park.",
       "wordId": null
     },
     {
@@ -6432,8 +6432,8 @@
       "gloss": {
         "en": "to take photos (of)"
       },
-      "example": "Ich habe das Schloss fotografiert.",
-      "exampleEn": "I took photos of the palace.",
+      "example": "Olena fotografiert gern die Altstadt.",
+      "exampleEn": "Olena likes taking photos of the old town.",
       "wordId": null
     },
     {
@@ -6488,8 +6488,8 @@
       "gloss": {
         "en": "to get, to receive"
       },
-      "example": "Ich habe eine Postkarte bekommen.",
-      "exampleEn": "I received a postcard.",
+      "example": "Priya bekommt eine Postkarte aus Dresden.",
+      "exampleEn": "Priya gets a postcard from Dresden.",
       "wordId": null
     },
     {
@@ -6794,8 +6794,8 @@
       "gloss": {
         "en": "to get to know, to meet (for the first time)"
       },
-      "example": "In Leipzig habe ich Olena kennengelernt.",
-      "exampleEn": "I met Olena in Leipzig.",
+      "example": "Im Deutschkurs lerne ich viele Leute kennen.",
+      "exampleEn": "In the German course I get to know lots of people.",
       "wordId": null
     },
     {
@@ -6870,8 +6870,8 @@
       "gloss": {
         "en": "to register, to sign up"
       },
-      "example": "Priya meldet sich für den Kurs an.",
-      "exampleEn": "Priya signs up for the course.",
+      "example": "Priya ist jetzt für den Kurs A1.2 angemeldet.",
+      "exampleEn": "Priya is now registered for the A1.2 course.",
       "wordId": null
     },
     {

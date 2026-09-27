@@ -19,7 +19,10 @@
 //     runtime from the reserves of earlier units (`from`: previous-3 · etappe ·
 //     all-previous) — by rule, never by item id (BLUEPRINT §3.1 LS7);
 //   - RESUME: the first step not yet finished (step level; the renderer keeps the
-//     item position inside a step).
+//     item position inside a step);
+//   - the OPTION ORDER of a non-exam choice item (orderedOptions): authors key most
+//     of them at options[0] (ITM-03 advisory), so the player shows them in an order
+//     seeded by (unit, item, attempt); exam items keep the format's order.
 //
 // The planned step handed to StepView is the SCHEMA step plus one additive key,
 // `plan` (see planStep). A renderer that ignores `plan` still renders the step.
@@ -50,6 +53,53 @@ export function seededShuffle(list, seed) {
     [out[i], out[j]] = [out[j], out[i]];
   }
   return out;
+}
+
+// ── option order of a non-exam choice item ──────────────────────────────────────────────
+//
+// The validator's ITM-03 advisory measured it: authors key most non-exam choice items
+// (multiple_choice, listen_select, a cloze with its own options …) at options[0], so a
+// player that shows the authored order can be gamed by position. The order is therefore
+// seeded by (unit, item, attempt): a re-render or a resumed session in the same attempt
+// shows the same order, a repeat of the step may reorder. Grading never reads a position —
+// checkItem compares the chosen option STRING (or block key) with `accepted`.
+//
+// Never reordered:
+//   - exam items (role 'exam', or rendered inside an ExamBlock — LS4, Plateau, Modelltest):
+//     the option order belongs to the exam format (Prüfungsmodus and Lernmodus alike);
+//   - richtig/falsch and ja/nein: a fixed pair in a fixed order, nothing to learn from its place.
+
+/** Item types whose two options are a fixed pair in a fixed order. */
+export const FIXED_ORDER_TYPES = Object.freeze(['richtig_falsch', 'ja_nein']);
+
+/** Is this an exam item (its option order is part of the format)? `block` = the enclosing ExamBlock, if any. */
+export function isExamItem(item, { block = null } = {}) {
+  return Boolean(block) || Boolean(item && item.role === 'exam');
+}
+
+/** Does the player reorder this item's own `options`? */
+export function shufflesOptions(item, { block = null } = {}) {
+  return Boolean(item)
+    && Array.isArray(item.options)
+    && item.options.length > 1
+    && !FIXED_ORDER_TYPES.includes(item.type)
+    && !isExamItem(item, { block });
+}
+
+/** The option-order seed of one item in one attempt (the draw's seedFor, keyed by unit + item). */
+export function optionSeed(unitId, itemId, attempt = 1) {
+  return seedFor(`${unitId || ''}|${itemId || ''}|options`, 0, Math.max(1, Math.floor(Number(attempt) || 1)));
+}
+
+/**
+ * The options of an item in the order the learner sees them: seeded by (unit, item, attempt)
+ * for a non-exam choice item, the authored order otherwise. Always a new array holding the
+ * same strings.
+ */
+export function orderedOptions(item, { unitId = null, attempt = 1, block = null } = {}) {
+  const options = Array.isArray(item && item.options) ? item.options : [];
+  if (!shufflesOptions(item, { block })) return [...options];
+  return seededShuffle(options, optionSeed(unitId, item.id, attempt));
 }
 
 const idsOf = (list) => new Set((list || []).map((x) => x && x.id).filter(Boolean));
@@ -92,7 +142,7 @@ export function drawStep(step, { unitId, attempt = 1 } = {}) {
 /**
  * The planned step for StepView: the SCHEMA step plus `plan`
  *   pool steps:  { attempt, practice, exit, spare, reserve }
- *   check step:  { items, proofItems, earlierIds, earlierMissing }
+ *   check step:  { attempt, items, proofItems, earlierIds, earlierMissing }
  *   other kinds: plan is null (the renderer reads the step itself).
  */
 export function planStep(step, { unit, attempt = 1, earlierItems = [] } = {}) {
@@ -140,8 +190,10 @@ export function planCheck(unit, { attempt = 1, earlierItems = [] } = {}) {
     seen.add(it.id);
     candidates.push(it);
   }
-  const drawn = seededShuffle(candidates, seedFor(`${unit && unit.id}|check`, 0, Math.max(1, Number(attempt) || 1))).slice(0, want);
+  const n = Math.max(1, Math.floor(Number(attempt) || 1));
+  const drawn = seededShuffle(candidates, seedFor(`${unit && unit.id}|check`, 0, n)).slice(0, want);
   return {
+    attempt: n,
     items: [...own, ...drawn],
     proofItems: (check.proofItems || []).filter((x) => x && x.id),
     earlierIds: drawn.map((x) => x.id),

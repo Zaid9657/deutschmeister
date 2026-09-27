@@ -17,9 +17,10 @@ export const REQUEUE_CAP = 4;
  *   card is shown once, after „Weiter" — never a third failure in a row without help.
  *
  * `onFinish({ correct, total })` — first-presentation results only (a requeue never
- * improves the score it repeats). `onAttempt(payload)` for every answer.
+ * improves the score it repeats). `onAttempt(payload)` for every answer. `attempt` (the
+ * step's, default 1) seeds the option order of non-exam choice items (ItemView).
  */
-export default function ItemRun({ items, requeuePool = [], requeue = false, unitId, lines, stepId, level, ruleCard = null, names = null, onAttempt, onFinish }) {
+export default function ItemRun({ items, requeuePool = [], requeue = false, unitId, lines, stepId, level, ruleCard = null, names = null, attempt = 1, onAttempt, onFinish }) {
   const [, t] = useV2Strings();
   const [queue, setQueue] = useState(() => (items || []).map((item) => ({ item, requeued: false })));
   const [pos, setPos] = useState(0);
@@ -113,6 +114,7 @@ export default function ItemRun({ items, requeuePool = [], requeue = false, unit
       index={firstIndex}
       total={firstTotal}
       requeued={entry.requeued}
+      attempt={attempt}
       onResult={onResult}
       onNext={next}
     />

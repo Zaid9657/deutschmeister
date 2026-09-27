@@ -8,6 +8,7 @@ import AudioButton from './AudioButton.jsx';
 import InlineFeedback from './InlineFeedback.jsx';
 import { ChoiceList, ChoiceSelect, TypedInput, TilesInput, MatchInput } from './ItemInputs.jsx';
 import { gradeAnswer, attemptPayload, RESULT, acceptedOf } from './grade.js';
+import { orderedOptions } from '../../lib/course-v2/unitPlan.js';
 import { quoteOf, resolveText, speakerName } from './content.js';
 import { useV2Strings, ltext } from './strings.js';
 
@@ -42,6 +43,10 @@ import { useV2Strings, ltext } from './strings.js';
  *   index, total, requeued   the eyebrow („Aufgabe 3 von 12", „+1 Wiederholung")
  *   allowReveal     offer „Lösung zeigen" before the first check (default: only in the retry)
  *   names           { speakerId: name } for read-aloud / audio labels
+ *   attempt         the step's attempt (step.plan.attempt, default 1): a non-exam item's own
+ *                   options are shown in the order unitPlan.orderedOptions seeds by unit + item +
+ *                   attempt; an exam item (role 'exam', or inside `block`) keeps its authored order.
+ *                   The answer is always the option string, never its position.
  */
 export default function ItemView({
   item,
@@ -59,6 +64,7 @@ export default function ItemView({
   requeued = false,
   allowReveal = false,
   names = null,
+  attempt = 1,
 }) {
   const [lang, t] = useV2Strings();
   const [value, setValue] = useState(() => (item.type === 'error_correction' ? quoteOf(item.promptDe) || '' : ''));
@@ -87,10 +93,10 @@ export default function ItemView({
       return opts;
     }
     if (Array.isArray(item.options) && item.options.length) {
-      return item.options.map((o) => ({ value: o, label: o }));
+      return orderedOptions(item, { unitId: uid, attempt, block }).map((o) => ({ value: o, label: o }));
     }
     return null;
-  }, [item, block, texts, t]);
+  }, [item, block, texts, t, uid, attempt]);
 
   const kind = (() => {
     if (item.type === 'read_aloud') return 'readaloud';

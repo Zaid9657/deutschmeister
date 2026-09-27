@@ -176,6 +176,7 @@ screenshots on the current tree.
 | 16 | The player's step list, resume button and recap named steps by German kind labels | English chrome showed „Prüfungstraining" where the step itself said „Exam training" | `kind.*` strings, and `stepTitle()` mirrors StepView's heading rule („Sprechen"/„Schreiben" stay German in both, as in StepView) |
 | 17 | The test-out note said „Die Lernschritte sind angerechnet", but Sprechen and Schreiben are also labelled „Lernschritt 5/6" | ambiguous about what was credited | worded like the Start: „Die Übungsschritte sind angerechnet. Offen sind noch Sprechen und Schreiben." |
 | 18 | The player's headings (resume, recap) were regular weight; the renderer's heading of the same unit title is semibold | the unit title changed weight between Start and resume | the player's headings use the renderer's weight and tracking |
+| 19 | ItemView showed a non-exam choice item's options in authored order, and authors key most of them at `options[0]` (ITM-03 advisory) | a learner could answer by position | `unitPlan.orderedOptions` shuffles them seeded by unit + item + attempt (`step.plan.attempt`, now also on the Check plan); exam items (role `exam`, inside an ExamBlock) and R/F · Ja/Nein keep their order; grading stays by option string (2026-09-27) |
 
 Files changed across both passes:
 

@@ -18,7 +18,7 @@ import { FIXTURES_ROOT } from '../scripts/course-v2/lib/tree.mjs';
 import { unitIdFor, plateauIdFor, normalizeLevel, nrOfId, stepIdOfItem, v2Paths, bandOf } from '../src/lib/course-v2/ids.js';
 import {
   drawCounts, drawStep, planStep, planCheck, alternateFor, buildUnitPlan, resumeIndex, earlierSourceNrs, reservesOf,
-  itemFromReserve, reserveItemsFor, withReserves,
+  itemFromReserve, reserveItemsFor, withReserves, orderedOptions, optionSeed, shufflesOptions, isExamItem,
 } from '../src/lib/course-v2/unitPlan.js';
 import { checkItem, attemptPayload, RESULT } from '../src/lib/course-v2/checkItem.js';
 import { dictationItems, materialize } from '../src/components/course-v2/content.js';
@@ -128,6 +128,103 @@ test('the planned unit keeps every SCHEMA step and adds only `plan`', () => {
   assert.equal(plan.steps.find((s) => s.kind === 'sprechen').plan, null);
   assert.ok(Array.isArray(plan.steps.find((s) => s.kind === 'check').plan.items));
   assert.deepEqual(planStep(unit.steps[0], { unit }).plan.practice.map((x) => x.id), plan.steps[0].plan.practice.map((x) => x.id));
+});
+
+// ---------------------------------------------------------------------------
+// Option order of non-exam choice items (ITM-03 advisory: authors key most of them at
+// options[0]; the fixture keys every one there). Seeded by unit + item + attempt.
+// ---------------------------------------------------------------------------
+
+/** Every item of the fixture unit that carries its own options, with the ExamBlock it sits in (if any). */
+function optionItems(u) {
+  const out = [];
+  const walk = (x, block) => {
+    if (Array.isArray(x)) return x.forEach((y) => walk(y, block));
+    if (!x || typeof x !== 'object') return;
+    const b = block || (Array.isArray(x.items) && x.template ? x : null);
+    if (typeof x.id === 'string' && x.type && Array.isArray(x.options)) out.push({ item: x, block: b });
+    Object.values(x).forEach((v) => walk(v, b));
+  };
+  walk(u.steps, null);
+  walk(u.check, null);
+  walk(u.start, null);
+  return out;
+}
+
+test('option order: same unit + item + attempt → same order; another attempt may reorder; the item is never mutated', () => {
+  const mc = { id: 'a1.1-u04-ls1-p03', type: 'multiple_choice', role: 'practice', options: ['einen Apfel', 'ein Apfel', 'einem Apfel'], answer: 'einen Apfel', accepted: ['einen Apfel'] };
+  const authored = [...mc.options];
+  const first = orderedOptions(mc, { unitId: 'a1.1-u04', attempt: 1 });
+  assert.deepEqual(orderedOptions(mc, { unitId: 'a1.1-u04', attempt: 1 }), first, 'a re-render in the same attempt shows the same order');
+  assert.equal(optionSeed('a1.1-u04', mc.id, 1), optionSeed('a1.1-u04', mc.id, 1));
+  assert.deepEqual([...first].sort(), [...authored].sort(), 'the same strings, only reordered');
+  assert.deepEqual(mc.options, authored, 'the authored item is untouched');
+  assert.notEqual(optionSeed('a1.1-u04', mc.id, 1), optionSeed('a1.1-u04', mc.id, 2), 'the attempt is part of the seed');
+  assert.notEqual(optionSeed('a1.1-u04', mc.id, 1), optionSeed('a1.1-u05', mc.id, 1), 'the unit is part of the seed');
+  const orders = Array.from({ length: 12 }, (_, i) => orderedOptions(mc, { unitId: 'a1.1-u04', attempt: i + 1 }).join('|'));
+  assert.ok(orders.some((o) => o !== orders[0]), 'a repeat attempt can reorder');
+  const keyAt = new Set(Array.from({ length: 30 }, (_, i) => orderedOptions(mc, { unitId: 'a1.1-u04', attempt: i + 1 }).indexOf(mc.answer)));
+  assert.deepEqual([...keyAt].sort(), [0, 1, 2], 'over attempts the key lands at every position');
+  // the fixture keys every non-exam item at options[0]; shown in the seeded order it is not always first
+  const shown = optionItems(unit).filter((x) => shufflesOptions(x.item, { block: x.block }));
+  assert.ok(shown.length >= 20);
+  assert.ok(shown.every((x) => x.item.options.indexOf(x.item.answer) === 0), 'fixture premise: authored key at options[0]');
+  const positions = shown.map((x) => orderedOptions(x.item, { unitId: unit.id, attempt: 1, block: x.block }).indexOf(x.item.answer));
+  assert.ok(positions.filter((p) => p === 0).length < shown.length / 2, `the key is no longer mostly first: ${positions.join(',')}`);
+});
+
+test('a shuffled choice item is graded by its option string, never by its position', () => {
+  const shown = optionItems(unit).filter((x) => shufflesOptions(x.item, { block: x.block }));
+  let moved = 0;
+  for (const { item, block } of shown) {
+    for (let attempt = 1; attempt <= 4; attempt += 1) {
+      const order = orderedOptions(item, { unitId: unit.id, attempt, block });
+      assert.ok(order.includes(item.answer), `${item.id}: the key is still offered`);
+      // what ItemView renders: the reordered item; the learner taps the key's string
+      assert.equal(checkItem({ ...item, options: order }, item.answer).result, RESULT.CORRECT, `${item.id} attempt ${attempt}: the key grades CORRECT`);
+      // the option now standing where the key was authored is right only if it IS the key
+      const atAuthoredSlot = order[item.options.indexOf(item.answer)];
+      if (atAuthoredSlot !== item.answer) moved += 1;
+      assert.equal(checkItem({ ...item, options: order }, atAuthoredSlot).correct, atAuthoredSlot === item.answer, `${item.id}: a position earns nothing`);
+    }
+  }
+  assert.ok(moved > 0, 'the shuffle moved some keys, so the position test above bit');
+});
+
+test('exam items keep the format’s order: role exam, anything inside an ExamBlock, and the R/F pair', () => {
+  const exam = optionItems(unit).filter((x) => x.block);
+  assert.ok(exam.length >= 5 && exam.every((x) => x.item.role === 'exam'), 'the fixture LS4 block carries abc exam items');
+  for (const { item, block } of exam) {
+    assert.equal(isExamItem(item, { block }), true);
+    for (let attempt = 1; attempt <= 6; attempt += 1) {
+      assert.deepEqual(orderedOptions(item, { unitId: unit.id, attempt, block }), item.options, `${item.id}: in the block`);
+      assert.deepEqual(orderedOptions(item, { unitId: unit.id, attempt }), item.options, `${item.id}: role exam alone keeps it too`);
+    }
+  }
+  const bare = { id: 'x-ls1-p01', type: 'multiple_choice', options: ['a', 'b', 'c'], answer: 'a' };
+  assert.equal(shufflesOptions(bare), true, 'a non-exam multiple choice is shuffled');
+  assert.equal(shufflesOptions(bare, { block: { id: 'x-ls4-ga2-h1' } }), false, 'the same item inside an ExamBlock is not');
+  for (const type of ['richtig_falsch', 'ja_nein']) {
+    const tf = { id: `x-${type}`, type, options: type === 'ja_nein' ? ['ja', 'nein'] : ['richtig', 'falsch'], answer: 'falsch' };
+    for (let attempt = 1; attempt <= 6; attempt += 1) assert.deepEqual(orderedOptions(tf, { unitId: 'x', attempt }), tf.options, `${type} keeps its fixed order`);
+  }
+  assert.deepEqual(orderedOptions({ id: 'x-typed', type: 'fill_blank', answer: 'sich' }), [], 'a typed item has no options to order');
+});
+
+test('the renderers show options through the seeded order with the step’s attempt', () => {
+  const plan = buildUnitPlan(unit, { attempts: { [`${unit.id}-ls1`]: 2, [`${unit.id}-ls7`]: 3 } });
+  assert.equal(plan.steps.find((s) => s.id === `${unit.id}-ls1`).plan.attempt, 2);
+  assert.equal(plan.steps.find((s) => s.kind === 'check').plan.attempt, 3, 'the Check plan carries its attempt');
+  const iv = read('src/components/course-v2/ItemView.jsx');
+  assert.match(iv, /orderedOptions\(item, \{ unitId: uid, attempt, block \}\)/, 'ItemView orders an item’s own options through unitPlan');
+  assert.doesNotMatch(iv, /item\.options\.map\(/, 'no path renders the authored order directly');
+  const sv = read('src/components/course-v2/StepView.jsx');
+  assert.match(sv, /const drawAttempt = Number\(step\.plan && step\.plan\.attempt\) \|\| 1;/);
+  assert.match(sv, /attempt: drawAttempt, onAttempt: attempt \}/, 'every ItemRun of the step gets the attempt');
+  assert.match(sv, /<CheckView[\s\S]{0,400}attempt=\{drawAttempt\}/, 'the Check gets it too');
+  assert.match(read('src/components/course-v2/ItemRun.jsx'), /attempt=\{attempt\}/);
+  assert.equal((read('src/components/course-v2/CheckView.jsx').match(/attempt=\{attempt\}/g) || []).length, 2, 'check items and proof items');
+  assert.match(read('src/components/course-v2/ExamBlockView.jsx'), /<ItemView[\s\S]{0,300}block=\{block\}/, 'exam items reach ItemView with their block (never shuffled)');
 });
 
 test('resume is at the first unfinished step; all finished → recap', () => {

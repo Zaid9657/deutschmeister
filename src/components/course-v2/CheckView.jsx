@@ -25,8 +25,9 @@ const LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] 
  * No AI anywhere; below 60 % the screen SUGGESTS repeating a Lernschritt and never blocks
  * (BLUEPRINT §3.5: no gate reads a score). `onDone({ stepId, correct, total, proofs })` counts
  * the 12 only; `proofs` = { canDoId: proven } as „Das kann ich" showed it (additive).
+ * `attempt` (the Check's plan.attempt) seeds the option order of its choice items (ItemView).
  */
-export default function CheckView({ unit, level, stepId, endLine = null, earlierItems = [], aufgaben = null, course = null, canDos = null, ruleCards = null, lines, names, onAttempt, onDone }) {
+export default function CheckView({ unit, level, stepId, endLine = null, earlierItems = [], attempt = 1, aufgaben = null, course = null, canDos = null, ruleCards = null, lines, names, onAttempt, onDone }) {
   const [lang, t] = useV2Strings();
   const check = unit?.check || {};
   const items = useMemo(() => [...(check.items || []), ...(earlierItems || [])], [check.items, earlierItems]);
@@ -73,6 +74,7 @@ export default function CheckView({ unit, level, stepId, endLine = null, earlier
           names={names}
           stepId={stepId}
           level={level}
+          attempt={attempt}
           onAttempt={onAttempt}
           onFinish={(r) => { setScore(r); setPhase(proofItems.length ? 'proofs' : 'summary'); }}
         />
@@ -92,6 +94,7 @@ export default function CheckView({ unit, level, stepId, endLine = null, earlier
           names={names}
           stepId={stepId}
           level={level}
+          attempt={attempt}
           onAttempt={onProofAttempt}
           onFinish={() => setPhase('summary')}
         />

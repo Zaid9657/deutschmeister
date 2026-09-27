@@ -123,7 +123,7 @@ export function run({ docs }) {
       const counts = [0, 0, 0];
       for (const k of keys) counts[k] += 1;
       const ideal = keys.length / 3;
-      if (counts.some((c) => Math.abs(c - ideal) > 1)) findings.push(advisory(doc, path, `non-exam 3-option keys ${counts.join('/')} (a/b/c) over ${keys.length} items in ${g} — balance each position within ±1 of ${ideal.toFixed(1)} (the player does not shuffle options)`, g));
+      if (counts.some((c) => Math.abs(c - ideal) > 1)) findings.push(advisory(doc, path, `non-exam 3-option keys ${counts.join('/')} (a/b/c) over ${keys.length} items in ${g} — balance each position within ±1 of ${ideal.toFixed(1)} (informational only: the player shuffles non-exam options with a seed — unitPlan.orderedOptions — so this never needs an authoring fix)`, g));
       for (const [where, list] of lists) {
         const run = longestRun(list);
         if (where !== 'pool' && where !== 'reserve' && run > 3) findings.push(advisory(doc, path, `${run} ${where} items in a row keyed at the same position (max 3)`, g));
