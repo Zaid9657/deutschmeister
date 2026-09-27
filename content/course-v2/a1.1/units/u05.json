@@ -260,7 +260,7 @@
         {
           "token": "eigene",
           "gloss": {
-            "en": "own: eine eigene Wohnung = a flat of their own"
+            "en": "own"
           }
         }
       ]
@@ -1046,8 +1046,8 @@
           {
             "id": "a1.1-u05-ls2-l06",
             "speaker": "cast.priya",
-            "de": "Er steht hier im Wohnzimmer, am Fenster. Hier arbeitet Arjun.",
-            "en": "It’s here in the living room, by the window. This is where Arjun works."
+            "de": "Er steht hier im Wohnzimmer, am Fenster. Hier arbeitet Arjun, und hier lerne ich Deutsch.",
+            "en": "It’s here in the living room, by the window. This is where Arjun works, and where I study German."
           },
           {
             "id": "a1.1-u05-ls2-l07",
@@ -1084,7 +1084,7 @@
           {
             "token": "eigene",
             "gloss": {
-              "en": "own: eine eigene Wohnung = a flat of your own"
+              "en": "own"
             }
           }
         ],
@@ -2288,7 +2288,7 @@
             "count": 2,
             "source": [
               "a1.1-u05-ls3-l07",
-              "a1.1-u05-ls3-l09"
+              "a1.1-u05-ls3-l01"
             ]
           },
           {
@@ -2917,7 +2917,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Ich spreche Malayalam, Englisch und ein bisschen Deutsch. Ich lerne Deutsch im Kurs."
+            "de": "Ich spreche Englisch und ein bisschen Deutsch. Ich lerne Deutsch im Kurs."
           },
           {
             "speaker": "partner",
@@ -3247,7 +3247,7 @@
         "type": "multiple_choice",
         "role": "proof",
         "topic": "lesen",
-        "promptDe": "Anzeige: Wohnzimmer, Schlafzimmer, Kinderzimmer, Küche, Bad, Balkon. Miete: 750 €. Wie viele Zimmer hat die Wohnung?",
+        "promptDe": "Anzeige: Wohnzimmer, Schlafzimmer, Kinderzimmer, Küche, Bad, Balkon. Wie viele Zimmer?",
         "promptEn": "Read the ad: how many rooms does the flat have?",
         "options": [
           "drei",
