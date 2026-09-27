@@ -18,7 +18,7 @@
 
 import { tokens, FUNCTION_WORDS } from './text.mjs';
 import { LEVELS, positionOf, parseUnitId, unitPosition } from './ids.mjs';
-import { CORE_FORMS, CORE_ENTRIES, NUMBER_WORDS } from './core-lexicon.mjs';
+import { CORE_FIXED, CORE_ENTRIES, NUMBER_WORDS } from './core-lexicon.mjs';
 
 const lc = (s) => String(s ?? '').toLowerCase().trim();
 const words = (s) => lc(s).split(/\s+/).filter(Boolean);
@@ -189,22 +189,56 @@ function addEntry(set, e) {
 }
 
 let coreCache = null;
-/** Every form the closed core list (core-lexicon.mjs) and the number words license. */
+/**
+ * The always-known floor: FUNCTION_WORDS, the separable particles and the number words (`always`),
+ * plus the core lemmas of core-lexicon.mjs with their forms (`lemmas`: [{ key, forms }]).
+ */
 export function coreForms() {
   if (coreCache) return coreCache;
-  const s = new Set([...FUNCTION_WORDS, ...PARTICLES, ...NUMBER_WORDS, ...CORE_FORMS]);
-  for (const e of CORE_ENTRIES) addEntry(s, e);
-  coreCache = s;
-  return s;
+  const always = new Set([...FUNCTION_WORDS, ...PARTICLES, ...NUMBER_WORDS]);
+  const lemmas = CORE_FIXED.map((x) => ({ key: lc(x.lemma), forms: x.forms.map(lc) }));
+  for (const e of CORE_ENTRIES) {
+    const s = new Set();
+    addEntry(s, e);
+    lemmas.push({ key: lc(e.lemma).replace(/^(der|die|das)\s+/, ''), forms: [...s] });
+  }
+  coreCache = { always, lemmas };
+  return coreCache;
+}
+
+const allocCache = new WeakMap();
+/** bare lemma (lower-case) → the earliest course position any lexicon allocates it to. */
+function allocatedAt(ctx) {
+  if (allocCache.has(ctx)) return allocCache.get(ctx);
+  const m = new Map();
+  for (const l of LEVELS) {
+    for (const e of ctx.levels.get(l)?.lexicon?.entries || []) {
+      const u = parseUnitId(e?.unit);
+      const p = u ? positionOf(u.level, u.nr) : null;
+      if (p === null) continue;
+      const k = lc(e?.lemma).replace(/^(der|die|das)\s+/, '');
+      if (!m.has(k) || m.get(k) > p) m.set(k, p);
+    }
+  }
+  allocCache.set(ctx, m);
+  return m;
 }
 
 /**
- * The known-token set at a course position: the core list and number words, lexicon entries of
- * every earlier level and of this level's units ≤ nr, cast names.
+ * The known-token set at a course position: function words, particles, number words; the core list
+ * (except a lemma some lexicon allocates to a LATER unit — the lexicon outranks the core); lexicon
+ * entries of every earlier level and of this level's units ≤ nr, every inflected form; cast names.
  */
 export function knownForms(ctx, level, nr) {
-  const known = new Set(coreForms());
+  const { always, lemmas } = coreForms();
+  const known = new Set(always);
   const here = positionOf(level, nr);
+  const alloc = allocatedAt(ctx);
+  for (const { key, forms } of lemmas) {
+    const at = alloc.get(key);
+    if (at !== undefined && here !== null && at > here) continue;
+    for (const f of forms) known.add(f);
+  }
   for (const l of LEVELS.slice(0, LEVELS.indexOf(level) + 1)) {
     for (const e of ctx.levels.get(l)?.lexicon?.entries || []) {
       const u = parseUnitId(e?.unit);

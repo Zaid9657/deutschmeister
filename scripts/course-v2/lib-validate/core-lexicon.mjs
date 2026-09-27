@@ -17,6 +17,10 @@
 // Entries are generated through the same morphology as the lexicon (lexicon.mjs entryForms), so
 // „bringen" licenses bringt, brachte, gebracht, brächte …; paradigms that morphology cannot generate
 // are spelled out in CORE_PARADIGMS. Number words are generated (NUMBER_WORDS).
+//
+// PRECEDENCE. The lexicon outranks this list: a core lemma that some lexicon allocates to a unit is
+// NOT known before that unit (lexicon.mjs knownForms), so the core can never teach a word early. The
+// list was pruned on 2026-09-27 of every lemma the eight lexicons already allocate (gehen, Frau, gut …).
 
 /** Irregular paradigms, every form spelled out (one entry each). */
 export const CORE_PARADIGMS = {
@@ -40,13 +44,13 @@ export const CORE_PARADIGMS = {
 const CLOSED = `
 dies dessen deren denen jemanden jemandem niemanden niemandem einige einigen einiger einiges
 mehrere mehreren solche solchen solcher solches keins meins deins
-dabei dafür dagegen daher dahin daneben daran darauf daraus darin darüber davon davor dazu dazwischen
+dabei dafür dahin daneben daran darauf daraus darin darüber davon davor dazu dazwischen
 woran worauf woraus worin worüber wovon wofür womit wozu dorthin
 außer
 einmal zweimal dreimal nochmal erst
-unten oben links rechts geradeaus hinten vorne vorn draußen allein
+unten oben hinten vorne vorn draußen
 morgens mittags nachmittags vormittags abends nachts montags dienstags mittwochs donnerstags freitags samstags sonntags
-vielleicht leider natürlich wirklich genau
+vielleicht natürlich wirklich genau
 ach oh na hm hmm äh ähm tja okay ok aha
 `;
 /**
@@ -56,155 +60,53 @@ ach oh na hm hmm äh ähm tja okay ok aha
 const CONTENT = `
 VERB beginnen | beginnt | begann | hat begonnen
 VERB bringen | bringt | brachte | hat gebracht
-VERB bleiben | bleibt | blieb | ist geblieben
-VERB finden | findet | fand | hat gefunden
-VERB geben | gibt | gab | hat gegeben
-VERB gehen | geht | ging | ist gegangen
-VERB halten | hält | hielt | hat gehalten
-VERB heißen | heißt | hieß | hat geheißen
-VERB kommen | kommt | kam | ist gekommen
 VERB liegen | liegt | lag | hat gelegen
-VERB machen | macht | machte | hat gemacht
-VERB nehmen | nimmt | nahm | hat genommen
 VERB sagen | sagt | sagte | hat gesagt
-VERB sehen | sieht | sah | hat gesehen
 VERB sitzen | sitzt | saß | hat gesessen
 VERB stehen | steht | stand | hat gestanden
-VERB gefallen | gefällt | gefiel | hat gefallen
-VERB fahren | fährt | fuhr | ist gefahren
-VERB laufen | läuft | lief | ist gelaufen
-VERB schlafen | schläft | schlief | hat geschlafen
-VERB sprechen | spricht | sprach | hat gesprochen
-VERB lesen | liest | las | hat gelesen
-VERB essen | isst | aß | hat gegessen
-VERB trinken | trinkt | trank | hat getrunken
-VERB schreiben | schreibt | schrieb | hat geschrieben
 VERB rufen | ruft | rief | hat gerufen
-VERB fragen | fragt | fragte | hat gefragt
-VERB antworten | antwortet | antwortete | hat geantwortet
-VERB brauchen | braucht | brauchte | hat gebraucht
-VERB danken | dankt | dankte | hat gedankt
 VERB dauern | dauert | dauerte | hat gedauert
-VERB fehlen | fehlt | fehlte | hat gefehlt
 VERB glauben | glaubt | glaubte | hat geglaubt
-VERB hören | hört | hörte | hat gehört
-VERB kaufen | kauft | kaufte | hat gekauft
-VERB kosten | kostet | kostete | hat gekostet
-VERB lernen | lernt | lernte | hat gelernt
-VERB sagen | sagt | sagte | hat gesagt
-VERB spielen | spielt | spielte | hat gespielt
 VERB stimmen | stimmt | stimmte | hat gestimmt
-VERB suchen | sucht | suchte | hat gesucht
-VERB warten | wartet | wartete | hat gewartet
-VERB wohnen | wohnt | wohnte | hat gewohnt
 VERB öffnen | öffnet | öffnete | hat geöffnet
 VERB zumachen | macht zu | machte zu | hat zugemacht
 VERB aufmachen | macht auf | machte auf | hat aufgemacht
-VERB anfangen | fängt an | fing an | hat angefangen
-VERB aufhören | hört auf | hörte auf | hat aufgehört
 VERB mitbringen | bringt mit | brachte mit | hat mitgebracht
 NOUN der Moment | Momente
 NOUN die Tür | Türen
-NOUN das Fenster | Fenster
-NOUN der Tisch | Tische
-NOUN der Stuhl | Stühle
 NOUN das Haus | Häuser
-NOUN die Wohnung | Wohnungen
-NOUN das Zimmer | Zimmer
-NOUN die Straße | Straßen
-NOUN die Stadt | Städte
-NOUN der Platz | Plätze
 NOUN der Ort | Orte
-NOUN das Land | Länder
 NOUN der Mensch | Menschen
 NOUN die Leute | Leute
-NOUN der Mann | Männer
-NOUN die Frau | Frauen
-NOUN das Kind | Kinder
-NOUN der Freund | Freunde
-NOUN die Frage | Fragen
 NOUN die Antwort | Antworten
-NOUN das Wort | Wörter
-NOUN der Satz | Sätze
 NOUN der Text | Texte
 NOUN das Bild | Bilder
-NOUN die Seite | Seiten
-NOUN die Nummer | Nummern
-NOUN der Name | Namen
 NOUN die Zeit | Zeiten
-NOUN die Uhr | Uhren
-NOUN die Stunde | Stunden
-NOUN die Minute | Minuten
-NOUN der Tag | Tage
-NOUN die Woche | Wochen
-NOUN der Monat | Monate
-NOUN das Jahr | Jahre
-NOUN der Morgen | Morgen
-NOUN der Abend | Abende
-NOUN die Nacht | Nächte
 NOUN der Mittag | Mittage
-NOUN das Wochenende | Wochenenden
 NOUN das Ende | Enden
-NOUN der Euro | Euro
 NOUN der Cent | Cent
-NOUN das Geld | –
-NOUN der Preis | Preise
-NOUN das Wasser | –
-NOUN der Kaffee | Kaffees
-NOUN der Tee | Tees
-NOUN das Essen | Essen
 NOUN das Auto | Autos
-NOUN der Bus | Busse
-NOUN der Zug | Züge
 NOUN die Arbeit | Arbeiten
 NOUN die Schule | Schulen
-NOUN der Kurs | Kurse
-NOUN das Problem | Probleme
-NOUN das Handy | Handys
-NOUN die Adresse | Adressen
-NOUN der Brief | Briefe
-NOUN die Hilfe | Hilfen
 NOUN der Gruß | Grüße
 NOUN die Dame | Damen
 NOUN der Herr | Herren
 NOUN das Mal | Male
 ADJ fertig
-ADJ gut
-ADJ schlecht
-ADJ groß
-ADJ klein
-ADJ neu
-ADJ alt
-ADJ jung
-ADJ lang
-ADJ kurz
-ADJ schön
-ADJ richtig
-ADJ falsch
-ADJ frei
-ADJ billig
-ADJ teuer
 ADJ schnell
 ADJ langsam
 ADJ früh
-ADJ spät
 ADJ nächst
 ADJ letzt
 ADJ viel
 ADJ wenig
 ADJ ganz
-ADJ halb
 ADJ gleich
 ADJ andere
 ADJ wichtig
 ADJ klar
-ADJ offen
-ADJ geschlossen
 ADJ geehrt
-ADJ lieb
 ADJ laut
-ADJ leise
-ADJ freundlich
 `;
 
 function parseContent(src) {
@@ -242,10 +144,10 @@ export const CORE_ENTRIES = parseContent(CONTENT);
 
 const CLOSED_WORDS = CLOSED.split(/\s+/).filter(Boolean);
 
-/** Every closed-class and paradigm form, as a flat list. */
-export const CORE_FORMS = [
-  ...CLOSED_WORDS,
-  ...Object.values(CORE_PARADIGMS).flatMap((s) => s.split(/\s+/).filter(Boolean)),
+/** Closed-class words and spelled-out paradigms as { lemma, forms } (content entries: CORE_ENTRIES). */
+export const CORE_FIXED = [
+  ...CLOSED_WORDS.map((w) => ({ lemma: w, forms: [w] })),
+  ...Object.entries(CORE_PARADIGMS).map(([lemma, f]) => ({ lemma, forms: f.split(/\s+/).filter(Boolean) })),
 ];
 
 /** The number of entries the core holds (a test pins the ceiling). */

@@ -44,6 +44,12 @@ import { StartViewSlot, StepViewSlot, KIND_LABEL_DE, hasStartRenderer } from './
 
 const pad2 = (n) => String(n).padStart(2, '0');
 
+// The Start's answers (StartView's gist item and the „Ich kann das schon" test-out)
+// carry the step ids `<unitId>-start` / `<unitId>-start-testout`, which name no unit
+// step; they are stored under their own stage so they never read as a step's items.
+const startStage = (stepId) => (String(stepId).endsWith('-testout') ? 'testout' : 'start');
+const isStartId = (unitId, stepId) => String(stepId).startsWith(`${unitId}-start`);
+
 function useUnitData(level, nr) {
   const [data, setData] = useState({ status: 'loading' });
   useEffect(() => {
@@ -231,7 +237,8 @@ export function UnitPlayer({ level, unit, manifest, user }) {
       for (const [stepId, list] of map.entries()) {
         if (!list.length) continue;
         const step = (unit.steps || []).find((s) => s.id === stepId);
-        flushAttempts(user.id, { level, unitId, stepKind: step && step.kind }, list);
+        const stepKind = step ? step.kind : isStartId(unitId, stepId) ? startStage(stepId) : null;
+        flushAttempts(user.id, { level, unitId, stepKind }, list);
         map.set(stepId, []);
       }
     };
@@ -292,6 +299,12 @@ export function UnitPlayer({ level, unit, manifest, user }) {
   }, [steps, stepIndex, user, level, unitId, finished, nextAfter]);
 
   const onStartDone = useCallback((result) => {
+    // The Start's own answers are written now, under their own stage (see startStage).
+    for (const [stepId, list] of pending.current.entries()) {
+      if (!isStartId(unitId, stepId) || !list.length) continue;
+      if (user) flushAttempts(user.id, { level, unitId, stepKind: startStage(stepId) }, list);
+      pending.current.set(stepId, []);
+    }
     const to = result && result.testOut;
     if (to && testOutPassed(to, testOutThreshold)) {
       const credited = (unit.steps || []).filter((s) => LERNSCHRITT_KINDS.includes(s.kind)).map((s) => s.id);
@@ -376,7 +389,7 @@ export function UnitPlayer({ level, unit, manifest, user }) {
         title={t('player.unit', { n: unit.nr })}
         footer={hasStartRenderer ? null : <Button size="lg" className="w-full" onClick={() => onStartDone(null)}>{t('start.begin')}</Button>}
       >
-        <StartViewSlot unit={unit} level={level} onDone={onStartDone} fallback={fallback} extra={{ course: manifest }} />
+        <StartViewSlot unit={unit} level={level} onDone={onStartDone} fallback={fallback} extra={{ course: manifest, onAttempt }} />
       </Shell>
     );
   }

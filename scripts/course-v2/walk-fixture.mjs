@@ -7,7 +7,9 @@
 //   npx vite --port 5199                      # in another shell
 //   PW=$(npm root -g)/playwright PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers \
 //     node scripts/course-v2/walk-fixture.mjs <outDir> [de|en] [steps=1] [prefix]
-//   env: RELOAD_AT_END=1 (also resume, course home, Plateau, a missing unit), FULL_CHECK=1
+//   env: RELOAD_AT_END=1 (also resume, course home, Plateau, a missing unit), FULL_CHECK=1,
+//        MISS_FIRST=1 (answer the first practice item wrongly: the miss feedback and the
+//        requeued alternate from the reserve index get their own screenshots)
 //
 // Every answer is the item's own `answer`, so a run that stops says where a screen and
 // the driver disagree. Exit code 1 on a crash; a "stuck:" line when no action is left.
@@ -27,6 +29,15 @@ const walk = (x) => { if (Array.isArray(x)) return x.forEach(walk); if (x && typ
 walk(unit);
 const lines = new Map(); walk2(unit);
 function walk2(x) { if (Array.isArray(x)) return x.forEach(walk2); if (x && typeof x === 'object') { if (x.id && typeof x.de === 'string' && x.speaker !== undefined) lines.set(x.id, x); Object.values(x).forEach(walk2); } }
+// the reserve index (the requeue's second source) — its entries answer by `answer` too
+try {
+  const reserve = JSON.parse(fs.readFileSync(path.resolve('.cache/course-v2-fixture/data/a2.1/reserve.json'), 'utf8'));
+  for (const it of reserve.items || []) {
+    if (!it || !it.id || items.has(it.id)) continue;
+    const m = it.type === 'sentence_building' ? /^([\s\S]*?) \[(.+)\]$/.exec(String(it.questionDe || '')) : null;
+    items.set(it.id, { ...it, ...(m ? { tiles: m[2].split(' / ') } : {}) });
+  }
+} catch { /* no reserve index compiled */ }
 for (const s of unit.steps) {
   for (const g of (s.pool && s.pool.generators) || []) if (g.generator === 'dictation.fromInput') g.ids.forEach((id, i) => { const l = lines.get(g.source[i]); if (l) items.set(id, { id, type: 'dictation', answer: l.de }); });
   const p = s.aussprache && s.aussprache.perception;
@@ -99,6 +110,7 @@ for (const s of unit.steps) {
   let lastEyebrow = '';
   const seenTypes = new Set(); const answered = new Set();
   let stepsFinished = 0; let lastStep = null; let guard = 0; let overflow = [];
+  let missed = !process.env.MISS_FIRST; let requeueShot = false; const firstIds = new Set();
   while (guard++ < 200) {
     s = await state();
     if (s.sw > 360) overflow.push(`${s.stepId} ${s.eyebrow} sw=${s.sw}`);
@@ -118,6 +130,24 @@ for (const s of unit.steps) {
       const firstOfType = !seenTypes.has(item.type); seenTypes.add(item.type);
       const scope = page.locator(`[data-item-id="${todo}"]`).last();
       await scope.scrollIntoViewIfNeeded();
+      const practice = /ÜBEN|PRACTICE/i.test(s.eyebrow);
+      if (practice && !missed && ['fill_blank', 'sentence_building', 'error_correction'].includes(item.type)) {
+        // MISS_FIRST: a wrong answer on the first typed/tiled practice item → miss + requeue
+        missed = true; firstIds.add(todo);
+        if (item.type === 'sentence_building' && item.tiles) {
+          const ans = String(item.answer).toLowerCase();
+          const order = [...item.tiles].sort((a, b) => ans.indexOf(b.toLowerCase()) - ans.indexOf(a.toLowerCase()));
+          for (const tok of order) await scope.locator('button:visible').filter({ hasText: new RegExp(`^\\s*${tok}\\s*$`, 'i') }).first().click();
+        } else {
+          await scope.locator('input:visible, textarea:visible').first().fill('xyz');
+        }
+        await page.locator('button:visible', { hasText: L.check }).last().click();
+        await page.waitForTimeout(300);
+        await snap('miss-feedback');
+        continue;
+      }
+      if (practice && process.env.MISS_FIRST && !requeueShot && /-r\d{2}$/.test(todo)) { requeueShot = true; await snap('requeue-reserve-item'); }
+      else if (practice && process.env.MISS_FIRST && !requeueShot && firstIds.has(todo)) { requeueShot = true; await snap('requeue-same-item'); }
       if (item.type === 'sentence_building' && item.tiles) {
         const ans = String(item.answer).toLowerCase();
         const order = [...item.tiles].sort((a, b) => ans.indexOf(a.toLowerCase()) - ans.indexOf(b.toLowerCase()));
