@@ -3157,7 +3157,7 @@
     }
   ],
   "story": {
-    "beat": "Priya und Amal lassen sich nach der missglückten Kreta-Reise nicht mit einem Gutschein abwimmeln: Sie tun sich mit den anderen Mitreisenden zusammen und fordern eine Minderung.",
+    "beat": "Priya und Amal geben sich nach der missglückten Kreta-Reise nicht mit einem Gutschein zufrieden: Sie tun sich mit den anderen Mitreisenden zusammen und fordern eine Minderung.",
     "cliffhanger": "Zurück in Hamburg findet Priya einen Zettel im Briefkasten. Ihre Nachbarin Frau Brodersen schreibt: „Gegenüber entsteht ein Mehrgenerationenhaus. Wollen wir uns nicht alle einmal kennenlernen?“",
     "castIn": [
       "cast.frau-brodersen"
@@ -3179,7 +3179,7 @@
       "currentAsOf": "2026-09-27",
       "exceptions": [
         {
-          "de": "Wer einen Mangel schuldhaft nicht anzeigt, kann keine Minderung und keinen Schadensersatz verlangen, soweit der Veranstalter deshalb keine Abhilfe schaffen konnte (§ 651o Abs. 2 BGB).",
+          "de": "Reisende, die einen Mangel schuldhaft nicht anzeigen, können keine Minderung und keinen Schadensersatz verlangen, soweit der Veranstalter deshalb keine Abhilfe schaffen konnte (§ 651o Abs. 2 BGB).",
           "en": "A traveller who culpably fails to report a defect loses the right to a price reduction and damages to the extent that the operator could therefore not remedy it (§ 651o(2) BGB)."
         },
         {
