@@ -248,8 +248,10 @@ function caseOnlyDiff(rawUser, rawAccepted) {
  * UI can say so.
  *
  * strict = true disables the typo allowance for single-token answers (pass
- * STRICT_TOPIC.test(item.topic)); dictation = true additionally folds dashes and
- * digit grouping (see normalizeDictation); spelling = true folds the separators
+ * STRICT_TOPIC.test(item.topic)); dictation = true additionally folds dashes,
+ * ellipses and digit grouping (see normalizeDictation) and, when that alone does
+ * not accept the answer, reads every number word as its digits (foldNumberWords:
+ * „fünfzehn Euro" = „15 Euro", course-v2 2026-09-27); spelling = true folds the separators
  * of a spelled-out word (see normalizeSpelling) and is turned on automatically
  * when an accepted answer looks like one (REVIEW #4 BLOCKER 1).
  *
@@ -260,14 +262,28 @@ function caseOnlyDiff(rawUser, rawAccepted) {
  * what the standard §3 says capitalisation is worth; it is NOT silently correct
  * any more. Spelled-out words have no meaningful case and are exempt.
  */
-export function checkAnswer(userInput, expected, {
+export function checkAnswer(userInput, expected, opts = {}) {
+  const first = compareAnswer(userInput, expected, opts, false);
+  // A dictation hears „fünfzehn" and „15" alike (see foldNumberWords). The
+  // folded comparison runs only when the plain one did not already accept the
+  // answer, and it is kept only when it is better, so a dictation can only gain
+  // from it: nothing that was CORRECT or TYPO before is graded worse. A plain
+  // bug fix for the live A1.1 dictations too („Der Tisch kostet fünfzehn Euro.").
+  if (!opts.dictation || first.result === RESULT.CORRECT) return first;
+  const folded = compareAnswer(userInput, expected, opts, true);
+  const rank = { [RESULT.CORRECT]: 2, [RESULT.TYPO]: 1, [RESULT.WRONG]: 0 };
+  return rank[folded.result] > rank[first.result] ? folded : first;
+}
+
+function compareAnswer(userInput, expected, {
   strict = false, dictation = false, caseSensitive = false, spelling = false,
-} = {}) {
+} = {}, numbers = false) {
   const accepted = (Array.isArray(expected) ? expected : [expected]).filter(Boolean);
   const spellingMode = spelling || spellingApplies(accepted);
   const fold = (s) => {
     let t = String(s ?? '');
     if (dictation) t = normalizeDictation(t);
+    if (numbers) t = normalizeDictation(foldNumberWords(t));
     if (spellingMode) t = normalizeSpelling(t);
     return t;
   };

@@ -3,8 +3,12 @@
 // Deliberately small and deterministic. Nothing here parses German; it cuts text the way the
 // rules need it cut and says so where a cut is a heuristic.
 
-/** A German word token: letters incl. umlauts/ß, optionally hyphenated; or a number (8.30, 0341, 12.). */
-export const TOKEN_RE = /[A-Za-zÄÖÜäöüß]+(?:-[A-Za-zÄÖÜäöüß]+)*|\d+(?:[.:,]\d+)*/g;
+/**
+ * A word token: Unicode letters (umlauts, ß, and the é/è/à/ç/ñ of loanwords: Café, Sprachcafé,
+ * Repair-Café — rule-smith 2026-09-27, the old [A-Za-zÄÖÜäöüß] class cut „Café" into „Caf" and never
+ * knew it), optionally hyphenated; or a number (8.30, 0341, 12.).
+ */
+export const TOKEN_RE = /[\p{L}\p{M}]+(?:-[\p{L}\p{M}]+)*|\d+(?:[.:,]\d+)*/gu;
 
 /** Every token of `text` as `{ text, lower, index }`. */
 export function tokens(text) {
@@ -22,7 +26,7 @@ export const words = (text) => tokens(text).map((t) => t.lower);
 export function wordCount(text) {
   return String(text ?? '')
     .split(/\s+/)
-    .filter((w) => /[A-Za-zÄÖÜäöüß0-9]/.test(w)).length;
+    .filter((w) => /[\p{L}\p{N}]/u.test(w)).length;
 }
 
 /** Lower-case, quotes and punctuation stripped, whitespace collapsed — for comparing two strings. */
@@ -67,15 +71,15 @@ export function sentences(text) {
     while (j < src.length && /[.!?…“”"»)']/.test(src[j])) j += 1;
     if (j < src.length && !/\s/.test(src[j])) continue; // 8.30, 0341.58, „…“-Mitte
     if (ch === '.') {
-      const before = src.slice(start, i).match(/([A-Za-zÄÖÜäöüß]+|\d+)$/);
+      const before = src.slice(start, i).match(/(\p{L}+|\d+)$/u);
       if (before) {
         const w = before[1].toLowerCase();
         if (/^\d+$/.test(w) && j < src.length) {
           // „am 12. März" / „der 3. Stock" / „vom 3. bis 5. Juni": an ordinal — unless the next
           // word is a capitalised function word that starts a sentence („Zimmer 12. Auf dem Tisch …")
           const next = src.slice(j).trimStart();
-          const nw = (next.match(/^[A-Za-zÄÖÜäöüß]+/) || [''])[0];
-          if (nw && !(/^[A-ZÄÖÜ]/.test(nw) && FUNCTION_WORDS.has(nw.toLowerCase()))) continue;
+          const nw = (next.match(/^\p{L}+/u) || [''])[0];
+          if (nw && !(/^\p{Lu}/u.test(nw) && FUNCTION_WORDS.has(nw.toLowerCase()))) continue;
         }
         if (ABBREVIATIONS.has(w) && j < src.length) continue;
       }
@@ -159,7 +163,7 @@ export function endsVerbFinal(clause) {
   const toks = tokens(clause).filter((t) => !/^\d/.test(t.text));
   if (!toks.length) return false;
   const last = toks[toks.length - 1];
-  if (/^[A-ZÄÖÜ]/.test(last.text) && toks.length > 1) return false; // a noun or a name
+  if (/^\p{Lu}/u.test(last.text) && toks.length > 1) return false; // a noun or a name
   const w = last.lower;
   if (AUX_MODAL_FORMS.has(w) || CONSONANT_FINAL_VERBS.has(w)) return true;
   if (NOT_VERB_FINAL.has(w)) return false;

@@ -59,3 +59,48 @@ export function detectorPlacement(ctx) {
 }
 
 export { describePosition };
+
+// ── forms a spine point introduces (GRM-04 exemption, orchestrator 2026-09-27) ────────────────
+//
+// A point can introduce a few FORMS of a construction whose detector belongs to a later point:
+// g.praeteritum-kernverben („Präteritum häufiger Verben beim Erzählen: kam, sagte, es gab (…)",
+// a2.2-u01) licenses kam/sagte/gab long before g.praeteritum (b1.1-u01) licenses the Präteritum of
+// every full verb, and det.praeteritum-vollverb must not block them in between. The forms are the
+// label's own list — after its colon, before any bracket — with the person endings of a finite form
+// (kam → kamen, kamst; sagte → sagten). Function words (es, ich, der …) never exempt anything: they
+// belong to too many constructions. The parenthesised model sentence is NOT a form list.
+
+const FORM_ENDINGS = ['', 'st', 'n', 'en', 't', 'et', 'e'];
+
+/** The forms a point's label lists: „…: kam, sagte, es gab (Als …)" → kam, sagte, gab (+ persons). */
+export function introducedForms(point, functionWords = new Set()) {
+  const label = String(point?.label || '');
+  const colon = label.indexOf(':');
+  if (colon < 0) return new Set();
+  const list = label.slice(colon + 1).split('(')[0];
+  const out = new Set();
+  for (const m of list.matchAll(/\p{L}+/gu)) {
+    const w = m[0].toLowerCase();
+    if (w.length < 2 || functionWords.has(w) || /^\p{Lu}/u.test(m[0])) continue;
+    for (const e of FORM_ENDINGS) out.add(`${w}${e}`);
+  }
+  return out;
+}
+
+/**
+ * The forms licensed at `pos` by points OTHER than a detector's own: every point whose intro
+ * (receptive for inputs and exam texts, productive for production) is at or before `pos`, plus the
+ * points the unit declares. Returns a Set of lower-case forms.
+ */
+export function exemptForms(ctx, pos, surface, declared = new Set(), functionWords = new Set()) {
+  const out = new Set();
+  const spine = ctx.registries.spine?.byId;
+  if (!spine) return out;
+  for (const [pid, { point }] of spine) {
+    const p = pointPositions(point);
+    const at = surface === 'production' ? p.prod : p.rec;
+    if (!declared.has(pid) && (at === null || at > pos)) continue;
+    for (const f of introducedForms(point, functionWords)) out.add(f);
+  }
+  return out;
+}

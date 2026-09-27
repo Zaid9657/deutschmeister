@@ -127,6 +127,12 @@
           "length": "full",
           "modeDefault": "pruefung",
           "slot": "sprechen"
+        },
+        {
+          "template": "tb1.sa",
+          "length": "full",
+          "modeDefault": "pruefung",
+          "slot": "schreiben"
         }
       ],
       "spur": {}
@@ -161,7 +167,8 @@
     "pruefungsfokusChips": [
       "tb1.lv3",
       "tb1.sb2",
-      "tb1.m3"
+      "tb1.m3",
+      "tb1.sa"
     ],
     "folge": {
       "title": "Montag, kurz vor der Mittagspause",
@@ -193,8 +200,8 @@
         {
           "id": "b1.2-u04-start-l05",
           "speaker": "cast.priya",
-          "de": "Das entscheiden wir morgen zusammen. Und Frau Otto bekommt danach von mir alle Ergebnisse und Beschlüsse per E-Mail.",
-          "en": "We’ll decide that together tomorrow. And afterwards I’ll send Ms Otto all the results and decisions by e-mail."
+          "de": "Das entscheiden wir morgen zusammen, und dann teilen wir die Aufgaben auf. Frau Otto bekommt danach von mir alle Ergebnisse und Beschlüsse per E-Mail.",
+          "en": "We’ll decide that together tomorrow, and then we’ll share out the tasks. Afterwards I’ll send Ms Otto all the results and decisions by e-mail."
         },
         {
           "id": "b1.2-u04-start-l06",
@@ -247,8 +254,8 @@
         "title": "Rundschreiben: Unser Teamtag",
         "textType": "tt.rundschreiben",
         "text": {
-          "de": "An alle Mitarbeiterinnen und Mitarbeiter\n\nUnser Teamtag im Juni\n\nLiebe Kolleginnen und Kollegen,\n\nin diesem Jahr sind viele neue Kolleginnen und Kollegen zu uns gekommen. Deshalb planen wir am Freitag, dem 19. Juni, einen gemeinsamen Teamtag. Der Zweck ist einfach: Wir wollen uns besser kennenlernen und einen Tag lang zusammen etwas unternehmen.\n\nFür das Projekt haben wir ein Budget von 1.200 Euro. Die Teilnehmerzahl liegt bei 18 Personen. Sie brauchen also nichts selbst zu bezahlen. Auch Urlaub brauchen Sie für diesen Tag nicht zu nehmen, denn der Teamtag ist Arbeitszeit.\n\nIm Intranet finden Sie unter „Teamtag“ Angebote aus Leipzig und Umgebung. Frau Nair vergleicht sie. Am Dienstag bereiten Herr Wolf, Frau Otto, Herr Yıldız, Frau Nair und ich den Tag in einer Sitzung vor. Der Teamtag ist dort der einzige Tagesordnungspunkt. Frau Nair stellt die Angebote vor, die infrage kommen. Ziel ist eine Einigung über Ort und Programm. Bis dahin ist alles noch vorläufig: Endgültig legen wir das Programm erst in der Sitzung fest. Ein Programmpunkt am Vormittag ist aber schon sicher: eine kurze Besprechung zum Zeitplan für das zweite Halbjahr.\n\nHaben Sie eine Idee oder einen Einwand, oder möchten Sie etwas ergänzen? Dann brauchen Sie nur eine kurze Nachricht an Frau Nair zu schreiben. In der Sitzung verteilen wir auch die Aufgaben: Wer übernimmt die Verantwortung für die Raumbuchung, wer für den Bus und wer für das Rahmenprogramm am Abend? Frau Nair fasst die Beschlüsse danach zusammen und schickt sie Ihnen per E-Mail.\n\nIch freue mich auf einen schönen Tag mit Ihnen!\n\nThomas Brandt\nGeschäftsführer",
-          "en": "Circular from the managing director: a team day on Friday 19 June for 18 people with a budget of 1,200 euros; staff pay nothing and need not take leave; Ms Nair compares the offers on the intranet; on Tuesday a small group (Mr Wolf, Ms Otto, Mr Yıldız, Ms Nair and Mr Brandt) meets to agree on the venue and programme and to share out the tasks."
+          "de": "An alle Mitarbeiterinnen und Mitarbeiter\n\nUnser Teamtag im Juni\n\nLiebe Kolleginnen und Kollegen,\n\nin diesem Jahr sind viele neue Kolleginnen und Kollegen zu uns gekommen. Deshalb planen wir am Freitag, dem 19. Juni, einen gemeinsamen Teamtag. Der Zweck ist einfach: Wir wollen uns besser kennenlernen und einen Tag lang zusammen etwas unternehmen.\n\nFür das Projekt haben wir ein Budget von 1.200 Euro. Die Teilnehmerzahl liegt bei 18 Personen. Sie brauchen also nichts selbst zu bezahlen. Auch Urlaub brauchen Sie für diesen Tag nicht zu nehmen, denn der Teamtag ist Arbeitszeit.\n\nIm Intranet finden Sie unter „Teamtag“ Angebote aus Leipzig und Umgebung. Frau Nair vergleicht sie. Am Dienstag bereiten Herr Wolf, Herr Yıldız, Frau Nair und ich den Tag in einer Sitzung vor. Der Teamtag ist dort der einzige Tagesordnungspunkt. Frau Otto ist an diesem Tag leider abwesend, denn sie ist auf einer Fortbildung. Frau Nair stellt die Angebote vor, die infrage kommen. Ziel ist eine Einigung über Ort und Programm. Bis dahin ist alles noch vorläufig: Endgültig legen wir das Programm erst in der Sitzung fest. Ein Programmpunkt am Vormittag ist aber schon sicher: eine kurze Besprechung zum Zeitplan für das zweite Halbjahr.\n\nHaben Sie eine Idee oder einen Einwand, oder möchten Sie etwas ergänzen? Dann brauchen Sie nur eine kurze Nachricht an Frau Nair zu schreiben. In der Sitzung verteilen wir auch die Aufgaben. Für das Rahmenprogramm am Abend hat sich Frau Otto schon bereit erklärt. Bei der Aufgabenverteilung geht es also noch um zwei Zuständigkeiten: Wer übernimmt die Verantwortung für die Raumbuchung und wer für den Bus? Frau Nair fasst die Beschlüsse danach zusammen und schickt sie Ihnen per E-Mail. Bis zum Teamtag bekommen Sie dann jede Woche einen kurzen Zwischenstand.\n\nIch freue mich auf einen schönen Tag mit Ihnen!\n\nThomas Brandt\nGeschäftsführer",
+          "en": "Circular from the managing director: a team day on Friday 19 June for 18 people with a budget of 1,200 euros; staff pay nothing and need not take leave; Ms Nair compares the offers on the intranet; on Tuesday a small group (Mr Wolf, Mr Yıldız, Ms Nair and Mr Brandt) meets to agree on the venue and programme and to share out the room booking and the bus – Ms Otto, who is away on a training course that day, has already volunteered for the evening programme; staff get a short progress update every week."
         },
         "glosses": [
           {
@@ -352,7 +359,7 @@
           "type": "richtig_falsch",
           "role": "detail",
           "topic": "lesen",
-          "promptDe": "„Wer welche Aufgabe übernimmt, entscheidet man erst in der Sitzung.“",
+          "promptDe": "„Wer den Bus und die Raumbuchung übernimmt, entscheidet man erst in der Sitzung.“",
           "promptEn": "True or false?",
           "options": [
             "richtig",
@@ -363,8 +370,8 @@
             "richtig"
           ],
           "explanation": {
-            "de": "In der Sitzung verteilt man auch die Aufgaben, zum Beispiel die Raumbuchung und den Bus.",
-            "en": "The tasks, e.g. the room booking and the bus, are shared out at the meeting."
+            "de": "Raumbuchung und Bus verteilt man erst in der Sitzung. Das Rahmenprogramm übernimmt Frau Otto schon.",
+            "en": "The room booking and the bus are shared out at the meeting; Ms Otto has already taken on the evening programme."
           },
           "origin": "agent"
         }
@@ -568,20 +575,20 @@
               "brauchen",
               "am Freitag",
               "nicht",
-              "zu arbeiten"
+              "ins Büro zu kommen"
             ],
-            "answer": "Wir brauchen am Freitag nicht zu arbeiten.",
+            "answer": "Wir brauchen am Freitag nicht ins Büro zu kommen.",
             "accepted": [
-              "Wir brauchen am Freitag nicht zu arbeiten.",
-              "Am Freitag brauchen wir nicht zu arbeiten.",
-              "Zu arbeiten brauchen wir am Freitag nicht."
+              "Wir brauchen am Freitag nicht ins Büro zu kommen.",
+              "Am Freitag brauchen wir nicht ins Büro zu kommen.",
+              "Ins Büro zu kommen brauchen wir am Freitag nicht."
             ],
             "acceptedWhy": {
-              "Zu arbeiten brauchen wir am Freitag nicht.": "grammatisch: der Infinitiv mit zu im Vorfeld betont die Handlung, aber selten"
+              "Ins Büro zu kommen brauchen wir am Freitag nicht.": "grammatisch: der Infinitiv mit zu im Vorfeld betont die Handlung, aber selten"
             },
             "explanation": {
-              "de": "brauchen auf Position 2, zu arbeiten am Ende.",
-              "en": "brauchen in second position, zu arbeiten at the end."
+              "de": "brauchen auf Position 2, ins Büro zu kommen am Ende.",
+              "en": "brauchen in second position, ins Büro zu kommen at the end."
             },
             "origin": "agent"
           },
@@ -619,8 +626,8 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "lx.unternehmen",
-            "promptDe": "Bilden Sie den Satz.",
-            "promptEn": "Build the sentence.",
+            "promptDe": "Bilden Sie die W-Frage.",
+            "promptEn": "Build the wh-question.",
             "tiles": [
               "was",
               "wollen",
@@ -928,8 +935,8 @@
           {
             "id": "b1.2-u04-ls2-l01",
             "speaker": "cast.jan-wolf",
-            "de": "So, fangen wir an. Anwesend sind heute Herr Brandt, Emre, Priya und ich. Frau Otto ist abwesend, sie ist auf einer Fortbildung. Deshalb moderiere ich, und Emre protokolliert. Auf der Tagesordnung steht nur ein Punkt: unser Teamtag.",
-            "en": "Right, let’s start. Present today are Mr Brandt, Emre, Priya and me. Ms Otto is away on a training course, so I’m chairing and Emre is taking the minutes. There is only one item on the agenda: our team day."
+            "de": "So, fangen wir an. Anwesend sind heute Herr Brandt, Emre, Priya und ich. Frau Otto ist abwesend, sie ist auf einer Fortbildung. Deshalb moderiere ich, und Emre protokolliert. Auf der Tagesordnung steht nur ein Punkt: unser Teamtag. Wer etwas sagen möchte, meldet sich bitte kurz zu Wort.",
+            "en": "Right, let’s start. Present today are Mr Brandt, Emre, Priya and me. Ms Otto is away on a training course, so I’m chairing and Emre is taking the minutes. There is only one item on the agenda: our team day. If you want to say something, please ask to speak."
           },
           {
             "id": "b1.2-u04-ls2-l02",
@@ -946,14 +953,14 @@
           {
             "id": "b1.2-u04-ls2-l04",
             "speaker": "cast.emre",
-            "de": "Darf ich kurz etwas ergänzen? Für die Kanutour muss man schwimmen können. Das kann nicht jeder im Team, ich zum Beispiel nicht so gut.",
-            "en": "May I add something? For the canoe tour you have to be able to swim. Not everyone on the team can – I can’t swim very well, for example."
+            "de": "Darf ich kurz etwas ergänzen? Für die Kanutour muss man schwimmen können. Das kann nicht jeder im Team, ich zum Beispiel nicht so gut. Ich würde deshalb etwas an Land vorziehen.",
+            "en": "May I add something? For the canoe tour you have to be able to swim. Not everyone on the team can – I can’t swim very well, for example. So I’d prefer something on land."
           },
           {
             "id": "b1.2-u04-ls2-l05",
             "speaker": "cast.herr-brandt",
-            "de": "Das ist ein wichtiger Einwand, Herr Yıldız. Frau Nair, gibt es eine Alternative?",
-            "en": "That’s an important objection, Mr Yıldız. Ms Nair, is there an alternative?"
+            "de": "Das ist ein wichtiger Einwand, Herr Yıldız. Gut, dass Sie sich zu Wort gemeldet haben. Frau Nair, gibt es eine Alternative?",
+            "en": "That’s an important objection, Mr Yıldız. Good that you spoke up. Ms Nair, is there an alternative?"
           },
           {
             "id": "b1.2-u04-ls2-l06",
@@ -964,8 +971,8 @@
           {
             "id": "b1.2-u04-ls2-l07",
             "speaker": "cast.jan-wolf",
-            "de": "Ich würde die Radtour auch vorziehen. Gut, ich fasse die Ergebnisse zusammen: Seminarhaus am See, vormittags Besprechung, nachmittags Radtour. Gibt es Gegenstimmen? … Nein. Dann haben wir das einstimmig beschlossen, und wir legen den Ort endgültig fest.",
-            "en": "I’d prefer the bike tour too. Good, let me sum up the results: seminar house by the lake, meeting in the morning, bike tour in the afternoon. Any votes against? … No. Then we’ve decided that unanimously, and the venue is fixed for good."
+            "de": "Ich würde die Radtour auch vorziehen. Gut, ich fasse die Ergebnisse zusammen: Seminarhaus am See, vormittags Besprechung, nachmittags Radtour. Findet das allgemeine Zustimmung? Gibt es Gegenstimmen? … Keine Gegenstimme. Dann haben wir das einstimmig beschlossen, und wir legen den Ort endgültig fest.",
+            "en": "I’d prefer the bike tour too. Good, let me sum up the results: seminar house by the lake, meeting in the morning, bike tour in the afternoon. Does everyone agree? Any votes against? … No votes against. Then we’ve decided that unanimously, and the venue is fixed for good."
           },
           {
             "id": "b1.2-u04-ls2-l08",
@@ -976,8 +983,8 @@
           {
             "id": "b1.2-u04-ls2-l09",
             "speaker": "cast.priya",
-            "de": "Die Raumbuchung übernehme ich gern. Aber um den Bus kann ich mich nicht auch noch kümmern, dafür fehlt mir die Zeit.",
-            "en": "I’m happy to do the room booking. But I can’t look after the bus as well – I don’t have the time."
+            "de": "Die Verantwortung für die Raumbuchung übernehme ich gern. Aber um den Bus kann ich mich nicht auch noch kümmern, dafür fehlt mir die Zeit.",
+            "en": "I’m happy to take responsibility for the room booking. But I can’t look after the bus as well – I don’t have the time."
           },
           {
             "id": "b1.2-u04-ls2-l10",
@@ -988,8 +995,8 @@
           {
             "id": "b1.2-u04-ls2-l11",
             "speaker": "cast.herr-brandt",
-            "de": "Sehr gut, das findet meine Zustimmung. Damit sind die Zuständigkeiten klar. Frau Otto übernimmt die Verantwortung für das Rahmenprogramm am Abend. Sie soll bis Freitag zwei Vorschläge sammeln, aber noch nichts buchen. Am Freitag besprechen wir dann den Zwischenstand und den Zeitplan. Frau Nair, schreiben Sie ihr bitte alles, was wir heute beschlossen haben. – Oh, Ihr Telefon klingelt. Sie machen heute auch den Empfang, also gehen Sie bitte ans Telefon.",
-            "en": "Very good, you have my approval. That makes it clear who is responsible for what. Ms Otto will be responsible for the evening programme: by Friday she should collect two suggestions, but not book anything yet. On Friday we’ll discuss where things stand and the schedule. Ms Nair, please write to her with everything we decided today. – Oh, your phone is ringing. You’re covering reception today too, so please answer it."
+            "de": "Sehr gut, eine schnelle Einigung. Das findet meine Zustimmung. Frau Otto kümmert sich ja um das Rahmenprogramm am Abend, das hat sie mir schon letzte Woche angeboten. Sie soll bis Freitag zwei Vorschläge sammeln, aber noch nichts buchen. Am Freitag besprechen wir dann den Zwischenstand und den Zeitplan. Damit sind die Zuständigkeiten klar, und wir können den Tagesordnungspunkt abschließen. Frau Nair, schreiben Sie ihr bitte alles, was wir heute beschlossen haben. – Oh, das Empfangstelefon klingelt. Gehen Sie ruhig ran.",
+            "en": "Very good – quick agreement, and it has my approval. Ms Otto is looking after the evening programme anyway; she offered to do it last week. By Friday she should collect two suggestions, but not book anything yet. On Friday we’ll discuss where things stand and the schedule. That makes it clear who is responsible for what, and we can close this agenda item. Ms Nair, please write to her with everything we decided today. – Oh, the reception phone is ringing. Go ahead and answer it."
           },
           {
             "id": "b1.2-u04-ls2-l12",
@@ -1007,9 +1014,9 @@
           {
             "id": "b1.2-u04-ls2-l14",
             "speaker": "x.herr-lehmann",
-            "de": "Ja, gern. Die Terrasse ist am 19. Juni frei, aber nur bis 22 Uhr. Ich habe sie vorläufig für Ihre Firma reserviert. Für das Essen brauchen wir bis Mittwoch die Teilnehmerzahl. Frau Otto soll mich bitte zurückrufen: 0341 22 58 90.",
-            "en": "Yes, please. The terrace is free on 19 June, but only until 10 pm. I’ve reserved it provisionally for your company. For the food we need the number of participants by Wednesday. Ms Otto should call me back, please: 0341 22 58 90.",
-            "say": "Ja, gern. Die Terrasse ist am neunzehnten Juni frei, aber nur bis zweiundzwanzig Uhr. Ich habe sie vorläufig für Ihre Firma reserviert. Für das Essen brauchen wir bis Mittwoch die Teilnehmerzahl. Frau Otto soll mich bitte zurückrufen: null drei vier eins, zweiundzwanzig, achtundfünfzig, neunzig."
+            "de": "Ja, gern. Für Ihre Gesprächsnotiz: Die Terrasse ist am 19. Juni frei, aber nur bis 22 Uhr. Ich halte sie bis nächsten Montag vorläufig für Ihre Firma frei. Wenn Sie sie nehmen, brauchen wir bis dahin die Teilnehmerzahl für das Essen. Frau Otto soll mich bitte zurückrufen: 0341 22 58 90.",
+            "en": "Yes, please. For your note: the terrace is free on 19 June, but only until 10 pm. I’ll hold it provisionally for your company until next Monday. If you take it, we need the number of participants for the food by then. Ms Otto should call me back, please: 0341 22 58 90.",
+            "say": "Ja, gern. Für Ihre Gesprächsnotiz: Die Terrasse ist am neunzehnten Juni frei, aber nur bis zweiundzwanzig Uhr. Ich halte sie bis nächsten Montag vorläufig für Ihre Firma frei. Wenn Sie sie nehmen, brauchen wir bis dahin die Teilnehmerzahl für das Essen. Frau Otto soll mich bitte zurückrufen: null drei vier eins, zweiundzwanzig, achtundfünfzig, neunzig."
           }
         ],
         "glosses": [
@@ -1724,7 +1731,7 @@
             "Das ist ein Ort, wo wir mittags zusammen essen können."
           ],
           [
-            "nicht / kein / nur brauchen",
+            "nicht / kein / nichts / nur brauchen",
             "zu + Infinitiv",
             "Wir brauchen keine eigenen Räder mitzubringen."
           ]
@@ -1938,8 +1945,8 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "lx.verantwortung",
-            "promptDe": "Bilden Sie den Satz.",
-            "promptEn": "Build the sentence.",
+            "promptDe": "Bilden Sie die W-Frage.",
+            "promptEn": "Build the wh-question.",
             "tiles": [
               "wer",
               "übernimmt",
@@ -2302,7 +2309,7 @@
         "tb1.m3",
         "tb1.sa"
       ],
-      "endLine": "Sie können jetzt Relativsätze mit was und wo und brauchen + zu mit nicht, kein oder nur benutzen."
+      "endLine": "Sie können jetzt Relativsätze mit was und wo und brauchen + zu mit nicht, kein, nichts oder nur benutzen."
     },
     {
       "id": "b1.2-u04-ls4",
@@ -2312,7 +2319,7 @@
           "id": "b1.2-u04-ls4-t1",
           "kind": "text",
           "title": "Anfrage an das Seminarhaus am See",
-          "text": "Betreff: Anfrage für einen Teamtag am 19. Juni\n\nSehr geehrte Damen und Herren,\n\nauf Ihrer Internetseite habe ich gelesen, ⟦01⟧ Sie Räume für Firmen vermieten. Wir sind ein Team von 18 Personen und planen am Freitag, dem 19. Juni, einen Teamtag. Ihr Haus liegt direkt am See, und genau das ist es, ⟦02⟧ uns so gut gefällt. Deshalb hat sich unser Team einstimmig für Sie entschieden.\n\nAm Vormittag möchten wir eine Besprechung machen. ⟦03⟧ brauchen wir einen Raum mit Beamer und Platz für alle. Einen Laptop brauchen Sie nicht ⟦04⟧ besorgen, den bringen wir selbst mit. Am Nachmittag möchten wir eine Radtour machen. Können Sie mir sagen, ⟦05⟧ die Fahrräder im Preis enthalten sind?\n\nMittags hätten wir gern ein warmes Essen. Zwei von uns essen ⟦06⟧ Fleisch. Gibt es bei Ihnen auch vegetarische Gerichte?\n\nBitte schicken Sie mir ein Angebot, ⟦07⟧ wir die Kosten vergleichen können. ⟦08⟧ der große Raum nicht mehr frei ist, reicht uns auch ein kleiner Raum. Kennen Sie außerdem einen Ort am See, ⟦09⟧ wir während der Tour eine Pause machen können?\n\nÜber eine schnelle Antwort ⟦10⟧ ich mich sehr freuen.\n\nMit freundlichen Grüßen\nPriya Nair\nBrandt Elektrotechnik",
+          "text": "Betreff: Anfrage für einen Teamtag am 19. Juni\n\nSehr geehrte Damen und Herren,\n\nauf Ihrer Internetseite habe ich gelesen, ⟦01⟧ Sie Räume für Firmen vermieten. Wir sind ein Team von 18 Personen und planen am Freitag, dem 19. Juni, einen Teamtag. Ihr Haus liegt direkt am See, und genau das ist es, ⟦02⟧ uns so gut gefällt. Deshalb hat sich unser Team einstimmig für Sie entschieden.\n\nAm Vormittag möchten wir eine Besprechung machen. ⟦03⟧ brauchen wir einen Raum mit Beamer und Platz für alle. Einen Laptop brauchen Sie nicht ⟦04⟧ besorgen, den bringen wir selbst mit. Am Nachmittag möchten wir eine Radtour machen. Können Sie mir sagen, ⟦05⟧ die Fahrräder im Preis enthalten sind?\n\nMittags hätten wir gern ein warmes Essen. Zwei von uns essen ⟦06⟧ Fleisch. Gibt es bei Ihnen auch vegetarische Gerichte?\n\nBitte schicken Sie mir ein Angebot, ⟦07⟧ wir die Kosten planen können. ⟦08⟧ der große Raum nicht mehr frei ist, reicht uns auch ein kleiner Raum. Kennen Sie außerdem einen Ort am See, ⟦09⟧ wir während der Tour eine Pause machen können?\n\nÜber eine schnelle Antwort ⟦10⟧ ich mich sehr freuen.\n\nMit freundlichen Grüßen\nPriya Nair\nBrandt Elektrotechnik",
           "glosses": []
         },
         {
@@ -3014,7 +3021,7 @@
         "register": "halbformell",
         "address": "Sie",
         "title": "Ergebnisse der Sitzung weitergeben",
-        "situationDe": "Sie sind Priya Nair und arbeiten bei Brandt Elektrotechnik. Ihre Kollegin Sabine Otto war auf einer Fortbildung und hat die Teambesprechung am Dienstag verpasst. Sie schreibt Ihnen:\n\n„Hallo Frau Nair,\nich bin wieder zurück aus Dresden – die Fortbildung war sehr interessant! Leider war ich bei unserer Sitzung am Dienstag nicht dabei. Können Sie mir kurz schreiben, was Sie für den Teamtag beschlossen haben? Herr Brandt hat gesagt, dass ich auch eine Aufgabe übernehmen soll. Was genau soll ich machen, und muss ich dafür schon etwas buchen? Und noch etwas: Hat jemand vom Seminarhaus am See für mich angerufen? Ich habe dort nach der Terrasse für einen Grillabend gefragt.\nVielen Dank und viele Grüße\nSabine Otto“\n\nIhre Notizen aus der Sitzung: Seminarhaus am Cospudener See · vormittags Besprechung, nachmittags Radtour · Raumbuchung: ich · Bus: Emre · Rahmenprogramm am Abend: Frau Otto – bis Freitag zwei Vorschläge sammeln, noch nichts buchen · Zwischenstand: Freitag · Gesprächsnotiz, Anruf Herr Lehmann (Seminarhaus): Terrasse am 19. Juni frei, nur bis 22 Uhr, vorläufig reserviert · Teilnehmerzahl bis Mittwoch · Rückruf: 0341 22 58 90",
+        "situationDe": "Sie sind Priya Nair und arbeiten bei Brandt Elektrotechnik. Ihre Kollegin Sabine Otto war auf einer Fortbildung und hat die Teambesprechung am Dienstag verpasst. Sie schreibt Ihnen:\n\n„Hallo Frau Nair,\nich bin wieder zurück aus Dresden – die Fortbildung war sehr interessant! Leider war ich bei unserer Sitzung am Dienstag nicht dabei. Können Sie mir kurz schreiben, was Sie für den Teamtag beschlossen haben und wer welche Aufgabe übernimmt? Herr Brandt hat mir ja schon bestätigt, dass ich das Rahmenprogramm am Abend übernehme. Was genau soll ich jetzt machen, und muss ich dafür schon etwas buchen? Und noch etwas: Hat jemand vom Seminarhaus am See für mich angerufen? Ich habe dort vor der Fortbildung nach der Terrasse für einen Grillabend gefragt, weil das Haus auf Ihrer Liste stand.\nVielen Dank und viele Grüße\nSabine Otto“\n\nIhre Notizen aus der Sitzung: Seminarhaus am Cospudener See · vormittags Besprechung, nachmittags Radtour · Raumbuchung: ich · Bus: Emre · Rahmenprogramm am Abend: Frau Otto (seit letzter Woche) – bis Freitag zwei Vorschläge sammeln, noch nichts buchen · Zwischenstand: Freitag · Gesprächsnotiz, Anruf Herr Lehmann (Seminarhaus): Terrasse am 19. Juni frei, nur bis 22 Uhr, bis Montag vorläufig für uns frei · wenn wir sie nehmen: Teilnehmerzahl bis Montag · Rückruf: 0341 22 58 90",
         "taskDe": "Antworten Sie Frau Otto. Schreiben Sie etwas zu allen vier Punkten.",
         "leitpunkte": [
           {
@@ -3031,7 +3038,7 @@
           },
           {
             "id": "lp2",
-            "de": "Welche Aufgabe hat Frau Otto, und wer macht was?",
+            "de": "Wer übernimmt welche Aufgabe?",
             "cues": [
               "Rahmenprogramm",
               "Abend",
@@ -3065,8 +3072,9 @@
               "Terrasse",
               "frei",
               "22 Uhr",
+              "Montag",
               "Teilnehmerzahl",
-              "Mittwoch",
+              "Rückruf",
               "zurückrufen",
               "0341 22 58 90"
             ]
@@ -3081,7 +3089,7 @@
           "Betreff",
           "Anrede",
           "Punkt 1: Ort und Programm",
-          "Punkt 2: Wer macht was?",
+          "Punkt 2: Wer übernimmt welche Aufgabe?",
           "Punkt 3: Was Frau Otto (noch nicht) tun muss",
           "Punkt 4: Nachricht von Herrn Lehmann",
           "Einleitung und Schluss",
@@ -3089,7 +3097,7 @@
           "Sie-Form",
           "etwa 80 bis 120 Wörter"
         ],
-        "modelText": "Betreff: Ergebnisse der Sitzung vom Dienstag\n\nLiebe Frau Otto,\n\nschön, dass Sie wieder da sind! Hier ist alles, was wir beschlossen haben: Der Teamtag findet im Seminarhaus am See statt, vormittags mit Besprechung, nachmittags mit einer Radtour. Wir haben die Aufgaben so aufgeteilt: Ich kümmere mich um die Raumbuchung und Emre um den Bus. Sie übernehmen das Rahmenprogramm am Abend. Sammeln Sie bitte bis Freitag zwei Vorschläge. Sie brauchen aber noch nichts zu buchen, denn am Freitag sprechen wir zuerst über den Zwischenstand. Herr Lehmann vom Seminarhaus hat auch angerufen: Die Terrasse ist am 19. Juni frei, aber nur bis 22 Uhr. Er braucht bis Mittwoch die Teilnehmerzahl. Bitte rufen Sie ihn zurück: 0341 22 58 90.\n\nViele Grüße\nPriya Nair"
+        "modelText": "Betreff: Ergebnisse der Sitzung vom Dienstag\n\nLiebe Frau Otto,\n\nschön, dass Sie wieder da sind! Hier ist alles, was wir beschlossen haben: Der Teamtag findet im Seminarhaus am See statt, vormittags mit Besprechung, nachmittags mit einer Radtour. Die Aufgaben haben wir so aufgeteilt: Ich kümmere mich um die Raumbuchung, Emre um den Bus und Sie um das Rahmenprogramm am Abend. Herr Brandt bittet Sie, bis Freitag zwei Vorschläge zu sammeln. Sie brauchen aber noch nichts zu buchen, denn am Freitag besprechen wir zuerst den Zwischenstand. Herr Lehmann vom Seminarhaus hat angerufen: Die Terrasse ist am 19. Juni bis 22 Uhr frei. Er hält sie bis Montag für uns frei. Wenn wir sie nehmen, braucht er bis dahin die Teilnehmerzahl. Er bittet Sie um Rückruf: 0341 22 58 90.\n\nViele Grüße\nPriya Nair"
       }
     },
     {
@@ -3313,7 +3321,7 @@
         "type": "notes",
         "role": "proof",
         "topic": "hoeren",
-        "promptDe": "Notiz für Emre – Elster-Reisen, Bus am 19.6.: ___ Euro, bis Donnerstag bestätigen",
+        "promptDe": "Notiz für Emre – Elster-Reisen, Bus am 19.6.: Preis ___ Euro",
         "promptEn": "Complete the note: the price.",
         "audioLineRef": "b1.2-u04-ls8-l01",
         "answer": "280",
@@ -3336,6 +3344,67 @@
           "en": "Ms Wendt says the trip costs 280 euros for 18 people."
         },
         "origin": "agent"
+      },
+      {
+        "id": "b1.2-u04-q02",
+        "type": "notes",
+        "role": "proof",
+        "topic": "hoeren",
+        "promptDe": "Notiz für Emre – Elster-Reisen, Bus am 19.6.: bestätigen bis ___",
+        "promptEn": "Complete the note: the deadline.",
+        "audioLineRef": "b1.2-u04-ls8-l01",
+        "answer": "Donnerstag",
+        "accepted": [
+          "Donnerstag",
+          "Do.",
+          "Do"
+        ],
+        "acceptedWhy": {
+          "Do.": "übliche Abkürzung für Donnerstag in einer Notiz",
+          "Do": "übliche Abkürzung für Donnerstag in einer Notiz"
+        },
+        "explanation": {
+          "de": "Frau Wendt sagt: Bitte bestätigen Sie bis Donnerstag.",
+          "en": "Ms Wendt asks for confirmation by Thursday."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "b1.2-u04-q03",
+        "type": "notes",
+        "role": "proof",
+        "topic": "hoeren",
+        "promptDe": "Notiz für Emre – Elster-Reisen, Bus am 19.6.: Rückruf unter ___",
+        "promptEn": "Complete the note: the phone number.",
+        "audioLineRef": "b1.2-u04-ls8-l01",
+        "answer": "0341 47 11 30",
+        "accepted": [
+          "0341 47 11 30",
+          "0341 471130",
+          "0341471130",
+          "0341/471130",
+          "0341/47 11 30",
+          "0341 / 47 11 30",
+          "0341-471130",
+          "0341-47 11 30",
+          "(0341) 471130",
+          "(0341) 47 11 30"
+        ],
+        "acceptedWhy": {
+          "0341/471130": "übliche Schreibweise: Vorwahl mit Schrägstrich, dieselben Ziffern",
+          "0341/47 11 30": "übliche Schreibweise: Vorwahl mit Schrägstrich, dieselben Ziffern",
+          "0341 / 47 11 30": "übliche Schreibweise: Vorwahl mit Schrägstrich, dieselben Ziffern",
+          "0341-471130": "übliche Schreibweise: Vorwahl mit Bindestrich, dieselben Ziffern",
+          "0341-47 11 30": "übliche Schreibweise: Vorwahl mit Bindestrich, dieselben Ziffern",
+          "(0341) 471130": "übliche Schreibweise: Vorwahl in Klammern, dieselben Ziffern",
+          "(0341) 47 11 30": "übliche Schreibweise: Vorwahl in Klammern, dieselben Ziffern"
+        },
+        "exact": "number",
+        "explanation": {
+          "de": "Die Nummer von Frau Wendt ist 0341 47 11 30. Jede Ziffer zählt.",
+          "en": "Ms Wendt’s number is 0341 47 11 30 – every digit counts."
+        },
+        "origin": "agent"
       }
     ],
     "proofs": [
@@ -3345,7 +3414,7 @@
       },
       {
         "canDo": "cd.b1.nachricht-notieren",
-        "item": "b1.2-u04-q01"
+        "item": "b1.2-u04-q03"
       },
       {
         "canDo": "cd.b1.besprechung-ergebnisse-weitergeben",

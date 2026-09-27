@@ -276,27 +276,6 @@
         "origin": "agent"
       }
     },
-    "auftakt": {
-      "promptDe": "Ein Umzug, ein Tag Verspätung, eine Kommode mit Delle, ein zerbrochener Spiegel: Was würden Sie jetzt als Erstes tun?",
-      "microOutput": {
-        "id": "b2.2-u04-start-mo",
-        "bankKey": "b22-u04-mo1",
-        "mode": "spoken",
-        "profile": "course-micro-sp",
-        "situationDe": "Nach Ihrem Umzug: Die Firma kam einen Tag zu spät, und eine Kommode und ein Spiegel sind beschädigt.",
-        "promptDe": "Was würden Sie jetzt tun? Sprechen Sie etwa eine Minute frei.",
-        "promptEn": "What would you do now? Speak freely for about a minute.",
-        "planSeconds": 30,
-        "seconds": [
-          50,
-          70
-        ],
-        "targets": [
-          "g.konj2-waere-haette-wuerde"
-        ],
-        "register": "Sie"
-      }
-    },
     "testOut": {
       "offered": true
     }
@@ -317,8 +296,8 @@
         "title": "Allgemeine Geschäftsbedingungen von Blitz Umzüge (Auszug)",
         "textType": "tt.bedingungen",
         "text": {
-          "de": "§ 1 Leistungsumfang\nDer Leistungsumfang steht im Auftrag. Geschirr, Glas und Spiegel verpackt der Auftragnehmer nur, sofern der Auftraggeber diese Leistung bestellt hat.\n§ 2 Termine\nDer vereinbarte Termin ist für beide Seiten verbindlich. Kommt der Auftragnehmer mehr als drei Stunden später als vertraglich vereinbart, erhält der Auftraggeber eine Teilerstattung von 10 % des Preises, es sei denn, der Grund für die Verspätung ist höhere Gewalt, zum Beispiel ein Unwetter oder eine gesperrte Straße.\n§ 3 Haftung\nFür Schäden, die seine Mitarbeiter beim Tragen, beim Laden oder während der Fahrt verursachen, ist der Auftragnehmer haftbar. Die Haftungsgrenze ist nach dem Gesetz 620 Euro je Kubikmeter Laderaum, den der Umzug braucht. Der Auftraggeber kann zusätzlich eine Transportversicherung mit einer größeren Versicherungssumme bestellen. Hat der Auftraggeber Kartons ohne Hilfe gepackt, gilt ein Haftungsausschluss für Schäden durch eine unsachgemäße Verpackung.\n§ 4 Schadensmeldung\nSchäden, die man sehen kann, gehören sofort bei der Lieferung ins Schadensprotokoll. Spätestens sind sie am Tag nach der Lieferung zu melden. Schäden, die man nicht sofort sieht, sind innerhalb von 14 Tagen zu melden. Nach der Lieferung ist die Meldung in Textform zu machen, zum Beispiel mit einer E-Mail. Anderenfalls kann der Auftraggeber keinen Schadensersatz mehr geltend machen.\n§ 5 Schadenshöhe\nDie Schadenshöhe weist der Auftraggeber mit einem Kostenvoranschlag oder einer Rechnung nach. Im Fall, dass man den Schaden reparieren kann, ist der Auftragnehmer für die Kosten der Reparatur ersatzpflichtig. Weicht die Rechnung der Werkstatt vom Kostenvoranschlag ab, gilt die Rechnung. Ab einer Schadenshöhe von 1.000 Euro kann der Auftragnehmer das Gutachten eines Sachverständigen verlangen. Die Kosten für das Gutachten trägt er selbst. Die Kostenerstattung erhält der Auftraggeber spätestens 14 Tage nach der Einigung.\n§ 6 Streit\nKönnen sich beide Seiten nicht einigen, ist der Auftragnehmer bereit, an einer Schlichtung für Verbraucher teilzunehmen. Der Rechtsweg bleibt beiden Seiten offen.",
-          "en": "§ 1 Scope of services\nThe scope of services is stated in the order. The contractor packs dishes, glass and mirrors only if the client has ordered this service.\n§ 2 Dates\nThe agreed date is binding for both sides. If the contractor arrives more than three hours later than contractually agreed, the client receives a partial refund of 10 % of the price, unless the delay is due to force majeure, for example a storm or a closed road.\n§ 3 Liability\nThe contractor is liable for damage its staff cause while carrying, loading or driving. By law the liability limit is 620 euros per cubic metre of loading space the move needs. The client can additionally order transit insurance with a higher sum insured. If the client packed boxes without help, liability is excluded for damage caused by improper packing.\n§ 4 Reporting damage\nVisible damage belongs in the damage report at delivery. It must be reported no later than the day after delivery. Damage that cannot be seen at once must be reported within 14 days. After delivery the report must be made in text form, for example by e-mail. Otherwise the client can no longer claim compensation.\n§ 5 Amount of damage\nThe client proves the amount of the damage with a cost estimate or an invoice. If the damage can be repaired, the contractor is liable for the cost of the repair. If the workshop’s invoice differs from the cost estimate, the invoice applies. From a damage amount of 1,000 euros the contractor may request an expert’s report. It bears the cost of the report itself. The client receives the reimbursement no later than 14 days after the agreement.\n§ 6 Disputes\nIf the two sides cannot agree, the contractor is prepared to take part in consumer arbitration. Legal action remains open to both sides."
+          "de": "§ 1 Leistungsumfang\nDer Leistungsumfang steht im Auftrag. Geschirr, Glas und Spiegel verpackt der Auftragnehmer nur, sofern der Auftraggeber diese Leistung bestellt hat.\n§ 2 Termine\nDer vereinbarte Termin ist für beide Seiten verbindlich. Kommt der Auftragnehmer mehr als drei Stunden zu spät, erhält der Auftraggeber eine Teilerstattung von 10 % des Preises, es sei denn, der Grund für die Verspätung ist höhere Gewalt. Höhere Gewalt ist zum Beispiel ein Unwetter oder eine gesperrte Straße.\n§ 3 Haftung\nFür Schäden, die seine Mitarbeiter beim Tragen, beim Laden oder während der Fahrt verursachen, ist der Auftragnehmer haftbar. Die Haftungsgrenze ist nach dem Gesetz 620 Euro je Kubikmeter Laderaum, den der Umzug braucht. Der Auftraggeber kann zusätzlich eine Transportversicherung mit einer größeren Versicherungssumme bestellen. Hat der Auftraggeber Kartons ohne Hilfe gepackt, gilt ein Haftungsausschluss für Schäden durch eine unsachgemäße Verpackung.\n§ 4 Schadensmeldung\nSchäden, die man sehen kann, gehören sofort bei der Lieferung ins Schadensprotokoll. Sie sind spätestens am Tag nach der Lieferung zu melden. Schäden, die man nicht sofort sieht, sind innerhalb von 14 Tagen zu melden. Nach der Lieferung ist die Meldung in Textform zu machen, zum Beispiel mit einer E-Mail. Anderenfalls kann der Auftraggeber keinen Schadensersatz mehr geltend machen.\n§ 5 Schadenshöhe\nDie Schadenshöhe weist der Auftraggeber mit einem Kostenvoranschlag oder einer Rechnung nach. Im Fall, dass man den Schaden reparieren kann, ist der Auftragnehmer für die Kosten der Reparatur ersatzpflichtig. Weicht die Rechnung der Werkstatt vom Kostenvoranschlag ab, gilt die Rechnung. Ab einer Schadenshöhe von 1.000 Euro kann der Auftragnehmer das Gutachten eines Sachverständigen verlangen. Die Kosten für das Gutachten trägt er selbst. Die Kostenerstattung erhält der Auftraggeber spätestens 14 Tage nach der Einigung.\n§ 6 Streit\nKönnen sich beide Seiten nicht einigen, ist der Auftragnehmer bereit, an einer Schlichtung für Verbraucher teilzunehmen. Der Rechtsweg bleibt beiden Seiten offen.",
+          "en": "§ 1 Scope of services\nThe scope of services is stated in the order. The contractor packs dishes, glass and mirrors only if the client has ordered this service.\n§ 2 Dates\nThe agreed date is binding for both sides. If the contractor is more than three hours late, the client receives a partial refund of 10 % of the price, unless the delay is due to force majeure. Force majeure is, for example, a storm or a closed road.\n§ 3 Liability\nThe contractor is liable for damage its staff cause while carrying, loading or driving. By law the liability limit is 620 euros per cubic metre of loading space the move needs. The client can additionally order transit insurance with a higher sum insured. If the client packed boxes without help, liability is excluded for damage caused by improper packing.\n§ 4 Reporting damage\nVisible damage belongs in the damage report at delivery. It must be reported no later than the day after delivery. Damage that cannot be seen at once must be reported within 14 days. After delivery the report must be made in text form, for example by e-mail. Otherwise the client can no longer claim compensation.\n§ 5 Amount of damage\nThe client proves the amount of the damage with a cost estimate or an invoice. If the damage can be repaired, the contractor is liable for the cost of the repair. If the workshop’s invoice differs from the cost estimate, the invoice applies. From a damage amount of 1,000 euros the contractor may request an expert’s report. It bears the cost of the report itself. The client receives the reimbursement no later than 14 days after the agreement.\n§ 6 Disputes\nIf the two sides cannot agree, the contractor is prepared to take part in consumer arbitration. Legal action remains open to both sides."
         },
         "glosses": [
           {
@@ -402,8 +381,8 @@
           ],
           "exact": "number",
           "explanation": {
-            "de": "§ 2: mehr als drei Stunden später als vereinbart.",
-            "en": "§ 2: more than three hours later than agreed."
+            "de": "§ 2: mehr als drei Stunden zu spät.",
+            "en": "§ 2: more than three hours late."
           },
           "origin": "agent"
         },
@@ -556,8 +535,8 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.verbindlich",
-            "promptDe": "Keine Seite kann den Termin einfach absagen. Er ist ___. (v…lich, 11 Buchstaben)",
-            "promptEn": "Adjective: binding (11 letters, v…lich).",
+            "promptDe": "Keine Seite kann den Termin einfach absagen. Er ist ___. (verb…lich, 11 Buchstaben)",
+            "promptEn": "Adjective: binding (11 letters, verb…lich).",
             "answer": "verbindlich",
             "accepted": [
               "verbindlich"
@@ -590,8 +569,8 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.fahrlaessig",
-            "promptDe": "Die Möbelpacker haben nicht aufgepasst. Sie haben ___ gehandelt. (f…, 10 Buchstaben)",
-            "promptEn": "How did the movers act? The legal word: f…, 10 letters.",
+            "promptDe": "Die Möbelpacker haben nicht aufgepasst. Sie haben ___ gehandelt. (fa…, 10 Buchstaben)",
+            "promptEn": "How did the movers act? The legal word: fa…, 10 letters.",
             "answer": "fahrlässig",
             "accepted": [
               "fahrlässig"
@@ -668,17 +647,19 @@
             "accepted": [
               "Wir haben die Vertragsbedingungen genau gelesen.",
               "Die Vertragsbedingungen haben wir genau gelesen.",
-              "Genau gelesen haben wir die Vertragsbedingungen."
+              "Genau gelesen haben wir die Vertragsbedingungen.",
+              "Die Vertragsbedingungen genau gelesen haben wir."
             ],
+            "acceptedWhy": {
+              "Die Vertragsbedingungen haben wir genau gelesen.": "grammatisch: das Objekt kann betont vorne stehen",
+              "Genau gelesen haben wir die Vertragsbedingungen.": "grammatisch: genau gelesen steht betont vorne; selten, aber richtig",
+              "Die Vertragsbedingungen genau gelesen haben wir.": "grammatisch: die Vertragsbedingungen genau gelesen steht als Einheit betont vorne; selten, aber richtig"
+            },
             "explanation": {
               "de": "Perfekt: haben auf Position 2, gelesen am Ende.",
               "en": "Perfekt: haben second, the participle last."
             },
-            "origin": "agent",
-            "acceptedWhy": {
-              "Die Vertragsbedingungen haben wir genau gelesen.": "grammatisch: das Objekt kann betont vorne stehen",
-              "Genau gelesen haben wir die Vertragsbedingungen.": "grammatisch: genau gelesen steht betont vorne; selten, aber richtig"
-            }
+            "origin": "agent"
           },
           {
             "id": "b2.2-u04-ls1-p09",
@@ -696,8 +677,14 @@
             "answer": "Die Firma kann ein Gutachten verlangen.",
             "accepted": [
               "Die Firma kann ein Gutachten verlangen.",
-              "Ein Gutachten kann die Firma verlangen."
+              "Ein Gutachten kann die Firma verlangen.",
+              "Verlangen kann die Firma ein Gutachten.",
+              "Ein Gutachten verlangen kann die Firma."
             ],
+            "acceptedWhy": {
+              "Verlangen kann die Firma ein Gutachten.": "grammatisch: verlangen steht betont vorne; selten, aber richtig",
+              "Ein Gutachten verlangen kann die Firma.": "grammatisch: ein Gutachten verlangen steht als Einheit betont vorne; selten, aber richtig"
+            },
             "explanation": {
               "de": "Modalverb auf Position 2, Infinitiv verlangen am Ende.",
               "en": "Modal second, infinitive last."
@@ -731,8 +718,8 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "lx.aufkommen",
-            "promptDe": "Korrigieren Sie: „Die Firma muss für den Schaden aufkommt.“",
-            "promptEn": "Correct the verb.",
+            "promptDe": "Korrigieren Sie die Verbform: „Die Firma muss für den Schaden aufkommt.“",
+            "promptEn": "Correct the verb form.",
             "answer": "Die Firma muss für den Schaden aufkommen.",
             "accepted": [
               "Die Firma muss für den Schaden aufkommen."
@@ -798,10 +785,10 @@
             "generator": "lex.glossTyped",
             "count": 1,
             "source": [
-              "lx.schadensersatz",
               "lx.haftung",
               "lx.gutachten",
-              "lx.vertragsbedingung"
+              "lx.schadenshoehe",
+              "lx.kostenvoranschlag"
             ]
           },
           {
@@ -810,7 +797,7 @@
             "source": [
               "lx.kostenvoranschlag",
               "lx.gutachten",
-              "lx.vertragsbedingung"
+              "lx.umzugsunternehmen"
             ]
           },
           {
@@ -908,7 +895,7 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "lx.aufkommen",
-          "promptDe": "Korrigieren Sie: „Die Firma kommt für dem Schaden auf.“",
+          "promptDe": "Korrigieren Sie den Kasus: „Die Firma kommt für dem Schaden auf.“",
           "promptEn": "Correct the case after für.",
           "answer": "Die Firma kommt für den Schaden auf.",
           "accepted": [
@@ -991,7 +978,7 @@
       ],
       "microOutput": {
         "id": "b2.2-u04-ls1-mo",
-        "bankKey": "b22-u04-mo2",
+        "bankKey": "b22-u04-mo1",
         "mode": "written",
         "profile": "course-micro",
         "situationDe": "Eine Freundin zieht nächsten Monat um und will die AGB der Umzugsfirma nicht lesen.",
@@ -1110,7 +1097,7 @@
           {
             "id": "b2.2-u04-ls2-l14",
             "speaker": "cast.priya",
-            "de": "Vielen Dank. Auf Wiedersehen.",
+            "de": "Vielen Dank. Auf Wiederhören.",
             "en": "Thank you. Goodbye."
           }
         ],
@@ -1307,11 +1294,15 @@
             "promptEn": "Priya answers with a … (noun with gegen-).",
             "answer": "Gegenangebot",
             "accepted": [
-              "Gegenangebot"
+              "Gegenangebot",
+              "Gegenvorschlag"
             ],
+            "acceptedWhy": {
+              "Gegenvorschlag": "Synonym: Gegenvorschlag = Gegenangebot; beide passen nach „mit einem“."
+            },
             "explanation": {
-              "de": "Wer ein Angebot nicht annimmt und selbst eine Summe nennt, macht ein Gegenangebot.",
-              "en": "Naming your own sum in reply is a counter-offer."
+              "de": "Wer ein Angebot nicht annimmt und selbst eine Summe nennt, macht ein Gegenangebot (auch: einen Gegenvorschlag).",
+              "en": "Naming your own sum in reply is a counter-offer (Gegenvorschlag also fits)."
             },
             "origin": "agent"
           },
@@ -1337,14 +1328,14 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.sich-weigern",
-            "promptDe": "Die Firma sagt klar Nein: Sie ___ sich, den Spiegel zu ersetzen.",
+            "promptDe": "Die Firma sagt klar Nein: Sie ___ sich, die 10 % für die Verspätung zu erstatten.",
             "promptEn": "The firm refuses: verb form.",
             "answer": "weigert",
             "accepted": [
               "weigert"
             ],
             "explanation": {
-              "de": "sich weigern, etwas zu tun = klar Nein sagen.",
+              "de": "sich weigern, etwas zu tun = klar Nein sagen: Die Firma weigert sich, die 10 % zu erstatten.",
               "en": "sich weigern = refuse."
             },
             "origin": "agent"
@@ -1399,8 +1390,14 @@
             "answer": "Wir sollten den Preis nachverhandeln.",
             "accepted": [
               "Wir sollten den Preis nachverhandeln.",
-              "Den Preis sollten wir nachverhandeln."
+              "Den Preis sollten wir nachverhandeln.",
+              "Nachverhandeln sollten wir den Preis.",
+              "Den Preis nachverhandeln sollten wir."
             ],
+            "acceptedWhy": {
+              "Nachverhandeln sollten wir den Preis.": "grammatisch: nachverhandeln steht betont vorne; selten, aber richtig",
+              "Den Preis nachverhandeln sollten wir.": "grammatisch: den Preis nachverhandeln steht als Einheit betont vorne; selten, aber richtig"
+            },
             "explanation": {
               "de": "sollten auf Position 2, nachverhandeln am Ende.",
               "en": "sollten second, the infinitive last."
@@ -1464,7 +1461,7 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "lx.bestehen-auf",
-            "promptDe": "Korrigieren Sie: „Wir bestehen auf eine schriftliche Bestätigung.“",
+            "promptDe": "Korrigieren Sie den Kasus: „Wir bestehen auf eine schriftliche Bestätigung.“",
             "promptEn": "Correct the case after auf.",
             "answer": "Wir bestehen auf einer schriftlichen Bestätigung.",
             "accepted": [
@@ -1486,12 +1483,16 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.falls",
-            "promptDe": "Korrigieren Sie: „Falls die Firma zahlt nicht, schreibe ich ihr.“",
+            "promptDe": "Korrigieren Sie die Wortstellung: „Falls die Firma zahlt nicht, schreibe ich ihr.“",
             "promptEn": "Correct the word order.",
             "answer": "Falls die Firma nicht zahlt, schreibe ich ihr.",
             "accepted": [
-              "Falls die Firma nicht zahlt, schreibe ich ihr."
+              "Falls die Firma nicht zahlt, schreibe ich ihr.",
+              "Ich schreibe ihr, falls die Firma nicht zahlt."
             ],
+            "acceptedWhy": {
+              "Ich schreibe ihr, falls die Firma nicht zahlt.": "grammatisch: Der Satz mit falls darf auch hinten stehen; zahlt steht dann ebenfalls am Ende."
+            },
             "intentionalError": true,
             "explanation": {
               "de": "Im Nebensatz mit falls steht das Verb am Ende: nicht zahlt.",
@@ -1553,9 +1554,8 @@
             "generator": "dictation.fromInput",
             "count": 2,
             "source": [
-              "b2.2-u04-ls2-l09",
-              "b2.2-u04-ls2-l13",
-              "b2.2-u04-ls2-l03"
+              "b2.2-u04-ls2-l03",
+              "b2.2-u04-ls2-l06"
             ]
           },
           {
@@ -1681,12 +1681,16 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "g.falls",
-          "promptDe": "Korrigieren Sie: „Falls haben Sie Fragen, rufen Sie uns an.“",
+          "promptDe": "Korrigieren Sie die Wortstellung: „Falls haben Sie Fragen, rufen Sie uns an.“",
           "promptEn": "Correct the word order.",
           "answer": "Falls Sie Fragen haben, rufen Sie uns an.",
           "accepted": [
-            "Falls Sie Fragen haben, rufen Sie uns an."
+            "Falls Sie Fragen haben, rufen Sie uns an.",
+            "Rufen Sie uns an, falls Sie Fragen haben."
           ],
+          "acceptedWhy": {
+            "Rufen Sie uns an, falls Sie Fragen haben.": "grammatisch: Der Satz mit falls darf auch hinten stehen; haben steht dann ebenfalls am Ende."
+          },
           "intentionalError": true,
           "explanation": {
             "de": "Nach falls: Subjekt zuerst, das Verb haben am Ende.",
@@ -1707,7 +1711,7 @@
       ],
       "microOutput": {
         "id": "b2.2-u04-ls2-mo",
-        "bankKey": "b22-u04-mo3",
+        "bankKey": "b22-u04-mo2",
         "mode": "spoken",
         "profile": "course-micro-sp",
         "situationDe": "Nach Ihrem Umzug fehlt ein Karton, und ein Stuhl ist kaputt.",
@@ -2036,11 +2040,11 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.konditional-konnektoren",
-            "promptDe": "Korrigieren Sie: „Wir zahlen, es sei denn, Sie den Schaden zu spät melden.“",
+            "promptDe": "Korrigieren Sie die Wortstellung: „Wir zahlen, es sei denn, Sie Schäden zu spät melden.“",
             "promptEn": "Correct the word order.",
-            "answer": "Wir zahlen, es sei denn, Sie melden den Schaden zu spät.",
+            "answer": "Wir zahlen, es sei denn, Sie melden Schäden zu spät.",
             "accepted": [
-              "Wir zahlen, es sei denn, Sie melden den Schaden zu spät."
+              "Wir zahlen, es sei denn, Sie melden Schäden zu spät."
             ],
             "intentionalError": true,
             "explanation": {
@@ -2058,12 +2062,16 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.konditional-konnektoren",
-            "promptDe": "Korrigieren Sie: „Sofern die Firma zahlt pünktlich, sind wir zufrieden.“",
+            "promptDe": "Korrigieren Sie die Wortstellung: „Sofern die Firma zahlt pünktlich, sind wir zufrieden.“",
             "promptEn": "Correct the word order.",
             "answer": "Sofern die Firma pünktlich zahlt, sind wir zufrieden.",
             "accepted": [
-              "Sofern die Firma pünktlich zahlt, sind wir zufrieden."
+              "Sofern die Firma pünktlich zahlt, sind wir zufrieden.",
+              "Wir sind zufrieden, sofern die Firma pünktlich zahlt."
             ],
+            "acceptedWhy": {
+              "Wir sind zufrieden, sofern die Firma pünktlich zahlt.": "grammatisch: Der Satz mit sofern darf auch hinten stehen; zahlt steht dann ebenfalls am Ende."
+            },
             "intentionalError": true,
             "explanation": {
               "de": "Nach sofern steht das Verb am Ende: pünktlich zahlt.",
@@ -2260,15 +2268,19 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "g.konditional-konnektoren",
-          "promptDe": "Korrigieren Sie: „Sollten Sie nicht zahlen, wir wenden uns an ein Gericht.“",
-          "promptEn": "Correct the main clause.",
-          "answer": "Sollten Sie nicht zahlen, wenden wir uns an ein Gericht.",
+          "promptDe": "Korrigieren Sie die Wortstellung: „Sollten Sie nicht zahlen, wir gehen vor Gericht.“",
+          "promptEn": "Correct the word order.",
+          "answer": "Sollten Sie nicht zahlen, gehen wir vor Gericht.",
           "accepted": [
-            "Sollten Sie nicht zahlen, wenden wir uns an ein Gericht."
+            "Sollten Sie nicht zahlen, gehen wir vor Gericht.",
+            "Wir gehen vor Gericht, sollten Sie nicht zahlen."
           ],
+          "acceptedWhy": {
+            "Wir gehen vor Gericht, sollten Sie nicht zahlen.": "grammatisch: Der Bedingungssatz ohne Konnektor darf auch nach dem Hauptsatz stehen."
+          },
           "intentionalError": true,
           "explanation": {
-            "de": "Der Bedingungssatz steht auf Position 1, also folgt direkt das Verb: wenden wir.",
+            "de": "Der Bedingungssatz steht auf Position 1, also folgt direkt das Verb: gehen wir.",
             "en": "The condition fills position 1, so the verb comes next."
           },
           "errorTag": "v2-inv",
@@ -2469,15 +2481,15 @@
             {
               "id": "b2.2-u04-ls4-t3-l01",
               "speaker": "radio",
-              "de": "Und jetzt unser Tipp für Verbraucher: Fragen Sie schon vor dem Umzug nach der Haftungsgrenze und nach einer Transportversicherung. Geht trotzdem etwas kaputt, müssen Sie den Transportschaden rechtzeitig melden. Was Sie sofort sehen, zum Beispiel einen kaputten Spiegel, melden Sie spätestens am Tag nach der Lieferung.",
-              "en": "And now our tip for consumers: before the move, ask about the liability limit and about transit insurance. If something breaks anyway, you must report the damage in transit in time. What you can see straight away, such as a broken mirror, you report no later than the day after delivery."
+              "de": "Unser Tipp für Verbraucher: Fragen Sie schon vor dem Umzug nach der Haftungsgrenze und nach einer Transportversicherung. Geht trotzdem etwas kaputt, müssen Sie den Transportschaden rechtzeitig melden. Was Sie sofort sehen, zum Beispiel einen kaputten Spiegel, melden Sie spätestens am Tag nach der Lieferung.",
+              "en": "Our tip for consumers: before the move, ask about the liability limit and about transit insurance. If something breaks anyway, you must report the damage in transit in time. What you can see straight away, such as a broken mirror, you report no later than the day after delivery."
             },
             {
               "id": "b2.2-u04-ls4-t3-l02",
               "speaker": "radio",
-              "de": "Für Schäden, die man nicht sofort findet, zum Beispiel an einem Gerät, haben Sie 14 Tage Zeit. Machen Sie Fotos und schreiben Sie der Firma eine E-Mail. Ein Anruf allein reicht nach der Lieferung nicht.",
-              "en": "For damage you don’t find straight away, for example on an appliance, you have 14 days. Take photos and send the company an e-mail. After delivery, a phone call alone is not enough.",
-              "say": "Für Schäden, die man nicht sofort findet, zum Beispiel an einem Gerät, haben Sie vierzehn Tage Zeit. Machen Sie Fotos und schreiben Sie der Firma eine E-Mail. Ein Anruf allein reicht nach der Lieferung nicht."
+              "de": "Für Schäden, die man nicht sofort findet, haben Sie 14 Tage Zeit. Machen Sie Fotos und schreiben Sie der Firma eine E-Mail. Ein Anruf allein reicht nach der Lieferung nicht.",
+              "en": "For damage you don’t find straight away, you have 14 days. Take photos and send the company an e-mail. After delivery, a phone call alone is not enough.",
+              "say": "Für Schäden, die man nicht sofort findet, haben Sie vierzehn Tage Zeit. Machen Sie Fotos und schreiben Sie der Firma eine E-Mail. Ein Anruf allein reicht nach der Lieferung nicht."
             },
             {
               "id": "b2.2-u04-ls4-t3-l03",
@@ -2523,9 +2535,9 @@
             {
               "id": "b2.2-u04-ls4-t5-l02",
               "speaker": "cast.arjun",
-              "de": "Als Gegenleistung sollen wir aber auf die 10 % für die Verspätung verzichten. Eingewilligt habe ich in nichts, das entscheidest du. Ich finde, wir sollten noch nachverhandeln. Überleg dir, wo deine Schmerzgrenze liegt. Sie wartet bis morgen um zwölf auf deine Antwort. Ruf mich an!",
-              "en": "In return, though, we’re supposed to give up the 10 % for the delay. I haven’t agreed to anything – that’s your decision. I think we should renegotiate. Think about where your limit is. She’s waiting for your answer until twelve tomorrow. Call me!",
-              "say": "Als Gegenleistung sollen wir aber auf die zehn Prozent für die Verspätung verzichten. Eingewilligt habe ich in nichts, das entscheidest du. Ich finde, wir sollten noch nachverhandeln. Überleg dir, wo deine Schmerzgrenze liegt. Sie wartet bis morgen um zwölf auf deine Antwort. Ruf mich an!"
+              "de": "Als Gegenleistung sollen wir aber auf die 10 % für die Verspätung verzichten. Eingewilligt habe ich in nichts, das entscheidest du. Ich finde, wir sollten noch nachverhandeln. Überleg dir, wo deine Schmerzgrenze liegt. Sie ruft dich morgen noch einmal an. Ruf mich vorher an!",
+              "en": "In return, though, we’re supposed to give up the 10 % for the delay. I haven’t agreed to anything – that’s your decision. I think we should renegotiate. Think about where your limit is. She’ll call you again tomorrow. Call me before then!",
+              "say": "Als Gegenleistung sollen wir aber auf die zehn Prozent für die Verspätung verzichten. Eingewilligt habe ich in nichts, das entscheidest du. Ich finde, wir sollten noch nachverhandeln. Überleg dir, wo deine Schmerzgrenze liegt. Sie ruft dich morgen noch einmal an. Ruf mich vorher an!"
             }
           ],
           "glosses": []
@@ -2996,7 +3008,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Einen Gutschein brauchen wir nach dem Umzug nicht. Eine Panne ist Ihr Risiko, kein Unwetter. Ich komme Ihnen aber entgegen: 74 Euro für die Verspätung akzeptiere ich – sofern Sie alles bis zum 20. November überweisen."
+            "de": "Einen Gutschein brauchen wir nach dem Umzug nicht. Eine Panne ist kein Unwetter, sondern Ihr Risiko. Ich komme Ihnen aber entgegen: 74 Euro für die Verspätung akzeptiere ich – sofern Sie alles bis zum 20. November überweisen."
           },
           {
             "speaker": "partner",
@@ -3025,7 +3037,7 @@
         "register": "halbformell",
         "address": "Sie",
         "title": "Beschwerde an das Umzugsunternehmen",
-        "situationDe": "Schriftlicher Ausdruck – vor dem Telefonat mit der Kundenberaterin: Sie haben Ihren Umzug bei einer Firma gebucht, die so wirbt: „Blitz Umzüge – pünktlich, sorgfältig, voll versichert. Mit Pünktlichkeitsgarantie!“ Die Möbelpacker kamen einen Tag zu spät. Eine Kommode wurde beschädigt, ein Spiegel ist zerbrochen (Wert: 120 Euro). Jetzt ist der Kostenvoranschlag der Werkstatt da: 380 Euro. Laut Vertragsbedingungen erstattet die Firma bei mehr als drei Stunden Verspätung 10 % des Umzugspreises von 1.480 Euro. Ein erstes Angebot von 200 Euro haben Sie am Telefon abgelehnt.",
+        "situationDe": "Schriftlicher Ausdruck – zeitlich vor dem zweiten Telefonat mit der Kundenberaterin: Sie haben Ihren Umzug bei einer Firma gebucht, die so wirbt: „Blitz Umzüge – pünktlich, sorgfältig, voll versichert. Mit Pünktlichkeitsgarantie!“ Die Möbelpacker kamen einen Tag zu spät. Eine Kommode wurde beschädigt, ein Spiegel ist zerbrochen (Wert: 120 Euro). Jetzt ist der Kostenvoranschlag der Werkstatt da: 380 Euro. Laut Vertragsbedingungen erstattet die Firma bei mehr als drei Stunden Verspätung 10 % des Umzugspreises von 1.480 Euro. Ein erstes Angebot von 200 Euro haben Sie am Telefon abgelehnt.",
         "taskDe": "Schreiben Sie der Firma eine E-Mail (mind. 150 Wörter) zu drei der vier Punkte.",
         "leitpunkte": [
           {
@@ -3073,6 +3085,7 @@
               "bis zum",
               "Sollten Sie",
               "anderenfalls",
+              "andernfalls",
               "Schlichtungsstelle",
               "Verbraucherzentrale",
               "vorbehalten"
@@ -3245,26 +3258,28 @@
         "type": "error_correction",
         "role": "check",
         "topic": "g.konditional-konnektoren",
-        "promptDe": "Korrigieren Sie: „Wir zahlen, vorausgesetzt, dass die Summe ist angemessen.“",
+        "promptDe": "Korrigieren Sie die Wortstellung: „Wir zahlen, vorausgesetzt, dass die Summe ist richtig.“",
         "promptEn": "Correct the word order.",
-        "answer": "Wir zahlen, vorausgesetzt, dass die Summe angemessen ist.",
+        "answer": "Wir zahlen, vorausgesetzt, dass die Summe richtig ist.",
         "accepted": [
-          "Wir zahlen, vorausgesetzt, dass die Summe angemessen ist.",
-          "Wir zahlen, vorausgesetzt, die Summe ist angemessen."
+          "Wir zahlen, vorausgesetzt, dass die Summe richtig ist.",
+          "Wir zahlen, vorausgesetzt, die Summe ist richtig.",
+          "Vorausgesetzt, dass die Summe richtig ist, zahlen wir."
         ],
+        "acceptedWhy": {
+          "Wir zahlen, vorausgesetzt, die Summe ist richtig.": "grammatisch: vorausgesetzt ohne dass, dann steht das Verb auf Position 2",
+          "Vorausgesetzt, dass die Summe richtig ist, zahlen wir.": "grammatisch: Der Satz mit vorausgesetzt, dass darf auch vorne stehen; ist steht am Ende."
+        },
         "intentionalError": true,
         "explanation": {
-          "de": "Nach vorausgesetzt, dass steht das Verb am Ende: angemessen ist. Ohne dass steht es auf Position 2: vorausgesetzt, die Summe ist angemessen.",
+          "de": "Nach vorausgesetzt, dass steht das Verb am Ende: richtig ist. Ohne dass steht es auf Position 2: vorausgesetzt, die Summe ist richtig.",
           "en": "After vorausgesetzt, dass the verb goes last; without dass it is second."
         },
         "errorTag": "verb-final",
         "errorTags": [
           "verb-final"
         ],
-        "origin": "agent",
-        "acceptedWhy": {
-          "Wir zahlen, vorausgesetzt, die Summe ist angemessen.": "grammatisch: vorausgesetzt ohne dass, dann steht das Verb auf Position 2"
-        }
+        "origin": "agent"
       },
       {
         "id": "b2.2-u04-c08",
@@ -3408,7 +3423,7 @@
   ],
   "story": {
     "beat": "Priya nimmt die 200 Euro nicht an und fordert schriftlich 648 Euro. Am Telefon plant sie mit der Kundenberaterin eine Lösung: 574 Euro, schriftlich bestätigt.",
-    "cliffhanger": "Kaum ist die Einigung per E-Mail bestätigt, schreibt Sara: „Priya, hast du heute Abend Zeit? Ich habe die Studienordnung für mein Studium bekommen und verstehe nur die Hälfte.“",
+    "cliffhanger": "Kaum ist die Einigung per E-Mail bestätigt, schreibt Sara: „Priya, hast du heute Abend Zeit? Ich habe die Studienordnung für meinen Studiengang bekommen und verstehe nur die Hälfte.“",
     "castIn": [
       "cast.sara"
     ]
