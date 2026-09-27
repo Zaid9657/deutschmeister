@@ -61,7 +61,7 @@ async function getRecipients() {
     for (const user of data.users) {
       // Only confirmed accounts with an email
       if (!user.email || !user.email_confirmed_at) continue;
-      emails.push({ id: user.id, email: user.email.trim().toLowerCase() });
+      emails.push({ id: user.id, email: user.email.trim().toLowerCase(), confirmedAt: user.email_confirmed_at });
     }
 
     if (data.users.length < 1000) break;
@@ -81,7 +81,7 @@ async function getRecipients() {
   if (profErr) {
     // If the column doesn't exist yet, log a warning and send to everyone
     console.warn('profiles query error (column may not exist yet):', profErr.message);
-    return emails;
+    return orderRecipients(emails);
   }
 
   const optedOut = new Set(
@@ -90,10 +90,12 @@ async function getRecipients() {
       .map((p) => p.id)
   );
 
-  return emails.filter((u) => !optedOut.has(u.id));
+  return orderRecipients(emails.filter((u) => !optedOut.has(u.id)));
 }
 
-function buildEmail({ sentence, recipient }) {
+function buildEmail({ sentence, recipient, runDate = utcRunDate() }) {
+  const headerDate = new Date(`${runDate}T12:00:00Z`)
+    .toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'UTC' });
   const ctaUrl = analyzeUrl(sentence.sentence_de);
   const unsubUrl = unsubscribeUrl(recipient.id);
 
@@ -113,7 +115,7 @@ function buildEmail({ sentence, recipient }) {
         <tr>
           <td style="background:#0F766E;padding:28px 32px;">
             <p style="margin:0;color:rgba(255,255,255,0.85);font-size:13px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;">DeutschMeister · Daily Sentence</p>
-            <p style="margin:6px 0 0;color:#ffffff;font-size:13px;opacity:0.8;">${new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
+            <p style="margin:6px 0 0;color:#ffffff;font-size:13px;opacity:0.8;">${headerDate}</p>
           </td>
         </tr>
 
@@ -181,19 +183,111 @@ function buildEmail({ sentence, recipient }) {
 // Each batch item carries its own per-recipient HTML (unsubscribe link).
 const BATCH_SIZE = 100;
 
-async function sendBatch(resendKey, items) {
-  const res = await fetch('https://api.resend.com/emails/batch', {
+// ─── once per day, even when the scheduler fires twice ──────────────────────
+// 2026-09-27: every confirmed recipient got this email TWICE — two complete sets
+// of 12 batch requests, 07:00:32 and 07:01:22 UTC, 2,236 sends against 1,117 the
+// day before (Resend logs + metrics). The schedule is registered once and the
+// code had not changed since 09-12; the first run's batches were twice as slow
+// as usual (16 s vs 7 s). Netlify retries a scheduled invocation it counts as
+// failed, up to three attempts, and a v1 handler that has not returned its
+// headers within ~28 s counts as failed. This handler only returns after the
+// last batch, and it had no memory of an earlier run, so the retry re-mailed
+// the whole list.
+//
+// The fix is Resend's own idempotency: every live batch carries an
+// Idempotency-Key of (UTC run date, batch index). A second request with the same
+// key and the same payload within 24 h is answered from Resend's cache and sends
+// nothing; the same key with a different payload is refused with 409. For that
+// to hold, a retry must rebuild byte-identical batches, so:
+//   * recipients are ordered by confirmation time, then id — never by whatever
+//     order listUsers returns — so a new confirmation joins the END of the list
+//     and every earlier batch keeps its members;
+//   * the header date is derived from the run date, not from the clock;
+//   * the key carries no recipient count: a count would change every key the
+//     moment one person confirmed between the two runs.
+// A run killed half-way is resumed exactly: the batches it sent are replayed as
+// no-ops, the ones it never reached go out under fresh keys.
+// Test sends carry no key — a morning test must never occupy a live batch key.
+// No database ledger: lifecycle_emails cannot hold it (user_id NOT NULL, kind
+// CHECK), and a per-day key needs no migration to be in force.
+
+/** YYYY-MM-DD in UTC — the unit of "once". The scheduler fires at 07:00 UTC. */
+export function utcRunDate(now = new Date()) {
+  return now.toISOString().slice(0, 10);
+}
+
+/** Resend Idempotency-Key for one live batch. Stable across retries of a day. */
+export function dailyBatchKey(runDate, batchIndex) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(runDate)) throw new Error(`bad run date: ${runDate}`);
+  if (!Number.isInteger(batchIndex) || batchIndex < 0) throw new Error(`bad batch index: ${batchIndex}`);
+  return `daily-sentence/${runDate}/batch-${batchIndex}`;
+}
+
+/** Deterministic order: confirmation time ascending, then id. Returns a new array. */
+export function orderRecipients(list) {
+  return [...list].sort((a, b) => {
+    const ta = Date.parse(a.confirmedAt) || 0;
+    const tb = Date.parse(b.confirmedAt) || 0;
+    if (ta !== tb) return ta - tb;
+    return a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
+  });
+}
+
+async function sendBatch(resendKey, items, idempotencyKey, fetchImpl = fetch) {
+  const headers = {
+    Authorization: `Bearer ${resendKey}`,
+    'Content-Type': 'application/json',
+  };
+  if (idempotencyKey) headers['Idempotency-Key'] = idempotencyKey;
+  const res = await fetchImpl('https://api.resend.com/emails/batch', {
     method: 'POST',
-    headers: {
-      Authorization: `Bearer ${resendKey}`,
-      'Content-Type': 'application/json',
-    },
+    headers,
     body: JSON.stringify(items),
   });
+  if (res.status === 409 && idempotencyKey) return 'conflict';
   if (!res.ok) {
     const text = await res.text();
     throw new Error(`Resend batch ${res.status}: ${text.slice(0, 300)}`);
   }
+  return 'accepted';
+}
+
+/**
+ * Build and send every batch. `live` decides whether batches carry an
+ * idempotency key; the handler passes false only for ?test=true.
+ * `accepted` includes batches Resend answered from an earlier run's cache (it
+ * does not say which) — Resend's metrics, not this count, are what was sent.
+ * `conflicts` are batches whose key was already used today with other members.
+ */
+export async function sendDailyBatches({ recipients, sentence, runDate, resendKey, live, fetchImpl = fetch }) {
+  const subject = `🇩🇪 ${sentence.sentence_de}`;
+  let sent = 0, failed = 0, conflicts = 0;
+
+  for (let i = 0; i < recipients.length; i += BATCH_SIZE) {
+    const batchIndex = i / BATCH_SIZE;
+    const slice = recipients.slice(i, i + BATCH_SIZE);
+    const items = slice.map((recipient) => ({
+      from: FROM_ADDRESS,
+      to: [recipient.email],
+      reply_to: 'zaid@deutsch-meister.de',
+      subject,
+      html: buildEmail({ sentence, recipient, runDate }),
+    }));
+    const key = live ? dailyBatchKey(runDate, batchIndex) : undefined;
+    try {
+      const outcome = await sendBatch(resendKey, items, key, fetchImpl);
+      if (outcome === 'conflict') {
+        conflicts += slice.length;
+        console.warn(`Batch ${batchIndex + 1}: key ${key} already used today with other members — not re-sent`);
+      } else {
+        sent += slice.length;
+      }
+    } catch (err) {
+      failed += slice.length;
+      console.error(`Batch ${batchIndex + 1} failed:`, err.message);
+    }
+  }
+  return { sent, failed, conflicts };
 }
 
 // ─── handler ─────────────────────────────────────────────────────────────────
@@ -242,29 +336,12 @@ const innerHandler = async (event) => {
 
   console.log(`Sending to ${recipients.length} recipients in batches of ${BATCH_SIZE}`);
 
-  const subject = `🇩🇪 ${sentence.sentence_de}`;
-  let sent = 0, failed = 0;
+  const { sent, failed, conflicts } = await sendDailyBatches({
+    recipients, sentence, runDate: utcRunDate(), resendKey, live: !isTest,
+  });
 
-  for (let i = 0; i < recipients.length; i += BATCH_SIZE) {
-    const slice = recipients.slice(i, i + BATCH_SIZE);
-    const items = slice.map((recipient) => ({
-      from: FROM_ADDRESS,
-      to: [recipient.email],
-      reply_to: 'zaid@deutsch-meister.de',
-      subject,
-      html: buildEmail({ sentence, recipient }),
-    }));
-    try {
-      await sendBatch(resendKey, items);
-      sent += slice.length;
-    } catch (err) {
-      failed += slice.length;
-      console.error(`Batch ${i / BATCH_SIZE + 1} failed:`, err.message);
-    }
-  }
-
-  console.log(`Done — sent: ${sent}, failed: ${failed}`);
-  return { statusCode: 200, body: JSON.stringify({ sent, failed, sentence: sentence.sentence_de }) };
+  console.log(`Done — accepted: ${sent} (includes batches replayed from an earlier run today), conflicts: ${conflicts}, failed: ${failed}`);
+  return { statusCode: 200, body: JSON.stringify({ sent, failed, conflicts, sentence: sentence.sentence_de }) };
 };
 
 // schedule() wraps the handler so Netlify recognises this as a scheduled
