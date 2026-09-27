@@ -501,7 +501,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.kostenvoranschlag",
-            "promptDe": "Bevor die Werkstatt repariert, schickt sie uns einen ___ mit dem Preis.",
+            "promptDe": "Bevor die Werkstatt repariert, schickt sie uns einen ___ mit dem Preis. (Kost…, 17 Buchstaben)",
             "promptEn": "What does the joiner send before repairing?",
             "answer": "Kostenvoranschlag",
             "accepted": [
@@ -818,7 +818,7 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "lx.gutachten",
-          "promptDe": "Ein Sachverständiger schreibt ein ___ über die Höhe des Schadens.",
+          "promptDe": "Ein Sachverständiger schreibt ein ___ über die Höhe des Schadens. (Gut…, 9 Buchstaben)",
           "promptEn": "What does an expert write?",
           "answer": "Gutachten",
           "accepted": [

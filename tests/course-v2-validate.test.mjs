@@ -540,8 +540,16 @@ describe('SCHEMA §15.6 on the worked example (--stage T)', () => {
     const failing = rep.results.filter((r) => r.status === 'fail').map((r) => r.id);
     assert.deepEqual(failing, ['CON-06'], rep.results.filter((r) => r.status === 'fail').map(messages).join('\n'));
     assert.equal(rep.exitCode, 1);
-    const pass = ['REF-01', 'ID-01', 'GRM-01', 'GRM-02', 'LEX-05', 'TXT-02', 'TXT-03', 'TXT-04', 'ITM-02', 'ITM-03', 'ITM-06', 'ITM-07', 'ITM-09', 'ITM-10', 'ITM-11', 'EXM-01', 'EXM-03', 'EXM-04', 'EXM-11'];
+    const pass = ['REF-01', 'ID-01', 'GRM-01', 'GRM-02', 'LEX-05', 'TXT-02', 'TXT-03', 'TXT-04', 'ITM-02', 'ITM-06', 'ITM-07', 'ITM-09', 'ITM-10', 'ITM-11', 'EXM-01', 'EXM-11'];
     for (const id of pass) assert.equal(rep.results.find((r) => r.id === id)?.status, 'pass', `${id} should pass`);
+    // rail extensions of 2026-09-27 that measure the worked example as advisories only (RAILS §7 item 13):
+    // ITM-03 non-exam key positions (every MC keyed at options[0]), EXM-03 two-letter cues („am", „um"),
+    // EXM-04 the ga2.sp1 Thema and a three-word card, ITM-13 dictation lengths
+    for (const id of ['ITM-03', 'EXM-03', 'EXM-04', 'ITM-13']) {
+      const r = rep.results.find((x) => x.id === id);
+      assert.ok(['pass', 'warn'].includes(r?.status), `${id}: ${r?.status}`);
+      assert.equal(r.findings.filter((f) => f.severity === 'blocker').length, 0, `${id} has no blocker on the worked example`);
+    }
   });
   test('verified, the example passes every rule', async () => {
     const b = ex();
