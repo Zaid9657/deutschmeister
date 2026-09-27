@@ -28,7 +28,7 @@ const bare = (w) => lc(w).replace(/[.,!?;:„“”"»«]/g, '');
 
 const PREPOSITIONS = new Set('an am ans auf aufs aus bei beim bis durch für gegen gegenüber hinter in im ins mit nach neben ohne seit über um unter von vom vor zu zum zur zwischen trotz wegen während statt außer laut dank innerhalb außerhalb'.split(' '));
 const PLACE_TIME_ADVERBS = new Set('heute morgen gestern vorgestern übermorgen jetzt dann danach hier dort da bald später früher abends morgens mittags nachmittags vormittags nachts montags dienstags mittwochs donnerstags freitags samstags sonntags zuerst zuletzt oben unten draußen drinnen links rechts geradeaus zurzeit sofort gleich'.split(' '));
-export const SENTENCE_ADVERBS = new Set('leider vielleicht natürlich trotzdem deshalb deswegen darum wahrscheinlich bestimmt sicher hoffentlich eigentlich außerdem allerdings jedoch sonst also dennoch folglich glücklicherweise offensichtlich rechtzeitig'.split(' '));
+export const SENTENCE_ADVERBS = new Set('leider vielleicht natürlich trotzdem deshalb deswegen darum wahrscheinlich bestimmt sicher hoffentlich eigentlich außerdem allerdings jedoch sonst also dennoch folglich glücklicherweise offensichtlich rechtzeitig andernfalls ansonsten schließlich immerhin zumindest jedenfalls übrigens tatsächlich'.split(' '));
 const TIME_DETERMINERS = new Set('jeden jede jedes nächsten nächste nächstes letzten letzte letztes diesen diese dieses'.split(' '));
 const DETERMINERS = new Set('der die das den dem des ein eine einen einem einer eines kein keine keinen keinem keiner mein meine meinen meinem meiner dein deine deinen deinem sein seine seinen seinem ihr ihre ihren ihrem unser unsere unseren unserem euer eure euren eurem dieser diese dieses diesen diesem viele viel wenige einige alle zwei drei vier fünf sechs sieben acht neun zehn'.split(' '));
 const NOMINATIVE_PRONOUNS = new Set(['ich', 'du', 'er', 'sie', 'es', 'wir', 'ihr', 'man']);
@@ -76,10 +76,14 @@ export function tileSequence(tiles, sentence) {
 }
 
 /** The kind of a tile for ordering: pp · adverb · sentence-adverb · time · np · pronoun · particle · verbal · other. */
-function tileKind(tile, { last, copula }) {
+function tileKind(tile, { last, copula, afterPreposition = false }) {
   const ws = words(tile).map(bare);
   const first = ws[0] || '';
-  if (ws.length === 1 && LONE_PRONOUNS.has(first)) return 'pronoun';
+  // a lone pronoun — the polite object „Sie" included („Sie verbinde ich …" is not a neutral order)
+  if (ws.length === 1 && (LONE_PRONOUNS.has(first) || NOMINATIVE_PRONOUNS.has(first))) return 'pronoun';
+  // a lone determiner or preposition is half a phrase; so is the phrase after a lone preposition
+  if (ws.length === 1 && (DETERMINERS.has(first) || PREPOSITIONS.has(first))) return 'other';
+  if (afterPreposition) return 'other';
   if (ws.length === 1 && PARTICLES.has(first)) return 'particle';
   if (PREPOSITIONS.has(first) && ws.length >= 2) return 'pp';
   if (ws.length === 1 && SENTENCE_ADVERBS.has(first)) return 'sentence-adverb';
@@ -94,7 +98,9 @@ function tileKind(tile, { last, copula }) {
   return 'other';
 }
 
-const FRONTABLE = new Set(['pp', 'adverb', 'sentence-adverb', 'time', 'np', 'predicative']);
+// a predicative stays with its copula at the clause end („Kalt wird es am Abend." is contrastive, and
+// no review asked for it beyond A1.1, whose unit accepts it anyway)
+const FRONTABLE = new Set(['pp', 'adverb', 'sentence-adverb', 'time', 'np']);
 
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 /** A tile moved out of the first position loses a sentence-initial capital (not „Sie", names, nouns). */
@@ -117,8 +123,10 @@ export const flatOrder = (s) => lc(s).replace(/[.,!?;:„“”"»«]/g, ' ').re
 export function missingOrders(item) {
   const tiles = Array.isArray(item?.tiles) ? item.tiles.map(String) : [];
   const answer = String(item?.answer || '').trim();
-  if (tiles.length < 3 || !answer || /\?\s*$/.test(answer) || answer.includes(',')) return [];
+  if (tiles.length < 3 || !answer || /[?!]\s*$/.test(answer) || answer.includes(',')) return [];
   if (tiles.some((t) => words(t).some((w) => CLAUSE_WORDS.has(bare(w))))) return [];
+  // „Bitte unterschreiben Sie hier.": an imperative, not a V2 declarative
+  if (tiles.some((t) => bare(t) === 'bitte')) return [];
   const end = (answer.match(/[.!]+$/) || ['.'])[0];
   const accepted = [answer, ...(Array.isArray(item.accepted) ? item.accepted : [])].map(String);
   const have = new Set(accepted.map(flatOrder));
@@ -126,7 +134,8 @@ export function missingOrders(item) {
   if (!seq || !isFinite(seq[1])) return [];
   const verb = seq[1];
   const copula = COPULAS.has(bare(verb));
-  const kinds = seq.map((t, i) => tileKind(t, { last: i === seq.length - 1, copula }));
+  const kindsOf = (sq) => sq.map((t, i) => tileKind(t, { last: i === sq.length - 1, copula, afterPreposition: i > 0 && words(sq[i - 1]).length === 1 && PREPOSITIONS.has(bare(sq[i - 1])) }));
+  const kinds = kindsOf(seq);
   // the subject: a nominative pronoun tile, else the first tile of a subject-first answer, else the
   // noun phrase right after the verb of an inverted one
   let subj = seq.findIndex((t, i) => i !== 1 && words(t).length === 1 && NOMINATIVE_PRONOUNS.has(bare(t)) && (i === 0 || i === 2 || !['sie', 'es'].includes(bare(t))));
@@ -139,15 +148,19 @@ export function missingOrders(item) {
     const s = `${cap(parts.filter(Boolean).join(' '))}${end}`;
     if (!have.has(flatOrder(s)) && !out.some((o) => flatOrder(o.order) === flatOrder(s))) out.push({ order: s, why });
   };
-  const rest = (skip) => seq.filter((_, i) => !skip.includes(i)).map(uncap);
+  // the Mittelfeld in its unmarked order: subject, the lone pronouns after it (uns, sich, es …), the
+  // element an inverted answer fronted, then the rest as the answer has it
+  const idx = seq.map((_, i) => i).filter((i) => i !== 1 && i !== subj && i !== 0);
+  const pron = [];
+  while (idx.length && kinds[idx[0]] === 'pronoun') pron.push(idx.shift());
+  const middle = [subj, ...pron, ...(subj !== 0 ? [0] : []), ...idx];
   if (!promptFixesFirst) {
     // subject-first order of an inverted answer
-    if (subj !== 0) want([seq[subj], verb, uncap(seq[0]), ...rest([0, 1, subj])], 'the subject-first order');
+    if (subj !== 0) want([seq[subj], verb, ...middle.slice(1).map((k) => uncap(seq[k]))], 'the subject-first order');
     // each frontable tile in the Vorfeld
     seq.forEach((t, i) => {
       if (i === 1 || i === subj || i === 0 || !FRONTABLE.has(kinds[i])) return;
-      const others = seq.map((x, k) => [x, k]).filter(([, k]) => ![1, i, subj].includes(k)).map(([x]) => uncap(x));
-      want([t, verb, uncap(seq[subj]), ...others], `„${t}" in the Vorfeld`);
+      want([t, verb, ...middle.filter((k) => k !== i).map((k) => uncap(seq[k]))], `„${t}" in the Vorfeld`);
     });
   }
   // Mittelfeld swaps on every accepted order the tiles spell
@@ -155,18 +168,18 @@ export function missingOrders(item) {
     const s2 = tileSequence(tiles, form);
     if (!s2 || !isFinite(s2[1])) continue;
     const e2 = (form.match(/[.!]+$/) || [end])[0];
-    const k2 = s2.map((t, i) => tileKind(t, { last: i === s2.length - 1, copula }));
+    const k2 = kindsOf(s2);
     for (let i = 2; i + 1 < s2.length; i += 1) {
       const a = s2[i];
       const b = s2[i + 1];
-      const pa = OBJECT_PRONOUNS.has(bare(a)) && words(a).length === 1;
-      const pb = OBJECT_PRONOUNS.has(bare(b)) && words(b).length === 1;
+      // an object pronoun (not the polite subject „Sie") after a local/temporal adverbial owes the
+      // unmarked pronoun-first order; never the reverse („… um einen Preisnachlass Sie")
+      const pb = OBJECT_PRONOUNS.has(bare(b)) && words(b).length === 1 && b !== 'Sie' && bare(b) !== bare(seq[subj]);
       const adv = (k) => k === 'pp' || k === 'adverb' || k === 'time';
       const sa = k2[i] === 'sentence-adverb';
       const sb = k2[i + 1] === 'sentence-adverb';
-      const npSubj = (t) => bare(t) !== bare(s2[0]) && words(t).length >= 2 && (DETERMINERS.has(bare(words(t)[0])) || /^\p{Lu}/u.test(words(t)[0]));
-      const swap = (pa && adv(k2[i + 1])) || (pb && adv(k2[i]))
-        || (sa && npSubj(b) && k2[i + 1] === 'np') || (sb && npSubj(a) && k2[i] === 'np');
+      const npSubj = (t) => bare(t) === bare(seq[subj]) && words(t).length >= 2;
+      const swap = (pb && adv(k2[i])) || (sa && npSubj(b)) || (sb && npSubj(a));
       if (!swap) continue;
       const parts = [...s2];
       [parts[i], parts[i + 1]] = [parts[i + 1], parts[i]];
