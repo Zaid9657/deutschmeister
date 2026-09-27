@@ -56,7 +56,9 @@ const STRIP_SPEC_KEYS = ['lehrwerk', 'deviation', 'source', 'fokusPlan'];
 const STRIP_TOP_KEYS = ['$schema', 'version', 'status', 'reviewedIn', 'stage'];
 const WORDS_PER_SECOND = 2.5; // line-length estimate (150 words/min) until the audio run measures it
 
-const json = (x) => `${JSON.stringify(x, null, 2)}\n`;
+// Compiled output is minified (the authored content under content/course-v2 stays readable): one line
+// per file, keys in the compiler's fixed insertion order, so an unchanged unit gives identical bytes.
+const json = (x) => `${JSON.stringify(x)}\n`;
 const round1 = (x) => Math.round(x * 10) / 10;
 const pad2 = (n) => String(n).padStart(2, '0');
 const isObj = (x) => x !== null && typeof x === 'object' && !Array.isArray(x);
