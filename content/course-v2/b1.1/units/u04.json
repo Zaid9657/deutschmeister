@@ -2734,7 +2734,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Guten Tag! Ich rufe an, weil unsere Bestellung kaputt angekommen ist. Die Bestellnummer ist 40317. Wir haben eine Lampe als Geschenk bestellt. Obwohl der Karton nicht beschädigt war, ist die Lampe kaputt, und sie geht nicht an."
+            "de": "Guten Tag! Ich rufe an, weil unsere Bestellung kaputt angekommen ist. Die Bestellnummer ist 40317. Wir haben eine Lampe als Geschenk bestellt. Obwohl die Lampe ganz neu ist, geht sie nicht an."
           },
           {
             "speaker": "partner",
@@ -3076,8 +3076,8 @@
           "Obwohl"
         ],
         "explanation": {
-          "de": "Wer alles richtig macht, erwartet: Das Gerät läuft. Es geht aber aus – ein Gegengrund, also Obwohl. Trotzdem passt nicht: „mache“ steht am Ende.",
-          "en": "Doing everything right, you expect the device to run, but it switches off – a reason against, so Obwohl. Trotzdem does not fit: the verb is at the end."
+          "de": "Man hat die Anleitung gelesen und erwartet: Das Gerät läuft. Es geht aber aus – ein Gegengrund, also Obwohl. Trotzdem passt nicht: „mache“ steht am Ende.",
+          "en": "You read the manual and expect the device to run, but it switches off – a reason against, so Obwohl. Trotzdem does not fit: the verb is at the end."
         },
         "origin": "agent"
       }
