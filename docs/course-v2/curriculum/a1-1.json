@@ -18,8 +18,8 @@
     {
       "nr": 1,
       "id": "a1.1-u01",
-      "title": "Hallo! Ich bin …",
-      "titleEn": "Hello! I'm …",
+      "title": "Freut mich!",
+      "titleEn": "Nice to meet you!",
       "situation": "Erster Tag im Deutschkurs: Die Teilnehmenden begrüßen sich und stellen sich vor – im Kursraum und im Kurs-Chat.",
       "handlungsfeld": "Soziale Kontakte (RC-Bereich D) · Unterricht (HF 11) · CEFR-Domäne: privat/Bildung",
       "unitType": "situation",
@@ -61,6 +61,13 @@
           "new": false,
           "lehrwerk": "Menschen A1 L1; Schritte plus Neu 1 L1",
           "chunk": true
+        },
+        {
+          "point": "Arbeitsanweisungen im Imperativ mit Sie (Hören Sie! Lesen Sie! Kreuzen Sie an!) – nur verstehen; Imperativ als Grammatik ab A1.2 Einheit 1",
+          "new": false,
+          "lehrwerk": "Netzwerk neu A1 K3; Die neue Linie 1 A1 K3 (Hueber: A1.2, Menschen A1 L18)",
+          "chunk": true,
+          "receptive": true
         }
       ],
       "vocabTheme": "Begrüßung, Länder, Sprachen",
@@ -234,7 +241,7 @@
           "lehrwerk": "Menschen A1 L3; Schritte plus Neu 1 L3/L6; Netzwerk neu A1 K2; Die neue Linie 1 A1 K2"
         },
         {
-          "point": "Verben mit Vokalwechsel e → i/ie (sprechen, lesen, sehen)",
+          "point": "Verben mit Vokalwechsel e → i/ie und a → ä; nehmen (du sprichst, er liest, du fährst, sie schläft, du nimmst) – nur du und er/sie/es",
           "new": true,
           "lehrwerk": "Menschen A1 L3; Schritte plus Neu 1 L3/L6; Netzwerk neu A1 K2; Die neue Linie 1 A1 K5"
         }
@@ -365,7 +372,8 @@
         "Goethe A1 Hören Teil 1",
         "Goethe A1 Hören Teil 2",
         "Goethe A1 Lesen Teil 2",
-        "Goethe A1 Sprechen Teil 3"
+        "Goethe A1 Sprechen Teil 3",
+        "Goethe A1 Schreiben Teil 2"
       ],
       "landeskunde": "Einkaufen in D-A-CH: Wochenmarkt, sonntags meist geschlossen, Flaschenpfand in Deutschland, bar oder mit Karte"
     },
@@ -411,6 +419,13 @@
           "new": false,
           "lehrwerk": "Menschen A1 L13 (A1.2); Schritte plus Neu 2 L11",
           "chunk": true
+        },
+        {
+          "point": "»ein großes Zimmer«, »eine helle Küche« (attributives Adjektiv in Anzeigen) – nur verstehen; Adjektivdeklination ab A2.1",
+          "new": false,
+          "lehrwerk": "Adjektivdeklination: Menschen A2 L4/L5/L9; Netzwerk neu A2 K5–6 (Schritte plus Neu 4: A2.2)",
+          "chunk": true,
+          "receptive": true
         }
       ],
       "vocabTheme": "Zimmer, Möbel, Wohnungsanzeige",
@@ -547,8 +562,8 @@
     {
       "nr": 7,
       "id": "a1.1-u07",
-      "title": "Mein Tag",
-      "titleEn": "My day",
+      "title": "Von morgens bis abends",
+      "titleEn": "From morning to night",
       "situation": "Eine neue Kollegin fragt nach dem Alltag: den Tagesablauf erzählen, Uhrzeiten und Öffnungszeiten verstehen und einen Termin notieren.",
       "handlungsfeld": "Arbeit (HF 2) · Soziale Kontakte (RC-Bereich D) · CEFR-Domäne: privat/beruflich",
       "unitType": "situation",
@@ -591,7 +606,6 @@
       "vocabTarget": 30,
       "keyWords": [
         "die Uhrzeit",
-        "die Minute",
         "die Stunde",
         "der Morgen",
         "der Abend",
@@ -603,6 +617,7 @@
         "aufstehen",
         "anfangen",
         "einkaufen",
+        "fahren",
         "geschlossen"
       ],
       "reading": {
@@ -747,14 +762,14 @@
       ],
       "grammar": [
         {
-          "point": "mögen und möchte (Ich mag Kaffee. Ich möchte einen Tee.)",
+          "point": "mögen: Vorlieben und Abneigungen (Ich mag Kaffee. Magst du Fisch? – Nein, Fisch mag ich nicht.)",
           "new": true,
-          "lehrwerk": "Menschen A1 L9; Netzwerk neu A1 K4; Schritte plus Neu 1 L3 (möchte)"
+          "lehrwerk": "Menschen A1 L9; Netzwerk neu A1 K4"
         },
         {
-          "point": "Akkusativ nach essen, trinken, nehmen, bestellen (Wiederholung)",
+          "point": "Wiederholung: möchte (Einheit 4) und Akkusativ (Einheit 6) beim Bestellen – Zuwachs: mag oder möchte? im Kontrast; möchte + maskuliner Akkusativ jetzt als Regel statt als feste Wendung; Was nimmst du? – Ich nehme einen Tee.",
           "new": false,
-          "lehrwerk": "Menschen A1 L6; Netzwerk neu A1 K4"
+          "lehrwerk": "Schritte plus Neu 1 L3 (möchte); Menschen A1 L6 (Akkusativ), L9; Netzwerk neu A1 K4"
         },
         {
           "point": "Komposita: das letzte Wort bestimmt den Artikel (der Apfel + der Kuchen = der Apfelkuchen)",
@@ -838,14 +853,14 @@
       ],
       "grammar": [
         {
-          "point": "Verben mit Vokalwechsel a → ä und nehmen (du fährst, er hält, sie nimmt)",
-          "new": true,
-          "lehrwerk": "Menschen A1 L3; Schritte plus Neu 1 L6; Netzwerk neu A1 K2; Die neue Linie 1 A1 K5"
-        },
-        {
-          "point": "Trennbare Verben unterwegs (einsteigen, umsteigen, abfahren, ankommen) – Erweiterung",
+          "point": "Wiederholung und Erweiterung: trennbare Verben unterwegs (einsteigen, umsteigen, abfahren, ankommen) – Zuwachs: zusammen mit Vokalwechsel (Der Zug fährt um 8.15 Uhr ab. Du steigst in Hannover um.)",
           "new": false,
           "lehrwerk": "Menschen A1 L10; Schritte plus Neu 1 L5; Netzwerk neu A1 K6"
+        },
+        {
+          "point": "Wiederholung: Vokalwechsel a → ä und nehmen aus Einheit 3 im neuen Wortfeld (du fährst, der Zug hält, Sie nehmen die U2)",
+          "new": false,
+          "lehrwerk": "Menschen A1 L3, L10; Netzwerk neu A1 K2–3"
         },
         {
           "point": "mit dem Zug, zum Bahnhof (Dativ als feste Wendung; Präpositionen mit Dativ ab A1.2)",
@@ -865,7 +880,7 @@
         "die Fahrkarte",
         "die Abfahrt",
         "die Verspätung",
-        "fahren",
+        "die Minute",
         "einsteigen",
         "umsteigen",
         "ankommen",
@@ -982,7 +997,8 @@
         "Goethe A1 Lesen Teil 1",
         "Goethe A1 Hören Teil 1",
         "Goethe A1 Hören Teil 3",
-        "Goethe A1 Sprechen Teil 2"
+        "Goethe A1 Sprechen Teil 2",
+        "Goethe A1 Schreiben Teil 2"
       ],
       "landeskunde": "Wochenende in D-A-CH: Ausflug ins Grüne, Brunch, Flohmarkt"
     },
@@ -1114,7 +1130,7 @@
     }
   ],
   "levelTest": {
-    "format": "Halb-Modelltest im Format Start Deutsch 1 (Goethe-Zertifikat A1 = telc Deutsch A1): alle elf Teile im Originalformat mit etwa der Hälfte der Items (Hören 3 + 2 + 3, Lesen 3 + 3 + 3, Schreiben Teil 1 und Teil 2, Sprechen Teile 1–3), Inhalte und Grammatik auf A1.1 begrenzt; ca. 35 min schriftlich + ca. 8 min Sprechen mit der KI als Prüferin und Partnerin; automatisches Übungsergebnis je Teil, keine Prüfungsprognose; eine Parallelform dient als Einstiegscheck für A1.2",
+    "format": "Halb-Modelltest im Format Start Deutsch 1 (Goethe-Zertifikat A1 = telc Deutsch A1): alle elf Teile im Originalformat mit etwa der Hälfte der Items (Hören 3 + 2 + 3, Lesen 3 + 3 + 3, Schreiben Teil 1 und Teil 2, Sprechen Teile 1–3), Inhalte und Grammatik auf A1.1 begrenzt; ca. 35 min schriftlich + ca. 8 min Sprechen mit der KI in der Rolle der Prüferin (automatische Übungsbewertung) und als Partnerin; Übungswerte je Prüfungsteil (kein Gesamturteil, keine Prüfungsprognose); eine Parallelform ist der Diagnose-Mini-Modelltest in Woche 1 von A1.2",
     "sections": [
       "Hören",
       "Lesen",

@@ -7,7 +7,7 @@
     "telc Deutsch A1"
   ],
   "hours": {
-    "guided": 48,
+    "guided": 47,
     "total": 75
   },
   "vocabTarget": {
@@ -56,6 +56,13 @@
           "point": "Imperativ mit Sie (Gehen Sie geradeaus! Nehmen Sie die U2!)",
           "new": true,
           "lehrwerk": "Netzwerk neu A1 K3; Die neue Linie 1 A1 K3; Menschen A1 L18; Schritte plus Neu 2 L9"
+        },
+        {
+          "point": "»gegenüber«, »an … vorbei« in Wegbeschreibungen – nur verstehen; aktiv ab A2.2",
+          "new": false,
+          "lehrwerk": "Menschen A2 L16–19; Schritte plus Neu 4 L11–12; Netzwerk neu A2 K7 (06, A2.2 #6)",
+          "chunk": true,
+          "receptive": true
         }
       ],
       "vocabTheme": "Orte in der Stadt, Wegbeschreibung",
@@ -306,20 +313,19 @@
           "lehrwerk": "Menschen A1 L16; Schritte plus Neu 2 L8/L12; Netzwerk neu A1 K12"
         },
         {
+          "point": "Ordinalzahlen und Datum (am dritten Mai, vom 3. bis 5. Juni, ab dem 1. Oktober, Heute ist der 12. März.)",
+          "new": true,
+          "lehrwerk": "Menschen A1 L24; Schritte plus Neu 2 L14; Netzwerk neu A1 K12 (hier vorgezogen, siehe D3)"
+        },
+        {
           "point": "Ich hätte gern einen Termin. (Konjunktiv II als feste Wendung)",
           "new": false,
           "lehrwerk": "Schritte plus Neu 2 L12; 06 F2: Goethe-A1-Inventar – Konjunktiv II nur als lexikalische Einheit",
           "chunk": true
-        },
-        {
-          "point": "am dritten Mai (Datum als feste Wendung; Ordinalzahlen in Einheit 12)",
-          "new": false,
-          "lehrwerk": "Menschen A1 L24; Schritte plus Neu 2 L14",
-          "chunk": true
         }
       ],
-      "vocabTheme": "Amt, Termine, Dokumente",
-      "vocabTarget": 26,
+      "vocabTheme": "Amt, Termine, Dokumente, Datum",
+      "vocabTarget": 28,
       "keyWords": [
         "das Amt",
         "das Bürgerbüro",
@@ -831,6 +837,13 @@
           "point": "war/hatte und Perfekt im Kontrast: früher und heute (Wiederholung)",
           "new": false,
           "lehrwerk": "Menschen A1 L19; Schritte plus Neu 2 L8"
+        },
+        {
+          "point": "»Er sieht jung aus«, »ein netter Mann« (aussehen; attributives Adjektiv) – nur verstehen; Adjektivdeklination ab A2.1",
+          "new": false,
+          "lehrwerk": "Menschen A1 L19 (Aussehen); Adjektivdeklination: Menschen A2 L4/L5/L9; Netzwerk neu A2 K5–6",
+          "chunk": true,
+          "receptive": true
         }
       ],
       "vocabTheme": "Aussehen, Charakter, Lebensphasen",
@@ -995,8 +1008,8 @@
       ],
       "grammar": [
         {
-          "point": "Ordinalzahlen und Datum (am ersten Mai, vom 3. bis 5. Juni, Ich habe am 12. März Geburtstag.)",
-          "new": true,
+          "point": "Wiederholung und Transfer: Datum und Ordinalzahlen (aus Einheit 4) bei Festen – Zuwachs: Geburtstage und Feiertage nennen (Ich habe am 12. März Geburtstag. Der Nationalfeiertag ist am 3. Oktober.)",
+          "new": false,
           "lehrwerk": "Menschen A1 L24; Schritte plus Neu 2 L14; Netzwerk neu A1 K12"
         },
         {
@@ -1006,13 +1019,13 @@
           "chunk": true
         },
         {
-          "point": "Verben mit Dativ bei Glückwünschen (Ich gratuliere dir. Ich wünsche Ihnen alles Gute.) – Wiederholung",
+          "point": "Verben mit Dativ bei Glückwünschen (Ich gratuliere dir. Ich wünsche Ihnen alles Gute.) – Wiederholung aus Einheit 6; Zuwachs: gratulieren, wünschen, danken",
           "new": false,
           "lehrwerk": "Menschen A1 L15; Schritte plus Neu 2 L13–14"
         }
       ],
-      "vocabTheme": "Feste, Feiertage, Glückwünsche, Datum",
-      "vocabTarget": 20,
+      "vocabTheme": "Feste, Feiertage, Glückwünsche",
+      "vocabTarget": 18,
       "keyWords": [
         "der Geburtstag",
         "die Feier",
@@ -1091,7 +1104,7 @@
     }
   ],
   "levelTest": {
-    "format": "Vollständiger Modelltest Start Deutsch 1 (Goethe-Zertifikat A1 = telc Deutsch A1), Parallelform B von drei: Hören ca. 20 min (15 Items, Teil 2 einmal gehört), Lesen 25 min (15 Items), Schreiben 20 min (Formular + ca. 30 Wörter), ohne Pause 65 min, dann ca. 15 min Sprechen (drei Teile, ohne Vorbereitung, die KI als Prüferin und Gruppe); Auswertung je Teil als automatisches Übungsergebnis nach der Goethe- und der telc-Bewertungsregel, nie als Bestehensprognose",
+    "format": "Vollständiger Modelltest Start Deutsch 1 (Goethe-Zertifikat A1 = telc Deutsch A1), der dritte von drei vollen Modelltests als Parallelform (Modelltest 1 = Checkpoint 3, Modelltest 2 = Checkpoint 4; dazu der Diagnose-Mini-Modelltest in Woche 1), in der letzten Woche vor dem Prüfungstermin ohne neuen Stoff: Hören ca. 20 min (15 Items, Teil 2 einmal gehört), Lesen 25 min (15 Items), Schreiben 20 min (Formular + ca. 30 Wörter), ohne Pause 65 min, danach 3–5 min Übertragung auf einen Antwortbogen (wie bei telc); dann ca. 15 min Sprechen (drei Teile, ohne Vorbereitung, die KI in der Rolle der Prüferin (automatische Übungsbewertung) und als Gruppe); Übungswerte je Prüfungsteil, dazu der Satz »nach der Bewertungsregel von Goethe/telc wäre dieses Übungsergebnis …«; kein Bereitschaftsurteil über mehrere Modelltests, nie eine Bestehensprognose",
     "sections": [
       "Hören",
       "Lesen",

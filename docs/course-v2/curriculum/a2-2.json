@@ -5,11 +5,11 @@
   "targetExams": [
     "Goethe-Zertifikat A2",
     "telc Deutsch A2 (Start Deutsch 2)",
-    "DTZ Deutsch-Test für Zuwanderer (A2-Bereich)"
+    "DTZ Deutsch-Test für Zuwanderer (A2-Bereich; nur im Integrationskurssystem)"
   ],
   "hours": {
-    "guided": 45,
-    "total": 56
+    "guided": 47,
+    "total": 74
   },
   "vocabTarget": {
     "newWords": 336,
@@ -47,11 +47,12 @@
         {
           "point": "Präteritum häufiger Verben erkennen: kam, ging, gab, sagte, fand (rezeptiv)",
           "new": true,
-          "lehrwerk": "Menschen A2 L24; Goethe-A2-Inventar (kommen, sagen); produktiv in B1.1 (Schritte plus Neu 5 L1)"
+          "lehrwerk": "Menschen A2 L24; Goethe-A2-Inventar (kommen, sagen); produktiv in B1.1 (Schritte plus Neu 5 L1)",
+          "receptive": true
         }
       ],
       "vocabTheme": "Sprachen lernen, Lernwege",
-      "vocabTarget": 28,
+      "vocabTarget": 29,
       "keyWords": [
         "die Muttersprache",
         "die Fremdsprache",
@@ -61,10 +62,8 @@
         "der Fehler",
         "der Akzent",
         "die Redewendung",
-        "das Tandem",
-        "der Einstufungstest",
         "übersetzen",
-        "verbessern",
+        "verbessern (Fehler)",
         "nachschlagen",
         "sich merken",
         "fließend",
@@ -84,7 +83,7 @@
         "examTeil": "Goethe A2 Schreiben Teil 2"
       },
       "speaking": {
-        "task": "Sich vorstellen und Zusatzfragen der Prüferin zu Sprachen und Lernen beantworten",
+        "task": "Sich vorstellen und Zusatzfragen zu Sprachen und Lernen beantworten – die KI spielt die Prüferin",
         "examTeil": "telc A2 Sprechen Teil 1"
       },
       "pronunciation": "Satzakzent und Pausen beim Erzählen: Als ich nach Wien kam, | konnte ich kein Wort.",
@@ -138,18 +137,16 @@
         }
       ],
       "vocabTheme": "Wünsche, Lebensziele, Zukunft",
-      "vocabTarget": 28,
+      "vocabTarget": 29,
       "keyWords": [
         "der Wunsch",
         "der Traum",
         "das Ziel",
         "die Hoffnung",
         "die Zukunft",
-        "die Weltreise",
-        "die Selbstständigkeit",
         "das Glück",
         "der Vorsatz",
-        "sich wünschen",
+        "sich (Dat.) etwas wünschen",
         "sich vorstellen",
         "träumen",
         "erreichen",
@@ -220,24 +217,21 @@
         }
       ],
       "vocabTheme": "Hotel, Unterkunft, Service",
-      "vocabTarget": 28,
+      "vocabTarget": 29,
       "keyWords": [
         "die Rezeption",
         "die Unterkunft",
         "das Einzelzimmer",
         "das Doppelzimmer",
-        "die Halbpension",
         "die Übernachtung",
         "der Aufenthalt",
         "die Anreise",
         "die Abreise",
         "die Klimaanlage",
         "der Aufzug",
-        "die Stornierung",
         "buchen",
         "stornieren",
         "sich beschweren",
-        "ausgebucht",
         "inklusive"
       ],
       "reading": {
@@ -249,13 +243,13 @@
         "seconds": 120
       },
       "writing": {
-        "task": "E-Mail an ein Hotel: die Buchung ändern, den Grund nennen, nach dem neuen Preis fragen",
+        "task": "E-Mail an ein Hotel nach der Abreise: Sie haben Ihr Ladekabel im Zimmer vergessen – Zimmernummer und Datum nennen, fragen, ob man es gefunden hat, und bitten, es Ihnen zu schicken",
         "words": 40,
         "examTeil": "Goethe A2 Schreiben Teil 2"
       },
       "speaking": {
-        "task": "Ein Foto beschreiben (Ankunft an einer Hotelrezeption), von eigenen Reiseerfahrungen erzählen und mit dem Heimatland vergleichen",
-        "examTeil": "DTZ Sprechen Teil 2"
+        "task": "Über ein Thema sprechen: Aufgabenkarte „Übernachten auf Reisen“ (Hotel, Ferienwohnung oder Freunde? Was ist Ihnen wichtig? Wie buchen Sie? Ein Problem?), danach Rückfragen. Spur DTZ: ein Foto beschreiben (Ankunft an einer Hotelrezeption), von eigenen Reiseerfahrungen erzählen und mit dem Heimatland vergleichen, ohne Vorbereitung",
+        "examTeil": "Goethe A2 Sprechen Teil 2"
       },
       "pronunciation": "Satzmelodie in direkten und indirekten Fragen",
       "examTeile": [
@@ -265,6 +259,7 @@
         "Goethe A2 Hören Teil 3",
         "DTZ Hören Teil 3",
         "Goethe A2 Schreiben Teil 2",
+        "Goethe A2 Sprechen Teil 2",
         "DTZ Sprechen Teil 2"
       ],
       "landeskunde": "Jugendherberge, Ferienwohnung und Kurtaxe"
@@ -308,17 +303,13 @@
         }
       ],
       "vocabTheme": "Ausflug, Natur, Weg, Unfall",
-      "vocabTarget": 28,
+      "vocabTarget": 29,
       "keyWords": [
         "die Tour",
         "die Wanderung",
-        "der Wanderweg",
-        "die Abzweigung",
         "die Brücke",
         "das Ufer",
         "der See",
-        "der Gipfel",
-        "die Hütte",
         "der Treffpunkt",
         "die Richtung",
         "der Unfall",
@@ -343,8 +334,8 @@
         "examTeil": "Goethe A2 Schreiben Teil 1"
       },
       "speaking": {
-        "task": "Gemeinsam etwas planen: einen Ausflug organisieren (Wohin? Wann? Wie fahren? Was mitnehmen? Wer macht was?)",
-        "examTeil": "DTZ Sprechen Teil 3"
+        "task": "Gemeinsam etwas planen: einen Ausflug organisieren – in zwei Terminkalendern einen Tag finden und klären, wohin es geht, wie Sie fahren, was Sie mitnehmen und wer was macht (Spur DTZ: Planungsblatt mit Leitpunkten)",
+        "examTeil": "Goethe A2 Sprechen Teil 3"
       },
       "pronunciation": "Konsonantenverbindungen: str-, spr-, pf- (Straße, sprechen, Kopf)",
       "examTeile": [
@@ -384,7 +375,7 @@
       ],
       "grammar": [
         {
-          "point": "Komparativ und Superlativ vor dem Nomen (der günstigere Tarif, das beste Angebot)",
+          "point": "Komparativ und Superlativ vor dem Nomen (der günstigere Tarif, das beste Angebot) – produktiv am Ende von A2.2, ohne Rückfall auf rezeptiv (B1.1 setzt es voraus); Wiederholung in E10",
           "new": true,
           "lehrwerk": "Schritte plus Neu 4 L9 (Komparation); Menschen B1 L9 (Komparativ attributiv, dort B1.1)"
         },
@@ -395,7 +386,7 @@
         }
       ],
       "vocabTheme": "Tarife, Verträge, Kündigung",
-      "vocabTarget": 28,
+      "vocabTarget": 29,
       "keyWords": [
         "der Vertrag",
         "der Tarif",
@@ -403,10 +394,7 @@
         "die Kündigung",
         "die Frist",
         "das Abonnement",
-        "die Grundgebühr",
-        "das Datenvolumen",
         "der Anbieter",
-        "die Vertragsnummer",
         "der Widerruf",
         "kündigen",
         "widerrufen",
@@ -424,12 +412,12 @@
         "seconds": 90
       },
       "writing": {
-        "task": "Kündigung eines Abos: A oder B wählen, vier Leitpunkte (Kundennummer, Kündigungsdatum, Grund, Bitte um Bestätigung)",
-        "words": 60,
-        "examTeil": "DTZ Schreiben"
+        "task": "E-Mail an einen Anbieter: ein Abo kündigen (drei Punkte): Kundennummer nennen, das Kündigungsdatum nennen, um eine Bestätigung bitten. Spur DTZ: A oder B wählen, vier Leitpunkte (zusätzlich den Grund nennen), ca. 60 Wörter",
+        "words": 40,
+        "examTeil": "Goethe A2 Schreiben Teil 2"
       },
       "speaking": {
-        "task": "Über ein Thema sprechen: Aufgabenkarte „Was machen Sie mit Ihrem Geld?“ (Kleidung? Sparen? Reisen? Handy?), danach Rückfragen",
+        "task": "Über ein Thema sprechen: Aufgabenkarte „Abos und Mitgliedschaften“ (Welche haben Sie? Was kostet das? Was nutzen Sie wirklich? Was würden Sie kündigen?), danach Rückfragen",
         "examTeil": "Goethe A2 Sprechen Teil 2"
       },
       "pronunciation": "Zahlen und Preise deutlich sprechen: neunzehn – neunzig, 19,99 €",
@@ -439,6 +427,7 @@
         "DTZ Lesen Teil 2",
         "telc A2 Hören Teil 1",
         "DTZ Hören Teil 1",
+        "Goethe A2 Schreiben Teil 2",
         "DTZ Schreiben",
         "Goethe A2 Sprechen Teil 2"
       ],
@@ -479,10 +468,9 @@
         }
       ],
       "vocabTheme": "Reparaturen, Hausverwaltung, Nachbarschaft",
-      "vocabTarget": 28,
+      "vocabTarget": 29,
       "keyWords": [
         "die Hausverwaltung",
-        "der Hausmeister",
         "die Heizung",
         "der Wasserhahn",
         "der Schaden",
@@ -491,7 +479,6 @@
         "der Mietvertrag",
         "der Lärm",
         "die Renovierung",
-        "die Ruhezeit",
         "der Schimmel",
         "tropfen",
         "undicht",
@@ -507,9 +494,9 @@
         "seconds": 150
       },
       "writing": {
-        "task": "E-Mail an die Hausverwaltung (A oder B wählen, vier Leitpunkte): Problem beschreiben, seit wann, um Reparatur bitten, Termin vorschlagen",
-        "words": 60,
-        "examTeil": "DTZ Schreiben"
+        "task": "E-Mail an die Hausverwaltung (drei Punkte): das Problem beschreiben, sagen, seit wann es besteht, einen Termin für die Reparatur vorschlagen. Spur DTZ: A oder B wählen, vier Leitpunkte (zusätzlich um schnelle Hilfe bitten), ca. 60 Wörter",
+        "words": 40,
+        "examTeil": "Goethe A2 Schreiben Teil 2"
       },
       "speaking": {
         "task": "Einen gemeinsamen Termin finden: Wann kann der Handwerker kommen? (zwei Terminkalender)",
@@ -520,6 +507,7 @@
         "DTZ Lesen Teil 4",
         "DTZ Lesen Teil 3",
         "telc A2 Hören Teil 3",
+        "Goethe A2 Schreiben Teil 2",
         "DTZ Schreiben",
         "telc A2 Sprechen Teil 3"
       ],
@@ -547,6 +535,10 @@
           "source": "04-cando-a1-a2 (A2.2 #10) · RC 112·A2"
         },
         {
+          "de": "Ich kann Standardbriefen der Versicherung wesentliche Informationen entnehmen, z. B. eine Beitragserhöhung.",
+          "source": "04-cando-a1-a2 (A2.2 #10) · RC 111·A2"
+        },
+        {
           "de": "Ich kann äußern, dass ich ein Schreiben nicht verstehe, weil ich noch nicht so gut Deutsch spreche.",
           "source": "04-cando-a1-a2 (A2.2 #9) · RC 34·A2"
         }
@@ -555,7 +547,8 @@
         {
           "point": "Passiv Präsens erkennen und verstehen: wird + Partizip II (Ihr Antrag wird bearbeitet.) (rezeptiv)",
           "new": true,
-          "lehrwerk": "Menschen A2 L14; Schritte plus Neu 4 L10; produktiv erst B1.2 (Netzwerk B1, Linie 1 B1)"
+          "lehrwerk": "Menschen A2 L14; Schritte plus Neu 4 L10; produktiv erst B1.2 (Netzwerk B1, Linie 1 B1)",
+          "receptive": true
         },
         {
           "point": "Indirekte Fragen im Amt (Können Sie mir sagen, bis wann …?): Wiederholung",
@@ -564,7 +557,7 @@
         },
         {
           "point": "Feste Wendungen im Amt: einen Antrag stellen, eine Frist einhalten, Unterlagen einreichen",
-          "new": true,
+          "new": false,
           "chunk": true,
           "lehrwerk": "Nomen-Verb-Verbindungen systematisch erst B2.1 (Aspekte neu B2 K4, Sicher! B2 L5)"
         }
@@ -572,17 +565,15 @@
       "vocabTheme": "Behördenpost, Bank, Versicherung",
       "vocabTarget": 28,
       "keyWords": [
-        "der Bescheid",
+        "der Antrag",
         "die Unterlagen (Pl.)",
-        "der Nachweis",
         "die Bescheinigung",
         "die Behörde",
         "der Kontoauszug",
         "die Mahnung",
-        "das Einschreiben",
+        "das Einschreiben (Brief)",
         "die Versicherung",
         "der Beitrag",
-        "die Geheimzahl",
         "beantragen",
         "einreichen",
         "sperren",
@@ -590,8 +581,8 @@
         "rechtzeitig"
       ],
       "reading": {
-        "textType": "Formeller Brief mit Frist (Behörde oder Versicherung): richtig/falsch und Multiple Choice",
-        "words": 150
+        "textType": "Zwei formelle Briefe: eine Behörde setzt eine Frist; die Versicherung kündigt eine Beitragserhöhung an (Standardbrief) – richtig/falsch und Multiple Choice",
+        "words": 240
       },
       "listening": {
         "textType": "Ansage einer Bank-Hotline und Nachricht auf der Mailbox (Telefonnotiz)",
@@ -665,13 +656,11 @@
         "die Temperatur",
         "das Klima",
         "die Umwelt",
-        "der Biomüll",
         "die Mülltrennung",
         "die Energie",
         "der Strom",
         "die Verpackung",
-        "das Plastik",
-        "trennen",
+        "trennen (Müll)",
         "schützen",
         "umweltfreundlich"
       ],
@@ -689,8 +678,8 @@
         "examTeil": "telc A2 Schreiben Teil 2"
       },
       "speaking": {
-        "task": "Ein Foto beschreiben (Mülltonnen im Hof), von eigenen Erfahrungen erzählen und mit dem Heimatland vergleichen",
-        "examTeil": "DTZ Sprechen Teil 2"
+        "task": "Alltagsgespräch „Umwelt im Alltag“ mit W-Fragekarten (Worauf …? Wofür …? Wie oft …?) und Joker-Karte (sechs Beiträge). Spur DTZ: ein Foto beschreiben (Mülltonnen im Hof), von eigenen Erfahrungen erzählen und mit dem Heimatland vergleichen, ohne Vorbereitung",
+        "examTeil": "telc A2 Sprechen Teil 2"
       },
       "pronunciation": "Diphthonge ei – eu/äu – au: heiß, teuer, Häuser, draußen",
       "examTeile": [
@@ -699,6 +688,7 @@
         "DTZ Hören Teil 4",
         "telc A2 Hören Teil 2",
         "telc A2 Schreiben Teil 2",
+        "telc A2 Sprechen Teil 2",
         "DTZ Sprechen Teil 2"
       ],
       "landeskunde": "Mülltrennung und Pfandsystem in D-A-CH"
@@ -735,6 +725,11 @@
           "point": "Zeitangaben im Lebenslauf: von … bis, seit, vor + Dativ (Wiederholung)",
           "new": false,
           "lehrwerk": "Menschen A1 L16; Schritte plus Neu 2 L8"
+        },
+        {
+          "point": "Zeitadverbien für den Lebensweg: danach, später, damals, inzwischen, schließlich – zu zuerst … dann (A1.1) (Zuerst habe ich als Koch gearbeitet. Inzwischen bin ich Pfleger.)",
+          "new": true,
+          "lehrwerk": "PD/RC 161·A2 (Signalwörter); Schritte plus Neu 4 L14; Netzwerk neu A2 K11 – aus E12 vorgezogen"
         }
       ],
       "vocabTheme": "Schulabschluss, Ausbildung, Berufserfahrung",
@@ -743,19 +738,17 @@
         "der Lebenslauf",
         "der Schulabschluss",
         "die Berufserfahrung",
-        "die Umschulung",
         "die Weiterbildung",
         "die Kenntnisse (Pl.)",
-        "die Fähigkeit",
         "die Stärke",
         "die Anerkennung",
         "das Zertifikat",
-        "die Beratung",
         "die Tätigkeit",
-        "anerkennen",
         "sammeln",
         "zuverlässig",
-        "teamfähig"
+        "damals",
+        "inzwischen",
+        "schließlich"
       ],
       "reading": {
         "textType": "Porträt: Vom Koch zum Pfleger – ein Berufsweg (richtig/falsch)",
@@ -815,6 +808,11 @@
           "point": "Relativsatz im Nominativ: Wiederholung und Kontrast Nominativ/Akkusativ",
           "new": false,
           "lehrwerk": "Menschen A2 L23"
+        },
+        {
+          "point": "Komparativ attributiv in Stellenanzeigen (eine größere Firma, bessere Arbeitszeiten): Wiederholung aus E5",
+          "new": false,
+          "lehrwerk": "Schritte plus Neu 4 L9; Menschen B1 L9"
         }
       ],
       "vocabTheme": "Stellensuche, Bewerbung, Arbeitsvertrag",
@@ -827,15 +825,13 @@
         "die Voraussetzung",
         "die Probezeit",
         "das Gehalt",
-        "der Lohn",
         "die Vollzeit",
         "die Teilzeit",
         "der Arbeitsvertrag",
         "sich bewerben",
         "einstellen",
         "verdienen",
-        "flexibel",
-        "befristet"
+        "flexibel"
       ],
       "reading": {
         "textType": "Stellenanzeigen im Internet (Welche Anzeige passt? eine Person ohne Lösung)",
@@ -851,7 +847,7 @@
         "examTeil": "Goethe A2 Schreiben Teil 2"
       },
       "speaking": {
-        "task": "Vorstellungsgespräch: sich vorstellen und Zusatzfragen der Prüferin beantworten",
+        "task": "Vorstellungsgespräch: sich vorstellen und Zusatzfragen beantworten – die KI spielt die Prüferin",
         "examTeil": "telc A2 Sprechen Teil 1"
       },
       "pronunciation": "Wortakzent bei -ion und -ieren: Qualifikation, Position, informieren",
@@ -905,14 +901,14 @@
         {
           "point": "Passiv Präsens in Arbeitsanweisungen verstehen (Die Maschine wird ausgeschaltet.) (rezeptiv, Wiederholung)",
           "new": false,
-          "lehrwerk": "Menschen A2 L14; Schritte plus Neu 4 L10"
+          "lehrwerk": "Menschen A2 L14; Schritte plus Neu 4 L10",
+          "receptive": true
         }
       ],
       "vocabTheme": "Arbeitsabläufe, Aufgaben, Urlaub und Vertretung",
       "vocabTarget": 28,
       "keyWords": [
         "der Ablauf",
-        "die Einarbeitung",
         "die Anweisung",
         "die Absprache",
         "das Team",
@@ -936,9 +932,9 @@
         "seconds": 150
       },
       "writing": {
-        "task": "E-Mail an die Vorgesetzte (A oder B wählen, vier Leitpunkte): Urlaub beantragen, Zeitraum nennen, Vertretung klären, um Bestätigung bitten",
-        "words": 70,
-        "examTeil": "DTZ Schreiben"
+        "task": "E-Mail an Ihre Vorgesetzte (drei Punkte): Urlaub beantragen, den Zeitraum nennen, sagen, wer Sie vertritt. Spur DTZ: A oder B wählen, vier Leitpunkte (zusätzlich um Bestätigung bitten), ca. 70 Wörter",
+        "words": 40,
+        "examTeil": "Goethe A2 Schreiben Teil 2"
       },
       "speaking": {
         "task": "Gemeinsam etwas planen: Aufgaben für das Sommerfest der Firma verteilen und einen Kompromiss finden",
@@ -951,6 +947,7 @@
         "telc A2 Hören Teil 3",
         "Goethe A2 Hören Teil 3",
         "DTZ Hören Teil 3",
+        "Goethe A2 Schreiben Teil 2",
         "DTZ Schreiben",
         "Goethe A2 Sprechen Teil 3",
         "telc A2 Sprechen Teil 3",
@@ -982,8 +979,8 @@
       ],
       "grammar": [
         {
-          "point": "Zusammenhängend erzählen: Zeitadverbien und Textverbindung (zuerst, danach, später, damals, inzwischen, schließlich)",
-          "new": true,
+          "point": "Zusammenhängend erzählen mit den Zeitadverbien aus E9 (zuerst, danach, später, damals, inzwischen, schließlich) im ganzen Text – Wiederholung und Transfer; E12 bringt keine neue Grammatik",
+          "new": false,
           "lehrwerk": "PD/RC 161·A2 (Signalwörter); Schritte plus Neu 4 L14 (Lebensstationen)"
         },
         {
@@ -994,11 +991,12 @@
         {
           "point": "Präteritum in Biografien lesen (rezeptiv, Wiederholung)",
           "new": false,
-          "lehrwerk": "Menschen A2 L24"
+          "lehrwerk": "Menschen A2 L24",
+          "receptive": true
         }
       ],
       "vocabTheme": "Lebensstationen, Veränderungen, Erinnerungen",
-      "vocabTarget": 28,
+      "vocabTarget": 22,
       "keyWords": [
         "die Kindheit",
         "die Jugend",
@@ -1011,11 +1009,9 @@
         "aufwachsen",
         "auswandern",
         "sich verlieben",
-        "sich trennen",
+        "sich trennen (Paar)",
         "erleben",
-        "damals",
-        "inzwischen",
-        "schließlich"
+        "sich erinnern (an)"
       ],
       "reading": {
         "textType": "Blog-Porträt: eine Lebensgeschichte (richtig/falsch)",
@@ -1080,7 +1076,7 @@
     }
   ],
   "levelTest": {
-    "format": "Vollständiger Modelltest im Format Goethe-Zertifikat A2 (Lesen 4 Teile, Hören 4 Teile, Schreiben 2 Teile: 90 Min. ohne Pause; Sprechen 3 Teile, ca. 15 Min. mit KI-Partner); im Prüfungs-Track alternativ vollständig im Format telc Deutsch A2 oder DTZ (A2-Bereich). Ergebnis als Übungswert nach der Bestehensregel der gewählten Prüfung, nie als Prüfungsergebnis.",
+    "format": "Vollständiger Modelltest (dritter voller Modelltest der Stufe, Parallelform) im Format der Prüfungsspur, die beim Onboarding einmal gewählt wird und für alle Kurse gilt; ohne Wahl: Goethe-Zertifikat A2 (Lesen 4 Teile, Hören 4 Teile, Schreiben 2 Teile: 90 Min. ohne Pause; Sprechen 3 Teile, ca. 15 Min., ohne Vorbereitung). Spur telc Deutsch A2: vollständig im telc-Format. Spur DTZ (nur im Integrationskurssystem): vollständig im DTZ-Format, Form aus dem mit B1.2 geteilten DTZ-Pool. Sprechen mit der KI in der Rolle der Prüferin und Partnerin (automatische Übungsbewertung). Prüfungspfad: Diagnose-Minitest in Woche 1 (Parallelform des A2.1-Halbtests), volle Modelltests an Checkpoint 3 und 4, dieser Test als dritter; in der letzten Woche kein neuer Stoff. Ergebnis als Übungswerte je Prüfungsteil nach der Bestehensregel der Spur, ohne Gesamturteil und ohne Prognose, nie als Prüfungsergebnis.",
     "sections": [
       "Lesen",
       "Hören",
