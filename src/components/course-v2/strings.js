@@ -6,7 +6,7 @@
 // Content (prompts, dialogues, explanations' `de`) is German whatever the chrome says.
 //
 // Register: every German string addresses the learner with „Sie" (BLUEPRINT §1.6; the
-// du-scan in tests/course-player.test.mjs reads the same rule for the legacy chrome).
+// register scan in tests/course-player.test.mjs reads the same rule for both chromes).
 //
 // Legal wording (BLUEPRINT §4.5, §1.6): an AI result is always labelled
 // „automatisierte Übungsbewertung" — in BOTH chrome languages the German label is shown,
@@ -224,6 +224,33 @@ const EN = {
   'step.unknown': 'This step type is not supported yet.',
   'step.back': 'Back',
   'step.ueberarbeiten': 'Revise',
+
+  // The unit player's own chrome (src/pages/course-v2/UnitPlayerPage.jsx)
+  'player.home': 'Course overview',
+  'player.progress': 'Progress in this unit',
+  'player.loading': 'Loading the unit …',
+  'player.unit': 'Unit {n}',
+  'player.goals': 'Goals',
+  'player.doneMark': 'done',
+  'player.minutes': '≈ {n} min. (planned)',
+  'player.welcomeBack': 'Welcome back. {d} of {t} steps are done.',
+  'player.resumeAt': 'Continue with step {n}: {title}',
+  'player.startAgain': 'See the unit start again',
+  'player.stepOf': 'Step {n} of {t}',
+  'player.testOutNote': 'The practice steps are credited. The two tasks are still open.',
+  'player.toPlateau': 'Continue to Plateau {n}',
+  'player.toUnit': 'Continue with unit {n}',
+  'player.complete': 'Unit complete',
+  'player.almost': 'Almost there',
+  'player.open': 'Still open',
+  'player.openStep': 'Step {n}: {title} →',
+  'player.repeatTip': 'Tip: repeat a step before you move on — or carry straight on, if you prefer.',
+  'player.canNow': 'What you can do now',
+  'player.goalsUnit': 'Goals of this unit',
+  'player.words': '{n} new words are now in your review.',
+  'player.nextUp': 'Next up:',
+  'player.soonTitle': 'This unit is coming soon',
+  'player.soonBody': 'It is still being written. You will find every finished unit in the course overview.',
 };
 
 const DE = {
@@ -431,6 +458,32 @@ const DE = {
   'step.unknown': 'Dieser Lernschritt wird noch nicht unterstützt.',
   'step.back': 'Zurück',
   'step.ueberarbeiten': 'Überarbeiten',
+
+  'player.home': 'Zur Kursübersicht',
+  'player.progress': 'Fortschritt in dieser Lektion',
+  'player.loading': 'Lektion wird geladen …',
+  'player.unit': 'Lektion {n}',
+  'player.goals': 'Lernziele',
+  'player.doneMark': 'erledigt',
+  'player.minutes': '≈ {n} Min. (geplant)',
+  'player.welcomeBack': 'Willkommen zurück. {d} von {t} Schritten sind erledigt.',
+  'player.resumeAt': 'Weiter bei Schritt {n}: {title}',
+  'player.startAgain': 'Einstieg noch einmal ansehen',
+  'player.stepOf': 'Schritt {n} von {t}',
+  'player.testOutNote': 'Die Lernschritte sind angerechnet. Offen sind noch die zwei Aufgaben.',
+  'player.toPlateau': 'Weiter zum Plateau {n}',
+  'player.toUnit': 'Weiter mit Lektion {n}',
+  'player.complete': 'Lektion geschafft',
+  'player.almost': 'Fast geschafft',
+  'player.open': 'Noch offen',
+  'player.openStep': 'Schritt {n}: {title} →',
+  'player.repeatTip': 'Tipp: Wiederholen Sie einen Lernschritt, bevor Sie weitergehen – Sie können aber auch direkt weitermachen.',
+  'player.canNow': 'Das können Sie jetzt',
+  'player.goalsUnit': 'Ziele dieser Lektion',
+  'player.words': '{n} neue Wörter sind jetzt in Ihrer Wiederholung.',
+  'player.nextUp': 'Als Nächstes:',
+  'player.soonTitle': 'Diese Lektion kommt bald',
+  'player.soonBody': 'Sie ist noch in Arbeit. Alle fertigen Lektionen finden Sie in der Kursübersicht.',
 };
 
 export const V2_STRINGS = { en: EN, de: DE };

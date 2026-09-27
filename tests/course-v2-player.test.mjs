@@ -18,6 +18,7 @@ import { FIXTURES_ROOT } from '../scripts/course-v2/lib/tree.mjs';
 import { unitIdFor, plateauIdFor, normalizeLevel, nrOfId, stepIdOfItem, v2Paths, bandOf } from '../src/lib/course-v2/ids.js';
 import {
   drawCounts, drawStep, planStep, planCheck, alternateFor, buildUnitPlan, resumeIndex, earlierSourceNrs, reservesOf,
+  itemFromReserve, reserveItemsFor, withReserves,
 } from '../src/lib/course-v2/unitPlan.js';
 import { checkItem, attemptPayload, RESULT } from '../src/lib/course-v2/checkItem.js';
 import {
@@ -315,4 +316,65 @@ test('the player reaches the renderers only through the optional slots and write
     assert.doesNotMatch(src, /\b(?:bg|text|border)-(?:amber|rose|red|green|blue|gray|slate)-\d/, `${f}: a raw Tailwind palette class`);
     assert.doesNotMatch(src, /\bdu\b|\bdein/i, `${f}: the course speaks Sie`);
   }
+});
+
+// ---------------------------------------------------------------------------
+// Integration seams (E1 client verify, docs/course-v2/E1-client.md §3)
+// ---------------------------------------------------------------------------
+
+test('reserves come back from reserve.json: ids → Items in the SCHEMA shape, re-attached to their steps', () => {
+  const index = outputOf('/a2.1/reserve.json');
+  assert.ok(unit.steps.every((st) => st.reserve === undefined), 'the compiler strips reserves from the chunk');
+  assert.ok(Array.isArray(index.byUnit[unit.id]) && typeof index.byUnit[unit.id][0] === 'string', 'byUnit lists ids');
+  const items = reserveItemsFor(index, [unit.id]);
+  assert.equal(items.length, index.byUnit[unit.id].length);
+  for (const it of items) {
+    assert.equal(typeof it.promptDe, 'string', `${it.id}: promptDe`);
+    assert.ok(it.explanation && typeof it.explanation.de === 'string', `${it.id}: explanation {de,en}`);
+    assert.equal(checkItem(it, Array.isArray(it.accepted) ? it.accepted[0] : it.answer).result, RESULT.CORRECT, `${it.id} grades its own answer`);
+  }
+  const playable = withReserves(unit, index);
+  const ls1 = playable.steps.find((st) => st.id === `${unit.id}-ls1`);
+  assert.ok(ls1.reserve.length > 0 && ls1.reserve.every((it) => it.id.startsWith(`${ls1.id}-r`)));
+  const plan = planStep(ls1, { unit: playable, attempt: 1 }).plan;
+  assert.equal(plan.reserve.length, ls1.reserve.length, 'the requeue reaches the reserve');
+  assert.equal(reserveItemsFor(index, ['a2.1-u06']).length, 0);
+});
+
+test('itemFromReserve restores sentence-building tiles and keeps an Item that is already in shape', () => {
+  const back = itemFromReserve({ id: 'x-ls1-r01', type: 'sentence_building', topic: 't', questionDe: 'Bilden Sie den Satz: [mich / ich / melde]', answer: 'Ich melde mich.', accepted: ['Ich melde mich.'], explanationDe: 'd', explanationEn: 'e', hint: 'h', errorTags: ['v2-inv'] });
+  assert.equal(back.promptDe, 'Bilden Sie den Satz.');
+  assert.deepEqual(back.tiles, ['mich', 'ich', 'melde']);
+  assert.deepEqual(back.hint, { de: 'h' });
+  assert.equal(back.errorTag, 'v2-inv');
+  const already = { id: 'y', promptDe: 'p' };
+  assert.equal(itemFromReserve(already), already);
+});
+
+test('the renderers read the player core: StepView serves step.plan and unit.ruleCards, the slots pass the extras', () => {
+  const sv = read('src/components/course-v2/StepView.jsx');
+  assert.match(sv, /const plan = step\?\.plan;/, 'StepView must serve the seeded draw of unitPlan.js');
+  assert.match(sv, /ruleCards \?\? unit\?\.ruleCards/, 'StepView must read the rule cards the player puts on the unit');
+  const slots = read('src/pages/course-v2/rendererSlots.jsx');
+  assert.match(slots, /<LazyStepView key=\{step && step\.id\} \{\.\.\.\(extra \|\| \{\}\)\} unit=/, 'extras spread BEFORE the contract props');
+  const page = read('src/pages/course-v2/UnitPlayerPage.jsx');
+  assert.match(page, /loadPlayableUnit\(level, nr\)/);
+  assert.match(page, /extra=\{\{ course: manifest \}\}/, 'StartView gets the manifest (can-do wording)');
+});
+
+test('an Aufgabe left without submitting leaves no step marker', () => {
+  const page = read('src/pages/course-v2/UnitPlayerPage.jsx');
+  const at = page.indexOf('const onDone = useCallback(');
+  const body = page.slice(at, page.indexOf('}, [', at));
+  const guard = body.indexOf('AUFGABE_KINDS.includes(step.kind) && result && result.submitted === false');
+  assert.ok(guard > 0, 'the unsubmitted-Aufgabe guard is missing');
+  assert.ok(guard < body.indexOf('recordStepDone('), 'the guard must return before the marker is written');
+});
+
+test('the dev fixture and the ?preview bypass exist only on the Vite dev server', () => {
+  const loaders = read('src/lib/course-v2/loaders.js');
+  assert.match(loaders, /const DEV_FIXTURE = import\.meta\.env\.DEV \? import\.meta\.glob\('\.\.\/\.\.\/\.\.\/\.cache\/course-v2-fixture\//);
+  const guard = read('src/components/LevelSubscriptionGuard.jsx');
+  assert.match(guard, /if \(import\.meta\.env\.DEV && COURSE_V2_PATH_RE\.test\(location\.pathname \|\| ''\) && new URLSearchParams\(location\.search\)\.has\('preview'\)\)/);
+  assert.ok(read('.gitignore').split('\n').includes('/.cache'), 'the compiled fixture lives in the gitignored .cache/');
 });

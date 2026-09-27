@@ -184,8 +184,8 @@
         {
           "id": "a1.2-u04-start-l04",
           "speaker": "cast.priya",
-          "de": "Ach ja, stimmt. Gehen wir morgen hin?",
-          "en": "Oh yes, right. Shall we go tomorrow?"
+          "de": "Ja, richtig. Gehen wir morgen hin?",
+          "en": "Yes, right. Shall we go tomorrow?"
         },
         {
           "id": "a1.2-u04-start-l05",
@@ -241,7 +241,7 @@
       },
       "input": {
         "kind": "mixed",
-        "title": "Die Webseite vom Bürgerbüro",
+        "title": "Das Bürgerbüro im Internet",
         "textType": "tt.webseite",
         "lines": [
           {
@@ -253,14 +253,14 @@
           {
             "id": "a1.2-u04-ls1-l02",
             "speaker": "cast.arjun",
-            "de": "Gut. Behörden finde ich schwierig.",
-            "en": "Good. I find public offices difficult."
+            "de": "Gut. Ämter und Behörden finde ich schwer.",
+            "en": "Good. I find offices and authorities hard."
           },
           {
             "id": "a1.2-u04-ls1-l03",
             "speaker": "cast.priya",
-            "de": "Keine Angst, die Webseite ist ganz einfach. Das Bürgerbüro ist am Lindenplatz.",
-            "en": "Don’t worry, the website is quite simple. The citizens’ office is on Lindenplatz."
+            "de": "Das ist ganz einfach. Hier ist das Bürgerbüro im Internet. Es ist am Marktplatz.",
+            "en": "It’s quite simple. Here is the citizens’ office online. It’s on Marktplatz."
           },
           {
             "id": "a1.2-u04-ls1-l04",
@@ -271,8 +271,9 @@
           {
             "id": "a1.2-u04-ls1-l05",
             "speaker": "cast.priya",
-            "de": "Montag, Dienstag und Donnerstag von acht bis achtzehn Uhr. Mittwoch und Freitag nur bis zwölf Uhr.",
-            "en": "Monday, Tuesday and Thursday from eight to six. Wednesday and Friday only until twelve."
+            "de": "Am Montag, Dienstag und Donnerstag von 8 bis 18 Uhr. Am Mittwoch und Freitag nur bis 12 Uhr.",
+            "en": "Monday, Tuesday and Thursday from 8 am to 6 pm. Wednesday and Friday only until 12 noon.",
+            "say": "Am Montag, Dienstag und Donnerstag von acht bis achtzehn Uhr. Am Mittwoch und Freitag nur bis zwölf Uhr."
           },
           {
             "id": "a1.2-u04-ls1-l06",
@@ -283,8 +284,9 @@
           {
             "id": "a1.2-u04-ls1-l07",
             "speaker": "cast.priya",
-            "de": "Ab Juni ist es auch am Samstag geöffnet, von neun bis zwölf.",
-            "en": "From June it’s also open on Saturdays, from nine to twelve."
+            "de": "Ab Juni ist es auch am Samstag geöffnet, von 9 bis 12 Uhr.",
+            "en": "From June it’s also open on Saturdays, from 9 to 12.",
+            "say": "Ab Juni ist es auch am Samstag geöffnet, von neun bis zwölf Uhr."
           },
           {
             "id": "a1.2-u04-ls1-l08",
@@ -295,26 +297,28 @@
           {
             "id": "a1.2-u04-ls1-l09",
             "speaker": "cast.priya",
-            "de": "Moment … Samstag ist schon voll. Mittwoch, der dritte Juni, ist auch voll. Aber am Freitag um elf ist noch ein Termin frei.",
-            "en": "Just a moment … Saturday is already full. Wednesday, the third of June, is full too. But there’s still a free slot on Friday at eleven."
+            "de": "Am Samstag ist kein Termin frei. Mittwoch, der dritte Juni, ist auch nicht frei. Aber am Freitag um 11 Uhr ist noch ein Termin frei.",
+            "en": "There’s no free slot on Saturday. Wednesday, the third of June, isn’t free either. But there’s still a free slot on Friday at 11.",
+            "say": "Am Samstag ist kein Termin frei. Mittwoch, der dritte Juni, ist auch nicht frei. Aber am Freitag um elf Uhr ist noch ein Termin frei."
           },
           {
             "id": "a1.2-u04-ls1-l10",
             "speaker": "cast.arjun",
-            "de": "Am Freitag, dem fünften Juni? Ich arbeite am Freitag erst ab eins. Das passt.",
-            "en": "On Friday, the fifth of June? On Friday I only start work at one. That works."
+            "de": "Am Freitag, dem 5. Juni? Am Freitag arbeite ich ab 13 Uhr. Das geht.",
+            "en": "On Friday, the fifth of June? On Friday I work from 1 pm. That works.",
+            "say": "Am Freitag, dem fünften Juni? Am Freitag arbeite ich ab dreizehn Uhr. Das geht."
           },
           {
             "id": "a1.2-u04-ls1-l11",
             "speaker": "cast.priya",
-            "de": "Und mein Kurs geht bis halb elf. Gut, ich nehme den Termin.",
-            "en": "And my course goes until half past ten. Fine, I’ll take the appointment."
+            "de": "Mein Kurs geht bis halb elf. Gut, ich nehme den Termin.",
+            "en": "My course goes until half past ten. Fine, I’ll take the appointment."
           },
           {
             "id": "a1.2-u04-ls1-l12",
             "speaker": "cast.arjun",
-            "de": "Was müssen wir mitbringen?",
-            "en": "What do we have to bring?"
+            "de": "Was brauchen wir für den Termin?",
+            "en": "What do we need for the appointment?"
           },
           {
             "id": "a1.2-u04-ls1-l13",
@@ -330,26 +334,20 @@
           }
         ],
         "text": {
-          "de": "Bürgerbüro Lindenplatz · Stadt Leipzig\nLindenplatz 3 · Eingang A · Erdgeschoss\n\nÖffnungszeiten\nMontag, Dienstag, Donnerstag: 8 bis 18 Uhr\nMittwoch und Freitag: 8 bis 12 Uhr\nNeu ab 1. Juni: auch Samstag, 9 bis 12 Uhr\n\nTermine\nSie brauchen immer einen Termin. Termine vereinbaren Sie online, bis einen Tag vorher.\nBitte kommen Sie zehn Minuten vor dem Termin.\nNeue Wohnung? Melden Sie die neue Adresse bitte an. Nach dem Umzug haben Sie zwei Wochen Zeit.\n\nBitte mitbringen\n– Pass oder Ausweis\n– das Formular „Anmeldung“ mit Ihrer Unterschrift\n– die Bestätigung von Ihrem Vermieter",
-          "en": "Citizens’ office Lindenplatz · City of Leipzig · Lindenplatz 3 · Entrance A · ground floor. Opening hours: Mon, Tue, Thu 8 am–6 pm; Wed and Fri 8 am–12 noon; new from 1 June: also Saturday 9 am–12 noon. Appointments: you always need an appointment; book online up to one day before. Please come ten minutes before your appointment. New flat? Please register your new address; after moving you have two weeks. Please bring: passport or ID card; the form “Anmeldung” with your signature; the confirmation from your landlord."
+          "de": "Bürgerbüro am Marktplatz · Stadt Leipzig\nEingang: Marktplatz 3 · Erdgeschoss\n\nÖffnungszeiten\nMontag, Dienstag, Donnerstag: 8 bis 18 Uhr\nMittwoch und Freitag: 8 bis 12 Uhr\nNeu ab 1. Juni: auch Samstag, 9 bis 12 Uhr\n\nTermine\nSie brauchen immer einen Termin. Termine vereinbaren Sie im Internet, bis einen Tag vorher.\nBitte kommen Sie zehn Minuten vor dem Termin.\nNeue Wohnung? Bitte melden Sie die neue Adresse an. Nach dem Umzug haben Sie zwei Wochen Zeit.\n\nDas brauchen Sie:\n– Pass oder Ausweis\n– das Formular „Anmeldung“: Bitte unterschreiben Sie es.\n– das Formular von Ihrem Vermieter",
+          "en": "Citizens’ office Marktplatz · City of Leipzig · entrance: Marktplatz 3 · ground floor. Opening hours: Mon, Tue, Thu 8 am–6 pm; Wed and Fri 8 am–12 noon; new from 1 June: also Saturday 9 am–12 noon. Appointments: you always need an appointment; book online up to one day before. Please come ten minutes before your appointment. New flat? Please register your new address; after moving you have two weeks. What you need: passport or ID card; the form “Anmeldung” – please sign it; the form from your landlord."
         },
         "glosses": [
           {
             "token": "Umzug",
             "gloss": {
-              "en": "move (to a new home)"
+              "en": "move (house)"
             }
           },
           {
             "token": "vorher",
             "gloss": {
               "en": "beforehand"
-            }
-          },
-          {
-            "token": "Bestätigung",
-            "gloss": {
-              "en": "confirmation"
             }
           }
         ],
@@ -383,19 +381,19 @@
           "type": "multiple_choice",
           "role": "gist",
           "topic": "lesen",
-          "promptDe": "Wie vereinbart man einen Termin im Bürgerbüro Lindenplatz?",
-          "promptEn": "How do you book an appointment there?",
+          "promptDe": "Wo vereinbart man einen Termin im Bürgerbüro am Marktplatz?",
+          "promptEn": "Where do you book an appointment?",
           "options": [
-            "online",
+            "im Internet",
             "am Telefon",
             "am Eingang"
           ],
-          "answer": "online",
+          "answer": "im Internet",
           "accepted": [
-            "online"
+            "im Internet"
           ],
           "explanation": {
-            "de": "Auf der Webseite steht: Termine vereinbaren Sie online.",
+            "de": "Im Internet steht: Termine vereinbaren Sie im Internet.",
             "en": "The website says appointments are booked online."
           },
           "origin": "agent"
@@ -435,6 +433,7 @@
           "accepted": [
             "am Freitag um 11 Uhr"
           ],
+          "exact": "number",
           "explanation": {
             "de": "Am Freitag um elf ist ein Termin frei. Arjun arbeitet erst ab eins.",
             "en": "Friday at eleven is free; Arjun only starts work at one."
@@ -446,14 +445,14 @@
           "type": "fill_blank",
           "role": "detail",
           "topic": "lesen",
-          "promptDe": "Auf der Webseite steht: Kommen Sie zehn Minuten ___ dem Termin.",
+          "promptDe": "Im Internet steht: Kommen Sie zehn Minuten ___ dem Termin.",
           "promptEn": "Before or after? Complete from the website.",
           "answer": "vor",
           "accepted": [
             "vor"
           ],
           "explanation": {
-            "de": "Die Webseite sagt: zehn Minuten vor dem Termin.",
+            "de": "Auf der Seite steht: zehn Minuten vor dem Termin.",
             "en": "The website says: ten minutes before the appointment."
           },
           "origin": "agent"
@@ -490,17 +489,17 @@
           "promptDe": "„Mein Kurs geht bis halb elf.“ Was ist um halb elf?",
           "promptEn": "What happens at 10:30?",
           "options": [
-            "Der Kurs ist zu Ende.",
-            "Der Kurs beginnt.",
-            "Der Kurs hat Pause."
+            "Der Kurs hört auf.",
+            "Der Kurs fängt an.",
+            "Der Kurs macht Pause."
           ],
-          "answer": "Der Kurs ist zu Ende.",
+          "answer": "Der Kurs hört auf.",
           "accepted": [
-            "Der Kurs ist zu Ende."
+            "Der Kurs hört auf."
           ],
           "explanation": {
-            "de": "bis = Ende. Um halb elf ist der Kurs zu Ende.",
-            "en": "“bis” marks the end point: the course ends at 10:30."
+            "de": "bis = Ende. Um halb elf hört der Kurs auf.",
+            "en": "“bis” marks the end point: the course stops at 10:30."
           },
           "origin": "agent"
         },
@@ -520,6 +519,7 @@
           "accepted": [
             "am 15. Juni"
           ],
+          "exact": "number",
           "explanation": {
             "de": "in zwei Wochen = zwei Wochen später: 1. Juni + 14 Tage = 15. Juni.",
             "en": "“in zwei Wochen” means two weeks from now: 15 June."
@@ -531,20 +531,20 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.temporal-praepositionen",
-          "promptDe": "„Arjun fährt für drei Tage nach Berlin.“ Wie lange ist er in Berlin?",
+          "promptDe": "„Arjun fährt für drei Tage nach Dresden.“ Wie lange ist er in Dresden?",
           "promptEn": "How long is he in Berlin?",
           "options": [
-            "drei Tage lang",
-            "nur am dritten Tag",
-            "nach drei Tagen"
+            "drei Tage",
+            "nur einen Tag",
+            "ab dem dritten Tag"
           ],
-          "answer": "drei Tage lang",
+          "answer": "drei Tage",
           "accepted": [
-            "drei Tage lang"
+            "drei Tage"
           ],
           "explanation": {
             "de": "für + Zeit = Dauer: für drei Tage = drei Tage lang.",
-            "en": "“für drei Tage” gives a duration: three days long."
+            "en": "“für drei Tage” gives a duration: three days."
           },
           "origin": "agent"
         }
@@ -672,21 +672,16 @@
             "tiles": [
               "wir",
               "arbeiten",
-              "bis 18 Uhr",
-              "heute"
+              "bis 18 Uhr"
             ],
-            "answer": "Wir arbeiten heute bis 18 Uhr.",
+            "answer": "Wir arbeiten bis 18 Uhr.",
             "accepted": [
-              "Wir arbeiten heute bis 18 Uhr.",
-              "Heute arbeiten wir bis 18 Uhr.",
-              "Bis 18 Uhr arbeiten wir heute."
+              "Wir arbeiten bis 18 Uhr.",
+              "Bis 18 Uhr arbeiten wir."
             ],
-            "acceptedWhy": {
-              "Bis 18 Uhr arbeiten wir heute.": "grammatisch: bis 18 Uhr im Vorfeld betont das Ende"
-            },
             "explanation": {
-              "de": "arbeiten steht auf Position 2. heute steht meist vor bis 18 Uhr.",
-              "en": "“arbeiten” is in second position; “heute” usually comes before “bis 18 Uhr”."
+              "de": "arbeiten steht auf Position 2. bis 18 Uhr = das Ende.",
+              "en": "“arbeiten” is in second position; “bis 18 Uhr” is the end point."
             },
             "origin": "agent"
           },
@@ -728,23 +723,19 @@
             "promptDe": "Bilden Sie den Satz.",
             "promptEn": "Build the sentence.",
             "tiles": [
-              "Arjun",
-              "fährt",
-              "für drei Tage",
-              "nach Berlin"
+              "das Bürgerbüro",
+              "ist",
+              "für eine Woche",
+              "geschlossen"
             ],
-            "answer": "Arjun fährt für drei Tage nach Berlin.",
+            "answer": "Das Bürgerbüro ist für eine Woche geschlossen.",
             "accepted": [
-              "Arjun fährt für drei Tage nach Berlin.",
-              "Für drei Tage fährt Arjun nach Berlin.",
-              "Nach Berlin fährt Arjun für drei Tage."
+              "Das Bürgerbüro ist für eine Woche geschlossen.",
+              "Für eine Woche ist das Bürgerbüro geschlossen."
             ],
-            "acceptedWhy": {
-              "Nach Berlin fährt Arjun für drei Tage.": "grammatisch: das Ziel im Vorfeld betont Berlin"
-            },
             "explanation": {
-              "de": "fährt steht auf Position 2. Die Zeit steht vor dem Ziel.",
-              "en": "“fährt” is in second position; time comes before the destination."
+              "de": "ist auf Position 2, geschlossen am Ende. für eine Woche = Dauer.",
+              "en": "“ist” second, “geschlossen” last; “für eine Woche” is a duration."
             },
             "origin": "agent"
           },
@@ -759,20 +750,16 @@
               "nach dem Kurs",
               "gehe",
               "ich",
-              "ins Bürgerbüro"
+              "einkaufen"
             ],
-            "answer": "Ich gehe nach dem Kurs ins Bürgerbüro.",
+            "answer": "Ich gehe nach dem Kurs einkaufen.",
             "accepted": [
-              "Ich gehe nach dem Kurs ins Bürgerbüro.",
-              "Nach dem Kurs gehe ich ins Bürgerbüro.",
-              "Ins Bürgerbüro gehe ich nach dem Kurs."
+              "Ich gehe nach dem Kurs einkaufen.",
+              "Nach dem Kurs gehe ich einkaufen."
             ],
-            "acceptedWhy": {
-              "Ins Bürgerbüro gehe ich nach dem Kurs.": "grammatisch: das Ziel im Vorfeld betont das Bürgerbüro"
-            },
             "explanation": {
-              "de": "gehe steht auf Position 2. nach dem Kurs = danach.",
-              "en": "“gehe” is in second position; “nach dem Kurs” means after the course."
+              "de": "gehe steht auf Position 2, einkaufen am Ende. nach dem Kurs = danach.",
+              "en": "“gehe” second, “einkaufen” last; “nach dem Kurs” means afterwards."
             },
             "origin": "agent"
           },
@@ -781,11 +768,11 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.temporal-praepositionen",
-            "promptDe": "Korrigieren Sie: „Nach der Termin gehen wir ins Café.“",
+            "promptDe": "Korrigieren Sie: „Nach der Termin gehen wir nach Hause.“",
             "promptEn": "Correct the sentence.",
-            "answer": "Nach dem Termin gehen wir ins Café.",
+            "answer": "Nach dem Termin gehen wir nach Hause.",
             "accepted": [
-              "Nach dem Termin gehen wir ins Café."
+              "Nach dem Termin gehen wir nach Hause."
             ],
             "intentionalError": true,
             "errorTag": "case-pp",
@@ -800,7 +787,7 @@
             "type": "multiple_choice",
             "role": "practice",
             "topic": "lx.vereinbaren",
-            "promptDe": "Sie brauchen einen Termin. Den Termin ___ Sie online.",
+            "promptDe": "Sie brauchen einen Termin. Den Termin ___ Sie im Internet.",
             "promptEn": "Choose the verb.",
             "options": [
               "vereinbaren",
@@ -910,18 +897,13 @@
           "tiles": [
             "der Kurs",
             "geht",
-            "bis halb elf",
-            "heute"
+            "bis halb elf"
           ],
-          "answer": "Der Kurs geht heute bis halb elf.",
+          "answer": "Der Kurs geht bis halb elf.",
           "accepted": [
-            "Der Kurs geht heute bis halb elf.",
-            "Heute geht der Kurs bis halb elf.",
-            "Bis halb elf geht der Kurs heute."
+            "Der Kurs geht bis halb elf.",
+            "Bis halb elf geht der Kurs."
           ],
-          "acceptedWhy": {
-            "Bis halb elf geht der Kurs heute.": "grammatisch: bis halb elf im Vorfeld betont das Ende"
-          },
           "errorTags": [
             "v2-inv"
           ],
@@ -1034,7 +1016,7 @@
       "kind": "situation",
       "title": "Ein neuer Termin",
       "structure": "g.ordinalzahlen-datum",
-      "modelSentence": "Unser Termin ist am elften Juni.",
+      "modelSentence": "Heute ist der dritte Juni.",
       "ruleCard": "rc.ordinalzahlen-datum",
       "warmup": {
         "draw": 6,
@@ -1048,22 +1030,22 @@
           {
             "id": "a1.2-u04-ls2-l01",
             "speaker": "cast.ensemble-a1-2",
-            "de": "Guten Tag, Frau Nair, guten Tag, Herr Nair. Hier ist das Bürgerbüro Lindenplatz.",
-            "en": "Hello, Ms Nair, hello, Mr Nair. This is the citizens’ office Lindenplatz."
+            "de": "Guten Tag, Frau Nair, guten Tag, Herr Nair. Hier ist das Bürgerbüro am Marktplatz.",
+            "en": "Hello, Ms Nair, hello, Mr Nair. This is the citizens’ office on Marktplatz."
           },
           {
             "id": "a1.2-u04-ls2-l02",
             "speaker": "cast.ensemble-a1-2",
-            "de": "Wir müssen Ihren Termin am Freitag, dem 5. Juni, leider verschieben. Die Sachbearbeiterin ist krank.",
-            "en": "Unfortunately we have to move your appointment on Friday, 5 June. The clerk is ill.",
-            "say": "Wir müssen Ihren Termin am Freitag, dem fünften Juni, leider verschieben. Die Sachbearbeiterin ist krank."
+            "de": "Wir müssen Ihren Termin am Freitag, dem 5. Juni, leider verschieben. Die Sachbearbeiterin ist nicht da.",
+            "en": "Unfortunately we have to move your appointment on Friday, 5 June. The clerk is not in.",
+            "say": "Wir müssen Ihren Termin am Freitag, dem fünften Juni, leider verschieben. Die Sachbearbeiterin ist nicht da."
           },
           {
             "id": "a1.2-u04-ls2-l03",
             "speaker": "cast.ensemble-a1-2",
-            "de": "Ihr neuer Termin ist am Dienstag, dem 9. Juni, um 8.30 Uhr. Passt das nicht? Dann rufen Sie uns bitte bis Donnerstag an.",
-            "en": "Your new appointment is on Tuesday, 9 June, at 8:30. Doesn’t that suit you? Then please call us by Thursday.",
-            "say": "Ihr neuer Termin ist am Dienstag, dem neunten Juni, um acht Uhr dreißig. Passt das nicht? Dann rufen Sie uns bitte bis Donnerstag an."
+            "de": "Ihr neuer Termin ist am Dienstag, dem 9. Juni, um 8.30 Uhr. Geht das nicht? Dann rufen Sie uns bitte bis Donnerstag an.",
+            "en": "Your new appointment is on Tuesday, 9 June, at 8:30. Doesn’t that work? Then please call us by Thursday.",
+            "say": "Ihr neuer Termin ist am Dienstag, dem neunten Juni, um acht Uhr dreißig. Geht das nicht? Dann rufen Sie uns bitte bis Donnerstag an."
           },
           {
             "id": "a1.2-u04-ls2-l04",
@@ -1080,63 +1062,66 @@
           {
             "id": "a1.2-u04-ls2-l06",
             "speaker": "cast.priya",
-            "de": "Am Dienstag, dem neunten Juni, um halb neun.",
-            "en": "On Tuesday, the ninth of June, at half past eight."
+            "de": "Am Dienstag, dem 9. Juni, um halb neun.",
+            "en": "On Tuesday, the ninth of June, at half past eight.",
+            "say": "Am Dienstag, dem neunten Juni, um halb neun."
           },
           {
             "id": "a1.2-u04-ls2-l07",
             "speaker": "cast.arjun",
-            "de": "Am neunten? Da habe ich um neun ein Meeting. Das geht nicht.",
-            "en": "On the ninth? I have a meeting at nine then. That doesn’t work."
+            "de": "Am 9. Juni? Da muss ich arbeiten. Um neun kommt ein Kunde. Das geht nicht.",
+            "en": "On the ninth of June? I have to work then. A customer is coming at nine. That doesn’t work.",
+            "say": "Am neunten Juni? Da muss ich arbeiten. Um neun kommt ein Kunde. Das geht nicht."
           },
           {
             "id": "a1.2-u04-ls2-l08",
             "speaker": "cast.priya",
-            "de": "Okay, dann rufe ich jetzt an.",
+            "de": "Gut, dann rufe ich jetzt an.",
             "en": "OK, then I’ll call now."
           },
           {
             "id": "a1.2-u04-ls2-l09",
             "speaker": "cast.ensemble-a1-2",
-            "de": "Bürgerbüro Lindenplatz, guten Tag.",
-            "en": "Citizens’ office Lindenplatz, hello."
+            "de": "Bürgerbüro am Marktplatz, guten Tag.",
+            "en": "Citizens’ office Marktplatz, hello."
           },
           {
             "id": "a1.2-u04-ls2-l10",
             "speaker": "cast.priya",
-            "de": "Guten Tag, hier ist Priya Nair. Wir haben am neunten Juni einen Termin. Ich hätte gern ein anderes Datum.",
-            "en": "Hello, this is Priya Nair. We have an appointment on the ninth of June. I’d like a different date."
+            "de": "Guten Tag, hier ist Priya Nair. Wir haben am 9. Juni einen Termin. Ich hätte gern ein anderes Datum.",
+            "en": "Hello, this is Priya Nair. We have an appointment on 9 June. I’d like a different date.",
+            "say": "Guten Tag, hier ist Priya Nair. Wir haben am neunten Juni einen Termin. Ich hätte gern ein anderes Datum."
           },
           {
             "id": "a1.2-u04-ls2-l11",
             "speaker": "cast.ensemble-a1-2",
-            "de": "Moment … Der erste freie Termin ist am Donnerstag, dem 11. Juni, um 16.30 Uhr.",
-            "en": "One moment … The first free slot is on Thursday, 11 June, at 4:30 pm.",
-            "say": "Moment … Der erste freie Termin ist am Donnerstag, dem elften Juni, um sechzehn Uhr dreißig."
+            "de": "Ich sehe mal nach … Der erste freie Termin ist am Donnerstag, dem 11. Juni, um 16.30 Uhr.",
+            "en": "Let me have a look … The first free slot is on Thursday, 11 June, at 4:30 pm.",
+            "say": "Ich sehe mal nach … Der erste freie Termin ist am Donnerstag, dem elften Juni, um sechzehn Uhr dreißig."
           },
           {
             "id": "a1.2-u04-ls2-l12",
             "speaker": "cast.priya",
-            "de": "Der elfte Juni um 16.30 Uhr? Ja, das passt sehr gut.",
-            "en": "The eleventh of June at 4:30 pm? Yes, that suits us very well.",
-            "say": "Der elfte Juni um sechzehn Uhr dreißig? Ja, das passt sehr gut."
+            "de": "Am 11. Juni um 16.30 Uhr? Ja, das geht sehr gut.",
+            "en": "On 11 June at 4:30 pm? Yes, that works very well.",
+            "say": "Am elften Juni um sechzehn Uhr dreißig? Ja, das geht sehr gut."
           },
           {
             "id": "a1.2-u04-ls2-l13",
             "speaker": "cast.ensemble-a1-2",
-            "de": "Gut, dann bis zum elften Juni. Und bitte vergessen Sie Ihre Pässe nicht!",
-            "en": "Good, see you on the eleventh of June then. And please don’t forget your passports!"
+            "de": "Gut, dann bis Donnerstag. Und bitte nehmen Sie Ihre Pässe mit!",
+            "en": "Good, see you on Thursday then. And please bring your passports!"
           },
           {
             "id": "a1.2-u04-ls2-l14",
             "speaker": "cast.priya",
-            "de": "Nein, bestimmt nicht. Vielen Dank! Auf Wiederhören.",
-            "en": "No, certainly not. Thank you very much! Goodbye."
+            "de": "Ja, gern. Danke schön! Auf Wiederhören.",
+            "en": "Yes, of course. Thank you! Goodbye."
           }
         ],
         "glosses": [
           {
-            "token": "typisch",
+            "token": "Typisch",
             "gloss": {
               "en": "typical"
             }
@@ -1194,13 +1179,12 @@
           "type": "fill_blank",
           "role": "detail",
           "topic": "hoeren",
-          "promptDe": "Der alte Termin: am Freitag, dem ___ Juni.",
+          "promptDe": "Der alte Termin: am Freitag, dem ___ Juni. Schreiben Sie die Zahl.",
           "promptEn": "Write the day of the old appointment.",
           "answer": "5.",
           "accepted": [
             "5.",
-            "5",
-            "fünften"
+            "5"
           ],
           "exact": "number",
           "explanation": {
@@ -1217,17 +1201,17 @@
           "promptDe": "Warum passt der 9. Juni nicht?",
           "promptEn": "Why doesn’t 9 June work?",
           "options": [
-            "Arjun hat ein Meeting.",
+            "Arjun muss arbeiten.",
             "Priya hat Kurs.",
             "Das Bürgerbüro ist zu."
           ],
-          "answer": "Arjun hat ein Meeting.",
+          "answer": "Arjun muss arbeiten.",
           "accepted": [
-            "Arjun hat ein Meeting."
+            "Arjun muss arbeiten."
           ],
           "explanation": {
-            "de": "Arjun sagt: Da habe ich um neun ein Meeting.",
-            "en": "Arjun has a meeting at nine that day."
+            "de": "Arjun sagt: Da muss ich arbeiten. Um neun kommt ein Kunde.",
+            "en": "Arjun has to work: a customer is coming at nine."
           },
           "origin": "agent"
         },
@@ -1269,6 +1253,7 @@
           "accepted": [
             "3. Juni"
           ],
+          "exact": "number",
           "explanation": {
             "de": "der dritte = der 3.; dreißigste = 30., dreizehnte = 13.",
             "en": "“der dritte” is the 3rd."
@@ -1291,6 +1276,7 @@
           "accepted": [
             "am 11. Juni"
           ],
+          "exact": "number",
           "explanation": {
             "de": "am elften = am 11.; am ersten = am 1., am siebten = am 7.",
             "en": "“am elften” is on the 11th."
@@ -1313,6 +1299,7 @@
           "accepted": [
             "der 20. Mai"
           ],
+          "exact": "number",
           "explanation": {
             "de": "Ab 20 endet die Zahl auf -ste: der zwanzigste = der 20.",
             "en": "From 20 on the ending is -ste: zwanzigste = 20th."
@@ -1439,19 +1426,19 @@
             "tiles": [
               "heute",
               "ist",
-              "der elfte Juni"
+              "der 11. Juni"
             ],
-            "answer": "Heute ist der elfte Juni.",
+            "answer": "Heute ist der 11. Juni.",
             "accepted": [
-              "Heute ist der elfte Juni.",
-              "Der elfte Juni ist heute."
+              "Heute ist der 11. Juni.",
+              "Der 11. Juni ist heute."
             ],
             "acceptedWhy": {
-              "Der elfte Juni ist heute.": "grammatisch: das Datum im Vorfeld betont den Tag"
+              "Der 11. Juni ist heute.": "grammatisch: das Datum im Vorfeld betont den Tag"
             },
             "explanation": {
-              "de": "Heute ist der … – das Datum mit der.",
-              "en": "Dates after “heute ist” use “der”: der elfte Juni."
+              "de": "Heute ist der 11. Juni. Man sagt: der elfte Juni.",
+              "en": "After “heute ist” the date takes “der”: der 11. (elfte) Juni."
             },
             "origin": "agent"
           },
@@ -1465,16 +1452,16 @@
             "tiles": [
               "mein Termin",
               "ist",
-              "am dritten Juni"
+              "am 3. Juni"
             ],
-            "answer": "Mein Termin ist am dritten Juni.",
+            "answer": "Mein Termin ist am 3. Juni.",
             "accepted": [
-              "Mein Termin ist am dritten Juni.",
-              "Am dritten Juni ist mein Termin."
+              "Mein Termin ist am 3. Juni.",
+              "Am 3. Juni ist mein Termin."
             ],
             "explanation": {
-              "de": "Wann? am + dritten: am dritten Juni.",
-              "en": "“When?” takes am + -en: am dritten Juni."
+              "de": "Wann? am 3. Juni. Man sagt: am dritten Juni.",
+              "en": "“When?” takes “am”: am 3. (dritten) Juni."
             },
             "origin": "agent"
           },
@@ -1489,20 +1476,16 @@
               "wir",
               "sind",
               "vom 3. bis 5. Juni",
-              "in Berlin"
+              "nicht da"
             ],
-            "answer": "Wir sind vom 3. bis 5. Juni in Berlin.",
+            "answer": "Wir sind vom 3. bis 5. Juni nicht da.",
             "accepted": [
-              "Wir sind vom 3. bis 5. Juni in Berlin.",
-              "Vom 3. bis 5. Juni sind wir in Berlin.",
-              "In Berlin sind wir vom 3. bis 5. Juni."
+              "Wir sind vom 3. bis 5. Juni nicht da.",
+              "Vom 3. bis 5. Juni sind wir nicht da."
             ],
-            "acceptedWhy": {
-              "In Berlin sind wir vom 3. bis 5. Juni.": "grammatisch: der Ort im Vorfeld betont Berlin"
-            },
             "explanation": {
-              "de": "sind steht auf Position 2. Die Zeit steht vor dem Ort.",
-              "en": "“sind” is in second position; time before place."
+              "de": "sind steht auf Position 2. vom … bis … = von Anfang bis Ende.",
+              "en": "“sind” is in second position; “vom … bis …” gives start and end."
             },
             "origin": "agent"
           },
@@ -1514,23 +1497,19 @@
             "promptDe": "Bilden Sie den Satz.",
             "promptEn": "Build the sentence.",
             "tiles": [
+              "am 9. Juni",
+              "muss",
               "Arjun",
-              "hat",
-              "am neunten Juni",
-              "ein Meeting"
+              "arbeiten"
             ],
-            "answer": "Arjun hat am neunten Juni ein Meeting.",
+            "answer": "Arjun muss am 9. Juni arbeiten.",
             "accepted": [
-              "Arjun hat am neunten Juni ein Meeting.",
-              "Am neunten Juni hat Arjun ein Meeting.",
-              "Ein Meeting hat Arjun am neunten Juni."
+              "Arjun muss am 9. Juni arbeiten.",
+              "Am 9. Juni muss Arjun arbeiten."
             ],
-            "acceptedWhy": {
-              "Ein Meeting hat Arjun am neunten Juni.": "grammatisch: ein Meeting im Vorfeld betont das Meeting"
-            },
             "explanation": {
-              "de": "hat steht auf Position 2. am neunten Juni = am 9. Juni.",
-              "en": "“hat” is in second position; “am neunten Juni” = on 9 June."
+              "de": "muss auf Position 2, arbeiten am Ende. am 9. Juni = am neunten Juni.",
+              "en": "“muss” second, “arbeiten” last; am 9. Juni = am neunten Juni."
             },
             "origin": "agent"
           },
@@ -1540,23 +1519,25 @@
             "role": "practice",
             "topic": "g.ordinalzahlen-datum",
             "promptDe": "Bilden Sie den Satz.",
-            "promptEn": "Build the polite wish.",
+            "promptEn": "Build the sentence.",
             "tiles": [
               "ich",
-              "hätte",
-              "gern",
+              "möchte",
               "einen Termin",
-              "am zwölften Juni"
+              "am 12. Juni"
             ],
-            "answer": "Ich hätte gern einen Termin am zwölften Juni.",
+            "answer": "Ich möchte einen Termin am 12. Juni.",
             "accepted": [
-              "Ich hätte gern einen Termin am zwölften Juni.",
-              "Am zwölften Juni hätte ich gern einen Termin.",
-              "Ich hätte gern am zwölften Juni einen Termin."
+              "Ich möchte einen Termin am 12. Juni.",
+              "Am 12. Juni möchte ich einen Termin.",
+              "Ich möchte am 12. Juni einen Termin."
             ],
+            "acceptedWhy": {
+              "Ich möchte am 12. Juni einen Termin.": "grammatisch: das Datum vor dem Objekt ist auch möglich"
+            },
             "explanation": {
-              "de": "hätte steht auf Position 2. Ich hätte gern … ist höflich.",
-              "en": "“hätte” is in second position; “Ich hätte gern …” is polite."
+              "de": "möchte steht auf Position 2. am 12. Juni = am zwölften Juni.",
+              "en": "“möchte” is in second position; am 12. Juni = am zwölften Juni."
             },
             "origin": "agent"
           },
@@ -1584,7 +1565,7 @@
             "type": "multiple_choice",
             "role": "practice",
             "topic": "g.ordinalzahlen-datum",
-            "promptDe": "Heute ist Montag, der 1. Juni. Der Mittwoch ist dann:",
+            "promptDe": "Heute ist Montag, der 1. Juni. Was ist das Datum am Mittwoch?",
             "promptEn": "Monday is 1 June. What date is Wednesday?",
             "options": [
               "der 3. Juni",
@@ -1595,6 +1576,7 @@
             "accepted": [
               "der 3. Juni"
             ],
+            "exact": "number",
             "explanation": {
               "de": "Montag = 1., Dienstag = 2., Mittwoch = 3. Juni.",
               "en": "Monday 1st, Tuesday 2nd, Wednesday 3rd."
@@ -1688,13 +1670,14 @@
           "promptEn": "Build the sentence.",
           "tiles": [
             "der Kurs",
-            "beginnt",
-            "am ersten Februar"
+            "fängt",
+            "am 1. Februar",
+            "an"
           ],
-          "answer": "Der Kurs beginnt am ersten Februar.",
+          "answer": "Der Kurs fängt am 1. Februar an.",
           "accepted": [
-            "Der Kurs beginnt am ersten Februar.",
-            "Am ersten Februar beginnt der Kurs."
+            "Der Kurs fängt am 1. Februar an.",
+            "Am 1. Februar fängt der Kurs an."
           ],
           "errorTags": [
             "v2-inv"
@@ -1706,8 +1689,8 @@
           ],
           "difficulty": 2,
           "explanation": {
-            "de": "beginnt steht auf Position 2. am ersten = am 1.",
-            "en": "“beginnt” is in second position; am ersten = on the 1st."
+            "de": "fängt auf Position 2, an am Ende. am 1. Februar = am ersten Februar.",
+            "en": "“fängt” second, “an” last; am 1. Februar = am ersten Februar."
           },
           "origin": "agent"
         },
@@ -1727,6 +1710,7 @@
           "accepted": [
             "19."
           ],
+          "exact": "number",
           "banks": [
             "plateau",
             "mehr-ueben"
@@ -1795,7 +1779,7 @@
       },
       "input": {
         "kind": "mixed",
-        "title": "Wegweiser und Information",
+        "title": "Information im Bürgerbüro",
         "textType": "tt.informationstafel",
         "lines": [
           {
@@ -1808,7 +1792,7 @@
           {
             "id": "a1.2-u04-ls3-l02",
             "speaker": "cast.ensemble-a1-4",
-            "de": "Zur Anmeldung? Zimmer 14, im ersten Stock. Das ist die dritte Tür rechts.",
+            "de": "Zur Anmeldung? Zimmer 14, im 1. Stock. Das ist die dritte Tür rechts.",
             "en": "For registration? Room 14, on the first floor. It’s the third door on the right.",
             "say": "Zur Anmeldung? Zimmer vierzehn, im ersten Stock. Das ist die dritte Tür rechts."
           },
@@ -1822,8 +1806,9 @@
           {
             "id": "a1.2-u04-ls3-l04",
             "speaker": "cast.ensemble-a1-4",
-            "de": "Nein, Zimmer vierzehn. Und nehmen Sie bitte eine Wartenummer.",
-            "en": "No, room fourteen. And please take a queue number."
+            "de": "Nein, Zimmer 14. Eins, vier. Und bitte nehmen Sie eine Wartenummer.",
+            "en": "No, room 14. One, four. And please take a queue number.",
+            "say": "Nein, Zimmer vierzehn. Eins, vier. Und bitte nehmen Sie eine Wartenummer."
           },
           {
             "id": "a1.2-u04-ls3-l05",
@@ -1834,9 +1819,9 @@
           {
             "id": "a1.2-u04-ls3-l06",
             "speaker": "cast.ensemble-a1-4",
-            "de": "Da vorne, am Eingang. Sie haben die Nummer 27. Bitte warten Sie oben.",
-            "en": "Over there, at the entrance. You have number 27. Please wait upstairs.",
-            "say": "Da vorne, am Eingang. Sie haben die Nummer siebenundzwanzig. Bitte warten Sie oben."
+            "de": "Dort, am Eingang. Sie haben die Nummer 27. Bitte warten Sie vor Zimmer 14.",
+            "en": "Over there, at the entrance. You have number 27. Please wait outside room 14.",
+            "say": "Dort, am Eingang. Sie haben die Nummer siebenundzwanzig. Bitte warten Sie vor Zimmer vierzehn."
           },
           {
             "id": "a1.2-u04-ls3-l07",
@@ -1860,49 +1845,49 @@
           {
             "id": "a1.2-u04-ls3-l10",
             "speaker": "cast.ensemble-a1-2",
-            "de": "Gut. Staatsangehörigkeit: indisch. Geburtsort: Kochi. Das Geburtsdatum stimmt auch.",
-            "en": "Good. Nationality: Indian. Place of birth: Kochi. The date of birth is correct, too."
+            "de": "Gut. Staatsangehörigkeit, Geburtsort, Geburtsdatum – alles richtig.",
+            "en": "Good. Nationality, place of birth, date of birth – all correct."
           },
           {
             "id": "a1.2-u04-ls3-l11",
             "speaker": "cast.ensemble-a1-2",
-            "de": "Aber hier fehlt Ihre Unterschrift, Herr Nair. Würden Sie bitte hier unten unterschreiben?",
-            "en": "But your signature is missing here, Mr Nair. Would you sign down here, please?"
+            "de": "Aber hier fehlt Ihre Unterschrift, Herr Nair. Würden Sie bitte hier unterschreiben?",
+            "en": "But your signature is missing here, Mr Nair. Would you sign here, please?"
           },
           {
             "id": "a1.2-u04-ls3-l12",
             "speaker": "cast.arjun",
-            "de": "Oh, Entschuldigung. So. Brauchen Sie auch eine Kopie?",
-            "en": "Oh, sorry. There. Do you need a copy as well?"
+            "de": "Entschuldigung! So. Brauchen Sie auch eine Kopie?",
+            "en": "Sorry! There. Do you need a copy as well?"
           },
           {
             "id": "a1.2-u04-ls3-l13",
             "speaker": "cast.ensemble-a1-2",
-            "de": "Nein, danke. Die Anmeldung ist fertig. Der Ausgang ist dort links.",
-            "en": "No, thanks. The registration is done. The exit is over there on the left."
+            "de": "Nein, danke. Das ist alles. Der Ausgang ist dort links.",
+            "en": "No, thanks. That’s everything. The exit is over there on the left."
           },
           {
             "id": "a1.2-u04-ls3-l14",
             "speaker": "cast.priya",
-            "de": "Das war aber schnell! Vielen Dank.",
-            "en": "That was quick! Thank you very much."
+            "de": "Das war aber leicht! Danke schön.",
+            "en": "That was easy! Thank you."
           }
         ],
         "text": {
-          "de": "Bürgerbüro Lindenplatz – Wegweiser\nErdgeschoss: Information · Wartenummern · Eingang A · Ausgang\n1. Stock: Anmeldung (neue Adresse) – Zimmer 11 bis 16\n2. Stock: Pass und Ausweis, Anträge – Zimmer 21 bis 25\n\nNeu seit 1. April: Bitte nehmen Sie am Eingang eine Wartenummer.\nDie Sachbearbeiterinnen und Sachbearbeiter rufen Ihre Nummer auf.\nBitte warten Sie vor dem Zimmer.",
-          "en": "Citizens’ office Lindenplatz – signpost. Ground floor: information · queue numbers · entrance A · exit. 1st floor: registration (new address) – rooms 11 to 16. 2nd floor: passport and ID card, applications – rooms 21 to 25. New since 1 April: please take a queue number at the entrance. The clerks call your number. Please wait outside the room."
+          "de": "Bürgerbüro am Marktplatz – Information\nErdgeschoss: Information · Wartenummern · Eingang · Ausgang\n1. Stock: Anmeldung (neue Adresse) – Zimmer 11 bis 16\n2. Stock: Pass, Ausweis und Anträge – Zimmer 21 bis 25\n\nNeu seit 1. April: Bitte nehmen Sie am Eingang eine Wartenummer.\nDie Sachbearbeiterinnen und Sachbearbeiter rufen Ihre Nummer auf.\nBitte warten Sie vor dem Zimmer.",
+          "en": "Citizens’ office Marktplatz – information. Ground floor: information · queue numbers · entrance · exit. 1st floor: registration (new address) – rooms 11 to 16. 2nd floor: passport, ID card and applications – rooms 21 to 25. New since 1 April: please take a queue number at the entrance. The clerks call your number. Please wait outside the room."
         },
         "glosses": [
+          {
+            "token": "Stock",
+            "gloss": {
+              "en": "floor (of a building)"
+            }
+          },
           {
             "token": "gültig",
             "gloss": {
               "en": "valid"
-            }
-          },
-          {
-            "token": "aufrufen",
-            "gloss": {
-              "en": "to call (out)"
             }
           }
         ],
@@ -1936,20 +1921,20 @@
           "type": "multiple_choice",
           "role": "gist",
           "topic": "hoeren",
-          "promptDe": "Ist die Anmeldung am Ende fertig?",
-          "promptEn": "Is the registration done in the end?",
+          "promptDe": "Was sagt die Sachbearbeiterin am Ende?",
+          "promptEn": "What does the clerk say at the end?",
           "options": [
-            "Ja, sie ist fertig.",
-            "Nein, die Unterschrift fehlt.",
-            "Nein, sie brauchen eine Kopie."
+            "Das ist alles.",
+            "Hier fehlt eine Kopie.",
+            "Bitte warten Sie hier."
           ],
-          "answer": "Ja, sie ist fertig.",
+          "answer": "Das ist alles.",
           "accepted": [
-            "Ja, sie ist fertig."
+            "Das ist alles."
           ],
           "explanation": {
-            "de": "Arjun unterschreibt. Dann sagt die Sachbearbeiterin: Die Anmeldung ist fertig.",
-            "en": "Arjun signs, then the clerk says the registration is done."
+            "de": "Arjun unterschreibt. Dann sagt sie: Das ist alles.",
+            "en": "Arjun signs; then she says that’s everything."
           },
           "origin": "agent"
         },
@@ -1962,8 +1947,7 @@
           "promptEn": "Write the room number.",
           "answer": "14",
           "accepted": [
-            "14",
-            "vierzehn"
+            "14"
           ],
           "exact": "number",
           "explanation": {
@@ -1981,8 +1965,7 @@
           "promptEn": "Write their queue number.",
           "answer": "27",
           "accepted": [
-            "27",
-            "siebenundzwanzig"
+            "27"
           ],
           "exact": "number",
           "explanation": {
@@ -2023,13 +2006,13 @@
           "promptDe": "„Könnten Sie das bitte wiederholen?“ Was möchte Priya?",
           "promptEn": "What does Priya want?",
           "options": [
-            "Sie möchte es noch einmal hören.",
+            "Sie möchte es wieder hören.",
             "Sie möchte eine Wartenummer.",
             "Sie möchte nach Hause gehen."
           ],
-          "answer": "Sie möchte es noch einmal hören.",
+          "answer": "Sie möchte es wieder hören.",
           "accepted": [
-            "Sie möchte es noch einmal hören."
+            "Sie möchte es wieder hören."
           ],
           "explanation": {
             "de": "wiederholen = noch einmal sagen. Könnten Sie …? ist eine höfliche Bitte.",
@@ -2251,22 +2234,22 @@
             "id": "a1.2-u04-ls3-p08",
             "type": "sentence_building",
             "role": "practice",
-            "topic": "g.ordinalzahlen-datum",
+            "topic": "redemittel",
             "promptDe": "Bilden Sie den Satz.",
             "promptEn": "Build the sentence.",
             "tiles": [
-              "Zimmer 14",
+              "die Information",
               "ist",
-              "im ersten Stock"
+              "im Erdgeschoss"
             ],
-            "answer": "Zimmer 14 ist im ersten Stock.",
+            "answer": "Die Information ist im Erdgeschoss.",
             "accepted": [
-              "Zimmer 14 ist im ersten Stock.",
-              "Im ersten Stock ist Zimmer 14."
+              "Die Information ist im Erdgeschoss.",
+              "Im Erdgeschoss ist die Information."
             ],
             "explanation": {
-              "de": "im ersten Stock = im 1. Stock. ist steht auf Position 2.",
-              "en": "“im ersten Stock” = on the first floor; “ist” second."
+              "de": "ist steht auf Position 2. Wo? im Erdgeschoss.",
+              "en": "“ist” is in second position; “im Erdgeschoss” says where."
             },
             "origin": "agent"
           },
@@ -2274,24 +2257,22 @@
             "id": "a1.2-u04-ls3-p09",
             "type": "sentence_building",
             "role": "practice",
-            "topic": "g.konj2-hoeflichkeit",
-            "promptDe": "Bilden Sie die Frage.",
-            "promptEn": "Build the polite request.",
+            "topic": "lx.unterschrift",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
             "tiles": [
-              "würden",
-              "Sie",
-              "bitte",
               "hier",
-              "unterschreiben"
+              "fehlt",
+              "Ihre Unterschrift"
             ],
-            "answer": "Würden Sie bitte hier unterschreiben?",
+            "answer": "Hier fehlt Ihre Unterschrift.",
             "accepted": [
-              "Würden Sie bitte hier unterschreiben?",
-              "Würden Sie hier bitte unterschreiben?"
+              "Hier fehlt Ihre Unterschrift.",
+              "Ihre Unterschrift fehlt hier."
             ],
             "explanation": {
-              "de": "Würden steht vorne, unterschreiben am Ende.",
-              "en": "“Würden” first, “unterschreiben” last."
+              "de": "fehlt steht auf Position 2.",
+              "en": "“fehlt” is in second position."
             },
             "origin": "agent"
           },
@@ -2305,19 +2286,19 @@
             "tiles": [
               "unser Termin",
               "ist",
-              "am elften Juni",
+              "am 11. Juni",
               "um 16.30 Uhr"
             ],
-            "answer": "Unser Termin ist am elften Juni um 16.30 Uhr.",
+            "answer": "Unser Termin ist am 11. Juni um 16.30 Uhr.",
             "accepted": [
-              "Unser Termin ist am elften Juni um 16.30 Uhr.",
-              "Am elften Juni ist unser Termin um 16.30 Uhr.",
-              "Um 16.30 Uhr ist unser Termin am elften Juni.",
-              "Am elften Juni um 16.30 Uhr ist unser Termin."
+              "Unser Termin ist am 11. Juni um 16.30 Uhr.",
+              "Am 11. Juni ist unser Termin um 16.30 Uhr.",
+              "Um 16.30 Uhr ist unser Termin am 11. Juni.",
+              "Am 11. Juni um 16.30 Uhr ist unser Termin."
             ],
             "acceptedWhy": {
-              "Um 16.30 Uhr ist unser Termin am elften Juni.": "grammatisch: die Uhrzeit im Vorfeld betont die Zeit",
-              "Am elften Juni um 16.30 Uhr ist unser Termin.": "grammatisch: Datum und Uhrzeit zusammen im Vorfeld"
+              "Um 16.30 Uhr ist unser Termin am 11. Juni.": "grammatisch: die Uhrzeit im Vorfeld betont die Zeit",
+              "Am 11. Juni um 16.30 Uhr ist unser Termin.": "grammatisch: Datum und Uhrzeit zusammen im Vorfeld"
             },
             "explanation": {
               "de": "ist auf Position 2. Erst der Tag, dann die Uhrzeit.",
@@ -2403,32 +2384,22 @@
           "id": "a1.2-u04-ls3-r01",
           "type": "fill_blank",
           "role": "practice",
-          "topic": "g.konj2-hoeflichkeit",
-          "promptDe": "Die Sachbearbeiterin spricht schnell. ___ Sie bitte langsam sprechen?",
-          "promptEn": "A polite request.",
-          "answer": "Würden",
+          "topic": "lx.kopie",
+          "promptDe": "Das ist nicht der Pass. Das ist nur eine ___ vom Pass.",
+          "promptEn": "A paper copy of a document.",
+          "answer": "Kopie",
           "accepted": [
-            "Würden",
-            "würden",
-            "Könnten",
-            "könnten"
+            "Kopie"
           ],
-          "acceptedWhy": {
-            "Könnten": "auch höflich: Könnten Sie bitte langsam sprechen?",
-            "könnten": "auch höflich, nur klein geschrieben"
-          },
-          "errorTags": [
-            "register"
-          ],
+          "errorTags": [],
           "banks": [
             "plateau",
-            "mehr-ueben",
-            "repair"
+            "mehr-ueben"
           ],
-          "difficulty": 2,
+          "difficulty": 1,
           "explanation": {
-            "de": "Höfliche Bitte: Würden Sie … / Könnten Sie … bitte …?",
-            "en": "Polite request: Würden Sie / Könnten Sie … bitte …?"
+            "de": "die Kopie = das Papier mit dem Foto vom Pass, nicht der Pass.",
+            "en": "A copy is a paper version of the passport, not the passport itself."
           },
           "origin": "agent"
         },
@@ -2436,19 +2407,24 @@
           "id": "a1.2-u04-ls3-r02",
           "type": "sentence_building",
           "role": "practice",
-          "topic": "lx.unterschrift",
+          "topic": "g.imperativ-sie",
           "promptDe": "Bilden Sie den Satz.",
-          "promptEn": "Build the sentence.",
+          "promptEn": "Build the polite instruction.",
           "tiles": [
-            "hier",
-            "fehlt",
-            "Ihre Unterschrift"
+            "bitte",
+            "unterschreiben",
+            "Sie",
+            "hier"
           ],
-          "answer": "Hier fehlt Ihre Unterschrift.",
+          "answer": "Bitte unterschreiben Sie hier.",
           "accepted": [
-            "Hier fehlt Ihre Unterschrift.",
-            "Ihre Unterschrift fehlt hier."
+            "Bitte unterschreiben Sie hier.",
+            "Unterschreiben Sie bitte hier.",
+            "Unterschreiben Sie hier bitte."
           ],
+          "acceptedWhy": {
+            "Unterschreiben Sie hier bitte.": "grammatisch: bitte am Ende ist auch höflich"
+          },
           "errorTags": [
             "v2-inv"
           ],
@@ -2459,8 +2435,8 @@
           ],
           "difficulty": 1,
           "explanation": {
-            "de": "fehlt steht auf Position 2.",
-            "en": "“fehlt” is in second position."
+            "de": "Imperativ mit Sie: Das Verb steht vorne, dann Sie.",
+            "en": "Sie imperative: the verb first, then “Sie”."
           },
           "origin": "agent"
         },
@@ -2551,7 +2527,6 @@
           40
         ],
         "targets": [
-          "g.konj2-hoeflichkeit",
           "g.ordinalzahlen-datum"
         ],
         "register": "Sie"
@@ -2564,11 +2539,11 @@
             "type": "listen_select",
             "role": "perception",
             "topic": "aussprache",
-            "promptDe": "Hören Sie: „am Dienstag“ – Frage oder Aussage?",
-            "promptEn": "Question or statement?",
+            "promptDe": "Hören Sie: „am Dienstag“ – ist das eine Frage?",
+            "promptEn": "Is it a question?",
             "options": [
               "Frage",
-              "Aussage"
+              "keine Frage"
             ],
             "answer": "Frage",
             "accepted": [
@@ -2585,19 +2560,19 @@
             "type": "listen_select",
             "role": "perception",
             "topic": "aussprache",
-            "promptDe": "Hören Sie: „um halb neun“ – Frage oder Aussage?",
-            "promptEn": "Question or statement?",
+            "promptDe": "Hören Sie: „um halb neun“ – ist das eine Frage?",
+            "promptEn": "Is it a question?",
             "options": [
-              "Aussage",
+              "keine Frage",
               "Frage"
             ],
-            "answer": "Aussage",
+            "answer": "keine Frage",
             "accepted": [
-              "Aussage"
+              "keine Frage"
             ],
             "explanation": {
-              "de": "Die Melodie geht am Ende nach unten: eine Aussage.",
-              "en": "The pitch falls at the end: a statement."
+              "de": "Die Melodie geht am Ende nach unten: keine Frage.",
+              "en": "The pitch falls at the end: not a question."
             },
             "origin": "agent"
           },
@@ -2606,11 +2581,11 @@
             "type": "listen_select",
             "role": "perception",
             "topic": "aussprache",
-            "promptDe": "Hören Sie: „Zimmer vierzehn“ – Frage oder Aussage?",
-            "promptEn": "Question or statement?",
+            "promptDe": "Hören Sie: „Zimmer vierzehn“ – ist das eine Frage?",
+            "promptEn": "Is it a question?",
             "options": [
               "Frage",
-              "Aussage"
+              "keine Frage"
             ],
             "answer": "Frage",
             "accepted": [
@@ -2627,19 +2602,19 @@
             "type": "listen_select",
             "role": "perception",
             "topic": "aussprache",
-            "promptDe": "Hören Sie: „am elften Juni“ – Frage oder Aussage?",
-            "promptEn": "Question or statement?",
+            "promptDe": "Hören Sie: „am 11. Juni“ – ist das eine Frage?",
+            "promptEn": "Is it a question?",
             "options": [
-              "Aussage",
+              "keine Frage",
               "Frage"
             ],
-            "answer": "Aussage",
+            "answer": "keine Frage",
             "accepted": [
-              "Aussage"
+              "keine Frage"
             ],
             "explanation": {
-              "de": "Die Melodie fällt am Ende: eine Aussage.",
-              "en": "Falling pitch: a statement."
+              "de": "Die Melodie fällt am Ende: keine Frage.",
+              "en": "Falling pitch: not a question."
             },
             "origin": "agent"
           }
@@ -2657,20 +2632,20 @@
         {
           "id": "a1.2-u04-ls4-t1",
           "kind": "audio",
-          "title": "Nachricht von der Sprachschule",
+          "title": "Nachricht vom Deutschkurs",
           "lines": [
             {
               "id": "a1.2-u04-ls4-t1-l01",
               "speaker": "cast.herr-richter",
-              "de": "Guten Tag, Frau Nair, hier ist Uwe Richter von der Sprachschule. Für Ihre Anmeldung zum neuen Kurs brauche ich noch eine Kopie von Ihrem Pass.",
-              "en": "Hello, Ms Nair, this is Uwe Richter from the language school. For your registration for the new course I still need a copy of your passport."
+              "de": "Guten Tag, Frau Nair, hier ist Uwe Richter aus dem Büro von Ihrem Deutschkurs. Für die Anmeldung zum neuen Kurs brauche ich noch eine Kopie von Ihrem Pass.",
+              "en": "Hello, Ms Nair, this is Uwe Richter from your German course office. For the registration for the new course I still need a copy of your passport."
             },
             {
               "id": "a1.2-u04-ls4-t1-l02",
               "speaker": "cast.herr-richter",
-              "de": "Am Montag und am Dienstag ist das Büro leider zu. Bitte bringen Sie die Kopie am Mittwoch. Ich bin ab 9 Uhr da. Danke!",
-              "en": "Unfortunately the office is closed on Monday and Tuesday. Please bring the copy on Wednesday. I’m there from 9 o’clock. Thanks!",
-              "say": "Am Montag und am Dienstag ist das Büro leider zu. Bitte bringen Sie die Kopie am Mittwoch. Ich bin ab neun Uhr da. Danke!"
+              "de": "Am Montag und am Dienstag ist das Büro leider geschlossen. Bitte kommen Sie am Mittwoch mit der Kopie. Ich bin ab 9 Uhr da. Danke!",
+              "en": "Unfortunately the office is closed on Monday and Tuesday. Please come with the copy on Wednesday. I’m there from 9 o’clock. Thanks!",
+              "say": "Am Montag und am Dienstag ist das Büro leider geschlossen. Bitte kommen Sie am Mittwoch mit der Kopie. Ich bin ab neun Uhr da. Danke!"
             }
           ],
           "glosses": []
@@ -2683,15 +2658,15 @@
             {
               "id": "a1.2-u04-ls4-t2-l01",
               "speaker": "cast.ensemble-a1-2",
-              "de": "Guten Tag, Herr Ahmed, hier ist das Bürgerbüro Lindenplatz. Ihr Termin ist am Donnerstag, dem 18. Juni, um 15.15 Uhr.",
-              "en": "Hello, Mr Ahmed, this is the citizens’ office Lindenplatz. Your appointment is on Thursday, 18 June, at 3:15 pm.",
-              "say": "Guten Tag, Herr Ahmed, hier ist das Bürgerbüro Lindenplatz. Ihr Termin ist am Donnerstag, dem achtzehnten Juni, um fünfzehn Uhr fünfzehn."
+              "de": "Guten Tag, Herr Ahmed, hier ist das Bürgerbüro am Marktplatz. Ihr Termin ist am Donnerstag, dem 18. Juni, um 15.15 Uhr.",
+              "en": "Hello, Mr Ahmed, this is the citizens’ office on Marktplatz. Your appointment is on Thursday, 18 June, at 3:15 pm.",
+              "say": "Guten Tag, Herr Ahmed, hier ist das Bürgerbüro am Marktplatz. Ihr Termin ist am Donnerstag, dem achtzehnten Juni, um fünfzehn Uhr fünfzehn."
             },
             {
               "id": "a1.2-u04-ls4-t2-l02",
               "speaker": "cast.ensemble-a1-2",
-              "de": "Bitte bringen Sie Ihren Pass und den Antrag mit. Nehmen Sie am Eingang eine Wartenummer. Vielen Dank und auf Wiederhören!",
-              "en": "Please bring your passport and the application form. Take a queue number at the entrance. Thank you and goodbye!"
+              "de": "Bitte nehmen Sie Ihren Pass und den Antrag mit. Am Eingang bekommen Sie eine Wartenummer. Danke schön und auf Wiederhören!",
+              "en": "Please bring your passport and the application form. At the entrance you get a queue number. Thank you and goodbye!"
             }
           ],
           "glosses": []
@@ -2704,43 +2679,37 @@
             {
               "id": "a1.2-u04-ls4-t3-l01",
               "speaker": "cast.jonas",
-              "de": "Hallo Priya, hier ist Jonas. Ich habe am Montag um acht einen Termin beim Amt. Ich brauche einen neuen Ausweis.",
-              "en": "Hi Priya, it’s Jonas. I have an appointment at the authorities on Monday at eight. I need a new ID card."
+              "de": "Hallo Priya, hier ist Jonas. Ich habe am Montag um 8 Uhr einen Termin beim Amt. Ich brauche einen neuen Ausweis.",
+              "en": "Hi Priya, it’s Jonas. I have an appointment at the authorities on Monday at 8. I need a new ID card.",
+              "say": "Hallo Priya, hier ist Jonas. Ich habe am Montag um acht Uhr einen Termin beim Amt. Ich brauche einen neuen Ausweis."
             },
             {
               "id": "a1.2-u04-ls4-t3-l02",
               "speaker": "cast.jonas",
-              "de": "Kannst du am Montag die Frühschicht machen? Ich arbeite dann am Samstag für dich. Geht das? Bis dann!",
-              "en": "Can you do the early shift on Monday? Then I’ll work for you on Saturday. Is that OK? See you!"
+              "de": "Kannst du am Montag meine Schicht am Morgen machen? Dann arbeite ich am Samstag für dich. Geht das? Tschüss!",
+              "en": "Can you do my morning shift on Monday? Then I’ll work for you on Saturday. Is that OK? Bye!"
             }
           ],
-          "glosses": [
-            {
-              "token": "Frühschicht",
-              "gloss": {
-                "en": "early shift"
-              }
-            }
-          ]
+          "glosses": []
         },
         {
           "id": "a1.2-u04-ls4-t4",
           "kind": "audio",
-          "title": "Nachricht von der Bibliothek",
+          "title": "Nachricht von der Post",
           "lines": [
             {
               "id": "a1.2-u04-ls4-t4-l01",
               "speaker": "cast.ensemble-a1-3",
-              "de": "Guten Tag, hier ist die Bibliothek am Lindenplatz. Frau Nair, Ihr Buch ist seit dem 28. Mai da. Sie können es bis zum 12. Juni abholen.",
-              "en": "Hello, this is the library on Lindenplatz. Ms Nair, your book has been here since 28 May. You can collect it until 12 June.",
-              "say": "Guten Tag, hier ist die Bibliothek am Lindenplatz. Frau Nair, Ihr Buch ist seit dem achtundzwanzigsten Mai da. Sie können es bis zum zwölften Juni abholen."
+              "de": "Guten Tag, hier ist die Post am Marktplatz. Frau Nair, ein Paket für Sie ist seit dem 28. Mai hier. Das Paket bleibt bis zum 12. Juni bei uns.",
+              "en": "Hello, this is the post office on Marktplatz. Ms Nair, a parcel for you has been here since 28 May. The parcel stays with us until 12 June.",
+              "say": "Guten Tag, hier ist die Post am Marktplatz. Frau Nair, ein Paket für Sie ist seit dem achtundzwanzigsten Mai hier. Das Paket bleibt bis zum zwölften Juni bei uns."
             },
             {
               "id": "a1.2-u04-ls4-t4-l02",
               "speaker": "cast.ensemble-a1-3",
-              "de": "Wir haben von Montag bis Freitag von 10 bis 19 Uhr geöffnet. Am Samstag ist die Bibliothek zu.",
-              "en": "We are open Monday to Friday from 10 am to 7 pm. On Saturday the library is closed.",
-              "say": "Wir haben von Montag bis Freitag von zehn bis neunzehn Uhr geöffnet. Am Samstag ist die Bibliothek zu."
+              "de": "Wir haben von Montag bis Freitag von 9 bis 18 Uhr geöffnet und am Samstag von 9 bis 12 Uhr.",
+              "en": "We are open Monday to Friday from 9 am to 6 pm and on Saturday from 9 to 12.",
+              "say": "Wir haben von Montag bis Freitag von neun bis achtzehn Uhr geöffnet und am Samstag von neun bis zwölf Uhr."
             }
           ],
           "glosses": []
@@ -2753,15 +2722,15 @@
             {
               "id": "a1.2-u04-ls4-t5-l01",
               "speaker": "cast.elif",
-              "de": "Hallo Priya, hier ist Elif. Wir wollen doch zusammen ins Kaufhaus. Am Samstag kann ich leider nicht, da arbeite ich. Und am Sonntag ist das Kaufhaus zu.",
-              "en": "Hi Priya, it’s Elif. We wanted to go to the department store together. Unfortunately I can’t on Saturday, I’m working. And on Sunday the store is closed."
+              "de": "Hallo Priya, hier ist Elif. Wir wollen doch zusammen einkaufen. Am Samstag kann ich leider nicht, da arbeite ich. Und am Sonntag ist alles zu.",
+              "en": "Hi Priya, it’s Elif. We wanted to go shopping together. Unfortunately I can’t on Saturday, I’m working. And on Sunday everything is closed."
             },
             {
               "id": "a1.2-u04-ls4-t5-l02",
               "speaker": "cast.elif",
-              "de": "Geht es am Freitag? Ich habe ab 17 Uhr Zeit. Ich warte am Eingang, okay?",
-              "en": "Does Friday work? I’m free from 5 pm. I’ll wait at the entrance, OK?",
-              "say": "Geht es am Freitag? Ich habe ab siebzehn Uhr Zeit. Ich warte am Eingang, okay?"
+              "de": "Geht es am Freitag? Ich habe ab 17 Uhr Zeit. Ich warte dann am Bahnhof. Bis Freitag!",
+              "en": "Does Friday work? I’m free from 5 pm. I’ll wait at the station then. See you on Friday!",
+              "say": "Geht es am Freitag? Ich habe ab siebzehn Uhr Zeit. Ich warte dann am Bahnhof. Bis Freitag!"
             }
           ],
           "glosses": []
@@ -2795,25 +2764,18 @@
             {
               "id": "a1.2-u04-ls4-t6-l04",
               "speaker": "cast.ensemble-a1-4",
-              "de": "Ach so, Zimmer 21. Das ist im zweiten Stock. Der Aufzug ist rechts.",
-              "en": "Oh, room 21. That’s on the second floor. The lift is on the right.",
-              "say": "Ach so, Zimmer einundzwanzig. Das ist im zweiten Stock. Der Aufzug ist rechts."
+              "de": "Zimmer 21? Das ist nicht im Erdgeschoss. Nehmen Sie bitte den Aufzug rechts.",
+              "en": "Room 21? That’s not on the ground floor. Please take the lift on the right.",
+              "say": "Zimmer einundzwanzig? Das ist nicht im Erdgeschoss. Nehmen Sie bitte den Aufzug rechts."
             },
             {
               "id": "a1.2-u04-ls4-t6-l05",
               "speaker": "cast.priya",
-              "de": "Vielen Dank!",
-              "en": "Thank you very much!"
+              "de": "Gut, danke schön!",
+              "en": "OK, thank you!"
             }
           ],
-          "glosses": [
-            {
-              "token": "Aufzug",
-              "gloss": {
-                "en": "lift, elevator"
-              }
-            }
-          ]
+          "glosses": []
         },
         {
           "id": "a1.2-u04-ls4-t7",
@@ -2823,28 +2785,28 @@
             {
               "id": "a1.2-u04-ls4-t7-l01",
               "speaker": "cast.ensemble-a1-3",
-              "de": "Guten Tag. Ich brauche einen neuen Pass. Wann ist er fertig?",
-              "en": "Hello. I need a new passport. When will it be ready?"
+              "de": "Guten Tag. Ich brauche einen neuen Pass. Wann ist der Pass da?",
+              "en": "Hello. I need a new passport. When will the passport be here?"
             },
             {
               "id": "a1.2-u04-ls4-t7-l02",
               "speaker": "cast.ensemble-a1-1",
-              "de": "Heute ist der 2. März. Der Pass ist in drei Wochen fertig, am 23. März.",
-              "en": "Today is 2 March. The passport will be ready in three weeks, on 23 March.",
-              "say": "Heute ist der zweite März. Der Pass ist in drei Wochen fertig, am dreiundzwanzigsten März."
+              "de": "Heute ist der 2. März. Ihr Pass ist in drei Wochen da, am 23. März.",
+              "en": "Today is 2 March. Your passport will be here in three weeks, on 23 March.",
+              "say": "Heute ist der zweite März. Ihr Pass ist in drei Wochen da, am dreiundzwanzigsten März."
             },
             {
               "id": "a1.2-u04-ls4-t7-l03",
               "speaker": "cast.ensemble-a1-3",
-              "de": "Am 23. März? Da bin ich nicht hier. Ab dem 20. März bin ich zwei Wochen in Spanien.",
-              "en": "On 23 March? I won’t be here then. From 20 March I’m in Spain for two weeks.",
-              "say": "Am dreiundzwanzigsten März? Da bin ich nicht hier. Ab dem zwanzigsten März bin ich zwei Wochen in Spanien."
+              "de": "Am 23. März? Da bin ich nicht hier. Ab dem 20. März bin ich zwei Wochen in Polen.",
+              "en": "On 23 March? I won’t be here then. From 20 March I’m in Poland for two weeks.",
+              "say": "Am dreiundzwanzigsten März? Da bin ich nicht hier. Ab dem zwanzigsten März bin ich zwei Wochen in Polen."
             },
             {
               "id": "a1.2-u04-ls4-t7-l04",
               "speaker": "cast.ensemble-a1-1",
-              "de": "Kein Problem. Sie können den Pass auch im April abholen.",
-              "en": "No problem. You can also collect the passport in April."
+              "de": "Das geht auch. Sie bekommen den Pass dann im April.",
+              "en": "That’s fine too. You’ll get the passport in April then."
             }
           ],
           "glosses": []
@@ -2922,8 +2884,8 @@
             {
               "id": "a1.2-u04-ls4-t10-l01",
               "speaker": "cast.ensemble-a1-4",
-              "de": "Guten Tag. Wann beginnt der nächste Deutschkurs?",
-              "en": "Hello. When does the next German course start?"
+              "de": "Guten Tag. Wann fängt der neue Deutschkurs an?",
+              "en": "Hello. When does the new German course start?"
             },
             {
               "id": "a1.2-u04-ls4-t10-l02",
@@ -2935,21 +2897,21 @@
             {
               "id": "a1.2-u04-ls4-t10-l03",
               "speaker": "cast.ensemble-a1-4",
-              "de": "Und wann ist der Kurs?",
-              "en": "And when are the classes?"
+              "de": "Und wann ist der Kurs? Am Vormittag?",
+              "en": "And when are the classes? In the morning?"
             },
             {
               "id": "a1.2-u04-ls4-t10-l04",
               "speaker": "cast.ensemble-a1-1",
-              "de": "Von Montag bis Donnerstag, von 9 bis 12 Uhr.",
-              "en": "Monday to Thursday, from 9 am to 12 noon.",
-              "say": "Von Montag bis Donnerstag, von neun bis zwölf Uhr."
+              "de": "Ja, von Montag bis Donnerstag, von 9 bis 12 Uhr.",
+              "en": "Yes, Monday to Thursday, from 9 am to 12 noon.",
+              "say": "Ja, von Montag bis Donnerstag, von neun bis zwölf Uhr."
             },
             {
               "id": "a1.2-u04-ls4-t10-l05",
               "speaker": "cast.ensemble-a1-4",
-              "de": "Gut, das passt. Danke!",
-              "en": "Good, that suits me. Thanks!"
+              "de": "Gut, das geht. Danke!",
+              "en": "Good, that works. Thanks!"
             }
           ],
           "glosses": []
@@ -2962,20 +2924,20 @@
             {
               "id": "a1.2-u04-ls4-t11-l01",
               "speaker": "cast.ensemble-a1-2",
-              "de": "Ihr Formular, bitte. Name, Geburtsdatum, Staatsangehörigkeit, Unterschrift – gut. Aber hier fehlt Ihr Geburtsort.",
-              "en": "Your form, please. Name, date of birth, nationality, signature – good. But your place of birth is missing here."
+              "de": "Guten Tag. Ihr Formular, bitte. Name, Geburtsdatum, Staatsangehörigkeit, Unterschrift – das ist alles gut. Aber hier fehlt noch Ihr Geburtsort.",
+              "en": "Hello. Your form, please. Name, date of birth, nationality, signature – that’s all fine. But your place of birth is still missing here."
             },
             {
               "id": "a1.2-u04-ls4-t11-l02",
               "speaker": "cast.ensemble-a1-3",
-              "de": "Oh, Entschuldigung. Mein Geburtsort ist Graz.",
-              "en": "Oh, sorry. My place of birth is Graz."
+              "de": "Entschuldigung! Mein Geburtsort ist Dresden.",
+              "en": "Sorry! My place of birth is Dresden."
             },
             {
               "id": "a1.2-u04-ls4-t11-l03",
               "speaker": "cast.ensemble-a1-2",
-              "de": "Graz. Danke, dann ist alles fertig.",
-              "en": "Graz. Thank you, then everything is done."
+              "de": "Dresden, gut. Dann ist das Formular jetzt richtig. Danke schön.",
+              "en": "Dresden, good. Then the form is correct now. Thank you."
             }
           ],
           "glosses": []
@@ -3026,19 +2988,19 @@
               "role": "exam",
               "topic": "hoeren",
               "textRef": "a1.2-u04-ls4-t2",
-              "promptDe": "Was macht Herr Ahmed am Eingang?",
+              "promptDe": "Was bekommt Herr Ahmed am Eingang?",
               "options": [
-                "eine Wartenummer nehmen",
-                "den Antrag unterschreiben",
-                "eine Kopie machen"
+                "eine Wartenummer",
+                "einen Antrag",
+                "eine Kopie"
               ],
-              "answer": "eine Wartenummer nehmen",
+              "answer": "eine Wartenummer",
               "accepted": [
-                "eine Wartenummer nehmen"
+                "eine Wartenummer"
               ],
               "explanation": {
-                "de": "Das Bürgerbüro sagt: Nehmen Sie am Eingang eine Wartenummer.",
-                "en": "He should take a queue number at the entrance."
+                "de": "Das Bürgerbüro sagt: Am Eingang bekommen Sie eine Wartenummer.",
+                "en": "He gets a queue number at the entrance."
               },
               "origin": "agent"
             },
@@ -3050,17 +3012,17 @@
               "textRef": "a1.2-u04-ls4-t3",
               "promptDe": "Was möchte Jonas?",
               "options": [
-                "Priya arbeitet am Montag früh.",
+                "Priya macht am Montag die Schicht.",
                 "Priya geht am Montag zum Amt.",
                 "Priya arbeitet am Samstag."
               ],
-              "answer": "Priya arbeitet am Montag früh.",
+              "answer": "Priya macht am Montag die Schicht.",
               "accepted": [
-                "Priya arbeitet am Montag früh."
+                "Priya macht am Montag die Schicht."
               ],
               "explanation": {
-                "de": "Jonas fragt: Kannst du am Montag die Frühschicht machen? Er arbeitet dann am Samstag.",
-                "en": "Jonas asks Priya to do Monday’s early shift; he works Saturday for her."
+                "de": "Jonas fragt: Kannst du am Montag meine Schicht machen? Er arbeitet dann am Samstag.",
+                "en": "Jonas asks Priya to take his Monday shift; he works Saturday for her."
               },
               "origin": "agent"
             },
@@ -3070,7 +3032,7 @@
               "role": "exam",
               "topic": "hoeren",
               "textRef": "a1.2-u04-ls4-t4",
-              "promptDe": "Bis wann kann Frau Nair das Buch abholen?",
+              "promptDe": "Bis wann ist das Paket bei der Post?",
               "options": [
                 "bis zum 28. Mai",
                 "bis zum 12. Juni",
@@ -3082,8 +3044,8 @@
               ],
               "exact": "number",
               "explanation": {
-                "de": "Das Buch ist seit dem 28. Mai da. Abholen: bis zum 12. Juni.",
-                "en": "Since 28 May it’s there; collect it by 12 June."
+                "de": "Das Paket ist seit dem 28. Mai da. Es bleibt bis zum 12. Juni.",
+                "en": "Since 28 May it’s there; it stays until 12 June."
               },
               "origin": "agent"
             },
@@ -3135,19 +3097,19 @@
               "role": "exam",
               "topic": "hoeren",
               "textRef": "a1.2-u04-ls4-t6",
-              "promptDe": "Wo ist Zimmer 21?",
+              "promptDe": "Was macht die Frau jetzt?",
               "options": [
-                "im Erdgeschoss",
-                "im ersten Stock",
-                "im zweiten Stock"
+                "Sie geht links.",
+                "Sie nimmt den Aufzug.",
+                "Sie wartet im Erdgeschoss."
               ],
-              "answer": "im zweiten Stock",
+              "answer": "Sie nimmt den Aufzug.",
               "accepted": [
-                "im zweiten Stock"
+                "Sie nimmt den Aufzug."
               ],
               "explanation": {
-                "de": "Zimmer 12 ist im Erdgeschoss. Zimmer 21 ist im zweiten Stock.",
-                "en": "Room 12 is on the ground floor; room 21 on the second floor."
+                "de": "Zimmer 21 ist nicht im Erdgeschoss. Der Mann sagt: Nehmen Sie den Aufzug.",
+                "en": "Room 21 is not on the ground floor, so she takes the lift."
               },
               "origin": "agent"
             },
@@ -3157,19 +3119,19 @@
               "role": "exam",
               "topic": "hoeren",
               "textRef": "a1.2-u04-ls4-t7",
-              "promptDe": "Wann holt der Mann den Pass ab?",
+              "promptDe": "Wann bekommt der Mann den Pass?",
               "options": [
                 "am 2. März",
-                "im April",
-                "am 23. März"
+                "am 23. März",
+                "im April"
               ],
               "answer": "im April",
               "accepted": [
                 "im April"
               ],
               "explanation": {
-                "de": "Am 23. März ist er in Spanien. Er kann den Pass im April abholen.",
-                "en": "On 23 March he is in Spain, so he collects it in April."
+                "de": "Am 23. März ist er in Polen. Er bekommt den Pass im April.",
+                "en": "On 23 March he is in Poland, so he gets it in April."
               },
               "origin": "agent"
             },
@@ -3224,7 +3186,7 @@
               "role": "exam",
               "topic": "hoeren",
               "textRef": "a1.2-u04-ls4-t10",
-              "promptDe": "Wann beginnt der Deutschkurs?",
+              "promptDe": "Wann fängt der Deutschkurs an?",
               "options": [
                 "am 2. Februar",
                 "am 27. März",
@@ -3258,8 +3220,8 @@
                 "der Geburtsort"
               ],
               "explanation": {
-                "de": "Die Unterschrift ist da. Es fehlt der Geburtsort: Graz.",
-                "en": "The signature is there; the place of birth (Graz) is missing."
+                "de": "Die Unterschrift ist da. Es fehlt der Geburtsort: Dresden.",
+                "en": "The signature is there; the place of birth (Dresden) is missing."
               },
               "origin": "agent"
             }
@@ -3293,11 +3255,11 @@
         "situationDe": "Sprechen Teil 2 mit zwei Themen: „Termine“ und „Im Amt“. Sie und Ihre Partnerin haben zu jedem Thema eine Karte.",
         "cards": {
           "learner": [
-            "Termine: Geburtstag",
+            "Termine: Urlaub",
             "Im Amt: Öffnungszeiten"
           ],
           "partner": [
-            "Termine: Arzt",
+            "Termine: Deutschkurs",
             "Im Amt: Pass"
           ]
         },
@@ -3317,36 +3279,36 @@
           "Wann …?",
           "Wie lange …?",
           "Brauche ich …?",
-          "am dritten …",
+          "am 3. …",
           "ab … Uhr",
           "bis … Uhr",
-          "Geburtstag",
+          "Urlaub",
           "Öffnungszeiten"
         ],
         "modelTurns": [
           {
             "speaker": "learner",
-            "de": "Wann haben Sie Geburtstag?"
+            "de": "Wann haben Sie Urlaub?"
           },
           {
             "speaker": "partner",
-            "de": "Am dritten Mai."
+            "de": "Im Mai, vom 4. bis zum 15. Mai."
           },
           {
             "speaker": "partner",
-            "de": "Wann haben Sie einen Termin beim Arzt?"
+            "de": "Wann fängt Ihr Deutschkurs an?"
           },
           {
             "speaker": "learner",
-            "de": "Am Montag, dem achten Juni, um neun Uhr."
+            "de": "Am Montag, dem 8. Juni, um 9 Uhr."
           },
           {
             "speaker": "learner",
-            "de": "Wann hat das Amt geöffnet?"
+            "de": "Wann ist das Amt geöffnet?"
           },
           {
             "speaker": "partner",
-            "de": "Von Montag bis Freitag, ab acht Uhr."
+            "de": "Von Montag bis Freitag, ab 8 Uhr."
           },
           {
             "speaker": "partner",
@@ -3371,7 +3333,7 @@
         "register": "formell",
         "address": "Sie",
         "title": "Online-Termin im Bürgerbüro",
-        "situationDe": "Ihr Freund Bilal Ahmed hat eine neue Wohnung. Er wohnt seit dem 8. Juni in der Gartenstraße 5 in Leipzig. Er kommt aus Pakistan und ist am 14. März 1999 in Lahore geboren. Er braucht einen Termin im Bürgerbüro. Bilal arbeitet jeden Tag bis 14 Uhr. Er hat nur am Nachmittag Zeit.",
+        "situationDe": "Ihr Freund Bilal Ahmed hat eine neue Wohnung in Leipzig. Er ist am 14. März 1999 in Lahore geboren. Seine Telefonnummer ist 0176 23 45 67. Bilal braucht einen Termin im Bürgerbüro für die Anmeldung. Er arbeitet jeden Tag bis 14 Uhr. Er hat nur am Nachmittag Zeit.",
         "taskDe": "Füllen Sie für Bilal das Online-Formular aus. Schreiben Sie fünf Angaben.",
         "leitpunkte": [],
         "form": {
@@ -3399,24 +3361,24 @@
             },
             {
               "id": "f3",
-              "labelDe": "Staatsangehörigkeit",
-              "answer": "pakistanisch",
+              "labelDe": "Telefonnummer",
+              "answer": "0176 23 45 67",
               "accepted": [
-                "pakistanisch",
-                "Pakistan"
-              ]
+                "0176 23 45 67",
+                "0176 234567",
+                "0176234567",
+                "0176/234567"
+              ],
+              "exact": "number"
             },
             {
               "id": "f4",
-              "labelDe": "Neue Adresse: Straße und Hausnummer",
-              "answer": "Gartenstraße 5",
+              "labelDe": "Termin für: Anmeldung, Pass oder Ausweis?",
+              "answer": "Anmeldung",
               "accepted": [
-                "Gartenstraße 5",
-                "Gartenstr. 5",
-                "Gartenstrasse 5",
-                "Gartenstraße 5, Leipzig"
-              ],
-              "exact": "number"
+                "Anmeldung",
+                "die Anmeldung"
+              ]
             },
             {
               "id": "f5",
@@ -3434,10 +3396,10 @@
         "checklist": [
           "Alle fünf Felder sind ausgefüllt.",
           "Das Geburtsdatum hat Tag, Monat und Jahr.",
-          "Straße und Hausnummer stimmen.",
+          "Die Telefonnummer ist ganz richtig.",
           "Die Angaben sind von Bilal, nicht von Ihnen."
         ],
-        "modelText": "Geburtsdatum: 14.03.1999\nGeburtsort: Lahore\nStaatsangehörigkeit: pakistanisch\nNeue Adresse: Gartenstraße 5\nTermin: nachmittags"
+        "modelText": "Geburtsdatum: 14.03.1999\nGeburtsort: Lahore\nTelefonnummer: 0176 23 45 67\nTermin für: Anmeldung\nTermin: nachmittags"
       }
     },
     {
@@ -3451,9 +3413,9 @@
       {
         "id": "a1.2-u04-ls7-l01",
         "speaker": "cast.ensemble-a1-2",
-        "de": "Hier ist das Bürgerbüro Lindenplatz. Frau Berg, Ihr Termin am Montag fällt leider aus. Können Sie am Mittwoch, dem 17. Juni, um 10 Uhr kommen?",
-        "en": "This is the citizens’ office Lindenplatz. Ms Berg, unfortunately your appointment on Monday is cancelled. Can you come on Wednesday, 17 June, at 10 am?",
-        "say": "Hier ist das Bürgerbüro Lindenplatz. Frau Berg, Ihr Termin am Montag fällt leider aus. Können Sie am Mittwoch, dem siebzehnten Juni, um zehn Uhr kommen?"
+        "de": "Hier ist das Bürgerbüro am Marktplatz. Frau Berg, Ihr Termin am Montag geht leider nicht. Können Sie am Mittwoch, dem 17. Juni, um 10 Uhr kommen?",
+        "en": "This is the citizens’ office on Marktplatz. Ms Berg, unfortunately your appointment on Monday isn’t possible. Can you come on Wednesday, 17 June, at 10 am?",
+        "say": "Hier ist das Bürgerbüro am Marktplatz. Frau Berg, Ihr Termin am Montag geht leider nicht. Können Sie am Mittwoch, dem siebzehnten Juni, um zehn Uhr kommen?"
       },
       {
         "id": "a1.2-u04-ls7-l02",
@@ -3631,18 +3593,18 @@
         "id": "a1.2-u04-c09",
         "type": "error_correction",
         "role": "check",
-        "topic": "g.ordinalzahlen-datum",
-        "promptDe": "Korrigieren Sie das Datum: „Ich habe am drei Mai einen Termin.“",
-        "promptEn": "Correct the date.",
-        "answer": "Ich habe am dritten Mai einen Termin.",
+        "topic": "g.temporal-praepositionen",
+        "promptDe": "Korrigieren Sie: „Ich habe in zwei Woche einen Termin.“",
+        "promptEn": "Correct the time phrase.",
+        "answer": "Ich habe in zwei Wochen einen Termin.",
         "accepted": [
-          "Ich habe am dritten Mai einen Termin."
+          "Ich habe in zwei Wochen einen Termin."
         ],
         "intentionalError": true,
-        "errorTag": "spelling-meaning",
+        "errorTag": "case-pp",
         "explanation": {
-          "de": "Datum mit am: am dritten Mai, nicht am drei.",
-          "en": "Dates after “am” use the ordinal: am dritten Mai."
+          "de": "in + Dativ Plural: in zwei Wochen.",
+          "en": "“in” + dative plural: in zwei Wochen."
         },
         "origin": "agent"
       }
@@ -3658,8 +3620,8 @@
         "type": "multiple_choice",
         "role": "proof",
         "topic": "lesen",
-        "promptDe": "Webseite: „Mo–Do 8–18 Uhr, Fr 8–12 Uhr“. Wann ist am Freitag geöffnet?",
-        "promptEn": "Read the opening hours.",
+        "promptDe": "Im Internet steht: „Montag–Donnerstag 8–18 Uhr, Freitag 8–12 Uhr“. Und am Freitag?",
+        "promptEn": "Read the opening hours: and on Friday?",
         "options": [
           "bis 12 Uhr",
           "bis 18 Uhr",
@@ -3670,8 +3632,8 @@
           "bis 12 Uhr"
         ],
         "explanation": {
-          "de": "Fr 8–12 Uhr: Am Freitag ist es von 8 bis 12 Uhr geöffnet.",
-          "en": "On Friday it is open from 8 to 12."
+          "de": "Freitag 8–12 Uhr: Am Freitag ist es bis 12 Uhr geöffnet.",
+          "en": "On Friday it is open until 12."
         },
         "origin": "agent"
       },
@@ -3773,27 +3735,27 @@
     },
     {
       "id": "a1.2-u04-rm02",
-      "de": "Geht es auch am elften Juni?",
+      "de": "Geht es auch am 11. Juni?",
       "en": "Would 11 June work as well?",
       "function": "einen anderen Termin vorschlagen"
     },
     {
       "id": "a1.2-u04-rm03",
-      "de": "Am neunten kann ich leider nicht.",
+      "de": "Am 9. Juni kann ich leider nicht.",
       "en": "Unfortunately I can’t on the ninth.",
       "function": "auf einen Terminvorschlag antworten"
     },
     {
       "id": "a1.2-u04-rm04",
-      "de": "Wann hat das Amt geöffnet?",
+      "de": "Wann ist das Amt geöffnet?",
       "en": "When is the office open?",
       "function": "nach Öffnungszeiten fragen",
       "forTemplate": "sd1.sp2"
     },
     {
       "id": "a1.2-u04-rm05",
-      "de": "Wann haben Sie Geburtstag? – Am dritten Mai.",
-      "en": "When is your birthday? – On the third of May.",
+      "de": "Wann haben Sie Urlaub? – Im Mai, vom 4. bis zum 15. Mai.",
+      "en": "When is your holiday? – In May, from 4 to 15 May.",
       "function": "nach einem Datum fragen und antworten",
       "forTemplate": "sd1.sp2"
     },

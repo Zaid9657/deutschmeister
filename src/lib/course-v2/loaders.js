@@ -22,7 +22,7 @@ import { reservesOf, earlierSourceNrs, reserveItemsFor, withReserves } from './u
 // production build import.meta.env.DEV is false, the glob is dead code, and nothing of
 // the fixture reaches dist/ (tests/course-v2-player.test.mjs pins the guard).
 const DEV_FIXTURE = import.meta.env.DEV ? import.meta.glob('../../../.cache/course-v2-fixture/data/*/**/*.json') : {};
-const DEV_PREFIX = '../../../.cache/course-v2-fixture/data/';
+const DEV_PREFIX = import.meta.env.DEV ? '../../../.cache/course-v2-fixture/data/' : '';
 
 const REAL_UNITS = import.meta.glob('../../data/course-v2/*/units/*.json');
 const REAL_MANIFESTS = import.meta.glob('../../data/course-v2/*/manifest.json');
@@ -36,7 +36,7 @@ const REAL_LEVELS = new Set(
 function withDevFixture(table, suffixRe) {
   const out = { ...table };
   for (const [key, loader] of Object.entries(DEV_FIXTURE)) {
-    if (!key.startsWith(DEV_PREFIX)) continue;
+    if (!DEV_PREFIX || !key.startsWith(DEV_PREFIX)) continue;
     const rest = key.slice(DEV_PREFIX.length);
     if (!suffixRe.test(rest) || REAL_LEVELS.has(rest.split('/')[0])) continue;
     out[`../../data/course-v2/${rest}`] = loader;

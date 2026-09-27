@@ -7,7 +7,7 @@
   "version": 1,
   "status": "draft",
   "reviewedIn": null,
-  "stage": "spec",
+  "stage": "T",
   "title": {
     "de": "Beschwerde mit Anspruch",
     "canDo": "Sie können sich über eine mangelhafte Reise beschweren, eine klare Forderung stellen und mit einer Mitreisenden das weitere Vorgehen planen."
@@ -42,7 +42,6 @@
     "lexiconBlocks": [
       {
         "title": "Reisemängel",
-        "target": 17,
         "lemmas": [
           "lx.reisemangel",
           "lx.unterbringung",
@@ -65,7 +64,6 @@
       },
       {
         "title": "Rechte und Bedingungen",
-        "target": 17,
         "lemmas": [
           "lx.pauschalreise",
           "lx.reiseveranstalter",
@@ -88,7 +86,6 @@
       },
       {
         "title": "Forderungen stellen",
-        "target": 17,
         "lemmas": [
           "lx.einfordern",
           "lx.beanstanden",
@@ -111,7 +108,6 @@
       },
       {
         "title": "Gemeinsam vorgehen",
-        "target": 16,
         "lemmas": [
           "lx.vorgehen",
           "lx.vorgehensweise",
@@ -189,5 +185,2990 @@
     "source": {
       "w2Draft": "curriculum/b2-1.md E4"
     }
-  }
+  },
+  "start": {
+    "lernziele": [
+      "cd.b2.zugestaendnisse-einfordern",
+      "cd.b2.schriftlich-reklamieren",
+      "cd.b2.reisebedingungen-verstehen",
+      "cd.b2.vorgehen-gemeinsam-planen",
+      "cd.b2.brief-grammatik-kontext"
+    ],
+    "pruefungsfokusChips": [
+      "tb2.m3",
+      "tb2.sa",
+      "tb2.sb1",
+      "tb2.hv3"
+    ],
+    "folge": {
+      "title": "Zimmer mit Meerblick?",
+      "lines": [
+        {
+          "id": "b2.1-u04-start-l01",
+          "speaker": "cast.amal",
+          "de": "Priya, sieh mal aus dem Fenster. Wo ist denn hier das Meer?",
+          "en": "Priya, look out of the window. Where is the sea?"
+        },
+        {
+          "id": "b2.1-u04-start-l02",
+          "speaker": "cast.priya",
+          "de": "Das Meer ist auf der anderen Seite. Wir schauen direkt auf eine Baustelle.",
+          "en": "The sea is on the other side. We are looking straight at a building site."
+        },
+        {
+          "id": "b2.1-u04-start-l03",
+          "speaker": "cast.amal",
+          "de": "In der Anzeige stand „ruhige Lage, alle Zimmer mit Meerblick“. Dafür haben wir extra mehr bezahlt.",
+          "en": "The advert said \"quiet location, all rooms with sea view\". We paid extra for that."
+        },
+        {
+          "id": "b2.1-u04-start-l04",
+          "speaker": "cast.priya",
+          "de": "Und hörst du das? Es ist acht Uhr abends, und unten arbeitet immer noch ein Bagger.",
+          "en": "And can you hear that? It is eight in the evening and there is still a digger working down there."
+        },
+        {
+          "id": "b2.1-u04-start-l05",
+          "speaker": "cast.amal",
+          "de": "Ich mache gleich ein paar Fotos. Wenn wir uns beschweren, brauchen wir Beweise.",
+          "en": "I'll take a few photos right away. If we complain, we need evidence."
+        },
+        {
+          "id": "b2.1-u04-start-l06",
+          "speaker": "cast.priya",
+          "de": "Gute Idee. Morgen früh gehen wir als Erstes zur Rezeption.",
+          "en": "Good idea. First thing tomorrow morning we'll go to reception."
+        },
+        {
+          "id": "b2.1-u04-start-l07",
+          "speaker": "cast.amal",
+          "de": "Ich habe mich ein ganzes Jahr auf diese Woche gefreut. So habe ich mir das nicht vorgestellt.",
+          "en": "I've been looking forward to this week for a whole year. This isn't how I imagined it."
+        },
+        {
+          "id": "b2.1-u04-start-l08",
+          "speaker": "cast.priya",
+          "de": "Ich auch nicht. Aber das lassen wir uns nicht gefallen.",
+          "en": "Neither did I. But we won't put up with this."
+        }
+      ],
+      "gistItem": {
+        "id": "b2.1-u04-start-i01",
+        "type": "multiple_choice",
+        "role": "gist",
+        "topic": "hoeren",
+        "promptDe": "Warum ärgern sich Priya und Amal?",
+        "promptEn": "Why are Priya and Amal annoyed?",
+        "options": [
+          "Das Zimmer entspricht nicht der Anzeige.",
+          "Das Hotel liegt weit weg vom Flughafen.",
+          "Die Reiseleitung hat sie nicht abgeholt."
+        ],
+        "answer": "Das Zimmer entspricht nicht der Anzeige.",
+        "accepted": [
+          "Das Zimmer entspricht nicht der Anzeige."
+        ],
+        "explanation": {
+          "de": "Die Anzeige versprach Meerblick und eine ruhige Lage. Sie sehen aber eine Baustelle und hören einen Bagger.",
+          "en": "The advert promised a sea view and a quiet location; instead they see a building site and hear a digger."
+        },
+        "origin": "agent"
+      }
+    },
+    "testOut": {
+      "offered": true
+    }
+  },
+  "steps": [
+    {
+      "id": "b2.1-u04-ls1",
+      "kind": "text",
+      "title": "Was steht in den Reisebedingungen?",
+      "structure": null,
+      "modelSentence": "Melden Sie einen Mangel bitte sofort unserer Reiseleitung.",
+      "ruleCard": "rc.konj2-bedeutungen",
+      "warmup": {
+        "draw": 6
+      },
+      "input": {
+        "kind": "text",
+        "title": "Allgemeine Reisebedingungen (Auszug)",
+        "textType": "tt.bedingungen",
+        "text": {
+          "de": "Blauwelle Reisen GmbH – Allgemeine Reisebedingungen für Pauschalreisen (Auszug)\n\n1. Mit Ihrer Buchung schließen Sie mit uns einen Reisevertrag. Welche Leistungen zu Ihrer Reise gehören, steht in der Leistungsbeschreibung und in Ihrer Buchungsbestätigung. Zusätzliche Wünsche gelten nur, wenn wir sie Ihnen schriftlich zugesichert haben.\n\n2. Einzelne Programmpunkte dürfen wir nur aus wichtigen Gründen ändern, zum Beispiel bei einem Unwetter. Über eine Programmänderung informieren wir Sie so früh wie möglich. Wenn eine Leistung ausfällt, bieten wir Ihnen nach Möglichkeit eine gleichwertige Ersatzleistung an.\n\n3. Wenn Sie während der Reise einen Mangel feststellen, melden Sie ihn bitte sofort unserer Reiseleitung. Wenn sie nicht erreichbar ist, wenden Sie sich direkt an unseren Kundenservice. Nur so können wir Abhilfe schaffen. Reisende, die einen Mangel nicht melden, verlieren unter Umständen ihren Anspruch auf eine Minderung.\n\n4. Für die Dauer eines Mangels mindert sich der Reisepreis. Wenn ein Mangel die Reise erheblich beeinträchtigt, können Sie uns eine angemessene Frist zur Abhilfe setzen. Wenn wir den Mangel in dieser Frist nicht beheben, dürfen Sie den Vertrag kündigen.\n\n5. Ihre Ansprüche richten Sie bitte nach der Reise schriftlich an unseren Kundenservice. Fügen Sie Belege und Fotos bei. Eine besondere Beschwerdefrist gibt es nicht. Ihre Ansprüche verjähren aber zwei Jahre nach dem vertraglichen Ende der Reise.\n\n6. Wenn Sie vor Reisebeginn stornieren, berechnen wir eine Entschädigung nach der Tabelle im Anhang.",
+          "en": "Blauwelle Reisen GmbH – General terms and conditions for package holidays (extract): 1 contract and services; 2 programme changes and substitute services; 3 report defects on site at once; 4 price reduction and termination after a deadline; 5 claims in writing after the trip, time limit two years; 6 cancellation before the trip."
+        },
+        "glosses": [
+          {
+            "token": "Abhilfe",
+            "gloss": {
+              "en": "remedy, putting something right"
+            }
+          },
+          {
+            "token": "verjähren",
+            "gloss": {
+              "en": "to become time-barred"
+            }
+          }
+        ],
+        "transcriptAfterUnaidedListen": false
+      },
+      "inputItems": [
+        {
+          "id": "b2.1-u04-ls1-i01",
+          "type": "multiple_choice",
+          "role": "gist",
+          "topic": "lesen",
+          "promptDe": "Wofür ist dieser Text vor allem da?",
+          "promptEn": "What is this text mainly for?",
+          "options": [
+            "Er regelt die Rechte und Pflichten von Reisenden und Veranstalter.",
+            "Er beschreibt das Programm einer Reise nach Kreta.",
+            "Er erklärt, wie man eine Reise online bucht."
+          ],
+          "answer": "Er regelt die Rechte und Pflichten von Reisenden und Veranstalter.",
+          "accepted": [
+            "Er regelt die Rechte und Pflichten von Reisenden und Veranstalter."
+          ],
+          "explanation": {
+            "de": "Allgemeine Reisebedingungen sind Teil des Vertrags: Sie regeln, was beide Seiten tun müssen und dürfen.",
+            "en": "General terms and conditions are part of the contract: they set out what both sides must and may do."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "b2.1-u04-ls1-i02",
+          "type": "multiple_choice",
+          "role": "gist",
+          "topic": "lesen",
+          "promptDe": "Welche Überschrift passt zu Abschnitt 3?",
+          "promptEn": "Which heading fits section 3?",
+          "options": [
+            "Mängel vor Ort melden",
+            "Ansprüche nach der Reise",
+            "Wenn sich das Programm ändert"
+          ],
+          "answer": "Mängel vor Ort melden",
+          "accepted": [
+            "Mängel vor Ort melden"
+          ],
+          "explanation": {
+            "de": "Abschnitt 3 erklärt, wem Sie einen Mangel während der Reise melden. Ansprüche nach der Reise stehen in Abschnitt 5.",
+            "en": "Section 3 explains whom you report a defect to during the trip; claims after the trip are in section 5."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "b2.1-u04-ls1-i03",
+          "type": "multiple_choice",
+          "role": "detail",
+          "topic": "lesen",
+          "promptDe": "Die Reiseleitung ist nicht erreichbar. An wen wenden Sie sich dann?",
+          "promptEn": "The tour guide cannot be reached. Whom do you contact?",
+          "options": [
+            "an den Kundenservice des Veranstalters",
+            "an die Rezeption des Hotels",
+            "an die Verbraucherzentrale"
+          ],
+          "answer": "an den Kundenservice des Veranstalters",
+          "accepted": [
+            "an den Kundenservice des Veranstalters"
+          ],
+          "explanation": {
+            "de": "In Abschnitt 3 steht: Ist die Reiseleitung nicht erreichbar, wenden Sie sich direkt an den Kundenservice.",
+            "en": "Section 3: if the tour guide cannot be reached, contact the customer service directly."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "b2.1-u04-ls1-i04",
+          "type": "fill_blank",
+          "role": "detail",
+          "topic": "lesen",
+          "promptDe": "Fällt eine Leistung aus, bietet Blauwelle nach Möglichkeit eine gleichwertige ___ an.",
+          "promptEn": "Section 2: what is offered instead?",
+          "answer": "Ersatzleistung",
+          "accepted": [
+            "Ersatzleistung"
+          ],
+          "explanation": {
+            "de": "Abschnitt 2: Eine Ersatzleistung ist das, was Sie statt der ausgefallenen Leistung bekommen.",
+            "en": "Section 2: a substitute service is what you get instead of the cancelled one."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "b2.1-u04-ls1-i05",
+          "type": "multiple_choice",
+          "role": "detail",
+          "topic": "lesen",
+          "promptDe": "Bis wann können Reisende ihre Ansprüche geltend machen?",
+          "promptEn": "Until when can travellers make their claims?",
+          "options": [
+            "bis zwei Jahre nach dem geplanten Reiseende",
+            "innerhalb von einem Monat nach der Reise",
+            "nur während der Reise"
+          ],
+          "answer": "bis zwei Jahre nach dem geplanten Reiseende",
+          "accepted": [
+            "bis zwei Jahre nach dem geplanten Reiseende"
+          ],
+          "explanation": {
+            "de": "Abschnitt 5: Eine besondere Beschwerdefrist gibt es nicht, die Ansprüche verjähren nach zwei Jahren.",
+            "en": "Section 5: there is no special complaint deadline; claims become time-barred after two years."
+          },
+          "origin": "agent"
+        }
+      ],
+      "pool": {
+        "items": [
+          {
+            "id": "b2.1-u04-ls1-p01",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.praep-genitiv",
+            "promptDe": "Wir konnten wegen ___ Baulärms kaum schlafen. (der Baulärm)",
+            "promptEn": "Genitive article after wegen.",
+            "answer": "des",
+            "accepted": [
+              "des"
+            ],
+            "errorTags": [
+              "case-pp"
+            ],
+            "explanation": {
+              "de": "wegen + Genitiv: der Baulärm → wegen des Baulärms.",
+              "en": "wegen takes the genitive: der Baulärm → des Baulärms."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls1-p02",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.praep-genitiv",
+            "promptDe": "Trotz ___ Mängel war die Stimmung in der Gruppe gut. (die Mängel)",
+            "promptEn": "Genitive plural after trotz.",
+            "answer": "der",
+            "accepted": [
+              "der"
+            ],
+            "errorTags": [
+              "case-pp"
+            ],
+            "explanation": {
+              "de": "trotz + Genitiv: Im Plural heißt der Artikel der – trotz der Mängel.",
+              "en": "trotz takes the genitive; the plural article is der."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls1-p03",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.praep-genitiv-formell",
+            "promptDe": "Aufgrund ___ Programmänderung fiel der Ausflug aus. (die Programmänderung)",
+            "promptEn": "Genitive after aufgrund.",
+            "answer": "der",
+            "accepted": [
+              "der"
+            ],
+            "errorTags": [
+              "case-pp"
+            ],
+            "explanation": {
+              "de": "aufgrund + Genitiv: die Programmänderung → aufgrund der Programmänderung.",
+              "en": "aufgrund takes the genitive: die → der."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls1-p04",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.praep-genitiv",
+            "promptDe": "Während ___ ganzen Reise war die Reiseleitung kaum zu sehen. (die Reise)",
+            "promptEn": "Genitive after während.",
+            "answer": "der",
+            "accepted": [
+              "der"
+            ],
+            "errorTags": [
+              "case-pp"
+            ],
+            "explanation": {
+              "de": "während + Genitiv: die Reise → während der ganzen Reise.",
+              "en": "während takes the genitive: die → der."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls1-p05",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "lx.reiseveranstalter",
+            "promptDe": "Die Firma, die eine Pauschalreise plant und verkauft, ist der ___.",
+            "promptEn": "The company that sells the package holiday.",
+            "answer": "Reiseveranstalter",
+            "accepted": [
+              "Reiseveranstalter",
+              "Veranstalter"
+            ],
+            "explanation": {
+              "de": "Der Reiseveranstalter (kurz: Veranstalter) organisiert die Pauschalreise und ist Ihr Vertragspartner.",
+              "en": "The tour operator organises the package holiday and is your contract partner."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls1-p06",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.praep-genitiv",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "wegen",
+              "des Baulärms",
+              "konnten",
+              "wir",
+              "nicht schlafen"
+            ],
+            "answer": "Wegen des Baulärms konnten wir nicht schlafen.",
+            "accepted": [
+              "Wegen des Baulärms konnten wir nicht schlafen.",
+              "Wir konnten wegen des Baulärms nicht schlafen."
+            ],
+            "errorTags": [
+              "v2-inv",
+              "case-pp"
+            ],
+            "explanation": {
+              "de": "Das Modalverb konnten steht auf Position 2, schlafen am Satzende.",
+              "en": "The modal konnten is in second position, schlafen at the end."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls1-p07",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "lx.dokumentieren",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "Amal",
+              "dokumentiert",
+              "alle Mängel",
+              "mit dem Handy"
+            ],
+            "answer": "Amal dokumentiert alle Mängel mit dem Handy.",
+            "accepted": [
+              "Amal dokumentiert alle Mängel mit dem Handy.",
+              "Amal dokumentiert mit dem Handy alle Mängel.",
+              "Alle Mängel dokumentiert Amal mit dem Handy.",
+              "Mit dem Handy dokumentiert Amal alle Mängel."
+            ],
+            "errorTags": [
+              "v2-inv"
+            ],
+            "explanation": {
+              "de": "Das Verb dokumentiert steht auf Position 2; davor steht ein Satzglied.",
+              "en": "The verb stays in second position, with one element before it."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls1-p08",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "lx.mangelhaft",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "die Unterbringung",
+              "war",
+              "leider",
+              "mangelhaft"
+            ],
+            "answer": "Die Unterbringung war leider mangelhaft.",
+            "accepted": [
+              "Die Unterbringung war leider mangelhaft.",
+              "Leider war die Unterbringung mangelhaft."
+            ],
+            "errorTags": [
+              "v2-inv"
+            ],
+            "explanation": {
+              "de": "war steht auf Position 2. Leider kann auch vorne stehen.",
+              "en": "war is in second position; leider can also come first."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls1-p09",
+            "type": "error_correction",
+            "role": "practice",
+            "topic": "g.praep-genitiv",
+            "promptDe": "Korrigieren Sie: „Wegen dem Baulärm konnten wir nicht schlafen.“",
+            "promptEn": "Correct the sentence for a written complaint.",
+            "answer": "Wegen des Baulärms konnten wir nicht schlafen.",
+            "accepted": [
+              "Wegen des Baulärms konnten wir nicht schlafen."
+            ],
+            "intentionalError": true,
+            "errorTag": "case-pp",
+            "explanation": {
+              "de": "In einem schriftlichen Text steht wegen mit Genitiv: wegen des Baulärms.",
+              "en": "In writing, wegen takes the genitive: wegen des Baulärms."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls1-p10",
+            "type": "error_correction",
+            "role": "practice",
+            "topic": "g.praep-genitiv",
+            "promptDe": "Korrigieren Sie: „Trotz des schlechten Wetter fand der Ausflug statt.“",
+            "promptEn": "Correct the sentence.",
+            "answer": "Trotz des schlechten Wetters fand der Ausflug statt.",
+            "accepted": [
+              "Trotz des schlechten Wetters fand der Ausflug statt."
+            ],
+            "intentionalError": true,
+            "errorTag": "case-np",
+            "explanation": {
+              "de": "Im Genitiv bekommt das Nomen Wetter ein -s: des schlechten Wetters.",
+              "en": "In the genitive the noun Wetter takes -s: des schlechten Wetters."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls1-p11",
+            "type": "multiple_choice",
+            "role": "practice",
+            "topic": "lx.erheblich",
+            "promptDe": "Ein Zimmer ohne Fenster statt eines Zimmers mit Meerblick ist ein ___ Mangel.",
+            "promptEn": "Choose the adjective.",
+            "options": [
+              "erheblicher",
+              "ausdrücklicher",
+              "nachträglicher"
+            ],
+            "answer": "erheblicher",
+            "accepted": [
+              "erheblicher"
+            ],
+            "explanation": {
+              "de": "erheblich heißt: groß und wichtig. Ein Zimmer ohne Fenster ist ein großer Unterschied.",
+              "en": "erheblich means considerable – a room without a window is a big difference."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls1-p12",
+            "type": "multiple_choice",
+            "role": "practice",
+            "topic": "lx.ausdruecklich",
+            "promptDe": "In der Anzeige stand ___: „Alle Zimmer mit Meerblick.“",
+            "promptEn": "Choose the adverb.",
+            "options": [
+              "ausdrücklich",
+              "erheblich",
+              "mangelhaft"
+            ],
+            "answer": "ausdrücklich",
+            "accepted": [
+              "ausdrücklich"
+            ],
+            "explanation": {
+              "de": "ausdrücklich heißt: klar und direkt gesagt oder geschrieben.",
+              "en": "ausdrücklich means stated clearly and explicitly."
+            },
+            "origin": "agent"
+          }
+        ],
+        "generators": [
+          {
+            "generator": "lex.articlePlural",
+            "count": 2,
+            "source": [
+              "lx.reisemangel",
+              "lx.unterbringung",
+              "lx.pauschalreise",
+              "lx.stornierung"
+            ]
+          },
+          {
+            "generator": "lex.glossTyped",
+            "count": 1,
+            "source": [
+              "lx.minderung",
+              "lx.reiseleitung",
+              "lx.verpflegung"
+            ]
+          },
+          {
+            "generator": "lex.glossMatch",
+            "count": 1,
+            "source": [
+              "lx.baulaerm",
+              "lx.verschmutzt",
+              "lx.abgenutzt",
+              "lx.ungeziefer",
+              "lx.renovierungsbeduerftig"
+            ]
+          }
+        ]
+      },
+      "reserve": [
+        {
+          "id": "b2.1-u04-ls1-r01",
+          "type": "fill_blank",
+          "role": "practice",
+          "topic": "g.praep-genitiv",
+          "promptDe": "Wegen ___ Programmänderung fiel der Ausflug in die Berge aus. (eine Programmänderung)",
+          "promptEn": "Genitive of the indefinite article.",
+          "answer": "einer",
+          "accepted": [
+            "einer"
+          ],
+          "errorTags": [
+            "case-pp"
+          ],
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair",
+            "einstufung"
+          ],
+          "difficulty": 2,
+          "explanation": {
+            "de": "wegen + Genitiv: eine → einer.",
+            "en": "wegen takes the genitive: eine → einer."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "b2.1-u04-ls1-r02",
+          "type": "fill_blank",
+          "role": "practice",
+          "topic": "lx.reisebedingungen",
+          "promptDe": "Wie man einen Mangel meldet, steht in den Allgemeinen ___ des Veranstalters.",
+          "promptEn": "Where is it written?",
+          "answer": "Reisebedingungen",
+          "accepted": [
+            "Reisebedingungen",
+            "Geschäftsbedingungen"
+          ],
+          "errorTags": [],
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "difficulty": 2,
+          "explanation": {
+            "de": "Die Allgemeinen Reisebedingungen regeln die Rechte und Pflichten bei einer Pauschalreise.",
+            "en": "The general terms of travel set out the rights and duties of a package holiday."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "b2.1-u04-ls1-r03",
+          "type": "sentence_building",
+          "role": "practice",
+          "topic": "g.praep-genitiv",
+          "promptDe": "Bilden Sie den Satz.",
+          "promptEn": "Build the sentence.",
+          "tiles": [
+            "trotz",
+            "der Mängel",
+            "blieb",
+            "die Stimmung",
+            "gut"
+          ],
+          "answer": "Trotz der Mängel blieb die Stimmung gut.",
+          "accepted": [
+            "Trotz der Mängel blieb die Stimmung gut.",
+            "Die Stimmung blieb trotz der Mängel gut."
+          ],
+          "errorTags": [
+            "v2-inv",
+            "case-pp"
+          ],
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "difficulty": 2,
+          "explanation": {
+            "de": "blieb steht auf Position 2; trotz der Mängel ist ein Satzglied.",
+            "en": "blieb is in second position; trotz der Mängel is one element."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "b2.1-u04-ls1-r04",
+          "type": "multiple_choice",
+          "role": "practice",
+          "topic": "lx.verschmutzt",
+          "promptDe": "Im Pool schwammen Blätter und Müll. Der Pool war stark ___.",
+          "promptEn": "Choose the adjective.",
+          "options": [
+            "verschmutzt",
+            "abgenutzt",
+            "renovierungsbedürftig"
+          ],
+          "answer": "verschmutzt",
+          "accepted": [
+            "verschmutzt"
+          ],
+          "errorTags": [],
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "difficulty": 1,
+          "explanation": {
+            "de": "verschmutzt heißt: schmutzig gemacht. Blätter und Müll machen den Pool schmutzig.",
+            "en": "verschmutzt means dirty, soiled."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "b2.1-u04-ls1-r05",
+          "type": "error_correction",
+          "role": "practice",
+          "topic": "g.praep-genitiv",
+          "promptDe": "Korrigieren Sie: „Während dem Abendessen war es im Restaurant sehr laut.“",
+          "promptEn": "Correct the sentence for a written complaint.",
+          "answer": "Während des Abendessens war es im Restaurant sehr laut.",
+          "accepted": [
+            "Während des Abendessens war es im Restaurant sehr laut."
+          ],
+          "errorTags": [
+            "case-pp"
+          ],
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "difficulty": 2,
+          "intentionalError": true,
+          "errorTag": "case-pp",
+          "explanation": {
+            "de": "In einem schriftlichen Text steht während mit Genitiv: während des Abendessens.",
+            "en": "In writing, während takes the genitive."
+          },
+          "origin": "agent"
+        }
+      ],
+      "microOutput": {
+        "id": "b2.1-u04-ls1-mo",
+        "bankKey": "b21-u04-mo1",
+        "mode": "written",
+        "profile": "course-micro",
+        "situationDe": "Amal hat die Reisebedingungen nicht gelesen. Sie fragt Sie per Nachricht, was sie jetzt tun soll.",
+        "promptDe": "Schreiben Sie Amal: Was steht in den Bedingungen, und was raten Sie ihr?",
+        "promptEn": "Message Amal: what the terms say about defects and what you advise her to do.",
+        "planSeconds": 30,
+        "words": [
+          50,
+          70
+        ],
+        "targets": [
+          "g.konj2-irreal-gegenwart"
+        ],
+        "register": "du"
+      },
+      "endLine": "Sie finden jetzt in Reisebedingungen die Regel, die für Ihren Fall gilt."
+    },
+    {
+      "id": "b2.1-u04-ls2",
+      "kind": "text",
+      "title": "An der Rezeption und am Telefon",
+      "structure": null,
+      "modelSentence": "Das hätten Sie uns wenigstens vorher sagen können.",
+      "ruleCard": "rc.konj2-vergangenheit-2",
+      "warmup": {
+        "draw": 6,
+        "contrastWith": "g.konj2-irreal-gegenwart"
+      },
+      "input": {
+        "kind": "dialog",
+        "title": "Zwei Gespräche: im Hotel und mit dem Kundenservice",
+        "textType": "tt.telefonat",
+        "lines": [
+          {
+            "id": "b2.1-u04-ls2-l01",
+            "speaker": "cast.priya",
+            "de": "Guten Morgen. Wir sind gestern mit der Gruppe von Blauwelle Reisen angekommen, Zimmer 214. Leider gibt es Probleme mit unserem Zimmer.",
+            "en": "Good morning. We arrived yesterday with the Blauwelle Reisen group, room 214. Unfortunately there are problems with our room.",
+            "say": "Guten Morgen. Wir sind gestern mit der Gruppe von Blauwelle Reisen angekommen, Zimmer zwei eins vier. Leider gibt es Probleme mit unserem Zimmer."
+          },
+          {
+            "id": "b2.1-u04-ls2-l02",
+            "speaker": "cast.ensemble-b2-6",
+            "de": "Guten Morgen. Das tut mir leid. Was genau ist denn los?",
+            "en": "Good morning. I'm sorry. What exactly is the matter?"
+          },
+          {
+            "id": "b2.1-u04-ls2-l03",
+            "speaker": "cast.priya",
+            "de": "Gebucht haben wir ein Doppelzimmer mit Meerblick in ruhiger Lage. Wir schauen aber auf eine Baustelle, und der Lärm beginnt um sieben Uhr. Außerdem funktioniert die Klimaanlage nicht.",
+            "en": "We booked a double room with sea view in a quiet location. But we look out onto a building site, and the noise starts at seven. And the air conditioning does not work."
+          },
+          {
+            "id": "b2.1-u04-ls2-l04",
+            "speaker": "cast.ensemble-b2-6",
+            "de": "Die Baustelle gehört zu unserem neuen Wellnessbereich. Ehrlich gesagt hätte Ihr Veranstalter Sie darüber informieren müssen. Wir haben ihm schon im Frühjahr Bescheid gegeben.",
+            "en": "The building site is for our new spa area. To be honest, your tour operator should have told you about it. We informed them back in the spring."
+          },
+          {
+            "id": "b2.1-u04-ls2-l05",
+            "speaker": "cast.priya",
+            "de": "Davon stand nichts in unseren Unterlagen. Wenn wir das gewusst hätten, hätten wir dieses Hotel nie gebucht. Könnten Sie uns bitte ein anderes Zimmer geben?",
+            "en": "Our documents said nothing about it. If we had known, we would never have booked this hotel. Could you please give us another room?"
+          },
+          {
+            "id": "b2.1-u04-ls2-l06",
+            "speaker": "cast.ensemble-b2-6",
+            "de": "Im Moment sind wir leider ausgebucht. Ab Donnerstag wird ein Zimmer zum Meer frei. Die Klimaanlage lasse ich heute noch reparieren.",
+            "en": "Unfortunately we are fully booked at the moment. From Thursday a sea-facing room will be free. I'll have the air conditioning repaired today."
+          },
+          {
+            "id": "b2.1-u04-ls2-l07",
+            "speaker": "cast.priya",
+            "de": "Donnerstag ist schon unser vierter Tag von acht. Gut, wir melden das trotzdem auch der Reiseleitung.",
+            "en": "Thursday is already our fourth day out of eight. Fine, we will still report this to the tour guide as well."
+          },
+          {
+            "id": "b2.1-u04-ls2-l08",
+            "speaker": "cast.ensemble-b2-1",
+            "de": "Blauwelle Reisen, Kundenservice, guten Tag. Was kann ich für Sie tun?",
+            "en": "Blauwelle Reisen, customer service, good afternoon. What can I do for you?"
+          },
+          {
+            "id": "b2.1-u04-ls2-l09",
+            "speaker": "cast.priya",
+            "de": "Guten Tag, hier ist Priya Nair aus der Gruppe auf Kreta. Ich möchte zwei Mängel anzeigen. Ihre Reiseleitung ist seit gestern weder am Telefon noch im Hotel zu erreichen.",
+            "en": "Hello, this is Priya Nair from the group on Crete. I would like to report two defects. Your tour guide has been unreachable since yesterday, neither by phone nor at the hotel."
+          },
+          {
+            "id": "b2.1-u04-ls2-l10",
+            "speaker": "cast.ensemble-b2-1",
+            "de": "Oh, das tut mir leid. Worum geht es genau?",
+            "en": "Oh, I'm sorry. What exactly is it about?"
+          },
+          {
+            "id": "b2.1-u04-ls2-l11",
+            "speaker": "cast.priya",
+            "de": "Unser Zimmer liegt direkt an einer Baustelle, obwohl Sie ausdrücklich eine ruhige Lage zugesichert haben. Und der Ausflug in die Berge ist heute ohne Ersatz ausgefallen. Das hätten Sie uns wenigstens vorher sagen können.",
+            "en": "Our room is right next to a building site, although you explicitly promised a quiet location. And today the trip into the mountains was cancelled without a replacement. You could at least have told us beforehand."
+          },
+          {
+            "id": "b2.1-u04-ls2-l12",
+            "speaker": "cast.ensemble-b2-1",
+            "de": "Ich verstehe Ihren Ärger. Aus Kulanz kann ich Ihnen einen Gutschein über 50 Euro für Ihre nächste Buchung anbieten.",
+            "en": "I understand your annoyance. As a goodwill gesture I can offer you a voucher for 50 euros for your next booking.",
+            "say": "Ich verstehe Ihren Ärger. Aus Kulanz kann ich Ihnen einen Gutschein über fünfzig Euro für Ihre nächste Buchung anbieten."
+          },
+          {
+            "id": "b2.1-u04-ls2-l13",
+            "speaker": "cast.priya",
+            "de": "Ein Gutschein hilft uns jetzt nicht weiter. Ich würde Sie bitten, uns sofort ein ruhiges Zimmer zu besorgen. Andernfalls fordern wir nach der Reise eine Minderung des Reisepreises.",
+            "en": "A voucher doesn't help us now. I would ask you to get us a quiet room immediately. Otherwise we will demand a price reduction after the trip."
+          },
+          {
+            "id": "b2.1-u04-ls2-l14",
+            "speaker": "cast.ensemble-b2-1",
+            "de": "Ich habe Ihre Mängelanzeige notiert und gebe sie an die Reiseleitung weiter. Bitte machen Sie Fotos und schicken Sie uns nach der Reise eine schriftliche Beschwerde mit allen Belegen.",
+            "en": "I have noted your notice of defects and will pass it on to the tour guide. Please take photos and send us a written complaint with all the receipts after the trip."
+          }
+        ],
+        "glosses": [
+          {
+            "token": "Wellnessbereich",
+            "gloss": {
+              "en": "spa area"
+            }
+          }
+        ],
+        "transcriptAfterUnaidedListen": true
+      },
+      "inputItems": [
+        {
+          "id": "b2.1-u04-ls2-i01",
+          "type": "multiple_choice",
+          "role": "gist",
+          "topic": "hoeren",
+          "promptDe": "Was ist das Hauptproblem mit dem Zimmer?",
+          "promptEn": "What is the main problem with the room?",
+          "options": [
+            "Es liegt laut an einer Baustelle, ohne Meerblick.",
+            "Es ist für zwei Personen zu klein.",
+            "Es liegt sehr weit weg vom Strand."
+          ],
+          "answer": "Es liegt laut an einer Baustelle, ohne Meerblick.",
+          "accepted": [
+            "Es liegt laut an einer Baustelle, ohne Meerblick."
+          ],
+          "explanation": {
+            "de": "Priya sagt: Wir schauen auf eine Baustelle, und der Lärm beginnt um sieben Uhr.",
+            "en": "Priya says they look onto a building site and the noise starts at seven."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "b2.1-u04-ls2-i02",
+          "type": "multiple_choice",
+          "role": "gist",
+          "topic": "hoeren",
+          "promptDe": "Wie reagiert der Kundenservice zuerst auf die Beschwerde?",
+          "promptEn": "How does customer service react first?",
+          "options": [
+            "Er bietet einen Gutschein an.",
+            "Er bietet sofort eine Minderung an.",
+            "Er sagt, dass nur das Hotel zuständig ist."
+          ],
+          "answer": "Er bietet einen Gutschein an.",
+          "accepted": [
+            "Er bietet einen Gutschein an."
+          ],
+          "explanation": {
+            "de": "Die Mitarbeiterin bietet aus Kulanz einen Gutschein über 50 Euro an.",
+            "en": "The agent offers a 50-euro voucher as a goodwill gesture."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "b2.1-u04-ls2-i03",
+          "type": "fill_blank",
+          "role": "detail",
+          "topic": "hoeren",
+          "promptDe": "Ab ___ hat das Hotel ein Zimmer zum Meer frei. (Wochentag)",
+          "promptEn": "Write the weekday.",
+          "answer": "Donnerstag",
+          "accepted": [
+            "Donnerstag"
+          ],
+          "explanation": {
+            "de": "Der Mann an der Rezeption sagt: Ab Donnerstag wird ein Zimmer zum Meer frei.",
+            "en": "The receptionist says a sea-facing room will be free from Thursday."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "b2.1-u04-ls2-i04",
+          "type": "multiple_choice",
+          "role": "detail",
+          "topic": "hoeren",
+          "promptDe": "Was hätte der Veranstalter nach Meinung der Rezeption tun müssen?",
+          "promptEn": "What should the tour operator have done, according to reception?",
+          "options": [
+            "die Gäste über die Baustelle informieren",
+            "den Gästen ein anderes Hotel buchen",
+            "die Klimaanlage reparieren lassen"
+          ],
+          "answer": "die Gäste über die Baustelle informieren",
+          "accepted": [
+            "die Gäste über die Baustelle informieren"
+          ],
+          "explanation": {
+            "de": "Er sagt: Ihr Veranstalter hätte Sie darüber informieren müssen – das Hotel hatte ihm im Frühjahr Bescheid gegeben.",
+            "en": "He says the operator should have told them; the hotel had informed it in spring."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "b2.1-u04-ls2-i05",
+          "type": "fill_blank",
+          "role": "detail",
+          "topic": "hoeren",
+          "promptDe": "Der Gutschein ist ___ Euro wert. (Zahl)",
+          "promptEn": "Write the amount.",
+          "answer": "50",
+          "accepted": [
+            "50",
+            "fünfzig"
+          ],
+          "exact": "number",
+          "explanation": {
+            "de": "Die Mitarbeiterin bietet einen Gutschein über 50 Euro an.",
+            "en": "The agent offers a voucher for 50 euros."
+          },
+          "origin": "agent"
+        }
+      ],
+      "pool": {
+        "items": [
+          {
+            "id": "b2.1-u04-ls2-p01",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.konj2-irreal-gegenwart",
+            "promptDe": "___ Sie uns bitte ein anderes Zimmer geben? (können, höflich)",
+            "promptEn": "Polite request with können.",
+            "answer": "Könnten",
+            "accepted": [
+              "Könnten"
+            ],
+            "errorTags": [
+              "register"
+            ],
+            "explanation": {
+              "de": "Höfliche Bitte: Konjunktiv II von können – Könnten Sie …?",
+              "en": "Polite request: Konjunktiv II of können – Könnten Sie …?"
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls2-p02",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.konj2-irreal-gegenwart",
+            "promptDe": "Wenn das Hotel nicht so laut ___, könnten wir besser schlafen. (sein)",
+            "promptEn": "Konjunktiv II of sein.",
+            "answer": "wäre",
+            "accepted": [
+              "wäre"
+            ],
+            "errorTags": [
+              "verb-final"
+            ],
+            "explanation": {
+              "de": "Irreale Bedingung in der Gegenwart: wenn … wäre, könnten wir …",
+              "en": "Unreal condition in the present: wenn … wäre."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls2-p03",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "lx.gewaehren",
+            "promptDe": "Wir bitten Sie, uns einen Preisnachlass zu ___. (= geben, formell)",
+            "promptEn": "Formal verb for \"give, grant\".",
+            "answer": "gewähren",
+            "accepted": [
+              "gewähren"
+            ],
+            "explanation": {
+              "de": "Einen Preisnachlass gewähren heißt: formell einen Rabatt geben.",
+              "en": "einen Preisnachlass gewähren = formally grant a discount."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls2-p04",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "lx.einfordern",
+            "promptDe": "Die zugesicherten Leistungen fordern wir ausdrücklich ___. (einfordern)",
+            "promptEn": "The separable prefix.",
+            "answer": "ein",
+            "accepted": [
+              "ein"
+            ],
+            "errorTags": [
+              "satzklammer"
+            ],
+            "explanation": {
+              "de": "einfordern ist trennbar: Wir fordern die Leistungen ein.",
+              "en": "einfordern is separable: wir fordern … ein."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls2-p05",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "lx.sich-berufen",
+            "promptDe": "Wir berufen uns ___ Ihre Leistungsbeschreibung.",
+            "promptEn": "Preposition after sich berufen.",
+            "answer": "auf",
+            "accepted": [
+              "auf"
+            ],
+            "errorTags": [
+              "case-pp"
+            ],
+            "explanation": {
+              "de": "sich berufen auf + Akkusativ: Wir berufen uns auf Ihre Beschreibung.",
+              "en": "sich berufen auf + accusative."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls2-p06",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "lx.preisnachlass",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "wir",
+              "bitten",
+              "Sie",
+              "um einen Preisnachlass"
+            ],
+            "answer": "Wir bitten Sie um einen Preisnachlass.",
+            "accepted": [
+              "Wir bitten Sie um einen Preisnachlass.",
+              "Um einen Preisnachlass bitten wir Sie."
+            ],
+            "errorTags": [
+              "v2-inv"
+            ],
+            "explanation": {
+              "de": "bitten steht auf Position 2; um einen Preisnachlass kann auch vorne stehen.",
+              "en": "bitten is in second position; the um-phrase can also come first."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls2-p07",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "lx.andernfalls",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "andernfalls",
+              "wenden",
+              "wir",
+              "uns",
+              "an die Verbraucherzentrale"
+            ],
+            "answer": "Andernfalls wenden wir uns an die Verbraucherzentrale.",
+            "accepted": [
+              "Andernfalls wenden wir uns an die Verbraucherzentrale.",
+              "Wir wenden uns andernfalls an die Verbraucherzentrale."
+            ],
+            "errorTags": [
+              "v2-inv"
+            ],
+            "explanation": {
+              "de": "andernfalls steht auf Position 1 oder im Mittelfeld; das Verb bleibt auf Position 2.",
+              "en": "andernfalls comes first or in the middle field; the verb stays in second position."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls2-p08",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.konj2-irreal-gegenwart",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the polite question.",
+            "tiles": [
+              "könnten",
+              "Sie",
+              "uns",
+              "ein ruhigeres Zimmer",
+              "geben"
+            ],
+            "answer": "Könnten Sie uns ein ruhigeres Zimmer geben?",
+            "accepted": [
+              "Könnten Sie uns ein ruhigeres Zimmer geben?"
+            ],
+            "errorTags": [
+              "satzklammer"
+            ],
+            "explanation": {
+              "de": "Ja/Nein-Frage: Könnten steht vorne, geben am Ende.",
+              "en": "Yes/no question: könnten first, geben at the end."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls2-p09",
+            "type": "error_correction",
+            "role": "practice",
+            "topic": "g.konj2-irreal-gegenwart",
+            "promptDe": "Korrigieren Sie: „Wenn wir ein ruhiges Zimmer hätten, wir würden besser schlafen.“",
+            "promptEn": "Correct the word order.",
+            "answer": "Wenn wir ein ruhiges Zimmer hätten, würden wir besser schlafen.",
+            "accepted": [
+              "Wenn wir ein ruhiges Zimmer hätten, würden wir besser schlafen."
+            ],
+            "intentionalError": true,
+            "errorTag": "v2-inv",
+            "explanation": {
+              "de": "Nach dem wenn-Satz steht zuerst das Verb: …, würden wir …",
+              "en": "After the wenn-clause the verb comes first: …, würden wir …"
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls2-p10",
+            "type": "error_correction",
+            "role": "practice",
+            "topic": "lx.sich-berufen",
+            "promptDe": "Korrigieren Sie: „Wir berufen uns an Ihre Zusage im Katalog.“",
+            "promptEn": "Correct the preposition.",
+            "answer": "Wir berufen uns auf Ihre Zusage im Katalog.",
+            "accepted": [
+              "Wir berufen uns auf Ihre Zusage im Katalog."
+            ],
+            "intentionalError": true,
+            "errorTag": "case-pp",
+            "explanation": {
+              "de": "Das Verb heißt sich berufen auf.",
+              "en": "The verb is sich berufen auf."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls2-p11",
+            "type": "multiple_choice",
+            "role": "practice",
+            "topic": "lx.kulanz",
+            "promptDe": "Der Veranstalter muss nichts zahlen, bietet aber freiwillig einen Gutschein an. Das ist …",
+            "promptEn": "Choose the word.",
+            "options": [
+              "Kulanz",
+              "Minderung",
+              "Stornierung"
+            ],
+            "answer": "Kulanz",
+            "accepted": [
+              "Kulanz"
+            ],
+            "explanation": {
+              "de": "Kulanz ist ein freiwilliges Entgegenkommen, zu dem die Firma nicht verpflichtet ist.",
+              "en": "Kulanz is a voluntary goodwill gesture."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls2-p12",
+            "type": "multiple_choice",
+            "role": "practice",
+            "topic": "g.modalpartikeln",
+            "promptDe": "„Das hätten Sie uns ___ vorher sagen können!“ Welches Wort verstärkt den Vorwurf?",
+            "promptEn": "Choose the particle.",
+            "options": [
+              "doch",
+              "mal",
+              "eben"
+            ],
+            "answer": "doch",
+            "accepted": [
+              "doch"
+            ],
+            "explanation": {
+              "de": "doch macht einen Vorwurf deutlicher: Das hätten Sie uns doch sagen können!",
+              "en": "doch strengthens a reproach."
+            },
+            "origin": "agent"
+          }
+        ],
+        "generators": [
+          {
+            "generator": "dictation.fromInput",
+            "count": 2,
+            "source": [
+              "b2.1-u04-ls2-l05",
+              "b2.1-u04-ls2-l13"
+            ]
+          },
+          {
+            "generator": "lex.glossTyped",
+            "count": 1,
+            "source": [
+              "lx.preisnachlass",
+              "lx.ausgleichszahlung",
+              "lx.maengelanzeige"
+            ]
+          },
+          {
+            "generator": "lex.glossMatch",
+            "count": 1,
+            "source": [
+              "lx.kulanz",
+              "lx.ersatzleistung",
+              "lx.beschwerdefrist",
+              "lx.reisevertrag"
+            ]
+          }
+        ]
+      },
+      "reserve": [
+        {
+          "id": "b2.1-u04-ls2-r01",
+          "type": "fill_blank",
+          "role": "practice",
+          "topic": "g.konj2-irreal-gegenwart",
+          "promptDe": "Ich ___ Sie bitten, uns bis Freitag zu antworten. (werden, höflich)",
+          "promptEn": "Polite form of werden.",
+          "answer": "würde",
+          "accepted": [
+            "würde"
+          ],
+          "errorTags": [
+            "register"
+          ],
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair",
+            "einstufung"
+          ],
+          "difficulty": 2,
+          "explanation": {
+            "de": "Höfliche Bitte: ich würde Sie bitten, … zu …",
+            "en": "Polite request: ich würde Sie bitten, …"
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "b2.1-u04-ls2-r02",
+          "type": "fill_blank",
+          "role": "practice",
+          "topic": "lx.gewaehren",
+          "promptDe": "Nach unserer Beschwerde hat uns der Veranstalter einen kleinen Rabatt ___. (gewähren)",
+          "promptEn": "Past participle.",
+          "answer": "gewährt",
+          "accepted": [
+            "gewährt"
+          ],
+          "errorTags": [
+            "perfekt-aux-participle"
+          ],
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "difficulty": 2,
+          "explanation": {
+            "de": "gewähren → hat gewährt (ohne ge-, weil die Vorsilbe ge- schon im Verb steht).",
+            "en": "gewähren → hat gewährt (no extra ge-)."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "b2.1-u04-ls2-r03",
+          "type": "sentence_building",
+          "role": "practice",
+          "topic": "lx.einfordern",
+          "promptDe": "Bilden Sie den Satz.",
+          "promptEn": "Build the sentence.",
+          "tiles": [
+            "wir",
+            "fordern",
+            "die zugesicherten Leistungen",
+            "ein"
+          ],
+          "answer": "Wir fordern die zugesicherten Leistungen ein.",
+          "accepted": [
+            "Wir fordern die zugesicherten Leistungen ein.",
+            "Die zugesicherten Leistungen fordern wir ein."
+          ],
+          "errorTags": [
+            "satzklammer"
+          ],
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "difficulty": 2,
+          "explanation": {
+            "de": "einfordern ist trennbar: fordern auf Position 2, ein am Satzende.",
+            "en": "einfordern is separable: fordern second, ein at the end."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "b2.1-u04-ls2-r04",
+          "type": "multiple_choice",
+          "role": "practice",
+          "topic": "lx.nachtraeglich",
+          "promptDe": "Die Minderung haben wir erst nach der Reise bekommen, also …",
+          "promptEn": "Choose the adverb.",
+          "options": [
+            "nachträglich",
+            "vorsorglich",
+            "ausdrücklich"
+          ],
+          "answer": "nachträglich",
+          "accepted": [
+            "nachträglich"
+          ],
+          "errorTags": [],
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "difficulty": 1,
+          "explanation": {
+            "de": "nachträglich heißt: später, nach einem Ereignis.",
+            "en": "nachträglich means afterwards, after the event."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "b2.1-u04-ls2-r05",
+          "type": "error_correction",
+          "role": "practice",
+          "topic": "g.konj2-irreal-gegenwart",
+          "promptDe": "Korrigieren Sie: „Könnten Sie uns bitte ein anderes Zimmer gegeben?“",
+          "promptEn": "Correct the verb form.",
+          "answer": "Könnten Sie uns bitte ein anderes Zimmer geben?",
+          "accepted": [
+            "Könnten Sie uns bitte ein anderes Zimmer geben?"
+          ],
+          "errorTags": [
+            "satzklammer"
+          ],
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "difficulty": 2,
+          "intentionalError": true,
+          "errorTag": "satzklammer",
+          "explanation": {
+            "de": "Nach könnten steht der Infinitiv am Ende: geben.",
+            "en": "After könnten the infinitive goes at the end: geben."
+          },
+          "origin": "agent"
+        }
+      ],
+      "microOutput": {
+        "id": "b2.1-u04-ls2-mo",
+        "bankKey": "b21-u04-mo2",
+        "mode": "spoken",
+        "profile": "course-micro-sp",
+        "situationDe": "Sie sind im Urlaub. Die Reiseleitung ist nicht erreichbar, also rufen Sie beim Veranstalter an.",
+        "promptDe": "Schildern Sie zwei Mängel und sagen Sie klar, was Sie vom Veranstalter erwarten.",
+        "promptEn": "On the phone: describe two defects and say clearly what you expect from the operator.",
+        "planSeconds": 30,
+        "seconds": [
+          50,
+          70
+        ],
+        "targets": [
+          "g.konj2-bedeutungen"
+        ],
+        "register": "Sie"
+      },
+      "aussprache": {
+        "focus": "Nachdruck ohne Aggression: Kontrastakzent und fallende Melodie bei Forderungen",
+        "perception": {
+          "generator": "perception.intonation",
+          "count": 3,
+          "source": [
+            "Wir erwarten eine Minderung.|Wir erwarten eine Minderung?",
+            "Das hätten Sie uns sagen müssen.|Das hätten Sie uns sagen müssen?",
+            "Ein Gutschein reicht nicht.|Ein Gutschein reicht nicht?"
+          ],
+          "voices": 4
+        },
+        "readAloud": {
+          "lineDe": "Ich würde Sie bitten, uns ein ruhiges Zimmer zu geben."
+        }
+      },
+      "endLine": "Sie können jetzt am Telefon Mängel schildern und klar sagen, was Sie erwarten."
+    },
+    {
+      "id": "b2.1-u04-ls3",
+      "kind": "sprache",
+      "ruleTable": {
+        "rows": [
+          [
+            "Funktion",
+            "Form",
+            "Beispiel aus den Gesprächen"
+          ],
+          [
+            "Was anders gewesen wäre",
+            "hätte / wäre + Partizip II",
+            "Wenn wir das gewusst hätten, hätten wir dieses Hotel nie gebucht."
+          ],
+          [
+            "Vorwurf",
+            "hätte + Infinitiv + Modalverb",
+            "Das hätten Sie uns wenigstens vorher sagen können."
+          ],
+          [
+            "Vorwurf (Hauptsatz, Inversion)",
+            "hätte + Subjekt + Infinitiv + müssen",
+            "Ehrlich gesagt hätte Ihr Veranstalter Sie darüber informieren müssen."
+          ],
+          [
+            "höfliche Bitte oder Forderung",
+            "würde / könnte + Infinitiv",
+            "Ich würde Sie bitten, uns sofort ein ruhiges Zimmer zu besorgen."
+          ]
+        ],
+        "blanks": [
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            1
+          ]
+        ]
+      },
+      "ruleCard": "rc.konj2-vergangenheit-2",
+      "pool": {
+        "items": [
+          {
+            "id": "b2.1-u04-ls3-p01",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.konj2-vergangenheit",
+            "promptDe": "Wenn wir das gewusst ___, hätten wir ein anderes Hotel gebucht. (haben)",
+            "promptEn": "Konjunktiv II of haben.",
+            "answer": "hätten",
+            "accepted": [
+              "hätten"
+            ],
+            "errorTags": [
+              "perfekt-aux-participle"
+            ],
+            "explanation": {
+              "de": "Konjunktiv II der Vergangenheit: hätte/hätten + Partizip II. Im wenn-Satz steht hätten am Ende.",
+              "en": "Past subjunctive: hätten + participle; in the wenn-clause hätten goes last."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls3-p02",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.konj2-vergangenheit",
+            "promptDe": "Mit einem anderen Veranstalter ___ das nicht passiert. (sein)",
+            "promptEn": "Konjunktiv II of sein.",
+            "answer": "wäre",
+            "accepted": [
+              "wäre"
+            ],
+            "errorTags": [
+              "perfekt-aux-participle"
+            ],
+            "explanation": {
+              "de": "passieren bildet das Perfekt mit sein, also: wäre … passiert.",
+              "en": "passieren takes sein, so: wäre … passiert."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls3-p03",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.konj2-bedeutungen",
+            "promptDe": "Sie hätten uns vor der Reise ___ müssen. (informieren)",
+            "promptEn": "Infinitive before müssen.",
+            "answer": "informieren",
+            "accepted": [
+              "informieren"
+            ],
+            "errorTags": [
+              "satzklammer"
+            ],
+            "explanation": {
+              "de": "Mit Modalverb stehen am Ende zwei Infinitive: informieren müssen.",
+              "en": "With a modal verb, two infinitives stand at the end."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls3-p04",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.konj2-bedeutungen",
+            "promptDe": "Das ___ Sie uns wenigstens vorher sagen können! (haben, Vorwurf)",
+            "promptEn": "Konjunktiv II of haben.",
+            "answer": "hätten",
+            "accepted": [
+              "hätten"
+            ],
+            "errorTags": [
+              "perfekt-aux-participle"
+            ],
+            "explanation": {
+              "de": "Vorwurf über Vergangenes: hätten + Infinitiv + können.",
+              "en": "Reproach about the past: hätten + infinitive + können."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls3-p05",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.konj2-vergangenheit",
+            "promptDe": "Wir finden, dass Sie uns früher ___. (informieren müssen, Konjunktiv II Vergangenheit)",
+            "promptEn": "Three verbs in the dass-clause.",
+            "answer": "hätten informieren müssen",
+            "accepted": [
+              "hätten informieren müssen"
+            ],
+            "errorTags": [
+              "verb-final"
+            ],
+            "explanation": {
+              "de": "Im Nebensatz steht hätten vor den beiden Infinitiven: …, dass Sie uns hätten informieren müssen.",
+              "en": "In a subordinate clause hätten comes before the two infinitives."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls3-p06",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.konj2-vergangenheit",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "wir",
+              "hätten",
+              "ein anderes Hotel",
+              "gebucht"
+            ],
+            "answer": "Wir hätten ein anderes Hotel gebucht.",
+            "accepted": [
+              "Wir hätten ein anderes Hotel gebucht.",
+              "Ein anderes Hotel hätten wir gebucht."
+            ],
+            "errorTags": [
+              "satzklammer"
+            ],
+            "explanation": {
+              "de": "hätten steht auf Position 2, das Partizip gebucht am Ende.",
+              "en": "hätten is in second position, the participle at the end."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls3-p07",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.konj2-bedeutungen",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the reproach.",
+            "tiles": [
+              "Sie",
+              "hätten",
+              "uns",
+              "rechtzeitig",
+              "informieren",
+              "müssen"
+            ],
+            "answer": "Sie hätten uns rechtzeitig informieren müssen.",
+            "accepted": [
+              "Sie hätten uns rechtzeitig informieren müssen.",
+              "Rechtzeitig hätten Sie uns informieren müssen."
+            ],
+            "errorTags": [
+              "satzklammer"
+            ],
+            "explanation": {
+              "de": "hätten auf Position 2, am Ende zuerst informieren, dann müssen.",
+              "en": "hätten second; at the end informieren, then müssen."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls3-p08",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.konj2-vergangenheit",
+            "promptDe": "Bilden Sie den Satz.",
+            "promptEn": "Build the sentence.",
+            "tiles": [
+              "wir finden",
+              "dass",
+              "Sie",
+              "uns",
+              "hätten",
+              "warnen",
+              "müssen"
+            ],
+            "answer": "Wir finden, dass Sie uns hätten warnen müssen.",
+            "accepted": [
+              "Wir finden, dass Sie uns hätten warnen müssen.",
+              "Dass Sie uns hätten warnen müssen, finden wir."
+            ],
+            "errorTags": [
+              "verb-final"
+            ],
+            "explanation": {
+              "de": "Im dass-Satz steht hätten vor warnen müssen.",
+              "en": "In the dass-clause hätten comes before warnen müssen."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls3-p09",
+            "type": "error_correction",
+            "role": "practice",
+            "topic": "g.konj2-vergangenheit",
+            "promptDe": "Korrigieren Sie: „Wenn das Zimmer ruhig gewesen hätte, hätten wir gut geschlafen.“",
+            "promptEn": "Correct the auxiliary.",
+            "answer": "Wenn das Zimmer ruhig gewesen wäre, hätten wir gut geschlafen.",
+            "accepted": [
+              "Wenn das Zimmer ruhig gewesen wäre, hätten wir gut geschlafen."
+            ],
+            "intentionalError": true,
+            "errorTag": "perfekt-aux-participle",
+            "explanation": {
+              "de": "gewesen steht mit wäre, nicht mit hätte: ruhig gewesen wäre.",
+              "en": "gewesen goes with wäre, not hätte."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls3-p10",
+            "type": "error_correction",
+            "role": "practice",
+            "topic": "g.konj2-bedeutungen",
+            "promptDe": "Korrigieren Sie: „Sie hätten uns rechtzeitig informieren gemusst.“",
+            "promptEn": "Correct the modal verb form.",
+            "answer": "Sie hätten uns rechtzeitig informieren müssen.",
+            "accepted": [
+              "Sie hätten uns rechtzeitig informieren müssen."
+            ],
+            "intentionalError": true,
+            "errorTag": "perfekt-aux-participle",
+            "explanation": {
+              "de": "Mit einem zweiten Infinitiv steht das Modalverb im Infinitiv: informieren müssen.",
+              "en": "Next to another infinitive, the modal stays in the infinitive: müssen."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls3-p11",
+            "type": "multiple_choice",
+            "role": "practice",
+            "topic": "g.konj2-bedeutungen",
+            "promptDe": "„Sie hätten uns vorher informieren müssen.“ Was drückt der Satz aus?",
+            "promptEn": "What does the sentence express?",
+            "options": [
+              "einen Vorwurf",
+              "eine höfliche Bitte",
+              "einen Wunsch für die Zukunft"
+            ],
+            "answer": "einen Vorwurf",
+            "accepted": [
+              "einen Vorwurf"
+            ],
+            "explanation": {
+              "de": "Der Satz sagt: Das war Ihre Pflicht, und Sie haben es nicht getan. Das ist ein Vorwurf.",
+              "en": "It says: it was your duty and you did not do it – a reproach."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "b2.1-u04-ls3-p12",
+            "type": "multiple_choice",
+            "role": "practice",
+            "topic": "g.konj2-bedeutungen",
+            "promptDe": "Welcher Satz ist eine höfliche, aber klare Forderung?",
+            "promptEn": "Which sentence is a polite but clear demand?",
+            "options": [
+              "Ich würde Sie bitten, uns bis Freitag zu antworten.",
+              "Antworten Sie uns endlich!",
+              "Vielleicht antworten Sie uns irgendwann."
+            ],
+            "answer": "Ich würde Sie bitten, uns bis Freitag zu antworten.",
+            "accepted": [
+              "Ich würde Sie bitten, uns bis Freitag zu antworten."
+            ],
+            "explanation": {
+              "de": "Der Konjunktiv macht die Bitte höflich, die Frist bis Freitag macht sie klar.",
+              "en": "The subjunctive makes it polite; the Friday deadline makes it clear."
+            },
+            "origin": "agent"
+          }
+        ],
+        "generators": [
+          {
+            "generator": "dictation.fromInput",
+            "count": 2,
+            "source": [
+              "b2.1-u04-ls2-l04",
+              "b2.1-u04-ls2-l11"
+            ]
+          },
+          {
+            "generator": "lex.glossTyped",
+            "count": 1,
+            "source": [
+              "lx.maengelanzeige",
+              "lx.fristsetzung",
+              "lx.ausgleichszahlung"
+            ]
+          },
+          {
+            "generator": "lex.glossMatch",
+            "count": 1,
+            "source": [
+              "lx.rechtliche-schritte-einleiten",
+              "lx.in-aussicht-stellen",
+              "lx.ersatzweise",
+              "lx.eingehend"
+            ]
+          }
+        ]
+      },
+      "reserve": [
+        {
+          "id": "b2.1-u04-ls3-r01",
+          "type": "fill_blank",
+          "role": "practice",
+          "topic": "g.konj2-vergangenheit",
+          "promptDe": "Ohne die Baustelle ___ die Reise wunderschön gewesen. (sein)",
+          "promptEn": "Konjunktiv II of sein.",
+          "answer": "wäre",
+          "accepted": [
+            "wäre"
+          ],
+          "errorTags": [
+            "perfekt-aux-participle"
+          ],
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair",
+            "einstufung"
+          ],
+          "difficulty": 2,
+          "explanation": {
+            "de": "gewesen steht mit wäre: wäre … gewesen.",
+            "en": "gewesen goes with wäre."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "b2.1-u04-ls3-r02",
+          "type": "fill_blank",
+          "role": "practice",
+          "topic": "g.konj2-bedeutungen",
+          "promptDe": "Die Reiseleitung hätte sich sofort um uns ___ müssen. (kümmern)",
+          "promptEn": "Infinitive before müssen.",
+          "answer": "kümmern",
+          "accepted": [
+            "kümmern"
+          ],
+          "errorTags": [
+            "satzklammer"
+          ],
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair",
+            "einstufung"
+          ],
+          "difficulty": 3,
+          "explanation": {
+            "de": "hätte … kümmern müssen: zwei Infinitive am Ende.",
+            "en": "hätte … kümmern müssen: two infinitives at the end."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "b2.1-u04-ls3-r03",
+          "type": "sentence_building",
+          "role": "practice",
+          "topic": "g.konj2-vergangenheit",
+          "promptDe": "Bilden Sie den Satz.",
+          "promptEn": "Build the sentence.",
+          "tiles": [
+            "wir",
+            "wären",
+            "lieber",
+            "zu Hause geblieben"
+          ],
+          "answer": "Wir wären lieber zu Hause geblieben.",
+          "accepted": [
+            "Wir wären lieber zu Hause geblieben.",
+            "Lieber wären wir zu Hause geblieben."
+          ],
+          "errorTags": [
+            "perfekt-aux-participle",
+            "satzklammer"
+          ],
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "difficulty": 2,
+          "explanation": {
+            "de": "bleiben bildet das Perfekt mit sein: wären … geblieben.",
+            "en": "bleiben takes sein: wären … geblieben."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "b2.1-u04-ls3-r04",
+          "type": "multiple_choice",
+          "role": "practice",
+          "topic": "g.konj2-vergangenheit",
+          "promptDe": "Welcher Satz sagt: Es ist nicht passiert?",
+          "promptEn": "Which sentence says it did not happen?",
+          "options": [
+            "Wir hätten fast den Flug verpasst.",
+            "Wir haben den Flug verpasst.",
+            "Wir verpassen den Flug."
+          ],
+          "answer": "Wir hätten fast den Flug verpasst.",
+          "accepted": [
+            "Wir hätten fast den Flug verpasst."
+          ],
+          "errorTags": [],
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "difficulty": 2,
+          "explanation": {
+            "de": "hätten fast verpasst heißt: Es war knapp, aber wir haben den Flug bekommen.",
+            "en": "hätten fast verpasst: it was close, but we caught the flight."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "b2.1-u04-ls3-r05",
+          "type": "error_correction",
+          "role": "practice",
+          "topic": "g.konj2-vergangenheit",
+          "promptDe": "Korrigieren Sie: „Wir wären gern ein Zimmer mit Meerblick gehabt.“",
+          "promptEn": "Correct the auxiliary.",
+          "answer": "Wir hätten gern ein Zimmer mit Meerblick gehabt.",
+          "accepted": [
+            "Wir hätten gern ein Zimmer mit Meerblick gehabt."
+          ],
+          "errorTags": [
+            "perfekt-aux-participle"
+          ],
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "difficulty": 2,
+          "intentionalError": true,
+          "errorTag": "perfekt-aux-participle",
+          "explanation": {
+            "de": "haben bildet das Perfekt mit haben: hätten … gehabt.",
+            "en": "haben takes haben: hätten … gehabt."
+          },
+          "origin": "agent"
+        }
+      ],
+      "cloze": [
+        {
+          "id": "b2.1-u04-ls3-s01",
+          "type": "cloze",
+          "role": "practice",
+          "topic": "lx.fristsetzung",
+          "promptDe": "Bitte antworten Sie uns ___ 30. November.",
+          "promptEn": "Choose the deadline phrase.",
+          "options": [
+            "bis zum",
+            "seit dem",
+            "ab dem"
+          ],
+          "answer": "bis zum",
+          "accepted": [
+            "bis zum"
+          ],
+          "explanation": {
+            "de": "Eine Frist nennt man mit bis zum: bis zum 30. November.",
+            "en": "A deadline: bis zum 30. November."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "b2.1-u04-ls3-s02",
+          "type": "cloze",
+          "role": "practice",
+          "topic": "lx.vorsorglich",
+          "promptDe": "___ haben wir alle Quittungen aufbewahrt.",
+          "promptEn": "Choose the adverb.",
+          "options": [
+            "Vorsorglich",
+            "Nachträglich",
+            "Ersatzweise"
+          ],
+          "answer": "Vorsorglich",
+          "accepted": [
+            "Vorsorglich"
+          ],
+          "explanation": {
+            "de": "vorsorglich heißt: für den Fall, dass man es später braucht.",
+            "en": "vorsorglich: as a precaution."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "b2.1-u04-ls3-s03",
+          "type": "cloze",
+          "role": "practice",
+          "topic": "lx.sich-vorbehalten",
+          "promptDe": "Wir behalten uns weitere Schritte ___.",
+          "promptEn": "Choose the prefix.",
+          "options": [
+            "vor",
+            "aus",
+            "ein"
+          ],
+          "answer": "vor",
+          "accepted": [
+            "vor"
+          ],
+          "explanation": {
+            "de": "sich etwas vorbehalten: Wir behalten uns weitere Schritte vor.",
+            "en": "sich etwas vorbehalten – to reserve the right to something."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "b2.1-u04-ls3-s04",
+          "type": "cloze",
+          "role": "practice",
+          "topic": "lx.hartnaeckig",
+          "promptDe": "Amal gibt am Telefon nicht auf. Sie bleibt freundlich, aber ___.",
+          "promptEn": "Choose the adjective.",
+          "options": [
+            "hartnäckig",
+            "unzumutbar",
+            "aussichtsreich"
+          ],
+          "answer": "hartnäckig",
+          "accepted": [
+            "hartnäckig"
+          ],
+          "explanation": {
+            "de": "hartnäckig heißt: Man gibt nicht auf und fragt immer wieder nach.",
+            "en": "hartnäckig: persistent, not giving up."
+          },
+          "origin": "agent"
+        }
+      ],
+      "redemittelFor": [
+        "tb2.sa",
+        "tb2.m3"
+      ],
+      "endLine": "Sie können jetzt sagen, was hätte anders sein müssen – höflich und bestimmt."
+    },
+    {
+      "id": "b2.1-u04-ls4",
+      "kind": "pruefung",
+      "texts": [
+        {
+          "id": "b2.1-u04-ls4-t1",
+          "kind": "text",
+          "title": "E-Mail an die Mitreisenden",
+          "text": "Betreff: Gemeinsame Beschwerde bei Blauwelle Reisen\n\nLiebe Mitreisende,\n\nseit einer Woche sind wir wieder zu Hause, und viele von Ihnen haben uns geschrieben, ⟦01⟧ sehr Sie sich über die Reise geärgert haben. Deshalb möchten wir Ihnen heute einen Vorschlag machen.\n\n⟦02⟧ wir uns zusammentun, ist unsere Beweislage viel besser. Amal hat während der ganzen Reise Fotos gemacht, ⟦03⟧ man die Baustelle und den verschmutzten Pool gut erkennen kann. Außerdem haben wir eine Kopie der Mängelanzeige, ⟦04⟧ wir am dritten Tag bei der Reiseleitung abgegeben haben.\n\nDer Veranstalter bietet bisher nur einen Gutschein über 50 Euro an. Wir finden aber, dass er uns schon vor der Reise über die Baustelle ⟦05⟧ informieren müssen. Mit dieser Information ⟦06⟧ viele von uns sicher ein anderes Hotel gebucht.\n\nWir schlagen deshalb vor, ⟦07⟧ jeder von uns einen kurzen Beschwerdebrief schickt und sich darin auf die Leistungsbeschreibung beruft. Den Musterbrief der Verbraucherzentrale haben wir schon an unseren Fall angepasst. Es ist sinnvoll, die Briefe per Einschreiben ⟦08⟧. ⟦09⟧ der vielen Mängel halten wir eine Minderung von 30 Prozent für angemessen.\n\n⟦10⟧ der Veranstalter nicht bis Ende November reagiert, wenden wir uns gemeinsam an die Verbraucherzentrale. Wenn Sie mitmachen möchten, antworten Sie uns einfach auf diese E-Mail.\n\nViele Grüße\nPriya Nair und Amal Haddad",
+          "glosses": []
+        },
+        {
+          "id": "b2.1-u04-ls4-t2",
+          "kind": "audio",
+          "title": "Sie sind im Urlaub und hören eine Nachricht der Reiseleitung auf Ihrer Mailbox.",
+          "lines": [
+            {
+              "id": "b2.1-u04-ls4-t2-l01",
+              "speaker": "cast.ensemble-b2-1",
+              "de": "Hallo, hier spricht die Reiseleitung von Blauwelle Reisen, eine Nachricht für alle Gäste der Kreta-Gruppe. Der Ausflug in die Berge morgen findet statt, aber der Bus fährt schon um 7.30 Uhr am Hotel ab, nicht wie geplant um 8.30 Uhr. Am Nachmittag soll es nämlich sehr heiß werden. Das Frühstück gibt es deshalb ausnahmsweise schon ab 6.45 Uhr. Falls Sie nicht mitfahren möchten, sagen Sie bitte bis heute Abend an der Rezeption Bescheid. Vielen Dank!",
+              "en": "Hello, this is the Blauwelle Reisen tour guide with a message for all guests of the Crete group. Tomorrow's trip into the mountains will take place, but the bus leaves the hotel at 7:30, not at 8:30 as planned. It is going to be very hot in the afternoon. Breakfast is therefore served from 6:45 as an exception. If you do not want to come, please tell reception by this evening. Thank you!",
+              "say": "Hallo, hier spricht die Reiseleitung von Blauwelle Reisen, eine Nachricht für alle Gäste der Kreta-Gruppe. Der Ausflug in die Berge morgen findet statt, aber der Bus fährt schon um halb acht am Hotel ab, nicht wie geplant um halb neun. Am Nachmittag soll es nämlich sehr heiß werden. Das Frühstück gibt es deshalb ausnahmsweise schon ab Viertel vor sieben. Falls Sie nicht mitfahren möchten, sagen Sie bitte bis heute Abend an der Rezeption Bescheid. Vielen Dank!"
+            }
+          ],
+          "glosses": []
+        },
+        {
+          "id": "b2.1-u04-ls4-t3",
+          "kind": "audio",
+          "title": "Sie sind am Flughafen und hören eine Durchsage.",
+          "lines": [
+            {
+              "id": "b2.1-u04-ls4-t3-l01",
+              "speaker": "durchsage",
+              "de": "Sehr geehrte Fluggäste, eine Information zu Flug 4127 nach Hamburg: Wegen eines technischen Problems verspätet sich der Abflug um etwa zwei Stunden. Die neue Abflugzeit ist 16.40 Uhr. Das Boarding beginnt voraussichtlich um 16 Uhr an Gate 7 statt an Gate 3. Gäste von Blauwelle Reisen erhalten am Schalter gegenüber dem Café einen Gutschein für Getränke und einen Snack. Wir bitten um Ihr Verständnis.",
+              "en": "Dear passengers, information about flight 4127 to Hamburg: due to a technical problem, departure is delayed by about two hours. The new departure time is 16:40. Boarding is expected to start at 16:00 at gate 7 instead of gate 3. Blauwelle Reisen guests receive a voucher for drinks and a snack at the desk opposite the café. Thank you for your understanding.",
+              "say": "Sehr geehrte Fluggäste, eine Information zu Flug vier eins zwei sieben nach Hamburg: Wegen eines technischen Problems verspätet sich der Abflug um etwa zwei Stunden. Die neue Abflugzeit ist sechzehn Uhr vierzig. Das Boarding beginnt voraussichtlich um sechzehn Uhr an Gate sieben statt an Gate drei. Gäste von Blauwelle Reisen erhalten am Schalter gegenüber dem Café einen Gutschein für Getränke und einen Snack. Wir bitten um Ihr Verständnis."
+            }
+          ],
+          "glosses": [
+            {
+              "token": "Boarding",
+              "gloss": {
+                "en": "boarding (getting on the plane)"
+              }
+            }
+          ]
+        },
+        {
+          "id": "b2.1-u04-ls4-t4",
+          "kind": "audio",
+          "title": "Sie sind wieder zu Hause und hören eine Nachricht auf Ihrer Mailbox.",
+          "lines": [
+            {
+              "id": "b2.1-u04-ls4-t4-l01",
+              "speaker": "cast.ensemble-b2-6",
+              "de": "Guten Tag, Frau Nair, hier ist der Kundenservice von Blauwelle Reisen. Wir haben Ihre schriftliche Beschwerde vom 3. November erhalten, vielen Dank. Zurzeit prüfen wir Ihren Fall gemeinsam mit dem Hotel und der Reiseleitung. Das dauert leider etwas länger als sonst. Mit einer Antwort können Sie in etwa drei Wochen rechnen. Wenn Sie noch weitere Fotos haben, schicken Sie uns diese bitte per E-Mail und nennen Sie dabei Ihre Buchungsnummer. Auf Wiederhören.",
+              "en": "Hello, Ms Nair, this is Blauwelle Reisen customer service. We have received your written complaint of 3 November, thank you. We are currently looking into your case together with the hotel and the tour guide. Unfortunately this is taking a little longer than usual. You can expect an answer in about three weeks. If you have any more photos, please e-mail them to us and give your booking number. Goodbye.",
+              "say": "Guten Tag, Frau Nair, hier ist der Kundenservice von Blauwelle Reisen. Wir haben Ihre schriftliche Beschwerde vom dritten November erhalten, vielen Dank. Zurzeit prüfen wir Ihren Fall gemeinsam mit dem Hotel und der Reiseleitung. Das dauert leider etwas länger als sonst. Mit einer Antwort können Sie in etwa drei Wochen rechnen. Wenn Sie noch weitere Fotos haben, schicken Sie uns diese bitte per E-Mail und nennen Sie dabei Ihre Buchungsnummer. Auf Wiederhören."
+            }
+          ],
+          "glosses": []
+        },
+        {
+          "id": "b2.1-u04-ls4-t5",
+          "kind": "audio",
+          "title": "Sie hören im Radio einen Tipp für Verbraucher.",
+          "lines": [
+            {
+              "id": "b2.1-u04-ls4-t5-l01",
+              "speaker": "radio",
+              "de": "Und nun unser Verbrauchertipp. Wenn Sie im Urlaub Ärger mit dem Hotel haben, melden Sie den Mangel sofort – am besten bei der Reiseleitung und zusätzlich schriftlich. Machen Sie Fotos und notieren Sie, wann und bei wem Sie sich beschwert haben. Reisende, die erst nach der Rückkehr reklamieren, haben oft schlechte Karten. Der Veranstalter hatte dann nämlich keine Chance, das Problem vor Ort zu lösen. Weitere Tipps finden Sie auf den Seiten der Verbraucherzentralen.",
+              "en": "And now our consumer tip. If you have trouble with your hotel on holiday, report the defect straight away – ideally to the tour guide and also in writing. Take photos and note when and to whom you complained. Travellers who only complain after they return are often at a disadvantage, because the operator had no chance to solve the problem on site. You will find more tips on the consumer advice centres' websites."
+            }
+          ],
+          "glosses": [
+            {
+              "token": "Verbrauchertipp",
+              "gloss": {
+                "en": "consumer tip"
+              }
+            }
+          ]
+        }
+      ],
+      "blocks": [
+        {
+          "id": "b2.1-u04-ls4-tb2-sb1",
+          "template": "tb2.sb1",
+          "lane": "tb2",
+          "length": "full",
+          "scaffolded": false,
+          "modeDefault": "lern",
+          "instructionsDe": "Lesen Sie die E-Mail. Welches Wort passt in die Lücke? Wählen Sie a, b oder c.",
+          "textRefs": [
+            "b2.1-u04-ls4-t1"
+          ],
+          "items": [
+            {
+              "id": "b2.1-u04-ls4-tb2-sb1-01",
+              "type": "cloze",
+              "role": "exam",
+              "topic": "lesen",
+              "promptDe": "Lücke 1",
+              "options": [
+                "wie",
+                "so",
+                "als"
+              ],
+              "textRef": "b2.1-u04-ls4-t1",
+              "answer": "wie",
+              "accepted": [
+                "wie"
+              ],
+              "explanation": {
+                "de": "Nach geschrieben leitet wie einen indirekten Fragesatz ein: …, wie sehr Sie sich geärgert haben.",
+                "en": "wie introduces the indirect question: how much you were annoyed."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "b2.1-u04-ls4-tb2-sb1-02",
+              "type": "cloze",
+              "role": "exam",
+              "topic": "lesen",
+              "promptDe": "Lücke 2",
+              "options": [
+                "Ob",
+                "Wenn",
+                "Wann"
+              ],
+              "textRef": "b2.1-u04-ls4-t1",
+              "answer": "Wenn",
+              "accepted": [
+                "Wenn"
+              ],
+              "explanation": {
+                "de": "wenn nennt hier eine Bedingung: Unter dieser Bedingung ist die Beweislage besser.",
+                "en": "wenn introduces a condition here."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "b2.1-u04-ls4-tb2-sb1-03",
+              "type": "cloze",
+              "role": "exam",
+              "topic": "lesen",
+              "promptDe": "Lücke 3",
+              "options": [
+                "auf die",
+                "auf deren",
+                "auf denen"
+              ],
+              "textRef": "b2.1-u04-ls4-t1",
+              "answer": "auf denen",
+              "accepted": [
+                "auf denen"
+              ],
+              "explanation": {
+                "de": "Man erkennt etwas auf den Fotos: auf + Dativ Plural – auf denen.",
+                "en": "auf + dative plural: auf denen."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "b2.1-u04-ls4-tb2-sb1-04",
+              "type": "cloze",
+              "role": "exam",
+              "topic": "lesen",
+              "promptDe": "Lücke 4",
+              "options": [
+                "die",
+                "der",
+                "deren"
+              ],
+              "textRef": "b2.1-u04-ls4-t1",
+              "answer": "die",
+              "accepted": [
+                "die"
+              ],
+              "explanation": {
+                "de": "Relativpronomen im Akkusativ: die Mängelanzeige, die wir abgegeben haben.",
+                "en": "Accusative relative pronoun: die."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "b2.1-u04-ls4-tb2-sb1-05",
+              "type": "cloze",
+              "role": "exam",
+              "topic": "lesen",
+              "promptDe": "Lücke 5",
+              "options": [
+                "würde",
+                "hätte",
+                "wäre"
+              ],
+              "textRef": "b2.1-u04-ls4-t1",
+              "answer": "hätte",
+              "accepted": [
+                "hätte"
+              ],
+              "explanation": {
+                "de": "Vorwurf im Nebensatz: …, dass er uns hätte informieren müssen.",
+                "en": "Reproach in a subordinate clause: hätte + two infinitives."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "b2.1-u04-ls4-tb2-sb1-06",
+              "type": "cloze",
+              "role": "exam",
+              "topic": "lesen",
+              "promptDe": "Lücke 6",
+              "options": [
+                "wären",
+                "würden",
+                "hätten"
+              ],
+              "textRef": "b2.1-u04-ls4-t1",
+              "answer": "hätten",
+              "accepted": [
+                "hätten"
+              ],
+              "explanation": {
+                "de": "buchen bildet das Perfekt mit haben, also: hätten … gebucht.",
+                "en": "buchen takes haben: hätten … gebucht."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "b2.1-u04-ls4-tb2-sb1-07",
+              "type": "cloze",
+              "role": "exam",
+              "topic": "lesen",
+              "promptDe": "Lücke 7",
+              "options": [
+                "dass",
+                "damit",
+                "ob"
+              ],
+              "textRef": "b2.1-u04-ls4-t1",
+              "answer": "dass",
+              "accepted": [
+                "dass"
+              ],
+              "explanation": {
+                "de": "vorschlagen, dass …: Der dass-Satz sagt, was wir vorschlagen.",
+                "en": "vorschlagen, dass … states the proposal."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "b2.1-u04-ls4-tb2-sb1-08",
+              "type": "cloze",
+              "role": "exam",
+              "topic": "lesen",
+              "promptDe": "Lücke 8",
+              "options": [
+                "schicken",
+                "zu schicken",
+                "geschickt"
+              ],
+              "textRef": "b2.1-u04-ls4-t1",
+              "answer": "zu schicken",
+              "accepted": [
+                "zu schicken"
+              ],
+              "explanation": {
+                "de": "Es ist sinnvoll, … zu schicken: nach sinnvoll steht ein Infinitiv mit zu.",
+                "en": "After \"es ist sinnvoll\" a zu-infinitive follows."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "b2.1-u04-ls4-tb2-sb1-09",
+              "type": "cloze",
+              "role": "exam",
+              "topic": "lesen",
+              "promptDe": "Lücke 9",
+              "options": [
+                "Trotz",
+                "Statt",
+                "Aufgrund"
+              ],
+              "textRef": "b2.1-u04-ls4-t1",
+              "answer": "Aufgrund",
+              "accepted": [
+                "Aufgrund"
+              ],
+              "explanation": {
+                "de": "aufgrund nennt den Grund: Wegen der vielen Mängel fordern wir eine Minderung.",
+                "en": "aufgrund gives the reason; trotz would say the opposite."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "b2.1-u04-ls4-tb2-sb1-10",
+              "type": "cloze",
+              "role": "exam",
+              "topic": "lesen",
+              "promptDe": "Lücke 10",
+              "options": [
+                "Falls",
+                "Obwohl",
+                "Damit"
+              ],
+              "textRef": "b2.1-u04-ls4-t1",
+              "answer": "Falls",
+              "accepted": [
+                "Falls"
+              ],
+              "explanation": {
+                "de": "falls nennt eine Bedingung: nur wenn der Veranstalter nicht reagiert.",
+                "en": "falls introduces a condition."
+              },
+              "origin": "agent"
+            }
+          ]
+        },
+        {
+          "id": "b2.1-u04-ls4-tb2-hv3",
+          "template": "tb2.hv3",
+          "lane": "tb2",
+          "length": "reduced",
+          "scaffolded": true,
+          "modeDefault": "lern",
+          "instructionsDe": "Sie hören vier kurze Texte nur einmal. Ist die Aussage richtig oder falsch?",
+          "textRefs": [
+            "b2.1-u04-ls4-t2",
+            "b2.1-u04-ls4-t3",
+            "b2.1-u04-ls4-t4",
+            "b2.1-u04-ls4-t5"
+          ],
+          "items": [
+            {
+              "id": "b2.1-u04-ls4-tb2-hv3-01",
+              "type": "richtig_falsch",
+              "role": "exam",
+              "topic": "hoeren",
+              "promptDe": "Der Bus zum Ausflug fährt morgen eine Stunde früher ab als geplant.",
+              "options": [
+                "richtig",
+                "falsch"
+              ],
+              "textRef": "b2.1-u04-ls4-t2",
+              "answer": "richtig",
+              "accepted": [
+                "richtig"
+              ],
+              "explanation": {
+                "de": "Der Bus fährt um 7.30 Uhr statt um 8.30 Uhr – also eine Stunde früher.",
+                "en": "The bus leaves at 7:30 instead of 8:30 – one hour earlier."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "b2.1-u04-ls4-tb2-hv3-02",
+              "type": "richtig_falsch",
+              "role": "exam",
+              "topic": "hoeren",
+              "promptDe": "Der Flug nach Hamburg fällt heute aus.",
+              "options": [
+                "richtig",
+                "falsch"
+              ],
+              "textRef": "b2.1-u04-ls4-t3",
+              "answer": "falsch",
+              "accepted": [
+                "falsch"
+              ],
+              "explanation": {
+                "de": "Der Flug fällt nicht aus. Er startet etwa zwei Stunden später, um 16.40 Uhr.",
+                "en": "The flight is not cancelled; it leaves about two hours later."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "b2.1-u04-ls4-tb2-hv3-03",
+              "type": "richtig_falsch",
+              "role": "exam",
+              "topic": "hoeren",
+              "promptDe": "Der Veranstalter hat schon über die Beschwerde entschieden.",
+              "options": [
+                "richtig",
+                "falsch"
+              ],
+              "textRef": "b2.1-u04-ls4-t4",
+              "answer": "falsch",
+              "accepted": [
+                "falsch"
+              ],
+              "explanation": {
+                "de": "Der Fall wird noch geprüft. Eine Antwort kommt erst in etwa drei Wochen.",
+                "en": "The case is still being checked; an answer comes in about three weeks."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "b2.1-u04-ls4-tb2-hv3-04",
+              "type": "richtig_falsch",
+              "role": "exam",
+              "topic": "hoeren",
+              "promptDe": "Im Radio empfiehlt man, Beschwerden schon im Urlaub festzuhalten.",
+              "options": [
+                "richtig",
+                "falsch"
+              ],
+              "textRef": "b2.1-u04-ls4-t5",
+              "answer": "richtig",
+              "accepted": [
+                "richtig"
+              ],
+              "explanation": {
+                "de": "Der Tipp: Fotos machen und notieren, wann und bei wem man sich beschwert hat.",
+                "en": "The tip: take photos and note when and to whom you complained."
+              },
+              "origin": "agent"
+            }
+          ]
+        }
+      ],
+      "strategyCards": [
+        {
+          "template": "tb2.sb1",
+          "de": "Sprachbausteine Teil 1: Lesen Sie zuerst den ganzen Satz um die Lücke, nicht nur das Wort davor. Fragen Sie: Welcher Kasus? Welche Verbform? Welche Verbindung – Grund, Bedingung oder Gegensatz? Oft passen zwei Wörter von der Bedeutung, aber nur eines von der Grammatik.",
+          "en": "Language elements part 1: read the whole sentence around the gap. Ask which case, which verb form and which link (reason, condition, contrast). Two options often fit the meaning, but only one fits the grammar."
+        },
+        {
+          "template": "tb2.hv3",
+          "de": "Hörverstehen Teil 3: Sie hören jeden Text nur einmal. Lesen Sie die Einleitung und die Aussage, bevor der Text beginnt, und achten Sie auf Zeiten, Zahlen und Wörter wie nicht, erst oder schon. Entscheiden Sie sofort nach dem Hören.",
+          "en": "Listening part 3: each text is played once. Read the introduction and the statement first; listen for times, numbers and words like nicht, erst, schon. Decide straight after listening."
+        }
+      ]
+    },
+    {
+      "id": "b2.1-u04-ls5",
+      "kind": "sprechen",
+      "task": {
+        "bankKey": "b21-u04-s",
+        "lane": "tb2",
+        "template": "tb2.m3",
+        "mode": "plan-together",
+        "profile": "tb2-m3",
+        "prepMinutes": 10,
+        "instructionsDe": "Planen Sie mit Amal, wie Sie Ihre Ansprüche beim Veranstalter durchsetzen.",
+        "situationDe": "Mündlicher Ausdruck Teil 3 (verkürzt): Sie waren mit Ihrer Freundin Amal auf einer Gruppenreise nach Kreta. Hotel und Programm hatten viele Mängel, und der Veranstalter bietet nur einen Gutschein über 50 Euro an. Sie und Amal duzen sich. Besprechen Sie: Welche Belege haben Sie? Was fordern Sie genau? Bis wann soll der Veranstalter antworten? Wer übernimmt welche Aufgabe? Was tun Sie, falls keine Antwort kommt? In der Prüfung haben Sie für Teil 2 und Teil 3 zusammen 20 Minuten Vorbereitung.",
+        "seconds": [
+          180,
+          300
+        ],
+        "moves": [
+          "vorschlagen",
+          "reagieren",
+          "widersprechen",
+          "einigen",
+          "verteilen"
+        ],
+        "aiRole": {
+          "name": "Amal",
+          "personaDe": "Ihre Freundin Amal Haddad, Bauingenieurin aus Leipzig, war mit auf der Reise. Sie ist verärgert und will hartnäckig bleiben, hält aber 30 Prozent Minderung für zu viel und schlägt zuerst 20 Prozent vor. Sie widerspricht einmal, lässt sich von guten Gründen überzeugen und fragt am Ende, wer was übernimmt. Wenn Sie einen auswendig gelernten Text vortragen, unterbricht sie Sie mit einer Frage.",
+          "register": "du",
+          "support": "interrupts"
+        },
+        "openingLine": "So, jetzt sind wir wieder zu Hause, und der Veranstalter bietet uns nur einen Gutschein über 50 Euro an. Wie wollen wir jetzt vorgehen?",
+        "hintWords": [
+          "Ich schlage vor, dass …",
+          "Was hältst du davon, wenn …?",
+          "Das sehe ich anders, weil …",
+          "Die Reiseleitung hätte … müssen.",
+          "Einverstanden.",
+          "Wer übernimmt …?",
+          "bis zum …",
+          "andernfalls"
+        ],
+        "modelTurns": [
+          {
+            "speaker": "learner",
+            "de": "Ich schlage vor, dass wir zuerst alle Belege sammeln: deine Fotos, die Mängelanzeige und die Anzeige mit der Beschreibung des Hotels."
+          },
+          {
+            "speaker": "partner",
+            "de": "Gute Idee. Und was fordern wir genau? Ein Gutschein über 50 Euro ist viel zu wenig."
+          },
+          {
+            "speaker": "learner",
+            "de": "Das sehe ich genauso. Ich würde eine Minderung von 30 Prozent verlangen. Der Baulärm hat uns jede Nacht gestört, und die Reiseleitung hätte sich sofort um ein anderes Zimmer kümmern müssen."
+          },
+          {
+            "speaker": "partner",
+            "de": "30 Prozent finde ich zu viel. Wollen wir nicht lieber mit 20 Prozent anfangen?"
+          },
+          {
+            "speaker": "learner",
+            "de": "Da bin ich anderer Meinung. Wenn wir zu wenig fordern, bekommen wir am Ende noch weniger. Wir berufen uns einfach auf die Leistungsbeschreibung."
+          },
+          {
+            "speaker": "partner",
+            "de": "Na gut, einverstanden. Und bis wann soll der Veranstalter antworten?"
+          },
+          {
+            "speaker": "learner",
+            "de": "Was hältst du von drei Wochen? Andernfalls wenden wir uns an die Verbraucherzentrale."
+          },
+          {
+            "speaker": "partner",
+            "de": "Gut. Dann schreibst du den Brief, und ich schicke dir bis Sonntag die Fotos."
+          },
+          {
+            "speaker": "learner",
+            "de": "Abgemacht. Und ich rufe nächste Woche noch einmal beim Kundenservice an und frage nach."
+          }
+        ]
+      }
+    },
+    {
+      "id": "b2.1-u04-ls6",
+      "kind": "schreiben",
+      "task": {
+        "bankKey": "b21-u04-w",
+        "lane": "tb2",
+        "template": "tb2.sa",
+        "examKey": "telc_b2",
+        "profile": "tb2-sa",
+        "register": "halbformell",
+        "address": "Sie",
+        "title": "Beschwerde an den Reiseveranstalter",
+        "situationDe": "Sie waren im Oktober mit diesem Angebot auf Kreta:\n„Blauwelle Reisen – Kreta für Entdecker. 8 Tage Gruppenreise im Herbst: ruhiges Vier-Sterne-Hotel direkt am Meer, alle Zimmer mit Meerblick, Halbpension mit kretischer Küche, täglich geführte Ausflüge mit deutschsprachiger Reiseleitung. Ab 1.190 Euro pro Person.“\nDie Reise hatte viele Mängel. Sie haben sich vor Ort beschwert, aber es hat sich kaum etwas geändert.",
+        "taskDe": "Schreiben Sie eine Beschwerde an Blauwelle Reisen. Behandeln Sie drei der vier Punkte.",
+        "leitpunkte": [
+          {
+            "id": "lp1",
+            "de": "Mängel: Was war anders, als die Anzeige versprochen hat?",
+            "cues": [
+              "Baustelle",
+              "Baulärm",
+              "Meerblick",
+              "Zimmer",
+              "Ausflug",
+              "zugesichert",
+              "versprochen"
+            ]
+          },
+          {
+            "id": "lp2",
+            "de": "Folgen: Wie haben die Mängel Ihren Urlaub beeinträchtigt?",
+            "cues": [
+              "schlafen",
+              "erholen",
+              "geärgert",
+              "Zeit",
+              "verloren",
+              "deshalb"
+            ]
+          },
+          {
+            "id": "lp3",
+            "de": "Verhalten vor Ort: Was hätten Reiseleitung oder Veranstalter tun müssen?",
+            "cues": [
+              "hätte",
+              "hätten",
+              "müssen",
+              "informieren",
+              "gemeldet",
+              "Mängelanzeige"
+            ]
+          },
+          {
+            "id": "lp4",
+            "de": "Forderung und Frist: Was erwarten Sie, und bis wann?",
+            "cues": [
+              "Minderung",
+              "Erstattung",
+              "Prozent",
+              "bis zum",
+              "Frist",
+              "fordern",
+              "andernfalls"
+            ]
+          }
+        ],
+        "choose": {
+          "from": 4,
+          "pick": 3
+        },
+        "wordBand": [
+          150,
+          200
+        ],
+        "wordBandLearning": [
+          110,
+          140
+        ],
+        "minSubmitWords": 75,
+        "checklist": [
+          "Betreff",
+          "Anrede",
+          "Einleitung: Um welche Reise geht es?",
+          "drei Punkte, jeder mit mehr als einem Satz",
+          "Punkte verbunden (außerdem, deshalb, obwohl …)",
+          "durchgehend Sie-Form",
+          "Schluss und Gruß",
+          "Lernmodus etwa 120 Wörter (Prüfung: mindestens 150)"
+        ],
+        "modelText": "Betreff: Beschwerde über die Reise „Kreta für Entdecker“ vom 12. bis 19. Oktober\n\nSehr geehrte Damen und Herren,\n\nvom 12. bis 19. Oktober war ich mit Ihrer Gruppenreise „Kreta für Entdecker“ auf Kreta. Leider entsprach die Reise in wichtigen Punkten nicht Ihrer Anzeige.\n\nSie haben ausdrücklich ein ruhiges Hotel mit Meerblick zugesichert. Unser Zimmer lag jedoch direkt an einer Baustelle, und der Baulärm begann jeden Morgen um sieben Uhr. Außerdem fiel ein Ausflug ohne Ersatz aus.\n\nIhre Reiseleitung war zwei Tage lang nicht erreichbar, obwohl wir die Mängel sofort gemeldet haben. Sie hätte uns spätestens am zweiten Tag ein anderes Zimmer anbieten müssen. Auch über die Baustelle hätten Sie uns schon vor der Reise informieren müssen.\n\nAufgrund dieser Mängel fordere ich eine Minderung von 30 Prozent des Reisepreises, also 357 Euro. Ich würde Sie bitten, mir den Betrag bis zum 30. November zu überweisen. Andernfalls wende ich mich an die Verbraucherzentrale.\n\nMit freundlichen Grüßen\nPriya Nair"
+      }
+    },
+    {
+      "id": "b2.1-u04-ls7",
+      "kind": "ueberarbeiten",
+      "of": "b21-u04-w",
+      "endLine": "Ihre Beschwerde ist jetzt klarer und genauer. Die überarbeitete Fassung kommt in Ihre Mappe."
+    },
+    {
+      "id": "b2.1-u04-ls8",
+      "kind": "check",
+      "endLine": "Geschafft! Sie können sich jetzt über eine mangelhafte Reise beschweren, klar fordern und das Vorgehen gemeinsam planen."
+    }
+  ],
+  "check": {
+    "lines": [
+      {
+        "id": "b2.1-u04-ls8-l01",
+        "speaker": "ansage",
+        "de": "Wir hätten uns einen ruhigeren Urlaub gewünscht.",
+        "en": "We would have wished for a quieter holiday."
+      }
+    ],
+    "items": [
+      {
+        "id": "b2.1-u04-c01",
+        "type": "fill_blank",
+        "role": "check",
+        "topic": "g.konj2-vergangenheit",
+        "promptDe": "Wenn die Klimaanlage funktioniert ___, hätten wir besser geschlafen. (haben)",
+        "promptEn": "Konjunktiv II of haben.",
+        "answer": "hätte",
+        "accepted": [
+          "hätte"
+        ],
+        "explanation": {
+          "de": "funktionieren bildet das Perfekt mit haben: hätte … funktioniert.",
+          "en": "funktionieren takes haben: hätte … funktioniert."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "b2.1-u04-c02",
+        "type": "fill_blank",
+        "role": "check",
+        "topic": "g.konj2-vergangenheit",
+        "promptDe": "Ohne die Baustelle ___ wir gern länger im Hotel geblieben. (sein)",
+        "promptEn": "Konjunktiv II of sein.",
+        "answer": "wären",
+        "accepted": [
+          "wären"
+        ],
+        "explanation": {
+          "de": "bleiben bildet das Perfekt mit sein: wären … geblieben.",
+          "en": "bleiben takes sein: wären … geblieben."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "b2.1-u04-c03",
+        "type": "fill_blank",
+        "role": "check",
+        "topic": "g.konj2-bedeutungen",
+        "promptDe": "Die Reiseleitung ___ sich sofort um uns kümmern müssen. (haben, Vorwurf)",
+        "promptEn": "Konjunktiv II of haben.",
+        "answer": "hätte",
+        "accepted": [
+          "hätte"
+        ],
+        "explanation": {
+          "de": "Vorwurf: hätte + Infinitiv + müssen.",
+          "en": "Reproach: hätte + infinitive + müssen."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "b2.1-u04-c04",
+        "type": "sentence_building",
+        "role": "check",
+        "topic": "g.konj2-bedeutungen",
+        "promptDe": "Bilden Sie den Satz.",
+        "promptEn": "Build the polite demand.",
+        "tiles": [
+          "ich",
+          "würde",
+          "Sie",
+          "bitten",
+          "uns bis Freitag zu antworten"
+        ],
+        "answer": "Ich würde Sie bitten, uns bis Freitag zu antworten.",
+        "accepted": [
+          "Ich würde Sie bitten, uns bis Freitag zu antworten."
+        ],
+        "explanation": {
+          "de": "würde auf Position 2, bitten am Ende des Hauptsatzes, dann der zu-Infinitiv.",
+          "en": "würde second, bitten at the end of the main clause, then the zu-infinitive."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "b2.1-u04-c05",
+        "type": "error_correction",
+        "role": "check",
+        "topic": "g.konj2-vergangenheit",
+        "promptDe": "Korrigieren Sie: „Wir hätten früher nach Hause gefahren.“",
+        "promptEn": "Correct the auxiliary.",
+        "answer": "Wir wären früher nach Hause gefahren.",
+        "accepted": [
+          "Wir wären früher nach Hause gefahren."
+        ],
+        "intentionalError": true,
+        "errorTag": "perfekt-aux-participle",
+        "explanation": {
+          "de": "fahren bildet das Perfekt mit sein: wären … gefahren.",
+          "en": "fahren takes sein: wären … gefahren."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "b2.1-u04-c06",
+        "type": "multiple_choice",
+        "role": "check",
+        "topic": "lx.minderung",
+        "promptDe": "Sie zahlen wegen eines Mangels weniger für die Reise. Das ist eine …",
+        "promptEn": "Choose the word.",
+        "options": [
+          "Minderung",
+          "Stornierung",
+          "Kulanz"
+        ],
+        "answer": "Minderung",
+        "accepted": [
+          "Minderung"
+        ],
+        "explanation": {
+          "de": "Eine Minderung heißt: Der Reisepreis wird wegen eines Mangels kleiner.",
+          "en": "Minderung: the price is reduced because of a defect."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "b2.1-u04-c07",
+        "type": "fill_blank",
+        "role": "check",
+        "topic": "lx.sich-berufen",
+        "promptDe": "Wir berufen ___ auf die Zusage in Ihrer Anzeige.",
+        "promptEn": "Reflexive pronoun for wir.",
+        "answer": "uns",
+        "accepted": [
+          "uns"
+        ],
+        "explanation": {
+          "de": "sich berufen ist reflexiv: wir berufen uns.",
+          "en": "sich berufen is reflexive: wir berufen uns."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "b2.1-u04-c08",
+        "type": "dictation",
+        "role": "check",
+        "topic": "hoeren",
+        "promptDe": "Hören Sie und schreiben Sie den Satz.",
+        "promptEn": "Listen and write the sentence.",
+        "audioLineRef": "b2.1-u04-ls8-l01",
+        "answer": "Wir hätten uns einen ruhigeren Urlaub gewünscht.",
+        "accepted": [
+          "Wir hätten uns einen ruhigeren Urlaub gewünscht."
+        ],
+        "explanation": {
+          "de": "hätten … gewünscht: Konjunktiv II der Vergangenheit.",
+          "en": "hätten … gewünscht: past subjunctive."
+        },
+        "origin": "agent"
+      }
+    ],
+    "earlierDraw": {
+      "count": 4,
+      "from": "previous-3",
+      "pool": "reserve"
+    },
+    "proofItems": [
+      {
+        "id": "b2.1-u04-q01",
+        "type": "multiple_choice",
+        "role": "proof",
+        "topic": "lesen",
+        "promptDe": "Regel: „Mängel sofort der Reiseleitung melden.“ Was tun Sie bei Baulärm zuerst?",
+        "promptEn": "The rule says: report defects to the tour guide at once. What do you do first?",
+        "options": [
+          "Ich melde den Lärm sofort der Reiseleitung.",
+          "Ich schreibe nach der Reise eine Beschwerde.",
+          "Ich suche mir selbst ein anderes Hotel."
+        ],
+        "answer": "Ich melde den Lärm sofort der Reiseleitung.",
+        "accepted": [
+          "Ich melde den Lärm sofort der Reiseleitung."
+        ],
+        "explanation": {
+          "de": "Die Regel sagt: sofort melden – und zwar der Reiseleitung. Eine Beschwerde nach der Reise ersetzt das nicht.",
+          "en": "The rule: report at once, to the tour guide; a complaint afterwards does not replace this."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "b2.1-u04-q02",
+        "type": "multiple_choice",
+        "role": "proof",
+        "topic": "g.konj2-vergangenheit",
+        "promptDe": "Aus einer E-Mail: „…, dass Sie uns früher ___ informieren müssen.“ Welches Wort passt?",
+        "promptEn": "Choose the word for the gap.",
+        "options": [
+          "hätten",
+          "wären",
+          "würden"
+        ],
+        "answer": "hätten",
+        "accepted": [
+          "hätten"
+        ],
+        "explanation": {
+          "de": "Vorwurf im Nebensatz: hätten + informieren müssen.",
+          "en": "Reproach in a subordinate clause: hätten + informieren müssen."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "b2.1-u04-q03",
+        "type": "multiple_choice",
+        "role": "proof",
+        "topic": "redemittel",
+        "promptDe": "Welche Antwort zeigt am Telefon klar, dass Sie ein Entgegenkommen erwarten?",
+        "promptEn": "Which reply makes clear you expect a concession?",
+        "options": [
+          "Ein Gutschein reicht nicht. Ich erwarte eine Minderung des Reisepreises.",
+          "Na gut, dann nehme ich eben den Gutschein.",
+          "Das ist nicht so schlimm, danke trotzdem."
+        ],
+        "answer": "Ein Gutschein reicht nicht. Ich erwarte eine Minderung des Reisepreises.",
+        "accepted": [
+          "Ein Gutschein reicht nicht. Ich erwarte eine Minderung des Reisepreises."
+        ],
+        "explanation": {
+          "de": "Die Antwort lehnt das Angebot ab und nennt eine klare Forderung.",
+          "en": "The reply rejects the offer and states a clear demand."
+        },
+        "origin": "agent"
+      }
+    ],
+    "proofs": [
+      {
+        "canDo": "cd.b2.zugestaendnisse-einfordern",
+        "item": "b2.1-u04-q03"
+      },
+      {
+        "canDo": "cd.b2.schriftlich-reklamieren",
+        "aufgabe": "schreiben"
+      },
+      {
+        "canDo": "cd.b2.reisebedingungen-verstehen",
+        "item": "b2.1-u04-q01"
+      },
+      {
+        "canDo": "cd.b2.vorgehen-gemeinsam-planen",
+        "aufgabe": "sprechen"
+      },
+      {
+        "canDo": "cd.b2.brief-grammatik-kontext",
+        "item": "b2.1-u04-q02"
+      }
+    ],
+    "rueckschau": [
+      "rc.konj2-vergangenheit-2",
+      "rc.konj2-bedeutungen"
+    ],
+    "portrait": {
+      "factRef": "b2.1-u04-f02",
+      "de": "Die Verbraucherzentralen: In Deutschland gibt es 16 Verbraucherzentralen, eine in jedem Bundesland. Sie beraten unabhängig – online, am Telefon oder persönlich vor Ort, zum Beispiel bei Ärger mit einer Pauschalreise. Ihr Dachverband, der Verbraucherzentrale Bundesverband, hat seinen Sitz in Berlin und bündelt die Arbeit der 16 Verbraucherzentralen und von mehr als 30 weiteren Verbänden.",
+      "en": "The consumer advice centres: Germany has 16 Verbraucherzentralen, one in each federal state. They give independent advice online, by phone or in person, for example about problems with a package holiday. Their umbrella organisation, the Federation of German Consumer Organisations (vzbv), is based in Berlin and brings together the 16 centres and more than 30 other associations."
+    },
+    "testOutThreshold": 0.8,
+    "cumulativeShare": 0.35
+  },
+  "redemittel": [
+    {
+      "id": "b2.1-u04-rm01",
+      "de": "Leider entsprach die Reise nicht Ihrer Beschreibung.",
+      "en": "Unfortunately the trip did not match your description.",
+      "function": "eine Beschwerde einleiten",
+      "forTemplate": "tb2.sa"
+    },
+    {
+      "id": "b2.1-u04-rm02",
+      "de": "Sie hätten uns rechtzeitig informieren müssen.",
+      "en": "You should have informed us in good time.",
+      "function": "einen Vorwurf machen",
+      "forTemplate": "tb2.sa"
+    },
+    {
+      "id": "b2.1-u04-rm03",
+      "de": "Ich würde Sie bitten, mir einen Teil des Reisepreises zu erstatten.",
+      "en": "I would ask you to refund part of the price.",
+      "function": "höflich, aber bestimmt fordern",
+      "forTemplate": "tb2.sa"
+    },
+    {
+      "id": "b2.1-u04-rm04",
+      "de": "Wir berufen uns dabei auf Ihre Leistungsbeschreibung.",
+      "en": "In doing so we refer to your description of services.",
+      "function": "sich auf eine Zusage beziehen",
+      "forTemplate": "tb2.sa"
+    },
+    {
+      "id": "b2.1-u04-rm05",
+      "de": "Andernfalls wende ich mich an die Verbraucherzentrale.",
+      "en": "Otherwise I will contact the consumer advice centre.",
+      "function": "eine Konsequenz ankündigen",
+      "forTemplate": "tb2.sa"
+    },
+    {
+      "id": "b2.1-u04-rm06",
+      "de": "Was hältst du davon, wenn wir zuerst alle Belege sammeln?",
+      "en": "What do you think about collecting all the evidence first?",
+      "function": "etwas vorschlagen",
+      "forTemplate": "tb2.m3"
+    },
+    {
+      "id": "b2.1-u04-rm07",
+      "de": "Da bin ich anderer Meinung, weil …",
+      "en": "I see that differently, because …",
+      "function": "widersprechen",
+      "forTemplate": "tb2.m3"
+    },
+    {
+      "id": "b2.1-u04-rm08",
+      "de": "Dann machen wir es so: Du schreibst den Brief, und ich rufe an.",
+      "en": "Then let's do it like this: you write the letter and I'll call.",
+      "function": "sich einigen und Aufgaben verteilen",
+      "forTemplate": "tb2.m3"
+    }
+  ],
+  "story": {
+    "beat": "Priya und Amal lassen sich nach der missglückten Kreta-Reise nicht mit einem Gutschein abwimmeln: Sie tun sich mit den anderen Mitreisenden zusammen und fordern eine Minderung.",
+    "cliffhanger": "Zurück in Hamburg findet Priya einen Zettel im Briefkasten. Ihre Nachbarin Frau Brodersen schreibt: „Gegenüber entsteht ein Mehrgenerationenhaus. Wollen wir uns nicht alle einmal kennenlernen?“",
+    "castIn": [
+      "cast.frau-brodersen"
+    ]
+  },
+  "fokus": [],
+  "facts": [
+    {
+      "id": "b2.1-u04-f01",
+      "claimDe": "Reisende müssen einen Reisemangel dem Reiseveranstalter unverzüglich anzeigen (§ 651o Abs. 1 BGB). Für die Dauer des Mangels mindert sich der Reisepreis (§ 651m Abs. 1 BGB). Bei einer erheblichen Beeinträchtigung kann man kündigen, wenn eine selbst gesetzte angemessene Frist zur Abhilfe ohne Erfolg verstrichen ist (§ 651l Abs. 1 BGB). Die Ansprüche verjähren in zwei Jahren ab dem vertraglich vorgesehenen Reiseende (§ 651j BGB).",
+      "claimEn": "Travellers must report a defect to the tour operator without undue delay (§ 651o(1) BGB). The price is reduced for the duration of the defect (§ 651m(1) BGB). If the trip is considerably impaired, the traveller may terminate after a reasonable deadline for remedy has passed without result (§ 651l(1) BGB). Claims become time-barred two years after the contractual end of the trip (§ 651j BGB).",
+      "sources": [
+        "https://www.gesetze-im-internet.de/bgb/__651o.html",
+        "https://www.gesetze-im-internet.de/bgb/__651m.html",
+        "https://www.gesetze-im-internet.de/bgb/__651l.html",
+        "https://www.gesetze-im-internet.de/bgb/__651j.html"
+      ],
+      "factsCheckedOn": "2026-09-27",
+      "currentAsOf": "2026-09-27",
+      "exceptions": [
+        {
+          "de": "Wer einen Mangel schuldhaft nicht anzeigt, kann keine Minderung und keinen Schadensersatz verlangen, soweit der Veranstalter deshalb keine Abhilfe schaffen konnte (§ 651o Abs. 2 BGB).",
+          "en": "A traveller who culpably fails to report a defect loses the right to a price reduction and damages to the extent that the operator could therefore not remedy it (§ 651o(2) BGB)."
+        },
+        {
+          "de": "Die Höhe einer Minderung ist nicht festgelegt; sie wird im Einzelfall, wenn nötig durch Schätzung, ermittelt (§ 651m Abs. 1 BGB).",
+          "en": "The amount of a reduction is not fixed; it is determined case by case, by estimate where necessary (§ 651m(1) BGB)."
+        }
+      ],
+      "verification": "verified",
+      "notes": "§§ 651j, 651l, 651m, 651o and 651y BGB read at gesetze-im-internet.de on 2026-09-27. § 651y: no deviation to the traveller's disadvantage. The fictional Blauwelle terms in LS1 paraphrase these rules and add no legal claim of their own; the complaint deadline sentence („Eine besondere Beschwerdefrist gibt es nicht\") reflects that the Pauschalreiserecht sets no separate complaint deadline, only the two-year limitation of § 651j. No legal advice is given."
+    },
+    {
+      "id": "b2.1-u04-f02",
+      "claimDe": "In Deutschland gibt es 16 Verbraucherzentralen, eine in jedem Bundesland; sie beraten unabhängig online, telefonisch oder persönlich vor Ort. Ihr Dachverband, der Verbraucherzentrale Bundesverband (vzbv), hat seinen Sitz in Berlin und bündelt 16 Verbraucherzentralen und mehr als 30 verbraucherpolitische Verbände.",
+      "claimEn": "Germany has 16 consumer advice centres, one per federal state; they give independent advice online, by phone or in person. Their umbrella body, the Federation of German Consumer Organisations (vzbv), is based in Berlin and brings together the 16 centres and more than 30 consumer-policy associations.",
+      "sources": [
+        "https://www.vzbv.de/ueber-uns",
+        "https://www.verbraucherzentrale.de/"
+      ],
+      "factsCheckedOn": "2026-09-27",
+      "currentAsOf": "2026-09-27",
+      "exceptions": [],
+      "verification": "verified",
+      "notes": "vzbv.de/ueber-uns read on 2026-09-27: „bündelt die Expertise von 16 Verbraucherzentralen und mehr als 30 verbraucherpolitischen Verbänden\"; seat Berlin. verbraucherzentrale.de read the same day: „Lassen Sie sich unabhängig beraten … online, telefonisch oder persönlich vor Ort\" and a per-Bundesland selector (one centre per state). Fees for advice vary by centre and topic and are deliberately not stated."
+    }
+  ],
+  "assets": []
 }
