@@ -1538,21 +1538,6 @@
       "wordId": null
     },
     {
-      "id": "lx.entlang",
-      "lemma": "entlang",
-      "pos": "PREP",
-      "rection": "nachgestellt + Akk.",
-      "role": "productive",
-      "unit": "a2.2-u04",
-      "block": 1,
-      "list_ref": "A2",
-      "gloss": {
-        "en": "along"
-      },
-      "example": "Gehen Sie immer den Fluss entlang.",
-      "wordId": null
-    },
-    {
       "id": "lx.folgen",
       "lemma": "folgen",
       "pos": "VERB",
@@ -1773,7 +1758,7 @@
       "gloss": {
         "en": "river"
       },
-      "example": "Der Weg geht immer am Fluss entlang.",
+      "example": "Am Fluss machen wir ein Picknick.",
       "wordId": null
     },
     {

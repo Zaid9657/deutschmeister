@@ -9,9 +9,9 @@
 //      back; speaking ≥ 20 s or ≥ 2 turns in a card mode. No score is read anywhere.
 //   3. THE UNIT — Lernschritte finished or tested out AND both Aufgaben submitted; a lane
 //      variant of an Aufgabe counts for its slot; completion is never taken away.
-//   4. THE COURSE — 12 units, P1–P3, the closing block's first form (any lane); never the
-//      Diagnose, never Modelltest B/C; works on the authored course.json AND the compiled
-//      manifest.
+//   4. THE COURSE — 12 units, P1–P3, the closing block's first form of the LEARNER'S lane
+//      (SCHEMA §5 CLOSING: the Halbtest in .1, Modelltest A in .2); never the Diagnose, never
+//      Modelltest B/C; works on the authored course.json AND the compiled manifest.
 //   5. THE BOARD — numbers only from full-length Prüfungsmodus attempts, the §5.6
 //      weighting, no banned word in any label.
 
@@ -23,6 +23,11 @@ import { dirname, join } from 'node:path';
 
 import {
   DEFAULT_COMPLETION,
+  DEFAULT_COMPLETION_DOT2,
+  CLOSING_DOT1,
+  CLOSING_DOT2,
+  defaultCompletion,
+  closingFormFor,
   LERNSCHRITT_KINDS,
   completionRules,
   normalizeLearnerState,
@@ -59,6 +64,7 @@ const COURSE_A21 = {
   level: 'a2.1',
   kind: 'dot1',
   units: Array.from({ length: 12 }, (_, i) => `a2.1-u${nr(i + 1)}`),
+  lanes: { primary: 'ga2', secondary: ['ta2'], later: [], live: ['ga2'] },
   plateaus: ['a2.1-p1', 'a2.1-p2', 'a2.1-p3'],
   closing: { halbtest: { ga2: 'a2.1-ht-ga2', ta2: 'a2.1-ht-ta2' }, wiederholungsplan: false },
   completion: DEFAULT_COMPLETION,
@@ -67,13 +73,14 @@ const COURSE_B12 = {
   level: 'b1.2',
   kind: 'dot2',
   units: Array.from({ length: 12 }, (_, i) => `b1.2-u${nr(i + 1)}`),
+  lanes: { primary: 'tb1', secondary: ['dtz'], later: [], live: ['tb1'] },
   plateaus: ['b1.2-p1', 'b1.2-p2', 'b1.2-p3'],
   closing: {
-    diagnose: { tb1: 'b1.2-dx-tb1' },
-    modelltests: { tb1: ['b1.2-ma-tb1', 'b1.2-mb-tb1', 'b1.2-mc-tb1'] },
+    diagnose: { tb1: 'b1.2-dx-tb1', dtz: 'b1.2-dx-dtz' },
+    modelltests: { tb1: ['b1.2-ma-tb1', 'b1.2-mb-tb1', 'b1.2-mc-tb1'], dtz: ['b1.2-ma-dtz', 'b1.2-mb-dtz'] },
     wiederholungsplan: true,
   },
-  completion: DEFAULT_COMPLETION,
+  completion: DEFAULT_COMPLETION_DOT2,
 };
 
 const WRITING = {
@@ -140,6 +147,37 @@ test('a completion block this module cannot honour fails loudly', () => {
     /both required and never required/,
   );
   assert.throws(() => completionRules({ completion: { lernschritt: { finishedWhen: 'all-items-correct' } } }), /finishedWhen/);
+  // the SCHEMA §5 CLOSING entry: only 'learner' or a lane id, only Modelltest forms a–c, never a neverRequired form
+  const closing = (entry, never) => ({ completion: { course: { required: [entry], ...(never ? { neverRequired: never } : {}) } } });
+  assert.throws(() => completionRules(closing({ kind: 'halbtest', lane: 'somebody', status: 'submitted' })), /unknown required lane/);
+  assert.throws(() => completionRules(closing({ kind: 'halbtest', status: 'submitted' })), /unknown required lane/);
+  assert.throws(() => completionRules(closing({ kind: 'modelltest', form: 'd', lane: 'learner', status: 'submitted' })), /unknown Modelltest form/);
+  assert.throws(() => completionRules(closing({ kind: 'modelltest', form: 'b', lane: 'learner', status: 'submitted' })), /'modelltest:b' is both required and never required/);
+  assert.throws(() => completionRules(closing({ kind: 'halbtest', form: 'a', lane: 'learner', status: 'submitted' })), /takes no form/);
+  assert.throws(() => completionRules(closing({ kind: 'diagnose', lane: 'learner', status: 'submitted' })), /unknown required kind/);
+  assert.throws(() => completionRules(closing({ kind: 'closing', status: 'submitted', count: 1 })), /unknown required kind/, 'the pre-revision form is gone');
+});
+
+test('the SCHEMA §5 defaults: CLOSING by course kind, the Diagnose never required, form tasks by their fields', () => {
+  assert.deepEqual(DEFAULT_COMPLETION.course.required[2], CLOSING_DOT1);
+  assert.deepEqual(DEFAULT_COMPLETION_DOT2.course.required[2], CLOSING_DOT2);
+  assert.deepEqual(CLOSING_DOT1, { kind: 'halbtest', lane: 'learner', status: 'submitted' });
+  assert.deepEqual(CLOSING_DOT2, { kind: 'modelltest', form: 'a', lane: 'learner', status: 'submitted' });
+  assert.equal(defaultCompletion('dot2'), DEFAULT_COMPLETION_DOT2);
+  assert.equal(defaultCompletion('dot1'), DEFAULT_COMPLETION);
+  for (const d of [DEFAULT_COMPLETION, DEFAULT_COMPLETION_DOT2]) {
+    assert.ok(d.course.neverRequired.includes('diagnose'));
+    assert.equal(d.aufgabe.submittedWhen.formAllFieldsNonEmpty, true);
+  }
+  // a course.json without a course block takes the default of its kind
+  assert.equal(completionRules({ kind: 'dot2' }).course.required[2].kind, 'modelltest');
+  assert.equal(completionRules({ kind: 'dot1' }).course.required[2].kind, 'halbtest');
+  const form = { bankKey: 'a11-u05-w', form: { fields: [{ id: 'f1', labelDe: 'Name', answer: 'Kaya' }, { id: 'f2', labelDe: 'PLZ', answer: '04109' }] } };
+  assert.equal(isAufgabeSubmitted(form, { fields: { f1: 'Kaya', f2: '04109' } }), true);
+  assert.equal(isAufgabeSubmitted(form, { values: { f1: 'Keya', f2: '0000' } }), true, 'wrong but non-empty fields are a real attempt');
+  assert.equal(isAufgabeSubmitted(form, { fields: { f1: 'Kaya', f2: '  ' } }), false, 'every field must be filled');
+  assert.equal(isAufgabeSubmitted(form, { fields: { f1: 'Kaya' } }, { aufgabe: { submittedWhen: { formAllFieldsNonEmpty: false } } }), true);
+  assert.equal(isAufgabeSubmitted(form, { words: 40 }), false, 'a form is never judged by words');
 });
 
 test('no score is ever required — the SCHEMA block says so and the module reads none', () => {
@@ -285,16 +323,26 @@ const allDone = (course, extra = {}) => ({
   ...extra,
 });
 
-test('a .1 course: 12 units + P1–P3 + the Halbtest of any lane', () => {
+test('a .1 course: 12 units + P1–P3 + the Halbtest of the learner\'s lane', () => {
   assert.deepEqual(closingFirstForms(COURSE_A21), ['a2.1-ht-ga2', 'a2.1-ht-ta2']);
   const noClosing = courseCompletion(COURSE_A21, { progress: allDone(COURSE_A21) });
   assert.equal(noClosing.complete, false);
-  assert.deepEqual(noClosing.parts.map((p) => [p.kind, p.done, p.count]), [['unit', 12, 12], ['plateau', 3, 3], ['closing', 0, 1]]);
+  assert.deepEqual(noClosing.parts.map((p) => [p.kind, p.done, p.count]), [['unit', 12, 12], ['plateau', 3, 3], ['halbtest', 0, 1]]);
+  assert.equal(noClosing.parts[2].lane, 'ga2', 'no learner_goals lane: the course\'s primary lane');
+  assert.deepEqual(noClosing.parts[2].missing, ['a2.1-ht-ga2']);
   assert.equal(noClosing.done, 15);
   assert.equal(noClosing.total, 16);
-  const ta2 = courseCompletion(COURSE_A21, { progress: allDone(COURSE_A21, { 'a2.1-ht-ta2': 'complete' }) });
-  assert.equal(ta2.complete, true, 'the secondary lane\'s Halbtest counts too');
-  assert.equal(ta2.share, 1);
+  const ga2 = courseCompletion(COURSE_A21, { progress: allDone(COURSE_A21, { 'a2.1-ht-ga2': 'complete' }) });
+  assert.equal(ga2.complete, true);
+  assert.equal(ga2.share, 1);
+  // the learner's lane decides: a ta2 learner needs the ta2 Halbtest, a ga2 learner the ga2 one
+  const ta2Done = allDone(COURSE_A21, { 'a2.1-ht-ta2': 'complete' });
+  assert.equal(courseCompletion(COURSE_A21, { progress: ta2Done, lane: 'ta2' }).complete, true);
+  assert.equal(courseCompletion(COURSE_A21, { progress: ta2Done, lane: 'ga2' }).complete, false, 'another lane\'s Halbtest does not count');
+  assert.equal(courseCompletion(COURSE_A21, { progress: ta2Done }).complete, false);
+  // a learner lane the course has no Halbtest for falls back to the primary lane
+  assert.equal(closingFormFor(COURSE_A21, CLOSING_DOT1, 'dtz'), 'a2.1-ht-ga2');
+  assert.equal(closingFormFor(COURSE_A21, CLOSING_DOT1, 'ta2'), 'a2.1-ht-ta2');
 });
 
 test('a tested-out or started unit is not a complete unit', () => {
@@ -304,26 +352,46 @@ test('a tested-out or started unit is not a complete unit', () => {
   assert.deepEqual(r.parts[0].missing, ['a2.1-u05', 'a2.1-u06']);
 });
 
-test('a .2 course closes with Modelltest A — never the Diagnose, never B or C alone', () => {
-  assert.deepEqual(closingFirstForms(COURSE_B12), ['b1.2-ma-tb1']);
+test('a .2 course closes with Modelltest A of the learner\'s lane — never the Diagnose, never B or C alone', () => {
+  assert.deepEqual(closingFirstForms(COURSE_B12), ['b1.2-ma-tb1', 'b1.2-ma-dtz']);
   for (const [extra, complete] of [
     [{ 'b1.2-dx-tb1': 'complete' }, false],
     [{ 'b1.2-mb-tb1': 'complete', 'b1.2-mc-tb1': 'complete' }, false],
+    [{ 'b1.2-ma-dtz': 'complete' }, false],
     [{ 'b1.2-ma-tb1': 'complete' }, true],
   ]) {
     assert.equal(courseCompletion(COURSE_B12, { progress: allDone(COURSE_B12, extra) }).complete, complete, JSON.stringify(extra));
   }
+  const dtz = { ...allDone(COURSE_B12), 'b1.2-dx-dtz': 'complete', 'b1.2-mb-dtz': 'complete' };
+  assert.equal(courseCompletion(COURSE_B12, { progress: dtz, lane: 'dtz' }).complete, false, 'a DTZ learner\'s Diagnose and form B do not close the course');
+  const r = courseCompletion(COURSE_B12, { progress: { ...dtz, 'b1.2-ma-dtz': 'gold' }, lane: 'dtz' });
+  assert.equal(r.complete, true);
+  assert.deepEqual([r.parts[2].kind, r.parts[2].form, r.parts[2].lane, r.parts[2].doneIds], ['modelltest', 'a', 'dtz', ['b1.2-ma-dtz']]);
 });
 
-// TODO (integration check 2026-09-27): SCHEMA §5 was revised — the closing entry of
-// `completion.course.required` is now { kind: 'halbtest', lane: 'learner', … } (.1) or
-// { kind: 'modelltest', form: 'a', lane: 'learner', … } (.2), `neverRequired` gained 'diagnose' and
-// `aufgabe.submittedWhen` gained `formAllFieldsNonEmpty`. The regenerated §15 fixture carries that
-// block; src/lib/course-v2/completion.js still accepts only { kind: 'closing' } and throws on it.
-// The fix belongs to the completion.js owner; drop `todo` once completionRules() reads the new form.
-test('the SCHEMA fixture (authored course.json + unit) and its compiled forms agree', {
-  todo: 'completion.js lags the revised SCHEMA §5 closing entry (halbtest / modelltest, lane "learner")',
-}, () => {
+test('every authored course.json carries the SCHEMA §5 CLOSING of its kind and is readable', () => {
+  for (const level of ['a1.1', 'a1.2', 'a2.1', 'a2.2', 'b1.1', 'b1.2', 'b2.1', 'b2.2']) {
+    const p = `content/course-v2/${level}/course.json`;
+    if (!existsSync(join(ROOT, p))) continue;
+    const course = readJson(p);
+    const rules = completionRules(course);
+    assert.deepEqual(rules, completionRules({ kind: course.kind, completion: defaultCompletion(course.kind) }), `${level}: the SCHEMA block of kind ${course.kind}`);
+    const empty = courseCompletion(course, {});
+    assert.equal(empty.complete, false);
+    assert.equal(empty.total, 16, level);
+    const closing = empty.parts[2];
+    assert.equal(closing.lane, course.lanes.primary, `${level}: the primary lane by default`);
+    assert.equal(closing.missing.length, 1, `${level}: the closing form exists in course.closing`);
+    const done = courseCompletion(course, { progress: allDone(course, { [closing.missing[0]]: 'complete' }) });
+    assert.equal(done.complete, true, level);
+    for (const dx of Object.values(course.closing.diagnose || {})) {
+      assert.equal(courseCompletion(course, { progress: allDone(course, { [dx]: 'complete' }) }).complete, false, `${level}: a submitted Diagnose never completes the course`);
+    }
+  }
+});
+
+// SCHEMA §5 revision (2026-09-27): the closing entry is { kind: 'halbtest' | 'modelltest', lane: 'learner' }.
+test('the SCHEMA fixture (authored course.json + unit) and its compiled forms agree', () => {
   const coursePath = 'content/course-v2/fixtures/registries/a2.1/course.json';
   const unitPath = 'content/course-v2/fixtures/a2.1-u07.json';
   if (!existsSync(join(ROOT, coursePath)) || !existsSync(join(ROOT, unitPath))) {

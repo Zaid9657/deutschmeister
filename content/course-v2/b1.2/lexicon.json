@@ -5891,6 +5891,21 @@
       "wordId": null
     },
     {
+      "id": "lx.entlang",
+      "lemma": "entlang",
+      "pos": "PREP",
+      "rection": "nachgestellt + Akk.",
+      "role": "productive",
+      "unit": "b1.2-u09",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "along"
+      },
+      "example": "Gehen Sie immer den Fluss entlang.",
+      "wordId": null
+    },
+    {
       "id": "lx.lebendig",
       "lemma": "lebendig",
       "pos": "ADJ",
