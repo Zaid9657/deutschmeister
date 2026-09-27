@@ -282,6 +282,18 @@
       "note": "invented: Blauwelle Reisen (b2.1 pilot)"
     },
     {
+      "form": "Bücherhalle",
+      "kind": "org",
+      "level": "b2.1",
+      "note": "Hamburg’s public library (Bücherhallen Hamburg)"
+    },
+    {
+      "form": "Kranich",
+      "kind": "org",
+      "level": "b2.1",
+      "note": "invented employer: Kranich Logistik (B2); „Logistik“ is a lexicon word (b2.1-u01)"
+    },
+    {
       "form": "Nora",
       "kind": "person",
       "level": "a1.1"

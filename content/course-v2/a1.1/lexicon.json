@@ -172,6 +172,25 @@
       "wordId": null
     },
     {
+      "id": "lx.begruessen",
+      "lemma": "begrüßen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "begrüßt",
+        "perfekt": "hat begrüßt"
+      },
+      "role": "productive",
+      "unit": "a1.1-u01",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to greet, to welcome"
+      },
+      "example": "Frau Schulz begrüßt die neuen Teilnehmenden.",
+      "exampleEn": "Mrs Schulz welcomes the new participants.",
+      "wordId": null
+    },
+    {
       "id": "lx.name",
       "lemma": "Name",
       "pos": "NOUN",
@@ -2528,6 +2547,26 @@
       "wordId": null
     },
     {
+      "id": "lx.ziehen",
+      "lemma": "ziehen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "zieht",
+        "praet": "zog",
+        "perfekt": "ist gezogen"
+      },
+      "role": "productive",
+      "unit": "a1.1-u05",
+      "block": 1,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "to move (house); to pull"
+      },
+      "example": "Priya und Arjun ziehen in eine neue Wohnung.",
+      "exampleEn": "Priya and Arjun are moving into a new flat.",
+      "wordId": null
+    },
+    {
       "id": "lx.tisch",
       "lemma": "Tisch",
       "pos": "NOUN",
@@ -3495,6 +3534,27 @@
       },
       "example": "Ich brauche noch ein paar Dinge für den Kurs.",
       "exampleEn": "I still need a few things for the course.",
+      "wordId": null
+    },
+    {
+      "id": "lx.bitten",
+      "lemma": "bitten",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "bittet",
+        "praet": "bat",
+        "perfekt": "hat gebeten"
+      },
+      "rection": "jmdn. um + Akk.",
+      "role": "receptive",
+      "unit": "a1.1-u06",
+      "block": 3,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "to ask (for), to request"
+      },
+      "example": "Ich bitte meine Nachbarin um Hilfe.",
+      "exampleEn": "I ask my neighbour for help.",
       "wordId": null
     },
     {
@@ -5076,6 +5136,21 @@
       },
       "example": "Heute Abend gehen wir ins Restaurant.",
       "exampleEn": "Tonight we are going to a restaurant.",
+      "wordId": null
+    },
+    {
+      "id": "lx.voll",
+      "lemma": "voll",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "a1.1-u09",
+      "block": 2,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "full"
+      },
+      "example": "Das Café ist heute sehr voll.",
+      "exampleEn": "The café is very full today.",
       "wordId": null
     },
     {

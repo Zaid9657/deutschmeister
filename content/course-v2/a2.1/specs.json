@@ -1375,7 +1375,8 @@
             "lx.sich-interessieren",
             "lx.weinen",
             "lx.verstaendnis",
-            "lx.sich-aufregen"
+            "lx.sich-aufregen",
+            "lx.versuchen"
           ]
         }
       ],
@@ -1631,7 +1632,8 @@
             "lx.braut",
             "lx.ring",
             "lx.polterabend",
-            "lx.stimmung"
+            "lx.stimmung",
+            "lx.vorbereiten"
           ]
         },
         {

@@ -657,25 +657,6 @@
       "wordId": null
     },
     {
-      "id": "lx.vorbereiten",
-      "lemma": "vorbereiten",
-      "pos": "VERB",
-      "verb_forms": {
-        "3sg": "bereitet vor",
-        "perfekt": "hat vorbereitet"
-      },
-      "separable": true,
-      "role": "productive",
-      "unit": "b1.1-u01",
-      "block": 4,
-      "list_ref": "B1",
-      "gloss": {
-        "en": "to prepare"
-      },
-      "example": "Olena bereitet das Treffen im Café vor.",
-      "wordId": null
-    },
-    {
       "id": "lx.praktikant",
       "lemma": "Praktikant",
       "pos": "NOUN",
@@ -8475,6 +8456,12 @@
     },
     {
       "lemma": "lx.meinung",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b1.1-u01"
+    },
+    {
+      "lemma": "lx.vorbereiten",
       "from": "receptive",
       "to": "productive",
       "unit": "b1.1-u01"

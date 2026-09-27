@@ -789,6 +789,13 @@ describe('proper names (registries/names.json, SCHEMA §4.9): known from their l
     assert.ok(knownForms(ctx, 'a1.1', 5).has('deutschland'));
     assert.ok(knownForms(ctx, 'a1.1', 1).has('leipzig'), 'unallocated names stay known');
   });
+  test('a cast member’s name is known in the genitive too („Priyas Praktikum")', () => {
+    const { ctx } = build('x', []);
+    ctx.registries.casts = { members: new Map([['cast.priya', { member: { name: 'Priya Nair', from: 'Kochi, Indien' } }]]), relations: [], files: [] };
+    const known = knownForms(ctx, 'a1.1', 1);
+    for (const w of ['priya', 'priyas', 'nair', 'kochi']) assert.ok(known.has(w), w);
+    assert.ok(!known.has('kochis'), 'the genitive is for the name, not the place of origin');
+  });
   test('the committed registry passes its schema; a duplicate form, an unknown kind or level does not', () => {
     const doc = JSON.parse(readFileSync(join(REPO, 'content', 'course-v2', 'registries', 'names.json'), 'utf8'));
     assert.deepEqual(check(KINDS.names.schema, doc), []);

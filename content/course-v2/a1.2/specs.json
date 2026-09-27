@@ -377,7 +377,6 @@
             "lx.paket",
             "lx.hilfe",
             "lx.annehmen",
-            "lx.bitten",
             "lx.klingeln",
             "lx.zettel",
             "lx.bescheid-sagen",
@@ -1435,7 +1434,8 @@
             "lx.kindheit",
             "lx.baby",
             "lx.rentner",
-            "lx.vorher"
+            "lx.vorher",
+            "lx.sich-ansehen"
           ]
         }
       ],

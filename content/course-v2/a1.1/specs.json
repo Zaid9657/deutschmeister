@@ -45,7 +45,8 @@
             "lx.entschuldigung",
             "lx.sprachschule",
             "lx.online",
-            "lx.chat"
+            "lx.chat",
+            "lx.begruessen"
           ]
         },
         {
@@ -614,7 +615,8 @@
             "lx.garten",
             "lx.per",
             "lx.wg",
-            "lx.stadtteil"
+            "lx.stadtteil",
+            "lx.ziehen"
           ]
         },
         {
@@ -798,7 +800,8 @@
             "lx.gebraucht",
             "lx.wissen",
             "lx.problem",
-            "lx.ding"
+            "lx.ding",
+            "lx.bitten"
           ]
         }
       ],
@@ -1211,7 +1214,8 @@
             "lx.suppe",
             "lx.lecker",
             "lx.essen",
-            "lx.restaurant"
+            "lx.restaurant",
+            "lx.voll"
           ]
         },
         {

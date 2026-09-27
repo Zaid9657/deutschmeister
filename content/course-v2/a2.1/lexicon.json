@@ -5266,6 +5266,25 @@
       "wordId": null
     },
     {
+      "id": "lx.versuchen",
+      "lemma": "versuchen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "versucht",
+        "perfekt": "hat versucht"
+      },
+      "role": "productive",
+      "unit": "a2.1-u10",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to try"
+      },
+      "example": "Ich versuche, dich zu verstehen.",
+      "exampleEn": "I am trying to understand you.",
+      "wordId": null
+    },
+    {
       "id": "lx.grundschule",
       "lemma": "Grundschule",
       "pos": "NOUN",
@@ -5961,6 +5980,25 @@
         "en": "atmosphere, mood"
       },
       "example": "Die Stimmung auf dem Fest war toll.",
+      "wordId": null
+    },
+    {
+      "id": "lx.vorbereiten",
+      "lemma": "vorbereiten",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "bereitet vor",
+        "perfekt": "hat vorbereitet"
+      },
+      "separable": true,
+      "role": "receptive",
+      "unit": "a2.1-u12",
+      "block": 1,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "to prepare"
+      },
+      "example": "Olena bereitet das Treffen im Café vor.",
       "wordId": null
     },
     {

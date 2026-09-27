@@ -1618,27 +1618,6 @@
       "wordId": null
     },
     {
-      "id": "lx.bitten",
-      "lemma": "bitten",
-      "pos": "VERB",
-      "verb_forms": {
-        "3sg": "bittet",
-        "praet": "bat",
-        "perfekt": "hat gebeten"
-      },
-      "rection": "jmdn. um + Akk.",
-      "role": "receptive",
-      "unit": "a1.2-u03",
-      "block": 3,
-      "list_ref": "A1",
-      "gloss": {
-        "en": "to ask (for), to request"
-      },
-      "example": "Ich bitte meine Nachbarin um Hilfe.",
-      "exampleEn": "I ask my neighbour for help.",
-      "wordId": null
-    },
-    {
       "id": "lx.klingeln",
       "lemma": "klingeln",
       "pos": "VERB",
@@ -5544,6 +5523,29 @@
       "wordId": null
     },
     {
+      "id": "lx.sich-ansehen",
+      "lemma": "sich ansehen",
+      "pos": "VERB",
+      "verb_forms": {
+        "2sg": "siehst dir an",
+        "3sg": "sieht sich an",
+        "praet": "sah sich an",
+        "perfekt": "hat sich angesehen"
+      },
+      "separable": true,
+      "reflexive": "dat",
+      "role": "receptive",
+      "unit": "a1.2-u10",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to look at, to have a look at"
+      },
+      "example": "Priya und Frau Lehmann sehen sich alte Fotos an.",
+      "exampleEn": "Priya and Mrs Lehmann look at old photos.",
+      "wordId": null
+    },
+    {
       "id": "lx.veranstaltung",
       "lemma": "Veranstaltung",
       "pos": "NOUN",
@@ -6325,6 +6327,12 @@
   "promotions": [
     {
       "lemma": "lx.helfen",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.2-u03"
+    },
+    {
+      "lemma": "lx.bitten",
       "from": "receptive",
       "to": "productive",
       "unit": "a1.2-u03"

@@ -178,8 +178,8 @@ A token is known at a unit when it is one of:
    examples (after its colon, inside brackets) and its rule cards' model sentence, table rows below the header and
    `caseMarks` tokens. Card prose is metalanguage and licenses nothing, and — as with the core — a card example
    the lexicon allocates to a later unit (`Montag` on the A1.1-U1 Präsens card, allocated to U7) is not licensed early.
-5. Cast names, proper names from `registries/names.json` (below), the file's `extras` names, glossed extras
-   (LEX-01) — and a **one-letter token** is an option key (`c`, `X`), never a word.
+5. Cast names (also in the genitive: `Priyas`), proper names from `registries/names.json` (below), the file's
+   `extras` names, glossed extras (LEX-01) — and a **one-letter token** is an option key (`c`, `X`), never a word.
 
 Compounds are **not** decomposed: a compound is a lexicon entry of its own (`list_ref: compound:a+b`, SCHEMA §6).
 **Proper names** that are not cast members come from `registries/names.json` (SCHEMA §4.9): every token of a listed
