@@ -332,7 +332,7 @@
         {
           "point": "Konjunktiv II der Vergangenheit produktiv, auch mit Modalverb (Hätten Sie uns informiert, hätten wir umgebucht. Das Hotel hätte uns ein anderes Zimmer geben müssen.)",
           "new": true,
-          "lehrwerk": "rezeptiv in B1.2 (Blueprint §2.5: B1.2 U10; im Entwurf b1-2 nach dem Kontinuitätsdurchgang E10/E11, vorher E12); Menschen B1 L10, Schritte plus Neu 5 L7; produktiv hier nach 06 impl. 11; Sicher! aktuell B2 L5–6"
+          "lehrwerk": "rezeptiv mit festen Rahmen in b1-2 E11 (Blueprint §2.5: B1.2 U10), wiederholt in b1-2 E12; Menschen B1 L10, Schritte plus Neu 5 L7; produktiv hier nach 06 impl. 11; Sicher! aktuell B2 L5–6"
         },
         {
           "point": "Bedeutungen des Konjunktiv II: höfliche Forderung und Vorwurf (Ich würde Sie bitten, … / Sie hätten uns vorher informieren müssen.)",
@@ -914,9 +914,9 @@
           "lehrwerk": "b1-1 E5; Sicher! aktuell B2 L5–6"
         },
         {
-          "point": "Temporale Konnektoren sobald und solange (Sobald die Ärztin da ist, rufe ich Sie an. Solange das Fieber anhält, bleibt Frau K. im Bett.)",
-          "new": true,
-          "lehrwerk": "Profile deutsch B2 (06 F1: sobald = B2); Lehrwerk-Kapitel nicht verifiziert; b1-2.md §8 übergibt sobald/solange als noch nicht gelehrt"
+          "point": "Temporale Konnektoren sobald und solange in Übergabe und Anweisungen (Sobald die Ärztin da ist, rufe ich Sie an. Solange das Fieber anhält, bleibt Frau K. im Bett.) – Wiederholung aus B1.2 E7; Zuwachs: zusammen mit Vermutungen im Futur (Sobald sie wach ist, wird sie Hunger haben.)",
+          "new": false,
+          "lehrwerk": "b1-2 E7; Profile deutsch B2 (06 F1: sobald = B2)"
         }
       ],
       "vocabTheme": "Pflegealltag, Übergabe, Befinden",
