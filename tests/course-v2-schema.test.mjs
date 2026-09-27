@@ -263,6 +263,43 @@ test('registry mutations fail with the right message', () => {
   assert.match(kindOf({ foo: 1 }, '/x/y.json').error, /missing \$schema/);
 });
 
+// ── the real text-type and lane registries (RAILS §7 items 9–10) ───────────────────────
+test('text-types: lengthByLevel is { input, writing? } per level (SCHEMA §4.7 as amended), with optional notes', () => {
+  const ok = { notes: ['input = course input, writing = learner text'], types: [{ id: 'tt.x', label: 'Notiz', parts: [], lengthByLevel: { 'a1.1': { input: [10, 100] }, 'b2.2': { input: [15, 250], writing: [5, 40] } } }] };
+  assert.deepEqual(check(KINDS.texttypes.schema, ok), []);
+  const bad = structuredClone(ok);
+  bad.types[0].lengthByLevel['a1.1'] = [10, 100];
+  bad.types[0].lengthByLevel['b2.2'].writing = [40, 5];
+  bad.types[0].lengthByLevel['b2.2'].exam = [1, 2];
+  const errors = check(KINDS.texttypes.schema, bad).map((e) => `${e.path} ${e.message}`);
+  assert.ok(errors.some((e) => /\["a1\.1"\] expected object/.test(e)), errors.join('\n'));
+  assert.ok(errors.some((e) => /\["b2\.2"\]\.writing band \[40, 5\]/.test(e)), errors.join('\n'));
+  assert.ok(errors.some((e) => /\["b2\.2"\]\.exam unknown key/.test(e)), errors.join('\n'));
+});
+
+test('the real text-type and lane registries pass SCH-01 and REF-01', () => {
+  const files = [path.join(REPO_ROOT, 'content/course-v2/registries/text-types.json'), ...listJsonFiles(path.join(REPO_ROOT, 'content/course-v2/registries/lanes'))];
+  const result = checkFiles(files);
+  assert.deepEqual(result.files.flatMap((f) => f.errors.map((e) => `${path.basename(f.file)}:${e.path}: ${e.rule} ${e.message}`)), []);
+  const lanes = files.filter((f) => f.includes(`${path.sep}lanes${path.sep}`)).map((f) => JSON.parse(fs.readFileSync(f, 'utf8')));
+  assert.ok(lanes.length >= 4);
+  for (const lane of lanes) {
+    assert.ok(['paper', 'digital', 'both'].includes(lane.delivery), lane.id);
+    for (const t of Object.values(lane.teile)) {
+      assert.ok(t.instructionsDe.length <= 200, `${t.id}: template instruction ≤ 200 characters (TXT-04)`);
+      if (typeof t.plays === 'number') assert.match(t.instructionsDe, t.plays === 2 ? /zweimal/ : /nur einmal/, `${t.id}: the instruction says how often the audio plays`);
+      if (t.textVariantDe) assert.equal(t.pictorial, true, `${t.id}: only a pictorial Teil has a text variant`);
+    }
+  }
+  // BLUEPRINT §4.9: the pictorial Teile of the launch lanes, each with its .1 text variant
+  const pictorial = lanes.flatMap((l) => Object.values(l.teile)).filter((t) => t.pictorial).map((t) => t.id).sort();
+  assert.deepEqual(pictorial, ['ga2.h2', 'ga2.h3', 'sd1.h1', 'sd1.sp3']);
+  for (const id of pictorial) {
+    const t = lanes.flatMap((l) => Object.values(l.teile)).find((x) => x.id === id);
+    assert.ok(t.textVariantDe && t.scaffoldAllowedIn.length, `${id}: text variant and a .1 course that may scaffold it`);
+  }
+});
+
 // ── KEY-01: BANK_KEY_RE ─────────────────────────────────────────────────────────────────
 test('BANK_KEY_RE and the legacy pattern are character-identical to SCHEMA §2', () => {
   const m = EX.bankKeyJs.match(/export const BANK_KEY_RE =\s*(\/\^.*\$\/);/);
