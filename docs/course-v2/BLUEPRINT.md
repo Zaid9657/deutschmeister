@@ -1322,3 +1322,196 @@ consent gate (`public/consent.js`).
   Übungsprüfung – keine Prognose Ihres Prüfungsergebnisses." · miniature „Hören Teil 4 haben Sie bisher nur im Kleinen
   geübt. In voller Länge kommt er in Plateau 2." · plan „Bis zu Ihrer Prüfung bleiben 19 Tage. Bei 5 Lerntagen pro
   Woche schaffen Sie die Lektionen 10–12 und Modelltest A bis zum 3.11. Möglich: ‚Ich kann das schon' für Lektion 10."
+
+---
+
+## 9. Quality gates
+
+Gates are split by what they need. **Deterministic gates run in CI in seconds** (`node scripts/course-v2/validate.mjs
+<level> [--unit N]`; LanguageTool ≈ 1 min per level against a warm self-hosted server). **Model-calling gates run as
+pinned-model pipeline steps** whose results are committed with the content hash they checked; CI verifies the hashes
+(QA-FRESH-01) and never calls a model or needs an API key. An author run's definition of done is **exit 0 on every
+deterministic gate for its file**; a run that returns a red unit is a failed run, not a draft. **Hard** = 0 findings;
+**ratchet** = only goes down and must equal its measurement (test), as the A1.1 validator's ratchets do; **advisory**
+= routed to reviewers.
+
+### 9.1 Deterministic rules (CI)
+
+| Id | Rule (precise) | Type |
+|---|---|---|
+| **SCH-01** | Every file validates against its SCHEMA.md spec, using a zero-dependency checker in `scripts/course-v2/lib/` (no ajv/zod, no lockfile churn) | hard |
+| **REF-01** | Every can-do, spine point, lemma, Teil template, rubric profile, rule card, cast member, text type, detector, fokus and fact id referenced anywhere resolves | hard |
+| **ID-01** | Ids unique and well-formed per SCHEMA §2; each child id starts with its parent id; `ids.ledger.json` per level tombstones removed ids — a removed id is never reused, a meaning change gets a new id | hard |
+| **KEY-01** | Writing, speaking and micro-output bank keys match `BANK_KEY_RE` (SCHEMA §2); the legacy `^(a\d\d)-l\d\d$` keys stay valid; a test covers all 8 prefixes × every slot kind and `courseTaskKeyPrefix()` | hard |
+| **ALL-01** | 12 units, P1–P3, the closing block of the course kind (.1 Halbtest per live lane; .2 Diagnose + forms per lane), Etappen 4 × 3 | hard |
+| **ALL-02** | 3–5 registry can-dos per unit, each with source tags and band; ≥ 1 productive can-do per unit proven by an Aufgabe; „Das kann ich" lists exactly the unit's can-dos, each linked to a proof | hard |
+| **ALL-03** | ≥ 2 Lehrwerk placements per unit or a `deviation.reason` | hard |
+| **ALL-04** | Every unit tagged with ≥ 1 Handlungsfeld; each band (.1 + .2) covers all 12 BAMF Handlungsfelder in units or Fokus-Karten | hard |
+| **ALL-05** | Situation per unit is registry-unique within a band (no repeated topic without a new function, [m14] §F4) | hard |
+| **ALL-06** | Quotas: ≥ 1 online-interaction can-do per half-level; from B1.1 ≥ 1 mediation can-do and ≥ 3 work units; B2 ≥ 2 care units; spiral threads B1.1→B2.2 name their band step | hard |
+| **GRM-01** | ≤ 2 new spine points + ≤ 1 chunk preview per unit; a receptive first introduction counts as new | hard |
+| **GRM-02** | Every spine point enters at its registry position, receptive before productive; an earlier placement carries a written reason | hard |
+| **GRM-03** | Inventory floors: Goethe A1 inventory complete by A1.2 U12; A1.2 Perfekt milestones (haben ≤ U5, sein ≤ U8, trennbar/untrennbar/-ieren ≤ U10); Goethe A2 inventory complete by A2.2 U12 | hard |
+| **GRM-04** | Grammar ceiling: production lines, model texts, rule-card examples, expected answers and exam texts use no construction introduced after the current position (detectors §9.3); inputs exceed it only via whitelisted chunks or glossed receptive exposure | hard for exact detectors, advisory for heuristic ones |
+| **GRM-05** | Rule cards ≤ 60 words (A1) / ≤ 80 (A2+), model sentence first, English twin, no unconditioned claim (`quality.js` `unconditionedRule`) | hard |
+| **GRM-06** | A point's contrast partner is interleaved in the warm-ups from its second LS on | hard |
+| **LEX-01** | Known-token coverage ≥ 95 % per input and exam text; ≥ 98 % for the extensive strand (known = earlier units + this unit's lexicon + function words + cast names + glossed extras) | hard |
+| **LEX-02** | Each new lemma ≥ 2× in its unit's inputs and in ≥ 2 later units (the last two units of a level may recycle via review) | ratchet |
+| **LEX-03** | Items, model texts and expected answers use known lemmas only; ≤ 3 glossed receptive extras per text | hard |
+| **LEX-04** | Off-list share ≤ 15 % (A) / ≤ 25 % (B1) per unit; B2 per the frequency-band rule; extension words receptive unless justified | hard |
+| **LEX-05** | New entries within ±10 % of the level target (§2.6); productive share within ±5 points of the level profile | hard |
+| **LEX-07** | One gloss per lemma across surfaces; feminine pairs one entry; `plural_kind` set; `wordId` null in authoring | hard |
+| **SRS-01** | Daily review minutes at Standard pace, recomputed from the course's lexicon, card counts, productive share and the level's seconds per review, ≤ the level budget (A1 6, A2 7, B1 9, B2 11); Leicht/Intensiv values written to `course.json` for the plan | hard |
+| **SRS-02** | Simulated capped ladder: every card introduced in U12 of a .2 course reaches ≥ 5 (productive) / ≥ 3 (receptive) spaced retrievals with the exam 28 days after U12 and with the exam 7 days after U12 | hard |
+| **TXT-01** | Sentence metrics of non-exam texts within the level profile (mean/max words, subordinate clauses) | ratchet for dialogues, hard for instructions and rule cards |
+| **TXT-02** | Exam texts within the Teil template's length band (±15 % of the official sample size) | hard |
+| **TXT-03** | Input sizes: A dialogues 8–14 lines (A1.1 6–10), 60–120 s; B texts 150–450 words or 2–4 min; scenes ≤ 90 s (A1) / ≤ 2 min | hard |
+| **TXT-04** | Every instruction fits ≤ 2 lines at 360 px (≤ 90 characters, design) | hard |
+| **LNG-01** | Hunspell `de_DE` (`nspell` + `dictionary-de`, GPL, build-time only) ∪ lexicon ∪ cast names: 0 unknown tokens outside `intentionalError` items | hard |
+| **LNG-02** | Self-hosted LanguageTool (LGPL-2.1; the public API allows 20 requests/min): 0 unresolved GRAMMAR, TYPOS, CASING, PUNCTUATION matches outside a per-rule allowlist with reasons | hard |
+| **LNG-03** | Determiner/adjective + noun agreement against lexicon genders for listed nouns | hard |
+| **LNG-04** | spaCy `de_core_news_sm` morphology checks (morphology accuracy 90.66 % per its model card) | advisory |
+| **ITM-01** | Every `quality.js` exclusion reason and repair predicate, generalised from `SCOPED_LEVEL = 'a1.1'` to all levels without changing A1.1 output (its tests stay green): answer in prompt, cue only in the English gloss, article-cue mismatch, ambiguous correction, missing fronted orders, agreement ambiguity, gender-pair ambiguity, missing determiner cue, metalinguistic prompt, statement without a task, English in German fields, unconditioned rule | hard |
+| **ITM-02** | MC: 3 options, one key, distractors in the key's form class | hard |
+| **ITM-03** | R/F and Ja/Nein sets 40–60 % true, no run > 3; a/b/c keys balanced ±1 per block | hard |
+| **ITM-04** | No R/F statement is a substring of its text or differs from a text sentence by one token (A1.1 review #9) | hard |
+| **ITM-05** | `MAX_SAME_TASK_SHAPE` holds on the POS-masked key (review #9) | hard |
+| **ITM-06** | Per LS: pool of 16, mix per §3.4, ≥ 70 % recall formats, generated ≤ the level cap | hard |
+| **ITM-07** | Every answer containing a digit, time, date, price, phone number or spelled name carries `exact` | hard |
+| **ITM-08** | `caseSensitive: true` only where capitalisation is the task (polite Sie/Ihnen/Ihr, capitalisation drills) | advisory |
+| **ITM-09** | `sentence_building`: every grammatical order is in `accepted` (`missingFrontedOrder`) | hard |
+| **ITM-10** | Every `accepted` form added after solver triage carries `acceptedWhy` and a reviewer-confirmed flag | hard |
+| **ITM-11** | Every authored item has a static explanation `{de, en}`; nothing in a paid course depends on a runtime explanation call | hard |
+| **CON-01** | Persona facts vs the cast bible (name, age, city, job, languages, relationships, du/Sie) | hard |
+| **CON-02** | Model texts do not contradict the dialogues they summarise (entities, times, places) | hard + advisory |
+| **CON-04** | Calendar, time and arithmetic sanity: weekday ↔ date in the story calendar, *halb elf* = 10.30, prices add up, opening hours consistent within a unit | hard |
+| **CON-05** | Register per relationship: Sie in all instructions and with strangers; du only where the cast bible marks it | hard |
+| **CON-06** | Every factual claim (Landeskunde, legal, administrative, statistic, Porträt) sits in a `facts[]` record with `sources`, `factsCheckedOn` ≤ 180 days before promotion, `currentAsOf`, `exceptions` and `verification: "verified"` | hard |
+| **EXM-01** | Every block matches its Teil template: items, options, no-match option, plays, reading time, time box, text band, word band, preparation minutes | hard |
+| **EXM-02** | `scaffolded` only where the template allows it for this course; never in a .2 course; A1.1 blocks untimed | hard |
+| **EXM-03** | Writing tasks: Leitpunkt count = template; `choose` for 3-of-4 lanes; Anrede/Gruß never a Leitpunkt; register per template; sd1 S1 form exactly 5 fields | hard |
+| **EXM-04** | Speaking tasks: mode = template interaction; preparation minutes = lane; cards/moves present | hard |
+| **EXM-05** | Mock forms match the lane blueprint; parallel forms share no 8-gram; lengths within ±10 % of each other; same item-type counts; key balance | hard |
+| **EXM-06** | Mocks, Plateaus and Halbtests use only the taught inventory (LEX-01 ≥ 95 %, no construction after the course's last unit; the Diagnose is exempt and labelled) | hard |
+| **EXM-07** | Per-lane scorers pinned at their boundaries (§5.5) | hard |
+| **EXM-08** | Deterministic zero/cap rules win over any AI output (tests with stubbed AI responses) | hard |
+| **EXM-09** | Coverage COV-1…COV-7 (§2.4) per live lane | hard |
+| **EXM-10** | No DTB-format block outside `dtb2`; the DTZ lane carries its label and gate question | hard |
+| **LGL-01** | Banned strings in course data, pages and e-mails: „bestanden" (about our tests), „bereit" (readiness), „prüfungsreif", „prüfungssicher", „Bestehenschance", „garantiert", „in … Wochen zu", „offiziell/anerkannt/zertifiziert/Partner" (about us), „persönliches Feedback", „Tutor", „Coach", „Lehrkraft korrigiert", „Korrektur deiner Texte", „Zertifikat" outside the fixed disclaimer, „Muttersprachler/native speaker" on TTS, „unbegrenzt/unlimited" (until §13 D8), „Prüfer/Prüferin" for the AI (the anti-recitation line names the human examiner and is allowlisted) | hard |
+| **LGL-02** | No page or product title begins with an exam mark | hard |
+| **LGL-03** | The fixed AI label in every graded-result component and the AI notice at first contact (component tests) | hard |
+| **LGL-04** | Sie in every instruction, notice and e-mail; du only in marked peer dialogues | hard |
+| **LGL-06** | „Computerstimme" on every audio surface without human-recording provenance | hard |
+| **LGL-07** | No score, Übungswert or share link in any e-mail template until counsel clears it | hard |
+| **LGL-08** | Mock counts per lane on lane pages, never summed; no mock count in a page H1 | hard |
+| **LGL-09** | Hours only from `minutesMeasured` with n ≥ 30 learners per course (design) | hard |
+| **AUD-01** | Every spoken line has a speaker → voice from the cast bible | hard |
+| **AUD-02** | Numbers, times, prices and phone numbers in canonical form with a `say` override where written ≠ spoken („10.30" → „halb elf") | hard |
+| **AUD-03** | Line length ≤ 250 characters; no unsupported characters | hard |
+| **AUD-04** | ≥ 2 voices per dialogue; ≥ 4 voices per perception drill | hard |
+| **TIM-01** | `minutesPlanned` from the time model (reading speed per level, audio × 1.5 in Lernmodus, ≈ 12 s per closed item, ≈ 30 s per typed item, task timers) ≤ the slot limit (§3.1–3.2); Prüfungsmodus sessions ≤ template time + 5 min | hard |
+| **TIM-02** | U1 LS1 of every course has a scored item within the first 3 screens | hard |
+| **TIM-03** | Every LS has an `endLine` and a next-step reference; every unit a cliffhanger | hard |
+| **TIM-04** | Payload per LS ≤ 150 KB JSON and ≤ 1.5 MB including its audio (design) | hard |
+| **TIM-05** | No 3 consecutive production items without a preceding worked example | hard |
+| **PRG-01** | No progression gate reads an AI score (static test over the gate code) | hard |
+| **PRG-02** | Completion is defined once in `course.json`; course home, certificate, reminders and weekly truth import the one function (test) | hard |
+| **PRG-03** | An Aufgabe counts as submitted only as a real attempt (§3.5) (test) | hard |
+| **PRG-04** | Plan suggestions, the board's Vorschlag and `teil`-card selection read deterministic inputs only (test on the selector inputs) | hard |
+| **QA-FRESH-01** | Every committed model-gate result carries the content hash it checked; CI fails when the current hash differs | hard |
+
+### 9.2 Model-calling gates (pipeline steps, pinned model ids, results committed under `content/course-v2/qa/`)
+
+| Id | Gate | Pass |
+|---|---|---|
+| **SOL-01 Blind solver** | Two independent runs (different model or framing) answer every item from the learner-visible fields only (prompt, options, text or transcript; never key, explanation or `accepted`); each answer graded by the real `checkAnswer(answer, accepted, checkOptionsFor(item))` | both CORRECT or TYPO; else triage: key wrong (BLOCKER) · ambiguous (rewrite) · valid alternative (add to `accepted` with `acceptedWhy`, reviewer confirms) · solver error (third run decides) |
+| **SOL-02 Second-key probe** | For MC and sentence building: „Ist eine andere Antwort ebenfalls richtig?" | no defensible second key |
+| **SOL-03 Text-blind probe** | Each R/F, Ja/Nein or a/b/c set answered without its text | accuracy ≤ 60 % over the set (else the set leaks) |
+| **CAL-01 Anchor regression** | Each rubric profile's anchors, 3 runs each, pinned model | §4.6 thresholds |
+| **CAL-02 Human agreement** | Profile output vs the human DaF examiner's ratings (§4.6) | ≥ 80 % within one band per criterion; mean signed error on error-heavy texts ≥ −0.5 band |
+| **LGL-05 Official-overlap** | 8-gram shingle hashes of the official model sets (kept in `private/`) vs all our texts | 0 matches |
+| **LEX-06 List coverage** | Cumulative list gates at A1.2 / A2.2 / B1.2 (≥ 95 % of the list headwords) from the private `list_ref` table | report committed with its hash |
+
+### 9.3 Construction detectors (GRM-04)
+
+Each spine point names its detectors; each detector declares a **precision class** — exact detectors block,
+heuristic ones only route to review. They extend `src/data/curricula/constructions.js`, keeping its rule that the
+introducing unit is read from the spine, never typed into the detector.
+
+| Construction | Detector | Precision |
+|---|---|---|
+| unambiguous subordinators (*weil, dass, wenn, ob, obwohl, nachdem, bevor, falls, sodass, indem*) | token + clause boundary | exact |
+| ambiguous subordinators (*als*, *während*, *seit*, *bis*, *damit*) | token + verb-final clause check | heuristic |
+| two-part connectors (*entweder … oder*, *weder … noch*, *nicht nur … sondern auch*, *sowohl … als auch*, *zwar … aber*, *je … desto*) | paired tokens in one sentence | exact |
+| Konjunktiv II forms (*wäre, hätte, würde, könnte, müsste, dürfte* …) | closed list; *möchte* whitelisted as a chunk from A1.1 | exact |
+| Präteritum of full verbs | lexicon `verb_forms.praet`, minus *war/hatte* and modals | exact (lexicon-driven) |
+| Perfekt | auxiliary + participle from lexicon `verb_forms.perfekt` in one clause | exact (lexicon-driven) |
+| Passiv | *werden* + participle; *worden* | exact for *worden*, heuristic otherwise |
+| Futur I | *werden* + clause-final infinitive | heuristic |
+| zu-Infinitiv | *zu* + infinitive / *-zu-* infix from separable lemmas | exact (lexicon-driven) |
+| reflexive pronoun with a reflexive lemma | lexicon `reflexive` + pronoun in the clause | exact (lexicon-driven) |
+| Genitiv, *wegen/trotz/während* + Gen. | pattern + lexicon | heuristic |
+| relative clause | comma + d-pronoun + verb-final | heuristic (+ spaCy advisory) |
+| imperative du/ihr | clause-initial verb form without subject | heuristic |
+| attributive adjective endings | determiner + adjective + noun from lexicon | heuristic |
+| comparison (*-er als*, *am -sten*) | pattern | exact |
+| Konjunktiv I, extended participial attribute | pattern | advisory |
+
+### 9.4 The DaF review rubric
+
+Two reviewers per unit with different personas, plus specialists:
+- **R1 „Prüferin"** (licensed-examiner persona): exam fidelity, rubric application, task clarity.
+- **R2 „Kursleiterin DaF/DaZ"**: naturalness, level, didactics, scene plausibility.
+- **Level reviewer** (one per level per round): coherence, spirals, persona, progression across all 12 units.
+- **Walkthrough reviewer** (criterion E): the compiled unit played with Playwright Chrome device emulation at
+  360 × 640 (agents have no Android emulator; this is the available equivalent) — every pilot unit, the first two
+  units of every level, every Plateau.
+- **Exam-fidelity reviewer** per band for Plateaus, Halbtests, Diagnosen and mock modules; **copy/legal reviewer** for
+  pages and e-mails; **calibration reviewer** per rubric profile.
+- **Fresh-eyes audit:** a random 20 % of exited units, to catch reviewer drift.
+
+**Score sheet: 7 criteria × 5 = 35.**
+
+| Criterion | 5 | 3 | 1 |
+|---|---|---|---|
+| **D — Deutsch** (correctness, idiom, register) | no errors; idiomatic; register fits each relationship | isolated unidiomatic phrasing, nothing wrong on a model surface | an error in a key, model text, rule card or input |
+| **N — Niveau** | lexis, grammar and length exactly on level; progression felt | isolated look-aheads, glossed | systematically too hard or too easy |
+| **H — Handlung** | a believable, lively scene in which the can-dos are actually performed | constructed but functional; somewhat bland | a can-do that is only claimed |
+| **A — Aufgaben** | unambiguous; the answer follows from the German prompt; plausible distractors; explanations name the real error | some weak distractors | ambiguous, or solvable without German |
+| **P — Prüfung** | Teil format, sizes, plays, timing, rubric profile and pass rule correct; lane-exact where required | small deviation, flagged `scaffolded` where allowed | a wrong format that trains the wrong behaviour |
+| **K — Kohärenz** | cast, facts (current, not merely sourced), progression and spirals consistent | small breaks | contradictions or an outdated fact |
+| **E — Ergonomie** | each LS within its minutes at 360 px; instructions ≤ 2 lines; early success; save points; the end screen names the win | one LS runs long or one confusing screen | a dead end, or an LS > 25 min without a save point |
+
+**Severity.**
+- **BLOCKER:** a wrong key or an answer that cannot be derived from the German prompt; wrong German on a model
+  surface; a false or outdated fact; a legal-copy breach (outcome claim, human-feedback claim, exam-mark misuse);
+  a misrepresented exam format or a scorer on the wrong pass rule; a dead end that blocks completion.
+- **MAJOR:** unnatural German on a model surface; a level breach in production lines or expected answers; a can-do
+  claimed but not performed; an ambiguous item or a defensible second answer not accepted; a persona or story
+  contradiction; a register error in an instruction; a Lernschritt that runs > 25 min or lacks a save point; a
+  missing lane-exact block in a .2 course; a gate hole that lets a finding class through.
+- **MINOR:** style, gloss wording, a weak distractor, a scene that could be livelier.
+
+**Exit per unit:** 0 BLOCKER, 0 MAJOR, every criterion ≥ 4, ≤ 5 logged MINOR. **Per level:** mean ≥ 29/35 (for
+reference, A1.1 closed at 21.6/25 ≈ 86 % in `REVIEW-daf-23`). Up to 4 rounds per unit are planned; **a 5th round
+triggers a rail fix** (template, exemplar or rule), never more rounds and never more authors. Proposal A's "≤ 1 MAJOR
+per Lektion" and B's "≤ 2 MAJOR per course" are rejected: at 8× the A1.1 volume they would ship known MAJORs.
+
+**Findings are JSON** (`{unitId, path, quote, problem, fix, severity, scope: "instance"|"class", proposedRule}`). Every
+`class` finding goes to a **rule-smith**, who writes the rule, a failing fixture and a test **over all registered
+courses**, then re-validates every unit ("close a finding class with a rule + a test, never with a list of ids",
+CLAUDE.md). **Stop-the-line:** a class that recurs in ≥ 3 units of a level halts that level's authoring until the rule
+exists.
+
+### 9.5 The reviewers' brief: what the machines cannot check
+
+Pragmatics (would a real person say this here?); collocations that are grammatical but unnatural (*eine Entscheidung
+treffen*, not ✗ *machen*); cultural accuracy and stereotypes; **whether a fact is still current** and complete
+(exceptions); whether a rule card's simplification has become false; whether a distractor is defensible; tone and
+humour; **blandness** — the characteristic failure of templated production, scored under H.
+
+### 9.6 Post-launch data gates (weekly, from `lesson_attempts` and the events of §7.8)
+
+An item or screen where learners quit at ≥ 2× the Lernschritt's median rate goes to review within a week. A
+Lernschritt with measured p50 > 25 min is split. AI grading p95 latency > 10 s on Android makes the degraded UX
+(§4.7) the default.

@@ -711,6 +711,11 @@
           "lehrwerk": "Menschen B1 L21; Netzwerk B1 K10; Linie 1 B1 K13"
         },
         {
+          "point": "indem: Mittel und Weg (Sie können die Abbuchung stoppen, indem Sie der Lastschrift widersprechen. Man spart Geld, indem man Verträge rechtzeitig kündigt.)",
+          "new": true,
+          "lehrwerk": "Menschen B1 L20 (unverified); Schritte plus Neu 6 L12 (Profile deutsch: B2)"
+        },
+        {
           "point": "Nomen-Verb-Verbindungen im formellen Brief als feste Wendungen: Widerspruch einlegen, eine Frist setzen, in Rechnung stellen, zur Verfügung stellen",
           "new": false,
           "lehrwerk": "Aspekte neu B2 K4; Sicher! B2 L5 (systematisch erst in B2.1)",
@@ -743,8 +748,8 @@
         "innerhalb",
         "außerhalb",
         "die Mitgliedschaft",
-        "die Kundennummer",
-        "der Einspruch"
+        "der Einspruch",
+        "indem"
       ],
       "reading": {
         "textType": "Zahlungsaufforderung und Mahnung (Richtig/Falsch und Multiple Choice) + Vertragsbedingungen des Studios (Multiple Choice) + Lückentext: Widerspruchsschreiben",
@@ -907,11 +912,6 @@
           "lehrwerk": "Menschen B1 L23; Schritte plus Neu 6 L9/L12 (Schritte plus Neu 5 L6 früher; split)"
         },
         {
-          "point": "indem: Mittel und Weg (Man spart Energie, indem man die Heizung herunterdreht.)",
-          "new": true,
-          "lehrwerk": "Menschen B1 L20 (unverified); Schritte plus Neu 6 L12 (Profile deutsch: B2)"
-        },
-        {
           "point": "als ob + Konjunktiv II: so tun, als ob …; ironische Kommentare verstehen und selbst formulieren (Er tut so, als ob ein Repair-Café das Klima retten könnte. Als ob das so einfach wäre!)",
           "new": true,
           "lehrwerk": "Menschen B1 L24; Schritte plus Neu 6 L9"
@@ -935,11 +935,11 @@
         "wegwerfen",
         "nachhaltig",
         "statt",
-        "indem",
         "als ob",
         "der Umweltschutz",
         "die Lebensdauer",
-        "das Ersatzteil"
+        "das Ersatzteil",
+        "der Elektroschrott"
       ],
       "reading": {
         "textType": "Zeitungsartikel über ein Repair-Café (Multiple Choice) + sieben Leserkommentare zur Frage „Kurzstreckenflüge verbieten?“ (Ja/Nein)",
