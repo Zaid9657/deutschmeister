@@ -53,7 +53,8 @@
           "lx.zeigen",
           "lx.video",
           "lx.familienstand",
-          "lx.partner"
+          "lx.partner",
+          "lx.person"
         ]
       },
       {
@@ -315,8 +316,8 @@
           {
             "id": "a1.1-u03-ls1-l09",
             "speaker": "cast.olena",
-            "de": "Und die Frau hier? Und das Kind? Ist das dein Kind?",
-            "en": "And the woman here? And the child? Is that your child?"
+            "de": "Und die zwei Personen hier, die Frau und das Kind? Ist das dein Kind?",
+            "en": "And the two people here, the woman and the child? Is that your child?"
           },
           {
             "id": "a1.1-u03-ls1-l10",
@@ -425,7 +426,7 @@
             "Lehrer"
           ],
           "explanation": {
-            "de": "Priya sagt: „Beide sind Lehrer.“ Der Bruder studiert.",
+            "de": "Priya sagt: „Ja, beide sind Lehrer.“ Der Bruder studiert.",
             "en": "Both parents are teachers; the brother is at university."
           },
           "origin": "agent"
@@ -447,7 +448,7 @@
             "der Bruder von Priya"
           ],
           "explanation": {
-            "de": "Priya sagt: „Das ist mein Bruder. Er heißt Rahul.“",
+            "de": "Priya sagt: „Ja, das ist mein Bruder. Er heißt Rahul.“",
             "en": "Priya says: this is my brother, his name is Rahul."
           },
           "origin": "agent"
@@ -1723,8 +1724,8 @@
           {
             "id": "a1.1-u03-ls3-l06",
             "speaker": "cast.emre",
-            "de": "Ich bin verheiratet! Meine Frau Elif wohnt in Leipzig. Bald wohne ich auch da.",
-            "en": "I’m married! My wife Elif lives in Leipzig. Soon I’ll live there too."
+            "de": "Ich bin verheiratet! Meine Frau Elif wohnt in Leipzig.",
+            "en": "I’m married! My wife Elif lives in Leipzig."
           },
           {
             "id": "a1.1-u03-ls3-l07",
@@ -1735,8 +1736,8 @@
           {
             "id": "a1.1-u03-ls3-l08",
             "speaker": "cast.emre",
-            "de": "Ja, das ist sehr gut! Und du, Bilal? Bist du verheiratet?",
-            "en": "Yes, it’s really good! And you, Bilal? Are you married?"
+            "de": "Ja! Bald wohne ich auch da. Und du, Bilal? Bist du verheiratet?",
+            "en": "Yes! Soon I’ll live there too. And you, Bilal? Are you married?"
           },
           {
             "id": "a1.1-u03-ls3-l09",
@@ -1752,8 +1753,8 @@
           }
         ],
         "text": {
-          "de": "Kurs A1 · Chat · Nachricht von Emre\nEmre: Hallo zusammen! Hier ist ein Foto aus İzmir: meine Familie! Das sind meine Eltern. Mein Vater ist Kellner. Meine Mutter spricht nur Türkisch. Das ist meine Schwester Zeynep, und das ist meine Oma. Sie ist 80! Liebe Grüße aus İzmir!",
-          "en": "Course A1 · chat · message from Emre. Emre: Hi everyone! Here’s a photo from İzmir: my family! These are my parents. My father is a waiter. My mother only speaks Turkish. This is my sister Zeynep, and this is my grandma. She’s 80! Love from İzmir!"
+          "de": "Kurs A1 · Chat · Nachricht von Emre\nEmre: Hallo zusammen! Hier sind ein Foto und ein Video aus İzmir: meine Familie! Das sind meine Eltern. Mein Vater ist Kellner. Meine Mutter spricht nur Türkisch. Das ist meine Schwester Zeynep, und das ist meine Oma. Sie ist 80! Liebe Grüße aus İzmir!",
+          "en": "Course A1 · chat · message from Emre. Emre: Hi everyone! Here are a photo and a video from İzmir: my family! These are my parents. My father is a waiter. My mother only speaks Turkish. This is my sister Zeynep, and this is my grandma. She’s 80! Love from İzmir!"
         },
         "glosses": [
           {
@@ -1795,8 +1796,8 @@
             "ein Foto aus İzmir"
           ],
           "explanation": {
-            "de": "Emre schreibt: „Hier ist ein Foto aus İzmir: meine Familie!“",
-            "en": "Emre posts a photo of his family from İzmir."
+            "de": "Emre schreibt: „Hier sind ein Foto und ein Video aus İzmir.“",
+            "en": "Emre posts a photo and a video from İzmir."
           },
           "origin": "agent"
         },
@@ -1964,8 +1965,8 @@
           "promptDe": "Priya fragt Emre: „Deine Frau wohnt in Leipzig?“ Wer wohnt in Leipzig?",
           "promptEn": "“deine Frau” = the wife of the person Priya talks to.",
           "options": [
-            "die Frau von Bilal",
             "die Frau von Emre",
+            "die Frau von Bilal",
             "die Frau von Arjun"
           ],
           "answer": "die Frau von Emre",
@@ -2221,7 +2222,7 @@
             "count": 2,
             "source": [
               "a1.1-u03-ls3-l03",
-              "a1.1-u03-ls3-l05"
+              "a1.1-u03-ls3-l06"
             ]
           },
           {
@@ -2433,7 +2434,7 @@
           "id": "a1.1-u03-ls4-t2",
           "kind": "text",
           "title": "Nachricht von Bilal",
-          "text": "Hallo Priya,\ndu fragst: Wo wohnt deine Familie? Meine Familie wohnt in Lahore. Hier ist ein Foto. Das sind meine Eltern und meine Geschwister: zwei Schwestern und ein Bruder. Mein Bruder ist verheiratet. Er hat zwei Kinder: Der Sohn ist acht, die Tochter ist sechs.\nUnd ich? Ich bin ledig und wohne jetzt in Leipzig. Meine Mutter schreibt oft: „Bilal, wie geht’s? Bist du müde? Schläfst du gut?“\nBis morgen im Kurs!\nBilal",
+          "text": "Hallo Priya,\ndu fragst: Wo wohnt deine Familie? Meine Familie wohnt in Lahore. Hier ist ein Foto mit fünf Personen. Das sind meine Eltern und meine Geschwister: zwei Schwestern und ein Bruder. Mein Bruder ist verheiratet. Er hat zwei Kinder: Der Sohn ist acht, die Tochter ist sechs.\nUnd ich? Ich bin ledig und wohne jetzt in Leipzig. Meine Mutter schreibt oft: „Bilal, wie geht’s? Bist du müde? Schläfst du gut?“\nBis morgen im Kurs!\nBilal",
           "glosses": []
         }
       ],
@@ -2672,7 +2673,7 @@
         "leitpunkte": [
           {
             "id": "lp1",
-            "de": "Wer ist das? Zwei Leute: mein …, meine …",
+            "de": "Wer ist das? Zwei Personen: mein …, meine …",
             "cues": [
               "mein",
               "meine",
@@ -3049,7 +3050,7 @@
       "id": "a1.1-u03-rm07",
       "de": "Mein Bruder ist 24. Er studiert.",
       "en": "My brother is 24. He’s at university.",
-      "function": "jemanden beschreiben: Alter und Beruf",
+      "function": "eine Person beschreiben: Alter und Beruf",
       "forTemplate": "sd1.s2"
     },
     {

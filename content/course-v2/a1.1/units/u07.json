@@ -137,7 +137,7 @@
       "Linie 1 A1 K5 (Grammatik: trennbare Verben; nach memo 06)"
     ],
     "deviation": {
-      "reason": "Landeskunde: Die Einheit macht keine landesweite Sachaussage und hat darum keinen Fact. Vom Plan-Punkt „Zeit in D-A-CH“ zeigt sie die 24-Stunden-Uhr auf Schildern und Terminen (17 Uhr, 20 Uhr, 8.15 Uhr) und sagt sie in einem Satz (Strategiekarte Lesen Teil 3: „Auf Schildern steht oft 17 Uhr. Man sagt auch: fünf Uhr.“); ls1-i05 akzeptiert „20“ für „acht Uhr am Abend“. „halb drei“ üben LS1–LS3, die Prüfungsteile und der Check. Pünktlichkeit ist eine Szene ohne landesweite Aussage (LS3: „Bitte kommen Sie pünktlich.“ – „Wir sind immer pünktlich!“, glossiert). Die Mittagspause kommt nicht vor: Sie gehört zum Arbeitsalltag in a2.1-u01 (lx.mittagspause); Pünktlichkeit als Wort und Thema lernt a1.1-u10 (lx.puenktlich, Bus und Bahn). Szene: Die Plan-Zeile „Fokus Alltag: Sprechzeiten einer Arztpraxis lesen“ ist hier keine Fokus-Karte, sondern das Anliegen von LS2–LS3 (erster Termin in der Praxis von Frau Doktor Sommer, cast.dr-sommer); die Anmeldung im Bürgerbüro bleibt in a1.2-u04 (Review a1.1-u07 r1 F01)."
+      "reason": "Landeskunde: Die Einheit macht keine landesweite Sachaussage und hat darum keinen Fact. Vom Plan-Punkt „Zeit in D-A-CH“ zeigt sie die 24-Stunden-Uhr auf Schildern und Terminen (17 Uhr, 20 Uhr, 8.15 Uhr) und sagt sie in einem Satz (Strategiekarte Lesen Teil 3: „Auf Schildern steht oft 17 Uhr. Das ist fünf Uhr am Nachmittag.“); ls1-i05 akzeptiert „20“ für „acht Uhr am Abend“. „halb drei“ üben LS1–LS3, die Prüfungsteile und der Check. Pünktlichkeit ist eine Szene ohne landesweite Aussage (LS3: Termin um 8.15 Uhr, „Bitte kommen Sie pünktlich.“ – Priya: „Gut, dann sind wir pünktlich!“, glossiert). Die Mittagspause kommt nicht vor: Sie gehört zum Arbeitsalltag in a2.1-u01 (lx.mittagspause); Pünktlichkeit als Wort und Thema lernt a1.1-u10 (lx.puenktlich, Bus und Bahn). Szene: Die Plan-Zeile „Fokus Alltag: Sprechzeiten einer Arztpraxis lesen“ ist hier keine Fokus-Karte, sondern das Anliegen von LS2–LS3 (erster Termin in der Praxis von Frau Doktor Sommer, cast.dr-sommer); die Anmeldung im Bürgerbüro bleibt in a1.2-u04 (Review a1.1-u07 r1 F01)."
     },
     "cast": [
       "cast.priya",
@@ -315,8 +315,8 @@
           {
             "id": "a1.1-u07-ls1-l09",
             "speaker": "cast.priya",
-            "de": "Ich stehe immer um sieben Uhr auf. Um halb acht frühstücke ich mit Arjun. Aber heute nicht! Um neun fängt der Kurs an.",
-            "en": "I always get up at seven. At half past seven I have breakfast with Arjun. But not today! The class starts at nine."
+            "de": "In der Woche stehe ich immer um sieben Uhr auf. Um halb acht frühstücke ich mit Arjun. Aber heute nicht! Um neun fängt der Kurs an.",
+            "en": "On weekdays I always get up at seven. At half past seven I have breakfast with Arjun. But not today! The class starts at nine."
           },
           {
             "id": "a1.1-u07-ls1-l10",
@@ -1071,8 +1071,8 @@
           {
             "id": "a1.1-u07-ls2-l01",
             "speaker": "cast.arjun",
-            "de": "Priya, wir brauchen noch einen Termin bei Frau Doktor Sommer. Wir sind ja neu hier.",
-            "en": "Priya, we still need an appointment with Dr Sommer. We’re new here, after all."
+            "de": "Priya, wir brauchen noch einen Termin bei Frau Doktor Sommer. Wir sind neu hier.",
+            "en": "Priya, we still need an appointment with Dr Sommer. We’re new here."
           },
           {
             "id": "a1.1-u07-ls2-l02",
@@ -1089,8 +1089,8 @@
           {
             "id": "a1.1-u07-ls2-l04",
             "speaker": "cast.priya",
-            "de": "Nur am Morgen? Und am Nachmittag nicht?",
-            "en": "Only in the morning? Not in the afternoon?"
+            "de": "Nur am Morgen? Und am Abend nicht?",
+            "en": "Only in the morning? Not in the evening?"
           },
           {
             "id": "a1.1-u07-ls2-l05",
@@ -1473,7 +1473,7 @@
               "v2-inv"
             ],
             "explanation": {
-              "de": "„Zuerst“ auf Position 1: „frühstücke“ steht auf Position 2, dann „ich“. Genauso nach „dann“.",
+              "de": "„Zuerst“ auf Position 1: „frühstücke“ steht auf Position 2, dann „ich“. Nach „dann“ auch.",
               "en": "“zuerst” first: the verb “frühstücke” second, then “ich” – the same after “dann”."
             },
             "origin": "agent"
@@ -1772,7 +1772,7 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "g.zeitangaben-inversion",
-          "promptDe": "Korrigieren Sie: „Emre arbeitet, aber lernt Priya.“",
+          "promptDe": "Korrigieren Sie die Wortstellung: „Emre arbeitet, aber lernt Priya.“",
           "promptEn": "Correct the word order after “aber”.",
           "answer": "Emre arbeitet, aber Priya lernt.",
           "accepted": [
@@ -1883,20 +1883,14 @@
           {
             "id": "a1.1-u07-ls3-l09",
             "speaker": "cast.arjun",
-            "de": "Wie spät ist es? Oh, schon halb fünf! Da ist die Praxis schon zu.",
-            "en": "What time is it? Oh, half past four already! The practice is closed by now."
+            "de": "Wie spät ist es? Oh, schon halb fünf! Die Praxis ist zu, da ist nur der Anrufbeantworter.",
+            "en": "What time is it? Oh, half past four already! The practice is closed – you’ll only get the answering machine."
           },
           {
             "id": "a1.1-u07-ls3-l10",
             "speaker": "cast.priya",
-            "de": "Stimmt. Aber Termine gibt es auch online. Moment … Tag: Donnerstag. Uhrzeit: Viertel nach acht. Gut!",
-            "en": "True. But you can book appointments online too. Just a moment … Day: Thursday. Time: a quarter past eight. Good!"
-          },
-          {
-            "id": "a1.1-u07-ls3-l11",
-            "speaker": "cast.arjun",
-            "de": "Dann sind wir schon um acht da. Wir sind immer pünktlich!",
-            "en": "Then we’ll be there at eight already. We’re always on time!"
+            "de": "Stimmt. Aber Termine gibt es auch online. Moment … Tag: Donnerstag. Uhrzeit: Viertel nach acht. Gut, dann sind wir pünktlich!",
+            "en": "True. But you can book appointments online too. Just a moment … Day: Thursday. Time: a quarter past eight. Good – then we’ll be on time!"
           }
         ],
         "text": {
@@ -1997,8 +1991,8 @@
           "type": "multiple_choice",
           "role": "detail",
           "topic": "hoeren",
-          "promptDe": "Wann macht die Praxis auf?",
-          "promptEn": "When does the practice open?",
+          "promptDe": "Wann sind Priya und Arjun am Donnerstag da?",
+          "promptEn": "When will Priya and Arjun be there on Thursday?",
           "options": [
             "um 10 Uhr",
             "um 11 Uhr",
@@ -2010,14 +2004,10 @@
           ],
           "exact": "number",
           "explanation": {
-            "de": "Priya sagt: „Die Praxis macht um acht Uhr auf.“ Um zehn fängt Arjun an, um elf der Kurs.",
-            "en": "The practice opens at eight; ten is when Arjun starts work, eleven the class."
+            "de": "Priya sagt: „Am Donnerstag um acht sind wir da!“ Um zehn fängt Arjun an, um elf der Kurs.",
+            "en": "They will be at the practice at eight; ten is when Arjun starts work, eleven the class."
           },
-          "origin": "agent",
-          "hint": {
-            "de": "die Praxis: Hier arbeitet Frau Doktor Sommer.",
-            "en": "Praxis = practice, surgery (doctor’s)"
-          }
+          "origin": "agent"
         },
         {
           "id": "a1.1-u07-ls3-i05",
@@ -2066,7 +2056,7 @@
             "Ab acht Uhr ist sie offen."
           ],
           "explanation": {
-            "de": "„macht … auf“ ist „aufmachen“: Ab acht Uhr ist die Praxis offen.",
+            "de": "„macht … auf“ ist „aufmachen“: Ab acht Uhr ist sie offen.",
             "en": "“macht … auf” (aufmachen) = opens: from eight the practice is open."
           },
           "origin": "agent",
@@ -2392,7 +2382,7 @@
             "count": 2,
             "source": [
               "a1.1-u07-ls3-l05",
-              "a1.1-u07-ls3-l07"
+              "a1.1-u07-ls3-l01"
             ]
           },
           {
@@ -2976,7 +2966,7 @@
                 "um vier"
               ],
               "explanation": {
-                "de": "Bilal hat um zwei Uhr einen Termin, zwei Stunden lang. Er sagt: „Ich komme also erst um vier, nicht um drei.“",
+                "de": "Bilal hat um zwei Uhr einen Termin. Er dauert zwei Stunden. Bilal sagt: „Ich komme also erst um vier, nicht um drei.“",
                 "en": "Bilal’s appointment at two takes two hours, so he comes at four, not three."
               },
               "origin": "agent"
@@ -3037,7 +3027,7 @@
       "strategyCards": [
         {
           "template": "sd1.l3",
-          "de": "Lesen Teil 3: Lesen Sie zuerst die Aussage. Suchen Sie dann auf dem Schild den Tag und die Uhrzeit. Auf Schildern steht oft 17 Uhr. Man sagt auch: fünf Uhr. Achtung: „zu“ ist „geschlossen“, und „offen“ ist „geöffnet“.",
+          "de": "Lesen Teil 3: Lesen Sie zuerst die Aussage. Suchen Sie dann auf dem Schild den Tag und die Uhrzeit. Auf Schildern steht oft 17 Uhr. Das ist fünf Uhr am Nachmittag. Achtung: „zu“ ist „geschlossen“, und „offen“ ist „geöffnet“.",
           "en": "Reading part 3: read the statement first, then look for the day and the time on the sign. Signs often use the 24-hour clock: 17 Uhr – in speech also “fünf Uhr”. Note: “zu” means “geschlossen” (closed) and “offen” means “geöffnet” (open)."
         },
         {
@@ -3058,7 +3048,7 @@
         "profile": "sd1-sp2",
         "prepMinutes": 0,
         "instructionsDe": "Zwei Themen: „Mein Tag“, dann „Meine Woche“. Fragen und antworten Sie mit den Karten.",
-        "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin Nora haben Wortkarten zu zwei Themen: zuerst „Mein Tag“, dann „Meine Woche“. Fragen Sie mit Ihrer Karte. Antworten Sie auf die Frage von Nora, gern mit zwei Sätzen.",
+        "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin Nora haben Wortkarten zu zwei Themen: zuerst „Mein Tag“, dann „Meine Woche“. Fragen Sie mit Ihrer Karte. Antworten Sie auf die Frage von Nora. Bei „aufstehen“ erzählen Sie in zwei Sätzen von Ihrem Tag.",
         "cards": {
           "learner": [
             "Mein Tag – Uhrzeit",
