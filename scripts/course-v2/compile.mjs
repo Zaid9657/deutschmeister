@@ -12,8 +12,11 @@
 //                        requires --out and --banks-out, so fixture output never lands in src/ or netlify/
 //     --no-refs          do not resolve references while checking (format only)
 //
-// Every input file of the level (and every shared registry) must pass the schema check first;
-// on any error nothing is written and the exit code is 1.
+// A level compiles from the units that exist (RAILS §4): a unit course.json lists but no file holds
+// yet is a manifest row with status 'coming'; a unit whose own check fails is skipped with its
+// errors printed (never half-written) and is 'coming' too — a skip alone does not fail the run.
+// Every other file of the level and every shared registry must pass the schema check; on such an
+// error nothing is written for the level and the exit code is 1.
 import path from 'node:path';
 import { compileLevel, writeOutputs, levelsIn, DEFAULT_OUT, DEFAULT_BANKS } from './lib/compiler.mjs';
 import { CONTENT_ROOT, FIXTURES_ROOT, rel } from './lib/tree.mjs';
@@ -57,9 +60,15 @@ if (levels.length === 0) {
 let failed = false;
 // Shared registries are checked with every level; an error in one is printed once, not per level.
 const printed = new Set();
+const short = (ids) => ids.map((id) => id.split('-').pop()).join(', ') || '—';
 for (const level of levels) {
   const result = compileLevel(level, { contentRoot, exclude, outRoot: opts.out || DEFAULT_OUT, banksRoot: opts.banksOut || DEFAULT_BANKS, refs: opts.refs });
-  for (const w of result.warnings) console.log(`warning: ${w}`);
+  for (const w of [...new Set(result.warnings)]) console.log(`warning: ${w}`);
+  for (const s of result.skipped || []) {
+    console.log(`skipped ${s.unit} (${s.file}): ${s.errors.length} check error(s) — the unit is listed as 'coming' until it passes`);
+    for (const e of s.errors.slice(0, 5)) console.log(`  ${e}`);
+    if (s.errors.length > 5) console.log(`  … ${s.errors.length - 5} more (node scripts/course-v2/check.mjs ${s.file})`);
+  }
   if (result.errors.length) {
     const fresh = result.errors.filter((e) => !printed.has(e));
     for (const e of fresh) {
@@ -71,13 +80,15 @@ for (const level of levels) {
     failed = true;
     continue;
   }
+  const sum = result.summary;
+  const units = `${sum.units} units: compiled ${short(sum.compiled)}${sum.syllabusOnly.length ? `; syllabus only ${short(sum.syllabusOnly)}` : ''}; ${sum.coming.length} coming${result.skipped.length ? ` (${result.skipped.length} skipped)` : ''}`;
   const changed = writeOutputs(result, { check: opts.check });
   if (opts.check) {
     for (const f of changed) console.log(`${rel(f)}: out of date — run node scripts/course-v2/compile.mjs ${level}`);
     if (changed.length) failed = true;
-    console.log(`course-v2 compile --check ${level}: ${result.outputs.length} output(s), ${changed.length} out of date`);
+    console.log(`course-v2 compile --check ${level}: ${units}; ${result.outputs.length} output(s), ${changed.length} out of date`);
   } else {
-    console.log(`course-v2 compile ${level}: ${result.outputs.length} output(s), ${changed.length} changed`);
+    console.log(`course-v2 compile ${level}: ${units}; ${result.outputs.length} output(s), ${changed.length} changed`);
   }
 }
 process.exitCode = failed ? 1 : 0; // not exit(): it drops unflushed piped stdout
