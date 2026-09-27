@@ -89,7 +89,11 @@ export function criteriaPlan(profile, task = {}) {
   const target = scoredTarget(profile, task);
   const plan = (profile?.criteria || []).filter(isAutoScored).map((c) => {
     const levels = levelsDesc(c.levels);
-    return { id: c.id, label: c.label, per: c.per || 'task', levels, count: critCount(c, task), weight: Number.isFinite(c.weight) ? c.weight : null };
+    const descriptors = Array.isArray(c.descriptors) ? c.descriptors.filter((d) => d && Number.isFinite(d.points) && typeof d.de === 'string' && d.de.trim()) : [];
+    return {
+      id: c.id, label: c.label, per: c.per || 'task', levels, count: critCount(c, task), weight: Number.isFinite(c.weight) ? c.weight : null,
+      ...(descriptors.length ? { descriptors } : {}),
+    };
   });
   const turns = plan.filter((c) => c.per === 'turn');
   if (turns.length) {
@@ -135,12 +139,33 @@ function feedbackLines(profile, level) {
 }
 
 function criteriaLines(plan) {
-  return plan.map((c) => {
+  return plan.flatMap((c) => {
     const shape = c.count > 1
       ? `eine Liste mit genau ${c.count} Zahlen (${c.per === 'leitpunkt' ? 'eine je Leitpunkt, in der Reihenfolge der Leitpunkte' : 'eine je Gesprächsbeitrag des Lernenden'})`
       : 'eine Zahl';
-    return `- "${c.id}": ${c.label}. Erlaubte Stufen: ${fmtLevels(c.levels)}. Wert: ${shape}.`;
+    const head = `- "${c.id}": ${c.label}. Erlaubte Stufen: ${fmtLevels(c.levels)}. Wert: ${shape}.`;
+    // The profile's own descriptors (our wording, SCHEMA §4.5), one per level, best first.
+    const desc = (c.descriptors || [])
+      .filter((d) => c.levels.includes(d.points))
+      .sort((a, b) => b.points - a.points)
+      .map((d) => `    Stufe ${fmtLevels([d.points])}: ${d.de.trim()}`);
+    return [head, ...desc];
   });
+}
+
+/** BLUEPRINT §2.5 / SCHEMA §4.5 errorPolicy: the tags this band only flags, never scores. */
+export function flaggedErrorTags(profile, level) {
+  const band = typeof level === 'string' ? level.slice(0, 2).toLowerCase() : '';
+  const policy = profile?.errorPolicy?.[band];
+  if (!policy || typeof policy !== 'object') return [];
+  return ERROR_TAGS.filter((t) => policy[t] === 'flag');
+}
+
+function errorPolicyLine(profile, level) {
+  const flagged = flaggedErrorTags(profile, level);
+  return flagged.length
+    ? `FEHLERPOLITIK: Fehler der Typen ${flagged.join(', ')} darfst du in "errors" melden, aber sie senken keine Stufe (auf diesem Niveau noch nicht bewertet).`
+    : null;
 }
 
 function outputSkeleton(plan, { withMoves = false, withCorrected = false } = {}) {
@@ -166,6 +191,7 @@ export function buildWritingSystemPrompt(profile, level, plan) {
     'KRITERIEN — bewerte jedes Kriterium ausschließlich mit einer der erlaubten Stufen:',
     ...criteriaLines(plan),
     SPELLING_LINE[profile.spelling] || SPELLING_LINE['only-if-meaning-suffers'],
+    errorPolicyLine(profile, level),
     'REGELN DES SYSTEMS: Wortzahl-Regeln und Formregeln (Betreff, Anrede, Gruß, du/Sie) wendet das System selbst an. Ziehe dafür nicht zusätzlich Punkte ab und berechne keine Summe. Melde nur deine Einschätzung in "flags":',
     '- "topicMissed": true nur, wenn der Text das Thema der Aufgabe ganz verfehlt.',
     '- "situationMissed": true nur, wenn der Text die Situation verfehlt (falscher Adressat oder Anlass).',
@@ -178,7 +204,7 @@ export function buildWritingSystemPrompt(profile, level, plan) {
     'Antworte NUR mit einem JSON-Objekt in genau dieser Form, ohne Text davor oder danach:',
     outputSkeleton(plan, { withCorrected: true }),
     'Das Feld "corrected" in "errors" füllst du nur, wenn die Nachricht ausdrücklich eine Überarbeitung ist; sonst lässt du es weg.',
-  ].join('\n');
+  ].filter(Boolean).join('\n');
 }
 
 /** The per-submission user message for a writing task. */
@@ -221,6 +247,7 @@ export function buildSpeakingSystemPrompt(profile, level, plan, { withMoves = fa
     ...criteriaLines(plan),
     'Du hast KEIN Audio, nur ein Transkript aus automatischer Spracherkennung. Einzelne seltsame Wörter sind wahrscheinlich Erkennungsfehler: werte sie nicht als Fehler des Lernenden. Entscheidend ist die Verständlichkeit, nicht die Zahl der Fehler.',
     au ? 'Aussprache und Intonation bewertest du NICHT (kein Audio): Sie sind nicht Teil der Kriterien und fließen in keine Stufe ein.' : null,
+    errorPolicyLine(profile, level),
     'Melde in "flags" nur deine Einschätzung: "topicMissed" (die Beiträge verfehlen die Aufgabe ganz), "situationMissed" (falsche Situation oder Rolle), "leitpunkteUnconnected" (Beiträge ohne Bezug zueinander), "ownAspect" (immer false). Berechne keine Summe.',
     'Setze "leitpunkte" auf [].',
     `FEHLER: höchstens 3, die lehrreichsten. "tag" ist genau einer von: ${ERROR_TAGS.join(', ')}. "hint" erklärt kurz, was besser geht; "corrected" nennt eine bessere Formulierung.`,

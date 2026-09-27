@@ -294,17 +294,8 @@ export const RULES = {
       return capNth(ctx, 1, 1, `Es fehlt: ${missing.join(', ')}.`, `Missing: ${missing.join(', ')}.`);
     },
   },
-  // telc B1: no A on criterion II with du and Sie mixed.
-  'telc-b1-no-a-crit2-register-mixed': {
-    kind: 'cap',
-    fn(ctx) {
-      if (!ctx.signals.registerMixed && !ctx.signals.addressDrift) return null;
-      return capNth(ctx, 1, 1, 'Du und Sie sind gemischt.', 'du and Sie are mixed.');
-    },
-  },
-  // telc B1, the Prüferin's reading (W2, 2026-09-27): no A on criterion II when the register is
-  // wrong for the task or du and Sie are mixed. Ready for lanes/tb1 to switch to; the older
-  // id above stays while tb1-sa.json still names it.
+  // telc B1: no A on criterion II when the register is wrong for the task or du and Sie are
+  // mixed (Prüferin W2, 2026-09-27: the official cap names both).
   'telc-b1-no-a-crit2-register-wrong-or-mixed': {
     kind: 'cap',
     fn(ctx) {

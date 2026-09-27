@@ -3,25 +3,142 @@
   "id": "tb1-sa",
   "kind": "writing",
   "lane": "tb1",
+  "method": "ai",
   "max": 45,
+  "examMax": 45,
   "criteria": [
-    { "id": "aufgabe", "label": "Kriterium I – Aufgabenbewältigung: wie viele der vier Leitpunkte inhaltlich angemessen bearbeitet sind (4 = A, 3 = B, 2 = C, 1 oder 0 = D)", "per": "task", "levels": [5, 3, 1, 0], "weight": 3 },
-    { "id": "gestaltung", "label": "Kriterium II – Kommunikative Gestaltung: Textsorte, Register, Verknüpfung der Leitpunkte, Spektrum der Redemittel", "per": "task", "levels": [5, 3, 1, 0], "weight": 3 },
-    { "id": "richtigkeit", "label": "Kriterium III – Formale Richtigkeit: Grammatik, Rechtschreibung und Zeichensetzung, gemessen an der Verständlichkeit", "per": "task", "levels": [5, 3, 1, 0], "weight": 3 }
+    {
+      "id": "aufgabe",
+      "label": "Kriterium I – Aufgabenbewältigung: wie viele der vier Leitpunkte inhaltlich angemessen bearbeitet sind (4 = A, 3 = B, 2 = C, 1 oder 0 = D)",
+      "per": "task",
+      "levels": [
+        5,
+        3,
+        1,
+        0
+      ],
+      "weight": 3,
+      "scoredBy": "ai",
+      "descriptors": [
+        {
+          "points": 5,
+          "de": "Sie gehen auf alle vier Punkte der Aufgabe ein, jeweils sinnvoll und passend zur beschriebenen Situation. Ein kurzer Satz pro Punkt genügt."
+        },
+        {
+          "points": 3,
+          "de": "Drei der vier Punkte sind sinnvoll bearbeitet; ein Punkt fehlt oder geht an der Aufgabe vorbei."
+        },
+        {
+          "points": 1,
+          "de": "Nur zwei der vier Punkte sind sinnvoll bearbeitet."
+        },
+        {
+          "points": 0,
+          "de": "Höchstens ein Punkt ist sinnvoll bearbeitet, oder der Text passt nicht zur Situation der Aufgabe."
+        }
+      ]
+    },
+    {
+      "id": "gestaltung",
+      "label": "Kriterium II – Kommunikative Gestaltung: Textsorte, Register, Verknüpfung der Leitpunkte, Spektrum der Redemittel",
+      "per": "task",
+      "levels": [
+        5,
+        3,
+        1,
+        0
+      ],
+      "weight": 3,
+      "scoredBy": "ai",
+      "descriptors": [
+        {
+          "points": 5,
+          "de": "Der Text wirkt wie eine echte E-Mail an genau diese Person: Anrede, Gruß und Ton passen durchgehend. Die Punkte gehen mit abwechslungsreichen Verbindungswörtern ineinander über, die Sätze beginnen unterschiedlich, und Sie können auch eigene Gedanken treffend formulieren."
+        },
+        {
+          "points": 3,
+          "de": "Die E-Mail erfüllt ihren Zweck: Anrede, Gruß und Ton passen im Wesentlichen, und die Punkte sind mit gängigen Verbindungswörtern zu einem Text verbunden. Bei schwierigeren Gedanken fehlen manchmal die passenden Wörter."
+        },
+        {
+          "points": 1,
+          "de": "Einfache Informationen, Bitten und Vorschläge kommen an, doch der Text besteht vor allem aus kurzen, gleich gebauten Sätzen, die nur mit den einfachsten Verbindungswörtern aneinandergereiht sind. Der Wortschatz reicht nur für vertraute Alltagsdinge."
+        },
+        {
+          "points": 0,
+          "de": "Der Text besteht aus einzelnen Wörtern und auswendig gelernten Wendungen ohne erkennbaren Zusammenhang; über Begrüßung und Verabschiedung hinaus gelingt kaum etwas."
+        }
+      ]
+    },
+    {
+      "id": "richtigkeit",
+      "label": "Kriterium III – Formale Richtigkeit: Grammatik, Rechtschreibung und Zeichensetzung, gemessen an der Verständlichkeit",
+      "per": "task",
+      "levels": [
+        5,
+        3,
+        1,
+        0
+      ],
+      "weight": 3,
+      "scoredBy": "ai",
+      "descriptors": [
+        {
+          "points": 5,
+          "de": "Grammatik, Rechtschreibung und Zeichensetzung sind weitgehend sicher. Einzelne Fehler, auch wiederkehrende, kommen vor, halten beim Lesen aber nicht auf."
+        },
+        {
+          "points": 3,
+          "de": "Es gibt deutliche und auch wiederkehrende Fehler, doch man versteht fast immer ohne Mühe, was Sie meinen."
+        },
+        {
+          "points": 1,
+          "de": "Kurze, einfache Sätze gelingen, aber Grundfehler, etwa bei Verbformen und Zeiten, sind häufig. Man muss öfter nachdenken, der Sinn wird aber meist klar."
+        },
+        {
+          "points": 0,
+          "de": "Nur wenige eingeübte Satzmuster sind richtig; weite Teile des Textes versteht man nur mit großer Mühe oder gar nicht."
+        }
+      ]
+    }
   ],
-  "zeroRules": ["telc-topic-missed-d-all"],
+  "bands": [],
+  "errorPolicy": {
+    "b1": {
+      "v2-inv": "flag",
+      "verb-final": "score",
+      "satzklammer": "score",
+      "case-np": "flag",
+      "case-pp": "flag",
+      "gender-article": "flag",
+      "adj-ending": "flag",
+      "perfekt-aux-participle": "score",
+      "connector-position": "score",
+      "n-dekl": "flag",
+      "reflexive": "flag",
+      "register": "score",
+      "spelling-meaning": "score"
+    }
+  },
+  "zeroRules": [
+    "telc-topic-missed-d-all"
+  ],
   "capRules": [
     "telc-situation-missed-d-crit1",
     "telc-b1-crit1-by-leitpunkt-count",
     "telc-b1-no-a-crit2-textsorte-missing",
-    "telc-b1-no-a-crit2-register-mixed",
+    "telc-b1-no-a-crit2-register-wrong-or-mixed",
     "telc-b1-no-a-crit2-leitpunkte-unconnected",
     "telc-b1-no-a-crit2-ich-wir-starts"
   ],
   "spelling": "scored",
-  "feedbackLanguage": ["de"],
+  "feedbackLanguage": [
+    "de"
+  ],
   "modelId": "config:writing-full",
   "splitVerified": true,
-  "calibration": { "status": "pending", "rangeBands": 1 },
+  "calibration": {
+    "status": "pending",
+    "rangeBands": 1
+  },
   "source": "https://shop.telc.net/media/catalog/product/file/telc_deutsch_b1_zd_uebungstest_1.pdf"
 }

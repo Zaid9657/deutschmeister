@@ -88,6 +88,29 @@ if (shared.PATTERNS && typeof shared.PATTERNS === 'object') {
   for (const [k, v] of Object.entries(shared.PATTERNS)) if (v instanceof RegExp) PATTERNS[k] = v;
 }
 
+/**
+ * SCHEMA §2 as revised on 2026-09-27 (reserve items rNN, exam texts STEP(-LANE)-tN and ASSESS(-LANE)-tN,
+ * lines TEXT-lNN, assets, assessment containers). ID-01 checks shapes against this transcription so a
+ * lagging shared library cannot reject ids the binding schema allows; the draft shape's BLOCK-tN-lNN
+ * lines stay accepted.
+ */
+const AS = `${LV}-(?:p[1-3]|ht-${LN}|dx-${LN}|m[abc]-${LN})`;
+const TX = `(?:${ST}|${AS})(?:-${LN})?-t\\d{1,2}`;
+const BL2 = `(?:${ST}-${LN}|${LV}-p[1-3]-${LN}|${LV}-(?:ht|dx)-${LN}|${LV}-m[abc]-${LN})-[a-z0-9]+`;
+export const SCHEMA_PATTERNS = {
+  item: whole(`${ST}-[isprx]\\d{2}|${UN}-start-i01|${UN}-[cq]\\d{2}|${BL2}-\\d{2}|${ST}-g\\d{2}|${AS}-(?:lm|hm)-\\d{2}`),
+  text: whole(TX),
+  line: whole(`(?:${ST}|${UN}-start|${TX}|${BL2}-t\\d+|${AS}-(?:lm|hm|sc))-l\\d{2}`),
+  block: whole(BL2),
+  asset: whole(`(?:${UN}|${AS})-a\\d{2}`),
+  mo: whole(`${ST}-mo|${UN}-start-mo|${LV}-p[1-3]-mo`),
+  rm: whole(`${UN}-rm\\d{2}`),
+  fact: whole(`${UN}-f\\d{2}`),
+  fokus: whole(`${UN}-fk\\d`),
+  STEP: whole(ST),
+  extra: /^x\.[a-z0-9-]+$/,
+};
+
 /** 'a2.1' → 'a21'. */
 export const prefixOfLevel = (level) => (PATTERNS.LEVEL.test(String(level)) ? String(level).replace('.', '') : null);
 

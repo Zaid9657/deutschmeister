@@ -2,7 +2,8 @@
 
 **Date:** 2026-09-27 · **Owner (sole writer):** cando-b1 · **Registry:**
 [`content/course-v2/registries/cando/b1.json`](../../../content/course-v2/registries/cando/b1.json) (SCHEMA §4.1,
-`course-v2/cando@1`) · **Status:** W2 draft, before the W2 DaF review and the registry freeze (BLUEPRINT §10.3) ·
+`course-v2/cando@1`) · **Status:** W2 draft, revised after the W2 DaF review ([`reviews/w2/daf-cando.json`](../reviews/w2/daf-cando.json),
+2026-09-27; changes in §12), before the registry freeze (BLUEPRINT §10.3) ·
 **Covers:** B1.1 and B1.2 · **Exam lane:** tb1 only (telc Deutsch B1; lean execution 2026-09-27 — no DTZ or
 Goethe/ÖSD B1 lane can-dos were created, see §3) · **Inputs:** [`curriculum/b1-1.json`](../curriculum/b1-1.json) +
 [`b1-2.json`](../curriculum/b1-2.json) (every can-do line), [BLUEPRINT](../BLUEPRINT.md) §2.2 rule 4, §2.8 (B1 rows),
@@ -11,9 +12,10 @@ Goethe/ÖSD B1 lane can-dos were created, see §3) · **Inputs:** [`curriculum/b
 §B1–B3, §C (B1.1/B1.2 placements), [02](../research/02-exams-b1.md) §2, §6, §7 (telc B1 Teile);
 `registries/lanes/tb1.json` (Teil ids); the sibling notes `cando-a1.md` and `cando-a2.md` (conventions).
 
-**Size:** 95 can-dos — 47 with halfLevel b1.1, 48 with b1.2. All 88 can-do lines of the two
+**Size:** 96 can-dos — 47 with halfLevel b1.1, 49 with b1.2. All 88 can-do lines of the two
 W2 plans map to an id (§6); they collapse into 76 ids through 12 merges (§5). 11 ids were added
-for lane tb1 and 8 for blueprint rows whose Kern-Kann-Beschreibung no draft line carries (§4).
+for lane tb1, 8 for blueprint rows whose Kern-Kann-Beschreibung no draft line carries, and 1 for the
+blueprint's HF 6 Fokus card on B1.2 U8 (§4).
 
 ## 1. How to use this
 
@@ -35,8 +37,9 @@ for lane tb1 and 8 for blueprint rows whose Kern-Kann-Beschreibung no draft line
    `cd.b1.aufgaben-verteilen` (core B1.1 U2) and, in B1.2, `cd.b1.projekt-planen-einwaende` (core B1.2 U4). In every
    other unit the round references them as spiral; it does not make them Lernziele again.
 6. **Quotas (ALL-06), on core ids.** Online interaction — B1.1: `cd.b1.online-austausch`; B1.2: `cd.b1.forum-stellung-nehmen`, `cd.b1.online-konversation`. Mediation —
-   B1.1: `cd.b1.durchsage-weitergeben`; B1.2: `cd.b1.zwischen-positionen-vermitteln`, `cd.b1.meinungen-wiedergeben-vergleichen`, `cd.b1.infotext-zusammenfassen`, `cd.b1.besprechung-ergebnisse-weitergeben`, `cd.b1.nachricht-notieren`. Keep at least one of each as core when swapping. Work units: see open
-   issue 2.
+   B1.1: `cd.b1.durchsage-weitergeben`; B1.2: `cd.b1.zwischen-positionen-vermitteln`, `cd.b1.meinungen-wiedergeben-vergleichen`, `cd.b1.infotext-zusammenfassen`, `cd.b1.besprechung-ergebnisse-weitergeben`, `cd.b1.nachricht-notieren`
+   (counted by the `mediation` flag, §9). Keep at least one of each as core when swapping. Work units (HF 2 or 3), as
+   the BLUEPRINT ALL-06 recount lists them: B1.1 U3, U7, U8 · B1.2 U3, U4, U12 (open issue 2).
 
 ## 2. Unit → can-do ids (BLUEPRINT §2.8 rows — use this table)
 
@@ -49,12 +52,12 @@ the `cd.b1.` prefix for width. *W2 lines* = draft unit and line number(s) whose 
 |---|---|---|---|---|---|
 | `b1.1-u01` | Was gibt's Neues? | SA, M1, LV2, HV2 | `cd.b1.neuigkeiten-austauschen` · `cd.b1.persoenliche-mail` · `cd.b1.kennenlernen-gespraech` · `cd.b1.online-austausch` | `mail-vier-leitpunkte` · `gespraech-details` · `artikel-details` · `blog-im-detail` | b1.1-u01 |
 | `b1.1-u02` | Wir organisieren ein Fest | M3, HV2 | `cd.b1.gemeinsam-planen` · `cd.b1.aufgaben-verteilen` · `cd.b1.enttaeuschung` · `cd.b1.rede-publikum` | `persoenliche-mail` · `gespraech-details` · `film-buch-wiedergeben` | b1.1-u06 (#3, #4) + b1.1-u11 (#2, #3) |
-| `b1.1-u03` | Wenn die Bahn nicht fährt | HV3, LV3 | `cd.b1.durchsagen-stoerung` · `cd.b1.stoerung-umbuchen` · `cd.b1.durchsage-weitergeben` | `beschwerde-schriftlich` · `anzeigen-gezielt` | b1.1-u12 |
+| `b1.1-u03` | Wenn die Bahn nicht fährt (Weg zur Arbeit · HF 10, 2) | HV3, LV3 | `cd.b1.durchsagen-stoerung` · `cd.b1.stoerung-umbuchen` · `cd.b1.durchsage-weitergeben` | `beschwerde-schriftlich` · `anzeigen-gezielt` | b1.1-u12 |
 | `b1.1-u04` | Ärger mit der Wohnung | LV3, SA, SB1 | `cd.b1.vermieter-details-erfragen` · `cd.b1.mietvertrag-verstehen` · `cd.b1.mangel-melden` · `cd.b1.mail-vier-leitpunkte` | `anzeigen-gezielt` · `brief-formen-erkennen` · `gemeinsam-planen` | b1.1-u03 |
 | `b1.1-u05` | Das Gerät ist kaputt | SB1, SA, M3 | `cd.b1.reklamieren` · `cd.b1.agb-verstehen` · `cd.b1.beschwerde-schriftlich` · `cd.b1.brief-formen-erkennen` | `mail-vier-leitpunkte` · `gemeinsam-planen` · `meinungen-austauschen` | b1.1-u04 (+ b1.1-u12 #4) |
 | `b1.1-u06` | Alles digital? | HV1, LV1, M2 | `cd.b1.plaene-vermutungen` · `cd.b1.radio-kurzbeitraege` · `cd.b1.kommentare-haltung` · `cd.b1.meinung-forum` | `medienerfahrungen` · `kurzmeldungen-thema` · `meinungen-austauschen` | b1.1-u05 + b1.1-u10 (#2, #3) |
 | `b1.1-u07` | Unter Kollegen | M3, HV3, SB2 | `cd.b1.absprachen-kollegen` · `cd.b1.krankmeldung-uebergabe` · `cd.b1.formelle-kurznachricht` · `cd.b1.wortwahl-brief` | `gemeinsam-planen` · `aufgaben-verteilen` · `durchsagen-stoerung` | b1.1-u02 |
-| `b1.1-u08` | Welcher Kurs passt zu mir? | LV3, M1, LV2 | `cd.b1.beratung-gespraech` · `cd.b1.anzeigen-gezielt` · `cd.b1.artikel-details` · `cd.b1.kursanfrage-schreiben` | `kennenlernen-gespraech` · `gespraech-details` · `lernziele-beschreiben` · `mail-vier-leitpunkte` | b1.1-u08 (#3, #4) + b1.1-u03 #4 (LV3) |
+| `b1.1-u08` | Weiterbildung im Betrieb (Beratung mit der Personalabteilung · HF 2, 4) | LV3, M1, LV2 | `cd.b1.beratung-gespraech` · `cd.b1.anzeigen-gezielt` · `cd.b1.artikel-details` · `cd.b1.kursanfrage-schreiben` | `kennenlernen-gespraech` · `gespraech-details` · `lernziele-beschreiben` · `mail-vier-leitpunkte` | b1.1-u08 (#3, #4) + b1.1-u03 #4 (LV3) |
 | `b1.1-u09` | Beim Arzt und in der Apotheke | LV2, M2, SB2 | `cd.b1.beim-arzt-erklaeren` · `cd.b1.beipackzettel` · `cd.b1.rat-geben` | `meinungen-austauschen` · `wortwahl-brief` · `artikel-details` · `formelle-kurznachricht` · `kurz-praesentieren` | b1.1-u07 (#1, #2) |
 | `b1.1-u10` | Glück gehabt! | HV2, SA | `cd.b1.erfahrungen-erzaehlen` · `cd.b1.film-buch-wiedergeben` · `cd.b1.gespraech-details` · `cd.b1.blog-im-detail` | `persoenliche-mail` · `mail-vier-leitpunkte` | b1.1-u09 (#2, #3) + b1.1-u06 (#1, #2) + b1.1-u08 #3 |
 | `b1.1-u11` | Menschen, die mir wichtig sind | LV1, SB2, M1 | `cd.b1.person-portraetieren` · `cd.b1.familiengeschichte` · `cd.b1.beileid` · `cd.b1.kurzmeldungen-thema` | `kennenlernen-gespraech` · `wortwahl-brief` · `enttaeuschung` · `aufgaben-verteilen` · `persoenliche-mail` | b1.1-u11 (#1) + b1.1-u09 (#1) |
@@ -69,12 +72,12 @@ the `cd.b1.` prefix for width. *W2 lines* = draft unit and line number(s) whose 
 | `b1.2-u03` | Die Bewerbung | **SA**, HV3 | `cd.b1.stelle-telefonisch-erfragen` · `cd.b1.bewerbung-schreiben` · `cd.b1.vorstellungsgespraech-erfahrung` · `cd.b1.gehalt-verhandeln` | `ansagen-handeln` · `mail-zusammenhaengend` · `ueber-mich-ausfuehrlich` · `brief-formen-erkennen` | b1.2-u03 |
 | `b1.2-u04` | Konflikt im Team | **M3**, HV2 | `cd.b1.standpunkt-einbringen` · `cd.b1.kompromiss-vorschlagen` · `cd.b1.entschuldigen-erklaeren` · `cd.b1.projekt-planen-einwaende` | `interview-details` · `nachricht-notieren` · `formelle-kurznachricht` · `aufgaben-verteilen` | b1.2-u04 (#1, #3) + b1.2-u05 |
 | `b1.2-u05` | Werbung, Konsum, Geld | **LV2**, LV1 | `cd.b1.artikel-argumente` · `cd.b1.pressemeldungen-ueberschriften` · `cd.b1.werbung-kritisch` · `cd.b1.kaufentscheidung-begruenden` | `angebot-fuer-andere` · `infotext-zusammenfassen` · `reklamieren` | b1.2-u02 #3 + b1.2-u01 #4 |
-| `b1.2-u06` | Einspruch! | **SB1**, SA | `cd.b1.einspruch-schriftlich` · `cd.b1.schaden-melden` · `cd.b1.problem-erklaeren-loesung` · `cd.b1.symptome-genau` | `versicherung-gespraech` · `unfall-schildern` · `brief-formen-erkennen` · `formelle-wendungen` · `ansagen-handeln` | b1.2-u08 + b1.2-u07 |
+| `b1.2-u06` | Einspruch! | **SB1**, SA | `cd.b1.einspruch-schriftlich` · `cd.b1.schaden-melden` · `cd.b1.problem-erklaeren-loesung` · `cd.b1.versicherung-gespraech` | `symptome-genau` (Fokus-Karte Gesundheit — the Konsultation thread's B1.2 step, §10) · `unfall-schildern` · `brief-formen-erkennen` · `formelle-wendungen` · `ansagen-handeln` | b1.2-u08 + b1.2-u07 |
 | `b1.2-u07` | Mitreden | **HV1**, M2 | `cd.b1.zwischen-positionen-vermitteln` · `cd.b1.meinungen-wiedergeben-vergleichen` · `cd.b1.position-werte` · `cd.b1.meinungsbeitraege-einmal` | `projekt-planen-einwaende` · `interview-details` · `debatte-wer-meint-was` · `formelle-kurznachricht` | b1.2-u11 (#1–#3) + b1.2-u10 #4 |
-| `b1.2-u08` | Regeln und Anleitungen | **SB2**, HV3 | `cd.b1.ablaeufe-erklaeren` · `cd.b1.regeln-detail` · `cd.b1.formelle-wendungen` · `cd.b1.ansagen-handeln` | `wortwahl-brief` · `mietvertrag-verstehen` · `thema-praesentieren` · `grafik-organiser` | b1.2-u06 (#1, #2) |
+| `b1.2-u08` | Regeln und Anleitungen | **SB2**, HV3 | `cd.b1.ablaeufe-erklaeren` · `cd.b1.regeln-detail` · `cd.b1.formelle-wendungen` · `cd.b1.ansagen-handeln` | `betreuungsvertrag-verstehen` (Fokus-DaZ „Betreuungsvertrag und Kita-Ordnung“, HF 6) · `wortwahl-brief` · `mietvertrag-verstehen` · `thema-praesentieren` · `grafik-organiser` | b1.2-u06 (#1, #2) |
 | `b1.2-u09` | Stadt oder Land? | **HV3**, LV2 | `cd.b1.fuehrung-verstehen` · `cd.b1.vor-nachteile-abwaegen` · `cd.b1.praesentation-rueckmeldung` | `artikel-argumente` · `ansagen-handeln` · `forum-stellung-nehmen` · `thema-praesentieren` · `pressemeldungen-ueberschriften` | b1.2-u09 |
 | `b1.2-u10` | Geschichten von früher | **HV2**, M1 | `cd.b1.ueber-frueher-berichten` · `cd.b1.foto-beschreiben-vergleichen` · `cd.b1.interview-details` · `cd.b1.ueber-mich-ausfuehrlich` | `blog-im-detail` · `erfahrungen-erzaehlen` · `frueher-heute-vergleichen` | b1.2-u12 (#1, #4) + b1.2-u11 #4 + neu |
-| `b1.2-u11` | Klima und Zukunft | **LV1**, SA | `cd.b1.artikel-zusammenfassen-stellung` · `cd.b1.debatte-wer-meint-was` · `cd.b1.kommentare-ironie` · `cd.b1.frueher-heute-vergleichen` | `meinungen-wiedergeben-vergleichen` · `forum-stellung-nehmen` · `plaene-vermutungen` · `persoenliche-mail` · `meinungsbeitraege-einmal` | b1.2-u10 (#1–#3) + b1.2-u12 #2 |
+| `b1.2-u11` | Klima und Zukunft | **LV1**, SA | `cd.b1.artikel-zusammenfassen-stellung` · `cd.b1.debatte-wer-meint-was` · `cd.b1.kommentare-einschraenkungen` · `cd.b1.frueher-heute-vergleichen` | `meinungen-wiedergeben-vergleichen` · `forum-stellung-nehmen` · `plaene-vermutungen` · `persoenliche-mail` · `meinungsbeitraege-einmal` | b1.2-u10 (#1–#3) + b1.2-u12 #2 |
 | `b1.2-u12` | Zurückblicken, weitergeben | **M1**, **SA**, SB2 | `cd.b1.infotext-zusammenfassen` · `cd.b1.besprechung-ergebnisse-weitergeben` · `cd.b1.nachricht-notieren` · `cd.b1.mail-zusammenhaengend` | `ueber-mich-ausfuehrlich` · `wortwahl-brief` · `meinungen-wiedergeben-vergleichen` · `projekt-planen-einwaende` · `plaene-vermutungen` · `lernziele-beschreiben` | b1.2-u04 (#2, #4) + b1.2-u02 #1 |
 
 The Diagnose (B1.2, free) and the Prüfungswochen carry no Lernziele of their own; the Halbtest (after B1.1 U12) and
@@ -111,7 +114,7 @@ check. In brackets: the unit where the id is core.
 - **Deferred lanes.** The drafts also map lines to Goethe/ÖSD B1 and DTZ Teile. Those lines are kept as course can-dos
   in format-neutral wording; their format tag stays in `source` (`GI-B1 …`, `DTZ S2`). When gb1 or dtz goes live, these
   ids already cover the Teile and no Spur can-do is needed: L1 `blog-im-detail` · L2 `artikel-argumente` · L3
-  `anzeigen-gezielt`, `angebot-fuer-andere` · L4 `kommentare-haltung`, `kommentare-ironie` · L5 `mietvertrag-verstehen`,
+  `anzeigen-gezielt`, `angebot-fuer-andere` · L4 `kommentare-haltung`, `kommentare-einschraenkungen` · L5 `mietvertrag-verstehen`,
   `regeln-detail` · H1 `durchsagen-stoerung`, `ansagen-handeln` · H2 `rede-publikum`, `fuehrung-verstehen` · H3
   `gespraech-details` · H4 `debatte-wer-meint-was` · Sch1 `persoenliche-mail` · Sch2 `meinung-forum`,
   `forum-stellung-nehmen` · Sch3 `formelle-kurznachricht` · Sp1 `gemeinsam-planen`, `projekt-planen-einwaende` · Sp2
@@ -126,20 +129,21 @@ check. In brackets: the unit where the id is core.
 | `cd.b1.mail-vier-leitpunkte` | b1.1 | neu (tb1) | **tb1 SA** (format): four Leitpunkte, Betreff, Anrede, Einleitung, Schluss, one register — the telc criteria (Aufgabenbewältigung counts Leitpunkte; Kommunikative Gestaltung loses A on mixed register, unconnected Leitpunkte, mostly Ich/Wir starts). No draft line names the format. B1.1 twin of `cd.a1.nachricht-anrede` / the A2 e-mail ids. |
 | `cd.b1.brief-formen-erkennen` | b1.1 | neu (tb1) | **tb1 SB1** (10 MC gaps in a personal letter: connectors, article/adjective endings, auxiliaries, relative pronouns, prepositions). No draft line; SB has no CEFR descriptor, so the source is the Teil only. |
 | `cd.b1.wortwahl-brief` | b1.1 | neu (tb1) | **tb1 SB2** (10 gaps from 15 words in a formal letter: collocations). No draft line. |
-| `cd.b1.beratung-gespraech` | b1.1 | neu (Blueprint-Zeile) | Blueprint B1.1 U8 „sich beraten lassen“; draft b1.1-u08 has the Beratungsgespräch as its speaking task but no can-do line for it. Weak source tag (open issue 3). |
+| `cd.b1.beratung-gespraech` | b1.1 | neu (Blueprint-Zeile) | Blueprint B1.1 U8 „Weiterbildung im Betrieb“: „sich am Arbeitsplatz beraten lassen“, Beratungsgespräch mit der Personalabteilung (HF 2, 4); draft b1.1-u08 has a Beratungsgespräch as its speaking task but no can-do line for it. Source RC 105·B1 (HF 4 Beratung: Erfahrung und Weiterbildungsziele darlegen, nach Angeboten fragen, mit Rückfragen reagieren), page-checked 2026-09-27. |
 | `cd.b1.artikel-details` | b1.1 | neu (tb1) | **tb1 LV2** in B1.1 (one press article, 5 MC, detail). The draft has a LV2 line only in B1.2 (b1.2-u02 #3 → `artikel-argumente`). |
-| `cd.b1.kursanfrage-schreiben` | b1.1 | neu (tb1) | **tb1 SA** + blueprint B1.1 U8, which needs a productive-written can-do for its SA; draft b1.1-u08 writing task („Anfrage an die Volkshochschule, vier Leitpunkte“) had none. Reused by B1.2 U2 (BLUEPRINT §3.9: e-mail to a language school). |
+| `cd.b1.kursanfrage-schreiben` | b1.1 | neu (tb1) | **tb1 SA** + blueprint B1.1 U8, which needs a productive-written can-do for its SA; draft b1.1-u08 writing task („Anfrage an die Volkshochschule, vier Leitpunkte“) had none. Addressee is the Personalabteilung or a Kursanbieter (work frame, HF 2, 4), so the same id serves B1.2 U2 as *more* (BLUEPRINT §3.9: e-mail to a language school). |
 | `cd.b1.rat-geben` | b1.1 | neu (Blueprint-Zeile) | Blueprint B1.1 U9 „Rat geben“ (Konjunktiv II: Ratschlag). No draft line. Weak source tag (open issue 3). |
 | `cd.b1.person-portraetieren` | b1.1 | neu (Blueprint-Zeile) | Blueprint B1.1 U11 „eine Person porträtieren; Menschen beschreiben“ (Vereinsblog). No draft line. |
 | `cd.b1.kurzmeldungen-thema` | b1.1 | neu (tb1) | **tb1 LV1** in B1.1 (headline ↔ short news item, global reading). The draft has a LV1 line only in B1.2 (b1.2-u01 #4 → `pressemeldungen-ueberschriften`). |
-| `cd.b1.missverstaendnis-klaeren` | b1.2 | neu (Blueprint-Zeile) | Blueprint B1.2 U1 „Missverständnisse klären“ (M13). The draft unit has the topic but no can-do for the clarifying move itself. Weak source tag (open issue 3). |
+| `cd.b1.missverstaendnis-klaeren` | b1.2 | neu (Blueprint-Zeile) | Blueprint B1.2 U1 „Missverständnisse klären“ (M13). The draft unit has the topic but no can-do for the clarifying move itself. Source RC 32·B1 (die eigene Sicht schildern und ein Missverständnis erklären), page-checked 2026-09-27. |
 | `cd.b1.werbung-kritisch` | b1.2 | neu (Blueprint-Zeile) | Blueprint B1.2 U5 „Werbung kritisch lesen“. No draft line (draft b1.2-u02 is a consumer-article unit). Source = Lehrwerk placement only (open issue 3). |
-| `cd.b1.kaufentscheidung-begruenden` | b1.2 | neu (Blueprint-Zeile) | Blueprint B1.2 U5 „Kaufentscheidungen begründen“. No draft line. Weak source tag (open issue 3). |
+| `cd.b1.kaufentscheidung-begruenden` | b1.2 | neu (Blueprint-Zeile) | Blueprint B1.2 U5 „Kaufentscheidungen begründen“. No draft line. Source RC 124·B1 (Preise vergleichen, Vor- und Nachteile einer Zahlungsart abwägen), page-checked 2026-09-27. |
 | `cd.b1.meinungsbeitraege-einmal` | b1.2 | neu (tb1) | **tb1 HV1** at exam conditions (five short statements, **played once**, R/F) — blueprint B1.2 U7 **HV1** full length. B1.1 twin: `radio-kurzbeitraege`. |
 | `cd.b1.formelle-wendungen` | b1.2 | neu (tb1) | **tb1 SB2** B1.2 step + the formal-letter collocations of draft b1.2-u08 (grammar line „Nomen-Verb-Verbindungen im formellen Brief“) and blueprint B1.2 U8 (**SB2** full length). Also serves the SA letters of U3/U6. |
 | `cd.b1.ansagen-handeln` | b1.2 | neu (tb1) | **tb1 HV3** B1.2 step (voicemail and hotline messages from firms, offices, Hausverwaltung: deadlines, numbers, next steps) — blueprint B1.2 U8/U9 HV3; the listening texts of drafts b1.2-u07/u08 (Mailbox, Hotline) had no can-do. |
 | `cd.b1.ueber-frueher-berichten` | b1.2 | neu (Blueprint-Zeile) | Blueprint B1.2 U10 „über früher berichten“ (Biografie, Heimat; M16–17). No draft unit carries this row. |
 | `cd.b1.foto-beschreiben-vergleichen` | b1.2 | neu (Blueprint-Zeile) | Blueprint B1.2 U10 „ein Foto beschreiben und vergleichen“. The format source is DTZ Sprechen Teil 2 (photo + own experience + home country); DTZ is a deferred lane, so the can-do is written format-neutral and the tag is a format source, not a lane. |
+| `cd.b1.betreuungsvertrag-verstehen` | b1.2 | neu (Blueprint-Fokus) | BLUEPRINT §2.8 B1.2 U8 Fokus column: Fokus-DaZ „Betreuungsvertrag und Kita-Ordnung“ (HF 6); ALL-04 is hard at B1 and HF 6 is in no B1 unit tag. Never core: *more* on B1.2 U8, proved in the Fokus card. Sources page-checked in the RC 2026-09-27 (open issue 4): RC 118·B1 is the HF 6 B1 goal (understand a description of how a procedure works), RC 116·A2 the situation (rules such as pick-up times, which are binding), GI-B1 L5 the reading operation (rules in detail, as `mietvertrag-verstehen` and `regeln-detail`). |
 | `cd.b1.mail-zusammenhaengend` | b1.2 | neu (tb1) | **tb1 SA** at exam conditions (B1.2 step): connected Leitpunkte, varied sentence starts, register held — the Kriterium-II rules of UT-B1 pp. 36–38. |
 
 ## 5. Merges: one id where two draft lines mean the same
@@ -166,7 +170,7 @@ suggest) · `reklamieren` (spoken) vs `beschwerde-schriftlich` (written) vs `pro
 `beim-arzt-erklaeren` (B1) vs `symptome-genau` (B1+) · `kurzmeldungen-thema` vs `pressemeldungen-ueberschriften` ·
 `artikel-details` vs `artikel-argumente` · `anzeigen-gezielt` vs `angebot-fuer-andere` · `radio-kurzbeitraege` vs
 `meinungsbeitraege-einmal` vs `debatte-wer-meint-was` · `durchsagen-stoerung` vs `ansagen-handeln` · `gespraech-details`
-vs `interview-details` · `kommentare-haltung` vs `kommentare-ironie` · `meinung-forum` (post) vs
+vs `interview-details` · `kommentare-haltung` vs `kommentare-einschraenkungen` · `meinung-forum` (post) vs
 `forum-stellung-nehmen` (reply to another post, interaction) · `meinungen-austauschen` (ZM B1: exchange views) vs
 `meinungen-wiedergeben-vergleichen` (relay a read opinion, mediation) vs `artikel-zusammenfassen-stellung` (ZM B1+) ·
 `kurz-praesentieren` (template, ≈ 2 min) vs `thema-praesentieren` (free, ≈ 3 min) · `gemeinsam-planen` vs
@@ -225,7 +229,7 @@ the source text with the person changed (internal mapping only, never for screen
 |  | 3 | Ich kann mit Kolleginnen und Kollegen eine Feier planen, Aufgaben verteilen und mich einigen, wer was macht. | 02-exams-b1 §2 · ≈ telc B1 Mündlicher Ausdruck T3 | `cd.b1.aufgaben-verteilen` |
 | `b1.1-u12` Leider fällt der Zug aus | 1 | Ich kann auch mit weniger routinemäßigen Situationen in öffentlichen Verkehrsmitteln umgehen. | 05-cando-b1-b2 (B1.1 #7) · ZM B1 | `cd.b1.stoerung-umbuchen` |
 |  | 2 | Ich kann an Informationsschaltern nach Verbindungen fragen und auf entsprechende Fragen reagieren. | 05-cando-b1-b2 (B1.1 #7) · ≈ RC 142 | `cd.b1.stoerung-umbuchen` |
-|  | 3 | Ich kann Informationen aus klaren, gut strukturierten Informationstexten über vertraute Themen mündlich weitergeben, z. B. eine Durchsage für eine Mitreisende. | 05-cando-b1-b2 (B1.2 #14) · SB B1, Mediation | `cd.b1.durchsage-weitergeben` |
+|  | 3 | Ich kann Informationen aus klaren, gut strukturierten Informationstexten über vertraute Themen mündlich weitergeben, z. B. eine Durchsage für eine Mitreisende. | 05-cando-b1-b2 (B1.2 #14) · SB B1, Mediation | `cd.b1.durchsage-weitergeben` (relay to the Team, as BLUEPRINT B1.1 U3 names it) |
 |  | 4 | Ich kann mich schriftlich bei einem Verkehrsunternehmen beschweren und eine Entschädigung verlangen. | 05-cando-b1-b2 (B1.1 #8, Transfer) · ≈ RC 125; ZM B1 „sich beschweren“ | `cd.b1.beschwerde-schriftlich` |
 | `b1.2-u01` Missverständnisse | 1 | Ich kann mich über interkulturelle Erfahrungen austauschen und erklären, warum ich bestimmte Verhaltensweisen als fremd empfunden habe. | 05-cando-b1-b2 (B1.2 #13) · RC 32 | `cd.b1.interkulturelle-erfahrungen` |
 |  | 2 | Ich kann in einem Forumsbeitrag (ca. 80 Wörter, 25 Minuten) zu einer Diskussion Stellung nehmen, meine Meinung begründen und auf einen anderen Beitrag eingehen. | 05-cando-b1-b2 (B1.2 #1) · ≈ GI-B1 Schreiben T2 | `cd.b1.forum-stellung-nehmen` |
@@ -261,7 +265,7 @@ the source text with the person changed (internal mapping only, never for screen
 |  | 3 | Ich kann Fragen zu meiner Präsentation beantworten und einer anderen Person eine Rückmeldung zu ihrer Präsentation geben. | 02-exams-b1 §1 · ≈ GI-B1 Sprechen T3 | `cd.b1.praesentation-rueckmeldung` |
 | `b1.2-u10` Reparieren statt wegwerfen | 1 | Ich kann einen Artikel zusammenfassen, dazu Stellung nehmen und Informationsfragen dazu beantworten. | 05-cando-b1-b2 (B1.2 #3) · ≈ ZM B1+ | `cd.b1.artikel-zusammenfassen-stellung` |
 |  | 2 | Ich kann in einer Radiodiskussion erkennen, wer was meint. | 05-cando-b1-b2 (B1.2 #14) · ≈ GI-B1 Hören T4 | `cd.b1.debatte-wer-meint-was` |
-|  | 3 | Ich kann in Leserkommentaren auch bei Ironie und Einschränkungen erkennen, ob die Schreibenden für oder gegen etwas sind. | 02-exams-b1 §7 (G-L4) · ≈ GI-B1 Lesen T4 | `cd.b1.kommentare-ironie` |
+|  | 3 | Ich kann in Leserkommentaren auch bei Ironie und Einschränkungen erkennen, ob die Schreibenden für oder gegen etwas sind. | 02-exams-b1 §7 (G-L4) · ≈ GI-B1 Lesen T4 | `cd.b1.kommentare-einschraenkungen` (the irony clause is not carried: B2 step, §12) |
 |  | 4 | Ich kann gelesene Meinungen wiedergeben, mit meiner eigenen Meinung vergleichen und darüber diskutieren. | 02-exams-b1 §2 · ≈ telc B1 Mündlicher Ausdruck T2 | `cd.b1.meinungen-wiedergeben-vergleichen` |
 | `b1.2-u11` Sich engagieren | 1 | Ich kann über Unterschiede sprechen und meine eigene Position darstellen und begründen, z. B. zur Gleichberechtigung von Frau und Mann. | 05-cando-b1-b2 (B1.2 #13) · ≈ RC 30 | `cd.b1.position-werte` |
 |  | 2 | Ich kann in einer Diskussion zwischen zwei Positionen vermitteln, indem ich beide Standpunkte kurz wiedergebe und einen Kompromiss vorschlage. | 14-lehrwerke-curricula §B3, §E15 · Netzwerk neu B1 K11 (Clip „in einer Diskussion vermitteln“); Begleitband, Mediation | `cd.b1.zwischen-positionen-vermitteln` |
@@ -283,7 +287,7 @@ the source text with the person changed (internal mapping only, never for screen
 | 5 Das Gerät ist kaputt | E4 Das ist nicht in Ordnung! + E12 line 4 | | 5 Werbung, Konsum, Geld | E2 line 3 + E1 line 4 |
 | 6 Alles digital? | E5 Wie werden wir morgen leben? + E10 lines 2–3 | | 6 Einspruch! | E8 Diese Rechnung stimmt nicht + E7 Ein Unfall mit dem Fahrrad |
 | 7 Unter Kollegen | E2 Neu im Team | | 7 Mitreden | E11 Sich engagieren (lines 1–3) + E10 line 4 |
-| 8 Welcher Kurs passt zu mir? | E8 lines 3–4 + E3 line 4 (+ the E8 writing and speaking tasks) | | 8 Regeln und Anleitungen | E6 So wird das gemacht (lines 1–2) |
+| 8 Weiterbildung im Betrieb | E8 lines 3–4 + E3 line 4 (+ the E8 writing and speaking tasks, moved from the VHS to the Personalabteilung) | | 8 Regeln und Anleitungen | E6 So wird das gemacht (lines 1–2) |
 | 9 Beim Arzt und in der Apotheke | E7 Was fehlt Ihnen genau? (lines 1–2) | | 9 Stadt oder Land? | E9 Stadt oder Land? |
 | 10 Glück gehabt! | E9 Neu anfangen (lines 2–3) + E6 lines 1–2 (Film) + E8 line 3 | | 10 Geschichten von früher | E12 lines 1, 4 + E11 line 4 — the row's Kern (früher, Foto) has no draft unit |
 | 11 Menschen, die mir wichtig sind | E11 line 1 + E9 line 1 — no draft unit is the Porträt/Vereinsblog | | 11 Klima und Zukunft | E10 Reparieren statt wegwerfen (lines 1–3) + E12 line 2 |
@@ -296,7 +300,7 @@ each id core in exactly one unit.
 ## 8. Registry index
 
 *Origin:* **W2-Plan** = carries a draft line; **neu (tb1)** = added for the lane; **neu (Blueprint-Zeile)** = a Kern-Kann
-of a §2.8 row that the drafts miss. *tb1* = the Teil(e) whose exam skill the can-do names. *Core in* = the blueprint
+of a §2.8 row that the drafts miss; **neu (Blueprint-Fokus)** = the Lernziel of a §2.8 Fokus card. *tb1* = the Teil(e) whose exam skill the can-do names. *Core in* = the blueprint
 unit that lists it; never-core ids show their *more* placements.
 
 | Id | halfLevel | band | mode | hf | online | mediation | tb1 | origin | core in |
@@ -311,7 +315,7 @@ unit that lists it; never-core ids show their *more* placements.
 | `cd.b1.rede-publikum` | b1.1 | B1 | receptive-spoken | D, 9 | — | — | — | W2-Plan | b1.1-u02 |
 | `cd.b1.durchsagen-stoerung` | b1.1 | B1 | receptive-spoken | 10 | — | — | hv3 | neu (tb1) | b1.1-u03 |
 | `cd.b1.stoerung-umbuchen` | b1.1 | B1 | interaction-spoken | 10 | — | — | — | W2-Plan | b1.1-u03 |
-| `cd.b1.durchsage-weitergeben` | b1.1 | B1 | mediation | 10, D | — | ja | — | W2-Plan | b1.1-u03 |
+| `cd.b1.durchsage-weitergeben` | b1.1 | B1 | mediation | 10, 2 | — | ja | — | W2-Plan | b1.1-u03 |
 | `cd.b1.vermieter-details-erfragen` | b1.1 | B1 | interaction-spoken | 12 | — | — | — | W2-Plan | b1.1-u04 |
 | `cd.b1.mietvertrag-verstehen` | b1.1 | B1 | receptive-written | 12 | — | — | — | W2-Plan | b1.1-u04 |
 | `cd.b1.mangel-melden` | b1.1 | B1 | productive-written | 12, C | — | — | sa | W2-Plan | b1.1-u04 |
@@ -323,16 +327,16 @@ unit that lists it; never-core ids show their *more* placements.
 | `cd.b1.plaene-vermutungen` | b1.1 | B1 | productive-spoken | 9, B | — | — | — | W2-Plan | b1.1-u06 |
 | `cd.b1.radio-kurzbeitraege` | b1.1 | B1 | receptive-spoken | 9 | — | — | hv1 | W2-Plan | b1.1-u06 |
 | `cd.b1.kommentare-haltung` | b1.1 | B1 | receptive-written | 9, B | — | — | — | W2-Plan | b1.1-u06 |
-| `cd.b1.meinung-forum` | b1.1 | B1 | productive-written | 9, B | ja | — | — | W2-Plan | b1.1-u06 |
+| `cd.b1.meinung-forum` | b1.1 | B1 | productive-written | 9, B | — | — | — | W2-Plan | b1.1-u06 |
 | `cd.b1.medienerfahrungen` | b1.1 | B1 | interaction-spoken | 9, D | — | — | — | W2-Plan | — (more: b1.1-u06) |
 | `cd.b1.absprachen-kollegen` | b1.1 | B1 | interaction-spoken | 2 | — | — | — | W2-Plan | b1.1-u07 |
 | `cd.b1.krankmeldung-uebergabe` | b1.1 | B1 | interaction-spoken | 2, 8 | — | — | — | W2-Plan | b1.1-u07 |
 | `cd.b1.formelle-kurznachricht` | b1.1 | B1 | productive-written | 2, D | — | — | — | W2-Plan | b1.1-u07 |
 | `cd.b1.wortwahl-brief` | b1.1 | B1 | receptive-written | D, E | — | — | sb2 | neu (tb1) | b1.1-u07 |
-| `cd.b1.beratung-gespraech` | b1.1 | B1 | interaction-spoken | 4 | — | — | — | neu (Blueprint-Zeile) | b1.1-u08 |
+| `cd.b1.beratung-gespraech` | b1.1 | B1 | interaction-spoken | 2, 4 | — | — | — | neu (Blueprint-Zeile) | b1.1-u08 |
 | `cd.b1.anzeigen-gezielt` | b1.1 | B1 | receptive-written | 4, 7, 12 | — | — | lv3 | W2-Plan | b1.1-u08 |
 | `cd.b1.artikel-details` | b1.1 | B1 | receptive-written | 4, 9 | — | — | lv2 | neu (tb1) | b1.1-u08 |
-| `cd.b1.kursanfrage-schreiben` | b1.1 | B1 | productive-written | 4, 11 | — | — | sa | neu (tb1) | b1.1-u08 |
+| `cd.b1.kursanfrage-schreiben` | b1.1 | B1 | productive-written | 2, 4 | — | — | sa | neu (tb1) | b1.1-u08 |
 | `cd.b1.beim-arzt-erklaeren` | b1.1 | B1 | interaction-spoken | 8 | — | — | — | W2-Plan | b1.1-u09 |
 | `cd.b1.beipackzettel` | b1.1 | B1 | receptive-written | 8 | — | — | — | W2-Plan | b1.1-u09 |
 | `cd.b1.rat-geben` | b1.1 | B1 | interaction-spoken | 8, D | — | — | — | neu (Blueprint-Zeile) | b1.1-u09 |
@@ -370,8 +374,8 @@ unit that lists it; never-core ids show their *more* placements.
 | `cd.b1.einspruch-schriftlich` | b1.2 | B1 | productive-written | 1, 5, C | — | — | sa | W2-Plan | b1.2-u06 |
 | `cd.b1.schaden-melden` | b1.2 | B1 | productive-written | 5 | — | — | — | W2-Plan | b1.2-u06 |
 | `cd.b1.problem-erklaeren-loesung` | b1.2 | B1+ | interaction-spoken | 7, 5, C | — | — | — | W2-Plan | b1.2-u06 |
-| `cd.b1.symptome-genau` | b1.2 | B1+ | interaction-spoken | 8 | — | — | — | W2-Plan | b1.2-u06 |
-| `cd.b1.versicherung-gespraech` | b1.2 | B1 | receptive-spoken | 5 | — | — | — | W2-Plan | — (more: b1.2-u06) |
+| `cd.b1.symptome-genau` | b1.2 | B1+ | interaction-spoken | 8 | — | — | — | W2-Plan | — (more + Fokus-Karte Gesundheit: b1.2-u06) |
+| `cd.b1.versicherung-gespraech` | b1.2 | B1 | receptive-spoken | 5 | — | — | — | W2-Plan | b1.2-u06 |
 | `cd.b1.unfall-schildern` | b1.2 | B1 | productive-spoken | 10, 1 | — | — | — | W2-Plan | — (more: b1.2-u06) |
 | `cd.b1.zwischen-positionen-vermitteln` | b1.2 | B1 | mediation | B, C, A | — | ja | — | W2-Plan | b1.2-u07 |
 | `cd.b1.meinungen-wiedergeben-vergleichen` | b1.2 | B1 | interaction-spoken | B, A | — | ja | m2 | W2-Plan | b1.2-u07 |
@@ -381,6 +385,7 @@ unit that lists it; never-core ids show their *more* placements.
 | `cd.b1.regeln-detail` | b1.2 | B1 | receptive-written | 12, 2 | — | — | — | W2-Plan | b1.2-u08 |
 | `cd.b1.formelle-wendungen` | b1.2 | B1 | productive-written | 1, 5, 12 | — | — | sb2 | neu (tb1) | b1.2-u08 |
 | `cd.b1.ansagen-handeln` | b1.2 | B1 | receptive-spoken | 1, 2, 12 | — | — | hv3 | neu (tb1) | b1.2-u08 |
+| `cd.b1.betreuungsvertrag-verstehen` | b1.2 | B1 | receptive-written | 6 | — | — | — | neu (Blueprint-Fokus) | — (more + Fokus-DaZ: b1.2-u08) |
 | `cd.b1.fuehrung-verstehen` | b1.2 | B1 | receptive-spoken | 10, 12 | — | — | — | W2-Plan | b1.2-u09 |
 | `cd.b1.vor-nachteile-abwaegen` | b1.2 | B1 | productive-spoken | 12, 10, B | — | — | — | W2-Plan | b1.2-u09 |
 | `cd.b1.praesentation-rueckmeldung` | b1.2 | B1 | interaction-spoken | E, D | — | — | — | W2-Plan | b1.2-u09 |
@@ -390,7 +395,7 @@ unit that lists it; never-core ids show their *more* placements.
 | `cd.b1.ueber-mich-ausfuehrlich` | b1.2 | B1 | interaction-spoken | D, A, 4 | — | — | m1 | W2-Plan | b1.2-u10 |
 | `cd.b1.artikel-zusammenfassen-stellung` | b1.2 | B1+ | productive-written | 9, B | — | — | sa | W2-Plan | b1.2-u11 |
 | `cd.b1.debatte-wer-meint-was` | b1.2 | B1 | receptive-spoken | 9, B | — | — | — | W2-Plan | b1.2-u11 |
-| `cd.b1.kommentare-ironie` | b1.2 | B1 | receptive-written | 9, B | — | — | — | W2-Plan | b1.2-u11 |
+| `cd.b1.kommentare-einschraenkungen` | b1.2 | B1 | receptive-written | 9, B | — | — | — | W2-Plan | b1.2-u11 |
 | `cd.b1.frueher-heute-vergleichen` | b1.2 | B1 | productive-spoken | 9, B | — | — | — | W2-Plan | b1.2-u11 |
 | `cd.b1.infotext-zusammenfassen` | b1.2 | B1 | productive-written | 7, 5, D | — | ja | — | W2-Plan | b1.2-u12 |
 | `cd.b1.besprechung-ergebnisse-weitergeben` | b1.2 | B1 | productive-written | 2, D | — | ja | — | W2-Plan | b1.2-u12 |
@@ -403,10 +408,13 @@ unit that lists it; never-core ids show their *more* placements.
   only the person changed (memo 05 conversion rule), so every draft line was **rewritten**, not transcribed. A scripted
   check compared each `de` with every draft line and every ich-Form line of memo 05: after the shared „Ich kann“ the
   longest common word run is **5 words**, and those runs are function-word frames, not descriptor
-  phrases (top: `persoenliche-mail` 5 („in einer persönlichen e mail“); `wortwahl-brief` 5 („in einem brief oder einer“); `praesentation-rueckmeldung` 5 („beantworten und einer anderen person“); `kennenlernen-gespraech` 4 („arbeit sprachen und plänen“); `agb-verstehen` 4 („die wichtigsten punkte der“); `radio-kurzbeitraege` 4 („wenn deutlich gesprochen wird“)). Examples (Firmenzeitung, Repair-Café, Vereinsblog …) are ours.
+  phrases (top: `persoenliche-mail` 5 („in einer persönlichen e mail“); `wortwahl-brief` 5 („in einem brief oder einer“); `praesentation-rueckmeldung` 5 („beantworten und einer anderen person“); `kennenlernen-gespraech` 4 („arbeit sprachen und plänen“); `agb-verstehen` 4 („die wichtigsten punkte der“); `radio-kurzbeitraege` 4 („wenn deutlich gesprochen wird“)). Re-run 2026-09-27 after the review
+  fixes, now also against every sentence of the RC full text: maximum **6 words**, `online-konversation` („ein
+  Gespräch über ein vertrautes Thema“, a generic frame); the six reworded or new `de` texts share at most 4 words
+  with any source (`kommentare-einschraenkungen`: „für oder gegen etwas“). Examples (Firmenzeitung, Repair-Café, Vereinsblog …) are ours.
 - **Ids.** `cd.b1.<slug>`, German, ASCII-folded, naming the function rather than the unit, so an id survives a unit
   move. **halfLevel** = the half where the id is first a core Lernziel; the never-core ids take the half of their first
-  placement (`medienerfahrungen`, `versicherung-gespraech`, `unfall-schildern`).
+  placement (`medienerfahrungen`, `unfall-schildern`, `symptome-genau`, `betreuungsvertrag-verstehen`).
 - **band** = the CEFR level at which the course expects the performance (as in `cando-a1.md`): **B1** by default,
   **B1+** only where the source is a B1+ key feature (`GER-M·B1+`): `problem-erklaeren-loesung`, `symptome-genau`,
   `ablaeufe-erklaeren`, `artikel-zusammenfassen-stellung`, `nachricht-notieren`. The exam level of both courses is B1,
@@ -414,20 +422,29 @@ unit that lists it; never-core ids show their *more* placements.
 - **mode** = the channel of the unit's proof: Hören/Lesen → `receptive-*`; monologue, narration, presentation →
   `productive-spoken`; letters, e-mails, posts, cards → `productive-written`; dialogue, negotiation, reacting →
   `interaction-spoken`; chat and forum replies → `interaction-written`; spoken or note-based relaying for a third
-  person → `mediation`. Counts: receptive-spoken 10 · receptive-written 16 · productive-spoken 16 · productive-written 18 · interaction-spoken 28 · interaction-written 4 · mediation 3.
-- **mediation: true** marks every mediation can-do: the three with mode `mediation` (`durchsage-weitergeben`,
-  `zwischen-positionen-vermitteln`, `nachricht-notieren`), the two written summaries for someone else
-  (`infotext-zusammenfassen`, `besprechung-ergebnisse-weitergeben`, mode productive-written) and the telc M2 relay
-  (`meinungen-wiedergeben-vergleichen`, interaction-spoken; BLUEPRINT B1.2 U7 calls „Meinungen wiedergeben“ mediation).
-- **online: true** = defined by a digital channel: `online-austausch`, `meinung-forum` (B1.1); `forum-stellung-nehmen`,
-  `online-konversation` (B1.2). E-mails, reader comments and radio stay `false` (A1/A2 convention).
+  person → `mediation`. Counts: receptive-spoken 10 · receptive-written 17 · productive-spoken 16 · productive-written 18 · interaction-spoken 28 · interaction-written 4 · mediation 3.
+- **mediation — shared rule (proposed to cando-b2 and the validator owner, to be stated in these words in both notes):**
+  > `mediation: true` whenever the can-do relays or relates content for a third party, whatever its `mode`.
+  > `mode: mediation` is used when the relaying itself is the proof channel (spoken relay, a note for someone else);
+  > otherwise `mode` names the channel of the proof (a written summary is `productive-written`, a relayed opinion
+  > in a discussion `interaction-spoken`). ALL-06 counts the flag, not the mode.
+
+  In B1 the flag is on six ids: the three with mode `mediation` (`durchsage-weitergeben`, `zwischen-positionen-vermitteln`,
+  `nachricht-notieren`), the two written summaries for someone else (`infotext-zusammenfassen`,
+  `besprechung-ergebnisse-weitergeben`, productive-written) and the telc M2 relay (`meinungen-wiedergeben-vergleichen`,
+  interaction-spoken; BLUEPRINT B1.2 U7 calls „Meinungen wiedergeben“ mediation). Every id with mode `mediation` has
+  the flag, so B2's current practice (flag exactly when mode is `mediation`) is a subset of this rule and stays valid.
+- **online: true** = the can-do is carried out as interaction in a digital channel (mode `interaction-written`, or
+  `interaction-spoken` in a video call) — the rule the DaF review proposed for all four registries: `online-austausch`
+  (B1.1); `forum-stellung-nehmen`, `online-konversation` (B1.2). A single forum post (`meinung-forum`, productive-written),
+  e-mails, reader comments and radio stay `false`. ALL-06 is then met by online ∧ interaction in both halves.
 - **hf** = BAMF Handlungsfeld(er) (1–12, A–E) of the source page, plus the row's field where it differs. Occurrences in
-  the registry: 1: 4 · 2: 16 · 3: 4 · 4: 10 · 5: 7 · 6: 0 · 7: 10 · 8: 5 · 9: 20 · 10: 7 · 11: 3 · 12: 11 · A: 10 · B: 23 · C: 10 · D: 35 · E: 9. HF 6 has no B1 can-do (open issue 4).
+  the registry: 1: 4 · 2: 19 · 3: 4 · 4: 10 · 5: 7 · 6: 1 · 7: 10 · 8: 5 · 9: 20 · 10: 7 · 11: 2 · 12: 11 · A: 10 · B: 23 · C: 10 · D: 34 · E: 9. HF 6 is carried by `betreuungsvertrag-verstehen` (Fokus card, open issue 4); HF 11 by B1.1 U12's tag (`lernziele-beschreiben`, `kurz-praesentieren`).
 - **Source tags** (never shown on screen):
 
   | Tag | Document |
   |---|---|
-  | `RC p·B1` | BAMF Rahmencurriculum für Integrationskurse (revision 2016), page · level, as memo 05 and the drafts cite it |
+  | `RC p·B1` | BAMF Rahmencurriculum für Integrationskurse (revision 2016), page · level. Every RC page in the file was read in the BAMF PDF (186 pp.) on 2026-09-27 (open issue 3) |
   | `GER-R·B1`, `GER-R·B1 Online`, `GER-R·B1 Mediation` | Begleitband 2020, Anhang 2 (Raster zur Selbstbeurteilung, with the online-interaction and mediation rows) — memo 05 „SB“ |
   | `GER-M·B1`, `GER-M·B1+` | Begleitband, Anhang 1 (Zentrale Merkmale der Niveaus) — memo 05 „ZM“ |
   | `GER-E·B1`, `GER-E·B1 Online`, `GER-E·B1 Mediation` | Begleitband, Anhang 8 (ergänzende Deskriptoren) — memo 05 „E8“ |
@@ -444,8 +461,8 @@ unit that lists it; never-core ids show their *more* placements.
 |---|---|---|---|
 | Beschwerde | `reklamieren`, `beschwerde-schriftlich` (U5; GER-M·B1 „sich beschweren“) | `problem-erklaeren-loesung` (U6, B1+), `einspruch-schriftlich` (U6) | Zugeständnisse einfordern (B2.1) |
 | Meinung | `meinungen-austauschen` (U12, GER-M·B1), `meinung-forum` (U6) | `meinungen-wiedergeben-vergleichen` (U7), `artikel-zusammenfassen-stellung` (U11, B1+) | Argumentation logisch aufbauen (B2.1) |
-| Konsultation | `beim-arzt-erklaeren` (U9) | `symptome-genau` (U6, B1+) — see open issue 1 | Beratung mit Nachfragen (B2.1) |
-| Weitergeben | `online-austausch` (U1), `durchsage-weitergeben` (U3, mediation) | `infotext-zusammenfassen`, `besprechung-ergebnisse-weitergeben`, `nachricht-notieren` (U12), `zwischen-positionen-vermitteln` (U7) | umschreiben, Fehler kontrollieren (B2.1) |
+| Konsultation | `beim-arzt-erklaeren` (U9) | `symptome-genau` (B1+) — *more* on U6, proved in a Fokus-Karte Gesundheit (e.g. the doctor's visit after the accident whose damage U6 reports); open issue 1 | Beratung mit Nachfragen (B2.1) |
+| Weitergeben | `online-austausch` (U1), `durchsage-weitergeben` (U3, mediation, to the Team) | `infotext-zusammenfassen`, `besprechung-ergebnisse-weitergeben`, `nachricht-notieren` (U12), `zwischen-positionen-vermitteln` (U7) | umschreiben, Fehler kontrollieren (B2.1) |
 | Planen (course spine) | `gemeinsam-planen`, `aufgaben-verteilen` (U2) | `projekt-planen-einwaende` (U4) | — |
 
 ## 11. Open issues

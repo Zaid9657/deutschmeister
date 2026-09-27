@@ -35,6 +35,9 @@ export function emptyContext({ root = null, repoRoot = null, today = null } = {}
       textTypes: null, // Map
       detectors: null, // { list, byId, file }
       casts: null, // { members: Map, relations: [], files: [] }
+      lemmas: null, // Map id → { entry, file }  (the global lemma registry, SCHEMA §4.8)
+      voices: null, // Map voice → { data, file }  (registries/voices.json)
+      style: null, // { data, file }  (registries/style.json)
     },
     levels: new Map(),
     stubs: new Map(), // ref kind → Set(ids): ids a fixture declares to exist in the full registries
@@ -158,11 +161,16 @@ function addCasts(ctx, data, file) {
   for (const r of arr(data.relations)) ctx.registries.casts.relations.push(r);
 }
 
+function addVoices(ctx, data, file) {
+  if (!ctx.registries.voices) ctx.registries.voices = new Map();
+  for (const [v, d] of Object.entries(data.voices || {})) ctx.registries.voices.set(v, { data: d, file });
+}
+
 function levelOfDoc(data, fallback) {
   if (data && PATTERNS.LEVEL.test(String(data.level || ''))) return data.level;
   const u = parseUnitId(data?.id) || parseUnitId(data?.unit);
   if (u) return u.level;
-  const m = String(data?.id || '').match(/^((?:a1|a2|b1|b2)\.[12])-/);
+  const m = String(data?.id || data?.plateau || '').match(/^((?:a1|a2|b1|b2)\.[12])-/);
   if (m) return m[1];
   return fallback || null;
 }
@@ -215,14 +223,14 @@ export function addDoc(ctx, kind, data, file, { target = false } = {}) {
     doc.nr = parseUnitId(data.unit)?.nr ?? null;
     slot.lanePacks = slot.lanePacks.filter((p) => !(p.data.unit === data.unit && p.data.lane === data.lane));
     slot.lanePacks.push(doc);
-  } else if (kind === 'plateau') slot.plateaus.push(doc);
+  } else if (kind === 'plateau' || kind === 'plateaulanepack') slot.plateaus.push(doc);
   else if (kind === 'closing') slot.closing.push(doc);
   else if (kind === 'mock') slot.mocks.push(doc);
   return doc;
 }
 
 const SCHEMA_KIND = (s) => {
-  const m = typeof s === 'string' ? s.match(/^course-v2\/([a-z]+)@\d+$/) : null;
+  const m = typeof s === 'string' ? s.match(/^course-v2\/([a-z-]+)@\d+$/) : null;
   return m ? m[1] : null;
 };
 
@@ -273,7 +281,17 @@ export function ingest(ctx, value, file, { levelHint = null, key = null, depth =
       return added;
     case 'anchor': case 'qa':
       return added;
-    case 'unit': case 'lanepack': case 'plateau': case 'closing': case 'mockmodule': {
+    case 'lemmas':
+      if (!ctx.registries.lemmas) ctx.registries.lemmas = new Map();
+      for (const [id, entry] of Object.entries(value.lemmas || {})) ctx.registries.lemmas.set(id, { entry, file });
+      return added;
+    case 'voices':
+      addVoices(ctx, value, file);
+      return added;
+    case 'style':
+      ctx.registries.style = { data: value, file };
+      return added;
+    case 'unit': case 'lanepack': case 'plateau': case 'plateaulanepack': case 'closing': case 'mockmodule': {
       const doc = addDoc(ctx, kind === 'mockmodule' ? 'mock' : kind, value, file);
       if (doc) added.push(doc);
       return added;
@@ -368,8 +386,11 @@ function listJsonDeepExcluding(dir, exclude) {
     if (exclude.some((x) => within(d, x))) return;
     for (const f of readdirSync(d).sort()) {
       const p = join(d, f);
-      if (statSync(p).isDirectory()) visit(p);
-      else if (f.endsWith('.json')) out.push(p);
+      // derived artefacts (.build/) and pipeline results (qa/, anchors/) are not content to validate
+      if (statSync(p).isDirectory()) {
+        if (f === '.build' || f === 'qa' || f === 'anchors' || f === 'node_modules') continue;
+        visit(p);
+      } else if (f.endsWith('.json')) out.push(p);
     }
   };
   visit(dir);
@@ -387,6 +408,13 @@ function ingestFile(ctx, file) {
     if (base === 'text-types.json') { addTextTypes(ctx, Array.isArray(data) ? data : data.types, r); return []; }
     if (base === 'detectors.json') { addDetectors(ctx, data.detectors, r); return []; }
     if (parent === 'casts') { addCasts(ctx, data, r); return []; }
+    if (base === 'voices.json') { addVoices(ctx, data, r); return []; }
+    if (base === 'style.json') { ctx.registries.style = { data, file: r }; return []; }
+    if (base === 'lemmas.json') {
+      if (!ctx.registries.lemmas) ctx.registries.lemmas = new Map();
+      for (const [id, entry] of Object.entries(data.lemmas || {})) ctx.registries.lemmas.set(id, { entry, file: r });
+      return [];
+    }
     if (base === 'ids.ledger.json') {
       const lv = PATTERNS.LEVEL.test(parent) ? parent : levelOfDoc(data, null);
       if (lv) levelSlot(ctx, lv).ledger = { data, file: r };

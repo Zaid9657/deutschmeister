@@ -265,6 +265,9 @@ them by id (`textRefs`, `Item.textRef`, `choices[].textRef`).
 { $schema: 'course-v2/spine@1',
   points: [{ id: re(spine), label: de,
              intro: { receptive: ref(unit), productive: ref(unit)? }, chunkFrom: ref(unit)?,
+                                  // exactly one intro per point (GRM-02); a later return is listed as `review` in the
+                                  // unit spec; a genuinely different function gets its own point (e.g.
+                                  // g.partizip-attr-einfach B1.2 U2 vs g.partizip-attr-erweitert B2.1 U6)
              detectors: [ref(detector)]*, contrast: ref(spine)?, errorTags: [str]*,
              lehrwerk: [str], consensus: enum(strong|majority|split|single),
              ruleCards: [ref(rulecard)], inventory: [enum(gz-a1|gz-a2)]* }] }
@@ -736,7 +739,11 @@ block (with its origin label in a .1 course; in a .2 course a missing lane-exact
 { $schema: 'course-v2/anchor@1', id: str, profile: ref(rubric), task: ref(bank),
   text: de?, transcript: de?, errorHeavy: bool,
   expected: { [criterion: str]: num }, humanRatingRef: str?,   // key into the private human-rating store
+  verifiedBy: enum(examiner|merlin|none),     // 'human-verified' = examiner or a MERLIN text of the same band
+  merlinRef: str?,                            // key into private/merlin/ (evaluation data, never shipped)
   author: str }
+  // CAL-01 counts only anchors with verifiedBy ≠ 'none' toward a lane going live (BLUEPRINT §1.4, §4.6);
+  // speaking anchors stay 'none' (regression only) until pilot recordings are rated
 
 // content/course-v2/qa/<level>/<fileId>.<gate>.json   — written by pipeline runners only
 { $schema: 'course-v2/qa@1', file: str, contentHash: str,
@@ -757,7 +764,7 @@ block (with its origin label in a .1 course; in a .2 course a missing lane-exact
 | **Review service** | card keys (§2) and the compiled card index | — |
 | **Plan / board** | `course.json` pace and review, `.build/course.facts.json` (review minutes incl. carry-over), `learner_goals` (the learner's band), `exam_practice_results`, deterministic Teil values | AI scores as plan inputs (PRG-04) |
 | **Einstufung** | the compiled fixed form per band (`.build/einstufung.json`) and `course.json.einstufung.routing` | AI scores for routing (PRG-04) |
-| **Copy** (`courseFacts` twins, `llms.txt`, `claims.test`) | `course.json.counts` (generated) | typed numbers |
+| **Copy** (`courseFacts` twins, `llms.txt`, `claims.test`) | `.build/course.facts.json` `counts` (incl. KI-ausgewertete vs deterministic Aufgaben from `rubric.method`) | typed numbers |
 
 ## 13. Compiler outputs (`node scripts/course-v2/compile.mjs <level>`, deterministic, idempotent, committed)
 
@@ -1827,7 +1834,7 @@ are **not** asserted on them.
 
 ```json
 {
-  "lv3": { "id": "tb1.lv3", "module": "lesen", "family": "fam.l-anzeigen", "task": "zuordnen", "items": 10, "choices": 12, "choiceKind": "ad", "choiceReuse": false, "noMatch": "x", "minutes": 20, "textType": "tt.kleinanzeige", "textWordsSource": "official-sample", "points": 25, "pictorial": false, "instructionsDe": "Lesen Sie zuerst die zehn Situationen, dann die zwölf Anzeigen. Welche Anzeige passt zu welcher Situation? Passt keine Anzeige, wählen Sie x.", "paraphraseOf": "telc UT B1, Leseverstehen Teil 3 (paraphrased)", "scaffold": { "minItems": 5, "textWords": [15, 45], "playsFixed": true, "optionsFixed": true, "choicesMin": 7 }, "scaffoldAllowedIn": ["b1.1"], "transfersTo": ["gb1.l3", "dtz.l2"], "source": "telc UT B1 (m02 §2)", "stand": "2026-09-26" },
+  "lv3": { "id": "tb1.lv3", "module": "lesen", "family": "fam.l-anzeigen", "task": "zuordnen", "items": 10, "choices": 12, "choiceKind": "ad", "choiceReuse": false, "noMatch": "x", "textType": "tt.kleinanzeige", "textWordsSource": "official-sample", "points": 25, "pictorial": false, "instructionsDe": "Lesen Sie zuerst die zehn Situationen, dann die zwölf Anzeigen. Welche Anzeige passt zu welcher Situation? Passt keine Anzeige, wählen Sie x.", "paraphraseOf": "telc UT B1, Leseverstehen Teil 3 (paraphrased)", "scaffold": { "minItems": 5, "textWords": [15, 45], "playsFixed": true, "optionsFixed": true, "choicesMin": 7 }, "scaffoldAllowedIn": ["b1.1"], "transfersTo": ["gb1.l3", "dtz.l2"], "source": "telc UT B1 (m02 §2)", "stand": "2026-09-26" },
   "l2": { "id": "gb2.l2", "module": "lesen", "family": "fam.l-textluecke", "task": "insert", "items": 6, "choices": 8, "choiceKind": "sentence", "choiceReuse": false, "textType": "tt.zeitungsartikel", "textWordsSource": "official-sample", "points": 6, "pictorial": false, "instructionsDe": "Im Text fehlen sechs Sätze. Welcher Satz passt in welche Lücke? Zwei Sätze passen nicht.", "paraphraseOf": "Goethe-Zertifikat B2 Modellsatz, Lesen Teil 2 (paraphrased)", "scaffold": { "minItems": 4, "textWords": [150, 300], "playsFixed": true, "optionsFixed": true, "choicesMin": 6 }, "scaffoldAllowedIn": ["b2.1"], "transfersTo": [], "source": "Goethe B2 Modellsatz (m03 §1)", "stand": "2026-09-26" }
 }
 ```
@@ -1909,9 +1916,9 @@ built after demand):
       "items": [
         { "id": "b2.2-u07-ls4-gb2-l2-01", "type": "insert", "role": "exam", "topic": "lesen", "textRef": "b2.2-u07-ls4-gb2-t1", "promptDe": "Lücke 1", "answer": "a", "accepted": ["a"], "explanation": { "de": "Nach der Einleitung folgt die Idee der Museumsnacht.", "en": "The idea behind the event follows the introduction." }, "origin": "agent" },
         { "id": "b2.2-u07-ls4-gb2-l2-02", "type": "insert", "role": "exam", "topic": "lesen", "textRef": "b2.2-u07-ls4-gb2-t1", "promptDe": "Lücke 2", "answer": "b", "accepted": ["b"], "explanation": { "de": "Ein Ticket für alle Häuser – deshalb planen die Gäste ihre Route.", "en": "One ticket for all venues – that is why guests plan a route." }, "origin": "agent" },
-        { "id": "b2.2-u07-ls4-gb2-l2-03", "type": "insert", "role": "exam", "topic": "lesen", "textRef": "b2.2-u07-ls4-gb2-t1", "promptDe": "Lücke 3", "answer": "c", "accepted": ["c"], "explanation": { "de": "„Das scheint zu funktionieren\" bezieht sich auf das Ziel der Veranstalter.", "en": "'That seems to work' refers to the organisers' aim." }, "origin": "agent" },
-        { "id": "b2.2-u07-ls4-gb2-l2-04", "type": "insert", "role": "exam", "topic": "lesen", "textRef": "b2.2-u07-ls4-gb2-t1", "promptDe": "Lücke 4", "answer": "d", "accepted": ["d"], "explanation": { "de": "„Ihrer Meinung nach\" setzt die Meinung der Kritiker fort.", "en": "'In their view' continues the critics' opinion." }, "origin": "agent" },
-        { "id": "b2.2-u07-ls4-gb2-l2-05", "type": "insert", "role": "exam", "topic": "lesen", "textRef": "b2.2-u07-ls4-gb2-t1", "promptDe": "Lücke 5", "answer": "e", "accepted": ["e"], "explanation": { "de": "„Einige … Andere …\": Satz e passt vor „Andere setzen auf …\".", "en": "'Some … others …': sentence e comes before 'Others rely on …'." }, "origin": "agent" },
+        { "id": "b2.2-u07-ls4-gb2-l2-03", "type": "insert", "role": "exam", "topic": "lesen", "textRef": "b2.2-u07-ls4-gb2-t1", "promptDe": "Lücke 3", "answer": "c", "accepted": ["c"], "explanation": { "de": "„Das scheint zu funktionieren“ bezieht sich auf das Ziel der Veranstalter.", "en": "'That seems to work' refers to the organisers' aim." }, "origin": "agent" },
+        { "id": "b2.2-u07-ls4-gb2-l2-04", "type": "insert", "role": "exam", "topic": "lesen", "textRef": "b2.2-u07-ls4-gb2-t1", "promptDe": "Lücke 4", "answer": "d", "accepted": ["d"], "explanation": { "de": "„Ihrer Meinung nach“ setzt die Meinung der Kritiker fort.", "en": "'In their view' continues the critics' opinion." }, "origin": "agent" },
+        { "id": "b2.2-u07-ls4-gb2-l2-05", "type": "insert", "role": "exam", "topic": "lesen", "textRef": "b2.2-u07-ls4-gb2-t1", "promptDe": "Lücke 5", "answer": "e", "accepted": ["e"], "explanation": { "de": "„Einige … Andere …“: Satz e passt vor „Andere setzen auf …“.", "en": "'Some … others …': sentence e comes before 'Others rely on …'." }, "origin": "agent" },
         { "id": "b2.2-u07-ls4-gb2-l2-06", "type": "insert", "role": "exam", "topic": "lesen", "textRef": "b2.2-u07-ls4-gb2-t1", "promptDe": "Lücke 6", "answer": "f", "accepted": ["f"], "explanation": { "de": "Der Gutschein führt zur Frage, ob man wiederkommt.", "en": "The voucher leads to the question of coming back." }, "origin": "agent" }
       ]
     }

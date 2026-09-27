@@ -1,18 +1,23 @@
-// Walkers over course-v2 documents (SCHEMA §8–§10). Every rule reads content through these, so
-// a new place an item, a line or a task can live is added once, here.
+// Walkers over course-v2 documents (SCHEMA §3–§10). Every rule reads content through these, so a
+// new place an item, a line, a text or a task can live is added once, here.
 //
-// A "doc" is `{ kind, file, data, level }` with kind ∈ unit | lanepack | plateau | closing | mock.
-// Each walker yields `{ …, path }` where `path` is a readable JSON path into `data`.
+// A "doc" is `{ kind, file, data, level }` with kind ∈ unit | lanepack | plateau | plateaulanepack |
+// closing | mock. Each walker yields `{ …, path }` where `path` is a readable JSON path into `data`.
+//
+// Exam texts (SCHEMA §3.6) live at step, slot or file level and blocks point at them with
+// `textRefs`; the first draft of the schema kept them inside the block (`block.texts`). Both
+// shapes are read, so a file written against either validates.
 
 const arr = (x) => (Array.isArray(x) ? x : []);
 const isObj = (x) => x !== null && typeof x === 'object' && !Array.isArray(x);
+const ASSESS_KINDS = new Set(['plateau', 'plateaulanepack', 'closing', 'mock']);
 
-/** A closing/mock `parts[]` entry: exam block, writing task or speaking task. */
+/** A closing/mock/Plateau entry: exam block, writing task or speaking task. */
 export function partKind(p) {
   if (!isObj(p)) return null;
-  if (Array.isArray(p.items) && (p.template || p.texts)) return 'block';
-  if (Array.isArray(p.leitpunkte) || Array.isArray(p.wordBand) || p.examKey) return 'writing';
-  if (p.mode && (p.aiRole || p.openingLine || p.cards)) return 'speaking';
+  if (Array.isArray(p.items) && (p.template || p.texts || p.textRefs)) return 'block';
+  if (Array.isArray(p.leitpunkte) || Array.isArray(p.wordBand) || p.examKey || isObj(p.form)) return 'writing';
+  if (Array.isArray(p.parts) || (p.mode && (p.aiRole || p.openingLine || p.cards))) return 'speaking';
   if (p.template && p.bankKey) return p.leitpunkte ? 'writing' : 'speaking';
   return null;
 }
@@ -24,36 +29,89 @@ export function* walkSteps(doc) {
   for (let i = 0; i < steps.length; i += 1) yield { step: steps[i], index: i, path: `steps[${i}]` };
 }
 
-/** Exam blocks: LS4 of a unit, lane-pack LS4 slot, Plateau Teile, closing and mock parts. */
-export function* walkBlocks(doc) {
+/**
+ * Every ExamText of a doc, once: step `texts`, lane-pack slot `texts`, file `texts`, and the
+ * draft shape's `block.texts`. `scope` groups the texts a block may refer to.
+ */
+export function* walkExamTexts(doc) {
   const d = doc.data || {};
+  // `ownerBlock` is set for the draft shape only: a text that lives inside its block
+  const each = function* (list, path, scope, step, ownerBlock = null) {
+    const xs = arr(list);
+    for (let i = 0; i < xs.length; i += 1) if (isObj(xs[i])) yield { text: xs[i], path: `${path}[${i}]`, scope, step, ownerBlock };
+  };
   if (doc.kind === 'unit') {
     for (const { step, path } of walkSteps(doc)) {
-      if (step?.kind !== 'pruefung') continue;
+      yield* each(step?.texts, `${path}.texts`, path, step);
+      for (const b of arr(step?.blocks).map((x, i) => [x, i])) yield* each(b[0]?.texts, `${path}.blocks[${b[1]}].texts`, `${path}.blocks[${b[1]}]`, step, b[0]);
+      if (isObj(step?.examBlock)) yield* each(step.examBlock.texts, `${path}.examBlock.texts`, `${path}.examBlock`, step, step.examBlock);
+    }
+  } else if (doc.kind === 'lanepack') {
+    const ls4 = d.slots?.ls4;
+    yield* each(ls4?.texts, 'slots.ls4.texts', 'slots.ls4', null);
+    for (const b of arr(ls4?.blocks).map((x, i) => [x, i])) yield* each(b[0]?.texts, `slots.ls4.blocks[${b[1]}].texts`, `slots.ls4.blocks[${b[1]}]`, null, b[0]);
+    yield* each(d.slots?.input?.texts, 'slots.input.texts', 'slots.input', null);
+    if (isObj(d.slots?.input?.examBlock)) yield* each(d.slots.input.examBlock.texts, 'slots.input.examBlock.texts', 'slots.input.examBlock', null, d.slots.input.examBlock);
+  } else if (ASSESS_KINDS.has(doc.kind)) {
+    yield* each(d.texts, 'texts', 'file', null);
+    const list = doc.kind === 'closing' || doc.kind === 'mock' ? arr(d.parts) : arr(d.examTeile);
+    const key = doc.kind === 'closing' || doc.kind === 'mock' ? 'parts' : 'examTeile';
+    for (let i = 0; i < list.length; i += 1) yield* each(list[i]?.texts, `${key}[${i}].texts`, `${key}[${i}]`, null, list[i]);
+  }
+}
+
+/** The ExamTexts a block uses: its own `texts` (draft shape) or its `textRefs` within its scope. */
+function resolveBlockTexts(block, scopeTexts, ownPath) {
+  if (Array.isArray(block?.texts)) return block.texts.map((t, i) => ({ text: t, path: `${ownPath}.texts[${i}]` })).filter((x) => isObj(x.text));
+  const refs = arr(block?.textRefs);
+  const out = [];
+  for (const r of refs) {
+    const hit = scopeTexts.find((x) => x.text.id === r);
+    if (hit) out.push(hit);
+  }
+  return out;
+}
+
+/** Exam blocks: LS4, slot-'input' blocks, lane-pack slots, Plateau Teile, closing and mock parts. */
+export function* walkBlocks(doc) {
+  const d = doc.data || {};
+  const all = [...walkExamTexts(doc)];
+  const inScope = (scopes) => all.filter((x) => scopes.includes(x.scope));
+  if (doc.kind === 'unit') {
+    for (const { step, path } of walkSteps(doc)) {
+      if (!isObj(step)) continue;
       const blocks = arr(step.blocks);
       for (let b = 0; b < blocks.length; b += 1) {
-        yield { block: blocks[b], path: `${path}.blocks[${b}]`, step, source: 'ls4' };
+        const bp = `${path}.blocks[${b}]`;
+        yield { block: blocks[b], path: bp, step, source: 'ls4', texts: resolveBlockTexts(blocks[b], inScope([path, bp]), bp) };
+      }
+      if (isObj(step.examBlock)) {
+        const bp = `${path}.examBlock`;
+        yield { block: step.examBlock, path: bp, step, source: 'input', texts: resolveBlockTexts(step.examBlock, inScope([path, bp]), bp) };
       }
     }
   } else if (doc.kind === 'lanepack') {
     const blocks = arr(d.slots?.ls4?.blocks);
     for (let b = 0; b < blocks.length; b += 1) {
-      yield { block: blocks[b], path: `slots.ls4.blocks[${b}]`, step: null, source: 'lanepack' };
+      const bp = `slots.ls4.blocks[${b}]`;
+      yield { block: blocks[b], path: bp, step: null, source: 'lanepack', texts: resolveBlockTexts(blocks[b], inScope(['slots.ls4', bp]), bp) };
     }
-  } else if (doc.kind === 'plateau') {
-    const blocks = arr(d.examTeile);
-    for (let b = 0; b < blocks.length; b += 1) {
-      yield { block: blocks[b], path: `examTeile[${b}]`, step: null, source: 'plateau' };
+    if (isObj(d.slots?.input?.examBlock)) {
+      const bp = 'slots.input.examBlock';
+      yield { block: d.slots.input.examBlock, path: bp, step: null, source: 'lanepack', texts: resolveBlockTexts(d.slots.input.examBlock, inScope(['slots.input', bp]), bp) };
     }
-  } else if (doc.kind === 'closing' || doc.kind === 'mock') {
-    const parts = arr(d.parts);
-    for (let b = 0; b < parts.length; b += 1) {
-      if (partKind(parts[b]) === 'block') yield { block: parts[b], path: `parts[${b}]`, step: null, source: doc.kind };
+  } else if (ASSESS_KINDS.has(doc.kind)) {
+    const key = doc.kind === 'closing' || doc.kind === 'mock' ? 'parts' : 'examTeile';
+    const list = arr(d[key]);
+    for (let b = 0; b < list.length; b += 1) {
+      if (partKind(list[b]) !== 'block') continue;
+      const bp = `${key}[${b}]`;
+      yield { block: list[b], path: bp, step: null, source: doc.kind, texts: resolveBlockTexts(list[b], inScope(['file', bp]), bp) };
     }
   }
 }
 
-/** Speaking and writing tasks (Aufgaben): LS5/LS6, lane-pack slots, Plateau productive, closing/mock parts. */
+/** Speaking and writing tasks (Aufgaben): LS5/LS6, lane-pack slots, Plateau Teile and productive, closing/mock parts. */
 export function* walkTasks(doc) {
   const d = doc.data || {};
   if (doc.kind === 'unit') {
@@ -64,17 +122,23 @@ export function* walkTasks(doc) {
   } else if (doc.kind === 'lanepack') {
     if (isObj(d.slots?.sprechen)) yield { task: d.slots.sprechen, kind: 'speaking', path: 'slots.sprechen', step: null, source: 'lanepack' };
     if (isObj(d.slots?.schreiben)) yield { task: d.slots.schreiben, kind: 'writing', path: 'slots.schreiben', step: null, source: 'lanepack' };
-  } else if (doc.kind === 'plateau') {
+  } else if (ASSESS_KINDS.has(doc.kind)) {
+    const key = doc.kind === 'closing' || doc.kind === 'mock' ? 'parts' : 'examTeile';
+    const list = arr(d[key]);
+    for (let i = 0; i < list.length; i += 1) {
+      const k = partKind(list[i]);
+      if (k === 'writing' || k === 'speaking') yield { task: list[i], kind: k, path: `${key}[${i}]`, step: null, source: doc.kind };
+    }
     const p = d.productive;
     const k = partKind(p);
-    if (k === 'writing' || k === 'speaking') yield { task: p, kind: k, path: 'productive', step: null, source: 'plateau' };
-  } else if (doc.kind === 'closing' || doc.kind === 'mock') {
-    const parts = arr(d.parts);
-    for (let i = 0; i < parts.length; i += 1) {
-      const k = partKind(parts[i]);
-      if (k === 'writing' || k === 'speaking') yield { task: parts[i], kind: k, path: `parts[${i}]`, step: null, source: doc.kind };
-    }
+    if (k === 'writing' || k === 'speaking') yield { task: p, kind: k, path: 'productive', step: null, source: doc.kind };
   }
+}
+
+/** The parts of a speaking task: `parts[]` of a multi-Teil round, else the task itself (SCHEMA §8). */
+export function speakingParts(task) {
+  if (Array.isArray(task?.parts) && task.parts.length) return task.parts.map((p, i) => ({ part: p, path: `.parts[${i}]` }));
+  return [{ part: task, path: '' }];
 }
 
 /** Micro-outputs: LS1–LS3 (and B Auftakt), Plateau Projekt. */
@@ -91,8 +155,8 @@ export function* walkMicroOutputs(doc) {
 }
 
 /**
- * Every authored item. `where` names the slot: gist · input · structured · pool · perception ·
- * cloze · exam · check · proof · reward.
+ * Every authored item. `where` names the slot: gist · input · structured · pool · reserve ·
+ * perception · cloze · exam · check · proof · reward.
  */
 export function* walkItems(doc) {
   const d = doc.data || {};
@@ -100,7 +164,7 @@ export function* walkItems(doc) {
     if (isObj(d.start?.folge?.gistItem)) yield { item: d.start.folge.gistItem, path: 'start.folge.gistItem', where: 'gist', step: null };
     for (const { step, path } of walkSteps(doc)) {
       if (!isObj(step)) continue;
-      const lists = [['inputItems', 'input'], ['structuredInput', 'structured'], ['cloze', 'cloze']];
+      const lists = [['inputItems', 'input'], ['structuredInput', 'structured'], ['cloze', 'cloze'], ['reserve', 'reserve']];
       for (const [key, where] of lists) {
         const items = arr(step[key]);
         for (let i = 0; i < items.length; i += 1) yield { item: items[i], path: `${path}.${key}[${i}]`, where, step };
@@ -124,15 +188,13 @@ export function* walkItems(doc) {
       for (let i = 0; i < items.length; i += 1) yield { item: items[i], path: `reward.${key}.items[${i}]`, where: 'reward', step: null };
     }
   }
-  for (const { block, path, step } of walkBlocks(doc)) {
+  for (const { block, path, step, texts } of walkBlocks(doc)) {
     const items = arr(block?.items);
-    for (let i = 0; i < items.length; i += 1) yield { item: items[i], path: `${path}.items[${i}]`, where: 'exam', step, block };
+    for (let i = 0; i < items.length; i += 1) yield { item: items[i], path: `${path}.items[${i}]`, where: 'exam', step, block, texts };
   }
 }
 
-/**
- * Every spoken line. `where`: folge · input · exam · check · reward · scene.
- */
+/** Every spoken line. `where`: folge · input · exam · check · reward · scene. */
 export function* walkLines(doc) {
   const d = doc.data || {};
   if (doc.kind === 'unit') {
@@ -150,21 +212,16 @@ export function* walkLines(doc) {
     const sc = arr(d.reward?.scene?.lines);
     for (let i = 0; i < sc.length; i += 1) yield { line: sc[i], path: `reward.scene.lines[${i}]`, where: 'scene', step: null };
   }
-  for (const { block, path, step } of walkBlocks(doc)) {
-    const texts = arr(block?.texts);
-    for (let t = 0; t < texts.length; t += 1) {
-      const lines = arr(texts[t]?.lines);
-      for (let i = 0; i < lines.length; i += 1) {
-        yield { line: lines[i], path: `${path}.texts[${t}].lines[${i}]`, where: 'exam', step, block, text: texts[t] };
-      }
-    }
+  for (const { text, path, step, ownerBlock } of walkExamTexts(doc)) {
+    const lines = arr(text.lines);
+    for (let i = 0; i < lines.length; i += 1) yield { line: lines[i], path: `${path}.lines[${i}]`, where: 'exam', step, text, ownerBlock };
   }
 }
 
 /**
- * Reading/listening surfaces as whole texts, for length and coverage rules.
+ * Reading/listening surfaces as whole texts, for length, coverage and grammar rules.
  * kind: folge · input (one per step input: its lines joined + its written text) · exam (one per
- * block text) · reward. `glosses` are the tokens the surface glosses for the learner.
+ * ExamText) · reward. `glosses` are the tokens the surface glosses for the learner.
  */
 export function* walkTexts(doc) {
   const d = doc.data || {};
@@ -172,36 +229,33 @@ export function* walkTexts(doc) {
   const glossTokens = (g) => arr(g).map((x) => String(x?.token ?? '')).filter(Boolean);
   if (doc.kind === 'unit') {
     if (isObj(d.start?.folge)) {
-      yield { kind: 'folge', de: joinLines(d.start.folge.lines), lines: arr(d.start.folge.lines), path: 'start.folge', glosses: [], step: null };
+      yield { kind: 'folge', de: joinLines(d.start.folge.lines), lines: arr(d.start.folge.lines), writtenText: '', path: 'start.folge', glosses: [], glossList: [], step: null };
     }
     for (const { step, path } of walkSteps(doc)) {
       const input = step?.input;
       if (!isObj(input)) continue;
-      const parts = [joinLines(input.lines), isObj(input.text) ? String(input.text.de ?? '') : ''].filter(Boolean);
+      const written = isObj(input.text) ? String(input.text.de ?? '') : '';
       yield {
-        kind: 'input', de: parts.join('\n'), lines: arr(input.lines), writtenText: isObj(input.text) ? String(input.text.de ?? '') : '',
-        inputKind: input.kind, path: `${path}.input`, glosses: glossTokens(input.glosses), step,
+        kind: 'input', de: [joinLines(input.lines), written].filter(Boolean).join('\n'), lines: arr(input.lines), writtenText: written,
+        inputKind: input.kind, path: `${path}.input`, glosses: glossTokens(input.glosses), glossList: arr(input.glosses), step,
       };
     }
   } else if (doc.kind === 'plateau') {
-    if (isObj(d.reward?.lesemagazin)) yield { kind: 'reward', de: String(d.reward.lesemagazin.text ?? ''), lines: [], path: 'reward.lesemagazin', glosses: [], step: null };
-    if (isObj(d.reward?.hoermagazin)) yield { kind: 'reward', de: joinLines(d.reward.hoermagazin.lines), lines: arr(d.reward.hoermagazin.lines), path: 'reward.hoermagazin', glosses: [], step: null };
+    if (isObj(d.reward?.lesemagazin)) yield { kind: 'reward', de: String(d.reward.lesemagazin.text ?? ''), lines: [], writtenText: String(d.reward.lesemagazin.text ?? ''), path: 'reward.lesemagazin', glosses: [], glossList: [], step: null };
+    if (isObj(d.reward?.hoermagazin)) yield { kind: 'reward', de: joinLines(d.reward.hoermagazin.lines), lines: arr(d.reward.hoermagazin.lines), writtenText: '', path: 'reward.hoermagazin', glosses: [], glossList: [], step: null };
   }
-  for (const { block, path, step } of walkBlocks(doc)) {
-    const texts = arr(block?.texts);
-    for (let t = 0; t < texts.length; t += 1) {
-      const tx = texts[t];
-      if (!isObj(tx)) continue;
-      const de = [joinLines(tx.lines), String(tx.text ?? '')].filter(Boolean).join('\n');
-      yield { kind: 'exam', de, lines: arr(tx.lines), path: `${path}.texts[${t}]`, glosses: glossTokens(tx.glosses), step, block, textId: tx.id };
-    }
+  for (const { text, path, step } of walkExamTexts(doc)) {
+    const written = String(text.text ?? '');
+    yield {
+      kind: 'exam', de: [joinLines(text.lines), written].filter(Boolean).join('\n'), lines: arr(text.lines), writtenText: written,
+      path, glosses: glossTokens(text.glosses), glossList: arr(text.glosses), step, textId: text.id,
+    };
   }
 }
 
 /**
- * Production surfaces (GRM-04, LEX-03): what the learner is asked to produce or is shown as a model
- * to imitate — expected answers, micro-output targets are not text; model texts, model turns,
- * Redemittel, model sentences and read-aloud lines.
+ * Production surfaces (GRM-04, LEX-03): expected answers, model sentences, read-aloud lines,
+ * Redemittel, model texts and model turns.
  */
 export function* walkProduction(doc) {
   const d = doc.data || {};
@@ -239,13 +293,21 @@ export function* walkIds(doc) {
   for (const { item, path, where, step, block } of walkItems(doc)) {
     if (isObj(item)) yield { id: item.id, kind: 'item', where, path: `${path}.id`, parent: block?.id ?? step?.id ?? null };
   }
-  for (const { line, path, where, step, block, text } of walkLines(doc)) {
-    if (isObj(line)) yield { id: line.id, kind: 'line', where, path: `${path}.id`, parent: block?.id ?? step?.id ?? null, textId: text?.id ?? null };
+  for (const { line, path, where, step, text, ownerBlock } of walkLines(doc)) {
+    if (!isObj(line)) continue;
+    // draft shape: BLOCK-tN-lNN; SCHEMA §2: TEXT-lNN
+    const parent = where !== 'exam' ? (step?.id ?? null) : ownerBlock ? `${ownerBlock.id}-${text?.id}` : (text?.id ?? null);
+    yield { id: line.id, kind: 'line', where, path: `${path}.id`, parent, textId: text?.id ?? null };
+  }
+  for (const { text, path, step, scope, ownerBlock } of walkExamTexts(doc)) {
+    yield { id: text.id, kind: 'text', path: `${path}.id`, parent: step?.id ?? null, scope, legacy: Boolean(ownerBlock) };
   }
   for (const { block, path, step } of walkBlocks(doc)) {
     if (isObj(block)) yield { id: block.id, kind: 'block', path: `${path}.id`, parent: step?.id ?? null, block };
   }
   for (const { mo, path, step } of walkMicroOutputs(doc)) yield { id: mo.id, kind: 'mo', path: `${path}.id`, parent: step?.id ?? null };
+  const assets = arr(d.assets);
+  for (let i = 0; i < assets.length; i += 1) if (isObj(assets[i])) yield { id: assets[i].id, kind: 'asset', path: `assets[${i}].id`, parent: null };
   if (doc.kind !== 'unit') return;
   for (const { step, path, index } of walkSteps(doc)) if (isObj(step)) yield { id: step.id, kind: 'step', path: `${path}.id`, index };
   const lists = [['redemittel', 'rm'], ['facts', 'fact'], ['fokus', 'fokus']];

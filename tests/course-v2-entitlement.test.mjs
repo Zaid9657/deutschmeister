@@ -83,6 +83,8 @@ function fakeAdmin(tables = {}, { missing = [], errors = {}, throws = false } = 
     const q = {
       select(_cols, opts) { head = !!(opts && opts.head); return q; },
       eq(c, v) { filters.push((r) => r[c] === v); return q; },
+      neq(c, v) { filters.push((r) => r[c] !== null && r[c] !== undefined && r[c] !== v); return q; },
+      in(c, vs) { filters.push((r) => vs.includes(r[c])); return q; },
       gte(c, v) { filters.push((r) => new Date(r[c]) >= new Date(v)); return q; },
       like(c, pattern) {
         const re = new RegExp(`^${pattern.split('%').map((s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('.*')}$`);
@@ -334,9 +336,12 @@ test('without the migration the allowance degrades to writing_submissions, never
     {
       purchases: [purchase('course_a1_2')],
       writing_submissions: [
-        { user_id: USER, task_key: 'a12-u04-w', created_at: NOW.toISOString() },
-        { user_id: USER, task_key: 'a12-u04-w', created_at: NOW.toISOString() },
-        { user_id: USER, task_key: 'a12-u04-w', created_at: NOW.toISOString() },
+        { user_id: USER, task_key: 'a12-u04-w', model: 'claude-sonnet-4-6', created_at: NOW.toISOString() },
+        { user_id: USER, task_key: 'a12-u04-w', model: 'claude-sonnet-4-6', created_at: NOW.toISOString() },
+        { user_id: USER, task_key: 'a12-u04-w-sd1', model: 'claude-sonnet-4-6', created_at: NOW.toISOString() }, // a lane variant is the same slot
+        { user_id: USER, task_key: 'a12-u05-w', model: 'deterministic', created_at: NOW.toISOString() }, // a rule-decided zero, no model call
+        { user_id: USER, task_key: 'a12-u05-w', model: 'deterministic', created_at: NOW.toISOString() },
+        { user_id: USER, task_key: 'a12-u05-w', model: 'deterministic', created_at: NOW.toISOString() },
       ],
     },
     { missing: ['course_ai_usage'] },
@@ -345,6 +350,10 @@ test('without the migration the allowance degrades to writing_submissions, never
   assert.equal(written.allowed, false, 'written slots stay capped by their own ledger');
   assert.equal(written.reason, 'slot_allowance_exhausted');
   assert.equal(written.degraded, true);
+  const zeros = await checkCourseAiAllowance(admin, USER, 'a12-u05-w', { now: NOW });
+  assert.equal(zeros.allowed, true, 'rule-decided zeros cost no model call and use up no attempt');
+  assert.equal(zeros.used, 0);
+  assert.equal(zeros.dailyUsed, 3);
   const spoken = await checkCourseAiAllowance(admin, USER, 'a12-u04-s', { now: NOW });
   assert.equal(spoken.allowed, true);
   assert.equal(spoken.reason, 'ledger_missing');

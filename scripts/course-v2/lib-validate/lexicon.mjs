@@ -117,18 +117,24 @@ export function lexiconComplete(ctx, level, nr) {
 
 /**
  * Occurrences of an entry in a text (token matches; a split separable form counts once when its
- * prefix stands later in the same sentence).
+ * prefix stands later in the same sentence; a noun also counts as the head of a compound).
  */
 export function countOccurrences(entry, text, cache = new Map()) {
   if (!cache.has(entry.id)) cache.set(entry.id, entryForms(entry));
   const { forms, prefix } = cache.get(entry.id);
+  // a compound exposes its head noun: „Teambesprechung" counts for „Besprechung"
+  const heads = entry.pos === 'NOUN' ? [...forms].filter((f) => f.length >= 4) : [];
   let n = 0;
   const sents = String(text || '').split(/(?<=[.!?…\n])\s+/);
   for (const s of sents) {
-    const toks = readTokens(s).map((t) => t.lower);
+    const raw = readTokens(s);
+    const toks = raw.map((t) => t.lower);
     for (let i = 0; i < toks.length; i += 1) {
       const w = toks[i];
-      if (!forms.has(w)) continue;
+      if (!forms.has(w)) {
+        if (heads.length && /^[A-ZÄÖÜ]/.test(raw[i].text) && heads.some((h) => w.length - h.length >= 3 && w.endsWith(h))) n += 1;
+        continue;
+      }
       if (prefix && !w.startsWith(prefix) && !w.includes(`${prefix}zu`)) {
         // a finite form without its prefix: only the separable verb when the prefix follows
         if (!toks.slice(i + 1).includes(prefix)) continue;

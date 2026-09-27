@@ -145,7 +145,7 @@ export async function runRules(resolved, { rules, only = null } = {}) {
     let out;
     if (rule.scope === 'level' && mode === 'file') {
       out = { findings: [], skipped: 'level-scope rule; run the validator on the level (node scripts/course-v2/validate.mjs <level>)' };
-    } else if (!docs.length && !levels.length) {
+    } else if (!docs.length && !levels.length && mode !== 'all') {
       out = { findings: [], skipped: 'no content in the target yet' };
     } else if (rule.scope === 'level' && !levels.length) {
       out = { findings: [], skipped: 'no level content in the target yet' };
@@ -200,8 +200,6 @@ export function formatReport(report, { verbose = false, maxFindings = 40 } = {})
       }
       const hidden = r.findings.length - Math.min(shown.length, maxFindings);
       if (hidden > 0) out.push(`        … ${hidden} more (use --verbose or --json)`);
-      for (const n of r.notes) out.push(`        note: ${n}`);
-    } else if (r.notes.length && verbose) {
       for (const n of r.notes) out.push(`        note: ${n}`);
     }
   }

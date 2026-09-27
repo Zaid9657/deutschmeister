@@ -27,13 +27,20 @@ export function run({ ctx, docs }) {
     const key = `${doc.level}|${nr}`;
     if (!cache.has(key)) cache.set(key, { known: knownForms(ctx, doc.level, nr), state: lexiconComplete(ctx, doc.level, nr) });
     const { known, state } = cache.get(key);
-    const severity = state.complete ? 'blocker' : 'advisory';
+    const pending = { surfaces: 0, forms: new Set() };
     for (const p of walkProduction(doc)) {
       if (p.item?.intentionalError && p.kind !== 'answer') continue;
       n += 1;
       const unknown = [...new Set(readTokens(p.de).filter((t) => !known.has(t.lower)).map((t) => t.text))];
-      if (unknown.length) findings.push(finding(severity, doc, p.path, `unknown lemma form(s) in a ${p.kind}: ${list(unknown, 10)}${state.complete ? '' : ` — advisory until the cumulative lexicon exists (${state.why})`}`, p.item?.id || null));
+      if (!unknown.length) continue;
+      if (state.complete) findings.push(blocker(doc, p.path, `unknown lemma form(s) in a ${p.kind}: ${list(unknown, 10)}`, p.item?.id || null));
+      else {
+        pending.surfaces += 1;
+        unknown.forEach((u) => pending.forms.add(u));
+      }
     }
+    // before the cumulative lexicon exists the measurement is one advisory per document
+    if (pending.surfaces) findings.push(finding('advisory', doc, null, `${pending.surfaces} production surface(s) use forms not in the lexicon so far: ${list([...pending.forms], 25)} — advisory until the cumulative lexicon exists (${state.why})`, doc.data?.id || null));
   }
   return n || findings.length ? { findings } : { findings, skipped: 'no lexicon.json for the target level yet, or no production surface' };
 }

@@ -717,7 +717,9 @@
       "id": "tb1-m1",
       "kind": "speaking",
       "lane": "tb1",
-      "max": 15,
+      "method": "ai",
+      "max": 12,
+      "examMax": 15,
       "criteria": [
         {
           "id": "ausdruck",
@@ -728,6 +730,25 @@
             3,
             1,
             0
+          ],
+          "scoredBy": "ai",
+          "descriptors": [
+            {
+              "points": 4,
+              "de": "Sie erzählen anschaulich und mit passenden Wörtern von sich und formulieren Ihre Fragen so, wie man es beim ersten Kennenlernen tut."
+            },
+            {
+              "points": 3,
+              "de": "Sie sagen im Großen und Ganzen, was Sie sagen wollen; manchmal fehlt ein Wort oder eine Formulierung passt nicht ganz zur Situation."
+            },
+            {
+              "points": 1,
+              "de": "Sie können nur einen Teil dessen ausdrücken, was Sie sagen möchten; oft fehlen Wörter, und Ihre Fragen bleiben unklar."
+            },
+            {
+              "points": 0,
+              "de": "Was Sie über sich sagen oder fragen wollen, wird fast nie verständlich."
+            }
           ]
         },
         {
@@ -739,6 +760,25 @@
             3,
             1,
             0
+          ],
+          "scoredBy": "ai",
+          "descriptors": [
+            {
+              "points": 4,
+              "de": "Sie erzählen von sich, stellen Ihrer Partnerin mehrere eigene Fragen, greifen ihre Antworten auf und halten das Gespräch ohne lange Pausen in Gang."
+            },
+            {
+              "points": 3,
+              "de": "Sie beteiligen sich aktiv und stellen auch Fragen; manchmal stockt das Gespräch oder Sie brauchen Hilfe, finden aber wieder hinein."
+            },
+            {
+              "points": 1,
+              "de": "Sie antworten meist nur und fragen kaum selbst; lange Pausen oder Abbrüche sind häufig."
+            },
+            {
+              "points": 0,
+              "de": "Ein Gespräch kommt kaum zustande; Sie antworten nicht oder nur mit einzelnen Wörtern."
+            }
           ]
         },
         {
@@ -750,20 +790,58 @@
             3,
             1,
             0
+          ],
+          "scoredBy": "ai",
+          "descriptors": [
+            {
+              "points": 4,
+              "de": "Satzbau und Formen sitzen weitgehend; Fehler sind selten und fallen kaum auf."
+            },
+            {
+              "points": 3,
+              "de": "Fehler kommen vor, aber Ihre Partnerin versteht Sie trotzdem ohne Mühe."
+            },
+            {
+              "points": 1,
+              "de": "An wichtigen Stellen führen Fehler dazu, dass man Sie nur mit Mühe oder falsch versteht."
+            },
+            {
+              "points": 0,
+              "de": "Fast jede Äußerung enthält Fehler; die Verständigung gelingt kaum oder gar nicht."
+            }
           ]
         },
         {
           "id": "aussprache",
-          "label": "Aussprache und Intonation",
+          "label": "Aussprache und Intonation (nicht automatisch bewertet)",
           "per": "part",
           "levels": [
             3,
             2,
             1,
             0
-          ]
+          ],
+          "scoredBy": "notAutoScored",
+          "descriptors": []
         }
       ],
+      "bands": [],
+      "errorPolicy": {
+        "b1": {
+          "v2-inv": "flag",
+          "verb-final": "score",
+          "satzklammer": "score",
+          "case-np": "flag",
+          "case-pp": "flag",
+          "gender-article": "flag",
+          "adj-ending": "flag",
+          "perfekt-aux-participle": "score",
+          "connector-position": "score",
+          "n-dekl": "flag",
+          "reflexive": "flag",
+          "register": "score"
+        }
+      },
       "zeroRules": [],
       "capRules": [],
       "spelling": "not-scored",
@@ -783,7 +861,9 @@
       "id": "tb1-m2",
       "kind": "speaking",
       "lane": "tb1",
-      "max": 30,
+      "method": "ai",
+      "max": 24,
+      "examMax": 30,
       "criteria": [
         {
           "id": "ausdruck",
@@ -794,6 +874,25 @@
             6,
             2,
             0
+          ],
+          "scoredBy": "ai",
+          "descriptors": [
+            {
+              "points": 8,
+              "de": "Sie geben die Meinung von Ihrem Blatt klar mit eigenen Worten wieder, begründen Ihre Sicht mit treffenden Wörtern und erzählen passend von eigenen Erfahrungen."
+            },
+            {
+              "points": 6,
+              "de": "Sie berichten die Meinung verständlich und sagen, was Sie selbst denken; bei Begründungen fehlen manchmal Wörter oder passende Wendungen."
+            },
+            {
+              "points": 2,
+              "de": "Die Meinung vom Blatt kommt nur bruchstückhaft an, und Ihre eigene Sicht bleibt vage; für Begründungen fehlen meist die Mittel."
+            },
+            {
+              "points": 0,
+              "de": "Weder die Meinung vom Blatt noch Ihre eigene Sicht wird verständlich."
+            }
           ]
         },
         {
@@ -805,6 +904,25 @@
             6,
             2,
             0
+          ],
+          "scoredBy": "ai",
+          "descriptors": [
+            {
+              "points": 8,
+              "de": "Sie gehen auf die Meinung Ihrer Partnerin ein, stimmen zu oder widersprechen mit Gründen, fragen nach und halten die Diskussion flüssig in Gang."
+            },
+            {
+              "points": 6,
+              "de": "Sie diskutieren aktiv mit und reagieren auf Ihre Partnerin; gelegentlich stockt es oder Sie brauchen einen Anstoß."
+            },
+            {
+              "points": 2,
+              "de": "Sie sagen vor allem Vorbereitetes auf und reagieren kaum auf Ihre Partnerin; lange Pausen sind häufig."
+            },
+            {
+              "points": 0,
+              "de": "Eine Diskussion kommt nicht zustande."
+            }
           ]
         },
         {
@@ -816,20 +934,58 @@
             6,
             2,
             0
+          ],
+          "scoredBy": "ai",
+          "descriptors": [
+            {
+              "points": 8,
+              "de": "Satzbau und Formen sitzen weitgehend; Fehler sind selten und fallen kaum auf."
+            },
+            {
+              "points": 6,
+              "de": "Fehler kommen vor, aber Ihre Partnerin versteht Sie trotzdem ohne Mühe."
+            },
+            {
+              "points": 2,
+              "de": "An wichtigen Stellen führen Fehler dazu, dass man Sie nur mit Mühe oder falsch versteht."
+            },
+            {
+              "points": 0,
+              "de": "Fast jede Äußerung enthält Fehler; die Verständigung gelingt kaum oder gar nicht."
+            }
           ]
         },
         {
           "id": "aussprache",
-          "label": "Aussprache und Intonation",
+          "label": "Aussprache und Intonation (nicht automatisch bewertet)",
           "per": "part",
           "levels": [
             6,
             4,
             2,
             0
-          ]
+          ],
+          "scoredBy": "notAutoScored",
+          "descriptors": []
         }
       ],
+      "bands": [],
+      "errorPolicy": {
+        "b1": {
+          "v2-inv": "flag",
+          "verb-final": "score",
+          "satzklammer": "score",
+          "case-np": "flag",
+          "case-pp": "flag",
+          "gender-article": "flag",
+          "adj-ending": "flag",
+          "perfekt-aux-participle": "score",
+          "connector-position": "score",
+          "n-dekl": "flag",
+          "reflexive": "flag",
+          "register": "score"
+        }
+      },
       "zeroRules": [],
       "capRules": [],
       "spelling": "not-scored",
@@ -849,7 +1005,9 @@
       "id": "tb1-m3",
       "kind": "speaking",
       "lane": "tb1",
-      "max": 30,
+      "method": "ai",
+      "max": 24,
+      "examMax": 30,
       "criteria": [
         {
           "id": "ausdruck",
@@ -860,6 +1018,25 @@
             6,
             2,
             0
+          ],
+          "scoredBy": "ai",
+          "descriptors": [
+            {
+              "points": 8,
+              "de": "Sie machen Vorschläge, begründen sie, reagieren passend auf die Ideen Ihrer Partnerin und formulieren Zustimmung, Einwände und Einigung treffend und abwechslungsreich."
+            },
+            {
+              "points": 6,
+              "de": "Sie können vorschlagen, zustimmen und ablehnen; für Begründungen oder Alternativen fehlen manchmal die passenden Wörter."
+            },
+            {
+              "points": 2,
+              "de": "Sie bringen nur einzelne Vorschläge ein, meist ohne Begründung; auf die Ideen Ihrer Partnerin reagieren Sie kaum sprachlich passend."
+            },
+            {
+              "points": 0,
+              "de": "Ihre Vorschläge und Reaktionen werden fast nie verständlich."
+            }
           ]
         },
         {
@@ -871,6 +1048,25 @@
             6,
             2,
             0
+          ],
+          "scoredBy": "ai",
+          "descriptors": [
+            {
+              "points": 8,
+              "de": "Sie planen aktiv mit, gehen auf jeden Vorschlag ein, fragen nach und sorgen dafür, dass Sie sich am Ende einigen und die Aufgaben verteilt sind."
+            },
+            {
+              "points": 6,
+              "de": "Sie beteiligen sich an der Planung und reagieren auf Ihre Partnerin; manchmal stockt es, oder die Aufgabenverteilung bleibt teilweise offen."
+            },
+            {
+              "points": 2,
+              "de": "Die Planung trägt vor allem Ihre Partnerin; Sie reagieren knapp, lange Pausen sind häufig, eine Einigung kommt kaum zustande."
+            },
+            {
+              "points": 0,
+              "de": "Eine gemeinsame Planung kommt nicht zustande."
+            }
           ]
         },
         {
@@ -882,20 +1078,58 @@
             6,
             2,
             0
+          ],
+          "scoredBy": "ai",
+          "descriptors": [
+            {
+              "points": 8,
+              "de": "Satzbau und Formen sitzen weitgehend; Fehler sind selten und fallen kaum auf."
+            },
+            {
+              "points": 6,
+              "de": "Fehler kommen vor, aber Ihre Partnerin versteht Sie trotzdem ohne Mühe."
+            },
+            {
+              "points": 2,
+              "de": "An wichtigen Stellen führen Fehler dazu, dass man Sie nur mit Mühe oder falsch versteht."
+            },
+            {
+              "points": 0,
+              "de": "Fast jede Äußerung enthält Fehler; die Verständigung gelingt kaum oder gar nicht."
+            }
           ]
         },
         {
           "id": "aussprache",
-          "label": "Aussprache und Intonation",
+          "label": "Aussprache und Intonation (nicht automatisch bewertet)",
           "per": "part",
           "levels": [
             6,
             4,
             2,
             0
-          ]
+          ],
+          "scoredBy": "notAutoScored",
+          "descriptors": []
         }
       ],
+      "bands": [],
+      "errorPolicy": {
+        "b1": {
+          "v2-inv": "flag",
+          "verb-final": "score",
+          "satzklammer": "score",
+          "case-np": "flag",
+          "case-pp": "flag",
+          "gender-article": "flag",
+          "adj-ending": "flag",
+          "perfekt-aux-participle": "score",
+          "connector-position": "score",
+          "n-dekl": "flag",
+          "reflexive": "flag",
+          "register": "score"
+        }
+      },
       "zeroRules": [],
       "capRules": [],
       "spelling": "not-scored",
@@ -915,7 +1149,9 @@
       "id": "tb1-sa",
       "kind": "writing",
       "lane": "tb1",
+      "method": "ai",
       "max": 45,
+      "examMax": 45,
       "criteria": [
         {
           "id": "aufgabe",
@@ -927,7 +1163,26 @@
             1,
             0
           ],
-          "weight": 3
+          "weight": 3,
+          "scoredBy": "ai",
+          "descriptors": [
+            {
+              "points": 5,
+              "de": "Sie gehen auf alle vier Punkte der Aufgabe ein, jeweils sinnvoll und passend zur beschriebenen Situation. Ein kurzer Satz pro Punkt genügt."
+            },
+            {
+              "points": 3,
+              "de": "Drei der vier Punkte sind sinnvoll bearbeitet; ein Punkt fehlt oder geht an der Aufgabe vorbei."
+            },
+            {
+              "points": 1,
+              "de": "Nur zwei der vier Punkte sind sinnvoll bearbeitet."
+            },
+            {
+              "points": 0,
+              "de": "Höchstens ein Punkt ist sinnvoll bearbeitet, oder der Text passt nicht zur Situation der Aufgabe."
+            }
+          ]
         },
         {
           "id": "gestaltung",
@@ -939,7 +1194,26 @@
             1,
             0
           ],
-          "weight": 3
+          "weight": 3,
+          "scoredBy": "ai",
+          "descriptors": [
+            {
+              "points": 5,
+              "de": "Der Text wirkt wie eine echte E-Mail an genau diese Person: Anrede, Gruß und Ton passen durchgehend. Die Punkte gehen mit abwechslungsreichen Verbindungswörtern ineinander über, die Sätze beginnen unterschiedlich, und Sie können auch eigene Gedanken treffend formulieren."
+            },
+            {
+              "points": 3,
+              "de": "Die E-Mail erfüllt ihren Zweck: Anrede, Gruß und Ton passen im Wesentlichen, und die Punkte sind mit gängigen Verbindungswörtern zu einem Text verbunden. Bei schwierigeren Gedanken fehlen manchmal die passenden Wörter."
+            },
+            {
+              "points": 1,
+              "de": "Einfache Informationen, Bitten und Vorschläge kommen an, doch der Text besteht vor allem aus kurzen, gleich gebauten Sätzen, die nur mit den einfachsten Verbindungswörtern aneinandergereiht sind. Der Wortschatz reicht nur für vertraute Alltagsdinge."
+            },
+            {
+              "points": 0,
+              "de": "Der Text besteht aus einzelnen Wörtern und auswendig gelernten Wendungen ohne erkennbaren Zusammenhang; über Begrüßung und Verabschiedung hinaus gelingt kaum etwas."
+            }
+          ]
         },
         {
           "id": "richtigkeit",
@@ -951,9 +1225,46 @@
             1,
             0
           ],
-          "weight": 3
+          "weight": 3,
+          "scoredBy": "ai",
+          "descriptors": [
+            {
+              "points": 5,
+              "de": "Grammatik, Rechtschreibung und Zeichensetzung sind weitgehend sicher. Einzelne Fehler, auch wiederkehrende, kommen vor, halten beim Lesen aber nicht auf."
+            },
+            {
+              "points": 3,
+              "de": "Es gibt deutliche und auch wiederkehrende Fehler, doch man versteht fast immer ohne Mühe, was Sie meinen."
+            },
+            {
+              "points": 1,
+              "de": "Kurze, einfache Sätze gelingen, aber Grundfehler, etwa bei Verbformen und Zeiten, sind häufig. Man muss öfter nachdenken, der Sinn wird aber meist klar."
+            },
+            {
+              "points": 0,
+              "de": "Nur wenige eingeübte Satzmuster sind richtig; weite Teile des Textes versteht man nur mit großer Mühe oder gar nicht."
+            }
+          ]
         }
       ],
+      "bands": [],
+      "errorPolicy": {
+        "b1": {
+          "v2-inv": "flag",
+          "verb-final": "score",
+          "satzklammer": "score",
+          "case-np": "flag",
+          "case-pp": "flag",
+          "gender-article": "flag",
+          "adj-ending": "flag",
+          "perfekt-aux-participle": "score",
+          "connector-position": "score",
+          "n-dekl": "flag",
+          "reflexive": "flag",
+          "register": "score",
+          "spelling-meaning": "score"
+        }
+      },
       "zeroRules": [
         "telc-topic-missed-d-all"
       ],
@@ -961,7 +1272,7 @@
         "telc-situation-missed-d-crit1",
         "telc-b1-crit1-by-leitpunkt-count",
         "telc-b1-no-a-crit2-textsorte-missing",
-        "telc-b1-no-a-crit2-register-mixed",
+        "telc-b1-no-a-crit2-register-wrong-or-mixed",
         "telc-b1-no-a-crit2-leitpunkte-unconnected",
         "telc-b1-no-a-crit2-ich-wir-starts"
       ],
@@ -997,7 +1308,7 @@
         },
         {
           "id": "aufgabe",
-          "label": "Aufgabenbewältigung: frei über eine Erfahrung sprechen (bis 1½ Minuten), Fragen beantworten und Anschlussfragen stellen; Strategien (auch Nachfragen und Hilfestellung) und Flüssigkeit",
+          "label": "Aufgabenbewältigung: frei über eine Erfahrung zu einem zu Hause vorbereiteten Thema (eines von sieben) sprechen (bis 1½ Minuten, nicht auswendig), Fragen beantworten und Anschlussfragen stellen; Strategien (auch Nachfragen und Hilfestellung) und Flüssigkeit",
           "per": "part",
           "levels": [
             7,
@@ -1036,7 +1347,7 @@
         "de"
       ],
       "modelId": "config:speaking-full",
-      "splitVerified": true,
+      "splitVerified": false,
       "calibration": {
         "status": "pending",
         "rangeBands": 1
@@ -1102,7 +1413,7 @@
         "de"
       ],
       "modelId": "config:speaking-full",
-      "splitVerified": true,
+      "splitVerified": false,
       "calibration": {
         "status": "pending",
         "rangeBands": 1
@@ -1168,7 +1479,7 @@
         "de"
       ],
       "modelId": "config:speaking-full",
-      "splitVerified": true,
+      "splitVerified": false,
       "calibration": {
         "status": "pending",
         "rangeBands": 1
@@ -1196,7 +1507,7 @@
         },
         {
           "id": "gestaltung",
-          "label": "Kriterium II – Kommunikative Gestaltung: Textlogik, Verknüpfung der Leitpunkte, einheitliches Register, Wortschatzspektrum, Betreff, Anrede und Schlussformel",
+          "label": "Kriterium II – Kommunikative Gestaltung: Textlogik, Verknüpfung der Leitpunkte, ein zur Aufgabe passendes und durchgehaltenes Register (halbformell/formell: Sie), Wortschatzspektrum, Betreff, Anrede und Schlussformel",
           "per": "task",
           "levels": [
             5,
@@ -1227,7 +1538,7 @@
         "telc-b2-crit1-by-leitpunkt-count",
         "telc-b2-crit1-leitpunkt-more-than-one-sentence",
         "telc-b2-no-a-crit2-textsorte-missing",
-        "telc-b2-no-b-crit2-register-mixed",
+        "telc-b2-no-b-crit2-register-wrong-or-mixed",
         "telc-b2-no-b-crit2-leitpunkte-unconnected"
       ],
       "spelling": "scored",

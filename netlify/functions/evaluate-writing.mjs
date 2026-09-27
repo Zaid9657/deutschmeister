@@ -98,6 +98,12 @@ const COURSE_TASK_KEY_RE = /^(a\d\d)-l\d\d$/;
 // still applies only to legacy keys: courseAllowanceFor() and the lifetime count
 // look at `-lNN` keys alone, and a v2 key never reaches that path (it is handled
 // by handleWritingV2 against the entitlement module's allowance).
+// Course v2 rows (`a21-u07-w`, `b12-p2-w-tb1`, …) as a POSIX regex for PostgREST's
+// `match`. They are billed against the v2 course allowance (_shared/entitlement.mjs),
+// so the legacy tier counts below never see them: a learner's v2 course writing must
+// not use up the exam-bank monthly limit. Exam slugs and `aNN-lNN` keys cannot match.
+export const V2_TASK_KEY_PG_RE = '^(a1[12]|a2[12]|b1[12]|b2[12])-(u(0[1-9]|1[0-2])|p[1-3]|ht|dx|m[abc])-';
+
 export function courseTaskKeyPrefix(taskKey) {
   const m = typeof taskKey === 'string' ? taskKey.match(COURSE_TASK_KEY_RE) : null;
   return m ? `${m[1]}-` : bankKeyScope(taskKey);
@@ -273,10 +279,13 @@ export const handler = async (event) => {
       // v2 bank keys share the course prefix (`a11-u01-w`); the legacy lifetime
       // allowance counts only the legacy `-lNN` rows (both filters apply).
       usedQuery = usedQuery.like('task_key', `${courseTaskKeyPrefix(task_key)}l%`);
-    } else if (tier !== 'free_trial') {
-      const now = new Date();
-      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-      usedQuery = usedQuery.gte('created_at', monthStart);
+    } else {
+      usedQuery = usedQuery.not('task_key', 'match', V2_TASK_KEY_PG_RE);
+      if (tier !== 'free_trial') {
+        const now = new Date();
+        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+        usedQuery = usedQuery.gte('created_at', monthStart);
+      }
     }
     const { count: used } = await usedQuery;
     if ((used ?? 0) >= limit) {

@@ -1,5 +1,5 @@
 import { supabase } from './supabase.mjs';
-import { checkCourseAiAllowance, recordCourseAiUse } from './entitlement.mjs';
+import { checkCourseAiAllowance, recordCourseAiUse, bankKeyInfo } from './entitlement.mjs';
 
 // Tiers: premium | pro | free_trial | free_expired
 // premium  — unlimited sessions
@@ -88,7 +88,8 @@ export async function checkCourseUsage(userId, courseTaskKey) {
 
 /** Count one graded v2 course speaking attempt (once per session, after the session row exists). */
 export async function incrementCourseUsage(userId, courseTaskKey) {
-  return recordCourseAiUse(supabase, userId, courseTaskKey, 'speaking');
+  // A spoken micro-output (…-moN) is a 'micro' use, a speaking Aufgabe a 'speaking' one.
+  return recordCourseAiUse(supabase, userId, courseTaskKey, bankKeyInfo(courseTaskKey)?.kind || 'speaking');
 }
 
 export async function checkUsage(userId, opts) {

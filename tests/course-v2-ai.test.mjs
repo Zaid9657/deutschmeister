@@ -31,8 +31,8 @@ import {
   levelOfPrefix,
   examKeyFor,
 } from '../netlify/functions/_shared/rubrics/keys.mjs';
-import { RULES, RULE_IDS, snapToLevel, textSignals, evaluateRules, applyRuleEffects } from '../netlify/functions/_shared/rubrics/rules.mjs';
-import { criteriaPlan, gradeSubmission, buildWritingSystemPrompt, buildWritingUserPrompt, isAutoScored, unscoredCriteria, scoredTarget } from '../netlify/functions/_shared/rubrics/grade.mjs';
+import { RULES, RULE_IDS, snapToLevel, textSignals, evaluateRules, applyRuleEffects, expectedAddress } from '../netlify/functions/_shared/rubrics/rules.mjs';
+import { criteriaPlan, gradeSubmission, buildWritingSystemPrompt, buildWritingUserPrompt, isAutoScored, unscoredCriteria, scoredTarget, flaggedErrorTags } from '../netlify/functions/_shared/rubrics/grade.mjs';
 import { __setCourseV2DataForTests, rubricProfile, loadBanks } from '../netlify/functions/_shared/rubrics/data.mjs';
 import { SCORE_LABEL_DE, SCORE_NOTICE_DE, feedbackLanguageFor, modelFor } from '../netlify/functions/_shared/rubrics/defaults.mjs';
 import { __setEntitlementForTests, checkCourseAi } from '../netlify/functions/_shared/rubrics/courseAi.mjs';
@@ -370,8 +370,26 @@ test('EXM-08: telc B1 — du/Sie mixed and Ich/Wir starts cap criterion II; a mi
   assert.equal(byId.gestaltung.values[0], 3);
   assert.equal(byId.aufgabe.values[0], 0);
   const ids = r.result.rulesApplied.map((f) => f.id);
-  for (const id of ['telc-b1-no-a-crit2-register-mixed', 'telc-b1-no-a-crit2-ich-wir-starts', 'telc-situation-missed-d-crit1']) assert.ok(ids.includes(id), id);
+  for (const id of ['telc-b1-no-a-crit2-register-wrong-or-mixed', 'telc-b1-no-a-crit2-ich-wir-starts', 'telc-situation-missed-d-crit1']) assert.ok(ids.includes(id), id);
   assert.equal(r.result.total_score, (0 + 3 + 5) * 3);
+});
+
+test('EXM-08: telc B2 — a WRONG register caps criterion II at C, as does a mixed one (Prüferin W2)', async () => {
+  const DU_BODY = 'ich habe deine Anzeige gelesen und interessiere mich sehr für dein Angebot. '.repeat(6);
+  const task = { ...TB2_TASK, address: undefined, register: 'halbformell' };
+  const wrong = `Betreff: Anfrage\nHallo,\n${DU_BODY}\nTschüss\nAna`;
+  const r1 = await gradeSubmission({ kind: 'writing', profile: P('tb2-sa'), task, level: 'b2.1', text: wrong, callModel: stubModel(telcAnswer()) });
+  assert.equal(r1.result.criteria.find((c) => c.id === 'gestaltung').values[0], 1, 'consistently du to an institution: no B');
+  assert.ok(r1.result.rulesApplied.some((f) => f.id === 'telc-b2-no-b-crit2-register-wrong-or-mixed'));
+  const mixed = `Betreff: Anfrage\nSehr geehrte Damen und Herren,\n${LONG_BODY} Kannst du mir antworten?\nMit freundlichen Grüßen\nAna`;
+  const r2 = await gradeSubmission({ kind: 'writing', profile: P('tb2-sa'), task, level: 'b2.1', text: mixed, callModel: stubModel(telcAnswer()) });
+  assert.equal(r2.result.criteria.find((c) => c.id === 'gestaltung').values[0], 1, 'du and Sie mixed: no B');
+  const right = `Betreff: Anfrage\nSehr geehrte Damen und Herren,\n${LONG_BODY}\nMit freundlichen Grüßen\nAna`;
+  const r3 = await gradeSubmission({ kind: 'writing', profile: P('tb2-sa'), task, level: 'b2.1', text: right, callModel: stubModel(telcAnswer()) });
+  assert.ok(!r3.result.rulesApplied.some((f) => f.id === 'telc-b2-no-b-crit2-register-wrong-or-mixed'));
+  assert.equal(expectedAddress({ register: 'informell' }), 'du');
+  assert.equal(expectedAddress({ register: 'formell', address: 'du' }), 'du', 'an explicit address wins');
+  assert.equal(textSignals('Liebe Anna,\nkommen Sie morgen?\nViele Grüße', { register: 'informell' }).registerWrong, true, 'Sie to a friend is wrong too');
 });
 
 test('EXM-08: telc — „Thema verfehlt“ is D on every criterion', async () => {
@@ -404,6 +422,19 @@ test('the rubric profile, not a fixed scale, shapes the prompt; the learner text
   assert.ok(user.indexOf('TEXT DES LERNENDEN') < user.indexOf(GOOD_TEXT), 'the learner text is fenced as the submission');
   assert.equal(GA2_TASK().modelText, undefined, 'the server bank carries no model text');
   assert.ok(!GA2_TASK().leitpunkte.some((l) => 'cues' in l), 'nor the cue lemmas');
+});
+
+test('the profile\'s own descriptors and its error policy reach the system block (SCHEMA §4.5)', () => {
+  const p = P('tb1-sa');
+  const system = buildWritingSystemPrompt(p, 'b1.1', criteriaPlan(p, {}));
+  for (const c of p.criteria.filter((x) => x.scoredBy === 'ai')) {
+    for (const d of c.descriptors) assert.ok(system.includes(d.de), `${c.id} ${d.points}`);
+  }
+  const flagged = flaggedErrorTags(p, 'b1.1');
+  assert.ok(flagged.length > 0 && flagged.every((t) => p.errorPolicy.b1[t] === 'flag'));
+  assert.match(system, new RegExp(`FEHLERPOLITIK: Fehler der Typen ${flagged.join(', ')}`));
+  assert.deepEqual(flaggedErrorTags(P('ga2-s2'), 'a2.1'), [], 'no policy → every tag scores, no line');
+  assert.ok(!buildWritingSystemPrompt(P('ga2-s2'), 'a2.1', criteriaPlan(P('ga2-s2'), {})).includes('FEHLERPOLITIK'));
 });
 
 test('feedback language: the profile\'s where it names one variant, the level\'s where it serves several', () => {
@@ -708,6 +739,18 @@ test('evaluate-writing routes bank keys to the v2 branch before any legacy looku
   assert.match(src, /handleWritingV2\(\{ supabase, userId: user_id, body, headers \}\)/);
   assert.match(src, /const user_id = await getAuthenticatedUserId\(event\)/);
   assert.match(src, /usedQuery\.like\('task_key', `\$\{courseTaskKeyPrefix\(task_key\)\}l%`\)/, 'the legacy count excludes v2 rows of the same course');
+  assert.match(src, /usedQuery = usedQuery\.not\('task_key', 'match', V2_TASK_KEY_PG_RE\);/, 'and the tier counts exclude every v2 row');
+});
+
+test('V2_TASK_KEY_PG_RE matches every v2 bank key and no legacy or exam key', async () => {
+  const { V2_TASK_KEY_PG_RE } = await import('../netlify/functions/evaluate-writing.mjs');
+  const re = new RegExp(V2_TASK_KEY_PG_RE);
+  for (const k of ['a11-u01-w', 'a21-u07-mo2', 'b12-p2-w-tb1', 'b22-ht-w', 'a22-dx-w-ga2', 'b12-ma-w1-tb1', 'a12-u12-mo3']) {
+    assert.ok(BANK_KEY_RE.test(k) && re.test(k), k);
+  }
+  const { WRITING_TASKS } = await import('../netlify/functions/_shared/writingTasks.mjs');
+  const legacy = Object.values(WRITING_TASKS || {}).flat().map((t) => t?.taskKey).filter(Boolean);
+  for (const k of [...legacy, 'a11-l01', 'a12-l12', 'beschwerde-lieferung']) assert.ok(!re.test(k), k);
 });
 
 test('speaking-session starts a v2 session from the key, gated by the course allowance, never 5 minutes', () => {

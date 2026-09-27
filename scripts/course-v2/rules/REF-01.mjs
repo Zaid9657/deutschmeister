@@ -65,7 +65,7 @@ export function makeResolver(ctx) {
 }
 
 /** Every reference of a doc: [{ kind, ref, path, level }]. */
-export function collectRefs(doc, ctx) {
+export function collectRefs(doc) {
   const out = [];
   const d = doc.data || {};
   const level = doc.level;
@@ -185,7 +185,7 @@ export function run({ ctx, docs, levels, mode }) {
     const withUnit = unit ? group : [...group, ...(group[0].kind === 'lanepack' ? [unitDoc(ctx, group[0].data.unit)].filter(Boolean) : [])];
     const local = localIds(withUnit);
     for (const doc of group) {
-      for (const r of collectRefs(doc, ctx)) {
+      for (const r of collectRefs(doc)) {
         const fn = resolve[r.kind];
         const res = fn ? fn(r.ref, r.level) : 'unknown';
         if (res === 'no') {

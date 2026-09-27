@@ -402,7 +402,7 @@ cloze). Lane-only Teile have no inbound transfer: e.g. `ta2.h1` phone notes, `ta
 |---|---|
 | **COV-1 Appearance** | For every **live** lane L of a course and every Teil T of L: (lane-exact blocks of T) + (blocks whose template lists T in `transfersTo`) **≥ 2 in a .1 course, ≥ 3 in a .2 course**; and lane-exact blocks of T **≥ 1 (.1) / ≥ 2 (.2)**. A lane-only Teil (no inbound transfer) counts lane-exact blocks only, so it needs ≥ 2 / ≥ 3 of its own. |
 | **COV-2 Full length before Modelltest A** | For every live lane of a .2 course and every Teil: **≥ 2 lane-exact blocks at full length, runnable in Prüfungsmodus**, located in the paired .1 course or in the .2 course before Modelltest A (LS4 blocks, Aufgaben, Plateau Teile, Diagnose). |
-| **COV-3 Prüfungsfokus per unit** | 2–4 Teile of the primary lane per unit; in a .2 unit ≥ 1 of them at full length in Prüfungsmodus by default. Each Prüfungsfokus Teil maps to **exactly one slot** (SCHEMA `pruefungsfokus[].slot`): `ls4` (≤ 2 receptive blocks), `sprechen`, `schreiben`, or — for a third receptive Teil — the LS3 exam text type (A skeleton, `ls3-text`) or Text B (B skeleton, `text-b`), where the Teil's items are authored against its template and counted (EXM-11). |
+| **COV-3 Prüfungsfokus per unit** | 2–4 Teile of the primary lane per unit; in a .2 unit ≥ 1 of them at full length in Prüfungsmodus by default. Each Prüfungsfokus Teil maps to **exactly one slot** (SCHEMA `pruefungsfokus[].slot`): `ls4` (≤ 2 receptive blocks), `sprechen`, `schreiben`, or `input` with a named step — the LS3 exam text type in the A skeleton, Text A or Text B in the B skeleton — where the Teil's block is authored against its template and counted (EXM-11). A third receptive Teil always goes to `input`. |
 | **COV-4 Module balance** | Each module (Hören, Lesen, Schreiben, Sprechen; plus Sprachbausteine for telc) holds ≥ 15 % of the course's Prüfungsfokus slots in the primary lane. |
 | **COV-5 Productive rotation** | Every productive Teil of the primary lane recurs at least every 4th unit (task repetition after about a week pays, [m09] §8). |
 | **COV-6 .2 lane-exactness** | In a .2 course every block and Aufgabe a learner of lane L meets is lane-exact for L (Spur-Karten fill every slot whose primary block is not L's template). In a .1 course a non-exact block shown to an L learner carries its origin label („im Format: telc Deutsch B1, Leseverstehen 3 – in Ihrer Prüfung: Goethe-Zertifikat B1, Lesen 3"). |
@@ -561,8 +561,8 @@ No stereotypes; names, countries, languages and du/Sie relationships are registr
 *Grammatik neu* marks a return to an earlier point „(Wiederholung)" or „(Wiederholung/Erweiterung)" and names a
 distinct spine id only where the function really differs (§2.5 rule 1); GRM-01 was recounted on every row after the
 critic pass. *Prüfungsteile* = primary-lane Teile of the unit's Prüfungsfokus; in .2 tables **bold** = full length in
-Prüfungsmodus by default; a third receptive Teil is carried by the LS3 exam text type (A) or Text B (B), never by a
-third LS4 block (COV-3). *Spur* = the secondary-lane blocks this row already plans for when the pack is built (the
+Prüfungsmodus by default; a third receptive Teil is carried by an input step (A: the LS3 exam text type; B: Text A or
+Text B), never by a third LS4 block (COV-3). *Spur* = the secondary-lane blocks this row already plans for when the pack is built (the
 curriculum agent adds more until COV-1/COV-2 hold). *Leaders* = Lehrwerk placements ([m14] §C); S5 = Schritte Neu 5
 and Si = Sicher! (B1+ in the B1 tables, Sicher! aktuell B2 in the B2 tables), read at source 2026-09-27; a row with
 fewer than two verified placements carries a `deviation` (ALL-03 rejects placements tagged (unverified) or
@@ -589,7 +589,7 @@ last new content), this blueprint's rule wins: Modelltests come after unit 12 (�
 | 8 | Hast du am Samstag Zeit? | Freizeit, sich verabreden · D | Vorschläge machen; zu- und absagen | *können*, *wollen* + Satzklammer | S2, Sp2, H3 | M7–8, S6, N6 | |
 | 9 | Im Café | bestellen, bezahlen, Vorlieben · 7 | bestellen; sagen, was man (nicht) mag | *mögen/möchte* (Vokalwechsel: Wiederholung) | Sp3, H1 | M9, N4 | |
 | 10 | Mit Bus und Bahn | Fahrkarte, Gleis, Durchsagen · 10 | Fahrkarte kaufen; Durchsagen verstehen | *müssen* (Imperativ *Sie* als Chunk) | H2, L3 | M10, N3 | |
-| 11 | Wie war dein Wochenende? | vom Wochenende erzählen, Online-Gruß · D | sagen, was man gemacht hat; einen kurzen Gruß schreiben | Perfekt als Chunks (8–10 Verben; *war/hatte* als Chunk) | S2, L1, Sp2 | M11–12, S7 (all families end A1.1 with the Perfekt) | |
+| 11 | Wie war dein Wochenende? | vom Wochenende erzählen, Online-Gruß · D | sagen, was man gemacht hat; einen kurzen Gruß schreiben | — (one chunk preview: *Vergangenheit als Chunks* — 8–10 Perfekt forms plus *war/hatte* in „Wie war …?"; systematic in A1.2 U1 and U5) | S2, L1, Sp2 | M11–12, S7 (all families end A1.1 with the Perfekt) | |
 | 12 | Deutsch lernen – mein Plan | Kurs, Lernziele, Lernwege · 11, E | über Lernziele sprechen; sich für einen Kurs anmelden | — (Wiederholung) | Sp1, S1, H2, L3 → **Halbtest** | RC Unterricht — **deviation:** S7 Kinder/Schule (DaZ) and M12 Feste (DaF) split by audience; the neutral field is chosen, Kita-Anmeldung becomes a Fokus-DaZ card (see Fokus), Feste go to A1.2 U12 | Fokus-DaZ „Kita-Anmeldung" (HF 6) |
 
 Coverage check (miniature appearances): H1 4, H2 3, H3 2, L1 3, L2 2, L3 3, S1 2, S2 3, Sp1 3, Sp2 3, Sp3 3.
@@ -784,7 +784,7 @@ Teile; if the unit has none, the next productive Teil in rotation (COV-5).
 | Slot | Min .1 / .2 (design) | What happens |
 |---|---|---|
 | **LS1 Auftakt + Text A** | 25 | ambiguous photo (an approved `Asset`, §4.9; until one exists, the question alone) or question („Was passiert hier? Was würden Sie tun?"), 60 s free speaking scored for fluency and task only (course-micro); Lernziele + Prüfungsfokus; **Text A** (usually Lesen) in one exam text type at the half-level's length; gist → detail; Wortfeld block 1 |
-| **LS2 Text B** | 25 | usually Hören (announcement, interview, tour, radio debate) in one text type; the serial scene; single play by default from B2.1 in exam-shaped items; carries a third receptive Prüfungsfokus Teil as a `mini`/`reduced` block where the unit has one (COV-3) |
+| **LS2 Text B** | 25 | usually Hören (announcement, interview, tour, radio debate) in one text type; the serial scene; single play by default from B2.1 in exam-shaped items. Text A or Text B may carry a Prüfungsfokus Teil as its exam block (slot `input`; at full length in .2, e.g. `tb1.lv3` in B1.2 U2, §3.9) — always so for a third receptive Teil (COV-3) |
 | **LS3 Sprache** | 25 | inductive grammar from Texts A/B (learner fills the rule table → rule card), recall practice, Wortschatz & Präzision (blocks 2–3, a Sprachbausteine-style cloze from B1.2), Redemittel for the Aufgaben |
 | **LS4 Prüfungstraining** | 25 / 30 | 1–2 lane blocks; .2 ≥ 1 full length in Prüfungsmodus |
 | **LS5 Sprechen** | 25 / ≤ 45 | the discourse task with the lane's interaction mode; **a planning round of ≥ 3 min in every B1 unit**; .1 Lernmodus with shortened preparation labelled „in der Prüfung: 20 Min. Vorbereitung"; .2 full preparation in Prüfungsmodus in ≥ 6 of 12 units, with a save point after the preparation |
@@ -1649,7 +1649,7 @@ card lists in memory and never writes into a content file (§10.5, SCHEMA §0). 
 | Id | Rule (precise) | Type |
 |---|---|---|
 | **SCH-01** | Every file validates against its SCHEMA.md spec **at its declared `stage`** (SCHEMA §8.1), using a zero-dependency checker in `scripts/course-v2/lib/` (no ajv/zod, no lockfile churn); authored files contain no generated field | hard |
-| **REF-01** | Every can-do, spine point, lemma, Teil template, rubric profile, rule card, cast member, text type, detector, fokus and fact id referenced anywhere resolves | hard |
+| **REF-01** | Every can-do, spine point, lemma (global registry), Teil template, rubric profile, rule card, cast member, extra, voice, text type, detector, fokus, fact, exam text and asset id referenced anywhere resolves | hard |
 | **ID-01** | Ids unique and well-formed per SCHEMA §2 (unit, Plateau, Halbtest, Diagnose and Modelltest block ids included); each child id starts with its parent id; `ids.ledger.json` per level is **append-only** and written only by the orchestrator's compile step after a lease is released; it tombstones removed ids — a removed id is never reused, a meaning change gets a new id | hard |
 | **KEY-01** | Writing, speaking and micro-output bank keys match `BANK_KEY_RE` (SCHEMA §2); the legacy `^(a\d\d)-l\d\d$` keys stay valid; a test covers all 8 prefixes × every slot kind (units, `p1–p3`, `ht`, `dx`, `ma–mc`, with and without a lane suffix) and `courseTaskKeyPrefix()` | hard |
 | **ALL-01** | 12 units, P1–P3, the closing block of the course kind (.1 Halbtest per live lane; .2 Diagnose + forms per lane), Etappen 4 × 3 | hard |
@@ -1664,7 +1664,7 @@ card lists in memory and never writes into a content file (§10.5, SCHEMA §0). 
 | **GRM-04** | Grammar ceiling: production lines, model texts, rule-card examples, expected answers and exam texts use no construction introduced after the current position (detectors §9.3); inputs exceed it only via whitelisted chunks or glossed receptive exposure | hard for exact detectors, advisory for heuristic ones |
 | **GRM-05** | Rule cards ≤ 60 words (A1) / ≤ 80 (A2+), model sentence first, English twin, no unconditioned claim (`quality.js` `unconditionedRule`) | hard |
 | **GRM-06** | A point's contrast partner is interleaved in the warm-ups from its second LS on | hard |
-| **LEX-01** | Known-token coverage ≥ 95 % per input and exam text; ≥ 98 % for the extensive strand (known = earlier units + this unit's lexicon + function words + cast names + glossed extras) | hard |
+| **LEX-01** | Known-token coverage ≥ 95 % per input and exam text; ≥ 98 % for the extensive strand (known = the cumulative allocation of all lower levels + earlier units + this unit's lexicon + function words + cast and extra names + glossed extras) | hard |
 | **LEX-02** | Each new lemma ≥ 2× in its unit's inputs and in ≥ 2 later units (the last two units of a level may recycle via review) | ratchet |
 | **LEX-03** | Items, model texts and expected answers use known lemmas only; ≤ 3 glossed receptive extras per text | hard |
 | **LEX-04** | Off-list share ≤ 15 % (A) / ≤ 25 % (B1) per unit; B2 per the frequency-band rule; extension words receptive unless justified | hard |
@@ -1707,7 +1707,7 @@ card lists in memory and never writes into a content file (§10.5, SCHEMA §0). 
 | **EXM-08** | Deterministic zero/cap rules win over any AI output (tests with stubbed AI responses) | hard |
 | **EXM-09** | Coverage COV-1…COV-7 (§2.4) per live lane | hard |
 | **EXM-10** | No DTB-format block outside `dtb2`; the DTZ lane carries its label and gate question | hard |
-| **EXM-11** | Every `pruefungsfokus` entry maps to exactly one slot (`ls4`, `sprechen`, `schreiben`, `ls3-text`, `text-b`), and that slot holds a block or task of that template; LS4 holds ≤ 2 blocks (COV-3) | hard |
+| **EXM-11** | Every `pruefungsfokus` entry maps to exactly one slot (`ls4`, `sprechen`, `schreiben`, or `input` + step), and that slot holds a block or task of that template; LS4 holds ≤ 2 blocks (COV-3) | hard |
 | **LGL-01** | **A claims rule over learner-visible strings** (course data fields shown to learners, pages, e-mails, in-app strings, `courseFacts`); internal enum ids and keys (`pruefer`, `examiner`, lane ids) are not linted. Banned: „bestanden" (about our tests), „bereit für die Prüfung"/„prüfungsbereit", „prüfungsreif", „prüfungssicher", „Bestehenschance", „garantiert", „in … Wochen zu", „offiziell/anerkannt/zertifiziert/Partner" (about us), „persönliches Feedback", „Tutor", „Coach"/„coach" (the live pricing page's „speaking coach" gets a copy pass in the first v2 integration PR, §10.7), „Lehrkraft korrigiert", „Korrektur deiner Texte", „Muttersprachler/native speaker" on TTS, „unbegrenzt/unlimited" (until §13 D8). **„Zertifikat"** is banned only as a description of *our* output („Ihr Zertifikat", „mit Zertifikat", „Zertifikat erhalten"); exam proper names are allowlisted (Goethe-Zertifikat, ÖSD-Zertifikat, Zertifikat Deutsch, Zertifikat Integrationskurs, Zertifikat B1/ZB1) and so is the fixed Teilnahmebescheinigung disclaimer. **„Prüfer/Prüferin"** is allowed only where it names the human examiner of the real exam (the anti-recitation line, strategy cards, „Die KI ersetzt keine Prüferin"); the AI's role in exam simulations is shown as **„Gesprächsleitung (KI)"** | hard |
 | **LGL-02** | No page or product title begins with an exam mark | hard |
 | **LGL-03** | The fixed AI label in every graded-result component and the AI notice at first contact (component tests) | hard |
@@ -1932,7 +1932,8 @@ course texts; ß in D/A texts, ss only in texts marked `variety: CH`; phone numb
 
 ### 10.4 Pilots (run in parallel)
 
-**Agent pilot (P1):** U4 of all eight levels, through S → I → T, Spur-Karten for each secondary lane, gates, solver,
+**Agent pilot (P1):** U4 of all eight levels, through S → I → T with the staged gates (§9), one Spur-Karte per designed
+secondary lane as a format test only (packs are built after demand, §1.4), gates, solver,
 two reviewers, fixes, ≤ 4 rounds; 2 rule-smiths standing; the walkthrough reviewer on every pilot unit (≈ 140 runs,
 peak ≈ 24). **Go only if all hold:** all 8 exit at 0/0 in ≤ 4 rounds; SOL-01 disagreement on first submission ≤ 5 %
 of items; LNG findings on first submission ≤ 1 per 1,000 words; reviewer mean ≥ 29/35 with no criterion < 4;
@@ -2150,7 +2151,7 @@ green. Re-review covers only failed criteria plus the fresh-eyes sample.
 |---|---|---|---|
 | **D1** | Do trial and Pro subscriptions still open **paid v2 levels** (today `hasLevelAccess` returns true for any live trial/subscription, and every course purchase grants a 90-day Pro window)? And what happens to the „3 Monate Pro inklusive" claim? | v2 paid content and its AI allowance follow the purchase only; trial/Pro keep the existing tools; keep „Pro inklusive" as a bonus for the existing tools or drop it — reconcile `pricing.js`/`marketing.js` in the same PR | first paid v2 sale |
 | **D2** | **Counsel** (FernUSG and more): AI grading in paid courses incl. A1.2; **the Prüfungsstand (AI ranges combined with pass lines), the Teil-Karte and the Halbtest view** (§5.6); reminders, plan and Wochenbericht wording and any share link; the existing 90-day Pro window with AI tools; private use of official rated samples and of MERLIN (CC BY-SA) for calibration; the LGL-05 boilerplate allowlist; Teilnahmebescheinigung wording; the voluntary refund promise; the Datenschutzerklärung (D13); FernUSG for buyers abroad (Rome I) | book counsel now; the counsel brief is produced in W2 (§10.3 lists its required items) | first paid v2 sale; the full board in paid courses; share link; calibration ground truth |
-| **D3** | **Hire human DaF examiner(s)** (Goethe/telc licensed) to rate ≥ 30 samples per rubric profile as calibration ground truth; optionally a spot check of 2 units per level (internal QA, never a learner entitlement) | yes; without it no accuracy statement is ever possible and AI parts stay ranges | CAL-02 |
+| **D3** | **Hire human DaF examiner(s)** (Goethe/telc licensed) to rate ≥ 30 samples per AI-scored writing profile (≈ 180 in the v1 cut), later the consented pilot speaking recordings, as calibration ground truth; optionally a spot check of 2 units per level (internal QA, never a learner entitlement) | yes; without it no accuracy statement is ever possible and AI parts stay ranges; MERLIN covers band placement meanwhile (§4.6) | CAL-02 (not a lane going live) |
 | **D4** | **Voice budget:** keep Azure TTS („Computerstimme") at launch, or commission human recordings for mocks and scenes later | TTS at launch (≈ $20 total, owner time); revisit human recordings for Modelltests after revenue | none at launch |
 | **D5** | **Pair offer** (.1 + .2) at checkout, and its price | offer it; the .1 courses are weak standalone buys | .1 conversion |
 | **D6** | **Paid previews / first-lesson leak:** is U1 of each paid course playable before purchase? | yes for U1 LS1–LS3 without Aufgaben; the free Diagnose covers the taste of scoring | page copy |

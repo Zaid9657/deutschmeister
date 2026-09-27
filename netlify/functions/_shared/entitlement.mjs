@@ -36,7 +36,8 @@ export const BANK_KEY_RE =
 export const LEGACY_COURSE_TASK_KEY_RE = /^(a\d\d)-l\d\d$/;
 
 const LEVEL_RE = /^(a1|a2|b1|b2)\.[12]$/;
-const LANE_SUFFIX_RE = /-(?:sd1|ga2|ta2|tb1|dtz|gb1|tb2|gb2|oza1|dtb2)$/;
+const LANES = ['sd1', 'ga2', 'ta2', 'tb1', 'dtz', 'gb1', 'tb2', 'gb2', 'oza1', 'dtb2'];
+const LANE_SUFFIX_RE = new RegExp(`-(?:${LANES.join('|')})$`);
 
 // A v2 learner-state id (SCHEMA §2 "Learner-state ids") or anything below one
 // (a Lernschritt, an item, a line): unit a2.1-u07, Plateau a2.1-p2, closing
@@ -250,10 +251,19 @@ function decide(info, used, dailyUsed, dailyCap, extra) {
 // applies the migration. The result says so (degraded: true).
 async function degradedAllowance(admin, userId, info, access, dayStart, dailyCap) {
   warnLedgerMissing('checkCourseAiAllowance');
-  const slot = await countRows(admin, 'writing_submissions', [['eq', 'user_id', userId], ['eq', 'task_key', info.bankKey]]);
+  // Per SLOT, like the ledger (a lane variant is the same slot), and only rows a model graded:
+  // the writing grader stores rule-decided zeros with model = 'deterministic', and those cost
+  // no model call, so they must not use up an attempt (E1 integration, 2026-09-27).
+  const slotKeys = [info.slotKey, ...LANES.map((l) => `${info.slotKey}-${l}`)];
+  const slot = await countRows(admin, 'writing_submissions', [
+    ['eq', 'user_id', userId],
+    ['in', 'task_key', slotKeys],
+    ['neq', 'model', 'deterministic'],
+  ]);
   const day = await countRows(admin, 'writing_submissions', [
     ['eq', 'user_id', userId],
     ['like', 'task_key', `${info.prefix}-%`],
+    ['neq', 'model', 'deterministic'],
     ['gte', 'created_at', dayStart.toISOString()],
   ]);
   if (slot.error || day.error) {

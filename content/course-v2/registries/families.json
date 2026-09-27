@@ -4,21 +4,23 @@
     {
       "id": "fam.h-detail",
       "label": "H-DETAIL",
-      "skill": "Hören: aus kurzen Alltagstexten (Dialog, Ansage, Mailbox) eine Einzelinformation wie Zeit, Ort, Preis oder Zahl heraushören.",
+      "skill": "Hören: aus kurzen Alltagstexten (Dialog, Ansage, Mailbox-Nachricht) eine Einzelinformation wie Zeit, Ort, Preis oder Zahl heraushören.",
       "templates": [
         "sd1.h1",
         "sd1.h3",
         "ga2.h1",
-        "tb1.hv3"
+        "ga2.h3",
+        "tb1.hv3",
+        "tb2.hv3"
       ]
     },
     {
       "id": "fam.h-durchsage",
       "label": "H-DURCHSAGE",
-      "skill": "Hören: öffentliche Durchsagen und kurze Meldungen (Bahnhof, Kaufhaus, Radio) verstehen und prüfen, ob eine Aussage stimmt.",
+      "skill": "Hören: öffentliche Durchsagen und Nachrichtenmeldungen (Bahnhof, Kaufhaus, Radio) einmal gehört global verstehen.",
       "templates": [
         "sd1.h2",
-        "tb2.hv3"
+        "tb2.hv1"
       ]
     },
     {
@@ -26,9 +28,7 @@
       "label": "H-GESPRÄCH",
       "skill": "Hören: ein längeres Gespräch zwischen zwei Personen verfolgen und Details oder Zuordnungen richtig erkennen.",
       "templates": [
-        "ga2.h2",
-        "ga2.h3",
-        "tb1.hv2"
+        "ga2.h2"
       ]
     },
     {
@@ -42,10 +42,10 @@
     {
       "id": "fam.h-vortrag",
       "label": "H-VORTRAG",
-      "skill": "Hören: ein Interview, einen Radiobeitrag oder eine Meldung mit mehreren Sprechern im Zusammenhang verstehen.",
+      "skill": "Hören: ein Interview oder einen Radiobeitrag im Zusammenhang verstehen und Aussagen dazu prüfen.",
       "templates": [
         "ga2.h4",
-        "tb2.hv1",
+        "tb1.hv2",
         "tb2.hv2"
       ]
     },
@@ -80,7 +80,7 @@
     {
       "id": "fam.l-artikel",
       "label": "L-ARTIKEL",
-      "skill": "Lesen: einen längeren Text (Artikel, E-Mail) im Detail verstehen und Fragen dazu beantworten.",
+      "skill": "Lesen: längere Texte (Artikel, Korrespondenz) im Detail verstehen und Fragen dazu beantworten.",
       "templates": [
         "ga2.l1",
         "ga2.l3",
@@ -147,7 +147,7 @@
     {
       "id": "fam.s-fragekarten",
       "label": "S-FRAGEKARTEN",
-      "skill": "Sprechen: mit einer Wortkarte eine Frage stellen und auf die Frage der Partnerin antworten.",
+      "skill": "Sprechen: mit einer Wortkarte eine Frage stellen und auf die Frage der Partnerin oder des Partners antworten.",
       "templates": [
         "sd1.sp2",
         "ga2.sp1"
@@ -173,7 +173,7 @@
     {
       "id": "fam.s-planen",
       "label": "S-PLANEN",
-      "skill": "Sprechen: mit einer Partnerin gemeinsam etwas planen, Vorschläge machen und sich einigen.",
+      "skill": "Sprechen: mit einer Partnerin oder einem Partner gemeinsam etwas planen, Vorschläge machen und sich einigen.",
       "templates": [
         "ga2.sp3",
         "tb1.m3",

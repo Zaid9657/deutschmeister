@@ -20,7 +20,7 @@
         "subordinateClausesMax": 0
       },
       "lexis": {
-        "newPerUnit": [28, 30],
+        "newPerUnit": [24, 32],
         "productiveShare": 0.5,
         "offListMax": 0.15,
         "coverageMin": 0.95
@@ -28,11 +28,13 @@
       "review": {
         "budgetMinutes": 6,
         "secondsPerReview": 8,
-        "firstReviewCeiling": 30
+        "firstReviewCeiling": 30,
+        "carryOverMinutes": 0
       },
       "pool": {
         "size": 16,
         "served": 12,
+        "reserve": [4, 6],
         "generatedMax": 0.4,
         "mix": {
           "typedGapDictation": [0.45, 0.55],
@@ -43,6 +45,7 @@
           "clozeInTypedGap": false
         }
       },
+      "examStemChars": [15, 90],
       "microOutput": {
         "seconds": [20, 30],
         "words": [3, 16]
@@ -70,7 +73,7 @@
         "subordinateClausesMax": 0
       },
       "lexis": {
-        "newPerUnit": [25, 28],
+        "newPerUnit": [18, 30],
         "productiveShare": 0.5,
         "offListMax": 0.15,
         "coverageMin": 0.95
@@ -78,11 +81,13 @@
       "review": {
         "budgetMinutes": 6,
         "secondsPerReview": 8,
-        "firstReviewCeiling": 30
+        "firstReviewCeiling": 30,
+        "carryOverMinutes": 1
       },
       "pool": {
         "size": 16,
         "served": 12,
+        "reserve": [4, 6],
         "generatedMax": 0.4,
         "mix": {
           "typedGapDictation": [0.45, 0.55],
@@ -93,6 +98,7 @@
           "clozeInTypedGap": false
         }
       },
+      "examStemChars": [15, 90],
       "microOutput": {
         "seconds": [20, 40],
         "words": [4, 24]
@@ -128,11 +134,13 @@
       "review": {
         "budgetMinutes": 7,
         "secondsPerReview": 9,
-        "firstReviewCeiling": 30
+        "firstReviewCeiling": 30,
+        "carryOverMinutes": 1.5
       },
       "pool": {
         "size": 16,
         "served": 12,
+        "reserve": [4, 6],
         "generatedMax": 0.4,
         "mix": {
           "typedGapDictation": [0.45, 0.55],
@@ -143,6 +151,7 @@
           "clozeInTypedGap": false
         }
       },
+      "examStemChars": [20, 120],
       "microOutput": {
         "seconds": [30, 40],
         "words": [8, 30]
@@ -170,7 +179,7 @@
         "subordinateClausesMax": 1
       },
       "lexis": {
-        "newPerUnit": [28, 30],
+        "newPerUnit": [22, 30],
         "productiveShare": 0.5,
         "offListMax": 0.15,
         "coverageMin": 0.95
@@ -178,11 +187,13 @@
       "review": {
         "budgetMinutes": 7,
         "secondsPerReview": 9,
-        "firstReviewCeiling": 30
+        "firstReviewCeiling": 30,
+        "carryOverMinutes": 1.5
       },
       "pool": {
         "size": 16,
         "served": 12,
+        "reserve": [4, 6],
         "generatedMax": 0.4,
         "mix": {
           "typedGapDictation": [0.45, 0.55],
@@ -193,6 +204,7 @@
           "clozeInTypedGap": false
         }
       },
+      "examStemChars": [20, 120],
       "microOutput": {
         "seconds": [30, 40],
         "words": [8, 30]
@@ -230,11 +242,13 @@
       "review": {
         "budgetMinutes": 9,
         "secondsPerReview": 10,
-        "firstReviewCeiling": 40
+        "firstReviewCeiling": 40,
+        "carryOverMinutes": 2
       },
       "pool": {
         "size": 16,
         "served": 12,
+        "reserve": [4, 6],
         "generatedMax": 0.3,
         "mix": {
           "typedGapDictation": [0.4, 0.5],
@@ -245,6 +259,7 @@
           "clozeInTypedGap": false
         }
       },
+      "examStemChars": [25, 160],
       "microOutput": {
         "seconds": [40, 60],
         "words": [40, 60]
@@ -282,11 +297,13 @@
       "review": {
         "budgetMinutes": 9,
         "secondsPerReview": 10,
-        "firstReviewCeiling": 40
+        "firstReviewCeiling": 40,
+        "carryOverMinutes": 2
       },
       "pool": {
         "size": 16,
         "served": 12,
+        "reserve": [4, 6],
         "generatedMax": 0.3,
         "mix": {
           "typedGapDictation": [0.4, 0.5],
@@ -297,6 +314,7 @@
           "clozeInTypedGap": true
         }
       },
+      "examStemChars": [25, 160],
       "microOutput": {
         "seconds": [40, 60],
         "words": [40, 60]
@@ -334,11 +352,13 @@
       "review": {
         "budgetMinutes": 11,
         "secondsPerReview": 10,
-        "firstReviewCeiling": 50
+        "firstReviewCeiling": 50,
+        "carryOverMinutes": 2
       },
       "pool": {
         "size": 16,
         "served": 12,
+        "reserve": [4, 6],
         "generatedMax": 0.25,
         "mix": {
           "typedGapDictation": [0.4, 0.5],
@@ -349,6 +369,7 @@
           "clozeInTypedGap": true
         }
       },
+      "examStemChars": [30, 220],
       "microOutput": {
         "seconds": [50, 70],
         "words": [50, 70]
@@ -378,7 +399,7 @@
         "subordinateClausesMax": 3
       },
       "lexis": {
-        "newPerUnit": [60, 70],
+        "newPerUnit": [55, 70],
         "productiveShare": 0.375,
         "offListMax": 0.25,
         "coverageMin": 0.95
@@ -386,11 +407,13 @@
       "review": {
         "budgetMinutes": 11,
         "secondsPerReview": 10,
-        "firstReviewCeiling": 50
+        "firstReviewCeiling": 50,
+        "carryOverMinutes": 2
       },
       "pool": {
         "size": 16,
         "served": 12,
+        "reserve": [4, 6],
         "generatedMax": 0.25,
         "mix": {
           "typedGapDictation": [0.4, 0.5],
@@ -401,6 +424,7 @@
           "clozeInTypedGap": true
         }
       },
+      "examStemChars": [30, 220],
       "microOutput": {
         "seconds": [50, 70],
         "words": [50, 70]

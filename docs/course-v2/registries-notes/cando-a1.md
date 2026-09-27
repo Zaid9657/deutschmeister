@@ -43,8 +43,8 @@ the two W2 plans map to an id (§6); 18 ids are new (sd1 needs and blueprint-row
 | `a1.1-u11` | Wie war dein Wochenende? | S2, L1, Sp2 | `cd.a1.wochenende-erzaehlen` · `cd.a1.zeitangaben-vergangen` · `cd.a1.kurze-mitteilungen` · `cd.a1.online-post` | `cd.a1.fragen-thema` · `cd.a1.nachricht-anrede` | a1.1-u11 |
 | `a1.1-u12` | Deutsch lernen – mein Plan | Sp1, S1, H2, L3 → Halbtest | `cd.a1.vorstellung-sp1` · `cd.a1.herkunft-situation` · `cd.a1.lernziele` · `cd.a1.kurs-erfragen` · `cd.a1.anweisungen-kurs` | `cd.a1.glossar` · `cd.a1.formular-person` · `cd.a1.beruf-nennen` · `cd.a1.elternbrief-rueckmeldung` (Fokus DaZ, statt Kita-Anmeldung) | a1.1-u12 |
 | `a1.2-u01` | Mein Arbeitsalltag | L1, Sp1, S1 | `cd.a1.arbeitsalltag` · `cd.a1.frueher-arbeit` · `cd.a1.frueher-war-hatte` · `cd.a1.arbeitsauftraege` · `cd.a1.dienstplan` | `cd.a1.stellenanzeigen` (Fokus Beruf / L2) · `cd.a1.koennen-gern` · `cd.a1.aussehen-charakter` · `cd.a1.kurze-mitteilungen` | a1.2-u02 + a1.2-u10 |
-| `a1.2-u02` | Einen Termin machen | H3, S1 | `cd.a1.termin-vereinbaren` · `cd.a1.datum` · `cd.a1.sprachnachricht-verstehen` · `cd.a1.behoerde-internet` · `cd.a1.info-schalter` | `cd.a1.formular-hilfe` · `cd.a1.anweisungen-verstehen` · `cd.a1.formular-person` | a1.2-u04 (+ a1.2-u12 Datum) |
-| `a1.2-u03` | Wie komme ich zum Rathaus? | L3, H1 | `cd.a1.weg-fragen` · `cd.a1.weg-folgen` · `cd.a1.wegweiser` · `cd.a1.aushang-hinweise` | `cd.a1.ansprechen-bitten` · `cd.a1.gespraech-details` | a1.2-u01 |
+| `a1.2-u02` | Wie komme ich zum Rathaus? | L3, H1 | `cd.a1.weg-fragen` · `cd.a1.weg-folgen` · `cd.a1.wegweiser` · `cd.a1.aushang-hinweise` | `cd.a1.ansprechen-bitten` · `cd.a1.gespraech-details` | a1.2-u01 |
+| `a1.2-u03` | Einen Termin machen | H3, S1 | `cd.a1.termin-vereinbaren` · `cd.a1.datum` · `cd.a1.sprachnachricht-verstehen` · `cd.a1.behoerde-internet` · `cd.a1.info-schalter` | `cd.a1.formular-hilfe` · `cd.a1.anweisungen-verstehen` · `cd.a1.formular-person` | a1.2-u04 (+ a1.2-u12 Datum) |
 | `a1.2-u04` | Beim Arzt | Sp3, L3, H3 | `cd.a1.arzt-anmeldung` · `cd.a1.beschwerden` · `cd.a1.medikamente` · `cd.a1.anweisungen-verstehen` | `cd.a1.notruf` (Fokus) · `cd.a1.sprachnachricht-verstehen` | a1.2-u05 |
 | `a1.2-u05` | Ich bin krank – ich sage ab | S2, H3, Sp3 | `cd.a1.krankmelden` · `cd.a1.absage-entschuldigung` · `cd.a1.mitteilungen-austauschen` | `cd.a1.kind-krankmelden` (Fokus DaZ) · `cd.a1.termin-vereinbaren` · `cd.a1.sprachnachricht-verstehen` | a1.2-u05 (Krankmeldung) + neu |
 | `a1.2-u06` | Wohnung und Nachbarn | L2, L3, Sp1, Sp2 | `cd.a1.hausordnung` · `cd.a1.im-haus-regeln` · `cd.a1.vermieter-mitteilung` | `cd.a1.anzeigen-infos` · `cd.a1.neuer-mieter` · `cd.a1.aushang-hinweise` | a1.2-u03 |
@@ -59,7 +59,7 @@ the two W2 plans map to an id (§6); 18 ids are new (sd1 needs and blueprint-row
 
 | Teil (sd1) | What it tests (lane file / memo 01) | A1.1 ids | A1.2 ids |
 |---|---|---|---|
-| H1 | number, price, time, place in short dialogues, 2× | `gespraech-details`, `preise`, `zahlen` | `weg-folgen`; `gespraech-details` as spiral in U3 |
+| H1 | number, price, time, place in short dialogues, 2× | `gespraech-details`, `preise`, `zahlen` | `weg-folgen`; `gespraech-details` as spiral in U2 |
 | H2 | the instruction in a public announcement, **1×** | `durchsage-geschaeft`, `durchsage-bahnhof` | `durchsage-reise` |
 | H3 | who/when/where/what to do on an answering machine, private and official | `ab-termin` | `sprachnachricht-verstehen`, `vermieter-mitteilung` |
 | L1 | two short notes or e-mails, r/f | `kurze-mitteilungen` | `mitteilungen-austauschen` |
@@ -301,16 +301,16 @@ of a §2.8 row the drafts miss; *neu (Fokus)* = Fokus-DaZ card. „Core in“ = 
 | `cd.a1.dienstplan` | a1.2 | productive-written | 2 | — | W2-Plan | a1.2-u01 |
 | `cd.a1.stellenanzeigen` | a1.2 | receptive-written | 3 | — | W2-Plan | — |
 | `cd.a1.aussehen-charakter` | a1.2 | productive-spoken | D | — | W2-Plan | — |
-| `cd.a1.termin-vereinbaren` | a1.2 | interaction-spoken | 2, 8, 1 | — | W2-Plan | a1.2-u02 |
-| `cd.a1.datum` | a1.2 | interaction-spoken | 1, D | — | W2-Plan | a1.2-u02 |
-| `cd.a1.sprachnachricht-verstehen` | a1.2 | receptive-spoken | 8, 1, D | — | neu (sd1) | a1.2-u02 |
-| `cd.a1.behoerde-internet` | a1.2 | receptive-written | 1, 9 | ja | W2-Plan | a1.2-u02 |
-| `cd.a1.info-schalter` | a1.2 | interaction-spoken | 1 | — | W2-Plan | a1.2-u02 |
+| `cd.a1.weg-fragen` | a1.2 | interaction-spoken | 10 | — | W2-Plan | a1.2-u02 |
+| `cd.a1.weg-folgen` | a1.2 | receptive-spoken | 10 | — | W2-Plan | a1.2-u02 |
+| `cd.a1.wegweiser` | a1.2 | receptive-written | 10, 1 | — | W2-Plan | a1.2-u02 |
+| `cd.a1.aushang-hinweise` | a1.2 | receptive-written | 1, 7 | — | neu (sd1) | a1.2-u02 |
+| `cd.a1.termin-vereinbaren` | a1.2 | interaction-spoken | 2, 8, 1 | — | W2-Plan | a1.2-u03 |
+| `cd.a1.datum` | a1.2 | interaction-spoken | 1, D | — | W2-Plan | a1.2-u03 |
+| `cd.a1.sprachnachricht-verstehen` | a1.2 | receptive-spoken | 8, 1, D | — | neu (sd1) | a1.2-u03 |
+| `cd.a1.behoerde-internet` | a1.2 | receptive-written | 1, 9 | — | W2-Plan | a1.2-u03 |
+| `cd.a1.info-schalter` | a1.2 | interaction-spoken | 1 | — | W2-Plan | a1.2-u03 |
 | `cd.a1.formular-hilfe` | a1.2 | interaction-spoken | 1 | — | W2-Plan | — |
-| `cd.a1.weg-fragen` | a1.2 | interaction-spoken | 10 | — | W2-Plan | a1.2-u03 |
-| `cd.a1.weg-folgen` | a1.2 | receptive-spoken | 10 | — | W2-Plan | a1.2-u03 |
-| `cd.a1.wegweiser` | a1.2 | receptive-written | 10, 1 | — | W2-Plan | a1.2-u03 |
-| `cd.a1.aushang-hinweise` | a1.2 | receptive-written | 1, 7 | — | neu (sd1) | a1.2-u03 |
 | `cd.a1.arzt-anmeldung` | a1.2 | interaction-spoken | 8 | — | W2-Plan | a1.2-u04 |
 | `cd.a1.beschwerden` | a1.2 | productive-spoken | 8 | — | W2-Plan | a1.2-u04 |
 | `cd.a1.medikamente` | a1.2 | receptive-spoken | 8 | — | W2-Plan | a1.2-u04 |
@@ -344,7 +344,7 @@ of a §2.8 row the drafts miss; *neu (Fokus)* = Fokus-DaZ card. „Core in“ = 
 | `cd.a1.besser-gefallen` | a1.2 | productive-spoken | B | — | W2-Plan | a1.2-u11 |
 | `cd.a1.veranstaltungen` | a1.2 | receptive-written | 9 | — | W2-Plan | a1.2-u11 |
 | `cd.a1.einladung-antworten` | a1.2 | interaction-written | D | — | W2-Plan | a1.2-u11 |
-| `cd.a1.handy-menue` | a1.2 | receptive-written | 9 | ja | W2-Plan | — |
+| `cd.a1.handy-menue` | a1.2 | receptive-written | 9 | — | W2-Plan | — |
 | `cd.a1.gratulieren` | a1.2 | productive-written | D | — | W2-Plan | a1.2-u12 |
 | `cd.a1.wuensche-danken` | a1.2 | interaction-spoken | D | — | W2-Plan | a1.2-u12 |
 | `cd.a1.du-anbieten` | a1.2 | interaction-spoken | D | — | W2-Plan | a1.2-u12 |
@@ -352,9 +352,16 @@ of a §2.8 row the drafts miss; *neu (Fokus)* = Fokus-DaZ card. „Core in“ = 
 
 ## 8. Conventions used in the file
 
-- **Wording.** Every `de` is our own ich-Form sentence in plain A1-near German. Memo 04 converted RC/Goethe/CEFR
-  descriptors by changing only the person, so the W2 draft lines are close to the source texts; none of them was copied
-  into the registry. Examples (`z. B. „Vorsicht, heiß!“`) are ours.
+- **Wording.** Every `de` is our own ich-Form sentence in plain A1-near German. Measured 2026-09-27 (longest shared
+  run of words, case and punctuation ignored, over all 115 `de` values):
+  - **against memo 04 (the source descriptors): max 6 words** — no descriptor text is quoted.
+  - **against the W2 draft lines (our own team's plan wording, itself derived from memo 04): max 14 words.** Two
+    `de` values are identical to their draft line — `frueher-arbeit` (= draft a1.2-u02 #5) and `bestellt-bezahlt`
+    (= a1.2-u07 #4) — and eight more share runs of 8–14 words: `gefallen` 14 (a1.1-u08 #3), `koennen-gern` 12
+    (a1.1-u08 #4), `schalter-telefon-bitten` 12 (a1.2-u07 #3), `im-haus-regeln` 11 (draft a1.2-u03 #4),
+    `besser-gefallen` 9, `um-etwas-bitten` 8, `ab-termin` 8, `feier-planen` 8. The draft lines are our text, so this
+    is legally harmless; an earlier version of this note said no draft line was copied, which was inaccurate.
+  Examples (`z. B. „Vorsicht, heiß!“`) are ours.
 - **`halfLevel`** = the half-level where the can-do is first a core Lernziel. A1.2 units reuse A1.1 ids only in *more*.
 - **`band`** = the CEFR level at which our course expects the performance. It is `A1` for every entry. Where a
   source places the descriptor elsewhere, the source tag keeps the original level and the reason is:
@@ -366,9 +373,12 @@ of a §2.8 row the drafts miss; *neu (Fokus)* = Fokus-DaZ card. „Core in“ = 
 - **`mode`** = the mode the unit's proof tests. A few descriptors name two channels („am Telefon oder in einer kurzen
   Nachricht"); the mode is the primary one (e.g. `krankmelden` = interaction-spoken; its written twin for S2 is
   `absage-entschuldigung`).
-- **`online: true`** = performed in a digital medium by definition (chat, post, app, web form, website):
-  `online-gruessen`, `online-post`, `mitteilungen-austauschen`, `online-bestellen`, `behoerde-internet`,
-  `handy-menue`. E-mails and paper-or-web reading tasks (`angebot-waehlen`) stay `false`.
+- **`online: true`** = an **online-interaction** can-do (the CEFR „Online-Interaktion“ scale, the item ALL-06 counts):
+  mode `interaction-written` and performed in a digital medium by definition (chat, post, messenger, web order form).
+  Shared rule with the A2/B1/B2 registries: a receptive can-do stays `false` even when its text is on a screen.
+  A1: `online-gruessen`, `online-post`, `mitteilungen-austauschen`, `online-bestellen`. `false` although digital:
+  `behoerde-internet` (reading a website) and `handy-menue` (reading app/web menus) — both receptive-written, set
+  to `false` after the W2 review 2026-09-27; e-mails and paper-or-web reading tasks (`angebot-waehlen`) stay `false`.
 - **`hf`** follows the RC page of the source (A pp. 29–38, B 39–46, D 53–60, E 61–74; HF 1–12
   pp. 75–157), plus the situation's field where the course uses it elsewhere. Registry coverage: HF 1–12 and A, B, D, E
   all occur; **C (Konflikte) does not** (the RC's four C goals at A1 need no A1 unit; ALL-04 counts HF 1–12 only).
@@ -403,7 +413,10 @@ of a §2.8 row the drafts miss; *neu (Fokus)* = Fokus-DaZ card. „Core in“ = 
    registration was found, so the card should use `elternbrief-rueckmeldung` (RC 117) or be written as a form task
    under `formular-person`.
 5. **Checks run.** `node scripts/course-v2/check.mjs content/course-v2/registries/cando/a1.json` → 0 errors
-   (SCH-01 against `scripts/course-v2/lib/schemas/cando.mjs`). `scripts/course-v2/validate.mjs` does not exist yet;
+   (SCH-01 against `scripts/course-v2/lib/schemas/cando.mjs`), re-run 2026-09-27 after the W2 review fixes (A1.2 U2/U3
+   rows swapped to match BLUEPRINT §2.8, `online` set to `false` on `behoerde-internet` and `handy-menue`).
+   `node scripts/course-v2/validate.mjs a1.1|a1.2` now exists and reports 0 blockers, all 38 rules skipped (no unit
+   content yet);
    a scratch script additionally checked every draft line's mapping and the §1 rules for §2 (3–5 core, ≥ 1
    productive/interaction core, each id core once, online-interaction quota per half-level, every id placed on a row).
    ALL-02/ALL-06 proper run on the units once they exist.

@@ -3,18 +3,109 @@
   "id": "course-micro-sp",
   "kind": "speaking",
   "lane": null,
+  "method": "ai",
   "max": 5,
+  "examMax": 5,
   "criteria": [
-    { "id": "task", "label": "Aufgabe erfüllt", "per": "task", "levels": [2, 1, 0] },
-    { "id": "target", "label": "Zielstruktur benutzt", "per": "task", "levels": [1, 0] },
-    { "id": "clear", "label": "verständlich und ohne lange Pausen", "per": "task", "levels": [2, 1, 0] }
+    {
+      "id": "task",
+      "label": "Aufgabe erfüllt",
+      "per": "task",
+      "levels": [2, 1, 0],
+      "scoredBy": "ai",
+      "descriptors": [
+        {
+          "points": 2,
+          "de": "Sie sagen alles, was die Mini-Aufgabe verlangt, passend zur Situation und zur Person, mit der Sie sprechen."
+        },
+        {
+          "points": 1,
+          "de": "Ein Teil der Mini-Aufgabe fehlt, oder Ihre Antwort passt nur teilweise zur Situation."
+        },
+        {
+          "points": 0,
+          "de": "Ihre Antwort passt nicht zur Mini-Aufgabe, oder Sie sagen fast nichts."
+        }
+      ]
+    },
+    {
+      "id": "target",
+      "label": "Zielstruktur benutzt (nur bei Mikro-Aufgaben mit Zielstruktur)",
+      "per": "task",
+      "levels": [1, 0],
+      "scoredBy": "ai",
+      "appliesIf": "targets",
+      "descriptors": [
+        {
+          "points": 1,
+          "de": "Die Struktur, die Sie in diesem Lernschritt geübt haben, kommt mindestens einmal richtig gebildet vor."
+        },
+        {
+          "points": 0,
+          "de": "Die geübte Struktur fehlt, oder sie ist so gebildet, dass man sie nicht erkennt."
+        }
+      ]
+    },
+    {
+      "id": "clear",
+      "label": "verständlich und ohne lange Pausen",
+      "per": "task",
+      "levels": [2, 1, 0],
+      "scoredBy": "ai",
+      "descriptors": [
+        {
+          "points": 2,
+          "de": "Man versteht Ihre Aussage beim ersten Hören. Sie sprechen ohne lange Pausen; kurzes Nachdenken ist normal."
+        },
+        {
+          "points": 1,
+          "de": "Man versteht das Wichtigste, aber lange Pausen oder abgebrochene Sätze machen es schwer, Ihnen zu folgen."
+        },
+        {
+          "points": 0,
+          "de": "Man versteht nicht, was Sie mitteilen wollen, oder Sie sprechen nur einzelne Wörter."
+        }
+      ]
+    }
   ],
+  "errorPolicy": {
+    "a1": {
+      "v2-inv": "flag",
+      "verb-final": "flag",
+      "satzklammer": "flag",
+      "case-np": "flag",
+      "case-pp": "flag",
+      "gender-article": "flag",
+      "adj-ending": "flag",
+      "perfekt-aux-participle": "flag",
+      "connector-position": "flag",
+      "n-dekl": "flag",
+      "reflexive": "flag",
+      "register": "score",
+      "spelling-meaning": "score"
+    },
+    "a2": {
+      "verb-final": "flag",
+      "adj-ending": "flag",
+      "case-np": "flag",
+      "n-dekl": "flag"
+    },
+    "b1": {
+      "v2-inv": "flag",
+      "adj-ending": "flag",
+      "n-dekl": "flag"
+    },
+    "b2": {}
+  },
   "zeroRules": [],
   "capRules": [],
   "spelling": "not-scored",
   "feedbackLanguage": ["de-a1", "de-a2", "de", "en"],
   "modelId": "config:micro-sp",
-  "splitVerified": true,
-  "calibration": { "status": "pending", "rangeBands": 1 },
-  "source": "https://www.goethe.de/pro/relaunch/prf/de/Pruefungsziele_Testbeschreibung_A1_SD1.pdf"
+  "splitVerified": false,
+  "calibration": {
+    "status": "pending",
+    "rangeBands": 1
+  },
+  "source": "https://github.com/Zaid9657/deutschmeister/blob/main/docs/course-v2/BLUEPRINT.md#43-writing-rubric-profiles-registriesrubricswritingjson"
 }
