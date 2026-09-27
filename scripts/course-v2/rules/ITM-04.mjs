@@ -6,7 +6,7 @@
 // bei „Möbel"" beside an item keyed „Möbel".
 
 import { walkItems } from '../lib-validate/walk.mjs';
-import { norm, sentences, tokens } from '../lib-validate/text.mjs';
+import { norm, sentences, tokens, FUNCTION_WORDS } from '../lib-validate/text.mjs';
 import { arr, isObj, blocker } from '../lib-validate/helpers.mjs';
 
 export const id = 'ITM-04';
@@ -83,7 +83,8 @@ export function run({ docs }) {
           const k = String(it?.answer ?? '');
           const shown = choiceText.get(k) || (arr(it?.options).includes(it?.answer) && k.length > 1 ? k : '');
           // the key-bearing noun phrase: a shown key with a noun in it
-          if (norm(shown).length >= 4 && /(^|\s)\p{Lu}/u.test(shown) && !everywhere(shown)) keys.push([norm(shown), it.id]);
+          const fn = !norm(shown).includes(' ') && FUNCTION_WORDS.has(norm(shown));
+          if (norm(shown).length >= 4 && /(^|\s)\p{Lu}/u.test(shown) && !fn && !everywhere(shown)) keys.push([norm(shown), it.id]);
         }
       }
       cards.forEach((c, ci) => {
