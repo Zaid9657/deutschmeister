@@ -1078,7 +1078,7 @@ hairline).
 6. The board's „Vorschlag" is computed only from deterministic inputs (receptive Teil values, counts of full-length
    attempts), labelled and dismissible (§1.6 rule 5).
 7. **Allowed words:** „Übungswert", „Grenze nach der Bestehensregel von …", „in voller Länge geübt", „im Kleinen
-   geübt", „Vorschlag". **Banned:** „bestanden" (about our tests), „bereit", „prüfungsreif", „Bestehenschance", any
+   geübt", „Vorschlag". **Banned:** „bestanden" (about our tests), „bereit für die Prüfung", „prüfungsreif", „Bestehenschance", any
    percentage presented as a likelihood, „in X Wochen" (LGL-01).
 
 ```
@@ -1397,7 +1397,7 @@ deterministic gate for its file**; a run that returns a red unit is a failed run
 | **EXM-08** | Deterministic zero/cap rules win over any AI output (tests with stubbed AI responses) | hard |
 | **EXM-09** | Coverage COV-1…COV-7 (§2.4) per live lane | hard |
 | **EXM-10** | No DTB-format block outside `dtb2`; the DTZ lane carries its label and gate question | hard |
-| **LGL-01** | Banned strings in course data, pages and e-mails: „bestanden" (about our tests), „bereit" (readiness), „prüfungsreif", „prüfungssicher", „Bestehenschance", „garantiert", „in … Wochen zu", „offiziell/anerkannt/zertifiziert/Partner" (about us), „persönliches Feedback", „Tutor", „Coach", „Lehrkraft korrigiert", „Korrektur deiner Texte", „Zertifikat" outside the fixed disclaimer, „Muttersprachler/native speaker" on TTS, „unbegrenzt/unlimited" (until §13 D8), „Prüfer/Prüferin" for the AI (the anti-recitation line names the human examiner and is allowlisted) | hard |
+| **LGL-01** | Banned strings in course data, pages and e-mails: „bestanden" (about our tests), „bereit für die Prüfung"/„prüfungsbereit", „prüfungsreif", „prüfungssicher", „Bestehenschance", „garantiert", „in … Wochen zu", „offiziell/anerkannt/zertifiziert/Partner" (about us), „persönliches Feedback", „Tutor", „Coach", „Lehrkraft korrigiert", „Korrektur deiner Texte", „Zertifikat" outside the fixed disclaimer, „Muttersprachler/native speaker" on TTS, „unbegrenzt/unlimited" (until §13 D8), „Prüfer/Prüferin" for the AI (the anti-recitation line names the human examiner and is allowlisted) | hard |
 | **LGL-02** | No page or product title begins with an exam mark | hard |
 | **LGL-03** | The fixed AI label in every graded-result component and the AI notice at first contact (component tests) | hard |
 | **LGL-04** | Sie in every instruction, notice and e-mail; du only in marked peer dialogues | hard |
