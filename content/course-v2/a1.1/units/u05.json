@@ -2512,7 +2512,7 @@
           "id": "a1.1-u05-ls4-t1",
           "kind": "ad",
           "title": "Wohnungen in Leipzig",
-          "text": "a) 2 Zimmer, Balkon, hell und ruhig. Münchner Straße 30. Miete: 690 Euro.\nb) 2 Zimmer, Balkon, nicht groß. Supermarkt neben dem Haus. Miete: 570 Euro.",
+          "text": "a) 2 Zimmer, Balkon, hell und ruhig. Miete: 690 Euro. Münchner Straße 30.\nb) 2 Zimmer, Balkon, nicht groß. Supermarkt neben dem Haus. Miete: 570 Euro.",
           "glosses": []
         },
         {
@@ -2540,7 +2540,7 @@
           "id": "a1.1-u05-ls4-t4",
           "kind": "ad",
           "title": "Zimmer in Leipzig",
-          "text": "a) Zimmer in einer WG, Hamburger Straße 12. Miete: 350 Euro.\nb) 1 Zimmer, Küche und Bad. Hinten ist ein Garten. Miete: 420 Euro.",
+          "text": "a) Zimmer in einer WG. Miete: 350 Euro. Hamburger Straße 12, Leipzig.\nb) 1 Zimmer, Küche und Bad. Hinten ist ein Garten. Miete: 420 Euro.",
           "glosses": []
         },
         {
@@ -2982,7 +2982,7 @@
         "register": "formell",
         "address": "Sie",
         "title": "Ein Formular für die Wohnung",
-        "situationDe": "Arjun und Priya möchten die Wohnung in der Kölner Straße 18. Arjun ist 31 Jahre alt und mit Priya verheiratet. Die beiden wohnen noch in einer WG, Berliner Straße 21. Aber die WG ist zu klein. Die Telefonnummer von Arjun ist 0176 52 83 91 40.",
+        "situationDe": "Arjun ist 31 Jahre alt und mit Priya verheiratet. Die beiden wohnen noch in einer WG, Berliner Straße 21, aber die WG ist zu klein. Jetzt möchten sie die Wohnung in der Kölner Straße 18 in Leipzig. Die Telefonnummer von Arjun ist 0176 52 83 91 40.",
         "taskDe": "Füllen Sie das Formular für Arjun aus. Schreiben Sie fünf Angaben.",
         "leitpunkte": [],
         "form": {
