@@ -2,11 +2,20 @@
 // a Leitpunkt; register, word band, rubric profile and exam key per template and lane
 // (BLUEPRINT §9.1). A form_fill Teil (sd1.s1, ta2.s1) is a WritingTask with a `form` whose field
 // count is the template's `items` (sd1.s1: exactly 5) and needs no word band (SCHEMA §8 WritingTask).
+//
+// Rail extensions (rule-smith 2026-09-27):
+//   - one number on the screen: the word counts taskDe and the checklist state are the band the player
+//     shows (wordBandLearning when present, else wordBand; WritingTaskView reads it so), except where
+//     the sentence names the exam („Prüfung: mindestens 150"), which is wordBand; the model text lies in
+//     the shown band (advisory when it lies in the exam band instead) (review a1.1-u04 r2 F05);
+//   - Leitpunkt cues are what the pre-check searches for as substrings: each has ≥ 4 letters („am"
+//     is inside „Reklamation"), and none is a connector the checklist already requires (obwohl,
+//     trotzdem …), which would tick the Leitpunkt for any text (review b1.1-u04 r2 F08).
 
 import { walkTasks } from '../lib-validate/walk.mjs';
 import { LANE_EXAM_KEY } from '../lib-validate/ids.mjs';
 import { arr, isObj, blocker, advisory } from '../lib-validate/helpers.mjs';
-import { norm } from '../lib-validate/text.mjs';
+import { norm, wordCount } from '../lib-validate/text.mjs';
 
 export const id = 'EXM-03';
 export const title = 'Writing tasks match their template (Leitpunkte, choose, register, words, rubric, exam key)';
@@ -15,6 +24,28 @@ export const scope = 'unit';
 export const stage = 'T';
 
 const GREETING_RE = /\b(?:Anrede|Gruß|Grüße|Grußformel|Schlussformel|begrüßen Sie|grüßen Sie|verabschieden Sie sich)\b/i;
+const CONNECTORS = new Set(['obwohl', 'trotzdem', 'weil', 'denn', 'deshalb', 'deswegen', 'darum', 'dass', 'wenn', 'falls', 'damit', 'sodass', 'außerdem', 'aber', 'und', 'oder']);
+
+/** Word-count statements in a text: [{ lo, hi, kind, exam }] — „20 bis 30 Wörter", „mind. 150 Wörter", „etwa 120 Wörter". */
+function wordStatements(text) {
+  const out = [];
+  for (const seg of String(text || '').split(/[()\n;]|\.\s/)) {
+    const exam = /Prüfung|telc|Goethe/i.test(seg);
+    for (const m of seg.matchAll(/(\d+)\s*(?:bis|–|-)\s*(\d+)\s*Wört/g)) out.push({ lo: Number(m[1]), hi: Number(m[2]), kind: 'range', exam, text: m[0] });
+    for (const m of seg.matchAll(/(?:mindestens|mind\.|min\.)\s*(\d+)\s*Wört/gi)) out.push({ lo: Number(m[1]), hi: null, kind: 'min', exam, text: m[0] });
+    for (const m of seg.matchAll(/(?:höchstens|max\.)\s*(\d+)\s*Wört/gi)) out.push({ lo: null, hi: Number(m[1]), kind: 'max', exam, text: m[0] });
+    for (const m of seg.matchAll(/(?:etwa|ca\.|ungefähr|rund)\s*(\d+)\s*Wört/gi)) out.push({ lo: Number(m[1]), hi: Number(m[1]), kind: 'about', exam, text: m[0] });
+  }
+  return out;
+}
+
+/** Does a statement agree with a band [lo, hi]? */
+function agrees(st, band) {
+  if (st.kind === 'range') return st.lo === band[0] && st.hi === band[1];
+  if (st.kind === 'min') return st.lo === band[0];
+  if (st.kind === 'max') return st.hi === band[1];
+  return st.lo >= band[0] && st.lo <= band[1];
+}
 
 export function run({ ctx, docs }) {
   const findings = [];
@@ -78,7 +109,30 @@ export function run({ ctx, docs }) {
         else if (typeof w.min === 'number' && typeof w.max !== 'number' && band[0] < w.min) findings.push(blocker(doc, `${path}.wordBand`, `word band starts at ${band[0]}; ${task.template} needs ≥ ${w.min}`, ref));
         else if (typeof w.target === 'number' && typeof w.min !== 'number' && (band[0] > w.target || band[1] < w.target)) findings.push(blocker(doc, `${path}.wordBand`, `word band ${band.join('–')} excludes the target ≈ ${w.target} of ${task.template}`, ref));
         if (typeof task.minSubmitWords === 'number' && task.minSubmitWords !== Math.ceil(band[0] * 0.5)) findings.push(advisory(doc, `${path}.minSubmitWords`, `minSubmitWords ${task.minSubmitWords}; the completion rule is 50 % of the lower bound (${Math.ceil(band[0] * 0.5)})`, ref));
+        const shown = arr(task.wordBandLearning).length === 2 ? task.wordBandLearning : band;
+        const said = [['taskDe', task.taskDe], ...arr(task.checklist).map((c, i) => [`checklist[${i}]`, c])];
+        for (const [where, text] of said) {
+          for (const st of wordStatements(text)) {
+            const against = st.exam ? band : shown;
+            if (!agrees(st, against)) findings.push(blocker(doc, `${path}.${where}`, `„${st.text}" — the ${st.exam ? 'exam band (wordBand)' : 'band the player shows'} is ${against.join('–')}`, ref));
+          }
+        }
+        if (task.modelText) {
+          const n = wordCount(task.modelText);
+          if (n < shown[0] || n > shown[1]) {
+            const inExam = n >= band[0] && n <= band[1];
+            findings.push((inExam ? advisory : blocker)(doc, `${path}.modelText`, `model text of ${n} words outside the band the player shows (${shown.join('–')})${inExam ? `; it fits the exam band ${band.join('–')}` : ''}`, ref));
+          }
+        }
       }
+      lp.forEach((l, i) => {
+        arr(l?.cues).forEach((c, k) => {
+          const cue = String(c || '').trim();
+          const letters = cue.replace(/[^\p{L}]/gu, '').length;
+          if (letters < 4) findings.push(blocker(doc, `${path}.leitpunkte[${i}].cues[${k}]`, `cue „${cue}" has ${letters} letters — as a substring it is found in unrelated words; use ≥ 4 letters`, ref));
+          else if (CONNECTORS.has(cue.toLowerCase()) && arr(task.checklist).some((x) => new RegExp(`(^|[^\\p{L}])${cue}(?=$|[^\\p{L}])`, 'iu').test(String(x)))) findings.push(blocker(doc, `${path}.leitpunkte[${i}].cues[${k}]`, `cue „${cue}" is a connector the checklist already requires — it ticks the Leitpunkt for any text`, ref));
+        });
+      });
     }
   }
   return tasks ? { findings } : { findings, skipped: 'no writing task in the target yet' };
