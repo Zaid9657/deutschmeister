@@ -216,7 +216,7 @@
             "lx.freinehmen",
             "lx.absprechen",
             "lx.vertretung",
-            "lx.brueckentag"
+            "lx.urlaubswunsch"
           ]
         },
         {
@@ -916,7 +916,7 @@
             "lx.begeisterung",
             "lx.sich-amuesieren",
             "lx.gelangweilt",
-            "lx.mitreissend"
+            "lx.grossartig"
           ]
         }
       ],
@@ -1238,7 +1238,7 @@
             "lx.niveau",
             "lx.kursbeginn",
             "lx.belegen",
-            "lx.anmeldefrist"
+            "lx.anmeldeschluss"
           ]
         }
       ],
@@ -1546,7 +1546,7 @@
             "lx.einerseits-andererseits",
             "lx.abstimmung",
             "lx.argumentieren",
-            "lx.gegenargument"
+            "lx.stellungnahme"
           ]
         },
         {

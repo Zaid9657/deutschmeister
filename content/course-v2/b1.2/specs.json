@@ -37,22 +37,66 @@
         {
           "title": "Höflichkeit und Direktheit",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.hoeflichkeit",
+            "lx.direktheit",
+            "lx.unhoeflich",
+            "lx.verhalten",
+            "lx.kritisieren",
+            "lx.sich-verhalten",
+            "lx.umgang",
+            "lx.angemessen",
+            "lx.ton",
+            "lx.zurueckhaltend"
+          ]
         },
         {
           "title": "Missverständnisse und Gefühle",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.missverstehen",
+            "lx.vorwurf",
+            "lx.sich-wundern",
+            "lx.absicht",
+            "lx.kraenken",
+            "lx.empfinden",
+            "lx.bemerkung",
+            "lx.sich-schaemen",
+            "lx.absichtlich",
+            "lx.klaeren"
+          ]
         },
         {
           "title": "Gewohnheiten und Herkunft",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.sich-gewoehnen",
+            "lx.vorurteil",
+            "lx.ueblich",
+            "lx.klischee",
+            "lx.brauch",
+            "lx.ungewohnt",
+            "lx.regional",
+            "lx.erwartung",
+            "lx.sich-anpassen",
+            "lx.hintergrund"
+          ]
         },
         {
           "title": "Gründe nennen, im Forum schreiben",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.darum",
+            "lx.deswegen",
+            "lx.naemlich",
+            "lx.erwarten",
+            "lx.daher",
+            "lx.eingehen",
+            "lx.uebertreiben",
+            "lx.betreffen",
+            "lx.begruendung",
+            "lx.sichtweise"
+          ]
         }
       ],
       "textTypes": [
@@ -154,22 +198,66 @@
         {
           "title": "Kaufen und Konsum",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.verbraucher",
+            "lx.anschaffung",
+            "lx.sich-leisten",
+            "lx.konsum",
+            "lx.kauf",
+            "lx.bedarf",
+            "lx.notwendig",
+            "lx.luxus",
+            "lx.ausgabe",
+            "lx.sich-goennen"
+          ]
         },
         {
           "title": "Geld, Raten und Kredit",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.rate",
+            "lx.summe",
+            "lx.finanzierung",
+            "lx.ratenzahlung",
+            "lx.sich-verschulden",
+            "lx.einkommen",
+            "lx.abbezahlen",
+            "lx.aufnehmen",
+            "lx.ratenkauf",
+            "lx.verschuldet"
+          ]
         },
         {
           "title": "Werbung und Angebote",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.werbung",
+            "lx.reduziert",
+            "lx.steigend",
+            "lx.lohnend",
+            "lx.ueberzeugend",
+            "lx.preisvergleich",
+            "lx.hersteller",
+            "lx.werben",
+            "lx.versprechen",
+            "lx.reduzieren"
+          ]
         },
         {
           "title": "Haushaltsgeräte vergleichen",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.haushaltsgeraet",
+            "lx.stromverbrauch",
+            "lx.lautstaerke",
+            "lx.bewerten",
+            "lx.empfehlenswert",
+            "lx.funktion",
+            "lx.testen",
+            "lx.haltbar",
+            "lx.trockner",
+            "lx.testsieger"
+          ]
         }
       ],
       "textTypes": [
@@ -268,22 +356,66 @@
         {
           "title": "Stellensuche",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.aufgabenbereich",
+            "lx.bezahlung",
+            "lx.stellensuche",
+            "lx.jobportal",
+            "lx.befristung",
+            "lx.eintrittstermin",
+            "lx.jobcenter",
+            "lx.einzelheit",
+            "lx.arbeitsmarkt",
+            "lx.stellenbeschreibung"
+          ]
         },
         {
           "title": "Bewerbungsunterlagen",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.bewerbungsunterlagen",
+            "lx.arbeitszeugnis",
+            "lx.personalabteilung",
+            "lx.personal",
+            "lx.vorlage",
+            "lx.anlage",
+            "lx.formulieren",
+            "lx.bewerbungsmappe",
+            "lx.bewerbungsfoto",
+            "lx.hiermit"
+          ]
         },
         {
           "title": "Im Vorstellungsgespräch",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.gehaltsvorstellung",
+            "lx.verhandeln",
+            "lx.sich-eignen",
+            "lx.geeignet",
+            "lx.verhandlung",
+            "lx.betriebsklima",
+            "lx.personalleiter",
+            "lx.schwerpunkt",
+            "lx.netto",
+            "lx.gehaltserhoehung"
+          ]
         },
         {
           "title": "Stärken und Qualifikationen",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.belastbar",
+            "lx.teamfaehig",
+            "lx.faehigkeit",
+            "lx.nicht-nur-sondern-auch",
+            "lx.sowohl-als-auch",
+            "lx.kommunikativ",
+            "lx.engagiert",
+            "lx.selbststaendigkeit",
+            "lx.sich-auskennen",
+            "lx.lernbereit"
+          ]
         }
       ],
       "textTypes": [
@@ -387,22 +519,66 @@
         {
           "title": "Besprechung und Tagesordnung",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.sitzung",
+            "lx.tagesordnung",
+            "lx.anwesend",
+            "lx.ergaenzen",
+            "lx.zusammenfassen",
+            "lx.tagesordnungspunkt",
+            "lx.abwesend",
+            "lx.protokollieren",
+            "lx.moderieren",
+            "lx.sich-zu-wort-melden"
+          ]
         },
         {
           "title": "Ergebnisse und Beschlüsse",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.ergebnis",
+            "lx.beschluss",
+            "lx.beschliessen",
+            "lx.festlegen",
+            "lx.vorlaeufig",
+            "lx.endgueltig",
+            "lx.einigung",
+            "lx.einstimmig",
+            "lx.zustimmung",
+            "lx.gegenstimme"
+          ]
         },
         {
           "title": "Aufgaben verteilen",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.verantwortung",
+            "lx.zeitplan",
+            "lx.verteilen",
+            "lx.aufgabenverteilung",
+            "lx.sich-bereit-erklaeren",
+            "lx.zustaendigkeit",
+            "lx.einwand",
+            "lx.gespraechsnotiz",
+            "lx.aufteilen",
+            "lx.zwischenstand"
+          ]
         },
         {
           "title": "Der Teamtag",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.projekt",
+            "lx.infrage-kommen",
+            "lx.unternehmen",
+            "lx.vorziehen",
+            "lx.budget",
+            "lx.raumbuchung",
+            "lx.zweck",
+            "lx.programmpunkt",
+            "lx.teilnehmerzahl",
+            "lx.rahmenprogramm"
+          ]
         }
       ],
       "textTypes": [
@@ -498,22 +674,66 @@
         {
           "title": "Nachbarschaft und Hausordnung",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.nachbarschaft",
+            "lx.ruhezeit",
+            "lx.abstellen",
+            "lx.hausgemeinschaft",
+            "lx.ruhestoerung",
+            "lx.fahrradkeller",
+            "lx.gemeinschaft",
+            "lx.bewohner",
+            "lx.sauberkeit",
+            "lx.innenhof"
+          ]
         },
         {
           "title": "Streit und Ärger",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.konflikt",
+            "lx.ruecksichtslos",
+            "lx.sodass",
+            "lx.genervt",
+            "lx.beleidigt",
+            "lx.krach",
+            "lx.so-dass",
+            "lx.unertraeglich",
+            "lx.drohen",
+            "lx.nerven"
+          ]
         },
         {
           "title": "Entschuldigen und nachgeben",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.nachgeben",
+            "lx.akzeptieren",
+            "lx.zugeben",
+            "lx.sich-vertragen",
+            "lx.verzeihen",
+            "lx.recht-geben",
+            "lx.schuld",
+            "lx.sich-beruhigen",
+            "lx.ruecksicht-nehmen",
+            "lx.einsehen"
+          ]
         },
         {
           "title": "Eine Lösung finden",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.loesung",
+            "lx.sich-halten",
+            "lx.schlichtung",
+            "lx.gegenseitig",
+            "lx.fair",
+            "lx.ausnahme",
+            "lx.regel",
+            "lx.festhalten",
+            "lx.schlichten",
+            "lx.zufriedenstellend"
+          ]
         }
       ],
       "textTypes": [
@@ -614,22 +834,66 @@
         {
           "title": "Abläufe im Betrieb",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.anleitung",
+            "lx.bedienen",
+            "lx.arbeitsschritt",
+            "lx.zunaechst",
+            "lx.reihenfolge",
+            "lx.betriebsordnung",
+            "lx.vorgang",
+            "lx.betriebsfuehrung",
+            "lx.gruendlich",
+            "lx.produktion"
+          ]
         },
         {
           "title": "Regeln und Pflichten",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.vorschrift",
+            "lx.pflicht",
+            "lx.verbot",
+            "lx.einhalten",
+            "lx.beachten",
+            "lx.genehmigung",
+            "lx.vorgeschrieben",
+            "lx.verbieten",
+            "lx.verpflichtet",
+            "lx.kleiderordnung"
+          ]
         },
         {
           "title": "Sicherheit am Arbeitsplatz",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.gefahr",
+            "lx.notausgang",
+            "lx.arbeitsschutz",
+            "lx.feuerloescher",
+            "lx.schutzkleidung",
+            "lx.helm",
+            "lx.brand",
+            "lx.kontrollieren",
+            "lx.handschuh",
+            "lx.schutzbrille"
+          ]
         },
         {
           "title": "Pünktlichkeit und Zuverlässigkeit",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.respekt",
+            "lx.praesentation",
+            "lx.wert-legen-auf",
+            "lx.unpuenktlichkeit",
+            "lx.praesentieren",
+            "lx.unzuverlaessig",
+            "lx.entscheidend",
+            "lx.es-genau-nehmen",
+            "lx.unpuenktlich",
+            "lx.verlaesslichkeit"
+          ]
         }
       ],
       "textTypes": [
@@ -733,22 +997,66 @@
         {
           "title": "Im Straßenverkehr",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.strassenverkehr",
+            "lx.radweg",
+            "lx.radfahrer",
+            "lx.bremsen",
+            "lx.vorfahrt",
+            "lx.ausweichen",
+            "lx.helmpflicht",
+            "lx.geschwindigkeit",
+            "lx.autofahrer",
+            "lx.gegenverkehr"
+          ]
         },
         {
           "title": "Der Unfall",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.zeuge",
+            "lx.stuerzen",
+            "lx.schuld-sein",
+            "lx.waehrend-2",
+            "lx.sobald",
+            "lx.zusammenstoss",
+            "lx.unfallhergang",
+            "lx.anfahren",
+            "lx.streifen",
+            "lx.solange"
+          ]
         },
         {
           "title": "Verletzungen und Beschwerden",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.wunde",
+            "lx.knochen",
+            "lx.brechen",
+            "lx.prellung",
+            "lx.schwellung",
+            "lx.roentgen",
+            "lx.handgelenk",
+            "lx.verband",
+            "lx.kuehlen",
+            "lx.gehirnerschuetterung"
+          ]
         },
         {
           "title": "Versicherung und Schaden",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.schadensmeldung",
+            "lx.beschaedigen",
+            "lx.versichert",
+            "lx.sachschaden",
+            "lx.haften",
+            "lx.schadensfall",
+            "lx.gutachter",
+            "lx.aussage",
+            "lx.kennzeichen",
+            "lx.schadenersatz"
+          ]
         }
       ],
       "textTypes": [
@@ -855,22 +1163,66 @@
         {
           "title": "Rechnung und Mahnung",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.forderung",
+            "lx.faellig",
+            "lx.fordern",
+            "lx.zahlungsaufforderung",
+            "lx.mahngebuehr",
+            "lx.begleichen",
+            "lx.inkassobuero",
+            "lx.zahlungsfrist",
+            "lx.offen",
+            "lx.ueberfaellig"
+          ]
         },
         {
           "title": "Verträge und Kündigung",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.fristgerecht",
+            "lx.kleingedruckte",
+            "lx.fitnessstudio",
+            "lx.kuendigungsbestaetigung",
+            "lx.beenden",
+            "lx.enden",
+            "lx.vertragsbedingungen",
+            "lx.vertraglich",
+            "lx.mindestlaufzeit",
+            "lx.fristlos"
+          ]
         },
         {
           "title": "Widerspruch einlegen",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.widerspruch",
+            "lx.innerhalb",
+            "lx.ausserhalb",
+            "lx.indem",
+            "lx.einspruch",
+            "lx.berechtigt",
+            "lx.ungerechtfertigt",
+            "lx.einlegen",
+            "lx.zur-verfuegung-stellen",
+            "lx.sich-wehren"
+          ]
         },
         {
           "title": "Konto und Zahlung",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.abbuchung",
+            "lx.zurueckzahlen",
+            "lx.lastschrift",
+            "lx.gutschrift",
+            "lx.rueckzahlung",
+            "lx.kontoinhaber",
+            "lx.in-rechnung-stellen",
+            "lx.bankverbindung",
+            "lx.eine-frist-setzen",
+            "lx.erhalten"
+          ]
         }
       ],
       "textTypes": [
@@ -978,22 +1330,66 @@
         {
           "title": "Stadt und Land",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.grossstadt",
+            "lx.kleinstadt",
+            "lx.laendlich",
+            "lx.landschaft",
+            "lx.staedtisch",
+            "lx.abgelegen",
+            "lx.einwohner",
+            "lx.stadtrand",
+            "lx.region",
+            "lx.dorf"
+          ]
         },
         {
           "title": "Infrastruktur und Pendeln",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.pendler",
+            "lx.pendeln",
+            "lx.entfernung",
+            "lx.arbeitsweg",
+            "lx.je-desto",
+            "lx.infrastruktur",
+            "lx.anbindung",
+            "lx.nahverkehr",
+            "lx.lebensqualitaet",
+            "lx.versorgung"
+          ]
         },
         {
           "title": "Bei einer Führung",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.denkmal",
+            "lx.um-herum",
+            "lx.stadtmauer",
+            "lx.historisch",
+            "lx.stadtfuehrer",
+            "lx.brunnen",
+            "lx.sehenswuerdigkeit",
+            "lx.turm",
+            "lx.rundgang",
+            "lx.mittelalter"
+          ]
         },
         {
           "title": "Vor- und Nachteile",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.lebendig",
+            "lx.eher",
+            "lx.landleben",
+            "lx.lebenshaltungskosten",
+            "lx.wohngegend",
+            "lx.einrichtung",
+            "lx.abwaegen",
+            "lx.hektisch",
+            "lx.im-gegensatz-zu",
+            "lx.hektik"
+          ]
         }
       ],
       "textTypes": [
@@ -1095,22 +1491,66 @@
         {
           "title": "Umwelt und Klima",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.klimaschutz",
+            "lx.umweltschutz",
+            "lx.retten",
+            "lx.umweltverschmutzung",
+            "lx.kurzstreckenflug",
+            "lx.weltweit",
+            "lx.treibhausgas",
+            "lx.klimafreundlich",
+            "lx.erderwaermung",
+            "lx.klimaschaedlich"
+          ]
         },
         {
           "title": "Reparieren und Wegwerfen",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.wegwerfen",
+            "lx.ersatzteil",
+            "lx.abfall",
+            "lx.werkzeug",
+            "lx.statt-zu",
+            "lx.lebensdauer",
+            "lx.repair-caf",
+            "lx.elektroschrott",
+            "lx.ohne-zu",
+            "lx.toaster"
+          ]
         },
         {
           "title": "Verbrauch und Nachhaltigkeit",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.nachhaltig",
+            "lx.nachhaltigkeit",
+            "lx.verschwenden",
+            "lx.verbrauch",
+            "lx.rohstoff",
+            "lx.pfand",
+            "lx.mehrwegflasche",
+            "lx.umweltbewusst",
+            "lx.oekologisch",
+            "lx.energieverbrauch"
+          ]
         },
         {
           "title": "Meinungen in der Diskussion",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.als-ob",
+            "lx.verzichten",
+            "lx.so-tun-als-ob",
+            "lx.uebertrieben",
+            "lx.verzicht",
+            "lx.massnahme",
+            "lx.moderator",
+            "lx.debatte",
+            "lx.zweifeln",
+            "lx.gegner"
+          ]
         }
       ],
       "textTypes": [
@@ -1213,22 +1653,66 @@
         {
           "title": "Ehrenamt und Engagement",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.ehrenamt",
+            "lx.engagement",
+            "lx.sich-engagieren",
+            "lx.sich-einsetzen",
+            "lx.ehrenamtliche",
+            "lx.ehrenamtsboerse",
+            "lx.tafel-2",
+            "lx.sich-zeit-nehmen",
+            "lx.nachhilfe",
+            "lx.hilfsorganisation"
+          ]
         },
         {
           "title": "Gesellschaft und Politik",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.gesellschaft",
+            "lx.wahl",
+            "lx.politisch",
+            "lx.buerger",
+            "lx.sozial",
+            "lx.gleichberechtigung",
+            "lx.demokratie",
+            "lx.partei",
+            "lx.regierung",
+            "lx.benachteiligt"
+          ]
         },
         {
           "title": "Im Verein",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.vermitteln",
+            "lx.weder-noch",
+            "lx.entweder-oder",
+            "lx.zwar-aber",
+            "lx.vorstand",
+            "lx.mitgliederversammlung",
+            "lx.position",
+            "lx.beitreten",
+            "lx.meinungsverschiedenheit",
+            "lx.streitpunkt"
+          ]
         },
         {
           "title": "Spenden und helfen",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.spende",
+            "lx.spenden",
+            "lx.unterstuetzen",
+            "lx.bereuen",
+            "lx.initiative",
+            "lx.aktion",
+            "lx.erloes",
+            "lx.erleichtert",
+            "lx.beduerftig",
+            "lx.sachspende"
+          ]
         }
       ],
       "textTypes": [
@@ -1336,22 +1820,66 @@
         {
           "title": "Zukunft und Visionen",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.vision",
+            "lx.wirklichkeit",
+            "lx.fantasie",
+            "lx.zukuenftig",
+            "lx.eines-tages",
+            "lx.menschheit",
+            "lx.weltraum",
+            "lx.raumfahrt",
+            "lx.utopie",
+            "lx.astronaut"
+          ]
         },
         {
           "title": "Früher und heute",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.gegenwart",
+            "lx.jahrhundert",
+            "lx.generation",
+            "lx.heutzutage",
+            "lx.vergangenheit",
+            "lx.veraltet",
+            "lx.altmodisch",
+            "lx.eintreffen",
+            "lx.wandel",
+            "lx.epoche"
+          ]
         },
         {
           "title": "Pläne und Ziele",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.perspektive",
+            "lx.verwirklichen",
+            "lx.realistisch",
+            "lx.sich-irren",
+            "lx.irrtum",
+            "lx.wahrscheinlichkeit",
+            "lx.lebensplanung",
+            "lx.sich-vornehmen",
+            "lx.lebensziel",
+            "lx.anstreben"
+          ]
         },
         {
           "title": "In der Ausstellung",
           "target": 10,
-          "lemmas": []
+          "lemmas": [
+            "lx.plakat",
+            "lx.darstellen",
+            "lx.erstaunlich",
+            "lx.fahrzeug",
+            "lx.zukunftswerkstatt",
+            "lx.exponat",
+            "lx.darstellung",
+            "lx.zeitalter",
+            "lx.weltausstellung",
+            "lx.vorstellbar"
+          ]
         }
       ],
       "textTypes": [

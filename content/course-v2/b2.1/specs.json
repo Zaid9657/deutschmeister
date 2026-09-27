@@ -35,22 +35,92 @@
         {
           "title": "Heimat und Zugehörigkeit",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.zugehoerigkeit",
+            "lx.verbundenheit",
+            "lx.diaspora",
+            "lx.heimatgefuehl",
+            "lx.ursprung",
+            "lx.sich-identifizieren",
+            "lx.verwurzelt",
+            "lx.weltoffen",
+            "lx.ortsgebunden",
+            "lx.identitaet",
+            "lx.fremdheit",
+            "lx.selbstwahrnehmung",
+            "lx.heimatort",
+            "lx.wahlheimat",
+            "lx.heimatlos",
+            "lx.lebensmittelpunkt",
+            "lx.vielschichtig"
+          ]
         },
         {
           "title": "Erinnerungen und Traditionen",
           "target": 16,
-          "lemmas": []
+          "lemmas": [
+            "lx.kindheitserinnerung",
+            "lx.ritual",
+            "lx.praegen",
+            "lx.erbstueck",
+            "lx.bewahren",
+            "lx.andenken",
+            "lx.nostalgisch",
+            "lx.wehmut",
+            "lx.heimatverein",
+            "lx.erbe",
+            "lx.zurueckdenken",
+            "lx.wachrufen",
+            "lx.verklaert",
+            "lx.kulturgut",
+            "lx.ueberholt",
+            "lx.loslassen"
+          ]
         },
         {
           "title": "Ankommen und Fuß fassen",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.fuss-fassen",
+            "lx.anpassung",
+            "lx.mentalitaet",
+            "lx.sich-einleben",
+            "lx.neuankoemmling",
+            "lx.eingewoehnung",
+            "lx.fremdeln",
+            "lx.kulturschock",
+            "lx.anschluss-finden",
+            "lx.zwiespaeltig",
+            "lx.offenheit",
+            "lx.willkommen-heissen",
+            "lx.entwurzelt",
+            "lx.zuzug",
+            "lx.zugezogen",
+            "lx.heimisch",
+            "lx.hinter-sich-lassen"
+          ]
         },
         {
           "title": "Stellung nehmen im Forum",
           "target": 16,
-          "lemmas": []
+          "lemmas": [
+            "lx.bezug-nehmen",
+            "lx.stellung-nehmen",
+            "lx.forumsbeitrag",
+            "lx.auffassung",
+            "lx.beipflichten",
+            "lx.entgegenhalten",
+            "lx.these",
+            "lx.haltung",
+            "lx.nachvollziehen",
+            "lx.differenziert",
+            "lx.pauschal",
+            "lx.verallgemeinerung",
+            "lx.zutreffen",
+            "lx.anknuepfen",
+            "lx.lesart",
+            "lx.einleuchtend"
+          ]
         }
       ],
       "textTypes": [
@@ -140,22 +210,92 @@
         {
           "title": "Gesprächsverhalten",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.gespraechskultur",
+            "lx.tonfall",
+            "lx.koerpersprache",
+            "lx.blickkontakt",
+            "lx.gespraechsverlauf",
+            "lx.redeanteil",
+            "lx.ins-wort-fallen",
+            "lx.nachhaken",
+            "lx.gespraechspause",
+            "lx.gestik",
+            "lx.mimik",
+            "lx.gespraechsbereitschaft",
+            "lx.wortkarg",
+            "lx.gespraechig",
+            "lx.zwischenruf",
+            "lx.rederecht",
+            "lx.abschweifen"
+          ]
         },
         {
           "title": "Missverständnisse klären",
           "target": 16,
-          "lemmas": []
+          "lemmas": [
+            "lx.klarstellung",
+            "lx.rueckfrage",
+            "lx.aneinander-vorbeireden",
+            "lx.andeutung",
+            "lx.zweideutig",
+            "lx.missdeuten",
+            "lx.ausraeumen",
+            "lx.unklarheit",
+            "lx.richtigstellen",
+            "lx.kontext",
+            "lx.sich-vergewissern",
+            "lx.unmissverstaendlich",
+            "lx.nachtragend",
+            "lx.klaerungsbedarf",
+            "lx.wortwahl",
+            "lx.heikel"
+          ]
         },
         {
           "title": "Umgangston und Register",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.umgangston",
+            "lx.hoeflichkeitsform",
+            "lx.gehoben",
+            "lx.anredeform",
+            "lx.register",
+            "lx.foermlich",
+            "lx.salopp",
+            "lx.taktvoll",
+            "lx.respektvoll",
+            "lx.vorwurfsvoll",
+            "lx.herablassend",
+            "lx.angebracht",
+            "lx.umgangsformen",
+            "lx.kumpelhaft",
+            "lx.hierarchie",
+            "lx.ins-fettnaepfchen-treten",
+            "lx.floskel"
+          ]
         },
         {
           "title": "In der Diskussion",
           "target": 16,
-          "lemmas": []
+          "lemmas": [
+            "lx.umschreiben",
+            "lx.sich-verstaendlich-machen",
+            "lx.gegenargument",
+            "lx.entkraeften",
+            "lx.verteidigen",
+            "lx.zwischenfrage",
+            "lx.zuspitzen",
+            "lx.ueberspitzt",
+            "lx.relativieren",
+            "lx.denkanstoss",
+            "lx.gleichbehandlung",
+            "lx.auf-den-punkt-bringen",
+            "lx.stichhaltig",
+            "lx.abwegig",
+            "lx.gespraechsregel",
+            "lx.konsens"
+          ]
         }
       ],
       "textTypes": [
@@ -245,22 +385,93 @@
         {
           "title": "Arbeitsvertrag",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.vertragsklausel",
+            "lx.aufhebungsvertrag",
+            "lx.tarifvertrag",
+            "lx.tariflich",
+            "lx.nebentaetigkeit",
+            "lx.urlaubsanspruch",
+            "lx.verschwiegenheitspflicht",
+            "lx.arbeitszeitregelung",
+            "lx.vertragsstrafe",
+            "lx.freistellung",
+            "lx.sonderurlaub",
+            "lx.abmahnung",
+            "lx.arbeitsrecht",
+            "lx.zulaessig",
+            "lx.ueberstundenregelung",
+            "lx.unterzeichnen",
+            "lx.resturlaub"
+          ]
         },
         {
           "title": "Gehaltsabrechnung",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.gehaltsabrechnung",
+            "lx.bruttogehalt",
+            "lx.nettogehalt",
+            "lx.lohnsteuer",
+            "lx.sozialabgaben",
+            "lx.abzug",
+            "lx.zulage",
+            "lx.verguetung",
+            "lx.auszahlen",
+            "lx.einbehalten",
+            "lx.steuerklasse",
+            "lx.beitragssatz",
+            "lx.sonderzahlung",
+            "lx.mindestlohn",
+            "lx.rueckwirkend",
+            "lx.anteilig",
+            "lx.unstimmigkeit"
+          ]
         },
         {
           "title": "Arbeitszeitmodelle",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.arbeitszeitmodell",
+            "lx.vertrauensarbeitszeit",
+            "lx.viertagewoche",
+            "lx.arbeitszeitkonto",
+            "lx.freizeitausgleich",
+            "lx.kernarbeitszeit",
+            "lx.arbeitszeiterfassung",
+            "lx.jobsharing",
+            "lx.entgrenzung",
+            "lx.erfassen",
+            "lx.erreichbarkeit",
+            "lx.beschaeftigte",
+            "lx.ausgelastet",
+            "lx.sich-ueberfordert-fuehlen",
+            "lx.arbeitsverdichtung",
+            "lx.praesenzpflicht",
+            "lx.arbeitszeitverkuerzung"
+          ]
         },
         {
           "title": "Nachfragen und reklamieren",
           "target": 16,
-          "lemmas": []
+          "lemmas": [
+            "lx.korrekturabrechnung",
+            "lx.um-pruefung-bitten",
+            "lx.gehaltsspanne",
+            "lx.lohnbuchhaltung",
+            "lx.stundennachweis",
+            "lx.uebersehen",
+            "lx.versehentlich",
+            "lx.zeitnah",
+            "lx.umgehend",
+            "lx.diesbezueglich",
+            "lx.hinsichtlich",
+            "lx.bezueglich",
+            "lx.beiliegend",
+            "lx.lohntransparenz",
+            "lx.offenlegen",
+            "lx.gehaltsgefaelle"
+          ]
         }
       ],
       "textTypes": [
@@ -360,22 +571,93 @@
         {
           "title": "Reisemängel",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.reisemangel",
+            "lx.unterbringung",
+            "lx.mangelhaft",
+            "lx.baulaerm",
+            "lx.verschmutzt",
+            "lx.verpflegung",
+            "lx.renovierungsbeduerftig",
+            "lx.abgenutzt",
+            "lx.ungeziefer",
+            "lx.unzumutbar",
+            "lx.laermpegel",
+            "lx.programmaenderung",
+            "lx.reiseleitung",
+            "lx.dokumentieren",
+            "lx.beweisfoto",
+            "lx.erheblich",
+            "lx.zimmerkategorie"
+          ]
         },
         {
           "title": "Rechte und Bedingungen",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.pauschalreise",
+            "lx.reiseveranstalter",
+            "lx.reisevertrag",
+            "lx.informationspflicht",
+            "lx.minderung",
+            "lx.leistungsbeschreibung",
+            "lx.ruecktritt",
+            "lx.reisebedingungen",
+            "lx.stornierung",
+            "lx.leistungsumfang",
+            "lx.verbraucherschutz",
+            "lx.beschwerdefrist",
+            "lx.ersatzleistung",
+            "lx.kulanz",
+            "lx.rechtslage",
+            "lx.zusichern",
+            "lx.ausdruecklich"
+          ]
         },
         {
           "title": "Forderungen stellen",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.einfordern",
+            "lx.beanstanden",
+            "lx.maengelanzeige",
+            "lx.ausgleichszahlung",
+            "lx.preisnachlass",
+            "lx.sich-berufen",
+            "lx.nachtraeglich",
+            "lx.gewaehren",
+            "lx.fristsetzung",
+            "lx.andernfalls",
+            "lx.rechtliche-schritte-einleiten",
+            "lx.reisepreis",
+            "lx.in-aussicht-stellen",
+            "lx.ersatzweise",
+            "lx.sich-vorbehalten",
+            "lx.eingehend",
+            "lx.schilderung"
+          ]
         },
         {
           "title": "Gemeinsam vorgehen",
           "target": 16,
-          "lemmas": []
+          "lemmas": [
+            "lx.vorgehen",
+            "lx.vorgehensweise",
+            "lx.wahrnehmen",
+            "lx.verbraucherzentrale",
+            "lx.musterbrief",
+            "lx.sich-zusammentun",
+            "lx.arbeitsteilung",
+            "lx.beschwerdebrief",
+            "lx.rechtsbeistand",
+            "lx.aussichtsreich",
+            "lx.abwimmeln",
+            "lx.hartnaeckig",
+            "lx.beweislage",
+            "lx.im-nachhinein",
+            "lx.im-recht-sein",
+            "lx.vorsorglich"
+          ]
         }
       ],
       "textTypes": [
@@ -474,22 +756,93 @@
         {
           "title": "Wohnformen",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.mehrgenerationenhaus",
+            "lx.wohnform",
+            "lx.wohnprojekt",
+            "lx.genossenschaft",
+            "lx.eigenheim",
+            "lx.eigentumswohnung",
+            "lx.wohnungsnot",
+            "lx.bezahlbar",
+            "lx.wohnraum",
+            "lx.privatsphaere",
+            "lx.generationenuebergreifend",
+            "lx.baugemeinschaft",
+            "lx.gemeinschaftsraum",
+            "lx.mietverhaeltnis",
+            "lx.wohnkosten",
+            "lx.sozialwohnung",
+            "lx.beengt"
+          ]
         },
         {
           "title": "Nachbarschaft und Gemeinschaft",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.anwohner",
+            "lx.nachbarschaftshilfe",
+            "lx.zusammenhalt",
+            "lx.anonymitaet",
+            "lx.hilfsbereitschaft",
+            "lx.solidarisch",
+            "lx.teilhabe",
+            "lx.sich-einbringen",
+            "lx.sich-vernetzen",
+            "lx.mitgestalten",
+            "lx.mitbestimmung",
+            "lx.kiez",
+            "lx.vielfaeltig",
+            "lx.inklusiv",
+            "lx.nachbarschaftstreff",
+            "lx.miteinander",
+            "lx.ausgrenzen"
+          ]
         },
         {
           "title": "Gefühle abstufen",
           "target": 16,
-          "lemmas": []
+          "lemmas": [
+            "lx.einigermassen",
+            "lx.halbwegs",
+            "lx.uebergluecklich",
+            "lx.beklommen",
+            "lx.gelassen",
+            "lx.hin-und-hergerissen",
+            "lx.zutiefst",
+            "lx.keineswegs",
+            "lx.vorfreude",
+            "lx.mulmig",
+            "lx.verunsichert",
+            "lx.bedrueckt",
+            "lx.unbeschwert",
+            "lx.gemischte-gefuehle",
+            "lx.aufgewuehlt",
+            "lx.ausgesprochen"
+          ]
         },
         {
           "title": "Ein Fest planen",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.hoffest",
+            "lx.kostenrahmen",
+            "lx.zeitrahmen",
+            "lx.nachtruhe",
+            "lx.anpacken",
+            "lx.beisteuern",
+            "lx.mitbringbuffet",
+            "lx.sitzgelegenheit",
+            "lx.pavillon",
+            "lx.laermbeschwerde",
+            "lx.ablaufplan",
+            "lx.improvisieren",
+            "lx.ausweichtermin",
+            "lx.kompromissvorschlag",
+            "lx.einen-mittelweg-finden",
+            "lx.resonanz",
+            "lx.ausklingen-lassen"
+          ]
         }
       ],
       "textTypes": [
@@ -592,22 +945,92 @@
         {
           "title": "Presse und Berichterstattung",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.berichterstattung",
+            "lx.schlagzeile",
+            "lx.pressemitteilung",
+            "lx.leitartikel",
+            "lx.lokalpresse",
+            "lx.quelle",
+            "lx.falschmeldung",
+            "lx.glaubwuerdigkeit",
+            "lx.pressefreiheit",
+            "lx.serioes",
+            "lx.recherchieren",
+            "lx.lokalteil",
+            "lx.kurzbericht",
+            "lx.auflage",
+            "lx.titelseite",
+            "lx.boulevardzeitung",
+            "lx.korrespondent"
+          ]
         },
         {
           "title": "Haltung und Kommentar",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.meinungsbeitrag",
+            "lx.einordnung",
+            "lx.sachlich",
+            "lx.einseitig",
+            "lx.umstritten",
+            "lx.meinungsmache",
+            "lx.polemisch",
+            "lx.voreingenommen",
+            "lx.leserbrief",
+            "lx.tendenz",
+            "lx.suggerieren",
+            "lx.verfasser",
+            "lx.kernaussage",
+            "lx.ironisch",
+            "lx.provokant",
+            "lx.anprangern",
+            "lx.kolumne"
+          ]
         },
         {
           "title": "Streitfragen in der Stadt",
           "target": 16,
-          "lemmas": []
+          "lemmas": [
+            "lx.stadtrat",
+            "lx.bauvorhaben",
+            "lx.buergerinitiative",
+            "lx.widerstand",
+            "lx.befuerworter",
+            "lx.gegenseite",
+            "lx.gewerbetreibende",
+            "lx.buergerbegehren",
+            "lx.anlieger",
+            "lx.stellplatz",
+            "lx.sperrung",
+            "lx.bezirk",
+            "lx.interessengruppe",
+            "lx.polarisieren",
+            "lx.kontroverse",
+            "lx.fuer-und-wider"
+          ]
         },
         {
           "title": "Wiedergeben, was andere sagen",
           "target": 16,
-          "lemmas": []
+          "lemmas": [
+            "lx.einraeumen",
+            "lx.bestreiten",
+            "lx.zitieren",
+            "lx.sich-aussprechen",
+            "lx.bekraeftigen",
+            "lx.unterstreichen",
+            "lx.betonen",
+            "lx.darlegen",
+            "lx.anfuehren",
+            "lx.bemaengeln",
+            "lx.beteuern",
+            "lx.entgegnen",
+            "lx.unkommentiert",
+            "lx.wiedergeben",
+            "lx.gegenposition",
+            "lx.zu-bedenken-geben"
+          ]
         }
       ],
       "textTypes": [
@@ -706,22 +1129,93 @@
         {
           "title": "Übergabe und Befinden",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.schichtuebergabe",
+            "lx.befinden",
+            "lx.unruhe",
+            "lx.pflegekraft",
+            "lx.heimbewohner",
+            "lx.verwirrt",
+            "lx.bettlaegerig",
+            "lx.sich-verschlechtern",
+            "lx.sturz",
+            "lx.vitalwerte",
+            "lx.pflegebedarf",
+            "lx.einschaetzen",
+            "lx.allgemeinzustand",
+            "lx.nachtwache",
+            "lx.dokumentation",
+            "lx.auffaellig",
+            "lx.fluessigkeitszufuhr"
+          ]
         },
         {
           "title": "Am Telefon mit Angehörigen",
           "target": 16,
-          "lemmas": []
+          "lemmas": [
+            "lx.angehoerige",
+            "lx.rueckrufwunsch",
+            "lx.ruecksprache",
+            "lx.abklaeren",
+            "lx.beunruhigt",
+            "lx.beschwichtigen",
+            "lx.vollmacht",
+            "lx.schweigepflicht",
+            "lx.vermerken",
+            "lx.sachlage",
+            "lx.aufgebracht",
+            "lx.verstaendnis-zeigen",
+            "lx.gesundheitszustand",
+            "lx.stichpunktartig",
+            "lx.stichpunkt",
+            "lx.sich-zurueckmelden"
+          ]
         },
         {
           "title": "Dienstplan und Engpass",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.rufbereitschaft",
+            "lx.engpass",
+            "lx.unterbesetzt",
+            "lx.ueberlastung",
+            "lx.umorganisieren",
+            "lx.springer",
+            "lx.zeitarbeit",
+            "lx.aushilfe",
+            "lx.prioritaet",
+            "lx.absichern",
+            "lx.pflegedienstleitung",
+            "lx.mindestbesetzung",
+            "lx.wochenenddienst",
+            "lx.belastungsgrenze",
+            "lx.personaldecke",
+            "lx.aushandeln",
+            "lx.diensttausch"
+          ]
         },
         {
           "title": "Rückmeldung im Team",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.verbesserungspotenzial",
+            "lx.lueckenhaft",
+            "lx.praezise",
+            "lx.formulierung",
+            "lx.anmerken",
+            "lx.beherzigen",
+            "lx.sich-etwas-zu-herzen-nehmen",
+            "lx.sorgfalt",
+            "lx.fachgerecht",
+            "lx.pflegebericht",
+            "lx.nachtragen",
+            "lx.aussagekraeftig",
+            "lx.fachsprache",
+            "lx.verbesserungswuerdig",
+            "lx.selbstreflexion",
+            "lx.fingerspitzengefuehl",
+            "lx.verbesserungsvorschlag"
+          ]
         }
       ],
       "textTypes": [
@@ -821,22 +1315,93 @@
         {
           "title": "Anerkennung des Abschlusses",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.anerkennungsverfahren",
+            "lx.gleichwertigkeit",
+            "lx.berufsabschluss",
+            "lx.beglaubigung",
+            "lx.zulassung",
+            "lx.reglementiert",
+            "lx.anpassungsqualifizierung",
+            "lx.kenntnispruefung",
+            "lx.berufserlaubnis",
+            "lx.einstufen",
+            "lx.bearbeitungsdauer",
+            "lx.ausbildungsinhalte",
+            "lx.anfordern",
+            "lx.fachkraft",
+            "lx.ausbildungsdauer",
+            "lx.anerkennungsstelle",
+            "lx.gleichgestellt"
+          ]
         },
         {
           "title": "Weiterbildung und Förderung",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.zusatzqualifikation",
+            "lx.fernkurs",
+            "lx.sich-weiterqualifizieren",
+            "lx.berufsbegleitend",
+            "lx.foerdermoeglichkeit",
+            "lx.qualifizierungsmassnahme",
+            "lx.kursgebuehr",
+            "lx.teilnahmebescheinigung",
+            "lx.absolvieren",
+            "lx.praxisphase",
+            "lx.praesenzunterricht",
+            "lx.zugangsvoraussetzung",
+            "lx.kostenuebernahme",
+            "lx.bildungstraeger",
+            "lx.beratungsstelle",
+            "lx.modul",
+            "lx.foerderfaehig"
+          ]
         },
         {
           "title": "Bewerbung und Anschreiben",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.stellenausschreibung",
+            "lx.anforderungsprofil",
+            "lx.motivationsschreiben",
+            "lx.initiativbewerbung",
+            "lx.werdegang",
+            "lx.referenz",
+            "lx.quereinstieg",
+            "lx.bewerbungsfrist",
+            "lx.personaler",
+            "lx.auswahlverfahren",
+            "lx.zum-fruehestmoeglichen-zeitpunkt",
+            "lx.personalverantwortung",
+            "lx.fuehrungserfahrung",
+            "lx.weiterentwicklung",
+            "lx.ansprechend",
+            "lx.interesse-wecken",
+            "lx.bewerbungsportal"
+          ]
         },
         {
           "title": "Qualifikationen darstellen",
           "target": 16,
-          "lemmas": []
+          "lemmas": [
+            "lx.sich-auszeichnen",
+            "lx.vorweisen",
+            "lx.hervorheben",
+            "lx.durchsetzungsfaehig",
+            "lx.kommunikationsstark",
+            "lx.eigenverantwortlich",
+            "lx.loesungsorientiert",
+            "lx.konfliktfaehig",
+            "lx.strukturiert",
+            "lx.gewissenhaft",
+            "lx.zielstrebig",
+            "lx.kompetenz",
+            "lx.fachkenntnisse",
+            "lx.fundiert",
+            "lx.verfuegen",
+            "lx.einsatzbereitschaft"
+          ]
         }
       ],
       "textTypes": [
@@ -928,22 +1493,93 @@
         {
           "title": "Konsum und Mode",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.kaufrausch",
+            "lx.wegwerfgesellschaft",
+            "lx.retoure",
+            "lx.onlinehandel",
+            "lx.billigmode",
+            "lx.schnaeppchen",
+            "lx.kaufentscheidung",
+            "lx.kaufverhalten",
+            "lx.impulskauf",
+            "lx.kleidertausch",
+            "lx.kurzlebig",
+            "lx.hochwertig",
+            "lx.modebranche",
+            "lx.konsument",
+            "lx.kostspielig",
+            "lx.sortiment",
+            "lx.ueberfluss"
+          ]
         },
         {
           "title": "Ursachen und Folgen",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.verursachen",
+            "lx.ausloesen",
+            "lx.zurueckfuehren",
+            "lx.dominoeffekt",
+            "lx.kettenreaktion",
+            "lx.bewirken",
+            "lx.nach-sich-ziehen",
+            "lx.infolgedessen",
+            "lx.folglich",
+            "lx.tragweite",
+            "lx.beguenstigen",
+            "lx.anreiz",
+            "lx.faktor",
+            "lx.sich-auswirken",
+            "lx.hervorrufen",
+            "lx.begleiterscheinung",
+            "lx.zwangslaeufig"
+          ]
         },
         {
           "title": "Nachhaltigkeit",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.ressource",
+            "lx.oekobilanz",
+            "lx.kreislaufwirtschaft",
+            "lx.lieferkette",
+            "lx.produktionsbedingungen",
+            "lx.ueberproduktion",
+            "lx.siegel",
+            "lx.langlebig",
+            "lx.reparaturfaehig",
+            "lx.wiederverwerten",
+            "lx.vernichten",
+            "lx.ausbeuten",
+            "lx.eindaemmen",
+            "lx.umweltschaedlich",
+            "lx.ressourcenschonend",
+            "lx.textilmuell",
+            "lx.ausstoss"
+          ]
         },
         {
           "title": "Argumente abwägen",
           "target": 16,
-          "lemmas": []
+          "lemmas": [
+            "lx.gewichtung",
+            "lx.ueberwiegen",
+            "lx.ins-gewicht-fallen",
+            "lx.ausschlaggebend",
+            "lx.nicht-zuletzt",
+            "lx.zudem",
+            "lx.demgegenueber",
+            "lx.hingegen",
+            "lx.letztlich",
+            "lx.zweifellos",
+            "lx.kehrseite",
+            "lx.aspekt",
+            "lx.in-kauf-nehmen",
+            "lx.vertretbar",
+            "lx.gesichtspunkt",
+            "lx.zu-kurz-greifen"
+          ]
         }
       ],
       "textTypes": [
@@ -1033,22 +1669,92 @@
         {
           "title": "Radio und Nachrichten",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.radiosender",
+            "lx.hoererschaft",
+            "lx.frequenz",
+            "lx.ausstrahlen",
+            "lx.schalte",
+            "lx.lokalnachrichten",
+            "lx.radiobeitrag",
+            "lx.einschaltquote",
+            "lx.nachrichtensprecher",
+            "lx.eilmeldung",
+            "lx.rundfunk",
+            "lx.oeffentlich-rechtlich",
+            "lx.rundfunkbeitrag",
+            "lx.nachrichtenlage",
+            "lx.hintergrundinformation",
+            "lx.uebertragen",
+            "lx.tagesaktuell"
+          ]
         },
         {
           "title": "Podcast und Interview",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.podcast",
+            "lx.episode",
+            "lx.mikrofon",
+            "lx.studiogast",
+            "lx.anschlussfrage",
+            "lx.themenschwerpunkt",
+            "lx.zielgruppe",
+            "lx.einspieler",
+            "lx.tonqualitaet",
+            "lx.stoergeraeusch",
+            "lx.gespraechsfuehrung",
+            "lx.einleiten",
+            "lx.abrunden",
+            "lx.gespraechsleitfaden",
+            "lx.vorab",
+            "lx.sendezeit",
+            "lx.reichweite"
+          ]
         },
         {
           "title": "Verkehrs- und Reisehinweise",
           "target": 16,
-          "lemmas": []
+          "lemmas": [
+            "lx.verkehrsmeldung",
+            "lx.rueckstau",
+            "lx.vollsperrung",
+            "lx.fahrbahn",
+            "lx.unfallstelle",
+            "lx.geisterfahrer",
+            "lx.ausweichstrecke",
+            "lx.zaehfluessig",
+            "lx.verkehrsbehinderung",
+            "lx.anschlussverbindung",
+            "lx.schienenersatzverkehr",
+            "lx.gleisaenderung",
+            "lx.streckensperrung",
+            "lx.pendelverkehr",
+            "lx.glaette",
+            "lx.verkehrslage"
+          ]
         },
         {
           "title": "Haltungen heraushören",
           "target": 16,
-          "lemmas": []
+          "lemmas": [
+            "lx.heraushoeren",
+            "lx.unterton",
+            "lx.ablehnend",
+            "lx.wohlwollend",
+            "lx.resigniert",
+            "lx.empoert",
+            "lx.gleichgueltig",
+            "lx.ambivalent",
+            "lx.unentschlossen",
+            "lx.stellung-beziehen",
+            "lx.anzweifeln",
+            "lx.sich-bedeckt-halten",
+            "lx.vage",
+            "lx.nuechtern",
+            "lx.unterschwellig",
+            "lx.entschieden"
+          ]
         }
       ],
       "textTypes": [
@@ -1148,22 +1854,93 @@
         {
           "title": "Forschung und Studie",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.studie",
+            "lx.hypothese",
+            "lx.befund",
+            "lx.stichprobe",
+            "lx.kontrollgruppe",
+            "lx.erforschen",
+            "lx.widerlegen",
+            "lx.belegen-2",
+            "lx.proband",
+            "lx.signifikant",
+            "lx.korrelation",
+            "lx.messung",
+            "lx.langzeitstudie",
+            "lx.fachzeitschrift",
+            "lx.ermitteln",
+            "lx.annahme",
+            "lx.verzerren"
+          ]
         },
         {
           "title": "Schlaf und Gesundheit",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.schlafrhythmus",
+            "lx.schlafstoerung",
+            "lx.tiefschlafphase",
+            "lx.nachtdienst",
+            "lx.leistungsfaehigkeit",
+            "lx.konzentrationsfaehigkeit",
+            "lx.beeintraechtigen",
+            "lx.innere-uhr",
+            "lx.tageslicht",
+            "lx.schlafdefizit",
+            "lx.durchschlafen",
+            "lx.erholsam",
+            "lx.nickerchen",
+            "lx.chronisch",
+            "lx.hormon",
+            "lx.bildschirmzeit",
+            "lx.dauerhaft"
+          ]
         },
         {
           "title": "Zusammenfassen und weitergeben",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.zufolge",
+            "lx.fazit",
+            "lx.sinngemaess",
+            "lx.in-eigenen-worten",
+            "lx.komprimieren",
+            "lx.wesentliche",
+            "lx.vereinfacht",
+            "lx.demnach",
+            "lx.schlussfolgerung",
+            "lx.verdeutlichen",
+            "lx.veranschaulichen",
+            "lx.ausklammern",
+            "lx.laie",
+            "lx.allgemeinverstaendlich",
+            "lx.fachbegriff",
+            "lx.stichwort",
+            "lx.kurzfassung"
+          ]
         },
         {
           "title": "Berichte und Belege",
           "target": 16,
-          "lemmas": []
+          "lemmas": [
+            "lx.datenlage",
+            "lx.erhebung",
+            "lx.teilnahmebedingungen",
+            "lx.aufwandsentschaedigung",
+            "lx.einverstaendniserklaerung",
+            "lx.anonymisiert",
+            "lx.prozentual",
+            "lx.anstieg",
+            "lx.rueckgang",
+            "lx.schaubild",
+            "lx.tendenziell",
+            "lx.vergleichsweise",
+            "lx.geringfuegig",
+            "lx.zunehmend",
+            "lx.repraesentativ",
+            "lx.fehlerquelle"
+          ]
         }
       ],
       "textTypes": [
@@ -1261,22 +2038,92 @@
         {
           "title": "Virtuelle Zusammenarbeit",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.videokonferenz",
+            "lx.standort",
+            "lx.zeitverschiebung",
+            "lx.virtuell",
+            "lx.plattform",
+            "lx.rollenverteilung",
+            "lx.tool",
+            "lx.koordinieren",
+            "lx.delegieren",
+            "lx.bildschirmfreigabe",
+            "lx.stummschalten",
+            "lx.zeitversetzt",
+            "lx.chatverlauf",
+            "lx.kanal",
+            "lx.hybrid",
+            "lx.arbeitsweise",
+            "lx.sich-einwaehlen"
+          ]
         },
         {
           "title": "Projekt und Auswertung",
           "target": 17,
-          "lemmas": []
+          "lemmas": [
+            "lx.meilenstein",
+            "lx.auswertung",
+            "lx.zwischenbilanz",
+            "lx.mehraufwand",
+            "lx.erkenntnis",
+            "lx.verzoegerung",
+            "lx.termingerecht",
+            "lx.reibungslos",
+            "lx.umsetzen",
+            "lx.nachsteuern",
+            "lx.vorankommen",
+            "lx.ergebnissicherung",
+            "lx.zielvorgabe",
+            "lx.im-verzug-sein",
+            "lx.kennzahl",
+            "lx.ueberschaubar",
+            "lx.stolperstein"
+          ]
         },
         {
           "title": "Präsentieren",
           "target": 16,
-          "lemmas": []
+          "lemmas": [
+            "lx.einstieg",
+            "lx.handout",
+            "lx.diagramm",
+            "lx.den-schwerpunkt-legen-auf",
+            "lx.abschliessend",
+            "lx.eingangs",
+            "lx.kernbotschaft",
+            "lx.fragerunde",
+            "lx.roter-faden",
+            "lx.vortragen",
+            "lx.foliensatz",
+            "lx.redezeit",
+            "lx.lampenfieber",
+            "lx.spickzettel",
+            "lx.souveraen",
+            "lx.vortragsstil"
+          ]
         },
         {
           "title": "Sprachbewusstsein und Selbstkorrektur",
           "target": 16,
-          "lemmas": []
+          "lemmas": [
+            "lx.fehlerprotokoll",
+            "lx.selbstkorrektur",
+            "lx.fluechtigkeitsfehler",
+            "lx.wiederkehrend",
+            "lx.sich-einpraegen",
+            "lx.satzstellung",
+            "lx.korrektur-lesen",
+            "lx.gegenlesen",
+            "lx.sprachgefuehl",
+            "lx.anglizismus",
+            "lx.sich-angewoehnen",
+            "lx.ausmerzen",
+            "lx.lernfortschritt",
+            "lx.satzmelodie",
+            "lx.sprachgebrauch",
+            "lx.stilistisch"
+          ]
         }
       ],
       "textTypes": [

@@ -1028,20 +1028,20 @@
       "wordId": null
     },
     {
-      "id": "lx.brueckentag",
-      "lemma": "Brückentag",
+      "id": "lx.urlaubswunsch",
+      "lemma": "Urlaubswunsch",
       "pos": "NOUN",
       "article": "der",
-      "plural": "Brückentage",
+      "plural": "Urlaubswünsche",
       "plural_kind": "regular",
       "role": "receptive",
       "unit": "b1.1-u02",
       "block": 2,
-      "list_ref": "freq:mid",
+      "list_ref": "compound:Urlaub+Wunsch",
       "gloss": {
-        "en": "day off between a holiday and the weekend"
+        "en": "requested holiday dates"
       },
-      "example": "Am Brückentag möchten viele Kollegen frei haben.",
+      "example": "Bitte tragen Sie Ihre Urlaubswünsche bis März ein.",
       "wordId": null
     },
     {
@@ -4061,17 +4061,17 @@
       "wordId": null
     },
     {
-      "id": "lx.mitreissend",
-      "lemma": "mitreißend",
+      "id": "lx.grossartig",
+      "lemma": "großartig",
       "pos": "ADJ",
       "role": "receptive",
       "unit": "b1.1-u06",
       "block": 4,
-      "list_ref": "freq:mid",
+      "list_ref": "B1",
       "gloss": {
-        "en": "rousing, gripping"
+        "en": "great, magnificent"
       },
-      "example": "Das Konzert war einfach mitreißend.",
+      "example": "Die Band war einfach großartig.",
       "wordId": null
     },
     {
@@ -5420,20 +5420,20 @@
       "wordId": null
     },
     {
-      "id": "lx.anmeldefrist",
-      "lemma": "Anmeldefrist",
+      "id": "lx.anmeldeschluss",
+      "lemma": "Anmeldeschluss",
       "pos": "NOUN",
-      "article": "die",
-      "plural": "Anmeldefristen",
-      "plural_kind": "regular",
+      "article": "der",
+      "plural": null,
+      "plural_kind": "singular-only",
       "role": "receptive",
       "unit": "b1.1-u08",
       "block": 4,
-      "list_ref": "compound:Anmeldung+Frist",
+      "list_ref": "compound:Anmeldung+Schluss",
       "gloss": {
         "en": "registration deadline"
       },
-      "example": "Die Anmeldefrist endet am 15. August.",
+      "example": "Anmeldeschluss ist der 15. August.",
       "wordId": null
     },
     {
@@ -6626,20 +6626,20 @@
       "wordId": null
     },
     {
-      "id": "lx.gegenargument",
-      "lemma": "Gegenargument",
+      "id": "lx.stellungnahme",
+      "lemma": "Stellungnahme",
       "pos": "NOUN",
-      "article": "das",
-      "plural": "Gegenargumente",
+      "article": "die",
+      "plural": "Stellungnahmen",
       "plural_kind": "regular",
       "role": "receptive",
       "unit": "b1.1-u10",
       "block": 3,
-      "list_ref": "compound:gegen+Argument",
+      "list_ref": "B1",
       "gloss": {
-        "en": "counter-argument"
+        "en": "statement (of position)"
       },
-      "example": "Gibt es ein Gegenargument?",
+      "example": "Der Betriebsrat schreibt eine Stellungnahme.",
       "wordId": null
     },
     {
