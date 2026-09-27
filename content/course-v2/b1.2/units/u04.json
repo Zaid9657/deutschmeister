@@ -3235,13 +3235,17 @@
           "280,00",
           "280 Euro",
           "280,00 Euro",
-          "280 €"
+          "280 €",
+          "280,-",
+          "280,- €"
         ],
         "acceptedWhy": {
           "280,00": "derselbe Preis mit Cent",
           "280 Euro": "derselbe Preis mit Währung",
           "280,00 Euro": "derselbe Preis mit Cent und Währung",
-          "280 €": "derselbe Preis mit Währungszeichen"
+          "280 €": "derselbe Preis mit Währungszeichen",
+          "280,-": "übliche Preisangabe in einer Notiz, derselbe Preis",
+          "280,- €": "übliche Preisangabe mit Währungszeichen, derselbe Preis"
         },
         "exact": "number",
         "explanation": {

@@ -1,6 +1,10 @@
 // ITM-02 — non-exam MC / a-b-c: 3 options, one key, distractors in the key's form class; R/F,
 // Ja/Nein and listen-select: 2 options (BLUEPRINT §9.1, SCHEMA §3.1). Exam items (role 'exam')
 // take their option count from the Teil template — that is EXM-01.
+//
+// A plural antecedent (review a2.1-u04 r2 F02): an item keyed „welche" that also offers a singular
+// „eine/eins/einen/einer" has two right answers („Haben wir noch Tassen? – Ja, wir haben eine.")
+// unless the frame fixes the plural — a plural copula (sind, waren) or a number ≥ 2 in the prompt.
 
 import { walkItems } from '../lib-validate/walk.mjs';
 import { norm, tokens } from '../lib-validate/text.mjs';
@@ -13,6 +17,8 @@ export const scope = 'unit';
 export const stage = 'I';
 
 const isSentence = (s) => /[.!?]["“”»]?\s*$/.test(String(s).trim());
+const SINGULAR_INDEF = new Set(['eine', 'eins', 'einen', 'einer', 'eines']);
+const { foldNumberWords } = await import('../../../src/lib/lesson/check.js');
 
 export function run({ docs }) {
   const findings = [];
@@ -37,6 +43,11 @@ export function run({ docs }) {
       // one key: every accepted form is the key (quotes and punctuation aside)
       for (const [i, a] of arr(item.accepted).entries()) {
         if (norm(a) !== norm(item.answer)) findings.push(blocker(doc, `${path}.accepted[${i}]`, `a choice item accepts „${a}" besides its key — two keys`, id));
+      }
+      if (norm(item.answer) === 'welche' && opts.some((o) => SINGULAR_INDEF.has(norm(o)))) {
+        const frame = String(item.promptDe || '');
+        const plural = /\b(?:sind|waren)\b/i.test(frame) || (foldNumberWords(frame).match(/\d+/g) || []).some((d) => Number(d) >= 2);
+        if (!plural) findings.push(blocker(doc, `${path}.options`, `key „welche" beside a singular ${opts.filter((o) => SINGULAR_INDEF.has(norm(o))).map((o) => `„${o}"`).join('/')}: nothing in the frame fixes the plural, so the singular is right too — add a plural verb or a number, or drop the singular option`, id));
       }
       // form class (advisory): sentence vs phrase, capitalisation, length
       if (want === 3 && opts.length === 3) {
