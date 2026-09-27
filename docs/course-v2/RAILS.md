@@ -129,17 +129,17 @@ node scripts/course-v2/validate.mjs <level|unit-file|--all> [--json] [--stage S|
 | GRM-02 | T | Spine points enter at their registry position, receptive before productive |
 | GRM-04 | S | Grammar ceiling via `registries/detectors.json` (texts from S, items and answers from I) |
 | GRM-05 | T | Rule cards: word limit, model sentence, English twin |
-| LEX-01 | S | Known-token coverage of inputs and exam texts (advisory until the cumulative lexicon exists) |
+| LEX-01 | S | Known-token coverage of inputs and exam texts (advisory until the cumulative lexicon exists); „known" is defined in §3.1a |
 | LEX-02 | S | New lemmas recur ≥ 2× in the unit's inputs and in ≥ 2 later units (ratchet) |
-| LEX-03 | I | Production uses known lemmas only; ≤ 3 glossed extras per text (advisory until the cumulative lexicon exists) |
+| LEX-03 | I | Production uses known lemmas only (§3.1a); ≤ 3 glossed extras per text (advisory until the cumulative lexicon exists) |
 | LEX-04 | S | Off-list share within the level limit; extension words receptive |
 | LEX-05 | spec | New-word counts and productive share per unit; `lexiconBlocks` = the `lexicon.json` allocation |
-| LEX-07 | T | Lexicon hygiene: one gloss per lemma, feminine pairs, `plural_kind`, `wordId: null` |
+| LEX-07 | T | Lexicon hygiene: one gloss per lemma, feminine pairs, `plural_kind`, `wordId: null`; a lemma a lower level allocated is re-allocated only by `promotions` (reported on the higher entry); a `-N` homograph needs its own gloss |
 | TXT-02 | S | Exam texts within their Teil template's length band |
 | TXT-03 | S | Input sizes: lines, words, seconds per level |
 | TXT-04 | T | Instructions ≤ 90 characters; exam stems within `examStemChars`; template instructions ≤ 200 |
 | ITM-01 … ITM-11 | I | Answer follows from the German prompt; choice items; key balance; R/F not copied; task shapes; pools of 16 + reserves 4–6 (no reserve repeats a pool item's POS-masked key); `exact`; `caseSensitive`; sentence-building orders; accepted forms; static `{de, en}` explanations |
-| CON-06 | S | Facts carry https sources, a fresh check date and `verification: "verified"` |
+| CON-06 | S | Facts carry https sources, a fresh check date and `verification: "verified"`; in a `draft` unit a sourced `partial`/`pending` fact with a reason in `notes` is a warning (§3.1a) |
 | EXM-01 | T | Exam blocks match their template: items, options, plays, block choice set (count, kind, reuse), no-match key, every answer a choice key, scaffold limits, each `⟦NN⟧` gap filled once |
 | EXM-02 | T | Scaffolding only where the template allows it; never in .2; pictorial Teile only as the text variant in .1 |
 | EXM-03 | T | Writing tasks match their template (Leitpunkte, `choose`, register, words, rubric, exam key; form tasks: field count) |
@@ -149,6 +149,45 @@ node scripts/course-v2/validate.mjs <level|unit-file|--all> [--json] [--stage S|
 | COV-3 | spec | 2–4 primary-lane Teile per unit; .2: ≥ 1 at full length in Prüfungsmodus |
 | COV-4 | spec (level) | Each module ≥ 15 % of the Prüfungsfokus slots |
 | COV-5 | spec (level) | Productive Teile recur at least every 4th unit |
+
+### 3.1a What LEX-01 / LEX-03 count as „known", and CON-06 while drafting (rule-smith 2026-09-27)
+
+A token is known at a unit when it is one of:
+
+1. **An inflected form of an allocated lemma** (every lower level + this level's units ≤ this one), generated from
+   the entry's own fields by `lib-validate/lexicon.mjs` — never guessed by stripping a token. Verbs: present with the
+   2sg/3sg stem change, imperative (`hilf`, `lies`), Präteritum (`verb_forms.praet`; when absent, the strong-verb
+   table `lib-validate/strong-verbs.mjs` — 124 simplexes, prefixed compounds follow them: `verstehen → verstand` —
+   plus the regular weak forms), Konjunktiv II in every person (`käme`, `hätte`, `könnte`, `würde`), Partizip II with
+   adjective endings (`die geplante Reise`), Partizip I, zu-infinitive; a separable verb split (`fängt … an`) and
+   rejoined (`stattfindet`, `ankam`). The Präteritum's **first** word is the verb (`kam mit` → `kam`; the old
+   last-word reading made every `mit`/`vor`/`ab`/`sich` an occurrence of the verb and under-counted LEX-02).
+   Nouns: case endings, the `plural` field (+n dative), the feminine pair (+nen). Adjectives/adverbs: six endings on
+   positive, comparative and superlative, umlauting comparatives (`älter`), irregulars (`besser`, `mehr`, `lieber`,
+   `höher`, `nächst`), `-el`/`-er` stems (`dunkle`, `teure`).
+2. **A number word** — cardinals 0–9 999 and ordinals with every ending (`ersten`, `zwanzigsten`, `dreißigsten`).
+3. **The closed A1 core**, `lib-validate/core-lexicon.mjs`: the irregular paradigms of sein, haben, werden, the modals,
+   wissen and tun (Konjunktiv II included); closed-class words `FUNCTION_WORDS` lacks (da-/wo-compounds, indefinites,
+   interjections, A1 time/place adverbs); ~50 A1 content words no lexicon allocates (Moment, Tür, einmal, fertig,
+   bringen, beginnen, sagen …). ≤ 400 entries (a test pins it and bans the B-level words proposed so far).
+   **The lexicon outranks the core:** a core lemma some lexicon allocates to a later unit is unknown before that
+   unit, so the core can never teach a word early; every lemma the eight lexicons allocated on 2026-09-27 was pruned
+   from it. A missing A2–B2 lemma is a gap for its allocator, never a core entry.
+4. **Licensed by the unit's grammar:** the example forms of every spine point the unit names
+   (`spec.grammar.new/chunk/review`) or that entered at or before it (`intro`, `chunkFrom`) — the spine label's
+   examples (after its colon, inside brackets) and its rule cards' model sentence, table rows below the header and
+   `caseMarks` tokens. Card prose is metalanguage and licenses nothing.
+5. Cast names, the file's `extras` names, glossed extras (LEX-01) — and a **one-letter token** is an option key
+   (`c`, `X`), never a word.
+
+Compounds are **not** decomposed: a compound is a lexicon entry of its own (`list_ref: compound:a+b`, SCHEMA §6).
+Place names have no registry yet and count as unknown (see §8).
+
+**CON-06 while drafting.** Agents cannot re-read most primary sources through the proxy. While a unit is
+`status: "draft"`, a `partial`/`pending` fact that carries https source(s) **and** says in `notes` what was not
+re-read and why is a warning (advisory, the reason quoted). From `status: "review"` on it blocks — the SCHEMA §15.6
+fixture is a `review` unit and still fails CON-06 as planned. No source, a non-https source or no reason: blocker at
+every status.
 
 `registries/detectors.json` (130 detectors: 67 exact, 59 heuristic, 4 advisory; each passes its own hit/miss
 examples) drives GRM-04. The spine's own `detectors` lists are still empty, so GRM-04 places each detector by its
@@ -220,7 +259,8 @@ node scripts/course-v2/compile.mjs <level|--all> [--check] [--content <dir>] [--
   hand-maintained on purpose; deriving it from unresolved refs would make REF-01 vacuous.
 - On the fixture: the checker reports 0 errors at every stage it is stripped to (`spec`, `S`, `I`, `T`); the
   validator reports exactly one blocker, **CON-06** (fact `a2.1-u07-f01` is `verification: "partial"`) — the failure
-  SCHEMA §15.6 plans.
+  SCHEMA §15.6 plans. It blocks because the fixture unit is `status: "review"`; the same fact in a `draft` unit is a
+  warning (§3.1a).
 
 ---
 
@@ -229,7 +269,7 @@ node scripts/course-v2/compile.mjs <level|--all> [--check] [--content <dir>] [--
 | File | Covers |
 |---|---|
 | `tests/course-v2-schema.test.mjs` | fixture verbatim; SCH-01/REF-01/KEY-01 on the fixture; the §8.1 stage schema (strip to each stage, absent/required per role); §15.4 lane pack and §15.7 choice fixtures in memory; 30+ mutations each failing at the expected path/rule/message; `BANK_KEY_RE` matrix (47,520 keys) and garbage; compiler determinism, idempotency, §15.5 equality, reserve index, ledger tombstones, refusal; both CLIs |
-| `tests/course-v2-validate.test.mjs` | every validator rule with a passing and a failing fixture (parsed from SCHEMA.md); §15.6 expectations; stage gates incl. the spec inference and COV-1's stage-T severity; detectors' own examples; CLI |
+| `tests/course-v2-validate.test.mjs` | every validator rule with a passing and a failing fixture (parsed from SCHEMA.md); §15.6 expectations; stage gates incl. the spec inference and COV-1's stage-T severity; detectors' own examples; the §3.1a morphology, core list (size, bans, precedence), licensed forms and LEX-03 on a complete synthetic lexicon; LEX-07 duplicates vs homographs; CON-06 draft warnings; UnitSpec `lexiconBlocks` `{6..20}`; CLI |
 | `tests/course-v2-ai.test.mjs`, `…-entitlement…`, `…-completion…` | the graders and speaking functions read the compiled banks; entitlement; the one completion function |
 
 `npm test` runs them all; `npx eslint scripts/course-v2 tests/course-v2-*.test.mjs --max-warnings=0` must be clean.
@@ -259,6 +299,15 @@ node scripts/course-v2/compile.mjs <level|--all> [--check] [--content <dir>] [--
    absence).
 
 ## 8. Open issues at the time of writing (2026-09-27)
+
+- **Lexicon errors LEX-07 reports (lexicon owners, 2026-09-27):** `a1.2/lexicon.json` re-allocates `lx.helfen` and
+  `lx.mitkommen` (receptive in A1.1): remove both entries, add `promotions` records. `b2.2/lexicon.json` re-allocates
+  77 lemmas already allocated at B1.2 (27) or B2.1 (50): remove them (12 of the B1.2 ones become `promotions`). The
+  B1.2 and B2.1 files are right; the rule used to report both sides.
+- **A1 words allocated late** make earlier units fail LEX-01/03 by design (the lexicon outranks the core):
+  `Problem` (b1.1-u01), `Dank` (b1.1-u11), `offen` (b1.2-u08). The A1/A2 allocators should move them down.
+- **Place names** (Leipziger, Cospudener, Nikolaikirche, Kreta …) have no registry and count as unknown in LEX-01/03;
+  the SCHEMA owner should decide between an `extras`-like `names` list per file and a `registries/places.json`.
 
 - **`src/lib/course-v2/completion.js` lags the revised SCHEMA §5**: it accepts only `{ kind: 'closing' }` in
   `completion.course.required` and throws on the new `{ kind: 'halbtest' | 'modelltest', lane: 'learner', … }`

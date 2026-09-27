@@ -9,7 +9,8 @@
 //     node scripts/course-v2/walk-fixture.mjs <outDir> [de|en] [steps=1] [prefix]
 //   env: RELOAD_AT_END=1 (also resume, course home, Plateau, a missing unit), FULL_CHECK=1,
 //        MISS_FIRST=1 (answer the first practice item wrongly: the miss feedback and the
-//        requeued alternate from the reserve index get their own screenshots)
+//        requeued alternate from the reserve index get their own screenshots),
+//        TESTOUT=1 (take „Ich kann das schon" at the Start instead of „Los geht's")
 //
 // Every answer is the item's own `answer`, so a run that stops says where a screen and
 // the driver disagree. Exit code 1 on a crash; a "stuck:" line when no action is left.
@@ -67,6 +68,7 @@ for (const s of unit.steps) {
   const L = lang === 'de'
     ? { check: 'Prüfen', next: ['Weiter', 'Ohne Auswertung weiter', 'Ohne Mikrofon weiter', 'Jetzt beginnen', 'Ich bin bereit', 'Los geht’s', 'Zur Kursübersicht', 'Lektion abschließen'], begin: 'Los geht’s' }
     : { check: 'Check', next: ['Continue', 'Continue without an assessment', 'Continue without a microphone', 'Start now', 'I am ready', 'Start', 'Course overview', 'Finish the unit'], begin: 'Start' };
+  L.testOut = lang === 'de' ? 'Ich kann das schon' : 'I can do this already';
 
   const state = () => page.evaluate(() => {
     const vis = (el) => !!(el.offsetParent || el.getClientRects().length) && getComputedStyle(el).visibility !== 'hidden';
@@ -104,7 +106,11 @@ for (const s of unit.steps) {
     await click(L.check);
     await snap('start-gist-feedback');
   }
-  await click(L.begin);
+  if (process.env.TESTOUT) {
+    await click(L.testOut);
+    await page.waitForTimeout(400);
+    await snap('testout-start');
+  } else await click(L.begin);
   await page.waitForTimeout(600);
 
   let lastEyebrow = '';
@@ -119,7 +125,8 @@ for (const s of unit.steps) {
       lastStep = s.stepId;
       if (stepsFinished >= STOP_AFTER) { await snap('next-step-reached'); break; }
     }
-    if (!s.stepId) { await snap('no-step'); console.log('no step section; h1=', s.h1, s.btns); break; }
+    // no step section left: the recap (or an error screen — the h1 and buttons say which)
+    if (!s.stepId) { await snap('recap'); console.log('no step section (recap?); h1=', s.h1, s.btns); break; }
     if (s.eyebrow !== lastEyebrow) { lastEyebrow = s.eyebrow; if (process.env.FULL_CHECK && s.btns.includes('Lektion abschließen')) await snap('check-summary-full', true); await snap(s.eyebrow.replace(/[^A-Za-zÄÖÜäöü0-9]+/g, '-').slice(0, 40)); console.log(s.stepId, '|', s.eyebrow, '|', s.btns.join(' / ')); }
     const nextBtn = L.next.find((n) => s.btns.includes(n));
     const todo = (s.ids || []).find((id) => !answered.has(id));
