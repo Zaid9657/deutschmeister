@@ -16,8 +16,8 @@ import { walkTexts, walkProduction, walkSteps } from '../lib-validate/walk.mjs';
 import { positionOf, parseUnitId, LEVELS } from '../lib-validate/ids.mjs';
 import { allLexicon } from '../lib-validate/context.mjs';
 import { buildLexEnv, detectInText } from '../lib-validate/detectors.mjs';
-import { detectorPlacement, describePosition } from '../lib-validate/spine.mjs';
-import { tokens } from '../lib-validate/text.mjs';
+import { detectorPlacement, describePosition, exemptForms } from '../lib-validate/spine.mjs';
+import { tokens, FUNCTION_WORDS } from '../lib-validate/text.mjs';
 import { arr, finding, list } from '../lib-validate/helpers.mjs';
 
 export const id = 'GRM-04';
@@ -52,6 +52,19 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
   const bySpine = [...placement.values()].filter((p) => p.source === 'spine').length;
   notes.push(`${placement.size} of ${ctx.registries.detectors.list.length} detectors placed (${bySpine} via the spine, ${placement.size - bySpine} via detector hints)${env.available ? '' : '; no lexicon loaded — lexicon-driven detectors run on word shape (advisory)'}`);
 
+  // forms a licensed spine point introduces are licensed, whatever later detector matches them
+  // (g.praeteritum-kernverben: kam, sagte, gab from a2.2-u01 under det.praeteritum-vollverb)
+  const exemptCache = new Map();
+  const exemptAt = (pos, surface, declared) => {
+    const key = `${pos}|${surface === 'production' ? 'p' : 'r'}|${[...declared].sort().join(',')}`;
+    if (!exemptCache.has(key)) exemptCache.set(key, exemptForms(ctx, pos, surface, declared, FUNCTION_WORDS));
+    return exemptCache.get(key);
+  };
+  const exempted = (match, exempt) => {
+    const content = tokens(match).map((t) => t.lower).filter((w) => !FUNCTION_WORDS.has(w));
+    return content.length > 0 && content.every((w) => exempt.has(w));
+  };
+
   const check = (doc, pos, declared, text, path, surface, glosses = []) => {
     if (!text) return;
     const seen = new Set();
@@ -63,6 +76,7 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
       for (const hit of detectInText(det, text, env)) {
         const key = `${det.id}|${path}`;
         if (seen.has(key)) continue;
+        if (exempted(hit.match, exemptAt(pos, surface, declared))) continue;
         seen.add(key);
         // glossed receptive exposure: an input may carry a later construction if its token is glossed
         if (surface !== 'production' && glosses.length) {

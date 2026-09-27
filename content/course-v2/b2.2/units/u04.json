@@ -2040,11 +2040,11 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.konditional-konnektoren",
-            "promptDe": "Korrigieren Sie die Wortstellung: „Wir zahlen, es sei denn, Sie Schäden zu spät melden.“",
+            "promptDe": "Korrigieren Sie die Wortstellung: „Wir zahlen, es sei denn, Sie die Delle zu spät melden.“",
             "promptEn": "Correct the word order.",
-            "answer": "Wir zahlen, es sei denn, Sie melden Schäden zu spät.",
+            "answer": "Wir zahlen, es sei denn, Sie melden die Delle zu spät.",
             "accepted": [
-              "Wir zahlen, es sei denn, Sie melden Schäden zu spät."
+              "Wir zahlen, es sei denn, Sie melden die Delle zu spät."
             ],
             "intentionalError": true,
             "explanation": {
