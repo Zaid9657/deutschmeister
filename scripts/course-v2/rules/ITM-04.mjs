@@ -1,5 +1,9 @@
 // ITM-04 — no R/F statement is a substring of its text or differs from a text sentence by one
 // token (A1.1 review #9): such a statement is answered by matching words, not by understanding.
+//
+// A strategy card must not solve its step (review a2.1-u04 r1): its example may not contain the key
+// (or the key option's text) of an item in the same step's exam blocks — „Einen Schrank finden Sie
+// bei „Möbel"" beside an item keyed „Möbel".
 
 import { walkItems } from '../lib-validate/walk.mjs';
 import { norm, sentences, tokens } from '../lib-validate/text.mjs';
@@ -62,6 +66,33 @@ export function run({ docs }) {
           break;
         }
       }
+    }
+  }
+  for (const doc of docs) {
+    if (doc.kind !== 'unit') continue;
+    for (const [si, step] of arr(doc.data.steps).entries()) {
+      const cards = arr(step?.strategyCards);
+      if (!cards.length) continue;
+      const keys = [];
+      for (const b of arr(step.blocks)) {
+        const choiceText = new Map(arr(b?.choices).map((c) => [String(c?.key), String(c?.de || '')]));
+        const items = arr(b?.items);
+        // an option every item offers („richtig", „anderes Stockwerk") is the Teil's format, not a key
+        const everywhere = (o) => items.length > 1 && items.every((x) => arr(x?.options).map(norm).includes(norm(o)));
+        for (const it of items) {
+          const k = String(it?.answer ?? '');
+          const shown = choiceText.get(k) || (arr(it?.options).includes(it?.answer) && k.length > 1 ? k : '');
+          // the key-bearing noun phrase: a shown key with a noun in it
+          if (norm(shown).length >= 4 && /(^|\s)\p{Lu}/u.test(shown) && !everywhere(shown)) keys.push([norm(shown), it.id]);
+        }
+      }
+      cards.forEach((c, ci) => {
+        n += 1;
+        const text = norm(c?.de);
+        for (const [k, itemId] of keys) {
+          if (new RegExp(`(^| )${k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}( |$)`).test(text)) findings.push(blocker(doc, `steps[${si}].strategyCards[${ci}].de`, `the strategy card's example contains „${k}", the key of ${itemId} in the same step`, itemId));
+        }
+      });
     }
   }
   return n ? { findings } : { findings, skipped: 'no richtig/falsch or ja/nein items with a text in the target yet' };

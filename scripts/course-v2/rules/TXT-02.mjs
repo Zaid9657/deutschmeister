@@ -4,6 +4,11 @@
 //
 // At stage S the blocks do not exist yet; the LS4 texts are then checked against the unit's single
 // `ls4` Prüfungsfokus template when there is exactly one.
+//
+// The tolerance is applied once (reviews a1.1-u04 r1 F10, a1.2-u04 r1 F26): where the template's
+// `source` says its textWords already are the samples ±15 % („textWords = ±15 % of the 6 sample
+// dialogues", „Band ±15 %" — 23 official-sample templates of sd1/ga2/tb1/tb2 say so), the band is
+// textWords itself; only a band written without it gets the ±15 % here.
 
 import { walkBlocks, walkExamTexts } from '../lib-validate/walk.mjs';
 import { wordCount } from '../lib-validate/text.mjs';
@@ -16,6 +21,8 @@ export const scope = 'unit';
 export const stage = 'S';
 
 const TOLERANCE = 0.15;
+/** Does the template say its band already carries the tolerance? */
+export const includesTolerance = (tpl) => tpl?.textWordsIncludesTolerance === true || /±\s*15\s*%/.test(String(tpl?.source || ''));
 const textDe = (t) => [arr(t?.lines).map((l) => l?.de || '').join(' '), t?.text || ''].join(' ');
 
 function band(tpl, length) {
@@ -25,6 +32,7 @@ function band(tpl, length) {
   }
   const b = tpl?.textWords;
   if (!Array.isArray(b) || b.length !== 2) return null;
+  if (includesTolerance(tpl)) return { lo: b[0], hi: b[1], label: `${b[0]}–${b[1]} (the ±15 % is already in the band)` };
   return { lo: Math.floor(b[0] * (1 - TOLERANCE)), hi: Math.ceil(b[1] * (1 + TOLERANCE)), label: `${b[0]}–${b[1]} (±15 %: ${Math.floor(b[0] * (1 - TOLERANCE))}–${Math.ceil(b[1] * (1 + TOLERANCE))})` };
 }
 

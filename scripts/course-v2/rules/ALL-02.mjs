@@ -1,9 +1,33 @@
 // ALL-02 — 3–5 registry can-dos per unit, each with source tags and band; ≥ 1 productive can-do
 // proven by an Aufgabe; „Das kann ich" (check.proofs) lists exactly the unit's can-dos, each
 // linked to a proof item or an Aufgabe; the Lernziele box shows exactly the unit's can-dos.
+//
+// Rail extensions (rule-smith 2026-09-27):
+//   - a proof item's key is not the answer of a Check item of the same unit — the Check would hand the
+//     learner the proof (review a2.1-u04 r2 F05);
+//   - a productive or interactive can-do proven by an item alone (reviews b2.1-u04 r1 F02, a2.1-u04 r2
+//     F05) and an Aufgabe whose texts name none of the can-do's function verbs (fragen, vorschlagen,
+//     bewerten …; reviews a1.1-u04 r1 F07, a1.2-u04 r1 F07, a2.1-u04 r1/r2 F04) are ADVISORIES: SCHEMA
+//     Check.proofs names only item or aufgabe (no micro-output), and the SCHEMA §15 worked example proves
+//     the interaction can-do cd.a2.rueckruf-weitergeben by an item — the SCHEMA owner decides first;
+//   - every spec.textTypes entry is the text type of something the unit shows or asks for — an input,
+//     an exam text, a block's or a task's Teil template (review a2.1-u04 r3 F09; advisory, minor).
 
-import { walkSteps } from '../lib-validate/walk.mjs';
-import { arr, blocker, list } from '../lib-validate/helpers.mjs';
+import { walkSteps, walkItems, walkTasks, speakingParts } from '../lib-validate/walk.mjs';
+import { arr, blocker, advisory, list } from '../lib-validate/helpers.mjs';
+import { norm } from '../lib-validate/text.mjs';
+
+/** Function verbs of a can-do → cues its Aufgabe's texts must carry (stems, lower case). */
+const FUNCTIONS = [
+  [/\bfragen\b|\berfragen\b|nachfragen/i, ['frag', '?']],
+  [/\bantworten\b|\bbeantworten\b|\breagieren\b/i, ['antwort', 'reagier']],
+  [/\bbitten\b/i, ['bitt']],
+  [/vorschlagen|vorschläge/i, ['vorschlag', 'schlagen', 'vorschläge']],
+  [/bewerten|beurteilen|sagen, wie .* gefällt|meinung/i, ['bewert', 'gefällt', 'finden', 'meinung', 'gut', 'beurteil']],
+  [/beschweren|reklamieren/i, ['beschwer', 'reklam']],
+  [/berichten|erzählen/i, ['bericht', 'erzähl']],
+  [/vereinbaren|absprechen|planen/i, ['vereinbar', 'termin', 'plan', 'absprech']],
+];
 
 export const id = 'ALL-02';
 export const title = 'Can-dos: 3–5 per unit, tagged, proven; ≥ 1 productive proven by an Aufgabe';
@@ -37,6 +61,25 @@ export function run({ ctx, docs }) {
     if (d.start && !sameSet(arr(d.start.lernziele), canDos)) {
       findings.push(blocker(doc, 'start.lernziele', 'the Lernziele box must list exactly spec.canDos', d.id));
     }
+    const tts = arr(d.spec.textTypes);
+    if (tts.length && arr(d.steps).length) {
+      const used = new Set();
+      const collect = (o) => {
+        if (Array.isArray(o)) o.forEach(collect);
+        else if (o && typeof o === 'object') {
+          if (typeof o.textType === 'string') used.add(o.textType);
+          if (typeof o.template === 'string') {
+            const t = ctx.registries.templates.get(o.template)?.template;
+            if (t?.textType) used.add(t.textType);
+          }
+          for (const [k, v] of Object.entries(o)) if (k !== 'check' && k !== 'spec') collect(v);
+        }
+      };
+      collect(d.start);
+      collect(d.steps);
+      collect(d.spec.lanes);
+      tts.forEach((tt, i) => { if (!used.has(tt)) findings.push(advisory(doc, `spec.textTypes[${i}]`, `${tt} is listed but no input, exam text or Teil template of the unit is of that type`, tt)); });
+    }
     if (!d.check) continue;
     const proofs = arr(d.check.proofs);
     const proven = proofs.map((p) => p?.canDo);
@@ -50,7 +93,30 @@ export function run({ ctx, docs }) {
       if (!p?.item && !p?.aufgabe) findings.push(blocker(doc, `check.proofs[${i}]`, `proof of ${p?.canDo} names neither an item nor an Aufgabe`, p?.canDo));
       if (p?.aufgabe && !stepKinds.has(p.aufgabe)) findings.push(blocker(doc, `check.proofs[${i}].aufgabe`, `proof by "${p.aufgabe}" but the unit has no ${p.aufgabe} step`, p?.canDo));
     });
+    // a proof item's key given away by a Check item of the same unit
+    const proofItems = new Map(arr(d.check.proofItems).map((it) => [it?.id, it]));
+    const checkAnswers = new Map();
+    for (const { item } of walkItems(doc)) if (item?.role === 'check' || arr(d.check.items).includes(item)) checkAnswers.set(norm(item?.answer), item?.id);
+    proofs.forEach((p, i) => {
+      const it = p?.item ? proofItems.get(p.item) : null;
+      if (!it || !it.answer || norm(it.answer).length < 3) return;
+      const hit = checkAnswers.get(norm(it.answer));
+      if (hit && hit !== it.id) findings.push(blocker(doc, `check.proofs[${i}]`, `proof item ${it.id}'s key „${it.answer}" is also the answer of Check item ${hit} — the Check hands the learner the proof`, p.canDo));
+    });
     if (reg) {
+      const tasks = [...walkTasks(doc)];
+      proofs.forEach((p, i) => {
+        const e = reg.get(p?.canDo)?.item;
+        if (!e) return;
+        if (p?.item && !p?.aufgabe && PRODUCTIVE.test(String(e.mode || ''))) findings.push(advisory(doc, `check.proofs[${i}]`, `${p.canDo} is ${e.mode}, proven by an item alone — prove it by an Aufgabe (or a micro-output once SCHEMA allows it)`, p.canDo));
+        if (!p?.aufgabe) return;
+        const t = tasks.find((x) => (p.aufgabe === 'sprechen' ? x.kind === 'speaking' : x.kind === 'writing'));
+        if (!t) return;
+        const parts = t.kind === 'speaking' ? speakingParts(t.task).map((x) => x.part) : [t.task];
+        const said = JSON.stringify(parts.map((x) => [x?.situationDe, x?.instructionsDe, x?.taskDe, x?.cards, x?.moves, x?.leitpunkte])).toLowerCase();
+        const missing = FUNCTIONS.filter(([re]) => re.test(String(e.de || ''))).filter(([, cues]) => !cues.some((c) => said.includes(c)));
+        if (missing.length) findings.push(advisory(doc, `check.proofs[${i}]`, `the ${p.aufgabe} task proving ${p.canDo} names none of the cues for ${missing.map(([re]) => re.source.split('|')[0].replace(/\\b/g, '')).join(', ')} („${String(e.de).slice(0, 80)}")`, p.canDo));
+      });
       const productiveByAufgabe = proofs.some((p) => p?.aufgabe && PRODUCTIVE.test(String(reg.get(p.canDo)?.item?.mode || '')));
       const modesKnown = canDos.every((c) => reg.get(c)?.item?.mode);
       if (modesKnown && !productiveByAufgabe) findings.push(blocker(doc, 'check.proofs', 'no productive or interactive can-do is proven by an Aufgabe (sprechen/schreiben)', d.id));

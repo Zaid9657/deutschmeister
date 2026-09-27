@@ -11,7 +11,8 @@
 // An entry's `example` is read by the learner at the entry's unit, so it stays under that unit's grammar
 // ceiling (GRM-04's detectors, receptive licensing; reviews a2.2-u04 r2 F01 / r3 F01: the lx.fluss card
 // „Der Weg geht immer am Fluss entlang." taught entlang at a2.2-u04, licensed from b1.2-u09). Exact
-// detectors block, heuristic ones advise; the finding names the lexicon file, whose owner acts.
+// detectors block (heuristic ones are left to GRM-04's review of the units); the finding names the
+// lexicon file, whose owner acts.
 
 import { walkTexts } from '../lib-validate/walk.mjs';
 import { LEVELS, parseUnitId, positionOf, describePosition } from '../lib-validate/ids.mjs';
@@ -97,7 +98,9 @@ export function run({ ctx, docs, levels, mode }) {
         const g = ctx.levels.get(u.level)?.units.get(u.nr)?.data?.spec?.grammar || {};
         const declared = new Set([...arr(g.new), ...arr(g.chunk), ...arr(g.review)]);
         for (const h of ceiling(e.example, positionOf(u.level, u.nr), 'input', declared)) {
-          const sev = h.precision === 'exact' ? 'blocker' : 'advisory';
+          // exact detectors only: the heuristic ones (articles, word shapes) are GRM-04's review noise
+          if (h.precision !== 'exact') continue;
+          const sev = 'blocker';
           findings.push(finding(sev, { file: slot.lexicon.file }, `entries[${i}].example`, `example „${e.example}" uses „${h.match}" (${h.construction}) — licensed from ${describePosition(h.licensedAt)} (${list(h.points, 3)}), the entry's unit is ${e.unit} — owner: the lexicon owner (${slot.lexicon.file})${sev === 'blocker' ? '' : ` [${h.precision}]`}`, e.id));
         }
       });
@@ -121,6 +124,9 @@ export function run({ ctx, docs, levels, mode }) {
         const tok = String(g?.token || '').toLowerCase();
         const cands = exact.get(tok) || byForm.get(tok) || [];
         const said = String(g?.gloss?.en || '').trim();
+        // a plural token glossed in the singular misleads (review a1.1-u04 r1 F21): „Kunden" → „customer"
+        const plural = cands.find((x) => x.e.pos === 'NOUN' && typeof x.e.plural === 'string' && [x.e.plural.toLowerCase(), `${x.e.plural.toLowerCase()}n`].includes(tok) && tok !== bare(x.e.lemma));
+        if (plural && said && !/s\b|\(pl|plural|people|children|men|women/i.test(said)) findings.push(finding('advisory', d, `${t.path}.glosses[${gi}]`, `„${g.token}" is the plural of ${plural.e.lemma}; its gloss „${said}" reads as a singular — gloss the plural or name the singular`, plural.e.id));
         if (!cands.length || !said || cands.some((x) => String(x.e.gloss.en).trim() === said)) return;
         const hit = cands[0].e;
         findings.push(blocker(d, `${t.path}.glosses[${gi}]`, `gloss „${g.gloss.en}" for „${g.token}" differs from the lexicon gloss „${hit.gloss.en}" (${hit.id})`, hit.id));

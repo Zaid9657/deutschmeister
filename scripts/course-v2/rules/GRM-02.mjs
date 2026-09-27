@@ -2,6 +2,10 @@
 // earlier placement carries a written reason (BLUEPRINT §9.1, §2.5 rule 2). Applied to what a
 // unit declares (spec.grammar) and to what it uses as a structure: the LS `structure`, the
 // micro-output targets (productive), the item topics and the rule cards.
+//
+// A chunk preview stays a chunk (review a1.2-u04 r1 F06): a point listed only under grammar.chunk may
+// be met as the listed phrases, but it is never a Lernschritt's `structure` and never the point of its
+// rule card — teaching it as structure is introducing it, which is the spine's call.
 
 import { walkSteps, walkMicroOutputs, walkItems } from '../lib-validate/walk.mjs';
 import { unitPosition } from '../lib-validate/ids.mjs';
@@ -62,7 +66,13 @@ export function run({ ctx, docs }) {
       const at = productive ? pp.prod : pp.rec;
       if (at !== null && at > pos) flag(path, `${pid} is used ${productive ? 'productively ' : ''}at ${d.id} but the spine introduces it ${productive ? 'productively ' : ''}at ${describePosition(at)}`, pid);
     };
+    const chunkOnly = new Set(arr(g.chunk).filter((p) => !arr(g.new).includes(p) && !arr(g.review).includes(p)));
+    const cards = new Map();
+    for (const slot of ctx.levels.values()) for (const c of arr(slot.ruleCards?.cards)) if (c?.id) cards.set(c.id, c);
     for (const { step, path } of walkSteps(doc)) {
+      if (step?.structure && chunkOnly.has(step.structure)) flag(`${path}.structure`, `${step.structure} is only a chunk preview here; a chunk is never a Lernschritt's structure`, step.structure);
+      const cardSpine = step?.ruleCard ? cards.get(step.ruleCard)?.spine : null;
+      if (cardSpine && chunkOnly.has(cardSpine)) flag(`${path}.ruleCard`, `rule card ${step.ruleCard} teaches ${cardSpine}, a chunk preview here; a chunk gets no rule card before its point enters`, cardSpine);
       if (step?.structure) {
         if (!licensed.has(step.structure)) flag(`${path}.structure`, `LS structure ${step.structure} is not in spec.grammar (new, chunk or review)`, step.structure);
         usedBefore(step.structure, `${path}.structure`, false);

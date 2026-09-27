@@ -12,6 +12,11 @@
 // new/chunk/review) is licensed in that unit — a misplacement is GRM-02's finding, reported once.
 // A spine chunkFrom at or before the position turns a finding into an advisory "chunk preview".
 //
+// A declared chunk is presented (review a1.1-u04 r1 F05): a unit that lists a point under
+// spec.grammar.chunk shows it in at least one input line or Redemittel — found by the point's own
+// detectors, else by the forms its spine label lists. A chunk no detector and no label form can find
+// is left to review (noted).
+//
 // Metalanguage surfaces are read too, as receptive text and ADVISORY only (they name constructions
 // as well as use them): each step's strategyCards[].de (review a2.1-u04 r2 F07) and each rule card's
 // de prose at the card's first use (a2.1-u04 r2 F10 / r3 F12). A form a licensed spine point lists in
@@ -22,7 +27,7 @@ import { walkTexts, walkProduction, walkSteps } from '../lib-validate/walk.mjs';
 import { positionOf, parseUnitId, LEVELS } from '../lib-validate/ids.mjs';
 import { allLexicon } from '../lib-validate/context.mjs';
 import { buildLexEnv, detectInText } from '../lib-validate/detectors.mjs';
-import { detectorPlacement, describePosition, exemptForms } from '../lib-validate/spine.mjs';
+import { detectorPlacement, describePosition, exemptForms, introducedForms } from '../lib-validate/spine.mjs';
 import { tokens, FUNCTION_WORDS } from '../lib-validate/text.mjs';
 import { arr, finding, list } from '../lib-validate/helpers.mjs';
 
@@ -118,6 +123,23 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
       for (const { step, path } of walkSteps(doc)) {
         arr(step?.strategyCards).forEach((c, i) => check(doc, pos, declared, String(c?.de || ''), `${path}.strategyCards[${i}].de`, 'input', [], true));
       }
+    }
+    if (doc.kind === 'unit') {
+      const shown = [...walkTexts(doc)].flatMap((t) => (t.kind === 'input' || t.kind === 'folge' ? [t.de] : []));
+      arr(doc.data.redemittel).forEach((r) => shown.push(String(r?.de || '')));
+      const text = shown.join('\n');
+      arr(g.chunk).forEach((pid, i) => {
+        if (!text.trim()) return;
+        const dets = detectors.filter((dd) => placement.get(dd.id)?.points.includes(pid));
+        const forms = introducedForms(spine.get(pid)?.point, FUNCTION_WORDS);
+        if (!dets.length && !forms.size) {
+          notes.push(`${doc.data.id}: chunk ${pid} has no detector and no label forms — its presentation is left to review`);
+          return;
+        }
+        const byDet = dets.some((dd) => detectInText(dd, text, env).length);
+        const byForm = tokens(text).some((t) => forms.has(t.lower));
+        if (!byDet && !byForm) findings.push(finding('blocker', doc, `spec.grammar.chunk[${i}]`, `the unit declares the chunk ${pid} but no input line or Redemittel presents it`, pid));
+      });
     }
     if (stageOf(doc) === 'S') continue; // stage S: texts only; items and expected answers arrive with I (BLUEPRINT §9)
     for (const p of walkProduction(doc)) check(doc, pos, declared, p.de, p.path, 'production');

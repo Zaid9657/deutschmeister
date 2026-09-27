@@ -8,6 +8,11 @@
 // a WARNING (advisory, the reason quoted) — it is the reviewer's to-do, not an authoring error. From
 // `status: "review"` on (the promotion path, SCHEMA §15.6) it is a blocker again. A fact without a source,
 // with a non-https source or without a reason stays a blocker at every status.
+//
+// An exception is checked on its own (review a1.2-u04 r1 F02: the claim's source was true, its
+// exception false): an exception that names no source of its own — a § / Art. citation, a URL or
+// „laut …" — is an advisory. SCHEMA's exceptions are LText without a source field; once the SCHEMA
+// owner adds `exceptions[].source`, this becomes a blocker.
 
 import { arr, isObj, blocker, advisory } from '../lib-validate/helpers.mjs';
 
@@ -44,6 +49,10 @@ export function run({ ctx, docs }) {
       }
       if (!DATE_RE.test(String(f.currentAsOf || ''))) findings.push(blocker(doc, `${p}.currentAsOf`, 'currentAsOf missing or not YYYY-MM-DD', f.id));
       if (!Array.isArray(f.exceptions)) findings.push(blocker(doc, `${p}.exceptions`, 'exceptions[] missing (write [] when there are none)', f.id));
+      arr(f.exceptions).forEach((x, xi) => {
+        const t = `${x?.de || ''} ${x?.source || ''}`;
+        if (!/§|\bArt\.|https?:\/\/|\blaut\b|\bnach\s+(?:dem|der)\s+\S+(?:gesetz|ordnung|verordnung)/i.test(t)) findings.push(advisory(doc, `${p}.exceptions[${xi}]`, 'the exception names no source of its own (§ citation, URL or „laut …") — a reviewer checks it separately from the claim', f.id));
+      });
       if (f.verification !== 'verified') {
         const why = String(f.notes || '').trim();
         const short = why ? ` (notes: ${why.slice(0, 140)}${why.length > 140 ? '…' : ''})` : '';
