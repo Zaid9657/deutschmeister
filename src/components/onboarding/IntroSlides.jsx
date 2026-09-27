@@ -1,11 +1,12 @@
 import { useEffect, useCallback, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, ListChecks, Rocket, ChevronLeft, ChevronRight, Check, Bug, GraduationCap } from 'lucide-react';
+import { Sparkles, Rocket, ChevronLeft, ChevronRight, Bug, GraduationCap } from 'lucide-react';
 import { useOnboarding } from '../../hooks/useOnboarding';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../utils/supabase';
-import { EXAM_TRACKS, examTrackByKey } from '../../data/examTracks';
-import { getTopicsForLevel } from '../../data/grammarTopics';
+import { EXAM_TRACKS } from '../../data/examTracks';
+import { FREE_COURSE_LEVEL } from '../../lib/courseEntry.js';
+import { STARTING_POINT_KEY, STARTING_POINTS } from '../../lib/firstRun.js';
 import {
   trackOnboardingStarted,
   trackOnboardingSlideViewed,
@@ -31,24 +32,16 @@ const SLIDES = [
     headline: 'Are you preparing for an exam?',
     isExamPicker: true,
   },
-  {
-    icon: ListChecks,
-    headline: 'Your first day, step by step.',
-    // Honest time: the test's own landing page says 15–20 minutes. The old
-    // "5 min" here broke the promise at exactly the moment 3 of 4 confirmed
-    // signups were dropping out (measured 2026-09-02: 271 finished these
-    // slides in 90 days, only 73 ever started a lesson).
-    checklist: [
-      'Take the placement test (15–20 min — we find your exact level)',
-      'Try a speaking session with the AI',
-      'Break down your first German sentence with X-Ray',
-    ],
-  },
+  // The "first day checklist" slide that stood here is gone (work order #6):
+  // it listed three different first actions — placement test, speaking, X-Ray —
+  // one click before the slide that asks for ONE. The last slide now asks the
+  // one question that decides the first action (src/lib/firstRun.js).
   {
     icon: Rocket,
-    headline: 'How do you want to start?',
+    headline: 'How much German do you know?',
+    // Honest time: the test's own landing page says 15–20 minutes.
     body:
-      'The placement test takes 15–20 minutes across reading, listening and speaking — and ends with the exact lesson to start at. Short on time? Jump into a first lesson now and place yourself properly later.',
+      `New to German? Lektion 1 of the free ${FREE_COURSE_LEVEL.toUpperCase()} course starts with the first „Hallo“, one short step at a time. Already know some? The placement test (15–20 min) finds your exact level.`,
     isFinal: true,
   },
 ];
@@ -103,18 +96,24 @@ export default function IntroSlides() {
     completeOnboarding('dashboard');
   };
 
-  // The fast lane out of the final slide: straight into a real lesson instead
-  // of a zeroed dashboard (where, measured, most first sessions used to end).
-  // Exam track chosen → that track's first library sublevel; otherwise the
-  // very beginning. Grammar is served by the Astro build → full-load href.
-  const fastLaneLevel =
-    (examTrack && examTrack !== 'none' && examTrackByKey(examTrack)?.sublevels[0]) || 'a1.1';
-  const fastLaneTopic = getTopicsForLevel(fastLaneLevel)[0];
-  const fastLaneHref = fastLaneTopic
-    ? `/grammar/${fastLaneLevel}/${fastLaneTopic.slug}/`
-    : `/grammar/${fastLaneLevel}/`;
-  const handleFirstLesson = () => {
-    completeOnboarding('first-lesson', { href: fastLaneHref });
+  // The exit out of the final slide (work order #6). Measured on the
+  // September 2026 cohort: 84 finished these slides, 13 of them ever touched a lesson.
+  // The placement test was the primary button (26 took it, 5 then did a
+  // lesson) and the "first lesson" button sent an exam-B1 picker to a B1.1
+  // grammar page. Now the beginner answer is the primary and lands IN Lektion
+  // 1 of the free course; "I know some German" goes to the placement test and
+  // is remembered (user_metadata.starting_point), so the dashboard's first-run
+  // card keeps offering the test until it is done. "new" is not written — it is
+  // the default, and not writing it keeps a USER_UPDATED auth event out of the
+  // lesson player's first render.
+  const chooseStart = (point) => {
+    if (point === STARTING_POINTS.SOME && user) {
+      supabase.auth.updateUser({ data: { [STARTING_POINT_KEY]: point } })
+        .then(({ error }) => {
+          if (error) console.error('starting_point save failed:', error.message);
+        });
+    }
+    completeOnboarding(point === STARTING_POINTS.SOME ? 'level-test' : 'first-lesson');
   };
 
   const slide = SLIDES[currentStep];
@@ -182,26 +181,13 @@ export default function IntroSlides() {
                 </div>
               )}
 
-              {slide.checklist && (
-                <ul className="text-left space-y-3 mb-6 mx-auto max-w-xs">
-                  {slide.checklist.map((item, i) => (
-                    <li key={item} className="flex items-start gap-3 animate-pop-in" style={{ animationDelay: `${90 * i}ms` }}>
-                      <div className="w-5 h-5 rounded-full bg-siegel-wash flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <Check className="w-3 h-3 text-siegel" aria-hidden="true" />
-                      </div>
-                      <span className="text-sm text-ink leading-snug">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-
               {slide.isFinal && (
                 <div className="flex flex-col gap-3 mt-2">
-                  <Button onClick={() => completeOnboarding('level-test')} shimmer size="lg" className="w-full">
-                    Start the placement test
+                  <Button onClick={() => chooseStart(STARTING_POINTS.NEW)} shimmer size="lg" className="w-full">
+                    I&apos;m new to German — start Lektion 1
                   </Button>
-                  <Button onClick={handleFirstLesson} variant="secondary" size="lg" className="w-full">
-                    Start my first lesson at {fastLaneLevel.toUpperCase()} →
+                  <Button onClick={() => chooseStart(STARTING_POINTS.SOME)} variant="secondary" size="lg" className="w-full">
+                    I know some German — find my level
                   </Button>
                   <button
                     onClick={handleSkip}

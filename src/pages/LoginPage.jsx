@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { postAuthPath } from '../lib/buyIntent';
 import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +24,7 @@ const LoginPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
-  const { signIn } = useAuth();
+  const { signIn, user, loading: authLoading } = useAuth();
   const [searchParams] = useSearchParams();
   const timedOut = searchParams.get('reason') === 'timeout';
 
@@ -39,6 +39,19 @@ const LoginPage = () => {
 
   // A pending checkout (set on /pricing/ before the signup detour) beats the dashboard.
   const from = location.state?.from?.pathname || postAuthPath();
+
+  // The signup confirmation link lands HERE already signed in: signUp's
+  // emailRedirectTo is /login (AuthContext), and supabase-js reads the session
+  // out of the URL hash. The page used to ignore that and show "Welcome Back"
+  // plus a password form to a learner who was already in — the first screen
+  // after confirming was a dead end (auth logs 2026-09-27: every /verify 303s
+  // to /login). A signed-in visitor goes on to where login would have sent
+  // them (onboarding, then the first-run card — src/lib/firstRun.js). Every
+  // explicit sign-out path awaits signOut() before navigating here, so this
+  // never bounces a user who just logged out.
+  useEffect(() => {
+    if (!authLoading && user) navigate(from, { replace: true });
+  }, [authLoading, user, from, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
