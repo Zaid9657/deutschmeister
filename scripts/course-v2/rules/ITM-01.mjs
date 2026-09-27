@@ -95,7 +95,6 @@ const PREPOSITIONS = new Set('an am ans auf aufs aus bei beim bis durch für geg
 /** A German cue in a prompt: a bracket, „= …", an arrow, first letters („B…", „Re___"), a word-class name. */
 const CUE_RE = /[(=→]|\p{L}(?:…|\.{3}|_{2,})|\b(?:Nomen|Verb|Adjektiv|Gegenteil|beginnt mit|Anfang)\b/u;
 const WORD_CUE_RE = /\bWort\b|\bWörter|\bausgeschrieben|\bBuchstaben/i;
-const flat = (s) => norm(s).replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
 const hasWord = (text, word) => new RegExp(`(?:^|[^\\p{L}])${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:$|[^\\p{L}])`, 'iu').test(text);
 
 /** Lower-case form → the POS its lexicon entries give it, over the cumulative lexicon of a level. */

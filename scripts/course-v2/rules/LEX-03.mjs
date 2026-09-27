@@ -32,7 +32,7 @@ export const scope = 'unit';
 export const stage = 'I';
 
 /** Generator sources as production (a2.1-u04 r2 F09). */
-function generatorFindings(ctx, doc, nr) {
+function generatorFindings(ctx, doc) {
   const out = [];
   const lex = cumulativeLexicon(ctx, doc.level);
   const byId = new Map(lex.map((e) => [e?.id, e]));
@@ -112,7 +112,7 @@ export function run({ ctx, docs }) {
         unknown.forEach((u) => pending.forms.add(u));
       }
     }
-    if (doc.kind === 'unit') findings.push(...generatorFindings(ctx, doc, nr));
+    if (doc.kind === 'unit') findings.push(...generatorFindings(ctx, doc));
     // before the cumulative lexicon exists the measurement is one advisory per document
     if (pending.surfaces) findings.push(finding('advisory', doc, null, `${pending.surfaces} production surface(s) use forms not in the lexicon so far: ${list([...pending.forms], 25)} — advisory until the cumulative lexicon exists (${state.why})`, doc.data?.id || null));
   }
