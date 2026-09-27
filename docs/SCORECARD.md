@@ -17,7 +17,7 @@ measuring the same week get the same number. The dated snapshot this started fro
 |---|---|---|---|---|
 | Revenue | 25% | **1** | — | MRR €32.97 from 3 payers (€55.15 on 09-21); 3 more past_due/unpaid. 0 real course sales since launch 09-03. No new paid sub since 08-27. Lifetime ≈ €203 gross (18 payments) |
 | Activation | 20% | **2** | ↓ | Signup→first lesson: Jun 15%, Jul 16%, Aug 10%, **Sep 10%**. Rebuilt A1.1: 4 learners, 0 Lektionen finished. Writing 0 ever, mock exams 5 ever |
-| Acquisition | 15% | **2** | ↓ | Signups: 205 (Jun) → 147 (Sep). Search signups are brand searches (13 of 14 land on `/`). 22 keywords in DE, 0/20 targets in top 30, 11 referring domains (10 spam). No social running. X-Ray anon use ~25× since 09-14, source unknown |
+| Acquisition | 15% | **2** | ↓ | Signups: 205 (Jun) → 147 (Sep). Search signups are brand searches (13 of 14 land on `/`). 22 keywords in DE, 0/20 targets in top 30, 11 referring domains (10 spam). No social running. The \"X-Ray spike\" since 09-14 was a **crawler** rendering the new example links (98% of anon analyses = our own example sentences); real anon X-Ray use is ~1–8/day |
 | Product & reliability | 15% | **5** | — | A1.1 at 0 blocker/major after 23 DaF reviews; 84 grammar topics; 3 mock exams. **Speaking: 24/45 starts (53%) got zero learner turns.** Paid levels still on older content. Webhooks: 0 failed in 30 days |
 | Retention & email | 10% | **3** | — | 29,500 sends/30 d, 1.95% bounce, 0 complaints. Click tracking switched **on** 2026-09-27; the click rate isn't known yet. Launch email written, never sent. 3 of 6 live paid subs failing |
 | Website performance | 5% | **8** | — | Mobile Lighthouse median 89 (home 100 … login 68), local build. `/login` CLS 2.0. `vendor-ui` 757 KB raw (all of lucide-react) |
@@ -40,7 +40,7 @@ Same evening, after the secrets finding and the rubric line it added: security 7
 | Activation | A1.1 Lektionen finished / 14 d | 0 | 5 | `weekly_truth_metrics()->course` |
 | Acquisition | Signups / week (30-day avg) | 38 | 50 | `auth.users` |
 | Acquisition | Non-brand share of attributed signups | ~6% | 30% | `profiles.acquisition_*` + landing page |
-| Acquisition | X-Ray → signup rate | unknown | measured | needs tracking (work order #3) |
+| Acquisition | X-Ray → signup rate | unknown | measured | `acquisition_last_source = 'xray'` ÷ human anon analyses (crawlers now 403) |
 | Acquisition | Target keywords in top 30 | 0/20 | 3/20 | DataForSEO (`docs/seo-routines/`) |
 | Product | Speaking zero-turn rate / 30 d | 53% | <15% | `speaking_sessions.user_turns` |
 | Email | Click tracking on | yes (2026-09-27) | click rate ≥3% | Resend |
@@ -53,7 +53,7 @@ Same evening, after the secrets finding and the rubric line it added: security 7
 ## 3. Work order — one at a time, top first
 
 The order follows one rule: **take the money already sitting there first** (the email list
-and the failing subscriptions), then the traffic you already have (X-Ray), then new traffic
+and the failing subscriptions), then the traffic you already have (grammar pages, X-Ray), then new traffic
 (social), then keep who arrives (activation). Polish comes last. Move down only when the
 item above is done or blocked on someone else.
 
@@ -64,7 +64,7 @@ item above is done or blocked on someone else.
 | 2 | **Launch the sub-level courses by email.** Do NOT run `drafts/send-launch-email-1.sh`: it is the old telc B1 email with code START49, which expired 2026-09-14. Steps: (a) owner creates a new 100% code in Lemon Squeezy restricted to the A2.1 product (DMTEST100 is tied to the retired product); (b) owner buys A2.1 for €0 on `/pricing/` with a **fresh** account; (c) agent verifies the `course_a2_1` purchase row and the 90-day `plan_type='course'` Pro row, and owner deactivates the code; (d) agent stages `drafts/send-launch-sublevel-1.sh` from Email 1 of `drafts/launch-sublevel-courses-2026-09.md`, excluding subscribers and buyers, and fixes 3 copy issues (unsourced quote, "Goethe exam format" → Goethe-*style*, "since Monday"); (e) owner runs `test`, then `live` **once** — nothing records sends, so a rerun re-mails everyone | Revenue | Owner + agent | open | email sent once; clicks visible; first real sale |
 | 3 | **Unpaid subscribers keep Pro.** The webhook copies the next renewal date into `subscription_end` even when the status is `unpaid`/`past_due`, so access rolls forward every month (e.g. last paid 06-03, Pro until 10-03). Fix: access must follow status, not only `subscription_end` | Revenue, Product | Agent (review) | open | an unpaid sub loses Pro at the end of its paid period; test pins it |
 | 4 | **Trial end sells only Pro.** 181 trials ended in 30 days and 0 converted. The day-6 and trial-ended emails offer only €9.99/mo, never the one-time courses. Draft course-offer versions | Revenue, Email | Agent draft + **owner decision** | open | a trial-end email offers the course; trial→paid measured |
-| 5 | Sign-up + course offer under the X-Ray result; record X-Ray→signup; find the traffic source | Acquisition, Activation | Agent | in PR | X-Ray→signup measured, ≥2% |
+| 5 | Sign-up + course offer under the X-Ray result; record X-Ray→signup; find the traffic source — **source found: a crawler** (see §6); crawler renders now 403 before any AI call; offer card + `ref=xray` shipped | Acquisition, Activation | Agent | in PR | X-Ray→signup measured, ≥2% |
 | 6 | Social pack live 2026-10-01: accounts created, IDs filled, posting Routine on | Acquisition | Owner, then agent | open | first attributed social signup |
 | 7 | Fix speaking starts that end with zero learner turns (and 8 of 12 speaking users hit the free cap — an offer moment) | Product | Agent | in PR | zero-turn rate <15% |
 | 8 | First-lesson path for new signups (land in a lesson, not a menu) | Activation | Agent | in PR | October cohort ≥18% |
@@ -139,6 +139,10 @@ Change a band only in a PR that says why, and re-score the history line it affec
 | 2026-09-27 | Email | Resend click tracking switched on for deutsch-meister.de (via connector) | click rate unknown → _next run_ | — | expected: click rate becomes measurable; required before any offer email |
 | 2026-09-27 | Security | Revoked PUBLIC/anon/authenticated EXECUTE on 3 SECURITY DEFINER functions (applied) + class test | exposed functions 2 → 0 | keep | `REVOKE … FROM anon, authenticated` is a no-op while PUBLIC holds EXECUTE; always name PUBLIC |
 | 2026-09-27 | Revenue | Launch-readiness audit | — | — | the staged launch script was the expired telc/START49 email; the precondition purchase never happened; audit before any send |
+| 2026-09-27 | Acquisition | Traced the X-Ray "spike" (150–350 anon analyses/day since 09-14) | 98.3% of anon analyses = our own `grammar_examples` sentences, flat over 24 h, N ids per IP-day, 49 IP-days stopped at the 12 cap → **crawler** rendering the "Examine in X-Ray" links added 09-14 (96fe7e1) | fixed | a traffic number is not reach until it is split into humans vs bots; the "bright spot" in the first scorecard was wrong |
+| 2026-09-27 | Support | `/support` open to everyone + links in every footer and the account menu (the only form sat behind the subscription guard: ~97% of accounts could not reach it) | tickets/30 d 0 → _next run_ | — | expected: first tickets within 2 weeks |
+| 2026-09-27 | Activation | Confirm link no longer dead-ends on /login; last onboarding slide sends beginners straight to A1.1 Lektion 1; dashboard "Start here" card | Sep cohort signup→lesson 10% → _October cohort_ | — | expected ≥18% |
+| 2026-09-27 | Product | Speaking: close sessions by server-counted turns; zero-turn sessions return the trial allowance; mic checked before a session is created | zero-turn 53% (13 of 24 were a counting bug) → _next run_ | — | expected <15%; 7/20 trial sessions this month were burnt |
 
 ## 7. How to refresh (exact sources)
 
@@ -187,4 +191,4 @@ select status, count(*) from subscriptions where price_paid > 0 group by 1;
 - DataForSEO: `api.dataforseo.com` is not on this environment's network allowlist.
 - Email opens: open tracking is off by choice; pixels are unreliable. Clicks have been
   tracked since 2026-09-27.
-- X-Ray traffic source: no referrer is stored.
+- X-Ray traffic source: logged per call since PR #155; stored once `migrations/2026-09-27-xray-usage-source.sql` is applied.
