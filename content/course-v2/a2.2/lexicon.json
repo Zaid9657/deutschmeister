@@ -672,6 +672,24 @@
       "wordId": null
     },
     {
+      "id": "lx.ziel",
+      "lemma": "Ziel",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Ziele",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a2.2-u02",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "goal, destination"
+      },
+      "example": "Was ist das Ziel von unserem Ausflug?",
+      "exampleEn": "What is the destination of our trip?",
+      "wordId": null
+    },
+    {
       "id": "lx.badesee",
       "lemma": "Badesee",
       "pos": "NOUN",
@@ -844,6 +862,24 @@
       "wordId": null
     },
     {
+      "id": "lx.radtour",
+      "lemma": "Radtour",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Radtouren",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.2-u02",
+      "block": 2,
+      "list_ref": "compound:Rad+Tour",
+      "gloss": {
+        "en": "bike tour"
+      },
+      "example": "Am Sonntag machen wir eine Radtour um den See.",
+      "exampleEn": "On Sunday we are doing a bike tour around the lake.",
+      "wordId": null
+    },
+    {
       "id": "lx.sich-einigen",
       "lemma": "sich einigen",
       "pos": "VERB",
@@ -994,6 +1030,21 @@
         "en": "group chat"
       },
       "example": "Ich schreibe es gleich in den Gruppenchat.",
+      "wordId": null
+    },
+    {
+      "id": "lx.einverstanden",
+      "lemma": "einverstanden",
+      "pos": "ADJ",
+      "role": "productive",
+      "unit": "a2.2-u02",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "in agreement (einverstanden sein: to agree)"
+      },
+      "example": "Wir fahren um neun los. Seid ihr einverstanden?",
+      "exampleEn": "We leave at nine. Do you agree?",
       "wordId": null
     },
     {
@@ -4695,6 +4746,24 @@
         "en": "arrangement, agreement"
       },
       "example": "Nach Absprache können Sie auch früher anfangen.",
+      "wordId": null
+    },
+    {
+      "id": "lx.protokoll",
+      "lemma": "Protokoll",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Protokolle",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a2.2-u10",
+      "block": 2,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "minutes (of a meeting), record"
+      },
+      "example": "Wer schreibt heute das Protokoll?",
+      "exampleEn": "Who is taking the minutes today?",
       "wordId": null
     },
     {

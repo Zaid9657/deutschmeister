@@ -971,7 +971,7 @@
           "lineDe": "Ich suche eine kleine Kaffeemaschine."
         }
       },
-      "endLine": "Sie können jetzt im Kaufhaus nach einem Gerät fragen und sagen, wie Sie es finden."
+      "endLine": "Sie können jetzt im Kaufhaus nach einem Gerät fragen und sagen: Das finde ich praktisch."
     },
     {
       "id": "a2.1-u04-ls2",
@@ -1674,7 +1674,7 @@
         ],
         "register": "du"
       },
-      "endLine": "Sie können jetzt Angebote vergleichen und sagen, was Sie schon haben."
+      "endLine": "Sie können jetzt Angebote vergleichen und kurz antworten: Ich habe schon einen. Wir haben noch welche."
     },
     {
       "id": "a2.1-u04-ls3",
@@ -3004,7 +3004,7 @@
           },
           {
             "id": "lp3",
-            "de": "Sagen Sie, bis wann Sie die Kaffeemaschine brauchen.",
+            "de": "Bis wann brauchen Sie die Kaffeemaschine? Nennen Sie einen Tag.",
             "cues": [
               "bis",
               "brauche",

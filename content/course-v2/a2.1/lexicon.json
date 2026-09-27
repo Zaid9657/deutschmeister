@@ -321,6 +321,21 @@
       "wordId": null
     },
     {
+      "id": "lx.besonders",
+      "lemma": "besonders",
+      "pos": "ADV",
+      "role": "productive",
+      "unit": "a2.1-u01",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "especially, particularly"
+      },
+      "example": "Die Kollegen sind besonders nett.",
+      "exampleEn": "The colleagues are especially nice.",
+      "wordId": null
+    },
+    {
       "id": "lx.mittagspause",
       "lemma": "Mittagspause",
       "pos": "NOUN",
@@ -647,6 +662,21 @@
       "wordId": null
     },
     {
+      "id": "lx.eigen",
+      "lemma": "eigen",
+      "pos": "ADJ",
+      "role": "productive",
+      "unit": "a2.1-u02",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "own"
+      },
+      "example": "Ich suche eine eigene Wohnung.",
+      "exampleEn": "I am looking for a flat of my own.",
+      "wordId": null
+    },
+    {
       "id": "lx.regal",
       "lemma": "Regal",
       "pos": "NOUN",
@@ -797,6 +827,39 @@
         "en": "curtain"
       },
       "example": "Die Vorhänge sind neu.",
+      "wordId": null
+    },
+    {
+      "id": "lx.modern",
+      "lemma": "modern",
+      "pos": "ADJ",
+      "role": "productive",
+      "unit": "a2.1-u02",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "modern"
+      },
+      "example": "Die Küche ist hell und modern.",
+      "exampleEn": "The kitchen is bright and modern.",
+      "wordId": null
+    },
+    {
+      "id": "lx.moebelstueck",
+      "lemma": "Möbelstück",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Möbelstücke",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.1-u02",
+      "block": 2,
+      "list_ref": "compound:Möbel+Stück",
+      "gloss": {
+        "en": "piece of furniture"
+      },
+      "example": "Welches Möbelstück brauchst du noch?",
+      "exampleEn": "Which piece of furniture do you still need?",
       "wordId": null
     },
     {
@@ -1149,6 +1212,24 @@
       "wordId": null
     },
     {
+      "id": "lx.kamera",
+      "lemma": "Kamera",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Kameras",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.1-u03",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "camera"
+      },
+      "example": "Die Kamera von meinem Handy ist sehr gut.",
+      "exampleEn": "The camera on my phone is very good.",
+      "wordId": null
+    },
+    {
       "id": "lx.netz",
       "lemma": "Netz",
       "pos": "NOUN",
@@ -1452,6 +1533,21 @@
         "en": "public"
       },
       "example": "Der Kommentar ist öffentlich, alle können ihn lesen.",
+      "wordId": null
+    },
+    {
+      "id": "lx.per",
+      "lemma": "per",
+      "pos": "PREP",
+      "role": "receptive",
+      "unit": "a2.1-u03",
+      "block": 3,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "by, via (per E-Mail)"
+      },
+      "example": "Ich schicke dir die Adresse per E-Mail.",
+      "exampleEn": "I will send you the address by e-mail.",
       "wordId": null
     },
     {
@@ -2241,6 +2337,24 @@
         "en": "fried, roasted"
       },
       "example": "Ich nehme den gebratenen Fisch.",
+      "wordId": null
+    },
+    {
+      "id": "lx.speise",
+      "lemma": "Speise",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Speisen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.1-u05",
+      "block": 2,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "dish, food"
+      },
+      "example": "Auf der Karte stehen warme und kalte Speisen.",
+      "exampleEn": "The menu has hot and cold dishes.",
       "wordId": null
     },
     {
@@ -3197,6 +3311,43 @@
       "wordId": null
     },
     {
+      "id": "lx.gruppe",
+      "lemma": "Gruppe",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Gruppen",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a2.1-u07",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "group"
+      },
+      "example": "Wir trainieren in einer kleinen Gruppe.",
+      "exampleEn": "We train in a small group.",
+      "wordId": null
+    },
+    {
+      "id": "lx.trainer",
+      "lemma": "Trainer",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Trainer",
+      "plural_kind": "regular",
+      "feminine": "die Trainerin",
+      "role": "receptive",
+      "unit": "a2.1-u07",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "coach, trainer"
+      },
+      "example": "Die Trainerin erklärt die Übung.",
+      "exampleEn": "The (female) coach explains the exercise.",
+      "wordId": null
+    },
+    {
       "id": "lx.gegenvorschlag",
       "lemma": "Gegenvorschlag",
       "pos": "NOUN",
@@ -3685,6 +3836,45 @@
         "en": "technician"
       },
       "example": "Der Techniker kommt um acht.",
+      "wordId": null
+    },
+    {
+      "id": "lx.raum",
+      "lemma": "Raum",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Räume",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a2.1-u08",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "room"
+      },
+      "example": "Die Besprechung ist in Raum 12.",
+      "exampleEn": "The meeting is in room 12.",
+      "wordId": null
+    },
+    {
+      "id": "lx.besprechen",
+      "lemma": "besprechen",
+      "pos": "VERB",
+      "verb_forms": {
+        "2sg": "besprichst",
+        "3sg": "bespricht",
+        "praet": "besprach",
+        "perfekt": "hat besprochen"
+      },
+      "role": "productive",
+      "unit": "a2.1-u08",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to discuss"
+      },
+      "example": "Das besprechen wir morgen im Team.",
+      "exampleEn": "We will discuss that in the team tomorrow.",
       "wordId": null
     },
     {
@@ -4328,6 +4518,21 @@
         "en": "walk"
       },
       "example": "Nach dem Essen machen wir einen Spaziergang.",
+      "wordId": null
+    },
+    {
+      "id": "lx.taeglich",
+      "lemma": "täglich",
+      "pos": "ADJ",
+      "role": "productive",
+      "unit": "a2.1-u09",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "daily"
+      },
+      "example": "Ich gehe täglich eine halbe Stunde spazieren.",
+      "exampleEn": "I go for a walk for half an hour every day.",
       "wordId": null
     },
     {

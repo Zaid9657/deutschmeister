@@ -481,20 +481,6 @@
       "wordId": null
     },
     {
-      "id": "lx.nachtragend",
-      "lemma": "nachtragend",
-      "pos": "ADJ",
-      "role": "receptive",
-      "unit": "b2.2-u01",
-      "block": 2,
-      "list_ref": "freq:est-10k+",
-      "gloss": {
-        "en": "unforgiving, resentful"
-      },
-      "example": "Zum Glück ist meine Freundin nicht nachtragend.",
-      "wordId": null
-    },
-    {
       "id": "lx.verletzlich",
       "lemma": "verletzlich",
       "pos": "ADJ",
@@ -577,6 +563,23 @@
         "en": "shame"
       },
       "example": "Aus Scham hat sie niemandem von ihren Problemen erzählt.",
+      "wordId": null
+    },
+    {
+      "id": "lx.vertrauensbruch",
+      "lemma": "Vertrauensbruch",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Vertrauensbrüche",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u01",
+      "block": 2,
+      "list_ref": "compound:Vertrauen+Bruch",
+      "gloss": {
+        "en": "breach of trust"
+      },
+      "example": "Dass er ihr Geheimnis weitererzählt hat, war für sie ein Vertrauensbruch.",
       "wordId": null
     },
     {
@@ -977,23 +980,6 @@
       "wordId": null
     },
     {
-      "id": "lx.bildschirmzeit",
-      "lemma": "Bildschirmzeit",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": null,
-      "plural_kind": "singular-only",
-      "role": "receptive",
-      "unit": "b2.2-u01",
-      "block": 4,
-      "list_ref": "compound:Bildschirm+Zeit",
-      "gloss": {
-        "en": "screen time"
-      },
-      "example": "Meine Bildschirmzeit liegt bei drei Stunden am Tag.",
-      "wordId": null
-    },
-    {
       "id": "lx.kontaktliste",
       "lemma": "Kontaktliste",
       "pos": "NOUN",
@@ -1008,23 +994,6 @@
         "en": "contact list"
       },
       "example": "In meiner Kontaktliste stehen über 300 Namen, aber echte Freunde sind es nur wenige.",
-      "wordId": null
-    },
-    {
-      "id": "lx.reichweite",
-      "lemma": "Reichweite",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": "Reichweiten",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b2.2-u01",
-      "block": 4,
-      "list_ref": "freq:est-5k-10k",
-      "gloss": {
-        "en": "reach (audience)"
-      },
-      "example": "Der Blogger hat eine große Reichweite.",
       "wordId": null
     },
     {
@@ -1093,6 +1062,41 @@
         "en": "growing loneliness"
       },
       "example": "Die Studie warnt vor einer Vereinsamung junger Menschen.",
+      "wordId": null
+    },
+    {
+      "id": "lx.blockieren",
+      "lemma": "blockieren",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "blockiert",
+        "perfekt": "hat blockiert"
+      },
+      "role": "productive",
+      "unit": "b2.2-u01",
+      "block": 4,
+      "list_ref": "freq:est-5k-10k",
+      "gloss": {
+        "en": "to block"
+      },
+      "example": "Nach dem Streit hat sie ihn in allen Netzwerken blockiert.",
+      "wordId": null
+    },
+    {
+      "id": "lx.profilbild",
+      "lemma": "Profilbild",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Profilbilder",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u01",
+      "block": 4,
+      "list_ref": "compound:Profil+Bild",
+      "gloss": {
+        "en": "profile picture"
+      },
+      "example": "Auf seinem Profilbild ist nur ein Sonnenuntergang zu sehen.",
       "wordId": null
     },
     {
@@ -1575,37 +1579,6 @@
       "wordId": null
     },
     {
-      "id": "lx.kostenuebernahme",
-      "lemma": "Kostenübernahme",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": "Kostenübernahmen",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b2.2-u02",
-      "block": 2,
-      "list_ref": "compound:Kosten+Übernahme",
-      "gloss": {
-        "en": "assumption of costs"
-      },
-      "example": "Bitte beantragen Sie die Kostenübernahme vor Kursbeginn.",
-      "wordId": null
-    },
-    {
-      "id": "lx.chronisch",
-      "lemma": "chronisch",
-      "pos": "ADJ",
-      "role": "receptive",
-      "unit": "b2.2-u02",
-      "block": 2,
-      "list_ref": "freq:est-5k-10k",
-      "gloss": {
-        "en": "chronic"
-      },
-      "example": "Viele chronische Krankheiten hängen mit der Ernährung zusammen.",
-      "wordId": null
-    },
-    {
       "id": "lx.vorbeugend",
       "lemma": "vorbeugend",
       "pos": "ADJ",
@@ -1631,6 +1604,40 @@
         "en": "hereditary"
       },
       "example": "Das Risiko für manche Krankheiten ist teilweise erblich.",
+      "wordId": null
+    },
+    {
+      "id": "lx.veranlagung",
+      "lemma": "Veranlagung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Veranlagungen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u02",
+      "block": 2,
+      "list_ref": "freq:est-10k+",
+      "gloss": {
+        "en": "predisposition"
+      },
+      "example": "Bei Bluthochdruck spielt die erbliche Veranlagung eine große Rolle.",
+      "wordId": null
+    },
+    {
+      "id": "lx.gesundheitscheck",
+      "lemma": "Gesundheitscheck",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Gesundheitschecks",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u02",
+      "block": 2,
+      "list_ref": "compound:Gesundheit+Check",
+      "gloss": {
+        "en": "health check-up"
+      },
+      "example": "Ab 35 zahlt die Krankenkasse alle drei Jahre einen Gesundheitscheck.",
       "wordId": null
     },
     {
@@ -1806,23 +1813,6 @@
       "wordId": null
     },
     {
-      "id": "lx.verbraucherschutz",
-      "lemma": "Verbraucherschutz",
-      "pos": "NOUN",
-      "article": "der",
-      "plural": null,
-      "plural_kind": "singular-only",
-      "role": "receptive",
-      "unit": "b2.2-u02",
-      "block": 3,
-      "list_ref": "compound:Verbraucher+Schutz",
-      "gloss": {
-        "en": "consumer protection"
-      },
-      "example": "Der Verbraucherschutz begrüßt die neue Kennzeichnung.",
-      "wordId": null
-    },
-    {
       "id": "lx.gesundheitspolitik",
       "lemma": "Gesundheitspolitik",
       "pos": "NOUN",
@@ -1902,6 +1892,23 @@
         "en": "traffic-light labelling"
       },
       "example": "Der Nutri-Score ist eine Art Ampelkennzeichnung.",
+      "wordId": null
+    },
+    {
+      "id": "lx.eigenverantwortung",
+      "lemma": "Eigenverantwortung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": null,
+      "plural_kind": "singular-only",
+      "role": "productive",
+      "unit": "b2.2-u02",
+      "block": 3,
+      "list_ref": "compound:eigen+Verantwortung",
+      "gloss": {
+        "en": "personal responsibility"
+      },
+      "example": "Der Staat sollte auf die Eigenverantwortung der Bürger setzen.",
       "wordId": null
     },
     {
@@ -2282,27 +2289,6 @@
       "wordId": null
     },
     {
-      "id": "lx.zugeben",
-      "lemma": "zugeben",
-      "pos": "VERB",
-      "verb_forms": {
-        "2sg": "gibst zu",
-        "3sg": "gibt zu",
-        "praet": "gab zu",
-        "perfekt": "hat zugegeben"
-      },
-      "separable": true,
-      "role": "productive",
-      "unit": "b2.2-u03",
-      "block": 1,
-      "list_ref": "freq:est-5k-10k",
-      "gloss": {
-        "en": "to admit"
-      },
-      "example": "Ich gebe zu, dass ich mich nicht gut abgesprochen habe.",
-      "wordId": null
-    },
-    {
       "id": "lx.feedbackkultur",
       "lemma": "Feedbackkultur",
       "pos": "NOUN",
@@ -2317,23 +2303,6 @@
         "en": "feedback culture"
       },
       "example": "In unserer Firma fehlt eine offene Feedbackkultur.",
-      "wordId": null
-    },
-    {
-      "id": "lx.selbstreflexion",
-      "lemma": "Selbstreflexion",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": null,
-      "plural_kind": "singular-only",
-      "role": "receptive",
-      "unit": "b2.2-u03",
-      "block": 1,
-      "list_ref": "compound:selbst+Reflexion",
-      "gloss": {
-        "en": "self-reflection"
-      },
-      "example": "Gutes Feedback beginnt mit Selbstreflexion.",
       "wordId": null
     },
     {
@@ -2354,23 +2323,6 @@
       "wordId": null
     },
     {
-      "id": "lx.verbesserungsvorschlag",
-      "lemma": "Verbesserungsvorschlag",
-      "pos": "NOUN",
-      "article": "der",
-      "plural": "Verbesserungsvorschläge",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b2.2-u03",
-      "block": 1,
-      "list_ref": "compound:Verbesserung+Vorschlag",
-      "gloss": {
-        "en": "suggestion for improvement"
-      },
-      "example": "Haben Sie einen Verbesserungsvorschlag?",
-      "wordId": null
-    },
-    {
       "id": "lx.zielvereinbarung",
       "lemma": "Zielvereinbarung",
       "pos": "NOUN",
@@ -2385,25 +2337,6 @@
         "en": "target agreement"
       },
       "example": "Im Gespräch wurde eine neue Zielvereinbarung getroffen.",
-      "wordId": null
-    },
-    {
-      "id": "lx.anmerken",
-      "lemma": "anmerken",
-      "pos": "VERB",
-      "verb_forms": {
-        "3sg": "merkt an",
-        "perfekt": "hat angemerkt"
-      },
-      "separable": true,
-      "role": "receptive",
-      "unit": "b2.2-u03",
-      "block": 1,
-      "list_ref": "freq:est-10k+",
-      "gloss": {
-        "en": "to remark, note"
-      },
-      "example": "Ich möchte kurz anmerken, dass der Plan nicht fair ist.",
       "wordId": null
     },
     {
@@ -2425,20 +2358,6 @@
       "wordId": null
     },
     {
-      "id": "lx.wohlwollend",
-      "lemma": "wohlwollend",
-      "pos": "ADJ",
-      "role": "receptive",
-      "unit": "b2.2-u03",
-      "block": 1,
-      "list_ref": "freq:est-10k+",
-      "gloss": {
-        "en": "benevolent, well-meaning"
-      },
-      "example": "Sie hat mein Feedback wohlwollend aufgenommen.",
-      "wordId": null
-    },
-    {
       "id": "lx.sachbezogen",
       "lemma": "sachbezogen",
       "pos": "ADJ",
@@ -2453,17 +2372,99 @@
       "wordId": null
     },
     {
-      "id": "lx.pauschal",
-      "lemma": "pauschal",
-      "pos": "ADJ",
+      "id": "lx.selbsteinschaetzung",
+      "lemma": "Selbsteinschätzung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Selbsteinschätzungen",
+      "plural_kind": "regular",
       "role": "receptive",
       "unit": "b2.2-u03",
       "block": 1,
-      "list_ref": "freq:est-5k-10k",
+      "list_ref": "compound:selbst+Einschätzung",
       "gloss": {
-        "en": "sweeping, blanket"
+        "en": "self-assessment"
       },
-      "example": "Solche pauschalen Vorwürfe helfen niemandem.",
+      "example": "Vor dem Gespräch füllt jeder eine kurze Selbsteinschätzung aus.",
+      "wordId": null
+    },
+    {
+      "id": "lx.fremdeinschaetzung",
+      "lemma": "Fremdeinschätzung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Fremdeinschätzungen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u03",
+      "block": 1,
+      "list_ref": "compound:fremd+Einschätzung",
+      "gloss": {
+        "en": "assessment by others"
+      },
+      "example": "Selbst- und Fremdeinschätzung lagen weit auseinander.",
+      "wordId": null
+    },
+    {
+      "id": "lx.verbesserungsbedarf",
+      "lemma": "Verbesserungsbedarf",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": null,
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "b2.2-u03",
+      "block": 1,
+      "list_ref": "compound:Verbesserung+Bedarf",
+      "gloss": {
+        "en": "need for improvement"
+      },
+      "example": "Bei der Dokumentation sehe ich noch Verbesserungsbedarf.",
+      "wordId": null
+    },
+    {
+      "id": "lx.wertschaetzend",
+      "lemma": "wertschätzend",
+      "pos": "ADJ",
+      "role": "productive",
+      "unit": "b2.2-u03",
+      "block": 1,
+      "list_ref": "derived:Wertschätzung",
+      "gloss": {
+        "en": "appreciative, respectful"
+      },
+      "example": "Kritik sollte immer wertschätzend formuliert sein.",
+      "wordId": null
+    },
+    {
+      "id": "lx.unter-vier-augen",
+      "lemma": "unter vier Augen",
+      "pos": "PHRASE",
+      "role": "receptive",
+      "unit": "b2.2-u03",
+      "block": 1,
+      "list_ref": "off-list:idiom",
+      "gloss": {
+        "en": "in private, one-to-one"
+      },
+      "example": "Das möchte ich lieber unter vier Augen mit Ihnen besprechen.",
+      "wordId": null
+    },
+    {
+      "id": "lx.entwicklungsgespraech",
+      "lemma": "Entwicklungsgespräch",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Entwicklungsgespräche",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u03",
+      "block": 1,
+      "list_ref": "compound:Entwicklung+Gespräch",
+      "gloss": {
+        "en": "development review (meeting)"
+      },
+      "example": "Im Entwicklungsgespräch haben wir über meine Weiterbildung gesprochen.",
       "wordId": null
     },
     {
@@ -2614,23 +2615,6 @@
       "wordId": null
     },
     {
-      "id": "lx.streitpunkt",
-      "lemma": "Streitpunkt",
-      "pos": "NOUN",
-      "article": "der",
-      "plural": "Streitpunkte",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b2.2-u03",
-      "block": 2,
-      "list_ref": "compound:Streit+Punkt",
-      "gloss": {
-        "en": "point of contention"
-      },
-      "example": "Der größte Streitpunkt sind die Wochenenddienste.",
-      "wordId": null
-    },
-    {
       "id": "lx.frustration",
       "lemma": "Frustration",
       "pos": "NOUN",
@@ -2683,24 +2667,6 @@
       "wordId": null
     },
     {
-      "id": "lx.schlichten",
-      "lemma": "schlichten",
-      "pos": "VERB",
-      "verb_forms": {
-        "3sg": "schlichtet",
-        "perfekt": "hat geschlichtet"
-      },
-      "role": "receptive",
-      "unit": "b2.2-u03",
-      "block": 2,
-      "list_ref": "freq:est-10k+",
-      "gloss": {
-        "en": "to settle, mediate (a dispute)"
-      },
-      "example": "Die Teamleiterin versucht, den Streit zu schlichten.",
-      "wordId": null
-    },
-    {
       "id": "lx.sich-angegriffen-fuehlen",
       "lemma": "sich angegriffen fühlen",
       "pos": "PHRASE",
@@ -2740,6 +2706,44 @@
         "en": "frustrated"
       },
       "example": "Sie ist frustriert, weil ihr Vorschlag ignoriert wurde.",
+      "wordId": null
+    },
+    {
+      "id": "lx.auseinandersetzung",
+      "lemma": "Auseinandersetzung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Auseinandersetzungen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u03",
+      "block": 2,
+      "list_ref": "freq:est-3k-5k",
+      "gloss": {
+        "en": "argument, dispute"
+      },
+      "example": "Nach der Auseinandersetzung haben die beiden kaum noch miteinander geredet.",
+      "wordId": null
+    },
+    {
+      "id": "lx.aneinandergeraten",
+      "lemma": "aneinandergeraten",
+      "pos": "VERB",
+      "verb_forms": {
+        "2sg": "gerätst aneinander",
+        "3sg": "gerät aneinander",
+        "praet": "geriet aneinander",
+        "perfekt": "ist aneinandergeraten"
+      },
+      "separable": true,
+      "role": "receptive",
+      "unit": "b2.2-u03",
+      "block": 2,
+      "list_ref": "freq:est-10k+",
+      "gloss": {
+        "en": "to clash, to get into an argument"
+      },
+      "example": "In der Besprechung sind die beiden Teamleiter heftig aneinandergeraten.",
       "wordId": null
     },
     {
@@ -2936,23 +2940,6 @@
       "wordId": null
     },
     {
-      "id": "lx.resturlaub",
-      "lemma": "Resturlaub",
-      "pos": "NOUN",
-      "article": "der",
-      "plural": null,
-      "plural_kind": "singular-only",
-      "role": "receptive",
-      "unit": "b2.2-u03",
-      "block": 3,
-      "list_ref": "compound:Rest+Urlaub",
-      "gloss": {
-        "en": "remaining holiday"
-      },
-      "example": "Ich habe noch fünf Tage Resturlaub.",
-      "wordId": null
-    },
-    {
       "id": "lx.brueckentag",
       "lemma": "Brückentag",
       "pos": "NOUN",
@@ -2967,23 +2954,6 @@
         "en": "bridge day (between holiday and weekend)"
       },
       "example": "Um die Brückentage gibt es jedes Jahr Streit.",
-      "wordId": null
-    },
-    {
-      "id": "lx.zustaendigkeit",
-      "lemma": "Zuständigkeit",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": "Zuständigkeiten",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b2.2-u03",
-      "block": 3,
-      "list_ref": "derived:zuständig",
-      "gloss": {
-        "en": "responsibility, competence"
-      },
-      "example": "Die Zuständigkeiten im Team sind nicht klar geregelt.",
       "wordId": null
     },
     {
@@ -3021,6 +2991,40 @@
         "en": "unequal"
       },
       "example": "Die Aufgaben sind im Moment sehr ungleich verteilt.",
+      "wordId": null
+    },
+    {
+      "id": "lx.urlaubsvertretung",
+      "lemma": "Urlaubsvertretung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Urlaubsvertretungen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u03",
+      "block": 3,
+      "list_ref": "compound:Urlaub+Vertretung",
+      "gloss": {
+        "en": "holiday cover (person or arrangement)"
+      },
+      "example": "Wer übernimmt im August die Urlaubsvertretung?",
+      "wordId": null
+    },
+    {
+      "id": "lx.auslastung",
+      "lemma": "Auslastung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": null,
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "b2.2-u03",
+      "block": 3,
+      "list_ref": "freq:est-10k+",
+      "gloss": {
+        "en": "workload, capacity utilisation"
+      },
+      "example": "Die Auslastung im Team ist im Dezember besonders hoch.",
       "wordId": null
     },
     {
@@ -3185,43 +3189,6 @@
       "wordId": null
     },
     {
-      "id": "lx.gespraechsbereitschaft",
-      "lemma": "Gesprächsbereitschaft",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": null,
-      "plural_kind": "singular-only",
-      "role": "receptive",
-      "unit": "b2.2-u03",
-      "block": 4,
-      "list_ref": "compound:Gespräch+Bereitschaft",
-      "gloss": {
-        "en": "willingness to talk"
-      },
-      "example": "Beide Seiten signalisieren Gesprächsbereitschaft.",
-      "wordId": null
-    },
-    {
-      "id": "lx.nachvollziehen",
-      "lemma": "nachvollziehen",
-      "pos": "VERB",
-      "verb_forms": {
-        "3sg": "vollzieht nach",
-        "praet": "vollzog nach",
-        "perfekt": "hat nachvollzogen"
-      },
-      "separable": true,
-      "role": "receptive",
-      "unit": "b2.2-u03",
-      "block": 4,
-      "list_ref": "freq:est-5k-10k",
-      "gloss": {
-        "en": "to understand, follow (reasoning)"
-      },
-      "example": "Ich kann Ihren Ärger gut nachvollziehen.",
-      "wordId": null
-    },
-    {
       "id": "lx.sich-annaehern",
       "lemma": "sich annähern",
       "pos": "VERB",
@@ -3312,6 +3279,43 @@
         "en": "de-escalation"
       },
       "example": "Der Coach erklärt einfache Techniken der Deeskalation.",
+      "wordId": null
+    },
+    {
+      "id": "lx.zugestehen",
+      "lemma": "zugestehen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "gesteht zu",
+        "praet": "gestand zu",
+        "perfekt": "hat zugestanden"
+      },
+      "separable": true,
+      "role": "receptive",
+      "unit": "b2.2-u03",
+      "block": 4,
+      "list_ref": "freq:est-10k+",
+      "gloss": {
+        "en": "to concede, to grant"
+      },
+      "example": "Man muss ihr zugestehen, dass sie viele Überstunden gemacht hat.",
+      "wordId": null
+    },
+    {
+      "id": "lx.kompromissbereitschaft",
+      "lemma": "Kompromissbereitschaft",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": null,
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "b2.2-u03",
+      "block": 4,
+      "list_ref": "derived:kompromissbereit",
+      "gloss": {
+        "en": "willingness to compromise"
+      },
+      "example": "Ohne Kompromissbereitschaft auf beiden Seiten finden wir keine Lösung.",
       "wordId": null
     },
     {
@@ -3670,23 +3674,6 @@
       "wordId": null
     },
     {
-      "id": "lx.kleingedruckte",
-      "lemma": "Kleingedruckte",
-      "pos": "NOUN",
-      "article": "das",
-      "plural": null,
-      "plural_kind": "singular-only",
-      "role": "receptive",
-      "unit": "b2.2-u04",
-      "block": 2,
-      "list_ref": "derived:klein gedruckt",
-      "gloss": {
-        "en": "small print"
-      },
-      "example": "Im Kleingedruckten steht eine Haftungsgrenze.",
-      "wordId": null
-    },
-    {
       "id": "lx.haftungsgrenze",
       "lemma": "Haftungsgrenze",
       "pos": "NOUN",
@@ -3771,37 +3758,6 @@
         "en": "contractor"
       },
       "example": "Der Auftragnehmer haftet für Schäden beim Transport.",
-      "wordId": null
-    },
-    {
-      "id": "lx.leistungsumfang",
-      "lemma": "Leistungsumfang",
-      "pos": "NOUN",
-      "article": "der",
-      "plural": null,
-      "plural_kind": "singular-only",
-      "role": "receptive",
-      "unit": "b2.2-u04",
-      "block": 2,
-      "list_ref": "compound:Leistung+Umfang",
-      "gloss": {
-        "en": "scope of services"
-      },
-      "example": "Der Leistungsumfang ist im Angebot genau beschrieben.",
-      "wordId": null
-    },
-    {
-      "id": "lx.vertraglich",
-      "lemma": "vertraglich",
-      "pos": "ADJ",
-      "role": "receptive",
-      "unit": "b2.2-u04",
-      "block": 2,
-      "list_ref": "derived:Vertrag",
-      "gloss": {
-        "en": "contractual"
-      },
-      "example": "Der Termin war vertraglich vereinbart.",
       "wordId": null
     },
     {
@@ -3903,20 +3859,6 @@
       "wordId": null
     },
     {
-      "id": "lx.angemessen",
-      "lemma": "angemessen",
-      "pos": "ADJ",
-      "role": "productive",
-      "unit": "b2.2-u04",
-      "block": 3,
-      "list_ref": "freq:est-5k-10k",
-      "gloss": {
-        "en": "appropriate, reasonable"
-      },
-      "example": "Wir halten 400 Euro für eine angemessene Entschädigung.",
-      "wordId": null
-    },
-    {
       "id": "lx.unverhaeltnismaessig",
       "lemma": "unverhältnismäßig",
       "pos": "ADJ",
@@ -3928,23 +3870,6 @@
         "en": "disproportionate"
       },
       "example": "Ihre Forderung ist unverhältnismäßig hoch.",
-      "wordId": null
-    },
-    {
-      "id": "lx.einigung",
-      "lemma": "Einigung",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": "Einigungen",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b2.2-u04",
-      "block": 3,
-      "list_ref": "derived:sich einigen",
-      "gloss": {
-        "en": "agreement"
-      },
-      "example": "Nach einer halben Stunde erzielten wir eine Einigung.",
       "wordId": null
     },
     {
@@ -4089,20 +4014,6 @@
       "wordId": null
     },
     {
-      "id": "lx.vertretbar",
-      "lemma": "vertretbar",
-      "pos": "ADJ",
-      "role": "receptive",
-      "unit": "b2.2-u04",
-      "block": 3,
-      "list_ref": "derived:vertreten",
-      "gloss": {
-        "en": "justifiable, acceptable"
-      },
-      "example": "Ein Abzug von zehn Prozent ist vertretbar.",
-      "wordId": null
-    },
-    {
       "id": "lx.kulant",
       "lemma": "kulant",
       "pos": "ADJ",
@@ -4151,25 +4062,6 @@
       "wordId": null
     },
     {
-      "id": "lx.begleichen",
-      "lemma": "begleichen",
-      "pos": "VERB",
-      "verb_forms": {
-        "3sg": "begleicht",
-        "praet": "beglich",
-        "perfekt": "hat beglichen"
-      },
-      "role": "productive",
-      "unit": "b2.2-u04",
-      "block": 4,
-      "list_ref": "freq:est-10k+",
-      "gloss": {
-        "en": "to settle (a bill)"
-      },
-      "example": "Bitte begleichen Sie den Betrag bis zum 15. Mai.",
-      "wordId": null
-    },
-    {
       "id": "lx.geltend-machen",
       "lemma": "geltend machen",
       "pos": "PHRASE",
@@ -4214,23 +4106,6 @@
         "en": "to refuse"
       },
       "example": "Die Firma weigert sich, den Schaden zu bezahlen.",
-      "wordId": null
-    },
-    {
-      "id": "lx.zahlungsfrist",
-      "lemma": "Zahlungsfrist",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": "Zahlungsfristen",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b2.2-u04",
-      "block": 4,
-      "list_ref": "compound:Zahlung+Frist",
-      "gloss": {
-        "en": "payment deadline"
-      },
-      "example": "Die Zahlungsfrist endet am Freitag.",
       "wordId": null
     },
     {
@@ -4282,23 +4157,6 @@
         "en": "legal expenses insurance"
       },
       "example": "Zum Glück haben wir eine Rechtsschutzversicherung.",
-      "wordId": null
-    },
-    {
-      "id": "lx.verbraucherzentrale",
-      "lemma": "Verbraucherzentrale",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": "Verbraucherzentralen",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b2.2-u04",
-      "block": 4,
-      "list_ref": "compound:Verbraucher+Zentrale",
-      "gloss": {
-        "en": "consumer advice centre"
-      },
-      "example": "Die Verbraucherzentrale hat uns kostenlos beraten.",
       "wordId": null
     },
     {
@@ -4355,28 +4213,6 @@
         "en": "to threaten"
       },
       "example": "Priya hat der Firma rechtliche Schritte angedroht.",
-      "wordId": null
-    },
-    {
-      "id": "lx.sich-vorbehalten",
-      "lemma": "sich vorbehalten",
-      "pos": "VERB",
-      "verb_forms": {
-        "2sg": "behältst dir vor",
-        "3sg": "behält sich vor",
-        "praet": "behielt sich vor",
-        "perfekt": "hat sich vorbehalten"
-      },
-      "separable": true,
-      "reflexive": "dat",
-      "role": "receptive",
-      "unit": "b2.2-u04",
-      "block": 4,
-      "list_ref": "freq:est-5k-10k",
-      "gloss": {
-        "en": "to reserve (the right)"
-      },
-      "example": "Wir behalten uns weitere Schritte vor.",
       "wordId": null
     },
     {
@@ -4901,23 +4737,6 @@
       "wordId": null
     },
     {
-      "id": "lx.modul",
-      "lemma": "Modul",
-      "pos": "NOUN",
-      "article": "das",
-      "plural": "Module",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b2.2-u05",
-      "block": 2,
-      "list_ref": "freq:est-5k-10k",
-      "gloss": {
-        "en": "module"
-      },
-      "example": "Das Modul besteht aus einer Vorlesung und einem Seminar.",
-      "wordId": null
-    },
-    {
       "id": "lx.pflichtveranstaltung",
       "lemma": "Pflichtveranstaltung",
       "pos": "NOUN",
@@ -4999,6 +4818,23 @@
         "en": "obligatory"
       },
       "example": "Ein Praktikum ist in diesem Studiengang obligatorisch.",
+      "wordId": null
+    },
+    {
+      "id": "lx.abschlussarbeit",
+      "lemma": "Abschlussarbeit",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Abschlussarbeiten",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "b2.2-u05",
+      "block": 2,
+      "list_ref": "compound:Abschluss+Arbeit",
+      "gloss": {
+        "en": "final thesis"
+      },
+      "example": "Für die Abschlussarbeit hat man im Bachelor meistens drei Monate Zeit.",
       "wordId": null
     },
     {
@@ -5166,23 +5002,6 @@
       "wordId": null
     },
     {
-      "id": "lx.these",
-      "lemma": "These",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": "Thesen",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b2.2-u05",
-      "block": 3,
-      "list_ref": "freq:est-5k-10k",
-      "gloss": {
-        "en": "thesis, claim"
-      },
-      "example": "Die Dozentin stellt drei Thesen zur Diskussion.",
-      "wordId": null
-    },
-    {
       "id": "lx.plagiat",
       "lemma": "Plagiat",
       "pos": "NOUN",
@@ -5214,23 +5033,6 @@
         "en": "source reference, citation"
       },
       "example": "Ohne Quellenangabe dürfen Sie nicht zitieren.",
-      "wordId": null
-    },
-    {
-      "id": "lx.fachbegriff",
-      "lemma": "Fachbegriff",
-      "pos": "NOUN",
-      "article": "der",
-      "plural": "Fachbegriffe",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b2.2-u05",
-      "block": 3,
-      "list_ref": "compound:Fach+Begriff",
-      "gloss": {
-        "en": "technical term"
-      },
-      "example": "Erklären Sie jeden Fachbegriff im Referat.",
       "wordId": null
     },
     {
@@ -5270,17 +5072,54 @@
       "wordId": null
     },
     {
-      "id": "lx.sinngemaess",
-      "lemma": "sinngemäß",
-      "pos": "ADJ",
+      "id": "lx.sekundaerliteratur",
+      "lemma": "Sekundärliteratur",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": null,
+      "plural_kind": "singular-only",
       "role": "receptive",
       "unit": "b2.2-u05",
       "block": 3,
-      "list_ref": "compound:Sinn+gemäß",
+      "list_ref": "freq:est-10k+",
       "gloss": {
-        "en": "in essence, paraphrased"
+        "en": "secondary literature"
       },
-      "example": "Sinngemäß sagt die Autorin, dass Wohnen immer teurer wird.",
+      "example": "Zu diesem Roman gibt es kaum Sekundärliteratur.",
+      "wordId": null
+    },
+    {
+      "id": "lx.exzerpt",
+      "lemma": "Exzerpt",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Exzerpte",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u05",
+      "block": 3,
+      "list_ref": "freq:est-10k+",
+      "gloss": {
+        "en": "excerpt, reading notes"
+      },
+      "example": "Zu jedem Fachartikel schreibe ich ein kurzes Exzerpt.",
+      "wordId": null
+    },
+    {
+      "id": "lx.recherche",
+      "lemma": "Recherche",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Recherchen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u05",
+      "block": 3,
+      "list_ref": "derived:recherchieren",
+      "gloss": {
+        "en": "research (looking up sources)"
+      },
+      "example": "Die Recherche in der Bibliothek hat länger gedauert als geplant.",
       "wordId": null
     },
     {
@@ -5468,22 +5307,6 @@
       "wordId": null
     },
     {
-      "id": "lx.lebenshaltungskosten",
-      "lemma": "Lebenshaltungskosten",
-      "pos": "NOUN",
-      "plural": "Lebenshaltungskosten",
-      "plural_kind": "plural-only",
-      "role": "receptive",
-      "unit": "b2.2-u05",
-      "block": 4,
-      "list_ref": "compound:Lebenshaltung+Kosten",
-      "gloss": {
-        "en": "cost of living"
-      },
-      "example": "Die Lebenshaltungskosten in München sind hoch.",
-      "wordId": null
-    },
-    {
       "id": "lx.semesterticket",
       "lemma": "Semesterticket",
       "pos": "NOUN",
@@ -5518,20 +5341,6 @@
       "wordId": null
     },
     {
-      "id": "lx.beduerftig",
-      "lemma": "bedürftig",
-      "pos": "ADJ",
-      "role": "receptive",
-      "unit": "b2.2-u05",
-      "block": 4,
-      "list_ref": "freq:est-10k+",
-      "gloss": {
-        "en": "in need"
-      },
-      "example": "Bedürftige Studierende können finanzielle Hilfe beantragen.",
-      "wordId": null
-    },
-    {
       "id": "lx.kostenguenstig",
       "lemma": "kostengünstig",
       "pos": "ADJ",
@@ -5543,6 +5352,40 @@
         "en": "inexpensive"
       },
       "example": "Eine Wohngemeinschaft ist oft die kostengünstigste Lösung.",
+      "wordId": null
+    },
+    {
+      "id": "lx.studierendenwerk",
+      "lemma": "Studierendenwerk",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Studierendenwerke",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u05",
+      "block": 4,
+      "list_ref": "compound:Studierende+Werk",
+      "gloss": {
+        "en": "student services organisation"
+      },
+      "example": "Wohnheimplätze vergibt das Studierendenwerk.",
+      "wordId": null
+    },
+    {
+      "id": "lx.untermietvertrag",
+      "lemma": "Untermietvertrag",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Untermietverträge",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u05",
+      "block": 4,
+      "list_ref": "compound:Untermiete+Vertrag",
+      "gloss": {
+        "en": "sublease agreement"
+      },
+      "example": "Für das WG-Zimmer habe ich nur einen Untermietvertrag.",
       "wordId": null
     },
     {
@@ -5940,25 +5783,6 @@
       "wordId": null
     },
     {
-      "id": "lx.darstellen",
-      "lemma": "darstellen",
-      "pos": "VERB",
-      "verb_forms": {
-        "3sg": "stellt dar",
-        "perfekt": "hat dargestellt"
-      },
-      "separable": true,
-      "role": "productive",
-      "unit": "b2.2-u06",
-      "block": 2,
-      "list_ref": "freq:est-3k-5k",
-      "gloss": {
-        "en": "to portray, depict"
-      },
-      "example": "Der Film stellt das Leben in einem kleinen Dorf sehr realistisch dar.",
-      "wordId": null
-    },
-    {
       "id": "lx.erzaehler",
       "lemma": "Erzähler",
       "pos": "NOUN",
@@ -6126,6 +5950,23 @@
         "en": "autobiographical"
       },
       "example": "Das Buch hat viele autobiografische Züge.",
+      "wordId": null
+    },
+    {
+      "id": "lx.neuerscheinung",
+      "lemma": "Neuerscheinung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Neuerscheinungen",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "b2.2-u06",
+      "block": 2,
+      "list_ref": "compound:neu+Erscheinung",
+      "gloss": {
+        "en": "new publication, new release"
+      },
+      "example": "Auf der Buchmesse werden viele Neuerscheinungen vorgestellt.",
       "wordId": null
     },
     {
@@ -6459,20 +6300,6 @@
       "wordId": null
     },
     {
-      "id": "lx.empfehlenswert",
-      "lemma": "empfehlenswert",
-      "pos": "ADJ",
-      "role": "productive",
-      "unit": "b2.2-u06",
-      "block": 4,
-      "list_ref": "derived:empfehlen",
-      "gloss": {
-        "en": "recommendable"
-      },
-      "example": "Das Buch ist sehr empfehlenswert.",
-      "wordId": null
-    },
-    {
       "id": "lx.kulturbetrieb",
       "lemma": "Kulturbetrieb",
       "pos": "NOUN",
@@ -6655,20 +6482,20 @@
       "wordId": null
     },
     {
-      "id": "lx.epoche",
-      "lemma": "Epoche",
+      "id": "lx.veranstaltungsort",
+      "lemma": "Veranstaltungsort",
       "pos": "NOUN",
-      "article": "die",
-      "plural": "Epochen",
+      "article": "der",
+      "plural": "Veranstaltungsorte",
       "plural_kind": "regular",
       "role": "productive",
-      "unit": "b2.2-u07",
-      "block": 1,
-      "list_ref": "freq:est-5k-10k",
+      "unit": "b2.2-u06",
+      "block": 4,
+      "list_ref": "compound:Veranstaltung+Ort",
       "gloss": {
-        "en": "epoch, era"
+        "en": "venue"
       },
-      "example": "Die Ausstellung zeigt Alltagsgegenstände aus verschiedenen Epochen.",
+      "example": "Der Veranstaltungsort ist barrierefrei erreichbar.",
       "wordId": null
     },
     {
@@ -6753,23 +6580,6 @@
         "en": "era"
       },
       "example": "Mit seinem Rücktritt ging eine Ära zu Ende.",
-      "wordId": null
-    },
-    {
-      "id": "lx.zeitalter",
-      "lemma": "Zeitalter",
-      "pos": "NOUN",
-      "article": "das",
-      "plural": "Zeitalter",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b2.2-u07",
-      "block": 1,
-      "list_ref": "compound:Zeit+Alter",
-      "gloss": {
-        "en": "age, era"
-      },
-      "example": "Wir leben im digitalen Zeitalter.",
       "wordId": null
     },
     {
@@ -6903,21 +6713,54 @@
       "wordId": null
     },
     {
-      "id": "lx.praegen",
-      "lemma": "prägen",
-      "pos": "VERB",
-      "verb_forms": {
-        "3sg": "prägt",
-        "perfekt": "hat geprägt"
-      },
+      "id": "lx.industrialisierung",
+      "lemma": "Industrialisierung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": null,
+      "plural_kind": "singular-only",
       "role": "receptive",
+      "unit": "b2.2-u07",
+      "block": 1,
+      "list_ref": "freq:est-10k+",
+      "gloss": {
+        "en": "industrialisation"
+      },
+      "example": "Mit der Industrialisierung zogen viele Menschen vom Land in die Städte.",
+      "wordId": null
+    },
+    {
+      "id": "lx.revolution",
+      "lemma": "Revolution",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Revolutionen",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "b2.2-u07",
+      "block": 1,
+      "list_ref": "freq:est-3k-5k",
+      "gloss": {
+        "en": "revolution"
+      },
+      "example": "Die friedliche Revolution von 1989 veränderte das Land.",
+      "wordId": null
+    },
+    {
+      "id": "lx.herrschaft",
+      "lemma": "Herrschaft",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Herrschaften",
+      "plural_kind": "regular",
+      "role": "productive",
       "unit": "b2.2-u07",
       "block": 1,
       "list_ref": "freq:est-5k-10k",
       "gloss": {
-        "en": "to shape, leave a mark on"
+        "en": "rule, reign"
       },
-      "example": "Die Jahre in der DDR haben ihn stark geprägt.",
+      "example": "Unter der Herrschaft des Kaisers hatten die Bürger kaum Rechte.",
       "wordId": null
     },
     {
@@ -7060,23 +6903,6 @@
       "wordId": null
     },
     {
-      "id": "lx.stolperstein",
-      "lemma": "Stolperstein",
-      "pos": "NOUN",
-      "article": "der",
-      "plural": "Stolpersteine",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b2.2-u07",
-      "block": 2,
-      "list_ref": "compound:stolpern+Stein",
-      "gloss": {
-        "en": "Stolperstein (memorial cobblestone)"
-      },
-      "example": "Vor dem Haus liegen drei Stolpersteine.",
-      "wordId": null
-    },
-    {
       "id": "lx.gedenkfeier",
       "lemma": "Gedenkfeier",
       "pos": "NOUN",
@@ -7195,6 +7021,23 @@
         "en": "unforgotten"
       },
       "example": "Die Opfer bleiben unvergessen.",
+      "wordId": null
+    },
+    {
+      "id": "lx.gedaechtnis",
+      "lemma": "Gedächtnis",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Gedächtnisse",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "b2.2-u07",
+      "block": 2,
+      "list_ref": "freq:est-5k-10k",
+      "gloss": {
+        "en": "memory"
+      },
+      "example": "Die Ereignisse sind vielen Menschen bis heute im Gedächtnis geblieben.",
       "wordId": null
     },
     {
@@ -7460,20 +7303,6 @@
       "wordId": null
     },
     {
-      "id": "lx.lueckenhaft",
-      "lemma": "lückenhaft",
-      "pos": "ADJ",
-      "role": "receptive",
-      "unit": "b2.2-u07",
-      "block": 3,
-      "list_ref": "derived:Lücke",
-      "gloss": {
-        "en": "incomplete, patchy"
-      },
-      "example": "Seine Erinnerungen sind an manchen Stellen lückenhaft.",
-      "wordId": null
-    },
-    {
       "id": "lx.vermeintlich",
       "lemma": "vermeintlich",
       "pos": "ADJ",
@@ -7485,6 +7314,23 @@
         "en": "supposed, alleged"
       },
       "example": "Der vermeintliche Augenzeuge war damals erst drei Jahre alt.",
+      "wordId": null
+    },
+    {
+      "id": "lx.echtheit",
+      "lemma": "Echtheit",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": null,
+      "plural_kind": "singular-only",
+      "role": "productive",
+      "unit": "b2.2-u07",
+      "block": 3,
+      "list_ref": "derived:echt",
+      "gloss": {
+        "en": "authenticity"
+      },
+      "example": "Ein Experte hat die Echtheit des Briefes bestätigt.",
       "wordId": null
     },
     {
@@ -7570,20 +7416,6 @@
         "en": "persecution"
       },
       "example": "Die Ausstellung erinnert an die Verfolgung politischer Gegner.",
-      "wordId": null
-    },
-    {
-      "id": "lx.historisch",
-      "lemma": "historisch",
-      "pos": "ADJ",
-      "role": "productive",
-      "unit": "b2.2-u07",
-      "block": 4,
-      "list_ref": "freq:est-3k-5k",
-      "gloss": {
-        "en": "historical, historic"
-      },
-      "example": "Der 9. November ist ein historisches Datum.",
       "wordId": null
     },
     {
@@ -7765,6 +7597,23 @@
       "wordId": null
     },
     {
+      "id": "lx.planwirtschaft",
+      "lemma": "Planwirtschaft",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": null,
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "b2.2-u07",
+      "block": 4,
+      "list_ref": "compound:Plan+Wirtschaft",
+      "gloss": {
+        "en": "planned economy"
+      },
+      "example": "In der Planwirtschaft der DDR legte der Staat die Preise fest.",
+      "wordId": null
+    },
+    {
       "id": "lx.terminvergabe",
       "lemma": "Terminvergabe",
       "pos": "NOUN",
@@ -7844,20 +7693,6 @@
         "en": "priority, primarily"
       },
       "example": "Akute Fälle werden vorrangig behandelt.",
-      "wordId": null
-    },
-    {
-      "id": "lx.zeitnah",
-      "lemma": "zeitnah",
-      "pos": "ADJ",
-      "role": "productive",
-      "unit": "b2.2-u08",
-      "block": 1,
-      "list_ref": "freq:est-10k+",
-      "gloss": {
-        "en": "prompt, timely"
-      },
-      "example": "Wir melden uns zeitnah bei Ihnen.",
       "wordId": null
     },
     {
@@ -7994,20 +7829,6 @@
       "wordId": null
     },
     {
-      "id": "lx.tagesaktuell",
-      "lemma": "tagesaktuell",
-      "pos": "ADJ",
-      "role": "receptive",
-      "unit": "b2.2-u08",
-      "block": 1,
-      "list_ref": "compound:Tag+aktuell",
-      "gloss": {
-        "en": "up to the minute, daily updated"
-      },
-      "example": "Freie Termine sehen Sie tagesaktuell im Portal.",
-      "wordId": null
-    },
-    {
       "id": "lx.terminlich",
       "lemma": "terminlich",
       "pos": "ADJ",
@@ -8019,6 +7840,37 @@
         "en": "in terms of scheduling"
       },
       "example": "Terminlich passt es mir erst nächste Woche.",
+      "wordId": null
+    },
+    {
+      "id": "lx.kurzfristig",
+      "lemma": "kurzfristig",
+      "pos": "ADJ",
+      "role": "productive",
+      "unit": "b2.2-u08",
+      "block": 1,
+      "list_ref": "freq:est-5k-10k",
+      "gloss": {
+        "en": "at short notice; short-term"
+      },
+      "example": "Leider müssen wir den Termin kurzfristig absagen.",
+      "wordId": null
+    },
+    {
+      "id": "lx.terminvereinbarung",
+      "lemma": "Terminvereinbarung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Terminvereinbarungen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u08",
+      "block": 1,
+      "list_ref": "compound:Termin+Vereinbarung",
+      "gloss": {
+        "en": "making an appointment"
+      },
+      "example": "Die Terminvereinbarung ist auch online möglich.",
       "wordId": null
     },
     {
@@ -8399,23 +8251,6 @@
       "wordId": null
     },
     {
-      "id": "lx.schweigepflicht",
-      "lemma": "Schweigepflicht",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": null,
-      "plural_kind": "singular-only",
-      "role": "receptive",
-      "unit": "b2.2-u08",
-      "block": 3,
-      "list_ref": "compound:schweigen+Pflicht",
-      "gloss": {
-        "en": "duty of confidentiality"
-      },
-      "example": "Alle Mitarbeitenden stehen unter Schweigepflicht.",
-      "wordId": null
-    },
-    {
       "id": "lx.patientenrecht",
       "lemma": "Patientenrecht",
       "pos": "NOUN",
@@ -8518,23 +8353,6 @@
       "wordId": null
     },
     {
-      "id": "lx.einverstaendniserklaerung",
-      "lemma": "Einverständniserklärung",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": "Einverständniserklärungen",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b2.2-u08",
-      "block": 3,
-      "list_ref": "compound:Einverständnis+Erklärung",
-      "gloss": {
-        "en": "declaration of consent"
-      },
-      "example": "Für die Videosprechstunde brauchen wir Ihre Einverständniserklärung.",
-      "wordId": null
-    },
-    {
       "id": "lx.verschluesselt",
       "lemma": "verschlüsselt",
       "pos": "ADJ",
@@ -8574,6 +8392,37 @@
         "en": "compliant with data protection law"
       },
       "example": "Die Software ist datenschutzkonform.",
+      "wordId": null
+    },
+    {
+      "id": "lx.personenbezogen",
+      "lemma": "personenbezogen",
+      "pos": "ADJ",
+      "role": "productive",
+      "unit": "b2.2-u08",
+      "block": 3,
+      "list_ref": "compound:Person+bezogen",
+      "gloss": {
+        "en": "personal (data), relating to a person"
+      },
+      "example": "Personenbezogene Daten dürfen nur mit Einwilligung weitergegeben werden.",
+      "wordId": null
+    },
+    {
+      "id": "lx.aufklaerungspflicht",
+      "lemma": "Aufklärungspflicht",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Aufklärungspflichten",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u08",
+      "block": 3,
+      "list_ref": "compound:Aufklärung+Pflicht",
+      "gloss": {
+        "en": "duty to inform (the patient)"
+      },
+      "example": "Die Ärztin hat eine Aufklärungspflicht über mögliche Nebenwirkungen.",
       "wordId": null
     },
     {
@@ -8665,40 +8514,6 @@
       "wordId": null
     },
     {
-      "id": "lx.laie",
-      "lemma": "Laie",
-      "pos": "NOUN",
-      "article": "der",
-      "plural": "Laien",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b2.2-u08",
-      "block": 4,
-      "list_ref": "freq:est-10k+",
-      "gloss": {
-        "en": "layperson"
-      },
-      "example": "Das Merkblatt ist für Laien schwer verständlich.",
-      "wordId": null
-    },
-    {
-      "id": "lx.fachsprache",
-      "lemma": "Fachsprache",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": "Fachsprachen",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b2.2-u08",
-      "block": 4,
-      "list_ref": "compound:Fach+Sprache",
-      "gloss": {
-        "en": "technical language"
-      },
-      "example": "Vermeiden Sie in der Antwort die Fachsprache.",
-      "wordId": null
-    },
-    {
       "id": "lx.verstaendlichkeit",
       "lemma": "Verständlichkeit",
       "pos": "NOUN",
@@ -8784,24 +8599,6 @@
       "wordId": null
     },
     {
-      "id": "lx.beschwichtigen",
-      "lemma": "beschwichtigen",
-      "pos": "VERB",
-      "verb_forms": {
-        "3sg": "beschwichtigt",
-        "perfekt": "hat beschwichtigt"
-      },
-      "role": "receptive",
-      "unit": "b2.2-u08",
-      "block": 4,
-      "list_ref": "freq:est-10k+",
-      "gloss": {
-        "en": "to placate, calm down"
-      },
-      "example": "Sara versucht, die aufgebrachte Patientin zu beschwichtigen.",
-      "wordId": null
-    },
-    {
       "id": "lx.laienverstaendlich",
       "lemma": "laienverständlich",
       "pos": "ADJ",
@@ -8827,6 +8624,54 @@
         "en": "hard of hearing"
       },
       "example": "Frau Wiese ist etwas schwerhörig und telefoniert ungern.",
+      "wordId": null
+    },
+    {
+      "id": "lx.anschaulich",
+      "lemma": "anschaulich",
+      "pos": "ADJ",
+      "role": "productive",
+      "unit": "b2.2-u08",
+      "block": 4,
+      "list_ref": "freq:est-10k+",
+      "gloss": {
+        "en": "clear, vivid (easy to picture)"
+      },
+      "example": "Mit einer Zeichnung hat die Ärztin den Eingriff anschaulich erklärt.",
+      "wordId": null
+    },
+    {
+      "id": "lx.verunsicherung",
+      "lemma": "Verunsicherung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Verunsicherungen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u08",
+      "block": 4,
+      "list_ref": "derived:verunsichern",
+      "gloss": {
+        "en": "uncertainty, unease"
+      },
+      "example": "Die neuen Regeln haben bei vielen Patienten zu Verunsicherung geführt.",
+      "wordId": null
+    },
+    {
+      "id": "lx.erlaeuterung",
+      "lemma": "Erläuterung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Erläuterungen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u08",
+      "block": 4,
+      "list_ref": "derived:erläutern",
+      "gloss": {
+        "en": "explanation"
+      },
+      "example": "Auf der Rückseite des Merkblatts finden Sie weitere Erläuterungen.",
       "wordId": null
     },
     {
@@ -9515,23 +9360,6 @@
       "wordId": null
     },
     {
-      "id": "lx.buergerbegehren",
-      "lemma": "Bürgerbegehren",
-      "pos": "NOUN",
-      "article": "das",
-      "plural": "Bürgerbegehren",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b2.2-u09",
-      "block": 3,
-      "list_ref": "compound:Bürger+Begehren",
-      "gloss": {
-        "en": "citizens' initiative (petition for a local vote)"
-      },
-      "example": "Eine Initiative sammelt Unterschriften für ein Bürgerbegehren.",
-      "wordId": null
-    },
-    {
       "id": "lx.buergerentscheid",
       "lemma": "Bürgerentscheid",
       "pos": "NOUN",
@@ -9668,6 +9496,23 @@
       "wordId": null
     },
     {
+      "id": "lx.mitsprache",
+      "lemma": "Mitsprache",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": null,
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "b2.2-u09",
+      "block": 3,
+      "list_ref": "freq:est-10k+",
+      "gloss": {
+        "en": "say, right to have a say"
+      },
+      "example": "Die Anwohner fordern mehr Mitsprache bei der Planung.",
+      "wordId": null
+    },
+    {
       "id": "lx.abwanderung",
       "lemma": "Abwanderung",
       "pos": "NOUN",
@@ -9754,74 +9599,6 @@
       "wordId": null
     },
     {
-      "id": "lx.abwaegen",
-      "lemma": "abwägen",
-      "pos": "VERB",
-      "verb_forms": {
-        "3sg": "wägt ab",
-        "praet": "wog ab",
-        "perfekt": "hat abgewogen"
-      },
-      "separable": true,
-      "role": "productive",
-      "unit": "b2.2-u09",
-      "block": 4,
-      "list_ref": "freq:est-10k+",
-      "gloss": {
-        "en": "to weigh up"
-      },
-      "example": "Man muss die Vor- und Nachteile sorgfältig abwägen.",
-      "wordId": null
-    },
-    {
-      "id": "lx.gegenargument",
-      "lemma": "Gegenargument",
-      "pos": "NOUN",
-      "article": "das",
-      "plural": "Gegenargumente",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b2.2-u09",
-      "block": 4,
-      "list_ref": "compound:gegen+Argument",
-      "gloss": {
-        "en": "counter-argument"
-      },
-      "example": "Auf dieses Gegenargument war sie gut vorbereitet.",
-      "wordId": null
-    },
-    {
-      "id": "lx.kehrseite",
-      "lemma": "Kehrseite",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": "Kehrseiten",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b2.2-u09",
-      "block": 4,
-      "list_ref": "freq:est-10k+",
-      "gloss": {
-        "en": "downside, flip side"
-      },
-      "example": "Die Kehrseite der Medaille sind längere Wege für Pendler.",
-      "wordId": null
-    },
-    {
-      "id": "lx.fuer-und-wider",
-      "lemma": "das Für und Wider",
-      "pos": "PHRASE",
-      "role": "receptive",
-      "unit": "b2.2-u09",
-      "block": 4,
-      "list_ref": "off-list:fixed-expression",
-      "gloss": {
-        "en": "pros and cons"
-      },
-      "example": "Die Radiodiskussion beleuchtet das Für und Wider.",
-      "wordId": null
-    },
-    {
       "id": "lx.zielkonflikt",
       "lemma": "Zielkonflikt",
       "pos": "NOUN",
@@ -9873,28 +9650,6 @@
       "wordId": null
     },
     {
-      "id": "lx.entgegenhalten",
-      "lemma": "entgegenhalten",
-      "pos": "VERB",
-      "verb_forms": {
-        "2sg": "hältst entgegen",
-        "3sg": "hält entgegen",
-        "praet": "hielt entgegen",
-        "perfekt": "hat entgegengehalten"
-      },
-      "separable": true,
-      "rection": "jmdm. etw.",
-      "role": "receptive",
-      "unit": "b2.2-u09",
-      "block": 4,
-      "list_ref": "freq:est-10k+",
-      "gloss": {
-        "en": "to counter (with an argument)"
-      },
-      "example": "Dem kann man entgegenhalten, dass die Luft besser wird.",
-      "wordId": null
-    },
-    {
       "id": "lx.sich-zuspitzen",
       "lemma": "sich zuspitzen",
       "pos": "VERB",
@@ -9912,24 +9667,6 @@
         "en": "to come to a head"
       },
       "example": "Die Debatte hat sich in den letzten Wochen zugespitzt.",
-      "wordId": null
-    },
-    {
-      "id": "lx.polarisieren",
-      "lemma": "polarisieren",
-      "pos": "VERB",
-      "verb_forms": {
-        "3sg": "polarisiert",
-        "perfekt": "hat polarisiert"
-      },
-      "role": "receptive",
-      "unit": "b2.2-u09",
-      "block": 4,
-      "list_ref": "freq:est-10k+",
-      "gloss": {
-        "en": "to polarise"
-      },
-      "example": "Das Thema polarisiert die Stadt.",
       "wordId": null
     },
     {
@@ -9958,6 +9695,114 @@
         "en": "controversial"
       },
       "example": "Der Vorschlag wurde kontrovers diskutiert.",
+      "wordId": null
+    },
+    {
+      "id": "lx.abwaegung",
+      "lemma": "Abwägung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Abwägungen",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "b2.2-u09",
+      "block": 4,
+      "list_ref": "derived:abwägen",
+      "gloss": {
+        "en": "weighing up"
+      },
+      "example": "Nach sorgfältiger Abwägung hat sich der Rat für den Radweg entschieden.",
+      "wordId": null
+    },
+    {
+      "id": "lx.einwenden",
+      "lemma": "einwenden",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "wendet ein",
+        "praet": "wandte ein",
+        "perfekt": "hat eingewandt"
+      },
+      "separable": true,
+      "role": "receptive",
+      "unit": "b2.2-u09",
+      "block": 4,
+      "list_ref": "freq:est-10k+",
+      "gloss": {
+        "en": "to object"
+      },
+      "example": "Man könnte einwenden, dass der Umbau zu teuer ist.",
+      "wordId": null
+    },
+    {
+      "id": "lx.untermauern",
+      "lemma": "untermauern",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "untermauert",
+        "perfekt": "hat untermauert"
+      },
+      "role": "receptive",
+      "unit": "b2.2-u09",
+      "block": 4,
+      "list_ref": "freq:est-10k+",
+      "gloss": {
+        "en": "to back up, to support (an argument)"
+      },
+      "example": "Sie untermauert ihre Position mit Zahlen aus der Verkehrszählung.",
+      "wordId": null
+    },
+    {
+      "id": "lx.interessenkonflikt",
+      "lemma": "Interessenkonflikt",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Interessenkonflikte",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u09",
+      "block": 4,
+      "list_ref": "compound:Interesse+Konflikt",
+      "gloss": {
+        "en": "conflict of interest"
+      },
+      "example": "Zwischen Anwohnern und Geschäftsleuten gibt es einen klaren Interessenkonflikt.",
+      "wordId": null
+    },
+    {
+      "id": "lx.streitkultur",
+      "lemma": "Streitkultur",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": null,
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "b2.2-u09",
+      "block": 4,
+      "list_ref": "compound:Streit+Kultur",
+      "gloss": {
+        "en": "culture of debate"
+      },
+      "example": "Eine gute Streitkultur lebt davon, dass man einander zuhört.",
+      "wordId": null
+    },
+    {
+      "id": "lx.sich-positionieren",
+      "lemma": "sich positionieren",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "positioniert sich",
+        "perfekt": "hat sich positioniert"
+      },
+      "reflexive": "akk",
+      "role": "receptive",
+      "unit": "b2.2-u09",
+      "block": 4,
+      "list_ref": "freq:est-10k+",
+      "gloss": {
+        "en": "to take a position"
+      },
+      "example": "Die Partei hat sich klar gegen das Projekt positioniert.",
       "wordId": null
     },
     {
@@ -10660,23 +10505,6 @@
       "wordId": null
     },
     {
-      "id": "lx.beschaeftigte",
-      "lemma": "Beschäftigte",
-      "pos": "NOUN",
-      "article": "der",
-      "plural": "Beschäftigten",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b2.2-u10",
-      "block": 3,
-      "list_ref": "derived:beschäftigen",
-      "gloss": {
-        "en": "employee"
-      },
-      "example": "Die Beschäftigten wurden früh in die Planung einbezogen.",
-      "wordId": null
-    },
-    {
       "id": "lx.berufsbild",
       "lemma": "Berufsbild",
       "pos": "NOUN",
@@ -10809,6 +10637,23 @@
         "en": "monotonous"
       },
       "example": "Monotone Aufgaben übernimmt künftig die Software.",
+      "wordId": null
+    },
+    {
+      "id": "lx.strukturwandel",
+      "lemma": "Strukturwandel",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": null,
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "b2.2-u10",
+      "block": 3,
+      "list_ref": "compound:Struktur+Wandel",
+      "gloss": {
+        "en": "structural change"
+      },
+      "example": "Der Strukturwandel verändert ganze Berufsbilder.",
       "wordId": null
     },
     {
@@ -11333,38 +11178,6 @@
       "wordId": null
     },
     {
-      "id": "lx.gewaehren",
-      "lemma": "gewähren",
-      "pos": "VERB",
-      "verb_forms": {
-        "3sg": "gewährt",
-        "perfekt": "hat gewährt"
-      },
-      "role": "receptive",
-      "unit": "b2.2-u11",
-      "block": 1,
-      "list_ref": "freq:est-5k-10k",
-      "gloss": {
-        "en": "to grant"
-      },
-      "example": "Der Zuschuss wird nur für anerkannte Kurse gewährt.",
-      "wordId": null
-    },
-    {
-      "id": "lx.ablehnend",
-      "lemma": "ablehnend",
-      "pos": "ADJ",
-      "role": "receptive",
-      "unit": "b2.2-u11",
-      "block": 1,
-      "list_ref": "derived:ablehnen",
-      "gloss": {
-        "en": "negative, dismissive"
-      },
-      "example": "Die Behörde hat ablehnend entschieden.",
-      "wordId": null
-    },
-    {
       "id": "lx.unvollstaendig",
       "lemma": "unvollständig",
       "pos": "ADJ",
@@ -11376,6 +11189,40 @@
         "en": "incomplete"
       },
       "example": "Laut Bescheid war der Antrag unvollständig.",
+      "wordId": null
+    },
+    {
+      "id": "lx.bearbeitungszeit",
+      "lemma": "Bearbeitungszeit",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Bearbeitungszeiten",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "b2.2-u11",
+      "block": 1,
+      "list_ref": "compound:Bearbeitung+Zeit",
+      "gloss": {
+        "en": "processing time"
+      },
+      "example": "Die Bearbeitungszeit beträgt zurzeit etwa sechs Wochen.",
+      "wordId": null
+    },
+    {
+      "id": "lx.bearbeitungsgebuehr",
+      "lemma": "Bearbeitungsgebühr",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Bearbeitungsgebühren",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u11",
+      "block": 1,
+      "list_ref": "compound:Bearbeitung+Gebühr",
+      "gloss": {
+        "en": "processing fee"
+      },
+      "example": "Für den Antrag wird eine Bearbeitungsgebühr von 30 Euro erhoben.",
       "wordId": null
     },
     {
@@ -11410,26 +11257,6 @@
         "en": "remedy, redress"
       },
       "example": "Ich bitte um Abhilfe und eine neue Entscheidung.",
-      "wordId": null
-    },
-    {
-      "id": "lx.einlegen",
-      "lemma": "einlegen",
-      "pos": "VERB",
-      "verb_forms": {
-        "3sg": "legt ein",
-        "perfekt": "hat eingelegt"
-      },
-      "separable": true,
-      "rection": "gegen etw. (Akk.)",
-      "role": "productive",
-      "unit": "b2.2-u11",
-      "block": 2,
-      "list_ref": "freq:est-5k-10k",
-      "gloss": {
-        "en": "to lodge (an objection)"
-      },
-      "example": "Gegen den Bescheid lege ich hiermit Widerspruch ein.",
       "wordId": null
     },
     {
@@ -11470,20 +11297,6 @@
         "en": "to submit later"
       },
       "example": "Den fehlenden Nachweis reiche ich hiermit nach.",
-      "wordId": null
-    },
-    {
-      "id": "lx.fristgerecht",
-      "lemma": "fristgerecht",
-      "pos": "ADJ",
-      "role": "productive",
-      "unit": "b2.2-u11",
-      "block": 2,
-      "list_ref": "compound:Frist+gerecht",
-      "gloss": {
-        "en": "within the deadline"
-      },
-      "example": "Der Widerspruch ist fristgerecht eingegangen.",
       "wordId": null
     },
     {
@@ -11589,25 +11402,6 @@
       "wordId": null
     },
     {
-      "id": "lx.richtigstellen",
-      "lemma": "richtigstellen",
-      "pos": "VERB",
-      "verb_forms": {
-        "3sg": "stellt richtig",
-        "perfekt": "hat richtiggestellt"
-      },
-      "separable": true,
-      "role": "receptive",
-      "unit": "b2.2-u11",
-      "block": 2,
-      "list_ref": "compound:richtig+stellen",
-      "gloss": {
-        "en": "to correct, set straight"
-      },
-      "example": "Ich möchte einen Fehler im Bescheid richtigstellen.",
-      "wordId": null
-    },
-    {
       "id": "lx.abweisen",
       "lemma": "abweisen",
       "pos": "VERB",
@@ -11650,20 +11444,6 @@
       "wordId": null
     },
     {
-      "id": "lx.zulaessig",
-      "lemma": "zulässig",
-      "pos": "ADJ",
-      "role": "receptive",
-      "unit": "b2.2-u11",
-      "block": 2,
-      "list_ref": "freq:est-5k-10k",
-      "gloss": {
-        "en": "permissible, admissible"
-      },
-      "example": "Ein Widerspruch per einfacher E-Mail ist oft nicht zulässig.",
-      "wordId": null
-    },
-    {
       "id": "lx.fristwahrend",
       "lemma": "fristwahrend",
       "pos": "ADJ",
@@ -11675,6 +11455,65 @@
         "en": "meeting the deadline"
       },
       "example": "Senden Sie den Widerspruch fristwahrend per Einschreiben.",
+      "wordId": null
+    },
+    {
+      "id": "lx.klage",
+      "lemma": "Klage",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Klagen",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "b2.2-u11",
+      "block": 2,
+      "list_ref": "freq:est-3k-5k",
+      "gloss": {
+        "en": "lawsuit, legal action"
+      },
+      "example": "Wird der Widerspruch abgelehnt, bleibt nur noch die Klage vor Gericht.",
+      "wordId": null
+    },
+    {
+      "id": "lx.rechtswidrig",
+      "lemma": "rechtswidrig",
+      "pos": "ADJ",
+      "role": "productive",
+      "unit": "b2.2-u11",
+      "block": 2,
+      "list_ref": "freq:est-10k+",
+      "gloss": {
+        "en": "unlawful"
+      },
+      "example": "Ich halte den Bescheid für rechtswidrig.",
+      "wordId": null
+    },
+    {
+      "id": "lx.unbegruendet",
+      "lemma": "unbegründet",
+      "pos": "ADJ",
+      "role": "productive",
+      "unit": "b2.2-u11",
+      "block": 2,
+      "list_ref": "derived:begründen",
+      "gloss": {
+        "en": "unfounded, without justification"
+      },
+      "example": "Die Behörde hält meinen Widerspruch für unbegründet.",
+      "wordId": null
+    },
+    {
+      "id": "lx.nachweislich",
+      "lemma": "nachweislich",
+      "pos": "ADV",
+      "role": "receptive",
+      "unit": "b2.2-u11",
+      "block": 2,
+      "list_ref": "derived:nachweisen",
+      "gloss": {
+        "en": "demonstrably, as can be proven"
+      },
+      "example": "Die Unterlagen sind nachweislich rechtzeitig eingegangen.",
       "wordId": null
     },
     {
@@ -11709,23 +11548,6 @@
         "en": "special right of termination"
       },
       "example": "Nach der Preiserhöhung haben Sie ein Sonderkündigungsrecht.",
-      "wordId": null
-    },
-    {
-      "id": "lx.kuendigungsbestaetigung",
-      "lemma": "Kündigungsbestätigung",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": "Kündigungsbestätigungen",
-      "plural_kind": "regular",
-      "role": "productive",
-      "unit": "b2.2-u11",
-      "block": 3,
-      "list_ref": "compound:Kündigung+Bestätigung",
-      "gloss": {
-        "en": "confirmation of cancellation"
-      },
-      "example": "Bitte schicken Sie mir eine schriftliche Kündigungsbestätigung.",
       "wordId": null
     },
     {
@@ -11790,23 +11612,6 @@
         "en": "termination date"
       },
       "example": "Der nächste Kündigungstermin ist der 31. März.",
-      "wordId": null
-    },
-    {
-      "id": "lx.mindestlaufzeit",
-      "lemma": "Mindestlaufzeit",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": "Mindestlaufzeiten",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b2.2-u11",
-      "block": 3,
-      "list_ref": "compound:mindest+Laufzeit",
-      "gloss": {
-        "en": "minimum term"
-      },
-      "example": "Der Vertrag hat eine Mindestlaufzeit von 24 Monaten.",
       "wordId": null
     },
     {
@@ -11952,6 +11757,40 @@
       "wordId": null
     },
     {
+      "id": "lx.vertragsaenderung",
+      "lemma": "Vertragsänderung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Vertragsänderungen",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "b2.2-u11",
+      "block": 3,
+      "list_ref": "compound:Vertrag+Änderung",
+      "gloss": {
+        "en": "change to a contract"
+      },
+      "example": "Jede Vertragsänderung muss schriftlich bestätigt werden.",
+      "wordId": null
+    },
+    {
+      "id": "lx.kuendigungsgrund",
+      "lemma": "Kündigungsgrund",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Kündigungsgründe",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u11",
+      "block": 3,
+      "list_ref": "compound:Kündigung+Grund",
+      "gloss": {
+        "en": "reason for termination"
+      },
+      "example": "Einen Kündigungsgrund müssen Sie bei einer ordentlichen Kündigung nicht nennen.",
+      "wordId": null
+    },
+    {
       "id": "lx.amtsdeutsch",
       "lemma": "Amtsdeutsch",
       "pos": "NOUN",
@@ -12015,20 +11854,6 @@
         "en": "comprehensible, understandable"
       },
       "example": "Die Begründung ist für mich nicht nachvollziehbar.",
-      "wordId": null
-    },
-    {
-      "id": "lx.hiermit",
-      "lemma": "hiermit",
-      "pos": "ADV",
-      "role": "productive",
-      "unit": "b2.2-u11",
-      "block": 4,
-      "list_ref": "freq:est-5k-10k",
-      "gloss": {
-        "en": "hereby"
-      },
-      "example": "Hiermit lege ich Widerspruch gegen Ihren Bescheid ein.",
       "wordId": null
     },
     {
@@ -12223,6 +12048,20 @@
       "wordId": null
     },
     {
+      "id": "lx.behoerdlich",
+      "lemma": "behördlich",
+      "pos": "ADJ",
+      "role": "productive",
+      "unit": "b2.2-u11",
+      "block": 4,
+      "list_ref": "derived:Behörde",
+      "gloss": {
+        "en": "official, by the authorities"
+      },
+      "example": "Für den Umbau brauchen Sie eine behördliche Genehmigung.",
+      "wordId": null
+    },
+    {
       "id": "lx.mundart",
       "lemma": "Mundart",
       "pos": "NOUN",
@@ -12305,37 +12144,6 @@
         "en": "peculiarity, characteristic"
       },
       "example": "Jede Region hat ihre sprachlichen Eigenarten.",
-      "wordId": null
-    },
-    {
-      "id": "lx.klischee",
-      "lemma": "Klischee",
-      "pos": "NOUN",
-      "article": "das",
-      "plural": "Klischees",
-      "plural_kind": "regular",
-      "role": "productive",
-      "unit": "b2.2-u12",
-      "block": 1,
-      "list_ref": "freq:est-10k+",
-      "gloss": {
-        "en": "cliché, stereotype"
-      },
-      "example": "Das Klischee vom unfreundlichen Berliner stimmt nicht.",
-      "wordId": null
-    },
-    {
-      "id": "lx.regional",
-      "lemma": "regional",
-      "pos": "ADJ",
-      "role": "productive",
-      "unit": "b2.2-u12",
-      "block": 1,
-      "list_ref": "freq:est-5k-10k",
-      "gloss": {
-        "en": "regional"
-      },
-      "example": "Manche Wörter werden nur regional verwendet.",
       "wordId": null
     },
     {
@@ -12532,6 +12340,48 @@
       "wordId": null
     },
     {
+      "id": "lx.sueddeutsch",
+      "lemma": "süddeutsch",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "b2.2-u12",
+      "block": 1,
+      "list_ref": "compound:Süden+deutsch",
+      "gloss": {
+        "en": "southern German"
+      },
+      "example": "Im süddeutschen Raum sagt man oft „Grüß Gott“.",
+      "wordId": null
+    },
+    {
+      "id": "lx.norddeutsch",
+      "lemma": "norddeutsch",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "b2.2-u12",
+      "block": 1,
+      "list_ref": "compound:Norden+deutsch",
+      "gloss": {
+        "en": "northern German"
+      },
+      "example": "Das norddeutsche „Moin“ hört man inzwischen auch in Berlin.",
+      "wordId": null
+    },
+    {
+      "id": "lx.sprachlich",
+      "lemma": "sprachlich",
+      "pos": "ADJ",
+      "role": "productive",
+      "unit": "b2.2-u12",
+      "block": 1,
+      "list_ref": "derived:Sprache",
+      "gloss": {
+        "en": "linguistic"
+      },
+      "example": "Die sprachlichen Unterschiede zwischen den Regionen sind groß.",
+      "wordId": null
+    },
+    {
       "id": "lx.mehrsprachigkeit",
       "lemma": "Mehrsprachigkeit",
       "pos": "NOUN",
@@ -12617,25 +12467,6 @@
         "en": "to communicate, make oneself understood"
       },
       "example": "Im Sprachcafé verständigen sich alle auf Deutsch.",
-      "wordId": null
-    },
-    {
-      "id": "lx.vermitteln",
-      "lemma": "vermitteln",
-      "pos": "VERB",
-      "verb_forms": {
-        "3sg": "vermittelt",
-        "perfekt": "hat vermittelt"
-      },
-      "rection": "zwischen jmdm.",
-      "role": "productive",
-      "unit": "b2.2-u12",
-      "block": 2,
-      "list_ref": "freq:est-3k-5k",
-      "gloss": {
-        "en": "to mediate; to convey"
-      },
-      "example": "Priya vermittelt zwischen den beiden Positionen.",
       "wordId": null
     },
     {
@@ -12837,6 +12668,23 @@
       "wordId": null
     },
     {
+      "id": "lx.zweitsprache",
+      "lemma": "Zweitsprache",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Zweitsprachen",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "b2.2-u12",
+      "block": 2,
+      "list_ref": "compound:zwei+Sprache",
+      "gloss": {
+        "en": "second language"
+      },
+      "example": "Deutsch ist für viele Kinder in der Klasse eine Zweitsprache.",
+      "wordId": null
+    },
+    {
       "id": "lx.redebeitrag",
       "lemma": "Redebeitrag",
       "pos": "NOUN",
@@ -12868,24 +12716,6 @@
         "en": "request to speak"
       },
       "example": "Gibt es weitere Wortmeldungen?",
-      "wordId": null
-    },
-    {
-      "id": "lx.moderieren",
-      "lemma": "moderieren",
-      "pos": "VERB",
-      "verb_forms": {
-        "3sg": "moderiert",
-        "perfekt": "hat moderiert"
-      },
-      "role": "productive",
-      "unit": "b2.2-u12",
-      "block": 3,
-      "list_ref": "freq:est-10k+",
-      "gloss": {
-        "en": "to moderate, host"
-      },
-      "example": "Priya moderiert heute den Abend im Sprachcafé.",
       "wordId": null
     },
     {
@@ -12997,91 +12827,6 @@
       "wordId": null
     },
     {
-      "id": "lx.redezeit",
-      "lemma": "Redezeit",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": null,
-      "plural_kind": "singular-only",
-      "role": "receptive",
-      "unit": "b2.2-u12",
-      "block": 3,
-      "list_ref": "compound:Rede+Zeit",
-      "gloss": {
-        "en": "speaking time"
-      },
-      "example": "Jeder hat drei Minuten Redezeit.",
-      "wordId": null
-    },
-    {
-      "id": "lx.rederecht",
-      "lemma": "Rederecht",
-      "pos": "NOUN",
-      "article": "das",
-      "plural": null,
-      "plural_kind": "singular-only",
-      "role": "receptive",
-      "unit": "b2.2-u12",
-      "block": 3,
-      "list_ref": "compound:Rede+Recht",
-      "gloss": {
-        "en": "right to speak, the floor"
-      },
-      "example": "Sie gibt das Rederecht an Esther weiter.",
-      "wordId": null
-    },
-    {
-      "id": "lx.zwischenfrage",
-      "lemma": "Zwischenfrage",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": "Zwischenfragen",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b2.2-u12",
-      "block": 3,
-      "list_ref": "compound:zwischen+Frage",
-      "gloss": {
-        "en": "interjected question"
-      },
-      "example": "Darf ich eine Zwischenfrage stellen?",
-      "wordId": null
-    },
-    {
-      "id": "lx.fazit",
-      "lemma": "Fazit",
-      "pos": "NOUN",
-      "article": "das",
-      "plural": "Fazits",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b2.2-u12",
-      "block": 3,
-      "list_ref": "freq:est-5k-10k",
-      "gloss": {
-        "en": "conclusion, summary"
-      },
-      "example": "Zum Schluss zieht die Moderatorin ein kurzes Fazit.",
-      "wordId": null
-    },
-    {
-      "id": "lx.denkanstoss",
-      "lemma": "Denkanstoß",
-      "pos": "NOUN",
-      "article": "der",
-      "plural": "Denkanstöße",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b2.2-u12",
-      "block": 3,
-      "list_ref": "compound:denken+Anstoß",
-      "gloss": {
-        "en": "food for thought"
-      },
-      "example": "Der Abend hat uns viele Denkanstöße gegeben.",
-      "wordId": null
-    },
-    {
       "id": "lx.buendeln",
       "lemma": "bündeln",
       "pos": "VERB",
@@ -13121,25 +12866,6 @@
       "wordId": null
     },
     {
-      "id": "lx.abschweifen",
-      "lemma": "abschweifen",
-      "pos": "VERB",
-      "verb_forms": {
-        "3sg": "schweift ab",
-        "perfekt": "ist abgeschweift"
-      },
-      "separable": true,
-      "role": "receptive",
-      "unit": "b2.2-u12",
-      "block": 3,
-      "list_ref": "freq:est-10k+",
-      "gloss": {
-        "en": "to digress"
-      },
-      "example": "Entschuldigung, ich bin etwas vom Thema abgeschweift.",
-      "wordId": null
-    },
-    {
       "id": "lx.ermutigen",
       "lemma": "ermutigen",
       "pos": "VERB",
@@ -13159,20 +12885,6 @@
       "wordId": null
     },
     {
-      "id": "lx.auf-den-punkt-bringen",
-      "lemma": "auf den Punkt bringen",
-      "pos": "PHRASE",
-      "role": "receptive",
-      "unit": "b2.2-u12",
-      "block": 3,
-      "list_ref": "off-list:idiom",
-      "gloss": {
-        "en": "to get to the point, sum up"
-      },
-      "example": "Können Sie Ihre Position kurz auf den Punkt bringen?",
-      "wordId": null
-    },
-    {
       "id": "lx.reihum",
       "lemma": "reihum",
       "pos": "ADV",
@@ -13184,6 +12896,147 @@
         "en": "in turn"
       },
       "example": "Wir stellen uns reihum kurz vor.",
+      "wordId": null
+    },
+    {
+      "id": "lx.resuemee",
+      "lemma": "Resümee",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Resümees",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u12",
+      "block": 3,
+      "list_ref": "freq:est-10k+",
+      "gloss": {
+        "en": "summary, conclusion"
+      },
+      "example": "Zum Schluss zog die Moderatorin ein kurzes Resümee.",
+      "wordId": null
+    },
+    {
+      "id": "lx.einhaken",
+      "lemma": "einhaken",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "hakt ein",
+        "perfekt": "hat eingehakt"
+      },
+      "separable": true,
+      "role": "receptive",
+      "unit": "b2.2-u12",
+      "block": 3,
+      "list_ref": "freq:est-10k+",
+      "gloss": {
+        "en": "to cut in (on a point)"
+      },
+      "example": "Darf ich an dieser Stelle kurz einhaken?",
+      "wordId": null
+    },
+    {
+      "id": "lx.schlusswort",
+      "lemma": "Schlusswort",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Schlussworte",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u12",
+      "block": 3,
+      "list_ref": "compound:Schluss+Wort",
+      "gloss": {
+        "en": "closing remarks"
+      },
+      "example": "Frau Brodersen hat das Schlusswort.",
+      "wordId": null
+    },
+    {
+      "id": "lx.themenwechsel",
+      "lemma": "Themenwechsel",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Themenwechsel",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u12",
+      "block": 3,
+      "list_ref": "compound:Thema+Wechsel",
+      "gloss": {
+        "en": "change of subject"
+      },
+      "example": "Nach einem kurzen Themenwechsel kam die Runde wieder auf den Dialekt zurück.",
+      "wordId": null
+    },
+    {
+      "id": "lx.erteilen",
+      "lemma": "erteilen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "erteilt",
+        "perfekt": "hat erteilt"
+      },
+      "role": "productive",
+      "unit": "b2.2-u12",
+      "block": 3,
+      "list_ref": "freq:est-5k-10k",
+      "gloss": {
+        "en": "to give, to grant (das Wort erteilen: to give the floor)"
+      },
+      "example": "Ich erteile jetzt Herrn Hansen das Wort.",
+      "wordId": null
+    },
+    {
+      "id": "lx.ausreden",
+      "lemma": "ausreden",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "redet aus",
+        "perfekt": "hat ausgeredet"
+      },
+      "separable": true,
+      "role": "productive",
+      "unit": "b2.2-u12",
+      "block": 3,
+      "list_ref": "freq:est-10k+",
+      "gloss": {
+        "en": "to finish speaking (jemanden ausreden lassen)"
+      },
+      "example": "Bitte lassen Sie Frau Nguyen ausreden.",
+      "wordId": null
+    },
+    {
+      "id": "lx.diskussionsleitung",
+      "lemma": "Diskussionsleitung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Diskussionsleitungen",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "b2.2-u12",
+      "block": 3,
+      "list_ref": "compound:Diskussion+Leitung",
+      "gloss": {
+        "en": "chairing a discussion; chair"
+      },
+      "example": "Die Diskussionsleitung übernimmt heute Esther Adeyemi.",
+      "wordId": null
+    },
+    {
+      "id": "lx.rednerliste",
+      "lemma": "Rednerliste",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Rednerlisten",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u12",
+      "block": 3,
+      "list_ref": "compound:Redner+Liste",
+      "gloss": {
+        "en": "list of speakers"
+      },
+      "example": "Ich setze Sie auf die Rednerliste.",
       "wordId": null
     }
   ],
@@ -13219,6 +13072,24 @@
       "unit": "b2.2-u04"
     },
     {
+      "lemma": "lx.angemessen",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b2.2-u04"
+    },
+    {
+      "lemma": "lx.begleichen",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b2.2-u04"
+    },
+    {
+      "lemma": "lx.empfehlenswert",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b2.2-u06"
+    },
+    {
       "lemma": "lx.jahrzehnt",
       "from": "receptive",
       "to": "productive",
@@ -13226,6 +13097,18 @@
     },
     {
       "lemma": "lx.zeitraum",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b2.2-u07"
+    },
+    {
+      "lemma": "lx.epoche",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b2.2-u07"
+    },
+    {
+      "lemma": "lx.historisch",
       "from": "receptive",
       "to": "productive",
       "unit": "b2.2-u07"
@@ -13249,6 +13132,12 @@
       "unit": "b2.2-u08"
     },
     {
+      "lemma": "lx.abwaegen",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b2.2-u09"
+    },
+    {
       "lemma": "lx.aktenzeichen",
       "from": "receptive",
       "to": "productive",
@@ -13261,7 +13150,43 @@
       "unit": "b2.2-u11"
     },
     {
+      "lemma": "lx.einlegen",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b2.2-u11"
+    },
+    {
+      "lemma": "lx.fristgerecht",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b2.2-u11"
+    },
+    {
+      "lemma": "lx.hiermit",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b2.2-u11"
+    },
+    {
       "lemma": "lx.dialekt",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b2.2-u12"
+    },
+    {
+      "lemma": "lx.klischee",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b2.2-u12"
+    },
+    {
+      "lemma": "lx.regional",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b2.2-u12"
+    },
+    {
+      "lemma": "lx.moderieren",
       "from": "receptive",
       "to": "productive",
       "unit": "b2.2-u12"

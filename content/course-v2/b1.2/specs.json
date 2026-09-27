@@ -382,7 +382,8 @@
             "lx.formulieren",
             "lx.bewerbungsmappe",
             "lx.bewerbungsfoto",
-            "lx.hiermit"
+            "lx.hiermit",
+            "lx.professionell"
           ]
         },
         {
@@ -1172,7 +1173,6 @@
             "lx.begleichen",
             "lx.inkassobuero",
             "lx.zahlungsfrist",
-            "lx.offen",
             "lx.ueberfaellig"
           ]
         },

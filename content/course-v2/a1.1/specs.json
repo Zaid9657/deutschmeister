@@ -72,7 +72,8 @@
             "lx.englisch",
             "lx.deutschland",
             "lx.ein-bisschen",
-            "lx.tuerkisch"
+            "lx.tuerkisch",
+            "lx.spanisch"
           ]
         }
       ],
@@ -217,7 +218,8 @@
             "lx.formular",
             "lx.verstehen",
             "lx.richtig",
-            "lx.falsch"
+            "lx.falsch",
+            "lx.ausfuellen"
           ]
         }
       ],
@@ -317,7 +319,8 @@
             "lx.sohn",
             "lx.tochter",
             "lx.kind",
-            "lx.geschwister"
+            "lx.geschwister",
+            "lx.zeigen"
           ]
         },
         {
@@ -758,7 +761,8 @@
             "lx.drucker",
             "lx.ladekabel",
             "lx.internet",
-            "lx.telefon"
+            "lx.telefon",
+            "lx.kollege"
           ]
         },
         {
@@ -773,7 +777,8 @@
             "lx.helfen",
             "lx.geben",
             "lx.gebraucht",
-            "lx.wissen"
+            "lx.wissen",
+            "lx.problem"
           ]
         }
       ],
@@ -916,7 +921,8 @@
             "lx.geschlossen",
             "lx.geoeffnet",
             "lx.wochenende",
-            "lx.spaet"
+            "lx.spaet",
+            "lx.offen"
           ]
         }
       ],
@@ -1026,7 +1032,8 @@
             "lx.spielen",
             "lx.laufen",
             "lx.fussball",
-            "lx.tanzen"
+            "lx.tanzen",
+            "lx.rad"
           ]
         },
         {
@@ -1041,7 +1048,8 @@
             "lx.lust-haben",
             "lx.mitkommen",
             "lx.park",
-            "lx.tut-mir-leid"
+            "lx.tut-mir-leid",
+            "lx.idee"
           ]
         },
         {
@@ -1056,7 +1064,8 @@
             "lx.toll",
             "lx.super",
             "lx.interessant",
-            "lx.film"
+            "lx.film",
+            "lx.meinen"
           ]
         }
       ],
@@ -1174,7 +1183,8 @@
             "lx.salat",
             "lx.suppe",
             "lx.lecker",
-            "lx.essen"
+            "lx.essen",
+            "lx.restaurant"
           ]
         },
         {
@@ -1328,7 +1338,8 @@
             "lx.platz",
             "lx.frei",
             "lx.person",
-            "lx.halten"
+            "lx.halten",
+            "lx.kilometer"
           ]
         }
       ],
@@ -1434,7 +1445,8 @@
             "lx.zoo",
             "lx.altstadt",
             "lx.schloss",
-            "lx.flohmarkt"
+            "lx.flohmarkt",
+            "lx.see"
           ]
         },
         {

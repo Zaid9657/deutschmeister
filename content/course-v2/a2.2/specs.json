@@ -184,7 +184,8 @@
             "lx.traeumen",
             "lx.moeglichkeit",
             "lx.hoffentlich",
-            "lx.abwechslung"
+            "lx.abwechslung",
+            "lx.ziel"
           ]
         },
         {
@@ -200,7 +201,8 @@
             "lx.freibad",
             "lx.insel",
             "lx.aussicht",
-            "lx.fuehrung"
+            "lx.fuehrung",
+            "lx.radtour"
           ]
         },
         {
@@ -215,7 +217,8 @@
             "lx.mehrheit",
             "lx.alternative",
             "lx.spontan",
-            "lx.gruppenchat"
+            "lx.gruppenchat",
+            "lx.einverstanden"
           ]
         }
       ],
@@ -1332,7 +1335,8 @@
             "lx.probezeit",
             "lx.ueberzeugen",
             "lx.vorgesetzte",
-            "lx.absprache"
+            "lx.absprache",
+            "lx.protokoll"
           ]
         },
         {

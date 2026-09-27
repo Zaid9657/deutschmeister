@@ -480,23 +480,6 @@
       "wordId": null
     },
     {
-      "id": "lx.problem",
-      "lemma": "Problem",
-      "pos": "NOUN",
-      "article": "das",
-      "plural": "Probleme",
-      "plural_kind": "regular",
-      "role": "productive",
-      "unit": "b1.1-u01",
-      "block": 3,
-      "list_ref": "A1",
-      "gloss": {
-        "en": "problem"
-      },
-      "example": "Am Anfang hatte ich viele Probleme mit der Sprache.",
-      "wordId": null
-    },
-    {
       "id": "lx.abonnieren",
       "lemma": "abonnieren",
       "pos": "VERB",
@@ -1712,6 +1695,43 @@
         "en": "running costs, service charges"
       },
       "example": "Zu den Betriebskosten gehört auch der Hausmeister.",
+      "wordId": null
+    },
+    {
+      "id": "lx.enthalten",
+      "lemma": "enthalten",
+      "pos": "VERB",
+      "verb_forms": {
+        "2sg": "enthältst",
+        "3sg": "enthält",
+        "praet": "enthielt",
+        "perfekt": "hat enthalten"
+      },
+      "role": "receptive",
+      "unit": "b1.1-u03",
+      "block": 2,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "to contain, to include"
+      },
+      "example": "Die Heizkosten sind in der Miete enthalten.",
+      "wordId": null
+    },
+    {
+      "id": "lx.hoehe",
+      "lemma": "Höhe",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Höhen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b1.1-u03",
+      "block": 2,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "height; amount (in Höhe von)"
+      },
+      "example": "Die Kaution in Höhe von drei Monatsmieten zahlen Sie vor dem Einzug.",
       "wordId": null
     },
     {
@@ -4947,6 +4967,23 @@
       "wordId": null
     },
     {
+      "id": "lx.seminarhaus",
+      "lemma": "Seminarhaus",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Seminarhäuser",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b1.1-u08",
+      "block": 1,
+      "list_ref": "compound:Seminar+Haus",
+      "gloss": {
+        "en": "seminar venue, conference house"
+      },
+      "example": "Der Kurs findet in einem Seminarhaus am See statt.",
+      "wordId": null
+    },
+    {
       "id": "lx.foerderung",
       "lemma": "Förderung",
       "pos": "NOUN",
@@ -6987,6 +7024,24 @@
       "wordId": null
     },
     {
+      "id": "lx.besorgen",
+      "lemma": "besorgen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "besorgt",
+        "perfekt": "hat besorgt"
+      },
+      "role": "receptive",
+      "unit": "b1.1-u11",
+      "block": 1,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "to get, to buy (for an occasion)"
+      },
+      "example": "Wer besorgt das Geschenk für Frau Kühn?",
+      "wordId": null
+    },
+    {
       "id": "lx.ansprache",
       "lemma": "Ansprache",
       "pos": "NOUN",
@@ -7001,23 +7056,6 @@
         "en": "short speech, address"
       },
       "example": "Nach der Ansprache gibt es Applaus.",
-      "wordId": null
-    },
-    {
-      "id": "lx.dank",
-      "lemma": "Dank",
-      "pos": "NOUN",
-      "article": "der",
-      "plural": null,
-      "plural_kind": "singular-only",
-      "role": "productive",
-      "unit": "b1.1-u11",
-      "block": 2,
-      "list_ref": "B1",
-      "gloss": {
-        "en": "thanks"
-      },
-      "example": "Vielen Dank für die gute Zusammenarbeit!",
       "wordId": null
     },
     {
@@ -7808,6 +7846,23 @@
       "wordId": null
     },
     {
+      "id": "lx.busfirma",
+      "lemma": "Busfirma",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Busfirmen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b1.1-u12",
+      "block": 2,
+      "list_ref": "compound:Bus+Firma",
+      "gloss": {
+        "en": "bus company"
+      },
+      "example": "Eine Busfirma bringt die Fahrgäste zum nächsten Bahnhof.",
+      "wordId": null
+    },
+    {
       "id": "lx.entschaedigung",
       "lemma": "Entschädigung",
       "pos": "NOUN",
@@ -8101,24 +8156,6 @@
         "en": "affected"
       },
       "example": "Alle Züge nach Berlin sind betroffen.",
-      "wordId": null
-    },
-    {
-      "id": "lx.erklaeren",
-      "lemma": "erklären",
-      "pos": "VERB",
-      "verb_forms": {
-        "3sg": "erklärt",
-        "perfekt": "hat erklärt"
-      },
-      "role": "productive",
-      "unit": "b1.1-u12",
-      "block": 4,
-      "list_ref": "A1",
-      "gloss": {
-        "en": "to explain"
-      },
-      "example": "Priya erklärt der Frau, was passiert ist.",
       "wordId": null
     },
     {

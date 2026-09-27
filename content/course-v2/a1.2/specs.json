@@ -45,7 +45,8 @@
             "lx.rathaus",
             "lx.marktplatz",
             "lx.kirche",
-            "lx.innenstadt"
+            "lx.innenstadt",
+            "lx.mitten"
           ]
         },
         {
@@ -60,7 +61,9 @@
             "lx.links",
             "lx.rechts",
             "lx.weit",
-            "lx.gegenueber"
+            "lx.gegenueber",
+            "lx.erklaeren",
+            "lx.meter"
           ]
         },
         {
@@ -361,12 +364,12 @@
           "lemmas": [
             "lx.paket",
             "lx.hilfe",
-            "lx.helfen",
             "lx.annehmen",
             "lx.bitten",
             "lx.klingeln",
             "lx.zettel",
-            "lx.bescheid-sagen"
+            "lx.bescheid-sagen",
+            "lx.dank"
           ]
         }
       ],
@@ -819,7 +822,8 @@
             "lx.rabatt",
             "lx.warenkorb",
             "lx.liefern",
-            "lx.umtauschen"
+            "lx.umtauschen",
+            "lx.prozent"
           ]
         }
       ],
@@ -1099,7 +1103,11 @@
             "lx.kalt",
             "lx.regnen",
             "lx.grad",
-            "lx.wolke"
+            "lx.wolke",
+            "lx.norden",
+            "lx.sueden",
+            "lx.osten",
+            "lx.westen"
           ]
         },
         {
@@ -1528,7 +1536,6 @@
           "lemmas": [
             "lx.einladung",
             "lx.einladen",
-            "lx.mitkommen",
             "lx.schade",
             "lx.stattfinden",
             "lx.treffpunkt",

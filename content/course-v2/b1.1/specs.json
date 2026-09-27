@@ -76,7 +76,6 @@
             "lx.veroeffentlichen",
             "lx.leser",
             "lx.meinung",
-            "lx.problem",
             "lx.abonnieren"
           ]
         },
@@ -383,7 +382,9 @@
             "lx.heizkosten",
             "lx.sparsam",
             "lx.anteil",
-            "lx.betriebskosten"
+            "lx.betriebskosten",
+            "lx.enthalten",
+            "lx.hoehe"
           ]
         },
         {
@@ -586,7 +587,8 @@
             "lx.anspruch",
             "lx.veraergert",
             "lx.enttaeuschend",
-            "lx.frechheit"
+            "lx.frechheit",
+            "lx.betreff"
           ]
         }
       ],
@@ -1190,7 +1192,8 @@
             "lx.verkehrsmeister",
             "lx.seminar",
             "lx.onlinekurs",
-            "lx.infoabend"
+            "lx.infoabend",
+            "lx.seminarhaus"
           ]
         },
         {
@@ -1681,7 +1684,8 @@
             "lx.buffet",
             "lx.feierlich",
             "lx.planung",
-            "lx.abschiedsgeschenk"
+            "lx.abschiedsgeschenk",
+            "lx.besorgen"
           ]
         },
         {
@@ -1689,7 +1693,6 @@
           "target": 11,
           "lemmas": [
             "lx.ansprache",
-            "lx.dank",
             "lx.glueckwunschkarte",
             "lx.langjaehrig",
             "lx.geruehrt",
@@ -1864,7 +1867,8 @@
             "lx.signalstoerung",
             "lx.entfallen",
             "lx.gesperrt",
-            "lx.zugausfall"
+            "lx.zugausfall",
+            "lx.busfirma"
           ]
         },
         {
@@ -1895,7 +1899,6 @@
             "lx.dolmetschen",
             "lx.sich-erkundigen",
             "lx.betroffen",
-            "lx.erklaeren",
             "lx.anzeigetafel"
           ]
         }

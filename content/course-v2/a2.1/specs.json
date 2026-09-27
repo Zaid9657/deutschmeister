@@ -62,7 +62,8 @@
             "lx.fremd",
             "lx.umgebung",
             "lx.kultur",
-            "lx.gewohnheit"
+            "lx.gewohnheit",
+            "lx.besonders"
           ]
         },
         {
@@ -190,7 +191,8 @@
             "lx.warmmiete",
             "lx.moebliert",
             "lx.altbau",
-            "lx.wohngemeinschaft"
+            "lx.wohngemeinschaft",
+            "lx.eigen"
           ]
         },
         {
@@ -205,7 +207,9 @@
             "lx.einbaukueche",
             "lx.spiegel",
             "lx.pflanze",
-            "lx.vorhang"
+            "lx.vorhang",
+            "lx.modern",
+            "lx.moebelstueck"
           ]
         },
         {
@@ -333,7 +337,8 @@
             "lx.aufladen",
             "lx.einschalten",
             "lx.ausschalten",
-            "lx.taste"
+            "lx.taste",
+            "lx.kamera"
           ]
         },
         {
@@ -363,7 +368,8 @@
             "lx.kommentar",
             "lx.profil",
             "lx.privat",
-            "lx.oeffentlich"
+            "lx.oeffentlich",
+            "lx.per"
           ]
         }
       ],
@@ -625,7 +631,8 @@
             "lx.vegetarisch",
             "lx.scharf",
             "lx.beilage",
-            "lx.gebraten"
+            "lx.gebraten",
+            "lx.speise"
           ]
         },
         {
@@ -906,7 +913,9 @@
             "lx.kursleiter",
             "lx.turnier",
             "lx.anfaenger",
-            "lx.ausprobieren"
+            "lx.ausprobieren",
+            "lx.gruppe",
+            "lx.trainer"
           ]
         },
         {
@@ -1042,7 +1051,9 @@
             "lx.empfang",
             "lx.buchhaltung",
             "lx.konferenzraum",
-            "lx.techniker"
+            "lx.techniker",
+            "lx.raum",
+            "lx.besprechen"
           ]
         },
         {
@@ -1205,7 +1216,8 @@
             "lx.schlaf",
             "lx.fit",
             "lx.abnehmen",
-            "lx.spaziergang"
+            "lx.spaziergang",
+            "lx.taeglich"
           ]
         }
       ],

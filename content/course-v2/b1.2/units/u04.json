@@ -285,8 +285,8 @@
             "um einen gemeinsamen Tag für alle im Juni"
           ],
           "explanation": {
-            "de": "Herr Brandt plant am 19. Juni einen Teamtag für alle Mitarbeiterinnen und Mitarbeiter.",
-            "en": "Mr Brandt is planning a team day for all staff on 19 June."
+            "de": "Herr Brandt plant am 19. Juni einen Teamtag für das ganze Team.",
+            "en": "Mr Brandt is planning a team day for the whole team on 19 June."
           },
           "origin": "agent"
         },
@@ -299,16 +299,16 @@
           "promptEn": "Why is the company holding the team day?",
           "options": [
             "Das Team soll ein neues Projekt planen.",
-            "Die Kolleginnen und Kollegen sollen sich besser kennenlernen.",
+            "Das Team soll sich besser kennenlernen.",
             "Die Firma möchte Geld sparen."
           ],
-          "answer": "Die Kolleginnen und Kollegen sollen sich besser kennenlernen.",
+          "answer": "Das Team soll sich besser kennenlernen.",
           "accepted": [
-            "Die Kolleginnen und Kollegen sollen sich besser kennenlernen."
+            "Das Team soll sich besser kennenlernen."
           ],
           "explanation": {
-            "de": "Viele Kollegen sind neu. Der Zweck des Tages: Alle sollen sich besser kennenlernen.",
-            "en": "Many colleagues are new; the purpose of the day is for everyone to get to know each other better."
+            "de": "Viele Kollegen sind neu. Der Zweck des Tages: Man soll sich besser kennenlernen.",
+            "en": "Many colleagues are new; the purpose of the day is to get to know each other better."
           },
           "origin": "agent"
         },
@@ -971,14 +971,14 @@
           {
             "id": "b1.2-u04-ls2-l07",
             "speaker": "cast.jan-wolf",
-            "de": "Ich würde die Radtour auch vorziehen. Gut, ich fasse die Ergebnisse zusammen: Seminarhaus am See, vormittags Besprechung, nachmittags Radtour. Gibt es Gegenstimmen? … Nein. Dann ist das einstimmig beschlossen, und wir legen den Ort endgültig fest.",
-            "en": "I’d prefer the bike tour too. Good, let me sum up the results: seminar house by the lake, meeting in the morning, bike tour in the afternoon. Any votes against? … No. Then that’s decided unanimously, and the venue is fixed for good."
+            "de": "Ich würde die Radtour auch vorziehen. Gut, ich fasse die Ergebnisse zusammen: Seminarhaus am See, vormittags Besprechung, nachmittags Radtour. Gibt es Gegenstimmen? … Nein. Dann haben wir das einstimmig beschlossen, und wir legen den Ort endgültig fest.",
+            "en": "I’d prefer the bike tour too. Good, let me sum up the results: seminar house by the lake, meeting in the morning, bike tour in the afternoon. Any votes against? … No. Then we’ve decided that unanimously, and the venue is fixed for good."
           },
           {
             "id": "b1.2-u04-ls2-l08",
             "speaker": "cast.jan-wolf",
-            "de": "Jetzt verteilen wir die Aufgaben. Wer erklärt sich bereit, die Raumbuchung zu übernehmen? Das Einzige, was dann noch fehlt, ist der Bus zum See.",
-            "en": "Now let’s share out the tasks. Who is willing to take on the room booking? The only thing still missing then is the bus to the lake."
+            "de": "Jetzt verteilen wir die Aufgaben. Erklärt sich jemand bereit, die Raumbuchung zu übernehmen? Das Einzige, was dann noch fehlt, ist der Bus zum See.",
+            "en": "Now let’s share out the tasks. Is anyone willing to take on the room booking? The only thing still missing then is the bus to the lake."
           },
           {
             "id": "b1.2-u04-ls2-l09",
@@ -995,8 +995,8 @@
           {
             "id": "b1.2-u04-ls2-l11",
             "speaker": "cast.herr-brandt",
-            "de": "Sehr gut, das findet meine Zustimmung. Damit sind die Zuständigkeiten klar. Frau Otto übernimmt die Verantwortung für das Rahmenprogramm am Abend. Sie soll bis Freitag zwei Vorschläge sammeln, aber noch nichts buchen. Am Freitag besprechen wir dann den Zwischenstand. Frau Nair, schreiben Sie ihr bitte alles, was wir heute beschlossen haben. – Oh, Ihr Telefon klingelt. Sie machen heute ja auch den Empfang, gehen Sie ruhig ans Telefon.",
-            "en": "Very good, you have my approval. That makes it clear who is responsible for what. Ms Otto will be responsible for the evening programme: by Friday she should collect two suggestions, but not book anything yet. On Friday we’ll discuss where things stand. Ms Nair, please write to her with everything we decided today. – Oh, your phone is ringing. You’re covering reception today, so do take it."
+            "de": "Sehr gut, das findet meine Zustimmung. Damit sind die Zuständigkeiten klar. Frau Otto übernimmt die Verantwortung für das Rahmenprogramm am Abend. Sie soll bis Freitag zwei Vorschläge sammeln, aber noch nichts buchen. Am Freitag besprechen wir dann den Zwischenstand. Frau Nair, schreiben Sie ihr bitte alles, was wir heute beschlossen haben. – Oh, Ihr Telefon klingelt. Sie machen heute auch den Empfang, also gehen Sie bitte ans Telefon.",
+            "en": "Very good, you have my approval. That makes it clear who is responsible for what. Ms Otto will be responsible for the evening programme: by Friday she should collect two suggestions, but not book anything yet. On Friday we’ll discuss where things stand. Ms Nair, please write to her with everything we decided today. – Oh, your phone is ringing. You’re covering reception today too, so please answer it."
           },
           {
             "id": "b1.2-u04-ls2-l12",
@@ -1135,8 +1135,8 @@
           ],
           "exact": "number",
           "explanation": {
-            "de": "Die Nummer von Herrn Lehmann ist 0341 22 58 90. Jede Ziffer zählt.",
-            "en": "Mr Lehmann’s number is 0341 22 58 90 – every digit counts."
+            "de": "Die Nummer von Herrn Lehmann ist 0341 22 58 90. Achten Sie auf die Ziffern.",
+            "en": "Mr Lehmann’s number is 0341 22 58 90 – watch the digits."
           },
           "origin": "agent",
           "acceptedWhy": {
@@ -1294,8 +1294,8 @@
               "was"
             ],
             "explanation": {
-              "de": "Nach alles beginnt der Relativsatz mit was.",
-              "en": "After alles the relative clause starts with was."
+              "de": "Bei Pronomen wie alles oder nichts beginnt der Relativsatz mit was.",
+              "en": "After pronouns like alles or nichts the relative clause starts with was."
             },
             "origin": "agent"
           },
@@ -1976,16 +1976,16 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.relativsatz-was-wo",
-            "promptDe": "Korrigieren Sie: „Das ist alles, das wir besprochen haben.“",
+            "promptDe": "Korrigieren Sie: „Das ist alles, das wir für den Teamtag geplant haben.“",
             "promptEn": "Correct the sentence.",
-            "answer": "Das ist alles, was wir besprochen haben.",
+            "answer": "Das ist alles, was wir für den Teamtag geplant haben.",
             "accepted": [
-              "Das ist alles, was wir besprochen haben."
+              "Das ist alles, was wir für den Teamtag geplant haben."
             ],
             "intentionalError": true,
             "explanation": {
-              "de": "Nach alles beginnt der Relativsatz mit was, nicht mit das.",
-              "en": "After alles the relative clause starts with was, not das."
+              "de": "Bei Pronomen wie alles beginnt der Relativsatz mit was, nicht mit das.",
+              "en": "After pronouns like alles the relative clause starts with was, not das."
             },
             "origin": "agent"
           },
@@ -2319,7 +2319,7 @@
           "id": "b1.2-u04-ls4-t1",
           "kind": "text",
           "title": "Anfrage an das Seminarhaus am See",
-          "text": "Betreff: Anfrage für einen Teamtag am 19. Juni\n\nSehr geehrte Damen und Herren,\n\nauf Ihrer Internetseite habe ich gelesen, ⟦01⟧ Sie Räume für Firmen vermieten. Wir sind ein Team von 18 Personen und planen am Freitag, dem 19. Juni, einen Teamtag. Ihr Haus liegt direkt am See, und genau das ist es, ⟦02⟧ uns besonders gefällt. Deshalb hat sich unser Team einstimmig für Sie entschieden.\n\nAm Vormittag möchten wir eine Besprechung machen. ⟦03⟧ brauchen wir einen Raum mit Beamer und Platz für alle. Einen Laptop brauchen Sie nicht ⟦04⟧ besorgen, den bringen wir selbst mit. Am Nachmittag möchten wir eine Radtour machen. Können Sie mir sagen, ⟦05⟧ die Fahrräder im Preis enthalten sind?\n\nMittags hätten wir gern ein warmes Essen. Zwei Kolleginnen essen ⟦06⟧ Fleisch. Gibt es bei Ihnen auch vegetarische Gerichte?\n\nBitte schicken Sie mir ein Angebot, ⟦07⟧ wir die Kosten vergleichen können. ⟦08⟧ der große Raum nicht mehr frei ist, reicht uns auch ein kleiner Raum. Kennen Sie außerdem einen Ort am See, ⟦09⟧ wir während der Radtour eine Pause machen können?\n\nÜber eine schnelle Antwort ⟦10⟧ ich mich sehr freuen.\n\nMit freundlichen Grüßen\nPriya Nair\nBrandt Elektrotechnik",
+          "text": "Betreff: Anfrage für einen Teamtag am 19. Juni\n\nSehr geehrte Damen und Herren,\n\nauf Ihrer Internetseite habe ich gelesen, ⟦01⟧ Sie Räume für Firmen vermieten. Wir sind ein Team von 18 Personen und planen am Freitag, dem 19. Juni, einen Teamtag. Ihr Haus liegt direkt am See, und genau das ist es, ⟦02⟧ uns so gut gefällt. Deshalb hat sich unser Team einstimmig für Sie entschieden.\n\nAm Vormittag möchten wir eine Besprechung machen. ⟦03⟧ brauchen wir einen Raum mit Beamer und Platz für alle. Einen Laptop brauchen Sie nicht ⟦04⟧ besorgen, den bringen wir selbst mit. Am Nachmittag möchten wir eine Radtour machen. Können Sie mir sagen, ⟦05⟧ die Fahrräder im Preis enthalten sind?\n\nMittags hätten wir gern ein warmes Essen. Zwei von uns essen ⟦06⟧ Fleisch. Gibt es bei Ihnen auch vegetarische Gerichte?\n\nBitte schicken Sie mir ein Angebot, ⟦07⟧ wir die Kosten vergleichen können. ⟦08⟧ der große Raum nicht mehr frei ist, reicht uns auch ein kleiner Raum. Kennen Sie außerdem einen Ort am See, ⟦09⟧ wir während der Tour eine Pause machen können?\n\nÜber eine schnelle Antwort ⟦10⟧ ich mich sehr freuen.\n\nMit freundlichen Grüßen\nPriya Nair\nBrandt Elektrotechnik",
           "glosses": []
         },
         {
@@ -2962,7 +2962,7 @@
           "register": "du",
           "support": "examiner"
         },
-        "openingLine": "Also, Ort und Radtour stehen fest. Aber was machen wir, wenn es am 19. Juni regnet? Ich würde dann gern mit allen ins Museum gehen. Was sagst du?",
+        "openingLine": "Also, Ort und Programm stehen fest. Aber was machen wir, wenn es am 19. Juni regnet? Ich würde dann gern mit allen ins Museum gehen. Was sagst du?",
         "hintWords": [
           "Ich schlage vor, …",
           "Wie wäre es mit …?",
@@ -2976,7 +2976,7 @@
         "modelTurns": [
           {
             "speaker": "partner",
-            "de": "Also, Ort und Radtour stehen fest. Aber was machen wir, wenn es am 19. Juni regnet? Ich würde dann gern mit allen ins Museum gehen. Was sagst du?"
+            "de": "Also, Ort und Programm stehen fest. Aber was machen wir, wenn es am 19. Juni regnet? Ich würde dann gern mit allen ins Museum gehen. Was sagst du?"
           },
           {
             "speaker": "learner",
@@ -3320,7 +3320,7 @@
         "type": "notes",
         "role": "proof",
         "topic": "hoeren",
-        "promptDe": "Notiz für Emre – Frau Wendt, Elster-Reisen: Bus am 19.6., Preis ___ Euro, bis Donnerstag bestätigen.",
+        "promptDe": "Notiz für Emre – Elster-Reisen, Bus am 19.6.: ___ Euro, bis Donnerstag bestätigen",
         "promptEn": "Complete the note: the price.",
         "audioLineRef": "b1.2-u04-ls8-l01",
         "answer": "280",

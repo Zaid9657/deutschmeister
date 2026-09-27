@@ -1704,6 +1704,20 @@
       "wordId": null
     },
     {
+      "id": "lx.professionell",
+      "lemma": "professionell",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "b1.2-u03",
+      "block": 2,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "professional"
+      },
+      "example": "Für die Bewerbung brauchen Sie ein professionelles Foto.",
+      "wordId": null
+    },
+    {
       "id": "lx.gehaltsvorstellung",
       "lemma": "Gehaltsvorstellung",
       "pos": "NOUN",
@@ -4872,20 +4886,6 @@
         "en": "payment deadline"
       },
       "example": "Die Zahlungsfrist beträgt 14 Tage.",
-      "wordId": null
-    },
-    {
-      "id": "lx.offen",
-      "lemma": "offen",
-      "pos": "ADJ",
-      "role": "productive",
-      "unit": "b1.2-u08",
-      "block": 1,
-      "list_ref": "A1",
-      "gloss": {
-        "en": "outstanding (unpaid); open"
-      },
-      "example": "Laut Studio ist noch ein Betrag von 99,80 Euro offen.",
       "wordId": null
     },
     {

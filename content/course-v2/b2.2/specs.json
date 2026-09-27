@@ -38,7 +38,18 @@
             "lx.rueckhalt",
             "lx.sich-anvertrauen",
             "lx.sich-entfremden",
-            "lx.sich-zurueckziehen"
+            "lx.sich-zurueckziehen",
+            "lx.vertrautheit",
+            "lx.entfremdung",
+            "lx.abgrenzung",
+            "lx.zweisamkeit",
+            "lx.einzelgaenger",
+            "lx.isolation",
+            "lx.sich-abkapseln",
+            "lx.anhaenglich",
+            "lx.distanziert",
+            "lx.innig",
+            "lx.geselligkeit"
           ]
         },
         {
@@ -49,7 +60,17 @@
             "lx.uebelnehmen",
             "lx.einfuehlsam",
             "lx.aufrichtig",
-            "lx.einsamkeit"
+            "lx.groll",
+            "lx.misstrauen",
+            "lx.verlustangst",
+            "lx.dankbarkeit",
+            "lx.eifersuechtig",
+            "lx.verletzlich",
+            "lx.empathisch",
+            "lx.sich-oeffnen",
+            "lx.sich-versoehnen",
+            "lx.scham",
+            "lx.vertrauensbruch"
           ]
         },
         {
@@ -60,7 +81,17 @@
             "lx.zuwendung",
             "lx.kontakte-pflegen",
             "lx.beistehen",
-            "lx.verlaesslich"
+            "lx.verlaesslich",
+            "lx.bereicherung",
+            "lx.verbindlichkeit",
+            "lx.beistand",
+            "lx.stellenwert",
+            "lx.fernbeziehung",
+            "lx.jugendfreund",
+            "lx.aufrechterhalten",
+            "lx.unzertrennlich",
+            "lx.freundschaftlich",
+            "lx.auf-augenhoehe"
           ]
         },
         {
@@ -71,7 +102,16 @@
             "lx.vernachlaessigen",
             "lx.oberflaechlich",
             "lx.zwanglos",
-            "lx.freundeskreis"
+            "lx.beziehungsstatus",
+            "lx.onlinefreundschaft",
+            "lx.selbstdarstellung",
+            "lx.kontaktliste",
+            "lx.entfolgen",
+            "lx.ghosten",
+            "lx.fluechtig",
+            "lx.vereinsamung",
+            "lx.blockieren",
+            "lx.profilbild"
           ]
         }
       ],
@@ -176,7 +216,18 @@
             "lx.ernaehrungsweise",
             "lx.verzehr",
             "lx.ausgewogen",
-            "lx.verarbeitet"
+            "lx.verarbeitet",
+            "lx.ballaststoff",
+            "lx.eiweiss",
+            "lx.kohlenhydrat",
+            "lx.vollkornprodukt",
+            "lx.zusatzstoff",
+            "lx.fertiggericht",
+            "lx.huelsenfrucht",
+            "lx.suessstoff",
+            "lx.naehrstoffreich",
+            "lx.pflanzlich",
+            "lx.fettarm"
           ]
         },
         {
@@ -187,7 +238,16 @@
             "lx.lebenserwartung",
             "lx.wirksamkeit",
             "lx.senken",
-            "lx.zuschuss"
+            "lx.vorsorgeuntersuchung",
+            "lx.risikofaktor",
+            "lx.volkskrankheit",
+            "lx.bluthochdruck",
+            "lx.diabetes",
+            "lx.praeventionskurs",
+            "lx.vorbeugend",
+            "lx.erblich",
+            "lx.veranlagung",
+            "lx.gesundheitscheck"
           ]
         },
         {
@@ -198,7 +258,17 @@
             "lx.aufklaerung",
             "lx.eingreifen",
             "lx.bevormunden",
-            "lx.verpflichtend"
+            "lx.verpflichtend",
+            "lx.lebensmittelindustrie",
+            "lx.lebensmittelhersteller",
+            "lx.selbstverpflichtung",
+            "lx.werbeverbot",
+            "lx.gesundheitspolitik",
+            "lx.mehrkosten",
+            "lx.besteuern",
+            "lx.wirkungslos",
+            "lx.ampelkennzeichnung",
+            "lx.eigenverantwortung"
           ]
         },
         {
@@ -209,7 +279,18 @@
             "lx.gegensteuern",
             "lx.verringern",
             "lx.gesundheitsbewusst",
-            "lx.zuckerhaltig"
+            "lx.zuckerhaltig",
+            "lx.heisshunger",
+            "lx.zwischenmahlzeit",
+            "lx.bewegungsmangel",
+            "lx.koerpergewicht",
+            "lx.stoffwechsel",
+            "lx.softdrink",
+            "lx.schrittzaehler",
+            "lx.naschen",
+            "lx.uebergewichtig",
+            "lx.massvoll",
+            "lx.zuckerfrei"
           ]
         }
       ],
@@ -310,7 +391,17 @@
             "lx.wertschaetzung",
             "lx.mitarbeitergespraech",
             "lx.konstruktiv",
-            "lx.zugeben"
+            "lx.feedbackkultur",
+            "lx.ich-botschaft",
+            "lx.zielvereinbarung",
+            "lx.wuerdigen",
+            "lx.sachbezogen",
+            "lx.selbsteinschaetzung",
+            "lx.fremdeinschaetzung",
+            "lx.verbesserungsbedarf",
+            "lx.wertschaetzend",
+            "lx.unter-vier-augen",
+            "lx.entwicklungsgespraech"
           ]
         },
         {
@@ -321,7 +412,18 @@
             "lx.eskalation",
             "lx.unzufriedenheit",
             "lx.verletzend",
-            "lx.angespannt"
+            "lx.angespannt",
+            "lx.missstimmung",
+            "lx.reibungspunkt",
+            "lx.unmut",
+            "lx.frustration",
+            "lx.konfliktgespraech",
+            "lx.eskalieren",
+            "lx.sich-angegriffen-fuehlen",
+            "lx.gereizt",
+            "lx.frustriert",
+            "lx.auseinandersetzung",
+            "lx.aneinandergeraten"
           ]
         },
         {
@@ -332,7 +434,17 @@
             "lx.dienstbesprechung",
             "lx.vorbehalt",
             "lx.sich-durchsetzen",
-            "lx.beharren"
+            "lx.beharren",
+            "lx.urlaubssperre",
+            "lx.arbeitsbelastung",
+            "lx.abwesenheit",
+            "lx.vertretungsregelung",
+            "lx.hochphase",
+            "lx.brueckentag",
+            "lx.sich-absprechen",
+            "lx.ungleich",
+            "lx.urlaubsvertretung",
+            "lx.auslastung"
           ]
         },
         {
@@ -343,7 +455,18 @@
             "lx.sich-zuruecknehmen",
             "lx.sich-rechtfertigen",
             "lx.kompromissbereit",
-            "lx.verstaendnisvoll"
+            "lx.verstaendnisvoll",
+            "lx.einsicht",
+            "lx.kompromissloesung",
+            "lx.mittelweg",
+            "lx.sich-annaehern",
+            "lx.auf-jemanden-zugehen",
+            "lx.einsichtig",
+            "lx.versoehnlich",
+            "lx.unnachgiebig",
+            "lx.deeskalation",
+            "lx.zugestehen",
+            "lx.kompromissbereitschaft"
           ]
         }
       ],
@@ -450,7 +573,16 @@
             "lx.gutachten",
             "lx.umzugsunternehmen",
             "lx.fahrlaessig",
-            "lx.kratzer"
+            "lx.delle",
+            "lx.transportschaden",
+            "lx.moebelpacker",
+            "lx.schadensprotokoll",
+            "lx.sachverstaendige",
+            "lx.transportversicherung",
+            "lx.verursacher",
+            "lx.glasbruch",
+            "lx.zerkratzt",
+            "lx.unsachgemaess"
           ]
         },
         {
@@ -461,7 +593,13 @@
             "lx.verbindlich",
             "lx.abweichen",
             "lx.aufkommen",
-            "lx.pauschale"
+            "lx.haftungsgrenze",
+            "lx.haftungsausschluss",
+            "lx.versicherungssumme",
+            "lx.auftraggeber",
+            "lx.auftragnehmer",
+            "lx.haftbar",
+            "lx.ersatzpflichtig"
           ]
         },
         {
@@ -471,8 +609,16 @@
             "lx.gegenangebot",
             "lx.kompensation",
             "lx.nachverhandeln",
-            "lx.angemessen",
-            "lx.unverhaeltnismaessig"
+            "lx.unverhaeltnismaessig",
+            "lx.verhandlungsspielraum",
+            "lx.schmerzgrenze",
+            "lx.verhandlungspartner",
+            "lx.verhandlungsposition",
+            "lx.gegenleistung",
+            "lx.teilerstattung",
+            "lx.feilschen",
+            "lx.einwilligen",
+            "lx.kulant"
           ]
         },
         {
@@ -480,10 +626,17 @@
           "lemmas": [
             "lx.wiedergutmachung",
             "lx.schlichtungsstelle",
-            "lx.begleichen",
             "lx.geltend-machen",
             "lx.bestehen-auf",
-            "lx.sich-weigern"
+            "lx.sich-weigern",
+            "lx.nachfrist",
+            "lx.rechtsweg",
+            "lx.rechtsschutzversicherung",
+            "lx.kostenerstattung",
+            "lx.einklagen",
+            "lx.androhen",
+            "lx.ausstehend",
+            "lx.anderenfalls"
           ]
         }
       ],
@@ -596,7 +749,18 @@
             "lx.studienkolleg",
             "lx.sich-immatrikulieren",
             "lx.zulassungsbeschraenkt",
-            "lx.akademisch"
+            "lx.akademisch",
+            "lx.fakultaet",
+            "lx.studierende",
+            "lx.vorlesung",
+            "lx.dozent",
+            "lx.erstsemester",
+            "lx.wintersemester",
+            "lx.hochschulzugangsberechtigung",
+            "lx.numerus-clausus",
+            "lx.bachelor",
+            "lx.master",
+            "lx.vorlesungsverzeichnis"
           ]
         },
         {
@@ -607,7 +771,18 @@
             "lx.regelstudienzeit",
             "lx.abgabetermin",
             "lx.fristverlaengerung",
-            "lx.anrechnen"
+            "lx.anrechnen",
+            "lx.klausur",
+            "lx.pruefungsordnung",
+            "lx.leistungspunkt",
+            "lx.anmeldefrist",
+            "lx.wiederholungspruefung",
+            "lx.pflichtveranstaltung",
+            "lx.anwesenheitspflicht",
+            "lx.wahlfach",
+            "lx.sich-exmatrikulieren",
+            "lx.obligatorisch",
+            "lx.abschlussarbeit"
           ]
         },
         {
@@ -618,7 +793,18 @@
             "lx.gliederung",
             "lx.zitat",
             "lx.fachspezifisch",
-            "lx.vorzeitig"
+            "lx.vorzeitig",
+            "lx.fachliteratur",
+            "lx.literaturverzeichnis",
+            "lx.fussnote",
+            "lx.fragestellung",
+            "lx.plagiat",
+            "lx.quellenangabe",
+            "lx.paraphrasieren",
+            "lx.gliedern",
+            "lx.sekundaerliteratur",
+            "lx.exzerpt",
+            "lx.recherche"
           ]
         },
         {
@@ -629,7 +815,17 @@
             "lx.studiengebuehr",
             "lx.stipendium",
             "lx.studienberatung",
-            "lx.erschwinglich"
+            "lx.erschwinglich",
+            "lx.wohnheimplatz",
+            "lx.wohnberechtigungsschein",
+            "lx.bafoeg",
+            "lx.studienkredit",
+            "lx.nebenjob",
+            "lx.semesterticket",
+            "lx.wohnungsknappheit",
+            "lx.kostenguenstig",
+            "lx.studierendenwerk",
+            "lx.untermietvertrag"
           ]
         }
       ],
@@ -736,7 +932,18 @@
             "lx.filmmusik",
             "lx.leinwand",
             "lx.kulisse",
-            "lx.fesseln"
+            "lx.fesseln",
+            "lx.spielfilm",
+            "lx.dokumentarfilm",
+            "lx.regie",
+            "lx.premiere",
+            "lx.filmfestival",
+            "lx.nachwuchsregisseur",
+            "lx.nebenrolle",
+            "lx.kinostart",
+            "lx.originalfassung",
+            "lx.untertitel",
+            "lx.romanvorlage"
           ]
         },
         {
@@ -747,7 +954,17 @@
             "lx.hauptfigur",
             "lx.gattung",
             "lx.schriftsteller",
-            "lx.darstellen"
+            "lx.erzaehler",
+            "lx.lesung",
+            "lx.buchmesse",
+            "lx.bestseller",
+            "lx.theaterstueck",
+            "lx.protagonist",
+            "lx.lyrik",
+            "lx.handlungsstrang",
+            "lx.verfassen",
+            "lx.autobiografisch",
+            "lx.neuerscheinung"
           ]
         },
         {
@@ -758,7 +975,17 @@
             "lx.beruehrend",
             "lx.langatmig",
             "lx.gelungen",
-            "lx.sehenswert"
+            "lx.sehenswert",
+            "lx.kritiker",
+            "lx.verriss",
+            "lx.meisterwerk",
+            "lx.pointe",
+            "lx.vorhersehbar",
+            "lx.kitschig",
+            "lx.tiefgruendig",
+            "lx.packend",
+            "lx.ueberbewertet",
+            "lx.mitreissend"
           ]
         },
         {
@@ -769,7 +996,18 @@
             "lx.begeistern",
             "lx.sich-auseinandersetzen",
             "lx.anspruchsvoll",
-            "lx.empfehlenswert"
+            "lx.kulturbetrieb",
+            "lx.kulturpolitik",
+            "lx.kulturfoerderung",
+            "lx.kulturszene",
+            "lx.besucherzahl",
+            "lx.dauerausstellung",
+            "lx.kulturerbe",
+            "lx.jury",
+            "lx.subventionieren",
+            "lx.hochkaraetig",
+            "lx.etabliert",
+            "lx.veranstaltungsort"
           ]
         }
       ],
@@ -869,13 +1107,22 @@
         {
           "title": "Epochen und Ereignisse",
           "lemmas": [
-            "lx.epoche",
             "lx.zaesur",
             "lx.nachkriegszeit",
             "lx.sich-ereignen",
             "lx.damalig",
-            "lx.jahrzehnt",
-            "lx.zeitraum"
+            "lx.aera",
+            "lx.umbruch",
+            "lx.weltkrieg",
+            "lx.kriegsende",
+            "lx.wiederaufbau",
+            "lx.gruendung",
+            "lx.zeitgeschichte",
+            "lx.einst",
+            "lx.seinerzeit",
+            "lx.industrialisierung",
+            "lx.revolution",
+            "lx.herrschaft"
           ]
         },
         {
@@ -886,7 +1133,17 @@
             "lx.zeitzeuge",
             "lx.opfer",
             "lx.aufarbeitung",
-            "lx.verschweigen"
+            "lx.verschweigen",
+            "lx.gedenktag",
+            "lx.mahnmal",
+            "lx.gedenkfeier",
+            "lx.gedenken",
+            "lx.versoehnung",
+            "lx.nachfahre",
+            "lx.vertreibung",
+            "lx.mahnen",
+            "lx.unvergessen",
+            "lx.gedaechtnis"
           ]
         },
         {
@@ -897,7 +1154,19 @@
             "lx.angeblich",
             "lx.glaubhaft",
             "lx.fragwuerdig",
-            "lx.zeitgeschichtlich"
+            "lx.zeitgeschichtlich",
+            "lx.nachlass",
+            "lx.urkunde",
+            "lx.zeitdokument",
+            "lx.faelschung",
+            "lx.historiker",
+            "lx.legende",
+            "lx.chronik",
+            "lx.nachweisen",
+            "lx.rekonstruieren",
+            "lx.authentisch",
+            "lx.vermeintlich",
+            "lx.echtheit"
           ]
         },
         {
@@ -908,7 +1177,18 @@
             "lx.mauerfall",
             "lx.diktatur",
             "lx.verfolgung",
-            "lx.historisch"
+            "lx.ddr",
+            "lx.stasi",
+            "lx.wende",
+            "lx.grenzuebergang",
+            "lx.montagsdemonstration",
+            "lx.mauerbau",
+            "lx.ausreise",
+            "lx.bespitzelung",
+            "lx.ostdeutsch",
+            "lx.westdeutsch",
+            "lx.gewaltfrei",
+            "lx.planwirtschaft"
           ]
         }
       ],
@@ -1010,8 +1290,17 @@
             "lx.hausbesuch",
             "lx.dringlichkeit",
             "lx.vorrangig",
-            "lx.zeitnah",
-            "lx.wartezeit"
+            "lx.sprechzeit",
+            "lx.akutsprechstunde",
+            "lx.terminportal",
+            "lx.terminabsage",
+            "lx.hausarztpraxis",
+            "lx.notfallpraxis",
+            "lx.terminerinnerung",
+            "lx.werktags",
+            "lx.terminlich",
+            "lx.kurzfristig",
+            "lx.terminvereinbarung"
           ]
         },
         {
@@ -1022,7 +1311,17 @@
             "lx.zuzahlung",
             "lx.rueckrufbitte",
             "lx.entgegennehmen",
-            "lx.gesundheitskarte"
+            "lx.arzthelfer",
+            "lx.quartal",
+            "lx.attest",
+            "lx.rezeptbestellung",
+            "lx.patientenanfrage",
+            "lx.rezeptgebuehr",
+            "lx.zuzahlungsbefreiung",
+            "lx.e-rezept",
+            "lx.ueberweisungsschein",
+            "lx.einlesen",
+            "lx.blutabnahme"
           ]
         },
         {
@@ -1033,7 +1332,18 @@
             "lx.patientenakte",
             "lx.merkblatt",
             "lx.ambulant",
-            "lx.stationaer"
+            "lx.stationaer",
+            "lx.patientenrecht",
+            "lx.datenschutzerklaerung",
+            "lx.weitergabe",
+            "lx.akteneinsicht",
+            "lx.vertraulichkeit",
+            "lx.aufbewahrungsfrist",
+            "lx.verschluesselt",
+            "lx.unbefugt",
+            "lx.datenschutzkonform",
+            "lx.personenbezogen",
+            "lx.aufklaerungspflicht"
           ]
         },
         {
@@ -1044,7 +1354,16 @@
             "lx.vertroesten",
             "lx.verweisen",
             "lx.barrierefrei",
-            "lx.sich-gedulden"
+            "lx.verstaendlichkeit",
+            "lx.uebergangszeit",
+            "lx.barriere",
+            "lx.patientenbeschwerde",
+            "lx.begleitperson",
+            "lx.laienverstaendlich",
+            "lx.schwerhoerig",
+            "lx.anschaulich",
+            "lx.verunsicherung",
+            "lx.erlaeuterung"
           ]
         }
       ],
@@ -1157,7 +1476,17 @@
             "lx.lieferverkehr",
             "lx.verkehrsberuhigung",
             "lx.mobilitaet",
-            "lx.autofrei"
+            "lx.autofrei",
+            "lx.radverkehr",
+            "lx.lastenrad",
+            "lx.parkraum",
+            "lx.parkgebuehr",
+            "lx.tempolimit",
+            "lx.oepnv",
+            "lx.carsharing",
+            "lx.anwohnerparken",
+            "lx.fussverkehr",
+            "lx.radspur"
           ]
         },
         {
@@ -1168,7 +1497,18 @@
             "lx.umgestaltung",
             "lx.einzelhandel",
             "lx.beleben",
-            "lx.veroeden"
+            "lx.veroeden",
+            "lx.stadtplanung",
+            "lx.stadtbild",
+            "lx.begruenung",
+            "lx.ladensterben",
+            "lx.gastronomie",
+            "lx.flaniermeile",
+            "lx.sanierung",
+            "lx.kaufkraft",
+            "lx.sanieren",
+            "lx.innerstaedtisch",
+            "lx.fusslaeufig"
           ]
         },
         {
@@ -1179,7 +1519,17 @@
             "lx.laermbelastung",
             "lx.einschraenkung",
             "lx.zugaenglich",
-            "lx.lebenswert"
+            "lx.lebenswert",
+            "lx.buergerversammlung",
+            "lx.buergerentscheid",
+            "lx.gemeinderat",
+            "lx.kommune",
+            "lx.anhoerung",
+            "lx.petition",
+            "lx.unterschriftenliste",
+            "lx.mitentscheiden",
+            "lx.kommunal",
+            "lx.mitsprache"
           ]
         },
         {
@@ -1190,7 +1540,18 @@
             "lx.verdraengen",
             "lx.ausbauen",
             "lx.gefaehrden",
-            "lx.abwaegen"
+            "lx.zielkonflikt",
+            "lx.landflucht",
+            "lx.nahversorgung",
+            "lx.sich-zuspitzen",
+            "lx.abgehaengt",
+            "lx.kontrovers",
+            "lx.abwaegung",
+            "lx.einwenden",
+            "lx.untermauern",
+            "lx.interessenkonflikt",
+            "lx.streitkultur",
+            "lx.sich-positionieren"
           ]
         }
       ],
@@ -1294,7 +1655,18 @@
             "lx.umstellung",
             "lx.einsetzen",
             "lx.generieren",
-            "lx.zukunftsfaehig"
+            "lx.zukunftsfaehig",
+            "lx.chatbot",
+            "lx.eingabe",
+            "lx.anwendungsmoeglichkeit",
+            "lx.prompt",
+            "lx.spracherkennung",
+            "lx.bilderkennung",
+            "lx.einfuehrungsphase",
+            "lx.pilotprojekt",
+            "lx.softwareloesung",
+            "lx.automatisieren",
+            "lx.maschinell"
           ]
         },
         {
@@ -1305,7 +1677,17 @@
             "lx.fehlerquote",
             "lx.analysieren",
             "lx.fehleranfaellig",
-            "lx.datenbasiert"
+            "lx.datenbasiert",
+            "lx.datensatz",
+            "lx.datenbasis",
+            "lx.datenqualitaet",
+            "lx.verzerrung",
+            "lx.trefferquote",
+            "lx.rechenleistung",
+            "lx.blackbox",
+            "lx.fehlerfrei",
+            "lx.nachpruefbar",
+            "lx.undurchsichtig"
           ]
         },
         {
@@ -1316,7 +1698,18 @@
             "lx.schulung",
             "lx.effizienz",
             "lx.arbeitsplatzverlust",
-            "lx.vereinfachen"
+            "lx.vereinfachen",
+            "lx.arbeitsablauf",
+            "lx.fachkraeftemangel",
+            "lx.berufsbild",
+            "lx.arbeitswelt",
+            "lx.entlastung",
+            "lx.qualifizierung",
+            "lx.entlasten",
+            "lx.wegfallen",
+            "lx.zeitsparend",
+            "lx.monoton",
+            "lx.strukturwandel"
           ]
         },
         {
@@ -1327,7 +1720,18 @@
             "lx.regulierung",
             "lx.ueberwachen",
             "lx.riskant",
-            "lx.absehbar"
+            "lx.absehbar",
+            "lx.datenmissbrauch",
+            "lx.haftungsfrage",
+            "lx.kontrollverlust",
+            "lx.leitlinie",
+            "lx.urheberrecht",
+            "lx.ethik",
+            "lx.befuerchtung",
+            "lx.folgenabschaetzung",
+            "lx.missbrauchen",
+            "lx.ethisch",
+            "lx.verantwortungsvoll"
           ]
         }
       ],
@@ -1432,7 +1836,17 @@
             "lx.sachverhalt",
             "lx.ueberpruefung",
             "lx.beifuegen",
-            "lx.aktenzeichen"
+            "lx.bewilligung",
+            "lx.nachforderung",
+            "lx.antragsfrist",
+            "lx.behoerdengang",
+            "lx.foerderantrag",
+            "lx.foerdersumme",
+            "lx.rechtsgrundlage",
+            "lx.bewilligen",
+            "lx.unvollstaendig",
+            "lx.bearbeitungszeit",
+            "lx.bearbeitungsgebuehr"
           ]
         },
         {
@@ -1440,10 +1854,21 @@
           "lemmas": [
             "lx.widerspruchsfrist",
             "lx.abhilfe",
-            "lx.einlegen",
             "lx.anfechten",
             "lx.nachreichen",
-            "lx.fristgerecht"
+            "lx.rechtsbehelfsbelehrung",
+            "lx.widerspruchsbescheid",
+            "lx.rechtsberatung",
+            "lx.schriftstueck",
+            "lx.eingangsbestaetigung",
+            "lx.sozialberatung",
+            "lx.abweisen",
+            "lx.stattgeben",
+            "lx.fristwahrend",
+            "lx.klage",
+            "lx.rechtswidrig",
+            "lx.unbegruendet",
+            "lx.nachweislich"
           ]
         },
         {
@@ -1451,10 +1876,21 @@
           "lemmas": [
             "lx.vertragslaufzeit",
             "lx.sonderkuendigungsrecht",
-            "lx.kuendigungsbestaetigung",
             "lx.zurueckfordern",
             "lx.ordnungsgemaess",
-            "lx.unverzueglich"
+            "lx.unverzueglich",
+            "lx.kuendigungstermin",
+            "lx.vertragspartner",
+            "lx.preiserhoehung",
+            "lx.kuendigungsschreiben",
+            "lx.vertragsverlaengerung",
+            "lx.mieterverein",
+            "lx.kuendbar",
+            "lx.stillschweigend",
+            "lx.wirksam",
+            "lx.zum-naechstmoeglichen-zeitpunkt",
+            "lx.vertragsaenderung",
+            "lx.kuendigungsgrund"
           ]
         },
         {
@@ -1464,8 +1900,19 @@
             "lx.buerokratie",
             "lx.berichtigen",
             "lx.nachvollziehbar",
-            "lx.hiermit",
-            "lx.versehen"
+            "lx.behoerdensprache",
+            "lx.leichte-sprache",
+            "lx.schachtelsatz",
+            "lx.vordruck",
+            "lx.paragraf",
+            "lx.vereinfachung",
+            "lx.amtsblatt",
+            "lx.ergehen",
+            "lx.unverstaendlich",
+            "lx.buergernah",
+            "lx.verklausuliert",
+            "lx.buerokratisch",
+            "lx.behoerdlich"
           ]
         }
       ],
@@ -1568,9 +2015,21 @@
             "lx.varietaet",
             "lx.umgangssprache",
             "lx.eigenart",
-            "lx.klischee",
-            "lx.regional",
-            "lx.dialekt"
+            "lx.hochdeutsch",
+            "lx.schweizerdeutsch",
+            "lx.plattdeutsch",
+            "lx.sprachfaerbung",
+            "lx.zungenschlag",
+            "lx.mundartsprecher",
+            "lx.sprachebene",
+            "lx.sprachbewusstsein",
+            "lx.ausgepraegt",
+            "lx.landestypisch",
+            "lx.gebuertig",
+            "lx.unverkennbar",
+            "lx.sueddeutsch",
+            "lx.norddeutsch",
+            "lx.sprachlich"
           ]
         },
         {
@@ -1581,8 +2040,19 @@
             "lx.sprachgrenze",
             "lx.sprachpolitik",
             "lx.sich-verstaendigen",
-            "lx.vermitteln",
-            "lx.verbreitet"
+            "lx.verbreitet",
+            "lx.zweisprachigkeit",
+            "lx.herkunftssprache",
+            "lx.amtssprache",
+            "lx.minderheitensprache",
+            "lx.sprachbiografie",
+            "lx.sprachstammtisch",
+            "lx.verkehrssprache",
+            "lx.sprachenvielfalt",
+            "lx.sprachwechsel",
+            "lx.sprachmittlung",
+            "lx.gleichberechtigt",
+            "lx.zweitsprache"
           ]
         },
         {
@@ -1590,11 +2060,24 @@
           "lemmas": [
             "lx.redebeitrag",
             "lx.wortmeldung",
-            "lx.moderieren",
             "lx.ueberleiten",
             "lx.aufgreifen",
             "lx.einbeziehen",
-            "lx.zu-wort-kommen"
+            "lx.zu-wort-kommen",
+            "lx.moderation",
+            "lx.gespraechsrunde",
+            "lx.buendeln",
+            "lx.zusammentragen",
+            "lx.ermutigen",
+            "lx.reihum",
+            "lx.resuemee",
+            "lx.einhaken",
+            "lx.schlusswort",
+            "lx.themenwechsel",
+            "lx.erteilen",
+            "lx.ausreden",
+            "lx.diskussionsleitung",
+            "lx.rednerliste"
           ]
         }
       ],
