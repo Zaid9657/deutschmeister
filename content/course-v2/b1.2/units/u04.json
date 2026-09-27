@@ -254,7 +254,7 @@
         "title": "Rundschreiben: Unser Teamtag",
         "textType": "tt.rundschreiben",
         "text": {
-          "de": "An alle Mitarbeiterinnen und Mitarbeiter\n\nUnser Teamtag im Juni\n\nLiebe Kolleginnen und Kollegen,\n\nin diesem Jahr sind viele neue Kolleginnen und Kollegen zu uns gekommen. Deshalb planen wir am Freitag, dem 19. Juni, einen gemeinsamen Teamtag. Der Zweck ist einfach: Wir wollen uns besser kennenlernen und einen Tag lang zusammen etwas unternehmen.\n\nFür das Projekt haben wir ein Budget von 1.200 Euro. Die Teilnehmerzahl liegt bei 18 Personen. Sie brauchen also nichts selbst zu bezahlen. Auch Urlaub brauchen Sie für diesen Tag nicht zu nehmen, denn der Teamtag ist Arbeitszeit.\n\nIm Intranet finden Sie unter „Teamtag“ Angebote aus Leipzig und Umgebung. Frau Nair vergleicht sie. Am Dienstag bereiten Herr Wolf, Herr Yıldız, Frau Nair und ich den Tag in einer Sitzung vor. Der Teamtag ist dort der einzige Tagesordnungspunkt. Frau Otto ist an diesem Tag leider abwesend, denn sie ist auf einer Fortbildung. Frau Nair stellt die Angebote vor, die infrage kommen. Ziel ist eine Einigung über Ort und Programm. Bis dahin ist alles noch vorläufig: Endgültig legen wir das Programm erst in der Sitzung fest. Ein Programmpunkt am Vormittag ist aber schon sicher: eine kurze Besprechung zum Zeitplan für das zweite Halbjahr.\n\nHaben Sie eine Idee oder einen Einwand, oder möchten Sie etwas ergänzen? Sie können sich auch ohne Sitzung zu Wort melden. Dafür brauchen Sie nur eine kurze Nachricht an Frau Nair zu schreiben. In der Sitzung verteilen wir auch die Aufgaben. Für das Rahmenprogramm am Abend hat sich Frau Otto schon bereit erklärt. Bei der Aufgabenverteilung geht es also noch um zwei Zuständigkeiten: Wer übernimmt die Verantwortung für die Raumbuchung und wer für den Bus? Frau Nair fasst die Beschlüsse danach zusammen und schickt sie Ihnen per E-Mail. Bis zum Teamtag bekommen Sie dann jede Woche einen kurzen Zwischenstand.\n\nIch freue mich auf einen schönen Tag mit Ihnen!\n\nThomas Brandt\nGeschäftsführer",
+          "de": "An alle Mitarbeiterinnen und Mitarbeiter\n\nUnser Teamtag im Juni\n\nLiebe Kolleginnen und Kollegen,\n\nin diesem Jahr sind viele neue Kolleginnen und Kollegen zu uns gekommen. Deshalb planen wir am Freitag, dem 19. Juni, einen gemeinsamen Teamtag. Der Zweck ist einfach: Wir wollen uns besser kennenlernen und einen Tag lang zusammen etwas unternehmen.\n\nFür das Projekt haben wir ein Budget von 1.200 Euro. Die Teilnehmerzahl liegt bei 18 Personen. Sie brauchen also nichts selbst zu bezahlen. Auch Urlaub brauchen Sie für diesen Tag nicht zu nehmen, denn der Teamtag ist Arbeitszeit.\n\nIm Intranet finden Sie unter „Teamtag“ Angebote aus Leipzig und Umgebung. Frau Nair vergleicht sie. Am Dienstag bereiten Herr Wolf, Herr Yıldız, Frau Nair und ich den Tag in einer Sitzung vor. Der Teamtag ist dort der einzige Tagesordnungspunkt. Frau Otto ist an diesem Tag leider abwesend, denn sie ist auf einer Fortbildung. Frau Nair stellt die Angebote vor, die infrage kommen. Ziel ist eine Einigung über Ort und Programm. Bis dahin ist alles noch vorläufig: Endgültig legen wir das Programm erst in der Sitzung fest. Ein Programmpunkt am Vormittag ist aber schon sicher: eine kurze Besprechung zum Zeitplan für das zweite Halbjahr.\n\nHaben Sie eine Idee oder einen Einwand, oder möchten Sie etwas ergänzen? Wenn Sie nicht in der Sitzung sind, können Sie sich auch schriftlich zu Wort melden: Dafür brauchen Sie nur eine kurze Nachricht an Frau Nair zu schreiben. In der Sitzung verteilen wir auch die Aufgaben. Für das Rahmenprogramm am Abend hat sich Frau Otto schon bereit erklärt. Bei der Aufgabenverteilung geht es also noch um zwei Zuständigkeiten: Wer übernimmt die Verantwortung für die Raumbuchung und wer für den Bus? Frau Nair fasst die Beschlüsse danach zusammen und schickt sie Ihnen per E-Mail. Bis zum Teamtag bekommen Sie dann jede Woche einen kurzen Zwischenstand.\n\nIch freue mich auf einen schönen Tag mit Ihnen!\n\nThomas Brandt\nGeschäftsführer",
           "en": "Circular from the managing director: a team day on Friday 19 June for 18 people with a budget of 1,200 euros; staff pay nothing and need not take leave; Ms Nair compares the offers on the intranet; on Tuesday a small group (Mr Wolf, Mr Yıldız, Ms Nair and Mr Brandt) meets to agree on the venue and programme and to share out the room booking and the bus – Ms Otto, who is away on a training course that day, has already volunteered for the evening programme; staff get a short progress update every week."
         },
         "glosses": [
@@ -452,8 +452,8 @@
           "promptEn": "Which sentence means the same?",
           "options": [
             "Sie brauchen nicht zu unterschreiben.",
-            "Sie brauchen nur zu unterschreiben.",
-            "Sie dürfen nicht unterschreiben."
+            "Sie dürfen nicht unterschreiben.",
+            "Sie brauchen nur zu unterschreiben."
           ],
           "answer": "Sie brauchen nur zu unterschreiben.",
           "accepted": [
@@ -610,16 +610,21 @@
             "accepted": [
               "Ich brauche den Bus nicht zu bestellen.",
               "Den Bus brauche ich nicht zu bestellen.",
-              "Zu bestellen brauche ich den Bus nicht."
+              "Zu bestellen brauche ich den Bus nicht.",
+              "Den Bus zu bestellen brauche ich nicht."
             ],
             "acceptedWhy": {
-              "Zu bestellen brauche ich den Bus nicht.": "grammatisch: der Infinitiv mit zu im Vorfeld betont die Handlung, aber selten"
+              "Zu bestellen brauche ich den Bus nicht.": "grammatisch: der Infinitiv mit zu im Vorfeld betont die Handlung, aber selten",
+              "Den Bus zu bestellen brauche ich nicht.": "grammatisch: der ganze Infinitiv mit zu steht im Vorfeld"
             },
             "explanation": {
               "de": "Das Verb brauche steht auf Position 2, zu bestellen am Ende.",
               "en": "brauche stays second; zu bestellen goes last."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "reviewerConfirmed": [
+              "Den Bus zu bestellen brauche ich nicht."
+            ]
           },
           {
             "id": "b1.2-u04-ls1-p08",
@@ -822,7 +827,8 @@
           "accepted": [
             "Du brauchst mich nicht abzuholen.",
             "Mich brauchst du nicht abzuholen.",
-            "Abzuholen brauchst du mich nicht."
+            "Abzuholen brauchst du mich nicht.",
+            "Mich abzuholen brauchst du nicht."
           ],
           "explanation": {
             "de": "abholen ist trennbar: abzuholen steht am Ende.",
@@ -840,11 +846,13 @@
           "origin": "agent",
           "acceptedWhy": {
             "Mich brauchst du nicht abzuholen.": "grammatisch: das Objekt mich im Vorfeld wird betont",
-            "Abzuholen brauchst du mich nicht.": "grammatisch: der Infinitiv mit zu im Vorfeld betont die Handlung, aber selten"
+            "Abzuholen brauchst du mich nicht.": "grammatisch: der Infinitiv mit zu im Vorfeld betont die Handlung, aber selten",
+            "Mich abzuholen brauchst du nicht.": "grammatisch: der ganze Infinitiv mit zu steht im Vorfeld"
           },
           "reviewerConfirmed": [
             "Mich brauchst du nicht abzuholen.",
-            "Abzuholen brauchst du mich nicht."
+            "Abzuholen brauchst du mich nicht.",
+            "Mich abzuholen brauchst du nicht."
           ]
         },
         {
@@ -995,8 +1003,8 @@
           {
             "id": "b1.2-u04-ls2-l11",
             "speaker": "cast.herr-brandt",
-            "de": "Sehr gut, eine schnelle Einigung. Das findet meine Zustimmung. Frau Otto kümmert sich um das Rahmenprogramm am Abend, das hat sie mir schon letzte Woche angeboten. Sie soll bis Freitag zwei Vorschläge sammeln, aber noch nichts buchen. Am Freitag besprechen wir dann den Zwischenstand und den Zeitplan. Damit sind die Zuständigkeiten klar, und wir können den Tagesordnungspunkt abschließen. Frau Nair, schreiben Sie ihr bitte alles, was wir heute beschlossen haben. – Oh, das Empfangstelefon klingelt. Gehen Sie bitte ans Telefon.",
-            "en": "Very good – quick agreement, and it has my approval. Ms Otto is looking after the evening programme; she offered to do it last week. By Friday she should collect two suggestions, but not book anything yet. On Friday we’ll discuss where things stand and the schedule. That makes it clear who is responsible for what, and we can close this agenda item. Ms Nair, please write to her with everything we decided today. – Oh, the reception phone is ringing. Please answer it."
+            "de": "Sehr gut, eine schnelle Einigung. Das findet meine Zustimmung. Frau Otto kümmert sich um das Rahmenprogramm am Abend, das hat sie mir schon letzte Woche angeboten. Sie soll bis Freitag zwei Vorschläge sammeln, aber noch nichts buchen. Am Freitag besprechen wir dann den Zwischenstand und den Zeitplan. Damit sind die Zuständigkeiten klar, und wir können den Tagesordnungspunkt abschließen. Frau Nair, schreiben Sie ihr bitte alles, was wir heute beschlossen haben. – Oh, das Empfangstelefon klingelt. Gehen Sie bitte ans Telefon, und wenn es wichtig ist, machen Sie eine Gesprächsnotiz.",
+            "en": "Very good – quick agreement, and it has my approval. Ms Otto is looking after the evening programme; she offered to do it last week. By Friday she should collect two suggestions, but not book anything yet. On Friday we’ll discuss where things stand and the schedule. That makes it clear who is responsible for what, and we can close this agenda item. Ms Nair, please write to her with everything we decided today. – Oh, the reception phone is ringing. Please answer it, and if it’s important, make a note of the call."
           },
           {
             "id": "b1.2-u04-ls2-l12",
@@ -1008,15 +1016,15 @@
           {
             "id": "b1.2-u04-ls2-l13",
             "speaker": "cast.priya",
-            "de": "Frau Otto ist heute leider nicht im Haus. Kann ich ihr etwas ausrichten? Ich schreibe ihr gern eine Gesprächsnotiz.",
-            "en": "Unfortunately Ms Otto isn’t in today. Can I take a message for her? I’ll gladly write her a note of the call."
+            "de": "Frau Otto ist heute leider nicht im Haus. Kann ich ihr etwas ausrichten? Ich lege ihr eine Gesprächsnotiz auf den Tisch.",
+            "en": "Unfortunately Ms Otto isn’t in today. Can I take a message for her? I’ll put a note of the call on her desk."
           },
           {
             "id": "b1.2-u04-ls2-l14",
             "speaker": "x.herr-lehmann",
-            "de": "Ja, gern. Für Ihre Gesprächsnotiz: Die Terrasse ist am 19. Juni frei, aber nur bis 22 Uhr. Ich halte sie bis nächsten Montag vorläufig für Ihre Firma frei. Wenn Sie sie nehmen, brauchen wir bis dahin die Teilnehmerzahl für das Essen. Frau Otto soll mich bitte zurückrufen: 0341 22 58 90.",
-            "en": "Yes, please. For your note: the terrace is free on 19 June, but only until 10 pm. I’ll hold it provisionally for your company until next Monday. If you take it, we need the number of participants for the food by then. Ms Otto should call me back, please: 0341 22 58 90.",
-            "say": "Ja, gern. Für Ihre Gesprächsnotiz: Die Terrasse ist am neunzehnten Juni frei, aber nur bis zweiundzwanzig Uhr. Ich halte sie bis nächsten Montag vorläufig für Ihre Firma frei. Wenn Sie sie nehmen, brauchen wir bis dahin die Teilnehmerzahl für das Essen. Frau Otto soll mich bitte zurückrufen: null drei vier eins, zweiundzwanzig, achtundfünfzig, neunzig."
+            "de": "Ja, gern. Bitte notieren Sie: Die Terrasse ist am 19. Juni frei, aber nur bis 22 Uhr. Ich halte sie bis nächsten Montag vorläufig für Ihre Firma frei. Wenn Sie sie nehmen, brauchen wir bis dahin die Teilnehmerzahl für das Essen. Frau Otto soll mich bitte zurückrufen: 0341 22 58 90.",
+            "en": "Yes, please. Please note: the terrace is free on 19 June, but only until 10 pm. I’ll hold it provisionally for your company until next Monday. If you take it, we need the number of participants for the food by then. Ms Otto should call me back, please: 0341 22 58 90.",
+            "say": "Ja, gern. Bitte notieren Sie: Die Terrasse ist am neunzehnten Juni frei, aber nur bis zweiundzwanzig Uhr. Ich halte sie bis nächsten Montag vorläufig für Ihre Firma frei. Wenn Sie sie nehmen, brauchen wir bis dahin die Teilnehmerzahl für das Essen. Frau Otto soll mich bitte zurückrufen: null drei vier eins, zweiundzwanzig, achtundfünfzig, neunzig."
           }
         ],
         "glosses": [
@@ -1038,8 +1046,8 @@
           "promptDe": "Worum geht es in der Sitzung?",
           "promptEn": "What is the meeting about?",
           "options": [
-            "um eine Fortbildung in Dresden",
             "um den Teamtag im Juni",
+            "um eine Fortbildung in Dresden",
             "um neue Kolleginnen und Kollegen"
           ],
           "answer": "um den Teamtag im Juni",
@@ -1203,8 +1211,8 @@
           "promptDe": "„Schreiben Sie ihr alles, was wir heute beschlossen haben.“ – Was soll Priya schreiben?",
           "promptEn": "What should Priya write?",
           "options": [
-            "nur den Termin",
             "alle Beschlüsse der Sitzung",
+            "nur den Termin",
             "eine Einladung"
           ],
           "answer": "alle Beschlüsse der Sitzung",
@@ -1423,8 +1431,8 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "lx.ergaenzen",
-            "promptDe": "Bilden Sie den Satz.",
-            "promptEn": "Build the sentence.",
+            "promptDe": "Bilden Sie die Frage.",
+            "promptEn": "Build the question.",
             "tiles": [
               "darf",
               "ich",
@@ -1434,20 +1442,13 @@
             ],
             "answer": "Darf ich kurz etwas ergänzen?",
             "accepted": [
-              "Darf ich kurz etwas ergänzen?",
-              "Ich darf kurz etwas ergänzen."
+              "Darf ich kurz etwas ergänzen?"
             ],
             "explanation": {
               "de": "Höfliche Frage: darf vorne, ergänzen am Ende.",
               "en": "Polite question: darf first, ergänzen last."
             },
-            "origin": "agent",
-            "acceptedWhy": {
-              "Ich darf kurz etwas ergänzen.": "grammatisch: Aussagesatz, höflich angekündigt statt gefragt"
-            },
-            "reviewerConfirmed": [
-              "Ich darf kurz etwas ergänzen."
-            ]
+            "origin": "agent"
           },
           {
             "id": "b1.2-u04-ls2-p10",
@@ -1922,7 +1923,8 @@
             "accepted": [
               "Sie brauchen das Protokoll nicht auszudrucken.",
               "Das Protokoll brauchen Sie nicht auszudrucken.",
-              "Auszudrucken brauchen Sie das Protokoll nicht."
+              "Auszudrucken brauchen Sie das Protokoll nicht.",
+              "Das Protokoll auszudrucken brauchen Sie nicht."
             ],
             "explanation": {
               "de": "brauchen auf Position 2, auszudrucken am Ende.",
@@ -1934,10 +1936,12 @@
             "origin": "agent",
             "acceptedWhy": {
               "Das Protokoll brauchen Sie nicht auszudrucken.": "grammatisch: das Objekt im Vorfeld wird betont",
-              "Auszudrucken brauchen Sie das Protokoll nicht.": "grammatisch: der Infinitiv mit zu im Vorfeld betont die Handlung, aber selten"
+              "Auszudrucken brauchen Sie das Protokoll nicht.": "grammatisch: der Infinitiv mit zu im Vorfeld betont die Handlung, aber selten",
+              "Das Protokoll auszudrucken brauchen Sie nicht.": "grammatisch: der ganze Infinitiv mit zu steht im Vorfeld"
             },
             "reviewerConfirmed": [
-              "Auszudrucken brauchen Sie das Protokoll nicht."
+              "Auszudrucken brauchen Sie das Protokoll nicht.",
+              "Das Protokoll auszudrucken brauchen Sie nicht."
             ]
           },
           {
@@ -2290,9 +2294,9 @@
           "promptDe": "Sie brauchen den Bus nicht selbst ___ bezahlen.",
           "promptEn": "Choose the word for the gap.",
           "options": [
+            "zu",
             "um",
-            "für",
-            "zu"
+            "für"
           ],
           "answer": "zu",
           "accepted": [
@@ -2568,7 +2572,7 @@
               "type": "zuordnen",
               "role": "exam",
               "topic": "lesen",
-              "promptDe": "Ihr Team möchte einen Tagesausflug nach Dresden machen, aber niemand möchte selbst Auto fahren.",
+              "promptDe": "Ihr Team möchte einen Tagesausflug in eine andere Stadt in Sachsen machen, aber niemand möchte selbst Auto fahren.",
               "answer": "g",
               "accepted": [
                 "g"
@@ -3021,7 +3025,7 @@
         "register": "halbformell",
         "address": "Sie",
         "title": "Ergebnisse der Sitzung weitergeben",
-        "situationDe": "Sie sind Priya Nair und arbeiten bei Brandt Elektrotechnik. Ihre Kollegin Sabine Otto war auf einer Fortbildung und hat die Teambesprechung am Dienstag verpasst. Sie schreibt Ihnen:\n\n„Hallo Frau Nair,\nich bin wieder zurück aus Dresden – die Fortbildung war sehr interessant! Leider war ich bei unserer Sitzung am Dienstag nicht dabei. Können Sie mir kurz schreiben, was Sie für den Teamtag beschlossen haben und wer welche Aufgabe übernimmt? Herr Brandt hat mir schon bestätigt, dass ich das Rahmenprogramm am Abend übernehme. Was genau soll ich jetzt machen, und muss ich dafür schon etwas buchen? Und noch etwas: Hat jemand vom Seminarhaus am See für mich angerufen? Ich habe dort vor der Fortbildung nach der Terrasse für einen Grillabend gefragt, weil das Haus auf Ihrer Liste stand.\nVielen Dank und viele Grüße\nSabine Otto“\n\nIhre Notizen aus der Sitzung: Seminarhaus am Cospudener See · vormittags Besprechung, nachmittags Radtour · Raumbuchung: ich · Bus: Emre · Rahmenprogramm am Abend: Frau Otto (seit letzter Woche) – bis Freitag zwei Vorschläge sammeln, noch nichts buchen · Zwischenstand: Freitag · Gesprächsnotiz, Anruf Herr Lehmann (Seminarhaus): Terrasse am 19. Juni frei, nur bis 22 Uhr, bis Montag vorläufig für uns frei · wenn wir sie nehmen: Teilnehmerzahl bis Montag · Rückruf: 0341 22 58 90",
+        "situationDe": "Sie sind Priya Nair und arbeiten bei Brandt Elektrotechnik. Ihre Kollegin Sabine Otto war auf einer Fortbildung und hat die Teambesprechung am Dienstag verpasst. Sie schreibt Ihnen:\n\n„Hallo Frau Nair,\nich bin wieder zurück aus Dresden, aber erst am Donnerstag wieder im Büro. Die Fortbildung war sehr interessant! Leider war ich bei unserer Sitzung am Dienstag nicht dabei. Können Sie mir kurz schreiben, was Sie für den Teamtag beschlossen haben und wer welche Aufgabe übernimmt? Herr Brandt hat mir schon bestätigt, dass ich das Rahmenprogramm am Abend übernehme. Was genau soll ich jetzt machen, und muss ich dafür schon etwas buchen? Und noch etwas: Hat jemand vom Seminarhaus am See für mich angerufen? Ich habe dort vor der Fortbildung nach der Terrasse für einen Grillabend gefragt, weil das Haus auf Ihrer Liste stand.\nVielen Dank und viele Grüße\nSabine Otto“\n\nIhre Notizen aus der Sitzung: Seminarhaus am Cospudener See · vormittags Besprechung, nachmittags Radtour · Raumbuchung: ich · Bus: Emre · Rahmenprogramm am Abend: Frau Otto (seit letzter Woche) – bis Freitag zwei Vorschläge sammeln, noch nichts buchen · Zwischenstand: Freitag · Gesprächsnotiz, Anruf Herr Lehmann (Seminarhaus): Terrasse am 19. Juni frei, nur bis 22 Uhr, bis Montag vorläufig für uns frei · wenn wir sie nehmen: Teilnehmerzahl bis Montag · Rückruf: 0341 22 58 90",
         "taskDe": "Antworten Sie Frau Otto. Schreiben Sie etwas zu allen vier Punkten.",
         "leitpunkte": [
           {
@@ -3097,7 +3101,7 @@
           "Sie-Form",
           "etwa 80 bis 120 Wörter"
         ],
-        "modelText": "Betreff: Unsere Sitzung am Dienstag\n\nLiebe Frau Otto,\n\nschön, dass Sie wieder da sind! Hier ist alles, was wir beschlossen haben. Der Teamtag findet im Seminarhaus am See statt: vormittags Besprechung, nachmittags Radtour. Die Aufgaben haben wir so aufgeteilt: Ich kümmere mich um die Raumbuchung, Emre um den Bus und Sie um das Rahmenprogramm am Abend. Herr Brandt bittet Sie, bis Freitag zwei Vorschläge zu sammeln. Sie brauchen noch nichts zu buchen, denn am Freitag besprechen wir den Zwischenstand. Herr Lehmann vom Seminarhaus hat angerufen: Die Terrasse ist am 19. Juni bis 22 Uhr frei. Er reserviert sie bis Montag und braucht bis dahin die Teilnehmerzahl. Er bittet um Rückruf: 0341 22 58 90. Bis Freitag!\n\nViele Grüße\nPriya Nair"
+        "modelText": "Betreff: Unsere Sitzung am Dienstag\n\nLiebe Frau Otto,\n\nschön, dass Sie wieder zurück sind! Hier ist alles, was wir beschlossen haben. Der Teamtag findet im Seminarhaus am See statt: vormittags Besprechung, nachmittags Radtour. Die Aufgaben haben wir so aufgeteilt: Ich kümmere mich um die Raumbuchung, Emre um den Bus und Sie um das Rahmenprogramm am Abend. Herr Brandt bittet Sie, bis Freitag zwei Vorschläge zu sammeln. Sie brauchen noch nichts zu buchen, denn am Freitag besprechen wir den Zwischenstand. Herr Lehmann vom Seminarhaus hat angerufen: Die Terrasse ist am 19. Juni bis 22 Uhr frei. Er reserviert sie bis Montag und braucht bis dahin die Teilnehmerzahl. Er bittet um Rückruf: 0341 22 58 90. Bis Freitag!\n\nViele Grüße\nPriya Nair"
       }
     },
     {
@@ -3117,21 +3121,9 @@
       {
         "id": "b1.2-u04-ls8-l01",
         "speaker": "x.frau-wendt",
-        "de": "Guten Tag, hier ist Karin Wendt von Elster-Reisen. Herr Yıldız hat nach einem Bus für den 19. Juni gefragt. Für 18 Personen kostet die Fahrt 280 Euro. Bitte bestätigen Sie bis Donnerstag: 0341 47 11 30.",
-        "en": "Hello, this is Karin Wendt from Elster-Reisen. Mr Yıldız asked about a bus for 19 June. For 18 people the trip costs 280 euros. Please confirm by Thursday: 0341 47 11 30.",
-        "say": "Guten Tag, hier ist Karin Wendt von Elster-Reisen. Herr Yıldız hat nach einem Bus für den neunzehnten Juni gefragt. Für achtzehn Personen kostet die Fahrt zweihundertachtzig Euro. Bitte bestätigen Sie bis Donnerstag: null drei vier eins, siebenundvierzig, elf, dreißig."
-      },
-      {
-        "id": "b1.2-u04-ls8-l02",
-        "speaker": "ansage",
-        "de": "Das ist alles, was wir heute beschlossen haben.",
-        "en": "That is everything we decided today."
-      },
-      {
-        "id": "b1.2-u04-ls8-l03",
-        "speaker": "ansage",
-        "de": "Sie brauchen das Protokoll nur zu unterschreiben.",
-        "en": "You only need to sign the minutes."
+        "de": "Guten Tag, hier ist Karin Wendt von Elster-Reisen. Herr Yıldız hat nach einem Bus für den 19. Juni gefragt. Für 18 Personen kostet die Fahrt 280 Euro. Bitte bestätigen Sie bis morgen um 14 Uhr: 0341 47 11 30.",
+        "en": "Hello, this is Karin Wendt from Elster-Reisen. Mr Yıldız asked about a bus for 19 June. For 18 people the trip costs 280 euros. Please confirm by 2 pm tomorrow: 0341 47 11 30.",
+        "say": "Guten Tag, hier ist Karin Wendt von Elster-Reisen. Herr Yıldız hat nach einem Bus für den neunzehnten Juni gefragt. Für achtzehn Personen kostet die Fahrt zweihundertachtzig Euro. Bitte bestätigen Sie bis morgen um vierzehn Uhr: null drei vier eins, siebenundvierzig, elf, dreißig."
       }
     ],
     "items": [
@@ -3230,96 +3222,9 @@
         ]
       },
       {
-        "id": "b1.2-u04-c05",
-        "type": "multiple_choice",
-        "role": "check",
-        "topic": "lx.einstimmig",
-        "promptDe": "Alle waren dafür, niemand war dagegen. Der Beschluss war ___.",
-        "promptEn": "Choose the word.",
-        "options": [
-          "vorläufig",
-          "abwesend",
-          "einstimmig"
-        ],
-        "answer": "einstimmig",
-        "accepted": [
-          "einstimmig"
-        ],
-        "explanation": {
-          "de": "einstimmig: Niemand stimmt dagegen, es gibt keine Gegenstimme.",
-          "en": "einstimmig = unanimous, no votes against."
-        },
-        "origin": "agent"
-      },
-      {
-        "id": "b1.2-u04-c06",
-        "type": "dictation",
-        "role": "check",
-        "topic": "hoeren",
-        "promptDe": "Hören Sie und schreiben Sie den Satz.",
-        "promptEn": "Listen and write the sentence.",
-        "audioLineRef": "b1.2-u04-ls8-l02",
-        "answer": "Das ist alles, was wir heute beschlossen haben.",
-        "accepted": [
-          "Das ist alles, was wir heute beschlossen haben."
-        ],
-        "explanation": {
-          "de": "Relativsatz nach einem Pronomen wie etwas: was; beschlossen haben steht am Ende.",
-          "en": "was after alles; beschlossen haben at the end."
-        },
-        "origin": "agent"
-      },
-      {
-        "id": "b1.2-u04-c07",
-        "type": "dictation",
-        "role": "check",
-        "topic": "hoeren",
-        "promptDe": "Hören Sie und schreiben Sie den Satz.",
-        "promptEn": "Listen and write the sentence.",
-        "audioLineRef": "b1.2-u04-ls8-l03",
-        "answer": "Sie brauchen das Protokoll nur zu unterschreiben.",
-        "accepted": [
-          "Sie brauchen das Protokoll nur zu unterschreiben."
-        ],
-        "explanation": {
-          "de": "nur brauchen + zu: zu und unterschreiben schreibt man getrennt.",
-          "en": "nur brauchen + zu: zu is written separately from unterschreiben."
-        },
-        "origin": "agent"
-      },
-      {
-        "id": "b1.2-u04-c08",
-        "type": "error_correction",
-        "role": "check",
-        "topic": "g.relativsatz-was-wo",
-        "promptDe": "Korrigieren Sie: „Ich schicke Ihnen alles, was wir haben beschlossen.“",
-        "promptEn": "Correct the sentence.",
-        "answer": "Ich schicke Ihnen alles, was wir beschlossen haben.",
-        "accepted": [
-          "Ich schicke Ihnen alles, was wir beschlossen haben."
-        ],
-        "intentionalError": true,
-        "explanation": {
-          "de": "Im Relativsatz steht das konjugierte Verb am Ende.",
-          "en": "In the relative clause the finite verb goes last."
-        },
-        "errorTag": "verb-final",
-        "errorTags": [
-          "verb-final"
-        ],
-        "origin": "agent"
-      }
-    ],
-    "earlierDraw": {
-      "count": 4,
-      "from": "previous-3",
-      "pool": "reserve"
-    },
-    "proofItems": [
-      {
-        "id": "b1.2-u04-q01",
+        "id": "b1.2-u04-c09",
         "type": "notes",
-        "role": "proof",
+        "role": "check",
         "topic": "hoeren",
         "promptDe": "Notiz für Emre – Elster-Reisen, Bus am 19.6.: Preis ___ Euro",
         "promptEn": "Complete the note: the price.",
@@ -3346,27 +3251,40 @@
         "origin": "agent"
       },
       {
-        "id": "b1.2-u04-q02",
+        "id": "b1.2-u04-c10",
         "type": "notes",
-        "role": "proof",
+        "role": "check",
         "topic": "hoeren",
-        "promptDe": "Notiz für Emre – Elster-Reisen, Bus am 19.6.: bestätigen bis ___",
+        "promptDe": "Notiz für Emre – Elster-Reisen, Bus am 19.6.: bestätigen bis morgen, ___ Uhr",
         "promptEn": "Complete the note: the deadline.",
         "audioLineRef": "b1.2-u04-ls8-l01",
-        "answer": "Donnerstag",
+        "answer": "14",
         "accepted": [
-          "Donnerstag"
+          "14",
+          "14:00",
+          "14.00",
+          "14 Uhr",
+          "14:00 Uhr",
+          "14.00 Uhr"
         ],
+        "acceptedWhy": {
+          "14:00": "übliche Schreibweise der Uhrzeit in einer Notiz, dieselbe Zeit",
+          "14.00": "übliche Schreibweise der Uhrzeit in einer Notiz, dieselbe Zeit",
+          "14 Uhr": "übliche Schreibweise der Uhrzeit in einer Notiz, dieselbe Zeit",
+          "14:00 Uhr": "übliche Schreibweise der Uhrzeit in einer Notiz, dieselbe Zeit",
+          "14.00 Uhr": "übliche Schreibweise der Uhrzeit in einer Notiz, dieselbe Zeit"
+        },
+        "exact": "number",
         "explanation": {
-          "de": "Frau Wendt sagt: Bitte bestätigen Sie bis Donnerstag.",
-          "en": "Ms Wendt asks for confirmation by Thursday."
+          "de": "Frau Wendt sagt: Bitte bestätigen Sie bis morgen um 14 Uhr. Achten Sie auf die Uhrzeit.",
+          "en": "Ms Wendt asks for confirmation by 2 pm tomorrow – watch the time."
         },
         "origin": "agent"
       },
       {
-        "id": "b1.2-u04-q03",
+        "id": "b1.2-u04-c11",
         "type": "notes",
-        "role": "proof",
+        "role": "check",
         "topic": "hoeren",
         "promptDe": "Notiz für Emre – Elster-Reisen, Bus am 19.6.: Rückruf unter ___",
         "promptEn": "Complete the note: the phone number.",
@@ -3399,8 +3317,36 @@
           "en": "Ms Wendt’s number is 0341 47 11 30 – watch the digits."
         },
         "origin": "agent"
+      },
+      {
+        "id": "b1.2-u04-c08",
+        "type": "error_correction",
+        "role": "check",
+        "topic": "g.relativsatz-was-wo",
+        "promptDe": "Korrigieren Sie: „Ich schicke Ihnen alles, was wir haben beschlossen.“",
+        "promptEn": "Correct the sentence.",
+        "answer": "Ich schicke Ihnen alles, was wir beschlossen haben.",
+        "accepted": [
+          "Ich schicke Ihnen alles, was wir beschlossen haben."
+        ],
+        "intentionalError": true,
+        "explanation": {
+          "de": "Im Relativsatz steht das konjugierte Verb am Ende.",
+          "en": "In the relative clause the finite verb goes last."
+        },
+        "errorTag": "verb-final",
+        "errorTags": [
+          "verb-final"
+        ],
+        "origin": "agent"
       }
     ],
+    "earlierDraw": {
+      "count": 4,
+      "from": "previous-3",
+      "pool": "reserve"
+    },
+    "proofItems": [],
     "proofs": [
       {
         "canDo": "cd.b1.projekt-planen-einwaende",
@@ -3408,7 +3354,7 @@
       },
       {
         "canDo": "cd.b1.nachricht-notieren",
-        "item": "b1.2-u04-q03"
+        "aufgabe": "schreiben"
       },
       {
         "canDo": "cd.b1.besprechung-ergebnisse-weitergeben",

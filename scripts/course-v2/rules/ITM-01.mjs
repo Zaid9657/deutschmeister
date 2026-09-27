@@ -15,8 +15,9 @@
 //
 // Rail extensions (rule-smith 2026-09-27; every one a class the u04 reviews found on ≥ 2 rounds or
 // levels — the German prompt, not promptEn, must decide the key):
-//   - a non-exam choice item whose key (or its digits) stands verbatim in the stem while no distractor
-//     does gives itself away (a1.1-u04 r1 F06);
+//   - a practice, Check or proof choice item whose key (or its digits) stands verbatim in the stem
+//     while no distractor does gives itself away (a1.1-u04 r1 F06; input and structured-input items
+//     quote their line on purpose);
 //   - a cue promptEn names — „the polite form of können", „(können)", „as a word", „starts with …" —
 //     stands in promptDe too (a1.2-u04 r1 F08, b2.2-u04 r1 F12);
 //   - a typed gap whose key is an ordinal word says „Wort" in promptDe, accepts the digit form, or
@@ -24,7 +25,10 @@
 //   - a typed gap without options whose key is a noun, an adjective, or a sentence adverb at the
 //     start of the sentence carries a German cue — a bracketed base form or choice, „= …", „→", the
 //     first letters — because another word of the same class fits the frame (b1.1-u04 r1 F05 / r2 F01,
-//     b1.2-u04 r1 F12, b2.2-u04 r1 F12, a2.1-u04 r1);
+//     b1.2-u04 r1 F12, b2.2-u04 r1 F12, a2.1-u04 r1). A sentence adverb at the start blocks („___ habe
+//     ich keine Antwort bekommen." → Trotzdem, Leider, Noch …); an open noun or adjective gap is an
+//     ADVISORY — the sentence around it may decide it („Die Leitung ist ___. Bitte rufen Sie später
+//     an." → besetzt, SCHEMA §15), which only a reader or the solver gate can judge;
 //   - a first-letter cue with underscores shows exactly the missing letters (b2.2-u04 r1 F12);
 //   - a typed gap whose key begins with a preposition has that preposition in promptDe
 //     (a2.2-u04 r2 F04: „Emre wartet ___ Brücke" → „an der", „auf der", „vor der" all fit).
@@ -119,7 +123,7 @@ function cueFindings(doc, item, path, where, pos) {
   const accepted = [key, ...arr(item.accepted).map(String)];
   const typed = item.type === 'fill_blank' && !arr(item.options).length;
   // the key given away by the stem
-  if (where !== 'exam' && item.role !== 'exam' && arr(item.options).length >= 3 && key) {
+  if (['pool', 'reserve', 'check', 'proof'].includes(where) && arr(item.options).length >= 3 && key) {
     const distractors = arr(item.options).map(String).filter((o) => norm(o) !== norm(key));
     const digits = (x) => x.replace(/\D+/g, '');
     const inStem = (x) => (digits(x).length >= 2 && digits(x) === digits(x.replace(/[^\d\s.,:]/g, '')) ? de.replace(/\D+/g, ' ').split(' ').includes(digits(x)) : norm(x).length >= 3 && hasWord(norm(de), norm(x)));
@@ -176,9 +180,8 @@ function cueFindings(doc, item, path, where, pos) {
   const noun = (cls.has('NOUN') || (/^\p{Lu}/u.test(w) && !initial)) && !/^\p{Lu}/u.test(w) === false;
   const adj = cls.has('ADJ') && !cls.has('VERB');
   const sadv = initial && SENTENCE_ADVERBS.has(w.toLowerCase());
-  if (noun || adj || sadv) {
-    out.push(blocker(doc, `${path}.promptDe`, `open ${noun ? 'noun' : adj ? 'adjective' : 'sentence-adverb'} gap („${key}") without a German cue — another word of its class fits the frame; add a bracketed base form or choice, „= …", or the first letters`, id));
-  }
+  if (sadv) out.push(blocker(doc, `${path}.promptDe`, `open sentence-adverb gap at the start („${key}") without a German cue — another connector fits; add the choice in brackets („(trotzdem / deshalb)") or the first letters`, id));
+  else if (noun || adj) out.push(advisory(doc, `${path}.promptDe`, `open ${noun ? 'noun' : 'adjective'} gap („${key}") without a German cue — if another word of its class fits the frame, add a bracketed base form, „= …", or the first letters`, id));
   return out;
 }
 

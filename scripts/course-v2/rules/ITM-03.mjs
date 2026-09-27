@@ -10,15 +10,19 @@
 //     dates) the key is not always the same extreme (a1.1-u04 r2 F04);
 //   - per step, and in the Check, the non-exam 3-option keys are balanced within ±1 across positions and
 //     no item list has a run > 3; over the unit no position holds more than half of them (b1.1-u04 r1
-//     F02, b2.1-u04 r1 F01, b2.2-u04 r1 F02).
+//     F02, b2.1-u04 r1 F01, b2.2-u04 r1 F02). ADVISORY: the reviews made it conditional on the player
+//     („unless the player shuffles non-exam options with a seed"), and the SCHEMA §15 worked example and
+//     five of the eight pilot units key every such item at options[0], i.e. were written for a player
+//     that shuffles. One seeded shuffle in the player (pinned by a test) settles the class for every
+//     unit; until the player owner decides, the measurement is printed, not enforced.
 
 import { walkItems } from '../lib-validate/walk.mjs';
 import { norm } from '../lib-validate/text.mjs';
-import { keyIndex, isObj, blocker } from '../lib-validate/helpers.mjs';
+import { keyIndex, isObj, blocker, advisory } from '../lib-validate/helpers.mjs';
 
 export const id = 'ITM-03';
 export const title = 'Key balance: R/F 40–60 % true without runs > 3; a/b/c balanced ±1 per block';
-export const type = 'hard';
+export const type = 'mixed';
 export const scope = 'unit';
 export const stage = 'I';
 
@@ -119,17 +123,17 @@ export function run({ docs }) {
       const counts = [0, 0, 0];
       for (const k of keys) counts[k] += 1;
       const ideal = keys.length / 3;
-      if (counts.some((c) => Math.abs(c - ideal) > 1)) findings.push(blocker(doc, path, `non-exam 3-option keys ${counts.join('/')} (a/b/c) over ${keys.length} items in ${g} — balance each position within ±1 of ${ideal.toFixed(1)} (the player does not shuffle options)`, g));
+      if (counts.some((c) => Math.abs(c - ideal) > 1)) findings.push(advisory(doc, path, `non-exam 3-option keys ${counts.join('/')} (a/b/c) over ${keys.length} items in ${g} — balance each position within ±1 of ${ideal.toFixed(1)} (the player does not shuffle options)`, g));
       for (const [where, list] of lists) {
         const run = longestRun(list);
-        if (where !== 'pool' && where !== 'reserve' && run > 3) findings.push(blocker(doc, path, `${run} ${where} items in a row keyed at the same position (max 3)`, g));
+        if (where !== 'pool' && where !== 'reserve' && run > 3) findings.push(advisory(doc, path, `${run} ${where} items in a row keyed at the same position (max 3)`, g));
       }
     }
     if (unitKeys.length >= 6) {
       const counts = [0, 0, 0];
       for (const k of unitKeys) counts[k] += 1;
       const top = Math.max(...counts);
-      if (top / unitKeys.length > 0.5) findings.push(blocker(doc, null, `${top} of the unit's ${unitKeys.length} non-exam 3-option keys sit at position ${'abc'[counts.indexOf(top)]} (max 50 %)`, doc.data?.id || null));
+      if (top / unitKeys.length > 0.5) findings.push(advisory(doc, null, `${top} of the unit's ${unitKeys.length} non-exam 3-option keys sit at position ${'abc'[counts.indexOf(top)]} (max 50 %)`, doc.data?.id || null));
     }
   }
   return sets ? { findings } : { findings, skipped: 'no R/F set (≥ 4 items), a/b/c exam block or 3-option step set (≥ 3 items) in the target yet' };
