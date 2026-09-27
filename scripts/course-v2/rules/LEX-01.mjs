@@ -61,6 +61,8 @@ export function unknownOnSurface(text, known, glosses = [], planted = null) {
   for (const t of readTokens(stripFragments(text))) {
     if (isKnown(t.lower, known) || gl.has(t.lower) || isMetalanguage(t.lower) || knownCompound(t.lower, knownForm)) continue;
     if (planted && planted(t.lower)) continue;
+    // a hyphenated word of known parts (Sie-Form, du-Form)
+    if (t.lower.includes('-') && t.lower.split('-').every((w) => isKnown(w, known) || isMetalanguage(w) || gl.has(w))) continue;
     if (!out.includes(t.text)) out.push(t.text);
   }
   return out;
@@ -129,7 +131,7 @@ export function run({ ctx, docs }) {
       if (sf.kind === 'strategyCard' || !sf.de.trim()) continue;
       texts += 1;
       // a distractor option's planted wrong form is no word to learn („Busfahrin", „Hoffman")
-      const planted = sf.kind === 'option' && sf.item && String(sf.de).trim() !== String(sf.item.answer ?? '').trim() ? (w) => plantedForm(w, sf.item) : null;
+      const planted = sf.kind === 'option' && sf.item && String(sf.de).trim() !== String(sf.item.answer ?? '').trim() ? (w) => !alloc.has(w) && plantedForm(w, sf.item) : null;
       const unknown = unknownOnSurface(sf.de, named, sf.glosses, planted);
       if (!unknown.length) continue;
       surfaceHits += 1;

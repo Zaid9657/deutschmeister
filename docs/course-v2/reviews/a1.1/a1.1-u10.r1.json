@@ -1,0 +1,320 @@
+{
+  "review": "a1.1-u10.r1",
+  "unitId": "a1.1-u10",
+  "file": "content/course-v2/a1.1/units/u10.json",
+  "round": 1,
+  "date": "2026-09-27",
+  "reviewers": [
+    {
+      "id": "R1",
+      "persona": "Prüferin (lizenzierte Goethe-A1-Prüferin): Prüfungstreue, Rubrik, Aufgabenklarheit"
+    },
+    {
+      "id": "R2",
+      "persona": "Kursleiterin DaF (A1.1): Natürlichkeit, Niveau, Didaktik, Szenenplausibilität"
+    }
+  ],
+  "method": "Every German string was read. We solved every item blind from promptDe plus its options, tiles or audio line: the start gist item, 3 × 5 inputItems, 3 × 4 structuredInput, 3 × 11 pool items, 13 reserve items, 9 exam items, 8 check items and 4 proof items (95 authored items), plus the generator sources. For sentence_building we used the compiler's rendered form (SCHEMA §3.1). Every typed key with a plausible second answer was run through the v2 grader (src/lib/course-v2/checkItem.js): ls1-i03, ls1-i04, ls2-i03, ls3-i03, q04, c07, ls1-p10, ls3-p09, and a dictation built from ls3-l03 („Gleis vierzehn“ is accepted, because dictation folds number words). We checked the exam blocks against content/course-v2/registries/lanes/sd1.json (h2, l3, sp2, sp3, s2) and recounted the exam-text words (H2 32/33/39/31 against [29, 47]; L3 16/14/14/12/16 against [10, 25]). Further checks: the grammar ceiling against grammar-spine.json and the specs notes; the rule cards against a1.1/rule-cards.json; lexicon allocation and roles against a1.1/lexicon.json and level-profiles.json (newPerUnit [24, 32]); the can-dos against registries/cando/a1.json; the cast against casts/series.json and casts/a1.json; and the story against u08, u09 (Sophie's Wednesday call, Olena's Friday dinner at the Restaurant Kochi) and u11 (the Dresden retelling, the one-hour delay, Sophie back on Wednesday). We also checked the unit against curriculum/a1-1.md §6 unit 10 and a1-1.json. All arithmetic was recomputed and holds: 9.10 → 10.25 and 18.35 → 19.50 are 1 h 15, as the Folge says. 88 € for two returns is 22 € per single, the price Nora quotes in LS5. 11.20 + 20 min = 11.40, 14.00 + 30 min = 14.30, 10.25 → 10.40 = 15 min, and the bus leaves at 8.30, arrives at 8.45 and meets Sophie at 8.50. We also read the client cue check (WritingTaskView.jsx cueFound) and the current ITM-01 error-correction rail.",
+  "validator": {
+    "command": "node scripts/course-v2/validate.mjs content/course-v2/a1.1/units/u10.json",
+    "result": "FAIL — 40 rules: 30 pass, 3 fail (LEX-01 1 blocker + 4 advisory; LEX-05 1 blocker; ITM-01 2 blocker), 3 warn (LEX-02 26 ratchet; LEX-03 1 advisory; CON-06 1 advisory), 4 skipped · 4 blocker, 26 ratchet, 6 advisory. This is the run at 22:26 UTC. The first run of this review, made before the rule-smith's edits to ITM-01, LEX-03 and CON-06 at 22:16–22:17 UTC, reported ITM-01 pass and CON-06 skipped (32 pass, 2 fail).",
+    "check": "node scripts/course-v2/check.mjs content/course-v2/a1.1/units/u10.json → 0 errors"
+  },
+  "verdict": "Not exit-ready: 3 BLOCKER, 5 MAJOR and 12 MINOR. All three blockers are validator failures the unit author can fix with data edits. The unit is well made. It continues u09's cliffhanger word for word, and it hands u11 exactly the facts u11 retells (Saturday, Sophie back on Wednesday, the one-hour delay on the way home). Every time and price adds up. du/Sie is right everywhere. H2 and L3 match sd1.json in items, options, plays, R/F balance and word bands, and they are original. The u04 finding classes that are easiest to repeat are closed here: question prompts name the question type; every order of the tiles is accepted with acceptedWhy; explanations name position 2; the dictation sources carry no `say`; number words are accepted on exact:number items (drei, zehn, achtundachtzig); the generators draw productive lemmas; the S2 counter, taskDe and checklist agree; the Gruß carries the name; LS4 is not voiced by the protagonists; and no instruction uses a genitive. Five things stop exit. First, two typed keys reject correct answers: „Platz“ on the platz-frei proof (F04) and „09.10“ for a time the learner hears (F05). Second, the cd.a1.fahrplan proof can be solved by matching the city name (F06). Third, the learner never asks for a seat in the proving Aufgabe (F07). Fourth, the new rule card states a gender rule that the unit's own „Mutter“ and „Wasser“ contradict (F08). Fifth, the red validator run: lx.durchsage is still listed although the lexicon has moved it to u04, the level-wide „Geschafft!“ endLine fails, and two -in corrections have bare „Korrigieren Sie:“ prompts (F01–F03).",
+  "scores": {
+    "D": 4,
+    "N": 3,
+    "H": 3,
+    "A": 2,
+    "P": 4,
+    "K": 3,
+    "E": 4
+  },
+  "total": 23,
+  "counts": {
+    "blocker": 3,
+    "major": 5,
+    "minor": 12,
+    "unitOwned": {
+      "blocker": 3,
+      "major": 4,
+      "minor": 10
+    },
+    "note": "unitOwned = the fix edits u10.json. F01 removes one lemma id. F02 changes one endLine word (the class decision belongs to the copy owner). F03 edits four promptDe lines. F04–F07, F09–F13 and F15–F18 are unit data edits, and F14's unit part is ls2-p03. Owned outside the unit: F08 (rule-cards owner), F14's allocation part (lexicon owner), F19 (level reviewer and later-unit authors) and F20 (curriculum and spine owners)."
+  },
+  "findings": [
+    {
+      "id": "F01",
+      "reviewer": "validator",
+      "criterion": "K",
+      "severity": "blocker",
+      "scope": "instance",
+      "unitId": "a1.1-u10",
+      "path": "spec.lexiconBlocks[0].lemmas[8] (lx.durchsage)",
+      "quote": "LEX-05: „lx.durchsage is allocated to a1.1-u04 in content/course-v2/a1.1/lexicon.json, listed in a1.1-u10“",
+      "problem": "The lexicon owner closed u04 r5-F03 by moving lx.durchsage to a1.1-u04, but u10 still lists it in its first block. LEX-05 therefore fails and the validator exits 1. The unit also departs from its own spec here: content/course-v2/a1.1/specs.json lists this block without lx.durchsage (11 lemmas). Without it, the unit carries exactly the 32 lemmas the lexicon allocates to u10, the maximum of level-profiles a1.1 newPerUnit [24, 32].",
+      "fix": "Unit author: delete \"lx.durchsage\" from spec.lexiconBlocks[0].lemmas. The word stays known from u04, so LS3, H2 and the Check need no change.",
+      "proposedRule": null
+    },
+    {
+      "id": "F02",
+      "reviewer": "validator",
+      "criterion": "N",
+      "severity": "blocker",
+      "scope": "class",
+      "unitId": "a1.1-u10",
+      "path": "steps[6].endLine (a1.1-u10-ls7)",
+      "quote": "„Geschafft! Sie können jetzt Fahrpläne lesen, Fahrkarten kaufen und Durchsagen am Bahnhof verstehen.“ — LEX-01: „Geschafft“ (no lexicon entry)",
+      "problem": "LEX-01 now walks endLines, and „Geschafft“ is in no lexicon and not in core-lexicon.mjs. This is a level class, not a u10 slip: all twelve a1.1 LS7 endLines open with „Geschafft!“, and the same run on u04, u09 and u11 reports the same blocker. The four LEX-01 advisories need no change: three are the letter pair „mm“ in the explanations of ls2-s04, ls2-p02 and ls2-r01, and one is the deliberate non-word „Busfahrin“ in ls3-p10. All of them sit on screens with an English twin.",
+      "fix": "Unit: „Super! Sie können jetzt Fahrpläne lesen, Fahrkarten kaufen und Durchsagen am Bahnhof verstehen.“ (lx.super, a1.1-u08). Copy owner or rule-smith: decide once for all twelve units. Either the LS7 opener becomes a fixed UI string with an en twin, outside unit content, or every endLine uses a known word.",
+      "proposedRule": "LEX-01 / metalanguage allowlist: the LS7 celebration opener is a copy-owned UI string with an en twin. Otherwise LEX-01 keeps flagging it in unit content. Make one decision for all registered courses, with a fixture that fails on an unglossed „Geschafft!“ in a unit endLine."
+    },
+    {
+      "id": "F03",
+      "reviewer": "validator+R1",
+      "criterion": "A",
+      "severity": "blocker",
+      "scope": "class",
+      "unitId": "a1.1-u10",
+      "path": "steps[2].pool.items[8] (a1.1-u10-ls3-p09), steps[2].reserve[3] (ls3-r04); same prompt shape outside the rail: steps[1].pool.items[9] (ls2-p10), steps[1].reserve[3] (ls2-r04)",
+      "quote": "„Korrigieren Sie: „Sophie ist Student.““ · „Korrigieren Sie: „Meine Mutter ist Busfahrer.““ · „Korrigieren Sie: „Arjun nehmt die Fahrkarten.““",
+      "problem": "ITM-01 fails both -in corrections. This is the u04 r5-F01 rail, which a rule-smith updated at 22:16 UTC during this review. Both items carry errorTag gender-article and a bare „Korrigieren Sie:“, which does not say what to correct. The vowel-change corrections (errorTag spelling-meaning) are outside the rail, but ls2-r04 has the same hole. „Ihr nehmt die Fahrkarten.“ is a one-word correction (replace the subject) and correct German, yet the grader rejects it. The word-order corrections ls1-p10, ls1-r04 and c07 pass legitimately, because their only other correction (the time or place in position 1) is accepted with acceptedWhy. The v2 grader also rejects „Wir müssen in Hannover umsteigen.“ for c07, but that correction changes the meaning, so it is not a defensible second answer.",
+      "fix": "ls3-p09 „Korrigieren Sie die Endung: „Sophie ist Student.““ (49 characters); ls3-r04 „Korrigieren Sie die Endung: „Meine Mutter ist Busfahrer.““ (57). ls2-p10 and ls2-r04: „Korrigieren Sie das Verb: …“ (ls2-r04 55 characters). No key changes.",
+      "proposedRule": "ITM-01: extend the error-correction rail to verb-form corrections (errorTag spelling-meaning on a finite verb). When replacing the subject with a personal pronoun makes the quoted sentence grammatical, promptDe must name „das Verb“ or „die Verbform“. Failing fixture: „Korrigieren Sie: „Arjun nehmt die Fahrkarten.““ (alternative correction „Ihr nehmt die Fahrkarten.“)."
+    },
+    {
+      "id": "F04",
+      "reviewer": "R1+R2",
+      "criterion": "A",
+      "severity": "major",
+      "scope": "instance",
+      "unitId": "a1.1-u10",
+      "path": "check.proofItems[3] (a1.1-u10-q04)",
+      "quote": "„Im Zug: Sie möchten sitzen. Fragen Sie: „Entschuldigung, ist hier noch ___?““ → accepted [„frei“]",
+      "problem": "„Entschuldigung, ist hier noch Platz?“ is as idiomatic as „… noch frei?“. Platz is a u10 lemma (lx.platz) that the learner meets in the same scene (ls3-l06 „Hier sind noch drei Plätze frei.“). We ran the v2 grader (src/lib/course-v2/checkItem.js) on the item, and it marks „Platz“ WRONG. So on the only item that proves cd.a1.platz-frei in the scored Check, a correct answer counts as an error (§9.4: a defensible second answer not accepted).",
+      "fix": "Let the frame decide: „Im Zug: Fragen Sie: „Entschuldigung, ist der Platz noch ___?““ (61 characters) → „frei“ only. This is the lexicon's own example („Ist der Platz frei?“). Alternatively, accept „Platz“ with acceptedWhy „Ist hier noch Platz? – auch richtig“.",
+      "proposedRule": null
+    },
+    {
+      "id": "F05",
+      "reviewer": "R1",
+      "criterion": "A",
+      "severity": "major",
+      "scope": "instance",
+      "unitId": "a1.1-u10",
+      "path": "steps[0].inputItems[2] (a1.1-u10-ls1-i03)",
+      "quote": "„Schreiben Sie die Uhrzeit in Zahlen: Der Zug fährt um ___ Uhr ab.“ → accepted [„9.10“, „9:10“]",
+      "problem": "The v2 grader marks „09.10“ and „09:10“ WRONG, because checkNumber compares digit strings („0910“ ≠ „910“). A two-digit hour is how departure boards, tickets and the DB app show the time. A learner who copies that format writes a correct listening answer and is told it is wrong. Related, for the rule-smith: repeating the unit word printed after the gap is WRONG, not TYPO, although the number is right. This affects „9.10 Uhr“ here, „88 Euro“ in ls2-i03 and „Gleis 3“ in ls1-i04, all checked with the grader.",
+      "fix": "Add „09.10“ and „09:10“ to accepted, with acceptedWhy „Uhrzeit mit 0 vorn, wie auf der Anzeigetafel“. Rule-smith: make checkNumber fold a leading zero in clock-time keys.",
+      "proposedRule": "ITM-07 / checkItem.js: an exact:number key of the form H.MM or H:MM also accepts 0H.MM and 0H:MM (a grader fold, tested over all registered courses). A number answer that repeats the unit word printed right after the gap („88 Euro“ for „___ Euro“) is at worst TYPO. Failing fixture: ls1-i03 with „09.10“."
+    },
+    {
+      "id": "F06",
+      "reviewer": "R1",
+      "criterion": "A",
+      "severity": "major",
+      "scope": "instance",
+      "unitId": "a1.1-u10",
+      "path": "check.proofItems[0] (a1.1-u10-q01); check.proofs[0] (cd.a1.fahrplan)",
+      "quote": "„Abfahrt Köln 14.05 · Ankunft Hannover 16.40. Wann ist der Zug in Hannover?“ — options 16.40 Uhr / 14.05 Uhr / 16.04 Uhr",
+      "problem": "The only proof of cd.a1.fahrplan can be solved without German. The question repeats „Hannover“, and the key is the number printed right after „Hannover“ in the stem. The learner does not need to understand either Ankunft or Abfahrt. The item also tests an arrival time, while the can-do is about finding Abfahrtszeiten, Ziele und Gleise. This is the u04 r1-F06 class: a proof item whose key can be read off the stem.",
+      "fix": "Make the Ab/An distinction the only route: „Hannover: Ankunft 16.40 Uhr · Abfahrt 16.50 Uhr. Wann fährt der Zug in Hannover ab?“ (83 characters), options 16.40 Uhr / 16.50 Uhr / 14.05 Uhr → 16.50 Uhr, explanation „„fährt … ab“ = Abfahrt: 16.50 Uhr.“ Alternatively, ask for the Gleis on a two-row board where each row has its own time and Gleis.",
+      "proposedRule": "ITM-01 (proof items): when the question repeats a stem token (a place or a name), the stem must bind ≥ 2 candidate values of the key's kind to that token, so that proximity alone cannot pick the key. Failing fixture: q01."
+    },
+    {
+      "id": "F07",
+      "reviewer": "R2",
+      "criterion": "H",
+      "severity": "major",
+      "scope": "instance",
+      "unitId": "a1.1-u10",
+      "path": "check.proofs[4] (cd.a1.platz-frei → q04 + aufgabe 'sprechen'); steps[4].task.parts[1].cards; steps[2].microOutput",
+      "quote": "cd.a1.platz-frei: „Ich kann im Zug oder Bus „Ist hier noch frei?“ fragen und antworten, wenn mich jemand das fragt.“ · Sp3 cards learner [„Fahrkarte“, „Fahrplan“], partner [„Platz“, „Wasser“]",
+      "problem": "The can-do is interaction-spoken and has two halves. In the proving Aufgabe the learner only answers (partner: „Entschuldigung, kann ich hier sitzen?“, learner: „Ja, gern. Hier ist noch frei.“). Asking occurs only as tiles (ls3-p06, ls3-r03), as the LS3 read-aloud line, and as the one-word typed gap q04 in a given frame. No micro-output asks for it: LS3's micro-output is a written message to Emre about jobs. This is the u04 r1-F07 class (half of a can-do is claimed rather than performed). ALL-02 cannot see it, because the rail proposed there was never written.",
+      "fix": "Give the learner the „Platz“ card in one Sp3 round (model „Entschuldigung, ist hier noch frei? Kann ich hier sitzen?“, partner „Ja, bitte.“) and keep a partner „Platz“ request in the other round, so that the learner both asks and answers. Alternatively, make the LS3 micro-output spoken (profile course-micro-sp): situationDe „Sie sind im Zug. Fragen Sie nach einem Platz. Dann fragt eine Frau: „Ist hier noch frei?““, promptDe „Fragen Sie. Dann antworten Sie.“",
+      "proposedRule": "ALL-02 (u04 r1-F07's rule, still unwritten): when an Aufgabe proves an interaction can-do, the learner's own model turns (or moves) must cover each of its function verbs (here fragen and antworten). Failing fixture: this unit's Sp3 with learner cards [Fahrkarte, Fahrplan]."
+    },
+    {
+      "id": "F08",
+      "reviewer": "R2",
+      "criterion": "N",
+      "severity": "major",
+      "scope": "instance",
+      "unitId": "a1.1-u10",
+      "path": "content/course-v2/a1.1/rule-cards.json [18] rc.wortbildung-er-in (shown in steps[2].ruleCard)",
+      "quote": "„Wörter auf -er sind der, Wörter auf -in sind die.“",
+      "problem": "The sentence is false as written, and the unit itself shows it. Before u10 the a1.1 lexicon teaches 16 nouns in -er that are not masculine. u02: die Nummer, Hausnummer, Telefonnummer. u03: die Mutter, Schwester, Tochter, das Alter. u04: das Wasser, die Butter. u05: das Zimmer, Wohnzimmer, Schlafzimmer, das Fenster. u06: das Papier. u09: das Bier, Mineralwasser. The rule fails even for persons: die Mutter, die Schwester, die Tochter. On the same step, ls3-r04 corrects „Meine Mutter ist Busfahrer.“, and the learner's Sp3 partner card is „Wasser“. The -in half fails too: der Termin (u07). A learner who applies the card writes ✗„der Mutter“, ✗„der Wasser“, ✗„die Termin“. This is not the u04 case of a rule that is true only in the nominative (r2-F09). Here the sentence is wrong as stated (§9.5: a rule card's simplification that has become false).",
+      "fix": "Rule-cards owner: limit the rule to person nouns made from verbs and name the exceptions. For example: „Personen aus Verben auf -er sind der: der Fahrer, der Lehrer. Mit -in sind sie die: die Fahrerin. Achtung: die Mutter, die Tochter; das Wasser, das Zimmer.“ Drop the plural sentence, which the table already shows, to stay within ruleCardMaxWords 60.",
+      "proposedRule": "GRM-05: check any rule-card sentence of the form „Wörter/Nomen auf -X sind der|die|das“ against every lexicon noun in -X known at the card's first unit. A counterexample fails the card unless the sentence names its scope and an „Achtung“ line lists the known exceptions. Failing fixture: rc.wortbildung-er-in at a1.1-u10 (die Mutter, das Wasser, der Termin)."
+    },
+    {
+      "id": "F09",
+      "reviewer": "R1",
+      "criterion": "P",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u10",
+      "path": "steps[4].task.parts[0] (sd1.sp2), modelTurns[1..7]; steps[4].task.aiRole.personaDe",
+      "quote": "personaDe „In Teil 2 antwortet sie wie am Schalter …“ · partner „Möchten Sie einfach oder hin und zurück?“ · partner „Hat der Zug heute Verspätung?“ – learner „Nein, er ist pünktlich.“",
+      "problem": "In Sprechen Teil 2, two candidates at a table ask each other questions on a topic word (sd1.json sp2). The learner's own questions („Was kostet eine Fahrkarte nach Dresden?“, „Wann fährt der Zug nach Dresden ab?“) are legitimate Teil-2 questions and carry cd.a1.fahrkarte-schalter. The partner's questions, however, are a ticket clerk's lines, and „Hat der Zug heute Verspätung?“ – „Nein, er ist pünktlich.“ refers to a train that does not exist at an exam table. The model therefore trains the learner to answer as a customer in a role-play. This is the u04 r3-F04 class (Sp2 modelled as a shop scene).",
+      "fix": "Keep the learner turns. Rewrite the partner's card questions as questions one candidate can ask another: „Fahrkarten – hin und zurück“ → „Kaufen Sie oft Fahrkarten hin und zurück?“ – „Ja, nach Dresden, hin und zurück.“; „Zug – Verspätung“ → „Hat Ihr Zug oft Verspätung?“ – „Ja, manchmal zehn Minuten.“ In personaDe, keep „wie am Schalter“ only for Nora's answers to the learner's price and time questions.",
+      "proposedRule": null
+    },
+    {
+      "id": "F10",
+      "reviewer": "R2",
+      "criterion": "A",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u10",
+      "path": "steps[2].structuredInput[1] (a1.1-u10-ls3-s02), steps[2].structuredInput[3] (ls3-s04)",
+      "quote": "„Arjun sagt: „Sophie ist Studentin.“ Was passt?“ → „Sophie ist eine Frau. Sie studiert.“ (distractor „Sophie ist ein Mann. Er studiert.“) · „„die Lehrerinnen“ – wer ist das?“ → „zwei oder mehr Lehrerinnen“",
+      "problem": "Structured input should make the ending carry the meaning. The learner can solve s02 from what earlier units say about Sophie (she is a woman), without the -in. In s04 the key is the only option that repeats the stem's word „Lehrerinnen“, so string matching solves it (the u04 r2-F03 class).",
+      "fix": "s02: „Sie hören: „Ich bin Kellnerin.“ Wer spricht?“ with options „ein Mann“ / „eine Frau“ / „zwei Frauen“ → „eine Frau“. s04: options „ein Mann“ / „eine Frau“ / „zwei oder mehr Frauen“ → „zwei oder mehr Frauen“.",
+      "proposedRule": "ITM-01 advisory (u04 r2-F03): in a structured or choice item, the key must not be the only option that contains a content word of the stem."
+    },
+    {
+      "id": "F11",
+      "reviewer": "R2",
+      "criterion": "K",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u10",
+      "path": "steps[0].microOutput (ls1-mo), steps[2].microOutput (ls3-mo), check.proofItems[1] (q02), steps[5].task.situationDe; start.folge.lines[6] (a1.1-u10-start-l07); steps[1].structuredInput[3] (ls2-s04)",
+      "quote": "ls1-mo „Sie fahren am Samstag auch mit nach Dresden.“ · ls3-mo „Sie sind mit Priya, Arjun und Sophie im Zug.“ · q02 „Sie fahren mit Arjun nach Dresden.“ · LS6 „Sie fahren heute auch nach Dresden. Sie treffen Sophie um 14 Uhr am Hauptbahnhof. Aber Ihr Zug hat jetzt 30 Minuten Verspätung.“ · Sophie „Bis Freitag bei Olena!“ · ls2-s04 „„Der Automat ___ nur Geld.““",
+      "problem": "(a) The learner's role changes within the unit. In LS1 and LS3 the learner is on the 9.10 train with all three, although LS2 buys only two tickets. In q02 the learner travels alone with Arjun. In LS6 the learner travels separately and meets Sophie at 14 Uhr on the same day. (b) Sophie's „Bis Freitag bei Olena!“ puts the party at Olena's home. In u09, Olena's birthday dinner is at the Restaurant Kochi, and Sophie lives with Olena, so „bei Olena“ is her own flat. (c) The frame of ls2-s04, „Der Automat nimmt nur Geld.“, is unidiomatic: a card payment is money too, so what is meant is „nur Bargeld“. It also contradicts the machine screen in the same input („Bezahlen: mit Karte oder bar?“).",
+      "fix": "(a) LS6 situationDe: „Sie fahren morgen nach Dresden und treffen Sophie um 14 Uhr am Hauptbahnhof. Aber Ihr Zug hat jetzt 30 Minuten Verspätung.“ This fits, because Sophie stays until Wednesday. q02 as in F18: „Automat: „Wie viele Personen?“ Priya und Arjun fahren nach Dresden. Was ist richtig?“ (84 characters). (b) „Bis Freitag im Restaurant!“ (en „See you on Friday at the restaurant!“). (c) „„Der Automat ___ meine Karte nicht.“ Was passt?“ (nimmt / nehme / nehmen), as in ls2-l04.",
+      "proposedRule": null
+    },
+    {
+      "id": "F12",
+      "reviewer": "R2",
+      "criterion": "K",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u10",
+      "path": "facts (empty), fokus (empty); start.folge.lines[3] (a1.1-u10-start-l04); steps[0].inputItems[4].options[1] (ls1-i05); steps[1].input.lines[0] (ls2-l01)",
+      "quote": "CON-06: „the plan names the Landeskunde point „Bahnfahren in D-A-CH: DB, ÖBB und SBB; Fahrkarte vor der Fahrt kaufen; Deutschlandticket im Nahverkehr“ but the unit has no facts[] record“ · Priya „Fahren wir mit dem Bus oder mit der U-Bahn?“ · ls1-i05 option „mit der U-Bahn“ · Sophie „Priya, du nimmst zwei Fahrkarten, oder?“",
+      "problem": "None of the three Landeskunde points in curriculum/a1-1.json u10 appears in the unit, and facts[] is empty. CON-06 warns now and blocks from status 'review' on. Two plausibility gaps come with this. First, Leipzig, where the cast lives, has no U-Bahn, only trams and the S-Bahn; the a1.2-u01 beat sends Priya by Straßenbahn. Yet Priya, after several months in Leipzig, suggests the U-Bahn for a trip to another city, and ls1-i05 offers it as a way to Leipzig Hbf. Second, Sophie buys no ticket, and no line says why.",
+      "fix": "Add one line that closes the gap and can carry a planned point, e.g. Sophie in ls2-l01: „… Ich habe schon eine Fahrkarte.“ Add a sourced Fact for any rule the unit states (e.g. that you buy the ticket before the journey, checked at the DB source on the day and with its exceptions), or give spec.deviation.reason naming „Landeskunde“. Folge l04: „Fahren wir mit dem Bus oder mit dem Zug?“ (Sophie: „Mit dem Zug! Der Zug ist schnell …“). ls1-i05: replace „mit der U-Bahn“ with „mit dem Auto“ (core lexicon).",
+      "proposedRule": null
+    },
+    {
+      "id": "F13",
+      "reviewer": "R1",
+      "criterion": "A",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u10",
+      "path": "steps[2].pool.items[5] (ls3-p06), steps[2].pool.items[6] (ls3-p07), steps[2].reserve[2] (ls3-r03); steps[1].pool.items[6] (ls2-p07)",
+      "quote": "ls3-p06 [ist / hier / noch / frei] → „Ist hier noch frei?“, topic g.wortbildung-er-in · ls3-p07 → „Fahren Sie auch nach Dresden?“, topic g.wortbildung-er-in · ls2-p07 [kostet / was / die Fahrkarte], topic g.vokalwechsel",
+      "problem": "These four items contain no -er/-in noun and no vowel-change verb. They train V1 and W-question order (g.ja-nein-frage, g.verbposition-2). The item topic feeds mastery and repair (SCHEMA §3.1: the compiler maps it into mastery.js). So a learner who builds „Ist hier noch frei?“ wrongly loses mastery on -er/-in and is sent to rc.wortbildung-er-in, which says nothing about question order.",
+      "fix": "Retag ls3-p06, ls3-p07 and ls3-r03 as g.ja-nein-frage, and ls2-p07 as g.verbposition-2 (both are a1.1 review points). Alternatively, replace them with items on the step's structure.",
+      "proposedRule": "New advisory ITM rule: an item whose topic is a spine point contains at least one form of that point, found by the point's detector or a marker list (g.wortbildung-er-in: a person noun in -er/-in/-innen; g.vokalwechsel: a du or er/sie/es form of a vowel-change verb). Failing fixture: ls3-p06."
+    },
+    {
+      "id": "F14",
+      "reviewer": "R2",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u10",
+      "path": "steps[1].pool.items[2] (ls2-p03); check.proofItems[3] (q04); steps[4].task.modelTurns[3]; steps[4].task.parts[1].cards.learner[1]; content/course-v2/a1.1/lexicon.json lx.halten, lx.frei, lx.platz, lx.hin-und-zurueck (receptive), lx.fahrer (a1.2-u02)",
+      "quote": "LEX-03 advisory: „the learner writes „hält“ from the bracketed lemma „halten“, but lx.halten is receptive“ · q04 key „frei“ (lx.frei receptive) · learner model turn „Ich möchte hin und zurück, bitte.“ · rc.wortbildung-er-in „fahren → der Fahrer“ (lx.fahrer: a1.2-u02, productive)",
+      "problem": "The unit asks the learner to produce lemmas the lexicon marks receptive. The learner types „hält“ (ls2-p03) and „frei“ in a scored Check proof (q04), and says „hin und zurück“ and „Fahrplan“ in the Aufgabe. Two can-dos, cd.a1.platz-frei and cd.a1.fahrkarte-schalter, are interaction-spoken and cannot be performed without frei and hin und zurück. So the allocation is off, more than the unit. Meanwhile U-Bahn and Hauptbahnhof are productive, and the learner produces neither anywhere. Separately, u10 teaches „Fahrer/Busfahrer(in)“ as the head example of its grammar point, while the lexicon allocates lx.fahrer to a1.2-u02 as a new productive word. This is the u04 r4-F02 class.",
+      "fix": "Lexicon owner: make lx.frei and lx.hin-und-zurueck productive, and in exchange make lx.u-bahn and lx.hauptbahnhof receptive. Neither of those two is in a generator source or in any learner production, so the productive share stays at 15/32. Move lx.fahrer to a1.1-u10 in place of a low-yield receptive lemma (e.g. lx.kilometer). Unit: keep ls2-p03 once lx.halten is productive; otherwise use a known vowel-change verb, e.g. „Sophie ___ am Abend nicht zurück. (fahren)“ → „fährt“.",
+      "proposedRule": "LEX-03: hard, not advisory, when a scored Check or proof item has a typed key built on a receptive lemma, or when an Aufgabe card or a learner model turn requires one."
+    },
+    {
+      "id": "F15",
+      "reviewer": "R2",
+      "criterion": "D",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u10",
+      "path": "steps[3].texts[1] (a1.1-u10-ls4-t2), steps[3].texts[2] (t3), steps[3].texts[3] (t4); steps[2].input.lines[3] (ls3-l04)",
+      "quote": "t2 „… Er fährt heute von Gleis 10, pünktlich um 14.05 Uhr. Bitte schnell einsteigen!“ · ls3-l04 „Da, auf der Anzeigetafel steht es auch: Dresden, Gleis 14! Schnell, wir steigen ein!“ · t3 „In ein paar Minuten kommen wir in Hannover an. Der Zug hält hier zehn Minuten.“ · t4 „Meine Damen und Herren, eine Durchsage!“",
+      "problem": "There are small pragmatic slips on listening model surfaces, three of them in exam texts. t2 tells the people waiting at Gleis 8 to board quickly, although their train leaves from Gleis 10. Arjun says „wir steigen ein“ while they are still at Gleis 12. t3 says „hier“ about a station the train has not yet reached. t4's announcer announces that there is an announcement. No key is affected.",
+      "fix": "t2 „Bitte gehen Sie zu Gleis 10.“ (36 words, inside [29, 47]). ls3-l04 „Schnell, zu Gleis 14!“ t3 „Der Zug hält dort zehn Minuten.“ t4 „Achtung, bitte!“ in place of „eine Durchsage!“.",
+      "proposedRule": null
+    },
+    {
+      "id": "F16",
+      "reviewer": "R2",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u10",
+      "path": "steps[0].aussprache.perception.source[1]; steps[2].aussprache.focus",
+      "quote": "„zehn|Seen“ · „Auch st und sp am Wortanfang sprechen Sie mit „sch“: steigen, Stadt, spät.“",
+      "problem": "(a) „Seen“ has two syllables in standard pronunciation ([ˈzeːən]), so „zehn|Seen“ is not a minimal pair for [ts] against [z]. The other three pairs are clean. (b) The unit's own key verbs are einsteigen, umsteigen and aussteigen, where st comes after a prefix, not at the start of the word, and is still pronounced [ʃt]. As stated, the rule leaves the learner to say ✗„ein-s-teigen“. The plan's examples (Stadt, Straße, spät) are all word-initial, so this gap is inherited from the plan.",
+      "fix": "(a) „Zoo|so“ (the focus line already cites „so“). (b) „St und sp am Wortanfang und nach einer Vorsilbe sprechen Sie mit „sch“: steigen, einsteigen, umsteigen, Stadt, spät. Aber in „ist“ und „erst“ hören Sie s.“",
+      "proposedRule": null
+    },
+    {
+      "id": "F17",
+      "reviewer": "R1",
+      "criterion": "E",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u10",
+      "path": "steps[5].task.leitpunkte[1].cues (lp2)",
+      "quote": "lp2 „Wann kommen Sie in Dresden an?“ cues [„komme“, „ankommen“, „Ankunft“, „14.30“, „halb drei“]",
+      "problem": "WritingTaskView.jsx (cueFound) matches cues as lower-cased substrings. The correct answers „Mein Zug kommt um 14:30 Uhr an.“ and „Ich bin um 14:30 Uhr in Dresden.“ match no cue: „kommt“ does not contain „komme“, and „14:30“ is not „14.30“. The pre-submit list then tells the learner that Punkt 2 is missing when it is not. The cue check is advisory and never scores, but it is the first feedback an A1.1 learner sees.",
+      "fix": "Add „kommt“, „14:30“ and „bin um“ to the lp2 cues.",
+      "proposedRule": "Client: before matching, cueFound folds ':' to '.' between digits. EXM-03 advisory: a cue that is a 1st-person verb form also lists the 3rd person („komme“ → „kommt“)."
+    },
+    {
+      "id": "F18",
+      "reviewer": "R1",
+      "criterion": "H",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u10",
+      "path": "check.proofItems[1] (a1.1-u10-q02); steps[1].input.text; steps[1].inputItems[3] (ls2-i04); assets (empty)",
+      "quote": "q02 „Automat: „Wie viele Personen?“ Sie fahren mit Arjun nach Dresden. Was ist richtig?“ → „2 Personen“ · cd.a1.fahrkartenautomat „Ich kann mit Hilfe der Bilder die wichtigsten Schritte am Fahrkartenautomaten verstehen.“",
+      "problem": "The proof checks one of the machine's four screens and reduces to counting (you plus Arjun) plus the cognate „Personen“. The screen that needs German („Einfach oder hin und zurück?“) is never tested; the only other machine item is ls2-i04 („Was fragt der Automat zuerst?“). The machine is text-only (assets []), while the can-do is about understanding the steps with the help of pictures. The can-do is performed, but thinly.",
+      "fix": "Add an LS2 structured item on the screen that needs German: „Automat: „Einfach oder hin und zurück?“ Am Abend fahren Sie wieder nach Leipzig.“ (80 characters), options „einfach“ / „hin und zurück“ / „zwei Personen“ → „hin und zurück“. Reframe q02 as in F11 („Priya und Arjun fahren nach Dresden.“). Add an icon row to the machine screen once the asset pipeline exists.",
+      "proposedRule": null
+    },
+    {
+      "id": "F19",
+      "reviewer": "validator",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u10",
+      "path": "spec.lexiconBlocks (LEX-02 ratchet, 26 lemmas)",
+      "quote": "„U-Bahn“ recurs in 0 later unit(s) (need ≥ 2) · „einsteigen“ 0 · „umsteigen“ 0 · „pünktlich“ 0 · „Abfahrt“ 0 · „Fahrplan“ 0",
+      "problem": "Unlike u04 r1-F25, this is now a real measurement: u11 and u12 are on disk, and u11 retells this very trip. Still, 26 of the 32 new lemmas recur in fewer than two later units, including five of the plan's productive anchors (einsteigen, umsteigen, pünktlich, Abfahrt, U-Bahn).",
+      "fix": "No u10 change. Level reviewer and the u11, u12 and a1.2-u01 authors: recycle at least Zug, Fahrkarte, Abfahrt, Gleis, Verspätung, pünktlich, einsteigen, umsteigen and aussteigen. u11 retells this trip, and the a1.2-u01 beat (Priya alone on the tram, understanding the announcements) is the natural second place. See F14 for making lx.u-bahn receptive.",
+      "proposedRule": null
+    },
+    {
+      "id": "F20",
+      "reviewer": "R2",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u10",
+      "path": "spec.grammar.new [g.wortbildung-er-in]; steps[2].structure; docs/course-v2/curriculum/a1-1.md §6 unit 10 and D7",
+      "quote": "a1-1.md: „Einheit 10 bringt keine neue Grammatik. Sie ist die Transfer- und Wiederholungseinheit nach Checkpoint 3. Die freie Zeit geht an Hören Teil 2 (einmal gehört) und an die Bitten in Sprechen Teil 3 (D7).“ · grammar-spine / specs.json: g.wortbildung-er-in new at a1.1-u10",
+      "problem": "The plan and the spine disagree. The unit follows the spine and specs.json (GRM-02 passes). As a result, a whole Lernschritt (LS3, with 11 pool items and 5 reserve items) goes to job nouns in -er/-in inside a transport unit, while the plan meant that time for H2 and the Sp3 requests. The in-scene hook (the Busfahrerin on the train) works, but it contradicts the plan the continuity review signed off. The learner has also met -in as a chunk since u02 („Ich bin Informatikerin“).",
+      "fix": "Curriculum and spine owners: decide once. Either update a1-1.md §6 u10 and D7 („neu: Wortbildung -er/-in“), or move g.wortbildung-er-in back to chunk status (chunkFrom u02) and give LS3 the Durchsage and Platz strand, with the -in items as review. No unit change until the decision is made.",
+      "proposedRule": null
+    }
+  ],
+  "exitCheck": {
+    "blocker": 3,
+    "major": 5,
+    "minor": 12,
+    "criteriaBelow4": [
+      "N",
+      "H",
+      "A",
+      "K"
+    ],
+    "exit": false,
+    "note": "Exit needs 0 BLOCKER, 0 MAJOR, every criterion ≥ 4 and ≤ 5 logged MINOR. After the unit-owned edits (F01–F07, F09–F18 and F14's unit part), the unit would carry F08 (rule-cards owner; major until the card is fixed) and three owner-held minors (F14's allocation, F19, F20). Class findings for the rule-smith: F02, F03, F05 (the grader fold), F06, F07 (the ALL-02 rail proposed in u04 r1-F07, still unwritten), F08 (GRM-05), F10, F13, F14 and F17. The F07 class now recurs in a second a1.1 unit; one more recurrence triggers the §9.4 stop-the-line rule."
+  }
+}

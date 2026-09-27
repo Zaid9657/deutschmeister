@@ -17,12 +17,13 @@
 //   prompt         items' promptDe, micro-outputs' promptDe, writing taskDe
 //   option         items' options[]
 //   explanation    items' explanation.de
-//   instructions   exam blocks' and speaking parts' instructionsDe (a block's text glosses count)
+//   instructions   exam blocks' and speaking parts' instructionsDe
 //   situation      speaking parts', writing tasks' and micro-outputs' situationDe
 //   leitpunkt      writing tasks' leitpunkte[].de
 //   checklist      writing tasks' checklist[]
 //   strategyCard   strategy cards' de (GRM-04 only)
-// An exam item's stem and options count its block's text glosses as glossed on that screen.
+// An exam block's screen holds its texts: their glosses and the words they show count as known on the
+// block's instruction and on its items' stems, options and explanations.
 
 import { walkItems, walkBlocks, walkTasks, walkMicroOutputs, walkSteps, speakingParts } from './walk.mjs';
 
@@ -35,13 +36,13 @@ const str = (x) => (typeof x === 'string' ? x : '');
  * before any unit allocates them — the task verbs of the Sie-imperative, the names of the exam's own
  * modules and parts, the grammar and pronunciation terms the explanations name, and the Goethe/telc
  * Sprechen topic labels. Lower-case surface forms; the inflected forms the course uses are listed. SMALL
- * on purpose (a test pins ≤ 130 entries and bans ordinary content words): a word a learner must
+ * on purpose (a test pins ≤ 140 entries and bans ordinary content words): a word a learner must
  * understand to answer is a lexicon word (allocate it) or a gloss on its screen, never an entry here.
  */
 export const INSTRUCTION_METALANGUAGE = Object.freeze([
-  // task verbs of the instructions („Korrigieren Sie …", „Was passt?", „Wählen Sie …")
+  // task verbs of the instructions („Korrigieren Sie …", „Was passt?", „Bitten Sie um …", „Wählen Sie …")
   'korrigieren', 'ergänzen', 'markieren', 'ordnen', 'notieren', 'ankreuzen', 'wiederholen', 'wählen', 'nennen',
-  'reagieren', 'passt', 'passen', 'passende', 'passenden',
+  'reagieren', 'bitten', 'passt', 'passen', 'passende', 'passenden',
   // the exam's modules, parts and task words
   'prüfung', 'prüfungen', 'teil', 'hören', 'lesen', 'schreiben', 'sprechen', 'gespräch', 'gespräche',
   'durchsage', 'durchsagen', 'aussage', 'aussagen', 'frage', 'fragen', 'antwort', 'antworten', 'thema', 'themen',
@@ -54,7 +55,9 @@ export const INSTRUCTION_METALANGUAGE = Object.freeze([
   'unbestimmter', 'endung', 'endungen', 'wortstellung', 'satzende', 'subjekt', 'pronomen', 'verneinung',
   'trennbar', 'trennbare', 'trennbaren', 'maskulin', 'feminin', 'neutral', 'nominativ', 'akkusativ', 'dativ',
   'perfekt', 'formell', 'informell', 'umlaut', 'akzent', 'melodie', 'satzmelodie', 'buchstabe', 'buchstaben',
-  'satz', 'sätze', 'sätzen', 'lücke', 'wort', 'wörter',
+  'satz', 'sätze', 'sätzen', 'nebensatz', 'relativsatz', 'relativsätze', 'lücke', 'lücken', 'wort', 'wörter',
+  // the course's own screens and modes (Mustertext, Lernmodus, Planungsrunde)
+  'mustertext', 'lernmodus', 'prüfungsmodus', 'planungsrunde',
   // Sprechen topic labels (Goethe A1/A2, telc A1: „Thema: Einkaufen")
   'einkaufen', 'essen', 'trinken', 'wohnen', 'freizeit', 'reisen', 'arbeit', 'wochenende', 'gesundheit',
 ]);
@@ -167,7 +170,8 @@ export function editDistance(a, b, cap = 2) {
 /**
  * A distractor option's planted wrong form („Busfahrin" beside the key „Busfahrerin", „Hoffman" beside
  * „Hofmann"): a token of ≥ 5 letters within two edits of a word of the item's key, accepted forms or other
- * options. It is wrong on purpose, not a word to learn.
+ * options. It is wrong on purpose, not a word to learn. LEX-01 asks this only of a token no lexicon
+ * allocates at all (a real word beside its derivation — „Verkäufer" / „Verkäuferin" — is never planted).
  */
 export function plantedForm(lower, item) {
   if (!item || lower.length < 5) return false;

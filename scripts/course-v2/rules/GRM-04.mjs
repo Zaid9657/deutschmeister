@@ -10,7 +10,7 @@
 // Positions: production and expected answers are licensed by the point's PRODUCTIVE intro;
 // inputs and exam texts by its RECEPTIVE intro. A point the unit itself declares (spec.grammar
 // new/chunk/review) is licensed in that unit — a misplacement is GRM-02's finding, reported once.
-// A spine chunkFrom at or before the position turns a finding into an advisory "chunk preview".
+// A spine chunkFrom at or before the position licenses the construction as a chunk: no finding (below).
 //
 // A declared chunk is presented (review a1.1-u04 r1 F05): a unit that lists a point under
 // spec.grammar.chunk shows it in at least one input line or Redemittel — found by the point's own

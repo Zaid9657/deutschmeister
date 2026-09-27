@@ -1467,6 +1467,8 @@ describe('LEX-01 walks every read surface (a1.1-u04 r3 F05 / r4 F04 / r5 F03)', 
   test('fail: the r4 ls2-s02 options („Verkäufer", a1.2-u02) and the r5 ones („Markt", no lexicon entry)', async () => {
     assertFail(await rule('LEX-01', withStep({ structuredInput: [s02(['Der Verkäufer fragt Priya.', 'Priya fragt den Verkäufer.', 'Priya fragt Nora.'])] })), /options\[0\].*„Verkäufer" \(lx\.verkaeufer: a1\.2-u02\)/);
     assertFail(await rule('LEX-01', withStep({ structuredInput: [s02(['Der Mann am Markt fragt Priya.', 'Priya fragt den Mann.', 'Priya fragt Nora.'])] })), /options\[0\].*„Markt" \(no lexicon entry\)/);
+    // a real word beside its derivation is no planted distractor
+    assertFail(await rule('LEX-01', withStep({ structuredInput: [s02(['Der Mann fragt Priya.', 'Der Verkäufer fragt Priya.', 'Die Verkäuferin fragt Priya.'])] })), /options\[1\].*„Verkäufer" \(lx\.verkaeufer: a1\.2-u02\)/);
   });
   test('pass: known words („der Mann fragt Priya"); the step input\'s gloss covers its own title („Auf dem Markt"), not the item screen', async () => {
     const r = await rule('LEX-01', withStep({ structuredInput: [s02(['Der Mann fragt Priya.', 'Priya fragt den Mann.', 'Priya fragt Nora.'])] }));
@@ -1501,7 +1503,7 @@ describe('LEX-01 walks every read surface (a1.1-u04 r3 F05 / r4 F04 / r5 F03)', 
     assert.ok(!/sprecht/.test(surf.find((x) => x.kind === 'prompt').de));
   });
   test('the allowlist stays small and holds no ordinary content word', () => {
-    assert.ok(INSTRUCTION_METALANGUAGE.length <= 130, `${INSTRUCTION_METALANGUAGE.length} entries`);
+    assert.ok(INSTRUCTION_METALANGUAGE.length <= 140, `${INSTRUCTION_METALANGUAGE.length} entries`);
     assert.equal(new Set(INSTRUCTION_METALANGUAGE).size, INSTRUCTION_METALANGUAGE.length, 'no duplicates');
     for (const w of ['markt', 'verkäufer', 'prospekt', 'sache', 'sachen', 'geschafft', 'café', 'kurz', 'kurze', 'person', 'personen', 'mann', 'frau', 'brot']) assert.ok(!INSTRUCTION_METALANGUAGE.includes(w), w);
   });

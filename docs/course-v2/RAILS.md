@@ -127,11 +127,11 @@ node scripts/course-v2/validate.mjs <level|unit-file|--all> [--json] [--stage S|
 | ALL-03 | spec | ≥ 2 verified Lehrwerk placements or a `deviation.reason` („(unverified)"/„(snippet)" do not count) |
 | GRM-01 | spec | ≤ 2 new spine points and ≤ 1 chunk preview per unit (spine intros included) |
 | GRM-02 | T | Spine points enter at their registry position, receptive before productive |
-| GRM-04 | S | Grammar ceiling via `registries/detectors.json` (texts from S, items and answers from I) |
-| GRM-05 | T | Rule cards: word limit, model sentence, English twin |
-| LEX-01 | S | Known-token coverage of inputs and exam texts (advisory until the cumulative lexicon exists); „known" is defined in §3.1a |
+| GRM-04 | S | Grammar ceiling via `registries/detectors.json` (texts from S, items and answers from I); one advisory instruction scope (strategy cards, instructionsDe, situationDe, title.canDo); chunk-licensed hits not reported (§3.1b) |
+| GRM-05 | T | Rule cards: word limit, model sentence, English twin; a card shows the chunk its first unit declares where the spine contrasts the two (§3.1b) |
+| LEX-01 | S | Known-token coverage of inputs and exam texts (advisory until the cumulative lexicon exists); „known" is defined in §3.1a; every other read surface (prompts, options, explanations, instructions, situations, Leitpunkte, checklist, can-do title, step titles, endLines) uses known, glossed or metalanguage words (§3.1b) |
 | LEX-02 | S | New lemmas recur ≥ 2× in the unit's inputs and in ≥ 2 later units (ratchet) |
-| LEX-03 | I | Production uses known lemmas only (§3.1a); ≤ 3 glossed extras per text (advisory until the cumulative lexicon exists) |
+| LEX-03 | I | Production uses known lemmas only (§3.1a); ≤ 3 glossed extras per text (advisory until the cumulative lexicon exists); lex.glossTyped sources productive (§3.1b) |
 | LEX-04 | S | Off-list share within the level limit; extension words receptive |
 | LEX-05 | spec | New-word counts and productive share per unit; `lexiconBlocks` = the `lexicon.json` allocation |
 | LEX-07 | T | Lexicon hygiene: one gloss per lemma, feminine pairs, `plural_kind`, `wordId: null`; a lemma a lower level allocated is re-allocated only by `promotions` (reported on the higher entry); a `-N` homograph needs its own gloss |
@@ -140,7 +140,7 @@ node scripts/course-v2/validate.mjs <level|unit-file|--all> [--json] [--stage S|
 | TXT-04 | T | Instructions ≤ 90 characters; exam stems within `examStemChars`; template instructions ≤ 200 |
 | ITM-01 … ITM-11 | I | Answer follows from the German prompt; choice items; key balance; R/F not copied; task shapes; pools of 16 + reserves 4–6 (no reserve repeats a pool item's POS-masked key); `exact`; `caseSensitive`; sentence-building orders; accepted forms; static `{de, en}` explanations (extensions: §3.1b) |
 | ITM-13 | I | Audio keys: a dictation key is typeable (only characters the checker folds) and its audio (`say`, else `de`) grades CORRECT against it; dictation length per band (advisory); „Frage/Aussage" follows the played text (§3.1b) |
-| CON-06 | S | Facts carry https sources, a fresh check date and `verification: "verified"`; in a `draft` unit a sourced `partial`/`pending` fact with a reason in `notes` is a warning (§3.1a) |
+| CON-06 | S | Facts carry https sources, a fresh check date and `verification: "verified"`; in a `draft` unit a sourced `partial`/`pending` fact with a reason in `notes` is a warning (§3.1a); a unit that states a country-wide rule, or whose plan names a Landeskunde point, has a fact or a Landeskunde reason (§3.1b) |
 | EXM-01 | T | Exam blocks match their template: items, options, plays, block choice set (count, kind, reuse), no-match key, every answer a choice key, scaffold limits, each `⟦NN⟧` gap filled once |
 | EXM-02 | T | Scaffolding only where the template allows it; never in .2; pictorial Teile only as the text variant in .1 |
 | EXM-03 | T | Writing tasks match their template (Leitpunkte, `choose`, register, words, rubric, exam key; form tasks: field count) |
@@ -194,9 +194,10 @@ re-read and why is a warning (advisory, the reason quoted). From `status: "revie
 fixture is a `review` unit and still fails CON-06 as planned. No source, a non-https source or no reason: blocker at
 every status.
 
-`registries/detectors.json` (130 detectors: 67 exact, 59 heuristic, 4 advisory; each passes its own hit/miss
-examples) drives GRM-04. The spine's own `detectors` lists are still empty, so GRM-04 places each detector by its
-`spinePoints` hint — the curriculum owner should copy those links into `grammar-spine.json`.
+`registries/detectors.json` (132 detectors: 68 exact, 60 heuristic, 4 advisory; each passes its own hit/miss
+examples) drives GRM-04. 129 are placed through the spine's own `points[].detectors` lists; `det.vokalwechsel`,
+`det.moechte-infinitiv` and `det.genitiv-feminin-attribut` through their `spinePoints` hint — the spine owner
+regenerates the lists (spine.md §2: „generated, never hand-typed").
 
 ### 3.1b Rail fixes from the u04 reviews (rule-smith 2026-09-27)
 
@@ -269,6 +270,29 @@ example itself does it (the example must stay as documented — §7 item 13 list
 | a2.1 r2 F09 | LEX-03 | lex.articlePlural / lex.glossTyped sources are productive (or core) lemmas; a dictation line makes the learner spell none of the unit's receptive-only or off-list lemmas. | advisory (minor, one round; the fix is the source or a promotion; the §15 example dictates „Stau", „Buchhaltung") |
 | a1.1 r1 F21 | LEX-07 | A plural token glossed in the singular („Kunden" → „customer"). | advisory |
 | orchestrator 2026-09-27 | `lib-validate/text.mjs` | Tokens are Unicode letters: „Café", „Sprachcafé", „Repair-Café", „à la carte" are words (the old class cut „Café" into „Caf"). | — |
+
+#### Second round: the a1.1-u04 rounds 4–5 (rule-smith 2026-09-27)
+
+The deferred rail findings of `docs/course-v2/reviews/a1.1/a1.1-u04.r4.json` and `.r5.json` (BLUEPRINT §9.4: the
+fifth round of a class is a rail, not a sixth round). Each has a passing and a failing test in
+`tests/course-v2-validate.test.mjs` (blocks „rail fixes from the a1.1-u04 rounds 4–5" onward),
+`tests/course-v2-schema.test.mjs` and `tests/course-v2-player.test.mjs`; every rule runs over every course
+(`validate.mjs --all`).
+
+| Review finding(s) | Rule | What it checks | Severity |
+|---|---|---|---|
+| a1.1 r5 F01 (major; = b2.2 r1 F14 / r2 F04, a2.2 r1 F05) | **ITM-01** | An `error_correction` item whose `errorTag`/`errorTags[0]` is `gender-article`, `case-np`, `case-pp` (article family), `v2-inv`, `verb-final`, `connector-position`, `satzklammer` (order family) or absent names the corrected category in promptDe outside the quoted sentence — „den Artikel", „die Endung", „das Pronomen" / „die Wortstellung", „die Position" / any of these or „die Verbform" — unless it accepts its alternative corrections, each with `acceptedWhy`. Other tags (`reflexive`, `register`, `adj-ending` …) are left alone. | blocker |
+| a1.1 r5 F01 (orchestrator's addendum) | ITM-01 | Deleting the article is a correction too (u04 keys deletions under „Korrigieren Sie den Artikel"): when the key swaps one article for another and the article-less sentence is German by evidence — the noun is `singular-only`, a distinct plural, or the unit writes the same verb + bare noun („Wir brauchen Brot und Käse.") — the deletion is accepted with `acceptedWhy`, or the prompt asks for a category a deletion cannot satisfy („die Endung"). „Ich brauche Kilo Äpfel" has no evidence and stays unasked. | blocker |
+| a1.1 r3 F05 / r4 F04 / r5 F03 (third round) | **LEX-01** | The surface walk (`lib-validate/metalanguage.mjs walkReadSurfaces`): items' promptDe, options, explanation.de; blocks' and speaking parts' instructionsDe; situationDe; writing taskDe, Leitpunkte, checklist; micro-output promptDe; title.canDo; step titles; endLines. A content word not known at the unit (allocated later — „Verkäufer" a1.2-u02 — or nowhere — „Markt" before its allocation) is glossed on that screen (Folge glosses → title.canDo, the step input's → its title, an exam block's texts → its instruction and items) or is instruction metalanguage: `INSTRUCTION_METALANGUAGE`, 128 forms in five groups (task verbs, the exam's parts, grammar terms, the course's own modes, the Sprechen topic labels), pinned ≤ 140 with a ban list of content words. Explanation notation („komm-st", „-en", „möcht-") is no word; a distractor's planted wrong form („Busfahrin", no lexicon entry, two edits from the key) is none either; an error correction's quoted sentence is not read. | blocker once the cumulative lexicon exists and the screen shows no English twin; advisory for item promptDe / explanation.de / micro-output promptDe (promptEn / explanation.en are on screen) and before the lexicon exists — so the SCHEMA §15 example (stub lexicon) reports advisories only and §15.6 holds for LEX-01 |
+| a1.1 r4 F05 | **CON-06** | A unit with `facts: []` is no longer „skipped". It needs ≥ 1 fact or a `spec.deviation.reason` naming its Landeskunde when (a) its German texts state a country-wide rule („in Deutschland / Österreich / der Schweiz / D-A-CH" or „hierzulande" + a rule word, not a person's own account, not a question), or (b) its plan entry (`docs/course-v2/curriculum/<level>.json` `landeskunde`, read by `lib-validate/curriculum.mjs`; none for the §15 fixture tree) names a Landeskunde point. | (a) blocker at every status; (b) a warning while `draft`, a blocker from `review` on — every one of the 96 plan units names a point, and many are taught as a scene („Zusammen oder getrennt?"), which a reader judges |
+| a1.1 r4 F02 | **LEX-03** | A `lex.glossTyped` source is productive, promoted or core (typing the word from its English gloss is recall). An authored `fill_blank` that brackets a receptive lemma and keys another form of it („(die Birne)" → „Birnen") is reported like `lex.articlePlural`. | glossTyped: blocker; the bracket items, articlePlural and dictation lines: advisory (recognition-spelling, the review's route (a)) |
+| a1.1 r4 F08 / r5 F05 | **GRM-04**, detectors | Fixtures at a1.1-u04 raise nothing: „Dann möchten wir zwei Kilo Kartoffeln.", „Wie viele möchten Sie?" (`det.adjektiv-endung-nullartikel`: the möchte paradigm and the finite aux/modal forms are `skipWords`, a word before „Sie/Ihnen" is no adjective), „Was macht das zusammen?", „Das macht zusammen 7,80 Euro." (`det.trennbare-verben` `skipClause`; the engine no longer cuts a clause at a decimal comma or a time colon), „Lesen Sie zuerst die Frage." (a construction the spine licenses as a chunk at the position — `chunkFrom` ≤ here — is not reported at all; the run's notes count it). One instruction scope: strategy cards, instructionsDe, situationDe and title.canDo are all read, all as advisory metalanguage (through the LEX-01 walker). | (fewer false hits) / advisory |
+| a1.1 r5 F05 | GRM-04, `det.genitiv-feminin-attribut` (new, heuristic, g.genitiv b1.1-u11) | Article + noun + „der" + noun („die Frage der Partnerin", „die Bitte der Partnerin") — reported on the German-only speaking instructions of a1.1 u05, u07, u08, u09 (and u12, u02's „am Empfang der Sprachschule"); „am Ende/Anfang der …" is a skip. | advisory |
+| a1.1 r5 F04 (fourth round) | **GRM-05** | When the first unit of the level that uses a card declares a `spec.grammar.chunk` whose spine point is the `contrast` of the card's point, the card's de, table or model sentence shows one of the chunk's label forms (`g.akkusativ` „den, einen, keinen" on rc.artikel-genus-plural at a1.1-u04). Scoped to the spine's contrast pairs: rc.praesens owes the Sie-imperative chunk of u01 nothing. | blocker |
+| a1.1 r5 F04 | GRM-04, `det.moechte-infinitiv` (new, exact, on g.koennen a1.1-u08) | A möchte form + an infinitive before the clause end (the Satzklammer), read on rule-card prose at the card's first use: the old rc.moechte „Ich möchte bezahlen." at a1.1-u04. The engine now lets an infinitive the lexicon knows beat the participle SHAPE („bezahlen", „verstehen"); `notFinal` lists words that never close the bracket („einen", „morgen"). | exact (blocks production and inputs before u08); on card prose advisory, like all metalanguage |
+| a1.1 r5 F03 | SCHEMA §8 `Start.folge.glosses` (new, optional, stage S), `StartView` | `folge.glosses: [{ token, gloss: EnText }]{0..3}` — a word the Folge uses before its unit glosses it; StartView hands them to the InputView that renders the Folge (it passed `[]`), LEX-01 counts them for the Folge and title.canDo, the compiler keeps them. | schema |
+| a1.1 r4 F01 residual | `grammar-spine.json` — **not changed** | `g.muessen-duerfen-man` keeps `chunkFrom` a1.1-u08. The spine allows one `chunkFrom` per unit (spine.md §2, GRM-01 counts it with the unit's declared chunk), and a1.1-u02 already is `g.wortbildung-er-in`'s; a second would fail GRM-01 on u02. The spine's own remedy for „Wie schreibt man das?" is its D21 Redemittel whitelist, now folded into `detectors.json`: `det.man` („wie schreibt man das", „wie sagt man", „wie spricht man"), `det.akkusativ-pronomen-ihn`, `det.reflexiv-pronomen`, `det.dativ-pronomen` (the four D21 rows). | — |
+| a1.1 r5 F05, unit part (u05, u07, u08, u09) | — | Not edited here (unit files); the genitive instructions are GRM-04 advisories on those units for their fixers. | — |
 
 ### 3.2 Not implemented yet, and why
 
@@ -356,9 +380,11 @@ node scripts/course-v2/compile.mjs <level|--all> [--check] [--content <dir>] [--
   other A2.1 units, the deferred `ta2` lane and templates, the text types/families/detector the unit names). It is
   hand-maintained on purpose; deriving it from unresolved refs would make REF-01 vacuous.
 - On the fixture: the checker reports 0 errors at every stage it is stripped to (`spec`, `S`, `I`, `T`); the
-  validator reports exactly one blocker, **CON-06** (fact `a2.1-u07-f01` is `verification: "partial"`) — the failure
-  SCHEMA §15.6 plans. It blocks because the fixture unit is `status: "review"`; the same fact in a `draft` unit is a
-  warning (§3.1a).
+  validator reports two blockers: **CON-06** (fact `a2.1-u07-f01` is `verification: "partial"`) — the failure
+  SCHEMA §15.6 plans; it blocks because the fixture unit is `status: "review"`, and the same fact in a `draft` unit is
+  a warning (§3.1a) — and, since the rail of 2026-09-27, **ITM-01** on `a2.1-u07-ls3-p10` (a verb-final error
+  correction whose German prompt is a bare „Korrigieren Sie:", §3.1b). §15.6 carries that row; with the prompt
+  „Korrigieren Sie die Wortstellung: …" CON-06 is again the only blocker (the tests pin both states).
 
 ---
 
@@ -368,7 +394,7 @@ node scripts/course-v2/compile.mjs <level|--all> [--check] [--content <dir>] [--
 |---|---|
 | `tests/course-v2-schema.test.mjs` | fixture verbatim; SCH-01/REF-01/KEY-01 on the fixture; the §8.1 stage schema (strip to each stage, absent/required per role); §15.4 lane pack and §15.7 choice fixtures in memory; 30+ mutations each failing at the expected path/rule/message; the amended text-type shape; the real `text-types.json` and `lanes/*.json` pass SCH-01/REF-01 (delivery, instructions ≤ 200 characters naming the play count, the four pictorial Teile of BLUEPRINT §4.9 with their text variants); `BANK_KEY_RE` matrix (47,520 keys) and garbage; compiler determinism, idempotency, §15.5 equality, reserve index, ledger tombstones, refusal; both CLIs |
 | `tests/course-v2-compile.test.mjs` | partial levels: 1 of 12 units compiles while the checker still reports REF-01; a missing unit is a `coming` row filled from `specs.json`; a unit failing its check (or not JSON) is skipped with its errors, writes nothing and keeps its ledger ids; another level's broken file is ignored; an error outside the units refuses the level; determinism, idempotency, minified output; `unitOfId`; the CLI's skip line and exit 0 |
-| `tests/course-v2-validate.test.mjs` | every validator rule with a passing and a failing fixture (parsed from SCHEMA.md); §15.6 expectations; stage gates incl. the spec inference and COV-1's stage-T severity; detectors' own examples; the §3.1a morphology, core list (size, bans, precedence), licensed forms and LEX-03 on a complete synthetic lexicon; LEX-07 duplicates vs homographs; CON-06 draft warnings; UnitSpec `lexiconBlocks` `{6..20}`; CLI; every §3.1b rail with its review fixture (the detector review sentences also against the real spine and detectors) |
+| `tests/course-v2-validate.test.mjs` | every validator rule with a passing and a failing fixture (parsed from SCHEMA.md); §15.6 expectations (incl. the ITM-01 row and its fix); the a1.1-u04 r4–r5 rails (ITM-01 categories and article deletion, the LEX-01 surface walk and its allowlist, CON-06 without facts, LEX-03 glossTyped, the a1.1-u04 detector fixtures, the instruction scope, det.genitiv-feminin-attribut, det.moechte-infinitiv on card prose, GRM-05 chunk forms); stage gates incl. the spec inference and COV-1's stage-T severity; detectors' own examples; the §3.1a morphology, core list (size, bans, precedence), licensed forms and LEX-03 on a complete synthetic lexicon; LEX-07 duplicates vs homographs; CON-06 draft warnings; UnitSpec `lexiconBlocks` `{6..20}`; CLI; every §3.1b rail with its review fixture (the detector review sentences also against the real spine and detectors) |
 | `tests/check-answer.test.mjs`, `tests/course-v2-player.test.mjs` | the answer checker's ellipsis and number-word folds (live and v2), `exact: 'number'` on dictations and fill-ins (the a2.2-u04 c07 / a1.2-u04 c08 fixtures, „neun"/„nuen"/„zehn" against „9"), the generator's `exact` |
 | `tests/course-v2-ai.test.mjs`, `…-entitlement…`, `…-completion…` | the graders and speaking functions read the compiled banks; entitlement; the one completion function — incl. the SCHEMA §5 `CLOSING` of both kinds, the learner's lane, the Diagnose never counting, form tasks, and every authored `course.json` and compiled manifest |
 
@@ -441,12 +467,16 @@ node scripts/course-v2/compile.mjs <level|--all> [--check] [--content <dir>] [--
     non-exam MC at options[0] (ITM-03), cues „am"/„um" (EXM-03), gives ga2.sp1 a Thema and a three-word card
     (EXM-04), proves the interaction can-do cd.a2.rueckruf-weitergeben by an item (ALL-02), dictates 19–29-word lines
     with receptive words (ITM-13, LEX-03) and has an open adjective gap („Die Leitung ist ___." → besetzt, ITM-01).
-    These rails are advisory, so §15.6 still holds (one blocker, CON-06); `tests/course-v2-validate.test.mjs` pins
-    that each of them reports no blocker on the example. For the SCHEMA owner to decide: (a) the player shuffles
+    These rails are advisory, so their §15.6 rows still hold; `tests/course-v2-validate.test.mjs` pins that each of
+    them reports no blocker on the example. One rail the example does NOT meet is a blocker, because its finding
+    class is MAJOR on three levels (§3.1b, ITM-01, second round): `a2.1-u07-ls3-p10` says „Correct the word order."
+    only in promptEn. §15.6 now carries that row (two blockers: ITM-01 and CON-06), and the SCHEMA owner's fix is
+    (g) its promptDe „Korrigieren Sie die Wortstellung: „Wenn Sie melden sich …““, after which CON-06 is again the
+    only one. For the SCHEMA owner to decide: (a) the player shuffles
     non-exam options with a seed (then ITM-03's non-exam balance goes), (b) `ExamBlock.example`, (c)
     `Check.proofs[].microOutput`, (d) `Fact.exceptions[].source`, (e) ErrorTag `null-article`, (f) whether the §15
-    exemplar adopts the reviewed formats (Goethe A2 Sp1 cards without Thema, ≥ 4-letter cues, shorter dictations).
-    The detector additions of `lib-validate/detectors.mjs DETECTOR_OVERLAYS` belong in `detectors.json`; its owner
+    exemplar adopts the reviewed formats (Goethe A2 Sp1 cards without Thema, ≥ 4-letter cues, shorter dictations),
+    (g) the ls3-p10 prompt above. The detector additions of `lib-validate/detectors.mjs DETECTOR_OVERLAYS` belong in `detectors.json`; its owner
     moves each entry there and deletes it from the overlay (a test fails on an overlay for a detector that does not
     exist).
 

@@ -31,7 +31,7 @@ export function ceilingChecker(ctx) {
       const licensedAt = surface === 'production' ? place.prod : place.rec;
       if (licensedAt === null || licensedAt <= pos) continue;
       if (place.points.some((p) => declared.has(p))) continue;
-      if (place.chunk !== null && place.chunk <= pos) continue; // a chunk preview is GRM-04's advisory, not a ceiling breach
+      if (place.chunk !== null && place.chunk <= pos) continue; // licensed as a chunk here: no ceiling breach (GRM-04 does not report it either)
       for (const hit of detectInText(det, text, env)) {
         const content = tokens(hit.match).map((t) => t.lower).filter((w) => !FUNCTION_WORDS.has(w));
         if (content.length && content.every((w) => exempt.has(w))) continue;
