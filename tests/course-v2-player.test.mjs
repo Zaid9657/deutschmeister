@@ -10,7 +10,8 @@
 //   - the three v2 routes sit above the legacy catch-all in App.jsx.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, mkdtempSync, cpSync, writeFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { compileLevel } from '../scripts/course-v2/lib/compiler.mjs';
@@ -575,4 +576,29 @@ test('the dev fixture and the ?preview bypass exist only on the Vite dev server'
   const guard = read('src/components/LevelSubscriptionGuard.jsx');
   assert.match(guard, /if \(import\.meta\.env\.DEV && COURSE_V2_PATH_RE\.test\(location\.pathname \|\| ''\) && new URLSearchParams\(location\.search\)\.has\('preview'\)\)/);
   assert.ok(read('.gitignore').split('\n').includes('/.cache'), 'the compiled fixture lives in the gitignored .cache/');
+});
+
+test('the Folge\'s own glosses reach the start screen (a1.1-u04 r5 F03: „Heute ist Markt." before its unit glosses it)', () => {
+  const sv = read('src/components/course-v2/StartView.jsx');
+  assert.match(sv, /const folgeGlosses = Array\.isArray\(folge\?\.glosses\) \? folge\.glosses : \[\];/, 'StartView reads start.folge.glosses');
+  assert.match(sv, /input=\{\{ title: folge\.title, lines: folge\.lines \|\| \[\], glosses: folgeGlosses, transcriptAfterUnaidedListen: true \}\}/, 'and hands them to the InputView that renders the Folge');
+  assert.doesNotMatch(sv, /glosses: \[\], transcriptAfterUnaidedListen/, 'the old hard-coded empty list is gone');
+  assert.match(read('src/components/course-v2/InputView.jsx'), /const glosses = input\?\.glosses \|\| \[\];/, 'InputView makes input.glosses tappable');
+  // the compiler carries them into the learner's chunk unchanged
+  const root = mkdtempSync(join(tmpdir(), 'cv2-folge-'));
+  try {
+    cpSync(FIXTURES_ROOT, root, { recursive: true });
+    const file = join(root, 'a2.1-u07.json');
+    const u = JSON.parse(readFileSync(file, 'utf8'));
+    const glosses = [{ token: 'Mailbox', gloss: { en: 'voicemail' } }];
+    u.start.folge.glosses = glosses;
+    writeFileSync(file, JSON.stringify(u));
+    const out = compileLevel('a2.1', { contentRoot: root, outRoot: '/nonexistent/out', banksRoot: '/nonexistent/banks' });
+    assert.deepEqual(out.errors, []);
+    const chunk = JSON.parse(out.outputs.find((o) => o.file.endsWith('/a2.1/units/u07.json')).text);
+    assert.deepEqual(chunk.start.folge.glosses, glosses);
+    assert.equal(unit.start.folge.glosses, undefined, 'the §15 Folge carries none, and the player falls back to []');
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });

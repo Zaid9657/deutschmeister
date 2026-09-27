@@ -24,7 +24,11 @@ import { tokens } from '../scripts/course-v2/lib-validate/text.mjs';
 import { missingOrders } from '../scripts/course-v2/lib-validate/orders.mjs';
 import { knownCompound } from '../scripts/course-v2/lib-validate/compounds.mjs';
 import { BANK_KEY_RE, SCHEMA_PATTERNS } from '../scripts/course-v2/lib-validate/ids.mjs';
-import { coverage } from '../scripts/course-v2/rules/LEX-01.mjs';
+import { coverage, unknownOnSurface } from '../scripts/course-v2/rules/LEX-01.mjs';
+import { correctionFamily, namesCategory, deletionAlternative } from '../scripts/course-v2/rules/ITM-01.mjs';
+import { chunkLabelForms } from '../scripts/course-v2/rules/GRM-05.mjs';
+import { countryRules } from '../scripts/course-v2/rules/CON-06.mjs';
+import { INSTRUCTION_METALANGUAGE, walkReadSurfaces, stripFragments, plantedForm } from '../scripts/course-v2/lib-validate/metalanguage.mjs';
 import { entryForms, knownForms, licensedForms, umlaut } from '../scripts/course-v2/lib-validate/lexicon.mjs';
 import { CORE_SIZE, CORE_LEMMAS, CORE_ENTRIES, NUMBER_WORDS } from '../scripts/course-v2/lib-validate/core-lexicon.mjs';
 import { strongPraet } from '../scripts/course-v2/lib-validate/strong-verbs.mjs';
@@ -1379,5 +1383,268 @@ describe('GRM-04 review fixtures against the real spine and detectors (a1.1 r1 F
   test('a1.2-u04: „Das Amt ist geöffnet.", „Ich finde das schwer.", „am dritten Juni", „Neu ab 1. Juni" raise nothing', async () => {
     const r = await rule('GRM-04', real('a1.2-u04', ['Das Amt ist geöffnet.', 'Ich finde das schwer.', 'Der Termin ist am dritten Juni.', 'Neu ab 1. Juni.']));
     assert.equal(r.findings.length, 0, messages(r));
+  });
+});
+
+// ── rail fixes from the a1.1-u04 rounds 4–5 (rule-smith 2026-09-27, second round; RAILS §3.1b) ──────────
+//
+// Each rail: a failing fixture (the review's own quote) and a passing one. The rules run over every course
+// (`validate.mjs --all`); the fixtures are synthetic units so a concurrent content edit cannot move them.
+
+const REAL_SPINE = JSON.parse(readFileSync(join(REPO, 'content', 'course-v2', 'registries', 'grammar-spine.json'), 'utf8'));
+const u04 = (extra = {}) => ({ $schema: 'course-v2/unit@1', id: 'a1.1-u04', level: 'a1.1', nr: 4, status: 'draft', stage: 'T', spec: { grammar: { new: ['g.artikel-genus-plural', 'g.moechte'], chunk: ['g.akkusativ'], review: [] } }, ...extra });
+/** An A1.1 lexicon with entries in U1–U4 (the cumulative lexicon is complete up to U4). */
+const A11_LEX = [
+  lx('lx.fragen', 'fragen', 'VERB', 'a1.1-u01', { verb_forms: { '3sg': 'fragt', perfekt: 'hat gefragt' } }),
+  lx('lx.antworten', 'antworten', 'VERB', 'a1.1-u01', { verb_forms: { '3sg': 'antwortet', perfekt: 'hat geantwortet' } }),
+  lx('lx.heissen', 'heißen', 'VERB', 'a1.1-u01', { verb_forms: { '3sg': 'heißt', perfekt: 'hat geheißen' } }),
+  lx('lx.zahl', 'Zahl', 'NOUN', 'a1.1-u02', { article: 'die', plural: 'Zahlen', plural_kind: 'regular' }),
+  lx('lx.mann', 'Mann', 'NOUN', 'a1.1-u03', { article: 'der', plural: 'Männer', plural_kind: 'regular' }),
+  lx('lx.frau', 'Frau', 'NOUN', 'a1.1-u03', { article: 'die', plural: 'Frauen', plural_kind: 'regular' }),
+  lx('lx.brot', 'Brot', 'NOUN', 'a1.1-u04', { article: 'das', plural: 'Brote', plural_kind: 'regular' }),
+  lx('lx.kaese', 'Käse', 'NOUN', 'a1.1-u04', { article: 'der', plural: null, plural_kind: 'singular-only' }),
+  lx('lx.kilo', 'Kilo', 'NOUN', 'a1.1-u04', { article: 'das', plural: 'Kilo', plural_kind: 'regular' }),
+  lx('lx.apfel', 'Apfel', 'NOUN', 'a1.1-u04', { article: 'der', plural: 'Äpfel', plural_kind: 'regular' }),
+  lx('lx.brauchen', 'brauchen', 'VERB', 'a1.1-u04', { verb_forms: { '3sg': 'braucht', perfekt: 'hat gebraucht' } }),
+  lx('lx.kosten', 'kosten', 'VERB', 'a1.1-u04', { verb_forms: { '3sg': 'kostet', perfekt: 'hat gekostet' } }),
+  lx('lx.kartoffel', 'Kartoffel', 'NOUN', 'a1.1-u04', { article: 'die', plural: 'Kartoffeln', plural_kind: 'regular', role: 'receptive' }),
+  lx('lx.birne', 'Birne', 'NOUN', 'a1.1-u04', { article: 'die', plural: 'Birnen', plural_kind: 'regular', role: 'receptive' }),
+  lx('lx.bezahlen', 'bezahlen', 'VERB', 'a1.1-u09', { verb_forms: { '3sg': 'bezahlt', perfekt: 'hat bezahlt' } }),
+];
+const A12_LEX = [lx('lx.verkaeufer', 'Verkäufer', 'NOUN', 'a1.2-u02', { article: 'der', plural: 'Verkäufer', plural_kind: 'regular', feminine: 'die Verkäuferin' })];
+const withNames = (b) => { b.ctx.registries.names = [{ form: 'Priya', kind: 'person', level: 'a1.1' }, { form: 'Nora', kind: 'person', level: 'a1.1' }]; return b; };
+
+describe('ITM-01 an error correction names what to correct (a1.1-u04 r5 F01; b2.2-u04 r1 F14 / r2 F04, a2.2-u04 r1 F05)', () => {
+  const ec = (promptDe, answer, extra = {}) => ({ id: 'a1.1-u04-ls1-p10', type: 'error_correction', role: 'practice', topic: 'g.artikel-genus-plural', promptDe, promptEn: 'Correct the sentence.', answer, accepted: [answer], intentionalError: true, errorTag: 'gender-article', explanation: { de: 'Brot ist neutral: ein Brot.', en: 'Brot is neuter.' }, ...extra });
+  const build = (item, checkKey = 'Wir brauchen Brot und Käse.') => lexCtx({
+    lexicon: { 'a1.1': A11_LEX },
+    unit: u04({ steps: [{ id: 'a1.1-u04-ls1', kind: 'situation', pool: { items: [item] } }], check: { items: [{ id: 'a1.1-u04-c06', type: 'dictation', role: 'check', topic: 'hoeren', promptDe: 'Hören Sie und schreiben Sie.', promptEn: 'Listen and write.', answer: checkKey, accepted: [checkKey], audioLineRef: 'a1.1-u04-check-l04', explanation: { de: 'So steht es im Text.', en: 'As heard.' } }] } }),
+  });
+  const bare = 'Korrigieren Sie: „Wir brauchen eine Brot.“';
+  test('fail: the bare „Korrigieren Sie:" of r5 (and „Wir brauchen Brot." — the unit writes „brauchen Brot" — is not accepted)', async () => {
+    const r = await rule('ITM-01', build(ec(bare, 'Wir brauchen ein Brot.')));
+    assertFail(r, /gender-article\) with a bare prompt/);
+    assertFail(r, /deleting the article is also a correct correction: „Wir brauchen Brot\." \(the unit writes „brauchen Brot"/);
+  });
+  test('pass: the current u04 item („Korrigieren Sie den Artikel:" and the deletion accepted with acceptedWhy)', async () => {
+    assertPass(await rule('ITM-01', build(ec('Korrigieren Sie den Artikel: „Wir brauchen eine Brot.“', 'Wir brauchen ein Brot.', { accepted: ['Wir brauchen ein Brot.', 'Wir brauchen Brot.'], acceptedWhy: { 'Wir brauchen Brot.': 'grammatisch: Brot ohne Artikel, wie in „Wir brauchen Brot und Käse."' } }))));
+  });
+  test('„den Artikel" does not rule the deletion out (u04 keys deletions under it); „die Endung" does', async () => {
+    assertFail(await rule('ITM-01', build(ec('Korrigieren Sie den Artikel: „Wir brauchen eine Brot.“', 'Wir brauchen ein Brot.'))), /deleting the article/);
+    assertPass(await rule('ITM-01', build(ec('Korrigieren Sie die Endung: „Wir brauchen eine Brot.“', 'Wir brauchen ein Brot.'))));
+  });
+  test('no evidence, no deletion finding: „Ich brauche Kilo Äpfel." is no German (c07); a mass noun is evidence of its own', async () => {
+    assertPass(await rule('ITM-01', build(ec('Korrigieren Sie den Artikel: „Ich brauche eine Kilo Äpfel.“', 'Ich brauche ein Kilo Äpfel.'), 'Wir kaufen Brot.')));
+    assertFail(await rule('ITM-01', build(ec('Korrigieren Sie den Artikel: „Wir brauchen einen Käse.“', 'Wir brauchen den Käse.', { errorTag: 'case-np' }), 'Wir kaufen Brot.')), /lx\.kaese is singular-only/);
+  });
+  test('word order: a bare prompt fails; „die Wortstellung" or every alternative accepted with acceptedWhy passes', async () => {
+    const order = (promptDe, extra = {}) => ec(promptDe, 'Falls Sie Fragen haben, rufen Sie uns an.', { errorTag: 'v2-inv', topic: 'g.falls', explanation: { de: 'Nach falls steht das Verb am Ende.', en: 'Verb last after falls.' }, ...extra });
+    assertFail(await rule('ITM-01', build(order('Korrigieren Sie: „Falls haben Sie Fragen, rufen Sie uns an.“'))), /v2-inv\) with a bare prompt/);
+    assertPass(await rule('ITM-01', build(order('Korrigieren Sie die Wortstellung: „Falls haben Sie Fragen, rufen Sie uns an.“'))));
+    assertPass(await rule('ITM-01', build(order('Korrigieren Sie: „Falls haben Sie Fragen, rufen Sie uns an.“', { accepted: ['Falls Sie Fragen haben, rufen Sie uns an.', 'Haben Sie Fragen, rufen Sie uns an.'], acceptedWhy: { 'Haben Sie Fragen, rufen Sie uns an.': 'grammatisch: Bedingung ohne falls, Verb auf Position 1' } }))));
+  });
+  test('scope: a tag outside the article and order classes (reflexive, register) is left alone; no tag is in scope', async () => {
+    assertPass(await rule('ITM-01', build(ec('Korrigieren Sie: „Ich melde sich morgen.“', 'Ich melde mich morgen.', { errorTag: 'reflexive' }))));
+    assertFail(await rule('ITM-01', build(ec('Korrigieren Sie: „Emre kommen aus der Türkei.“', 'Emre kommt aus der Türkei.', { errorTag: undefined }))), /no errorTag\) with a bare prompt/);
+    assertPass(await rule('ITM-01', build(ec('Korrigieren Sie die Verbform: „Emre kommen aus der Türkei.“', 'Emre kommt aus der Türkei.', { errorTag: undefined }))));
+  });
+  test('helpers: the family per tag, the category outside the quote, the one-article swap', () => {
+    assert.equal(correctionFamily({ errorTag: 'case-pp' }), 'article');
+    assert.equal(correctionFamily({ errorTags: ['satzklammer'] }), 'order');
+    assert.equal(correctionFamily({}), 'any');
+    assert.equal(correctionFamily({ errorTag: 'register' }), null);
+    assert.equal(namesCategory('Korrigieren Sie: „Der Artikel ist falsch.“', 'article'), false, 'a category word inside the quote does not count');
+    assert.equal(namesCategory('Korrigieren Sie die Position des Verbs: „…“', 'order'), true);
+    assert.deepEqual(deletionAlternative({ promptDe: 'Korrigieren Sie: „Wir brauchen eine Brot.“', answer: 'Wir brauchen ein Brot.' }), { sentence: 'Wir brauchen Brot.', noun: 'Brot', before: 'brauchen', article: 'ein' });
+    assert.equal(deletionAlternative({ promptDe: 'Korrigieren Sie: „Das ist mein Schwester.“', answer: 'Das ist meine Schwester.' }), null, 'a possessive is no article to delete');
+  });
+});
+
+describe('LEX-01 walks every read surface (a1.1-u04 r3 F05 / r4 F04 / r5 F03)', () => {
+  const s02 = (options) => ({ id: 'a1.1-u04-ls2-s02', type: 'multiple_choice', role: 'structured', topic: 'g.artikel-genus-plural', promptDe: 'Wer fragt?', promptEn: 'Who asks?', options, answer: options[0], accepted: [options[0]], explanation: { de: 'Der Mann fragt.', en: 'The man asks.' } });
+  const build = (unitExtra) => withNames(lexCtx({ lexicon: { 'a1.1': A11_LEX, 'a1.2': A12_LEX }, unit: u04({ stage: 'S', ...unitExtra }) }));
+  const withStep = (step, extra = {}) => build({ steps: [{ id: 'a1.1-u04-ls2', kind: 'situation', title: 'Auf dem Markt', input: { kind: 'dialog', lines: [], glosses: [{ token: 'Markt', gloss: { en: 'market' } }] }, ...step }], ...extra });
+  test('fail: the r4 ls2-s02 options („Verkäufer", a1.2-u02) and the r5 ones („Markt", no lexicon entry)', async () => {
+    assertFail(await rule('LEX-01', withStep({ structuredInput: [s02(['Der Verkäufer fragt Priya.', 'Priya fragt den Verkäufer.', 'Priya fragt Nora.'])] })), /options\[0\].*„Verkäufer" \(lx\.verkaeufer: a1\.2-u02\)/);
+    assertFail(await rule('LEX-01', withStep({ structuredInput: [s02(['Der Mann am Markt fragt Priya.', 'Priya fragt den Mann.', 'Priya fragt Nora.'])] })), /options\[0\].*„Markt" \(no lexicon entry\)/);
+  });
+  test('pass: known words („der Mann fragt Priya"); the step input\'s gloss covers its own title („Auf dem Markt"), not the item screen', async () => {
+    const r = await rule('LEX-01', withStep({ structuredInput: [s02(['Der Mann fragt Priya.', 'Priya fragt den Mann.', 'Priya fragt Nora.'])] }));
+    assertPass(r);
+    assert.ok(!r.findings.some((f) => /\.title/.test(f.path || '')), messages(r));
+  });
+  test('the metalanguage allowlist: „Welche Antwort passt?", „Korrigieren Sie die Endung", „Hören Teil 1"', async () => {
+    assertPass(await rule('LEX-01', withStep({ structuredInput: [{ ...s02(['Der Mann fragt Priya.', 'Priya fragt den Mann.', 'Priya fragt Nora.']), promptDe: 'Hören Teil 1: Welche Antwort passt? Korrigieren Sie die Endung.' }] })));
+  });
+  test('a surface with its English twin on screen (promptEn, explanation.en) is an advisory; options and instructions block', async () => {
+    const r = await rule('LEX-01', withStep({ structuredInput: [{ ...s02(['Der Mann fragt Priya.', 'Priya fragt den Mann.', 'Priya fragt Nora.']), promptDe: 'Was fragt der Verkäufer?' }] }));
+    assertPass(r);
+    assert.ok(r.findings.some((f) => f.severity === 'advisory' && /promptDe/.test(f.path) && /English twin/.test(f.message)), messages(r));
+    assertFail(await rule('LEX-01', build({ steps: [{ id: 'a1.1-u04-ls4', kind: 'pruefung', blocks: [{ id: 'a1.1-u04-ls4-sd1-h1', template: 'sd1.h1', instructionsDe: 'Sie hören sechs kurze Gespräche zweimal.', textRefs: [], items: [] }] }] })), /instructionsDe.*„kurze" \(no lexicon entry\)/);
+  });
+  test('title.canDo, endLine, situationDe, Leitpunkte and checklist are walked; the Folge\'s glosses cover title.canDo', async () => {
+    const extra = { title: { de: 'Was kostet das?', canDo: 'Sie können auf dem Markt fragen.' }, start: { folge: { title: 'Heute', lines: [{ id: 'a1.1-u04-start-l01', speaker: 'cast.priya', de: 'Heute ist Markt.' }] } } };
+    assertFail(await rule('LEX-01', build(extra)), /title\.canDo.*„Markt"/);
+    const glossed = { ...extra, start: { folge: { ...extra.start.folge, glosses: [{ token: 'Markt', gloss: { en: 'market' } }] } } };
+    const r = await rule('LEX-01', build(glossed));
+    assertPass(r);
+    assert.ok(!r.findings.some((f) => /start\.folge/.test(f.path || '')), 'the Folge line „Heute ist Markt." is covered by its own gloss');
+    const paths = [...walkReadSurfaces({ kind: 'unit', data: { steps: [{ id: 's', kind: 'check', endLine: 'Geschafft!' }, { id: 't', kind: 'schreiben', task: { bankKey: 'k', leitpunkte: [{ id: 'lp1', de: 'Sachen' }], checklist: ['Anrede'], situationDe: 'Sie sind auf dem Markt.', taskDe: 'Schreiben Sie.' } }] } })].map((x) => x.path);
+    assert.deepEqual(paths, ['steps[0].endLine', 'steps[1].task.situationDe', 'steps[1].task.taskDe', 'steps[1].task.leitpunkte[0].de', 'steps[1].task.checklist[0]']);
+  });
+  test('morpheme notation and planted distractors are no words; an error correction\'s quoted sentence is not read', () => {
+    assert.equal(stripFragments('ich + heiß-e, du komm-st: Endung -st, möcht- + e').replace(/\s+/g, ' ').trim(), 'ich + heiße, du kommst: Endung , + e');
+    assert.ok(plantedForm('busfahrin', { answer: 'Busfahrerin', options: ['Busfahrerin', 'Busfahrin', 'Busfahrer'] }));
+    assert.ok(!plantedForm('verkäufer', { answer: 'Mann', options: ['Mann', 'Verkäufer', 'Frau'] }));
+    assert.deepEqual(unknownOnSurface('Korrigieren Sie den Artikel.', new Set(['sie', 'den'])), []);
+    const surf = [...walkReadSurfaces({ kind: 'unit', data: { steps: [{ id: 's', kind: 'situation', pool: { items: [{ id: 'i', type: 'error_correction', intentionalError: true, promptDe: 'Korrigieren Sie: „Er sprecht gut.“', answer: 'Er spricht gut.' }] } }] } })];
+    assert.ok(!/sprecht/.test(surf.find((x) => x.kind === 'prompt').de));
+  });
+  test('the allowlist stays small and holds no ordinary content word', () => {
+    assert.ok(INSTRUCTION_METALANGUAGE.length <= 130, `${INSTRUCTION_METALANGUAGE.length} entries`);
+    assert.equal(new Set(INSTRUCTION_METALANGUAGE).size, INSTRUCTION_METALANGUAGE.length, 'no duplicates');
+    for (const w of ['markt', 'verkäufer', 'prospekt', 'sache', 'sachen', 'geschafft', 'café', 'kurz', 'kurze', 'person', 'personen', 'mann', 'frau', 'brot']) assert.ok(!INSTRUCTION_METALANGUAGE.includes(w), w);
+  });
+  test('the SCHEMA §15 worked example (stub cumulative lexicon) reports its read surfaces as advisories only (§15.6 unchanged)', async () => {
+    const r = await rule('LEX-01', exFixed());
+    assertPass(r);
+  });
+});
+
+describe('CON-06 a unit without facts is not skipped (a1.1-u04 r4 F05)', () => {
+  const lines = (...de) => [{ id: 'a1.1-u04-ls3', kind: 'situation', input: { kind: 'dialog', lines: de.map((x, i) => ({ id: `a1.1-u04-ls3-l${String(i + 1).padStart(2, '0')}`, speaker: 'cast.arjun', de: x })) } }];
+  const build = (unitExtra, plan = [{ nr: 4, landeskunde: 'Einkaufen in D-A-CH: sonntags meist geschlossen, Flaschenpfand in Deutschland' }]) => {
+    const b = lexCtx({ unit: u04({ stage: 'S', facts: [], ...unitExtra }) });
+    b.ctx.registries.curriculum = new Map([['a1.1', plan]]);
+    return b;
+  };
+  test('fail: a stated country-wide rule and facts [] (the r4 ls3-l11), at every status', async () => {
+    assertFail(await rule('CON-06', build({ steps: lines('Morgen ist Sonntag, da sind die Supermärkte in Deutschland zu.') })), /states a country-wide rule/);
+  });
+  test('the plan\'s Landeskunde point with facts []: a warning in a draft, a blocker from status "review" on', async () => {
+    const draft = await rule('CON-06', build({ steps: lines('Morgen ist Sonntag.') }));
+    assertPass(draft);
+    assert.ok(draft.findings.some((f) => f.severity === 'advisory' && /^warning: the plan names the Landeskunde point/.test(f.message)), messages(draft));
+    assertFail(await rule('CON-06', build({ status: 'review', steps: lines('Morgen ist Sonntag.') })), /plan names the Landeskunde point/);
+  });
+  test('pass: a facts[] record, or a deviation.reason naming the Landeskunde; a person\'s own account is no rule', async () => {
+    assertPass(await rule('CON-06', build({ status: 'review', steps: lines('Morgen ist Sonntag, da sind die Supermärkte in Deutschland zu.'), spec: { ...u04().spec, deviation: { reason: 'Landeskunde nur als Szene: die Einheit stellt keine Behauptung über Öffnungszeiten auf.' } } })));
+    assert.notEqual((await rule('CON-06', build({ status: 'review', steps: lines('Ich wohne jetzt in Deutschland.') }, []))).status, 'fail', 'no plan point, no stated rule: nothing to record');
+    const withFact = exFixed((p) => { p.unit.steps[0].input.lines[0].de = 'In Deutschland darf man sonntags nicht arbeiten.'; });
+    assertPass(await rule('CON-06', withFact));
+    assert.equal(countryRules({ kind: 'unit', data: { steps: lines('Wie ist das in Deutschland?', 'Wir wohnen in Deutschland, und wir zahlen Miete.') } }).length, 0, 'a question and a personal account are no rule');
+  });
+});
+
+describe('LEX-03 typed recall is production (a1.1-u04 r4 F02)', () => {
+  const build = (generators, items = []) => lexCtx({ lexicon: { 'a1.1': A11_LEX }, unit: u04({ stage: 'I', steps: [{ id: 'a1.1-u04-ls2', kind: 'situation', pool: { items, generators } }] }) });
+  test('fail: an LS2 lex.glossTyped source lx.kartoffel (receptive); pass: a productive source', async () => {
+    assertFail(await rule('LEX-03', build([{ generator: 'lex.glossTyped', count: 1, source: ['lx.kartoffel', 'lx.brot'] }])), /lex\.glossTyped makes the learner write Kartoffel from its English gloss, but lx\.kartoffel is receptive/);
+    assertPass(await rule('LEX-03', build([{ generator: 'lex.glossTyped', count: 1, source: ['lx.kaese', 'lx.brot'] }])));
+  });
+  test('an authored fill_blank asking for a receptive lemma\'s plural from the bracket (c02 „(die Birne)" → „Birnen") is an advisory', async () => {
+    const c02 = (lemma, answer) => ({ id: 'a1.1-u04-ls2-p01', type: 'fill_blank', role: 'practice', topic: 'g.artikel-genus-plural', promptDe: `Eine ${lemma}? Nein, drei ___, bitte. (die ${lemma})`, answer, accepted: [answer] });
+    const r = await rule('LEX-03', build([], [c02('Birne', 'Birnen')]));
+    assertPass(r);
+    assert.ok(r.findings.some((f) => f.severity === 'advisory' && /„Birnen" from the bracketed lemma „die Birne", but lx\.birne is receptive/.test(f.message)), messages(r));
+    const ok = await rule('LEX-03', build([], [{ ...c02('Birne', 'Birnen'), promptDe: 'Ein Brot? Nein, drei ___, bitte. (das Brot)', answer: 'Brote', accepted: ['Brote'] }]));
+    assert.ok(!ok.findings.some((f) => /bracketed lemma/.test(f.message)), messages(ok));
+  });
+});
+
+describe('GRM-04 / detectors at a1.1-u04 (r4 F08 / r5 F05) and the genitive on instruction surfaces', () => {
+  const build = (unitId, unitExtra = {}, cards = null) => {
+    const ctx = emptyContext({ root: null, today: '2026-09-27' });
+    ingest(ctx, REAL_SPINE, 'registries/grammar-spine.json');
+    addDetectors(ctx, REAL_DETECTORS, 'registries/detectors.json');
+    ingest(ctx, { $schema: 'course-v2/lexicon@1', level: 'a1.1', entries: A11_LEX }, 'fixture:a1.1/lexicon.json');
+    if (cards) ingest(ctx, { $schema: 'course-v2/rulecards@1', level: 'a1.1', cards }, 'fixture:a1.1/rule-cards.json');
+    const [level, nr] = [unitId.slice(0, 4), Number(unitId.slice(-2))];
+    const doc = addDoc(ctx, 'unit', { $schema: 'course-v2/unit@1', id: unitId, level, nr, stage: 'S', spec: { grammar: { new: [], chunk: [], review: [] } }, ...unitExtra }, `fixture:${level}/units/u${String(nr).padStart(2, '0')}.json`, { target: true });
+    return { ctx, docs: [doc], levels: [ctx.levels.get(level)] };
+  };
+  const input = (...de) => ({ steps: [{ id: 'a1.1-u04-ls2', kind: 'situation', input: { kind: 'dialog', lines: de.map((x, i) => ({ id: `a1.1-u04-ls2-l${String(i + 1).padStart(2, '0')}`, speaker: 'cast.arjun', de: x })) } }] });
+  test('no advisory: „Dann möchten wir zwei Kilo Kartoffeln.", „Wie viele möchten Sie?", „Was macht das zusammen?", „Das macht zusammen 7,80 Euro."', async () => {
+    const r = await rule('GRM-04', build('a1.1-u04', input('Dann möchten wir zwei Kilo Kartoffeln.', 'Wie viele möchten Sie?', 'Was macht das zusammen?', 'Das macht zusammen 7,80 Euro.', 'Das macht zusammen 7 Euro.')));
+    assert.equal(r.findings.length, 0, messages(r));
+    assert.ok(hits('det.trennbare-verben', 'Ich stehe um sechs Uhr auf, dann kaufe ich ein.'), 'the separable-verb detector still hits a real clamp');
+  });
+  test('a construction licensed as a chunk at the position is not reported: „Lesen Sie zuerst die Frage." (chunkFrom a1.1-u01)', async () => {
+    const r = await rule('GRM-04', build('a1.1-u04', { steps: [{ id: 'a1.1-u04-ls4', kind: 'pruefung', strategyCards: [{ template: 'sd1.h1', de: 'Lesen Sie zuerst die Frage.', en: 'Read the question first.' }] }] }));
+    assert.equal(r.findings.length, 0, messages(r));
+    assert.ok(r.notes.some((x) => /licensed as a chunk/.test(x)), r.notes.join('\n'));
+  });
+  test('one instruction scope: the same sentence gets the same verdict in strategyCards, instructionsDe, situationDe and title.canDo', async () => {
+    const line = 'Sie hören sechs Gespräche, bei gutem Wetter.';
+    const r = await rule('GRM-04', build('a1.1-u04', {
+      title: { de: 'Was kostet das?', canDo: line },
+      steps: [
+        { id: 'a1.1-u04-ls4', kind: 'pruefung', strategyCards: [{ template: 'sd1.h1', de: line, en: '…' }], blocks: [{ id: 'a1.1-u04-ls4-sd1-h1', template: 'sd1.h1', instructionsDe: line, textRefs: [], items: [] }] },
+        { id: 'a1.1-u04-ls5', kind: 'sprechen', task: { bankKey: 'a11-u04-s', parts: [{ template: 'sd1.sp3', mode: 'cards-request', situationDe: line, instructionsDe: 'Bitten Sie um etwas.' }] } },
+      ],
+    }));
+    assertPass(r);
+    const paths = r.findings.filter((f) => f.id === 'det.adjektiv-endung-nullartikel').map((f) => f.path).sort();
+    assert.deepEqual(paths, ['steps[0].blocks[0].instructionsDe', 'steps[0].strategyCards[0].de', 'steps[1].task.parts[0].situationDe', 'title.canDo']);
+    assert.ok(r.findings.every((f) => f.severity === 'advisory'));
+  });
+  test('the genitive on a German-only speaking instruction („die Frage der Partnerin", u05/u07/u08/u09) is reported; „von Nora" is not', async () => {
+    const task = (situationDe) => ({ steps: [{ id: 'a1.1-u05-ls5', kind: 'sprechen', task: { bankKey: 'a11-u05-s', parts: [{ template: 'sd1.sp2', mode: 'cards-ask', situationDe, instructionsDe: 'Fragen Sie.' }] } }] });
+    const r = await rule('GRM-04', build('a1.1-u05', task('Antworten Sie auf die Frage der Partnerin: Was ist das?')));
+    assert.ok(r.findings.some((f) => f.id === 'det.genitiv-feminin-attribut' && f.severity === 'advisory' && /situationDe/.test(f.path) && /b1\.1-u11/.test(f.message)), messages(r));
+    const ok = await rule('GRM-04', build('a1.1-u05', task('Antworten Sie auf die Frage von Nora: Was ist das?')));
+    assert.ok(!ok.findings.some((f) => f.id === 'det.genitiv-feminin-attribut'), messages(ok));
+  });
+  test('det.moechte-infinitiv reads rule-card prose at the card\'s first use: the old rc.moechte at a1.1-u04 (advisory), the new one clean', async () => {
+    const card = (de) => [{ id: 'rc.moechte', spine: 'g.moechte', depth: 1, modelSentence: 'Ich möchte ein Kilo Tomaten, bitte.', de, en: 'möchte is polite.', table: [['ich', 'möchte']], caseMarks: [] }];
+    const unit = { steps: [{ id: 'a1.1-u04-ls2', kind: 'situation', ruleCard: 'rc.moechte' }] };
+    const old = await rule('GRM-04', build('a1.1-u04', unit, card('möchte ist höflich. Mit einem zweiten Verb steht der Infinitiv am Ende: Ich möchte bezahlen.')), { mode: 'level' });
+    assert.ok(old.findings.some((f) => f.id === 'det.moechte-infinitiv' && f.path === 'cards[0].de' && f.severity === 'advisory' && /rule-card prose uses „möchte bezahlen\./.test(f.message)), messages(old));
+    const now = await rule('GRM-04', build('a1.1-u04', unit, card('möchte ist höflich. Was möchten Sie? – Ich möchte ein Kilo Äpfel, bitte.')), { mode: 'level' });
+    assert.ok(!now.findings.some((f) => f.id === 'det.moechte-infinitiv'), messages(now));
+  });
+  test('the D21 Redemittel whitelist of the spine (docs/course-v2/registries-notes/spine.md): „Wie schreibt man das?" at a1.1-u02', async () => {
+    assert.equal(hits('det.man', 'Wie schreibt man das?'), 0);
+    assert.ok(hits('det.man', 'Man darf hier nicht parken.'));
+    assert.equal(hits('det.akkusativ-pronomen-ihn', 'Der Pullover ist schön. Ich nehme ihn.'), 0);
+    assert.equal(hits('det.dativ-pronomen', 'Tut mir leid, ich muss arbeiten.'), 0);
+    const r = await rule('GRM-04', build('a1.1-u02', { steps: [{ id: 'a1.1-u02-ls1', kind: 'situation', input: { kind: 'dialog', lines: [{ id: 'a1.1-u02-ls1-l01', speaker: 'cast.priya', de: 'Wie schreibt man das?' }] } }] }));
+    assert.equal(r.findings.length, 0, messages(r));
+  });
+  test('engine: a decimal comma is no clause boundary; a known be-/ver- infinitive closes the bracket; notFinal words never do', () => {
+    const lex = [{ lemma: 'bezahlen', pos: 'VERB', verb_forms: { '3sg': 'bezahlt', perfekt: 'hat bezahlt' } }];
+    assert.equal(hits('det.trennbare-verben', 'Er zahlt zusammen 7,80 Euro.'), 0, '„zusammen 7" was cut into a clause of its own');
+    assert.ok(hits('det.moechte-infinitiv', 'Ich möchte jetzt bezahlen.', lex));
+    assert.equal(hits('det.moechte-infinitiv', 'Ich möchte einen.', lex), 0);
+    assert.equal(hits('det.moechte-infinitiv', 'Ich möchte einen Apfel.', lex), 0);
+  });
+});
+
+describe('GRM-05 a card shows the chunk its first unit declares (a1.1-u04 r5 F04)', () => {
+  const spine = [
+    { id: 'g.artikel-genus-plural', label: 'Artikel und Genus (der, das, die; ein, eine)', intro: { receptive: 'a1.1-u04', productive: 'a1.1-u04' }, detectors: [], errorTags: [], lehrwerk: [], consensus: 'strong', ruleCards: ['rc.artikel-genus-plural'], inventory: [] },
+    { id: 'g.moechte', label: 'möchte: ich möchte, Sie möchten (Ich möchte ein Brot.)', intro: { receptive: 'a1.1-u04', productive: 'a1.1-u04' }, detectors: [], errorTags: [], lehrwerk: [], consensus: 'strong', ruleCards: ['rc.moechte'], inventory: [] },
+    { id: 'g.akkusativ', label: 'Akkusativ: den, einen, keinen (Ich brauche einen Laptop.)', intro: { receptive: 'a1.1-u06', productive: 'a1.1-u06' }, chunkFrom: 'a1.1-u04', contrast: 'g.artikel-genus-plural', detectors: [], errorTags: [], lehrwerk: [], consensus: 'strong', ruleCards: ['rc.akkusativ'], inventory: [] },
+  ];
+  const card = (id, pt, de, table = [['Artikel', 'maskulin'], ['unbestimmt', 'ein Apfel']]) => ({ id, spine: pt, depth: 1, modelSentence: 'Der Apfel kostet 50 Cent.', de, en: 'English twin.', table, caseMarks: [] });
+  const OLD = 'Jedes Nomen hat ein Genus: der, das oder die. Unbestimmt heißt es ein (der, das) und eine (die). Im Plural ist der Artikel immer die.';
+  const NEW = 'Jedes Nomen hat ein Genus: der, das oder die. Unbestimmt (Nominativ): ein (der, das), eine (die). Achtung: Ich möchte einen Apfel. (der → den, ein → einen: Einheit 6)';
+  const build = (artikelDe, chunk = ['g.akkusativ']) => {
+    const b = lexCtx({ spine, cards: { 'a1.1': [card('rc.artikel-genus-plural', 'g.artikel-genus-plural', artikelDe), card('rc.moechte', 'g.moechte', 'möchte ist höflich: Ich möchte ein Kilo Äpfel.', [['ich', 'möchte']])] }, unit: u04({ spec: { grammar: { new: ['g.artikel-genus-plural', 'g.moechte'], chunk, review: [] } }, steps: [{ id: 'a1.1-u04-ls1', kind: 'situation', ruleCard: 'rc.artikel-genus-plural' }, { id: 'a1.1-u04-ls2', kind: 'situation', ruleCard: 'rc.moechte' }] }) });
+    return b;
+  };
+  test('fail: rc.artikel-genus-plural as r2–r5 read it (no „den/einen/keinen" at a1.1-u04, whose chunk is g.akkusativ)', async () => {
+    assertFail(await rule('GRM-05', build(OLD), { mode: 'level' }), /rc\.artikel-genus-plural is first used at a1\.1-u04, which declares the chunk g\.akkusativ.*„einen"/);
+  });
+  test('pass: the card with its „Achtung: Ich möchte einen Apfel." line; rc.moechte (not the chunk\'s contrast) owes nothing', async () => {
+    const r = await rule('GRM-05', build(NEW), { mode: 'level' });
+    assertPass(r);
+    assert.ok(!r.findings.some((f) => f.id === 'rc.moechte'), messages(r));
+  });
+  test('no chunk in the first unit, no rule; the label forms', async () => {
+    assertPass(await rule('GRM-05', build(OLD, []), { mode: 'level' }));
+    assert.deepEqual([...chunkLabelForms(spine[2])], ['den', 'einen', 'keinen']);
+    assert.deepEqual([...chunkLabelForms({ label: 'müssen und dürfen; man (Man darf hier nicht parken.)' })], ['müssen', 'dürfen', 'man']);
+    assert.deepEqual([...chunkLabelForms({ label: 'seit und vor + Dativ (seit einem Jahr)' })], ['seit', 'vor']);
   });
 });

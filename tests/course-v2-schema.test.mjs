@@ -203,6 +203,21 @@ test('the notation accepts what it should: optional reviewerConfirmed, a percept
   assert.equal(errorsOf(v).filter((e) => e.path === '$.steps').length, 0);
 });
 
+test('start.folge.glosses is optional, written by S, at most three, each { token, gloss: EnText } (a1.1-u04 r5 F03)', () => {
+  const u = unit();
+  assert.deepEqual(errorsOf(u), [], 'the §15 Folge carries none');
+  u.start.folge.glosses = [{ token: 'Mailbox', gloss: { en: 'voicemail' } }];
+  assert.deepEqual(errorsOf(u), []);
+  assert.deepEqual(checkDocument(stripToStage(u, 'S'), { kind: 'unit', index: INDEX }), [], 'present from stage S');
+  assert.deepEqual(stripToStage(u, 'S').start.folge.glosses, u.start.folge.glosses, 'stripping to S keeps it');
+  const four = unit();
+  four.start.folge.glosses = ['a', 'b', 'c', 'd'].map((token) => ({ token, gloss: { en: token } }));
+  assert.ok(errorsOf(four).some((e) => e.path === '$.start.folge.glosses' && /expected 0\.\.3 items/.test(e.message)), errorsOf(four).map((e) => `${e.path} ${e.message}`).join('\n'));
+  const bad = unit();
+  bad.start.folge.glosses = [{ token: 'Mailbox', gloss: 'voicemail' }];
+  assert.ok(errorsOf(bad).some((e) => /^\$\.start\.folge\.glosses\[0\]\.gloss/.test(e.path)), errorsOf(bad).map((e) => `${e.path} ${e.message}`).join('\n'));
+});
+
 test('a spec-stage unit is the curriculum agent\'s file; everything after spec is absent there', () => {
   const spec = stripToStage(unit(), 'spec');
   spec.status = 'draft';

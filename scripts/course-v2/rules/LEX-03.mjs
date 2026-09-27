@@ -40,9 +40,10 @@ export const type = 'hard';
 export const scope = 'unit';
 export const stage = 'I';
 
-/** Generator sources as production (a2.1-u04 r2 F09). */
+/** Generator sources as production (a2.1-u04 r2 F09). Returns the findings; `out.checked` counts what was read. */
 function generatorFindings(ctx, doc) {
   const out = [];
+  out.checked = 0;
   const lex = cumulativeLexicon(ctx, doc.level);
   const byId = new Map(lex.map((e) => [e?.id, e]));
   const promoted = new Set();
@@ -87,6 +88,7 @@ function generatorFindings(ctx, doc) {
       if (!g || !Array.isArray(g.source)) return;
       const gp = `${path}.pool.generators[${gi}]`;
       if (g.generator === 'lex.articlePlural' || g.generator === 'lex.glossTyped') {
+        out.checked += g.source.length;
         g.source.forEach((id, k) => {
           const e = byId.get(id);
           if (e && e.role !== 'productive' && !promoted.has(id) && !CORE.has(String(e.lemma).toLowerCase())) {
@@ -143,7 +145,11 @@ export function run({ ctx, docs }) {
         unknown.forEach((u) => pending.forms.add(u));
       }
     }
-    if (doc.kind === 'unit') findings.push(...generatorFindings(ctx, doc));
+    if (doc.kind === 'unit') {
+      const gen = generatorFindings(ctx, doc);
+      n += gen.checked;
+      findings.push(...gen);
+    }
     // before the cumulative lexicon exists the measurement is one advisory per document
     if (pending.surfaces) findings.push(finding('advisory', doc, null, `${pending.surfaces} production surface(s) use forms not in the lexicon so far: ${list([...pending.forms], 25)} — advisory until the cumulative lexicon exists (${state.why})`, doc.data?.id || null));
   }
