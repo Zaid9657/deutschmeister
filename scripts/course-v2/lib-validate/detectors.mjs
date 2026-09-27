@@ -45,6 +45,7 @@ export function buildLexEnv(entries = []) {
     verbStems: new Set(),
     weakNouns: new Set(),
     vowelChange: new Set(), // 2sg/3sg present forms whose stem vowel differs from the infinitive's
+    adjectives: new Set(), // ADJ lemmas: a participle with its own ADJ entry („beschädigt") is predicative after sein
   };
   for (const e of arr(entries)) {
     if (!e || typeof e !== 'object') continue;
@@ -81,6 +82,7 @@ export function buildLexEnv(entries = []) {
         env.reflexiveStems.set(s, e.reflexive);
       }
     }
+    if (e.pos === 'ADJ') env.adjectives.add(lemma);
     if (e.pos === 'NOUN' && e.article === 'der' && typeof e.plural === 'string') {
       const pl = lc(e.plural);
       if ((pl === `${lemma}n` || pl === `${lemma}en`) && /(?:e|ant|ent|ist|at|oge|graf|soph|nom)$/.test(lemma)) env.weakNouns.add(lemma);
@@ -423,6 +425,8 @@ function clauseImperative(det, sentence, env) {
   const first = toks[0];
   const second = toks[1];
   if (!first) return [];
+  // „300 Gramm, bitte." opens with a number, not a verb (review a1.1-u04 r2 F11)
+  if (!/^\p{L}/u.test(first.text)) return [];
   const w = first.lower;
   if (FUNCTION_WORDS.has(w) && !['sei', 'seid', 'hab', 'habt', 'werd'].includes(w)) return [];
   if (NOT_IMPERATIVE.has(w)) return [];
@@ -446,40 +450,76 @@ function clauseImperative(det, sentence, env) {
   return [{ index: first.index, match: first.text, fallback: !known }];
 }
 
+/**
+ * Participles that, after a form of sein, are lexicalised state adjectives and never a Perfekt or a
+ * Zustandspassiv: „im Preis enthalten", „das Amt ist geöffnet/geschlossen", „bin verheiratet",
+ * „sind verletzt", „ist gebrochen" (orchestrator 2026-09-27; reviews a1.2-u04 r1 F27, a2.2-u04
+ * r2 F16 / r3 F11). Small and closed on purpose — a participle with its own ADJ lexicon entry
+ * („beschädigt", review b1.1-u04 r1 F17) is exempt through the lexicon instead.
+ */
+export const LEXICALISED_STATES = Object.freeze(['enthalten', 'geöffnet', 'geschlossen', 'verheiratet', 'geschieden', 'verletzt', 'gebrochen']);
+const LEXICALISED_STATE_SET = new Set(LEXICALISED_STATES);
+const SEIN_FORMS_RE = /^(?:bin|bist|ist|sind|seid|war|warst|waren|wart|wäre|wärst|wären|wärt)$/;
+const COORDINATORS = new Set(['und', 'oder', 'aber', 'sondern']);
+
+/**
+ * A clause's tokens cut at a coordinator that opens a conjunct with its own finite auxiliary
+ * („Sie ist ausgerutscht | und hat sich am Fuß verletzt"): each conjunct pairs its own auxiliary
+ * with its own participle (review a2.2-u04 r2 F16). „Ich habe Brot und Käse gekauft" stays whole.
+ */
+function conjuncts(toks) {
+  const out = [];
+  let from = 0;
+  for (let i = 1; i < toks.length; i += 1) {
+    if (!COORDINATORS.has(toks[i].lower)) continue;
+    if (!toks.slice(i + 1).some((t) => AUX_MODAL_FORMS.has(t.lower))) continue;
+    out.push(toks.slice(from, i));
+    from = i + 1;
+  }
+  out.push(toks.slice(from));
+  return out.filter((x) => x.length);
+}
+
 /** Aux + participle in one clause (Perfekt, Plusquamperfekt, KII Vergangenheit, Zustandspassiv). */
 function lexParticipleAux(det, sentence, env) {
   const spec = det.spec || {};
   const auxForms = new Set(arr(spec.auxForms).map(lc));
   const hits = [];
   for (const c of clauseSpans(sentence)) {
-    const toks = tokens(c.text).filter((t) => !/^\d/.test(t.text));
-    const words = toks.map((t) => t.lower);
-    const auxIdx = words.findIndex((w) => auxForms.has(w));
-    if (auxIdx < 0) continue;
-    for (let i = 0; i < toks.length; i += 1) {
-      if (i === auxIdx) continue;
-      const w = words[i];
-      if (/^[A-ZÄÖÜ]/.test(toks[i].text) && i > 0) continue;
-      const known = env.participles.get(w);
-      const shape = PARTICIPLE_SHAPE.test(w) && !env.infinitives.has(w);
-      if (!known && !shape) continue;
-      // the participle closes the clause (only auxiliaries/infinitives may follow it)
-      if (!words.slice(i + 1).every((x) => TRAILING_OK.has(x))) continue;
-      if (words[i - 1] === 'zu') continue; // „… etwas zu erzählen": a zu-infinitive, not a participle
-      if (spec.requireKnown && !known) continue;
-      // which auxiliary the participle's verb takes: 'hat' or 'ist'
-      let want = null;
-      if (spec.participleAux === 'haben') want = 'hat';
-      else if (spec.participleAux === 'sein') want = 'ist';
-      else if (spec.participleAux === 'match-aux') want = /^(?:hat|hät|hab)/.test(words[auxIdx]) ? 'hat' : 'ist';
-      if (want && known && known.aux !== want) continue;
-      // without a lexicon a sein-reading cannot be told from an adjective („ist geschlossen", „bin verheiratet")
-      const auxIsSein = /^(?:bin|bist|ist|sind|seid|war|warst|waren|wart|wäre|wärst|wären|wärt)$/.test(words[auxIdx]);
-      if ((want === 'ist' || auxIsSein) && !known && !spec.guessSein) continue;
-      if (spec.shape === 'trennbar-untrennbar' && !/^(?:[a-zäöüß]+ge[a-zäöüß]+(?:t|en)|(?:be|ver|er|ent|zer|emp|miss|über|unter|hinter)[a-zäöüß]+(?:t|en)|[a-zäöüß]+iert)$/.test(w)) continue;
-      if (spec.shape === 'trennbar-untrennbar' && /^ge/.test(w) && !/iert$/.test(w)) continue;
-      hits.push({ index: c.start + toks[auxIdx].index, match: `${toks[auxIdx].text} … ${toks[i].text}`, fallback: !known });
-      break;
+    for (const toks of conjuncts(tokens(c.text).filter((t) => !/^\d/.test(t.text)))) {
+      const words = toks.map((t) => t.lower);
+      const auxIdx = words.findIndex((w) => auxForms.has(w));
+      if (auxIdx < 0) continue;
+      for (let i = 0; i < toks.length; i += 1) {
+        if (i === auxIdx) continue;
+        const w = words[i];
+        if (/^\p{Lu}/u.test(toks[i].text) && i > 0) continue;
+        const known = env.participles.get(w);
+        const shape = PARTICIPLE_SHAPE.test(w) && !env.infinitives.has(w);
+        if (!known && !shape) continue;
+        // the participle closes the clause (only auxiliaries/infinitives may follow it)
+        if (!words.slice(i + 1).every((x) => TRAILING_OK.has(x))) continue;
+        if (words[i - 1] === 'zu') continue; // „… etwas zu erzählen": a zu-infinitive, not a participle
+        if (spec.requireKnown && !known) continue;
+        const auxIsSein = SEIN_FORMS_RE.test(words[auxIdx]);
+        // sein + a lexicalised state or an adjective of the lexicon is a predicative adjective
+        if (auxIsSein && (LEXICALISED_STATE_SET.has(w) || env.adjectives.has(w))) continue;
+        // which auxiliary the participle's verb takes: 'hat' or 'ist'
+        let want = null;
+        if (spec.participleAux === 'haben') want = 'hat';
+        else if (spec.participleAux === 'sein') want = 'ist';
+        else if (spec.participleAux === 'match-aux') want = /^(?:hat|hät|hab)/.test(words[auxIdx]) ? 'hat' : 'ist';
+        // 'any' is a Perfekt with either auxiliary — but with ITS auxiliary: „ist … enthalten"
+        // (hat enthalten) is no Perfekt (the exact det.perfekt-trennbar-untrennbar blocked it)
+        else if (spec.participleAux === 'any' && known) want = auxIsSein ? 'ist' : 'hat';
+        if (want && known && known.aux !== want) continue;
+        // without a lexicon a sein-reading cannot be told from an adjective („ist geschlossen", „bin verheiratet")
+        if ((want === 'ist' || auxIsSein) && !known && !spec.guessSein) continue;
+        if (spec.shape === 'trennbar-untrennbar' && !/^(?:[a-zäöüß]+ge[a-zäöüß]+(?:t|en)|(?:be|ver|er|ent|zer|emp|miss|über|unter|hinter)[a-zäöüß]+(?:t|en)|[a-zäöüß]+iert)$/.test(w)) continue;
+        if (spec.shape === 'trennbar-untrennbar' && /^ge/.test(w) && !/iert$/.test(w)) continue;
+        hits.push({ index: c.start + toks[auxIdx].index, match: `${toks[auxIdx].text} … ${toks[i].text}`, fallback: !known });
+        break;
+      }
     }
   }
   return hits;
@@ -692,9 +732,47 @@ export function detectorProblem(det) {
   }
 }
 
+/**
+ * Spec additions the rails apply to registry detectors until `detectors.json` carries them
+ * (review-driven, 2026-09-27; each entry names its finding). Arrays are appended to the registry's,
+ * scalars fill only an unset field. The registry owner folds an entry into detectors.json and deletes
+ * it here; tests pin every entry's hit/miss sentences.
+ */
+export const DETECTOR_OVERLAYS = Object.freeze({
+  // „Am Samstag arbeite ich." / „Den Bus brauche ich." / „Probleme habe ich" are 1sg indicative
+  // (a2.1-u04 r1/r2 F11, a2.2-u04 r1 F09, b1.1-u04 r1 F17, b1.2-u04 r1 F26)
+  'det.konjunktiv1': { notFollowedBy: ['ich'] },
+  // „noch mal" (= again) and „mal wieder" are no modal particles (b1.1-u04 r1 F17)
+  'det.modalpartikeln': { notPrecededBy: ['noch'], notFollowedBy: ['wieder'] },
+  // a determiner or possessive after the preposition is no adjective: „für eine Wanderung",
+  // „auf unser Boot" (a1.1-u04 r2 F11, a2.2-u04 r2 F16 / r3 F11)
+  'det.adjektiv-endung-nullartikel': { skipWords: ['eine', 'keine', 'unser', 'euer', 'jede', 'diese', 'jene', 'welche', 'manche', 'solche', 'dieser', 'jener', 'solcher', 'mancher', 'welcher'] },
+  // „ein bisschen" is a quantifier, not article + adjective (a1.1-u04 r1 F24)
+  'det.adjektiv-endung-unbestimmt': { skipWords: ['bisschen'] },
+  'det.unbestimmter-artikel': { skipAlso: '^(?:ein|eine)\\s+(?:bisschen|paar|wenig)\\b' },
+});
+
+const overlaid = new WeakMap();
+
+/** The detector with its DETECTOR_OVERLAYS entry applied (the registry object is never changed). */
+export function withOverlay(det) {
+  const extra = det && DETECTOR_OVERLAYS[det.id];
+  if (!extra) return det;
+  if (overlaid.has(det)) return overlaid.get(det);
+  const spec = { ...(det.spec || {}) };
+  for (const [k, v] of Object.entries(extra)) {
+    if (Array.isArray(v)) spec[k] = [...arr(spec[k]), ...v];
+    else if (spec[k] === undefined) spec[k] = v;
+  }
+  const out = { ...det, spec };
+  overlaid.set(det, out);
+  return out;
+}
+
 /** Hits of one detector in one sentence: [{ detector, precision, index, match, fallback }]. */
-export function detectInSentence(det, sentence, env = EMPTY_ENV) {
-  if (detectorProblem(det)) return [];
+export function detectInSentence(registryDet, sentence, env = EMPTY_ENV) {
+  if (detectorProblem(registryDet)) return [];
+  const det = withOverlay(registryDet);
   const spec = det.spec || {};
   let raw;
   if (det.method === 'token') raw = runToken(det, sentence);
