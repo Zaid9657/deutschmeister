@@ -489,13 +489,17 @@
             "promptEn": "A word for proof of purchase (starts with B).",
             "answer": "Beleg",
             "accepted": [
-              "Beleg"
+              "Beleg",
+              "Beweis"
             ],
             "explanation": {
-              "de": "Ein Beleg zeigt: Sie haben die Ware gekauft.",
-              "en": "A Beleg proves that you bought the item."
+              "de": "Ein Beleg (auch: ein Beweis) zeigt: Sie haben die Ware gekauft.",
+              "en": "A Beleg (also: a Beweis) proves that you bought the item."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "acceptedWhy": {
+              "Beweis": "richtig: auch ein Beweis für den Kauf"
+            }
           },
           {
             "id": "b1.1-u04-ls1-p06",
@@ -911,7 +915,7 @@
             "id": "b1.1-u04-ls2-l03",
             "speaker": "cast.ensemble-b1-4",
             "de": "Kundendienst, guten Tag. Wie kann ich Ihnen weiterhelfen?",
-            "en": "Customer service, good afternoon. How can I help you?"
+            "en": "Customer service, hello. How can I help you?"
           },
           {
             "id": "b1.1-u04-ls2-l04",
@@ -965,8 +969,8 @@
           {
             "id": "b1.1-u04-ls2-l12",
             "speaker": "cast.priya",
-            "de": "Dann möchte ich lieber ein Ersatzgerät, denn wir brauchen den Staubsauger jeden Tag. Und bitte schicken Sie mir das auch schriftlich.",
-            "en": "Then I'd rather have a replacement, because we need the vacuum cleaner every day. And please send me that in writing too."
+            "de": "Dann möchte ich lieber ein Ersatzgerät, denn wir brauchen den Staubsauger jeden Tag.",
+            "en": "Then I'd rather have a replacement, because we need the vacuum cleaner every day."
           },
           {
             "id": "b1.1-u04-ls2-l13",
@@ -977,8 +981,14 @@
           {
             "id": "b1.1-u04-ls2-l14",
             "speaker": "cast.priya",
-            "de": "Gut, vielen Dank. Sie haben mir sehr geholfen. Auf Wiederhören!",
-            "en": "Good, thank you very much. You've been a great help. Goodbye!"
+            "de": "Obwohl ich so lange warten musste, haben Sie mir sehr geholfen.",
+            "en": "Although I had to wait so long, you've been a great help."
+          },
+          {
+            "id": "b1.1-u04-ls2-l15",
+            "speaker": "cast.ensemble-b1-4",
+            "de": "Gern geschehen. Auf Wiederhören!",
+            "en": "You're welcome. Goodbye!"
           }
         ],
         "glosses": [
@@ -1144,7 +1154,7 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.obwohl",
-          "promptDe": "„Obwohl ich zweimal angerufen habe, hat niemand abgenommen.“ Was hat die Frau erwartet?",
+          "promptDe": "„Obwohl ich zweimal angerufen habe, hat niemand abgenommen.“ Was hat die Person erwartet?",
           "promptEn": "What did the person expect?",
           "options": [
             "dass jemand ans Telefon geht",
@@ -1193,7 +1203,7 @@
           "options": [
             "den Grund für den Anruf",
             "etwas Überraschendes",
-            "die Zeit von dem Anruf"
+            "wann Priya anruft"
           ],
           "answer": "den Grund für den Anruf",
           "accepted": [
@@ -1479,8 +1489,7 @@
             "generator": "dictation.fromInput",
             "count": 2,
             "source": [
-              "b1.1-u04-ls2-l06",
-              "b1.1-u04-ls2-l08",
+              "b1.1-u04-ls2-l14",
               "b1.1-u04-ls2-l12"
             ]
           },
@@ -1752,20 +1761,24 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.obwohl",
-            "promptDe": "Ich möchte lieber mein Geld zurück, obwohl der Händler mir ein neues Gerät ___. (schicken)",
+            "promptDe": "Ich möchte lieber mein Geld zurück, obwohl der Händler mir ein neues Gerät ___. (anbieten)",
             "promptEn": "Verb form at the end.",
-            "answer": "schickt",
+            "answer": "anbietet",
             "accepted": [
-              "schickt"
+              "anbietet",
+              "angeboten hat"
             ],
             "explanation": {
-              "de": "Im Nebensatz mit obwohl steht das Verb am Ende: …, obwohl der Händler mir ein neues Gerät schickt.",
-              "en": "In the obwohl clause the verb goes to the end."
+              "de": "Im Nebensatz mit obwohl steht das Verb am Ende, und anbieten bleibt zusammen: …, obwohl der Händler mir ein neues Gerät anbietet.",
+              "en": "In the obwohl clause the verb goes to the end, and anbieten stays in one piece: … anbietet."
             },
             "errorTags": [
               "verb-final"
             ],
-            "origin": "agent"
+            "origin": "agent",
+            "acceptedWhy": {
+              "angeboten hat": "richtig: auch im Perfekt möglich, hat steht dann am Ende"
+            }
           },
           {
             "id": "b1.1-u04-ls3-p02",
@@ -2225,7 +2238,7 @@
           "id": "b1.1-u04-ls4-t1",
           "kind": "text",
           "title": "E-Mail von Priya an Olena",
-          "text": "Liebe Olena,\ndanke für deine lange E-Mail! Bei uns ist zurzeit viel los. Stell dir vor: Letzte Woche haben Arjun und ich online einen Staubsauger bestellt. Er war nicht billig, ⟦01⟧ wir wollten ein gutes Gerät. Aber schon nach zwei Tagen hat er nicht mehr richtig funktioniert, ⟦02⟧ ich den Akku jeden Abend aufgeladen habe. Ich habe dem Onlineshop sofort geschrieben. ⟦03⟧ hat niemand geantwortet! So eine Frechheit! Ich war sehr verärgert. Gestern habe ich dann bei ⟦04⟧ Hotline angerufen. Ich musste zwanzig Minuten warten, aber der Mitarbeiter, mit ⟦05⟧ ich gesprochen habe, war sehr nett. Er hat gesagt, dass wir Anspruch auf ein neues Gerät haben. Das alte Gerät schicke ich ⟦06⟧ Montag zurück. Ich weiß noch nicht, ⟦07⟧ das Ersatzgerät besser ist. Hoffentlich funktioniert der ⟦08⟧ Staubsauger länger! Und wie geht es dir? Kommst du bald wieder nach Leipzig?\nLiebe Grüße\nPriya",
+          "text": "Liebe Olena,\ndanke für deine lange E-Mail! Bei uns ist zurzeit viel los. Stell dir vor: Letzte Woche haben Arjun und ich online einen Staubsauger bestellt. Er war nicht billig, ⟦01⟧ wir wollten ein gutes Gerät. Aber schon nach zwei Tagen hat er nicht mehr richtig funktioniert, ⟦02⟧ ich den Akku jeden Abend aufgeladen habe. Ich habe dem Onlineshop sofort geschrieben. ⟦03⟧ hat niemand geantwortet! So eine Frechheit! Ich war sehr verärgert. Gestern habe ich dann bei ⟦04⟧ Hotline angerufen. Ich musste zwanzig Minuten warten, aber der Mitarbeiter, mit ⟦05⟧ ich gesprochen habe, war sehr nett. Er hat gesagt, dass wir Anspruch auf ein neues Gerät haben. Das alte Gerät schicke ich am Montag zurück. Jetzt warte ich ⟦06⟧ das Ersatzgerät. Ich weiß noch nicht, ⟦07⟧ es besser ist. Hoffentlich funktioniert der ⟦08⟧ Staubsauger länger! Und wie geht es dir? Kommst du bald wieder nach Leipzig?\nLiebe Grüße\nPriya",
           "glosses": []
         },
         {
@@ -2429,21 +2442,21 @@
               "id": "b1.1-u04-ls4-tb1-sb1-06",
               "type": "cloze",
               "role": "exam",
-              "topic": "g.zeitangaben-inversion",
+              "topic": "g.verben-praeposition",
               "promptDe": "Lücke 6: Welches Wort passt?",
               "options": [
-                "im",
-                "am",
-                "um"
+                "für",
+                "auf",
+                "an"
               ],
               "textRef": "b1.1-u04-ls4-t1",
-              "answer": "am",
+              "answer": "auf",
               "accepted": [
-                "am"
+                "auf"
               ],
               "explanation": {
-                "de": "Bei Wochentagen sagt man am: am Montag.",
-                "en": "With days of the week: am Montag."
+                "de": "warten auf + Akkusativ: Ich warte auf das Ersatzgerät.",
+                "en": "warten takes auf + accusative: Ich warte auf das Ersatzgerät."
               },
               "origin": "agent"
             },
@@ -2641,13 +2654,12 @@
         "profile": "tb1-m2",
         "prepMinutes": 8,
         "instructionsDe": "Geben Sie die Meinung auf Ihrem Blatt wieder. Sagen Sie dann, was Sie selbst denken.",
-        "situationDe": "Mündlicher Ausdruck Teil 2 im Lernmodus. Thema: „Online einkaufen oder lieber im Geschäft?“ Sie und Ihre Partnerin haben je ein Blatt mit einer Meinung. Zuerst geben Sie beide die Meinung auf Ihrem Blatt wieder, dann diskutieren Sie und erzählen von eigenen Erfahrungen. In der Prüfung haben Sie 20 Minuten Vorbereitung für alle drei Teile, hier 8 Minuten für diesen Teil. Danach folgt eine Planungsrunde mit eigener Zeit (4 Minuten): Sie beide haben zusammen eine Lampe als Geschenk online bestellt, und sie ist kaputt angekommen. Planen Sie, wer beim Shop anruft und wer was macht. Dann spielt Ihre Partnerin den Kundenservice. Rufen Sie an und sagen Sie, was nicht funktioniert und was Sie schon versucht haben. Verlangen Sie dann eine neue Lampe, eine Reparatur oder Ihr Geld zurück.",
+        "situationDe": "Teil 2 – Thema: Online einkaufen oder lieber im Geschäft? Sie und Ihre Partnerin haben je ein Blatt mit einer Meinung. Berichten Sie zuerst beide, was auf Ihrem Blatt steht. Diskutieren Sie dann und erzählen Sie von eigenen Erfahrungen.\nDanach: Planungsrunde und Anruf beim Kundenservice. Ihre gemeinsam bestellte Geschenk-Lampe ist kaputt angekommen. Planen Sie zusammen: Wer ruft an, wer macht was? Dann ist Ihre Partnerin der Kundenservice. Sagen Sie, was nicht funktioniert und was Sie schon versucht haben. Verlangen Sie eine neue Lampe, eine Reparatur oder Ihr Geld zurück.",
         "stimulus": {
           "kind": "quotes",
-          "de": "Online einkaufen oder lieber im Geschäft?",
+          "de": "Thema: Online einkaufen oder lieber im Geschäft?\nIhr Blatt – Thomas, 34, Krankenpfleger:",
           "items": [
-            "Ihr Blatt – Thomas, 34, Krankenpfleger: „Ich kaufe fast alles online, denn ich arbeite im Schichtdienst und habe wenig Zeit. Im Internet vergleiche ich die Preise in Ruhe, und oft ist es günstiger. Wenn mir etwas nicht gefällt, schicke ich es einfach zurück. In der Stadt finde ich oft nicht, was ich suche.“",
-            "Blatt der Partnerin – Monika, 58, Bibliothekarin: „Ich kaufe lieber im Geschäft. Dort kann ich die Ware sehen und anfassen, und eine Verkäuferin berät mich. Wenn etwas kaputt ist, gehe ich einfach zurück in den Laden. Bei Onlineshops hängt man oft lange in der Warteschleife, und die vielen Pakete sind schlecht für die Umwelt.“"
+            "Ich kaufe fast alles online, denn ich arbeite im Schichtdienst und habe wenig Zeit. Im Internet vergleiche ich die Preise in Ruhe, und oft ist es günstiger. Wenn mir etwas nicht gefällt, schicke ich es einfach zurück. In der Stadt finde ich oft nicht, was ich suche."
           ]
         },
         "seconds": [
@@ -2668,7 +2680,7 @@
         },
         "aiRole": {
           "name": "Partnerin (KI)",
-          "personaDe": "Teilnehmerin in der Prüfung, Mitte vierzig; berichtet die Meinung von Monika, kauft selbst lieber im Geschäft, widerspricht höflich mit Gründen und lässt sich nur mit guten Argumenten überzeugen; in der Planungsrunde macht sie einen Gegenvorschlag (zuerst eine E-Mail schreiben); danach spielt sie den Kundenservice vom Shop (Sie): fragt nach der Bestellnummer und danach, was die Person schon versucht hat, und bietet erst nach einer klaren Forderung (neue Lampe, Reparatur oder Geld zurück) eine Lösung an",
+          "personaDe": "Teilnehmerin in der Prüfung, Mitte vierzig. Dein Blatt – Monika, 58, Bibliothekarin: Ich kaufe lieber im Geschäft. Dort kann ich die Ware sehen und anfassen, und eine Verkäuferin berät mich. Wenn etwas kaputt ist, gehe ich einfach zurück in den Laden. Bei Onlineshops hängt man oft lange in der Warteschleife, und die vielen Pakete sind schlecht für die Umwelt. Ablauf: Zuerst gibst du Monikas Meinung mit eigenen Worten wieder. Du kaufst selbst lieber im Geschäft, widersprichst höflich mit Gründen und lässt dich nur mit guten Argumenten überzeugen. Nach der Diskussion planst du mit deinem Gegenüber den Anruf beim Shop (eure gemeinsam bestellte Geschenk-Lampe ist kaputt angekommen) und machst einen Gegenvorschlag: zuerst eine E-Mail schreiben. Wenn ihr euch geeinigt habt, sagst du kurz: „Gut, dann los!“ Danach bist du der Kundenservice vom Shop (Sie) und meldest dich so: „Kundenservice, guten Tag!“ Dein Gegenüber ruft an, auch wenn ihr in der Planung etwas anderes verteilt habt. Du fragst nach der Bestellnummer und danach, was die Person schon versucht hat, und bietest erst nach einer klaren Forderung (neue Lampe, Reparatur oder Geld zurück) eine Lösung an.",
           "register": "Sie",
           "support": "examiner"
         },
@@ -2690,7 +2702,7 @@
           },
           {
             "speaker": "partner",
-            "de": "Auf meinem Zettel steht die Meinung von Monika. Sie ist 58. Sie kauft lieber im Laden, weil sie die Ware sehen möchte und dort Hilfe bekommt."
+            "de": "Auf meinem Zettel steht die Meinung von Monika. Sie ist 58 und arbeitet als Bibliothekarin. Sie kauft lieber im Laden, weil sie die Ware sehen möchte und dort Hilfe bekommt."
           },
           {
             "speaker": "learner",
@@ -2730,7 +2742,7 @@
           },
           {
             "speaker": "partner",
-            "de": "Gut, jetzt spiele ich den Kundenservice. Kundenservice, guten Tag! Wie kann ich Ihnen helfen?"
+            "de": "Gut, dann los! – Kundenservice, guten Tag! Wie kann ich Ihnen helfen?"
           },
           {
             "speaker": "learner",
@@ -2768,7 +2780,7 @@
         "address": "Sie",
         "title": "Eine Reklamation schreiben",
         "situationDe": "Sie haben bei einem Onlineshop einen Wasserkocher für 39 Euro bestellt (Bestellnummer 70412). Nach einer Woche funktioniert er nicht mehr richtig. Sie haben dem Shop kurz geschrieben. Jetzt bekommen Sie diese Antwort:\n\nBetreff: Ihre Nachricht zu Bestellung 70412\nSehr geehrte Kundin, sehr geehrter Kunde,\nvielen Dank für Ihre Nachricht. Es tut uns leid, dass Ihr Wasserkocher nicht richtig funktioniert. Wir möchten Ihnen gern helfen. Dafür brauchen wir aber noch ein paar Informationen. Bitte schreiben Sie uns: Wann haben Sie den Wasserkocher bestellt, und wann ist er angekommen? Was genau funktioniert nicht? Was haben Sie schon selbst versucht? Und was möchten Sie jetzt: eine Reparatur, einen neuen Wasserkocher oder Ihr Geld zurück?\nMit freundlichen Grüßen\nSabine Lange\nKundenservice von Hellwig Haushalt",
-        "taskDe": "Antworten Sie zu allen 4 Punkten. telc nennt keine Wortzahl; wir empfehlen 80–120 Wörter.",
+        "taskDe": "Schreiben Sie zu allen vier Punkten. Hier etwa 60–100 Wörter; telc nennt keine Wortzahl.",
         "leitpunkte": [
           {
             "id": "lp1",
@@ -2776,10 +2788,9 @@
             "cues": [
               "bestellt",
               "Bestellnummer",
-              "am",
               "angekommen",
-              "Paket",
-              "Wasserkocher"
+              "geliefert",
+              "Lieferung"
             ]
           },
           {
@@ -2800,10 +2811,9 @@
             "cues": [
               "versucht",
               "ausprobiert",
-              "obwohl",
-              "trotzdem",
-              "noch mal",
-              "geprüft"
+              "geprüft",
+              "noch einmal",
+              "Steckdose"
             ]
           },
           {
@@ -2812,11 +2822,11 @@
             "cues": [
               "erwarte",
               "verlange",
-              "neue",
               "Geld zurück",
               "Reparatur",
-              "bitte",
-              "Umtausch"
+              "neuen Wasserkocher",
+              "Umtausch",
+              "erstatten"
             ]
           }
         ],
@@ -2832,7 +2842,7 @@
         "checklist": [
           "Betreff",
           "Anrede: Sehr geehrte Frau Lange,",
-          "Einleitung: ein Satz zu Ihrer Nachricht",
+          "Einleitung: ein Satz zur Antwort vom Shop (Dank)",
           "Punkt 1: Was haben Sie wann bestellt?",
           "Punkt 2: Was funktioniert nicht?",
           "Punkt 3: Was haben Sie schon versucht?",
@@ -2842,7 +2852,7 @@
           "nicht jeden Satz mit Ich beginnen",
           "mindestens ein Satz mit obwohl oder trotzdem"
         ],
-        "modelText": "Betreff: Reklamation – Bestellnummer 70412\n\nSehr geehrte Frau Lange,\n\nvielen Dank für Ihre Antwort. Am 2. Oktober habe ich bei Ihnen einen Wasserkocher für 39 Euro bestellt, und zwei Tage später war das Paket da. Leider funktioniert er schon nach einer Woche nicht mehr richtig: Das Wasser wird nicht heiß, obwohl das Licht an ist.\n\nIch habe alles geprüft und den Wasserkocher an einer anderen Steckdose ausprobiert. Trotzdem ist das Problem nicht weg. Deshalb bitte ich Sie, mir einen neuen Wasserkocher zu schicken. Wenn das nicht geht, erstatten Sie mir bitte den Kaufpreis.\n\nMit freundlichen Grüßen\nPriya Nair"
+        "modelText": "Betreff: Reklamation – Bestellnummer 70412\n\nSehr geehrte Frau Lange,\n\nvielen Dank für Ihre Antwort. Am 2. Oktober habe ich bei Ihnen einen Wasserkocher für 39 Euro bestellt, und zwei Tage später war das Paket da. Leider funktioniert er schon nach einer Woche nicht mehr richtig: Das Wasser wird nicht heiß, obwohl das Licht an ist.\n\nIch habe alles geprüft und den Wasserkocher an einer anderen Steckdose ausprobiert. Trotzdem ist das Problem nicht weg. Deshalb bitte ich Sie, mir einen neuen Wasserkocher zu schicken. Wenn das nicht geht, erstatten Sie mir bitte den Kaufpreis.\n\nMit freundlichen Grüßen\n[Ihr Name]"
       }
     },
     {
@@ -2862,8 +2872,8 @@
       {
         "id": "b1.1-u04-ls8-l01",
         "speaker": "cast.priya",
-        "de": "Obwohl ich zwei E-Mails geschrieben habe, warte ich noch auf eine Antwort.",
-        "en": "Although I've written two emails, I'm still waiting for an answer."
+        "de": "Obwohl ich schon am Montag geschrieben habe, hat der Shop nicht geantwortet.",
+        "en": "Although I wrote on Monday already, the shop did not answer."
       }
     ],
     "items": [
@@ -2964,13 +2974,17 @@
         "promptEn": "Past participle.",
         "answer": "erstattet",
         "accepted": [
-          "erstattet"
+          "erstattet",
+          "zurückerstattet"
         ],
         "explanation": {
-          "de": "erstatten ist untrennbar: Das Partizip hat kein ge-: erstattet.",
-          "en": "erstatten has no ge- in the participle: erstattet."
+          "de": "erstatten ist untrennbar: Das Partizip hat kein ge-: erstattet. Auch zurückerstattet ist richtig.",
+          "en": "erstatten has no ge- in the participle: erstattet. zurückerstattet is correct too."
         },
-        "origin": "agent"
+        "origin": "agent",
+        "acceptedWhy": {
+          "zurückerstattet": "richtig: zurückerstatten hat auch kein ge-"
+        }
       },
       {
         "id": "b1.1-u04-c06",
@@ -2980,13 +2994,13 @@
         "promptDe": "Hören Sie und schreiben Sie den Satz.",
         "promptEn": "Listen and write the sentence.",
         "audioLineRef": "b1.1-u04-ls8-l01",
-        "answer": "Obwohl ich zwei E-Mails geschrieben habe, warte ich noch auf eine Antwort.",
+        "answer": "Obwohl ich schon am Montag geschrieben habe, hat der Shop nicht geantwortet.",
         "accepted": [
-          "Obwohl ich zwei E-Mails geschrieben habe, warte ich noch auf eine Antwort."
+          "Obwohl ich schon am Montag geschrieben habe, hat der Shop nicht geantwortet."
         ],
         "explanation": {
-          "de": "obwohl-Satz mit habe am Ende, dann sofort das Verb warte.",
-          "en": "obwohl clause with habe at the end, then the verb warte."
+          "de": "obwohl-Satz mit habe am Ende, dann sofort das Verb hat: hat der Shop nicht geantwortet.",
+          "en": "obwohl clause with habe at the end, then the verb hat straight away."
         },
         "origin": "agent"
       },
@@ -3064,8 +3078,8 @@
         "type": "multiple_choice",
         "role": "proof",
         "topic": "g.obwohl",
-        "promptDe": "„Ich habe die Anleitung genau gelesen. ___ ich alles richtig mache, geht das Gerät aus.“",
-        "promptEn": "From a letter: which word fits?",
+        "promptDe": "Aus einer Reklamation: „___ ich alles richtig mache, geht das Gerät immer wieder aus.“",
+        "promptEn": "From a complaint letter: which word fits?",
         "options": [
           "Weil",
           "Trotzdem",
@@ -3076,8 +3090,8 @@
           "Obwohl"
         ],
         "explanation": {
-          "de": "Man hat die Anleitung gelesen und erwartet: Das Gerät läuft. Es geht aber aus – ein Gegengrund, also Obwohl. Trotzdem passt nicht: „mache“ steht am Ende.",
-          "en": "You read the manual and expect the device to run, but it switches off – a reason against, so Obwohl. Trotzdem does not fit: the verb is at the end."
+          "de": "„Ich mache alles richtig“ ist der Gegengrund: Man erwartet dann, dass das Gerät läuft. obwohl steht beim Gegengrund, das Verb mache am Ende. Weil passt nicht zur Bedeutung. Trotzdem passt nicht, denn danach kommt sofort das Verb.",
+          "en": "„Ich mache alles richtig“ is the reason against: you would then expect the device to run. obwohl goes with the reason against, with the verb mache at the end. Weil does not fit the meaning; Trotzdem does not fit, because the verb must follow it directly."
         },
         "origin": "agent"
       }

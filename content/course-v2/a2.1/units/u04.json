@@ -487,7 +487,7 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.adj-dekl-unbestimmt",
-          "promptDe": "Welches Wort passt? „Priya kauft ein praktisches ___.“",
+          "promptDe": "Welches Wort passt? „Priya sieht ein praktisches ___.“",
           "promptEn": "Which noun fits the ending?",
           "options": [
             "Gerät",
@@ -633,22 +633,22 @@
             "promptEn": "Build the sentence.",
             "tiles": [
               "Priya",
-              "kauft",
+              "sucht",
               "heute",
               "ein neues Gerät"
             ],
-            "answer": "Priya kauft heute ein neues Gerät.",
+            "answer": "Priya sucht heute ein neues Gerät.",
             "accepted": [
-              "Priya kauft heute ein neues Gerät.",
-              "Heute kauft Priya ein neues Gerät.",
-              "Ein neues Gerät kauft Priya heute."
+              "Priya sucht heute ein neues Gerät.",
+              "Heute sucht Priya ein neues Gerät.",
+              "Ein neues Gerät sucht Priya heute."
             ],
             "acceptedWhy": {
-              "Ein neues Gerät kauft Priya heute.": "grammatisch: das Objekt steht betont vorne"
+              "Ein neues Gerät sucht Priya heute.": "grammatisch: das Objekt steht betont vorne"
             },
             "explanation": {
-              "de": "kauft steht auf Position 2. ein neues Gerät: Neutrum im Akkusativ.",
-              "en": "kauft stays in second position; ein neues Gerät is neuter accusative."
+              "de": "sucht steht auf Position 2. ein neues Gerät: Neutrum im Akkusativ.",
+              "en": "sucht stays in second position; ein neues Gerät is neuter accusative."
             },
             "origin": "agent"
           },
@@ -780,7 +780,7 @@
             "generator": "dictation.fromInput",
             "count": 2,
             "source": [
-              "a2.1-u04-ls1-l06",
+              "a2.1-u04-ls1-l08",
               "a2.1-u04-ls1-l10"
             ]
           },
@@ -985,9 +985,13 @@
         "contrastWith": "g.kein"
       },
       "input": {
-        "kind": "dialog",
+        "kind": "mixed",
         "title": "Kaufhaus oder Internet?",
-        "textType": "tt.dialog",
+        "textType": "tt.internetanzeige",
+        "text": {
+          "de": "Zwei Angebote im Internet\n\nAngebot 1: Kaffeemaschine, Modell aus der Schweiz\n79,00 Euro · Farbe: Weiß\nSehr leise, 2 Jahre Garantie\nVersand: 4,95 Euro · Lieferzeit: 3 Tage\nBewertungen: „Sehr gute Qualität, und sie ist leise!“\n\nAngebot 2: Kleine Kaffeemaschine\n55,00 Euro · Farbe: Schwarz oder Weiß\nKlein und praktisch, 1 Jahr Garantie\nVersand: kostenlos · Lieferzeit: 3 Tage\nBewertungen: „Guter Kaffee, aber sehr laut!“",
+          "en": "Two offers online. Offer 1: coffee machine, Swiss model, 79.00 euros, colour: white. Very quiet, 2-year guarantee. Shipping: 4.95 euros, delivery time: 3 days. Reviews: \"Very good quality, and it is quiet!\" Offer 2: small coffee machine, 55.00 euros, colour: black or white. Small and practical, 1-year guarantee. Shipping: free, delivery time: 3 days. Reviews: \"Good coffee, but very loud!\""
+        },
         "lines": [
           {
             "id": "a2.1-u04-ls2-l01",
@@ -1037,7 +1041,7 @@
           {
             "id": "a2.1-u04-ls2-l08",
             "speaker": "cast.arjun",
-            "de": "So laut am Morgen? Nein, danke! Welche ist am leisesten?",
+            "de": "So laut am Morgen? Nein, danke! Welches ist am leisesten?",
             "en": "That loud in the morning? No, thanks! Which one is the quietest?"
           },
           {
@@ -1114,24 +1118,6 @@
           "origin": "agent"
         },
         {
-          "id": "a2.1-u04-ls2-i03",
-          "type": "fill_blank",
-          "role": "detail",
-          "topic": "hoeren",
-          "promptDe": "Im Internet kostet das Modell aus der Schweiz ___ Euro.",
-          "promptEn": "Write the price.",
-          "answer": "79",
-          "accepted": [
-            "79"
-          ],
-          "exact": "number",
-          "explanation": {
-            "de": "Priya sagt: Das Modell aus der Schweiz gibt es online für 79 Euro.",
-            "en": "Priya says the Swiss model costs 79 euros online."
-          },
-          "origin": "agent"
-        },
-        {
           "id": "a2.1-u04-ls2-i04",
           "type": "fill_blank",
           "role": "detail",
@@ -1171,6 +1157,28 @@
           "explanation": {
             "de": "Arjun hat keinen. Anna hat einen – Priya soll sie fragen.",
             "en": "Arjun doesn't have one. Anna has one – Priya should ask her."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a2.1-u04-ls2-i06",
+          "type": "multiple_choice",
+          "role": "detail",
+          "topic": "lesen",
+          "promptDe": "Angebot 2: Wie lange hat die kleine Kaffeemaschine Garantie?",
+          "promptEn": "Offer 2: how long is the guarantee on the small coffee machine?",
+          "options": [
+            "ein Jahr",
+            "zwei Jahre",
+            "drei Jahre"
+          ],
+          "answer": "ein Jahr",
+          "accepted": [
+            "ein Jahr"
+          ],
+          "explanation": {
+            "de": "In Angebot 2 steht: 1 Jahr Garantie. Zwei Jahre Garantie hat das Modell aus der Schweiz.",
+            "en": "Offer 2 says a one-year guarantee; the two-year guarantee is the Swiss model’s."
           },
           "origin": "agent"
         }
@@ -1363,8 +1371,8 @@
               "Leider habe ich keinen."
             ],
             "explanation": {
-              "de": "habe steht auf Position 2. keinen steht am Ende.",
-              "en": "habe in second position; keinen at the end."
+              "de": "habe steht auf Position 2. keinen steht hier ohne Nomen: maskulin, Akkusativ.",
+              "en": "habe is in second position; keinen stands here without a noun: masculine accusative."
             },
             "origin": "agent"
           },
@@ -1384,13 +1392,20 @@
             "answer": "Wir haben zu Hause welche.",
             "accepted": [
               "Wir haben zu Hause welche.",
+              "Wir haben welche zu Hause.",
               "Zu Hause haben wir welche."
             ],
             "explanation": {
-              "de": "haben steht auf Position 2. welche steht am Ende.",
-              "en": "haben in second position; welche at the end."
+              "de": "haben steht auf Position 2. Das Pronomen welche (Plural) steht nie auf Position 1.",
+              "en": "haben is in second position. The plural pronoun welche never stands in position 1."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "acceptedWhy": {
+              "Wir haben welche zu Hause.": "grammatisch: das Pronomen welche kann vor der Ortsangabe stehen"
+            },
+            "reviewerConfirmed": [
+              "Wir haben welche zu Hause."
+            ]
           },
           {
             "id": "a2.1-u04-ls2-p07",
@@ -1508,7 +1523,7 @@
             "count": 2,
             "source": [
               "a2.1-u04-ls2-l04",
-              "a2.1-u04-ls2-l12"
+              "a2.1-u04-ls2-l02"
             ]
           },
           {
@@ -1912,7 +1927,7 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.adj-dekl-unbestimmt",
-          "promptDe": "Welches Wort passt? „Arjun bestellt ein kleines ___.“",
+          "promptDe": "Welches Wort passt? „Priya bestellt ein kleines ___.“",
           "promptEn": "Which noun fits the ending?",
           "options": [
             "Gerät",
@@ -2213,7 +2228,7 @@
             "generator": "dictation.fromInput",
             "count": 2,
             "source": [
-              "a2.1-u04-ls3-l06",
+              "a2.1-u04-ls3-l02",
               "a2.1-u04-ls3-l11"
             ]
           },
@@ -2394,7 +2409,7 @@
             "einem|einen",
             "keinem|keinen",
             "meinem|meinen",
-            "kleinem|kleinen"
+            "diesem|diesen"
           ],
           "voices": 4
         },
@@ -2412,7 +2427,7 @@
           "id": "a2.1-u04-ls4-t1",
           "kind": "sign",
           "title": "Kaufhaus am Markt – Wegweiser",
-          "text": "Kaufhaus am Markt – Wegweiser\n\n4. Stockwerk\nMöbel für Wohnzimmer, Schlafzimmer und Büro: Sofas, Tische, Stühle, Regale · Betten, Teppiche und Lampen · Kundenservice: Reparaturen und Garantie · Kaffee und Kuchen, Mittagessen von 11 bis 15 Uhr\n\n3. Stockwerk\nHaushalt: Kaffeemaschinen, Wasserkocher, Mikrowellen, Staubsauger, Waschmaschinen, Föhne · Küche: Tassen, Gläser, Geschirr · Alles für das Bad · Diese Woche im Sonderangebot: Staubsauger und Föhne\n\n2. Stockwerk\nKleidung für Männer: Hemden, Hosen, Pullover, Mäntel · Kleidung für Kinder: Jacken, Hosen, T-Shirts, Schuhe · Spiele und Bücher für Kinder · Sport: Fußbälle, Fahrräder, Schuhe und Kleidung für den Sport\n\n1. Stockwerk\nKleidung für Frauen: Kleider, Röcke, Jacken, Mäntel, Schuhe · Taschen und Koffer · Brillen und Uhren\n\nErdgeschoss\nInformation · Kundenservice: Fragen zu Bestellungen, Lieferungen und Rechnungen · Handys, Laptops, Computer, Drucker und Kabel · Bücher, Hefte, Papier und Stifte · Kalender und Geschenke\n\nNeu: Online bestellen und im Kaufhaus abholen – an der Information im Erdgeschoss\nAufzug und Rolltreppe: neben der Information · Geldautomat: neben dem Eingang\nToiletten: im 1. und im 4. Stockwerk\nÖffnungszeiten: Montag bis Samstag 9.30 bis 20 Uhr · Sonntag geschlossen",
+          "text": "Kaufhaus am Markt – Wegweiser\n\n4. Stockwerk\nMöbel für Wohnzimmer, Schlafzimmer und Büro: Sofas, Tische, Stühle, Regale · Betten, Teppiche und Lampen · Kundenservice: Reparaturen und Garantie · Kaffee und Kuchen, Mittagessen von 11 bis 15 Uhr\n\n3. Stockwerk\nHaushalt: Kaffeemaschinen, Wasserkocher, Mikrowellen, Staubsauger, Waschmaschinen, Föhne · Küche: Tassen, Gläser, Geschirr · Alles für das Bad · Diese Woche im Sonderangebot: Kaffeemaschinen, Staubsauger und Föhne\n\n2. Stockwerk\nKleidung für Männer: Hemden, Hosen, Pullover, Mäntel · Kleidung für Kinder: Jacken, Hosen, T-Shirts, Schuhe · Spiele und Bücher für Kinder · Sport: Fußbälle, Fahrräder, Schuhe und Kleidung für den Sport\n\n1. Stockwerk\nKleidung für Frauen: Kleider, Röcke, Jacken, Mäntel, Schuhe · Taschen und Koffer · Brillen und Uhren\n\nErdgeschoss\nInformation · Kundenservice: Fragen zu Bestellungen, Lieferungen und Rechnungen · Handys, Laptops, Computer, Drucker und Kabel · Bücher, Hefte, Papier und Stifte · Kalender und Geschenke\n\nNeu: Online bestellen und im Kaufhaus abholen – an der Information im Erdgeschoss\nAufzug und Rolltreppe: neben der Information · Geldautomat: neben dem Eingang\nToiletten: im 1. und im 4. Stockwerk\nÖffnungszeiten: Montag bis Samstag 9.30 bis 20 Uhr · Sonntag geschlossen",
           "glosses": []
         },
         {
@@ -2423,9 +2438,9 @@
             {
               "id": "a2.1-u04-ls4-t2-l01",
               "speaker": "cast.ensemble-a2-3",
-              "de": "Guten Tag. Suchen Sie einen Wasserkocher? Hier ist ein weißer für 25 Euro und ein roter für 30 Euro.",
-              "en": "Hello. Are you looking for a kettle? Here is a white one for 25 euros and a red one for 30 euros.",
-              "say": "Guten Tag. Suchen Sie einen Wasserkocher? Hier ist ein weißer für fünfundzwanzig Euro und ein roter für dreißig Euro."
+              "de": "Guten Tag. Suchen Sie einen Wasserkocher? Hier sind ein weißer für 25 Euro und ein roter für 30 Euro.",
+              "en": "Hello. Are you looking for a kettle? Here are a white one for 25 euros and a red one for 30 euros.",
+              "say": "Guten Tag. Suchen Sie einen Wasserkocher? Hier sind ein weißer für fünfundzwanzig Euro und ein roter für dreißig Euro."
             },
             {
               "id": "a2.1-u04-ls4-t2-l02",
@@ -2457,7 +2472,7 @@
               "id": "a2.1-u04-ls4-t3-l01",
               "speaker": "cast.ensemble-a2-1",
               "de": "Kaufhaus am Markt, Abteilung Haushalt, guten Tag.",
-              "en": "Kaufhaus am Markt, household department, good morning."
+              "en": "Kaufhaus am Markt, household department, hello."
             },
             {
               "id": "a2.1-u04-ls4-t3-l02",
@@ -2863,8 +2878,8 @@
       "strategyCards": [
         {
           "template": "ga2.l2",
-          "de": "Lesen Teil 2: Lesen Sie zuerst die Situation. Was brauchen Sie genau? Suchen Sie dann das Wort im Wegweiser. Einen Schrank finden Sie zum Beispiel bei „Möbel“. Achtung: Ein Wort steht manchmal zweimal da. Keine Lösung passt? Dann wählen Sie „anderes Stockwerk“.",
-          "en": "Reading part 2: read the situation first and decide what exactly you need, then look for the right category on the directory – a wardrobe, for example, is under „Möbel“. Careful: a word may appear twice. If no floor fits, choose „anderes Stockwerk“."
+          "de": "Lesen Teil 2: Lesen Sie zuerst die Situation. Was brauchen Sie genau? Suchen Sie dann im Wegweiser: Wo passt das? Einen Schrank finden Sie zum Beispiel bei „Möbel“. Achtung: Ein Wort steht manchmal zweimal im Wegweiser. Keine Lösung passt? Dann wählen Sie „anderes Stockwerk“.",
+          "en": "Reading part 2: read the situation first and decide what exactly you need. Then ask where it belongs on the directory – a wardrobe, for example, is under „Möbel“. Careful: a word sometimes appears twice on the directory. If no floor fits, choose „anderes Stockwerk“."
         },
         {
           "template": "ga2.h3",
@@ -2883,7 +2898,7 @@
         "mode": "cards-ask",
         "profile": "ga2-sp1",
         "prepMinutes": 0,
-        "instructionsDe": "Fragen Sie mit jeder Karte. Ihre Partnerin antwortet. Dann fragt sie, Sie antworten.",
+        "instructionsDe": "Stellen Sie zu jeder Karte eine Frage. Ihre Partnerin antwortet. Dann umgekehrt.",
         "situationDe": "Sprechen Teil 1: Fragen zur Person. Sie und Ihre Partnerin haben je vier Karten.",
         "cards": {
           "learner": [
@@ -2944,7 +2959,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Ich finde sie gut. Dort gibt es eine gute Beratung, aber es ist oft nicht billig."
+            "de": "Ich finde sie gut. Dort gibt es eine gute Beratung, aber dort ist es oft teuer."
           },
           {
             "speaker": "partner",
@@ -3054,23 +3069,6 @@
     ],
     "items": [
       {
-        "id": "a2.1-u04-c01",
-        "type": "fill_blank",
-        "role": "check",
-        "topic": "g.adj-dekl-unbestimmt",
-        "promptDe": "Ich brauche einen ___ Föhn. (neu)",
-        "promptEn": "Adjective ending, masculine accusative.",
-        "answer": "neuen",
-        "accepted": [
-          "neuen"
-        ],
-        "explanation": {
-          "de": "einen + maskulin im Akkusativ: neuen.",
-          "en": "Masculine accusative after einen: -en."
-        },
-        "origin": "agent"
-      },
-      {
         "id": "a2.1-u04-c02",
         "type": "fill_blank",
         "role": "check",
@@ -3101,6 +3099,23 @@
         "explanation": {
           "de": "der Wasserkocher, Akkusativ, negativ: keinen.",
           "en": "Masculine accusative, negative: keinen."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a2.1-u04-c09",
+        "type": "fill_blank",
+        "role": "check",
+        "topic": "g.indefinitpronomen",
+        "promptDe": "Brauchen wir Eier? – Nein, wir haben noch ___. (Eier)",
+        "promptEn": "Indefinite pronoun for Eier (plural).",
+        "answer": "welche",
+        "accepted": [
+          "welche"
+        ],
+        "explanation": {
+          "de": "Eier: Plural. Ohne Nomen: welche. Nein, wir haben noch welche.",
+          "en": "Eier is plural; without the noun it is welche."
         },
         "origin": "agent"
       },
