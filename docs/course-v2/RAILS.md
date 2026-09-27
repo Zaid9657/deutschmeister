@@ -116,7 +116,7 @@ node scripts/course-v2/validate.mjs <level|unit-file|--all> [--json] [--stage S|
   (`validate.mjs a2.1`) and skip on a single file.
 - The validator does not re-check shapes: run the checker too.
 
-### 3.1 Implemented rules (39)
+### 3.1 Implemented rules (40)
 
 | Rule | Stage | What it checks |
 |---|---|---|
@@ -138,7 +138,8 @@ node scripts/course-v2/validate.mjs <level|unit-file|--all> [--json] [--stage S|
 | TXT-02 | S | Exam texts within their Teil template's length band |
 | TXT-03 | S | Input sizes: lines, words, seconds per level |
 | TXT-04 | T | Instructions ≤ 90 characters; exam stems within `examStemChars`; template instructions ≤ 200 |
-| ITM-01 … ITM-11 | I | Answer follows from the German prompt; choice items; key balance; R/F not copied; task shapes; pools of 16 + reserves 4–6 (no reserve repeats a pool item's POS-masked key); `exact`; `caseSensitive`; sentence-building orders; accepted forms; static `{de, en}` explanations |
+| ITM-01 … ITM-11 | I | Answer follows from the German prompt; choice items; key balance; R/F not copied; task shapes; pools of 16 + reserves 4–6 (no reserve repeats a pool item's POS-masked key); `exact`; `caseSensitive`; sentence-building orders; accepted forms; static `{de, en}` explanations (extensions: §3.1b) |
+| ITM-13 | I | Audio keys: a dictation key is typeable (only characters the checker folds) and its audio (`say`, else `de`) grades CORRECT against it; dictation length per band (advisory); „Frage/Aussage" follows the played text (§3.1b) |
 | CON-06 | S | Facts carry https sources, a fresh check date and `verification: "verified"`; in a `draft` unit a sourced `partial`/`pending` fact with a reason in `notes` is a warning (§3.1a) |
 | EXM-01 | T | Exam blocks match their template: items, options, plays, block choice set (count, kind, reuse), no-match key, every answer a choice key, scaffold limits, each `⟦NN⟧` gap filled once |
 | EXM-02 | T | Scaffolding only where the template allows it; never in .2; pictorial Teile only as the text variant in .1 |
@@ -197,6 +198,78 @@ every status.
 examples) drives GRM-04. The spine's own `detectors` lists are still empty, so GRM-04 places each detector by its
 `spinePoints` hint — the curriculum owner should copy those links into `grammar-spine.json`.
 
+### 3.1b Rail fixes from the u04 reviews (rule-smith 2026-09-27)
+
+Every `proposedRule`, and every finding whose path or fix pointed at the checker, a generator or a validator
+rule, in `docs/course-v2/reviews/<level>/<level>-u04.r*.json` (8 levels, 14 review rounds) was collected; BLUEPRINT
+§9.4 makes a class that survives rounds a rail. Each fix below has a passing and a failing test
+(`tests/check-answer.test.mjs`, `tests/course-v2-player.test.mjs`, `tests/course-v2-validate.test.mjs`, blocks
+„rail fixes from the u04 reviews" onward). **Severity** says what a finding does to the run; a rail is advisory where
+the review finding was minor, where the rule is a heuristic a reader must confirm, or where the SCHEMA §15 worked
+example itself does it (the example must stay as documented — §7 item 13 lists what the SCHEMA owner decides).
+
+**The answer checker** (`src/lib/lesson/check.js`, `src/lib/course-v2/checkItem.js`, generator
+`src/components/course-v2/content.js dictationItems`):
+
+| Review finding(s) | Change | Live A1.1 course |
+|---|---|---|
+| a2.2 r3 F02 | An ellipsis („…", „..." typed) is punctuation: `stripPunct` turns it into a space for every check, `normalizeDictation` too. „Mir wird schlecht und ein bisschen kalt." is CORRECT against „Mir wird schlecht… und …". New `unfoldedDictationChars(text)` names what no fold removes. | bug fix (no live key has „…"; a typed „..." used to glue two words) |
+| a2.2 r2 F07, b1.1 r2 F05, a1.1 r2 F01 | A dictation hears „fünfzehn" and „15" alike: `foldNumberWords` reads cardinals 0–9999 and ordinals as digits („am dritten Juni" = „am 3. Juni"); „ein/eine" never fold. In `checkAnswer` it is a second pass that runs only when the plain dictation check did not accept the answer and is kept only when it is better — nothing CORRECT or TYPO is graded worse. | bug fix: the live L4/L6/L8/L10/L11 dictations say „fünfzehn Euro", „um eins", „um neun Uhr" — „15 Euro" was WRONG |
+| a2.2 r3 F04 | `exact: 'number'` on a **dictation** compares the whole sentence: the digit runs (number words read as digits) must be the same numbers in the same order, the rest is graded by the dictation check („Hugel" = TYPO); no words-may-be-left-out shortcut („10" alone is WRONG). a1.2-u04-c08 re-run: its date forms still grade CORRECT. | v2 only (checkItem) |
+| a1.1 r3 (orchestrator), b2.2 r1 F16 | On every `exact: 'number'` item a German number word equals its value („neun" for „9", „dreiundzwanzig" for „23", and „200" for a worded „zweihundert"); a letter slip in a number word („nuen") is a TYPO, a wrong value („zehn") WRONG. A worded time („halb zehn") is never answered by its digits alone. | v2 only |
+| b1.2 r1 F23 | Pinned by a test: a phone number compares digits only — „0341/225890", „(0341) 225890", „0341-225890" are CORRECT. | v2 only |
+| a2.2 r3 F04, ITM-07 | `dictationItems` sets `exact: 'number'` on a line with a digit or a number word, so a generated dictation is graded like an authored one. | — |
+
+**Validator rules** (`scripts/course-v2/rules/*`, `scripts/course-v2/lib-validate/*`):
+
+| Review finding(s) | Rule | What it checks | Severity |
+|---|---|---|---|
+| a2.2 r3 F02, a1.1 r2 F01, a1.2 r1 F01 | **ITM-13** (new) | Dictations (authored, and every `dictation.fromInput` line built by the player's own generator): the key holds no character the checker does not fold („(", „/", „%", „€" …); the line's `say` (else `de`) — its commas are pauses — is graded CORRECT by the player's `checkItem` against the key (sentence keys of ≥ 3 words). `listen_select` „Frage/Aussage": the played text ends in „?" exactly when the key is „Frage". | blocker |
+| a2.1 r3 F08, b1.1 r2 F11 | ITM-13 | Dictation length: A ≤ 12 words and ≤ 2 sentences, B1 ≤ 15 words and 1 sentence, B2 no cap (a one-word exclamation is no sentence). | advisory (minor findings; the §15 example dictates 19–29-word lines) |
+| a2.2 r2 F07 / r3 F04, b1.1 r2 F05 | ITM-07 | A dictation containing a digit or number word carries `exact: "number"` (whole-sentence mode); any other `exact` is a finding. | blocker |
+| a2.2 r1 F02, r2 F02, r3 F03 | GRM-05, ITM-11 (`lib-validate/claims.mjs`) | A rule card (de, en, and its own table for a pronoun-only claim) or an item explanation never pairs a form with „ohne X / kein -X / no -X / without -X" when the form ends in X („du wirst und er wird – ohne d"). | blocker |
+| a2.2 r3 F01 | LEX-05 | Every message names the file whose owner acts; lexicon.json, specs.json and the unit spec are compared, and where two agree the third is named. | (message) |
+| a2.2 r2 F01 | LEX-05 | A lemma the spec lists as new that another level allocates: an earlier level's lemma is a review word (unit author removes it); a promotion to this unit (`promotions`, now read by the context) is fine. | blocker |
+| a2.2 r2 F01 / r3 F01 | LEX-07 (`lib-validate/ceiling.mjs`) | A lexicon `example` stays under the grammar ceiling of the entry's unit (GRM-04's detectors, receptive licensing, exact detectors only): „Der Weg geht immer am Fluss entlang." at a2.2-u04 blocks. | blocker, owner: lexicon |
+| task item 5; a1.2 r1 F27, a2.2 r2 F16 / r3 F11, b1.1 r1 F17 | detector engine | sein + a lexicalised state is no Zustandspassiv and no Perfekt: `LEXICALISED_STATES` = enthalten, geöffnet, geschlossen, verheiratet, geschieden, verletzt, gebrochen („im Preis enthalten"), and a participle with its own ADJ lexicon entry („beschädigt"); `participleAux: 'any'` now needs the verb's own auxiliary (the exact det.perfekt-trennbar-untrennbar blocked „ist … enthalten"); a conjunct with its own auxiliary is its own clause („ist ausgerutscht und hat sich … verletzt"). | (fewer false hits) |
+| a2.1 r1/r2 F11, a2.2 r1 F09, b1.1 r1 F17, b1.2 r1 F26, a1.1 r1 F24 / r2 F11 | detector engine, `DETECTOR_OVERLAYS` | Registry detectors get review-driven spec additions until `detectors.json` carries them: det.konjunktiv1 not before „ich" („Am Samstag arbeite ich"); det.modalpartikeln not in „noch mal", „mal wieder"; det.adjektiv-endung-nullartikel skips determiners („für eine Wohnung", „auf unser Boot"); det.adjektiv-endung-unbestimmt / det.unbestimmter-artikel skip „ein bisschen/paar/wenig". Engine: a ^-anchored pattern reads behind an opening quote (b1.1 r1 F08: „„Wer …, soll …"" hits det.relativsatz-wer); a number opens no imperative („300 Gramm, bitte."); a plural Präteritum form that is a known participle is the participle („Parken verboten!"). Pattern specs may now carry `notFollowedBy`, `notPrecededBy`, `skipWords`, `skipAlso`. | (fewer false hits) |
+| orchestrator 2026-09-27 | GRM-04 (`spine.mjs exemptForms`) | The forms a licensed spine point lists in its label („…: kam, sagte, es gab (…)") are licensed whatever later detector matches them: g.praeteritum-kernverben (a2.2-u01) licenses kam/sagte/gab under det.praeteritum-vollverb (b1.1-u01); „ging" still blocks. | (fewer false hits) |
+| a2.1 r2 F07 / F10, r3 F12 | GRM-04 | Strategy cards and rule-card prose are read as receptive text — advisory only, they name constructions as much as they use them. | advisory |
+| a1.1 r1 F05 | GRM-04 | A declared chunk (`spec.grammar.chunk`) is presented in an input line or Redemittel, found by the point's detectors or its label forms. | blocker |
+| a1.2 r1 F06 | GRM-02 | A chunk-only point is never a Lernschritt `structure` nor the point of its rule card. | blocker |
+| a1.1 r1 F01/F12 | ITM-09 | A sentence-building item whose answer is a question says so in promptDe („Bilden Sie die Frage."). | blocker |
+| a1.1 r1 F04, a1.2 r1 F12, a2.1 r3 F01, b1.2 r1 F10, b2.1 r1 F04, b2.2 r1 F15 | ITM-09 (`lib-validate/orders.mjs`) | The tile orders German allows are accepted: every frontable tile (PP, time/place or sentence adverb, time phrase, object NP) in the Vorfeld with the verb second and the subject after it; the subject-first order of an inverted answer; object pronoun before an adverbial (never the reverse); sentence adverb ↔ full-NP subject. Unless promptDe fixes the first tile („Beginnen Sie mit …"), which now also silences quality.js `missingFrontedOrder`. Items with a comma, a coordinator or subordinator tile, imperatives and questions are left alone. | blocker |
+| b1.1 r1 F02 / r2 F01, b2.2 r1 F01, a1.1 r2 F04 | ITM-03 | Exam blocks: every 3-option item counts (cloze too); no three equal a/b/c keys in a row; with ≥ 3 number items the key is not always the extreme. | blocker |
+| b2.1 r1 F01, b2.2 r1 F02, b1.1 r1 F02 | ITM-03 | Non-exam 3-option keys balanced ±1 per step and in the Check, runs ≤ 3 per item list, ≤ 50 % per position over the unit. | advisory (the player shows options in authored order; the §15 example and 5 of 8 units key every such item at options[0] — one seeded shuffle in the player settles it, §7 item 13) |
+| a1.1 r1 F06 | ITM-01 | A practice, Check or proof choice item whose key (or its digits) stands in the stem while no distractor does. | blocker |
+| a1.2 r1 F08, b2.2 r1 F12 | ITM-01 | A cue promptEn gives stands in promptDe: a relation („the polite form of können") as a cue — in brackets, after „von", before „→"; a quoted word as a word; „as a word", „starts with …". | blocker |
+| a1.2 r1 F10 | ITM-01 | A typed gap keyed with an ordinal word says „Wort", accepts the digits, or carries `exact: "number"`. | blocker |
+| b2.2 r1 F12 | ITM-01 | First letters with underscores show exactly the missing letters. | blocker |
+| a2.2 r2 F04 | ITM-01 | A typed gap keyed with a preposition phrase or contraction („an der", „zum") has the preposition in promptDe, unless the gap follows a preposition („gegenüber ___"). | blocker |
+| b1.1 r1 F05 / r2 F01, b1.2 r1 F12, b2.2 r1 F12, a2.1 r1 | ITM-01 | An open typed gap: a sentence adverb at the start blocks („___ habe ich keine Antwort bekommen." → Trotzdem); a noun or adjective gap without a German cue is advisory (the sentence may decide it; synonyms accepted or a defining prompt „…: Das ist eine ___." count as a cue). Practice, reserve and Check items only. | blocker / advisory |
+| a2.1 r2 F02 | ITM-02 | A key „welche" beside a singular „eine/eins/einen" option needs a plural copula or a number ≥ 2 in the frame. | blocker |
+| a2.2 r1 F03 / F05 | ITM-10 | A unit that accepts „zu der" in a gap accepts it in every correction whose answer has „zur" (all nine contractions); „gegenüber ___" keyed „vom …" accepts the bare dative. | blocker |
+| a2.1 r1 | ITM-04 | A strategy card's example contains no key noun phrase of an item in its step (options every item offers — „richtig", „anderes Stockwerk" — and function words excepted). | blocker |
+| a2.2 r1 F10, r2 F13, r3 F10 | EXM-01 | Where the template's source says the example uses up an option, a full block leaves options − items − 1 (+ 1 with a no-match item) unused. | advisory until SCHEMA's ExamBlock can carry `example` |
+| a1.1 r2 F05 | EXM-03 | Word counts in taskDe and the checklist equal the band the player shows (wordBandLearning, else wordBand; a clause naming the exam compares with wordBand); the model text lies in the shown band (advisory when it fits the exam band). | blocker |
+| b1.1 r2 F08 | EXM-03 | Leitpunkt cues: ≥ 4 letters or digits; not a connector the checklist already requires. | advisory (the §15 exemplar cues „am", „um"; the fix is whole-word matching in the pre-check) |
+| a2.1 r1 | EXM-04 | ga2.sp1 cards: a keyword with „?" and no topic prefix (blocker); > 2 words or a Thema in situationDe (advisory — the §15 exemplar has both). | blocker / advisory |
+| a2.2 r1 F07 | EXM-04 | Two calendars (stimulus + partnerData): same weekday, ≥ 5 timed entries each, exactly one common free window ≥ 90 min. | blocker |
+| b1.1 r2 F02 | EXM-04 | tb1.m2: one quote on the learner's sheet; the partner's sheet in aiRole.personaDe. | blocker |
+| b2.1 r1 F02, a2.1 r2 F05 | ALL-02 | A productive or interactive can-do proven by an item alone. | advisory (SCHEMA Check.proofs has no micro-output; the §15 example proves cd.a2.rueckruf-weitergeben by an item) |
+| a1.1 r1 F07, a1.2 r1 F07, a2.1 r1 / r2 F04 | ALL-02 | The Aufgabe proving a can-do names a cue for each function verb of the can-do (fragen, vorschlagen, bewerten, beschweren …). | advisory (heuristic) |
+| a2.1 r2 F05 | ALL-02 | A proof item's key is not the answer of a Check item. | blocker |
+| a2.1 r3 F09 | ALL-02 | Every spec.textTypes entry is the type of an input, exam text or Teil template of the unit. | advisory |
+| a2.1 r3 F10 | COV-3 | spec.lanes equals the unit's specs.json entry; the message routes to the curriculum owner (the unit file is authored). | blocker |
+| a1.1 r1 F10, a1.2 r1 F26 | TXT-02 | The ±15 % is applied once: a template whose source says its textWords already carry it („Band ±15 %", 23 templates) is compared with textWords itself. | blocker |
+| a1.2 r1 F02 | CON-06 | An exception names a source of its own (§, law, URL, „laut …"). | advisory until SCHEMA gives exceptions a source field |
+| a1.1 r2 F07 | LEX-01 | story.cliffhanger is measured like an input. | as LEX-01 |
+| b1.2 r1 F01, b2.2 r1 F05 | LEX-01, LEX-03 (`lib-validate/compounds.mjs`) | A compound of two known forms (with a linking s/es/n/en/e) is known to LEX-01 and an advisory in LEX-03 („allocate compound:a+b"). §3.1a's rule stands: the lexicon still holds compounds. | advisory |
+| a2.2 r1 F08, b1.2 r1 F09, b2.2 r1 F18 | LEX-02 | A lemma allocated to the unit that no authored German string uses, and a productive lemma no input shows. | blocker |
+| a2.1 r2 F09 | LEX-03 | lex.articlePlural / lex.glossTyped sources are productive lemmas (blocker); a dictation line that makes the learner spell the unit's receptive-only or off-list lemma (advisory: minor, and the §15 example dictates „Stau", „Buchhaltung"). | blocker / advisory |
+| a1.1 r1 F21 | LEX-07 | A plural token glossed in the singular („Kunden" → „customer"). | advisory |
+| orchestrator 2026-09-27 | `lib-validate/text.mjs` | Tokens are Unicode letters: „Café", „Sprachcafé", „Repair-Café", „à la carte" are words (the old class cut „Café" into „Caf"). | — |
+
 ### 3.2 Not implemented yet, and why
 
 | Rules | Why not (yet) |
@@ -218,6 +291,7 @@ examples) drives GRM-04. The spine's own `detectors` lists are still empty, so G
 | EXM-07, EXM-08, PRG-01, PRG-02 | Code rules, pinned by tests instead: `tests/course-v2-ai.test.mjs` (EXM-08 zero/cap rules), `tests/course-v2-completion.test.mjs` (PRG-02 one completion function). |
 | QA-FRESH-01, SOL-01…03, CAL-01/02, LGL-05 | Model-calling and calibration gates (BLUEPRINT §9.2): **deferred** in lean execution. No `qa/` or `anchors/` files are written; the checker still validates their shape if one appears. |
 | LGL-01 … LGL-10 | Claims/legal lints over learner-visible strings: owned by the claims/copy tests, not the content validator. |
+| Review proposals not built (2026-09-27) | a1.1 r1 F23 (ErrorTag `null-article`), a2.1 r2 F05 (Check.proofs `microOutput`), a1.2 r1 F02 (`exceptions[].source`), a2.2 r3 F10 (`ExamBlock.example`): **SCHEMA fields** — the rails turn advisory → blocker once they exist (§3.1b). a2.1 r1 (ITM-02 hypernym distractors), a1.1 r1 F05 second half (a nominative rule on an accusative gap), a1.1 r2 F06 (LS4 texts contradicting the story), a2.2 r1 F08 first half (the plan's „not taught here" is prose): **semantics** — solver/reviewer gates. a2.1 r1 LGL-05 (n-grams against official instructions): the official strings are not in the repo; LGL is the claims tests'. a2.1 r2 F07 (a det.dat-akk-stellung detector) and a2.2 r2 F16 positive recall of det.adjektiv-endung-nullartikel („über Hügel und steile Wege"): **detectors.json** — for its owner. a2.2 r2 F03 (V2 orders inside „und" conjuncts), b1.1 r1 F06 (connector correction variants): clause combinations need a parser; ITM-09 leaves such items alone and says so. b1.1 r2 F02 runtime half (buildCoursePartnerPrompt, SpeakingTaskView) and b1.1 r2 F07 (prep timer, word counter): player/function code, not rails. b1.1 r2 F11 alternative (a `LINE#n` sentence selector for dictation.fromInput): needs SCHEMA, REF-01 and compiler support. a1.2 r1 F15 (the ordinal card must list erste/dritte/siebte/achte): one card's content. a2.1 r3 F02 (a review may not close a class until its rule and fixture exist): a review-process rule — this section and §3.1b are its ledger. |
 
 ---
 
@@ -294,7 +368,8 @@ node scripts/course-v2/compile.mjs <level|--all> [--check] [--content <dir>] [--
 |---|---|
 | `tests/course-v2-schema.test.mjs` | fixture verbatim; SCH-01/REF-01/KEY-01 on the fixture; the §8.1 stage schema (strip to each stage, absent/required per role); §15.4 lane pack and §15.7 choice fixtures in memory; 30+ mutations each failing at the expected path/rule/message; the amended text-type shape; the real `text-types.json` and `lanes/*.json` pass SCH-01/REF-01 (delivery, instructions ≤ 200 characters naming the play count, the four pictorial Teile of BLUEPRINT §4.9 with their text variants); `BANK_KEY_RE` matrix (47,520 keys) and garbage; compiler determinism, idempotency, §15.5 equality, reserve index, ledger tombstones, refusal; both CLIs |
 | `tests/course-v2-compile.test.mjs` | partial levels: 1 of 12 units compiles while the checker still reports REF-01; a missing unit is a `coming` row filled from `specs.json`; a unit failing its check (or not JSON) is skipped with its errors, writes nothing and keeps its ledger ids; another level's broken file is ignored; an error outside the units refuses the level; determinism, idempotency, minified output; `unitOfId`; the CLI's skip line and exit 0 |
-| `tests/course-v2-validate.test.mjs` | every validator rule with a passing and a failing fixture (parsed from SCHEMA.md); §15.6 expectations; stage gates incl. the spec inference and COV-1's stage-T severity; detectors' own examples; the §3.1a morphology, core list (size, bans, precedence), licensed forms and LEX-03 on a complete synthetic lexicon; LEX-07 duplicates vs homographs; CON-06 draft warnings; UnitSpec `lexiconBlocks` `{6..20}`; CLI |
+| `tests/course-v2-validate.test.mjs` | every validator rule with a passing and a failing fixture (parsed from SCHEMA.md); §15.6 expectations; stage gates incl. the spec inference and COV-1's stage-T severity; detectors' own examples; the §3.1a morphology, core list (size, bans, precedence), licensed forms and LEX-03 on a complete synthetic lexicon; LEX-07 duplicates vs homographs; CON-06 draft warnings; UnitSpec `lexiconBlocks` `{6..20}`; CLI; every §3.1b rail with its review fixture (the detector review sentences also against the real spine and detectors) |
+| `tests/check-answer.test.mjs`, `tests/course-v2-player.test.mjs` | the answer checker's ellipsis and number-word folds (live and v2), `exact: 'number'` on dictations and fill-ins (the a2.2-u04 c07 / a1.2-u04 c08 fixtures, „neun"/„nuen"/„zehn" against „9"), the generator's `exact` |
 | `tests/course-v2-ai.test.mjs`, `…-entitlement…`, `…-completion…` | the graders and speaking functions read the compiled banks; entitlement; the one completion function — incl. the SCHEMA §5 `CLOSING` of both kinds, the learner's lane, the Diagnose never counting, form tasks, and every authored `course.json` and compiled manifest |
 
 `npm test` runs them all; `npx eslint scripts/course-v2 tests/course-v2-*.test.mjs --max-warnings=0` must be clean.
@@ -362,6 +437,18 @@ node scripts/course-v2/compile.mjs <level|--all> [--check] [--content <dir>] [--
     (`state.lane`), falling back to the course's primary lane when unknown or not offered; the old `{ kind: 'closing' }`
     is rejected. `formAllFieldsNonEmpty` decides form tasks (`attempt.fields`). Defaults per kind:
     `DEFAULT_COMPLETION` (dot1), `DEFAULT_COMPLETION_DOT2`.
+13. **Rail fixes the SCHEMA §15 worked example does not meet** (2026-09-27, rails, §3.1b): the example keys every
+    non-exam MC at options[0] (ITM-03), cues „am"/„um" (EXM-03), gives ga2.sp1 a Thema and a three-word card
+    (EXM-04), proves the interaction can-do cd.a2.rueckruf-weitergeben by an item (ALL-02), dictates 19–29-word lines
+    with receptive words (ITM-13, LEX-03) and has an open adjective gap („Die Leitung ist ___." → besetzt, ITM-01).
+    These rails are advisory, so §15.6 still holds (one blocker, CON-06); `tests/course-v2-validate.test.mjs` pins
+    that each of them reports no blocker on the example. For the SCHEMA owner to decide: (a) the player shuffles
+    non-exam options with a seed (then ITM-03's non-exam balance goes), (b) `ExamBlock.example`, (c)
+    `Check.proofs[].microOutput`, (d) `Fact.exceptions[].source`, (e) ErrorTag `null-article`, (f) whether the §15
+    exemplar adopts the reviewed formats (Goethe A2 Sp1 cards without Thema, ≥ 4-letter cues, shorter dictations).
+    The detector additions of `lib-validate/detectors.mjs DETECTOR_OVERLAYS` belong in `detectors.json`; its owner
+    moves each entry there and deletes it from the overlay (a test fails on an overlay for a detector that does not
+    exist).
 
 ## 8. Open issues at the time of writing (2026-09-27)
 
