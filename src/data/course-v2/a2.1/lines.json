@@ -1,0 +1,499 @@
+[
+  {
+    "id": "a2.1-u04-start-l01",
+    "speaker": "cast.arjun",
+    "voice": "de-DE-KasperNeural",
+    "rate": "-5%",
+    "text": "Priya, unsere Kaffeemaschine funktioniert nicht mehr!"
+  },
+  {
+    "id": "a2.1-u04-start-l02",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Was? Sie ist nur drei Jahre alt!"
+  },
+  {
+    "id": "a2.1-u04-start-l03",
+    "speaker": "cast.arjun",
+    "voice": "de-DE-KasperNeural",
+    "rate": "-5%",
+    "text": "Ohne Kaffee kann ich nicht arbeiten. Wir brauchen eine neue."
+  },
+  {
+    "id": "a2.1-u04-start-l04",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Heute Nachmittag gehe ich ins Kaufhaus. Dort gibt es eine gute Beratung."
+  },
+  {
+    "id": "a2.1-u04-start-l05",
+    "speaker": "cast.arjun",
+    "voice": "de-DE-KasperNeural",
+    "rate": "-5%",
+    "text": "Oder wir bestellen online. Das ist oft günstiger."
+  },
+  {
+    "id": "a2.1-u04-start-l06",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Ich möchte die Kaffeemaschine aber zuerst sehen. Kommst du mit?"
+  },
+  {
+    "id": "a2.1-u04-start-l07",
+    "speaker": "cast.arjun",
+    "voice": "de-DE-KasperNeural",
+    "rate": "-5%",
+    "text": "Leider nicht, ich spiele um drei Fußball. Schick mir bitte Fotos!"
+  },
+  {
+    "id": "a2.1-u04-ls1-l01",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Entschuldigung, wo finde ich Kaffeemaschinen?"
+  },
+  {
+    "id": "a2.1-u04-ls1-l02",
+    "speaker": "cast.ensemble-a2-1",
+    "voice": "de-DE-LouisaNeural",
+    "rate": "-5%",
+    "text": "Die Abteilung Haushalt ist im dritten Stockwerk. Nehmen Sie die Rolltreppe. Auf dem Wegweiser sehen Sie alle Abteilungen."
+  },
+  {
+    "id": "a2.1-u04-ls1-l03",
+    "speaker": "cast.ensemble-a2-3",
+    "voice": "de-DE-ChristophNeural",
+    "rate": "-5%",
+    "text": "Guten Tag! Kann ich Ihnen helfen?"
+  },
+  {
+    "id": "a2.1-u04-ls1-l04",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Ja, bitte. Ich suche eine neue Kaffeemaschine. Unsere alte ist kaputt."
+  },
+  {
+    "id": "a2.1-u04-ls1-l05",
+    "speaker": "cast.ensemble-a2-3",
+    "voice": "de-DE-ChristophNeural",
+    "rate": "-5%",
+    "text": "Möchten Sie ein großes Gerät oder ein kleines Modell?"
+  },
+  {
+    "id": "a2.1-u04-ls1-l06",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Ein kleines Modell, bitte. Unsere Küche ist nicht groß. Und das Gerät soll leise und praktisch sein."
+  },
+  {
+    "id": "a2.1-u04-ls1-l07",
+    "speaker": "cast.ensemble-a2-3",
+    "voice": "de-DE-ChristophNeural",
+    "rate": "-5%",
+    "text": "Dann ist das hier gut: ein neues Modell aus der Schweiz. Die Marke hat gute Qualität."
+  },
+  {
+    "id": "a2.1-u04-ls1-l08",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Das sieht gut aus. Wie lange hat es Garantie?"
+  },
+  {
+    "id": "a2.1-u04-ls1-l09",
+    "speaker": "cast.ensemble-a2-3",
+    "voice": "de-DE-ChristophNeural",
+    "rate": "-5%",
+    "text": "Zwei Jahre. Es ist sehr leise, und die Bewertungen im Internet sind gut. Es kostet neunundachtzig Euro."
+  },
+  {
+    "id": "a2.1-u04-ls1-l10",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Das ist nicht billig. Haben Sie auch ein günstiges Modell?"
+  },
+  {
+    "id": "a2.1-u04-ls1-l11",
+    "speaker": "cast.ensemble-a2-3",
+    "voice": "de-DE-ChristophNeural",
+    "rate": "-5%",
+    "text": "Ja, hier: ein praktisches Gerät für neunundfünfzig Euro. Es ist klein und sehr nützlich. Und es ist im Sonderangebot."
+  },
+  {
+    "id": "a2.1-u04-ls1-l12",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Gibt es das auch in Weiß? Schwarz gefällt mir nicht so."
+  },
+  {
+    "id": "a2.1-u04-ls1-l13",
+    "speaker": "cast.ensemble-a2-3",
+    "voice": "de-DE-ChristophNeural",
+    "rate": "-5%",
+    "text": "In Weiß ist es leider nicht vorrätig. Aber Sie können es online bestellen. Die Lieferzeit ist kurz: nur drei Tage."
+  },
+  {
+    "id": "a2.1-u04-ls1-l14",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Gut, dann vergleiche ich zu Hause. Vielen Dank für die Beratung!"
+  },
+  {
+    "id": "a2.1-u04-ls2-l01",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Arjun, hier sind zwei Angebote. Welches ist besser?"
+  },
+  {
+    "id": "a2.1-u04-ls2-l02",
+    "speaker": "cast.arjun",
+    "voice": "de-DE-KasperNeural",
+    "rate": "-5%",
+    "text": "Zwei Kaffeemaschinen? Wir brauchen nur eine!"
+  },
+  {
+    "id": "a2.1-u04-ls2-l03",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Ja, aber ich vergleiche gern. Im Kaufhaus kostet das Modell aus der Schweiz neunundachtzig Euro. Das ist eine gute Marke."
+  },
+  {
+    "id": "a2.1-u04-ls2-l04",
+    "speaker": "cast.arjun",
+    "voice": "de-DE-KasperNeural",
+    "rate": "-5%",
+    "text": "Und im Internet? Gibt es da auch eins?"
+  },
+  {
+    "id": "a2.1-u04-ls2-l05",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Ja, das Modell aus der Schweiz gibt es online für neunundsiebzig Euro, und es ist weiß. Der Versand kostet vier Euro fünfundneunzig, und die Lieferzeit ist kurz: nur drei Tage."
+  },
+  {
+    "id": "a2.1-u04-ls2-l06",
+    "speaker": "cast.arjun",
+    "voice": "de-DE-KasperNeural",
+    "rate": "-5%",
+    "text": "Dann ist das Modell online günstiger als im Kaufhaus. Gibt es online auch andere?"
+  },
+  {
+    "id": "a2.1-u04-ls2-l07",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Ja, viele. Das Modell für neunundfünfzig Euro aus dem Kaufhaus kostet online nur fünfundfünfzig Euro. Es ist am günstigsten, aber es ist sehr laut. Das steht in den Bewertungen."
+  },
+  {
+    "id": "a2.1-u04-ls2-l08",
+    "speaker": "cast.arjun",
+    "voice": "de-DE-KasperNeural",
+    "rate": "-5%",
+    "text": "So laut am Morgen? Nein, danke! Welche ist am leisesten?"
+  },
+  {
+    "id": "a2.1-u04-ls2-l09",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Das Modell aus der Schweiz. Es ist am leisesten, und die Qualität ist gut. Zwei Jahre Garantie sind auch ein großer Vorteil."
+  },
+  {
+    "id": "a2.1-u04-ls2-l10",
+    "speaker": "cast.arjun",
+    "voice": "de-DE-KasperNeural",
+    "rate": "-5%",
+    "text": "Super, dann bestell es online. Brauchen wir auch Tassen?"
+  },
+  {
+    "id": "a2.1-u04-ls2-l11",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Nein, wir haben noch welche. Aber ich brauche einen Föhn. Mein Föhn ist kaputt."
+  },
+  {
+    "id": "a2.1-u04-ls2-l12",
+    "speaker": "cast.arjun",
+    "voice": "de-DE-KasperNeural",
+    "rate": "-5%",
+    "text": "Ich habe keinen. Aber Anna hat einen. Frag sie!"
+  },
+  {
+    "id": "a2.1-u04-ls3-l01",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Arjun, das Paket von „Küche und mehr“ ist da! Es ist ziemlich groß."
+  },
+  {
+    "id": "a2.1-u04-ls3-l02",
+    "speaker": "cast.arjun",
+    "voice": "de-DE-KasperNeural",
+    "rate": "-5%",
+    "text": "Super! Ich möchte jetzt einen Kaffee."
+  },
+  {
+    "id": "a2.1-u04-ls3-l03",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Warte … Was ist das? Das ist ein Wasserkocher!"
+  },
+  {
+    "id": "a2.1-u04-ls3-l04",
+    "speaker": "cast.arjun",
+    "voice": "de-DE-KasperNeural",
+    "rate": "-5%",
+    "text": "Ein roter Wasserkocher? Aber wir haben schon einen."
+  },
+  {
+    "id": "a2.1-u04-ls3-l05",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Und im Paket ist keine Kaffeemaschine. Ich habe eine weiße Kaffeemaschine bestellt!"
+  },
+  {
+    "id": "a2.1-u04-ls3-l06",
+    "speaker": "cast.arjun",
+    "voice": "de-DE-KasperNeural",
+    "rate": "-5%",
+    "text": "Das ist nicht gut. Was machen wir jetzt? Was steht in der E-Mail zur Rücksendung?"
+  },
+  {
+    "id": "a2.1-u04-ls3-l07",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Hier: Die Rücksendung ist kostenlos. Das Formular ist in meinem Kundenkonto."
+  },
+  {
+    "id": "a2.1-u04-ls3-l11",
+    "speaker": "cast.arjun",
+    "voice": "de-DE-KasperNeural",
+    "rate": "-5%",
+    "text": "Gut. Kannst du den Kundenservice auch anrufen?"
+  },
+  {
+    "id": "a2.1-u04-ls3-l12",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Heute nicht mehr. Der Kundenservice ist von acht bis achtzehn Uhr da, und jetzt ist es schon halb sieben."
+  },
+  {
+    "id": "a2.1-u04-ls3-l08",
+    "speaker": "cast.arjun",
+    "voice": "de-DE-KasperNeural",
+    "rate": "-5%",
+    "text": "Dann schreib dem Kundenservice: Die Lieferung ist falsch! Wir brauchen die Kaffeemaschine bis Samstag. Am Samstag kommen Anna und Felix zum Frühstück."
+  },
+  {
+    "id": "a2.1-u04-ls3-l09",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Gut, ich schreibe heute noch eine E-Mail. Ich frage auch nach der Rücksendung. Und den Wasserkocher schicke ich zurück."
+  },
+  {
+    "id": "a2.1-u04-ls3-l10",
+    "speaker": "cast.arjun",
+    "voice": "de-DE-KasperNeural",
+    "rate": "-5%",
+    "text": "Gute Idee. Und heute trinke ich Tee."
+  },
+  {
+    "id": "a2.1-u04-ls4-t2-l01",
+    "speaker": "cast.ensemble-a2-3",
+    "voice": "de-DE-ChristophNeural",
+    "rate": "-5%",
+    "text": "Guten Tag. Suchen Sie einen Wasserkocher? Hier ist ein weißer für fünfundzwanzig Euro und ein roter für dreißig Euro."
+  },
+  {
+    "id": "a2.1-u04-ls4-t2-l02",
+    "speaker": "cast.ensemble-a2-1",
+    "voice": "de-DE-LouisaNeural",
+    "rate": "-5%",
+    "text": "Einen weißen habe ich schon zu Hause. Haben Sie auch einen schwarzen?"
+  },
+  {
+    "id": "a2.1-u04-ls4-t2-l03",
+    "speaker": "cast.ensemble-a2-3",
+    "voice": "de-DE-ChristophNeural",
+    "rate": "-5%",
+    "text": "Nein, leider nicht. Schwarz ist nicht mehr vorrätig."
+  },
+  {
+    "id": "a2.1-u04-ls4-t2-l04",
+    "speaker": "cast.ensemble-a2-1",
+    "voice": "de-DE-LouisaNeural",
+    "rate": "-5%",
+    "text": "Gut, dann nehme ich einen roten. Rot ist auch schön."
+  },
+  {
+    "id": "a2.1-u04-ls4-t3-l01",
+    "speaker": "cast.ensemble-a2-1",
+    "voice": "de-DE-LouisaNeural",
+    "rate": "-5%",
+    "text": "Kaufhaus am Markt, Abteilung Haushalt, guten Tag."
+  },
+  {
+    "id": "a2.1-u04-ls4-t3-l02",
+    "speaker": "cast.ensemble-a2-4",
+    "voice": "de-DE-RalfNeural",
+    "rate": "-5%",
+    "text": "Guten Tag. Ich möchte den Staubsauger im Sonderangebot kaufen. Ist er vorrätig?"
+  },
+  {
+    "id": "a2.1-u04-ls4-t3-l03",
+    "speaker": "cast.ensemble-a2-1",
+    "voice": "de-DE-LouisaNeural",
+    "rate": "-5%",
+    "text": "Heute leider nicht. Er kommt am Freitag. Sie können ihn am Samstag abholen."
+  },
+  {
+    "id": "a2.1-u04-ls4-t3-l04",
+    "speaker": "cast.ensemble-a2-4",
+    "voice": "de-DE-RalfNeural",
+    "rate": "-5%",
+    "text": "Am Samstag arbeite ich. Geht es auch am Montag?"
+  },
+  {
+    "id": "a2.1-u04-ls4-t3-l05",
+    "speaker": "cast.ensemble-a2-1",
+    "voice": "de-DE-LouisaNeural",
+    "rate": "-5%",
+    "text": "Ja, gern. Wir sind ab neun Uhr dreißig da."
+  },
+  {
+    "id": "a2.1-u04-ls4-t3-l06",
+    "speaker": "cast.ensemble-a2-4",
+    "voice": "de-DE-RalfNeural",
+    "rate": "-5%",
+    "text": "Gut, dann komme ich am Montag."
+  },
+  {
+    "id": "a2.1-u04-ls4-t4-l01",
+    "speaker": "cast.ensemble-a2-4",
+    "voice": "de-DE-RalfNeural",
+    "rate": "-5%",
+    "text": "Meine Mutter hat am Sonntag Geburtstag. Ich suche noch ein Geschenk."
+  },
+  {
+    "id": "a2.1-u04-ls4-t4-l02",
+    "speaker": "cast.ensemble-a2-1",
+    "voice": "de-DE-LouisaNeural",
+    "rate": "-5%",
+    "text": "Braucht sie einen neuen Föhn? Ein Föhn ist immer nützlich."
+  },
+  {
+    "id": "a2.1-u04-ls4-t4-l03",
+    "speaker": "cast.ensemble-a2-4",
+    "voice": "de-DE-RalfNeural",
+    "rate": "-5%",
+    "text": "Nein, sie hat schon einen. Aber ihre Mikrowelle ist sehr alt."
+  },
+  {
+    "id": "a2.1-u04-ls4-t4-l04",
+    "speaker": "cast.ensemble-a2-1",
+    "voice": "de-DE-LouisaNeural",
+    "rate": "-5%",
+    "text": "Eine Mikrowelle ist teuer. Kauf ihr eine schöne Tasse!"
+  },
+  {
+    "id": "a2.1-u04-ls4-t4-l05",
+    "speaker": "cast.ensemble-a2-4",
+    "voice": "de-DE-RalfNeural",
+    "rate": "-5%",
+    "text": "Eine Tasse? Nein. Sie braucht die Mikrowelle sehr oft. Ich kaufe ihr eine."
+  },
+  {
+    "id": "a2.1-u04-ls4-t5-l01",
+    "speaker": "cast.ensemble-a2-3",
+    "voice": "de-DE-ChristophNeural",
+    "rate": "-5%",
+    "text": "Guten Tag! Ich habe ein Paket für Frau Berger. Ist sie zu Hause?"
+  },
+  {
+    "id": "a2.1-u04-ls4-t5-l02",
+    "speaker": "cast.ensemble-a2-1",
+    "voice": "de-DE-LouisaNeural",
+    "rate": "-5%",
+    "text": "Nein, Frau Berger arbeitet heute bis achtzehn Uhr. Ich bin ihre Nachbarin."
+  },
+  {
+    "id": "a2.1-u04-ls4-t5-l03",
+    "speaker": "cast.ensemble-a2-3",
+    "voice": "de-DE-ChristophNeural",
+    "rate": "-5%",
+    "text": "Kann ich Ihnen das Paket geben?"
+  },
+  {
+    "id": "a2.1-u04-ls4-t5-l04",
+    "speaker": "cast.ensemble-a2-1",
+    "voice": "de-DE-LouisaNeural",
+    "rate": "-5%",
+    "text": "Ja, gern. Frau Berger bekommt es heute Abend."
+  },
+  {
+    "id": "a2.1-u04-ls4-t5-l05",
+    "speaker": "cast.ensemble-a2-3",
+    "voice": "de-DE-ChristophNeural",
+    "rate": "-5%",
+    "text": "Vielen Dank! Bitte unterschreiben Sie hier."
+  },
+  {
+    "id": "a2.1-u04-ls4-t6-l01",
+    "speaker": "cast.ensemble-a2-3",
+    "voice": "de-DE-ChristophNeural",
+    "rate": "-5%",
+    "text": "Kaufhaus am Markt, guten Tag. Was kann ich für Sie tun?"
+  },
+  {
+    "id": "a2.1-u04-ls4-t6-l02",
+    "speaker": "cast.ensemble-a2-1",
+    "voice": "de-DE-LouisaNeural",
+    "rate": "-5%",
+    "text": "Guten Tag. Ich möchte einen Staubsauger bestellen. Kann ich mit meiner Bankkarte bezahlen?"
+  },
+  {
+    "id": "a2.1-u04-ls4-t6-l03",
+    "speaker": "cast.ensemble-a2-3",
+    "voice": "de-DE-ChristophNeural",
+    "rate": "-5%",
+    "text": "Am Telefon leider nicht. Die Zahlung mit Bankkarte geht nur online. Am Telefon zahlen Sie auf Rechnung."
+  },
+  {
+    "id": "a2.1-u04-ls4-t6-l04",
+    "speaker": "cast.ensemble-a2-1",
+    "voice": "de-DE-LouisaNeural",
+    "rate": "-5%",
+    "text": "Online bestellen möchte ich nicht. Dann bezahle ich auf Rechnung."
+  },
+  {
+    "id": "a2.1-u04-ls7-l01",
+    "speaker": "ansage",
+    "voice": null,
+    "rate": null,
+    "text": "Die Rücksendung ist kostenlos."
+  },
+  {
+    "id": "a2.1-u04-ls7-l02",
+    "speaker": "ansage",
+    "voice": null,
+    "rate": null,
+    "text": "Wie lange hat das Gerät Garantie?"
+  }
+]

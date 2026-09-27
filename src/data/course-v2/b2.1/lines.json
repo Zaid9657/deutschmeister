@@ -1,0 +1,198 @@
+[
+  {
+    "id": "b2.1-u04-start-l01",
+    "speaker": "cast.amal",
+    "voice": "de-DE-TanjaNeural",
+    "rate": "-5%",
+    "text": "Priya, komm mal ans Fenster. Wo ist denn hier das Meer?"
+  },
+  {
+    "id": "b2.1-u04-start-l02",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Das Meer ist auf der anderen Seite. Wir sehen direkt auf eine Baustelle."
+  },
+  {
+    "id": "b2.1-u04-start-l03",
+    "speaker": "cast.amal",
+    "voice": "de-DE-TanjaNeural",
+    "rate": "-5%",
+    "text": "In der Anzeige steht: „Ruhige Lage, alle Zimmer mit Blick auf das Meer.“ Für diese Zimmerkategorie haben wir mehr bezahlt."
+  },
+  {
+    "id": "b2.1-u04-start-l04",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Und hörst du den Baulärm? Es ist acht Uhr abends, und auf der Baustelle arbeiten sie immer noch. Bei diesem Lärmpegel kann doch niemand schlafen."
+  },
+  {
+    "id": "b2.1-u04-start-l05",
+    "speaker": "cast.amal",
+    "voice": "de-DE-TanjaNeural",
+    "rate": "-5%",
+    "text": "Sieh mal ins Bad: Die Dusche ist verschmutzt, und die Möbel sind alt und abgenutzt. Das ganze Zimmer ist renovierungsbedürftig."
+  },
+  {
+    "id": "b2.1-u04-start-l06",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "So eine Unterbringung ist unzumutbar."
+  },
+  {
+    "id": "b2.1-u04-start-l07",
+    "speaker": "cast.amal",
+    "voice": "de-DE-TanjaNeural",
+    "rate": "-5%",
+    "text": "Ich habe mich ein Jahr lang auf diese Woche gefreut. So habe ich mir das nicht vorgestellt. Wie gehen wir jetzt vor?"
+  },
+  {
+    "id": "b2.1-u04-start-l08",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Machen wir eine Arbeitsteilung: Du machst Beweisfotos, und ich dokumentiere alle Mängel schriftlich. Morgen früh melden wir sie an der Rezeption und bei der Reiseleitung. Das lassen wir uns nicht gefallen."
+  },
+  {
+    "id": "b2.1-u04-start-l09",
+    "speaker": "cast.amal",
+    "voice": "de-DE-TanjaNeural",
+    "rate": "-5%",
+    "text": "Genau. Da bleiben wir hartnäckig."
+  },
+  {
+    "id": "b2.1-u04-ls2-l01",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Guten Morgen. Wir sind gestern mit Blauwelle Reisen angekommen, Zimmer zwei eins vier. Ich möchte leider einige Mängel beanstanden."
+  },
+  {
+    "id": "b2.1-u04-ls2-l02",
+    "speaker": "cast.ensemble-b2-6",
+    "voice": "de-DE-BerndNeural",
+    "rate": "0%",
+    "text": "Guten Morgen. Das tut mir leid. Was genau ist denn los?"
+  },
+  {
+    "id": "b2.1-u04-ls2-l03",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Wir haben ein Doppelzimmer in ruhiger Lage mit Blick auf das Meer gebucht. Das gehört zum Leistungsumfang, so steht es in unserer Buchungsbestätigung. Wir sehen aber direkt auf eine Baustelle, und der Baulärm fängt um sieben Uhr an. Außerdem ist das Zimmer renovierungsbedürftig: Die Möbel sind abgenutzt, die Dusche ist verschmutzt, und im Bad gibt es Ungeziefer."
+  },
+  {
+    "id": "b2.1-u04-ls2-l04",
+    "speaker": "cast.ensemble-b2-6",
+    "voice": "de-DE-BerndNeural",
+    "rate": "0%",
+    "text": "Die Baustelle gehört zu unserem neuen Wellnessbereich. Ehrlich gesagt hätte Ihr Reiseveranstalter Sie darüber informieren müssen. Wir haben ihm schon im Frühling Bescheid gegeben."
+  },
+  {
+    "id": "b2.1-u04-ls2-l05",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Davon steht nichts in unseren Unterlagen. Ich finde, dass der Reiseveranstalter uns das vor der Buchung hätte sagen müssen. Wenn wir das gewusst hätten, hätten wir dieses Hotel nie gebucht. Könnten Sie uns bitte ein anderes Zimmer geben?"
+  },
+  {
+    "id": "b2.1-u04-ls2-l06",
+    "speaker": "cast.ensemble-b2-6",
+    "voice": "de-DE-BerndNeural",
+    "rate": "0%",
+    "text": "Leider sind wir zurzeit ausgebucht. Ab Donnerstag wird ein Zimmer zum Meer frei. Die Dusche lasse ich heute noch sauber machen."
+  },
+  {
+    "id": "b2.1-u04-ls2-l07",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Am Donnerstag ist die halbe Reise schon vorbei. Gut, dann gehen wir so vor: Wir dokumentieren alles mit Beweisfotos und melden die Mängel trotzdem auch der Reiseleitung."
+  },
+  {
+    "id": "b2.1-u04-ls2-l08",
+    "speaker": "cast.ensemble-b2-1",
+    "voice": "de-DE-TanjaNeural",
+    "rate": "0%",
+    "text": "Blauwelle Reisen, Kundenservice, guten Tag. Was kann ich für Sie tun?"
+  },
+  {
+    "id": "b2.1-u04-ls2-l09",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Guten Tag, hier ist Priya Nair. Ich bin mit einer Pauschalreise von Ihnen auf Kreta und möchte einen Reisemangel anzeigen. Ihre Reiseleitung ist seit gestern weder am Telefon noch im Hotel erreichbar."
+  },
+  {
+    "id": "b2.1-u04-ls2-l10",
+    "speaker": "cast.ensemble-b2-1",
+    "voice": "de-DE-TanjaNeural",
+    "rate": "0%",
+    "text": "Das tut mir leid. Bitte erklären Sie mir möglichst genau, was passiert ist."
+  },
+  {
+    "id": "b2.1-u04-ls2-l11",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Neben unserem Zimmer ist eine Baustelle, obwohl Sie in der Leistungsbeschreibung ausdrücklich eine ruhige Lage zugesichert haben. Bei diesem Lärmpegel können wir nicht schlafen. Auch die Verpflegung ist mangelhaft, und heute ist der Ausflug in die Berge ohne Ersatzleistung ausgefallen. Das hätten Sie uns doch rechtzeitig sagen können!"
+  },
+  {
+    "id": "b2.1-u04-ls2-l12",
+    "speaker": "cast.ensemble-b2-1",
+    "voice": "de-DE-TanjaNeural",
+    "rate": "0%",
+    "text": "Danke für Ihre Schilderung, ich verstehe Ihren Ärger. Aus Kulanz kann ich Ihnen einen Gutschein über fünfzig Euro für eine weitere Buchung in Aussicht stellen."
+  },
+  {
+    "id": "b2.1-u04-ls2-l13",
+    "speaker": "cast.priya",
+    "voice": "de-DE-AmalaNeural",
+    "rate": "-10%",
+    "text": "Bitte wimmeln Sie mich nicht mit einem Gutschein ab. Der Baulärm ist unzumutbar, das ist ein erheblicher Mangel. Ich berufe mich auf Ihre Leistungsbeschreibung und würde Sie bitten, uns sofort ein ruhiges Zimmer anzubieten. Andernfalls fordern wir nach der Reise eine Minderung des Reisepreises ein. Weitere Schritte behalten wir uns vor."
+  },
+  {
+    "id": "b2.1-u04-ls2-l14",
+    "speaker": "cast.ensemble-b2-1",
+    "voice": "de-DE-TanjaNeural",
+    "rate": "0%",
+    "text": "Ich gebe Ihre Mängelanzeige sofort an die Reiseleitung weiter, und wir prüfen Ihren Fall eingehend. Einen Preisnachlass oder eine Ausgleichszahlung kann ich Ihnen am Telefon leider nicht gewähren. Bitte schicken Sie uns nach der Reise eine schriftliche Beschwerde mit Beweisfotos und allen Belegen."
+  },
+  {
+    "id": "b2.1-u04-ls4-t2-l01",
+    "speaker": "cast.ensemble-b2-1",
+    "voice": "de-DE-TanjaNeural",
+    "rate": "0%",
+    "text": "Hallo, hier spricht die Reiseleitung von Blauwelle Reisen, eine Nachricht für alle Gäste hier im Hotel. Es gibt eine kleine Programmänderung. Der Ausflug in die Berge morgen findet statt, aber der Bus fährt schon um halb acht am Hotel ab, nicht wie im Programm um halb neun. Am Nachmittag soll es nämlich sehr heiß werden. Das Frühstück gibt es deshalb ausnahmsweise schon ab Viertel vor sieben. Falls Sie nicht mitkommen möchten, sagen Sie bitte bis heute Abend an der Rezeption Bescheid. Ersatzweise können Sie am Freitag an einer Bootsfahrt teilnehmen. Vielen Dank!"
+  },
+  {
+    "id": "b2.1-u04-ls4-t3-l01",
+    "speaker": "durchsage",
+    "voice": null,
+    "rate": null,
+    "text": "Eine Information für alle Passagiere des Fluges vier eins zwei sieben nach Hamburg: Wegen eines Problems mit dem Flugzeug verspätet sich der Flug um zwei Stunden. Der Flug geht jetzt um sechzehn Uhr vierzig. Sie können ab sechzehn Uhr an Ausgang sieben einsteigen, nicht an Ausgang drei. Gäste von Blauwelle Reisen erhalten am Schalter neben Ausgang sieben einen Gutschein für Getränke und ein kleines Essen. Fragen zu einer Ausgleichszahlung beantworten wir Ihnen auch dort. Wir bitten um Ihr Verständnis."
+  },
+  {
+    "id": "b2.1-u04-ls4-t4-l01",
+    "speaker": "cast.ensemble-b2-6",
+    "voice": "de-DE-BerndNeural",
+    "rate": "0%",
+    "text": "Guten Tag, Frau Nair, hier ist der Kundenservice von Blauwelle Reisen. Wir haben Ihren Beschwerdebrief vom dritten November erhalten, vielen Dank. Zurzeit prüfen wir eingehend alle Mängel, die Sie beanstandet haben – gemeinsam mit dem Hotel und der Reiseleitung. Ob wir Ihnen eine Minderung gewähren können, entscheiden wir danach. Eine Antwort bekommen Sie innerhalb von drei Wochen. Wenn Sie weitere Beweisfotos haben, schicken Sie uns diese bitte als E-Mail. Vielen Dank und einen schönen Tag."
+  },
+  {
+    "id": "b2.1-u04-ls4-t5-l01",
+    "speaker": "radio",
+    "voice": null,
+    "rate": null,
+    "text": "Und jetzt unser Tipp zum Verbraucherschutz. Wenn im Urlaub etwas nicht stimmt, empfehlen wir diese Vorgehensweise: Melden Sie den Reisemangel sofort der Reiseleitung und zusätzlich schriftlich, nicht erst nachträglich. Andernfalls hat der Reiseveranstalter keine Chance, den Mangel zu beseitigen. Dokumentieren Sie alles mit Fotos und heben Sie vorsorglich alle Quittungen auf. Dann ist Ihre Beweislage gut, und eine Beschwerde ist aussichtsreich. Eine Beschwerdefrist gibt es bei Pauschalreisen übrigens nicht. Wie die Rechtslage genau ist, erklären die Verbraucherzentralen auf ihren Internetseiten. Dort finden Sie auch Musterbriefe. Einen Rechtsbeistand brauchen die meisten Reisenden nicht. So nehmen Sie Ihre Rechte als Verbraucher wahr."
+  },
+  {
+    "id": "b2.1-u04-ls8-l01",
+    "speaker": "ansage",
+    "voice": null,
+    "rate": null,
+    "text": "Wir hätten uns einen ruhigeren Urlaub gewünscht."
+  }
+]
