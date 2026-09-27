@@ -1835,6 +1835,7 @@ which E0-1 generates so that the cumulative lexicon and the reserve index behind
 | TXT-02 | pass | `ga2.h1` texts 26–32 words (band 25–60); `ta2.h1` texts 37–46 words (band 30–70) |
 | TXT-03 | pass | dialogues 8–10 lines |
 | TXT-04 | pass | every non-exam `promptDe`, block `instructionsDe` and `taskDe` ≤ 90 characters; exam stems within `examStemChars` [20, 110]; template `instructionsDe` ≤ 200 |
+| **ITM-01** | **fail (rail of 2026-09-27)** | `a2.1-u07-ls3-p10` (`errorTag: "verb-final"`) says what to correct only in `promptEn` („Correct the word order."); its German prompt is a bare „Korrigieren Sie:", and „Melden Sie sich bis zehn Uhr, ist Herr Brandt da." is a second correct correction the key rejects (RAILS §3.1b, review a1.1-u04 r5 F01, the class of b2.2-u04 r2 F04). With the prompt „Korrigieren Sie die Wortstellung: …" this row passes and CON-06 is again the only blocker |
 | ITM-02, ITM-03 | pass | three options on every non-exam MC and every `abc` item; `ga2.h1` keys b, c, a, c, b (balanced ±1) |
 | ITM-06 | pass | each situation step: 11 authored + 5 generated = 16; typed/dictation 8/16, sentence building 5/16, error correction 1/16, choice 2/16, generated 5/16 ≤ 0.4; reserve 4 each, no reserve item repeats a pool item's POS-masked key |
 | ITM-07 | pass | every answer with a digit, time, phone number or spelled name carries `exact` |
