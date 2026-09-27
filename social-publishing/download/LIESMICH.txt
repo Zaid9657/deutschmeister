@@ -1,0 +1,40 @@
+DEUTSCH MEISTER — alle Videos und Podcasts herunterladen
+========================================================
+
+Warum ein Skript und kein fertiges ZIP: die Dateien sind zusammen rund
+6,9 GB. Das ist nichts, was durch einen Chat passt — und es muss auch nicht,
+denn dein Rechner darf direkt auf den Speicher zugreifen.
+
+WAS DRIN IST
+  dateien.csv          alle 46 Dateien mit Titel, Stufe, Quelle, Zielname
+  herunterladen.sh     macOS / Linux
+  herunterladen.ps1    Windows
+
+SO GEHT ES
+  macOS / Linux:   Terminal in diesem Ordner öffnen, dann
+                     bash herunterladen.sh
+  Windows:         Rechtsklick auf herunterladen.ps1 -> Mit PowerShell ausführen
+
+  Nur die Videos (0,7 GB):     bash herunterladen.sh Video
+  Nur die Podcasts (6,2 GB):   bash herunterladen.sh Podcast
+
+  Abgebrochen? Einfach nochmal starten. Fertige Dateien werden übersprungen.
+
+WAS DU BEKOMMST
+  Videos/     22 Dateien — 11 Themen, je englisch (EN) und arabisch (AR), alle A1
+  Podcasts/   24 Dateien — A1.1 bis B2.2, benannt nach Stufe und Titel
+
+ZWEI DINGE, DIE DU WISSEN SOLLTEST
+
+1. "Videos/03 - Der Die Das - EN - PRUEFEN.mp4"
+   Diese Datei ist auf das Byte genau so groß wie das Personalpronomen-Video.
+   Wahrscheinlich liegt unter dem Artikel-Namen das falsche Video. Öffne sie
+   zuerst, bevor du sie irgendwo hochlädst.
+
+2. Die zehn Podcasts ab B1.1 Nr. 3 sind auf der Website NICHT sichtbar — und
+   der Grund ist nicht der Schalter, sondern der Dateiname. Die Datenbank zeigt
+   auf "B1.2/1.mp4", im Speicher liegt aber "B1.2/1 (2).mp4". Die Klammer im
+   Namen ist der ganze Fehler. Dieses Skript kennt die echten Namen und lädt sie
+   korrekt; die Website findet sie nicht. Wer sie live schalten will, muss
+   entweder die Dateien umbenennen oder die Pfade in der Datenbank korrigieren —
+   den Schalter allein umzulegen würde zehn kaputte Player erzeugen.
