@@ -171,6 +171,15 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   `curl -sS "$HTTPS_PROXY/__agentproxy/status"`. Routine prompts live in
   `docs/seo-routines/` rather than the Routines UI, because an agent cannot edit a Routine it did not
   create and a UI-only prompt drifts from the repo silently.
+- **Social posts: carousels from the next pack on (owner decision 2026-09-27).** The first pack
+  (`drafts/instagram-100/`, 50 single-image posts, 2026-10-01 → 11-19) is the template: brand
+  tokens, 1080×1350 JPEG (4:5), exam facts only from the checked Leitfaden modules, per-channel
+  captions with UTM tags, images served from `public/social/ig/`. Every later pack uses **2–4
+  images per post where the content needs it** (hook → rule/example → practice/CTA), not one
+  card by default. Instagram (Publish Photo(s)) and Facebook (Create Page Photo) take a list of
+  up to 10 image URLs in Zapier; Zapier's Telegram action sends ONE photo, so a Telegram album
+  needs the Bot API's `sendMediaGroup` (or one photo + the rest as a follow-up). The sheet needs
+  one column per slide, not one `image_url`.
 - **Leitfäden are data, not pages.** A guide lives in
   `astro-site/src/data/guides/<slug>.js` and is rendered by
   `pages/leitfaden/[slug].astro`; the hub lists the registry. Adding one is a data module,

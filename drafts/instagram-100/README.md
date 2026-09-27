@@ -8,6 +8,9 @@ the same template and voice. Nothing self-publishes until the daily Routine
 The directory name says 100 because that was the first brief. The owner cut it to
 50 on 2026-09-27, and the name stays so earlier links still work.
 
+**Next pack (owner, 2026-09-27):** 2–4 images per post where the content needs it,
+as a carousel. See the "Social posts" line in `CLAUDE.md`.
+
 ## What is where
 | File | What |
 |---|---|
