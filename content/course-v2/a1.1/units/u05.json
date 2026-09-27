@@ -3269,7 +3269,7 @@
         "type": "multiple_choice",
         "role": "proof",
         "topic": "lesen",
-        "promptDe": "Sie haben 700 Euro für die Miete. Wichtig für Sie: Die Wohnung ist nicht dunkel. Was passt?",
+        "promptDe": "Sie haben 700 Euro für die Miete. Wichtig: Die Wohnung ist nicht dunkel. Was passt?",
         "promptEn": "You have 700 euros for rent, and the flat must not be dark. Which ad fits?",
         "options": [
           "Ruhig, aber dunkel. 590 Euro",
