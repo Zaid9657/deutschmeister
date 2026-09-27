@@ -1,0 +1,896 @@
+{
+  "$schema": "course-v2/text-types@1",
+  "types": [
+    {
+      "id": "tt.formular",
+      "label": "Formular oder Vordruck",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": [10, 100],
+        "a1.2": [10, 130],
+        "a2.1": [10, 150],
+        "a2.2": [10, 150],
+        "b1.1": [15, 200],
+        "b1.2": [15, 200],
+        "b2.1": [15, 250],
+        "b2.2": [15, 250]
+      }
+    },
+    {
+      "id": "tt.steckbrief",
+      "label": "Steckbrief oder Profil",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": [15, 100],
+        "a1.2": [15, 130],
+        "a2.1": [20, 150],
+        "a2.2": [20, 150]
+      }
+    },
+    {
+      "id": "tt.kurzmitteilung",
+      "label": "Kurze Mitteilung (Nachricht, Notiz oder E-Mail)",
+      "parts": ["anrede", "gruss"],
+      "lengthByLevel": {
+        "a1.1": [15, 100],
+        "a1.2": [20, 130],
+        "a2.1": [20, 150],
+        "a2.2": [20, 150]
+      }
+    },
+    {
+      "id": "tt.notiz",
+      "label": "Notiz oder Zettel",
+      "parts": ["anrede", "gruss"],
+      "lengthByLevel": {
+        "a1.1": [10, 80],
+        "a1.2": [10, 100],
+        "a2.1": [10, 120],
+        "a2.2": [10, 120],
+        "b1.1": [10, 150],
+        "b1.2": [10, 150],
+        "b2.1": [10, 150],
+        "b2.2": [10, 150]
+      }
+    },
+    {
+      "id": "tt.sms",
+      "label": "SMS oder Chat-Nachricht",
+      "parts": ["anrede", "gruss"],
+      "lengthByLevel": {
+        "a1.1": [5, 80],
+        "a1.2": [5, 100],
+        "a2.1": [10, 150],
+        "a2.2": [10, 150],
+        "b1.1": [10, 200],
+        "b1.2": [10, 200],
+        "b2.1": [10, 200],
+        "b2.2": [10, 200]
+      }
+    },
+    {
+      "id": "tt.email-informell",
+      "label": "Persönliche E-Mail",
+      "parts": ["anrede", "gruss"],
+      "lengthByLevel": {
+        "a1.1": [25, 100],
+        "a1.2": [25, 130],
+        "a2.1": [30, 300],
+        "a2.2": [40, 320],
+        "b1.1": [50, 450],
+        "b1.2": [60, 480],
+        "b2.1": [80, 500],
+        "b2.2": [80, 550]
+      }
+    },
+    {
+      "id": "tt.email-halbformell",
+      "label": "Halbformelle E-Mail oder Nachricht",
+      "parts": ["anrede", "gruss"],
+      "lengthByLevel": {
+        "a1.1": [15, 100],
+        "a1.2": [20, 130],
+        "a2.1": [25, 230],
+        "a2.2": [25, 280],
+        "b1.1": [30, 300],
+        "b1.2": [30, 300],
+        "b2.1": [50, 350],
+        "b2.2": [60, 350]
+      }
+    },
+    {
+      "id": "tt.email-antwort",
+      "label": "Antwort-E-Mail mit Betreff (informell oder halbformell)",
+      "parts": ["betreff", "anrede", "einleitung", "schluss", "gruss"],
+      "lengthByLevel": {
+        "b1.1": [60, 300],
+        "b1.2": [80, 300],
+        "b2.1": [100, 350],
+        "b2.2": [120, 350]
+      }
+    },
+    {
+      "id": "tt.email-formell",
+      "label": "Formelle E-Mail (Anfrage, Beschwerde, Widerspruch)",
+      "parts": ["betreff", "anrede", "einleitung", "schluss", "gruss"],
+      "lengthByLevel": {
+        "b1.1": [60, 300],
+        "b1.2": [80, 300],
+        "b2.1": [100, 350],
+        "b2.2": [140, 400]
+      }
+    },
+    {
+      "id": "tt.brief-persoenlich",
+      "label": "Persönlicher Brief",
+      "parts": ["anrede", "gruss"],
+      "lengthByLevel": {
+        "a2.1": [30, 230],
+        "a2.2": [30, 280],
+        "b1.1": [60, 350],
+        "b1.2": [60, 350],
+        "b2.1": [80, 400],
+        "b2.2": [80, 400]
+      }
+    },
+    {
+      "id": "tt.brief-formell",
+      "label": "Formeller Brief oder Bescheid (Behörde, Versicherung, Firma)",
+      "parts": ["datum", "betreff", "anrede", "gruss", "unterschrift"],
+      "lengthByLevel": {
+        "a2.2": [50, 280],
+        "b1.1": [60, 400],
+        "b1.2": [60, 400],
+        "b2.1": [80, 450],
+        "b2.2": [100, 500]
+      }
+    },
+    {
+      "id": "tt.anschreiben",
+      "label": "Bewerbungsschreiben (Anschreiben)",
+      "parts": ["betreff", "anrede", "einleitung", "schluss", "gruss"],
+      "lengthByLevel": {
+        "b1.1": [80, 300],
+        "b1.2": [80, 300],
+        "b2.1": [100, 350],
+        "b2.2": [120, 350]
+      }
+    },
+    {
+      "id": "tt.lebenslauf",
+      "label": "Tabellarischer Lebenslauf",
+      "parts": [],
+      "lengthByLevel": {
+        "a2.2": [30, 200],
+        "b1.1": [40, 250],
+        "b1.2": [40, 250],
+        "b2.1": [60, 300],
+        "b2.2": [60, 300]
+      }
+    },
+    {
+      "id": "tt.einladung",
+      "label": "Einladung",
+      "parts": ["anrede", "gruss"],
+      "lengthByLevel": {
+        "a1.1": [15, 100],
+        "a1.2": [20, 130],
+        "a2.1": [25, 200],
+        "a2.2": [25, 200],
+        "b1.1": [30, 250],
+        "b1.2": [30, 250],
+        "b2.1": [40, 300],
+        "b2.2": [40, 300]
+      }
+    },
+    {
+      "id": "tt.postkarte",
+      "label": "Postkarte oder Glückwunschkarte",
+      "parts": ["anrede", "gruss"],
+      "lengthByLevel": {
+        "a1.1": [15, 80],
+        "a1.2": [15, 100],
+        "a2.1": [15, 120],
+        "a2.2": [15, 120],
+        "b1.1": [15, 150],
+        "b1.2": [15, 150],
+        "b2.1": [15, 150],
+        "b2.2": [15, 150]
+      }
+    },
+    {
+      "id": "tt.post",
+      "label": "Beitrag in sozialen Medien",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": [10, 80],
+        "a1.2": [10, 100],
+        "a2.1": [15, 150],
+        "a2.2": [15, 150],
+        "b1.1": [20, 250],
+        "b1.2": [20, 250],
+        "b2.1": [20, 300],
+        "b2.2": [20, 300]
+      }
+    },
+    {
+      "id": "tt.forumsbeitrag",
+      "label": "Forumsbeitrag (Meinung mit Begründung)",
+      "parts": ["einleitung", "schluss"],
+      "lengthByLevel": {
+        "b1.1": [40, 480],
+        "b1.2": [50, 520],
+        "b2.1": [80, 650],
+        "b2.2": [100, 700]
+      }
+    },
+    {
+      "id": "tt.zusammenfassung",
+      "label": "Zusammenfassung zum Weitergeben",
+      "parts": [],
+      "lengthByLevel": {
+        "b1.1": [30, 150],
+        "b1.2": [40, 150],
+        "b2.1": [60, 200],
+        "b2.2": [80, 220]
+      }
+    },
+    {
+      "id": "tt.telefonnotiz",
+      "label": "Telefon- oder Gesprächsnotiz",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.2": [5, 130],
+        "a2.1": [5, 230],
+        "a2.2": [5, 280],
+        "b1.1": [10, 480],
+        "b1.2": [10, 520],
+        "b2.1": [10, 600],
+        "b2.2": [10, 600]
+      }
+    },
+    {
+      "id": "tt.schild",
+      "label": "Schild, Hinweis oder Aushang",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": [3, 60],
+        "a1.2": [3, 80],
+        "a2.1": [5, 120],
+        "a2.2": [5, 120],
+        "b1.1": [5, 200],
+        "b1.2": [5, 200],
+        "b2.1": [5, 250],
+        "b2.2": [5, 250]
+      }
+    },
+    {
+      "id": "tt.internetanzeige",
+      "label": "Internetanzeige oder kurzes Online-Angebot",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": [8, 100],
+        "a1.2": [8, 130],
+        "a2.1": [15, 230],
+        "a2.2": [15, 280],
+        "b1.1": [20, 480],
+        "b1.2": [20, 520],
+        "b2.1": [30, 650],
+        "b2.2": [30, 700]
+      }
+    },
+    {
+      "id": "tt.kleinanzeige",
+      "label": "Kleinanzeige",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": [8, 100],
+        "a1.2": [8, 130],
+        "a2.1": [15, 230],
+        "a2.2": [15, 280],
+        "b1.1": [20, 480],
+        "b1.2": [20, 520],
+        "b2.1": [30, 650],
+        "b2.2": [30, 700]
+      }
+    },
+    {
+      "id": "tt.stellenanzeige",
+      "label": "Stellenanzeige",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.2": [15, 130],
+        "a2.1": [20, 230],
+        "a2.2": [20, 280],
+        "b1.1": [30, 480],
+        "b1.2": [30, 520],
+        "b2.1": [40, 650],
+        "b2.2": [40, 700]
+      }
+    },
+    {
+      "id": "tt.webseite",
+      "label": "Webseite",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": [15, 100],
+        "a1.2": [15, 130],
+        "a2.1": [30, 230],
+        "a2.2": [30, 280],
+        "b1.1": [50, 480],
+        "b1.2": [50, 520],
+        "b2.1": [80, 650],
+        "b2.2": [80, 700]
+      }
+    },
+    {
+      "id": "tt.prospekt",
+      "label": "Prospekt oder Werbeblatt mit Angeboten",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": [20, 100],
+        "a1.2": [20, 130],
+        "a2.1": [30, 230],
+        "a2.2": [30, 280],
+        "b1.1": [40, 400],
+        "b1.2": [40, 400],
+        "b2.1": [60, 450],
+        "b2.2": [60, 450]
+      }
+    },
+    {
+      "id": "tt.informationstafel",
+      "label": "Informationstafel, Wegweiser oder Verzeichnis",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": [5, 80],
+        "a1.2": [5, 100],
+        "a2.1": [30, 270],
+        "a2.2": [30, 280],
+        "b1.1": [40, 400],
+        "b1.2": [40, 400],
+        "b2.1": [40, 450],
+        "b2.2": [40, 450]
+      }
+    },
+    {
+      "id": "tt.programm",
+      "label": "Programm oder Veranstaltungskalender",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": [20, 100],
+        "a1.2": [20, 130],
+        "a2.1": [40, 270],
+        "a2.2": [40, 280],
+        "b1.1": [60, 480],
+        "b1.2": [60, 520],
+        "b2.1": [80, 650],
+        "b2.2": [80, 700]
+      }
+    },
+    {
+      "id": "tt.fahrplan",
+      "label": "Fahrplan oder Anzeigetafel",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": [5, 80],
+        "a1.2": [5, 100],
+        "a2.1": [10, 150],
+        "a2.2": [10, 150],
+        "b1.1": [10, 200],
+        "b1.2": [10, 200],
+        "b2.1": [10, 200],
+        "b2.2": [10, 200]
+      }
+    },
+    {
+      "id": "tt.speisekarte",
+      "label": "Speisekarte",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": [15, 100],
+        "a1.2": [15, 130],
+        "a2.1": [20, 150],
+        "a2.2": [20, 150],
+        "b1.1": [20, 200],
+        "b1.2": [20, 200]
+      }
+    },
+    {
+      "id": "tt.beleg",
+      "label": "Beleg oder Bestätigung (Buchung, Rechnung, Abrechnung)",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.2": [10, 100],
+        "a2.1": [15, 180],
+        "a2.2": [15, 200],
+        "b1.1": [20, 300],
+        "b1.2": [20, 300],
+        "b2.1": [30, 350],
+        "b2.2": [30, 350]
+      }
+    },
+    {
+      "id": "tt.dokument",
+      "label": "Ausweis, Karte oder Zeugnis",
+      "parts": [],
+      "lengthByLevel": {
+        "a2.1": [5, 100],
+        "a2.2": [5, 120],
+        "b1.1": [5, 150],
+        "b1.2": [5, 150],
+        "b2.1": [5, 200],
+        "b2.2": [5, 200]
+      }
+    },
+    {
+      "id": "tt.anleitung",
+      "label": "Anleitung, Gebrauchshinweis oder Beipackzettel",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.2": [10, 100],
+        "a2.1": [20, 200],
+        "a2.2": [20, 250],
+        "b1.1": [40, 450],
+        "b1.2": [40, 450],
+        "b2.1": [60, 500],
+        "b2.2": [60, 500]
+      }
+    },
+    {
+      "id": "tt.regeln",
+      "label": "Hausordnung, Betriebsordnung oder Studienordnung",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.2": [20, 130],
+        "a2.1": [30, 230],
+        "a2.2": [30, 280],
+        "b1.1": [60, 450],
+        "b1.2": [60, 450],
+        "b2.1": [100, 500],
+        "b2.2": [100, 500]
+      }
+    },
+    {
+      "id": "tt.bedingungen",
+      "label": "Vertrags- oder Geschäftsbedingungen",
+      "parts": [],
+      "lengthByLevel": {
+        "a2.2": [40, 280],
+        "b1.1": [60, 450],
+        "b1.2": [60, 450],
+        "b2.1": [100, 500],
+        "b2.2": [100, 500]
+      }
+    },
+    {
+      "id": "tt.broschuere",
+      "label": "Informationsbroschüre oder Merkblatt",
+      "parts": [],
+      "lengthByLevel": {
+        "a2.1": [40, 230],
+        "a2.2": [60, 280],
+        "b1.1": [80, 480],
+        "b1.2": [80, 520],
+        "b2.1": [100, 600],
+        "b2.2": [100, 650]
+      }
+    },
+    {
+      "id": "tt.rundschreiben",
+      "label": "Rundschreiben oder Mitteilung im Betrieb",
+      "parts": ["datum", "betreff", "anrede", "gruss"],
+      "lengthByLevel": {
+        "b1.1": [50, 350],
+        "b1.2": [50, 400],
+        "b2.1": [80, 450],
+        "b2.2": [80, 450]
+      }
+    },
+    {
+      "id": "tt.zeitungsartikel",
+      "label": "Zeitungs- oder Zeitschriftenartikel",
+      "parts": [],
+      "lengthByLevel": {
+        "a2.1": [80, 260],
+        "a2.2": [120, 280],
+        "b1.1": [150, 480],
+        "b1.2": [150, 520],
+        "b2.1": [200, 650],
+        "b2.2": [250, 700]
+      }
+    },
+    {
+      "id": "tt.kurzmeldung",
+      "label": "Kurzmeldung (Presse oder Firmenzeitung)",
+      "parts": [],
+      "lengthByLevel": {
+        "a2.2": [30, 150],
+        "b1.1": [40, 480],
+        "b1.2": [50, 520],
+        "b2.1": [60, 650],
+        "b2.2": [80, 700]
+      }
+    },
+    {
+      "id": "tt.leserkommentar",
+      "label": "Leserkommentar oder kurze Meinung",
+      "parts": [],
+      "lengthByLevel": {
+        "b1.1": [20, 480],
+        "b1.2": [20, 520],
+        "b2.1": [30, 650],
+        "b2.2": [30, 700]
+      }
+    },
+    {
+      "id": "tt.kommentar",
+      "label": "Kommentar (Meinungsbeitrag in der Presse)",
+      "parts": [],
+      "lengthByLevel": {
+        "b1.2": [120, 450],
+        "b2.1": [150, 550],
+        "b2.2": [150, 600]
+      }
+    },
+    {
+      "id": "tt.blogbeitrag",
+      "label": "Blogbeitrag oder Erfahrungsbericht",
+      "parts": [],
+      "lengthByLevel": {
+        "a2.1": [60, 230],
+        "a2.2": [80, 280],
+        "b1.1": [100, 480],
+        "b1.2": [100, 520],
+        "b2.1": [120, 650],
+        "b2.2": [150, 700]
+      }
+    },
+    {
+      "id": "tt.erzaehltext",
+      "label": "Erzähltext (Erinnerung oder Geschichte)",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.2": [40, 130],
+        "a2.1": [80, 230],
+        "a2.2": [100, 280],
+        "b1.1": [150, 600],
+        "b1.2": [150, 650],
+        "b2.1": [200, 800],
+        "b2.2": [200, 900]
+      }
+    },
+    {
+      "id": "tt.portraet",
+      "label": "Porträt (Person oder Ort)",
+      "parts": [],
+      "lengthByLevel": {
+        "a2.2": [80, 280],
+        "b1.1": [80, 480],
+        "b1.2": [80, 520],
+        "b2.1": [100, 550],
+        "b2.2": [100, 600]
+      }
+    },
+    {
+      "id": "tt.kritik",
+      "label": "Kritik oder Rezension",
+      "parts": [],
+      "lengthByLevel": {
+        "b1.1": [80, 400],
+        "b1.2": [80, 450],
+        "b2.1": [120, 500],
+        "b2.2": [120, 550]
+      }
+    },
+    {
+      "id": "tt.bericht",
+      "label": "Bericht (über ein Projekt, die Arbeit oder ein Ereignis)",
+      "parts": [],
+      "lengthByLevel": {
+        "b1.1": [80, 400],
+        "b1.2": [80, 450],
+        "b2.1": [100, 500],
+        "b2.2": [120, 550]
+      }
+    },
+    {
+      "id": "tt.kurzdialog",
+      "label": "Kurzdialog im Alltag",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": [15, 100],
+        "a1.2": [20, 130],
+        "a2.1": [25, 150],
+        "a2.2": [25, 150],
+        "b1.1": [30, 200],
+        "b1.2": [30, 200],
+        "b2.1": [40, 250],
+        "b2.2": [40, 250]
+      }
+    },
+    {
+      "id": "tt.dialog",
+      "label": "Dialog oder Gespräch im Alltag",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": [15, 100],
+        "a1.2": [20, 130],
+        "a2.1": [25, 300],
+        "a2.2": [25, 320],
+        "b1.1": [30, 600],
+        "b1.2": [30, 650],
+        "b2.1": [40, 800],
+        "b2.2": [40, 900]
+      }
+    },
+    {
+      "id": "tt.telefonat",
+      "label": "Telefonat oder Videotelefonat",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": [25, 100],
+        "a1.2": [25, 130],
+        "a2.1": [30, 230],
+        "a2.2": [30, 280],
+        "b1.1": [60, 520],
+        "b1.2": [60, 550],
+        "b2.1": [80, 600],
+        "b2.2": [80, 650]
+      }
+    },
+    {
+      "id": "tt.mailbox",
+      "label": "Nachricht auf der Mailbox oder Sprachnachricht",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": [15, 100],
+        "a1.2": [15, 130],
+        "a2.1": [20, 230],
+        "a2.2": [20, 280],
+        "b1.1": [25, 480],
+        "b1.2": [25, 520],
+        "b2.1": [30, 520],
+        "b2.2": [30, 520]
+      }
+    },
+    {
+      "id": "tt.telefonansage",
+      "label": "Telefonansage oder Nachricht auf dem Anrufbeantworter",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": [15, 100],
+        "a1.2": [15, 130],
+        "a2.1": [20, 230],
+        "a2.2": [20, 280],
+        "b1.1": [25, 480],
+        "b1.2": [25, 520],
+        "b2.1": [30, 520],
+        "b2.2": [30, 520]
+      }
+    },
+    {
+      "id": "tt.kurzansage",
+      "label": "Kurze Ansage (Radio, Telefon oder Durchsage)",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": [10, 100],
+        "a1.2": [10, 130],
+        "a2.1": [20, 230],
+        "a2.2": [20, 280],
+        "b1.1": [25, 480],
+        "b1.2": [25, 520],
+        "b2.1": [30, 520],
+        "b2.2": [30, 520]
+      }
+    },
+    {
+      "id": "tt.durchsage",
+      "label": "Durchsage (Bahnhof, Flughafen, Kaufhaus, Betrieb)",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": [8, 100],
+        "a1.2": [8, 130],
+        "a2.1": [15, 230],
+        "a2.2": [15, 280],
+        "b1.1": [20, 480],
+        "b1.2": [20, 520],
+        "b2.1": [25, 520],
+        "b2.2": [25, 520]
+      }
+    },
+    {
+      "id": "tt.radiomeldung",
+      "label": "Radiomeldung (Nachrichten, Wetter, Verkehr, Tipp)",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.2": [15, 130],
+        "a2.1": [20, 230],
+        "a2.2": [20, 280],
+        "b1.1": [30, 480],
+        "b1.2": [30, 520],
+        "b2.1": [40, 600],
+        "b2.2": [40, 650]
+      }
+    },
+    {
+      "id": "tt.radiointerview",
+      "label": "Interview (Radio oder Podcast)",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": [30, 100],
+        "a1.2": [30, 130],
+        "a2.1": [80, 280],
+        "a2.2": [120, 300],
+        "b1.1": [200, 650],
+        "b1.2": [200, 700],
+        "b2.1": [250, 900],
+        "b2.2": [300, 1000]
+      }
+    },
+    {
+      "id": "tt.umfrage",
+      "label": "Straßenumfrage oder kurze Meinungsäußerungen",
+      "parts": [],
+      "lengthByLevel": {
+        "a2.1": [50, 230],
+        "a2.2": [60, 280],
+        "b1.1": [80, 480],
+        "b1.2": [80, 520],
+        "b2.1": [100, 600],
+        "b2.2": [100, 650]
+      }
+    },
+    {
+      "id": "tt.diskussion",
+      "label": "Radiodiskussion oder Gesprächsrunde",
+      "parts": [],
+      "lengthByLevel": {
+        "b1.1": [200, 650],
+        "b1.2": [250, 700],
+        "b2.1": [300, 800],
+        "b2.2": [300, 900]
+      }
+    },
+    {
+      "id": "tt.vortrag",
+      "label": "Vortrag, Kurzvortrag oder Ansprache",
+      "parts": [],
+      "lengthByLevel": {
+        "b1.1": [120, 550],
+        "b1.2": [150, 600],
+        "b2.1": [200, 800],
+        "b2.2": [250, 1000]
+      }
+    },
+    {
+      "id": "tt.fuehrung",
+      "label": "Führung oder Rundgang",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": [30, 100],
+        "a1.2": [30, 130],
+        "a2.1": [50, 230],
+        "a2.2": [60, 280],
+        "b1.1": [120, 550],
+        "b1.2": [150, 600],
+        "b2.1": [150, 650],
+        "b2.2": [150, 700]
+      }
+    },
+    {
+      "id": "tt.stichwortblatt",
+      "label": "Stichwortblatt (Angaben zur Person)",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": [3, 20],
+        "a1.2": [3, 20],
+        "a2.1": [3, 25],
+        "a2.2": [3, 25],
+        "b1.1": [5, 50],
+        "b1.2": [5, 50],
+        "b2.1": [5, 60],
+        "b2.2": [5, 60]
+      }
+    },
+    {
+      "id": "tt.wortkarte",
+      "label": "Wortkarte (Thema und Stichwort)",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": [1, 4],
+        "a1.2": [1, 4],
+        "a2.1": [1, 4],
+        "a2.2": [1, 4]
+      }
+    },
+    {
+      "id": "tt.bildkarte",
+      "label": "Bildkarte",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": [0, 3],
+        "a1.2": [0, 3],
+        "a2.1": [0, 3],
+        "a2.2": [0, 3]
+      }
+    },
+    {
+      "id": "tt.aufgabenkarte",
+      "label": "Aufgabenkarte mit Leitfrage und Stichpunkten",
+      "parts": [],
+      "lengthByLevel": {
+        "a2.1": [6, 30],
+        "a2.2": [6, 30],
+        "b1.1": [10, 60],
+        "b1.2": [10, 60],
+        "b2.1": [10, 80],
+        "b2.2": [10, 80]
+      }
+    },
+    {
+      "id": "tt.terminkalender",
+      "label": "Terminkalender, Dienst- oder Stundenplan",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.2": [5, 50],
+        "a2.1": [5, 60],
+        "a2.2": [5, 60],
+        "b1.1": [5, 80],
+        "b1.2": [5, 80],
+        "b2.1": [5, 100],
+        "b2.2": [5, 100]
+      }
+    },
+    {
+      "id": "tt.planungsblatt",
+      "label": "Aufgabenblatt zur gemeinsamen Planung",
+      "parts": [],
+      "lengthByLevel": {
+        "a2.1": [5, 60],
+        "a2.2": [5, 60],
+        "b1.1": [15, 80],
+        "b1.2": [15, 80],
+        "b2.1": [20, 100],
+        "b2.2": [20, 100]
+      }
+    },
+    {
+      "id": "tt.meinungsblatt",
+      "label": "Aufgabenblatt mit zwei kurzen Meinungen",
+      "parts": [],
+      "lengthByLevel": {
+        "b1.1": [30, 120],
+        "b1.2": [30, 120],
+        "b2.1": [40, 150],
+        "b2.2": [40, 150]
+      }
+    },
+    {
+      "id": "tt.foto",
+      "label": "Foto zum Beschreiben",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": [0, 15],
+        "a1.2": [0, 15],
+        "a2.1": [0, 15],
+        "a2.2": [0, 15],
+        "b1.1": [0, 15],
+        "b1.2": [0, 15],
+        "b2.1": [0, 15],
+        "b2.2": [0, 15]
+      }
+    },
+    {
+      "id": "tt.praesentation",
+      "label": "Präsentationsfolien",
+      "parts": [],
+      "lengthByLevel": {
+        "b1.1": [10, 100],
+        "b1.2": [10, 100],
+        "b2.1": [15, 150],
+        "b2.2": [15, 150]
+      }
+    }
+  ]
+}

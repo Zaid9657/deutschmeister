@@ -1,0 +1,30 @@
+{
+  "$schema": "course-v2/lane@1",
+  "id": "ga2",
+  "name": "Goethe-Zertifikat A2",
+  "level": "A2",
+  "examKey": "goethe_a2",
+  "providers": ["goethe"],
+  "stand": "2026-09-26",
+  "sources": [
+    "https://www.goethe.de/pro/relaunch/prf/de/Durchfuehrungsbestimmungen_A2.pdf",
+    "https://www.goethe.de/pro/relaunch/prf/materialien/A2/A2_Uebungssatz_Erwachsene.pdf"
+  ],
+  "access": { "gate": "none" },
+  "modules": {
+    "lesen": { "minutes": 30, "teile": ["l1", "l2", "l3", "l4"] },
+    "hoeren": { "minutes": 30, "teile": ["h1", "h2", "h3", "h4"] },
+    "schreiben": { "minutes": 30, "teile": ["s1", "s2"] },
+    "sprechen": { "minutes": 15, "teile": ["sp1", "sp2", "sp3"], "prepMinutes": 0, "format": "pair" }
+  },
+  "writtenBlock": { "minutes": 90, "breaks": false },
+  "teile": {
+    "h1": { "id": "ga2.h1", "module": "hoeren", "family": "fam.h-detail", "task": "abc", "items": 5, "options": 3, "plays": 2, "textType": "tt.kurzansage", "textWords": [25, 60], "textWordsSource": "design", "points": 5, "scaffoldAllowedIn": ["a2.1"], "transfersTo": [], "source": "US-A2 p. 3 and Hören Teil 1", "stand": "2026-09-26" },
+    "s2": { "id": "ga2.s2", "module": "schreiben", "family": "fam.w-nachricht", "task": "writing", "textType": "tt.email-halbformell", "words": { "min": 30, "max": 40 }, "leitpunkte": 3, "register": "halbformell", "rubric": "ga2-s2", "points": 10, "scaffoldAllowedIn": [], "transfersTo": [], "source": "US-A2 p. 37", "stand": "2026-09-26" },
+    "sp1": { "id": "ga2.sp1", "module": "sprechen", "family": "fam.s-fragekarten", "task": "speaking", "textType": "tt.wortkarte", "interaction": "cards-ask", "prepMinutes": 0, "rubric": "ga2-sp1", "points": 4, "scaffoldAllowedIn": ["a2.1"], "transfersTo": ["ta2.sp2"], "source": "US-A2 Sprechen Teil 1; DB-A2 §1.4", "stand": "2026-09-26" }
+  },
+  "blueprint": { "modules": { "lesen": ["l1", "l2", "l3", "l4"], "hoeren": ["h1", "h2", "h3", "h4"], "schreiben": ["s1", "s2"], "sprechen": ["sp1", "sp2", "sp3"] }, "totalMinutes": 105, "answerSheetStep": false },
+  "scale": { "kind": "scaled", "max": 100, "parts": { "lesen": 25, "hoeren": 25, "schreiben": 25, "sprechen": 25 } },
+  "passRule": "goethe-a2",
+  "openQuestions": ["Sprechen per-Teil split reconstructed from the rating sheet (memo 01, unverified)"]
+}

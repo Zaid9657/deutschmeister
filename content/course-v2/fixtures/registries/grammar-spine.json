@@ -1,0 +1,30 @@
+{
+  "$schema": "course-v2/spine@1",
+  "points": [
+    {
+      "id": "g.reflexiv-akk",
+      "label": "Reflexive Verben mit Akkusativ: ich melde mich, du beeilst dich",
+      "intro": {
+        "receptive": "a2.1-u07",
+        "productive": "a2.1-u07"
+      },
+      "detectors": [
+        "det.reflexiv-pronomen"
+      ],
+      "contrast": "g.akk-personalpronomen",
+      "errorTags": [
+        "reflexive"
+      ],
+      "lehrwerk": [
+        "M A2 L11",
+        "S3 L5",
+        "N A2 K4"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.reflexiv-akk"
+      ],
+      "inventory": []
+    }
+  ]
+}

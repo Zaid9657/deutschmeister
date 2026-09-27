@@ -1,0 +1,50 @@
+{
+  "$schema": "course-v2/rubric@1",
+  "id": "ga2-s2",
+  "kind": "writing",
+  "lane": "ga2",
+  "max": 10,
+  "criteria": [
+    {
+      "id": "af",
+      "label": "Aufgabenerfüllung (Sprachfunktionen, Register)",
+      "per": "task",
+      "levels": [
+        5,
+        3.5,
+        2,
+        0.5,
+        0
+      ]
+    },
+    {
+      "id": "sp",
+      "label": "Sprache (Spektrum, Beherrschung)",
+      "per": "task",
+      "levels": [
+        5,
+        3.5,
+        2,
+        0.5,
+        0
+      ]
+    }
+  ],
+  "zeroRules": [
+    "goethe-e-under-half-words",
+    "goethe-e-topic-missed"
+  ],
+  "capRules": [],
+  "spelling": "only-if-meaning-suffers",
+  "feedbackLanguage": [
+    "de-a2",
+    "en"
+  ],
+  "modelId": "config:writing-full",
+  "splitVerified": true,
+  "calibration": {
+    "status": "pending",
+    "rangeBands": 1
+  },
+  "source": "https://www.goethe.de/pro/relaunch/prf/materialien/A2/A2_Uebungssatz_Erwachsene.pdf"
+}

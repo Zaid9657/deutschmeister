@@ -1,0 +1,605 @@
+// Construction detectors (BLUEPRINT §9.3, GRM-04) — the engine that runs
+// `content/course-v2/registries/detectors.json`.
+//
+// A detector answers one question about one sentence: "is construction X used here?". It never
+// knows WHEN X is taught — that is read from the grammar spine (`points[].detectors` + `intro`),
+// the rule `src/data/curricula/constructions.js` established: the introducing unit is never typed
+// into a detector, so moving a spine point moves the guard with it.
+//
+// Precision is declared per detector and honoured per hit:
+//   exact      — deterministic and (measured on its own examples) free of false positives;
+//                GRM-04 blocks on it.
+//   heuristic  — shape-based; routes to review (advisory).
+//   advisory   — known to be noisy; advisory only.
+// A lexicon-driven detector that has to fall back to word shape (the lexicon does not know the
+// form) marks that hit `fallback: true` and it is treated as heuristic.
+//
+// Methods (the `method` field) and their `spec`:
+//   token    tokens[] | phrases[] (lower-case), clauseInitial?, requireVerbFinal?, notQuestion?,
+//            notPrecededBy[]?, notFollowedBy[]?, followedByCapital?, caseSensitive?
+//   pattern  regex, flags?, group?, skip? (regex on the match), skipSentence?, requireVerbFinal?, notQuestion?
+//   clause   kind: pair | subordinate | relative | aux-final | imperative (see the functions below)
+//   lexicon  kind: participle-aux | praeteritum | reflexive | zu-infinitive | n-declension
+// Every spec may carry whitelist[] (lower-case phrases inside which hits are ignored) and
+// examples { hit[], miss[], lexicon[]? } which the test suite runs.
+
+import { tokens, sentences, clauses, endsVerbFinal, isQuestion, FUNCTION_WORDS, AUX_MODAL_FORMS } from './text.mjs';
+
+const arr = (x) => (Array.isArray(x) ? x : []);
+const lc = (s) => String(s ?? '').toLowerCase();
+
+// ── lexicon environment ───────────────────────────────────────────────────────────────────
+
+/**
+ * What the lexicon-driven detectors need, derived from lexicon entries (SCHEMA §6). With no
+ * entries, `available` is false and every lexicon detector runs on its shape fallback only.
+ */
+export function buildLexEnv(entries = []) {
+  const env = {
+    available: false,
+    participles: new Map(), // participle → { aux: 'hat'|'ist', lemma }
+    praet: new Set(),
+    infinitives: new Set(),
+    zuInfix: new Set(),
+    reflexiveStems: new Map(), // stem → 'akk'|'dat'
+    verbStems: new Set(),
+    weakNouns: new Set(),
+  };
+  for (const e of arr(entries)) {
+    if (!e || typeof e !== 'object') continue;
+    const lemma = lc(e.lemma).trim();
+    if (!lemma) continue;
+    env.available = true;
+    if (e.pos === 'VERB') {
+      const inf = lemma.replace(/^sich\s+/, '').split(/\s+/).pop();
+      env.infinitives.add(inf);
+      const stem = inf.replace(/(?:en|n)$/, '');
+      env.verbStems.add(stem);
+      const vf = e.verb_forms || {};
+      const perfekt = lc(vf.perfekt).trim().split(/\s+/).filter(Boolean);
+      if (perfekt.length >= 2) {
+        const aux = perfekt[0] === 'ist' ? 'ist' : 'hat';
+        env.participles.set(perfekt[perfekt.length - 1], { aux, lemma });
+      }
+      const praet = lc(vf.praet).trim().split(/\s+/).filter(Boolean);
+      if (praet.length) env.praet.add(praet[0]);
+      const third = lc(vf['3sg']).trim().split(/\s+/).filter(Boolean);
+      let prefix = null;
+      if (e.separable && third.length >= 2) prefix = third[third.length - 1];
+      if (prefix && inf.startsWith(prefix)) {
+        env.zuInfix.add(`${prefix}zu${inf.slice(prefix.length)}`);
+        env.verbStems.add(stem.slice(prefix.length));
+      }
+      if (e.reflexive) {
+        const s = prefix && stem.startsWith(prefix) ? stem.slice(prefix.length) : stem;
+        env.reflexiveStems.set(s, e.reflexive);
+      }
+    }
+    if (e.pos === 'NOUN' && e.article === 'der' && typeof e.plural === 'string') {
+      const pl = lc(e.plural);
+      if ((pl === `${lemma}n` || pl === `${lemma}en`) && /(?:e|ant|ent|ist|at|oge|graf|soph|nom)$/.test(lemma)) env.weakNouns.add(lemma);
+    }
+  }
+  return env;
+}
+
+export const EMPTY_ENV = buildLexEnv([]);
+
+// ── helpers ───────────────────────────────────────────────────────────────────────────────
+
+const SUBJECT_PRONOUNS = new Set(['ich', 'du', 'er', 'sie', 'es', 'wir', 'ihr', 'man']);
+const DETERMINERS = new Set(`der die das den dem des ein eine einen einem einer eines kein keine keinen keinem keiner keines
+mein meine meinen meinem meiner meines dein deine deinen deinem deiner deines sein seine seinen seinem seiner seines
+ihr ihre ihren ihrem ihrer ihres unser unsere unseren unserem unserer unseres euer eure euren eurem eurer eures
+dieser diese dieses diesen diesem jeder jede jedes jeden jedem`.split(/\s+/));
+const PARTICIPLE_SHAPE = /^(?:ge[a-zäöüß]{2,}(?:t|en)|(?:ab|an|auf|aus|ein|mit|nach|vor|zu|zurück|weg|los|fest|fern|her|hin|um|durch|weiter|kennen)ge[a-zäöüß]{2,}(?:t|en)|[a-zäöüß]{3,}iert|(?:be|ver|er|ent|zer|emp|miss|über|unter|hinter)[a-zäöüß]{2,}(?:t|en))$/;
+const INFINITIVE_SHAPE = /^[a-zäöüß]{3,}(?:en|ern|eln)$/;
+const TRAILING_OK = new Set([...AUX_MODAL_FORMS, 'sein', 'haben', 'werden', 'worden', 'gewesen', 'geworden', 'lassen', 'können', 'müssen', 'sollen', 'wollen', 'dürfen']);
+
+/** Char ranges of whitelisted phrases in a sentence. */
+function whitelistRanges(sentence, whitelist) {
+  const s = lc(sentence);
+  const out = [];
+  for (const phrase of arr(whitelist)) {
+    const p = lc(phrase);
+    if (!p) continue;
+    let i = s.indexOf(p);
+    while (i >= 0) {
+      const before = i === 0 ? ' ' : s[i - 1];
+      const after = i + p.length >= s.length ? ' ' : s[i + p.length];
+      if (!/[a-zäöüß]/.test(before) && !/[a-zäöüß]/.test(after)) out.push([i, i + p.length]);
+      i = s.indexOf(p, i + 1);
+    }
+  }
+  return out;
+}
+
+const inRanges = (index, length, ranges) => ranges.some(([a, b]) => index >= a && index + length <= b);
+
+/** Clause spans of a sentence with their char offset. */
+function clauseSpans(sentence) {
+  const out = [];
+  let offset = 0;
+  const parts = String(sentence).split(/([,;:()–—]|\s-\s)/);
+  for (const part of parts) {
+    if (!/^([,;:()–—]|\s-\s)$/.test(part) && part.trim()) {
+      const lead = part.length - part.trimStart().length;
+      out.push({ text: part.trim(), start: offset + lead });
+    }
+    offset += part.length;
+  }
+  return out;
+}
+
+function clauseAt(sentence, index) {
+  for (const c of clauseSpans(sentence)) if (index >= c.start && index < c.start + c.text.length) return c;
+  return { text: String(sentence), start: 0 };
+}
+
+const isCapitalMidSentence = (tok, i) => i > 0 && /^[A-ZÄÖÜ]/.test(tok.text);
+
+// ── methods ───────────────────────────────────────────────────────────────────────────────
+
+function runToken(det, sentence) {
+  const spec = det.spec || {};
+  const toks = tokens(sentence);
+  const hits = [];
+  const want = new Set(arr(spec.tokens).map((t) => (spec.caseSensitive ? t : lc(t))));
+  const phrases = arr(spec.phrases).map((p) => (Array.isArray(p) ? p : String(p).split(/\s+/)).map(lc));
+  for (let i = 0; i < toks.length; i += 1) {
+    const t = toks[i];
+    const w = spec.caseSensitive ? t.text : t.lower;
+    let len = 0;
+    if (want.has(w)) len = 1;
+    else {
+      for (const ph of phrases) {
+        if (ph.every((p, k) => toks[i + k] && toks[i + k].lower === p)) {
+          len = ph.length;
+          break;
+        }
+      }
+    }
+    if (!len) continue;
+    if (spec.notPrecededBy && i > 0 && arr(spec.notPrecededBy).map(lc).includes(toks[i - 1].lower)) continue;
+    if (spec.notFollowedBy && toks[i + len] && arr(spec.notFollowedBy).map(lc).includes(toks[i + len].lower)) continue;
+    if (spec.followedByCapital && !(toks[i + len] && /^[A-ZÄÖÜ]/.test(toks[i + len].text))) continue;
+    if (spec.notQuestion && isQuestion(sentence)) continue;
+    const clause = clauseAt(sentence, t.index);
+    if (spec.clauseInitial) {
+      const first = tokens(clause.text)[0];
+      const firstIsConj = first && ['und', 'oder', 'aber'].includes(first.lower);
+      const firstIdx = clause.start + (first ? first.index : 0);
+      const second = tokens(clause.text)[1];
+      const okAfterConj = firstIsConj && second && clause.start + second.index === t.index;
+      if (firstIdx !== t.index && !okAfterConj) continue;
+    }
+    if (spec.requireVerbFinal && !endsVerbFinal(sentence.slice(t.index, clause.start + clause.text.length))) continue;
+    const end = toks[i + len - 1];
+    hits.push({ index: t.index, match: sentence.slice(t.index, end.index + end.text.length) });
+  }
+  return hits;
+}
+
+function runPattern(det, sentence) {
+  const spec = det.spec || {};
+  if (!spec.regex) return [];
+  if (spec.skipSentence && new RegExp(spec.skipSentence, 'iu').test(sentence)) return [];
+  if (spec.notQuestion && isQuestion(sentence)) return [];
+  const re = new RegExp(spec.regex, spec.flags || 'gu');
+  const flagsG = re.flags.includes('g') ? re : new RegExp(re.source, `${re.flags}g`);
+  const hits = [];
+  for (const m of sentence.matchAll(flagsG)) {
+    const g = spec.group || 0;
+    const text = m[g] ?? m[0];
+    const index = m.index + (g ? m[0].indexOf(text) : 0);
+    if (spec.skip && new RegExp(spec.skip, 'iu').test(text)) continue;
+    if (spec.requireVerbFinal) {
+      const clause = clauseAt(sentence, index);
+      if (!endsVerbFinal(sentence.slice(index, clause.start + clause.text.length))) continue;
+    }
+    hits.push({ index, match: text });
+  }
+  return hits;
+}
+
+/** Two-part connectors: every [first, second] pair, first before second, in one sentence. */
+function clausePair(det, sentence) {
+  const s = lc(sentence);
+  const hits = [];
+  const find = (phrase, from) => {
+    const p = lc(phrase);
+    const re = new RegExp(`(?<![a-zäöüß])${p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+')}(?![a-zäöüß])`, 'u');
+    const m = re.exec(s.slice(from));
+    return m ? from + m.index : -1;
+  };
+  for (const [first, second] of arr(det.spec?.pairs)) {
+    const a = find(first, 0);
+    if (a < 0) continue;
+    const b = find(second, a + lc(first).length);
+    if (b < 0) continue;
+    hits.push({ index: a, match: `${sentence.slice(a, a + first.length)} … ${sentence.slice(b, b + second.length)}` });
+  }
+  return hits;
+}
+
+/** An ambiguous subordinator: clause-initial token, subject next, verb-final clause. */
+function clauseSubordinate(det, sentence) {
+  const spec = det.spec || {};
+  const want = new Set(arr(spec.tokens).map(lc));
+  const hits = [];
+  if (spec.notQuestion && isQuestion(sentence)) return hits;
+  for (const c of clauseSpans(sentence)) {
+    const toks = tokens(c.text);
+    let k = 0;
+    if (toks[0] && ['und', 'oder', 'aber', 'erst', 'nur', 'schon', 'gerade', 'genau'].includes(toks[0].lower) && toks.length > 1) k = 1;
+    const t = toks[k];
+    if (!t || !want.has(t.lower)) continue;
+    const next = toks[k + 1];
+    if (!next) continue;
+    const subjectLike = SUBJECT_PRONOUNS.has(next.lower) || DETERMINERS.has(next.lower) || /^[A-ZÄÖÜ]/.test(next.text);
+    if (spec.requireSubject !== false && !subjectLike) continue;
+    if (next && arr(spec.notFollowedBy).map(lc).includes(next.lower)) continue;
+    if (!endsVerbFinal(c.text.slice(t.index))) continue;
+    if (toks.length - k < (spec.minTokens || 3)) continue;
+    hits.push({ index: c.start + t.index, match: c.text.slice(t.index) });
+  }
+  return hits;
+}
+
+/** A relative clause: (comma) (preposition) d-pronoun … verb-final. */
+function clauseRelative(det, sentence) {
+  const spec = det.spec || {};
+  const pronouns = new Set(arr(spec.pronouns).map(lc));
+  const preps = new Set(arr(spec.prepositions).map(lc));
+  const hits = [];
+  const spans = clauseSpans(sentence);
+  for (let ci = 0; ci < spans.length; ci += 1) {
+    const c = spans[ci];
+    if (ci === 0 && spec.requireComma !== false) continue; // a relative clause follows its head
+    const toks = tokens(c.text);
+    let k = 0;
+    if (preps.size) {
+      if (!toks[0] || !preps.has(toks[0].lower)) continue;
+      k = 1;
+    } else if (spec.prepositionsOnly) continue;
+    const t = toks[k];
+    if (!t || !pronouns.has(t.lower)) continue;
+    // „…, die Kollegin kommt" is a main clause: a pronoun directly followed by a noun is an article
+    const next = toks[k + 1];
+    if (next && /^[A-ZÄÖÜ]/.test(next.text) && !arr(spec.allowCapitalNext).includes(t.lower)) {
+      if (!['dessen', 'deren'].includes(t.lower)) continue;
+    }
+    if (!endsVerbFinal(c.text)) continue;
+    if (toks.length - k < 3) continue;
+    // the head: the clause before ends in a noun (capitalised) or a pronoun like alles/das/etwas
+    const prev = tokens(spans[ci - 1]?.text || '');
+    const head = prev[prev.length - 1];
+    if (spec.requireNounHead !== false && head && !/^[A-ZÄÖÜ]/.test(head.text) && !['alles', 'das', 'etwas', 'nichts', 'vieles', 'einzige', 'beste', 'erste', 'letzte', 'wenig', 'manches'].includes(head.lower)) continue;
+    hits.push({ index: c.start + (toks[0]?.index || 0), match: c.text });
+  }
+  return hits;
+}
+
+const isParticiple = (w, env) => env.participles.has(w) || PARTICIPLE_SHAPE.test(w);
+const isInfinitive = (w, env) => (env.available && env.infinitives.has(w)) || (INFINITIVE_SHAPE.test(w) && !w.startsWith('ge'));
+
+/**
+ * Auxiliary + clause-final non-finite form. spec.aux: finite forms; spec.final:
+ *   infinitive                  (Futur I: „wird … kommen")
+ *   participle                  (Passiv: „wird … geprüft")
+ *   participle+werden           (Passiv mit Modalverb: „muss … geprüft werden")
+ *   participle+aux              (Futur II: „wird … geschlafen haben")
+ *   participle+zu+aux           (Infinitiv Perfekt/Passiv: „… bestanden zu haben")
+ *   infinitive+infinitive       (lassen / Doppelinfinitiv: „reparieren lassen")
+ */
+function clauseAuxFinal(det, sentence, env) {
+  const spec = det.spec || {};
+  const aux = new Set(arr(spec.aux).map(lc));
+  const hits = [];
+  if (spec.notQuestion && isQuestion(sentence)) return hits;
+  for (const c of clauseSpans(sentence)) {
+    const toks = tokens(c.text).filter((t) => !/^\d/.test(t.text));
+    if (toks.length < 2) continue;
+    const auxIdx = aux.size ? toks.findIndex((t) => aux.has(t.lower)) : 0;
+    if (auxIdx < 0) continue;
+    const words = toks.map((t) => t.lower);
+    const last = words[words.length - 1];
+    const prev = words[words.length - 2];
+    const prev2 = words[words.length - 3];
+    let ok = false;
+    let fallback = false;
+    const lastIsCap = /^[A-ZÄÖÜ]/.test(toks[toks.length - 1].text);
+    switch (spec.final) {
+      case 'infinitive':
+        ok = !lastIsCap && toks.length - 1 > auxIdx && !aux.has(last) && isInfinitive(last, env) && !env.participles.has(last) && !PARTICIPLE_SHAPE.test(last);
+        fallback = ok && !(env.available && env.infinitives.has(last));
+        break;
+      case 'participle':
+        ok = !lastIsCap && toks.length - 1 > auxIdx && isParticiple(last, env) && !(env.available && env.infinitives.has(last) && !env.participles.has(last));
+        fallback = ok && !env.participles.has(last);
+        if (!ok && toks.length - 2 > auxIdx && aux.has(last) && isParticiple(prev, env)) {
+          ok = true; // subordinate order: „…, dass der Antrag geprüft wird"
+          fallback = !env.participles.has(prev);
+        }
+        break;
+      case 'participle+werden':
+        ok = last === 'werden' && prev && isParticiple(prev, env);
+        if (!ok && aux.has(last) && prev === 'werden' && prev2 && isParticiple(prev2, env)) ok = true; // „…, weil sie geprüft werden muss"
+        fallback = ok && !env.participles.has(last === 'werden' ? prev : prev2);
+        break;
+      case 'participle+aux':
+        ok = (last === 'haben' || last === 'sein') && prev && isParticiple(prev, env) && toks.length - 2 > auxIdx;
+        fallback = ok && !env.participles.has(prev);
+        break;
+      case 'participle+zu+aux':
+        ok = ['haben', 'sein', 'werden'].includes(last) && prev === 'zu' && prev2 && isParticiple(prev2, env);
+        fallback = ok && !env.participles.has(prev2);
+        break;
+      case 'infinitive+infinitive':
+        ok = aux.has(last) ? false : (arr(spec.finalWords).map(lc).includes(last) && prev && isInfinitive(prev, env));
+        if (!ok && aux.has(last) && arr(spec.finalWords).map(lc).includes(prev) && prev2 && isInfinitive(prev2, env)) ok = true;
+        fallback = ok;
+        break;
+      default:
+        ok = false;
+    }
+    if (ok) hits.push({ index: c.start + toks[auxIdx].index, match: c.text.slice(toks[auxIdx].index), fallback });
+  }
+  return hits;
+}
+
+const NOT_IMPERATIVE = new Set(`hallo tschüss tschüs danke prima super toll schade achtung oh ach na ja nein
+viel viele gute guten herzlich herzlichen willkommen bis alles liebe lieber hilfe stopp moment
+bitte vorsicht klar genau richtig falsch okay ok los schnell weiter`.split(/\s+/));
+
+/** Imperative: Sie-form („Gehen Sie …!") or du/ihr-form („Kauf bitte Milch!", „Beeil dich!"). */
+function clauseImperative(det, sentence, env) {
+  const spec = det.spec || {};
+  if (isQuestion(sentence)) return [];
+  let toks = tokens(sentence);
+  if (toks[0] && toks[0].lower === 'bitte') toks = toks.slice(1);
+  const first = toks[0];
+  const second = toks[1];
+  if (!first) return [];
+  const w = first.lower;
+  if (FUNCTION_WORDS.has(w) && !['sei', 'seid', 'hab', 'habt', 'werd'].includes(w)) return [];
+  if (NOT_IMPERATIVE.has(w)) return [];
+  if (spec.person === 'sie') {
+    if (!second || second.text !== 'Sie') return [];
+    if (!/(?:en|ern|eln|n)$/.test(w) && w !== 'seien') return [];
+    return [{ index: first.index, match: `${first.text} Sie`, fallback: !(env.available && env.infinitives.has(w)) }];
+  }
+  // du / ihr
+  if (second && (SUBJECT_PRONOUNS.has(second.lower) || second.text === 'Sie')) return [];
+  if (/en$/.test(w) && w !== 'seien') return [];
+  const endsBang = /!\s*[“”"»]?\s*$/.test(sentence.trim());
+  const hasBitte = /\bbitte\b/i.test(sentence);
+  const reflexNext = second && ['dich', 'euch', 'mir', 'dir', 'uns', 'mich'].includes(second.lower);
+  if (!endsBang && !hasBitte) return [];
+  const stem = w.replace(/(?:e|t)$/, '');
+  const known = env.available && (env.verbStems.has(w) || env.verbStems.has(stem));
+  if (!known && !reflexNext && !hasBitte && !['sei', 'seid'].includes(w)) return [];
+  return [{ index: first.index, match: first.text, fallback: !known }];
+}
+
+/** Aux + participle in one clause (Perfekt, Plusquamperfekt, KII Vergangenheit, Zustandspassiv). */
+function lexParticipleAux(det, sentence, env) {
+  const spec = det.spec || {};
+  const auxForms = new Set(arr(spec.auxForms).map(lc));
+  const hits = [];
+  for (const c of clauseSpans(sentence)) {
+    const toks = tokens(c.text).filter((t) => !/^\d/.test(t.text));
+    const words = toks.map((t) => t.lower);
+    const auxIdx = words.findIndex((w) => auxForms.has(w));
+    if (auxIdx < 0) continue;
+    for (let i = 0; i < toks.length; i += 1) {
+      if (i === auxIdx) continue;
+      const w = words[i];
+      if (/^[A-ZÄÖÜ]/.test(toks[i].text) && i > 0) continue;
+      const known = env.participles.get(w);
+      const shape = PARTICIPLE_SHAPE.test(w) && !env.infinitives.has(w);
+      if (!known && !shape) continue;
+      // the participle closes the clause (only auxiliaries/infinitives may follow it)
+      if (!words.slice(i + 1).every((x) => TRAILING_OK.has(x))) continue;
+      if (spec.participleAux && spec.participleAux !== 'any' && known) {
+        const want = spec.participleAux === 'sein' ? 'ist' : 'hat';
+        if (known.aux !== want) continue;
+      }
+      if (spec.participleAux && spec.participleAux !== 'any' && !known && spec.shapeAux !== 'any') {
+        // without a lexicon we cannot tell haben- from sein-verbs: only the haben reading is guessed
+        if (spec.participleAux === 'sein') continue;
+      }
+      if (spec.shape === 'trennbar-untrennbar' && !/^(?:[a-zäöüß]+ge[a-zäöüß]+(?:t|en)|(?:be|ver|er|ent|zer|emp|miss|über|unter|hinter)[a-zäöüß]+(?:t|en)|[a-zäöüß]+iert)$/.test(w)) continue;
+      if (spec.shape === 'trennbar-untrennbar' && /^ge/.test(w) && !/iert$/.test(w)) continue;
+      hits.push({ index: c.start + toks[auxIdx].index, match: `${toks[auxIdx].text} … ${toks[i].text}`, fallback: !known });
+      break;
+    }
+  }
+  return hits;
+}
+
+/** Präteritum of full verbs: lexicon `verb_forms.praet` ∪ the detector's closed list, every person. */
+function lexPraeteritum(det, sentence, env) {
+  const spec = det.spec || {};
+  const exclude = new Set(arr(spec.exclude).map(lc));
+  const base = new Set([...arr(spec.forms).map(lc), ...env.praet]);
+  const forms = new Map();
+  for (const b of base) {
+    if (!b || exclude.has(b)) continue;
+    const persons = b.endsWith('te') ? [b, `${b}st`, `${b}n`, `${b}t`] : [b, `${b}st`, `${b}en`, `${b}t`];
+    for (const p of persons) if (!exclude.has(p)) forms.set(p, env.praet.has(b));
+  }
+  const hits = [];
+  const toks = tokens(sentence);
+  toks.forEach((t, i) => {
+    if (isCapitalMidSentence(t, i)) return;
+    if (forms.has(t.lower)) hits.push({ index: t.index, match: t.text, fallback: false });
+  });
+  return hits;
+}
+
+/** Reflexive pronoun agreeing with the subject in one clause (or `sich`, or a reflexive imperative). */
+function lexReflexive(det, sentence, env) {
+  const spec = det.spec || {};
+  const pairs = spec.pairs || {};
+  const hits = [];
+  for (const c of clauseSpans(sentence)) {
+    const toks = tokens(c.text);
+    const words = toks.map((t) => t.lower);
+    if (spec.sich) {
+      const i = words.indexOf('sich');
+      if (i >= 0) {
+        hits.push({ index: c.start + toks[i].index, match: toks[i].text, fallback: false });
+        continue;
+      }
+    }
+    let found = false;
+    for (const [subject, pronouns] of Object.entries(pairs)) {
+      const s = words.indexOf(subject);
+      if (s < 0) continue;
+      const r = words.findIndex((w, k) => k !== s && arr(pronouns).includes(w));
+      if (r < 0) continue;
+      // „Ihr Name" / „ihr" as a possessive: the subject must not be followed by a noun
+      if (subject === 'ihr' && toks[s + 1] && /^[A-ZÄÖÜ]/.test(toks[s + 1].text)) continue;
+      if (subject === 'ihr' && toks[s].text === 'Ihr') continue;
+      hits.push({ index: c.start + toks[r].index, match: `${toks[s].text} … ${toks[r].text}`, fallback: false });
+      found = true;
+      break;
+    }
+    if (found) continue;
+    // imperative without a subject: „Beeil dich!", „Setz dich!", „Meldet euch!"
+    const imperativePron = spec.imperativePronouns ? new Set(arr(spec.imperativePronouns)) : null;
+    if (imperativePron && toks.length >= 2 && imperativePron.has(words[1]) && !SUBJECT_PRONOUNS.has(words[1])) {
+      const w = words[0];
+      const stem = w.replace(/(?:e|t)$/, '');
+      const known = env.reflexiveStems.has(w) || env.reflexiveStems.has(stem);
+      if (known) hits.push({ index: c.start + toks[0].index, match: `${toks[0].text} ${toks[1].text}`, fallback: false });
+    }
+  }
+  return hits;
+}
+
+/** zu + infinitive at the clause end, or the -zu- infix of a separable verb. */
+function lexZuInfinitive(det, sentence, env) {
+  const spec = det.spec || {};
+  const hits = [];
+  const infixFallback = new RegExp(spec.infixRegex || '^(?:an|auf|aus|ein|mit|ab|vor|zurück|nach|weg|los|fern|kennen|statt|teil|her|hin|fest|weiter|zusammen)zu[a-zäöüß]{3,}(?:en|ern|eln)$', 'u');
+  for (const c of clauseSpans(sentence)) {
+    const toks = tokens(c.text).filter((t) => !/^\d/.test(t.text));
+    const words = toks.map((t) => t.lower);
+    for (let i = 0; i < toks.length; i += 1) {
+      const w = words[i];
+      const tail = words.slice(i + 1);
+      const closes = tail.every((x) => TRAILING_OK.has(x));
+      if (w === 'zu' && toks[i + 1] && !/^[A-ZÄÖÜ]/.test(toks[i + 1].text)) {
+        const inf = words[i + 1];
+        if (!words.slice(i + 2).every((x) => TRAILING_OK.has(x))) continue;
+        const known = env.available && env.infinitives.has(inf);
+        if (known || (INFINITIVE_SHAPE.test(inf) && !arr(spec.notInfinitive).map(lc).includes(inf))) {
+          hits.push({ index: c.start + toks[i].index, match: `zu ${toks[i + 1].text}`, fallback: !known });
+          break;
+        }
+      } else if (closes && (env.zuInfix.has(w) || infixFallback.test(w))) {
+        hits.push({ index: c.start + toks[i].index, match: toks[i].text, fallback: !env.zuInfix.has(w) });
+        break;
+      }
+    }
+  }
+  return hits;
+}
+
+/** n-Deklination: a weak masculine noun with -n/-en after an oblique determiner. */
+function lexNDeclension(det, sentence, env) {
+  const spec = det.spec || {};
+  const nouns = new Set([...arr(spec.nouns).map(lc), ...env.weakNouns]);
+  const dets = new Set(arr(spec.determiners).map(lc));
+  const hits = [];
+  const toks = tokens(sentence);
+  for (let i = 1; i < toks.length; i += 1) {
+    const t = toks[i];
+    if (!/^[A-ZÄÖÜ]/.test(t.text)) continue;
+    const w = t.lower;
+    const base = w.endsWith('en') && nouns.has(w.slice(0, -2)) ? w.slice(0, -2) : w.endsWith('n') && nouns.has(w.slice(0, -1)) ? w.slice(0, -1) : null;
+    if (!base) continue;
+    // a determiner right before, or one adjective between
+    const d1 = toks[i - 1]?.lower;
+    const d2 = toks[i - 2]?.lower;
+    if (dets.has(d1) || (d2 && dets.has(d2) && /(?:en|em)$/.test(d1 || ''))) {
+      hits.push({ index: t.index, match: `${toks[dets.has(d1) ? i - 1 : i - 2].text} … ${t.text}`, fallback: !env.weakNouns.has(base) });
+    }
+  }
+  return hits;
+}
+
+const CLAUSE_KINDS = {
+  pair: clausePair,
+  subordinate: clauseSubordinate,
+  relative: clauseRelative,
+  'aux-final': clauseAuxFinal,
+  imperative: clauseImperative,
+};
+const LEXICON_KINDS = {
+  'participle-aux': lexParticipleAux,
+  praeteritum: lexPraeteritum,
+  reflexive: lexReflexive,
+  'zu-infinitive': lexZuInfinitive,
+  'n-declension': lexNDeclension,
+};
+
+/** Is this detector definition runnable by this engine? Returns an error string or null. */
+export function detectorProblem(det) {
+  if (!det || typeof det !== 'object') return 'not an object';
+  if (!/^det\.[a-z0-9-]+$/.test(String(det.id || ''))) return 'id must match det.<slug>';
+  if (!['exact', 'heuristic', 'advisory'].includes(det.precision)) return 'precision must be exact|heuristic|advisory';
+  const spec = det.spec || {};
+  switch (det.method) {
+    case 'token': return arr(spec.tokens).length || arr(spec.phrases).length ? null : 'token detector without tokens/phrases';
+    case 'pattern':
+      try {
+        new RegExp(spec.regex, spec.flags || 'gu');
+        return spec.regex ? null : 'pattern detector without regex';
+      } catch (e) {
+        return `bad regex: ${e.message}`;
+      }
+    case 'clause': return CLAUSE_KINDS[spec.kind] ? null : `unknown clause kind ${spec.kind}`;
+    case 'lexicon': return LEXICON_KINDS[spec.kind] ? null : `unknown lexicon kind ${spec.kind}`;
+    default: return `unknown method ${det.method}`;
+  }
+}
+
+/** Hits of one detector in one sentence: [{ detector, precision, index, match, fallback }]. */
+export function detectInSentence(det, sentence, env = EMPTY_ENV) {
+  if (detectorProblem(det)) return [];
+  const spec = det.spec || {};
+  let raw;
+  if (det.method === 'token') raw = runToken(det, sentence);
+  else if (det.method === 'pattern') raw = runPattern(det, sentence);
+  else if (det.method === 'clause') raw = CLAUSE_KINDS[spec.kind](det, sentence, env);
+  else raw = LEXICON_KINDS[spec.kind](det, sentence, env);
+  const ranges = whitelistRanges(sentence, spec.whitelist);
+  return raw
+    .filter((h) => !inRanges(h.index, Math.max(1, String(h.match).split(' … ')[0].length), ranges))
+    .map((h) => ({
+      detector: det.id,
+      precision: h.fallback && det.precision === 'exact' ? 'heuristic' : det.precision,
+      index: h.index,
+      match: h.match,
+      fallback: Boolean(h.fallback),
+    }));
+}
+
+/** Hits of one detector in a text (split into sentences). */
+export function detectInText(det, text, env = EMPTY_ENV) {
+  const out = [];
+  for (const s of sentences(text)) for (const h of detectInSentence(det, s, env)) out.push({ ...h, sentence: s });
+  return out;
+}
+
+/** Hits of every detector in a text. */
+export function detectAll(detectors, text, env = EMPTY_ENV) {
+  const out = [];
+  for (const det of arr(detectors)) out.push(...detectInText(det, text, env));
+  return out;
+}
+
+export { clauses };

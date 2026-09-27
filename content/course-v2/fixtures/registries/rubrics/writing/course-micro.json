@@ -1,0 +1,52 @@
+{
+  "$schema": "course-v2/rubric@1",
+  "id": "course-micro",
+  "kind": "writing",
+  "lane": null,
+  "max": 5,
+  "criteria": [
+    {
+      "id": "task",
+      "label": "Aufgabe erfüllt",
+      "per": "task",
+      "levels": [
+        2,
+        1,
+        0
+      ]
+    },
+    {
+      "id": "target",
+      "label": "Zielstruktur benutzt",
+      "per": "task",
+      "levels": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "clear",
+      "label": "verständlich",
+      "per": "task",
+      "levels": [
+        2,
+        1,
+        0
+      ]
+    }
+  ],
+  "zeroRules": [],
+  "capRules": [],
+  "spelling": "only-if-meaning-suffers",
+  "feedbackLanguage": [
+    "de-a2",
+    "en"
+  ],
+  "modelId": "config:micro",
+  "splitVerified": true,
+  "calibration": {
+    "status": "pending",
+    "rangeBands": 1
+  },
+  "source": "https://www.goethe.de/pro/relaunch/prf/materialien/A2/A2_Uebungssatz_Erwachsene.pdf"
+}

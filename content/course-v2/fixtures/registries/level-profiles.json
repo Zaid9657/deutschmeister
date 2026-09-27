@@ -1,0 +1,76 @@
+{
+  "$schema": "course-v2/levels@1",
+  "levels": [
+    {
+      "level": "a2.1",
+      "band": "A2",
+      "skeleton": "A",
+      "steps": [
+        "situation",
+        "situation",
+        "situation",
+        "pruefung",
+        "sprechen",
+        "schreiben",
+        "check"
+      ],
+      "minutes": {
+        "situation": 22,
+        "pruefung": 25,
+        "sprechen": 22,
+        "schreiben": 22,
+        "check": 15,
+        "reviewPerDay": 7
+      },
+      "sentence": {
+        "meanWordsMax": 9,
+        "maxWords": 16,
+        "subordinateClausesMax": 1
+      },
+      "lexis": {
+        "newPerUnit": [
+          28,
+          30
+        ],
+        "productiveShare": 0.5,
+        "offListMax": 0.15,
+        "coverageMin": 0.95
+      },
+      "review": {
+        "budgetMinutes": 7,
+        "secondsPerReview": 9,
+        "firstReviewCeiling": 30
+      },
+      "pool": {
+        "size": 16,
+        "served": 12,
+        "generatedMax": 0.4,
+        "mix": {
+          "typedGapDictation": [
+            0.45,
+            0.55
+          ],
+          "sentenceBuildingMin": 0.2,
+          "errorCorrectionMax": 0.12,
+          "choiceMax": 0.2
+        }
+      },
+      "microOutput": {
+        "seconds": [
+          30,
+          40
+        ],
+        "words": [
+          8,
+          30
+        ]
+      },
+      "ruleCardMaxWords": 80,
+      "partnerSupport": "clarify",
+      "feedbackLanguage": [
+        "de-a2",
+        "en"
+      ]
+    }
+  ]
+}

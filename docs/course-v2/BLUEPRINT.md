@@ -1,10 +1,13 @@
 # Course v2 — BLUEPRINT (binding)
 
 **Date:** 2026-09-27 · **Status:** BINDING for every later course-v2 workflow (W2 curriculum, W3 materials, W4
-review, W5 build). · **Companion:** [`SCHEMA.md`](SCHEMA.md) is the binding data model. · **Precedence:**
-`DECISIONS.md` > this blueprint > `SCHEMA.md` > the W2 drafts in `curriculum/` > the proposals in `proposals/`.
-Where this document and a proposal disagree, this document wins; where it is silent, ask the orchestrator,
-do not reach back into a proposal.
+review, W5 build). · **Companion:** [`SCHEMA.md`](SCHEMA.md) is the binding data model. · **Precedence (one
+rule, stated identically in SCHEMA.md):** `DECISIONS.md` > this blueprint > `SCHEMA.md` > the W2 drafts in
+`curriculum/` > the proposals in `proposals/`. SCHEMA.md is authoritative **only on field shapes, id patterns and
+file layout**; it never overrides a count, a rule, a threshold or product behaviour stated here. Where this document
+and a proposal disagree, this document wins; where it is silent, ask the orchestrator, do not reach back into a
+proposal. Where this document would add a condition to a DECISIONS row, it can only recommend it and ask the owner
+for a new row (§13 D14).
 
 **How it was made.** Synthesis of Proposal C (production rails; winner of the DaF and production judges) with
 Proposal A's exam layer (winner of the revenue judge) and Proposal B's completion and first-week layer, fixing
@@ -12,7 +15,11 @@ every must-fix the three judges raised. Inputs read: `DECISIONS.md`, `inputs/db-
 research memos 01–14 (memo 14 required), the three proposals, the W2 drafts, and the repo files named in §11.
 One new check was made on the web: § 5 Abs. 1a EntgFG (eAU) at <https://dejure.org/gesetze/EntgFG/5.html>
 (read 2026-09-27; gesetze-im-internet.de returned 503), and § 4 ArbZG at
-<https://dejure.org/gesetze/ArbZG/4.html> for the SCHEMA example. No MCP tool was called.
+<https://dejure.org/gesetze/ArbZG/4.html> for the SCHEMA example. No MCP tool was called. The critic pass
+(Changelog at the end) added three publisher tables of contents, read 2026-09-27 as PDFs with a browser
+User-Agent: Schritte Neu 5 ([Hueber Inhalt, ISBN 978-3-19-301086-5, footer „Schritte int. Neu 5"](https://shop.hueber.de/media/hueber_dateien/Internet_Inhaltsverz/Red1/9783193010865_Inhalt.pdf)),
+Sicher! aktuell B2.1 ([Inhalt, ISBN 978-3-19-641207-9](https://shop.hueber.de/media/hueber_dateien/Internet_Inhaltsverz/Red1/9783196412079_Inhalt.pdf))
+and Sicher! aktuell B2.2 ([Inhalt, ISBN 978-3-19-661207-3](https://shop.hueber.de/media/hueber_dateien/Internet_Inhaltsverz/Red1/9783196612073_Inhalt.pdf)).
 
 **Citation convention.** `[m01]`…`[m14]` = `research/01…14-*.md` (each carries its primary URLs). A URL inline
 is a primary source. **(design)** = a decision of this blueprint, not a finding. **(derived)** = our arithmetic,
