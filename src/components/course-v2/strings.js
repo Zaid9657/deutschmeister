@@ -251,6 +251,16 @@ const EN = {
   'player.nextUp': 'Next up:',
   'player.soonTitle': 'This unit is coming soon',
   'player.soonBody': 'It is still being written. You will find every finished unit in the course overview.',
+  // step kinds as the player's step list and recap name them (the renderer's own
+  // headings: seg.exam, check.title, step.ueberarbeiten; Sprechen/Schreiben stay German)
+  'kind.situation': 'Situation',
+  'kind.text': 'Text',
+  'kind.sprache': 'Language',
+  'kind.pruefung': 'Exam training',
+  'kind.sprechen': 'Speaking task',
+  'kind.schreiben': 'Writing task',
+  'kind.ueberarbeiten': 'Revise',
+  'kind.check': 'Unit check',
 };
 
 const DE = {
@@ -484,6 +494,14 @@ const DE = {
   'player.nextUp': 'Als Nächstes:',
   'player.soonTitle': 'Diese Lektion kommt bald',
   'player.soonBody': 'Sie ist noch in Arbeit. Alle fertigen Lektionen finden Sie in der Kursübersicht.',
+  'kind.situation': 'Situation',
+  'kind.text': 'Text',
+  'kind.sprache': 'Sprache',
+  'kind.pruefung': 'Prüfungstraining',
+  'kind.sprechen': 'Sprechen',
+  'kind.schreiben': 'Schreiben',
+  'kind.ueberarbeiten': 'Überarbeiten',
+  'kind.check': 'Lektions-Check',
 };
 
 export const V2_STRINGS = { en: EN, de: DE };

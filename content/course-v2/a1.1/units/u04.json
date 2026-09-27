@@ -1391,7 +1391,7 @@
             "role": "practice",
             "topic": "g.moechte",
             "promptDe": "Bilden Sie die W-Frage.",
-            "promptEn": "Build the question with the question word first.",
+            "promptEn": "Build the W-question.",
             "tiles": [
               "möchten",
               "Sie",
@@ -1463,7 +1463,7 @@
             "role": "practice",
             "topic": "lx.kosten",
             "promptDe": "Bilden Sie die W-Frage.",
-            "promptEn": "Build the question with the question word first.",
+            "promptEn": "Build the W-question.",
             "tiles": [
               "kosten",
               "was",
@@ -2122,7 +2122,7 @@
             "role": "practice",
             "topic": "g.artikel-genus-plural",
             "promptDe": "Bilden Sie die W-Frage.",
-            "promptEn": "Build the question with the question word first.",
+            "promptEn": "Build the W-question.",
             "tiles": [
               "sind",
               "die Eier",
@@ -2144,7 +2144,7 @@
             "role": "practice",
             "topic": "g.artikel-genus-plural",
             "promptDe": "Bilden Sie die W-Frage.",
-            "promptEn": "Build the question with the question word first.",
+            "promptEn": "Build the W-question.",
             "tiles": [
               "ist",
               "der Reis",
@@ -2671,8 +2671,8 @@
             {
               "id": "a1.1-u04-ls4-t6-l05",
               "speaker": "cast.priya",
-              "de": "Gut, dann kaufen wir vier Birnen. Die sind heute auch billig.",
-              "en": "Fine, then we’ll buy four pears. They’re cheap today, too."
+              "de": "Gut, dann kaufen wir vier Birnen. Die sind heute billig.",
+              "en": "Fine, then we’ll buy four pears. They’re cheap today."
             }
           ],
           "glosses": []
@@ -2735,9 +2735,9 @@
             {
               "id": "a1.1-u04-ls4-t9-l01",
               "speaker": "durchsage",
-              "de": "Guten Tag! Heute ist unser Supermarkt nur bis 18 Uhr geöffnet. Morgen ist Sonntag, da ist der Supermarkt zu. Am Montag sind wir wieder von 8 bis 20 Uhr für Sie da. Danke und bis Montag!",
-              "en": "Hello! Today our supermarket is only open until 6 pm. Tomorrow is Sunday – the supermarket is closed then. On Monday we are here for you again from 8 am to 8 pm. Thank you, and see you on Monday!",
-              "say": "Guten Tag! Heute ist unser Supermarkt nur bis achtzehn Uhr geöffnet. Morgen ist Sonntag, da ist der Supermarkt zu. Am Montag sind wir wieder von acht bis zwanzig Uhr für Sie da. Danke und bis Montag!"
+              "de": "Guten Tag! Heute ist der Supermarkt nur bis 18 Uhr geöffnet. Morgen ist Sonntag, da ist alles zu. Am Montag sind wir wieder von 8 bis 20 Uhr für Sie da. Danke und bis Montag!",
+              "en": "Hello! Today the supermarket is only open until 6 pm. Tomorrow is Sunday – everything is closed then. On Monday we are here for you again from 8 am to 8 pm. Thank you, and see you on Monday!",
+              "say": "Guten Tag! Heute ist der Supermarkt nur bis achtzehn Uhr geöffnet. Morgen ist Sonntag, da ist alles zu. Am Montag sind wir wieder von acht bis zwanzig Uhr für Sie da. Danke und bis Montag!"
             }
           ],
           "glosses": [
@@ -3150,7 +3150,7 @@
           },
           {
             "speaker": "partner",
-            "de": "Wie viel Käse möchten Sie?"
+            "de": "Wie viel Gramm Käse möchten Sie?"
           },
           {
             "speaker": "learner",

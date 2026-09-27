@@ -103,7 +103,17 @@ function Shell({ level, title, progress, children, footer }) {
   );
 }
 
-const stepTitle = (step) => (step && step.title) || KIND_LABEL_DE[step && step.kind] || '';
+// A step's name as the renderer's heading shows it (StepView: the authored title, else
+// „Sprechen"/„Schreiben" — exam part names, German in both chrome languages — else the
+// kind in the chrome language), so the step list, the resume button and the recap say
+// what the learner saw on the step itself.
+const stepTitle = (step, t) => {
+  if (!step) return '';
+  if (step.title) return step.title;
+  if (step.kind === 'sprechen') return 'Sprechen';
+  if (step.kind === 'schreiben') return 'Schreiben';
+  return t ? t(`kind.${step.kind}`) : KIND_LABEL_DE[step.kind] || '';
+};
 const minutesOf = (unit, stepId) => (unit.minutesPlanned && unit.minutesPlanned.byStep && unit.minutesPlanned.byStep[stepId]) || null;
 
 function StepList({ unit, steps, finished, currentIndex, onOpen }) {
@@ -130,9 +140,9 @@ function StepList({ unit, steps, finished, currentIndex, onOpen }) {
                 {done ? <Check className="h-4 w-4" /> : i + 1}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-sm font-bold text-ink">{stepTitle(s)}</span>
+                <span className="block truncate text-sm font-bold text-ink">{stepTitle(s, t)}</span>
                 <span className="block text-xs text-graphite">
-                  {KIND_LABEL_DE[s.kind]}{min ? ` · ${t('player.minutes', { n: min })}` : ''}{done ? ` · ${t('player.doneMark')}` : ''}
+                  {t(`kind.${s.kind}`)}{min ? ` · ${t('player.minutes', { n: min })}` : ''}{done ? ` · ${t('player.doneMark')}` : ''}
                 </span>
               </span>
             </button>
@@ -401,7 +411,7 @@ export function UnitPlayer({ level, unit, manifest, user }) {
         level={level}
         progress={progress}
         title={t('player.unit', { n: unit.nr })}
-        footer={next && <Button size="lg" className="w-full" onClick={() => goTo(stepIndex)}>{t('player.resumeAt', { n: stepIndex + 1, title: stepTitle(next) })}</Button>}
+        footer={next && <Button size="lg" className="w-full" onClick={() => goTo(stepIndex)}>{t('player.resumeAt', { n: stepIndex + 1, title: stepTitle(next, t) })}</Button>}
       >
         <div className="space-y-5">
           <header>
@@ -430,7 +440,7 @@ export function UnitPlayer({ level, unit, manifest, user }) {
           unit={unit}
           step={step}
           level={level}
-          title={stepTitle(step)}
+          title={stepTitle(step, t)}
           onAttempt={onAttempt}
           onDone={onDone}
           onSkip={() => nextAfter(stepIndex, finished)}
@@ -484,7 +494,7 @@ export function UnitPlayer({ level, unit, manifest, user }) {
               {openSteps.map(({ s, i }) => (
                 <li key={s.id}>
                   <button type="button" onClick={() => goTo(i)} className="min-h-11 text-left text-sm font-bold text-siegel hover:text-siegel-deep">
-                    {t('player.openStep', { n: i + 1, title: stepTitle(s) })}
+                    {t('player.openStep', { n: i + 1, title: stepTitle(s, t) })}
                   </button>
                 </li>
               ))}

@@ -27,7 +27,7 @@ streichen strich · streiten stritt · tragen trug · treffen traf · treiben tr
 tun tat · verderben verdarb · vergessen vergaß · verlieren verlor · verzeihen verzieh · wachsen wuchs · waschen wusch
 weisen wies · werben warb · werden wurde · werfen warf · wiegen wog · wissen wusste · ziehen zog · zwingen zwang
 biegen bog · dürfen durfte · können konnte · mögen mochte · müssen musste · sollen sollte · wollen wollte
-`.split('·').map((s) => s.trim().split(/\s+/)).filter((p) => p.length === 2)));
+`.split(/[·\n]/).map((s) => s.trim().split(/\s+/)).filter((p) => p.length === 2)));
 
 const KEYS = Object.keys(STRONG_PRAET).sort((a, b) => b.length - a.length);
 

@@ -793,7 +793,7 @@ describe('SCHEMA §8 UnitSpec.lexiconBlocks: 6..20 lemmas per block (B2 carries 
   const blockErrors = (n) => {
     const spec = exampleContext().parts.unit.spec;
     spec.lexiconBlocks = spec.lexiconBlocks.map((b, i) => ({ ...b, lemmas: Array.from({ length: n }, (_, k) => `lx.test-${i}-${k}`) }));
-    return check('UnitSpec', spec).filter((e) => /lexiconBlocks\[\d\]\.lemmas/.test(e.path || e.at || JSON.stringify(e)) && /items/.test(e.message || JSON.stringify(e)));
+    return check('UnitSpec', spec).filter((e) => /lexiconBlocks\[\d\]\.lemmas$/.test(e.path) && /expected 6\.\.20 items/.test(e.message));
   };
   test('17 lemmas per block pass, 21 and 5 do not', () => {
     assert.deepEqual(blockErrors(17), []);
