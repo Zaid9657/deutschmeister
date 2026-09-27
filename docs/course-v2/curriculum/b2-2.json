@@ -1,0 +1,1097 @@
+{
+  "level": "b2.2",
+  "code": "B2.2",
+  "cefr": "B2",
+  "targetExams": [
+    "Goethe-Zertifikat B2",
+    "telc Deutsch B2",
+    "Deutsch-Test für den Beruf B2 (DTB, telc) – Beruf-Lane, Hinweise und ein optionaler Modelltest"
+  ],
+  "hours": {
+    "guided": 53,
+    "total": 68
+  },
+  "vocabTarget": {
+    "newWords": 800,
+    "cumulative": 4000
+  },
+  "units": [
+    {
+      "nr": 1,
+      "id": "b2.2-u01",
+      "title": "Mit viel Gefühl: Freundschaft im digitalen Zeitalter",
+      "titleEn": "With feeling: friendship in the digital age",
+      "situation": "Ein Magazin und eine Radiosendung fragen, ob Freundschaften online halten; Sie geben einer Freundin wieder, was die Fachleute sagen, und schreiben einen Beitrag im Forum des Senders.",
+      "handlungsfeld": "Soziale Kontakte, Beziehungen (BSK A) · Gefühle und Meinungen (BSK C) · Goethe-B2-Thema Beziehungen",
+      "unitType": "texttype",
+      "canDo": [
+        {
+          "de": "Ich kann detaillierte Informationen und Argumente zuverlässig mündlich weitergeben, zum Beispiel die wichtigsten Punkte aus einem gut strukturierten Text.",
+          "source": "05-cando-b1-b2 B2.2 #9 · SB B2 Mediation"
+        },
+        {
+          "de": "Ich kann in einer Radiodiskussion mit drei Personen verfolgen, wer welche Position vertritt.",
+          "source": "≈ 03-exams-b2 §1 · GI-B2 Hören T3"
+        },
+        {
+          "de": "Ich kann einen Forumsbeitrag von etwa 150 Wörtern mit Einleitung und Schluss schreiben, der vier Punkte genau bearbeitet.",
+          "source": "05-cando-b1-b2 B2.1 #2 (Prüfungslänge) · GI-B2 Schreiben T1"
+        },
+        {
+          "de": "Ich kann Gefühle und die persönliche Bedeutung von Beziehungen differenziert ausdrücken.",
+          "source": "≈ 05-cando-b1-b2 B2.1 #12 · GER S. 86 B2"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Konjunktiv I der Gegenwart in der indirekten Rede (Sie sagt, echte Freundschaft brauche Zeit.) und Ersatz durch Konjunktiv II, wo die Form nicht eindeutig ist (Sie meinen, sie hätten keine Zeit.)",
+          "new": true,
+          "lehrwerk": "Aspekte neu B2 K8; Sicher! aktuell B2 L7 (06 F3 B2.2 #1, strong); Profile deutsch B2"
+        },
+        {
+          "point": "Redeeinleitende Verben und Wiedergabe mit laut/zufolge im Wechsel mit Konjunktiv I (Wiederholung aus B2.1 E11)",
+          "new": false,
+          "lehrwerk": "Sicher! aktuell B2 L7"
+        }
+      ],
+      "vocabTheme": "Freundschaft, Nähe, digitale Beziehungen",
+      "vocabTarget": 67,
+      "keyWords": [
+        "die Vertrautheit",
+        "die Einsamkeit",
+        "die Zuneigung",
+        "die Eifersucht",
+        "die Bindung",
+        "die Geborgenheit",
+        "der Rückhalt",
+        "die Oberflächlichkeit",
+        "der Freundeskreis",
+        "sich anvertrauen",
+        "sich entfremden",
+        "Kontakte pflegen",
+        "vernachlässigen",
+        "aufrichtig",
+        "oberflächlich",
+        "verlässlich"
+      ],
+      "reading": {
+        "textType": "Magazinartikel: Wie viele Freunde braucht der Mensch? (6 Fragen, Mehrfachauswahl)",
+        "words": 420
+      },
+      "listening": {
+        "textType": "Radiodiskussion mit Moderator, Psychologin und Blogger: Wer sagt das? (einmal gehört)",
+        "seconds": 250
+      },
+      "writing": {
+        "task": "Forumsbeitrag: Können Online-Freundschaften echte Freundschaften ersetzen? (4 Leitpunkte, Einleitung und Schluss)",
+        "words": 150,
+        "examTeil": "Goethe B2 Schreiben Teil 1"
+      },
+      "speaking": {
+        "task": "Einen Magazintext in höchstens einer Minute zusammenfassen und dann mit der Partnerin über Freundschaft im Netz diskutieren",
+        "examTeil": "telc B2 Mündlicher Ausdruck Teil 2"
+      },
+      "pronunciation": "Gefühle in der Stimme: Freude, Zweifel und Ironie über Tonhöhe und Tempo (Na, das ist ja toll.)",
+      "examTeile": [
+        "Goethe B2 Lesen Teil 3",
+        "telc B2 Leseverstehen Teil 2",
+        "Goethe B2 Hören Teil 3",
+        "Goethe B2 Schreiben Teil 1",
+        "telc B2 Mündlicher Ausdruck Teil 2",
+        "telc B2 Sprachbausteine Teil 1"
+      ],
+      "landeskunde": "Vereine und Freundeskreise: wie Freundschaften in D-A-CH entstehen (Vereinskultur)"
+    },
+    {
+      "nr": 2,
+      "id": "b2.2-u02",
+      "title": "Fit für die Zukunft? Ernährung und Prävention",
+      "titleEn": "Fit for the future? Nutrition and prevention",
+      "situation": "Ihre Krankenkasse wirbt für Präventionskurse, und in der Politik wird über eine Zuckersteuer gestritten; Sie hören einen Vortrag, fragen bei der Kasse nach und diskutieren über die Steuer.",
+      "handlungsfeld": "Gesundheit (RC 8) · Banken/Versicherungen (RC 5) · Goethe-B2-Themen Ernährung, Gesundheit",
+      "unitType": "texttype",
+      "canDo": [
+        {
+          "de": "Ich kann längere Redebeiträge und Vorträge verstehen und auch komplexer Argumentation folgen, wenn mir das Thema einigermaßen vertraut ist.",
+          "source": "05-cando-b1-b2 B2.2 #8 · SB B2"
+        },
+        {
+          "de": "Ich kann genau erklären, auf welchem Weg man ein Ziel erreicht und welche Mittel dafür nötig sind.",
+          "source": "≈ eigene Formulierung nach ZM B1+ „beschreiben, wie man etwas macht“ (05 §2.2), auf B2-Niveau"
+        },
+        {
+          "de": "Ich kann Argumente austauschen, auf Gegenargumente reagieren und am Ende sagen, ob ich dafür oder dagegen bin.",
+          "source": "05-cando-b1-b2 B2.2 #2 · GI-B2 Sprechen T2"
+        },
+        {
+          "de": "Ich kann in einer halbformellen E-Mail von mindestens 150 Wörtern gezielt nachfragen und eigene Punkte ergänzen.",
+          "source": "≈ 03-exams-b2 §2 · telc B2 Schriftlicher Ausdruck, Aufgabe A"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Modalsätze: indem (Wiederholung) und neu dadurch, dass … (Man senkt das Risiko dadurch, dass man sich mehr bewegt.)",
+          "new": true,
+          "lehrwerk": "Aspekte neu B2 K7; Sicher! aktuell B2 L11 (06 F3 B2.2 #3, strong); indem Menschen B1 L20 (B1.2)"
+        },
+        {
+          "point": "ohne dass / ohne … zu und (an)statt dass / (an)statt … zu im Kontrast (Wiederholung)",
+          "new": false,
+          "lehrwerk": "Menschen B1 L23–24; Schritte plus Neu 6 L9/L12"
+        }
+      ],
+      "vocabTheme": "Ernährung, Prävention, Gesundheitspolitik",
+      "vocabTarget": 67,
+      "keyWords": [
+        "die Prävention",
+        "die Früherkennung",
+        "der Nährstoff",
+        "der Zuckergehalt",
+        "die Kalorienzufuhr",
+        "das Übergewicht",
+        "die Zivilisationskrankheit",
+        "die Lebenserwartung",
+        "die Zuckersteuer",
+        "der Verzehr",
+        "der Zuschuss",
+        "vorbeugen",
+        "senken",
+        "fördern",
+        "ausgewogen",
+        "gesundheitsbewusst",
+        "verarbeitet"
+      ],
+      "reading": {
+        "textType": "Ratgeberartikel mit Satzlücken: Kleine Schritte, große Wirkung (6 Lücken, 8 Sätze)",
+        "words": 330
+      },
+      "listening": {
+        "textType": "Vortrag einer Ernährungswissenschaftlerin (zweimal gehört, 8 Fragen)",
+        "seconds": 200
+      },
+      "writing": {
+        "task": "Halbformelle E-Mail an die Krankenkasse: Bitte um Informationen zu Präventionskursen und Zuschuss (3 von 4 Leitpunkten oder 2 + eigener)",
+        "words": 150,
+        "examTeil": "telc B2 Schriftlicher Ausdruck"
+      },
+      "speaking": {
+        "task": "Diskussion: Soll es eine Zuckersteuer geben? Argumente austauschen, Gegenargumente aufgreifen, die eigene Position zusammenfassen",
+        "examTeil": "Goethe B2 Sprechen Teil 2"
+      },
+      "pronunciation": "Satzakzent bei Gegenüberstellungen und Zahlen (nicht ZEHN, sondern ZWÖLF Gramm)",
+      "examTeile": [
+        "Goethe B2 Lesen Teil 2",
+        "Goethe B2 Hören Teil 4",
+        "telc B2 Schriftlicher Ausdruck",
+        "Goethe B2 Sprechen Teil 2",
+        "telc B2 Sprachbausteine Teil 2"
+      ],
+      "landeskunde": "Präventionskurse der gesetzlichen Krankenkassen; Nutri-Score (Stand prüfen)"
+    },
+    {
+      "nr": 3,
+      "id": "b2.2-u03",
+      "title": "Kritik, Konflikt, Kompromiss: Feedback im Team",
+      "titleEn": "Criticism, conflict, compromise: feedback in the team",
+      "situation": "In Ihrem Team wird über Urlaubsplanung und Aufgabenverteilung gestritten; Sie lesen Meinungen zur Feedbackkultur, hören ein Interview mit einem Coach, üben Kritik und schreiben Ihrer Vorgesetzten.",
+      "handlungsfeld": "Arbeit (RC 2) · BSK B Dissens · BSK IV Kommunikation am Arbeitsplatz",
+      "unitType": "texttype",
+      "canDo": [
+        {
+          "de": "Ich kann sagen, was meiner Meinung nach ein Problem ist und anders gemacht werden sollte, und das begründen.",
+          "source": "05-cando-b1-b2 B2.2 #5 · BSK 52.1 B2"
+        },
+        {
+          "de": "Ich kann auf Kritik an meinem Standpunkt reagieren und die Reaktion begründen.",
+          "source": "05-cando-b1-b2 B2.2 #5 · BSK 54.5 B2"
+        },
+        {
+          "de": "Ich kann in einem Konfliktgespräch die Positionen erkennen und Verständnis für beide Seiten ausdrücken und begründen.",
+          "source": "05-cando-b1-b2 B2.2 #6 · BSK 54.2 B2"
+        },
+        {
+          "de": "Ich kann einer Vorgesetzten eine Nachricht von etwa 100 Wörtern schreiben, in der ich um Verständnis bitte, meine Lage beschreibe und einen Vorschlag mache.",
+          "source": "05-cando-b1-b2 B2.1 #10 (Prüfungslänge) · GI-B2 Schreiben T2"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Modalpartikeln im Gespräch: doch, ja, eben, halt, mal, eigentlich, wohl – Kritik abschwächen oder verstärken (Das war doch so abgesprochen. Könnten Sie mal …?)",
+          "new": true,
+          "lehrwerk": "Sicher! aktuell B2 L8; Aspekte neu B2 K9 (06 F3 B2.2 #8); rezeptiv Menschen B1 L19–20 (split)"
+        },
+        {
+          "point": "Konjunktiv II für höfliche Kritik und Vorschläge (Es wäre besser gewesen, wenn …) – Wiederholung",
+          "new": false,
+          "lehrwerk": "Sicher! aktuell B2 L5–6; B2.1 E4"
+        }
+      ],
+      "vocabTheme": "Feedback, Konflikt, Teamarbeit",
+      "vocabTarget": 67,
+      "keyWords": [
+        "das Feedback",
+        "die Kritikfähigkeit",
+        "der Vorwurf",
+        "die Kränkung",
+        "das Mitarbeitergespräch",
+        "die Arbeitsverteilung",
+        "die Unzufriedenheit",
+        "die Vereinbarung",
+        "die Eskalation",
+        "die Wertschätzung",
+        "sich rechtfertigen",
+        "einlenken",
+        "entgegenkommen",
+        "nachgeben",
+        "konstruktiv",
+        "verletzend",
+        "kompromissbereit"
+      ],
+      "reading": {
+        "textType": "Meinungen von Beschäftigten zur Feedbackkultur: Überschriften zuordnen",
+        "words": 360
+      },
+      "listening": {
+        "textType": "Interview mit einem Business-Coach über Konflikte im Team (Richtig/Falsch, einmal gehört)",
+        "seconds": 360
+      },
+      "writing": {
+        "task": "Nachricht an die Vorgesetzte: Konflikt um die Urlaubsplanung schildern, um Verständnis bitten, Vorschlag machen, um ein Gespräch bitten",
+        "words": 100,
+        "examTeil": "Goethe B2 Schreiben Teil 2"
+      },
+      "speaking": {
+        "task": "Mit einer Kollegin Urlaubsplanung und Aufgabenverteilung neu aushandeln, bis beide zustimmen",
+        "examTeil": "telc B2 Mündlicher Ausdruck Teil 3"
+      },
+      "pronunciation": "Modalpartikeln unbetont, Akzent auf dem Inhalt; Kritik mit weicher Satzmelodie (Das könnten wir doch MAL besprechen.)",
+      "examTeile": [
+        "Goethe B2 Lesen Teil 4",
+        "telc B2 Hörverstehen Teil 2",
+        "Goethe B2 Schreiben Teil 2",
+        "telc B2 Mündlicher Ausdruck Teil 3",
+        "DTB B2 Sprechen Teil 2 (Beruf-Lane)"
+      ],
+      "landeskunde": "Betriebsrat und Mitarbeitergespräch in deutschen Betrieben"
+    },
+    {
+      "nr": 4,
+      "id": "b2.2-u04",
+      "title": "Verhandeln: Schaden, Ersatz, Einigung",
+      "titleEn": "Negotiating: damage, compensation, agreement",
+      "situation": "Ein Umzugsunternehmen hat Möbel beschädigt und ist einen Tag zu spät gekommen; Sie prüfen die Vertragsbedingungen, fordern schriftlich Schadensersatz und verhandeln über eine Einigung.",
+      "handlungsfeld": "Dienstleistungen, Verbraucherrechte (RC 7) · BSK B Dissens · Goethe-B2-Thema Dienstleistungen",
+      "unitType": "texttype",
+      "canDo": [
+        {
+          "de": "Ich kann einen Schadensfall darlegen, jemanden überzeugen, eine Wiedergutmachung zu leisten, und dabei klar die Grenzen für Zugeständnisse abstecken.",
+          "source": "05-cando-b1-b2 B2.2 #4 (≈) · ZM B2+"
+        },
+        {
+          "de": "Ich kann verhandeln und dabei entscheidende Punkte hervorheben und stützende Einzelheiten anführen.",
+          "source": "05-cando-b1-b2 B2.2 #4 · BSK 57.9 B2"
+        },
+        {
+          "de": "Ich kann Vertragsbedingungen abschnittsweise verstehen und daraus ableiten, welche Ansprüche ich habe.",
+          "source": "≈ 05-cando-b1-b2 B2.2 #11 · GI-B2 Lesen T5"
+        },
+        {
+          "de": "Ich kann eine formelle Beschwerde von mindestens 150 Wörtern schreiben, die Leitpunkte logisch verknüpft und eine Frist setzt.",
+          "source": "≈ 03-exams-b2 §2 · telc B2 Schriftlicher Ausdruck, Aufgabe B"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Konditionale Konnektoren: sofern, vorausgesetzt, dass, es sei denn, im Fall(e), dass; uneingeleiteter Konditionalsatz (Sollten Sie bis zum 15. nicht zahlen, …)",
+          "new": true,
+          "lehrwerk": "Aspekte neu B2 K10; Sicher! aktuell B2 L8–9/L12 (06 F3 B2.2 #6, strong); Profile deutsch B2 (sofern)"
+        },
+        {
+          "point": "falls und wenn in Bedingungen: Wiederholung und Registerwahl",
+          "new": false,
+          "lehrwerk": "Menschen B1 L6 (falls)"
+        }
+      ],
+      "vocabTheme": "Schadensersatz, Vertrag, Verhandlung",
+      "vocabTarget": 67,
+      "keyWords": [
+        "der Schadensersatz",
+        "die Haftung",
+        "die Wiedergutmachung",
+        "das Umzugsunternehmen",
+        "der Kostenvoranschlag",
+        "die Schadensmeldung",
+        "das Gutachten",
+        "die Einigung",
+        "das Zugeständnis",
+        "die Forderung",
+        "haften",
+        "ersetzen",
+        "geltend machen",
+        "sich einigen auf",
+        "abweichen",
+        "verbindlich",
+        "fahrlässig"
+      ],
+      "reading": {
+        "textType": "Allgemeine Geschäftsbedingungen eines Umzugsunternehmens: Abschnitten Überschriften zuordnen",
+        "words": 250
+      },
+      "listening": {
+        "textType": "Fünf kurze Gespräche und Telefonate rund um den Umzug (einmal gehört)",
+        "seconds": 300
+      },
+      "writing": {
+        "task": "Formelle Beschwerde-E-Mail an das Umzugsunternehmen: Schaden darlegen, Schadensersatz fordern, Frist setzen (3 von 4 Leitpunkten, mindestens 150 Wörter)",
+        "words": 160,
+        "examTeil": "telc B2 Schriftlicher Ausdruck"
+      },
+      "speaking": {
+        "task": "Mit der Kundenberaterin eine Einigung über den Schadensersatz aushandeln: Angebot, Gegenangebot, Grenze, Ergebnis festhalten",
+        "examTeil": "telc B2 Mündlicher Ausdruck Teil 3; telc B2+ Beruf Verhandeln"
+      },
+      "pronunciation": "Bestimmt und höflich: fallende Intonation bei Grenzen (Unter 400 Euro können wir uns nicht einigen.)",
+      "examTeile": [
+        "Goethe B2 Lesen Teil 5",
+        "Goethe B2 Hören Teil 1",
+        "telc B2 Hörverstehen Teil 3",
+        "telc B2 Schriftlicher Ausdruck",
+        "telc B2 Mündlicher Ausdruck Teil 3",
+        "DTB B2 Hören und Schreiben (Beruf-Lane)"
+      ],
+      "landeskunde": "Verbraucherzentralen und Schlichtungsstellen (Stand und Quelle prüfen)"
+    },
+    {
+      "nr": 5,
+      "id": "b2.2-u05",
+      "title": "An der Uni: Vorlesung, Studienordnung, Referat",
+      "titleEn": "At university: lecture, regulations, presentation",
+      "situation": "Sie bereiten sich auf ein Studium oder den Studienkolleg vor; Sie lesen eine Studienordnung, hören eine Einführungsvorlesung und halten ein Referat darüber, wie man ein Studium finanzieren kann.",
+      "handlungsfeld": "Aus- und Weiterbildung (RC 4) · Studium (Sicher! aktuell B2 L9) · Goethe-B2-Thema Bildung",
+      "unitType": "texttype",
+      "canDo": [
+        {
+          "de": "Ich kann eine Ordnung, zum Beispiel eine Studienordnung, abschnittsweise verstehen.",
+          "source": "05-cando-b1-b2 B2.2 #11 · GI-B2 Lesen T5"
+        },
+        {
+          "de": "Ich kann einem kurzen Vortrag gezielt Informationen entnehmen.",
+          "source": "05-cando-b1-b2 B2.2 #8 · GI-B2 Hören T4"
+        },
+        {
+          "de": "Ich kann einen Vortrag von ca. 4 Minuten mit Einleitung, Hauptteil und Schluss halten und Fragen dazu beantworten.",
+          "source": "05-cando-b1-b2 B2.2 #1 · GI-B2 Sprechen T1"
+        },
+        {
+          "de": "Ich kann Sachverhalte im Nominalstil verdichten und nominal formulierte Sätze in eigene Worte zurückführen.",
+          "source": "≈ eigene Formulierung nach Aspekte neu B2 K9 / Sicher! aktuell B2 L5, L8 (06 F3 B2.2 #4)"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Nominalisierung: Verbalstil ↔ Nominalstil (weil die Gebühren steigen → wegen der steigenden Gebühren; nachdem man sich eingeschrieben hat → nach der Einschreibung)",
+          "new": true,
+          "lehrwerk": "Aspekte neu B2 K9; Sicher! aktuell B2 L5/L8 (06 F3 B2.2 #4, strong)"
+        },
+        {
+          "point": "Nominalgruppen mit Genitivattribut und Präposition (die Anmeldung zur Prüfung, die Abgabe der Hausarbeit)",
+          "new": true,
+          "lehrwerk": "Aspekte neu B2 K9"
+        }
+      ],
+      "vocabTheme": "Studium, Hochschule, Studienfinanzierung",
+      "vocabTarget": 68,
+      "keyWords": [
+        "die Studienordnung",
+        "die Einschreibung",
+        "der Leistungsnachweis",
+        "die Hausarbeit",
+        "das Referat",
+        "die Studiengebühr",
+        "das Stipendium",
+        "das Studienkolleg",
+        "die Regelstudienzeit",
+        "der Abgabetermin",
+        "die Modulprüfung",
+        "sich einschreiben",
+        "sich immatrikulieren",
+        "anrechnen",
+        "zulassungsbeschränkt",
+        "fachspezifisch"
+      ],
+      "reading": {
+        "textType": "Auszug aus einer Studienordnung: Abschnitten Überschriften zuordnen",
+        "words": 250
+      },
+      "listening": {
+        "textType": "Einführungsvorlesung: Wie man wissenschaftlich arbeitet (zweimal gehört, 8 Fragen)",
+        "seconds": 200
+      },
+      "writing": {
+        "task": "Nachricht an die Dozentin: Abgabe der Hausarbeit verschieben – Grund, Entschuldigung, Vorschlag, Bitte um Antwort",
+        "words": 100,
+        "examTeil": "Goethe B2 Schreiben Teil 2"
+      },
+      "speaking": {
+        "task": "Referat (≈ 4 Min.): Wie finanziert man ein Studium? Mehrere Möglichkeiten, eine genauer, Vor- und Nachteile, Bewertung; danach Fragen beantworten",
+        "examTeil": "Goethe B2 Sprechen Teil 1"
+      },
+      "pronunciation": "Lange Nominalgruppen gliedern: Wortgruppenakzent und Pausen (die Finanzierung | des Studiums | durch ein Stipendium)",
+      "examTeile": [
+        "Goethe B2 Lesen Teil 5",
+        "Goethe B2 Hören Teil 4",
+        "Goethe B2 Schreiben Teil 2",
+        "Goethe B2 Sprechen Teil 1",
+        "telc B2 Sprachbausteine Teil 2"
+      ],
+      "landeskunde": "Studienkolleg, DSH und TestDaF: B2 als Brücke, nicht als Zulassung (RO-DT; memo 03 §5)"
+    },
+    {
+      "nr": 6,
+      "id": "b2.2-u06",
+      "title": "Kulturwelten: Film, Buch, Festival",
+      "titleEn": "Worlds of culture: film, books, festivals",
+      "situation": "Beim Filmfestival Ihrer Stadt lesen Sie Kulturmeldungen, hören die Kulturnachrichten, erzählen von einem Film oder Buch, das Sie beeindruckt hat, und diskutieren im Forum über freien Eintritt in Museen.",
+      "handlungsfeld": "Freizeit und Kultur · Goethe-B2-Themen Freizeit, Beziehungen/Kultur",
+      "unitType": "texttype",
+      "canDo": [
+        {
+          "de": "Ich kann über ein Buch, einen Film oder ein Erlebnis zusammenhängend erzählen, meine Reaktion begründen und auf Nachfragen spontan antworten.",
+          "source": "≈ 03-exams-b2 §2 · telc B2 Mündlicher Ausdruck T1; Steigerung von 05 B1.1 #4 (SB B1)"
+        },
+        {
+          "de": "Ich kann kurzen Meldungen die Hauptaussage entnehmen und passende Überschriften finden.",
+          "source": "≈ 03-exams-b2 §2 · telc B2 Leseverstehen T1"
+        },
+        {
+          "de": "Ich kann im Radio Nachrichten und Kulturbeiträge verstehen, auch wenn ich sie nur einmal höre.",
+          "source": "≈ 05-cando-b1-b2 B2.2 #13 · SB B2; telc B2 Hörverstehen T1"
+        },
+        {
+          "de": "Ich kann in einem Forumsbeitrag Stellung nehmen und meine Argumente mit Beispielen stützen.",
+          "source": "05-cando-b1-b2 B2.1 #2 · GI-B2 Schreiben T1"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Nomen, Verben und Adjektive mit Präpositionen (die Begeisterung für, die Kritik an, der Einfluss auf; begeistert von, angewiesen auf)",
+          "new": true,
+          "lehrwerk": "Aspekte neu B2 K8; Sicher! aktuell B2 L6–7 (06 F3 B2.2 #2, strong); Verben mit Präp. Menschen A2 L18, Schritte plus Neu 3 L5"
+        },
+        {
+          "point": "Präpositionaladverb als Korrelat bei Nomen und Adjektiven (Ich bin stolz darauf, dass …; das Interesse daran, …) – Wiederholung aus B2.1 E2",
+          "new": false,
+          "lehrwerk": "Aspekte neu B2 K2; Menschen A2 L18"
+        }
+      ],
+      "vocabTheme": "Film, Literatur, Kulturbetrieb",
+      "vocabTarget": 67,
+      "keyWords": [
+        "die Inszenierung",
+        "die Verfilmung",
+        "die Hauptfigur",
+        "der Regisseur",
+        "die Rezension",
+        "das Publikum",
+        "die Uraufführung",
+        "das Kulturangebot",
+        "die Gattung",
+        "die Spannung",
+        "beeindrucken",
+        "sich auseinandersetzen mit",
+        "darstellen",
+        "berührend",
+        "anspruchsvoll",
+        "sehenswert"
+      ],
+      "reading": {
+        "textType": "Fünf Kulturmeldungen und zehn Überschriften (zuordnen)",
+        "words": 1100
+      },
+      "listening": {
+        "textType": "Kulturnachrichten im Radio (Richtig/Falsch, einmal gehört)",
+        "seconds": 200
+      },
+      "writing": {
+        "task": "Forumsbeitrag: Sollte der Eintritt in öffentliche Museen frei sein? (4 Leitpunkte, Einleitung und Schluss)",
+        "words": 150,
+        "examTeil": "Goethe B2 Schreiben Teil 1"
+      },
+      "speaking": {
+        "task": "Über Erfahrungen sprechen: ein Film oder Buch, das mich beeindruckt hat (≈ 1½ Min., frei, nicht auswendig), dann Fragen beantworten",
+        "examTeil": "telc B2 Mündlicher Ausdruck Teil 1"
+      },
+      "pronunciation": "Frei statt auswendig: natürliche Pausen, Selbstkorrektur, Füllstrategien (Wie soll ich sagen …) – telc bricht auswendig Gelerntes ab",
+      "examTeile": [
+        "telc B2 Leseverstehen Teil 1",
+        "telc B2 Hörverstehen Teil 1",
+        "Goethe B2 Schreiben Teil 1",
+        "telc B2 Mündlicher Ausdruck Teil 1",
+        "telc B2 Sprachbausteine Teil 1"
+      ],
+      "landeskunde": "Filmfestspiele und Buchmessen in D-A-CH (Berlinale, Frankfurter und Leipziger Buchmesse)"
+    },
+    {
+      "nr": 7,
+      "id": "b2.2-u07",
+      "title": "Das macht(e) Geschichte: Zeitzeugen und Quellen",
+      "titleEn": "Making history: eyewitnesses and sources",
+      "situation": "Ihre Stadt startet ein Erinnerungsprojekt mit Zeitzeugen; Sie lesen einen Bericht, hören ein Zeitzeugeninterview, prüfen, was Quellen behaupten, und halten einen Vortrag darüber, wie man an Geschichte erinnern kann.",
+      "handlungsfeld": "Politik, Gesellschaft, Geschichte (Orientierung) · Goethe-B2-Thema Orte",
+      "unitType": "texttype",
+      "canDo": [
+        {
+          "de": "Ich kann wiedergeben, was eine Zeitzeugin erzählt hat, und dabei deutlich machen, was belegt und was nur behauptet ist.",
+          "source": "≈ eigene Formulierung nach SB B2 Mediation (05 B2.2 #9)"
+        },
+        {
+          "de": "Ich kann Sachverhalte klar und systematisch darstellen und wichtige Punkte mit stützenden Details hervorheben.",
+          "source": "05-cando-b1-b2 B2.2 #1 · GER S. 64 B2"
+        },
+        {
+          "de": "Ich kann in einer halbformellen E-Mail eine Anfrage stellen und die Leitpunkte logisch verknüpfen.",
+          "source": "≈ 03-exams-b2 §2 · telc B2 Schriftlicher Ausdruck, Aufgabe A"
+        },
+        {
+          "de": "Ich kann einem langen Interview, das ich nur einmal höre, die wesentlichen Aussagen entnehmen.",
+          "source": "≈ 03-exams-b2 §2 · telc B2 Hörverstehen T2"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Konjunktiv I der Vergangenheit (Er sagte, er sei 1961 nach Berlin gekommen und habe dort als Schlosser gearbeitet.)",
+          "new": true,
+          "lehrwerk": "Aspekte neu B2 K8 (06 F3 B2.2 #1, strong)"
+        },
+        {
+          "point": "Subjektive Modalverben: sollen/wollen für fremde und eigene Behauptungen (Er soll dabei gewesen sein.) und müssen/dürfte/kann für Vermutungen (Das muss 1989 gewesen sein.)",
+          "new": true,
+          "lehrwerk": "Sicher! aktuell B2 L8; Aspekte neu B2 K9 (06 F3 B2.2 #8)"
+        }
+      ],
+      "vocabTheme": "Geschichte, Erinnerung, Quellen",
+      "vocabTarget": 68,
+      "keyWords": [
+        "der Zeitzeuge",
+        "die Erinnerungskultur",
+        "das Gedenken",
+        "die Gedenkstätte",
+        "die Überlieferung",
+        "die Epoche",
+        "die Teilung",
+        "die Wiedervereinigung",
+        "der Mauerfall",
+        "die Aufarbeitung",
+        "das Archiv",
+        "überliefern",
+        "aufarbeiten",
+        "gedenken",
+        "bezeugen",
+        "zeitgeschichtlich",
+        "angeblich",
+        "nachweislich"
+      ],
+      "reading": {
+        "textType": "Zeitungsbericht über ein Zeitzeugenprojekt (6 Fragen, Mehrfachauswahl)",
+        "words": 420
+      },
+      "listening": {
+        "textType": "Langes Radiointerview mit einer Zeitzeugin (Richtig/Falsch, einmal gehört)",
+        "seconds": 360
+      },
+      "writing": {
+        "task": "Halbformelle E-Mail an ein Stadtarchiv: Anfrage zu einer Führung und zu Materialien für eine Gruppe (3 von 4 Leitpunkten oder 2 + eigener)",
+        "words": 150,
+        "examTeil": "telc B2 Schriftlicher Ausdruck"
+      },
+      "speaking": {
+        "task": "Vortrag (≈ 4 Min.): Wie sollte man an Geschichte erinnern? Museum, Gedenktag, Zeitzeugengespräch, digitales Archiv – eine Möglichkeit genauer, Vor- und Nachteile, Bewertung; dann Fragen",
+        "examTeil": "Goethe B2 Sprechen Teil 1"
+      },
+      "pronunciation": "Jahreszahlen und Daten flüssig sprechen (neunzehnhunderteinundsechzig; am neunten November)",
+      "examTeile": [
+        "Goethe B2 Lesen Teil 3",
+        "telc B2 Leseverstehen Teil 1",
+        "telc B2 Hörverstehen Teil 2",
+        "telc B2 Schriftlicher Ausdruck",
+        "Goethe B2 Sprechen Teil 1"
+      ],
+      "landeskunde": "Erinnerungsorte: Gedenkstätten, Stolpersteine, der 9. November (Fakten nur mit Quelle)"
+    },
+    {
+      "nr": 8,
+      "id": "b2.2-u08",
+      "title": "Angehörige informieren: Merkblätter verständlich machen",
+      "titleEn": "Informing relatives: making leaflets understandable",
+      "situation": "Sie arbeiten in einem ambulanten Pflegedienst; eine Angehörige beschwert sich, ruft an und versteht ein Merkblatt zur Pflegeversicherung nicht – Sie antworten im Auftrag der Leitung und erklären das Merkblatt in einfachen Worten.",
+      "handlungsfeld": "Arbeit (RC 2) · Gesundheit (RC 8) · Banken/Versicherungen (RC 5) · Pflege als Arbeitsfeld (memo 10 impl. 5) · Mediation",
+      "unitType": "texttype",
+      "canDo": [
+        {
+          "de": "Ich kann die wichtigsten Punkte aus komplexen, aber gut strukturierten Texten zuverlässig mündlich weitergeben.",
+          "source": "05-cando-b1-b2 B2.2 #9 · SB B2 Mediation"
+        },
+        {
+          "de": "Ich kann eine Kundenbeschwerde im Auftrag meiner Vorgesetzten schriftlich beantworten und dabei alle Anweisungen umsetzen.",
+          "source": "≈ 03-exams-b2 §3 · DTB Lesen und Schreiben"
+        },
+        {
+          "de": "Ich kann einem Telefonat die wichtigen Informationen entnehmen und eine Telefonnotiz schreiben.",
+          "source": "≈ 03-exams-b2 §3 · DTB Hören und Schreiben"
+        },
+        {
+          "de": "Ich kann in einem Kundengespräch Vor- und Nachteile erläutern und meine Vorgehensweise begründen.",
+          "source": "05-cando-b1-b2 B2.2 #7 · KK-B2 Groblernziel 35"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Nominalstil in Verbalstil zurückführen: Merkblatt- und Amtssprache für Laien umformulieren (Bei Beantragung der Leistung … → Wenn Sie die Leistung beantragen, …)",
+          "new": false,
+          "lehrwerk": "Transfer von E5 (Aspekte neu B2 K9; Sicher! aktuell B2 L5/L8)"
+        },
+        {
+          "point": "Handlungsanweisungen wiedergeben: sein + zu, haben + zu, sollen (Der Antrag ist bis … zu stellen → Sie müssen den Antrag bis … stellen.) – Wiederholung",
+          "new": false,
+          "lehrwerk": "B2.1 E6 (Aspekte neu B2 K5)"
+        }
+      ],
+      "vocabTheme": "Pflegeversicherung, ambulante Pflege, Kundenkontakt",
+      "vocabTarget": 67,
+      "keyWords": [
+        "die Pflegeversicherung",
+        "der Pflegegrad",
+        "die Pflegeleistung",
+        "der Pflegedienst",
+        "die Kurzzeitpflege",
+        "die Entlastung",
+        "das Merkblatt",
+        "der Hausbesuch",
+        "die Begutachtung",
+        "der Eigenanteil",
+        "die Kostenübernahme",
+        "entlasten",
+        "zuzahlen",
+        "erläutern",
+        "ambulant",
+        "stationär",
+        "pflegebedürftig"
+      ],
+      "reading": {
+        "textType": "Anzeigen mit Entlastungsangeboten für pflegende Angehörige (10 Situationen, 12 Anzeigen, „x“ möglich)",
+        "words": 1000
+      },
+      "listening": {
+        "textType": "Anruf einer Angehörigen beim Pflegedienst → Telefonnotiz; dazu fünf kurze Alltagsgespräche (einmal gehört)",
+        "seconds": 300
+      },
+      "writing": {
+        "task": "Antwort-E-Mail an eine Angehörige, die sich beschwert, im Auftrag der Pflegedienstleitung: alle Anweisungen umsetzen, eine Lösung anbieten",
+        "words": 150,
+        "examTeil": "DTB B2 Lesen und Schreiben; Register und Aufbau wie telc B2 Schriftlicher Ausdruck"
+      },
+      "speaking": {
+        "task": "Ein Merkblatt zur Pflegeversicherung in höchstens einer Minute für eine Angehörige zusammenfassen, dann die Möglichkeiten mit ihr abwägen",
+        "examTeil": "telc B2 Mündlicher Ausdruck Teil 2; DTB B2 Sprechen Teil 1C"
+      },
+      "pronunciation": "Erklärstil: langsamer, Akzent auf Schlüsselwörtern, kurze Sinneinheiten",
+      "examTeile": [
+        "telc B2 Leseverstehen Teil 3",
+        "Goethe B2 Hören Teil 1",
+        "DTB B2 Lesen und Schreiben (Beruf-Lane)",
+        "DTB B2 Hören und Schreiben (Beruf-Lane)",
+        "telc B2 Mündlicher Ausdruck Teil 2",
+        "DTB B2 Sprechen Teil 1C (Beruf-Lane)"
+      ],
+      "landeskunde": "Pflegeversicherung und Pflegegrade (Stand prüfen; keine Rechts- oder Leistungsberatung)"
+    },
+    {
+      "nr": 9,
+      "id": "b2.2-u09",
+      "title": "Stadt, Land, Zukunft: lebhaft diskutieren",
+      "titleEn": "Town, country, future: lively debate",
+      "situation": "In einer Bürgerversammlung wird über eine autofreie Innenstadt gestritten; Sie lesen Forumsbeiträge, hören eine Radiodiskussion, behalten in der Debatte das Rederecht und schreiben Ihren eigenen Beitrag.",
+      "handlungsfeld": "Mobilität (RC 10) · Politik und Teilhabe · Goethe-B2-Themen Orte, Wohnen/Umwelt",
+      "unitType": "texttype",
+      "canDo": [
+        {
+          "de": "Ich kann mich auf Aussagen und Schlussfolgerungen anderer Sprechender beziehen, daran anknüpfen und so zur Entwicklung des Gesprächs beitragen.",
+          "source": "05-cando-b1-b2 B2.2 #2 · ZM B2+"
+        },
+        {
+          "de": "Ich kann Versatzstücke wie „Das ist eine schwierige Frage“ verwenden, um Zeit zum Formulieren zu gewinnen und das Rederecht zu behalten.",
+          "source": "05-cando-b1-b2 B2.2 #3 · ZM B2"
+        },
+        {
+          "de": "Ich kann mich so spontan und fließend verständigen, dass ein normales Gespräch mit kompetenten Sprechenden ohne Belastung für eine der beiden Seiten möglich ist.",
+          "source": "05-cando-b1-b2 B2.2 #14 · ZM B2"
+        },
+        {
+          "de": "Ich kann in Forumsbeiträgen erkennen, welche Einstellung die Schreibenden haben.",
+          "source": "05-cando-b1-b2 B2.1 #3 · GI-B2 Lesen T1"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Konzessive Konnektoren: obgleich, wenngleich, selbst wenn, auch wenn; dennoch, gleichwohl; zwar … aber (Wiederholung)",
+          "new": true,
+          "lehrwerk": "Aspekte neu B2 K10; Sicher! aktuell B2 L8–9/L12 (06 F3 B2.2 #6, strong)"
+        },
+        {
+          "point": "Konsekutive und adversative Konnektoren: folglich, infolgedessen, so … dass; wohingegen, während, hingegen",
+          "new": true,
+          "lehrwerk": "Aspekte neu B2 K10; Sicher! aktuell B2 L8–9/L12; sodass Menschen B1 L20"
+        }
+      ],
+      "vocabTheme": "Stadtentwicklung, Verkehr, Bürgerbeteiligung",
+      "vocabTarget": 67,
+      "keyWords": [
+        "die Verkehrswende",
+        "die Innenstadt",
+        "die Fußgängerzone",
+        "der Individualverkehr",
+        "die Anbindung",
+        "die Lebensqualität",
+        "die Bürgerbeteiligung",
+        "der Einzelhandel",
+        "die Abwanderung",
+        "die Infrastruktur",
+        "der ländliche Raum",
+        "verdrängen",
+        "beleben",
+        "ausbauen",
+        "zugänglich",
+        "autofrei",
+        "abgelegen"
+      ],
+      "reading": {
+        "textType": "Vier Forumsbeiträge zur autofreien Innenstadt: 9 Aussagen Personen zuordnen",
+        "words": 560
+      },
+      "listening": {
+        "textType": "Radiodiskussion mit Moderatorin, Einzelhändler und Verkehrsplanerin: Wer sagt das? (einmal gehört)",
+        "seconds": 250
+      },
+      "writing": {
+        "task": "Forumsbeitrag: Sollte die Innenstadt autofrei werden? (4 Leitpunkte, Einleitung und Schluss)",
+        "words": 150,
+        "examTeil": "Goethe B2 Schreiben Teil 1"
+      },
+      "speaking": {
+        "task": "Diskussion in Prüfungslänge: autofreie Innenstadt – Argumente austauschen, anknüpfen, das Rederecht halten, am Ende die Position zusammenfassen",
+        "examTeil": "Goethe B2 Sprechen Teil 2"
+      },
+      "pronunciation": "Tempo und Flüssigkeit: Verschleifungen der Umgangssprache verstehen (hamwa = haben wir, is = ist) und selbst deutlich bleiben",
+      "examTeile": [
+        "Goethe B2 Lesen Teil 1",
+        "Goethe B2 Hören Teil 3",
+        "Goethe B2 Schreiben Teil 1",
+        "Goethe B2 Sprechen Teil 2",
+        "telc B2 Sprachbausteine Teil 2"
+      ],
+      "landeskunde": "Bürgerbeteiligung in Kommunen: Bürgerbegehren und Bürgerentscheid"
+    },
+    {
+      "nr": 10,
+      "id": "b2.2-u10",
+      "title": "Ein Blick in die Zukunft: Arbeiten mit KI",
+      "titleEn": "A look into the future: working with AI",
+      "situation": "Ihr Betrieb führt KI-Werkzeuge ein; Sie lesen einen Fachartikel, hören ein Experteninterview, präsentieren der Abteilung die Möglichkeiten und schreiben einen Beitrag im Intranet.",
+      "handlungsfeld": "Arbeit (RC 2) · Mediennutzung (RC 9) · Goethe-B2-Thema Alltag/Arbeit",
+      "unitType": "texttype",
+      "canDo": [
+        {
+          "de": "Ich kann eine längere, gut strukturierte Präsentation halten, auch zu komplexeren Themen.",
+          "source": "05-cando-b1-b2 B2.2 #7 · BSK 43.7 B2"
+        },
+        {
+          "de": "Ich kann Fachartikel mit dichten Nominalgruppen verstehen und erweiterte Partizipialattribute in Relativsätze auflösen.",
+          "source": "≈ eigene Formulierung nach Aspekte neu B2 K10 / Sicher! aktuell B2 L12 (06 F3 B2.2 #5)"
+        },
+        {
+          "de": "Ich kann einem Interview mit einer Expertin detaillierte Informationen entnehmen.",
+          "source": "≈ 03-exams-b2 §1 · GI-B2 Hören T2"
+        },
+        {
+          "de": "Ich kann in einem Diskussionsforum im Intranet einen Vorschlag begründen, meine Beiträge mit denen anderer verbinden und mit Meinungsverschiedenheiten umgehen.",
+          "source": "≈ 05-cando-b1-b2 B2.1 #14 · SB B2 Online-Interaktion; DTB Schreiben (Forumsbeitrag)"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Erweiterte Partizipialattribute (die von der Firma eingeführten Werkzeuge; die ständig wachsende Datenmenge) und ihre Auflösung in Relativsätze",
+          "new": true,
+          "lehrwerk": "Aspekte neu B2 K10; Sicher! aktuell B2 L12 (06 F3 B2.2 #5, strong)"
+        },
+        {
+          "point": "Partizipien als Nomen (die Beschäftigten, die Auszubildenden, das Erreichte)",
+          "new": true,
+          "lehrwerk": "Aspekte neu B2 K10; Sicher! aktuell B2 L12; Adjektive als Nomen Menschen B1 L1"
+        }
+      ],
+      "vocabTheme": "Digitalisierung, KI, Arbeit der Zukunft",
+      "vocabTarget": 68,
+      "keyWords": [
+        "die KI-Anwendung",
+        "der Algorithmus",
+        "die Automatisierung",
+        "die Datenmenge",
+        "die Effizienz",
+        "die Fehlerquote",
+        "die Schulung",
+        "der Arbeitsplatzverlust",
+        "die Transparenz",
+        "die Arbeitserleichterung",
+        "automatisieren",
+        "überwachen",
+        "einsetzen",
+        "vereinfachen",
+        "fehleranfällig",
+        "datenbasiert",
+        "zukunftsfähig"
+      ],
+      "reading": {
+        "textType": "Fachartikel mit Satzlücken: Wie KI die Büroarbeit verändert (6 Lücken, 8 Sätze)",
+        "words": 330
+      },
+      "listening": {
+        "textType": "Radiointerview mit einer Arbeitsmarktforscherin (zweimal gehört, 6 Fragen)",
+        "seconds": 210
+      },
+      "writing": {
+        "task": "Beitrag im Intranet: Welche KI-Werkzeuge soll die Abteilung einführen? Vorschlag, Begründung, Einwände, Fazit",
+        "words": 150,
+        "examTeil": "DTB B2 Schreiben (Forumsbeitrag im Intranet); Aufbau wie Goethe B2 Schreiben Teil 1"
+      },
+      "speaking": {
+        "task": "Präsentation (≈ 4 Min.) für die Abteilung: drei KI-Werkzeuge, eines genauer, Vor- und Nachteile, Empfehlung; dann Fragen beantworten",
+        "examTeil": "Goethe B2 Sprechen Teil 1; DTB B2 Sprechen Teil 1A"
+      },
+      "pronunciation": "Lange Attributgruppen sprechen: den Spannungsbogen vom Artikel bis zum Nomen halten",
+      "examTeile": [
+        "Goethe B2 Lesen Teil 2",
+        "telc B2 Leseverstehen Teil 2",
+        "Goethe B2 Hören Teil 2",
+        "Goethe B2 Sprechen Teil 1",
+        "DTB B2 Schreiben Forumsbeitrag (Beruf-Lane)",
+        "DTB B2 Sprechen Teil 1A (Beruf-Lane)"
+      ],
+      "landeskunde": "Mitbestimmung bei neuer Technik: die Rolle des Betriebsrats"
+    },
+    {
+      "nr": 11,
+      "id": "b2.2-u11",
+      "title": "Abrechnung, Widerspruch, Kündigung: formell schreiben",
+      "titleEn": "Bills, objections, cancellations: writing formally",
+      "situation": "Ihr Energieversorger schickt eine fehlerhafte Jahresabrechnung und kündigt eine Preiserhöhung an; Sie lesen Stellungnahmen, hören die Nachrichten, beschweren sich formell mit Forderung und kündigen fristgerecht.",
+      "handlungsfeld": "Wohnen (RC 12) · Verträge, Banken/Versicherungen (RC 5) · Ämter und Behörden (RC 1)",
+      "unitType": "texttype",
+      "canDo": [
+        {
+          "de": "Ich kann einen Widerspruch klar und gut strukturiert formulieren und begründen.",
+          "source": "05-cando-b1-b2 B2.2 #11 · BSK 39.3 B2"
+        },
+        {
+          "de": "Ich kann ein Kündigungsschreiben in klaren, zusammenhängenden Sätzen mit angemessener Formalität verfassen.",
+          "source": "05-cando-b1-b2 B2.2 #12 · BSK 45.1 B2"
+        },
+        {
+          "de": "Ich kann zusammenhängend und klar schreiben und dabei die üblichen Konventionen der Gestaltung und der Gliederung in Absätze einhalten.",
+          "source": "05-cando-b1-b2 B2.2 #12 · GER S. 118 B2"
+        },
+        {
+          "de": "Ich kann in kurzen Meinungstexten den Standpunkt der Schreibenden erkennen.",
+          "source": "≈ 03-exams-b2 §1 · GI-B2 Lesen T4"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Präpositionen mit Genitiv im formellen Stil: aufgrund, infolge, angesichts, hinsichtlich, bezüglich, zwecks, ungeachtet, zugunsten; gemäß + Dativ",
+          "new": true,
+          "lehrwerk": "Aspekte neu B2 K10; Sicher! aktuell B2 L8–9/L12 (06 F3 B2.2 #6, strong); wegen/trotz/während Menschen B1 L12"
+        },
+        {
+          "point": "Nominalstil im Geschäftsbrief (Um Prüfung der Abrechnung wird gebeten.) – Wiederholung aus E5",
+          "new": false,
+          "lehrwerk": "Aspekte neu B2 K9"
+        }
+      ],
+      "vocabTheme": "Verträge, Abrechnungen, Behördensprache",
+      "vocabTarget": 68,
+      "keyWords": [
+        "die Jahresabrechnung",
+        "der Energieversorger",
+        "die Preiserhöhung",
+        "das Sonderkündigungsrecht",
+        "der Widerspruch",
+        "die Nachzahlung",
+        "der Abschlag",
+        "der Zählerstand",
+        "die Rückerstattung",
+        "die Fristsetzung",
+        "die Vertragslaufzeit",
+        "widersprechen",
+        "berichtigen",
+        "anfechten",
+        "fristgerecht",
+        "unverzüglich",
+        "fehlerhaft"
+      ],
+      "reading": {
+        "textType": "Stellungnahmen von Verbraucherinnen und Verbrauchern zu Preiserhöhungen: Überschriften zuordnen",
+        "words": 360
+      },
+      "listening": {
+        "textType": "Wirtschaftsnachrichten im Radio (Richtig/Falsch, einmal gehört)",
+        "seconds": 220
+      },
+      "writing": {
+        "task": "Formelle Beschwerde-E-Mail an den Energieversorger: Fehler darlegen, Berichtigung fordern, Frist setzen (3 von 4 Leitpunkten oder 2 + eigener, mindestens 150 Wörter)",
+        "words": 160,
+        "examTeil": "telc B2 Schriftlicher Ausdruck"
+      },
+      "speaking": {
+        "task": "Einen Zeitungstext über steigende Energiepreise in höchstens einer Minute zusammenfassen, dann Maßnahmen diskutieren",
+        "examTeil": "telc B2 Mündlicher Ausdruck Teil 2"
+      },
+      "pronunciation": "Formelle Texte vorlesen: Genitivendungen und Präpositionen deutlich (aufgrund der hohen Kosten)",
+      "examTeile": [
+        "Goethe B2 Lesen Teil 4",
+        "telc B2 Leseverstehen Teil 3",
+        "telc B2 Hörverstehen Teil 1",
+        "telc B2 Hörverstehen Teil 3",
+        "telc B2 Schriftlicher Ausdruck",
+        "telc B2 Mündlicher Ausdruck Teil 2"
+      ],
+      "landeskunde": "Widerspruch und Kündigungsfristen bei Energieverträgen (keine Rechtsberatung; Stand prüfen)"
+    },
+    {
+      "nr": 12,
+      "id": "b2.2-u12",
+      "title": "Sprache und Regionen: vermitteln und moderieren",
+      "titleEn": "Language and regions: mediating and moderating",
+      "situation": "Im Sprachcafé Ihrer Stadt moderieren Sie einen Abend über Dialekte und Mehrsprachigkeit; Sie lesen Forumsbeiträge, hören ein Interview mit einer Sprachwissenschaftlerin, fassen die Positionen für alle zusammen und schreiben der Organisatorin.",
+      "handlungsfeld": "Sprache und Kommunikation (Goethe-B2-Thema) · Soziale Kontakte (BSK A) · Mediation (Begleitband)",
+      "unitType": "texttype",
+      "canDo": [
+        {
+          "de": "Ich kann zur Beteiligung ermutigen und Fragen stellen, die andere einladen, aus ihrer Perspektive zu reagieren.",
+          "source": "05-cando-b1-b2 B2.2 #10 · SB B2 Mediation"
+        },
+        {
+          "de": "Ich kann am Ende einer Diskussion die Schlüsselaspekte zusammenfügen.",
+          "source": "05-cando-b1-b2 B2.2 #9 · E8 B2"
+        },
+        {
+          "de": "Ich kann einem Interview mit einer Expertin detaillierte Informationen und Standpunkte entnehmen.",
+          "source": "≈ 03-exams-b2 §1 · GI-B2 Hören T2"
+        },
+        {
+          "de": "Ich kann über meine Erfahrungen mit Sprachen und Dialekten frei sprechen und Nachfragen beantworten.",
+          "source": "≈ 03-exams-b2 §2 · telc B2 Mündlicher Ausdruck T1"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Redewiedergabe beim Zusammenfassen: Konjunktiv I und Ersatzformen, sollen, laut/zufolge (Wiederholung und Integration)",
+          "new": false,
+          "lehrwerk": "Aspekte neu B2 K8; Sicher! aktuell B2 L7"
+        },
+        {
+          "point": "Konnektoren der Textverknüpfung beim Zusammenfassen: einerseits … andererseits, während, wohingegen, folglich (Wiederholung)",
+          "new": false,
+          "lehrwerk": "Aspekte neu B2 K7/K10"
+        }
+      ],
+      "vocabTheme": "Sprache, Dialekt, Mehrsprachigkeit",
+      "vocabTarget": 59,
+      "keyWords": [
+        "der Dialekt",
+        "die Mundart",
+        "die Standardsprache",
+        "die Mehrsprachigkeit",
+        "die Varietät",
+        "die Sprachgemeinschaft",
+        "das Vorurteil",
+        "die Umgangssprache",
+        "die Identität",
+        "die Moderation",
+        "der Redebeitrag",
+        "moderieren",
+        "vermitteln",
+        "sich verständigen",
+        "regional",
+        "mehrsprachig"
+      ],
+      "reading": {
+        "textType": "Vier Forumsbeiträge: Soll Dialekt in der Schule Platz haben? (9 Aussagen Personen zuordnen)",
+        "words": 560
+      },
+      "listening": {
+        "textType": "Radiointerview mit einer Sprachwissenschaftlerin über Dialekte (zweimal gehört, 6 Fragen)",
+        "seconds": 210
+      },
+      "writing": {
+        "task": "Nachricht an die Organisatorin des Sprachcafés: Moderation zusagen, um Verständnis für eine Änderung bitten, einen Vorschlag machen",
+        "words": 100,
+        "examTeil": "Goethe B2 Schreiben Teil 2"
+      },
+      "speaking": {
+        "task": "Über Erfahrungen sprechen: Sprachen und Dialekte in meinem Leben (≈ 1½ Min.), dann Fragen; anschließend eine Gesprächsrunde moderieren und zusammenfassen",
+        "examTeil": "telc B2 Mündlicher Ausdruck Teil 1"
+      },
+      "pronunciation": "Regionale Aussprache verstehen (Beispiele aus Bayern, Österreich, der Schweiz); die eigene Standardaussprache als Ziel",
+      "examTeile": [
+        "Goethe B2 Lesen Teil 1",
+        "Goethe B2 Hören Teil 2",
+        "Goethe B2 Schreiben Teil 2",
+        "telc B2 Mündlicher Ausdruck Teil 1",
+        "telc B2 Sprachbausteine Teil 1"
+      ],
+      "landeskunde": "Dialekte und Standardvarietäten in Deutschland, Österreich und der Schweiz"
+    }
+  ],
+  "checkpoints": [
+    {
+      "afterUnit": 3,
+      "covers": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "afterUnit": 6,
+      "covers": [
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "afterUnit": 9,
+      "covers": [
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "afterUnit": 12,
+      "covers": [
+        10,
+        11,
+        12
+      ]
+    }
+  ],
+  "levelTest": {
+    "format": "Vollständiger Modelltest im Format Goethe-Zertifikat B2 (Lesen 5 Teile/65 Min., Hören 4 Teile/≈ 40 Min., Schreiben 2 Teile/75 Min., ohne Pause; Sprechen 2 Teile nach 15 Min. Vorbereitung, mit KI-Partner); im telc-Track vollständig im Format telc Deutsch B2 (Leseverstehen + Sprachbausteine 90 Min., Hörverstehen ≈ 20 Min., Schriftlicher Ausdruck 30 Min.; Mündlicher Ausdruck 3 Teile nach 20 Min. Vorbereitung). Dritter voller Modelltest der Stufe; DTB B2 als optionaler Beruf-Satz. Ergebnis als Übungswert nach der Bestehensregel der gewählten Prüfung (Goethe: je Modul ≥ 60; telc: ≥ 135/225 schriftlich und ≥ 45/75 mündlich), nie als Prüfungsergebnis.",
+    "sections": [
+      "Lesen",
+      "Hören",
+      "Schreiben",
+      "Sprechen"
+    ]
+  }
+}
