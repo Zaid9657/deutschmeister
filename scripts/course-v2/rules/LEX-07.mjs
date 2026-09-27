@@ -7,11 +7,17 @@
 // reported on the later one. A homograph (`lx.x-2`) is legitimate beside `lx.x` when its gloss differs;
 // it is reported only when it repeats a gloss of the same lemma (rule-smith 2026-09-27: the rule used to
 // report the plain entry of every valid homograph pair, e.g. a1.2 lx.ueberweisung beside b1.1 lx.ueberweisung-2).
+//
+// An entry's `example` is read by the learner at the entry's unit, so it stays under that unit's grammar
+// ceiling (GRM-04's detectors, receptive licensing; reviews a2.2-u04 r2 F01 / r3 F01: the lx.fluss card
+// „Der Weg geht immer am Fluss entlang." taught entlang at a2.2-u04, licensed from b1.2-u09). Exact
+// detectors block, heuristic ones advise; the finding names the lexicon file, whose owner acts.
 
 import { walkTexts } from '../lib-validate/walk.mjs';
-import { LEVELS } from '../lib-validate/ids.mjs';
+import { LEVELS, parseUnitId, positionOf, describePosition } from '../lib-validate/ids.mjs';
+import { ceilingChecker } from '../lib-validate/ceiling.mjs';
 import { entryForms } from '../lib-validate/lexicon.mjs';
-import { arr, isObj, blocker } from '../lib-validate/helpers.mjs';
+import { arr, isObj, blocker, finding, list } from '../lib-validate/helpers.mjs';
 
 export const id = 'LEX-07';
 export const title = 'Lexicon hygiene: one gloss per lemma, feminine pairs, plural_kind, wordId null';
@@ -79,6 +85,23 @@ export function run({ ctx, docs, levels, mode }) {
         }
       }
     });
+  }
+  // examples under the grammar ceiling of the entry's unit
+  const ceiling = ceilingChecker(ctx);
+  if (ceiling) {
+    for (const slot of withLex) {
+      slot.lexicon.entries.forEach((e, i) => {
+        if (!isObj(e) || typeof e.example !== 'string' || !e.example.trim()) return;
+        const u = parseUnitId(e.unit);
+        if (!u) return;
+        const g = ctx.levels.get(u.level)?.units.get(u.nr)?.data?.spec?.grammar || {};
+        const declared = new Set([...arr(g.new), ...arr(g.chunk), ...arr(g.review)]);
+        for (const h of ceiling(e.example, positionOf(u.level, u.nr), 'input', declared)) {
+          const sev = h.precision === 'exact' ? 'blocker' : 'advisory';
+          findings.push(finding(sev, { file: slot.lexicon.file }, `entries[${i}].example`, `example „${e.example}" uses „${h.match}" (${h.construction}) — licensed from ${describePosition(h.licensedAt)} (${list(h.points, 3)}), the entry's unit is ${e.unit} — owner: the lexicon owner (${slot.lexicon.file})${sev === 'blocker' ? '' : ` [${h.precision}]`}`, e.id));
+        }
+      });
+    }
   }
   // glosses on surfaces must repeat the lexicon gloss
   // glosses on surfaces must repeat the lexicon gloss. Candidates: the entries whose lemma IS the token
