@@ -185,6 +185,9 @@ const PRICE_FREE_SURFACES = [
   'src/pages/TelcB1KursPage.jsx',
   // The exercise paywall quotes the course and Pro prices on every gated lesson.
   'astro-site/src/components/ExercisePlayer.jsx',
+  // Sentence X-Ray carries the signed-out conversion offer and the Pro upsell
+  // at the daily limit (docs/SCORECARD.md work order #3, 2026-09-27).
+  'src/pages/SentenceXRay.jsx',
 ];
 
 test('no page source retypes a price literal', () => {

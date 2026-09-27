@@ -68,6 +68,34 @@ export function blobToBase64(blob) {
   });
 }
 
+// Ask for the microphone BEFORE a speaking session is created. The session
+// start reserves the learner's allowance (a trial session, a wallet debit, a
+// subscriber's free session), so a denied or missing microphone has to fail
+// here — not on the first tap inside a session that has already been counted.
+// The returned stream is handed to SpeakingSession, so there is no second
+// permission prompt.
+export async function acquireMicrophone() {
+  if (typeof navigator === 'undefined' || !navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== 'function') {
+    const err = new Error('Requested device not found');
+    err.name = 'NotFoundError';
+    throw err;
+  }
+  return navigator.mediaDevices.getUserMedia({ audio: true });
+}
+
+export function releaseMicrophone(stream) {
+  try { stream?.getTracks?.().forEach((t) => t.stop()); } catch { /* noop */ }
+}
+
+// A stream is only reusable while at least one audio track is still live.
+export function isLiveStream(stream) {
+  try {
+    return !!stream && stream.getAudioTracks().some((t) => t.readyState === 'live');
+  } catch {
+    return false;
+  }
+}
+
 export function micErrorMessage(err) {
   const msg = (err?.message || err?.name || '').toLowerCase();
   if (msg.includes('not allowed') || msg.includes('permission') || err?.name === 'NotAllowedError') {

@@ -51,6 +51,7 @@ const VocabularySectionPage = lazy(() => import('./pages/VocabularySectionPage')
 const SentenceXRay = lazy(() => import('./pages/SentenceXRay'));
 const FAQPage = lazy(() => import('./pages/FAQPage'));
 const UeberUnsPage = lazy(() => import('./pages/UeberUnsPage'));
+const SupportPage = lazy(() => import('./pages/SupportPage'));
 const VerifyEmailPage = lazy(() => import('./pages/VerifyEmailPage'));
 const IntroSlides = lazy(() => import('./components/onboarding/IntroSlides'));
 const TelcB1KursPage = lazy(() => import('./pages/TelcB1KursPage'));
@@ -171,6 +172,12 @@ function Shell() {
                     />
                     <Route path="/faq" element={<FAQPage />} />
                     <Route path="/ueber-uns" element={<UeberUnsPage />} />
+                    {/* Help & feedback — deliberately NO guard. The ticket form lived only
+                        on /profile behind SubscriptionGuard, unreachable for every account
+                        without a live trial or subscription (0 tickets from 1,685 accounts).
+                        The page handles signed-out itself. Not crawlable: noindex, no
+                        prerender, no sitemap; netlify.toml rewrites /support. */}
+                    <Route path="/support" element={<SupportPage />} />
                     {/* No /vergleich routes — the Astro-built comparison pages
                         (astro-site/src/pages/vergleich/) win in production and the
                         SPA rewrites were deliberately removed; the SPA twins were

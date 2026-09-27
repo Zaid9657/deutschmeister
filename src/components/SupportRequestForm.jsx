@@ -1,23 +1,24 @@
-// Learner-facing support form (Profil). Opens a ticket through
+// Learner-facing support form (/support and Profil). Opens a ticket through
 // support-ticket-create (identity from the JWT); the thread the learner sees
-// back is public messages only.
+// back is public messages only. The request shape lives in
+// src/lib/supportTicket.js, which tests/support.test.mjs drives through the
+// real handler.
 import { useEffect, useState } from 'react';
 import { supabase, getAuthHeaders } from '../utils/supabase';
+import { SUPPORT_ENDPOINT, SUPPORT_CATEGORIES, SUBJECT_MIN, SUBJECT_MAX, BODY_MIN, BODY_MAX, ticketPayload } from '../lib/supportTicket.js';
 import Button from './ui/Button.jsx';
-
-const CATEGORIES = [['technical', 'Technisches Problem'], ['payment', 'Zahlung / Abo'], ['content', 'Inhalt / Fehler in einer Lektion'], ['account', 'Konto'], ['suggestion', 'Vorschlag'], ['other', 'Sonstiges']];
 
 async function call(body) {
   const headers = { 'Content-Type': 'application/json', ...(await getAuthHeaders()) };
-  const res = await fetch('/.netlify/functions/support-ticket-create', { method: 'POST', headers, body: JSON.stringify(body) });
+  const res = await fetch(SUPPORT_ENDPOINT, { method: 'POST', headers, body: JSON.stringify(body) });
   const json = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(json.error || `Fehler ${res.status}`);
   return json;
 }
 
-export default function SupportRequestForm() {
+export default function SupportRequestForm({ initialCategory = 'technical' }) {
   const [subject, setSubject] = useState('');
-  const [category, setCategory] = useState('technical');
+  const [category, setCategory] = useState(initialCategory);
   const [body, setBody] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
@@ -38,7 +39,7 @@ export default function SupportRequestForm() {
     setBusy(true);
     setError(null);
     try {
-      const r = await call({ subject, category, body });
+      const r = await call(ticketPayload({ subject, category, body }));
       setDone(r.reference);
       setSubject('');
       setBody('');
@@ -55,10 +56,10 @@ export default function SupportRequestForm() {
       {done ? <p className="mb-3 rounded-lg bg-siegel-wash px-3 py-2 text-sm text-siegel-deep">Danke — Ihre Anfrage {done} ist eingegangen. Wir antworten per E-Mail.</p> : null}
       <form onSubmit={submit} className="space-y-3">
         <div className="grid gap-3 sm:grid-cols-2">
-          <label className="block text-sm"><span className="mb-1 block font-semibold text-ink">Betreff</span><input className={inputCls} value={subject} onChange={(e) => setSubject(e.target.value)} required minLength={3} maxLength={200} /></label>
-          <label className="block text-sm"><span className="mb-1 block font-semibold text-ink">Thema</span><select className={inputCls} value={category} onChange={(e) => setCategory(e.target.value)}>{CATEGORIES.map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select></label>
+          <label className="block text-sm"><span className="mb-1 block font-semibold text-ink">Betreff</span><input className={inputCls} value={subject} onChange={(e) => setSubject(e.target.value)} required minLength={SUBJECT_MIN} maxLength={SUBJECT_MAX} /></label>
+          <label className="block text-sm"><span className="mb-1 block font-semibold text-ink">Thema</span><select className={inputCls} value={category} onChange={(e) => setCategory(e.target.value)}>{SUPPORT_CATEGORIES.map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select></label>
         </div>
-        <label className="block text-sm"><span className="mb-1 block font-semibold text-ink">Nachricht</span><textarea className={`${inputCls} min-h-[6rem]`} value={body} onChange={(e) => setBody(e.target.value)} required minLength={10} maxLength={5000} /></label>
+        <label className="block text-sm"><span className="mb-1 block font-semibold text-ink">Nachricht</span><textarea className={`${inputCls} min-h-[6rem]`} value={body} onChange={(e) => setBody(e.target.value)} required minLength={BODY_MIN} maxLength={BODY_MAX} /></label>
         {error ? <p className="text-sm text-viz-error">{error}</p> : null}
         <Button type="submit" disabled={busy}>{busy ? 'Wird gesendet…' : 'Anfrage senden'}</Button>
       </form>

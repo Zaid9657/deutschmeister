@@ -18,7 +18,9 @@ import { loadDashboardStats, DAILY_GOAL_TARGET } from '../services/dashboardStat
 import { GRAMMAR_TOPIC_COUNT } from '../data/marketing.js';
 import { listAttempts } from '../services/examService';
 import { readinessFromAttempts } from '../services/readiness';
+import { firstRunAction, STARTING_POINT_KEY } from '../lib/firstRun.js';
 import SEO from '../components/SEO';
+import FirstRunCard from '../components/FirstRunCard.jsx';
 import Button from '../components/ui/Button.jsx';
 import Card from '../components/ui/Card.jsx';
 import Chip from '../components/ui/Chip.jsx';
@@ -59,7 +61,7 @@ const Sk = ({ className = '' }) => (
 const DashboardPage = () => {
   const { user } = useAuth();
   const { progress, loading: progressLoading } = useProgress();
-  const { isInFreeTrial, getTrialDaysRemaining, hasActiveSubscription, hasProduct, purchases, profile } = useSubscription();
+  const { isInFreeTrial, getTrialDaysRemaining, hasActiveSubscription, hasProduct, hasLevelAccess, purchases, profile } = useSubscription();
 
   const inTrial = user ? isInFreeTrial() : false;
   const isSubscribed = user ? hasActiveSubscription() : false;
@@ -122,6 +124,21 @@ const DashboardPage = () => {
   }, [user, examTrack]);
 
   const loading = progressLoading || statsLoading;
+
+  // First run (work order #6): no lesson activity yet → ONE primary action,
+  // decided by src/lib/firstRun.js (Lektion 1 of the free course, or the
+  // placement test for a learner who said they know some German, or the
+  // placed level's first lesson). The card takes the hero's slot and every
+  // other button on this screen turns secondary. Unknown activity (a failed
+  // read) is never first-run.
+  const firstRun = loading
+    ? null
+    : firstRunAction({
+        hasLessonActivity: stats?.lessonActivity,
+        startingPoint: user?.user_metadata?.[STARTING_POINT_KEY],
+        currentLevel: profile?.current_level,
+        hasLevelAccess,
+      });
 
   // Daily goal: a real win gets ONE confetti burst per visit — the ref keeps
   // re-renders (stats refresh, progress updates) from repeating it.
@@ -244,7 +261,7 @@ const DashboardPage = () => {
                   'Loading your path…'
                 ) : cur.allDone ? (
                   <>You've completed every topic — <span className="font-bold text-ink">Meisterhaft.</span></>
-                ) : isBrandNew ? (
+                ) : isBrandNew || firstRun ? (
                   <>Welcome to your German journey — let's take the <span className="font-bold text-ink">first step</span>.</>
                 ) : (
                   <>Keep it going — <span className="font-bold text-ink">{remainingInLevel} topic{remainingInLevel !== 1 ? 's' : ''} left</span> in {levelLabel}.</>
@@ -267,7 +284,7 @@ const DashboardPage = () => {
         {examTrack && (
           <Reveal delay={60} className="mb-6">
             <Card raised edge="siegel" className="flex flex-wrap items-center gap-3 px-5 py-4">
-              <Button size="sm" href={`/pruefung/${examTrack.slug}/`}>
+              <Button size="sm" variant={firstRun ? 'secondary' : 'primary'} href={`/pruefung/${examTrack.slug}/`}>
                 <Trophy className="w-4 h-4" />
                 Your goal: {examTrack.nameDe}
               </Button>
@@ -305,6 +322,8 @@ const DashboardPage = () => {
         <Reveal delay={120} className="mb-8">
           {loading ? (
             <Sk className="h-48 sm:h-52" />
+          ) : firstRun ? (
+            <FirstRunCard action={firstRun} />
           ) : (
             <Card raised edge={examTrack ? 'paper' : 'siegel'} className="p-6 sm:p-8">
               <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
@@ -487,7 +506,7 @@ const DashboardPage = () => {
                   <p className="text-[0.75rem] text-accent-aprikose-ink">Keep your streak and unlock unlimited speaking</p>
                 </div>
               </div>
-              <Button href="/pricing/" className="whitespace-nowrap">
+              <Button href="/pricing/" variant={firstRun ? 'secondary' : 'primary'} className="whitespace-nowrap">
                 <Crown className="w-4 h-4" /> Upgrade to Pro
               </Button>
             </Card>

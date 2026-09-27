@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { FOOTER_GROUPS, LEGAL_LINKS, SOCIAL_LINKS } from '../data/navigation';
+import { FOOTER_GROUPS, LEGAL_LINKS, SOCIAL_LINKS, SUPPORT_LINK } from '../data/navigation';
 import Logo from './Logo';
-import { Youtube } from 'lucide-react';
+import { Youtube, LifeBuoy } from 'lucide-react';
 
 // The app previously had NO footer: the guides, FAQ, Über uns and the
 // comparison pages were linked only from the Astro site's footer, so anyone
@@ -49,6 +49,13 @@ const Footer = () => {
                 </li>
               ))}
             </ul>
+            {/* The one way to reach a human — on every full-chrome screen. */}
+            <p className="mt-3 text-sm">
+              <FooterLink item={SUPPORT_LINK} className="inline-flex items-center gap-2 font-semibold text-white hover:text-siegel-wash transition-colors">
+                <LifeBuoy className="w-4 h-4" aria-hidden="true" />
+                {isGerman ? SUPPORT_LINK.labelDe : SUPPORT_LINK.labelEn}
+              </FooterLink>
+            </p>
           </div>
           {FOOTER_GROUPS.map((group) => (
             <div key={group.key}>

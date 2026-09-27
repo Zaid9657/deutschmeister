@@ -1,5 +1,6 @@
 import { supabaseKey, supabase } from './_shared/supabase.mjs';
 import { checkUsage } from './_shared/speakingUsage.mjs';
+import { closeOutStaleSessions } from './_shared/speakingCloseout.mjs';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 
 export const handler = async (event) => {
@@ -33,6 +34,16 @@ export const handler = async (event) => {
     const authUserId = await getAuthenticatedUserId(event);
     if (!authUserId) {
       return unauthorizedResponse(headers);
+    }
+
+    // Settle the caller's abandoned sessions first, so an allowance reserved by
+    // a session that never got a learner turn is back before it is reported —
+    // otherwise the setup screen shows "0 free left" and the Start button that
+    // would release it is disabled. Never blocks the check.
+    try {
+      await closeOutStaleSessions(supabase, { userId: authUserId });
+    } catch (err) {
+      console.error('check-speaking-usage stale close-out threw:', err.message);
     }
 
     const result = await checkUsage(authUserId);

@@ -41,6 +41,13 @@
 [functions."weekly-truth"]
   schedule = "0 6 * * 1"
 
+# Speaking close-out (hourly, :20): settles speaking sessions the learner walked
+# away from — zero learner turns → 'cancelled' + reservation released, else
+# 'completed' with the server-counted turns. Sends nothing. The schedule()
+# wrapper in the function is authoritative; this mirrors it.
+[functions."speaking-closeout"]
+  schedule = "20 * * * *"
+
 # Security headers for all pages
 [[headers]]
   for = "/*"
@@ -365,6 +372,12 @@
   status = 200
 [[redirects]]
   from = "/analyze"
+  to = "/app.html"
+  status = 200
+# Help & feedback (the support-ticket form). Linked from both footers and the
+# account menu; not crawlable (noindex), so not prerendered and not in the sitemap.
+[[redirects]]
+  from = "/support"
   to = "/app.html"
   status = 200
 

@@ -95,11 +95,15 @@ export async function checkUsage(userId) {
   };
 }
 
-export async function incrementUsage(userId) {
+// `id` links the usage row to its session (usageIdForToken in
+// speakingCloseout.mjs), so a session that ends with zero learner turns can
+// release exactly this row. Without it the row is unlinkable and permanent.
+export async function incrementUsage(userId, { id = null } = {}) {
   console.log('[incrementUsage] Recording session for user:', userId);
   const { error } = await supabase
     .from('speaking_usage')
     .insert({
+      ...(id ? { id } : {}),
       user_id: userId,
       created_at: new Date().toISOString(),
     });
