@@ -10,6 +10,9 @@ async function findImages(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
+      // public/social/ holds social-media cards fetched by URL (Zapier), never
+      // shown on the site — a .webp twin would be dead weight in every build.
+      if (full === path.join(PUBLIC_DIR, 'social')) continue;
       results.push(...(await findImages(full)));
     } else if (EXTENSIONS.includes(path.extname(entry.name).toLowerCase())) {
       results.push(full);
