@@ -2600,7 +2600,7 @@
         {
           "id": "a1.1-u07-ls4-t2",
           "kind": "sign",
-          "title": "An der Sprachschule",
+          "title": "An einem Büro",
           "text": "Büro – geöffnet:\nMontag bis Donnerstag 9 bis 17 Uhr\nfreitags 9 bis 13 Uhr\nAm Wochenende ist das Büro geschlossen.",
           "glosses": []
         },
@@ -2772,7 +2772,7 @@
               "role": "exam",
               "topic": "lesen",
               "textRef": "a1.1-u07-ls4-t2",
-              "promptDe": "An der Sprachschule: „Am Freitag um 15 Uhr ist das Büro geöffnet.“",
+              "promptDe": "Am Büro: „Am Freitag um 15 Uhr ist das Büro geöffnet.“",
               "options": [
                 "richtig",
                 "falsch"
@@ -3448,7 +3448,7 @@
   ],
   "story": {
     "beat": "Priya und Emre erzählen im Videochat vom Tag in Leipzig und in İzmir. Priya und Arjun brauchen einen Termin im Bürgerbüro, aber es ist nur am Morgen offen, und da hat Priya Kurs. Da ruft Herr Richter an: Am Donnerstag fängt der Kurs erst um elf Uhr an.",
-    "cliffhanger": "Am Donnerstag um elf Uhr im Kurs: Emre ist online. Er sagt: „Priya, meine Frau Elif wohnt auch in Leipzig. Hast du am Samstag Zeit?“",
+    "cliffhanger": "Am Donnerstag um elf Uhr im Kurs: Emre ist online. Nach dem Kurs schreibt er Priya: „Hast du am Wochenende Zeit? Ich rufe dich heute Abend an!“",
     "castIn": [
       "cast.emre",
       "cast.herr-richter"

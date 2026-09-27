@@ -478,11 +478,11 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.koennen",
-          "promptDe": "Olena: „Ich kann gut schwimmen.“ Was stimmt?",
-          "promptEn": "“kann gut” = is good at. What is true?",
+          "promptDe": "Olena: „Ich kann gut schwimmen.“ Was heißt das?",
+          "promptEn": "“kann gut” = is good at. What does it mean?",
           "options": [
             "Olena schwimmt nicht gut.",
-            "Olena schwimmt gern.",
+            "Olena möchte schwimmen.",
             "Olena schwimmt gut."
           ],
           "answer": "Olena schwimmt gut.",
@@ -490,8 +490,8 @@
             "Olena schwimmt gut."
           ],
           "explanation": {
-            "de": "„Ich kann gut schwimmen“ heißt: Olena schwimmt gut. „gern“ sagt der Satz nicht.",
-            "en": "“Ich kann gut schwimmen” means Olena swims well; it says nothing about liking it."
+            "de": "„Ich kann gut schwimmen“ heißt: Olena schwimmt gut. „möchte“ ist etwas anderes.",
+            "en": "“Ich kann gut schwimmen” means Olena swims well; “möchte” means she wants to."
           },
           "origin": "agent"
         },
@@ -1224,8 +1224,8 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.nicht-position-gern",
-          "promptDe": "Priya: „Musik höre ich sehr gern.“ Was stimmt?",
-          "promptEn": "“sehr gern” – what is true?",
+          "promptDe": "Priya: „Musik höre ich sehr gern.“ Was heißt das?",
+          "promptEn": "“sehr gern” – what does it mean?",
           "options": [
             "Priya findet Musik nicht so toll.",
             "Priya findet Musik super.",
@@ -1246,8 +1246,8 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.nicht-position-gern",
-          "promptDe": "Olena: „Laufen kann ich nicht gut.“ Was stimmt?",
-          "promptEn": "“nicht gut” – what is true?",
+          "promptDe": "Olena: „Laufen kann ich nicht gut.“ Was heißt das?",
+          "promptEn": "“nicht gut” – what does it mean?",
           "options": [
             "Olena läuft nicht gern.",
             "Olena läuft gut, aber nicht gern.",
@@ -1968,8 +1968,8 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.koennen",
-          "promptDe": "Sophie: „Am Samstag kann ich nicht.“ Was stimmt?",
-          "promptEn": "What is true?",
+          "promptDe": "Sophie: „Am Samstag kann ich nicht.“ Was heißt das?",
+          "promptEn": "What does it mean?",
           "options": [
             "Sophie kann nicht gut laufen.",
             "Sophie hat am Samstag keine Zeit.",
