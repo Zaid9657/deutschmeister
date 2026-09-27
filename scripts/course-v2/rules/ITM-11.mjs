@@ -1,9 +1,12 @@
 // ITM-11 — every authored item has a static explanation {de, en}; de ≤ 25 words at A levels
 // (BLUEPRINT §9.1, SCHEMA §3.1): nothing in a paid course depends on a runtime explanation call.
+// An explanation must not deny a form the ending it has: „es wird – ohne d" (claims.mjs, reviews
+// a2.2-u04 r1 F02 / r2 F02 / r3 F03; the same check runs on rule cards in GRM-05).
 
 import { walkItems } from '../lib-validate/walk.mjs';
 import { wordCount } from '../lib-validate/text.mjs';
 import { isObj, blocker } from '../lib-validate/helpers.mjs';
+import { endingContradictions } from '../lib-validate/claims.mjs';
 
 export const id = 'ITM-11';
 export const title = 'Static explanation {de, en} on every item; de ≤ 25 words at A levels';
@@ -25,6 +28,11 @@ export function run({ docs }) {
       if (!isObj(e) || !String(e.de || '').trim() || !String(e.en || '').trim()) {
         findings.push(blocker(doc, `${path}.explanation`, 'missing static explanation {de, en}', item.id));
         continue;
+      }
+      for (const lang of ['de', 'en']) {
+        for (const c of endingContradictions(e[lang])) {
+          findings.push(blocker(doc, `${path}.explanation.${lang}`, `„${c.form}" is paired with „${c.claim}", but „${c.form}" ends in -${c.letters}`, item.id));
+        }
       }
       const w = wordCount(e.de);
       if (aLevel && w > MAX_A) findings.push(blocker(doc, `${path}.explanation.de`, `${w} words (max ${MAX_A} at A levels)`, item.id));

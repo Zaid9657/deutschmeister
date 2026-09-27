@@ -293,8 +293,8 @@
           {
             "id": "a1.1-u04-ls1-l06",
             "speaker": "cast.priya",
-            "de": "Und die Milch? Wir brauchen auch Milch. Die Milch ist auch billig, oder?",
-            "en": "And the milk? We need milk too. The milk is cheap too, isn’t it?"
+            "de": "Wir brauchen auch Milch. Die Milch ist auch billig, oder?",
+            "en": "We need milk too. The milk is cheap too, isn’t it?"
           },
           {
             "id": "a1.1-u04-ls1-l07",
@@ -1546,7 +1546,7 @@
             "count": 2,
             "source": [
               "a1.1-u04-ls2-l02",
-              "a1.1-u04-ls2-l09"
+              "a1.1-u04-ls2-l04"
             ]
           },
           {
@@ -1823,16 +1823,16 @@
           "promptEn": "What does the announcement say?",
           "options": [
             "Heute sind Eier und Butter im Angebot.",
-            "Heute ist die Milch im Angebot.",
-            "Heute sind Reis und Zucker im Angebot."
+            "Heute ist der Reis im Angebot.",
+            "Heute ist der Supermarkt zu."
           ],
           "answer": "Heute sind Eier und Butter im Angebot.",
           "accepted": [
             "Heute sind Eier und Butter im Angebot."
           ],
           "explanation": {
-            "de": "Die Durchsage sagt: „Heute im Angebot: Eier!“ Und: „die Butter“. Der Reis ist nicht im Angebot.",
-            "en": "The announcement: eggs and butter are on offer today. The rice is not on offer."
+            "de": "Die Durchsage sagt: „Heute im Angebot: Eier!“ Und: „die Butter“. Der Reis ist nicht im Angebot, und der Supermarkt ist nicht zu.",
+            "en": "The announcement: eggs and butter are on offer today. The rice is not on offer, and the supermarket is not closed."
           },
           "origin": "agent"
         },

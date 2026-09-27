@@ -2,9 +2,18 @@
 // carries `exact` (no typo allowance on those tokens; BLUEPRINT §9.1, SCHEMA §3.1). A number the
 // prompt or the tiles already give (a sentence to build, a sentence to correct) is not produced by
 // the learner and needs no `exact`.
+//
+// A DICTATION with a digit or a number word needs `exact: "number"` too (reviews a2.2-u04 r2 F07 /
+// r3 F04, b1.1-u04 r2 F05): on a dictation checkItem reads it as the whole-sentence mode — the words
+// keep the dictation typo rule, the digits must match, „zehn" counts as „10" — never as the
+// digits-only reading of a fill-in („10" alone does not transcribe a sentence). Any other `exact`
+// on such a dictation is a finding. Generated dictations (dictation.fromInput) carry it from the
+// generator (src/components/course-v2/content.js dictationItems).
 
 import { walkItems, walkLines } from '../lib-validate/walk.mjs';
 import { arr, isObj, blocker } from '../lib-validate/helpers.mjs';
+
+const { hasNumber } = await import('../../../src/lib/lesson/check.js');
 
 export const id = 'ITM-07';
 export const title = 'Numbers, times, dates, prices and spelled names carry `exact`';
@@ -32,6 +41,12 @@ export function run({ docs }) {
       if (!isObj(item)) continue;
       n += 1;
       const forms = [item.answer, ...arr(item.accepted)].map((x) => String(x ?? ''));
+      if (item.type === 'dictation') {
+        if (forms.some((f) => hasNumber(f)) && item.exact !== 'number') {
+          findings.push(blocker(doc, `${path}.exact`, `dictation „${item.answer}" contains a number and needs exact: "number" (whole-sentence mode: words keep the typo rule, digits exact, „zehn" = „10")${item.exact ? ` — has exact: "${item.exact}"` : ''}`, item.id));
+        }
+        continue;
+      }
       // a number the prompt or the tiles already give is copied, not produced: exact adds nothing
       const given = `${item.promptDe || ''} ${arr(item.tiles).join(' ')}`.toLowerCase();
       const produced = (f) => {

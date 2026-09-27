@@ -9,10 +9,12 @@
 //      from the audio (review a2.2-u04 r3 F02; „…" is folded since the same round);
 //   2. a faithful transcription of the audio — the line's `say` (the TTS text) when it has one, else
 //      its `de` — is graded CORRECT against the key: „… eins neunzehn." never matches the key
-//      „… 1,19 Euro." (review a1.1-u04 r2 F01); number words and digits already fold;
+//      „… 1,19 Euro." (review a1.1-u04 r2 F01); number words and digits already fold. Only for a
+//      sentence key (≥ 3 words): „Schreiben Sie das Datum" keys a part of the line („12.05.");
 //   3. length: at A levels ≤ 12 words and ≤ 2 sentences (review a2.1-u04 r3 F08), at B1 ≤ 15 words and
-//      one sentence (review b1.1-u04 r2 F11); B2 has no cap (no review asked for one). One slip
-//      anywhere costs the whole item, so a paragraph measures stamina, not the target.
+//      one sentence (review b1.1-u04 r2 F11); B2 has no cap (no review asked for one). A one-word
+//      exclamation („Gut!", „So.") is not counted as a sentence. One slip anywhere costs the whole
+//      item, so a paragraph measures stamina, not the target.
 // Perception (`listen_select` with the options „Frage"/„Aussage" or „keine Frage"): the played text
 // (`speak`, the `audioLineRef` line or the prompt's quotation) ends in „?" exactly when the key is
 // „Frage" (review a1.2-u04 r1 F01).
@@ -54,7 +56,7 @@ function dictationFindings(doc, item, line, path, where) {
   if (bad.length) {
     out.push(blocker(doc, path, `${where} key contains ${bad.map((c) => `„${c}"`).join(' ')} — the checker folds no such character, so no transcription of the audio can match it; write it as it is spoken`, item.id));
   }
-  if (line && checker) {
+  if (line && checker && wordCount(item.answer) >= 3) {
     const heard = String(line.say || line.de || '');
     const r = checker.checkItem(item, heard).result;
     if (heard && r !== checker.RESULT.CORRECT) {
@@ -65,7 +67,7 @@ function dictationFindings(doc, item, line, path, where) {
   const key = String(item.answer || '');
   if (cap && key) {
     const w = wordCount(key);
-    const s = sentences(key).length;
+    const s = sentences(key).filter((x) => wordCount(x) >= 2).length;
     if (w > cap[0] || s > cap[1]) {
       out.push(blocker(doc, path, `${where}: ${w} words in ${s} sentence(s) — a ${doc.level} dictation holds ≤ ${cap[0]} words in ≤ ${cap[1]} sentence(s)`, item.id));
     }
