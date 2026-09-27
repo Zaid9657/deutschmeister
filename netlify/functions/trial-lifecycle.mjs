@@ -9,6 +9,10 @@
 //   trial_day6   — the day before it ends: here's what you keep, or lose
 //   trial_ended  — the day after: your progress is saved, one click restores it
 //
+// The two closing mails offer Pro AND, where one is buyable, the one-time
+// course for the learner's level (see "the course offer" below). Every site
+// link carries utm_source=email&utm_medium=lifecycle&utm_campaign=<kind>.
+//
 // Safe to re-run: every send is recorded in `lifecycle_emails` with a
 // UNIQUE(user_id, kind), and the insert happens BEFORE the send, so a crash
 // mid-run can drop a message but can never duplicate one. Opted-out users
@@ -16,7 +20,16 @@
 import { schedule } from '@netlify/functions';
 import { createClient } from '@supabase/supabase-js';
 import { createHmac } from 'crypto';
-import { MONTHLY_PRICE_EUR, eur } from './_shared/pricing.mjs';
+import {
+  MONTHLY_PRICE_EUR,
+  eur,
+  ALL_LEVELS,
+  SUBLEVEL_PRICES_EUR,
+  SELLABLE_LEVELS,
+  COURSE_PRO_MONTHS,
+  productKeyForLevel,
+} from './_shared/pricing.mjs';
+import { BRAND } from './_shared/brand.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -38,9 +51,86 @@ function unsubscribeUrl(userId) {
   return `${BASE_URL}/.netlify/functions/unsubscribe?uid=${userId}&token=${token}`;
 }
 
+// ─── links ───────────────────────────────────────────────────────────────────
+
+/**
+ * A site link as it appears in these mails, tagged with the mail's kind so a
+ * click lands in attribution (public/attribution.js) and PostHog as
+ * source=email, medium=lifecycle, campaign=<kind>. The unsubscribe link is
+ * built by unsubscribeUrl() above and is never tagged.
+ */
+export const trackedUrl = (path, kind) => {
+  const url = new URL(path, BASE_URL);
+  url.searchParams.set('utm_source', 'email');
+  url.searchParams.set('utm_medium', 'lifecycle');
+  url.searchParams.set('utm_campaign', kind);
+  return url.toString();
+};
+
+/** An href value with `&` escaped, as an HTML attribute requires. */
+const attr = (url) => url.replace(/&/g, '&amp;');
+
+// ─── the course offer ────────────────────────────────────────────────────────
+//
+// Until 2026-09-27 both closing mails sold only Pro by the month, and 0 of the
+// 180 trials that ended in the previous 30 days converted (docs/SCORECARD.md
+// §3 #4). They now ALSO offer the one-time course for the learner's level.
+//
+// Which course: the learner's placement (profiles.current_level) when it is a
+// priced sub-level. Otherwise (never placed, since the column's 'a1' default
+// is a band and not a placement, or placed at the free level) it is the first
+// paid level on the ladder, the step after the free course. It is offered only
+// when it is buyable twice over:
+//   1. it is in SELLABLE_LEVELS, so a coming-soon level is never offered, and a
+//      learner placed at one gets no course block at all rather than a level
+//      below their placement;
+//   2. the webhook's variant env var for it is set in this (functions) scope,
+//      so any purchase the mail leads to is one lemonsqueezy-webhook.mjs can
+//      turn into an entitlement.
+// Either missing → no course block, and the mail is the Pro-only mail it was.
+//
+// Buyers are not in the audience: a course purchase grants an included Pro
+// window (is_subscribed = true), and selectRecipients() skips subscribed users.
+
+const FREE_LEVELS = ALL_LEVELS.filter((l) => SUBLEVEL_PRICES_EUR[l] === undefined);
+const FIRST_PAID_LEVEL = ALL_LEVELS.find((l) => SUBLEVEL_PRICES_EUR[l] !== undefined);
+const FREE_CODE = FREE_LEVELS.map((l) => l.toUpperCase()).join('/');
+
+/** profiles.current_level ('A2.1', 'a2.1', or the legacy default 'a1') → the placed sub-level, or null. */
+export const placedSublevel = (currentLevel) => {
+  const v = String(currentLevel || '').trim().toLowerCase();
+  return ALL_LEVELS.includes(v) ? v : null;
+};
+
+/** The functions-scope env var lemonsqueezy-webhook.mjs maps to this level's product key. */
+export const courseVariantEnv = (level) => `LEMONSQUEEZY_${productKeyForLevel(level).toUpperCase()}_VARIANT_ID`;
+
+/** The sales page of a level course: an Astro route, so it ends in a slash. */
+export const coursePath = (level) => `/courses/${level.replace('.', '-')}/`;
+
+/**
+ * The course to offer this learner, or null when none is buyable for them.
+ * @param {string|null|undefined} currentLevel profiles.current_level
+ * @param {Record<string, string|undefined>} [env] defaults to process.env
+ */
+export function courseOfferFor(currentLevel, env = process.env) {
+  const placed = placedSublevel(currentLevel);
+  const level = placed && SUBLEVEL_PRICES_EUR[placed] !== undefined ? placed : FIRST_PAID_LEVEL;
+  if (!level || !SELLABLE_LEVELS.includes(level)) return null;
+  if (!env?.[courseVariantEnv(level)]) return null;
+  return {
+    level,
+    code: level.toUpperCase(),
+    key: productKeyForLevel(level),
+    price: SUBLEVEL_PRICES_EUR[level],
+    placed: placed === level,
+    path: coursePath(level),
+  };
+}
+
 // ─── copy ────────────────────────────────────────────────────────────────────
 
-const SHELL = ({ heading, body, ctaHref, ctaLabel, unsubUrl }) => `<!DOCTYPE html>
+const SHELL = ({ heading, body, homeHref, unsubUrl }) => `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${heading}</title></head>
 <body style="margin:0;padding:0;background:#f8fafc;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
@@ -58,20 +148,13 @@ const SHELL = ({ heading, body, ctaHref, ctaLabel, unsubUrl }) => `<!DOCTYPE htm
         <tr>
           <td style="padding:36px 32px 28px;">
             ${body}
-            <table cellpadding="0" cellspacing="0" style="margin:28px 0;">
-              <tr>
-                <td style="border-radius:10px;background:#0F766E;">
-                  <a href="${ctaHref}" style="display:inline-block;padding:14px 28px;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none;letter-spacing:-0.2px;">${ctaLabel}</a>
-                </td>
-              </tr>
-            </table>
             <p style="margin:0;font-size:16px;color:#1e293b;line-height:1.6;">— Zaid</p>
           </td>
         </tr>
         <tr>
           <td style="padding:20px 32px;border-top:1px solid #f1f5f9;text-align:center;">
             <p style="margin:0;font-size:12px;color:#94a3b8;line-height:1.6;">
-              DeutschMeister · <a href="${BASE_URL}" style="color:#94a3b8;">deutsch-meister.de</a><br>
+              DeutschMeister · <a href="${attr(homeHref)}" style="color:#94a3b8;">deutsch-meister.de</a><br>
               <a href="${unsubUrl}" style="color:#94a3b8;">Unsubscribe from these emails</a>
             </p>
           </td>
@@ -84,36 +167,92 @@ const SHELL = ({ heading, body, ctaHref, ctaLabel, unsubUrl }) => `<!DOCTYPE htm
 
 const P = (text) => `<p style="margin:0 0 16px;font-size:16px;color:#475569;line-height:1.6;">${text}</p>`;
 
+/** A button. Solid for the main offer, outlined for the alternative; never a gradient. */
+const BUTTON = (href, label, { outline = false } = {}) => `
+            <table cellpadding="0" cellspacing="0" style="margin:8px 0 28px;">
+              <tr>
+                <td style="border-radius:10px;${outline ? `background:${BRAND.white};border:2px solid ${BRAND.siegel};` : `background:${BRAND.siegel};`}">
+                  <a href="${attr(href)}" style="display:inline-block;padding:${outline ? '12px 26px' : '14px 28px'};color:${outline ? BRAND.siegel : BRAND.white};font-size:15px;font-weight:600;text-decoration:none;letter-spacing:-0.2px;">${label}</a>
+                </td>
+              </tr>
+            </table>`;
+
+/** The one-time course alternative, or '' when no course is buyable for this learner. */
+function courseBlock(kind, offer) {
+  if (!offer) return '';
+  const lead = offer.placed
+    ? `Your placement test put you at ${offer.code}.`
+    : `The ${FREE_CODE} course stays free, and the next step after it is ${offer.code}.`;
+  const pro = kind === 'trial_ended'
+    ? `and it brings Pro back for ${COURSE_PRO_MONTHS} months`
+    : `and ${COURSE_PRO_MONTHS} months of Pro are included`;
+  const everyLevel = offer.placed
+    ? ''
+    : P(`Not a beginner? <a href="${attr(trackedUrl('/courses/', kind))}" style="color:${BRAND.siegel};">See the course for every level</a>.`);
+  return (
+    P(`<strong style="color:#1e293b;">Rather pay once?</strong> ${lead} The ${offer.code} course is ${eur(offer.price)}, paid one time: lifetime access to the level, no subscription, ${pro}.`) +
+    BUTTON(trackedUrl(offer.path, kind), `See the ${offer.code} course →`, { outline: true }) +
+    everyLevel
+  );
+}
+
+// `offersCourse` marks the two closing mails; day 3 is about using the trial,
+// not about paying, and stays offer-free.
 const TEMPLATES = {
   trial_day3: {
     subject: 'Three things in your DeutschMeister trial worth 10 minutes',
-    ctaHref: `${BASE_URL}/analyze/`,
-    ctaLabel: 'Analyze a sentence →',
-    body:
+    offersCourse: false,
+    body: (kind) =>
       P('Hey! You\'re three days into your trial, so here\'s the short list of what\'s actually worth your time.') +
       P('<strong style="color:#1e293b;">Sentence X-Ray</strong> — paste any German sentence and see what every word is doing: the cases, the roles, and <em>why</em>. It takes about three seconds and it\'s the fastest way to stop guessing.') +
       P('<strong style="color:#1e293b;">Listening</strong> — short native-speaker dialogues graded to your level, so you understand most of what you hear instead of drowning in it.') +
-      P('<strong style="color:#1e293b;">Speaking</strong> — a two-minute conversation with an AI partner that corrects you as you go.'),
+      P('<strong style="color:#1e293b;">Speaking</strong> — a two-minute conversation with an AI partner that corrects you as you go.') +
+      BUTTON(trackedUrl('/analyze/', kind), 'Analyze a sentence →'),
   },
   trial_day6: {
     subject: 'Your DeutschMeister trial ends tomorrow',
-    ctaHref: `${BASE_URL}/pricing/`,
-    ctaLabel: `Keep Pro — ${eur(MONTHLY_PRICE_EUR)}/month →`,
-    body:
+    offersCourse: true,
+    body: (kind, offer) =>
       P('Quick heads-up: your Pro trial ends tomorrow.') +
       P(`If you keep it, you stay on 50 sentence analyses a day, the full grammar library through B2, listening, reading, and AI speaking practice. That's ${eur(MONTHLY_PRICE_EUR)} a month — less than one hour with a tutor.`) +
-      P('If you don\'t, nothing dramatic happens: your account stays, your progress stays, and you drop to the free tier. You can come back whenever.'),
+      BUTTON(trackedUrl('/pricing/', kind), `Keep Pro — ${eur(MONTHLY_PRICE_EUR)}/month →`) +
+      courseBlock(kind, offer) +
+      P(`If you ${offer ? 'pick neither' : 'don\'t'}, nothing dramatic happens: your account stays, your progress stays, and you drop to the free tier. You can come back whenever.`),
   },
   trial_ended: {
     subject: 'Your progress is saved',
-    ctaHref: `${BASE_URL}/pricing/`,
-    ctaLabel: 'Restore Pro access →',
-    body:
+    offersCourse: true,
+    body: (kind, offer) =>
       P('Your trial ended yesterday — so this is the last you\'ll hear from me about it.') +
       P('Everything you did is still there: your topics, your streak, your history. Nothing was deleted, and one click puts it all back within reach.') +
+      BUTTON(trackedUrl('/pricing/', kind), 'Restore Pro access →') +
+      courseBlock(kind, offer) +
       P('And if the timing just isn\'t right, that\'s genuinely fine. The free tier and the daily sentence keep working, and German isn\'t going anywhere.'),
   },
 };
+
+export const KINDS = Object.keys(TEMPLATES);
+
+/**
+ * One rendered message. `offer` is courseOfferFor()'s result; it is ignored
+ * for a kind that does not carry the course offer.
+ */
+export function renderEmail(kind, { offer = null, unsubUrl }) {
+  const tpl = TEMPLATES[kind];
+  if (!tpl) throw new Error(`unknown trial-lifecycle kind: ${kind}`);
+  return {
+    subject: tpl.subject,
+    html: SHELL({
+      heading: tpl.subject,
+      body: tpl.body(kind, tpl.offersCourse ? offer : null),
+      homeHref: trackedUrl('/', kind),
+      unsubUrl,
+    }),
+  };
+}
+
+/** Does this kind carry the course offer? */
+export const offersCourse = (kind) => Boolean(TEMPLATES[kind]?.offersCourse);
 
 // ─── selection ───────────────────────────────────────────────────────────────
 
@@ -139,7 +278,7 @@ async function selectRecipients(kind) {
 
   const { data: profiles, error } = await supabase
     .from('profiles')
-    .select('id, email_daily_sentence, is_subscribed')
+    .select('id, email_daily_sentence, is_subscribed, current_level')
     .gte(windows.col, lower)
     .lt(windows.col, upper);
   if (error) throw new Error(`profiles query failed: ${error.message}`);
@@ -170,7 +309,7 @@ async function selectRecipients(kind) {
 
   return candidates
     .filter((p) => !sentAlready.has(p.id) && emails.has(p.id))
-    .map((p) => ({ id: p.id, email: emails.get(p.id) }));
+    .map((p) => ({ id: p.id, email: emails.get(p.id), currentLevel: p.current_level }));
 }
 
 async function sendBatch(resendKey, items) {
@@ -184,11 +323,13 @@ async function sendBatch(resendKey, items) {
 
 async function sendKind(resendKey, kind) {
   const recipients = await selectRecipients(kind);
-  if (recipients.length === 0) return { kind, sent: 0, failed: 0 };
+  if (recipients.length === 0) return { kind, sent: 0, failed: 0, offered: {} };
 
-  const tpl = TEMPLATES[kind];
   let sent = 0;
   let failed = 0;
+  // Course offers actually mailed, by product key: how the owner reads what
+  // the closing mails offered before any clicks or sales come in.
+  const offered = {};
 
   for (let i = 0; i < recipients.length; i += BATCH_SIZE) {
     const slice = recipients.slice(i, i + BATCH_SIZE);
@@ -204,30 +345,29 @@ async function sendKind(resendKey, kind) {
       continue;
     }
 
-    const items = slice.map((r) => ({
-      from: FROM_ADDRESS,
-      to: [r.email],
-      reply_to: 'zaid@deutsch-meister.de',
-      subject: tpl.subject,
-      html: SHELL({
-        heading: tpl.subject,
-        body: tpl.body,
-        ctaHref: tpl.ctaHref,
-        ctaLabel: tpl.ctaLabel,
-        unsubUrl: unsubscribeUrl(r.id),
-      }),
-    }));
+    const offers = slice.map((r) => (offersCourse(kind) ? courseOfferFor(r.currentLevel) : null));
+    const items = slice.map((r, j) => {
+      const { subject, html } = renderEmail(kind, { offer: offers[j], unsubUrl: unsubscribeUrl(r.id) });
+      return {
+        from: FROM_ADDRESS,
+        to: [r.email],
+        reply_to: 'zaid@deutsch-meister.de',
+        subject,
+        html,
+      };
+    });
 
     try {
       await sendBatch(resendKey, items);
       sent += slice.length;
+      for (const offer of offers) if (offer) offered[offer.key] = (offered[offer.key] || 0) + 1;
     } catch (err) {
       failed += slice.length;
       console.error(`[trial-lifecycle] ${kind} batch failed:`, err.message);
     }
   }
 
-  return { kind, sent, failed };
+  return { kind, sent, failed, offered };
 }
 
 // ─── course-window expiry sweep ──────────────────────────────────────────────
@@ -281,7 +421,7 @@ const innerHandler = async (event) => {
   }
 
   const results = [];
-  for (const kind of ['trial_day3', 'trial_day6', 'trial_ended']) {
+  for (const kind of KINDS) {
     try {
       results.push(await sendKind(resendKey, kind));
     } catch (err) {

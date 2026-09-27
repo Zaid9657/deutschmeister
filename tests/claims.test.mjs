@@ -296,6 +296,19 @@ test('the functions\' synced pricing copy matches the data layer', async () => {
   const shared = await import('../netlify/functions/_shared/pricing.mjs');
   assert.equal(shared.MONTHLY_PRICE_EUR, MONTHLY_PRICE_EUR, 'functions pricing copy drifted from src/data/pricing.js');
   assert.equal(shared.eur(shared.MONTHLY_PRICE_EUR), eur(MONTHLY_PRICE_EUR), 'functions eur() formats differently than the data layer');
+  // The course values the trial-end offer quotes (trial-lifecycle.mjs).
+  assert.deepEqual(shared.ALL_LEVELS, ALL_LEVELS, 'functions level ladder drifted');
+  assert.deepEqual(shared.SUBLEVEL_PRICES_EUR, SUBLEVEL_PRICES_EUR, 'functions course prices drifted from src/data/pricing.js');
+  assert.deepEqual(shared.COMING_SOON_LEVELS, COMING_SOON_LEVELS, 'functions coming-soon list drifted — an email could offer a course that is not for sale');
+  assert.deepEqual(shared.SELLABLE_LEVELS, SELLABLE_LEVELS, 'functions sellable levels drifted');
+  assert.equal(shared.COURSE_PRO_DAYS, COURSE_PRO_DAYS, 'functions Pro window drifted');
+  assert.equal(shared.COURSE_PRO_MONTHS, LEVEL_COURSES[productKeyForLevel(SELLABLE_LEVELS[0])].proMonths, 'functions Pro months drifted');
+  for (const level of ALL_LEVELS) {
+    assert.equal(shared.productKeyForLevel(level), productKeyForLevel(level), `functions product key for ${level} drifted`);
+  }
+  for (const price of Object.values(SUBLEVEL_PRICES_EUR)) {
+    assert.equal(shared.eur(price), eur(price), `functions eur() formats ${price} differently than the data layer`);
+  }
 });
 
 test('writing limits match the server that enforces them', () => {

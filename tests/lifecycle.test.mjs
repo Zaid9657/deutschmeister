@@ -18,6 +18,14 @@
 //      cannot import src/data, so the safe rule is no figures at all), no
 //      "unlimited", and CTA links to prerendered routes must carry their
 //      trailing slash (CLAUDE.md's three-slash-case rule).
+//
+//   6. THE TRIAL-END COURSE OFFER. The day-6 and trial-ended mails offer the
+//      one-time course for the learner's level beside Pro (2026-09-27, after
+//      0 of 180 ended trials converted on a Pro-only offer). Pinned: only a
+//      buyable course is ever offered, its price and Pro window are the data
+//      layer's, every site link carries utm_*=email/lifecycle/<kind> and the
+//      unsubscribe link is untouched, and the trial windows plus
+//      claim-before-send are what section 1's table says they are.
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -26,6 +34,18 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 import { WINDOWS, TEMPLATES } from '../netlify/functions/activation-lifecycle.mjs';
+import * as trial from '../netlify/functions/trial-lifecycle.mjs';
+import {
+  ALL_LEVELS,
+  SUBLEVEL_PRICES_EUR,
+  SELLABLE_LEVELS,
+  COMING_SOON_LEVELS,
+  COURSE_PRO_MONTHS,
+  MONTHLY_PRICE_EUR,
+  eur,
+  productKeyForLevel,
+} from '../src/data/pricing.js';
+import { levelToSlug } from '../astro-site/src/data/courseContents.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -194,4 +214,152 @@ test('activation copy carries no figures, no unlimited claims, and slashed CTAs'
     // Prerendered SPA routes must be linked with the trailing slash.
     assert.ok(/\/$/.test(tpl.ctaHref), `${kind}: CTA "${tpl.ctaHref}" missing its trailing slash — 301 on every click`);
   }
+});
+
+// ---------------------------------------------------------------------------
+// 6. The trial-end course offer (trial-lifecycle.mjs)
+// ---------------------------------------------------------------------------
+
+const SITE = 'https://deutsch-meister.de';
+const UNSUB = `${SITE}/.netlify/functions/unsubscribe?uid=u1&token=t1`;
+/** Every buyable course's webhook variant set — production once all of them are live. */
+const ENV_ALL = Object.fromEntries(SELLABLE_LEVELS.map((l) => [trial.courseVariantEnv(l), 'variant-id']));
+/** The first priced level on the ladder: the step after the free course. */
+const FIRST_PAID = ALL_LEVELS.find((l) => SUBLEVEL_PRICES_EUR[l] !== undefined);
+const hrefs = (html) => [...html.matchAll(/href="([^"]+)"/g)].map((m) => m[1].replace(/&amp;/g, '&'));
+const render = (kind, offer) => trial.renderEmail(kind, { offer, unsubUrl: UNSUB }).html;
+
+test('the trial-end offer is the course for the learner\'s level, and only ever a buyable one', () => {
+  for (const level of ALL_LEVELS) {
+    for (const stored of [level.toUpperCase(), level]) {
+      const offer = trial.courseOfferFor(stored, ENV_ALL);
+      if (COMING_SOON_LEVELS.includes(level)) {
+        // Never a coming-soon course, and never a course BELOW the placement.
+        assert.equal(offer, null, `${stored}: a coming-soon level must get no course offer`);
+      } else if (SUBLEVEL_PRICES_EUR[level] === undefined) {
+        assert.equal(offer.level, FIRST_PAID, `${stored}: placed at the free level → the next paid level`);
+        assert.equal(offer.placed, false);
+      } else {
+        assert.equal(offer.level, level, `${stored}: placed at a buyable level → that level's course`);
+        assert.equal(offer.placed, true);
+      }
+    }
+  }
+  // Never placed: the column's 'a1' default is a band, not a placement.
+  for (const unplaced of ['a1', 'A1', null, undefined, '', 'nonsense']) {
+    const offer = trial.courseOfferFor(unplaced, ENV_ALL);
+    assert.equal(offer?.level, FIRST_PAID, `${unplaced}: unplaced learners get the step after the free course`);
+    assert.equal(offer.placed, false);
+  }
+  // Every offer is sellable, priced by the data layer, keyed like the webhook.
+  for (const stored of [...ALL_LEVELS, 'a1', null]) {
+    const offer = trial.courseOfferFor(stored, ENV_ALL);
+    if (!offer) continue;
+    assert.ok(SELLABLE_LEVELS.includes(offer.level), `${offer.level} is not for sale`);
+    assert.equal(offer.price, SUBLEVEL_PRICES_EUR[offer.level]);
+    assert.equal(offer.key, productKeyForLevel(offer.level));
+  }
+});
+
+test('no webhook variant configured → no course offer (never a sale the webhook cannot fulfil)', () => {
+  for (const stored of [...ALL_LEVELS, 'a1', null]) {
+    assert.equal(trial.courseOfferFor(stored, {}), null, `${stored}: offered a course with no variant configured`);
+  }
+  // Only one course configured: an unplaced learner does NOT slide up to it.
+  const only = { [trial.courseVariantEnv('a2.1')]: 'variant-id' };
+  assert.equal(trial.courseOfferFor('a1', only), null);
+  assert.equal(trial.courseOfferFor('A2.1', only)?.level, 'a2.1');
+});
+
+test('a coming-soon course is never offered, even once its variant env var exists', () => {
+  // The owner may create a B1 variant before the course is rebuilt; the data
+  // layer's coming-soon list, not the env, decides whether it is for sale.
+  const every = Object.fromEntries(Object.keys(SUBLEVEL_PRICES_EUR).map((l) => [trial.courseVariantEnv(l), 'variant-id']));
+  for (const level of COMING_SOON_LEVELS) {
+    assert.equal(trial.courseOfferFor(level.toUpperCase(), every), null, `${level} offered while coming soon`);
+  }
+});
+
+test('the env var the offer checks is the one the webhook maps to that product', () => {
+  const webhook = read('netlify/functions/lemonsqueezy-webhook.mjs');
+  for (const level of SELLABLE_LEVELS) {
+    const line = `${trial.courseVariantEnv(level)}: '${productKeyForLevel(level)}'`;
+    assert.ok(webhook.includes(line), `webhook has no "${line}" — a sale from the mail would grant nothing`);
+  }
+});
+
+test('the course link is the level\'s real sales page, with its trailing slash', () => {
+  for (const level of SELLABLE_LEVELS) {
+    assert.equal(trial.coursePath(level), `/courses/${levelToSlug(level)}/`);
+  }
+  assert.ok(read('astro-site/src/pages/courses/[level].astro').includes('ALL_LEVELS.map'), 'the course pages no longer cover every level');
+});
+
+test('day 6 and trial-ended offer Pro AND the course, at the data layer\'s figures', () => {
+  for (const stored of ['a1', ...SELLABLE_LEVELS.map((l) => l.toUpperCase())]) {
+    const offer = trial.courseOfferFor(stored, ENV_ALL);
+    for (const kind of ['trial_day6', 'trial_ended']) {
+      assert.ok(trial.offersCourse(kind), `${kind} must carry the course offer`);
+      const html = render(kind, offer);
+      const paths = hrefs(html).map((h) => (h.startsWith(SITE) ? new URL(h).pathname : h));
+      assert.ok(paths.includes('/pricing/'), `${kind}: the Pro offer is gone`);
+      assert.ok(paths.includes(offer.path), `${kind}: no link to ${offer.path}`);
+      assert.ok(html.includes(eur(SUBLEVEL_PRICES_EUR[offer.level])), `${kind}: course price is not the data layer's`);
+      assert.ok(html.includes(`${COURSE_PRO_MONTHS} months`), `${kind}: the included Pro window is not the data layer's`);
+      assert.ok(!/\b(unbegrenzt\w*|unlimited)\b/i.test(html), `${kind}: unlimited claim`);
+      if (offer.placed) assert.ok(html.includes(`placement test put you at ${offer.code}`), `${kind}: placed learner not told why`);
+    }
+  }
+  assert.ok(render('trial_day6', null).includes(eur(MONTHLY_PRICE_EUR)), 'day 6 no longer quotes the Pro price');
+});
+
+test('no buyable course → the Pro-only mail, and day 3 never sells a course', () => {
+  const coursePrices = Object.values(SUBLEVEL_PRICES_EUR).map(eur);
+  for (const kind of ['trial_day6', 'trial_ended']) {
+    const html = render(kind, trial.courseOfferFor('B1.1', ENV_ALL));
+    assert.ok(!hrefs(html).some((h) => h.includes('/courses/')), `${kind}: course link without a buyable course`);
+    for (const p of coursePrices) assert.ok(!html.includes(p), `${kind}: quotes ${p} without a buyable course`);
+  }
+  assert.equal(trial.offersCourse('trial_day3'), false);
+  const day3 = render('trial_day3', trial.courseOfferFor('a1', ENV_ALL));
+  assert.ok(!hrefs(day3).some((h) => h.includes('/courses/')), 'day 3 must not carry the course offer');
+});
+
+test('every site link in every trial mail carries utm email/lifecycle/<kind>; unsubscribe is untouched', () => {
+  assert.deepEqual(trial.KINDS, ['trial_day3', 'trial_day6', 'trial_ended']);
+  for (const kind of trial.KINDS) {
+    for (const offer of [null, trial.courseOfferFor('a1', ENV_ALL)]) {
+      const links = hrefs(render(kind, offer));
+      assert.ok(links.includes(UNSUB), `${kind}: the unsubscribe link changed`);
+      const site = links.filter((h) => h !== UNSUB);
+      assert.ok(site.length >= 2, `${kind}: expected a CTA and the footer link`);
+      for (const href of site) {
+        const url = new URL(href);
+        assert.equal(url.origin, SITE, `${kind}: off-site link ${href}`);
+        assert.equal(url.searchParams.get('utm_source'), 'email', `${kind}: ${href}`);
+        assert.equal(url.searchParams.get('utm_medium'), 'lifecycle', `${kind}: ${href}`);
+        assert.equal(url.searchParams.get('utm_campaign'), kind, `${kind}: ${href}`);
+        // Every target is an Astro or prerendered route: slash, or a 301 per click.
+        assert.ok(url.pathname.endsWith('/'), `${kind}: ${url.pathname} missing its trailing slash`);
+      }
+    }
+  }
+});
+
+test('the trial windows and claim-before-send are what section 1 says they are', () => {
+  const src = read('netlify/functions/trial-lifecycle.mjs');
+  // TRIAL_OCCUPIED above is derived from these three lines; if one moves, the
+  // table (and the activation disjointness it guards) must move with it.
+  for (const line of [
+    `trial_day3: { col: 'trial_started_at', lower: now - 4 * day, upper: now - 3 * day }`,
+    `trial_day6: { col: 'trial_ends_at', lower: now, upper: now + day }`,
+    `trial_ended: { col: 'trial_ends_at', lower: now - 2 * day, upper: now - day }`,
+  ]) {
+    assert.ok(src.includes(line), `trial window changed — update TRIAL_OCCUPIED: ${line}`);
+  }
+  assert.ok(src.includes(`onConflict: 'user_id,kind'`), 'claim must use the lifecycle_emails unique key');
+  const loop = src.slice(src.indexOf('async function sendKind'));
+  assert.ok(loop.indexOf('.upsert(') !== -1, 'claim missing from the send loop');
+  assert.ok(loop.indexOf('.upsert(') < loop.indexOf('await sendBatch(resendKey'), 'claim must come BEFORE the send');
+  assert.ok(loop.indexOf('continue;') < loop.indexOf('await sendBatch(resendKey'), 'a failed claim must skip the send');
 });

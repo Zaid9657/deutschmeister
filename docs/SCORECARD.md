@@ -19,7 +19,7 @@ measuring the same week get the same number. The dated snapshot this started fro
 | Activation | 20% | **2** | ↓ | Signup→first lesson: Jun 15%, Jul 16%, Aug 10%, **Sep 10%**. Rebuilt A1.1: 4 learners, 0 Lektionen finished. Writing 0 ever, mock exams 5 ever |
 | Acquisition | 15% | **2** | ↓ | Signups: 205 (Jun) → 147 (Sep). Search signups are brand searches (13 of 14 land on `/`). 22 keywords in DE, 0/20 targets in top 30, 11 referring domains (10 spam). No social running. The \"X-Ray spike\" since 09-14 was a **crawler** rendering the new example links (98% of anon analyses = our own example sentences); real anon X-Ray use is ~1–8/day |
 | Product & reliability | 15% | **5** | — | A1.1 at 0 blocker/major after 23 DaF reviews; 84 grammar topics; 3 mock exams. **Speaking: 24/45 starts (53%) got zero learner turns.** Paid levels still on older content. Webhooks: 0 failed in 30 days |
-| Retention & email | 10% | **3** | — | 29,500 sends/30 d, 1.95% bounce, 0 complaints. Click tracking switched **on** 2026-09-27; the click rate isn't known yet. Launch email written, never sent. 3 of 6 live paid subs failing |
+| Retention & email | 10% | **3** | — | deutsch-meister.de 08-29→09-27 (Resend): 31,777 sent, 1.89% bounce, 0 complaints. Click tracking **on** since 09-27, switched after that day's 07:00 batch: 1 unique click so far, so no rate until the 09-28 batch. 0 offer emails. 3 of 6 live paid subs failing (2 past_due, 1 unpaid). Trial-end mails: 0 of 180 ended trials converted; course-offer version in PR (owner decision) |
 | Website performance | 5% | **10** | ↑ | Mobile Lighthouse, local build (2026-09-27, after PR #156): / 100, /pricing/ 99, grammar 99, course 99, guide 100, /level-test/ 86, /login 94 → median 99; worst CLS 2.0 → 0. `vendor-ui` 757 → 102 KB raw. Fonts self-hosted. **At target: this agent does nothing until it regresses** |
 | Support | 5% | **5** | — | 0 tickets ever from 1,685 accounts — no backlog, no signal |
 | Security & engineering | 5% | **6** | ↓ | Advisors: 0 errors; 2 actionable warnings (leaked-password protection off; 2 extensions in `public`). The exposed-function warning is fixed (2026-09-27). **New: every Netlify env var is stored non-secret, and a `phx_` PostHog personal API key ships in the public JS** (work order #0). CI green |
@@ -43,8 +43,9 @@ Same evening, after the secrets finding and the rubric line it added: security 7
 | Acquisition | X-Ray → signup rate | unknown | measured | `acquisition_last_source = 'xray'` ÷ human anon analyses (crawlers now 403) |
 | Acquisition | Target keywords in top 30 | 0/20 | 3/20 | DataForSEO (`docs/seo-routines/`) |
 | Product | Speaking zero-turn rate / 30 d | 53% | <15% | `speaking_sessions.user_turns` |
-| Email | Click tracking on | yes (2026-09-27) | click rate ≥3% | Resend |
+| Email | Click tracking on | yes (2026-09-27); 1 unique click, rate from the 09-28 batch | click rate ≥3% | Resend |
 | Email | Offer/campaign emails sent / 30 d | 0 | 2 | Resend / `send-campaign` |
+| Email | Trial→paid (trials ended in last 30 d) | 0 of 180 | ≥2% | `profiles.trial_ends_at` + `subscriptions`/`purchases` `price_paid > 0` |
 | Web | Mobile Lighthouse median, 7 pages | 99 (was 89) | ≥95 (hold) | Lighthouse §7 |
 | Web | Worst CLS | 0 (was 2.0) | <0.1 (hold) | Lighthouse §7 |
 | Security | Actionable advisor warnings | 2 (was 3) | 0 | Supabase `get_advisors` |
@@ -63,7 +64,7 @@ item above is done or blocked on someone else.
 | 1 | One 10-min dashboard sitting: ~~Resend click tracking on~~ (done 2026-09-27 via connector) · Lemon Squeezy failed-payment emails on · Supabase leaked-password protection on | Revenue, Security | Owner | 1 of 3 done | all three toggles on |
 | 2 | **Launch the sub-level courses by email.** Do NOT run `drafts/send-launch-email-1.sh`: it is the old telc B1 email with code START49, which expired 2026-09-14. Steps: (a) owner creates a new 100% code in Lemon Squeezy restricted to the A2.1 product (DMTEST100 is tied to the retired product); (b) owner buys A2.1 for €0 on `/pricing/` with a **fresh** account; (c) agent verifies the `course_a2_1` purchase row and the 90-day `plan_type='course'` Pro row, and owner deactivates the code; (d) agent stages `drafts/send-launch-sublevel-1.sh` from Email 1 of `drafts/launch-sublevel-courses-2026-09.md`, excluding subscribers and buyers, and fixes 3 copy issues (unsourced quote, "Goethe exam format" → Goethe-*style*, "since Monday"); (e) owner runs `test`, then `live` **once** — nothing records sends, so a rerun re-mails everyone | Revenue | Owner + agent | open | email sent once; clicks visible; first real sale |
 | 3 | **Unpaid subscribers keep Pro.** The webhook copies the next renewal date into `subscription_end` even when the status is `unpaid`/`past_due`, so access rolls forward every month (e.g. last paid 06-03, Pro until 10-03). Fix: access must follow status, not only `subscription_end` | Revenue, Product | Agent (review) | open | an unpaid sub loses Pro at the end of its paid period; test pins it |
-| 4 | **Trial end sells only Pro.** 181 trials ended in 30 days and 0 converted. The day-6 and trial-ended emails offer only €9.99/mo, never the one-time courses. Draft course-offer versions | Revenue, Email | Agent draft + **owner decision** | open | a trial-end email offers the course; trial→paid measured |
+| 4 | **Trial end sells only Pro.** 181 trials ended in 30 days and 0 converted. The day-6 and trial-ended emails offer only €9.99/mo, never the one-time courses. Draft course-offer versions | Revenue, Email | Agent draft + **owner decision** | PR open 2026-09-27: day-6 + trial-ended now also offer the level course (A1.2 for unplaced learners, the placed level if buyable, none for B1/B2), every site link UTM-tagged. **Owner:** approve the copy and merge; confirm `LEMONSQUEEZY_COURSE_A1_2/A2_1/A2_2_VARIANT_ID` are set in Netlify's functions scope, or the mail stays Pro-only | a trial-end email offers the course; trial→paid measured |
 | 5 | Sign-up + course offer under the X-Ray result; record X-Ray→signup; find the traffic source — **source found: a crawler** (see §6); crawler renders now 403 before any AI call; offer card + `ref=xray` shipped | Acquisition, Activation | Agent | shipped 2026-09-27 (#155) | X-Ray→signup measured, ≥2% |
 | 6 | Social pack live 2026-10-01: accounts created, IDs filled, posting Routine on | Acquisition | Owner, then agent | open | first attributed social signup |
 | 7 | Fix speaking starts that end with zero learner turns (and 8 of 12 speaking users hit the free cap — an offer moment) | Product | Agent | shipped 2026-09-27 (#155) | zero-turn rate <15% |
@@ -136,7 +137,8 @@ Change a band only in a PR that says why, and re-score the history line it affec
 |---|---|---|---|---|---|
 | 2026-09-03 | Activation | A1.1 reordered: der/die/das first, alphabet moved to lesson 5 | grammar one-and-done (14 d): 1/9 (09-07) → 5/8 (09-21) → 1/4 (09-27) | inconclusive | cohorts of 4–9 can't show an effect; judge on a full month |
 | 2026-09-12→14 | Product | A1.1 rebuilt + 23 DaF review rounds | Lektionen finished: 0 → 0 | keep content, stop polishing | quality without traffic moved nothing |
-| 2026-09-27 | Email | Resend click tracking switched on for deutsch-meister.de (via connector) | click rate unknown → _next run_ | — | expected: click rate becomes measurable; required before any offer email |
+| 2026-09-27 | Email | Resend click tracking switched on for deutsch-meister.de (via connector) | click rate unknown → _next run_ (09-27 late: 1 unique click; the switch came after the 07:00 batch, so no rate yet) | — | expected: click rate becomes measurable; required before any offer email |
+| 2026-09-27 | Email | Day-6 + trial-ended mails also offer the one-time course for the learner's level (derived price, buyable only, UTM `email/lifecycle/<kind>`); PR, owner decision | trial→paid 0 of 180 (30 d) → _next run after merge_ | — | expected: ≥1 course sale within 30 days of merge, traceable by `utm_campaign=trial_day6`/`trial_ended` |
 | 2026-09-27 | Security | Revoked PUBLIC/anon/authenticated EXECUTE on 3 SECURITY DEFINER functions (applied) + class test | exposed functions 2 → 0 | keep | `REVOKE … FROM anon, authenticated` is a no-op while PUBLIC holds EXECUTE; always name PUBLIC |
 | 2026-09-27 | Revenue | Launch-readiness audit | — | — | the staged launch script was the expired telc/START49 email; the precondition purchase never happened; audit before any send |
 | 2026-09-27 | Acquisition | Traced the X-Ray "spike" (150–350 anon analyses/day since 09-14) | 98.3% of anon analyses = our own `grammar_examples` sentences, flat over 24 h, N ids per IP-day, 49 IP-days stopped at the 12 cap → **crawler** rendering the "Examine in X-Ray" links added 09-14 (96fe7e1) | fixed | a traffic number is not reach until it is split into humans vs bots; the "bright spot" in the first scorecard was wrong |
@@ -193,4 +195,14 @@ select status, count(*) from subscriptions where price_paid > 0 group by 1;
 - DataForSEO: `api.dataforseo.com` is not on this environment's network allowlist.
 - Email opens: open tracking is off by choice; pixels are unreliable. Clicks have been
   tracked since 2026-09-27.
+- Email click rate: Resend does not record when click tracking was switched on. It came on
+  after the 09-27 07:00 daily batch (2,241 sends, 0 clicks), so the first rate that means
+  anything starts with the 09-28 07:00 batch.
+- Which course checkouts are live: whether `LEMONSQUEEZY_COURSE_A1_2/A2_1/A2_2_VARIANT_ID` are
+  set was not read, because every Netlify env var is stored non-secret (§3 #0) and listing them
+  would print server secrets into an agent transcript. No sub-level course has ever been bought.
+  The trial-end mail checks the variables when it sends and stays Pro-only when they are unset.
+- On 09-27, the 07:00 UTC hour alone sent 2,241 emails (Resend, account-wide). On 09-25 and
+  09-26, deutsch-meister.de sent 1,158 and 1,159 in the whole day. The daily sentence may have
+  run twice, but that can't be checked: nothing records daily-sentence runs.
 - X-Ray traffic source: logged per call since PR #155; stored once `migrations/2026-09-27-xray-usage-source.sql` is applied.
