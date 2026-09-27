@@ -519,7 +519,7 @@ UnitSpec = {
   handlungsfeld: [str],
   canDos: [ref(cando)]{3..5},
   grammar: { new: [ref(spine)]{0..2}, chunk: [ref(spine)]{0..1}, review: [ref(spine)]* },   // GRM-01, GRM-02
-  lexiconBlocks: [{ title: de, lemmas: [ref(lexicon)]{6..10} }]{3..4},                       // = lexicon.json allocation
+  lexiconBlocks: [{ title: de, lemmas: [ref(lexicon)]{6..20} }]{3..4},                       // = lexicon.json allocation (B2: 60–70 new words = 3–4 blocks of 15–18)
   textTypes: [ref(texttype)],
   lanes: { primary: ref(lane),
            pruefungsfokus: [{ template: ref(template), length: enum(full|reduced|mini),
