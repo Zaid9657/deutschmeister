@@ -299,6 +299,8 @@ export function knownForms(ctx, level, nr) {
   }
   for (const [, { member }] of ctx.registries.casts?.members || []) {
     for (const t of readTokens(`${member?.name || ''} ${member?.from || ''}`)) known.add(t.lower);
+    // a cast member's name also in the genitive: „Priyas Praktikum", „Arjuns WG"
+    for (const t of readTokens(member?.name || '')) known.add(`${t.lower}s`);
   }
   const rank = LEVELS.indexOf(level);
   for (const name of namesOf(ctx)) {
