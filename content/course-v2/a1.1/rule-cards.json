@@ -405,8 +405,8 @@
       "spine": "g.akkusativ",
       "depth": 1,
       "modelSentence": "Ich brauche einen Laptop.",
-      "de": "Nach Verben wie brauchen, haben, suchen, kaufen und möchte steht das Nomen im Akkusativ. Nur maskulin ändert sich: der → den, ein → einen, kein → keinen. Neutral, feminin und Plural sind wie im Nominativ: Ich brauche ein Heft, eine Tasche und die Stifte.",
-      "en": "After verbs such as brauchen, haben, suchen, kaufen and möchte the noun is in the accusative. Only the masculine changes: der → den, ein → einen, kein → keinen. Neuter, feminine and plural look the same as in the nominative: Ich brauche ein Heft, eine Tasche und die Stifte.",
+      "de": "Nach Verben wie brauchen, haben, suchen, kaufen und möchte steht das Nomen im Akkusativ. Nur maskulin ändert sich: der → den, ein → einen, kein → keinen. Neutral, feminin und Plural sind wie im Nominativ: Ich brauche ein Heft, eine Tasche und die Stifte. Achtung: „Gibst du mir bitte das Heft?“ – mir ist Dativ (auch dir), das Heft ist Akkusativ.",
+      "en": "After verbs such as brauchen, haben, suchen, kaufen and möchte the noun is in the accusative. Only the masculine changes: der → den, ein → einen, kein → keinen. Neuter, feminine and plural look the same as in the nominative: Ich brauche ein Heft, eine Tasche und die Stifte. Note: „Gibst du mir bitte das Heft?“ – mir is dative (so is dir), das Heft is accusative.",
       "table": [
         [
           "Kasus",
@@ -491,8 +491,8 @@
       "spine": "g.trennbare-verben",
       "depth": 1,
       "modelSentence": "Ich stehe um sieben Uhr auf.",
-      "de": "Trennbare Verben haben zwei Teile: aufstehen, anfangen, einkaufen, fernsehen. Im Satz steht das Verb auf Position 2, der erste Teil steht am Ende: Der Kurs fängt um neun Uhr an. Im Infinitiv sind beide Teile zusammen: Ich möchte einkaufen. Der erste Teil hat den Wortakzent: AUFstehen.",
-      "en": "Separable verbs have two parts: aufstehen, anfangen, einkaufen, fernsehen. In a sentence the verb is in position 2 and the first part goes to the end: Der Kurs fängt um neun Uhr an. In the infinitive both parts stay together: Ich möchte einkaufen. The first part carries the stress: AUFstehen.",
+      "de": "Trennbare Verben haben zwei Teile: aufstehen, anfangen, einkaufen, fernsehen. Im Satz steht das Verb auf Position 2, der erste Teil steht am Ende: Der Kurs fängt um neun Uhr an. Im Infinitiv sind beide Teile zusammen, so steht das Verb auch im Wörterbuch: einkaufen. Der erste Teil hat den Wortakzent: AUFstehen.",
+      "en": "Separable verbs have two parts: aufstehen, anfangen, einkaufen, fernsehen. In a sentence the verb is in position 2 and the first part goes to the end: Der Kurs fängt um neun Uhr an. In the infinitive both parts stay together, which is also how the dictionary lists the verb: einkaufen. The first part carries the stress: AUFstehen.",
       "table": [
         [
           "Position 1",
@@ -567,8 +567,8 @@
       "spine": "g.koennen",
       "depth": 1,
       "modelSentence": "Ich kann gut schwimmen. Kannst du am Samstag kommen?",
-      "de": "können heißt: Das kann ich gut (Ich kann gut kochen.) oder: Das ist möglich (Am Samstag kann ich kommen.). Die Formen: ich kann, du kannst, er/sie kann, wir können, ihr könnt, sie/Sie können. können steht auf Position 2, das zweite Verb im Infinitiv am Ende. Das ist die Satzklammer.",
-      "en": "können expresses ability (Ich kann gut kochen.) or possibility (Am Samstag kann ich kommen.). Forms: ich kann, du kannst, er/sie kann, wir können, ihr könnt, sie/Sie können. können is in position 2 and the second verb goes to the end in the infinitive. This is the sentence bracket.",
+      "de": "können heißt: Das kann ich gut (Ich kann gut kochen.) oder: Das ist möglich (Am Samstag kann ich kommen.). Die Formen: ich kann, du kannst, er/sie kann, wir können, ihr könnt, sie/Sie können. können steht auf Position 2, der Infinitiv am Ende: Das ist die Satzklammer. Auch müssen hat die Satzklammer: Ich muss arbeiten.",
+      "en": "können expresses ability (Ich kann gut kochen.) or possibility (Am Samstag kann ich kommen.). Forms: ich kann, du kannst, er/sie kann, wir können, ihr könnt, sie/Sie können. können is in position 2 and the infinitive goes to the end: this is the sentence bracket. müssen forms the bracket too: Ich muss arbeiten.",
       "table": [
         [
           "Position 1",
@@ -709,8 +709,8 @@
       "spine": "g.perfekt-haben",
       "depth": 1,
       "modelSentence": "Am Samstag habe ich Pizza gemacht.",
-      "de": "Über gestern und das Wochenende sprechen Sie meistens im Perfekt: haben auf Position 2, das Partizip am Ende. Lernen Sie diese Formen als feste Wörter: gemacht, gekauft, gespielt, gekocht, gearbeitet – gegessen, getrunken, gesehen, gelesen, geschlafen. Viele Partizipien enden auf -t, andere auf -en. Die Regel für neue Verben kommt in A1.2.",
-      "en": "To talk about yesterday or the weekend you mostly use the Perfekt: haben in position 2, the participle at the end. Learn these forms as fixed words: gemacht, gekauft, gespielt, gekocht, gearbeitet – gegessen, getrunken, gesehen, gelesen, geschlafen. Many participles end in -t, others in -en. The rule for new verbs comes in A1.2.",
+      "de": "Über gestern und das Wochenende sprechen Sie meistens im Perfekt: haben auf Position 2, das Partizip am Ende. Lernen Sie die Partizipien als feste Wörter – auf -t: gemacht, gekauft, gespielt, gekocht, gearbeitet; auf -en: gegessen, getrunken, gesehen, gelesen, geschlafen. Aber für sein und haben sagen Sie meistens war und hatte: Ich war in Dresden. Der Zug hatte Verspätung.",
+      "en": "To talk about yesterday or the weekend you mostly use the Perfekt: haben in position 2, the participle at the end. Learn the participles as fixed words – in -t: gemacht, gekauft, gespielt, gekocht, gearbeitet; in -en: gegessen, getrunken, gesehen, gelesen, geschlafen. But for sein and haben you mostly say war and hatte: Ich war in Dresden. Der Zug hatte Verspätung.",
       "table": [
         [
           "Position 2",

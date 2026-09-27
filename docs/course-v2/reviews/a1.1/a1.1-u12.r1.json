@@ -1,0 +1,255 @@
+{
+ "review": "a1.1-u12.r1",
+ "unitId": "a1.1-u12",
+ "file": "content/course-v2/a1.1/units/u12.json",
+ "round": 1,
+ "date": "2026-09-27",
+ "reviewers": [
+  {
+   "id": "R1",
+   "persona": "Prüferin (lizenzierte Goethe-A1-Prüferin): Prüfungstreue, Rubrik, Aufgabenklarheit"
+  },
+  {
+   "id": "R2",
+   "persona": "Kursleiterin DaF (A1.1): Natürlichkeit, Niveau, Didaktik, Szenenplausibilität"
+  }
+ ],
+ "method": "Both reviewers read every German string. That covered title and title.canDo, spec.situation, the Folge (9 lines and the gist item), the three inputs (30 dialogue lines, the Sprachschule web page, Priya's e-mail), the 9 LS4 exam texts (4 announcements of 34/37/32/31 words and 5 signs of 21/19/18/21/19 words, recounted), both strategy cards, 8 redemittel with their function labels, both Aussprache blocks, the three rule cards, the Sp1+Sp2 task (instructions, situations, cards, persona, openingLine, hintWords, 16 model turns), the S2 task (situation, taskDe, 3 Leitpunkte with cues, checklist, a 31-word model text), the Fokus card, the fact record, the story beat and cliffhanger, every endLine, promptDe, option and explanation.de. We solved all 102 authored items blind from promptDe plus options, tiles or audio line: 1 Folge gist, 15 input items, 12 structuredInput, 33 pool items, 15 reserve, 8 perception, 9 exam items, 8 check items and 1 proof item. For sentence_building we permuted the tiles and checked every V2, V1, Vorfeld and Mittelfeld order against accepted[]. For error_correction we tried every one-word and one-move correction. For W-word gaps we tried every W-word the course has taught. We traced the 12 generators (3 × dictation.fromInput on 6 source lines, none with `say`; numbers.dictation price-euro; 3 × lex.articlePlural, 2 × lex.glossTyped, 3 × lex.glossMatch) against the lexicon roles and plural_kind. All typed-recall and article/plural sources are productive with regular plurals. We graded risky answers with the player's src/lib/course-v2/checkItem.js: ls3-p02 „Wie viel“ → wrong; ls3-p08 „Ich lerne Deutsch seit drei Monaten.“ → wrong (v2-inv); ls3-p10 key → correct; ls2-i05 „10“/„zehn“ → correct; ls3-i03 „320“ → correct; c05 without the final full stop → correct; ls2-p09 „Wir wollen den Kurs am Abend machen.“ → correct. The exam blocks and tasks were checked against content/course-v2/registries/lanes/sd1.json: sd1.h2 has 4 R/F items, 2 options, 1 play and textWords [29, 47]; sd1.l3 has 5 R/F items and textWords [10, 25]; sd1.sp1 is a monologue, prep 0, spelling plus a number; sd1.sp2 has 2 rounds, cards-ask, prep 0; sd1.s2 has 3 Leitpunkte and a 30-word target, with Anrede/Gruß not a Leitpunkt. We also checked the rubric ids sd1-sp1, sd1-sp2, sd1-s2, course-micro and course-micro-sp (all resolve). The exam texts and tasks are original (cast- and school-specific situations, own wording); the agent proxy blocks the Goethe Modellsatz, so no verbatim comparison was possible. The grammar ceiling was checked against grammar-spine.json: g.perfekt-sein receptive a1.1-u12 and productive a1.2-u08, taught on the closed participle list of rc.perfekt-sein as in u11; g.wollen a1.1-u12; g.temporal-seit-vor chunkFrom a1.1-u12, productive a1.2-u02; g.indirekte-frage a2.2-u03; g.genitiv b1.1-u11; g.reflexiv-akk a2.1-u08. New-word load was checked against level-profiles.json (24 new words; 12 productive, 12 receptive), and every German string was scanned against knownForms + licensedForms at a1.1-u12 (lib-validate/lexicon.mjs), including surfaces LEX-01 does not walk (redemittel function labels, the Fokus card, split verbs). Can-dos were read in registries/cando/a1.json. Cast and story facts were checked against casts/series.json, casts/a1.json (the beat a1.1-u12 → a1.2-u01) and units u01, u02, u05–u11. The unit was compared with curriculum/a1-1.md §6 unit 12 and a1-1.json, specs.json and BLUEPRINT §2.8 row 12. Every finding class of the u04 trail (r1–r5) and of the u01–u11 r1 reviews that names u12 was checked for recurrence. The level was validated once for the level-scope COV rules.",
+ "validator": {
+  "command": "node scripts/course-v2/validate.mjs content/course-v2/a1.1/units/u12.json",
+  "result": "FAIL — 40 rules: 33 pass, 2 fail (LEX-01: 2 blocker — title.canDo „ausführlich“, ls7 endLine „Geschafft“; ITM-01: 1 blocker — ls3-p10 bare „Korrigieren Sie:“), 1 warn (GRM-04: 9 advisory — „aller“ in t8; „warum Sie Deutsch lernen“ and „sich“ in title.canDo; „ganzen“, „Familiennamen“, „sich“, „Namen“ in the Sp1 part; „die Frage der Partnerin“ in the Sp2 situation; „im Büro der Sprachschule“ in ls3-mo), 4 skipped (ITM-08; COV-1, COV-4, COV-5 level-scope) · 3 blocker, 0 ratchet, 9 advisory",
+  "check": "node scripts/course-v2/check.mjs content/course-v2/a1.1/units/u12.json → 0 errors",
+  "levelRun": "node scripts/course-v2/validate.mjs a1.1 → COV-1, COV-4 and COV-5 pass; the only COV-3 blocker is u01's (spec.lanes differs from specs.json), not u12's. u12's spec.lanes and canDos equal a1.1/specs.json (sd1.s2 in place of the plan's S1, lernziele/kurs-erfragen in place of Glossar/Anmeldeformular: a W2 spec decision, not the author's)."
+ },
+ "verdict": "Not exit-ready: 2 BLOCKER (both from the validator: LEX-01 on the can-do title and the LS7 end screen, and ITM-01 on one bare error correction), 4 MAJOR and 9 MINOR. A lot is right. The German is correct on every model surface. du/Sie is right everywhere: Frau Schulz and Herr Richter use Sie with surnames, and the course friends use du and ihr. All 102 authored keys are right. Two of them reject a defensible second answer, and one proof can be solved without German. The H2 and L3 blocks, the Sp1/Sp2 task and the S2 task match sd1.json in items, options, plays, word bands, R/F balance and Leitpunkte, and they are original. The story closes A1.1 cleanly. The Folge picks up u11's cliffhanger (Olena „macht auch mit“). Every biography matches the cast bible (Bilal from Lahore, Priya at the Empfang in Kochi with Arjun there first, Emre and Arta online from İzmir and Prishtina, Arjun's own SD1 plan). The cliffhanger is the series beat to a1.2-u01 almost word for word, and the fact record on Deutsch in Österreich and der Schweiz carries sources and exceptions. The u04 classes that are easiest to repeat did not come back: question prompts name the question type, Vorfeld orders are accepted, dictation lines carry no `say`, number items accept words and digits, the word band shown equals the task line, generator sources are productive, and LS4 is voiced by announcers, not the protagonists. What stops exit: two keys that reject defensible answers („Wie viel kostet …?“; „Ich lerne Deutsch seit drei Monaten.“), a can-do proof solvable by string matching, and Priya's phone number, which contradicts u02 although u08 r1-F02 already assigned this exact edit to u12. The minors are one class of genitives and look-aheads on instruction surfaces and redemittel labels, the seit chunk asked for before it is shown, three phrasings, small timetable contradictions, word-spotting R/F keys, one weak structured-input item, and one owner-held item each for the rule-cards owner (rc.perfekt-sein and aufstehen) and the lexicon owner (examples, mitmachen).",
+ "scores": {
+  "D": 4,
+  "N": 3,
+  "H": 4,
+  "A": 2,
+  "P": 4,
+  "K": 3,
+  "E": 4
+ },
+ "total": 24,
+ "counts": {
+  "blocker": 2,
+  "major": 4,
+  "minor": 9,
+  "unitOwned": {
+   "blocker": 2,
+   "major": 4,
+   "minor": 7
+  },
+  "note": "unitOwned = the fix edits u12.json: F01 (two strings), F02 (1 promptDe, plus 6 for consistency), F03 (accepted + explanation), F04 (one accepted order), F05 (q01 prompt, key, explanation), F06 (one model turn), and the unit parts of F07–F13. Owned outside the unit: the „Geschafft“ decision in F01 (copy owner / rule-smith), the detector parts of F07 and the rails proposed in F02–F08, F12 and F15 (rule-smith), the cast-bible record in F06 (cast owner), F14 (rule-cards owner) and F15 (lexicon owner)."
+ },
+ "findings": [
+  {
+   "id": "F01",
+   "reviewer": "validator+R2",
+   "criterion": "N",
+   "severity": "blocker",
+   "scope": "class",
+   "unitId": "a1.1-u12",
+   "path": "title.canDo; steps[6].endLine (a1.1-u12-ls7)",
+   "quote": "title.canDo „Sie können sich ausführlich vorstellen, sagen, warum Sie Deutsch lernen, und per E-Mail nach einem Kurs fragen.“ · ls7 endLine „Geschafft! Sie können jetzt viel über sich erzählen, Ihren Plan mit Deutsch sagen und nach einem Kurs fragen.“ · LEX-01: „ausführlich“ (lx.ausfuehrlich: b1.1-u01); „Geschafft“ (no lexicon entry)",
+   "problem": "LEX-01 fails the unit with 2 blockers, so validate.mjs exits 1 and the unit cannot exit (§10.6). Both sit on the German-only screens that frame the unit: StartView renders title.canDo without an English twin, and the LS7 end screen has none. Both are known level classes. „Geschafft“ is the end-screen class of u05 r1-F01, u06 r1-F02, u09 r1-F02, u10 r1-F02 and u11 r1-F01, and u12 is the sixth unit to report it. The canDo look-ahead is the class of u04 r4, u05 r1-F01, u06 r1-F02 and u11 r1-F01. The canDo line has two more problems. „ausführlich“ overclaims the can-do it summarises (cd.a1.vorstellung-sp1: „in mehreren Sätzen“). GRM-04 also flags the verb-final indirect clause „warum Sie Deutsch lernen“ (g.indirekte-frage a2.2-u03; level profile subordinateClausesMax 0), and this hit is real, not a false positive. The endLine adds „über sich erzählen“, a reflexive pronoun after a preposition (g.reflexiv-akk a2.1-u08), on a surface GRM-04 does not walk.",
+   "fix": "title.canDo „Sie können sich mit allen Stichwörtern vorstellen, Ihren Plan mit Deutsch nennen und per E-Mail nach einem Kurs fragen.“ „Stichwörtern“ and „nennen“ are INSTRUCTION_METALANGUAGE, „sich vorstellen“ is the u01 chunk, and every other word is known at u12 (checked with knownForms). ls7 endLine „Super! Sie können jetzt über Ihr Land, Ihre Arbeit und Ihren Plan mit Deutsch sprechen und nach einem Kurs fragen.“ (lx.super a1.1-u08). Copy owner / rule-smith: the „Geschafft“ decision owed since u05 r1-F01 is still open. Either the LS7 opener becomes a fixed UI string with an en twin, or every endLine uses a known word.",
+   "proposedRule": null
+  },
+  {
+   "id": "F02",
+   "reviewer": "validator+R1",
+   "criterion": "A",
+   "severity": "blocker",
+   "scope": "class",
+   "unitId": "a1.1-u12",
+   "path": "steps[2].pool.items[9] (a1.1-u12-ls3-p10) promptDe; same bare frame: steps[0].pool.items[9] (ls1-p10), steps[0].reserve[3] (ls1-r04), steps[1].pool.items[9] (ls2-p10), steps[1].reserve[3] (ls2-r04), steps[2].reserve[3] (ls3-r04), check.items[6] (c07)",
+   "quote": "ls3-p10 promptDe „Korrigieren Sie: „Wann der Kurs fängt an?““ · promptEn „Correct the word order.“ · ITM-01: „error correction (v2-inv) with a bare prompt: name what to correct … „Korrigieren Sie:“ alone admits corrections the grader rejects“",
+   "problem": "This is the u04 r5-F01 class (and u10 r1-F03), and it is now a rail. The German prompt does not say what to correct. The key itself is right: checkItem accepts „Wann fängt der Kurs an?“, and we found no second correction a learner could defend. Still, only promptEn names the category, and ITM-01 forbids the English gloss as the only cue, so the validator fails the unit. Six other corrections use the same bare „Korrigieren Sie:“. Four of them pass the rail only because they accept both V2 orders (ls2-p10, ls2-r04, ls3-r04, c07), and those four name the category („Correct the word order.“) in English only. The other two (ls1-p10, ls1-r04) carry errorTag perfekt-aux-participle, which is outside the rail's list, and their prompts name nothing.",
+   "fix": "ls3-p10 promptDe „Korrigieren Sie die Wortstellung: „Wann der Kurs fängt an?““ (59 characters). For one convention in the unit, use the same German frame „Korrigieren Sie die Wortstellung: „…““ on ls2-p10, ls2-r04, ls3-r04 and c07. On ls1-p10 and ls1-r04, write „haben oder sein? Korrigieren Sie: „…““ (≤ 77 characters; ls1-p04 already asks „(haben oder sein?)“). No key changes.",
+   "proposedRule": "ITM-01: add perfekt-aux-participle to the error tags whose correction prompt must name the category (the auxiliary is nameable: „haben oder sein?“). Failing fixture: a1.1-u12 ls1-p10 with the bare „Korrigieren Sie:“. The test runs over all registered courses."
+  },
+  {
+   "id": "F03",
+   "reviewer": "R1",
+   "criterion": "A",
+   "severity": "major",
+   "scope": "class",
+   "unitId": "a1.1-u12",
+   "path": "steps[2].pool.items[1] (a1.1-u12-ls3-p02)",
+   "quote": "promptDe „___ kostet der Kurs? – 320 Euro. (W-Wort)“ · accepted [„Was“] · explanation „Die Antwort ist ein Preis. Dann fragen Sie: „Was kostet …?““ · checkItem(ls3-p02, „Wie viel“) → wrong, expected „Was“ · „Wieviel“ → wrong",
+   "problem": "„Wie viel kostet der Kurs? – 320 Euro.“ is correct German, and it is the price question this course itself has taught. u04 and u09 ask „Wie viel kostet alles zusammen?“ in three prompts, and u04 asks „Wie viel möchten Sie?“ and „Wie viel Gramm Käse …?“. A learner who writes the price question they know best is graded WRONG and told that the answer is „Was“. The explanation then implies that „Wie viel“ is false. The hint „(W-Wort)“ does not exclude it, because „wie viel“ is a W-word in this course's own sense. §9.4 rates a defensible second answer that is not accepted as MAJOR.",
+   "fix": "Add „Wie viel“ and „Wieviel“ to accepted[] with acceptedWhy „auch richtig: „Wie viel kostet …?“ fragt auch nach dem Preis“. Set explanation.de to „Die Antwort ist ein Preis: „Was kostet …?“ oder „Wie viel kostet …?““ (under 25 words).",
+   "proposedRule": "ITM-10: a fill_blank whose key is a single W-word and whose stem continues with a form of kosten also accepts „Wie viel“ / „Wieviel“. Generalise this as a small table of equivalent W-words for the answer type given in the stem (price: Was / Wie viel; clock time: Wann / Um wie viel Uhr). Failing fixture: a1.1-u12 ls3-p02. The test runs over all registered courses."
+  },
+  {
+   "id": "F04",
+   "reviewer": "R2",
+   "criterion": "A",
+   "severity": "major",
+   "scope": "class",
+   "unitId": "a1.1-u12",
+   "path": "steps[2].pool.items[7] (a1.1-u12-ls3-p08); scripts/course-v2/lib-validate/orders.mjs",
+   "quote": "tiles [lerne / ich / seit drei Monaten / Deutsch] · accepted „Ich lerne seit drei Monaten Deutsch.“, „Seit drei Monaten lerne ich Deutsch.“, „Deutsch lerne ich seit drei Monaten.“ · checkItem(„Ich lerne Deutsch seit drei Monaten.“) → wrong, errorTag v2-inv",
+   "problem": "„Ich lerne Deutsch seit drei Monaten.“ is grammatical and common German: in a clause with one verb, the time phrase follows the object, and „lerne“ is in position 2. The grader marks it WRONG and tags it v2-inv, so a learner whose verb is correctly second is sent to the verb-position repair card. The unit contradicts itself here. ls2-p09 accepts exactly this Mittelfeld swap („Wir wollen den Kurs am Abend machen.“ next to „… am Abend den Kurs machen.“). ITM-09 passes the item because orders.mjs enumerates only Vorfeld orders and pronoun or sentence-adverb swaps. It does not swap a full object noun and a time phrase in the Mittelfeld. That is a gate hole in the u04 r1-F04 class (§9.4: MAJOR).",
+   "fix": "Add „Ich lerne Deutsch seit drei Monaten.“ with acceptedWhy „auch richtig: „seit drei Monaten“ nach „Deutsch“, das Verb „lerne“ bleibt auf Position 2“.",
+   "proposedRule": "ITM-09 (orders.mjs Mittelfeld): in a V2 statement with one verb tile, a full noun-phrase object tile and a time-phrase tile (seit/am/um/im/jeden … + noun, or a time adverb) after the finite verb may stand in either order. Each order is accepted or excluded by promptDe. Failing fixture: a1.1-u12 ls3-p08. Passing fixture: a1.1-u12 ls2-p09. The test runs over all registered courses."
+  },
+  {
+   "id": "F05",
+   "reviewer": "R1",
+   "criterion": "A",
+   "severity": "major",
+   "scope": "instance",
+   "unitId": "a1.1-u12",
+   "path": "check.proofItems[0] (a1.1-u12-q01); check.proofs[4] (cd.a1.anweisungen-kurs → item)",
+   "quote": "„Im Buch steht: „Lesen Sie zuerst den Text. Kreuzen Sie dann an.“ Was machen Sie zuerst?“ — options „Ich kreuze an.“ / „Ich lese den Text.“ / „Ich schreibe einen Text.“ → „Ich lese den Text.“",
+   "problem": "The only proof of cd.a1.anweisungen-kurs can be solved without German. The question repeats „zuerst“, which stands in the stem next to „Lesen Sie … den Text“, and the key is the option that copies those words. The learner needs neither the order word (zuerst/dann) nor the unit's new instruction verb ankreuzen. This is the u04 r1-F06 and u10 r1-F06 class, both MAJOR. c08, the other instruction item, is also answered by matching heard words („lesen“, „Text“, „kreuzen … an“), so nothing in the Check needs the instruction to be understood.",
+   "fix": "Ask about the step that follows the order word. promptDe „Im Buch steht: „Lesen Sie den Text. Kreuzen Sie dann an.“ Was machen Sie am Ende?“ (81 characters). Options unchanged, key „Ich kreuze an.“. explanation.de „„dann“: Zuerst lesen Sie den Text, am Ende kreuzen Sie an.“ „am Ende“ is not in the stem, so the order must be understood. Both example instructions of the can-do stay on the screen.",
+   "proposedRule": "ITM-01 (the u04 r1-F06 rule, still unwritten): a choice item fails when a content word of its question stands in the stem next to a phrase that exactly one option copies. Failing fixture: a1.1-u12 q01 („zuerst“ → „Lesen Sie zuerst den Text“ → „Ich lese den Text.“). The test runs over all registered courses."
+  },
+  {
+   "id": "F06",
+   "reviewer": "R2",
+   "criterion": "K",
+   "severity": "major",
+   "scope": "class",
+   "unitId": "a1.1-u12",
+   "path": "steps[4].task.modelTurns[7] (Sp1 model, learner = Priya)",
+   "quote": "u12 „Meine Nummer ist 0176 24 58 31.“ · u02 form „Telefonnummer: 0176 38 29 41 06“, rm05 „Meine Telefonnummer ist 0176 38 29 41 06.“, model „Die Nummer ist 0176 38 29 41 06.“",
+   "problem": "The Sp1 model is Priya's own self-introduction („Ich heiße Priya Nair. Ich bin 28 Jahre alt …“). It gives her a phone number that contradicts the one she dictates to Herr Richter and writes into this same school's registration form in u02, which is the unit where the learner practised phone numbers with that number. „0176“ plus six digits is also not a possible German mobile number (11–12 digits; u02's number has 12). u08 r1-F02 found the same line in u08, rated it MAJOR (§9.4: persona contradiction on a model surface) and assigned this edit to the u12 owner. The line is unchanged.",
+   "fix": "modelTurns[7] „Meine Nummer ist 0176 38 29 41 06.“ Cast owner: record Priya's number in casts/series.json, as u08 r1-F02 asked.",
+   "proposedRule": "CON (cast data): persona data that a unit fixes on a form, a redemittel or a model turn (phone, address, age) is recorded in the cast bible, and a later model turn spoken by that cast member that states the same datum must match it. Failing fixture: a1.1-u12 Sp1 modelTurns[7]. The test runs over all registered courses."
+  },
+  {
+   "id": "F07",
+   "reviewer": "R2",
+   "criterion": "N",
+   "severity": "minor",
+   "scope": "class",
+   "unitId": "a1.1-u12",
+   "path": "steps[2].microOutput.situationDe (ls3-mo); steps[4].task.parts[1].situationDe (sd1.sp2); steps[5].task.situationDe (ls6); steps[1].input.title (LS2); steps[4].task.parts[0].situationDe (sd1.sp1); steps[3].texts[7] (t8); GRM-04 advisories",
+   "quote": "„Sie sind im Büro der Sprachschule.“ · „Antworten Sie auf die Frage der Partnerin“ · „Auf der Webseite einer Sprachschule steht“ · LS2 title „Die Webseite der Sprachschule“ · Sp1 „Sprechen Sie in ganzen Sätzen“ · t8 „Leute aus aller Welt“",
+   "problem": "The u04 r5-F05 class recurs: genitive attributes (g.genitiv b1.1-u11) on German-only task surfaces. r5-F05 gave u03's wording („die Frage von Nora“) as the fix for every later unit. GRM-04 catches two of the four as advisories. It misses „einer Sprachschule“, because the heuristic matches only „der“, and the LS2 input title, because titles are outside GRM-04's instruction scope. „in ganzen Sätzen“ is a real article-less adjective ending (g.adj-dekl-nullartikel a2.2-u05). The situation also calls this Sp1 round „jetzt mit allen Stichwörtern“, but u05 and u08 already used all seven. The remaining GRM-04 advisories are false positives. „Stellen Sie sich vor“ is the u01 chunk. „Ihren (Familien)Namen“ is the SD1 examiner formula the course has used since u02. „aus aller Welt“ is a fixed phrase, but it is opaque at A1 and unglossed.",
+   "fix": "ls3-mo „Sie sind in der Sprachschule, im Büro. Herr Richter sagt: …“. Sp2 „Sie und Ihre Partnerin Nora haben Wortkarten zu zwei Themen … Antworten Sie auf die Frage von Nora: …“. LS6 „Eine Sprachschule schreibt auf der Webseite: „Neu: …““. LS2 title „Die Webseite: Sprachschule Leipzig“. Sp1 „Sprechen Teil 1: Sagen Sie Sätze zu Name, Alter, Land, Wohnort, Sprachen, Beruf und Hobby. …“. t8 „Sie lernen viele Leute kennen. Kostet nichts!“ (the web page's own words; 19 words, inside [10, 25]).",
+   "proposedRule": "GRM-04: det.genitiv-feminin-attribut also matches einer/eines/des + noun after a noun, and step and input titles join the instruction scope. Hits licensed as a chunk at the position („Stellen Sie sich vor“, chunkFrom a1.1-u01) are suppressed. Fixtures at a1.1-u12: „Auf der Webseite einer Sprachschule steht …“ reports; „Stellen Sie sich vor.“ does not. The test runs over all registered courses."
+  },
+  {
+   "id": "F08",
+   "reviewer": "R2",
+   "criterion": "N",
+   "severity": "minor",
+   "scope": "class",
+   "unitId": "a1.1-u12",
+   "path": "redemittel[0].function (rm01), [1] (rm02), [2] (rm03), [5] (rm06); src/components/course-v2/StepView.jsx l. 313",
+   "quote": "rm01 „sagen, wie Sie nach Leipzig gekommen sind“ · rm02 „über die Arbeit im Herkunftsland sprechen“ · rm03 „sagen, seit wann Sie Deutsch lernen (feste Wendung: seit drei Monaten)“ · rm06 „nach dem Kursbeginn fragen“",
+   "problem": "StepView shows r.function as the German label under each Redemittel. The English twin appears only when the UI language is English. Three labels are verb-final indirect clauses (g.indirekte-frage a2.2-u03). They use „Herkunftsland“ (lx.herkunftsland b1.1-u09) and „Kursbeginn“ (lx.kursbeginn b1.1-u08), and „feste Wendung“, where lx.fest is a1.2-u12 and „Wendung“ has no lexicon entry. Neither LEX-01's surface walk nor GRM-04 reads redemittel.function, so no gate sees this. u11 r1-F01 found „feste Wendung“ and „Gruppe“ in u11's labels, so this is a class.",
+   "fix": "rm01 „sagen: Ich bin nach … gekommen.“ · rm02 „über die Arbeit in Ihrem Land sprechen“ · rm03 „sagen: Ich lerne seit … Deutsch.“ · rm06 „fragen: Wann fängt der Kurs an?“",
+   "proposedRule": "LEX-01's surface walk and GRM-04's instruction scope include redemittel[].function (a German-only label in StepView). Failing fixture: a1.1-u12 rm02 („Herkunftsland“, b1.1-u09). The test runs over all registered courses."
+  },
+  {
+   "id": "F09",
+   "reviewer": "R2",
+   "criterion": "N",
+   "severity": "minor",
+   "scope": "instance",
+   "unitId": "a1.1-u12",
+   "path": "steps[1].microOutput (a1.1-u12-ls2-mo) promptDe, situationDe; steps[4].task.hintWords[2]",
+   "quote": "ls2-mo „Schreiben Sie 1–2 Sätze: Seit wann lernen Sie Deutsch? Was wollen Sie machen?“ · situationDe „Die Sprachschule fragt auf der Webseite: „Was wollen Sie mit Deutsch machen?““ · hint „Ich lerne seit … Deutsch.“ · first „seit“ in the unit: LS3 input (Priya's e-mail)",
+   "problem": "LS2 asks the learner to produce the unit's chunk (g.temporal-seit-vor, chunkFrom a1.1-u12, productive a1.2-u02) before any line of the unit has shown it. The Folge and the LS1 and LS2 inputs contain no „seit“. The first model is Priya's e-mail in LS3. The unit models only one filler, „seit drei Monaten“. Yet the LS2 prompt and the Sp1 hint invite the learner's own duration (seit einem Jahr, seit zwei Wochen), which is seit + Dativ beyond the chunk. The plan says: „seit als feste Wendung; temporale Präpositionen ab A1.2“. ls2-mo's situation also claims the web page asks „Was wollen Sie mit Deutsch machen?“, but the LS2 page does not.",
+   "fix": "Model the chunk before it is asked for: ls2-l10 „Mein Plan? Ich lerne seit drei Monaten Deutsch. Jetzt will ich die Prüfung machen. …“. Or move the seit question to LS3 and let ls2-mo ask only „Was wollen Sie mit Deutsch machen?“. Give the hint as fixed variants: „Ich lerne seit drei Monaten / seit einem Jahr Deutsch.“. ls2-mo situationDe „Frau Schulz fragt: „Was wollen Sie mit Deutsch machen?““ (the Folge's own question and homework).",
+   "proposedRule": null
+  },
+  {
+   "id": "F10",
+   "reviewer": "R2",
+   "criterion": "D",
+   "severity": "minor",
+   "scope": "instance",
+   "unitId": "a1.1-u12",
+   "path": "steps[2].input.lines[4] (a1.1-u12-ls3-l05) and steps[2].inputItems[2].explanation (ls3-i03); start.folge.lines[5] (a1.1-u12-start-l06); steps[0].reserve[1] (ls1-r02) answer and steps[0].inputItems[1].explanation (ls1-i02)",
+   "quote": "„Das Buch ist schon im Preis.“ · „Sie ist nicht leicht. Aber Sie brauchen nur einen Plan.“ · „Emre und Arta sind zu Hause geblieben.“",
+   "problem": "(a) „ist schon im Preis“ is a truncated calque of 'included in the price'. A school office says „Das Buch ist im Preis dabei“ (or „… inbegriffen“). The phrase stands on a listening model line and is repeated in an explanation. (b) „Sie brauchen nur einen Plan“ tells the learner that a plan alone gets them through the exam. That is glib for a teacher. In a product that sells a dated exam plan it also reads as an outcome promise, which the owner's rule forbids („never promise a pass“). (c) An A1 learner reads „zu Hause geblieben“ as 'stayed in, did not go out', which is the sense of rc.perfekt-sein's own row („Sie ist zu Hause geblieben.“). The sentence means 'stayed in their home countries'.",
+   "fix": "(a) „Das Buch ist im Preis dabei.“ in ls3-l05 and in ls3-i03's explanation. (b) „Sie ist nicht leicht. Aber mit einem Plan lernen Sie gut.“ (c) ls1-r02 answer and tiles „Emre und Arta sind in İzmir und Prishtina geblieben.“ (tile „in İzmir und Prishtina“), and ls1-i02 explanation „Emre und Arta sind in İzmir und in Prishtina geblieben.“ All words are known at u12.",
+   "proposedRule": null
+  },
+  {
+   "id": "F11",
+   "reviewer": "R2",
+   "criterion": "K",
+   "severity": "minor",
+   "scope": "instance",
+   "unitId": "a1.1-u12",
+   "path": "steps[1].input.text (LS2 web page); steps[2].inputItems[3].explanation (ls3-i04); steps[2].pool.items[10] (ls3-p11), steps[2].reserve[0] (ls3-r01); steps[0].inputItems[4].explanation (ls1-i05)",
+   "quote": "web page „Im Kurs üben Sie jeden Tag.“ above „Montag bis Donnerstag …“ / „Dienstag und Donnerstag …“ · ls3-i04 „Um 9 Uhr fängt der Kurs jeden Tag an.“ · ls3-p11/r01 „Wie lange dauert der (Deutsch)kurs? – Vier Wochen.“ · ls1-i05 „Im Geschäft arbeitet Emre, am Computer Bilal.“",
+   "problem": "(a) Neither course runs every day (Mo–Do, or Tue and Thu). The page and the explanation contradict the timetable printed two lines below. (b) The unit never states how long A1.2 lasts. The practice items make it four weeks, which at Mo–Do 9–12 is about 48 hours, for a half-level that took Priya's group three months at the same school („seit drei Monaten“). (c) Bilal worked at the computer in Lahore (ls1-l02, Perfekt). Now he is looking for work (Chancenkarte; ls2-l03 „Ich will hier Arbeit finden.“). The present tense has him still working there. Each break is small, but the unit teaches exactly this contrast between the past and now.",
+   "fix": "(a) Web page „Im Kurs üben Sie viel.“; ls3-i04 „Um 9 Uhr fängt der Kurs an, von Montag bis Donnerstag.“ (b) ls3-p11 and ls3-r01 „Drei Monate.“ (lx.monat a1.1-u11); in ls3-p11, keep the options' form class („Drei Monate.“ / „Am Montag.“ / „Im Büro.“). (c) ls1-i05 „Im Geschäft arbeitet Emre. Am Computer hat Bilal in Lahore gearbeitet.“",
+   "proposedRule": null
+  },
+  {
+   "id": "F12",
+   "reviewer": "R1",
+   "criterion": "P",
+   "severity": "minor",
+   "scope": "class",
+   "unitId": "a1.1-u12",
+   "path": "steps[3].blocks[0].items[2] (a1.1-u12-ls4-sd1-h2-03); steps[3].blocks[1].items[1] (sd1-l3-02), items[3] (sd1-l3-04)",
+   "quote": "h2-03 „Kaffee und Tee stehen neben dem Brot.“ ← t3 „Kaffee und Tee finden Sie hinten, neben dem Brot.“ · l3-02 „Der Kurs A1 lernt heute in Kursraum 2.“ ← t6 „Bitte gehen Sie in Kursraum 2.“ · l3-04 „Am Mittwoch können Sie hier Deutsch sprechen.“ ← t8 „Deutsch sprechen am Mittwoch: 17 bis 19 Uhr, hier in Kursraum 3.“",
+   "problem": "Three of the four richtig keys in LS4 repeat their text's words, and every falsch key changes one detail. A learner who marks 'same words = richtig' scores 9 of 9 without reading for meaning. SD1 Hören Teil 2 and Lesen Teil 3 statements paraphrase (u04 r1-F19 class). ITM-04 passes because it bans only substrings and one-token edits. h2-01 („25 Minuten später“ for „Verspätung“) shows the paraphrase the other three need. l3-02 is also unidiomatic, since a course does not „lernen“ in a room.",
+   "fix": "h2-03 „Heute ist Tee billig.“ (richtig: im Angebot, nur 1,50 Euro). l3-02 „An Kursraum 5: Die Wörterbücher sind heute nicht hier.“ (richtig; it needs „Die Wörterbücher sind auch dort.“ read as 'in room 2', and it removes „lernt“). l3-04 „An Kursraum 3: Am Mittwoch um 18 Uhr können Sie hier Deutsch üben.“ (richtig; it needs the 17–19 range). The R/F balance and the key positions stay the same.",
+   "proposedRule": "ITM-04: a richtig statement shares no content-word trigram, and at most two content words besides names and numbers, with its text. Failing fixture: a1.1-u12 sd1-h2-03. The test runs over all registered courses."
+  },
+  {
+   "id": "F13",
+   "reviewer": "R2",
+   "criterion": "A",
+   "severity": "minor",
+   "scope": "instance",
+   "unitId": "a1.1-u12",
+   "path": "steps[1].structuredInput[3] (a1.1-u12-ls2-s04)",
+   "quote": "„Sie bestellen im Restaurant. Was ist höflich?“ — „Ich will einen Kaffee.“ / „Ich möchte einen Kaffee, bitte.“ / „Einen Kaffee!“",
+   "problem": "The key is the only option with „bitte“, so the item is solved without the will/möchte contrast it exists to teach (the u04 r2-F03 and u10 r1-F10 class: a structured-input key found by one surface cue). It is the unit's only item on the rc.wollen rule „Beim Bestellen … möchte, nicht will“.",
+   "fix": "Options „Ich will einen Kaffee, bitte.“ / „Ich möchte einen Kaffee, bitte.“ / „Ich will jetzt einen Kaffee!“ → key unchanged. Only möchte against will decides it now. The explanation stays.",
+   "proposedRule": null
+  },
+  {
+   "id": "F14",
+   "reviewer": "R2",
+   "criterion": "N",
+   "severity": "minor",
+   "scope": "instance",
+   "unitId": "a1.1-u12",
+   "path": "content/course-v2/a1.1/rule-cards.json rc.perfekt-sein (steps[0].ruleCard)",
+   "quote": "„Einige Verben bilden das Perfekt mit sein: Verben für eine Bewegung von A nach B, und bleiben. … Die anderen Verben aus A1.1 haben haben: ich habe gemacht.“",
+   "problem": "The simplification is false in the level's own context (§9.5). lx.aufstehen (a1.1-u07, productive; verb_forms.perfekt „ist aufgestanden“) is not a movement from A to B. So a learner who applies the card to the u07 daily routine writes ✗„Ich habe um sieben aufgestanden“, and the card says every other A1.1 verb takes haben. The spine label of g.perfekt-sein says „Bewegung und Veränderung“, and the card drops the second half.",
+   "fix": "Rule-cards owner: „Einige Verben bilden das Perfekt mit sein: Verben für eine Bewegung (kommen, fahren, fliegen, gehen, auch aufstehen) und bleiben. Die meisten anderen Verben haben haben: ich habe gemacht.“ This stays within ruleCardMaxWords 60. No change in u12.json.",
+   "proposedRule": null
+  },
+  {
+   "id": "F15",
+   "reviewer": "R2",
+   "criterion": "N",
+   "severity": "minor",
+   "scope": "class",
+   "unitId": "a1.1-u12",
+   "path": "content/course-v2/a1.1/lexicon.json lx.welt.example, lx.plan.example, lx.sich-anmelden.example; start.folge.lines[1], [2] (mitmachen, lx.mitmachen a2.1-u07)",
+   "quote": "lx.welt „Deutsch spricht man in vielen Ländern der Welt.“ · lx.plan „Mein Plan ist die B1-Prüfung im nächsten Jahr.“ · lx.sich-anmelden „Priya ist jetzt für den Kurs A1.2 angemeldet.“ · Folge „Ich mache mit!“ / „Olena macht auch mit.“",
+   "problem": "This is the u04 r4-F01 and u03 r1-F05 class. The learner reads these examples on this unit's word cards. „der Welt“ is a genitive attribute (g.genitiv b1.1-u11), and „im nächsten Jahr“ is an attributive adjective ending (A2). The sich-anmelden card shows a stative participle („ist … angemeldet“), not the reflexive verb it teaches. LEX-07 is green only because the detectors for these constructions are heuristic. Separately, the Folge's key plot line uses mitmachen twice in split form (u11's cliffhanger does too), but lx.mitmachen is allocated to a2.1-u07. LEX-01 reads split verbs token by token („mache“, „mit“), so it cannot see this.",
+   "fix": "Lexicon owner: lx.welt „Die Welt ist groß.“ (or another sentence without genitive); lx.plan „Mein Plan: Ich will die Prüfung machen.“; lx.sich-anmelden „Priya meldet sich für den Kurs A1.2 an.“. Allocate lx.mitmachen as receptive to a1.1-u11, where it is first used („Wer macht mit?“), or gloss it in the u12 Folge. No change in u12.json unless the Folge gets the gloss.",
+   "proposedRule": "LEX-01: a separable-verb lemma is detected in split form (finite stem … particle at the clause end) and checked against its allocation. Failing fixture: a1.1-u12 Folge „Olena macht auch mit.“ (lx.mitmachen a2.1-u07). The test runs over all registered courses."
+  }
+ ],
+ "exitCheck": {
+  "blocker": 2,
+  "major": 4,
+  "minor": 9,
+  "criteriaBelow4": [
+   "N",
+   "A",
+   "K"
+  ],
+  "exit": false,
+  "note": "Exit needs 0 BLOCKER, 0 MAJOR, every criterion ≥ 4 and ≤ 5 logged MINOR. All 6 blockers and majors are data edits in u12.json. F01 is two strings and F02 one promptDe line. F03 and F04 each add one accepted form with acceptedWhy. F05 changes one proof prompt and its key, and F06 one model turn. With them, A and K return to 4. After the unit parts of F07–F13, the unit carries 2 owner-held minors (F14 rule cards, F15 lexicon) plus the detector part of F07, which is within the limit. N reaches 4 once F01, F07 and F08 are fixed. Class findings for the rule-smith: F02 (perfekt-aux-participle in the ITM-01 rail), F03 (equivalent W-words), F04 (Mittelfeld orders in ITM-09), F05 (the u04 r1-F06 rule), F06 (cast data), F07 (genitive detector and title scope), F08 (redemittel labels), F12 (ITM-04 overlap) and F15 (split verbs in LEX-01). Level reviewer: the „Geschafft“ endLine is now reported in six units, and the u08 r1-F02 phone-number edit has landed in neither u08 nor u12."
+ }
+}

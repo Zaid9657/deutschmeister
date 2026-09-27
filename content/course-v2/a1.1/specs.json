@@ -46,7 +46,8 @@
             "lx.sprachschule",
             "lx.online",
             "lx.chat",
-            "lx.begruessen"
+            "lx.begruessen",
+            "lx.geschafft"
           ]
         },
         {
@@ -228,7 +229,8 @@
             "lx.falsch",
             "lx.ausfuellen",
             "lx.empfang",
-            "lx.anmeldung"
+            "lx.anmeldung",
+            "lx.kurz"
           ]
         }
       ],
@@ -332,7 +334,8 @@
             "lx.zeigen",
             "lx.video",
             "lx.familienstand",
-            "lx.partner"
+            "lx.partner",
+            "lx.person"
           ]
         },
         {
@@ -1218,7 +1221,8 @@
             "lx.lecker",
             "lx.essen",
             "lx.restaurant",
-            "lx.voll"
+            "lx.voll",
+            "lx.cafe"
           ]
         },
         {
@@ -1232,7 +1236,8 @@
             "lx.nehmen",
             "lx.moegen",
             "lx.geburtstag",
-            "lx.hoeflich"
+            "lx.hoeflich",
+            "lx.getrennt"
           ]
         },
         {
@@ -1374,7 +1379,6 @@
             "lx.puenktlich",
             "lx.platz",
             "lx.frei",
-            "lx.person",
             "lx.halten",
             "lx.kilometer",
             "lx.unterwegs",

@@ -10,7 +10,7 @@
   "stage": "T",
   "title": {
     "de": "Meine Familie",
-    "canDo": "Sie können Ihre Familie vorstellen, nach der Familie von anderen fragen und ein paar Sätze über Menschen schreiben, die Sie kennen."
+    "canDo": "Sie können sagen: Das ist meine Familie. Und Sie können fragen: Ist das deine Schwester?"
   },
   "spec": {
     "situation": "Priya zeigt Olena im Videotelefonat Fotos von ihrer Familie in Kochi; beide stellen ihre Familien vor und fragen nach Eltern, Geschwistern und Kindern. Im Kurs-Chat postet Emre ein Foto von seiner Familie.",
@@ -89,7 +89,6 @@
       "tt.telefonat",
       "tt.post",
       "tt.kurzmitteilung",
-      "tt.email-informell",
       "tt.wortkarte"
     ],
     "lanes": {
@@ -122,13 +121,19 @@
       "N A1 K5 Alltag und Familie",
       "Linie 1 A1 K2–3, K5 (Grammatik; nach memo 06)"
     ],
-    "deviation": null,
+    "deviation": {
+      "reason": "Landeskunde: Die Einheit macht keine Sachaussage und hat darum keinen Fact. Von „Familie in D-A-CH: Patchworkfamilie, Doppelnamen, Oma und Opa“ zeigt sie nur das Wort „Oma“ (glossiert, im Chat-Post von Emre, LS3); Patchworkfamilie und Doppelnamen bräuchten einen belegten Fact und neuen Wortschatz, und Großmutter/Großvater sind a1.2-u10 zugeordnet (Review r1 F12). Lesen: Der Chat-Post von Emre hat rund 50 statt ≈ 60 Wörter; das längere Lesen tragen die zwei LS4-Texte (je rund 70 Wörter). Schreiben: Statt der Vorstufe mit 2 Leitpunkten und ≈ 20 Wörtern übt LS6 sd1.s2 „reduced“ mit den 3 Leitpunkten der Vorlage (EXM-03), je eine Frage (Wer? Wo? Was?), 20–30 Wörter; Wohnort und Arbeit verlangt cd.a1.ueber-andere-schreiben (Review r1 F07). Sprechen: Vor Teil 2 fragt Nora „Wie geht es Ihnen?“ (cd.a1.befinden); Situation und Nora sagen, dass Teil 2 erst danach beginnt (Review r1 F08)."
+    },
     "cast": [
       "cast.priya",
       "cast.olena",
       "cast.emre",
       "cast.arjun",
-      "cast.bilal"
+      "cast.bilal",
+      "cast.herr-richter",
+      "cast.frau-schulz",
+      "cast.arta",
+      "cast.ensemble-a1-2"
     ],
     "fokusPlan": [],
     "source": {
@@ -354,7 +359,7 @@
             "Fotos aus Kochi"
           ],
           "explanation": {
-            "de": "Olena fragt: „Hast du die Fotos aus Kochi?“ Priya sagt: „Ja, hier.“",
+            "de": "Olena fragt: „Hast du die Fotos aus Kochi?“ Priya sagt: „Ja, hier sind sie.“",
             "en": "Olena asks for the photos from Kochi, and Priya shows them."
           },
           "origin": "agent"
@@ -466,7 +471,7 @@
             "Schwester"
           ],
           "explanation": {
-            "de": "„meine“ steht bei Wörtern mit „die“: „die Schwester“, „meine Schwester“.",
+            "de": "„meine“ steht bei „die“: „die Schwester“ → „meine Schwester“.",
             "en": "“meine” goes with die-words: die Schwester → meine Schwester."
           },
           "origin": "agent"
@@ -524,7 +529,7 @@
           "promptEn": "“Ihr” is formal “your”. Who is meant?",
           "options": [
             "Herr Richter",
-            "Rahul",
+            "Bilal",
             "Arjun"
           ],
           "answer": "Arjun",
@@ -691,7 +696,7 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.possessiv-mein-dein",
-            "promptDe": "Bilden Sie die Frage.",
+            "promptDe": "Bilden Sie die Ja/Nein-Frage (Verb auf Position 1).",
             "promptEn": "Build the yes/no question.",
             "tiles": [
               "dein Bruder",
@@ -739,8 +744,8 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.possessiv-mein-dein",
-            "promptDe": "Korrigieren Sie: „Das ist mein Schwester.“",
-            "promptEn": "Correct the sentence.",
+            "promptDe": "Korrigieren Sie die Endung: „Das ist mein Schwester.“",
+            "promptEn": "Correct the ending.",
             "answer": "Das ist meine Schwester.",
             "accepted": [
               "Das ist meine Schwester."
@@ -761,7 +766,7 @@
             "type": "multiple_choice",
             "role": "practice",
             "topic": "lx.wie-gehts",
-            "promptDe": "Herr Richter: „Guten Tag, Frau Nair! Wie geht’s?“ Was passt?",
+            "promptDe": "Herr Richter: „Guten Tag, Frau Nair! Wie geht es Ihnen?“ Was passt?",
             "promptEn": "Herr Richter and Priya say Sie. Choose the answer.",
             "options": [
               "Danke, gut. Und Ihnen?",
@@ -773,8 +778,8 @@
               "Danke, gut. Und Ihnen?"
             ],
             "explanation": {
-              "de": "Herr Richter und Priya sagen „Sie“: „Und Ihnen?“. „Und dir?“ sagt man zu Freunden.",
-              "en": "They use Sie, so “Und Ihnen?”; “Und dir?” is for friends."
+              "de": "Herr Richter und Priya sagen „Sie“, also: „Und Ihnen?“. „Und dir?“ sagen Freunde.",
+              "en": "They use Sie, so “Und Ihnen?”; friends say “Und dir?”."
             },
             "origin": "agent"
           }
@@ -918,8 +923,8 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "g.possessiv-mein-dein",
-          "promptDe": "Korrigieren Sie: „Wie alt ist deine Vater?“",
-          "promptEn": "Correct the sentence.",
+          "promptDe": "Korrigieren Sie die Endung: „Wie alt ist deine Vater?“",
+          "promptEn": "Correct the ending.",
           "answer": "Wie alt ist dein Vater?",
           "accepted": [
             "Wie alt ist dein Vater?"
@@ -947,9 +952,9 @@
         "bankKey": "a11-u03-mo1",
         "mode": "spoken",
         "profile": "course-micro-sp",
-        "situationDe": "Olena ist im Videochat: „Hallo! Wie geht’s?“ Sie haben Familienfotos.",
-        "promptDe": "Antworten Sie Olena. Dann zeigen Sie zwei Personen: Das ist mein …, das ist meine …",
-        "promptEn": "Answer Olena, then introduce two people from your photos: this is my …",
+        "situationDe": "Videochat mit Olena. Sie haben zwei Familienfotos.",
+        "promptDe": "Olena: „Wie geht’s?“ Antworten Sie. Zwei Fotos: Wer ist das? Wie alt? Was macht er/sie?",
+        "promptEn": "Olena asks how you are – answer. Then two photos: who is it, how old, what does he/she do?",
         "planSeconds": 30,
         "seconds": [
           20,
@@ -961,7 +966,7 @@
         "register": "du"
       },
       "aussprache": {
-        "focus": "Satzmelodie: Ja/Nein-Frage steigend ↗, Aussage und W-Frage fallend ↘",
+        "focus": "Satzmelodie: Ja/Nein-Frage steigend ↗ (auch „Das ist dein Bruder?“), Aussage und W-Frage fallend ↘",
         "perception": {
           "generator": "perception.intonation",
           "count": 3,
@@ -1077,7 +1082,7 @@
             "Priya und Arjun"
           ],
           "explanation": {
-            "de": "Zuerst spricht Priya mit Olena. Am Ende sagt auch Arjun: „Hallo, Olena!“",
+            "de": "Zuerst spricht Priya mit Olena. Am Ende sagt auch Arjun: „Hallo!“",
             "en": "First Priya talks to Olena; at the end Arjun says hello too."
           },
           "origin": "agent"
@@ -1099,18 +1104,23 @@
             "in Charkiw"
           ],
           "explanation": {
-            "de": "Olena sagt: „Meine Eltern wohnen in Charkiw.“ Iryna wohnt in Berlin.",
+            "de": "Olena sagt: „Meine Eltern wohnen in Charkiw.“ Die Schwester wohnt in Berlin.",
             "en": "Olena’s parents live in Kharkiv; her sister lives in Berlin."
           },
           "origin": "agent"
         },
         {
           "id": "a1.1-u03-ls2-i03",
-          "type": "fill_blank",
+          "type": "multiple_choice",
           "role": "detail",
           "topic": "hoeren",
           "promptDe": "Der Vater von Olena ist ___ von Beruf.",
-          "promptEn": "What is Olena’s father’s job? Write the word.",
+          "promptEn": "What is Olena’s father’s job?",
+          "options": [
+            "Lehrer",
+            "Informatiker",
+            "Student"
+          ],
           "answer": "Informatiker",
           "accepted": [
             "Informatiker"
@@ -1138,7 +1148,7 @@
             "in Berlin"
           ],
           "explanation": {
-            "de": "Olena sagt: „Sie heißt Iryna und wohnt jetzt in Berlin.“",
+            "de": "Olena sagt: „Sie wohnt jetzt in Berlin.“ „Sie“ ist die Schwester von Olena.",
             "en": "Her sister Iryna lives in Berlin now."
           },
           "origin": "agent"
@@ -1172,8 +1182,8 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.vokalwechsel",
-          "promptDe": "Arjun fragt: „Sprichst du Englisch?“ Wen fragt Arjun?",
-          "promptEn": "“sprichst” = du-form. Whom does Arjun ask?",
+          "promptDe": "Arjun fragt: „Sprichst du Englisch?“ Wer ist „du“?",
+          "promptEn": "“sprichst” = du-form. Who is “du”?",
           "options": [
             "Olena",
             "Priya und Olena",
@@ -1184,8 +1194,8 @@
             "Olena"
           ],
           "explanation": {
-            "de": "„Sprichst du“: eine Person, du. Arjun fragt Olena.",
-            "en": "“Sprichst du” – one person you call du: Olena."
+            "de": "Arjun spricht mit Olena: „du“ ist Olena.",
+            "en": "Arjun is talking to Olena, so “du” is Olena."
           },
           "origin": "agent"
         },
@@ -1206,8 +1216,8 @@
             "die Mutter von Olena"
           ],
           "explanation": {
-            "de": "„liest“ ist Singular: eine Person. Zwei Personen „lesen“.",
-            "en": "“liest” is singular – one person; two people “lesen”."
+            "de": "„liest“ ist Singular: „sie“ ist die Mutter. Plural: „sie lesen“.",
+            "en": "“liest” is singular – “sie” is the mother; plural: “sie lesen”."
           },
           "origin": "agent"
         },
@@ -1357,7 +1367,7 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.vokalwechsel",
-            "promptDe": "Bilden Sie die Frage.",
+            "promptDe": "Bilden Sie die Ja/Nein-Frage (Verb auf Position 1).",
             "promptEn": "Build the yes/no question.",
             "tiles": [
               "du",
@@ -1453,8 +1463,8 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.vokalwechsel",
-            "promptDe": "Korrigieren Sie: „Er sprecht gut Deutsch.“",
-            "promptEn": "Correct the sentence.",
+            "promptDe": "Korrigieren Sie das Verb: „Er sprecht gut Deutsch.“",
+            "promptEn": "Correct the verb.",
             "answer": "Er spricht gut Deutsch.",
             "accepted": [
               "Er spricht gut Deutsch."
@@ -1647,9 +1657,9 @@
         "bankKey": "a11-u03-mo2",
         "mode": "written",
         "profile": "course-micro",
-        "situationDe": "Bilal fragt im Kurs-Chat: „Und deine Familie? Was machen deine Eltern und Geschwister?“",
-        "promptDe": "Antworten Sie in 1–2 Sätzen, zum Beispiel mit liest, spricht oder schläft.",
-        "promptEn": "Answer in 1–2 sentences – for example with liest, spricht or schläft.",
+        "situationDe": "Bilal fragt im Chat: „Und deine Familie? Was machen deine Eltern und Geschwister?“",
+        "promptDe": "Antworten Sie Bilal in 1–2 Sätzen. Verben: liest, spricht oder schläft.",
+        "promptEn": "Answer Bilal in 1–2 sentences – use liest, spricht or schläft.",
         "planSeconds": 30,
         "words": [
           3,
@@ -1660,7 +1670,7 @@
         ],
         "register": "du"
       },
-      "endLine": "Sie können jetzt sagen, was Menschen machen: Mein Vater liest, mein Bruder spricht Englisch."
+      "endLine": "Sie können jetzt sagen: Mein Vater liest, mein Bruder spricht Englisch."
     },
     {
       "id": "a1.1-u03-ls3",
@@ -1681,8 +1691,8 @@
           {
             "id": "a1.1-u03-ls3-l01",
             "speaker": "cast.frau-schulz",
-            "de": "Guten Morgen! Herr Yıldız, danke für das Foto aus İzmir! Das ist Ihre Familie, oder? Wie alt ist Ihre Mutter?",
-            "en": "Good morning! Mr Yıldız, thank you for the photo from İzmir! That’s your family, isn’t it? How old is your mother?"
+            "de": "Guten Morgen! Heute sprechen wir über Familie und Alter. Herr Yıldız, danke für das Foto aus İzmir! Das ist Ihre Familie, oder? Wie alt ist Ihre Mutter?",
+            "en": "Good morning! Today we’re talking about family and age. Mr Yıldız, thank you for the photo from İzmir! That’s your family, isn’t it? How old is your mother?"
           },
           {
             "id": "a1.1-u03-ls3-l02",
@@ -1713,8 +1723,8 @@
           {
             "id": "a1.1-u03-ls3-l06",
             "speaker": "cast.emre",
-            "de": "Ja! Meine Frau wohnt in Leipzig. Bald wohne ich auch da.",
-            "en": "Yes! My wife lives in Leipzig. Soon I’ll live there too."
+            "de": "Ich bin verheiratet! Meine Frau Elif wohnt in Leipzig. Bald wohne ich auch da.",
+            "en": "I’m married! My wife Elif lives in Leipzig. Soon I’ll live there too."
           },
           {
             "id": "a1.1-u03-ls3-l07",
@@ -1742,8 +1752,8 @@
           }
         ],
         "text": {
-          "de": "Kurs A1 · Chat · Nachricht von Emre\nEmre: Hallo zusammen! Hier ist ein Foto und ein Video aus İzmir: meine Familie! Das sind meine Eltern. Mein Vater ist Kellner. Meine Mutter spricht nur Türkisch. Und das ist meine Schwester Zeynep. Liebe Grüße aus İzmir!",
-          "en": "Course A1 · chat · message from Emre. Emre: Hi everyone! Here are a photo and a video from İzmir: my family! These are my parents. My father is a waiter. My mother only speaks Turkish. And this is my sister Zeynep. Love from İzmir!"
+          "de": "Kurs A1 · Chat · Nachricht von Emre\nEmre: Hallo zusammen! Hier ist ein Foto aus İzmir: meine Familie! Das sind meine Eltern. Mein Vater ist Kellner. Meine Mutter spricht nur Türkisch. Das ist meine Schwester Zeynep, und das ist meine Oma. Sie ist 80! Liebe Grüße aus İzmir!",
+          "en": "Course A1 · chat · message from Emre. Emre: Hi everyone! Here’s a photo from İzmir: my family! These are my parents. My father is a waiter. My mother only speaks Turkish. This is my sister Zeynep, and this is my grandma. She’s 80! Love from İzmir!"
         },
         "glosses": [
           {
@@ -1753,9 +1763,9 @@
             }
           },
           {
-            "token": "Freundin",
+            "token": "Oma",
             "gloss": {
-              "en": "friend; boyfriend/girlfriend"
+              "en": "grandma"
             }
           },
           {
@@ -1785,8 +1795,8 @@
             "ein Foto aus İzmir"
           ],
           "explanation": {
-            "de": "Emre schreibt: „Hier ist ein Foto und ein Video aus İzmir.“",
-            "en": "Emre posts a photo and a video from İzmir."
+            "de": "Emre schreibt: „Hier ist ein Foto aus İzmir: meine Familie!“",
+            "en": "Emre posts a photo of his family from İzmir."
           },
           "origin": "agent"
         },
@@ -1807,8 +1817,8 @@
             "Emre"
           ],
           "explanation": {
-            "de": "Bilal fragt: „Bist du auch verheiratet?“ Emre sagt: „Ja!“ Bilal ist ledig.",
-            "en": "Emre says yes; Bilal is single."
+            "de": "Emre sagt: „Ich bin verheiratet!“ Bilal ist ledig.",
+            "en": "Emre says he’s married; Bilal is single."
           },
           "origin": "agent"
         },
@@ -1851,8 +1861,8 @@
             "in Leipzig"
           ],
           "explanation": {
-            "de": "Emre sagt: „Meine Frau wohnt in Leipzig.“ Emre wohnt noch in İzmir.",
-            "en": "His wife lives in Leipzig; Emre is still in İzmir."
+            "de": "Emre sagt: „Meine Frau Elif wohnt in Leipzig.“ Emre wohnt noch in İzmir.",
+            "en": "His wife Elif lives in Leipzig; Emre is still in İzmir."
           },
           "origin": "agent"
         },
@@ -1954,9 +1964,9 @@
           "promptDe": "Priya fragt Emre: „Deine Frau wohnt in Leipzig?“ Wer wohnt in Leipzig?",
           "promptEn": "“deine Frau” = the wife of the person Priya talks to.",
           "options": [
+            "die Frau von Bilal",
             "die Frau von Emre",
-            "die Mutter von Emre",
-            "die Schwester von Emre"
+            "die Frau von Arjun"
           ],
           "answer": "die Frau von Emre",
           "accepted": [
@@ -2001,7 +2011,7 @@
             ],
             "caseSensitive": true,
             "explanation": {
-              "de": "Formell mit „Sie“: „die Mutter“ → „Ihre Mutter“, groß geschrieben.",
+              "de": "Formell mit „Sie“: „die Mutter“ → „Ihre Mutter“ – mit „I“, nicht „i“.",
               "en": "Formal: die Mutter → Ihre Mutter, with a capital I."
             },
             "origin": "agent"
@@ -2036,7 +2046,7 @@
             ],
             "caseSensitive": true,
             "explanation": {
-              "de": "Formell: „der Vater“ → „Ihr Vater“, groß geschrieben.",
+              "de": "Formell: „der Vater“ → „Ihr Vater“ – mit „I“, nicht „i“.",
               "en": "Formal: der Vater → Ihr Vater, with a capital I."
             },
             "origin": "agent"
@@ -2046,7 +2056,7 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.ja-nein-frage",
-            "promptDe": "Bilden Sie die Frage.",
+            "promptDe": "Bilden Sie die Ja/Nein-Frage (Verb auf Position 1).",
             "promptEn": "Build the yes/no question.",
             "tiles": [
               "verheiratet",
@@ -2164,8 +2174,8 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.possessiv-mein-dein",
-            "promptDe": "Korrigieren Sie: „Frau Schulz, ist das deine Tochter?“",
-            "promptEn": "Correct the sentence.",
+            "promptDe": "Korrigieren Sie („Sie“, nicht „du“): „Frau Schulz, ist das deine Tochter?“",
+            "promptEn": "Correct the sentence: use Sie, not du.",
             "answer": "Frau Schulz, ist das Ihre Tochter?",
             "accepted": [
               "Frau Schulz, ist das Ihre Tochter?"
@@ -2177,7 +2187,7 @@
               "register"
             ],
             "explanation": {
-              "de": "Zu Frau Schulz sagt man „Sie“: „Ihre Tochter“, nicht „deine Tochter“.",
+              "de": "Mit Frau Schulz: „Sie“. Also „Ihre Tochter“, nicht „deine Tochter“.",
               "en": "Frau Schulz is addressed with Sie: Ihre Tochter."
             },
             "origin": "agent"
@@ -2211,7 +2221,7 @@
             "count": 2,
             "source": [
               "a1.1-u03-ls3-l03",
-              "a1.1-u03-ls3-l06"
+              "a1.1-u03-ls3-l05"
             ]
           },
           {
@@ -2271,7 +2281,7 @@
             "einstufung"
           ],
           "explanation": {
-            "de": "Formell: „der Bruder“ → „Ihr Bruder“, groß geschrieben.",
+            "de": "Formell: „der Bruder“ → „Ihr Bruder“ – mit „I“, nicht „i“.",
             "en": "Formal: der Bruder → Ihr Bruder, with a capital I."
           },
           "origin": "agent"
@@ -2340,8 +2350,8 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "g.possessiv-mein-dein",
-          "promptDe": "Korrigieren Sie: „Emre, wie alt ist dein Schwester?“",
-          "promptEn": "Correct the sentence.",
+          "promptDe": "Korrigieren Sie die Endung: „Emre, wie alt ist dein Schwester?“",
+          "promptEn": "Correct the ending.",
           "answer": "Emre, wie alt ist deine Schwester?",
           "accepted": [
             "Emre, wie alt ist deine Schwester?"
@@ -2370,8 +2380,8 @@
         "mode": "spoken",
         "profile": "course-micro-sp",
         "situationDe": "Im Kurs ist Emre online. Er zeigt das Foto aus İzmir.",
-        "promptDe": "Stellen Sie Emre zwei Fragen: Ist das dein/deine …? Wie alt …? Was macht …?",
-        "promptEn": "Ask Emre two questions about the people in his photo.",
+        "promptDe": "Fragen Sie Emre zuerst: Wie geht’s? Dann zwei Fragen: Ist das dein/deine …? Wie alt …?",
+        "promptEn": "First ask Emre how he is. Then ask two questions about the people in his photo.",
         "planSeconds": 30,
         "seconds": [
           20,
@@ -2423,7 +2433,7 @@
           "id": "a1.1-u03-ls4-t2",
           "kind": "text",
           "title": "Nachricht von Bilal",
-          "text": "Hallo Priya,\ndu fragst: Wo wohnt deine Familie? Meine Familie wohnt in Lahore. Das sind meine Eltern und meine Geschwister: zwei Schwestern und ein Bruder. Mein Bruder ist verheiratet. Er hat zwei Kinder: Der Sohn ist acht, die Tochter ist sechs.\nUnd ich? Ich bin ledig und wohne jetzt in Leipzig. Meine Mutter schreibt oft: „Bilal, wie geht’s? Bist du müde? Schläfst du gut?“\nBis morgen im Kurs!\nBilal",
+          "text": "Hallo Priya,\ndu fragst: Wo wohnt deine Familie? Meine Familie wohnt in Lahore. Hier ist ein Foto. Das sind meine Eltern und meine Geschwister: zwei Schwestern und ein Bruder. Mein Bruder ist verheiratet. Er hat zwei Kinder: Der Sohn ist acht, die Tochter ist sechs.\nUnd ich? Ich bin ledig und wohne jetzt in Leipzig. Meine Mutter schreibt oft: „Bilal, wie geht’s? Bist du müde? Schläfst du gut?“\nBis morgen im Kurs!\nBilal",
           "glosses": []
         }
       ],
@@ -2568,14 +2578,14 @@
         "profile": "sd1-sp2",
         "prepMinutes": 0,
         "instructionsDe": "Zwei Themen: „Familie“, dann „Freunde“. Fragen und antworten Sie mit den Karten.",
-        "situationDe": "Sprechen Teil 2. Vorher fragt Ihre Partnerin Nora: „Wie geht’s?“ Antworten Sie und fragen Sie zurück: „Und Ihnen?“ Dann haben Sie und Nora Wortkarten zu zwei Themen: zuerst „Familie“, dann „Freunde“. Stellen Sie mit Ihrer Karte eine Frage. Antworten Sie auf die Frage von Nora. Erzählen Sie auch ein bisschen: mein Bruder …, meine Schwester …",
+        "situationDe": "Zuerst sagt Ihre Partnerin Nora Hallo. Antworten Sie und fragen Sie auch: „Und Ihnen?“ Das ist noch nicht Teil 2. Dann Teil 2 mit Wortkarten: Sie fragen Nora, und Nora fragt Sie. Sagen Sie auch Alter und Beruf: „Meine Mutter ist 58. Sie ist Lehrerin.“",
         "cards": {
           "learner": [
             "Familie – Geschwister",
             "Freunde – Sprachen"
           ],
           "partner": [
-            "Familie – Kinder",
+            "Familie – Eltern",
             "Freunde – wohnen"
           ]
         },
@@ -2586,20 +2596,20 @@
         "moves": [],
         "aiRole": {
           "name": "Nora",
-          "personaDe": "Teilnehmerin in der Prüfung; spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste. Beginnt mit „Hallo! Wie geht’s?“ (vor Teil 2, nicht bewertet). Ihre Familie: zwei Schwestern in Hamburg; Kinder: nein. Ihre Freunde wohnen in Leipzig und sprechen Deutsch und Englisch.",
+          "personaDe": "Teilnehmerin in der Prüfung; spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste. Beginnt mit „Hallo! Ich bin Nora. Wie geht es Ihnen?“ (vor Teil 2, nicht bewertet) und sagt dann: „Jetzt kommt Teil 2.“ Ihre Karten: „Familie – Eltern“ (sie fragt: „Was machen Ihre Eltern?“) und „Freunde – wohnen“ („Wo wohnen Ihre Freunde?“). Nennt die Antwort kein Alter und keinen Beruf, fragt sie einmal nach: „Wie alt ist Ihre Mutter?“ oder „Was macht Ihr Vater?“, dann weiter. Ihre Familie: zwei Schwestern, 30 und 34, beide Lehrerinnen in Hamburg; Kinder: nein. Ihre Freunde wohnen in Leipzig und sprechen Deutsch und Englisch.",
           "register": "Sie",
           "support": "slow-wordbank"
         },
-        "openingLine": "Hallo! Ich bin Nora. Wie geht’s? … Dann sprechen wir über zwei Themen: zuerst „Familie“, dann „Freunde“. Bitte, Sie fragen zuerst!",
+        "openingLine": "Hallo! Ich bin Nora. Wie geht es Ihnen? … Jetzt kommt Teil 2. Wir sprechen über zwei Themen: zuerst „Familie“, dann „Freunde“. Bitte, Sie fragen zuerst!",
         "hintWords": [
           "Gut, danke. Und Ihnen?",
           "Haben Sie …?",
           "Wie alt ist Ihr/Ihre …?",
           "Was macht Ihr/Ihre …?",
-          "Wo wohnen Ihre …?",
-          "Sprechen Ihre Freunde viele Sprachen?",
-          "Mein/Meine … ist …",
-          "Nein. Aber …"
+          "Sprechen Ihre Freunde Englisch?",
+          "Meine Eltern wohnen in …",
+          "Mein/Meine … ist … Jahre alt.",
+          "Mein/Meine … ist Lehrer/Lehrerin."
         ],
         "modelTurns": [
           {
@@ -2608,7 +2618,7 @@
           },
           {
             "speaker": "partner",
-            "de": "Auch gut, danke!"
+            "de": "Auch gut, danke! Jetzt kommt Teil 2."
           },
           {
             "speaker": "learner",
@@ -2616,19 +2626,19 @@
           },
           {
             "speaker": "partner",
-            "de": "Ja, zwei Schwestern. Sie wohnen in Hamburg."
+            "de": "Ja, zwei Schwestern. Sie sind 30 und 34 und wohnen in Hamburg."
           },
           {
             "speaker": "partner",
-            "de": "Haben Sie Kinder?"
+            "de": "Was machen Ihre Eltern?"
           },
           {
             "speaker": "learner",
-            "de": "Nein. Aber meine Schwester hat eine Tochter. Sie ist fünf."
+            "de": "Meine Eltern wohnen in Kochi. Meine Mutter ist Lehrerin, sie ist 58."
           },
           {
             "speaker": "learner",
-            "de": "Sprechen Ihre Freunde viele Sprachen?"
+            "de": "Sprechen Ihre Freunde Englisch?"
           },
           {
             "speaker": "partner",
@@ -2662,7 +2672,7 @@
         "leitpunkte": [
           {
             "id": "lp1",
-            "de": "Wer ist das? Nennen Sie zwei Personen: mein …, meine …",
+            "de": "Wer ist das? Zwei Leute: mein …, meine …",
             "cues": [
               "mein",
               "meine",
@@ -2680,7 +2690,7 @@
           },
           {
             "id": "lp2",
-            "de": "Wo wohnen die zwei Personen?",
+            "de": "Wo wohnen sie?",
             "cues": [
               "wohnt",
               "wohnen"
@@ -2688,14 +2698,17 @@
           },
           {
             "id": "lp3",
-            "de": "Was machen die Personen? Wie alt sind sie?",
+            "de": "Was machen sie?",
             "cues": [
               "arbeitet",
+              "arbeiten",
               "studiert",
+              "studieren",
               "Lehrer",
               "Student",
               "Schüler",
-              "Jahre",
+              "Informatiker",
+              "Kellner",
               "macht",
               "liest",
               "spricht"
@@ -2710,18 +2723,18 @@
         "checklist": [
           "Anrede: Liebe Olena,",
           "Punkt 1: Wer ist das? (mein …, meine …)",
-          "Punkt 2: Wo wohnen die Personen?",
-          "Punkt 3: Was machen sie? Wie alt sind sie?",
-          "Gruß mit Ihrem Namen",
+          "Punkt 2: Wo wohnen sie?",
+          "Punkt 3: Was machen sie?",
+          "Gruß: Viele Grüße + Ihr Name",
           "20 bis 30 Wörter"
         ],
-        "modelText": "Liebe Olena,\ndas ist meine Schwester. Sie ist 25 und wohnt in Berlin. Sie studiert. Das ist mein Vater. Er ist Lehrer in Hamburg.\nViele Grüße\n(Ihr Name)"
+        "modelText": "Liebe Olena,\ndas ist meine Schwester. Sie ist 25, wohnt in Berlin und studiert. Das ist mein Vater. Er ist 60 und Lehrer in Hamburg.\nViele Grüße\n(Ihr Name)"
       }
     },
     {
       "id": "a1.1-u03-ls7",
       "kind": "check",
-      "endLine": "Geschafft! Sie können jetzt Ihre Familie vorstellen und andere nach der Familie fragen."
+      "endLine": "Sehr gut! Sie können jetzt Ihre Familie vorstellen und andere nach der Familie fragen."
     }
   ],
   "check": {
@@ -2777,7 +2790,7 @@
         ],
         "caseSensitive": true,
         "explanation": {
-          "de": "Formell: „der Mann“ → „Ihr Mann“, groß geschrieben.",
+          "de": "Formell: „der Mann“ → „Ihr Mann“ – mit „I“, nicht „i“.",
           "en": "Formal: der Mann → Ihr Mann, with a capital I."
         },
         "origin": "agent"
@@ -2860,7 +2873,7 @@
           "Meine Schwester ist verheiratet."
         ],
         "explanation": {
-          "de": "„Schwester“ ist ein Nomen. Nomen schreibt man groß.",
+          "de": "„Schwester“ ist ein Nomen: mit „S“, nicht mit „s“.",
           "en": "Nouns are capitalised: Schwester."
         },
         "origin": "agent"
@@ -2870,8 +2883,8 @@
         "type": "error_correction",
         "role": "check",
         "topic": "g.possessiv-mein-dein",
-        "promptDe": "Korrigieren Sie: „Ist das dein Mutter?“",
-        "promptEn": "Correct the sentence.",
+        "promptDe": "Korrigieren Sie die Endung: „Ist das dein Mutter?“",
+        "promptEn": "Correct the ending.",
         "answer": "Ist das deine Mutter?",
         "accepted": [
           "Ist das deine Mutter?"
@@ -3023,20 +3036,20 @@
       "id": "a1.1-u03-rm05",
       "de": "Gut, danke. Und dir?",
       "en": "Fine, thanks. And you?",
-      "function": "auf „Wie geht’s?“ antworten und zurückfragen (du)"
+      "function": "auf „Wie geht’s?“ antworten und auch fragen (du)"
     },
     {
       "id": "a1.1-u03-rm06",
       "de": "Danke, gut. Und Ihnen?",
       "en": "Fine, thank you. And you?",
-      "function": "auf „Wie geht’s?“ antworten und zurückfragen (Sie)",
+      "function": "auf „Wie geht es Ihnen?“ antworten und auch fragen (Sie)",
       "forTemplate": "sd1.sp2"
     },
     {
       "id": "a1.1-u03-rm07",
       "de": "Mein Bruder ist 24. Er studiert.",
       "en": "My brother is 24. He’s at university.",
-      "function": "eine Person beschreiben",
+      "function": "jemanden beschreiben: Alter und Beruf",
       "forTemplate": "sd1.s2"
     },
     {
@@ -3047,7 +3060,7 @@
     }
   ],
   "story": {
-    "beat": "Priya sagt Herrn Richter: Arjun Nair ist ihr Mann. Am Abend zeigt sie Olena im Videochat ihre Familie in Kochi, und Olena zeigt ihre Familie aus Charkiw; Arjun sagt Olena Hallo. Am nächsten Morgen im Kurs zeigt Emre ein Foto aus İzmir und erzählt: Seine Frau wohnt schon in Leipzig.",
+    "beat": "Priya sagt Herrn Richter: Arjun Nair ist ihr Mann. Am Abend zeigt sie Olena im Videochat ihre Familie in Kochi, und Olena zeigt ihre Familie aus Charkiw; Arjun sagt Olena Hallo. Am nächsten Morgen im Kurs zeigt Emre ein Foto aus İzmir und erzählt: Seine Frau Elif wohnt schon in Leipzig.",
     "cliffhanger": "Dann kommt noch eine Nachricht aus Kochi. Die Mutter von Priya fragt: „Und Leipzig? Wie ist Leipzig? Ist Leipzig teuer?“",
     "castIn": [
       "cast.arjun"

@@ -191,6 +191,21 @@
       "wordId": null
     },
     {
+      "id": "lx.geschafft",
+      "lemma": "geschafft",
+      "pos": "INTJ",
+      "role": "receptive",
+      "unit": "a1.1-u01",
+      "block": 1,
+      "list_ref": "derived:schaffen",
+      "gloss": {
+        "en": "done! / made it!"
+      },
+      "example": "Geschafft! Die Einheit ist fertig.",
+      "exampleEn": "Done! The unit is finished.",
+      "wordId": null
+    },
+    {
       "id": "lx.name",
       "lemma": "Name",
       "pos": "NOUN",
@@ -1203,6 +1218,21 @@
       "wordId": null
     },
     {
+      "id": "lx.kurz",
+      "lemma": "kurz",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "a1.1-u02",
+      "block": 4,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "short; briefly"
+      },
+      "example": "Antworten Sie bitte kurz.",
+      "exampleEn": "Please answer briefly.",
+      "wordId": null
+    },
+    {
       "id": "lx.familie",
       "lemma": "Familie",
       "pos": "NOUN",
@@ -1452,6 +1482,24 @@
       },
       "example": "Sophie lebt mit ihrem Partner in Dresden.",
       "exampleEn": "Sophie lives with her partner in Dresden.",
+      "wordId": null
+    },
+    {
+      "id": "lx.person",
+      "lemma": "Person",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Personen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.1-u03",
+      "block": 1,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "person"
+      },
+      "example": "Das sind zwei Personen: mein Vater und meine Mutter.",
+      "exampleEn": "These are two people: my father and my mother.",
       "wordId": null
     },
     {
@@ -5208,6 +5256,24 @@
       "wordId": null
     },
     {
+      "id": "lx.cafe",
+      "lemma": "Café",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Cafés",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.1-u09",
+      "block": 2,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "café, coffee shop"
+      },
+      "example": "Im Café trinke ich einen Kaffee.",
+      "exampleEn": "At the café I have a coffee.",
+      "wordId": null
+    },
+    {
       "id": "lx.speisekarte",
       "lemma": "Speisekarte",
       "pos": "NOUN",
@@ -5352,6 +5418,21 @@
       },
       "example": "Im Café fragt Priya höflich nach der Speisekarte.",
       "exampleEn": "In the café Priya politely asks for the menu.",
+      "wordId": null
+    },
+    {
+      "id": "lx.getrennt",
+      "lemma": "getrennt",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "a1.1-u09",
+      "block": 3,
+      "list_ref": "derived:trennen",
+      "gloss": {
+        "en": "separate(ly)"
+      },
+      "example": "Zusammen oder getrennt?",
+      "exampleEn": "Together or separately?",
       "wordId": null
     },
     {
@@ -5943,24 +6024,6 @@
       },
       "example": "Ist hier noch frei?",
       "exampleEn": "Is this seat still free?",
-      "wordId": null
-    },
-    {
-      "id": "lx.person",
-      "lemma": "Person",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": "Personen",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "a1.1-u10",
-      "block": 3,
-      "list_ref": "A1",
-      "gloss": {
-        "en": "person"
-      },
-      "example": "Eine Fahrkarte für zwei Personen, bitte.",
-      "exampleEn": "A ticket for two people, please.",
       "wordId": null
     },
     {
