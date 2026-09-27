@@ -359,7 +359,24 @@ test('the renderers read the player core: StepView serves step.plan and unit.rul
   assert.match(slots, /<LazyStepView key=\{step && step\.id\} \{\.\.\.\(extra \|\| \{\}\)\} unit=/, 'extras spread BEFORE the contract props');
   const page = read('src/pages/course-v2/UnitPlayerPage.jsx');
   assert.match(page, /loadPlayableUnit\(level, nr\)/);
-  assert.match(page, /extra=\{\{ course: manifest \}\}/, 'StartView gets the manifest (can-do wording)');
+  assert.match(page, /extra=\{\{ course: manifest, onAttempt \}\}/, 'StartView gets the manifest (can-do wording) and the attempt sink');
+});
+
+test('the Start’s answers are stored under their own stage, never as a unit step’s items', () => {
+  const page = read('src/pages/course-v2/UnitPlayerPage.jsx');
+  assert.match(page, /const startStage = \(stepId\) => \(String\(stepId\)\.endsWith\('-testout'\) \? 'testout' : 'start'\);/);
+  const at = page.indexOf('const onStartDone = useCallback(');
+  const body = page.slice(at, page.indexOf('}, [', at));
+  assert.ok(body.indexOf('flushAttempts(user.id, { level, unitId, stepKind: startStage(stepId) }, list)') > 0, 'the gist/test-out answers are written when the Start is done');
+  assert.ok(body.indexOf('flushAttempts(') < body.indexOf('testOutPassed('), 'written before the test-out decision moves on');
+});
+
+test('the Check announces the number of items it will actually ask', () => {
+  const strings = read('src/components/course-v2/strings.js');
+  for (const line of strings.split('\n').filter((l) => l.includes("'check.lead'"))) {
+    assert.match(line, /'\{n\} /, `the check lead must not hard-code a count: ${line.trim()}`);
+  }
+  assert.match(read('src/components/course-v2/CheckView.jsx'), /t\('check\.lead', \{ n: items\.length \}\)/);
 });
 
 test('an Aufgabe left without submitting leaves no step marker', () => {

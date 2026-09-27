@@ -95,7 +95,7 @@
       "pruefungsfokus": [
         {
           "template": "ga2.l2",
-          "length": "reduced",
+          "length": "full",
           "modeDefault": "lern",
           "slot": "ls4"
         },
@@ -283,7 +283,7 @@
           {
             "id": "a2.1-u04-ls1-l07",
             "speaker": "cast.ensemble-a2-3",
-            "de": "Dann ist das hier gut: ein neues Modell aus der Schweiz. Die Marke hat eine gute Qualität.",
+            "de": "Dann ist das hier gut: ein neues Modell aus der Schweiz. Die Marke hat gute Qualität.",
             "en": "Then this one is good: a new model from Switzerland. The brand has good quality."
           },
           {
@@ -321,7 +321,7 @@
           {
             "id": "a2.1-u04-ls1-l13",
             "speaker": "cast.ensemble-a2-3",
-            "de": "In Weiß ist es leider nicht vorrätig. Aber Sie können es online bestellen. Die Lieferzeit ist nur drei Tage.",
+            "de": "In Weiß ist es leider nicht vorrätig. Aber Sie können es online bestellen. Die Lieferung dauert nur drei Tage.",
             "en": "Unfortunately it isn't in stock in white. But you can order it online. Delivery only takes three days."
           },
           {
@@ -894,7 +894,7 @@
             "en": "ein nützliches Gerät: neuter, ending -es."
           },
           "errorTags": [
-            "adj-ending"
+            "v2-inv"
           ],
           "difficulty": 2,
           "banks": [
@@ -940,16 +940,17 @@
         "bankKey": "a21-u04-mo1",
         "mode": "spoken",
         "profile": "course-micro-sp",
-        "situationDe": "Sie sind im Kaufhaus und suchen ein neues Gerät für Ihre Küche.",
-        "promptDe": "Sagen Sie dem Verkäufer: Welches Gerät suchen Sie? Fragen Sie nach dem Preis.",
-        "promptEn": "Tell the salesperson what kind of appliance you are looking for and ask about the price.",
+        "situationDe": "Sie sind im Kaufhaus und suchen eine Kaffeemaschine. Der Verkäufer zeigt Ihnen zwei Modelle.",
+        "promptDe": "Wie finden Sie die Geräte? Was ist gut, was nicht so gut? Fragen Sie nach der Garantie.",
+        "promptEn": "Say how you like the two machines – what is good, what is not so good – and ask about the guarantee.",
         "planSeconds": 30,
         "seconds": [
           30,
           40
         ],
         "targets": [
-          "g.adj-dekl-unbestimmt"
+          "g.adj-dekl-unbestimmt",
+          "g.komparation"
         ],
         "register": "Sie"
       },
@@ -1016,9 +1017,9 @@
           {
             "id": "a2.1-u04-ls2-l05",
             "speaker": "cast.priya",
-            "de": "Ja, hier ist eins für 79 Euro, und es ist weiß. Der Versand kostet 4,95 Euro, die Lieferzeit ist drei Tage.",
-            "en": "Yes, here is one for 79 euros, and it is white. Shipping costs 4.95 euros, delivery takes three days.",
-            "say": "Ja, hier ist eins für neunundsiebzig Euro, und es ist weiß. Der Versand kostet vier Euro fünfundneunzig, die Lieferzeit ist drei Tage."
+            "de": "Ja, das Modell aus der Schweiz gibt es online für 79 Euro, und es ist weiß. Der Versand kostet 4,95 Euro, und die Lieferzeit ist kurz: nur drei Tage.",
+            "en": "Yes, the Swiss model is available online for 79 euros, and it is white. Shipping costs 4.95 euros, and delivery is quick: only three days.",
+            "say": "Ja, das Modell aus der Schweiz gibt es online für neunundsiebzig Euro, und es ist weiß. Der Versand kostet vier Euro fünfundneunzig, und die Lieferzeit ist kurz: nur drei Tage."
           },
           {
             "id": "a2.1-u04-ls2-l06",
@@ -1125,8 +1126,8 @@
           ],
           "exact": "number",
           "explanation": {
-            "de": "Priya sagt: Hier ist eins für 79 Euro.",
-            "en": "Online it costs 79 euros."
+            "de": "Priya sagt: Das Modell aus der Schweiz gibt es online für 79 Euro.",
+            "en": "Priya says the Swiss model costs 79 euros online."
           },
           "origin": "agent"
         },
@@ -1136,16 +1137,20 @@
           "role": "detail",
           "topic": "hoeren",
           "promptDe": "Das Modell für 65 Euro ist am ___.",
-          "promptEn": "Which superlative does Priya use?",
+          "promptEn": "Which superlative describes the 65-euro model?",
           "answer": "günstigsten",
           "accepted": [
-            "günstigsten"
+            "günstigsten",
+            "billigsten"
           ],
           "explanation": {
-            "de": "Priya sagt: Am günstigsten ist ein Modell für 65 Euro.",
-            "en": "The 65-euro model is the cheapest."
+            "de": "Priya sagt: Am günstigsten ist ein Modell für 65 Euro. „Am billigsten“ bedeutet das Gleiche.",
+            "en": "The 65-euro model is the cheapest; „am billigsten“ means the same."
           },
-          "origin": "agent"
+          "origin": "agent",
+          "acceptedWhy": {
+            "billigsten": "gleiche Bedeutung wie „günstigsten“; Priya sagt „am günstigsten“"
+          }
         },
         {
           "id": "a2.1-u04-ls2-i05",
@@ -1176,8 +1181,8 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.indefinitpronomen",
-          "promptDe": "„Ich habe keinen.“ Was hat Arjun nicht?",
-          "promptEn": "What does Arjun not have?",
+          "promptDe": "„Ich habe keinen.“ Wofür steht „keinen“?",
+          "promptEn": "What does „keinen“ stand for?",
           "options": [
             "einen Föhn",
             "eine Tasse",
@@ -1188,8 +1193,8 @@
             "einen Föhn"
           ],
           "explanation": {
-            "de": "keinen: maskulin im Akkusativ, also der Föhn.",
-            "en": "keinen is masculine accusative, so it stands for der Föhn."
+            "de": "keinen: maskulin im Akkusativ, also (k)einen Föhn.",
+            "en": "keinen is masculine accusative, so it stands for (k)einen Föhn."
           },
           "origin": "agent"
         },
@@ -1198,11 +1203,11 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.indefinitpronomen",
-          "promptDe": "„Gibt es da auch eins?“ Was sucht Arjun?",
-          "promptEn": "What is Arjun asking about?",
+          "promptDe": "„Gibt es da auch eins?“ Wofür steht „eins“?",
+          "promptEn": "What does „eins“ stand for?",
           "options": [
             "ein Modell",
-            "eine Kaffeemaschine",
+            "eine Marke",
             "einen Föhn"
           ],
           "answer": "ein Modell",
@@ -1220,12 +1225,12 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.indefinitpronomen",
-          "promptDe": "„Wir brauchen nur eine.“ Was brauchen sie?",
-          "promptEn": "What do they need?",
+          "promptDe": "„Wir brauchen nur eine.“ Wofür steht „eine“?",
+          "promptEn": "What does „eine“ stand for?",
           "options": [
             "eine Kaffeemaschine",
             "einen Wasserkocher",
-            "ein Gerät"
+            "ein Kabel"
           ],
           "answer": "eine Kaffeemaschine",
           "accepted": [
@@ -1242,8 +1247,8 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.indefinitpronomen",
-          "promptDe": "„Wir haben noch welche.“ Was haben sie noch?",
-          "promptEn": "What do they still have?",
+          "promptDe": "„Wir haben noch welche.“ Wofür steht „welche“?",
+          "promptEn": "What does „welche“ stand for?",
           "options": [
             "Tassen",
             "einen Föhn",
@@ -1267,15 +1272,15 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.indefinitpronomen",
-            "promptDe": "Ist hier ein Aufzug? – Ja, dort ist ___. (der Aufzug)",
-            "promptEn": "Pronoun for der Aufzug (nominative).",
+            "promptDe": "Gibt es hier einen Aufzug? – Ja, dort ist ___. (ein Aufzug)",
+            "promptEn": "Indefinite pronoun for ein Aufzug (nominative).",
             "answer": "einer",
             "accepted": [
               "einer"
             ],
             "explanation": {
-              "de": "der Aufzug ist maskulin, hier im Nominativ: einer.",
-              "en": "Masculine nominative: einer."
+              "de": "ein Aufzug ist maskulin, hier im Nominativ: einer.",
+              "en": "Masculine nominative indefinite pronoun: einer."
             },
             "origin": "agent"
           },
@@ -1284,8 +1289,8 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.indefinitpronomen",
-            "promptDe": "Brauchst du ein Kabel? – Nein, ich habe schon ___.",
-            "promptEn": "Pronoun for das Kabel.",
+            "promptDe": "Brauchst du ein Kabel? – Nein, ich habe schon ___. (ein Kabel)",
+            "promptEn": "Indefinite pronoun for ein Kabel.",
             "answer": "eins",
             "accepted": [
               "eins",
@@ -1319,18 +1324,23 @@
           },
           {
             "id": "a2.1-u04-ls2-p04",
-            "type": "fill_blank",
+            "type": "multiple_choice",
             "role": "practice",
             "topic": "g.indefinitpronomen",
-            "promptDe": "Haben wir noch Tassen? – Ja, wir haben ___.",
-            "promptEn": "Pronoun for a plural noun.",
+            "promptDe": "Welches Wort passt? „Haben wir noch Tassen? – Ja, wir haben ___.“",
+            "promptEn": "Choose the pronoun for a plural noun.",
+            "options": [
+              "welche",
+              "eine",
+              "eins"
+            ],
             "answer": "welche",
             "accepted": [
               "welche"
             ],
             "explanation": {
-              "de": "Tassen: Plural. Ja, wir haben welche.",
-              "en": "Plural noun, positive answer: welche."
+              "de": "Tassen: Plural. Ja, wir haben welche. eine und eins stehen für ein Nomen im Singular.",
+              "en": "Plural noun, positive answer: welche. eine/eins stand for singular nouns."
             },
             "origin": "agent"
           },
@@ -1410,7 +1420,7 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.indefinitpronomen",
-            "promptDe": "Bilden Sie den Satz.",
+            "promptDe": "Bilden Sie die Antwort: „Ich habe einen Föhn. Und Anna?“",
             "promptEn": "Build the sentence.",
             "tiles": [
               "Anna",
@@ -1476,22 +1486,17 @@
           },
           {
             "id": "a2.1-u04-ls2-p11",
-            "type": "multiple_choice",
+            "type": "fill_blank",
             "role": "practice",
             "topic": "g.komparation",
-            "promptDe": "Welche Form passt? „Das Angebot ist am ___.“",
-            "promptEn": "Choose the superlative.",
-            "options": [
-              "günstigsten",
-              "günstiger",
-              "günstig"
-            ],
+            "promptDe": "Das Angebot im Internet ist am ___. (günstig)",
+            "promptEn": "Superlative of günstig after am.",
             "answer": "günstigsten",
             "accepted": [
               "günstigsten"
             ],
             "explanation": {
-              "de": "Nach am steht der Superlativ: am günstigsten.",
+              "de": "Nach am steht der Superlativ: günstig – am günstigsten.",
               "en": "After am comes the superlative: am günstigsten."
             },
             "origin": "agent"
@@ -1541,14 +1546,14 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "g.indefinitpronomen",
-          "promptDe": "Die Tasse ist kaputt? Hier ist noch ___. (die Tasse)",
+          "promptDe": "Die Tasse ist kaputt? Hier ist noch ___. (eine Tasse)",
           "promptEn": "Pronoun for die Tasse.",
           "answer": "eine",
           "accepted": [
             "eine"
           ],
           "explanation": {
-            "de": "die Tasse ist feminin: Hier ist noch eine.",
+            "de": "eine Tasse ist feminin: Hier ist noch eine.",
             "en": "Feminine noun: eine."
           },
           "errorTags": [
@@ -1611,7 +1616,7 @@
             "en": "Superlative after sein: am günstigsten."
           },
           "errorTags": [
-            "spelling-meaning"
+            "v2-inv"
           ],
           "difficulty": 2,
           "banks": [
@@ -1656,9 +1661,9 @@
         "bankKey": "a21-u04-mo2",
         "mode": "written",
         "profile": "course-micro",
-        "situationDe": "Ihre Freundin Anna schreibt: „Hast du einen Föhn für mich?“",
-        "promptDe": "Antworten Sie Anna in 1–3 Sätzen: Haben Sie einen? Wer hat noch einen?",
-        "promptEn": "Reply to Anna in 1–3 sentences: do you have one, and who else has one?",
+        "situationDe": "Ihre Freundin Priya schreibt: „Mein Föhn ist sehr alt. Hast du einen für mich?“",
+        "promptDe": "Antworten Sie Priya in 1–3 Sätzen: Haben Sie einen? Wer hat noch einen?",
+        "promptEn": "Reply to Priya in 1–3 sentences: do you have one, and who else has one?",
         "planSeconds": 30,
         "words": [
           8,
@@ -1687,8 +1692,8 @@
         "title": "Die E-Mail vom Online-Shop und das Paket",
         "textType": "tt.email-halbformell",
         "text": {
-          "de": "Ihre Bestellung bei „Küche und mehr“\n\nLiebe Frau Nair,\nvielen Dank für Ihre Bestellung! Heute schicken wir Ihnen das Paket.\n\nArtikel: 1 Kaffeemaschine, Modell aus der Schweiz, Farbe: Weiß\nPreis: 79,00 Euro · Versand: 4,95 Euro\nZahlung: auf Rechnung. Bitte bezahlen Sie in 14 Tagen.\nLieferung: am Donnerstag zwischen 10 und 14 Uhr\n\nSie sind am Donnerstag nicht zu Hause? Dann bekommt Ihr Nachbar das Paket.\nDer Artikel gefällt Ihnen nicht, oder er ist kaputt? Dann können Sie ihn zurückschicken. Ihr Vorteil: Die Rücksendung ist 30 Tage lang kostenlos. Das Formular für die Rücksendung finden Sie in Ihrem Kundenkonto.\n\nHaben Sie Fragen? Unser Kundenservice ist von Montag bis Freitag von 8 bis 18 Uhr für Sie da.\n\nViele Grüße\nIhr Team von „Küche und mehr“",
-          "en": "Your order from \"Küche und mehr\". Dear Ms Nair, thank you for your order! We are sending you the parcel today. Item: 1 coffee machine, Swiss model, colour: white. Price: 79.00 euros · shipping: 4.95 euros. Payment: by invoice – please pay within 14 days. Delivery: Thursday between 10 am and 2 pm. Not at home on Thursday? Then your neighbour will receive the parcel. You don't like the item or it is broken? Then you can send it back. Your advantage: returns are free for 30 days. You will find the returns form in your customer account. Questions? Our customer service is there for you Monday to Friday from 8 am to 6 pm. Best regards, your \"Küche und mehr\" team"
+          "de": "Ihre Bestellung bei „Küche und mehr“\n\nLiebe Frau Nair,\nvielen Dank für Ihre Bestellung! Heute schicken wir Ihnen das Paket.\n\nArtikel: 1 Kaffeemaschine, Modell aus der Schweiz, Farbe: Weiß\nPreis: 79,00 Euro · Versand: 4,95 Euro\nZahlung: auf Rechnung. Sie haben 14 Tage Zeit.\nLieferung: am Donnerstag zwischen 10 und 14 Uhr\n\nSie sind am Donnerstag nicht zu Hause? Dann bekommt Ihr Nachbar das Paket.\nDer Artikel gefällt Ihnen nicht, oder er ist kaputt? Dann können Sie ihn zurückschicken. Ihr Vorteil: Die Rücksendung ist 30 Tage lang kostenlos. Das Formular für die Rücksendung finden Sie in Ihrem Kundenkonto.\n\nHaben Sie Fragen? Unser Kundenservice ist von Montag bis Freitag von 8 bis 18 Uhr für Sie da.\n\nViele Grüße\nIhr Team von „Küche und mehr“",
+          "en": "Your order from \"Küche und mehr\". Dear Ms Nair, thank you for your order! We are sending you the parcel today. Item: 1 coffee machine, Swiss model, colour: white. Price: 79.00 euros · shipping: 4.95 euros. Payment: by invoice – you have 14 days to pay. Delivery: Thursday between 10 am and 2 pm. Not at home on Thursday? Then your neighbour will receive the parcel. You don't like the item or it is broken? Then you can send it back. Your advantage: returns are free for 30 days. You will find the returns form in your customer account. Questions? Our customer service is there for you Monday to Friday from 8 am to 6 pm. Best regards, your \"Küche und mehr\" team"
         },
         "lines": [
           {
@@ -1734,16 +1739,29 @@
             "en": "Here: returns are free. The form is in my customer account."
           },
           {
+            "id": "a2.1-u04-ls3-l11",
+            "speaker": "cast.arjun",
+            "de": "Gut. Kannst du den Kundenservice auch anrufen?",
+            "en": "Good. Can you also call customer service?"
+          },
+          {
+            "id": "a2.1-u04-ls3-l12",
+            "speaker": "cast.priya",
+            "de": "Heute nicht mehr. Der Kundenservice ist von 8 bis 18 Uhr da, und jetzt ist es schon halb sieben.",
+            "en": "Not today. Customer service is available from 8 am to 6 pm, and it is already half past six.",
+            "say": "Heute nicht mehr. Der Kundenservice ist von acht bis achtzehn Uhr da, und jetzt ist es schon halb sieben."
+          },
+          {
             "id": "a2.1-u04-ls3-l08",
             "speaker": "cast.arjun",
-            "de": "Dann schreib dem Kundenservice: Die Lieferung ist falsch! Wir brauchen die Kaffeemaschine bis Samstag. Meine Eltern kommen.",
-            "en": "Then write to customer service: the delivery is wrong! We need the coffee machine by Saturday. My parents are coming."
+            "de": "Dann schreib dem Kundenservice: Die Lieferung ist falsch! Wir brauchen die Kaffeemaschine bis Samstag. Am Samstag kommen Anna und Felix zum Frühstück.",
+            "en": "Then write to customer service: the delivery is wrong! We need the coffee machine by Saturday. Anna and Felix are coming for breakfast on Saturday."
           },
           {
             "id": "a2.1-u04-ls3-l09",
             "speaker": "cast.priya",
-            "de": "Gut, ich schreibe heute noch eine E-Mail. Und den Wasserkocher schicke ich zurück.",
-            "en": "OK, I'll write an e-mail today. And I'll send the kettle back."
+            "de": "Gut, ich schreibe heute noch eine E-Mail. Ich frage auch nach der Lieferzeit. Und den Wasserkocher schicke ich zurück.",
+            "en": "OK, I will write an e-mail today. I will also ask about the delivery time. And I will send the kettle back."
           },
           {
             "id": "a2.1-u04-ls3-l10",
@@ -2309,8 +2327,7 @@
             "en": "schreiben + dative person: einer netten, ending -en."
           },
           "errorTags": [
-            "adj-ending",
-            "case-np"
+            "v2-inv"
           ],
           "difficulty": 3,
           "banks": [
@@ -2396,7 +2413,7 @@
           "id": "a2.1-u04-ls4-t1",
           "kind": "sign",
           "title": "Kaufhaus am Markt – Wegweiser",
-          "text": "Kaufhaus am Markt – Wegweiser\n\n4. Stockwerk: Möbel · Betten · Teppiche · Lampen · Kundenservice (Reparaturen)\n3. Stockwerk: Haushalt: Kaffeemaschinen, Wasserkocher, Staubsauger, Mikrowellen · Küche: Tassen, Gläser, Geschirr\n2. Stockwerk: Kleidung für Männer und Kinder · Sport: Schuhe, Fahrräder\n1. Stockwerk: Kleidung für Frauen: Kleider, Röcke, Mäntel · Taschen · Brillen\nErdgeschoss: Information · Handys, Laptops und Kabel · Bücher und Hefte · Kaffee und Kuchen\n\nAufzug und Rolltreppe: neben der Information\nÖffnungszeiten: Montag bis Samstag 9.30 bis 20 Uhr · Sonntag geschlossen",
+          "text": "Kaufhaus am Markt – Wegweiser\n\n4. Stockwerk\nMöbel für Wohnzimmer, Schlafzimmer und Büro: Sofas, Tische, Stühle, Regale · Betten, Teppiche und Lampen · Kundenservice: Reparaturen und Garantie · Kaffee und Kuchen, Mittagessen von 11 bis 15 Uhr\n\n3. Stockwerk\nHaushalt: Kaffeemaschinen, Wasserkocher, Mikrowellen, Staubsauger, Waschmaschinen, Föhne · Küche: Tassen, Gläser, Geschirr · Alles für das Bad · Diese Woche im Sonderangebot: Mikrowellen und Föhne\n\n2. Stockwerk\nKleidung für Männer: Hemden, Hosen, Pullover, Mäntel · Kleidung für Kinder: Jacken, Hosen, T-Shirts, Schuhe · Spiele und Bücher für Kinder · Sport: Fußbälle, Fahrräder, Schuhe und Kleidung für den Sport\n\n1. Stockwerk\nKleidung für Frauen: Kleider, Röcke, Jacken, Mäntel, Schuhe · Taschen und Koffer · Brillen und Uhren\n\nErdgeschoss\nInformation · Kundenservice: Fragen zu Bestellungen, Lieferungen und Rechnungen · Handys, Laptops, Computer, Drucker und Kabel · Bücher, Hefte, Papier und Stifte · Kalender und Geschenke\n\nNeu: Online bestellen und im Kaufhaus abholen – an der Information im Erdgeschoss\nAufzug und Rolltreppe: neben der Information · Geldautomat: neben dem Eingang\nToiletten: im 1. und im 4. Stockwerk\nÖffnungszeiten: Montag bis Samstag 9.30 bis 20 Uhr · Sonntag geschlossen",
           "glosses": []
         },
         {
@@ -2509,8 +2526,8 @@
             {
               "id": "a2.1-u04-ls4-t4-l05",
               "speaker": "cast.ensemble-a2-4",
-              "de": "Eine Tasse? Nein. Sie braucht die Mikrowelle jeden Tag. Ich kaufe ihr eine.",
-              "en": "A cup? No. She uses the microwave every day. I'll buy her one."
+              "de": "Eine Tasse? Nein. Sie braucht die Mikrowelle sehr oft. Ich kaufe ihr eine.",
+              "en": "A cup? No. She uses the microwave very often. I will buy her one."
             }
           ],
           "glosses": []
@@ -2557,13 +2574,13 @@
         {
           "id": "a2.1-u04-ls4-t6",
           "kind": "audio",
-          "title": "Gespräch 5: Beim Kundenservice",
+          "title": "Gespräch 5: Eine Bestellung am Telefon",
           "lines": [
             {
               "id": "a2.1-u04-ls4-t6-l01",
               "speaker": "cast.ensemble-a2-3",
-              "de": "Kundenservice, guten Tag. Was kann ich für Sie tun?",
-              "en": "Customer service, hello. What can I do for you?"
+              "de": "Kaufhaus am Markt, guten Tag. Was kann ich für Sie tun?",
+              "en": "Kaufhaus am Markt, hello. What can I do for you?"
             },
             {
               "id": "a2.1-u04-ls4-t6-l02",
@@ -2574,8 +2591,8 @@
             {
               "id": "a2.1-u04-ls4-t6-l03",
               "speaker": "cast.ensemble-a2-3",
-              "de": "Am Telefon leider nicht. Die Zahlung ist dann auf Rechnung. Online geht es auch mit Bankkarte.",
-              "en": "Not on the phone, I'm afraid. Payment is then by invoice. Online, a bank card works too."
+              "de": "Am Telefon leider nicht. Die Zahlung mit Bankkarte geht nur online. Am Telefon zahlen Sie auf Rechnung.",
+              "en": "Not on the phone, I am afraid. Payment by bank card only works online. On the phone you pay by invoice."
             },
             {
               "id": "a2.1-u04-ls4-t6-l04",
@@ -2592,10 +2609,10 @@
           "id": "a2.1-u04-ls4-ga2-l2",
           "template": "ga2.l2",
           "lane": "ga2",
-          "length": "reduced",
-          "scaffolded": true,
+          "length": "full",
+          "scaffolded": false,
           "modeDefault": "lern",
-          "instructionsDe": "Lesen Sie den Wegweiser. In welches Stockwerk gehen Sie? Wählen Sie a, b oder c.",
+          "instructionsDe": "Wo finden Sie das im Kaufhaus? Suchen Sie im Wegweiser und wählen Sie a, b oder c.",
           "textRefs": [
             "a2.1-u04-ls4-t1"
           ],
@@ -2618,8 +2635,8 @@
               ],
               "exact": "number",
               "explanation": {
-                "de": "Kleidung für Kinder gibt es im 2. Stockwerk.",
-                "en": "Children's clothing is on the second floor."
+                "de": "Ihr Sohn ist ein Kind: Kleidung für Kinder gibt es im 2. Stockwerk. Jacken im 1. Stockwerk sind für Frauen.",
+                "en": "Children's clothing is on the second floor; the jackets on the first floor are for women."
               },
               "origin": "agent"
             },
@@ -2641,8 +2658,8 @@
               ],
               "exact": "number",
               "explanation": {
-                "de": "Küche: Tassen, Gläser, Geschirr – das ist im 3. Stockwerk.",
-                "en": "Glasses are listed under Küche on the third floor."
+                "de": "Küche: Tassen, Gläser, Geschirr – das ist im 3. Stockwerk. Brillen im 1. Stockwerk sind keine Gläser für die Küche.",
+                "en": "Glasses for the kitchen are on the third floor; Brillen (spectacles) on the first floor are something else."
               },
               "origin": "agent"
             },
@@ -2663,8 +2680,8 @@
                 "anderes Stockwerk"
               ],
               "explanation": {
-                "de": "Staubsauger kauft man im 3. Stockwerk. Reparaturen macht der Kundenservice im 4. Stockwerk.",
-                "en": "Vacuum cleaners are sold on floor 3, but repairs are at customer service on floor 4."
+                "de": "Staubsauger kauft man im 3. Stockwerk. Reparaturen macht der Kundenservice im 4. Stockwerk, nicht im Erdgeschoss.",
+                "en": "Vacuum cleaners are sold on floor 3; repairs are at the customer service on floor 4, not on the ground floor."
               },
               "origin": "agent"
             },
@@ -2689,6 +2706,29 @@
                 "en": "Phones, laptops and cables are on the ground floor."
               },
               "origin": "agent"
+            },
+            {
+              "id": "a2.1-u04-ls4-ga2-l2-05",
+              "type": "abc",
+              "role": "exam",
+              "topic": "lesen",
+              "promptDe": "Sie möchten im Kaufhaus einen Kaffee trinken. Wohin gehen Sie?",
+              "options": [
+                "4. Stockwerk",
+                "3. Stockwerk",
+                "anderes Stockwerk"
+              ],
+              "textRef": "a2.1-u04-ls4-t1",
+              "answer": "4. Stockwerk",
+              "accepted": [
+                "4. Stockwerk"
+              ],
+              "exact": "number",
+              "explanation": {
+                "de": "Kaffee und Kuchen gibt es im 4. Stockwerk. Im 3. Stockwerk gibt es nur Kaffeemaschinen.",
+                "en": "Coffee and cake are served on the fourth floor; the third floor only sells coffee machines."
+              },
+              "origin": "agent"
             }
           ]
         },
@@ -2697,9 +2737,9 @@
           "template": "ga2.h3",
           "lane": "ga2",
           "length": "full",
-          "scaffolded": false,
+          "scaffolded": true,
           "modeDefault": "lern",
-          "instructionsDe": "Sie hören fünf kurze Gespräche. Sie hören jeden Text einmal. Wählen Sie a, b oder c.",
+          "instructionsDe": "In der Prüfung mit Bildern. Fünf Gespräche, jedes nur einmal. Was passt: a, b oder c?",
           "textRefs": [
             "a2.1-u04-ls4-t2",
             "a2.1-u04-ls4-t3",
@@ -2824,13 +2864,13 @@
       "strategyCards": [
         {
           "template": "ga2.l2",
-          "de": "Lesen Teil 2: Lesen Sie zuerst die Situation. Was brauchen Sie genau? Suchen Sie dann das passende Wort im Wegweiser. Eine Jacke für ein Kind finden Sie bei „Kleidung für Kinder“. Achtung: Ein Wort steht manchmal zweimal da. Passt keine Lösung, wählen Sie „anderes Stockwerk“.",
-          "en": "Reading part 2: read the situation first and decide what exactly you need, then look for the matching category on the directory. Careful: a word may appear twice. If no floor fits, choose \"anderes Stockwerk\"."
+          "de": "Lesen Teil 2: Lesen Sie zuerst die Situation. Was brauchen Sie genau? Suchen Sie dann das Wort im Wegweiser. Einen Schrank finden Sie zum Beispiel bei „Möbel“. Achtung: Ein Wort steht manchmal zweimal da. Passt keine Lösung, wählen Sie „anderes Stockwerk“.",
+          "en": "Reading part 2: read the situation first and decide what exactly you need, then look for the right category on the directory – a wardrobe, for example, is under „Möbel“. Careful: a word may appear twice. If no floor fits, choose „anderes Stockwerk“."
         },
         {
           "template": "ga2.h3",
-          "de": "Hören Teil 3: Sie hören jedes Gespräch nur einmal. Lesen Sie vorher die Frage und die drei Antworten. Oft hören Sie alle drei Antworten im Gespräch. Achten Sie auf das Ende: „Dann nehme ich …“, „Dann komme ich …“.",
-          "en": "Listening part 3: each conversation is played only once. Read the question and the three options first. You often hear all three options – listen for the decision at the end."
+          "de": "Hören Teil 3: In der Prüfung sind die Antworten Bilder, hier sind es Wörter. Sie hören jedes Gespräch nur einmal. Lesen Sie vorher die Frage und die drei Antworten. Oft hören Sie alle drei im Gespräch. Achten Sie auf das Ende: Dort sagt die Person, was sie wirklich macht.",
+          "en": "Listening part 3: in the exam the options are pictures; here they are words. Each conversation is played only once. Read the question and the three options first. You often hear all three – listen for the decision at the end."
         }
       ]
     },
@@ -2845,19 +2885,19 @@
         "profile": "ga2-sp1",
         "prepMinutes": 0,
         "instructionsDe": "Fragen Sie mit jeder Karte. Ihre Partnerin antwortet. Dann fragt sie, Sie antworten.",
-        "situationDe": "Sprechen Teil 1: Sie und Ihre Partnerin haben je vier Karten zum Thema „Einkaufen“.",
+        "situationDe": "Sprechen Teil 1: Fragen zur Person. Sie und Ihre Partnerin haben je vier Karten.",
         "cards": {
           "learner": [
-            "Einkaufen: Supermarkt?",
-            "Einkaufen: Internet?",
-            "Einkaufen: Geschenk?",
-            "Einkaufen: Küche?"
+            "Einkaufen?",
+            "Internet?",
+            "Geschenk?",
+            "Küche?"
           ],
           "partner": [
-            "Einkaufen: Samstag?",
-            "Einkaufen: Preis?",
-            "Einkaufen: Marke?",
-            "Einkaufen: Kaufhaus?"
+            "Samstag?",
+            "Kaufhaus?",
+            "Marke?",
+            "Geld?"
           ]
         },
         "turns": [
@@ -2867,17 +2907,17 @@
         "moves": [],
         "aiRole": {
           "name": "Marta",
-          "personaDe": "Teilnehmerin in der Prüfung, kauft gern im Internet und vergleicht Preise, antwortet in einfachen, ganzen Sätzen",
+          "personaDe": "Teilnehmerin in der Prüfung, kauft gern im Internet und vergleicht Preise; fragt mit ihren Karten gern nach Ihrer Meinung (Wie finden Sie …? Was ist gut, was nicht so gut?) und antwortet in einfachen, ganzen Sätzen",
           "register": "Sie",
           "support": "clarify"
         },
-        "openingLine": "Guten Tag! Wir beginnen mit Teil 1. Stellen Sie bitte Ihre erste Frage.",
+        "openingLine": "Hallo, ich bin Marta. Möchten Sie anfangen? Stellen Sie mir bitte Ihre erste Frage.",
         "hintWords": [
+          "Wie oft …?",
           "Wo …?",
           "Was …?",
-          "Welche …?",
-          "Wie oft …?",
-          "Supermarkt",
+          "Wie finden Sie …?",
+          "Einkaufen",
           "Internet",
           "Geschenk",
           "Küche"
@@ -2885,27 +2925,27 @@
         "modelTurns": [
           {
             "speaker": "learner",
-            "de": "Wie oft gehen Sie in den Supermarkt?"
+            "de": "Wie oft gehen Sie einkaufen?"
           },
           {
             "speaker": "partner",
-            "de": "Ich gehe jeden Samstag in den Supermarkt."
+            "de": "Einmal in der Woche. Ich gehe am Samstag in den Supermarkt."
           },
           {
             "speaker": "partner",
-            "de": "Wo kaufen Sie gern Kleidung?"
+            "de": "Wie finden Sie Kaufhäuser?"
           },
           {
             "speaker": "learner",
-            "de": "Ich kaufe gern im Kaufhaus ein. Dort gibt es eine gute Beratung."
+            "de": "Ich finde sie gut. Dort gibt es eine gute Beratung, aber es ist oft nicht billig."
           },
           {
             "speaker": "partner",
-            "de": "Welche Marke finden Sie gut?"
+            "de": "Ist die Marke für Sie wichtig?"
           },
           {
             "speaker": "learner",
-            "de": "Ich habe eine Kaffeemaschine aus der Schweiz. Die Marke finde ich sehr gut."
+            "de": "Nicht so wichtig. Die Qualität und der Preis sind für mich wichtig."
           },
           {
             "speaker": "learner",
@@ -3169,22 +3209,23 @@
         "type": "multiple_choice",
         "role": "proof",
         "topic": "lesen",
-        "promptDe": "Wegweiser: „EG Taschen · 1. Stockwerk Sport · 2. Stockwerk Haushalt“. Wo sind Staubsauger?",
-        "promptEn": "Where are vacuum cleaners?",
+        "promptDe": "Im Kaufhaus Sonne: „1. Stockwerk Sport · 2. Stockwerk Haushalt“. Wo sind Staubsauger?",
+        "promptEn": "Where are vacuum cleaners in this store?",
         "options": [
           "im 2. Stockwerk",
           "im 1. Stockwerk",
-          "im Erdgeschoss"
+          "im 3. Stockwerk"
         ],
         "answer": "im 2. Stockwerk",
         "accepted": [
           "im 2. Stockwerk"
         ],
         "explanation": {
-          "de": "Staubsauger sind Haushaltsgeräte. Haushalt ist im 2. Stockwerk.",
-          "en": "Vacuum cleaners belong to Haushalt, on the second floor."
+          "de": "Staubsauger sind Haushaltsgeräte. Im Kaufhaus Sonne ist Haushalt im 2. Stockwerk.",
+          "en": "Vacuum cleaners belong to Haushalt, which is on the second floor in this store."
         },
-        "origin": "agent"
+        "origin": "agent",
+        "exact": "number"
       },
       {
         "id": "a2.1-u04-q02",
@@ -3297,8 +3338,8 @@
     },
     {
       "id": "a2.1-u04-rm07",
-      "de": "Welche Marke finden Sie gut?",
-      "en": "Which brand do you like?",
+      "de": "Ist die Marke für Sie wichtig?",
+      "en": "Is the brand important to you?",
       "function": "mit einer Karte fragen",
       "forTemplate": "ga2.sp1"
     }

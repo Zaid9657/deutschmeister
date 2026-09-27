@@ -5,7 +5,8 @@
 //
 // What a lemma licenses (rule-smith 2026-09-27, BLUEPRINT §9.1 LEX-01/LEX-03):
 //   VERB  present (all persons; the 2sg/3sg stem change from verb_forms), imperative (incl. hilf/lies),
-//         Präteritum (verb_forms.praet, else the regular weak forms), Konjunktiv II (umlauted Präteritum:
+//         Präteritum (verb_forms.praet, else the strong-verb table of strong-verbs.mjs and the regular
+//         weak forms), Konjunktiv II (umlauted Präteritum:
 //         käme, hätte, könnte, würde …, every person ending), Partizip II (verb_forms.perfekt, else ge…t)
 //         incl. its adjective endings, Partizip I (+d), zu-infinitive; a separable verb also with its
 //         prefix split off („kommt … mit") and rejoined in a subordinate clause („stattfindet", „ankam").
@@ -19,6 +20,7 @@
 import { tokens, FUNCTION_WORDS } from './text.mjs';
 import { LEVELS, positionOf, parseUnitId, unitPosition } from './ids.mjs';
 import { CORE_FIXED, CORE_ENTRIES, NUMBER_WORDS } from './core-lexicon.mjs';
+import { strongPraet } from './strong-verbs.mjs';
 
 const lc = (s) => String(s ?? '').toLowerCase().trim();
 const words = (s) => lc(s).split(/\s+/).filter(Boolean);
@@ -76,7 +78,7 @@ function adjectiveForms(lemma, add) {
 }
 
 /**
- * The finite and non-finite forms of a verb entry. `pre` is its separable prefix (or null).
+ * The finite and non-finite forms of a verb entry, added through `add`; returns its separable prefix (or null).
  */
 function verbForms(e, add) {
   const lemma = lc(e.lemma);
@@ -107,7 +109,8 @@ function verbForms(e, add) {
   const w2 = words(e.verb_forms?.['2sg']);
   if (w2[0]) fin(w2[0]);
   // Präteritum (the finite word of verb_forms.praet: „kam mit" → kam, „meldete sich" → meldete)
-  const praet = words(e.verb_forms?.praet)[0] || null;
+  const own = words(e.verb_forms?.praet)[0] || null;
+  const praet = own || strongPraet(base);
   let pRoot = null;
   if (praet) {
     if (praet.endsWith('te')) {
@@ -117,10 +120,13 @@ function verbForms(e, add) {
       pRoot = praet.endsWith('e') ? praet.slice(0, -1) : praet; // wurde → wurd
       for (const w of [praet, `${pRoot}st`, `${pRoot}est`, `${pRoot}en`, `${pRoot}t`, `${pRoot}et`]) fin(w);
     }
-  } else {
-    // regular weak Präteritum when the entry does not say otherwise
-    pRoot = `${stem}${e2}t`;
-    for (const w of [`${pRoot}e`, `${pRoot}en`, `${pRoot}est`, `${pRoot}et`]) fin(w);
+  }
+  if (!own) {
+    // the regular weak Präteritum when the entry does not say otherwise (also beside a table match:
+    // a weak verb that ends in a strong simplex, beantragen, keeps its beantragte)
+    const weak = `${stem}${e2}t`;
+    if (!pRoot) pRoot = weak;
+    for (const w of [`${weak}e`, `${weak}en`, `${weak}est`, `${weak}et`]) fin(w);
   }
   // Konjunktiv II: the Präteritum root, umlauted for strong and mixed verbs (käme, hätte, könnte, würde)
   if (praet) {
