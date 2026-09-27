@@ -315,6 +315,24 @@
       "wordId": null
     },
     {
+      "id": "lx.psychologe",
+      "lemma": "Psychologe",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Psychologen",
+      "plural_kind": "regular",
+      "feminine": "die Psychologin",
+      "role": "receptive",
+      "unit": "b2.2-u01",
+      "block": 1,
+      "list_ref": "freq:5001-10000",
+      "gloss": {
+        "en": "psychologist"
+      },
+      "example": "Eine Psychologin erklärt im Radio, was Freundschaft stark macht.",
+      "wordId": null
+    },
+    {
       "id": "lx.zuneigung",
       "lemma": "Zuneigung",
       "pos": "NOUN",
@@ -580,6 +598,25 @@
         "en": "breach of trust"
       },
       "example": "Dass er ihr Geheimnis weitererzählt hat, war für sie ein Vertrauensbruch.",
+      "wordId": null
+    },
+    {
+      "id": "lx.ueberstehen",
+      "lemma": "überstehen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "übersteht",
+        "praet": "überstand",
+        "perfekt": "hat überstanden"
+      },
+      "role": "receptive",
+      "unit": "b2.2-u01",
+      "block": 2,
+      "list_ref": "freq:5001-10000",
+      "gloss": {
+        "en": "to get through, to survive"
+      },
+      "example": "Ihre Freundschaft hat auch den Umzug nach Hamburg überstanden.",
       "wordId": null
     },
     {
@@ -849,6 +886,22 @@
       "wordId": null
     },
     {
+      "id": "lx.fachleute",
+      "lemma": "Fachleute",
+      "pos": "NOUN",
+      "plural": "Fachleute",
+      "plural_kind": "plural-only",
+      "role": "receptive",
+      "unit": "b2.2-u01",
+      "block": 3,
+      "list_ref": "freq:5001-10000",
+      "gloss": {
+        "en": "experts"
+      },
+      "example": "Fachleute raten, Freundschaften bewusst zu pflegen.",
+      "wordId": null
+    },
+    {
       "id": "lx.freundschaftsanfrage",
       "lemma": "Freundschaftsanfrage",
       "pos": "NOUN",
@@ -1097,6 +1150,23 @@
         "en": "profile picture"
       },
       "example": "Auf seinem Profilbild ist nur ein Sonnenuntergang zu sehen.",
+      "wordId": null
+    },
+    {
+      "id": "lx.magazin",
+      "lemma": "Magazin",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Magazine",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u01",
+      "block": 4,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "magazine"
+      },
+      "example": "In einem Magazin liest Priya über Freundschaft im Netz.",
       "wordId": null
     },
     {
@@ -1388,6 +1458,24 @@
         "en": "low-fat"
       },
       "example": "Fettarme Milch hat weniger Kalorien.",
+      "wordId": null
+    },
+    {
+      "id": "lx.wissenschaftler",
+      "lemma": "Wissenschaftler",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Wissenschaftler",
+      "plural_kind": "regular",
+      "feminine": "die Wissenschaftlerin",
+      "role": "receptive",
+      "unit": "b2.2-u02",
+      "block": 1,
+      "list_ref": "derived:Wissenschaft",
+      "gloss": {
+        "en": "scientist"
+      },
+      "example": "Eine Ernährungswissenschaftlerin beantwortet Fragen der Hörer.",
       "wordId": null
     },
     {
@@ -6213,6 +6301,24 @@
       "wordId": null
     },
     {
+      "id": "lx.beeindrucken",
+      "lemma": "beeindrucken",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "beeindruckt",
+        "perfekt": "hat beeindruckt"
+      },
+      "role": "receptive",
+      "unit": "b2.2-u06",
+      "block": 3,
+      "list_ref": "freq:5001-10000",
+      "gloss": {
+        "en": "to impress"
+      },
+      "example": "Der Film hat mich sehr beeindruckt.",
+      "wordId": null
+    },
+    {
       "id": "lx.kulturangebot",
       "lemma": "Kulturangebot",
       "pos": "NOUN",
@@ -8155,6 +8261,23 @@
       "wordId": null
     },
     {
+      "id": "lx.versichertenkarte",
+      "lemma": "Versichertenkarte",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Versichertenkarten",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u08",
+      "block": 2,
+      "list_ref": "compound:Versicherte+Karte",
+      "gloss": {
+        "en": "health insurance card"
+      },
+      "example": "Bitte bringen Sie Ihre Versichertenkarte mit.",
+      "wordId": null
+    },
+    {
       "id": "lx.einwilligung",
       "lemma": "Einwilligung",
       "pos": "NOUN",
@@ -8203,23 +8326,6 @@
         "en": "patient record"
       },
       "example": "Die Befunde stehen in Ihrer elektronischen Patientenakte.",
-      "wordId": null
-    },
-    {
-      "id": "lx.merkblatt",
-      "lemma": "Merkblatt",
-      "pos": "NOUN",
-      "article": "das",
-      "plural": "Merkblätter",
-      "plural_kind": "regular",
-      "role": "productive",
-      "unit": "b2.2-u08",
-      "block": 3,
-      "list_ref": "compound:merken+Blatt",
-      "gloss": {
-        "en": "information leaflet"
-      },
-      "example": "Das Merkblatt erklärt die neue Terminvergabe.",
       "wordId": null
     },
     {
@@ -8672,6 +8778,24 @@
         "en": "explanation"
       },
       "example": "Auf der Rückseite des Merkblatts finden Sie weitere Erläuterungen.",
+      "wordId": null
+    },
+    {
+      "id": "lx.beruecksichtigen",
+      "lemma": "berücksichtigen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "berücksichtigt",
+        "perfekt": "hat berücksichtigt"
+      },
+      "role": "receptive",
+      "unit": "b2.2-u08",
+      "block": 4,
+      "list_ref": "freq:3001-5000",
+      "gloss": {
+        "en": "to take into account"
+      },
+      "example": "Wir berücksichtigen Ihre Wünsche bei der Terminvergabe.",
       "wordId": null
     },
     {
@@ -12062,6 +12186,37 @@
       "wordId": null
     },
     {
+      "id": "lx.absatz",
+      "lemma": "Absatz",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Absätze",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.2-u11",
+      "block": 4,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "paragraph"
+      },
+      "example": "Beginnen Sie für jeden Punkt einen neuen Absatz.",
+      "wordId": null
+    },
+    {
+      "id": "lx.teilweise",
+      "lemma": "teilweise",
+      "pos": "ADV",
+      "role": "receptive",
+      "unit": "b2.2-u11",
+      "block": 4,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "partly, in part"
+      },
+      "example": "Dem Widerspruch wurde teilweise stattgegeben.",
+      "wordId": null
+    },
+    {
       "id": "lx.mundart",
       "lemma": "Mundart",
       "pos": "NOUN",
@@ -12685,6 +12840,34 @@
       "wordId": null
     },
     {
+      "id": "lx.oesterreichisch",
+      "lemma": "österreichisch",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "b2.2-u12",
+      "block": 2,
+      "list_ref": "freq:5001-10000",
+      "gloss": {
+        "en": "Austrian"
+      },
+      "example": "Im österreichischen Deutsch sagt man „Jänner“ statt „Januar“.",
+      "wordId": null
+    },
+    {
+      "id": "lx.schweizerisch",
+      "lemma": "schweizerisch",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "b2.2-u12",
+      "block": 2,
+      "list_ref": "freq:>10000",
+      "gloss": {
+        "en": "Swiss"
+      },
+      "example": "Im schweizerischen Hochdeutsch gibt es kein ß.",
+      "wordId": null
+    },
+    {
       "id": "lx.redebeitrag",
       "lemma": "Redebeitrag",
       "pos": "NOUN",
@@ -13132,7 +13315,19 @@
       "unit": "b2.2-u08"
     },
     {
+      "lemma": "lx.merkblatt",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b2.2-u08"
+    },
+    {
       "lemma": "lx.abwaegen",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b2.2-u09"
+    },
+    {
+      "lemma": "lx.fussgaengerzone",
       "from": "receptive",
       "to": "productive",
       "unit": "b2.2-u09"

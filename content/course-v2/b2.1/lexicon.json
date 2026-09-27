@@ -280,6 +280,20 @@
       "wordId": null
     },
     {
+      "id": "lx.bewusst",
+      "lemma": "bewusst",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "b2.1-u01",
+      "block": 1,
+      "list_ref": "freq:3001-5000",
+      "gloss": {
+        "en": "conscious(ly), deliberate(ly)"
+      },
+      "example": "Amal hat sich bewusst für Leipzig entschieden.",
+      "wordId": null
+    },
+    {
       "id": "lx.kindheitserinnerung",
       "lemma": "Kindheitserinnerung",
       "pos": "NOUN",
@@ -556,6 +570,40 @@
       "wordId": null
     },
     {
+      "id": "lx.praegung",
+      "lemma": "Prägung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Prägungen",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "b2.1-u01",
+      "block": 2,
+      "list_ref": "freq:5001-10000",
+      "gloss": {
+        "en": "formative influence, imprint"
+      },
+      "example": "Die Kindheit in Kochi war eine starke Prägung für Priya.",
+      "wordId": null
+    },
+    {
+      "id": "lx.brauchtum",
+      "lemma": "Brauchtum",
+      "pos": "NOUN",
+      "article": "das",
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "b2.1-u01",
+      "block": 2,
+      "list_ref": "freq:>10000",
+      "gloss": {
+        "en": "customs, traditions"
+      },
+      "example": "Im Erzgebirge wird das Brauchtum zu Weihnachten gepflegt.",
+      "plural": null,
+      "wordId": null
+    },
+    {
       "id": "lx.fuss-fassen",
       "lemma": "Fuß fassen",
       "pos": "PHRASE",
@@ -823,6 +871,23 @@
         "en": "to leave behind"
       },
       "example": "Sie hat ihr altes Leben nicht ganz hinter sich gelassen.",
+      "wordId": null
+    },
+    {
+      "id": "lx.logistik",
+      "lemma": "Logistik",
+      "pos": "NOUN",
+      "article": "die",
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "b2.1-u01",
+      "block": 3,
+      "list_ref": "freq:5001-10000",
+      "gloss": {
+        "en": "logistics"
+      },
+      "example": "Priya arbeitet jetzt in der Logistik.",
+      "plural": null,
       "wordId": null
     },
     {
@@ -1100,6 +1165,41 @@
         "en": "convincing, plausible"
       },
       "example": "Dieses Argument finde ich einleuchtend.",
+      "wordId": null
+    },
+    {
+      "id": "lx.aspekt",
+      "lemma": "Aspekt",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Aspekte",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "b2.1-u01",
+      "block": 4,
+      "list_ref": "freq:3001-5000",
+      "gloss": {
+        "en": "aspect"
+      },
+      "example": "Einen Aspekt hat der Artikel ganz vergessen.",
+      "wordId": null
+    },
+    {
+      "id": "lx.beurteilen",
+      "lemma": "beurteilen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "beurteilt",
+        "perfekt": "hat beurteilt"
+      },
+      "role": "receptive",
+      "unit": "b2.1-u01",
+      "block": 4,
+      "list_ref": "freq:3001-5000",
+      "gloss": {
+        "en": "to judge, to assess"
+      },
+      "example": "Wie beurteilen Sie die Situation in Ihrem Heimatland?",
       "wordId": null
     },
     {
@@ -1385,6 +1485,23 @@
         "en": "to digress"
       },
       "example": "Im Gespräch schweift Malte oft vom Thema ab.",
+      "wordId": null
+    },
+    {
+      "id": "lx.zurueckhaltung",
+      "lemma": "Zurückhaltung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "b2.1-u02",
+      "block": 1,
+      "list_ref": "freq:5001-10000",
+      "gloss": {
+        "en": "reserve, restraint"
+      },
+      "example": "Ihre Zurückhaltung im Meeting wirkte auf die Kollegen unsicher.",
+      "plural": null,
       "wordId": null
     },
     {
@@ -2175,6 +2292,24 @@
       "wordId": null
     },
     {
+      "id": "lx.scheitern",
+      "lemma": "scheitern",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "scheitert",
+        "perfekt": "ist gescheitert"
+      },
+      "role": "receptive",
+      "unit": "b2.1-u02",
+      "block": 4,
+      "list_ref": "freq:3001-5000",
+      "gloss": {
+        "en": "to fail"
+      },
+      "example": "Viele Gespräche scheitern an Missverständnissen.",
+      "wordId": null
+    },
+    {
       "id": "lx.vertragsklausel",
       "lemma": "Vertragsklausel",
       "pos": "NOUN",
@@ -2456,6 +2591,23 @@
         "en": "remaining leave"
       },
       "example": "Den Resturlaub muss sie bis Ende März nehmen.",
+      "wordId": null
+    },
+    {
+      "id": "lx.umstand",
+      "lemma": "Umstand",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Umstände",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.1-u03",
+      "block": 1,
+      "list_ref": "freq:3001-5000",
+      "gloss": {
+        "en": "circumstance (unter Umständen: possibly)"
+      },
+      "example": "Unter Umständen bekommen Sie für die Überstunden freie Tage.",
       "wordId": null
     },
     {
@@ -4679,6 +4831,24 @@
       "wordId": null
     },
     {
+      "id": "lx.projektleiter",
+      "lemma": "Projektleiter",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Projektleiter",
+      "plural_kind": "regular",
+      "feminine": "die Projektleiterin",
+      "role": "receptive",
+      "unit": "b2.1-u05",
+      "block": 1,
+      "list_ref": "compound:Projekt+Leiter",
+      "gloss": {
+        "en": "project manager"
+      },
+      "example": "Die Projektleiterin stellt das Wohnprojekt vor.",
+      "wordId": null
+    },
+    {
       "id": "lx.anwohner",
       "lemma": "Anwohner",
       "pos": "NOUN",
@@ -4967,6 +5137,41 @@
         "en": "to exclude, to marginalise"
       },
       "example": "Niemand soll im Haus ausgegrenzt werden.",
+      "wordId": null
+    },
+    {
+      "id": "lx.toleranz",
+      "lemma": "Toleranz",
+      "pos": "NOUN",
+      "article": "die",
+      "plural_kind": "singular-only",
+      "role": "productive",
+      "unit": "b2.1-u05",
+      "block": 2,
+      "list_ref": "freq:5001-10000",
+      "gloss": {
+        "en": "tolerance"
+      },
+      "example": "Zusammen wohnen braucht viel Toleranz.",
+      "plural": null,
+      "wordId": null
+    },
+    {
+      "id": "lx.betreuen",
+      "lemma": "betreuen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "betreut",
+        "perfekt": "hat betreut"
+      },
+      "role": "receptive",
+      "unit": "b2.1-u05",
+      "block": 2,
+      "list_ref": "freq:3001-5000",
+      "gloss": {
+        "en": "to look after, to care for"
+      },
+      "example": "Im Wohnprojekt betreuen die Jüngeren manchmal die Kinder der Nachbarn.",
       "wordId": null
     },
     {
@@ -6045,6 +6250,24 @@
       "wordId": null
     },
     {
+      "id": "lx.behaupten",
+      "lemma": "behaupten",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "behauptet",
+        "perfekt": "hat behauptet"
+      },
+      "role": "productive",
+      "unit": "b2.1-u06",
+      "block": 2,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "to claim, to assert"
+      },
+      "example": "Der Kommentar behauptet, der Umbau sei zu teuer.",
+      "wordId": null
+    },
+    {
       "id": "lx.stadtrat",
       "lemma": "Stadtrat",
       "pos": "NOUN",
@@ -6315,6 +6538,26 @@
         "en": "the pros and cons"
       },
       "example": "Der Bericht stellt das Für und Wider der Zone dar.",
+      "wordId": null
+    },
+    {
+      "id": "lx.sich-einmischen",
+      "lemma": "sich einmischen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "mischt sich ein",
+        "perfekt": "hat sich eingemischt"
+      },
+      "separable": true,
+      "reflexive": "akk",
+      "role": "receptive",
+      "unit": "b2.1-u06",
+      "block": 3,
+      "list_ref": "freq:5001-10000",
+      "gloss": {
+        "en": "to get involved, to interfere"
+      },
+      "example": "Priya möchte sich in die Debatte im Stadtteil einmischen.",
       "wordId": null
     },
     {
@@ -6894,6 +7137,56 @@
       "wordId": null
     },
     {
+      "id": "lx.verabreichen",
+      "lemma": "verabreichen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "verabreicht",
+        "perfekt": "hat verabreicht"
+      },
+      "role": "productive",
+      "unit": "b2.1-u07",
+      "block": 1,
+      "list_ref": "freq:>10000",
+      "gloss": {
+        "en": "to administer (medication)"
+      },
+      "example": "Die Pflegekraft verabreicht die Tabletten um acht Uhr.",
+      "wordId": null
+    },
+    {
+      "id": "lx.beobachten",
+      "lemma": "beobachten",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "beobachtet",
+        "perfekt": "hat beobachtet"
+      },
+      "role": "productive",
+      "unit": "b2.1-u07",
+      "block": 1,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "to observe, to watch"
+      },
+      "example": "Bitte beobachten Sie Herrn Albers heute Nacht genau.",
+      "wordId": null
+    },
+    {
+      "id": "lx.unruhig",
+      "lemma": "unruhig",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "b2.1-u07",
+      "block": 1,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "restless, uneasy"
+      },
+      "example": "Die Bewohnerin war in der Nacht sehr unruhig.",
+      "wordId": null
+    },
+    {
       "id": "lx.angehoerige",
       "lemma": "Angehörige",
       "pos": "NOUN",
@@ -7456,6 +7749,23 @@
       "wordId": null
     },
     {
+      "id": "lx.personalengpass",
+      "lemma": "Personalengpass",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Personalengpässe",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.1-u07",
+      "block": 3,
+      "list_ref": "compound:Personal+Engpass",
+      "gloss": {
+        "en": "staff shortage"
+      },
+      "example": "Wegen eines Personalengpasses fällt der Ausflug aus.",
+      "wordId": null
+    },
+    {
       "id": "lx.verbesserungspotenzial",
       "lemma": "Verbesserungspotenzial",
       "pos": "NOUN",
@@ -7731,6 +8041,23 @@
         "en": "suggestion for improvement"
       },
       "example": "Lina hat einen Verbesserungsvorschlag für die Übergabe.",
+      "wordId": null
+    },
+    {
+      "id": "lx.zusammenhang",
+      "lemma": "Zusammenhang",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Zusammenhänge",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "b2.1-u07",
+      "block": 4,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "connection, context"
+      },
+      "example": "Erklären Sie den Zusammenhang zwischen Dienstplan und Überstunden.",
       "wordId": null
     },
     {
@@ -8017,6 +8344,51 @@
         "en": "on an equal footing, treated as equivalent"
       },
       "example": "Nach der Anerkennung ist er deutschen Fachkräften gleichgestellt.",
+      "wordId": null
+    },
+    {
+      "id": "lx.merkblatt",
+      "lemma": "Merkblatt",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Merkblätter",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.1-u08",
+      "block": 1,
+      "list_ref": "compound:merken+Blatt",
+      "gloss": {
+        "en": "information leaflet"
+      },
+      "example": "Das Merkblatt erklärt die neue Terminvergabe.",
+      "wordId": null
+    },
+    {
+      "id": "lx.auslaendisch",
+      "lemma": "ausländisch",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "b2.1-u08",
+      "block": 1,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "foreign"
+      },
+      "example": "Ausländische Abschlüsse müssen oft anerkannt werden.",
+      "wordId": null
+    },
+    {
+      "id": "lx.gleichwertig",
+      "lemma": "gleichwertig",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "b2.1-u08",
+      "block": 1,
+      "list_ref": "freq:5001-10000",
+      "gloss": {
+        "en": "equivalent"
+      },
+      "example": "Ihr Abschluss ist einem deutschen Abschluss gleichwertig.",
       "wordId": null
     },
     {
@@ -8588,6 +8960,23 @@
       "wordId": null
     },
     {
+      "id": "lx.eignung",
+      "lemma": "Eignung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "b2.1-u08",
+      "block": 3,
+      "list_ref": "freq:5001-10000",
+      "gloss": {
+        "en": "suitability"
+      },
+      "example": "Im Anschreiben begründen Sie Ihre Eignung für die Stelle.",
+      "plural": null,
+      "wordId": null
+    },
+    {
       "id": "lx.sich-auszeichnen",
       "lemma": "sich auszeichnen",
       "pos": "VERB",
@@ -8841,6 +9230,20 @@
         "en": "commitment, willingness to work hard"
       },
       "example": "Seine Einsatzbereitschaft wird im Zeugnis gelobt.",
+      "wordId": null
+    },
+    {
+      "id": "lx.fachlich",
+      "lemma": "fachlich",
+      "pos": "ADJ",
+      "role": "productive",
+      "unit": "b2.1-u08",
+      "block": 4,
+      "list_ref": "freq:3001-5000",
+      "gloss": {
+        "en": "professional, technical (relating to one’s field)"
+      },
+      "example": "Fachlich bringe ich viel Erfahrung aus der Pflege mit.",
       "wordId": null
     },
     {
@@ -9700,6 +10103,40 @@
       "wordId": null
     },
     {
+      "id": "lx.konsumverzicht",
+      "lemma": "Konsumverzicht",
+      "pos": "NOUN",
+      "article": "der",
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "b2.1-u09",
+      "block": 3,
+      "list_ref": "compound:Konsum+Verzicht",
+      "gloss": {
+        "en": "consumer abstinence, buying less"
+      },
+      "example": "Konsumverzicht ist für viele junge Leute ein Thema.",
+      "plural": null,
+      "wordId": null
+    },
+    {
+      "id": "lx.haltbarkeit",
+      "lemma": "Haltbarkeit",
+      "pos": "NOUN",
+      "article": "die",
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "b2.1-u09",
+      "block": 3,
+      "list_ref": "derived:haltbar",
+      "gloss": {
+        "en": "durability; shelf life"
+      },
+      "example": "Billige Kleidung hat oft eine geringe Haltbarkeit.",
+      "plural": null,
+      "wordId": null
+    },
+    {
       "id": "lx.gewichtung",
       "lemma": "Gewichtung",
       "pos": "NOUN",
@@ -9862,23 +10299,6 @@
         "en": "downside, flip side"
       },
       "example": "Die Kehrseite der billigen Preise sind niedrige Löhne.",
-      "wordId": null
-    },
-    {
-      "id": "lx.aspekt",
-      "lemma": "Aspekt",
-      "pos": "NOUN",
-      "article": "der",
-      "plural": "Aspekte",
-      "plural_kind": "regular",
-      "role": "productive",
-      "unit": "b2.1-u09",
-      "block": 4,
-      "list_ref": "freq:3001-5000",
-      "gloss": {
-        "en": "aspect"
-      },
-      "example": "Einen Aspekt hat der Artikel ganz vergessen.",
       "wordId": null
     },
     {
@@ -10226,6 +10646,23 @@
         "en": "up to the minute, of the day"
       },
       "example": "Der Podcast soll nicht tagesaktuell sein, sondern Hintergründe liefern.",
+      "wordId": null
+    },
+    {
+      "id": "lx.fakt",
+      "lemma": "Fakt",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Fakten",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.1-u10",
+      "block": 1,
+      "list_ref": "freq:3001-5000",
+      "gloss": {
+        "en": "fact"
+      },
+      "example": "Im Podcast geht es um Fakten, nicht um Meinungen.",
       "wordId": null
     },
     {
@@ -11318,6 +11755,54 @@
       "wordId": null
     },
     {
+      "id": "lx.wissenschaftlich",
+      "lemma": "wissenschaftlich",
+      "pos": "ADJ",
+      "role": "productive",
+      "unit": "b2.1-u11",
+      "block": 1,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "scientific"
+      },
+      "example": "Die Studie ist wissenschaftlich gut gemacht.",
+      "wordId": null
+    },
+    {
+      "id": "lx.methode",
+      "lemma": "Methode",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Methoden",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "b2.1-u11",
+      "block": 1,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "method"
+      },
+      "example": "Mit welcher Methode wurde der Schlaf gemessen?",
+      "wordId": null
+    },
+    {
+      "id": "lx.versuchsperson",
+      "lemma": "Versuchsperson",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Versuchspersonen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.1-u11",
+      "block": 1,
+      "list_ref": "compound:Versuch+Person",
+      "gloss": {
+        "en": "test subject"
+      },
+      "example": "An der Studie nahmen 120 Versuchspersonen teil.",
+      "wordId": null
+    },
+    {
       "id": "lx.schlafrhythmus",
       "lemma": "Schlafrhythmus",
       "pos": "NOUN",
@@ -11597,6 +12082,58 @@
         "en": "permanent(ly), lasting"
       },
       "example": "Wer dauerhaft zu wenig schläft, wird schneller krank.",
+      "wordId": null
+    },
+    {
+      "id": "lx.auswirkung",
+      "lemma": "Auswirkung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Auswirkungen",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "b2.1-u11",
+      "block": 2,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "effect, impact"
+      },
+      "example": "Schlafmangel hat Auswirkungen auf die Konzentration.",
+      "wordId": null
+    },
+    {
+      "id": "lx.konzentration",
+      "lemma": "Konzentration",
+      "pos": "NOUN",
+      "article": "die",
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "b2.1-u11",
+      "block": 2,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "concentration"
+      },
+      "example": "Nach einer kurzen Nacht leidet die Konzentration.",
+      "plural": null,
+      "wordId": null
+    },
+    {
+      "id": "lx.beeinflussen",
+      "lemma": "beeinflussen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "beeinflusst",
+        "perfekt": "hat beeinflusst"
+      },
+      "role": "productive",
+      "unit": "b2.1-u11",
+      "block": 2,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "to influence"
+      },
+      "example": "Das Handy am Abend beeinflusst den Schlaf.",
       "wordId": null
     },
     {
@@ -12123,6 +12660,56 @@
         "en": "source of error"
       },
       "example": "Eine mögliche Fehlerquelle sind die Fragebögen.",
+      "wordId": null
+    },
+    {
+      "id": "lx.feststellen",
+      "lemma": "feststellen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "stellt fest",
+        "perfekt": "hat festgestellt"
+      },
+      "separable": true,
+      "role": "productive",
+      "unit": "b2.1-u11",
+      "block": 4,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "to find, to establish"
+      },
+      "example": "Die Forscher haben festgestellt, dass Licht wach macht.",
+      "wordId": null
+    },
+    {
+      "id": "lx.eindeutig",
+      "lemma": "eindeutig",
+      "pos": "ADJ",
+      "role": "productive",
+      "unit": "b2.1-u11",
+      "block": 4,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "clear(ly), unambiguous"
+      },
+      "example": "Die Ergebnisse sind nicht eindeutig.",
+      "wordId": null
+    },
+    {
+      "id": "lx.aussagekraft",
+      "lemma": "Aussagekraft",
+      "pos": "NOUN",
+      "article": "die",
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "b2.1-u11",
+      "block": 4,
+      "list_ref": "compound:Aussage+Kraft",
+      "gloss": {
+        "en": "significance, explanatory power"
+      },
+      "example": "Mit so wenigen Teilnehmern hat die Studie wenig Aussagekraft.",
+      "plural": null,
       "wordId": null
     },
     {
@@ -12697,6 +13284,55 @@
       "wordId": null
     },
     {
+      "id": "lx.priorisieren",
+      "lemma": "priorisieren",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "priorisiert",
+        "perfekt": "hat priorisiert"
+      },
+      "role": "productive",
+      "unit": "b2.1-u12",
+      "block": 2,
+      "list_ref": "freq:>10000",
+      "gloss": {
+        "en": "to prioritise"
+      },
+      "example": "Wir müssen die Aufgaben für diese Woche priorisieren.",
+      "wordId": null
+    },
+    {
+      "id": "lx.zeitaufwendig",
+      "lemma": "zeitaufwendig",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "b2.1-u12",
+      "block": 2,
+      "list_ref": "compound:Zeit+aufwendig",
+      "gloss": {
+        "en": "time-consuming"
+      },
+      "example": "Die Auswertung der Umfrage war sehr zeitaufwendig.",
+      "wordId": null
+    },
+    {
+      "id": "lx.tatsache",
+      "lemma": "Tatsache",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Tatsachen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b2.1-u12",
+      "block": 2,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "fact"
+      },
+      "example": "Es ist eine Tatsache, dass das Projekt länger gedauert hat.",
+      "wordId": null
+    },
+    {
       "id": "lx.einstieg",
       "lemma": "Einstieg",
       "pos": "NOUN",
@@ -13247,6 +13883,12 @@
       "unit": "b2.1-u01"
     },
     {
+      "lemma": "lx.brauch",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b2.1-u01"
+    },
+    {
       "lemma": "lx.duzen",
       "from": "receptive",
       "to": "productive",
@@ -13254,6 +13896,18 @@
     },
     {
       "lemma": "lx.anliegen",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b2.1-u02"
+    },
+    {
+      "lemma": "lx.zurueckhaltend",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b2.1-u02"
+    },
+    {
+      "lemma": "lx.ausdruecken",
       "from": "receptive",
       "to": "productive",
       "unit": "b2.1-u02"
@@ -13307,6 +13961,18 @@
       "unit": "b2.1-u05"
     },
     {
+      "lemma": "lx.sich-bereit-erklaeren",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b2.1-u05"
+    },
+    {
+      "lemma": "lx.budget",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b2.1-u05"
+    },
+    {
       "lemma": "lx.kommentar",
       "from": "receptive",
       "to": "productive",
@@ -13331,6 +13997,12 @@
       "unit": "b2.1-u07"
     },
     {
+      "lemma": "lx.versorgung",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b2.1-u07"
+    },
+    {
       "lemma": "lx.lehrgang",
       "from": "receptive",
       "to": "productive",
@@ -13343,7 +14015,19 @@
       "unit": "b2.1-u08"
     },
     {
+      "lemma": "lx.konsum",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b2.1-u09"
+    },
+    {
       "lemma": "lx.entfallen",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b2.1-u10"
+    },
+    {
+      "lemma": "lx.ausweichen",
       "from": "receptive",
       "to": "productive",
       "unit": "b2.1-u10"
@@ -13359,48 +14043,6 @@
       "from": "receptive",
       "to": "productive",
       "unit": "b2.1-u12"
-    },
-    {
-      "lemma": "lx.brauch",
-      "from": "receptive",
-      "to": "productive",
-      "unit": "b2.1-u01"
-    },
-    {
-      "lemma": "lx.zurueckhaltend",
-      "from": "receptive",
-      "to": "productive",
-      "unit": "b2.1-u02"
-    },
-    {
-      "lemma": "lx.konsum",
-      "from": "receptive",
-      "to": "productive",
-      "unit": "b2.1-u09"
-    },
-    {
-      "lemma": "lx.sich-bereit-erklaeren",
-      "from": "receptive",
-      "to": "productive",
-      "unit": "b2.1-u05"
-    },
-    {
-      "lemma": "lx.budget",
-      "from": "receptive",
-      "to": "productive",
-      "unit": "b2.1-u05"
-    },
-    {
-      "lemma": "lx.ausweichen",
-      "from": "receptive",
-      "to": "productive",
-      "unit": "b2.1-u10"
-    },
-    {
-      "lemma": "lx.versorgung",
-      "from": "receptive",
-      "to": "productive",
-      "unit": "b2.1-u07"
     }
   ]
 }

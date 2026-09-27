@@ -180,6 +180,42 @@
       "wordId": null
     },
     {
+      "id": "lx.schild",
+      "lemma": "Schild",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Schilder",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.2-u01",
+      "block": 1,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "sign"
+      },
+      "example": "Das Schild zeigt den Weg zum Bahnhof.",
+      "exampleEn": "The sign shows the way to the station.",
+      "wordId": null
+    },
+    {
+      "id": "lx.polizei",
+      "lemma": "Polizei",
+      "pos": "NOUN",
+      "article": "die",
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "a1.2-u01",
+      "block": 1,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "police"
+      },
+      "example": "Die Polizei ist neben dem Rathaus.",
+      "exampleEn": "The police station is next to the town hall.",
+      "plural": null,
+      "wordId": null
+    },
+    {
       "id": "lx.weg",
       "lemma": "Weg",
       "pos": "NOUN",
@@ -365,6 +401,24 @@
       "wordId": null
     },
     {
+      "id": "lx.ecke",
+      "lemma": "Ecke",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Ecken",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a1.2-u01",
+      "block": 2,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "corner"
+      },
+      "example": "Die Apotheke ist an der Ecke.",
+      "exampleEn": "The chemist’s is on the corner.",
+      "wordId": null
+    },
+    {
       "id": "lx.haltestelle",
       "lemma": "Haltestelle",
       "pos": "NOUN",
@@ -503,6 +557,20 @@
       },
       "example": "Liebe Fahrgäste, bitte hier aussteigen.",
       "exampleEn": "Dear passengers, please get off here.",
+      "wordId": null
+    },
+    {
+      "id": "lx.allein",
+      "lemma": "allein",
+      "pos": "ADV",
+      "role": "productive",
+      "unit": "a1.2-u01",
+      "block": 3,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "alone, on one’s own"
+      },
+      "example": "In der Mittagspause esse ich nicht gern allein.",
       "wordId": null
     },
     {
@@ -686,6 +754,62 @@
       },
       "example": "Sie macht eine Ausbildung im Hotel.",
       "exampleEn": "She is doing her training in the hotel.",
+      "wordId": null
+    },
+    {
+      "id": "lx.verkaeufer",
+      "lemma": "Verkäufer",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Verkäufer",
+      "plural_kind": "regular",
+      "feminine": "die Verkäuferin",
+      "role": "productive",
+      "unit": "a1.2-u02",
+      "block": 1,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "shop assistant, salesperson"
+      },
+      "example": "Elif arbeitet als Verkäuferin im Kaufhaus.",
+      "exampleEn": "Elif works as a shop assistant in the department store.",
+      "wordId": null
+    },
+    {
+      "id": "lx.fahrer",
+      "lemma": "Fahrer",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Fahrer",
+      "plural_kind": "regular",
+      "feminine": "die Fahrerin",
+      "role": "productive",
+      "unit": "a1.2-u02",
+      "block": 1,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "driver"
+      },
+      "example": "Der Fahrer bringt die Pakete ins Hotel.",
+      "exampleEn": "The driver brings the parcels to the hotel.",
+      "wordId": null
+    },
+    {
+      "id": "lx.aufgabe",
+      "lemma": "Aufgabe",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Aufgaben",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a1.2-u02",
+      "block": 1,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "task, job, duty"
+      },
+      "example": "Meine Aufgabe im Hotel: Ich helfe an der Rezeption.",
+      "exampleEn": "My job at the hotel: I help at reception.",
       "wordId": null
     },
     {
@@ -1184,6 +1308,41 @@
       "wordId": null
     },
     {
+      "id": "lx.ansage",
+      "lemma": "Ansage",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Ansagen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.2-u03",
+      "block": 1,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "announcement"
+      },
+      "example": "Die Ansage im Bus war schwer zu verstehen.",
+      "wordId": null
+    },
+    {
+      "id": "lx.mietshaus",
+      "lemma": "Mietshaus",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Mietshäuser",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.2-u03",
+      "block": 1,
+      "list_ref": "compound:Miete+Haus",
+      "gloss": {
+        "en": "block of rented flats"
+      },
+      "example": "Priya wohnt in einem Mietshaus mit zwölf Wohnungen.",
+      "exampleEn": "Priya lives in a block of twelve rented flats.",
+      "wordId": null
+    },
+    {
       "id": "lx.hausordnung",
       "lemma": "Hausordnung",
       "pos": "NOUN",
@@ -1344,6 +1503,60 @@
       },
       "example": "Nach 22 Uhr bitte keinen Lärm!",
       "exampleEn": "No noise after 10 pm, please!",
+      "wordId": null
+    },
+    {
+      "id": "lx.regel",
+      "lemma": "Regel",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Regeln",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a1.2-u03",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "rule"
+      },
+      "example": "Für den Hof brauchen wir klare Regeln.",
+      "wordId": null
+    },
+    {
+      "id": "lx.erlauben",
+      "lemma": "erlauben",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "erlaubt",
+        "perfekt": "hat erlaubt"
+      },
+      "role": "receptive",
+      "unit": "a1.2-u03",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to allow, to permit"
+      },
+      "example": "Grillen ist im Hof nicht erlaubt.",
+      "exampleEn": "Barbecues are not allowed in the courtyard.",
+      "wordId": null
+    },
+    {
+      "id": "lx.ordnung",
+      "lemma": "Ordnung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "a1.2-u03",
+      "block": 2,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "order (in Ordnung: all right)"
+      },
+      "example": "Ist alles in Ordnung?",
+      "exampleEn": "Is everything all right?",
+      "plural": null,
       "wordId": null
     },
     {
@@ -2289,6 +2502,24 @@
       "wordId": null
     },
     {
+      "id": "lx.gesundheit",
+      "lemma": "Gesundheit",
+      "pos": "NOUN",
+      "article": "die",
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "a1.2-u05",
+      "block": 2,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "health; bless you!"
+      },
+      "example": "Gesundheit! – Danke.",
+      "exampleEn": "Bless you! – Thank you.",
+      "plural": null,
+      "wordId": null
+    },
+    {
       "id": "lx.arzt",
       "lemma": "Arzt",
       "pos": "NOUN",
@@ -2417,6 +2648,40 @@
       },
       "example": "Er ist im Krankenhaus.",
       "exampleEn": "He is in hospital.",
+      "wordId": null
+    },
+    {
+      "id": "lx.telefonisch",
+      "lemma": "telefonisch",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "a1.2-u05",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "by phone"
+      },
+      "example": "Sie können sich auch telefonisch anmelden.",
+      "exampleEn": "You can also register by phone.",
+      "wordId": null
+    },
+    {
+      "id": "lx.patient",
+      "lemma": "Patient",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Patienten",
+      "plural_kind": "regular",
+      "feminine": "die Patientin",
+      "role": "productive",
+      "unit": "a1.2-u05",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "patient"
+      },
+      "example": "Im Wartezimmer sitzen viele Patienten.",
+      "exampleEn": "There are many patients in the waiting room.",
       "wordId": null
     },
     {
@@ -2724,6 +2989,24 @@
       },
       "example": "Im Winter trage ich einen Mantel.",
       "exampleEn": "In winter I wear a coat.",
+      "wordId": null
+    },
+    {
+      "id": "lx.mode",
+      "lemma": "Mode",
+      "pos": "NOUN",
+      "article": "die",
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "a1.2-u06",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "fashion"
+      },
+      "example": "Elif interessiert sich für Mode.",
+      "exampleEn": "Elif is interested in fashion.",
+      "plural": null,
       "wordId": null
     },
     {
@@ -3060,6 +3343,60 @@
       "wordId": null
     },
     {
+      "id": "lx.kasse",
+      "lemma": "Kasse",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Kassen",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a1.2-u06",
+      "block": 3,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "till, checkout"
+      },
+      "example": "Bitte zahlen Sie an der Kasse.",
+      "exampleEn": "Please pay at the checkout.",
+      "wordId": null
+    },
+    {
+      "id": "lx.kompliment",
+      "lemma": "Kompliment",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Komplimente",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.2-u06",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "compliment"
+      },
+      "example": "Elif macht Priya ein Kompliment: Die Jacke steht dir gut!",
+      "exampleEn": "Elif pays Priya a compliment: the jacket suits you!",
+      "wordId": null
+    },
+    {
+      "id": "lx.online-shop",
+      "lemma": "Online-Shop",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Online-Shops",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.2-u06",
+      "block": 3,
+      "list_ref": "compound:online+Shop",
+      "gloss": {
+        "en": "online shop"
+      },
+      "example": "Im Online-Shop ist die Jacke billiger.",
+      "exampleEn": "The jacket is cheaper in the online shop.",
+      "wordId": null
+    },
+    {
       "id": "lx.brief",
       "lemma": "Brief",
       "pos": "NOUN",
@@ -3227,6 +3564,24 @@
       "wordId": null
     },
     {
+      "id": "lx.karte",
+      "lemma": "Karte",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Karten",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.2-u07",
+      "block": 1,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "card; postcard; map"
+      },
+      "example": "Priya kauft auf der Post eine Karte und Briefmarken.",
+      "exampleEn": "Priya buys a card and stamps at the post office.",
+      "wordId": null
+    },
+    {
       "id": "lx.konto",
       "lemma": "Konto",
       "pos": "NOUN",
@@ -3391,6 +3746,60 @@
       },
       "example": "Die IBAN beginnt mit DE.",
       "exampleEn": "The IBAN starts with DE.",
+      "wordId": null
+    },
+    {
+      "id": "lx.bildschirm",
+      "lemma": "Bildschirm",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Bildschirme",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.2-u07",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "screen"
+      },
+      "example": "Auf dem Bildschirm steht eine Fehlermeldung.",
+      "wordId": null
+    },
+    {
+      "id": "lx.verwendungszweck",
+      "lemma": "Verwendungszweck",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Verwendungszwecke",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.2-u07",
+      "block": 2,
+      "list_ref": "compound:Verwendung+Zweck",
+      "gloss": {
+        "en": "payment reference"
+      },
+      "example": "Beim Verwendungszweck schreiben Sie: Miete Oktober.",
+      "exampleEn": "As the payment reference you write: rent October.",
+      "wordId": null
+    },
+    {
+      "id": "lx.benutzen",
+      "lemma": "benutzen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "benutzt",
+        "perfekt": "hat benutzt"
+      },
+      "role": "productive",
+      "unit": "a1.2-u07",
+      "block": 2,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "to use"
+      },
+      "example": "Wie benutze ich den Geldautomaten?",
+      "exampleEn": "How do I use the cash machine?",
       "wordId": null
     },
     {
@@ -4114,6 +4523,24 @@
       "wordId": null
     },
     {
+      "id": "lx.jahreszeit",
+      "lemma": "Jahreszeit",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Jahreszeiten",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.2-u08",
+      "block": 4,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "season"
+      },
+      "example": "Welche Jahreszeit magst du am liebsten?",
+      "exampleEn": "Which season do you like best?",
+      "wordId": null
+    },
+    {
       "id": "lx.haushalt",
       "lemma": "Haushalt",
       "pos": "NOUN",
@@ -4282,6 +4709,42 @@
       "wordId": null
     },
     {
+      "id": "lx.kuehlschrank",
+      "lemma": "Kühlschrank",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Kühlschränke",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a1.2-u09",
+      "block": 1,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "fridge"
+      },
+      "example": "Die Milch steht im Kühlschrank.",
+      "exampleEn": "The milk is in the fridge.",
+      "wordId": null
+    },
+    {
+      "id": "lx.sache",
+      "lemma": "Sache",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Sachen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.2-u09",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "thing; matter"
+      },
+      "example": "Räum bitte deine Sachen auf!",
+      "exampleEn": "Please tidy up your things!",
+      "wordId": null
+    },
+    {
       "id": "lx.mitbewohner",
       "lemma": "Mitbewohner",
       "pos": "NOUN",
@@ -4445,6 +4908,23 @@
       "wordId": null
     },
     {
+      "id": "lx.streit",
+      "lemma": "Streit",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Streite",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.2-u09",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "argument, quarrel"
+      },
+      "example": "Nach dem Streit haben wir lange nicht gesprochen.",
+      "wordId": null
+    },
+    {
       "id": "lx.vorsicht",
       "lemma": "Vorsicht!",
       "pos": "INTJ",
@@ -4593,6 +5073,24 @@
       "wordId": null
     },
     {
+      "id": "lx.notiz",
+      "lemma": "Notiz",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Notizen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.2-u09",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "note"
+      },
+      "example": "Sophie schreibt eine Notiz für den Putzplan.",
+      "exampleEn": "Sophie writes a note for the cleaning rota.",
+      "wordId": null
+    },
+    {
       "id": "lx.haar",
       "lemma": "Haar",
       "pos": "NOUN",
@@ -4732,6 +5230,26 @@
       "wordId": null
     },
     {
+      "id": "lx.beschreiben",
+      "lemma": "beschreiben",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "beschreibt",
+        "praet": "beschrieb",
+        "perfekt": "hat beschrieben"
+      },
+      "role": "productive",
+      "unit": "a1.2-u10",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to describe"
+      },
+      "example": "Frau Lehmann beschreibt ihre Mutter.",
+      "exampleEn": "Mrs Lehmann describes her mother.",
+      "wordId": null
+    },
+    {
       "id": "lx.lustig",
       "lemma": "lustig",
       "pos": "ADJ",
@@ -4849,6 +5367,23 @@
       },
       "example": "Auf dem alten Foto sieht er sehr ernst aus.",
       "exampleEn": "He looks very serious in the old photo.",
+      "wordId": null
+    },
+    {
+      "id": "lx.charakter",
+      "lemma": "Charakter",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Charaktere",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.2-u10",
+      "block": 2,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "character, personality"
+      },
+      "example": "Sie hat einen starken Charakter.",
       "wordId": null
     },
     {
@@ -4994,6 +5529,21 @@
       "wordId": null
     },
     {
+      "id": "lx.vorher",
+      "lemma": "vorher",
+      "pos": "ADV",
+      "role": "receptive",
+      "unit": "a1.2-u10",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "beforehand"
+      },
+      "example": "Vorher hat Frau Lehmann in Halle gewohnt.",
+      "exampleEn": "Before that, Mrs Lehmann lived in Halle.",
+      "wordId": null
+    },
+    {
       "id": "lx.veranstaltung",
       "lemma": "Veranstaltung",
       "pos": "NOUN",
@@ -5132,6 +5682,41 @@
       "wordId": null
     },
     {
+      "id": "lx.plakat",
+      "lemma": "Plakat",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Plakate",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.2-u11",
+      "block": 1,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "poster"
+      },
+      "example": "Auf dem Plakat sieht man fliegende Autos.",
+      "wordId": null
+    },
+    {
+      "id": "lx.bibliothek",
+      "lemma": "Bibliothek",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Bibliotheken",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a1.2-u11",
+      "block": 1,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "library"
+      },
+      "example": "In der Bibliothek gibt es am Samstag eine Lesung.",
+      "exampleEn": "There is a reading at the library on Saturday.",
+      "wordId": null
+    },
+    {
       "id": "lx.app",
       "lemma": "App",
       "pos": "NOUN",
@@ -5257,6 +5842,25 @@
       },
       "example": "Ich bin heute nur per Handy erreichbar.",
       "exampleEn": "Today I can only be reached by mobile.",
+      "wordId": null
+    },
+    {
+      "id": "lx.waehlen",
+      "lemma": "wählen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "wählt",
+        "perfekt": "hat gewählt"
+      },
+      "role": "receptive",
+      "unit": "a1.2-u11",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to choose; to dial; to vote"
+      },
+      "example": "Wählen Sie ein Datum und eine Uhrzeit.",
+      "exampleEn": "Choose a date and a time.",
       "wordId": null
     },
     {
@@ -5588,21 +6192,21 @@
       "wordId": null
     },
     {
-      "id": "lx.geburtstag",
-      "lemma": "Geburtstag",
+      "id": "lx.glueck",
+      "lemma": "Glück",
       "pos": "NOUN",
-      "article": "der",
-      "plural": "Geburtstage",
-      "plural_kind": "regular",
+      "article": "das",
+      "plural_kind": "singular-only",
       "role": "productive",
       "unit": "a1.2-u12",
-      "block": 3,
+      "block": 2,
       "list_ref": "A1",
       "gloss": {
-        "en": "birthday"
+        "en": "luck; happiness"
       },
-      "example": "Arjun hat am Samstag Geburtstag.",
-      "exampleEn": "It is Arjun’s birthday on Saturday.",
+      "example": "Viel Glück im neuen Job!",
+      "exampleEn": "Good luck in your new job!",
+      "plural": null,
       "wordId": null
     },
     {
@@ -5698,6 +6302,24 @@
       "example": "Elif bringt eine Torte mit.",
       "exampleEn": "Elif is bringing a cake.",
       "wordId": null
+    },
+    {
+      "id": "lx.liste",
+      "lemma": "Liste",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Listen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.2-u12",
+      "block": 3,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "list"
+      },
+      "example": "Wir schreiben eine Liste: Wer bringt was mit?",
+      "exampleEn": "We write a list: who is bringing what?",
+      "wordId": null
     }
   ],
   "promotions": [
@@ -5720,7 +6342,25 @@
       "unit": "a1.2-u11"
     },
     {
+      "lemma": "lx.absagen",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.2-u11"
+    },
+    {
+      "lemma": "lx.zusagen",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.2-u11"
+    },
+    {
       "lemma": "lx.planen",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.2-u12"
+    },
+    {
+      "lemma": "lx.geburtstag",
       "from": "receptive",
       "to": "productive",
       "unit": "a1.2-u12"

@@ -109,23 +109,6 @@
       "wordId": null
     },
     {
-      "id": "lx.sprachschule",
-      "lemma": "Sprachschule",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": "Sprachschulen",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "a2.1-u01",
-      "block": 1,
-      "list_ref": "compound:Sprache+Schule",
-      "gloss": {
-        "en": "language school"
-      },
-      "example": "Ich habe Deutsch an einer Sprachschule gelernt.",
-      "wordId": null
-    },
-    {
       "id": "lx.herkunft",
       "lemma": "Herkunft",
       "pos": "NOUN",
@@ -174,6 +157,39 @@
         "en": "chance, opportunity"
       },
       "example": "Die Stelle in Leipzig ist eine große Chance für mich.",
+      "wordId": null
+    },
+    {
+      "id": "lx.selbst",
+      "lemma": "selbst",
+      "pos": "ADV",
+      "role": "receptive",
+      "unit": "a2.1-u01",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "(my/your…)self; even"
+      },
+      "example": "Das Essen koche ich selbst.",
+      "exampleEn": "I cook the food myself.",
+      "wordId": null
+    },
+    {
+      "id": "lx.elektrotechnik",
+      "lemma": "Elektrotechnik",
+      "pos": "NOUN",
+      "article": "die",
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "a2.1-u01",
+      "block": 1,
+      "list_ref": "freq:top-10000",
+      "gloss": {
+        "en": "electrical engineering"
+      },
+      "example": "Priya arbeitet am Empfang von Brandt Elektrotechnik.",
+      "exampleEn": "Priya works at reception at Brandt Elektrotechnik.",
+      "plural": null,
       "wordId": null
     },
     {
@@ -336,6 +352,57 @@
       "wordId": null
     },
     {
+      "id": "lx.erleben",
+      "lemma": "erleben",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "erlebt",
+        "perfekt": "hat erlebt"
+      },
+      "role": "receptive",
+      "unit": "a2.1-u01",
+      "block": 2,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "to experience"
+      },
+      "example": "In Deutschland habe ich viel erlebt.",
+      "wordId": null
+    },
+    {
+      "id": "lx.gespraech",
+      "lemma": "Gespräch",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Gespräche",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a2.1-u01",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "conversation, talk"
+      },
+      "example": "In der Mittagspause kommt Priya mit Jan ins Gespräch.",
+      "exampleEn": "At lunch Priya gets talking with Jan.",
+      "wordId": null
+    },
+    {
+      "id": "lx.gerade",
+      "lemma": "gerade",
+      "pos": "ADV",
+      "role": "receptive",
+      "unit": "a2.1-u01",
+      "block": 2,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "just (now), at the moment"
+      },
+      "example": "Ich bin gerade erst nach Leipzig gekommen.",
+      "exampleEn": "I have only just come to Leipzig.",
+      "wordId": null
+    },
+    {
       "id": "lx.mittagspause",
       "lemma": "Mittagspause",
       "pos": "NOUN",
@@ -367,20 +434,6 @@
         "en": "canteen (at work)"
       },
       "example": "Das Essen in der Kantine ist gut und billig.",
-      "wordId": null
-    },
-    {
-      "id": "lx.allein",
-      "lemma": "allein",
-      "pos": "ADV",
-      "role": "productive",
-      "unit": "a2.1-u01",
-      "block": 3,
-      "list_ref": "A1",
-      "gloss": {
-        "en": "alone, on one’s own"
-      },
-      "example": "In der Mittagspause esse ich nicht gern allein.",
       "wordId": null
     },
     {
@@ -662,18 +715,21 @@
       "wordId": null
     },
     {
-      "id": "lx.eigen",
-      "lemma": "eigen",
-      "pos": "ADJ",
-      "role": "productive",
+      "id": "lx.interesse",
+      "lemma": "Interesse",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Interessen",
+      "plural_kind": "regular",
+      "role": "receptive",
       "unit": "a2.1-u02",
       "block": 1,
       "list_ref": "A2",
       "gloss": {
-        "en": "own"
+        "en": "interest"
       },
-      "example": "Ich suche eine eigene Wohnung.",
-      "exampleEn": "I am looking for a flat of my own.",
+      "example": "Ich habe Interesse an der Wohnung.",
+      "exampleEn": "I am interested in the flat.",
       "wordId": null
     },
     {
@@ -1034,6 +1090,44 @@
       "wordId": null
     },
     {
+      "id": "lx.einzug",
+      "lemma": "Einzug",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Einzüge",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.1-u02",
+      "block": 3,
+      "list_ref": "derived:einziehen",
+      "gloss": {
+        "en": "moving in"
+      },
+      "example": "Beim Einzug hilft uns Priya.",
+      "wordId": null
+    },
+    {
+      "id": "lx.besprechen",
+      "lemma": "besprechen",
+      "pos": "VERB",
+      "verb_forms": {
+        "2sg": "besprichst",
+        "3sg": "bespricht",
+        "praet": "besprach",
+        "perfekt": "hat besprochen"
+      },
+      "role": "productive",
+      "unit": "a2.1-u02",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to discuss"
+      },
+      "example": "Das besprechen wir morgen im Team.",
+      "exampleEn": "We will discuss that in the team tomorrow.",
+      "wordId": null
+    },
+    {
       "id": "lx.smartphone",
       "lemma": "Smartphone",
       "pos": "NOUN",
@@ -1048,23 +1142,6 @@
         "en": "smartphone"
       },
       "example": "Mein Smartphone ist erst ein Jahr alt.",
-      "wordId": null
-    },
-    {
-      "id": "lx.bildschirm",
-      "lemma": "Bildschirm",
-      "pos": "NOUN",
-      "article": "der",
-      "plural": "Bildschirme",
-      "plural_kind": "regular",
-      "role": "productive",
-      "unit": "a2.1-u03",
-      "block": 1,
-      "list_ref": "A2",
-      "gloss": {
-        "en": "screen"
-      },
-      "example": "Auf dem Bildschirm steht eine Fehlermeldung.",
       "wordId": null
     },
     {
@@ -1212,21 +1289,58 @@
       "wordId": null
     },
     {
-      "id": "lx.kamera",
-      "lemma": "Kamera",
+      "id": "lx.erreichen",
+      "lemma": "erreichen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "erreicht",
+        "perfekt": "hat erreicht"
+      },
+      "role": "receptive",
+      "unit": "a2.1-u03",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to reach, to achieve"
+      },
+      "example": "Ich möchte mein Ziel bis nächstes Jahr erreichen.",
+      "wordId": null
+    },
+    {
+      "id": "lx.loesen",
+      "lemma": "lösen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "löst",
+        "perfekt": "hat gelöst"
+      },
+      "role": "productive",
+      "unit": "a2.1-u03",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to solve"
+      },
+      "example": "Mit einem Neustart löst Priya das Problem.",
+      "exampleEn": "Priya solves the problem by restarting.",
+      "wordId": null
+    },
+    {
+      "id": "lx.produkt",
+      "lemma": "Produkt",
       "pos": "NOUN",
-      "article": "die",
-      "plural": "Kameras",
+      "article": "das",
+      "plural": "Produkte",
       "plural_kind": "regular",
       "role": "receptive",
       "unit": "a2.1-u03",
       "block": 1,
       "list_ref": "A2",
       "gloss": {
-        "en": "camera"
+        "en": "product"
       },
-      "example": "Die Kamera von meinem Handy ist sehr gut.",
-      "exampleEn": "The camera on my phone is very good.",
+      "example": "Das Produkt hat zwei Jahre Garantie.",
+      "exampleEn": "The product has a two-year warranty.",
       "wordId": null
     },
     {
@@ -1317,20 +1431,6 @@
       "wordId": null
     },
     {
-      "id": "lx.online",
-      "lemma": "online",
-      "pos": "ADV",
-      "role": "receptive",
-      "unit": "a2.1-u03",
-      "block": 2,
-      "list_ref": "freq:top5000",
-      "gloss": {
-        "en": "online"
-      },
-      "example": "Wie lange bist du jeden Tag online?",
-      "wordId": null
-    },
-    {
       "id": "lx.update",
       "lemma": "Update",
       "pos": "NOUN",
@@ -1379,23 +1479,6 @@
         "en": "attachment (e-mail)"
       },
       "example": "Die Fotos sind im Anhang.",
-      "wordId": null
-    },
-    {
-      "id": "lx.sprachnachricht",
-      "lemma": "Sprachnachricht",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": "Sprachnachrichten",
-      "plural_kind": "regular",
-      "role": "productive",
-      "unit": "a2.1-u03",
-      "block": 3,
-      "list_ref": "compound:Sprache+Nachricht",
-      "gloss": {
-        "en": "voice message"
-      },
-      "example": "Anna schickt mir oft Sprachnachrichten.",
       "wordId": null
     },
     {
@@ -1536,18 +1619,39 @@
       "wordId": null
     },
     {
-      "id": "lx.per",
-      "lemma": "per",
-      "pos": "PREP",
+      "id": "lx.zeitung",
+      "lemma": "Zeitung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Zeitungen",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a2.1-u03",
+      "block": 3,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "newspaper"
+      },
+      "example": "Emre liest die Zeitung auf dem Handy.",
+      "exampleEn": "Emre reads the newspaper on his phone.",
+      "wordId": null
+    },
+    {
+      "id": "lx.radio",
+      "lemma": "Radio",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Radios",
+      "plural_kind": "regular",
       "role": "receptive",
       "unit": "a2.1-u03",
       "block": 3,
-      "list_ref": "B1",
+      "list_ref": "A1",
       "gloss": {
-        "en": "by, via (per E-Mail)"
+        "en": "radio"
       },
-      "example": "Ich schicke dir die Adresse per E-Mail.",
-      "exampleEn": "I will send you the address by e-mail.",
+      "example": "Morgens hört Priya Radio.",
+      "exampleEn": "In the mornings Priya listens to the radio.",
       "wordId": null
     },
     {
@@ -2196,6 +2300,21 @@
       "wordId": null
     },
     {
+      "id": "lx.moeglich",
+      "lemma": "möglich",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "a2.1-u05",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "possible"
+      },
+      "example": "Ist ein Tisch für sechs Personen möglich?",
+      "exampleEn": "Would a table for six be possible?",
+      "wordId": null
+    },
+    {
       "id": "lx.vorspeise",
       "lemma": "Vorspeise",
       "pos": "NOUN",
@@ -2355,6 +2474,21 @@
       },
       "example": "Auf der Karte stehen warme und kalte Speisen.",
       "exampleEn": "The menu has hot and cold dishes.",
+      "wordId": null
+    },
+    {
+      "id": "lx.typisch",
+      "lemma": "typisch",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "a2.1-u05",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "typical"
+      },
+      "example": "Leipziger Allerlei ist ein typisch sächsisches Gericht.",
+      "exampleEn": "Leipziger Allerlei is a typical Saxon dish.",
       "wordId": null
     },
     {
@@ -2677,6 +2811,40 @@
       "wordId": null
     },
     {
+      "id": "lx.buchen",
+      "lemma": "buchen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "bucht",
+        "perfekt": "hat gebucht"
+      },
+      "role": "productive",
+      "unit": "a2.1-u06",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to book"
+      },
+      "example": "Priya bucht die Fahrkarten online.",
+      "exampleEn": "Priya books the tickets online.",
+      "wordId": null
+    },
+    {
+      "id": "lx.verschieden",
+      "lemma": "verschieden",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "a2.1-u06",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "different, various"
+      },
+      "example": "Es gibt verschiedene Verbindungen nach Berlin.",
+      "exampleEn": "There are various connections to Berlin.",
+      "wordId": null
+    },
+    {
       "id": "lx.bahnsteig",
       "lemma": "Bahnsteig",
       "pos": "NOUN",
@@ -2981,6 +3149,25 @@
         "en": "onward journey"
       },
       "example": "Für die Weiterfahrt nehmen Sie bitte den Bus.",
+      "wordId": null
+    },
+    {
+      "id": "lx.starten",
+      "lemma": "starten",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "startet",
+        "perfekt": "ist gestartet"
+      },
+      "role": "receptive",
+      "unit": "a2.1-u06",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to start, to set off"
+      },
+      "example": "Unsere Reise startet am Freitag in Leipzig.",
+      "exampleEn": "Our trip starts in Leipzig on Friday.",
       "wordId": null
     },
     {
@@ -3348,6 +3535,64 @@
       "wordId": null
     },
     {
+      "id": "lx.aktivitaet",
+      "lemma": "Aktivität",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Aktivitäten",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.1-u07",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "activity"
+      },
+      "example": "Der Verein bietet viele Aktivitäten für Kinder an.",
+      "exampleEn": "The club offers lots of activities for children.",
+      "wordId": null
+    },
+    {
+      "id": "lx.sich-bewegen",
+      "lemma": "sich bewegen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "bewegt sich",
+        "perfekt": "hat sich bewegt"
+      },
+      "reflexive": "akk",
+      "role": "receptive",
+      "unit": "a2.1-u07",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to move, to get exercise"
+      },
+      "example": "Ich bewege mich zu wenig.",
+      "exampleEn": "I don’t get enough exercise.",
+      "wordId": null
+    },
+    {
+      "id": "lx.gewinnen",
+      "lemma": "gewinnen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "gewinnt",
+        "praet": "gewann",
+        "perfekt": "hat gewonnen"
+      },
+      "role": "productive",
+      "unit": "a2.1-u07",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to win"
+      },
+      "example": "Unser Team hat am Sonntag gewonnen.",
+      "exampleEn": "Our team won on Sunday.",
+      "wordId": null
+    },
+    {
       "id": "lx.gegenvorschlag",
       "lemma": "Gegenvorschlag",
       "pos": "NOUN",
@@ -3401,26 +3646,6 @@
         "en": "to suggest"
       },
       "example": "Ich schlage vor, wir treffen uns am Montag.",
-      "wordId": null
-    },
-    {
-      "id": "lx.sich-verabreden",
-      "lemma": "sich verabreden",
-      "pos": "VERB",
-      "verb_forms": {
-        "3sg": "verabredet sich",
-        "perfekt": "hat sich verabredet"
-      },
-      "reflexive": "akk",
-      "rection": "mit + Dat.",
-      "role": "productive",
-      "unit": "a2.1-u07",
-      "block": 3,
-      "list_ref": "A2",
-      "gloss": {
-        "en": "to arrange to meet"
-      },
-      "example": "Ich habe mich mit Amal zum Joggen verabredet.",
       "wordId": null
     },
     {
@@ -3685,6 +3910,25 @@
       "wordId": null
     },
     {
+      "id": "lx.notieren",
+      "lemma": "notieren",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "notiert",
+        "perfekt": "hat notiert"
+      },
+      "role": "receptive",
+      "unit": "a2.1-u08",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to note down"
+      },
+      "example": "Priya notiert die Telefonnummer.",
+      "exampleEn": "Priya notes down the phone number.",
+      "wordId": null
+    },
+    {
       "id": "lx.besprechung",
       "lemma": "Besprechung",
       "pos": "NOUN",
@@ -3770,23 +4014,6 @@
       "wordId": null
     },
     {
-      "id": "lx.empfang",
-      "lemma": "Empfang",
-      "pos": "NOUN",
-      "article": "der",
-      "plural": "Empfänge",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "a2.1-u08",
-      "block": 2,
-      "list_ref": "A2",
-      "gloss": {
-        "en": "reception (desk)"
-      },
-      "example": "Priya arbeitet am Empfang.",
-      "wordId": null
-    },
-    {
       "id": "lx.buchhaltung",
       "lemma": "Buchhaltung",
       "pos": "NOUN",
@@ -3854,27 +4081,6 @@
       },
       "example": "Die Besprechung ist in Raum 12.",
       "exampleEn": "The meeting is in room 12.",
-      "wordId": null
-    },
-    {
-      "id": "lx.besprechen",
-      "lemma": "besprechen",
-      "pos": "VERB",
-      "verb_forms": {
-        "2sg": "besprichst",
-        "3sg": "bespricht",
-        "praet": "besprach",
-        "perfekt": "hat besprochen"
-      },
-      "role": "productive",
-      "unit": "a2.1-u08",
-      "block": 2,
-      "list_ref": "A2",
-      "gloss": {
-        "en": "to discuss"
-      },
-      "example": "Das besprechen wir morgen im Team.",
-      "exampleEn": "We will discuss that in the team tomorrow.",
       "wordId": null
     },
     {
@@ -4002,26 +4208,6 @@
         "en": "to apologise"
       },
       "example": "Ich entschuldige mich für die Verspätung.",
-      "wordId": null
-    },
-    {
-      "id": "lx.absagen",
-      "lemma": "absagen",
-      "pos": "VERB",
-      "verb_forms": {
-        "3sg": "sagt ab",
-        "perfekt": "hat abgesagt"
-      },
-      "separable": true,
-      "rection": "jmdm. etw. (Dat. + Akk.)",
-      "role": "receptive",
-      "unit": "a2.1-u08",
-      "block": 3,
-      "list_ref": "A2",
-      "gloss": {
-        "en": "to cancel, to call off"
-      },
-      "example": "Frau Kowalski sagt den Termin am Montag ab.",
       "wordId": null
     },
     {
@@ -4203,6 +4389,54 @@
         "en": "blood pressure"
       },
       "example": "Die Ärztin misst den Blutdruck.",
+      "wordId": null
+    },
+    {
+      "id": "lx.krankheit",
+      "lemma": "Krankheit",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Krankheiten",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.1-u09",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "illness, disease"
+      },
+      "example": "Diese Krankheit ist nicht gefährlich.",
+      "exampleEn": "This illness is not dangerous.",
+      "wordId": null
+    },
+    {
+      "id": "lx.schlimm",
+      "lemma": "schlimm",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "a2.1-u09",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "bad, serious"
+      },
+      "example": "Ist es schlimm, Frau Doktor?",
+      "exampleEn": "Is it serious, doctor?",
+      "wordId": null
+    },
+    {
+      "id": "lx.stark",
+      "lemma": "stark",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "a2.1-u09",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "strong; severe"
+      },
+      "example": "Emre hat starke Kopfschmerzen.",
+      "exampleEn": "Emre has a severe headache.",
       "wordId": null
     },
     {
@@ -4536,6 +4770,24 @@
       "wordId": null
     },
     {
+      "id": "lx.zeitschrift",
+      "lemma": "Zeitschrift",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Zeitschriften",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.1-u09",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "magazine"
+      },
+      "example": "In einer Zeitschrift liest Priya Tipps für einen gesunden Alltag.",
+      "exampleEn": "In a magazine Priya reads tips for a healthy everyday life.",
+      "wordId": null
+    },
+    {
       "id": "lx.gefuehl",
       "lemma": "Gefühl",
       "pos": "NOUN",
@@ -4728,23 +4980,6 @@
       "wordId": null
     },
     {
-      "id": "lx.streit",
-      "lemma": "Streit",
-      "pos": "NOUN",
-      "article": "der",
-      "plural": "Streite",
-      "plural_kind": "regular",
-      "role": "productive",
-      "unit": "a2.1-u10",
-      "block": 2,
-      "list_ref": "A2",
-      "gloss": {
-        "en": "argument, quarrel"
-      },
-      "example": "Nach dem Streit haben wir lange nicht gesprochen.",
-      "wordId": null
-    },
-    {
       "id": "lx.stolz",
       "lemma": "stolz",
       "pos": "ADJ",
@@ -4842,6 +5077,25 @@
         "en": "to argue, to quarrel"
       },
       "example": "Die beiden streiten sich oft über Geld.",
+      "wordId": null
+    },
+    {
+      "id": "lx.heiraten",
+      "lemma": "heiraten",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "heiratet",
+        "perfekt": "hat geheiratet"
+      },
+      "role": "receptive",
+      "unit": "a2.1-u10",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to marry, to get married"
+      },
+      "example": "Jan und Anna heiraten im Mai.",
+      "exampleEn": "Jan and Anna are getting married in May.",
       "wordId": null
     },
     {
@@ -5182,6 +5436,23 @@
       "wordId": null
     },
     {
+      "id": "lx.schulzeit",
+      "lemma": "Schulzeit",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": null,
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "a2.1-u11",
+      "block": 1,
+      "list_ref": "compound:Schule+Zeit",
+      "gloss": {
+        "en": "school days, schooldays"
+      },
+      "example": "In meiner Schulzeit hatte ich viele Freunde.",
+      "wordId": null
+    },
+    {
       "id": "lx.berufsschule",
       "lemma": "Berufsschule",
       "pos": "NOUN",
@@ -5487,6 +5758,39 @@
         "en": "cone of sweets for the first school day"
       },
       "example": "Am ersten Schultag bekommen Kinder in Deutschland eine Schultüte.",
+      "wordId": null
+    },
+    {
+      "id": "lx.anders",
+      "lemma": "anders",
+      "pos": "ADV",
+      "role": "productive",
+      "unit": "a2.1-u11",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "different(ly)"
+      },
+      "example": "In Kochi war die Schule ganz anders.",
+      "exampleEn": "School was completely different in Kochi.",
+      "wordId": null
+    },
+    {
+      "id": "lx.interview",
+      "lemma": "Interview",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Interviews",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.1-u11",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "interview"
+      },
+      "example": "Im Interview erzählt ein Lehrer von seiner Schulzeit.",
+      "exampleEn": "In the interview a teacher talks about his school days.",
       "wordId": null
     },
     {
@@ -5962,7 +6266,74 @@
       },
       "example": "Ich bin dir sehr dankbar für deine Hilfe.",
       "wordId": null
+    },
+    {
+      "id": "lx.ueberlegen",
+      "lemma": "überlegen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "überlegt",
+        "perfekt": "hat überlegt"
+      },
+      "role": "receptive",
+      "unit": "a2.1-u12",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to think about, to consider"
+      },
+      "example": "Ich habe lange überlegt, bevor ich gekündigt habe.",
+      "wordId": null
+    },
+    {
+      "id": "lx.kamera",
+      "lemma": "Kamera",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Kameras",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.1-u12",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "camera"
+      },
+      "example": "Die Kamera von meinem Handy ist sehr gut.",
+      "exampleEn": "The camera on my phone is very good.",
+      "wordId": null
     }
   ],
-  "promotions": []
+  "promotions": [
+    {
+      "lemma": "lx.eigen",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a2.1-u02"
+    },
+    {
+      "lemma": "lx.sprachnachricht",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a2.1-u03"
+    },
+    {
+      "lemma": "lx.bildschirm",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a2.1-u03"
+    },
+    {
+      "lemma": "lx.sich-verabreden",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a2.1-u07"
+    },
+    {
+      "lemma": "lx.streit",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a2.1-u10"
+    }
+  ]
 }

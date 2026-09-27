@@ -1758,6 +1758,9 @@
               "anbietet",
               "angeboten hat"
             ],
+            "acceptedWhy": {
+              "angeboten hat": "richtig: auch im Perfekt möglich, hat steht dann am Ende"
+            },
             "explanation": {
               "de": "Im Nebensatz mit obwohl steht das Verb am Ende, und anbieten bleibt zusammen: …, obwohl der Händler mir ein neues Gerät anbietet.",
               "en": "In the obwohl clause the verb goes to the end, and anbieten stays in one piece: … anbietet."
@@ -1765,10 +1768,7 @@
             "errorTags": [
               "verb-final"
             ],
-            "origin": "agent",
-            "acceptedWhy": {
-              "angeboten hat": "richtig: auch im Perfekt möglich, hat steht dann am Ende"
-            }
+            "origin": "agent"
           },
           {
             "id": "b1.1-u04-ls3-p02",

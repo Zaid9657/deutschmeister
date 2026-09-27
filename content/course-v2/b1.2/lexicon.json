@@ -1201,6 +1201,24 @@
       "wordId": null
     },
     {
+      "id": "lx.experte",
+      "lemma": "Experte",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Experten",
+      "plural_kind": "regular",
+      "feminine": "die Expertin",
+      "role": "receptive",
+      "unit": "b1.2-u02",
+      "block": 3,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "expert"
+      },
+      "example": "Eine Expertin der Verbraucherzentrale gibt Tipps.",
+      "wordId": null
+    },
+    {
       "id": "lx.haushaltsgeraet",
       "lemma": "Haushaltsgerät",
       "pos": "NOUN",
@@ -1364,6 +1382,20 @@
         "en": "test winner (best-rated product)"
       },
       "example": "Der Testsieger ist gar nicht so teuer.",
+      "wordId": null
+    },
+    {
+      "id": "lx.unterschiedlich",
+      "lemma": "unterschiedlich",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "b1.2-u02",
+      "block": 4,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "different, varying"
+      },
+      "example": "Die Geräte haben sehr unterschiedliche Preise.",
       "wordId": null
     },
     {
@@ -1534,6 +1566,23 @@
         "en": "job description"
       },
       "example": "Lesen Sie die Stellenbeschreibung genau.",
+      "wordId": null
+    },
+    {
+      "id": "lx.pflegeheim",
+      "lemma": "Pflegeheim",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Pflegeheime",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b1.2-u03",
+      "block": 1,
+      "list_ref": "compound:Pflege+Heim",
+      "gloss": {
+        "en": "care home, nursing home"
+      },
+      "example": "Amal bewirbt sich in einem Pflegeheim.",
       "wordId": null
     },
     {
@@ -1715,6 +1764,20 @@
         "en": "professional"
       },
       "example": "Für die Bewerbung brauchen Sie ein professionelles Foto.",
+      "wordId": null
+    },
+    {
+      "id": "lx.noetig",
+      "lemma": "nötig",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "b1.2-u03",
+      "block": 2,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "necessary"
+      },
+      "example": "Ist ein Foto in der Bewerbung nötig?",
       "wordId": null
     },
     {
@@ -3044,6 +3107,24 @@
       "wordId": null
     },
     {
+      "id": "lx.stoeren",
+      "lemma": "stören",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "stört",
+        "perfekt": "hat gestört"
+      },
+      "role": "productive",
+      "unit": "b1.2-u05",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to disturb, to bother"
+      },
+      "example": "Die laute Musik stört die Nachbarn.",
+      "wordId": null
+    },
+    {
       "id": "lx.nachgeben",
       "lemma": "nachgeben",
       "pos": "VERB",
@@ -3331,23 +3412,6 @@
       "wordId": null
     },
     {
-      "id": "lx.regel",
-      "lemma": "Regel",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": "Regeln",
-      "plural_kind": "regular",
-      "role": "productive",
-      "unit": "b1.2-u05",
-      "block": 4,
-      "list_ref": "A2",
-      "gloss": {
-        "en": "rule"
-      },
-      "example": "Für den Hof brauchen wir klare Regeln.",
-      "wordId": null
-    },
-    {
       "id": "lx.festhalten",
       "lemma": "festhalten",
       "pos": "VERB",
@@ -3563,6 +3627,68 @@
         "en": "production"
       },
       "example": "In der Produktion wird in drei Schichten gearbeitet.",
+      "wordId": null
+    },
+    {
+      "id": "lx.tabelle",
+      "lemma": "Tabelle",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Tabellen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b1.2-u06",
+      "block": 1,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "table, chart"
+      },
+      "example": "In der Tabelle sehen Sie alle Arbeitsschritte.",
+      "wordId": null
+    },
+    {
+      "id": "lx.anweisung",
+      "lemma": "Anweisung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Anweisungen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b1.2-u06",
+      "block": 1,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "instruction"
+      },
+      "example": "Folgen Sie bitte genau den Anweisungen.",
+      "wordId": null
+    },
+    {
+      "id": "lx.einzeln",
+      "lemma": "einzeln",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "b1.2-u06",
+      "block": 1,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "individual, single"
+      },
+      "example": "Die einzelnen Schritte stehen in der Anleitung.",
+      "wordId": null
+    },
+    {
+      "id": "lx.uebersichtlich",
+      "lemma": "übersichtlich",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "b1.2-u06",
+      "block": 1,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "clear, easy to follow"
+      },
+      "example": "Der neue Plan ist sehr übersichtlich.",
       "wordId": null
     },
     {
@@ -3905,6 +4031,20 @@
         "en": "safety goggles"
       },
       "example": "An der Maschine muss eine Schutzbrille getragen werden.",
+      "wordId": null
+    },
+    {
+      "id": "lx.vorsichtig",
+      "lemma": "vorsichtig",
+      "pos": "ADJ",
+      "role": "productive",
+      "unit": "b1.2-u06",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "careful"
+      },
+      "example": "Seien Sie vorsichtig mit der Maschine!",
       "wordId": null
     },
     {
@@ -4406,6 +4546,43 @@
       "wordId": null
     },
     {
+      "id": "lx.schildern",
+      "lemma": "schildern",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "schildert",
+        "perfekt": "hat geschildert"
+      },
+      "role": "productive",
+      "unit": "b1.2-u07",
+      "block": 2,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "to describe (what happened)"
+      },
+      "example": "Priya schildert der Polizei den Unfall.",
+      "wordId": null
+    },
+    {
+      "id": "lx.geschehen",
+      "lemma": "geschehen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "geschieht",
+        "praet": "geschah",
+        "perfekt": "ist geschehen"
+      },
+      "role": "receptive",
+      "unit": "b1.2-u07",
+      "block": 2,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "to happen"
+      },
+      "example": "Der Unfall geschah an der Kreuzung.",
+      "wordId": null
+    },
+    {
       "id": "lx.wunde",
       "lemma": "Wunde",
       "pos": "NOUN",
@@ -4753,6 +4930,25 @@
       "wordId": null
     },
     {
+      "id": "lx.entstehen",
+      "lemma": "entstehen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "entsteht",
+        "praet": "entstand",
+        "perfekt": "ist entstanden"
+      },
+      "role": "receptive",
+      "unit": "b1.2-u07",
+      "block": 4,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "to arise, to be caused"
+      },
+      "example": "Am Fahrrad ist ein Schaden von 200 Euro entstanden.",
+      "wordId": null
+    },
+    {
       "id": "lx.forderung",
       "lemma": "Forderung",
       "pos": "NOUN",
@@ -4900,6 +5096,24 @@
         "en": "overdue"
       },
       "example": "Die Zahlung ist seit zwei Wochen überfällig.",
+      "wordId": null
+    },
+    {
+      "id": "lx.verwenden",
+      "lemma": "verwenden",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "verwendet",
+        "perfekt": "hat verwendet"
+      },
+      "role": "receptive",
+      "unit": "b1.2-u08",
+      "block": 1,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "to use"
+      },
+      "example": "Verwenden Sie für den Widerspruch das Formular.",
       "wordId": null
     },
     {
@@ -5221,6 +5435,24 @@
         "en": "to defend oneself, to fight back"
       },
       "example": "Gegen falsche Rechnungen sollte man sich wehren.",
+      "wordId": null
+    },
+    {
+      "id": "lx.bearbeiten",
+      "lemma": "bearbeiten",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "bearbeitet",
+        "perfekt": "hat bearbeitet"
+      },
+      "role": "receptive",
+      "unit": "b1.2-u08",
+      "block": 3,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "to process, to deal with"
+      },
+      "example": "Wir bearbeiten Ihren Widerspruch so schnell wie möglich.",
       "wordId": null
     },
     {
@@ -5553,6 +5785,40 @@
         "en": "village"
       },
       "example": "Das Dorf hat nur einen kleinen Laden.",
+      "wordId": null
+    },
+    {
+      "id": "lx.einheimische",
+      "lemma": "Einheimische",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Einheimischen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b1.2-u09",
+      "block": 1,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "local (person)"
+      },
+      "example": "Die Einheimischen kennen die besten Wege.",
+      "wordId": null
+    },
+    {
+      "id": "lx.fussgaengerzone",
+      "lemma": "Fußgängerzone",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Fußgängerzonen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b1.2-u09",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "pedestrian zone"
+      },
+      "example": "In der Fußgängerzone gibt es viele kleine Geschäfte.",
       "wordId": null
     },
     {
@@ -5903,6 +6169,23 @@
         "en": "along"
       },
       "example": "Gehen Sie immer den Fluss entlang.",
+      "wordId": null
+    },
+    {
+      "id": "lx.stadtfuehrung",
+      "lemma": "Stadtführung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Stadtführungen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b1.2-u09",
+      "block": 3,
+      "list_ref": "compound:Stadt+Führung",
+      "gloss": {
+        "en": "guided tour of a town"
+      },
+      "example": "Die Stadtführung beginnt am Marktplatz.",
       "wordId": null
     },
     {
@@ -6396,6 +6679,23 @@
       "wordId": null
     },
     {
+      "id": "lx.material",
+      "lemma": "Material",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Materialien",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b1.2-u10",
+      "block": 2,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "material"
+      },
+      "example": "Für die Reparatur braucht man das richtige Material.",
+      "wordId": null
+    },
+    {
       "id": "lx.nachhaltig",
       "lemma": "nachhaltig",
       "pos": "ADJ",
@@ -6725,6 +7025,42 @@
       "wordId": null
     },
     {
+      "id": "lx.inhalt",
+      "lemma": "Inhalt",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Inhalte",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b1.2-u10",
+      "block": 4,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "content(s)"
+      },
+      "example": "Fassen Sie den Inhalt der Diskussion kurz zusammen.",
+      "wordId": null
+    },
+    {
+      "id": "lx.unterscheiden",
+      "lemma": "unterscheiden",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "unterscheidet",
+        "praet": "unterschied",
+        "perfekt": "hat unterschieden"
+      },
+      "role": "receptive",
+      "unit": "b1.2-u10",
+      "block": 4,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "to distinguish, to tell apart"
+      },
+      "example": "Man muss Meinungen und Fakten unterscheiden.",
+      "wordId": null
+    },
+    {
       "id": "lx.ehrenamt",
       "lemma": "Ehrenamt",
       "pos": "NOUN",
@@ -6900,6 +7236,20 @@
       "wordId": null
     },
     {
+      "id": "lx.aktiv",
+      "lemma": "aktiv",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "b1.2-u11",
+      "block": 1,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "active"
+      },
+      "example": "Frau Schubert ist seit Jahren im Verein aktiv.",
+      "wordId": null
+    },
+    {
       "id": "lx.gesellschaft",
       "lemma": "Gesellschaft",
       "pos": "NOUN",
@@ -7059,6 +7409,23 @@
         "en": "disadvantaged"
       },
       "example": "Die Initiative hilft benachteiligten Kindern.",
+      "wordId": null
+    },
+    {
+      "id": "lx.politik",
+      "lemma": "Politik",
+      "pos": "NOUN",
+      "article": "die",
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "b1.2-u11",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "politics; policy"
+      },
+      "example": "Samir interessiert sich sehr für Politik.",
+      "plural": null,
       "wordId": null
     },
     {
@@ -7905,23 +8272,6 @@
       "wordId": null
     },
     {
-      "id": "lx.plakat",
-      "lemma": "Plakat",
-      "pos": "NOUN",
-      "article": "das",
-      "plural": "Plakate",
-      "plural_kind": "regular",
-      "role": "productive",
-      "unit": "b1.2-u12",
-      "block": 4,
-      "list_ref": "B1",
-      "gloss": {
-        "en": "poster"
-      },
-      "example": "Auf dem Plakat sieht man fliegende Autos.",
-      "wordId": null
-    },
-    {
       "id": "lx.darstellen",
       "lemma": "darstellen",
       "pos": "VERB",
@@ -8068,6 +8418,24 @@
         "en": "imaginable"
       },
       "example": "Ein Leben ohne Internet ist kaum noch vorstellbar.",
+      "wordId": null
+    },
+    {
+      "id": "lx.besucher",
+      "lemma": "Besucher",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Besucher",
+      "plural_kind": "regular",
+      "feminine": "die Besucherin",
+      "role": "receptive",
+      "unit": "b1.2-u12",
+      "block": 4,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "visitor"
+      },
+      "example": "Die Ausstellung hatte am ersten Tag 500 Besucher.",
       "wordId": null
     }
   ],
@@ -8295,7 +8663,19 @@
       "unit": "b1.2-u11"
     },
     {
+      "lemma": "lx.waehlen",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b1.2-u11"
+    },
+    {
       "lemma": "lx.aussicht",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b1.2-u12"
+    },
+    {
+      "lemma": "lx.plakat",
       "from": "receptive",
       "to": "productive",
       "unit": "b1.2-u12"

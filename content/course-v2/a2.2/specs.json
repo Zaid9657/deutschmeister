@@ -63,7 +63,8 @@
             "lx.redewendung",
             "lx.sprachcafe",
             "lx.tandem",
-            "lx.einstufungstest"
+            "lx.einstufungstest",
+            "lx.sprachkurs"
           ]
         },
         {
@@ -78,7 +79,10 @@
             "lx.unterbrechen",
             "lx.ansprechen",
             "lx.missverstaendnis",
-            "lx.verwechseln"
+            "lx.verwechseln",
+            "lx.meinung",
+            "lx.kontakt",
+            "lx.thema"
           ]
         }
       ],
@@ -326,7 +330,8 @@
             "lx.abreise",
             "lx.aufenthalt",
             "lx.halbpension",
-            "lx.ausgebucht"
+            "lx.ausgebucht",
+            "lx.unterkunft"
           ]
         },
         {
@@ -357,7 +362,8 @@
             "lx.zimmerservice",
             "lx.auschecken",
             "lx.ausnahmsweise",
-            "lx.schluesselkarte"
+            "lx.schluesselkarte",
+            "lx.beantworten"
           ]
         }
       ],
@@ -629,7 +635,11 @@
             "lx.anbieter",
             "lx.verlaengern",
             "lx.bedingung",
-            "lx.laufzeit"
+            "lx.laufzeit",
+            "lx.abonnement",
+            "lx.widerruf",
+            "lx.widerrufen",
+            "lx.abschliessen"
           ]
         },
         {
@@ -754,7 +764,9 @@
             "lx.girokonto",
             "lx.online-banking",
             "lx.kredit",
-            "lx.diebstahl"
+            "lx.diebstahl",
+            "lx.ersatz",
+            "lx.lassen"
           ]
         },
         {
@@ -770,7 +782,8 @@
             "lx.zinsen",
             "lx.leihen",
             "lx.schulden",
-            "lx.dauerauftrag"
+            "lx.dauerauftrag",
+            "lx.erledigen"
           ]
         },
         {
@@ -894,7 +907,8 @@
             "lx.verstopft",
             "lx.schimmel",
             "lx.waschbecken",
-            "lx.feucht"
+            "lx.feucht",
+            "lx.dringend"
           ]
         },
         {
@@ -1047,7 +1061,8 @@
             "lx.energie",
             "lx.verpackung",
             "lx.schuetzen",
-            "lx.plastik"
+            "lx.plastik",
+            "lx.muelltrennung"
           ]
         },
         {
@@ -1167,7 +1182,6 @@
           "target": 10,
           "lemmas": [
             "lx.schulabschluss",
-            "lx.schulzeit",
             "lx.zertifikat",
             "lx.anerkennung",
             "lx.damals",
@@ -1205,7 +1219,8 @@
             "lx.tabellarisch",
             "lx.zeitraum",
             "lx.angabe",
-            "lx.anschliessend"
+            "lx.anschliessend",
+            "lx.ordnen"
           ]
         }
       ],
@@ -1330,7 +1345,6 @@
             "lx.staerke",
             "lx.schwaeche",
             "lx.ablauf",
-            "lx.erledigen",
             "lx.probezeit",
             "lx.ueberzeugen",
             "lx.vorgesetzte",
@@ -1350,7 +1364,8 @@
             "lx.sicherheit",
             "lx.freundlichkeit",
             "lx.geduld",
-            "lx.arbeitsklima"
+            "lx.arbeitsklima",
+            "lx.arbeitsvertrag"
           ]
         }
       ],
@@ -1460,7 +1475,8 @@
             "lx.schreiben-2",
             "lx.mahnung",
             "lx.ablaufen",
-            "lx.aktenzeichen"
+            "lx.aktenzeichen",
+            "lx.einschreiben"
           ]
         },
         {
@@ -1490,7 +1506,8 @@
             "lx.versaeumen",
             "lx.stempel",
             "lx.beilegen",
-            "lx.original"
+            "lx.original",
+            "lx.angeben"
           ]
         }
       ],
@@ -1608,7 +1625,8 @@
             "lx.jugend",
             "lx.heimatstadt",
             "lx.geburt",
-            "lx.rente"
+            "lx.rente",
+            "lx.station"
           ]
         },
         {
@@ -1618,23 +1636,23 @@
             "lx.veraenderung",
             "lx.sich-erinnern",
             "lx.erinnerung",
-            "lx.erleben",
             "lx.abschied",
             "lx.sich-trennen",
-            "lx.heimweh"
+            "lx.heimweh",
+            "lx.paar",
+            "lx.geschichte"
           ]
         },
         {
           "title": "Pläne für die Zukunft",
           "target": 7,
           "lemmas": [
-            "lx.plan",
-            "lx.erreichen",
             "lx.vorhaben",
             "lx.irgendwann",
             "lx.unabhaengig",
             "lx.gruenden",
-            "lx.hoffnung"
+            "lx.hoffnung",
+            "lx.vorsatz"
           ]
         }
       ],

@@ -42,7 +42,10 @@
             "lx.tschuess",
             "lx.auf-wiedersehen",
             "lx.freut-mich",
-            "lx.entschuldigung"
+            "lx.entschuldigung",
+            "lx.sprachschule",
+            "lx.online",
+            "lx.chat"
           ]
         },
         {
@@ -57,7 +60,9 @@
             "lx.stadt",
             "lx.fragen",
             "lx.kurs",
-            "lx.teilnehmer"
+            "lx.teilnehmer",
+            "lx.sich-vorstellen",
+            "lx.wohnort"
           ]
         },
         {
@@ -73,7 +78,8 @@
             "lx.deutschland",
             "lx.ein-bisschen",
             "lx.tuerkisch",
-            "lx.spanisch"
+            "lx.spanisch",
+            "lx.muttersprache"
           ]
         }
       ],
@@ -219,7 +225,9 @@
             "lx.verstehen",
             "lx.richtig",
             "lx.falsch",
-            "lx.ausfuellen"
+            "lx.ausfuellen",
+            "lx.empfang",
+            "lx.anmeldung"
           ]
         }
       ],
@@ -320,7 +328,10 @@
             "lx.tochter",
             "lx.kind",
             "lx.geschwister",
-            "lx.zeigen"
+            "lx.zeigen",
+            "lx.video",
+            "lx.familienstand",
+            "lx.partner"
           ]
         },
         {
@@ -600,7 +611,10 @@
             "lx.balkon",
             "lx.schlafzimmer",
             "lx.toilette",
-            "lx.garten"
+            "lx.garten",
+            "lx.per",
+            "lx.wg",
+            "lx.stadtteil"
           ]
         },
         {
@@ -615,7 +629,8 @@
             "lx.lampe",
             "lx.sessel",
             "lx.moebel",
-            "lx.fenster"
+            "lx.fenster",
+            "lx.schreibtisch"
           ]
         },
         {
@@ -631,7 +646,8 @@
             "lx.miete",
             "lx.nachbar",
             "lx.anzeige",
-            "lx.ruhig"
+            "lx.ruhig",
+            "lx.eigen"
           ]
         }
       ],
@@ -762,7 +778,10 @@
             "lx.ladekabel",
             "lx.internet",
             "lx.telefon",
-            "lx.kollege"
+            "lx.kollege",
+            "lx.praktikum",
+            "lx.telefonieren",
+            "lx.webseite"
           ]
         },
         {
@@ -778,7 +797,8 @@
             "lx.geben",
             "lx.gebraucht",
             "lx.wissen",
-            "lx.problem"
+            "lx.problem",
+            "lx.ding"
           ]
         }
       ],
@@ -897,7 +917,8 @@
             "lx.anrufen",
             "lx.fruehstuecken",
             "lx.tag",
-            "lx.nach-hause"
+            "lx.nach-hause",
+            "lx.erzaehlen"
           ]
         },
         {
@@ -922,7 +943,9 @@
             "lx.geoeffnet",
             "lx.wochenende",
             "lx.spaet",
-            "lx.offen"
+            "lx.offen",
+            "lx.anrufbeantworter",
+            "lx.geschaeft"
           ]
         }
       ],
@@ -1050,7 +1073,10 @@
             "lx.park",
             "lx.tut-mir-leid",
             "lx.idee",
-            "lx.planen"
+            "lx.planen",
+            "lx.sich-verabreden",
+            "lx.absagen",
+            "lx.zusagen"
           ]
         },
         {
@@ -1197,7 +1223,9 @@
             "lx.bestellen",
             "lx.bezahlen",
             "lx.nehmen",
-            "lx.moegen"
+            "lx.moegen",
+            "lx.geburtstag",
+            "lx.hoeflich"
           ]
         },
         {
@@ -1309,7 +1337,9 @@
             "lx.ankunft",
             "lx.verspaetung",
             "lx.durchsage",
-            "lx.information"
+            "lx.information",
+            "lx.hauptbahnhof",
+            "lx.anzeigetafel"
           ]
         },
         {
@@ -1340,7 +1370,9 @@
             "lx.frei",
             "lx.person",
             "lx.halten",
-            "lx.kilometer"
+            "lx.kilometer",
+            "lx.unterwegs",
+            "lx.ein-paar"
           ]
         }
       ],
@@ -1447,7 +1479,8 @@
             "lx.altstadt",
             "lx.schloss",
             "lx.flohmarkt",
-            "lx.see"
+            "lx.see",
+            "lx.sprachnachricht"
           ]
         },
         {
@@ -1580,7 +1613,8 @@
             "lx.leicht",
             "lx.schwer",
             "lx.ueben",
-            "lx.frage"
+            "lx.frage",
+            "lx.plan"
           ]
         },
         {
@@ -1604,7 +1638,6 @@
             "lx.deutschkurs",
             "lx.pruefung",
             "lx.hausaufgabe",
-            "lx.anmeldung",
             "lx.sich-anmelden",
             "lx.ankreuzen",
             "lx.beispiel",

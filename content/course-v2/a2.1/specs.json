@@ -44,10 +44,11 @@
             "lx.vermissen",
             "lx.verlassen",
             "lx.heimatland",
-            "lx.sprachschule",
             "lx.herkunft",
             "lx.visum",
-            "lx.chance"
+            "lx.chance",
+            "lx.selbst",
+            "lx.elektrotechnik"
           ]
         },
         {
@@ -63,7 +64,10 @@
             "lx.umgebung",
             "lx.kultur",
             "lx.gewohnheit",
-            "lx.besonders"
+            "lx.besonders",
+            "lx.erleben",
+            "lx.gespraech",
+            "lx.gerade"
           ]
         },
         {
@@ -72,7 +76,6 @@
           "lemmas": [
             "lx.mittagspause",
             "lx.kantine",
-            "lx.allein",
             "lx.mahlzeit",
             "lx.smalltalk",
             "lx.sich-unterhalten",
@@ -192,7 +195,7 @@
             "lx.moebliert",
             "lx.altbau",
             "lx.wohngemeinschaft",
-            "lx.eigen"
+            "lx.interesse"
           ]
         },
         {
@@ -224,7 +227,9 @@
             "lx.ausziehen",
             "lx.einrichten",
             "lx.aufbauen",
-            "lx.karton"
+            "lx.karton",
+            "lx.einzug",
+            "lx.besprechen"
           ]
         }
       ],
@@ -329,7 +334,6 @@
           "target": 10,
           "lemmas": [
             "lx.smartphone",
-            "lx.bildschirm",
             "lx.akku",
             "lx.speicher",
             "lx.einstellung",
@@ -338,7 +342,9 @@
             "lx.einschalten",
             "lx.ausschalten",
             "lx.taste",
-            "lx.kamera"
+            "lx.erreichen",
+            "lx.loesen",
+            "lx.produkt"
           ]
         },
         {
@@ -350,7 +356,6 @@
             "lx.meldung",
             "lx.speichern",
             "lx.loeschen",
-            "lx.online",
             "lx.update",
             "lx.internetseite",
             "lx.anhang"
@@ -360,7 +365,6 @@
           "title": "Soziale Medien und Nachrichten",
           "target": 9,
           "lemmas": [
-            "lx.sprachnachricht",
             "lx.nutzer",
             "lx.hochladen",
             "lx.teilen",
@@ -369,7 +373,8 @@
             "lx.profil",
             "lx.privat",
             "lx.oeffentlich",
-            "lx.per"
+            "lx.zeitung",
+            "lx.radio"
           ]
         }
       ],
@@ -616,7 +621,8 @@
             "lx.menue",
             "lx.kneipe",
             "lx.bestaetigen",
-            "lx.terrasse"
+            "lx.terrasse",
+            "lx.moeglich"
           ]
         },
         {
@@ -632,7 +638,8 @@
             "lx.scharf",
             "lx.beilage",
             "lx.gebraten",
-            "lx.speise"
+            "lx.speise",
+            "lx.typisch"
           ]
         },
         {
@@ -758,7 +765,9 @@
             "lx.buchungsbestaetigung",
             "lx.hinfahrt",
             "lx.rueckfahrt",
-            "lx.abkuerzung"
+            "lx.abkuerzung",
+            "lx.buchen",
+            "lx.verschieden"
           ]
         },
         {
@@ -788,7 +797,8 @@
             "lx.planmaessig",
             "lx.ersatzverkehr",
             "lx.ausfall",
-            "lx.weiterfahrt"
+            "lx.weiterfahrt",
+            "lx.starten"
           ]
         }
       ],
@@ -915,7 +925,10 @@
             "lx.anfaenger",
             "lx.ausprobieren",
             "lx.gruppe",
-            "lx.trainer"
+            "lx.trainer",
+            "lx.aktivitaet",
+            "lx.sich-bewegen",
+            "lx.gewinnen"
           ]
         },
         {
@@ -925,7 +938,6 @@
             "lx.gegenvorschlag",
             "lx.verabredung",
             "lx.vorschlagen",
-            "lx.sich-verabreden",
             "lx.teilnehmen",
             "lx.woechentlich",
             "lx.abstimmen",
@@ -1036,7 +1048,8 @@
             "lx.hinterlassen",
             "lx.telefonnotiz",
             "lx.sich-verspaeten",
-            "lx.zurzeit"
+            "lx.zurzeit",
+            "lx.notieren"
           ]
         },
         {
@@ -1048,12 +1061,10 @@
             "lx.fruehschicht",
             "lx.spaetschicht",
             "lx.ueberstunde",
-            "lx.empfang",
             "lx.buchhaltung",
             "lx.konferenzraum",
             "lx.techniker",
-            "lx.raum",
-            "lx.besprechen"
+            "lx.raum"
           ]
         },
         {
@@ -1067,7 +1078,6 @@
             "lx.apparat",
             "lx.leitung",
             "lx.sich-entschuldigen",
-            "lx.absagen",
             "lx.stau"
           ]
         }
@@ -1186,7 +1196,10 @@
             "lx.beschwerde",
             "lx.hausarzt",
             "lx.vorerkrankung",
-            "lx.blutdruck"
+            "lx.blutdruck",
+            "lx.krankheit",
+            "lx.schlimm",
+            "lx.stark"
           ]
         },
         {
@@ -1217,7 +1230,8 @@
             "lx.fit",
             "lx.abnehmen",
             "lx.spaziergang",
-            "lx.taeglich"
+            "lx.taeglich",
+            "lx.zeitschrift"
           ]
         }
       ],
@@ -1340,13 +1354,13 @@
           "lemmas": [
             "lx.beziehung",
             "lx.freundschaft",
-            "lx.streit",
             "lx.stolz",
             "lx.neuigkeit",
             "lx.verliebt",
             "lx.pech",
             "lx.laune",
-            "lx.sich-streiten"
+            "lx.sich-streiten",
+            "lx.heiraten"
           ]
         },
         {
@@ -1467,7 +1481,8 @@
             "lx.stundenplan",
             "lx.mathematik",
             "lx.realschule",
-            "lx.schuluniform"
+            "lx.schuluniform",
+            "lx.schulzeit"
           ]
         },
         {
@@ -1497,7 +1512,9 @@
             "lx.abendkurs",
             "lx.semester",
             "lx.tafel",
-            "lx.schultuete"
+            "lx.schultuete",
+            "lx.anders",
+            "lx.interview"
           ]
         }
       ],
@@ -1644,7 +1661,9 @@
             "lx.sekt",
             "lx.kerze",
             "lx.geschenkpapier",
-            "lx.dankbar"
+            "lx.dankbar",
+            "lx.ueberlegen",
+            "lx.kamera"
           ]
         }
       ],

@@ -343,6 +343,24 @@
       "wordId": null
     },
     {
+      "id": "lx.sprachkurs",
+      "lemma": "Sprachkurs",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Sprachkurse",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a2.2-u01",
+      "block": 2,
+      "list_ref": "compound:Sprache+Kurs",
+      "gloss": {
+        "en": "language course"
+      },
+      "example": "Tomasz besucht einen Sprachkurs am Abend.",
+      "exampleEn": "Tomasz goes to an evening language course.",
+      "wordId": null
+    },
+    {
       "id": "lx.peinlich",
       "lemma": "peinlich",
       "pos": "ADJ",
@@ -496,6 +514,59 @@
         "en": "to mix up, to confuse"
       },
       "example": "Ich verwechsle oft „wenn\" und „als\".",
+      "wordId": null
+    },
+    {
+      "id": "lx.meinung",
+      "lemma": "Meinung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Meinungen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.2-u01",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "opinion"
+      },
+      "example": "Schreib mir bitte deine Meinung.",
+      "wordId": null
+    },
+    {
+      "id": "lx.kontakt",
+      "lemma": "Kontakt",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Kontakte",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.2-u01",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "contact"
+      },
+      "example": "Im Sprachcafé findet Lina schnell Kontakt.",
+      "exampleEn": "Lina quickly makes contact at the language café.",
+      "wordId": null
+    },
+    {
+      "id": "lx.thema",
+      "lemma": "Thema",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Themen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.2-u01",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "topic, subject"
+      },
+      "example": "Lass uns das Thema wechseln.",
+      "exampleEn": "Let’s change the subject.",
       "wordId": null
     },
     {
@@ -1215,6 +1286,24 @@
       "wordId": null
     },
     {
+      "id": "lx.unterkunft",
+      "lemma": "Unterkunft",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Unterkünfte",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a2.2-u03",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "accommodation"
+      },
+      "example": "Wir suchen eine günstige Unterkunft in Berlin.",
+      "exampleEn": "We are looking for cheap accommodation in Berlin.",
+      "wordId": null
+    },
+    {
       "id": "lx.einzelzimmer",
       "lemma": "Einzelzimmer",
       "pos": "NOUN",
@@ -1535,6 +1624,25 @@
         "en": "key card"
       },
       "example": "Meine Schlüsselkarte öffnet die Tür nicht.",
+      "wordId": null
+    },
+    {
+      "id": "lx.beantworten",
+      "lemma": "beantworten",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "beantwortet",
+        "perfekt": "hat beantwortet"
+      },
+      "role": "receptive",
+      "unit": "a2.2-u03",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to answer"
+      },
+      "example": "Die Rezeption beantwortet alle Fragen.",
+      "exampleEn": "Reception answers all questions.",
       "wordId": null
     },
     {
@@ -2350,6 +2458,83 @@
       "wordId": null
     },
     {
+      "id": "lx.abonnement",
+      "lemma": "Abonnement",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Abonnements",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a2.2-u05",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "subscription"
+      },
+      "example": "Ich möchte mein Abonnement kündigen.",
+      "exampleEn": "I would like to cancel my subscription.",
+      "wordId": null
+    },
+    {
+      "id": "lx.widerruf",
+      "lemma": "Widerruf",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Widerrufe",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.2-u05",
+      "block": 2,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "cancellation, withdrawal (of a contract)"
+      },
+      "example": "Den Widerruf schicken Sie am besten per E-Mail.",
+      "exampleEn": "It is best to send the cancellation by e-mail.",
+      "wordId": null
+    },
+    {
+      "id": "lx.widerrufen",
+      "lemma": "widerrufen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "widerruft",
+        "praet": "widerrief",
+        "perfekt": "hat widerrufen"
+      },
+      "role": "receptive",
+      "unit": "a2.2-u05",
+      "block": 2,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "to withdraw from, to cancel (a contract)"
+      },
+      "example": "Sie können den Vertrag 14 Tage lang widerrufen.",
+      "exampleEn": "You can withdraw from the contract for 14 days.",
+      "wordId": null
+    },
+    {
+      "id": "lx.abschliessen",
+      "lemma": "abschließen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "schließt ab",
+        "praet": "schloss ab",
+        "perfekt": "hat abgeschlossen"
+      },
+      "separable": true,
+      "role": "productive",
+      "unit": "a2.2-u05",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to conclude (a contract); to lock"
+      },
+      "example": "Lina schließt einen neuen Handyvertrag ab.",
+      "exampleEn": "Lina takes out a new mobile contract.",
+      "wordId": null
+    },
+    {
       "id": "lx.auswahl",
       "lemma": "Auswahl",
       "pos": "NOUN",
@@ -2665,6 +2850,45 @@
       "wordId": null
     },
     {
+      "id": "lx.ersatz",
+      "lemma": "Ersatz",
+      "pos": "NOUN",
+      "article": "der",
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "a2.2-u06",
+      "block": 1,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "replacement"
+      },
+      "example": "Die Bank schickt Ihnen eine neue Karte als Ersatz.",
+      "exampleEn": "The bank will send you a new card as a replacement.",
+      "plural": null,
+      "wordId": null
+    },
+    {
+      "id": "lx.lassen",
+      "lemma": "lassen",
+      "pos": "VERB",
+      "verb_forms": {
+        "2sg": "lässt",
+        "3sg": "lässt",
+        "praet": "ließ",
+        "perfekt": "hat gelassen"
+      },
+      "role": "productive",
+      "unit": "a2.2-u06",
+      "block": 1,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "to let; to have (something done)"
+      },
+      "example": "Ich lasse die Karte sofort sperren.",
+      "exampleEn": "I will have the card blocked immediately.",
+      "wordId": null
+    },
+    {
       "id": "lx.sich-etwas-leisten",
       "lemma": "sich etwas leisten",
       "pos": "VERB",
@@ -2840,6 +3064,24 @@
         "en": "standing order"
       },
       "example": "Die Miete zahle ich per Dauerauftrag.",
+      "wordId": null
+    },
+    {
+      "id": "lx.erledigen",
+      "lemma": "erledigen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "erledigt",
+        "perfekt": "hat erledigt"
+      },
+      "role": "productive",
+      "unit": "a2.2-u06",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to do, to deal with, to get done"
+      },
+      "example": "Diese Aufgabe erledige ich sofort.",
       "wordId": null
     },
     {
@@ -3161,6 +3403,21 @@
         "en": "damp, moist"
       },
       "example": "Die Wand ist feucht.",
+      "wordId": null
+    },
+    {
+      "id": "lx.dringend",
+      "lemma": "dringend",
+      "pos": "ADJ",
+      "role": "productive",
+      "unit": "a2.2-u07",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "urgent(ly)"
+      },
+      "example": "Die Heizung muss dringend repariert werden.",
+      "exampleEn": "The heating urgently needs to be repaired.",
       "wordId": null
     },
     {
@@ -3815,6 +4072,24 @@
       "wordId": null
     },
     {
+      "id": "lx.muelltrennung",
+      "lemma": "Mülltrennung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "a2.2-u08",
+      "block": 2,
+      "list_ref": "compound:Müll+Trennung",
+      "gloss": {
+        "en": "waste separation"
+      },
+      "example": "Mülltrennung ist in Deutschland ganz normal.",
+      "exampleEn": "Separating rubbish is completely normal in Germany.",
+      "plural": null,
+      "wordId": null
+    },
+    {
       "id": "lx.zukunft",
       "lemma": "Zukunft",
       "pos": "NOUN",
@@ -3962,23 +4237,6 @@
         "en": "school-leaving qualification"
       },
       "example": "Welchen Schulabschluss haben Sie?",
-      "wordId": null
-    },
-    {
-      "id": "lx.schulzeit",
-      "lemma": "Schulzeit",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": null,
-      "plural_kind": "singular-only",
-      "role": "productive",
-      "unit": "a2.2-u09",
-      "block": 1,
-      "list_ref": "compound:Schule+Zeit",
-      "gloss": {
-        "en": "school days, schooldays"
-      },
-      "example": "In meiner Schulzeit hatte ich viele Freunde.",
       "wordId": null
     },
     {
@@ -4405,6 +4663,25 @@
       "wordId": null
     },
     {
+      "id": "lx.ordnen",
+      "lemma": "ordnen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "ordnet",
+        "perfekt": "hat geordnet"
+      },
+      "role": "receptive",
+      "unit": "a2.2-u09",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to arrange, to put in order"
+      },
+      "example": "Im Lebenslauf ordnen Sie die Stationen nach der Zeit.",
+      "exampleEn": "In the CV you arrange the stages by date.",
+      "wordId": null
+    },
+    {
       "id": "lx.bewerbung",
       "lemma": "Bewerbung",
       "pos": "NOUN",
@@ -4646,24 +4923,6 @@
       "wordId": null
     },
     {
-      "id": "lx.erledigen",
-      "lemma": "erledigen",
-      "pos": "VERB",
-      "verb_forms": {
-        "3sg": "erledigt",
-        "perfekt": "hat erledigt"
-      },
-      "role": "productive",
-      "unit": "a2.2-u10",
-      "block": 2,
-      "list_ref": "A2",
-      "gloss": {
-        "en": "to do, to deal with, to get done"
-      },
-      "example": "Diese Aufgabe erledige ich sofort.",
-      "wordId": null
-    },
-    {
       "id": "lx.probezeit",
       "lemma": "Probezeit",
       "pos": "NOUN",
@@ -4896,6 +5155,24 @@
       "wordId": null
     },
     {
+      "id": "lx.arbeitsvertrag",
+      "lemma": "Arbeitsvertrag",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Arbeitsverträge",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.2-u10",
+      "block": 3,
+      "list_ref": "compound:Arbeit+Vertrag",
+      "gloss": {
+        "en": "employment contract"
+      },
+      "example": "Lesen Sie den Arbeitsvertrag genau, bevor Sie unterschreiben.",
+      "exampleEn": "Read the employment contract carefully before you sign.",
+      "wordId": null
+    },
+    {
       "id": "lx.buergeramt",
       "lemma": "Bürgeramt",
       "pos": "NOUN",
@@ -5059,6 +5336,24 @@
         "en": "file number, reference"
       },
       "example": "Bitte nennen Sie immer das Aktenzeichen.",
+      "wordId": null
+    },
+    {
+      "id": "lx.einschreiben",
+      "lemma": "Einschreiben",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Einschreiben",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.2-u11",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "registered letter"
+      },
+      "example": "Den Widerspruch schicke ich per Einschreiben.",
+      "exampleEn": "I am sending the objection by registered mail.",
       "wordId": null
     },
     {
@@ -5371,6 +5666,28 @@
       "wordId": null
     },
     {
+      "id": "lx.angeben",
+      "lemma": "angeben",
+      "pos": "VERB",
+      "verb_forms": {
+        "2sg": "gibst an",
+        "3sg": "gibt an",
+        "praet": "gab an",
+        "perfekt": "hat angegeben"
+      },
+      "separable": true,
+      "role": "receptive",
+      "unit": "a2.2-u11",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to state, to give (details)"
+      },
+      "example": "Bitte geben Sie Ihre Adresse und Ihr Geburtsdatum an.",
+      "exampleEn": "Please give your address and date of birth.",
+      "wordId": null
+    },
+    {
       "id": "lx.aufwachsen",
       "lemma": "aufwachsen",
       "pos": "VERB",
@@ -5515,6 +5832,24 @@
       "wordId": null
     },
     {
+      "id": "lx.station",
+      "lemma": "Station",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Stationen",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a2.2-u12",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "stage, stop; ward"
+      },
+      "example": "Leipzig war eine wichtige Station in Priyas Leben.",
+      "exampleEn": "Leipzig was an important stage in Priya’s life.",
+      "wordId": null
+    },
+    {
       "id": "lx.veraenderung",
       "lemma": "Veränderung",
       "pos": "NOUN",
@@ -5566,24 +5901,6 @@
         "en": "memory"
       },
       "example": "Das ist eine schöne Erinnerung.",
-      "wordId": null
-    },
-    {
-      "id": "lx.erleben",
-      "lemma": "erleben",
-      "pos": "VERB",
-      "verb_forms": {
-        "3sg": "erlebt",
-        "perfekt": "hat erlebt"
-      },
-      "role": "productive",
-      "unit": "a2.2-u12",
-      "block": 2,
-      "list_ref": "B1",
-      "gloss": {
-        "en": "to experience"
-      },
-      "example": "In Deutschland habe ich viel erlebt.",
       "wordId": null
     },
     {
@@ -5641,38 +5958,39 @@
       "wordId": null
     },
     {
-      "id": "lx.plan",
-      "lemma": "Plan",
+      "id": "lx.paar",
+      "lemma": "Paar",
       "pos": "NOUN",
-      "article": "der",
-      "plural": "Pläne",
+      "article": "das",
+      "plural": "Paare",
       "plural_kind": "regular",
       "role": "productive",
       "unit": "a2.2-u12",
-      "block": 3,
-      "list_ref": "freq:1-5k",
+      "block": 2,
+      "list_ref": "A2",
       "gloss": {
-        "en": "plan"
+        "en": "couple, pair"
       },
-      "example": "Mein Plan ist die B1-Prüfung im nächsten Jahr.",
+      "example": "Seit zehn Jahren sind Priya und Arjun ein Paar.",
+      "exampleEn": "Priya and Arjun have been a couple for ten years.",
       "wordId": null
     },
     {
-      "id": "lx.erreichen",
-      "lemma": "erreichen",
-      "pos": "VERB",
-      "verb_forms": {
-        "3sg": "erreicht",
-        "perfekt": "hat erreicht"
-      },
+      "id": "lx.geschichte",
+      "lemma": "Geschichte",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Geschichten",
+      "plural_kind": "regular",
       "role": "productive",
       "unit": "a2.2-u12",
-      "block": 3,
+      "block": 2,
       "list_ref": "A2",
       "gloss": {
-        "en": "to reach, to achieve"
+        "en": "story; history"
       },
-      "example": "Ich möchte mein Ziel bis nächstes Jahr erreichen.",
+      "example": "Priya erzählt ihre Geschichte im Vereinsblog.",
+      "exampleEn": "Priya tells her story on the club blog.",
       "wordId": null
     },
     {
@@ -5757,7 +6075,50 @@
       },
       "example": "Meine Hoffnung ist eine feste Stelle.",
       "wordId": null
+    },
+    {
+      "id": "lx.vorsatz",
+      "lemma": "Vorsatz",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Vorsätze",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.2-u12",
+      "block": 3,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "resolution, intention"
+      },
+      "example": "Mein Vorsatz für das neue Jahr: mehr Deutsch sprechen.",
+      "exampleEn": "My resolution for the new year: speak more German.",
+      "wordId": null
     }
   ],
-  "promotions": []
+  "promotions": [
+    {
+      "lemma": "lx.muttersprache",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a2.2-u01"
+    },
+    {
+      "lemma": "lx.schulzeit",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a2.2-u09"
+    },
+    {
+      "lemma": "lx.erleben",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a2.2-u12"
+    },
+    {
+      "lemma": "lx.erreichen",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a2.2-u12"
+    }
+  ]
 }

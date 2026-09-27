@@ -49,7 +49,8 @@
             "lx.anhaenglich",
             "lx.distanziert",
             "lx.innig",
-            "lx.geselligkeit"
+            "lx.geselligkeit",
+            "lx.psychologe"
           ]
         },
         {
@@ -70,7 +71,8 @@
             "lx.sich-oeffnen",
             "lx.sich-versoehnen",
             "lx.scham",
-            "lx.vertrauensbruch"
+            "lx.vertrauensbruch",
+            "lx.ueberstehen"
           ]
         },
         {
@@ -91,7 +93,8 @@
             "lx.aufrechterhalten",
             "lx.unzertrennlich",
             "lx.freundschaftlich",
-            "lx.auf-augenhoehe"
+            "lx.auf-augenhoehe",
+            "lx.fachleute"
           ]
         },
         {
@@ -111,7 +114,8 @@
             "lx.fluechtig",
             "lx.vereinsamung",
             "lx.blockieren",
-            "lx.profilbild"
+            "lx.profilbild",
+            "lx.magazin"
           ]
         }
       ],
@@ -227,7 +231,8 @@
             "lx.suessstoff",
             "lx.naehrstoffreich",
             "lx.pflanzlich",
-            "lx.fettarm"
+            "lx.fettarm",
+            "lx.wissenschaftler"
           ]
         },
         {
@@ -985,7 +990,8 @@
             "lx.tiefgruendig",
             "lx.packend",
             "lx.ueberbewertet",
-            "lx.mitreissend"
+            "lx.mitreissend",
+            "lx.beeindrucken"
           ]
         },
         {
@@ -1321,7 +1327,8 @@
             "lx.e-rezept",
             "lx.ueberweisungsschein",
             "lx.einlesen",
-            "lx.blutabnahme"
+            "lx.blutabnahme",
+            "lx.versichertenkarte"
           ]
         },
         {
@@ -1330,7 +1337,6 @@
             "lx.einwilligung",
             "lx.datenschutz",
             "lx.patientenakte",
-            "lx.merkblatt",
             "lx.ambulant",
             "lx.stationaer",
             "lx.patientenrecht",
@@ -1363,7 +1369,8 @@
             "lx.schwerhoerig",
             "lx.anschaulich",
             "lx.verunsicherung",
-            "lx.erlaeuterung"
+            "lx.erlaeuterung",
+            "lx.beruecksichtigen"
           ]
         }
       ],
@@ -1912,7 +1919,9 @@
             "lx.buergernah",
             "lx.verklausuliert",
             "lx.buerokratisch",
-            "lx.behoerdlich"
+            "lx.behoerdlich",
+            "lx.absatz",
+            "lx.teilweise"
           ]
         }
       ],
@@ -2052,7 +2061,9 @@
             "lx.sprachwechsel",
             "lx.sprachmittlung",
             "lx.gleichberechtigt",
-            "lx.zweitsprache"
+            "lx.zweitsprache",
+            "lx.oesterreichisch",
+            "lx.schweizerisch"
           ]
         },
         {

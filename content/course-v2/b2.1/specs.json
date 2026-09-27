@@ -52,7 +52,8 @@
             "lx.wahlheimat",
             "lx.heimatlos",
             "lx.lebensmittelpunkt",
-            "lx.vielschichtig"
+            "lx.vielschichtig",
+            "lx.bewusst"
           ]
         },
         {
@@ -74,7 +75,9 @@
             "lx.verklaert",
             "lx.kulturgut",
             "lx.ueberholt",
-            "lx.loslassen"
+            "lx.loslassen",
+            "lx.praegung",
+            "lx.brauchtum"
           ]
         },
         {
@@ -97,7 +100,8 @@
             "lx.zuzug",
             "lx.zugezogen",
             "lx.heimisch",
-            "lx.hinter-sich-lassen"
+            "lx.hinter-sich-lassen",
+            "lx.logistik"
           ]
         },
         {
@@ -119,7 +123,9 @@
             "lx.zutreffen",
             "lx.anknuepfen",
             "lx.lesart",
-            "lx.einleuchtend"
+            "lx.einleuchtend",
+            "lx.aspekt",
+            "lx.beurteilen"
           ]
         }
       ],
@@ -227,7 +233,8 @@
             "lx.gespraechig",
             "lx.zwischenruf",
             "lx.rederecht",
-            "lx.abschweifen"
+            "lx.abschweifen",
+            "lx.zurueckhaltung"
           ]
         },
         {
@@ -294,7 +301,8 @@
             "lx.stichhaltig",
             "lx.abwegig",
             "lx.gespraechsregel",
-            "lx.konsens"
+            "lx.konsens",
+            "lx.scheitern"
           ]
         }
       ],
@@ -402,7 +410,8 @@
             "lx.zulaessig",
             "lx.ueberstundenregelung",
             "lx.unterzeichnen",
-            "lx.resturlaub"
+            "lx.resturlaub",
+            "lx.umstand"
           ]
         },
         {
@@ -773,7 +782,8 @@
             "lx.mietverhaeltnis",
             "lx.wohnkosten",
             "lx.sozialwohnung",
-            "lx.beengt"
+            "lx.beengt",
+            "lx.projektleiter"
           ]
         },
         {
@@ -796,7 +806,9 @@
             "lx.inklusiv",
             "lx.nachbarschaftstreff",
             "lx.miteinander",
-            "lx.ausgrenzen"
+            "lx.ausgrenzen",
+            "lx.toleranz",
+            "lx.betreuen"
           ]
         },
         {
@@ -985,7 +997,8 @@
             "lx.ironisch",
             "lx.provokant",
             "lx.anprangern",
-            "lx.kolumne"
+            "lx.kolumne",
+            "lx.behaupten"
           ]
         },
         {
@@ -1007,7 +1020,8 @@
             "lx.interessengruppe",
             "lx.polarisieren",
             "lx.kontroverse",
-            "lx.fuer-und-wider"
+            "lx.fuer-und-wider",
+            "lx.sich-einmischen"
           ]
         },
         {
@@ -1146,7 +1160,10 @@
             "lx.nachtwache",
             "lx.dokumentation",
             "lx.auffaellig",
-            "lx.fluessigkeitszufuhr"
+            "lx.fluessigkeitszufuhr",
+            "lx.verabreichen",
+            "lx.beobachten",
+            "lx.unruhig"
           ]
         },
         {
@@ -1191,7 +1208,8 @@
             "lx.belastungsgrenze",
             "lx.personaldecke",
             "lx.aushandeln",
-            "lx.diensttausch"
+            "lx.diensttausch",
+            "lx.personalengpass"
           ]
         },
         {
@@ -1214,7 +1232,8 @@
             "lx.verbesserungswuerdig",
             "lx.selbstreflexion",
             "lx.fingerspitzengefuehl",
-            "lx.verbesserungsvorschlag"
+            "lx.verbesserungsvorschlag",
+            "lx.zusammenhang"
           ]
         }
       ],
@@ -1332,7 +1351,10 @@
             "lx.fachkraft",
             "lx.ausbildungsdauer",
             "lx.anerkennungsstelle",
-            "lx.gleichgestellt"
+            "lx.gleichgestellt",
+            "lx.merkblatt",
+            "lx.auslaendisch",
+            "lx.gleichwertig"
           ]
         },
         {
@@ -1378,7 +1400,8 @@
             "lx.weiterentwicklung",
             "lx.ansprechend",
             "lx.interesse-wecken",
-            "lx.bewerbungsportal"
+            "lx.bewerbungsportal",
+            "lx.eignung"
           ]
         },
         {
@@ -1400,7 +1423,8 @@
             "lx.fachkenntnisse",
             "lx.fundiert",
             "lx.verfuegen",
-            "lx.einsatzbereitschaft"
+            "lx.einsatzbereitschaft",
+            "lx.fachlich"
           ]
         }
       ],
@@ -1556,7 +1580,9 @@
             "lx.umweltschaedlich",
             "lx.ressourcenschonend",
             "lx.textilmuell",
-            "lx.ausstoss"
+            "lx.ausstoss",
+            "lx.konsumverzicht",
+            "lx.haltbarkeit"
           ]
         },
         {
@@ -1574,7 +1600,6 @@
             "lx.letztlich",
             "lx.zweifellos",
             "lx.kehrseite",
-            "lx.aspekt",
             "lx.in-kauf-nehmen",
             "lx.vertretbar",
             "lx.gesichtspunkt",
@@ -1686,7 +1711,8 @@
             "lx.nachrichtenlage",
             "lx.hintergrundinformation",
             "lx.uebertragen",
-            "lx.tagesaktuell"
+            "lx.tagesaktuell",
+            "lx.fakt"
           ]
         },
         {
@@ -1871,7 +1897,10 @@
             "lx.fachzeitschrift",
             "lx.ermitteln",
             "lx.annahme",
-            "lx.verzerren"
+            "lx.verzerren",
+            "lx.wissenschaftlich",
+            "lx.methode",
+            "lx.versuchsperson"
           ]
         },
         {
@@ -1894,7 +1923,10 @@
             "lx.chronisch",
             "lx.hormon",
             "lx.bildschirmzeit",
-            "lx.dauerhaft"
+            "lx.dauerhaft",
+            "lx.auswirkung",
+            "lx.konzentration",
+            "lx.beeinflussen"
           ]
         },
         {
@@ -1939,7 +1971,10 @@
             "lx.geringfuegig",
             "lx.zunehmend",
             "lx.repraesentativ",
-            "lx.fehlerquelle"
+            "lx.fehlerquelle",
+            "lx.feststellen",
+            "lx.eindeutig",
+            "lx.aussagekraft"
           ]
         }
       ],
@@ -2078,7 +2113,10 @@
             "lx.im-verzug-sein",
             "lx.kennzahl",
             "lx.ueberschaubar",
-            "lx.stolperstein"
+            "lx.stolperstein",
+            "lx.priorisieren",
+            "lx.zeitaufwendig",
+            "lx.tatsache"
           ]
         },
         {

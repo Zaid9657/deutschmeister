@@ -123,6 +123,55 @@
       "wordId": null
     },
     {
+      "id": "lx.sprachschule",
+      "lemma": "Sprachschule",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Sprachschulen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.1-u01",
+      "block": 1,
+      "list_ref": "compound:Sprache+Schule",
+      "gloss": {
+        "en": "language school"
+      },
+      "example": "Ich habe Deutsch an einer Sprachschule gelernt.",
+      "wordId": null
+    },
+    {
+      "id": "lx.online",
+      "lemma": "online",
+      "pos": "ADV",
+      "role": "receptive",
+      "unit": "a1.1-u01",
+      "block": 1,
+      "list_ref": "freq:top5000",
+      "gloss": {
+        "en": "online"
+      },
+      "example": "Wie lange bist du jeden Tag online?",
+      "wordId": null
+    },
+    {
+      "id": "lx.chat",
+      "lemma": "Chat",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Chats",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.1-u01",
+      "block": 1,
+      "list_ref": "freq:top-5000",
+      "gloss": {
+        "en": "chat (online)"
+      },
+      "example": "Emre schreibt im Chat: Hallo!",
+      "exampleEn": "Emre writes in the chat: Hello!",
+      "wordId": null
+    },
+    {
       "id": "lx.name",
       "lemma": "Name",
       "pos": "NOUN",
@@ -284,6 +333,45 @@
       },
       "example": "Olena ist Teilnehmerin im Kurs.",
       "exampleEn": "Olena is a participant in the course.",
+      "wordId": null
+    },
+    {
+      "id": "lx.sich-vorstellen",
+      "lemma": "sich vorstellen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "stellt sich vor",
+        "perfekt": "hat sich vorgestellt"
+      },
+      "separable": true,
+      "reflexive": "akk",
+      "role": "productive",
+      "unit": "a1.1-u01",
+      "block": 2,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "to introduce oneself"
+      },
+      "example": "Ich stelle mich kurz vor: Ich heiße Priya.",
+      "exampleEn": "Let me briefly introduce myself: my name is Priya.",
+      "wordId": null
+    },
+    {
+      "id": "lx.wohnort",
+      "lemma": "Wohnort",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Wohnorte",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.1-u01",
+      "block": 2,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "place of residence"
+      },
+      "example": "Mein Wohnort ist Leipzig.",
+      "exampleEn": "I live in Leipzig.",
       "wordId": null
     },
     {
@@ -464,6 +552,24 @@
       },
       "example": "Sprechen Sie Spanisch?",
       "exampleEn": "Do you speak Spanish?",
+      "wordId": null
+    },
+    {
+      "id": "lx.muttersprache",
+      "lemma": "Muttersprache",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Muttersprachen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.1-u01",
+      "block": 3,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "mother tongue, first language"
+      },
+      "example": "Meine Muttersprache ist Türkisch.",
+      "exampleEn": "My first language is Turkish.",
       "wordId": null
     },
     {
@@ -1043,6 +1149,41 @@
       "wordId": null
     },
     {
+      "id": "lx.empfang",
+      "lemma": "Empfang",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Empfänge",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.1-u02",
+      "block": 4,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "reception (desk)"
+      },
+      "example": "Priya arbeitet am Empfang.",
+      "wordId": null
+    },
+    {
+      "id": "lx.anmeldung",
+      "lemma": "Anmeldung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Anmeldungen",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a1.1-u02",
+      "block": 4,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "registration"
+      },
+      "example": "Die Anmeldung ist im Büro.",
+      "exampleEn": "Registration is in the office.",
+      "wordId": null
+    },
+    {
       "id": "lx.familie",
       "lemma": "Familie",
       "pos": "NOUN",
@@ -1237,6 +1378,61 @@
       },
       "example": "Priya zeigt ein Foto von ihrer Familie.",
       "exampleEn": "Priya shows a photo of her family.",
+      "wordId": null
+    },
+    {
+      "id": "lx.video",
+      "lemma": "Video",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Videos",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.1-u03",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "video"
+      },
+      "example": "Priya und Olena sprechen per Video.",
+      "exampleEn": "Priya and Olena talk by video.",
+      "wordId": null
+    },
+    {
+      "id": "lx.familienstand",
+      "lemma": "Familienstand",
+      "pos": "NOUN",
+      "article": "der",
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "a1.1-u03",
+      "block": 1,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "marital status"
+      },
+      "example": "Familienstand: verheiratet.",
+      "exampleEn": "Marital status: married.",
+      "plural": null,
+      "wordId": null
+    },
+    {
+      "id": "lx.partner",
+      "lemma": "Partner",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Partner",
+      "plural_kind": "regular",
+      "feminine": "die Partnerin",
+      "role": "receptive",
+      "unit": "a1.1-u03",
+      "block": 1,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "partner"
+      },
+      "example": "Sophie lebt mit ihrem Partner in Dresden.",
+      "exampleEn": "Sophie lives with her partner in Dresden.",
       "wordId": null
     },
     {
@@ -2281,6 +2477,57 @@
       "wordId": null
     },
     {
+      "id": "lx.per",
+      "lemma": "per",
+      "pos": "PREP",
+      "role": "receptive",
+      "unit": "a1.1-u05",
+      "block": 1,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "by, via (per E-Mail)"
+      },
+      "example": "Ich schicke dir die Adresse per E-Mail.",
+      "exampleEn": "I will send you the address by e-mail.",
+      "wordId": null
+    },
+    {
+      "id": "lx.wg",
+      "lemma": "WG",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "WGs",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.1-u05",
+      "block": 1,
+      "list_ref": "freq:top-10000",
+      "gloss": {
+        "en": "shared flat (Wohngemeinschaft)"
+      },
+      "example": "Arjun wohnt noch in einer WG.",
+      "exampleEn": "Arjun still lives in a shared flat.",
+      "wordId": null
+    },
+    {
+      "id": "lx.stadtteil",
+      "lemma": "Stadtteil",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Stadtteile",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.1-u05",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "district, part of town"
+      },
+      "example": "Die Wohnung liegt in einem ruhigen Stadtteil.",
+      "exampleEn": "The flat is in a quiet district.",
+      "wordId": null
+    },
+    {
       "id": "lx.tisch",
       "lemma": "Tisch",
       "pos": "NOUN",
@@ -2442,6 +2689,24 @@
       "wordId": null
     },
     {
+      "id": "lx.schreibtisch",
+      "lemma": "Schreibtisch",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Schreibtische",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a1.1-u05",
+      "block": 2,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "desk"
+      },
+      "example": "Der Schreibtisch steht am Fenster.",
+      "exampleEn": "The desk is by the window.",
+      "wordId": null
+    },
+    {
       "id": "lx.gross",
       "lemma": "groß",
       "pos": "ADJ",
@@ -2599,6 +2864,21 @@
       },
       "example": "Die Wohnung ist hell und ruhig.",
       "exampleEn": "The flat is bright and quiet.",
+      "wordId": null
+    },
+    {
+      "id": "lx.eigen",
+      "lemma": "eigen",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "a1.1-u05",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "own"
+      },
+      "example": "Ich suche eine eigene Wohnung.",
+      "exampleEn": "I am looking for a flat of my own.",
       "wordId": null
     },
     {
@@ -2963,6 +3243,61 @@
       "wordId": null
     },
     {
+      "id": "lx.praktikum",
+      "lemma": "Praktikum",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Praktika",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a1.1-u06",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "internship, work placement"
+      },
+      "example": "Bilal sucht ein Praktikum im Büro.",
+      "exampleEn": "Bilal is looking for an internship in an office.",
+      "wordId": null
+    },
+    {
+      "id": "lx.telefonieren",
+      "lemma": "telefonieren",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "telefoniert",
+        "perfekt": "hat telefoniert"
+      },
+      "role": "productive",
+      "unit": "a1.1-u06",
+      "block": 2,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "to phone, to be on the phone"
+      },
+      "example": "Herr Richter telefoniert gerade.",
+      "exampleEn": "Mr Richter is on the phone right now.",
+      "wordId": null
+    },
+    {
+      "id": "lx.webseite",
+      "lemma": "Webseite",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Webseiten",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.1-u06",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "website"
+      },
+      "example": "Auf der Webseite gibt es gebrauchte Laptops.",
+      "exampleEn": "There are used laptops on the website.",
+      "wordId": null
+    },
+    {
       "id": "lx.suchen",
       "lemma": "suchen",
       "pos": "VERB",
@@ -3142,6 +3477,24 @@
       },
       "example": "Der Laptop ist kaputt. Das ist ein Problem.",
       "exampleEn": "The laptop is broken. That is a problem.",
+      "wordId": null
+    },
+    {
+      "id": "lx.ding",
+      "lemma": "Ding",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Dinge",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.1-u06",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "thing"
+      },
+      "example": "Ich brauche noch ein paar Dinge für den Kurs.",
+      "exampleEn": "I still need a few things for the course.",
       "wordId": null
     },
     {
@@ -3479,6 +3832,25 @@
       "wordId": null
     },
     {
+      "id": "lx.erzaehlen",
+      "lemma": "erzählen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "erzählt",
+        "perfekt": "hat erzählt"
+      },
+      "role": "productive",
+      "unit": "a1.1-u07",
+      "block": 2,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "to tell (about)"
+      },
+      "example": "Priya erzählt von ihrem Tag.",
+      "exampleEn": "Priya talks about her day.",
+      "wordId": null
+    },
+    {
       "id": "lx.woche",
       "lemma": "Woche",
       "pos": "NOUN",
@@ -3698,6 +4070,42 @@
       },
       "example": "Der Supermarkt ist bis 20 Uhr offen.",
       "exampleEn": "The supermarket is open until 8 pm.",
+      "wordId": null
+    },
+    {
+      "id": "lx.anrufbeantworter",
+      "lemma": "Anrufbeantworter",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Anrufbeantworter",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.1-u07",
+      "block": 4,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "answering machine, voicemail"
+      },
+      "example": "Herr Richter spricht auf den Anrufbeantworter.",
+      "exampleEn": "Mr Richter leaves a message on the answering machine.",
+      "wordId": null
+    },
+    {
+      "id": "lx.geschaeft",
+      "lemma": "Geschäft",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Geschäfte",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.1-u07",
+      "block": 4,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "shop, store"
+      },
+      "example": "Die Geschäfte öffnen um neun Uhr.",
+      "exampleEn": "The shops open at nine o’clock.",
       "wordId": null
     },
     {
@@ -4095,6 +4503,66 @@
       },
       "example": "Was planst du am Wochenende?",
       "exampleEn": "What are you planning for the weekend?",
+      "wordId": null
+    },
+    {
+      "id": "lx.sich-verabreden",
+      "lemma": "sich verabreden",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "verabredet sich",
+        "perfekt": "hat sich verabredet"
+      },
+      "reflexive": "akk",
+      "rection": "mit + Dat.",
+      "role": "receptive",
+      "unit": "a1.1-u08",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to arrange to meet"
+      },
+      "example": "Ich habe mich mit Amal zum Joggen verabredet.",
+      "wordId": null
+    },
+    {
+      "id": "lx.absagen",
+      "lemma": "absagen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "sagt ab",
+        "perfekt": "hat abgesagt"
+      },
+      "separable": true,
+      "rection": "jmdm. etw. (Dat. + Akk.)",
+      "role": "receptive",
+      "unit": "a1.1-u08",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to cancel, to call off"
+      },
+      "example": "Frau Kowalski sagt den Termin am Montag ab.",
+      "wordId": null
+    },
+    {
+      "id": "lx.zusagen",
+      "lemma": "zusagen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "sagt zu",
+        "perfekt": "hat zugesagt"
+      },
+      "separable": true,
+      "role": "receptive",
+      "unit": "a1.1-u08",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to accept (an invitation), to say yes"
+      },
+      "example": "Sophie sagt zu: Ich komme mit!",
+      "exampleEn": "Sophie says yes: I’m coming along!",
       "wordId": null
     },
     {
@@ -4725,6 +5193,39 @@
       "wordId": null
     },
     {
+      "id": "lx.geburtstag",
+      "lemma": "Geburtstag",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Geburtstage",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.1-u09",
+      "block": 3,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "birthday"
+      },
+      "example": "Arjun hat am Samstag Geburtstag.",
+      "exampleEn": "It is Arjun’s birthday on Saturday.",
+      "wordId": null
+    },
+    {
+      "id": "lx.hoeflich",
+      "lemma": "höflich",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "a1.1-u09",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "polite"
+      },
+      "example": "Im Café fragt Priya höflich nach der Speisekarte.",
+      "exampleEn": "In the café Priya politely asks for the menu.",
+      "wordId": null
+    },
+    {
       "id": "lx.apfelkuchen",
       "lemma": "Apfelkuchen",
       "pos": "NOUN",
@@ -5010,6 +5511,40 @@
       },
       "example": "Wo ist die Information?",
       "exampleEn": "Where is the information desk?",
+      "wordId": null
+    },
+    {
+      "id": "lx.hauptbahnhof",
+      "lemma": "Hauptbahnhof",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Hauptbahnhöfe",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a1.1-u10",
+      "block": 1,
+      "list_ref": "compound:Haupt+Bahnhof",
+      "gloss": {
+        "en": "main station"
+      },
+      "example": "Der Zug endet heute schon am Hauptbahnhof.",
+      "wordId": null
+    },
+    {
+      "id": "lx.anzeigetafel",
+      "lemma": "Anzeigetafel",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Anzeigetafeln",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.1-u10",
+      "block": 1,
+      "list_ref": "compound:Anzeige+Tafel",
+      "gloss": {
+        "en": "departure board"
+      },
+      "example": "Auf der Anzeigetafel steht: Zug fällt aus.",
       "wordId": null
     },
     {
@@ -5356,6 +5891,36 @@
       "wordId": null
     },
     {
+      "id": "lx.unterwegs",
+      "lemma": "unterwegs",
+      "pos": "ADV",
+      "role": "receptive",
+      "unit": "a1.1-u10",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "on the way, out and about"
+      },
+      "example": "Wir sind schon unterwegs nach Dresden.",
+      "exampleEn": "We are already on our way to Dresden.",
+      "wordId": null
+    },
+    {
+      "id": "lx.ein-paar",
+      "lemma": "ein paar",
+      "pos": "PHRASE",
+      "role": "receptive",
+      "unit": "a1.1-u10",
+      "block": 3,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "a few, a couple of"
+      },
+      "example": "Der Zug kommt in ein paar Minuten.",
+      "exampleEn": "The train is coming in a few minutes.",
+      "wordId": null
+    },
+    {
       "id": "lx.ausflug",
       "lemma": "Ausflug",
       "pos": "NOUN",
@@ -5534,6 +6099,23 @@
       },
       "example": "Am Samstag waren wir am See.",
       "exampleEn": "On Saturday we were at the lake.",
+      "wordId": null
+    },
+    {
+      "id": "lx.sprachnachricht",
+      "lemma": "Sprachnachricht",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Sprachnachrichten",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.1-u11",
+      "block": 1,
+      "list_ref": "compound:Sprache+Nachricht",
+      "gloss": {
+        "en": "voice message"
+      },
+      "example": "Anna schickt mir oft Sprachnachrichten.",
       "wordId": null
     },
     {
@@ -5976,6 +6558,23 @@
       "wordId": null
     },
     {
+      "id": "lx.plan",
+      "lemma": "Plan",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Pläne",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a1.1-u12",
+      "block": 1,
+      "list_ref": "freq:1-5k",
+      "gloss": {
+        "en": "plan"
+      },
+      "example": "Mein Plan ist die B1-Prüfung im nächsten Jahr.",
+      "wordId": null
+    },
+    {
       "id": "lx.fliegen",
       "lemma": "fliegen",
       "pos": "VERB",
@@ -6176,24 +6775,6 @@
       },
       "example": "Die Hausaufgabe ist auf Seite 20.",
       "exampleEn": "The homework is on page 20.",
-      "wordId": null
-    },
-    {
-      "id": "lx.anmeldung",
-      "lemma": "Anmeldung",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": "Anmeldungen",
-      "plural_kind": "regular",
-      "role": "productive",
-      "unit": "a1.1-u12",
-      "block": 3,
-      "list_ref": "A1",
-      "gloss": {
-        "en": "registration"
-      },
-      "example": "Die Anmeldung ist im Büro.",
-      "exampleEn": "Registration is in the office.",
       "wordId": null
     },
     {

@@ -240,7 +240,8 @@
             "lx.hersteller",
             "lx.werben",
             "lx.versprechen",
-            "lx.reduzieren"
+            "lx.reduzieren",
+            "lx.experte"
           ]
         },
         {
@@ -256,7 +257,8 @@
             "lx.testen",
             "lx.haltbar",
             "lx.trockner",
-            "lx.testsieger"
+            "lx.testsieger",
+            "lx.unterschiedlich"
           ]
         }
       ],
@@ -366,7 +368,8 @@
             "lx.jobcenter",
             "lx.einzelheit",
             "lx.arbeitsmarkt",
-            "lx.stellenbeschreibung"
+            "lx.stellenbeschreibung",
+            "lx.pflegeheim"
           ]
         },
         {
@@ -383,7 +386,8 @@
             "lx.bewerbungsmappe",
             "lx.bewerbungsfoto",
             "lx.hiermit",
-            "lx.professionell"
+            "lx.professionell",
+            "lx.noetig"
           ]
         },
         {
@@ -701,7 +705,8 @@
             "lx.so-dass",
             "lx.unertraeglich",
             "lx.drohen",
-            "lx.nerven"
+            "lx.nerven",
+            "lx.stoeren"
           ]
         },
         {
@@ -730,7 +735,6 @@
             "lx.gegenseitig",
             "lx.fair",
             "lx.ausnahme",
-            "lx.regel",
             "lx.festhalten",
             "lx.schlichten",
             "lx.zufriedenstellend"
@@ -845,7 +849,11 @@
             "lx.vorgang",
             "lx.betriebsfuehrung",
             "lx.gruendlich",
-            "lx.produktion"
+            "lx.produktion",
+            "lx.tabelle",
+            "lx.anweisung",
+            "lx.einzeln",
+            "lx.uebersichtlich"
           ]
         },
         {
@@ -877,7 +885,8 @@
             "lx.brand",
             "lx.kontrollieren",
             "lx.handschuh",
-            "lx.schutzbrille"
+            "lx.schutzbrille",
+            "lx.vorsichtig"
           ]
         },
         {
@@ -1024,7 +1033,9 @@
             "lx.unfallhergang",
             "lx.anfahren",
             "lx.streifen",
-            "lx.solange"
+            "lx.solange",
+            "lx.schildern",
+            "lx.geschehen"
           ]
         },
         {
@@ -1056,7 +1067,8 @@
             "lx.gutachter",
             "lx.aussage",
             "lx.kennzeichen",
-            "lx.schadenersatz"
+            "lx.schadenersatz",
+            "lx.entstehen"
           ]
         }
       ],
@@ -1173,7 +1185,8 @@
             "lx.begleichen",
             "lx.inkassobuero",
             "lx.zahlungsfrist",
-            "lx.ueberfaellig"
+            "lx.ueberfaellig",
+            "lx.verwenden"
           ]
         },
         {
@@ -1205,7 +1218,8 @@
             "lx.ungerechtfertigt",
             "lx.einlegen",
             "lx.zur-verfuegung-stellen",
-            "lx.sich-wehren"
+            "lx.sich-wehren",
+            "lx.bearbeiten"
           ]
         },
         {
@@ -1340,7 +1354,9 @@
             "lx.einwohner",
             "lx.stadtrand",
             "lx.region",
-            "lx.dorf"
+            "lx.dorf",
+            "lx.einheimische",
+            "lx.fussgaengerzone"
           ]
         },
         {
@@ -1373,7 +1389,8 @@
             "lx.turm",
             "lx.rundgang",
             "lx.mittelalter",
-            "lx.entlang"
+            "lx.entlang",
+            "lx.stadtfuehrung"
           ]
         },
         {
@@ -1518,7 +1535,8 @@
             "lx.repair-caf",
             "lx.elektroschrott",
             "lx.ohne-zu",
-            "lx.toaster"
+            "lx.toaster",
+            "lx.material"
           ]
         },
         {
@@ -1550,7 +1568,9 @@
             "lx.moderator",
             "lx.debatte",
             "lx.zweifeln",
-            "lx.gegner"
+            "lx.gegner",
+            "lx.inhalt",
+            "lx.unterscheiden"
           ]
         }
       ],
@@ -1664,7 +1684,8 @@
             "lx.tafel-2",
             "lx.sich-zeit-nehmen",
             "lx.nachhilfe",
-            "lx.hilfsorganisation"
+            "lx.hilfsorganisation",
+            "lx.aktiv"
           ]
         },
         {
@@ -1680,7 +1701,8 @@
             "lx.demokratie",
             "lx.partei",
             "lx.regierung",
-            "lx.benachteiligt"
+            "lx.benachteiligt",
+            "lx.politik"
           ]
         },
         {
@@ -1870,7 +1892,6 @@
           "title": "In der Ausstellung",
           "target": 10,
           "lemmas": [
-            "lx.plakat",
             "lx.darstellen",
             "lx.erstaunlich",
             "lx.fahrzeug",
@@ -1879,7 +1900,8 @@
             "lx.darstellung",
             "lx.zeitalter",
             "lx.weltausstellung",
-            "lx.vorstellbar"
+            "lx.vorstellbar",
+            "lx.besucher"
           ]
         }
       ],

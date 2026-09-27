@@ -463,23 +463,6 @@
       "wordId": null
     },
     {
-      "id": "lx.meinung",
-      "lemma": "Meinung",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": "Meinungen",
-      "plural_kind": "regular",
-      "role": "productive",
-      "unit": "b1.1-u01",
-      "block": 3,
-      "list_ref": "A2",
-      "gloss": {
-        "en": "opinion"
-      },
-      "example": "Schreib mir bitte deine Meinung.",
-      "wordId": null
-    },
-    {
       "id": "lx.abonnieren",
       "lemma": "abonnieren",
       "pos": "VERB",
@@ -674,6 +657,25 @@
       "wordId": null
     },
     {
+      "id": "lx.vorbereiten",
+      "lemma": "vorbereiten",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "bereitet vor",
+        "perfekt": "hat vorbereitet"
+      },
+      "separable": true,
+      "role": "productive",
+      "unit": "b1.1-u01",
+      "block": 4,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "to prepare"
+      },
+      "example": "Olena bereitet das Treffen im Café vor.",
+      "wordId": null
+    },
+    {
       "id": "lx.praktikant",
       "lemma": "Praktikant",
       "pos": "NOUN",
@@ -840,6 +842,24 @@
         "en": "staff, workforce"
       },
       "example": "Die ganze Belegschaft ist zur Versammlung eingeladen.",
+      "wordId": null
+    },
+    {
+      "id": "lx.teamleiter",
+      "lemma": "Teamleiter",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Teamleiter",
+      "plural_kind": "regular",
+      "feminine": "die Teamleiterin",
+      "role": "receptive",
+      "unit": "b1.1-u02",
+      "block": 1,
+      "list_ref": "compound:Team+Leiter",
+      "gloss": {
+        "en": "team leader"
+      },
+      "example": "Die Teamleiterin erklärt Tomasz den Schichtplan.",
       "wordId": null
     },
     {
@@ -1028,6 +1048,24 @@
       "wordId": null
     },
     {
+      "id": "lx.begruenden",
+      "lemma": "begründen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "begründet",
+        "perfekt": "hat begründet"
+      },
+      "role": "productive",
+      "unit": "b1.1-u02",
+      "block": 2,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "to give reasons for, to justify"
+      },
+      "example": "Bitte begründen Sie Ihren Urlaubswunsch kurz.",
+      "wordId": null
+    },
+    {
       "id": "lx.krankmeldung",
       "lemma": "Krankmeldung",
       "pos": "NOUN",
@@ -1196,6 +1234,20 @@
       "wordId": null
     },
     {
+      "id": "lx.muendlich",
+      "lemma": "mündlich",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "b1.1-u02",
+      "block": 3,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "oral(ly), spoken"
+      },
+      "example": "Die Krankmeldung können Sie mündlich oder schriftlich machen.",
+      "wordId": null
+    },
+    {
       "id": "lx.betriebsrat",
       "lemma": "Betriebsrat",
       "pos": "NOUN",
@@ -1346,23 +1398,6 @@
         "en": "control centre (transport)"
       },
       "example": "Bei einer Störung rufen Sie sofort die Leitstelle an.",
-      "wordId": null
-    },
-    {
-      "id": "lx.ansage",
-      "lemma": "Ansage",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": "Ansagen",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b1.1-u02",
-      "block": 4,
-      "list_ref": "B1",
-      "gloss": {
-        "en": "announcement"
-      },
-      "example": "Die Ansage im Bus war schwer zu verstehen.",
       "wordId": null
     },
     {
@@ -1530,6 +1565,57 @@
         "en": "open-ended, permanent"
       },
       "example": "Zum Glück ist der Mietvertrag unbefristet.",
+      "wordId": null
+    },
+    {
+      "id": "lx.anrede",
+      "lemma": "Anrede",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Anreden",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b1.1-u03",
+      "block": 1,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "form of address, salutation"
+      },
+      "example": "In einem formellen Brief ist die Anrede „Sehr geehrte Frau …“.",
+      "wordId": null
+    },
+    {
+      "id": "lx.einleitung",
+      "lemma": "Einleitung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Einleitungen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b1.1-u03",
+      "block": 1,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "introduction"
+      },
+      "example": "In der Einleitung schreiben Sie, warum Sie schreiben.",
+      "wordId": null
+    },
+    {
+      "id": "lx.schluss",
+      "lemma": "Schluss",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Schlüsse",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b1.1-u03",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "end, conclusion"
+      },
+      "example": "Zum Schluss bedanken Sie sich für die Hilfe.",
       "wordId": null
     },
     {
@@ -1857,23 +1943,6 @@
       "wordId": null
     },
     {
-      "id": "lx.einzug",
-      "lemma": "Einzug",
-      "pos": "NOUN",
-      "article": "der",
-      "plural": "Einzüge",
-      "plural_kind": "regular",
-      "role": "productive",
-      "unit": "b1.1-u03",
-      "block": 3,
-      "list_ref": "derived:einziehen",
-      "gloss": {
-        "en": "moving in"
-      },
-      "example": "Beim Einzug hilft uns Priya.",
-      "wordId": null
-    },
-    {
       "id": "lx.packen",
       "lemma": "packen",
       "pos": "VERB",
@@ -2088,6 +2157,23 @@
         "en": "to remove, to fix (a fault)"
       },
       "example": "Bitte beseitigen Sie den Mangel bis Ende des Monats.",
+      "wordId": null
+    },
+    {
+      "id": "lx.detail",
+      "lemma": "Detail",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Details",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b1.1-u03",
+      "block": 4,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "detail"
+      },
+      "example": "Im Protokoll steht jedes Detail der Wohnungsübergabe.",
       "wordId": null
     },
     {
@@ -2951,6 +3037,24 @@
       "wordId": null
     },
     {
+      "id": "lx.nutzen",
+      "lemma": "nutzen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "nutzt",
+        "perfekt": "hat genutzt"
+      },
+      "role": "receptive",
+      "unit": "b1.1-u05",
+      "block": 1,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "to use, to make use of"
+      },
+      "example": "Viele Menschen nutzen das Handy auch als Wecker.",
+      "wordId": null
+    },
+    {
       "id": "lx.sendung",
       "lemma": "Sendung",
       "pos": "NOUN",
@@ -3121,6 +3225,51 @@
       "wordId": null
     },
     {
+      "id": "lx.forum",
+      "lemma": "Forum",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Foren",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b1.1-u05",
+      "block": 2,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "forum"
+      },
+      "example": "Im Forum diskutieren viele Leute über das Thema.",
+      "wordId": null
+    },
+    {
+      "id": "lx.aktuell",
+      "lemma": "aktuell",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "b1.1-u05",
+      "block": 2,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "current, up to date"
+      },
+      "example": "Die aktuellen Nachrichten lese ich online.",
+      "wordId": null
+    },
+    {
+      "id": "lx.haeufig",
+      "lemma": "häufig",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "b1.1-u05",
+      "block": 2,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "frequent(ly)"
+      },
+      "example": "Jugendliche nutzen häufig soziale Medien.",
+      "wordId": null
+    },
+    {
       "id": "lx.vorhersagen",
       "lemma": "vorhersagen",
       "pos": "VERB",
@@ -3287,6 +3436,20 @@
       "wordId": null
     },
     {
+      "id": "lx.etwa",
+      "lemma": "etwa",
+      "pos": "ADV",
+      "role": "receptive",
+      "unit": "b1.1-u05",
+      "block": 3,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "about, roughly"
+      },
+      "example": "In etwa zehn Jahren fahren viele Autos ohne Fahrer.",
+      "wordId": null
+    },
+    {
       "id": "lx.fortschritt",
       "lemma": "Fortschritt",
       "pos": "NOUN",
@@ -3448,6 +3611,26 @@
         "en": "critical"
       },
       "example": "Man sollte Nachrichten kritisch lesen.",
+      "wordId": null
+    },
+    {
+      "id": "lx.sich-austauschen",
+      "lemma": "sich austauschen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "tauscht sich aus",
+        "perfekt": "hat sich ausgetauscht"
+      },
+      "separable": true,
+      "reflexive": "akk",
+      "role": "productive",
+      "unit": "b1.1-u05",
+      "block": 4,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "to exchange views, to share experiences"
+      },
+      "example": "Im Kurs tauschen wir uns über unsere Mediengewohnheiten aus.",
       "wordId": null
     },
     {
@@ -3799,6 +3982,24 @@
       "wordId": null
     },
     {
+      "id": "lx.autor",
+      "lemma": "Autor",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Autoren",
+      "plural_kind": "regular",
+      "feminine": "die Autorin",
+      "role": "receptive",
+      "unit": "b1.1-u06",
+      "block": 2,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "author"
+      },
+      "example": "Die Autorin liest heute aus ihrem neuen Buch.",
+      "wordId": null
+    },
+    {
       "id": "lx.ausverkauft",
       "lemma": "ausverkauft",
       "pos": "ADJ",
@@ -3957,6 +4158,26 @@
         "en": "instead"
       },
       "example": "Stattdessen gehen wir ins Kabarett.",
+      "wordId": null
+    },
+    {
+      "id": "lx.ausgehen",
+      "lemma": "ausgehen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "geht aus",
+        "praet": "ging aus",
+        "perfekt": "ist ausgegangen"
+      },
+      "separable": true,
+      "role": "receptive",
+      "unit": "b1.1-u06",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to go out"
+      },
+      "example": "Am Freitag gehen Lina und Tomasz zusammen aus.",
       "wordId": null
     },
     {
@@ -4796,6 +5017,23 @@
       "wordId": null
     },
     {
+      "id": "lx.rat",
+      "lemma": "Rat",
+      "pos": "NOUN",
+      "article": "der",
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "b1.1-u07",
+      "block": 4,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "advice"
+      },
+      "example": "Die Ärztin gibt Tomasz einen Rat: mehr Bewegung.",
+      "plural": null,
+      "wordId": null
+    },
+    {
       "id": "lx.fortbildung",
       "lemma": "Fortbildung",
       "pos": "NOUN",
@@ -5321,6 +5559,42 @@
       "wordId": null
     },
     {
+      "id": "lx.erfolg",
+      "lemma": "Erfolg",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Erfolge",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "b1.1-u08",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "success"
+      },
+      "example": "Viel Erfolg bei der Prüfung!",
+      "wordId": null
+    },
+    {
+      "id": "lx.ausdruecken",
+      "lemma": "ausdrücken",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "drückt aus",
+        "perfekt": "hat ausgedrückt"
+      },
+      "separable": true,
+      "role": "receptive",
+      "unit": "b1.1-u08",
+      "block": 3,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "to express"
+      },
+      "example": "Auf Deutsch kann ich meine Gefühle noch nicht so gut ausdrücken.",
+      "wordId": null
+    },
+    {
       "id": "lx.teilnahme",
       "lemma": "Teilnahme",
       "pos": "NOUN",
@@ -5663,6 +5937,20 @@
       "wordId": null
     },
     {
+      "id": "lx.bisher",
+      "lemma": "bisher",
+      "pos": "ADV",
+      "role": "receptive",
+      "unit": "b1.1-u09",
+      "block": 1,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "so far, until now"
+      },
+      "example": "Bisher hat Samir in Damaskus gearbeitet.",
+      "wordId": null
+    },
+    {
       "id": "lx.wendepunkt",
       "lemma": "Wendepunkt",
       "pos": "NOUN",
@@ -5819,21 +6107,20 @@
       "wordId": null
     },
     {
-      "id": "lx.ueberlegen",
-      "lemma": "überlegen",
-      "pos": "VERB",
-      "verb_forms": {
-        "3sg": "überlegt",
-        "perfekt": "hat überlegt"
-      },
-      "role": "productive",
+      "id": "lx.situation",
+      "lemma": "Situation",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Situationen",
+      "plural_kind": "regular",
+      "role": "receptive",
       "unit": "b1.1-u09",
       "block": 2,
       "list_ref": "A2",
       "gloss": {
-        "en": "to think about, to consider"
+        "en": "situation"
       },
-      "example": "Ich habe lange überlegt, bevor ich gekündigt habe.",
+      "example": "In dieser Situation hat Amal eine schwere Entscheidung getroffen.",
       "wordId": null
     },
     {
@@ -6697,6 +6984,41 @@
       "wordId": null
     },
     {
+      "id": "lx.diskutieren",
+      "lemma": "diskutieren",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "diskutiert",
+        "perfekt": "hat diskutiert"
+      },
+      "role": "productive",
+      "unit": "b1.1-u10",
+      "block": 3,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "to discuss"
+      },
+      "example": "Im Forum diskutieren viele über die Vier-Tage-Woche.",
+      "wordId": null
+    },
+    {
+      "id": "lx.sicht",
+      "lemma": "Sicht",
+      "pos": "NOUN",
+      "article": "die",
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "b1.1-u10",
+      "block": 3,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "view, point of view"
+      },
+      "example": "Aus meiner Sicht hat die Vier-Tage-Woche viele Vorteile.",
+      "plural": null,
+      "wordId": null
+    },
+    {
       "id": "lx.gerecht",
       "lemma": "gerecht",
       "pos": "ADJ",
@@ -6736,23 +7058,6 @@
         "en": "sensible, meaningful"
       },
       "example": "Das halte ich für sinnvoll.",
-      "wordId": null
-    },
-    {
-      "id": "lx.forum",
-      "lemma": "Forum",
-      "pos": "NOUN",
-      "article": "das",
-      "plural": "Foren",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b1.1-u10",
-      "block": 4,
-      "list_ref": "B1",
-      "gloss": {
-        "en": "forum"
-      },
-      "example": "Im Forum diskutieren viele Leute über das Thema.",
       "wordId": null
     },
     {
@@ -7445,23 +7750,6 @@
       "wordId": null
     },
     {
-      "id": "lx.charakter",
-      "lemma": "Charakter",
-      "pos": "NOUN",
-      "article": "der",
-      "plural": "Charaktere",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b1.1-u11",
-      "block": 4,
-      "list_ref": "B1",
-      "gloss": {
-        "en": "character, personality"
-      },
-      "example": "Sie hat einen starken Charakter.",
-      "wordId": null
-    },
-    {
       "id": "lx.ehrgeizig",
       "lemma": "ehrgeizig",
       "pos": "ADJ",
@@ -7638,23 +7926,6 @@
         "en": "connecting train"
       },
       "example": "Unseren Anschlusszug haben wir verpasst.",
-      "wordId": null
-    },
-    {
-      "id": "lx.hauptbahnhof",
-      "lemma": "Hauptbahnhof",
-      "pos": "NOUN",
-      "article": "der",
-      "plural": "Hauptbahnhöfe",
-      "plural_kind": "regular",
-      "role": "productive",
-      "unit": "b1.1-u12",
-      "block": 1,
-      "list_ref": "compound:Haupt+Bahnhof",
-      "gloss": {
-        "en": "main station"
-      },
-      "example": "Der Zug endet heute schon am Hauptbahnhof.",
       "wordId": null
     },
     {
@@ -8157,23 +8428,6 @@
       },
       "example": "Alle Züge nach Berlin sind betroffen.",
       "wordId": null
-    },
-    {
-      "id": "lx.anzeigetafel",
-      "lemma": "Anzeigetafel",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": "Anzeigetafeln",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "b1.1-u12",
-      "block": 4,
-      "list_ref": "compound:Anzeige+Tafel",
-      "gloss": {
-        "en": "departure board"
-      },
-      "example": "Auf der Anzeigetafel steht: Zug fällt aus.",
-      "wordId": null
     }
   ],
   "promotions": [
@@ -8209,6 +8463,18 @@
     },
     {
       "lemma": "lx.gemeinsam",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b1.1-u01"
+    },
+    {
+      "lemma": "lx.kontakt",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b1.1-u01"
+    },
+    {
+      "lemma": "lx.meinung",
       "from": "receptive",
       "to": "productive",
       "unit": "b1.1-u01"
@@ -8268,6 +8534,12 @@
       "unit": "b1.1-u03"
     },
     {
+      "lemma": "lx.einzug",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b1.1-u03"
+    },
+    {
       "lemma": "lx.umtauschen",
       "from": "receptive",
       "to": "productive",
@@ -8308,6 +8580,12 @@
       "from": "receptive",
       "to": "productive",
       "unit": "b1.1-u08"
+    },
+    {
+      "lemma": "lx.ueberlegen",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "b1.1-u09"
     },
     {
       "lemma": "lx.anlass",

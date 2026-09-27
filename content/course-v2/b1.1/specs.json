@@ -75,7 +75,6 @@
             "lx.eintrag",
             "lx.veroeffentlichen",
             "lx.leser",
-            "lx.meinung",
             "lx.abonnieren"
           ]
         },
@@ -92,7 +91,8 @@
             "lx.sich-wiedersehen",
             "lx.ausfuehrlich",
             "lx.umarmung",
-            "lx.begruessung"
+            "lx.begruessung",
+            "lx.vorbereiten"
           ]
         }
       ],
@@ -199,7 +199,8 @@
             "lx.ansprechpartner",
             "lx.dienst",
             "lx.sich-einarbeiten",
-            "lx.belegschaft"
+            "lx.belegschaft",
+            "lx.teamleiter"
           ]
         },
         {
@@ -215,7 +216,8 @@
             "lx.freinehmen",
             "lx.absprechen",
             "lx.vertretung",
-            "lx.urlaubswunsch"
+            "lx.urlaubswunsch",
+            "lx.begruenden"
           ]
         },
         {
@@ -231,7 +233,8 @@
             "lx.rueckkehr",
             "lx.uebergabe",
             "lx.vertreten",
-            "lx.genesung"
+            "lx.genesung",
+            "lx.muendlich"
           ]
         },
         {
@@ -246,8 +249,7 @@
             "lx.gelten",
             "lx.regelung",
             "lx.das-schwarze-brett",
-            "lx.leitstelle",
-            "lx.ansage"
+            "lx.leitstelle"
           ]
         }
       ],
@@ -366,7 +368,10 @@
             "lx.vereinbarung",
             "lx.erlaubnis",
             "lx.mieten",
-            "lx.unbefristet"
+            "lx.unbefristet",
+            "lx.anrede",
+            "lx.einleitung",
+            "lx.schluss"
           ]
         },
         {
@@ -398,7 +403,6 @@
             "lx.kleinanzeige",
             "lx.umzugshilfe",
             "lx.ummelden",
-            "lx.einzug",
             "lx.packen",
             "lx.umziehen"
           ]
@@ -416,7 +420,8 @@
             "lx.zaehlerstand",
             "lx.kratzer",
             "lx.fleck",
-            "lx.beseitigen"
+            "lx.beseitigen",
+            "lx.detail"
           ]
         }
       ],
@@ -703,7 +708,8 @@
             "lx.automatisch",
             "lx.vernetzt",
             "lx.selbstfahrend",
-            "lx.programmieren"
+            "lx.programmieren",
+            "lx.nutzen"
           ]
         },
         {
@@ -719,7 +725,10 @@
             "lx.sender",
             "lx.presse",
             "lx.kurzmeldung",
-            "lx.journalist"
+            "lx.journalist",
+            "lx.forum",
+            "lx.aktuell",
+            "lx.haeufig"
           ]
         },
         {
@@ -735,7 +744,8 @@
             "lx.prognose",
             "lx.vermutung",
             "lx.wohl",
-            "lx.jahrzehnt"
+            "lx.jahrzehnt",
+            "lx.etwa"
           ]
         },
         {
@@ -751,7 +761,8 @@
             "lx.ansicht",
             "lx.skeptisch",
             "lx.risiko",
-            "lx.kritisch"
+            "lx.kritisch",
+            "lx.sich-austauschen"
           ]
         }
       ],
@@ -886,7 +897,8 @@
             "lx.filmkritik",
             "lx.hauptrolle",
             "lx.krimi",
-            "lx.komoedie"
+            "lx.komoedie",
+            "lx.autor"
           ]
         },
         {
@@ -902,7 +914,8 @@
             "lx.warteliste",
             "lx.reihe",
             "lx.einlass",
-            "lx.stattdessen"
+            "lx.stattdessen",
+            "lx.ausgehen"
           ]
         },
         {
@@ -1073,7 +1086,8 @@
             "lx.abwehrkraefte",
             "lx.vitamin",
             "lx.erholung",
-            "lx.staerken"
+            "lx.staerken",
+            "lx.rat"
           ]
         }
       ],
@@ -1225,7 +1239,9 @@
             "lx.lebenslang",
             "lx.karriere",
             "lx.selbstvertrauen",
-            "lx.lernziel"
+            "lx.lernziel",
+            "lx.erfolg",
+            "lx.ausdruecken"
           ]
         },
         {
@@ -1360,7 +1376,8 @@
             "lx.abschnitt",
             "lx.lebensgeschichte",
             "lx.arbeitssuche",
-            "lx.einwandern"
+            "lx.einwandern",
+            "lx.bisher"
           ]
         },
         {
@@ -1376,7 +1393,7 @@
             "lx.arbeitslosigkeit",
             "lx.entschluss",
             "lx.zoegern",
-            "lx.ueberlegen"
+            "lx.situation"
           ]
         },
         {
@@ -1549,7 +1566,9 @@
             "lx.einerseits-andererseits",
             "lx.abstimmung",
             "lx.argumentieren",
-            "lx.stellungnahme"
+            "lx.stellungnahme",
+            "lx.diskutieren",
+            "lx.sicht"
           ]
         },
         {
@@ -1559,7 +1578,6 @@
             "lx.gerecht",
             "lx.ausgeglichen",
             "lx.sinnvoll",
-            "lx.forum",
             "lx.work-life-balance",
             "lx.kinderbetreuung",
             "lx.privatleben",
@@ -1729,7 +1747,6 @@
             "lx.grosszuegig",
             "lx.humorvoll",
             "lx.eigenschaft",
-            "lx.charakter",
             "lx.ehrgeizig",
             "lx.bescheiden",
             "lx.sorgfaeltig"
@@ -1850,7 +1867,6 @@
             "lx.zugbindung",
             "lx.familienfeier",
             "lx.anschlusszug",
-            "lx.hauptbahnhof",
             "lx.sitzplatz"
           ]
         },
@@ -1898,8 +1914,7 @@
             "lx.weitergeben",
             "lx.dolmetschen",
             "lx.sich-erkundigen",
-            "lx.betroffen",
-            "lx.anzeigetafel"
+            "lx.betroffen"
           ]
         }
       ],
