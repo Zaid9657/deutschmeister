@@ -10,6 +10,8 @@ import Chip from '../ui/Chip.jsx';
 import Reveal from '../ui/Reveal.jsx';
 import Aurora from '../ui/Aurora.jsx';
 import confettiBurst from '../../lib/confetti.js';
+import { placementSignupHref, rememberPlacement } from '../../lib/placement.js';
+import { TRIAL_DAYS, TRIAL_SPEAKING_SESSIONS } from '../../data/marketing.js';
 
 // The earned moment (docs/design/playbook.md). Finishing the placement test IS
 // a win — one confetti burst, one `celebrate` action — and that is true at
@@ -131,6 +133,14 @@ const LevelTestResults = ({
 
   const { sublevel: finalSublevel, demotions } = calculateFinalLevel();
 
+  // A signed-out tester's result is kept on this browser, so the "save my
+  // results" door below keeps its promise: the first profile load after
+  // sign-in writes it to profiles.current_level (src/lib/placement.js). The
+  // level stored is the one this screen shows, i.e. after any demotion.
+  useEffect(() => {
+    if (!user) rememberPlacement(finalSublevel);
+  }, [user, finalSublevel]);
+
   // Deep link into the first lesson of the placed level. Grammar lessons are
   // served by the Astro build, so this must be rendered as a full-load <a>
   // (trailing-slash class). Falls back to the hub if the topic list ever
@@ -228,9 +238,12 @@ const LevelTestResults = ({
               Save your results and start practicing at {finalSublevel}
             </p>
             <p className="mx-auto mt-2 max-w-prose text-[0.9375rem] leading-relaxed text-graphite">
-              Create a free account to track your progress, unlock your level, and get 2 free AI speaking sessions.
+              Create a free account and this result is saved to it. Your first {TRIAL_DAYS} days include
+              every level and {TRIAL_SPEAKING_SESSIONS} AI speaking sessions.
             </p>
-            <Button className="mt-4" to={`/signup?level=${finalSublevel}`}>
+            {/* A plain href, not a router Link: public/attribution.js records
+                ?ref=level-test only on a page load (src/lib/placement.js). */}
+            <Button className="mt-4" href={placementSignupHref(finalSublevel)}>
               Sign up free — save my results
             </Button>
           </Card>

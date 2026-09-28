@@ -19,6 +19,7 @@ import {
   TRIAL_SPEAKING_SESSIONS,
   TRIAL_WRITING_EVALUATIONS,
 } from '../data/marketing.js';
+import { pendingPlacement } from '../lib/placement.js';
 
 // The playbook form field (docs/design/playbook.md §1), with room for the
 // leading icon. The focus ring comes from the global *:focus-visible rule.
@@ -46,6 +47,11 @@ const SignupPage = () => {
   const { signUp } = useAuth();
 
   useEffect(() => { trackSignupStarted(); }, []);
+
+  // A level-test result taken signed out on this browser, waiting to be saved
+  // (src/lib/placement.js). Read once: the line below names the level the
+  // visitor came here to keep.
+  const [placedLevel] = useState(() => pendingPlacement());
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -135,6 +141,12 @@ const SignupPage = () => {
 
         {/* Form */}
         <Card raised className="p-8">
+          {placedLevel && (
+            <p className="mb-6 rounded-clay border border-rule bg-siegel-wash px-4 py-3 text-sm leading-relaxed text-ink">
+              Your level test result, <span className="font-bold">{placedLevel}</span>, is saved to your
+              account the first time you sign in on this browser.
+            </p>
+          )}
           {error && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
