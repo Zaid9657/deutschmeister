@@ -58,18 +58,20 @@ async function fetchActivityTimestamps(userId) {
       .eq('user_id', userId),
     // Reading and listening both counted for nothing before this: a learner
     // could finish a lesson or a dialogue every day and still show a 0-day
-    // streak. (user_listening_progress did not even exist, so the SPA's writes
-    // to it were being discarded silently.)
+    // streak. Each table marks "done" its own way (src/lib/listeningProgress.js):
+    // reading has `completed` + `last_read_at`, listening only `completed_at`.
+    // Asking either for the other's column was a 400 on every dashboard load
+    // until 2026-09-28, which is why both still counted for nothing.
     supabase
       .from('user_reading_progress')
-      .select('completed_at')
+      .select('last_read_at')
       .eq('user_id', userId)
       .eq('completed', true),
     supabase
       .from('user_listening_progress')
       .select('completed_at')
       .eq('user_id', userId)
-      .eq('completed', true),
+      .not('completed_at', 'is', null),
     // Renovation Phase 6: SRS reviews, writing evaluations and completed
     // practice exams are real daily work and feed the streak + goal too.
     supabase
@@ -105,7 +107,7 @@ async function fetchActivityTimestamps(userId) {
   (grammar.data || []).forEach((r) => stamps.push(...grammarRowStamps(r)));
   (xray.data || []).forEach((r) => r.used_at && stamps.push(r.used_at));
   (speaking.data || []).forEach((r) => r.created_at && stamps.push(r.created_at));
-  (reading.data || []).forEach((r) => r.completed_at && stamps.push(r.completed_at));
+  (reading.data || []).forEach((r) => r.last_read_at && stamps.push(r.last_read_at));
   (listening.data || []).forEach((r) => r.completed_at && stamps.push(r.completed_at));
   (srs.data || []).forEach((r) => r.last_reviewed_at && stamps.push(r.last_reviewed_at));
   (writing.data || []).forEach((r) => r.created_at && stamps.push(r.created_at));

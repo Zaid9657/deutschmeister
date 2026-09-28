@@ -50,9 +50,14 @@ are pages, not channels.
 | `xray` | the offer under an X-Ray result and at the anonymous limit (`src/lib/xray.js`) | — |
 | `grammar` | every grammar lesson (both signup doors, the locked-exercise door, the signed-out finish line, the free-course door on A1 pages), the `/grammar/` hub, the nav trial button on `/grammar/**` | the topic slug, `index`, or `nav` |
 | `leitfaden` | every guide's CTA (level test, account, prices), the `/leitfaden/` hub, the nav trial button on `/leitfaden/**` | the guide slug, `index`, or `nav` |
+| `level-test` | "Sign up free — save my results" under a signed-out level-test result (`src/lib/placement.js`, 2026-09-28). The result itself travels in localStorage `dm_placement` and is written to `profiles.current_level` at the first sign-in on that browser | the placed sub-level (`b1.2`) |
 
-Built only with `onsiteHref()` in `astro-site/src/lib/onsiteLinks.js`;
-`tests/onsite-attribution.test.mjs` fails on a bare door on those pages.
+The grammar and guide doors are built only with `onsiteHref()` in
+`astro-site/src/lib/onsiteLinks.js`; `tests/onsite-attribution.test.mjs` fails on a
+bare door on those pages. The level-test door is `placementSignupHref()`, pinned by
+`tests/placement.test.mjs`. A visitor who follows a guide's level-test link and then
+signs up under the result is filed `level-test` in `acquisition_last_source` (last
+touch wins); the guide shows only if it was the first touch.
 
 How to read them: when `acquisition_source` is an on-site source, the visitor
 had no earlier touch, i.e. arrived untracked and converted on that page. When
@@ -63,7 +68,7 @@ the first touch is a channel (say `google`), the channel stays in
 ```sql
 select acquisition_last_source, acquisition_content, count(*) from profiles
 where created_at > now() - interval '30 days'
-  and acquisition_last_source in ('grammar', 'leitfaden', 'xray')
+  and acquisition_last_source in ('grammar', 'leitfaden', 'xray', 'level-test')
 group by 1, 2 order by 3 desc;
 ```
 
