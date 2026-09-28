@@ -10,7 +10,7 @@ import { courseHomeModel, STATUS_LABEL_DE } from '../../lib/course-v2/homeModel.
 import { planSummary } from '../../lib/course-v2/pacePlan.js';
 import { fetchLevelState, fetchLearnerGoal } from '../../lib/course-v2/progress.js';
 import { localLevelState } from '../../lib/course-v2/localState.js';
-import { loadManifest, plateauNrs } from '../../lib/course-v2/loaders.js';
+import { closingIds, loadManifest, plateauNrs } from '../../lib/course-v2/loaders.js';
 import { V2_DEFAULT_PACE } from '../../config/courseV2.js';
 import ActionBar from './ActionBar.jsx';
 
@@ -21,10 +21,11 @@ import ActionBar from './ActionBar.jsx';
 // The unit path grouped by Etappe, each Etappe closed by its Plateau (or the
 // closing block), with the can-do title, the planned minutes, the Prüfungsfokus
 // chips and the learner's status per unit; one primary action („Weiter mit
-// Lektion N"), pinned in the thumb zone; a one-line plan from the pace preset.
-// Everything shown is computed in src/lib/course-v2/homeModel.js; completion comes
-// from completion.js. The gate is soft: a unit whose predecessor is not finished
-// shows „Trotzdem öffnen" and opens anyway.
+// Lektion N", „Plateau 1 starten", „Abschluss starten"), pinned in the thumb zone;
+// a one-line plan from the pace preset. Everything shown is computed in
+// src/lib/course-v2/homeModel.js; completion comes from completion.js. The gate is
+// soft: a unit whose predecessor is not finished — or a Plateau / the closing block
+// whose units are not — shows „Trotzdem öffnen" and opens anyway.
 
 function UnitCard({ row }) {
   const done = row.status === 'complete' || row.status === 'gold';
@@ -73,25 +74,58 @@ function UnitCard({ row }) {
   );
 }
 
-function PlateauRow({ plateau }) {
+// A Plateau (after U3, U6, U9) or the closing block (after U12) in its slot of the path,
+// soft-locked like a unit: not ready (its units' Lernschritte not finished) still opens.
+const STOP_TEXT = {
+  plateau: { title: (s) => `Plateau ${s.nr}`, what: 'Wiederholung und Prüfungsteile der Etappe' },
+  closing: { title: () => 'Abschluss des Kurses', what: 'Halbtest: alle Prüfungsteile im Kleinen, danach Ihre Teil-Karte' },
+};
+
+function StopRow({ stop }) {
+  const text = STOP_TEXT[stop.kind] || STOP_TEXT.plateau;
   const inner = (
     <div className="flex items-center gap-3 px-4 py-3">
-      <Flag className="h-5 w-5 shrink-0 text-graphite" aria-hidden="true" />
+      <span
+        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-pill ${
+          stop.done ? 'bg-accent-limette-wash text-accent-limette-ink' : 'border border-rule bg-white text-graphite'
+        }`}
+        aria-hidden="true"
+      >
+        {stop.done ? <Check className="h-5 w-5" /> : <Flag className="h-5 w-5" />}
+      </span>
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-bold text-ink">Plateau {plateau.nr}</p>
-        <p className="text-xs text-graphite">
-          {plateau.done ? 'Abgegeben' : plateau.available ? 'Wiederholung und Prüfungsteile der Etappe' : 'Kommt bald'}
-        </p>
+        <p className="text-sm font-bold text-ink">{text.title(stop)}</p>
+        <p className="text-xs text-graphite">{stop.available ? text.what : 'Kommt bald'}</p>
+        {stop.available && (
+          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-graphite">
+            <span className="font-bold">{stop.done ? 'Abgegeben' : stop.started ? 'Begonnen' : 'Offen'}</span>
+            {!stop.ready && !stop.done && !stop.started && (
+              <span className="inline-flex items-center gap-1"><Lock className="h-3 w-3" aria-hidden="true" /> Noch nicht dran – trotzdem öffnen</span>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
-  return plateau.available
-    ? <Card as={Link} to={plateau.href} interactive className="block">{inner}</Card>
-    : <Card tone="sunk">{inner}</Card>;
+  return stop.available
+    ? <Card as={Link} to={stop.href} interactive className="block">{inner}</Card>
+    : <Card tone="sunk" className="opacity-80">{inner}</Card>;
+}
+
+/** The primary action's label for the next stop of the path. */
+function nextLabel(next) {
+  if (!next) return '';
+  if (next.kind === 'plateau') return next.started ? `Weiter mit Plateau ${next.nr}` : `Plateau ${next.nr} starten`;
+  if (next.kind === 'closing') return next.started ? 'Weiter mit dem Abschluss' : 'Abschluss starten';
+  return next.status === 'started' ? `Weiter mit Lektion ${next.nr}` : `Lektion ${next.nr} starten`;
 }
 
 export function CourseHomeV2({ level, manifest, state, goal }) {
-  const model = useMemo(() => courseHomeModel(manifest, state, { plateaus: plateauNrs(level) }), [manifest, state, level]);
+  const lane = (goal && goal.lane) || null;
+  const model = useMemo(
+    () => courseHomeModel(manifest, state, { plateaus: plateauNrs(level), closings: closingIds(level), lane }),
+    [manifest, state, level, lane],
+  );
   const pace = (goal && goal.pace) || V2_DEFAULT_PACE;
   const plan = useMemo(
     () => (model ? planSummary({ manifest, pace, remainingSteps: model.remainingSteps, examDate: goal && goal.exam_date }) : null),
@@ -99,7 +133,6 @@ export function CourseHomeV2({ level, manifest, state, goal }) {
   );
   if (!model) return null;
   const next = model.next;
-  const started = next && next.status === 'started';
   const unitPart = model.completion ? model.completion.parts.find((p) => p.kind === 'unit') : null;
 
   return (
@@ -128,15 +161,8 @@ export function CourseHomeV2({ level, manifest, state, goal }) {
               </h2>
               <div className="mt-3 space-y-3">
                 {e.units.map((row) => <UnitCard key={row.id} row={row} />)}
-                {e.plateau && <PlateauRow plateau={e.plateau} />}
-                {e.closing && (
-                  <Card tone="sunk">
-                    <div className="flex items-center gap-3 px-4 py-3">
-                      <Flag className="h-5 w-5 shrink-0 text-graphite" aria-hidden="true" />
-                      <p className="text-sm text-graphite">Abschluss des Kurses – kommt bald</p>
-                    </div>
-                  </Card>
-                )}
+                {e.plateau && <StopRow stop={e.plateau} />}
+                {e.closing && <StopRow stop={e.closing} />}
               </div>
             </section>
           ))}
@@ -145,7 +171,7 @@ export function CourseHomeV2({ level, manifest, state, goal }) {
       {next && (
         <ActionBar>
           <Button size="lg" className="w-full" to={next.href}>
-            {started ? `Weiter mit Lektion ${next.nr}` : `Lektion ${next.nr} starten`}
+            {nextLabel(next)}
           </Button>
         </ActionBar>
       )}

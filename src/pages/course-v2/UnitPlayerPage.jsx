@@ -9,6 +9,7 @@ import { normalizeLevel, levelCode, nrOfId, v2Paths } from '../../lib/course-v2/
 import { buildUnitPlan, resumeIndex } from '../../lib/course-v2/unitPlan.js';
 import { LERNSCHRITT_KINDS, AUFGABE_KINDS, testOutPassed, unitCompletion } from '../../lib/course-v2/completion.js';
 import { unitRules } from '../../lib/course-v2/homeModel.js';
+import { proofParts, proofShown } from '../../lib/course-v2/proofs.js';
 import {
   fetchUnitState, startUnit, recordStepDone, flushAttempts, recordTestOut, saveUnitStatus, statusToStore,
   seedUnitCards, logCourseEvent,
@@ -309,7 +310,7 @@ export function UnitPlayer({ level, unit, manifest, user }) {
       });
     } else localStepDone(unitId, level, step.id);
     if (step.kind === 'check' && result) {
-      setCheckResult({ correct: Number(result.correct) || 0, total: Number(result.total) || 0, proofs: result.proofs || null });
+      setCheckResult({ correct: Number(result.correct) || 0, total: Number(result.total) || 0, proofs: result.proofs || null, proofItems: result.proofItems || null });
     }
     if (result && result.microOutputs && typeof result.microOutputs === 'object') setMicroSent((m) => ({ ...m, ...result.microOutputs }));
     setSessionRuns((m) => new Map(m).set(step.id, (m.get(step.id) || 0) + 1));
@@ -468,30 +469,45 @@ export function UnitPlayer({ level, unit, manifest, user }) {
   const openSteps = steps.map((s, i) => ({ s, i })).filter(({ s }) => !finished.has(s.id) && s.kind !== 'ueberarbeiten');
   const words = Array.isArray(unit.reviewCards) ? unit.reviewCards.filter((k) => String(k).startsWith('word:')).length : 0;
   const canDos = (manifestRow && manifestRow.canDos) || [];
-  // Which can-do is proven, by the unit's own proof rule (check.proofs): an Aufgabe proof
-  // by that Aufgabe being submitted now; an item proof by the Check's „Das kann ich" of
-  // this visit (CheckView's onDone `proofs`); without either (no proof rule, or the Check
-  // was done in an earlier visit) by the unit being complete. So the recap never ticks a
+  // Which can-do is proven, by the unit's own proof rule (check.proofs) read the way the Check
+  // reads it — proofShown (src/lib/course-v2/proofs.js): EVERY proof the rule names must be shown,
+  // an item AND an Aufgabe where it names both (the recap used to look at the Aufgabe alone).
+  //   items        the proof items' results of this visit's Check (CheckView's `proofItems`); a
+  //                Check without them reports its per-can-do verdict (`proofs`), which then stands
+  //                for the item; a Check done in an earlier visit left neither, and the item counts
+  //                as shown once the unit is complete;
+  //   aufgaben     submitted now (finished Aufgabe steps) — so an Aufgabe submitted after the Check
+  //                still ticks its can-do;
+  //   microOutputs the learner's own micro-outputs sent.
+  // A can-do without a proof rule is proven by the unit being complete. So the recap never ticks a
   // can-do the Check has just shown as open.
   const canDoIds = (manifestRow && manifestRow.canDoIds) || [];
   const proofRules = (unit.check && unit.check.proofs) || [];
+  const proofEvidence = { aufgaben: rendererExtras.aufgaben, microOutputs: rendererExtras.microOutputs };
+  const proofItemsOf = (rule) => {
+    if (!rule.item) return {};
+    if (checkResult && checkResult.proofItems && rule.item in checkResult.proofItems) return { [rule.item]: checkResult.proofItems[rule.item] === true };
+    if (checkResult && checkResult.proofs && rule.canDo in checkResult.proofs) return { [rule.item]: checkResult.proofs[rule.canDo] === true };
+    return { [rule.item]: complete };
+  };
   const proven = (i) => {
     const rule = proofRules.find((p) => p && p.canDo === canDoIds[i]);
-    if (rule && rule.aufgabe) return (unit.steps || []).some((s) => s.kind === rule.aufgabe && finished.has(s.id));
-    if (rule && rule.microOutput) return Boolean(microOutputsSent(unit, microSent, finished)[rule.microOutput]);
-    if (rule && checkResult && checkResult.proofs && rule.canDo in checkResult.proofs) return Boolean(checkResult.proofs[rule.canDo]);
-    return complete;
+    if (!rule || !proofParts(rule).length) return complete;
+    return proofShown(rule, { ...proofEvidence, items: proofItemsOf(rule) });
   };
   const allProven = canDos.length > 0 && canDos.every((_, i) => proven(i));
   const units = (manifest && manifest.units) || [];
   const nextRow = units.find((r) => r && nrOfId(r.unit || r.id) === unit.nr + 1) || null;
   const etappe = ((manifest && manifest.etappen) || []).find((e) => (e.units || []).includes(unitId));
-  const plateauNext = etappe && etappe.closedBy && etappe.closedBy !== 'closing' && (etappe.units || [])[etappe.units.length - 1] === unitId;
+  const lastOfEtappe = Boolean(etappe && etappe.closedBy) && (etappe.units || [])[etappe.units.length - 1] === unitId;
+  const plateauNext = lastOfEtappe && etappe.closedBy !== 'closing';
   const nextTarget = plateauNext
     ? { to: v2Paths.plateau(level, nrOfId(etappe.closedBy)), label: t('player.toPlateau', { n: nrOfId(etappe.closedBy) }) }
-    : nextRow && nextRow.chunk
-      ? { to: v2Paths.unit(level, unit.nr + 1), label: t('player.toUnit', { n: unit.nr + 1 }) }
-      : { to: v2Paths.home(level), label: t('player.home') };
+    : lastOfEtappe && !(manifest && manifest.kind === 'dot2') // a .2 closing (Modelltest A) has no v2 runner yet
+      ? { to: v2Paths.closing(level), label: t('as.toClosing') }
+      : nextRow && nextRow.chunk
+        ? { to: v2Paths.unit(level, unit.nr + 1), label: t('player.toUnit', { n: unit.nr + 1 }) }
+        : { to: v2Paths.home(level), label: t('player.home') };
 
   return (
     <Shell

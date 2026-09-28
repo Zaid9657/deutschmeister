@@ -28,8 +28,10 @@ const LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] 
  *      step's end line.
  *
  * No AI anywhere; below 60 % the screen SUGGESTS repeating a Lernschritt and never blocks
- * (BLUEPRINT §3.5: no gate reads a score). `onDone({ stepId, correct, total, proofs })` counts
- * the 12 only; `proofs` = { canDoId: proven } as „Das kann ich" showed it (additive).
+ * (BLUEPRINT §3.5: no gate reads a score). `onDone({ stepId, correct, total, proofs, proofItems })`
+ * counts the 12 only; `proofs` = { canDoId: proven } as „Das kann ich" showed it, `proofItems` =
+ * { proofItemId: answeredRight } — the item evidence the player's recap re-reads with proofShown
+ * once an Aufgabe is submitted after the Check (both additive).
  * `attempt` (the Check's plan.attempt) seeds the option order of its choice items (ItemView).
  */
 export default function CheckView({ unit, level, stepId, endLine = null, earlierItems = [], attempt = 1, aufgaben = null, microOutputs = null, course = null, canDos = null, ruleCards = null, lines, names, onAttempt, onDone }) {
@@ -175,7 +177,7 @@ export default function CheckView({ unit, level, stepId, endLine = null, earlier
       {endLine && allProven && <p className="text-[1rem] font-bold text-ink" lang="de">{endLine}</p>}
 
       <div className="flex justify-end">
-        <Button onClick={() => onDone && onDone({ stepId, correct: score.correct, total: score.total, proofs })} size="lg" className="w-full sm:w-auto">
+        <Button onClick={() => onDone && onDone({ stepId, correct: score.correct, total: score.total, proofs, proofItems: { ...proofResults } })} size="lg" className="w-full sm:w-auto">
           {t('check.done')}
         </Button>
       </div>
