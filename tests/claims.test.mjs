@@ -188,6 +188,9 @@ const PRICE_FREE_SURFACES = [
   // Sentence X-Ray carries the signed-out conversion offer and the Pro upsell
   // at the daily limit (docs/SCORECARD.md work order #3, 2026-09-27).
   'src/pages/SentenceXRay.jsx',
+  // The offer at the free-speaking limit quotes the level course and Pro
+  // (docs/SCORECARD.md work order #7b, 2026-09-28).
+  'src/components/speaking/SpeakingLimitOffer.jsx',
 ];
 
 test('no page source retypes a price literal', () => {
