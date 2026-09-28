@@ -28,7 +28,7 @@
 // so the SCHEMA §15 worked example (a stub cumulative lexicon) reports advisories only and §15.6 holds.
 
 import { walkTexts, walkSteps } from '../lib-validate/walk.mjs';
-import { knownForms, lexiconComplete, readTokens, licensedForms, isKnown, entryForms } from '../lib-validate/lexicon.mjs';
+import { knownForms, lexiconComplete, readTokens, licensedForms, isKnown, entryForms, namesOf } from '../lib-validate/lexicon.mjs';
 import { levelNumbers, arr, finding, pct, list } from '../lib-validate/helpers.mjs';
 
 const str = (x) => (typeof x === 'string' ? x : '');
@@ -91,6 +91,25 @@ function allocationIndex(ctx) {
   }
   allocCache.set(ctx, m);
   return m;
+}
+
+/** Academic titles that stand in a person's name („Frau Doktor Sommer", „Dr. Klein"). */
+const NAME_TITLES = new Set(['doktor', 'dr', 'professor', 'professorin', 'prof']);
+/**
+ * The title words of `text` that stand in a person's name — after the Anrede („Frau Doktor …", „Herrn Dr. …") or
+ * before a name token (`names`: cast, extras, the names registry): part of the name, not a word to learn
+ * (final code pass 2026-09-28: „Hier arbeitet Frau Doktor Sommer." in the hint of a1.1-u07 ls3-s01).
+ */
+export function nameTitles(text, names = new Set()) {
+  const toks = readTokens(String(text || ''));
+  const out = [];
+  toks.forEach((t, i) => {
+    if (!NAME_TITLES.has(t.lower) || !/^\p{Lu}/u.test(t.text)) return;
+    const prev = toks[i - 1]?.lower;
+    const next = toks[i + 1];
+    if (['frau', 'herr', 'herrn'].includes(prev) || (next && /^\p{Lu}/u.test(next.text) && names.has(next.lower))) out.push(t.lower);
+  });
+  return out;
 }
 
 /** The unit position of a doc (a lane pack: its unit's). */
@@ -195,6 +214,12 @@ export function run({ ctx, docs }) {
     // can-do title, step titles, endLines (r3 F05 / r4 F04 / r5 F03)
     const named = new Set(known);
     for (const n of taskNames(doc)) for (const t of readTokens(n)) named.add(t.lower);
+    // person-name tokens (cast, the file's extras, the names registry, the AI partners): a title before one is the name's
+    const personNames = new Set();
+    for (const [, { member }] of ctx.registries.casts?.members || []) for (const t of readTokens(member?.name || '')) personNames.add(t.lower);
+    for (const x of Object.values(doc.data?.extras && typeof doc.data.extras === 'object' ? doc.data.extras : {})) for (const t of readTokens(`${x?.name || ''} ${x?.nameDe || ''}`)) personNames.add(t.lower);
+    for (const n of namesOf(ctx)) for (const t of readTokens(n.form)) personNames.add(t.lower);
+    for (const n of taskNames(doc)) for (const t of readTokens(n)) personNames.add(t.lower);
     const alloc = allocationIndex(ctx);
     const here = unitPosition(unitData?.id ?? doc.data?.unit);
     const surfaces2 = [...walkReadSurfaces(doc, { cando: ctx.registries.cando })];
@@ -222,7 +247,7 @@ export function run({ ctx, docs }) {
       // explanation that names it („Busfahrin" → „Busfahrerin", a1.1-u10 ls3-p10)
       const plantedOk = sf.item && ((sf.kind === 'option' && String(sf.de).trim() !== String(sf.item.answer ?? '').trim()) || sf.kind === 'explanation');
       const planted = plantedOk ? (w) => !alloc.has(w) && plantedForm(w, sf.item) : null;
-      const unknown = unknownOnSurface(sf.de, named, sf.glosses, planted);
+      const unknown = unknownOnSurface(sf.de, named, [...arr(sf.glosses), ...nameTitles(sf.de, personNames)], planted);
       if (!unknown.length) continue;
       surfaceHits += 1;
       const where = unknown.map((w) => {

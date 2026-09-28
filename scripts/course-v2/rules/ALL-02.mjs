@@ -26,6 +26,14 @@
 //   - a proof by Aufgabe whose rubric scores no criterion for the can-do's function (a1.1-u02 r2 F05 / r3 F05:
 //     cd.a1.nachfragen by sd1-sp1, whose criteria are vorstellen, buchstabieren, nummer) and a productive
 //     can-do whose object noun no card, move, Leitpunkt or persona names (a1.1-u05 r1 F03) are ADVISORIES.
+//
+// Final code pass (2026-09-28, the a1.1 u02/u03/u11 deferrals):
+//   - a declared SpeakingPart move that NAMES the can-do — its id's last segment or its learnerDe label
+//     („nachfragen: Wie bitte? …") — is the grader's record of that function (grade.mjs movesFor: „nachfragen" is
+//     reported as evidence for a can-do proof), so the rubric check above is met (u02 check.proofs[4]);
+//   - a proof may name an item AND an Aufgabe (or a micro-output): the receptive and the productive side of one
+//     can-do (13 a1.1 entries). SCHEMA §8 allows it; the can-do is shown when every named proof is, and CheckView
+//     lists each with its own status (src/lib/course-v2/proofs.js). Every named proof is resolved as above.
 
 import { walkSteps, walkItems, walkTasks, speakingParts } from '../lib-validate/walk.mjs';
 import { arr, blocker, advisory, ratchet, list } from '../lib-validate/helpers.mjs';
@@ -50,6 +58,19 @@ const FUNCTIONS = [
 const FUNCTION_VERBS = { berichten: ['erzählen', 'berichten'], vorstellen: ['vorstellen', 'sich vorstellen', 'beschreiben'] };
 const CONTENT_STOP = new Set(['ich', 'sie', 'du', 'es', 'wir', 'ihr', 'er']);
 const fnName = (re) => re.source.split('|')[0].replace(/\\b/g, '');
+
+/**
+ * The names a can-do goes by for a declared move: its id's last segment („cd.a1.nachfragen" → „nachfragen") and the
+ * label of its learnerDe line („nachfragen: Wie bitte? …" → „nachfragen"), lower case.
+ */
+export function canDoMoveNames(id, entry) {
+  const out = new Set();
+  const slug = String(id || '').split('.').pop();
+  if (slug) out.add(slug.toLowerCase());
+  const head = String(entry?.learnerDe || '').match(/^\s*([\p{L}\s-]{3,40}):/u);
+  if (head) out.add(head[1].trim().toLowerCase());
+  return out;
+}
 
 /** The can-do's content nouns (capitalised, ≥ 4 letters, not the opening „Ich"), lower case. */
 export function canDoNouns(text) {
@@ -208,7 +229,10 @@ export function run({ ctx, docs }) {
         if (fns.length && t.kind === 'speaking') {
           const criteria = parts.flatMap((x) => arr(ctx.registries.rubrics?.get(x?.profile)?.data?.criteria)).map((c) => `${c?.id} ${c?.label}`.toLowerCase());
           const moves = parts.flatMap((x) => arr(x?.moves)).join(' ').toLowerCase();
-          const scored = !criteria.length || fns.some(([, cues]) => cues.map((c) => c.trim()).filter((c) => c.length >= 3).some((c) => criteria.some((x) => x.includes(c)) || moves.includes(c)));
+          // a declared move that names the can-do („nachfragen" for cd.a1.nachfragen) is the grader's record of it
+          const moveNames = canDoMoveNames(p.canDo, e);
+          const byMove = parts.flatMap((x) => arr(x?.moves)).some((m) => moveNames.has(String(m).toLowerCase()));
+          const scored = !criteria.length || byMove || fns.some(([, cues]) => cues.map((c) => c.trim()).filter((c) => c.length >= 3).some((c) => criteria.some((x) => x.includes(c)) || moves.includes(c)));
           if (!scored) findings.push(advisory(doc, `check.proofs[${i}]`, `the rubric of the ${p.aufgabe} task proving ${p.canDo} (${[...new Set(parts.map((x) => x?.profile))].join(', ')}) scores no criterion for its function (${fns.map(([re]) => fnName(re)).join(', ')}) — prove it by a task that scores it, or by its proof item`, p.canDo));
         }
         // the learner's own model turns perform the functions of an interaction can-do (a1.1-u10 r1 F07, the
