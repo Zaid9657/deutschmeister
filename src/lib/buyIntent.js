@@ -9,7 +9,13 @@
 import { safeGet, safeSet, safeRemove } from '../utils/safeStorage';
 
 const KEY = 'dm_buy_intent';
-const VALID = /^(monthly|yearly|telc_b1_komplett|course_[a-z0-9]+)$/;
+// Sub-level keys carry a second underscore (course_a1_2). The pattern used to
+// be `course_[a-z0-9]+`, written in the band era (course_a1, course_alle). From
+// the 2026-09-08 sub-level re-cut until 2026-09-28 it refused every course on
+// sale, so a signed-out Buy click on /pricing/ or /courses/ landed on
+// /dashboard after signup with no checkout. tests/speaking-offer.test.mjs runs
+// every product key through this exact pattern.
+const VALID = /^(monthly|yearly|telc_b1_komplett|course_[a-z0-9]+(?:_[0-9])?)$/;
 
 export const setBuyIntent = (productKey) => {
   if (VALID.test(productKey || '')) safeSet(KEY, productKey);
