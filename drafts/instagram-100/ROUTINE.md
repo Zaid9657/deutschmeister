@@ -15,9 +15,8 @@ repository. Without them the fired session has no Zapier tools and no CSV.
 
 Target IDs (checked 2026-09-27 through the Zapier connector):
 - Facebook: connection `66517282`, page `1232346926638010` "Deutsch Meister". **Live.**
-- Instagram: not yet possible. The Graph API shows the Deutsch Meister page with **no**
-  `instagram_business_account`. The IG account must be a Business account and linked to
-  that page first. After that, add the account id to the Routine.
+- Instagram: connection `66517288`, account `17841425239004659` "DeutschMeister | Deutsch
+  lernen" (@deutschmeisterde), linked to the Deutsch Meister page on 2026-09-28. **Live.**
 - Telegram: deferred by the owner until the week of 2026-10-05.
 
 ---
