@@ -344,8 +344,8 @@
             "den Fahrplan von Sophie"
           ],
           "explanation": {
-            "de": "Sophie schreibt den Fahrplan im Chat. Priya und Arjun lesen ihn.",
-            "en": "Sophie sent the timetable in the chat, and Priya and Arjun read it."
+            "de": "Priya und Arjun lesen den Fahrplan. Er kommt von Sophie, im Chat.",
+            "en": "Priya and Arjun read the timetable – Sophie sent it in the chat."
           },
           "origin": "agent"
         },
