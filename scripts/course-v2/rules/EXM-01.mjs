@@ -13,6 +13,7 @@
 
 import { walkBlocks } from '../lib-validate/walk.mjs';
 import { arr, isObj, blocker, advisory } from '../lib-validate/helpers.mjs';
+import { tokens, FUNCTION_WORDS } from '../lib-validate/text.mjs';
 
 export const id = 'EXM-01';
 export const title = 'Exam blocks match their Teil template (items, type, options, no-match, plays)';
@@ -168,6 +169,23 @@ export function run({ ctx, docs }) {
         for (const { text, path: tp } of arr(texts)) {
           const voices = new Set(arr(text?.lines).map((l) => l?.speaker).filter(Boolean));
           if (arr(text?.lines).length && voices.size !== t.speakers) findings.push(advisory(doc, tp, `${voices.size} speaker(s) in ${text.id}; a ${block.template} text has ${t.speakers}`, id));
+        }
+      }
+      // a pictorial Teil in its text variant: every option names something the text says, or the pictures'
+      // stand-ins are answered by word-matching (a1.1-u09 r2 F04: „Suppe" never heard in t6) — ADVISORY
+      if (t.pictorial === true) {
+        const byId = new Map(arr(texts).map(({ text }) => [text?.id, text]));
+        for (const [k, it] of items.entries()) {
+          const text = byId.get(it?.textRef);
+          if (!text || arr(it?.options).length < 2) continue;
+          const heard = new Set(tokens([...arr(text.lines).flatMap((l) => [l?.de, l?.say]), text.text].filter(Boolean).join(' ')).map((x) => x.lower));
+          const absent = [];
+          for (const o of arr(it.options)) {
+            const words = tokens(String(o)).filter((x) => /^\p{Lu}/u.test(x.text) || (x.text.length >= 4 && !FUNCTION_WORDS.has(x.lower)));
+            const miss = words.filter((w) => !heard.has(w.lower) && ![...heard].some((h) => h.length >= 4 && (h.startsWith(w.lower.slice(0, -1)) || w.lower.startsWith(h.slice(0, -1)))));
+            if (words.length && miss.length === words.length) absent.push(`„${o}"`);
+          }
+          if (absent.length) findings.push(advisory(doc, `${path}.items[${k}].options`, `option(s) ${absent.join(', ')} never occur in ${it.textRef} — in a pictorial Teil's text variant every option is something the text mentions`, it.id || id));
         }
       }
       if (typeof t.plays === 'number' && (!short || !scaffold || scaffold.playsFixed !== false)) {
