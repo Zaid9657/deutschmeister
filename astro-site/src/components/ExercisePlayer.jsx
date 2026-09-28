@@ -182,7 +182,7 @@ function FillBlank({ exercise, onAnswer, answered }) {
 // three doors as the SPA's hasLevelAccess. Signed-out visitors see the
 // signup door first (7 days of Pro), signed-in ones the course they are
 // missing. Prices derive from pricing.js; nothing here is retyped.
-function LockedExercises({ level, signedIn, count }) {
+function LockedExercises({ level, signedIn, count, signupHref }) {
   const course = courseForLevel(level);
   const buyable = Boolean(course) && !course.comingSoon;
   const code = course?.code || level.toUpperCase();
@@ -218,7 +218,7 @@ function LockedExercises({ level, signedIn, count }) {
           </>
         ) : (
           <>
-            <a href="https://deutsch-meister.de/signup" className={primary}>
+            <a href={signupHref} className={primary}>
               Start free — {TRIAL_DAYS} days of Pro included
             </a>
             <a href="https://deutsch-meister.de/login" className={secondary}>
@@ -231,7 +231,9 @@ function LockedExercises({ level, signedIn, count }) {
   );
 }
 
-export default function ExercisePlayer({ exercises, topicId, level, nextHref, nextTitle }) {
+// `signupHref` is the page's attributed signup door (astro-site/src/lib/onsiteLinks.js);
+// the bare /signup is only a fallback for a caller that passes none.
+export default function ExercisePlayer({ exercises, topicId, level, nextHref, nextTitle, signupHref = '/signup' }) {
   const isFreeLevel = !level || level.toLowerCase() === FREE_LEVEL_LABEL.toLowerCase();
   // 'open' | 'checking' | 'locked'
   const [access, setAccess] = useState(() => {
@@ -261,12 +263,12 @@ export default function ExercisePlayer({ exercises, topicId, level, nextHref, ne
     return <p className="text-sm italic text-graphite">Checking your access…</p>;
   }
   if (access === 'locked') {
-    return <LockedExercises level={level} signedIn={signedIn} count={exercises?.length || 0} />;
+    return <LockedExercises level={level} signedIn={signedIn} count={exercises?.length || 0} signupHref={signupHref} />;
   }
-  return <ExerciseRun exercises={exercises} topicId={topicId} nextHref={nextHref} nextTitle={nextTitle} />;
+  return <ExerciseRun exercises={exercises} topicId={topicId} nextHref={nextHref} nextTitle={nextTitle} signupHref={signupHref} />;
 }
 
-function ExerciseRun({ exercises, topicId, nextHref, nextTitle }) {
+function ExerciseRun({ exercises, topicId, nextHref, nextTitle, signupHref }) {
   const [current, setCurrent] = useState(0);
   const [results, setResults] = useState([]); // array of booleans
   const [answered, setAnswered] = useState(false);
@@ -371,6 +373,18 @@ function ExerciseRun({ exercises, topicId, nextHref, nextTitle }) {
               </a>
             )}
           </div>
+        )}
+        {/* Signed out, this run is recorded nowhere: recordAttempt above runs
+            only with a stored session. Saying so is the honest offer, and the
+            link carries the lesson (?ref=grammar) so the signup is traceable. */}
+        {!hasStoredSession() && signupHref && (
+          <p className="mx-auto mt-5 max-w-sm border-t border-rule pt-4 text-sm leading-relaxed text-graphite">
+            This score is not saved without an account.{' '}
+            <a href={signupHref} className="font-bold text-siegel hover:text-siegel-deep">
+              Create a free account
+            </a>{' '}
+            to keep your progress — {TRIAL_DAYS} days of Pro included.
+          </p>
         )}
       </div>
     );

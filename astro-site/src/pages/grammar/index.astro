@@ -3,6 +3,8 @@ import Layout from '../../layouts/Layout.astro';
 import Aurora from '../../components/Aurora.astro';
 import { getAllTopics, SUB_LEVELS, LEVEL_META } from '../../lib/grammar.js';
 import { ORGANIZATION } from '../../lib/siteMeta.js';
+import { onsiteHref } from '../../lib/onsiteLinks.js';
+import { TRIAL_DAYS } from '../../data/marketing.js';
 import '../../styles/global.css';
 
 const allTopics = await getAllTopics();
@@ -211,8 +213,8 @@ const H2 = 'font-display text-[1.5625rem] font-semibold leading-tight tracking-[
           Use what you learn in AI speaking practice, reading, listening, and focused exercises.
         </p>
         <div class="reveal mt-8" style="--rd:160ms">
-          <a href="https://deutsch-meister.de/signup" class={BTN_PRIMARY}>
-            Start free — includes 7 days of Pro
+          <a href={onsiteHref('signup', 'grammar', 'index')} class={BTN_PRIMARY}>
+            Start free — includes {TRIAL_DAYS} days of Pro
           </a>
         </div>
       </div>

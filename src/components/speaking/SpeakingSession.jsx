@@ -2,10 +2,11 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Mic, Square, Loader2, Volume2, PhoneOff, X, AlertCircle, RotateCcw } from 'lucide-react';
 import { getConfigForLevel } from '../../constants/speakingPrompts';
 import { getAuthHeaders } from '../../utils/supabase';
-import { pickAudioMimeType, blobToBase64, micErrorMessage } from './mediaSupport';
+import { pickAudioMimeType, blobToBase64, micErrorMessage, isLiveStream } from './mediaSupport';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
+import ReportProblemLink from '../ReportProblemLink.jsx';
 
 function formatTime(seconds) {
   const m = Math.floor(seconds / 60);
@@ -21,6 +22,9 @@ const EQ_BARS = [0, 1, 2, 3, 4, 5, 6];
 // action 'start'); this component only drives the conversation loop:
 //   tap → record → speaking-turn (STT → teacher → TTS) → play + transcript
 // then "Finish & get feedback" (or the timer) → action 'end' → evaluation.
+// Cancel also sends 'end': the server counts the learner turns itself, and a
+// session that got none is closed as 'cancelled' and its allowance released
+// (netlify/functions/_shared/speakingCloseout.mjs).
 //
 // Shared by the /speaking flow and the placement test (evalMode='placement').
 const SpeakingSession = ({
@@ -30,8 +34,9 @@ const SpeakingSession = ({
   sessionToken,
   plannedMinutes = 5,
   opening,               // { text, audioBase64 }
+  micStream = null,      // granted before the session was created (acquireMicrophone)
   onComplete,
-  onCancel,
+  onCancel,              // (ended: Promise) — resolves once the server has closed the session
 }) => {
   const isPlacement = evalMode === 'placement';
   const config = getConfigForLevel(level);
@@ -46,9 +51,10 @@ const SpeakingSession = ({
   const [timeRemaining, setTimeRemaining] = useState(plannedMinutes * 60);
   const [turnError, setTurnError] = useState(null); // { message, stage, retryable }
   const [ttsWarning, setTtsWarning] = useState(false);
+  const [noSpeech, setNoSpeech] = useState(false);
   const [evaluating, setEvaluating] = useState(false);
 
-  const streamRef = useRef(null);
+  const streamRef = useRef(micStream);
   const recorderRef = useRef(null);
   const chunksRef = useRef([]);
   const audioRef = useRef(null);
@@ -59,6 +65,7 @@ const SpeakingSession = ({
   const lastRecordingRef = useRef(null); // { audioBase64, mimeType } for retry
   const lastReplyAudioRef = useRef(opening?.audioBase64 || null);
   const transcriptEndRef = useRef(null);
+  const turnInFlightRef = useRef(null); // the pending speaking-turn request, if any
 
   useEffect(() => { messagesRef.current = messages; }, [messages]);
   useEffect(() => { transcriptEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages, recordState]);
@@ -104,6 +111,20 @@ const SpeakingSession = ({
     }
   }, [stopAudio]);
 
+  // ---- end: the server closes the session on the turns IT counted ----
+  // keepalive so a Cancel that unmounts the page still reaches the server.
+  const reportEnd = useCallback(async () => {
+    const duration = startTimeRef.current ? Math.max(0, Math.round((Date.now() - startTimeRef.current) / 1000)) : 0;
+    try {
+      await fetch('/api/speaking/speaking-session', {
+        method: 'POST',
+        keepalive: true,
+        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
+        body: JSON.stringify({ action: 'end', session_token: sessionToken, duration_seconds: duration }),
+      });
+    } catch (err) { console.warn('[speaking] end log failed:', err?.message); }
+  }, [sessionToken]);
+
   // ---- evaluation / end ----
   const endSession = useCallback(async () => {
     if (endingRef.current) return;
@@ -118,18 +139,18 @@ const SpeakingSession = ({
     }
     if (streamRef.current) { streamRef.current.getTracks().forEach((t) => t.stop()); streamRef.current = null; }
 
+    // A turn already sent is part of the session: wait for it before counting.
+    // Finishing (or the timer running out) mid-"Thinking…" used to count zero
+    // turns, skip the evaluation and throw away the learner's answer.
+    if (turnInFlightRef.current) {
+      try { await turnInFlightRef.current; } catch { /* its own error handling ran */ }
+    }
+
     const currentMessages = messagesRef.current;
     const userTurns = currentMessages.filter((m) => m.role === 'user').length;
-    const duration = startTimeRef.current ? Math.max(0, Math.round((Date.now() - startTimeRef.current) / 1000)) : 0;
 
     // Log the end (best-effort — must not block evaluation).
-    try {
-      await fetch('/api/speaking/speaking-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
-        body: JSON.stringify({ action: 'end', session_token: sessionToken, duration_seconds: duration, user_turns: userTurns, status: 'completed' }),
-      });
-    } catch (err) { console.warn('[speaking] end log failed:', err?.message); }
+    await reportEnd();
 
     // Nothing said → no evaluation.
     if (userTurns === 0) { onComplete?.(null); return; }
@@ -150,7 +171,7 @@ const SpeakingSession = ({
       else { console.error('Evaluation failed:', await res.text()); onComplete?.(null); }
     } catch (err) { console.error('Evaluation error:', err); onComplete?.(null); }
     finally { setEvaluating(false); }
-  }, [sessionToken, level, isPlacement, onComplete, stopAudio]);
+  }, [sessionToken, level, isPlacement, onComplete, stopAudio, reportEnd]);
 
   // ---- timer: countdown from planned_minutes, auto-end at 0 ----
   useEffect(() => {
@@ -173,10 +194,11 @@ const SpeakingSession = ({
   }, []);
 
   // ---- turn: send the recorded audio to speaking-turn ----
-  const sendTurn = useCallback(async (audioBase64, mimeType) => {
+  const postTurn = useCallback(async (audioBase64, mimeType) => {
     setRecordState('processing');
     setTurnError(null);
     setTtsWarning(false);
+    setNoSpeech(false);
     try {
       const res = await fetch('/api/speaking/speaking-turn', {
         method: 'POST',
@@ -205,14 +227,16 @@ const SpeakingSession = ({
       const next = [...messagesRef.current];
       if (userTranscript) next.push({ role: 'user', content: userTranscript });
       if (replyText) next.push({ role: 'assistant', content: replyText });
+      messagesRef.current = next; // endSession may be waiting on this turn
       setMessages(next);
+      setNoSpeech(data.noSpeech === true);
 
       if (warning === 'tts_unavailable' || !replyAudioBase64) {
         setTtsWarning(true);
         lastReplyAudioRef.current = null;
       } else {
         lastReplyAudioRef.current = replyAudioBase64;
-        playAudio(replyAudioBase64);
+        if (!endingRef.current) playAudio(replyAudioBase64); // not over the scoring screen
       }
       setRecordState('idle');
     } catch (err) {
@@ -221,6 +245,15 @@ const SpeakingSession = ({
       setRecordState('idle');
     }
   }, [sessionToken, endSession, playAudio]);
+
+  // Remember the pending request so endSession can wait for it.
+  const sendTurn = useCallback((audioBase64, mimeType) => {
+    const request = postTurn(audioBase64, mimeType);
+    turnInFlightRef.current = request;
+    const clear = () => { if (turnInFlightRef.current === request) turnInFlightRef.current = null; };
+    request.then(clear, clear);
+    return request;
+  }, [postTurn]);
 
   const handleRecordingStopped = useCallback(async () => {
     const mimeType = recorderRef.current?.mimeType || pickAudioMimeType() || 'audio/webm';
@@ -236,7 +269,7 @@ const SpeakingSession = ({
     setTurnError(null);
     stopAudio();
     try {
-      if (!streamRef.current) {
+      if (!isLiveStream(streamRef.current)) {
         streamRef.current = await navigator.mediaDevices.getUserMedia({ audio: true });
       }
       const mimeType = pickAudioMimeType();
@@ -370,6 +403,11 @@ const SpeakingSession = ({
             Audio isn't available right now — read the reply above.
           </div>
         )}
+        {noSpeech && (
+          <div className="mb-3 p-2.5 rounded-clay border border-accent-aprikose/30 bg-accent-aprikose-wash text-xs text-accent-aprikose-ink text-center">
+            We couldn't hear any speech in that recording. Check that your microphone is on, unmuted and the one selected, then tap and speak.
+          </div>
+        )}
         {turnError && (
           <div className="mb-3 p-3 rounded-clay border border-accent-himbeer/30 bg-accent-himbeer-wash text-sm text-accent-himbeer-ink">
             <div className="flex items-start gap-2">
@@ -381,6 +419,8 @@ const SpeakingSession = ({
                     <RotateCcw className="w-3.5 h-3.5" /> Send again
                   </button>
                 )}
+                {/* New tab: leaving this screen would end the running session. */}
+                <div className="mt-2"><ReportProblemLink topic="technical" newTab /></div>
               </div>
             </div>
           </div>
@@ -440,7 +480,20 @@ const SpeakingSession = ({
             </Button>
           </div>
 
-          <Button variant="ghost" size="sm" className="mt-3" onClick={() => { cleanup(); onCancel?.(); }}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="mt-3"
+            onClick={() => {
+              endingRef.current = true;
+              cleanup();
+              // Close it server-side too (it used to stay 'active' forever),
+              // after any turn already on its way, so that turn is counted.
+              const inFlight = turnInFlightRef.current;
+              const ended = inFlight ? inFlight.then(reportEnd, reportEnd) : reportEnd();
+              onCancel?.(ended);
+            }}
+          >
             <X className="w-3 h-3" /> Cancel
           </Button>
         </div>

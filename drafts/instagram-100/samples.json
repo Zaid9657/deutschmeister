@@ -1,0 +1,79 @@
+[
+  {
+    "id": "001",
+    "series": "Satz des Tages",
+    "accent": "limette",
+    "level": "A2 · B1",
+    "layout": "kasus",
+    "headline": "Ich helfe [[DAT:dem Mann]].",
+    "rows": [
+      {
+        "ok": true,
+        "text": "Ich helfe dem Mann."
+      },
+      {
+        "ok": false,
+        "text": "Ich helfe den Mann."
+      }
+    ],
+    "note": "helfen will Dativ. Immer. Auch wenn es sich nach Akkusativ anfühlt.",
+    "footer": "Satz testen → Link in Bio",
+    "link_path": "/analyze/",
+    "publish_at": "2026-10-01T18:00:00+02:00",
+    "alt": "Lernkarte: Ich helfe dem Mann – richtig, mit Dativ markiert. Ich helfe den Mann – falsch, durchgestrichen.",
+    "caption": "„Ich helfe den Mann.“ Klingt richtig. Ist falsch.\n\nhelfen will immer Dativ: dem Mann, der Frau, dem Kind, den Kindern. Genau so etwas fragen die Sprachbausteine in telc und Goethe ab.\n\nMerksatz: Wem hilfst du? → Dativ.\n\nSchreib unten einen eigenen Satz mit „helfen“ 👇",
+    "cta_ig": "Deinen Satz gratis durchleuchten: Link in Bio.",
+    "cta_web": "Deinen Satz gratis durchleuchten:",
+    "hashtags": "#deutschlernen #deutschgrammatik #dativ #telcb1 #goetheb1 #learngerman #deutschalsfremdsprache"
+  },
+  {
+    "id": "002",
+    "series": "Prüfungs-Fakt",
+    "accent": "aprikose",
+    "level": "Goethe B1",
+    "layout": "fact",
+    "headline": "95 Punkte im Lesen. Schreiben trotzdem nicht bestanden.",
+    "stats": [
+      {
+        "num": "95",
+        "label": "Lesen · bestanden"
+      },
+      {
+        "num": "55",
+        "label": "Schreiben · nicht bestanden",
+        "fail": true
+      }
+    ],
+    "note": "Jedes Modul braucht 60 von 100 Punkten. Zwischen den Modulen wird nicht verrechnet.",
+    "footer": "Leitfaden → Link in Bio",
+    "link_path": "/leitfaden/goethe-b1/",
+    "publish_at": "2026-10-02T18:00:00+02:00",
+    "alt": "Lernkarte Goethe B1: 95 Punkte im Lesen bestanden, 55 Punkte im Schreiben nicht bestanden. Jedes Modul braucht 60 von 100 Punkten.",
+    "caption": "95 Punkte im Lesen. Und das Schreiben trotzdem nicht bestanden.\n\nBeim Goethe-Zertifikat B1 ist jedes Modul eine eigene Hürde: 60 von 100 Punkten, pro Modul. Zwischen den Modulen wird nicht verrechnet.\n\nHeißt für dich: Lernzeit gehört in dein schwächstes Modul, nicht in das, was sich gut anfühlt.\n\nWelches Modul ist bei dir das schwächste? Schreib's in die Kommentare.",
+    "cta_ig": "Der ganze Goethe-B1-Leitfaden mit Lernplan: Link in Bio.",
+    "cta_web": "Der ganze Goethe-B1-Leitfaden mit Lernplan:",
+    "hashtags": "#goetheb1 #goethezertifikat #deutschprüfung #b1prüfung #deutschlernen #learngerman"
+  },
+  {
+    "id": "003",
+    "series": "Redemittel",
+    "accent": "himbeer",
+    "level": "B1 · Brief",
+    "layout": "list",
+    "headline": "3 Sätze für jeden Beschwerdebrief",
+    "items": [
+      "Ich schreibe Ihnen, weil …",
+      "Leider ist … noch nicht angekommen.",
+      "Deshalb bitte ich Sie, … zu …"
+    ],
+    "note": "Passt in fast jede halbformelle Aufgabe. Speichern für den Prüfungstag.",
+    "footer": "Beispielbrief → Link in Bio",
+    "link_path": "/leitfaden/brief-schreiben-b1/",
+    "publish_at": "2026-10-03T18:00:00+02:00",
+    "alt": "Lernkarte Redemittel B1: drei Sätze für den Beschwerdebrief – Ich schreibe Ihnen, weil …; Leider ist … noch nicht angekommen; Deshalb bitte ich Sie, … zu …",
+    "caption": "3 Sätze, die in fast jeden Beschwerdebrief passen:\n\n1. Ich schreibe Ihnen, weil …\n2. Leider ist … noch nicht angekommen.\n3. Deshalb bitte ich Sie, … zu …\n\nEinleitung, Problem, Bitte. Der Rest ist Leitpunkte abarbeiten. Speicher dir den Post für den Prüfungstag 📌",
+    "cta_ig": "Kompletter Aufbau mit Beispielbrief: Link in Bio.",
+    "cta_web": "Kompletter Aufbau mit Beispielbrief:",
+    "hashtags": "#telcb1 #b1brief #deutschschreiben #redemittel #deutschlernen #dtz #learngerman"
+  }
+]

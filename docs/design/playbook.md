@@ -24,6 +24,10 @@ use it — the kit grows, screens never improvise.
 - **Motion is opt-out for the visitor.** Everything rides the global
   `prefers-reduced-motion` gate; scripts/hooks additionally no-op. No-JS must
   never hide content (Astro: `.reveal` is gated behind `html.js`).
+- **The hero is visible in the first frame.** `hero-line` rises but never fades
+  (text painted at opacity 0 does not count for LCP), and a page H1 is never a
+  scroll `reveal` — `<SectionHeading size="page">` renders it plain.
+  `tests/web-performance.test.mjs` pins both.
 - **Pass = celebrate, fail = calm.** Confetti and `celebrate` only on a real
   win (goal met, mock passed, lesson complete). A failed mock gets a calm,
   encouraging screen — never confetti, never a candy button.

@@ -11,6 +11,7 @@ import Chip from '../components/ui/Chip.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
 import { curriculumFor } from '../data/curricula/index.js';
+import { SUPPORT_LINK } from '../data/navigation.js';
 import CurriculumHomePage from './CurriculumHomePage.jsx';
 
 // The course home: a guided path through one sub-level (decision 2026-09-08,
@@ -150,7 +151,9 @@ export default function CourseHomePage() {
 
         <footer className="mt-4 border-t border-rule pt-6 text-sm text-graphite">
           Lessons open in order. Your progress is saved on every lesson you mark done, on any device.{' '}
-          <Link to={`/modelltest/${course.testSlug}`} className="font-bold text-siegel hover:text-siegel-deep">Final test</Link> · <Link to="/courses/" className="font-bold text-siegel hover:text-siegel-deep">All courses</Link>
+          <Link to={`/modelltest/${course.testSlug}`} className="font-bold text-siegel hover:text-siegel-deep">Final test</Link> · <Link to="/courses/" className="font-bold text-siegel hover:text-siegel-deep">All courses</Link> ·{' '}
+          {/* No site footer on the course home (src/lib/chrome.js) — support lives here. */}
+          <Link to={SUPPORT_LINK.href} className="font-bold text-siegel hover:text-siegel-deep">{SUPPORT_LINK.labelEn}</Link>
         </footer>
       </div>
     </div>

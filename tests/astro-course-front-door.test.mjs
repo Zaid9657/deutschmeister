@@ -10,6 +10,8 @@ import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { DOORS } from '../astro-site/src/lib/onsiteLinks.js';
+
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const PAGES = join(root, 'astro-site', 'src', 'pages');
 
@@ -34,6 +36,21 @@ const COURSE_DOOR = /^\/course\/(a1\.1|\$\{[\w.]*level\})$/;
 // What this suite forbids is the grammar index posing as the course.
 const isTrialSignup = ({ href }) => /\/signup\/?$/.test(href);
 
+// An attributed door (astro-site/src/lib/onsiteLinks.js, 2026-09-27) is judged
+// by where it goes: `onsiteHref('<door>', …)` resolves to DOORS[door] (its
+// query string is attribution, not destination). Every other href is checked
+// exactly as written, and an expression this suite cannot read fails the rules
+// below — a "start free" anchor must keep a destination it can resolve.
+const ONSITE_CALL = /^onsiteHref\('(\w+)'/;
+function destination(href) {
+  const call = href.trim().match(ONSITE_CALL);
+  if (call) {
+    assert.ok(DOORS[call[1]], `onsiteHref: unknown door "${call[1]}"`);
+    return DOORS[call[1]];
+  }
+  return href;
+}
+
 // <a … href="…" | href={`…`} | href={…} …>text</a>
 const ANCHOR = /<a\b[^>]*?\bhref=(?:"([^"]*)"|\{`([^`]*)`\}|\{([^}]*)\})[^>]*>([\s\S]*?)<\/a>/g;
 
@@ -52,7 +69,9 @@ const byPage = new Map(pages.map((p) => [relative(root, p), startFreeAnchors(rea
 
 test('every "start free" CTA on the Astro site opens the course, never the grammar index', () => {
   for (const [page, anchors] of byPage) {
-    for (const { href, text } of anchors) {
+    for (const anchor of anchors) {
+      const { text } = anchor;
+      const href = destination(anchor.href);
       assert.doesNotMatch(href, /\/grammar\//, `${page}: "${text}" points at the grammar index (${href})`);
       if (isTrialSignup({ href, text })) continue;
       assert.match(href, COURSE_DOOR, `${page}: "${text}" must open /course/a1.1 (got ${href})`);

@@ -1,0 +1,1212 @@
+[
+  {
+    "series": "Satz des Tages",
+    "accent": "limette",
+    "level": "A2 · B1",
+    "layout": "kasus",
+    "headline": "Ich helfe [[DAT:dem Mann]].",
+    "rows": [
+      {
+        "ok": true,
+        "text": "Ich helfe dem Mann."
+      },
+      {
+        "ok": false,
+        "text": "Ich helfe den Mann."
+      }
+    ],
+    "note": "helfen will Dativ. Immer. Auch wenn es sich nach Akkusativ anfühlt.",
+    "footer": "Satz testen → Link in Bio",
+    "link_path": "/analyze/",
+    "alt": "Lernkarte: Ich helfe dem Mann – richtig, mit Dativ markiert. Ich helfe den Mann – falsch, durchgestrichen.",
+    "caption": "„Ich helfe den Mann.“ Klingt richtig. Ist falsch.\n\nhelfen will immer Dativ: dem Mann, der Frau, dem Kind, den Kindern. Genau so etwas fragen die Sprachbausteine in telc und Goethe ab.\n\nMerksatz: Wem hilfst du? → Dativ.\n\nSchreib unten einen eigenen Satz mit „helfen“ 👇",
+    "cta_ig": "Deinen Satz gratis durchleuchten: Link in Bio.",
+    "cta_web": "Deinen Satz gratis durchleuchten:",
+    "hashtags": "#deutschlernen #deutschgrammatik #dativ #telcb1 #goetheb1 #learngerman #deutschalsfremdsprache",
+    "id": "001",
+    "publish_at": "2026-10-01T18:00:00+02:00"
+  },
+  {
+    "series": "Prüfungs-Fakt",
+    "accent": "aprikose",
+    "level": "Goethe B1",
+    "layout": "fact",
+    "headline": "95 Punkte im Lesen. Schreiben trotzdem nicht bestanden.",
+    "stats": [
+      {
+        "num": "95",
+        "label": "Lesen · bestanden"
+      },
+      {
+        "num": "55",
+        "label": "Schreiben · nicht bestanden",
+        "fail": true
+      }
+    ],
+    "note": "Jedes Modul braucht 60 von 100 Punkten. Zwischen den Modulen wird nicht verrechnet.",
+    "footer": "Leitfaden → Link in Bio",
+    "link_path": "/leitfaden/goethe-b1/",
+    "alt": "Lernkarte Goethe B1: 95 Punkte im Lesen bestanden, 55 Punkte im Schreiben nicht bestanden. Jedes Modul braucht 60 von 100 Punkten.",
+    "caption": "95 Punkte im Lesen. Und das Schreiben trotzdem nicht bestanden.\n\nBeim Goethe-Zertifikat B1 ist jedes Modul eine eigene Hürde: 60 von 100 Punkten, pro Modul. Zwischen den Modulen wird nicht verrechnet.\n\nHeißt für dich: Lernzeit gehört in dein schwächstes Modul, nicht in das, was sich gut anfühlt.\n\nWelches Modul ist bei dir das schwächste? Schreib's in die Kommentare.",
+    "cta_ig": "Der ganze Goethe-B1-Leitfaden mit Lernplan: Link in Bio.",
+    "cta_web": "Der ganze Goethe-B1-Leitfaden mit Lernplan:",
+    "hashtags": "#goetheb1 #goethezertifikat #deutschprüfung #b1prüfung #deutschlernen #learngerman",
+    "id": "002",
+    "publish_at": "2026-10-02T18:00:00+02:00"
+  },
+  {
+    "series": "Redemittel",
+    "accent": "himbeer",
+    "level": "B1 · Brief",
+    "layout": "list",
+    "headline": "3 Sätze für jeden Beschwerdebrief",
+    "items": [
+      "Ich schreibe Ihnen, weil …",
+      "Leider ist … noch nicht angekommen.",
+      "Deshalb bitte ich Sie, … zu …"
+    ],
+    "note": "Passt in fast jede halbformelle Aufgabe. Speichern für den Prüfungstag.",
+    "footer": "Beispielbrief → Link in Bio",
+    "link_path": "/leitfaden/brief-schreiben-b1/",
+    "alt": "Lernkarte Redemittel B1: drei Sätze für den Beschwerdebrief – Ich schreibe Ihnen, weil …; Leider ist … noch nicht angekommen; Deshalb bitte ich Sie, … zu …",
+    "caption": "3 Sätze, die in fast jeden Beschwerdebrief passen:\n\n1. Ich schreibe Ihnen, weil …\n2. Leider ist … noch nicht angekommen.\n3. Deshalb bitte ich Sie, … zu …\n\nEinleitung, Problem, Bitte. Der Rest ist Leitpunkte abarbeiten. Speicher dir den Post für den Prüfungstag 📌",
+    "cta_ig": "Kompletter Aufbau mit Beispielbrief: Link in Bio.",
+    "cta_web": "Kompletter Aufbau mit Beispielbrief:",
+    "hashtags": "#telcb1 #b1brief #deutschschreiben #redemittel #deutschlernen #dtz #learngerman",
+    "id": "003",
+    "publish_at": "2026-10-03T18:00:00+02:00"
+  },
+  {
+    "series": "Satz des Tages",
+    "level": "A2",
+    "layout": "kasus",
+    "headline": "Ich danke [[DAT:dir]].",
+    "link_path": "/grammar/a2.1/dative-case/",
+    "caption": "„Ich danke dich“ hört man oft. Richtig ist: Ich danke dir.\n\ndanken will Dativ, genau wie helfen, antworten und gratulieren. Frag dich: Wem danke ich? → Dativ.\n\nWem möchtest du heute danken? Schreib es auf Deutsch in die Kommentare 👇",
+    "note": "danken will Dativ. Wie helfen, antworten, gratulieren.",
+    "rows": [
+      {
+        "ok": true,
+        "text": "Ich danke dir."
+      },
+      {
+        "ok": false,
+        "text": "Ich danke dich."
+      }
+    ],
+    "id": "004",
+    "publish_at": "2026-10-04T18:00:00+02:00",
+    "accent": "limette",
+    "hashtags": "#deutschlernen #deutschgrammatik #learngerman #deutschalsfremdsprache #daf",
+    "footer": "Regel → Link in Bio",
+    "cta_ig": "Die ganze Regel mit Übungen, kostenlos: Link in Bio.",
+    "cta_web": "Die ganze Regel mit Übungen, kostenlos:"
+  },
+  {
+    "series": "Fehler-Check",
+    "level": "A2 · B1",
+    "layout": "kasus",
+    "headline": "Nach „weil“ geht das Verb ans Ende.",
+    "link_path": "/grammar/a2.2/subordinate-word-order/",
+    "caption": "Einer der häufigsten Fehler, auch bei B1.\n\nweil, dass, wenn, ob leiten einen Nebensatz ein. Das konjugierte Verb geht ans Ende.\n\n✓ …, weil ich keine Zeit habe.\n✗ …, weil ich habe keine Zeit.\n\nSchreib einen weil-Satz über deinen Tag 👇",
+    "note": "weil, dass, wenn, ob: Nebensatz. Verb ans Ende.",
+    "rows": [
+      {
+        "ok": true,
+        "text": "…, weil ich keine Zeit habe."
+      },
+      {
+        "ok": false,
+        "text": "…, weil ich habe keine Zeit."
+      }
+    ],
+    "id": "005",
+    "publish_at": "2026-10-05T18:00:00+02:00",
+    "accent": "aprikose",
+    "hashtags": "#deutschlernen #deutschfehler #learngerman #deutschgrammatik #daf",
+    "footer": "Regel → Link in Bio",
+    "cta_ig": "Die ganze Regel mit Übungen, kostenlos: Link in Bio.",
+    "cta_web": "Die ganze Regel mit Übungen, kostenlos:"
+  },
+  {
+    "series": "Redemittel",
+    "level": "B1 · Sprechen",
+    "layout": "list",
+    "headline": "Deine Meinung sagen",
+    "link_path": "/speaking/",
+    "caption": "In der mündlichen Prüfung wirst du nach deiner Meinung gefragt. Drei Einstiege, die immer passen:\n\n1. Ich bin der Meinung, dass …\n2. Meiner Meinung nach ist …\n3. Ich finde es wichtig, dass …\n\nAchtung bei Nr. 2: Nach „Meiner Meinung nach“ kommt sofort das Verb.",
+    "note": "Nach „Meiner Meinung nach“ kommt sofort das Verb.",
+    "items": [
+      "Ich bin der Meinung, dass …",
+      "Meiner Meinung nach ist …",
+      "Ich finde es wichtig, dass …"
+    ],
+    "id": "006",
+    "publish_at": "2026-10-06T18:00:00+02:00",
+    "accent": "himbeer",
+    "hashtags": "#deutschlernen #redemittel #deutschprüfung #learngerman #daf",
+    "footer": "Sprechen üben → Link in Bio",
+    "cta_ig": "Sprechen üben ohne Partner: Link in Bio.",
+    "cta_web": "Sprechen üben ohne Partner:"
+  },
+  {
+    "series": "Wortschatz",
+    "level": "A2 · B1 · Amt",
+    "layout": "list",
+    "headline": "5 Wörter für das Amt",
+    "link_path": "/grammar/a1.1/nouns-gender/",
+    "caption": "Behördendeutsch, das du wirklich brauchst. Immer mit Artikel und Plural lernen:\n\nder Antrag · die Anträge\ndas Formular · die Formulare\ndie Unterschrift · die Unterschriften\nder Termin · die Termine\ndie Bescheinigung · die Bescheinigungen\n\nWelches Wort fehlt auf der Liste? 👇",
+    "note": "Nomen immer mit Artikel und Plural lernen.",
+    "items": [
+      "der Antrag · die Anträge",
+      "das Formular · die Formulare",
+      "die Unterschrift · die Unterschriften",
+      "der Termin · die Termine",
+      "die Bescheinigung · die Bescheinigungen"
+    ],
+    "id": "007",
+    "publish_at": "2026-10-07T18:00:00+02:00",
+    "accent": "limette",
+    "hashtags": "#deutschlernen #wortschatz #deutschvokabeln #learngerman #daf",
+    "footer": "Regel → Link in Bio",
+    "cta_ig": "Die ganze Regel mit Übungen, kostenlos: Link in Bio.",
+    "cta_web": "Die ganze Regel mit Übungen, kostenlos:"
+  },
+  {
+    "series": "Prüfungs-Fakt",
+    "level": "telc B1",
+    "layout": "fact",
+    "headline": "Schriftlich und mündlich zählen getrennt.",
+    "link_path": "/leitfaden/telc-b1/",
+    "caption": "Bei telc Deutsch B1 brauchst du 60 % in beiden Teilen, getrennt: mindestens 135 von 225 Punkten schriftlich und 45 von 75 mündlich.\n\nZwischen den Teilen wird nicht verrechnet. Ein starker schriftlicher Teil rettet also kein schwaches Sprechen.\n\nWelcher Teil macht dir mehr Sorgen? 👇",
+    "note": "60 % in beiden Teilen. Zwischen den Teilen wird nicht verrechnet.",
+    "stats": [
+      {
+        "num": "135",
+        "label": "von 225 · schriftlich"
+      },
+      {
+        "num": "45",
+        "label": "von 75 · mündlich"
+      }
+    ],
+    "id": "008",
+    "publish_at": "2026-10-08T18:00:00+02:00",
+    "accent": "aprikose",
+    "hashtags": "#deutschprüfung #telc #goethezertifikat #deutschlernen #learngerman",
+    "footer": "Leitfaden → Link in Bio",
+    "cta_ig": "Der ganze Leitfaden: Link in Bio.",
+    "cta_web": "Der ganze Leitfaden:"
+  },
+  {
+    "series": "Lerntipp",
+    "level": "A1 – B1",
+    "layout": "list",
+    "headline": "Nomen nie ohne Artikel lernen",
+    "link_path": "/grammar/a1.1/nouns-gender/",
+    "caption": "„Tisch“ lernen reicht nicht. Lern „der Tisch, die Tische“.\n\n1. Immer Artikel und Plural dazu\n2. Laut sagen, nicht nur lesen\n3. Jeden Tag ein paar neue Wörter statt vieler am Sonntag\n\nWie lernst du deine Vokabeln? 👇",
+    "note": "Der Artikel ist Teil des Wortes.",
+    "items": [
+      "Immer Artikel und Plural dazu",
+      "Laut sagen, nicht nur lesen",
+      "Jeden Tag ein paar statt vieler am Sonntag"
+    ],
+    "id": "009",
+    "publish_at": "2026-10-09T18:00:00+02:00",
+    "accent": "himbeer",
+    "hashtags": "#deutschlernen #lerntipps #deutschprüfung #learngerman #daf",
+    "footer": "Regel → Link in Bio",
+    "cta_ig": "Die ganze Regel mit Übungen, kostenlos: Link in Bio.",
+    "cta_web": "Die ganze Regel mit Übungen, kostenlos:"
+  },
+  {
+    "series": "Fehler-Check",
+    "level": "A2 · B1",
+    "layout": "kasus",
+    "headline": "„denn“ oder „weil“?",
+    "link_path": "/grammar/a2.2/coordinating-conjunctions/",
+    "caption": "Gleiche Bedeutung, andere Wortstellung.\n\ndenn → normale Wortstellung: …, denn ich habe keine Zeit.\nweil → Verb am Ende: …, weil ich keine Zeit habe.\n\nBeides ist richtig. Nur mischen darfst du nicht.",
+    "note": "Gleiche Bedeutung. denn: normale Wortstellung. weil: Verb am Ende.",
+    "rows": [
+      {
+        "ok": true,
+        "text": "…, denn ich habe keine Zeit."
+      },
+      {
+        "ok": true,
+        "text": "…, weil ich keine Zeit habe."
+      }
+    ],
+    "id": "010",
+    "publish_at": "2026-10-10T18:00:00+02:00",
+    "accent": "aprikose",
+    "hashtags": "#deutschlernen #deutschfehler #learngerman #deutschgrammatik #daf",
+    "footer": "Regel → Link in Bio",
+    "cta_ig": "Die ganze Regel mit Übungen, kostenlos: Link in Bio.",
+    "cta_web": "Die ganze Regel mit Übungen, kostenlos:"
+  },
+  {
+    "series": "Satz des Tages",
+    "level": "A2",
+    "layout": "kasus",
+    "headline": "[[NOM:Das Kleid]] gefällt [[DAT:mir]].",
+    "link_path": "/grammar/a2.1/dative-case/",
+    "caption": "Bei „gefallen“ denken viele falsch herum.\n\nDas Ding, das gefällt, ist das Subjekt (Nominativ). Die Person, der es gefällt, steht im Dativ: Das Kleid gefällt mir. Die Schuhe gefallen mir.\n\nWas gefällt dir an Deutschland? Ein Satz reicht 👇",
+    "note": "Das Ding ist das Subjekt. Die Person steht im Dativ.",
+    "rows": [
+      {
+        "ok": true,
+        "text": "Das Kleid gefällt mir."
+      },
+      {
+        "ok": false,
+        "text": "Ich gefalle das Kleid."
+      }
+    ],
+    "id": "011",
+    "publish_at": "2026-10-11T18:00:00+02:00",
+    "accent": "limette",
+    "hashtags": "#deutschlernen #deutschgrammatik #learngerman #deutschalsfremdsprache #daf",
+    "footer": "Regel → Link in Bio",
+    "cta_ig": "Die ganze Regel mit Übungen, kostenlos: Link in Bio.",
+    "cta_web": "Die ganze Regel mit Übungen, kostenlos:"
+  },
+  {
+    "series": "Redemittel",
+    "level": "B1 · Sprechen",
+    "layout": "list",
+    "headline": "Zustimmen und widersprechen",
+    "link_path": "/speaking/",
+    "caption": "Ein Gespräch lebt davon, dass du auf deinen Partner eingehst. Genau das wird in der mündlichen Prüfung bewertet.\n\n1. Da hast du recht.\n2. Das sehe ich auch so.\n3. Das sehe ich anders, weil …\n4. Ja, aber …\n\nWelchen Satz benutzt du am meisten? 👇",
+    "note": "Auf den Partner eingehen ist Teil der Bewertung.",
+    "items": [
+      "Da hast du recht.",
+      "Das sehe ich auch so.",
+      "Das sehe ich anders, weil …",
+      "Ja, aber …"
+    ],
+    "id": "012",
+    "publish_at": "2026-10-12T18:00:00+02:00",
+    "accent": "himbeer",
+    "hashtags": "#deutschlernen #redemittel #deutschprüfung #learngerman #daf",
+    "footer": "Sprechen üben → Link in Bio",
+    "cta_ig": "Sprechen üben ohne Partner: Link in Bio.",
+    "cta_web": "Sprechen üben ohne Partner:"
+  },
+  {
+    "series": "Wortschatz",
+    "level": "A2 · B1 · Wohnen",
+    "layout": "list",
+    "headline": "5 Wörter rund um die Wohnung",
+    "link_path": "/grammar/a1.1/nouns-gender/",
+    "caption": "Wohnungssuche auf Deutsch? Diese Wörter stehen in jeder Anzeige und jedem Vertrag:\n\ndie Miete · die Mieten\nder Vermieter · die Vermieter\ndie Nebenkosten (nur Plural)\ndie Kaution · die Kautionen\nder Mietvertrag · die Mietverträge\n\nSpeichern für die nächste Besichtigung 📌",
+    "note": "Diese Wörter stehen in jeder Anzeige.",
+    "items": [
+      "die Miete · die Mieten",
+      "der Vermieter · die Vermieter",
+      "die Nebenkosten (nur Plural)",
+      "die Kaution · die Kautionen",
+      "der Mietvertrag · die Mietverträge"
+    ],
+    "id": "013",
+    "publish_at": "2026-10-13T18:00:00+02:00",
+    "accent": "limette",
+    "hashtags": "#deutschlernen #wortschatz #deutschvokabeln #learngerman #daf",
+    "footer": "Regel → Link in Bio",
+    "cta_ig": "Die ganze Regel mit Übungen, kostenlos: Link in Bio.",
+    "cta_web": "Die ganze Regel mit Übungen, kostenlos:"
+  },
+  {
+    "series": "Lerntipp",
+    "level": "A2 – B1",
+    "layout": "list",
+    "headline": "10 Minuten Sprechen am Tag",
+    "link_path": "/speaking/",
+    "caption": "Viele lernen monatelang Grammatik und sprechen kaum. In der mündlichen Prüfung merkt man das sofort.\n\n1. Beschreib laut deinen Tag\n2. Nimm dich auf und hör zu\n3. Übe typische Themen: Reisen, Gesundheit, Medien\n\n10 Minuten täglich. Kein Partner nötig.",
+    "note": "Kein Partner nötig. Nur jeden Tag.",
+    "items": [
+      "Beschreib laut deinen Tag",
+      "Nimm dich auf und hör zu",
+      "Übe Themen: Reisen, Gesundheit, Medien"
+    ],
+    "id": "014",
+    "publish_at": "2026-10-14T18:00:00+02:00",
+    "accent": "himbeer",
+    "hashtags": "#deutschlernen #lerntipps #deutschprüfung #learngerman #daf",
+    "footer": "Sprechen üben → Link in Bio",
+    "cta_ig": "Sprechen üben ohne Partner: Link in Bio.",
+    "cta_web": "Sprechen üben ohne Partner:"
+  },
+  {
+    "series": "Prüfungs-Fakt",
+    "level": "telc B2",
+    "layout": "fact",
+    "headline": "Sprachbausteine: klein, aber sie zählen.",
+    "link_path": "/leitfaden/telc-b2/",
+    "caption": "Die Sprachbausteine bei telc B2 sind ein Lückentext: Konnektoren, Präpositionen, feste Wendungen.\n\nSie bringen maximal 30 der 225 Punkte im schriftlichen Teil. Wenig? Es sind Punkte, die du mit gezielter Grammatik planbar holen kannst.",
+    "note": "Konnektoren, Präpositionen, feste Wendungen: Grammatik im Kontext.",
+    "stats": [
+      {
+        "num": "30",
+        "label": "Punkte max. · Sprachbausteine"
+      },
+      {
+        "num": "225",
+        "label": "Punkte · schriftlicher Teil"
+      }
+    ],
+    "id": "015",
+    "publish_at": "2026-10-15T18:00:00+02:00",
+    "accent": "aprikose",
+    "hashtags": "#deutschprüfung #telc #goethezertifikat #deutschlernen #learngerman",
+    "footer": "Leitfaden → Link in Bio",
+    "cta_ig": "Der ganze Leitfaden: Link in Bio.",
+    "cta_web": "Der ganze Leitfaden:"
+  },
+  {
+    "series": "Fehler-Check",
+    "level": "A2",
+    "layout": "kasus",
+    "headline": "Seit drei Jahren lebe ich hier.",
+    "link_path": "/grammar/a2.1/temporal-prepositions/",
+    "caption": "Du wohnst immer noch in Berlin? Dann Präsens.\n\n✓ Ich lebe seit drei Jahren in Berlin.\n✗ Ich habe seit drei Jahren in Berlin gelebt.\n\nWas noch andauert, steht mit „seit“ im Präsens. Viele Sprachen machen das anders, deshalb passiert der Fehler so oft.\n\nSeit wann lernst du Deutsch? 👇",
+    "note": "Was heute noch andauert, steht mit „seit“ im Präsens.",
+    "rows": [
+      {
+        "ok": true,
+        "text": "Ich lebe seit drei Jahren hier."
+      },
+      {
+        "ok": false,
+        "text": "Ich habe seit drei Jahren hier gelebt."
+      }
+    ],
+    "id": "016",
+    "publish_at": "2026-10-16T18:00:00+02:00",
+    "accent": "aprikose",
+    "hashtags": "#deutschlernen #deutschfehler #learngerman #deutschgrammatik #daf",
+    "footer": "Regel → Link in Bio",
+    "cta_ig": "Die ganze Regel mit Übungen, kostenlos: Link in Bio.",
+    "cta_web": "Die ganze Regel mit Übungen, kostenlos:"
+  },
+  {
+    "series": "Satz des Tages",
+    "level": "A1 · A2",
+    "layout": "kasus",
+    "headline": "Ich fahre [[DAT:mit dem]] Bus.",
+    "link_path": "/grammar/a2.1/prepositions-dative/",
+    "caption": "mit + Dativ. Immer. Ohne Ausnahme.\n\nmit dem Bus, mit der Bahn, mit dem Fahrrad, mit den Kindern.\n\nDie Dativ-Präpositionen im Paket: aus, bei, mit, nach, seit, von, zu. Einmal auswendig, dann nie wieder raten.\n\nWie kommst du zur Arbeit? Antworte mit „mit“ 👇",
+    "note": "mit will immer Dativ: mit dem Bus, mit der Bahn, mit dem Auto.",
+    "rows": [
+      {
+        "ok": true,
+        "text": "Ich fahre mit dem Bus."
+      },
+      {
+        "ok": false,
+        "text": "Ich fahre mit den Bus."
+      }
+    ],
+    "id": "017",
+    "publish_at": "2026-10-17T18:00:00+02:00",
+    "accent": "limette",
+    "hashtags": "#deutschlernen #deutschgrammatik #learngerman #deutschalsfremdsprache #daf",
+    "footer": "Regel → Link in Bio",
+    "cta_ig": "Die ganze Regel mit Übungen, kostenlos: Link in Bio.",
+    "cta_web": "Die ganze Regel mit Übungen, kostenlos:"
+  },
+  {
+    "series": "Redemittel",
+    "level": "telc B1 · Teil 3",
+    "layout": "list",
+    "headline": "Gemeinsam etwas planen",
+    "link_path": "/leitfaden/telc-b1/",
+    "caption": "Im dritten Teil der mündlichen telc-B1-Prüfung plant ihr zusammen etwas, zum Beispiel ein Fest oder einen Ausflug. Es geht darum, das Gespräch am Laufen zu halten.\n\n1. Wollen wir …?\n2. Was hältst du davon, wenn …?\n3. Gute Idee! Wer kümmert sich um …?\n4. Dann machen wir es so.\n\nSpeichern für die Prüfungsvorbereitung 📌",
+    "note": "Nicht perfekt, sondern im Gespräch bleiben.",
+    "items": [
+      "Wollen wir …?",
+      "Was hältst du davon, wenn …?",
+      "Gute Idee! Wer kümmert sich um …?",
+      "Dann machen wir es so."
+    ],
+    "id": "018",
+    "publish_at": "2026-10-18T18:00:00+02:00",
+    "accent": "himbeer",
+    "hashtags": "#deutschlernen #redemittel #deutschprüfung #learngerman #daf",
+    "footer": "Leitfaden → Link in Bio",
+    "cta_ig": "Der ganze Leitfaden: Link in Bio.",
+    "cta_web": "Der ganze Leitfaden:"
+  },
+  {
+    "series": "Wortschatz",
+    "level": "B1 · Arbeit",
+    "layout": "list",
+    "headline": "5 Wörter für die Jobsuche",
+    "link_path": "/grammar/a1.1/nouns-gender/",
+    "caption": "Bewerbung auf Deutsch? Diese fünf Wörter brauchst du ab Tag eins:\n\ndie Bewerbung · die Bewerbungen\nder Lebenslauf · die Lebensläufe\ndas Vorstellungsgespräch · die Vorstellungsgespräche\ndie Probezeit · die Probezeiten\ndas Gehalt · die Gehälter\n\nIn welcher Branche suchst du? 👇",
+    "note": "Mit Artikel und Plural, sonst fehlt die Hälfte.",
+    "items": [
+      "die Bewerbung · die Bewerbungen",
+      "der Lebenslauf · die Lebensläufe",
+      "das Vorstellungsgespräch",
+      "die Probezeit · die Probezeiten",
+      "das Gehalt · die Gehälter"
+    ],
+    "id": "019",
+    "publish_at": "2026-10-19T18:00:00+02:00",
+    "accent": "limette",
+    "hashtags": "#deutschlernen #wortschatz #deutschvokabeln #learngerman #daf",
+    "footer": "Regel → Link in Bio",
+    "cta_ig": "Die ganze Regel mit Übungen, kostenlos: Link in Bio.",
+    "cta_web": "Die ganze Regel mit Übungen, kostenlos:"
+  },
+  {
+    "series": "Lerntipp",
+    "level": "B1 · Lesen",
+    "layout": "list",
+    "headline": "Lesen unter Zeitdruck",
+    "link_path": "/leitfaden/telc-b1/",
+    "caption": "Der schriftliche Teil ist lang. Wer beim Lesen zu viel Zeit verbraucht, hat sie beim Schreiben nicht mehr.\n\n1. Erst die Aufgaben lesen, dann den Text\n2. Nicht jedes Wort verstehen wollen\n3. Vorher mit Stoppuhr üben\n\nDu suchst Informationen, du übersetzt nicht.",
+    "note": "Du suchst Informationen, du übersetzt nicht.",
+    "items": [
+      "Erst die Aufgaben, dann den Text",
+      "Nicht jedes Wort verstehen wollen",
+      "Vorher mit Stoppuhr üben"
+    ],
+    "id": "020",
+    "publish_at": "2026-10-20T18:00:00+02:00",
+    "accent": "himbeer",
+    "hashtags": "#deutschlernen #lerntipps #deutschprüfung #learngerman #daf",
+    "footer": "Leitfaden → Link in Bio",
+    "cta_ig": "Der ganze Leitfaden: Link in Bio.",
+    "cta_web": "Der ganze Leitfaden:"
+  },
+  {
+    "series": "Fehler-Check",
+    "level": "B1",
+    "layout": "kasus",
+    "headline": "„Als ich klein war …“, nicht „wenn“.",
+    "link_path": "/grammar/b1.1/temporal-clauses/",
+    "caption": "als oder wenn? Die Regel passt in zwei Zeilen:\n\nEinmal in der Vergangenheit → als: Als ich klein war, …\nImmer wieder oder in der Zukunft → wenn: Wenn ich Zeit habe, …\n\nErzähl in einem Satz: Als ich nach Deutschland kam, … 👇",
+    "note": "Einmal in der Vergangenheit → als. Immer wieder oder Zukunft → wenn.",
+    "rows": [
+      {
+        "ok": true,
+        "text": "Als ich klein war, …"
+      },
+      {
+        "ok": false,
+        "text": "Wenn ich klein war, …"
+      }
+    ],
+    "id": "021",
+    "publish_at": "2026-10-21T18:00:00+02:00",
+    "accent": "aprikose",
+    "hashtags": "#deutschlernen #deutschfehler #learngerman #deutschgrammatik #daf",
+    "footer": "Regel → Link in Bio",
+    "cta_ig": "Die ganze Regel mit Übungen, kostenlos: Link in Bio.",
+    "cta_web": "Die ganze Regel mit Übungen, kostenlos:"
+  },
+  {
+    "series": "Satz des Tages",
+    "level": "A1 · A2",
+    "layout": "kasus",
+    "headline": "Das ist [[AKK:für meinen]] Bruder.",
+    "link_path": "/grammar/a1.2/prepositions-accusative/",
+    "caption": "für + Akkusativ. Immer.\n\nfür meinen Bruder, für meine Mutter, für mein Kind.\n\nDie Akkusativ-Präpositionen: durch, für, gegen, ohne, um. Fünf Wörter, eine Regel.\n\nFür wen lernst du Deutsch? 👇",
+    "note": "für will immer Akkusativ. Dazu: durch, gegen, ohne, um.",
+    "rows": [
+      {
+        "ok": true,
+        "text": "für meinen Bruder"
+      },
+      {
+        "ok": false,
+        "text": "für meinem Bruder"
+      }
+    ],
+    "id": "022",
+    "publish_at": "2026-10-22T18:00:00+02:00",
+    "accent": "limette",
+    "hashtags": "#deutschlernen #deutschgrammatik #learngerman #deutschalsfremdsprache #daf",
+    "footer": "Regel → Link in Bio",
+    "cta_ig": "Die ganze Regel mit Übungen, kostenlos: Link in Bio.",
+    "cta_web": "Die ganze Regel mit Übungen, kostenlos:"
+  },
+  {
+    "series": "Prüfungs-Fakt",
+    "level": "DTZ",
+    "layout": "fact",
+    "headline": "Der DTZ kennt kein „durchgefallen“.",
+    "link_path": "/leitfaden/dtz/",
+    "caption": "Der Deutsch-Test für Zuwanderer prüft A2 und B1 gleichzeitig. Im Zeugnis steht pro Bereich, welches Niveau du erreicht hast.\n\nOb das Ergebnis für deinen Zweck reicht (Einbürgerung, Aufenthalt, Kursabschluss), entscheidet die zuständige Stelle. Kläre das vorher.",
+    "note": "Im Zeugnis steht pro Bereich: A2 oder B1.",
+    "stats": [
+      {
+        "num": "2",
+        "label": "Niveaus in einer Prüfung"
+      },
+      {
+        "num": "~16",
+        "label": "Minuten mündlich, zu zweit"
+      }
+    ],
+    "id": "023",
+    "publish_at": "2026-10-23T18:00:00+02:00",
+    "accent": "aprikose",
+    "hashtags": "#deutschprüfung #telc #goethezertifikat #deutschlernen #learngerman",
+    "footer": "Leitfaden → Link in Bio",
+    "cta_ig": "Der ganze Leitfaden: Link in Bio.",
+    "cta_web": "Der ganze Leitfaden:"
+  },
+  {
+    "series": "Redemittel",
+    "level": "B1 · Brief",
+    "layout": "list",
+    "headline": "Einen Termin absagen",
+    "link_path": "/leitfaden/brief-schreiben-b1/",
+    "caption": "Absagen ist eine typische Schreibaufgabe. Drei Sätze tragen den ganzen Brief:\n\n1. Leider kann ich am … nicht kommen, weil …\n2. Könnten wir einen neuen Termin vereinbaren?\n3. Ich bitte um Ihr Verständnis.\n\nGrund, neuer Vorschlag, höflicher Schluss. Fertig.",
+    "note": "Grund, neuer Vorschlag, höflicher Schluss.",
+    "items": [
+      "Leider kann ich am … nicht kommen, weil …",
+      "Könnten wir einen neuen Termin vereinbaren?",
+      "Ich bitte um Ihr Verständnis."
+    ],
+    "id": "024",
+    "publish_at": "2026-10-24T18:00:00+02:00",
+    "accent": "himbeer",
+    "hashtags": "#deutschlernen #redemittel #deutschprüfung #learngerman #daf",
+    "footer": "Leitfaden → Link in Bio",
+    "cta_ig": "Der ganze Leitfaden: Link in Bio.",
+    "cta_web": "Der ganze Leitfaden:"
+  },
+  {
+    "series": "Fehler-Check",
+    "level": "A1",
+    "layout": "kasus",
+    "headline": "Ich bin 30 Jahre alt.",
+    "link_path": "/grammar/a1.1/verb-sein/",
+    "caption": "Im Deutschen „hast“ du kein Alter. Du „bist“ es.\n\n✓ Ich bin 30 Jahre alt.\n✗ Ich habe 30 Jahre.\n\nKlein, aber es fällt sofort auf, auch in der Vorstellungsrunde der mündlichen Prüfung.",
+    "note": "Alter immer mit sein: Ich bin … Jahre alt.",
+    "rows": [
+      {
+        "ok": true,
+        "text": "Ich bin 30 Jahre alt."
+      },
+      {
+        "ok": false,
+        "text": "Ich habe 30 Jahre."
+      }
+    ],
+    "id": "025",
+    "publish_at": "2026-10-25T18:00:00+01:00",
+    "accent": "aprikose",
+    "hashtags": "#deutschlernen #deutschfehler #learngerman #deutschgrammatik #daf",
+    "footer": "Regel → Link in Bio",
+    "cta_ig": "Die ganze Regel mit Übungen, kostenlos: Link in Bio.",
+    "cta_web": "Die ganze Regel mit Übungen, kostenlos:"
+  },
+  {
+    "series": "Wortschatz",
+    "level": "A2 · Gesundheit",
+    "layout": "list",
+    "headline": "5 Wörter für die Arztpraxis",
+    "link_path": "/speaking/",
+    "caption": "Vor dem nächsten Arzttermin einmal durchlesen:\n\ndie Praxis · die Praxen\ndas Rezept · die Rezepte\ndie Krankenkasse · die Krankenkassen\ndie Überweisung · die Überweisungen\ndie Versichertenkarte · die Versichertenkarten\n\nAchtung: Überweisung heißt beim Arzt „zum Facharzt geschickt werden“, bei der Bank „Geld senden“.",
+    "note": "Überweisung: beim Arzt zum Facharzt, bei der Bank Geld senden.",
+    "items": [
+      "die Praxis · die Praxen",
+      "das Rezept · die Rezepte",
+      "die Krankenkasse · die Krankenkassen",
+      "die Überweisung · die Überweisungen",
+      "die Versichertenkarte"
+    ],
+    "id": "026",
+    "publish_at": "2026-10-26T18:00:00+01:00",
+    "accent": "limette",
+    "hashtags": "#deutschlernen #wortschatz #deutschvokabeln #learngerman #daf",
+    "footer": "Sprechen üben → Link in Bio",
+    "cta_ig": "Sprechen üben ohne Partner: Link in Bio.",
+    "cta_web": "Sprechen üben ohne Partner:"
+  },
+  {
+    "series": "Lerntipp",
+    "level": "B1 · Brief",
+    "layout": "list",
+    "headline": "Checkliste vor dem Abgeben",
+    "link_path": "/leitfaden/brief-schreiben-b1/",
+    "caption": "Aufgabenerfüllung und passendes Register wiegen schwerer als einzelne Grammatikfehler. Vor dem Abgeben prüfst du:\n\n1. Alle Leitpunkte beantwortet?\n2. Sie oder du, passt das Register?\n3. Passen Anrede und Gruß zusammen?\n4. Wortzahl der Aufgabe eingehalten?\n\nSpeichern 📌",
+    "note": "Aufgabe und Register wiegen schwerer als einzelne Fehler.",
+    "items": [
+      "Alle Leitpunkte beantwortet?",
+      "Sie oder du: passt das Register?",
+      "Passen Anrede und Gruß zusammen?",
+      "Wortzahl eingehalten?"
+    ],
+    "id": "027",
+    "publish_at": "2026-10-27T18:00:00+01:00",
+    "accent": "himbeer",
+    "hashtags": "#deutschlernen #lerntipps #deutschprüfung #learngerman #daf",
+    "footer": "Leitfaden → Link in Bio",
+    "cta_ig": "Der ganze Leitfaden: Link in Bio.",
+    "cta_web": "Der ganze Leitfaden:"
+  },
+  {
+    "series": "Satz des Tages",
+    "level": "A2 · B1",
+    "layout": "kasus",
+    "headline": "Wohin? Oder wo?",
+    "link_path": "/grammar/a2.1/two-way-prepositions/",
+    "caption": "Die Wechselpräpositionen (in, an, auf, über, unter, vor, hinter, neben, zwischen) nehmen mal Akkusativ, mal Dativ.\n\nWohin? Bewegung zum Ziel → Akkusativ: Ich lege das Buch auf den Tisch.\nWo? Position → Dativ: Das Buch liegt auf dem Tisch.\n\nSpeicher dir den Post 📌",
+    "note": "Bewegung zum Ziel → Akkusativ. Position → Dativ.",
+    "rows": [
+      {
+        "ok": true,
+        "text": "Wohin? Auf [[AKK:den Tisch]]."
+      },
+      {
+        "ok": true,
+        "text": "Wo? Auf [[DAT:dem Tisch]]."
+      }
+    ],
+    "id": "028",
+    "publish_at": "2026-10-28T18:00:00+01:00",
+    "accent": "limette",
+    "hashtags": "#deutschlernen #deutschgrammatik #learngerman #deutschalsfremdsprache #daf",
+    "footer": "Regel → Link in Bio",
+    "cta_ig": "Die ganze Regel mit Übungen, kostenlos: Link in Bio.",
+    "cta_web": "Die ganze Regel mit Übungen, kostenlos:"
+  },
+  {
+    "series": "Fehler-Check",
+    "level": "A1",
+    "layout": "kasus",
+    "headline": "Ich habe Hunger.",
+    "link_path": "/grammar/a1.1/verb-haben/",
+    "caption": "Hunger, Durst, Angst, Zeit: Die „hast“ du im Deutschen.\n\n✓ Ich habe Hunger.\n✗ Ich bin Hunger.\n\nMit Adjektiv geht auch sein: Ich bin hungrig. Aber Nomen → haben.\n\nWas hast du gerade: Hunger, Durst oder keine Zeit? 😄",
+    "note": "Hunger, Durst, Angst, Zeit: mit haben.",
+    "rows": [
+      {
+        "ok": true,
+        "text": "Ich habe Hunger."
+      },
+      {
+        "ok": false,
+        "text": "Ich bin Hunger."
+      }
+    ],
+    "id": "029",
+    "publish_at": "2026-10-29T18:00:00+01:00",
+    "accent": "aprikose",
+    "hashtags": "#deutschlernen #deutschfehler #learngerman #deutschgrammatik #daf",
+    "footer": "Regel → Link in Bio",
+    "cta_ig": "Die ganze Regel mit Übungen, kostenlos: Link in Bio.",
+    "cta_web": "Die ganze Regel mit Übungen, kostenlos:"
+  },
+  {
+    "series": "Redemittel",
+    "level": "B1 · Brief",
+    "layout": "list",
+    "headline": "Der formelle Brief: Anfang und Schluss",
+    "link_path": "/leitfaden/brief-schreiben-b1/",
+    "caption": "Halbformell an Vermieter, Amt, Kundenservice oder Kursleitung? Dann Sie-Form und diese Rahmen-Sätze:\n\n1. Sehr geehrte Damen und Herren,\n2. Ich wende mich an Sie, weil …\n3. Über eine baldige Antwort würde ich mich freuen.\n4. Mit freundlichen Grüßen\n\nAnrede und Gruß müssen zusammenpassen.",
+    "note": "Sie-Form. Anrede und Gruß müssen zusammenpassen.",
+    "items": [
+      "Sehr geehrte Damen und Herren,",
+      "Ich wende mich an Sie, weil …",
+      "Über eine baldige Antwort würde ich mich freuen.",
+      "Mit freundlichen Grüßen"
+    ],
+    "id": "030",
+    "publish_at": "2026-10-30T18:00:00+01:00",
+    "accent": "himbeer",
+    "hashtags": "#deutschlernen #redemittel #deutschprüfung #learngerman #daf",
+    "footer": "Leitfaden → Link in Bio",
+    "cta_ig": "Der ganze Leitfaden: Link in Bio.",
+    "cta_web": "Der ganze Leitfaden:"
+  },
+  {
+    "series": "Prüfungs-Fakt",
+    "level": "Start Deutsch 1",
+    "layout": "fact",
+    "headline": "Unter 60 Punkten heißt: alles noch mal.",
+    "link_path": "/leitfaden/start-deutsch-1/",
+    "caption": "Start Deutsch 1 (A1) hat 100 Punkte, bestanden ist ab 60.\n\nEs gibt keine Module. Wer unter 60 bleibt, legt bei der Wiederholung alle vier Teile neu ab.\n\nFür den Ehegattennachzug werden Goethe und telc anerkannt. Was im Einzelfall gilt, klärt die Auslandsvertretung.",
+    "note": "Keine Module: Bei der Wiederholung legst du alle vier Teile neu ab.",
+    "stats": [
+      {
+        "num": "60",
+        "label": "von 100 · bestanden"
+      },
+      {
+        "num": "4",
+        "label": "Teile bei Wiederholung"
+      }
+    ],
+    "id": "031",
+    "publish_at": "2026-10-31T18:00:00+01:00",
+    "accent": "aprikose",
+    "hashtags": "#deutschprüfung #telc #goethezertifikat #deutschlernen #learngerman",
+    "footer": "Leitfaden → Link in Bio",
+    "cta_ig": "Der ganze Leitfaden: Link in Bio.",
+    "cta_web": "Der ganze Leitfaden:"
+  },
+  {
+    "series": "Satz des Tages",
+    "level": "B1",
+    "layout": "kasus",
+    "headline": "[[GEN:Wegen des]] Regens bleiben wir zu Hause.",
+    "link_path": "/grammar/b1.1/genitive-prepositions/",
+    "caption": "„Wegen dem Regen“ hörst du jeden Tag. Im Alltag ist das okay.\n\nIn der Prüfung schreibst du Genitiv: wegen des Regens, trotz des Staus, während der Pause.\n\nDas ist der kleine Unterschied, den Prüfer sehen.",
+    "note": "Im Alltag hörst du „wegen dem“. In der Prüfung schreib Genitiv.",
+    "rows": [
+      {
+        "ok": true,
+        "text": "Wegen des Regens …"
+      },
+      {
+        "ok": false,
+        "text": "Wegen dem Regen … (nur Alltag)"
+      }
+    ],
+    "id": "032",
+    "publish_at": "2026-11-01T18:00:00+01:00",
+    "accent": "limette",
+    "hashtags": "#deutschlernen #deutschgrammatik #learngerman #deutschalsfremdsprache #daf",
+    "footer": "Regel → Link in Bio",
+    "cta_ig": "Die ganze Regel mit Übungen, kostenlos: Link in Bio.",
+    "cta_web": "Die ganze Regel mit Übungen, kostenlos:"
+  },
+  {
+    "series": "Wortschatz",
+    "level": "A2 · B1",
+    "layout": "list",
+    "headline": "Gleiches Wort, anderer Artikel",
+    "link_path": "/grammar/a1.1/nouns-gender/",
+    "caption": "Deshalb lernst du Nomen immer mit Artikel. Hier ändert er die ganze Bedeutung:\n\nder See (Binnengewässer) · die See (das Meer)\nder Leiter (Chef) · die Leiter (zum Steigen)\ndas Steuer (im Auto) · die Steuer (ans Finanzamt)\nder Band (Buch) · die Band (Musik)\n\nKanntest du alle vier? 👇",
+    "note": "Der Artikel ändert die ganze Bedeutung.",
+    "items": [
+      "der See · die See (= das Meer)",
+      "der Leiter (Chef) · die Leiter",
+      "das Steuer (Auto) · die Steuer (Geld)",
+      "der Band (Buch) · die Band (Musik)"
+    ],
+    "id": "033",
+    "publish_at": "2026-11-02T18:00:00+01:00",
+    "accent": "limette",
+    "hashtags": "#deutschlernen #wortschatz #deutschvokabeln #learngerman #daf",
+    "footer": "Regel → Link in Bio",
+    "cta_ig": "Die ganze Regel mit Übungen, kostenlos: Link in Bio.",
+    "cta_web": "Die ganze Regel mit Übungen, kostenlos:"
+  },
+  {
+    "series": "Lerntipp",
+    "level": "B1",
+    "layout": "list",
+    "headline": "Den Modelltest richtig nutzen",
+    "link_path": "/leitfaden/modelltest-deutsch-b1/",
+    "caption": "Mehr Modelltests heißt nicht mehr Fortschritt.\n\n1. Einmal früh: Wo verlierst du die meisten Punkte?\n2. Dazwischen: nur deine Schwächen trainieren\n3. Einmal kurz vor der Prüfung: Generalprobe unter echten Bedingungen\n\nWie viele Modelltests hast du schon gemacht? 👇",
+    "note": "Messen, trainieren, noch einmal messen.",
+    "items": [
+      "Einmal früh: Wo verlierst du Punkte?",
+      "Dazwischen: nur Schwächen trainieren",
+      "Kurz vor der Prüfung: Generalprobe"
+    ],
+    "id": "034",
+    "publish_at": "2026-11-03T18:00:00+01:00",
+    "accent": "himbeer",
+    "hashtags": "#deutschlernen #lerntipps #deutschprüfung #learngerman #daf",
+    "footer": "Leitfaden → Link in Bio",
+    "cta_ig": "Der ganze Leitfaden: Link in Bio.",
+    "cta_web": "Der ganze Leitfaden:"
+  },
+  {
+    "series": "Fehler-Check",
+    "level": "A1 · A2",
+    "layout": "kasus",
+    "headline": "Das Verb steht auf Platz 2.",
+    "link_path": "/grammar/a1.2/basic-sentence-structure/",
+    "caption": "Im Hauptsatz steht das Verb auf Position 2, auch wenn vorne kein Subjekt steht.\n\n✓ Morgen fahre ich nach Hamburg.\n✗ Morgen ich fahre nach Hamburg.\n\nDiese Regel macht deine Sätze sofort deutscher.\n\nFang einen Satz mit „Heute“ an 👇",
+    "note": "Auch wenn vorne kein Subjekt steht: Verb auf Platz 2.",
+    "rows": [
+      {
+        "ok": true,
+        "text": "Morgen fahre ich nach Hamburg."
+      },
+      {
+        "ok": false,
+        "text": "Morgen ich fahre nach Hamburg."
+      }
+    ],
+    "id": "035",
+    "publish_at": "2026-11-04T18:00:00+01:00",
+    "accent": "aprikose",
+    "hashtags": "#deutschlernen #deutschfehler #learngerman #deutschgrammatik #daf",
+    "footer": "Regel → Link in Bio",
+    "cta_ig": "Die ganze Regel mit Übungen, kostenlos: Link in Bio.",
+    "cta_web": "Die ganze Regel mit Übungen, kostenlos:"
+  },
+  {
+    "series": "Redemittel",
+    "level": "A2 · B1 · Brief",
+    "layout": "list",
+    "headline": "Der private Brief",
+    "link_path": "/leitfaden/brief-schreiben-b1/",
+    "caption": "An Freunde schreibst du in der du-Form, locker, aber vollständig.\n\n1. Liebe Anna, / Lieber Tom,\n2. Danke für deine Nachricht!\n3. Ich freue mich schon auf …\n4. Viele Grüße\n\nUnd trotzdem gilt: alle Leitpunkte der Aufgabe beantworten.",
+    "note": "du-Form, locker, aber alle Leitpunkte beantworten.",
+    "items": [
+      "Liebe Anna, / Lieber Tom,",
+      "Danke für deine Nachricht!",
+      "Ich freue mich schon auf …",
+      "Viele Grüße"
+    ],
+    "id": "036",
+    "publish_at": "2026-11-05T18:00:00+01:00",
+    "accent": "himbeer",
+    "hashtags": "#deutschlernen #redemittel #deutschprüfung #learngerman #daf",
+    "footer": "Leitfaden → Link in Bio",
+    "cta_ig": "Der ganze Leitfaden: Link in Bio.",
+    "cta_web": "Der ganze Leitfaden:"
+  },
+  {
+    "series": "Satz des Tages",
+    "level": "A2 · B1",
+    "layout": "kasus",
+    "headline": "Ich gebe [[DAT:dem Kind]] [[AKK:den Ball]].",
+    "link_path": "/grammar/a2.1/pronouns-accusative-dative/",
+    "caption": "Zwei Objekte in einem Satz? Es gibt eine einfache Reihenfolge.\n\nZwei Nomen: Dativ vor Akkusativ → Ich gebe dem Kind den Ball.\nAkkusativ ist ein Pronomen: Akkusativ zuerst → Ich gebe ihn dem Kind.\n\nWelche Variante war dir neu? 👇",
+    "note": "Zwei Nomen: Dativ vor Akkusativ. Ist der Akkusativ ein Pronomen, kommt er zuerst.",
+    "rows": [
+      {
+        "ok": true,
+        "text": "Ich gebe ihm den Ball."
+      },
+      {
+        "ok": true,
+        "text": "Ich gebe ihn dem Kind."
+      }
+    ],
+    "id": "037",
+    "publish_at": "2026-11-06T18:00:00+01:00",
+    "accent": "limette",
+    "hashtags": "#deutschlernen #deutschgrammatik #learngerman #deutschalsfremdsprache #daf",
+    "footer": "Regel → Link in Bio",
+    "cta_ig": "Die ganze Regel mit Übungen, kostenlos: Link in Bio.",
+    "cta_web": "Die ganze Regel mit Übungen, kostenlos:"
+  },
+  {
+    "series": "Prüfungs-Fakt",
+    "level": "Goethe A2",
+    "layout": "fact",
+    "headline": "60 Punkte und trotzdem nicht bestanden?",
+    "link_path": "/leitfaden/goethe-a2/",
+    "caption": "Beim Goethe-Zertifikat A2 gibt es zwei Hürden: mindestens 45 von 75 Punkten schriftlich und mindestens 15 von 25 im Sprechen.\n\nVerfehlst du eine davon, ist die ganze Prüfung nicht bestanden, auch mit 60 Punkten in der Summe.\n\nHeißt: Sprechen nicht bis zum Schluss aufschieben.",
+    "note": "Zwei Hürden. Verfehlst du eine, ist die ganze Prüfung nicht bestanden.",
+    "stats": [
+      {
+        "num": "45",
+        "label": "von 75 · schriftlich"
+      },
+      {
+        "num": "15",
+        "label": "von 25 · Sprechen"
+      }
+    ],
+    "id": "038",
+    "publish_at": "2026-11-07T18:00:00+01:00",
+    "accent": "aprikose",
+    "hashtags": "#deutschprüfung #telc #goethezertifikat #deutschlernen #learngerman",
+    "footer": "Leitfaden → Link in Bio",
+    "cta_ig": "Der ganze Leitfaden: Link in Bio.",
+    "cta_web": "Der ganze Leitfaden:"
+  },
+  {
+    "series": "Fehler-Check",
+    "level": "A1 · A2",
+    "layout": "kasus",
+    "headline": "Ich rufe dich morgen an.",
+    "link_path": "/grammar/a1.1/separable-verbs-intro/",
+    "caption": "anrufen, aufstehen, einkaufen: trennbare Verben.\n\nIm Hauptsatz geht die Vorsilbe ans Ende:\n✓ Ich rufe dich morgen an.\n✗ Ich anrufe dich morgen.\n\nWann stehst du morgen auf? Antworte mit einem ganzen Satz 👇",
+    "note": "Trennbare Verben: Die Vorsilbe geht ans Satzende.",
+    "rows": [
+      {
+        "ok": true,
+        "text": "Ich rufe dich morgen an."
+      },
+      {
+        "ok": false,
+        "text": "Ich anrufe dich morgen."
+      }
+    ],
+    "id": "039",
+    "publish_at": "2026-11-08T18:00:00+01:00",
+    "accent": "aprikose",
+    "hashtags": "#deutschlernen #deutschfehler #learngerman #deutschgrammatik #daf",
+    "footer": "Regel → Link in Bio",
+    "cta_ig": "Die ganze Regel mit Übungen, kostenlos: Link in Bio.",
+    "cta_web": "Die ganze Regel mit Übungen, kostenlos:"
+  },
+  {
+    "series": "Wortschatz",
+    "level": "A2 · B1",
+    "layout": "list",
+    "headline": "9 Verben mit Dativ",
+    "link_path": "/grammar/a2.1/dative-case/",
+    "caption": "Diese Verben wollen Dativ. Frag: Wem?\n\nhelfen · danken · antworten\ngefallen · gehören · schmecken\ngratulieren · passen · fehlen\n\nIch gratuliere dir. Das Buch gehört mir. Du fehlst mir.\n\nBau einen Satz mit einem der Verben 👇",
+    "note": "Frag „Wem?“ → Dativ. Ich gratuliere dir.",
+    "items": [
+      "helfen · danken · antworten",
+      "gefallen · gehören · schmecken",
+      "gratulieren · passen · fehlen"
+    ],
+    "id": "040",
+    "publish_at": "2026-11-09T18:00:00+01:00",
+    "accent": "limette",
+    "hashtags": "#deutschlernen #wortschatz #deutschvokabeln #learngerman #daf",
+    "footer": "Regel → Link in Bio",
+    "cta_ig": "Die ganze Regel mit Übungen, kostenlos: Link in Bio.",
+    "cta_web": "Die ganze Regel mit Übungen, kostenlos:"
+  },
+  {
+    "series": "Lerntipp",
+    "level": "A1 – B1",
+    "layout": "list",
+    "headline": "Deutsch im Alltag, ohne Extra-Zeit",
+    "link_path": "/level-test/",
+    "caption": "Du hast keine Stunde am Tag? Dann nimm Deutsch in das, was du sowieso tust:\n\n1. Handy auf Deutsch umstellen\n2. Einkaufsliste auf Deutsch schreiben\n3. Nachrichten in einfacher Sprache hören\n\nWelchen Trick nutzt du? 👇",
+    "note": "Deutsch in das einbauen, was du sowieso tust.",
+    "items": [
+      "Handy auf Deutsch umstellen",
+      "Einkaufsliste auf Deutsch schreiben",
+      "Nachrichten in einfacher Sprache hören"
+    ],
+    "id": "041",
+    "publish_at": "2026-11-10T18:00:00+01:00",
+    "accent": "himbeer",
+    "hashtags": "#deutschlernen #lerntipps #deutschprüfung #learngerman #daf",
+    "footer": "Einstufungstest → Link in Bio",
+    "cta_ig": "Wo stehst du wirklich? Gratis-Einstufungstest: Link in Bio.",
+    "cta_web": "Wo stehst du wirklich? Gratis-Einstufungstest:"
+  },
+  {
+    "series": "Redemittel",
+    "level": "A2 · B1 · Alltag",
+    "layout": "list",
+    "headline": "Beim Arzt",
+    "link_path": "/speaking/",
+    "caption": "Sätze, die du im echten Leben brauchst, nicht nur in der Prüfung:\n\n1. Ich habe seit … Schmerzen.\n2. Mir ist schwindelig.\n3. Können Sie mich krankschreiben?\n4. Wie oft muss ich die Tabletten nehmen?\n\nWelchen Satz hättest du schon mal gebraucht? 👇",
+    "note": "Speichern für den nächsten Termin.",
+    "items": [
+      "Ich habe seit … Schmerzen.",
+      "Mir ist schwindelig.",
+      "Können Sie mich krankschreiben?",
+      "Wie oft muss ich die Tabletten nehmen?"
+    ],
+    "id": "042",
+    "publish_at": "2026-11-11T18:00:00+01:00",
+    "accent": "himbeer",
+    "hashtags": "#deutschlernen #redemittel #deutschprüfung #learngerman #daf",
+    "footer": "Sprechen üben → Link in Bio",
+    "cta_ig": "Sprechen üben ohne Partner: Link in Bio.",
+    "cta_web": "Sprechen üben ohne Partner:"
+  },
+  {
+    "series": "Satz des Tages",
+    "level": "A2 · B1",
+    "layout": "kasus",
+    "headline": "Ich warte [[AKK:auf den]] Bus.",
+    "link_path": "/grammar/a2.2/verbs-with-prepositions-intro/",
+    "caption": "„Ich warte für den Bus“ ist ein direkt übersetzter Fehler.\n\nwarten auf + Akkusativ. Verben mit Präposition lernst du am besten als Paket: warten auf, denken an, sich interessieren für.\n\nWorauf wartest du gerade? 👇",
+    "note": "warten auf + Akkusativ. Verb und Präposition als Paket lernen.",
+    "rows": [
+      {
+        "ok": true,
+        "text": "Ich warte auf den Bus."
+      },
+      {
+        "ok": false,
+        "text": "Ich warte für den Bus."
+      }
+    ],
+    "id": "043",
+    "publish_at": "2026-11-12T18:00:00+01:00",
+    "accent": "limette",
+    "hashtags": "#deutschlernen #deutschgrammatik #learngerman #deutschalsfremdsprache #daf",
+    "footer": "Regel → Link in Bio",
+    "cta_ig": "Die ganze Regel mit Übungen, kostenlos: Link in Bio.",
+    "cta_web": "Die ganze Regel mit Übungen, kostenlos:"
+  },
+  {
+    "series": "Fehler-Check",
+    "level": "A2",
+    "layout": "kasus",
+    "headline": "Ich bin nach Hause gegangen.",
+    "link_path": "/grammar/a2.1/perfect-tense-sein/",
+    "caption": "Perfekt mit haben oder sein?\n\nBewegung von A nach B oder eine Veränderung des Zustands → sein.\n✓ Ich bin nach Hause gegangen.\n✗ Ich habe nach Hause gegangen.\n\nAuch: Ich bin eingeschlafen. Ich bin gewachsen.\n\nWas hast du gestern gemacht? Ein Satz im Perfekt 👇",
+    "note": "Bewegung von A nach B oder Zustandswechsel → Perfekt mit sein.",
+    "rows": [
+      {
+        "ok": true,
+        "text": "Ich bin nach Hause gegangen."
+      },
+      {
+        "ok": false,
+        "text": "Ich habe nach Hause gegangen."
+      }
+    ],
+    "id": "044",
+    "publish_at": "2026-11-13T18:00:00+01:00",
+    "accent": "aprikose",
+    "hashtags": "#deutschlernen #deutschfehler #learngerman #deutschgrammatik #daf",
+    "footer": "Regel → Link in Bio",
+    "cta_ig": "Die ganze Regel mit Übungen, kostenlos: Link in Bio.",
+    "cta_web": "Die ganze Regel mit Übungen, kostenlos:"
+  },
+  {
+    "series": "Prüfungs-Fakt",
+    "level": "Modelltest",
+    "layout": "fact",
+    "headline": "Offizielle Modelltests kosten nichts.",
+    "link_path": "/leitfaden/modelltest-deutsch-b1/",
+    "caption": "telc, das Goethe-Institut und das BAMF stellen Modelltests kostenlos bereit, mit Lösungen und Hörmaterial. Bezahlen musst du nur die Prüfung selbst.\n\nZwei komplette Durchgänge reichen den meisten: einer am Anfang, einer als Generalprobe.",
+    "note": "telc, Goethe und BAMF: mit Lösungen und Hörmaterial.",
+    "stats": [
+      {
+        "num": "0 €",
+        "label": "offizielle Modelltests"
+      },
+      {
+        "num": "2",
+        "label": "Durchgänge reichen meist"
+      }
+    ],
+    "id": "045",
+    "publish_at": "2026-11-14T18:00:00+01:00",
+    "accent": "aprikose",
+    "hashtags": "#deutschprüfung #telc #goethezertifikat #deutschlernen #learngerman",
+    "footer": "Leitfaden → Link in Bio",
+    "cta_ig": "Der ganze Leitfaden: Link in Bio.",
+    "cta_web": "Der ganze Leitfaden:"
+  },
+  {
+    "series": "Wortschatz",
+    "level": "B1",
+    "layout": "list",
+    "headline": "4 Verbinder für bessere Texte",
+    "link_path": "/grammar/b1.1/adverbial-connectors/",
+    "caption": "Mit diesen Wörtern klingen deine Texte zusammenhängend statt wie eine Liste:\n\ndeshalb: Ich bin müde. Deshalb gehe ich ins Bett.\ntrotzdem: Es regnet. Trotzdem gehen wir raus.\naußerdem: Die Wohnung ist groß. Außerdem ist sie hell.\ndanach: Ich esse. Danach lerne ich.\n\nWichtig: Danach kommt sofort das Verb.",
+    "note": "Nach diesen Wörtern kommt sofort das Verb.",
+    "items": [
+      "deshalb: Deshalb gehe ich …",
+      "trotzdem: Trotzdem gehen wir …",
+      "außerdem: Außerdem ist sie …",
+      "danach: Danach lerne ich."
+    ],
+    "id": "046",
+    "publish_at": "2026-11-15T18:00:00+01:00",
+    "accent": "limette",
+    "hashtags": "#deutschlernen #wortschatz #deutschvokabeln #learngerman #daf",
+    "footer": "Regel → Link in Bio",
+    "cta_ig": "Die ganze Regel mit Übungen, kostenlos: Link in Bio.",
+    "cta_web": "Die ganze Regel mit Übungen, kostenlos:"
+  },
+  {
+    "series": "Lerntipp",
+    "level": "A2 – B1",
+    "layout": "list",
+    "headline": "Führ ein Fehler-Tagebuch",
+    "link_path": "/analyze/",
+    "caption": "Die meisten machen immer wieder dieselben fünf Fehler. Finde deine.\n\n1. Jeden Fehler mit Korrektur aufschreiben\n2. Einmal pro Woche die Liste durchgehen\n3. Ein Fehler kommt immer wieder? Das ist dein Thema.\n\nWelcher Fehler passiert dir am häufigsten? 👇",
+    "note": "Deine Fehler zeigen dir, was du lernen musst.",
+    "items": [
+      "Jeden Fehler mit Korrektur aufschreiben",
+      "Einmal pro Woche durchgehen",
+      "Kommt er wieder? Das ist dein Thema."
+    ],
+    "id": "047",
+    "publish_at": "2026-11-16T18:00:00+01:00",
+    "accent": "himbeer",
+    "hashtags": "#deutschlernen #lerntipps #deutschprüfung #learngerman #daf",
+    "footer": "Satz testen → Link in Bio",
+    "cta_ig": "Deinen eigenen Satz gratis durchleuchten: Link in Bio.",
+    "cta_web": "Deinen eigenen Satz gratis durchleuchten:"
+  },
+  {
+    "series": "Redemittel",
+    "level": "A2 · B1 · Sprechen",
+    "layout": "list",
+    "headline": "Wenn du etwas nicht verstehst",
+    "link_path": "/speaking/",
+    "caption": "Nachfragen ist Kommunikation, kein Fehler. Besser nachfragen als raten.\n\n1. Können Sie das bitte wiederholen?\n2. Was meinen Sie mit …?\n3. Habe ich Sie richtig verstanden: …?\n4. Könnten Sie bitte langsamer sprechen?",
+    "note": "Nachfragen ist Kommunikation. Besser als raten.",
+    "items": [
+      "Können Sie das bitte wiederholen?",
+      "Was meinen Sie mit …?",
+      "Habe ich Sie richtig verstanden: …?",
+      "Könnten Sie bitte langsamer sprechen?"
+    ],
+    "id": "048",
+    "publish_at": "2026-11-17T18:00:00+01:00",
+    "accent": "himbeer",
+    "hashtags": "#deutschlernen #redemittel #deutschprüfung #learngerman #daf",
+    "footer": "Sprechen üben → Link in Bio",
+    "cta_ig": "Sprechen üben ohne Partner: Link in Bio.",
+    "cta_web": "Sprechen üben ohne Partner:"
+  },
+  {
+    "series": "Satz des Tages",
+    "level": "B1",
+    "layout": "kasus",
+    "headline": "Ich freue mich [[AKK:auf das]] Wochenende.",
+    "link_path": "/grammar/b1.2/verbs-with-prepositions/",
+    "caption": "sich freuen auf oder sich freuen über? Beides ist richtig, aber es bedeutet etwas anderes.\n\nauf = es kommt noch: Ich freue mich auf das Wochenende.\nüber = es ist schon da: Ich freue mich über das Geschenk.\n\nWorauf freust du dich diese Woche? 👇",
+    "note": "auf = es kommt noch. über = es ist schon da.",
+    "rows": [
+      {
+        "ok": true,
+        "text": "auf das Wochenende (kommt noch)"
+      },
+      {
+        "ok": true,
+        "text": "über das Geschenk (ist schon da)"
+      }
+    ],
+    "id": "049",
+    "publish_at": "2026-11-18T18:00:00+01:00",
+    "accent": "limette",
+    "hashtags": "#deutschlernen #deutschgrammatik #learngerman #deutschalsfremdsprache #daf",
+    "footer": "Regel → Link in Bio",
+    "cta_ig": "Die ganze Regel mit Übungen, kostenlos: Link in Bio.",
+    "cta_web": "Die ganze Regel mit Übungen, kostenlos:"
+  },
+  {
+    "series": "Fehler-Check",
+    "level": "A2",
+    "layout": "kasus",
+    "headline": "„kennen“ oder „wissen“?",
+    "link_path": "/level-test/",
+    "caption": "Beide heißen im Englischen „to know“. Im Deutschen nicht.\n\nkennen + Person, Ort, Ding: Ich kenne den Weg.\nwissen + Information: Ich weiß, wo er wohnt.\n\n✗ Ich weiß ihn. Das geht nicht.",
+    "note": "kennen: Person, Ort, Ding. wissen: Information (dass, wo, wie …).",
+    "rows": [
+      {
+        "ok": true,
+        "text": "Ich kenne den Weg."
+      },
+      {
+        "ok": true,
+        "text": "Ich weiß, wo er wohnt."
+      },
+      {
+        "ok": false,
+        "text": "Ich weiß ihn."
+      }
+    ],
+    "id": "050",
+    "publish_at": "2026-11-19T18:00:00+01:00",
+    "accent": "aprikose",
+    "hashtags": "#deutschlernen #deutschfehler #learngerman #deutschgrammatik #daf",
+    "footer": "Einstufungstest → Link in Bio",
+    "cta_ig": "Wo stehst du wirklich? Gratis-Einstufungstest: Link in Bio.",
+    "cta_web": "Wo stehst du wirklich? Gratis-Einstufungstest:"
+  }
+]

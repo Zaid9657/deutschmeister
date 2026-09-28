@@ -239,6 +239,14 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
 
 ## Current state / open threads
 
+- **Read `docs/SCORECARD.md` before choosing any work.** It is the living business
+  scorecard: 8 areas scored by a fixed rubric, the tracked metrics, the ordered work queue
+  (take the top open item, one at a time), an experiments log and the score history. A PR
+  that moves an aspect updates its row, the queue status, one history line and one
+  experiment line in the same PR. There is one agent per area in `.claude/agents/` (plus
+  `scorecard-steward`), all following `docs/agents/PROTOCOL.md`: one move per run, and they
+  open PRs but never merge them. The schedule and prompts are in `docs/scorecard-routine.md`.
+  30/100 on 2026-09-27. Revenue and acquisition, not product quality, are the bottleneck.
 - **Course rebuilds are bound by `docs/course-standard-2026-09-12.md`** — what a course is (12
   situational Lektionen with Goethe can-dos, 9-step Lektion, in-app lesson engine, checkpoints, spaced
   review, dated plan), the measured gap of the four live courses, and the rebuild order. Never sequence

@@ -1,4 +1,4 @@
-import { tailwindColors, tailwindFontFamily, tailwindBoxShadow, tailwindEasing, radius } from './src/data/design-tokens.js';
+import { tailwindColors, tailwindFontFamily, tailwindBoxShadow, tailwindEasing, radius, fontFaces } from './src/data/design-tokens.js';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -48,5 +48,8 @@ export default {
       },
     },
   },
-  plugins: [],
+  // The self-hosted faces and their metric-matched fallbacks (design-tokens.js,
+  // "SELF-HOSTED FACES"). Upright only: the static pages never loaded the
+  // italic cut, and their few italic lines stay synthesised as before.
+  plugins: [({ addBase }) => addBase(fontFaces)],
 };

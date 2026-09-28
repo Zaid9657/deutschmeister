@@ -12,8 +12,8 @@ import {
   buildCoursePartnerPrompt,
   partnerMaxTokens,
 } from './_shared/speakingAI.mjs';
-
-const GRACE_MINUTES = 2;
+// One grace window for both "turns stop here" and "the session is stale".
+import { SESSION_GRACE_MINUTES } from './_shared/speakingCloseout.mjs';
 
 export const handler = async (event) => {
   const allowedOrigins = [
@@ -88,7 +88,7 @@ export const handler = async (event) => {
 
     // 2. Time budget: started_at + planned_minutes (+ grace) must not be exceeded.
     const startedMs = session.started_at ? new Date(session.started_at).getTime() : 0;
-    const budgetMs = (Number(session.planned_minutes || 5) + GRACE_MINUTES) * 60 * 1000;
+    const budgetMs = (Number(session.planned_minutes || 5) + SESSION_GRACE_MINUTES) * 60 * 1000;
     if (startedMs && Date.now() > startedMs + budgetMs) {
       return { statusCode: 403, headers, body: JSON.stringify({ error: 'Die Zeit für diese Sitzung ist abgelaufen.', stage: 'session', code: 'session_expired' }) };
     }
@@ -193,6 +193,10 @@ export const handler = async (event) => {
         replyText,
         replyAudioBase64,
         ...(ttsWarning ? { warning: 'tts_unavailable' } : {}),
+        // Audio arrived but no speech was recognised — almost always a muted or
+        // wrong microphone, not the learner's German. The client says so
+        // instead of letting the teacher's "bitte wiederholen" imply it.
+        ...(userTranscript ? {} : { noSpeech: true }),
       }),
     };
   } catch (error) {

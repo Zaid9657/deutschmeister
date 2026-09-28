@@ -38,7 +38,10 @@ export function grammarRowStamps(row) {
   return stamps;
 }
 
-/** Gather every activity timestamp for a user across the activity tables. */
+/**
+ * Gather every activity timestamp for a user across the activity tables, plus
+ * whether any lesson row exists (the same two reads, no extra query).
+ */
 async function fetchActivityTimestamps(userId) {
   const [grammar, xray, speaking, reading, listening, srs, writing, exams, lessonItems, lessons] = await Promise.all([
     supabase
@@ -109,7 +112,22 @@ async function fetchActivityTimestamps(userId) {
   (exams.data || []).forEach((r) => r.completed_at && stamps.push(r.completed_at));
   (lessonItems.data || []).forEach((r) => r.created_at && stamps.push(r.created_at));
   (lessons.data || []).forEach((r) => r.updated_at && stamps.push(r.updated_at));
-  return stamps;
+  return { stamps, lessonActivity: lessonActivityFrom(grammar, lessons) };
+}
+
+/**
+ * Has this learner touched a lesson at all — the scorecard's activation
+ * definition (docs/SCORECARD.md §7: any user_grammar_progress OR lesson_progress
+ * row)? `true` as soon as either table has a row; `null` (unknown) when a read
+ * failed and the other found nothing, so a network error never shows the
+ * first-run "start here" card to someone who has started (src/lib/firstRun.js).
+ * Takes the two supabase results ({ data, error }) as they come back.
+ */
+export function lessonActivityFrom(grammarResult, lessonResult) {
+  const rows = (r) => (Array.isArray(r?.data) ? r.data.length : 0);
+  if (rows(grammarResult) + rows(lessonResult) > 0) return true;
+  if (!grammarResult || !lessonResult || grammarResult.error || lessonResult.error) return null;
+  return false;
 }
 
 /**
@@ -210,6 +228,7 @@ const EMPTY_STATS = {
   activitiesToday: 0,
   speakingSessions: 0,
   xrayChecks: 0,
+  lessonActivity: null, // unknown — see lessonActivityFrom
 };
 
 /**
@@ -220,7 +239,7 @@ export async function loadDashboardStats(userId) {
   if (!userId) return { ...EMPTY_STATS };
 
   try {
-    const [timestamps, speakingCount, xrayCount] = await Promise.all([
+    const [{ stamps: timestamps, lessonActivity }, speakingCount, xrayCount] = await Promise.all([
       fetchActivityTimestamps(userId),
       supabase
         .from('speaking_evaluations')
@@ -239,6 +258,7 @@ export async function loadDashboardStats(userId) {
       activitiesToday: computeActivitiesToday(timestamps),
       speakingSessions: speakingCount.count || 0,
       xrayChecks: xrayCount.count || 0,
+      lessonActivity,
     };
   } catch (err) {
     console.error('[dashboardStats] loadDashboardStats error:', err);

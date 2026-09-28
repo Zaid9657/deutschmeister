@@ -2,11 +2,11 @@ import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, LogOut, Globe, LayoutDashboard, Crown, Sparkles, Mic, ClipboardCheck, BookOpen, BookMarked, ChevronDown, Film, Radio, Scan, Headphones, FileText, PlayCircle, GraduationCap, ShieldCheck } from 'lucide-react';
+import { Menu, X, User, LogOut, Globe, LayoutDashboard, Crown, Sparkles, Mic, ClipboardCheck, BookOpen, BookMarked, ChevronDown, Film, Radio, Scan, Headphones, FileText, PlayCircle, GraduationCap, ShieldCheck, LifeBuoy } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { isAdminEmail } from '../config/admins';
-import { NAV_GROUPS } from '../data/navigation';
+import { NAV_GROUPS, SUPPORT_LINK } from '../data/navigation';
 import Logo from './Logo';
 import Button from './ui/Button';
 
@@ -210,6 +210,14 @@ const Navbar = () => {
                         <Crown size={16} />
                         {isGerman ? 'Preise' : 'Pricing'}
                       </a>
+                      <Link
+                        to={SUPPORT_LINK.href}
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-ink hover:bg-siegel-wash transition-colors"
+                      >
+                        <LifeBuoy size={16} />
+                        {label(SUPPORT_LINK)}
+                      </Link>
                       {isAdmin && (
                         <Link
                           to="/admin"
@@ -357,6 +365,14 @@ const Navbar = () => {
                     >
                       <User size={20} className="text-graphite" />
                       <span className="text-ink font-medium">{t('nav.profile')}</span>
+                    </Link>
+                    <Link
+                      to={SUPPORT_LINK.href}
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-siegel-wash transition-colors"
+                    >
+                      <LifeBuoy size={20} className="text-graphite" />
+                      <span className="text-ink font-medium">{label(SUPPORT_LINK)}</span>
                     </Link>
                     {isAdmin && (
                       <Link
