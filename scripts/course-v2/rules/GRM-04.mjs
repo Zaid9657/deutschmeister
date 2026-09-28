@@ -52,6 +52,13 @@
 //   - a unit's own run reports the prose of the rule cards it is the first to show (u05 r2 F09 / r3 F07).
 // The engine side (lib-validate/detectors.mjs): the „zusammen" adverb class, a particle before „…", the
 // perception pair „bitte|bitter", the label „Punkt 2:", „das deine", „Teil 1.", „verabredet".
+//
+// Final code pass (2026-09-28, the a1.1 u01/u07 deferrals):
+//   - a `reportOn: 'chosen'` article is chosen only when the ARTICLE itself stands in the gap: „Indien ist ein ___."
+//     → „Land" types the noun after a printed „ein", it does not choose the article (u01 ls3-p05/p06); an error
+//     correction's quoted sentence is compared case-free („Die Postleitzahl …" keeps „die Postleitzahl");
+//   - the can-do frame opens EVERY sentence of a frame surface, „Und"/„Aber" before it included: a title.canDo
+//     split into two sentences for TXT-01 („Sie können … . Und Sie können fragen: …") is two frames (u03, u07).
 
 import { walkTexts, walkProduction, walkSteps } from '../lib-validate/walk.mjs';
 import { walkReadSurfaces, isMetalanguage } from '../lib-validate/metalanguage.mjs';
@@ -64,7 +71,21 @@ import { entryForms } from '../lib-validate/lexicon.mjs';
 import { arr, finding, list, CHOICE_TYPES } from '../lib-validate/helpers.mjs';
 
 /** The can-do frame that opens title.canDo, endLines and the Lernziele lines: „Sie können …", „Ich kann …". */
-const FRAME_RE = /^\s*(?:Sie\s+können|Ich\s+kann|Du\s+kannst|Jetzt\s+können\s+Sie)\b/u;
+const FRAME_RE = /^\s*(?:(?:Und|Aber)\s+)?(?:Sie\s+können|Ich\s+kann|Du\s+kannst|Jetzt\s+können\s+Sie)\b/u;
+/**
+ * The can-do frames of a frame surface as [from, to) character spans: one at the start of every sentence
+ * (a canDo split into „Sie können … . Und Sie können …" for TXT-01 carries two, a1.1-u03/u07).
+ */
+export function frameSpans(text) {
+  const out = [];
+  const t = String(text || '');
+  const starts = [0, ...[...t.matchAll(/[.!?](?:[“"‘»«]?)\s+/gu)].map((m) => m.index + m[0].length)];
+  for (const at of starts) {
+    const m = t.slice(at).match(FRAME_RE);
+    if (m) out.push([at, at + m[0].length]);
+  }
+  return out;
+}
 const FRAME_KINDS = new Set(['canDo', 'endLine', 'lernziel']);
 /** The learner-address register on an instruction: „Ihr-", „Ihnen". */
 const ADDRESS_RE = /^(?:Ihr(?:e|en|em|er|es)?|Ihnen)$/u;
@@ -187,7 +208,10 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
     if (!text) return;
     const { metalanguage = false, kind = null, template = null, chosen = null } = opts;
     const seen = new Set();
-    const frame = FRAME_KINDS.has(kind) ? (String(text).match(FRAME_RE) || [''])[0] : '';
+    const frames = FRAME_KINDS.has(kind) ? frameSpans(text) : [];
+    const inFrame = (at) => frames.some(([a, b]) => at >= a && at < b);
+    // a hit in a sentence a frame opens (for the frame's object clause below): no sentence end between them
+    const framedSentence = (at) => frames.some(([a]) => a <= at && !/[.!?]/.test(String(text).slice(a, at)));
     for (const det of detectors) {
       const place = placement.get(det.id);
       const licensedAt = surface === 'production' ? place.prod : place.rec;
@@ -211,8 +235,13 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
         }
         if (reportOn === 'chosen') {
           const at = text.indexOf(hit.sentence) + hit.index;
-          if (chosen.gap && !(at < chosen.gap[1] && at + String(hit.match).length > chosen.gap[0])) continue;
-          if (chosen.quoted !== undefined && String(chosen.quoted).includes(hit.match)) continue;
+          // the article (the hit's first token) is what the learner chooses: it must stand in the gap —
+          // „ein ___" → „Land" types the noun after a printed article (a1.1-u01 ls3-p05/p06)
+          const article = tokens(hit.match)[0];
+          const artFrom = at + (article ? article.index : 0);
+          const artTo = artFrom + (article ? article.text.length : String(hit.match).length);
+          if (chosen.gap && !(artFrom < chosen.gap[1] && artTo > chosen.gap[0])) continue;
+          if (chosen.quoted !== undefined && String(chosen.quoted).toLowerCase().includes(String(hit.match).toLowerCase())) continue;
         }
         if (metalanguage) {
           const sentAt = text.indexOf(hit.sentence);
@@ -220,9 +249,9 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
           const htoks = tokens(hit.match);
           const content = htoks.map((t) => t.lower).filter((w) => !FUNCTION_WORDS.has(w));
           let why = null;
-          if (frame && at < frame.length) why = 'frame';
+          if (inFrame(at)) why = 'frame';
           // the can-do frame's object clause: „Sie können sagen, was Sie gern machen." (a1.1-u08 r2 F09 / r3 F10)
-          else if (frame && /indirekt|Frage mit ob/i.test(det.construction || '') && /\b(?:sagen|fragen|erzählen|verstehen|zeigen|nennen|erklären),\s*$/u.test(hit.sentence.slice(0, hit.index))) why = 'frame';
+          else if (framedSentence(at) && /indirekt|Frage mit ob/i.test(det.construction || '') && /\b(?:sagen|fragen|erzählen|verstehen|zeigen|nennen|erklären),\s*$/u.test(hit.sentence.slice(0, hit.index))) why = 'frame';
           else if (template && inOrder(hit.match, templateText(template))) why = 'template';
           else if (htoks.length && ADDRESS_RE.test(htoks[0].text)) why = 'address';
           else if (content.length && content.every((w) => isMetalanguage(w))) why = 'metalanguage';

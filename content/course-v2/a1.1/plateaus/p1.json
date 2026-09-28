@@ -482,7 +482,7 @@
           "type": "richtig_falsch",
           "role": "exam",
           "topic": "lesen",
-          "promptDe": "„Die Teilnehmer schreiben heute eine Nachricht in den Chat.“",
+          "promptDe": "„Frau Schulz fragt: Wer ist morgen online?“",
           "options": [
             "richtig",
             "falsch"
@@ -493,8 +493,8 @@
             "richtig"
           ],
           "explanation": {
-            "de": "Frau Schulz schreibt: „Bitte schreiben Sie heute noch eine Nachricht in den Chat.“",
-            "en": "Ms Schulz asks everyone to write a message in the chat today."
+            "de": "Frau Schulz schreibt: „Bitte schreiben Sie heute noch eine Nachricht in den Chat: Sind Sie morgen online?“",
+            "en": "Ms Schulz asks everyone to say in the chat today whether they will be online tomorrow."
           },
           "origin": "agent"
         },

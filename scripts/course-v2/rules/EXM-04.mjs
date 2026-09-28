@@ -21,8 +21,15 @@
 // buchstabieren, nummer) elicits each of them — its instructionsDe, situationDe, cards, the AI partner's
 // persona or opening line name it, not in a negated clause („kein Buchstabieren") — or the unit declares the
 // omission: its Prüfungsfokus entry for the template has length 'reduced'. A criterion scored but never
-// asked for grades the learner on a performance nobody requested: BLOCKER while the entry says 'full';
-// with 'reduced' an ADVISORY (the grader still scores the criterion — SCHEMA has no criteria subset yet).
+// asked for grades the learner on a performance nobody requested: BLOCKER.
+//
+// The part's length (final code pass, 2026-09-28, a1.1-u01 deferral): the rubric's criteria subset exists —
+// `appliesIf: 'full'` (SCHEMA §4.5) — and the compiler carries a shortened Teil's Prüfungsfokus length onto
+// the part (`length`), where grade.mjs appliesTo drops those criteria from the model, the prompt and the
+// target. So a part played 'reduced' or 'mini' (its own `length`, else the unit's Prüfungsfokus entry for its
+// template, slot 'sprechen') is checked against the criteria the grader scores AT THAT LENGTH: an
+// `appliesIf: 'full'` criterion there is not scored and needs no elicitation (no finding); a criterion the
+// grader still scores and the part never asks for is the BLOCKER above, whatever the length.
 
 import { walkTasks, speakingParts } from '../lib-validate/walk.mjs';
 import { arr, isObj, blocker, advisory } from '../lib-validate/helpers.mjs';
@@ -75,6 +82,20 @@ export function elicits(text, cues) {
 
 /** A criterion that names a task: its label ends in an infinitive („Eine Nummer nennen"). */
 export const isPerformance = (c) => /(?:^|\s)\p{Ll}+(?:en|ern|eln)$/u.test(String(c?.label || '').trim());
+
+/** The Prüfungsfokus lengths at which a Teil is shortened (grade.mjs SHORTENED_LENGTHS, SCHEMA §8). */
+export const SHORTENED_LENGTHS = Object.freeze(['reduced', 'mini']);
+/**
+ * The length a speaking part is played at: its own `length` (the compiled form), else the unit's
+ * Prüfungsfokus entry for its template in slot 'sprechen', else 'full' (the compiler's shortenedSpeakingTeile).
+ */
+export function partLength(part, unitData) {
+  if (SHORTENED_LENGTHS.includes(part?.length)) return part.length;
+  const fokus = arr(unitData?.spec?.lanes?.pruefungsfokus).find((f) => f?.template === part?.template && f?.slot === 'sprechen');
+  return SHORTENED_LENGTHS.includes(fokus?.length) ? fokus.length : 'full';
+}
+/** Does the grader score criterion `c` on a part played at `length`? (grade.mjs appliesTo, speaking side.) */
+export const scoredAt = (c, length) => !(c?.appliesIf === 'full' && SHORTENED_LENGTHS.includes(length));
 
 export const id = 'EXM-04';
 export const title = 'Speaking tasks match their template (mode, preparation, cards/moves, stimulus, length, rubric)';
@@ -204,13 +225,15 @@ export function run({ ctx, docs }) {
         const criteria = arr(ctx.registries.rubrics?.get(part.profile)?.data?.criteria).filter((c) => c?.per === 'part' && isPerformance(c));
         if (criteria.length >= 2) {
           const asked = [part.instructionsDe, part.situationDe, JSON.stringify(part.cards || ''), task.aiRole?.personaDe, part.aiRole?.personaDe, task.openingLine].join(' ');
-          const missing = criteria.filter((c) => !elicits(asked, criterionCues(c)));
+          // only what the grader scores at the part's length: a shortened part drops appliesIf 'full' (grade.mjs appliesTo)
+          const length = partLength(part, doc.kind === 'unit' ? doc.data : null);
+          const missing = criteria.filter((c) => scoredAt(c, length) && !elicits(asked, criterionCues(c)));
           if (missing.length) {
-            const fokus = arr((doc.kind === 'unit' ? doc.data : null)?.spec?.lanes?.pruefungsfokus).find((f) => f?.template === part.template && f?.slot === 'sprechen');
-            const reduced = fokus?.length === 'reduced' || fokus?.length === 'mini';
-            const msg = `${part.profile} scores ${missing.map((c) => `„${c.id}"`).join(', ')}, but the part never asks for ${missing.length > 1 ? 'them' : 'it'} (instructionsDe, situationDe, cards, persona, openingLine)`;
-            if (reduced) findings.push(advisory(doc, `${path}${pp}.profile`, `${msg} — the Prüfungsfokus entry says '${fokus.length}', but the grader still scores ${missing.length > 1 ? 'them' : 'it'} (SCHEMA has no criteria subset yet)`, ref));
-            else findings.push(blocker(doc, `${path}${pp}.instructionsDe`, `${msg} — the learner is graded on a performance nobody requested; ask for it, or set the Prüfungsfokus entry of ${part.template} to length 'reduced'`, ref));
+            const msg = `${part.profile} scores ${missing.map((c) => `„${c.id}"`).join(', ')}${length === 'full' ? '' : ` even at length '${length}'`}, but the part never asks for ${missing.length > 1 ? 'them' : 'it'} (instructionsDe, situationDe, cards, persona, openingLine)`;
+            const fix = length === 'full'
+              ? `ask for it, or set the Prüfungsfokus entry of ${part.template} to length 'reduced' (the rubric's appliesIf 'full' criteria are then not scored)`
+              : `ask for it, or mark the criterion appliesIf 'full' in the rubric ${part.profile}`;
+            findings.push(blocker(doc, `${path}${pp}.instructionsDe`, `${msg} — the learner is graded on a performance nobody requested; ${fix}`, ref));
           }
         }
         if (part.template === 'tb1.m2' && !/Blatt|Meinung/.test(String(task.aiRole?.personaDe || part.aiRole?.personaDe || ''))) {
