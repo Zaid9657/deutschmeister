@@ -372,6 +372,8 @@ function producedFindings(ctx, doc) {
       if (w.length < 3 || FUNCTION_WORDS.has(w) || NUMBER_WORDS.has(w) || CORE.has(w) || /^\d/.test(w) || (sf.meta && isMetalanguage(w))) return;
       if (sf.nounsOnly && !/^\p{Lu}/u.test(t.text)) return;
       let cands = byForm.get(w) || [];
+      // a Leitpunkt's nouns only: a sentence-initial imperative („Setzen Sie eine Frist …") is no noun
+      if (sf.nounsOnly) cands = cands.filter((c) => c.e.pos === 'NOUN');
       // a bare finite form is the separable verb only when its particle closes the clause (see particleCloses)
       cands = cands.filter((c) => !c.split || particleCloses(sf.de, toks, i, c.split));
       const initial = i === 0 || /[.!?:„"]\s*$/.test(sf.de.slice(0, t.index));
