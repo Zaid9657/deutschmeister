@@ -61,7 +61,8 @@ export function commonFreeWindows(a, b) {
 }
 
 /** Cue stems a criterion is asked for by (its id's stem, plus the words an instruction uses for it). */
-const CRITERION_CUES = { nummer: ['nummer', 'zahl', 'telefon', 'postleitzahl'], vorstellen: ['vorstell', 'stichw', 'name'], buchstabieren: ['buchstabier'] };
+// „vorstellen" also in its split imperative („Stellen Sie sich vor.", „Stell dich vor.")
+const CRITERION_CUES = { nummer: ['nummer', 'zahl', 'telefon', 'postleitzahl'], vorstellen: ['vorstell', 'stichw', 'name', 'stellen sie sich', 'stell dich'], buchstabieren: ['buchstabier'] };
 export function criterionCues(criterion) {
   const key = String(criterion?.id || '').toLowerCase();
   if (CRITERION_CUES[key]) return CRITERION_CUES[key];

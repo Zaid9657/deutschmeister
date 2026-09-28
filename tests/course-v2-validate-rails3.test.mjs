@@ -12,12 +12,14 @@ import { fileURLToPath } from 'node:url';
 
 import { runRules, loadRules } from '../scripts/course-v2/lib-validate/runner.mjs';
 import { emptyContext, ingest, addDoc, addDetectors } from '../scripts/course-v2/lib-validate/context.mjs';
+import { unitPosition } from '../scripts/course-v2/lib-validate/ids.mjs';
+import { tokens } from '../scripts/course-v2/lib-validate/text.mjs';
 import { detectInText, buildLexEnv, IHR_ONLY_VERBS, DETECTOR_OVERLAYS } from '../scripts/course-v2/lib-validate/detectors.mjs';
 import { constituents, missingOrders, tilesBuildKey } from '../scripts/course-v2/lib-validate/orders.mjs';
 import { knownCompound, FINITE_FIRST_PARTS } from '../scripts/course-v2/lib-validate/compounds.mjs';
-import { stripFragments, INSTRUCTION_METALANGUAGE } from '../scripts/course-v2/lib-validate/metalanguage.mjs';
+import { stripFragments, INSTRUCTION_METALANGUAGE, hintHeadWords } from '../scripts/course-v2/lib-validate/metalanguage.mjs';
 import { entriesKnownAt, knownForms } from '../scripts/course-v2/lib-validate/lexicon.mjs';
-import { glossSet } from '../scripts/course-v2/rules/LEX-01.mjs';
+import { glossSet, nameTitles } from '../scripts/course-v2/rules/LEX-01.mjs';
 import { answerClassCue, calqueWasSprechen } from '../scripts/course-v2/rules/ITM-01.mjs';
 import { baselineSolver } from '../scripts/course-v2/rules/ITM-02.mjs';
 import { DOUBLE_PLURALS } from '../scripts/course-v2/rules/ITM-06.mjs';
@@ -29,10 +31,11 @@ import { phones, streets } from '../scripts/course-v2/rules/CON-01.mjs';
 import { subordinateClauses } from '../scripts/course-v2/rules/TXT-01.mjs';
 import { perAd, adsOf } from '../scripts/course-v2/rules/TXT-02.mjs';
 import { quotedLine, SIE_FORM_RE } from '../scripts/course-v2/rules/TXT-04.mjs';
-import { criterionCues, elicits, isPerformance, REQUEST_RE } from '../scripts/course-v2/rules/EXM-04.mjs';
+import { criterionCues, elicits, isPerformance, REQUEST_RE, partLength, scoredAt } from '../scripts/course-v2/rules/EXM-04.mjs';
 import { suffixClaims, exhaustivePerfektClaim, positionColumnProblems, unconditionedPlacement, unquotedForms } from '../scripts/course-v2/rules/GRM-05.mjs';
-import { cueHead, SPELLED_CHAIN_RE } from '../scripts/course-v2/rules/LEX-03.mjs';
-import { learnerTurnGaps } from '../scripts/course-v2/rules/ALL-02.mjs';
+import { cueHead, SPELLED_CHAIN_RE, promotedAt, particleCloses } from '../scripts/course-v2/rules/LEX-03.mjs';
+import { learnerTurnGaps, canDoMoveNames } from '../scripts/course-v2/rules/ALL-02.mjs';
+import { frameSpans } from '../scripts/course-v2/rules/GRM-04.mjs';
 import { teilName } from '../scripts/course-v2/rules/ALL-03.mjs';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -586,4 +589,149 @@ describe('TXT-01 a bracket is no clause (rc.artikel-genus-plural)', () => {
     assert.equal(subordinateClauses('Klicken Sie auf das Wort, das nicht stimmt.'), 1);
     assert.equal(subordinateClauses('Jedes Nomen hat ein Genus: der (maskulin), das (neutral) oder die (feminin).'), 0);
   });
+});
+
+// ── the final code pass (2026-09-28): the a1.1 deferrals aimed at the rules ──────────────────
+
+describe('EXM-04 honours the part\'s length: a shortened Teil is checked against what the grader scores there (a1.1-u01)', () => {
+  const RUBRIC = JSON.parse(readFileSync(join(REG, 'rubrics', 'speaking', 'sd1-sp1.json'), 'utf8'));
+  const run = (instructionsDe, { fokus = 'reduced', own = null } = {}) => {
+    const part = { template: 'sd1.sp1', mode: 'monologue', profile: 'sd1-sp1', situationDe: 'Im Kurs.', instructionsDe, ...(own ? { length: own } : {}) };
+    const b = bundle({ units: [unit(1, { spec: { grammar: { new: [], chunk: [], review: [] }, lanes: { primary: 'sd1', pruefungsfokus: fokus ? [{ template: 'sd1.sp1', length: fokus, slot: 'sprechen' }] : [] } }, steps: [{ id: 'a1.1-u01-ls5', kind: 'sprechen', task: { bankKey: 'a11-u01-s', lane: 'sd1', parts: [part] } }] })] });
+    ingest(b.ctx, RUBRIC, 'registries/rubrics/speaking/sd1-sp1.json');
+    return rule('EXM-04', b);
+  };
+  test('the helpers: the part\'s own length wins, else the Prüfungsfokus entry; appliesIf \'full\' is not scored when shortened', () => {
+    const unitData = { spec: { lanes: { pruefungsfokus: [{ template: 'sd1.sp1', length: 'reduced', slot: 'sprechen' }] } } };
+    assert.equal(partLength({ template: 'sd1.sp1' }, unitData), 'reduced');
+    assert.equal(partLength({ template: 'sd1.sp1', length: 'mini' }, null), 'mini');
+    assert.equal(partLength({ template: 'sd1.sp2' }, unitData), 'full');
+    assert.equal(scoredAt({ appliesIf: 'full' }, 'reduced'), false);
+    assert.equal(scoredAt({ appliesIf: 'full' }, 'full'), true);
+    assert.equal(scoredAt({}, 'mini'), true);
+  });
+  test('pass: sd1.sp1 reduced, only „Stellen Sie sich vor." — buchstabieren and nummer are appliesIf \'full\' (the stale advisory is gone)', async () => {
+    hasNot(await run('Stellen Sie sich vor.'), /never asks for/);
+  });
+  test('pass: the compiled form — the part carries length \'reduced\' itself', async () => {
+    hasNot(await run('Stellen Sie sich vor.', { fokus: null, own: 'reduced' }), /never asks for/);
+  });
+  test('fail: reduced, but the criterion still scored there („vorstellen") is never asked for', async () => {
+    has(await run('Nennen Sie Ihre Telefonnummer.'), /scores „vorstellen" even at length 'reduced'/, 'blocker');
+  });
+});
+
+describe('GRM-04 an article is chosen only when the article is in the gap (a1.1-u01 ls3-p05/p06, u02 ls1-r04)', () => {
+  const run = (nr, it) => rule('GRM-04', bundle({ units: [unit(nr, { steps: [situation(`a1.1-u0${nr}-ls3`, { pool: { items: [it] } })] })] }));
+  const gap = (promptDe, answer) => item('a1.1-u01-ls3-p05', { type: 'fill_blank', promptDe, answer, accepted: [answer] });
+  const ids = (r) => r.findings.map((f) => f.id);
+  test('pass: „Indien ist ein ___." → „Land" types the noun after a printed article', async () => {
+    const r = await run(1, gap('Kochi ist eine Stadt. Indien ist ein ___. (L…)', 'Land'));
+    assert.ok(!ids(r).includes('det.unbestimmter-artikel'), messages(r));
+  });
+  test('fail: „Indien ist ___ Land." → „ein" chooses the article', async () => {
+    const r = await run(1, gap('Indien ist ___ Land.', 'ein'));
+    assert.ok(ids(r).includes('det.unbestimmter-artikel'), messages(r));
+  });
+  test('pass: an error correction that keeps the quoted article, the sentence re-ordered („Die …" / „… die …")', async () => {
+    const promptDe = 'Korrigieren Sie die Wortstellung: „Die Postleitzahl nicht ist 04109.“';
+    const r = await run(2, item('a1.1-u02-ls3-r04', { type: 'error_correction', promptDe, answer: 'Die Postleitzahl ist nicht 04109.', accepted: ['Die Postleitzahl ist nicht 04109.', '04109 ist die Postleitzahl nicht.'] }));
+    assert.ok(!ids(r).includes('det.bestimmter-artikel'), messages(r));
+  });
+});
+
+describe('GRM-04 every sentence of a can-do may open with the frame (a1.1-u03, u07: title.canDo split for TXT-01)', () => {
+  const run = (canDo) => rule('GRM-04', bundle({ units: [unit(3, { title: { de: 'Familie', canDo } })] }));
+  const koennen = (r) => r.findings.filter((f) => f.id === 'det.modal-koennen');
+  test('frameSpans: one frame per sentence that opens with it, „Und" included', () => {
+    assert.equal(frameSpans('Sie können sagen: Das ist meine Familie. Und Sie können fragen: Ist das deine Schwester?').length, 2);
+    assert.equal(frameSpans('Sie können grüßen. Dann können Sie gehen.').length, 1);
+  });
+  test('pass: „Sie können sagen: … . Und Sie können fragen: …?"', async () => {
+    const r = await run('Sie können sagen: Das ist meine Familie. Und Sie können fragen: Ist das deine Schwester?');
+    assert.equal(koennen(r).length, 0, messages(r));
+  });
+  test('fail: a second sentence that is not a frame („Dann können Sie fragen.")', async () => {
+    const r = await run('Sie können sagen: Das ist meine Familie. Dann können Sie fragen.');
+    assert.equal(koennen(r).length, 1, messages(r));
+  });
+});
+
+describe('LEX-03 a promotion counts from its own unit on (a1.1-u03, u08: lx.kellner promoted at u10)', () => {
+  const lex = [lx('lx.kellner', 'Kellner', 'NOUN', 'a1.1-u02', { article: 'der', plural: 'Kellner', plural_kind: 'regular', feminine: 'die Kellnerin', role: 'receptive' })];
+  const withPromotion = (b) => {
+    ingest(b.ctx, { $schema: 'course-v2/lexicon@1', level: 'a1.1', entries: [], promotions: [{ lemma: 'lx.kellner', from: 'receptive', to: 'productive', unit: 'a1.1-u10' }] }, 'fixture:a1.1/lexicon.promotions.json');
+    return b;
+  };
+  const run = (nr) => rule('LEX-03', withPromotion(bundle({ lexicon: lex, units: [unit(nr, { redemittel: [{ id: `a1.1-u${String(nr).padStart(2, '0')}-rm01`, de: 'Er ist Kellner.', en: 'He is a waiter.', function: 'den Beruf nennen' }] })] })));
+  test('promotedAt: before the promotion\'s unit the lemma is not promoted', () => {
+    const b = withPromotion(bundle({ lexicon: lex, units: [unit(3)] }));
+    assert.equal(promotedAt(b.ctx, unitPosition('a1.1-u03')).has('lx.kellner'), false);
+    assert.equal(promotedAt(b.ctx, unitPosition('a1.1-u10')).has('lx.kellner'), true);
+    assert.equal(promotedAt(b.ctx, unitPosition('a1.1-u12')).has('lx.kellner'), true);
+  });
+  test('fail: „Er ist Kellner." produced at u03, the promotion is at u10', async () => has(await run(3), /asked to produce „Kellner" \(lx\.kellner: receptive/, 'ratchet'));
+  test('pass: the same line at u10', async () => hasNot(await run(10), /asked to produce „Kellner"/));
+});
+
+describe('LEX-03 a bare finite form is the separable verb only when its particle closes the clause (a1.1-u05: „steht")', () => {
+  const lex = [
+    lx('lx.aufstehen', 'aufstehen', 'VERB', 'a1.1-u07', { separable: true, verb_forms: { '3sg': 'steht auf', perfekt: 'ist aufgestanden' } }),
+    lx('lx.schreibtisch', 'Schreibtisch', 'NOUN', 'a1.1-u05', { article: 'der', plural: 'Schreibtische', plural_kind: 'regular' }),
+  ];
+  const run = (de) => rule('LEX-03', bundle({ lexicon: lex, units: [unit(5, { redemittel: [{ id: 'a1.1-u05-rm01', de, en: 'x', function: 'fragen' }] })] }));
+  test('particleCloses', () => {
+    const at = (text, w) => { const toks = tokens(text); return particleCloses(text, toks, toks.findIndex((t) => t.lower === w), 'auf'); };
+    assert.equal(at('Er steht um sieben auf.', 'steht'), true);
+    assert.equal(at('Wann steht er auf, um sieben?', 'steht'), true);
+    assert.equal(at('Das Verb steht auf Position 2.', 'steht'), false);
+    assert.equal(at('Wo steht Ihr Schreibtisch? Er ist auf.', 'steht'), false, 'the particle of another sentence');
+  });
+  test('pass: „Wo steht Ihr Schreibtisch?" — the core verb stehen', async () => hasNot(await run('Wo steht Ihr Schreibtisch?'), /„steht"/));
+  test('pass: „Der Schreibtisch steht auf Position 2." — „auf" opens a phrase', async () => hasNot(await run('Der Schreibtisch steht auf Position 2.'), /„steht"/));
+  test('fail: „Er steht um sieben auf." — aufstehen, allocated at u07', async () => has(await run('Er steht um sieben auf.'), /asked to produce „steht" \(lx\.aufstehen: allocated a1\.1-u07\)/, 'ratchet'));
+});
+
+describe('LEX-01 a hint does not report the words it glosses for its own item (a1.1-u07 ls3-s01, h3-01, h3-03)', () => {
+  const lex = [lx('lx.arbeiten', 'arbeiten', 'VERB', 'a1.1-u03', { verb_forms: { '3sg': 'arbeitet' } })];
+  const run = (hintDe) => rule('LEX-01', bundle({ cast: true, lexicon: lex, units: [unit(7, { steps: [situation('a1.1-u07-ls3', { structuredInput: [item('a1.1-u07-ls3-s01', { type: 'multiple_choice', role: 'structured', promptDe: 'Priya: „Die Praxis ist um acht Uhr offen.“ Was ist richtig?', options: ['ja', 'nein', 'vielleicht'], answer: 'ja', accepted: ['ja'], hint: { de: hintDe, en: 'Praxis = a doctor\'s practice' } })] })] })] }));
+  const onHint = (r) => r.findings.filter((f) => /hint\.de$/.test(f.path)).map((f) => f.message).join('\n');
+  test('the helpers: the head words a hint glosses; a title inside a name', () => {
+    assert.deepEqual(hintHeadWords('die Bäckerei: Dort gibt es Brot. samstags: am Tag nach Freitag.'), ['bäckerei', 'samstags']);
+    assert.deepEqual(nameTitles('Hier arbeitet Frau Doktor Sommer.'), ['doktor']);
+    assert.deepEqual(nameTitles('Praxis Doktor Sommer', new Set(['sommer'])), ['doktor']);
+    assert.deepEqual(nameTitles('Der Doktor kommt.'), []);
+  });
+  test('pass: „die Praxis: Hier arbeitet Frau Doktor Wagner." — the head word and the title in a name', async () => {
+    const msg = onHint(await run('die Praxis: Hier arbeitet Frau Doktor Wagner.'));
+    assert.ok(!/„Praxis"|„Doktor"/.test(msg), msg);
+  });
+  test('fail: an unknown word in the explanation is still reported („Zahnärztin")', async () => {
+    const msg = onHint(await run('die Praxis: Hier arbeitet eine Zahnärztin.'));
+    assert.match(msg, /„Zahnärztin"/);
+    assert.ok(!/„Praxis"/.test(msg), msg);
+  });
+});
+
+describe('ALL-02 a declared move that names the can-do; a proof item is a proof item (a1.1-u02 check.proofs[4])', () => {
+  const CANDO = JSON.parse(readFileSync(join(REG, 'cando', 'a1.json'), 'utf8'));
+  const RUBRIC = JSON.parse(readFileSync(join(REG, 'rubrics', 'speaking', 'sd1-sp1.json'), 'utf8'));
+  const run = (moves, proofItem = 'a1.1-u02-q03') => {
+    const b = bundle({ units: [unit(2, {
+      spec: { canDos: ['cd.a1.nachfragen'], grammar: { new: [], chunk: [], review: [] } },
+      steps: [{ id: 'a1.1-u02-ls5', kind: 'sprechen', task: { bankKey: 'a11-u02-s', lane: 'sd1', template: 'sd1.sp1', mode: 'monologue', profile: 'sd1-sp1', moves, cards: { learner: ['Name?'], partner: [] }, instructionsDe: 'Stellen Sie sich vor.' } }],
+      check: { items: [], proofItems: [item('a1.1-u02-q03', { type: 'multiple_choice', role: 'proof', promptDe: 'Was sagen Sie?', options: ['Wie bitte?', 'Danke.', 'Tschüss.'], answer: 'Wie bitte?', accepted: ['Wie bitte?'] })], proofs: [{ canDo: 'cd.a1.nachfragen', item: proofItem, aufgabe: 'sprechen' }] },
+    })] });
+    ingest(b.ctx, CANDO, 'registries/cando/a1.json');
+    ingest(b.ctx, RUBRIC, 'registries/rubrics/speaking/sd1-sp1.json');
+    return rule('ALL-02', b);
+  };
+  test('canDoMoveNames: the id\'s last segment and the learnerDe label', () => {
+    const names = canDoMoveNames('cd.a1.nachfragen', { learnerDe: 'nachfragen: Wie bitte? Noch einmal, bitte.' });
+    assert.ok(names.has('nachfragen'));
+  });
+  test('fail: no move — the rubric scores no criterion for the function', async () => has(await run([]), /scores no criterion for its function/, 'advisory'));
+  test('pass: the declared move „nachfragen"', async () => hasNot(await run(['nachfragen']), /scores no criterion/));
+  test('fail: a proof item that is not one of check.proofItems', async () => has(await run(['nachfragen'], 'a1.1-u02-c01'), /not one of check\.proofItems/, 'blocker'));
+  test('pass: item AND aufgabe on one proof (SCHEMA §8, 2026-09-28)', async () => hasNot(await run(['nachfragen']), /names neither|not one of check\.proofItems|no sprechen step/));
 });

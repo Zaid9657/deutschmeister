@@ -20,6 +20,7 @@ import { dirname, join } from 'node:path';
 import { checkItem, quotedSentence, v2CheckOptions, RESULT, isChoiceItem } from '../src/lib/course-v2/checkItem.js';
 import { gradeAnswer } from '../src/components/course-v2/grade.js';
 import { isAufgabeSubmitted } from '../src/lib/course-v2/completion.js';
+import { proofParts, proofShown } from '../src/lib/course-v2/proofs.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const res = (item, input) => checkItem(item, input).result;
@@ -320,4 +321,24 @@ test('rail (all courses): the determiner swap of a one-word possessive key on a 
     if ((item.accepted || []).some((a) => prep(a) === prep(twin))) continue;
     assert.equal(res(item, twin), RESULT.WRONG, `${item.id}: „${twin}“ for „${key}“`);
   }
+});
+
+// ── „Das kann ich": an entry may name an item AND an Aufgabe (SCHEMA §8, 2026-09-28) ─────────
+test('Check.proofs: every named proof is listed and the can-do is shown only when each one is', () => {
+  const proof = { canDo: 'cd.a1.buchstabieren', item: 'a1.1-u02-q01', aufgabe: 'sprechen' };
+  assert.deepEqual(proofParts(proof, {}).map((p) => [p.kind, p.ok]), [['item', false], ['aufgabe', false]], 'the item first, then the Aufgabe — neither ignored');
+  assert.equal(proofShown(proof, { items: { 'a1.1-u02-q01': true } }), false, 'the item alone does not tick it (CheckView used to stop here)');
+  assert.equal(proofShown(proof, { aufgaben: { sprechen: true } }), false, 'nor the Aufgabe alone');
+  assert.equal(proofShown(proof, { items: { 'a1.1-u02-q01': true }, aufgaben: { sprechen: true } }), true);
+  assert.equal(proofShown(proof, { items: { 'a1.1-u02-q01': false }, aufgaben: { sprechen: true } }), false, 'a proof item answered wrong');
+  assert.equal(proofShown({ canDo: 'cd.a1.formular-person', microOutput: 'a1.1-u02-ls2-mo' }, { microOutputs: { 'a1.1-u02-ls2-mo': true } }), true);
+  assert.equal(proofShown({ canDo: 'cd.a1.x' }, { aufgaben: { sprechen: true } }), false, 'an entry that names no proof is never shown');
+  assert.equal(proofShown({ canDo: 'cd.a1.x', aufgabe: 'schreiben' }, { aufgaben: null }), false, 'no evidence yet');
+});
+
+test('Check.proofs: CheckView reads the one rule and renders a line per named proof', () => {
+  const src = readFileSync(join(ROOT, 'src/components/course-v2/CheckView.jsx'), 'utf8');
+  assert.match(src, /proofParts\(proof, \{ items: proofResults, aufgaben, microOutputs \}\)/);
+  assert.match(src, /st\.labels\.map\(/, 'one status line per named proof');
+  assert.ok(!/if \(proof\.item\) \{/.test(src), 'no item-first early return');
 });
