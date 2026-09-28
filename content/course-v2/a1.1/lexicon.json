@@ -388,8 +388,8 @@
       "gloss": {
         "en": "to introduce oneself"
       },
-      "example": "Bitte stellen Sie sich vor.",
-      "exampleEn": "Please introduce yourself.",
+      "example": "Thema: Vorstellen. – Ich heiße Priya und komme aus Indien.",
+      "exampleEn": "Topic: introducing yourself. – My name is Priya and I’m from India.",
       "wordId": null
     },
     {
@@ -735,21 +735,6 @@
       },
       "example": "Die Hausnummer ist zwanzig.",
       "exampleEn": "The house number is twenty.",
-      "wordId": null
-    },
-    {
-      "id": "lx.dreissig",
-      "lemma": "dreißig",
-      "pos": "NUM",
-      "role": "receptive",
-      "unit": "a1.1-u02",
-      "block": 1,
-      "list_ref": "A1",
-      "gloss": {
-        "en": "thirty"
-      },
-      "example": "Emre ist dreißig.",
-      "exampleEn": "Emre is thirty.",
       "wordId": null
     },
     {
@@ -2602,6 +2587,21 @@
       },
       "example": "Das Haus hat einen Garten.",
       "exampleEn": "The house has a garden.",
+      "wordId": null
+    },
+    {
+      "id": "lx.per",
+      "lemma": "per",
+      "pos": "PREP",
+      "role": "receptive",
+      "unit": "a1.1-u05",
+      "block": 1,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "by, via (per E-Mail)"
+      },
+      "example": "Priya fragt per E-Mail nach der Wohnung.",
+      "exampleEn": "Priya asks about the flat by e-mail.",
       "wordId": null
     },
     {

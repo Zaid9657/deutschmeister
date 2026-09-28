@@ -3443,7 +3443,7 @@
         ],
         "exact": "number",
         "explanation": {
-          "de": "Am Montag geht es nicht, und um zwei ist es für Olena früh. Sie sagt: „Ich komme um halb drei.“",
+          "de": "Am Montag geht es nicht, und um zwei ist es für Olena ein bisschen früh. Sie sagt: „Ich komme um halb drei.“",
           "en": "Monday doesn’t work for Olena and two is a bit early for her – she comes on Wednesday at half past two."
         },
         "origin": "agent"

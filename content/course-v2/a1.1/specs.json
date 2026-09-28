@@ -194,7 +194,6 @@
             "lx.zwei",
             "lx.zwoelf",
             "lx.zwanzig",
-            "lx.dreissig",
             "lx.hundert"
           ]
         },
@@ -628,6 +627,7 @@
             "lx.schlafzimmer",
             "lx.toilette",
             "lx.garten",
+            "lx.per",
             "lx.wg",
             "lx.stadtteil",
             "lx.ziehen"
