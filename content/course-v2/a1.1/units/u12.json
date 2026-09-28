@@ -171,15 +171,15 @@
         {
           "id": "a1.1-u12-start-l02",
           "speaker": "cast.bilal",
-          "de": "Und dann kommt der Kurs A1.2, oder? Ich mache mit!",
-          "en": "And then comes the A1.2 course, right? I’m joining!",
-          "say": "Und dann kommt der Kurs A eins zwei, oder? Ich mache mit!"
+          "de": "Und dann kommt der Kurs A1.2, oder? Ich mache den Kurs auch!",
+          "en": "And then comes the A1.2 course, right? I’m doing that course too!",
+          "say": "Und dann kommt der Kurs A eins zwei, oder? Ich mache den Kurs auch!"
         },
         {
           "id": "a1.1-u12-start-l03",
           "speaker": "cast.priya",
-          "de": "Ich auch. Und Olena macht auch mit.",
-          "en": "Me too. And Olena is joining too."
+          "de": "Ich auch. Und Olena kommt auch.",
+          "en": "Me too. And Olena is coming too."
         },
         {
           "id": "a1.1-u12-start-l04",
@@ -226,24 +226,17 @@
         {
           "id": "a1.1-u12-start-l11",
           "speaker": "cast.priya",
-          "de": "Und ich bringe Käse und eine Flasche Saft mit.",
-          "en": "And I’ll bring cheese and a bottle of juice."
-        }
-      ],
-      "glosses": [
-        {
-          "token": "mache mit",
-          "gloss": {
-            "en": "I’m joining in (mitmachen = to join in, to take part)"
-          }
+          "de": "Lecker! Und ich kaufe Käse und eine Flasche Saft ein.",
+          "en": "Yummy! And I’ll buy cheese and a bottle of juice."
         },
         {
-          "token": "macht auch mit",
-          "gloss": {
-            "en": "is joining in too (mitmachen = to join in, to take part)"
-          }
+          "id": "a1.1-u12-start-l12",
+          "speaker": "cast.emre",
+          "de": "Tut mir leid, ich kann nicht. Ich bin noch in İzmir!",
+          "en": "Sorry, I can’t. I’m still in İzmir!"
         }
       ],
+      "glosses": [],
       "gistItem": {
         "id": "a1.1-u12-start-i01",
         "type": "multiple_choice",
@@ -1398,13 +1391,13 @@
           "promptDe": "Sie bestellen im Restaurant. Was ist höflich?",
           "promptEn": "Ordering in a restaurant: what is polite?",
           "options": [
-            "Ich will einen Kaffee, bitte.",
-            "Ich möchte einen Kaffee, bitte.",
-            "Ich will jetzt einen Kaffee!"
+            "Ich will den Fisch, bitte.",
+            "Ich möchte den Fisch, bitte.",
+            "Ich will jetzt den Fisch!"
           ],
-          "answer": "Ich möchte einen Kaffee, bitte.",
+          "answer": "Ich möchte den Fisch, bitte.",
           "accepted": [
-            "Ich möchte einen Kaffee, bitte."
+            "Ich möchte den Fisch, bitte."
           ],
           "explanation": {
             "de": "Beim Bestellen sagen Sie „möchte“. „will“ sagen Sie für Pläne: Ich will die Prüfung machen.",
@@ -1988,8 +1981,8 @@
           {
             "id": "a1.1-u12-ls3-l09",
             "speaker": "cast.herr-richter",
-            "de": "Sehr gut. Füllen Sie bitte das Formular aus. Kreuzen Sie hier an: Kurs am Morgen. Dann melde ich Sie an.",
-            "en": "Very good. Please fill in the form. Tick here: morning course. Then I’ll register you."
+            "de": "Sehr gut. Füllen Sie bitte das Formular aus: Name und Adresse. Kreuzen Sie hier an: Kurs am Morgen. Dann melde ich Sie an.",
+            "en": "Very good. Please fill in the form: name and address. Tick here: morning course. Then I’ll register you."
           },
           {
             "id": "a1.1-u12-ls3-l10",
@@ -2881,7 +2874,7 @@
           "id": "a1.1-u12-ls4-t8",
           "kind": "sign",
           "title": "An Kursraum 3",
-          "text": "Deutsch sprechen am Mittwoch: 17 bis 19 Uhr, hier in Kursraum 3.\nSie lernen viele Leute kennen. Kostet nichts!",
+          "text": "Deutsch sprechen am Mittwoch: 17 bis 19 Uhr, hier in Kursraum 3.\nDanach gibt es Abendessen. Sie lernen viele Leute kennen. Kostet nichts!",
           "glosses": []
         },
         {
