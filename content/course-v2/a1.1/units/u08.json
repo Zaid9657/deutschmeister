@@ -34,7 +34,8 @@
       ],
       "review": [
         "g.zeitangaben-inversion",
-        "g.trennbare-verben"
+        "g.trennbare-verben",
+        "g.kein"
       ]
     },
     "lexiconBlocks": [
@@ -128,7 +129,7 @@
       "Linie 1 A1 K4/K7–8 (Grammatik: Modalverben; nach memo 06)"
     ],
     "deviation": {
-      "reason": "Abweichungen vom Stoffplan a1-1 §6 Unit 8 (Review a1.1-u08 r1 F11). (1) Hören: Statt Hören Teil 1 übt LS4 Hören Teil 3 (fünf Nachrichten am Telefon), weil die Verabredungen der Einheit Anrufe und Nachrichten sind; sd1.h1 ist Prüfungsfokus in a1.1-u09. (2) Lesen: Lesen Teil 2 und der Vergleich von zwei Angeboten fehlen. LS2 liest ein Programm auf der Webseite des Parks (tt.programm, 60 Wörter) ohne a/b-Vergleich; sd1.l2 ist Prüfungsfokus in a1.1-u05 und a1.1-u06 (COV-1 nicht gefährdet). (3) Schreiben: Statt einer Einladung (Was? Wann? Wo?) schreibt der Lerner in S2 eine Absage mit einem anderen Tag (sd1.s2). Einladen übt die Mikroaufgabe von LS3 (Olena anrufen: Kommst du mit? Was, wo, wann?) und Sprechen Teil 2 („Kommen Sie mit? Wann haben Sie Zeit?“). (4) Sprechen: Prüfungsfokus ist Teil 1, nicht Teil 2 (Priya stellt sich in der Laufgruppe vor, mit Hobby, Buchstabieren und Nummer). Der geplante Teil 2 (Themenkarten „Freizeit“ und „Wochenende“) ist der zweite Teil derselben Sprechaufgabe und steht als Chip, nicht im Prüfungsfokus. (5) Landeskunde: Vereine in D-A-CH (Sportverein, Chor) und der ruhige Sonntag fehlen. Die Einheit macht keine Sachaussage und hat darum keinen Fact. lx.verein ist erst a2.1 und lx.sonntag a1.1-u11; der Punkt gehört in eine Fokus-Karte (Fokus Alltag: Anmeldung im Sportverein) oder in a1.1-u11 (Wochenende) und ist für die Level-Revision offen. (6) Wortschatz: 35 statt 28 Einträge (Band 24–32; LEX-05 besteht nur mit ±10 %). Die Kürzung auf 32 (lx.rad in lx.fahrrad, lx.planen und lx.interessant als Glossen) und die Rollen liegen beim Lexikon (Review F07). Aussprache: LS1 übt wie geplant ich- und ach-Laut, LS3 zusätzlich ich-Laut und sch."
+      "reason": "Abweichungen vom Stoffplan a1-1 §6 Unit 8 (Review a1.1-u08 r1 F11). (1) Hören: Statt Hören Teil 1 übt LS4 Hören Teil 3 (fünf Nachrichten am Telefon), weil die Verabredungen der Einheit Anrufe und Nachrichten sind; sd1.h1 ist Prüfungsfokus in a1.1-u09. (2) Lesen: Lesen Teil 2 und der Vergleich von zwei Angeboten fehlen. LS2 liest ein Programm auf der Webseite des Parks (tt.programm, 60 Wörter) ohne a/b-Vergleich; sd1.l2 ist Prüfungsfokus in a1.1-u05 und a1.1-u06 (COV-1 nicht gefährdet). (3) Schreiben: Statt einer Einladung (Was? Wann? Wo?) schreibt der Lerner in S2 eine Absage mit einem anderen Tag (sd1.s2). Einladen übt die Mikroaufgabe von LS3 (Olena anrufen: Kommst du mit ins Kino? Was, wo, wann?) und Sprechen Teil 2 („Kommen Sie mit? Wann haben Sie Zeit?“). (4) Sprechen: Prüfungsfokus ist Sprechen Teil 1 (sd1.sp1), nicht Sprechen Teil 2 wie im Stoffplan: Priya stellt sich in der Laufgruppe vor, mit Hobby, Buchstabieren und Nummer. Der geplante Teil 2 (sd1.sp2, Themenkarten „Hobby“ und „Wochenende“) ist der zweite Teil derselben Sprechaufgabe, in voller Länge, und steht als Chip. Das Kartenthema heißt „Hobby“, nicht „Freizeit“: lx.freizeit ist in dieser Einheit rezeptiv, und Lernerkarten sind Produktion. (5) Landeskunde: Vereine in D-A-CH (Sportverein, Chor) und der ruhige Sonntag fehlen. Die Einheit macht keine Sachaussage und hat darum keinen Fact. lx.verein ist erst a2.1 und lx.sonntag a1.1-u11; der Punkt gehört in eine Fokus-Karte (Fokus Alltag: Anmeldung im Sportverein) oder in a1.1-u11 (Wochenende) und ist für die Level-Revision offen. (6) Wortschatz: 35 statt 28 Einträge (Band 24–32; LEX-05 besteht nur mit ±10 %). Die Kürzung auf 32 (lx.rad in lx.fahrrad, lx.planen und lx.interessant als Glossen) und die Rollen liegen beim Lexikon (Review F07). Aussprache: LS1 übt wie geplant ich- und ach-Laut, LS3 zusätzlich ich-Laut und sch."
     },
     "cast": [
       "cast.priya",
@@ -136,7 +137,8 @@
       "cast.elif",
       "cast.olena",
       "cast.sophie",
-      "cast.bilal"
+      "cast.bilal",
+      "cast.ensemble-a1-3"
     ],
     "fokusPlan": [],
     "source": {
@@ -162,14 +164,14 @@
         {
           "id": "a1.1-u08-start-l01",
           "speaker": "cast.emre",
-          "de": "Priya, meine Frau Elif wohnt auch in Leipzig. Hast du am Samstag Zeit?",
-          "en": "Priya, my wife Elif lives in Leipzig too. Are you free on Saturday?"
+          "de": "Priya, du weißt: Meine Frau Elif wohnt auch in Leipzig. Hast du am Samstag Zeit?",
+          "en": "Priya, you know my wife Elif lives in Leipzig too. Are you free on Saturday?"
         },
         {
           "id": "a1.1-u08-start-l02",
           "speaker": "cast.priya",
-          "de": "Am Samstag? Ja, da habe ich Zeit. Warum?",
-          "en": "On Saturday? Yes, I’m free then. Why?"
+          "de": "Am Samstag? Ja, da habe ich Zeit. Ich habe keinen Termin. Warum?",
+          "en": "On Saturday? Yes, I’m free then. I have no appointments. Why?"
         },
         {
           "id": "a1.1-u08-start-l03",
@@ -249,7 +251,7 @@
       },
       "input": {
         "kind": "mixed",
-        "title": "Im Chat: Was macht ihr gern?",
+        "title": "Im Chat mit Olena, Sophie und Bilal",
         "textType": "tt.sms",
         "lines": [
           {
@@ -273,8 +275,8 @@
           {
             "id": "a1.1-u08-ls1-l04",
             "speaker": "cast.priya",
-            "de": "Rad fahren? Das kann ich nicht. In Kochi fahre ich nie Fahrrad. Aber ich kann gut tanzen.",
-            "en": "Cycling? I can’t do that. In Kochi I never ride a bike. But I’m good at dancing."
+            "de": "Rad fahren? Das kann ich nicht. Mein Bruder in Kochi fährt jeden Tag Fahrrad. Aber ich kann gut tanzen.",
+            "en": "Cycling? I can’t do that. My brother in Kochi rides his bike every day. But I’m good at dancing."
           },
           {
             "id": "a1.1-u08-ls1-l05",
@@ -285,8 +287,8 @@
           {
             "id": "a1.1-u08-ls1-l06",
             "speaker": "cast.olena",
-            "de": "Ohne mich! Ich tanze nicht gern, und ich kann nicht gut tanzen.",
-            "en": "Count me out! I don’t like dancing, and I’m not good at it."
+            "de": "Ohne mich! Ich tanze nicht gern, und ich kann nicht gut tanzen. Am Freitag sehe ich fern.",
+            "en": "Count me out! I don’t like dancing, and I’m not good at it. On Friday I’m watching TV."
           },
           {
             "id": "a1.1-u08-ls1-l07",
@@ -535,6 +537,9 @@
               "de": "„ich kann“: ohne Endung.",
               "en": "ich kann – no ending."
             },
+            "errorTags": [
+              "verb-ending"
+            ],
             "origin": "agent"
           },
           {
@@ -552,6 +557,9 @@
               "de": "„du kannst“: mit „-st“.",
               "en": "du kannst – with -st."
             },
+            "errorTags": [
+              "verb-ending"
+            ],
             "origin": "agent"
           },
           {
@@ -569,6 +577,9 @@
               "de": "„Olena und Priya“ = „sie“: „sie können“.",
               "en": "Olena und Priya = sie: sie können."
             },
+            "errorTags": [
+              "verb-ending"
+            ],
             "origin": "agent"
           },
           {
@@ -586,6 +597,9 @@
               "de": "„ihr könnt“: mit „-t“.",
               "en": "ihr könnt – with -t."
             },
+            "errorTags": [
+              "verb-ending"
+            ],
             "origin": "agent"
           },
           {
@@ -619,7 +633,7 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.koennen",
-            "promptDe": "Bilden Sie die Frage.",
+            "promptDe": "Bilden Sie eine Ja/Nein-Frage.",
             "promptEn": "Build the yes/no question.",
             "tiles": [
               "kannst",
@@ -729,6 +743,12 @@
             "topic": "g.koennen",
             "promptDe": "Korrigieren Sie die Position von ‚gut‘: „Ich kann schwimmen gut.“",
             "promptEn": "Correct the position of “gut”.",
+            "tiles": [
+              "ich",
+              "kann",
+              "gut",
+              "schwimmen"
+            ],
             "answer": "Ich kann gut schwimmen.",
             "accepted": [
               "Ich kann gut schwimmen.",
@@ -800,8 +820,8 @@
             "source": [
               "lx.hobby",
               "lx.fahrrad",
-              "lx.termin",
-              "lx.woche"
+              "lx.samstag",
+              "lx.abend"
             ]
           },
           {
@@ -828,6 +848,9 @@
           "answer": "kann",
           "accepted": [
             "kann"
+          ],
+          "errorTags": [
+            "verb-ending"
           ],
           "banks": [
             "plateau",
@@ -893,6 +916,9 @@
           "accepted": [
             "Nein, nicht so gut."
           ],
+          "errorTags": [
+            "spelling-meaning"
+          ],
           "banks": [
             "plateau",
             "mehr-ueben"
@@ -916,6 +942,10 @@
             "Du kannst gut schwimmen."
           ],
           "intentionalError": true,
+          "errorTag": "verb-ending",
+          "errorTags": [
+            "verb-ending"
+          ],
           "banks": [
             "plateau",
             "mehr-ueben"
@@ -937,6 +967,9 @@
           "answer": "könnt",
           "accepted": [
             "könnt"
+          ],
+          "errorTags": [
+            "verb-ending"
           ],
           "banks": [
             "plateau",
@@ -967,7 +1000,8 @@
         "targets": [
           "g.koennen"
         ],
-        "register": "du"
+        "register": "du",
+        "modelDe": "Ich kann gut schwimmen. Aber ich kann nicht so gut tanzen."
       },
       "aussprache": {
         "focus": "ich-Laut und ach-Laut: ich, nicht – auch, acht",
@@ -1142,14 +1176,10 @@
             "19",
             "19.00",
             "19:00",
-            "neunzehn",
-            "7",
-            "sieben"
+            "7"
           ],
           "acceptedWhy": {
-            "7": "im Alltag: sieben Uhr am Abend = 19 Uhr, so sagt es Olena",
-            "neunzehn": "Zahl als Wort: so liest man es",
-            "sieben": "im Alltag: sieben Uhr am Abend = 19 Uhr, so sagt es Olena"
+            "7": "im Alltag: sieben Uhr am Abend = 19 Uhr, so sagt es Olena"
           },
           "exact": "number",
           "explanation": {
@@ -1265,7 +1295,7 @@
             "Ich laufe nicht so gut."
           ],
           "explanation": {
-            "de": "„nicht gut“ sagt, wie ich laufe: nicht so gut. „nicht gern“ ist etwas anderes.",
+            "de": "„nicht gut“ heißt: Ich laufe nicht so gut. „nicht gern“ ist etwas anderes.",
             "en": "“nicht gut” is about how well I run, not about liking it."
           },
           "origin": "agent"
@@ -1344,6 +1374,9 @@
               "de": "„du findest“: mit „-e-“ vor „-st“.",
               "en": "du findest – with -e- before -st."
             },
+            "errorTags": [
+              "verb-ending"
+            ],
             "origin": "agent"
           },
           {
@@ -1361,6 +1394,9 @@
               "de": "„du meinst“: mit „-st“.",
               "en": "du meinst – with -st."
             },
+            "errorTags": [
+              "verb-ending"
+            ],
             "origin": "agent"
           },
           {
@@ -1516,6 +1552,12 @@
             "topic": "g.nicht-position-gern",
             "promptDe": "Korrigieren Sie die Position von ‚nicht‘: „Ich schwimme gern nicht.“",
             "promptEn": "Correct the position of “nicht”.",
+            "tiles": [
+              "ich",
+              "schwimme",
+              "nicht",
+              "gern"
+            ],
             "answer": "Ich schwimme nicht gern.",
             "accepted": [
               "Ich schwimme nicht gern.",
@@ -1525,6 +1567,10 @@
               "Gern schwimme ich nicht.": "grammatisch, aber selten: „gern“ betont auf Position 1, wie „Gern tanze ich nicht.“"
             },
             "intentionalError": true,
+            "errorTag": "negation",
+            "errorTags": [
+              "negation"
+            ],
             "explanation": {
               "de": "„nicht“ steht meist vor „gern“: „Ich schwimme nicht gern.“",
               "en": "“nicht” usually comes before “gern”."
@@ -1580,7 +1626,7 @@
             "source": [
               "lx.konzert",
               "lx.kino",
-              "lx.idee",
+              "lx.fahrrad",
               "lx.hobby"
             ]
           },
@@ -1608,6 +1654,9 @@
           "answer": "nicht gern",
           "accepted": [
             "nicht gern"
+          ],
+          "errorTags": [
+            "negation"
           ],
           "banks": [
             "plateau",
@@ -1642,6 +1691,7 @@
             "Sehr gern schwimme ich.": "grammatisch: „sehr gern“ betont auf Position 1"
           },
           "errorTags": [
+            "negation",
             "v2-inv"
           ],
           "banks": [
@@ -1672,6 +1722,9 @@
           "accepted": [
             "Super!"
           ],
+          "errorTags": [
+            "spelling-meaning"
+          ],
           "banks": [
             "plateau",
             "mehr-ueben",
@@ -1691,6 +1744,12 @@
           "topic": "g.nicht-position-gern",
           "promptDe": "Korrigieren Sie die Position von ‚nicht‘: „Das Kino ist teuer nicht.“",
           "promptEn": "Correct the position of “nicht”.",
+          "tiles": [
+            "das Kino",
+            "ist",
+            "nicht",
+            "teuer"
+          ],
           "answer": "Das Kino ist nicht teuer.",
           "accepted": [
             "Das Kino ist nicht teuer.",
@@ -1700,6 +1759,10 @@
             "Teuer ist das Kino nicht.": "grammatisch: „teuer“ betont auf Position 1, „ist“ bleibt auf Position 2"
           },
           "intentionalError": true,
+          "errorTag": "negation",
+          "errorTags": [
+            "negation"
+          ],
           "banks": [
             "plateau",
             "mehr-ueben"
@@ -1722,6 +1785,9 @@
           "accepted": [
             "findet"
           ],
+          "errorTags": [
+            "verb-ending"
+          ],
           "banks": [
             "plateau",
             "mehr-ueben"
@@ -1730,6 +1796,32 @@
           "explanation": {
             "de": "„sie findet“: mit „-e-“ vor „-t“.",
             "en": "sie findet – with -e- before -t."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u08-ls2-r06",
+          "type": "fill_blank",
+          "role": "practice",
+          "topic": "g.nicht-position-gern",
+          "promptDe": "Am Abend sehe ich ___ ___ fern. Ich höre Musik. (gern / nicht)",
+          "promptEn": "Put the two words in order.",
+          "answer": "nicht gern",
+          "accepted": [
+            "nicht gern"
+          ],
+          "errorTags": [
+            "negation"
+          ],
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "difficulty": 2,
+          "explanation": {
+            "de": "„nicht“ steht vor „gern“: „Ich sehe nicht gern fern.“ „fern“ steht am Ende.",
+            "en": "“nicht” comes before “gern”; the prefix “fern” stays at the end."
           },
           "origin": "agent"
         }
@@ -1750,7 +1842,8 @@
         "targets": [
           "g.nicht-position-gern"
         ],
-        "register": "du"
+        "register": "du",
+        "modelDe": "Ich höre gern Musik. Das Konzert finde ich super! Aber ich tanze nicht gern."
       },
       "endLine": "Sie können jetzt sagen, was Sie gern machen, was nicht, und wie Sie etwas finden."
     },
@@ -1803,8 +1896,8 @@
           {
             "id": "a1.1-u08-ls3-l06",
             "speaker": "cast.priya",
-            "de": "Super! Und wann lauft ihr am Samstag? Um wie viel Uhr?",
-            "en": "Great! And when do you run on Saturday? At what time?"
+            "de": "Super! Moment, ich brauche meinen Kalender und einen Kuli. So! Wann lauft ihr am Samstag?",
+            "en": "Great! Hang on, I need my calendar and a pen. There! When do you run on Saturday?"
           },
           {
             "id": "a1.1-u08-ls3-l07",
@@ -1901,12 +1994,8 @@
           "accepted": [
             "10",
             "10.00",
-            "10:00",
-            "zehn"
+            "10:00"
           ],
-          "acceptedWhy": {
-            "zehn": "Zahl als Wort: so hört man es"
-          },
           "exact": "number",
           "explanation": {
             "de": "Elif sagt: „Um zehn Uhr.“ „10“ und „zehn“ sind richtig.",
@@ -2066,6 +2155,9 @@
               "de": "„Am Samstag“ auf Position 1, dann „kann“ auf Position 2.",
               "en": "“Am Samstag” first, then “kann” in position 2."
             },
+            "errorTags": [
+              "verb-ending"
+            ],
             "origin": "agent"
           },
           {
@@ -2083,6 +2175,9 @@
               "de": "Ja/Nein-Frage mit „du“: „Kannst du …?“",
               "en": "Yes/no question with du: Kannst du …?"
             },
+            "errorTags": [
+              "verb-ending"
+            ],
             "origin": "agent"
           },
           {
@@ -2100,6 +2195,9 @@
               "de": "„treffen“: „er trifft“ mit „i“.",
               "en": "treffen: er trifft (with i)."
             },
+            "errorTags": [
+              "verb-ending"
+            ],
             "origin": "agent"
           },
           {
@@ -2156,7 +2254,7 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.koennen",
-            "promptDe": "Bilden Sie die Frage.",
+            "promptDe": "Bilden Sie eine Ja/Nein-Frage.",
             "promptEn": "Build the yes/no question.",
             "tiles": [
               "kannst",
@@ -2179,7 +2277,7 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.koennen",
-            "promptDe": "Bilden Sie die Frage.",
+            "promptDe": "Bilden Sie eine Ja/Nein-Frage.",
             "promptEn": "Build the yes/no question.",
             "tiles": [
               "kann",
@@ -2262,8 +2360,14 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.koennen",
-            "promptDe": "Korrigieren Sie: „Am Montag ich kann nicht.“",
-            "promptEn": "Correct the sentence.",
+            "promptDe": "Korrigieren Sie die Wortstellung: „Am Montag ich kann nicht.“",
+            "promptEn": "Correct the word order.",
+            "tiles": [
+              "am Montag",
+              "kann",
+              "ich",
+              "nicht"
+            ],
             "answer": "Am Montag kann ich nicht.",
             "accepted": [
               "Am Montag kann ich nicht.",
@@ -2332,7 +2436,7 @@
             "source": [
               "lx.kino",
               "lx.konzert",
-              "lx.idee",
+              "lx.samstag",
               "lx.fahrrad"
             ]
           },
@@ -2360,6 +2464,9 @@
           "answer": "kann",
           "accepted": [
             "kann"
+          ],
+          "errorTags": [
+            "verb-ending"
           ],
           "banks": [
             "plateau",
@@ -2425,6 +2532,9 @@
           "accepted": [
             "Sie sagt zu."
           ],
+          "errorTags": [
+            "spelling-meaning"
+          ],
           "banks": [
             "plateau",
             "mehr-ueben",
@@ -2444,6 +2554,12 @@
           "topic": "g.koennen",
           "promptDe": "Korrigieren Sie die Satzklammer: „Kannst du am Montag kommst?“",
           "promptEn": "Correct the sentence bracket (the verb at the end).",
+          "tiles": [
+            "kannst",
+            "du",
+            "am Montag",
+            "kommen"
+          ],
           "answer": "Kannst du am Montag kommen?",
           "accepted": [
             "Kannst du am Montag kommen?"
@@ -2460,7 +2576,7 @@
           ],
           "difficulty": 2,
           "explanation": {
-            "de": "Nach „kannst“ steht das zweite Verb im Infinitiv am Ende: „kommen“.",
+            "de": "Nach „kannst“ steht „kommen“ im Infinitiv am Ende.",
             "en": "After “kannst” the second verb is an infinitive at the end."
           },
           "origin": "agent"
@@ -2475,6 +2591,9 @@
           "answer": "kommt",
           "accepted": [
             "kommt"
+          ],
+          "errorTags": [
+            "satzklammer"
           ],
           "banks": [
             "plateau",
@@ -2493,7 +2612,7 @@
         "bankKey": "a11-u08-mo3",
         "mode": "spoken",
         "profile": "course-micro-sp",
-        "situationDe": "Sie möchten am Samstag mit Olena im Park laufen. Sie rufen Olena an.",
+        "situationDe": "Sie möchten am Freitag mit Olena ins Kino gehen. Sie rufen Olena an.",
         "promptDe": "Fragen Sie Olena: Kommst du mit? Sagen Sie: was und wo. Fragen Sie: Wann kannst du?",
         "promptEn": "Invite Olena: say what and where, and ask when she can come.",
         "planSeconds": 30,
@@ -2504,7 +2623,8 @@
         "targets": [
           "g.koennen"
         ],
-        "register": "du"
+        "register": "du",
+        "modelDe": "Hallo Olena! Ich gehe am Freitag ins Kino. Kommst du mit? Wann kannst du?"
       },
       "aussprache": {
         "focus": "ich-Laut und sch: mich – misch, Kirche – Kirsche",
@@ -2543,8 +2663,8 @@
             {
               "id": "a1.1-u08-ls4-t1-l02",
               "speaker": "x.jana",
-              "de": "Um sieben Uhr kann ich nicht, da arbeite ich noch. Ich bin um halb acht am Kino. Kommst du mit? Tschüss!",
-              "en": "I can’t at seven, I’m still working then. I’ll be at the cinema at half past seven. Are you coming? Bye!"
+              "de": "Um sieben Uhr kann ich nicht, da arbeite ich noch. Ich bin um halb acht am Kino. Kommst du mit? Und ich habe deinen Schlüssel! Tschüss!",
+              "en": "I can’t at seven, I’m still working then. I’ll be at the cinema at half past seven. Are you coming? And I’ve got your key! Bye!"
             }
           ],
           "glosses": []
@@ -2591,8 +2711,8 @@
             {
               "id": "a1.1-u08-ls4-t3-l02",
               "speaker": "x.markus",
-              "de": "Mein Garten ist zu klein. Wir spielen in der Schule, um drei Uhr. Zwei Leute sagen leider ab. Kannst du kommen? Tschüss!",
-              "en": "My garden is too small. We’re playing at the school, at three. Two people have cancelled, unfortunately. Can you come? Bye!"
+              "de": "Mein Garten ist zu klein. Wir spielen in der Schule, um drei Uhr. Mein Sohn spielt auch mit. Zwei Leute sagen leider ab. Kannst du kommen? Tschüss!",
+              "en": "My garden is too small. We’re playing at the school, at three. My son is playing too. Two people have cancelled, unfortunately. Can you come? Bye!"
             }
           ],
           "glosses": []
@@ -2611,8 +2731,8 @@
             {
               "id": "a1.1-u08-ls4-t4-l02",
               "speaker": "x.lisa",
-              "de": "Das finde ich teuer. Ich bringe Wasser und Brot mit. Kannst du Obst mitbringen? Bis Samstag!",
-              "en": "I think that’s expensive. I’ll bring water and bread. Can you bring some fruit? See you on Saturday!"
+              "de": "Das finde ich teuer. Ich bringe Wasser und Brot mit. Kannst du Obst mitbringen? Deine Tasche ist groß! Bis Samstag!",
+              "en": "I think that’s expensive. I’ll bring water and bread. Can you bring some fruit? Your bag is big! See you on Saturday!"
             }
           ],
           "glosses": []
@@ -2631,8 +2751,8 @@
             {
               "id": "a1.1-u08-ls4-t5-l02",
               "speaker": "x.anna-berger",
-              "de": "Bitte bringen Sie das Geld bis Donnerstag ins Büro. Das Büro ist von neun bis zwölf Uhr offen. Danke!",
-              "en": "Please bring the money to the office by Thursday. The office is open from nine to twelve. Thank you!"
+              "de": "Bitte bringen Sie das Geld bis Donnerstag ins Büro. Das Büro macht um neun Uhr auf und um zwölf Uhr zu. Danke!",
+              "en": "Please bring the money to the office by Thursday. The office opens at nine and closes at twelve. Thank you!"
             }
           ],
           "glosses": []
@@ -2792,6 +2912,7 @@
             "prepMinutes": 0,
             "instructionsDe": "Stellen Sie sich vor. Dann buchstabieren Sie Ihren Vornamen und sagen eine Nummer.",
             "situationDe": "Sprechen Teil 1: Am Samstag im Park stellt sich Priya vor. Jetzt Sie: Name, Alter, Land, Wohnort, Sprachen, Beruf, Hobby. Sagen Sie beim Hobby auch: Was machen Sie gern? Was können Sie gut? Dann bittet die Gesprächsleitung (KI): Buchstabieren Sie bitte Ihren Vornamen. Wie ist Ihre Telefonnummer?",
+            "situationEn": "Speaking part 1: on Saturday in the park, Priya introduces herself. Now it’s your turn: name, age, country, where you live, languages, job, hobby. For your hobby, also say what you like doing and what you are good at. Then the examiner (AI) asks: please spell your first name. What is your phone number?",
             "cards": {
               "learner": [
                 "Name?",
@@ -2808,22 +2929,25 @@
               40,
               90
             ],
-            "moves": []
+            "moves": [
+              "nachfragen"
+            ]
           },
           {
             "template": "sd1.sp2",
             "mode": "cards-ask",
             "profile": "sd1-sp2",
             "prepMinutes": 0,
-            "instructionsDe": "Zwei Themen: „Freizeit“, dann „Wochenende“. Fragen und antworten Sie mit den Karten.",
-            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin Nora haben Wortkarten zu zwei Themen. Zuerst „Freizeit“, dann „Wochenende“. Stellen Sie mit Ihrer Karte eine Frage. Antworten Sie auf die Frage von Nora. Bei „Freizeit“ sagen Sie auch: Das finde ich super. / Das finde ich nicht so toll. Bei „Wochenende“ fragen Sie: Kommen Sie mit? Wann haben Sie Zeit? Und Sie sagen zu oder ab.",
+            "instructionsDe": "Zwei Themen: „Hobby“, dann „Wochenende“. Fragen und antworten Sie mit den Karten.",
+            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin Nora haben Wortkarten zu zwei Themen. Zuerst „Hobby“, dann „Wochenende“. Stellen Sie mit Ihrer Karte eine Frage. Antworten Sie auf die Frage von Nora. Bei „Hobby“ sagen Sie auch: Das finde ich super. / Das finde ich nicht so gut. Bei „Wochenende“ fragen Sie: Kommen Sie mit? Wann haben Sie Zeit? Und Sie sagen zu oder ab.",
+            "situationEn": "Speaking part 2: you and your partner Nora have word cards on two topics, first “Hobby”, then “Wochenende” (weekend). Ask a question with your card. Answer Nora’s question. For “Hobby”, also say: I think that’s great. / I don’t think that’s so good. For “Wochenende”, ask: Would you like to come along? When are you free? And say yes or no.",
             "cards": {
               "learner": [
-                "Freizeit – Musik",
+                "Hobby – Musik",
                 "Wochenende – Kino"
               ],
               "partner": [
-                "Freizeit – Sport",
+                "Hobby – Sport",
                 "Wochenende – Samstag"
               ]
             },
@@ -2836,7 +2960,7 @@
         ],
         "aiRole": {
           "name": "Nora",
-          "personaDe": "In Teil 1 Gesprächsleitung (KI): hört zu, bittet dann um das Buchstabieren des Vornamens und um die Telefonnummer. In Teil 2 Teilnehmerin in der Prüfung: hört gern Musik aus Indien, schwimmt gern und hat am Freitagabend Zeit; fragt mit der Karte „Samstag“ und lädt ein (Gehen wir zusammen schwimmen?). Spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste.",
+          "personaDe": "In Teil 1 Gesprächsleitung (KI): hört zu, bittet dann um das Buchstabieren des Vornamens und um die Telefonnummer; wiederholt langsam, wenn die Person nachfragt. In Teil 2 Teilnehmerin in der Prüfung, spricht über Hobbys und Freizeit: hört gern Musik aus Indien, schwimmt gern und hat am Freitag am Abend Zeit; fragt mit der Karte „Sport“ und mit der Karte „Samstag“ und lädt ein (Gehen wir zusammen schwimmen?). Spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste.",
           "register": "Sie",
           "support": "slow-wordbank"
         },
@@ -2858,7 +2982,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Ich wohne jetzt in Leipzig. In Kochi arbeite ich am Empfang, hier lerne ich Deutsch. Ich spreche drei Sprachen: meine Muttersprache, Englisch und ein bisschen Deutsch."
+            "de": "Ich wohne jetzt in Leipzig. In Kochi arbeite ich am Empfang. Hier lerne ich Deutsch. Ich spreche drei Sprachen: meine Muttersprache, Englisch und ein bisschen Deutsch."
           },
           {
             "speaker": "learner",
@@ -2866,7 +2990,7 @@
           },
           {
             "speaker": "partner",
-            "de": "Danke. Buchstabieren Sie bitte „Priya“."
+            "de": "Danke. Ihr Vorname ist Priya. Buchstabieren Sie bitte."
           },
           {
             "speaker": "learner",
@@ -2875,6 +2999,14 @@
           {
             "speaker": "partner",
             "de": "Und wie ist Ihre Telefonnummer?"
+          },
+          {
+            "speaker": "learner",
+            "de": "Wie bitte? Ich verstehe das nicht."
+          },
+          {
+            "speaker": "partner",
+            "de": "Ihre Telefonnummer, bitte."
           },
           {
             "speaker": "learner",
@@ -2894,7 +3026,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Ja, ich tanze gern. Fußball finde ich nicht so toll."
+            "de": "Ja, ich tanze gern. Aber ich schwimme nicht gern."
           },
           {
             "speaker": "learner",
@@ -2902,7 +3034,7 @@
           },
           {
             "speaker": "partner",
-            "de": "Ja, gern! Am Freitagabend habe ich Zeit."
+            "de": "Ja, gern! Am Freitag habe ich am Abend Zeit."
           },
           {
             "speaker": "partner",
@@ -2910,7 +3042,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Tut mir leid, am Samstag kann ich nicht. Ich laufe im Park. Aber am Freitag habe ich Zeit!"
+            "de": "Tut mir leid, am Samstag kann ich nicht. Ich muss arbeiten. Aber am Freitag habe ich Zeit!"
           }
         ]
       }
@@ -3000,8 +3132,8 @@
       {
         "id": "a1.1-u08-ls7-l02",
         "speaker": "cast.sophie",
-        "de": "Am Montag kann ich nicht, aber am Mittwoch. Wir können schwimmen gehen.",
-        "en": "I can’t on Monday, but on Wednesday I can. We can go swimming."
+        "de": "Am Montag habe ich einen Termin. Aber am Mittwoch kann ich.",
+        "en": "I have an appointment on Monday. But on Wednesday I can."
       }
     ],
     "items": [
@@ -3020,6 +3152,9 @@
           "de": "„er kann“: ohne Endung.",
           "en": "er kann – no ending."
         },
+        "errorTags": [
+          "verb-ending"
+        ],
         "origin": "agent"
       },
       {
@@ -3037,6 +3172,9 @@
           "de": "„ihr könnt“: mit „-t“.",
           "en": "ihr könnt – with -t."
         },
+        "errorTags": [
+          "verb-ending"
+        ],
         "origin": "agent"
       },
       {
@@ -3092,6 +3230,13 @@
         "topic": "g.nicht-position-gern",
         "promptDe": "Korrigieren Sie die Position von ‚nicht‘: „Ich höre gern nicht Musik.“",
         "promptEn": "Correct the position of “nicht”.",
+        "tiles": [
+          "ich",
+          "höre",
+          "nicht",
+          "gern",
+          "Musik"
+        ],
         "answer": "Ich höre nicht gern Musik.",
         "accepted": [
           "Ich höre nicht gern Musik.",
@@ -3103,6 +3248,10 @@
           "Ich höre Musik nicht gern.": "grammatisch: „Musik“ vor „nicht gern“; „nicht“ steht vor „gern“"
         },
         "intentionalError": true,
+        "errorTag": "negation",
+        "errorTags": [
+          "negation"
+        ],
         "explanation": {
           "de": "„nicht“ steht vor „gern“: „Ich höre nicht gern Musik.“",
           "en": "“nicht” goes before “gern”."
@@ -3167,8 +3316,8 @@
           "am Mittwoch"
         ],
         "explanation": {
-          "de": "Sophie sagt: „Am Montag kann ich nicht, aber am Mittwoch.“",
-          "en": "Sophie can’t on Monday, but she can on Wednesday."
+          "de": "Sophie sagt: „Am Montag habe ich einen Termin. Aber am Mittwoch kann ich.“",
+          "en": "Sophie has an appointment on Monday, but she can on Wednesday."
         },
         "origin": "agent"
       }
@@ -3259,6 +3408,7 @@
   "story": {
     "beat": "Am Donnerstagabend ruft Emre an und erzählt von Elif, und am Freitag ruft Elif an: Priya lernt Emres Frau kennen. Mit Olena, Sophie und Bilal spricht sie über Hobbys und plant den Samstag: Olena läuft mit, Sophie ist in Dresden, Bilal spielt Fußball und kommt am Abend ins Konzert.",
     "cliffhanger": "Nach einer Stunde im Park ist Priya sehr müde. Da fragt Elif: „Priya, möchtest du jetzt einen Kaffee? Olena auch?“",
+    "cliffhangerEn": "After an hour in the park, Priya is very tired. Then Elif asks: “Priya, would you like a coffee now? Olena too?”",
     "castIn": [
       "cast.elif"
     ]
