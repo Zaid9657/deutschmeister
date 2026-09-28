@@ -72,12 +72,12 @@
           "lx.umsteigen",
           "lx.aussteigen",
           "lx.ankommen",
+          "lx.busfahrer",
           "lx.abfahren",
           "lx.puenktlich",
           "lx.platz",
           "lx.frei",
           "lx.halten",
-          "lx.kilometer",
           "lx.unterwegs",
           "lx.ein-paar"
         ]
@@ -198,8 +198,8 @@
         {
           "id": "a1.1-u10-start-l07",
           "speaker": "cast.sophie",
-          "de": "Ja, genau. Der Fahrplan kommt gleich im Chat. Bis Freitag im Restaurant!",
-          "en": "Yes, exactly. The timetable is coming in the chat in a minute. See you on Friday at the restaurant!"
+          "de": "Ja, genau. Der Fahrplan kommt gleich im Chat. Bis Freitag im Restaurant Kochi!",
+          "en": "Yes, exactly. The timetable is coming in the chat in a minute. See you on Friday at the Restaurant Kochi!"
         },
         {
           "id": "a1.1-u10-start-l08",
@@ -344,8 +344,8 @@
             "den Fahrplan von Sophie"
           ],
           "explanation": {
-            "de": "Priya sagt: „Der Fahrplan von Sophie ist da!“ Sophie schreibt den Fahrplan im Chat.",
-            "en": "Priya says Sophie’s timetable has arrived – Sophie sent it in the chat."
+            "de": "Sophie schreibt den Fahrplan im Chat. Priya und Arjun lesen ihn.",
+            "en": "Sophie sent the timetable in the chat, and Priya and Arjun read it."
           },
           "origin": "agent"
         },
@@ -366,8 +366,8 @@
             "am Samstag"
           ],
           "explanation": {
-            "de": "Der Zug fährt am Samstag um 9.10 Uhr ab. Am Abend fahren sie zurück.",
-            "en": "The train leaves on Saturday at 9:10, and they come back in the evening."
+            "de": "Der Fahrplan ist für Samstag. Am Abend fahren Priya und Arjun zurück.",
+            "en": "The timetable is for Saturday, and they come back in the evening."
           },
           "origin": "agent"
         },
@@ -380,16 +380,8 @@
           "promptEn": "Write the departure time in figures.",
           "answer": "9.10",
           "accepted": [
-            "9.10",
-            "9:10",
-            "09.10",
-            "09:10"
+            "9.10"
           ],
-          "acceptedWhy": {
-            "9:10": "Uhrzeit mit Doppelpunkt, auch richtig",
-            "09.10": "Uhrzeit mit 0 vorn, wie auf der Anzeigetafel",
-            "09:10": "Uhrzeit mit 0 vorn und Doppelpunkt, wie auf der Fahrkarte"
-          },
           "exact": "number",
           "explanation": {
             "de": "Priya sagt: „Am Samstag fährt der Zug um 9.10 Uhr ab.“",
@@ -406,8 +398,7 @@
           "promptEn": "Read the timetable: which platform in the evening?",
           "answer": "3",
           "accepted": [
-            "3",
-            "drei"
+            "3"
           ],
           "exact": "number",
           "explanation": {
@@ -542,6 +533,10 @@
             "accepted": [
               "fährt"
             ],
+            "errorTags": [
+              "verb-ending",
+              "satzklammer"
+            ],
             "explanation": {
               "de": "„abfahren“: „er fährt … ab“. „fährt“ steht auf Position 2, „ab“ am Ende.",
               "en": "abfahren: er fährt … ab – “fährt” in position 2, “ab” at the end."
@@ -558,6 +553,9 @@
             "answer": "kommen",
             "accepted": [
               "kommen"
+            ],
+            "errorTags": [
+              "verb-ending"
             ],
             "explanation": {
               "de": "„ankommen“ mit „wir“: „wir kommen … an“. „an“ steht am Ende.",
@@ -576,8 +574,11 @@
             "accepted": [
               "um"
             ],
+            "errorTags": [
+              "satzklammer"
+            ],
             "explanation": {
-              "de": "„umsteigen“: „wir steigen … um“. Der erste Teil „um“ steht am Satzende.",
+              "de": "„umsteigen“: „wir steigen … um“. „um“ steht am Satzende.",
               "en": "umsteigen: wir steigen … um – “um” goes to the end."
             },
             "origin": "agent"
@@ -592,6 +593,9 @@
             "answer": "stehen",
             "accepted": [
               "stehen"
+            ],
+            "errorTags": [
+              "verb-ending"
             ],
             "explanation": {
               "de": "„Priya und Arjun“ = „sie“: „sie stehen … auf“. „auf“ steht am Ende.",
@@ -670,6 +674,10 @@
             "accepted": [
               "Wir steigen nicht um."
             ],
+            "errorTags": [
+              "satzklammer",
+              "negation"
+            ],
             "explanation": {
               "de": "„steigen“ steht auf Position 2. „nicht“ steht vor „um“, „um“ am Ende.",
               "en": "“steigen” in position 2; “nicht” before “um”, “um” at the end."
@@ -731,8 +739,14 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.trennbare-verben",
-            "promptDe": "Korrigieren Sie: „Der Zug ankommt um 19.50 Uhr.“",
-            "promptEn": "Correct the sentence.",
+            "promptDe": "Korrigieren Sie die Wortstellung: „Der Zug ankommt um 19.50 Uhr.“",
+            "promptEn": "Correct the word order.",
+            "tiles": [
+              "der Zug",
+              "kommt",
+              "um 19.50 Uhr",
+              "an"
+            ],
             "answer": "Der Zug kommt um 19.50 Uhr an.",
             "accepted": [
               "Der Zug kommt um 19.50 Uhr an.",
@@ -829,6 +843,7 @@
             "fährt"
           ],
           "errorTags": [
+            "verb-ending",
             "satzklammer"
           ],
           "banks": [
@@ -900,7 +915,7 @@
           ],
           "difficulty": 1,
           "explanation": {
-            "de": "„abfahren“: „fährt … ab“. Der erste Teil „ab“ steht am Satzende.",
+            "de": "„abfahren“: „fährt … ab“. „ab“ steht am Satzende.",
             "en": "abfahren: fährt … ab – “ab” goes to the end."
           },
           "origin": "agent"
@@ -910,8 +925,14 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "g.trennbare-verben",
-          "promptDe": "Korrigieren Sie: „Sophie einsteigt in Leipzig.“",
-          "promptEn": "Correct the sentence.",
+          "promptDe": "Korrigieren Sie die Wortstellung: „Sophie einsteigt in Leipzig.“",
+          "promptEn": "Correct the word order.",
+          "tiles": [
+            "Sophie",
+            "steigt",
+            "in Leipzig",
+            "ein"
+          ],
           "answer": "Sophie steigt in Leipzig ein.",
           "accepted": [
             "Sophie steigt in Leipzig ein.",
@@ -954,7 +975,8 @@
         "targets": [
           "g.trennbare-verben"
         ],
-        "register": "du"
+        "register": "du",
+        "modelDe": "Der Zug fährt um 9.10 Uhr ab. Er kommt um 10.25 Uhr in Dresden an."
       },
       "aussprache": {
         "focus": "z sprechen Sie wie „ts“: Zug, zehn, zwei, zurück – nicht wie das s in „so“.",
@@ -1018,8 +1040,8 @@
           {
             "id": "a1.1-u10-ls2-l05",
             "speaker": "cast.arjun",
-            "de": "Kein Problem. Da ist ein Schalter. Ich kaufe die Fahrkarten da, und ihr trinkt einen Kaffee.",
-            "en": "No problem. There’s a ticket counter. I’ll buy the tickets there, and you two have a coffee."
+            "de": "Kein Problem. Da ist ein Schalter. Ich kaufe die Fahrkarten da, und ihr trinkt einen Kaffee im Café.",
+            "en": "No problem. There’s a ticket counter. I’ll buy the tickets there, and you two have a coffee in the café."
           },
           {
             "id": "a1.1-u10-ls2-l06",
@@ -1042,9 +1064,9 @@
           {
             "id": "a1.1-u10-ls2-l09",
             "speaker": "cast.ensemble-a1-3",
-            "de": "Das macht zusammen 88 Euro. Der Zug fährt um 9.10 Uhr ab, in ein paar Minuten. Er fährt von Gleis 12 und ist heute pünktlich.",
-            "en": "That comes to 88 euros altogether. The train leaves at 9:10, in a few minutes. It leaves from platform 12 and is on time today.",
-            "say": "Das macht zusammen achtundachtzig Euro. Der Zug fährt um neun Uhr zehn ab, in ein paar Minuten. Er fährt von Gleis zwölf und ist heute pünktlich."
+            "de": "Das macht zusammen 88 Euro. Der Zug fährt um 9.10 Uhr von Gleis 12 ab. Das ist in ein paar Minuten. Er ist heute pünktlich.",
+            "en": "That comes to 88 euros altogether. The train leaves from platform 12 at 9:10. That’s in a few minutes. It is on time today.",
+            "say": "Das macht zusammen achtundachtzig Euro. Der Zug fährt um neun Uhr zehn von Gleis zwölf ab. Das ist in ein paar Minuten. Er ist heute pünktlich."
           },
           {
             "id": "a1.1-u10-ls2-l10",
@@ -1128,8 +1150,7 @@
           "promptEn": "Write the price.",
           "answer": "88",
           "accepted": [
-            "88",
-            "achtundachtzig"
+            "88"
           ],
           "exact": "number",
           "explanation": {
@@ -1244,6 +1265,9 @@
           "accepted": [
             "fahren"
           ],
+          "errorTags": [
+            "verb-ending"
+          ],
           "explanation": {
             "de": "Bei „wir“ gibt es kein „ä“: „wir fahren“. Das „ä“ gibt es nur bei „du“ und „er/sie“.",
             "en": "With wir the vowel stays: wir fahren. The ä is only for du and er/sie."
@@ -1266,8 +1290,11 @@
           "accepted": [
             "nimmt"
           ],
+          "errorTags": [
+            "verb-ending"
+          ],
           "explanation": {
-            "de": "„der Automat“ = „er“: „er nimmt“ – mit „i“ und „mm“.",
+            "de": "„der Automat“ = „er“: „er nimmt“ – mit „i“ und zwei „m“.",
             "en": "der Automat = er: er nimmt (i, mm)."
           },
           "origin": "agent"
@@ -1286,6 +1313,9 @@
             "accepted": [
               "fährst"
             ],
+            "errorTags": [
+              "verb-ending"
+            ],
             "explanation": {
               "de": "„du“ + „fahren“: a → ä, „du fährst“.",
               "en": "du + fahren: a → ä, du fährst."
@@ -1303,8 +1333,11 @@
             "accepted": [
               "nimmt"
             ],
+            "errorTags": [
+              "verb-ending"
+            ],
             "explanation": {
-              "de": "„er“ + „nehmen“: „er nimmt“ – mit „i“ und „mm“.",
+              "de": "„er“ + „nehmen“: „er nimmt“ – mit „i“ und zwei „m“.",
               "en": "er + nehmen: er nimmt (i, mm)."
             },
             "origin": "agent"
@@ -1319,6 +1352,9 @@
             "answer": "trifft",
             "accepted": [
               "trifft"
+            ],
+            "errorTags": [
+              "verb-ending"
             ],
             "explanation": {
               "de": "„Priya“ = „sie“: e → i, „sie trifft“.",
@@ -1336,6 +1372,9 @@
             "answer": "fahre",
             "accepted": [
               "fahre"
+            ],
+            "errorTags": [
+              "verb-ending"
             ],
             "explanation": {
               "de": "Bei „ich“ gibt es kein „ä“: „ich fahre“.",
@@ -1478,9 +1517,9 @@
               "Du fährst am Abend zurück."
             ],
             "intentionalError": true,
-            "errorTag": "spelling-meaning",
+            "errorTag": "verb-ending",
             "errorTags": [
-              "spelling-meaning"
+              "verb-ending"
             ],
             "explanation": {
               "de": "„du“ + „fahren“: „du fährst“ – mit „ä“.",
@@ -1503,6 +1542,9 @@
             "answer": "liest",
             "accepted": [
               "liest"
+            ],
+            "errorTags": [
+              "verb-ending"
             ],
             "explanation": {
               "de": "„Arjun“ = „er“: „er liest“ – mit „ie“.",
@@ -1564,7 +1606,7 @@
             "nimmst"
           ],
           "errorTags": [
-            "spelling-meaning"
+            "verb-ending"
           ],
           "banks": [
             "plateau",
@@ -1573,7 +1615,7 @@
           ],
           "difficulty": 2,
           "explanation": {
-            "de": "„du“ + „nehmen“: „du nimmst“ – mit „i“ und „mm“.",
+            "de": "„du“ + „nehmen“: „du nimmst“ – mit „i“ und zwei „m“.",
             "en": "du + nehmen: du nimmst."
           },
           "origin": "agent"
@@ -1629,6 +1671,9 @@
           "accepted": [
             "fährt"
           ],
+          "errorTags": [
+            "verb-ending"
+          ],
           "banks": [
             "plateau",
             "mehr-ueben"
@@ -1652,9 +1697,9 @@
             "Arjun nimmt die Fahrkarten."
           ],
           "intentionalError": true,
-          "errorTag": "spelling-meaning",
+          "errorTag": "verb-ending",
           "errorTags": [
-            "spelling-meaning"
+            "verb-ending"
           ],
           "banks": [
             "plateau",
@@ -1685,14 +1730,15 @@
         "targets": [
           "g.vokalwechsel"
         ],
-        "register": "Sie"
+        "register": "Sie",
+        "modelDe": "Guten Tag! Wann fährt der Zug nach Berlin ab? Was kostet die Fahrkarte? Eine Fahrkarte nach Berlin, hin und zurück, bitte."
       },
       "endLine": "Sie können jetzt am Schalter nach Abfahrt und Preis fragen und eine Fahrkarte kaufen."
     },
     {
       "id": "a1.1-u10-ls3",
       "kind": "situation",
-      "title": "Ist hier noch frei?",
+      "title": "Im Zug nach Dresden",
       "structure": "g.wortbildung-er-in",
       "modelSentence": "Ich bin Busfahrerin, und mein Mann ist auch Busfahrer.",
       "ruleCard": "rc.wortbildung-er-in",
@@ -1708,9 +1754,9 @@
           {
             "id": "a1.1-u10-ls3-l01",
             "speaker": "durchsage",
-            "de": "Achtung an Gleis 12! Der Zug nach Dresden fährt heute nicht von Gleis 12 ab. Er fährt von Gleis 14 ab. Abfahrt: 9.10 Uhr.",
-            "en": "Attention at platform 12! The train to Dresden does not leave from platform 12 today. It leaves from platform 14. Departure: 9:10.",
-            "say": "Achtung an Gleis zwölf! Der Zug nach Dresden fährt heute nicht von Gleis zwölf ab. Er fährt von Gleis vierzehn ab. Abfahrt: neun Uhr zehn."
+            "de": "Achtung an Gleis 12! Der Zug nach Dresden fährt heute nicht von Gleis 12 ab. Er fährt von Gleis 14 ab. Abfahrt: 9.10 Uhr. Der Zug ist pünktlich.",
+            "en": "Attention at platform 12! The train to Dresden does not leave from platform 12 today. It leaves from platform 14. Departure: 9:10. The train is on time.",
+            "say": "Achtung an Gleis zwölf! Der Zug nach Dresden fährt heute nicht von Gleis zwölf ab. Er fährt von Gleis vierzehn ab. Abfahrt: neun Uhr zehn. Der Zug ist pünktlich."
           },
           {
             "id": "a1.1-u10-ls3-l02",
@@ -1765,9 +1811,9 @@
           {
             "id": "a1.1-u10-ls3-l10",
             "speaker": "cast.ensemble-a1-2",
-            "de": "Ich fahre jeden Tag 200 Kilometer. Mein Bus hält auch am Hauptbahnhof in Dresden.",
-            "en": "I drive 200 kilometres every day. My bus stops at Dresden main station too.",
-            "say": "Ich fahre jeden Tag zweihundert Kilometer. Mein Bus hält auch am Hauptbahnhof in Dresden."
+            "de": "Ich fahre jeden Tag den Bus 60. Er hält auch am Hauptbahnhof in Dresden.",
+            "en": "I drive the number 60 bus every day. It stops at Dresden main station too.",
+            "say": "Ich fahre jeden Tag den Bus sechzig. Er hält auch am Hauptbahnhof in Dresden."
           }
         ],
         "text": {
@@ -1839,8 +1885,7 @@
           "promptEn": "Read the board: how many minutes late?",
           "answer": "10",
           "accepted": [
-            "10",
-            "zehn"
+            "10"
           ],
           "exact": "number",
           "explanation": {
@@ -1933,6 +1978,9 @@
           "accepted": [
             "eine Frau"
           ],
+          "errorTags": [
+            "gender-article"
+          ],
           "explanation": {
             "de": "„Kellnerin“ mit „-in“: Das ist eine Frau. Ein Mann sagt: „Ich bin Kellner.“",
             "en": "“Kellnerin” has -in: a woman. A man says “Ich bin Kellner.”"
@@ -1954,6 +2002,9 @@
           "answer": "ein Mann",
           "accepted": [
             "ein Mann"
+          ],
+          "errorTags": [
+            "gender-article"
           ],
           "explanation": {
             "de": "„der Informatiker“ ist ein Mann. Eine Frau ist „die Informatikerin“.",
@@ -1977,6 +2028,9 @@
           "accepted": [
             "zwei oder mehr Frauen"
           ],
+          "errorTags": [
+            "gender-article"
+          ],
           "explanation": {
             "de": "„-innen“ am Ende: Plural, zwei oder mehr Frauen.",
             "en": "The ending -innen is the plural: two or more women."
@@ -1991,11 +2045,14 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.wortbildung-er-in",
-            "promptDe": "Die Frau im Restaurant bringt den Kaffee. Sie ist ___. (der Kellner → die …)",
+            "promptDe": "Die Frau im Café bringt die Rechnung. Sie ist ___. (der Kellner → die …)",
             "promptEn": "The feminine form of Kellner.",
             "answer": "Kellnerin",
             "accepted": [
               "Kellnerin"
+            ],
+            "errorTags": [
+              "gender-article"
             ],
             "explanation": {
               "de": "„der Kellner“ – „die Kellnerin“: Für eine Frau kommt „-in“ dazu.",
@@ -2014,6 +2071,9 @@
             "accepted": [
               "Studentin"
             ],
+            "errorTags": [
+              "gender-article"
+            ],
             "explanation": {
               "de": "„der Student“ – „die Studentin“: mit „-in“.",
               "en": "der Student → die Studentin."
@@ -2031,6 +2091,9 @@
             "accepted": [
               "Busfahrerin"
             ],
+            "errorTags": [
+              "gender-article"
+            ],
             "explanation": {
               "de": "„der Busfahrer“ – „die Busfahrerin“: mit „-in“.",
               "en": "der Busfahrer → die Busfahrerin."
@@ -2047,6 +2110,9 @@
             "answer": "Teilnehmerinnen",
             "accepted": [
               "Teilnehmerinnen"
+            ],
+            "errorTags": [
+              "gender-article"
             ],
             "explanation": {
               "de": "„die Teilnehmerin“ – „die Teilnehmerinnen“: Plural mit „-nen“.",
@@ -2085,8 +2151,8 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.ja-nein-frage",
-            "promptDe": "Bilden Sie die Frage.",
-            "promptEn": "Build the question.",
+            "promptDe": "Bilden Sie die Ja/Nein-Frage.",
+            "promptEn": "Build the yes/no question.",
             "tiles": [
               "ist",
               "hier",
@@ -2108,8 +2174,8 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.ja-nein-frage",
-            "promptDe": "Bilden Sie die Frage.",
-            "promptEn": "Build the question.",
+            "promptDe": "Bilden Sie die Ja/Nein-Frage.",
+            "promptEn": "Build the yes/no question.",
             "tiles": [
               "fahren",
               "Sie",
@@ -2195,6 +2261,9 @@
             "accepted": [
               "Busfahrerin"
             ],
+            "errorTags": [
+              "gender-article"
+            ],
             "explanation": {
               "de": "Eine Frau: „Busfahrer“ + „-in“ = „Busfahrerin“. „Busfahrin“ gibt es nicht.",
               "en": "For a woman: Busfahrer + -in = Busfahrerin; “Busfahrin” is not a word."
@@ -2216,6 +2285,9 @@
             "answer": "Freundinnen",
             "accepted": [
               "Freundinnen"
+            ],
+            "errorTags": [
+              "gender-article"
             ],
             "explanation": {
               "de": "Zwei Frauen: Plural „Freundinnen“ – mit „-innen“.",
@@ -2327,8 +2399,8 @@
           "type": "sentence_building",
           "role": "practice",
           "topic": "g.ja-nein-frage",
-          "promptDe": "Bilden Sie die Frage.",
-          "promptEn": "Build the question.",
+          "promptDe": "Bilden Sie die Ja/Nein-Frage.",
+          "promptEn": "Build the yes/no question.",
           "tiles": [
             "ist",
             "der Platz",
@@ -2387,7 +2459,7 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "g.wortbildung-er-in",
-          "promptDe": "Die zwei Frauen im Restaurant sind ___. (die Kellnerin, Plural)",
+          "promptDe": "Zwei Frauen im Café bringen die Getränke. Sie sind ___. (die Kellnerin, Plural)",
           "promptEn": "The plural of Kellnerin.",
           "answer": "Kellnerinnen",
           "accepted": [
@@ -2425,7 +2497,8 @@
         "targets": [
           "g.wortbildung-er-in"
         ],
-        "register": "du"
+        "register": "du",
+        "modelDe": "Hier sind Arjun, Sophie und eine Frau aus Dresden. Sie ist Busfahrerin."
       },
       "aussprache": {
         "focus": "sch ist nicht s: Schein – sein. st, sp wie „scht“, „schp“: steigen, umsteigen, Verspätung, spät. Aber st wie „s-t“: ist, erst, kostet, Samstag, fährst.",
@@ -2570,7 +2643,7 @@
           "id": "a1.1-u10-ls4-t9",
           "kind": "sign",
           "title": "Vor dem Kino",
-          "text": "Bus 60 – Hauptbahnhof: 2 Kilometer\nMontag bis Freitag: alle 10 Minuten\nam Wochenende: alle 20 Minuten",
+          "text": "Bus 60 – Hauptbahnhof\nMontag bis Freitag: alle 10 Minuten\nam Wochenende: alle 20 Minuten",
           "glosses": []
         }
       ],
@@ -2827,6 +2900,7 @@
             "prepMinutes": 0,
             "instructionsDe": "Zwei Themen: „Fahrkarten“, dann „Zug“. Fragen und antworten Sie mit den Karten.",
             "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin haben Wortkarten zu zwei Themen, zuerst „Fahrkarten“, dann „Zug“. Fragen Sie mit Ihrer Karte: Was kostet …? Wann fährt … ab? Ihre Partnerin fragt auch. Antworten Sie.",
+            "situationEn": "Speaking part 2: you and your partner have word cards on two topics, first “Fahrkarten” (tickets), then “Zug” (train). Ask a question with your card: Was kostet …? Wann fährt … ab? Your partner asks too. Answer.",
             "cards": {
               "learner": [
                 "Fahrkarten – Preis",
@@ -2850,6 +2924,7 @@
             "prepMinutes": 0,
             "instructionsDe": "Bitten Sie mit jeder Karte um etwas. Ihre Partnerin bittet auch: Reagieren Sie.",
             "situationDe": "Sprechen Teil 3: Sie und Ihre Partnerin haben je zwei Karten zum Thema Bahnhof und Zug. Bei der Karte „Platz“ möchten Sie sitzen. In der Prüfung sind auf den Karten Bilder.",
+            "situationEn": "Speaking part 3: you and your partner each have two cards on the topic station and train. With the card “Platz” (seat) you would like to sit down. In the exam the cards show pictures.",
             "cards": {
               "learner": [
                 "Platz",
@@ -2915,7 +2990,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Ja, manchmal zehn Minuten."
+            "de": "Ja, manchmal zehn Minuten. Aber oft ist er pünktlich."
           },
           {
             "speaker": "learner",
@@ -2985,7 +3060,6 @@
               "komme",
               "kommt",
               "ankommen",
-              "Ankunft",
               "14.30",
               "14:30",
               "halb drei",
@@ -2999,9 +3073,9 @@
               "Information",
               "Gleis",
               "treffe",
-              "Bahnhof",
-              "Automat",
-              "Schalter"
+              "trifft",
+              "treffen",
+              "Bahnhof"
             ]
           }
         ],
@@ -3055,6 +3129,9 @@
         "accepted": [
           "kommt"
         ],
+        "errorTags": [
+          "verb-ending"
+        ],
         "explanation": {
           "de": "„der Bus“ = „er“: „er kommt … an“. „an“ steht am Ende.",
           "en": "der Bus = er: er kommt … an."
@@ -3099,6 +3176,9 @@
         "accepted": [
           "fährt"
         ],
+        "errorTags": [
+          "verb-ending"
+        ],
         "explanation": {
           "de": "„Sophie“ = „sie“: a → ä, „sie fährt“.",
           "en": "Sophie = sie: sie fährt."
@@ -3121,6 +3201,9 @@
         "accepted": [
           "Lehrerin"
         ],
+        "errorTags": [
+          "gender-article"
+        ],
         "explanation": {
           "de": "Frau Schulz ist eine Frau: „Lehrerin“. „-innen“ ist Plural.",
           "en": "Frau Schulz is one woman: Lehrerin."
@@ -3137,6 +3220,9 @@
         "answer": "Freundin",
         "accepted": [
           "Freundin"
+        ],
+        "errorTags": [
+          "gender-article"
         ],
         "explanation": {
           "de": "Olena ist eine Frau: „die Freundin“ – mit „-in“.",
@@ -3167,8 +3253,14 @@
         "type": "error_correction",
         "role": "check",
         "topic": "g.trennbare-verben",
-        "promptDe": "Korrigieren Sie: „Wir umsteigen in Hannover.“",
-        "promptEn": "Correct the sentence.",
+        "promptDe": "Korrigieren Sie die Wortstellung: „Wir umsteigen in Hannover.“",
+        "promptEn": "Correct the word order.",
+        "tiles": [
+          "wir",
+          "steigen",
+          "in Hannover",
+          "um"
+        ],
         "answer": "Wir steigen in Hannover um.",
         "accepted": [
           "Wir steigen in Hannover um.",
@@ -3222,7 +3314,7 @@
         "type": "multiple_choice",
         "role": "proof",
         "topic": "lesen",
-        "promptDe": "Hannover: Ankunft 16.40 Uhr · Abfahrt 16.50 Uhr. Wann fährt der Zug in Hannover ab?",
+        "promptDe": "Hannover: Ankunft 16.40 · Abfahrt 16.50. Wann fährt der Zug in Hannover ab?",
         "promptEn": "Read the timetable: when does the train leave Hanover?",
         "options": [
           "16.40 Uhr",
@@ -3383,17 +3475,16 @@
       "id": "a1.1-u10-rm08",
       "de": "Mein Zug hat zehn Minuten Verspätung.",
       "en": "My train is ten minutes late.",
-      "function": "eine Verspätung melden",
+      "function": "von einer Verspätung schreiben",
       "forTemplate": "sd1.s2"
     }
   ],
   "story": {
     "beat": "Nach dem Anruf von Sophie fahren Priya und Arjun am Samstag – einen Tag nach dem Geburtstag von Olena – mit Sophie nach Dresden; dort wohnen die Eltern von Sophie. Sie lesen den Fahrplan im Chat, kaufen die Fahrkarten am Schalter – der Automat nimmt die Karte nicht – und finden nach einer Durchsage das neue Gleis. Im Zug lernen sie eine Busfahrerin aus Dresden kennen. Am Abend fahren Priya und Arjun zurück; Sophie bleibt bis Mittwoch in Dresden.",
     "cliffhanger": "Am Abend sind Priya und Arjun wieder am Hauptbahnhof in Dresden. Auf der Anzeigetafel steht: „Leipzig, 18.35 Uhr: 60 Minuten Verspätung“. Arjun sagt: „Na gut. Dann trinken wir noch einen Kaffee!“",
+    "cliffhangerEn": "In the evening Priya and Arjun are back at Dresden main station. The departure board says: “Leipzig, 18:35: 60 minutes late”. Arjun says: “Oh well. Then we’ll have another coffee!”",
     "castIn": [
-      "cast.sophie",
-      "cast.ensemble-a1-3",
-      "cast.ensemble-a1-2"
+      "cast.arjun"
     ]
   },
   "fokus": [],

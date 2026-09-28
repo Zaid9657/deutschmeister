@@ -50,7 +50,6 @@
           "lx.zwei",
           "lx.zwoelf",
           "lx.zwanzig",
-          "lx.dreissig",
           "lx.hundert"
         ]
       },
@@ -92,7 +91,7 @@
           "lx.ausfuellen",
           "lx.empfang",
           "lx.anmeldung",
-          "lx.kurz"
+          "lx.rezeptionist"
         ]
       }
     ],
@@ -134,13 +133,17 @@
       "Linie 1 A1 K2–3 (Grammatik: sein/haben, nicht; nach memo 06)"
     ],
     "deviation": {
-      "reason": "Abweichungen vom Stoffplan a1-1 u02 (Review a1.1-u02 r1 F03, F14; r2 F05; r3 F04, F05). (1) „das Alter“ (Plan-Schlüsselwort): Das Lexikon führt lx.alt erst in a1.1-u03 ein (dort „Alter: 28“ im Formular und „Ich bin … Jahre alt“). Darum steht „Alter?“ nicht auf dem Sp1-Stichwortblatt dieser Einheit; das Alter kommt in u03. (2) Landeskunde: Die Adressform (zuerst Straße und Hausnummer, dann Postleitzahl und Ort) steht im endLine von LS1 und ist mit dem Fact a1.1-u02-f01 belegt. Telefonnummern in Zweiergruppen hört der Lerner in allen Nummern-Texten (H1 Gespräch 1, Check-Zeile l02: „null drei vier eins, siebenundneunzig, dreiundsechzig, zwanzig“); die Einheit formuliert dazu keine Regel und hat dafür keinen Fact. (3) Aussprache: Statt „lange und kurze Vokale“ hört LS1 das Alphabet mit den Umlauten beim Buchstabieren (E–I, A–R, Ä–E, Ü–U; H1 Gespräch 2: „Schaefer“ mit A und E, nicht mit Ä), LS3 hört ü–u, und „zwo“ steht glossiert in LS2. Lange und kurze Vokale übt a1.1-u09 LS1. (4) Grammatik: Die Grammatik-Spine setzt g.ja-nein-frage (mit doch) an a1.1-u02 statt an Plan-u03. Die Einheit trägt damit g.negation-nicht und g.ja-nein-frage neu, g.praesens (alle Personen, haben) als Wiederholung und -in als Chunk (GRM-01: höchstens 2 neu, 1 Chunk). (5) cd.a1.formular-person: Die eigenen Angaben (Name, Wohnort, Beruf; Name und Wohnort dürfen erfunden sein, keine Telefonnummer) schreibt der Lerner in der Mikroaufgabe von LS2, im Rahmen des Niveauprofils (3–16 Wörter). Der Nachweis in check.proofs bleibt die S1-Aufgabe (Formular für Emre), weil SCHEMA Check.proofs nur ein Item oder eine Aufgabe nennt und WritingTask keinen zweiten Teil hat. Ebenso cd.a1.nachfragen: Die Rubrik sd1-sp1 bewertet das Nachfragen nicht; der Nachweis bleibt q03 und die Sprechen-Aufgabe, bis SCHEMA und Rubrik einen Kurs-Zug oder einen Nachweis durch eine Mikroaufgabe erlauben."
+      "reason": "Abweichungen vom Stoffplan a1-1 u02 (Review a1.1-u02 r1 F03, F14; r2 F05; r3 F04, F05). (1) „das Alter“ (Plan-Schlüsselwort): Das Lexikon führt lx.alt erst in a1.1-u03 ein (dort „Alter: 28“ im Formular und „Ich bin … Jahre alt“). Darum steht „Alter?“ nicht auf dem Sp1-Stichwortblatt dieser Einheit; das Alter kommt in u03. (2) Landeskunde: Die Adressform (zuerst Straße und Hausnummer, dann Postleitzahl und Ort) steht im endLine von LS1 und ist mit dem Fact a1.1-u02-f01 belegt. Telefonnummern in Zweiergruppen hört der Lerner in allen Nummern-Texten (H1 Gespräch 1, Check-Zeile l02: „null drei vier eins, siebenundneunzig, dreiundsechzig, zwanzig“); die Einheit formuliert dazu keine Regel und hat dafür keinen Fact. (3) Aussprache: Statt „lange und kurze Vokale“ hört LS1 das Alphabet mit den Umlauten beim Buchstabieren (E–I, A–R, Ä–E, Ü–U; H1 Gespräch 2: „Schaefer“ mit A und E, nicht mit Ä), LS3 hört ü–u, und „zwo“ steht glossiert in LS2. Lange und kurze Vokale übt a1.1-u09 LS1. (4) Grammatik: Die Grammatik-Spine setzt g.ja-nein-frage (mit doch) an a1.1-u02 statt an Plan-u03. Die Einheit trägt damit g.negation-nicht und g.ja-nein-frage neu, g.praesens (alle Personen, haben) als Wiederholung und -in als Chunk (GRM-01: höchstens 2 neu, 1 Chunk). (5) cd.a1.formular-person: Die eigenen Angaben (Name, Wohnort, Beruf; Name und Wohnort dürfen erfunden sein, keine Telefonnummer) schreibt der Lerner in der Mikroaufgabe von LS2, im Rahmen des Niveauprofils (3–16 Wörter). Diese Mikroaufgabe ist auch der Nachweis in check.proofs (microOutput, SCHEMA §8 seit 2026-09-28); das S1-Formular für Emre übt die Prüfungsform. cd.a1.nachfragen: Die Sprechen-Aufgabe trägt den Kurs-Zug „nachfragen“ (moves); die Rubrik sd1-sp1 selbst bewertet nur vorstellen, buchstabieren und nummer. Der Nachweis bleibt q03 und die Sprechen-Aufgabe."
     },
     "cast": [
       "cast.priya",
       "cast.herr-richter",
       "cast.emre",
-      "cast.frau-schulz"
+      "cast.frau-schulz",
+      "cast.arta",
+      "cast.ensemble-a1-2",
+      "cast.ensemble-a1-3",
+      "cast.ensemble-a1-4"
     ],
     "fokusPlan": [],
     "source": {
@@ -190,8 +193,8 @@
         {
           "id": "a1.1-u02-start-l05",
           "speaker": "cast.herr-richter",
-          "de": "Ach, Herr Yıldız! Moment, bitte – nur kurz.",
-          "en": "Oh, Mr Yıldız! One moment, please – just briefly."
+          "de": "Ach, Herr Yıldız! Moment, bitte.",
+          "en": "Oh, Mr Yıldız! One moment, please."
         },
         {
           "id": "a1.1-u02-start-l06",
@@ -257,7 +260,7 @@
       "kind": "situation",
       "title": "Mit A oder mit E?",
       "structure": "g.negation-nicht",
-      "modelSentence": "Die Hausnummer ist nicht zwanzig.",
+      "modelSentence": "Die Nummer ist nicht zwanzig.",
       "ruleCard": "rc.negation-nicht",
       "warmup": {
         "draw": 6,
@@ -555,7 +558,10 @@
               "de": "„nicht“ steht vor „zwanzig“: Zwanzig stimmt nicht.",
               "en": "“nicht” goes before “zwanzig”: twenty is not right."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "negation"
+            ]
           },
           {
             "id": "a1.1-u02-ls1-p02",
@@ -572,7 +578,10 @@
               "de": "„nicht“ steht vor „in Leipzig“: Leipzig stimmt nicht.",
               "en": "“nicht” goes before “in Leipzig” – Leipzig is not true."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "negation"
+            ]
           },
           {
             "id": "a1.1-u02-ls1-p03",
@@ -589,7 +598,10 @@
               "de": "„sie buchstabiert“: mit „-t“.",
               "en": "sie buchstabiert – with -t."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "verb-ending"
+            ]
           },
           {
             "id": "a1.1-u02-ls1-p04",
@@ -606,7 +618,10 @@
               "de": "„Sie schreiben“: Sie hat immer „-en“.",
               "en": "Formal Sie always takes -en: Sie schreiben."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "verb-ending"
+            ]
           },
           {
             "id": "a1.1-u02-ls1-p05",
@@ -633,7 +648,11 @@
               "de": "„wohne“ steht auf Position 2. „nicht“ steht vor „in Kochi“.",
               "en": "“wohne” is in position 2; “nicht” goes before “in Kochi”."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "negation",
+              "v2-inv"
+            ]
           },
           {
             "id": "a1.1-u02-ls1-p06",
@@ -660,7 +679,11 @@
               "de": "„kommt“ steht auf Position 2. „nicht“ steht vor „aus Leipzig“.",
               "en": "“kommt” is in position 2; “nicht” goes before “aus Leipzig”."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "negation",
+              "v2-inv"
+            ]
           },
           {
             "id": "a1.1-u02-ls1-p07",
@@ -687,7 +710,11 @@
               "de": "„ist“ steht auf Position 2. „nicht“ steht vor „richtig“.",
               "en": "“ist” is in position 2; “nicht” goes before “richtig”."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "negation",
+              "v2-inv"
+            ]
           },
           {
             "id": "a1.1-u02-ls1-p08",
@@ -709,7 +736,10 @@
               "de": "W-Frage: „Wie“ auf Position 1, „ist“ auf Position 2.",
               "en": "W-question: “Wie” first, “ist” second."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "v2-inv"
+            ]
           },
           {
             "id": "a1.1-u02-ls1-p09",
@@ -736,7 +766,11 @@
               "de": "„ist“ steht auf Position 2. „nicht“ steht vor „in Leipzig“.",
               "en": "“ist” is in position 2; “nicht” goes before “in Leipzig”."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "negation",
+              "v2-inv"
+            ]
           },
           {
             "id": "a1.1-u02-ls1-p10",
@@ -754,15 +788,22 @@
               "Zwanzig ist die Hausnummer nicht.": "grammatisch: zwanzig betont auf Position 1, das Verb bleibt auf Position 2"
             },
             "intentionalError": true,
-            "errorTag": "v2-inv",
+            "errorTag": "negation",
             "errorTags": [
+              "negation",
               "v2-inv"
             ],
             "explanation": {
               "de": "Das Verb „ist“ steht auf Position 2. „nicht“ steht nach dem Verb, vor „zwanzig“.",
               "en": "The verb “ist” is in position 2; “nicht” follows it, before “zwanzig”."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "tiles": [
+              "die Hausnummer",
+              "ist",
+              "nicht",
+              "zwanzig"
+            ]
           },
           {
             "id": "a1.1-u02-ls1-p11",
@@ -784,7 +825,10 @@
               "de": "Es ist falsch: „Nein“ und „nicht richtig“.",
               "en": "It is wrong: “Nein” plus “nicht richtig”."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "negation"
+            ]
           }
         ],
         "generators": [
@@ -851,7 +895,10 @@
             "de": "„nicht“ steht vor „Olena“: Olena stimmt nicht.",
             "en": "“nicht” goes before “Olena” – that name is not right."
           },
-          "origin": "agent"
+          "origin": "agent",
+          "errorTags": [
+            "negation"
+          ]
         },
         {
           "id": "a1.1-u02-ls1-r02",
@@ -875,6 +922,7 @@
             "In Berlin wohnt Priya nicht.": "grammatisch: in Berlin auf Position 1, das Verb bleibt auf Position 2"
           },
           "errorTags": [
+            "negation",
             "v2-inv"
           ],
           "banks": [
@@ -915,7 +963,10 @@
             "de": "„Nein“ ist die Antwort. Im Satz steht „nicht“: „sie wohnt nicht in Kochi“.",
             "en": "“Nein” opens the answer; inside the sentence you need “nicht”."
           },
-          "origin": "agent"
+          "origin": "agent",
+          "errorTags": [
+            "negation"
+          ]
         },
         {
           "id": "a1.1-u02-ls1-r04",
@@ -933,8 +984,9 @@
             "04109 ist die Postleitzahl nicht.": "grammatisch: 04109 betont auf Position 1, das Verb bleibt auf Position 2"
           },
           "intentionalError": true,
-          "errorTag": "v2-inv",
+          "errorTag": "negation",
           "errorTags": [
+            "negation",
             "v2-inv"
           ],
           "banks": [
@@ -946,7 +998,13 @@
             "de": "Das Verb „ist“ steht auf Position 2. „nicht“ steht nach dem Verb.",
             "en": "The verb “ist” is in position 2; “nicht” follows it."
           },
-          "origin": "agent"
+          "origin": "agent",
+          "tiles": [
+            "die Postleitzahl",
+            "ist",
+            "nicht",
+            "04109"
+          ]
         },
         {
           "id": "a1.1-u02-ls1-r05",
@@ -969,7 +1027,10 @@
             "de": "„du schreibst“: mit „-st“.",
             "en": "du schreibst – with -st."
           },
-          "origin": "agent"
+          "origin": "agent",
+          "errorTags": [
+            "verb-ending"
+          ]
         }
       ],
       "microOutput": {
@@ -988,7 +1049,8 @@
         "targets": [
           "g.negation-nicht"
         ],
-        "register": "Sie"
+        "register": "Sie",
+        "modelDe": "Nein, das ist nicht richtig. Nicht E – A! Ich buchstabiere: N – A – I – R."
       },
       "aussprache": {
         "focus": "Buchstaben: E und I, A und R, Ä und E, Ü und U. E auf Deutsch – A auf Englisch.",
@@ -1318,7 +1380,10 @@
               "de": "Ja/Nein-Frage: Das Verb steht auf Position 1: „Wohnen Sie …?“",
               "en": "Yes/no question: the verb comes first."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "verb-ending"
+            ]
           },
           {
             "id": "a1.1-u02-ls2-p02",
@@ -1335,7 +1400,10 @@
               "de": "Ja/Nein-Frage mit „du“: „Lernst du …?“ Das Verb steht auf Position 1.",
               "en": "Yes/no question with du: Lernst du …? – verb first."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "verb-ending"
+            ]
           },
           {
             "id": "a1.1-u02-ls2-p03",
@@ -1352,7 +1420,10 @@
               "de": "Die Frage hat „nicht“, und die Antwort ist ja. Dann sagen Sie „Doch“.",
               "en": "The question has “nicht” and the answer is yes: “Doch”."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "negation"
+            ]
           },
           {
             "id": "a1.1-u02-ls2-p04",
@@ -1391,7 +1462,10 @@
               "de": "Ja/Nein-Frage: „Wohnen“ steht auf Position 1.",
               "en": "Yes/no question: “Wohnen” comes first."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "v2-inv"
+            ]
           },
           {
             "id": "a1.1-u02-ls2-p06",
@@ -1413,7 +1487,10 @@
               "de": "Ja/Nein-Frage: „Ist“ steht auf Position 1.",
               "en": "Yes/no question: “Ist” comes first."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "v2-inv"
+            ]
           },
           {
             "id": "a1.1-u02-ls2-p07",
@@ -1435,7 +1512,10 @@
               "de": "W-Frage: „Wie“ auf Position 1, „ist“ auf Position 2.",
               "en": "W-question: “Wie” first, “ist” second."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "v2-inv"
+            ]
           },
           {
             "id": "a1.1-u02-ls2-p08",
@@ -1457,7 +1537,10 @@
               "de": "Ja/Nein-Frage: „Lernen“ steht auf Position 1.",
               "en": "Yes/no question: “Lernen” comes first."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "v2-inv"
+            ]
           },
           {
             "id": "a1.1-u02-ls2-p09",
@@ -1483,7 +1566,10 @@
               "de": "Aussagesatz: Das Verb „wohne“ steht auf Position 2.",
               "en": "Statement: the verb “wohne” is in position 2."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "v2-inv"
+            ]
           },
           {
             "id": "a1.1-u02-ls2-p10",
@@ -1505,7 +1591,12 @@
               "de": "Ja/Nein-Frage: Das Verb steht auf Position 1, das Subjekt „du“ gleich danach.",
               "en": "Yes/no question: verb first, then the subject “du”."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "tiles": [
+              "lernst",
+              "du",
+              "online"
+            ]
           },
           {
             "id": "a1.1-u02-ls2-p11",
@@ -1527,7 +1618,10 @@
               "de": "Die Frage ist ohne „nicht“. Die Antwort ist „Ja“ oder „Nein“, nicht „Doch“.",
               "en": "The question has no “nicht”, so the answer is Ja or Nein – not Doch."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "negation"
+            ]
           }
         ],
         "generators": [
@@ -1565,7 +1659,6 @@
               "lx.zwei",
               "lx.zwoelf",
               "lx.zwanzig",
-              "lx.dreissig",
               "lx.hundert"
             ]
           }
@@ -1593,7 +1686,11 @@
             "de": "Ja/Nein-Frage: „Sprechen Sie …?“ Das Verb steht auf Position 1.",
             "en": "Yes/no question: Sprechen Sie …? – verb first."
           },
-          "origin": "agent"
+          "origin": "agent",
+          "errorTags": [
+            "v2-inv",
+            "verb-ending"
+          ]
         },
         {
           "id": "a1.1-u02-ls2-r02",
@@ -1652,7 +1749,10 @@
             "de": "Die Frage hat „nicht“, und die Antwort ist ja. Dann sagen Sie „Doch“.",
             "en": "The question has “nicht” and the answer is yes: “Doch”."
           },
-          "origin": "agent"
+          "origin": "agent",
+          "errorTags": [
+            "negation"
+          ]
         },
         {
           "id": "a1.1-u02-ls2-r04",
@@ -1674,7 +1774,10 @@
             "de": "Zwei, eins = 21 = einundzwanzig: zuerst „ein“, dann „zwanzig“.",
             "en": "2-1 = 21 = einundzwanzig: the ones come first."
           },
-          "origin": "agent"
+          "origin": "agent",
+          "errorTags": [
+            "spelling-meaning"
+          ]
         },
         {
           "id": "a1.1-u02-ls2-r05",
@@ -1701,7 +1804,12 @@
             "de": "Ja/Nein-Frage: zuerst das Verb, dann das Subjekt „Sie“.",
             "en": "Yes/no question: the verb first, then the subject “Sie”."
           },
-          "origin": "agent"
+          "origin": "agent",
+          "tiles": [
+            "sprechen",
+            "Sie",
+            "Türkisch"
+          ]
         }
       ],
       "microOutput": {
@@ -1720,7 +1828,8 @@
         "targets": [
           "g.ja-nein-frage"
         ],
-        "register": "Sie"
+        "register": "Sie",
+        "modelDe": "Ich heiße Nora. Ich wohne in Leipzig. Ich bin Studentin. Ist der Kurs auch online?"
       },
       "endLine": "Sie können jetzt nachfragen, mit Ja, Nein oder Doch antworten und Ihre Angaben schreiben."
     },
@@ -1779,8 +1888,8 @@
           {
             "id": "a1.1-u02-ls3-l07",
             "speaker": "cast.frau-schulz",
-            "de": "Guten Tag, Herr Richter! Hallo, Frau Nair! Nur kurz: Wir haben jetzt zwölf Teilnehmer im Kurs A1.",
-            "en": "Hello, Mr Richter! Hello, Ms Nair! Just briefly: we now have twelve participants in the A1 course."
+            "de": "Guten Tag, Herr Richter! Hallo, Frau Nair! Herr Richter, wir haben jetzt zwölf Teilnehmer im Kurs A1.",
+            "en": "Hello, Mr Richter! Hello, Ms Nair! Mr Richter, we now have twelve participants in the A1 course."
           },
           {
             "id": "a1.1-u02-ls3-l08",
@@ -1791,8 +1900,8 @@
           {
             "id": "a1.1-u02-ls3-l09",
             "speaker": "cast.frau-schulz",
-            "de": "Wirklich? Hundert! Wir haben Schüler, Studenten, Kellner und Informatiker im Kurs. Und jetzt eine Rezeptionistin!",
-            "en": "Really? A hundred! We have school students, university students, waiters and IT specialists in the course. And now a receptionist!"
+            "de": "Wirklich? Hundert! Wir haben Schüler, Studenten, Lehrer, Kellner und Informatiker im Kurs. Und jetzt eine Rezeptionistin!",
+            "en": "Really? A hundred! We have school students, university students, teachers, waiters and IT specialists in the course. And now a receptionist!"
           },
           {
             "id": "a1.1-u02-ls3-l10",
@@ -1896,15 +2005,13 @@
           "topic": "hoeren",
           "promptDe": "Die Sprachschule hat jetzt ___ Teilnehmer.",
           "promptEn": "How many participants does the school have?",
-          "answer": "hundert",
+          "answer": "100",
           "accepted": [
-            "hundert",
             "100",
-            "einhundert"
+            "hundert"
           ],
           "acceptedWhy": {
-            "100": "Zahl als Ziffer: auch richtig",
-            "einhundert": "Zahl als Wort: auch richtig"
+            "hundert": "Zahl als Wort: so sagt Herr Richter die Zahl"
           },
           "exact": "number",
           "explanation": {
@@ -2044,7 +2151,10 @@
               "de": "„wir haben“: wie der Infinitiv.",
               "en": "wir haben – the same as the infinitive."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "verb-ending"
+            ]
           },
           {
             "id": "a1.1-u02-ls3-p02",
@@ -2061,7 +2171,10 @@
               "de": "„ihr habt“: mit „-t“.",
               "en": "ihr habt – with -t."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "verb-ending"
+            ]
           },
           {
             "id": "a1.1-u02-ls3-p03",
@@ -2078,7 +2191,10 @@
               "de": "„Emre und Arta“ = sie (Plural): „sie lernen“.",
               "en": "Emre and Arta = sie (plural): sie lernen."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "verb-ending"
+            ]
           },
           {
             "id": "a1.1-u02-ls3-p04",
@@ -2095,7 +2211,10 @@
               "de": "Sophie ist eine Frau: Student + „-in“ = Studentin.",
               "en": "Sophie is a woman: add -in – Studentin."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "gender-article"
+            ]
           },
           {
             "id": "a1.1-u02-ls3-p05",
@@ -2121,7 +2240,10 @@
               "de": "Das Verb „haben“ steht auf Position 2.",
               "en": "The verb “haben” is in position 2."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "v2-inv"
+            ]
           },
           {
             "id": "a1.1-u02-ls3-p06",
@@ -2144,7 +2266,10 @@
               "de": "W-Frage: „Was“ auf Position 1, „sind“ auf Position 2.",
               "en": "W-question: “Was” first, “sind” second."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "v2-inv"
+            ]
           },
           {
             "id": "a1.1-u02-ls3-p07",
@@ -2173,7 +2298,11 @@
               "de": "„arbeite“ steht auf Position 2. „nicht“ steht am Ende oder vor „hier“.",
               "en": "“arbeite” is in position 2; “nicht” goes at the end or before “hier”."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "negation",
+              "v2-inv"
+            ]
           },
           {
             "id": "a1.1-u02-ls3-p08",
@@ -2199,7 +2328,10 @@
               "de": "„lernen“ steht auf Position 2 (Emre und Arta = Plural).",
               "en": "“lernen” is in position 2 (Emre and Arta = plural)."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "v2-inv"
+            ]
           },
           {
             "id": "a1.1-u02-ls3-p09",
@@ -2228,7 +2360,10 @@
               "de": "„habt“ steht auf Position 2 („ihr habt“).",
               "en": "“habt” is in position 2 (ihr habt)."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "v2-inv"
+            ]
           },
           {
             "id": "a1.1-u02-ls3-p10",
@@ -2246,7 +2381,11 @@
               "de": "Frau Schulz und Herr Richter = sie (Plural): „arbeiten“ mit „-en“.",
               "en": "Two people = plural: arbeiten."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "errorTags": [
+              "verb-ending"
+            ],
+            "errorTag": "verb-ending"
           },
           {
             "id": "a1.1-u02-ls3-p11",
@@ -2333,7 +2472,10 @@
             "de": "„Sophie und ich“ = wir: „wir wohnen“.",
             "en": "Sophie and I = wir: wir wohnen."
           },
-          "origin": "agent"
+          "origin": "agent",
+          "errorTags": [
+            "verb-ending"
+          ]
         },
         {
           "id": "a1.1-u02-ls3-r02",
@@ -2355,7 +2497,10 @@
             "de": "Frau Schulz ist eine Frau: Lehrer + „-in“ = Lehrerin.",
             "en": "Frau Schulz is a woman: add -in – Lehrerin."
           },
-          "origin": "agent"
+          "origin": "agent",
+          "errorTags": [
+            "gender-article"
+          ]
         },
         {
           "id": "a1.1-u02-ls3-r03",
@@ -2423,7 +2568,10 @@
             "de": "„Sie sind“: formell, wie „sie sind“ im Plural.",
             "en": "Formal Sie: Sind Sie …?"
           },
-          "origin": "agent"
+          "origin": "agent",
+          "errorTags": [
+            "verb-ending"
+          ]
         },
         {
           "id": "a1.1-u02-ls3-r05",
@@ -2446,7 +2594,11 @@
             "de": "Olena und Bilal = sie (Plural): „wohnen“ mit „-en“.",
             "en": "Olena and Bilal = plural: wohnen."
           },
-          "origin": "agent"
+          "origin": "agent",
+          "errorTags": [
+            "verb-ending"
+          ],
+          "errorTag": "verb-ending"
         },
         {
           "id": "a1.1-u02-ls3-r06",
@@ -2473,7 +2625,10 @@
             "de": "„sie lernt“ mit „-t“: nur eine Frau, also Arta. Bilal ist „er“.",
             "en": "“sie lernt” with -t is one woman only, so Arta – Bilal would be “er”."
           },
-          "origin": "agent"
+          "origin": "agent",
+          "errorTags": [
+            "verb-ending"
+          ]
         }
       ],
       "microOutput": {
@@ -2492,7 +2647,8 @@
         "targets": [
           "g.praesens"
         ],
-        "register": "Sie"
+        "register": "Sie",
+        "modelDe": "Wie bitte? Noch einmal, bitte. Ich bin Lehrer. Nein, hier arbeite ich nicht. Ich lerne Deutsch."
       },
       "aussprache": {
         "focus": "ü und u: Schüler – Student, für – Kurs",
@@ -2769,14 +2925,14 @@
             {
               "id": "a1.1-u02-ls4-t6-l01",
               "speaker": "cast.ensemble-a1-3",
-              "de": "Hallo! Du kommst aus Madrid, richtig?",
-              "en": "Hi! You come from Madrid, right?"
+              "de": "Hallo! Woher kommst du?",
+              "en": "Hi! Where are you from?"
             },
             {
               "id": "a1.1-u02-ls4-t6-l02",
               "speaker": "x.lucia",
-              "de": "Ja. Ich komme aus Madrid, aber ich wohne jetzt in Dresden.",
-              "en": "Yes. I come from Madrid, but I live in Dresden now."
+              "de": "Ich komme aus Madrid, aber ich wohne jetzt in Dresden.",
+              "en": "I come from Madrid, but I live in Dresden now."
             },
             {
               "id": "a1.1-u02-ls4-t6-l03",
@@ -2979,6 +3135,7 @@
         "prepMinutes": 0,
         "instructionsDe": "Stellen Sie sich vor. Buchstabieren Sie dann Ihren Namen und sagen Sie eine Nummer.",
         "situationDe": "Sprechen Teil 1: Sagen Sie Name, Land, Wohnort, Sprachen und Beruf. Dann sagt die Gesprächsleitung (KI): „Buchstabieren Sie bitte Ihren Familiennamen.“ Dann fragt sie: „Und die Telefonnummer?“ Fragen Sie nach: „Wie bitte?“ Sie können auch eine andere Nummer sagen.",
+        "situationEn": "Speaking part 1: say your name, country, where you live, your languages and your job. Then the examiner (AI) says: “Please spell your surname.” Then she asks: “And your phone number?” Ask her to repeat: “Wie bitte?” You may also give a different number.",
         "cards": {
           "learner": [
             "Name?",
@@ -2993,7 +3150,9 @@
           60,
           120
         ],
-        "moves": [],
+        "moves": [
+          "nachfragen"
+        ],
         "bankKey": "a11-u02-s",
         "lane": "sd1",
         "aiRole": {
@@ -3020,7 +3179,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Ich wohne jetzt in Leipzig. Ich spreche Englisch und ein bisschen Deutsch."
+            "de": "Ich wohne jetzt in Leipzig. Ich spreche Malayalam, Englisch und ein bisschen Deutsch."
           },
           {
             "speaker": "learner",
@@ -3040,11 +3199,11 @@
           },
           {
             "speaker": "learner",
-            "de": "Wie bitte? Noch einmal, bitte. Langsam, bitte."
+            "de": "Wie bitte? Noch einmal, bitte. Die Telefonnummer?"
           },
           {
             "speaker": "partner",
-            "de": "Wie ist die Telefonnummer, bitte?"
+            "de": "Ja. Wie ist die Telefonnummer, bitte?"
           },
           {
             "speaker": "learner",
@@ -3076,24 +3235,18 @@
               "answer": "İzmir",
               "accepted": [
                 "İzmir",
-                "Izmir",
-                "İzmir, Türkei",
-                "Izmir, Türkei",
-                "İzmir (Türkei)",
-                "Izmir (Türkei)",
-                "in İzmir",
-                "in Izmir"
-              ]
+                "Izmir"
+              ],
+              "acceptedWhy": {
+                "Izmir": "ohne Punkt auf dem I: So schreibt man İzmir auch auf Deutsch."
+              }
             },
             {
               "id": "f2",
               "labelDe": "Land",
               "answer": "Türkei",
               "accepted": [
-                "Türkei",
-                "die Türkei",
-                "Tuerkei",
-                "in der Türkei"
+                "Türkei"
               ]
             },
             {
@@ -3101,8 +3254,7 @@
               "labelDe": "Muttersprache",
               "answer": "Türkisch",
               "accepted": [
-                "Türkisch",
-                "Tuerkisch"
+                "Türkisch"
               ]
             },
             {
@@ -3111,13 +3263,11 @@
               "answer": "0090 532 418 30 60",
               "accepted": [
                 "0090 532 418 30 60",
-                "00905324183060",
-                "0090 532 4183060",
-                "+90 532 418 30 60",
-                "+905324183060",
-                "0090-532-418 30 60",
-                "0090 / 532 418 30 60"
+                "+90 532 418 30 60"
               ],
+              "acceptedWhy": {
+                "+90 532 418 30 60": "„+90“ statt „0090“: dieselbe Nummer in der Türkei"
+              },
               "exact": "number"
             },
             {
@@ -3126,16 +3276,11 @@
               "answer": "online",
               "accepted": [
                 "online",
-                "Online",
-                "Kurs online",
-                "Onlinekurs",
-                "Online-Kurs",
-                "Online Kurs",
-                "nur online",
-                "online, nicht in Leipzig",
-                "online (nicht in Leipzig)",
-                "online, nicht Leipzig"
-              ]
+                "nur online"
+              ],
+              "acceptedWhy": {
+                "nur online": "dieselbe Angabe: Emre lernt nur online, nicht in Leipzig"
+              }
             }
           ],
           "documents": []
@@ -3194,7 +3339,10 @@
           "de": "„nicht“ steht vor „richtig“: Das E stimmt nicht.",
           "en": "“nicht” goes before “richtig”: the E is not right."
         },
-        "origin": "agent"
+        "origin": "agent",
+        "errorTags": [
+          "negation"
+        ]
       },
       {
         "id": "a1.1-u02-c02",
@@ -3211,7 +3359,10 @@
           "de": "Ja/Nein-Frage mit „du“: „Wohnst du …?“ Das Verb steht auf Position 1.",
           "en": "Yes/no question with du: Wohnst du …? – verb first."
         },
-        "origin": "agent"
+        "origin": "agent",
+        "errorTags": [
+          "verb-ending"
+        ]
       },
       {
         "id": "a1.1-u02-c03",
@@ -3233,7 +3384,10 @@
           "de": "Die Frage hat „nicht“, und die Antwort ist ja. Dann sagen Sie „Doch“.",
           "en": "The question has “nicht” and the answer is yes: “Doch”."
         },
-        "origin": "agent"
+        "origin": "agent",
+        "errorTags": [
+          "negation"
+        ]
       },
       {
         "id": "a1.1-u02-c04",
@@ -3255,7 +3409,10 @@
           "de": "Ja/Nein-Frage: „Lernst“ steht auf Position 1.",
           "en": "Yes/no question: “Lernst” comes first."
         },
-        "origin": "agent"
+        "origin": "agent",
+        "errorTags": [
+          "v2-inv"
+        ]
       },
       {
         "id": "a1.1-u02-c05",
@@ -3272,7 +3429,10 @@
           "de": "„Emre und Arta“ = sie (Plural): „sie sind“.",
           "en": "Emre and Arta = plural: sie sind."
         },
-        "origin": "agent"
+        "origin": "agent",
+        "errorTags": [
+          "verb-ending"
+        ]
       },
       {
         "id": "a1.1-u02-c06",
@@ -3348,12 +3508,8 @@
         "audioLineRef": "a1.1-u02-ls7-l01",
         "answer": "Berisha",
         "accepted": [
-          "Berisha",
-          "B E R I S H A"
+          "Berisha"
         ],
-        "acceptedWhy": {
-          "B E R I S H A": "buchstabiert geschrieben: auch richtig"
-        },
         "exact": "name",
         "explanation": {
           "de": "Arta buchstabiert: B – E – R – I – S – H – A. Also: Berisha.",
@@ -3416,7 +3572,7 @@
       },
       {
         "canDo": "cd.a1.formular-person",
-        "aufgabe": "schreiben"
+        "microOutput": "a1.1-u02-ls2-mo"
       },
       {
         "canDo": "cd.a1.daten-angeben",
@@ -3487,10 +3643,14 @@
   "story": {
     "beat": "Priya füllt am Empfang in der Sprachschule das Anmeldeformular aus. Herr Richter schreibt zuerst „Neir“ und „zwanzig“, aber Priya korrigiert: „Nair“ und „einundzwanzig“. Emre ruft aus İzmir noch einmal an und gibt seine Telefonnummer durch – mit „Wie bitte?“ und „Noch einmal, bitte!“. Priya ist Teilnehmerin Nummer hundert.",
     "cliffhanger": "Dann kommt eine E-Mail: „Anmeldung: Arjun Nair“. Herr Richter fragt: „Auch Nair? Wer ist das, Frau Nair?“",
+    "cliffhangerEn": "Then an e-mail arrives: “Registration: Arjun Nair”. Mr Richter asks: “Nair as well? Who is that, Ms Nair?”",
     "castIn": [
+      "cast.herr-richter",
+      "cast.arta",
       "cast.ensemble-a1-2",
       "cast.ensemble-a1-3",
-      "cast.ensemble-a1-4"
+      "cast.ensemble-a1-4",
+      "cast.arjun"
     ]
   },
   "fokus": [],

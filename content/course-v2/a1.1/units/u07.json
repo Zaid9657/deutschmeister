@@ -10,7 +10,7 @@
   "stage": "T",
   "title": {
     "de": "Mein Tag",
-    "canDo": "Sie können nach der Uhrzeit fragen, die Uhrzeit sagen, von Ihrem Tag erzählen und Öffnungszeiten und Nachrichten zu Terminen verstehen."
+    "canDo": "Sie können nach der Uhrzeit fragen und die Uhrzeit sagen. Sie erzählen von Ihrem Tag und verstehen Öffnungszeiten und Nachrichten zu Terminen."
   },
   "spec": {
     "situation": "Priya erzählt Emre im Videochat von ihrem Tag in Leipzig, Emre von seinem Tag im Elektrogeschäft in İzmir. Priya und Arjun brauchen einen ersten Termin bei Frau Doktor Sommer, ihrer neuen Hausärztin. Die Praxis ist von Montag bis Freitag am Morgen und an drei Nachmittagen offen, aber den ersten Termin gibt es nur am Morgen – und da hat Priya Kurs. Herr Richter spricht auf Priyas Handy eine Nachricht: Der Kurs beginnt am Donnerstag später. Am Mittwochnachmittag ist die Praxis zu; Priya bucht online einen Termin für Donnerstag um 8.15 Uhr.",
@@ -73,7 +73,8 @@
           "lx.dienstag",
           "lx.mittwoch",
           "lx.donnerstag",
-          "lx.freitag"
+          "lx.freitag",
+          "lx.sonntag"
         ]
       },
       {
@@ -82,11 +83,11 @@
           "lx.oeffnungszeit",
           "lx.termin",
           "lx.geschlossen",
-          "lx.geoeffnet",
           "lx.wochenende",
           "lx.spaet",
           "lx.offen",
-          "lx.anrufbeantworter",
+          "lx.aufmachen",
+          "lx.zumachen",
           "lx.geschaeft"
         ]
       }
@@ -203,14 +204,14 @@
         {
           "id": "a1.1-u07-start-l06",
           "speaker": "cast.priya",
-          "de": "Heute nicht. Ich habe keine Zeit!",
-          "en": "Not today. I don’t have time!"
+          "de": "Heute nicht. Ich habe keine Zeit! Ich suche meine Tasche …",
+          "en": "Not today. I don’t have time! I’m looking for my bag …"
         },
         {
           "id": "a1.1-u07-start-l07",
           "speaker": "cast.arjun",
-          "de": "Hier, ein Brötchen für dich. Und heute Abend ruft Emre an, oder?",
-          "en": "Here, a bread roll for you. And Emre is calling this evening, isn’t he?"
+          "de": "Hier ist sie. Und hier, ein Brötchen für dich. Heute Abend ruft Emre an, oder?",
+          "en": "Here it is. And here, a bread roll for you. Emre is calling this evening, isn’t he?"
         },
         {
           "id": "a1.1-u07-start-l08",
@@ -261,7 +262,7 @@
       },
       "input": {
         "kind": "dialog",
-        "title": "Videochat mit Emre",
+        "title": "Ein Videochat am Abend",
         "textType": "tt.telefonat",
         "lines": [
           {
@@ -279,8 +280,8 @@
           {
             "id": "a1.1-u07-ls1-l03",
             "speaker": "cast.priya",
-            "de": "Das weiß ich. Und wann arbeitest du?",
-            "en": "I know that. And when do you work?"
+            "de": "Ich auch! Und wann arbeitest du?",
+            "en": "Me too! And when do you work?"
           },
           {
             "id": "a1.1-u07-ls1-l04",
@@ -382,16 +383,12 @@
           "promptEn": "Write the hour.",
           "answer": "6",
           "accepted": [
-            "6",
-            "sechs"
+            "6"
           ],
-          "acceptedWhy": {
-            "sechs": "Zahl als Wort: so hört man es"
-          },
           "exact": "number",
           "explanation": {
-            "de": "Emre sagt: „Ich stehe jeden Tag um sechs Uhr auf.“",
-            "en": "Emre gets up at six every day."
+            "de": "Emre sagt: „Ich stehe jeden Tag um sechs Uhr auf.“ Das ist am Morgen.",
+            "en": "Emre gets up at six in the morning every day."
           },
           "origin": "agent"
         },
@@ -428,14 +425,10 @@
           "answer": "8",
           "accepted": [
             "8",
-            "acht",
-            "20",
-            "zwanzig"
+            "20"
           ],
           "acceptedWhy": {
-            "20": "24-Stunden-Uhr: acht Uhr am Abend ist 20 Uhr",
-            "acht": "Zahl als Wort: so hört man es",
-            "zwanzig": "24-Stunden-Uhr: acht Uhr am Abend ist 20 Uhr"
+            "20": "24-Stunden-Uhr: acht Uhr am Abend ist 20 Uhr"
           },
           "exact": "number",
           "explanation": {
@@ -569,7 +562,7 @@
               "fängt"
             ],
             "errorTags": [
-              "spelling-meaning"
+              "verb-ending"
             ],
             "explanation": {
               "de": "„anfangen“: „der Kurs fängt … an“, mit „ä“.",
@@ -589,7 +582,7 @@
               "fängst"
             ],
             "errorTags": [
-              "spelling-meaning"
+              "verb-ending"
             ],
             "explanation": {
               "de": "„anfangen“: „du fängst … an“, mit „ä“, wie „er fängt“.",
@@ -607,6 +600,10 @@
             "answer": "kauft",
             "accepted": [
               "kauft"
+            ],
+            "errorTags": [
+              "satzklammer",
+              "verb-ending"
             ],
             "explanation": {
               "de": "„einkaufen“: „sie kauft … ein“. „ein“ steht am Ende.",
@@ -739,6 +736,12 @@
             "topic": "g.trennbare-verben",
             "promptDe": "Korrigieren Sie die Wortstellung: „Ich aufstehe um sieben Uhr.“",
             "promptEn": "Correct the word order.",
+            "tiles": [
+              "ich",
+              "stehe",
+              "um sieben Uhr",
+              "auf"
+            ],
             "answer": "Ich stehe um sieben Uhr auf.",
             "accepted": [
               "Ich stehe um sieben Uhr auf.",
@@ -802,8 +805,8 @@
             "count": 1,
             "source": [
               "lx.abend",
-              "lx.stunde",
-              "lx.uhrzeit",
+              "lx.morgen",
+              "lx.uhr",
               "lx.woche"
             ]
           },
@@ -832,6 +835,10 @@
           "answer": "steht",
           "accepted": [
             "steht"
+          ],
+          "errorTags": [
+            "satzklammer",
+            "verb-ending"
           ],
           "banks": [
             "plateau",
@@ -895,6 +902,9 @@
           "accepted": [
             "fern"
           ],
+          "errorTags": [
+            "satzklammer"
+          ],
           "banks": [
             "plateau",
             "mehr-ueben",
@@ -914,6 +924,12 @@
           "topic": "g.trennbare-verben",
           "promptDe": "Korrigieren Sie die Wortstellung: „Der Kurs anfängt um neun Uhr.“",
           "promptEn": "Correct the word order.",
+          "tiles": [
+            "der Kurs",
+            "fängt",
+            "um neun Uhr",
+            "an"
+          ],
           "answer": "Der Kurs fängt um neun Uhr an.",
           "accepted": [
             "Der Kurs fängt um neun Uhr an.",
@@ -956,7 +972,8 @@
         "targets": [
           "g.trennbare-verben"
         ],
-        "register": "du"
+        "register": "du",
+        "modelDe": "Ich stehe um sieben Uhr auf. Um neun fängt der Kurs an. Am Abend kaufe ich ein, dann lerne ich."
       },
       "aussprache": {
         "focus": "Trennbare Verben: „auf“, „an“, „ein“ und „fern“ haben den Akzent, auch am Satzende: aufstehen – Ich stehe um sieben AUF.",
@@ -1083,8 +1100,8 @@
           {
             "id": "a1.1-u07-ls2-l03",
             "speaker": "cast.arjun",
-            "de": "Moment. Hier auf der Webseite sind die Öffnungszeiten. Montag bis Freitag, von acht bis zwölf Uhr.",
-            "en": "Just a moment. The opening hours are here on the website. Monday to Friday, from eight to twelve."
+            "de": "Moment. Hier auf der Webseite sind die Öffnungszeiten. Von Montag bis Freitag macht die Praxis um acht auf. Um zwölf macht sie zu.",
+            "en": "Just a moment. The opening hours are here on the website. From Monday to Friday the practice opens at eight. It closes at twelve."
           },
           {
             "id": "a1.1-u07-ls2-l04",
@@ -1101,8 +1118,8 @@
           {
             "id": "a1.1-u07-ls2-l06",
             "speaker": "cast.priya",
-            "de": "Hm. Ich habe von Montag bis Freitag Kurs. Immer von neun bis halb eins.",
-            "en": "Hm. I have class from Monday to Friday. Always from nine to half past twelve."
+            "de": "Ich habe von Montag bis Freitag Kurs, von neun bis halb eins.",
+            "en": "I have class from Monday to Friday, from nine to half past twelve."
           },
           {
             "id": "a1.1-u07-ls2-l07",
@@ -1130,8 +1147,8 @@
           }
         ],
         "text": {
-          "de": "Praxis Doktor Julia Sommer\nÖffnungszeiten\nMontag bis Freitag: 8 bis 12 Uhr\nMontag, Dienstag, Donnerstag: 15 bis 18 Uhr\nam Wochenende geschlossen\nNeu bei uns? Der erste Termin ist nur am Morgen.\nNur mit Termin (online oder am Telefon)",
-          "en": "Dr Julia Sommer’s practice · Opening hours: Monday to Friday 8 am–12 noon · Monday, Tuesday, Thursday 3–6 pm · closed at the weekend · New to the practice? The first appointment is in the morning only. · By appointment only (online or by phone)"
+          "de": "Praxis Doktor Julia Sommer\nÖffnungszeiten\nMontag bis Freitag: 8 bis 12 Uhr\nMontag, Dienstag, Donnerstag: 15 bis 18 Uhr\nMittwoch und Freitag: am Nachmittag geschlossen\nam Wochenende geschlossen\nNeu bei uns? Der erste Termin ist nur am Morgen.\nNur mit Termin (online oder am Telefon)",
+          "en": "Dr Julia Sommer’s practice · Opening hours: Monday to Friday 8 am–12 noon · Monday, Tuesday, Thursday 3–6 pm · Wednesday and Friday: closed in the afternoon · closed at the weekend · New to the practice? The first appointment is in the morning only. · By appointment only (online or by phone)"
         },
         "glosses": [
           {
@@ -1165,7 +1182,7 @@
           "promptEn": "What do Priya and Arjun need?",
           "options": [
             "einen Termin",
-            "eine Wohnung",
+            "eine Webseite",
             "einen Kurs"
           ],
           "answer": "einen Termin",
@@ -1209,12 +1226,8 @@
           "promptEn": "Read the website: open until when in the morning?",
           "answer": "12",
           "accepted": [
-            "12",
-            "zwölf"
+            "12"
           ],
-          "acceptedWhy": {
-            "zwölf": "Zahl als Wort: auch richtig"
-          },
           "exact": "number",
           "explanation": {
             "de": "Auf der Webseite steht: „Montag bis Freitag: 8 bis 12 Uhr“. Von 15 bis 18 Uhr ist am Nachmittag.",
@@ -1417,7 +1430,8 @@
               "arbeitet"
             ],
             "errorTags": [
-              "v2-inv"
+              "v2-inv",
+              "verb-ending"
             ],
             "explanation": {
               "de": "„Am Mittwoch“ auf Position 1: „arbeitet“ steht auf Position 2, dann „Arjun“.",
@@ -1572,6 +1586,12 @@
             "topic": "g.zeitangaben-inversion",
             "promptDe": "Korrigieren Sie die Wortstellung: „Am Montag ich arbeite bis fünf.“",
             "promptEn": "Correct the word order.",
+            "tiles": [
+              "am Montag",
+              "arbeite",
+              "ich",
+              "bis fünf"
+            ],
             "answer": "Am Montag arbeite ich bis fünf.",
             "accepted": [
               "Am Montag arbeite ich bis fünf.",
@@ -1625,7 +1645,7 @@
             "count": 2,
             "source": [
               "a1.1-u07-ls2-l04",
-              "a1.1-u07-ls2-l09"
+              "a1.1-u07-ls2-l06"
             ]
           },
           {
@@ -1670,6 +1690,9 @@
           "answer": "Am",
           "accepted": [
             "Am"
+          ],
+          "errorTags": [
+            "spelling-meaning"
           ],
           "banks": [
             "plateau",
@@ -1733,6 +1756,9 @@
           "accepted": [
             "nach"
           ],
+          "errorTags": [
+            "spelling-meaning"
+          ],
           "banks": [
             "plateau",
             "mehr-ueben",
@@ -1752,6 +1778,12 @@
           "topic": "g.zeitangaben-inversion",
           "promptDe": "Korrigieren Sie die Wortstellung: „Am Abend Arjun sieht fern.“",
           "promptEn": "Correct the word order.",
+          "tiles": [
+            "am Abend",
+            "sieht",
+            "Arjun",
+            "fern"
+          ],
           "answer": "Am Abend sieht Arjun fern.",
           "accepted": [
             "Am Abend sieht Arjun fern.",
@@ -1784,6 +1816,13 @@
           "topic": "g.zeitangaben-inversion",
           "promptDe": "Korrigieren Sie die Wortstellung: „Emre arbeitet, aber lernt Priya.“",
           "promptEn": "Correct the word order after “aber”.",
+          "tiles": [
+            "Emre",
+            "arbeitet",
+            "aber",
+            "Priya",
+            "lernt"
+          ],
           "answer": "Emre arbeitet, aber Priya lernt.",
           "accepted": [
             "Emre arbeitet, aber Priya lernt.",
@@ -1828,14 +1867,15 @@
         "targets": [
           "g.zeitangaben-inversion"
         ],
-        "register": "du"
+        "register": "du",
+        "modelDe": "Am Montag arbeite ich von neun bis fünf. Am Wochenende habe ich Zeit."
       },
       "endLine": "Sie können jetzt Öffnungszeiten lesen und sagen: Am Montag arbeite ich von neun bis fünf."
     },
     {
       "id": "a1.1-u07-ls3",
       "kind": "situation",
-      "title": "Eine Nachricht auf dem Anrufbeantworter",
+      "title": "Eine Nachricht auf dem Handy",
       "structure": "g.trennbare-verben",
       "modelSentence": "Am Donnerstag fängt der Kurs erst um elf Uhr an.",
       "ruleCard": "rc.trennbare-verben",
@@ -1899,14 +1939,14 @@
           {
             "id": "a1.1-u07-ls3-l09",
             "speaker": "cast.arjun",
-            "de": "Wie spät ist es? Oh, schon halb fünf! Und heute ist Mittwoch: Am Nachmittag ist die Praxis zu.",
-            "en": "What time is it? Oh, half past four already! And it’s Wednesday today: the practice is closed in the afternoon."
+            "de": "Wie spät ist es? Oh, schon halb fünf! Und heute ist Mittwoch. Da macht die Praxis um zwölf zu.",
+            "en": "What time is it? Oh, half past four already! And it’s Wednesday today. On Wednesdays the practice closes at twelve."
           },
           {
             "id": "a1.1-u07-ls3-l10",
             "speaker": "cast.priya",
-            "de": "Stimmt, da ist nur der Anrufbeantworter. Aber Termine gibt es auch online. Moment … Tag: Donnerstag. Uhrzeit: Viertel nach acht. Wir sind um acht da, dann sind wir pünktlich.",
-            "en": "True, you’ll only get the answering machine. But you can book appointments online too. Just a moment … Day: Thursday. Time: a quarter past eight. We’ll be there at eight – then we’re on time."
+            "de": "Stimmt. Aber Termine gibt es auch online. Moment … Tag: Donnerstag. Uhrzeit: Viertel nach acht. Wir sind um acht da, dann sind wir pünktlich.",
+            "en": "True. But you can book appointments online too. Just a moment … Day: Thursday. Time: a quarter past eight. We’ll be there at eight – then we’re on time."
           }
         ],
         "text": {
@@ -1989,16 +2029,12 @@
           "promptEn": "Write the hour.",
           "answer": "11",
           "accepted": [
-            "11",
-            "elf"
+            "11"
           ],
-          "acceptedWhy": {
-            "elf": "Zahl als Wort: so hört man es"
-          },
           "exact": "number",
           "explanation": {
-            "de": "Herr Richter sagt: „Nicht um neun, erst um elf Uhr.“",
-            "en": "Mr Richter says: not at nine, not until eleven."
+            "de": "Herr Richter sagt: „Nicht um neun, erst um elf Uhr.“ Das ist am Morgen.",
+            "en": "Mr Richter says: not at nine, not until eleven in the morning (11 am)."
           },
           "origin": "agent"
         },
@@ -2035,15 +2071,9 @@
           "answer": "8.15 Uhr",
           "accepted": [
             "8.15 Uhr",
-            "8.15",
-            "8:15 Uhr",
-            "8:15",
             "Viertel nach acht"
           ],
           "acceptedWhy": {
-            "8.15": "ohne „Uhr“ auch richtig",
-            "8:15 Uhr": "mit Doppelpunkt auch richtig",
-            "8:15": "mit Doppelpunkt, ohne „Uhr“",
             "Viertel nach acht": "so sagt man 8.15 Uhr"
           },
           "exact": "number",
@@ -2091,15 +2121,15 @@
           "options": [
             "Ja, um zehn ist Kurs.",
             "Nein, um zehn ist noch kein Kurs.",
-            "Ja, von zehn bis elf."
+            "Nein, heute ist kein Kurs."
           ],
           "answer": "Nein, um zehn ist noch kein Kurs.",
           "accepted": [
             "Nein, um zehn ist noch kein Kurs."
           ],
           "explanation": {
-            "de": "„erst um elf“: Der Kurs fängt um elf an, nicht um neun und nicht um zehn.",
-            "en": "“erst um elf” = not until eleven – not at nine and not at ten."
+            "de": "„erst um elf“: Der Kurs fängt um elf an, nicht um neun und nicht um zehn. Aber es gibt Kurs.",
+            "en": "“erst um elf” = not until eleven – not at nine and not at ten. But there is class."
           },
           "origin": "agent"
         },
@@ -2181,6 +2211,10 @@
             "accepted": [
               "macht"
             ],
+            "errorTags": [
+              "satzklammer",
+              "verb-ending"
+            ],
             "explanation": {
               "de": "„aufmachen“: „das Geschäft macht … auf“.",
               "en": "aufmachen: das Geschäft macht … auf."
@@ -2199,7 +2233,7 @@
               "fängt"
             ],
             "errorTags": [
-              "spelling-meaning"
+              "verb-ending"
             ],
             "explanation": {
               "de": "„anfangen“: „er fängt … an“, mit „ä“. „an“ steht am Ende.",
@@ -2217,6 +2251,10 @@
             "answer": "stehst",
             "accepted": [
               "stehst"
+            ],
+            "errorTags": [
+              "satzklammer",
+              "verb-ending"
             ],
             "explanation": {
               "de": "„aufstehen“: „du stehst … auf“. In der W-Frage steht „stehst“ auf Position 2.",
@@ -2349,6 +2387,12 @@
             "topic": "g.trennbare-verben",
             "promptDe": "Korrigieren Sie die Wortstellung: „Der Kurs fängt an um elf Uhr.“",
             "promptEn": "Correct the word order.",
+            "tiles": [
+              "der Kurs",
+              "fängt",
+              "um elf Uhr",
+              "an"
+            ],
             "answer": "Der Kurs fängt um elf Uhr an.",
             "accepted": [
               "Der Kurs fängt um elf Uhr an.",
@@ -2426,8 +2470,8 @@
               "lx.halb",
               "lx.viertel",
               "lx.spaet",
-              "lx.geoeffnet",
-              "lx.anrufbeantworter",
+              "lx.aufmachen",
+              "lx.zumachen",
               "lx.geschaeft"
             ]
           }
@@ -2444,6 +2488,10 @@
           "answer": "macht",
           "accepted": [
             "macht"
+          ],
+          "errorTags": [
+            "satzklammer",
+            "verb-ending"
           ],
           "banks": [
             "plateau",
@@ -2507,6 +2555,9 @@
             "Es ist halb fünf."
           ],
           "exact": "number",
+          "errorTags": [
+            "spelling-meaning"
+          ],
           "banks": [
             "plateau",
             "mehr-ueben",
@@ -2526,6 +2577,13 @@
           "topic": "g.trennbare-verben",
           "promptDe": "Korrigieren Sie die Wortstellung: „Am Donnerstag der Kurs fängt um elf an.“",
           "promptEn": "Correct the word order.",
+          "tiles": [
+            "am Donnerstag",
+            "fängt",
+            "der Kurs",
+            "um elf",
+            "an"
+          ],
           "answer": "Am Donnerstag fängt der Kurs um elf an.",
           "accepted": [
             "Am Donnerstag fängt der Kurs um elf an.",
@@ -2572,7 +2630,8 @@
         "targets": [
           "g.trennbare-verben"
         ],
-        "register": "du"
+        "register": "du",
+        "modelDe": "Von Montag bis Freitag macht er um sieben Uhr auf. Um 22 Uhr macht er zu."
       },
       "aussprache": {
         "focus": "Satzmelodie: Bei der Frage „Erst um elf?“ geht die Melodie am Ende nach oben, bei „Erst um elf.“ nach unten.",
@@ -2666,7 +2725,7 @@
           "lineDe": "Erst um elf? Dann haben wir am Morgen Zeit!"
         }
       },
-      "endLine": "Sie können jetzt eine Nachricht auf dem Anrufbeantworter verstehen: Tag und Uhrzeit."
+      "endLine": "Sie können jetzt eine Nachricht am Telefon verstehen: Tag und Uhrzeit."
     },
     {
       "id": "a1.1-u07-ls4",
@@ -2677,14 +2736,28 @@
           "kind": "sign",
           "title": "Am Supermarkt",
           "text": "Geöffnet:\nMontag bis Freitag 7 bis 22 Uhr\nsamstags 7 bis 20 Uhr\nsonntags geschlossen",
-          "glosses": []
+          "glosses": [
+            {
+              "token": "Geöffnet",
+              "gloss": {
+                "en": "open (on signs)"
+              }
+            }
+          ]
         },
         {
           "id": "a1.1-u07-ls4-t2",
           "kind": "sign",
           "title": "An einem Büro",
           "text": "Büro – geöffnet:\nMontag bis Donnerstag 9 bis 17 Uhr\nfreitags 9 bis 13 Uhr\nAm Wochenende ist das Büro geschlossen.",
-          "glosses": []
+          "glosses": [
+            {
+              "token": "geöffnet",
+              "gloss": {
+                "en": "open (on signs)"
+              }
+            }
+          ]
         },
         {
           "id": "a1.1-u07-ls4-t3",
@@ -2800,7 +2873,14 @@
               "en": "Hi, it’s Sophie. The answering machine again! Are you free on Wednesday? I’m studying until five, but then I’m going shopping. I’ll be at the supermarket at half past five. Are you coming too?"
             }
           ],
-          "glosses": []
+          "glosses": [
+            {
+              "token": "Anrufbeantworter",
+              "gloss": {
+                "en": "answering machine, voicemail"
+              }
+            }
+          ]
         }
       ],
       "blocks": [
@@ -3068,7 +3148,8 @@
         "profile": "sd1-sp2",
         "prepMinutes": 0,
         "instructionsDe": "Zwei Themen: „Mein Tag“, dann „Meine Woche“. Fragen und antworten Sie mit den Karten.",
-        "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin Nora haben Wortkarten zu zwei Themen: zuerst „Mein Tag“, dann „Meine Woche“. Fragen Sie mit Ihrer Karte. Antworten Sie auf die Frage von Nora. Bei „aufstehen“ erzählen Sie in zwei Sätzen von Ihrem Tag.",
+        "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin Nora haben Wortkarten. Es gibt zwei Themen: zuerst „Mein Tag“, dann „Meine Woche“. Fragen Sie mit Ihrer Karte. Antworten Sie auf die Frage von Nora. Bei „aufstehen“ erzählen Sie in zwei Sätzen von Ihrem Tag.",
+        "situationEn": "Speaking part 2: you and your partner Nora have word cards on two topics – first “My day”, then “My week”. Ask a question with your card. Answer Nora’s question. For “aufstehen” (get up), tell her about your day in two sentences.",
         "cards": {
           "learner": [
             "Mein Tag – Uhrzeit",
@@ -3094,7 +3175,7 @@
         "hintWords": [
           "Wie spät ist es?",
           "Es ist halb …",
-          "Es ist Viertel nach …",
+          "Es ist … Uhr.",
           "Wann stehen Sie … auf?",
           "Ich stehe um … auf.",
           "von … bis …",
@@ -3171,11 +3252,16 @@
               "Morgen",
               "Donnerstagmorgen",
               "kaufe",
+              "kauft",
               "Termin",
               "stehe",
+              "steht",
               "lerne",
+              "lernt",
               "arbeite",
-              "fahre"
+              "arbeitet",
+              "fahre",
+              "fährt"
             ]
           },
           {
@@ -3216,14 +3302,14 @@
       {
         "id": "a1.1-u07-ls7-l01",
         "speaker": "cast.priya",
-        "de": "Am Abend sehe ich fern.",
-        "en": "In the evening I watch TV."
+        "de": "Am Wochenende ist das Büro geschlossen.",
+        "en": "At the weekend the office is closed."
       },
       {
         "id": "a1.1-u07-ls7-l02",
         "speaker": "cast.olena",
-        "de": "Hallo Priya, hier ist Olena. Am Montag geht es nicht, da arbeite ich bis sechs. Lernen wir am Mittwoch zusammen? Um zwei ist es ein bisschen früh für mich. Ich komme um halb drei. Bis dann!",
-        "en": "Hi Priya, it’s Olena. Monday doesn’t work – I’m working until six. Shall we study together on Wednesday? Two o’clock is a bit early for me. I’ll come at half past two. See you then!"
+        "de": "Hallo Priya, hier ist Olena. Am Montag geht es nicht, da arbeite ich bis sechs. Lernen wir am Mittwoch zusammen? Bis zwei kaufe ich ein, dann komme ich. Um halb drei bin ich da. Bis dann!",
+        "en": "Hi Priya, it’s Olena. Monday doesn’t work – I’m working until six. Shall we study together on Wednesday? I’m shopping until two, then I’ll come. I’ll be there at half past two. See you then!"
       }
     ],
     "items": [
@@ -3237,6 +3323,10 @@
         "answer": "fängt",
         "accepted": [
           "fängt"
+        ],
+        "errorTags": [
+          "satzklammer",
+          "verb-ending"
         ],
         "explanation": {
           "de": "„anfangen“: „der Kurs fängt … an“, mit „ä“. In der W-Frage auf Position 2.",
@@ -3254,6 +3344,9 @@
         "answer": "ein",
         "accepted": [
           "ein"
+        ],
+        "errorTags": [
+          "satzklammer"
         ],
         "explanation": {
           "de": "„einkaufen“ ist trennbar: „kaufe“ auf Position 2, „ein“ am Ende.",
@@ -3333,13 +3426,13 @@
         "audioLineRef": "a1.1-u07-ls7-l01",
         "promptDe": "Hören Sie und schreiben Sie den Satz.",
         "promptEn": "Listen and write the sentence.",
-        "answer": "Am Abend sehe ich fern.",
+        "answer": "Am Wochenende ist das Büro geschlossen.",
         "accepted": [
-          "Am Abend sehe ich fern."
+          "Am Wochenende ist das Büro geschlossen."
         ],
         "explanation": {
-          "de": "„Abend“ ist ein Nomen: groß. „fern“ steht am Ende.",
-          "en": "“Abend” is a noun, so it is capitalised; “fern” goes to the end."
+          "de": "„Wochenende“ und „Büro“ sind Nomen: groß. „geschlossen“ ist klein.",
+          "en": "“Wochenende” and “Büro” are nouns, so they are capitalised; “geschlossen” is not."
         },
         "origin": "agent"
       },
@@ -3350,6 +3443,12 @@
         "topic": "g.zeitangaben-inversion",
         "promptDe": "Korrigieren Sie die Wortstellung: „Am Freitag ich kaufe ein.“",
         "promptEn": "Correct the word order.",
+        "tiles": [
+          "am Freitag",
+          "kaufe",
+          "ich",
+          "ein"
+        ],
         "answer": "Am Freitag kaufe ich ein.",
         "accepted": [
           "Am Freitag kaufe ich ein.",
@@ -3411,12 +3510,8 @@
         "promptEn": "Read the sign: until when on Friday?",
         "answer": "14",
         "accepted": [
-          "14",
-          "vierzehn"
+          "14"
         ],
-        "acceptedWhy": {
-          "vierzehn": "Zahl als Wort: auch richtig"
-        },
         "exact": "number",
         "explanation": {
           "de": "Am Geschäft steht: „Freitag 10–14 Uhr“. 19 Uhr ist Montag bis Donnerstag.",
@@ -3443,8 +3538,8 @@
         ],
         "exact": "number",
         "explanation": {
-          "de": "Am Montag geht es nicht, und um zwei ist es für Olena ein bisschen früh. Sie sagt: „Ich komme um halb drei.“",
-          "en": "Monday doesn’t work for Olena and two is a bit early for her – she comes on Wednesday at half past two."
+          "de": "Olena sagt: „Am Montag geht es nicht.“ Bis zwei kauft sie ein. „Um halb drei bin ich da.“",
+          "en": "Monday doesn’t work for Olena. She is shopping until two and will be there on Wednesday at half past two."
         },
         "origin": "agent"
       }
@@ -3514,8 +3609,8 @@
     },
     {
       "id": "a1.1-u07-rm07",
-      "de": "Wann ist das Geschäft offen?",
-      "en": "When is the shop open?",
+      "de": "Wann ist das Büro offen?",
+      "en": "When is the office open?",
       "function": "nach Öffnungszeiten fragen"
     },
     {
@@ -3529,10 +3624,11 @@
   "story": {
     "beat": "Priya und Emre erzählen im Videochat vom Tag in Leipzig und in İzmir. Priya und Arjun brauchen einen ersten Termin bei Frau Doktor Sommer, ihrer neuen Hausärztin. Aber den ersten Termin gibt es nur am Morgen, und da hat Priya Kurs. Da kommt eine Nachricht von Herrn Richter: Am Donnerstag fängt der Kurs erst um elf Uhr an. Priya bucht online einen Termin: Donnerstag, 8.15 Uhr.",
     "cliffhanger": "Am Donnerstag um acht sind Priya und Arjun bei Frau Sommer. Um elf ist Priya im Kurs, und Emre ist online. Nach dem Kurs schreibt er Priya: „Hast du am Wochenende Zeit? Ich rufe heute Abend an!“",
+    "cliffhangerEn": "On Thursday at eight Priya and Arjun are at Dr Sommer’s. At eleven Priya is in class, and Emre is online. After class he writes to Priya: “Are you free at the weekend? I’ll call this evening!”",
     "castIn": [
-      "cast.emre",
-      "cast.herr-richter",
-      "cast.dr-sommer"
+      "cast.sophie",
+      "cast.dr-sommer",
+      "cast.emre"
     ]
   },
   "fokus": [],

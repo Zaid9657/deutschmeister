@@ -10,7 +10,7 @@
   "stage": "T",
   "title": {
     "de": "Im Café",
-    "canDo": "Sie können im Café bestellen und bezahlen, eine Speisekarte lesen und sagen: Das mag ich, das mag ich nicht."
+    "canDo": "Sie können eine Speisekarte lesen, im Café bestellen und bezahlen. Sie können sagen: Das mag ich, das mag ich nicht."
   },
   "spec": {
     "situation": "Priya trifft Elif und Olena im Café: Sie lesen die Speisekarte, sagen: Das mag ich, das mag ich nicht, bestellen, essen und bezahlen. Danach füllt Priya das Online-Formular für einen Tisch zum Geburtstag von Olena aus.",
@@ -345,8 +345,8 @@
           }
         ],
         "text": {
-          "de": "Café am Park\nFrühstück (bis 12 Uhr)\nBrötchen mit Butter und Käse: 3,50 €\nBrötchen mit Wurst: 3,50 €\nKäsebrot: 3,80 €\nObstsalat: 4,50 €\nMittagessen (ab 12 Uhr)\nTomatensuppe: 5,50 €\nSalat mit Käse: 7,20 €\nFisch mit Kartoffeln: 12,90 €\nKuchen\nApfelkuchen: 3,70 €\nGetränke\nKaffee, 1 Tasse: 2,90 €\nTee, 1 Tasse: 2,60 €\nOrangensaft, 1 Glas: 3,40 €\nMineralwasser, 1 Flasche: 2,50 €\nBier, 1 Glas: 3,90 €",
-          "en": "Café by the park · Breakfast (until 12): roll with butter and cheese 3.50 € · roll with cold cuts 3.50 € · cheese sandwich 3.80 € · fruit salad 4.50 € · Lunch (from 12): tomato soup 5.50 € · salad with cheese 7.20 € · fish with potatoes 12.90 € · Cake: apple cake 3.70 € · Drinks: coffee, 1 cup 2.90 € · tea, 1 cup 2.60 € · orange juice, 1 glass 3.40 € · mineral water, 1 bottle 2.50 € · beer, 1 glass 3.90 €"
+          "de": "Café am Park\nÖffnungszeiten: Dienstag bis Sonntag, 8 bis 18 Uhr\nFrühstück (bis 12 Uhr)\nBrötchen mit Butter und Käse: 3,50 €\nBrötchen mit Wurst: 3,50 €\nKäsebrot: 3,80 €\nObstsalat: 4,50 €\nMittagessen (ab 12 Uhr)\nTomatensuppe: 5,50 €\nSalat mit Käse: 7,20 €\nFisch mit Kartoffeln: 12,90 €\nKuchen\nApfelkuchen: 3,70 €\nGetränke\nKaffee, 1 Tasse: 2,90 €\nTee, 1 Tasse: 2,60 €\nOrangensaft, 1 Glas: 3,40 €\nMineralwasser, 1 Flasche: 2,50 €\nBier, 1 Glas: 3,90 €",
+          "en": "Café by the park · Opening hours: Tuesday to Sunday, 8 am to 6 pm · Breakfast (until 12): roll with butter and cheese 3.50 € · roll with cold cuts 3.50 € · cheese sandwich 3.80 € · fruit salad 4.50 € · Lunch (from 12): tomato soup 5.50 € · salad with cheese 7.20 € · fish with potatoes 12.90 € · Cake: apple cake 3.70 € · Drinks: coffee, 1 cup 2.90 € · tea, 1 cup 2.60 € · orange juice, 1 glass 3.40 € · mineral water, 1 bottle 2.50 € · beer, 1 glass 3.90 €"
         },
         "glosses": [
           {
@@ -567,6 +567,9 @@
             "accepted": [
               "mag"
             ],
+            "errorTags": [
+              "verb-ending"
+            ],
             "explanation": {
               "de": "„ich mag“: Bei „ich“ hat „mag“ keine Endung.",
               "en": "ich mag – no ending with ich."
@@ -584,6 +587,9 @@
             "accepted": [
               "magst"
             ],
+            "errorTags": [
+              "verb-ending"
+            ],
             "explanation": {
               "de": "„du magst“: mit „a“ und mit „-st“.",
               "en": "du magst – with “a” and the ending -st."
@@ -600,6 +606,9 @@
             "answer": "mögt",
             "accepted": [
               "mögt"
+            ],
+            "errorTags": [
+              "verb-ending"
             ],
             "explanation": {
               "de": "„ihr mögt“: mit „ö“ und mit „-t“.",
@@ -662,7 +671,7 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.moegen",
-            "promptDe": "Bilden Sie die Frage.",
+            "promptDe": "Bilden Sie eine Ja/Nein-Frage.",
             "promptEn": "Build the yes/no question.",
             "tiles": [
               "du",
@@ -672,6 +681,9 @@
             "answer": "Magst du Fisch?",
             "accepted": [
               "Magst du Fisch?"
+            ],
+            "errorTags": [
+              "v2-inv"
             ],
             "explanation": {
               "de": "Ja/Nein-Frage: Das Verb „magst“ steht auf Position 1.",
@@ -700,6 +712,9 @@
             "acceptedWhy": {
               "Wurst mag Olena nicht.": "grammatisch: „Wurst“ betont auf Position 1, das Verb bleibt auf Position 2"
             },
+            "errorTags": [
+              "negation"
+            ],
             "explanation": {
               "de": "Das Verb „mag“ steht auf Position 2, „nicht“ steht am Ende.",
               "en": "“mag” is in position 2; “nicht” goes at the end."
@@ -726,6 +741,9 @@
             "acceptedWhy": {
               "Den Obstsalat mag Elif.": "grammatisch: „den Obstsalat“ betont auf Position 1, das Verb bleibt auf Position 2"
             },
+            "errorTags": [
+              "case-np"
+            ],
             "explanation": {
               "de": "Das Verb „mag“ steht auf Position 2. „den Obstsalat“ ist Akkusativ.",
               "en": "“mag” is in position 2; “den Obstsalat” is accusative."
@@ -737,7 +755,7 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.moegen",
-            "promptDe": "Bilden Sie die Frage.",
+            "promptDe": "Bilden Sie eine Ja/Nein-Frage.",
             "promptEn": "Build the yes/no question.",
             "tiles": [
               "ihr",
@@ -755,6 +773,9 @@
               "Mögt ihr Kuchen auch?": "umgangssprachlich: „auch“ am Ende, das Verb bleibt auf Position 1",
               "Mögt auch ihr Kuchen?": "grammatisch: „auch“ vor „ihr“ betont „ihr“ (auch ihr, wie wir); das Verb bleibt auf Position 1"
             },
+            "errorTags": [
+              "v2-inv"
+            ],
             "reviewerConfirmed": [
               "Mögt auch ihr Kuchen?"
             ],
@@ -802,6 +823,9 @@
             "accepted": [
               "mag"
             ],
+            "errorTags": [
+              "verb-ending"
+            ],
             "explanation": {
               "de": "Das ist immer so, nicht nur jetzt: „mag“. „magst“ ist die du-Form.",
               "en": "It is always true, not just now: “mag”. “magst” is the du-form."
@@ -824,8 +848,7 @@
             "source": [
               "lx.getraenk",
               "lx.speisekarte",
-              "lx.restaurant",
-              "lx.rechnung"
+              "lx.kuchen"
             ]
           },
           {
@@ -864,6 +887,9 @@
           "accepted": [
             "mag"
           ],
+          "errorTags": [
+            "verb-ending"
+          ],
           "banks": [
             "plateau",
             "mehr-ueben",
@@ -887,6 +913,9 @@
           "answer": "mögen",
           "accepted": [
             "mögen"
+          ],
+          "errorTags": [
+            "verb-ending"
           ],
           "banks": [
             "plateau",
@@ -947,6 +976,9 @@
           "accepted": [
             "Nein, Fisch finde ich nicht gut."
           ],
+          "errorTags": [
+            "verb-ending"
+          ],
           "banks": [
             "plateau",
             "mehr-ueben"
@@ -970,6 +1002,10 @@
             "Olena mag Fisch."
           ],
           "intentionalError": true,
+          "errorTag": "verb-ending",
+          "errorTags": [
+            "verb-ending"
+          ],
           "banks": [
             "plateau",
             "mehr-ueben"
@@ -998,7 +1034,8 @@
         "targets": [
           "g.moegen"
         ],
-        "register": "du"
+        "register": "du",
+        "modelDe": "Ich mag Kaffee und Kuchen. Aber Fisch mag ich nicht."
       },
       "aussprache": {
         "focus": "Vokale: lang oder kurz? Tee, Salat, Brot: lang – Bett, Stadt, Suppe: kurz.",
@@ -1024,7 +1061,7 @@
       "kind": "situation",
       "title": "Wir möchten bestellen",
       "structure": "g.akkusativ",
-      "modelSentence": "Ich nehme einen Kaffee und ein Käsebrot.",
+      "modelSentence": "Ich nehme einen Kaffee und einen Kuchen.",
       "ruleCard": "rc.akkusativ",
       "warmup": {
         "draw": 6,
@@ -1032,7 +1069,7 @@
       },
       "input": {
         "kind": "dialog",
-        "title": "Bestellen und bezahlen",
+        "title": "Frühstück im Café",
         "textType": "tt.dialog",
         "lines": [
           {
@@ -1190,15 +1227,15 @@
           "options": [
             "Er ist heute sehr teuer.",
             "Es gibt nur noch einen.",
-            "Er ist nicht lecker."
+            "Es gibt heute keinen."
           ],
           "answer": "Es gibt nur noch einen.",
           "accepted": [
             "Es gibt nur noch einen."
           ],
           "explanation": {
-            "de": "Der Kellner sagt: „Wir haben nur noch einen Obstsalat.“",
-            "en": "The waiter says they only have one fruit salad left."
+            "de": "Der Kellner sagt: „Wir haben nur noch einen Obstsalat.“ Einen Obstsalat gibt es also noch.",
+            "en": "The waiter says they only have one fruit salad left – so there is still one."
           },
           "origin": "agent"
         },
@@ -1345,6 +1382,9 @@
             "accepted": [
               "ein"
             ],
+            "errorTags": [
+              "gender-article"
+            ],
             "explanation": {
               "de": "„das Mineralwasser“ → „ein Mineralwasser“: Bei „das“ steht „ein“, ohne Endung.",
               "en": "das Mineralwasser → ein Mineralwasser: with das-nouns “ein” stays."
@@ -1362,6 +1402,9 @@
             "accepted": [
               "nimmst"
             ],
+            "errorTags": [
+              "verb-ending"
+            ],
             "explanation": {
               "de": "„du nimmst“: „e“ wird „i“, und „h“ wird „m“.",
               "en": "du nimmst: e becomes i, and h becomes m."
@@ -1378,6 +1421,9 @@
             "answer": "nimmt",
             "accepted": [
               "nimmt"
+            ],
+            "errorTags": [
+              "verb-ending"
             ],
             "explanation": {
               "de": "„sie nimmt“: wie „du nimmst“, mit „-t“.",
@@ -1434,6 +1480,9 @@
             "acceptedWhy": {
               "Heute bezahle ich.": "grammatisch: „heute“ auf Position 1, das Verb bleibt auf Position 2"
             },
+            "errorTags": [
+              "v2-inv"
+            ],
             "explanation": {
               "de": "Das Verb „bezahle“ steht auf Position 2.",
               "en": "The verb “bezahle” is in position 2."
@@ -1455,6 +1504,9 @@
             "answer": "Was nimmst du?",
             "accepted": [
               "Was nimmst du?"
+            ],
+            "errorTags": [
+              "v2-inv"
             ],
             "explanation": {
               "de": "W-Frage: „Was“ auf Position 1, „nimmst“ auf Position 2.",
@@ -1508,6 +1560,9 @@
             "acceptedWhy": {
               "Einen Obstsalat möchte Olena.": "grammatisch: „einen Obstsalat“ betont auf Position 1, das Verb bleibt auf Position 2"
             },
+            "errorTags": [
+              "case-np"
+            ],
             "explanation": {
               "de": "Das Verb „möchte“ steht auf Position 2. „einen Obstsalat“ ist Akkusativ.",
               "en": "“möchte” is in position 2; “einen Obstsalat” is accusative."
@@ -1579,7 +1634,7 @@
             "generator": "lex.glossTyped",
             "count": 1,
             "source": [
-              "lx.bestellen",
+              "lx.lecker",
               "lx.bezahlen",
               "lx.rechnung",
               "lx.speisekarte",
@@ -1612,6 +1667,9 @@
           "accepted": [
             "eine"
           ],
+          "errorTags": [
+            "gender-article"
+          ],
           "banks": [
             "plateau",
             "mehr-ueben",
@@ -1634,6 +1692,9 @@
           "answer": "nimmt",
           "accepted": [
             "nimmt"
+          ],
+          "errorTags": [
+            "verb-ending"
           ],
           "banks": [
             "plateau",
@@ -1721,6 +1782,12 @@
           "topic": "g.moechte",
           "promptDe": "Korrigieren Sie die Wortstellung: „Wir möchten bezahlen die Rechnung.“",
           "promptEn": "Correct the word order.",
+          "tiles": [
+            "wir",
+            "möchten",
+            "die Rechnung",
+            "bezahlen"
+          ],
           "answer": "Wir möchten die Rechnung bezahlen.",
           "accepted": [
             "Wir möchten die Rechnung bezahlen.",
@@ -1762,6 +1829,9 @@
           "accepted": [
             "Nein, danke."
           ],
+          "errorTags": [
+            "register"
+          ],
           "banks": [
             "plateau",
             "mehr-ueben"
@@ -1790,7 +1860,8 @@
         "targets": [
           "g.akkusativ"
         ],
-        "register": "Sie"
+        "register": "Sie",
+        "modelDe": "Ich möchte einen Tee und ein Stück Kuchen, bitte. … Die Rechnung, bitte!"
       },
       "endLine": "Sie können jetzt im Café bestellen, um die Rechnung bitten und bezahlen."
     },
@@ -1799,7 +1870,7 @@
       "kind": "situation",
       "title": "Olena hat Geburtstag",
       "structure": "g.moegen",
-      "modelSentence": "Ich mag Fisch, aber heute möchte ich eine Suppe.",
+      "modelSentence": "Ich mag Fisch, aber heute möchte ich Fleisch.",
       "ruleCard": "rc.moegen",
       "warmup": {
         "draw": 6,
@@ -2097,6 +2168,9 @@
             "accepted": [
               "mögen"
             ],
+            "errorTags": [
+              "verb-ending"
+            ],
             "explanation": {
               "de": "„sie mögen“ (Plural): mit „ö“ und mit „-en“.",
               "en": "sie mögen (plural) – with “ö” and -en."
@@ -2113,6 +2187,9 @@
             "answer": "möchte",
             "accepted": [
               "möchte"
+            ],
+            "errorTags": [
+              "verb-ending"
             ],
             "explanation": {
               "de": "„ich möchte“: ohne „-t“ am Ende. „möchte“ heißt: jetzt, heute.",
@@ -2131,6 +2208,9 @@
             "accepted": [
               "Das"
             ],
+            "errorTags": [
+              "gender-article"
+            ],
             "explanation": {
               "de": "Das letzte Wort bestimmt den Artikel: das Brot → das Käsebrot.",
               "en": "The last word decides the article: das Brot → das Käsebrot."
@@ -2147,6 +2227,9 @@
             "answer": "Der",
             "accepted": [
               "Der"
+            ],
+            "errorTags": [
+              "gender-article"
             ],
             "explanation": {
               "de": "Das letzte Wort bestimmt den Artikel: der Salat → der Obstsalat.",
@@ -2290,6 +2373,9 @@
               "Online bestellt Priya den Tisch.": "grammatisch: „online“ betont auf Position 1, das Verb bleibt auf Position 2",
               "Priya bestellt online den Tisch.": "umgangssprachlich: „online“ vor „den Tisch“, das Verb bleibt auf Position 2"
             },
+            "errorTags": [
+              "v2-inv"
+            ],
             "explanation": {
               "de": "Das Verb „bestellt“ steht auf Position 2.",
               "en": "The verb “bestellt” is in position 2."
@@ -2309,6 +2395,10 @@
               "Ich nehme einen Tee."
             ],
             "intentionalError": true,
+            "errorTag": "verb-ending",
+            "errorTags": [
+              "verb-ending"
+            ],
             "explanation": {
               "de": "Beim Bestellen sagen Sie „möchte“ oder „nehme“, nicht „mag“. „mag“ heißt: Das finde ich immer gut.",
               "en": "When ordering you say “möchte” or “nehme”, not “mag”; “mag” means you like something in general."
@@ -2334,6 +2424,9 @@
             "accepted": [
               "mag"
             ],
+            "errorTags": [
+              "verb-ending"
+            ],
             "explanation": {
               "de": "Kaffee finde ich immer gut: „mag“. Heute, jetzt: „möchte“ – einen Tee. „mögt“ ist die ihr-Form.",
               "en": "Always: “mag”; the wish for today: “möchte”. “mögt” is the ihr-form."
@@ -2347,7 +2440,7 @@
             "count": 2,
             "source": [
               "a1.1-u09-ls3-l08",
-              "a1.1-u09-ls3-l09"
+              "a1.1-u09-ls3-l05"
             ]
           },
           {
@@ -2397,6 +2490,9 @@
           "accepted": [
             "magst"
           ],
+          "errorTags": [
+            "verb-ending"
+          ],
           "banks": [
             "plateau",
             "mehr-ueben",
@@ -2421,6 +2517,9 @@
           "accepted": [
             "Die"
           ],
+          "errorTags": [
+            "gender-article"
+          ],
           "banks": [
             "plateau",
             "mehr-ueben"
@@ -2437,7 +2536,7 @@
           "type": "sentence_building",
           "role": "practice",
           "topic": "g.moegen",
-          "promptDe": "Bilden Sie die Frage.",
+          "promptDe": "Bilden Sie eine Ja/Nein-Frage.",
           "promptEn": "Build the yes/no question.",
           "tiles": [
             "Fleisch",
@@ -2447,6 +2546,9 @@
           "answer": "Magst du Fleisch?",
           "accepted": [
             "Magst du Fleisch?"
+          ],
+          "errorTags": [
+            "v2-inv"
           ],
           "banks": [
             "plateau",
@@ -2474,6 +2576,9 @@
           "answer": "Einen Orangensaft, bitte.",
           "accepted": [
             "Einen Orangensaft, bitte."
+          ],
+          "errorTags": [
+            "verb-ending"
           ],
           "banks": [
             "plateau",
@@ -2542,7 +2647,8 @@
         "targets": [
           "g.moegen"
         ],
-        "register": "du"
+        "register": "du",
+        "modelDe": "Ja, ich komme gern! Ich mag Fisch, aber Fleisch mag ich nicht."
       },
       "aussprache": {
         "focus": "Wortakzent in Komposita: Das erste Wort hat den Akzent – APFELkuchen, ORANGENsaft, TOMATENsuppe.",
@@ -3073,6 +3179,7 @@
             "prepMinutes": 0,
             "instructionsDe": "Zwei Themen: „Essen und Trinken“, dann „Getränke“. Fragen und antworten Sie mit den Karten.",
             "situationDe": "Sprechen Teil 2: Sie und Nora haben Wortkarten zu zwei Themen: zuerst „Essen und Trinken“, dann „Getränke“. Stellen Sie mit Ihrer Karte eine Frage. Antworten Sie auf die Frage von Nora. Sagen Sie auch: Was mögen Sie? Was mögen Sie nicht?",
+            "situationEn": "Speaking part 2: you and Nora have word cards on two topics: first “Essen und Trinken” (food and drink), then “Getränke” (drinks). Ask a question with your card. Answer Nora’s question. Also say what you like and what you don’t like.",
             "cards": {
               "learner": [
                 "Essen und Trinken – Frühstück",
@@ -3095,7 +3202,8 @@
             "profile": "sd1-sp3",
             "prepMinutes": 0,
             "instructionsDe": "Bitten Sie mit jeder Karte höflich um etwas. Dann reagieren Sie auf die Bitte von Nora.",
-            "situationDe": "Sprechen Teil 3: Sie und Nora haben je zwei Karten. Bitten Sie Nora mit Ihren Karten um etwas. Nora bittet Sie auch zweimal um etwas. In der Prüfung sind auf den Karten Bilder.",
+            "situationDe": "Sprechen Teil 3: Sie und Nora sind im Café. Sie haben je zwei Karten. Bitten Sie Nora mit Ihren Karten um etwas. Nora bittet Sie auch zweimal um etwas. In der Prüfung sind auf den Karten Bilder.",
+            "situationEn": "Speaking part 3: you and Nora are in a café. You each have two cards. Use your cards to ask Nora for something. Nora also asks you for something twice. In the exam the cards show pictures.",
             "cards": {
               "learner": [
                 "Kaffee",
@@ -3222,8 +3330,7 @@
               "accepted": [
                 "Olena Kovalenko",
                 "Kovalenko, Olena",
-                "Kovalenko Olena",
-                "Frau Olena Kovalenko"
+                "Kovalenko Olena"
               ],
               "exact": "name"
             },
@@ -3233,14 +3340,7 @@
               "answer": "0157 38 42 96 10",
               "accepted": [
                 "0157 38 42 96 10",
-                "015738429610",
-                "0157 38429610",
-                "0157 3842 9610",
-                "0157/38 42 96 10",
-                "0157-38 42 96 10",
-                "0157 / 38 42 96 10",
-                "+49 157 38 42 96 10",
-                "+4915738429610"
+                "+49 157 38 42 96 10"
               ],
               "exact": "number"
             },
@@ -3251,15 +3351,7 @@
               "accepted": [
                 "Freitag",
                 "am Freitag",
-                "Fr.",
-                "Freitagabend",
-                "am Freitagabend",
-                "Freitag Abend",
-                "am Freitag Abend",
-                "Freitag abends",
-                "am Freitag abends",
-                "Freitag am Abend",
-                "am Freitag am Abend"
+                "Fr."
               ]
             },
             {
@@ -3268,57 +3360,13 @@
               "answer": "19.30 Uhr",
               "accepted": [
                 "19.30 Uhr",
-                "19:30 Uhr",
-                "19.30",
-                "19:30",
-                "19 Uhr 30",
-                "um 19.30 Uhr",
-                "um 19.30",
-                "19.30 Uhr abends",
-                "19.30 Uhr am Abend",
                 "7.30 Uhr",
-                "7:30 Uhr",
-                "7.30",
-                "7:30",
-                "um 7.30 Uhr",
-                "um 7.30",
-                "7.30 Uhr abends",
-                "um 7.30 Uhr abends",
-                "7.30 Uhr am Abend",
-                "um 7.30 Uhr am Abend",
-                "7.30 abends",
-                "um 7.30 abends",
-                "halb acht",
-                "um halb acht",
-                "halb acht am Abend",
-                "um halb acht am Abend",
-                "halb acht abends",
-                "um halb acht abends",
-                "um 19.30 Uhr abends",
-                "abends um 19.30 Uhr",
-                "um 19.30 Uhr am Abend",
-                "am Abend um 19.30 Uhr",
-                "abends um 19.30",
-                "am Abend um 19.30",
-                "abends 19.30 Uhr",
-                "am Abend 19.30 Uhr",
-                "19.30 abends",
-                "19.30 am Abend",
-                "um 19.30 abends",
-                "um 19.30 am Abend",
-                "abends um 7.30 Uhr",
-                "am Abend um 7.30 Uhr",
-                "abends um 7.30",
-                "am Abend um 7.30",
-                "abends 7.30 Uhr",
-                "am Abend 7.30 Uhr",
-                "7.30 am Abend",
-                "um 7.30 am Abend",
-                "abends um halb acht",
-                "am Abend um halb acht",
-                "abends halb acht",
-                "am Abend halb acht"
+                "halb acht"
               ],
+              "acceptedWhy": {
+                "7.30 Uhr": "grammatisch: Im Alltag zählt man die Uhrzeit auch nur bis 12: 7.30 Uhr am Abend = 19.30 Uhr.",
+                "halb acht": "grammatisch: So steht die Uhrzeit in der E-Mail von Olena: „um halb acht“."
+              },
               "exact": "number"
             },
             {
@@ -3327,23 +3375,7 @@
               "answer": "6",
               "accepted": [
                 "6",
-                "sechs",
-                "6 Leute",
-                "sechs Leute",
-                "6 Personen",
-                "sechs Personen",
-                "für 6",
-                "für sechs",
-                "für 6 Leute",
-                "für sechs Leute",
-                "für 6 Personen",
-                "für sechs Personen",
-                "Tisch für 6",
-                "Tisch für sechs",
-                "Tisch für 6 Leute",
-                "Tisch für sechs Leute",
-                "Tisch für 6 Personen",
-                "Tisch für sechs Personen"
+                "sechs"
               ],
               "exact": "number"
             }
@@ -3363,7 +3395,7 @@
     {
       "id": "a1.1-u09-ls7",
       "kind": "check",
-      "endLine": "Super! Sie können jetzt im Café bestellen und bezahlen, eine Speisekarte lesen und sagen: Das mag ich, das mag ich nicht."
+      "endLine": "Super! Sie können jetzt eine Speisekarte lesen, im Café bestellen und bezahlen. Sie können sagen: Das mag ich, das mag ich nicht."
     }
   ],
   "check": {
@@ -3394,6 +3426,9 @@
         "accepted": [
           "mag"
         ],
+        "errorTags": [
+          "verb-ending"
+        ],
         "explanation": {
           "de": "„sie mag“: bei er/sie ohne Endung.",
           "en": "sie mag – no ending with er/sie."
@@ -3410,6 +3445,9 @@
         "answer": "nimmst",
         "accepted": [
           "nimmst"
+        ],
+        "errorTags": [
+          "verb-ending"
         ],
         "explanation": {
           "de": "„du nimmst“: „e“ wird „i“, und „h“ wird „m“.",
@@ -3457,6 +3495,9 @@
         "acceptedWhy": {
           "Eine Tomatensuppe nehme ich.": "grammatisch: „eine Tomatensuppe“ betont auf Position 1, das Verb bleibt auf Position 2"
         },
+        "errorTags": [
+          "v2-inv"
+        ],
         "explanation": {
           "de": "Das Verb „nehme“ steht auf Position 2.",
           "en": "The verb “nehme” is in position 2."
@@ -3478,6 +3519,9 @@
         "answer": "Ja, sehr! Kuchen ist lecker.",
         "accepted": [
           "Ja, sehr! Kuchen ist lecker."
+        ],
+        "errorTags": [
+          "verb-ending"
         ],
         "explanation": {
           "de": "„Magst du …?“ fragt: Findest du das gut? Die Antwort sagt ja oder nein.",
@@ -3684,8 +3728,9 @@
   "story": {
     "beat": "Nach dem Laufen sitzen Priya, Elif und Olena im Café am Park. Sie lesen die Speisekarte und sagen: Das mag ich, das mag ich nicht. Sie bestellen, essen und bezahlen – heute bezahlt Elif. Olena hat am Freitag Geburtstag; Priya bestellt für Olena online einen Tisch im Restaurant Kochi.",
     "cliffhanger": "Am Mittwoch hat Olena alle Antworten: Am Freitag kommen alle. Da ruft Sophie an: „Hallo Priya, hier ist Sophie! Hast du am Samstag Zeit?“",
+    "cliffhangerEn": "On Wednesday Olena has all the answers: everyone is coming on Friday. Then Sophie calls: “Hi Priya, it’s Sophie! Are you free on Saturday?”",
     "castIn": [
-      "cast.ensemble-a1-3"
+      "cast.sophie"
     ]
   },
   "fokus": [],

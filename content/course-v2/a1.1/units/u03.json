@@ -260,7 +260,7 @@
       },
       "input": {
         "kind": "dialog",
-        "title": "Im Videochat: Fotos aus Kochi",
+        "title": "Im Videochat mit Olena",
         "textType": "tt.telefonat",
         "lines": [
           {
@@ -396,12 +396,8 @@
           "promptEn": "How old is Priya’s mother? Write the number.",
           "answer": "58",
           "accepted": [
-            "58",
-            "achtundfünfzig"
+            "58"
           ],
-          "acceptedWhy": {
-            "achtundfünfzig": "Zahl als Wort: so hört man es"
-          },
           "exact": "number",
           "explanation": {
             "de": "Priya sagt: „Meine Mutter ist 58.“ 62 ist der Vater.",
@@ -557,6 +553,9 @@
             "accepted": [
               "meine"
             ],
+            "errorTags": [
+              "gender-article"
+            ],
             "explanation": {
               "de": "„die Mutter“ → „meine Mutter“.",
               "en": "die Mutter → meine Mutter."
@@ -573,6 +572,9 @@
             "answer": "mein",
             "accepted": [
               "mein"
+            ],
+            "errorTags": [
+              "gender-article"
             ],
             "explanation": {
               "de": "„der Bruder“ → „mein Bruder“.",
@@ -591,6 +593,9 @@
             "accepted": [
               "dein"
             ],
+            "errorTags": [
+              "gender-article"
+            ],
             "explanation": {
               "de": "„der Vater“ → „dein Vater“.",
               "en": "der Vater → dein Vater."
@@ -607,6 +612,9 @@
             "answer": "meine",
             "accepted": [
               "meine"
+            ],
+            "errorTags": [
+              "gender-article"
             ],
             "explanation": {
               "de": "Plural: „meine Eltern“.",
@@ -777,6 +785,9 @@
             "answer": "Danke, gut. Und Ihnen?",
             "accepted": [
               "Danke, gut. Und Ihnen?"
+            ],
+            "errorTags": [
+              "register"
             ],
             "explanation": {
               "de": "Herr Richter und Priya sagen „Sie“, also: „Und Ihnen?“. „Und dir?“ sagen Freunde.",
@@ -964,7 +975,8 @@
         "targets": [
           "g.possessiv-mein-dein"
         ],
-        "register": "du"
+        "register": "du",
+        "modelDe": "Gut, danke. Und dir? Das ist meine Mutter. Sie ist 58 und Lehrerin. Und das ist mein Bruder. Er ist 24. Er studiert."
       },
       "aussprache": {
         "focus": "Satzmelodie: Ja/Nein-Frage steigend ↗ (auch „Das ist dein Bruder?“), Aussage und W-Frage fallend ↘",
@@ -998,7 +1010,7 @@
       },
       "input": {
         "kind": "dialog",
-        "title": "Im Videochat: Fotos aus Charkiw",
+        "title": "Im Videochat: die Familie von Olena",
         "textType": "tt.telefonat",
         "lines": [
           {
@@ -1281,7 +1293,7 @@
               "sprichst"
             ],
             "errorTags": [
-              "spelling-meaning"
+              "verb-ending"
             ],
             "explanation": {
               "de": "„sprechen“: „du sprichst“ – mit „i“.",
@@ -1301,7 +1313,7 @@
               "liest"
             ],
             "errorTags": [
-              "spelling-meaning"
+              "verb-ending"
             ],
             "explanation": {
               "de": "„lesen“: „sie liest“ – mit „ie“.",
@@ -1321,7 +1333,7 @@
               "schläft"
             ],
             "errorTags": [
-              "spelling-meaning"
+              "verb-ending"
             ],
             "explanation": {
               "de": "„schlafen“: „er schläft“ – mit „ä“.",
@@ -1341,7 +1353,7 @@
               "liest"
             ],
             "errorTags": [
-              "spelling-meaning"
+              "verb-ending"
             ],
             "explanation": {
               "de": "„lesen“: „du liest“ – wie „er liest“, mit „ie“.",
@@ -1483,9 +1495,9 @@
               "Er spricht gut Deutsch."
             ],
             "intentionalError": true,
-            "errorTag": "spelling-meaning",
+            "errorTag": "verb-ending",
             "errorTags": [
-              "spelling-meaning"
+              "verb-ending"
             ],
             "explanation": {
               "de": "„sprechen“: „er spricht“ – mit „i“, nicht „sprecht“.",
@@ -1510,7 +1522,7 @@
               "sprichst"
             ],
             "errorTags": [
-              "spelling-meaning"
+              "verb-ending"
             ],
             "explanation": {
               "de": "„du sprichst“: mit „i“ und mit „-st“.",
@@ -1574,7 +1586,7 @@
             "schläfst"
           ],
           "errorTags": [
-            "spelling-meaning"
+            "verb-ending"
           ],
           "difficulty": 2,
           "banks": [
@@ -1641,7 +1653,7 @@
             "Sprichst"
           ],
           "errorTags": [
-            "spelling-meaning"
+            "verb-ending"
           ],
           "difficulty": 1,
           "banks": [
@@ -1667,7 +1679,7 @@
             "schläft"
           ],
           "errorTags": [
-            "spelling-meaning"
+            "verb-ending"
           ],
           "difficulty": 1,
           "banks": [
@@ -1698,14 +1710,15 @@
         "targets": [
           "g.vokalwechsel"
         ],
-        "register": "du"
+        "register": "du",
+        "modelDe": "Meine Mutter liest sehr viel, und mein Bruder spricht gut Englisch."
       },
       "endLine": "Sie können jetzt sagen: Mein Vater liest, mein Bruder spricht Englisch."
     },
     {
       "id": "a1.1-u03-ls3",
       "kind": "situation",
-      "title": "Ein Foto aus İzmir",
+      "title": "Verheiratet oder ledig?",
       "structure": "g.possessiv-mein-dein",
       "modelSentence": "Ist das deine Schwester? – Ja, das ist meine Schwester.",
       "ruleCard": "rc.possessiv-mein-dein",
@@ -1861,12 +1874,8 @@
           "promptEn": "How old is Emre’s mother? Write the number.",
           "answer": "55",
           "accepted": [
-            "55",
-            "fünfundfünfzig"
+            "55"
           ],
-          "acceptedWhy": {
-            "fünfundfünfzig": "Zahl als Wort: so hört man es"
-          },
           "exact": "number",
           "explanation": {
             "de": "Emre sagt: „Meine Mutter ist 55, und mein Vater ist 63.“",
@@ -1981,7 +1990,7 @@
             "mein"
           ],
           "explanation": {
-            "de": "Olena fragt „dein Vater“. Emre sagt über sich: „mein Vater“.",
+            "de": "Olena fragt: „dein Vater“. Emre sagt: „mein Vater“.",
             "en": "The question says “dein”; Emre answers “mein”."
           },
           "origin": "agent"
@@ -2022,6 +2031,9 @@
             "accepted": [
               "deine"
             ],
+            "errorTags": [
+              "gender-article"
+            ],
             "explanation": {
               "de": "„die Schwester“ → „deine Schwester“.",
               "en": "die Schwester → deine Schwester."
@@ -2040,6 +2052,9 @@
               "Ihre"
             ],
             "caseSensitive": true,
+            "errorTags": [
+              "gender-article"
+            ],
             "explanation": {
               "de": "Formell mit „Sie“: „die Mutter“ → „Ihre Mutter“ – mit „I“, nicht „i“.",
               "en": "Formal: die Mutter → Ihre Mutter, with a capital I."
@@ -2051,11 +2066,14 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.possessiv-mein-dein",
-            "promptDe": "Bilal, wo wohnen ___ Eltern? (dein oder deine?)",
+            "promptDe": "Bilal, woher kommen ___ Eltern? (dein oder deine?)",
             "promptEn": "dein or deine?",
             "answer": "deine",
             "accepted": [
               "deine"
+            ],
+            "errorTags": [
+              "gender-article"
             ],
             "explanation": {
               "de": "Plural: „deine Eltern“.",
@@ -2075,6 +2093,9 @@
               "Ihr"
             ],
             "caseSensitive": true,
+            "errorTags": [
+              "gender-article"
+            ],
             "explanation": {
               "de": "Formell: „der Vater“ → „Ihr Vater“ – mit „I“, nicht „i“.",
               "en": "Formal: der Vater → Ihr Vater, with a capital I."
@@ -2363,6 +2384,10 @@
           "accepted": [
             "deine"
           ],
+          "errorTags": [
+            "gender-article",
+            "register"
+          ],
           "difficulty": 2,
           "banks": [
             "plateau",
@@ -2420,7 +2445,8 @@
         "targets": [
           "g.possessiv-mein-dein"
         ],
-        "register": "du"
+        "register": "du",
+        "modelDe": "Hallo Emre, wie geht’s? Ist das deine Schwester? Und wie alt ist dein Vater?"
       },
       "aussprache": {
         "focus": "Vokalwechsel hören: a – ä, e – ie, e – i (ihr schlaft – er schläft, ihr lest – er liest)",
@@ -2609,9 +2635,10 @@
         "prepMinutes": 0,
         "instructionsDe": "Zwei Themen: „Familie“, dann „Freunde“. Fragen und antworten Sie mit den Karten.",
         "situationDe": "Zuerst sagt Ihre Partnerin Nora Hallo. Antworten Sie und fragen Sie auch: „Und Ihnen?“ Das ist noch nicht Teil 2. Dann Teil 2 mit Wortkarten: Sie fragen Nora, und Nora fragt Sie. Sagen Sie auch Alter und Beruf: „Meine Mutter ist 58. Sie ist Lehrerin.“",
+        "situationEn": "First your partner Nora says hello. Answer and ask back: “Und Ihnen?” That is not part 2 yet. Then part 2 with word cards: you ask Nora, and Nora asks you. Also say ages and jobs: “Meine Mutter ist 58. Sie ist Lehrerin.”",
         "cards": {
           "learner": [
-            "Familie – Geschwister",
+            "Familie – Schwester",
             "Freunde – Sprachen"
           ],
           "partner": [
@@ -2652,7 +2679,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Haben Sie Geschwister?"
+            "de": "Haben Sie einen Bruder oder eine Schwester?"
           },
           {
             "speaker": "partner",
@@ -2702,7 +2729,7 @@
         "leitpunkte": [
           {
             "id": "lp1",
-            "de": "Wer ist das? Zwei Personen: mein …, meine …",
+            "de": "Wer ist das? Zwei Leute aus der Familie: mein …, meine …",
             "cues": [
               "mein",
               "meine",
@@ -2736,8 +2763,6 @@
               "studieren",
               "Lehrer",
               "Student",
-              "Schüler",
-              "Informatiker",
               "Kellner",
               "macht",
               "liest",
@@ -2801,6 +2826,9 @@
         "accepted": [
           "meine"
         ],
+        "errorTags": [
+          "gender-article"
+        ],
         "explanation": {
           "de": "„die Tochter“ → „meine Tochter“.",
           "en": "die Tochter → meine Tochter."
@@ -2819,6 +2847,9 @@
           "Ihr"
         ],
         "caseSensitive": true,
+        "errorTags": [
+          "gender-article"
+        ],
         "explanation": {
           "de": "Formell: „der Mann“ → „Ihr Mann“ – mit „I“, nicht „i“.",
           "en": "Formal: der Mann → Ihr Mann, with a capital I."
@@ -2837,7 +2868,7 @@
           "schläft"
         ],
         "errorTags": [
-          "spelling-meaning"
+          "verb-ending"
         ],
         "explanation": {
           "de": "„schlafen“: „es schläft“ – mit „ä“.",
@@ -3046,8 +3077,8 @@
     },
     {
       "id": "a1.1-u03-rm02",
-      "de": "Haben Sie Geschwister?",
-      "en": "Do you have any brothers or sisters?",
+      "de": "Haben Sie einen Bruder oder eine Schwester?",
+      "en": "Do you have a brother or a sister?",
       "function": "nach der Familie fragen",
       "forTemplate": "sd1.sp2"
     },
@@ -3095,6 +3126,7 @@
   "story": {
     "beat": "Priya sagt Herrn Richter: Arjun Nair ist ihr Mann. Am Abend zeigt sie Olena im Videochat ihre Familie in Kochi, und Olena zeigt ihre Familie aus Charkiw; Arjun sagt Olena Hallo. Am nächsten Morgen im Kurs zeigt Emre ein Foto aus İzmir und erzählt: Seine Frau Elif wohnt schon in Leipzig.",
     "cliffhanger": "Dann kommt noch eine Nachricht aus Kochi. Die Mutter von Priya fragt: „Und Leipzig? Wie ist Leipzig? Ist Leipzig teuer?“",
+    "cliffhangerEn": "Then one more message arrives from Kochi. Priya’s mother asks: “And Leipzig? What is Leipzig like? Is Leipzig expensive?”",
     "castIn": [
       "cast.arjun"
     ]

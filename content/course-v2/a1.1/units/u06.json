@@ -10,10 +10,10 @@
   "stage": "T",
   "title": {
     "de": "Das brauche ich",
-    "canDo": "Sie können Dinge im Kurs und im Büro nennen, andere um etwas bitten und Frau Schulz eine Nachricht mit Anrede und Gruß schreiben."
+    "canDo": "Sie können im Kurs und im Büro um etwas bitten. Und Sie schreiben Frau Schulz eine Nachricht mit Anrede und Gruß."
   },
   "spec": {
-    "situation": "In der Sprachschule fehlt Priya vieles: Sie fragt im Kurs und im Büro von Herrn Richter nach Stift, Heft und Ladekabel, bittet andere um Dinge und sucht mit Bilal im Internet einen Laptop für den Onlinekurs: gebraucht und nicht teuer.",
+    "situation": "In der Sprachschule fehlt Priya vieles: Sie fragt im Kurs und im Büro von Herrn Richter nach Stift, Heft und Ladekabel, bittet andere um Dinge und sucht mit Bilal im Internet einen Laptop für den Kurs: nicht neu und nicht teuer.",
     "handlungsfeld": [
       "11",
       "2"
@@ -51,7 +51,8 @@
           "lx.tasche",
           "lx.seite",
           "lx.bleistift",
-          "lx.kursraum"
+          "lx.kursraum",
+          "lx.wort"
         ]
       },
       {
@@ -83,11 +84,11 @@
           "lx.fehlen",
           "lx.helfen",
           "lx.geben",
-          "lx.gebraucht",
           "lx.wissen",
           "lx.problem",
           "lx.ding",
-          "lx.bitten"
+          "lx.bitten",
+          "lx.frage"
         ]
       }
     ],
@@ -218,8 +219,8 @@
         "type": "multiple_choice",
         "role": "gist",
         "topic": "hoeren",
-        "promptDe": "Was braucht Priya für den Onlinekurs?",
-        "promptEn": "What does Priya need for the online lessons?",
+        "promptDe": "Der Kurs ist manchmal online. Was braucht Priya dann?",
+        "promptEn": "The course is sometimes online. What does Priya need then?",
         "options": [
           "einen Stift",
           "ein Heft",
@@ -297,8 +298,8 @@
           {
             "id": "a1.1-u06-ls1-l07",
             "speaker": "cast.arta",
-            "de": "Frau Schulz, ich bin online, nicht im Kursraum. Ich habe hier ein Ding. Wie heißt das auf Deutsch?",
-            "en": "Frau Schulz, I’m online, not in the classroom. I’ve got a thing here. What’s this called in German?"
+            "de": "Frau Schulz, ich bin online, nicht im Kursraum. Ich habe hier ein Ding. Ich weiß das Wort nicht. Wie heißt das auf Deutsch?",
+            "en": "Frau Schulz, I’m online, not in the classroom. I’ve got a thing here. I don’t know the word. What’s it called in German?"
           },
           {
             "id": "a1.1-u06-ls1-l08",
@@ -309,8 +310,8 @@
           {
             "id": "a1.1-u06-ls1-l09",
             "speaker": "cast.arta",
-            "de": "Ein Schlüssel! Danke. Und ist das richtig: der Schlüssel?",
-            "en": "A key! Thank you. And is this right: der Schlüssel?"
+            "de": "Ein Schlüssel! Danke. Und ist das Wort richtig: der Schlüssel?",
+            "en": "A key! Thank you. And is the word right: der Schlüssel?"
           },
           {
             "id": "a1.1-u06-ls1-l10",
@@ -376,13 +377,9 @@
           "promptEn": "Which page? Write the number.",
           "answer": "24",
           "accepted": [
-            "24",
-            "vierundzwanzig"
+            "24"
           ],
           "exact": "number",
-          "acceptedWhy": {
-            "vierundzwanzig": "Zahl als Wort: so hören Sie es"
-          },
           "explanation": {
             "de": "Frau Schulz sagt: „Seite 24“ (vierundzwanzig). „24“ und „vierundzwanzig“ sind richtig.",
             "en": "She says page 24 – “24” and “vierundzwanzig” are both correct."
@@ -813,7 +810,7 @@
             "count": 1,
             "source": [
               "lx.tasche",
-              "lx.papier",
+              "lx.heft",
               "lx.handy",
               "lx.schluessel"
             ]
@@ -823,7 +820,7 @@
             "count": 1,
             "source": [
               "lx.stift",
-              "lx.heft",
+              "lx.papier",
               "lx.bleistift",
               "lx.seite",
               "lx.kursraum"
@@ -971,7 +968,8 @@
         "targets": [
           "g.akkusativ"
         ],
-        "register": "Sie"
+        "register": "Sie",
+        "modelDe": "Das ist für mein Handy. Wie heißt das? Ich habe noch einen Kuli und ein Heft dabei."
       },
       "aussprache": {
         "focus": "-er am Ende hören Sie wie a: Computer, Kalender, Drucker.",
@@ -1017,8 +1015,8 @@
           {
             "id": "a1.1-u06-ls2-l02",
             "speaker": "cast.priya",
-            "de": "Guten Morgen! Haben Sie vielleicht ein Ladekabel? Mein Handy ist leer.",
-            "en": "Good morning! Have you got a charging cable, by any chance? My phone is flat."
+            "de": "Guten Morgen! Ich habe eine Frage: Haben Sie vielleicht ein Ladekabel? Mein Handy ist leer.",
+            "en": "Good morning! I’ve got a question: have you got a charging cable, by any chance? My phone is flat."
           },
           {
             "id": "a1.1-u06-ls2-l03",
@@ -1029,8 +1027,8 @@
           {
             "id": "a1.1-u06-ls2-l04",
             "speaker": "cast.priya",
-            "de": "Hm. Und noch etwas: Mein Heft fehlt. Ist es vielleicht hier im Büro?",
-            "en": "Hm. And one more thing: my exercise book is missing. Is it here in the office, maybe?"
+            "de": "Hm. Und noch eine Frage: Mein Heft fehlt. Ist es vielleicht hier im Büro?",
+            "en": "Hm. And one more question: my exercise book is missing. Is it here in the office, maybe?"
           },
           {
             "id": "a1.1-u06-ls2-l05",
@@ -1349,6 +1347,9 @@
             "accepted": [
               "nicht"
             ],
+            "errorTags": [
+              "negation"
+            ],
             "explanation": {
               "de": "„nicht“ steht beim Verb: funktioniert nicht. „kein“ steht vor einem Nomen.",
               "en": "“nicht” negates the verb: funktioniert nicht. “kein” goes before a noun."
@@ -1422,6 +1423,9 @@
             "accepted": [
               "Der Drucker funktioniert nicht."
             ],
+            "errorTags": [
+              "negation"
+            ],
             "explanation": {
               "de": "„funktioniert“ steht auf Position 2, „nicht“ steht am Ende.",
               "en": "“funktioniert” is in position 2; “nicht” goes at the end."
@@ -1483,7 +1487,8 @@
               "Heute ist meine Kollegin nicht da.": "grammatisch: heute auf Position 1, das Verb bleibt auf Position 2"
             },
             "errorTags": [
-              "v2-inv"
+              "v2-inv",
+              "negation"
             ],
             "explanation": {
               "de": "„ist“ steht auf Position 2. „nicht da“ steht am Ende.",
@@ -1530,6 +1535,7 @@
               "keine"
             ],
             "errorTags": [
+              "negation",
               "gender-article"
             ],
             "explanation": {
@@ -1555,7 +1561,7 @@
               "lx.handy",
               "lx.buero",
               "lx.problem",
-              "lx.kalender"
+              "lx.wort"
             ]
           },
           {
@@ -1563,7 +1569,7 @@
             "count": 1,
             "source": [
               "lx.kollege",
-              "lx.telefonieren",
+              "lx.frage",
               "lx.computer",
               "lx.kaputt"
             ]
@@ -1575,6 +1581,7 @@
               "lx.drucker",
               "lx.ladekabel",
               "lx.telefon",
+              "lx.telefonieren",
               "lx.fehlen",
               "lx.wissen"
             ]
@@ -1661,6 +1668,7 @@
             "kein"
           ],
           "errorTags": [
+            "negation",
             "gender-article"
           ],
           "banks": [
@@ -1687,6 +1695,10 @@
             "Der Drucker funktioniert nicht."
           ],
           "intentionalError": true,
+          "errorTag": "negation",
+          "errorTags": [
+            "negation"
+          ],
           "banks": [
             "plateau",
             "mehr-ueben"
@@ -1730,7 +1742,7 @@
         "bankKey": "a11-u06-mo2",
         "mode": "written",
         "profile": "course-micro",
-        "situationDe": "Olena schreibt im Chat: „Ich brauche morgen im Kurs Papier und einen Kuli. Hast du das?“",
+        "situationDe": "Olena schreibt im Chat: „Ich brauche morgen im Kurs ein Heft und einen Kuli. Hast du das?“",
         "promptDe": "Antworten Sie Olena in 1–2 Sätzen: Was haben Sie nicht? Was haben Sie?",
         "promptEn": "Answer Olena in 1–2 sentences: what you haven’t got and what you have got.",
         "planSeconds": 30,
@@ -1741,7 +1753,8 @@
         "targets": [
           "g.kein"
         ],
-        "register": "du"
+        "register": "du",
+        "modelDe": "Ich habe kein Heft, aber ich habe einen Kuli für dich."
       },
       "endLine": "Sie können jetzt mit „kein“ und „nicht“ antworten: Nein, ich habe keinen Laptop."
     },
@@ -1761,8 +1774,8 @@
         "title": "Chat mit Bilal",
         "textType": "tt.sms",
         "text": {
-          "de": "Bilal: Hallo Priya! Ich suche im Internet. Auf einer Webseite gibt es zwei Angebote:\na) Laptop, gebraucht, 3 Jahre alt, funktioniert sehr gut, mit Ladekabel. 180 Euro.\nb) Laptop, neu, mit Tasche. 390 Euro.\nPriya: Danke, Bilal! Laptop b ist zu teuer. Ich möchte den Laptop für 180 Euro.\nBilal: Gut! Aber da ist keine Tasche dabei. Brauchst du eine Tasche?\nPriya: Ja, ich brauche eine Tasche.\nBilal: Ich habe noch eine Tasche. Die gebe ich dir. Und heute Abend kaufen wir zusammen den Laptop!\nPriya: Das ist sehr lieb, danke!",
-          "en": "Bilal: Hi Priya! I’m searching online. On one website there are two offers: a) laptop, used, 3 years old, works very well, with charging cable, 180 euros. b) laptop, new, with bag, 390 euros. Priya: Thanks, Bilal! Laptop b is too expensive. I’d like the laptop for 180 euros. Bilal: Good! But there’s no bag with it. Do you need a bag? Priya: Yes, I need a bag. Bilal: I still have a bag – I’ll give it to you. And this evening we’ll buy the laptop together! Priya: That’s really kind, thanks!"
+          "de": "Bilal: Hallo Priya! Ich suche im Internet. Auf einer Webseite gibt es zwei Angebote:\na) Laptop, 3 Jahre alt, funktioniert sehr gut, mit Ladekabel. 180 Euro.\nb) Laptop, neu, mit Tasche. 390 Euro.\nPriya: Danke, Bilal! Laptop b ist zu teuer. Ich möchte den Laptop für 180 Euro.\nBilal: Gut! Aber da ist keine Tasche dabei. Brauchst du eine Tasche?\nPriya: Ja, ich brauche eine Tasche.\nBilal: Ich habe noch eine Tasche. Die gebe ich dir. Und heute Abend kaufen wir zusammen den Laptop!\nPriya: Das ist sehr lieb, danke!",
+          "en": "Bilal: Hi Priya! I’m searching online. On one website there are two offers: a) laptop, 3 years old, works very well, with charging cable, 180 euros. b) laptop, new, with bag, 390 euros. Priya: Thanks, Bilal! Laptop b is too expensive. I’d like the laptop for 180 euros. Bilal: Good! But there’s no bag with it. Do you need a bag? Priya: Yes, I need a bag. Bilal: I still have a bag – I’ll give it to you. And this evening we’ll buy the laptop together! Priya: That’s really kind, thanks!"
         },
         "glosses": [],
         "transcriptAfterUnaidedListen": false
@@ -1821,16 +1834,12 @@
           "promptEn": "Write the number.",
           "answer": "3",
           "accepted": [
-            "3",
-            "drei"
+            "3"
           ],
           "exact": "number",
-          "acceptedWhy": {
-            "drei": "Zahl als Wort"
-          },
           "explanation": {
-            "de": "Im Chat steht: „Laptop, gebraucht, 3 Jahre alt“.",
-            "en": "The chat says the used laptop is 3 years old."
+            "de": "Im Chat steht: „a) Laptop, 3 Jahre alt“.",
+            "en": "The chat says laptop a is 3 years old."
           },
           "origin": "agent"
         },
@@ -1844,13 +1853,9 @@
           "answer": "390",
           "accepted": [
             "390",
-            "390,00",
-            "dreihundertneunzig"
+            "390,00"
           ],
           "exact": "number",
-          "acceptedWhy": {
-            "dreihundertneunzig": "Zahl als Wort"
-          },
           "explanation": {
             "de": "Im Chat steht: „b) Laptop, neu, mit Tasche. 390 Euro.“",
             "en": "Laptop b costs 390 euros."
@@ -2290,7 +2295,7 @@
             "source": [
               "lx.internet",
               "lx.webseite",
-              "lx.gebraucht",
+              "lx.helfen",
               "lx.ding",
               "lx.geben"
             ]
@@ -2463,7 +2468,8 @@
         "targets": [
           "g.akkusativ"
         ],
-        "register": "du"
+        "register": "du",
+        "modelDe": "Ich möchte den Laptop für 180 Euro. Ich brauche noch eine Tasche. Danke, Bilal!"
       },
       "aussprache": {
         "focus": "Der Akzent: vorne oder hinten? Hören Sie genau.",
@@ -2574,7 +2580,7 @@
           "id": "a1.1-u06-ls4-t2",
           "kind": "ad",
           "title": "Handys",
-          "text": "a) Handy, gebraucht, funktioniert gut. Mit Ladekabel. 95 Euro. Telefon: 0341 201744\nb) Handy, 2 Jahre alt, sehr gut. Ohne Ladekabel. Nur 80 Euro!",
+          "text": "a) Handy, funktioniert gut. Mit Ladekabel. 95 Euro. Telefon: 0341 201744\nb) Handy, 2 Jahre alt, sehr gut. Ohne Ladekabel. Nur 80 Euro!",
           "glosses": []
         },
         {
@@ -2745,7 +2751,8 @@
             "profile": "sd1-sp2",
             "prepMinutes": 0,
             "instructionsDe": "Zwei Themen: „Im Kurs“, dann „Im Büro“. Fragen und antworten Sie mit den Karten.",
-            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin Nora haben Wortkarten zu zwei Themen: zuerst „Im Kurs“, dann „Im Büro“. Fragen Sie mit Ihrer Karte: Hast du …? Brauchst du …? Nora fragt auch. Antworten Sie: Ja, ich habe … / Nein, ich habe keinen / kein / keine …",
+            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin Nora haben Wortkarten. Es gibt zwei Themen: zuerst „Im Kurs“, dann „Im Büro“. Fragen Sie mit Ihrer Karte: Hast du …? Brauchst du …? Nora fragt auch. Antworten Sie: Ja, ich habe … / Nein, ich habe keinen / kein / keine …",
+            "situationEn": "Speaking part 2: you and your partner Nora have word cards. There are two topics: first “Im Kurs” (in class), then “Im Büro” (at the office). Ask a question with your card: Hast du …? Brauchst du …? Nora asks too. Answer: Ja, ich habe … / Nein, ich habe keinen / kein / keine …",
             "cards": {
               "learner": [
                 "Im Kurs – Heft",
@@ -2753,7 +2760,7 @@
               ],
               "partner": [
                 "Im Kurs – Buch",
-                "Im Büro – Kalender"
+                "Im Büro – Laptop"
               ]
             },
             "turns": [
@@ -2768,11 +2775,12 @@
             "profile": "sd1-sp3",
             "prepMinutes": 0,
             "instructionsDe": "Bitten Sie mit jeder Karte um etwas. Ihre Partnerin bittet auch: Reagieren Sie.",
-            "situationDe": "Sprechen Teil 3: Sie und Ihre Partnerin Nora haben je zwei Karten. In der Prüfung sind auf den Karten Bilder. „Hast du …?“ ohne „bitte“ oder „für mich“ ist nur eine Frage. Bitten Sie: Gibst du mir bitte …? Hast du … für mich? Fehlt ein Wort? Zeigen Sie und sagen Sie: „Das ist für …“",
+            "situationDe": "Sprechen Teil 3: Sie und Ihre Partnerin Nora haben je zwei Karten. In der Prüfung sind auf den Karten Bilder. „Hast du …?“ ohne „bitte“ ist nur eine Frage. Bitten Sie: Gibst du mir bitte …? Hast du bitte … für mich? Fehlt ein Wort? Zeigen Sie und sagen Sie: „Das ist für …“",
+            "situationEn": "Speaking part 3: you and your partner Nora each have two cards. In the exam the cards show pictures. “Hast du …?” without “bitte” is only a question. Make a request: Gibst du mir bitte …? Hast du bitte … für mich? Don’t know the word? Point at it and say: “Das ist für …” (It’s for …).",
             "cards": {
               "learner": [
                 "Heft",
-                "Auf der Karte ist nur ein Bild: ein Ladekabel. Sie kennen das Wort nicht."
+                "Bild (Ladekabel): Wie heißt das auf Deutsch?"
               ],
               "partner": [
                 "Buch",
@@ -2798,7 +2806,7 @@
           "Ja, ich habe …",
           "Nein, ich habe keinen / kein / keine …",
           "Gibst du mir bitte …?",
-          "Hast du … für mich?",
+          "Hast du bitte … für mich?",
           "Ja, hier, bitte.",
           "Das ist für …",
           "Wie heißt das auf Deutsch?"
@@ -2830,11 +2838,11 @@
           },
           {
             "speaker": "partner",
-            "de": "Brauchst du im Büro einen Kalender?"
+            "de": "Brauchst du im Büro einen Laptop?"
           },
           {
             "speaker": "learner",
-            "de": "Nein, ich brauche keinen Kalender. Mein Kalender ist auf dem Handy."
+            "de": "Nein, ich brauche keinen Laptop. Ich habe einen Computer."
           },
           {
             "speaker": "learner",
@@ -2862,7 +2870,7 @@
           },
           {
             "speaker": "partner",
-            "de": "Hast du einen Bleistift für mich?"
+            "de": "Hast du bitte einen Bleistift für mich?"
           },
           {
             "speaker": "learner",
@@ -2899,7 +2907,7 @@
           },
           {
             "id": "lp2",
-            "de": "Bitten Sie Frau Schulz um einen Laptop für den Onlinekurs.",
+            "de": "Bitten Sie Frau Schulz um einen Laptop für den Kurs.",
             "cues": [
               "Haben Sie",
               "Gibt es",
@@ -2932,7 +2940,7 @@
           "Gruß und Ihr Name",
           "20 bis 30 Wörter"
         ],
-        "modelText": "Liebe Frau Schulz,\nich habe nur ein Handy, keinen Laptop. Haben Sie vielleicht einen Laptop für mich? Zu Seite 24: Heißt es „die Schlüssel“?\nViele Grüße\n(Ihr Name)"
+        "modelText": "Liebe Frau Schulz,\nich habe nur ein Handy, keinen Laptop. Haben Sie vielleicht einen Laptop für mich? Eine Frage zu Seite 24: Heißt es „die Schlüssel“?\nViele Grüße\n(Ihr Name)"
       }
     },
     {
@@ -3029,6 +3037,9 @@
         "accepted": [
           "nicht"
         ],
+        "errorTags": [
+          "negation"
+        ],
         "explanation": {
           "de": "Beim Verb steht „nicht“: funktioniert nicht. „kein“ steht vor einem Nomen.",
           "en": "A verb is negated with nicht; kein goes before a noun."
@@ -3114,6 +3125,7 @@
           "Nein, ich habe kein Heft."
         ],
         "errorTags": [
+          "negation",
           "gender-article"
         ],
         "explanation": {
@@ -3181,8 +3193,8 @@
   "redemittel": [
     {
       "id": "a1.1-u06-rm01",
-      "de": "Hast du einen Kuli für mich?",
-      "en": "Have you got a pen for me?",
+      "de": "Hast du bitte einen Kuli für mich?",
+      "en": "Have you got a pen for me, please?",
       "function": "um etwas bitten",
       "forTemplate": "sd1.sp3"
     },
@@ -3223,8 +3235,8 @@
     },
     {
       "id": "a1.1-u06-rm07",
-      "de": "Ist das richtig: der Schlüssel?",
-      "en": "Is this right: der Schlüssel?",
+      "de": "Ist das Wort richtig: der Schlüssel?",
+      "en": "Is the word right: der Schlüssel?",
       "function": "fragen: Ist das Wort richtig?"
     },
     {
@@ -3238,6 +3250,7 @@
   "story": {
     "beat": "Priya hat im Kurs kein Heft und keinen Stift, und ab jetzt ist der Kurs manchmal online – aber sie hat keinen Laptop. Olena hilft mit Papier und Bleistift, Herr Richter hat das Heft im Büro, und Bilal sucht mit Priya im Internet einen Laptop: Er kostet nur 180 Euro.",
     "cliffhanger": "Am Abend hat Priya den Laptop, und er funktioniert! Da kommt eine Nachricht von Emre: „Du hast jetzt einen Laptop? Dann lernen wir morgen zusammen, im Videochat!“",
+    "cliffhangerEn": "In the evening Priya has the laptop, and it works! Then a message comes from Emre: “You’ve got a laptop now? Then let’s study together tomorrow, on video chat!”",
     "castIn": [
       "cast.emre"
     ]
