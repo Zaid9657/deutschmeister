@@ -159,8 +159,8 @@
     {
       "id": "a1.1-p3-sd1-t10",
       "kind": "sign",
-      "title": "An der Tür vom Büro",
-      "text": "Sprachschule – Büro\nHeute ab 14 Uhr geschlossen!\nMorgen sind wir ab 8 Uhr wieder für Sie da.",
+      "title": "Am Supermarkt",
+      "text": "Supermarkt am Park\nMontag bis Samstag 7 bis 21 Uhr\nSonntag geschlossen\nBrötchen gibt es ab 7 Uhr.",
       "glosses": []
     }
   ],
@@ -400,19 +400,19 @@
           "type": "richtig_falsch",
           "role": "exam",
           "topic": "lesen",
-          "promptDe": "An der Tür vom Büro: „Morgen um neun Uhr ist das Büro offen.“",
+          "promptDe": "Am Supermarkt: „Am Sonntag um zehn Uhr kann man hier einkaufen.“",
           "options": [
             "richtig",
             "falsch"
           ],
           "textRef": "a1.1-p3-sd1-t10",
-          "answer": "richtig",
+          "answer": "falsch",
           "accepted": [
-            "richtig"
+            "falsch"
           ],
           "explanation": {
-            "de": "Heute ist das Büro ab 14 Uhr zu. Aber morgen ist es ab 8 Uhr wieder da, also auch um 9 Uhr.",
-            "en": "Today the office closes at 2 pm, but tomorrow it is open from 8 am, so also at 9."
+            "de": "Auf dem Schild steht: „Sonntag geschlossen“. Offen ist der Supermarkt nur von Montag bis Samstag.",
+            "en": "The sign says it is closed on Sundays; it is only open Monday to Saturday."
           },
           "origin": "agent"
         }

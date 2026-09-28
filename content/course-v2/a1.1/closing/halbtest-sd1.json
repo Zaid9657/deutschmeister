@@ -174,9 +174,8 @@
         {
           "id": "a1.1-ht-sd1-t6-l02",
           "speaker": "cast.herr-richter",
-          "de": "Bitte bezahlen Sie bis Freitag im Büro. Das Büro ist von 9 bis 12 Uhr offen. Auf Wiedersehen!",
-          "en": "Please pay at the office by Friday. The office is open from 9 am to 12 noon. Goodbye!",
-          "say": "Bitte bezahlen Sie bis Freitag im Büro. Das Büro ist von neun bis zwölf Uhr offen. Auf Wiedersehen!"
+          "de": "Er ist immer von Montag bis Donnerstag. Bitte bezahlen Sie den Kurs bis Freitag im Büro. Auf Wiedersehen!",
+          "en": "It is always from Monday to Thursday. Please pay for the course at the office by Friday. Goodbye!"
         }
       ],
       "glosses": []
@@ -247,7 +246,7 @@
       "id": "a1.1-ht-sd1-t10",
       "kind": "text",
       "title": "Nachricht von Frau Schulz",
-      "text": "Liebe Teilnehmerinnen und Teilnehmer,\nam Donnerstag ist der letzte Tag im Kurs A1. Dann machen wir eine Party im Kursraum! Bitte bringen Sie etwas mit: Kuchen, Obst oder Getränke. Ich bringe Kaffee und Tee. Die Party beginnt um 11 Uhr und dauert bis 12.30 Uhr.\nViele Grüße\nHeike Schulz",
+      "text": "Liebe Teilnehmerinnen und Teilnehmer,\nam Freitag ist der letzte Tag im Kurs A1. Dann frühstücken wir zusammen im Kursraum! Bitte bringen Sie etwas mit: Brötchen, Käse, Obst oder Kuchen. Ich bringe Kaffee und Tee. Das Frühstück beginnt um 9 Uhr. Danach sprechen wir über die Prüfung.\nViele Grüße\nHeike Schulz",
       "glosses": []
     },
     {
@@ -281,8 +280,8 @@
     {
       "id": "a1.1-ht-sd1-t15",
       "kind": "sign",
-      "title": "In der Sprachschule",
-      "text": "Anmeldung für den Kurs A1.2: im Büro, Montag bis Donnerstag, 9 bis 12 Uhr. Am Freitag ist das Büro geschlossen.",
+      "title": "Am Gleis",
+      "text": "Gleis 3: Heute fahren hier keine Züge nach Dresden. Die Züge nach Dresden fahren heute ab Gleis 7.",
       "glosses": []
     },
     {
@@ -457,7 +456,7 @@
           "options": [
             "bis Montag",
             "bis Freitag",
-            "bis zwölf Uhr"
+            "bis Donnerstag"
           ],
           "textRef": "a1.1-ht-sd1-t6",
           "answer": "bis Freitag",
@@ -465,7 +464,7 @@
             "bis Freitag"
           ],
           "explanation": {
-            "de": "Herr Richter sagt: „Bitte bezahlen Sie bis Freitag im Büro.“ Am Montag fängt der Kurs an.",
+            "de": "Herr Richter sagt: „Bitte bezahlen Sie den Kurs bis Freitag im Büro.“ Am Montag fängt der Kurs an.",
             "en": "Mr Richter asks him to pay at the office by Friday; the course starts on Monday."
           },
           "origin": "agent"
@@ -588,8 +587,8 @@
             "falsch"
           ],
           "explanation": {
-            "de": "Die Teilnehmer bringen Kuchen, Obst oder Getränke. Frau Schulz schreibt: „Ich bringe Kaffee und Tee.“",
-            "en": "The participants bring cake, fruit or drinks; Ms Schulz brings the coffee and tea."
+            "de": "Die Teilnehmer bringen Brötchen, Käse, Obst oder Kuchen. Frau Schulz schreibt: „Ich bringe Kaffee und Tee.“",
+            "en": "The participants bring rolls, cheese, fruit or cake; Ms Schulz brings the coffee and tea."
           },
           "origin": "agent"
         }
@@ -714,7 +713,7 @@
           "type": "richtig_falsch",
           "role": "exam",
           "topic": "lesen",
-          "promptDe": "In der Sprachschule: „Am Freitag kann man sich im Büro für den Kurs anmelden.“",
+          "promptDe": "Am Gleis: „Heute fährt der Zug nach Dresden von Gleis 3.“",
           "options": [
             "richtig",
             "falsch"
@@ -725,8 +724,8 @@
             "falsch"
           ],
           "explanation": {
-            "de": "Die Anmeldung ist von Montag bis Donnerstag. Am Freitag ist das Büro geschlossen.",
-            "en": "Registration is Monday to Thursday; the office is closed on Friday."
+            "de": "Auf dem Schild steht: Heute fahren an Gleis 3 keine Züge nach Dresden. Sie fahren ab Gleis 7.",
+            "en": "The sign says no trains to Dresden leave from platform 3 today; they leave from platform 7."
           },
           "origin": "agent"
         },

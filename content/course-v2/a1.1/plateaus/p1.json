@@ -277,7 +277,7 @@
       "id": "a1.1-p1-sd1-t7",
       "kind": "text",
       "title": "E-Mail von Frau Schulz",
-      "text": "Liebe Teilnehmerinnen und Teilnehmer,\nmorgen ist der Kurs nicht hier in der Sprachschule, er ist online. Bitte schreiben Sie heute noch eine Nachricht in den Chat: Sind Sie morgen online?\nMorgen sprechen wir über Familie. Bitte zeigen Sie ein Foto: Ihre Eltern, Ihre Geschwister oder Ihre Kinder. Das Foto ist aber nicht so wichtig. Wichtig ist: Sie sprechen Deutsch!\nViele Grüße\nHeike Schulz",
+      "text": "Liebe Teilnehmerinnen und Teilnehmer,\nmorgen sprechen wir im Kurs über Familie. Bitte zeigen Sie ein Foto: Ihre Eltern, Ihre Geschwister oder Ihre Kinder. Das Foto ist aber nicht so wichtig. Wichtig ist: Sie sprechen Deutsch!\nEmre und Arta sind morgen wieder online, nicht hier in der Sprachschule. Bitte zeigen Sie das Foto dann auch im Chat.\nViele Grüße\nHeike Schulz",
       "glosses": []
     },
     {
@@ -461,7 +461,7 @@
           "type": "richtig_falsch",
           "role": "exam",
           "topic": "lesen",
-          "promptDe": "„Der Kurs ist morgen in der Sprachschule.“",
+          "promptDe": "„Morgen sprechen alle im Kurs über Sprachen.“",
           "options": [
             "richtig",
             "falsch"
@@ -472,8 +472,8 @@
             "falsch"
           ],
           "explanation": {
-            "de": "Frau Schulz schreibt: „Morgen ist der Kurs nicht hier in der Sprachschule, er ist online.“",
-            "en": "Ms Schulz writes that tomorrow the class is online, not at the school."
+            "de": "Frau Schulz schreibt: „Morgen sprechen wir im Kurs über Familie.“ Nicht über Sprachen.",
+            "en": "Ms Schulz writes that tomorrow the class talks about family, not languages."
           },
           "origin": "agent"
         },
@@ -482,7 +482,7 @@
           "type": "richtig_falsch",
           "role": "exam",
           "topic": "lesen",
-          "promptDe": "„Frau Schulz fragt: Wer ist morgen online?“",
+          "promptDe": "„Emre und Arta sind morgen nicht in der Sprachschule.“",
           "options": [
             "richtig",
             "falsch"
@@ -493,8 +493,8 @@
             "richtig"
           ],
           "explanation": {
-            "de": "Frau Schulz schreibt: „Bitte schreiben Sie heute noch eine Nachricht in den Chat: Sind Sie morgen online?“",
-            "en": "Ms Schulz asks everyone to say in the chat today whether they will be online tomorrow."
+            "de": "Frau Schulz schreibt: „Emre und Arta sind morgen wieder online, nicht hier in der Sprachschule.“",
+            "en": "Ms Schulz writes that Emre and Arta will be online again tomorrow, not at the school."
           },
           "origin": "agent"
         },

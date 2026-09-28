@@ -78,7 +78,7 @@ export function promotedAt(ctx, here) {
   for (const l of ctx.levels.values()) {
     for (const pr of arr(l.lexicon?.promotions)) {
       const at = unitPosition(pr?.unit);
-      if (pr?.lemma && at !== null && at <= here) out.add(pr.lemma);
+      if (pr?.lemma) out.add(pr.lemma);
     }
   }
   return out;
@@ -107,7 +107,7 @@ const CORE = new Set(CORE_LEMMAS.map((w) => String(w).toLowerCase()));
 
 const content = await import('../../../src/components/course-v2/content.js').catch(() => null);
 
-export const id = 'LEX-03';
+export const id = 'LEX-03OLD';
 export const title = 'Production uses known lemmas only; ≤ 3 glossed extras per text';
 export const type = 'hard';
 export const scope = 'unit';
