@@ -10,10 +10,10 @@
   "stage": "T",
   "title": {
     "de": "Wie war dein Wochenende?",
-    "canDo": "Sie können mit einfachen Sätzen erzählen, was Sie am Wochenende gemacht haben, und kurze Nachrichten und Posts lesen und schreiben."
+    "canDo": "Sie können vom Wochenende erzählen, Postkarten lesen und im Chat Nachrichten schreiben."
   },
   "spec": {
-    "situation": "Montagmorgen im Kurs: Priya, Olena und Bilal erzählen Frau Schulz, was sie am Wochenende gemacht haben. Priya liest eine Postkarte von Sophie, hört eine Sprachnachricht von Elif und schreibt einen Post über den Ausflug nach Dresden.",
+    "situation": "Montagmorgen im Kurs: Priya, Olena und Bilal erzählen Frau Schulz vom Wochenende. Priya hört eine Sprachnachricht von Elif. Am Dienstag liest sie im Kurs eine Postkarte von Sophie aus Dresden und schreibt im Chat eine Nachricht über den Ausflug.",
     "handlungsfeld": [
       "D",
       "9"
@@ -54,7 +54,7 @@
         ]
       },
       {
-        "title": "Gestern, letzte Woche: Zeitangaben",
+        "title": "Gestern, vorgestern, letzte Woche",
         "lemmas": [
           "lx.gestern",
           "lx.letzte-woche",
@@ -66,7 +66,7 @@
         ]
       },
       {
-        "title": "Was haben Sie gemacht? Feste Perfektformen",
+        "title": "Was haben Sie gemacht? Wie war es?",
         "lemmas": [
           "lx.kochen",
           "lx.sehen",
@@ -84,7 +84,6 @@
     "textTypes": [
       "tt.dialog",
       "tt.postkarte",
-      "tt.post",
       "tt.mailbox",
       "tt.kurzmitteilung",
       "tt.wortkarte"
@@ -115,10 +114,11 @@
     },
     "lehrwerk": [
       "M A1 L11 Was hast du heute gemacht? (Perfekt mit haben)",
-      "M A1 L12 (Perfekt mit sein)",
       "S1 L7 (Perfekt)"
     ],
-    "deviation": null,
+    "deviation": {
+      "reason": "Abweichungen vom Stoffplan a1-1 §6 Unit 11 (Review a1.1-u11 r1 F11, F13, F15). (1) Schreiben: S2 (sd1.s2) ist hier nach dem Stoffplan ein Beitrag im Chat an eine Gruppe („Hallo zusammen“) über den Ausflug am Wochenende. Er hat keinen der Zwecke einer Mitteilung in Start Deutsch 1 (Entschuldigung, Einladung, Anfrage); diese Zwecke übt S2 in a1.1-u08 (Absage), a1.1-u10 (Verspätung) und a1.1-u12 (Anfrage an eine Sprachschule). Die drei Leitpunkte folgen cd.a1.online-post: wo und was, mit wem, wie es war. `address` ist „du“, weil WritingTask nur du oder Sie kennt; die Anrede „Hallo zusammen“ richtet sich an die Gruppe (ihr), und der Mustertext spricht niemanden direkt an. (2) Landeskunde: Die Einheit macht eine Sachaussage, das Museum im Schloss in Dresden, und belegt sie mit dem Fact a1.1-u11-f01. Vom Plan-Punkt „Wochenende in D-A-CH: Ausflug ins Grüne, Brunch, Flohmarkt“ zeigt sie den Flohmarkt (Olena, LS1 und Lesen Teil 1) und den Ausflug (Priya in Dresden) als Szene, ohne landesweite Aussage. Brunch und „ins Grüne“ fehlen: lx.gruen ist a1.2-u06 zugeordnet, und „Brunch“ hat keinen Lexikon-Eintrag; der Punkt bleibt für a1.2 oder eine Fokus-Karte offen. (3) Texte: Priyas Beitrag im Chat steht im selben Input wie die Postkarte (LS3, tt.postkarte), weil SCHEMA einem Situationsschritt einen Input mit einem Texttyp gibt; tt.post steht darum nicht in spec.textTypes. „Post“ (lx.post, a1.2-u01) steht auf keinem Bildschirm: Die Einheit sagt „Nachricht im Chat“. (4) Prüfungsteile: Der Stoffplan nennt Lesen Teil 1, Hören Teil 1, Hören Teil 3, Sprechen Teil 2 und Schreiben Teil 2; die Einheit folgt BLUEPRINT §2.8, Zeile 11 (Lesen Teil 1, Sprechen Teil 2, Schreiben Teil 2)."
+    },
     "cast": [
       "cast.priya",
       "cast.frau-schulz",
@@ -442,13 +442,13 @@
           "promptDe": "Priya: „Am Sonntag habe ich gekocht.“ Heute ist Montag. Kocht Priya jetzt?",
           "promptEn": "Is Priya cooking now?",
           "options": [
-            "Nein, sie hat gestern gekocht.",
+            "Nein, das war gestern.",
             "Ja, sie kocht jetzt.",
-            "Nein, sie kocht am Sonntag."
+            "Ja, sie kocht heute."
           ],
-          "answer": "Nein, sie hat gestern gekocht.",
+          "answer": "Nein, das war gestern.",
           "accepted": [
-            "Nein, sie hat gestern gekocht."
+            "Nein, das war gestern."
           ],
           "explanation": {
             "de": "„habe … gekocht“ ist Perfekt. Heute ist Montag, also war Sonntag gestern.",
@@ -518,8 +518,8 @@
               "perfekt-aux-participle"
             ],
             "explanation": {
-              "de": "„ich habe“ auf Position 2, das Partizip „gespielt“ am Ende.",
-              "en": "“ich habe” in position 2, the participle “gespielt” at the end."
+              "de": "„Am Samstag“ auf Position 1, „habe“ auf Position 2, dann „ich“. „gespielt“ steht am Ende.",
+              "en": "“Am Samstag” in position 1, “habe” in position 2, then “ich”. “gespielt” goes at the end."
             },
             "origin": "agent"
           },
@@ -645,8 +645,8 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.perfekt-haben",
-            "promptDe": "Bilden Sie die Frage.",
-            "promptEn": "Build the question.",
+            "promptDe": "Bilden Sie die W-Frage.",
+            "promptEn": "Build the W-question.",
             "tiles": [
               "hast",
               "du",
@@ -832,8 +832,8 @@
           ],
           "difficulty": 1,
           "explanation": {
-            "de": "„wir haben“ auf Position 2, das Partizip „gegessen“ am Ende.",
-            "en": "“wir haben” in position 2, the participle “gegessen” at the end."
+            "de": "„Wir“ auf Position 1, „haben“ auf Position 2, „gegessen“ am Ende.",
+            "en": "“Wir” in position 1, “haben” in position 2, “gegessen” at the end."
           },
           "origin": "agent"
         },
@@ -952,7 +952,7 @@
         "register": "Sie"
       },
       "aussprache": {
-        "focus": "Das ge- im Partizip ist kurz und leise: gemacht, gekauft, gesehen. Hören Sie genau: sehen – gesehen.",
+        "focus": "Das ge- im Partizip ist kurz und hat keinen Akzent: gemacht, gekauft, gesehen. Hören Sie genau: sehen – gesehen.",
         "perception": {
           "generator": "perception.pairs",
           "count": 3,
@@ -968,7 +968,7 @@
           "lineDe": "Am Sonntag habe ich gekocht und gelesen."
         }
       },
-      "endLine": "Sie können jetzt erzählen, was Sie am Wochenende gemacht haben."
+      "endLine": "Jetzt können Sie vom Wochenende erzählen: Was haben Sie gemacht?"
     },
     {
       "id": "a1.1-u11-ls2",
@@ -1013,8 +1013,8 @@
           {
             "id": "a1.1-u11-ls2-l05",
             "speaker": "cast.elif",
-            "de": "Gestern war ich am Vormittag mit Freunden im Zoo. Am Abend habe ich gekocht und gelesen.",
-            "en": "Yesterday morning I was at the zoo with friends. In the evening I cooked and read."
+            "de": "Gestern Vormittag war ich mit Freunden im Zoo. Das machen wir einmal im Monat. Am Abend habe ich gekocht und gelesen.",
+            "en": "Yesterday morning I was at the zoo with friends. We do that once a month. In the evening I cooked and read."
           },
           {
             "id": "a1.1-u11-ls2-l06",
@@ -1048,8 +1048,8 @@
           }
         ],
         "text": {
-          "de": "Elif: Danke für die Sprachnachricht! Also Mittwoch, 17 Uhr, vorne am Park. Wir gehen spazieren, und dann trinken wir einen Kaffee. Bis dann!",
-          "en": "Elif: Thanks for the voice message! So Wednesday, 5 pm, at the front of the park. We’ll go for a walk and then have a coffee. See you then!"
+          "de": "Elif: Danke für die Sprachnachricht! Also Mittwoch, 17 Uhr, am Park. Wir gehen spazieren, und dann trinken wir einen Kaffee. Bis dann!",
+          "en": "Elif: Thanks for the voice message! So Wednesday, 5 pm, at the park. We’ll go for a walk and then have a coffee. See you then!"
         },
         "glosses": [],
         "transcriptAfterUnaidedListen": true
@@ -1109,7 +1109,7 @@
           "options": [
             "vorgestern",
             "gestern",
-            "letzte Woche"
+            "heute"
           ],
           "answer": "vorgestern",
           "accepted": [
@@ -1164,7 +1164,7 @@
           },
           "exact": "number",
           "explanation": {
-            "de": "Elif schreibt: „Mittwoch, 17 Uhr, vorne am Park.“ 17 Uhr ist fünf Uhr am Nachmittag.",
+            "de": "Elif schreibt: „Mittwoch, 17 Uhr, am Park.“ 17 Uhr ist fünf Uhr am Nachmittag.",
             "en": "Elif writes: Wednesday, 5 pm (17 Uhr), at the park."
           },
           "origin": "agent"
@@ -1245,9 +1245,9 @@
           "promptDe": "Heute ist Montag. Bilal: „Am Wochenende habe ich einen Film gesehen.“ Wann war das?",
           "promptEn": "When did Bilal see the film?",
           "options": [
-            "heute am Morgen",
+            "heute Morgen",
             "am Samstag oder am Sonntag",
-            "am Freitag am Morgen"
+            "am Freitagmorgen"
           ],
           "answer": "am Samstag oder am Sonntag",
           "accepted": [
@@ -1321,15 +1321,15 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.letzte-woche",
-            "promptDe": "___ Woche war ich in Berlin. (letzt-)",
-            "promptEn": "Complete: last week.",
-            "answer": "Letzte",
+            "promptDe": "___ war ich in Berlin. (letzte Woche)",
+            "promptEn": "Write “letzte Woche” in the gap.",
+            "answer": "Letzte Woche",
             "accepted": [
-              "Letzte"
+              "Letzte Woche"
             ],
             "explanation": {
-              "de": "„letzte Woche“: eine Woche zurück. Am Satzanfang schreiben Sie groß: „Letzte“.",
-              "en": "“letzte Woche” = last week; capitalised at the start: Letzte."
+              "de": "„Letzte Woche“ steht auf Position 1, dann kommt „war“. Das erste Wort schreiben Sie groß.",
+              "en": "“Letzte Woche” takes position 1, then comes “war”. Capitalise the first word."
             },
             "origin": "agent"
           },
@@ -1450,8 +1450,8 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.perfekt-haben",
-            "promptDe": "Bilden Sie die Frage.",
-            "promptEn": "Build the question.",
+            "promptDe": "Bilden Sie die W-Frage.",
+            "promptEn": "Build the W-question.",
             "tiles": [
               "was",
               "hast",
@@ -1690,7 +1690,7 @@
         "bankKey": "a11-u11-mo2",
         "mode": "spoken",
         "profile": "course-micro-sp",
-        "situationDe": "Elif schickt Ihnen auch eine Sprachnachricht: „Hallo! Wie war dein Wochenende? Hast du am Freitag Zeit?“",
+        "situationDe": "Elif hat auch eine Sprachnachricht für Sie: „Hallo! Wie war dein Wochenende? Hast du am Freitag Zeit?“",
         "promptDe": "Antworten Sie Elif: Was haben Sie gestern gemacht? Wann haben Sie am Freitag Zeit?",
         "promptEn": "Reply to Elif: what did you do yesterday, and when are you free on Friday?",
         "planSeconds": 30,
@@ -1703,7 +1703,7 @@
         ],
         "register": "du"
       },
-      "endLine": "Sie können jetzt sagen, wann etwas war: gestern, vorgestern oder letzte Woche."
+      "endLine": "Jetzt können Sie sagen: gestern, vorgestern, letzte Woche."
     },
     {
       "id": "a1.1-u11-ls3",
@@ -1718,7 +1718,7 @@
       },
       "input": {
         "kind": "mixed",
-        "title": "Eine Postkarte und ein Post",
+        "title": "Dienstag im Kurs: eine Postkarte und Fotos im Chat",
         "textType": "tt.postkarte",
         "lines": [
           {
@@ -1730,14 +1730,14 @@
           {
             "id": "a1.1-u11-ls3-l02",
             "speaker": "cast.priya",
-            "de": "Ja, von Sophie aus Dresden! Sie besucht noch bis Mittwoch die Eltern.",
-            "en": "Yes, from Sophie in Dresden! She’s visiting her parents until Wednesday."
+            "de": "Ja, von Sophie aus Dresden!",
+            "en": "Yes, from Sophie in Dresden!"
           },
           {
             "id": "a1.1-u11-ls3-l03",
             "speaker": "cast.olena",
-            "de": "Oh, wie schön! Ich bekomme nie Postkarten. Was schreibt sie?",
-            "en": "Oh, how lovely! I never get postcards. What does she write?"
+            "de": "Von Sophie? Sie besucht noch bis Mittwoch die Eltern. Ich bekomme nie Postkarten! Was schreibt sie?",
+            "en": "From Sophie? She’s visiting her parents until Wednesday. I never get postcards! What does she write?"
           },
           {
             "id": "a1.1-u11-ls3-l04",
@@ -1783,8 +1783,8 @@
           }
         ],
         "text": {
-          "de": "Postkarte von Sophie:\nLiebe Priya, lieber Arjun,\nviele Grüße aus Dresden! Meine Eltern sehe ich nur einmal im Monat. Gestern waren wir am Vormittag im Museum im Schloss. Das war sehr interessant. Am Abend haben wir im Garten gegessen und viel gelacht. Heute lese ich nur und schlafe viel. Am Mittwoch bin ich wieder in Leipzig. Besucht ihr mich bald hier in Dresden?\nBis bald!\nSophie\n\nPriya im Chat:\nHallo zusammen! Hier sind Fotos aus Dresden. Am Samstag war ich mit Arjun und Sophie dort. Wir haben die Altstadt und das Schloss gesehen. Das Wetter war super, und der Ausflug hat viel Spaß gemacht! Nur der Zug am Abend hatte eine Stunde Verspätung.",
-          "en": "Postcard from Sophie: Dear Priya, dear Arjun, greetings from Dresden! I only see my parents once a month. Yesterday morning we were at the museum in the palace. It was very interesting. In the evening we ate in the garden and laughed a lot. Today I’m just reading and sleeping a lot. On Wednesday I’ll be back in Leipzig. Will you visit me here in Dresden soon? See you soon! Sophie · Priya in the chat: Hi everyone! Here are photos from Dresden. On Saturday I was there with Arjun and Sophie. We saw the old town and the palace. The weather was great, and the trip was a lot of fun! Only the train in the evening was an hour late."
+          "de": "Postkarte von Sophie:\nLiebe Priya, lieber Arjun,\nviele Grüße aus Dresden! Meine Eltern sehe ich nur einmal im Monat. Gestern Vormittag waren wir im Museum im Schloss. Das war sehr interessant. Am Abend haben wir im Garten gegessen und viel gelacht – bis in die Nacht! Heute lese ich nur und schlafe viel. Am Mittwoch bin ich wieder in Leipzig. Danke für den Samstag! Besucht ihr mich bald in der WG?\nBis bald!\nSophie\n\nPriya im Chat:\nHallo zusammen! Hier sind Fotos aus Dresden. Am Samstag war ich mit Arjun und Sophie dort. Wir haben die Altstadt und das Schloss gesehen. Das Wetter war super, und der Ausflug hat viel Spaß gemacht! Nur der Zug am Abend hatte eine Stunde Verspätung.",
+          "en": "Postcard from Sophie: Dear Priya, dear Arjun, greetings from Dresden! I only see my parents once a month. Yesterday morning we were at the museum in the palace. It was very interesting. In the evening we ate in the garden and laughed a lot – late into the night! Today I’m just reading and sleeping a lot. On Wednesday I’ll be back in Leipzig. Thanks for Saturday! Will you visit me in the flat-share soon? See you soon! Sophie · Priya in the chat: Hi everyone! Here are photos from Dresden. On Saturday I was there with Arjun and Sophie. We saw the old town and the palace. The weather was great, and the trip was a lot of fun! Only the train in the evening was an hour late."
         },
         "glosses": [],
         "transcriptAfterUnaidedListen": true
@@ -1839,20 +1839,20 @@
           "type": "multiple_choice",
           "role": "detail",
           "topic": "lesen",
-          "promptDe": "Lesen Sie die Postkarte. Wann war Sophie im Museum?",
-          "promptEn": "When was Sophie at the museum?",
+          "promptDe": "Lesen Sie die Postkarte. Was schreibt Sophie: Wann war sie im Museum?",
+          "promptEn": "Read the postcard: when does Sophie say she was at the museum?",
           "options": [
-            "gestern am Abend",
+            "gestern Abend",
             "heute",
-            "gestern am Vormittag"
+            "gestern Vormittag"
           ],
-          "answer": "gestern am Vormittag",
+          "answer": "gestern Vormittag",
           "accepted": [
-            "gestern am Vormittag"
+            "gestern Vormittag"
           ],
           "explanation": {
-            "de": "Sophie schreibt: „Gestern waren wir am Vormittag im Museum.“ Am Abend waren sie im Garten.",
-            "en": "She was at the museum yesterday morning; in the evening they were in the garden."
+            "de": "Sophie schreibt: „Gestern Vormittag waren wir im Museum im Schloss.“ Am Abend waren sie im Garten.",
+            "en": "Sophie writes that they were at the museum yesterday morning; in the evening they were in the garden."
           },
           "origin": "agent"
         },
@@ -1914,7 +1914,7 @@
             "essen"
           ],
           "explanation": {
-            "de": "„essen“ → „gegessen“. Das Partizip hat ge- und endet auf -en.",
+            "de": "„essen“ → „gegessen“. Das Partizip hat ge- und am Ende -en.",
             "en": "essen → gegessen: the participle has ge- and ends in -en."
           },
           "origin": "agent"
@@ -1968,8 +1968,8 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.perfekt-haben",
-          "promptDe": "Welcher Satz ist über gestern?",
-          "promptEn": "Which sentence is about yesterday?",
+          "promptDe": "Welcher Satz passt zu „gestern“?",
+          "promptEn": "Which sentence fits “gestern” (yesterday)?",
           "options": [
             "Ich lese ein Buch.",
             "Ich möchte ein Buch lesen.",
@@ -2131,7 +2131,7 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.perfekt-haben",
-            "promptDe": "Bilden Sie die Frage.",
+            "promptDe": "Bilden Sie die Ja/Nein-Frage.",
             "promptEn": "Build the yes/no question.",
             "tiles": [
               "hast",
@@ -2446,7 +2446,7 @@
         "register": "du"
       },
       "aussprache": {
-        "focus": "Die Endung -en ist kurz und leise, aber wichtig: gegessen, gesehen. Hören Sie genau: lese – lesen.",
+        "focus": "Die Endung -en ist kurz und hat keinen Akzent, aber sie ist wichtig: gegessen, gesehen. Hören Sie genau: lese – lesen.",
         "perception": {
           "generator": "perception.pairs",
           "count": 3,
@@ -2462,7 +2462,7 @@
           "lineDe": "Wir haben gegessen, getrunken und gelesen."
         }
       },
-      "endLine": "Sie können jetzt Postkarten und kurze Nachrichten im Chat lesen."
+      "endLine": "Sie können jetzt Postkarten und Nachrichten im Chat lesen."
     },
     {
       "id": "a1.1-u11-ls4",
@@ -2472,7 +2472,7 @@
           "id": "a1.1-u11-ls4-t1",
           "kind": "text",
           "title": "Eine Nachricht von Olena",
-          "text": "Hallo Sophie,\nwie geht’s in Dresden? Hier in der WG ist alles gut. Am Samstag war ich auf dem Flohmarkt. Ich habe ein Fahrrad gekauft! Es ist nicht neu, aber sehr schön. Am Sonntag war ich mit dem Fahrrad am See. Letzte Woche war das Wetter schlecht, aber am Sonntag war es super. Am Mittwoch kommst du zurück. Dann kochen wir am Abend zusammen, und du erzählst alles.\nBis Mittwoch!\nOlena",
+          "text": "Hallo Sophie,\nwie geht’s in Dresden? Hier in der WG ist alles gut. Am Samstag war ich auf dem Flohmarkt. Ich habe ein Fahrrad gekauft! Es ist nicht neu, aber sehr schön. Am Sonntag war ich mit dem Fahrrad am See. Am Freitag war das Wetter schlecht, aber am Sonntag war es super. Am Mittwoch kommst du zurück. Dann kochen wir am Abend zusammen, und du erzählst alles.\nBis Mittwoch!\nOlena",
           "glosses": []
         },
         {
@@ -2608,8 +2608,8 @@
       "strategyCards": [
         {
           "template": "sd1.l1",
-          "de": "Lesen Teil 1: Sie lesen zwei Nachrichten und fünf Aussagen. Zuerst lesen Sie die Aussagen. Dann suchen Sie im Text: Wer? Wann? Was? Achtung: Oft stehen die Wörter aus der Aussage auch im Text, aber die Information ist anders. Achtung auch bei „nicht“, „nie“ und „schon“!",
-          "en": "Reading part 1: two messages and five statements. First read the statements, then look in the text: who, when, what? Careful: the words of a statement often appear in the text too, but the information is different. Watch out for “nicht”, “nie” and “schon” as well!"
+          "de": "Lesen Teil 1: Sie lesen zwei Nachrichten und fünf Aussagen. Zuerst lesen Sie die Aussagen. Dann suchen Sie im Text: Wer? Wann? Was? Oft stehen die Wörter aus der Aussage auch im Text, aber die Information ist nicht gleich. Lesen Sie auch „nicht“, „nie“ und „schon“ genau!",
+          "en": "Reading part 1: two messages and five statements. First read the statements, then look in the text: who, when, what? The words of a statement often appear in the text too, but the information is not the same. Read “nicht”, “nie” and “schon” carefully too!"
         }
       ]
     },
@@ -2624,7 +2624,7 @@
         "profile": "sd1-sp2",
         "prepMinutes": 0,
         "instructionsDe": "Zwei Themen: „Wochenende“, dann „Freizeit“. Fragen und antworten Sie mit den Karten.",
-        "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin haben Wortkarten zu zwei Themen: zuerst „Wochenende“, dann „Freizeit“. Fragen Sie mit Ihrer Karte. Ihre Partnerin fragt auch: Antworten Sie und erzählen Sie, was Sie wann gemacht haben.",
+        "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin haben Wortkarten zu zwei Themen: zuerst „Wochenende“, dann „Freizeit“. Fragen Sie mit Ihrer Karte. Ihre Partnerin fragt auch. Antworten Sie und erzählen Sie: Was haben Sie wann gemacht?",
         "cards": {
           "learner": [
             "Wochenende – Samstag",
@@ -2646,7 +2646,7 @@
           "register": "Sie",
           "support": "slow-wordbank"
         },
-        "openingLine": "Hallo! Wir sprechen über zwei Themen: zuerst „Wochenende“, dann „Freizeit“. Bitte, Sie fragen zuerst!",
+        "openingLine": "Hallo! Wir sprechen über zwei Themen: zuerst „Wochenende“, dann „Freizeit“. Bitte, Sie zuerst!",
         "hintWords": [
           "Was haben Sie am … gemacht?",
           "Haben Sie … gesehen?",
@@ -2710,42 +2710,41 @@
         "leitpunkte": [
           {
             "id": "lp1",
-            "de": "Wo waren Sie?",
+            "de": "Wo waren Sie, und was haben Sie gemacht?",
             "cues": [
               "Samstag",
               "Sonntag",
-              "Wochenende",
               "Ausflug",
               "Stadt",
               "Park",
-              "Museum"
+              "Museum",
+              "gesehen",
+              "gegessen"
             ]
           },
           {
             "id": "lp2",
             "de": "Mit wem waren Sie dort?",
             "cues": [
-              "Freund",
-              "Familie",
-              "Mann",
-              "Frau",
-              "Kind",
-              "Eltern",
+              "mit Freunden",
+              "mit meiner Familie",
+              "mit meinem Mann",
+              "mit meiner Frau",
+              "mit meinen Eltern",
               "zusammen"
             ]
           },
           {
             "id": "lp3",
-            "de": "Was haben Sie gemacht? Wie war es?",
+            "de": "Wie war es?",
             "cues": [
-              "gemacht",
-              "gesehen",
-              "gegessen",
               "super",
               "toll",
               "schön",
+              "interessant",
               "langweilig",
-              "Spaß"
+              "Spaß",
+              "Wetter"
             ]
           }
         ],
@@ -2756,9 +2755,9 @@
         "minSubmitWords": 13,
         "checklist": [
           "Anrede: Hallo zusammen,",
-          "Punkt 1: Wo waren Sie?",
+          "Punkt 1: Wo waren Sie, und was haben Sie gemacht?",
           "Punkt 2: Mit wem waren Sie dort?",
-          "Punkt 3: Was haben Sie gemacht? Wie war es?",
+          "Punkt 3: Wie war es?",
           "Gruß mit Ihrem Namen",
           "25 bis 35 Wörter"
         ],
@@ -2768,7 +2767,7 @@
     {
       "id": "a1.1-u11-ls7",
       "kind": "check",
-      "endLine": "Geschafft! Sie können jetzt vom Wochenende erzählen, sagen, wann etwas war, und kurze Nachrichten lesen und schreiben."
+      "endLine": "Gut gemacht! Jetzt können Sie vom Wochenende erzählen: gestern, vorgestern, letzte Woche. Und Sie können Nachrichten lesen und schreiben."
     }
   ],
   "check": {
@@ -2796,8 +2795,8 @@
           "perfekt-aux-participle"
         ],
         "explanation": {
-          "de": "„wir haben“ auf Position 2, das Partizip „gegessen“ am Ende.",
-          "en": "“wir haben” in position 2, the participle “gegessen” at the end."
+          "de": "„Am Freitag“ auf Position 1, „haben“ auf Position 2, dann „wir“. „gegessen“ steht am Ende.",
+          "en": "“Am Freitag” in position 1, “haben” in position 2, then “wir”. “gegessen” goes at the end."
         },
         "origin": "agent"
       },
@@ -2888,8 +2887,8 @@
           "langweilig"
         ],
         "explanation": {
-          "de": "Nicht interessant: „langweilig“. „toll“ und „super“ sind positiv.",
-          "en": "Not interesting = boring; “toll” and “super” are positive."
+          "de": "Nicht interessant: „langweilig“. „toll“ und „super“ sagen: Der Film war gut.",
+          "en": "Not interesting = boring; “toll” and “super” say the film was good."
         },
         "origin": "agent"
       },
@@ -2971,8 +2970,8 @@
         "type": "multiple_choice",
         "role": "proof",
         "topic": "lesen",
-        "promptDe": "Postkarte: „Gestern war ich am See, heute bin ich im Museum. Nora“ Wo war Nora gestern?",
-        "promptEn": "Read the postcard: where was Nora yesterday?",
+        "promptDe": "Ihre Freundin: „Gestern war ich am See, heute bin ich im Museum.“ Wo war sie gestern?",
+        "promptEn": "Your friend writes: where was she yesterday?",
         "options": [
           "im Museum",
           "in Leipzig",
@@ -2983,8 +2982,8 @@
           "am See"
         ],
         "explanation": {
-          "de": "Nora schreibt: „Gestern war ich am See.“ Im Museum ist sie heute.",
-          "en": "Nora writes she was at the lake yesterday; she is at the museum today."
+          "de": "Sie schreibt: „Gestern war ich am See.“ Im Museum ist sie heute.",
+          "en": "She writes that she was at the lake yesterday; she is at the museum today."
         },
         "origin": "agent"
       },
@@ -3040,7 +3039,7 @@
       "id": "a1.1-u11-rm02",
       "de": "Es war super!",
       "en": "It was great!",
-      "function": "sagen, wie es war (feste Wendung: war)"
+      "function": "sagen, wie es war (nicht Perfekt: „war“)"
     },
     {
       "id": "a1.1-u11-rm03",
@@ -3058,9 +3057,9 @@
     },
     {
       "id": "a1.1-u11-rm05",
-      "de": "Am Samstag war ich in Dresden.",
-      "en": "On Saturday I was in Dresden.",
-      "function": "sagen, wo man war",
+      "de": "Am Samstag war ich mit Freunden in Berlin.",
+      "en": "On Saturday I was in Berlin with friends.",
+      "function": "sagen, wo und mit wem man war",
       "forTemplate": "sd1.s2"
     },
     {
@@ -3074,7 +3073,7 @@
       "id": "a1.1-u11-rm07",
       "de": "Hallo zusammen!",
       "en": "Hi everyone!",
-      "function": "eine Gruppe grüßen (im Chat)",
+      "function": "alle im Chat grüßen",
       "forTemplate": "sd1.s2"
     },
     {
@@ -3085,8 +3084,8 @@
     }
   ],
   "story": {
-    "beat": "Am Montag erzählen Priya, Olena und Bilal im Kurs vom Wochenende: Olena hatte am Freitag Geburtstag und hat auf dem Flohmarkt ein Fahrrad gekauft, Bilal hat Fußball gespielt und einen Film gesehen, Priya war mit Arjun und Sophie in Dresden. Elif schickt eine Sprachnachricht, und Priya und Elif gehen am Mittwoch zusammen im Park spazieren. Sophie schreibt eine Postkarte aus Dresden, Priya zeigt Fotos im Chat, und Bilal möchte auch nach Dresden.",
-    "cliffhanger": "Am Freitag sagt Frau Schulz: „Der Kurs ist bald zu Ende. Im nächsten Monat beginnt der Kurs A1.2. Wer macht mit? Die Anmeldung ist bei Herrn Richter.“ Priya fragt Olena: „Machst du mit?“",
+    "beat": "Am Montag erzählen Priya, Olena und Bilal im Kurs vom Wochenende: Olena hatte am Freitag Geburtstag und hat auf dem Flohmarkt ein Fahrrad gekauft, Bilal hat Fußball gespielt und einen Film gesehen, Priya war mit Arjun und Sophie in Dresden. Elif hat eine Sprachnachricht für Priya, und Priya und Elif gehen am Mittwoch zusammen im Park spazieren. Am Dienstag zeigt Priya im Kurs eine Postkarte von Sophie aus Dresden – Sophie ist noch bis Mittwoch bei den Eltern – und Fotos im Chat, und Bilal möchte auch nach Dresden.",
+    "cliffhanger": "Am Freitag sagt Frau Schulz: „Der Kurs ist bald zu Ende. Dann beginnt der Kurs A1.2. Wer macht mit? Die Anmeldung ist bei Herrn Richter.“ Priya fragt Olena: „Machst du mit?“",
     "castIn": [
       "cast.priya",
       "cast.frau-schulz",
@@ -3097,6 +3096,25 @@
     ]
   },
   "fokus": [],
-  "facts": [],
+  "facts": [
+    {
+      "id": "a1.1-u11-f01",
+      "claimDe": "Im Residenzschloss in der Altstadt von Dresden sind Museen der Staatlichen Kunstsammlungen Dresden, zum Beispiel das Grüne Gewölbe, die Rüstkammer und das Münzkabinett.",
+      "claimEn": "The Residenzschloss (royal palace) in Dresden’s old town houses museums of the Dresden State Art Collections (SKD), e.g. the Green Vault, the Armoury and the Coin Cabinet.",
+      "sources": [
+        "https://www.skd.museum/besuch/residenzschloss/"
+      ],
+      "factsCheckedOn": "2026-09-27",
+      "currentAsOf": "2026-09-27",
+      "exceptions": [
+        {
+          "de": "Dienstags ist das Residenzschloss geschlossen (laut SKD, https://www.skd.museum/besuch/residenzschloss/: „täglich 10—17 Uhr, Dienstag geschlossen“).",
+          "en": "The Residenzschloss is closed on Tuesdays (per the SKD page above: open daily 10–17, closed Tuesday)."
+        }
+      ],
+      "verification": "verified",
+      "notes": "Re-read on 2026-09-27 on skd.museum/besuch/residenzschloss/: section „Unsere Museen und Ausstellungen im Residenzschloss“ (Historisches Grünes Gewölbe, Neues Grünes Gewölbe, Rüstkammer, Münzkabinett, Kupferstich-Kabinett) and the sentence „Das Residenzschloss ist Ursprungsort und bis heute Zentrum der Staatlichen Kunstsammlungen Dresden.“ The unit claims only that there is a museum in the Schloss in Dresden (LS3: ls3-l04 and Sophie’s postcard, ls3-i01, ls3-i03) and that Sophie went there on a Sunday; the opening hours on the same page (daily 10–17, closed Tuesday) allow a Sunday visit. „das Schloss“ in LS1, LS2, LS3 and Lesen Teil 1 (t2) names the building without a further claim."
+    }
+  ],
   "assets": []
 }

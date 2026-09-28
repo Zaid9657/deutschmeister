@@ -10,10 +10,10 @@
   "stage": "T",
   "title": {
     "de": "Das brauche ich",
-    "canDo": "Sie können Dinge im Kurs und im Büro benennen, andere um etwas bitten und eine kurze Nachricht mit passender Anrede schreiben."
+    "canDo": "Sie können Dinge im Kurs und im Büro nennen, andere um etwas bitten und Frau Schulz eine Nachricht mit Anrede und Gruß schreiben."
   },
   "spec": {
-    "situation": "In der Sprachschule fehlt Priya vieles: Sie fragt im Kurs und im Büro von Herrn Richter nach Stift, Heft und Ladekabel, bittet andere um Dinge und sucht mit Bilal im Internet einen gebrauchten Laptop für den Online-Kurs.",
+    "situation": "In der Sprachschule fehlt Priya vieles: Sie fragt im Kurs und im Büro von Herrn Richter nach Stift, Heft und Ladekabel, bittet andere um Dinge und sucht mit Bilal im Internet einen Laptop für den Onlinekurs: gebraucht und nicht teuer.",
     "handlungsfeld": [
       "11",
       "2"
@@ -97,7 +97,8 @@
       "tt.internetanzeige",
       "tt.sms",
       "tt.kurzmitteilung",
-      "tt.bildkarte"
+      "tt.bildkarte",
+      "tt.wortkarte"
     ],
     "lanes": {
       "primary": "sd1",
@@ -131,7 +132,7 @@
       "Linie 1 A1 K4/K6 (Grammatik: Akkusativ; nach memo 06)"
     ],
     "deviation": {
-      "reason": "Position 6 statt 5 (Tausch mit „Hier wohne ich“, BLUEPRINT §2.8 Zeile 5): die Grammatik-Spine führt g.akkusativ und g.kein an a1.1-u06 ein, und die Registries gewinnen (spine.md §6). Das Thema Büro und Technik steht nur in Menschen (L5–6); Schritte plus Neu 1 und Netzwerk neu platzieren hier nur den Akkusativ. Siehe docs/course-v2/curriculum/a1-1.specs-notes.md."
+      "reason": "Position 6 statt 5 (Tausch mit „Hier wohne ich“, BLUEPRINT §2.8 Zeile 5): die Grammatik-Spine führt g.akkusativ und g.kein an a1.1-u06 ein, und die Registries gewinnen (spine.md §6). Das Thema Büro und Technik steht nur in Menschen (L5–6); Schritte plus Neu 1 und Netzwerk neu platzieren hier nur den Akkusativ. Siehe docs/course-v2/curriculum/a1-1.specs-notes.md. Weitere Abweichungen vom Stoffplan (Review r1-F14): Situation Sprachschule statt „Erster Tag im Praktikum“; das Praktikum steht nur in Lesen Teil 2 (t5), HF 2 tragen das Büro von Herrn Richter und t5. Hören Teil 1 entfällt hier; sd1.h1 ist Prüfungsfokus in u01, u02, u04 und u09. Die sd1.sp2-Runde trägt cd.a1.besitz-fragen und steht als Chip, nicht im Prüfungsfokus (der Slot „sprechen“ trägt sd1.sp3). Landeskunde „duzen oder siezen?“ nur als Szene (im Kurs du, Frau Schulz und Herr Richter Sie, Nora nennt die Regel in ihrer Eröffnung), keine Tatsachenbehauptung und darum kein facts[]-Eintrag; englische Wörter im Arbeitsalltag nur als Wortakzent (LS3: Laptop, Handy, Büro, Papier)."
     },
     "cast": [
       "cast.priya",
@@ -202,8 +203,8 @@
         {
           "id": "a1.1-u06-start-l07",
           "speaker": "cast.priya",
-          "de": "Einen Laptop? Oh nein, ich habe keinen Laptop. Ich habe nur ein Handy!",
-          "en": "A laptop? Oh no, I haven’t got a laptop. I’ve only got a mobile phone!"
+          "de": "Einen Laptop? Oh nein! Ich habe nur ein Handy, und der Laptop von Arjun ist für die Arbeit.",
+          "en": "A laptop? Oh no! I’ve only got a mobile phone, and Arjun’s laptop is for work."
         },
         {
           "id": "a1.1-u06-start-l08",
@@ -243,7 +244,7 @@
     {
       "id": "a1.1-u06-ls1",
       "kind": "situation",
-      "title": "Im Kursraum: Was haben Sie dabei?",
+      "title": "Im Kursraum: Ich habe …",
       "structure": "g.akkusativ",
       "modelSentence": "Ich habe einen Kuli und ein Heft.",
       "ruleCard": "rc.akkusativ",
@@ -253,7 +254,7 @@
       },
       "input": {
         "kind": "dialog",
-        "title": "Was haben Sie heute dabei?",
+        "title": "Im Kursraum",
         "textType": "tt.dialog",
         "lines": [
           {
@@ -278,8 +279,8 @@
           {
             "id": "a1.1-u06-ls1-l04",
             "speaker": "cast.olena",
-            "de": "Ich habe eine Tasche. In der Tasche habe ich einen Kuli, zwei Stifte und mein Handy.",
-            "en": "I’ve got a bag. In the bag I’ve got a ballpoint pen, two pens and my phone."
+            "de": "Ich habe eine Tasche. In der Tasche habe ich ein Buch, einen Kuli, zwei Stifte und mein Handy.",
+            "en": "I’ve got a bag. In the bag I’ve got a book, a ballpoint pen, two pens and my phone."
           },
           {
             "id": "a1.1-u06-ls1-l05",
@@ -380,7 +381,7 @@
           ],
           "exact": "number",
           "acceptedWhy": {
-            "vierundzwanzig": "Zahl als Wort: so hört man es"
+            "vierundzwanzig": "Zahl als Wort: so hören Sie es"
           },
           "explanation": {
             "de": "Frau Schulz sagt: „Seite 24“ (vierundzwanzig). „24“ und „vierundzwanzig“ sind richtig.",
@@ -617,10 +618,12 @@
             "accepted": [
               "Ich brauche heute einen Kuli.",
               "Heute brauche ich einen Kuli.",
-              "Einen Kuli brauche ich heute."
+              "Einen Kuli brauche ich heute.",
+              "Ich brauche einen Kuli heute."
             ],
             "acceptedWhy": {
-              "Einen Kuli brauche ich heute.": "grammatisch: einen Kuli betont auf Position 1, das Verb bleibt auf Position 2"
+              "Einen Kuli brauche ich heute.": "grammatisch: einen Kuli betont auf Position 1, das Verb bleibt auf Position 2",
+              "Ich brauche einen Kuli heute.": "gesprochen: heute betont am Ende, das Verb bleibt auf Position 2"
             },
             "errorTags": [
               "v2-inv"
@@ -629,7 +632,10 @@
               "de": "„brauche“ steht auf Position 2. „einen Kuli“ ist Akkusativ.",
               "en": "“brauche” is in position 2; “einen Kuli” is accusative."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "reviewerConfirmed": [
+              "Ich brauche einen Kuli heute."
+            ]
           },
           {
             "id": "a1.1-u06-ls1-p06",
@@ -740,8 +746,8 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.akkusativ",
-            "promptDe": "Korrigieren Sie: „Ich brauche ein Laptop.“",
-            "promptEn": "Correct the sentence.",
+            "promptDe": "Korrigieren Sie die Endung: „Ich brauche ein Laptop.“",
+            "promptEn": "Correct the ending.",
             "answer": "Ich brauche einen Laptop.",
             "accepted": [
               "Ich brauche einen Laptop."
@@ -752,8 +758,8 @@
               "case-np"
             ],
             "explanation": {
-              "de": "der Laptop → einen Laptop. Maskulin im Akkusativ: „einen“.",
-              "en": "der Laptop → einen Laptop: masculine accusative is “einen”."
+              "de": "der Laptop → einen Laptop. Maskulin im Akkusativ: ein → einen.",
+              "en": "der Laptop → einen Laptop: in the masculine accusative ein becomes einen."
             },
             "origin": "agent"
           },
@@ -762,7 +768,7 @@
             "type": "multiple_choice",
             "role": "practice",
             "topic": "g.akkusativ",
-            "promptDe": "Welcher Artikel passt? Ich suche ___ Kalender.",
+            "promptDe": "Was passt? Ich suche ___ Kalender.",
             "promptEn": "Choose the article.",
             "options": [
               "der",
@@ -925,11 +931,11 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "g.akkusativ",
-          "promptDe": "Korrigieren Sie: „Frau Schulz sucht der Schlüssel.“",
-          "promptEn": "Correct the sentence.",
-          "answer": "Frau Schulz sucht den Schlüssel.",
+          "promptDe": "Korrigieren Sie die Endung: „Frau Schulz sucht der Kuli.“",
+          "promptEn": "Correct the ending.",
+          "answer": "Frau Schulz sucht den Kuli.",
           "accepted": [
-            "Frau Schulz sucht den Schlüssel."
+            "Frau Schulz sucht den Kuli."
           ],
           "intentionalError": true,
           "errorTag": "case-np",
@@ -943,8 +949,8 @@
           ],
           "difficulty": 2,
           "explanation": {
-            "de": "der Schlüssel → den Schlüssel. Nach „suchen“: Akkusativ.",
-            "en": "der Schlüssel → den Schlüssel: accusative after suchen."
+            "de": "der Kuli → den Kuli. Nach „suchen“: Akkusativ.",
+            "en": "der Kuli → den Kuli: accusative after suchen."
           },
           "origin": "agent"
         }
@@ -954,9 +960,9 @@
         "bankKey": "a11-u06-mo1",
         "mode": "spoken",
         "profile": "course-micro-sp",
-        "situationDe": "Sie sind im Kurs. Sie haben etwas in der Tasche, aber Sie kennen das Wort nicht.",
-        "promptDe": "Fragen Sie: Wie heißt das auf Deutsch? Sagen Sie dann: Was haben Sie noch dabei?",
-        "promptEn": "Ask what the thing is called in German, then say what else you have with you (Ich habe einen …).",
+        "situationDe": "Sie sind im Kurs. Sie haben ein Ladekabel in der Tasche, aber Sie kennen das Wort nicht.",
+        "promptDe": "Zeigen Sie es: „Das ist für …“ Fragen Sie: „Wie heißt das?“ Dann: „Ich habe noch … dabei.“",
+        "promptEn": "Point at it and say what it is for (Das ist für …), ask what it is called, then say what else you have with you (Ich habe noch … dabei).",
         "planSeconds": 30,
         "seconds": [
           20,
@@ -984,7 +990,7 @@
           "lineDe": "Mein Computer und mein Kalender sind neu."
         }
       },
-      "endLine": "Sie können jetzt sagen: Ich habe einen Kuli und ein Heft. Und Sie fragen: Wie heißt das auf Deutsch?"
+      "endLine": "Sie können jetzt sagen: Ich habe einen Kuli und ein Heft. Und Sie können fragen: Wie heißt das auf Deutsch?"
     },
     {
       "id": "a1.1-u06-ls2",
@@ -1047,8 +1053,8 @@
           {
             "id": "a1.1-u06-ls2-l08",
             "speaker": "cast.herr-richter",
-            "de": "Ja, ich weiß, er ist kaputt. Heute haben wir keinen Drucker. Mein Kollege macht das morgen.",
-            "en": "Yes, I know, it’s broken. Today we have no printer. My colleague will see to it tomorrow."
+            "de": "Ja, ich weiß, er ist kaputt. Wir haben nur einen Drucker. Mein Kollege macht das morgen.",
+            "en": "Yes, I know, it’s broken. We’ve only got one printer. My colleague will see to it tomorrow."
           },
           {
             "id": "a1.1-u06-ls2-l09",
@@ -1079,20 +1085,20 @@
           "type": "multiple_choice",
           "role": "gist",
           "topic": "hoeren",
-          "promptDe": "Wo sprechen Priya und Bilal mit Herrn Richter?",
-          "promptEn": "Where do Priya and Bilal talk to Mr Richter?",
+          "promptDe": "Was hat Priya am Ende?",
+          "promptEn": "What has Priya got in the end?",
           "options": [
-            "zu Hause",
-            "im Kursraum",
-            "im Büro"
+            "einen Laptop",
+            "einen Drucker",
+            "das Heft und ein Ladekabel"
           ],
-          "answer": "im Büro",
+          "answer": "das Heft und ein Ladekabel",
           "accepted": [
-            "im Büro"
+            "das Heft und ein Ladekabel"
           ],
           "explanation": {
-            "de": "Herr Richter sagt: „Hier im Büro gibt es nur das Telefon.“",
-            "en": "Mr Richter says: “Here in the office there is only the telephone.”"
+            "de": "Herr Richter fragt: „Ist das Ihr Heft?“ Priya sagt: „Ja!“ Und Bilal sagt: „Hier ist ein Ladekabel für dich.“",
+            "en": "Mr Richter finds her exercise book, and Bilal gives her a charging cable; the laptop comes later."
           },
           "origin": "agent"
         },
@@ -1135,8 +1141,8 @@
             "der Drucker"
           ],
           "explanation": {
-            "de": "Bilal sagt: „Der Drucker funktioniert nicht.“ Herr Richter sagt: „Heute haben wir keinen Drucker.“",
-            "en": "The printer is not working – today there is no printer."
+            "de": "Bilal sagt: „Der Drucker funktioniert nicht.“ Herr Richter sagt: „Er ist kaputt.“",
+            "en": "Bilal says the printer isn’t working, and Mr Richter says it is broken."
           },
           "origin": "agent"
         },
@@ -1186,7 +1192,7 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.kein",
-          "promptDe": "Herr Richter sagt: „Der Drucker funktioniert nicht.“ Was stimmt?",
+          "promptDe": "Bilal sagt: „Der Drucker funktioniert nicht.“ Was stimmt?",
           "promptEn": "“funktioniert nicht” – is there a printer?",
           "options": [
             "Es gibt keinen Drucker.",
@@ -1264,8 +1270,8 @@
             "Hier ist kein Laptop."
           ],
           "explanation": {
-            "de": "„keine Laptops“ ist Plural: Hier ist kein Laptop, nicht einer und nicht zwei.",
-            "en": "“keine Laptops” (plural): there is no laptop here at all."
+            "de": "„keine Laptops“ ist Plural. Das heißt: Hier ist kein Laptop.",
+            "en": "“keine Laptops” is plural: there is no laptop here at all."
           },
           "origin": "agent"
         }
@@ -1317,8 +1323,8 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.kein",
-            "promptDe": "Heute haben wir ___ Drucker. (kein)",
-            "promptEn": "kein → form for der Drucker.",
+            "promptDe": "Heute hat Bilal ___ Kuli. (kein)",
+            "promptEn": "kein → form for der Kuli.",
             "answer": "keinen",
             "accepted": [
               "keinen"
@@ -1327,8 +1333,8 @@
               "case-np"
             ],
             "explanation": {
-              "de": "der Drucker → keinen Drucker. Nach „haben“ steht der Akkusativ.",
-              "en": "der Drucker → keinen Drucker: accusative after haben."
+              "de": "der Kuli → keinen Kuli. Nach „haben“ steht der Akkusativ.",
+              "en": "der Kuli → keinen Kuli: accusative after haben."
             },
             "origin": "agent"
           },
@@ -1490,8 +1496,8 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.kein",
-            "promptDe": "Korrigieren Sie: „Ich habe keine Laptop.“",
-            "promptEn": "Correct the sentence.",
+            "promptDe": "Korrigieren Sie die Endung von „keine“: „Ich habe keine Laptop.“",
+            "promptEn": "Correct the ending of “keine”.",
             "answer": "Ich habe keinen Laptop.",
             "accepted": [
               "Ich habe keinen Laptop."
@@ -1674,8 +1680,8 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "g.negation-nicht",
-          "promptDe": "Korrigieren Sie: „Der Drucker funktioniert kein.“",
-          "promptEn": "Correct the sentence.",
+          "promptDe": "Korrigieren Sie die Verneinung beim Verb: „Der Drucker funktioniert kein.“",
+          "promptEn": "Correct the negation of the verb.",
           "answer": "Der Drucker funktioniert nicht.",
           "accepted": [
             "Der Drucker funktioniert nicht."
@@ -1724,7 +1730,7 @@
         "bankKey": "a11-u06-mo2",
         "mode": "written",
         "profile": "course-micro",
-        "situationDe": "Olena schreibt im Chat: „Der Kurs ist ab jetzt manchmal online. Hast du einen Laptop?“",
+        "situationDe": "Olena schreibt im Chat: „Ich brauche morgen im Kurs Papier und einen Kuli. Hast du das?“",
         "promptDe": "Antworten Sie Olena in 1–2 Sätzen: Was haben Sie nicht? Was haben Sie?",
         "promptEn": "Answer Olena in 1–2 sentences: what you haven’t got and what you have got.",
         "planSeconds": 30,
@@ -1742,7 +1748,7 @@
     {
       "id": "a1.1-u06-ls3",
       "kind": "situation",
-      "title": "Ein Laptop für den Onlinekurs",
+      "title": "Bilal sucht im Internet",
       "structure": "g.akkusativ",
       "modelSentence": "Ich möchte den Laptop für 180 Euro.",
       "ruleCard": "rc.akkusativ",
@@ -1767,8 +1773,8 @@
           "type": "multiple_choice",
           "role": "gist",
           "topic": "lesen",
-          "promptDe": "Was möchte Priya kaufen?",
-          "promptEn": "What does Priya want to buy?",
+          "promptDe": "Was braucht Priya?",
+          "promptEn": "What does Priya need?",
           "options": [
             "einen Laptop",
             "ein Handy",
@@ -1779,8 +1785,8 @@
             "einen Laptop"
           ],
           "explanation": {
-            "de": "Priya schreibt: „Ich möchte den Laptop für 180 Euro.“",
-            "en": "Priya writes that she would like the laptop for 180 euros."
+            "de": "Bilal sucht einen Laptop für Priya. Priya schreibt: „Ich möchte den Laptop für 180 Euro.“",
+            "en": "Bilal is looking for a laptop for Priya, and she writes that she would like the one for 180 euros."
           },
           "origin": "agent"
         },
@@ -1859,7 +1865,7 @@
           "promptDe": "Was gibt Bilal Priya?",
           "promptEn": "What does Bilal give Priya?",
           "options": [
-            "ein Ladekabel",
+            "ein Handy",
             "einen Laptop",
             "eine Tasche"
           ],
@@ -1924,7 +1930,7 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.akkusativ",
-          "promptDe": "Welcher Satz hat einen Akkusativ?",
+          "promptDe": "Wo steht ein Akkusativ?",
           "promptEn": "Which sentence has an accusative?",
           "options": [
             "Der Laptop ist neu.",
@@ -2031,7 +2037,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.akkusativ",
-            "promptDe": "Ich suche ___ Schlüssel. (mein)",
+            "promptDe": "Ich suche ___ Kuli. (mein)",
             "promptEn": "mein → accusative form.",
             "answer": "meinen",
             "accepted": [
@@ -2041,8 +2047,8 @@
               "case-np"
             ],
             "explanation": {
-              "de": "„mein“ ist wie „ein“: der Schlüssel → einen Schlüssel → meinen Schlüssel.",
-              "en": "“mein” works like “ein”: einen Schlüssel → meinen Schlüssel."
+              "de": "„mein“ ist wie „ein“: der Kuli → einen Kuli → meinen Kuli.",
+              "en": "“mein” works like “ein”: einen Kuli → meinen Kuli."
             },
             "origin": "agent"
           },
@@ -2207,8 +2213,8 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.akkusativ",
-            "promptDe": "Korrigieren Sie: „Ich möchte der Laptop.“",
-            "promptEn": "Correct the sentence.",
+            "promptDe": "Korrigieren Sie die Endung: „Ich möchte der Laptop.“",
+            "promptEn": "Correct the ending.",
             "answer": "Ich möchte den Laptop.",
             "accepted": [
               "Ich möchte den Laptop."
@@ -2272,7 +2278,7 @@
             "generator": "lex.glossTyped",
             "count": 1,
             "source": [
-              "lx.praktikum",
+              "lx.buero",
               "lx.problem",
               "lx.funktionieren",
               "lx.laptop"
@@ -2391,7 +2397,7 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "g.akkusativ",
-          "promptDe": "Hast du ___ Schlüssel? (mein)",
+          "promptDe": "Hast du ___ Laptop? (mein)",
           "promptEn": "mein → accusative form.",
           "answer": "meinen",
           "accepted": [
@@ -2407,8 +2413,8 @@
           ],
           "difficulty": 3,
           "explanation": {
-            "de": "der Schlüssel → meinen Schlüssel. „mein“ ist wie „ein“.",
-            "en": "der Schlüssel → meinen Schlüssel: mein works like ein."
+            "de": "der Laptop → meinen Laptop. „mein“ ist wie „ein“.",
+            "en": "der Laptop → meinen Laptop: mein works like ein."
           },
           "origin": "agent"
         },
@@ -2417,8 +2423,8 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "g.akkusativ",
-          "promptDe": "Korrigieren Sie: „Bilal sucht ein Laptop.“",
-          "promptEn": "Correct the sentence.",
+          "promptDe": "Korrigieren Sie die Endung: „Bilal sucht ein Laptop.“",
+          "promptEn": "Correct the ending.",
           "answer": "Bilal sucht einen Laptop.",
           "accepted": [
             "Bilal sucht einen Laptop."
@@ -2435,8 +2441,8 @@
           ],
           "difficulty": 2,
           "explanation": {
-            "de": "der Laptop → einen Laptop. Maskulin im Akkusativ: „einen“.",
-            "en": "der Laptop → einen Laptop: masculine accusative is “einen”."
+            "de": "der Laptop → einen Laptop. Maskulin im Akkusativ: ein → einen.",
+            "en": "der Laptop → einen Laptop: in the masculine accusative ein becomes einen."
           },
           "origin": "agent"
         }
@@ -2460,7 +2466,7 @@
         "register": "du"
       },
       "aussprache": {
-        "focus": "Wortakzent in Wörtern aus anderen Sprachen: LAPtop, HANdy – aber BüRO, PaPIER.",
+        "focus": "Der Akzent: vorne oder hinten? Hören Sie genau.",
         "perception": [
           {
             "id": "a1.1-u06-ls3-x01",
@@ -2561,35 +2567,35 @@
           "id": "a1.1-u06-ls4-t1",
           "kind": "ad",
           "title": "Laptops",
-          "text": "a) Laptop, 4 Jahre alt, funktioniert gut. Mit Ladekabel. 150 Euro.\nb) Laptop, neu, mit Tasche und Ladekabel. Nur 520 Euro!",
+          "text": "a) Laptop, 3 Jahre alt: 180 Euro. Die Tasche kostet 40 Euro. Leipzig.\nb) Laptop mit Tasche, 5 Jahre alt, funktioniert gut. Nur 170 Euro!",
           "glosses": []
         },
         {
           "id": "a1.1-u06-ls4-t2",
           "kind": "ad",
           "title": "Handys",
-          "text": "a) Handy, 2 Jahre alt, sehr gut. Ohne Ladekabel. 80 Euro.\nb) Handy, gebraucht, funktioniert gut. Mit Ladekabel und Tasche. 95 Euro.",
+          "text": "a) Handy, gebraucht, funktioniert gut. Mit Ladekabel. 95 Euro. Telefon: 0341 201744\nb) Handy, 2 Jahre alt, sehr gut. Ohne Ladekabel. Nur 80 Euro!",
           "glosses": []
         },
         {
           "id": "a1.1-u06-ls4-t3",
           "kind": "ad",
           "title": "Drucker",
-          "text": "a) Drucker, 3 Jahre alt. Er funktioniert nicht. Nur 10 Euro.\nb) Drucker, 6 Jahre alt, funktioniert gut. Mit Papier. 45 Euro.",
+          "text": "a) Drucker, 3 Jahre alt. Er funktioniert nicht. 10 Euro. Telefon: 0176 314408\nb) Drucker, 6 Jahre alt, funktioniert gut. Mit Papier. 45 Euro. Leipzig.",
           "glosses": []
         },
         {
           "id": "a1.1-u06-ls4-t4",
           "kind": "ad",
           "title": "Taschen",
-          "text": "a) Tasche, groß: für Laptop, Bücher und Papier. 25 Euro.\nb) Tasche, klein: für Handy, Kulis und Kalender. 15 Euro.",
+          "text": "a) Tasche, klein: für Handy, Kulis und Kalender. Nicht für Laptops. 15 Euro.\nb) Tasche, groß: für Hefte, Papier und einen Laptop. 25 Euro. Leipzig.",
           "glosses": []
         },
         {
           "id": "a1.1-u06-ls4-t5",
           "kind": "ad",
           "title": "Praktikum",
-          "text": "a) Praktikum im Büro: Sie telefonieren und schreiben E-Mails. Deutsch: sehr gut.\nb) Praktikum für Informatiker: Computer, Internet und Webseiten. Deutsch: A1 ist okay.",
+          "text": "a) Praktikum für Informatiker: Computer, Internet und Webseiten. Deutsch: A1 ist okay.\nb) Praktikum im Büro: Sie telefonieren und schreiben E-Mails. Deutsch: sehr gut.",
           "glosses": []
         }
       ],
@@ -2601,7 +2607,7 @@
           "length": "full",
           "scaffolded": false,
           "modeDefault": "lern",
-          "instructionsDe": "Lesen Sie die fünf Situationen. Was passt: Anzeige a oder b?",
+          "instructionsDe": "Lesen Sie die Sätze 1–5. Was passt: Anzeige a oder b?",
           "textRefs": [
             "a1.1-u06-ls4-t1",
             "a1.1-u06-ls4-t2",
@@ -2616,18 +2622,18 @@
               "role": "exam",
               "topic": "lesen",
               "textRef": "a1.1-u06-ls4-t1",
-              "promptDe": "Sie brauchen einen Laptop für den Onlinekurs und haben nur 200 Euro. Was passt?",
+              "promptDe": "Sie haben nur 200 Euro. Sie brauchen einen Laptop und eine Tasche. Was passt?",
               "options": [
                 "a",
                 "b"
               ],
-              "answer": "a",
+              "answer": "b",
               "accepted": [
-                "a"
+                "b"
               ],
               "explanation": {
-                "de": "Laptop b ist neu, aber er kostet 520 Euro: zu teuer. Laptop a kostet 150 Euro und funktioniert gut.",
-                "en": "Laptop b is new but costs 520 euros – too much. Laptop a costs 150 euros and works well."
+                "de": "Laptop a kostet 180 Euro, aber die Tasche kostet noch 40 Euro: zusammen 220 Euro. Laptop b mit Tasche kostet nur 170 Euro.",
+                "en": "Laptop a costs 180 euros plus 40 for the bag – 220 in all. Laptop b comes with a bag for only 170 euros."
               },
               "origin": "agent"
             },
@@ -2642,13 +2648,13 @@
                 "a",
                 "b"
               ],
-              "answer": "b",
+              "answer": "a",
               "accepted": [
-                "b"
+                "a"
               ],
               "explanation": {
-                "de": "Handy a ist sehr gut, aber es ist ohne Ladekabel. Handy b hat ein Ladekabel.",
-                "en": "Phone a is very good but comes without a charging cable; phone b has one."
+                "de": "Handy b ist sehr gut, aber es ist ohne Ladekabel. Handy a hat ein Ladekabel.",
+                "en": "Phone b is very good but comes without a charging cable; phone a has one."
               },
               "origin": "agent"
             },
@@ -2684,13 +2690,13 @@
                 "a",
                 "b"
               ],
-              "answer": "a",
+              "answer": "b",
               "accepted": [
-                "a"
+                "b"
               ],
               "explanation": {
-                "de": "Tasche b ist klein: nur für Handy, Kulis und Kalender. Tasche a ist für Laptop und Bücher.",
-                "en": "Bag b is small – only for a phone, pens and a diary. Bag a is for a laptop and books."
+                "de": "Tasche a ist klein und nicht für Laptops. Tasche b ist groß und für einen Laptop: Da sind auch Bücher kein Problem.",
+                "en": "Bag a is small and not for laptops. Bag b is big and takes a laptop, so books are no problem either."
               },
               "origin": "agent"
             },
@@ -2705,13 +2711,13 @@
                 "a",
                 "b"
               ],
-              "answer": "b",
+              "answer": "a",
               "accepted": [
-                "b"
+                "a"
               ],
               "explanation": {
-                "de": "Bei Praktikum a steht: „Deutsch: sehr gut.“ Bei Praktikum b ist Deutsch A1 okay.",
-                "en": "Internship a is office work and needs very good German; for b, A1 German is fine."
+                "de": "Bei Praktikum b steht: „Deutsch: sehr gut.“ Bei Praktikum a ist Deutsch A1 okay.",
+                "en": "Internship b is office work and needs very good German; for a, A1 German is fine."
               },
               "origin": "agent"
             }
@@ -2721,8 +2727,8 @@
       "strategyCards": [
         {
           "template": "sd1.l2",
-          "de": "Lesen Teil 2: Kleine Wörter sind oft wichtig: mit oder ohne, nicht, kein, nur. „Ohne Ladekabel“ ist nicht „mit Ladekabel“, und „funktioniert nicht“ heißt: kaputt. Zuerst die Situation lesen: Was brauchen Sie? Dann a und b genau lesen.",
-          "en": "Reading part 2: small words often decide – mit or ohne, nicht, kein, nur. “Ohne Ladekabel” is not “mit Ladekabel”, and “funktioniert nicht” means broken. Read the situation first – what do you need? – then read a and b closely."
+          "de": "Lesen Teil 2: Wichtig sind oft: mit oder ohne, nicht, kein, nur. Lesen Sie zuerst: Was brauchen Sie? Dann lesen Sie a und b genau.",
+          "en": "Reading part 2: what often decides is mit or ohne, nicht, kein, nur. First read: what do you need? Then read a and b closely."
         }
       ]
     },
@@ -2739,7 +2745,7 @@
             "profile": "sd1-sp2",
             "prepMinutes": 0,
             "instructionsDe": "Zwei Themen: „Im Kurs“, dann „Im Büro“. Fragen und antworten Sie mit den Karten.",
-            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin haben Wortkarten zu zwei Themen: zuerst „Im Kurs“, dann „Im Büro“. Fragen Sie mit Ihrer Karte: Hast du …? Brauchst du …? Ihre Partnerin fragt auch. Antworten Sie: Ja, ich habe … / Nein, ich habe kein …",
+            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin Nora haben Wortkarten zu zwei Themen: zuerst „Im Kurs“, dann „Im Büro“. Fragen Sie mit Ihrer Karte: Hast du …? Brauchst du …? Nora fragt auch. Antworten Sie: Ja, ich habe … / Nein, ich habe keinen / kein / keine …",
             "cards": {
               "learner": [
                 "Im Kurs – Heft",
@@ -2762,11 +2768,11 @@
             "profile": "sd1-sp3",
             "prepMinutes": 0,
             "instructionsDe": "Bitten Sie mit jeder Karte um etwas. Ihre Partnerin bittet auch: Reagieren Sie.",
-            "situationDe": "Sprechen Teil 3: Sie und Ihre Partnerin haben je zwei Karten. In der Prüfung sind auf den Karten Bilder. „Hast du …?“ ist nur eine Frage, keine Bitte. Bitten Sie: Gibst du mir bitte …? Hast du … für mich?",
+            "situationDe": "Sprechen Teil 3: Sie und Ihre Partnerin Nora haben je zwei Karten. In der Prüfung sind auf den Karten Bilder. „Hast du …?“ ist nur eine Frage, keine Bitte. Bitten Sie: Gibst du mir bitte …? Hast du … für mich? Fehlt ein Wort? Zeigen Sie und sagen Sie: „Das ist für …“",
             "cards": {
               "learner": [
                 "Heft",
-                "Papier"
+                "Auf der Karte ist nur ein Bild: ein Ladekabel. Sie kennen das Wort nicht."
               ],
               "partner": [
                 "Buch",
@@ -2782,20 +2788,20 @@
         ],
         "aiRole": {
           "name": "Nora",
-          "personaDe": "Teilnehmerin in der Prüfung; sie ist mit Ihnen im Kurs und sagt du. Sie spricht langsam, wiederholt gern und zeigt Wörter aus der Liste.",
+          "personaDe": "Teilnehmerin in der Prüfung; sie ist mit Ihnen im Kurs und sagt du. Sie spricht langsam, wiederholt gern und zeigt Wörter aus der Liste. Fehlt ein Wort? Nora hilft mit dem Wort.",
           "register": "du",
           "support": "slow-wordbank"
         },
-        "openingLine": "Hallo! Wir sind zusammen im Kurs, also sagen wir du. Zuerst Teil 2: Fragen und Antworten, erst „Im Kurs“, dann „Im Büro“. Dann Teil 3: Bitten. Du zuerst!",
+        "openingLine": "Hallo, ich bin Nora! Wir sind zusammen im Kurs, also sagen wir du. Zuerst Teil 2: Fragen und Antworten, erst „Im Kurs“, dann „Im Büro“. Dann Teil 3: Bitten. Du zuerst!",
         "hintWords": [
-          "Hast du …?",
-          "Brauchst du …?",
+          "Hast du …? / Brauchst du …?",
           "Ja, ich habe …",
           "Nein, ich habe keinen / kein / keine …",
           "Gibst du mir bitte …?",
           "Hast du … für mich?",
           "Ja, hier, bitte.",
-          "Danke!"
+          "Das ist für …",
+          "Wie heißt das auf Deutsch?"
         ],
         "modelTurns": [
           {
@@ -2808,11 +2814,11 @@
           },
           {
             "speaker": "partner",
-            "de": "Brauchst du heute das Buch?"
+            "de": "Brauchst du im Kurs ein Buch?"
           },
           {
             "speaker": "learner",
-            "de": "Ja, ich brauche das Buch für den Kurs."
+            "de": "Ja, ich brauche ein Buch für den Kurs."
           },
           {
             "speaker": "learner",
@@ -2848,11 +2854,11 @@
           },
           {
             "speaker": "learner",
-            "de": "Ich brauche bitte Papier."
+            "de": "Ich brauche bitte das hier. Das ist für mein Handy. Wie heißt das auf Deutsch?"
           },
           {
             "speaker": "partner",
-            "de": "Hier, bitte."
+            "de": "Ein Ladekabel? Hier, bitte."
           },
           {
             "speaker": "partner",
@@ -2877,7 +2883,7 @@
         "register": "halbformell",
         "address": "Sie",
         "title": "Eine Nachricht an Frau Schulz",
-        "situationDe": "Der Kurs ist ab jetzt manchmal online. Aber Sie haben keinen Laptop, nur ein Handy. Frau Schulz ist Ihre Lehrerin.",
+        "situationDe": "Der Kurs ist ab jetzt manchmal online. Aber Sie haben keinen Laptop, nur ein Handy. Frau Schulz ist Ihre Lehrerin. Zu Hause lernen Sie Seite 24: Dinge im Kursraum.",
         "taskDe": "Schreiben Sie Frau Schulz eine Nachricht zu allen drei Punkten (20 bis 30 Wörter).",
         "leitpunkte": [
           {
@@ -2894,7 +2900,7 @@
           },
           {
             "id": "lp2",
-            "de": "Bitten Sie Frau Schulz um etwas.",
+            "de": "Bitten Sie Frau Schulz um einen Laptop für den Onlinekurs.",
             "cues": [
               "Haben Sie",
               "Gibt es",
@@ -2906,12 +2912,13 @@
           },
           {
             "id": "lp3",
-            "de": "Fragen Sie: Ist ein Wort richtig?",
+            "de": "Fragen Sie zu Seite 24: Ist ein Wort richtig?",
             "cues": [
               "richtig",
               "Heißt es",
               "heißt das",
-              "Wort"
+              "Wort",
+              "Seite 24"
             ]
           }
         ],
@@ -2923,19 +2930,19 @@
         "checklist": [
           "Anrede: Liebe Frau Schulz,",
           "Punkt 1: Was fehlt Ihnen?",
-          "Punkt 2: eine Bitte an Frau Schulz",
-          "Punkt 3: eine Frage: Ist das Wort richtig?",
+          "Punkt 2: eine Bitte um einen Laptop",
+          "Punkt 3: eine Frage zu Seite 24: Ist das Wort richtig?",
           "Sie, nicht du",
-          "Gruß mit Ihrem Namen",
+          "Gruß und Ihr Name",
           "20 bis 30 Wörter"
         ],
-        "modelText": "Liebe Frau Schulz,\nich habe keinen Laptop, nur ein Handy. Gibt es in der Sprachschule einen Laptop für mich? Und ist das richtig: „der Laptop“?\nViele Grüße\n(Ihr Name)"
+        "modelText": "Liebe Frau Schulz,\nich habe keinen Laptop, nur ein Handy. Haben Sie vielleicht einen Laptop für mich? Eine Frage zu Seite 24: Heißt es „die Schlüssel“?\nViele Grüße\n(Ihr Name)"
       }
     },
     {
       "id": "a1.1-u06-ls7",
       "kind": "check",
-      "endLine": "Geschafft! Sie können jetzt um Dinge bitten, mit „kein“ antworten und eine Nachricht an Frau Schulz schreiben."
+      "endLine": "Sehr gut! Sie können jetzt um Dinge bitten, mit „kein“ antworten und Frau Schulz eine Nachricht schreiben."
     }
   ],
   "check": {
@@ -3055,8 +3062,8 @@
         "type": "error_correction",
         "role": "check",
         "topic": "g.akkusativ",
-        "promptDe": "Korrigieren Sie: „Hast du ein Kuli?“",
-        "promptEn": "Correct the sentence.",
+        "promptDe": "Korrigieren Sie die Endung: „Hast du ein Kuli?“",
+        "promptEn": "Correct the ending.",
         "answer": "Hast du einen Kuli?",
         "accepted": [
           "Hast du einen Kuli?"
@@ -3067,8 +3074,8 @@
           "case-np"
         ],
         "explanation": {
-          "de": "der Kuli → einen Kuli. Maskulin im Akkusativ: „einen“.",
-          "en": "der Kuli → einen Kuli: masculine accusative is “einen”."
+          "de": "der Kuli → einen Kuli. Maskulin im Akkusativ: ein → einen.",
+          "en": "der Kuli → einen Kuli: in the masculine accusative ein becomes einen."
         },
         "origin": "agent"
       },
@@ -3077,20 +3084,20 @@
         "type": "multiple_choice",
         "role": "check",
         "topic": "lx.kuli",
-        "promptDe": "Sie möchten etwas schreiben. Was brauchen Sie?",
-        "promptEn": "You want to write something. What do you need?",
+        "promptDe": "Sie schreiben etwas auf Papier. Was brauchen Sie?",
+        "promptEn": "You are writing something on paper. What do you need?",
         "options": [
           "einen Kuli",
           "einen Schlüssel",
-          "einen Kalender"
+          "ein Ladekabel"
         ],
         "answer": "einen Kuli",
         "accepted": [
           "einen Kuli"
         ],
         "explanation": {
-          "de": "Mit einem Kuli schreiben Sie. Mit einem Schlüssel öffnen Sie eine Tür.",
-          "en": "You write with a pen; a key opens a door."
+          "de": "Mit einem Kuli schreiben Sie. Einen Schlüssel brauchen Sie für die Tür, ein Ladekabel für das Handy.",
+          "en": "You write with a pen; a key is for the door and a charging cable for the phone."
         },
         "origin": "agent"
       },
@@ -3134,17 +3141,17 @@
         "promptDe": "Sie brauchen ein Ladekabel, aber Sie kennen das Wort nicht. Was sagen Sie?",
         "promptEn": "You need a charging cable but don’t know the word. What do you say?",
         "options": [
-          "Ich brauche ein Handy. Wie viel kostet das?",
+          "Ich brauche ein Ladekabel, bitte.",
           "Ich brauche das für mein Handy. Wie heißt das?",
-          "Ich habe ein Handy. Wie alt ist das?"
+          "Ich habe kein Handy. Haben Sie ein Handy?"
         ],
         "answer": "Ich brauche das für mein Handy. Wie heißt das?",
         "accepted": [
           "Ich brauche das für mein Handy. Wie heißt das?"
         ],
         "explanation": {
-          "de": "Das Wort fehlt? Zeigen Sie und sagen Sie: „Das ist für mein Handy.“ Dann fragen Sie: „Wie heißt das?“",
-          "en": "When a word is missing, point, describe it (“for my phone”) and ask what it is called."
+          "de": "Sie kennen das Wort nicht? Zeigen Sie und sagen Sie: „Das ist für mein Handy.“ Dann fragen Sie: „Wie heißt das?“",
+          "en": "If you don’t know the word, point, say what it is for and ask what it is called."
         },
         "origin": "agent"
       }
@@ -3160,7 +3167,8 @@
       },
       {
         "canDo": "cd.a1.wort-fehlt",
-        "item": "a1.1-u06-q01"
+        "item": "a1.1-u06-q01",
+        "aufgabe": "sprechen"
       },
       {
         "canDo": "cd.a1.wort-pruefen",
@@ -3186,7 +3194,7 @@
       "id": "a1.1-u06-rm02",
       "de": "Gibst du mir bitte das Heft?",
       "en": "Could you give me the exercise book, please?",
-      "function": "um etwas bitten (feste Wendung: mir)",
+      "function": "um etwas bitten („mir“ ist Dativ)",
       "forTemplate": "sd1.sp3"
     },
     {
@@ -3207,20 +3215,21 @@
       "id": "a1.1-u06-rm05",
       "de": "Brauchst du einen Laptop?",
       "en": "Do you need a laptop?",
-      "function": "fragen, ob jemand etwas braucht",
+      "function": "fragen: Brauchst du etwas?",
       "forTemplate": "sd1.sp2"
     },
     {
       "id": "a1.1-u06-rm06",
-      "de": "Wie heißt das auf Deutsch?",
-      "en": "What’s this called in German?",
-      "function": "ein Wort fehlt: fragen"
+      "de": "Das ist für mein Handy. Wie heißt das auf Deutsch?",
+      "en": "It’s for my phone. What’s it called in German?",
+      "function": "ein Wort fehlt: zeigen, sagen und fragen",
+      "forTemplate": "sd1.sp3"
     },
     {
       "id": "a1.1-u06-rm07",
       "de": "Ist das richtig: der Schlüssel?",
       "en": "Is this right: der Schlüssel?",
-      "function": "fragen, ob ein Wort richtig ist"
+      "function": "fragen: Ist das Wort richtig?"
     },
     {
       "id": "a1.1-u06-rm08",
@@ -3232,14 +3241,9 @@
   ],
   "story": {
     "beat": "Priya hat im Kurs kein Heft und keinen Stift, und ab jetzt ist der Kurs manchmal online – aber sie hat keinen Laptop. Olena hilft mit Papier und Bleistift, Herr Richter hat das Heft im Büro, und Bilal sucht mit Priya im Internet einen Laptop: Er kostet nur 180 Euro.",
-    "cliffhanger": "Am Abend hat Priya den Laptop, und er funktioniert! Da kommt eine Nachricht von Emre: „Du hast jetzt einen Laptop? Dann machen wir morgen einen Videochat!“",
+    "cliffhanger": "Am Abend hat Priya den Laptop, und er funktioniert! Da kommt eine Nachricht von Emre: „Du hast jetzt einen Laptop? Dann lernen wir morgen zusammen, im Videochat!“",
     "castIn": [
-      "cast.priya",
-      "cast.olena",
-      "cast.frau-schulz",
-      "cast.arta",
-      "cast.herr-richter",
-      "cast.bilal"
+      "cast.emre"
     ]
   },
   "fokus": [],

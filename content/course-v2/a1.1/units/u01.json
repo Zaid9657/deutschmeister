@@ -50,7 +50,8 @@
           "lx.sprachschule",
           "lx.online",
           "lx.chat",
-          "lx.begruessen"
+          "lx.begruessen",
+          "lx.geschafft"
         ]
       },
       {
@@ -131,7 +132,7 @@
       "Linie 1 A1 K1–2 (Grammatik: Präsens, W-Frage; nach memo 06)"
     ],
     "deviation": {
-      "reason": "Sprechen: LS5 übt Teil 1 verkürzt (nur die Vorstellung; Buchstabieren und Nummer sind Stoff von u02, daher Prüfungsfokus sd1.sp1 „reduced“) und hängt eine sd1.sp2-Runde mit zwei Themen an („Kurs“, „Sprachen“; Karten Land und Englisch für den Lerner, Wohnort und Deutsch für die Gesprächsleitung), die mit „Danke! Auf Wiedersehen!“ endet; sie trägt cd.a1.person-erfragen und cd.a1.verabschieden als Aufgabe (Review r1 F01/F02). Der Stoffplan nennt für u01 nur Sp1, H1 und S1; COV-3 erlaubt den vierten Teil. Aussprache: Statt „Satzmelodie der W-Frage; Wortakzent in Namen, Ländern und Sprachen“ hören LS1 und LS3 die Personalendungen (komme – kommen, wohnst – wohnt), weil sie der Leitpunkt g.praesens sind. Die Satzmelodie (W-Frage fallend, Ja/Nein-Frage steigend) übt a1.1-u03 LS1, den Wortakzent bei Ländern und Städten a1.1-u12 LS1. Landeskunde: Die Einheit macht keine Sachaussage und hat darum keinen Fact. Von „Grüßen in D-A-CH“ zeigt sie ein „Grüß Gott“ (Herr Braun aus Wien, H1 Gespräch 2, glossiert) und „du oder Sie?“ im Kurs (LS2: „Im Kurs sagen Sie ‚du‘“); Servus, Moin und Grüezi fehlen, damit der Wortschatz am ersten Tag klein bleibt. Deutsch in D-A-CH kommt in a1.1-u12 („Deutsch in der Welt“) wieder. Feste Wendungen: „Wie geht’s? – Gut, danke“ steht nicht in u01, sondern in a1.1-u03 (lx.wie-gehts), aus demselben Grund. Nach Sprachen fragt die Einheit mit der Plan-Wendung „Sprichst du (auch) Englisch?“; „Welche Sprachen sprichst du?“ wartet auf einen Chunk-Eintrag im Spine (g.welch-dies ist erst a1.2-u06 lizenziert). Schreiben: Das eigene Kursprofil (Plan: Steckbrief, ≈ 20 Wörter) schreibt der Lerner in LS2 als Chat-Antwort an Emre (Name, Land, Wohnort und eine Frage); die Schreiben-Aufgabe ist sd1.s1 im Prüfungsformat (Formular zu einer anderen Person, 5 Felder). Lesen: Der Kurs-Chat (LS3) ist länger als die geplanten ≈ 45 Wörter, weil vier kurze Einträge die Detail- und Strukturfragen tragen (Wohnort, Muttersprache, er/sie-Formen); er bleibt im TXT-03-Rahmen."
+      "reason": "Sprechen: LS5 übt Teil 1 verkürzt (nur die Vorstellung; Buchstabieren und Nummer sind Stoff von u02, daher Prüfungsfokus sd1.sp1 „reduced“) und hängt eine sd1.sp2-Runde mit zwei Themen an („Kurs“, „Sprachen“; Karten Land und Englisch für den Lerner, Wohnort und Deutsch für die Gesprächsleitung; pro Thema fragt zuerst der Lerner mit seiner Karte, dann die Gesprächsleitung mit ihrer), die mit „Danke! Auf Wiedersehen!“ endet; sie trägt cd.a1.person-erfragen und cd.a1.verabschieden als Aufgabe (Review r1 F01/F02). Der Stoffplan nennt für u01 nur Sp1, H1 und S1; COV-3 erlaubt den vierten Teil. Aussprache: Statt „Satzmelodie der W-Frage; Wortakzent in Namen, Ländern und Sprachen“ hören LS1 und LS3 die Personalendungen (komme – kommen, wohnst – wohnt), weil sie der Leitpunkt g.praesens sind. Die Satzmelodie (W-Frage fallend, Ja/Nein-Frage steigend) übt a1.1-u03 LS1, den Wortakzent bei Ländern und Städten a1.1-u12 LS1. Landeskunde: Die Einheit macht keine Sachaussage und hat darum keinen Fact. Von „Grüßen in D-A-CH“ zeigt sie ein „Grüß Gott“ (Herr Braun aus Wien, H1 Gespräch 2, glossiert) und „du oder Sie?“ im Kurs (LS2: „Im Kurs sagen Sie ‚du‘“); Servus, Moin und Grüezi fehlen, damit der Wortschatz am ersten Tag klein bleibt. Deutsch in D-A-CH kommt in a1.1-u12 („Deutsch in der Welt“) wieder. Feste Wendungen: „Wie geht’s? – Gut, danke“ steht nicht in u01, sondern in a1.1-u03 (lx.wie-gehts), aus demselben Grund. Nach Sprachen fragt die Einheit mit der Plan-Wendung „Sprichst du (auch) Englisch?“; „Welche Sprachen sprichst du?“ wartet auf einen Chunk-Eintrag im Spine (g.welch-dies ist erst a1.2-u06 lizenziert). Schreiben: Das eigene Kursprofil (Plan: Steckbrief, ≈ 20 Wörter) schreibt der Lerner in LS2 als Chat-Antwort an Emre (Name, Land, Wohnort und eine Frage nach Sprachen; kürzer als der Plan, weil das Micro-Output-Band der Stufe 3–16 Wörter ist); die Schreiben-Aufgabe ist sd1.s1 im Prüfungsformat (Formular zu einer anderen Person, 5 Felder). Wortschatz: 35 neue Einträge statt 24–32 (Plan 26). lx.geschafft kam nach Review r1 dazu (die Check-Formel „Geschafft!“ der A1.1-Einheiten); ob lx.chat, lx.spanisch und lx.begruessen nur glossiert werden, entscheidet die Lexikon-Datei (Review r2 F05). Lesen: Der Kurs-Chat (LS3) ist länger als die geplanten ≈ 45 Wörter, weil vier kurze Einträge die Detail- und Strukturfragen tragen (Wohnort, Muttersprache, er/sie-Formen); er bleibt im TXT-03-Rahmen."
     },
     "cast": [
       "cast.priya",
@@ -307,8 +308,8 @@
           {
             "id": "a1.1-u01-ls1-l07",
             "speaker": "cast.frau-schulz",
-            "de": "Danke, Herr Ahmed. Und jetzt frage ich Sie: Wie heißen Sie, und woher kommen Sie?",
-            "en": "Thank you, Mr Ahmed. And now I’m asking you: what’s your name, and where are you from?"
+            "de": "Danke, Herr Ahmed. Und Sie? Wie heißen Sie, und woher kommen Sie?",
+            "en": "Thank you, Mr Ahmed. And you? What’s your name, and where are you from?"
           },
           {
             "id": "a1.1-u01-ls1-l08",
@@ -319,14 +320,14 @@
           {
             "id": "a1.1-u01-ls1-l09",
             "speaker": "cast.frau-schulz",
-            "de": "Aha, aus Kochi! Und wo wohnen Sie jetzt, Frau Nair? Auch hier in Leipzig?",
-            "en": "I see, from Kochi! And where do you live now, Ms Nair? Here in Leipzig too?"
+            "de": "Aha, aus Kochi – das ist eine Stadt in Indien. Und wo wohnen Sie jetzt, Frau Nair? Auch hier in Leipzig?",
+            "en": "I see, from Kochi – that’s a city in India. And where do you live now, Ms Nair? Here in Leipzig too?"
           },
           {
             "id": "a1.1-u01-ls1-l10",
             "speaker": "cast.priya",
-            "de": "Ja, jetzt wohne ich auch hier in Leipzig. Kochi ist eine Stadt in Indien.",
-            "en": "Yes, now I live here in Leipzig too. Kochi is a city in India."
+            "de": "Ja, jetzt wohne ich auch hier in Leipzig. Und hier lerne ich Deutsch.",
+            "en": "Yes, now I live here in Leipzig too. And I’m learning German here."
           }
         ],
         "glosses": [],
@@ -559,9 +560,6 @@
             "accepted": [
               "kommen"
             ],
-            "errorTags": [
-              "register"
-            ],
             "explanation": {
               "de": "Sie + komm-en: Für „Sie“ ist die Endung -en.",
               "en": "Sie takes the ending -en: Sie kommen."
@@ -682,8 +680,8 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.verbposition-2",
-            "promptDe": "Bilden Sie die Frage.",
-            "promptEn": "Build the question.",
+            "promptDe": "Bilden Sie die W-Frage.",
+            "promptEn": "Build the W-question.",
             "tiles": [
               "wohnen",
               "Sie",
@@ -736,8 +734,8 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.verbposition-2",
-            "promptDe": "Bilden Sie die Frage.",
-            "promptEn": "Build the question.",
+            "promptDe": "Bilden Sie die W-Frage.",
+            "promptEn": "Build the W-question.",
             "tiles": [
               "heißen",
               "Sie",
@@ -758,8 +756,8 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.praesens",
-            "promptDe": "Korrigieren Sie: „Frau Schulz, woher kommst du?“",
-            "promptEn": "Correct the sentence.",
+            "promptDe": "Korrigieren Sie: du oder Sie? „Frau Schulz, woher kommst du?“",
+            "promptEn": "du or Sie? Correct the question.",
             "answer": "Frau Schulz, woher kommen Sie?",
             "accepted": [
               "Frau Schulz, woher kommen Sie?",
@@ -866,8 +864,8 @@
           "type": "sentence_building",
           "role": "practice",
           "topic": "g.verbposition-2",
-          "promptDe": "Bilden Sie die Frage.",
-          "promptEn": "Build the question.",
+          "promptDe": "Bilden Sie die W-Frage.",
+          "promptEn": "Build the W-question.",
           "tiles": [
             "kommen",
             "Sie",
@@ -945,8 +943,8 @@
             "repair"
           ],
           "explanation": {
-            "de": "Das Verb „wohnen“ steht auf Position 2. Mit „Sie“ ist die Endung -en.",
-            "en": "“wohnen” is in position 2; with Sie the ending is -en."
+            "de": "Das Verb „wohnen“ steht auf Position 2.",
+            "en": "The verb “wohnen” is in position 2."
           },
           "origin": "agent"
         },
@@ -1062,8 +1060,8 @@
           {
             "id": "a1.1-u01-ls2-l05",
             "speaker": "cast.olena",
-            "de": "Entschuldigung! Hallo, ihr zwei! Ich bin Olena. Und du? Wie heißt du noch mal?",
-            "en": "Excuse me! Hi, you two! I’m Olena. And you? What was your name again?"
+            "de": "Entschuldigung! Hallo, Priya! Ich bin Olena. Und du? Wie heißt du noch mal?",
+            "en": "Excuse me! Hi, Priya! I’m Olena. And you? What was your name again?"
           },
           {
             "id": "a1.1-u01-ls2-l06",
@@ -1080,8 +1078,8 @@
           {
             "id": "a1.1-u01-ls2-l08",
             "speaker": "cast.frau-schulz",
-            "de": "So, das ist alles für heute. Danke! Auf Wiedersehen und bis morgen!",
-            "en": "Right, that’s all for today. Thank you! Goodbye and see you tomorrow!"
+            "de": "So, geschafft! Das ist alles für heute. Danke! Auf Wiedersehen und bis morgen!",
+            "en": "Right, done! That’s all for today. Thank you! Goodbye and see you tomorrow!"
           },
           {
             "id": "a1.1-u01-ls2-l09",
@@ -1210,17 +1208,17 @@
           "promptDe": "Was sagt Bilal am Ende zu Priya?",
           "promptEn": "What does Bilal say to Priya at the end?",
           "options": [
-            "Auf Wiedersehen, Frau Schulz!",
+            "Tschüss, Priya!",
             "Bis morgen, Priya!",
-            "Freut mich, Priya!"
+            "Auf Wiedersehen, Priya!"
           ],
           "answer": "Bis morgen, Priya!",
           "accepted": [
             "Bis morgen, Priya!"
           ],
           "explanation": {
-            "de": "Bilal sagt zu Priya: „Bis morgen, Priya!“ „Auf Wiedersehen, Frau Schulz!“ sagt Priya.",
-            "en": "Bilal says “Bis morgen, Priya!”; Priya is the one who says “Auf Wiedersehen, Frau Schulz!”."
+            "de": "Bilal sagt: „Bis morgen, Priya!“ „Tschüss“ sagt Priya zu Olena und Bilal.",
+            "en": "Bilal says “Bis morgen, Priya!”; Priya is the one who says “Tschüss” to Olena and Bilal."
           },
           "origin": "agent"
         }
@@ -1410,8 +1408,8 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.verbposition-2",
-            "promptDe": "Bilden Sie die Frage.",
-            "promptEn": "Build the question.",
+            "promptDe": "Bilden Sie die W-Frage.",
+            "promptEn": "Build the W-question.",
             "tiles": [
               "kommst",
               "du",
@@ -1435,8 +1433,8 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.verbposition-2",
-            "promptDe": "Bilden Sie die Frage.",
-            "promptEn": "Build the question.",
+            "promptDe": "Bilden Sie die W-Frage.",
+            "promptEn": "Build the W-question.",
             "tiles": [
               "lernen",
               "Sie",
@@ -1524,8 +1522,8 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.verbposition-2",
-            "promptDe": "Bilden Sie die Frage.",
-            "promptEn": "Build the question.",
+            "promptDe": "Bilden Sie die W-Frage.",
+            "promptEn": "Build the W-question.",
             "tiles": [
               "wohnst",
               "du",
@@ -1764,9 +1762,6 @@
           "accepted": [
             "kommen"
           ],
-          "errorTags": [
-            "register"
-          ],
           "difficulty": 1,
           "banks": [
             "plateau",
@@ -1785,9 +1780,9 @@
         "bankKey": "a11-u01-mo2",
         "mode": "written",
         "profile": "course-micro",
-        "situationDe": "Emre fragt Sie im Chat: „Hallo! Ich bin Emre, aus İzmir. Wie heißt du? Woher kommst du?“",
-        "promptDe": "Antworten Sie Emre in 1–3 Sätzen. Fragen Sie auch: Wo? Sprachen?",
-        "promptEn": "Answer Emre in 1–3 sentences, then ask him where he lives and which languages he speaks.",
+        "situationDe": "Emre fragt Sie im Chat: „Hallo! Ich bin Emre, aus İzmir. Wie heißt du? Woher kommst du? Und wo wohnst du?“",
+        "promptDe": "Antworten Sie Emre: Name, Land, Wohnort. Fragen Sie auch: Sprachen?",
+        "promptEn": "Answer Emre: your name, your country and where you live. Then ask him about his languages.",
         "planSeconds": 30,
         "words": [
           3,
@@ -1798,7 +1793,7 @@
         ],
         "register": "du"
       },
-      "endLine": "Sie können jetzt fragen: Wie heißt du? Woher kommst du? Sprichst du Englisch? Und Sie können „Tschüss“ sagen."
+      "endLine": "Sie können jetzt fragen: Wie heißt du? Woher kommst du? Sprichst du Englisch?"
     },
     {
       "id": "a1.1-u01-ls3",
@@ -1816,8 +1811,8 @@
         "title": "Im Kurs-Chat",
         "textType": "tt.steckbrief",
         "text": {
-          "de": "Chat · Kurs A1 · Sprachschule Leipzig · Thema: Vorstellen\nFrau Schulz: Guten Abend! Ich begrüße alle Teilnehmer im Chat. Das ist Arta. Arta lernt online.\nArta: Guten Abend! Ich bin Arta Berisha. Land: Kosovo. Wohnort: Prishtina. Muttersprache: Albanisch. Ich spreche auch Englisch und lerne online Deutsch.\nEmre: Hallo, Arta! Ich bin Emre. Ich lerne auch online. Wohnort: İzmir. Muttersprache: Türkisch.\nArta: Hallo, Emre! Sprichst du auch Englisch?\nEmre: Nein, nur Türkisch und ein bisschen Deutsch.\nOlena: Hallo, Arta! Hallo, Emre! Ich heiße Olena. Ich komme aus Charkiw. Das ist eine Stadt in der Ukraine. Jetzt wohne ich in Leipzig. Ich spreche Ukrainisch, Russisch und Englisch.\nArta: Tschüss und bis morgen im Kurs!",
-          "en": "Chat · Course A1 · Leipzig language school · Topic: introductions\nMrs Schulz: Good evening! Welcome, everyone, to the chat. This is Arta. Arta is learning online.\nArta: Good evening! I’m Arta Berisha. Country: Kosovo. Place of residence: Prishtina. First language: Albanian. I also speak English and I’m learning German online.\nEmre: Hi, Arta! I’m Emre. I’m learning online too. Place of residence: İzmir. First language: Turkish.\nArta: Hi, Emre! Do you speak English too?\nEmre: No, only Turkish and a little German.\nOlena: Hi, Arta! Hi, Emre! My name is Olena. I’m from Kharkiv. That’s a city in Ukraine. Now I live in Leipzig. I speak Ukrainian, Russian and English.\nArta: Bye, see you tomorrow in class!"
+          "de": "Chat · Kurs A1 · Sprachschule Leipzig · Thema: Vorstellen\nFrau Schulz: Guten Abend! Ich begrüße alle Teilnehmer im Chat. Das ist Arta. Arta lernt online. Fragen und antworten Sie bitte!\nArta: Guten Abend! Ich bin Arta Berisha. Land: Kosovo. Wohnort: Prishtina. Muttersprache: Albanisch. Ich spreche auch Englisch und lerne online Deutsch.\nEmre: Hallo, Arta! Ich bin Emre. Ich lerne auch online. Wohnort: İzmir. Muttersprache: Türkisch.\nArta: Hallo, Emre! Sprichst du auch Englisch?\nEmre: Nein, nur Türkisch und ein bisschen Deutsch.\nOlena: Hallo, Arta! Hallo, Emre! Ich heiße Olena. Ich komme aus Charkiw. Das ist eine Stadt in der Ukraine. Jetzt wohne ich in Leipzig. Ich spreche Ukrainisch, Russisch und Englisch.\nArta: Tschüss und bis morgen im Kurs!",
+          "en": "Chat · Course A1 · Leipzig language school · Topic: introductions\nMrs Schulz: Good evening! Welcome, everyone, to the chat. This is Arta. Arta is learning online. Please ask and answer!\nArta: Good evening! I’m Arta Berisha. Country: Kosovo. Place of residence: Prishtina. First language: Albanian. I also speak English and I’m learning German online.\nEmre: Hi, Arta! I’m Emre. I’m learning online too. Place of residence: İzmir. First language: Turkish.\nArta: Hi, Emre! Do you speak English too?\nEmre: No, only Turkish and a little German.\nOlena: Hi, Arta! Hi, Emre! My name is Olena. I’m from Kharkiv. That’s a city in Ukraine. Now I live in Leipzig. I speak Ukrainian, Russian and English.\nArta: Bye, see you tomorrow in class!"
         },
         "glosses": [
           {
@@ -1942,8 +1937,8 @@
             "Türkisch"
           ],
           "explanation": {
-            "de": "Emre: „Muttersprache: Türkisch.“ Er spricht ein bisschen Deutsch. Englisch sprechen nur Arta und Olena.",
-            "en": "Emre’s first language is Turkish; he speaks a little German. Only Arta and Olena speak English."
+            "de": "Emre: „Muttersprache: Türkisch.“ Er spricht ein bisschen Deutsch. Im Chat sprechen nur Arta und Olena Englisch.",
+            "en": "Emre’s first language is Turkish; he speaks a little German. In the chat, only Arta and Olena speak English."
           },
           "origin": "agent"
         }
@@ -2239,8 +2234,8 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.verbposition-2",
-            "promptDe": "Bilden Sie die Frage.",
-            "promptEn": "Build the question.",
+            "promptDe": "Bilden Sie die W-Frage.",
+            "promptEn": "Build the W-question.",
             "tiles": [
               "lernst",
               "du",
@@ -2265,8 +2260,8 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.verbposition-2",
-            "promptDe": "Bilden Sie die Frage.",
-            "promptEn": "Build the question.",
+            "promptDe": "Bilden Sie die W-Frage.",
+            "promptEn": "Build the W-question.",
             "tiles": [
               "wohnt",
               "Arta",
@@ -2504,9 +2499,9 @@
         "bankKey": "a11-u01-mo3",
         "mode": "spoken",
         "profile": "course-micro-sp",
-        "situationDe": "Olena fragt Sie online: „Hallo! Sprichst du Englisch?“",
-        "promptDe": "Antworten Sie Olena in 1–2 Sätzen. Fragen Sie dann: Woher? Wo? Sprachen?",
-        "promptEn": "Tell Olena which languages you speak, then ask her where she is from, where she lives and which languages she speaks.",
+        "situationDe": "Marco ist auch im Kurs. Er fragt Sie online: „Hallo! Sprichst du Englisch?“",
+        "promptDe": "Antworten Sie Marco in 1–2 Sätzen. Fragen Sie dann: Woher? Wo? Sprachen?",
+        "promptEn": "Tell Marco which languages you speak, then ask him where he is from, where he lives and which languages he speaks.",
         "planSeconds": 30,
         "seconds": [
           20,
@@ -2664,8 +2659,8 @@
             {
               "id": "a1.1-u01-ls4-t4-l01",
               "speaker": "x.eva-lindner",
-              "de": "So, jetzt ist der Kurs zu Ende. Danke und bis morgen!",
-              "en": "Right, class is over now. Thank you and see you tomorrow!"
+              "de": "So, geschafft! Jetzt ist der Kurs zu Ende. Danke und bis morgen!",
+              "en": "Right, done! Class is over now. Thank you and see you tomorrow!"
             },
             {
               "id": "a1.1-u01-ls4-t4-l02",
@@ -2702,26 +2697,26 @@
             {
               "id": "a1.1-u01-ls4-t5-l01",
               "speaker": "x.anna",
-              "de": "Hallo, Tom! Da bist du ja!",
-              "en": "Hi, Tom! There you are!"
+              "de": "Hallo, Tom! Ist der Kurs heute Abend?",
+              "en": "Hi, Tom! Is class this evening?"
             },
             {
               "id": "a1.1-u01-ls4-t5-l02",
               "speaker": "x.tom",
-              "de": "Hallo, Anna! Oh, da ist Frau Lindner. Guten Tag, Frau Lindner!",
-              "en": "Hi, Anna! Oh, there’s Ms Lindner. Hello, Ms Lindner!"
+              "de": "Heute Abend? Nein, morgen, oder? Oh, da ist Frau Lindner. Guten Morgen, Frau Lindner!",
+              "en": "This evening? No, tomorrow, isn’t it? Oh, there’s Ms Lindner. Good morning, Ms Lindner!"
             },
             {
               "id": "a1.1-u01-ls4-t5-l03",
-              "speaker": "x.anna",
-              "de": "Oh ja. Guten Morgen, Frau Lindner!",
-              "en": "Oh yes. Good morning, Ms Lindner!"
+              "speaker": "x.eva-lindner",
+              "de": "Guten Morgen, Anna! Guten Morgen, Tom! Der Kurs beginnt jetzt. Kommen Sie bitte!",
+              "en": "Good morning, Anna! Good morning, Tom! Class is starting now. Come in, please!"
             },
             {
               "id": "a1.1-u01-ls4-t5-l04",
-              "speaker": "x.eva-lindner",
-              "de": "Guten Morgen, Anna! Guten Morgen, Tom! Kommen Sie bitte! Der Kurs beginnt jetzt.",
-              "en": "Good morning, Anna! Good morning, Tom! Come in, please! Class is starting now."
+              "speaker": "x.anna",
+              "de": "Jetzt? Oh! Danke, Frau Lindner!",
+              "en": "Now? Oh! Thank you, Ms Lindner!"
             }
           ],
           "glosses": []
@@ -2876,20 +2871,20 @@
               "type": "abc",
               "role": "exam",
               "topic": "hoeren",
-              "promptDe": "Was sagt Anna zu Frau Lindner?",
+              "promptDe": "Wann beginnt der Kurs?",
               "options": [
-                "Hallo!",
-                "Guten Morgen!",
-                "Guten Tag!"
+                "morgen",
+                "jetzt",
+                "heute Abend"
               ],
               "textRef": "a1.1-u01-ls4-t5",
-              "answer": "Guten Morgen!",
+              "answer": "jetzt",
               "accepted": [
-                "Guten Morgen!"
+                "jetzt"
               ],
               "explanation": {
-                "de": "Anna sagt zu Frau Lindner: „Guten Morgen, Frau Lindner!“ „Hallo“ sagt sie zu Tom. „Guten Tag“ sagt Tom.",
-                "en": "Anna says “Guten Morgen” to Ms Lindner and “Hallo” to Tom; Tom is the one who says “Guten Tag”."
+                "de": "Frau Lindner sagt: „Der Kurs beginnt jetzt.“ Anna fragt: „Heute Abend?“ Tom sagt: „Morgen, oder?“",
+                "en": "Ms Lindner says class starts now. Anna guessed this evening and Tom guessed tomorrow."
               },
               "origin": "agent"
             },
@@ -2981,7 +2976,7 @@
         ],
         "aiRole": {
           "name": "Gesprächsleitung (KI)",
-          "personaDe": "leitet Sprechen Teil 1 und Teil 2 wie in der Prüfung; spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste. Teil 1: Nur die Vorstellung: kein Buchstabieren, keine Zahl (das kommt in Einheit 2). Teil 2: hat die Karten „Kurs – Wohnort“ und „Sprachen – Deutsch“, antwortet kurz auf die Fragen, fragt dann selbst und beendet das Gespräch mit „Danke! Auf Wiedersehen!“",
+          "personaDe": "leitet Sprechen Teil 1 und Teil 2 wie in der Prüfung; spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste. Teil 1: Nur die Vorstellung (Name, Land, Wohnort, Sprachen): kein Buchstabieren, keine Zahl (das kommt in Einheit 2); danach: „Danke! Jetzt Teil 2.“ Teil 2: zwei Runden, zuerst „Kurs“, dann „Sprachen“. Karten des Gegenübers: „Kurs – Land“ und „Sprachen – Englisch“; eigene Karten: „Kurs – Wohnort“ und „Sprachen – Deutsch“. In jeder Runde fragt zuerst das Gegenüber mit seiner Karte, sie antwortet kurz; dann fragt sie mit ihrer Karte, das Gegenüber antwortet. Am Ende sagt sie: „Danke! Auf Wiedersehen!“",
           "register": "Sie",
           "support": "slow-wordbank"
         },
@@ -2991,7 +2986,7 @@
           "Ich komme aus …",
           "Ich wohne in …",
           "Ich spreche … und ein bisschen Deutsch.",
-          "Meine Muttersprache ist …",
+          "Muttersprache: …",
           "Woher kommen Sie?",
           "Sprechen Sie …?",
           "Danke! Auf Wiedersehen!"
@@ -3146,7 +3141,7 @@
     {
       "id": "a1.1-u01-ls7",
       "kind": "check",
-      "endLine": "Sie können jetzt grüßen und sich vorstellen. Sie können nach Name, Land und Sprachen fragen und „Auf Wiedersehen“ sagen."
+      "endLine": "Geschafft! Sie können jetzt grüßen und sich vorstellen. Sie können nach Name, Land und Sprachen fragen und „Auf Wiedersehen“ sagen."
     }
   ],
   "check": {
@@ -3426,8 +3421,8 @@
         "type": "sentence_building",
         "role": "proof",
         "topic": "g.verbposition-2",
-        "promptDe": "Sie fragen Frau Schulz. Bilden Sie die Frage.",
-        "promptEn": "You ask Mrs Schulz. Build the question.",
+        "promptDe": "Sie fragen Frau Schulz. Bilden Sie die W-Frage.",
+        "promptEn": "You ask Mrs Schulz. Build the W-question.",
         "tiles": [
           "wohnen",
           "Sie",
@@ -3549,7 +3544,7 @@
   ],
   "story": {
     "beat": "Priya wohnt jetzt in Leipzig. Heute beginnt der Kurs A1 von Frau Schulz. Im Kurs sind auch Olena und Bilal. Emre und Arta lernen online, in İzmir und in Prishtina.",
-    "cliffhanger": "Nach dem Kurs: „Frau Nair? Ich bin Uwe Richter, von der Anmeldung. Bitte kommen Sie morgen. Ihr Name – wie schreibt man das?“",
+    "cliffhanger": "Nach dem Kurs: „Frau Nair? Guten Tag! Ich bin Uwe Richter, von der Sprachschule. Bitte kommen Sie morgen. Nair – mit A oder mit E?“",
     "castIn": [
       "cast.priya",
       "cast.frau-schulz",
@@ -3632,6 +3627,14 @@
       "gender": "m",
       "age": 35,
       "voice": "de-DE-RalfNeural",
+      "rate": "-10%",
+      "variety": "D"
+    },
+    "x.marco": {
+      "role": "Teilnehmer im Kurs A1 von Frau Schulz, lernt online",
+      "gender": "m",
+      "age": 28,
+      "voice": "de-DE-KlausNeural",
       "rate": "-10%",
       "variety": "D"
     }

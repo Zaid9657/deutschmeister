@@ -47,7 +47,6 @@
           "lx.abfahrt",
           "lx.ankunft",
           "lx.verspaetung",
-          "lx.durchsage",
           "lx.information",
           "lx.hauptbahnhof",
           "lx.anzeigetafel"
@@ -77,7 +76,6 @@
           "lx.puenktlich",
           "lx.platz",
           "lx.frei",
-          "lx.person",
           "lx.halten",
           "lx.kilometer",
           "lx.unterwegs",
@@ -128,7 +126,9 @@
       "M A1 L10 Ich steige jetzt in die U-Bahn ein.",
       "N A1 K3 In Hamburg"
     ],
-    "deviation": null,
+    "deviation": {
+      "reason": "Abweichungen vom Stoffplan a1-1 §6 Unit 10 (Review a1.1-u10 r1 F12, F18, F20). (1) Landeskunde: Die Einheit macht keine landesweite Sachaussage und hat darum keinen Fact. Vom Plan-Punkt „Bahnfahren in D-A-CH“ zeigt sie „Fahrkarte vor der Fahrt kaufen“ als Szene: Sophie hat schon eine Fahrkarte, Priya und Arjun kaufen ihre vor der Abfahrt am Automaten und am Schalter (LS2). DB, ÖBB, SBB und das Deutschlandticket fehlen: Preis und Geltungsbereich des Deutschlandtickets ändern sich und bräuchten einen belegten, frischen Fact und neuen Wortschatz; der Punkt ist für eine Fokus-Karte oder die Level-Revision offen. Leipzig hat keine U-Bahn: Die Einheit schickt die Figuren darum nicht mit der U-Bahn; die U-Bahn steht nur in einer Durchsage aus einer anderen Stadt (LS4, Hören Teil 2). (2) Grammatik: Die Einheit folgt der Grammatik-Spine und specs.json (g.wortbildung-er-in neu in LS3). Der Stoffplan nennt für Unit 10 keine neue Grammatik; die Entscheidung liegt bei den Ownern von Stoffplan und Spine (Review r1 F20). (3) Sprechen: LS5 beginnt mit einer sd1.sp2-Runde mit zwei Themen („Fahrkarten“, „Zug“); sie trägt cd.a1.fahrkarte-schalter und steht als Chip, aber nicht im Prüfungsfokus, weil COV-3 höchstens vier Teile erlaubt. In Sprechen Teil 3 fragt der Lerner selbst nach einem Platz und antwortet auf die Frage der Partnerin (cd.a1.platz-frei, Review r1 F07). (4) Der Fahrkartenautomat in LS2 ist nur Text, ohne Bilder (assets leer), bis es eine Asset-Pipeline gibt (Review r1 F18)."
+    },
     "cast": [
       "cast.priya",
       "cast.arjun",
@@ -180,14 +180,14 @@
         {
           "id": "a1.1-u10-start-l04",
           "speaker": "cast.priya",
-          "de": "Nach Dresden? Sehr gern! Fahren wir mit dem Bus oder mit der U-Bahn?",
-          "en": "To Dresden? I’d love to! Do we go by bus or by underground?"
+          "de": "Nach Dresden? Sehr gern! Fahren wir mit dem Bus?",
+          "en": "To Dresden? I’d love to! Do we take the bus?"
         },
         {
           "id": "a1.1-u10-start-l05",
           "speaker": "cast.sophie",
-          "de": "Mit der U-Bahn? Nein, mit der Bahn! Der Zug ist schnell: nur eine Stunde und fünfzehn Minuten.",
-          "en": "By underground? No, by train! The train is fast: only an hour and fifteen minutes."
+          "de": "Mit dem Bus? Nein, mit der Bahn! Der Zug ist schnell: nur eine Stunde und fünfzehn Minuten.",
+          "en": "By bus? No, by train! The train is fast: only an hour and fifteen minutes."
         },
         {
           "id": "a1.1-u10-start-l06",
@@ -198,8 +198,8 @@
         {
           "id": "a1.1-u10-start-l07",
           "speaker": "cast.sophie",
-          "de": "Ja, genau. Der Fahrplan kommt gleich im Chat. Bis Freitag bei Olena!",
-          "en": "Yes, exactly. The timetable is coming in the chat in a minute. See you on Friday at Olena’s!"
+          "de": "Ja, genau. Der Fahrplan kommt gleich im Chat. Bis Freitag im Restaurant!",
+          "en": "Yes, exactly. The timetable is coming in the chat in a minute. See you on Friday at the restaurant!"
         },
         {
           "id": "a1.1-u10-start-l08",
@@ -381,8 +381,15 @@
           "answer": "9.10",
           "accepted": [
             "9.10",
-            "9:10"
+            "9:10",
+            "09.10",
+            "09:10"
           ],
+          "acceptedWhy": {
+            "9:10": "Uhrzeit mit Doppelpunkt, auch richtig",
+            "09.10": "Uhrzeit mit 0 vorn, wie auf der Anzeigetafel",
+            "09:10": "Uhrzeit mit 0 vorn und Doppelpunkt, wie auf der Fahrkarte"
+          },
           "exact": "number",
           "explanation": {
             "de": "Priya sagt: „Am Samstag fährt der Zug um 9.10 Uhr ab.“",
@@ -418,7 +425,7 @@
           "promptEn": "How do Priya and Arjun get to the main station on Saturday?",
           "options": [
             "mit dem Fahrrad",
-            "mit der U-Bahn",
+            "mit dem Auto",
             "mit dem Bus"
           ],
           "answer": "mit dem Bus",
@@ -956,7 +963,7 @@
           "count": 3,
           "source": [
             "Zeit|seit",
-            "zehn|Seen",
+            "Zoo|so",
             "Zahl|Saal",
             "Zoll|soll"
           ],
@@ -987,8 +994,8 @@
           {
             "id": "a1.1-u10-ls2-l01",
             "speaker": "cast.sophie",
-            "de": "Guten Morgen, ihr zwei! Hier ist der Automat. Priya, du nimmst zwei Fahrkarten, oder?",
-            "en": "Good morning, you two! Here’s the machine. Priya, you’re getting two tickets, right?"
+            "de": "Guten Morgen, ihr zwei! Hier ist der Automat. Ich habe schon eine Fahrkarte. Priya, du nimmst zwei Fahrkarten, oder?",
+            "en": "Good morning, you two! Here’s the machine. I already have a ticket. Priya, you’re getting two tickets, right?"
           },
           {
             "id": "a1.1-u10-ls2-l02",
@@ -1132,24 +1139,24 @@
           "origin": "agent"
         },
         {
-          "id": "a1.1-u10-ls2-i04",
+          "id": "a1.1-u10-ls2-i06",
           "type": "multiple_choice",
           "role": "detail",
           "topic": "lesen",
-          "promptDe": "Lesen Sie den Text am Automaten. Was fragt der Automat zuerst?",
-          "promptEn": "Read the machine: what does it ask first?",
+          "promptDe": "Automat: „Einfach oder hin und zurück?“ Priya fährt abends wieder nach Leipzig. Was passt?",
+          "promptEn": "The machine asks: single or return? Priya comes back to Leipzig in the evening. What fits?",
           "options": [
-            "die Stadt",
-            "die Personen",
-            "das Geld"
+            "hin und zurück",
+            "einfach",
+            "zwei Personen"
           ],
-          "answer": "die Stadt",
+          "answer": "hin und zurück",
           "accepted": [
-            "die Stadt"
+            "hin und zurück"
           ],
           "explanation": {
-            "de": "Zuerst fragt der Automat: „Wohin fahren Sie?“ Die Antwort ist eine Stadt.",
-            "en": "First it asks where you are going – the answer is a city."
+            "de": "Priya fährt am Abend zurück nach Leipzig. Sie braucht also eine Fahrkarte hin und zurück.",
+            "en": "Priya comes back to Leipzig in the evening, so she needs a return ticket."
           },
           "origin": "agent"
         },
@@ -1248,7 +1255,7 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.vokalwechsel",
-          "promptDe": "„Der Automat ___ nur Geld.“ Was passt?",
+          "promptDe": "„Der Automat ___ meine Karte nicht.“ Was passt?",
           "promptEn": "Which form goes with der Automat (= er)?",
           "options": [
             "nimmt",
@@ -1303,19 +1310,19 @@
             "origin": "agent"
           },
           {
-            "id": "a1.1-u10-ls2-p03",
+            "id": "a1.1-u10-ls2-p12",
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.vokalwechsel",
-            "promptDe": "Der Bus ___ am Hauptbahnhof. (halten)",
-            "promptEn": "halten: er-form.",
-            "answer": "hält",
+            "promptDe": "Priya ___ Sophie um 8.50 Uhr an der Information. (treffen)",
+            "promptEn": "treffen: sie-form (singular).",
+            "answer": "trifft",
             "accepted": [
-              "hält"
+              "trifft"
             ],
             "explanation": {
-              "de": "„halten“: a → ä, „er hält“. Das „t“ kommt nicht zweimal.",
-              "en": "halten: a → ä, er hält (no second t)."
+              "de": "„Priya“ = „sie“: e → i, „sie trifft“.",
+              "en": "Priya = sie: e → i, sie trifft."
             },
             "origin": "agent"
           },
@@ -1389,7 +1396,7 @@
             "id": "a1.1-u10-ls2-p07",
             "type": "sentence_building",
             "role": "practice",
-            "topic": "g.vokalwechsel",
+            "topic": "g.verbposition-2",
             "promptDe": "Bilden Sie die W-Frage.",
             "promptEn": "Build the W-question.",
             "tiles": [
@@ -1464,8 +1471,8 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.vokalwechsel",
-            "promptDe": "Korrigieren Sie: „Du fahrst am Abend zurück.“",
-            "promptEn": "Correct the sentence.",
+            "promptDe": "Korrigieren Sie das Verb: „Du fahrst am Abend zurück.“",
+            "promptEn": "Correct the verb.",
             "answer": "Du fährst am Abend zurück.",
             "accepted": [
               "Du fährst am Abend zurück."
@@ -1638,8 +1645,8 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "g.vokalwechsel",
-          "promptDe": "Korrigieren Sie: „Arjun nehmt die Fahrkarten.“",
-          "promptEn": "Correct the sentence.",
+          "promptDe": "Korrigieren Sie das Verb: „Arjun nehmt die Fahrkarten.“",
+          "promptEn": "Correct the verb.",
           "answer": "Arjun nimmt die Fahrkarten.",
           "accepted": [
             "Arjun nimmt die Fahrkarten."
@@ -1721,9 +1728,9 @@
           {
             "id": "a1.1-u10-ls3-l04",
             "speaker": "cast.arjun",
-            "de": "Da, auf der Anzeigetafel steht es auch: Dresden, Gleis 14! Schnell, wir steigen ein!",
-            "en": "There, it’s on the departure board too: Dresden, platform 14! Quick, let’s get on!",
-            "say": "Da, auf der Anzeigetafel steht es auch: Dresden, Gleis vierzehn! Schnell, wir steigen ein!"
+            "de": "Da, auf der Anzeigetafel steht es auch: Dresden, Gleis 14! Schnell, zu Gleis 14! Dort steigen wir ein.",
+            "en": "There, it’s on the departure board too: Dresden, platform 14! Quick, to platform 14! That’s where we get on.",
+            "say": "Da, auf der Anzeigetafel steht es auch: Dresden, Gleis vierzehn! Schnell, zu Gleis vierzehn! Dort steigen wir ein."
           },
           {
             "id": "a1.1-u10-ls3-l05",
@@ -1896,17 +1903,17 @@
           "promptDe": "Die Frau sagt: „Ich bin Busfahrerin.“ Was macht sie?",
           "promptEn": "What does a Busfahrerin do?",
           "options": [
-            "Sie kauft Fahrkarten.",
             "Sie fährt einen Bus.",
-            "Sie lernt Deutsch."
+            "Sie fährt mit dem Bus zum Kurs.",
+            "Sie kauft eine Fahrkarte für den Bus."
           ],
           "answer": "Sie fährt einen Bus.",
           "accepted": [
             "Sie fährt einen Bus."
           ],
           "explanation": {
-            "de": "„Busfahrerin“ kommt von „Bus fahren“: Sie fährt einen Bus.",
-            "en": "“Busfahrerin” comes from “Bus fahren”: she drives a bus."
+            "de": "„Busfahrerin“ kommt von „einen Bus fahren“: Das ist ihre Arbeit. Mit dem Bus fahren viele Leute.",
+            "en": "“Busfahrerin” comes from “einen Bus fahren” (to drive a bus): that is her job. Many people ride the bus."
           },
           "origin": "agent"
         },
@@ -1915,20 +1922,20 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.wortbildung-er-in",
-          "promptDe": "Arjun sagt: „Sophie ist Studentin.“ Was passt?",
-          "promptEn": "-in = a woman. What fits?",
+          "promptDe": "„Ich bin Kellnerin.“ Wer sagt das?",
+          "promptEn": "“Ich bin Kellnerin.” Who says this?",
           "options": [
-            "Sophie ist eine Frau. Sie studiert.",
-            "Sophie ist ein Mann. Er studiert.",
-            "Sophie fährt einen Bus."
+            "ein Mann",
+            "eine Frau",
+            "zwei Frauen"
           ],
-          "answer": "Sophie ist eine Frau. Sie studiert.",
+          "answer": "eine Frau",
           "accepted": [
-            "Sophie ist eine Frau. Sie studiert."
+            "eine Frau"
           ],
           "explanation": {
-            "de": "„-in“ am Ende: eine Frau. „Studentin“: Sie studiert.",
-            "en": "The ending -in means a woman; a Studentin studies."
+            "de": "„Kellnerin“ mit „-in“: Das ist eine Frau. Ein Mann sagt: „Ich bin Kellner.“",
+            "en": "“Kellnerin” has -in: a woman. A man says “Ich bin Kellner.”"
           },
           "origin": "agent"
         },
@@ -1962,13 +1969,13 @@
           "promptDe": "„die Lehrerinnen“ – wer ist das?",
           "promptEn": "-innen = plural. Who is it?",
           "options": [
-            "ein Lehrer",
-            "eine Lehrerin",
-            "zwei oder mehr Lehrerinnen"
+            "ein Mann",
+            "eine Frau",
+            "zwei oder mehr Frauen"
           ],
-          "answer": "zwei oder mehr Lehrerinnen",
+          "answer": "zwei oder mehr Frauen",
           "accepted": [
-            "zwei oder mehr Lehrerinnen"
+            "zwei oder mehr Frauen"
           ],
           "explanation": {
             "de": "„-innen“ am Ende: Plural, zwei oder mehr Frauen.",
@@ -2077,7 +2084,7 @@
             "id": "a1.1-u10-ls3-p06",
             "type": "sentence_building",
             "role": "practice",
-            "topic": "g.wortbildung-er-in",
+            "topic": "g.ja-nein-frage",
             "promptDe": "Bilden Sie die Frage.",
             "promptEn": "Build the question.",
             "tiles": [
@@ -2100,7 +2107,7 @@
             "id": "a1.1-u10-ls3-p07",
             "type": "sentence_building",
             "role": "practice",
-            "topic": "g.wortbildung-er-in",
+            "topic": "g.ja-nein-frage",
             "promptDe": "Bilden Sie die Frage.",
             "promptEn": "Build the question.",
             "tiles": [
@@ -2155,8 +2162,8 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.wortbildung-er-in",
-            "promptDe": "Korrigieren Sie: „Sophie ist Student.“",
-            "promptEn": "Correct the sentence.",
+            "promptDe": "Korrigieren Sie die Endung: „Sophie ist Student.“",
+            "promptEn": "Correct the ending.",
             "answer": "Sophie ist Studentin.",
             "accepted": [
               "Sophie ist Studentin."
@@ -2319,7 +2326,7 @@
           "id": "a1.1-u10-ls3-r03",
           "type": "sentence_building",
           "role": "practice",
-          "topic": "g.wortbildung-er-in",
+          "topic": "g.ja-nein-frage",
           "promptDe": "Bilden Sie die Frage.",
           "promptEn": "Build the question.",
           "tiles": [
@@ -2352,8 +2359,8 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "g.wortbildung-er-in",
-          "promptDe": "Korrigieren Sie: „Meine Mutter ist Busfahrer.“",
-          "promptEn": "Correct the sentence.",
+          "promptDe": "Korrigieren Sie die Endung: „Meine Mutter ist Busfahrer.“",
+          "promptEn": "Correct the ending.",
           "answer": "Meine Mutter ist Busfahrerin.",
           "accepted": [
             "Meine Mutter ist Busfahrerin."
@@ -2421,7 +2428,7 @@
         "register": "du"
       },
       "aussprache": {
-        "focus": "sch ist nicht s: Schein – sein. Auch st und sp am Wortanfang sprechen Sie mit „sch“: steigen, Stadt, spät. Aber in „ist“ und „erst“ hören Sie s.",
+        "focus": "sch ist nicht s: Schein – sein. Auch st und sp am Wortanfang und nach einer Vorsilbe sprechen Sie mit „sch“: steigen, einsteigen, umsteigen, Stadt, spät. Aber in „ist“ und „erst“ hören Sie s.",
         "perception": {
           "generator": "perception.pairs",
           "count": 3,
@@ -2473,9 +2480,9 @@
             {
               "id": "a1.1-u10-ls4-t2-l01",
               "speaker": "durchsage",
-              "de": "Meine Damen und Herren, eine Information für Gleis 8! Der Zug nach Hamburg fährt heute nicht von Gleis 8 ab. Er fährt heute von Gleis 10, pünktlich um 14.05 Uhr. Bitte schnell einsteigen!",
-              "en": "Ladies and gentlemen, information for platform 8! The train to Hamburg does not leave from platform 8 today. Today it leaves from platform 10, on time at 14:05. Please board quickly!",
-              "say": "Meine Damen und Herren, eine Information für Gleis acht! Der Zug nach Hamburg fährt heute nicht von Gleis acht ab. Er fährt heute von Gleis zehn, pünktlich um vierzehn Uhr fünf. Bitte schnell einsteigen!"
+              "de": "Meine Damen und Herren, eine Information für Gleis 8! Der Zug nach Hamburg fährt heute nicht von Gleis 8 ab. Er fährt heute von Gleis 10, pünktlich um 14.05 Uhr. Bitte gehen Sie zu Gleis 10.",
+              "en": "Ladies and gentlemen, information for platform 8! The train to Hamburg does not leave from platform 8 today. Today it leaves from platform 10, on time at 14:05. Please go to platform 10.",
+              "say": "Meine Damen und Herren, eine Information für Gleis acht! Der Zug nach Hamburg fährt heute nicht von Gleis acht ab. Er fährt heute von Gleis zehn, pünktlich um vierzehn Uhr fünf. Bitte gehen Sie zu Gleis zehn."
             }
           ],
           "glosses": []
@@ -2488,9 +2495,9 @@
             {
               "id": "a1.1-u10-ls4-t3-l01",
               "speaker": "durchsage",
-              "de": "Meine Damen und Herren! In ein paar Minuten kommen wir in Hannover an. Der Zug hält hier zehn Minuten. Sie möchten nach Köln? Dann steigen Sie bitte in Hannover um. Der Zug nach Köln fährt von Gleis 4 ab.",
-              "en": "Ladies and gentlemen, we will arrive in Hanover in a few minutes. The train stops here for ten minutes. Are you going to Cologne? Then please change trains in Hanover. The train to Cologne leaves from platform 4.",
-              "say": "Meine Damen und Herren! In ein paar Minuten kommen wir in Hannover an. Der Zug hält hier zehn Minuten. Sie möchten nach Köln? Dann steigen Sie bitte in Hannover um. Der Zug nach Köln fährt von Gleis vier ab."
+              "de": "Meine Damen und Herren! In ein paar Minuten kommen wir in Hannover an. Der Zug hält dort zehn Minuten. Sie möchten nach Köln? Dann steigen Sie bitte in Hannover um. Der Zug nach Köln fährt von Gleis 4 ab.",
+              "en": "Ladies and gentlemen, we will arrive in Hanover in a few minutes. The train stops there for ten minutes. Are you going to Cologne? Then please change trains in Hanover. The train to Cologne leaves from platform 4.",
+              "say": "Meine Damen und Herren! In ein paar Minuten kommen wir in Hannover an. Der Zug hält dort zehn Minuten. Sie möchten nach Köln? Dann steigen Sie bitte in Hannover um. Der Zug nach Köln fährt von Gleis vier ab."
             }
           ],
           "glosses": []
@@ -2503,12 +2510,19 @@
             {
               "id": "a1.1-u10-ls4-t4-l01",
               "speaker": "durchsage",
-              "de": "Meine Damen und Herren, eine Durchsage! Heute fährt die U-Bahn U2 nicht zum Hauptbahnhof. Aber der Bus 62 fährt heute zum Hauptbahnhof. Er fährt alle zehn Minuten, auch am Abend. Danke!",
-              "en": "Ladies and gentlemen, an announcement! Today the U2 underground does not go to the main station. But bus 62 goes to the main station today. It runs every ten minutes, in the evening too. Thank you!",
-              "say": "Meine Damen und Herren, eine Durchsage! Heute fährt die U-Bahn U zwei nicht zum Hauptbahnhof. Aber der Bus zweiundsechzig fährt heute zum Hauptbahnhof. Er fährt alle zehn Minuten, auch am Abend. Danke!"
+              "de": "Achtung, bitte! Heute fährt die U-Bahn U2 nicht zum Hauptbahnhof. Aber der Bus 62 fährt heute zum Hauptbahnhof. Er fährt alle zehn Minuten, auch am Abend. Morgen fährt die U-Bahn wieder. Danke!",
+              "en": "Attention, please! Today the U2 underground does not go to the main station. But bus 62 goes to the main station today. It runs every ten minutes, in the evening too. Tomorrow the underground runs again. Thank you!",
+              "say": "Achtung, bitte! Heute fährt die U-Bahn U zwei nicht zum Hauptbahnhof. Aber der Bus zweiundsechzig fährt heute zum Hauptbahnhof. Er fährt alle zehn Minuten, auch am Abend. Morgen fährt die U-Bahn wieder. Danke!"
             }
           ],
-          "glosses": []
+          "glosses": [
+            {
+              "token": "Achtung",
+              "gloss": {
+                "en": "attention"
+              }
+            }
+          ]
         },
         {
           "id": "a1.1-u10-ls4-t5",
@@ -2835,15 +2849,15 @@
             "profile": "sd1-sp3",
             "prepMinutes": 0,
             "instructionsDe": "Bitten Sie mit jeder Karte um etwas. Ihre Partnerin bittet auch: Reagieren Sie.",
-            "situationDe": "Sprechen Teil 3: Sie und Ihre Partnerin haben je zwei Karten zum Thema Bahnhof und Zug. In der Prüfung sind auf den Karten Bilder.",
+            "situationDe": "Sprechen Teil 3: Sie und Ihre Partnerin haben je zwei Karten zum Thema Bahnhof und Zug. Sie sind im Zug und fragen auch nach einem Platz. In der Prüfung sind auf den Karten Bilder.",
             "cards": {
               "learner": [
-                "Fahrkarte",
-                "Fahrplan"
+                "Platz",
+                "Fahrkarte"
               ],
               "partner": [
-                "Platz",
-                "Wasser"
+                "Wasser",
+                "Platz"
               ]
             },
             "turns": [
@@ -2855,7 +2869,7 @@
         ],
         "aiRole": {
           "name": "Nora",
-          "personaDe": "Teilnehmerin in der Prüfung; spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste. In Teil 2 antwortet sie wie am Schalter: Eine Fahrkarte nach Dresden kostet 22 Euro, der Zug fährt um 9.10 Uhr ab. In Teil 3 bittet sie um einen Platz („Kann ich hier sitzen?“) und um Wasser.",
+          "personaDe": "Teilnehmerin in der Prüfung; spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste. In Teil 2 antwortet sie auf Ihre Fragen zu Preis und Abfahrt wie am Schalter: Eine Fahrkarte nach Dresden kostet 22 Euro, der Zug fährt um 9.10 Uhr ab. Ihre eigenen Fragen stellt sie als Teilnehmerin: „Kaufen Sie oft Fahrkarten hin und zurück?“, „Hat Ihr Zug oft Verspätung?“ In Teil 3 bittet sie um Wasser und um einen Platz („Kann ich hier sitzen?“) und reagiert auf Ihre Bitten.",
           "register": "Sie",
           "support": "slow-wordbank"
         },
@@ -2863,12 +2877,12 @@
         "hintWords": [
           "Was kostet …?",
           "Wann fährt … ab?",
-          "Einfach oder hin und zurück?",
-          "Hat der Zug Verspätung?",
+          "Ja, … hin und zurück.",
+          "Ja, manchmal … Minuten.",
+          "Entschuldigung, ist hier noch frei?",
           "Eine Fahrkarte nach …, bitte.",
-          "Kann ich bitte … haben?",
-          "Ja, hier ist noch frei.",
-          "Ja, gern. Hier, bitte."
+          "Ja, gern. Hier ist noch frei.",
+          "Ja, hier, bitte."
         ],
         "modelTurns": [
           {
@@ -2881,11 +2895,11 @@
           },
           {
             "speaker": "partner",
-            "de": "Möchten Sie einfach oder hin und zurück?"
+            "de": "Kaufen Sie oft Fahrkarten hin und zurück?"
           },
           {
             "speaker": "learner",
-            "de": "Ich möchte hin und zurück, bitte."
+            "de": "Ja. Ich fahre oft nach Dresden, hin und zurück."
           },
           {
             "speaker": "learner",
@@ -2897,11 +2911,27 @@
           },
           {
             "speaker": "partner",
-            "de": "Hat der Zug heute Verspätung?"
+            "de": "Hat Ihr Zug oft Verspätung?"
           },
           {
             "speaker": "learner",
-            "de": "Nein, er ist pünktlich."
+            "de": "Ja, manchmal zehn Minuten."
+          },
+          {
+            "speaker": "learner",
+            "de": "Entschuldigung, ist hier noch frei? Kann ich hier sitzen?"
+          },
+          {
+            "speaker": "partner",
+            "de": "Ja, bitte."
+          },
+          {
+            "speaker": "partner",
+            "de": "Haben Sie Wasser für mich?"
+          },
+          {
+            "speaker": "learner",
+            "de": "Ja, hier, bitte."
           },
           {
             "speaker": "learner",
@@ -2918,22 +2948,6 @@
           {
             "speaker": "learner",
             "de": "Ja, gern. Hier ist noch frei."
-          },
-          {
-            "speaker": "learner",
-            "de": "Kann ich bitte den Fahrplan haben?"
-          },
-          {
-            "speaker": "partner",
-            "de": "Ja, gern. Hier, bitte."
-          },
-          {
-            "speaker": "partner",
-            "de": "Haben Sie Wasser für mich?"
-          },
-          {
-            "speaker": "learner",
-            "de": "Ja, hier, bitte."
           }
         ]
       }
@@ -2950,7 +2964,7 @@
         "register": "informell",
         "address": "du",
         "title": "Eine Nachricht an Sophie: Mein Zug hat Verspätung",
-        "situationDe": "Sie fahren heute auch nach Dresden. Sie treffen Sophie um 14 Uhr am Hauptbahnhof. Aber Ihr Zug hat jetzt 30 Minuten Verspätung.",
+        "situationDe": "Sophie ist noch bis Mittwoch in Dresden. Heute ist Dienstag: Sie fahren noch einmal nach Dresden und treffen Sophie um 14 Uhr am Hauptbahnhof. Aber Ihr Zug hat jetzt 30 Minuten Verspätung.",
         "taskDe": "Schreiben Sie Sophie eine Nachricht zu allen drei Punkten (25 bis 35 Wörter).",
         "leitpunkte": [
           {
@@ -2959,7 +2973,7 @@
             "cues": [
               "Verspätung",
               "Minuten",
-              "später",
+              "spät",
               "dreißig",
               "30 Minuten"
             ]
@@ -2969,10 +2983,13 @@
             "de": "Wann kommen Sie in Dresden an?",
             "cues": [
               "komme",
+              "kommt",
               "ankommen",
               "Ankunft",
               "14.30",
-              "halb drei"
+              "14:30",
+              "halb drei",
+              "bin um"
             ]
           },
           {
@@ -2981,9 +2998,9 @@
             "cues": [
               "Information",
               "Gleis",
-              "treffen",
+              "treffe",
               "Bahnhof",
-              "Automaten",
+              "Automat",
               "Schalter"
             ]
           }
@@ -3205,21 +3222,21 @@
         "type": "multiple_choice",
         "role": "proof",
         "topic": "lesen",
-        "promptDe": "Abfahrt Köln 14.05 · Ankunft Hannover 16.40. Wann ist der Zug in Hannover?",
-        "promptEn": "Read the timetable: when is the train in Hanover?",
+        "promptDe": "Hannover: Ankunft 16.40 Uhr · Abfahrt 16.50 Uhr. Wann fährt der Zug in Hannover ab?",
+        "promptEn": "Read the timetable: when does the train leave Hanover?",
         "options": [
           "16.40 Uhr",
           "14.05 Uhr",
-          "16.04 Uhr"
+          "16.50 Uhr"
         ],
-        "answer": "16.40 Uhr",
+        "answer": "16.50 Uhr",
         "accepted": [
-          "16.40 Uhr"
+          "16.50 Uhr"
         ],
         "exact": "number",
         "explanation": {
-          "de": "„Ankunft“ heißt: Der Zug kommt an. In Hannover ist er um 16.40 Uhr.",
-          "en": "“Ankunft” is the arrival: 16:40 in Hanover."
+          "de": "„fährt … ab“ heißt: Abfahrt. In Hannover ist die Abfahrt um 16.50 Uhr. 16.40 Uhr ist die Ankunft.",
+          "en": "“fährt … ab” means departure: 16:50 in Hanover. 16:40 is the arrival."
         },
         "origin": "agent"
       },
@@ -3228,7 +3245,7 @@
         "type": "multiple_choice",
         "role": "proof",
         "topic": "lesen",
-        "promptDe": "Automat: „Wie viele Personen?“ Sie fahren mit Arjun nach Dresden. Was ist richtig?",
+        "promptDe": "Automat: „Wie viele Personen?“ Priya und Arjun fahren nach Dresden. Was ist richtig?",
         "promptEn": "The machine asks how many people. What is right?",
         "options": [
           "1 Person",
@@ -3241,8 +3258,8 @@
         ],
         "exact": "number",
         "explanation": {
-          "de": "„Wie viele Personen?“: Sie und Arjun, das sind zwei Personen.",
-          "en": "“How many people?” – you and Arjun: two people."
+          "de": "„Wie viele Personen?“: Priya und Arjun, das sind zwei Personen.",
+          "en": "“How many people?” – Priya and Arjun: two people."
         },
         "origin": "agent"
       },
@@ -3275,15 +3292,15 @@
         "type": "fill_blank",
         "role": "proof",
         "topic": "lx.frei",
-        "promptDe": "Im Zug: Sie möchten sitzen. Fragen Sie: „Entschuldigung, ist hier noch ___?“",
+        "promptDe": "Im Zug: Sie möchten sitzen. Fragen Sie: „Entschuldigung, ist der Platz noch ___?“",
         "promptEn": "Ask whether the seat is free.",
         "answer": "frei",
         "accepted": [
           "frei"
         ],
         "explanation": {
-          "de": "So fragen Sie im Zug nach einem Platz: „Ist hier noch frei?“",
-          "en": "This is how you ask for a seat on the train."
+          "de": "So fragen Sie im Zug nach einem Platz: „Ist der Platz noch frei?“",
+          "en": "This is how you ask for a seat on the train: “Is this seat free?”"
         },
         "origin": "agent"
       }
@@ -3352,7 +3369,8 @@
       "id": "a1.1-u10-rm06",
       "de": "Entschuldigung, ist hier noch frei?",
       "en": "Excuse me, is this seat free?",
-      "function": "im Zug nach einem Platz fragen"
+      "function": "im Zug nach einem Platz fragen",
+      "forTemplate": "sd1.sp3"
     },
     {
       "id": "a1.1-u10-rm07",

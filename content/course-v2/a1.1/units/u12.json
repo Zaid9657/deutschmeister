@@ -10,7 +10,7 @@
   "stage": "T",
   "title": {
     "de": "Deutsch lernen – mein Plan",
-    "canDo": "Sie können sich ausführlich vorstellen, sagen, warum Sie Deutsch lernen, und per E-Mail nach einem Kurs fragen."
+    "canDo": "Sie können sich mit allen Stichwörtern vorstellen, Ihren Plan mit Deutsch nennen und per E-Mail nach einem Kurs fragen."
   },
   "spec": {
     "situation": "Der Kurs geht zu Ende: Priya, Emre, Arta und Bilal erzählen, woher sie kommen, wie sie nach Leipzig gekommen sind oder kommen wollen und was sie mit Deutsch wollen. Priya liest das Kursangebot der Sprachschule, fragt per E-Mail nach dem Kurs A1.2 und meldet sich bei Herrn Richter an.",
@@ -198,8 +198,8 @@
         {
           "id": "a1.1-u12-start-l06",
           "speaker": "cast.frau-schulz",
-          "de": "Sie ist nicht leicht. Aber Sie brauchen nur einen Plan. Was wollen Sie mit Deutsch machen? Zum Beispiel hier arbeiten?",
-          "en": "It isn’t easy. But all you need is a plan. What do you want to do with German? Work here, for example?"
+          "de": "Sie ist nicht leicht. Aber mit einem Plan lernen Sie gut. Was wollen Sie mit Deutsch machen? Zum Beispiel hier arbeiten?",
+          "en": "It isn’t easy. But with a plan you learn well. What do you want to do with German? Work here, for example?"
         },
         {
           "id": "a1.1-u12-start-l07",
@@ -218,6 +218,20 @@
           "speaker": "cast.frau-schulz",
           "de": "Gut. Dann ist das Ihre Hausaufgabe: Schreiben Sie Ihren Plan!",
           "en": "Good. Then that’s your homework: write down your plan!"
+        }
+      ],
+      "glosses": [
+        {
+          "token": "mache mit",
+          "gloss": {
+            "en": "I’m joining in (mitmachen = to join in, to take part)"
+          }
+        },
+        {
+          "token": "macht auch mit",
+          "gloss": {
+            "en": "is joining in too (mitmachen = to join in, to take part)"
+          }
         }
       ],
       "gistItem": {
@@ -321,8 +335,8 @@
           {
             "id": "a1.1-u12-ls1-l10",
             "speaker": "cast.frau-schulz",
-            "de": "Und ich bin immer in Leipzig geblieben. Nur einmal bin ich ins Ausland gefahren. Nach Wien, in Österreich!",
-            "en": "And I’ve always stayed in Leipzig. I’ve only been abroad once. To Vienna, in Austria!"
+            "de": "Und ich bin immer in Leipzig geblieben. Nur einmal bin ich ins Ausland gefahren. Nach Wien, in Österreich! Aber jetzt ist die Welt hier im Kurs.",
+            "en": "And I’ve always stayed in Leipzig. I’ve only been abroad once. To Vienna, in Austria! But now the world is here in our course."
           }
         ],
         "glosses": [],
@@ -368,8 +382,8 @@
             "Bilal und Priya"
           ],
           "explanation": {
-            "de": "Bilal und Priya sind nach Leipzig gekommen. Emre und Arta sind zu Hause geblieben.",
-            "en": "Bilal and Priya came to Leipzig; Emre and Arta stayed at home."
+            "de": "Bilal und Priya sind nach Leipzig gekommen. Emre und Arta sind in İzmir und in Prishtina geblieben.",
+            "en": "Bilal and Priya came to Leipzig; Emre and Arta stayed in İzmir and in Prishtina."
           },
           "origin": "agent"
         },
@@ -429,8 +443,8 @@
             "Sie hat am Empfang gearbeitet."
           ],
           "explanation": {
-            "de": "Priya sagt: „In Kochi habe ich am Empfang gearbeitet.“ Im Geschäft arbeitet Emre, am Computer Bilal.",
-            "en": "Priya worked at a reception desk; Emre works in a shop, Bilal on the computer."
+            "de": "Priya sagt: „In Kochi habe ich am Empfang gearbeitet.“ Im Geschäft arbeitet Emre. Am Computer hat Bilal in Lahore gearbeitet.",
+            "en": "Priya worked at a reception desk; Emre works in a shop, and Bilal worked on the computer in Lahore."
           },
           "origin": "agent"
         }
@@ -744,8 +758,8 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.perfekt-sein",
-            "promptDe": "Korrigieren Sie: „Ich habe nach Leipzig geflogen.“",
-            "promptEn": "Correct the sentence.",
+            "promptDe": "haben oder sein? Korrigieren Sie: „Ich habe nach Leipzig geflogen.“",
+            "promptEn": "haben or sein? Correct the sentence.",
             "answer": "Ich bin nach Leipzig geflogen.",
             "accepted": [
               "Ich bin nach Leipzig geflogen."
@@ -867,16 +881,16 @@
           "tiles": [
             "sind",
             "Emre und Arta",
-            "zu Hause",
+            "in İzmir und Prishtina",
             "geblieben"
           ],
-          "answer": "Emre und Arta sind zu Hause geblieben.",
+          "answer": "Emre und Arta sind in İzmir und Prishtina geblieben.",
           "accepted": [
-            "Emre und Arta sind zu Hause geblieben.",
-            "Zu Hause sind Emre und Arta geblieben."
+            "Emre und Arta sind in İzmir und Prishtina geblieben.",
+            "In İzmir und Prishtina sind Emre und Arta geblieben."
           ],
           "acceptedWhy": {
-            "Zu Hause sind Emre und Arta geblieben.": "grammatisch: „zu Hause“ betont auf Position 1, „sind“ bleibt auf Position 2"
+            "In İzmir und Prishtina sind Emre und Arta geblieben.": "grammatisch: „in İzmir und Prishtina“ betont auf Position 1, „sind“ bleibt auf Position 2"
           },
           "explanation": {
             "de": "„sind“ steht auf Position 2, „geblieben“ steht am Ende.",
@@ -929,8 +943,8 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "g.perfekt-sein",
-          "promptDe": "Korrigieren Sie: „Priya ist in Kochi am Empfang gearbeitet.“",
-          "promptEn": "Correct the sentence.",
+          "promptDe": "haben oder sein? Korrigieren Sie: „Priya ist in Kochi am Empfang gearbeitet.“",
+          "promptEn": "haben or sein? Correct the sentence.",
           "answer": "Priya hat in Kochi am Empfang gearbeitet.",
           "accepted": [
             "Priya hat in Kochi am Empfang gearbeitet."
@@ -1104,7 +1118,7 @@
       },
       "input": {
         "kind": "mixed",
-        "title": "Die Webseite der Sprachschule",
+        "title": "Die Webseite: Sprachschule Leipzig",
         "textType": "tt.webseite",
         "lines": [
           {
@@ -1165,13 +1179,13 @@
           {
             "id": "a1.1-u12-ls2-l10",
             "speaker": "cast.priya",
-            "de": "Mein Plan? Ich will die Prüfung machen. Dann will ich wieder am Empfang arbeiten.",
-            "en": "My plan? I want to take the exam. Then I want to work at a reception desk again."
+            "de": "Mein Plan? Ich lerne seit drei Monaten Deutsch. Jetzt will ich die Prüfung machen. Dann will ich wieder am Empfang arbeiten.",
+            "en": "My plan? I’ve been learning German for three months. Now I want to take the exam. Then I want to work at a reception desk again."
           }
         ],
         "text": {
-          "de": "Sprachschule Leipzig: Deutsch lernen mit Plan\nDeutsch in der Welt: in Deutschland, in Österreich, in der Schweiz\nSie kommen aus dem Ausland? Sie wollen hier leben und arbeiten? Sie wollen die Prüfung Start Deutsch 1 machen? Dann ist der Kurs A1.2 richtig für Sie!\nAm Morgen: Montag bis Donnerstag, 9 bis 12 Uhr, hier in der Sprachschule\nAm Abend: Dienstag und Donnerstag, 18 bis 21 Uhr, online\nIm Kurs üben Sie jeden Tag. Und Sie lernen viele Leute kennen.\nDer Preis? Fragen Sie im Büro. Dort melden wir Sie gern an.",
-          "en": "Sprachschule Leipzig: learning German with a plan · German in the world: in Germany, in Austria, in Switzerland · You come from abroad? You want to live and work here? You want to take the Start Deutsch 1 exam? Then the A1.2 course is right for you! · Mornings: Monday to Thursday, 9 to 12, here at the school · Evenings: Tuesday and Thursday, 18 to 21, online · In the course you practise every day, and you get to know lots of people. · The price? Ask at the office. We will be happy to register you there."
+          "de": "Sprachschule Leipzig: Deutsch lernen mit Plan\nDeutsch in der Welt: in Deutschland, in Österreich, in der Schweiz\nSie kommen aus dem Ausland? Sie wollen hier leben und arbeiten? Sie wollen die Prüfung Start Deutsch 1 machen? Dann ist der Kurs A1.2 richtig für Sie!\nAm Morgen: Montag bis Donnerstag, 9 bis 12 Uhr, hier in der Sprachschule\nAm Abend: Dienstag und Donnerstag, 18 bis 21 Uhr, online\nIm Kurs üben Sie viel. Und Sie lernen viele Leute kennen.\nDer Preis? Fragen Sie im Büro. Dort melden wir Sie gern an.",
+          "en": "Sprachschule Leipzig: learning German with a plan · German in the world: in Germany, in Austria, in Switzerland · You come from abroad? You want to live and work here? You want to take the Start Deutsch 1 exam? Then the A1.2 course is right for you! · Mornings: Monday to Thursday, 9 to 12, here at the school · Evenings: Tuesday and Thursday, 18 to 21, online · In the course you practise a lot, and you get to know lots of people. · The price? Ask at the office. We will be happy to register you there."
         },
         "glosses": [],
         "transcriptAfterUnaidedListen": true
@@ -1363,9 +1377,9 @@
           "promptDe": "Sie bestellen im Restaurant. Was ist höflich?",
           "promptEn": "Ordering in a restaurant: what is polite?",
           "options": [
-            "Ich will einen Kaffee.",
+            "Ich will einen Kaffee, bitte.",
             "Ich möchte einen Kaffee, bitte.",
-            "Einen Kaffee!"
+            "Ich will jetzt einen Kaffee!"
           ],
           "answer": "Ich möchte einen Kaffee, bitte.",
           "accepted": [
@@ -1595,7 +1609,7 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.wollen",
-            "promptDe": "Korrigieren Sie: „Ich will arbeiten in Leipzig.“",
+            "promptDe": "Korrigieren Sie die Wortstellung: „Ich will arbeiten in Leipzig.“",
             "promptEn": "Correct the word order.",
             "answer": "Ich will in Leipzig arbeiten.",
             "accepted": [
@@ -1776,7 +1790,7 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "g.wollen",
-          "promptDe": "Korrigieren Sie: „Emre will kommen nach Leipzig.“",
+          "promptDe": "Korrigieren Sie die Wortstellung: „Emre will kommen nach Leipzig.“",
           "promptEn": "Correct the word order.",
           "answer": "Emre will nach Leipzig kommen.",
           "accepted": [
@@ -1831,7 +1845,7 @@
         "bankKey": "a11-u12-mo2",
         "mode": "written",
         "profile": "course-micro",
-        "situationDe": "Die Sprachschule fragt auf der Webseite: „Was wollen Sie mit Deutsch machen?“ Sie schreiben eine Antwort.",
+        "situationDe": "Frau Schulz fragt: „Was wollen Sie mit Deutsch machen?“ Sie schreiben eine Antwort.",
         "promptDe": "Schreiben Sie 1–2 Sätze: Seit wann lernen Sie Deutsch? Was wollen Sie machen?",
         "promptEn": "Write 1–2 sentences: how long you have been learning German and what you want to do.",
         "planSeconds": 30,
@@ -1891,9 +1905,9 @@
           {
             "id": "a1.1-u12-ls3-l05",
             "speaker": "cast.herr-richter",
-            "de": "Er kostet 320 Euro. Das Buch ist schon im Preis. Sie bezahlen hier im Büro.",
-            "en": "It costs 320 euros. The book is already included in the price. You pay here at the office.",
-            "say": "Er kostet dreihundertzwanzig Euro. Das Buch ist schon im Preis. Sie bezahlen hier im Büro."
+            "de": "Er kostet 320 Euro. Das Buch ist im Preis dabei. Sie bezahlen hier im Büro.",
+            "en": "It costs 320 euros. The book is included in the price. You pay here at the office.",
+            "say": "Er kostet dreihundertzwanzig Euro. Das Buch ist im Preis dabei. Sie bezahlen hier im Büro."
           },
           {
             "id": "a1.1-u12-ls3-l06",
@@ -2004,7 +2018,7 @@
           },
           "exact": "number",
           "explanation": {
-            "de": "Herr Richter sagt: „Er kostet 320 Euro.“ Das Buch ist schon im Preis.",
+            "de": "Herr Richter sagt: „Er kostet 320 Euro.“ Das Buch ist im Preis dabei.",
             "en": "The course costs 320 euros, book included."
           },
           "origin": "agent"
@@ -2026,8 +2040,8 @@
             "am Montag in zwei Wochen"
           ],
           "explanation": {
-            "de": "Herr Richter sagt: „Am Montag in zwei Wochen.“ Um 9 Uhr fängt der Kurs jeden Tag an.",
-            "en": "It starts on Monday in two weeks; 9 o’clock is the daily start time."
+            "de": "Herr Richter sagt: „Am Montag in zwei Wochen.“ Um 9 Uhr fängt der Kurs an, von Montag bis Donnerstag.",
+            "en": "It starts on Monday in two weeks; from Monday to Thursday it starts at 9 o’clock."
           },
           "origin": "agent"
         },
@@ -2171,14 +2185,20 @@
             "role": "practice",
             "topic": "g.verbposition-2",
             "promptDe": "___ kostet der Kurs? – 320 Euro. (W-Wort)",
-            "promptEn": "Question word.",
+            "promptEn": "Question word(s).",
             "answer": "Was",
             "accepted": [
-              "Was"
+              "Was",
+              "Wie viel",
+              "Wieviel"
             ],
+            "acceptedWhy": {
+              "Wie viel": "auch richtig: „Wie viel kostet …?“ fragt auch nach dem Preis",
+              "Wieviel": "zusammen geschrieben: alte Schreibweise von „Wie viel“, fragt auch nach dem Preis"
+            },
             "explanation": {
-              "de": "Die Antwort ist ein Preis. Dann fragen Sie: „Was kostet …?“",
-              "en": "The answer is a price: “Was kostet …?”"
+              "de": "Die Antwort ist ein Preis: „Was kostet …?“ oder „Wie viel kostet …?“",
+              "en": "The answer is a price: “Was kostet …?” or “Wie viel kostet …?”"
             },
             "origin": "agent"
           },
@@ -2309,10 +2329,12 @@
             "answer": "Ich lerne seit drei Monaten Deutsch.",
             "accepted": [
               "Ich lerne seit drei Monaten Deutsch.",
+              "Ich lerne Deutsch seit drei Monaten.",
               "Seit drei Monaten lerne ich Deutsch.",
               "Deutsch lerne ich seit drei Monaten."
             ],
             "acceptedWhy": {
+              "Ich lerne Deutsch seit drei Monaten.": "auch richtig: „seit drei Monaten“ nach „Deutsch“, das Verb „lerne“ bleibt auf Position 2",
               "Seit drei Monaten lerne ich Deutsch.": "grammatisch: „seit drei Monaten“ betont auf Position 1, „lerne“ bleibt auf Position 2",
               "Deutsch lerne ich seit drei Monaten.": "grammatisch: „Deutsch“ betont auf Position 1, „lerne“ bleibt auf Position 2"
             },
@@ -2352,7 +2374,7 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.verbposition-2",
-            "promptDe": "Korrigieren Sie: „Wann der Kurs fängt an?“",
+            "promptDe": "Korrigieren Sie die Wortstellung: „Wann der Kurs fängt an?“",
             "promptEn": "Correct the word order.",
             "answer": "Wann fängt der Kurs an?",
             "accepted": [
@@ -2377,16 +2399,16 @@
             "promptDe": "„Wie lange dauert der Deutschkurs?“ Was passt?",
             "promptEn": "Choose the right answer.",
             "options": [
-              "Vier Wochen.",
+              "Drei Monate.",
               "Am Montag.",
               "Im Büro."
             ],
-            "answer": "Vier Wochen.",
+            "answer": "Drei Monate.",
             "accepted": [
-              "Vier Wochen."
+              "Drei Monate."
             ],
             "explanation": {
-              "de": "„Wie lange …?“ fragt nach der Zeit: Minuten, Stunden oder Wochen.",
+              "de": "„Wie lange …?“ fragt nach der Zeit: Stunden, Wochen oder Monate.",
               "en": "“Wie lange?” asks for a length of time."
             },
             "origin": "agent"
@@ -2438,14 +2460,14 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "g.verbposition-2",
-          "promptDe": "___ lange dauert der Kurs? – Vier Wochen. (W-Wort)",
+          "promptDe": "___ lange dauert der Kurs? – Drei Monate. (W-Wort)",
           "promptEn": "Question word.",
           "answer": "Wie",
           "accepted": [
             "Wie"
           ],
           "explanation": {
-            "de": "Nach einer Zeit wie „vier Wochen“ fragen Sie: „Wie lange …?“",
+            "de": "Nach einer Zeit wie „drei Monate“ fragen Sie: „Wie lange …?“",
             "en": "A length of time is asked for with “Wie lange …?”"
           },
           "banks": [
@@ -2520,7 +2542,7 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "g.verbposition-2",
-          "promptDe": "Korrigieren Sie: „Am Samstag die Prüfung ist.“",
+          "promptDe": "Korrigieren Sie die Wortstellung: „Am Samstag die Prüfung ist.“",
           "promptEn": "Correct the word order.",
           "answer": "Am Samstag ist die Prüfung.",
           "accepted": [
@@ -2580,7 +2602,7 @@
         "bankKey": "a11-u12-mo3",
         "mode": "spoken",
         "profile": "course-micro-sp",
-        "situationDe": "Sie sind im Büro der Sprachschule. Herr Richter sagt: „Guten Tag! Was kann ich für Sie tun?“",
+        "situationDe": "Sie sind in der Sprachschule, im Büro. Herr Richter sagt: „Guten Tag! Was kann ich für Sie tun?“",
         "promptDe": "Sagen Sie Ihren Namen und Ihren Kurs. Fragen Sie: Wann ist die Prüfung?",
         "promptEn": "Say your name and your course, then ask when the exam is.",
         "planSeconds": 30,
@@ -2782,7 +2804,7 @@
           "id": "a1.1-u12-ls4-t8",
           "kind": "sign",
           "title": "An Kursraum 3",
-          "text": "Deutsch sprechen am Mittwoch: 17 bis 19 Uhr, hier in Kursraum 3.\nSie lernen Leute aus aller Welt kennen. Kostet nichts!",
+          "text": "Deutsch sprechen am Mittwoch: 17 bis 19 Uhr, hier in Kursraum 3.\nSie lernen viele Leute kennen. Kostet nichts!",
           "glosses": []
         },
         {
@@ -2857,7 +2879,7 @@
               "role": "exam",
               "topic": "hoeren",
               "textRef": "a1.1-u12-ls4-t3",
-              "promptDe": "„Kaffee und Tee stehen neben dem Brot.“",
+              "promptDe": "„Heute ist Tee billig.“",
               "options": [
                 "richtig",
                 "falsch"
@@ -2867,8 +2889,8 @@
                 "richtig"
               ],
               "explanation": {
-                "de": "Die Durchsage sagt: „Kaffee und Tee finden Sie hinten, neben dem Brot.“",
-                "en": "Coffee and tea are at the back, next to the bread."
+                "de": "Tee ist heute im Angebot: „Jeder Tee kostet nur 1,50 Euro.“ Das ist billig.",
+                "en": "Tea is on special offer today: every tea costs only 1.50 euros – that is cheap."
               },
               "origin": "agent"
             },
@@ -2938,7 +2960,7 @@
               "role": "exam",
               "topic": "lesen",
               "textRef": "a1.1-u12-ls4-t6",
-              "promptDe": "An Kursraum 5: „Der Kurs A1 lernt heute in Kursraum 2.“",
+              "promptDe": "An Kursraum 5: „Die Wörterbücher sind heute nicht hier.“",
               "options": [
                 "richtig",
                 "falsch"
@@ -2948,8 +2970,8 @@
                 "richtig"
               ],
               "explanation": {
-                "de": "Auf dem Schild steht: „Heute nicht hier! Bitte gehen Sie in Kursraum 2.“",
-                "en": "The sign sends course A1 to room 2 today."
+                "de": "Auf dem Schild steht: „Die Wörterbücher sind auch dort.“ „dort“ ist Kursraum 2, nicht hier in Kursraum 5.",
+                "en": "The dictionaries are “also there” – in room 2 with the course, not here in room 5."
               },
               "origin": "agent"
             },
@@ -2980,7 +3002,7 @@
               "role": "exam",
               "topic": "lesen",
               "textRef": "a1.1-u12-ls4-t8",
-              "promptDe": "An Kursraum 3: „Am Mittwoch können Sie hier Deutsch sprechen.“",
+              "promptDe": "An Kursraum 3: „Am Mittwoch um 18 Uhr können Sie hier Deutsch üben.“",
               "options": [
                 "richtig",
                 "falsch"
@@ -2990,8 +3012,8 @@
                 "richtig"
               ],
               "explanation": {
-                "de": "Auf dem Schild steht: „Deutsch sprechen am Mittwoch: 17 bis 19 Uhr, hier in Kursraum 3.“",
-                "en": "On Wednesdays, 17–19, you can speak German in room 3."
+                "de": "Auf dem Schild steht: „Deutsch sprechen am Mittwoch: 17 bis 19 Uhr“. 18 Uhr ist zwischen 17 und 19 Uhr.",
+                "en": "German conversation is on Wednesdays from 17 to 19 – 18:00 is within that time."
               },
               "origin": "agent"
             },
@@ -3045,7 +3067,7 @@
             "profile": "sd1-sp1",
             "prepMinutes": 0,
             "instructionsDe": "Stellen Sie sich vor. Dann buchstabieren Sie Ihren Namen und sagen eine Nummer.",
-            "situationDe": "Sprechen Teil 1, jetzt mit allen Stichwörtern: Sprechen Sie in ganzen Sätzen über Name, Alter, Land, Wohnort, Sprachen, Beruf und Hobby. Sagen Sie auch: Seit wann lernen Sie Deutsch? Dann bittet die Gesprächsleitung (KI): Buchstabieren Sie bitte Ihren Familiennamen. Wie ist Ihre Telefonnummer?",
+            "situationDe": "Sprechen Teil 1: Sagen Sie Sätze zu Name, Alter, Land, Wohnort, Sprachen, Beruf und Hobby. Sagen Sie auch: Seit wann lernen Sie Deutsch? Dann bittet die Gesprächsleitung (KI): Buchstabieren Sie bitte Ihren Familiennamen. Wie ist Ihre Telefonnummer?",
             "cards": {
               "learner": [
                 "Name?",
@@ -3070,7 +3092,7 @@
             "profile": "sd1-sp2",
             "prepMinutes": 0,
             "instructionsDe": "Zwei Themen: „Deutsch lernen“, dann „Arbeit“. Fragen und antworten Sie mit den Karten.",
-            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin haben Wortkarten zu zwei Themen: zuerst „Deutsch lernen“, dann „Arbeit“. Stellen Sie mit Ihrer Karte eine Frage. Antworten Sie auf die Frage der Partnerin: Was wollen Sie mit Deutsch machen? Wo haben Sie in Ihrem Land gearbeitet?",
+            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin Nora haben Wortkarten zu zwei Themen: zuerst „Deutsch lernen“, dann „Arbeit“. Stellen Sie mit Ihrer Karte eine Frage. Antworten Sie auf die Frage von Nora: Was wollen Sie mit Deutsch machen? Wo haben Sie in Ihrem Land gearbeitet?",
             "cards": {
               "learner": [
                 "Deutsch lernen – Prüfung",
@@ -3098,7 +3120,7 @@
         "hintWords": [
           "Ich heiße …",
           "Ich komme aus …",
-          "Ich lerne seit … Deutsch.",
+          "Ich lerne seit drei Monaten / seit einem Jahr Deutsch.",
           "Mein Hobby ist …",
           "Ich will …",
           "Wann wollen Sie …?",
@@ -3136,7 +3158,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Meine Nummer ist 0176 24 58 31."
+            "de": "Meine Nummer ist 0176 38 29 41 06."
           },
           {
             "speaker": "learner",
@@ -3185,7 +3207,7 @@
         "register": "halbformell",
         "address": "Sie",
         "title": "Eine E-Mail an eine Sprachschule: Fragen zum Kurs",
-        "situationDe": "Sie wollen weiter Deutsch lernen. Auf der Webseite einer Sprachschule steht: „Neu: Kurs A1.2 am Samstag. Fragen? Schreiben Sie uns!“",
+        "situationDe": "Sie wollen weiter Deutsch lernen. Eine Sprachschule schreibt auf der Webseite: „Neu: Kurs A1.2 am Samstag. Fragen? Schreiben Sie uns!“",
         "taskDe": "Schreiben Sie der Sprachschule eine E-Mail zu allen drei Punkten (25 bis 35 Wörter).",
         "leitpunkte": [
           {
@@ -3242,7 +3264,7 @@
     {
       "id": "a1.1-u12-ls7",
       "kind": "check",
-      "endLine": "Geschafft! Sie können jetzt viel über sich erzählen, Ihren Plan mit Deutsch sagen und nach einem Kurs fragen."
+      "endLine": "Super! Sie können jetzt über Ihr Land, Ihre Arbeit und Ihren Plan mit Deutsch sprechen und nach einem Kurs fragen."
     }
   ],
   "check": {
@@ -3404,7 +3426,7 @@
         "type": "error_correction",
         "role": "check",
         "topic": "g.wollen",
-        "promptDe": "Korrigieren Sie: „Ich will lernen Deutsch.“",
+        "promptDe": "Korrigieren Sie die Wortstellung: „Ich will lernen Deutsch.“",
         "promptEn": "Correct the word order.",
         "answer": "Ich will Deutsch lernen.",
         "accepted": [
@@ -3460,20 +3482,20 @@
         "type": "multiple_choice",
         "role": "proof",
         "topic": "lesen",
-        "promptDe": "Im Buch steht: „Lesen Sie zuerst den Text. Kreuzen Sie dann an.“ Was machen Sie zuerst?",
-        "promptEn": "Read the instruction: what do you do first?",
+        "promptDe": "Im Buch steht: „Lesen Sie den Text. Kreuzen Sie dann an.“ Was machen Sie am Ende?",
+        "promptEn": "Read the instruction: what do you do at the end?",
         "options": [
           "Ich kreuze an.",
           "Ich lese den Text.",
           "Ich schreibe einen Text."
         ],
-        "answer": "Ich lese den Text.",
+        "answer": "Ich kreuze an.",
         "accepted": [
-          "Ich lese den Text."
+          "Ich kreuze an."
         ],
         "explanation": {
-          "de": "Im Buch steht: zuerst den Text lesen, dann ankreuzen.",
-          "en": "The instruction says: first read the text, then tick."
+          "de": "„dann“: Zuerst lesen Sie den Text, am Ende kreuzen Sie an.",
+          "en": "“dann” = then: first you read the text, at the end you tick."
         },
         "origin": "agent"
       }
@@ -3508,21 +3530,21 @@
       "id": "a1.1-u12-rm01",
       "de": "Ich bin nach Leipzig gekommen.",
       "en": "I came to Leipzig.",
-      "function": "sagen, wie Sie nach Leipzig gekommen sind",
+      "function": "sagen: Ich bin nach … gekommen.",
       "forTemplate": "sd1.sp1"
     },
     {
       "id": "a1.1-u12-rm02",
       "de": "In Kochi habe ich am Empfang gearbeitet.",
       "en": "In Kochi I worked at a reception desk.",
-      "function": "über die Arbeit im Herkunftsland sprechen",
+      "function": "über die Arbeit in Ihrem Land sprechen",
       "forTemplate": "sd1.sp2"
     },
     {
       "id": "a1.1-u12-rm03",
       "de": "Ich lerne seit drei Monaten Deutsch.",
       "en": "I have been learning German for three months.",
-      "function": "sagen, seit wann Sie Deutsch lernen (feste Wendung: seit drei Monaten)",
+      "function": "sagen: Ich lerne seit … Deutsch.",
       "forTemplate": "sd1.sp1"
     },
     {
@@ -3543,7 +3565,7 @@
       "id": "a1.1-u12-rm06",
       "de": "Wann fängt der Kurs an?",
       "en": "When does the course start?",
-      "function": "nach dem Kursbeginn fragen",
+      "function": "fragen: Wann fängt der Kurs an?",
       "forTemplate": "sd1.s2"
     },
     {

@@ -1,0 +1,277 @@
+{
+  "review": "a1.1-u08.r2",
+  "unitId": "a1.1-u08",
+  "file": "content/course-v2/a1.1/units/u08.json",
+  "round": 2,
+  "date": "2026-09-28",
+  "reviewers": [
+    {
+      "id": "R1",
+      "persona": "Prüferin (lizenzierte Goethe-A1-Prüferin, Start Deutsch 1): Prüfungstreue, Rubrik, Aufgabenklarheit"
+    },
+    {
+      "id": "R2",
+      "persona": "Kursleiterin DaF (A1.1): Natürlichkeit, Niveau, Didaktik, Szenenplausibilität"
+    }
+  ],
+  "method": "Both reviewers read every German string of the current file again. That covered title and title.canDo, spec.situation and the new spec.deviation, the Folge (8 lines) and its gist item, and the three inputs: the LS1 chat (9 lines plus Priya's message), the LS2 dialogue (10 lines plus the park website) and the LS3 call (10 lines plus the group chat). It also covered the 5 H3 texts, the strategy card, 8 redemittel, both speaking parts (instructionsDe, situationDe, cards), aiRole, openingLine, 8 hintWords and 15 model turns, and the S2 task (situation, taskDe, 3 Leitpunkte with cues, checklist, model text). Finally it covered the 2 check lines, the 3 micro-outputs, both Aussprache blocks, story.beat and the cliffhanger, every endLine, modelSentence and explanation.de, the 35 u08 entries of a1.1/lexicon.json, and the rule cards rc.koennen, rc.nicht-position-gern and the new a1.2 card rc.nicht-position-gern-2. We solved all 89 authored items blind from promptDe plus options, tiles or audio line: start gist 1, input 15, structured input 12, pool 33, reserve 15, exam 5 and check 8. There are no proof items. For sentence_building we permuted the tiles, including the Mittelfeld positions of gern, nicht and auch and the V1 questions. For error_correction we tried every correction that keeps the meaning (not only one-edit corrections) and every Duden doublet of the key's words. We ran 90 candidate answers through the real grader, src/lib/course-v2/checkItem.js, and built the dictations exactly as src/components/course-v2/content.js dictationItems builds them. The results are quoted in previousFindings, F02 and F03. We compiled a1.1 into the scratchpad (node scripts/course-v2/compile.mjs a1.1 --out <scratch> --banks-out <scratch>), so nothing was written to the repo. We then ran the server's own normalizeSpeakingTask and buildCoursePartnerPrompt (netlify/functions/_shared/speakingAI.mjs) on the compiled a11-u08-s entry (F01). We walked every German surface with the validator's knownForms + licensedForms at a1.1-u08, including the surfaces LEX-01 does not read (Folge, modelTurns, hintWords, redemittel, check lines, readAloud, story, model text), and looked up each unknown token in all eight lexicons. Only metalanguage, glossed input words and the cliffhanger's u09 teaser „Kaffee“ remain. We checked exam fidelity against content/course-v2/registries/lanes/sd1.json and against the rubrics sd1-sp1 and sd1-sp2: h3 = 5 × abc, 3 options, 2 plays, textWords [28–54], tt.telefonansage; sp1 = a keyword sheet on which not every keyword is needed, then a spelled word and a number; sp2 = two rounds, with one question and one answer per candidate per round; s2 = 3 Leitpunkte and about 30 words. Our recounts: H3 41/38/42/38/40, S2 model 31, cliffhanger 20. We read story and cast against u02 (Priya's number and Beruf), u07 (the Thursday cliffhanger), u09 (the café), casts/series.json and casts/a1.json. We verified every deviation claim: sd1.h1 is in u09's Prüfungsfokus, sd1.l2 is in u05's and u06's, lx.verein is a2.1-u07, lx.sonntag is a1.1-u11, and lexiconBlocks lists 35 lemmas. We re-checked every r1 finding against the current files and the rails (scripts/course-v2/rules/*).",
+  "validator": {
+    "command": "node scripts/course-v2/validate.mjs content/course-v2/a1.1/units/u08.json",
+    "result": "OK (no blocker findings). 40 rules: 31 pass, 0 fail, 4 warn, 5 skipped; 0 blocker, 20 ratchet, 10 advisory. GRM-04 gives 8 advisories. All are false positives or instruction-surface hits (F09): (1) „sind/bin … verabredet“ is read as Zustandspassiv (steps[2].input.lines[9], steps[2].input.text), although it is the example of lx.sich-verabreden. (2) „sich“ is read as reflexive grammar in title.canDo and in the Sp1 instructionsDe and situationDe; these are lx.sich-verabreden and u01's chunk „Stellen Sie sich vor“. (3) „Vornamen“ is read as n-Deklination in the Sp1 instructionsDe and situationDe; this is lx.vorname (a1.1-u02) in the exam's own wording. (4) „sagen, was Sie gut können …“ in title.canDo is read as an indirect question; the u04 exemplar's endLines use the same can-do frame. Eight chunk-licensed hits are now reported only as a note. LEX-01 gives 1 advisory: the ls2-i05 explanation quotes „Eintritt frei“ (lx.eintritt a1.2-u11, lx.frei a1.1-u10). Both words are glossed on the LS2 input screen and the item shows its English twin, which u01 r2 accepted. LEX-02: ratchet 20, unchanged (F06). LEX-03 gives 1 advisory, new in this round: „Freitagabend“ in modelTurns[12] is a compound of known parts without an allocation. It comes from r1's own F06 proposal (F06). ALL-02 now passes (r1: advisories for tt.programm and tt.einladung). Skipped: ITM-08 (no caseSensitive item), CON-06 (facts[] is correctly empty) and COV-1/4/5 (level scope).",
+    "check": "node scripts/course-v2/check.mjs content/course-v2/a1.1/units/u08.json → 0 errors",
+    "level": "node scripts/course-v2/validate.mjs a1.1 --rule COV-1,COV-3,COV-4,COV-5,LEX-07 → COV-1, COV-4, COV-5 and LEX-07 pass. COV-3 fails with 1 blocker on a1.1-u01 (spec.lanes differs from a1.1/specs.json), not on u08.",
+    "notes": "Rail status since r1. Written: the ITM-01 correction-naming rule (ITM-01.mjs l. 212 ff., from a1.1-u04 r5-F01); the unit passes it. GRM-04 now reports chunk-licensed hits as a note, which is half of r1-F13. Not written: the order computation for error_correction and for the Mittelfeld and particle orders (r1-F01 → F02); the variant fold in the checker (r1-F03 → F03); CON-01 for persona data (r1-F02: there is no CON-01 rule file, and cast.priya records no phone); a hard LEX-03 for the lemmas the proof Aufgaben require (r1-F07 → F06); ITM-12 ErrorTag coverage (r1-F12 → F08); the lexicon-lemma licence in GRM-04 (r1-F13 → F09). The engine defect of u01 r2-F01 is unchanged in speakingAI.mjs (F01)."
+  },
+  "previousFindings": [
+    {
+      "id": "r1-F01",
+      "severity": "major",
+      "status": "partly-fixed",
+      "evidence": "All five items now name what to correct: „Korrigieren Sie die Position von ‚gut‘ / ‚nicht‘:“ and „Korrigieren Sie das Verb:“. They also accept the fronted orders r1 listed, each with acceptedWhy. checkItem results: c05 „Musik höre ich nicht gern.“ → correct; ls2-p10 „Gern schwimme ich nicht.“ → correct; ls2-r04 „Teuer ist das Kino nicht.“ → correct; ls1-p10 „Schwimmen kann ich gut.“ and „Gut schwimmen kann ich.“ → correct. ls1-r04 „Er kann gut schwimmen.“ → wrong, which is now right, because the prompt says „das Verb“. The ITM-01 naming rail exists and the unit passes it. The order half of the proposed rail was not written, and the class returns on the same items: c05 still rejects „Ich höre Musik nicht gern.“ → F02."
+    },
+    {
+      "id": "r1-F02",
+      "severity": "major",
+      "status": "fixed-in-unit",
+      "evidence": "modelTurns[6] is now „Meine Nummer ist 0176 38 29 41 06.“, the number Priya gives in u02. u12's Sp1 model was corrected too: only u02, u08 and u12 contain 0176 38 29 41 06. The class part is open. casts/series.json cast.priya still records no phone number or address, and there is no CON-01 rule. Because no failing instance is left, this is logged as a note for the cast owner and the rule-smith, not as a finding."
+    },
+    {
+      "id": "r1-F03",
+      "severity": "major",
+      "status": "fixed-in-unit",
+      "evidence": "ls2-l09 is now „Gut, dann gehen wir zusammen ins Konzert!“, and checkItem gives „Gut dann gehen wir zusammen ins Konzert“ → correct. The rail was not written. The checker still grades „OK“ WRONG for „Okay“, and the same class returns on the unit's own new core word: „gerne“ for „gern“ → WRONG → F03."
+    },
+    {
+      "id": "r1-F04",
+      "severity": "minor",
+      "status": "partly-fixed",
+      "evidence": "Each of these landed as proposed: ls2-l10 „für Kinder und Eltern“; ls2-l05 with ls2-s04 (a real quote now); ls2-s02 (Olena's question and Priya's „Ja, sehr gern!“); ls3-l04 with ls3-s01; Sophie's chat line with ls3-s02; ls3-r03 (the Folge line); ls3-r02 (key „Sophie kann am Samstag nicht.“); and the beat („Am Donnerstagabend ruft Emre an“, as u07's cliffhanger promised). Sophie's invitation is now answered (ls1-l08), but the new sentence order makes Olena's „Ich auch!“ ambiguous. The Sp1 model now names the languages („meine Muttersprache, Englisch und ein bisschen Deutsch“) but still has no Beruf → F04."
+    },
+    {
+      "id": "r1-F05",
+      "severity": "minor",
+      "status": "open",
+      "evidence": "Unchanged: lx.zusagen „Sophie sagt zu: Ich komme mit!“, lx.absagen „Frau Kowalski …“, lx.fahrrad „Am Sonntag …“, the rc.koennen row „du am Sonntag“, and lx.sonntag at a1.1-u11 → F05."
+    },
+    {
+      "id": "r1-F06",
+      "severity": "minor",
+      "status": "fixed",
+      "evidence": "t5, h3-05 and the explanation now read „Das Kino kostet sieben Euro.“ ls3-l09 is „Ja, natürlich! Olena kann auch kommen.“ modelTurns[12] and aiRole.personaDe say „am Freitagabend“. The LS3 endLine is „Sie können sich jetzt verabreden …“. check l01 is „Ich schwimme gern. Hast du am Montag Zeit?“, so Sophie's „Wir können schwimmen gehen.“ now follows, and c06 and c08 match. One residue: our own proposal „Freitagabend“ has no lexicon allocation (a LEX-03 advisory), logged in F06."
+    },
+    {
+      "id": "r1-F07",
+      "severity": "minor",
+      "status": "open",
+      "evidence": "The lexicon is unchanged: 35 entries, 17 productive and 18 receptive. lx.samstag, lx.tut-mir-leid, lx.mitkommen, lx.tanzen, lx.laufen and lx.super are receptive, and lx.rad stands beside lx.fahrrad. The LEX-02 ratchet is 20. The unit now logs the point in spec.deviation (6), and every lex.glossTyped source is productive → F06."
+    },
+    {
+      "id": "r1-F08",
+      "severity": "minor",
+      "status": "partly-fixed",
+      "evidence": "These parts landed. The ls2-p05, -p06 and -p07 explanations now say „meist“. ls3-s05 and Sophie's chat line („nicht in Leipzig, sondern in Dresden“) teach „nicht …, sondern …“ before h3-02 and the strategy card rely on it. The spine's other half now has the depth-2 card rc.nicht-position-gern-2 in the a1.2 bundle, and a1.2-u10 lists g.nicht-position-gern as review. rc.nicht-position-gern itself is unchanged („gern steht nach dem Verb“ without condition) → F07."
+    },
+    {
+      "id": "r1-F09",
+      "severity": "minor",
+      "status": "fixed-in-unit",
+      "evidence": "proofs[1] (cd.a1.zeit-zusagen-absagen) now points to 'sprechen', and modelTurns[14] ends „Aber am Freitag habe ich Zeit!“, so both halves of the can-do are modelled. However, all four proofs now rest on the speaking task, and three of them only on its Teil 2, which the engine neither runs nor scores → F01."
+    },
+    {
+      "id": "r1-F10",
+      "severity": "minor",
+      "status": "fixed",
+      "evidence": "The Sp2 situationDe now reads „Bei „Freizeit“ sagen Sie auch: Das finde ich super. / Das finde ich nicht so toll.“ and „Antworten Sie auf die Frage von Nora.“, with no genitive. rm01 now gives the du and the Sie form („Hast du … – Haben Sie am Samstag Zeit?“). ls2-s03 has no speaker, so no distractor can be true in the story. The LS3 readAloud is „Schwimmen? Nein, leider nicht. Vielleicht am Mittwoch?“ (sch and ich-Laut). ls1-mo now begins „Olena ruft Sie an: …“."
+    },
+    {
+      "id": "r1-F11",
+      "severity": "minor",
+      "status": "fixed",
+      "evidence": "spec.deviation names all six departures and where each lands. We checked every claim, and all are true. tt.einladung is dropped, LS2 is tt.programm, and ALL-02 passes. Two residues are outside the unit and go to notes. a1.1/specs.json still has deviation null for u08, tt.webseite, tt.einladung and the old title.canDo (this is the curriculum owner's task; COV-3 compares only lanes). u04's deviation still cites u08 for Lesen Teil 2."
+    },
+    {
+      "id": "r1-F12",
+      "severity": "minor",
+      "status": "open",
+      "evidence": "SCHEMA §3.1 and grade.mjs ERROR_TAGS are unchanged. ls2-p10, ls2-r04 and c05 carry no errorTag, ls2-r02 is still tagged v2-inv, and ls1-r04 still has no tag → F08. ls1-p10 is now tagged satzklammer, which is right."
+    },
+    {
+      "id": "r1-F13",
+      "severity": "minor",
+      "status": "partly-fixed",
+      "evidence": "Chunk-licensed hits are now only a note, and the „Tut mir leid“, „gefällt mir“ and imperative hits are gone. The two „verabredet“ Zustandspassiv hits still fire, and one of them is r1's named failing fixture. The walk now also produces four new kinds of noise on instruction surfaces → F09."
+    }
+  ],
+  "verdict": "Not exit-ready: 1 BLOCKER, 2 MAJOR, 6 MINOR. The r1 fixes landed well in the unit. Of the 13 findings, 6 are fixed or fixed in the unit (F02, F03, F06, F09, F10, F11), 4 are partly fixed (F01, F04, F08, F13), and 3 are still open with their owners (F05, F07, F12). Every key is right, and every correction prompt now names what to correct. Priya's number matches u02 in both u08 and u12. The story breaks are repaired, the deviation is logged and every claim in it is true, and the German on every model surface is correct. Three things stop exit. (1) F01, BLOCKER, not owned by the unit. The engine defect of u01 r2-F01 is still there: normalizeSpeakingTask drops `parts`, so for a11-u08-s the AI partner gets only the Teil 1 monologue script, with no cards, and the whole session is graded with sd1-sp1. Since the r1-F09 fix, all four can-do proofs point at the speaking task. Three of them (verabreden, zeit-zusagen-absagen, gefallen) are performed only in Teil 2, which the engine neither runs nor scores. (2) F02, MAJOR. The r1-F01 class was closed by listing r1's answers, not by the order rail. The scored Check still rejects „Ich höre Musik nicht gern.“, the very order the unit's own rule card models („Ich koche nicht gern.“). Three practice items reject equally grammatical orders: „Ich höre Musik gern.“, „Gut kann ich schwimmen.“ and „Kann auch Olena kommen?“. (3) F03, MAJOR. The checker grades „gerne“ WRONG wherever „gern“ is typed, the Check included. This is the r1-F03 variant class on the unit's own new core word, and the checker still grades „OK“ WRONG too. The edits in the unit are small: four accepted forms with acceptedWhy (F02), and one reordered line plus one model sentence (F04). Everything else belongs to other owners: the engine (F01), the checker (F03), the rule-smith (F02 and F09) and the lexicon, rule-card and SCHEMA owners (F05–F08). For the level: A1.1 cannot be declared finished before F01 lands. It blocks every A1.1 unit with a multi-Teil speaking task: u01, u04, u05, u06, u08, u09, u10 and u12.",
+  "scores": {
+    "D": 4,
+    "N": 4,
+    "H": 4,
+    "A": 3,
+    "P": 2,
+    "K": 4,
+    "E": 4
+  },
+  "scoreNotes": {
+    "D": "Every line is grammatical, and du/Sie is right in every relationship: du among the friends and with Elif; Sie in the instructions and with Frau Berger, the Schwimmbad and Nora. The unidiomatic phrasings r1 found are gone („Das Kino kostet sieben Euro“, „Olena kann auch kommen“, „am Freitagabend“, „sich verabreden“). It stays at 4, not 5, because a few lines still read as constructed. After the new line order, Olena's „Ich auch!“ answers the wrong sentence (F04). The Sp1 model lists „meine Muttersprache“ where a speaker would name the language.",
+    "N": "Production stays within the u08 ceiling. That ceiling covers können with the Satzklammer, nicht/gern, „nicht …, sondern …“ (now taught in LS3) and the chunk „Ich muss arbeiten“. Every German surface reads with known words, metalanguage or a gloss. It stays at 4 for three owner-held points. The unit has 35 entries against a band of 24–32, and its core acts are receptive (F06). The rule card states the position of gern without „meist“ (F07). The detectors report noise (F09).",
+    "H": "The weekend is lively and connected: Emre's Thursday call, a hobby chat with a real disagreement, a website read together, Elif's call with an exact meeting point, a group chat in which each friend answers differently, and a café cliffhanger that u09 picks up. Every can-do is designed into an Aufgabe, and the Sp2 model now both declines and offers a free day. It is 4 and not 5 because, in the running session, three of the four can-dos rest on a Teil 2 that the engine neither runs nor scores (F01).",
+    "A": "Every key is right, and the German prompt decides every item. Every correction prompt names what to correct, and the fronted orders r1 listed are accepted. It scores 3 for two reasons. The unit still marks grammatical orders wrong: „Ich höre Musik nicht gern.“ in the scored Check, „Ich höre Musik gern.“, „Gut kann ich schwimmen.“ and „Kann auch Olena kommen?“ (F02). And the checker grades „gerne“ WRONG wherever „gern“ is typed (F03).",
+    "P": "H3 is exact to sd1.json: 5 × a/b/c, 3 options, 2 plays, texts of 41/38/42/38/40 words, keys b c a b a, every option heard, three private and two official messages, all original. Sp1 elicits the introduction, a spelled name and a number for sd1-sp1. S2 has 3 Leitpunkte and about 30 words, in informal register, with Anrede and Gruß outside the Leitpunkte. It scores 2 because the Sprechen task is delivered and scored on the wrong basis. The AI runs only Teil 1's monologue script, without the Teil 2 cards, and the whole session is graded with sd1-sp1, so Teil 2 has no criterion (F01).",
+    "K": "Priya's number now matches u02 in both u08 and u12, and the story breaks r1 found are repaired. The website is read correctly, every quoted stem is a real line, ls3-r02 now keys Sophie, Sophie's invitation is answered, and Emre calls on Thursday evening as u07 promised. The handover to u09 holds. It stays at 4 for small residues: the new „Ich auch!“ ambiguity and the Sp1 model without a Beruf (F04), and word cards that still invert the unit's zusagen/absagen and name a stranger (F05).",
+    "E": "Each Lernschritt keeps the structure it had in r1, instructions stay within 90 characters, and every end screen names the win. It is 4 and not 5 because the LS5 screen shows the learner two Teile with cards, while the AI partner is told only about the monologue (F01)."
+  },
+  "total": 25,
+  "counts": {
+    "blocker": 1,
+    "major": 2,
+    "minor": 6,
+    "unitOwned": {
+      "blocker": 0,
+      "major": 1,
+      "minor": 1
+    },
+    "note": "unitOwned means the fix edits u08.json. That is F02 (four accepted forms with acceptedWhy; the rail comes from the rule-smith) and F04 (ls1-l08 and one Sp1 model turn). Owned outside the unit: F01 (E1 server track), F03 (lesson checker; lexicon owner for the lx.gern variant), F05 (lexicon and rule-card owners), F06 (lexicon owner), F07 (rule-card owner), F08 (SCHEMA owner) and F09 (rule-smith)."
+  },
+  "findings": [
+    {
+      "id": "F01",
+      "reviewer": "R1",
+      "criterion": "P",
+      "severity": "blocker",
+      "scope": "class",
+      "unitId": "a1.1-u08",
+      "path": "steps[4].task.parts[0..1] (sd1.sp1 + sd1.sp2); check.proofs[0..3] (all four → 'sprechen'); compiled bank entry a11-u08-s; scripts/course-v2/lib/compiler.mjs speakingEntry (l. 287–303); netlify/functions/_shared/speakingAI.mjs normalizeSpeakingTask (l. 340–366), MODE_RULES['cards-ask'], buildCoursePartnerPrompt (l. 500); netlify/functions/_shared/rubrics/speakingV2.mjs (l. 38–56)",
+      "quote": "The compiled a11-u08-s has at its top level { template: 'sd1.sp1', mode: 'monologue', profile: 'sd1-sp1', parts: [ sp1, sp2 with learner cards „Freizeit – Musik“, „Wochenende – Kino“ and partner cards „Freizeit – Sport“, „Wochenende – Samstag“ ] }. normalizeSpeakingTask(entry) → mode 'monologue', profile 'sd1-sp1', cards { learner: [], partner: [] }, situationDe '', instructionsDe '', and no parts. buildCoursePartnerPrompt → „ABLAUF — zusammenhängendes Sprechen: Dein Gegenüber spricht zuerst allein zum Thema. … Danach stellst du eine bis zwei Nachfragen zum Gesagten.“ The words Freizeit, Wochenende and Kino occur nowhere in the prompt; Teil 2 appears only in the persona prose („In Teil 2 Teilnehmerin in der Prüfung …“). check.proofs: verabreden, zeit-zusagen-absagen, gefallen, koennen-gern → all 'sprechen'.",
+      "problem": "This is the engine class of u01 r2-F01. u01 r2 already listed u08 among the affected units, and nothing in speakingAI.mjs has changed. The r1-F09 fix has made this unit depend on it more. Three of the four can-dos are performed only in Teil 2: verabreden („Kommen Sie mit ins Kino? Wann haben Sie Zeit?“), zeit-zusagen-absagen („Tut mir leid … Aber am Freitag habe ich Zeit!“) and gefallen („Fußball finde ich nicht so toll.“). Since r1, all four proofs point at 'sprechen'; proofs[1] moved there from the S2 writing task, whose path works. In the running session the learner sees both Teile with their cards in SpeakingTaskView. The AI partner, however, is given only Teil 1's monologue script, with no cards and no situation. speakingV2 then grades the whole transcript with sd1-sp1 (vorstellen, buchstabieren, nummer; max 3). The Teil 2 questions and answers (sd1-sp2: 2 points per question, 1 per answer) have no criterion. So the Das-kann-ich tick of three can-dos rests on a Teil that is neither run nor scored. That is a scorer on the wrong pass rule for Teil 2, and a can-do that is claimed but not performed in the product (§9.4 BLOCKER). Even once `parts` are read, MODE_RULES['cards-ask'] has the learner ask all their cards first. This unit's model, like SD1, alternates round by round (ask, answer, be asked, answer). The class covers eight A1.1 units (u01, u04, u05, u06, u08, u09, u10, u12), so it is stop-the-line.",
+      "fix": "Engine owner (E1 server track), as u01 r2-F01. normalizeSpeakingTask keeps `parts` and normalises each one. buildCoursePartnerPrompt renders one ABLAUF per part in order, with that part's situation, instructions and both card sets, plus a hand-over line („Jetzt Teil 2: …“). cards-ask runs round by round. speakingV2 grades each part with its own profile (here sd1-sp1, max 3, plus sd1-sp2, max 6), and the result card shows both Teile. Unit: no edit. Do not move the proofs back to 'schreiben': r1-F09 stands, because the can-do is spoken interaction. After the engine fix, play one a11-u08-s session. The AI must run Teil 2 with „Freizeit – Sport“ and „Wochenende – Samstag“ and answer „Kommen Sie mit ins Kino?“, and the result must show a Teil 2 score.",
+      "proposedRule": "The u01 r2-F01 test over every compiled speaking bank entry with `parts`: (a) the partner prompt contains one ABLAUF per part and every part's learner and partner cards; (b) the grading plan covers every part's profile. Add a11-u08-s to its failing fixtures (with a11-u01-s and a11-u04-s). The test runs over all registered courses."
+    },
+    {
+      "id": "F02",
+      "reviewer": "R1",
+      "criterion": "A",
+      "severity": "major",
+      "scope": "class",
+      "unitId": "a1.1-u08",
+      "path": "check.items[4] (a1.1-u08-c05); steps[1].pool.items[6] (ls2-p07); steps[0].pool.items[9] (ls1-p10); steps[2].pool.items[6] (ls3-p07); scripts/course-v2/lib-validate/orders.mjs (PARTICLES; questions and error_correction out of scope); scripts/course-v2/rules/ITM-09.mjs",
+      "quote": "c05 „Korrigieren Sie die Position von ‚nicht‘: „Ich höre gern nicht Musik.““: checkItem „Ich höre Musik nicht gern.“ → wrong, while „Musik höre ich nicht gern.“ → correct. ls2-p07, tiles höre / ich / gern / Musik: „Ich höre Musik gern.“ → wrong, while „Musik höre ich gern.“ and „Gern höre ich Musik.“ → correct. ls1-p10 „Korrigieren Sie die Position von ‚gut‘: …“: „Gut kann ich schwimmen.“ → wrong, while „Gut schwimmen kann ich.“ → correct. ls3-p07 „Bilden Sie die Frage.“, tiles kann / Olena / auch / kommen: „Kann auch Olena kommen?“ → wrong. rc.nicht-position-gern: „Das Gegenteil ist nicht gern: Ich koche nicht gern.“",
+      "problem": "The r1-F01 fix named the category in every correction prompt and added the fronted orders r1 listed, and the ITM-01 naming rail now exists. But the class was closed with a list of ids, not with the order rail r1 asked for, and the unit still marks grammatical orders of the same sentences wrong. One of them is in the scored Check. (1) c05. A bare or definite object may stand before „nicht gern“: „Ich esse Fisch nicht gern.“ is as usual as „Ich esse nicht gern Fisch.“ The rule card models „nicht gern“ at the end of the sentence. The item already accepts „Musik höre ich nicht gern.“, which moves „Musik“ just as far. A learner who follows the card writes exactly „Ich höre Musik nicht gern.“ and gets a red X with no retry. (2) ls2-p07 has the same Mittelfeld order without the negation. (3) ls1-p10. The unit accepts rare fronting with acceptedWhy „grammatisch, aber selten“ („Gern tanze ich nicht.“ in ls2-p05 and „Gern schwimme ich nicht.“ in ls2-p10), but it rejects the same move with „gut“: „Gut kann ich schwimmen.“ This is the weakest instance, and it is still grammatical. (4) ls3-p07. „auch“ may stand before the noun subject with the same meaning: „Kann auch Olena kommen?“ = „Kann Olena auch kommen?“ The u04 exemplar accepted the parallel „Auch die Milch ist billig.“ (u04 r1-F04). orders.mjs can see none of these. It treats gern, nicht and auch as particles that cannot be fronted. In the Mittelfeld it only swaps object pronouns and sentence adverbs. It skips questions. ITM-09 does not run on error_correction at all. §9.4 rates both a defensible second answer that is not accepted and a gate hole that lets the class through as MAJOR. The class is now in its fourth a1.1 round (u01 r1-F16, u04 r5-F01, u08 r1-F01, here), so it stays stop-the-line.",
+      "fix": "Unit (keys and explanations unchanged; the explanations already say „meist“): c05: add „Ich höre Musik nicht gern.“ to accepted, acceptedWhy „grammatisch: „Musik“ vor „nicht gern“; „nicht“ steht vor „gern““. ls2-p07: add „Ich höre Musik gern.“, acceptedWhy „grammatisch: „Musik“ vor „gern““. ls1-p10: add „Gut kann ich schwimmen.“, acceptedWhy „grammatisch, aber selten: „gut“ betont auf Position 1, wie „Gern tanze ich nicht.““. ls3-p07: add „Kann auch Olena kommen?“, acceptedWhy „grammatisch: „auch“ vor „Olena“, gleiche Bedeutung“. All four are built from the given tiles or key words (ITM-09 tile check) and carry acceptedWhy (ITM-10). Still not accepted, by design and as in r1: „Bilal spielt Fußball am Samstag.“ and „Ich habe Zeit am Montag.“ (a time phrase after the bare noun of a verb-noun unit is marked), and „Bilal fährt Rad gern.“ („Rad fahren“ is one unit). Per CLAUDE.md, widening accepted[] does not close the class; the rail below does.",
+      "proposedRule": "ITM-09 + orders.mjs, extending r1-F01's proposal: (a) run the order computation on the key of every error_correction item whose family is 'order' or whose promptDe names „Position“ or „Wortstellung“, and require each computed order in accepted[] with acceptedWhy; (b) Mittelfeld: a bare or definite object noun may stand on either side of gern, nicht gern and (nicht) gut, except the noun of a verb-noun unit the lexicon lists as a chunk („Rad fahren“); (c) a focus particle (auch, nur) may stand before a full noun-phrase subject; (d) apply (b) and (c) to V1 questions too; (e) Vorfeld: a manner adverb (gut, gern, schnell) can be fronted. Failing fixtures: a1.1-u08 c05, ls2-p07, ls1-p10 and ls3-p07. Passing fixture: a1.1-u08 ls3-p10. The test runs over all registered courses."
+    },
+    {
+      "id": "F03",
+      "reviewer": "R2",
+      "criterion": "A",
+      "severity": "major",
+      "scope": "class",
+      "unitId": "a1.1-u08",
+      "path": "check.items[4] (c05); steps[1].pool.items[9] (ls2-p10); steps[0].pool.generators[1] (lex.glossTyped, source includes lx.gern); steps[1].pool.items[0] (ls2-p01), steps[1].reserve[0] (ls2-r01), check.items[3] (c04); src/lib/lesson/check.js (spelling variants, l. 124: only ss/ß, ue/ü, oe/ö); content/course-v2/a1.1/lexicon.json lx.gern",
+      "quote": "checkItem(c05, „Ich höre nicht gerne Musik.“) → wrong · checkItem(ls2-p10, „Ich schwimme nicht gerne.“) → wrong · typed key „gern“ ← „gerne“ → wrong; „nicht gern“ ← „nicht gerne“ → wrong (the shape of c04, ls2-p01 and ls2-r01) · key „Okay“ ← „OK“ → wrong, still, after r1-F03 · „Tschüss!“ ← „Tschüs!“ → typo · lx.gern { lemma „gern“, gloss „gladly; like to (do sth.)“, no variant }",
+      "problem": "„gerne“ is not a spelling slip but the second form of the same word: Duden's headword is „gern, gerne“, and learners hear it every day („Ja, gerne!“). The checker treats the extra „-e“ as a wrong ending and grades every „gerne“ WRONG, with no retry. In this unit that hits the scored Check (c05) and a pool correction (ls2-p10). It will also hit LS1's lex.glossTyped item once the player core builds it from lx.gern: there the learner types the word from its English gloss, and „gerne“ is exactly as right as „gern“. This is the r1-F03 class: a Duden variant graded WRONG („OK“ for „Okay“; u01 r1-F16 „tschüs“). r1 closed the instance by swapping the dictation source, but the rail was not written. So the class has come back on the unit's own new core word, and the checker still grades „OK“ WRONG. It is the third a1.1 occurrence, so it is stop-the-line (§9.4), and every later unit with a typed „gern“ inherits it.",
+      "fix": "Checker owner (src/lib/lesson/check.js, which decides every answer in the course). Before comparing, fold a closed table of Duden doublets, so that the twin grades like the key: gern/gerne, okay/OK/O. K./o. k., tschüss/tschüs, allein/alleine. Add a test in the checker suite. This also closes r1-F03's class for good. Per CLAUDE.md, do not widen accepted[] in the unit: the rule belongs in the checker. After the fold, c05 with „Ich höre nicht gerne Musik.“ must grade correct. Lexicon owner: record „gerne“ as a variant of lx.gern, so that the glossTyped build accepts it.",
+      "proposedRule": "A checker test (node --test) plus a course-v2 rail. For every typed item (fill_blank, error_correction, generated lex.glossTyped) whose key contains a token of the doublet table, checkItem on the key with that token swapped for its twin must return CORRECT. For a dictation, the audio decides and TYPO is enough. Failing fixtures: a1.1-u08 c05 („gerne“) and the r1-F03 fixture („OK, dann gehen wir zusammen ins Konzert!“). The test runs over all registered courses."
+    },
+    {
+      "id": "F04",
+      "reviewer": "R2",
+      "criterion": "K",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u08",
+      "path": "steps[0].input.lines[5] (ls1-l06), [7] (ls1-l08), [8] (ls1-l09); steps[4].task.modelTurns[0..2] (Sp1 model) vs steps[4].task.parts[0].cards.learner „Beruf?“ and a1.1-u02 ls3-l03 / ls3-l05",
+      "quote": "ls1-l06 Olena „Ohne mich! Ich tanze nicht gern …“ · ls1-l08 Priya „Ich höre jeden Abend Musik. Und Sophie, am Freitag habe ich Zeit!“ · ls1-l09 Olena „Ich auch! Wir haben viele Hobbys …“ · Sp1 model „Ich wohne jetzt in Leipzig. Ich spreche drei Sprachen: meine Muttersprache, Englisch und ein bisschen Deutsch.“ (no Beruf) · u02 Priya „Ich bin Rezeptionistin, Herr Richter. In Kochi, in Indien.“ – „Nein, hier arbeite ich nicht. Ich lerne jetzt Deutsch.“",
+      "problem": "Two residues of r1-F04. (1) The fix that lets Priya answer Sophie puts the Friday sentence last in ls1-l08. Olena's „Ich auch!“ now reads as „I'm free on Friday too“, two lines after her „Ohne mich!“ to dancing on Friday. (2) The Sp1 model now names the languages but still not the Beruf, although the card „Beruf?“ asks for it and u02 fixed it: a receptionist in Kochi who does not work in Leipzig. sd1.sp1 allows skipping a keyword, but the model is the learner's template.",
+      "fix": "ls1-l08: „Sophie, am Freitag habe ich Zeit! Und ich höre jeden Abend Musik.“ It keeps the same 12 words. Olena's „Ich auch!“ then answers the music, ls1-i05 still works, and the dictation source keeps no number and no variant spelling. Sp1 modelTurns[1]: „Ich wohne jetzt in Leipzig. In Kochi arbeite ich am Empfang. Ich spreche drei Sprachen: …“. „Empfang“ is lx.empfang, a1.1-u02; „Rezeptionistin“ has no lexicon entry, so the model avoids it.",
+      "proposedRule": null
+    },
+    {
+      "id": "F05",
+      "reviewer": "R2",
+      "criterion": "K",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u08",
+      "path": "content/course-v2/a1.1/lexicon.json lx.zusagen.example, lx.absagen.example, lx.fahrrad.example, lx.sonntag.unit; content/course-v2/a1.1/rule-cards.json rc.koennen table row 3 (shown in steps[0] and steps[2])",
+      "quote": "lx.zusagen „Sophie sagt zu: Ich komme mit!“ · lx.absagen „Frau Kowalski sagt den Termin am Montag ab.“ · lx.fahrrad „Am Sonntag fahre ich Fahrrad.“ · rc.koennen „– | Kannst | du am Sonntag | kommen?“ · lx.sonntag unit a1.1-u11",
+      "problem": "r1-F05 is unchanged in round 2. The zusagen card still makes Sophie the one who accepts, in the unit where Sophie declines („Tut mir leid, ich sage ab.“) and Olena accepts. The absagen card names „Frau Kowalski“, who is neither a cast member nor an extra. Two cards shown in u08 put „Sonntag“ in front of the learner three units before its allocation. These are owned outside the unit, and the unit needs no edit.",
+      "fix": "Lexicon owner, as r1: lx.zusagen „Olena sagt zu: Ich komme mit!“; lx.absagen „Sophie sagt am Samstag ab.“; and either move lx.sonntag to a1.1-u08 (receptive), or change lx.fahrrad to „Am Samstag fahre ich Fahrrad.“. Rule-card owner: rc.koennen row „– | Kannst | du am Freitag | kommen?“.",
+      "proposedRule": "As r1-F05, LEX-07/CON-01: a lexicon or rule-card example that names a person uses a cast member or a name from registries/names.json. A word allocated to a later unit that appears on a card shown in an earlier unit is an advisory. Failing fixture: lx.absagen „Frau Kowalski“. The test runs over all registered courses."
+    },
+    {
+      "id": "F06",
+      "reviewer": "R2",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u08",
+      "path": "content/course-v2/a1.1/lexicon.json u08 entries (lx.samstag, lx.tut-mir-leid, lx.mitkommen, lx.tanzen, lx.laufen, lx.super receptive; lx.rad beside lx.fahrrad); lx.freitag (a1.1-u07, receptive); steps[4].task.modelTurns[12] („Am Freitagabend“, LEX-03 advisory); spec.deviation point (6); LEX-02 ratchet",
+      "quote": "35 entries, 17 productive / 18 receptive (band 24–32, plan 28) · lx.samstag, lx.tut-mir-leid, lx.mitkommen, lx.tanzen, lx.laufen, lx.super: receptive · rm04 „Tut mir leid, am Samstag kann ich nicht.“ (forTemplate sd1.s2) · Sp2 model „… Aber am Freitag habe ich Zeit!“ · LEX-03 „compound(s) of known parts not in the lexicon: Freitagabend (freitag+abend)“ · LEX-02 20",
+      "problem": "r1-F07 is unchanged in the lexicon. The proof Aufgabe and the exam-tagged redemittel require the learner to say „am Samstag“, „Tut mir leid“, „Kommst du mit?“, „tanzen“, „laufen“ and „super“, but all of them are receptive, so SRS schedules only their recognition. Freitag, which the S2 model and the new Sp2 line use, has been receptive since u07. The unit enters 35 lemmas, and both Rad and Fahrrad. The unit now logs this in spec.deviation (6), which is right. New in r2, and caused by us: r1-F06's proposal „am Freitagabend“ left a compound that LEX-03 cannot place. The class (u01 r1-F10, u04 r4-F02, u08 r1-F07) stays stop-the-line until its rail exists.",
+      "fix": "Lexicon owner, as r1-F07. Make lx.samstag, lx.tut-mir-leid, lx.mitkommen, lx.tanzen and lx.laufen productive, and lx.freitag too (at u07). Merge lx.rad into lx.fahrrad, with „Rad fahren“ as its chunk, and gloss lx.planen and lx.interessant in place, to reach 32 entries. Make lx.freizeit, lx.idee, lx.fahrrad, lx.sport and lx.spielen receptive. Allocate „Freitagabend“ as compound:freitag+abend at a1.1-u08 (receptive). Then re-run LEX-05 and LEX-03. Level reviewer: recycle the eight zero-recurrence lemmas (Freizeit, Sport, schwimmen, Rad, Konzert, sich verabreden, zusagen, gefallen) in u09–u12.",
+      "proposedRule": "As r1-F07, LEX-03 (hard): every lemma the unit requires the learner to produce is productive at or before that unit. That covers a redemittel with forTemplate, a proof Aufgabe's Leitpunkt cues, hintWords or learner model turns and the modelText, and a micro-output promptDe. Failing fixture: a1.1-u08 rm04 with lx.tut-mir-leid receptive. The test runs over all registered courses."
+    },
+    {
+      "id": "F07",
+      "reviewer": "R1",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u08",
+      "path": "content/course-v2/a1.1/rule-cards.json rc.nicht-position-gern (steps[1].ruleCard); compare steps[1].pool.items[4..6] (ls2-p05/p06/p07)",
+      "quote": "rc „gern steht nach dem Verb: Ich lese gern. … Die Position von nicht: … vor gern, Adjektiven und Orten“ · accepted „Gern fährt Bilal Rad.“, „Gern höre ich Musik.“, „Gern tanze ich nicht.“ · the unit's explanations now say „„gern“ steht meist nach dem Verb.“",
+      "problem": "The unit half of r1-F08 has landed. The three explanations say „meist“, and ls3-s05 and Sophie's chat line teach „nicht …, sondern …“ before h3-02 and the strategy card rely on it. The spine's other half now has a depth-2 card in a1.2 (rc.nicht-position-gern-2) and a review in a1.2-u10. The card itself is unchanged. It still states „gern steht nach dem Verb“ without condition, next to accepted orders that put gern first. The learner reads a rule on the card that the explanation two screens later qualifies (§9.5: a simplification that has become false in context; the u04 r2–r5 rule-card class). Once F02 accepts „Ich höre Musik gern.“, the unconditioned sentence becomes false for a second pattern.",
+      "fix": "Rule-card owner (≤ 60 words, as r1): „gern steht meist direkt nach dem Verb: Ich lese gern. Das Gegenteil: Ich koche nicht gern. (Betont auch: Gern koche ich nicht.)“ The rest of the card stays unchanged.",
+      "proposedRule": "GRM-05 (extended), as an advisory for the reviewer to confirm: when a unit accepts, with acceptedWhy, an order that puts a word elsewhere than its rule card places it without condition („steht nach dem Verb“, „steht vor …“), the card qualifies the rule („meist“, „oft“). Failing fixture: rc.nicht-position-gern with a1.1-u08 ls2-p06. The test runs over all registered courses."
+    },
+    {
+      "id": "F08",
+      "reviewer": "R1",
+      "criterion": "A",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u08",
+      "path": "docs/course-v2/SCHEMA.md §3.1 ErrorTag; netlify/functions/_shared/rubrics/grade.mjs ERROR_TAGS (l. 19); registries/grammar-spine.json g.nicht-position-gern errorTags []; steps[1].pool.items[9] (ls2-p10), steps[1].reserve[3] (ls2-r04), check.items[4] (c05): no errorTag; steps[1].reserve[1] (ls2-r02, errorTags [v2-inv]); steps[0].reserve[3] (ls1-r04, no errorTag)",
+      "quote": "ErrorTag = enum(v2-inv|verb-final|satzklammer|case-np|case-pp|gender-article|adj-ending|perfekt-aux-participle|connector-position|n-dekl|reflexive|register|spelling-meaning), unchanged · g.nicht-position-gern „errorTags“: []",
+      "problem": "r1-F12 is unchanged. The position of nicht, the unit's second new point, still has no ErrorTag. So its three correction items carry none, the graders cannot name the error, and the repair pool has nothing to draw on for it. ls2-r02 (a gern item) is still tagged v2-inv. ls1-r04 („Du kann …“) still has no Personalendung tag; that point is u01 r1-F15, now in its third a1.1 round.",
+      "fix": "SCHEMA and BLUEPRINT owner: add 'negation-position' and 'verb-ending' to ErrorTag, to grade.mjs ERROR_TAGS and to the spine's errorTags for g.nicht-position-gern and g.praesens. Unit, after that: errorTag 'negation-position' on ls2-p10, ls2-r04 and c05, and on ls2-r02 instead of v2-inv; 'verb-ending' on ls1-r04.",
+      "proposedRule": "As r1-F12 and u01 r1-F15, ITM-12: every spine point introduced productively in a unit has at least one ErrorTag with a repair pool there. Failing fixture: g.nicht-position-gern at a1.1-u08. The test runs over all registered courses."
+    },
+    {
+      "id": "F09",
+      "reviewer": "R1",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u08",
+      "path": "GRM-04 advisories: steps[2].input.lines[9] and steps[2].input.text (det.zustandspassiv); title.canDo (det.reflexiv-pronomen, det.indirekte-w-frage); steps[4].task.parts[0].instructionsDe and .situationDe (det.reflexiv-pronomen, det.n-deklination)",
+      "quote": "„Dann sind wir verabredet“ / „Ich bin … mit Elif verabredet“ → Zustandspassiv (b2.1-u08) · „Sie können sich verabreden …“, „Stellen Sie sich vor.“, „stellt sich Priya vor“ → reflexiv (a2.1-u08) · „Buchstabieren Sie Ihren Vornamen“ → n-Deklination (b1.1-u02) · „… und sagen, was Sie gut können und gern machen.“ → indirekte W-Frage (a2.2-u03)",
+      "problem": "Half of r1-F13 landed. Chunk-licensed hits are now only a note, and the „Tut mir leid“, „gefällt mir“ and imperative hits are gone. The other half did not. „verabredet“, the example of lx.sich-verabreden and r1's named failing fixture, is still read as Zustandspassiv. The detector walk now also reaches instruction surfaces, and there it produces new false hits. It reads the lemma „sich verabreden“ and u01's chunk „Stellen Sie sich vor“ as reflexive grammar, and the exam's own „Ihren Vornamen“ as n-Deklination. It reads the can-do frame „sagen, was Sie … können“ as an indirect question, although the u04 exemplar's endLines use the same frame. All 8 hits are false positives, and no production line goes over the ceiling. This is the fourth a1.1 unit with detector noise (u01 r1-F09, u04 r5-F05, u08 r1-F13), so reviewers re-triage the same hits every round.",
+      "fix": "Rule-smith: write the r1-F13 rail (a hit inside the lemma or example of a lexicon entry allocated at or before the unit is licensed). In addition, the instruction walk should exempt the course's own frames through metalanguage.mjs, as it already does for single words: „Sie können … sagen, was …“, „Stellen Sie sich vor“, „Buchstabieren Sie Ihren (Vor)namen“. Unit: none.",
+      "proposedRule": "GRM-04: (a) as r1-F13; (b) instruction surfaces are read through the metalanguage.mjs frames, and a construction hit on them is a note unless the same construction occurs in a line the learner must produce. Failing fixtures: a1.1-u08 steps[2].input.lines[9] and title.canDo. The test runs over all registered courses."
+    }
+  ],
+  "exitCheck": {
+    "blocker": 1,
+    "major": 2,
+    "minor": 6,
+    "criteriaBelow4": [
+      "A",
+      "P"
+    ],
+    "exit": false,
+    "note": "Exit needs 0 BLOCKER, 0 MAJOR, every criterion at 4 or above and at most 5 logged MINOR. F01 is the gate, and the unit does not own it. The E1 server track must read `parts` and score each Teil with its own profile (u01 r2-F01). The defect blocks all eight multi-Teil A1.1 units, so A1.1 cannot be declared finished before the fix lands. F02 needs four accepted forms in the unit plus the order rail. F03 needs a doublet fold in check.js with a test. With those three, A and P return to 4. After the F04 edit in the unit, five owner-held minors remain (F05, F06, F07, F08, F09), which is exactly the limit. Re-review needs no full content round: check P by playing one a11-u08-s session after the engine fix, A by re-running the F02 and F03 candidates through checkItem, and K on the two F04 lines. Class findings for the rule-smith: F01 (the compiled-bank test), F02, F03, F06, F07, F08 and F09. Stop-the-line (§9.4) stays in force for four classes: the order class (fourth a1.1 round), the variant class (third a1.1 occurrence), receptive lemmas that must be produced, and detector noise."
+  },
+  "notes": [
+    "Exemplar classes (u04 r1–r5, u01 r1/r2) that do NOT recur here: sentence-building prompts that do not say Frage or Aussagesatz (u04 r1-F01/F12); dictation sources with `say` (u04 r2-F01; the six sources are plain lines, and the only `say` is in exam text t2); number words rejected in time gaps (u04 r3-F01; ls2-i03 accepts „sieben“ and „neunzehn“, ls3-i03 accepts „zehn“); lex.articlePlural sources without a plural (r3-F03); lex.glossTyped sources on receptive lemmas (r4-F02); exam texts off-band (r1-F10); distractors never heard (r1-F19; all 15 H3 options are heard); protagonists in LS4 texts (r2-F06); a genitive on the speaking instructions (r5-F05; „der Partnerin“ is gone); a bare „Korrigieren Sie:“ that rejects a second correction (r5-F01; ls3-p10 keeps the bare prompt but accepts both V2 corrections, as ITM-01 allows); lexicon examples above the ceiling (r4-F01; LEX-07 passes); factual claims without facts[] (r4-F05).",
+    "Exemplar classes that DO recur: grammatical orders marked wrong (u04 r1-F04, r5-F01 → F02); a Duden variant graded WRONG (u01 r1-F16, u08 r1-F03 → F03); a round-1 fix that makes a new small break (u01 r2's observation → F04); word cards that contradict the unit (u01 r1-F07 → F05); receptive lemmas that must be produced (u04 r4-F02 → F06); a rule card that is false in context (u04 r2-F09 … r5-F04 → F07); a missing ErrorTag (u01 r1-F15 → F08); detector noise (u04 r5-F05 → F09).",
+    "For the orchestrator (the user asked to be told when a level is finished): A1.1 is not finished. Apart from each unit's own findings, F01 is an engine blocker for u01, u04, u05, u06, u08, u09, u10 and u12. The approved u04 exemplar is affected too (u01 r2 notes). A level evaluation of A1.1 is meaningful only after the E1 server track reads `parts`.",
+    "For the curriculum owner: a1.1/specs.json u08 still has deviation null, textTypes with tt.webseite and tt.einladung, and the pre-r1 title.canDo („… auf Vorschläge zusagen oder absagen …“). COV-3 compares only spec.lanes, so nothing flags this drift. Under the rule „one plan, one truth“ the unit file is the authored one, so specs.json should be updated from it. The level run's only COV-3 blocker is on u01.",
+    "For the level reviewer: (1) u04's deviation still says Lesen Teil 2 is practised „laut Stoffplan auch in u08 und u12“. Neither unit carries sd1.l2 (u08 logs this; u12's Prüfungsfokus is h2/l3/sp1/s2). COV-1 passes on u05 and u06. (2) g.nicht-position-gern is now reviewed in a1.2-u10, with the depth-2 card rc.nicht-position-gern-2. (3) LEX-02 is 20: eight u08 lemmas recur in no later unit (F06).",
+    "For the cast owner and the rule-smith (r1-F02, class part): the course fixes persona data that casts/series.json does not record. Priya's number is 0176 38 29 41 06 (u02, u08, u12), her address is Kölner Straße 18, 04177 Leipzig (from u05), and Arjun's number is 0176 52 83 91 40 (u05). There is no CON-01 rule that checks such data. There is no failing instance today, so this is a note, not a finding.",
+    "Considered and not flagged. (1) In Sp2 the learner is told to ask two questions on the „Wochenende“ card („Kommen Sie mit? Wann haben Sie Zeit?“), while SD1 asks one question per card. This is a course adaptation that performs cd.a1.verabreden outside the Prüfungsfokus (the Teil is a chip), and sd1-sp2 still scores one question per turn; revisit when the engine reads `parts`. (2) Priya invites Nora to the cinema although in LS2 she finds films „nicht so interessant“. The card fixes „Kino“, and going to a film for company is plausible. (3) „meine Muttersprache“ instead of „Malayalam“ in the Sp1 model: Malayalam has no lexicon or names.json entry, and the phrase is a usable learner template. (4) „Was planst du am Samstag?“ and „Wie findest du das Konzert?“ before the concert: both are common usage about a plan. (5) The ls2-i05 LEX-01 advisory: see validator. (6) ls1-p10 is tagged satzklammer, which is right, because the infinitive is not at the end. (7) As in r1, „Ich kann leider nicht am Samstag.“ (ls3-p05), „Bilal spielt Fußball am Samstag.“ (ls1-p08) and „Ich habe Zeit am Montag.“ (ls3-p09) remain not accepted, because these orders are marked. (8) exact:number on h3-01 and h3-05 is harmless on choice items.",
+    "We checked every proposed fix against the rails before recommending it. F02's four forms are built from the given tiles or key words and carry acceptedWhy. F04's ls1-l08 keeps 12 words, and no sentence has more than 12, with no number and no variant spelling for the dictation. „Empfang“ is known at u08 (lx.empfang a1.1-u02), but „Rezeptionistin“ and „Malayalam“ are not (knownForms), which is why F04 avoids them. One r1 proposal of ours („Am Freitagabend“, r1-F06) produced the LEX-03 advisory that F06 now logs.",
+    "Legal and claims: no surface promises an outcome, claims human feedback or misuses exam marks. The AI is „Gesprächsleitung (KI)“ in Teil 1 and a „Teilnehmerin in der Prüfung“ persona in Teil 2, and no surface calls it a Prüferin. The five H3 messages, including the reworded t5, the Sp2 topic cards and the S2 situation are original in the SD1 format. The Sp1 keyword list is the format's candidate-sheet content, as sd1.json records. facts[] is correctly empty, because the unit states no Landeskunde, legal or statistical fact."
+  ]
+}
