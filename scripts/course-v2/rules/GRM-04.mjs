@@ -210,8 +210,9 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
     const seen = new Set();
     const frames = FRAME_KINDS.has(kind) ? frameSpans(text) : [];
     const inFrame = (at) => frames.some(([a, b]) => at >= a && at < b);
-    // a hit in a sentence a frame opens (for the frame's object clause below): no sentence end between them
-    const framedSentence = (at) => frames.some(([a]) => a <= at && !/[.!?]/.test(String(text).slice(a, at)));
+    // a hit in a sentence a frame opens, or in a surface a frame opens (as before the split-canDo fix), for the
+    // frame's object clause below
+    const framedSentence = (at) => frames.some(([a]) => a === 0 || (a <= at && !/[.!?]/.test(String(text).slice(a, at))));
     for (const det of detectors) {
       const place = placement.get(det.id);
       const licensedAt = surface === 'production' ? place.prod : place.rec;
