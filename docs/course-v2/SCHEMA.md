@@ -805,7 +805,8 @@ block (with its origin label in a .1 course; in a .2 course a missing lane-exact
                                                         // Schreiben, Sprechen; + Sprachbausteine for telc); full length
                                                         // in .2; block ids LEVEL-pN-<lane>-<teil>, bank keys
                                                         // <prefix>-pN-(w|s)[n]-<lane>
-  productive: WritingTask | SpeakingTask,               // the separate task repeating the type of three weeks earlier
+  productive: WritingTask | SpeakingTask,               // the separate task repeating the type of three weeks earlier;
+                                                        // bank key <prefix>-pN-(w|s), no Teil digit (a11-p1-s)
   reward: { lesemagazin: { title: de, text: de, items: [Item]{3..5} }?, hoermagazin: { title: de, lines: [Line],
             items: [Item]{3..5} }?, scene: { lines: [Line] }?, projekt: { promptDe: de, microOutput: MicroOutput }? },
   extras: Extras?, assets: [Asset]* }
@@ -825,6 +826,25 @@ block (with its origin label in a .1 course; in a .2 course a missing lane-exact
   extras: Extras?, assets: [Asset]* }
   // halbtest: every Teil of the lane, ≈ half the items (each block within its template's scaffold); diagnose: one
   // full-length Teil per module
+
+// Compiled forms and submission (settled 2026-09-28, player + compiler):
+//   - the compiled Plateau's `review` keeps draw/currentShare/from and adds `units: { current, earlier }`,
+//     `drawn: { current, earlier }` and `items: [Item & { unit, step }]` — the set the compiler DREW (§13): only
+//     reserve items with banks: ['plateau'] of units at stage T; round(draw × currentShare) from the units since
+//     the previous Plateau, the rest from the earlier ones (a share short of candidates hands its rest to the
+//     other, so P1 draws all from U1–U3); spread over units and Lernschritte, seeded by the Plateau id, items an
+//     earlier Plateau of the level drew last. `unit`/`step` map each miss back to its Lernschritt.
+//   - a compiled .1 Halbtest adds `comesNext: { level, byTemplate: { [template]: { unit, nr, title } } }`: for each
+//     of its Teile the first unit of the .2 level whose Prüfungsfokus (primary lane) names the template — from that
+//     level's unit files, else its specs.json; `byTemplate` is empty while the .2 level has neither (the
+//     Teil-Karte then says „kommt in A1.2").
+//   - a Plateau or closing block is SUBMITTED (lesson_progress 'complete' under its id, §2; what §5 completion
+//     counts) when every required section is finished: the review set and each ExamBlock with all items answered,
+//     right or wrong; each WritingTask/SpeakingTask (a Teil or the productive task) submitted as a real attempt
+//     (the Aufgabe rule, BLUEPRINT §3.5). The reward is never graded and never required. No score is read.
+//   - a speaking part's own `length` (reduced|mini) is carried into the speaking bank like a unit's Prüfungsfokus
+//     length; SpeakingPart has no such field yet, so Plateau and closing parts are graded at full length until it is
+//     added (EXM-04, grade.mjs appliesIf 'full').
 
 // mocks/<lane>/<form>/<module>.json  (.2 only; one agent per module)
 { $schema: 'course-v2/mockmodule@1', id: re(MODULE), level: re(LEVEL), lane: ref(lane), form: enum(a|b|c),
@@ -881,7 +901,7 @@ agents run only the read-only validator.
 | writing tasks | `src/data/writingTasks/<level>.js` ↔ `netlify/functions/_shared/writingTasks/<level>.mjs` (byte-identical, `check-duplicates`) | `evaluate-writing` |
 | speaking tasks | `src/data/speakingTasks/<level>.js` ↔ `netlify/functions/_shared/speakingTasks/<level>.mjs` | speaking functions |
 | rubric profiles | `netlify/functions/_shared/rubrics/<id>.mjs` (+ a client copy of labels only) | graders, result cards |
-| Plateaus, closing, mocks | modules in the Modelltest runner's shape with the new part types (block `choices`, image choices) | runner + per-lane scorers |
+| Plateaus, closing, mocks | modules in the Modelltest runner's shape with the new part types (block `choices`, image choices); v0: `<level>/plateaus/pN.json` with the DRAWN review set (`review.items`, §10), `<level>/closing/<id>.json` with `comesNext` (§10) | runner + per-lane scorers; the v2 Plateau / Abschluss runner |
 | reserves | `src/data/course-v2/<level>/reserve.js` (the reserve index by unit, topic and error tag) | requeue, `earlierDraw`, Plateau review sets, Mehr üben, repair cards |
 | Einstufung | `<level>/.build/einstufung.json` → `src/data/course-v2/einstufung/<band>.js` (the fixed form from `course.json.einstufung`) | onboarding S1 |
 | assets | `.build/assets.json` (approved assets: url, size) from the image pipeline | player, pages |
@@ -890,7 +910,7 @@ agents run only the read-only validator.
 | syllabus | `astro-site/src/data/syllabus/<level>.json` ↔ `src/data/syllabus/<level>.json` | Astro course pages, SPA course home |
 | counts for copy | `src/data/courseFacts.js` ↔ `astro-site/src/data/courseFacts.js` | pages, `claims.test`, `build-llms.mjs` |
 | ids | `<level>/ids.ledger.json` — **append-only**: new ids are appended, removed ids tombstoned, nothing is rewritten | ID-01 |
-| hashes, minutes, cards, counts | `<level>/.build/units/uNN.json` (`contentHash`, `minutesPlanned`, `reviewCards`), `<level>/.build/course.facts.json` (`minutesPlanned`, `reviewMinutesByPace` current + carry-over, `minutesMeasured`, `counts` incl. AI-scored vs deterministic Aufgaben), `<level>/.build/srs.json` (SRS-01/02 incl. the cumulative-deck simulation) | QA-FRESH-01, TIM-01, SRS-01/02, plan, copy |
+| hashes, minutes, cards, counts | `<level>/.build/units/uNN.json` (`contentHash`, `minutesPlanned`, `reviewCards`), `<level>/.build/course.facts.json` (`minutesPlanned`, `reviewMinutesByPace` current + carry-over, `minutesMeasured`, `counts` incl. AI-scored vs deterministic Aufgaben), `<level>/.build/srs.json` (SRS-01/02 incl. the cumulative-deck simulation). v0 manifest `counts`: `examBlocks`/`writingTasks`/`speakingTasks`/`microOutputs` are the units' sums; `inPlateaus` and `inClosing` count those Teile (+ `items`, Plateau `reviewItems`), `inCourse` = all three | QA-FRESH-01, TIM-01, SRS-01/02, plan, copy |
 
 ## 14. Learner state in Supabase (hand-applied migrations; no content tables)
 
