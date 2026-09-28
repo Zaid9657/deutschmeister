@@ -305,16 +305,16 @@
           "type": "multiple_choice",
           "role": "gist",
           "topic": "hoeren",
-          "promptDe": "Im Kurs sprechen heute alle über ___.",
+          "promptDe": "Im Kurs sprechen heute alle ___.",
           "promptEn": "What is everyone in class talking about today?",
           "options": [
-            "das Wochenende",
-            "den Flohmarkt",
-            "das Kino"
+            "über das Wochenende",
+            "über den Flohmarkt",
+            "über das Kino"
           ],
-          "answer": "das Wochenende",
+          "answer": "über das Wochenende",
           "accepted": [
-            "das Wochenende"
+            "über das Wochenende"
           ],
           "explanation": {
             "de": "Frau Schulz sagt: „Heute sprechen wir über das Wochenende.“ Flohmarkt und Kino: Das war nur bei Olena und Bilal.",
@@ -1003,8 +1003,8 @@
           {
             "id": "a1.1-u11-ls2-l03",
             "speaker": "cast.elif",
-            "de": "Die Party am Freitag war toll, oder? Mein Wochenende war dann ruhig.",
-            "en": "The party on Friday was great, wasn’t it? After that my weekend was quiet."
+            "de": "Die Party am Freitag war toll, oder? Der Fisch war sehr lecker! Mein Wochenende war dann ruhig.",
+            "en": "The party on Friday was great, wasn’t it? The fish was really tasty! After that my weekend was quiet."
           },
           {
             "id": "a1.1-u11-ls2-l04",
@@ -1039,14 +1039,14 @@
           {
             "id": "a1.1-u11-ls2-l09",
             "speaker": "cast.priya",
-            "de": "Aber gestern war ich sehr müde. Ich habe bis elf Uhr geschlafen! Am Sonntag frühstücke ich immer spät und rufe meine Mutter an.",
-            "en": "But yesterday I was very tired. I slept until eleven! On Sundays I always have a late breakfast and call my mother."
+            "de": "Aber gestern war ich sehr müde. Ich habe bis elf Uhr geschlafen! Am Sonntag frühstücke ich immer spät. Dann rufe ich meine Mutter an.",
+            "en": "But yesterday I was very tired. I slept until eleven! On Sundays I always have a late breakfast. Then I call my mother."
           },
           {
             "id": "a1.1-u11-ls2-l10",
             "speaker": "cast.priya",
-            "de": "Mittwoch ist gut! Da habe ich ab fünf Uhr Zeit. Bis Mittwoch!",
-            "en": "Wednesday is good! I’m free from five o’clock then. See you on Wednesday!"
+            "de": "Mittwoch ist gut! Da habe ich ab fünf Uhr Zeit.",
+            "en": "Wednesday is good! I’m free from five o’clock then."
           }
         ],
         "text": {
@@ -1527,7 +1527,7 @@
             "generator": "dictation.fromInput",
             "count": 2,
             "source": [
-              "a1.1-u11-ls2-l03",
+              "a1.1-u11-ls2-l01",
               "a1.1-u11-ls2-l10"
             ]
           },
@@ -2290,8 +2290,8 @@
             "generator": "dictation.fromInput",
             "count": 2,
             "source": [
-              "a1.1-u11-ls3-l05",
-              "a1.1-u11-ls3-l06"
+              "a1.1-u11-ls3-l02",
+              "a1.1-u11-ls3-l05"
             ]
           },
           {
@@ -2482,7 +2482,7 @@
           "g.zeitangaben-inversion"
         ],
         "register": "du",
-        "modelDe": "Toll! Die Altstadt ist sehr schön. Letzte Woche war ich mit Freunden im Park."
+        "modelDe": "Toll! Dresden ist sehr schön. Letzte Woche war ich mit Freunden im Park."
       },
       "aussprache": {
         "focus": "Die Endung -en hat keinen Akzent, aber sie ist wichtig: gegessen, gesehen. Hören Sie genau: lese – lesen.",
@@ -2511,14 +2511,14 @@
           "id": "a1.1-u11-ls4-t1",
           "kind": "text",
           "title": "Eine Nachricht von Olena",
-          "text": "Hallo Sophie,\nwie geht’s in Dresden? Hier in der WG ist alles gut. Am Samstag war ich auf dem Flohmarkt. Ich habe ein Fahrrad gekauft! Es ist nicht neu, aber sehr schön. Am Sonntag war ich mit dem Fahrrad am See. Am Freitag war das Wetter schlecht, aber am Sonntag war es super. Am Mittwoch kommst du zurück. Dann kochen wir am Abend zusammen, und du erzählst alles.\nBis Mittwoch!\nOlena",
+          "text": "Hallo Sophie,\nwie geht’s in Dresden? Hier in der WG ist alles gut. Am Samstag war ich auf dem Flohmarkt. Ich habe ein Fahrrad gekauft! Es ist nicht neu, aber sehr schön. Am Sonntag war ich mit dem Fahrrad am See. Am Freitag war das Wetter schlecht, aber am Sonntag war es super. Am Mittwoch kommst du zurück. Ich kaufe am Nachmittag ein. Dann kochen wir am Abend zusammen, und du erzählst alles.\nBis Mittwoch!\nOlena",
           "glosses": []
         },
         {
           "id": "a1.1-u11-ls4-t2",
           "kind": "text",
           "title": "Eine Nachricht von Bilal",
-          "text": "Hallo Priya,\ndanke für die Fotos im Chat! Arjun fotografiert wirklich gut. Die Altstadt und das Schloss sind sehr schön. Ich war noch nie in Dresden. Am Samstag fahre ich vielleicht auch nach Dresden. Gibt es dort auch einen Zoo? Und was hat die Fahrkarte gekostet? Hast du am Donnerstag nach dem Kurs Zeit? Dann trinken wir einen Kaffee, und du erzählst mehr. Ich bezahle!\nViele Grüße\nBilal",
+          "text": "Hallo Priya,\ndanke für die Fotos im Chat! Arjun fotografiert wirklich gut. Die Altstadt und das Schloss sind sehr schön. Ich war noch nie in Dresden. Am Samstag fahre ich vielleicht auch nach Dresden. Wann fährt der Zug ab? Gibt es dort auch einen Zoo? Und was hat die Fahrkarte gekostet? Hast du am Donnerstag nach dem Kurs Zeit? Dann trinken wir einen Kaffee, und du erzählst mehr. Ich bezahle!\nViele Grüße\nBilal",
           "glosses": []
         }
       ],
@@ -3058,7 +3058,7 @@
     "proofs": [
       {
         "canDo": "cd.a1.wochenende-erzaehlen",
-        "aufgabe": "sprechen"
+        "microOutput": "a1.1-u11-ls2-mo"
       },
       {
         "canDo": "cd.a1.zeitangaben-vergangen",
