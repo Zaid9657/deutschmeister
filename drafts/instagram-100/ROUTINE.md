@@ -4,14 +4,14 @@ Kept in the repo (not only in the Routines UI) so it cannot drift silently — s
 rule as `docs/seo-routines/`. One fire = one post on up to three channels, through
 the owner's existing Zapier connections. Nothing else.
 
-Live Routine: **`trig_01T4HY5Q35TXnUj1qnk33Pp4`** "DeutschMeister daily post (Oct–Nov 2026)",
-created 2026-09-27, schedule `CRON_TZ=Europe/Berlin 52 17 * 10,11 *` (17:52, off the hour;
-October and November only, so it stops by itself after the last post on 11-19). The
+Live Routine: **`trig_01T4HY5Q35TXnUj1qnk33Pp4`** "DeutschMeister daily post (50 days from 2026-09-28)",
+schedule `CRON_TZ=Europe/Berlin 52 17 * 9,10,11 *` (17:52 Berlin). The owner moved the start up to
+2026-09-28 (live test that day = post 001), so the Routine posts row N = days since 2026-09-28 + 1
+and stops after 050 on 2026-11-16. The
 Routine's own prompt is the source that runs; keep this file in step with it.
 
-**Needs from the owner (the API could not attach them):** in claude.ai → Routines, edit
-the Routine and add the **Zapier** connector and the **Zaid9657/deutschmeister**
-repository. Without them the fired session has no Zapier tools and no CSV.
+The owner attached the **Zapier** connector and the **Zaid9657/deutschmeister** repository in
+the Routines UI on 2026-09-28 (the API could not attach them).
 
 Target IDs (checked 2026-09-27 through the Zapier connector):
 - Facebook: connection `66517282`, page `1232346926638010` "Deutsch Meister". **Live.**

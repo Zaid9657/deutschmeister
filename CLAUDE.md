@@ -172,7 +172,7 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   `docs/seo-routines/` rather than the Routines UI, because an agent cannot edit a Routine it did not
   create and a UI-only prompt drifts from the repo silently.
 - **Social posts: carousels from the next pack on (owner decision 2026-09-27).** The first pack
-  (`drafts/instagram-100/`, 50 single-image posts, 2026-10-01 → 11-19) is the template: brand
+  (`drafts/instagram-100/`, 50 single-image posts, 2026-09-28 → 11-16) is the template: brand
   tokens, 1080×1350 JPEG (4:5), exam facts only from the checked Leitfaden modules, per-channel
   captions with UTM tags, images served from `public/social/ig/`. Every later pack uses **2–4
   images per post where the content needs it** (hook → rule/example → practice/CTA), not one

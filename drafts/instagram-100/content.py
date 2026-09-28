@@ -202,7 +202,7 @@ posts += order
 assert len(posts) == 50, len(posts)
 
 tz = ZoneInfo('Europe/Berlin')
-start = datetime.date(2026, 10, 1)
+start = datetime.date(2026, 9, 28)  # owner moved the start up on 2026-09-28
 for i, p in enumerate(posts):
   p['id'] = f'{i+1:03d}'
   p['publish_at'] = datetime.datetime.combine(start + datetime.timedelta(days=i), datetime.time(18, 0), tz).isoformat()
