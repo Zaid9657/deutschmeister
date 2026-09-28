@@ -464,8 +464,8 @@
           "promptDe": "Bilal: „Ich habe ein Buch gelesen.“ Olena: „Ich lese ein Buch.“ Wer liest jetzt?",
           "promptEn": "Who is reading now?",
           "options": [
-            "Bilal",
             "Olena",
+            "Bilal",
             "Bilal und Olena"
           ],
           "answer": "Olena",
@@ -731,10 +731,12 @@
             "answer": "Ich habe am Freitag Fisch gegessen.",
             "accepted": [
               "Ich habe am Freitag Fisch gegessen.",
-              "Am Freitag habe ich Fisch gegessen."
+              "Am Freitag habe ich Fisch gegessen.",
+              "Fisch habe ich am Freitag gegessen."
             ],
             "acceptedWhy": {
-              "Am Freitag habe ich Fisch gegessen.": "auch richtig: „am Freitag“ auf Position 1, „habe“ auf Position 2"
+              "Am Freitag habe ich Fisch gegessen.": "auch richtig: „am Freitag“ auf Position 1, „habe“ auf Position 2",
+              "Fisch habe ich am Freitag gegessen.": "auch richtig: „Fisch“ betont auf Position 1, „habe“ auf Position 2"
             },
             "intentionalError": true,
             "errorTag": "perfekt-aux-participle",
@@ -1785,8 +1787,8 @@
           }
         ],
         "text": {
-          "de": "Postkarte von Sophie:\nLiebe Priya, lieber Arjun,\nviele Grüße aus Dresden! Meine Eltern sehe ich nur einmal im Monat. Gestern Vormittag waren wir im Museum im Schloss. Das war sehr interessant. Am Abend haben wir im Garten gegessen und viel gelacht – bis in die Nacht! Heute lese ich nur und schlafe viel. Am Mittwoch bin ich wieder in Leipzig. Danke für den Samstag! Besucht ihr mich bald in der WG?\nBis bald!\nSophie\n\nPriya im Chat:\nHallo zusammen! Hier sind Fotos aus Dresden. Am Samstag war ich mit Arjun und Sophie dort. Wir haben die Altstadt und das Schloss gesehen. Das Wetter war super, und der Ausflug hat viel Spaß gemacht! Nur der Zug am Abend hatte eine Stunde Verspätung.",
-          "en": "Postcard from Sophie: Dear Priya, dear Arjun, greetings from Dresden! I only see my parents once a month. Yesterday morning we were at the museum in the palace. It was very interesting. In the evening we ate in the garden and laughed a lot – late into the night! Today I’m just reading and sleeping a lot. On Wednesday I’ll be back in Leipzig. Thanks for Saturday! Will you visit me in the flat-share soon? See you soon! Sophie · Priya in the chat: Hi everyone! Here are photos from Dresden. On Saturday I was there with Arjun and Sophie. We saw the old town and the palace. The weather was great, and the trip was a lot of fun! Only the train in the evening was an hour late."
+          "de": "Postkarte von Sophie:\nLiebe Priya, lieber Arjun,\nviele Grüße aus Dresden! Meine Eltern sehe ich nur einmal im Monat. Gestern Vormittag waren wir im Museum im Schloss. Das war sehr interessant. Am Abend haben wir im Garten gegessen und viel gelacht. Die Nacht war kurz! Heute lese ich nur und schlafe viel. Am Mittwoch bin ich wieder in Leipzig. Danke für den Samstag! Besucht ihr mich bald in der WG?\nBis bald!\nSophie\n\nPriya im Chat:\nHallo zusammen! Hier sind Fotos aus Dresden. Am Samstag war ich mit Arjun und Sophie dort. Wir haben die Altstadt und das Schloss gesehen. Das Wetter war super, und der Ausflug hat viel Spaß gemacht! Nur der Zug am Abend hatte eine Stunde Verspätung.",
+          "en": "Postcard from Sophie: Dear Priya, dear Arjun, greetings from Dresden! I only see my parents once a month. Yesterday morning we were at the museum in the palace. It was very interesting. In the evening we ate in the garden and laughed a lot. It was a short night! Today I’m just reading and sleeping a lot. On Wednesday I’ll be back in Leipzig. Thanks for Saturday! Will you visit me in the flat-share soon? See you soon! Sophie · Priya in the chat: Hi everyone! Here are photos from Dresden. On Saturday I was there with Arjun and Sophie. We saw the old town and the palace. The weather was great, and the trip was a lot of fun! Only the train in the evening was an hour late."
         },
         "glosses": [],
         "transcriptAfterUnaidedListen": true
@@ -2437,8 +2439,8 @@
         "mode": "written",
         "profile": "course-micro",
         "situationDe": "Priya zeigt im Chat Fotos aus Dresden: die Altstadt und das Schloss. Sie schreibt: „Das war der Samstag in Dresden!“",
-        "promptDe": "Antworten Sie Priya in 1–2 Sätzen: Wie finden Sie die Fotos? Waren Sie schon in Dresden?",
-        "promptEn": "Reply to Priya in 1–2 sentences: what do you think of the photos? Have you been to Dresden?",
+        "promptDe": "Antworten Sie Priya: Wie finden Sie die Fotos? Und wo waren Sie letzte Woche?",
+        "promptEn": "Reply to Priya: what do you think of the photos, and where were you last week?",
         "planSeconds": 30,
         "words": [
           3,
@@ -2612,8 +2614,8 @@
       "strategyCards": [
         {
           "template": "sd1.l1",
-          "de": "Lesen Teil 1: Sie lesen zwei Nachrichten und fünf Aussagen. Zuerst lesen Sie die Aussagen. Dann suchen Sie im Text: Wer? Wann? Was? Oft stehen die Wörter aus der Aussage auch im Text, aber die Information ist nicht gleich. Lesen Sie auch „nicht“, „nie“ und „schon“ genau!",
-          "en": "Reading part 1: two messages and five statements. First read the statements, then look in the text: who, when, what? The words of a statement often appear in the text too, but the information is not the same. Read “nicht”, “nie” and “schon” carefully too!"
+          "de": "Lesen Teil 1: Sie lesen zwei Nachrichten und fünf Aussagen. Zuerst lesen Sie die Aussagen. Dann suchen Sie im Text: Wer? Wann? Was? Oft stehen die Wörter aus der Aussage auch im Text, aber die Information ist manchmal nicht gleich. Lesen Sie auch „nicht“, „nie“ und „schon“ genau!",
+          "en": "Reading part 1: two messages and five statements. First read the statements, then look in the text: who, when, what? The words of a statement often appear in the text too, but the information is sometimes not the same. Read “nicht”, “nie” and “schon” carefully too!"
         }
       ]
     },
@@ -2734,8 +2736,7 @@
               "mit meiner Familie",
               "mit meinem Mann",
               "mit meiner Frau",
-              "mit meinen Eltern",
-              "zusammen"
+              "mit meinen Eltern"
             ]
           },
           {
