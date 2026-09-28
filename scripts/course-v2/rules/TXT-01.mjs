@@ -12,7 +12,8 @@
 //     at the card's first use: a subordinate clause over the limit is a RATCHET (three rounds asked for it);
 //     a long sentence is an ADVISORY until the limits are calibrated against the level's own frames (u06: a
 //     23-word title.canDo, a 19-word situationDe).
-// Exam texts follow their Teil template (TXT-02) and are not measured here.
+// Exam texts follow their Teil template (TXT-02); a sentence of theirs over maxWords is an ADVISORY here
+// (a1.1-u11 r2 F06).
 
 import { walkTexts, walkProduction, walkSteps } from '../lib-validate/walk.mjs';
 import { walkReadSurfaces } from '../lib-validate/metalanguage.mjs';
@@ -93,7 +94,16 @@ export function run({ ctx, docs, levels, mode }) {
     };
     // the course's German texts
     for (const t of walkTexts(doc)) {
-      if (t.kind === 'exam') continue;
+      if (t.kind === 'exam') {
+        // an exam text follows its Teil template (TXT-02), but a sentence over the level's maxWords is still
+        // read by an A1 learner under time — ADVISORY (a1.1-u11 r2 F06: the LS3 postcard, 14 words)
+        const parts = t.lines.length ? t.lines.map((l, i) => [String(l?.de || ''), `${t.path}.lines[${i}]`, l?.id]) : [[String(t.writtenText || ''), `${t.path}.text`, t.step?.id]];
+        for (const [txt, path, lid] of parts) {
+          const long = sentences(txt).filter((x) => typeof maxWords === 'number' && wordCount(x) > maxWords);
+          if (long.length) findings.push(advisory(doc, path, `exam text: ${long.length} sentence(s) over ${maxWords} words at ${doc.level}: „${long[0].slice(0, 80)}" (${wordCount(long[0])})`, lid));
+        }
+        continue;
+      }
       if (t.lines.length) t.lines.forEach((l, i) => measureText(String(l?.de || ''), `${t.path}.lines[${i}]`, l?.id));
       if (t.writtenText) measureText(t.writtenText, `${t.path}.text`, t.step?.id);
     }

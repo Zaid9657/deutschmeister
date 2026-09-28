@@ -159,7 +159,8 @@ export function run({ ctx, docs, levels, mode }) {
       }
       // a person an example names („Frau Kowalski") is a cast member or a names.json person (a1.1-u08 r1 F05:
       // lx.absagen) — a stranger with a surname reads as a character the story never introduces
-      for (const m of e.example.matchAll(/\b(?:Herr|Frau)\s+(\p{Lu}\p{Ll}+)/gu)) {
+      // (a title is no name: „Frau Doktor Sommer" names Sommer, „Frau Doktor" alone names nobody)
+      for (const m of e.example.matchAll(/\b(?:Herr|Frau)\s+(?:(?:Doktor|Dr\.|Professor|Prof\.)\s*)?(?!Doktor\b|Professor\b)(\p{Lu}\p{Ll}+)/gu)) {
         if (!personNames.has(m[1].toLowerCase())) findings.push(finding('advisory', { file: slot.lexicon.file }, `entries[${i}].example`, `example „${e.example}" names „${m[0]}", who is neither in the cast bible nor in names.json — use a cast member (or add the name to names.json)`, e.id));
       }
       // the cast bible
