@@ -125,7 +125,9 @@ export const ProgressProvider = ({ children }) => {
           .from('user_listening_progress')
           .select('exercise_id')
           .eq('user_id', userId)
-          .eq('completed', true),
+          // completed_at, not `completed`: the live table has no flag column
+          // (src/lib/listeningProgress.js). The flag made this a 400 on every load.
+          .not('completed_at', 'is', null),
       ]);
       const doneIds = new Set((done.data || []).map((r) => r.exercise_id));
       const summary = {};

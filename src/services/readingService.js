@@ -89,17 +89,23 @@ export async function markLessonComplete(userId, lessonId) {
   if (!userId || !lessonId) return;
 
   try {
-    await supabase
+    // last_read_at is this table's stamp; it has no completed_at column
+    // (src/lib/listeningProgress.js), and sending one made every save a 400.
+    const now = new Date().toISOString();
+    const { error } = await supabase
       .from('user_reading_progress')
       .upsert(
         {
           user_id: userId,
           lesson_id: lessonId,
           completed: true,
-          completed_at: new Date().toISOString(),
+          last_read_at: now,
+          updated_at: now,
         },
         { onConflict: 'user_id,lesson_id' }
       );
+    // supabase-js resolves on a REST error, so the catch below never saw one.
+    if (error) console.error('[readingService] markLessonComplete:', error.message);
   } catch (err) {
     console.error('[readingService] markLessonComplete error:', err);
   }

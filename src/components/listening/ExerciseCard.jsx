@@ -4,6 +4,7 @@ import { formatDuration } from '../../utils/listeningHelpers';
 import { useTranslation } from 'react-i18next';
 import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
+import { isListeningDone } from '../../lib/listeningProgress.js';
 
 // One exercise row: an interactive clay card. The level hue it used to take
 // from getLevelTheme is gone (design-tokens.js rule 1) — a completed exercise
@@ -11,7 +12,7 @@ import Chip from '../ui/Chip.jsx';
 const ExerciseCard = ({ exercise }) => {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
-  const isCompleted = exercise.progress?.completed;
+  const isCompleted = isListeningDone(exercise.progress);
   const score = exercise.progress?.score;
   const isGerman = i18n.language === 'de';
 
