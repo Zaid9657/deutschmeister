@@ -5,6 +5,12 @@
   command = "npm run build && cd astro-site && npm install && npm run build && cd .. && node scripts/merge-site-builds.mjs && node scripts/prerender-spa-routes.mjs && (node scripts/ping-indexnow.mjs || true)"
   publish = "dist"
   functions = "netlify/functions"
+  # Skip the build when a push touches only files the site never reads. Every
+  # production deploy costs 15 Netlify credits (the team's Pro plan includes
+  # 3,000/month, shared with medmeister). Exit 0 = skip. An unknown
+  # CACHED_COMMIT_REF (first build, shallow history) makes git diff exit 128,
+  # which builds, so an error never skips a real change. Build hooks ignore it.
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ':(exclude)*.md' ':(exclude)docs' ':(exclude)drafts' ':(exclude)migrations' ':(exclude).claude' ':(exclude).github'"
 
 [functions]
   node_bundler = "esbuild"
