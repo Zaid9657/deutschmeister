@@ -3364,8 +3364,8 @@
                 "halb acht"
               ],
               "acceptedWhy": {
-                "7.30 Uhr": "grammatisch: Im Alltag zählt man die Uhrzeit auch nur bis 12: 7.30 Uhr am Abend = 19.30 Uhr.",
-                "halb acht": "grammatisch: So steht die Uhrzeit in der E-Mail von Olena: „um halb acht“."
+                "7.30 Uhr": "grammatisch: Im Alltag sagt man am Abend auch 7.30 Uhr (= 19.30 Uhr).",
+                "halb acht": "grammatisch: So steht die Uhrzeit in der Situation: „Sie essen um halb acht.“"
               },
               "exact": "number"
             },

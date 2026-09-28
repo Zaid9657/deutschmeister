@@ -84,7 +84,8 @@
           "lx.nachbar",
           "lx.anzeige",
           "lx.ruhig",
-          "lx.eigen"
+          "lx.eigen",
+          "lx.hausmeister"
         ]
       }
     ],
@@ -134,7 +135,7 @@
       "Linie 1 A1 K3–4 (Grammatik: er/es/sie; nach memo 06)"
     ],
     "deviation": {
-      "reason": "Menschen (L14) und Netzwerk neu (K9) setzen Wohnen erst in A1.2; die Einheit bleibt mit Schritte plus Neu 1 L4 in A1.1, weil Start Deutsch 1 Lesen Teil 2 Wohnungsanzeigen nutzt (BLUEPRINT §2.8, Zeile 6). Sie steht an Position 5 statt 6 (Tausch mit „Das brauche ich“), weil die Grammatik-Spine g.pronomen-er-es-sie und g.adjektiv-praedikativ an a1.1-u05 einführt (spine.md §6); siehe docs/course-v2/curriculum/a1-1.specs-notes.md. Prüfungsteile: Der Stoffplan nennt Lesen Teil 2, Sprechen Teil 2 und Schreiben Teil 2. Die Einheit übt Schreiben Teil 1 (ein Formular für die Wohnung) statt Teil 2, weil S1 sonst nur in u01, u02 und u09 steht, S2 aber in acht Einheiten; Lesen Teil 1 und Sprechen Teil 1 kommen dazu. LS5 hängt an Teil 1 eine sd1.sp2-Runde mit zwei Themen an („Wohnung“, „Möbel“). Sie trägt cd.a1.wohnung-beschreiben (Nora fragt „Wie viele Zimmer hat Ihre Wohnung?“ und „Wo steht Ihr Schreibtisch?“, Review r1 F03) und steht als Chip, aber nicht im Prüfungsfokus, weil COV-3 höchstens vier Teile erlaubt. Die geplante E-Mail über die neue Wohnung übernimmt der Chat mit Olena in LS2 (Mikro-Ausgabe: Zimmer und Möbel). Landeskunde: WG und Name an der Tür zeigt die Einheit nur als Szene, ohne Sachaussage, und hat darum keinen Fact; das Erdgeschoss als Stockwerk null kommt mit lx.erdgeschoss in a1.2-u03 (Frau Lehmann wohnt hier nur „hier unten“). Aussprache: ö/o und ü/u wie geplant; die Hörpaare trennen den Vokal von Länge und ach-/ich-Laut (Review r1 F17)."
+      "reason": "Menschen (L14) und Netzwerk neu (K9) setzen Wohnen erst in A1.2; die Einheit bleibt mit Schritte plus Neu 1 L4 in A1.1, weil Start Deutsch 1 Lesen Teil 2 Wohnungsanzeigen nutzt (BLUEPRINT §2.8, Zeile 6). Sie steht an Position 5 statt 6 (Tausch mit „Das brauche ich“), weil die Grammatik-Spine g.pronomen-er-es-sie und g.adjektiv-praedikativ an a1.1-u05 einführt (spine.md §6); siehe docs/course-v2/curriculum/a1-1.specs-notes.md. Prüfungsteile: Der Stoffplan nennt Lesen Teil 2, Sprechen Teil 2 und Schreiben Teil 2. Die Einheit übt Schreiben Teil 1 (ein Formular für die Wohnung) statt Teil 2, weil S1 sonst nur in u01, u02 und u09 steht, S2 aber in acht Einheiten; Lesen Teil 1 und Sprechen Teil 1 kommen dazu. LS5 hängt an Teil 1 eine sd1.sp2-Runde an: ein Thema („Wohnung“) in zwei Runden, erst Zimmer, dann Möbel. Die Karten nennen „Wohnung“, nicht „Möbel“, weil lx.moebel rezeptiv ist. Sie trägt cd.a1.wohnung-beschreiben (Nora fragt „Wie viele Zimmer hat Ihre Wohnung?“ und „Wo steht Ihr Schreibtisch?“, Review r1 F03) und steht als Chip, aber nicht im Prüfungsfokus, weil COV-3 höchstens vier Teile erlaubt. Die geplante E-Mail über die neue Wohnung übernimmt der Chat mit Olena in LS2 (Mikro-Ausgabe: Zimmer und Möbel). Landeskunde: WG und Name an der Tür zeigt die Einheit nur als Szene, ohne Sachaussage, und hat darum keinen Fact; das Erdgeschoss als Stockwerk null kommt mit lx.erdgeschoss in a1.2-u03 (Frau Lehmann wohnt hier nur „hier unten“). Aussprache: ö/o und ü/u wie geplant; die Hörpaare trennen den Vokal von Länge und ach-/ich-Laut (Review r1 F17)."
     },
     "cast": [
       "cast.priya",
@@ -346,16 +347,23 @@
           {
             "id": "a1.1-u05-ls1-l10",
             "speaker": "cast.priya",
-            "de": "Das ist okay. Hell, ruhig und 640 Euro – die Nummer eins ist gut für uns!",
-            "en": "That’s OK. Bright, quiet and 640 euros – number one is right for us!",
-            "say": "Das ist okay. Hell, ruhig und sechshundertvierzig Euro – die Nummer eins ist gut für uns!"
+            "de": "Das ist okay. Hell, ruhig und 640 Euro – die Nummer eins ist gut für uns! Wir ziehen in die Kölner Straße.",
+            "en": "That’s OK. Bright, quiet and 640 euros – number one is right for us! We’re moving to Kölner Straße.",
+            "say": "Das ist okay. Hell, ruhig und sechshundertvierzig Euro – die Nummer eins ist gut für uns! Wir ziehen in die Kölner Straße."
           }
         ],
         "text": {
           "de": "Wohnungen in Leipzig\nNummer 1: Kölner Straße 18. 2 Zimmer, Küche, Bad, Balkon. Sehr hell und ruhig. Miete: 640 Euro.\nNummer 2: Wohnung mit Garten. 3 Zimmer, Küche, Bad und Toilette. Sehr groß. Miete: 890 Euro.\nNummer 3: 1 Zimmer, Küche und Bad. Möbel: Bett, Schrank, Tisch und Stuhl. Klein, aber neu. Miete: 390 Euro.",
           "en": "Flats in Leipzig · No. 1: Kölner Straße 18. 2 rooms, kitchen, bathroom, balcony. Very bright and quiet. Rent: 640 euros. · No. 2: flat with a garden. 3 rooms, kitchen, bathroom and separate toilet. Very big. Rent: 890 euros. · No. 3: 1 room, kitchen and bathroom. Furniture: bed, wardrobe, table and chair. Small, but new. Rent: 390 euros."
         },
-        "glosses": [],
+        "glosses": [
+          {
+            "token": "ziehen in",
+            "gloss": {
+              "en": "move into (a new home): wir ziehen in die … = we are moving to …"
+            }
+          }
+        ],
         "transcriptAfterUnaidedListen": true
       },
       "inputItems": [
@@ -452,20 +460,20 @@
           "type": "multiple_choice",
           "role": "detail",
           "topic": "lesen",
-          "promptDe": "Lesen Sie die Anzeige Nummer 3. Was ist schon in der Wohnung?",
-          "promptEn": "Read ad no. 3: what is already in the flat?",
+          "promptDe": "Lesen Sie die Anzeige Nummer 3. Was hat die Wohnung?",
+          "promptEn": "Read ad no. 3: what does the flat have?",
           "options": [
-            "ein Sofa",
-            "ein Sessel",
-            "ein Bett"
+            "einen Balkon",
+            "einen Garten",
+            "einen Schrank"
           ],
-          "answer": "ein Bett",
+          "answer": "einen Schrank",
           "accepted": [
-            "ein Bett"
+            "einen Schrank"
           ],
           "explanation": {
-            "de": "In der Anzeige steht: „Möbel: Bett, Schrank, Tisch und Stuhl“. Ein Sofa und ein Sessel sind nicht da.",
-            "en": "The ad lists bed, wardrobe, table and chair – no sofa and no armchair."
+            "de": "In der Anzeige steht: „Möbel: Bett, Schrank, Tisch und Stuhl“. Nummer 1 hat einen Balkon, Nummer 2 einen Garten.",
+            "en": "Ad no. 3 lists bed, wardrobe, table and chair. The balcony belongs to no. 1, the garden to no. 2."
           },
           "origin": "agent"
         }
@@ -481,15 +489,15 @@
           "options": [
             "Nein, sie möchte die Wohnung nicht.",
             "Ja, sie möchte die Wohnung.",
-            "Ja, aber nur mit Garten."
+            "Nein, aber Arjun möchte die Wohnung."
           ],
           "answer": "Nein, sie möchte die Wohnung nicht.",
           "accepted": [
             "Nein, sie möchte die Wohnung nicht."
           ],
           "explanation": {
-            "de": "„zu teuer“ heißt: Das ist nicht gut für Priya. Sie möchte die Wohnung nicht.",
-            "en": "“zu teuer” = too expensive, a problem – so Priya does not want the flat."
+            "de": "„zu teuer für uns“ heißt: Das ist nicht gut für Priya und Arjun. Sie möchten die Wohnung nicht.",
+            "en": "“zu teuer für uns” = too expensive for us, a problem for both – so neither Priya nor Arjun wants the flat."
           },
           "origin": "agent"
         },
@@ -545,8 +553,8 @@
           "promptDe": "„640 Euro? Das ist nicht zu teuer.“ Ist die Miete okay?",
           "promptEn": "“nicht zu teuer” – is the rent OK?",
           "options": [
-            "Nein, sie ist zu teuer.",
             "Nein, sie ist zu billig.",
+            "Ja, aber sie ist zu teuer.",
             "Ja, das ist gut."
           ],
           "answer": "Ja, das ist gut.",
@@ -554,8 +562,8 @@
             "Ja, das ist gut."
           ],
           "explanation": {
-            "de": "„nicht zu teuer“ heißt: Die Miete ist okay. Das ist gut.",
-            "en": "“nicht zu teuer” = not too expensive: the rent is fine, and that is good."
+            "de": "„nicht zu teuer“ heißt: Die Miete ist okay. Das ist gut. „zu teuer“ und „zu billig“ passen nicht.",
+            "en": "“nicht zu teuer” = not too expensive: the rent is fine, and that is good. “too expensive” and “too cheap” do not fit."
           },
           "origin": "agent"
         }
@@ -590,6 +598,9 @@
             "accepted": [
               "sehr"
             ],
+            "errorTags": [
+              "spelling-meaning"
+            ],
             "explanation": {
               "de": "„aber sie ist okay“: Die Küche ist gut. Also „sehr klein“, nicht „zu klein“.",
               "en": "“but it’s OK”: no problem, so “very small”, not “too small”."
@@ -606,6 +617,9 @@
             "answer": "sind",
             "accepted": [
               "sind"
+            ],
+            "errorTags": [
+              "verb-ending"
             ],
             "explanation": {
               "de": "„die Wohnungen“ = Plural: „sind“.",
@@ -679,6 +693,9 @@
             "acceptedWhy": {
               "Einen Balkon hat die Wohnung.": "grammatisch: „einen Balkon“ betont auf Position 1"
             },
+            "errorTags": [
+              "v2-inv"
+            ],
             "explanation": {
               "de": "„hat“ steht auf Position 2.",
               "en": "“hat” is in position 2."
@@ -705,6 +722,9 @@
             "acceptedWhy": {
               "Sehr klein ist das Bad.": "grammatisch: „sehr klein“ betont auf Position 1, das Verb bleibt auf Position 2"
             },
+            "errorTags": [
+              "v2-inv"
+            ],
             "explanation": {
               "de": "„ist“ steht auf Position 2.",
               "en": "“ist” is in position 2."
@@ -731,6 +751,9 @@
             "acceptedWhy": {
               "Sehr hell sind die Zimmer.": "grammatisch: „sehr hell“ betont auf Position 1, das Verb bleibt auf Position 2"
             },
+            "errorTags": [
+              "v2-inv"
+            ],
             "explanation": {
               "de": "„sind“ steht auf Position 2 („die Zimmer“ = Plural).",
               "en": "“sind” is in position 2 (“die Zimmer” is plural)."
@@ -752,6 +775,9 @@
             "answer": "Wie ist die Küche?",
             "accepted": [
               "Wie ist die Küche?"
+            ],
+            "errorTags": [
+              "v2-inv"
             ],
             "explanation": {
               "de": "W-Frage: „Wie“ auf Position 1, „ist“ auf Position 2.",
@@ -796,6 +822,9 @@
             "answer": "Das ist nicht gut.",
             "accepted": [
               "Das ist nicht gut."
+            ],
+            "errorTags": [
+              "spelling-meaning"
             ],
             "explanation": {
               "de": "„zu groß“ heißt: Das ist nicht gut. Das Sofa passt dort nicht.",
@@ -855,6 +884,9 @@
           "answer": "ist",
           "accepted": [
             "ist"
+          ],
+          "errorTags": [
+            "verb-ending"
           ],
           "banks": [
             "plateau",
@@ -948,6 +980,9 @@
           "accepted": [
             "Das ist zu teuer."
           ],
+          "errorTags": [
+            "spelling-meaning"
+          ],
           "banks": [
             "plateau",
             "mehr-ueben"
@@ -976,7 +1011,8 @@
         "targets": [
           "g.adjektiv-praedikativ"
         ],
-        "register": "du"
+        "register": "du",
+        "modelDe": "Die Nummer zwei ist groß, aber zu teuer. Die Nummer eins ist hell und ruhig."
       },
       "aussprache": {
         "focus": "ö und o: schon – schön, Sohn – Söhne",
@@ -1000,7 +1036,7 @@
     {
       "id": "a1.1-u05-ls2",
       "kind": "situation",
-      "title": "Die Wohnung per Video",
+      "title": "Hallo, Olena!",
       "structure": "g.pronomen-er-es-sie",
       "modelSentence": "Wie ist die Küche? – Sie ist klein, aber hell.",
       "ruleCard": "rc.pronomen-er-es-sie",
@@ -1070,8 +1106,8 @@
           {
             "id": "a1.1-u05-ls2-l10",
             "speaker": "cast.priya",
-            "de": "Es ist nicht sehr groß. Der Schrank ist alt, aber das Bett ist neu und sehr gut.",
-            "en": "It isn’t very big. The wardrobe is old, but the bed is new and very good."
+            "de": "Es ist nicht sehr groß. Der Schrank ist alt, aber das Bett ist neu. Hier schlafen wir sehr gut!",
+            "en": "It isn’t very big. The wardrobe is old, but the bed is new. We sleep really well here!"
           }
         ],
         "glosses": [
@@ -1100,8 +1136,8 @@
           "promptEn": "What does Priya show Olena?",
           "options": [
             "die Wohnung",
-            "eine Anzeige",
-            "ein Formular"
+            "die WG",
+            "nur die Küche"
           ],
           "answer": "die Wohnung",
           "accepted": [
@@ -1360,6 +1396,9 @@
             "accepted": [
               "Sie"
             ],
+            "errorTags": [
+              "gender-article"
+            ],
             "explanation": {
               "de": "„die Stühle“ = Plural → „sie“ + „sind“.",
               "en": "die Stühle is plural → sie + sind."
@@ -1386,6 +1425,9 @@
             "acceptedWhy": {
               "Sehr schön ist er.": "grammatisch: „sehr schön“ betont auf Position 1, das Verb bleibt auf Position 2"
             },
+            "errorTags": [
+              "v2-inv"
+            ],
             "explanation": {
               "de": "„ist“ steht auf Position 2. „Er“ steht für „der Balkon“.",
               "en": "“ist” is in position 2; “er” stands for der Balkon."
@@ -1441,6 +1483,9 @@
             "acceptedWhy": {
               "Am Fenster steht der Schreibtisch.": "grammatisch: der Ort auf Position 1, das Verb bleibt auf Position 2"
             },
+            "errorTags": [
+              "v2-inv"
+            ],
             "explanation": {
               "de": "„steht“ steht auf Position 2.",
               "en": "“steht” is in position 2."
@@ -1467,6 +1512,9 @@
             "acceptedWhy": {
               "Zu alt sind sie.": "grammatisch: „zu alt“ betont auf Position 1, das Verb bleibt auf Position 2"
             },
+            "errorTags": [
+              "v2-inv"
+            ],
             "explanation": {
               "de": "„sind“ steht auf Position 2. „Sie“ steht für „die Stühle“ (Plural).",
               "en": "“sind” is in position 2; “sie” stands for die Stühle (plural)."
@@ -1488,6 +1536,9 @@
             "answer": "Wo steht das Bett?",
             "accepted": [
               "Wo steht das Bett?"
+            ],
+            "errorTags": [
+              "v2-inv"
             ],
             "explanation": {
               "de": "W-Frage: „Wo“ auf Position 1, „steht“ auf Position 2.",
@@ -1532,6 +1583,9 @@
             "answer": "Es",
             "accepted": [
               "Es"
+            ],
+            "errorTags": [
+              "gender-article"
             ],
             "explanation": {
               "de": "„das Bett“ → „es“.",
@@ -1690,6 +1744,9 @@
           "accepted": [
             "Sie"
           ],
+          "errorTags": [
+            "gender-article"
+          ],
           "banks": [
             "plateau",
             "mehr-ueben",
@@ -1713,13 +1770,14 @@
         "promptEn": "Answer Olena in 2–3 sentences: how many rooms, what is in the living room, and what it is like.",
         "planSeconds": 30,
         "words": [
-          8,
-          25
+          6,
+          16
         ],
         "targets": [
           "g.pronomen-er-es-sie"
         ],
-        "register": "du"
+        "register": "du",
+        "modelDe": "Meine Wohnung hat zwei Zimmer. Im Wohnzimmer ist ein Sofa. Es ist hell und schön."
       },
       "endLine": "Sie können jetzt Ihre Wohnung zeigen und über die Zimmer und die Möbel sprechen."
     },
@@ -1772,8 +1830,8 @@
           {
             "id": "a1.1-u05-ls3-l06",
             "speaker": "cast.herr-krause",
-            "de": "Guten Tag! Mein Name ist Krause, ich bin hier der Hausmeister. Sie sind Familie Nair, oder?",
-            "en": "Hello! My name is Krause, I’m the caretaker here. You’re the Nairs, aren’t you?"
+            "de": "Guten Tag! Mein Name ist Krause, ich bin hier der Hausmeister. Sie sind Familie Nair, oder? Woher kommen Sie?",
+            "en": "Hello! My name is Krause, I’m the caretaker here. You’re the Nairs, aren’t you? Where are you from?"
           },
           {
             "id": "a1.1-u05-ls3-l07",
@@ -1835,7 +1893,7 @@
           "promptDe": "Wer spricht mit Priya und Arjun?",
           "promptEn": "Who talks to Priya and Arjun?",
           "options": [
-            "Leute im Kurs",
+            "Leute aus Indien",
             "Leute in der WG",
             "Nachbarn und der Hausmeister"
           ],
@@ -1901,7 +1959,7 @@
           "promptDe": "Wer ist Herr Krause?",
           "promptEn": "Who is Mr Krause?",
           "options": [
-            "ein Freund von Arjun",
+            "der Mann von Frau Haddad",
             "der Hausmeister",
             "ein Nachbar von oben"
           ],
@@ -1910,8 +1968,8 @@
             "der Hausmeister"
           ],
           "explanation": {
-            "de": "Herr Krause sagt: „Ich bin hier der Hausmeister.“",
-            "en": "Mr Krause says he is the caretaker."
+            "de": "Herr Krause sagt: „Ich bin hier der Hausmeister.“ Er wohnt unten.",
+            "en": "Mr Krause says he is the caretaker; he lives downstairs."
           },
           "origin": "agent"
         },
@@ -2101,6 +2159,9 @@
             "accepted": [
               "Sie"
             ],
+            "errorTags": [
+              "gender-article"
+            ],
             "explanation": {
               "de": "Frau Lehmann ist eine Frau: „sie“.",
               "en": "Mrs Lehmann is a woman: sie."
@@ -2127,6 +2188,9 @@
             "acceptedWhy": {
               "Sehr ruhig ist es.": "grammatisch: „sehr ruhig“ betont auf Position 1, das Verb bleibt auf Position 2"
             },
+            "errorTags": [
+              "v2-inv"
+            ],
             "explanation": {
               "de": "„ist“ steht auf Position 2. „Es“ steht für „das Haus“.",
               "en": "“ist” is in position 2; “es” stands for das Haus."
@@ -2199,7 +2263,7 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.ja-nein-frage",
-            "promptDe": "Bilden Sie die Frage.",
+            "promptDe": "Bilden Sie eine Ja/Nein-Frage: Verb auf Position 1.",
             "promptEn": "Build the yes/no question.",
             "tiles": [
               "Sie",
@@ -2215,6 +2279,9 @@
             "acceptedWhy": {
               "Sind Sie hier neu?": "grammatisch: „hier“ und „neu“ können tauschen"
             },
+            "errorTags": [
+              "v2-inv"
+            ],
             "explanation": {
               "de": "Ja/Nein-Frage: Das Verb „sind“ steht auf Position 1.",
               "en": "Yes/no question: the verb “sind” comes first."
@@ -2236,6 +2303,9 @@
             "answer": "Wie ist das Haus?",
             "accepted": [
               "Wie ist das Haus?"
+            ],
+            "errorTags": [
+              "v2-inv"
             ],
             "explanation": {
               "de": "W-Frage: „Wie“ auf Position 1, „ist“ auf Position 2.",
@@ -2280,6 +2350,9 @@
             "answer": "Sie ist klein.",
             "accepted": [
               "Sie ist klein."
+            ],
+            "errorTags": [
+              "gender-article"
             ],
             "explanation": {
               "de": "„die Küche“ → „sie“: „Sie ist klein.“",
@@ -2434,6 +2507,9 @@
           "accepted": [
             "Es ist neu."
           ],
+          "errorTags": [
+            "gender-article"
+          ],
           "banks": [
             "plateau",
             "mehr-ueben",
@@ -2489,7 +2565,8 @@
         "targets": [
           "g.pronomen-er-es-sie"
         ],
-        "register": "Sie"
+        "register": "Sie",
+        "modelDe": "Ja, ich bin neu hier. Ich wohne ganz oben. Die Wohnung? Sie ist klein, aber sehr hell."
       },
       "aussprache": {
         "focus": "ü und u: Stuhl – Stühle, Mutter – Mütter",
@@ -2856,6 +2933,7 @@
             "prepMinutes": 0,
             "instructionsDe": "Stellen Sie sich vor. Dann buchstabieren Sie Ihre Straße und sagen Ihre Postleitzahl.",
             "situationDe": "Sprechen Teil 1: Stellen Sie sich vor wie in der Prüfung: Name, Alter, Land, Wohnort, Sprachen, Beruf. Beim Wohnort: Stadt und Stadtteil. Sagen Sie auch: „Ich bin neu im Haus.“ Und: Wie ist die Wohnung? Dann sagt Nora: „Buchstabieren Sie bitte Ihre Straße.“ Und sie fragt: „Wie ist Ihre Postleitzahl?“",
+            "situationEn": "Speaking part 1: introduce yourself as in the exam – name, age, country, where you live, languages, job. For where you live, give the city and the district. Also say “Ich bin neu im Haus.” (I’m new in the building) and what the flat is like. Then Nora says: “Please spell your street.” And she asks: “What is your postcode?”",
             "cards": {
               "learner": [
                 "Name?",
@@ -2878,16 +2956,17 @@
             "mode": "cards-ask",
             "profile": "sd1-sp2",
             "prepMinutes": 0,
-            "instructionsDe": "Zwei Themen: „Wohnung“, dann „Möbel“. Fragen und antworten Sie mit den Karten.",
-            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin Nora haben Wortkarten zu zwei Themen: zuerst „Wohnung“, dann „Möbel“. Fragen Sie mit der Karte: Wie ist …? Ist … neu? Wo steht …? Antworten Sie auf die Fragen von Nora.",
+            "instructionsDe": "Thema „Wohnung“: erst Zimmer, dann Möbel. Fragen und antworten Sie mit den Karten.",
+            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin Nora haben Wortkarten zum Thema „Wohnung“: zuerst die Zimmer, dann die Möbel. Fragen Sie mit der Karte: Wie ist …? Ist … neu? Wo ist …? Antworten Sie auch auf die Fragen von Nora.",
+            "situationEn": "Speaking part 2: you and your partner Nora have word cards on the topic “Wohnung” (flat) – first the rooms, then the furniture. Ask a question with your card: Wie ist …? Ist … neu? Wo ist …? Also answer Nora’s questions.",
             "cards": {
               "learner": [
                 "Wohnung – Küche",
-                "Möbel – Sofa"
+                "Wohnung – Sofa"
               ],
               "partner": [
                 "Wohnung – Zimmer",
-                "Möbel – Schreibtisch"
+                "Wohnung – Schreibtisch"
               ]
             },
             "turns": [
@@ -2905,14 +2984,14 @@
         },
         "openingLine": "Guten Tag! Wir beginnen mit Teil 1. Bitte stellen Sie sich vor. Danach kommt Teil 2 mit den Karten.",
         "hintWords": [
-          "Ich wohne in … (Stadt), in … (Stadtteil).",
+          "Ich wohne in … (Stadt).",
           "Ich bin neu im Haus.",
           "Meine Wohnung ist …",
           "Meine Wohnung hat … Zimmer.",
           "Wie ist Ihre …?",
           "Ist Ihr … neu?",
           "Er / Es / Sie ist …",
-          "Er / Es / Sie steht im …"
+          "Er / Es / Sie ist im …"
         ],
         "modelTurns": [
           {
@@ -2921,15 +3000,15 @@
           },
           {
             "speaker": "learner",
-            "de": "Ich bin neu hier im Haus. Ich wohne jetzt in Leipzig, in der Kölner Straße."
+            "de": "Ich bin neu hier im Haus. Ich wohne jetzt in Leipzig, in Lindenau, in der Kölner Straße."
           },
           {
             "speaker": "learner",
-            "de": "Die Wohnung ist klein, aber sehr hell. Der Stadtteil ist ruhig."
+            "de": "Die Wohnung ist klein, aber sehr hell und ruhig."
           },
           {
             "speaker": "learner",
-            "de": "Ich spreche drei Sprachen: meine Muttersprache, Englisch und ein bisschen Deutsch. Ich lerne Deutsch im Kurs."
+            "de": "Ich spreche drei Sprachen: Malayalam, Englisch und ein bisschen Deutsch. Ich lerne Deutsch im Kurs."
           },
           {
             "speaker": "partner",
@@ -2961,7 +3040,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Sie hat zwei Zimmer: ein Wohnzimmer und ein Schlafzimmer. Und sie hat eine Küche, ein Bad und einen Balkon."
+            "de": "Sie hat zwei Zimmer, eine Küche, ein Bad und einen Balkon."
           },
           {
             "speaker": "learner",
@@ -2977,7 +3056,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Er steht im Wohnzimmer, am Fenster."
+            "de": "Er ist im Wohnzimmer."
           }
         ]
       }
@@ -3004,10 +3083,7 @@
               "labelDe": "Alter",
               "answer": "31",
               "accepted": [
-                "31",
-                "31 Jahre",
-                "einunddreißig",
-                "31 Jahre alt"
+                "31"
               ],
               "exact": "number"
             },
@@ -3024,12 +3100,7 @@
               "labelDe": "Wie viele Leute wohnen dann in der Wohnung?",
               "answer": "2",
               "accepted": [
-                "2",
-                "zwei",
-                "2 Leute",
-                "zwei Leute",
-                "2 Personen",
-                "zwei Personen"
+                "2"
               ],
               "exact": "number"
             },
@@ -3039,10 +3110,11 @@
               "answer": "Berliner Straße 21",
               "accepted": [
                 "Berliner Straße 21",
-                "Berliner Str. 21",
-                "Berliner Strasse 21",
-                "Berliner Straße 21, Leipzig"
+                "Berliner Str. 21"
               ],
+              "acceptedWhy": {
+                "Berliner Str. 21": "Abkürzung: „Str.“ = „Straße“"
+              },
               "exact": "number"
             },
             {
@@ -3051,14 +3123,11 @@
               "answer": "0176 52 83 91 40",
               "accepted": [
                 "0176 52 83 91 40",
-                "017652839140",
-                "0176 5283 9140",
-                "0176 52839140",
-                "+49 176 52 83 91 40",
-                "+4917652839140",
-                "0176-52 83 91 40",
-                "0176 / 52 83 91 40"
+                "+49 176 52 83 91 40"
               ],
+              "acceptedWhy": {
+                "+49 176 52 83 91 40": "dieselbe Nummer mit der Vorwahl für Deutschland"
+              },
               "exact": "number"
             }
           ],
@@ -3069,7 +3138,7 @@
           "Die Angaben sind von Arjun, nicht von Ihnen.",
           "Wie viele Leute wohnen dann in der Wohnung? Lesen Sie genau.",
           "Adresse jetzt: Wo wohnt Arjun noch?",
-          "Die Telefonnummer: Jede Zahl ist richtig."
+          "Die Telefonnummer: Lesen Sie jede Zahl noch einmal."
         ],
         "modelText": "Alter: 31\nFamilienstand: verheiratet\nWie viele Leute wohnen dann in der Wohnung? 2\nAdresse jetzt: Berliner Straße 21\nTelefonnummer: 0176 52 83 91 40"
       }
@@ -3101,6 +3170,9 @@
         "accepted": [
           "Sie"
         ],
+        "errorTags": [
+          "gender-article"
+        ],
         "explanation": {
           "de": "„die Wohnung“ → „sie“.",
           "en": "die Wohnung → sie."
@@ -3118,6 +3190,9 @@
         "accepted": [
           "sehr"
         ],
+        "errorTags": [
+          "spelling-meaning"
+        ],
         "explanation": {
           "de": "„klein, aber schön“: Das ist gut. Also „sehr schön“.",
           "en": "“small, but nice” is positive, so “sehr schön”."
@@ -3134,6 +3209,9 @@
         "answer": "sind",
         "accepted": [
           "sind"
+        ],
+        "errorTags": [
+          "verb-ending"
         ],
         "explanation": {
           "de": "„die Zimmer“ = Plural: „sind“.",
@@ -3161,6 +3239,9 @@
         "acceptedWhy": {
           "Sehr groß ist der Tisch.": "grammatisch: „sehr groß“ betont auf Position 1, das Verb bleibt auf Position 2"
         },
+        "errorTags": [
+          "v2-inv"
+        ],
         "explanation": {
           "de": "„ist“ steht auf Position 2.",
           "en": "“ist” is in position 2."
@@ -3182,6 +3263,9 @@
         "answer": "Das ist zu viel Geld.",
         "accepted": [
           "Das ist zu viel Geld."
+        ],
+        "errorTags": [
+          "spelling-meaning"
         ],
         "explanation": {
           "de": "„zu teuer“ heißt: Das ist zu viel Geld.",
@@ -3238,16 +3322,16 @@
         "promptEn": "Choose the words.",
         "options": [
           "im",
-          "in der",
-          "in"
+          "am",
+          "in der"
         ],
         "answer": "im",
         "accepted": [
           "im"
         ],
         "explanation": {
-          "de": "„im“ = „in dem“: das Wohnzimmer → im Wohnzimmer. Aber: die Küche → in der Küche.",
-          "en": "“im” = “in dem”: das Wohnzimmer → im Wohnzimmer. But: die Küche → in der Küche."
+          "de": "„im“ = „in dem“: das Wohnzimmer → im Wohnzimmer. Aber: die Küche → in der Küche. „am Fenster“ heißt: neben dem Fenster.",
+          "en": "“im” = “in dem”: das Wohnzimmer → im Wohnzimmer. But: die Küche → in der Küche. “am Fenster” means next to the window."
         },
         "origin": "agent"
       }
@@ -3315,7 +3399,7 @@
       },
       {
         "canDo": "cd.a1.neuer-mieter",
-        "aufgabe": "sprechen"
+        "microOutput": "a1.1-u05-ls3-mo"
       },
       {
         "canDo": "cd.a1.anzeigen-infos",
@@ -3360,7 +3444,7 @@
     },
     {
       "id": "a1.1-u05-rm05",
-      "de": "Im Wohnzimmer steht ein Sofa.",
+      "de": "Im Wohnzimmer ist ein Sofa.",
       "en": "There’s a sofa in the living room.",
       "function": "über Möbel im Zimmer sprechen",
       "forTemplate": "sd1.sp2"
@@ -3389,6 +3473,15 @@
   "story": {
     "beat": "Priya und Arjun ziehen aus Arjuns WG in eine eigene Wohnung: Kölner Straße 18, zwei Zimmer, Küche, Bad und Balkon. Priya zeigt Olena die Wohnung per Video. Im Haus lernen die beiden Frau Lehmann, Herrn Krause und Frau Haddad kennen.",
     "cliffhanger": "Am Abend sitzt Priya am Schreibtisch und ruft: „Arjun! Morgen ist Kurs, und mein Heft ist nicht hier. Wo ist es?“",
+    "cliffhangerEn": "In the evening Priya is sitting at the desk and calls out: “Arjun! There’s class tomorrow, and my exercise book isn’t here. Where is it?”",
+    "glosses": [
+      {
+        "token": "Heft",
+        "gloss": {
+          "en": "exercise book"
+        }
+      }
+    ],
     "castIn": [
       "cast.frau-lehmann",
       "cast.herr-krause",

@@ -2045,7 +2045,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.wortbildung-er-in",
-            "promptDe": "Die Frau im Café bringt die Rechnung. Sie ist ___. (der Kellner → die …)",
+            "promptDe": "Die Frau im Café bringt Getränke und die Rechnung. Sie ist ___. (der Kellner → die …)",
             "promptEn": "The feminine form of Kellner.",
             "answer": "Kellnerin",
             "accepted": [
@@ -2459,7 +2459,7 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "g.wortbildung-er-in",
-          "promptDe": "Zwei Frauen im Café bringen die Getränke. Sie sind ___. (die Kellnerin, Plural)",
+          "promptDe": "Zwei Frauen fragen: „Zusammen oder getrennt?“ Sie sind ___. (die Kellnerin, Plural)",
           "promptEn": "The plural of Kellnerin.",
           "answer": "Kellnerinnen",
           "accepted": [
