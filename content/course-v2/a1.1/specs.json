@@ -194,6 +194,7 @@
             "lx.zwei",
             "lx.zwoelf",
             "lx.zwanzig",
+            "lx.dreissig",
             "lx.hundert"
           ]
         },
@@ -663,8 +664,7 @@
             "lx.anzeige",
             "lx.ruhig",
             "lx.eigen",
-            "lx.hausmeister",
-            "lx.willkommen"
+            "lx.hausmeister"
           ]
         }
       ],

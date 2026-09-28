@@ -1335,19 +1335,19 @@
           "role": "structured",
           "topic": "g.zeitangaben-inversion",
           "promptDe": "Priya: „Ich frage morgen im Kurs Frau Schulz.“ Wann fragt Priya?",
-          "promptEn": "“morgen” or “am Morgen”: when does Priya ask?",
+          "promptEn": "“morgen” or “Morgen”: when does Priya ask?",
           "options": [
-            "heute am Morgen",
+            "heute Morgen",
             "am nächsten Tag",
-            "heute am Abend"
+            "heute Abend"
           ],
           "answer": "am nächsten Tag",
           "accepted": [
             "am nächsten Tag"
           ],
           "explanation": {
-            "de": "„morgen“ ohne „am“ ist der nächste Tag. „am Morgen“ ist früh am Tag, um sieben oder acht Uhr.",
-            "en": "morgen = tomorrow; am Morgen = in the morning (at seven or eight, say)."
+            "de": "„morgen“ (klein) ist der nächste Tag. „Morgen“ (groß) ist eine Tageszeit: am Morgen, heute Morgen.",
+            "en": "“morgen” (lower case) = tomorrow; “Morgen” (capital M) = morning, a time of day: am Morgen, heute Morgen."
           },
           "origin": "agent"
         }
@@ -1946,7 +1946,7 @@
           "options": [
             "Am Donnerstag ist kein Kurs.",
             "Der Kurs fängt am Donnerstag später an.",
-            "Der Kurs fängt am Donnerstag früher an."
+            "Der Kurs fängt am Donnerstag schon um acht an."
           ],
           "answer": "Der Kurs fängt am Donnerstag später an.",
           "accepted": [
@@ -2098,8 +2098,8 @@
             "Nein, um zehn ist noch kein Kurs."
           ],
           "explanation": {
-            "de": "„erst um elf“: Der Kurs fängt um elf an, nicht früher.",
-            "en": "“erst um elf” = not until eleven, not earlier."
+            "de": "„erst um elf“: Der Kurs fängt um elf an, nicht um neun und nicht um zehn.",
+            "en": "“erst um elf” = not until eleven – not at nine and not at ten."
           },
           "origin": "agent"
         },
@@ -2965,7 +2965,7 @@
               },
               "origin": "agent",
               "hint": {
-                "de": "die Praxis: beim Arzt",
+                "de": "die Praxis: Hier arbeitet Frau Doktor Klein.",
                 "en": "Praxis = a doctor’s practice (surgery)"
               }
             },
@@ -3014,8 +3014,8 @@
               },
               "origin": "agent",
               "hint": {
-                "de": "die Bäckerei: Dort gibt es Brot und Brötchen.",
-                "en": "Bäckerei = bakery"
+                "de": "die Bäckerei: Dort gibt es Brot und Brötchen. samstags: am Tag nach Freitag.",
+                "en": "Bäckerei = bakery; samstags = on Saturdays"
               }
             },
             {
@@ -3047,8 +3047,8 @@
       "strategyCards": [
         {
           "template": "sd1.l3",
-          "de": "Lesen Teil 3: Lesen Sie zuerst die Aussage. Suchen Sie dann auf dem Schild den Tag und die Uhrzeit. Auf Schildern steht oft 17 Uhr. Das ist fünf Uhr am Nachmittag. Achtung: „zu“ ist „geschlossen“, und „offen“ ist „geöffnet“.",
-          "en": "Reading part 3: read the statement first, then look for the day and the time on the sign. Signs often use the 24-hour clock: 17 Uhr is five o’clock in the afternoon. Note: “zu” means “geschlossen” (closed) and “offen” means “geöffnet” (open)."
+          "de": "Lesen Teil 3: Lesen Sie zuerst die Aussage. Suchen Sie dann auf dem Schild den Tag und die Uhrzeit. Auf Schildern steht oft 17 Uhr. Das ist fünf Uhr am Nachmittag. „zu“ ist „geschlossen“, und „offen“ ist „geöffnet“.",
+          "en": "Reading part 3: read the statement first, then look for the day and the time on the sign. Signs often use the 24-hour clock: 17 Uhr is five o’clock in the afternoon. “zu” means “geschlossen” (closed) and “offen” means “geöffnet” (open)."
         },
         {
           "template": "sd1.h3",
@@ -3222,8 +3222,8 @@
       {
         "id": "a1.1-u07-ls7-l02",
         "speaker": "cast.olena",
-        "de": "Hallo Priya, hier ist Olena. Am Montag geht es nicht, da arbeite ich bis sechs. Lernen wir am Mittwoch zusammen? Um zwei habe ich einen Termin. Aber um halb drei bin ich da. Bis dann!",
-        "en": "Hi Priya, it’s Olena. Monday doesn’t work – I’m working until six. Shall we study together on Wednesday? I have an appointment at two. But I’ll be there at half past two. See you then!"
+        "de": "Hallo Priya, hier ist Olena. Am Montag geht es nicht, da arbeite ich bis sechs. Lernen wir am Mittwoch zusammen? Um zwei ist es ein bisschen früh für mich. Ich komme um halb drei. Bis dann!",
+        "en": "Hi Priya, it’s Olena. Monday doesn’t work – I’m working until six. Shall we study together on Wednesday? Two o’clock is a bit early for me. I’ll come at half past two. See you then!"
       }
     ],
     "items": [
@@ -3407,8 +3407,8 @@
         "type": "fill_blank",
         "role": "proof",
         "topic": "lesen",
-        "promptDe": "Geschäft: „Montag–Freitag 10–19, samstags 10–14 Uhr“. Samstags ist es bis ___ Uhr offen.",
-        "promptEn": "Read the sign: until when on Saturdays?",
+        "promptDe": "Geschäft: „Montag–Donnerstag 10–19, Freitag 10–14 Uhr“. Am Freitag offen bis ___ Uhr.",
+        "promptEn": "Read the sign: until when on Friday?",
         "answer": "14",
         "accepted": [
           "14",
@@ -3419,8 +3419,8 @@
         },
         "exact": "number",
         "explanation": {
-          "de": "Am Geschäft steht: „samstags 10–14 Uhr“. 19 Uhr ist von Montag bis Freitag.",
-          "en": "On Saturdays the shop is open 10–14; 19:00 is Monday to Friday."
+          "de": "Am Geschäft steht: „Freitag 10–14 Uhr“. 19 Uhr ist Montag bis Donnerstag.",
+          "en": "On Friday the shop is open 10–14; 19:00 is Monday to Thursday."
         },
         "origin": "agent"
       },
@@ -3443,8 +3443,8 @@
         ],
         "exact": "number",
         "explanation": {
-          "de": "Olena sagt: „Am Montag geht es nicht.“ Um zwei hat sie einen Termin. „Aber um halb drei bin ich da.“",
-          "en": "Monday doesn’t work for Olena, and at two she has an appointment – she comes on Wednesday at half past two."
+          "de": "Am Montag geht es nicht, und um zwei ist es für Olena früh. Sie sagt: „Ich komme um halb drei.“",
+          "en": "Monday doesn’t work for Olena and two is a bit early for her – she comes on Wednesday at half past two."
         },
         "origin": "agent"
       }

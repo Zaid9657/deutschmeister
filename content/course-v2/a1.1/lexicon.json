@@ -615,7 +615,7 @@
       "article": "die",
       "plural": "Zahlen",
       "plural_kind": "regular",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u02",
       "block": 1,
       "list_ref": "A1",
@@ -681,7 +681,7 @@
       "id": "lx.eins",
       "lemma": "eins",
       "pos": "NUM",
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u02",
       "block": 1,
       "list_ref": "A1",
@@ -735,6 +735,21 @@
       },
       "example": "Die Hausnummer ist zwanzig.",
       "exampleEn": "The house number is twenty.",
+      "wordId": null
+    },
+    {
+      "id": "lx.dreissig",
+      "lemma": "dreißig",
+      "pos": "NUM",
+      "role": "receptive",
+      "unit": "a1.1-u02",
+      "block": 1,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "thirty"
+      },
+      "example": "Emre ist dreißig.",
+      "exampleEn": "Emre is thirty.",
       "wordId": null
     },
     {
@@ -831,7 +846,7 @@
       "article": "die",
       "plural": "E-Mails",
       "plural_kind": "regular",
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u02",
       "block": 2,
       "list_ref": "A1",
@@ -961,7 +976,7 @@
       "plural": "Studenten",
       "plural_kind": "regular",
       "feminine": "die Studentin",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u02",
       "block": 3,
       "list_ref": "A1",
@@ -1089,7 +1104,7 @@
       "article": "das",
       "plural": "Formulare",
       "plural_kind": "regular",
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u02",
       "block": 4,
       "list_ref": "A1",
@@ -1108,7 +1123,7 @@
         "3sg": "versteht",
         "perfekt": "hat verstanden"
       },
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u02",
       "block": 4,
       "list_ref": "A1",
@@ -1338,7 +1353,7 @@
       "article": "der",
       "plural": "Söhne",
       "plural_kind": "regular",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u03",
       "block": 1,
       "list_ref": "A1",
@@ -1683,7 +1698,7 @@
         "3sg": "macht",
         "perfekt": "hat gemacht"
       },
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u03",
       "block": 3,
       "list_ref": "A1",
@@ -3019,21 +3034,6 @@
       "wordId": null
     },
     {
-      "id": "lx.willkommen",
-      "lemma": "willkommen",
-      "pos": "ADJ",
-      "role": "receptive",
-      "unit": "a1.1-u05",
-      "block": 3,
-      "list_ref": "freq:top-5000",
-      "gloss": {
-        "en": "welcome"
-      },
-      "example": "Willkommen im Haus!",
-      "exampleEn": "Welcome to the building!",
-      "wordId": null
-    },
-    {
       "id": "lx.kuli",
       "lemma": "Kuli",
       "pos": "NOUN",
@@ -3274,7 +3274,7 @@
       "article": "der",
       "plural": "Kalender",
       "plural_kind": "regular",
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u06",
       "block": 2,
       "list_ref": "freq:top-10000",
@@ -3620,7 +3620,7 @@
       "article": "das",
       "plural": "Probleme",
       "plural_kind": "regular",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u06",
       "block": 3,
       "list_ref": "A1",
@@ -7048,6 +7048,18 @@
       "from": "receptive",
       "to": "productive",
       "unit": "a1.1-u06"
+    },
+    {
+      "lemma": "lx.eins",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u07"
+    },
+    {
+      "lemma": "lx.machen",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u11"
     }
   ]
 }
