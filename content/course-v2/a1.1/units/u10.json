@@ -3075,10 +3075,7 @@
             "de": "Wo treffen Sie Sophie? Schreiben Sie einen Ort am Bahnhof.",
             "cues": [
               "Information",
-              "Gleis",
-              "Schalter",
-              "Automat",
-              "Café"
+              "Gleis"
             ]
           }
         ],
@@ -3340,20 +3337,20 @@
         "type": "multiple_choice",
         "role": "proof",
         "topic": "lesen",
-        "promptDe": "Automat: „Bezahlen: mit Karte oder bar?“ Sie haben keine Karte, nur 50 Euro. Was passt?",
-        "promptEn": "The machine asks: pay by card or in cash? You have no card, only 50 euros. What do you choose?",
+        "promptDe": "Automat: „Einfach oder hin und zurück?“ Sie fahren nicht zurück. Was passt?",
+        "promptEn": "The machine asks: single or return? You are not coming back. What fits?",
         "options": [
-          "mit Karte",
-          "bar",
-          "hin und zurück"
+          "hin und zurück",
+          "einfach",
+          "zwei Personen"
         ],
-        "answer": "bar",
+        "answer": "einfach",
         "accepted": [
-          "bar"
+          "einfach"
         ],
         "explanation": {
-          "de": "„bar“ heißt: mit Geld, ohne Karte. Sie haben keine Karte, also bezahlen Sie bar.",
-          "en": "“bar” means in cash, without a card. You have no card, so you pay in cash."
+          "de": "„Einfach“ heißt: nur hin, nicht zurück. Sie fahren nicht zurück, also: einfach.",
+          "en": "“Einfach” means one way only. You are not coming back, so: single."
         },
         "origin": "agent"
       },

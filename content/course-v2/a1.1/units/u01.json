@@ -253,7 +253,7 @@
       "promptDe": "Jetzt Sie! Frau Schulz fragt Sie im Kurs.",
       "microOutput": {
         "id": "a1.1-u01-start-mo",
-        "bankKey": "a11-u01-mo0",
+        "bankKey": "a11-u01-mo",
         "mode": "spoken",
         "profile": "course-micro-sp",
         "situationDe": "Im Kurs A1 sagt Frau Schulz: „Guten Morgen! Wie heißen Sie? Woher kommen Sie?“",

@@ -32,9 +32,9 @@
         {
           "id": "a1.1-ht-sd1-t1-l04",
           "speaker": "cast.ensemble-a1-3",
-          "de": "Hin und zurück kostet 38 Euro. Einfach kostet 19 Euro.",
-          "en": "A return costs 38 euros. A single costs 19 euros.",
-          "say": "Hin und zurück kostet achtunddreißig Euro. Einfach kostet neunzehn Euro."
+          "de": "Hin und zurück kostet 44 Euro. Einfach kostet 22 Euro.",
+          "en": "A return costs 44 euros. A single costs 22 euros.",
+          "say": "Hin und zurück kostet vierundvierzig Euro. Einfach kostet zweiundzwanzig Euro."
         },
         {
           "id": "a1.1-ht-sd1-t1-l05",
@@ -123,19 +123,12 @@
         {
           "id": "a1.1-ht-sd1-t4-l01",
           "speaker": "durchsage",
-          "de": "Achtung an Gleis 5! Der Zug nach Berlin fährt heute nicht um 14.10 Uhr ab. Er hat 20 Minuten Verspätung. Abfahrt jetzt: 14.30 Uhr, auch hier an Gleis 5.",
-          "en": "Attention at platform 5! The train to Berlin does not leave at 14:10 today. It is 20 minutes late. Departure now: 14:30, also here at platform 5.",
-          "say": "Achtung an Gleis fünf! Der Zug nach Berlin fährt heute nicht um vierzehn Uhr zehn ab. Er hat zwanzig Minuten Verspätung. Abfahrt jetzt: vierzehn Uhr dreißig, auch hier an Gleis fünf."
+          "de": "Meine Damen und Herren, willkommen im Zug nach München! Um 13.45 Uhr sind wir in München. Das Restaurant im Zug ist heute leider geschlossen. Kaffee gibt es erst am Bahnhof in München. Danke!",
+          "en": "Ladies and gentlemen, welcome aboard the train to Munich! We will be in Munich at 13:45. The restaurant on the train is unfortunately closed today. Coffee is only available at the station in Munich. Thank you!",
+          "say": "Meine Damen und Herren, willkommen im Zug nach München! Um dreizehn Uhr fünfundvierzig sind wir in München. Das Restaurant im Zug ist heute leider geschlossen. Kaffee gibt es erst am Bahnhof in München. Danke!"
         }
       ],
-      "glosses": [
-        {
-          "token": "Achtung",
-          "gloss": {
-            "en": "attention"
-          }
-        }
-      ]
+      "glosses": []
     },
     {
       "id": "a1.1-ht-sd1-t5",
@@ -145,9 +138,9 @@
         {
           "id": "a1.1-ht-sd1-t5-l01",
           "speaker": "durchsage",
-          "de": "Liebe Kunden, heute ist der Supermarkt nur bis 18 Uhr offen. Morgen ist Sonntag, dann ist der Supermarkt geschlossen. Am Montag sind wir ab 7 Uhr wieder für Sie da.",
-          "en": "Dear customers, today the supermarket is only open until 6 pm. Tomorrow is Sunday, and the supermarket is closed. On Monday we are here for you again from 7 am.",
-          "say": "Liebe Kunden, heute ist der Supermarkt nur bis achtzehn Uhr offen. Morgen ist Sonntag, dann ist der Supermarkt geschlossen. Am Montag sind wir ab sieben Uhr wieder für Sie da."
+          "de": "Liebe Kunden, heute ist der Supermarkt zehn Jahre alt! Von 14 bis 17 Uhr gibt es Kaffee und Kuchen für alle, gleich neben dem Obst. Sie bezahlen nichts. Danke und bis bald!",
+          "en": "Dear customers, today the supermarket is ten years old! From 2 to 5 pm there is coffee and cake for everyone, right next to the fruit. You pay nothing. Thank you and see you soon!",
+          "say": "Liebe Kunden, heute ist der Supermarkt zehn Jahre alt! Von vierzehn bis siebzehn Uhr gibt es Kaffee und Kuchen für alle, gleich neben dem Obst. Sie bezahlen nichts. Danke und bis bald!"
         }
       ],
       "glosses": [
@@ -188,16 +181,16 @@
         {
           "id": "a1.1-ht-sd1-t7-l01",
           "speaker": "cast.ensemble-a1-1",
-          "de": "Guten Tag, hier ist die Praxis von Frau Doktor Sommer. Sie haben morgen um 10 Uhr einen Termin. Das geht leider nicht. Frau Doktor Sommer ist morgen nicht da.",
-          "en": "Hello, this is Dr Sommer’s practice. You have an appointment tomorrow at 10 am. Unfortunately that is not possible. Dr Sommer is not here tomorrow.",
-          "say": "Guten Tag, hier ist die Praxis von Frau Doktor Sommer. Sie haben morgen um zehn Uhr einen Termin. Das geht leider nicht. Frau Doktor Sommer ist morgen nicht da."
+          "de": "Guten Tag, hier ist die Praxis von Frau Doktor Sommer. Sie haben am Donnerstag einen Termin. Auf der Terminkarte steht 10.15 Uhr. Das ist leider falsch.",
+          "en": "Hello, this is Dr Sommer’s practice. You have an appointment on Thursday. The appointment card says 10.15. Unfortunately that is wrong.",
+          "say": "Guten Tag, hier ist die Praxis von Frau Doktor Sommer. Sie haben am Donnerstag einen Termin. Auf der Terminkarte steht zehn Uhr fünfzehn. Das ist leider falsch."
         },
         {
           "id": "a1.1-ht-sd1-t7-l02",
           "speaker": "cast.ensemble-a1-1",
-          "de": "Ihr Termin ist jetzt am Donnerstag um 9.15 Uhr. Auf Wiedersehen!",
-          "en": "Your appointment is now on Thursday at 9.15 am. Goodbye!",
-          "say": "Ihr Termin ist jetzt am Donnerstag um neun Uhr fünfzehn. Auf Wiedersehen!"
+          "de": "Ihr Termin ist schon um 9.15 Uhr. Bitte kommen Sie pünktlich. Auf Wiedersehen!",
+          "en": "Your appointment is already at 9.15. Please be on time. Goodbye!",
+          "say": "Ihr Termin ist schon um neun Uhr fünfzehn. Bitte kommen Sie pünktlich. Auf Wiedersehen!"
         }
       ],
       "glosses": [
@@ -211,6 +204,12 @@
           "token": "Doktor",
           "gloss": {
             "en": "doctor (title)"
+          }
+        },
+        {
+          "token": "Terminkarte",
+          "gloss": {
+            "en": "appointment card"
           }
         }
       ]
@@ -253,7 +252,7 @@
       "id": "a1.1-ht-sd1-t11",
       "kind": "ad",
       "title": "Nach Dresden",
-      "text": "a) Mit dem Bus nach Dresden: nur 12 Euro. Jeden Tag, auch am Samstag und am Sonntag.\nb) Mit dem Zug nach Dresden: schnell, nur eine Stunde. Hin und zurück 38 Euro.",
+      "text": "a) Mit dem Bus nach Dresden: nur 12 Euro. Jeden Tag, auch am Samstag und am Sonntag.\nb) Mit dem Zug nach Dresden: schnell, nur eine Stunde und fünfzehn Minuten. Hin und zurück 44 Euro.",
       "glosses": []
     },
     {
@@ -314,18 +313,18 @@
           "topic": "hoeren",
           "promptDe": "Wie viel bezahlt die Frau für die Fahrkarte?",
           "options": [
-            "19 Euro",
-            "38 Euro",
-            "83 Euro"
+            "22 Euro",
+            "44 Euro",
+            "24 Euro"
           ],
           "textRef": "a1.1-ht-sd1-t1",
-          "answer": "38 Euro",
+          "answer": "44 Euro",
           "accepted": [
-            "38 Euro"
+            "44 Euro"
           ],
           "explanation": {
-            "de": "Die Frau nimmt die Fahrkarte hin und zurück. Hin und zurück kostet 38 Euro, einfach nur 19 Euro.",
-            "en": "She buys a return ticket, which costs 38 euros; a single would be 19 euros."
+            "de": "Die Frau nimmt die Fahrkarte hin und zurück. Hin und zurück kostet 44 Euro, einfach nur 22 Euro.",
+            "en": "She buys a return ticket, which costs 44 euros; a single would be 22 euros."
           },
           "exact": "number",
           "origin": "agent"
@@ -394,7 +393,7 @@
           "type": "richtig_falsch",
           "role": "exam",
           "topic": "hoeren",
-          "promptDe": "„Der Zug nach Berlin fährt pünktlich um 14.10 Uhr ab.“",
+          "promptDe": "„Im Zug kann man heute einen Kaffee kaufen.“",
           "options": [
             "richtig",
             "falsch"
@@ -405,8 +404,8 @@
             "falsch"
           ],
           "explanation": {
-            "de": "Der Zug hat 20 Minuten Verspätung. Er fährt erst um 14.30 Uhr ab.",
-            "en": "The train is 20 minutes late and leaves at 14:30."
+            "de": "Das Restaurant im Zug ist heute geschlossen. Kaffee gibt es erst am Bahnhof in München.",
+            "en": "The restaurant on the train is closed today; coffee is only available at the station in Munich."
           },
           "origin": "agent"
         },
@@ -415,7 +414,7 @@
           "type": "richtig_falsch",
           "role": "exam",
           "topic": "hoeren",
-          "promptDe": "„Am Sonntag kann man im Supermarkt nicht einkaufen.“",
+          "promptDe": "„Kaffee und Kuchen kosten heute im Supermarkt nichts.“",
           "options": [
             "richtig",
             "falsch"
@@ -426,8 +425,8 @@
             "richtig"
           ],
           "explanation": {
-            "de": "Die Durchsage sagt: Morgen ist Sonntag, dann ist der Supermarkt geschlossen.",
-            "en": "The announcement says the supermarket is closed tomorrow, Sunday."
+            "de": "Die Durchsage sagt: Von 14 bis 17 Uhr gibt es Kaffee und Kuchen für alle. Sie bezahlen nichts.",
+            "en": "The announcement says there is coffee and cake for everyone from 2 to 5 pm, and you pay nothing."
           },
           "origin": "agent"
         }
@@ -624,8 +623,8 @@
             "a"
           ],
           "explanation": {
-            "de": "Der Bus kostet nur 12 Euro und fährt auch am Samstag. Der Zug ist schnell, aber er kostet 38 Euro.",
-            "en": "The bus costs only 12 euros and runs on Saturdays; the train is faster but costs 38 euros."
+            "de": "Der Bus kostet nur 12 Euro und fährt auch am Samstag. Der Zug ist schnell, aber er kostet 44 Euro.",
+            "en": "The bus costs only 12 euros and runs on Saturdays; the train is faster but costs 44 euros."
           },
           "origin": "agent"
         },

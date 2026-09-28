@@ -18,8 +18,8 @@
         {
           "id": "a1.1-p3-sd1-t1-l01",
           "speaker": "x.paula-hartmann",
-          "de": "Hallo, hier ist Paula. Am Samstag laufen wir nicht um zehn Uhr. Wir laufen schon um halb neun. Um zehn Uhr spielen die Kinder im Park Fußball.",
-          "en": "Hi, it’s Paula. On Saturday we’re not running at ten, but already at half past eight. At ten the children play football in the park."
+          "de": "Hallo, hier ist Paula. Am Samstag laufen wir nicht wie immer um zehn Uhr. Wir laufen schon um halb neun. Um zehn Uhr spielen die Kinder im Park Fußball.",
+          "en": "Hi, it’s Paula. On Saturday we’re not running at ten as usual, but already at half past eight. At ten the children are playing football in the park."
         },
         {
           "id": "a1.1-p3-sd1-t1-l02",
@@ -132,7 +132,7 @@
       "id": "a1.1-p3-sd1-t6",
       "kind": "sign",
       "title": "Am Café",
-      "text": "Café am Park\nMontag bis Freitag 8 bis 18 Uhr\nSamstag und Sonntag 9 bis 20 Uhr\nFrühstück bis 12 Uhr",
+      "text": "Café am Park\nDienstag bis Sonntag 8 bis 18 Uhr\nMontag geschlossen\nFrühstück bis 12 Uhr",
       "glosses": []
     },
     {
@@ -199,7 +199,7 @@
           ],
           "explanation": {
             "de": "Paula sagt: „Wir laufen schon um halb neun.“ Um zehn Uhr spielen die Kinder Fußball. Um Viertel nach acht ist Paula am Café.",
-            "en": "Paula says they run at half past eight, not at ten. At a quarter past eight she will be at the café."
+            "en": "Paula says that this Saturday they run at half past eight, not at ten as usual. At a quarter past eight she will be at the café."
           },
           "origin": "agent"
         },
@@ -316,7 +316,7 @@
           "type": "richtig_falsch",
           "role": "exam",
           "topic": "lesen",
-          "promptDe": "Am Café: „Am Sonntag um 19 Uhr ist das Café offen.“",
+          "promptDe": "Am Café: „Am Sonntag um 17 Uhr ist das Café offen.“",
           "options": [
             "richtig",
             "falsch"
@@ -327,8 +327,8 @@
             "richtig"
           ],
           "explanation": {
-            "de": "Samstag und Sonntag ist das Café von 9 bis 20 Uhr offen. Um 19 Uhr ist es also offen.",
-            "en": "On Saturdays and Sundays the café is open from 9 am to 8 pm, so it is open at 7 pm."
+            "de": "Von Dienstag bis Sonntag ist das Café von 8 bis 18 Uhr offen. Um 17 Uhr ist es also offen.",
+            "en": "From Tuesday to Sunday the café is open from 8 am to 6 pm, so it is open at 5 pm on Sunday."
           },
           "origin": "agent"
         },
@@ -428,7 +428,7 @@
       "address": "Sie",
       "textType": "tt.formular",
       "title": "Sport im Park: Anmeldung für Frau Hartmann",
-      "situationDe": "Paula Hartmann ist 26 Jahre alt und wohnt in Leipzig. Sie arbeitet als Lehrerin in einer Schule. Paula läuft sehr gern, aber nicht schnell. Jetzt macht sie einen Kurs im Park: Laufen, jeden Samstag um halb neun, eine Stunde.",
+      "situationDe": "Paula Hartmann ist 26 Jahre alt und wohnt in Leipzig. Sie arbeitet als Lehrerin in einer Schule. Paula läuft sehr gern, aber nicht schnell. Jetzt macht sie einen Kurs im Park: Laufen, jeden Samstag um zehn Uhr, eine Stunde.",
       "taskDe": "Lesen Sie den Text. Schreiben Sie: Familienname, Alter, Beruf, Tag und Uhrzeit.",
       "leitpunkte": [],
       "form": {
@@ -477,18 +477,17 @@
           {
             "id": "f5",
             "labelDe": "Uhrzeit",
-            "answer": "8.30 Uhr",
+            "answer": "10 Uhr",
             "accepted": [
-              "8.30 Uhr",
-              "8:30 Uhr",
-              "8.30",
-              "8:30",
-              "halb neun",
-              "um halb neun"
+              "10 Uhr",
+              "10.00 Uhr",
+              "10",
+              "zehn Uhr",
+              "um zehn Uhr"
             ],
             "acceptedWhy": {
-              "halb neun": "grammatisch: So steht die Uhrzeit im Text: „um halb neun“ = 8.30 Uhr.",
-              "um halb neun": "grammatisch: So steht die Uhrzeit im Text: „um halb neun“ = 8.30 Uhr."
+              "zehn Uhr": "grammatisch: So steht die Uhrzeit im Text: „um zehn Uhr“ = 10 Uhr.",
+              "um zehn Uhr": "grammatisch: So steht die Uhrzeit im Text: „um zehn Uhr“ = 10 Uhr."
             },
             "exact": "number"
           }
@@ -502,7 +501,7 @@
         "Tag: Wann ist der Kurs?",
         "Uhrzeit: um wie viel Uhr?"
       ],
-      "modelText": "Familienname: Hartmann\nAlter: 26\nBeruf: Lehrerin\nTag: Samstag\nUhrzeit: 8.30 Uhr"
+      "modelText": "Familienname: Hartmann\nAlter: 26\nBeruf: Lehrerin\nTag: Samstag\nUhrzeit: 10 Uhr"
     },
     {
       "bankKey": "a11-p3-s2-sd1",

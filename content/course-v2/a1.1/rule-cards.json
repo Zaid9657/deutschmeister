@@ -155,7 +155,7 @@
         [
           "Ich bin",
           "nicht",
-          "Lehrerin."
+          "Lehrerin. Ich bin Studentin."
         ],
         [
           "Ich komme",
@@ -240,8 +240,8 @@
       "spine": "g.vokalwechsel",
       "depth": 1,
       "modelSentence": "Ich spreche Deutsch. Sprichst du auch Deutsch?",
-      "de": "Einige Verben haben bei „du“ und „er/sie/es“ ein „i“, „ie“ oder „ä“. e → i: „du sprichst“, „er spricht“. e → ie: „du liest“, „sie liest“. a → ä: „du schläfst“, „er schläft“. Bei „ich“, „wir“, „ihr“ und „sie/Sie“ ist der Vokal wie im Infinitiv. Auch „nehmen“: „du nimmst“, „er nimmt“.",
-      "en": "Some verbs have i, ie or ä with du and er/sie/es. e → i: du sprichst, er spricht. e → ie: du liest, sie liest. a → ä: du schläfst, er schläft. With ich, wir, ihr and sie/Sie the vowel is the same as in the infinitive. Also nehmen: du nimmst, er nimmt.",
+      "de": "Einige Verben haben bei „du“ und „er/sie/es“ ein „i“, „ie“ oder „ä“. e → i: „du sprichst“, „er spricht“. e → ie: „du liest“, „sie liest“. a → ä: „du schläfst“, „er schläft“. Bei „ich“, „wir“, „ihr“ und „sie/Sie“ ist der Vokal wie im Infinitiv.",
+      "en": "Some verbs have i, ie or ä with du and er/sie/es. e → i: du sprichst, er spricht. e → ie: du liest, sie liest. a → ä: du schläfst, er schläft. With ich, wir, ihr and sie/Sie the vowel is the same as in the infinitive.",
       "table": [
         [
           "Person",
@@ -281,8 +281,8 @@
       "spine": "g.artikel-genus-plural",
       "depth": 1,
       "modelSentence": "Der Apfel kostet 50 Cent. Die Äpfel kosten 2 Euro.",
-      "de": "Jedes Nomen hat ein Genus: „der“, „das“ oder „die“. Lernen Sie jedes Nomen mit Artikel. Unbestimmt: „ein“ (der, das), „eine“ (die). Aber nach „möchte“: „Ich möchte einen Apfel.“ (der → den, ein → einen) Im Plural: „die Äpfel“, „die Brote“. Plural-Endungen: -e, -er, -n, -en, -s oder ohne Endung, oft mit Umlaut. Nach „Gramm“ und „Kilo“ ohne Artikel: „200 Gramm Käse“.",
-      "en": "Every noun has a gender: der (masculine), das (neuter) or die (feminine). Learn each noun with its article. Indefinite: ein (der, das), eine (die). But after möchte: Ich möchte einen Apfel. (der → den, ein → einen) In the plural: die Äpfel, die Brote. Plural endings: -e, -er, -n, -en, -s or none, often with an umlaut. No article after Gramm and Kilo: 200 Gramm Käse.",
+      "de": "Jedes Nomen hat ein Genus: „der“, „das“ oder „die“. Lernen Sie jedes Nomen mit Artikel. Unbestimmt: „ein“ (der, das), „eine“ (die). Aber nach „möchte“, „brauchen“ und „kaufen“: „einen“ (der). „Wir brauchen einen Apfel.“ Plural: „die Äpfel“, „die Brote“. Endungen: -e, -er, -n, -en, -s oder ohne Endung, oft mit Umlaut. Nach „Gramm“ und „Kilo“ ohne Artikel: „200 Gramm Käse“.",
+      "en": "Every noun has a gender: der (masculine), das (neuter) or die (feminine). Learn each noun with its article. Indefinite: ein (der, das), eine (die). But after möchte, brauchen and kaufen: einen (der). Wir brauchen einen Apfel. Plural: die Äpfel, die Brote. Endings: -e, -er, -n, -en, -s or none, often with an umlaut. No article after Gramm and Kilo: 200 Gramm Käse.",
       "table": [
         [
           "Artikel",
@@ -379,7 +379,7 @@
       "spine": "g.adjektiv-praedikativ",
       "depth": 1,
       "modelSentence": "Die Wohnung ist nicht groß, aber sehr hell.",
-      "de": "Nach „sein“ steht das Adjektiv ohne Endung: „Das Zimmer ist klein.“ „Die Küche ist klein.“ „Die Zimmer sind klein.“ „sehr“ heißt: viel („sehr schön“). „zu“ heißt: zu viel (nicht gut): „Die Wohnung ist zu teuer.“ „nicht“ steht vor dem Adjektiv: „nicht groß“.",
+      "de": "Nach „sein“ steht das Adjektiv ohne Endung: „Das Zimmer ist klein.“ „Die Küche ist klein.“ „Die Zimmer sind klein.“ „sehr schön“ ist mehr als „schön“. „zu“ heißt: zu viel (nicht gut): „Die Wohnung ist zu teuer.“ „nicht“ steht vor dem Adjektiv: „nicht groß“.",
       "en": "After sein the adjective has no ending: Das Zimmer ist klein. Die Küche ist klein. Die Zimmer sind klein. sehr means very (sehr schön). zu means too much, not good: Die Wohnung ist zu teuer. nicht goes before the adjective: nicht groß.",
       "table": [
         [
@@ -458,8 +458,8 @@
       "spine": "g.kein",
       "depth": 1,
       "modelSentence": "Hast du einen Stift? – Nein, ich habe keinen Stift.",
-      "de": "„kein“ ist die Verneinung von „ein“. „ein Stift“ → „kein Stift“, „eine Tasche“ → „keine Tasche“. Nomen ohne Artikel haben auch „kein“: „keine Stifte“, „keine Zeit“. „nicht“ ist für Verben, Adjektive, Namen und Nomen mit „der/das/die“. „Der Laptop ist nicht neu.“ Auch bei Berufen: „Ich bin nicht Lehrerin.“",
-      "en": "kein negates ein: ein Stift → kein Stift, eine Tasche → keine Tasche. Nouns without an article also take kein: keine Stifte, keine Zeit. nicht is for verbs, adjectives, names and nouns with der, das, die. Der Laptop ist nicht neu. Also with jobs: Ich bin nicht Lehrerin.",
+      "de": "„kein“ ist die Verneinung von „ein“. „ein Stift“ → „kein Stift“, „eine Tasche“ → „keine Tasche“. Nomen ohne Artikel haben auch „kein“: „keine Stifte“, „keine Zeit“. „nicht“ ist für Verben, Adjektive, Namen und Nomen mit „der/das/die“. „Der Laptop ist nicht neu.“ Bei Berufen: „Ich bin Lehrerin.“ – „Ich bin keine Lehrerin.“ Auch richtig: „Ich bin nicht Lehrerin.“",
+      "en": "kein negates ein: ein Stift → kein Stift, eine Tasche → keine Tasche. Nouns without an article also take kein: keine Stifte, keine Zeit. nicht is for verbs, adjectives, names and nouns with der, das, die. Der Laptop ist nicht neu. With jobs: Ich bin Lehrerin. – Ich bin keine Lehrerin. Also correct: Ich bin nicht Lehrerin.",
       "table": [
         [
           "Kasus",
@@ -495,8 +495,8 @@
       "spine": "g.trennbare-verben",
       "depth": 1,
       "modelSentence": "Ich stehe um sieben Uhr auf.",
-      "de": "Trennbare Verben: „aufstehen“, „anfangen“, „einkaufen“, „fernsehen“. Das Verb steht auf Position 2. In der Ja/Nein-Frage steht es auf Position 1. Der Teil vorne („auf“, „an“, „ein“) steht am Ende. „Der Kurs fängt um neun Uhr an.“ Im Infinitiv ist es ein Wort: „aufstehen“, „einkaufen“. Der Teil vorne hat den Akzent: „AUFstehen“.",
-      "en": "Separable verbs: aufstehen, anfangen, einkaufen, fernsehen. The verb is in position 2. In a yes/no question it is in position 1. The front part (auf, an, ein) goes to the end. Der Kurs fängt um neun Uhr an. In the infinitive it is one word: aufstehen, einkaufen. The front part carries the stress: AUFstehen.",
+      "de": "Trennbare Verben: „aufstehen“, „anfangen“, „einkaufen“, „fernsehen“. Das Verb steht auf Position 2. In der Ja/Nein-Frage steht es auf Position 1. Der Teil vorne („auf“, „an“, „ein“) steht am Ende. „Der Kurs fängt um neun Uhr an.“ Im Infinitiv ist es ein Wort. Der Teil vorne hat den Akzent: „AUFstehen“. Im Satz oft nicht: „Ich stehe um SIEben Uhr auf.“",
+      "en": "Separable verbs: aufstehen, anfangen, einkaufen, fernsehen. The verb is in position 2. In a yes/no question it is in position 1. The front part (auf, an, ein) goes to the end. Der Kurs fängt um neun Uhr an. In the infinitive it is one word. The front part carries the stress: AUFstehen. In a sentence the main stress is often elsewhere: Ich stehe um SIEben Uhr auf.",
       "table": [
         [
           "Position 1",
@@ -523,10 +523,10 @@
           "auf."
         ],
         [
-          "Olena",
-          "fährt",
-          "um acht Uhr",
-          "ab."
+          "Emre",
+          "sieht",
+          "am Abend",
+          "fern."
         ],
         [
           "Wann",

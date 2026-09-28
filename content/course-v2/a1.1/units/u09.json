@@ -1805,7 +1805,7 @@
           ],
           "difficulty": 3,
           "explanation": {
-            "de": "Mit „möchte“ steht das zweite Verb am Ende: „… die Rechnung bezahlen.“",
+            "de": "Mit „möchte“ steht „bezahlen“ am Ende: „… die Rechnung bezahlen.“",
             "en": "With “möchte” the second verb goes to the end."
           },
           "origin": "agent",
@@ -2347,7 +2347,7 @@
               "satzklammer"
             ],
             "explanation": {
-              "de": "„möchtest“ auf Position 2, das zweite Verb „essen“ am Ende.",
+              "de": "„möchtest“ auf Position 2, „essen“ am Ende.",
               "en": "“möchtest” in position 2, the second verb “essen” at the end."
             },
             "origin": "agent"
@@ -2655,7 +2655,7 @@
         "modelDe": "Ja, ich komme gern! Ich mag Fisch, aber Fleisch mag ich nicht."
       },
       "aussprache": {
-        "focus": "Wortakzent in Komposita: Das erste Wort hat den Akzent – APFELkuchen, ORANGENsaft, TOMATENsuppe.",
+        "focus": "Apfel + Kuchen = Apfelkuchen: Der Akzent ist am Anfang – APFELkuchen, ORANGENsaft, TOMATENsuppe.",
         "perception": [
           {
             "id": "a1.1-u09-ls3-x01",
@@ -2694,7 +2694,7 @@
               "am Anfang"
             ],
             "explanation": {
-              "de": "„Obstsalat“: Jetzt hat das erste Wort „Obst“ den Akzent: OBSTsalat.",
+              "de": "„Obstsalat“: Jetzt ist der Akzent am Anfang, auf „Obst“: OBSTsalat.",
               "en": "Obstsalat: now the first part, Obst, is stressed: OBST-salat."
             },
             "origin": "agent"
@@ -2736,7 +2736,7 @@
               "am Anfang"
             ],
             "explanation": {
-              "de": "„Käsebrot“: Das erste Wort „Käse“ hat den Akzent: KÄSEbrot.",
+              "de": "„Käsebrot“: Der Akzent ist am Anfang, auf „Käse“: KÄSEbrot.",
               "en": "Käsebrot: the first part, Käse, is stressed: KÄSE-brot."
             },
             "origin": "agent"
@@ -3164,7 +3164,7 @@
       "strategyCards": [
         {
           "template": "sd1.h1",
-          "de": "Hören Teil 1: Sie hören jedes Gespräch zweimal. Lesen Sie zuerst die Frage und a, b, c. Oft sagt eine Person zuerst etwas und dann: „Nein, Moment …“. Achten Sie auf „nicht“, „aber“ und „dann“. In der Prüfung sind a, b und c Bilder.",
+          "de": "Hören Teil 1: Sie hören jedes Gespräch zweimal. Lesen Sie zuerst die Frage und a, b, c. Oft sagt eine Person zuerst etwas und dann: „Nein, Moment …“. Wichtig sind „nicht“, „aber“ und „dann“. In der Prüfung sind a, b und c Bilder.",
           "en": "Listening part 1: you hear each conversation twice. Read the question and a, b, c first. People often say one thing and then change it (“Nein, Moment …”). Listen for “nicht”, “aber” and “dann”. In the exam, a, b and c are pictures."
         }
       ]
@@ -3389,7 +3389,7 @@
         "checklist": [
           "Name: Vorname und Familienname",
           "Telefonnummer: Jede Zahl ist richtig.",
-          "Tag: Welcher Tag? (Montag, Dienstag …)",
+          "Tag: Das Abendessen ist am …",
           "Uhrzeit: Wann essen sie?",
           "Leute: Wer kommt? Wie viele sind es?"
         ],

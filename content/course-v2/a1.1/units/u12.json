@@ -2318,18 +2318,18 @@
             "promptDe": "Bilden Sie die W-Frage.",
             "promptEn": "Build the W-question.",
             "tiles": [
-              "fährt",
-              "der Zug",
+              "fängt",
+              "die Prüfung",
               "wann",
-              "ab"
+              "an"
             ],
-            "answer": "Wann fährt der Zug ab?",
+            "answer": "Wann fängt die Prüfung an?",
             "accepted": [
-              "Wann fährt der Zug ab?"
+              "Wann fängt die Prüfung an?"
             ],
             "explanation": {
-              "de": "W-Frage: „Wann“ auf Position 1, „fährt“ auf Position 2, „ab“ am Ende.",
-              "en": "W-question: “Wann” first, “fährt” second, “ab” at the end."
+              "de": "W-Frage: „Wann“ auf Position 1, „fängt“ auf Position 2, „an“ am Ende.",
+              "en": "W-question: “Wann” first, “fängt” second, “an” at the end."
             },
             "origin": "agent"
           },

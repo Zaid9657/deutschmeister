@@ -221,7 +221,7 @@
         "type": "multiple_choice",
         "role": "gist",
         "topic": "hoeren",
-        "promptDe": "Emre und Priya sprechen …",
+        "promptDe": "Emre und Priya sprechen ___.",
         "promptEn": "What are Emre and Priya talking about?",
         "options": [
           "über die Arbeit in İzmir",
@@ -363,7 +363,7 @@
           "type": "multiple_choice",
           "role": "gist",
           "topic": "hoeren",
-          "promptDe": "Die Freunde sprechen …",
+          "promptDe": "Die Freunde sprechen ___.",
           "promptEn": "What are the friends talking about?",
           "options": [
             "über Kochi",
@@ -397,7 +397,7 @@
             "Olena"
           ],
           "explanation": {
-            "de": "Olena sagt: „Aber ich kann gut schwimmen.“",
+            "de": "Olena sagt: „Ich kann gut schwimmen.“",
             "en": "Olena says she is a good swimmer."
           },
           "origin": "agent"
@@ -3003,7 +3003,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Ich wohne jetzt in Leipzig. Ich arbeite am Empfang in der Sprachschule. Da lerne ich auch Deutsch. Ich spreche drei Sprachen: Malayalam, Englisch und ein bisschen Deutsch."
+            "de": "Ich wohne jetzt in Leipzig. Hier arbeite ich am Empfang. Ich lerne auch Deutsch. Ich spreche drei Sprachen: Malayalam, Englisch und ein bisschen Deutsch."
           },
           {
             "speaker": "learner",

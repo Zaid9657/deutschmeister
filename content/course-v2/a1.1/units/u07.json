@@ -976,7 +976,7 @@
         "modelDe": "Ich stehe um sieben Uhr auf. Um neun fängt der Kurs an. Am Abend kaufe ich ein, dann lerne ich."
       },
       "aussprache": {
-        "focus": "Trennbare Verben: Im Wort hat der erste Teil den Akzent: AUFstehen, ANfangen, EINkaufen. Im Satz steht er am Ende: Ich stehe um sieben auf.",
+        "focus": "Trennbare Verben: Im Wort haben „auf“, „an“, „ein“ und „fern“ den Akzent: AUFstehen, ANfangen, EINkaufen, FERNsehen. Im Satz stehen sie am Ende: Ich stehe um sieben auf.",
         "perception": [
           {
             "id": "a1.1-u07-ls1-x01",
@@ -994,8 +994,8 @@
               "auf"
             ],
             "explanation": {
-              "de": "„aufstehen“: „Ich stehe um sieben auf.“ Der Teil „auf“ steht am Ende. Sprechen Sie ihn deutlich.",
-              "en": "aufstehen: ‘auf’ comes at the end – say it clearly."
+              "de": "„aufstehen“: „Ich stehe um sieben auf.“ Der Teil „auf“ steht am Ende.",
+              "en": "aufstehen: ‘auf’ comes at the end of the sentence."
             },
             "origin": "agent"
           },
@@ -1016,7 +1016,7 @@
             ],
             "explanation": {
               "de": "„anfangen“: „Der Kurs fängt um neun an.“ „an“ steht am Ende.",
-              "en": "anfangen: ‘an’ comes at the end – say it clearly."
+              "en": "anfangen: ‘an’ comes at the end of the sentence."
             },
             "origin": "agent"
           },
@@ -1037,7 +1037,7 @@
             ],
             "explanation": {
               "de": "„einkaufen“: „Wir kaufen am Freitag ein.“ „ein“ steht am Ende.",
-              "en": "einkaufen: ‘ein’ comes at the end – say it clearly."
+              "en": "einkaufen: ‘ein’ comes at the end of the sentence."
             },
             "origin": "agent"
           },
@@ -1058,7 +1058,7 @@
             ],
             "explanation": {
               "de": "„fernsehen“: „Emre sieht am Abend fern.“ „fern“ steht am Ende.",
-              "en": "fernsehen: ‘fern’ comes at the end – say it clearly."
+              "en": "fernsehen: ‘fern’ comes at the end of the sentence."
             },
             "origin": "agent"
           }
@@ -3239,7 +3239,6 @@
             "cues": [
               "fängt",
               "später",
-              "erst um",
               "elf Uhr",
               "11 Uhr",
               "um 11"

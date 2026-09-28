@@ -2166,7 +2166,7 @@
             "role": "practice",
             "topic": "redemittel",
             "promptDe": "Sie fragen Frau Schulz nach einem Wort. Bilden Sie die Ja/Nein-Frage.",
-            "promptEn": "You ask Frau Schulz about a word. Build the yes/no question: is the word right?",
+            "promptEn": "You ask Frau Schulz about a word. Build the yes/no question.",
             "tiles": [
               "ist",
               "das Wort",
@@ -2940,7 +2940,7 @@
           "Gruß und Ihr Name",
           "20 bis 30 Wörter"
         ],
-        "modelText": "Liebe Frau Schulz,\nich habe nur ein Handy, keinen Laptop. Haben Sie vielleicht einen Laptop für mich? Zu Seite 24: Ist das Wort richtig: die Schlüssel?\nViele Grüße\n(Ihr Name)"
+        "modelText": "Liebe Frau Schulz,\nich habe nur ein Handy, keinen Laptop. Haben Sie bitte einen Laptop für mich? Zu Seite 24: Ist das Wort richtig: die Schlüssel?\nViele Grüße\n(Ihr Name)"
       }
     },
     {

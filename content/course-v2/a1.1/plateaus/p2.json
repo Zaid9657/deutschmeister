@@ -394,12 +394,13 @@
             "klein",
             "hell",
             "ruhig",
-            "schön"
+            "ist schön",
+            "sehr schön"
           ]
         },
         {
           "id": "lp2",
-          "de": "Was fehlt noch? Was brauchen Sie?",
+          "de": "Was fehlt? Was brauchen Sie?",
           "cues": [
             "brauche",
             "braucht",
@@ -431,7 +432,7 @@
       "checklist": [
         "Anrede: Liebe Olena,",
         "Punkt 1: Wie ist die Wohnung?",
-        "Punkt 2: Was fehlt noch?",
+        "Punkt 2: Was fehlt? Was brauchen Sie?",
         "Punkt 3: eine Bitte an Olena",
         "Gruß: Viele Grüße + Ihr Name",
         "25 bis 35 Wörter"
@@ -723,8 +724,8 @@
           "type": "multiple_choice",
           "role": "detail",
           "topic": "hoeren",
-          "promptDe": "Was macht Priya jetzt noch?",
-          "promptEn": "What does Priya still do now?",
+          "promptDe": "Was macht Priya jetzt?",
+          "promptEn": "What does Priya do now?",
           "options": [
             "Sie schreibt Emre.",
             "Sie lernt zehn Wörter.",
