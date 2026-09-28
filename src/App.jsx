@@ -68,7 +68,7 @@ const CheckpointPage = lazy(() => import('./pages/lesson/CheckpointPage'));
 const ReviewPage = lazy(() => import('./pages/lesson/ReviewPage'));
 const CourseCompletePage = lazy(() => import('./pages/CourseCompletePage'));
 const CourseCertificatePage = lazy(() => import('./pages/CourseCertificatePage'));
-// Course v2 player (docs/course-v2/BLUEPRINT.md §7.3): course home, unit player, Plateau, closing block.
+// Course v2 player (docs/course-v2/BLUEPRINT.md §7.3): course home, unit player, Plateau.
 const CourseHomeV2Page = lazy(() => import('./pages/course-v2/CourseHomeV2Page.jsx'));
 const UnitPlayerPage = lazy(() => import('./pages/course-v2/UnitPlayerPage.jsx'));
 const PlateauPage = lazy(() => import('./pages/course-v2/PlateauPage.jsx'));
