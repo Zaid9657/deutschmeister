@@ -272,8 +272,8 @@
           {
             "id": "a1.1-u01-ls1-l01",
             "speaker": "cast.frau-schulz",
-            "de": "So, jetzt bitte auf Deutsch. Stellen Sie sich bitte vor: Wie heißen Sie? Woher kommen Sie? Und wo wohnen Sie?",
-            "en": "Right, now in German, please. Please introduce yourselves: What’s your name? Where are you from? And where do you live?"
+            "de": "So, jetzt bitte auf Deutsch: Wie heißen Sie? Woher kommen Sie? Und wo wohnen Sie?",
+            "en": "Right, now in German, please: What’s your name? Where are you from? And where do you live?"
           },
           {
             "id": "a1.1-u01-ls1-l02",
@@ -1890,19 +1890,13 @@
           "promptEn": "Where does Arta live? Write the city.",
           "answer": "Prishtina",
           "accepted": [
-            "Prishtina",
-            "Pristina",
-            "Priština"
+            "Prishtina"
           ],
           "explanation": {
             "de": "Im Chat steht: „Wohnort: Prishtina.“",
             "en": "Arta writes: place of residence – Prishtina."
           },
-          "origin": "agent",
-          "acceptedWhy": {
-            "Pristina": "deutsche Schreibweise der Stadt (Duden: Pristina)",
-            "Priština": "Schreibweise mit Hatschek"
-          }
+          "origin": "agent"
         },
         {
           "id": "a1.1-u01-ls3-i04",
@@ -3016,7 +3010,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Ich spreche Malayalam, Englisch und ein bisschen Deutsch."
+            "de": "Ich spreche Englisch und ein bisschen Deutsch."
           },
           {
             "speaker": "partner",

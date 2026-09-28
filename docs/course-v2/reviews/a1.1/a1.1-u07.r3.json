@@ -1,0 +1,232 @@
+{
+  "review": "a1.1-u07.r3",
+  "unitId": "a1.1-u07",
+  "file": "content/course-v2/a1.1/units/u07.json",
+  "round": 3,
+  "date": "2026-09-28",
+  "reviewers": [
+    {
+      "id": "R1",
+      "persona": "Prüferin (lizenzierte Goethe-A1-Prüferin): Prüfungstreue, Rubrik, Aufgabenklarheit"
+    },
+    {
+      "id": "R2",
+      "persona": "Kursleiterin DaF (A1.1): Natürlichkeit, Niveau, Didaktik, Szenenplausibilität"
+    }
+  ],
+  "method": "Both reviewers read every German string of the current file, which was edited after r2: title and title.canDo, spec.situation and spec.deviation.reason, story beat and cliffhanger, the Folge (8 lines and the gist item), the three inputs (30 lines, the practice sign with its new afternoon hours, and the booking confirmation), the 9 exam texts, 2 strategy cards, 8 redemittel, the Sp2 task (instructions, situation, cards, aiRole, openingLine, 8 hintWords, 8 model turns), the S2 task (title, situation, taskDe, 3 Leitpunkte, checklist, model text), the 2 check lines, every endLine, promptDe, option, hint and explanation.de, both rule cards (prose and tables), and the u07 entries of a1.1/lexicon.json with their examples. We solved all 93 authored items blind from promptDe plus options, tiles or audio line (1 gist, 15 input, 12 structured, 33 pool, 13 reserve, 9 exam, 8 check, 2 proof), and the 8 perception items. We permuted every sentence_building item against its frame. For each of the 8 error corrections we listed every correct correction. We ran 33 candidate answers through the real grader, src/lib/course-v2/checkItem.js, and re-graded all 147 accepted forms of the 101 items: all are correct. We checked the exam blocks against content/course-v2/registries/lanes/sd1.json: l3 has 5 × richtig_falsch on signs with location, 10–25 words; h3 is abc with 2 plays, reduced and scaffolded as a1.1 allows; sp2 is cards-ask with 2 topics; s2 has 3 Leitpunkte and about 30 words. We recomputed the word counts with lib-validate/text.mjs: signs 15/20/16/17/18, messages 36/31/37/33. We walked the lexical surface with a script built on lib-validate/lexicon.mjs (knownForms and licensedForms at a1.1-u07, compounds, the metalanguage allowlist). It covered every string of the unit, including hints, model turns and the rule cards. A second pass listed the always-known core and function words that some lexicon allocates to a later unit. We tested the r2-F01 gate by validating a scratch copy of the unit (in the session scratchpad, not in the repo) with ls2-p10 and ls3-r04 put back to their r2 state. We checked the cast against casts/a1.json and series.json, and the story against u05, u06, u08 and a1.2-u04. We checked the new practice hours against a1.2/lexicon.json lx.praxis and against the specs that reuse cast.dr-sommer (a1.2 u05, a2.1, b1.1). We checked the rule cards against rc.ja-nein-frage and against u08 and u11. We read ItemView.jsx (hint and maskQuote) and strings.js ltext for how a hint is shown: only hint.main, in the UI language. We read the rail code the findings depend on: ITM-01, ITM-09, LEX-01, LEX-03, core-lexicon.mjs, text.mjs FUNCTION_WORDS and metalanguage.mjs walkReadSurfaces. Every German replacement proposed below was run through the same knownForms walk, TXT-04 and the word counter.",
+  "validator": {
+    "command": "node scripts/course-v2/validate.mjs content/course-v2/a1.1/units/u07.json",
+    "result": "OK (no blocker findings). 40 rules: 31 pass, 0 fail, 4 warn, 5 skipped; 0 blocker, 11 ratchet, 4 advisory. The counts are identical to r2. GRM-04 has 1 advisory: det.modal-koennen on title.canDo („Sie können …“), a false positive (F07). LEX-01 has 1 advisory: „Praxis“ in ls3-s01 promptDe, which the item's own hint glosses on the same screen, also a false positive (F07). LEX-02 has 11 ratchet, the same eleven lemmas as in r1 and r2 (F08). ITM-03 has 2 informational advisories (LS1 non-exam keys 2/5/2, LS2 2/4/2); the player seeds non-exam option order, so no authoring fix is owed. Skipped: ITM-08 (no caseSensitive item), CON-06 (no facts[]) and the level-scope COV-1/4/5. ITM-01, ITM-09 and ITM-10 pass, but they also pass the r2 state of ls2-p10 and ls3-r04 (gateTest, F01).",
+    "check": "node scripts/course-v2/check.mjs content/course-v2/a1.1/units/u07.json → 0 errors",
+    "level": "node scripts/course-v2/validate.mjs a1.1 --rule COV-1,COV-4,COV-5,LEX-02 → COV-1, COV-4 and COV-5 pass. LEX-02 has 200 ratchet and 0 blocker (r2: 1 blocker, 203 ratchet).",
+    "gateTest": "Scratch copy of u07 with ls2-p10 accepted = [„Am Montag arbeite ich bis fünf.“, „Ich arbeite am Montag bis fünf.“], and with ls3-r04 = „Korrigieren Sie: „Am Donnerstag der Kurs fängt um elf an.““ accepting [„Am Donnerstag fängt der Kurs um elf an.“, „Der Kurs fängt am Donnerstag um elf an.“]. The acceptedWhy entries were trimmed to match. Result: PASS ITM-01, PASS ITM-09, PASS ITM-10, „result: OK (no blocker findings)“. The rail still cannot see the r2 defect.",
+    "grader": "checkItem runs (correct unless stated): ls2-p10 „Bis fünf arbeite ich am Montag.“; ls3-r04 „Um elf fängt der Kurs am Donnerstag an.“; ls3-p10 „Um elf Uhr fängt der Kurs an.“; c07 „Ich kaufe am Freitag ein.“; ls2-p12 „Ich frühstücke zuerst.“; ls2-r05 „Emre arbeitet, aber Priya lernt.“; ls2-i03 „12“ and „zwölf“ („18“ is wrong, as it should be); ls3-i05 „8.15 Uhr“, „8.15 Uhr.“, „Viertel nach 8“, „acht Uhr fünfzehn“ and „8 Uhr 15“ („viertel nach acht“ → typo, for the lower case only); q01 „14“ and „vierzehn“; ls1-i05 „20“ and „zwanzig“; ls1-i03 „6“; ls3-i03 „11“; ls2-i05 „Freitag“ („freitag“ → typo); ls1-p12 „fängst“; c04 „von“. Graded WRONG, and defensibly so: „12 Uhr“ and „14 Uhr“ in a gap that is followed by „Uhr“; „Ich arbeite bis fünf am Montag.“ and „Der Kurs fängt um elf am Donnerstag an.“ (marked orders that reverse the usual general-before-specific sequence of time phrases); „Das Geschäft ist offen ab neun Uhr.“ (Ausklammerung under an Aussagesatz frame). Known from r2 and still not logged: ls1-p10 „Ich stehe um 7 Uhr auf.“ → wrong (the E1 owner's digit folding for non-exact sentence answers).",
+    "notes": "No rail changed since r2. ITM-01.mjs, ITM-09.mjs, LEX-01.mjs, LEX-03.mjs, GRM-04.mjs, metalanguage.mjs and core-lexicon.mjs are all older than the r2 file (2026-09-27 19:03–22:44 against r2 at 2026-09-28 00:18). a1.1/rule-cards.json and a1.1/lexicon.json are unchanged too (2026-09-27 23:06 and 23:03). Only u07.json changed (2026-09-28 01:15). The unit-side fixes are therefore real, and every owner-side finding of r2 is still open."
+  },
+  "previousFindings": [
+    {
+      "id": "r2-F01",
+      "severity": "major",
+      "status": "fixed-in-unit",
+      "evidence": "ls2-p10 now accepts „Am Montag arbeite ich bis fünf.“, „Ich arbeite am Montag bis fünf.“, „Bis fünf arbeite ich am Montag.“ and „Am Montag bis fünf arbeite ich.“, each alternative with acceptedWhy. ls3-r04 accepts the three V2 orders plus „Am Donnerstag um elf fängt der Kurs an.“. checkItem grades both r2 counter-examples correct. All 8 order corrections (ls1-p10, ls1-r04, ls2-p10, ls2-r04, ls2-r05, ls3-p10, ls3-r04, c07) now open with „Korrigieren Sie die Wortstellung:“, and each accepts every V2 order of its constituents. The rail half is not done: in their r2 form both items still pass ITM-01 and ITM-09 (validator.gateTest). Carried forward as F01, owned by the rule-smith."
+    },
+    {
+      "id": "r2-F02",
+      "severity": "minor",
+      "status": "fixed",
+      "evidence": "Nora's „spät“ card now asks „Und in Ihrem Land? Wie spät ist es da jetzt?“, and the learner answers „Da ist es jetzt zwei Uhr.“. This is natural small talk, and the learner really has the answer. personaDe was updated („Fragt mit ihren Karten: „Und in Ihrem Land? Wie spät ist es da jetzt?“ … akzeptiert jede richtige Uhrzeit“), and „Da ist es jetzt …“ replaced „Dann …“ in hintWords. The learner's own card and turn are unchanged („Entschuldigung, wie spät ist es?“ – „Es ist halb zehn.“). The two card words Uhrzeit and spät still both lead to „Wie spät ist es?“. That is noted under P and not logged."
+    },
+    {
+      "id": "r2-F03",
+      "severity": "minor",
+      "status": "fixed",
+      "evidence": "The preferred route was taken. The sign reads „Montag bis Freitag: 8 bis 12 Uhr / Montag, Dienstag, Donnerstag: 15 bis 18 Uhr / am Wochenende geschlossen / Neu bei uns? Der erste Termin ist nur am Morgen.“, which gives 29 consultation hours, a typical GP pattern. „erste“ is glossed. ls2-l04/l05 („Nur am Morgen? Und am Abend nicht?“ – „Montag, Dienstag und Donnerstag auch von drei bis sechs. Aber der erste Termin ist nur am Morgen.“), ls2-i03 („Am Morgen offen bis ___ Uhr.“ → 12, still unique), spec.situation and story.beat agree. ls3-l09 now makes the day explicit and matches the closed Wednesday afternoon: „Und heute ist Mittwoch: Am Nachmittag ist die Praxis zu.“. a1.2/lexicon.json lx.praxis („Die Praxis ist am Mittwochnachmittag geschlossen.“) agrees. The series fact is written into spec.deviation.reason. Later authors do not read that field, so we left a note for the casts owner (notes)."
+    },
+    {
+      "id": "r2-F04",
+      "severity": "minor",
+      "status": "partly-fixed",
+      "evidence": "Unit part done: the LS2 input glosses „erste“ (steps[1].input.glosses[2]). The rule-card table („Zuerst dusche ich.“, „am Samstag nicht.“) and the lexicon examples of lx.einkaufen („Am Samstag …“) and lx.geschlossen („Am Sonntag …“) are unchanged, because both files are unchanged since before r2. The LEX-01 extension is unwritten. Carried forward and widened as F05: the look-ahead now also reaches the proof item q01 and two hints, through routes the rail does not see."
+    },
+    {
+      "id": "r2-F05",
+      "severity": "minor",
+      "status": "open",
+      "evidence": "lx.aufmachen and lx.zumachen are still in none of the eight lexicons, while ls3-p02, ls3-p07, ls3-r01, ls3-mo, ls3-s01 and ls3-s04 drill them. The reason no rule reports this is different from the one r2 gave; F06 names it."
+    },
+    {
+      "id": "r2-F06",
+      "severity": "minor",
+      "status": "open",
+      "evidence": "The same two false-positive advisories fire (GRM-04 det.modal-koennen on title.canDo; LEX-01 „Praxis“ on ls3-s01 despite its hint). GRM-04.mjs and metalanguage.mjs predate r2. Carried forward as F07."
+    },
+    {
+      "id": "r2-F07",
+      "severity": "minor",
+      "status": "open",
+      "evidence": "LEX-02 still reports the same 11 lemmas: einkaufen, fernsehen, Öffnungszeit, Termin and Anrufbeantworter in 0 later units; Nachmittag, Viertel, anrufen, frühstücken, spät and Geschäft in 1. u08–u12 have not brought them back. Carried forward as F08."
+    },
+    {
+      "id": "r1-F01…r1-F14",
+      "severity": "various",
+      "status": "fixed, except the two carried halves",
+      "evidence": "Re-verified on the current file. „Bürgerbüro“ appears only in spec.deviation.reason, as a routing note, and not on a learner surface. The Sp2 learner asks and says the time. ls1-i05 accepts „20“ and „zwanzig“. ls2-s02 and ls2-s03 are decided by the verb–subject pair, and ls1-s04's options all use kaufen. The L3 instruction glosses „Schilder“. ls1-p12 and ls3-p12 drill anfangen. rc.trennbare-verben has no möchte + infinitive, and the cliffhanger has no accusative pronoun. ls2-p12 („Zuerst frühstücke ich.“) and ls2-r05 (connector position) practise the spine's sub-rules. ls3-l07 says „am Donnerstag erst um zehn“. spec.cast lists every speaker. The deviation carries the Landeskunde. ls2-l06, the openingLine, situationDe („auf die Frage von Nora“), lp2 („am Donnerstagmorgen“), q01 („Geschäft: …“) and t7 are idiomatic. The three private messages differ in shape, but see F03 for a repeat that the r1-F12 fix brought in. No chunk-licensed Sie-imperative is reported. The lexicon half of r1-F06 is F06, and r1-F14 is F08."
+    }
+  ],
+  "verdict": "Not exit-ready, but the unit's own content is exit-grade: 0 BLOCKER and 0 MAJOR in u07.json. We re-verified all seven r2 findings. r2-F01 is fixed in the unit: both order corrections accept all three V2 orders, and all eight corrections now say „Korrigieren Sie die Wortstellung“. r2-F02 and r2-F03 are fixed. Nora's second card asks „Und in Ihrem Land? Wie spät ist es da jetzt?“. The practice now has typical hours (Mo–Fr 8–12, Mo/Di/Do 15–18, 29 hours a week), and the clash with the course has moved to the first appointment. The unit part of r2-F04 has landed. Its rule-card and lexicon parts have not, and r2-F05, F06 and F07 are unchanged, because their owners' files are unchanged. We solved all 93 items blind, and every key is right. Every sentence_building and error_correction item accepts every order its frame allows. The exam blocks are exact to sd1.json and original. du/Sie is right in every relationship. The week holds: Folge, video chat, LS2 on a weekday evening before Wednesday, LS3 on Wednesday at 16.30, Thursday at 8.15, and u08's Thursday-evening call. One MAJOR stops exit, and it belongs to the rail, not the unit (F01). With ls2-p10 and ls3-r04 put back to their r2 lists, ITM-01 and ITM-09 still pass. The class is now logged in five a1.1 units, so it is stop-the-line. Three small unit edits are new. The ls2-s05 distractors „heute am Morgen / heute am Abend“ and its definition of „am Morgen“ as „um sieben oder acht Uhr“ clash with the unit's own „heute Abend“ and with LS2's „am Morgen … bis 12 Uhr“ (F02). Bilal's H3 message and Olena's proof message hinge on the same sentence, „Um zwei habe ich einen Termin“ (F03). The Samstag look-ahead now reaches the proof item q01 and two hints, through routes the rail does not see (F05, unit part). There is one new owner-held minor. rc.trennbare-verben says „Im Satz steht das Verb auf Position 2“, which rc.ja-nein-frage (u02) and u08's „Kommst du mit?“ contradict (F04).",
+  "scores": {
+    "D": 4,
+    "N": 4,
+    "H": 4,
+    "A": 4,
+    "P": 4,
+    "K": 5,
+    "E": 4
+  },
+  "scoreNotes": {
+    "D": "There is no wrong German on any model surface, and the register fits every relationship. The new Sp2 exchange („Und in Ihrem Land? Wie spät ist es da jetzt?“ – „Da ist es jetzt zwei Uhr.“) is natural small talk. It is 4 and not 5 because of ls2-s05: its distractors „heute am Morgen / heute am Abend“ are marked forms, while the unit itself says „heute Abend“, and its definition of „am Morgen“ contradicts LS2 (F02).",
+    "N": "34 new words (17 productive), inside the band. Production lines stay under the ceiling. It is 4 and not 5 for three reasons. The Samstag/Sonntag look-ahead now reaches the proof item q01 and two hints (F05). aufmachen and zumachen are still not in the lexicon (F06). rc.trennbare-verben states the verb position too broadly (F04).",
+    "H": "A lively, coherent week: the late Folge, the İzmir video chat, the practice whose first appointment clashes with the morning course, Herr Richter's voicemail, the closed Wednesday afternoon and the online booking. All four can-dos are performed, and the learner asks and says the time in Sp2. It is 4 and not 5 because two private messages share the same „Um zwei habe ich einen Termin“ and the same inference (F03).",
+    "A": "Every key is right and no item is ambiguous. Every sentence_building and error_correction order is accepted. Number words and the 24-hour clock are graded correct. Distractors are plausible, apart from the known weak ones (ls2-s01 arithmetic, ls3-s03 „Er steht auf.“). The unit's items earn 4. The MAJOR F01 belongs to the rail: the gate that should have caught r2-F01 still would not catch it. So F01 stops exit without lowering A.",
+    "P": "L3: 5 signs with location, 15–20 words, R/F 2/3. H3: 4 messages, 31–37 words, 2 plays, scaffolded as a1.1 allows, keys b/a/c/c, options not in ascending order. Sp2: 2 topics, cards-ask, Nora in Sie. S2: 3 separate Leitpunkte, informal, 25–35 words. All are original tasks in the official format. It stays at 4 for two reasons. The Sp2 situation asks for an answer „in zwei Sätzen“, beyond the one-answer format. The two Mein-Tag card words (Uhrzeit, spät) both still lead to „Wie spät ist es?“, which two different SD1 card words would not.",
+    "K": "The cast facts are right: Emre's shop and online course, Olena working until six, Bilal's appointment, Sophie studying, Herr Richter in the school office, Frau Schulz. The week holds across the Folge, LS1–LS3, the cliffhanger and u08. The practice hours are typical now and agree with a1.2's lx.praxis example („am Mittwochnachmittag geschlossen“). a1.2-u04 is not contradicted. The couple are „neu hier“ after their u05 move, which fits Arjun's year in Leipzig.",
+    "E": "Every instruction is ≤ 90 characters, every endLine names the win, and the perception prompts mask their quotes (ItemView maskQuote). The 360 px walkthrough belongs to the walkthrough reviewer and was not run in this round."
+  },
+  "total": 29,
+  "counts": {
+    "blocker": 0,
+    "major": 1,
+    "minor": 7,
+    "unitOwned": {
+      "blocker": 0,
+      "major": 0,
+      "minor": 3
+    },
+    "note": "unitOwned counts the findings whose fix edits u07.json: F02 (three options and one explanation), F03 (one check line and one explanation) and the unit part of F05 (the q01 prompt and explanation, and two hints). Owned outside the unit: F01 (rule-smith, plus the SCHEMA owner for `tiles` on corrections), F04 (rule-cards owner), the rule-card, lexicon and rail parts of F05, F06 (lexicon owner and rule-smith), F07 (rule-smith) and F08 (level reviewer and the u08–u12 authors)."
+  },
+  "exitCheck": {
+    "blocker": 0,
+    "major": 1,
+    "minor": 7,
+    "criteriaBelow4": [],
+    "exit": false,
+    "note": "Exit needs 0 BLOCKER, 0 MAJOR, every criterion ≥ 4 and ≤ 5 logged MINOR. Every criterion is ≥ 4 (29/35). The unit misses on F01, a MAJOR that u07.json cannot fix: the ITM-01/ITM-09 order rail, which is stop-the-line for a1.1 (u01, u02, u04, u07, u08). It also carries 7 minors. The three unit edits are small: F02 (ls2-s05), F03 (Olena's line and the q02 explanation), and F05's unit part (q01, and the h3-01 and h3-03 hints). After them, 5 owner-held minors remain (F04, F05's owner parts, F06, F07, F08), which is within the limit. Re-review then needs no content round: validate.mjs green with the new rail (with its u07 fixtures failing in their r2 form), a checkItem spot check that the ls2-s05, q01 and q02 keys still grade correct, and a read of the edited strings. This is round 3 of the 4 that §9.4 plans. Per §9.4, F01 is already a rail fix and not a reason for more rounds. Class findings for the rule-smith: F01, F05, F06 and F07."
+  },
+  "notes": [
+    "Exemplar classes checked clean in this round. Every sentence_building frame says Aussagesatz or W-Frage, and every order it allows is accepted (u04 r1-F01/F04/F12, r2-F02). Every correction prompt names what to correct, and each accepts every correct correction (u04 r5-F01). No dictation source carries a `say` (u04 r2-F01). Number words and the 24-hour clock are graded correct on every exact:number item (u04 r3-F01). Sentence-building explanations name the position (u04 r3-F02). The lex.articlePlural source has plurals only (Abend, Stunde, Uhrzeit, Woche; u04 r3-F03). The lex.glossTyped sources are productive (u04 r4-F02). The proofs need German to read (u04 r1-F06), with the q01 caveat of F05. The H3 keys are b/a/c/c and the options are not ascending (u04 r2-F04). The exam texts are within the raw bands (u04 r1-F10). There is no wordBandLearning (u04 r2-F05). The LS4 texts do not retell the unit's scene with other facts: t5 agrees with LS3, and t6 is another practice (u04 r2-F06). The errorTags fit the planted errors (u04 r1-F23). No speaking instruction uses a genitive (u04 r5-F05). No structured-input key is the only option repeating the stem (u04 r1-F26, r2-F03). The spec's text types are all present (u04 r4-F06).",
+    "Exemplar classes that recur: F01 ← u04 r1-F04 and r5-F01, u08 r2-F02 (stop-the-line). F04 ← u04 r2-F09 … r5-F04 (a card rule that is true only for part of the frames the learner meets). F05 ← u04 r2-F07 … r5-F03 and u07 r2-F04. F06 ← u04 r4-F02, u07 r1-F06 and r2-F05. F07 ← u04 r1-F24 … r5-F05 and u07 r2-F06. F08 ← u04 r1-F25 and u07 r1-F14 / r2-F07.",
+    "Story check (no finding). The Folge morning („heute Abend ruft Emre an … um acht“) leads to the LS1 video chat at 20 Uhr in Leipzig, which is 21 Uhr in İzmir, after Emre's shift ends at 20 Uhr. LS2 falls on a weekday evening before Wednesday: Arjun proposes „am Mittwoch um acht“, and Priya will ask „morgen im Kurs“. LS3 is on Wednesday at 16.30, now stated in ls3-l09, with Arjun working at home. Herr Richter's message is about the next day. On Thursday there is the practice at 8.15, Arjun starts at 10 and the course runs 11–14.30. The cliffhanger and u08 („Am Donnerstagabend ruft Emre an“) follow. For later authors: on Thursday the course runs until 13.30–14.30 İzmir time (depending on the season), past Emre's 14 Uhr shift start. The cliffhanger only says he is online at eleven, so nothing contradicts it, but a scene that keeps Emre in the Thursday course until the end would.",
+    "For the casts owner, not logged: the unit writes its series fact into spec.deviation.reason („Die Praxis von Frau Doktor Sommer hat Sprechzeiten Montag bis Freitag 8–12 Uhr und Montag, Dienstag, Donnerstag 15–18 Uhr; den ersten Termin gibt es nur am Morgen, Mittwoch- und Freitagnachmittag ist sie zu.“). The authors of a1.2-u05 (whose plan includes the practice's answering-machine Ansage), a2.1 and b1.1 read casts/*.json, not a1.1-u07's deviation. Copy the hours into cast.dr-sommer.role in casts/a1.json and into its a2 and b1 entries. a1.2/lexicon.json lx.praxis already agrees. The SCHEMA owner may also want to say whether deviation.reason (ALL-03's field for Lehrwerk placements, of which u07 has five) should carry Landeskunde and series facts at all.",
+    "Optional polish, not logged. ls3-i04 „Wann sind Priya und Arjun am Donnerstag da?“: „da“ has no antecedent in the prompt, and „… am Donnerstag bei Frau Sommer?“ says where (all words known; the cliffhanger already uses „bei Frau Sommer“). The ls3-i02 option „Sie haben am Donnerstag einen Termin.“ opens with a „Sie“ that can read as the formal you; „Priya und Arjun haben …“ avoids that. The LS2 endLine names Öffnungszeiten but gives a work time as its example („Am Montag arbeite ich von neun bis fünf.“); „Das Geschäft ist von acht bis zwölf Uhr offen.“ would name the win with known words („Praxis“ would need a gloss on an endLine). The title of spec.lexiconBlocks[1], „Mein Tag: trennbare Verben“, covers frühstücken, which ls1-p09 teaches as „nicht trennbar“, and fahren, gehen, Tag, nach Hause and erzählen. The player does not render block titles (progress.js reads only the lemmas), so this is cosmetic. t9's „aber dann kaufe ich ein“ (r2 note) is unchanged. On the sign, German practices usually write „vormittags“ for 8–12. lx.vormittag is not taught until u11, so „am Morgen“ is the defensible choice at u07, provided F02 stops defining it as seven or eight o'clock.",
+    "For the E1 (grader) owner, not logged, unchanged since r2: a digit answer that repeats the „Uhr“ printed after the gap („12 Uhr“ in ls2-i03, „14 Uhr“ in q01) is graded wrong. This is defensible, since it would read „bis 12 Uhr Uhr“. Digits in non-exact sentence answers are also graded wrong (ls1-p10 „Ich stehe um 7 Uhr auf.“).",
+    "Legal and claims: there is no outcome promise, no human-feedback claim and no exam-mark misuse. Nora is a „Teilnehmerin“ persona, and the strategy cards describe SD1 honestly. All exam tasks are original in the SD1 format; the practice, bakery, market, office and course signs and the four messages are generic, not modelled on the Modellsatz. No Goethe or CEFR descriptor is quoted.",
+    "Fix-proposal check (r1-F02 showed that it is needed). Every German replacement in F02–F05 was run through knownForms and licensedForms at a1.1-u07; every word is known except the glossed targets themselves (Praxis in a hint, „samstags“ in its own gloss). We also checked the lengths. The q01 prompt is 85 characters (TXT-04 ≤ 90). The Olena line has 36 words (now 35). The s05 explanation has 15 words and the q02 explanation 18 (ITM-11 ≤ 25). The rc.trennbare-verben prose goes from 51 to 55 words (GRM-05 ≤ 60). We checked each fix against the other scenes: F03 keeps all three q02 options heard, F05's q01 still makes the learner separate two ranges, and F02 keeps one key."
+  ],
+  "findings": [
+    {
+      "id": "F01",
+      "reviewer": "R1",
+      "criterion": "A",
+      "severity": "major",
+      "scope": "class",
+      "unitId": "a1.1-u07",
+      "path": "scripts/course-v2/rules/ITM-01.mjs alternativesExplained (l. 238) and correctionFindings (l. 281–293); scripts/course-v2/rules/ITM-09.mjs and lib-validate/orders.mjs (error_correction out of scope); fixtures: steps[1].pool.items[9] (a1.1-u07-ls2-p10) and steps[2].reserve[3] (a1.1-u07-ls3-r04) in their r2 form",
+      "quote": "Scratch copy with ls2-p10 accepted [„Am Montag arbeite ich bis fünf.“, „Ich arbeite am Montag bis fünf.“], and with ls3-r04 „Korrigieren Sie: „Am Donnerstag der Kurs fängt um elf an.““ accepting [„Am Donnerstag fängt der Kurs um elf an.“, „Der Kurs fängt am Donnerstag um elf an.“] → „PASS ITM-01 … PASS ITM-09 … PASS ITM-10 … result: OK (no blocker findings)“. ITM-01.mjs (2026-09-27 22:16) and ITM-09.mjs are older than r2 (2026-09-28 00:18).",
+      "problem": "The unit half of r2-F01 has landed. ls2-p10 and ls3-r04 accept all three V2 orders, plus the joint time phrase („Am Montag bis fünf …“, „Am Donnerstag um elf …“), each with acceptedWhy. checkItem grades „Bis fünf arbeite ich am Montag.“ and „Um elf fängt der Kurs am Donnerstag an.“ correct. The rail half has not landed. Put back to their r2 state, both items still pass ITM-01, ITM-09 and ITM-10, so the next author who lists two of three orders gets a green validator again. This is §9.4's „gate hole that lets a finding class through“ (MAJOR). The class is no longer local. Correct orders rejected by an order correction or a sentence build have been logged in u01 (r1-F16), u02 (r2-F01), u04 (r1-F04, r5-F01), u07 (r2-F01) and u08 (r1-F01, r2-F02; a1.1-u08 r2 already calls it stop-the-line). Each time the unit was fixed with a hand list of accepted orders, which is the closing-by-ids that CLAUDE.md rules out. No edit to u07.json is owed: all 8 order corrections name „die Wortstellung“ and accept every V2 order of their constituents.",
+      "fix": "Rule-smith, with no unit edit: write the order rail that u07 r2-F01 proposed and u08 r2-F02 extended. Run orders.mjs / ITM-09 missingOrders on the key of every error_correction in the order family. That family is errorTag v2-inv, satzklammer, verb-final or connector-position, or a promptDe that names „Wortstellung“ or „Position“. Take the constituents from an optional `tiles` array on the correction (SCHEMA owner: same meaning as in sentence_building), or let orders.mjs derive them. A missing owed order is a blocker unless promptDe fixes Position 1. Until this rail is green, a1.1 authoring stays stopped (§9.4 stop-the-line).",
+      "proposedRule": "ITM-01/ITM-09 order rail for error_correction. Failing fixtures: a1.1-u07 ls2-p10 and ls3-r04 in their r2 form (two accepted orders each, three owed). Passing fixtures: the same items as they are now. The test runs over all registered courses. After it lands, re-validate a1.1 u01, u02, u04, u07 and u08."
+    },
+    {
+      "id": "F02",
+      "reviewer": "R2",
+      "criterion": "D",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u07",
+      "path": "steps[1].structuredInput[3] (a1.1-u07-ls2-s05) options and explanation; against start.folge.lines[6] (a1.1-u07-start-l07), story.cliffhanger, steps[1].input.text, steps[1].input.lines[3..4] (ls2-l04, ls2-l05), steps[1].inputItems[1..2] (ls2-i02 explanation, ls2-i03); a1.1-u11 steps[1].structuredInput[3].options[0]",
+      "quote": "ls2-s05 options [„heute am Morgen“, „am nächsten Tag“, „heute am Abend“] · explanation.de „„morgen“ ohne „am“ ist der nächste Tag. „am Morgen“ ist früh am Tag, um sieben oder acht Uhr.“ · start-l07 „Und heute Abend ruft Emre an, oder?“ · cliffhanger „Ich rufe heute Abend an!“ · sign „Montag bis Freitag: 8 bis 12 Uhr … Der erste Termin ist nur am Morgen.“ · ls2-i02 explanation „nur am Morgen, von 8 bis 12 Uhr“ · ls2-i03 „Am Morgen offen bis ___ Uhr.“ → 12 · a1.1-u11 option „heute Morgen“",
+      "problem": "There are two problems on the one item that teaches the morgen/Morgen contrast. (1) The distractors are not the idiomatic forms. In Germany the fixed pairs are „heute Morgen“ and „heute Abend“; „heute am Abend“ is marked (Austrian, or emphatic). The unit itself says „heute Abend“ in the Folge and in the cliffhanger, and u11 uses „heute Morgen“ as an option. The explanation's rule „„morgen“ ohne „am“ ist der nächste Tag“ then fails on „heute Morgen“, which the learner meets four units later. (2) The explanation defines „am Morgen“ as „um sieben oder acht Uhr“. In the same Lernschritt, the sign, Arjun's lines, ls2-i02's explanation and ls2-i03 („Am Morgen offen bis ___ Uhr“ → 12) use „am Morgen“ for the whole forenoon, up to 12 Uhr. The learner gets two definitions of the word in one step. The key is not wrong, and the item still has exactly one right answer.",
+      "fix": "Options „heute Morgen“ / „am nächsten Tag“ / „heute Abend“; the key is unchanged. explanation.de: „„morgen“ (klein) ist der nächste Tag. „Morgen“ (groß) ist eine Tageszeit: am Morgen, heute Morgen.“ This is 15 words, all known at a1.1-u07, and the quoted sentence in the prompt shows the lower-case „morgen“. explanation.en to match („morgen“ in lower case = tomorrow; „Morgen“ with a capital = morning: am Morgen, heute Morgen). Dropping „um sieben oder acht Uhr“ also removes the clash with LS2's 8–12.",
+      "proposedRule": ""
+    },
+    {
+      "id": "F03",
+      "reviewer": "R2",
+      "criterion": "H",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u07",
+      "path": "check.lines[1] (a1.1-u07-ls7-l02, Olena) and check.proofItems[1] (a1.1-u07-q02) explanation; against steps[3].texts[6] (a1.1-u07-ls4-t7, Bilal) and steps[3].blocks[1].items[1] (a1.1-u07-ls4-sd1-h3-02)",
+      "quote": "t7 Bilal „… Ich komme am Freitag später. Um zwei Uhr habe ich einen Termin. Er dauert zwei Stunden. Ich komme also erst um vier, nicht um drei. …“ → h3-02 „Wann kommt Bilal am Freitag?“ · ls7-l02 Olena „… Lernen wir am Mittwoch zusammen? Um zwei habe ich einen Termin. Aber um halb drei bin ich da. …“ → q02 „Wann kommt Olena?“",
+      "problem": "The two private messages the learner hears in LS4 and in the Check rest on the same sentence and the same inference. A friend has an appointment at two, so he or she comes later, and the item asks when the person comes. The q02 proof of cd.a1.ab-termin therefore repeats h3-02. Within one unit, a two o'clock appointment also lasts two hours for Bilal and less than half an hour for Olena. This is the §9.5 blandness that H scores. r1-F12 closed the shared message template, and this repeat came in with that fix.",
+      "fix": "Give Olena a different reason, one that also recycles the unit's own verb. ls7-l02: „Hallo Priya, hier ist Olena. Am Montag geht es nicht, da arbeite ich bis sechs. Lernen wir am Mittwoch zusammen? Bis zwei kaufe ich ein, dann komme ich. Um halb drei bin ich da. Bis dann!“ (36 words, all known at a1.1-u07). q02's options stay as they are, because „am Montag“, „zwei“ and „halb drei“ are all still heard. q02 explanation.de: „Olena sagt: „Am Montag geht es nicht.“ Bis zwei kauft sie ein. „Um halb drei bin ich da.““ (18 words), with explanation.en to match.",
+      "proposedRule": ""
+    },
+    {
+      "id": "F04",
+      "reviewer": "R2",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u07",
+      "path": "content/course-v2/a1.1/rule-cards.json cards[13] rc.trennbare-verben de, en and table (shown at steps[0].ruleCard and steps[2].ruleCard); against cards[4] rc.ja-nein-frage and a1.1-u08 steps[2].title and steps[2].input.lines[2]",
+      "quote": "rc.trennbare-verben „Im Satz steht das Verb auf Position 2, der erste Teil steht am Ende: Der Kurs fängt um neun Uhr an.“ · rc.ja-nein-frage (g.ja-nein-frage productive from a1.1-u02) „In der Ja/Nein-Frage steht das Verb auf Position 1“ · a1.1-u08 LS3 title „Kommst du mit?“ and input „Hast du am Samstag Zeit? Kommst du mit?“",
+      "problem": "The card gives one verb position for every sentence, but that position holds only in the Aussagesatz and the W-Frage. Learners have produced Ja/Nein-Fragen with the verb in Position 1 since u02, and the very next unit titles a Lernschritt „Kommst du mit?“, a separable verb in Position 1. So two cards of the same course now contradict each other, and this is the only card for g.trennbare-verben. It is the u04 r2-F09 → r5-F04 class (a card rule that is true for only part of the frames the learner meets). The card's model sentence is not wrong.",
+      "fix": "Rule-cards owner: „Das Verb steht auf Position 2 (in der Ja/Nein-Frage auf Position 1), der erste Teil steht am Ende: Der Kurs fängt um neun Uhr an.“ The card goes from 51 to 55 words (GRM-05 allows ≤ 60 at A1). Add the table row „Kaufst | du | heute | ein?“ under the existing header (Position 1 | Position 2 | … | Ende), so the verb stands in the Position-1 column. Change the en twin to match („The verb is in position 2 (position 1 in a yes/no question) …“). All words are known at a1.1-u07.",
+      "proposedRule": ""
+    },
+    {
+      "id": "F05",
+      "reviewer": "R2",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u07",
+      "path": "content/course-v2/a1.1/rule-cards.json cards[14] rc.zeitangaben-inversion table[2], table[4]; content/course-v2/a1.1/lexicon.json lx.einkaufen.example, lx.geschlossen.example; check.proofItems[0] (a1.1-u07-q01) promptDe; steps[3].blocks[1].items[2] (a1.1-u07-ls4-sd1-h3-03) promptDe and hint; steps[3].blocks[1].items[0] (a1.1-u07-ls4-sd1-h3-01) hint; steps[2].inputItems[0].options[2] (ls3-i01); scripts/course-v2/lib-validate/core-lexicon.mjs l. 53; lib-validate/text.mjs l. 121; lib-validate/metalanguage.mjs walkReadSurfaces",
+      "quote": "Unchanged since r2: rc.zeitangaben-inversion „– | Zuerst | dusche | ich.“ and „aber | ich | arbeite | am Samstag nicht.“ · lx.einkaufen „Am Samstag kaufe ich ein.“ · lx.geschlossen „Am Sonntag ist der Supermarkt geschlossen.“. New: q01 „Geschäft: „Montag–Freitag 10–19, samstags 10–14 Uhr“. Samstags ist es bis ___ Uhr offen.“ · h3-03 „Wann ist die Bäckerei samstags offen?“ · h3-01 hint.de „die Praxis: beim Arzt“ (lx.arzt @ a1.2-u05) · ls3-i01 option „Der Kurs fängt am Donnerstag früher an.“ (lx.frueher @ a1.2-u02) · lx.samstag @ a1.1-u08, lx.sonntag @ a1.1-u11, lx.vormittag @ a1.1-u11 · core-lexicon.mjs l. 53 „… montags dienstags mittwochs donnerstags freitags samstags sonntags“",
+      "problem": "The unit part of r2-F04 has landed: „erste“ is glossed in the LS2 input. The rule-card and lexicon parts have not, because both files are unchanged since before r2. The class has also found two more routes around LEX-01. (1) core-lexicon.mjs lists „samstags, sonntags, vormittags …“ as closed-class core lemmas. knownForms() lets a later allocation outrank a core lemma, but these are keyed on their own form, not on lx.samstag (u08), lx.sonntag (u11) or lx.vormittag (u11), so no allocation ever holds them back. text.mjs lists „früher“ among the always-known function words, which knownForms() never checks against an allocation (lx.frueher @ a1.2-u02). Either way, all of them pass at u07. As a result, an untaught day word sits at the centre of the Öffnungszeiten proof q01, in both the sign and the question, and of the h3-03 question. Both items can still be solved by matching the string, which is the weaker reading a proof should not rely on. (2) walkReadSurfaces does not read item hints, and ItemView shows only hint.main, in the UI language. A learner with a German UI sees „die Praxis: beim Arzt“ as the only gloss, and „Arzt“ is itself an a1.2 word. The exam texts t1 and t8 („sonntags“, „Samstags“) are within LEX-01's 95 % coverage and need nothing.",
+      "fix": "Unit: change q01 to „Geschäft: „Montag–Donnerstag 10–19, Freitag 10–14 Uhr“. Am Freitag offen bis ___ Uhr.“ (85 characters; key 14 unchanged), with the explanation „Am Geschäft steht: „Freitag 10–14 Uhr“. 19 Uhr ist Montag bis Donnerstag.“. h3-03 hint.de: „die Bäckerei: Dort gibt es Brot und Brötchen. samstags: am Tag nach Freitag.“ (en: „… samstags = on Saturdays“). h3-01 hint.de: „die Praxis: Hier arbeitet Frau Doktor Klein.“. All three were checked against knownForms at a1.1-u07. Lexicon owner, preferred over two more example rewrites: allocate lx.samstag and lx.sonntag at a1.1-u07 as receptive, and promote lx.sonntag to productive at u11 through the promotions mechanism. The plan supports this: its vocabTheme is „Wochentage“, its speaking cue is „Arbeitest du am Samstag?“, and SD1 signs always carry both days. This closes the rule-card „am Samstag“, both lexicon examples, and q01 and h3-03 in one step. The unit's count must then come back to ≤ 35 together with F06, for example by making lx.anrufbeantworter and lx.geoeffnet gloss-only. If the lexicon owner declines, apply r2-F04's example rewrites. Rule-cards owner: „Zuerst frühstücke ich.“ in place of „Zuerst dusche ich.“.",
+      "proposedRule": "LEX-01, extending r2-F04's proposal. (a) A derived adverb (Samstag → samstags, Vormittag → vormittags) and a FUNCTION_WORDS entry that some lexicon allocates (früher) count as known only from that allocation, as core lemmas already do. (b) walkReadSurfaces reads item hint.de as a surface and counts its tokens as glosses of that item (r2-F06). Failing fixtures: a1.1-u07 q01 („samstags“), h3-03 („samstags“), the h3-01 hint („Arzt“), and rc.zeitangaben-inversion at u07 („dusche“, „Samstag“). The test runs over all registered courses."
+    },
+    {
+      "id": "F06",
+      "reviewer": "R1+R2",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u07",
+      "path": "content/course-v2/a1.1/lexicon.json (no lx.aufmachen, no lx.zumachen); scripts/course-v2/lib-validate/core-lexicon.mjs l. 73–74; scripts/course-v2/rules/LEX-03.mjs l. 67–79; steps[2].pool.items[1] (ls3-p02), steps[2].pool.items[6] (ls3-p07), steps[2].reserve[0] (ls3-r01), steps[2].microOutput (ls3-mo), steps[2].structuredInput[0] and [3] (ls3-s01, ls3-s04)",
+      "quote": "core-lexicon.mjs „VERB zumachen | macht zu | machte zu | hat zugemacht“ and „VERB aufmachen | macht auf | machte auf | hat aufgemacht“ · LEX-03 l. 78 „const e = byLemma.get(cue); if (!e) continue;“ · ls3-p02 „Das Geschäft ___ um acht Uhr auf. (aufmachen)“ · ls3-r01 „Der Supermarkt ___ um zehn Uhr zu. (zumachen)“ · ls3-mo „Wann macht der Supermarkt auf? Wann macht er zu?“",
+      "problem": "r2-F05 is unchanged. The unit drills, builds and elicits aufmachen and zumachen, the verbs of its Öffnungszeiten can-do, but no lexicon of the eight levels allocates them. So they reach no vocabulary card, no review ladder and no LEX-02 count, and A1.2 cannot know they were taught. We can now say why no rule reports it, which corrects r2's reading. The validator's core list carries both verbs as always-known A1 lemmas, and knownForms() skips a core lemma only when a lexicon allocates it to a later unit. With no allocation at all, the core makes „macht … auf“ known from u01 on. LEX-03's bracket check looks „(aufmachen)“ up in the lexicon and silently skips a cue that no lexicon has. So LEX-03 does not pass these items by splitting machen + auf.",
+      "fix": "Lexicon owner, as r2-F05 asked: add lx.aufmachen and lx.zumachen at a1.1-u07, productive, and let spec.lexiconBlocks follow (LEX-05). Bring the unit back to ≤ 35 new words together with F05, for example by making lx.anrufbeantworter and lx.geoeffnet gloss-only. No unit edit.",
+      "proposedRule": "LEX-03 and core-lexicon: a bracketed cue in a fill_blank that matches no lexicon lemma is a finding, not a skip. A core CONTENT lemma that a unit drills in production (a bracketed cue, a tile verb, a micro-output target) must also be allocated by a lexicon at or before that unit. Failing fixtures: a1.1-u07 ls3-p02 and ls3-r01. The test runs over all registered courses."
+    },
+    {
+      "id": "F07",
+      "reviewer": "R1",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u07",
+      "path": "title.canDo (GRM-04 det.modal-koennen); steps[2].structuredInput[0].promptDe (a1.1-u07-ls3-s01) with its hint (LEX-01); scripts/course-v2/rules/GRM-04.mjs; scripts/course-v2/lib-validate/metalanguage.mjs walkReadSurfaces",
+      "quote": "GRM-04 „title.canDo (det.modal-koennen): instruction uses „können“ … licensed from a1.1-u08 (g.koennen), here a1.1-u07“ · LEX-01 „steps[2].structuredInput[0].promptDe (a1.1-u07-ls3-s01): a prompt uses a word not known at a1.1-u07: „Praxis““ · ls3-s01 hint.de „die Praxis: Hier arbeitet Frau Doktor Sommer.“",
+      "problem": "Unchanged since r2; both rule files are older than r2. These two advisories are the only ones on the unit, and both are false. GRM-04 reads SCHEMA's „Sie können …“ can-do frame as the modal verb before u08. LEX-01 reports „Praxis“ although the item's own hint glosses it on the same screen. A rail that keeps crying wolf trains authors to ignore it.",
+      "fix": "No unit change. Rule-smith, as in r2-F06: treat the can-do frame on title.canDo and on endLines („Sie können jetzt …“) as SCHEMA metalanguage, and count hint tokens as glosses of their item. F05 (b) makes the hint a walked surface at the same time.",
+      "proposedRule": "GRM-04 / LEX-01 fixtures: a1.1-u07 title.canDo gives no det.modal-koennen advisory, and a1.1-u07 ls3-s01 with its hint gives no LEX-01 advisory. A „können“ + infinitive outside the can-do frame still reports. The test runs over all registered courses."
+    },
+    {
+      "id": "F08",
+      "reviewer": "R2",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u07",
+      "path": "spec.lexiconBlocks (LEX-02 ratchet 11); a1.1 units u08–u12",
+      "quote": "LEX-02 on u07: „einkaufen“, „fernsehen“, „Öffnungszeit“, „Termin“, „Anrufbeantworter“ recur in 0 later unit(s); „Nachmittag“, „Viertel“, „anrufen“, „frühstücken“, „spät“, „Geschäft“ in 1 (need ≥ 2). These are the same 11 lemmas as in r1 and r2.",
+      "problem": "This is the third round without movement (r1-F14, r2-F07). u08–u12 are at stage T, and none of them has brought these daily-routine words back. Termin and einkaufen, two of the unit's most useful words, never reappear in A1.1 after the unit that teaches them. Without recurrence, the spaced review relies on cards alone.",
+      "fix": "Level reviewer and the u08–u12 authors, as r1-F14 and r2-F07 proposed: Termin and fernsehen in u08 („Am Samstag habe ich einen Termin.“ / „Am Abend sehe ich fern.“); einkaufen, Geschäft and Öffnungszeit in u09 or u11; frühstücken, anrufen and spät in u11 („Am Sonntag frühstücke ich spät und rufe meine Mutter an.“). Anrufbeantworter goes into u10 or u11, or the lexicon owner makes it gloss-only (see F05 and F06). F03's Olena line adds one einkaufen inside u07 only; the later-unit count needs u08–u12. Re-measure with the level run.",
+      "proposedRule": ""
+    }
+  ]
+}

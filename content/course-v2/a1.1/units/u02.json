@@ -134,7 +134,7 @@
       "Linie 1 A1 K2–3 (Grammatik: sein/haben, nicht; nach memo 06)"
     ],
     "deviation": {
-      "reason": "Abweichungen vom Stoffplan a1-1 u02 (Review a1.1-u02 r1 F03, F14; r2 F05). (1) „das Alter“ (Plan-Schlüsselwort): Das Lexikon führt lx.alt erst in a1.1-u03 ein (dort „Alter: 28“ im Formular und „Ich bin … Jahre alt“). Darum steht „Alter?“ nicht auf dem Sp1-Stichwortblatt dieser Einheit; das Alter kommt in u03. (2) Landeskunde: Die Adressform (zuerst Straße und Hausnummer, dann Postleitzahl und Ort) steht im endLine von LS1 und ist mit dem Fact a1.1-u02-f01 belegt. Telefonnummern in Zweiergruppen hört der Lerner in allen Nummern-Texten (H1 Gespräch 1, Check-Zeile l02: „null drei vier eins, siebenundneunzig, dreiundsechzig, zwanzig“); die Einheit formuliert dazu keine Regel und hat dafür keinen Fact. (3) Aussprache: Statt „lange und kurze Vokale“ hört LS1 das Alphabet mit den Umlauten beim Buchstabieren (E–I, A–R, Ä–E, Ü–U; H1 Gespräch 2: „Schaefer“ mit A und E, nicht mit Ä), LS3 hört ü–u, und „zwo“ steht glossiert in LS2. Lange und kurze Vokale übt a1.1-u09 LS1. (4) Grammatik: Die Grammatik-Spine setzt g.ja-nein-frage (mit doch) an a1.1-u02 statt an Plan-u03. Die Einheit trägt damit g.negation-nicht und g.ja-nein-frage neu, g.praesens (alle Personen, haben) als Wiederholung und -in als Chunk (GRM-01: höchstens 2 neu, 1 Chunk). (5) cd.a1.formular-person: Die eigenen Angaben (Familienname, Vorname, Wohnort, Telefonnummer, Beruf; erfundene Angaben erlaubt) schreibt der Lerner in der Mikroaufgabe von LS2. Der Nachweis in check.proofs bleibt die S1-Aufgabe (Formular für Emre), weil SCHEMA Check.proofs nur ein Item oder eine Aufgabe nennt und WritingTask keinen zweiten Teil hat. Ebenso cd.a1.nachfragen: Die Rubrik sd1-sp1 bewertet das Nachfragen nicht; der Nachweis bleibt q03 und die Sprechen-Aufgabe, bis SCHEMA und Rubrik einen Kurs-Zug oder einen Nachweis durch eine Mikroaufgabe erlauben."
+      "reason": "Abweichungen vom Stoffplan a1-1 u02 (Review a1.1-u02 r1 F03, F14; r2 F05; r3 F04, F05). (1) „das Alter“ (Plan-Schlüsselwort): Das Lexikon führt lx.alt erst in a1.1-u03 ein (dort „Alter: 28“ im Formular und „Ich bin … Jahre alt“). Darum steht „Alter?“ nicht auf dem Sp1-Stichwortblatt dieser Einheit; das Alter kommt in u03. (2) Landeskunde: Die Adressform (zuerst Straße und Hausnummer, dann Postleitzahl und Ort) steht im endLine von LS1 und ist mit dem Fact a1.1-u02-f01 belegt. Telefonnummern in Zweiergruppen hört der Lerner in allen Nummern-Texten (H1 Gespräch 1, Check-Zeile l02: „null drei vier eins, siebenundneunzig, dreiundsechzig, zwanzig“); die Einheit formuliert dazu keine Regel und hat dafür keinen Fact. (3) Aussprache: Statt „lange und kurze Vokale“ hört LS1 das Alphabet mit den Umlauten beim Buchstabieren (E–I, A–R, Ä–E, Ü–U; H1 Gespräch 2: „Schaefer“ mit A und E, nicht mit Ä), LS3 hört ü–u, und „zwo“ steht glossiert in LS2. Lange und kurze Vokale übt a1.1-u09 LS1. (4) Grammatik: Die Grammatik-Spine setzt g.ja-nein-frage (mit doch) an a1.1-u02 statt an Plan-u03. Die Einheit trägt damit g.negation-nicht und g.ja-nein-frage neu, g.praesens (alle Personen, haben) als Wiederholung und -in als Chunk (GRM-01: höchstens 2 neu, 1 Chunk). (5) cd.a1.formular-person: Die eigenen Angaben (Name, Wohnort, Beruf; Name und Wohnort dürfen erfunden sein, keine Telefonnummer) schreibt der Lerner in der Mikroaufgabe von LS2, im Rahmen des Niveauprofils (3–16 Wörter). Der Nachweis in check.proofs bleibt die S1-Aufgabe (Formular für Emre), weil SCHEMA Check.proofs nur ein Item oder eine Aufgabe nennt und WritingTask keinen zweiten Teil hat. Ebenso cd.a1.nachfragen: Die Rubrik sd1-sp1 bewertet das Nachfragen nicht; der Nachweis bleibt q03 und die Sprechen-Aufgabe, bis SCHEMA und Rubrik einen Kurs-Zug oder einen Nachweis durch eine Mikroaufgabe erlauben."
     },
     "cast": [
       "cast.priya",
@@ -1130,7 +1130,7 @@
           "promptDe": "Versteht Herr Richter die Nummer sofort?",
           "promptEn": "Does Mr Richter understand the number at once?",
           "options": [
-            "Ja, er versteht sie sofort.",
+            "Ja, er versteht die Nummer sofort.",
             "Nein, Emre schreibt eine E-Mail.",
             "Nein, Emre sagt die Nummer noch einmal."
           ],
@@ -1681,11 +1681,11 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "g.ja-nein-frage",
-          "promptDe": "Korrigieren Sie die Wortstellung in der Frage: „Verstehen mich Sie?“",
+          "promptDe": "Korrigieren Sie die Wortstellung in der Frage: „Sprechen Türkisch Sie?“",
           "promptEn": "Correct the word order in the question.",
-          "answer": "Verstehen Sie mich?",
+          "answer": "Sprechen Sie Türkisch?",
           "accepted": [
-            "Verstehen Sie mich?"
+            "Sprechen Sie Türkisch?"
           ],
           "intentionalError": true,
           "errorTag": "v2-inv",
@@ -1698,8 +1698,8 @@
           ],
           "difficulty": 2,
           "explanation": {
-            "de": "Ja/Nein-Frage: zuerst das Verb, dann das Subjekt „Sie“, dann „mich“.",
-            "en": "Verb first, then the subject “Sie”, then “mich”."
+            "de": "Ja/Nein-Frage: zuerst das Verb, dann das Subjekt „Sie“.",
+            "en": "Yes/no question: the verb first, then the subject “Sie”."
           },
           "origin": "agent"
         }
@@ -1709,13 +1709,13 @@
         "bankKey": "a11-u02-mo2",
         "mode": "written",
         "profile": "course-micro",
-        "situationDe": "Eine E-Mail von Herrn Richter: „Bitte schreiben Sie: Familienname, Vorname, Wohnort, Telefonnummer, Beruf.“ Sie können auch eine andere Nummer schreiben.",
-        "promptDe": "Schreiben Sie die fünf Angaben. Stellen Sie Herrn Richter auch eine Ja/Nein-Frage.",
-        "promptEn": "Write the five details (invented ones are fine). Ask Mr Richter one yes/no question, too.",
+        "situationDe": "Eine E-Mail von Herrn Richter: „Bitte schreiben Sie: Name, Wohnort, Beruf.“ Name und Wohnort: Sie können auch andere schreiben.",
+        "promptDe": "Schreiben Sie Name, Wohnort und Beruf. Stellen Sie auch eine Ja/Nein-Frage.",
+        "promptEn": "Write your name, where you live and your job (name and place may be invented). Ask one yes/no question, too.",
         "planSeconds": 30,
         "words": [
-          8,
-          25
+          3,
+          16
         ],
         "targets": [
           "g.ja-nein-frage"
@@ -2453,12 +2453,12 @@
           "type": "multiple_choice",
           "role": "practice",
           "topic": "g.praesens",
-          "promptDe": "Frau Schulz: „Emre? Arta? … Ja, sie lernt online.“ Wer ist „sie“?",
+          "promptDe": "Frau Schulz: „Bilal? Arta? … Ja, sie lernt online.“ Wer ist „sie“?",
           "promptEn": "“lernt” with -t: who is “sie”?",
           "options": [
             "nur Arta",
-            "Emre und Arta",
-            "nur Emre"
+            "Bilal und Arta",
+            "nur Bilal"
           ],
           "answer": "nur Arta",
           "accepted": [
@@ -2470,8 +2470,8 @@
           ],
           "difficulty": 2,
           "explanation": {
-            "de": "„sie lernt“ mit „-t“: nur eine Frau, also Arta. Emre ist „er“.",
-            "en": "“sie lernt” with -t is one woman only, so Arta – Emre would be “er”."
+            "de": "„sie lernt“ mit „-t“: nur eine Frau, also Arta. Bilal ist „er“.",
+            "en": "“sie lernt” with -t is one woman only, so Arta – Bilal would be “er”."
           },
           "origin": "agent"
         }
@@ -2481,7 +2481,7 @@
         "bankKey": "a11-u02-mo3",
         "mode": "spoken",
         "profile": "course-micro-sp",
-        "situationDe": "Frau Schulz fragt schnell: „Was sind Sie von Beruf? Und arbeiten Sie hier?“ Sie verstehen sie nicht.",
+        "situationDe": "Frau Schulz fragt schnell: „Was sind Sie von Beruf? Und arbeiten Sie hier?“ Sie verstehen Frau Schulz nicht.",
         "promptDe": "Fragen Sie nach. Dann sagen Sie Ihren Beruf. Arbeiten Sie? Wo?",
         "promptEn": "Ask her to repeat. Then say your job, whether you work and where.",
         "planSeconds": 30,
@@ -2998,7 +2998,7 @@
         "lane": "sd1",
         "aiRole": {
           "name": "Gesprächsleitung",
-          "personaDe": "Gesprächsleitung (KI) in der Prüfung, Sprechen Teil 1; spricht langsam und deutlich und zeigt Wörter aus der Wortliste. Nach der Vorstellung sagt sie: „Buchstabieren Sie bitte Ihren Familiennamen.“ Dann fragt sie kurz: „Und die Telefonnummer?“ Bei „Wie bitte?“ oder „Noch einmal, bitte“ wiederholt sie die Frage ganz: „Wie ist die Telefonnummer, bitte?“ Fragt der Lerner nicht nach, wiederholt sie die Frage nach einer Pause. Jede Nummer ist in Ordnung; die Nummer muss nicht die echte Nummer des Lerners sein.",
+          "personaDe": "Gesprächsleitung (KI) in der Prüfung, Sprechen Teil 1; spricht langsam und deutlich und zeigt Wörter aus der Wortliste. Nach der Vorstellung sagt sie: „Buchstabieren Sie bitte Ihren Familiennamen.“ Dann fragt sie kurz: „Und die Telefonnummer?“ Bei „Wie bitte?“ oder „Noch einmal, bitte“ wiederholt sie die Frage ganz: „Wie ist die Telefonnummer, bitte?“ Nennt der Lerner keine Nummer, fragt sie noch einmal: „Wie ist die Telefonnummer, bitte?“ Jede Nummer ist in Ordnung; die Nummer muss nicht die echte Nummer des Lerners sein.",
           "register": "Sie",
           "support": "slow-wordbank"
         },
@@ -3083,8 +3083,7 @@
                 "Izmir (Türkei)",
                 "in İzmir",
                 "in Izmir"
-              ],
-              "exact": "name"
+              ]
             },
             {
               "id": "f2",
@@ -3349,8 +3348,12 @@
         "audioLineRef": "a1.1-u02-ls7-l01",
         "answer": "Berisha",
         "accepted": [
-          "Berisha"
+          "Berisha",
+          "B E R I S H A"
         ],
+        "acceptedWhy": {
+          "B E R I S H A": "buchstabiert geschrieben: auch richtig"
+        },
         "exact": "name",
         "explanation": {
           "de": "Arta buchstabiert: B – E – R – I – S – H – A. Also: Berisha.",
@@ -3482,7 +3485,7 @@
     }
   ],
   "story": {
-    "beat": "Priya füllt am Empfang in der Sprachschule das Anmeldeformular aus. Herr Richter schreibt zuerst „Neir“ und „zwanzig“, aber Priya korrigiert ihn. Emre ruft aus İzmir noch einmal an und gibt seine Telefonnummer durch – mit „Wie bitte?“ und „Noch einmal, bitte!“. Priya ist Teilnehmerin Nummer hundert.",
+    "beat": "Priya füllt am Empfang in der Sprachschule das Anmeldeformular aus. Herr Richter schreibt zuerst „Neir“ und „zwanzig“, aber Priya korrigiert: „Nair“ und „einundzwanzig“. Emre ruft aus İzmir noch einmal an und gibt seine Telefonnummer durch – mit „Wie bitte?“ und „Noch einmal, bitte!“. Priya ist Teilnehmerin Nummer hundert.",
     "cliffhanger": "Dann kommt eine E-Mail: „Anmeldung: Arjun Nair“. Herr Richter fragt: „Auch Nair? Wer ist das, Frau Nair?“",
     "castIn": [
       "cast.ensemble-a1-2",

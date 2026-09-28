@@ -138,7 +138,7 @@
     "fokusPlan": [
       {
         "kind": "daz",
-        "title": "Kita und Schule: einen Elternbrief beantworten",
+        "title": "Kita und Schule: auf einen Elternbrief antworten",
         "hf": "6"
       }
     ],
@@ -353,15 +353,15 @@
           "options": [
             "Wie sind Sie nach Leipzig gekommen?",
             "Was kostet der Kurs A1.2?",
-            "Wann ist die Prüfung?"
+            "Wann sind Sie nach Wien gefahren?"
           ],
           "answer": "Wie sind Sie nach Leipzig gekommen?",
           "accepted": [
             "Wie sind Sie nach Leipzig gekommen?"
           ],
           "explanation": {
-            "de": "Frau Schulz fragt: „Woher kommen Sie? Und wie sind Sie nach Leipzig gekommen?“",
-            "en": "She asks where people come from and how they came to Leipzig."
+            "de": "Frau Schulz fragt: „Woher kommen Sie? Und wie sind Sie nach Leipzig gekommen?“ Nach Wien ist sie einmal gefahren.",
+            "en": "She asks where people come from and how they came to Leipzig. She herself once went to Vienna."
           },
           "origin": "agent"
         },
@@ -412,17 +412,17 @@
           "promptDe": "Wie ist Bilal von Berlin nach Leipzig gekommen?",
           "promptEn": "How did Bilal get from Berlin to Leipzig?",
           "options": [
-            "mit dem Bus",
-            "mit dem Zug",
-            "mit dem Auto"
+            "Er ist geflogen.",
+            "Er ist mit dem Zug gefahren.",
+            "Er ist in Berlin geblieben."
           ],
-          "answer": "mit dem Zug",
+          "answer": "Er ist mit dem Zug gefahren.",
           "accepted": [
-            "mit dem Zug"
+            "Er ist mit dem Zug gefahren."
           ],
           "explanation": {
-            "de": "Bilal sagt: „Dann bin ich mit dem Zug nach Leipzig gefahren.“",
-            "en": "He went to Leipzig by train."
+            "de": "Von Lahore nach Berlin ist Bilal geflogen. Von Berlin nach Leipzig ist er mit dem Zug gefahren.",
+            "en": "Bilal flew from Lahore to Berlin. From Berlin to Leipzig he went by train."
           },
           "origin": "agent"
         },
@@ -1149,8 +1149,8 @@
           {
             "id": "a1.1-u12-ls2-l05",
             "speaker": "cast.arta",
-            "de": "Mein Mann lebt in Leipzig. Ich will auch hier leben. Und ich will die Prüfung machen.",
-            "en": "My husband lives in Leipzig. I want to live here too. And I want to take the exam."
+            "de": "Mein Mann lebt in Leipzig. Ich will auch dort leben. Und ich will die Prüfung machen.",
+            "en": "My husband lives in Leipzig. I want to live there too. And I want to take the exam."
           },
           {
             "id": "a1.1-u12-ls2-l06",
@@ -1179,15 +1179,22 @@
           {
             "id": "a1.1-u12-ls2-l10",
             "speaker": "cast.priya",
-            "de": "Mein Plan? Ich lerne seit drei Monaten Deutsch. Jetzt will ich die Prüfung machen. Dann will ich wieder am Empfang arbeiten.",
-            "en": "My plan? I’ve been learning German for three months. Now I want to take the exam. Then I want to work at a reception desk again."
+            "de": "Mein Plan? Ich lerne seit drei Monaten Deutsch. Jetzt will ich die Prüfung machen. Dann will ich wieder am Empfang arbeiten. Aber zuerst will ich ein Praktikum in einem Hotel machen.",
+            "en": "My plan? I’ve been learning German for three months. Now I want to take the exam. Then I want to work at a reception desk again. But first I want to do an internship in a hotel."
           }
         ],
         "text": {
           "de": "Sprachschule Leipzig: Deutsch lernen mit Plan\nDeutsch in der Welt: in Deutschland, in Österreich, in der Schweiz\nSie kommen aus dem Ausland? Sie wollen hier leben und arbeiten? Sie wollen die Prüfung Start Deutsch 1 machen? Dann ist der Kurs A1.2 richtig für Sie!\nAm Morgen: Montag bis Donnerstag, 9 bis 12 Uhr, hier in der Sprachschule\nAm Abend: Dienstag und Donnerstag, 18 bis 21 Uhr, online\nIm Kurs üben Sie viel. Und Sie lernen viele Leute kennen.\nDer Preis? Fragen Sie im Büro. Dort melden wir Sie gern an.",
           "en": "Sprachschule Leipzig: learning German with a plan · German in the world: in Germany, in Austria, in Switzerland · You come from abroad? You want to live and work here? You want to take the Start Deutsch 1 exam? Then the A1.2 course is right for you! · Mornings: Monday to Thursday, 9 to 12, here at the school · Evenings: Tuesday and Thursday, 18 to 21, online · In the course you practise a lot, and you get to know lots of people. · The price? Ask at the office. We will be happy to register you there."
         },
-        "glosses": [],
+        "glosses": [
+          {
+            "token": "Hotel",
+            "gloss": {
+              "en": "hotel"
+            }
+          }
+        ],
         "transcriptAfterUnaidedListen": true
       },
       "inputItems": [
@@ -1200,16 +1207,16 @@
           "promptEn": "What is true about all four?",
           "options": [
             "… wollen noch mehr Deutsch lernen.",
-            "… wollen in Wien leben.",
-            "… wollen nach İzmir fliegen."
+            "… wollen in Österreich arbeiten.",
+            "… wollen am Empfang arbeiten."
           ],
           "answer": "… wollen noch mehr Deutsch lernen.",
           "accepted": [
             "… wollen noch mehr Deutsch lernen."
           ],
           "explanation": {
-            "de": "Die vier wollen den Kurs A1.2 machen. Arta und Emre machen den Kurs am Abend, online.",
-            "en": "All four want to do the A1.2 course; Arta and Emre do it online in the evening."
+            "de": "Die vier wollen den Kurs A1.2 machen. Nur Bilal will vielleicht in Österreich arbeiten. Nur Priya will am Empfang arbeiten.",
+            "en": "The four want to do the A1.2 course. Only Bilal may want to work in Austria; only Priya wants to work at a reception desk."
           },
           "origin": "agent"
         },
@@ -1221,9 +1228,9 @@
           "promptDe": "Lesen Sie die Webseite. Was steht dort?",
           "promptEn": "Read the web page: what is on it?",
           "options": [
-            "Essen und Getränke",
+            "Arbeit im Ausland",
             "Kurse und Uhrzeiten",
-            "Züge und Gleise"
+            "Wörterbücher und Preise"
           ],
           "answer": "Kurse und Uhrzeiten",
           "accepted": [
@@ -1244,7 +1251,7 @@
           "promptEn": "When is the course online?",
           "options": [
             "am Morgen",
-            "am Wochenende",
+            "am Montag",
             "am Abend"
           ],
           "answer": "am Abend",
@@ -1252,8 +1259,8 @@
             "am Abend"
           ],
           "explanation": {
-            "de": "Auf der Webseite steht: „Am Abend: Dienstag und Donnerstag, 18 bis 21 Uhr, online“.",
-            "en": "The evening course on Tuesday and Thursday is online."
+            "de": "Auf der Webseite steht: „Am Abend: Dienstag und Donnerstag, 18 bis 21 Uhr, online“. Am Montag ist der Kurs am Morgen, in der Sprachschule.",
+            "en": "The evening course on Tuesday and Thursday is online; on Monday the course is in the morning, at the school."
           },
           "origin": "agent"
         },
@@ -1266,7 +1273,7 @@
           "promptEn": "What does Bilal want to find here?",
           "options": [
             "Arbeit",
-            "eine Wohnung",
+            "ein Wörterbuch",
             "einen Kurs"
           ],
           "answer": "Arbeit",
@@ -1308,8 +1315,8 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.wollen",
-          "promptDe": "Priya sagt: „Bilal will hier Arbeit finden.“ Wer will Arbeit finden?",
-          "promptEn": "“will” = wants. Who wants to find work?",
+          "promptDe": "Priya sagt zu Bilal: „Du willst hier Arbeit finden, oder?“ Wer will Arbeit finden?",
+          "promptEn": "“du willst” = you want. Who wants to find work?",
           "options": [
             "Bilal",
             "Priya",
@@ -1320,8 +1327,8 @@
             "Bilal"
           ],
           "explanation": {
-            "de": "„Bilal will …“: Bilal will Arbeit finden. Priya erzählt nur.",
-            "en": "Bilal is the one who wants to find work; Priya is only reporting it."
+            "de": "„du willst“: Priya spricht mit Bilal. Bilal will Arbeit finden, nicht Priya.",
+            "en": "“du willst”: Priya is talking to Bilal. Bilal wants to find work, not Priya."
           },
           "origin": "agent"
         },
@@ -1964,7 +1971,7 @@
           "promptEn": "Read the e-mail: why does Priya write?",
           "options": [
             "Sie hat Fragen zum Kurs.",
-            "Sie sucht eine Wohnung.",
+            "Sie hat Fragen zur Prüfung.",
             "Sie ist heute nicht im Kurs."
           ],
           "answer": "Sie hat Fragen zum Kurs.",
@@ -1972,8 +1979,8 @@
             "Sie hat Fragen zum Kurs."
           ],
           "explanation": {
-            "de": "Priya schreibt: „Ich habe zwei Fragen: Wann fängt der Kurs an? Und was kostet er?“",
-            "en": "Priya has two questions about the A1.2 course."
+            "de": "Priya schreibt: „Ich habe zwei Fragen: Wann fängt der Kurs an? Und was kostet er?“ Nach der Prüfung fragt sie erst im Büro.",
+            "en": "Priya has two questions about the A1.2 course; she only asks about the exam later, at the office."
           },
           "origin": "agent"
         },
@@ -2960,7 +2967,7 @@
               "role": "exam",
               "topic": "lesen",
               "textRef": "a1.1-u12-ls4-t6",
-              "promptDe": "An Kursraum 5: „Die Wörterbücher sind heute nicht hier.“",
+              "promptDe": "An Kursraum 5: „Heute ist der Kurs von Frau Schulz nicht in Kursraum 5.“",
               "options": [
                 "richtig",
                 "falsch"
@@ -2970,8 +2977,8 @@
                 "richtig"
               ],
               "explanation": {
-                "de": "Auf dem Schild steht: „Die Wörterbücher sind auch dort.“ „dort“ ist Kursraum 2, nicht hier in Kursraum 5.",
-                "en": "The dictionaries are “also there” – in room 2 with the course, not here in room 5."
+                "de": "An Kursraum 5 steht: „Heute nicht hier!“ Der Kurs ist heute in Kursraum 2.",
+                "en": "The sign on room 5 says “Not here today!” – today the course is in room 2."
               },
               "origin": "agent"
             },
@@ -3599,10 +3606,10 @@
     {
       "id": "a1.1-u12-fk1",
       "kind": "daz",
-      "title": "Kita und Schule: einen Elternbrief beantworten",
+      "title": "Kita und Schule: auf einen Elternbrief antworten",
       "hf": "6",
-      "bodyDe": "Haben Sie ein Kind in der Kita oder in der Schule? Dann bekommen Sie manchmal einen Elternbrief, zum Beispiel für einen Ausflug. Unten auf dem Brief ist oft ein Abschnitt für Ihre Antwort. Dort kreuzen Sie an: Ja oder Nein. Dann schreiben Sie den Namen von Ihrem Kind, das Datum und Ihre Unterschrift. Geben Sie den Abschnitt pünktlich in der Kita oder in der Schule ab. Sie verstehen etwas nicht? Fragen Sie die Erzieherin oder die Lehrerin.",
-      "bodyEn": "Do you have a child at nursery or at school? Then you will sometimes get a letter to parents, for example about a trip. At the bottom there is often a slip for your reply. Tick yes or no there. Then write your child’s name, the date and your signature. Hand the slip back to the nursery or school on time. Don’t understand something? Ask the childcare worker or the teacher.",
+      "bodyDe": "Haben Sie ein Kind in der Kita oder in der Schule? Dann bekommen Sie manchmal einen Elternbrief, zum Beispiel für einen Ausflug. Unten ist oft ein Teil für Ihre Antwort. Dort kreuzen Sie an: Ja oder Nein. Dann schreiben Sie den Namen von Ihrem Kind, das Datum und Ihre Unterschrift. Bringen Sie den Teil pünktlich zurück. Sie verstehen etwas nicht? Fragen Sie die Erzieherin oder die Lehrerin.",
+      "bodyEn": "Do you have a child at nursery or at school? Then you will sometimes get a letter to parents, for example about a trip. At the bottom there is often a part for your reply. Tick yes or no there. Then write your child’s name, the date and your signature. Bring that part back on time. Don’t understand something? Ask the childcare worker or the teacher.",
       "factRefs": [],
       "minutes": 10,
       "optional": true

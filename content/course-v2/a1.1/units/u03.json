@@ -178,8 +178,8 @@
         {
           "id": "a1.1-u03-start-l04",
           "speaker": "cast.priya",
-          "de": "Nein, er arbeitet. Er ist Informatiker und wohnt schon ein Jahr hier.",
-          "en": "No, he works. He’s an IT specialist and has already lived here for a year."
+          "de": "Noch nicht. Er arbeitet. Er ist Informatiker und wohnt schon ein Jahr hier.",
+          "en": "Not yet – he’s working. He’s an IT specialist and has already lived here for a year."
         },
         {
           "id": "a1.1-u03-start-l05",
@@ -1280,6 +1280,9 @@
             "accepted": [
               "sprichst"
             ],
+            "errorTags": [
+              "spelling-meaning"
+            ],
             "explanation": {
               "de": "„sprechen“: „du sprichst“ – mit „i“.",
               "en": "sprechen: du sprichst – with i."
@@ -1296,6 +1299,9 @@
             "answer": "liest",
             "accepted": [
               "liest"
+            ],
+            "errorTags": [
+              "spelling-meaning"
             ],
             "explanation": {
               "de": "„lesen“: „sie liest“ – mit „ie“.",
@@ -1314,6 +1320,9 @@
             "accepted": [
               "schläft"
             ],
+            "errorTags": [
+              "spelling-meaning"
+            ],
             "explanation": {
               "de": "„schlafen“: „er schläft“ – mit „ä“.",
               "en": "schlafen: er schläft – with ä."
@@ -1330,6 +1339,9 @@
             "answer": "liest",
             "accepted": [
               "liest"
+            ],
+            "errorTags": [
+              "spelling-meaning"
             ],
             "explanation": {
               "de": "„lesen“: „du liest“ – wie „er liest“, mit „ie“.",
@@ -1471,6 +1483,10 @@
               "Er spricht gut Deutsch."
             ],
             "intentionalError": true,
+            "errorTag": "spelling-meaning",
+            "errorTags": [
+              "spelling-meaning"
+            ],
             "explanation": {
               "de": "„sprechen“: „er spricht“ – mit „i“, nicht „sprecht“.",
               "en": "sprechen: er spricht – with i."
@@ -1492,6 +1508,9 @@
             "answer": "sprichst",
             "accepted": [
               "sprichst"
+            ],
+            "errorTags": [
+              "spelling-meaning"
             ],
             "explanation": {
               "de": "„du sprichst“: mit „i“ und mit „-st“.",
@@ -1553,6 +1572,9 @@
           "answer": "schläfst",
           "accepted": [
             "schläfst"
+          ],
+          "errorTags": [
+            "spelling-meaning"
           ],
           "difficulty": 2,
           "banks": [
@@ -1618,6 +1640,9 @@
           "accepted": [
             "Sprichst"
           ],
+          "errorTags": [
+            "spelling-meaning"
+          ],
           "difficulty": 1,
           "banks": [
             "plateau",
@@ -1641,10 +1666,14 @@
           "accepted": [
             "schläft"
           ],
+          "errorTags": [
+            "spelling-meaning"
+          ],
           "difficulty": 1,
           "banks": [
             "plateau",
-            "mehr-ueben"
+            "mehr-ueben",
+            "repair"
           ],
           "explanation": {
             "de": "„schlafen“: „er schläft“ – mit „ä“.",
@@ -2807,6 +2836,9 @@
         "accepted": [
           "schläft"
         ],
+        "errorTags": [
+          "spelling-meaning"
+        ],
         "explanation": {
           "de": "„schlafen“: „es schläft“ – mit „ä“.",
           "en": "schlafen: es schläft – with ä."
@@ -2823,15 +2855,15 @@
         "tiles": [
           "liest",
           "meine Mutter",
-          "abends"
+          "jetzt"
         ],
-        "answer": "Meine Mutter liest abends.",
+        "answer": "Meine Mutter liest jetzt.",
         "accepted": [
-          "Meine Mutter liest abends.",
-          "Abends liest meine Mutter."
+          "Meine Mutter liest jetzt.",
+          "Jetzt liest meine Mutter."
         ],
         "acceptedWhy": {
-          "Abends liest meine Mutter.": "grammatisch: abends auf Position 1, das Verb bleibt auf Position 2"
+          "Jetzt liest meine Mutter.": "grammatisch: jetzt auf Position 1, das Verb bleibt auf Position 2"
         },
         "explanation": {
           "de": "Das Verb „liest“ steht auf Position 2.",

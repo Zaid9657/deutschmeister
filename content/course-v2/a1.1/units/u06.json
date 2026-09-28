@@ -132,7 +132,7 @@
       "Linie 1 A1 K4/K6 (Grammatik: Akkusativ; nach memo 06)"
     ],
     "deviation": {
-      "reason": "Position 6 statt 5 (Tausch mit „Hier wohne ich“, BLUEPRINT §2.8 Zeile 5): die Grammatik-Spine führt g.akkusativ und g.kein an a1.1-u06 ein, und die Registries gewinnen (spine.md §6). Das Thema Büro und Technik steht nur in Menschen (L5–6); Schritte plus Neu 1 und Netzwerk neu platzieren hier nur den Akkusativ. Siehe docs/course-v2/curriculum/a1-1.specs-notes.md. Weitere Abweichungen vom Stoffplan (Review r1-F14): Situation Sprachschule statt „Erster Tag im Praktikum“; das Praktikum steht nur in Lesen Teil 2 (t5), HF 2 tragen das Büro von Herrn Richter und t5. Hören Teil 1 entfällt hier; sd1.h1 ist Prüfungsfokus in u01, u02, u04 und u09. Die sd1.sp2-Runde trägt cd.a1.besitz-fragen und steht als Chip, nicht im Prüfungsfokus (der Slot „sprechen“ trägt sd1.sp3). Landeskunde „duzen oder siezen?“ nur als Szene (im Kurs du, Frau Schulz und Herr Richter Sie, Nora nennt die Regel in ihrer Eröffnung), keine Tatsachenbehauptung und darum kein facts[]-Eintrag; englische Wörter im Arbeitsalltag nur als Wortakzent (LS3: Laptop, Handy, Büro, Papier)."
+      "reason": "Position 6 statt 5 (Tausch mit „Hier wohne ich“, BLUEPRINT §2.8 Zeile 5): die Grammatik-Spine führt g.akkusativ und g.kein an a1.1-u06 ein, und die Registries gewinnen (spine.md §6). Das Thema Büro und Technik steht nur in Menschen (L5–6); Schritte plus Neu 1 und Netzwerk neu platzieren hier nur den Akkusativ. Siehe docs/course-v2/curriculum/a1-1.specs-notes.md. Weitere Abweichungen vom Stoffplan (Review r1-F14): Situation Sprachschule statt „Erster Tag im Praktikum“; das Praktikum steht nur in Lesen Teil 2 (t5), HF 2 tragen das Büro von Herrn Richter und t5. Hören Teil 1 entfällt hier; sd1.h1 ist Prüfungsfokus in u01, u02, u04 und u09. Die sd1.sp2-Runde trägt cd.a1.besitz-fragen und steht als Chip, nicht im Prüfungsfokus (der Slot „sprechen“ trägt sd1.sp3). Landeskunde „duzen oder siezen?“ nur als Szene (im Kurs du, Frau Schulz und Herr Richter Sie, Nora nennt die Regel in ihrer Eröffnung), keine Tatsachenbehauptung und darum kein facts[]-Eintrag; Wortakzent nur in LS3: Laptop und Handy (vorne), Büro und Papier (hinten)."
     },
     "cast": [
       "cast.priya",
@@ -203,8 +203,8 @@
         {
           "id": "a1.1-u06-start-l07",
           "speaker": "cast.priya",
-          "de": "Einen Laptop? Oh nein! Ich habe nur ein Handy, und der Laptop von Arjun ist für die Arbeit.",
-          "en": "A laptop? Oh no! I’ve only got a mobile phone, and Arjun’s laptop is for work."
+          "de": "Einen Laptop? Oh nein! Ich habe nur ein Handy. Und der Laptop von Arjun ist für die Arbeit.",
+          "en": "A laptop? Oh no! I’ve only got a mobile phone. And Arjun’s laptop is for work."
         },
         {
           "id": "a1.1-u06-start-l08",
@@ -279,8 +279,8 @@
           {
             "id": "a1.1-u06-ls1-l04",
             "speaker": "cast.olena",
-            "de": "Ich habe eine Tasche. In der Tasche habe ich ein Buch, einen Kuli, zwei Stifte und mein Handy.",
-            "en": "I’ve got a bag. In the bag I’ve got a book, a ballpoint pen, two pens and my phone."
+            "de": "Ich habe eine Tasche. In der Tasche habe ich ein Buch, einen Kuli und zwei Stifte. Mein Handy ist auch da.",
+            "en": "I’ve got a bag. In the bag I’ve got a book, a ballpoint pen and two pens. My phone is in there too."
           },
           {
             "id": "a1.1-u06-ls1-l05",
@@ -586,7 +586,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.akkusativ",
-            "promptDe": "Olena sucht ___ Schlüssel. (der)",
+            "promptDe": "Olena sucht ___ Bleistift. (der)",
             "promptEn": "der → accusative form.",
             "answer": "den",
             "accepted": [
@@ -596,8 +596,8 @@
               "case-np"
             ],
             "explanation": {
-              "de": "der Schlüssel → den Schlüssel. Nach „suchen“ steht der Akkusativ.",
-              "en": "der Schlüssel → den Schlüssel: accusative after suchen."
+              "de": "der Bleistift → den Bleistift. Nach „suchen“ steht der Akkusativ.",
+              "en": "der Bleistift → den Bleistift: accusative after suchen."
             },
             "origin": "agent"
           },
@@ -960,7 +960,7 @@
         "bankKey": "a11-u06-mo1",
         "mode": "spoken",
         "profile": "course-micro-sp",
-        "situationDe": "Sie sind im Kurs. Sie haben ein Ladekabel in der Tasche, aber Sie kennen das Wort nicht.",
+        "situationDe": "Sie sind im Kurs. Sie haben ein Ding für Ihr Handy dabei. Aber Sie kennen das Wort nicht.",
         "promptDe": "Zeigen Sie es: „Das ist für …“ Fragen Sie: „Wie heißt das?“ Dann: „Ich habe noch … dabei.“",
         "promptEn": "You have a charging cable for your phone in your bag, but you don’t know the German word. Point at it, say what it is for (Das ist für …), ask what it is called, then say what else you have with you (Ich habe noch … dabei).",
         "planSeconds": 30,
@@ -1088,8 +1088,8 @@
           "promptDe": "Was möchte Priya von Herrn Richter?",
           "promptEn": "What does Priya want from Mr Richter?",
           "options": [
-            "einen Laptop",
-            "einen Drucker",
+            "ein Handy und einen Laptop",
+            "einen Drucker und Papier",
             "ein Ladekabel und das Heft"
           ],
           "answer": "ein Ladekabel und das Heft",
@@ -1151,20 +1151,20 @@
           "type": "multiple_choice",
           "role": "detail",
           "topic": "hoeren",
-          "promptDe": "Ist das Heft von Priya im Büro?",
-          "promptEn": "Is Priya’s exercise book in the office?",
+          "promptDe": "Wer hat das Heft von Priya?",
+          "promptEn": "Who has Priya’s exercise book?",
           "options": [
-            "Nein, das Heft ist zu Hause.",
-            "Nein, im Büro ist nur ein Kalender.",
-            "Ja, das Heft ist im Büro."
+            "Bilal",
+            "Olena",
+            "Herr Richter"
           ],
-          "answer": "Ja, das Heft ist im Büro.",
+          "answer": "Herr Richter",
           "accepted": [
-            "Ja, das Heft ist im Büro."
+            "Herr Richter"
           ],
           "explanation": {
-            "de": "Herr Richter hat ein Heft im Büro. Priya sagt: „Ja! Da steht mein Name.“",
-            "en": "Mr Richter has an exercise book in the office, and Priya’s name is on it."
+            "de": "Das Heft ist im Büro. Herr Richter fragt: „Ist das Ihr Heft?“ Priya sagt: „Ja! Da steht mein Name.“",
+            "en": "The exercise book is in Mr Richter’s office; he asks whether it is hers, and it is."
           },
           "origin": "agent"
         },
@@ -1226,8 +1226,8 @@
             "Tasche"
           ],
           "explanation": {
-            "de": "„keine“ steht bei feminin: die Tasche → keine Tasche. Aber: keinen Laptop, kein Heft.",
-            "en": "“keine” goes with feminine nouns: keine Tasche. But: keinen Laptop, kein Heft."
+            "de": "„keine“ steht bei feminin und im Plural: keine Tasche, keine Laptops. Aber: keinen Laptop, kein Heft.",
+            "en": "“keine” goes with feminine nouns and with the plural: keine Tasche, keine Laptops. But: keinen Laptop, kein Heft."
           },
           "origin": "agent"
         },
@@ -1533,8 +1533,8 @@
               "gender-article"
             ],
             "explanation": {
-              "de": "die Zeit → keine Zeit. Vor einem Nomen ohne Artikel steht „kein“, nicht „nicht“.",
-              "en": "die Zeit → keine Zeit: a noun without an article is negated with kein."
+              "de": "die Zeit → keine Zeit. „kein“ steht auch bei Nomen ohne Artikel: Ich habe Zeit. → Ich habe keine Zeit.",
+              "en": "die Zeit → keine Zeit: kein is also used with nouns that have no article: Ich habe Zeit → Ich habe keine Zeit."
             },
             "origin": "agent"
           }
@@ -1670,8 +1670,8 @@
           ],
           "difficulty": 1,
           "explanation": {
-            "de": "Vor einem Nomen steht „kein“, nicht „nicht“: das Problem → kein Problem.",
-            "en": "A noun is negated with kein, not nicht: das Problem → kein Problem."
+            "de": "ein Problem → kein Problem: „kein“ ist die Verneinung von „ein“.",
+            "en": "ein Problem → kein Problem: kein is the negative of ein."
           },
           "origin": "agent"
         },
@@ -1761,8 +1761,8 @@
         "title": "Chat mit Bilal",
         "textType": "tt.sms",
         "text": {
-          "de": "Bilal: Hallo Priya! Ich suche im Internet. Auf einer Webseite gibt es zwei Angebote:\na) Laptop, gebraucht, 3 Jahre alt, funktioniert sehr gut, mit Ladekabel. 180 Euro.\nb) Laptop, neu, mit Tasche. 390 Euro.\nPriya: Danke, Bilal! Laptop b ist zu teuer. Ich möchte den Laptop für 180 Euro.\nBilal: Gut! Aber er hat keine Tasche. Brauchst du eine Tasche?\nPriya: Ja, ich brauche eine Tasche.\nBilal: Ich habe noch eine Tasche. Die gebe ich dir. Und heute Abend kaufen wir zusammen den Laptop!\nPriya: Das ist sehr lieb, danke!",
-          "en": "Bilal: Hi Priya! I’m searching online. On one website there are two offers: a) laptop, used, 3 years old, works very well, with charging cable, 180 euros. b) laptop, new, with bag, 390 euros. Priya: Thanks, Bilal! Laptop b is too expensive. I’d like the laptop for 180 euros. Bilal: Good! But it has no bag. Do you need a bag? Priya: Yes, I need a bag. Bilal: I still have a bag – I’ll give it to you. And this evening we’ll buy the laptop together! Priya: That’s really kind, thanks!"
+          "de": "Bilal: Hallo Priya! Ich suche im Internet. Auf einer Webseite gibt es zwei Angebote:\na) Laptop, gebraucht, 3 Jahre alt, funktioniert sehr gut, mit Ladekabel. 180 Euro.\nb) Laptop, neu, mit Tasche. 390 Euro.\nPriya: Danke, Bilal! Laptop b ist zu teuer. Ich möchte den Laptop für 180 Euro.\nBilal: Gut! Aber da ist keine Tasche dabei. Brauchst du eine Tasche?\nPriya: Ja, ich brauche eine Tasche.\nBilal: Ich habe noch eine Tasche. Die gebe ich dir. Und heute Abend kaufen wir zusammen den Laptop!\nPriya: Das ist sehr lieb, danke!",
+          "en": "Bilal: Hi Priya! I’m searching online. On one website there are two offers: a) laptop, used, 3 years old, works very well, with charging cable, 180 euros. b) laptop, new, with bag, 390 euros. Priya: Thanks, Bilal! Laptop b is too expensive. I’d like the laptop for 180 euros. Bilal: Good! But there’s no bag with it. Do you need a bag? Priya: Yes, I need a bag. Bilal: I still have a bag – I’ll give it to you. And this evening we’ll buy the laptop together! Priya: That’s really kind, thanks!"
         },
         "glosses": [],
         "transcriptAfterUnaidedListen": false
@@ -2452,7 +2452,7 @@
         "bankKey": "a11-u06-mo3",
         "mode": "spoken",
         "profile": "course-micro-sp",
-        "situationDe": "Sie sprechen mit Bilal. Laptop a kostet 180 Euro, Laptop b kostet 390 Euro.",
+        "situationDe": "Sie sprechen mit Bilal. Er fragt: „Was möchtest du?“ Laptop a kostet 180 Euro, Laptop b kostet 390 Euro.",
         "promptDe": "Antworten Sie Bilal: „Ich möchte …“ und „Ich brauche noch …“. Sagen Sie auch danke.",
         "promptEn": "Answer Bilal: say which laptop you would like (Ich möchte …) and what else you need (Ich brauche noch …), and say thank you.",
         "planSeconds": 30,
@@ -2866,7 +2866,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Nein, ich habe keinen Bleistift. Aber hier ist ein Kuli."
+            "de": "Nein, aber ich habe einen Kuli für dich. Hier, bitte."
           }
         ]
       }
@@ -2911,10 +2911,9 @@
             "id": "lp3",
             "de": "Fragen Sie zu Seite 24: Ist ein Wort richtig?",
             "cues": [
-              "richtig",
               "Heißt es",
               "heißt das",
-              "Wort",
+              "der, die oder das",
               "Seite 24"
             ]
           }
@@ -2933,7 +2932,7 @@
           "Gruß und Ihr Name",
           "20 bis 30 Wörter"
         ],
-        "modelText": "Liebe Frau Schulz,\nich habe nur ein Handy, keinen Laptop. Haben Sie vielleicht einen Laptop für mich? Eine Frage zu Seite 24: Heißt es „die Schlüssel“?\nViele Grüße\n(Ihr Name)"
+        "modelText": "Liebe Frau Schulz,\nich habe nur ein Handy, keinen Laptop. Haben Sie vielleicht einen Laptop für mich? Zu Seite 24: Heißt es „die Schlüssel“?\nViele Grüße\n(Ihr Name)"
       }
     },
     {
@@ -3118,8 +3117,8 @@
           "gender-article"
         ],
         "explanation": {
-          "de": "das Heft → kein Heft. „keinen“ steht nur bei maskulin, und vor „Heft“ steht „kein“, nicht „nicht“.",
-          "en": "das Heft → kein Heft: “keinen” is only masculine, and a noun takes kein, not nicht."
+          "de": "das Heft → kein Heft: „kein“ ist die Verneinung von „ein“. „keinen“ steht nur bei maskulin.",
+          "en": "das Heft → kein Heft: kein is the negative of ein. “keinen” goes only with masculine nouns."
         },
         "origin": "agent"
       }
@@ -3147,8 +3146,8 @@
           "Ich brauche das für mein Handy. Wie heißt das?"
         ],
         "explanation": {
-          "de": "Sie kennen das Wort nicht? Zeigen Sie und sagen Sie: „Das ist für mein Handy.“ Dann fragen Sie: „Wie heißt das?“",
-          "en": "If you don’t know the word, point, say what it is for and ask what it is called."
+          "de": "Sie kennen das Wort nicht? Zeigen Sie und sagen Sie: „Ich brauche das für mein Handy.“ Dann fragen Sie: „Wie heißt das?“",
+          "en": "If you don’t know the word, point, say what you need it for and ask what it is called."
         },
         "origin": "agent"
       }
@@ -3203,8 +3202,8 @@
     },
     {
       "id": "a1.1-u06-rm04",
-      "de": "Nein, ich habe keinen Kuli. Aber hier ist ein Bleistift.",
-      "en": "No, I haven’t got a pen. But here’s a pencil.",
+      "de": "Nein, ich habe keinen Laptop. Aber da ist ein Computer.",
+      "en": "No, I haven’t got a laptop. But there’s a computer over there.",
       "function": "auf eine Bitte reagieren: nein sagen und helfen",
       "forTemplate": "sd1.sp3"
     },

@@ -1748,8 +1748,8 @@
           {
             "id": "a1.1-u05-ls3-l02",
             "speaker": "cast.priya",
-            "de": "Ja, guten Tag! Ich bin Priya Nair, und das ist mein Mann, Arjun. Wir wohnen jetzt ganz oben.",
-            "en": "Yes, hello! I’m Priya Nair, and this is my husband, Arjun. We live right at the top now."
+            "de": "Ja, guten Tag! Wir sind neu hier. Ich bin Priya Nair, und das ist mein Mann, Arjun. Wir wohnen jetzt ganz oben.",
+            "en": "Yes, hello! We’re new here. I’m Priya Nair, and this is my husband, Arjun. We live right at the top now."
           },
           {
             "id": "a1.1-u05-ls3-l03",
@@ -2478,9 +2478,9 @@
         "bankKey": "a11-u05-mo3",
         "mode": "spoken",
         "profile": "course-micro-sp",
-        "situationDe": "Sie sind neu in einem Haus in Leipzig. An der Tür steht Frau Lehmann und fragt: „Wohnen Sie jetzt hier im Haus? Und wie ist die Wohnung?“",
-        "promptDe": "Antworten Sie Frau Lehmann: Wer sind Sie? Wo wohnen Sie? Wie ist die Wohnung?",
-        "promptEn": "Answer Mrs Lehmann: who you are, where you live in the building and what the flat is like.",
+        "situationDe": "Sie sind neu in einem Haus in Leipzig. An der Tür steht Frau Lehmann und fragt: „Guten Tag! Sind Sie neu hier? Und wie ist die Wohnung?“",
+        "promptDe": "Antworten Sie Frau Lehmann: Sind Sie neu hier? Wo wohnen Sie? Wie ist die Wohnung?",
+        "promptEn": "Answer Mrs Lehmann: are you new here, where do you live in the building, and what is the flat like?",
         "planSeconds": 30,
         "seconds": [
           20,
@@ -3043,7 +3043,7 @@
                 "Berliner Strasse 21",
                 "Berliner Straße 21, Leipzig"
               ],
-              "exact": "name"
+              "exact": "number"
             },
             {
               "id": "f5",
@@ -3263,20 +3263,20 @@
         "type": "multiple_choice",
         "role": "proof",
         "topic": "lesen",
-        "promptDe": "Anzeige: Wohnzimmer, Schlafzimmer, Kinderzimmer, Küche, Bad, Balkon. Wie viele Zimmer?",
+        "promptDe": "Anzeige: Wohnzimmer, zwei Schlafzimmer, Küche, Bad, Balkon. Wie viele Zimmer?",
         "promptEn": "Read the ad: how many rooms does the flat have?",
         "options": [
+          "zwei",
           "drei",
-          "fünf",
-          "sechs"
+          "fünf"
         ],
         "answer": "drei",
         "accepted": [
           "drei"
         ],
         "explanation": {
-          "de": "In der Anzeige sind 3 Zimmer: Wohnzimmer, Schlafzimmer, Kinderzimmer. Dazu kommen Küche, Bad und Balkon.",
-          "en": "The ad has 3 rooms: living room, bedroom and child’s room. Kitchen, bathroom and balcony come on top."
+          "de": "In der Anzeige sind 3 Zimmer: ein Wohnzimmer und zwei Schlafzimmer. Dazu kommen Küche, Bad und Balkon.",
+          "en": "The ad has 3 rooms: a living room and two bedrooms. Kitchen, bathroom and balcony come on top."
         },
         "origin": "agent"
       },
@@ -3298,8 +3298,8 @@
         ],
         "exact": "number",
         "explanation": {
-          "de": "„nicht dunkel“ = hell. a ist dunkel. c ist hell, aber 790 Euro: zu teuer. b passt.",
-          "en": "“nicht dunkel” means bright. a is dark; c is bright but 790 euros is too much. b fits."
+          "de": "„nicht dunkel“ = hell. Die Wohnung für 590 Euro ist dunkel. Die Wohnung für 790 Euro ist zu teuer. 640 Euro passt.",
+          "en": "“nicht dunkel” means bright. The flat for 590 euros is dark; the one for 790 euros is too expensive. The one for 640 euros fits."
         },
         "origin": "agent"
       }
