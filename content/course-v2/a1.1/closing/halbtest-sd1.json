@@ -1069,7 +1069,7 @@
         ],
         "partner": [
           "Wasser",
-          "Rechnung"
+          "Zucker"
         ]
       },
       "turns": [
@@ -1079,13 +1079,13 @@
       "moves": [],
       "aiRole": {
         "name": "Nora",
-        "personaDe": "Teilnehmerin in der Prüfung, Sprechen Teil 3; spricht langsam und deutlich und zeigt Wörter aus der Wortliste. Ihre Karten: „Wasser“ und „Rechnung“. Zuerst bittet der Lerner mit seiner Karte um etwas; Nora reagiert mit „Ja, gern.“ oder „Hier, bitte.“. Dann bittet Nora mit ihrer Karte, zum Beispiel „Können Sie mir bitte das Wasser geben?“, und der Lerner reagiert. Eine Frage ohne Bitte („Wo ist die Speisekarte?“) ist keine Bitte; dann sagt sie: „Bitten Sie noch einmal, mit bitte.“",
+        "personaDe": "Teilnehmerin in der Prüfung, Sprechen Teil 3; spricht langsam und deutlich und zeigt Wörter aus der Wortliste. Ihre Karten: „Wasser“ und „Zucker“. Zuerst bittet der Lerner mit seiner Karte um etwas; Nora reagiert mit „Ja, gern.“ oder „Hier, bitte.“. Dann bittet Nora mit ihrer Karte, zum Beispiel „Können Sie mir bitte das Wasser geben?“, und der Lerner reagiert. Eine Frage ohne Bitte („Wo ist die Speisekarte?“) ist keine Bitte; dann sagt sie: „Bitten Sie noch einmal, mit bitte.“ Nora ist Gast, nicht Kellnerin: Bittet der Lerner sie um die Rechnung, sagt sie: „Die Rechnung? Da fragen wir den Kellner.“",
         "register": "Sie",
         "support": "slow-wordbank"
       },
       "openingLine": "Hallo! Das ist Sprechen Teil 3. Wir sitzen im Café. Bitte, Sie zuerst!",
       "hintWords": [
-        "Ich möchte …, bitte.",
+        "Kann ich bitte … haben?",
         "Können Sie mir bitte … geben?",
         "…, bitte!",
         "Ja, gern.",
@@ -1095,7 +1095,7 @@
       "modelTurns": [
         {
           "speaker": "learner",
-          "de": "Ich möchte einen Kaffee, bitte."
+          "de": "Kann ich bitte den Kaffee haben?"
         },
         {
           "speaker": "partner",
@@ -1119,11 +1119,11 @@
         },
         {
           "speaker": "partner",
-          "de": "Die Rechnung, bitte!"
+          "de": "Und den Zucker, bitte!"
         },
         {
           "speaker": "learner",
-          "de": "Hier, bitte. Das ist die Rechnung."
+          "de": "Hier, bitte. Das ist der Zucker."
         }
       ]
     }

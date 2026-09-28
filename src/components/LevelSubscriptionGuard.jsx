@@ -13,7 +13,7 @@ import LockedContentOverlay from './LockedContentOverlay';
 // /course/:level/p/:nr. They are gated on hasCourseAccess(level) — free level
 // or a bought course, trial/Pro only if V2_TRIAL_PRO_OPENS_PAID — while every
 // other level route keeps hasLevelAccess(level).
-const COURSE_V2_PATH_RE = /^\/course\/[^/]+\/(?:v2|u\/[^/]+|p\/[^/]+)\/?$/;
+const COURSE_V2_PATH_RE = /^\/course\/[^/]+\/(?:v2|abschluss|u\/[^/]+|p\/[^/]+)\/?$/;
 // /course/:level itself renders v2 once its level is in COURSE_V2_LIVE.
 const COURSE_HOME_PATH_RE = /^\/course\/[^/]+\/?$/;
 

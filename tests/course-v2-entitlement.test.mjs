@@ -449,7 +449,7 @@ test('the route guard asks hasCourseAccess on exactly the v2 routes', () => {
   const m = src.match(/const COURSE_V2_PATH_RE = (\/.*\/);/);
   assert.ok(m, 'COURSE_V2_PATH_RE not found');
   const re = new Function(`return ${m[1]};`)();
-  for (const p of ['/course/a2.1/v2', '/course/a2.1/v2/', '/course/b1.2/u/7', '/course/b1.2/u/12/', '/course/a1.2/p/2']) {
+  for (const p of ['/course/a2.1/v2', '/course/a2.1/v2/', '/course/b1.2/u/7', '/course/b1.2/u/12/', '/course/a1.2/p/2', '/course/a1.1/abschluss']) {
     assert.ok(re.test(p), `${p} is a v2 route`);
   }
   for (const p of ['/course/a2.1', '/course/a1.1/l/3', '/course/a1.1/cp/1', '/course/a2.1/intro', '/course/a2.1/u', '/level/a2.1', '/course/a2.1/u/7/x']) {
