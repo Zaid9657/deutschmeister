@@ -169,7 +169,8 @@ function generatorFindings(ctx, doc) {
       const at = e ? unitPosition(e.unit) : null;
       if (!e || (at !== null && here !== null && at > here)) {
         // a cue the unit cannot name: allocated later, or in no lexicon (u07 r2 F05 / r3 F06, u10 r2 F03)
-        if (FUNCTION_WORDS.has(low) || CORE.has(low) || NUMBER_WORDS.has(low) || isMetalanguage(low)) continue;
+        // (a core word the lexicon allocates later is outranked by the lexicon, as in knownForms)
+        if (FUNCTION_WORDS.has(low) || (!e && CORE.has(low)) || NUMBER_WORDS.has(low) || isMetalanguage(low)) continue;
         if (!knownHere) {
           knownHere = knownForms(ctx, doc.level, doc.nr);
           for (const f of licensedForms(ctx, doc.data).forms) knownHere.add(f);

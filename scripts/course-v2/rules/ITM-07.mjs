@@ -45,8 +45,9 @@ function spelledWords(text) {
   return out;
 }
 
-const EVENING_RE = /\b(?:abends|am Abend|nachmittags|am Nachmittag|in der Nacht|nachts|p\.?m\.?|in the (?:evening|afternoon))\b/iu;
-const MORNING_RE = /\b(?:morgens|am Morgen|vormittags|am Vormittag|früh|a\.?m\.?|in the morning|before noon)\b/iu;
+// („am Abend" must not read as „a.m.": the English abbreviations need their dots, or „pm" as a word)
+const EVENING_RE = /\b(?:abends|am Abend|nachmittags|am Nachmittag|in der Nacht|nachts|in the (?:evening|afternoon))\b|\bp\.m\.|\b\d{1,2}\s?pm\b/iu;
+const MORNING_RE = /\b(?:morgens|am Morgen|vormittags|am Vormittag|früh|in the morning|before noon)\b|\ba\.m\.|\b\d{1,2}\s?am\b/iu;
 /**
  * A typed exact:number item whose key is a clock hour 1–12 at a gap before „Uhr" either accepts the hour + 12
  * or says the time is before noon (explanation, acceptedWhy or reviewerConfirmed). Evening in the item's own
