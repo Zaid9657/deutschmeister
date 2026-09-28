@@ -167,6 +167,7 @@ const APP_CHROME = [
   'src/pages/IntroPage.jsx',
   'src/pages/NotFoundPage.jsx',
   'src/pages/SpeakingPage.jsx',
+  'src/components/speaking/SpeakingLimitOffer.jsx',
   'src/pages/UeberUnsPage.jsx',
   'src/pages/VideoDetailPage.jsx',
 ];

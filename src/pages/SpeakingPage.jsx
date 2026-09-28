@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
-  Mic, Crown, ArrowRight, Loader2, AlertTriangle, Monitor, Lock, Play,
+  Mic, ArrowRight, Loader2, AlertTriangle, Monitor, Lock, Play,
   Wallet, MessageCircle, CheckCircle2, RotateCcw, Clock,
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
@@ -16,6 +16,10 @@ import SpeakingSession from '../components/speaking/SpeakingSession';
 import SpeakingEvaluationResults from '../components/SpeakingEvaluationResults';
 import { LEVEL_ORDER } from '../config/levels';
 import { readCourseContext } from '../lib/courseFlow.js';
+import { levelsForProduct } from '../data/pricing.js';
+import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy';
+import { isFreeSpeakingCapped, speakingLimitMoment, speakingLimitOffer } from '../lib/speakingOffer.js';
+import SpeakingLimitOffer from '../components/speaking/SpeakingLimitOffer.jsx';
 import Button from '../components/ui/Button.jsx';
 import ReportProblemLink from '../components/ReportProblemLink.jsx';
 import Card from '../components/ui/Card.jsx';
@@ -120,7 +124,7 @@ function MissionResultBanner({ passed }) {
 
 const SpeakingPage = () => {
   const { user } = useAuth();
-  const { profile, hasAccess, hasActiveSubscription, loading: subLoading } = useSubscription();
+  const { profile, purchases, hasAccess, hasActiveSubscription, loading: subLoading } = useSubscription();
 
   const [phase, setPhase] = useState('setup'); // setup | session | results | eval_failed
   const [selectedLevel, setSelectedLevel] = useState('A1.1');
@@ -257,6 +261,25 @@ const SpeakingPage = () => {
   const canAfford = selectedCost === 0 || walletCents >= selectedCost;
   const startDisabled = starting || metaLoading || missionLocked || !canAfford || !browserSupport.supported;
 
+  // ---- the speaking limit (docs/SCORECARD.md work order #7b) ----
+  // A non-subscriber with no free session left and no credit to pay with, or
+  // a locked mission, used to meet a disabled Start, "top-ups are coming soon"
+  // or a generic /pricing/ link. Now they see one concrete offer: the buyable
+  // course for their level with its included Pro months, else Pro. The
+  // decision is src/lib/speakingOffer.js; a course whose checkout id is unset
+  // is never offered.
+  const capped = isFreeSpeakingCapped({ subscriber, usage });
+  const showLimitOffer = !subscriber && !subLoading && !metaLoading && (missionLocked || (capped && !canAfford));
+  const limitOffer = showLimitOffer
+    ? speakingLimitOffer({
+      profileLevel: profile?.current_level,
+      practiceLevel: selectedLevel,
+      checkoutIdFor: (key) => LEMONSQUEEZY_CONFIG.levelCourses[key]?.variantId || '',
+      ownedLevels: (purchases || []).flatMap((p) => levelsForProduct(p.product_key)),
+    })
+    : null;
+  const limitMoment = speakingLimitMoment({ usage, missionLocked });
+
   // ---- start ----
   const handleStart = async () => {
     if (startDisabled) return;
@@ -303,6 +326,9 @@ const SpeakingPage = () => {
       const data = await res.json().catch(() => ({}));
       if (res.status === 402) {
         setStartError({ type: 'funds', balance: data.balance_cents ?? walletCents, cost: data.cost_cents ?? selectedCost });
+        // The server priced it: the free allowance is gone. Re-read it so the
+        // limit offer replaces the dead end.
+        loadMeta();
         return;
       }
       if (!res.ok) {
@@ -631,7 +657,7 @@ const SpeakingPage = () => {
         )}
 
         {/* Start error / notices */}
-        {startError?.type === 'funds' && (
+        {startError?.type === 'funds' && !limitOffer && (
           <Card tone="wash" className="mb-4 p-3.5 text-sm text-siegel-deep text-center">
             Not enough credit — top-ups are coming soon.
           </Card>
@@ -645,17 +671,26 @@ const SpeakingPage = () => {
             </span>
           </div>
         )}
-        {!canAfford && !startError && (
-          <Card tone="wash" className="mb-4 p-3.5 text-sm text-siegel-deep text-center">
-            Not enough credit — top-ups are coming soon.
-          </Card>
+        {!canAfford && !startError && !limitOffer && (
+          fiveMinIsFree && selectedMinutes !== 5 ? (
+            <Card tone="wash" className="mb-4 p-3.5 text-sm text-siegel-deep text-center">
+              Longer sessions are paid from credit. A 5-minute session is free for you.{' '}
+              <button type="button" onClick={() => setSelectedMinutes(5)} className="font-bold underline underline-offset-2 hover:text-siegel">
+                Switch to 5 min
+              </button>
+            </Card>
+          ) : (
+            <Card tone="wash" className="mb-4 p-3.5 text-sm text-siegel-deep text-center">
+              {subscriber && selectedMinutes === 5
+                ? `Today's ${SUB_FREE_5MIN_PER_DAY} free sessions are used. New ones start at midnight UTC.`
+                : 'Not enough credit — top-ups are coming soon.'}
+            </Card>
+          )
         )}
 
-        {/* Start / upgrade */}
-        {missionLocked ? (
-          <Button href="/pricing/" size="lg" className="w-full">
-            <Crown className="w-5 h-5" /> Unlock with Pro
-          </Button>
+        {/* Start, or the offer at the speaking limit */}
+        {limitOffer ? (
+          <SpeakingLimitOffer offer={limitOffer} moment={limitMoment} />
         ) : (
           <Button
             shimmer
@@ -668,9 +703,11 @@ const SpeakingPage = () => {
             {selectedCost > 0 ? `Start · ${euros(selectedCost)}` : 'Start'}
           </Button>
         )}
-        <p className="text-center font-data text-[0.75rem] text-graphite mt-3">
-          {activeMission ? 'Guided mission' : 'Free conversation'} · {selectedMinutes} minutes
-        </p>
+        {!limitOffer && (
+          <p className="text-center font-data text-[0.75rem] text-graphite mt-3">
+            {activeMission ? 'Guided mission' : 'Free conversation'} · {selectedMinutes} minutes
+          </p>
+        )}
       </div>
     </div>
   );

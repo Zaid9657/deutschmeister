@@ -43,7 +43,7 @@ export const consumeCheckoutSuccess = () => {
   return true;
 };
 
-export const trackPaywallShown = (feature) => track('paywall_shown', { feature });
+export const trackPaywallShown = (feature, props = {}) => track('paywall_shown', { ...props, feature });
 export const trackPaywallDismissed = (feature) => track('paywall_dismissed', { feature });
 
 export const trackFAQViewed = () => track('faq_viewed');
