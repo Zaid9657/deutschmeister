@@ -732,7 +732,8 @@ Check = {
                                                        // index — never an item id of another unit file
   proofItems: [Item]{0..5},                            // proof items (q): one per receptive can-do, scored apart from the 12
   proofs: [{ canDo: ref(cando), item: ref(item)? , aufgabe: enum(sprechen|schreiben)?,
-              microOutput: re(mo)? }]{3..5},    // microOutput: the learner's own micro-output proves it (2026-09-28)
+              microOutput: re(mo)? }]{3..5},    // microOutput: the learner's own micro-output proves it (2026-09-28);
+                                                       // ≥ 1 of item/aufgabe/microOutput, several allowed (below)
   rueckschau: [ref(rulecard)]{1..3}?,                  // B skeleton only (required there): the Grammatik-Rückschau
   portrait: { factRef: ref(fact), de: de, en: en, assetRef: ref(asset)? }?,
                                                        // B skeleton only (required there); text-only unless AST-02 holds
@@ -750,9 +751,15 @@ the course's first unit. It is not the unit's speaker list; that is `spec.cast`.
 cliffhanger's English twin (the translation toggle, as on every Line); **`story.glosses`** glosses the words it uses
 before their unit, as the Folge's glosses do (a1.1 u01 r1-F08 / r2-F09).
 
-**`Check.proofs`**: each proof names exactly one of `item`, `aufgabe` or `microOutput`. A `microOutput` proof is the
-learner's own output (a1.1-u02: the own-data form `a1.1-u02-ls2-mo` proves `cd.a1.formular-person`, where the S1
-form about Emre could not); ALL-02 resolves the id against the unit's micro-outputs.
+**`Check.proofs`**: each proof names at least one of `item`, `aufgabe` or `microOutput`, and may name more than one
+(decided 2026-09-28, final A1.1 code pass): an `item` beside an `aufgabe` is the receptive and the productive side of
+one can-do (13 a1.1 entries, e.g. `cd.a1.buchstabieren`: the proof item `a1.1-u02-q01` and the sprechen Aufgabe). The
+can-do counts as shown when **every** named proof is — the item answered right in the Check, the Aufgabe submitted, the
+micro-output sent; „Das kann ich" (CheckView) lists each named proof with its own status, and the one reader of the rule
+is `src/lib/course-v2/proofs.js` (`proofParts`, `proofShown`). A `microOutput` proof is the learner's own output
+(a1.1-u02: the own-data form `a1.1-u02-ls2-mo` proves `cd.a1.formular-person`, where the S1 form about Emre could not);
+ALL-02 resolves every named proof — the item among the proof items, the Aufgabe among the unit's steps, the id against
+the unit's micro-outputs — and a proof that names none is a blocker.
 
 ### 8.1 Stage schema (what SCH-01 requires at each `stage`)
 

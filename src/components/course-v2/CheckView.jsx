@@ -7,6 +7,7 @@ import RuleCardView from './RuleCardView.jsx';
 import StoryCliffhanger from './StoryCliffhanger.jsx';
 import { canDoTexts } from './content.js';
 import { useV2Strings } from './strings.js';
+import { proofParts } from '../../lib/course-v2/proofs.js';
 
 const LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite';
 
@@ -18,9 +19,11 @@ const LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] 
  *      `check.earlier` refs are resolved by the player core and passed in; without them
  *      the check runs on this unit's items alone);
  *   2. the proof items, scored apart from the 12 (one per receptive can-do);
- *   3. „Das kann ich": each can-do with its proof — an item answered right, the
- *      speaking/writing Aufgabe submitted (`aufgaben`, from the player's learner state), or the
- *      learner's own micro-output sent (`microOutputs`);
+ *   3. „Das kann ich": each can-do with its proofs — an item answered right, the
+ *      speaking/writing Aufgabe submitted (`aufgaben`, from the player's learner state), and/or the
+ *      learner's own micro-output sent (`microOutputs`). An entry may name several (an item and
+ *      an Aufgabe: the receptive and the productive side); each is listed with its own status and
+ *      the can-do is ticked when every one is shown (SCHEMA §8, src/lib/course-v2/proofs.js);
  *   4. the B-skeleton Grammatik-Rückschau (rule cards) and Porträt, the cliffhanger and the
  *      step's end line.
  *
@@ -49,22 +52,21 @@ export default function CheckView({ unit, level, stepId, endLine = null, earlier
     if (typeof onAttempt === 'function') onAttempt(p);
   };
 
+  // every proof the entry names, each with its own line: an item answered right, the Aufgabe
+  // submitted, the learner's own micro-output sent (SCHEMA §8 Check.proofs, 2026-09-28)
   const proofStatus = (proof) => {
-    if (proof.item) {
-      if (!(proof.item in proofResults)) return { ok: false, label: t('check.proofOpen') };
-      return proofResults[proof.item] ? { ok: true, label: t('check.proofItem') } : { ok: false, label: t('check.proofOpen') };
-    }
-    if (proof.aufgabe) {
-      const task = t(proof.aufgabe === 'sprechen' ? 'check.aufgabeSprechen' : 'check.aufgabeSchreiben');
-      const done = !!(aufgaben && aufgaben[proof.aufgabe]);
-      return done ? { ok: true, label: t('check.proofAufgabe', { task }) } : { ok: false, label: t('check.aufgabeOpen', { task }) };
-    }
-    if (proof.microOutput) {
-      // the learner's own micro-output (SCHEMA §8 Check.proofs[].microOutput, 2026-09-28)
-      const done = !!(microOutputs && microOutputs[proof.microOutput]);
-      return done ? { ok: true, label: t('check.proofMicro') } : { ok: false, label: t('check.microOpen') };
-    }
-    return { ok: false, label: t('check.proofOpen') };
+    const parts = proofParts(proof, { items: proofResults, aufgaben, microOutputs });
+    if (!parts.length) return { ok: false, labels: [t('check.proofOpen')] };
+    const several = parts.length > 1;
+    const labels = parts.map((part) => {
+      if (part.kind === 'item') return part.ok ? t('check.proofItem') : t(several ? 'check.itemOpen' : 'check.proofOpen');
+      if (part.kind === 'aufgabe') {
+        const task = t(part.ref === 'sprechen' ? 'check.aufgabeSprechen' : 'check.aufgabeSchreiben');
+        return part.ok ? t('check.proofAufgabe', { task }) : t('check.aufgabeOpen', { task });
+      }
+      return part.ok ? t('check.proofMicro') : t('check.microOpen');
+    });
+    return { ok: parts.every((part) => part.ok), labels };
   };
 
   if (phase === 'items') {
@@ -139,7 +141,7 @@ export default function CheckView({ unit, level, stepId, endLine = null, earlier
                     : <Circle className="mt-0.5 h-5 w-5 shrink-0 text-graphite" aria-hidden="true" />}
                   <span>
                     <span className="text-ink" lang="de">{texts[p.canDo] || p.canDo}</span>
-                    <span className="block text-[0.8125rem] text-graphite">{st.label}</span>
+                    {st.labels.map((label, k) => <span key={k} className="block text-[0.8125rem] text-graphite">{label}</span>)}
                   </span>
                 </li>
               );
