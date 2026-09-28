@@ -814,27 +814,22 @@ export function detectorProblem(det) {
  * it here; tests pin every entry's hit/miss sentences.
  */
 export const DETECTOR_OVERLAYS = Object.freeze({
-  // „Am Samstag arbeite ich." / „Den Bus brauche ich." / „Probleme habe ich" are 1sg indicative
-  // (a2.1-u04 r1/r2 F11, a2.2-u04 r1 F09, b1.1-u04 r1 F17, b1.2-u04 r1 F26)
-  'det.konjunktiv1': { notFollowedBy: ['ich'] },
-  // „noch mal" (= again) and „mal wieder" are no modal particles (b1.1-u04 r1 F17)
-  'det.modalpartikeln': { notPrecededBy: ['noch'], notFollowedBy: ['wieder'] },
-  // a determiner or possessive after the preposition is no adjective: „für eine Wanderung",
-  // „auf unser Boot" (a1.1-u04 r2 F11, a2.2-u04 r2 F16 / r3 F11)
-  'det.adjektiv-endung-nullartikel': { skipWords: ['eine', 'keine', 'unser', 'euer', 'jede', 'diese', 'jene', 'welche', 'manche', 'solche', 'dieser', 'jener', 'solcher', 'mancher', 'welcher'], notVerbForm: true },
-  // „ein bisschen" is a quantifier, not article + adjective (a1.1-u04 r1 F24)
-  'det.adjektiv-endung-unbestimmt': { skipWords: ['bisschen'], notVerbForm: true },
+  // (the list-type entries of 2026-09-27 — konjunktiv1, modalpartikeln, the nullartikel/unbestimmt skip lists,
+  // the ordinal labels — were folded into detectors.json on 2026-09-28; the scalar fields below stay here)
+  // a verb in the adjective slot is no adjective: „Das lernen Sie bald." (a1.1-u01 r2 F10 / r3 F09)
+  'det.adjektiv-endung-nullartikel': { notVerbForm: true },
+  'det.adjektiv-endung-unbestimmt': { notVerbForm: true },
   'det.unbestimmter-artikel': { skipAlso: '^(?:ein|eine)\\s+(?:bisschen|paar|wenig)\\b', reportOn: 'chosen' },
   // an article is reported only where the LEARNER chooses it — a typed gap or an error correction — never
   // as article + noun in an input, a tile, an instruction or a model (a1.1-u02 r1 F20 / r2 F10, u03 r3 F09:
   // 113 of the level's 171 GRM-04 advisories); a possessive after the demonstrative „das" is no article
   // („Ist das deine Mutter?", a1.1-u03 r1 F15 / r2 F08)
   'det.bestimmter-artikel': { reportOn: 'chosen', skipAlso: '^(?:der|die|das|den|dem)\\s+(?:mein|dein|sein|ihr|unser|euer)\\p{L}*(?:\\s|$)' },
-  // a verb in the adjective slot is no adjective: „Das lernen Sie bald." (a1.1-u01 r2 F10 / r3 F09)
   'det.adjektiv-endung-bestimmt': { notVerbForm: true },
-  // „Teil 1. Sie hören …", „Nummer 3. Dann …": a number after a label noun is a cardinal (a1.1-u03 r1 F15)
-  // a number ending a phone number or a sentence („… 96 10. Priya bestellt …") is no date either
-  'det.ordinalzahl': { notPrecededBy: ['teil', 'aufgabe', 'nummer', 'nr', 'punkt', 'text', 'satz', 'beispiel', 'frage', 'seite', 'einheit', 'lektion', 'raum', 'zimmer', 'gleis', 'bus', 'linie', 'haus', 'straße', 'tram', 'position', 'stelle', 'zeile', 'karte'], notAfterNumber: true },
+  // a number ending a phone number or a sentence („… 96 10. Priya bestellt …") is no date (a1.1-u09 r3 F07)
+  'det.ordinalzahl': { notAfterNumber: true },
+  // „Mögt ihr auch Kuchen?", „Habt ihr Zeit?": „ihr" after its own finite verb is the pronoun (a1.1-u09 r3 F07)
+  'det.possessiv-sein-ihr-unser-euer': { notAfterIhrVerb: true },
   // „Name" (mixed declension) is taught as a word with its forms at A1.1-U1 (lx.name): „Ihren Namen",
   // „nach dem Namen", „Familiennamen" are vocabulary, not the B1 n-declension (a1.1 u01/u02/u05/u08)
   'det.n-deklination': { lexicalNouns: ['name'] },

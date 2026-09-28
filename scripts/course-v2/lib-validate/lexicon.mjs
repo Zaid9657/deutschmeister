@@ -174,8 +174,10 @@ export function entryForms(e) {
     add(w);
     for (const suf of ['s', 'es', 'n', 'en', 'e', 'er']) add(`${w}${suf}`);
     if (w.endsWith('e')) add(`${w}r`); // nominalised adjective: ein Beschäftigter
-    if (typeof e.plural === 'string') {
-      const pl = lc(e.plural).replace(/^die\s+/, '');
+    // the plural and every further correct plural (SCHEMA §6 pluralVariants, 2026-09-28: „Balkons")
+    for (const p of [e.plural, ...(Array.isArray(e.pluralVariants) ? e.pluralVariants : [])]) {
+      if (typeof p !== 'string') continue;
+      const pl = lc(p).replace(/^die\s+/, '');
       add(pl);
       if (!/[ns]$/.test(pl)) add(`${pl}n`);
     }

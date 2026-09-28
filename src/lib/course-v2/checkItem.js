@@ -48,7 +48,7 @@
 //     Personen, Leute, Uhr …), the label's words, the words of the field's accepted forms, the
 //     situation sentence that states the same fact, a negated alternative of the label („nicht
 //     in Leipzig"), a postcode and city after a street — and never an un-negated alternative
-//     („in Leipzig online" stays WRONG), the values of the form's other fields (`otherAccepted`)
+//     („in Leipzig online" stays WRONG), the keys of the form's other fields (`otherAnswers`)
 //     and the Anrede before a name. Case is free on a form, and the words of a street key are
 //     required („21" alone is no address). (a1.1-u02 r2/r3 F02/F01, u05 r2/r3 F01, u09 r2/r3 F03.)
 //
@@ -372,8 +372,9 @@ function gapFrameRule(item, input, out) {
  * „um 19.30 Uhr abends", „Freitag, am Abend"). A time-of-day word the label offers as an
  * alternative („vormittags oder nachmittags?") is the information there, and never licensed.
  */
+const BASIC_FRAME = new Set(['nr', 'fuer', 'jahre', 'jahr', 'alt', 'person', 'personen', 'leute', 'uhr', 'um', 'am', 'im', 'in', 'der', 'die', 'das', 'den', 'dem', 'des']);
 const FORM_FRAME = new Set([
-  'nr', 'fuer', 'jahre', 'jahr', 'alt', 'person', 'personen', 'leute', 'uhr', 'um', 'am', 'im', 'in', 'der', 'die', 'das', 'den', 'dem', 'des',
+  ...BASIC_FRAME,
   'morgens', 'vormittags', 'mittags', 'nachmittags', 'abends', 'nachts', 'morgen', 'vormittag', 'mittag', 'nachmittag', 'abend', 'nacht',
 ]);
 /** The Anrede before a personal name („Frau Olena Kovalenko"). */
@@ -392,14 +393,14 @@ function labelAlternatives(labelDe) {
   const tail = String(labelDe || '').split(':').pop();
   if (!/\boder\b/i.test(tail)) return [];
   return tail.split(/,|\boder\b/i)
-    .map((p) => new Set(formTokens(p).map(formTok).filter((t) => t && !FORM_FRAME.has(t))))
+    .map((p) => new Set(formTokens(p).map(formTok).filter((t) => t && !BASIC_FRAME.has(t))))
     .filter((set) => set.size > 0);
 }
 
 /** What may stand beside a form value: the field's frame, label, forms and the situation's same-fact sentence. */
 function formContext(item) {
   const accepted = acceptedOf(item);
-  const contentOf = (s) => formTokens(s).map(formTok).filter((t) => t && hasLetter(t) && !FORM_FRAME.has(t));
+  const contentOf = (s) => formTokens(s).map(formTok).filter((t) => t && hasLetter(t) && !BASIC_FRAME.has(t));
   const keyTokens = new Set(accepted.flatMap(contentOf));
   const alternatives = labelAlternatives(item.labelDe);
   // the key's own alternative is decided by the key itself (`answer`), never by an accepted
@@ -416,9 +417,10 @@ function formContext(item) {
     const toks = formTokens(sentence).map(formTok);
     if (toks.some((t) => keyTokens.has(t))) toks.forEach(add);
   }
-  // the values of the form's other fields („am Freitag um 19.30 Uhr" in the day field), digits included
+  // the keys of the form's other fields („am Freitag um 19.30 Uhr" in the day field), digits included —
+  // their keys only, never their accepted variants (u02 f5 accepts „online, nicht in Leipzig")
   const otherValues = new Set();
-  for (const a of Array.isArray(item.otherAccepted) ? item.otherAccepted : []) {
+  for (const a of Array.isArray(item.otherAnswers) ? item.otherAnswers : []) {
     for (const t of formTokens(a).map(formTok)) if (t && !others.has(t) && !keyTokens.has(t)) otherValues.add(t);
   }
   if (item.exact === 'name' || /\bname\b/i.test(String(item.labelDe || ''))) NAME_FRAME.forEach(add);

@@ -162,6 +162,14 @@ export function run({ ctx, docs }) {
       const noMatchItems = items.filter((it) => it.noMatch || (t.noMatch && String(it.answer).trim() === t.noMatch));
       if (t.noMatch && block.length === 'full' && !noMatchItems.length) findings.push(blocker(doc, `${path}.items`, `${block.template} has a no-match option (${t.noMatch}); no item uses it`, id));
       if (!t.noMatch && noMatchItems.some((it) => it.noMatch)) findings.push(blocker(doc, `${path}.items`, `${block.template} has no no-match option; an item is marked noMatch`, id));
+      // distinct voices per text (TeilTemplate `speakers`, SCHEMA §4.3, 2026-09-28: sd1.h1 has 2): ADVISORY —
+      // the exam's format, not a grading question
+      if (typeof t.speakers === 'number') {
+        for (const { text, path: tp } of arr(texts)) {
+          const voices = new Set(arr(text?.lines).map((l) => l?.speaker).filter(Boolean));
+          if (arr(text?.lines).length && voices.size !== t.speakers) findings.push(advisory(doc, tp, `${voices.size} speaker(s) in ${text.id}; a ${block.template} text has ${t.speakers}`, id));
+        }
+      }
       if (typeof t.plays === 'number' && (!short || !scaffold || scaffold.playsFixed !== false)) {
         const ins = String(block.instructionsDe || '').toLowerCase();
         const says = /\bzweimal\b|\b2-mal\b|\bzwei mal\b/.test(ins) ? 2 : /\beinmal\b|\bnur einmal\b|\b1-mal\b/.test(ins) ? 1 : null;

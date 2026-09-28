@@ -9,9 +9,12 @@
 //   - a gap right after „gegenüber" keyed with „vom …" / „von der …" accepts the bare dative too
 //     („gegenüber dem Rathaus" is the standard form).
 
-import { walkItems } from '../lib-validate/walk.mjs';
+import { walkItems, walkTasks } from '../lib-validate/walk.mjs';
 import { norm } from '../lib-validate/text.mjs';
-import { arr, isObj, blocker } from '../lib-validate/helpers.mjs';
+import { arr, isObj, blocker, advisory } from '../lib-validate/helpers.mjs';
+
+/** More accepted forms than this on one form field is a list standing in for a checker rule (a1.1-u09 r3 F03). */
+export const FORM_ACCEPTED_MAX = 12;
 
 export const id = 'ITM-10';
 export const title = 'Accepted forms: answer accepted, acceptedWhy and reviewerConfirmed consistent';
@@ -63,10 +66,31 @@ export function run({ docs }) {
         const bareForm = String(item.answer || '').replace(/^vom\b/i, 'dem').replace(/^von\s+(?=der|dem|den)/i, '');
         if (bareForm !== String(item.answer || '') && !acceptedN.includes(norm(bareForm))) findings.push(blocker(doc, `${path}.accepted`, `after „gegenüber" the bare dative „${bareForm}" is the standard form — accept it besides „${item.answer}"`, item.id));
       }
+      // the forms an explanation presents as correct for the slot („‚möchte' oder ‚nehme'") are accepted
+      // (a1.1-u09 r1 F01): ADVISORY — the reader decides whether the explanation or the list is wrong
+      if (['fill_blank', 'cloze'].includes(item.type) && !arr(item.options).length && !/\s/.test(String(item.answer || '').trim())) {
+        const m = String(item.explanation?.de || '').match(/[‚„']([^‚„'‘“]+)[‘“']\s+oder\s+[‚„']([^‚„'‘“]+)[‘“']/u);
+        if (m) for (const f of [m[1], m[2]]) if (!/\s/.test(f.trim()) && !acceptedN.includes(norm(f))) findings.push(advisory(doc, `${path}.accepted`, `the explanation offers „${f}" as correct, but it is not accepted`, item.id));
+      }
       for (const form of arr(item.reviewerConfirmed)) {
         if (!accepted.includes(form)) findings.push(blocker(doc, `${path}.reviewerConfirmed`, `reviewer-confirmed „${form}" is not in accepted`, item.id));
         if (!why[form]) findings.push(blocker(doc, `${path}.acceptedWhy`, `reviewer-confirmed „${form}" carries no acceptedWhy`, item.id));
       }
+    }
+    // form fields: acceptedWhy names accepted forms (SCHEMA §8 WritingTask.form, 2026-09-28); a long list
+    for (const { task, path } of walkTasks(doc)) {
+      arr(task?.form?.fields).forEach((f, i) => {
+        if (!isObj(f)) return;
+        n += 1;
+        const fp = `${path}.form.fields[${i}]`;
+        const acc = arr(f.accepted);
+        const why = isObj(f.acceptedWhy) ? f.acceptedWhy : {};
+        for (const form of Object.keys(why)) {
+          if (!acc.includes(form)) findings.push(blocker(doc, `${fp}.acceptedWhy`, `acceptedWhy explains „${form}", which is not an accepted form of field ${f.id}`, task.bankKey));
+          if (!String(why[form] || '').trim()) findings.push(blocker(doc, `${fp}.acceptedWhy`, `acceptedWhy for „${form}" is empty`, task.bankKey));
+        }
+        if (acc.length > FORM_ACCEPTED_MAX) findings.push(advisory(doc, `${fp}.accepted`, `field ${f.id} accepts ${acc.length} forms (> ${FORM_ACCEPTED_MAX}) — a list standing in for a checker rule (exact: "number", a fold); ask the checker owner for the rule`, task.bankKey));
+      });
     }
   }
   return n ? { findings } : { findings, skipped: 'no authored items in the target yet' };
