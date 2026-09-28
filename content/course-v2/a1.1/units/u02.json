@@ -1255,7 +1255,7 @@
           "type": "multiple_choice",
           "role": "detail",
           "topic": "hoeren",
-          "promptDe": "Wie oft sagt Emre die Nummer?",
+          "promptDe": "Wie oft sagt Emre die ganze Nummer?",
           "promptEn": "How often does Emre say the whole number?",
           "options": [
             "zweimal",
@@ -1829,7 +1829,7 @@
           "g.ja-nein-frage"
         ],
         "register": "Sie",
-        "modelDe": "Ich heiße Nora. Ich wohne in Leipzig. Ich bin Studentin. Ist der Kurs auch online?"
+        "modelDe": "Ich heiße Anna. Ich wohne in Leipzig. Ich bin Studentin. Ist der Kurs auch online?"
       },
       "endLine": "Sie können jetzt nachfragen, mit Ja, Nein oder Doch antworten und Ihre Angaben schreiben."
     },
@@ -1864,8 +1864,8 @@
           {
             "id": "a1.1-u02-ls3-l03",
             "speaker": "cast.priya",
-            "de": "Ich bin Rezeptionistin, Herr Richter. In Kochi, in Indien.",
-            "en": "I’m a receptionist, Mr Richter. In Kochi, in India."
+            "de": "Ich bin Rezeptionistin von Beruf, Herr Richter.",
+            "en": "I’m a receptionist by profession, Mr Richter."
           },
           {
             "id": "a1.1-u02-ls3-l04",
@@ -3183,7 +3183,7 @@
           },
           {
             "speaker": "learner",
-            "de": "In Kochi arbeite ich am Empfang. Hier in Leipzig arbeite ich nicht, ich lerne Deutsch."
+            "de": "Ich bin Rezeptionistin von Beruf. Hier in Leipzig arbeite ich nicht, ich lerne Deutsch."
           },
           {
             "speaker": "partner",
@@ -3275,12 +3275,8 @@
               "labelDe": "Kurs: in Leipzig oder online?",
               "answer": "online",
               "accepted": [
-                "online",
-                "nur online"
-              ],
-              "acceptedWhy": {
-                "nur online": "dieselbe Angabe: Emre lernt nur online, nicht in Leipzig"
-              }
+                "online"
+              ]
             }
           ],
           "documents": []

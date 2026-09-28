@@ -643,10 +643,12 @@
             "answer": "Ich bin nach Leipzig gekommen.",
             "accepted": [
               "Ich bin nach Leipzig gekommen.",
-              "Nach Leipzig bin ich gekommen."
+              "Nach Leipzig bin ich gekommen.",
+              "Gekommen bin ich nach Leipzig."
             ],
             "acceptedWhy": {
-              "Nach Leipzig bin ich gekommen.": "grammatisch: „nach Leipzig“ betont auf Position 1, „bin“ bleibt auf Position 2"
+              "Nach Leipzig bin ich gekommen.": "grammatisch: „nach Leipzig“ betont auf Position 1, „bin“ bleibt auf Position 2",
+              "Gekommen bin ich nach Leipzig.": "grammatisch, aber stark betont: das Partizip auf Position 1, das Verb bleibt auf Position 2"
             },
             "explanation": {
               "de": "„bin“ steht auf Position 2, „gekommen“ steht am Ende.",
@@ -670,10 +672,12 @@
             "answer": "Emre ist in İzmir geblieben.",
             "accepted": [
               "Emre ist in İzmir geblieben.",
-              "In İzmir ist Emre geblieben."
+              "In İzmir ist Emre geblieben.",
+              "Geblieben ist Emre in İzmir."
             ],
             "acceptedWhy": {
-              "In İzmir ist Emre geblieben.": "grammatisch: „in İzmir“ betont auf Position 1, „ist“ bleibt auf Position 2"
+              "In İzmir ist Emre geblieben.": "grammatisch: „in İzmir“ betont auf Position 1, „ist“ bleibt auf Position 2",
+              "Geblieben ist Emre in İzmir.": "grammatisch, aber stark betont: das Partizip auf Position 1, das Verb bleibt auf Position 2"
             },
             "explanation": {
               "de": "„ist“ steht auf Position 2, „geblieben“ steht am Ende.",
@@ -697,10 +701,12 @@
             "answer": "Wir sind mit dem Zug gefahren.",
             "accepted": [
               "Wir sind mit dem Zug gefahren.",
-              "Mit dem Zug sind wir gefahren."
+              "Mit dem Zug sind wir gefahren.",
+              "Gefahren sind wir mit dem Zug."
             ],
             "acceptedWhy": {
-              "Mit dem Zug sind wir gefahren.": "grammatisch: „mit dem Zug“ betont auf Position 1, „sind“ bleibt auf Position 2"
+              "Mit dem Zug sind wir gefahren.": "grammatisch: „mit dem Zug“ betont auf Position 1, „sind“ bleibt auf Position 2",
+              "Gefahren sind wir mit dem Zug.": "grammatisch, aber stark betont: das Partizip auf Position 1, das Verb bleibt auf Position 2"
             },
             "explanation": {
               "de": "„sind“ steht auf Position 2, „gefahren“ steht am Ende.",
@@ -748,10 +754,12 @@
             "answer": "Frau Schulz ist nach Wien gefahren.",
             "accepted": [
               "Frau Schulz ist nach Wien gefahren.",
-              "Nach Wien ist Frau Schulz gefahren."
+              "Nach Wien ist Frau Schulz gefahren.",
+              "Gefahren ist Frau Schulz nach Wien."
             ],
             "acceptedWhy": {
-              "Nach Wien ist Frau Schulz gefahren.": "grammatisch: „nach Wien“ betont auf Position 1, „ist“ bleibt auf Position 2"
+              "Nach Wien ist Frau Schulz gefahren.": "grammatisch: „nach Wien“ betont auf Position 1, „ist“ bleibt auf Position 2",
+              "Gefahren ist Frau Schulz nach Wien.": "grammatisch, aber stark betont: das Partizip auf Position 1, das Verb bleibt auf Position 2"
             },
             "explanation": {
               "de": "„ist“ steht auf Position 2, „gefahren“ steht am Ende.",
@@ -895,10 +903,12 @@
           "answer": "Emre und Arta sind in İzmir und Prishtina geblieben.",
           "accepted": [
             "Emre und Arta sind in İzmir und Prishtina geblieben.",
-            "In İzmir und Prishtina sind Emre und Arta geblieben."
+            "In İzmir und Prishtina sind Emre und Arta geblieben.",
+            "Geblieben sind Emre und Arta in İzmir und Prishtina."
           ],
           "acceptedWhy": {
-            "In İzmir und Prishtina sind Emre und Arta geblieben.": "grammatisch: „in İzmir und Prishtina“ betont auf Position 1, „sind“ bleibt auf Position 2"
+            "In İzmir und Prishtina sind Emre und Arta geblieben.": "grammatisch: „in İzmir und Prishtina“ betont auf Position 1, „sind“ bleibt auf Position 2",
+            "Geblieben sind Emre und Arta in İzmir und Prishtina.": "grammatisch, aber stark betont: das Partizip auf Position 1, das Verb bleibt auf Position 2"
           },
           "explanation": {
             "de": "„sind“ steht auf Position 2, „geblieben“ steht am Ende.",
@@ -1017,6 +1027,7 @@
           30
         ],
         "targets": [
+          "g.perfekt-haben",
           "g.verbposition-2"
         ],
         "register": "Sie",
@@ -1190,13 +1201,14 @@
           {
             "id": "a1.1-u12-ls2-l10",
             "speaker": "cast.priya",
-            "de": "Mein Plan? Ich lerne seit drei Monaten Deutsch. Jetzt will ich die Prüfung machen. Dann will ich wieder am Empfang arbeiten. Aber zuerst will ich ein Praktikum in einem Hotel machen.",
-            "en": "My plan? I’ve been learning German for three months. Now I want to take the exam. Then I want to work at a reception desk again. But first I want to do an internship in a hotel."
+            "de": "Mein Plan? Ich lerne seit drei Monaten Deutsch. Zuerst will ich ein Praktikum in einem Hotel machen. Dann kommt der Kurs A1.2. Danach will ich die Prüfung machen und wieder am Empfang arbeiten.",
+            "en": "My plan? I’ve been learning German for three months. First I want to do an internship in a hotel. Then comes the A1.2 course. After that I want to take the exam and work at a reception desk again.",
+            "say": "Mein Plan? Ich lerne seit drei Monaten Deutsch. Zuerst will ich ein Praktikum in einem Hotel machen. Dann kommt der Kurs A eins zwei. Danach will ich die Prüfung machen und wieder am Empfang arbeiten."
           }
         ],
         "text": {
-          "de": "Sprachschule Leipzig: Deutsch lernen mit Plan\nDeutsch in der Welt: in Deutschland, in Österreich, in der Schweiz\nSie kommen aus dem Ausland? Sie wollen hier leben und arbeiten? Sie wollen die Prüfung Start Deutsch 1 machen? Dann ist der Kurs A1.2 richtig für Sie!\nAm Morgen: Montag bis Donnerstag, 9 bis 12 Uhr, in der Sprachschule\nAm Abend: Dienstag und Donnerstag, 18 bis 21 Uhr, online\nIm Kurs üben und wiederholen Sie viel. Und Sie lernen viele Leute kennen.\nDer Preis? Fragen Sie im Büro. Dort melden wir Sie gern an.",
-          "en": "Sprachschule Leipzig: learning German with a plan · German in the world: in Germany, in Austria, in Switzerland · You come from abroad? You want to live and work here? You want to take the Start Deutsch 1 exam? Then the A1.2 course is right for you! · Mornings: Monday to Thursday, 9 to 12, at the school · Evenings: Tuesday and Thursday, 18 to 21, online · In the course you practise and revise a lot, and you get to know lots of people. · The price? Ask at the office. We will be happy to register you there."
+          "de": "Willkommen in der Sprachschule Leipzig!\nDeutsch lernen mit Plan\nDeutsch in der Welt: in Deutschland, in Österreich, in der Schweiz\nSie kommen aus dem Ausland? Sie wollen hier leben und arbeiten? Sie wollen die Prüfung Start Deutsch 1 machen? Dann ist der Kurs A1.2 richtig für Sie!\nAm Morgen: Montag bis Donnerstag, 9 bis 12 Uhr, in der Sprachschule\nAm Abend: Dienstag und Donnerstag, 18 bis 21 Uhr, online\nIm Kurs üben und wiederholen Sie viel. Und Sie lernen viele Leute kennen.\nDer Preis? Fragen Sie im Büro. Dort melden wir Sie gern an.",
+          "en": "Welcome to the Sprachschule Leipzig! · Learning German with a plan · German in the world: in Germany, in Austria, in Switzerland · You come from abroad? You want to live and work here? You want to take the Start Deutsch 1 exam? Then the A1.2 course is right for you! · Mornings: Monday to Thursday, 9 to 12, at the school · Evenings: Tuesday and Thursday, 18 to 21, online · In the course you practise and revise a lot, and you get to know lots of people. · The price? Ask at the office. We will be happy to register you there."
         },
         "glosses": [
           {
@@ -1504,10 +1516,12 @@
             "answer": "Ich will in Leipzig arbeiten.",
             "accepted": [
               "Ich will in Leipzig arbeiten.",
-              "In Leipzig will ich arbeiten."
+              "In Leipzig will ich arbeiten.",
+              "Arbeiten will ich in Leipzig."
             ],
             "acceptedWhy": {
-              "In Leipzig will ich arbeiten.": "grammatisch: „in Leipzig“ betont auf Position 1, „will“ bleibt auf Position 2"
+              "In Leipzig will ich arbeiten.": "grammatisch: „in Leipzig“ betont auf Position 1, „will“ bleibt auf Position 2",
+              "Arbeiten will ich in Leipzig.": "grammatisch, aber stark betont: „arbeiten“ auf Position 1, „will“ bleibt auf Position 2"
             },
             "explanation": {
               "de": "„will“ steht auf Position 2, „arbeiten“ steht am Ende.",
@@ -1534,10 +1548,12 @@
             "answer": "Arta will die Prüfung machen.",
             "accepted": [
               "Arta will die Prüfung machen.",
-              "Die Prüfung will Arta machen."
+              "Die Prüfung will Arta machen.",
+              "Machen will Arta die Prüfung."
             ],
             "acceptedWhy": {
-              "Die Prüfung will Arta machen.": "grammatisch: „die Prüfung“ betont auf Position 1, „will“ bleibt auf Position 2"
+              "Die Prüfung will Arta machen.": "grammatisch: „die Prüfung“ betont auf Position 1, „will“ bleibt auf Position 2",
+              "Machen will Arta die Prüfung.": "grammatisch, aber stark betont: „machen“ auf Position 1, „will“ bleibt auf Position 2"
             },
             "explanation": {
               "de": "„will“ steht auf Position 2, „machen“ steht am Ende.",
@@ -1614,12 +1630,16 @@
               "Wir wollen am Abend den Kurs machen.",
               "Wir wollen den Kurs am Abend machen.",
               "Am Abend wollen wir den Kurs machen.",
-              "Den Kurs wollen wir am Abend machen."
+              "Den Kurs wollen wir am Abend machen.",
+              "Machen wollen wir am Abend den Kurs.",
+              "Machen wollen wir den Kurs am Abend."
             ],
             "acceptedWhy": {
               "Wir wollen den Kurs am Abend machen.": "grammatisch: „den Kurs“ vor „am Abend“ ist auch richtig",
               "Am Abend wollen wir den Kurs machen.": "grammatisch: „am Abend“ betont auf Position 1, „wollen“ bleibt auf Position 2",
-              "Den Kurs wollen wir am Abend machen.": "grammatisch: „den Kurs“ betont auf Position 1, „wollen“ bleibt auf Position 2"
+              "Den Kurs wollen wir am Abend machen.": "grammatisch: „den Kurs“ betont auf Position 1, „wollen“ bleibt auf Position 2",
+              "Machen wollen wir am Abend den Kurs.": "grammatisch, aber stark betont: „machen“ auf Position 1, „wollen“ bleibt auf Position 2",
+              "Machen wollen wir den Kurs am Abend.": "grammatisch, aber stark betont: „machen“ auf Position 1, „wollen“ bleibt auf Position 2"
             },
             "explanation": {
               "de": "„wollen“ steht auf Position 2, „machen“ steht am Ende.",
@@ -1646,10 +1666,12 @@
             "answer": "Ich will in Leipzig arbeiten.",
             "accepted": [
               "Ich will in Leipzig arbeiten.",
-              "In Leipzig will ich arbeiten."
+              "In Leipzig will ich arbeiten.",
+              "Arbeiten will ich in Leipzig."
             ],
             "acceptedWhy": {
-              "In Leipzig will ich arbeiten.": "auch richtig: „in Leipzig“ auf Position 1, „arbeiten“ am Ende"
+              "In Leipzig will ich arbeiten.": "auch richtig: „in Leipzig“ auf Position 1, „arbeiten“ am Ende",
+              "Arbeiten will ich in Leipzig.": "auch richtig, aber stark betont: „arbeiten“ auf Position 1, „will“ auf Position 2"
             },
             "intentionalError": true,
             "errorTag": "satzklammer",
@@ -1775,10 +1797,12 @@
           "answer": "Bilal will Arbeit finden.",
           "accepted": [
             "Bilal will Arbeit finden.",
-            "Arbeit will Bilal finden."
+            "Arbeit will Bilal finden.",
+            "Finden will Bilal Arbeit."
           ],
           "acceptedWhy": {
-            "Arbeit will Bilal finden.": "grammatisch: „Arbeit“ betont auf Position 1, „will“ bleibt auf Position 2"
+            "Arbeit will Bilal finden.": "grammatisch: „Arbeit“ betont auf Position 1, „will“ bleibt auf Position 2",
+            "Finden will Bilal Arbeit.": "grammatisch, aber stark betont: „finden“ auf Position 1, „will“ bleibt auf Position 2"
           },
           "explanation": {
             "de": "„will“ steht auf Position 2, „finden“ steht am Ende.",
@@ -1842,10 +1866,12 @@
           "answer": "Emre will nach Leipzig kommen.",
           "accepted": [
             "Emre will nach Leipzig kommen.",
-            "Nach Leipzig will Emre kommen."
+            "Nach Leipzig will Emre kommen.",
+            "Kommen will Emre nach Leipzig."
           ],
           "acceptedWhy": {
-            "Nach Leipzig will Emre kommen.": "auch richtig: „nach Leipzig“ auf Position 1, „kommen“ am Ende"
+            "Nach Leipzig will Emre kommen.": "auch richtig: „nach Leipzig“ auf Position 1, „kommen“ am Ende",
+            "Kommen will Emre nach Leipzig.": "auch richtig, aber stark betont: „kommen“ auf Position 1, „will“ auf Position 2"
           },
           "intentionalError": true,
           "errorTag": "satzklammer",
@@ -2292,18 +2318,18 @@
             "promptDe": "Bilden Sie die W-Frage.",
             "promptEn": "Build the W-question.",
             "tiles": [
-              "fängt",
-              "der Kurs",
+              "fährt",
+              "der Zug",
               "wann",
-              "an"
+              "ab"
             ],
-            "answer": "Wann fängt der Kurs an?",
+            "answer": "Wann fährt der Zug ab?",
             "accepted": [
-              "Wann fängt der Kurs an?"
+              "Wann fährt der Zug ab?"
             ],
             "explanation": {
-              "de": "W-Frage: „Wann“ auf Position 1, „fängt“ auf Position 2, „an“ am Ende.",
-              "en": "W-question: “Wann” first, “fängt” second, “an” at the end."
+              "de": "W-Frage: „Wann“ auf Position 1, „fährt“ auf Position 2, „ab“ am Ende.",
+              "en": "W-question: “Wann” first, “fährt” second, “ab” at the end."
             },
             "origin": "agent"
           },
@@ -2419,17 +2445,16 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.verbposition-2",
-            "promptDe": "Korrigieren Sie die Wortstellung: „Wann der Kurs fängt an?“",
+            "promptDe": "Korrigieren Sie die Wortstellung: „Wann die Prüfung ist?“",
             "promptEn": "Correct the word order.",
             "tiles": [
               "wann",
-              "fängt",
-              "der Kurs",
-              "an"
+              "ist",
+              "die Prüfung"
             ],
-            "answer": "Wann fängt der Kurs an?",
+            "answer": "Wann ist die Prüfung?",
             "accepted": [
-              "Wann fängt der Kurs an?"
+              "Wann ist die Prüfung?"
             ],
             "intentionalError": true,
             "errorTag": "v2-inv",
@@ -2437,8 +2462,8 @@
               "v2-inv"
             ],
             "explanation": {
-              "de": "In der W-Frage steht das Verb „fängt“ auf Position 2, gleich nach „Wann“.",
-              "en": "In a W-question the verb “fängt” comes second, right after “Wann”."
+              "de": "In der W-Frage steht das Verb „ist“ auf Position 2, gleich nach „Wann“.",
+              "en": "In a W-question the verb “ist” comes second, right after “Wann”."
             },
             "origin": "agent"
           },
@@ -2683,7 +2708,7 @@
           "g.verbposition-2"
         ],
         "register": "Sie",
-        "modelDe": "Guten Tag! Ich heiße Priya Nair. Ich bin im Kurs A1 von Frau Schulz. Wann ist die Prüfung?"
+        "modelDe": "Guten Tag! Ich heiße Priya Nair. Ich bin im Kurs A1.1 von Frau Schulz. Wann ist die Prüfung?"
       },
       "aussprache": {
         "focus": "Akzent: Oft ist der Akzent vorne – PRÜfung, WÖRterbuch. Aber: EmpFANG, BeRUF.",
@@ -2860,7 +2885,7 @@
           "id": "a1.1-u12-ls4-t6",
           "kind": "sign",
           "title": "An Kursraum 5",
-          "text": "Kurs A1 von Frau Schulz: Heute nicht hier!\nBitte gehen Sie in Kursraum 2.\nDen Schlüssel für Kursraum 2 bekommen Sie im Büro.",
+          "text": "Kurs A1.1 von Frau Schulz: Heute nicht hier!\nBitte gehen Sie in Kursraum 2.\nDen Schlüssel für Kursraum 2 bekommen Sie im Büro.",
           "glosses": []
         },
         {
@@ -3186,7 +3211,7 @@
         ],
         "aiRole": {
           "name": "Nora",
-          "personaDe": "In Teil 1 Gesprächsleitung (KI): hört zu, bittet dann: „Buchstabieren Sie bitte Ihren Familiennamen.“ und fragt: „Wie ist Ihre Telefonnummer?“ Bei „Wie bitte?“ wiederholt sie die Frage langsam. In Teil 2 Teilnehmerin in der Prüfung: lernt seit sechs Monaten Deutsch und will die Prüfung in drei Monaten machen; ist in ihrem Land Lehrerin und arbeitet jetzt in Leipzig in einem Restaurant. Fragt mit der Karte „Plan“: „Was wollen Sie mit Deutsch machen?“ und mit der Karte „Land“: „Wo haben Sie in Ihrem Land gearbeitet?“ Spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste.",
+          "personaDe": "In Teil 1 spricht die Gesprächsleitung (KI): Sie hört zu, bittet dann: „Buchstabieren Sie bitte Ihren Familiennamen.“ und fragt: „Wie ist Ihre Telefonnummer?“ Bei „Wie bitte?“ wiederholt sie die Frage langsam. In Teil 2 ist Nora Teilnehmerin in der Prüfung und sagt Sie. Sie wohnt in Leipzig und lernt seit sechs Monaten Deutsch in einem Kurs; die Prüfung will sie in drei Monaten machen. In ihrem Land (sie nennt es nicht, sie sagt nur „in meinem Land“) ist sie Lehrerin, in Leipzig arbeitet sie in einem Restaurant. Sie hat zwei Schwestern in Hamburg und keine Kinder. Fragt mit der Karte „Plan“: „Was wollen Sie mit Deutsch machen?“ und mit der Karte „Land“: „Wo haben Sie in Ihrem Land gearbeitet?“ Spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste.",
           "register": "Sie",
           "support": "slow-wordbank"
         },
@@ -3264,7 +3289,7 @@
           },
           {
             "speaker": "partner",
-            "de": "Ich bin Lehrerin. Hier in Leipzig arbeite ich in einem Restaurant."
+            "de": "In meinem Land bin ich Lehrerin. Hier in Leipzig arbeite ich in einem Restaurant."
           },
           {
             "speaker": "partner",
@@ -3423,10 +3448,12 @@
         "answer": "Wir wollen die Prüfung machen.",
         "accepted": [
           "Wir wollen die Prüfung machen.",
-          "Die Prüfung wollen wir machen."
+          "Die Prüfung wollen wir machen.",
+          "Machen wollen wir die Prüfung."
         ],
         "acceptedWhy": {
-          "Die Prüfung wollen wir machen.": "grammatisch: „die Prüfung“ betont auf Position 1, „wollen“ bleibt auf Position 2"
+          "Die Prüfung wollen wir machen.": "grammatisch: „die Prüfung“ betont auf Position 1, „wollen“ bleibt auf Position 2",
+          "Machen wollen wir die Prüfung.": "grammatisch, aber stark betont: „machen“ auf Position 1, „wollen“ bleibt auf Position 2"
         },
         "explanation": {
           "de": "„wollen“ steht auf Position 2, „machen“ steht am Ende.",
@@ -3520,10 +3547,12 @@
         "answer": "Ich will Deutsch lernen.",
         "accepted": [
           "Ich will Deutsch lernen.",
-          "Deutsch will ich lernen."
+          "Deutsch will ich lernen.",
+          "Lernen will ich Deutsch."
         ],
         "acceptedWhy": {
-          "Deutsch will ich lernen.": "auch richtig: „Deutsch“ auf Position 1, „lernen“ am Ende"
+          "Deutsch will ich lernen.": "auch richtig: „Deutsch“ auf Position 1, „lernen“ am Ende",
+          "Lernen will ich Deutsch.": "auch richtig, aber stark betont: „lernen“ auf Position 1, „will“ auf Position 2"
         },
         "intentionalError": true,
         "errorTag": "satzklammer",

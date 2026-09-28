@@ -255,9 +255,9 @@
           {
             "id": "a1.1-u11-ls1-l04",
             "speaker": "cast.olena",
-            "de": "Am Samstag war ich auf dem Flohmarkt. Da habe ich ein Fahrrad gekauft, für nur 40 Euro!",
-            "en": "On Saturday I was at the flea market. I bought a bike there, for only 40 euros!",
-            "say": "Am Samstag war ich auf dem Flohmarkt. Da habe ich ein Fahrrad gekauft, für nur vierzig Euro!"
+            "de": "Am Samstag war ich auf dem Flohmarkt. Da habe ich ein Fahrrad gekauft, für nur 40 Euro! Der Flohmarkt ist nur einmal im Monat.",
+            "en": "On Saturday I was at the flea market. I bought a bike there, for only 40 euros! The flea market is only on once a month.",
+            "say": "Am Samstag war ich auf dem Flohmarkt. Da habe ich ein Fahrrad gekauft, für nur vierzig Euro! Der Flohmarkt ist nur einmal im Monat."
           },
           {
             "id": "a1.1-u11-ls1-l05",
@@ -730,11 +730,13 @@
             "accepted": [
               "Ich habe am Freitag Fisch gegessen.",
               "Am Freitag habe ich Fisch gegessen.",
-              "Fisch habe ich am Freitag gegessen."
+              "Fisch habe ich am Freitag gegessen.",
+              "Gegessen habe ich am Freitag Fisch."
             ],
             "acceptedWhy": {
               "Am Freitag habe ich Fisch gegessen.": "auch richtig: „am Freitag“ auf Position 1, „habe“ auf Position 2",
-              "Fisch habe ich am Freitag gegessen.": "auch richtig: „Fisch“ betont auf Position 1, „habe“ auf Position 2"
+              "Fisch habe ich am Freitag gegessen.": "auch richtig: „Fisch“ betont auf Position 1, „habe“ auf Position 2",
+              "Gegessen habe ich am Freitag Fisch.": "auch richtig, aber stark betont: das Partizip auf Position 1, „habe“ auf Position 2"
             },
             "intentionalError": true,
             "errorTag": "perfekt-aux-participle",
@@ -948,7 +950,7 @@
           16
         ],
         "targets": [
-          "g.zeitangaben-inversion"
+          "g.perfekt-haben"
         ],
         "register": "Sie",
         "modelDe": "Am Samstag habe ich im Park Fußball gespielt. Am Sonntag habe ich gekocht."
@@ -1477,10 +1479,12 @@
             "answer": "Am Sonntag hat Elif gekocht.",
             "accepted": [
               "Am Sonntag hat Elif gekocht.",
-              "Elif hat am Sonntag gekocht."
+              "Elif hat am Sonntag gekocht.",
+              "Gekocht hat Elif am Sonntag."
             ],
             "acceptedWhy": {
-              "Elif hat am Sonntag gekocht.": "auch richtig: „Elif“ auf Position 1, „hat“ auf Position 2"
+              "Elif hat am Sonntag gekocht.": "auch richtig: „Elif“ auf Position 1, „hat“ auf Position 2",
+              "Gekocht hat Elif am Sonntag.": "auch richtig, aber stark betont: das Partizip auf Position 1, „hat“ auf Position 2"
             },
             "intentionalError": true,
             "errorTag": "v2-inv",
@@ -1718,6 +1722,7 @@
           30
         ],
         "targets": [
+          "g.perfekt-haben",
           "g.zeitangaben-inversion"
         ],
         "register": "du",
@@ -1803,8 +1808,8 @@
           }
         ],
         "text": {
-          "de": "Postkarte von Sophie:\nLiebe Priya, lieber Arjun,\nviele Grüße aus Dresden! Meine Eltern sehe ich nur einmal im Monat. Gestern Vormittag waren wir um Viertel nach zehn im Museum im Schloss. Das war sehr interessant. Am Abend haben wir im Garten gegessen und viel gelacht. In der Nacht haben wir nur fünf Stunden geschlafen! Heute lese ich nur und schlafe viel. Am Mittwoch bin ich wieder in Leipzig. Danke für den Samstag! Besucht ihr mich bald in der WG?\nBis bald!\nSophie\n\nPriya im Chat:\nHallo zusammen! Hier sind Fotos aus Dresden. Am Samstag war ich mit Arjun und Sophie dort. Wir haben die Altstadt und das Schloss gesehen. Das Wetter war super, und der Ausflug hat viel Spaß gemacht! Nur der Zug am Abend hatte eine Stunde Verspätung.",
-          "en": "Postcard from Sophie: Dear Priya, dear Arjun, greetings from Dresden! I only see my parents once a month. Yesterday morning at quarter past ten we were at the museum in the palace. It was very interesting. In the evening we ate in the garden and laughed a lot. We only slept five hours that night! Today I’m just reading and sleeping a lot. On Wednesday I’ll be back in Leipzig. Thanks for Saturday! Will you visit me in the flat-share soon? See you soon! Sophie · Priya in the chat: Hi everyone! Here are photos from Dresden. On Saturday I was there with Arjun and Sophie. We saw the old town and the palace. The weather was great, and the trip was a lot of fun! Only the train in the evening was an hour late."
+          "de": "Postkarte von Sophie:\nLiebe Priya, lieber Arjun,\nviele Grüße aus Dresden! Meine Eltern sagen auch Hallo! Gestern Vormittag waren wir um Viertel nach zehn im Museum im Schloss. Das war sehr interessant. Am Abend haben wir im Garten gegessen und viel gelacht. In der Nacht haben wir nur fünf Stunden geschlafen! Heute lese ich nur und schlafe viel. Am Mittwoch bin ich wieder in Leipzig. Danke für den Samstag! Besucht ihr mich bald in der WG?\nBis bald!\nSophie\n\nPriya im Chat:\nHallo zusammen! Hier sind Fotos aus Dresden. Am Samstag war ich mit Arjun und Sophie dort. Wir haben die Altstadt und das Schloss gesehen. Das Wetter war super, und der Ausflug hat viel Spaß gemacht! Nur der Zug am Abend hatte eine Stunde Verspätung.",
+          "en": "Postcard from Sophie: Dear Priya, dear Arjun, greetings from Dresden! My parents say hi too! Yesterday morning at quarter past ten we were at the museum in the palace. It was very interesting. In the evening we ate in the garden and laughed a lot. We only slept five hours that night! Today I’m just reading and sleeping a lot. On Wednesday I’ll be back in Leipzig. Thanks for Saturday! Will you visit me in the flat-share soon? See you soon! Sophie · Priya in the chat: Hi everyone! Here are photos from Dresden. On Saturday I was there with Arjun and Sophie. We saw the old town and the palace. The weather was great, and the trip was a lot of fun! Only the train in the evening was an hour late."
         },
         "glosses": [],
         "transcriptAfterUnaidedListen": true
@@ -2237,12 +2242,14 @@
               "Ich habe am Sonntag ein Buch gelesen.",
               "Am Sonntag habe ich ein Buch gelesen.",
               "Ein Buch habe ich am Sonntag gelesen.",
-              "Ich habe ein Buch am Sonntag gelesen."
+              "Ich habe ein Buch am Sonntag gelesen.",
+              "Gelesen habe ich am Sonntag ein Buch."
             ],
             "acceptedWhy": {
               "Am Sonntag habe ich ein Buch gelesen.": "auch richtig: „am Sonntag“ auf Position 1, „habe“ auf Position 2",
               "Ein Buch habe ich am Sonntag gelesen.": "auch richtig: „ein Buch“ betont auf Position 1, „habe“ auf Position 2",
-              "Ich habe ein Buch am Sonntag gelesen.": "grammatisch, aber betont: „am Sonntag“ ist wichtig; die Satzklammer „habe … gelesen“ ist richtig"
+              "Ich habe ein Buch am Sonntag gelesen.": "grammatisch, aber betont: „am Sonntag“ ist wichtig; die Satzklammer „habe … gelesen“ ist richtig",
+              "Gelesen habe ich am Sonntag ein Buch.": "auch richtig, aber stark betont: das Partizip auf Position 1, „habe“ auf Position 2"
             },
             "intentionalError": true,
             "errorTag": "satzklammer",
@@ -2436,10 +2443,12 @@
           "answer": "Wir haben einen Tee getrunken.",
           "accepted": [
             "Wir haben einen Tee getrunken.",
-            "Einen Tee haben wir getrunken."
+            "Einen Tee haben wir getrunken.",
+            "Getrunken haben wir einen Tee."
           ],
           "acceptedWhy": {
-            "Einen Tee haben wir getrunken.": "auch richtig: „einen Tee“ betont auf Position 1, „haben“ auf Position 2"
+            "Einen Tee haben wir getrunken.": "auch richtig: „einen Tee“ betont auf Position 1, „haben“ auf Position 2",
+            "Getrunken haben wir einen Tee.": "auch richtig, aber stark betont: das Partizip auf Position 1, „haben“ auf Position 2"
           },
           "intentionalError": true,
           "errorTag": "satzklammer",
@@ -2682,7 +2691,7 @@
         "moves": [],
         "aiRole": {
           "name": "Nora",
-          "personaDe": "Teilnehmerin in der Prüfung; spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste. Am Samstag hat sie mit Freunden Fußball gespielt. Am Freitag war sie im Kino, der Film war toll. Sie fragt mit den Karten „Sonntag“ und „Ausflug“.",
+          "personaDe": "Teilnehmerin in der Prüfung; sagt Sie. Sie wohnt in Leipzig und lernt Deutsch in einem Kurs. In ihrem Land (sie nennt es nicht, sie sagt nur „in meinem Land“) ist sie Lehrerin, in Leipzig arbeitet sie in einem Restaurant. Sie hat zwei Schwestern in Hamburg und keine Kinder; sie fährt oft mit dem Zug nach Hamburg. Sie schwimmt gern und frühstückt am Sonntag lange. Am Samstag war sie in Hamburg bei ihren Schwestern. Am Freitag war sie im Kino, der Film war toll. Sie fragt mit den Karten „Sonntag“ und „Ausflug“. Spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste.",
           "register": "Sie",
           "support": "slow-wordbank"
         },
@@ -2704,7 +2713,7 @@
           },
           {
             "speaker": "partner",
-            "de": "Am Samstag habe ich mit Freunden Fußball gespielt."
+            "de": "Am Samstag war ich in Hamburg. Dort wohnen meine Schwestern."
           },
           {
             "speaker": "partner",
@@ -2964,10 +2973,12 @@
         "answer": "Wir haben ein Fahrrad gekauft.",
         "accepted": [
           "Wir haben ein Fahrrad gekauft.",
-          "Ein Fahrrad haben wir gekauft."
+          "Ein Fahrrad haben wir gekauft.",
+          "Gekauft haben wir ein Fahrrad."
         ],
         "acceptedWhy": {
-          "Ein Fahrrad haben wir gekauft.": "auch richtig: „ein Fahrrad“ betont auf Position 1, „haben“ auf Position 2"
+          "Ein Fahrrad haben wir gekauft.": "auch richtig: „ein Fahrrad“ betont auf Position 1, „haben“ auf Position 2",
+          "Gekauft haben wir ein Fahrrad.": "auch richtig, aber stark betont: das Partizip auf Position 1, „haben“ auf Position 2"
         },
         "intentionalError": true,
         "errorTag": "satzklammer",
