@@ -18,8 +18,8 @@
 //
 // Clock hours (a1.1-u07 r1 F03): a typed exact:number key that is an hour 1–12 at a gap before „Uhr" accepts
 // the hour + 12, or the item says the time is before noon. Evening by the item's own words (explanation,
-// promptEn, acceptedWhy) without the hour + 12 is a BLOCKER (the 24-hour answer is graded wrong); undecided is
-// a RATCHET.
+// promptEn, acceptedWhy) without the hour + 12 is a BLOCKER (the 24-hour answer is graded wrong); a step input
+// that places only the morning („heute Vormittag", „morgen früh") settles it; undecided is a RATCHET.
 
 import { walkItems, walkLines } from '../lib-validate/walk.mjs';
 import { arr, isObj, blocker, ratchet, CHOICE_TYPES } from '../lib-validate/helpers.mjs';
@@ -52,7 +52,7 @@ const MORNING_RE = /\b(?:morgens|am Morgen|vormittags|am Vormittag|früh|a\.?m\.
  * or says the time is before noon (explanation, acceptedWhy or reviewerConfirmed). Evening in the item's own
  * words and no hour + 12: BLOCKER (the learner who writes „20 Uhr" is graded wrong); undecided: RATCHET.
  */
-export function clockHourFinding(doc, item, path) {
+export function clockHourFinding(doc, item, path, step = null) {
   if (item?.exact !== 'number' || !['fill_blank', 'notes', 'cloze'].includes(item.type) || arr(item.options).length) return null;
   const m = String(item.answer ?? '').trim().match(/^(\d{1,2})(?:[.:](\d{2}))?(?:\s*Uhr)?$/);
   if (!m) return null;
@@ -65,6 +65,9 @@ export function clockHourFinding(doc, item, path) {
   if (accepted) return null;
   const said = [item.explanation?.de, item.explanation?.en, item.promptEn, JSON.stringify(item.acceptedWhy || {}), ...arr(item.reviewerConfirmed)].join(' ');
   if (MORNING_RE.test(said) || arr(item.reviewerConfirmed).length) return null;
+  // the step's own input places the morning („heute Vormittag", „morgen früh") and never the evening
+  const heard = [...arr(step?.input?.lines).map((l) => l?.de), step?.input?.text?.de].filter(Boolean).join(' ');
+  if (heard && MORNING_RE.test(heard) && !EVENING_RE.test(heard)) return null;
   if (EVENING_RE.test(`${said} ${prompt}`)) return blocker(doc, `${path}.accepted`, `the key „${item.answer}" is an evening hour by the item's own words, but „${later}" is not accepted — the learner who writes the 24-hour time is graded wrong`, item.id);
   return ratchet(doc, `${path}.accepted`, `the key „${item.answer}" is a clock hour 1–12: accept „${later}" too (acceptedWhy: 24-Stunden-Uhr), or say in the explanation that the time is before noon`, item.id);
 }
@@ -75,12 +78,12 @@ export function run({ docs }) {
   for (const doc of docs) {
     const spelled = new Set();
     for (const { line } of walkLines(doc)) for (const w of spelledWords(line?.de)) spelled.add(w);
-    for (const { item, path } of walkItems(doc)) {
+    for (const { item, path, step } of walkItems(doc)) {
       if (!isObj(item)) continue;
       n += 1;
       const forms = [item.answer, ...arr(item.accepted)].map((x) => String(x ?? ''));
       // a clock hour 1–12 (a1.1-u07 r1 F03): „bis acht Uhr" in the evening is „20 Uhr" too
-      const clock = clockHourFinding(doc, item, path);
+      const clock = clockHourFinding(doc, item, path, step);
       if (clock) findings.push(clock);
       if (item.type === 'dictation') {
         if (forms.some((f) => hasNumber(f)) && item.exact !== 'number') {
