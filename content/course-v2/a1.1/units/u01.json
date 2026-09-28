@@ -272,8 +272,8 @@
           {
             "id": "a1.1-u01-ls1-l01",
             "speaker": "cast.frau-schulz",
-            "de": "So, jetzt bitte auf Deutsch: Wie heißen Sie? Woher kommen Sie? Und wo wohnen Sie?",
-            "en": "Right, now in German, please: What’s your name? Where are you from? And where do you live?"
+            "de": "So, jetzt bitte auf Deutsch. Stellen Sie sich bitte vor: Wie heißen Sie? Woher kommen Sie? Und wo wohnen Sie?",
+            "en": "Right, now in German, please. Please introduce yourselves: What’s your name? Where are you from? And where do you live?"
           },
           {
             "id": "a1.1-u01-ls1-l02",
@@ -1060,8 +1060,8 @@
           {
             "id": "a1.1-u01-ls2-l05",
             "speaker": "cast.olena",
-            "de": "Entschuldigung! Hallo, Priya! Ich bin Olena. Und du? Wie heißt du noch mal?",
-            "en": "Excuse me! Hi, Priya! I’m Olena. And you? What was your name again?"
+            "de": "Entschuldigung! Hallo, Priya! Und hallo – ich bin Olena. Wie heißt du noch mal?",
+            "en": "Excuse me! Hi, Priya! And hi – I’m Olena. What was your name again?"
           },
           {
             "id": "a1.1-u01-ls2-l06",
@@ -1078,14 +1078,14 @@
           {
             "id": "a1.1-u01-ls2-l08",
             "speaker": "cast.frau-schulz",
-            "de": "So, geschafft! Das ist alles für heute. Danke! Auf Wiedersehen und bis morgen!",
-            "en": "Right, done! That’s all for today. Thank you! Goodbye and see you tomorrow!"
+            "de": "So, das ist alles für heute. Danke! Auf Wiedersehen und bis morgen!",
+            "en": "Right, that’s all for today. Thank you! Goodbye and see you tomorrow!"
           },
           {
             "id": "a1.1-u01-ls2-l09",
             "speaker": "cast.priya",
-            "de": "Auf Wiedersehen, Frau Schulz! Tschüss, Olena! Tschüss, Bilal! Bis morgen!",
-            "en": "Goodbye, Mrs Schulz! Bye, Olena! Bye, Bilal! See you tomorrow!"
+            "de": "Geschafft! Auf Wiedersehen, Frau Schulz! Tschüss, Olena! Tschüss, Bilal! Bis morgen!",
+            "en": "Made it! Goodbye, Mrs Schulz! Bye, Olena! Bye, Bilal! See you tomorrow!"
           },
           {
             "id": "a1.1-u01-ls2-l10",
@@ -1449,7 +1449,7 @@
               "v2-inv"
             ],
             "explanation": {
-              "de": "„Was“ auf Position 1, das Verb „lernen“ auf Position 2, dann „Sie“. – Deutsch.",
+              "de": "„Was“ auf Position 1, das Verb „lernen“ auf Position 2, dann „Sie“. Antwort: Deutsch.",
               "en": "“Was” first, the verb “lernen” in position 2, then “Sie”. Answer: Deutsch."
             },
             "origin": "agent"
@@ -1890,13 +1890,19 @@
           "promptEn": "Where does Arta live? Write the city.",
           "answer": "Prishtina",
           "accepted": [
-            "Prishtina"
+            "Prishtina",
+            "Pristina",
+            "Priština"
           ],
           "explanation": {
             "de": "Im Chat steht: „Wohnort: Prishtina.“",
             "en": "Arta writes: place of residence – Prishtina."
           },
-          "origin": "agent"
+          "origin": "agent",
+          "acceptedWhy": {
+            "Pristina": "deutsche Schreibweise der Stadt (Duden: Pristina)",
+            "Priština": "Schreibweise mit Hatschek"
+          }
         },
         {
           "id": "a1.1-u01-ls3-i04",
@@ -2659,32 +2665,32 @@
             {
               "id": "a1.1-u01-ls4-t4-l01",
               "speaker": "x.eva-lindner",
-              "de": "So, geschafft! Jetzt ist der Kurs zu Ende. Danke und bis morgen!",
-              "en": "Right, done! Class is over now. Thank you and see you tomorrow!"
+              "de": "So, jetzt ist der Kurs zu Ende. Danke!",
+              "en": "Right, class is over now. Thank you!"
             },
             {
               "id": "a1.1-u01-ls4-t4-l02",
               "speaker": "x.tom",
-              "de": "Danke, Frau Lindner! Auf Wiedersehen!",
-              "en": "Thank you, Ms Lindner! Goodbye!"
+              "de": "Geschafft! Danke, Frau Lindner! Ist der Kurs heute noch online?",
+              "en": "Made it! Thank you, Ms Lindner! Is there an online class later today?"
             },
             {
               "id": "a1.1-u01-ls4-t4-l03",
               "speaker": "x.eva-lindner",
-              "de": "Auf Wiedersehen, Tom! Bis morgen, Anna!",
-              "en": "Goodbye, Tom! See you tomorrow, Anna!"
+              "de": "Nein. Der Kurs ist morgen wieder hier.",
+              "en": "No. The class is here again tomorrow."
             },
             {
               "id": "a1.1-u01-ls4-t4-l04",
               "speaker": "x.tom",
-              "de": "Tschüss, Anna! Bis morgen hier im Kurs!",
-              "en": "Bye, Anna! See you tomorrow here in class!"
+              "de": "Ach so! Dann lerne ich heute noch online. Auf Wiedersehen!",
+              "en": "I see! Then I’ll study online a bit more today. Goodbye!"
             },
             {
               "id": "a1.1-u01-ls4-t4-l05",
-              "speaker": "x.anna",
-              "de": "Tschüss, Tom! Heute lerne ich noch online. Bis morgen!",
-              "en": "Bye, Tom! Today I’ll study online a bit more. See you tomorrow!"
+              "speaker": "x.eva-lindner",
+              "de": "Auf Wiedersehen, Tom! Bis morgen!",
+              "en": "Goodbye, Tom! See you tomorrow!"
             }
           ],
           "glosses": []
@@ -2697,23 +2703,29 @@
             {
               "id": "a1.1-u01-ls4-t5-l01",
               "speaker": "x.anna",
-              "de": "Hallo, Tom! Ist der Kurs heute Abend?",
-              "en": "Hi, Tom! Is class this evening?"
+              "de": "Guten Morgen, Frau Lindner! Ist der Kurs heute Abend?",
+              "en": "Good morning, Ms Lindner! Is class this evening?"
             },
             {
               "id": "a1.1-u01-ls4-t5-l02",
-              "speaker": "x.tom",
-              "de": "Heute Abend? Nein, morgen, oder? Oh, da ist Frau Lindner. Guten Morgen, Frau Lindner!",
-              "en": "This evening? No, tomorrow, isn’t it? Oh, there’s Ms Lindner. Good morning, Ms Lindner!"
+              "speaker": "x.eva-lindner",
+              "de": "Guten Morgen, Anna! Heute Abend? Nein.",
+              "en": "Good morning, Anna! This evening? No."
             },
             {
               "id": "a1.1-u01-ls4-t5-l03",
-              "speaker": "x.eva-lindner",
-              "de": "Guten Morgen, Anna! Guten Morgen, Tom! Der Kurs beginnt jetzt. Kommen Sie bitte!",
-              "en": "Good morning, Anna! Good morning, Tom! Class is starting now. Come in, please!"
+              "speaker": "x.anna",
+              "de": "Oh! Dann ist der Kurs morgen, oder?",
+              "en": "Oh! Then class is tomorrow, isn’t it?"
             },
             {
               "id": "a1.1-u01-ls4-t5-l04",
+              "speaker": "x.eva-lindner",
+              "de": "Nein, der Kurs beginnt jetzt. Kommen Sie bitte!",
+              "en": "No, class is starting now. Come in, please!"
+            },
+            {
+              "id": "a1.1-u01-ls4-t5-l05",
               "speaker": "x.anna",
               "de": "Jetzt? Oh! Danke, Frau Lindner!",
               "en": "Now? Oh! Thank you, Ms Lindner!"
@@ -2729,14 +2741,14 @@
             {
               "id": "a1.1-u01-ls4-t6-l01",
               "speaker": "x.eva-lindner",
-              "de": "Guten Morgen! Heute ist der Kurs online. Herr Walsh, wo sind Sie heute?",
-              "en": "Good morning! Today the class is online. Mr Walsh, where are you today?"
+              "de": "Guten Morgen! Heute ist der Kurs online. Herr Walsh, wo sind Sie heute? In Hamburg?",
+              "en": "Good morning! Today the class is online. Mr Walsh, where are you today? In Hamburg?"
             },
             {
               "id": "a1.1-u01-ls4-t6-l02",
               "speaker": "x.sam-walsh",
-              "de": "Guten Morgen, Frau Lindner! Ich bin heute in Irland.",
-              "en": "Good morning, Ms Lindner! I’m in Ireland today."
+              "de": "Guten Morgen, Frau Lindner! Nein, ich bin heute in Irland.",
+              "en": "Good morning, Ms Lindner! No, I’m in Ireland today."
             },
             {
               "id": "a1.1-u01-ls4-t6-l03",
@@ -2749,12 +2761,6 @@
               "speaker": "x.sam-walsh",
               "de": "Ja, ich wohne in Leipzig. Aber heute und morgen bin ich in Irland.",
               "en": "Yes, I live in Leipzig. But today and tomorrow I’m in Ireland."
-            },
-            {
-              "id": "a1.1-u01-ls4-t6-l05",
-              "speaker": "x.tom",
-              "de": "Und ich bin heute in Hamburg. Hallo, Sam!",
-              "en": "And I’m in Hamburg today. Hi, Sam!"
             }
           ],
           "glosses": []
@@ -2861,8 +2867,8 @@
                 "morgen"
               ],
               "explanation": {
-                "de": "Frau Lindner sagt: „Danke und bis morgen!“ Jetzt ist der Kurs zu Ende. Heute lernt Anna noch online.",
-                "en": "Ms Lindner says “see you tomorrow”: class is over now, and Anna only studies online today."
+                "de": "Frau Lindner sagt: „Der Kurs ist morgen wieder hier.“ Jetzt ist der Kurs zu Ende. Heute lernt Tom online.",
+                "en": "Ms Lindner says the class is here again tomorrow. Class is over now, and today Tom studies online."
               },
               "origin": "agent"
             },
@@ -2883,8 +2889,8 @@
                 "jetzt"
               ],
               "explanation": {
-                "de": "Frau Lindner sagt: „Der Kurs beginnt jetzt.“ Anna fragt: „Heute Abend?“ Tom sagt: „Morgen, oder?“",
-                "en": "Ms Lindner says class starts now. Anna guessed this evening and Tom guessed tomorrow."
+                "de": "Frau Lindner sagt: „Der Kurs beginnt jetzt.“ Anna fragt: „Ist der Kurs heute Abend?“ und „Dann ist der Kurs morgen, oder?“",
+                "en": "Ms Lindner says class starts now. Anna first asks about this evening, then about tomorrow – both are wrong."
               },
               "origin": "agent"
             },
@@ -2905,8 +2911,8 @@
                 "in Irland"
               ],
               "explanation": {
-                "de": "Herr Walsh sagt: „Heute und morgen bin ich in Irland.“ In Leipzig wohnt er. In Hamburg ist Tom.",
-                "en": "Mr Walsh is in Ireland today; he lives in Leipzig, and Tom is in Hamburg."
+                "de": "Herr Walsh sagt: „Heute und morgen bin ich in Irland.“ In Leipzig wohnt er. „In Hamburg?“ fragt Frau Lindner.",
+                "en": "Mr Walsh is in Ireland today and tomorrow; he lives in Leipzig. Only Ms Lindner mentions Hamburg, as a question."
               },
               "origin": "agent"
             }
@@ -2916,8 +2922,8 @@
       "strategyCards": [
         {
           "template": "sd1.h1",
-          "de": "Hören Teil 1: Sie hören sechs Gespräche, jedes Gespräch zweimal. Lesen Sie zuerst die Frage: Wer? Woher? Wo? Oft hören Sie zwei oder drei Antworten. Aber nur eine passt zur Frage. In der Prüfung sind a, b und c Bilder.",
-          "en": "Listening part 1: six short conversations, each played twice. Read the question first: who, where from, where? You often hear two or three of the options, but only one answers the question. In the exam the options are pictures."
+          "de": "Hören Teil 1: Sie hören sechs Gespräche, jedes Gespräch zweimal. Lesen Sie zuerst die Frage: Woher? Wo? Was? Wann? Oft hören Sie zwei oder drei Antworten. Aber nur eine passt zur Frage. In der Prüfung sind a, b und c Bilder.",
+          "en": "Listening part 1: six short conversations, each played twice. Read the question first: where from, where, what, when? You often hear two or three of the options, but only one answers the question. In the exam the options are pictures."
         }
       ]
     },
@@ -3010,7 +3016,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Ich spreche Englisch und ein bisschen Deutsch."
+            "de": "Ich spreche Malayalam, Englisch und ein bisschen Deutsch."
           },
           {
             "speaker": "partner",
@@ -3022,7 +3028,7 @@
           },
           {
             "speaker": "partner",
-            "de": "Ich komme aus Leipzig. Und wo wohnen Sie?"
+            "de": "Ich komme aus Leipzig und wohne auch hier. Und wo wohnen Sie?"
           },
           {
             "speaker": "learner",
@@ -3544,7 +3550,7 @@
   ],
   "story": {
     "beat": "Priya wohnt jetzt in Leipzig. Heute beginnt der Kurs A1 von Frau Schulz. Im Kurs sind auch Olena und Bilal. Emre und Arta lernen online, in İzmir und in Prishtina.",
-    "cliffhanger": "Nach dem Kurs: „Frau Nair? Guten Tag! Ich bin Uwe Richter, von der Sprachschule. Bitte kommen Sie morgen. Nair – mit A oder mit E?“",
+    "cliffhanger": "Nach dem Kurs: „Frau Nair? Guten Tag! Ich bin Uwe Richter, von der Sprachschule. Nair – mit A oder mit E?“",
     "castIn": [
       "cast.priya",
       "cast.frau-schulz",
