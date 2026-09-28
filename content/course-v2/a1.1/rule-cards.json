@@ -32,7 +32,7 @@
         ],
         [
           "Was",
-          "sprechen",
+          "lernen",
           "Sie?"
         ]
       ],
@@ -43,8 +43,8 @@
       "spine": "g.praesens",
       "depth": 1,
       "modelSentence": "Ich komme aus Indien. Und woher kommst du?",
-      "de": "Im Präsens hat das Verb eine Endung: ich wohn-e, du wohn-st, er/sie wohn-t, Sie wohn-en. Sie (formell) hat immer -en, für eine Person und für mehrere. sein ist unregelmäßig: ich bin, du bist, er/sie ist, Sie sind. du sagen Sie zu Freunden und in der Familie, Sie zu fremden Erwachsenen und im Amt.",
-      "en": "In the present tense the verb takes an ending: ich wohne, du wohnst, er/sie wohnt, Sie wohnen. Formal Sie always takes -en, for one person or several. sein is irregular: ich bin, du bist, er/sie ist, Sie sind. Use du with friends and family, Sie with adults you do not know and at offices.",
+      "de": "Im Präsens hat das Verb eine Endung: ich wohn-e, du wohn-st, er/sie wohn-t, Sie wohn-en. Sie (formell) hat immer -en, für eine Person und für mehrere. sein ist unregelmäßig: ich bin, du bist, er/sie ist, Sie sind. „du“ sagen Sie zu Freunden, in der Familie und im Kurs. „Sie“ sagen Sie zu Frau Schulz und im Amt.",
+      "en": "In the present tense the verb takes an ending: ich wohne, du wohnst, er/sie wohnt, Sie wohnen. Formal Sie always takes -en, for one person or several. sein is irregular: ich bin, du bist, er/sie ist, Sie sind. Say du to friends, in the family and in the course. Say Sie to Mrs Schulz and at offices.",
       "table": [
         [
           "Person",
@@ -83,7 +83,7 @@
       "id": "rc.praesens-2",
       "spine": "g.praesens",
       "depth": 2,
-      "modelSentence": "Wir haben am Montag Kurs. Habt ihr auch Kurs?",
+      "modelSentence": "Wir haben heute Kurs. Habt ihr auch Kurs?",
       "de": "Präsens, alle Personen: wir wohn-en, ihr wohn-t, sie/Sie wohn-en. wir, sie und Sie haben die Form vom Infinitiv. haben: ich habe, du hast, er/sie hat, wir haben, ihr habt, sie/Sie haben. sein: wir sind, ihr seid, sie/Sie sind. Bei arbeiten kommt ein e dazu: du arbeitest, er arbeitet, ihr arbeitet.",
       "en": "Present tense, all persons: wir wohnen, ihr wohnt, sie/Sie wohnen. wir, sie and Sie use the infinitive form. haben: ich habe, du hast, er/sie hat, wir haben, ihr habt, sie/Sie haben. sein: wir sind, ihr seid, sie/Sie sind. arbeiten adds an e: du arbeitest, er arbeitet, ihr arbeitet.",
       "table": [
@@ -143,9 +143,9 @@
       "id": "rc.negation-nicht",
       "spine": "g.negation-nicht",
       "depth": 1,
-      "modelSentence": "Nein, ich bin nicht Lehrerin. Ich bin Ärztin.",
-      "de": "Mit nicht sagen Sie: Das stimmt nicht. nicht steht vor dem Wort, das nicht stimmt: Ich bin nicht Lehrerin. Ich komme nicht aus Berlin. Für den ganzen Satz steht nicht am Ende: Ich arbeite heute nicht.",
-      "en": "Use nicht to say that something is not true. nicht goes before the word that is not true: Ich bin nicht Lehrerin. Ich komme nicht aus Berlin. To negate the whole sentence, nicht goes at the end: Ich arbeite heute nicht.",
+      "modelSentence": "Nein, ich bin nicht Lehrerin. Ich bin Studentin.",
+      "de": "Mit nicht sagen Sie: Das stimmt nicht. nicht steht vor dem Wort: nicht zwanzig, nicht aus Berlin, nicht Lehrerin – Studentin. Für den ganzen Satz steht nicht am Ende: Ich arbeite heute nicht. Achtung: Ich habe kein Formular. (kein: Einheit 6)",
+      "en": "Use nicht to say that something is not true. nicht goes before the word: nicht zwanzig, nicht aus Berlin, nicht Lehrerin – Studentin. To negate the whole sentence, nicht goes at the end: Ich arbeite heute nicht. Note: Ich habe kein Formular. (kein: unit 6)",
       "table": [
         [
           "Ich bin",
@@ -196,8 +196,8 @@
       "spine": "g.possessiv-mein-dein",
       "depth": 1,
       "modelSentence": "Das ist meine Mutter, und das ist mein Bruder.",
-      "de": "mein, dein und Ihr sagen: Das gehört zu mir, zu dir oder zu Ihnen. mein steht bei Wörtern mit der und das, meine bei Wörtern mit die und im Plural. Genauso: dein – deine, Ihr – Ihre. Ihr (formell) schreiben Sie immer groß: Ist das Ihre Tochter?",
-      "en": "mein, dein and Ihr say who something belongs to: me, you (informal) or you (formal). Use mein with der and das words, meine with die words and in the plural. The same for dein – deine, Ihr – Ihre. Formal Ihr is always capitalised: Ist das Ihre Tochter?",
+      "de": "„mein“ (ich), „dein“ (du), „Ihr“ (Sie). „mein“ steht bei „der“ und „das“, „meine“ bei „die“ und im Plural. Genauso: „dein – deine“, „Ihr – Ihre“. „Ihr“ (formell) schreiben Sie immer mit „I“: Ist das Ihre Tochter?",
+      "en": "mein (ich), dein (du), Ihr (Sie). Use mein with der and das nouns, meine with die nouns and in the plural. The same for dein – deine, Ihr – Ihre. Formal Ihr always starts with a capital I: Ist das Ihre Tochter?",
       "table": [
         [
           "Person",
@@ -235,42 +235,42 @@
       "spine": "g.vokalwechsel",
       "depth": 1,
       "modelSentence": "Ich spreche Deutsch. Sprichst du auch Deutsch?",
-      "de": "Einige Verben ändern den Vokal bei du und er/sie/es: e → i (sprechen: du sprichst, er spricht), e → ie (lesen: du liest, sie liest), a → ä (fahren: du fährst, er fährt). Bei ich, wir, ihr und sie/Sie bleibt der Vokal. nehmen ist besonders: du nimmst, er nimmt.",
-      "en": "Some verbs change their vowel with du and er/sie/es: e → i (du sprichst, er spricht), e → ie (du liest, sie liest), a → ä (du fährst, er fährt). With ich, wir, ihr and sie/Sie the vowel stays. nehmen is special: du nimmst, er nimmt.",
+      "de": "Einige Verben ändern den Vokal bei du und er/sie/es: e → i (sprechen: du sprichst, er spricht), e → ie (lesen: du liest, sie liest), a → ä (schlafen: du schläfst, er schläft). Bei ich, wir, ihr und sie/Sie bleibt der Vokal. nehmen ist besonders: du nimmst, er nimmt.",
+      "en": "Some verbs change their vowel with du and er/sie/es: e → i (du sprichst, er spricht), e → ie (du liest, sie liest), a → ä (du schläfst, er schläft). With ich, wir, ihr and sie/Sie the vowel stays. nehmen is special: du nimmst, er nimmt.",
       "table": [
         [
           "Person",
           "sprechen",
           "lesen",
-          "fahren",
+          "schlafen",
           "nehmen"
         ],
         [
           "ich",
           "spreche",
           "lese",
-          "fahre",
+          "schlafe",
           "nehme"
         ],
         [
           "du",
           "sprichst",
           "liest",
-          "fährst",
+          "schläfst",
           "nimmst"
         ],
         [
           "er/sie/es",
           "spricht",
           "liest",
-          "fährt",
+          "schläft",
           "nimmt"
         ],
         [
           "wir",
           "sprechen",
           "lesen",
-          "fahren",
+          "schlafen",
           "nehmen"
         ]
       ],
@@ -348,8 +348,8 @@
       "spine": "g.pronomen-er-es-sie",
       "depth": 1,
       "modelSentence": "Wie ist die Küche? – Sie ist groß und hell.",
-      "de": "Für ein Nomen können Sie ein Pronomen sagen. Das Pronomen passt zum Artikel: der Tisch → er, das Bad → es, die Küche → sie, die Möbel (Plural) → sie. Das gilt auch für Sachen, nicht nur für Personen: Der Tisch? Er ist neu.",
-      "en": "You can replace a noun with a pronoun. The pronoun matches the article: der Tisch → er, das Bad → es, die Küche → sie, die Möbel (plural) → sie. This works for things too, not only for people: Der Tisch? Er ist neu.",
+      "de": "Ein Pronomen steht für ein Nomen. Es passt zum Artikel: der Tisch → er, das Bad → es, die Küche → sie, die Möbel (Plural) → sie. Nicht nur für Personen, auch für Tisch, Bad und Küche: Der Tisch? Er ist neu.",
+      "en": "A pronoun stands for a noun. It matches the article: der Tisch → er, das Bad → es, die Küche → sie, die Möbel (plural) → sie. Not only for people, also for things such as Tisch, Bad and Küche: Der Tisch? Er ist neu.",
       "table": [
         [
           "der Tisch",
@@ -379,8 +379,8 @@
       "spine": "g.adjektiv-praedikativ",
       "depth": 1,
       "modelSentence": "Die Wohnung ist nicht groß, aber sehr hell.",
-      "de": "Nach sein steht das Adjektiv ohne Endung: Das Zimmer ist klein. Die Küche ist klein. Die Zimmer sind klein. sehr macht das Adjektiv stärker: sehr schön. zu heißt: mehr als gut, das ist ein Problem: Die Wohnung ist zu teuer. nicht steht vor dem Adjektiv: nicht groß.",
-      "en": "After sein the adjective has no ending: Das Zimmer ist klein. Die Küche ist klein. Die Zimmer sind klein. sehr makes it stronger: sehr schön. zu means more than is good, a problem: Die Wohnung ist zu teuer. nicht goes before the adjective: nicht groß.",
+      "de": "Nach sein steht das Adjektiv ohne Endung: Das Zimmer ist klein. Die Küche ist klein. Die Zimmer sind klein. sehr heißt: viel (sehr schön). zu heißt: zu viel, nicht gut (Die Wohnung ist zu teuer). nicht steht vor dem Adjektiv: nicht groß.",
+      "en": "After sein the adjective has no ending: Das Zimmer ist klein. Die Küche ist klein. Die Zimmer sind klein. sehr means very (sehr schön). zu means too much, not good (Die Wohnung ist zu teuer). nicht goes before the adjective: nicht groß.",
       "table": [
         [
           "sehr",
@@ -390,7 +390,7 @@
         [
           "zu",
           "Die Wohnung ist zu teuer.",
-          "ein Problem"
+          "nicht gut"
         ],
         [
           "nicht",
@@ -405,8 +405,8 @@
       "spine": "g.akkusativ",
       "depth": 1,
       "modelSentence": "Ich brauche einen Laptop.",
-      "de": "Nach Verben wie brauchen, haben, suchen, kaufen und möchte steht das Nomen im Akkusativ. Nur maskulin ändert sich: der → den, ein → einen, kein → keinen. Neutral, feminin und Plural sind wie im Nominativ: Ich brauche ein Heft, eine Tasche und die Stifte. Achtung: „Gibst du mir bitte das Heft?“ – mir ist Dativ (auch dir), das Heft ist Akkusativ.",
-      "en": "After verbs such as brauchen, haben, suchen, kaufen and möchte the noun is in the accusative. Only the masculine changes: der → den, ein → einen, kein → keinen. Neuter, feminine and plural look the same as in the nominative: Ich brauche ein Heft, eine Tasche und die Stifte. Note: „Gibst du mir bitte das Heft?“ – mir is dative (so is dir), das Heft is accusative.",
+      "de": "Nach Verben wie brauchen, haben, suchen, kaufen und möchte steht das Nomen im Akkusativ. Nur maskulin ändert sich: der → den, ein → einen, kein → keinen, mein → meinen. Neutral, feminin und Plural sind wie im Nominativ: Ich brauche ein Heft, eine Tasche und die Stifte. Achtung: „Gibst du mir bitte das Heft?“ – mir ist Dativ (auch dir), das Heft ist Akkusativ.",
+      "en": "After verbs such as brauchen, haben, suchen, kaufen and möchte the noun is in the accusative. Only the masculine changes: der → den, ein → einen, kein → keinen, mein → meinen. Neuter, feminine and plural look the same as in the nominative: Ich brauche ein Heft, eine Tasche und die Stifte. Note: „Gibst du mir bitte das Heft?“ – mir is dative (so is dir), das Heft is accusative.",
       "table": [
         [
           "Kasus",
@@ -417,14 +417,14 @@
         ],
         [
           "Nominativ",
-          "der / ein Stift",
+          "der / ein / mein Stift",
           "das / ein Heft",
           "die / eine Tasche",
           "die Stifte"
         ],
         [
           "Akkusativ",
-          "den / einen Stift",
+          "den / einen / meinen Stift",
           "das / ein Heft",
           "die / eine Tasche",
           "die Stifte"
@@ -444,6 +444,10 @@
           "kasus": "akkusativ"
         },
         {
+          "token": "meinen",
+          "kasus": "akkusativ"
+        },
+        {
           "token": "der",
           "kasus": "nominativ"
         }
@@ -454,8 +458,8 @@
       "spine": "g.kein",
       "depth": 1,
       "modelSentence": "Hast du einen Stift? – Nein, ich habe keinen Stift.",
-      "de": "kein ist die Verneinung von ein: ein Stift → kein Stift, eine Tasche → keine Tasche. Ohne Artikel (Plural, Mengen) heißt die Verneinung auch kein: keine Stifte, keine Zeit. Mit nicht verneinen Sie Verben, Adjektive, Namen und Nomen mit der, das, die: Der Laptop ist nicht neu.",
-      "en": "kein negates ein: ein Stift → kein Stift, eine Tasche → keine Tasche. Nouns without an article (plural, quantities) are also negated with kein: keine Stifte, keine Zeit. Use nicht for verbs, adjectives, names and nouns with der, das, die: Der Laptop ist nicht neu.",
+      "de": "kein ist die Verneinung von ein: ein Stift → kein Stift, eine Tasche → keine Tasche. Ohne Artikel (Plural, Mengen) heißt die Verneinung auch kein: keine Stifte, keine Zeit. Mit nicht verneinen Sie Verben, Adjektive, Namen und Nomen mit der, das, die: Der Laptop ist nicht neu. Bei Berufen auch nicht: Ich bin nicht Lehrerin.",
+      "en": "kein negates ein: ein Stift → kein Stift, eine Tasche → keine Tasche. Nouns without an article (plural, quantities) are also negated with kein: keine Stifte, keine Zeit. Use nicht for verbs, adjectives, names and nouns with der, das, die: Der Laptop ist nicht neu. With jobs, nicht works too: Ich bin nicht Lehrerin.",
       "table": [
         [
           "Kasus",
