@@ -345,7 +345,7 @@ function producedFindings(ctx, doc) {
     for (const f of forms) {
       if (!byForm.has(f)) byForm.set(f, []);
       // a separable verb's form without its particle („steht" of aufstehen) is marked split
-      byForm.get(f).push({ e, at, split: Boolean(e.separable && prefix && !f.startsWith(prefix)) ? prefix : null });
+      byForm.get(f).push({ e, at, split: e.separable && prefix && !f.startsWith(prefix) ? prefix : null });
     }
   }
   // multi-word lemmas the learner may produce here („guten Tag", „auf Wiedersehen"): their words are theirs, not
