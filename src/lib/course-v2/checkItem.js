@@ -51,13 +51,17 @@
 //     („in Leipzig online" stays WRONG), the keys of the form's other fields (`otherAnswers`)
 //     and the Anrede before a name. Case is free on a form, and the words of a street key are
 //     required („21" alone is no address). (a1.1-u02 r2/r3 F02/F01, u05 r2/r3 F01, u09 r2/r3 F03.)
+//     „nur" is a frame word („nur online" = „online"). A letter slip in a word the frame licenses —
+//     one edit from a licensed word of ≥ 5 letters, never from the label's other alternative — is
+//     the checker's own TYPO class: the entry keeps its retry, it is never WRONG and never CORRECT
+//     („Izmir, Turkei" for İzmir is a TYPO, as „Turkei" alone is in the Land field; a1.1-u02 f1).
 //
 // The error tag of a miss prefers the item's own SCHEMA tag (`errorTags[0]`,
 // then `errorTag`), which feeds the repair cards (BLUEPRINT §6.2); only an
 // item without one falls back to check.js's descriptive tagError.
 import {
   RESULT, checkAnswer, checkOptionsFor, tagError, normalizeSpelling, normalizeDictation, foldNumberWords, isDictationTask,
-  cardinalValue, ordinalValue, spellCardinal, stripPunct,
+  cardinalValue, ordinalValue, spellCardinal, stripPunct, levenshtein,
 } from '../lesson/check.js';
 import { normalizeAnswer } from '../../utils/answerMatch.js';
 
@@ -396,7 +400,7 @@ function gapFrameRule(item, input, out) {
  * „um 19.30 Uhr abends", „Freitag, am Abend"). A time-of-day word the label offers as an
  * alternative („vormittags oder nachmittags?") is the information there, and never licensed.
  */
-const BASIC_FRAME = new Set(['nr', 'fuer', 'jahre', 'jahr', 'alt', 'person', 'personen', 'leute', 'uhr', 'um', 'am', 'im', 'in', 'der', 'die', 'das', 'den', 'dem', 'des']);
+const BASIC_FRAME = new Set(['nr', 'fuer', 'nur', 'jahre', 'jahr', 'alt', 'person', 'personen', 'leute', 'uhr', 'um', 'am', 'im', 'in', 'der', 'die', 'das', 'den', 'dem', 'des']);
 const FORM_FRAME = new Set([
   ...BASIC_FRAME,
   'morgens', 'vormittags', 'mittags', 'nachmittags', 'abends', 'nachts', 'morgen', 'vormittag', 'mittag', 'nachmittag', 'abend', 'nacht',
@@ -451,6 +455,18 @@ function formContext(item) {
   const street = accepted.some((a) => STREET_RE.test(formTok(a)) && /\d/.test(a));
   const cities = new Set(street ? formTokens(item.situationDe).filter((t) => /^\p{Lu}/u.test(t)).map(formTok).filter((t) => !others.has(t)) : []);
   return { licensed, others, street, cities, otherValues };
+}
+
+/**
+ * A letter slip in a licensed word: one edit from a licensed word (or another field's key) of ≥ 5
+ * letters — the checker's own typo distance (check.js) — and not a slip of the label's other
+ * alternative („Leipzg" for the negated-only „Leipzig" stays unlicensed).
+ */
+function licensedSlip(w, ctx) {
+  if (!hasLetter(w) || NEGATION.has(w) || ctx.others.has(w) || /\d/.test(w)) return false;
+  const near = (x) => x.length >= 5 && Math.abs(x.length - w.length) <= 1 && levenshtein(w, x) === 1;
+  if ([...ctx.others].some(near)) return false;
+  return [...ctx.licensed].some(near) || [...ctx.otherValues].some(near);
 }
 
 /** Which tokens may stand OUTSIDE the value: frame, licensed words, negated alternatives, a street's postcode and city. */
@@ -512,16 +528,22 @@ function checkFormField(item, input) {
   const tokens = splitCompounds(formTokens(input), item, ctx);
   if (!tokens.length || tokens.length > 16) return direct;
   const mask = licensedMask(tokens, ctx);
+  // a letter slip in a licensed word outside the value (a1.1-u02 f1 „Izmir, Turkei"): the window
+  // may stand beside it, and the entry is then at best a TYPO — its retry, never WRONG
+  const slip = tokens.map((tk, k) => !mask[k] && licensedSlip(formTok(tk), ctx));
+  const ok = (k) => mask[k] || slip[k];
   let best = direct;
   for (let i = 0; i < tokens.length; i += 1) {
-    if (i > 0 && !mask[i - 1]) break; // every token before the window must be licensed
+    if (i > 0 && !ok(i - 1)) break; // every token before the window must be licensed
     for (let j = tokens.length; j > i; j -= 1) {
-      if (j < tokens.length && !mask[j]) break; // … and every token after it
+      if (j < tokens.length && !ok(j)) break; // … and every token after it
+      const slipped = slip.some((x, k) => x && (k < i || k >= j));
       const windowTokens = tokens.slice(i, j);
       const variants = [windowTokens, windowTokens.filter((tk) => !FORM_FRAME.has(formTok(tk)))];
       for (const v of variants) {
         if (!v.length || (i === 0 && j === tokens.length && v === windowTokens)) continue;
-        const out = formBase(item, v.join(' '));
+        let out = formBase(item, v.join(' '));
+        if (slipped && out.result === RESULT.CORRECT) out = { result: RESULT.TYPO, expected: out.expected };
         if (RANK[out.result] > RANK[best.result]) best = out;
         if (best.result === RESULT.CORRECT) return best;
       }
