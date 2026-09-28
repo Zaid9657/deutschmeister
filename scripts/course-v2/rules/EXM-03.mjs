@@ -24,7 +24,7 @@
 import { walkTasks } from '../lib-validate/walk.mjs';
 import { LANE_EXAM_KEY } from '../lib-validate/ids.mjs';
 import { arr, isObj, blocker, advisory } from '../lib-validate/helpers.mjs';
-import { norm, wordCount } from '../lib-validate/text.mjs';
+import { norm, wordCount, FUNCTION_WORDS } from '../lib-validate/text.mjs';
 import { IDENTIFIER_RE } from './ITM-07.mjs';
 
 export const id = 'EXM-03';
@@ -55,6 +55,31 @@ function agrees(st, band) {
   if (st.kind === 'min') return st.lo === band[0];
   if (st.kind === 'max') return st.hi === band[1];
   return st.lo >= band[0] && st.lo <= band[1];
+}
+
+const thirdCache = new WeakMap();
+/** „komme" → „kommt" when the cumulative lexicon has a verb whose 3rd person is stem + t; else null. */
+export function firstPersonThird(ctx, cue) {
+  const c = String(cue || '').trim().toLowerCase();
+  // a possessive or particle („meine", „bitte") is no verb form
+  if (!/^\p{Ll}{3,}e$/u.test(c) || !ctx?.levels || FUNCTION_WORDS.has(c)) return null;
+  if (!thirdCache.has(ctx)) {
+    const m = new Map();
+    const other = new Set();
+    for (const slot of ctx.levels.values()) {
+      for (const e of arr(slot?.lexicon?.entries)) {
+        const lemma = String(e?.lemma || '').toLowerCase();
+        if (e?.pos !== 'VERB') other.add(lemma);
+        if (e?.pos !== 'VERB' || !/en$|ern$|eln$/.test(lemma) || /\s/.test(lemma)) continue;
+        const stem = lemma.replace(/e?n$/, '');
+        const third = String(e?.verb_forms?.['3sg'] || '').toLowerCase().split(/\s+/)[0];
+        if (third && third !== `${stem}e`) m.set(`${stem}e`, third);
+      }
+    }
+    for (const w of other) m.delete(w);
+    thirdCache.set(ctx, m);
+  }
+  return thirdCache.get(ctx).get(c) || null;
 }
 
 export function run({ ctx, docs }) {
@@ -136,9 +161,19 @@ export function run({ ctx, docs }) {
           }
         }
       }
+      // the frame every compliant draft carries: the checklist's Anrede and Gruß, the model text's first and
+      // last lines — a cue found there ticks its Leitpunkt for any text (a1.1-u11 r2 F05: lp2 „zusammen")
+      const mtLines = String(task.modelText || '').split(/\n+/).map((x) => x.trim()).filter(Boolean);
+      const frame = [...arr(task.checklist).map((x) => String(x || '')).filter((x) => /^\s*(?:Anrede|Gruß|Grußformel)\b/i.test(x)).map((x) => x.replace(/^[^:]*:?/, '')), mtLines.length > 2 ? mtLines[0] : '', ...(mtLines.length > 2 ? mtLines.slice(-2) : [])].join(' | ').toLowerCase();
       lp.forEach((l, i) => {
+        const cueSet = new Set(arr(l?.cues).map((c) => String(c || '').trim().toLowerCase()));
         arr(l?.cues).forEach((c, k) => {
           const cue = String(c || '').trim();
+          if (cue.length >= 3 && frame.includes(cue.toLowerCase())) findings.push(advisory(doc, `${path}.leitpunkte[${i}].cues[${k}]`, `cue „${cue}" stands in the Anrede or Gruß every draft carries — the pre-check finds it in any text; drop it or use a content word of the Leitpunkt`, ref));
+          // a 1st-person verb cue („komme") misses the learner who writes about someone else („Mein Bruder kommt")
+          // (a1.1-u10 r1 F17)
+          const third = firstPersonThird(ctx, cue);
+          if (third && !cueSet.has(third)) findings.push(advisory(doc, `${path}.leitpunkte[${i}].cues[${k}]`, `cue „${cue}" is a 1st-person verb form — list the 3rd person „${third}" too, or the pre-check misses a draft that tells about someone else`, ref));
           const letters = cue.replace(/[^\p{L}\p{N}]/gu, '').length;
           if (letters < 4) findings.push(advisory(doc, `${path}.leitpunkte[${i}].cues[${k}]`, `cue „${cue}" has ${letters} letters — as a substring it is found in unrelated words; use ≥ 4 letters`, ref));
           else if (CONNECTORS.has(cue.toLowerCase()) && arr(task.checklist).some((x) => new RegExp(`(^|[^\\p{L}])${cue}(?=$|[^\\p{L}])`, 'iu').test(String(x)))) findings.push(advisory(doc, `${path}.leitpunkte[${i}].cues[${k}]`, `cue „${cue}" is a connector the checklist already requires — it ticks the Leitpunkt for any text`, ref));

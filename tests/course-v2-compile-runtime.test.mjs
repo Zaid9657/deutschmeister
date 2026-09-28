@@ -7,7 +7,9 @@
 //   2. the manifest's can-do texts are the registry's learner line `learnerDe`, else `de`
 //      (StartView „Lernziele", CheckView „Das kann ich"; a1.1-u06 r2/r3 F01, u11 r3 F02);
 //   3. every plural of a noun with `pluralVariants` is accepted where a typed item's key types
-//      one (SCHEMA §6: „Balkons" beside „Balkone").
+//      one (SCHEMA §6: „Balkons" beside „Balkone");
+//   4. a WritingTask's `textType` reaches the writing bank with its registry label, so the grader
+//      names the genre (SCHEMA §8, 2026-09-28).
 //
 // Runs on a temp copy of the SCHEMA §15 fixture tree, edited in memory; nothing is written to the repo.
 import test from 'node:test';
@@ -16,6 +18,7 @@ import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:f
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { compileLevel } from '../scripts/course-v2/lib/compiler.mjs';
+import { buildWritingUserPrompt } from '../netlify/functions/_shared/rubrics/grade.mjs';
 import { FIXTURES_ROOT } from '../scripts/course-v2/lib/tree.mjs';
 
 function compileEdited(edit) {
@@ -76,4 +79,16 @@ test('every plural of a noun with pluralVariants is accepted where a typed key t
   assert.deepEqual(inPool.accepted, inChunk.accepted, 'the pool shape carries them too');
   const tiles = out.unit.steps[0].pool.items.find((x) => x.type === 'sentence_building');
   assert.ok(tiles.accepted.every((a) => !/Anrufs/.test(a)), 'a tile item is never widened');
+});
+
+test('a WritingTask\'s text type reaches the writing bank, and the grader names the genre', () => {
+  const plain = compileEdited(() => {});
+  assert.equal('textType' in plain.banks.writing['a21-u07-w'], false, 'no text type: nothing carried');
+  const typed = compileEdited((rw) => rw('a2.1-u07.json', (u) => {
+    const step = u.steps.find((st) => st.kind === 'schreiben');
+    step.task.textType = 'tt.email-halbformell';
+  }));
+  assert.equal(typed.banks.writing['a21-u07-w'].textType, 'tt.email-halbformell');
+  const prompt = buildWritingUserPrompt({ task: { ...typed.banks.writing['a21-u07-w'], textTypeLabel: 'Beitrag in sozialen Medien' }, text: 'Hallo ihr!', attemptNr: 1 });
+  assert.match(prompt, /^AUFGABE \(Textsorte: Beitrag in sozialen Medien, /);
 });

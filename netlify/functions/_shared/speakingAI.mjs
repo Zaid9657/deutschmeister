@@ -365,7 +365,7 @@ export function normalizeSpeakingPart(p) {
     situationDe: strOf(s.situationDe),
     cards: { learner: cardList(s.cards?.learner), partner: cardList(s.cards?.partner) },
     slides: strList(s.slides, 5),
-    moves: strList(s.moves, 6).filter((m) => m in MOVES_DE),
+    moves: strList(s.moves, 6).filter((m) => Object.hasOwn(MOVES_DE, m)),
     planningRound: objOf(s.planningRound),
     stimulus: materialOf(s.stimulus),
     partnerData: materialOf(s.partnerData),
