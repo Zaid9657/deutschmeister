@@ -317,8 +317,8 @@
             "über das Wochenende"
           ],
           "explanation": {
-            "de": "Frau Schulz sagt: „Heute sprechen wir über das Wochenende.“ Flohmarkt und Kino: Das war nur bei Olena und Bilal.",
-            "en": "Ms Schulz says they are talking about the weekend today. The flea market and the cinema are only Olena’s and Bilal’s weekend."
+            "de": "Frau Schulz sagt: „Heute sprechen wir über das Wochenende.“ Olena war auf dem Flohmarkt, Bilal im Kino: Das war am Wochenende.",
+            "en": "Ms Schulz says they are talking about the weekend today. The flea market (Olena) and the cinema (Bilal) were part of the weekend."
           },
           "origin": "agent"
         },
@@ -2728,7 +2728,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Ja, am Samstag war ich mit Freunden in Berlin. Es war super!"
+            "de": "Ja, am Samstag war ich mit meinem Bruder in Berlin. Es war super!"
           }
         ]
       }
@@ -2804,7 +2804,7 @@
           "Gruß mit Ihrem Namen",
           "25 bis 35 Wörter"
         ],
-        "modelText": "Hallo zusammen,\nam Sonntag war ich mit Freunden in Berlin. Wir waren im Museum und haben dann Kuchen gegessen. Das Wetter war schön, und es hat viel Spaß gemacht!\nViele Grüße\n(Ihr Name)"
+        "modelText": "Hallo zusammen,\nam Sonntag war ich mit meiner Schwester in Berlin. Wir waren im Museum und haben dann Kuchen gegessen. Das Wetter war schön, und es hat viel Spaß gemacht!\nViele Grüße\n(Ihr Name)"
       }
     },
     {
