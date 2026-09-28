@@ -202,7 +202,9 @@ export function ordinalStems(n) {
 }
 
 function buildNumbers() {
-  const s = new Set(['ein', 'eins', 'million', 'millionen', 'milliarde', 'milliarden']);
+  // „zwo" is the spoken variant of „zwei" in phone numbers and on the phone (review a1.1-u02: the
+  // Buchstabier-/Zahlen-Szene says „null-drei-vier-zwo"); a number word, not a lemma to allocate
+  const s = new Set(['ein', 'eins', 'zwo', 'million', 'millionen', 'milliarde', 'milliarden']);
   for (let n = 0; n <= 9999; n += 1) for (const c of cardinals(n)) s.add(c);
   for (let n = 1; n <= 9999; n += 1) {
     const endings = n <= 100 || n % 100 === 0 ? ['e', 'en', 'er', 'es', 'em'] : ['e', 'en'];

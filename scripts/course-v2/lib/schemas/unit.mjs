@@ -58,6 +58,8 @@ define('Fokus', {
   'hf?': 'str',
   bodyDe: 'de',
   bodyEn: 'en',
+  // words the card uses before their unit, as on the Folge (a1.1-u12 r2 F08 / r3 F05)
+  'glosses?': 'Glosses',
   factRefs: '[ref(fact)]*',
   minutes: 'int',
   optional: 'true',
@@ -155,7 +157,9 @@ const checkSchema = obj({
   items: '[Item]{7..9}',
   earlierDraw: { count: 'int[3..5]', from: 'enum(previous-3|etappe|all-previous)', pool: "'reserve'" },
   proofItems: '[Item]{0..5}',
-  proofs: arr({ canDo: 'ref(cando)', 'item?': 'ref(item)', 'aufgabe?': 'enum(sprechen|schreiben)' }, '{3..5}'),
+  // microOutput: the learner's own micro-output proves the can-do (a1.1-u02 r1 F03 / r2 F05 / r3 F05); a
+  // format check here (re(mo)), ALL-02 resolves it against the unit's micro-outputs
+  proofs: arr({ canDo: 'ref(cando)', 'item?': 'ref(item)', 'aufgabe?': 'enum(sprechen|schreiben)', 'microOutput?': 're(mo)' }, '{3..5}'),
   'rueckschau?': '[ref(rulecard)]{1..3}', // B skeleton only (required there; the validator knows the skeleton)
   'portrait?': { factRef: 'ref(fact)', de: 'de', en: 'en', 'assetRef?': 'ref(asset)' },
   testOutThreshold: 'num',
@@ -189,7 +193,9 @@ function unitShape(stage) {
     steps: ['S', union(arr(Step, '{7}'), arr(Step, '{8}'))],
     check: ['I', checkSchema],
     redemittel: ['S', '[Redemittel]{2..8}'],
-    story: ['S', { beat: 'de', cliffhanger: 'de', castIn: '[ref(cast)]' }],
+    // cliffhangerEn / glosses: the cliffhanger's English twin and the words it uses before their unit
+    // (a1.1-u01 r1 F08 / r2 F09); castIn: SCHEMA §8 (who enters the story here)
+    story: ['S', { beat: 'de', cliffhanger: 'de', 'cliffhangerEn?': 'en', 'glosses?': 'Glosses', castIn: '[ref(cast)]' }],
     fokus: ['S', '[Fokus]{0..2}'],
     facts: ['S', '[Fact]*'],
     extras: ['S', 'Extras', { optional: true }],

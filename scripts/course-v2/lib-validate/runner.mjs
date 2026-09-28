@@ -25,9 +25,9 @@ export const RULE_ORDER = [
   'REF-01', 'ID-01', 'KEY-01', 'ALL-02', 'ALL-03',
   'GRM-01', 'GRM-02', 'GRM-04', 'GRM-05',
   'LEX-01', 'LEX-02', 'LEX-03', 'LEX-04', 'LEX-05', 'LEX-07',
-  'TXT-02', 'TXT-03', 'TXT-04',
-  'ITM-01', 'ITM-02', 'ITM-03', 'ITM-04', 'ITM-05', 'ITM-06', 'ITM-07', 'ITM-08', 'ITM-09', 'ITM-10', 'ITM-11', 'ITM-13',
-  'CON-06',
+  'TXT-01', 'TXT-02', 'TXT-03', 'TXT-04',
+  'ITM-01', 'ITM-02', 'ITM-03', 'ITM-04', 'ITM-05', 'ITM-06', 'ITM-07', 'ITM-08', 'ITM-09', 'ITM-10', 'ITM-11', 'ITM-12', 'ITM-13',
+  'CON-01', 'CON-06',
   'EXM-01', 'EXM-02', 'EXM-03', 'EXM-04', 'EXM-11',
   'COV-1', 'COV-3', 'COV-4', 'COV-5',
 ];

@@ -1,6 +1,8 @@
 // evaluate-speaking, course v2 branch: grade a stored speaking session that was
-// started from a bank key, against the task's speaking rubric profile, with the
-// deterministic zero/cap rules applied after the model (EXM-08).
+// started from a bank key, against the task's speaking rubric profile — for a
+// multi-Teil round, each part against its own profile, summed, with the score per
+// Teil under `parts` — with the deterministic zero/cap rules applied after the
+// model (EXM-08).
 //
 // Called by netlify/functions/evaluate-speaking.mjs after the JWT check, the
 // daily evaluation cap and the load of the SERVER-STORED transcript. The session
@@ -10,8 +12,8 @@
 
 import { rubricProfile, spineLabel } from './data.mjs';
 import { unknownRuleIds } from './rules.mjs';
-import { gradeSubmission, callAnthropic } from './grade.mjs';
-import { loadV2SpeakingTask } from '../speakingAI.mjs';
+import { gradeSpeakingTask, callAnthropic } from './grade.mjs';
+import { loadV2SpeakingTask, speakingProfileIds } from '../speakingAI.mjs';
 import { dbLevel } from './keys.mjs';
 
 /**
@@ -35,20 +37,22 @@ export async function evaluateSpeakingV2({ supabase, userId, sessionToken, sessi
   const loaded = loadV2SpeakingTask(courseTaskKey);
   if (!loaded) return respond(410, { error: 'task_unavailable' });
   const { level, task } = loaded;
-  const profileId = task.profile || (task.micro ? 'course-micro-sp' : null);
-  const profile = rubricProfile(profileId);
-  if (!profile || profile.kind !== 'speaking' || unknownRuleIds(profile).length) {
-    console.error('[evaluate-speaking v2] rubric profile unavailable:', profileId, courseTaskKey);
-    return respond(503, { error: 'rubric_unavailable', profile: profileId || null });
+  // Every part of a round is graded on its OWN profile (sd1.sp1 on sd1-sp1, sd1.sp2 on
+  // sd1-sp2 …); one missing or broken profile refuses the whole evaluation.
+  const profileIds = speakingProfileIds(task);
+  const profiles = profileIds.map((id) => rubricProfile(id));
+  const bad = profiles.findIndex((p) => !p || p.kind !== 'speaking' || unknownRuleIds(p).length);
+  if (bad >= 0) {
+    console.error('[evaluate-speaking v2] rubric profile unavailable:', profileIds[bad], courseTaskKey);
+    return respond(503, { error: 'rubric_unavailable', profile: profileIds[bad] || null });
   }
 
   const turns = transcript.filter((m) => m.role === 'user' && typeof m.content === 'string' && m.content.trim());
   if (!turns.length) return respond(400, { error: 'no_learner_turns' });
 
-  const graded = await gradeSubmission({
-    kind: 'speaking',
-    profile,
+  const graded = await gradeSpeakingTask({
     task,
+    profiles,
     level,
     text: turns.map((m) => m.content).join('\n'),
     transcript,

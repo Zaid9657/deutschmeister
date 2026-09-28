@@ -14,11 +14,18 @@
 //     finding was minor, the SCHEMA §15 exemplar carries „am"/„um" cues, and the defect sits in the
 //     pre-check's substring match (WritingTaskView cueFound and its server twin) — whole-word matching
 //     there is the fix for every unit at once.
+//
+// Third round (the a1.1 unit reviews, rule-smith 2026-09-28, RAILS §3.1c: a1.1-u05 r3 F01): a form field whose
+// answer mixes words and a digit run — an address („Berliner Straße 21"), a time („19.30 Uhr") — takes
+// exact: "number" (digits exact, a slip in the words a TYPO), not "name" (which turns a slip in „Straße" into
+// WRONG); "name" is for an answer that is wholly a name, and for a level or room code (ITM-07 IDENTIFIER_RE).
+// ADVISORY: both settings grade the digits exactly; the finding is about the words around them.
 
 import { walkTasks } from '../lib-validate/walk.mjs';
 import { LANE_EXAM_KEY } from '../lib-validate/ids.mjs';
 import { arr, isObj, blocker, advisory } from '../lib-validate/helpers.mjs';
 import { norm, wordCount } from '../lib-validate/text.mjs';
+import { IDENTIFIER_RE } from './ITM-07.mjs';
 
 export const id = 'EXM-03';
 export const title = 'Writing tasks match their template (Leitpunkte, choose, register, words, rubric, exam key)';
@@ -86,6 +93,7 @@ export function run({ ctx, docs }) {
           }
           if (!arr(f.accepted).some((a) => norm(a) === norm(f.answer))) findings.push(blocker(doc, `${path}.form.fields[${i}].accepted`, `accepted does not contain the answer „${f.answer}"`, ref));
           if (/\d/.test(f.answer) && !f.exact) findings.push(blocker(doc, `${path}.form.fields[${i}].exact`, `answer „${f.answer}" carries a digit: set exact (ITM-07)`, ref));
+          if (f.exact === 'name' && /\p{L}{2,}/u.test(f.answer) && /\d/.test(f.answer) && !IDENTIFIER_RE.test(f.answer)) findings.push(advisory(doc, `${path}.form.fields[${i}].exact`, `answer „${f.answer}" mixes words and a number: exact: "number" (digits exact, a slip in the words a TYPO), not "name"`, ref));
         });
         if (task.profile && t.rubric && task.profile !== t.rubric) findings.push(blocker(doc, `${path}.profile`, `rubric profile ${task.profile}; ${task.template} is graded with ${t.rubric}`, ref));
         continue;

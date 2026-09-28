@@ -495,8 +495,8 @@
       "spine": "g.trennbare-verben",
       "depth": 1,
       "modelSentence": "Ich stehe um sieben Uhr auf.",
-      "de": "Trennbare Verben haben zwei Teile: aufstehen, anfangen, einkaufen, fernsehen. Im Satz steht das Verb auf Position 2, der erste Teil steht am Ende: Der Kurs fängt um neun Uhr an. Im Infinitiv sind beide Teile zusammen, so steht das Verb auch im Wörterbuch: einkaufen. Der erste Teil hat den Wortakzent: AUFstehen.",
-      "en": "Separable verbs have two parts: aufstehen, anfangen, einkaufen, fernsehen. In a sentence the verb is in position 2 and the first part goes to the end: Der Kurs fängt um neun Uhr an. In the infinitive both parts stay together, which is also how the dictionary lists the verb: einkaufen. The first part carries the stress: AUFstehen.",
+      "de": "Trennbare Verben haben zwei Teile: aufstehen, anfangen, einkaufen, fernsehen. Das Verb steht auf Position 2 (in der Ja/Nein-Frage auf Position 1), der erste Teil steht am Ende: Der Kurs fängt um neun Uhr an. Im Infinitiv sind beide Teile zusammen: aufstehen, einkaufen. Der erste Teil hat den Wortakzent: AUFstehen.",
+      "en": "Separable verbs have two parts: aufstehen, anfangen, einkaufen, fernsehen. The verb is in position 2 (position 1 in a yes/no question), and the first part goes to the end: Der Kurs fängt um neun Uhr an. In the infinitive both parts stay together: aufstehen, einkaufen. The first part carries the stress: AUFstehen.",
       "table": [
         [
           "Position 1",
@@ -517,9 +517,21 @@
           "an."
         ],
         [
+          "Das Geschäft",
+          "macht",
+          "um acht Uhr",
+          "auf."
+        ],
+        [
           "Wann",
           "kaufst",
           "du",
+          "ein?"
+        ],
+        [
+          "Kaufst",
+          "du",
+          "heute",
           "ein?"
         ]
       ],
@@ -548,7 +560,7 @@
         [
           "–",
           "Zuerst",
-          "dusche",
+          "frühstücke",
           "ich."
         ],
         [
@@ -561,7 +573,7 @@
           "aber",
           "ich",
           "arbeite",
-          "am Samstag nicht."
+          "am Freitag nicht."
         ]
       ],
       "caseMarks": []
@@ -593,9 +605,9 @@
           "kommen."
         ],
         [
-          "–",
           "Kannst",
-          "du am Sonntag",
+          "du",
+          "am Freitag",
           "kommen?"
         ]
       ],
@@ -606,8 +618,8 @@
       "spine": "g.nicht-position-gern",
       "depth": 1,
       "modelSentence": "Ich tanze nicht gern, aber ich schwimme sehr gern.",
-      "de": "gern steht nach dem Verb: Ich lese gern. Das Gegenteil ist nicht gern: Ich koche nicht gern. Die Position von nicht: am Satzende für den ganzen Satz (Ich komme heute nicht.), vor dem Infinitiv am Ende (Ich kann nicht kommen.) und vor gern, Adjektiven und Orten (nicht gut, nicht in Leipzig).",
-      "en": "gern follows the verb: Ich lese gern. Its opposite is nicht gern: Ich koche nicht gern. Where nicht goes: at the end to negate the whole sentence (Ich komme heute nicht.), before the infinitive at the end (Ich kann nicht kommen.), and before gern, adjectives and places (nicht gut, nicht in Leipzig).",
+      "de": "gern steht meist nach dem Verb: Ich lese gern. Das Gegenteil: Ich tanze nicht gern. (Auch richtig: Gern tanze ich nicht.) Die Position von nicht: am Satzende für den ganzen Satz (Ich komme heute nicht.), vor dem Infinitiv am Ende (Ich kann nicht kommen.) und meist vor gern, Adjektiven und Orten (nicht gut, nicht in Leipzig).",
+      "en": "gern usually comes after the verb: Ich lese gern. The opposite: Ich tanze nicht gern. (Also correct: Gern tanze ich nicht.) Where nicht goes: at the end to negate the whole sentence (Ich komme heute nicht.), before the infinitive at the end (Ich kann nicht kommen.), and usually before gern, adjectives and places (nicht gut, nicht in Leipzig).",
       "table": [
         [
           "Ich komme heute",
@@ -620,7 +632,7 @@
           "kommen."
         ],
         [
-          "Ich koche",
+          "Ich tanze",
           "nicht",
           "gern."
         ],
@@ -637,8 +649,8 @@
       "spine": "g.moegen",
       "depth": 1,
       "modelSentence": "Magst du Fisch? – Nein, Fisch mag ich nicht.",
-      "de": "mögen mit Nomen sagt: Das finde ich gut. Ich mag Kaffee. Die Formen: ich mag, du magst, er/sie mag, wir mögen, ihr mögt, sie/Sie mögen. möchte ist ein Wunsch jetzt: Ich möchte einen Tee. mag gilt immer: Ich mag Tee. Bei Verben sagen Sie meistens gern: Ich koche gern.",
-      "en": "mögen with a noun means you like it: Ich mag Kaffee. Forms: ich mag, du magst, er/sie mag, wir mögen, ihr mögt, sie/Sie mögen. möchte is a wish right now: Ich möchte einen Tee. mag is always true: Ich mag Tee. With activities you usually say gern: Ich koche gern.",
+      "de": "mögen + Nomen: Ich mag Kaffee. Die Formen: ich mag, du magst, er/sie mag, wir mögen, ihr mögt, sie/Sie mögen. möchte: jetzt, hier (im Café): Ich möchte einen Tee. mag: immer, das finde ich gut: Ich mag Tee. Bei Verben sagen Sie gern: Ich tanze gern.",
+      "en": "mögen + noun: Ich mag Kaffee. Forms: ich mag, du magst, er/sie mag, wir mögen, ihr mögt, sie/Sie mögen. möchte: now, here (in the café): Ich möchte einen Tee. mag: always, you like it: Ich mag Tee. With activities you say gern: Ich tanze gern.",
       "table": [
         [
           "Person",
@@ -666,7 +678,17 @@
           "möchten"
         ],
         [
-          "Bedeutung",
+          "ihr",
+          "mögt",
+          "möchtet"
+        ],
+        [
+          "sie/Sie",
+          "mögen",
+          "möchten"
+        ],
+        [
+          "Wann?",
           "immer: Ich mag Tee.",
           "jetzt: Ich möchte einen Tee."
         ]
@@ -678,32 +700,28 @@
       "spine": "g.wortbildung-er-in",
       "depth": 1,
       "modelSentence": "Er ist Busfahrer, und sie ist Busfahrerin.",
-      "de": "Aus einem Verb wird eine Person: Verbstamm + -er. fahren → der Fahrer, spielen → der Spieler, verkaufen → der Verkäufer (manchmal mit Umlaut). Für Frauen kommt -in dazu: die Fahrerin, die Spielerin, die Verkäuferin. Wörter auf -er sind der, Wörter auf -in sind die. Plural: die Fahrer, die Fahrerinnen.",
-      "en": "A verb can become a person: verb stem + -er. fahren → der Fahrer, spielen → der Spieler, verkaufen → der Verkäufer (sometimes with an umlaut). For women add -in: die Fahrerin, die Spielerin, die Verkäuferin. Nouns in -er take der, nouns in -in take die. Plural: die Fahrer, die Fahrerinnen.",
+      "de": "Beruf und Person: Für eine Frau kommt -in dazu: der Lehrer → die Lehrerin, der Student → die Studentin, der Freund → die Freundin. Plural: die Lehrerinnen. Oft kommt das Wort von einem Verb: fahren → der Busfahrer, die Busfahrerin. Achtung: Nicht alle Wörter auf -er sind der: die Mutter, das Wasser.",
+      "en": "Jobs and people: for a woman, add -in: der Lehrer → die Lehrerin, der Student → die Studentin, der Freund → die Freundin. Plural: die Lehrerinnen. Often the word comes from a verb: fahren → der Busfahrer, die Busfahrerin. Careful: not every noun in -er takes der: die Mutter, das Wasser.",
       "table": [
         [
-          "Verb",
-          "-er (der)",
-          "-in (die)",
+          "der (ein Mann)",
+          "die (eine Frau)",
           "Plural"
         ],
         [
-          "fahren",
-          "der Fahrer",
-          "die Fahrerin",
-          "die Fahrer / die Fahrerinnen"
+          "Lehrer",
+          "Lehrerin",
+          "die Lehrer / die Lehrerinnen"
         ],
         [
-          "spielen",
-          "der Spieler",
-          "die Spielerin",
-          "die Spieler / die Spielerinnen"
+          "Student",
+          "Studentin",
+          "die Studenten / die Studentinnen"
         ],
         [
-          "verkaufen",
-          "der Verkäufer",
-          "die Verkäuferin",
-          "die Verkäufer / die Verkäuferinnen"
+          "Busfahrer",
+          "Busfahrerin",
+          "die Busfahrer / die Busfahrerinnen"
         ]
       ],
       "caseMarks": []
@@ -717,24 +735,75 @@
       "en": "To talk about yesterday or the weekend you mostly use the Perfekt: haben in position 2, the participle at the end. Learn the participles as fixed words – in -t: gemacht, gekauft, gespielt, gekocht, gearbeitet; in -en: gegessen, getrunken, gesehen, gelesen, geschlafen. But for sein and haben you mostly say war and hatte: Ich war in Dresden. Der Zug hatte Verspätung.",
       "table": [
         [
+          "Position 1",
           "Position 2",
           "…",
           "Ende: Partizip"
         ],
         [
-          "Ich habe",
+          "Ich",
+          "habe",
           "am Samstag Pizza",
           "gemacht."
         ],
         [
-          "Wir haben",
-          "einen Film",
-          "gesehen."
+          "Am Samstag",
+          "habe",
+          "ich Pizza",
+          "gemacht."
         ],
         [
-          "Was hast du",
-          "gestern",
+          "Was",
+          "hast",
+          "du gestern",
           "gegessen?"
+        ],
+        [
+          "Gestern",
+          "war",
+          "ich in Dresden.",
+          "–"
+        ]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.zeitangaben-inversion-2",
+      "spine": "g.zeitangaben-inversion",
+      "depth": 2,
+      "modelSentence": "Vorgestern war ich in Dresden.",
+      "de": "Zeitangaben wie gestern, vorgestern und letzte Woche können auf Position 1 stehen. Das Verb steht auf Position 2 (habe, hat, war, hatte), das Subjekt steht danach, das Partizip am Ende: Gestern habe ich lange geschlafen. Letzte Woche war ich in Dresden. und, aber, oder stehen auf Position 0.",
+      "en": "Time phrases such as gestern, vorgestern and letzte Woche can take position 1. The verb is in position 2 (habe, hat, war, hatte), the subject follows it and the participle goes to the end: Gestern habe ich lange geschlafen. Letzte Woche war ich in Dresden. und, aber, oder take position 0.",
+      "table": [
+        [
+          "Position 0",
+          "Position 1",
+          "Position 2",
+          "…"
+        ],
+        [
+          "–",
+          "Gestern",
+          "habe",
+          "ich lange geschlafen."
+        ],
+        [
+          "–",
+          "Vorgestern",
+          "war",
+          "ich im Park."
+        ],
+        [
+          "–",
+          "Letzte Woche",
+          "hatte",
+          "ich keine Zeit."
+        ],
+        [
+          "aber",
+          "ich",
+          "habe",
+          "gestern nicht gearbeitet."
         ]
       ],
       "caseMarks": []
@@ -744,8 +813,8 @@
       "spine": "g.perfekt-sein",
       "depth": 1,
       "modelSentence": "Ich bin im Mai nach Leipzig gekommen.",
-      "de": "Einige Verben bilden das Perfekt mit sein: Verben für eine Bewegung von A nach B, und bleiben. Lernen Sie diese Formen fest: ich bin gekommen, gefahren, geflogen, gegangen, geblieben. Die anderen Verben aus A1.1 haben haben: ich habe gemacht. sein oder haben steht auf Position 2, das Partizip am Ende.",
-      "en": "Some verbs form the Perfekt with sein: verbs of movement from A to B, and bleiben. Learn these forms as fixed words: ich bin gekommen, gefahren, geflogen, gegangen, geblieben. The other A1.1 verbs take haben: ich habe gemacht. sein or haben is in position 2, the participle at the end.",
+      "de": "Einige Verben bilden das Perfekt mit sein: Verben für eine Bewegung (kommen, fahren, fliegen, gehen, schwimmen), aufstehen und bleiben. Lernen Sie die Formen fest: ich bin gekommen, gefahren, geflogen, gegangen, geblieben. Die meisten anderen Verben haben haben: ich habe gemacht, ich habe getanzt. sein oder haben steht auf Position 2, das Partizip am Ende.",
+      "en": "Some verbs form the Perfekt with sein: verbs of movement (kommen, fahren, fliegen, gehen, schwimmen), aufstehen and bleiben. Learn the forms as fixed words: ich bin gekommen, gefahren, geflogen, gegangen, geblieben. Most other verbs take haben: ich habe gemacht, ich habe getanzt. sein or haben is in position 2, the participle at the end.",
       "table": [
         [
           "haben",
@@ -771,8 +840,8 @@
       "spine": "g.wollen",
       "depth": 1,
       "modelSentence": "Ich will im Sommer die Prüfung machen.",
-      "de": "wollen sagt: Das ist mein Plan, mein Ziel. Die Formen: ich will, du willst, er/sie will, wir wollen, ihr wollt, sie/Sie wollen. ich und er/sie haben keine Endung. Wie bei können steht das zweite Verb im Infinitiv am Ende. Beim Bestellen und Bitten sagen Sie höflich möchte, nicht will.",
-      "en": "wollen expresses a plan or goal. Forms: ich will, du willst, er/sie will, wir wollen, ihr wollt, sie/Sie wollen. ich and er/sie have no ending. As with können, the second verb goes to the end in the infinitive. When ordering or asking for something, say möchte, not will: it is more polite.",
+      "de": "wollen sagt: Das ist mein Plan, mein Ziel. Die Formen: ich will, du willst, er/sie will, wir wollen, ihr wollt, sie/Sie wollen. ich und er/sie haben keine Endung. Wie bei können steht der Infinitiv am Ende. Beim Bestellen und Bitten sagen Sie höflich möchte, nicht will.",
+      "en": "wollen expresses a plan or goal. Forms: ich will, du willst, er/sie will, wir wollen, ihr wollt, sie/Sie wollen. ich and er/sie have no ending. As with können, the infinitive goes to the end. When ordering or asking for something, say möchte, not will: it is more polite.",
       "table": [
         [
           "ich",

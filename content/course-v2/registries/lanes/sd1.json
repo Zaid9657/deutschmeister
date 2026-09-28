@@ -25,7 +25,7 @@
   "teile": {
     "h1": {
       "id": "sd1.h1", "module": "hoeren", "family": "fam.h-detail", "task": "abc",
-      "items": 6, "options": 3, "plays": 2, "minutes": 7,
+      "items": 6, "options": 3, "plays": 2, "speakers": 2, "minutes": 7,
       "textType": "tt.kurzdialog", "textWords": [32, 53], "textWordsSource": "official-sample",
       "points": 6, "scaffoldAllowedIn": ["a1.1"], "transfersTo": [],
       "pictorial": true,

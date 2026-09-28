@@ -182,13 +182,64 @@ export function missingOrders(item) {
       const sa = k2[i] === 'sentence-adverb';
       const sb = k2[i + 1] === 'sentence-adverb';
       const npSubj = (t) => bare(t) === bare(seq[subj]) && words(t).length >= 2;
-      const swap = (pb && adv(k2[i])) || (sa && npSubj(b)) || (sb && npSubj(a));
+      // a clause-final indefinite or negated object after a time/place adverb may follow it too
+      // („Ich brauche heute einen Kuli." / „… einen Kuli heute.", a1.1-u06 r1 F10) — like a final place phrase
+      const indefLast = i + 1 === s2.length - 1 && k2[i + 1] === 'np' && /^(?:ein|eine|einen|einem|kein|keine|keinen|keinem)$/.test(bare(words(b)[0] || '')) && (k2[i] === 'adverb' || k2[i] === 'time');
+      const swap = (pb && adv(k2[i])) || (sa && npSubj(b)) || (sb && npSubj(a)) || indefLast;
       if (!swap) continue;
       const parts = [...s2];
       [parts[i], parts[i + 1]] = [parts[i + 1], parts[i]];
       const s = `${cap(parts.map((x, k) => (k === 0 ? x : uncap(x))).join(' '))}${e2}`;
       if (!have.has(flatOrder(s)) && !out.some((o) => flatOrder(o.order) === flatOrder(s))) out.push({ order: s, why: `the Mittelfeld order of „${a}" and „${b}"` });
     }
+  }
+  return out;
+}
+
+/**
+ * The constituents of a declarative sentence, as tiles an error-correction key has none of (ITM-01, the
+ * order family; reviews a1.1-u02 r2 F01 / r3 F08): a preposition or a determiner opens a phrase that runs
+ * to its first capitalised noun, number or time („um sieben Uhr", „am Montag", „die Rechnung"); every
+ * other word is a tile of its own. Deliberately small — it feeds `missingOrders`, which leaves alone what it
+ * cannot read (commas, coordinators, questions).
+ */
+export function constituents(sentence) {
+  const ws = words(String(sentence || '').replace(/[.!?]+\s*$/, ''));
+  const NUM = /^(?:\d+(?:[.,:]\d+)*|null|eins|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|zwanzig|dreißig|hundert)$/;
+  const UNIT = /^(?:Uhr|Euro|Kilo|Gramm|Minuten|Stunden|Tage|Jahre|Prozent)$/;
+  const out = [];
+  for (let i = 0; i < ws.length; i += 1) {
+    const w = bare(ws[i]);
+    const opens = PREPOSITIONS.has(w) || DETERMINERS.has(w);
+    // „zu" + an infinitive is no phrase; a phrase ends in a capitalised noun, a number or a number + unit
+    if (opens && i + 1 < ws.length && !(w === 'zu' && /^\p{Ll}/u.test(ws[i + 1]) && !NUM.test(bare(ws[i + 1])))) {
+      let end = -1;
+      for (let j = i + 1; j < ws.length; j += 1) {
+        const x = ws[j];
+        const bx = bare(x);
+        if (NUM.test(bx)) {
+          end = j;
+          // a number keeps its unit and the noun it measures („um elf Uhr", „zwei Kilo Äpfel", „drei Äpfel")
+          if (ws[end + 1] && UNIT.test(ws[end + 1].replace(/[.,!?]/g, ''))) end += 1;
+          if (ws[end + 1] && /^\p{Lu}/u.test(ws[end + 1]) && !UNIT.test(ws[end + 1].replace(/[.,!?]/g, '')) && !/Uhr$/.test(ws[end])) end += 1;
+          break;
+        }
+        if (/^\p{Lu}/u.test(x)) {
+          end = j;
+          // a measure noun takes the noun it measures („zwei Kilo Äpfel")
+          if (UNIT.test(x.replace(/[.,!?]/g, '')) && !/^Uhr/.test(x) && ws[j + 1] && /^\p{Lu}/u.test(ws[j + 1])) end = j + 1;
+          break;
+        }
+        if (DETERMINERS.has(bx) || /^[a-zäöüß]+(?:e|en|er|es|em)$/.test(bx)) continue;
+        break;
+      }
+      if (end > i) {
+        out.push(ws.slice(i, end + 1).join(' '));
+        i = end;
+        continue;
+      }
+    }
+    out.push(ws[i]);
   }
   return out;
 }

@@ -9,6 +9,24 @@ research 01 §1 and §7, 04 (inventory A1.1/A1.2, F5 precedence rule), 14 §C, `
 **Size:** 115 can-dos — 60 introduced in A1.1, 55 in A1.2. All 105 can-do lines of
 the two W2 plans map to an id (§6); 18 ids are new (sd1 needs and blueprint-row gaps, §4).
 
+## 0. Learner lines (`learnerDe`, 2026-09-28)
+
+The Start screen („Lernziele") and the Check screen („Das kann ich") show a can-do's text German-only. `de` is our
+ich-Form descriptor wording with its source and may use any construction; at a1.1-u06 the reviewers counted 53 of
+56 a1.1 Lernziele texts with a look-ahead (subordinate clauses, zu-infinitive, Perfekt, unknown words; review
+a1.1-u06 r2/r3-F01, u11 r3-F02, stop-the-line for the level). Every can-do an A1 unit shows now carries a
+**`learnerDe`** (SCHEMA §4.1), which the compiler shows instead of `de`:
+
+- **No „Ich kann" frame** (the screen heading carries it; *können* is a1.1-u08): an infinitive phrase, a colon and
+  the unit's own sentences — „andere fragen: Wie heißen Sie? Woher kommen Sie? Wo wohnen Sie?".
+- **Known at the first unit that lists the id in `start.lernziele`**: words known there (knownForms) and no
+  construction the spine licenses later. Checked with the validator itself: `validate.mjs --rule LEX-01,GRM-04`
+  reads each Lernziele line at its unit (rule-smith 2026-09-28) and reports it at this registry; all 61 lines are
+  clean (56 a1.1 ids shown by u01–u12, five a1.2 ids shown by the a1.2-u04 draft). The u06 and u11 lines are the
+  reviewers' own, walked clean by them; u11's lose their „Ich kann".
+- **Open:** the four a1.1 ids no unit shows (`online-gruessen`, `beruf-nennen`, `glossar`, `elternbrief-rueckmeldung`)
+  and the other a1.2 ids get a line when a unit first lists them, checked at that unit.
+
 ## 1. How to use this
 
 1. **Unit ids are the BLUEPRINT §2.8 rows, not the W2 draft numbers.** The drafts are input, not law (BLUEPRINT §2.8).

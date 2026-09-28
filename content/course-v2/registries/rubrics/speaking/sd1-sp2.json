@@ -8,6 +8,7 @@
     { "id": "frage", "label": "Zur Wortkarte eine passende Frage stellen", "per": "turn", "levels": [2, 1, 0] },
     { "id": "antwort", "label": "Die Frage verstehen und darauf antworten", "per": "turn", "levels": [1, 0.5, 0] }
   ],
+  "errorPolicy": { "a1": { "case-np": "flag", "case-pp": "flag", "negation": "flag" } },
   "zeroRules": [],
   "capRules": [],
   "spelling": "not-scored",

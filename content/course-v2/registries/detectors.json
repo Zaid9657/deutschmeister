@@ -59,10 +59,12 @@
         "skip": "\\s(?:Verb|Nomen|Artikel|Satz|Wort|Frage|Antwort|Endung|Genus|Regel|Form|Beispiel)$",
         "examples": {
           "hit": [
-            "Das ist ein Tisch."
+            "Das ist ein Tisch.",
+            "Ich möchte einen Apfel."
           ],
           "miss": [
-            "Das ist der Tisch."
+            "Das ist der Tisch.",
+            "Ich möchte ein bisschen Käse."
           ]
         }
       }
@@ -81,16 +83,18 @@
           "mein name ist",
           "wie ist ihr name",
           "wie ist dein name",
-          "ihr name"
+          "ihr name",
+          "meine muttersprache ist"
         ],
-        "notes": "Mein Name ist … / Wie ist Ihr Name? sind Kontakt-Chunks und stehen auf der Whitelist; der Spine kann weitere Chunks über chunkFrom freigeben.",
+        "notes": "Mein Name ist … / Meine Muttersprache ist … / Wie ist Ihr Name? sind Kontakt-Chunks von a1.1-u01 und stehen auf der Whitelist („Meine Muttersprache ist …“: Review a1.1-u01 r2 F09); der Spine kann weitere Chunks über chunkFrom freigeben.",
         "examples": {
           "hit": [
             "Das ist meine Mutter."
           ],
           "miss": [
             "Das ist die Mutter von Anna.",
-            "Mein Name ist Priya."
+            "Mein Name ist Priya.",
+            "Meine Muttersprache ist Malayalam."
           ]
         }
       }
@@ -179,11 +183,12 @@
           "g.trennbare-verben"
         ],
         "kind": "separable-bracket",
-        "notes": "Strukturell wie src/data/curricula/constructions.js (separable-verbs-intro): Vorsilbe aus der geschlossenen Klasse am Klauselende, davor ein finites Verb, das keine Form von sein ist. „Was macht das zusammen?\" / „Das macht zusammen 7,80 Euro.\" sind machen + zusammen (die Summe), kein trennbares Verb (skipClause; Review a1.1-u04 r4 F08 / r5 F05).",
+        "notes": "Strukturell wie src/data/curricula/constructions.js (separable-verbs-intro): Vorsilbe aus der geschlossenen Klasse am Klauselende, davor ein finites Verb, das keine Form von sein ist. „Was macht das zusammen?\" / „Das macht zusammen 7,80 Euro.\" sind machen + zusammen (die Summe), kein trennbares Verb (skipClause; Review a1.1-u04 r4 F08 / r5 F05). „Stellen Sie sich (bitte) vor“ ist die Arbeitsanweisung von Sprechen Teil 1 und der Chunk von lx.sich-vorstellen ab a1.1-u01 (skipClause; Review a1.1-u01 r3 F05); „Heute stelle ich Arta vor.“ trifft weiter.",
         "examples": {
           "hit": [
             "Ich stehe um sechs Uhr auf.",
-            "Bitte füllen Sie das Formular aus."
+            "Bitte füllen Sie das Formular aus.",
+            "Heute stelle ich Arta vor."
           ],
           "miss": [
             "Die Tür ist zu.",
@@ -191,10 +196,13 @@
             "Ich stehe um sechs Uhr.",
             "Was macht das zusammen?",
             "Das macht zusammen 7,80 Euro.",
-            "Das macht zusammen 7 Euro."
+            "Das macht zusammen 7 Euro.",
+            "Stellen Sie sich vor: Name, Land, Wohnort, Sprachen.",
+            "Stellen Sie sich bitte vor: Wie heißen Sie?",
+            "Bitte stellen Sie sich kurz vor."
           ]
         },
-        "skipClause": "\\bmach(?:t|en|st)\\s+(?:(?:das|es|alles|dann)\\s+)*zusammen\\b"
+        "skipClause": "\\bmach(?:t|en|st)\\s+(?:(?:das|es|alles|dann)\\s+)*zusammen\\b|^(?:bitte\\s+)?stellen\\s+sie\\s+sich\\s+(?:bitte\\s+)?(?:kurz\\s+)?vor\\W*$"
       }
     },
     {
@@ -725,12 +733,55 @@
         "examples": {
           "hit": [
             "Heute ist der 12. März.",
-            "Ich wohne im dritten Stock."
+            "Ich wohne im dritten Stock.",
+            "Der Kurs fängt am 1. Februar an.",
+            "Die Anmeldung ist im 1. Stock."
           ],
           "miss": [
-            "Ich wohne in Zimmer 12."
+            "Ich wohne in Zimmer 12.",
+            "Kölner Straße 18. Die Telefonnummer ist 0176 38 29 41 06.",
+            "Münchner Straße 30. Miete: 750 Euro.",
+            "Das Verb steht auf Position 2. Das Subjekt steht danach.",
+            "Er ist 24. Er studiert in Kochi.",
+            "Der Zug fährt ab Gleis 3. Wir steigen ein."
           ]
-        }
+        },
+        "notes": "Eine Kardinalzahl nach einem Zähl-Nomen (Straße 18. Die …, Position 2. Das …, Gleis 3. Wir …) oder nach einer Kopula am Satzende (Er ist 24. Er …) ist keine Ordinalzahl (notPrecededBy; die Zähl-Nomen aus DETECTOR_OVERLAYS übernommen, die Kopula-Formen neu: Review a1.1-u05 r1 F04, a1.1-u03 r1 F15).",
+        "notPrecededBy": [
+          "teil",
+          "aufgabe",
+          "nummer",
+          "nr",
+          "punkt",
+          "text",
+          "satz",
+          "beispiel",
+          "frage",
+          "seite",
+          "einheit",
+          "lektion",
+          "raum",
+          "zimmer",
+          "gleis",
+          "bus",
+          "linie",
+          "haus",
+          "straße",
+          "tram",
+          "position",
+          "stelle",
+          "zeile",
+          "karte",
+          "ist",
+          "bin",
+          "bist",
+          "sind",
+          "seid",
+          "war",
+          "waren",
+          "kostet",
+          "kosten"
+        ]
       }
     },
     {
@@ -803,9 +854,17 @@
             "Diese Jacke ist schön."
           ],
           "miss": [
-            "Die Jacke ist schön."
+            "Die Jacke ist schön.",
+            "Welche Sprachen sprichst du?",
+            "Und welche Sprachen sprechen Sie?",
+            "Welche Antwort passt: a, b oder c?"
           ]
-        }
+        },
+        "whitelist": [
+          "welche sprachen",
+          "welche antwort passt"
+        ],
+        "notes": "Whitelist: „Welche Sprachen sprichst du / sprechen Sie?“ ist der Chunk von a1.1-u01 (Review a1.1-u01 r1 F03); „Welche Antwort passt?“ ist die Aufgabenformel von sd1.h1/h3 (a1.1-u02 r2 F10)."
       }
     },
     {
@@ -1078,9 +1137,13 @@
           ],
           "miss": [
             "Ich suche eine Wohnung.",
-            "Das ist mein Laptop."
+            "Das ist mein Laptop.",
+            "Ich möchte ein bisschen Käse."
           ]
-        }
+        },
+        "skipWords": [
+          "bisschen"
+        ]
       }
     },
     {
@@ -1132,7 +1195,9 @@
             "Vielen Dank!",
             "Wie viele möchten Sie?",
             "Dann möchten wir zwei Kilo Kartoffeln.",
-            "Wie viele haben Sie?"
+            "Wie viele haben Sie?",
+            "Ich suche für eine Wohnung einen Tisch.",
+            "Dann kommen Sie auf unser Boot!"
           ]
         },
         "skipWords": [
@@ -1149,7 +1214,22 @@
           "dürfen",
           "sollen",
           "wollen",
-          "mögen"
+          "mögen",
+          "eine",
+          "keine",
+          "unser",
+          "euer",
+          "jede",
+          "diese",
+          "jene",
+          "welche",
+          "manche",
+          "solche",
+          "dieser",
+          "jener",
+          "solcher",
+          "mancher",
+          "welcher"
         ]
       }
     },
@@ -1286,9 +1366,14 @@
           "sehen wir uns",
           "ich freue mich",
           "wir freuen uns",
-          "ich möchte mich anmelden"
+          "ich möchte mich anmelden",
+          "stellen sie sich vor",
+          "stellen sie sich bitte vor",
+          "sich vorstellen",
+          "sich verabreden",
+          "sich anmelden"
         ],
-        "notes": "„sich\" ist immer reflexiv; mich/dich/uns/euch zählen nur mit dem passenden Subjekt in derselben Klausel oder im Imperativ eines Lexikonverbs mit reflexive: akk|dat.",
+        "notes": "„sich\" ist immer reflexiv; mich/dich/uns/euch zählen nur mit dem passenden Subjekt in derselben Klausel oder im Imperativ eines Lexikonverbs mit reflexive: akk|dat. Whitelist der rezeptiven A1.1-Lemmas als ganze Wendung: „Stellen Sie sich (bitte) vor“ und „sich vorstellen“ (lx.sich-vorstellen, a1.1-u01; Review a1.1-u01 r2/r3 F05), „sich verabreden“ (a1.1-u08), „sich anmelden“ (a1.1-u12). Getrennte Stellungen (stellt sich Priya vor) bleiben Hinweise, bis GRM-04 ein zugeteiltes reflexives Lexem selbst lizenziert.",
         "examples": {
           "lexicon": [
             {
@@ -1309,7 +1394,10 @@
           "miss": [
             "Ich rufe dich morgen an.",
             "Er besucht uns.",
-            "Wir sehen uns morgen!"
+            "Wir sehen uns morgen!",
+            "Stellen Sie sich bitte vor: Wie heißen Sie?",
+            "Sie können grüßen, sich vorstellen und Tschüss sagen.",
+            "Sie können sich verabreden."
           ]
         }
       }
@@ -2776,9 +2864,17 @@
           ],
           "miss": [
             "Ja, das stimmt.",
-            "Kommst du nicht? – Doch!"
+            "Kommst du nicht? – Doch!",
+            "Können Sie noch mal kommen?",
+            "Das ist mal wieder typisch."
           ]
-        }
+        },
+        "notPrecededBy": [
+          "noch"
+        ],
+        "notFollowedBy": [
+          "wieder"
+        ]
       }
     },
     {
@@ -3607,9 +3703,14 @@
           ],
           "miss": [
             "Er sagt, er ist krank.",
-            "Heute habe ich Zeit."
+            "Heute habe ich Zeit.",
+            "Am Samstag arbeite ich.",
+            "Den Bus brauche ich."
           ]
-        }
+        },
+        "notFollowedBy": [
+          "ich"
+        ]
       }
     },
     {

@@ -211,6 +211,9 @@ export const hasNumber = (text) => /\d/.test(foldNumberWords(text));
 export function normalizeSpelling(text) {
   return String(text ?? '')
     .replace(/[\u2010-\u2015\u2212\uFF0D-]/g, ' ')
+    // punctuation right after a single letter is a separator too: \u201EB, E, R \u2026" and a closing
+    // full stop (\u201EB-E-R-I-S-H-A.") used to keep the last letter apart (course-v2 a1.1-u02 r3)
+    .replace(/(?<=(^|\s)\p{L})[.,;:!?]+(?=\s|$)/gu, ' ')
     .replace(/\s+/g, ' ')
     .replace(/(?<=(^|\s)\p{L})\s+(?=\p{L}(\s|$))/gu, '')
     .trim();
@@ -302,8 +305,84 @@ export function checkAnswer(userInput, expected, opts = {}) {
   return rank[folded.result] > rank[first.result] ? folded : first;
 }
 
+// ── opt-in rules (course v2) ────────────────────────────────────────────────────
+//
+// Three options the live course never passes — checkOptionsFor() does not set them, so the
+// live A1.1 grading is unchanged — and the course-v2 wrapper (src/lib/course-v2/checkItem.js)
+// does. Each closes a class the v2 unit reviews found, with a rule rather than accepted[] lists:
+//
+//   doublets   — Duden doublets are one word: gern/gerne, allein/alleine, tschüss/tschüs,
+//                okay/OK/O. K. An answer that differs from an accepted form only by such a twin
+//                is CORRECT (a dictation, where the audio decides: TYPO). (a1.1-u08 r2/r3 F02/F03)
+//   paradigm   — a one-letter „slip" that yields another form of the key's paradigm is a grammar
+//                error, never a typo: a person-ending swap (kommt/kommst, findet/findest,
+//                findst/findest, will/willt), a stem-vowel twin of a du/er/ihr form
+//                (schlaft/schläft, lest/liest, sprecht/spricht, fahrst/fährst) and a modal stem
+//                twin (willen/wollen, wollst/willst). A genuine letter slip (kanst, nimst, wilst,
+//                konnen, mögn) keeps its typo retry. (a1.1-u03 r2/r3 F01, u08/u09/u10/u12 r3)
+//   politeCase — on a caseSensitive item only the polite forms decide by case (Sie, Ihnen, Ihr-):
+//                „… ist das Ihre tochter?" is a TYPO, „… ist das ihre Tochter?" WRONG.
+//                (a1.1-u03 r2/r3 F05)
+
+/** The second spelling of a Duden doublet → the first, on a prepared (normalised, lower-case) string. */
+const DOUBLET_OF = Object.freeze({ gerne: 'gern', alleine: 'allein', tschues: 'tschuess', okay: 'ok' });
+
+/** Fold every Duden doublet of a PREPARED answer to one spelling („o k" → „ok", „gerne" → „gern"). */
+export function foldDoublets(prepared) {
+  return String(prepared ?? '').replace(/\bo k\b/g, 'ok').split(' ').map((w) => DOUBLET_OF[w] || w).join(' ');
+}
+
+/** Endings of a finite verb (and of the e-epenthesis) whose swap is a person/number change. */
+const PERSON_TAILS = new Set(['', 'e', 'st', 't', 'est', 'et', 'en']);
+/** Modal (and wissen) stem pairs, normalised: the singular stem ↔ the plural/infinitive stem. */
+const MODAL_STEMS = Object.freeze([['will', 'woll'], ['kann', 'koenn'], ['muss', 'muess'], ['darf', 'duerf'], ['mag', 'moeg'], ['weiss', 'wiss']]);
+const VOWELS = 'aeiou';
+
+/** One vowel edit between two normalised words: an umlaut marker (a/o/u + e), e → ie, or a vowel for a vowel. */
+function vowelAlternation(a, b) {
+  if (a.length === b.length) {
+    const diff = [...a].map((ch, i) => (ch === b[i] ? -1 : i)).filter((i) => i >= 0);
+    return diff.length === 1 && VOWELS.includes(a[diff[0]]) && VOWELS.includes(b[diff[0]]);
+  }
+  if (Math.abs(a.length - b.length) !== 1) return false;
+  const [short, long] = a.length < b.length ? [a, b] : [b, a];
+  let i = 0;
+  while (i < short.length && short[i] === long[i]) i += 1;
+  if (long.slice(0, i) + long.slice(i + 1) !== short) return false;
+  const added = long[i];
+  if (added === 'e' && i > 0 && 'aou'.includes(long[i - 1])) return true; // schlaft / schlaeft
+  return added === 'i' && long[i + 1] === 'e'; // lest / liest
+}
+
+/** True when `u` is another form of the paradigm of `e` (both normalised words), not a letter slip. */
+export function paradigmTwin(u, e) {
+  if (!u || !e || u === e) return false;
+  const cp = commonPrefix(u, e);
+  if (cp >= 2 && PERSON_TAILS.has(u.slice(cp)) && PERSON_TAILS.has(e.slice(cp))) return true;
+  if (MODAL_STEMS.some(([s, p]) => (u.startsWith(s) && e.startsWith(p)) || (u.startsWith(p) && e.startsWith(s)))) return true;
+  return /s?t$/.test(u) && /s?t$/.test(e) && vowelAlternation(u, e);
+}
+
+/** The one word two same-length sentences differ in is a paradigm twin (see paradigmTwin). */
+function paradigmDiffers(user, expected) {
+  const u = user.split(' '); const e = expected.split(' ');
+  if (u.length !== e.length) return false;
+  return u.some((w, i) => w !== e[i] && paradigmTwin(w, e[i]));
+}
+
+/** The polite forms whose capital letter IS the task (Sie, Ihnen, Ihr, Ihre …). */
+const POLITE_RE = /^(sie|ihnen|ihr|ihre|ihren|ihrem|ihrer|ihres)$/;
+
+/** A case-only miss that touches a polite form (raw strings, same letters). */
+function politeCaseMiss(rawUser, rawAccepted) {
+  const u = rawUser.split(' '); const a = rawAccepted.split(' ');
+  if (u.length !== a.length) return true;
+  return a.some((w, i) => w !== u[i] && POLITE_RE.test(w.toLowerCase()));
+}
+
 function compareAnswer(userInput, expected, {
   strict = false, dictation = false, caseSensitive = false, spelling = false,
+  doublets = false, paradigm = false, politeCase = false,
 } = {}, numbers = false) {
   const accepted = (Array.isArray(expected) ? expected : [expected]).filter(Boolean);
   const spellingMode = spelling || spellingApplies(accepted);
@@ -328,9 +407,17 @@ function compareAnswer(userInput, expected, {
   for (const a of accepted) {
     if (prepare(a) !== user) continue;
     if (spellingMode || !caseOnlyDiff(rawUser, raw(a))) return { result: RESULT.CORRECT, expected: a };
+    // opt-in: on a caseSensitive item only a polite form decides by its capital letter
+    if (caseSensitive && politeCase && !politeCaseMiss(rawUser, raw(a))) return { result: RESULT.TYPO, expected: a, reason: 'case' };
     return caseSensitive
       ? { result: RESULT.WRONG, expected: a, reason: 'case' }
       : { result: RESULT.TYPO, expected: a, reason: 'case' };
+  }
+  if (doublets) {
+    const folded = foldDoublets(user);
+    for (const a of accepted) {
+      if (foldDoublets(prepare(a)) === folded) return { result: dictation ? RESULT.TYPO : RESULT.CORRECT, expected: a };
+    }
   }
   for (const a of accepted) {
     if (strict && strictApplies(a)) continue;
@@ -338,6 +425,7 @@ function compareAnswer(userInput, expected, {
     const shortFunctionWord = norm.length <= 4 && !norm.includes(' ');
     if (shortFunctionWord) continue;
     if (norm.length >= 5 && levenshtein(user, norm) === 1 && !endingDiffers(user, norm)) {
+      if (paradigm && paradigmDiffers(user, norm)) continue;
       return { result: RESULT.TYPO, expected: a };
     }
   }

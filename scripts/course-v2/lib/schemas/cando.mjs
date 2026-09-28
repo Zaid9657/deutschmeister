@@ -7,6 +7,9 @@ export const candoSchema = obj({
   items: arr({
     id: 're(cando)',
     de: 'de', // our own ich-Form wording, never verbatim CEFR/Goethe text
+    // the line the learner reads on Start („Lernziele") and Check („Das kann ich"): no „Ich kann" frame,
+    // only words and constructions known at the first unit that shows it (a1.1-u06 r2/r3 F01, u11 r3 F02)
+    'learnerDe?': 'de',
     halfLevel: 're(LEVEL)',
     band: 'enum(A1|A2|A2+|B1|B1+|B2|B2+)',
     mode: 'enum(receptive-spoken|receptive-written|productive-spoken|productive-written|interaction-spoken|interaction-written|mediation)',

@@ -1,11 +1,18 @@
 # Course v2 — SCHEMA (binding content data model)
 
-**Date:** 2026-09-27 (critic pass applied, see the BLUEPRINT changelog) · **Status:** BINDING. Companion of
+**Date:** 2026-09-27 (critic pass applied, see the BLUEPRINT changelog); amended 2026-09-28 with the A1.1 unit
+reviews' deferred schema items (listed at the end of this header) · **Status:** BINDING. Companion of
 [`BLUEPRINT.md`](BLUEPRINT.md). **Precedence (one rule, stated identically in the blueprint):** `DECISIONS.md` >
 BLUEPRINT > SCHEMA; this file is authoritative **only on field shapes, id patterns and file layout** and never
 overrides a count, a rule, a threshold or product behaviour stated in the blueprint. Counts that appear in a type
 below (e.g. `{4..6}`) transcribe the blueprint; if they ever differ, the blueprint wins and this file is corrected.
 · **Implements:** BLUEPRINT §2–§10.
+**Amendments 2026-09-28** (A1.1 unit reviews r1–r3; every one optional or a new enum value, so no existing file
+changes meaning): ErrorTag `verb-ending` and `negation` (§3.1); can-do `learnerDe` (§4.1); TeilTemplate
+`speakers` (§4.3); rubric criterion `appliesIf` written down (§4.5); cast `contact` and the
+voice registry file (§4.7); names kind `language` (§4.9); lexicon `pluralVariants` (§6); unit `story.cliffhangerEn`,
+`story.glosses` and the meaning of `story.castIn`, `Fokus.glosses`, `MicroOutput.modelDe`, `SpeakingPart.situationEn`,
+the speaking move `nachfragen`, `acceptedWhy` on form fields and `Check.proofs[].microOutput` (§8).
 **Implementation:** plain JSON content files authored by agents, a zero-dependency schema checker and a deterministic
 compiler written in JavaScript (`scripts/course-v2/lib/`, `scripts/course-v2/compile.mjs`), JS/JSON runtime modules.
 No TypeScript, no ajv/zod (no lockfile churn), **no new content tables** in Supabase.
@@ -152,7 +159,19 @@ Item = {
 ```
 
 `ErrorTag = enum(v2-inv|verb-final|satzklammer|case-np|case-pp|gender-article|adj-ending|perfekt-aux-participle|
-connector-position|n-dekl|reflexive|register|spelling-meaning)` (BLUEPRINT §2.5).
+connector-position|n-dekl|reflexive|register|spelling-meaning|verb-ending|negation)` (BLUEPRINT §2.5).
+
+- `verb-ending` — the finite verb form: person ending and agreement (*du kommt* → *du kommst*, *Emre kommen* →
+  *Emre kommt*) and the stem-vowel change (*du fahrst* → *du fährst*). Added 2026-09-28 (a1.1 u01 r1-F15 … u03 r3-F01); the graders' list
+  (`netlify/functions/_shared/rubrics/grade.mjs` `ERROR_TAGS`) carries it too.
+- `negation` — *nicht* or *kein*, and the place of *nicht* (*Ich habe nicht einen Laptop* → *Ich habe keinen
+  Laptop*; *Ich nicht koche gern* → *Ich koche nicht gern*). One tag for both: the repair card key names the rule card (`repair:negation:rc.kein` vs
+  `repair:negation:rc.nicht-position-gern`), so the two stay apart without a second tag. Added 2026-09-28 (a1.1 u06
+  r1-F01 … r3-F06; u08 r1-F12 … r3-F09 asked for `negation-position`, folded in here). Not yet in the graders' list:
+  an item may carry it; an AI grader reports it only once `ERROR_TAGS` has it (and ITM-12 then needs its repair
+  pool at every level).
+- The schema checker keeps ONE copy of the enum (`scripts/course-v2/lib/schemas/common.mjs` `ERROR_TAG`, imported by
+  `rubric.mjs` for `errorPolicy`).
 
 **Gaps in exam texts.** A cloze or insert gap is marked in the ExamText as `⟦NN⟧`, where `NN` is the two-digit suffix
 of the item that fills it (`…-l2-03` fills `⟦03⟧`); every item has exactly one marker and every marker one item (EXM-01).
@@ -251,6 +270,7 @@ them by id (`textRefs`, `Item.textRef`, `choices[].textRef`).
 ```js
 { $schema: 'course-v2/cando@1', band: enum(a1|a2|b1|b2),
   items: [{ id: re(cando), de: de,               // our own ich-Form wording, never verbatim CEFR/Goethe text
+            learnerDe: de?,                      // the learner line (below); `de` stays the descriptor wording
             halfLevel: re(LEVEL), band: enum(A1|A2|A2+|B1|B1+|B2|B2+),
             mode: enum(receptive-spoken|receptive-written|productive-spoken|productive-written|
                        interaction-spoken|interaction-written|mediation),
@@ -258,6 +278,12 @@ them by id (`textRefs`, `Item.textRef`, `choices[].textRef`).
             hf: [enum(1|2|3|4|5|6|7|8|9|10|11|12|A|B|C|D|E)],
             online: bool, mediation: bool }] }
 ```
+
+**`learnerDe`** (added 2026-09-28, a1.1-u06 r2/r3-F01, u11 r3-F02) is what Start („Lernziele") and Check („Das kann
+ich") show. `de` is the reviewer's and the descriptor's wording, in the ich-Form with its source, and may use any
+construction. `learnerDe` has no „Ich kann" frame (the screen heading carries it; *können* is a1.1-u08). It uses
+only words and constructions that are known at the first unit whose `start.lernziele` lists the id: LEX-01 and
+GRM-04 read it there in the instruction scope, like `title.canDo`. A compiler shows `learnerDe`, else `de`.
 
 ### 4.2 Grammar spine — `grammar-spine.json`
 
@@ -302,7 +328,8 @@ TeilTemplate = {
   choiceKind: enum(text|heading|ad|person|word|sentence|picture|place|opinion)?,
   choiceReuse: bool?,                // true where one choice may answer several items (gb2.l1: 9 statements → 4 people)
   noMatch: enum(X|0|x)?,             // the no-match key, if the Teil has one
-  plays: int[1..2]?, readingSeconds: int?, minutes: num?,
+  plays: int[1..2]?, speakers: int[1..6]?,   // speakers: distinct voices per text (sd1.h1: 2), EXM-01
+  readingSeconds: int?, minutes: num?,
   textType: ref(texttype), textWords: [int, int]?, textWordsSource: enum(official-sample|design),
   words: { target: int?, min: int?, max: int? }?, leitpunkte: int?, choose: { from: int, pick: int }?,
   register: enum(informell|halbformell|formell)?,
@@ -338,6 +365,8 @@ TeilTemplate = {
   max: num,                         // the scored maximum, i.e. the sum over criteria with scoredBy ≠ notAutoScored
   examMax: num,                     // the official maximum, incl. notAutoScored criteria (for range widening, §5.6)
   criteria: [{ id: str, label: de, per: enum(task|leitpunkt|turn|part)?, levels: [num], weight: num?,
+               appliesIf: enum(targets)?,                        // counts only when the task has target structures
+                                                                 // (course-micro, course-micro-sp)
                scoredBy: enum(ai|deterministic|notAutoScored),   // Aussprache/Intonation: always notAutoScored
                descriptors: [{ points: num, de: de }]* }],       // one per entry of `levels`, OUR wording, never the
                                                                  // official descriptor text; required when scoredBy = ai;
@@ -393,13 +422,18 @@ their descriptors, the bands and the error policy to the model; `deterministic` 
                 method: enum(token|pattern|lexicon|clause), spec: object }] }
 // casts/series.json  +  casts/<band>.json
 { members: { [castId]: { name: str, age: int?, from: str?, languages: [str]*, role: de,
-                         exam: { lane: ref(lane), arc: de }?, voice: { azure: str, rate: str }, bands: [str] } },
+                         exam: { lane: ref(lane), arc: de }?, voice: { azure: str, rate: str }, bands: [str],
+                         contact: { phone: str?,                          // as the units write it
+                                    addresses: [{ de: de, from: ref(unit), until: ref(unit)?, note: str? }]* }? } },
+      // contact (added 2026-09-28, a1.1 u02 r1-F16 … u12 r1-F06): the persona data units state, so all agree
   relations: [{ a: ref(cast), b: ref(cast), address: enum(du|Sie), since: ref(unit)? }] }
 // casts/series.json additionally fixes every cross-course beat in P0 (BLUEPRINT §2.7)
 { beats: [{ from: ref(unit), to: ref(unit), cliffhanger: de, resolution: de, recapDe: de }] }
       // from = a course's U12, to = the next course's U01; recapDe = the stand-alone line for new buyers
-// registries/voices.json  (story architect)
+// registries/voices.json  (story architect; written 2026-09-28: the Azure German neural voices, so ref(voice) resolves)
 { voices: { [voice: str]: { gender: enum(f|m|d), locale: enum(de-DE|de-AT|de-CH), ageBand: enum(young|adult|older) } } }
+      // once the file exists REF-01 resolves every `ref(voice)` (an extra's voice) against it; a de-AT/de-CH voice
+      // on an extra goes with that extra's `variety` (docs/course-v2/registries-notes/voices.md)
 // registries/style.json  (level-profile agent; read by LNG-02 allowlists, `accepted` generators and pre-checks)
 { time: { running: str, accept: [str] },        // „11.15 Uhr", accept also „11:15"
   quotes: { primary: '„…"', secondary: '‚…\'' }, duInLetters: enum(lower|upper), gender: enum(pair|neutral-participle),
@@ -423,13 +457,16 @@ Written only by the orchestrator's `scripts/course-v2/lex/register.mjs` after ea
 ```js
 { $schema: 'course-v2/names@1', version: 1,
   names: [{ form: de,                               // as written: 'Leipzig', 'Cospudener See', 'Elster-Reisen'
-            kind: enum(place|person|org|brand|event),
+            kind: enum(place|person|org|brand|event|language),   // language: added 2026-09-28
             level: re(LEVEL),                      // the first level whose texts may use the name
             note: str? }]* }                       // `form` unique (case-insensitive)
 ```
 
 The places, people, organisations, brands and events a text may name that are **not** cast members (a cast
-member's `name` and `from` are known anyway) and not a file's one-off speakers (`extras`, §3.5). LEX-01 and
+member's `name` and `from` are known anyway) and not a file's one-off speakers (`extras`, §3.5), and the cast's
+languages that no lexicon allocates (kind `language`: *Malayalam*, *Urdu*, *Albanisch* …; a1.1 u01 r1-F13, u05
+r1-F06). A person a unit's input names without a voice (*Rahul*, *Iryna*) is listed here too: this list is how a
+unit declares the names it introduces (a1.1 u03 r1-F01 … r3-F10). LEX-01 and
 LEX-03 count every token of a listed name as known from its `level` on, with its genitive -s (*Leipzigs*) and
 adjectival -er (*Leipziger*, *Cospudener*); a token ending in -e inside a multi-word name takes the adjective
 endings (*in der Sächsischen Schweiz*). An irregular derivative is a name of its own (*Münchner*).
@@ -494,6 +531,8 @@ lives in `course.json` any more: `minutesPlanned`, `reviewMinutesByPace` (curren
   entries: [{ id: re(lexicon), lemma: de,
               pos: enum(NOUN|VERB|ADJ|ADV|PREP|CONJ|PRON|DET|NUM|PHRASE|INTJ),
               article: enum(der|die|das)?, plural: str | null ?, plural_kind: enum(regular|singular-only|plural-only)?,
+              pluralVariants: [str]*?,                // further correct plurals („Balkons" beside „Balkone"),
+                                                      // accepted wherever the plural is asked; added 2026-09-28
               feminine: str?,                         // one entry for the pair, as Goethe counts
               verb_forms: { '2sg': str?, '3sg': str, praet: str?, perfekt: str? }?,   // 2sg required where the stem
                                                       // vowel changes (Vokalwechsel detector, BLUEPRINT §9.3)
@@ -537,7 +576,8 @@ BLUEPRINT §2.6); the values in §15 are illustrative.
   steps: [Step]{7} | [Step]{8},                       // A skeleton 7, B skeleton 8 (level profile)
   check: Check,
   redemittel: [{ id: re(rm), de: de, en: en, function: de, forTemplate: ref(template)? }]{2..8},
-  story: { beat: de, cliffhanger: de, castIn: [ref(cast)] },
+  story: { beat: de, cliffhanger: de, cliffhangerEn: en?, glosses: [{ token: str, gloss: EnText }]{0..3}?,
+           castIn: [ref(cast)] },            // castIn: see „story.castIn" below
   fokus: [Fokus]{0..2},
   facts: [Fact]*,
   extras: Extras?,                                   // one-off speakers of this file (§3.3)
@@ -602,7 +642,9 @@ Input = {
 MicroOutput = {
   id: re(mo), bankKey: re(BANK_KEY), mode: enum(spoken|written), profile: enum(course-micro|course-micro-sp),
   situationDe: de?, promptDe: de, promptEn: en, planSeconds: int, seconds: [int, int]?, words: [int, int]?,
-  targets: [ref(spine)], register: enum(du|Sie) }
+  targets: [ref(spine)], register: enum(du|Sie),
+  modelDe: de? }                             // one model answer, shown after the attempt: it hits every target
+                                             // and uses known words only (a1.1-u05 r2 F05); added 2026-09-28
 
 PruefungStep = {                                     // LS4
   id, kind: 'pruefung',
@@ -648,6 +690,7 @@ SpeakingPart = {
   mode: enum(cards-ask|cards-request|group|get-to-know|monologue|plan-together|discuss|photo|feedback-question|mediate),
   profile: ref(rubric), prepMinutes: int, prepAtHome: bool?,   // = the template (EXM-04)
   instructionsDe: de, situationDe: de?,
+  situationEn: en?,                                            // English twin of situationDe (A1.1–A1.2); 2026-09-28
   cards: { learner: [Card]*, partner: [Card]* }?,              // Card = de | { de: de?, imageRef: ref(asset) }
   photos: { learner: ref(asset), partner: ref(asset)? }?,      // dtz.s2: a different photo per candidate
   slides: [de]{5}?,
@@ -658,7 +701,7 @@ SpeakingPart = {
   keyPoints: [de]*,                                            // required for mode 'mediate' (scored on coverage)
   seconds: [int, int]?, turns: [int, int]?,                   // target length within the template band; also the
                                                                // hard session length for the minute allowance
-  moves: [enum(vorschlagen|reagieren|widersprechen|einigen|verteilen)]*,
+  moves: [enum(vorschlagen|reagieren|widersprechen|einigen|verteilen|nachfragen)]*,   // nachfragen (sd1.sp1): 2026-09-28
   planningRound: { minutes: int, moves: [str] }? }            // every B1 unit (BLUEPRINT §2.8)
 
 WritingTask = {
@@ -667,7 +710,8 @@ WritingTask = {
   title: de, situationDe: de, taskDe: de,
   leitpunkte: [{ id: str, de: de, cues: [str] }],      // count = template; Anrede/Gruß never a Leitpunkt (EXM-03)
   choose: { from: int, pick: int }?,
-  form: { fields: [{ id: str, labelDe: de, answer: str, accepted: [str], exact: enum(number|name)? }],
+  form: { fields: [{ id: str, labelDe: de, answer: str, accepted: [str], acceptedWhy: { [form: str]: de }?,
+                     exact: enum(number|name)? }],
           documents: [ref(asset)]* }?,                  // form_fill tasks (sd1.s1, ta2.s1): method deterministic
   wordBand: [int, int]?, wordBandLearning: [int, int]?, minSubmitWords: int?,   // required unless `form`
   checklist: [de], modelText: de,                      // model text shown only after the learner's revision
@@ -680,15 +724,28 @@ Check = {
                                                        // drawn at runtime by the unit builder from the compiled reserve
                                                        // index — never an item id of another unit file
   proofItems: [Item]{0..5},                            // proof items (q): one per receptive can-do, scored apart from the 12
-  proofs: [{ canDo: ref(cando), item: ref(item)? , aufgabe: enum(sprechen|schreiben)? }]{3..5},
+  proofs: [{ canDo: ref(cando), item: ref(item)? , aufgabe: enum(sprechen|schreiben)?,
+              microOutput: re(mo)? }]{3..5},    // microOutput: the learner's own micro-output proves it (2026-09-28)
   rueckschau: [ref(rulecard)]{1..3}?,                  // B skeleton only (required there): the Grammatik-Rückschau
   portrait: { factRef: ref(fact), de: de, en: en, assetRef: ref(asset)? }?,
                                                        // B skeleton only (required there); text-only unless AST-02 holds
   testOutThreshold: num, cumulativeShare: num }
 
 Fokus = { id: re(fokus), kind: enum(daz|daf|beruf), title: de, hf: str?, bodyDe: de, bodyEn: en,
+          glosses: [{ token: str, gloss: EnText }]{0..3}?,     // as the Folge's (a1.1-u12 r3 F05); 2026-09-28
           factRefs: [ref(fact)]*, minutes: int, optional: true }
 ```
+
+**`story.castIn`** (defined 2026-09-28, a1.1-u06 r1 F13): the cast members who **enter the story** in this unit —
+(1) every cast member whose first line in the course is in this unit, and (2) the character the cliffhanger names or
+quotes, who carries the hook into the next unit (the §15 example: `["cast.emre"]`). The protagonist is listed only in
+the course's first unit. It is not the unit's speaker list; that is `spec.cast`. **`story.cliffhangerEn`** is the
+cliffhanger's English twin (the translation toggle, as on every Line); **`story.glosses`** glosses the words it uses
+before their unit, as the Folge's glosses do (a1.1 u01 r1-F08 / r2-F09).
+
+**`Check.proofs`**: each proof names exactly one of `item`, `aufgabe` or `microOutput`. A `microOutput` proof is the
+learner's own output (a1.1-u02: the own-data form `a1.1-u02-ls2-mo` proves `cd.a1.formular-person`, where the S1
+form about Emre could not); ALL-02 resolves the id against the unit's micro-outputs.
 
 ### 8.1 Stage schema (what SCH-01 requires at each `stage`)
 

@@ -5,8 +5,8 @@
 // migrate their profiles one by one (tb1 first); make them required once every profile carries them.
 // The refine below already enforces what the grader relies on whenever the fields are present.
 import { obj, arr, map } from '../schema.mjs';
-
-const ERROR_TAG = 'enum(v2-inv|verb-final|satzklammer|case-np|case-pp|gender-article|adj-ending|perfekt-aux-participle|connector-position|n-dekl|reflexive|register|spelling-meaning)';
+// one ErrorTag enum for items and error policies (SCHEMA §3.1, §4.5)
+import { ERROR_TAG } from './common.mjs';
 
 export const rubricSchema = obj({
   $schema: "'course-v2/rubric@1'",
@@ -25,7 +25,7 @@ export const rubricSchema = obj({
     'scoredBy?': 'enum(ai|deterministic|notAutoScored)',
     'descriptors?': arr({ points: 'num', de: 'de' }, '*'),
     // Used by course-micro / course-micro-sp since 2026-09-27: the criterion counts only when the
-    // task has target structures. NOT YET IN SCHEMA §4.5 — the SCHEMA owner should add the line.
+    // task has target structures (SCHEMA §4.5, added 2026-09-28).
     'appliesIf?': 'enum(targets)',
   })),
   'bands?': arr({ label: 'str', min: 'num', max: 'num' }, '*'),

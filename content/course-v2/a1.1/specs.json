@@ -948,7 +948,8 @@
             "lx.dienstag",
             "lx.mittwoch",
             "lx.donnerstag",
-            "lx.freitag"
+            "lx.freitag",
+            "lx.sonntag"
           ]
         },
         {
@@ -958,11 +959,11 @@
             "lx.oeffnungszeit",
             "lx.termin",
             "lx.geschlossen",
-            "lx.geoeffnet",
             "lx.wochenende",
             "lx.spaet",
             "lx.offen",
-            "lx.anrufbeantworter",
+            "lx.aufmachen",
+            "lx.zumachen",
             "lx.geschaeft"
           ]
         }
@@ -1384,12 +1385,12 @@
             "lx.umsteigen",
             "lx.aussteigen",
             "lx.ankommen",
+            "lx.busfahrer",
             "lx.abfahren",
             "lx.puenktlich",
             "lx.platz",
             "lx.frei",
             "lx.halten",
-            "lx.kilometer",
             "lx.unterwegs",
             "lx.ein-paar"
           ]
@@ -1508,7 +1509,6 @@
           "lemmas": [
             "lx.gestern",
             "lx.letzte-woche",
-            "lx.sonntag",
             "lx.vorgestern",
             "lx.monat",
             "lx.vormittag",

@@ -21,7 +21,16 @@
 //   situation      speaking parts', writing tasks' and micro-outputs' situationDe
 //   leitpunkt      writing tasks' leitpunkte[].de
 //   checklist      writing tasks' checklist[]
-//   strategyCard   strategy cards' de (GRM-04 only)
+//   strategyCard   strategy cards' de (GRM-04; LEX-01 as an advisory — the card shows its English twin)
+// Surfaces added by the a1.1 unit reviews (rule-smith 2026-09-28, RAILS §3.1c), all `extra: true` — LEX-01
+// reports an unknown word on them as an ADVISORY (a word the learner may not know is not wrong German):
+//   recap          start.recapDe                                (U01's stand-alone recap line, StartView)
+//   folgeTitle     start.folge.title                            (the Folge's glosses count)
+//   lernziel       the learner text of every start.lernziele can-do (the registry's learnerDe, else de) —
+//                  also GRM-04's instruction scope, like title.canDo (a1.1-u06 r2 F01 / r3 F01)
+//   openingLine    speaking tasks' openingLine                  (the AI partner's first line, heard)
+//   rmFunction     redemittel[].function                        (StepView shows it in the German UI; en twin)
+// story.beat is authoring text the player never renders (grep src/components/course-v2) and is not walked.
 // An exam block's screen holds its texts: their glosses and the words they show count as known on the
 // block's instruction and on its items' stems, options and explanations.
 
@@ -48,13 +57,16 @@ export const INSTRUCTION_METALANGUAGE = Object.freeze([
   'durchsage', 'durchsagen', 'aussage', 'aussagen', 'frage', 'fragen', 'antwort', 'antworten', 'thema', 'themen',
   'karte', 'karten', 'wortkarte', 'wortkarten', 'schild', 'schilder', 'anrede', 'gruß', 'text', 'texte', 'punkt',
   'punkte', 'punkten', 'stichwort', 'stichwörter', 'stichwörtern', 'angaben', 'ki', 'gesprächsleitung',
+  // the sd1.l2 template's own task word („Lesen Sie die Situationen …"; the level decision a1.1-u05 r1 F01 /
+  // u06 r1 F02 asked for — lx.situation is a b1.1 lemma, the exam names its items with it from A1 on)
+  'situation', 'situationen',
   // grammar and pronunciation terms the explanations name
   'plural', 'singular', 'position', 'aussagesatz', 'fragesatz', 'w-frage', 'w-fragen', 'w-wort', 'w-wörter',
   'nein-frage', 'ja-nein-frage', 'nomen', 'verb', 'verben', 'verbform', 'form', 'formen', 'infinitiv',
   'partizip', 'adjektiv', 'artikel', 'bestimmt', 'bestimmte', 'bestimmter', 'unbestimmt', 'unbestimmte',
   'unbestimmter', 'endung', 'endungen', 'wortstellung', 'satzende', 'subjekt', 'pronomen', 'verneinung',
   'trennbar', 'trennbare', 'trennbaren', 'maskulin', 'feminin', 'neutral', 'nominativ', 'akkusativ', 'dativ',
-  'perfekt', 'formell', 'informell', 'umlaut', 'akzent', 'melodie', 'satzmelodie', 'buchstabe', 'buchstaben',
+  'perfekt', 'präsens', 'genus', 'vokal', 'adjektive', 'formell', 'informell', 'umlaut', 'akzent', 'melodie', 'satzmelodie', 'buchstabe', 'buchstaben',
   'satz', 'sätze', 'sätzen', 'nebensatz', 'relativsatz', 'relativsätze', 'lücke', 'lücken', 'wort', 'wörter',
   // the course's own screens and modes (Mustertext, Lernmodus, Planungsrunde)
   'mustertext', 'lernmodus', 'prüfungsmodus', 'planungsrunde',
@@ -76,6 +88,8 @@ export const stripQuoted = (text) => String(text || '').replace(/[„“"‚][^�
  */
 export function stripFragments(text) {
   return String(text || '')
+    // a first-letter cue is a truncated word, not a word: „(St…)", „B...", „Re___" (a1.1-u01 r2 F10)
+    .replace(/\p{L}+(?:…|\.{3}|_{2,})/gu, ' ')
     .replace(/(^|[^\p{L}])-\p{L}+/gu, '$1 ')
     .replace(/\p{L}+-(?!\p{L})/gu, ' ')
     .replace(/(\p{Ll}+)-(\p{Ll}{1,3})(?!\p{L})/gu, '$1$2');
@@ -91,11 +105,25 @@ const glossTokens = (list) => arr(list).map((g) => String(g?.token ?? '').toLowe
  * English twin (an item's promptEn and explanation.en, a micro-output's promptEn — the player shows them
  * outside the German UI), which LEX-01 reports as an advisory only.
  */
-export function* walkReadSurfaces(doc) {
+export function* walkReadSurfaces(doc, { cando = null } = {}) {
   const d = doc.data || {};
-  const s = (kind, de, path, id, glosses = [], extra = {}) => ({ kind, de: str(de), path, id: id ?? null, glosses, instruction: false, twin: false, ...extra });
+  // the can-do registry (ctx.registries.cando) gives the Lernziele box its text; without it the lines are skipped
+  const registryCando = cando ? (id) => cando.get(id)?.item || null : null;
+  const s = (kind, de, path, id, glosses = [], more = {}) => ({ kind, de: str(de), path, id: id ?? null, glosses, instruction: false, twin: false, extra: false, ...more });
   if (doc.kind === 'unit') {
-    if (str(d.title?.canDo)) yield s('canDo', d.title.canDo, 'title.canDo', d.id, glossTokens(d.start?.folge?.glosses), { instruction: true });
+    const folgeGlosses = glossTokens(d.start?.folge?.glosses);
+    if (str(d.title?.canDo)) yield s('canDo', d.title.canDo, 'title.canDo', d.id, folgeGlosses, { instruction: true });
+    if (str(d.start?.recapDe)) yield s('recap', d.start.recapDe, 'start.recapDe', d.id, folgeGlosses, { extra: true });
+    if (str(d.start?.folge?.title)) yield s('folgeTitle', d.start.folge.title, 'start.folge.title', d.id, folgeGlosses, { extra: true });
+    for (const [i, c] of arr(d.start?.lernziele).entries()) {
+      const e = registryCando?.(c);
+      const text = str(e?.learnerDe) || str(e?.de);
+      // the text is the can-do registry's, not the unit's: `owner` routes a finding to the registry file
+      if (text) yield s('lernziel', text, `start.lernziele[${i}]`, c, folgeGlosses, { instruction: true, extra: true, owner: { file: cando.get(c)?.file ?? null, path: `items[${c}].${str(e?.learnerDe) ? 'learnerDe' : 'de'}` } });
+    }
+    for (const [i, r] of arr(d.redemittel).entries()) {
+      if (str(r?.function)) yield s('rmFunction', r.function, `redemittel[${i}].function`, r.id, [], { extra: true, twin: Boolean(str(r?.en)) });
+    }
     for (const { step, path } of walkSteps(doc)) {
       if (!isObj(step)) continue;
       if (str(step.title)) yield s('stepTitle', step.title, `${path}.title`, step.id, glossTokens(step.input?.glosses));
@@ -131,8 +159,10 @@ export function* walkReadSurfaces(doc) {
   }
   for (const { task, kind, path } of walkTasks(doc)) {
     if (kind === 'speaking') {
+      if (str(task.openingLine)) yield s('openingLine', task.openingLine, `${path}.openingLine`, task.bankKey, [], { extra: true, task });
       for (const { part, path: pp } of speakingParts(task)) {
-        if (str(part?.situationDe)) yield s('situation', part.situationDe, `${path}${pp}.situationDe`, task.bankKey, [], { instruction: true, task });
+        // SpeakingPart.situationEn (SCHEMA §8, 2026-09-28) is the situation's English twin on the same screen
+        if (str(part?.situationDe)) yield s('situation', part.situationDe, `${path}${pp}.situationDe`, task.bankKey, [], { instruction: true, task, twin: Boolean(str(part?.situationEn)) });
         if (str(part?.instructionsDe)) yield s('instructions', part.instructionsDe, `${path}${pp}.instructionsDe`, task.bankKey, [], { instruction: true, task });
       }
     } else {

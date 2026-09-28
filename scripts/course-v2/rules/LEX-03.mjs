@@ -18,6 +18,18 @@
 //     lex.articlePlural: an ADVISORY naming the item;
 //   - a compound of two known forms („Radtour", „Möbelstücke") is an advisory — allocate it as
 //     `compound:a+b` — never a blocker (reviews b1.2-u04 r1 F01, b2.2-u04 r1 F05; compounds.mjs).
+//
+// Third round (the a1.1 unit reviews u01–u06, rule-smith 2026-09-28, RAILS §3.1c):
+//   - receptive-typed: an authored typed item (fill_blank, typed cloze, notes, form_fill) whose key holds
+//     a form of one of the UNIT's receptive lemmas that the prompt does not show is typed recall of a word
+//     taught for recognition (a1.1-u01 r1 F10 / r2 F05 / r3 F05a, u03 r1 F06 / r2 F03 / r3 F03 — six
+//     rounds). A RATCHET, not a blocker: the learner is not graded wrong, the item asks for a word the
+//     unit only lets them recognise; the fix is the item (cue a productive word) or a promotion;
+//   - a typed number-word key when every number lemma the unit allocates is receptive (a1.1-u02 r2 F07 /
+//     r3 F06): the same class, the same ratchet;
+//   - FALSE POSITIVES closed: a spelled letter chain („B-E-R-I-S-H-A", check.js SPELLED_OUT_RE) is
+//     letters, not an unknown lemma (a1.1-u02 r3); the file's `extras` names are known words in
+//     production as they are in LEX-01 (a1.1-u02 r1: an sd1.h1 spelling key could not name an extra).
 
 import { walkProduction, walkTexts } from '../lib-validate/walk.mjs';
 import { knownForms, lexiconComplete, readTokens, licensedForms, isKnown } from '../lib-validate/lexicon.mjs';
@@ -28,7 +40,13 @@ import { walkSteps, walkItems } from '../lib-validate/walk.mjs';
 import { entryForms } from '../lib-validate/lexicon.mjs';
 import { knownCompound } from '../lib-validate/compounds.mjs';
 import { FUNCTION_WORDS } from '../lib-validate/text.mjs';
-import { CORE_LEMMAS } from '../lib-validate/core-lexicon.mjs';
+import { CORE_LEMMAS, NUMBER_WORDS } from '../lib-validate/core-lexicon.mjs';
+import { tokens } from '../lib-validate/text.mjs';
+
+/** A spelled-out letter chain („B-E-R-I-S-H-A", „H A L L O") is letters (check.js SPELLED_OUT_RE). */
+export const SPELLED_CHAIN_RE = /^\p{L}(?:-\p{L})+$/u;
+/** Typed item types whose key the learner writes from memory (dictation is heard, not recalled). */
+const RECALL_TYPES = new Set(['fill_blank', 'cloze', 'notes', 'form_fill']);
 
 const CORE = new Set(CORE_LEMMAS.map((w) => String(w).toLowerCase()));
 
@@ -64,6 +82,37 @@ function generatorFindings(ctx, doc) {
     if (!e?.lemma || (e.unit === doc.data?.id && (e.role === 'receptive' || /^off-list/.test(String(e.list_ref || ''))) && !promoted.has(e.id))) continue;
     if (e.unit === doc.data?.id || e.role === 'productive' || promoted.has(e.id)) for (const f of entryForms(e).forms) risky.delete(f);
   }
+  // receptive-typed (RAILS §3.1c): the unit's own receptive lemmas (not promoted, not core), by form; a form
+  // shared with a lemma the learner may produce is safe
+  const receptiveForms = new Map();
+  for (const e of lex) {
+    if (!e?.lemma || e.unit !== doc.data?.id || e.role !== 'receptive' || promoted.has(e.id) || CORE.has(String(e.lemma).toLowerCase())) continue;
+    for (const f of entryForms(e).forms) if (f.length > 2 && !FUNCTION_WORDS.has(f) && !NUMBER_WORDS.has(f)) receptiveForms.set(f, e);
+  }
+  for (const e of lex) {
+    if (!e?.lemma || receptiveForms.size === 0) continue;
+    if (e.role === 'productive' || promoted.has(e.id)) for (const f of entryForms(e).forms) receptiveForms.delete(f);
+  }
+  // the unit's number lemmas: a typed number-word key is recall when all of them are receptive
+  const numberLemmas = lex.filter((e) => e?.unit === doc.data?.id && NUMBER_WORDS.has(String(e.lemma).toLowerCase()));
+  const numbersReceptive = numberLemmas.length > 0 && numberLemmas.every((e) => e.role === 'receptive' && !promoted.has(e.id));
+  const recallFlagged = new Set();
+  for (const { item, path, where } of walkItems(doc)) {
+    if (!item || !RECALL_TYPES.has(item.type) || arr(item.options).length) continue;
+    // a comprehension item (input, structured, exam, proof items, or one tied to a line or text) takes its key
+    // from what the learner hears or reads: recognition-spelling, like a dictation line — not recall
+    if (!['pool', 'reserve', 'check'].includes(where) || item.audioLineRef || item.textRef) continue;
+    const shown = new Set(tokens(`${item.promptDe || ''} ${arr(item.tiles).join(' ')}`).map((t) => t.lower));
+    const keyWords = [...new Set(tokens(String(item.answer ?? '')).map((t) => t.lower))].filter((w) => !shown.has(w));
+    const hits = keyWords.filter((w) => receptiveForms.has(w));
+    if (hits.length) {
+      recallFlagged.add(item);
+      out.push(finding('ratchet', doc, `${path}.answer`, `typed recall of a receptive word: the key „${item.answer}" makes the learner write ${hits.map((w) => `„${w}" (${receptiveForms.get(w).id}, receptive at ${doc.data?.id})`).join(', ')} — cue a productive word, show the form in the prompt, or promote the lemma`, item.id));
+      continue;
+    }
+    const numbers = keyWords.filter((w) => NUMBER_WORDS.has(w) && w.length > 3);
+    if (numbersReceptive && numbers.length) out.push(finding('ratchet', doc, `${path}.answer`, `typed number word(s) ${numbers.map((w) => `„${w}"`).join(', ')}, but every number lemma ${doc.data?.id} allocates is receptive (${numberLemmas.map((e) => e.id).join(', ')}) — make one productive or accept the digits (exact: "number")`, item.id));
+  }
   // authored fill_blank items that hand the learner a receptive lemma in brackets and key another form of it
   const byLemma = new Map();
   for (const e of lex) {
@@ -72,7 +121,7 @@ function generatorFindings(ctx, doc) {
     if (!byLemma.has(bareLemma)) byLemma.set(bareLemma, e);
   }
   for (const { item, path } of walkItems(doc)) {
-    if (!item || item.type !== 'fill_blank' || arr(item.options).length) continue;
+    if (!item || item.type !== 'fill_blank' || arr(item.options).length || recallFlagged.has(item)) continue;
     for (const m of String(item.promptDe || '').matchAll(/\(([^)]+)\)/g)) {
       const cue = m[1].replace(/^(?:der|die|das|sich)\s+/i, '').trim().toLowerCase();
       const e = byLemma.get(cue);
@@ -129,12 +178,16 @@ export function run({ ctx, docs }) {
     const known = new Set(base);
     const unitData = doc.kind === 'unit' ? doc.data : doc.kind === 'lanepack' ? unitDoc(ctx, doc.data.unit)?.data : null;
     if (unitData) for (const f of licensedForms(ctx, unitData).forms) known.add(f);
+    // the file's extras are known words in production too, as in LEX-01 (a1.1-u02 r1)
+    for (const [slug, x] of Object.entries(doc.data?.extras && typeof doc.data.extras === 'object' ? doc.data.extras : {})) {
+      for (const t of readTokens(`${x?.name || ''} ${x?.nameDe || ''} ${slug.replace(/^x\./, '').replace(/-/g, ' ')}`)) known.add(t.lower);
+    }
     const pending = { surfaces: 0, forms: new Set() };
     const knownForm = (w) => isKnown(w, known);
     for (const p of walkProduction(doc)) {
       if (p.item?.intentionalError && p.kind !== 'answer') continue;
       n += 1;
-      const all = [...new Set(readTokens(p.de).filter((t) => !isKnown(t.lower, known)).map((t) => t.text))];
+      const all = [...new Set(readTokens(p.de).filter((t) => !isKnown(t.lower, known) && !SPELLED_CHAIN_RE.test(t.text)).map((t) => t.text))];
       const compounds = all.filter((w) => knownCompound(w.toLowerCase(), knownForm));
       const unknown = all.filter((w) => !compounds.includes(w));
       if (compounds.length && state.complete) findings.push(finding('advisory', doc, p.path, `compound(s) of known parts not in the lexicon: ${list(compounds.map((w) => `${w} (${knownCompound(w.toLowerCase(), knownForm).join('+')})`), 6)} — allocate as compound:a+b`, p.item?.id || null));

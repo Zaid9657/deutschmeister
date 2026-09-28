@@ -2,8 +2,12 @@
 // 60–120 s; B-level texts 150–450 words or 2–4 min of audio; scenes (Folge) ≤ 90 s at A1, ≤ 2 min
 // above. Line and word counts are hard. Durations are hard when the compiler has written
 // `seconds`; before that they are ESTIMATED from the words (advisory).
+//
+// Micro-outputs (the a1.1 unit reviews, rule-smith 2026-09-28, RAILS §3.1c: a1.1-u02 r3 F04): a micro-output's
+// `words` and `seconds` lie inside the level profile's microOutput band unless spec.deviation.reason names
+// the micro-output (its id) — ADVISORY (the fixture a1.1-u05 ls2-mo [8, 25] against [3, 16]).
 
-import { walkTexts } from '../lib-validate/walk.mjs';
+import { walkTexts, walkMicroOutputs } from '../lib-validate/walk.mjs';
 import { wordCount } from '../lib-validate/text.mjs';
 import { levelNumbers, arr, blocker, advisory } from '../lib-validate/helpers.mjs';
 
@@ -31,6 +35,18 @@ export function run({ ctx, docs }) {
     const L = levelNumbers(ctx, doc.level);
     const aLevel = L.skeleton === 'A';
     const sceneMax = doc.level.startsWith('a1') ? 90 : 120;
+    const band = L.microOutput || null;
+    const deviation = String(doc.data?.spec?.deviation?.reason || '');
+    for (const { mo, path } of walkMicroOutputs(doc)) {
+      if (!band) break;
+      n += 1;
+      for (const k of ['words', 'seconds']) {
+        const want = band[k];
+        const have = mo?.[k];
+        if (!Array.isArray(want) || !Array.isArray(have) || have.length !== 2) continue;
+        if ((have[0] < want[0] || have[1] > want[1]) && !deviation.includes(String(mo.id))) findings.push(advisory(doc, `${path}.${k}`, `${k} [${have.join(', ')}] outside the ${doc.level} micro-output band [${want.join(', ')}] — keep inside it, or name ${mo.id} in spec.deviation.reason`, mo.id));
+      }
+    }
     for (const t of walkTexts(doc)) {
       if (t.kind === 'folge') {
         n += 1;

@@ -155,9 +155,10 @@
           "lehrwerk": "Menschen A1 L2; Schritte plus Neu 1 L4; Netzwerk neu A1 K3; Die neue Linie 1 A1 K3"
         },
         {
-          "point": "Berufe maskulin und feminin: -in (Lehrer – Lehrerin)",
-          "new": true,
-          "lehrwerk": "Menschen A1 L2 (-in); Goethe-A1-Wortbildungsinventar (06 F2)"
+          "point": "Berufe maskulin und feminin: -in (Lehrer – Lehrerin) als Wortpaare; die Regel -er/-in kommt in Einheit 10 (Spine D3)",
+          "new": false,
+          "lehrwerk": "Menschen A1 L2 (-in); Goethe-A1-Wortbildungsinventar (06 F2)",
+          "chunk": true
         }
       ],
       "vocabTheme": "Alphabet, Zahlen 0–100, Adresse, Berufe",
@@ -732,7 +733,18 @@
         "Goethe A1 Lesen Teil 2",
         "Goethe A1 Sprechen Teil 2"
       ],
-      "landeskunde": "Vereine in D-A-CH (Sportverein, Chor) und der ruhige Sonntag"
+      "landeskunde": "Vereine in D-A-CH (Sportverein, Chor) und der ruhige Sonntag",
+      "recycle": {
+        "from": "a1.1-u06",
+        "lemmas": [
+          "lx.tasche",
+          "lx.schluessel",
+          "lx.kalender",
+          "lx.heft",
+          "lx.kuli"
+        ],
+        "note": "Samstag im Park und Verabredung: Schlüssel und Handy in der Tasche, den Termin im Kalender, die Adresse im Heft notieren (Review a1.1-u06 r2 F07)"
+      }
     },
     {
       "nr": 9,
@@ -852,6 +864,11 @@
         }
       ],
       "grammar": [
+        {
+          "point": "Wortbildung Personen: -in für Frauen, -er aus Verben (fahren → der Fahrer, die Fahrerin; die Busfahrerin) – die Regel zu den Wortpaaren aus Einheit 2",
+          "new": true,
+          "lehrwerk": "Menschen A1 L2 (-in); Menschen A2 L3 (-er); Goethe-A1-Wortbildungsinventar (06 F2)"
+        },
         {
           "point": "Wiederholung und Erweiterung: trennbare Verben unterwegs (einsteigen, umsteigen, abfahren, ankommen) – Zuwachs: zusammen mit Vokalwechsel (Der Zug fährt um 8.15 Uhr ab. Du steigst in Hannover um.)",
           "new": false,
@@ -1092,7 +1109,20 @@
         "Goethe A1 Lesen Teil 2",
         "Goethe A1 Hören Teil 1"
       ],
-      "landeskunde": "Deutsch in der Welt: Amtssprache in Deutschland, Österreich, der Schweiz, Liechtenstein, Luxemburg und Belgien"
+      "landeskunde": "Deutsch in der Welt: Amtssprache in Deutschland, Österreich, der Schweiz, Liechtenstein, Luxemburg und Belgien",
+      "recycle": {
+        "from": "a1.1-u06",
+        "lemmas": [
+          "lx.heft",
+          "lx.kuli",
+          "lx.stift",
+          "lx.tasche",
+          "lx.schluessel",
+          "lx.drucker",
+          "lx.kalender"
+        ],
+        "note": "Prüfungstag und Kursanmeldung: Kuli oder Stift, Heft und Ausweis in der Tasche, der Prüfungstermin im Kalender, die Anmeldung am Drucker (Review a1.1-u06 r2 F07)"
+      }
     }
   ],
   "checkpoints": [

@@ -43,6 +43,34 @@ New ids: `g.praeteritum-kernverben` (`rc.praeteritum-kernverben`), `g.indefinitp
 `netlify/functions/_shared/course-v2/rubrics.json` embeds spine labels (among them the three retired ids); it is a
 compiled file (`scripts/course-v2/compile-rubrics.mjs`) and needs a recompile by its owner.
 
+## 0a. What the A1.1 unit reviews changed (2026-09-28)
+
+The deferred spine items of the a1.1 unit reviews u01–u12 (r1–r3), applied by the registry owner. Every change
+loosens or adds; none moves an intro, so GRM-01/GRM-02 are unchanged for every level.
+
+| Review item | Change | Why |
+|---|---|---|
+| u01 r1-F15 … u03 r3-F01, u08 r1-F12 … r3-F09 | `errorTags` `verb-ending` (new SCHEMA tag) on `g.praesens` and `g.vokalwechsel` (first), and on `g.moechte`, `g.koennen`, `g.moegen`, `g.wollen`, `g.muessen-duerfen-man`, `g.sollen`, `g.praeteritum-sein-haben`, `g.praeteritum-modalverben`, `g.praeteritum`, `g.praeteritum-kernverben` | the repair pool of a verb-form error needs a tag; closed as a class (every point that teaches a finite-verb paradigm), not for the three points the reviews named. `g.vokalwechsel` keeps `spelling-meaning` second (*fährt/fahrt*) |
+| u06 r1-F01 … r3-F06, u08 r1-F12 … r3-F09 | `negation` (new SCHEMA tag) on `g.negation-nicht`, `g.nicht-position-gern`, `g.negation-system` (first) and added to `g.kein` | one tag for *nicht/kein* and the place of *nicht*: the repair key names the rule card, so `negation-position` (u08) is folded in |
+| u06 r1-F03 / r2-F06 / r3-F07 | `g.akkusativ` label: „den, einen, keinen, **meinen, deinen**" | u06 LS3 drills the possessive accusative; the label lists the forms (licensedForms, GRM-05 read it) |
+| — (mirror check §3) | `g.vokalwechsel` +`det.vokalwechsel`, `g.koennen` +`det.moechte-infinitiv`, `g.genitiv` +`det.genitiv-feminin-attribut` | three detectors added to detectors.json on 2026-09-27 were placed only through their `spinePoints` hint; the mirror is exact again (placement unchanged) |
+| u01 r1–r3 F03 | no spine change: „Welche Sprachen …?" is on the `det.welch-dies` whitelist | a phrase, not a point; the u01 chunk slot is `g.imperativ-sie` |
+| u01 r2/r3 F05, u02 r2/r3 | no spine change: *sich vorstellen / Stellen Sie sich (bitte) vor*, *sich verabreden*, *sich anmelden* on the `det.reflexiv-pronomen` whitelist; the Sie-imperative on `det.trennbare-verben` `skipClause` | the receptive A1.1 reflexive lemmas as whole phrases; GRM-04 also licenses a lexicon reflexive/separable verb in its own clause (rule-smith 2026-09-28) |
+| u01 r2 F09 | no spine change: „Meine Muttersprache ist …" on the `det.possessiv-mein-dein-ihr` whitelist, beside „Mein Name ist …" | a contact chunk of u01 |
+
+**Declined, with the reason** (each would break GRM-01 „≤ 1 chunk preview per unit", which counts a spine
+`chunkFrom` and the unit's declared chunk together, or would change nothing):
+
+| Request | Why not |
+|---|---|
+| `g.praep-dativ` `chunkFrom` a1.1-u01 (*aus der Türkei*) | a1.1-u01's one chunk is `g.imperativ-sie`; and `g.praep-dativ` has no detector, so a `chunkFrom` clears no finding. The u01 findings were the article detectors, which GRM-04 now reports only where the learner chooses the article (`reportOn: 'chosen'`, rule-smith 2026-09-28) |
+| receptive intro of `g.artikel-genus-plural` at a1.1-u01 | a receptive intro counts as new (BLUEPRINT §2.5 rule 1): a1.1-u01 would have three new points (GRM-01) and must list it (GRM-02). The class (≈ 107 article advisories in u01–u03) is closed by `reportOn: 'chosen'` |
+| `g.vokalwechsel` `chunkFrom` a1.1-u01 | already covered: *sprichst/spricht* are on the `det.vokalwechsel` whitelist (BLUEPRINT §9.3) |
+| `g.muessen-duerfen-man` `chunkFrom` a1.1-u02 (title „Wie schreibt man das?") | a1.1-u02's chunk is `g.wortbildung-er-in`; the title is on the `det.man` whitelist (D21) |
+| `g.praep-akkusativ` `chunkFrom` a1.1-u04 (*für mich, für den …*) | u04's chunk is `g.akkusativ`; the point has no detector, so nothing is reported today |
+| `g.wechselpraep` `chunkFrom` a1.1-u05 (*ziehen in die …*) | u05's chunk is `g.praep-dativ`; the one Folge line stays glossed. A `det.wechselpraep-richtung` was measured on all content: 27 hits, 13 of them correct A1 chunks (*ins Kino, ins Konzert* in a1.1-u08, the plan's own fixed phrase) — not added |
+| `g.adj-dekl-unbestimmt` `chunkFrom` a1.1-u05 (*ein großes Zimmer*) | u05's chunk slot is taken; the unit glosses the form (*eigene*) |
+
 ## 1. What the file holds
 
 | Level | New points (receptive intro here) | Productive steps of earlier points | Rule cards in this level |
@@ -89,7 +117,7 @@ compiled file (`scripts/course-v2/compile-rubrics.mjs`) and needs a recompile by
 | `intro` | Unit ids from the plans (§4 lists every change). `productive` is always written, even when it equals `receptive`. |
 | `chunkFrom` | The first unit in which a plan uses the point's form as a fixed phrase (productive or receptive). **At most one point per unit** has that unit as `chunkFrom`, because a unit spec carries at most one chunk preview (GRM-01, `grammar.chunk {0..1}`; GRM-01 counts the unit's declared chunk **and** the spine's `chunkFrom` together). Where a plan unit names two chunks, the spine records one, and §4 D10 says what happens to the other. A `chunkFrom` at or before a unit turns a GRM-04 hit into an advisory "chunk preview" from then on, so a later unit that uses the phrase **before the intro needs no `grammar.chunk` entry** of its own: a1.1-u10 *mit dem Zug* is covered by `g.praep-dativ` (`chunkFrom` a1.1-u05); a1.2-u05 *Mir tut der Kopf weh* by `g.dativverben-pronomen` (`chunkFrom` a1.1-u06), which leaves a1.2-u05's chunk slot to `g.reflexiv-akk`; b1.2-u08 *Widerspruch einlegen* by `g.nomen-verb-verbindungen` (`chunkFrom` a2.2-u07). |
 | `contrast` | Always a point introduced **in the same or an earlier unit**, because GRM-06 interleaves the partner in the warm-ups from the point's second Lernschritt, so the partner must already be licensed. Partners come from the plans' own contrasts, the blueprint's interleaving pairs (Akk/Dat, Perfekt *haben/sein*, *weil/denn*, *wenn/als*, *deshalb/trotzdem*) and the "classic difficulty" column of memo 06 F3 (*konnte/könnte*, *wird/würde*, *mich/mir*, *nicht/kein*, zu after modal verbs). The first points of A1.1 have none. |
-| `errorTags` | SCHEMA §3.1 enum only. The enum has no tag for conjugation, for negation or for Mittelfeld order (b2-1.md §8 asks for one; see §8 item 4). `register` marks du/Sie, politeness and formal-style points. `spelling-meaning` marks forms whose spelling changes the meaning (*konnte/könnte*, *wurde/würde*, *fährt/fahrt*, umlaut comparatives). |
+| `errorTags` | SCHEMA §3.1 enum only. Since 2026-09-28 it has `verb-ending` (person ending, agreement, stem-vowel change) and `negation` (*nicht* or *kein*, and the place of *nicht*); every point that teaches a verb paradigm carries `verb-ending`, every negation point `negation` (§0a). It still has no tag for Mittelfeld order (b2-1.md §8 asks for one; see §8 item 4). `register` marks du/Sie, politeness and formal-style points. `spelling-meaning` marks forms whose spelling changes the meaning (*konnte/könnte*, *wurde/würde*, *fährt/fahrt*, umlaut comparatives). |
 | `lehrwerk` | Compact codes in the SCHEMA §15.1 style: **M** Menschen (`M A1 L13`), **S*n*** Schritte plus Neu volume *n* (`S2 L11`), **N** Netzwerk neu (`N A1 K7`, `N B1 K12`), **NW** Netzwerk B1 first edition (`NW B1 K6`), **LIN** (Die neue) Linie 1 (`LIN A1 K3`), **As** Aspekte neu (`As B1+ K2`, `As B2 K1`), **Si** Sicher! B1+ / Sicher! aktuell B2 (`Si B1+ L5`, `Si B2 L7`), **MOT** Motive. Taken from the plans' `lehrwerk` strings, checked against memo 06 F3. A placement in another half-level (e.g. `M A2 L21` for *welch-/dies-*) is listed on purpose: it documents the split. Two review additions have no verified Lehrwerk chapter; they cite their source instead (`06 Impl. 13`) or say `(unverified)`, never an invented chapter. |
 | `consensus` | The memo 06 F3 label where the point matches an F3 row. Otherwise it is derived from the placements (strong = every family covering the level puts it here; majority = most do; split = they disagree; single = one book, one inventory or the plan's own design). The B2 labels inherit memo 06's caveat that the Sicher! aktuell B2 L1–6 mapping is (unverified). |
 | `ruleCards` | `rc.<slug>` is the depth-1 card in the level of `intro.receptive`. A second card is a depth-2 card where the productive step or a named increment lies in a later unit. There are nine: `rc.praesens-2`, `rc.perfekt-haben-2`, `rc.perfekt-sein-2`, `rc.pronomen-er-es-sie-2`, `rc.nicht-position-gern-2`, `rc.komparation-2`, `rc.praeteritum-2`, `rc.passiv-praesens-2`, `rc.konj2-vergangenheit-2`. (`rc.verbposition-2` is a depth-1 card: its slug ends in *-2* because the point is *Verbposition 2*.) §7 lists which `<level>/rule-cards.json` must hold each card. The cards are written later, per level. Until they exist, REF-01 only checks the format of these ids. |
@@ -443,9 +471,9 @@ productive step or a named increment, listed at the unit that uses it first).
    L19–21 for *sodass* and the Modalpartikeln is (unverified); `g.als-irreal` cites `As B2` without a chapter;
    `g.redewiedergabe` and `g.werden-vollverb` are plan designs (`single`). The review additions
    `g.indefinitpronomen-personen` and `g.wortbildung-heit-keit` have no verified Lehrwerk chapter (`single`).
-4. **Error-tag gaps.** The SCHEMA §3.1 enum has no value for Mittelfeld order, negation or verb conjugation.
-   b2-1.md §8 wants a Mittelfeld tag from B2.1. That is a SCHEMA owner decision. Until then
-   `g.mittelfeld-angaben` carries `v2-inv` and the negation points carry no tag.
+4. **Error-tag gaps.** Negation and verb conjugation have tags since 2026-09-28 (`negation`, `verb-ending`, §0a).
+   The SCHEMA §3.1 enum still has no value for Mittelfeld order; b2-1.md §8 wants one from B2.1. Until then
+   `g.mittelfeld-angaben` carries `v2-inv`.
 5. **Plan texts not updated.** D1–D21 and E3–E5 mean the plan files (`a1-1`, `a1-2`, `a2-1`, `a2-2`, `b1-1`,
    `b1-2`, `b2-1`, `b2-2` .md/.json) differ from the spine in the places listed. The level curriculum agents follow
    the spine in the unit specs. The plan owners may fix the text.

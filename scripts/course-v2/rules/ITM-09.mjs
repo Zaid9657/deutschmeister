@@ -9,11 +9,23 @@
 //   - a sentence-building item whose answer is a question says so in promptDe („Bilden Sie die
 //     Frage."): tiles show no punctuation, so „Bilden Sie den Satz." admits the statement too
 //     (review a1.1-u04 r1 F01, F12).
+//
+// Third round (the a1.1 unit reviews, rule-smith 2026-09-28, RAILS §3.1c):
+//   - a question whose key opens with its finite verb (a Ja/Nein-Frage, V1) names that in promptDe —
+//     „Ja/Nein-Frage", „Verb auf Position 1", „Verb vorn" — because check.js folds the „?" and the tiles show
+//     no punctuation; „Bilden Sie die Frage." alone lets the learner guess between V1 and a W-order
+//     (a1.1-u03 r1 F02). ADVISORY: the learner is not graded wrong, the task is under-specified;
+//   - orders.mjs owes a clause-final indefinite or negated object after a time/place adverb („Ich brauche
+//     einen Kuli heute.", a1.1-u06 r1 F10) — a blocker through the tile-order check above.
 
 import { walkItems } from '../lib-validate/walk.mjs';
 import { tokens } from '../lib-validate/text.mjs';
-import { compiledItem, arr, isObj, blocker } from '../lib-validate/helpers.mjs';
+import { compiledItem, arr, isObj, blocker, advisory } from '../lib-validate/helpers.mjs';
 import { missingOrders, fixesFirstTile } from '../lib-validate/orders.mjs';
+
+const W_WORDS = new Set('wer wen wem wessen was wo wohin woher wann wie warum weshalb wieso welche welcher welches welchen welchem wie viel wie viele'.split(' '));
+/** Does promptDe name the verb-first question? („Ja/Nein-Frage", „Verb auf Position 1", „Verb vorn"/„am Anfang") */
+export const namesV1 = (promptDe) => /Ja[-/ ]?(?:oder[- ])?Nein[-‑ ]?Frage|Entscheidungsfrage|Position\s*1|Verb\s+(?:vorn|nach vorn|am Anfang|zuerst|auf Platz 1)/iu.test(String(promptDe || ''));
 
 export const id = 'ITM-09';
 export const title = 'Sentence building: every order accepted, every accepted order built from the tiles';
@@ -47,6 +59,10 @@ export function run({ docs }) {
       if (!arr(item.accepted).includes(item.answer)) findings.push(blocker(doc, `${path}.accepted`, 'the answer itself is missing from accepted', item.id));
       if (/\?\s*$/.test(String(item.answer || '')) && !/frage|fragen/i.test(String(item.promptDe || ''))) {
         findings.push(blocker(doc, `${path}.promptDe`, `the answer „${item.answer}" is a question, but the prompt „${item.promptDe || ''}" does not ask for one (tiles carry no „?"; say „Bilden Sie die Frage.")`, item.id));
+      }
+      if (/\?\s*$/.test(String(item.answer || '')) && /frage/i.test(String(item.promptDe || ''))) {
+        const first = tokens(String(item.answer)).map((t) => t.lower)[0] || '';
+        if (first && !W_WORDS.has(first) && !namesV1(item.promptDe)) findings.push(advisory(doc, `${path}.promptDe`, `the key „${item.answer}" is a Ja/Nein-Frage (verb first); say so in promptDe („Bilden Sie eine Ja/Nein-Frage: Verb auf Position 1.") — the tiles carry no „?" and the checker folds it`, item.id));
       }
       const owed = missingOrders(item);
       if (owed.length) {

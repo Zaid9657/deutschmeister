@@ -202,8 +202,8 @@
         {
           "id": "a1.1-u09-start-l07",
           "speaker": "cast.olena",
-          "de": "Und ich nehme einen Orangensaft. Gibt es noch Frühstück?",
-          "en": "And I’ll have an orange juice. Is there still breakfast?"
+          "de": "Und ich nehme einen Orangensaft, bitte. Gibt es noch Frühstück?",
+          "en": "And I’ll have an orange juice, please. Is there still breakfast?"
         },
         {
           "id": "a1.1-u09-start-l08",
@@ -226,7 +226,7 @@
         {
           "id": "a1.1-u09-start-l11",
           "speaker": "cast.elif",
-          "de": "Beides ist höflich. Aber immer mit „bitte“!",
+          "de": "„Ich möchte …“ und „Ich nehme …“ sind höflich. Aber immer mit „bitte“!",
           "en": "Both are polite. But always with “bitte”!"
         }
       ],
@@ -940,12 +940,12 @@
           "promptEn": "Choose the right answer.",
           "options": [
             "Ja, einen Fisch, bitte.",
-            "Nein, Fisch mag ich nicht.",
+            "Nein, Fisch finde ich nicht gut.",
             "Fisch kostet 12,90 Euro."
           ],
-          "answer": "Nein, Fisch mag ich nicht.",
+          "answer": "Nein, Fisch finde ich nicht gut.",
           "accepted": [
-            "Nein, Fisch mag ich nicht."
+            "Nein, Fisch finde ich nicht gut."
           ],
           "banks": [
             "plateau",
@@ -1189,12 +1189,12 @@
           "promptEn": "What does the waiter say about the fruit salad?",
           "options": [
             "Er ist heute sehr teuer.",
-            "Es gibt nur noch einen Obstsalat.",
+            "Es gibt nur noch einen.",
             "Er ist nicht lecker."
           ],
-          "answer": "Es gibt nur noch einen Obstsalat.",
+          "answer": "Es gibt nur noch einen.",
           "accepted": [
-            "Es gibt nur noch einen Obstsalat."
+            "Es gibt nur noch einen."
           ],
           "explanation": {
             "de": "Der Kellner sagt: „Wir haben nur noch einen Obstsalat.“",
@@ -3222,7 +3222,8 @@
               "accepted": [
                 "Olena Kovalenko",
                 "Kovalenko, Olena",
-                "Kovalenko Olena"
+                "Kovalenko Olena",
+                "Frau Olena Kovalenko"
               ],
               "exact": "name"
             },
@@ -3336,7 +3337,13 @@
                 "für 6 Leute",
                 "für sechs Leute",
                 "für 6 Personen",
-                "für sechs Personen"
+                "für sechs Personen",
+                "Tisch für 6",
+                "Tisch für sechs",
+                "Tisch für 6 Leute",
+                "Tisch für sechs Leute",
+                "Tisch für 6 Personen",
+                "Tisch für sechs Personen"
               ],
               "exact": "number"
             }
@@ -3465,12 +3472,12 @@
         "promptEn": "Choose the right answer.",
         "options": [
           "Einen Kuchen, bitte.",
-          "Ja, Kuchen mag ich sehr.",
+          "Ja, sehr! Kuchen ist lecker.",
           "Das macht 3,70 Euro."
         ],
-        "answer": "Ja, Kuchen mag ich sehr.",
+        "answer": "Ja, sehr! Kuchen ist lecker.",
         "accepted": [
-          "Ja, Kuchen mag ich sehr."
+          "Ja, sehr! Kuchen ist lecker."
         ],
         "explanation": {
           "de": "„Magst du …?“ fragt: Findest du das gut? Die Antwort sagt ja oder nein.",
@@ -3523,7 +3530,7 @@
         "type": "multiple_choice",
         "role": "check",
         "topic": "lx.speisekarte",
-        "promptDe": "Sie möchten bestellen, aber Sie haben keine Speisekarte. Was sagen Sie?",
+        "promptDe": "Sie möchten bestellen, aber Sie wissen nicht: Was gibt es hier? Was sagen Sie?",
         "promptEn": "Choose what you say.",
         "options": [
           "Die Speisekarte, bitte.",

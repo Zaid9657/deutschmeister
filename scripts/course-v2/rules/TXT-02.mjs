@@ -9,6 +9,11 @@
 // `source` says its textWords already are the samples ±15 % („textWords = ±15 % of the 6 sample
 // dialogues", „Band ±15 %" — 23 official-sample templates of sd1/ga2/tb1/tb2 say so), the band is
 // textWords itself; only a band written without it gets the ±15 % here.
+//
+// Per ad (the a1.1 unit reviews, rule-smith 2026-09-28, RAILS §3.1c: a1.1-u05 r1 F09, u06 r1 F09): where the
+// template's source says the band is per ad („textWords per ad", sd1.l2), a text holding „a) …" and „b) …" is
+// split at its labels and each ad is measured on its own, labels excluded — the pair was measured against
+// one ad's band, which capped every ad at half its length.
 
 import { walkBlocks, walkExamTexts } from '../lib-validate/walk.mjs';
 import { wordCount } from '../lib-validate/text.mjs';
@@ -24,6 +29,13 @@ const TOLERANCE = 0.15;
 /** Does the template say its band already carries the tolerance? */
 export const includesTolerance = (tpl) => tpl?.textWordsIncludesTolerance === true || /±\s*15\s*%/.test(String(tpl?.source || ''));
 const textDe = (t) => [arr(t?.lines).map((l) => l?.de || '').join(' '), t?.text || ''].join(' ');
+/** Does the template measure each ad of a text on its own? */
+export const perAd = (tpl) => /\bper (?:ad|text|advert)\b|je Anzeige/i.test(String(tpl?.source || ''));
+/** The ads of a text: the parts after „a)", „b)" … at a line start, labels removed; the whole text if it has none. */
+export function adsOf(text) {
+  const parts = String(text || '').split(/(?:^|\n)\s*[a-h]\)\s*/).map((x) => x.trim()).filter(Boolean);
+  return parts.length >= 2 ? parts : [String(text || '')];
+}
 
 function band(tpl, length) {
   if (length === 'reduced' || length === 'mini') {
@@ -45,6 +57,13 @@ export function run({ ctx, docs }) {
     const b = band(tpl, length);
     if (!b) return;
     texts += 1;
+    if (perAd(tpl)) {
+      adsOf(textDe(t)).forEach((ad, k, all) => {
+        const n = wordCount(ad);
+        if (n < b.lo || n > b.hi) findings.push(blocker(doc, path, `${all.length > 1 ? `ad ${String.fromCharCode(97 + k)}) has ` : ''}${n} words; ${tpl.id} ${length === 'full' || !length ? 'band' : length} per ad ${b.label}`, ref));
+      });
+      return;
+    }
     const n = wordCount(textDe(t));
     if (n < b.lo || n > b.hi) findings.push(blocker(doc, path, `${n} words; ${tpl.id} ${length === 'full' || !length ? 'band' : length} ${b.label}`, ref));
   };

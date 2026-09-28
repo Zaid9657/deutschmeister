@@ -15,8 +15,17 @@
 // chunk is the Sie-imperative) owes the chunk nothing. Blocker. The card-prose half of the finding
 // (rc.moechte previewing „Ich möchte bezahlen.") is GRM-04's: det.moechte-infinitiv reads the card's prose
 // at its first use, as metalanguage (advisory).
+//
+// Third round (the a1.1 unit reviews, rule-smith 2026-09-28, RAILS §3.1c):
+//   - a German form the card cites in its prose is quoted („du", „ist"), as ITM-11 asks of explanations: a
+//     form of the card's own table (below its header) standing unquoted in the prose is an ADVISORY
+//     (a1.1-u01 r1 F06 / r2 F04, u03 r2 F07 / r3 F08 — rc.praesens, rc.possessiv-mein-dein);
+//   - a form a unit drills in ≥ 2 typed items under a spine point appears in that point's label or on its
+//     rule card (text, table, model sentence) — the learner is drilled on a form nobody showed: ADVISORY
+//     (a1.1-u06 r2 F06 / r3 F07: meinen/deinen under g.akkusativ).
 
-import { walkSteps } from '../lib-validate/walk.mjs';
+import { walkSteps, walkItems } from '../lib-validate/walk.mjs';
+import { stripQuoted } from '../lib-validate/metalanguage.mjs';
 import { wordCount, tokens, FUNCTION_WORDS } from '../lib-validate/text.mjs';
 import { levelNumbers, arr, blocker, advisory } from '../lib-validate/helpers.mjs';
 import { endingContradictions } from '../lib-validate/claims.mjs';
@@ -70,8 +79,58 @@ function firstUses(slot) {
   return out;
 }
 
+/** Forms of the card's table (below the header) that its prose cites without quotes. */
+export function unquotedForms(card) {
+  const forms = new Set();
+  for (const row of arr(card?.table).slice(1)) {
+    for (const cell of arr(row)) for (const t of tokens(cell)) if (t.text.length >= 2 && /^\p{Ll}/u.test(t.text) && !/\d/.test(t.text)) forms.add(t.lower);
+  }
+  const prose = stripQuoted(String(card?.de || '')).replace(/\([^)]*\)/g, ' ');
+  const out = [];
+  for (const t of tokens(prose)) {
+    // a pronoun or article in running prose is prose („Nach du …" is a citation, „Sie lernen …" is not):
+    // only a form whose token is no function word of the prose sentence counts, or a form after „nach/mit/bei"
+    if (!forms.has(t.text) || out.includes(t.text)) continue;
+    if (FUNCTION_WORDS.has(t.lower) && !/(?:nach|mit|bei|vor|zu|für)\s+$/i.test(prose.slice(Math.max(0, t.index - 6), t.index))) continue;
+    out.push(t.text);
+  }
+  return out;
+}
+
+/** Forms a unit drills in ≥ 2 typed one-word items per spine point: Map(point → Map(form → count)). */
+export function drilledForms(doc) {
+  const m = new Map();
+  for (const { item } of walkItems(doc)) {
+    if (!item || item.type !== 'fill_blank' || arr(item.options).length || !String(item.topic || '').startsWith('g.')) continue;
+    const key = String(item.answer || '').trim().toLowerCase();
+    if (!key || /\s/.test(key)) continue;
+    if (!m.has(item.topic)) m.set(item.topic, new Map());
+    const f = m.get(item.topic);
+    f.set(key, (f.get(key) || 0) + 1);
+  }
+  return m;
+}
+
 export function run({ ctx, docs, levels, mode }) {
   const findings = [];
+  // drilled forms shown on the label or a card of their point (u06 r2 F06 / r3 F07)
+  const spineById = ctx.registries.spine?.byId || null;
+  if (spineById) {
+    const allCards = [];
+    for (const slot of ctx.levels.values()) for (const c of arr(slot.ruleCards?.cards)) allCards.push(c);
+    for (const doc of docs) {
+      if (doc.kind !== 'unit') continue;
+      for (const [pid, forms] of drilledForms(doc)) {
+        const point = spineById.get(pid)?.point;
+        if (!point) continue;
+        const cardIds = new Set(arr(point.ruleCards));
+        const shown = [point.label, ...allCards.filter((c) => c?.spine === pid || cardIds.has(c?.id)).flatMap((c) => [c.de, c.modelSentence, ...arr(c.table).flat()])].map((x) => String(x ?? '')).join(' ');
+        const seen = new Set(tokens(shown).map((t) => t.lower));
+        const missing = [...forms].filter(([f, k]) => k >= 2 && !seen.has(f)).map(([f]) => f);
+        if (missing.length) findings.push(advisory(doc, 'spec.grammar', `${missing.map((f) => `„${f}"`).join(', ')} ${missing.length > 1 ? 'are' : 'is'} drilled in ≥ 2 typed items under ${pid}, but neither its label nor its rule card shows ${missing.length > 1 ? 'them' : 'it'} — add the form to the card (owner: the rule-cards file) or drill a form the card shows`, pid));
+      }
+    }
+  }
   const cards = []; // { card, index, file, level }
   const want = new Set();
   if (mode === 'file') {
@@ -82,7 +141,7 @@ export function run({ ctx, docs, levels, mode }) {
   } else {
     for (const slot of levels) arr(slot.ruleCards?.cards).forEach((card, index) => cards.push({ card, index, file: slot.ruleCards.file, level: slot.level }));
   }
-  if (!cards.length) return { findings, skipped: 'no rule cards for the target yet (rule-cards.json)' };
+  if (!cards.length) return findings.length ? { findings } : { findings, skipped: 'no rule cards for the target yet (rule-cards.json)' };
   const spine = ctx.registries.spine?.byId || null;
   const uses = new Map();
   for (const { card, index, file, level } of cards) {
@@ -98,6 +157,8 @@ export function run({ ctx, docs, levels, mode }) {
         findings.push(blocker(doc, `${p}.${lang}`, `„${c.form}" is paired with „${c.claim}", but „${c.form}" ends in -${c.letters} (the card's own paradigm)`, card?.id));
       }
     }
+    const unquoted = unquotedForms(card);
+    if (unquoted.length) findings.push(advisory(doc, `${p}.de`, `the prose cites ${unquoted.slice(0, 5).map((f) => `„${f}"`).join(', ')} from the card's own table without quotes — quote a cited form („du", „ist"), as explanations do`, card?.id));
     if (arr(card?.caseMarks).length && !CASE_RE.test(`${card?.de || ''} ${JSON.stringify(card?.table || [])}`)) {
       findings.push(advisory(doc, `${p}.caseMarks`, 'Kasus colours on a card that names no case (colour means grammatical case only where a case is named)', card?.id));
     }

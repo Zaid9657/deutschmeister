@@ -49,6 +49,24 @@
 //     noun is singular-only (mass) in the lexicon, is a plural form, or the unit writes the same verb +
 //     bare noun elsewhere („Wir brauchen Brot und Käse.") — the deletion is accepted with acceptedWhy, or
 //     the prompt asks for a category deletion cannot satisfy („die Endung"). Blocker.
+//
+// Third round (the a1.1 unit reviews, rule-smith 2026-09-28, RAILS §3.1c):
+//   - „die Verneinung" / „die Negation" names a category for an untagged correction (a1.1-u06 r1 F01);
+//   - an order-family error correction with a declarative key accepts every order ITM-09's enumerator
+//     (lib-validate/orders.mjs, on the key's constituents) derives — the learner who fronts another phrase
+//     is graded wrong otherwise — unless promptDe fixes the first position (a1.1-u02 r2 F01 / r3 F08).
+//     Blocker;
+//   - promptEn restricting the answer class of a typed gap („the city", „(country)", „which language")
+//     is carried by promptDe („Stadt", „(Land)", „Sprache") — another class fits the frame and is graded
+//     wrong otherwise (a1.1-u01 r1 F04). Blocker;
+//   - a typed gap cued by a determiner with a plural form („(der)", „(mein)", „(kein)") before a noun whose
+//     plural equals its singular („Schlüssel", „Drucker") accepts the plural determiner or fixes the number
+//     in promptDe; an error correction planting the article of such a noun accepts the plural article
+//     (a1.1-u06 r1 F04 / r3 F04: „Olena sucht ___ Schlüssel. (der)" — „die" is German). Blocker;
+//   - advisories: a gist item whose key's content words all stand in its step or input title (u06 r1 F07); an
+//     input item's explanation quoting ≥ 4 consecutive words of the line that holds a later item's key
+//     (u06 r2 F03); the calque „Was spricht …?" (sprechen with an interrogative „was" and no „Sprache",
+//     u02 r1 F05).
 
 import { walkItems, walkLines, walkProduction } from '../lib-validate/walk.mjs';
 import { stripQuoted } from '../lib-validate/metalanguage.mjs';
@@ -56,7 +74,7 @@ import { norm, tokens } from '../lib-validate/text.mjs';
 import { compiledItem, CHOICE_TYPES, arr, isObj, blocker, advisory } from '../lib-validate/helpers.mjs';
 import { cumulativeLexicon } from '../lib-validate/context.mjs';
 import { entryForms } from '../lib-validate/lexicon.mjs';
-import { SENTENCE_ADVERBS } from '../lib-validate/orders.mjs';
+import { SENTENCE_ADVERBS, constituents, missingOrders, fixesFirstTile } from '../lib-validate/orders.mjs';
 
 const { ordinalValue } = await import('../../../src/lib/lesson/check.js');
 
@@ -214,7 +232,7 @@ const ARTICLE_TAGS = new Set(['gender-article', 'case-np', 'case-pp']);
 const ORDER_TAGS = new Set(['v2-inv', 'verb-final', 'connector-position', 'satzklammer']);
 const ARTICLE_CATEGORY_RE = /\b(?:Artikel|Artikeln|Endung|Endungen|Kasus|Pronomen|Präposition|Form|Wortform|Nomen)\b/u;
 const ORDER_CATEGORY_RE = /\b(?:Wortstellung|Satzstellung|Stellung|Stelle|Position|Reihenfolge|Verbposition|Satzbau|Satzklammer)\b/u;
-const VERB_CATEGORY_RE = /\b(?:Verbform|Verb|Verben|Konjugation)\b/u;
+const VERB_CATEGORY_RE = /\b(?:Verbform|Verb|Verben|Konjugation|Verneinung|Negation)\b/u;
 const ARTICLES = new Set(['der', 'die', 'das', 'den', 'dem', 'des', 'ein', 'eine', 'einen', 'einem', 'einer', 'eines']);
 
 /** The category family an error_correction item must name, or null when the rail does not apply. */
@@ -291,7 +309,15 @@ function correctionFindings(ctx, doc, lexIndex) {
       const want = family === 'article' ? '„den Artikel", „die Endung", „das Pronomen"' : family === 'order' ? '„die Wortstellung", „die Position des Verbs"' : '„den Artikel", „die Endung", „die Wortstellung", „die Verbform"';
       out.push(blocker(doc, `${path}.promptDe`, `error correction (${item.errorTag || arr(item.errorTags)[0] || 'no errorTag'}) with a bare prompt: name what to correct (${want}) outside the quoted sentence, or accept every other correct correction with acceptedWhy — „Korrigieren Sie:" alone admits corrections the grader rejects`, item.id));
     }
-    if (family === 'order') continue;
+    if (family === 'order') {
+      // every order the enumerator derives from the key's constituents (a1.1-u02 r2 F01 / r3 F08)
+      const key = String(item.answer || '').trim();
+      // one declarative sentence only (a key of two sentences is out of the enumerator's reach)
+      if (!key || /[?]\s*$/.test(key) || key.includes(',') || /[.!?]\s+\S/.test(key) || fixesFirstTile(item) || /\bPosition\s+1\b|\bam Anfang\b|\bVerb vorn\b/i.test(stripQuoted(item.promptDe))) continue;
+      const owed = missingOrders({ tiles: constituents(key), answer: key, accepted: arr(item.accepted), promptDe: item.promptDe });
+      if (owed.length) out.push(blocker(doc, `${path}.accepted`, `word-order correction: German also allows ${owed.slice(0, 3).map((o) => `„${o.order}" (${o.why})`).join('; ')}${owed.length > 3 ? ` … (+${owed.length - 3})` : ''} — accept it (acceptedWhy), or fix the first position in promptDe („Beginnen Sie mit …")`, item.id));
+      continue;
+    }
     // deleting the article: only a category deletion cannot satisfy rules it out
     if (/\bEndung(?:en)?\b|\bKasus\b|\bPronomen\b/u.test(stripQuoted(item.promptDe))) continue;
     const alt = deletionAlternative(item);
@@ -308,6 +334,108 @@ function correctionFindings(ctx, doc, lexIndex) {
   }
   return out;
 }
+
+// ── the third round (RAILS §3.1c) ─────────────────────────────────────────────────────────────────
+
+/** promptEn words that restrict the answer class → the German words that carry the same restriction. */
+// the German side accepts the class word or a frame that restricts the gap as well („kosten ___ Euro",
+// „um ___", „spricht … und ___", „heißt ___")
+const ANSWER_CLASSES = [
+  [/city|town/, /Stadt|Ort|Wohnort/], [/country/, /Land/], [/first name/, /Vorname/], [/(?:surname|family name|last name)/, /Familienname|Nachname/],
+  [/name/, /Name|heißt|heiße|heißen/], [/language/, /Sprach|sprich|sprech/], [/street/, /Straße/], [/(?:job|profession|occupation)/, /Beruf|arbeitet als|ist von Beruf/],
+  [/(?:weekday|day of the week)/, /Tag|Wochentag/], [/month/, /Monat/], [/(?:time|what time)/, /Uhr|Uhrzeit|wann|\bum\s+_{2,}/i], [/price/, /Preis|kost|Euro|€/],
+  [/(?:phone number|telephone number)/, /Telefon|Handy|Nummer/], [/(?:postcode|postal code|zip)/, /Postleitzahl|PLZ/], [/drink/, /Getränk|trink/], [/food|dish/, /Essen|Gericht|ess|isst/],
+];
+/** An English restriction of the answer: „(city)", „the city:", „which city", „write the country". */
+const CLASS_CUE_RE = /\((?:the |a |your )?([a-z ]{3,20})\)|\b(?:which|what)\s+([a-z ]{3,20}?)(?=\s+(?:is|does|do|did|has|are|was|comes?|lives?)\b|\?)|\b(?:write|type|give|name|enter)\s+(?:the|a|an|your)\s+([a-z ]{3,20}?)(?=[.:,)!?]|$)|^(?:the|a|an|your)\s+([a-z ]{3,20}?)\s*[:?]/i;
+
+export function answerClassCue(promptEn) {
+  const m = String(promptEn || '').match(CLASS_CUE_RE);
+  if (!m) return null;
+  const phrase = (m[1] || m[2] || m[3] || m[4] || '').trim().toLowerCase();
+  const hit = ANSWER_CLASSES.find(([en]) => en.test(phrase));
+  return hit ? { phrase, de: hit[1] } : null;
+}
+
+const PLURAL_CUE_DETERMINERS = new Set(['der', 'die', 'das', 'den', 'mein', 'meine', 'dein', 'deine', 'kein', 'keine', 'ihr', 'ihre', 'sein', 'seine', 'unser', 'unsere']);
+const PLURAL_OF = { der: 'die', den: 'die', das: 'die', dem: 'den', ein: null, einen: null, mein: 'meine', meinen: 'meine', dein: 'deine', deinen: 'deine', kein: 'keine', keinen: 'keine', ihr: 'ihre', ihren: 'ihre', sein: 'seine', seinen: 'seine', unser: 'unsere', unseren: 'unsere' };
+/** Words in promptDe that fix the number: a numeral, „ein/einen", „Singular/Plural", „alle", „viele". */
+const NUMBER_FIXED_RE = /\b(?:Singular|Plural|ein|eine|einen|einem|zwei|drei|vier|fünf|alle|viele|nur einen?|beide)\b|\b\d+\b/iu;
+const SINGULAR_VERB_RE = /^(?:ist|hat|war|kostet|liegt|steht|fehlt|gehört|passt|kommt|geht|funktioniert|braucht)$/;
+
+/** The third-round findings of one item (see the header). */
+function thirdRoundFindings(doc, item, path, where, nouns, step, list, index) {
+  const out = [];
+  const de = String(item.promptDe || '');
+  const en = String(item.promptEn || '');
+  const accepted = [item.answer, ...arr(item.accepted)].map((x) => String(x ?? ''));
+  const typed = item.type === 'fill_blank' && !arr(item.options).length;
+  // the answer class promptEn restricts (u01 r1 F04)
+  if (typed) {
+    const cue = answerClassCue(en);
+    if (cue && !cue.de.test(de)) out.push(blocker(doc, `${path}.promptDe`, `promptEn restricts the answer to „${cue.phrase}", promptDe does not (${cue.de.source.split('|').slice(0, 3).map((w) => `„${w.replace(/\\[bs]|[()+{}_,2]/g, '')}"`).join(' / ')}) — another answer fits the German frame and is graded wrong`, item.id));
+  }
+  // a plural-capable determiner cue before a noun whose plural equals its singular (u06 r1 F04 / r3 F04)
+  if (typed) {
+    const gap = de.search(/_{2,}/);
+    const cueM = de.match(/\((der|die|das|mein|dein|kein|ihr|Ihr|sein|unser)\)/u);
+    if (gap >= 0 && cueM) {
+      const after = de.slice(gap).replace(/^_+\s*/, '');
+      const noun = (after.match(/^(\p{Lu}\p{Ll}+)/u) || [])[1];
+      const e = noun ? nouns.get(noun.toLowerCase()) : null;
+      const same = e && typeof e.plural === 'string' && e.plural.replace(/^die\s+/i, '').toLowerCase() === String(e.lemma).replace(/^(?:der|die|das)\s+/i, '').toLowerCase();
+      const next = (after.match(/^\p{Lu}\p{Ll}+\s+(\p{L}+)/u) || [])[1] || '';
+      const keyDet = String(item.answer || '').trim().toLowerCase();
+      const plural = Object.prototype.hasOwnProperty.call(PLURAL_OF, keyDet) ? PLURAL_OF[keyDet] : null;
+      if (same && plural && PLURAL_CUE_DETERMINERS.has(cueM[1].toLowerCase()) && !SINGULAR_VERB_RE.test(next) && !NUMBER_FIXED_RE.test(stripQuoted(de).replace(/\([^)]*\)/g, ' '))
+        && !accepted.some((a) => a.trim().toLowerCase() === plural)) {
+        out.push(blocker(doc, `${path}.accepted`, `„${noun}" has the same form in the plural (${e.id}: die ${e.plural}), and nothing in promptDe fixes the number — „${plural}" is German too; accept it (acceptedWhy) or fix the number („ein …", „(Singular)")`, item.id));
+      }
+    }
+  }
+  if (item.type === 'error_correction') {
+    // the planted article of a same-form-plural noun: the plural article is a correction too
+    const alt = deletionAlternative(item);
+    const e = alt ? nouns.get(alt.noun.toLowerCase()) : null;
+    const same = e && typeof e.plural === 'string' && e.plural.replace(/^die\s+/i, '').toLowerCase() === String(e.lemma).replace(/^(?:der|die|das)\s+/i, '').toLowerCase();
+    const plural = alt && Object.prototype.hasOwnProperty.call(PLURAL_OF, alt.article) ? PLURAL_OF[alt.article] : null;
+    if (same && plural && !NUMBER_FIXED_RE.test(stripQuoted(de))) {
+      const m = de.match(/[„"‚]([^“"‘]+)[“"‘]/);
+      const verbNext = m ? (String(item.answer).split(/\s+/)[String(item.answer).split(/\s+/).findIndex((w) => w.replace(/[.,!?]/g, '') === alt.noun) + 1] || '') : '';
+      const withPlural = String(item.answer).replace(new RegExp(`(^|\\s)${alt.article}(\\s+${alt.noun})`, 'i'), `$1${plural}$2`);
+      if (!SINGULAR_VERB_RE.test(verbNext.replace(/[.,!?]/g, '')) && withPlural !== String(item.answer) && !accepted.some((a) => norm(a) === norm(withPlural))) {
+        out.push(blocker(doc, `${path}.accepted`, `„${alt.noun}" has the same form in the plural (${e.id}): „${withPlural}" is a correct correction too — accept it with acceptedWhy`, item.id));
+      }
+    }
+  }
+  // a gist item answered by its own step or input title (u06 r1 F07)
+  if ((where === 'gist' || item.role === 'gist') && step) {
+    const titles = `${step.title || ''} ${step.input?.title || ''}`;
+    const tset = new Set(tokens(titles).map((t) => t.lower));
+    const content = tokens(String(item.answer || '')).map((t) => t.lower).filter((w) => w.length > 3);
+    if (content.length && content.every((w) => tset.has(w))) out.push(advisory(doc, `${path}.answer`, `the gist key „${item.answer}" stands in the step/input title („${titles.trim()}") — the title answers the item`, item.id));
+  }
+  // an input item's explanation quoting the line of a later item's key (u06 r2 F03)
+  if (where === 'input' && list && step?.input) {
+    const expl = tokens(String(item.explanation?.de || '')).map((t) => t.lower);
+    for (const later of list.slice(index + 1)) {
+      const key = norm(later?.answer);
+      if (!key) continue;
+      const line = arr(step.input.lines).find((l) => norm(l?.de).includes(key));
+      if (!line) continue;
+      const lw = tokens(line.de).map((t) => t.lower);
+      const quotes = lw.some((_, k) => k + 4 <= lw.length && expl.join(' ').includes(lw.slice(k, k + 4).join(' ')));
+      if (quotes) {
+        out.push(advisory(doc, `${path}.explanation.de`, `the explanation quotes ≥ 4 words of line ${line.id}, which holds the key of the later item ${later.id} („${later.answer}")`, item.id));
+        break;
+      }
+    }
+  }
+  return out;
+}
+
+/** The calque „Was spricht …?" (sprechen + interrogative „was", no „Sprache" in the clause, u02 r1 F05). */
+export const calqueWasSprechen = (text) => String(text || '').split(/[.!;]/).some((c) => /^\s*[„"]?Was\s+(?:sprich|sprech)\p{L}*\b/u.test(c) && !/Sprache/u.test(c));
 
 /** bare lower-case noun (singular and plural) → its lexicon entry, over the cumulative lexicon. */
 function nounIndex(ctx, level, cache) {
@@ -337,10 +465,16 @@ export function run({ ctx, docs }) {
   for (const doc of docs) {
     const pos = posIndex(ctx, doc.level, posCache);
     findings.push(...correctionFindings(ctx, doc, nounIndex(ctx, doc.level, posCache)));
-    for (const { item, path, where, block, texts } of walkItems(doc)) {
+    const nouns = nounIndex(ctx, doc.level, posCache);
+    for (const { item, path, where, block, texts, step } of walkItems(doc)) {
       if (!isObj(item)) continue;
       n += 1;
       const id = item.id;
+      const list = where === 'input' && step ? arr(step.inputItems) : null;
+      findings.push(...thirdRoundFindings(doc, item, path, where, nouns, step, list, list ? list.indexOf(item) : -1));
+      for (const [k, v] of [['promptDe', item.promptDe], ...arr(item.options).map((o, i) => [`options[${i}]`, o])]) {
+        if (calqueWasSprechen(v)) findings.push(advisory(doc, `${path}.${k}`, `„${String(v).slice(0, 60)}" — „Was spricht …?" is a calque; ask „Welche Sprache(n) spricht …?" or „Was sagt …?"`, id));
+      }
       const prompt = String(item.promptDe || '');
       // v2 task shape: the German prompt carries the task
       if (!prompt.trim()) findings.push(blocker(doc, `${path}.promptDe`, 'no German prompt', id));

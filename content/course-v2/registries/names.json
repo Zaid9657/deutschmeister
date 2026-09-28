@@ -299,6 +299,102 @@
       "level": "a1.1"
     },
     {
+      "form": "Pristina",
+      "kind": "place",
+      "level": "a1.1",
+      "note": "German spelling of Prishtina (Duden: Pristina); cast.arta is from Prishtina, so an answer may use either spelling (a1.1-u01 r1 F04 / r2 F06 / r3 F06)"
+    },
+    {
+      "form": "Priština",
+      "kind": "place",
+      "level": "a1.1",
+      "note": "spelling of Prishtina with the háček (a1.1-u01 r1 F04 / r2 F06 / r3 F06)"
+    },
+    {
+      "form": "Lindenau",
+      "kind": "place",
+      "level": "a1.1",
+      "note": "district of Leipzig, PLZ 04177: Priya's and Arjun's flat in the Kölner Straße from a1.1-u05 (casts/series.json contact; a1.1-u05 r2 F04 / r3 F02)"
+    },
+    {
+      "form": "Malayalam",
+      "kind": "language",
+      "level": "a1.1",
+      "note": "cast.priya, cast.arjun (a1.1-u01 r1 F13, a1.1-u05 r1 F06)"
+    },
+    {
+      "form": "Hindi",
+      "kind": "language",
+      "level": "a1.1",
+      "note": "cast.arjun"
+    },
+    {
+      "form": "Arabisch",
+      "kind": "language",
+      "level": "a1.1",
+      "note": "cast.amal (a1 band); a lexicon allocation would outrank this entry"
+    },
+    {
+      "form": "Russisch",
+      "kind": "language",
+      "level": "a1.1",
+      "note": "cast.frau-schulz, cast.olena, cast.frau-lehmann (a1.1-u01 r1 F13)"
+    },
+    {
+      "form": "Ukrainisch",
+      "kind": "language",
+      "level": "a1.1",
+      "note": "cast.olena (a1.1-u01 r1 F13)"
+    },
+    {
+      "form": "Urdu",
+      "kind": "language",
+      "level": "a1.1",
+      "note": "cast.bilal (a1.1-u01 r1 F13)"
+    },
+    {
+      "form": "Punjabi",
+      "kind": "language",
+      "level": "a1.1",
+      "note": "cast.bilal"
+    },
+    {
+      "form": "Albanisch",
+      "kind": "language",
+      "level": "a1.1",
+      "note": "cast.arta (a1.1-u01 r1 F13)"
+    },
+    {
+      "form": "Rahul",
+      "kind": "person",
+      "level": "a1.1",
+      "note": "Priya's brother in Kochi, named in a1.1-u03 inputs, no voice (a1.1-u03 r1 F01 / r2 F09 / r3 F10)"
+    },
+    {
+      "form": "Anu",
+      "kind": "person",
+      "level": "a1.1",
+      "note": "Priya's sister in Kochi, a1.1-u03 (a1.1-u03 r1 F01)"
+    },
+    {
+      "form": "Iryna",
+      "kind": "person",
+      "level": "a1.1",
+      "note": "Olena's sister in Berlin, a1.1-u03 (a1.1-u03 r1 F01)"
+    },
+    {
+      "form": "Zeynep",
+      "kind": "person",
+      "level": "a1.1",
+      "note": "Emre's sister in İzmir, a1.1-u03 (a1.1-u03 r1 F01)"
+    },
+    {
+      "form": "Drita",
+      "kind": "person",
+      "level": "a1.1",
+      "note": "Arta's sister, a1.1-u03 (a1.1-u03 r1 F01)"
+    },
+    {
       "form": "Mira",
       "kind": "person",
       "level": "a1.2"

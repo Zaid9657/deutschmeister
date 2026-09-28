@@ -31,15 +31,73 @@
 // all (a1.1-u04 r4 F08 / r5 F05: „Lesen Sie zuerst die Frage." under chunkFrom a1.1-u01 raised an
 // advisory that itself said the chunk was licensed); the run's notes count what was suppressed. A
 // chunk is not a ceiling breach — LEX-07's ceiling check already skipped it.
+//
+// Third round (the a1.1 unit reviews u01–u06, rule-smith 2026-09-28, RAILS §3.1c) — the false-positive
+// classes, each closed by a rule (the level's 171 advisories were ~85 % noise):
+//   - production is what the learner WRITES: typed keys, model turns, Redemittel, model texts, model
+//     sentences. A choice item's key is read, not written — a receptive surface (u01 r2 F10, u03 r2 F08);
+//   - a detector marked `reportOn: 'chosen'` (the article detectors, DETECTOR_OVERLAYS until detectors.json
+//     carries it) reports only an article the learner chooses: inside the gap of a typed item, or the
+//     article an error correction changes (u02 r1 F20 / r2 F10, u03 r3 F09);
+//   - on the instruction scope: the can-do frame („Sie können …", „Ich kann …") that opens title.canDo,
+//     endLines and the Lernziele lines (u05 r1 F16 / r2 F11 / r3 F09, u06 r1 F02); the Teil template's own
+//     instruction wording in a part or block of that template („Stellen Sie sich … vor", sd1.sp1); a verb the
+//     lexicon allocates here or earlier as a reflexive or separable lemma, in its own clause („Stellen Sie
+//     sich vor": lx.sich-vorstellen a1.1-u01, u01 r2 F10); the learner-address register „Ihr-" („Ihren
+//     Namen"); a phrase whose content words are all instruction metalanguage („einen Aussagesatz") —
+//     none of these is reported;
+//   - the read scope grows by the item surfaces (promptDe, options, explanation.de) and the Redemittel
+//     labels, advisory like every metalanguage surface (u02 r2 F03 / r3 F08, u05 r1 F15, u06 r1 F11); the
+//     Lernziele lines are read like title.canDo and reported once, at the can-do registry;
+//   - a unit's own run reports the prose of the rule cards it is the first to show (u05 r2 F09 / r3 F07).
+// The engine side (lib-validate/detectors.mjs): the „zusammen" adverb class, a particle before „…", the
+// perception pair „bitte|bitter", the label „Punkt 2:", „das deine", „Teil 1.", „verabredet".
 
 import { walkTexts, walkProduction, walkSteps } from '../lib-validate/walk.mjs';
-import { walkReadSurfaces } from '../lib-validate/metalanguage.mjs';
-import { positionOf, parseUnitId, LEVELS } from '../lib-validate/ids.mjs';
+import { walkReadSurfaces, isMetalanguage } from '../lib-validate/metalanguage.mjs';
+import { positionOf, parseUnitId, LEVELS, unitPosition } from '../lib-validate/ids.mjs';
 import { allLexicon } from '../lib-validate/context.mjs';
-import { buildLexEnv, detectInText } from '../lib-validate/detectors.mjs';
+import { buildLexEnv, detectInText, withOverlay } from '../lib-validate/detectors.mjs';
 import { detectorPlacement, describePosition, exemptForms, introducedForms } from '../lib-validate/spine.mjs';
 import { tokens, FUNCTION_WORDS } from '../lib-validate/text.mjs';
-import { arr, finding, list } from '../lib-validate/helpers.mjs';
+import { entryForms } from '../lib-validate/lexicon.mjs';
+import { arr, finding, list, CHOICE_TYPES } from '../lib-validate/helpers.mjs';
+
+/** The can-do frame that opens title.canDo, endLines and the Lernziele lines: „Sie können …", „Ich kann …". */
+const FRAME_RE = /^\s*(?:Sie\s+können|Ich\s+kann|Du\s+kannst|Jetzt\s+können\s+Sie)\b/u;
+const FRAME_KINDS = new Set(['canDo', 'endLine', 'lernziel']);
+/** The learner-address register on an instruction: „Ihr-", „Ihnen". */
+const ADDRESS_RE = /^(?:Ihr(?:e|en|em|er|es)?|Ihnen)$/u;
+/** Item types whose key the learner types (the rest is chosen). */
+const choiceItem = (item) => Boolean(item) && (CHOICE_TYPES.has(item.type) || (item.type === 'cloze' && arr(item.options).length > 0) || item.type === 'insert');
+
+/**
+ * An instruction formula: every content word of the hit's clause besides the hit itself is instruction
+ * metalanguage („Welche Antwort passt?", „Welches Wort fehlt?") — the construction names the task, it is not
+ * content the learner must parse. „Welche Sprachen spricht die Frau?" is content (a1.1-u02 r2 F03).
+ */
+function formulaClause(sentence, index, hitToks) {
+  const own = new Set(hitToks.map((t) => t.lower));
+  const clause = String(sentence).split(/[,;:]/).reduce((acc, part) => {
+    if (acc.found) return acc;
+    const end = acc.at + part.length;
+    if (index >= acc.at && index < end + 1) return { found: part, at: end + 1 };
+    return { found: null, at: end + 1 };
+  }, { found: null, at: 0 }).found || sentence;
+  const content = tokens(clause).map((t) => t.lower).filter((w) => !FUNCTION_WORDS.has(w) && !own.has(w) && !/^\d/.test(w));
+  return content.length > 0 && content.every((w) => isMetalanguage(w) || FORMULA_VERBS.has(w));
+}
+/** The verbs of the task formulas („Welcher Satz sagt …?", „Welches Wort steht auf Position 2?", „Was fehlt?"). */
+const FORMULA_VERBS = new Set(['sagt', 'sagen', 'steht', 'stehen', 'fehlt', 'fehlen', 'heißt', 'zeigt', 'zeigen', 'meint', 'bedeutet', 'gehört', 'gehören', 'stimmt', 'stimmen', 'richtig', 'falsch']);
+
+/** Do the tokens of `needle` occur in `hay`, in order (not necessarily adjacent)? */
+function inOrder(needle, hay) {
+  const n = tokens(needle).map((t) => t.lower);
+  const h = tokens(hay).map((t) => t.lower);
+  let k = 0;
+  for (const w of h) if (w === n[k]) k += 1;
+  return n.length > 0 && k === n.length;
+}
 
 export const id = 'GRM-04';
 export const title = 'Grammar ceiling: no construction before the spine licenses it (detectors)';
@@ -66,7 +124,8 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
   const placement = detectorPlacement(ctx);
   if (!placement.size) return { findings: [], skipped: 'no detector is mapped to a spine point yet (points[].detectors / spec.spinePoints)' };
   const detectors = ctx.registries.detectors.list.filter((d) => placement.has(d.id));
-  const env = buildLexEnv(allLexicon(ctx));
+  const lexicon = allLexicon(ctx);
+  const env = buildLexEnv(lexicon);
   const spine = ctx.registries.spine.byId;
   const findings = [];
   const notes = [];
@@ -85,11 +144,30 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
     const content = tokens(match).map((t) => t.lower).filter((w) => !FUNCTION_WORDS.has(w));
     return content.length > 0 && content.every((w) => exempt.has(w));
   };
+  // reflexive and separable VERB lemmas the lexicon allocates at or before a position: taught as words, so
+  // an instruction may use them in their own clause („Stellen Sie sich vor", lx.sich-vorstellen a1.1-u01)
+  const chunkVerbs = lexicon
+    .filter((e) => e?.pos === 'VERB' && (e.reflexive || e.separable || /\s/.test(String(e.lemma || '').replace(/^sich\s+/, ''))))
+    .map((e) => ({ at: unitPosition(e.unit), forms: entryForms(e).forms }))
+    .filter((x) => x.at !== null);
+  const lexicalChunk = (sentence, pos) => {
+    const words = tokens(sentence).map((t) => t.lower);
+    return chunkVerbs.some((v) => v.at <= pos && words.some((w) => v.forms.has(w) && !FUNCTION_WORDS.has(w)));
+  };
+  const templateText = (id) => String(ctx.registries.templates.get(id)?.template?.instructionsDe || '');
 
   let chunkSuppressed = 0;
-  const check = (doc, pos, declared, text, path, surface, glosses = [], metalanguage = false) => {
+  let instructionSuppressed = 0;
+  const reportedOnce = new Set();
+  /**
+   * opts: metalanguage (advisory scope) · kind (the read surface's kind) · template (its Teil template) ·
+   * chosen (production only: { gap: [from, to] } of a typed gap, or { quoted } of an error correction)
+   */
+  const check = (doc, pos, declared, text, path, surface, glosses = [], opts = {}) => {
     if (!text) return;
+    const { metalanguage = false, kind = null, template = null, chosen = null } = opts;
     const seen = new Set();
+    const frame = FRAME_KINDS.has(kind) ? (String(text).match(FRAME_RE) || [''])[0] : '';
     for (const det of detectors) {
       const place = placement.get(det.id);
       const licensedAt = surface === 'production' ? place.prod : place.rec;
@@ -100,10 +178,35 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
         chunkSuppressed += detectInText(det, text, env).length ? 1 : 0;
         continue;
       }
+      // an article is reported only where the learner chooses it (RAILS §3.1c)
+      const reportOn = withOverlay(det).spec?.reportOn;
+      if (reportOn === 'chosen' && (surface !== 'production' || !chosen)) continue;
       for (const hit of detectInText(det, text, env)) {
         const key = `${det.id}|${path}`;
         if (seen.has(key)) continue;
         if (exempted(hit.match, exemptAt(pos, surface, declared))) continue;
+        if (reportOn === 'chosen') {
+          const at = text.indexOf(hit.sentence) + hit.index;
+          if (chosen.gap && !(at < chosen.gap[1] && at + String(hit.match).length > chosen.gap[0])) continue;
+          if (chosen.quoted !== undefined && String(chosen.quoted).includes(hit.match)) continue;
+        }
+        if (metalanguage) {
+          const sentAt = text.indexOf(hit.sentence);
+          const at = sentAt + hit.index;
+          const htoks = tokens(hit.match);
+          const content = htoks.map((t) => t.lower).filter((w) => !FUNCTION_WORDS.has(w));
+          let why = null;
+          if (frame && at < frame.length) why = 'frame';
+          else if (template && inOrder(hit.match, templateText(template))) why = 'template';
+          else if (htoks.length && ADDRESS_RE.test(htoks[0].text)) why = 'address';
+          else if (content.length && content.every((w) => isMetalanguage(w))) why = 'metalanguage';
+          else if (formulaClause(hit.sentence, hit.index, htoks)) why = 'formula';
+          else if (lexicalChunk(hit.sentence, pos) && /reflexiv|trennbar/i.test(det.construction || '')) why = 'lexicon';
+          if (why) {
+            instructionSuppressed += 1;
+            continue;
+          }
+        }
         seen.add(key);
         // glossed receptive exposure: an input may carry a later construction if its token is glossed
         if (surface !== 'production' && glosses.length) {
@@ -113,12 +216,21 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
         const exact = hit.precision === 'exact';
         const severity = exact && !metalanguage ? 'blocker' : 'advisory';
         const prec = exact ? '' : ` [${hit.precision}${hit.fallback ? ', shape fallback' : ''}]`;
-        const verb = surface === 'production' ? 'produces' : surface === 'exam' ? 'exam text uses' : !metalanguage ? 'input uses' : /^cards\[/.test(path) ? 'rule-card prose uses' : 'instruction uses';
-        findings.push(finding(severity, doc, path,
+        const verb = surface === 'production' ? 'produces' : surface === 'exam' ? 'exam text uses' : !metalanguage ? (kind === 'choice' ? 'a choice key uses' : 'input uses') : /^cards\[/.test(path) ? 'rule-card prose uses' : 'instruction uses';
+        findings.push(finding(severity, opts.owner ? { file: opts.owner.file } : doc, opts.owner ? opts.owner.path : path,
           `${verb} „${hit.match}" (${det.construction}) — licensed ${surface === 'production' ? 'productively ' : ''}from ${describePosition(licensedAt)} (${list(place.points, 3)}), here ${describePosition(pos)}${prec}`,
           det.id));
       }
     }
+  };
+
+  /** Rule-card prose and model sentence, checked at the card's first use. */
+  const checkCard = (card, i, file, pos) => {
+    if (pos === null) return;
+    const doc = { file };
+    const declared = new Set([card?.spine].filter(Boolean));
+    check(doc, pos, declared, String(card?.modelSentence || ''), `cards[${i}].modelSentence`, 'production');
+    check(doc, pos, declared, String(card?.de || ''), `cards[${i}].de`, 'input', [], { metalanguage: true });
   };
 
   for (const doc of docs) {
@@ -134,9 +246,23 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
       if (t.writtenText) check(doc, pos, declared, t.writtenText, `${t.path}.text`, surface, t.glosses.map((x) => x.toLowerCase()));
       else if (!t.lines.length && t.de) check(doc, pos, declared, t.de, t.path, surface, t.glosses.map((x) => x.toLowerCase()));
     }
-    // the one instruction scope: strategy cards, instructionsDe, situationDe, title.canDo (advisory)
-    for (const sf of walkReadSurfaces(doc)) {
-      if (sf.instruction) check(doc, pos, declared, sf.de, sf.path, 'input', [], true);
+    // the instruction scope (strategy cards, instructionsDe, situationDe, title.canDo, Lernziele) and, from
+    // stage I, the item surfaces and Redemittel labels — all advisory metalanguage
+    const itemsToo = stageOf(doc) !== 'S';
+    for (const sf of walkReadSurfaces(doc, { cando: ctx.registries.cando })) {
+      const itemSurface = sf.kind === 'prompt' || sf.kind === 'option' || sf.kind === 'explanation' || sf.kind === 'rmFunction';
+      if (!sf.instruction && !(itemsToo && itemSurface)) continue;
+      if (sf.owner) {
+        const k = `${sf.owner.file}|${sf.owner.path}`;
+        if (reportedOnce.has(k)) continue;
+        reportedOnce.add(k);
+      }
+      // a choice item's options are its key's alternatives: the key is read at the receptive position below
+      const partNr = sf.task ? sf.path.match(/\.parts\[(\d+)\]/) : null;
+      const template = sf.task ? (partNr ? sf.task.parts?.[Number(partNr[1])]?.template : sf.task.template) : sf.template || null;
+      // a typed item's stem is read with its gap filled: „Und was ___ du gegessen?" is a question, not a clause
+      const text = sf.kind === 'prompt' && sf.item && !choiceItem(sf.item) && /_{2,}/.test(sf.de) && sf.item.answer ? sf.de.replace(/_{2,}/, String(sf.item.answer)) : sf.de;
+      check(doc, pos, declared, text, sf.path, 'input', [], { metalanguage: true, kind: sf.kind, template, owner: sf.owner });
     }
     if (doc.kind === 'unit') {
       const shown = [...walkTexts(doc)].flatMap((t) => (t.kind === 'input' || t.kind === 'folge' ? [t.de] : []));
@@ -154,9 +280,45 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
         const byForm = tokens(text).some((t) => forms.has(t.lower));
         if (!byDet && !byForm) findings.push(finding('blocker', doc, `spec.grammar.chunk[${i}]`, `the unit declares the chunk ${pid} but no input line or Redemittel presents it`, pid));
       });
+      // a unit's own run reports the rule cards it is the first of its level to show (a1.1-u05 r2 F09 / r3 F07);
+      // a level run reports every card below
+      if (mode === 'file') {
+        const slot = ctx.levels.get(doc.level);
+        const cards = arr(slot?.ruleCards?.cards);
+        if (cards.length) {
+          const first = new Map();
+          for (const u of slot.units.values()) {
+            for (const { step } of walkSteps(u)) if (step?.ruleCard && (!first.has(step.ruleCard) || first.get(step.ruleCard) > u.nr)) first.set(step.ruleCard, u.nr);
+          }
+          cards.forEach((card, i) => { if (first.get(card?.id) === doc.nr) checkCard(card, i, slot.ruleCards.file, pos); });
+        }
+      }
     }
     if (stageOf(doc) === 'S') continue; // stage S: texts only; items and expected answers arrive with I (BLUEPRINT §9)
-    for (const p of walkProduction(doc)) check(doc, pos, declared, p.de, p.path, 'production');
+    for (const p of walkProduction(doc)) {
+      const item = p.item;
+      // a choice item's key is read, not written: the receptive position licenses it (RAILS §3.1c)
+      if (item && choiceItem(item)) {
+        check(doc, pos, declared, p.de, p.path, 'input', [], { kind: 'choice' });
+        continue;
+      }
+      let chosen = null;
+      if (item && p.kind === 'answer') {
+        if (item.type === 'error_correction') {
+          const q = String(item.promptDe || '').match(/[„"‚]([^“"‘]+)[“"‘]/);
+          chosen = { quoted: q ? q[1] : '' };
+        } else if (/_{2,}/.test(String(item.promptDe || ''))) {
+          // the gap filled with this answer: the article is chosen where the hit overlaps the gap
+          const prompt = String(item.promptDe);
+          const at = prompt.search(/_{2,}/);
+          const gapLen = (prompt.slice(at).match(/^_+/) || [''])[0].length;
+          const filled = `${prompt.slice(0, at)}${p.de}${prompt.slice(at + gapLen)}`.replace(/\s*\([^)]*\)\s*$/, '');
+          check(doc, pos, declared, filled, p.path, 'production', [], { chosen: { gap: [at, at + p.de.length] } });
+          continue;
+        }
+      }
+      check(doc, pos, declared, p.de, p.path, 'production', [], { chosen });
+    }
     if (doc.kind === 'unit') {
       const lines = arr(doc.data.check?.lines);
       lines.forEach((l, i) => check(doc, pos, declared, String(l?.de || ''), `check.lines[${i}]`, 'input'));
@@ -180,13 +342,11 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
         const intro = spine.get(card?.spine)?.point?.intro;
         const pos = firstUse.get(card?.id) ?? positionOf(parseUnitId(intro?.productive || intro?.receptive)?.level || slot.level, parseUnitId(intro?.productive || intro?.receptive)?.nr ?? 12);
         if (pos === null || !LEVELS.includes(slot.level)) return;
-        const doc = { file: slot.ruleCards.file };
-        const declared = new Set([card?.spine].filter(Boolean));
-        check(doc, pos, declared, String(card?.modelSentence || ''), `cards[${i}].modelSentence`, 'production');
-        check(doc, pos, declared, String(card?.de || ''), `cards[${i}].de`, 'input', [], true);
+        checkCard(card, i, slot.ruleCards.file, pos);
       });
     }
   }
   if (chunkSuppressed) notes.push(`${chunkSuppressed} hit(s) of constructions licensed as a chunk at their position not reported (chunkFrom ≤ here)`);
+  if (instructionSuppressed) notes.push(`${instructionSuppressed} hit(s) on instruction surfaces not reported: the can-do frame, the Teil template's own wording, the address register „Ihr-", metalanguage, or a lexicon verb taught as a word (RAILS §3.1c)`);
   return { findings, notes };
 }

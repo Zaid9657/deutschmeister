@@ -48,6 +48,7 @@ export function buildLexEnv(entries = []) {
     vowelChange: new Set(), // 2sg/3sg present forms whose stem vowel differs from the infinitive's
     adjectives: new Set(), // ADJ lemmas: a participle with its own ADJ entry („beschädigt") is predicative after sein
     nouns: new Set(), // NOUN lemmas and plurals: a capitalised „Sprachen:" opening a line is the noun, not „sprachen"
+    separableFinite: new Map(), // prefix → finite/infinitive forms of the lexicon's separable verbs with that prefix
   };
   for (const e of arr(entries)) {
     if (!e || typeof e !== 'object') continue;
@@ -78,6 +79,11 @@ export function buildLexEnv(entries = []) {
       if (prefix && inf.startsWith(prefix)) {
         env.zuInfix.add(`${prefix}zu${inf.slice(prefix.length)}`);
         env.verbStems.add(stem.slice(prefix.length));
+        const base = stem.slice(prefix.length);
+        if (!env.separableFinite.has(prefix)) env.separableFinite.set(prefix, new Set());
+        const set = env.separableFinite.get(prefix);
+        for (const end of ['', 'e', 'st', 't', 'en', 'et', 'n', 'est']) set.add(`${base}${end}`);
+        for (const f of [third[0], second[0]]) if (f) set.add(f);
       }
       if (e.reflexive) {
         const s = prefix && stem.startsWith(prefix) ? stem.slice(prefix.length) : stem;
@@ -218,7 +224,7 @@ function runToken(det, sentence) {
 /** Leading quotation marks, brackets and blanks before a quoted sentence („Wer …, soll …“). */
 const LEADING_QUOTES_RE = /^[\s„“”"»«‚‘’'(]+/u;
 
-function runPattern(det, sentence) {
+function runPattern(det, sentence, env = EMPTY_ENV) {
   const spec = det.spec || {};
   if (!spec.regex) return [];
   if (spec.skipSentence && new RegExp(spec.skipSentence, 'iu').test(sentence)) return [];
@@ -241,6 +247,13 @@ function runPattern(det, sentence) {
     if (spec.skip && new RegExp(spec.skip, 'iu').test(text)) continue;
     if (spec.skipAlso && new RegExp(spec.skipAlso, 'iu').test(text)) continue;
     if (skipWords.has(lc(text))) continue;
+    // an adjective slot holding a verb the lexicon knows (and no adjective of that form): „Das lernen Sie
+    // bald." is das + lernen + Sie, no adjective ending (a1.1-u01 r2 F10 / r3 F09)
+    if (spec.notVerbForm && env.available && env.infinitives.has(lc(text)) && !env.adjectives.has(lc(text))) continue;
+    if (spec.notAfterNumber) {
+      const before = sentence.slice(0, index).trimEnd();
+      if (/\d$/.test(before)) continue;
+    }
     if (toks.length) {
       const end = offset + m.index + m[0].length;
       const next = toks.find((t) => t.index >= end);
@@ -292,6 +305,8 @@ function clauseSubordinate(det, sentence) {
     if (toks[0] && ['und', 'oder', 'aber', 'erst', 'nur', 'schon', 'gerade', 'genau'].includes(toks[0].lower) && toks.length > 1) k = 1;
     const t = toks[k];
     if (!t || !want.has(t.lower)) continue;
+    // „wie „er liest“", „was „mein“ heißt": a W-word before a quotation compares or cites, it opens no clause
+    if (/^\s*[„“"‚']/u.test(c.text.slice(t.index + t.text.length))) continue;
     const next = toks[k + 1];
     if (!next) continue;
     const subjectLike = SUBJECT_PRONOUNS.has(next.lower) || DETERMINERS.has(next.lower) || /^[A-ZÄÖÜ]/.test(next.text);
@@ -436,11 +451,16 @@ bitte vorsicht klar genau richtig falsch okay ok los schnell weiter`.split(/\s+/
 function clauseImperative(det, sentence, env) {
   const spec = det.spec || {};
   if (isQuestion(sentence)) return [];
+  // „bitte|bitter" is an option pair of a perception item, not a sentence (a1.1-u06 r2)
+  if (sentence.includes('|')) return [];
   let toks = tokens(sentence);
-  if (toks[0] && toks[0].lower === 'bitte') toks = toks.slice(1);
+  const leadingBitte = Boolean(toks[0] && toks[0].lower === 'bitte');
+  if (leadingBitte) toks = toks.slice(1);
   const first = toks[0];
   const second = toks[1];
   if (!first) return [];
+  // „Punkt 2: …", „Teil 1: …": a label and its number, not an imperative (a1.1-u06 r2, the checklists)
+  if (second && /^\d/.test(second.text)) return [];
   // „300 Gramm, bitte." opens with a number, not a verb (review a1.1-u04 r2 F11)
   if (!/^\p{L}/u.test(first.text)) return [];
   const w = first.lower;
@@ -457,23 +477,28 @@ function clauseImperative(det, sentence, env) {
   // „Vorname, Nachname …": a list or an address, not an imperative
   if (/^\s*[A-Za-zÄÖÜäöüß]+\s*,/.test(sentence.replace(/^\s*bitte\s*,?\s*/i, ''))) return [];
   const endsBang = /!\s*[“”"»]?\s*$/.test(sentence.trim());
-  const hasBitte = /\bbitte\b/i.test(sentence);
+  // the particle „bitte" (lower case, or the sentence's opening „Bitte"), never the noun „eine Bitte"
+  const hasBitte = leadingBitte || /(?:^|[^\p{L}])bitte(?:[^\p{L}]|$)/u.test(sentence.slice(first.index));
+  // a capitalised first word the lexicon knows as a noun opens a label or a heading, not an order
+  if (/^\p{Lu}/u.test(first.text) && env.available && env.nouns.has(w) && !env.verbStems.has(w.replace(/(?:e|t)$/, ''))) return [];
   const reflexNext = second && ['dich', 'euch', 'mir', 'dir', 'uns', 'mich'].includes(second.lower);
   if (!endsBang && !hasBitte) return [];
   const stem = w.replace(/(?:e|t)$/, '');
   const known = env.available && (env.verbStems.has(w) || env.verbStems.has(stem));
   if (!known && !reflexNext && !hasBitte && !['sei', 'seid'].includes(w)) return [];
+  // with a lexicon loaded, „bitte" no longer vouches for an unknown first word („Arjun sagt: „…, bitte.“")
+  if (!known && !reflexNext && !['sei', 'seid'].includes(w) && env.available) return [];
   return [{ index: first.index, match: first.text, fallback: !known }];
 }
 
 /**
  * Participles that, after a form of sein, are lexicalised state adjectives and never a Perfekt or a
  * Zustandspassiv: „im Preis enthalten", „das Amt ist geöffnet/geschlossen", „bin verheiratet",
- * „sind verletzt", „ist gebrochen" (orchestrator 2026-09-27; reviews a1.2-u04 r1 F27, a2.2-u04
+ * „sind verletzt", „ist gebrochen", „wir sind verabredet" (a1.1-u08, 2026-09-28) (orchestrator 2026-09-27; reviews a1.2-u04 r1 F27, a2.2-u04
  * r2 F16 / r3 F11). Small and closed on purpose — a participle with its own ADJ lexicon entry
  * („beschädigt", review b1.1-u04 r1 F17) is exempt through the lexicon instead.
  */
-export const LEXICALISED_STATES = Object.freeze(['enthalten', 'geöffnet', 'geschlossen', 'verheiratet', 'geschieden', 'verletzt', 'gebrochen']);
+export const LEXICALISED_STATES = Object.freeze(['enthalten', 'geöffnet', 'geschlossen', 'verheiratet', 'geschieden', 'verletzt', 'gebrochen', 'verabredet']);
 const LEXICALISED_STATE_SET = new Set(LEXICALISED_STATES);
 const SEIN_FORMS_RE = /^(?:bin|bist|ist|sind|seid|war|warst|waren|wart|wäre|wärst|wären|wärt)$/;
 const COORDINATORS = new Set(['und', 'oder', 'aber', 'sondern']);
@@ -667,6 +692,7 @@ function lexNDeclension(det, sentence, env) {
   const spec = det.spec || {};
   const nouns = new Set([...arr(spec.nouns).map(lc), ...env.weakNouns]);
   const dets = new Set(arr(spec.determiners).map(lc));
+  const lexical = arr(spec.lexicalNouns).map(lc);
   const hits = [];
   const toks = tokens(sentence);
   for (let i = 1; i < toks.length; i += 1) {
@@ -675,6 +701,8 @@ function lexNDeclension(det, sentence, env) {
     const w = t.lower;
     const base = w.endsWith('en') && nouns.has(w.slice(0, -2)) ? w.slice(0, -2) : w.endsWith('n') && nouns.has(w.slice(0, -1)) ? w.slice(0, -1) : null;
     if (!base) continue;
+    // a noun whose -n forms the course teaches as vocabulary, with its compounds („Namen", „Familiennamen")
+    if (lexical.some((n) => base === n || base.endsWith(n))) continue;
     // a determiner right before, or one adjective between
     const d1 = toks[i - 1]?.lower;
     const d2 = toks[i - 2]?.lower;
@@ -686,6 +714,15 @@ function lexNDeclension(det, sentence, env) {
 }
 
 const SEPARABLE_DEFAULT = ['an', 'auf', 'aus', 'ein', 'mit', 'ab', 'zu', 'los', 'weg', 'vor', 'zurück', 'nach', 'her', 'hin', 'fern', 'fest', 'weiter', 'kennen', 'statt', 'teil', 'vorbei', 'zusammen'];
+/**
+ * Particles that are also free adverbs: „Wir lernen zusammen." / „Dann lernen wir morgen zusammen." is
+ * lernen + the adverb, no separable verb (a1.1-u02 r1 F20 / r2 F10, u06 r2). With a lexicon loaded, such a
+ * clause-final particle is a clamp only when the lexicon has a separable verb of that prefix whose finite
+ * form the clause carries („Kommst du mit?": mitkommen); without a lexicon every one still hits.
+ */
+const ADVERB_PARTICLES = new Set(['zusammen', 'weiter', 'zurück', 'vorbei', 'los', 'weg', 'mit', 'fest', 'fern', 'hin', 'her']);
+/** A particle followed by an ellipsis or a gap is a preposition waiting for its object: „Ich komme aus …". */
+const OPEN_AFTER_RE = /^\s*(?:…|\.{3}|_{2,})/u;
 const FINITE_VERB_RE = /^[a-zäöüß]{2,}(?:e|st|t|en|et)$/;
 const COPULA = new Set(['bin', 'bist', 'ist', 'sind', 'seid', 'war', 'warst', 'waren', 'wart', 'wäre', 'wären']);
 
@@ -694,7 +731,7 @@ const COPULA = new Set(['bin', 'bist', 'ist', 'sind', 'seid', 'war', 'warst', 'w
  * ends in a separable prefix and carries, before it, a token shaped like a finite verb that is not
  * the copula („Die Tür ist zu." is a predicate, not a clamp).
  */
-function clauseSeparableBracket(det, sentence) {
+function clauseSeparableBracket(det, sentence, env = EMPTY_ENV) {
   const spec = det.spec || {};
   const prefixes = new Set(arr(spec.prefixes).length ? arr(spec.prefixes).map(lc) : SEPARABLE_DEFAULT);
   // a clause the detector leaves alone: „Was macht das zusammen?" is machen + zusammen (the sum), no
@@ -707,6 +744,11 @@ function clauseSeparableBracket(det, sentence) {
     if (toks.length < 3) continue;
     const last = toks[toks.length - 1];
     if (!prefixes.has(last.lower) || /^[A-ZÄÖÜ]/.test(last.text)) continue;
+    if (OPEN_AFTER_RE.test(sentence.slice(c.start + last.index + last.text.length))) continue;
+    if (ADVERB_PARTICLES.has(last.lower) && env.available) {
+      const forms = env.separableFinite.get(last.lower);
+      if (!forms || !toks.slice(0, -1).some((t) => forms.has(t.lower))) continue;
+    }
     const finite = toks.slice(0, -1).some((t, i) => {
       const w = i === 0 ? t.lower : t.text;
       const low = t.lower;
@@ -779,10 +821,27 @@ export const DETECTOR_OVERLAYS = Object.freeze({
   'det.modalpartikeln': { notPrecededBy: ['noch'], notFollowedBy: ['wieder'] },
   // a determiner or possessive after the preposition is no adjective: „für eine Wanderung",
   // „auf unser Boot" (a1.1-u04 r2 F11, a2.2-u04 r2 F16 / r3 F11)
-  'det.adjektiv-endung-nullartikel': { skipWords: ['eine', 'keine', 'unser', 'euer', 'jede', 'diese', 'jene', 'welche', 'manche', 'solche', 'dieser', 'jener', 'solcher', 'mancher', 'welcher'] },
+  'det.adjektiv-endung-nullartikel': { skipWords: ['eine', 'keine', 'unser', 'euer', 'jede', 'diese', 'jene', 'welche', 'manche', 'solche', 'dieser', 'jener', 'solcher', 'mancher', 'welcher'], notVerbForm: true },
   // „ein bisschen" is a quantifier, not article + adjective (a1.1-u04 r1 F24)
-  'det.adjektiv-endung-unbestimmt': { skipWords: ['bisschen'] },
-  'det.unbestimmter-artikel': { skipAlso: '^(?:ein|eine)\\s+(?:bisschen|paar|wenig)\\b' },
+  'det.adjektiv-endung-unbestimmt': { skipWords: ['bisschen'], notVerbForm: true },
+  'det.unbestimmter-artikel': { skipAlso: '^(?:ein|eine)\\s+(?:bisschen|paar|wenig)\\b', reportOn: 'chosen' },
+  // an article is reported only where the LEARNER chooses it — a typed gap or an error correction — never
+  // as article + noun in an input, a tile, an instruction or a model (a1.1-u02 r1 F20 / r2 F10, u03 r3 F09:
+  // 113 of the level's 171 GRM-04 advisories); a possessive after the demonstrative „das" is no article
+  // („Ist das deine Mutter?", a1.1-u03 r1 F15 / r2 F08)
+  'det.bestimmter-artikel': { reportOn: 'chosen', skipAlso: '^(?:der|die|das|den|dem)\\s+(?:mein|dein|sein|ihr|unser|euer)\\p{L}*(?:\\s|$)' },
+  // a verb in the adjective slot is no adjective: „Das lernen Sie bald." (a1.1-u01 r2 F10 / r3 F09)
+  'det.adjektiv-endung-bestimmt': { notVerbForm: true },
+  // „Teil 1. Sie hören …", „Nummer 3. Dann …": a number after a label noun is a cardinal (a1.1-u03 r1 F15)
+  // a number ending a phone number or a sentence („… 96 10. Priya bestellt …") is no date either
+  'det.ordinalzahl': { notPrecededBy: ['teil', 'aufgabe', 'nummer', 'nr', 'punkt', 'text', 'satz', 'beispiel', 'frage', 'seite', 'einheit', 'lektion', 'raum', 'zimmer', 'gleis', 'bus', 'linie', 'haus', 'straße', 'tram', 'position', 'stelle', 'zeile', 'karte'], notAfterNumber: true },
+  // „Name" (mixed declension) is taught as a word with its forms at A1.1-U1 (lx.name): „Ihren Namen",
+  // „nach dem Namen", „Familiennamen" are vocabulary, not the B1 n-declension (a1.1 u01/u02/u05/u08)
+  'det.n-deklination': { lexicalNouns: ['name'] },
+  // „Was ist gut, was nicht?" is a question, not „Was mich stört, …": the relative clause ends in its verb
+  'det.relativsatz-wer': { requireVerbFinal: true },
+  // „Das war letzte Woche." — a finite verb before an ordinal-like adjective is no participle attribute
+  'det.erweitertes-partizipialattribut': { skip: '^(?:letzt|nächst|erst|best|meist)\\p{L}*$' },
 });
 
 const overlaid = new WeakMap();
@@ -809,7 +868,7 @@ export function detectInSentence(registryDet, sentence, env = EMPTY_ENV) {
   const spec = det.spec || {};
   let raw;
   if (det.method === 'token') raw = runToken(det, sentence);
-  else if (det.method === 'pattern') raw = runPattern(det, sentence);
+  else if (det.method === 'pattern') raw = runPattern(det, sentence, env);
   else if (det.method === 'clause') raw = CLAUSE_KINDS[spec.kind](det, sentence, env);
   else raw = LEXICON_KINDS[spec.kind](det, sentence, env);
   const ranges = whitelistRanges(sentence, spec.whitelist);

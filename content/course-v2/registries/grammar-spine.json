@@ -35,6 +35,7 @@
       },
       "detectors": [],
       "errorTags": [
+        "verb-ending",
         "register"
       ],
       "lehrwerk": [
@@ -62,7 +63,9 @@
       "detectors": [
         "det.negation-nicht"
       ],
-      "errorTags": [],
+      "errorTags": [
+        "negation"
+      ],
       "lehrwerk": [
         "M A1 L2",
         "S1 L4",
@@ -138,9 +141,12 @@
         "receptive": "a1.1-u03",
         "productive": "a1.1-u03"
       },
-      "detectors": [],
+      "detectors": [
+        "det.vokalwechsel"
+      ],
       "contrast": "g.praesens",
       "errorTags": [
+        "verb-ending",
         "spelling-meaning"
       ],
       "lehrwerk": [
@@ -197,7 +203,8 @@
         "det.moechte"
       ],
       "errorTags": [
-        "satzklammer"
+        "satzklammer",
+        "verb-ending"
       ],
       "lehrwerk": [
         "S1 L3",
@@ -263,7 +270,7 @@
     },
     {
       "id": "g.akkusativ",
-      "label": "Akkusativ: den, einen, keinen (Ich brauche einen Laptop.)",
+      "label": "Akkusativ: den, einen, keinen, meinen, deinen (Ich brauche einen Laptop.)",
       "intro": {
         "receptive": "a1.1-u06",
         "productive": "a1.1-u06"
@@ -304,7 +311,8 @@
       "contrast": "g.negation-nicht",
       "errorTags": [
         "gender-article",
-        "case-np"
+        "case-np",
+        "negation"
       ],
       "lehrwerk": [
         "M A1 L5",
@@ -382,11 +390,13 @@
         "productive": "a1.1-u08"
       },
       "detectors": [
-        "det.modal-koennen"
+        "det.modal-koennen",
+        "det.moechte-infinitiv"
       ],
       "contrast": "g.trennbare-verben",
       "errorTags": [
-        "satzklammer"
+        "satzklammer",
+        "verb-ending"
       ],
       "lehrwerk": [
         "M A1 L7",
@@ -411,7 +421,9 @@
       },
       "detectors": [],
       "contrast": "g.negation-nicht",
-      "errorTags": [],
+      "errorTags": [
+        "negation"
+      ],
       "lehrwerk": [
         "M A1 L7–8",
         "S1 L6"
@@ -437,7 +449,8 @@
       ],
       "contrast": "g.moechte",
       "errorTags": [
-        "case-np"
+        "case-np",
+        "verb-ending"
       ],
       "lehrwerk": [
         "M A1 L9",
@@ -545,7 +558,8 @@
       ],
       "contrast": "g.moechte",
       "errorTags": [
-        "satzklammer"
+        "satzklammer",
+        "verb-ending"
       ],
       "lehrwerk": [
         "S1 L6–7",
@@ -628,7 +642,9 @@
         "det.praeteritum-sein-haben"
       ],
       "contrast": "g.perfekt-haben",
-      "errorTags": [],
+      "errorTags": [
+        "verb-ending"
+      ],
       "lehrwerk": [
         "M A1 L19",
         "S2 L8",
@@ -684,7 +700,8 @@
       ],
       "contrast": "g.koennen",
       "errorTags": [
-        "satzklammer"
+        "satzklammer",
+        "verb-ending"
       ],
       "lehrwerk": [
         "M A1 L21",
@@ -784,7 +801,8 @@
       ],
       "contrast": "g.muessen-duerfen-man",
       "errorTags": [
-        "satzklammer"
+        "satzklammer",
+        "verb-ending"
       ],
       "lehrwerk": [
         "M A1 L18",
@@ -1502,7 +1520,8 @@
       ],
       "contrast": "g.konj2-koennte",
       "errorTags": [
-        "spelling-meaning"
+        "spelling-meaning",
+        "verb-ending"
       ],
       "lehrwerk": [
         "S3 L6",
@@ -1529,7 +1548,8 @@
       ],
       "contrast": "g.perfekt-haben",
       "errorTags": [
-        "spelling-meaning"
+        "spelling-meaning",
+        "verb-ending"
       ],
       "lehrwerk": [
         "M A2 L24",
@@ -1605,7 +1625,9 @@
       },
       "detectors": [],
       "contrast": "g.perfekt-haben",
-      "errorTags": [],
+      "errorTags": [
+        "verb-ending"
+      ],
       "lehrwerk": [
         "M A2 L24"
       ],
@@ -2388,7 +2410,8 @@
       },
       "detectors": [
         "det.genitiv-des",
-        "det.genitiv-artikel"
+        "det.genitiv-artikel",
+        "det.genitiv-feminin-attribut"
       ],
       "contrast": "g.praep-dativ",
       "errorTags": [
@@ -2930,7 +2953,9 @@
       },
       "detectors": [],
       "contrast": "g.nicht-position-gern",
-      "errorTags": [],
+      "errorTags": [
+        "negation"
+      ],
       "lehrwerk": [
         "As B2 K1",
         "Si B2 L1",

@@ -15,6 +15,14 @@
 //     (review a2.2-u04 r1 F07);
 //   - tb1.m2 (the partner's sheet is hidden): stimulus.items holds exactly one quote, the learner's, and
 //     the partner's sheet is in aiRole.personaDe (review b1.1-u04 r2 F02).
+//
+// Reduced parts (the a1.1 unit reviews, rule-smith 2026-09-28, RAILS §3.1c: a1.1-u01 r1 F01). A part graded
+// with a profile of SEPARATE performances (criteria scored `per: 'part'`, e.g. sd1-sp1: vorstellen,
+// buchstabieren, nummer) elicits each of them — its instructionsDe, situationDe, cards, the AI partner's
+// persona or opening line name it, not in a negated clause („kein Buchstabieren") — or the unit declares the
+// omission: its Prüfungsfokus entry for the template has length 'reduced'. A criterion scored but never
+// asked for grades the learner on a performance nobody requested: BLOCKER while the entry says 'full';
+// with 'reduced' an ADVISORY (the grader still scores the criterion — SCHEMA has no criteria subset yet).
 
 import { walkTasks, speakingParts } from '../lib-validate/walk.mjs';
 import { arr, isObj, blocker, advisory } from '../lib-validate/helpers.mjs';
@@ -44,6 +52,29 @@ export function commonFreeWindows(a, b) {
   }
   return out;
 }
+
+/** Cue stems a criterion is asked for by (its id's stem, plus the words an instruction uses for it). */
+const CRITERION_CUES = { nummer: ['nummer', 'zahl', 'telefon', 'postleitzahl'], vorstellen: ['vorstell', 'stichw', 'name'], buchstabieren: ['buchstabier'] };
+export function criterionCues(criterion) {
+  const key = String(criterion?.id || '').toLowerCase();
+  if (CRITERION_CUES[key]) return CRITERION_CUES[key];
+  const idStem = key.replace(/ieren$/, 'ier').replace(/(?:en|n)$/, '');
+  return idStem.length >= 4 ? [idStem] : [];
+}
+/** Is a cue named in `text` outside a negated phrase („kein Buchstabieren", „keine Zahl", „nicht buchstabieren")? */
+export function elicits(text, cues) {
+  const t = String(text || '').toLowerCase();
+  return cues.some((c) => {
+    for (const m of t.matchAll(new RegExp(c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'))) {
+      const before = t.slice(Math.max(0, m.index - 12), m.index);
+      if (!/\b(?:kein|keine|keinen|nicht|ohne)\s+(?:\p{L}+\s+)?$/u.test(before)) return true;
+    }
+    return false;
+  });
+}
+
+/** A criterion that names a task: its label ends in an infinitive („Eine Nummer nennen"). */
+export const isPerformance = (c) => /(?:^|\s)\p{Ll}+(?:en|ern|eln)$/u.test(String(c?.label || '').trim());
 
 export const id = 'EXM-04';
 export const title = 'Speaking tasks match their template (mode, preparation, cards/moves, stimulus, length, rubric)';
@@ -138,6 +169,21 @@ export function run({ ctx, docs }) {
         const entry = ctx.registries.templates.get(part.template);
         if (entry && task.lane && task.lane !== entry.lane) findings.push(blocker(doc, `${path}${pp}.template`, `task lane ${task.lane}, template ${part.template} belongs to ${entry.lane}`, ref));
         checkPart(ctx, doc, part, `${path}${pp}`, ref, findings);
+        // every separate performance the profile scores is asked for, or the Teil is declared reduced
+        // a performance criterion is a task, labelled with an infinitive („Ein Wort buchstabieren"); a quality
+        // criterion is a noun („Aussprache", „Aufgabenerfüllung") and applies to whatever the part elicits
+        const criteria = arr(ctx.registries.rubrics?.get(part.profile)?.data?.criteria).filter((c) => c?.per === 'part' && isPerformance(c));
+        if (criteria.length >= 2) {
+          const asked = [part.instructionsDe, part.situationDe, JSON.stringify(part.cards || ''), task.aiRole?.personaDe, part.aiRole?.personaDe, task.openingLine].join(' ');
+          const missing = criteria.filter((c) => !elicits(asked, criterionCues(c)));
+          if (missing.length) {
+            const fokus = arr((doc.kind === 'unit' ? doc.data : null)?.spec?.lanes?.pruefungsfokus).find((f) => f?.template === part.template && f?.slot === 'sprechen');
+            const reduced = fokus?.length === 'reduced' || fokus?.length === 'mini';
+            const msg = `${part.profile} scores ${missing.map((c) => `„${c.id}"`).join(', ')}, but the part never asks for ${missing.length > 1 ? 'them' : 'it'} (instructionsDe, situationDe, cards, persona, openingLine)`;
+            if (reduced) findings.push(advisory(doc, `${path}${pp}.profile`, `${msg} — the Prüfungsfokus entry says '${fokus.length}', but the grader still scores ${missing.length > 1 ? 'them' : 'it'} (SCHEMA has no criteria subset yet)`, ref));
+            else findings.push(blocker(doc, `${path}${pp}.instructionsDe`, `${msg} — the learner is graded on a performance nobody requested; ask for it, or set the Prüfungsfokus entry of ${part.template} to length 'reduced'`, ref));
+          }
+        }
         if (part.template === 'tb1.m2' && !/Blatt|Meinung/.test(String(task.aiRole?.personaDe || part.aiRole?.personaDe || ''))) {
           findings.push(blocker(doc, `${path}.aiRole.personaDe`, 'tb1.m2: the partner\'s sheet (its quote) belongs in aiRole.personaDe', ref));
         }

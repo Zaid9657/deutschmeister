@@ -261,6 +261,8 @@ function taskShape(task) {
   if (task.mode === 'spoken') return 'spoken-micro';
   if (Array.isArray(task.wordBand)) return 'writing';
   if (typeof task.mode === 'string') return 'speaking';
+  // a multi-Teil speaking round (SCHEMA §8 `{ parts }`) carries its modes on its parts only
+  if (Array.isArray(task.parts) && task.parts.some((p) => p && typeof p.mode === 'string')) return 'speaking';
   return null;
 }
 
@@ -298,7 +300,9 @@ export function isAufgabeSubmitted(task, attempt, rules = DEFAULT_COMPLETION) {
   }
   if (shape === 'speaking' || shape === 'spoken-micro') {
     if ((Number(attempt.speechSeconds) || 0) >= sw.speakingMinSeconds) return true;
-    return shape === 'speaking' && CARD_MODES.includes(task.mode) && (Number(attempt.turns) || 0) >= sw.cardModeMinTurns;
+    // a multi-Teil round has no top-level mode: a card mode in any of its parts counts
+    const modes = Array.isArray(task.parts) && task.parts.length ? task.parts.map((p) => p && p.mode) : [task.mode];
+    return shape === 'speaking' && modes.some((m) => CARD_MODES.includes(m)) && (Number(attempt.turns) || 0) >= sw.cardModeMinTurns;
   }
   return false;
 }

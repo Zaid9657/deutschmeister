@@ -10,6 +10,9 @@ export const lexiconSchema = obj({
     pos: 'enum(NOUN|VERB|ADJ|ADV|PREP|CONJ|PRON|DET|NUM|PHRASE|INTJ)',
     'article?': 'enum(der|die|das)',
     'plural?': 'str | null',
+    // further correct plurals beside `plural` („Balkone" + „Balkons"): accepted wherever the plural is asked
+    // (a1.1-u05 r2 F10 / r3 F08); `plural` stays the one form the course teaches
+    'pluralVariants?': '[str]*',
     'plural_kind?': 'enum(regular|singular-only|plural-only)',
     'feminine?': 'str', // one entry for the pair, as Goethe counts
     'verb_forms?': { '2sg?': 'str', '3sg': 'str', 'praet?': 'str', 'perfekt?': 'str' }, // 2sg where the stem vowel changes

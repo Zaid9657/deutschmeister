@@ -284,7 +284,32 @@ function writingEntry(t, level, owner) {
 const SPEAKING_PART_KEYS = ['template', 'mode', 'profile', 'prepMinutes', 'prepAtHome', 'instructionsDe', 'situationDe', 'cards', 'photos', 'slides',
   'stimulus', 'partnerData', 'topicChoice', 'keyPoints', 'seconds', 'turns', 'moves', 'planningRound'];
 
-function speakingEntry(t, level, owner) {
+/**
+ * The Prüfungsfokus length of each speaking Teil of a unit (SCHEMA §8 UnitSpec.lanes.pruefungsfokus,
+ * slot 'sprechen'): template → 'reduced' | 'mini'. Only shortened Teile are listed; a Teil the
+ * Prüfungsfokus does not name, or names 'full', is played at full length.
+ */
+function shortenedSpeakingTeile(spec) {
+  const out = new Map();
+  const list = isObj(spec) && isObj(spec.lanes) && Array.isArray(spec.lanes.pruefungsfokus) ? spec.lanes.pruefungsfokus : [];
+  for (const p of list) {
+    if (isObj(p) && p.slot === 'sprechen' && typeof p.template === 'string' && (p.length === 'reduced' || p.length === 'mini')) out.set(p.template, p.length);
+  }
+  return out;
+}
+
+/**
+ * One SpeakingPart as the speaking functions read it. `length` is carried from the unit's
+ * Prüfungsfokus when the Teil is shortened there: the grader then scores only the criteria a
+ * shortened Teil elicits (rubric `appliesIf: 'full'`; review a1.1-u01 r1–r3 F01).
+ */
+function speakingPart(p, shortened) {
+  const out = pick(p, SPEAKING_PART_KEYS);
+  const length = shortened && shortened.get(p.template);
+  return length ? { ...out, length } : out;
+}
+
+function speakingEntry(t, level, owner, shortened = null) {
   const parts = Array.isArray(t.parts) ? t.parts : null;
   return withHash({
     level,
@@ -292,10 +317,11 @@ function speakingEntry(t, level, owner) {
     lane: t.lane,
     examKey: LANE_EXAM_KEY[t.lane] || null,
     // a one-Teil task carries its part fields at the top (as normalizeSpeakingTask reads them);
-    // a multi-Teil round carries `parts` and the first part's template/mode/profile for the session row
+    // a multi-Teil round carries `parts` — each with its own template, mode and rubric profile, and
+    // each graded on that profile — plus the first part's template/mode/profile for the session row
     ...(parts
-      ? { ...pick(parts[0], ['template', 'mode', 'profile', 'prepMinutes']), parts: parts.map((p) => pick(p, SPEAKING_PART_KEYS)) }
-      : pick(t, SPEAKING_PART_KEYS)),
+      ? { ...pick(parts[0], ['template', 'mode', 'profile', 'prepMinutes']), parts: parts.map((p) => speakingPart(p, shortened)) }
+      : speakingPart(t, shortened)),
     aiRole: t.aiRole,
     openingLine: t.openingLine,
     hintWords: t.hintWords,
@@ -411,7 +437,7 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
   if (!profile) warnings.push(`${level}: no level profile — minutesPlanned is null`);
   const lexicon = mine('lexicon')[0]?.doc || null;
   const ruleCards = mine('rulecards')[0]?.doc || null;
-  const candoText = new Map(docs('cando').flatMap((t) => t.doc.items.map((i) => [i.id, i.de])));
+  const candoText = new Map(docs('cando').flatMap((t) => t.doc.items.map((i) => [i.id, (typeof i.learnerDe === 'string' && i.learnerDe.trim()) || i.de])));
   const spineLabel = new Map(docs('spine').flatMap((t) => t.doc.points.map((p) => [p.id, p.label])));
   const lanes = new Map(docs('lane').map((t) => [t.doc.id, t.doc]));
   const live = new Set(course.lanes.live);
@@ -438,7 +464,7 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
   const levelOut = path.join(outRoot, level);
   const ids = new Map();
   const bank = { writing: new Map(), speaking: new Map(), micro: new Map() };
-  const addBank = (tasks, owner, file) => {
+  const addBank = (tasks, owner, file, shortened = null) => {
     for (const { kind, task } of tasks) {
       if (!task.bankKey.startsWith(`${prefix}-`)) {
         errors.push(`${rel(file)}: KEY-01 bank key "${task.bankKey}" does not belong to course prefix "${prefix}"`);
@@ -451,7 +477,7 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
       }
       const entry =
         kind === 'writing' ? writingEntry(task, level, owner)
-          : kind === 'speaking' ? speakingEntry(task, level, owner)
+          : kind === 'speaking' ? speakingEntry(task, level, owner, shortened)
             : microEntry(task, level, owner);
       target.set(task.bankKey, entry);
       if (kind.startsWith('micro')) bank.micro.set(task.bankKey, entry);
@@ -471,6 +497,8 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
     }
     return pf;
   };
+  // the learner line of a can-do (`learnerDe`, SCHEMA §4.1) where the registry has one; `de` stays the
+  // descriptor wording (ich-Form + source) and is the fallback (review a1.1-u06 r2/r3 F01, u11 r3 F02)
   const canDoTexts = (unitId, ids) => ids.map((id) => {
     if (!candoText.has(id)) warnings.push(`${unitId}: can-do ${id} has no registry text`);
     return candoText.get(id) || id;
@@ -508,7 +536,7 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
       if (isLine(x)) lines.push(x);
     });
     const tasks = collectBankTasks(u);
-    addBank(tasks, { unit: u.id }, file);
+    addBank(tasks, { unit: u.id }, file, shortenedSpeakingTeile(u.spec));
 
     const packs = (packsByUnit.get(u.id) || []).filter((p) => live.has(p.doc.lane)).sort((a, b) => a.doc.lane.localeCompare(b.doc.lane));
     for (const p of packs) {

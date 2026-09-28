@@ -31,12 +31,33 @@
 //     listen_select, insert, word-bank cloze, match) answer with a key or an
 //     option string: an exact key comparison, never a typo.
 //
+//   - every typed answer is graded with the live per-item options PLUS three opt-in rules
+//     of check.js (v2CheckOptions): Duden doublets are one word (gern/gerne, OK/okay), a
+//     paradigm twin is a grammar error, never a typo (kommt/kommst, schlaft/schläft, willen/
+//     wollen — on g./lx. topics and error corrections), and on a caseSensitive item only the
+//     polite forms decide by case. The live course never passes them.
+//   - `error_correction`: the item's own quoted wrong sentence is WRONG, never a TYPO (ItemView
+//     prefills it), and a slip in a token where the key corrects the quote is WRONG too — the
+//     correction IS that token (a1.1-u03 r2/r3 F01, u10 r3 F03).
+//   - a typed `fill_blank` answered with the word printed right before or after the gap
+//     („88 Euro" for „___ Euro", „nach Berlin" for „nach ___") is a TYPO with the reason
+//     'number-only' / 'word-only' („Schreiben Sie nur die Zahl."), never WRONG; a clock time
+//     keeps its value with a leading zero („09.10" = „9.10") (a1.1-u10 r3 F06, u12 r3 F04).
+//   - `form_fill` (sd1.s1, ta2.s1; WritingTaskView passes labelDe and the task's situationDe):
+//     an entry is its value plus the field's frame — frame words (Nr., für, Jahre, alt,
+//     Personen, Leute, Uhr …), the label's words, the words of the field's accepted forms, the
+//     situation sentence that states the same fact, a negated alternative of the label („nicht
+//     in Leipzig"), a postcode and city after a street — and never an un-negated alternative
+//     („in Leipzig online" stays WRONG). Case is free on a form, and the words of a street
+//     key are required („21" alone is no address). (a1.1-u02 r2/r3 F02/F01, u05 r2/r3 F01,
+//     u09 r2/r3 F03.)
+//
 // The error tag of a miss prefers the item's own SCHEMA tag (`errorTags[0]`,
 // then `errorTag`), which feeds the repair cards (BLUEPRINT §6.2); only an
 // item without one falls back to check.js's descriptive tagError.
 import {
   RESULT, checkAnswer, checkOptionsFor, tagError, normalizeSpelling, normalizeDictation, foldNumberWords, isDictationTask,
-  cardinalValue, ordinalValue, spellCardinal,
+  cardinalValue, ordinalValue, spellCardinal, stripPunct,
 } from '../lesson/check.js';
 import { normalizeAnswer } from '../../utils/answerMatch.js';
 
@@ -51,6 +72,25 @@ const acceptedOf = (item) => {
   const list = Array.isArray(item && item.accepted) && item.accepted.length ? item.accepted : [item && item.answer];
   return list.filter((a) => typeof a === 'string' && a.length > 0);
 };
+
+/** Topics on which a paradigm twin is a grammar error: spine points and lexicon words. */
+const PARADIGM_TOPIC_RE = /^(g|lx)\./;
+
+/**
+ * The checker options of a v2 typed answer: check.js's per-item options (strict topic,
+ * caseSensitive, dictation, spelled-out words) plus the opt-in v2 rules (see check.js):
+ * doublets always, politeCase always, paradigm on spine/lexicon topics and error corrections
+ * (never on a dictation, where the audio decides).
+ */
+export function v2CheckOptions(item, accepted = acceptedOf(item)) {
+  const base = checkOptionsFor({ ...item, accepted });
+  return {
+    ...base,
+    doublets: true,
+    politeCase: true,
+    paradigm: !base.dictation && (PARADIGM_TOPIC_RE.test(String((item && item.topic) || '')) || (item && item.type) === 'error_correction'),
+  };
+}
 
 /** A cloze answers from options/choices when it has them, else it is typed. */
 export function isChoiceItem(item) {
@@ -97,7 +137,7 @@ function checkWholeNumber(item, input, forms, dictation) {
   for (const a of forms) {
     const want = foldNumbers(a);
     if (runs(want) !== runs(user)) continue;
-    const out = checkAnswer(mask(user), [mask(want)], { dictation, caseSensitive: item.caseSensitive === true });
+    const out = checkAnswer(mask(user), [mask(want)], { dictation, caseSensitive: item.caseSensitive === true, doublets: true, politeCase: true });
     if (RANK[out.result] > RANK[best.result]) best = { result: out.result, expected: a, ...(out.reason ? { reason: out.reason } : {}) };
     if (best.result === RESULT.CORRECT) break;
   }
@@ -134,7 +174,7 @@ function checkNumber(item, input) {
       // „0341 90 12 33" for „0341 90 12 33": digits are the task; the words around
       // them may be left out, never wrong.
       if (!userWords || userWords.toLowerCase() === want.toLowerCase()) return { result: RESULT.CORRECT, expected: a };
-      const words = checkAnswer(userWords, want, { caseSensitive: item.caseSensitive === true });
+      const words = checkAnswer(userWords, want, { caseSensitive: item.caseSensitive === true, doublets: true, politeCase: true });
       if (words.result === RESULT.CORRECT) return { result: RESULT.CORRECT, expected: a };
       if (words.result === RESULT.TYPO && !typo) typo = { result: RESULT.TYPO, expected: a };
     }
@@ -200,20 +240,29 @@ function repairNumberSlips(input, accepted) {
   return changed ? out : null;
 }
 
+/** A clock time with a leading zero („09.10", „07:30") written without it; any other digit run is untouched. */
+const foldTimeZero = (s) => String(s ?? '').replace(/(^|[^\d.:])0(\d[.:]\d{2})(?![\d])/g, '$1$2');
+
 /** exact: 'number' — digits (dictation: the whole sentence), then the number-word slip rule. */
 function checkExactNumber(item, input) {
+  const accepted = acceptedOf(item);
+  const folded = accepted.map(foldTimeZero);
+  // „09.10" is the time „9.10" (a1.1-u10 r1 F05 / r3 F06): both sides lose a clock time's leading zero
+  const timed = { ...item, accepted: folded };
+  const back = (out) => ({ ...out, expected: accepted[folded.indexOf(out.expected)] ?? out.expected });
   const grade = isDictationTask(item) ? checkDictationNumber : checkNumber;
-  const out = grade(item, input);
+  const userInput = foldTimeZero(input);
+  const out = back(grade(timed, userInput));
   if (out.result !== RESULT.WRONG) return out;
-  const repaired = repairNumberSlips(input, acceptedOf(item));
+  const repaired = repairNumberSlips(userInput, folded);
   if (!repaired) return out;
-  const again = grade(item, repaired);
+  const again = back(grade(timed, repaired));
   return again.result === RESULT.WRONG ? out : { result: RESULT.TYPO, expected: again.expected };
 }
 
 function checkName(item, input) {
   const accepted = acceptedOf(item);
-  const opts = checkOptionsFor({ ...item, accepted });
+  const opts = v2CheckOptions(item, accepted);
   const out = checkAnswer(input, accepted, opts);
   // A letter slip is a different name. Only the checker's case rule may still retry.
   if (out.result === RESULT.TYPO && out.reason !== 'case') return { result: RESULT.WRONG, expected: out.expected };
@@ -232,20 +281,227 @@ export function errorTagFor(item, input, expected) {
   return tagError(item, input, expected);
 }
 
+/** A typed answer by the item's `exact` rule (or the checker's own rule). */
+function checkTyped(item, input) {
+  if (item.exact === 'number') return checkExactNumber(item, input);
+  if (item.exact === 'name') return checkName(item, input);
+  const accepted = acceptedOf(item);
+  return checkAnswer(input, accepted, v2CheckOptions(item, accepted));
+}
+
+// ── error_correction ─────────────────────────────────────────────────────────────
+
+/** The first „…" / "…" / «…» quotation of a prompt (the sentence to correct), or null. */
+export function quotedSentence(promptDe) {
+  const m = /„([^“”"]{2,})[“”"]|"([^"]{2,})"|«([^»]{2,})»/.exec(String(promptDe || ''));
+  return m ? (m[1] || m[2] || m[3]).trim() : null;
+}
+
+/** An answer as the checker compares it: normalised, punctuation folded, lower-case. */
+const prep = (s) => stripPunct(normalizeAnswer(s));
+
 /**
- * checkItem(item, input) → { result, correct, typo, expected, errorTag }
+ * An error correction (a1.1-u03 r2/r3 F01, u10 r3 F03): the quoted wrong sentence itself is
+ * WRONG — ItemView prefills it, so the unchanged sentence used to pass as a „typo" — and the
+ * token(s) in which the key corrects the quote are compared strictly: a slip there is the
+ * error the item is about („Ist das meine Mutter?" for „Ist das deine Mutter?").
+ */
+function errorCorrectionRule(item, input, out) {
+  const quote = quotedSentence(item.promptDe);
+  if (!quote) return out;
+  const q = prep(quote);
+  const accepted = acceptedOf(item);
+  if (prep(input) === q && !accepted.some((a) => prep(a) === q)) return { result: RESULT.WRONG, expected: accepted[0] || '' };
+  if (out.result !== RESULT.TYPO || out.reason === 'case') return out;
+  const key = prep(out.expected).split(' ');
+  const user = prep(input).split(' ');
+  if (key.length !== user.length) return out;
+  const quoteWords = q.split(' ');
+  const corrected = new Set(key.filter((w) => !quoteWords.includes(w)));
+  const slipOnCorrection = key.some((w, i) => w !== user[i] && corrected.has(w));
+  return slipOnCorrection ? { result: RESULT.WRONG, expected: out.expected } : out;
+}
+
+// ── fill_blank: the word next to the gap ─────────────────────────────────────────
+
+const GAP_RE = /_{2,}/;
+/** Symbols a unit word printed next to a gap may be typed as. */
+const UNIT_SYMBOLS = Object.freeze({ euro: ['€', 'eur'], prozent: ['%'], grad: ['°'] });
+
+/** The words printed directly before and after the gap of a prompt (normalised), or null. */
+function gapNeighbours(promptDe) {
+  const text = String(promptDe || '');
+  const m = GAP_RE.exec(text);
+  if (!m) return null;
+  const word = (s) => (s ? prep(s) : '');
+  const before = word((text.slice(0, m.index).match(/(\S+)\s*$/) || [])[1]);
+  const after = word((text.slice(m.index + m[0].length).match(/^\s*(\S+)/) || [])[1]);
+  return { before, after };
+}
+
+/**
+ * „88 Euro" for „kosten zusammen ___ Euro": the learner wrote the value AND the word printed
+ * next to the gap. That is the right value, so a TYPO with a hint (reason 'number-only' /
+ * 'word-only'), never WRONG. Only the neighbour words (or their symbols) may be dropped.
+ */
+function gapFrameRule(item, input, out) {
+  if (out.result !== RESULT.WRONG || item.type !== 'fill_blank') return out;
+  const nb = gapNeighbours(item.promptDe);
+  if (!nb || (!nb.before && !nb.after)) return out;
+  const forms = (w) => (w ? [w, ...(UNIT_SYMBOLS[w] || [])] : []);
+  let tokens = String(input ?? '').trim().split(/\s+/).filter(Boolean);
+  let stripped = false;
+  if (tokens.length > 1 && forms(nb.before).includes(prep(tokens[0]))) { tokens = tokens.slice(1); stripped = true; }
+  if (tokens.length > 1 && forms(nb.after).includes(prep(tokens[tokens.length - 1]))) { tokens = tokens.slice(0, -1); stripped = true; }
+  if (!stripped && tokens.length === 1) {
+    // „890€": a unit symbol glued to the value
+    const glued = /^(.+?)(€|%|°)$/.exec(tokens[0]);
+    if (glued && forms(nb.after).includes(glued[2])) { tokens = [glued[1]]; stripped = true; }
+  }
+  if (!stripped) return out;
+  const again = checkTyped(item, tokens.join(' '));
+  if (again.result === RESULT.WRONG) return out;
+  return { result: RESULT.TYPO, expected: again.expected, reason: item.exact === 'number' ? 'number-only' : 'word-only' };
+}
+
+// ── form_fill (sd1.s1, ta2.s1) ──────────────────────────────────────────────────
+
+/** Frame words of a form entry: never the information itself (a1.1-u05 r2/r3 F01). */
+const FORM_FRAME = new Set(['nr', 'fuer', 'jahre', 'jahr', 'alt', 'person', 'personen', 'leute', 'uhr', 'um', 'am', 'im', 'in', 'der', 'die', 'das', 'den', 'dem', 'des']);
+const NEGATION = new Set(['nicht', 'kein', 'keine']);
+const STREET_RE = /(strasse|str|weg|platz|gasse|allee|ring|damm|ufer)\b/;
+
+/** A form token as the frame rule compares it: normalised, diacritics of other scripts folded (İzmir = Izmir). */
+const formTok = (w) => normalizeAnswer(w).normalize('NFD').replace(/\p{M}+/gu, '').replace(/[.]+$/, '');
+/** Split an entry into tokens: spaces and the separators „, / ( ) – ;", a hyphen between letters, a colon before a space. */
+const formTokens = (s) => String(s ?? '').split(/[\s,/()[\]–—;!?„“"]+|:(?=\s|$)|(?<=\p{L})-(?=\p{L})/u).filter(Boolean);
+const hasLetter = (t) => /\p{L}/u.test(t);
+
+/** The label's alternatives („Kurs: in Leipzig oder online?") as sets of content tokens, or []. */
+function labelAlternatives(labelDe) {
+  const tail = String(labelDe || '').split(':').pop();
+  if (!/\boder\b/i.test(tail)) return [];
+  return tail.split(/,|\boder\b/i)
+    .map((p) => new Set(formTokens(p).map(formTok).filter((t) => t && !FORM_FRAME.has(t))))
+    .filter((set) => set.size > 0);
+}
+
+/** What may stand beside a form value: the field's frame, label, forms and the situation's same-fact sentence. */
+function formContext(item) {
+  const accepted = acceptedOf(item);
+  const contentOf = (s) => formTokens(s).map(formTok).filter((t) => t && hasLetter(t) && !FORM_FRAME.has(t));
+  const keyTokens = new Set(accepted.flatMap(contentOf));
+  const alternatives = labelAlternatives(item.labelDe);
+  // the key's own alternative is decided by the key itself (`answer`), never by an accepted
+  // variant that names the other one negated („online, nicht in Leipzig")
+  const answerTokens = new Set(contentOf(item.answer || accepted[0] || ''));
+  const own = alternatives.find((set) => [...set].some((t) => answerTokens.has(t))) || null;
+  const others = new Set(alternatives.filter((set) => set !== own).flatMap((set) => [...set]));
+  const licensed = new Set();
+  const add = (t) => { if (t && !others.has(t) && hasLetter(t)) licensed.add(t); };
+  formTokens(item.labelDe).map(formTok).forEach(add);
+  accepted.flatMap((a) => formTokens(a).map(formTok)).forEach(add);
+  const sentences = String(item.situationDe || '').split(/(?<=[.!?])\s+/);
+  for (const sentence of sentences) {
+    const toks = formTokens(sentence).map(formTok);
+    if (toks.some((t) => keyTokens.has(t))) toks.forEach(add);
+  }
+  const street = accepted.some((a) => STREET_RE.test(formTok(a)) && /\d/.test(a));
+  const cities = new Set(street ? formTokens(item.situationDe).filter((t) => /^\p{Lu}/u.test(t)).map(formTok).filter((t) => !others.has(t)) : []);
+  return { licensed, others, street, cities };
+}
+
+/** Which tokens may stand OUTSIDE the value: frame, licensed words, negated alternatives, a street's postcode and city. */
+function licensedMask(tokens, ctx) {
+  const t = tokens.map(formTok);
+  const mask = t.map((w) => FORM_FRAME.has(w) || ctx.licensed.has(w) || (ctx.street && (/^\d{5}$/.test(w) || ctx.cities.has(w))));
+  // „nicht in Leipzig": a negation and the other alternative it negates
+  t.forEach((w, i) => {
+    if (!NEGATION.has(w)) return;
+    let j = i + 1;
+    let negated = false;
+    while (j < t.length && (FORM_FRAME.has(t[j]) || ctx.others.has(t[j]))) {
+      if (ctx.others.has(t[j])) { negated = true; mask[j] = true; }
+      j += 1;
+    }
+    mask[i] = negated;
+  });
+  // an alternative the label offers and the entry does not negate is never licensed
+  t.forEach((w, i) => { if (ctx.others.has(w) && !(i > 0 && mask[i] && t.slice(0, i).some((x) => NEGATION.has(x)))) mask[i] = false; });
+  return mask;
+}
+
+/** Letter words of an entry that are neither frame nor number words („Berliner Straße" of „Berliner Straße 21"). */
+const contentWords = (s) => formTokens(foldNumberWords(s)).map(formTok).filter((t) => hasLetter(t) && !FORM_FRAME.has(t) && !/^\d/.test(t));
+
+/** One candidate value of a form field: the field's own check, case free, a street key's words required. */
+function formBase(item, value) {
+  let out = checkTyped(item, value);
+  if (out.result === RESULT.TYPO && out.reason === 'case') out = { result: RESULT.CORRECT, expected: out.expected };
+  if (out.result !== RESULT.WRONG && item.exact === 'number' && contentWords(out.expected).length && !contentWords(value).length) {
+    return { result: RESULT.WRONG, expected: out.expected };
+  }
+  return out;
+}
+
+/** A compound of the key and a licensed word („Onlinekurs") as two tokens. */
+function splitCompounds(tokens, item, ctx) {
+  const keys = acceptedOf(item).map(formTok).filter((k) => k.length >= 3 && !k.includes(' '));
+  return tokens.flatMap((tok) => {
+    const w = formTok(tok);
+    for (const k of keys) {
+      if (w !== k && w.startsWith(k) && ctx.licensed.has(w.slice(k.length))) return [tok.slice(0, k.length), tok.slice(k.length)];
+      if (w !== k && w.endsWith(k) && ctx.licensed.has(w.slice(0, w.length - k.length))) return [tok.slice(0, tok.length - k.length), tok.slice(tok.length - k.length)];
+    }
+    return [tok];
+  });
+}
+
+/**
+ * form_fill: the whole entry, else the best window of it whose surrounding tokens are all
+ * licensed (see formContext / licensedMask); inside the window, frame words may be left out
+ * („Berliner Straße Nr. 21"). A result is only ever upgraded by the frame, never downgraded.
+ */
+function checkFormField(item, input) {
+  const direct = formBase(item, input);
+  if (direct.result === RESULT.CORRECT) return direct;
+  const ctx = formContext(item);
+  const tokens = splitCompounds(formTokens(input), item, ctx);
+  if (!tokens.length || tokens.length > 16) return direct;
+  const mask = licensedMask(tokens, ctx);
+  let best = direct;
+  for (let i = 0; i < tokens.length; i += 1) {
+    if (i > 0 && !mask[i - 1]) break; // every token before the window must be licensed
+    for (let j = tokens.length; j > i; j -= 1) {
+      if (j < tokens.length && !mask[j]) break; // … and every token after it
+      const windowTokens = tokens.slice(i, j);
+      const variants = [windowTokens, windowTokens.filter((tk) => !FORM_FRAME.has(formTok(tk)))];
+      for (const v of variants) {
+        if (!v.length || (i === 0 && j === tokens.length && v === windowTokens)) continue;
+        const out = formBase(item, v.join(' '));
+        if (RANK[out.result] > RANK[best.result]) best = out;
+        if (best.result === RESULT.CORRECT) return best;
+      }
+    }
+  }
+  return best;
+}
+
+/**
+ * checkItem(item, input) → { result, correct, typo, expected, errorTag, reason? }
  * `result` is RESULT.CORRECT | TYPO | WRONG (a TYPO earns one retry, standard §3);
- * `errorTag` is null unless the answer is wrong.
+ * `errorTag` is null unless the answer is wrong; `reason` ('case' | 'number-only' |
+ * 'word-only') says what a TYPO's retry notice should point at.
  */
 export function checkItem(item, input) {
   if (!item) return { result: RESULT.WRONG, correct: false, typo: false, expected: '', errorTag: null };
   let out;
   if (isChoiceItem(item)) out = checkChoice(item, input);
-  else if (item.exact === 'number') out = checkExactNumber(item, input);
-  else if (item.exact === 'name') out = checkName(item, input);
+  else if (item.type === 'form_fill') out = checkFormField(item, input);
   else {
-    const accepted = acceptedOf(item);
-    out = checkAnswer(input, accepted, checkOptionsFor({ ...item, accepted }));
+    out = checkTyped(item, input);
+    if (item.type === 'error_correction') out = errorCorrectionRule(item, input, out);
+    out = gapFrameRule(item, input, out);
   }
   const correct = out.result === RESULT.CORRECT;
   const typo = out.result === RESULT.TYPO;
@@ -255,6 +511,7 @@ export function checkItem(item, input) {
     typo,
     expected: out.expected || '',
     errorTag: out.result === RESULT.WRONG ? errorTagFor(item, input, out.expected) : null,
+    ...(typo && out.reason ? { reason: out.reason } : {}),
   };
 }
 

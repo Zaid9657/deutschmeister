@@ -280,6 +280,8 @@ export function* walkProduction(doc) {
     const rm = arr(d.redemittel);
     for (let i = 0; i < rm.length; i += 1) if (rm[i]?.de) yield { de: String(rm[i].de), path: `redemittel[${i}].de`, kind: 'redemittel' };
   }
+  // a micro-output's model answer (MicroOutput.modelDe, SCHEMA §8, 2026-09-28) is production like a model text
+  for (const { mo, path } of walkMicroOutputs(doc)) if (mo?.modelDe) yield { de: String(mo.modelDe), path: `${path}.modelDe`, kind: 'model-micro' };
   for (const { task, kind, path } of walkTasks(doc)) {
     if (kind === 'writing' && task.modelText) yield { de: String(task.modelText), path: `${path}.modelText`, kind: 'model-text' };
     if (kind === 'speaking') {

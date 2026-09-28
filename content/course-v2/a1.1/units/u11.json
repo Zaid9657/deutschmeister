@@ -1950,8 +1950,8 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.perfekt-haben",
-          "promptDe": "Sophie: „Heute lese ich. Gestern habe ich viel gelacht.“ Was macht Sophie heute?",
-          "promptEn": "What is Sophie doing today?",
+          "promptDe": "Sophie: „Ich habe viel gelacht. Ich lese ein Buch.“ Was macht Sophie jetzt?",
+          "promptEn": "What is Sophie doing now?",
           "options": [
             "Sie lacht viel.",
             "Sie liest.",
@@ -1962,8 +1962,8 @@
             "Sie liest."
           ],
           "explanation": {
-            "de": "„Heute lese ich“ ist jetzt. „habe … gelacht“ ist Perfekt: Das war gestern.",
-            "en": "“Heute lese ich” is now. “habe … gelacht” is the Perfekt: that was yesterday."
+            "de": "„Ich lese“ ist jetzt. „habe … gelacht“ ist Perfekt: Das war schon.",
+            "en": "“Ich lese” is now. “habe … gelacht” is the Perfekt: it already happened."
           },
           "origin": "agent"
         },
@@ -2525,12 +2525,12 @@
               "origin": "agent"
             },
             {
-              "id": "a1.1-u11-ls4-sd1-l1-02",
+              "id": "a1.1-u11-ls4-sd1-l1-06",
               "type": "richtig_falsch",
               "role": "exam",
               "topic": "lesen",
               "textRef": "a1.1-u11-ls4-t1",
-              "promptDe": "„Sophie ist am Mittwoch wieder in Leipzig.“",
+              "promptDe": "„Olena war am Sonntag am See.“",
               "options": [
                 "richtig",
                 "falsch"
@@ -2540,8 +2540,8 @@
                 "richtig"
               ],
               "explanation": {
-                "de": "Olena schreibt: „Am Mittwoch kommst du zurück.“",
-                "en": "Olena writes that Sophie comes back on Wednesday."
+                "de": "Olena schreibt: „Am Sonntag war ich mit dem Fahrrad am See.“",
+                "en": "Olena writes that she rode her bike to the lake on Sunday."
               },
               "origin": "agent"
             },

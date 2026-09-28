@@ -12,6 +12,9 @@ import { orderedOptions } from '../../lib/course-v2/unitPlan.js';
 import { quoteOf, resolveText, speakerName } from './content.js';
 import { useV2Strings, ltext } from './strings.js';
 
+/** The one-retry notice per checker reason: case, the value written with the word next to the gap, else spelling. */
+const RETRY_NOTICE = Object.freeze({ case: 'item.caseRetry', 'number-only': 'item.numberOnlyRetry', 'word-only': 'item.wordOnlyRetry' });
+
 /**
  * ItemView({ item, level, onResult }) — renders ONE item of any SCHEMA §3.1 type and
  * reports the answer once (shared contract, E1):
@@ -263,7 +266,7 @@ export default function ItemView({
         <p className="mt-2 text-[0.8125rem] text-graphite">{t('item.hint', { hint: hint.main })}</p>
       )}
       {phase === 'retry' && (
-        <InlineFeedback retry message={t(outcome && outcome.reason === 'case' ? 'item.caseRetry' : 'item.typoRetry')} />
+        <InlineFeedback retry message={t(RETRY_NOTICE[outcome && outcome.reason] || 'item.typoRetry')} />
       )}
       {needsCheckButton && (
         <div className={`flex flex-wrap items-center justify-end gap-3 ${compact ? 'mt-3' : 'mt-6'}`}>

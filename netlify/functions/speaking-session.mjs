@@ -14,6 +14,7 @@ import {
   v2TaskColumns,
   buildCoursePartnerPrompt,
   partnerMaxTokens,
+  speakingProfileIds,
 } from './_shared/speakingAI.mjs';
 import { dbLevel } from './_shared/rubrics/keys.mjs';
 import { rubricProfile } from './_shared/rubrics/data.mjs';
@@ -109,12 +110,14 @@ async function startCourseV2Session({ user_id, key, parsed, minutes, providedTok
   const { level, task } = loaded;
 
   // Refuse up front when the task could not be graded afterwards — no allowance
-  // is spent on a session whose evaluation would fail.
-  const profileId = task.profile || (task.micro ? 'course-micro-sp' : null);
-  const profile = rubricProfile(profileId);
-  if (!profile || profile.kind !== 'speaking' || unknownRuleIds(profile).length) {
-    console.error('[speaking-session v2] rubric profile unavailable:', profileId, key);
-    return { statusCode: 503, headers, body: JSON.stringify({ error: 'rubric_unavailable', profile: profileId || null }) };
+  // is spent on a session whose evaluation would fail. A multi-Teil round is graded
+  // part by part, so every part's profile must resolve.
+  for (const profileId of speakingProfileIds(task)) {
+    const profile = rubricProfile(profileId);
+    if (!profile || profile.kind !== 'speaking' || unknownRuleIds(profile).length) {
+      console.error('[speaking-session v2] rubric profile unavailable:', profileId, key);
+      return { statusCode: 503, headers, body: JSON.stringify({ error: 'rubric_unavailable', profile: profileId || null }) };
+    }
   }
 
   const gate = await checkCourseAi(supabase, user_id, key, level);

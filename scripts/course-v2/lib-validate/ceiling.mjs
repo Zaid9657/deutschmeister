@@ -4,7 +4,7 @@
 // seven units before the spine licenses it).
 
 import { allLexicon } from './context.mjs';
-import { buildLexEnv, detectInText } from './detectors.mjs';
+import { buildLexEnv, detectInText, withOverlay } from './detectors.mjs';
 import { detectorPlacement, exemptForms } from './spine.mjs';
 import { tokens, FUNCTION_WORDS } from './text.mjs';
 
@@ -32,6 +32,8 @@ export function ceilingChecker(ctx) {
       if (licensedAt === null || licensedAt <= pos) continue;
       if (place.points.some((p) => declared.has(p))) continue;
       if (place.chunk !== null && place.chunk <= pos) continue; // licensed as a chunk here: no ceiling breach (GRM-04 does not report it either)
+      // an article is reported only where the learner chooses it (GRM-04 `reportOn: 'chosen'`, RAILS §3.1c)
+      if (withOverlay(det).spec?.reportOn === 'chosen') continue;
       for (const hit of detectInText(det, text, env)) {
         const content = tokens(hit.match).map((t) => t.lower).filter((w) => !FUNCTION_WORDS.has(w));
         if (content.length && content.every((w) => exempt.has(w))) continue;

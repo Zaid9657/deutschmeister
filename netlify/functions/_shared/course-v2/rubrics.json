@@ -704,6 +704,11 @@
           ]
         }
       ],
+      "errorPolicy": {
+        "a1": {
+          "negation": "flag"
+        }
+      },
       "zeroRules": [],
       "capRules": [],
       "spelling": "only-if-meaning-suffers",
@@ -800,6 +805,13 @@
           ]
         }
       ],
+      "errorPolicy": {
+        "a1": {
+          "case-np": "flag",
+          "case-pp": "flag",
+          "negation": "flag"
+        }
+      },
       "zeroRules": [],
       "capRules": [],
       "spelling": "not-scored",
@@ -843,6 +855,13 @@
           ]
         }
       ],
+      "errorPolicy": {
+        "a1": {
+          "case-np": "flag",
+          "case-pp": "flag",
+          "negation": "flag"
+        }
+      },
       "zeroRules": [],
       "capRules": [],
       "spelling": "not-scored",
@@ -1707,7 +1726,7 @@
     "g.adjektiv-nomen": "Adjektive als Nomen (der/die Bekannte, ein Bekannter, die Verwandten)",
     "g.adjektiv-praedikativ": "Adjektive nach sein, mit sehr, zu und nicht (Die Küche ist zu klein.)",
     "g.akk-personalpronomen": "Personalpronomen im Akkusativ: mich, dich, ihn, sie, es, uns, euch",
-    "g.akkusativ": "Akkusativ: den, einen, keinen (Ich brauche einen Laptop.)",
+    "g.akkusativ": "Akkusativ: den, einen, keinen, meinen, deinen (Ich brauche einen Laptop.)",
     "g.als-irreal": "Irreale Vergleichssätze mit als + Verb (Es sah aus, als wäre alles fertig.)",
     "g.als-ob": "als ob + Konjunktiv II (Er tut so, als ob er alles wüsste.)",
     "g.als-temporal": "Nebensatz mit als (einmal in der Vergangenheit) und wenn (immer wieder)",

@@ -1,5 +1,6 @@
 // SCHEMA §4.9 — proper-name registry `registries/names.json` (`course-v2/names@1`).
-// Places, people, organisations, brands and events that are not cast members. LEX-01/LEX-03 count a
+// Places, people, organisations, brands, events and the cast's languages (kind language, 2026-09-28) that
+// are not cast members. LEX-01/LEX-03 count a
 // listed name — with its genitive -s and adjectival -er forms — as known from its `level` on
 // (lib-validate/lexicon.mjs nameForms). Matched by $schema or, without one, by file name.
 import { obj, arr } from '../schema.mjs';
@@ -9,7 +10,7 @@ export const namesSchema = obj({
   version: '1',
   names: arr({
     form: 'de', // the name as it is written: „Leipzig", „Cospudener See", „Stiftung Warentest"
-    kind: 'enum(place|person|org|brand|event)',
+    kind: 'enum(place|person|org|brand|event|language)',
     level: 're(LEVEL)', // the first level whose texts may use it
     'note?': 'str',
   }, '*'),

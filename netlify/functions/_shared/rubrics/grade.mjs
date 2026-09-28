@@ -16,9 +16,13 @@
 import { applyRuleEffects, evaluateRules, decidesZero, snapToLevel, textSignals, countWords } from './rules.mjs';
 import { feedbackLanguageFor, modelFor, SCORE_LABEL_DE, SCORE_NOTICE_DE } from './defaults.mjs';
 
+// SCHEMA §3.1 ErrorTag, in step with the schema checker's enum (scripts/course-v2/lib/schemas/common.mjs
+// ERROR_TAG). 'verb-ending' (Personalendung/Kongruenz/Vokalwechsel: a1.1 u01 r1-F15 … u03 r3-F01) and
+// 'negation' (nicht/kein and the place of nicht: a1.1 u06 r1-F01 … r3-F06) joined it on 2026-09-28.
 export const ERROR_TAGS = [
   'v2-inv', 'verb-final', 'satzklammer', 'case-np', 'case-pp', 'gender-article', 'adj-ending',
   'perfekt-aux-participle', 'connector-position', 'n-dekl', 'reflexive', 'register', 'spelling-meaning',
+  'verb-ending', 'negation',
 ];
 export const PLAN_MOVES = ['vorschlagen', 'reagieren', 'widersprechen', 'einigen', 'verteilen'];
 
@@ -45,9 +49,21 @@ export function isAutoScored(c) {
   return true;
 }
 
-/** Whether a criterion applies to THIS task (`appliesIf: 'targets'`: only when the task names target structures). */
+/** The Prüfungsfokus lengths at which a Teil is shortened (SCHEMA §8 UnitSpec.lanes.pruefungsfokus). */
+export const SHORTENED_LENGTHS = Object.freeze(['reduced', 'mini']);
+
+/**
+ * Whether a criterion applies to THIS task (or speaking part):
+ *   - `appliesIf: 'targets'` — only when the task names target structures (course-micro);
+ *   - `appliesIf: 'full'` — only when the Teil is played at full length. A part the unit's
+ *     Prüfungsfokus declares 'reduced' or 'mini' (the compiler carries it as `length`) does
+ *     not elicit that component, so it is neither asked of the model nor counted in the
+ *     target: a flawless a1.1-u01 introduction (sd1.sp1 reduced) is 1 of 1, never 1 of 3
+ *     (review a1.1-u01 r1–r3 F01).
+ */
 export function appliesTo(c, task) {
   if (c?.appliesIf === 'targets') return Array.isArray(task?.targets) && task.targets.length > 0;
+  if (c?.appliesIf === 'full') return !SHORTENED_LENGTHS.includes(task?.length);
   return true;
 }
 
@@ -253,6 +269,8 @@ export function buildSpeakingSystemPrompt(profile, level, plan, { withMoves = fa
   return [
     `Du bist eine erfahrene Bewerterin für Deutsch als Fremdsprache. Du bewertest die Beiträge eines Lernenden in einer Sprechübung aus einem Online-Kurs (Niveau ${String(level).toUpperCase()}) nach dem Bewertungsprofil "${profile.id}". Das Ergebnis ist eine automatisierte Übungsbewertung (Richtwert): keine offizielle Bewertung, kein Prüfungsergebnis.`,
     'Du bewertest NUR die Beiträge des Lernenden. Die Beiträge der Gesprächspartnerin sind Kontext.',
+    // a1.1-u03 r1 F08: the Befinden warm-up before Teil 2 is recorded in the transcript but is no turn of the task
+    'Begrüßung und Befinden vor dem Beginn der Aufgabe (z. B. „Wie geht es Ihnen?“ – „Gut, danke.“) sind Aufwärmen: Sie zählen nicht als Gesprächsbeiträge der Aufgabe und fließen in keine Stufe ein.',
     'KRITERIEN — bewerte jedes Kriterium ausschließlich mit einer der erlaubten Stufen:',
     ...criteriaLines(plan),
     'Du hast KEIN Audio, nur ein Transkript aus automatischer Spracherkennung. Einzelne seltsame Wörter sind wahrscheinlich Erkennungsfehler: werte sie nicht als Fehler des Lernenden. Entscheidend ist die Verständlichkeit, nicht die Zahl der Fehler.',
@@ -273,6 +291,7 @@ const MODE_LABEL_DE = {
   'cards-ask': 'Fragen und Antworten mit Wortkarten',
   'cards-request': 'Bitten und Reagieren mit Bildkarten',
   group: 'Prüfungssimulation in der Gruppe',
+  'get-to-know': 'sich kennenlernen',
   monologue: 'zusammenhängendes Sprechen mit Nachfragen',
   'plan-together': 'gemeinsam etwas planen',
   discuss: 'diskutieren',
@@ -281,15 +300,29 @@ const MODE_LABEL_DE = {
   mediate: 'eine Nachricht weitergeben (Sprachmittlung)',
 };
 
-/** The per-session user message for a speaking evaluation. */
+/**
+ * The per-session user message for a speaking evaluation. A part of a multi-Teil round
+ * (`task.round = { index, count, labels }`, set by gradeSpeakingParts) is graded on its own
+ * turns only: the transcript holds the whole round, so the message names the part and fences
+ * the other parts off as context.
+ */
 export function buildSpeakingUserPrompt({ task, transcript, targetLabels = [] }) {
   const partner = task?.aiRole?.name || 'Partnerin';
-  const lines = [`AUFGABE (${MODE_LABEL_DE[task.mode] || task.mode}):`];
+  const lines = [];
+  const round = task?.round && Number.isInteger(task.round.count) && task.round.count > 1 ? task.round : null;
+  if (round) {
+    const labels = Array.isArray(round.labels) ? round.labels : [];
+    const own = labels[round.index] || `Teil ${round.index + 1}`;
+    lines.push(`DIESE ÜBUNG HAT ${round.count} TEILE, in dieser Reihenfolge: ${labels.join(', ')}. Das Transkript enthält alle Teile.`);
+    lines.push(`BEWERTE NUR ${own}: die Beiträge des Lernenden in diesem Teil. Beiträge aus den anderen Teilen sind nur Kontext und fließen in keine Stufe ein. Ein Teil endet dort, wo ${partner} zum nächsten Teil überleitet („Jetzt …“).`);
+  }
+  lines.push(`AUFGABE${round ? ` — ${round.labels?.[round.index] || `Teil ${round.index + 1}`}` : ''} (${MODE_LABEL_DE[task.mode] || task.mode}):`);
   if (task.situationDe) lines.push(`Situation: ${task.situationDe}`);
   if (task.instructionsDe) lines.push(`Auftrag: ${task.instructionsDe}`);
   if (task.cards?.learner?.length) lines.push(`Karten des Lernenden: ${task.cards.learner.join(' · ')}`);
   if (task.cards?.partner?.length) lines.push(`Karten der Partnerin: ${task.cards.partner.join(' · ')}`);
   if (task.slides?.length) lines.push(`Folien: ${task.slides.join(' · ')}`);
+  if (task.keyPoints?.length) lines.push(`Inhaltspunkte der Nachricht: ${task.keyPoints.join(' · ')}`);
   if (task.moves?.length) lines.push(`Erwartete Gesprächsschritte: ${task.moves.join(', ')}`);
   if (targetLabels.length) lines.push(`Zielstruktur(en): ${targetLabels.join('; ')}`);
   lines.push('TRANSKRIPT (bewerte nur "Lernende/r"):');
@@ -539,4 +572,153 @@ export async function gradeSubmission({
     modelCalled: true,
     result: assemble({ profile, plan, scored, fired, model: out, signals, attemptNr, modelId: model, decidedBy: fired.length ? 'model+rules' : 'model', allowCorrected, task }),
   };
+}
+
+// ── multi-Teil speaking rounds (SCHEMA §8 SpeakingTask `{ parts }`) ─────────────
+//
+// A round (a1.1 u01: sd1.sp1 + sd1.sp2; u04: sd1.sp2 + sd1.sp3 …) is ONE conversation and
+// ONE transcript, but every part is its own Teil with its own rubric profile. Each part is
+// graded with its own profile — its own criteria, levels, rules and target, `appliesIf`
+// read against the part's own `length` — and the totals are summed (review a1.1-u01 r1–r3
+// F01: the round used to be graded on parts[0]'s profile alone, so the Sp2 half was scored
+// on the sd1-sp1 rubric and a flawless session showed „1 von 3 Punkten").
+
+/**
+ * The label of each part of a round: „Teil 2" from its template (sd1.sp2, tb1.m2, dtz.s2),
+ * else its position — unique within the round. The partner's hand-over line („Danke! Jetzt
+ * Teil 2.“) and the grader's part fence use the same labels.
+ */
+export function speakingPartLabels(parts) {
+  const list = Array.isArray(parts) ? parts : [];
+  const labels = list.map((p, i) => {
+    const m = /\.(?:sp|m|s)(\d+)$/.exec(String(p?.template || ''));
+    return `Teil ${m ? m[1] : i + 1}`;
+  });
+  return new Set(labels).size === labels.length ? labels : list.map((_, i) => `Teil ${i + 1}`);
+}
+
+const partsOf = (task) => (Array.isArray(task?.parts) && task.parts.length ? task.parts : [task || {}]);
+
+/** The task one part of a round is graded as: the part's own fields, the round's role and targets, and the part fence. */
+export function speakingPartTask(task, index) {
+  const parts = partsOf(task);
+  const part = parts[index] || {};
+  if (parts.length < 2) return { ...task, ...part };
+  return {
+    ...part,
+    aiRole: task.aiRole,
+    hintWords: task.hintWords || [],
+    targets: task.targets || [],
+    round: { index, count: parts.length, labels: speakingPartLabels(parts) },
+  };
+}
+
+/**
+ * The scoring plan of every part of a task: [{ index, label, template, length, profileId,
+ * plan, max }]. `profileOf(id)` resolves a profile (data.mjs rubricProfile); a part whose
+ * profile does not resolve has `plan: null`.
+ */
+export function speakingPartsPlan(task, profileOf) {
+  const parts = partsOf(task);
+  const labels = speakingPartLabels(parts);
+  return parts.map((p, i) => {
+    const profileId = p.profile || task?.profile || (task?.micro ? 'course-micro-sp' : null);
+    const profile = profileId ? profileOf(profileId) : null;
+    const partTask = speakingPartTask(task, i);
+    const plan = profile ? criteriaPlan(profile, partTask) : null;
+    return {
+      index: i, label: labels[i], template: p.template || null, length: p.length || 'full', profileId,
+      plan, max: plan ? round2(plan.reduce((s, c) => s + c.max, 0)) : null,
+    };
+  });
+}
+
+const shareOf = (r) => (r.max_score > 0 ? r.total_score / r.max_score : 1);
+
+/** One result for a round: the part results side by side under `parts`, the totals summed. */
+export function combinePartResults(results, parts) {
+  const labels = speakingPartLabels(parts);
+  const sum = (f) => round2(results.reduce((s, r) => s + (Number(f(r)) || 0), 0));
+  const partsOut = results.map((r, i) => ({
+    index: i + 1,
+    label: labels[i],
+    template: parts[i]?.template || null,
+    length: parts[i]?.length || 'full',
+    rubric: r.rubric,
+    total_score: r.total_score,
+    max_score: r.max_score,
+    criteria: r.criteria,
+    rulesApplied: r.rulesApplied,
+    feedback: r.feedback,
+    feedbackEn: r.feedbackEn,
+    strengths: r.strengths,
+    nextStep: r.nextStep,
+    errors: r.errors,
+    flags: r.flags,
+    decidedBy: r.decidedBy,
+    ...(r.moves ? { moves: r.moves } : {}),
+  }));
+  const joined = (key) => partsOut.filter((p) => p[key]).map((p) => `${p.label}: ${p[key]}`).join(' ');
+  // the next step of the weakest part: that is where practice pays most
+  const weakest = results.map((r, i) => ({ r, i })).filter((x) => x.r.nextStep).sort((a, b) => shareOf(a.r) - shareOf(b.r) || a.i - b.i)[0];
+  const strengths = [...new Set(results.flatMap((r) => (r.strengths || []).slice(0, 1)).concat(results.flatMap((r) => (r.strengths || []).slice(1))))].slice(0, 2);
+  const first = results[0];
+  const decided = results.map((r) => r.decidedBy);
+  return {
+    schema: 2,
+    scoreLabelDe: SCORE_LABEL_DE,
+    noticeDe: SCORE_NOTICE_DE,
+    rubric: {
+      id: results.map((r) => r.rubric.id).join('+'),
+      kind: 'speaking',
+      lane: first.rubric.lane,
+      max: sum((r) => r.rubric.max),
+      profileMax: sum((r) => r.rubric.profileMax),
+      examMax: sum((r) => r.rubric.examMax),
+      spelling: first.rubric.spelling,
+      splitVerified: results.every((r) => r.rubric.splitVerified === true),
+      calibration: first.rubric.calibration,
+      source: first.rubric.source,
+      parts: results.map((r) => r.rubric.id),
+    },
+    parts: partsOut,
+    criteria: results.flatMap((r, i) => r.criteria.map((c) => ({ ...c, part: i + 1, partLabel: labels[i] }))),
+    rulesApplied: results.flatMap((r, i) => r.rulesApplied.map((f) => ({ ...f, part: i + 1 }))),
+    total_score: sum((r) => r.total_score),
+    max_score: sum((r) => r.max_score),
+    feedback: joined('feedback'),
+    feedbackEn: joined('feedbackEn'),
+    strengths,
+    nextStep: weakest ? weakest.r.nextStep : null,
+    improvements: weakest ? [weakest.r.nextStep] : [],
+    errors: results.flatMap((r) => r.errors || []).slice(0, 3),
+    corrections: results.flatMap((r) => r.corrections || []).slice(0, 3),
+    leitpunkte: [],
+    leitpunkt_check: [],
+    flags: null,
+    signals: first.signals,
+    attempt: first.attempt,
+    model: first.model,
+    decidedBy: decided.includes('model+rules') ? 'model+rules' : decided.every((d) => d === 'rules') ? 'rules' : 'model',
+  };
+}
+
+/**
+ * Grade a speaking task part by part (a one-Teil task: exactly gradeSubmission). `profiles`
+ * are the parts' resolved profiles, in order. The parts are graded in parallel — each is one
+ * model call — and a part whose model answer stays unusable fails the whole evaluation
+ * (never a silent 0 for one Teil).
+ */
+export async function gradeSpeakingTask({ task, profiles, level, text, transcript = [], targetLabels = [], callModel = callAnthropic }) {
+  const parts = partsOf(task);
+  if (parts.length < 2) {
+    return gradeSubmission({ kind: 'speaking', profile: profiles[0], task: speakingPartTask(task, 0), level, text, transcript, targetLabels, callModel });
+  }
+  const graded = await Promise.all(parts.map((_, i) => gradeSubmission({
+    kind: 'speaking', profile: profiles[i], task: speakingPartTask(task, i), level, text, transcript, targetLabels, callModel,
+  })));
+  const modelCalled = graded.some((g) => g.modelCalled);
+  const failed = graded.find((g) => !g.ok);
+  if (failed) return { ok: false, reason: failed.reason, modelCalled };
+  return { ok: true, modelCalled, result: combinePartResults(graded.map((g) => g.result), parts) };
 }

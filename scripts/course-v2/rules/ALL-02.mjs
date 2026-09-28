@@ -12,10 +12,27 @@
 //     the interaction can-do cd.a2.rueckruf-weitergeben by an item — the SCHEMA owner decides first;
 //   - every spec.textTypes entry is the text type of something the unit shows or asks for — an input,
 //     an exam text, a block's or a task's Teil template (review a2.1-u04 r3 F09; advisory, minor).
+//
+// Third round (the a1.1 unit reviews, rule-smith 2026-09-28, RAILS §3.1c):
+//   - the vorstellen/beschreiben function (a1.1-u03 r1 F04 / r2 F08 / r3 F09); the task's cues are read from
+//     its situation, instructions, cards, moves, Leitpunkte, hintWords and the AI partner's persona — never its
+//     model turns; a function whose verb the unit cannot use yet („erzählen" before its unit) is also met by
+//     the can-do's own content nouns on a card or among the hintWords („Familie", „Eltern");
+//   - an interaction can-do proven by an item alone is a RATCHET when no speaking Aufgabe or spoken
+//     micro-output of the unit names its function (a1.1-u01 r1 F02, u06 r1 F06) — the proof mechanism
+//     cannot yet name a micro-output, so the unit must at least perform the function somewhere;
+//   - a can-do about the learner's OWN data („meine Angaben", „über mich") proven by a form task that
+//     copies a stimulus text about someone else (sd1.s1: fixed field answers) is an ADVISORY (a1.1-u02 r1 F03);
+//   - a proof by Aufgabe whose rubric scores no criterion for the can-do's function (a1.1-u02 r2 F05 / r3 F05:
+//     cd.a1.nachfragen by sd1-sp1, whose criteria are vorstellen, buchstabieren, nummer) and a productive
+//     can-do whose object noun no card, move, Leitpunkt or persona names (a1.1-u05 r1 F03) are ADVISORIES.
 
 import { walkSteps, walkItems, walkTasks, speakingParts } from '../lib-validate/walk.mjs';
-import { arr, blocker, advisory, list } from '../lib-validate/helpers.mjs';
+import { arr, blocker, advisory, ratchet, list } from '../lib-validate/helpers.mjs';
 import { norm } from '../lib-validate/text.mjs';
+import { walkMicroOutputs } from '../lib-validate/walk.mjs';
+import { unitPosition } from '../lib-validate/ids.mjs';
+import { allLexicon } from '../lib-validate/context.mjs';
 
 /** Function verbs of a can-do → cues its Aufgabe's texts must carry (stems, lower case). */
 const FUNCTIONS = [
@@ -27,7 +44,17 @@ const FUNCTIONS = [
   [/beschweren|reklamieren/i, ['beschwer', 'reklam']],
   [/berichten|erzählen/i, ['bericht', 'erzähl']],
   [/vereinbaren|absprechen|planen/i, ['vereinbar', 'termin', 'plan', 'absprech']],
+  [/vorstellen|beschreiben/i, ['vorstell', 'beschreib', 'alt', 'beruf', 'mach', 'wer ', 'name', 'woher', 'wohn']],
 ];
+/** The verbs a function is named by, for the „not yet allocated" check. */
+const FUNCTION_VERBS = { berichten: ['erzählen', 'berichten'], vorstellen: ['vorstellen', 'sich vorstellen', 'beschreiben'] };
+const CONTENT_STOP = new Set(['ich', 'sie', 'du', 'es', 'wir', 'ihr', 'er']);
+const fnName = (re) => re.source.split('|')[0].replace(/\\b/g, '');
+
+/** The can-do's content nouns (capitalised, ≥ 4 letters, not the opening „Ich"), lower case. */
+export function canDoNouns(text) {
+  return [...new Set((String(text || '').match(/(?<![„\p{L}])\p{Lu}\p{Ll}{3,}/gu) || []).map((w) => w.toLowerCase()).filter((w) => !CONTENT_STOP.has(w)))];
+}
 
 export const id = 'ALL-02';
 export const title = 'Can-dos: 3–5 per unit, tagged, proven; ≥ 1 productive proven by an Aufgabe';
@@ -89,9 +116,12 @@ export function run({ ctx, docs }) {
       findings.push(blocker(doc, 'check.proofs', `„Das kann ich" must list exactly the unit's can-dos${missing.length ? `; unproven: ${list(missing)}` : ''}${extra.length ? `; not the unit's: ${list(extra)}` : ''}`, d.id));
     }
     const stepKinds = new Set([...walkSteps(doc)].map((s) => s.step?.kind));
+    // a micro-output proof (SCHEMA §8, 2026-09-28): the learner's own output, resolved against the unit's micro-outputs
+    const moIds = new Set([...walkMicroOutputs(doc)].map(({ mo }) => mo?.id).filter(Boolean));
     proofs.forEach((p, i) => {
-      if (!p?.item && !p?.aufgabe) findings.push(blocker(doc, `check.proofs[${i}]`, `proof of ${p?.canDo} names neither an item nor an Aufgabe`, p?.canDo));
+      if (!p?.item && !p?.aufgabe && !p?.microOutput) findings.push(blocker(doc, `check.proofs[${i}]`, `proof of ${p?.canDo} names neither an item, an Aufgabe nor a micro-output`, p?.canDo));
       if (p?.aufgabe && !stepKinds.has(p.aufgabe)) findings.push(blocker(doc, `check.proofs[${i}].aufgabe`, `proof by "${p.aufgabe}" but the unit has no ${p.aufgabe} step`, p?.canDo));
+      if (p?.microOutput && moIds.size && !moIds.has(p.microOutput)) findings.push(blocker(doc, `check.proofs[${i}].microOutput`, `proof by micro-output "${p.microOutput}", which is not a micro-output of the unit`, p?.canDo));
     });
     // a proof item's key given away by a Check item of the same unit
     const proofItems = new Map(arr(d.check.proofItems).map((it) => [it?.id, it]));
@@ -105,17 +135,69 @@ export function run({ ctx, docs }) {
     });
     if (reg) {
       const tasks = [...walkTasks(doc)];
+      const here = unitPosition(d.id);
+      // what the unit's speaking tasks and spoken micro-outputs say (the interaction-function check)
+      const spoken = JSON.stringify([
+        ...tasks.filter((x) => x.kind === 'speaking').map(({ task }) => [task.aiRole?.personaDe, task.hintWords, ...speakingParts(task).map(({ part }) => [part?.situationDe, part?.instructionsDe, part?.cards, part?.moves])]),
+        ...[...walkMicroOutputs(doc)].filter(({ mo }) => mo?.mode === 'spoken').map(({ mo }) => [mo.situationDe, mo.promptDe]),
+      ]).toLowerCase();
+      const lexicon = allLexicon(ctx);
+      // the nouns the unit itself allocates (singular and plural), for the can-do object check
+      const unitNouns = new Set(lexicon.filter((x) => x?.unit === d.id && x.pos === 'NOUN').flatMap((x) => [String(x.lemma).replace(/^(?:der|die|das)\s+/i, ''), typeof x.plural === 'string' ? x.plural : '']).filter(Boolean).map((w) => w.toLowerCase()));
+      const firstAt = (lemma) => {
+        const at = lexicon.filter((x) => String(x?.lemma || '').toLowerCase() === lemma).map((x) => unitPosition(x.unit)).filter((x) => x !== null);
+        return at.length ? Math.min(...at) : null;
+      };
       proofs.forEach((p, i) => {
         const e = reg.get(p?.canDo)?.item;
         if (!e) return;
-        if (p?.item && !p?.aufgabe && PRODUCTIVE.test(String(e.mode || ''))) findings.push(advisory(doc, `check.proofs[${i}]`, `${p.canDo} is ${e.mode}, proven by an item alone — prove it by an Aufgabe (or a micro-output once SCHEMA allows it)`, p.canDo));
+        const fns = FUNCTIONS.filter(([re]) => re.test(String(e.de || '')));
+        if (p?.item && !p?.aufgabe && !p?.microOutput && PRODUCTIVE.test(String(e.mode || ''))) {
+          // an interaction can-do the unit never performs in speech: a ratchet (a1.1-u01 r1 F02, u06 r1 F06)
+          const performed = !fns.length || fns.some(([, cues]) => cues.some((c) => spoken.includes(c)));
+          if (/^interaction-spoken/.test(String(e.mode)) && !performed) findings.push(ratchet(doc, `check.proofs[${i}]`, `${p.canDo} is ${e.mode}, proven by an item alone, and no speaking task or spoken micro-output of the unit names its function (${fns.map(([re]) => fnName(re)).join(', ')}) — add a card, move or spoken micro-output that performs it, and prove it by the Aufgabe`, p.canDo));
+          else findings.push(advisory(doc, `check.proofs[${i}]`, `${p.canDo} is ${e.mode}, proven by an item alone — prove it by an Aufgabe or the micro-output that performs it (Check.proofs[].microOutput)`, p.canDo));
+        }
         if (!p?.aufgabe) return;
         const t = tasks.find((x) => (p.aufgabe === 'sprechen' ? x.kind === 'speaking' : x.kind === 'writing'));
         if (!t) return;
         const parts = t.kind === 'speaking' ? speakingParts(t.task).map((x) => x.part) : [t.task];
-        const said = JSON.stringify(parts.map((x) => [x?.situationDe, x?.instructionsDe, x?.taskDe, x?.cards, x?.moves, x?.leitpunkte])).toLowerCase();
-        const missing = FUNCTIONS.filter(([re]) => re.test(String(e.de || ''))).filter(([, cues]) => !cues.some((c) => said.includes(c)));
-        if (missing.length) findings.push(advisory(doc, `check.proofs[${i}]`, `the ${p.aufgabe} task proving ${p.canDo} names none of the cues for ${missing.map(([re]) => re.source.split('|')[0].replace(/\\b/g, '')).join(', ')} („${String(e.de).slice(0, 80)}")`, p.canDo));
+        const said = JSON.stringify([...parts.map((x) => [x?.situationDe, x?.instructionsDe, x?.taskDe, x?.cards, x?.moves, x?.leitpunkte]), t.task.hintWords, t.task.aiRole?.personaDe]).toLowerCase();
+        const onCards = JSON.stringify([...parts.map((x) => [x?.cards, x?.leitpunkte]), t.task.hintWords]).toLowerCase();
+        const nouns = canDoNouns(e.de);
+        const byContent = nouns.some((w) => onCards.includes(w));
+        const missing = fns.filter(([re, cues]) => {
+          if (cues.some((c) => said.includes(c))) return false;
+          // a function verb the unit cannot use yet is met by the can-do's own content on a card (u03 r3 F09)
+          const key = re.source.includes('bericht') ? 'berichten' : re.source.includes('vorstell') ? 'vorstellen' : null;
+          const verbs = key ? FUNCTION_VERBS[key] : [];
+          const notYet = verbs.length > 0 && verbs.every((v) => {
+            const at = firstAt(v);
+            return at === null || here === null || at > here;
+          });
+          return !(notYet && byContent);
+        });
+        if (missing.length) findings.push(advisory(doc, `check.proofs[${i}]`, `the ${p.aufgabe} task proving ${p.canDo} names none of the cues for ${missing.map(([re]) => fnName(re)).join(', ')} („${String(e.de).slice(0, 80)}")`, p.canDo));
+        // own data proven by copying someone else's (a1.1-u02 r1 F03; SCHEMA §8: prove it by the own-data micro-output)
+        const ownData = /(?:meine[nrms]?\s+(?:Angaben|Daten|Namen|Adresse|Telefonnummer)|über mich|von mir)(?![\p{L}])/iu.test(String(e.de || ''));
+        if (ownData && t.kind === 'writing' && arr(t.task.form?.fields).some((f) => String(f?.answer || '').trim())) {
+          findings.push(advisory(doc, `check.proofs[${i}]`, `${p.canDo} is about the learner's own data („${String(e.de).slice(0, 60)}…"), but the proving form task copies fixed answers from a text about someone else — prove it with a task whose data are the learner's own, or by that micro-output (Check.proofs[].microOutput)`, p.canDo));
+        }
+        // the rubric scores the function (a1.1-u02 r2 F05)
+        if (fns.length && t.kind === 'speaking') {
+          const criteria = parts.flatMap((x) => arr(ctx.registries.rubrics?.get(x?.profile)?.data?.criteria)).map((c) => `${c?.id} ${c?.label}`.toLowerCase());
+          const moves = parts.flatMap((x) => arr(x?.moves)).join(' ').toLowerCase();
+          const scored = !criteria.length || fns.some(([, cues]) => cues.map((c) => c.trim()).filter((c) => c.length >= 3).some((c) => criteria.some((x) => x.includes(c)) || moves.includes(c)));
+          if (!scored) findings.push(advisory(doc, `check.proofs[${i}]`, `the rubric of the ${p.aufgabe} task proving ${p.canDo} (${[...new Set(parts.map((x) => x?.profile))].join(', ')}) scores no criterion for its function (${fns.map(([re]) => fnName(re)).join(', ')}) — prove it by a task that scores it, or by its proof item`, p.canDo));
+        }
+        // the object of a productive can-do — a noun of the can-do the unit itself allocates („Zimmer", „Möbel"
+        // at a1.1-u05) — is named somewhere in the task (a1.1-u05 r1 F03)
+        const objects = nouns.filter((w) => unitNouns.has(w));
+        if (/^(?:productive|interaction)-spoken/.test(String(e.mode || '')) && t.kind === 'speaking' && objects.length) {
+          const partnerTurns = arr(t.task.modelTurns).filter((x) => x?.speaker === 'partner').map((x) => x?.de);
+          const hay = `${said} ${JSON.stringify(partnerTurns).toLowerCase()}`;
+          if (!objects.some((w) => hay.includes(w))) findings.push(advisory(doc, `check.proofs[${i}]`, `no card, move, Leitpunkt, persona or partner turn of the task proving ${p.canDo} names what the can-do is about (${objects.slice(0, 4).join(', ')})`, p.canDo));
+        }
       });
       const productiveByAufgabe = proofs.some((p) => p?.aufgabe && PRODUCTIVE.test(String(reg.get(p.canDo)?.item?.mode || '')));
       const modesKnown = canDos.every((c) => reg.get(c)?.item?.mode);

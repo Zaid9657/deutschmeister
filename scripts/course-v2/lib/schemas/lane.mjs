@@ -15,6 +15,8 @@ define('TeilTemplate', obj({
   'choiceReuse?': 'bool',
   'noMatch?': 'enum(X|0|x)',
   'plays?': 'int[1..2]',
+  // Hören: the distinct voices of each text (sd1.h1 short conversations: 2; a1.1-u01 r3 F07); EXM-01 reads it
+  'speakers?': 'int[1..6]',
   'readingSeconds?': 'int',
   'minutes?': 'num',
   textType: 'ref(texttype)',

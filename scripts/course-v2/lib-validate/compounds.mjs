@@ -9,6 +9,17 @@
 
 const LINKS = ['', 's', 'es', 'n', 'en', 'e'];
 
+/**
+ * A first part that is a finite verb form is no compound part (review a1.1-u05 r2 F08 / r3 F06(b):
+ * „willkommen" was known as will + kommen). German compounds do not start with a finite modal or
+ * auxiliary; the closed list below is every present and past form of sein, haben, werden and the modals
+ * that a split could produce.
+ */
+export const FINITE_FIRST_PARTS = Object.freeze(new Set(`bin bist ist sind seid war warst waren wart
+hab habe hast hat habt hatte hattest hatten hattet werd werde wirst wird werdet wurde wurdest wurden
+kann kannst können könnt konnte konnten muss musst müssen müsst musste mussten will willst wollen wollt wollte wollten
+soll sollst sollen sollt sollte sollten darf darfst dürfen dürft durfte durften mag magst mögen mögt mochte möchte`.split(/\s+/)));
+
 /** The two known parts of `lower` („möbelstücke" → ['möbel', 'stücke']), or null. */
 export function knownCompound(lower, isKnownForm) {
   const w = String(lower || '');
@@ -20,7 +31,7 @@ export function knownCompound(lower, isKnownForm) {
     for (const l of LINKS) {
       if (l && !left.endsWith(l)) continue;
       const stem = l ? left.slice(0, -l.length) : left;
-      if (stem.length >= 3 && isKnownForm(stem)) return [stem, right];
+      if (stem.length >= 3 && isKnownForm(stem) && !FINITE_FIRST_PARTS.has(stem) && !FINITE_FIRST_PARTS.has(left)) return [stem, right];
     }
   }
   return null;

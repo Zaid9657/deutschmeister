@@ -22,11 +22,45 @@
 // Perception (`listen_select` with the options „Frage"/„Aussage" or „keine Frage"): the played text
 // (`speak`, the `audioLineRef` line or the prompt's quotation) ends in „?" exactly when the key is
 // „Frage" (review a1.2-u04 r1 F01).
+//
+// Known wrong forms (the a1.1 unit reviews, rule-smith 2026-09-28, RAILS §3.1c: a1.1-u03 r2 F01 / r3 F01):
+// the player's own checkItem grades the forms a learner who has NOT learnt the point would type —
+//   - an error correction's quoted sentence submitted unchanged must be WRONG (BLOCKER: the learner who
+//     corrects nothing is not told so; the unit fixes it by planting an error the checker tells apart);
+//   - for a typed one-word gap: the person-ending twin of a finite verb (-st ↔ -t: „kommst"/„kommt"), the
+//     unchanged stem vowel of a vowel-change verb („schlaft" for „schläft"), the m/d/s swap of a possessive
+//     („deine" for „meine") must be WRONG. check.js forgives one letter as a TYPO here — the checker's
+//     STRICT_TOPIC does not match the v2 spine ids (g.possessiv-…, g.akkusativ) and endingDiffers compares
+//     only the last letter — so the unit cannot fix it: a RATCHET until the checker does (openIssues).
 
 import { walkSteps, walkItems } from '../lib-validate/walk.mjs';
 import { sentences, wordCount } from '../lib-validate/text.mjs';
 import { bandOfLevel } from '../lib-validate/ids.mjs';
-import { arr, isObj, blocker, advisory, list } from '../lib-validate/helpers.mjs';
+import { arr, isObj, blocker, advisory, ratchet, list } from '../lib-validate/helpers.mjs';
+import { cumulativeLexicon } from '../lib-validate/context.mjs';
+import { entryForms } from '../lib-validate/lexicon.mjs';
+import { stemVowelChanged } from '../lib-validate/detectors.mjs';
+
+/**
+ * The known wrong forms of a one-word typed key: [{ form, why }]. `verbs` maps a finite form to its
+ * infinitive stem (from the lexicon). Exported for the tests.
+ */
+export function knownWrongForms(key, verbs = new Map()) {
+  const out = [];
+  const k = String(key || '').trim();
+  if (!k || /\s/.test(k)) return out;
+  const lower = k.toLowerCase();
+  const stem = verbs.get(lower);
+  if (stem !== undefined) {
+    if (/[^s]st$/.test(lower) && !/sst$/.test(lower)) out.push({ form: k.replace(/st$/, 't'), why: 'the person-ending twin (-t for -st)' });
+    else if (/[^s]t$/.test(lower)) out.push({ form: k.replace(/t$/, 'st'), why: 'the person-ending twin (-st for -t)' });
+    const ending = (lower.match(/(st|t)$/) || [])[1];
+    if (ending && stemVowelChanged(stem, lower)) out.push({ form: `${stem}${/[sßz]$/.test(stem) && ending === 'st' ? 't' : ending}`, why: `the unchanged stem vowel („${stem}-")` });
+  }
+  const pos = lower.match(/^(mein|dein|sein)(e|en|em|er|es)?$/);
+  if (pos) for (const p of ['m', 'd', 's']) if (lower[0] !== p) out.push({ form: `${k[0] === k[0].toUpperCase() ? p.toUpperCase() : p}${k.slice(1)}`, why: 'the possessive swap' });
+  return out;
+}
 
 export const id = 'ITM-13';
 export const title = 'Audio keys: dictations typeable and graded as heard; Frage/Aussage follows the played text';
@@ -80,7 +114,7 @@ function dictationFindings(doc, item, line, path, where) {
   return out;
 }
 
-export function run({ docs }) {
+export function run({ ctx, docs }) {
   const findings = [];
   const notes = [];
   if (loadError) notes.push(`player modules not importable (${loadError}); the audio-agreement check did not run`);
@@ -88,9 +122,37 @@ export function run({ docs }) {
   for (const doc of docs) {
     if (doc.kind !== 'unit') continue;
     const lines = content ? content.lineIndex(doc.data) : new Map();
+    // finite verb forms of the lexicon → the infinitive stem (the known-wrong-forms check)
+    const verbs = new Map();
+    for (const e of cumulativeLexicon(ctx, doc.level)) {
+      if (e?.pos !== 'VERB' || e.separable || /\s/.test(String(e.lemma).replace(/^sich\s+/, ''))) continue;
+      const inf = String(e.lemma).replace(/^sich\s+/, '').toLowerCase();
+      const st = inf.replace(/(?:en|n)$/, '');
+      for (const f of entryForms(e).forms) if (/(?:st|t)$/.test(f) && !f.startsWith('ge') && !verbs.has(f)) verbs.set(f, st);
+    }
     // authored dictations and perception items
     for (const { item, path } of walkItems(doc)) {
       if (!isObj(item)) continue;
+      if (checker && item.type === 'error_correction') {
+        const q = String(item.promptDe || '').match(/[„"‚]([^“"‘]+)[“"‘]/);
+        if (q) {
+          n += 1;
+          const r = checker.checkItem(item, q[1]).result;
+          if (r !== checker.RESULT.WRONG) findings.push(blocker(doc, `${path}.promptDe`, `the uncorrected sentence „${q[1]}" is graded ${r.toUpperCase()} against the key „${item.answer}" — the learner who changes nothing is not told so; plant an error the checker grades WRONG`, item.id));
+        }
+        continue;
+      }
+      if (checker && item.type === 'fill_blank' && !arr(item.options).length && item.answer) {
+        for (const w of knownWrongForms(item.answer, verbs)) {
+          if ([item.answer, ...arr(item.accepted)].some((a) => String(a).trim().toLowerCase() === w.form.toLowerCase())) continue;
+          n += 1;
+          const r = checker.checkItem(item, w.form).result;
+          if (r !== checker.RESULT.WRONG) {
+            findings.push(ratchet(doc, `${path}.answer`, `„${w.form}" (${w.why}) is graded ${r.toUpperCase()} against the key „${item.answer}" — a grammar error the checker forgives as a slip (check.js; see RAILS §3.1c)`, item.id));
+            break;
+          }
+        }
+      }
       if (item.type === 'dictation') {
         n += 1;
         findings.push(...dictationFindings(doc, item, lines.get(item.audioLineRef), path, 'dictation'));

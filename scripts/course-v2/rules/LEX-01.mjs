@@ -27,9 +27,11 @@
 // the coverage rule: a blocker once the cumulative lexicon exists up to the unit, an advisory before —
 // so the SCHEMA §15 worked example (a stub cumulative lexicon) reports advisories only and §15.6 holds.
 
-import { walkTexts } from '../lib-validate/walk.mjs';
+import { walkTexts, walkSteps } from '../lib-validate/walk.mjs';
 import { knownForms, lexiconComplete, readTokens, licensedForms, isKnown, entryForms } from '../lib-validate/lexicon.mjs';
 import { levelNumbers, arr, finding, pct, list } from '../lib-validate/helpers.mjs';
+
+const str = (x) => (typeof x === 'string' ? x : '');
 import { parseUnitId, describePosition, unitPosition } from '../lib-validate/ids.mjs';
 import { unitDoc, allLexicon } from '../lib-validate/context.mjs';
 import { knownCompound } from '../lib-validate/compounds.mjs';
@@ -41,9 +43,15 @@ export const type = 'hard';
 export const scope = 'unit';
 export const stage = 'S';
 
+/** Gloss tokens, lower-cased; a multi-word token („Willkommen im Haus") glosses each of its words (a1.1-u05 r2 F08). */
+export const glossSet = (glosses) => new Set(arr(glosses).flatMap((g) => {
+  const w = String(g).toLowerCase().trim();
+  return w.includes(' ') ? [w, ...w.split(/\s+/)] : [w];
+}));
+
 export function coverage(text, known, glosses = []) {
   const toks = readTokens(text);
-  const gl = new Set(arr(glosses).map((g) => String(g).toLowerCase()));
+  const gl = glossSet(glosses);
   const unknown = [];
   const knownForm = (w) => isKnown(w, known);
   for (const t of toks) if (!isKnown(t.lower, known) && !gl.has(t.lower) && !knownCompound(t.lower, knownForm)) unknown.push(t.text);
@@ -55,7 +63,7 @@ export function coverage(text, known, glosses = []) {
  * nor instruction metalanguage.
  */
 export function unknownOnSurface(text, known, glosses = [], planted = null) {
-  const gl = new Set(arr(glosses).map((g) => String(g).toLowerCase()));
+  const gl = glossSet(glosses);
   const knownForm = (w) => isKnown(w, known);
   const out = [];
   for (const t of readTokens(stripFragments(text))) {
@@ -88,7 +96,27 @@ function allocationIndex(ctx) {
 const SURFACE_LABEL = {
   canDo: 'the can-do title', stepTitle: 'a step title', endLine: 'an endLine', prompt: 'a prompt', option: 'an option',
   explanation: 'an explanation', instructions: 'an instruction', situation: 'a situation', leitpunkt: 'a Leitpunkt', checklist: 'a checklist line',
+  strategyCard: 'a strategy card', recap: 'the recap line', folgeTitle: 'the Folge title', lernziel: 'a Lernziele line',
+  openingLine: 'the AI partner\'s opening line', rmFunction: 'a Redemittel label', ruleCard: 'a rule card',
 };
+
+/**
+ * The rule cards a unit is the FIRST of its level to show (steps[].ruleCard), with their index in the
+ * level's rule-cards.json: [{ card, index, file }]. A card shown first by another unit is that unit's.
+ */
+export function cardsFirstShownBy(ctx, doc) {
+  const slot = ctx.levels.get(doc.level);
+  const cards = arr(slot?.ruleCards?.cards);
+  if (!cards.length || doc.kind !== 'unit') return [];
+  const first = new Map();
+  for (const u of slot.units.values()) {
+    for (const { step } of walkSteps(u)) {
+      if (!step?.ruleCard) continue;
+      if (!first.has(step.ruleCard) || first.get(step.ruleCard) > u.nr) first.set(step.ruleCard, u.nr);
+    }
+  }
+  return cards.map((card, index) => ({ card, index, file: slot.ruleCards.file })).filter((x) => first.get(x.card?.id) === doc.nr);
+}
 
 export function run({ ctx, docs }) {
   const findings = [];
@@ -96,6 +124,7 @@ export function run({ ctx, docs }) {
   let texts = 0;
   const cache = new Map();
   let surfaceHits = 0;
+  const ownerSeen = new Set();
   for (const doc of docs) {
     const nr = doc.kind === 'unit' ? doc.nr : doc.kind === 'lanepack' ? parseUnitId(doc.data.unit)?.nr : 12;
     if (!ctx.levels.get(doc.level)?.lexicon) continue;
@@ -110,7 +139,8 @@ export function run({ ctx, docs }) {
     }
     const min = levelNumbers(ctx, doc.level).coverageMin;
     const surfaces = [...walkTexts(doc)];
-    if (doc.kind === 'unit' && doc.data?.story?.cliffhanger) surfaces.push({ kind: 'story', de: String(doc.data.story.cliffhanger), path: 'story.cliffhanger', glosses: [], step: null });
+    // story.glosses (SCHEMA §8, 2026-09-28) gloss the cliffhanger as the Folge's glosses gloss the Folge
+    if (doc.kind === 'unit' && doc.data?.story?.cliffhanger) surfaces.push({ kind: 'story', de: String(doc.data.story.cliffhanger), path: 'story.cliffhanger', glosses: arr(doc.data.story.glosses).map((g) => String(g?.token ?? '')).filter(Boolean), step: null });
     for (const t of surfaces) {
       if (!t.de.trim()) continue;
       texts += 1;
@@ -127,11 +157,31 @@ export function run({ ctx, docs }) {
     for (const n of taskNames(doc)) for (const t of readTokens(n)) named.add(t.lower);
     const alloc = allocationIndex(ctx);
     const here = unitPosition(unitData?.id ?? doc.data?.unit);
-    for (const sf of walkReadSurfaces(doc)) {
-      if (sf.kind === 'strategyCard' || !sf.de.trim()) continue;
+    const surfaces2 = [...walkReadSurfaces(doc, { cando: ctx.registries.cando })];
+    // a rule card at its first use (a1.1-u02 r3 F07, u05 r2 F09 / r3 F06): its model sentence and the
+    // table cells below the header are what the learner reads as German; its prose too — all advisory
+    for (const { card, index, file } of cardsFirstShownBy(ctx, doc)) {
+      const cdoc = { file };
+      const at = `cards[${index}]`;
+      if (str(card?.modelSentence)) surfaces2.push({ kind: 'ruleCard', de: card.modelSentence, path: `${at}.modelSentence`, id: card.id, glosses: [], extra: true, doc: cdoc });
+      arr(card?.table).slice(1).forEach((row, r) => arr(row).forEach((cell, c) => {
+        if (str(cell)) surfaces2.push({ kind: 'ruleCard', de: cell, path: `${at}.table[${r + 1}][${c}]`, id: card.id, glosses: [], extra: true, doc: cdoc });
+      }));
+      if (str(card?.de)) surfaces2.push({ kind: 'ruleCard', de: card.de, path: `${at}.de`, id: card.id, glosses: [], extra: true, doc: cdoc });
+    }
+    for (const sf of surfaces2) {
+      if (!sf.de.trim()) continue;
+      // a registry-owned line (the Lernziele text of a can-do) is reported once, at its registry
+      if (sf.owner) {
+        const k = `${sf.owner.file}|${sf.owner.path}`;
+        if (ownerSeen.has(k)) continue;
+        ownerSeen.add(k);
+      }
       texts += 1;
-      // a distractor option's planted wrong form is no word to learn („Busfahrin", „Hoffman")
-      const planted = sf.kind === 'option' && sf.item && String(sf.de).trim() !== String(sf.item.answer ?? '').trim() ? (w) => !alloc.has(w) && plantedForm(w, sf.item) : null;
+      // a planted wrong form is no word to learn: a distractor option („Busfahrin", „Hoffman"), and the
+      // explanation that names it („Busfahrin" → „Busfahrerin", a1.1-u10 ls3-p10)
+      const plantedOk = sf.item && ((sf.kind === 'option' && String(sf.de).trim() !== String(sf.item.answer ?? '').trim()) || sf.kind === 'explanation');
+      const planted = plantedOk ? (w) => !alloc.has(w) && plantedForm(w, sf.item) : null;
       const unknown = unknownOnSurface(sf.de, named, sf.glosses, planted);
       if (!unknown.length) continue;
       surfaceHits += 1;
@@ -141,10 +191,12 @@ export function run({ ctx, docs }) {
         const at = unitPosition(a.unit);
         return `„${w}" (${a.id}: ${at !== null && here !== null && at > here ? a.unit : `${a.unit}, not licensed here`})`;
       });
-      // a surface whose screen shows its English twin (promptEn, explanation.en) is an advisory
-      const severity = state.complete && !sf.twin ? 'blocker' : 'advisory';
-      const tail = !state.complete ? ` — advisory until the cumulative lexicon exists (${state.why})` : sf.twin ? ' — advisory: the screen shows its English twin' : '';
-      findings.push(finding(severity, doc, sf.path, `${SURFACE_LABEL[sf.kind] || sf.kind} uses a word not known at ${describePosition(here)}: ${list(where, 6)} — gloss it on that screen, reword with known words, or allocate it to this unit or earlier${tail}`, sf.id));
+      // a surface whose screen shows its English twin (promptEn, explanation.en, a strategy card's en) is an
+      // advisory; so is every surface the 2026-09-28 round added (`extra`, RAILS §3.1c)
+      const twin = sf.twin || sf.kind === 'strategyCard';
+      const severity = state.complete && !twin && !sf.extra ? 'blocker' : 'advisory';
+      const tail = !state.complete ? ` — advisory until the cumulative lexicon exists (${state.why})` : twin ? ' — advisory: the screen shows its English twin' : sf.extra ? ' — advisory (a surface added by RAILS §3.1c)' : '';
+      findings.push(finding(severity, sf.owner ? { file: sf.owner.file } : sf.doc || doc, sf.owner ? sf.owner.path : sf.path, `${SURFACE_LABEL[sf.kind] || sf.kind} uses a word not known at ${describePosition(here)}: ${list(where, 6)} — gloss it on that screen, reword with known words, or allocate it to this unit or earlier${tail}`, sf.id));
     }
   }
   if (surfaceHits) notes.push(`${surfaceHits} read surface(s) with an unknown word (metalanguage allowlist: lib-validate/metalanguage.mjs)`);

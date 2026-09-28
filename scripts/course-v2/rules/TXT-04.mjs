@@ -4,10 +4,26 @@
 // (role 'exam'), which follow the level profile's `examStemChars` band — a gap label („Lücke 3")
 // of an insert/cloze item is not a stem and is held to the maximum only — and a Teil template's
 // `instructionsDe` (≤ 200 characters, the Prüfungsmodus intro screen; checked when the registry is loaded).
+//
+// Register (the a1.1 unit reviews, rule-smith 2026-09-28, RAILS §3.1c: a1.1-u06 r2 F02): a micro-output or a
+// speaking task whose register is du and whose promptDe/instructionsDe gives the learner the line to say
+// („Sagen Sie: …", „Fragen Sie (Olena): …") quotes a du line, not a Sie form („Haben Sie …?") — ADVISORY.
 
 import { walkItems, walkBlocks, walkTasks, walkMicroOutputs } from '../lib-validate/walk.mjs';
 import { charLength } from '../lib-validate/text.mjs';
-import { blocker } from '../lib-validate/helpers.mjs';
+import { blocker, advisory } from '../lib-validate/helpers.mjs';
+
+/**
+ * The line a prompt hands the learner to say: the first sentence after „Sagen Sie (X):" / „Fragen Sie (X):"
+ * („Fragen Sie Olena: Haben Sie einen Laptop?"). „Schreiben Sie Olena: Was haben Sie?" asks the learner, not
+ * the partner, and is not a line to say.
+ */
+export function quotedLine(promptDe) {
+  const m = String(promptDe || '').match(/(?:^|[.!?]\s*)(?:Sagen|Fragen)\s+Sie(?:\s+[^:.!?]{0,30})?:\s*[„"]?([^.!?“"]+[.!?]?)/u);
+  return m ? m[1].trim() : null;
+}
+/** The Sie form in a line to say: „Haben Sie …?", „Was machen Sie …?", „Ihnen", „Ihr-" (not sentence-initial). */
+export const SIE_FORM_RE = /\p{L}+\s+Sie\b[^.!]*\?|(?<=\s)(?:Ihnen|Ihr(?:e|en|em|er)?)\b/u;
 import { levelProfile } from '../lib-validate/context.mjs';
 
 export const id = 'TXT-04';
@@ -56,7 +72,18 @@ export function run({ ctx, docs }) {
       if (task?.template) usedTemplates.add(task.template);
       for (const p of Array.isArray(task?.parts) ? task.parts : []) if (p?.template) usedTemplates.add(p.template);
     }
-    for (const { mo, path } of walkMicroOutputs(doc)) check(doc, mo.promptDe, `${path}.promptDe`, mo.id);
+    for (const { mo, path } of walkMicroOutputs(doc)) {
+      check(doc, mo.promptDe, `${path}.promptDe`, mo.id);
+      const line = mo.register === 'du' ? quotedLine(mo.promptDe) : null;
+      if (line && SIE_FORM_RE.test(line)) findings.push(advisory(doc, `${path}.promptDe`, `register du, but the line the prompt hands the learner is in the Sie form („${line.slice(0, 60)}") — quote the du form`, mo.id));
+    }
+    for (const { task, kind, path } of walkTasks(doc)) {
+      if (kind !== 'speaking' || task.aiRole?.register !== 'du') continue;
+      for (const [k, v] of [['instructionsDe', task.instructionsDe], ...(Array.isArray(task.parts) ? task.parts.map((p, i) => [`parts[${i}].instructionsDe`, p?.instructionsDe]) : [])]) {
+        const line = quotedLine(v);
+        if (line && SIE_FORM_RE.test(line)) findings.push(advisory(doc, `${path}.${k}`, `the partner is addressed with du, but the line the instruction hands the learner is in the Sie form („${line.slice(0, 60)}")`, task.bankKey));
+      }
+    }
   }
   // template instructionsDe (≤ 200): the templates this target uses, or every loaded one with --all
   const templates = [...ctx.registries.templates.values()].filter((e) => usedTemplates.has(e.template?.id));

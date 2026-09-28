@@ -187,7 +187,13 @@ export function entryForms(e) {
   } else if (pos === 'ADJ' || pos === 'ADV') {
     adjectiveForms(lemma, add);
   } else {
-    for (const t of lemma.split(/\s+/)) add(t.replace(/[^a-zäöüß-]/g, ''));
+    for (const t of lemma.split(/\s+/)) {
+      add(t.replace(/[^a-zäöüß-]/g, ''));
+      // an apostrophe phrase contributes its parts: „Wie geht’s?" → gehts, geht (review a1.1-u03 r1 F01 /
+      // r2 F09 / r3 F10 — LEX-01 read „geht" as lx.gehen, a1.1-u07, on the phrase's own screens)
+      const parts = t.split(/['’‘`´]/).map((x) => x.replace(/[^a-zäöüß-]/g, ''));
+      if (parts.length > 1) for (const x of parts) if (x.length > 1) add(x);
+    }
   }
   return { forms, prefix };
 }
@@ -275,7 +281,7 @@ export function namesOf(ctx) {
 /**
  * The known-token set at a course position: function words, particles, number words; the core list
  * (except a lemma some lexicon allocates to a LATER unit — the lexicon outranks the core); lexicon
- * entries of every earlier level and of this level's units ≤ nr, every inflected form; cast names;
+ * entries of every earlier level and of this level's units ≤ nr, every inflected form; cast names, origins and languages;
  * the proper names of registries/names.json whose level is ≤ this level (again except a token some
  * lexicon allocates to a later unit: „Schweiz" is taught at a1.1-u12, the name list cannot bring it forward).
  */
@@ -298,7 +304,9 @@ export function knownForms(ctx, level, nr) {
     }
   }
   for (const [, { member }] of ctx.registries.casts?.members || []) {
-    for (const t of readTokens(`${member?.name || ''} ${member?.from || ''}`)) known.add(t.lower);
+    // name, origin and the member's own languages (review a1.1-u01 r2 F08, u02 r2 F07 / r3 F06, u05 r3 F02:
+    // „Ich spreche Malayalam, Englisch und ein bisschen Deutsch." is Priya's line, not an unknown lemma)
+    for (const t of readTokens(`${member?.name || ''} ${member?.from || ''} ${arr(member?.languages).join(' ')}`)) known.add(t.lower);
     // a cast member's name also in the genitive: „Priyas Praktikum", „Arjuns WG"
     for (const t of readTokens(member?.name || '')) known.add(`${t.lower}s`);
   }

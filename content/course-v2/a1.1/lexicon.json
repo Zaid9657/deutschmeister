@@ -597,7 +597,7 @@
       "article": "die",
       "plural": "Muttersprachen",
       "plural_kind": "regular",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u01",
       "block": 3,
       "list_ref": "A1",
@@ -3677,7 +3677,7 @@
       "article": "die",
       "plural": "Uhren",
       "plural_kind": "regular",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u07",
       "block": 1,
       "list_ref": "A1",
@@ -3695,7 +3695,7 @@
       "article": "die",
       "plural": "Uhrzeiten",
       "plural_kind": "regular",
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u07",
       "block": 1,
       "list_ref": "A1",
@@ -3782,7 +3782,7 @@
       "id": "lx.halb",
       "lemma": "halb",
       "pos": "ADJ",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u07",
       "block": 1,
       "list_ref": "A1",
@@ -3868,8 +3868,8 @@
       "gloss": {
         "en": "to go shopping"
       },
-      "example": "Am Samstag kaufe ich ein.",
-      "exampleEn": "I go shopping on Saturday.",
+      "example": "Am Freitag kaufe ich ein.",
+      "exampleEn": "I go shopping on Friday.",
       "wordId": null
     },
     {
@@ -3881,7 +3881,7 @@
         "3sg": "fährt",
         "perfekt": "ist gefahren"
       },
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u07",
       "block": 2,
       "list_ref": "A1",
@@ -3900,7 +3900,7 @@
         "3sg": "geht",
         "perfekt": "ist gegangen"
       },
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u07",
       "block": 2,
       "list_ref": "A1",
@@ -4012,7 +4012,7 @@
         "3sg": "erzählt",
         "perfekt": "hat erzählt"
       },
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u07",
       "block": 2,
       "list_ref": "A1",
@@ -4120,7 +4120,7 @@
       "article": "der",
       "plural": "Freitage",
       "plural_kind": "regular",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u07",
       "block": 3,
       "list_ref": "A1",
@@ -4129,6 +4129,24 @@
       },
       "example": "Am Freitag gehe ich früh nach Hause.",
       "exampleEn": "On Friday I go home early.",
+      "wordId": null
+    },
+    {
+      "id": "lx.sonntag",
+      "lemma": "Sonntag",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Sonntage",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a1.1-u07",
+      "block": 3,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "Sunday"
+      },
+      "example": "Am Sonntag arbeite ich nicht.",
+      "exampleEn": "I don’t work on Sundays.",
       "wordId": null
     },
     {
@@ -4183,21 +4201,6 @@
       "wordId": null
     },
     {
-      "id": "lx.geoeffnet",
-      "lemma": "geöffnet",
-      "pos": "ADJ",
-      "role": "receptive",
-      "unit": "a1.1-u07",
-      "block": 4,
-      "list_ref": "derived:öffnen",
-      "gloss": {
-        "en": "open"
-      },
-      "example": "Das Büro ist von 9 bis 17 Uhr geöffnet.",
-      "exampleEn": "The office is open from 9 a.m. to 5 p.m.",
-      "wordId": null
-    },
-    {
       "id": "lx.wochenende",
       "lemma": "Wochenende",
       "pos": "NOUN",
@@ -4219,7 +4222,7 @@
       "id": "lx.spaet",
       "lemma": "spät",
       "pos": "ADJ",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u07",
       "block": 4,
       "list_ref": "A1",
@@ -4246,21 +4249,43 @@
       "wordId": null
     },
     {
-      "id": "lx.anrufbeantworter",
-      "lemma": "Anrufbeantworter",
-      "pos": "NOUN",
-      "article": "der",
-      "plural": "Anrufbeantworter",
-      "plural_kind": "regular",
-      "role": "receptive",
+      "id": "lx.aufmachen",
+      "lemma": "aufmachen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "macht auf",
+        "perfekt": "hat aufgemacht"
+      },
+      "separable": true,
+      "role": "productive",
       "unit": "a1.1-u07",
       "block": 4,
       "list_ref": "A1",
       "gloss": {
-        "en": "answering machine, voicemail"
+        "en": "to open (a shop, a door)"
       },
-      "example": "Herr Richter spricht auf den Anrufbeantworter.",
-      "exampleEn": "Mr Richter leaves a message on the answering machine.",
+      "example": "Das Geschäft macht um acht Uhr auf.",
+      "exampleEn": "The shop opens at eight o’clock.",
+      "wordId": null
+    },
+    {
+      "id": "lx.zumachen",
+      "lemma": "zumachen",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "macht zu",
+        "perfekt": "hat zugemacht"
+      },
+      "separable": true,
+      "role": "productive",
+      "unit": "a1.1-u07",
+      "block": 4,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "to close, to shut"
+      },
+      "example": "Der Supermarkt macht um 22 Uhr zu.",
+      "exampleEn": "The supermarket closes at 10 p.m.",
       "wordId": null
     },
     {
@@ -4306,7 +4331,7 @@
       "article": "die",
       "plural": null,
       "plural_kind": "singular-only",
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u08",
       "block": 1,
       "list_ref": "A1",
@@ -4324,7 +4349,7 @@
       "article": "der",
       "plural": null,
       "plural_kind": "singular-only",
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u08",
       "block": 1,
       "list_ref": "A1",
@@ -4398,7 +4423,7 @@
         "3sg": "spielt",
         "perfekt": "hat gespielt"
       },
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u08",
       "block": 1,
       "list_ref": "A1",
@@ -4418,7 +4443,7 @@
         "3sg": "läuft",
         "perfekt": "ist gelaufen"
       },
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u08",
       "block": 1,
       "list_ref": "A1",
@@ -4455,7 +4480,7 @@
         "3sg": "tanzt",
         "perfekt": "hat getanzt"
       },
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u08",
       "block": 1,
       "list_ref": "A1",
@@ -4491,7 +4516,7 @@
       "article": "der",
       "plural": "Samstage",
       "plural_kind": "regular",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u08",
       "block": 2,
       "list_ref": "A1",
@@ -4597,7 +4622,7 @@
         "perfekt": "ist mitgekommen"
       },
       "separable": true,
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u08",
       "block": 2,
       "list_ref": "A1",
@@ -4630,7 +4655,7 @@
       "id": "lx.tut-mir-leid",
       "lemma": "Tut mir leid",
       "pos": "PHRASE",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u08",
       "block": 2,
       "list_ref": "derived:leidtun",
@@ -4648,7 +4673,7 @@
       "article": "die",
       "plural": "Ideen",
       "plural_kind": "regular",
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u08",
       "block": 2,
       "list_ref": "A2",
@@ -4715,7 +4740,8 @@
       "gloss": {
         "en": "to cancel, to call off"
       },
-      "example": "Frau Kowalski sagt den Termin am Montag ab.",
+      "example": "Sophie sagt am Samstag ab.",
+      "exampleEn": "Sophie says she can’t come on Saturday.",
       "wordId": null
     },
     {
@@ -4734,8 +4760,8 @@
       "gloss": {
         "en": "to accept (an invitation), to say yes"
       },
-      "example": "Sophie sagt zu: Ich komme mit!",
-      "exampleEn": "Sophie says yes: I’m coming along!",
+      "example": "Olena sagt zu: Ich komme mit!",
+      "exampleEn": "Olena accepts: I’m coming along!",
       "wordId": null
     },
     {
@@ -4846,7 +4872,7 @@
       "id": "lx.super",
       "lemma": "super",
       "pos": "ADJ",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u08",
       "block": 3,
       "list_ref": "freq:top-5000",
@@ -4952,7 +4978,7 @@
       "article": "der",
       "plural": "Säfte",
       "plural_kind": "regular",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u09",
       "block": 1,
       "list_ref": "A1",
@@ -5086,8 +5112,8 @@
       "gloss": {
         "en": "breakfast"
       },
-      "example": "Frühstück gibt es bis 11 Uhr.",
-      "exampleEn": "Breakfast is served until 11.",
+      "example": "Frühstück gibt es bis 12 Uhr.",
+      "exampleEn": "Breakfast is served until 12 o’clock.",
       "wordId": null
     },
     {
@@ -5122,8 +5148,8 @@
       "gloss": {
         "en": "dinner, supper"
       },
-      "example": "Das Abendessen ist um sieben.",
-      "exampleEn": "Dinner is at seven.",
+      "example": "Das Abendessen ist um halb acht.",
+      "exampleEn": "Dinner is at half past seven.",
       "wordId": null
     },
     {
@@ -5151,7 +5177,7 @@
       "article": "der",
       "plural": "Fische",
       "plural_kind": "regular",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u09",
       "block": 2,
       "list_ref": "A1",
@@ -5412,8 +5438,8 @@
       "gloss": {
         "en": "birthday"
       },
-      "example": "Arjun hat am Samstag Geburtstag.",
-      "exampleEn": "It is Arjun’s birthday on Saturday.",
+      "example": "Olena hat am Freitag Geburtstag.",
+      "exampleEn": "Olena’s birthday is on Friday.",
       "wordId": null
     },
     {
@@ -5427,8 +5453,8 @@
       "gloss": {
         "en": "polite"
       },
-      "example": "Im Café fragt Priya höflich nach der Speisekarte.",
-      "exampleEn": "In the café Priya politely asks for the menu.",
+      "example": "„Ich möchte …“ und „Ich nehme …“ sind höflich.",
+      "exampleEn": "“Ich möchte …” and “Ich nehme …” are polite.",
       "wordId": null
     },
     {
@@ -5615,7 +5641,7 @@
       "article": "die",
       "plural": "U-Bahnen",
       "plural_kind": "regular",
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u10",
       "block": 1,
       "list_ref": "A1",
@@ -5658,8 +5684,8 @@
       "gloss": {
         "en": "departure"
       },
-      "example": "Abfahrt: 9.10 Uhr, Gleis 3.",
-      "exampleEn": "Departure: 9:10, platform 3.",
+      "example": "Abfahrt: 9.10 Uhr, Gleis 12.",
+      "exampleEn": "Departure: 9.10, platform 12.",
       "wordId": null
     },
     {
@@ -5676,8 +5702,8 @@
       "gloss": {
         "en": "arrival"
       },
-      "example": "Ankunft in Dresden: 10.15 Uhr.",
-      "exampleEn": "Arrival in Dresden: 10:15.",
+      "example": "Ankunft in Dresden: 10.25 Uhr.",
+      "exampleEn": "Arrival in Dresden: 10.25.",
       "wordId": null
     },
     {
@@ -5723,14 +5749,15 @@
       "article": "der",
       "plural": "Hauptbahnhöfe",
       "plural_kind": "regular",
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u10",
       "block": 1,
       "list_ref": "compound:Haupt+Bahnhof",
       "gloss": {
         "en": "main station"
       },
-      "example": "Der Zug endet heute schon am Hauptbahnhof.",
+      "example": "Wir treffen Sophie am Hauptbahnhof.",
+      "exampleEn": "We are meeting Sophie at the main station.",
       "wordId": null
     },
     {
@@ -5747,7 +5774,8 @@
       "gloss": {
         "en": "departure board"
       },
-      "example": "Auf der Anzeigetafel steht: Zug fällt aus.",
+      "example": "Auf der Anzeigetafel steht: Dresden, Gleis 14.",
+      "exampleEn": "The departure board says: Dresden, platform 14.",
       "wordId": null
     },
     {
@@ -5823,7 +5851,7 @@
       "id": "lx.hin-und-zurueck",
       "lemma": "hin und zurück",
       "pos": "PHRASE",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u10",
       "block": 2,
       "list_ref": "derived:zurück",
@@ -5924,8 +5952,8 @@
       "gloss": {
         "en": "to change (trains, buses)"
       },
-      "example": "In Riesa steigen wir um.",
-      "exampleEn": "We change in Riesa.",
+      "example": "In Hannover steigen Sie um.",
+      "exampleEn": "You change trains in Hanover.",
       "wordId": null
     },
     {
@@ -5964,8 +5992,27 @@
       "gloss": {
         "en": "to arrive"
       },
-      "example": "Der Zug kommt um 10.15 Uhr an.",
-      "exampleEn": "The train arrives at 10:15.",
+      "example": "Der Zug kommt um 10.25 Uhr in Dresden an.",
+      "exampleEn": "The train arrives in Dresden at 10.25.",
+      "wordId": null
+    },
+    {
+      "id": "lx.busfahrer",
+      "lemma": "Busfahrer",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Busfahrer",
+      "plural_kind": "regular",
+      "feminine": "die Busfahrerin",
+      "role": "productive",
+      "unit": "a1.1-u10",
+      "block": 3,
+      "list_ref": "compound:Bus+Fahrer",
+      "gloss": {
+        "en": "bus driver"
+      },
+      "example": "Ich bin Busfahrerin, und mein Mann ist auch Busfahrer.",
+      "exampleEn": "I am a bus driver, and my husband is a bus driver too.",
       "wordId": null
     },
     {
@@ -6011,7 +6058,7 @@
       "article": "der",
       "plural": "Plätze",
       "plural_kind": "regular",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u10",
       "block": 3,
       "list_ref": "A1",
@@ -6026,7 +6073,7 @@
       "id": "lx.frei",
       "lemma": "frei",
       "pos": "ADJ",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u10",
       "block": 3,
       "list_ref": "A1",
@@ -6055,24 +6102,6 @@
       },
       "example": "Der Zug hält in Riesa.",
       "exampleEn": "The train stops in Riesa.",
-      "wordId": null
-    },
-    {
-      "id": "lx.kilometer",
-      "lemma": "Kilometer",
-      "pos": "NOUN",
-      "article": "der",
-      "plural": "Kilometer",
-      "plural_kind": "regular",
-      "role": "receptive",
-      "unit": "a1.1-u10",
-      "block": 3,
-      "list_ref": "A2",
-      "gloss": {
-        "en": "kilometre"
-      },
-      "example": "Bis zum Bahnhof sind es zwei Kilometer.",
-      "exampleEn": "It is two kilometres to the station.",
       "wordId": null
     },
     {
@@ -6300,7 +6329,8 @@
       "gloss": {
         "en": "voice message"
       },
-      "example": "Anna schickt mir oft Sprachnachrichten.",
+      "example": "Elif hat eine Sprachnachricht für Priya.",
+      "exampleEn": "Elif has a voice message for Priya.",
       "wordId": null
     },
     {
@@ -6334,36 +6364,18 @@
       "wordId": null
     },
     {
-      "id": "lx.sonntag",
-      "lemma": "Sonntag",
-      "pos": "NOUN",
-      "article": "der",
-      "plural": "Sonntage",
-      "plural_kind": "regular",
-      "role": "productive",
-      "unit": "a1.1-u11",
-      "block": 2,
-      "list_ref": "A1",
-      "gloss": {
-        "en": "Sunday"
-      },
-      "example": "Am Sonntag haben wir gekocht.",
-      "exampleEn": "On Sunday we cooked.",
-      "wordId": null
-    },
-    {
       "id": "lx.vorgestern",
       "lemma": "vorgestern",
       "pos": "ADV",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u11",
       "block": 2,
       "list_ref": "freq:top-10000",
       "gloss": {
         "en": "the day before yesterday"
       },
-      "example": "Vorgestern war Sophie in Leipzig.",
-      "exampleEn": "The day before yesterday Sophie was in Leipzig.",
+      "example": "Vorgestern war Priya in Dresden.",
+      "exampleEn": "The day before yesterday Priya was in Dresden.",
       "wordId": null
     },
     {
@@ -6380,8 +6392,8 @@
       "gloss": {
         "en": "month"
       },
-      "example": "Letzten Monat habe ich viel gearbeitet.",
-      "exampleEn": "Last month I worked a lot.",
+      "example": "Das machen wir einmal im Monat.",
+      "exampleEn": "We do that once a month.",
       "wordId": null
     },
     {
@@ -6756,7 +6768,8 @@
       "gloss": {
         "en": "plan"
       },
-      "example": "Mein Plan ist die B1-Prüfung im nächsten Jahr.",
+      "example": "Mein Plan: Ich will die Prüfung machen.",
+      "exampleEn": "My plan: I want to take the exam.",
       "wordId": null
     },
     {
@@ -6884,8 +6897,8 @@
       "gloss": {
         "en": "world"
       },
-      "example": "Deutsch spricht man in vielen Ländern der Welt.",
-      "exampleEn": "German is spoken in many countries of the world.",
+      "example": "Die Welt ist groß.",
+      "exampleEn": "The world is big.",
       "wordId": null
     },
     {
@@ -6980,8 +6993,8 @@
       "gloss": {
         "en": "to register, to sign up"
       },
-      "example": "Priya ist jetzt für den Kurs A1.2 angemeldet.",
-      "exampleEn": "Priya is now registered for the A1.2 course.",
+      "example": "Herr Richter meldet Priya für den Kurs A1.2 an.",
+      "exampleEn": "Mr Richter registers Priya for the A1.2 course.",
       "wordId": null
     },
     {
@@ -7044,6 +7057,18 @@
   ],
   "promotions": [
     {
+      "lemma": "lx.entschuldigung",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u04"
+    },
+    {
+      "lemma": "lx.jahr",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u05"
+    },
+    {
       "lemma": "lx.richtig",
       "from": "receptive",
       "to": "productive",
@@ -7056,10 +7081,76 @@
       "unit": "a1.1-u07"
     },
     {
+      "lemma": "lx.gehen",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u08"
+    },
+    {
+      "lemma": "lx.gut",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u08"
+    },
+    {
+      "lemma": "lx.empfang",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u08"
+    },
+    {
+      "lemma": "lx.stueck",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u09"
+    },
+    {
+      "lemma": "lx.fahren",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u10"
+    },
+    {
+      "lemma": "lx.teilnehmer",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u10"
+    },
+    {
+      "lemma": "lx.kellner",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u10"
+    },
+    {
+      "lemma": "lx.mittwoch",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u10"
+    },
+    {
       "lemma": "lx.machen",
       "from": "receptive",
       "to": "productive",
       "unit": "a1.1-u11"
+    },
+    {
+      "lemma": "lx.sonntag",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u11"
+    },
+    {
+      "lemma": "lx.spielen",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u11"
+    },
+    {
+      "lemma": "lx.monat",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u12"
     }
   ]
 }

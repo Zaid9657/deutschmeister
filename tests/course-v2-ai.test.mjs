@@ -32,7 +32,10 @@ import {
   examKeyFor,
 } from '../netlify/functions/_shared/rubrics/keys.mjs';
 import { RULES, RULE_IDS, snapToLevel, textSignals, evaluateRules, applyRuleEffects, expectedAddress } from '../netlify/functions/_shared/rubrics/rules.mjs';
-import { criteriaPlan, gradeSubmission, buildWritingSystemPrompt, buildWritingUserPrompt, isAutoScored, unscoredCriteria, scoredTarget, flaggedErrorTags } from '../netlify/functions/_shared/rubrics/grade.mjs';
+import {
+  criteriaPlan, gradeSubmission, buildWritingSystemPrompt, buildWritingUserPrompt, isAutoScored, unscoredCriteria, scoredTarget, flaggedErrorTags,
+  speakingPartsPlan, speakingPartLabels, combinePartResults, ERROR_TAGS,
+} from '../netlify/functions/_shared/rubrics/grade.mjs';
 import { __setCourseV2DataForTests, rubricProfile, loadBanks } from '../netlify/functions/_shared/rubrics/data.mjs';
 import { SCORE_LABEL_DE, SCORE_NOTICE_DE, feedbackLanguageFor, modelFor } from '../netlify/functions/_shared/rubrics/defaults.mjs';
 import { __setEntitlementForTests, checkCourseAi } from '../netlify/functions/_shared/rubrics/courseAi.mjs';
@@ -45,13 +48,15 @@ import {
   v2TaskKeyFromSession,
   taskFromSession,
   buildCoursePartnerPrompt,
+  normalizeSpeakingTask,
 } from '../netlify/functions/_shared/speakingAI.mjs';
 import { courseTaskKeyPrefix, courseAllowanceFor } from '../netlify/functions/evaluate-writing.mjs';
 import * as entitlement from '../netlify/functions/_shared/entitlement.mjs';
 import { compileRubrics } from '../scripts/course-v2/compile-rubrics.mjs';
-import { compileLevel } from '../scripts/course-v2/lib/compiler.mjs';
-import { FIXTURES_ROOT } from '../scripts/course-v2/lib/tree.mjs';
+import { compileLevel, levelsIn } from '../scripts/course-v2/lib/compiler.mjs';
+import { CONTENT_ROOT, FIXTURES_ROOT } from '../scripts/course-v2/lib/tree.mjs';
 import * as ids from '../scripts/course-v2/lib/ids.mjs';
+import { ERROR_TAG as SCHEMA_ERROR_TAG } from '../scripts/course-v2/lib/schemas/common.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -736,6 +741,279 @@ test('speaking v2 evaluation: once per session, only with learner turns, only fo
   assert.equal((await run({ transcript: TRANSCRIPT.filter((m) => m.role === 'assistant') })).statusCode, 400);
   assert.equal(model.calls.length, 0);
   __setCourseV2DataForTests(null);
+});
+
+// ── 6b. multi-Teil speaking rounds (SCHEMA §8 `{ parts }`; review a1.1-u01 r1–r3 F01) ──
+//
+// A round is one conversation over two or three Teile. The partner runs every part (one ABLAUF
+// per part, both card sets, a hand-over line), and the grader scores each part on its own
+// rubric profile — a shortened Teil only on the criteria it elicits — and sums the totals.
+// The rule runs over every compiled speaking entry with `parts` of every registered course.
+
+/** Every registered course, compiled in memory by the real compiler: { level: banks }. */
+function registeredBanks() {
+  const tmp = mkdtempSync(join(tmpdir(), 'cv2-rounds-'));
+  const out = {};
+  try {
+    for (const level of levelsIn(CONTENT_ROOT, { exclude: [FIXTURES_ROOT] })) {
+      const r = compileLevel(level, { contentRoot: CONTENT_ROOT, exclude: [FIXTURES_ROOT], outRoot: join(tmp, 'out'), banksRoot: join(tmp, 'banks') });
+      const banks = r.outputs.find((o) => o.file.endsWith(`${level}.banks.json`));
+      if (banks) out[level] = JSON.parse(banks.text);
+    }
+  } finally {
+    rmSync(tmp, { recursive: true, force: true });
+  }
+  return out;
+}
+const REGISTERED = registeredBanks();
+const ROUNDS = Object.entries(REGISTERED).flatMap(([level, b]) => Object.entries(b.speaking || {})
+  .filter(([, e]) => Array.isArray(e.parts) && e.parts.length > 1)
+  .map(([key, entry]) => ({ level, key, entry })));
+
+/** sd1-sp1 as the rubric half of r1-F01 writes it: spelling and the number only at full length. */
+const SD1_SP1_FULL_ONLY = () => ({
+  ...P('sd1-sp1'),
+  criteria: P('sd1-sp1').criteria.map((c) => (c.id === 'vorstellen' ? c : { ...c, appliesIf: 'full' })),
+});
+
+const cardWord = (c) => (typeof c === 'string' ? c : (c && c.de) || '');
+
+test('rounds: the compiled banks carry each part with its own template, mode and profile, and a shortened Teil\'s length', () => {
+  const byKey = Object.fromEntries(ROUNDS.map((r) => [r.key, r.entry]));
+  if (byKey['a11-u01-s']) {
+    assert.deepEqual(byKey['a11-u01-s'].parts.map((p) => [p.template, p.profile, p.length || 'full']), [['sd1.sp1', 'sd1-sp1', 'reduced'], ['sd1.sp2', 'sd1-sp2', 'full']]);
+  }
+  if (byKey['a11-u04-s']) assert.deepEqual(byKey['a11-u04-s'].parts.map((p) => p.profile), ['sd1-sp2', 'sd1-sp3']);
+  for (const { key, entry } of ROUNDS) {
+    for (const p of entry.parts) {
+      assert.ok(p.template && p.mode && p.profile, `${key}: every part names its template, mode and profile`);
+      assert.ok(!('length' in p) || ['reduced', 'mini'].includes(p.length), `${key}: only a shortened Teil carries a length`);
+    }
+  }
+});
+
+test('rounds: normalizeSpeakingTask keeps every part (a one-Teil task is a round of one)', () => {
+  for (const { key, entry } of ROUNDS) {
+    const t = normalizeSpeakingTask(entry);
+    assert.equal(t.parts.length, entry.parts.length, key);
+    t.parts.forEach((p, i) => {
+      assert.equal(p.template, entry.parts[i].template, `${key} part ${i + 1}`);
+      assert.equal(p.profile, entry.parts[i].profile, `${key} part ${i + 1}`);
+      assert.equal(p.situationDe, (entry.parts[i].situationDe || '').trim(), `${key} part ${i + 1}: its own situation`);
+      assert.equal(p.instructionsDe, entry.parts[i].instructionsDe.trim(), `${key} part ${i + 1}: its own task line`);
+      assert.deepEqual(p.cards.learner, (entry.parts[i].cards?.learner || []).map(cardWord), `${key} part ${i + 1}: learner cards`);
+      assert.deepEqual(p.cards.partner, (entry.parts[i].cards?.partner || []).map(cardWord), `${key} part ${i + 1}: partner cards`);
+    });
+  }
+  const one = normalizeSpeakingTask({ mode: 'cards-ask', profile: 'sd1-sp2', instructionsDe: 'Fragen Sie.', cards: { learner: ['a'], partner: [{ de: 'b', imageRef: 'x' }, { imageRef: 'y' }] } });
+  assert.equal(one.parts.length, 1);
+  assert.equal(one.mode, 'cards-ask', 'the top level mirrors the first part');
+  assert.deepEqual(one.parts[0].cards.partner, ['b', '(Bildkarte)'], 'an object card keeps its word; a picture-only card is named as one');
+  assert.equal(one.parts[0].length, 'full');
+});
+
+test('rounds: the partner prompt has one ABLAUF per part, every card of both sides, and a hand-over between parts', () => {
+  assert.ok(ROUNDS.length > 0 || Object.keys(REGISTERED).length === 0, 'at least one round is compiled');
+  for (const { level, key, entry } of ROUNDS) {
+    const prompt = buildCoursePartnerPrompt({ level: level.toUpperCase(), task: entry });
+    assert.equal((prompt.match(/^ABLAUF/gm) || []).length, entry.parts.length, `${key}: one ABLAUF per part`);
+    assert.equal((prompt.match(/^ÜBERGANG:/gm) || []).length, entry.parts.length - 1, `${key}: a hand-over between parts`);
+    assert.match(prompt, /^ENDE:/m, `${key}: the last part closes the round`);
+    entry.parts.forEach((p) => {
+      for (const c of [...(p.cards?.learner || []), ...(p.cards?.partner || [])]) {
+        const w = cardWord(c);
+        if (w) assert.ok(prompt.includes(`„${w}“`), `${key}: card „${w}“ is in the prompt`);
+      }
+      if (p.situationDe) assert.ok(prompt.includes(p.situationDe.trim()), `${key}: every part's situation reaches the partner`);
+      assert.ok(prompt.includes(p.instructionsDe.trim()), `${key}: every part's task line reaches the partner`);
+    });
+  }
+});
+
+test('rounds: cards-ask runs round by round — the learner asks with its card, then the partner with its own', () => {
+  const p = buildCoursePartnerPrompt({
+    level: 'A1.1',
+    task: {
+      parts: [
+        { template: 'sd1.sp1', mode: 'monologue', profile: 'sd1-sp1', instructionsDe: 'Stellen Sie sich vor.', cards: { learner: ['Name?'] } },
+        { template: 'sd1.sp2', mode: 'cards-ask', profile: 'sd1-sp2', instructionsDe: 'Fragen und antworten Sie.', cards: { learner: ['Kurs – Land', 'Sprachen – Englisch'], partner: ['Kurs – Wohnort', 'Sprachen – Deutsch'] } },
+      ],
+      aiRole: { name: 'Gesprächsleitung (KI)', register: 'Sie', support: 'slow-wordbank' },
+    },
+  });
+  assert.match(p, /DIE ÜBUNG HAT 2 TEILE: Teil 1, Teil 2\./);
+  assert.match(p, /ÜBERGANG: Wenn Teil 1 fertig ist, sage „Danke! Jetzt Teil 2\.“/);
+  assert.match(p, /Runde 1: Dein Gegenüber stellt mit seiner Karte „Kurs – Land“ eine Frage\. Du antwortest [^\n]*Dann fragst du mit deiner Karte „Kurs – Wohnort“/);
+  assert.match(p, /Runde 2: Dein Gegenüber stellt mit seiner Karte „Sprachen – Englisch“ eine Frage\.[^\n]*„Sprachen – Deutsch“/);
+  assert.ok(p.indexOf('=== TEIL 1 ===') < p.indexOf('=== TEIL 2 ==='), 'the parts come in order');
+  const request = buildCoursePartnerPrompt({ level: 'A1.1', task: { mode: 'cards-request', cards: { learner: ['Tee'], partner: ['Fenster'] }, aiRole: { name: 'Nora' } } });
+  assert.match(request, /Runde 1: Dein Gegenüber formuliert mit seiner Karte „Tee“ eine Bitte\.[^\n]*„Fenster“/);
+  assert.match(request, /statt einer Bitte eine Informationsfrage/);
+  assert.match(request, /bedanke dich kurz/, 'a one-Teil task still closes itself');
+  const info = buildCoursePartnerPrompt({ level: 'A2.1', task: { mode: 'plan-together', partnerData: { kind: 'calendar', items: ['Mo 9–12 Kurs'] }, aiRole: { name: 'Sofia' } } });
+  assert.match(info, /DEINE INFORMATIONEN \(nur für dich[^\n]*Mo 9–12 Kurs/, 'the info-gap side reaches the partner, never the learner');
+});
+
+test('rounds: the grading plan covers every part on its own profile and scores nothing a shortened part does not elicit', () => {
+  const profileOf = (id) => P(id);
+  for (const { key, entry } of ROUNDS) {
+    const plans = speakingPartsPlan(normalizeSpeakingTask(entry), profileOf);
+    assert.equal(plans.length, entry.parts.length, key);
+    plans.forEach((pl, i) => {
+      assert.equal(pl.profileId, entry.parts[i].profile, `${key} part ${i + 1}: graded on its own profile`);
+      assert.ok(pl.plan && pl.plan.length > 0, `${key} part ${i + 1}: the profile resolves and has criteria`);
+      const profile = P(pl.profileId);
+      for (const c of pl.plan) {
+        const crit = profile.criteria.find((x) => x.id === c.id);
+        assert.ok(!(crit.appliesIf === 'full' && ['reduced', 'mini'].includes(entry.parts[i].length)), `${key} part ${i + 1}: ${c.id} is not elicited by a shortened Teil`);
+      }
+    });
+  }
+  // the rubric half of r1-F01: once sd1-sp1 marks spelling and the number as full-length only
+  const withRule = (id) => (id === 'sd1-sp1' ? SD1_SP1_FULL_ONLY() : P(id));
+  const reduced = speakingPartsPlan({ parts: [{ template: 'sd1.sp1', profile: 'sd1-sp1', length: 'reduced' }, { template: 'sd1.sp2', profile: 'sd1-sp2' }] }, withRule);
+  assert.deepEqual(reduced.map((p) => p.max), [1, 6], 'a reduced Sp1 is worth 1 (vorstellen), Sp2 its 6');
+  assert.deepEqual(reduced[0].plan.map((c) => c.id), ['vorstellen']);
+  const full = speakingPartsPlan({ parts: [{ template: 'sd1.sp1', profile: 'sd1-sp1' }, { template: 'sd1.sp2', profile: 'sd1-sp2' }] }, withRule);
+  assert.deepEqual(full.map((p) => p.max), [3, 6], 'at full length all three Sp1 criteria count');
+  assert.equal(scoredTarget(SD1_SP1_FULL_ONLY(), { length: 'mini' }), 1);
+  if (P('sd1-sp1').criteria.some((c) => c.appliesIf === 'full')) {
+    const u01 = ROUNDS.find((r) => r.key === 'a11-u01-s');
+    if (u01) assert.equal(speakingPartsPlan(normalizeSpeakingTask(u01.entry), profileOf)[0].max, 1, 'a11-u01-s: the reduced introduction is out of 1');
+  }
+});
+
+/** A model stub that answers per rubric profile (the parts are graded in parallel). */
+function perProfileModel(answers) {
+  const calls = [];
+  const fn = async (req) => {
+    calls.push(req);
+    const id = (/Bewertungsprofil "([^"]+)"/.exec(req.system) || [])[1];
+    return JSON.stringify(answers[id] || {});
+  };
+  fn.calls = calls;
+  return fn;
+}
+const answer = (criteria, feedback) => ({ criteria, flags: {}, leitpunkte: [], errors: [], strengths: [`${feedback} gut`], nextStep: `${feedback} üben`, feedback, feedbackEn: '' });
+
+test('rounds: a11-u01-s is graded part by part and summed — a flawless session is full marks, with the score per Teil', async () => {
+  const u01 = ROUNDS.find((r) => r.key === 'a11-u01-s');
+  if (!u01) return; // the unit is not compiled on this tree
+  __setCourseV2DataForTests({ banks: { 'a1.1': REGISTERED['a1.1'] }, rubrics: { ...RUBRICS, profiles: { ...RUBRICS.profiles, 'sd1-sp1': SD1_SP1_FULL_ONLY() } } });
+  const model = perProfileModel({
+    'sd1-sp1': answer({ vorstellen: 1 }, 'Teil-1'),
+    'sd1-sp2': answer({ frage: [2, 2], antwort: [1, 1] }, 'Teil-2'),
+  });
+  const { client, log } = fakeSupabase();
+  const transcript = [
+    { role: 'assistant', content: 'Guten Tag! Zuerst Teil 1: Bitte stellen Sie sich vor.' },
+    { role: 'user', content: 'Ich heiße Ana. Ich komme aus Brasilien. Ich wohne in Leipzig. Ich spreche Portugiesisch und ein bisschen Deutsch.' },
+    { role: 'assistant', content: 'Danke! Jetzt Teil 2. Bitte fragen Sie mit Ihrer Karte.' },
+    { role: 'user', content: 'Woher kommen Sie?' },
+  ];
+  const res = await evaluateSpeakingV2({
+    supabase: client, userId: 'u1', sessionToken: 'sp_r', sessionRow: { level: 'A1.1', evaluated: false },
+    courseTaskKey: 'a11-u01-s', transcript, headers: HEADERS, deps: { callModel: model },
+  });
+  assert.equal(res.statusCode, 200);
+  const b = bodyOf(res);
+  assert.equal(model.calls.length, 2, 'one grading call per part');
+  assert.deepEqual(model.calls.map((c) => (/Bewertungsprofil "([^"]+)"/.exec(c.system) || [])[1]).sort(), ['sd1-sp1', 'sd1-sp2']);
+  const sp1Call = model.calls.find((c) => c.system.includes('"sd1-sp1"'));
+  assert.ok(!/"buchstabieren"|"nummer"/.test(sp1Call.system), 'the reduced Sp1 never asks the model for spelling or a number');
+  assert.match(sp1Call.user, /BEWERTE NUR Teil 1/);
+  assert.match(model.calls.find((c) => c.system.includes('"sd1-sp2"')).user, /BEWERTE NUR Teil 2/);
+  assert.equal(b.total_score, 7);
+  assert.equal(b.max_score, 7, 'u01 is scored out of 1 + 6');
+  assert.deepEqual(b.parts.map((p) => [p.label, p.template, p.total_score, p.max_score]), [['Teil 1', 'sd1.sp1', 1, 1], ['Teil 2', 'sd1.sp2', 6, 6]]);
+  assert.equal(b.rubric.id, 'sd1-sp1+sd1-sp2');
+  assert.equal(b.passed, null);
+  assert.match(b.feedback, /^Teil 1: Teil-1 Teil 2: Teil-2$/);
+  assert.equal(log.inserts.find((i) => i.table === 'speaking_evaluations').payload.score, 100);
+  __setCourseV2DataForTests(null);
+});
+
+test('rounds: a11-u04-s grades its Sp3 part on sd1-sp3 (bitte/reaktion), never on the first part\'s profile', async () => {
+  const u04 = ROUNDS.find((r) => r.key === 'a11-u04-s');
+  if (!u04) return;
+  __setCourseV2DataForTests({ banks: { 'a1.1': REGISTERED['a1.1'] }, rubrics: RUBRICS });
+  const model = perProfileModel({
+    'sd1-sp2': answer({ frage: [2, 1], antwort: [1, 0.5] }, 'Sp2'),
+    'sd1-sp3': answer({ bitte: [2, 2], reaktion: [1, 1] }, 'Sp3'),
+  });
+  const { client } = fakeSupabase();
+  const res = await evaluateSpeakingV2({
+    supabase: client, userId: 'u1', sessionToken: 'sp_4', sessionRow: { level: 'A1.1', evaluated: false },
+    courseTaskKey: 'a11-u04-s', transcript: TRANSCRIPT, headers: HEADERS, deps: { callModel: model },
+  });
+  const b = bodyOf(res);
+  assert.equal(res.statusCode, 200);
+  assert.deepEqual(b.parts.map((p) => p.rubric.id), ['sd1-sp2', 'sd1-sp3']);
+  assert.deepEqual(b.parts[1].criteria.map((c) => c.id), ['bitte', 'reaktion']);
+  assert.equal(b.total_score, 4.5 + 6);
+  assert.equal(b.max_score, 12);
+  assert.deepEqual(b.criteria.map((c) => `${c.part}:${c.id}`), ['1:frage', '1:antwort', '2:bitte', '2:reaktion']);
+  __setCourseV2DataForTests(null);
+});
+
+test('rounds: one part without a usable model answer fails the evaluation; one missing profile refuses it', async () => {
+  const u01 = ROUNDS.find((r) => r.key === 'a11-u01-s');
+  if (!u01) return;
+  __setCourseV2DataForTests({ banks: { 'a1.1': REGISTERED['a1.1'] }, rubrics: RUBRICS });
+  const half = perProfileModel({ 'sd1-sp1': answer({ vorstellen: 1, buchstabieren: 0, nummer: 0 }, 'x') });
+  const { client, log } = fakeSupabase();
+  const run = (callModel) => evaluateSpeakingV2({
+    supabase: client, userId: 'u1', sessionToken: 'sp_f', sessionRow: { level: 'A1.1', evaluated: false },
+    courseTaskKey: 'a11-u01-s', transcript: TRANSCRIPT, headers: HEADERS, deps: { callModel },
+  });
+  assert.equal(bodyOf(await run(half)).evaluation_failed, true, 'never a silent 0 for the Sp2 half');
+  assert.equal(log.inserts.length, 0);
+  __setCourseV2DataForTests({ banks: { 'a1.1': REGISTERED['a1.1'] }, rubrics: { ...RUBRICS, profiles: { ...RUBRICS.profiles, 'sd1-sp2': undefined } } });
+  const refused = await run(half);
+  assert.equal(refused.statusCode, 503);
+  assert.equal(bodyOf(refused).profile, 'sd1-sp2');
+  __setCourseV2DataForTests(null);
+});
+
+test('the graders\' ErrorTag list is the schema checker\'s enum (SCHEMA §3.1), so a unit tag is always a grader tag', () => {
+  const enumTags = SCHEMA_ERROR_TAG.replace(/^enum\(|\)$/g, '').split('|');
+  assert.deepEqual([...ERROR_TAGS].sort(), [...enumTags].sort());
+});
+
+test('the sd1 Sprechen Teile 2/3 only flag case and nicht/kein errors at A1 (the A1.1 spine teaches them later)', () => {
+  for (const id of ['sd1-sp2', 'sd1-sp3']) {
+    assert.deepEqual(flaggedErrorTags(P(id), 'a1.1'), ['case-np', 'case-pp', 'negation'], id);
+    const system = buildWritingSystemPrompt(P(id), 'a1.1', criteriaPlan(P(id), {}));
+    assert.match(system, /FEHLERPOLITIK: Fehler der Typen case-np, case-pp, negation/);
+  }
+  assert.deepEqual(flaggedErrorTags(P('sd1-s2'), 'a1.2'), ['negation']);
+});
+
+test('ErrorTag verb-ending (Personalendung/Kongruenz) is a tag the graders accept', async () => {
+  assert.ok(ERROR_TAGS.includes('verb-ending'));
+  const system = buildWritingSystemPrompt(P('sd1-s2'), 'a1.1', criteriaPlan(P('sd1-s2'), {}));
+  assert.match(system, /verb-ending/);
+  const r = await gradeSubmission({
+    kind: 'speaking', profile: P('sd1-sp2'), task: { mode: 'cards-ask' }, level: 'a1.1', text: 'Du kommt aus Polen?', transcript: [{ role: 'user', content: 'Du kommt aus Polen?' }],
+    callModel: stubModel({ criteria: { frage: [2, 2], antwort: [1, 1] }, errors: [{ span: 'Du kommt', tag: 'verb-ending', hint: 'Prüfen Sie die Endung.' }], feedback: 'x' }),
+  });
+  assert.equal(r.result.errors[0].tag, 'verb-ending');
+});
+
+test('rounds: combinePartResults sums the parts and keeps each Teil whole', () => {
+  const r = (id, total, max, extra = {}) => ({
+    rubric: { id, lane: 'sd1', max, profileMax: max, examMax: max, splitVerified: true, calibration: { status: 'pending', rangeBands: 1 }, source: null, spelling: 'not-scored' },
+    criteria: [{ scored: true, id: 'c', label: 'C', max, points: total, values: [total] }], rulesApplied: [], total_score: total, max_score: max,
+    feedback: `${id} fb`, feedbackEn: '', strengths: [`${id} s1`, `${id} s2`], nextStep: `${id} next`, errors: [{ span: id }], corrections: [], signals: {}, attempt: 1, model: 'm', decidedBy: 'model', ...extra,
+  });
+  const c = combinePartResults([r('a', 1, 1), r('b', 2, 6)], [{ template: 'sd1.sp1' }, { template: 'sd1.sp2' }]);
+  assert.equal(c.total_score, 3);
+  assert.equal(c.max_score, 7);
+  assert.deepEqual(c.strengths, ['a s1', 'b s1'], 'one strength from each Teil first');
+  assert.equal(c.nextStep, 'b next', 'the next step of the weakest Teil');
+  assert.deepEqual(c.parts.map((p) => p.label), ['Teil 1', 'Teil 2']);
+  assert.deepEqual(speakingPartLabels([{ template: 'sd1.sp2' }, { template: 'sd1.sp3' }]), ['Teil 2', 'Teil 3'], 'the exam Teil, as the learner sees it');
+  assert.deepEqual(speakingPartLabels([{ template: 'x.sp1' }, { template: 'y.sp1' }]), ['Teil 1', 'Teil 2'], 'unique labels');
 });
 
 // ── 7. wiring ──────────────────────────────────────────────────────────────────

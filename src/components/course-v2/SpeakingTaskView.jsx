@@ -20,8 +20,15 @@ function PartMaterial({ part, t, lang, chosen, setChosen }) {
       <div className="flex flex-wrap items-center gap-2">
         {part.template && <Chip tone="label">{teilLabel(part.template)}</Chip>}
       </div>
-      {part.situationDe && <p className="text-[0.9375rem] leading-relaxed text-ink" lang="de">{part.situationDe}</p>}
-      {part.instructionsDe && <p className="text-[0.9375rem] font-bold leading-relaxed text-ink" lang="de">{part.instructionsDe}</p>}
+      {part.situationDe && (
+        <div>
+          <p className="text-[0.9375rem] leading-relaxed text-ink" lang="de">{part.situationDe}</p>
+          {/* the optional English twin (SpeakingPart.situationEn; review a1.1-u01 r1 F08), like every other twin in English chrome */}
+          {part.situationEn && lang !== 'de' && <p className="mt-1 text-[0.875rem] leading-relaxed text-graphite" lang="en">{part.situationEn}</p>}
+        </div>
+      )}
+      {!part.situationDe && part.situationEn && lang !== 'de' && <p className="text-[0.875rem] leading-relaxed text-graphite" lang="en">{part.situationEn}</p>}
+      {part.instructionsDe &&<p className="text-[0.9375rem] font-bold leading-relaxed text-ink" lang="de">{part.instructionsDe}</p>}
 
       {learnerCards.length > 0 && (
         <div>

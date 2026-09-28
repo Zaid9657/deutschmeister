@@ -5,8 +5,11 @@ import { define, obj, map, arr, gen, union, ifHas } from '../schema.mjs';
 define('LText', { de: 'de', en: 'en', 'tr?': 'str', 'ar?': 'str' });
 define('EnText', { en: 'en', 'tr?': 'str', 'ar?': 'str' });
 
+// SCHEMA §3.1. 'verb-ending' (Personalendung, Kongruenz, Vokalwechsel: a1.1 u01 r1-F15 … u03 r3-F01) and
+// 'negation' (nicht oder kein, and the place of nicht: a1.1 u06 r1-F01 … r3-F06, u08 r1-F12 … r3-F09) added
+// 2026-09-28. rubric.mjs imports this constant, so the unit and the rubric enums cannot drift.
 export const ERROR_TAG =
-  'enum(v2-inv|verb-final|satzklammer|case-np|case-pp|gender-article|adj-ending|perfekt-aux-participle|connector-position|n-dekl|reflexive|register|spelling-meaning)';
+  'enum(v2-inv|verb-final|satzklammer|case-np|case-pp|gender-article|adj-ending|perfekt-aux-participle|connector-position|n-dekl|reflexive|register|spelling-meaning|verb-ending|negation)';
 define('ErrorTag', ERROR_TAG);
 
 // §3.1 Item
@@ -132,6 +135,8 @@ define('MicroOutput', obj({
   'words?': '[int, int]',
   targets: '[ref(spine)]',
   register: 'enum(du|Sie)',
+  // one model answer, shown after the attempt; it uses every target and only known words (a1.1-u05 r2 F05)
+  'modelDe?': 'de',
 }));
 
 // §8 ExamBlock
@@ -161,6 +166,8 @@ const speakingPart = {
   'prepAtHome?': 'bool',
   instructionsDe: 'de',
   'situationDe?': 'de',
+  // the English twin of situationDe, shown under it at A1.1–A1.2 (a1.1-u01 r1 F08)
+  'situationEn?': 'en',
   'cards?': { learner: '[Card]*', partner: '[Card]*' },
   'photos?': { learner: 'ref(asset)', 'partner?': 'ref(asset)' },
   'slides?': '[de]{5}',
@@ -172,7 +179,8 @@ const speakingPart = {
   'keyPoints?': '[de]*',
   'seconds?': '[int, int]',
   'turns?': '[int, int]',
-  moves: '[enum(vorschlagen|reagieren|widersprechen|einigen|verteilen)]*',
+  // nachfragen: ask for a repetition, a spelling or a slower turn (a1.1-u02 r1 F19, sd1.sp1)
+  moves: '[enum(vorschlagen|reagieren|widersprechen|einigen|verteilen|nachfragen)]*',
   'planningRound?': { minutes: 'int', moves: '[str]' },
 };
 const refinePart = (p, emit) => {
@@ -216,7 +224,8 @@ define('WritingTask', obj({
   leitpunkte: arr({ id: 'str', de: 'de', cues: '[str]' }, '*'),
   'choose?': { from: 'int', pick: 'int' },
   'form?': {
-    fields: arr({ id: 'str', labelDe: 'de', answer: 'str', accepted: '[str]', 'exact?': 'enum(number|name)' }),
+    // acceptedWhy: as on an Item, for every non-obvious accepted form (ITM-10; a1.1-u02 r2 F02)
+    fields: arr({ id: 'str', labelDe: 'de', answer: 'str', accepted: '[str]', 'acceptedWhy?': map('str', 'de'), 'exact?': 'enum(number|name)' }),
     documents: '[ref(asset)]*',
   },
   'wordBand?': '[int, int]',

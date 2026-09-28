@@ -6,9 +6,9 @@
 // (numbers and names compared exactly, digit grouping folded). No screen builds check options
 // of its own (the rule tests/course-player.test.mjs GRADING_SITES states for the legacy course).
 //
-// This adapter only adds what a screen needs on top: `reason: 'case'` for the one-retry notice
-// („achten Sie auf Groß- und Kleinschreibung"), and `notes` graded like a dictation (heard, so
-// an unhearable separator never decides it).
+// This adapter only adds what a screen needs on top: the retry `reason` — 'case' („achten Sie
+// auf Groß- und Kleinschreibung"), 'number-only' / 'word-only' („Schreiben Sie nur die Zahl.")
+// — and `notes` graded like a dictation (heard, so an unhearable separator never decides it).
 
 import { checkItem, errorTagFor as libErrorTag, RESULT } from '../../lib/course-v2/checkItem.js';
 
@@ -24,6 +24,8 @@ export function gradeAnswer(item, answer) {
   const graded = item?.type === 'notes' && !item.exact ? { ...item, kind: 'dictation' } : item;
   const out = checkItem(graded, answer);
   const expected = out.expected || acceptedOf(item)[0] || '';
+  // the checker names what a retry should point at ('case', 'number-only', 'word-only')
+  if (out.result === RESULT.TYPO && out.reason) return { result: out.result, expected, reason: out.reason };
   if (out.result === RESULT.TYPO && fold(answer).toLowerCase() === fold(expected).toLowerCase()) {
     return { result: out.result, expected, reason: 'case' };
   }
