@@ -48,9 +48,9 @@
 //     Personen, Leute, Uhr …), the label's words, the words of the field's accepted forms, the
 //     situation sentence that states the same fact, a negated alternative of the label („nicht
 //     in Leipzig"), a postcode and city after a street — and never an un-negated alternative
-//     („in Leipzig online" stays WRONG). Case is free on a form, and the words of a street
-//     key are required („21" alone is no address). (a1.1-u02 r2/r3 F02/F01, u05 r2/r3 F01,
-//     u09 r2/r3 F03.)
+//     („in Leipzig online" stays WRONG), the values of the form's other fields (`otherAccepted`)
+//     and the Anrede before a name. Case is free on a form, and the words of a street key are
+//     required („21" alone is no address). (a1.1-u02 r2/r3 F02/F01, u05 r2/r3 F01, u09 r2/r3 F03.)
 //
 // The error tag of a miss prefers the item's own SCHEMA tag (`errorTags[0]`,
 // then `errorTag`), which feeds the repair cards (BLUEPRINT §6.2); only an
@@ -366,8 +366,18 @@ function gapFrameRule(item, input, out) {
 
 // ── form_fill (sd1.s1, ta2.s1) ──────────────────────────────────────────────────
 
-/** Frame words of a form entry: never the information itself (a1.1-u05 r2/r3 F01). */
-const FORM_FRAME = new Set(['nr', 'fuer', 'jahre', 'jahr', 'alt', 'person', 'personen', 'leute', 'uhr', 'um', 'am', 'im', 'in', 'der', 'die', 'das', 'den', 'dem', 'des']);
+/**
+ * Frame words of a form entry: never the information itself (a1.1-u05 r2/r3 F01) — numbering and
+ * units, prepositions and articles, and the time of day around a time or a day (a1.1-u09 r2/r3 F03:
+ * „um 19.30 Uhr abends", „Freitag, am Abend"). A time-of-day word the label offers as an
+ * alternative („vormittags oder nachmittags?") is the information there, and never licensed.
+ */
+const FORM_FRAME = new Set([
+  'nr', 'fuer', 'jahre', 'jahr', 'alt', 'person', 'personen', 'leute', 'uhr', 'um', 'am', 'im', 'in', 'der', 'die', 'das', 'den', 'dem', 'des',
+  'morgens', 'vormittags', 'mittags', 'nachmittags', 'abends', 'nachts', 'morgen', 'vormittag', 'mittag', 'nachmittag', 'abend', 'nacht',
+]);
+/** The Anrede before a personal name („Frau Olena Kovalenko"). */
+const NAME_FRAME = new Set(['frau', 'herr', 'herrn']);
 const NEGATION = new Set(['nicht', 'kein', 'keine']);
 const STREET_RE = /(strasse|str|weg|platz|gasse|allee|ring|damm|ufer)\b/;
 
@@ -406,15 +416,21 @@ function formContext(item) {
     const toks = formTokens(sentence).map(formTok);
     if (toks.some((t) => keyTokens.has(t))) toks.forEach(add);
   }
+  // the values of the form's other fields („am Freitag um 19.30 Uhr" in the day field), digits included
+  const otherValues = new Set();
+  for (const a of Array.isArray(item.otherAccepted) ? item.otherAccepted : []) {
+    for (const t of formTokens(a).map(formTok)) if (t && !others.has(t) && !keyTokens.has(t)) otherValues.add(t);
+  }
+  if (item.exact === 'name' || /\bname\b/i.test(String(item.labelDe || ''))) NAME_FRAME.forEach(add);
   const street = accepted.some((a) => STREET_RE.test(formTok(a)) && /\d/.test(a));
   const cities = new Set(street ? formTokens(item.situationDe).filter((t) => /^\p{Lu}/u.test(t)).map(formTok).filter((t) => !others.has(t)) : []);
-  return { licensed, others, street, cities };
+  return { licensed, others, street, cities, otherValues };
 }
 
 /** Which tokens may stand OUTSIDE the value: frame, licensed words, negated alternatives, a street's postcode and city. */
 function licensedMask(tokens, ctx) {
   const t = tokens.map(formTok);
-  const mask = t.map((w) => FORM_FRAME.has(w) || ctx.licensed.has(w) || (ctx.street && (/^\d{5}$/.test(w) || ctx.cities.has(w))));
+  const mask = t.map((w) => FORM_FRAME.has(w) || ctx.licensed.has(w) || ctx.otherValues.has(w) || (ctx.street && (/^\d{5}$/.test(w) || ctx.cities.has(w))));
   // „nicht in Leipzig": a negation and the other alternative it negates
   t.forEach((w, i) => {
     if (!NEGATION.has(w)) return;
@@ -449,9 +465,10 @@ function splitCompounds(tokens, item, ctx) {
   const keys = acceptedOf(item).map(formTok).filter((k) => k.length >= 3 && !k.includes(' '));
   return tokens.flatMap((tok) => {
     const w = formTok(tok);
+    const part = (x) => ctx.licensed.has(x) || FORM_FRAME.has(x);
     for (const k of keys) {
-      if (w !== k && w.startsWith(k) && ctx.licensed.has(w.slice(k.length))) return [tok.slice(0, k.length), tok.slice(k.length)];
-      if (w !== k && w.endsWith(k) && ctx.licensed.has(w.slice(0, w.length - k.length))) return [tok.slice(0, tok.length - k.length), tok.slice(tok.length - k.length)];
+      if (w !== k && w.startsWith(k) && part(w.slice(k.length))) return [tok.slice(0, k.length), tok.slice(k.length)];
+      if (w !== k && w.endsWith(k) && part(w.slice(0, w.length - k.length))) return [tok.slice(0, tok.length - k.length), tok.slice(tok.length - k.length)];
     }
     return [tok];
   });

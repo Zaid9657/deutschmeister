@@ -214,14 +214,22 @@ export const RULES = {
       };
     },
   },
-  // Forms (sd1-s1): a field whose key is a number, time or date counts only when exact.
+  // Forms (sd1-s1): a field whose key is a number, time or date counts only when exact — exact
+  // against ANY accepted form of the field (`accepted`, a1.1-u09 r1 F04: „7.30 Uhr", „um 19.30 Uhr"
+  // are accepted forms of one time), and exact in its DIGITS: the words around them are the
+  // item checker's business, never a reason for 0 here.
   'form-number-exact': {
     kind: 'zero',
     fn(ctx) {
       if (!Array.isArray(ctx.fields)) return null;
       const norm = (s) => String(s ?? '').replace(/\s+/g, '').toLowerCase();
+      const digits = (s) => String(s ?? '').replace(/\D+/g, '');
+      const exact = (f) => {
+        const forms = [f.expected, ...(Array.isArray(f.accepted) ? f.accepted : [])].filter((a) => /\d/.test(String(a ?? '')));
+        return forms.some((a) => norm(a) === norm(f.given) || (digits(f.given) !== '' && digits(a) === digits(f.given)));
+      };
       const wrong = ctx.fields
-        .filter((f) => /\d/.test(String(f.expected ?? '')) && norm(f.given) !== norm(f.expected))
+        .filter((f) => /\d/.test(String(f.expected ?? '')) && !exact(f))
         .map((f) => f.criterion);
       if (!wrong.length) return null;
       return {

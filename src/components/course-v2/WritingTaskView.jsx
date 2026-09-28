@@ -39,8 +39,9 @@ function FormTask({ task, stepId, onDone, onAttempt }) {
     const out = {};
     let correct = 0;
     for (const f of fields) {
-      // labelDe and the task's situation feed the form rule (checkItem: value + the field's frame)
-      const item = { id: `${task.bankKey}-${f.id}`, type: 'form_fill', topic: 'schreiben', answer: f.answer, accepted: f.accepted?.length ? f.accepted : [f.answer], exact: f.exact, labelDe: f.labelDe, situationDe: task.situationDe };
+      // labelDe, the task's situation and the other fields' values feed the form rule (checkItem: value + the field's frame)
+      const otherAccepted = fields.filter((g) => g.id !== f.id).flatMap((g) => [g.answer, ...(g.accepted || [])]);
+      const item = { id: `${task.bankKey}-${f.id}`, type: 'form_fill', topic: 'schreiben', answer: f.answer, accepted: f.accepted?.length ? f.accepted : [f.answer], exact: f.exact, labelDe: f.labelDe, situationDe: task.situationDe, otherAccepted };
       const r = gradeAnswer(item, values[f.id] || '');
       out[f.id] = r;
       if (r.result !== RESULT.WRONG) correct += 1;
