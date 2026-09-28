@@ -93,11 +93,33 @@ function allocationIndex(ctx) {
   return m;
 }
 
+/** The unit position of a doc (a lane pack: its unit's). */
+const here0 = (doc, unitData) => unitPosition(unitData?.id ?? doc.data?.unit ?? doc.data?.id);
+
+const sepCache = new WeakMap();
+/** Separable VERB entries allocated after `here`: [{ e, prefix, finite: Set }] (the split-form check). */
+function laterSeparables(ctx, here) {
+  if (here === null) return [];
+  if (!sepCache.has(ctx)) {
+    const all = [];
+    for (const e of allLexicon(ctx)) {
+      if (e?.pos !== 'VERB' || !e.separable) continue;
+      const { forms, prefix } = entryForms(e);
+      if (!prefix) continue;
+      const finite = new Set([...forms].filter((f) => !f.startsWith(prefix) && !f.startsWith('ge') && f.length > 2));
+      all.push({ e, prefix, finite, at: unitPosition(e.unit) });
+    }
+    sepCache.set(ctx, all);
+  }
+  return sepCache.get(ctx).filter((v) => v.at !== null && v.at > here);
+}
+
 const SURFACE_LABEL = {
   canDo: 'the can-do title', stepTitle: 'a step title', endLine: 'an endLine', prompt: 'a prompt', option: 'an option',
   explanation: 'an explanation', instructions: 'an instruction', situation: 'a situation', leitpunkt: 'a Leitpunkt', checklist: 'a checklist line',
   strategyCard: 'a strategy card', recap: 'the recap line', folgeTitle: 'the Folge title', lernziel: 'a Lernziele line',
   openingLine: 'the AI partner\'s opening line', rmFunction: 'a Redemittel label', ruleCard: 'a rule card',
+  hint: 'a hint', inputTitle: 'an input title', ausspracheFocus: 'the Aussprache focus', blockTitle: 'a Wortschatz block title', fokus: 'a Fokus card',
 };
 
 /**
@@ -149,6 +171,24 @@ export function run({ ctx, docs }) {
       if (c.share + 1e-9 < need) {
         const severity = state.complete && t.kind !== 'story' ? 'blocker' : 'advisory';
         findings.push(finding(severity, doc, t.path, `known-token coverage ${pct(c.share)} (need ≥ ${pct(need)}); unknown: ${list([...new Set(c.unknown)], 12)}${state.complete ? '' : ` — advisory until the cumulative lexicon exists (${state.why})`}`, t.step?.id || t.block?.id || null));
+      } else if (state.complete && (t.kind === 'input' || t.kind === 'folge') && c.unknown.length) {
+        // a word no lexicon of any level allocates, unglossed, even where the text passes its threshold
+        // (a1.1-u09 r3 F05: „Beides ist höflich …" in the Folge) — ADVISORY
+        const nowhere = [...new Set(c.unknown)].filter((w) => !allocationIndex(ctx).has(w.toLowerCase()));
+        if (nowhere.length) findings.push(finding('advisory', doc, t.path, `${list(nowhere.map((w) => `„${w}"`), 6)}: no lexicon of any level allocates it and nothing glosses it — gloss it, or ask the lexicon owner to allocate it (the text passes its coverage threshold)`, t.step?.id || null));
+      }
+      // a separable verb in split form („Olena macht auch mit.") that the lexicon allocates to a later unit:
+      // its finite stem and its particle are each known, the verb is not (a1.1-u12 r1 F15 / r2 F11) — ADVISORY
+      if (t.kind === 'input' || t.kind === 'folge' || t.kind === 'story') {
+        for (const v of laterSeparables(ctx, here0(doc, unitData))) {
+          for (const sent of String(t.de).split(/(?<=[.!?])\s+|\n/)) {
+            const toks = readTokens(sent).map((x) => x.lower);
+            if (toks[toks.length - 1] === v.prefix && toks.slice(0, -1).some((w) => v.finite.has(w))) {
+              findings.push(finding('advisory', doc, t.path, `„${sent.trim().slice(0, 60)}" uses ${v.e.lemma} (${v.e.id}: ${v.e.unit}) in split form before its unit — the stem and the particle are known, the verb is not; gloss it or reword`, v.e.id));
+              break;
+            }
+          }
+        }
       }
     }
     // the surface walk: prompts, options, explanations, instructions, situations, Leitpunkte, checklist,

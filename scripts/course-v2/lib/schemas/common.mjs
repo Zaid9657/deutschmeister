@@ -21,6 +21,8 @@ define('Item', {
   promptDe: 'de',
   'promptEn?': 'en',
   'options?': '[str]{2..3}',
+  // sentence_building: the tiles ARE the cue; error_correction: the constituents of the corrected sentence,
+  // never shown, from which the order rails compute every order German allows (SCHEMA §3.1; a1.1-u07 r2/r3 F01)
   'tiles?': '[str]{2..8}',
   'pairs?': '[[str, str]]{3..6}',
   'audioLineRef?': 'ref(line)',
@@ -217,7 +219,11 @@ define('WritingTask', obj({
   examKey: 'str',
   profile: 'ref(rubric)',
   register: 'enum(informell|halbformell|formell)',
-  address: 'enum(du|Sie)',
+  // ihr: a text to a group („Hallo zusammen", ihr/euch; a1.1-u11 r1 F11)
+  address: 'enum(du|Sie|ihr)',
+  // the text type the learner writes (tt.post, tt.email-halbformell …): the editor's word band (text-types
+  // `writing`) and ALL-02's spec.textTypes check read it (a1.1-u11 r1 F15)
+  'textType?': 'ref(texttype)',
   title: 'de',
   situationDe: 'de',
   taskDe: 'de',

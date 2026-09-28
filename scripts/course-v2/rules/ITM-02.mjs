@@ -19,7 +19,6 @@ import { walkItems } from '../lib-validate/walk.mjs';
 import { norm, tokens } from '../lib-validate/text.mjs';
 import { expectedOptions, arr, isObj, blocker, advisory, ratchet } from '../lib-validate/helpers.mjs';
 import { FUNCTION_WORDS } from '../lib-validate/text.mjs';
-import { NUMBER_WORDS } from '../lib-validate/core-lexicon.mjs';
 
 export const id = 'ITM-02';
 export const title = 'Choice items: option count, exactly one key, distractors in the key\'s form class';
@@ -94,7 +93,7 @@ export function run({ docs }) {
   const findings = [];
   let n = 0;
   for (const doc of docs) {
-    for (const { item, path, where } of walkItems(doc)) {
+    for (const { item, path, where, step } of walkItems(doc)) {
       if (!isObj(item)) continue;
       // the baseline solver reads every 3-option choice item, exam items included
       if (arr(item.options).length === 3 && (where === 'exam' || expectedOptions(item.type) === 3)) {
@@ -103,6 +102,17 @@ export function run({ docs }) {
           const proof = where === 'proof' || item.role === 'proof';
           const msg = `a reader without German reaches the key „${item.answer}": ${hits.map((h) => h.why).join('; ')} — make a distractor share the surface, or the key differ from it`;
           findings.push(proof ? ratchet(doc, `${path}.options`, `proof item: ${msg}`, item.id) : advisory(doc, `${path}.options`, msg, item.id));
+        }
+      }
+      // an input item's distractors come from the text: a distractor noun the input never has is excluded
+      // without reading (a1.1-u12 r2 F05) — ADVISORY
+      if (where === 'input' && step?.input && arr(item.options).length >= 2) {
+        const inputWords = new Set(tokens([arr(step.input.lines).map((l) => l?.de).join(' '), step.input.text?.de || ''].join(' ')).map((t) => t.lower));
+        for (const o of arr(item.options)) {
+          if (norm(o) === norm(item.answer)) continue;
+          const nouns = tokens(o).filter((t, i) => i > 0 && /^\p{Lu}/u.test(t.text) && !FUNCTION_WORDS.has(t.lower));
+          const absent = nouns.filter((t) => !inputWords.has(t.lower) && ![...inputWords].some((w) => w.length > 4 && (w.startsWith(t.lower.slice(0, -1)) || t.lower.startsWith(w.slice(0, -1)))));
+          if (nouns.length && absent.length === nouns.length) findings.push(advisory(doc, `${path}.options`, `distractor „${o}": ${absent.map((t) => `„${t.text}"`).join(', ')} never occurs in the step's input — a reader rules it out without listening`, item.id));
         }
       }
       if (where === 'exam' || item.role === 'exam') continue;

@@ -16,6 +16,7 @@ import {
 import { localStepDone, localTestOut, localUnitState, localUnitStatus } from '../../lib/course-v2/localState.js';
 import { loadEarlierItems, loadManifest, loadPlayableUnit, loadRuleCards } from '../../lib/course-v2/loaders.js';
 import ActionBar from './ActionBar.jsx';
+import StoryCliffhanger from '../../components/course-v2/StoryCliffhanger.jsx';
 import { useV2Strings } from '../../components/course-v2/strings.js';
 import { StartViewSlot, StepViewSlot, KIND_LABEL_DE, hasStartRenderer } from './rendererSlots.jsx';
 
@@ -198,6 +199,9 @@ export function UnitPlayer({ level, unit, manifest, user }) {
   const [stepIndex, setStepIndex] = useState(0);
   const [earlierItems, setEarlierItems] = useState([]);
   const [checkResult, setCheckResult] = useState(null);
+  // { [microOutputId]: sent } of this visit (StepView reports it with the step): a Check proof by
+  // micro-output ticks on the learner's own output (SCHEMA §8 Check.proofs[].microOutput)
+  const [microSent, setMicroSent] = useState({});
   const [testOutNote, setTestOutNote] = useState(null);
   const [sessionRuns, setSessionRuns] = useState(() => new Map()); // stepId → runs finished in this visit
   const pending = useRef(new Map()); // stepId → attempts not yet written
@@ -307,6 +311,7 @@ export function UnitPlayer({ level, unit, manifest, user }) {
     if (step.kind === 'check' && result) {
       setCheckResult({ correct: Number(result.correct) || 0, total: Number(result.total) || 0, proofs: result.proofs || null });
     }
+    if (result && result.microOutputs && typeof result.microOutputs === 'object') setMicroSent((m) => ({ ...m, ...result.microOutputs }));
     setSessionRuns((m) => new Map(m).set(step.id, (m.get(step.id) || 0) + 1));
     const done = new Set(finished);
     done.add(step.id);
@@ -386,8 +391,9 @@ export function UnitPlayer({ level, unit, manifest, user }) {
       course: manifest || null,
       earlierItems: checkPlan ? (checkPlan.items || []).filter((it) => earlierIds.has(it.id)) : null,
       aufgaben,
+      microOutputs: microOutputsSent(unit, microSent, finished),
     };
-  }, [steps, unit.steps, unit.ruleCards, manifest, finished]);
+  }, [steps, unit, manifest, finished, microSent]);
 
   const doneCount = steps.filter((s) => finished.has(s.id)).length;
   const progress = steps.length ? doneCount / steps.length : 0;
@@ -472,6 +478,7 @@ export function UnitPlayer({ level, unit, manifest, user }) {
   const proven = (i) => {
     const rule = proofRules.find((p) => p && p.canDo === canDoIds[i]);
     if (rule && rule.aufgabe) return (unit.steps || []).some((s) => s.kind === rule.aufgabe && finished.has(s.id));
+    if (rule && rule.microOutput) return Boolean(microOutputsSent(unit, microSent, finished)[rule.microOutput]);
     if (rule && checkResult && checkResult.proofs && rule.canDo in checkResult.proofs) return Boolean(checkResult.proofs[rule.canDo]);
     return complete;
   };
@@ -557,7 +564,7 @@ export function UnitPlayer({ level, unit, manifest, user }) {
 
         {unit.story && unit.story.cliffhanger && (
           <Card tone="wash" className="p-4">
-            <p className="text-sm italic text-ink">{unit.story.cliffhanger}</p>
+            <StoryCliffhanger story={unit.story} idPrefix={`${unitId}-recap-story`} className="text-sm italic text-ink" />
           </Card>
         )}
 
@@ -570,6 +577,19 @@ export function UnitPlayer({ level, unit, manifest, user }) {
       </div>
     </Shell>
   );
+}
+
+/**
+ * Which of the unit's micro-outputs the learner has sent: this visit's report (StepView), else —
+ * for a step finished in an earlier visit — the step being finished.
+ */
+function microOutputsSent(unit, sent, finished) {
+  const out = {};
+  for (const s of (unit && unit.steps) || []) {
+    const id = s && s.microOutput && s.microOutput.id;
+    if (id) out[id] = id in sent ? Boolean(sent[id]) : finished.has(s.id);
+  }
+  return out;
 }
 
 export default function UnitPlayerPage() {

@@ -144,6 +144,14 @@ export default function MicroOutputView({ mo, level, onDone }) {
         </div>
       )}
 
+      {/* MicroOutput.modelDe (SCHEMA §8, 2026-09-28): one model answer, only after the learner's own attempt */}
+      {mo.modelDe && (results.length > 0 || spokenResult) && (
+        <details className="mt-4 rounded-clay border border-rule bg-white p-4">
+          <summary className={`cursor-pointer ${LABEL}`}>{t('mo.model')}</summary>
+          <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink" lang="de">{mo.modelDe}</p>
+        </details>
+      )}
+
       <div className="mt-6 flex flex-wrap items-center justify-end gap-3">
         {!(results.length || spokenResult) && (
           <button

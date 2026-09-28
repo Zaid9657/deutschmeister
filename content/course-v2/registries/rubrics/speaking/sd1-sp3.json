@@ -8,7 +8,7 @@
     { "id": "bitte", "label": "Zur Bildkarte eine Bitte formulieren", "per": "turn", "levels": [2, 1, 0] },
     { "id": "reaktion", "label": "Auf eine Bitte reagieren", "per": "turn", "levels": [1, 0.5, 0] }
   ],
-  "errorPolicy": { "a1": { "case-np": "flag", "case-pp": "flag", "negation": "flag" } },
+  "errorPolicy": { "a1": { "case-np": "flag", "case-pp": "flag", "verb-ending": "flag", "negation": "flag" } },
   "zeroRules": [],
   "capRules": [],
   "spelling": "not-scored",

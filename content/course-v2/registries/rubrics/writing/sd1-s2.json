@@ -8,7 +8,7 @@
     { "id": "lp", "label": "Leitpunkt inhaltlich erfüllt und verständlich", "per": "leitpunkt", "levels": [3, 1.5, 0] },
     { "id": "kg", "label": "Form passt zur Textsorte (Anrede, Gruß)", "per": "task", "levels": [1, 0.5, 0] }
   ],
-  "errorPolicy": { "a1": { "negation": "flag" } },
+  "errorPolicy": { "a1": { "verb-ending": "flag", "negation": "flag" } },
   "zeroRules": [],
   "capRules": [],
   "spelling": "only-if-meaning-suffers",

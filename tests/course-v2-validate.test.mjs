@@ -559,12 +559,15 @@ describe('SCHEMA §15.6 on the worked example (--stage T)', () => {
     const f = exFixed(null, { verified: false });
     const fixed = await runRules({ ctx: f.ctx, docs: f.docs, levels: f.levels, mode: 'file', label: 'test', notes: [] }, { rules: RULES, stage: 'T' });
     assert.deepEqual(fixed.results.filter((r) => r.status === 'fail').map((r) => r.id), ['CON-06']);
-    const pass = ['REF-01', 'ID-01', 'GRM-01', 'GRM-02', 'LEX-05', 'TXT-02', 'TXT-03', 'TXT-04', 'ITM-02', 'ITM-06', 'ITM-07', 'ITM-09', 'ITM-10', 'ITM-11', 'EXM-01', 'EXM-11'];
+    const pass = ['REF-01', 'ID-01', 'GRM-01', 'GRM-02', 'TXT-02', 'TXT-03', 'TXT-04', 'ITM-06', 'ITM-07', 'ITM-10', 'ITM-11', 'EXM-01', 'EXM-11'];
     for (const id of pass) assert.equal(rep.results.find((r) => r.id === id)?.status, 'pass', `${id} should pass`);
     // rail extensions of 2026-09-27 that measure the worked example as advisories only (RAILS §7 item 13):
     // ITM-03 non-exam key positions (every MC keyed at options[0]), EXM-03 two-letter cues („am", „um"),
     // EXM-04 the ga2.sp1 Thema and a three-word card, ITM-13 dictation lengths
-    for (const id of ['ITM-03', 'EXM-03', 'EXM-04', 'ITM-13']) {
+    // and the rails of 2026-09-28 (RAILS §3.1c): LEX-05's content advisories (lx.rueckruf shown once, the
+    // articlePlural sources the LS1 input never shows), ITM-02's baseline solver, ITM-12's untagged reserve
+    // items (ratchet), ITM-09's Ja/Nein-Frage prompt, TXT-01, CON-01
+    for (const id of ['ITM-03', 'EXM-03', 'EXM-04', 'ITM-13', 'LEX-05', 'ITM-02', 'ITM-09', 'ITM-12', 'TXT-01', 'CON-01']) {
       const r = rep.results.find((x) => x.id === id);
       assert.ok(['pass', 'warn'].includes(r?.status), `${id}: ${r?.status}`);
       assert.equal(r.findings.filter((f) => f.severity === 'blocker').length, 0, `${id} has no blocker on the worked example`);
@@ -1080,7 +1083,8 @@ describe('detector engine: review fixtures (a1.1 r1 F24 / r2 F11, a1.2 r1 F27, a
       assert.equal(hits('det.perfekt-trennbar-untrennbar', s, lex), 0, s);
     }
     assert.ok(hits('det.zustandspassiv', 'Der Antrag ist eingereicht.', lex), 'a real Zustandspassiv still hits');
-    assert.deepEqual(LEXICALISED_STATES, ['enthalten', 'geöffnet', 'geschlossen', 'verheiratet', 'geschieden', 'verletzt', 'gebrochen']);
+    // „verabredet" joined on 2026-09-28 (a1.1-u08 r2 F09 / r3 F10: „Wir sind am Samstag verabredet.")
+    assert.deepEqual(LEXICALISED_STATES, ['enthalten', 'geöffnet', 'geschlossen', 'verheiratet', 'geschieden', 'verletzt', 'gebrochen', 'verabredet']);
   });
   test('a participle with its own ADJ entry is predicative; a conjunct with its own auxiliary is its own clause', () => {
     const lex = [haben('beschädigen', 'beschädigt'), { lemma: 'beschädigt', pos: 'ADJ' }, haben('verletzen', 'verletzt'), { lemma: 'ausrutschen', pos: 'VERB', separable: true, verb_forms: { '3sg': 'rutscht aus', perfekt: 'ist ausgerutscht' } }];

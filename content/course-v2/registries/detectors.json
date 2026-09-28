@@ -694,7 +694,9 @@
           ],
           "miss": [
             "Das ist mein Fahrrad.",
-            "Habt ihr Zeit?"
+            "Habt ihr Zeit?",
+            "Mögt ihr Kuchen auch?",
+            "Mögt auch ihr Kuchen?"
           ]
         }
       }
@@ -743,7 +745,8 @@
             "Münchner Straße 30. Miete: 750 Euro.",
             "Das Verb steht auf Position 2. Das Subjekt steht danach.",
             "Er ist 24. Er studiert in Kochi.",
-            "Der Zug fährt ab Gleis 3. Wir steigen ein."
+            "Der Zug fährt ab Gleis 3. Wir steigen ein.",
+            "Die Nummer ist 0157 38 42 96 10. Priya bestellt einen Kaffee."
           ]
         },
         "notes": "Eine Kardinalzahl nach einem Zähl-Nomen (Straße 18. Die …, Position 2. Das …, Gleis 3. Wir …) oder nach einer Kopula am Satzende (Er ist 24. Er …) ist keine Ordinalzahl (notPrecededBy; die Zähl-Nomen aus DETECTOR_OVERLAYS übernommen, die Kopula-Formen neu: Review a1.1-u05 r1 F04, a1.1-u03 r1 F15).",
@@ -2575,21 +2578,24 @@
         "spinePoints": [
           "g.genitiv"
         ],
-        "regex": "(?:^|[^\\p{L}])((?:[Dd](?:ie|er|as|en|em)|(?:[Ee]|[Kk]e|[Mm]e|[Dd]e|[Ss]e)in(?:e|en|em|er)?|[Ii]hr(?:e|en|em|er)?|[Uu]nser(?:e|en|em|er)?|[Aa]m|[Ii]m|[Vv]om|[Zz]um|[Zz]ur|[Bb]eim)\\s+(?:[a-zäöüß]+(?:e|en)\\s+)?[A-ZÄÖÜ][a-zäöüß]+\\s+der\\s+(?:[a-zäöüß]+(?:e|en)\\s+)?[A-ZÄÖÜ][a-zäöüß]+)",
+        "regex": "(?:^|[^\\p{L}])((?:[Dd](?:ie|er|as|en|em)|(?:[Ee]|[Kk]e|[Mm]e|[Dd]e|[Ss]e)in(?:e|en|em|er)?|[Ii]hr(?:e|en|em|er)?|[Uu]nser(?:e|en|em|er)?|[Aa]m|[Ii]m|[Vv]om|[Zz]um|[Zz]ur|[Bb]eim)\\s+(?:[a-zäöüß]+(?:e|en)\\s+)?[A-ZÄÖÜ][a-zäöüß]+\\s+(?:der|einer|meiner|deiner|seiner|ihrer|unserer|eurer)\\s+(?:[a-zäöüß]+(?:e|en)\\s+)?[A-ZÄÖÜ][a-zäöüß]+)",
         "group": 1,
         "skip": "^(?:am|im)\\s+(?:Ende|Anfang)\\s+der\\s",
-        "notes": "Heuristik: Artikel + Nomen + „der\" + Nomen. „der\" kann auch ein Dativobjekt einleiten (Ich gebe das Buch der Lehrerin.); „am Ende der Straße\" ist ein Wegbeschreibungs-Chunk (skip). Liest mit GRM-04 auch die deutschen Arbeitsanweisungen (instructionsDe, situationDe). Review a1.1-u04 r5 F05.",
+        "notes": "Heuristik: Artikel + Nomen + „der\" + Nomen. „der\" kann auch ein Dativobjekt einleiten (Ich gebe das Buch der Lehrerin.); „am Ende der Straße\" ist ein Wegbeschreibungs-Chunk (skip). Liest mit GRM-04 auch die deutschen Arbeitsanweisungen (instructionsDe, situationDe). Review a1.1-u04 r5 F05. Seit 2026-09-28 auch einer / meiner … + Nomen nach einem Nomen („die Webseite einer Sprachschule“; Review a1.1-u12 r1 F07); des und eines + Nomen melden det.genitiv-des und det.genitiv-artikel.",
         "examples": {
           "hit": [
             "Antworten Sie auf die Frage der Partnerin.",
             "Dann reagieren Sie auf die Bitte der Partnerin.",
-            "Das ist das Auto der Nachbarin."
+            "Das ist das Auto der Nachbarin.",
+            "Auf der Webseite einer Sprachschule steht ein Kurs."
           ],
           "miss": [
             "Antworten Sie auf die Frage von Nora.",
             "Die Frau fragt, der Mann antwortet.",
             "Am Ende der Straße ist die Post.",
-            "Ich gebe der Lehrerin das Buch."
+            "Ich gebe der Lehrerin das Buch.",
+            "Ich spreche mit einer Freundin.",
+            "Das ist die Webseite von einer Sprachschule."
           ]
         }
       }
@@ -3575,7 +3581,7 @@
         ],
         "participleAux": "haben",
         "requireKnown": true,
-        "notes": "Nur lexikongestützt (Partizip eines haben-Verbs); lexikalisierte Adjektive (verheiratet) stehen nicht als Partizip im Lexikon.",
+        "notes": "Nur lexikongestützt (Partizip eines haben-Verbs); lexikalisierte Adjektive (verheiratet) stehen nicht als Partizip im Lexikon. „verabredet sein“ (lx.sich-verabreden, a1.1-u08) ist ein Zustandsadjektiv (LEXICALISED_STATES der Engine; Review a1.1-u08 r3 F10(b)).",
         "examples": {
           "lexicon": [
             {
@@ -3602,6 +3608,15 @@
                 "3sg": "kommt",
                 "perfekt": "ist gekommen"
               }
+            },
+            {
+              "lemma": "sich verabreden",
+              "pos": "VERB",
+              "reflexive": "akk",
+              "verb_forms": {
+                "3sg": "verabredet sich",
+                "perfekt": "hat sich verabredet"
+              }
             }
           ],
           "hit": [
@@ -3610,7 +3625,9 @@
           ],
           "miss": [
             "Er ist gekommen.",
-            "Ich bin verheiratet."
+            "Ich bin verheiratet.",
+            "Wir sind am Samstag verabredet.",
+            "Ich bin heute mit Olena verabredet."
           ]
         }
       }

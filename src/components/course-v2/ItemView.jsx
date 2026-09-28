@@ -9,7 +9,7 @@ import InlineFeedback from './InlineFeedback.jsx';
 import { ChoiceList, ChoiceSelect, TypedInput, TilesInput, MatchInput } from './ItemInputs.jsx';
 import { gradeAnswer, attemptPayload, RESULT, acceptedOf } from './grade.js';
 import { orderedOptions } from '../../lib/course-v2/unitPlan.js';
-import { quoteOf, resolveText, speakerName } from './content.js';
+import { correctionQuoteOf, quoteOf, resolveText, speakerName } from './content.js';
 import { useV2Strings, ltext } from './strings.js';
 
 /** The one-retry notice per checker reason: case, the value written with the word next to the gap, else spelling. */
@@ -70,10 +70,11 @@ export default function ItemView({
   attempt = 1,
 }) {
   const [lang, t] = useV2Strings();
-  const [value, setValue] = useState(() => (item.type === 'error_correction' ? quoteOf(item.promptDe) || '' : ''));
+  const [value, setValue] = useState(() => (item.type === 'error_correction' ? correctionQuoteOf(item.promptDe) || '' : ''));
   const [phase, setPhase] = useState('answering'); // answering | retry | done
   const [outcome, setOutcome] = useState(null); // { result, expected, revealed }
   const typoSeen = useRef(false);
+  const typoAnswer = useRef(null); // the answer that earned the one retry
   const reported = useRef(false);
   const inputRef = useRef(null);
 
@@ -139,13 +140,18 @@ export default function ItemView({
     if (phase === 'done') return;
     const answer = override != null ? override : value;
     if (!String(answer || '').trim()) return;
-    const r = gradeAnswer(item, answer);
+    let r = gradeAnswer(item, answer);
     if (r.result === RESULT.TYPO && retryAllowed && phase === 'answering') {
       typoSeen.current = true;
+      typoAnswer.current = String(answer).trim();
       setOutcome({ result: RESULT.TYPO, reason: r.reason || null });
       setPhase('retry');
       if (inputRef.current) inputRef.current.focus();
       return;
+    }
+    // the retry is for fixing the slip: the same answer sent again is not a fix (a1.1-u08 r3 F03)
+    if (phase === 'retry' && r.result === RESULT.TYPO && typoAnswer.current !== null && String(answer).trim() === typoAnswer.current) {
+      r = { ...r, result: RESULT.WRONG };
     }
     if (r.result === RESULT.TYPO) typoSeen.current = true;
     const correct = r.result !== RESULT.WRONG;

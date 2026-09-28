@@ -25,8 +25,10 @@ export const rubricSchema = obj({
     'scoredBy?': 'enum(ai|deterministic|notAutoScored)',
     'descriptors?': arr({ points: 'num', de: 'de' }, '*'),
     // Used by course-micro / course-micro-sp since 2026-09-27: the criterion counts only when the
-    // task has target structures (SCHEMA §4.5, added 2026-09-28).
-    'appliesIf?': 'enum(targets)',
+    // task has target structures (SCHEMA §4.5, added 2026-09-28). 'full' (runtime track, 2026-09-28,
+    // a1.1-u01 r1–r3 F01): the criterion counts only when the Teil is played at full length — a part
+    // the unit's Prüfungsfokus declares 'reduced'/'mini' does not elicit it (grade.mjs appliesTo).
+    'appliesIf?': 'enum(targets|full)',
   })),
   'bands?': arr({ label: 'str', min: 'num', max: 'num' }, '*'),
   'errorPolicy?': map('enum(a1|a2|b1|b2)', map(ERROR_TAG, 'enum(flag|score)')),

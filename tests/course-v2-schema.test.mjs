@@ -593,3 +593,11 @@ test('compile.mjs: fixture compile via the CLI, --check clean on a second run, -
   const badLevel = node(['scripts/course-v2/compile.mjs', 'c1.1']);
   assert.equal(badLevel.status, 2);
 });
+
+test('rubric criterion appliesIf: „targets" and „full" (a shortened Teil does not elicit it; a1.1-u01 r1–r3 F01), nothing else', () => {
+  const doc = JSON.parse(fs.readFileSync(path.join(path.dirname(new URL(import.meta.url).pathname), '..', 'content/course-v2/registries/rubrics/speaking/sd1-sp1.json'), 'utf8'));
+  assert.deepEqual(check(KINDS.rubric.schema, doc), [], 'the registry profile passes');
+  assert.deepEqual(doc.criteria.filter((c) => c.appliesIf === 'full').map((c) => c.id), ['buchstabieren', 'nummer'], 'spelling and the number only at full length');
+  const bad = { ...doc, criteria: doc.criteria.map((c, i) => (i === 0 ? { ...c, appliesIf: 'reduced' } : c)) };
+  assert.ok(check(KINDS.rubric.schema, bad).some((e) => /appliesIf/.test(e.path)), 'an unknown condition is refused');
+});

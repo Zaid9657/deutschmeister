@@ -250,6 +250,15 @@ function runPattern(det, sentence, env = EMPTY_ENV) {
     // an adjective slot holding a verb the lexicon knows (and no adjective of that form): „Das lernen Sie
     // bald." is das + lernen + Sie, no adjective ending (a1.1-u01 r2 F10 / r3 F09)
     if (spec.notVerbForm && env.available && env.infinitives.has(lc(text)) && !env.adjectives.has(lc(text))) continue;
+    // „ihr" right after a finite ihr-form (habt, mögt, seid, kommt), with at most one particle between, is
+    // the subject pronoun: „Mögt ihr auch Kuchen?" (spec.notAfterIhrVerb)
+    if (spec.notAfterIhrVerb && /^ihr\b/.test(text)) {
+      const before = tokens(sentence.slice(0, index)).map((t) => t.text);
+      const prev = before.slice(-2);
+      const verbish = (w) => (/^\p{Ll}+(?:t|d)$/u.test(w || '') && !FUNCTION_WORDS.has(String(w).toLowerCase())) || ['habt', 'seid', 'mögt', 'könnt', 'wollt', 'müsst', 'dürft', 'sollt', 'wart', 'hattet', 'wisst'].includes(String(w).toLowerCase());
+      if (verbish(prev[prev.length - 1]) || (/^(?:auch|noch|schon|denn|mal|heute|morgen|jetzt)$/i.test(prev[prev.length - 1] || '') && verbish(prev[0]))) continue;
+      if (/^(?:Habt|Seid|Mögt|Könnt|Wollt|Müsst|Kommt|Geht|Macht|Esst|Trinkt|Wisst|Hattet)$/u.test(before[before.length - 1] || '')) continue;
+    }
     if (spec.notAfterNumber) {
       const before = sentence.slice(0, index).trimEnd();
       if (/\d$/.test(before)) continue;

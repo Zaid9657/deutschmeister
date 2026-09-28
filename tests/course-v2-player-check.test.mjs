@@ -19,6 +19,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { checkItem, quotedSentence, v2CheckOptions, RESULT, isChoiceItem } from '../src/lib/course-v2/checkItem.js';
 import { gradeAnswer } from '../src/components/course-v2/grade.js';
+import { isAufgabeSubmitted } from '../src/lib/course-v2/completion.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const res = (item, input) => checkItem(item, input).result;
@@ -42,6 +43,17 @@ test('error_correction: a slip in the corrected token is the error the item is a
   assert.equal(res(c07, 'Ist das deine mutter?'), RESULT.TYPO, 'a case slip keeps its retry');
   const tagged = checkItem(c07, 'Ist das meine Mutter?');
   assert.equal(tagged.errorTag, 'gender-article', 'the item\'s own SCHEMA tag feeds the repair card');
+});
+
+test('error_correction: the sentence to correct is the quotation after the colon, never a word the prompt names (a1.1-u08 r1 F01)', () => {
+  assert.equal(quotedSentence('Korrigieren Sie die Position von „nicht“: „Ich schwimme gern nicht.“'), 'Ich schwimme gern nicht.');
+  assert.equal(quotedSentence('Korrigieren Sie („Sie“, nicht „du“): „Frau Schulz, ist das deine Tochter?“'), 'Frau Schulz, ist das deine Tochter?');
+  assert.equal(quotedSentence('Korrigieren Sie: „Um 8:30 Uhr kommt er.“'), 'Um 8:30 Uhr kommt er.', 'a colon inside the quote is not the prompt\'s colon');
+  assert.equal(quotedSentence('„Du kommt aus Polen?“ Korrigieren Sie „kommt“.'), 'Du kommt aus Polen?', 'no colon: the longest quotation');
+  assert.equal(quotedSentence('Ohne Zitat.'), null);
+  const src = readFileSync(join(ROOT, 'src/components/course-v2/ItemView.jsx'), 'utf8');
+  assert.match(src, /correctionQuoteOf\(item\.promptDe\)/, 'ItemView prefills the same sentence the checker compares with');
+  assert.match(src, /String\(answer\)\.trim\(\) === typoAnswer\.current/, 'the same answer sent again after a typo retry is not a fix (a1.1-u08 r3 F03)');
 });
 
 // ── 2. paradigm twins ─────────────────────────────────────────────────────────
@@ -74,6 +86,19 @@ test('Duden doublets and the polite capital reach every v2 item', () => {
   assert.equal(typo.result, RESULT.TYPO);
   assert.equal(typo.reason, 'case');
   assert.equal(res(polite, 'Frau Schulz, ist das ihre Tochter?'), RESULT.WRONG);
+});
+
+test('a spelling slip in the spaces is a TYPO („Wieviel" for „Wie viel", a1.1-u12 r3)', () => {
+  const wieviel = { id: 'a1.1-u12-ls3-p02', type: 'fill_blank', topic: 'redemittel', promptDe: '___ kostet der Kurs?', answer: 'Wie viel', accepted: ['Wie viel', 'Was'] };
+  assert.equal(res(wieviel, 'Wieviel'), RESULT.TYPO);
+  assert.equal(res(wieviel, 'wieviel'), RESULT.TYPO);
+  assert.equal(res(wieviel, 'Wie viel'), RESULT.CORRECT);
+});
+
+test('a name written letter by letter is the name, whether or not the item lists a spelled form (a1.1-u02 r3 F02)', () => {
+  const q01 = { id: 'a1.1-u02-q01', type: 'fill_blank', topic: 'hoeren', promptDe: 'Der Familienname von Arta ist ___.', answer: 'Berisha', accepted: ['Berisha'], exact: 'name' };
+  for (const typed of ['B-E-R-I-S-H-A', 'B-E-R-I-S-H-A.', 'B E R I S H A', 'b, e, r, i, s, h, a', 'Berisha']) assert.equal(res(q01, typed), RESULT.CORRECT, typed);
+  for (const typed of ['B-E-R-I-S-A', 'Berischa', 'Berisa', 'Ber isha']) assert.equal(res(q01, typed), RESULT.WRONG, typed);
 });
 
 // ── 3. the word next to the gap, and clock times ──────────────────────────────
@@ -140,6 +165,26 @@ test('form_fill: numbers with their frame words, a street with its postcode and 
   const stand = field('Familienstand', 'verheiratet', ['verheiratet'], U05);
   for (const typed of ['verheiratet', 'Verheiratet', 'verheiratet mit Priya']) assert.equal(res(stand, typed), RESULT.CORRECT, typed);
   assert.equal(res(stand, 'ledig'), RESULT.WRONG);
+});
+
+test('form_fill: the time of day, the other fields\' values and the Anrede may stand beside a value (a1.1-u09 r2/r3 F03)', () => {
+  const SIT = 'Olena Kovalenko hat am Freitag Geburtstag. Am Abend isst sie mit Freunden im Restaurant Kochi. Sie essen um halb acht.';
+  const keys = { f1: 'Olena Kovalenko', f3: 'Freitag', f4: '19.30 Uhr', f5: '6' };
+  const mk = (id, labelDe, accepted, exact) => ({ ...field(labelDe, accepted[0], accepted, SIT, exact), id, otherAnswers: Object.entries(keys).filter(([k]) => k !== id).map(([, v]) => v) });
+  const zeit = mk('f4', 'Uhrzeit', ['19.30 Uhr', '7.30 Uhr', 'halb acht'], 'number');
+  for (const typed of ['um 19.30 Uhr am Freitag', '19:30', 'um 7.30 abends', 'abends um halb acht', 'halb acht am Abend']) assert.equal(res(zeit, typed), RESULT.CORRECT, typed);
+  for (const typed of ['20.30', 'halb neun']) assert.equal(res(zeit, typed), RESULT.WRONG, typed);
+  const tag = mk('f3', 'Tag', ['Freitag', 'am Freitag', 'Fr.']);
+  for (const typed of ['Freitagabend', 'am Freitag Abend', 'Freitag abends', 'am Freitag um 19.30 Uhr']) assert.equal(res(tag, typed), RESULT.CORRECT, typed);
+  assert.equal(res(tag, 'Samstag'), RESULT.WRONG);
+  const name = mk('f1', 'Name', ['Olena Kovalenko', 'Kovalenko, Olena'], 'name');
+  assert.equal(res(name, 'Frau Olena Kovalenko'), RESULT.CORRECT);
+  assert.equal(res(name, 'Frau Kovalenko'), RESULT.WRONG);
+  const tisch = mk('f5', 'Tisch für wie viele Leute?', ['6', 'sechs'], 'number');
+  for (const typed of ['Tisch für 6', 'für sechs Leute', 'Tisch für 6 Personen']) assert.equal(res(tisch, typed), RESULT.CORRECT, typed);
+  const termin = field('Termin: vormittags oder nachmittags?', 'nachmittags', ['nachmittags', 'am Nachmittag'], '');
+  assert.equal(res(termin, 'nachmittags, nicht vormittags'), RESULT.CORRECT);
+  assert.equal(res(termin, 'vormittags'), RESULT.WRONG, 'a time of day the label offers as the other alternative is the wrong entry');
 });
 
 test('form_fill: a name keeps its letters exact; case is free on a form', () => {
@@ -231,4 +276,14 @@ test('rail (all courses): every form field takes its key in any case, and its ke
       assert.equal(res(item, `für ${item.answer} Personen`), RESULT.CORRECT, `${item.id}: „für ${item.answer} Personen“`);
     }
   }
+});
+
+// ── a multi-Teil round is a speaking Aufgabe (completion.js) ─────────────────
+test('a multi-Teil speaking round is recognised as a speaking Aufgabe, card Teile included (SCHEMA §8 `{ parts }`)', () => {
+  const round = { bankKey: 'a11-u01-s', parts: [{ template: 'sd1.sp1', mode: 'monologue' }, { template: 'sd1.sp2', mode: 'cards-ask' }], aiRole: { name: 'x' } };
+  assert.equal(isAufgabeSubmitted(round, { speechSeconds: 25 }), true, 'enough speech');
+  assert.equal(isAufgabeSubmitted(round, { speechSeconds: 5, turns: 2 }), true, 'a card Teil counts its turns');
+  assert.equal(isAufgabeSubmitted(round, { speechSeconds: 5, turns: 1 }), false);
+  const mono = { ...round, parts: [{ mode: 'monologue' }, { mode: 'monologue' }] };
+  assert.equal(isAufgabeSubmitted(mono, { speechSeconds: 5, turns: 3 }), false, 'no card Teil: turns alone do not count');
 });

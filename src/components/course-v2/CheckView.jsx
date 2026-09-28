@@ -4,6 +4,7 @@ import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import ItemRun from './ItemRun.jsx';
 import RuleCardView from './RuleCardView.jsx';
+import StoryCliffhanger from './StoryCliffhanger.jsx';
 import { canDoTexts } from './content.js';
 import { useV2Strings } from './strings.js';
 
@@ -17,8 +18,9 @@ const LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] 
  *      `check.earlier` refs are resolved by the player core and passed in; without them
  *      the check runs on this unit's items alone);
  *   2. the proof items, scored apart from the 12 (one per receptive can-do);
- *   3. „Das kann ich": each can-do with its proof — an item answered right, or the
- *      speaking/writing Aufgabe submitted (`aufgaben`, from the player's learner state);
+ *   3. „Das kann ich": each can-do with its proof — an item answered right, the
+ *      speaking/writing Aufgabe submitted (`aufgaben`, from the player's learner state), or the
+ *      learner's own micro-output sent (`microOutputs`);
  *   4. the B-skeleton Grammatik-Rückschau (rule cards) and Porträt, the cliffhanger and the
  *      step's end line.
  *
@@ -27,7 +29,7 @@ const LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] 
  * the 12 only; `proofs` = { canDoId: proven } as „Das kann ich" showed it (additive).
  * `attempt` (the Check's plan.attempt) seeds the option order of its choice items (ItemView).
  */
-export default function CheckView({ unit, level, stepId, endLine = null, earlierItems = [], attempt = 1, aufgaben = null, course = null, canDos = null, ruleCards = null, lines, names, onAttempt, onDone }) {
+export default function CheckView({ unit, level, stepId, endLine = null, earlierItems = [], attempt = 1, aufgaben = null, microOutputs = null, course = null, canDos = null, ruleCards = null, lines, names, onAttempt, onDone }) {
   const [lang, t] = useV2Strings();
   const check = unit?.check || {};
   const items = useMemo(() => [...(check.items || []), ...(earlierItems || [])], [check.items, earlierItems]);
@@ -56,6 +58,11 @@ export default function CheckView({ unit, level, stepId, endLine = null, earlier
       const task = t(proof.aufgabe === 'sprechen' ? 'check.aufgabeSprechen' : 'check.aufgabeSchreiben');
       const done = !!(aufgaben && aufgaben[proof.aufgabe]);
       return done ? { ok: true, label: t('check.proofAufgabe', { task }) } : { ok: false, label: t('check.aufgabeOpen', { task }) };
+    }
+    if (proof.microOutput) {
+      // the learner's own micro-output (SCHEMA §8 Check.proofs[].microOutput, 2026-09-28)
+      const done = !!(microOutputs && microOutputs[proof.microOutput]);
+      return done ? { ok: true, label: t('check.proofMicro') } : { ok: false, label: t('check.microOpen') };
     }
     return { ok: false, label: t('check.proofOpen') };
   };
@@ -159,7 +166,7 @@ export default function CheckView({ unit, level, stepId, endLine = null, earlier
       {unit?.story?.cliffhanger && (
         <Card tone="sunk" className="p-5">
           <p className={LABEL}>{t('check.story')}</p>
-          <p className="mt-2 font-display text-[1.125rem] leading-snug text-ink" lang="de">{unit.story.cliffhanger}</p>
+          <StoryCliffhanger story={unit.story} idPrefix={`${stepId}-story`} />
         </Card>
       )}
 

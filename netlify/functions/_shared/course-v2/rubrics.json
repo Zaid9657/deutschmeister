@@ -706,6 +706,7 @@
       ],
       "errorPolicy": {
         "a1": {
+          "verb-ending": "flag",
           "negation": "flag"
         }
       },
@@ -749,7 +750,8 @@
             1,
             0.5,
             0
-          ]
+          ],
+          "appliesIf": "full"
         },
         {
           "id": "nummer",
@@ -759,9 +761,16 @@
             1,
             0.5,
             0
-          ]
+          ],
+          "appliesIf": "full"
         }
       ],
+      "errorPolicy": {
+        "a1": {
+          "verb-ending": "flag",
+          "negation": "flag"
+        }
+      },
       "zeroRules": [],
       "capRules": [],
       "spelling": "not-scored",
@@ -809,6 +818,7 @@
         "a1": {
           "case-np": "flag",
           "case-pp": "flag",
+          "verb-ending": "flag",
           "negation": "flag"
         }
       },
@@ -859,6 +869,7 @@
         "a1": {
           "case-np": "flag",
           "case-pp": "flag",
+          "verb-ending": "flag",
           "negation": "flag"
         }
       },

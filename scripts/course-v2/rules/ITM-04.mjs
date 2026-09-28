@@ -7,7 +7,7 @@
 
 import { walkItems } from '../lib-validate/walk.mjs';
 import { norm, sentences, tokens, FUNCTION_WORDS } from '../lib-validate/text.mjs';
-import { arr, isObj, blocker } from '../lib-validate/helpers.mjs';
+import { arr, isObj, blocker, advisory } from '../lib-validate/helpers.mjs';
 
 export const id = 'ITM-04';
 export const title = 'R/F statements are not copied from their text (substring or one-token edit)';
@@ -58,6 +58,15 @@ export function run({ docs }) {
       if (norm(text).includes(st)) {
         findings.push(blocker(doc, `${path}.promptDe`, 'the statement stands verbatim in its text', item.id));
         continue;
+      }
+      // a proper name in an exam statement that its text never names answers „falsch" by itself
+      // (a1.1-u11 r3 F04, RAILS §3.1c) — ADVISORY
+      if (block) {
+        const names = tokens(statement).filter((t, i) => i > 0 && /^\p{Lu}/u.test(t.text) && !FUNCTION_WORDS.has(t.lower) && /^\p{Lu}\p{Ll}+$/u.test(t.text));
+        const textToks = new Set(tokens(text).map((t) => t.lower));
+        const missing = names.filter((t) => !textToks.has(t.lower) && ![...textToks].some((w) => w.startsWith(t.lower.slice(0, Math.max(4, t.lower.length - 2)))));
+        const cast = [...missing].filter((t) => /^[A-ZÄÖÜ][a-zäöüß]+$/.test(t.text) && t.text.length >= 3);
+        if (cast.length && cast.every((t) => !/(?:ung|heit|keit|chen|ion|tät)$/.test(t.lower))) findings.push(advisory(doc, `${path}.promptDe`, `the statement names ${cast.map((t) => `„${t.text}"`).join(', ')}, which its text never names — the name alone answers it`, item.id));
       }
       const stTok = tokens(st).map((t) => t.lower);
       for (const s of sentences(text)) {

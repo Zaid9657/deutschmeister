@@ -12,7 +12,9 @@ changes meaning): ErrorTag `verb-ending` and `negation` (§3.1); can-do `learner
 `speakers` (§4.3); rubric criterion `appliesIf` written down (§4.5); cast `contact` and the
 voice registry file (§4.7); names kind `language` (§4.9); lexicon `pluralVariants` (§6); unit `story.cliffhangerEn`,
 `story.glosses` and the meaning of `story.castIn`, `Fokus.glosses`, `MicroOutput.modelDe`, `SpeakingPart.situationEn`,
-the speaking move `nachfragen`, `acceptedWhy` on form fields and `Check.proofs[].microOutput` (§8).
+the speaking move `nachfragen`, `acceptedWhy` on form fields and `Check.proofs[].microOutput` (§8). Second batch
+(a1.1 u07–u12 reviews): `tiles` on an error correction (§3.1), cast `contact.hoursDe` (§4.7), `WritingTask.address`
+`ihr` and `WritingTask.textType` (§8).
 **Implementation:** plain JSON content files authored by agents, a zero-dependency schema checker and a deterministic
 compiler written in JavaScript (`scripts/course-v2/lib/`, `scripts/course-v2/compile.mjs`), JS/JSON runtime modules.
 No TypeScript, no ajv/zod (no lockfile churn), **no new content tables** in Supabase.
@@ -135,7 +137,9 @@ Item = {
   options: [str]{2..3}?,             // per-item options only: non-exam MC 3 (ITM-02); richtig_falsch/ja_nein/
                                      // listen_select 2; exam abc = the template's `options`. NEVER used for a
                                      // zuordnen, insert or word-bank cloze item: those answer from the block's `choices`
-  tiles: [str]{2..8}?,               // sentence_building: the tiles ARE the cue; promptDe carries only the frame
+  tiles: [str]{2..8}?,               // sentence_building: the tiles ARE the cue; promptDe carries only the frame.
+                                     // error_correction (word order): the constituents of the corrected sentence,
+                                     // never rendered, so ITM-01/ITM-09 compute the orders German allows (2026-09-28)
   pairs: [[str, str]]{3..6}?,        // match
   audioLineRef: ref(line)?,          // dictation, listen_select, notes
   textRef: ref(text)?,               // exam items: the text they belong to (an ExamText id of the enclosing step or file)
@@ -424,7 +428,8 @@ their descriptors, the bands and the error policy to the model; `deterministic` 
 { members: { [castId]: { name: str, age: int?, from: str?, languages: [str]*, role: de,
                          exam: { lane: ref(lane), arc: de }?, voice: { azure: str, rate: str }, bands: [str],
                          contact: { phone: str?,                          // as the units write it
-                                    addresses: [{ de: de, from: ref(unit), until: ref(unit)?, note: str? }]* }? } },
+                                    addresses: [{ de: de, from: ref(unit), until: ref(unit)?, note: str? }]*,
+                                    hoursDe: de?, note: str? }? } },          // hoursDe: opening hours (a practice)
       // contact (added 2026-09-28, a1.1 u02 r1-F16 … u12 r1-F06): the persona data units state, so all agree
   relations: [{ a: ref(cast), b: ref(cast), address: enum(du|Sie), since: ref(unit)? }] }
 // casts/series.json additionally fixes every cross-course beat in P0 (BLUEPRINT §2.7)
@@ -706,7 +711,9 @@ SpeakingPart = {
 
 WritingTask = {
   bankKey: re(BANK_KEY), lane: ref(lane), template: ref(template), examKey: str,   // = the lane's examKey
-  profile: ref(rubric), register: enum(informell|halbformell|formell), address: enum(du|Sie),
+  profile: ref(rubric), register: enum(informell|halbformell|formell),
+  address: enum(du|Sie|ihr),                           // ihr: a text to a group („Hallo zusammen"); 2026-09-28
+  textType: ref(texttype)?,                            // what the learner writes (tt.post): word band, ALL-02; 2026-09-28
   title: de, situationDe: de, taskDe: de,
   leitpunkte: [{ id: str, de: de, cues: [str] }],      // count = template; Anrede/Gruß never a Leitpunkt (EXM-03)
   choose: { from: int, pick: int }?,

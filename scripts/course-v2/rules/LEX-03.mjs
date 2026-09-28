@@ -27,15 +27,29 @@
 //     unit only lets them recognise; the fix is the item (cue a productive word) or a promotion;
 //   - a typed number-word key when every number lemma the unit allocates is receptive (a1.1-u02 r2 F07 /
 //     r3 F06): the same class, the same ratchet;
+//   - produced lemmas (a1.1-u06 r1 F12 … u08 r1 F07 / r2 F06 / r3 F07, u09 r3 F06, u10 r1 F14, u12 r2 F04 / r3 F03
+//     — the class of eight units): a lemma the unit makes the learner PRODUCE — a model sentence, a Redemittel,
+//     the learner's speaking cards and model turns, hintWords, Leitpunkt cues, a checklist line, a model text,
+//     a micro-output model — is productive (or promoted, or core) at or before the unit. A receptive lemma, of
+//     this unit or an earlier one, or a lemma allocated later, there is a RATCHET. No metalanguage exemption
+//     except on the checklist, and a capitalised word inside a sentence is matched against nouns only
+//     („Eine Frage" is not „frage");
+//   - a bracketed cue names a lemma: its first noun or verb („(der Kellner → die …)", „(aufmachen)") resolves to
+//     a lexicon entry, a feminine form to its masculine entry; a cue that matches no lemma, or one allocated
+//     later or receptive, is an ADVISORY (a1.1-u07 r2 F05 / r3 F06, u10 r2 F03 / r3 F04);
+//   - an authored dictation makes the learner spell no receptive lemma of the cumulative lexicon (advisory,
+//     a1.1-u12 r2 F04 / r3 F03);
 //   - FALSE POSITIVES closed: a spelled letter chain („B-E-R-I-S-H-A", check.js SPELLED_OUT_RE) is
 //     letters, not an unknown lemma (a1.1-u02 r3); the file's `extras` names are known words in
 //     production as they are in LEX-01 (a1.1-u02 r1: an sd1.h1 spelling key could not name an extra).
 
-import { walkProduction, walkTexts } from '../lib-validate/walk.mjs';
+import { walkProduction, walkTexts, walkTasks, walkMicroOutputs, speakingParts } from '../lib-validate/walk.mjs';
+import { isMetalanguage } from '../lib-validate/metalanguage.mjs';
+import { unitPosition } from '../lib-validate/ids.mjs';
 import { knownForms, lexiconComplete, readTokens, licensedForms, isKnown } from '../lib-validate/lexicon.mjs';
 import { arr, finding, blocker, list } from '../lib-validate/helpers.mjs';
 import { parseUnitId } from '../lib-validate/ids.mjs';
-import { unitDoc, cumulativeLexicon } from '../lib-validate/context.mjs';
+import { unitDoc, cumulativeLexicon, allLexicon } from '../lib-validate/context.mjs';
 import { walkSteps, walkItems } from '../lib-validate/walk.mjs';
 import { entryForms } from '../lib-validate/lexicon.mjs';
 import { knownCompound } from '../lib-validate/compounds.mjs';
@@ -105,7 +119,16 @@ function generatorFindings(ctx, doc) {
     const shown = new Set(tokens(`${item.promptDe || ''} ${arr(item.tiles).join(' ')}`).map((t) => t.lower));
     const keyWords = [...new Set(tokens(String(item.answer ?? '')).map((t) => t.lower))].filter((w) => !shown.has(w));
     const hits = keyWords.filter((w) => receptiveForms.has(w));
-    if (hits.length) {
+    // a bracketed cue of the same lemma („(die Birne)" → „Birnen") is recognition-spelling, the advisory below —
+    // unless the item drills a new spine point of the unit and the cue carries no article (u03 r2 F03)
+    const cues = [...String(item.promptDe || '').matchAll(/\(([^)]+)\)/g)].map((m) => m[1].trim());
+    const newPoint = arr(doc.data?.spec?.grammar?.new).includes(item.topic);
+    const cuedByBracket = hits.length && cues.some((c) => {
+      const bare = c.replace(/^(?:der|die|das|sich)\s+/i, '').toLowerCase();
+      const e = hits.map((w) => receptiveForms.get(w)).find((x) => String(x.lemma).replace(/^(?:der|die|das|sich)\s+/i, '').toLowerCase() === bare);
+      return e && (!newPoint || /^(?:der|die|das)\s/i.test(c));
+    });
+    if (hits.length && !cuedByBracket) {
       recallFlagged.add(item);
       out.push(finding('ratchet', doc, `${path}.answer`, `typed recall of a receptive word: the key „${item.answer}" makes the learner write ${hits.map((w) => `„${w}" (${receptiveForms.get(w).id}, receptive at ${doc.data?.id})`).join(', ')} — cue a productive word, show the form in the prompt, or promote the lemma`, item.id));
       continue;
@@ -160,6 +183,67 @@ function generatorFindings(ctx, doc) {
   return out;
 }
 
+/** The production surfaces of a unit: [{ de, path, meta? }]. */
+export function productionSurfaces(doc) {
+  const out = [];
+  const d = doc.data || {};
+  for (const { step, path } of walkSteps(doc)) if (step?.modelSentence) out.push({ de: String(step.modelSentence), path: `${path}.modelSentence` });
+  arr(d.redemittel).forEach((r, i) => { if (r?.de) out.push({ de: String(r.de), path: `redemittel[${i}].de` }); });
+  for (const { task, kind, path } of walkTasks(doc)) {
+    if (kind === 'speaking') {
+      arr(task.hintWords).forEach((h, i) => out.push({ de: String(h), path: `${path}.hintWords[${i}]` }));
+      arr(task.modelTurns).forEach((t, i) => { if (t?.speaker === 'learner' && t.de) out.push({ de: String(t.de), path: `${path}.modelTurns[${i}].de` }); });
+      // a card that is a keyword prompt („Wohnort?", the exam's Stichwort) is a stimulus, not a word to produce
+      for (const { part, path: pp } of speakingParts(task)) arr(part?.cards?.learner).forEach((c, i) => { const de = String(typeof c === 'string' ? c : c?.de || ''); if (!/\?\s*$/.test(de)) out.push({ de, path: `${path}${pp}.cards.learner[${i}]` }); });
+    } else {
+      arr(task.leitpunkte).forEach((lp, i) => arr(lp?.cues).forEach((c, k) => out.push({ de: String(c), path: `${path}.leitpunkte[${i}].cues[${k}]` })));
+      // the checklist is read while writing: its instruction words („Punkt 2:", „Anrede") are metalanguage
+      arr(task.checklist).forEach((c, i) => out.push({ de: String(c), path: `${path}.checklist[${i}]`, meta: true }));
+      if (task.modelText) out.push({ de: String(task.modelText), path: `${path}.modelText` });
+    }
+  }
+  for (const { mo, path } of walkMicroOutputs(doc)) if (mo?.modelDe) out.push({ de: String(mo.modelDe), path: `${path}.modelDe` });
+  return out;
+}
+
+/** Produced lemmas that are not productive at the unit (the ratchet above). */
+function producedFindings(ctx, doc) {
+  const out = [];
+  const d = doc.data || {};
+  const here = unitPosition(d.id);
+  if (here === null) return out;
+  const lex = allLexicon(ctx);
+  const promoted = new Set();
+  for (const l of ctx.levels.values()) for (const pr of arr(l.lexicon?.promotions)) promoted.add(pr?.lemma);
+  const byForm = new Map();
+  for (const e of lex) {
+    const at = unitPosition(e?.unit);
+    if (at === null || !e?.lemma) continue;
+    for (const f of entryForms(e).forms) {
+      if (!byForm.has(f)) byForm.set(f, []);
+      byForm.get(f).push({ e, at });
+    }
+  }
+  for (const sf of productionSurfaces(doc)) {
+    const toks = tokens(sf.de);
+    const bad = [];
+    toks.forEach((t, i) => {
+      const w = t.lower;
+      if (w.length < 3 || FUNCTION_WORDS.has(w) || NUMBER_WORDS.has(w) || CORE.has(w) || /^\d/.test(w) || (sf.meta && isMetalanguage(w))) return;
+      let cands = byForm.get(w) || [];
+      const initial = i === 0 || /[.!?:„"]\s*$/.test(sf.de.slice(0, t.index));
+      if (/^\p{Lu}/u.test(t.text) && !initial) cands = cands.filter((c) => c.e.pos === 'NOUN');
+      else if (/^\p{Ll}/u.test(t.text)) cands = cands.filter((c) => c.e.pos !== 'NOUN');
+      if (!cands.length) return;
+      if (cands.some((c) => c.at <= here && (c.e.role === 'productive' || promoted.has(c.e.id)))) return;
+      const c = cands.sort((a, b) => a.at - b.at)[0];
+      bad.push(`„${t.text}" (${c.e.id}: ${c.at > here ? `allocated ${c.e.unit}` : `receptive, ${c.e.unit}`})`);
+    });
+    if (bad.length) out.push(finding('ratchet', doc, sf.path, `the learner is asked to produce ${[...new Set(bad)].slice(0, 4).join(', ')} — use a productive word, or promote the lemma (lexicon.json promotions)`, null));
+  }
+  return out;
+}
+
 export function run({ ctx, docs }) {
   const findings = [];
   let n = 0;
@@ -199,6 +283,7 @@ export function run({ ctx, docs }) {
       }
     }
     if (doc.kind === 'unit') {
+      findings.push(...producedFindings(ctx, doc));
       const gen = generatorFindings(ctx, doc);
       n += gen.checked;
       findings.push(...gen);

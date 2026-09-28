@@ -312,6 +312,15 @@ export function knownForms(ctx, level, nr) {
     // a cast member's name also in the genitive: „Priyas Praktikum", „Arjuns WG"
     for (const t of readTokens(member?.name || '')) known.add(`${t.lower}s`);
   }
+  // the lexicon outranks the always-known floor for ordinals and the time/manner adverbs it teaches as lemmas
+  // (a1.1-u07 r2 F04, r3 F05a: lx.erste at a1.2-u04 never counted, so „der erste Termin" passed at a1.1)
+  for (const e of allocatedLater(ctx, here)) {
+    const bareLemma = lc(e.lemma);
+    if (/\s/.test(bareLemma)) continue;
+    for (const f of entryForms(e).forms) {
+      if ((NUMBER_WORDS.has(f) && ORDINAL_FORM_RE.test(f) && !CARDINAL_LIKE.has(f)) || (f === bareLemma && OUTRANKED_ADVERBS.has(f))) known.delete(f);
+    }
+  }
   const rank = LEVELS.indexOf(level);
   for (const name of namesOf(ctx)) {
     if (LEVELS.indexOf(name.level) > rank) continue;
@@ -322,6 +331,30 @@ export function knownForms(ctx, level, nr) {
     }
   }
   return known;
+}
+
+/** Ordinal number words („erste", „dritten", „zwanzigste"); cardinals that end alike are kept. */
+const ORDINAL_FORM_RE = /(?:te|ten|ter|tes|tem)$/;
+const CARDINAL_LIKE = new Set(['acht']);
+/** Adverbs of the always-known floor that a lexicon teaches as a lemma of its own: known from that unit on. */
+const OUTRANKED_ADVERBS = new Set(['früher', 'später', 'gestern', 'vorgestern', 'übermorgen', 'samstags', 'sonntags', 'montags', 'vormittags', 'nachmittags', 'abends', 'morgens', 'mittags', 'nachts']);
+
+const laterCache = new WeakMap();
+/** Lexicon entries allocated after a course position. */
+function allocatedLater(ctx, here) {
+  if (here === null) return [];
+  if (!laterCache.has(ctx)) laterCache.set(ctx, new Map());
+  const m = laterCache.get(ctx);
+  if (!m.has(here)) {
+    const out = [];
+    for (const l of LEVELS) for (const e of ctx.levels.get(l)?.lexicon?.entries || []) {
+      const u = parseUnitId(e?.unit);
+      const p = u ? positionOf(u.level, u.nr) : null;
+      if (p !== null && p > here) out.push(e);
+    }
+    m.set(here, out);
+  }
+  return m.get(here);
 }
 
 /** The tokens of a spine label's examples: what follows its first colon and what stands in brackets. */

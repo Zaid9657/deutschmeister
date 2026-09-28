@@ -137,6 +137,9 @@ export function resolveText(ref, ...pools) {
   return null;
 }
 
+/** The sentence an error_correction prompt quotes to correct (the checker's own rule, checkItem.js). */
+export { quotedSentence as correctionQuoteOf } from '../../lib/course-v2/checkItem.js';
+
 /** The first „…" / "…" quotation in a prompt, or null. */
 export function quoteOf(text) {
   const m = /„([^“”"]{2,})[“”"]|"([^"]{2,})"|«([^»]{2,})»/.exec(String(text || ''));

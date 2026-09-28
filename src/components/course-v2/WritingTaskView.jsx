@@ -19,7 +19,8 @@ const draftKey = (bankKey) => `dm_v2_writing_${bankKey}`;
 export const readDraft = (bankKey) => safeGetJSON(draftKey(bankKey), null);
 const writeDraft = (bankKey, value) => safeSetJSON(draftKey(bankKey), value);
 
-const fold = (s) => String(s || '').toLowerCase();
+// „14:30" and „14.30" are one time: a colon between digits folds to the dot (a1.1-u10 r1 F17)
+const fold = (s) => String(s || '').toLowerCase().replace(/(\d):(?=\d)/g, '$1.');
 
 /** Is there a surface hint of this Leitpunkt? A FORM check only; the KI decides meaning. */
 const cueFound = (lp, text) => {
@@ -72,7 +73,12 @@ function FormTask({ task, stepId, onDone, onAttempt }) {
               lang="de"
             />
             {results && results[f.id] && (
-              <InlineFeedback result={results[f.id].result} expected={results[f.id].expected} />
+              <InlineFeedback
+                result={results[f.id].result}
+                expected={results[f.id].expected}
+                // why a variant form also counts (SCHEMA §8 form.fields[].acceptedWhy, ITM-10)
+                explanation={f.acceptedWhy && f.acceptedWhy[results[f.id].expected] ? { de: f.acceptedWhy[results[f.id].expected] } : null}
+              />
             )}
           </div>
         ))}

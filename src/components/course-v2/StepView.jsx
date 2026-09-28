@@ -94,6 +94,7 @@ function segmentsFor(step, extras) {
  *   warmupItems    the 6 due review items for the Aufwärmen segment
  *   earlierItems   the resolved `check.earlierDraw` items for the Lektions-Check
  *   aufgaben       { sprechen: bool, schreiben: bool } — submitted Aufgaben (check proofs)
+ *   microOutputs   { [moId]: bool } — the learner's own micro-outputs sent (check proofs by micro-output)
  *   names          { speakerId: display name } from the cast registry
  *   canDos         { canDoId: wording } overrides
  *   onBack         a „Zurück" link in the header
@@ -110,6 +111,7 @@ export default function StepView({
   warmupItems = null,
   earlierItems = null,
   aufgaben = null,
+  microOutputs = null,
   names = null,
   canDos = null,
   onBack = null,
@@ -166,6 +168,9 @@ export default function StepView({
   const [segIdx, setSegIdx] = useState(0);
   const tally = useRef({ correct: 0, total: 0 });
   const reported = useRef(false);
+  // { [microOutputId]: submitted } — reported with the step so a Check proof by micro-output
+  // (SCHEMA §8 Check.proofs[].microOutput) can tick when the learner's own output was sent
+  const microDone = useRef({});
   const [readAloudDone, setReadAloudDone] = useState(false);
 
   if (!step) return null;
@@ -183,7 +188,8 @@ export default function StepView({
   const finishStep = (extra = {}) => {
     if (reported.current) return;
     reported.current = true;
-    if (typeof onDone === 'function') onDone({ stepId: step.id, correct: tally.current.correct, total: tally.current.total, ...extra });
+    const micro = Object.keys(microDone.current).length ? { microOutputs: { ...microDone.current } } : {};
+    if (typeof onDone === 'function') onDone({ stepId: step.id, correct: tally.current.correct, total: tally.current.total, ...micro, ...extra });
   };
   // The player core's attempt of this step (unitPlan: pool steps and the Check): it seeds the
   // option order of non-exam choice items, so a repeat may reorder and a re-render never does.
@@ -285,7 +291,14 @@ export default function StepView({
       );
       break;
     case 'micro':
-      body = <MicroOutputView key="micro" mo={step.microOutput} level={level} onDone={advance} />;
+      body = (
+        <MicroOutputView
+          key="micro"
+          mo={step.microOutput}
+          level={level}
+          onDone={(r) => { if (step.microOutput?.id) microDone.current[step.microOutput.id] = !!(r && r.submitted); advance(); }}
+        />
+      );
       break;
     case 'exit':
       body = <ItemRun key="exit" items={pool.exit} {...runProps} onFinish={(r) => { count(r); advance(); }} />;
@@ -362,6 +375,7 @@ export default function StepView({
           earlierItems={earlierItems || planEarlier(step.plan)}
           attempt={drawAttempt}
           aufgaben={aufgaben}
+          microOutputs={microOutputs}
           course={course}
           canDos={canDos}
           ruleCards={cards}

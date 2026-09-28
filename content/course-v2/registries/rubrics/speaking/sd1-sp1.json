@@ -6,9 +6,10 @@
   "max": 3,
   "criteria": [
     { "id": "vorstellen", "label": "Sich mit mehreren Sätzen vorstellen", "per": "part", "levels": [1, 0.5, 0] },
-    { "id": "buchstabieren", "label": "Ein Wort buchstabieren", "per": "part", "levels": [1, 0.5, 0] },
-    { "id": "nummer", "label": "Eine Nummer nennen", "per": "part", "levels": [1, 0.5, 0] }
+    { "id": "buchstabieren", "label": "Ein Wort buchstabieren", "per": "part", "levels": [1, 0.5, 0], "appliesIf": "full" },
+    { "id": "nummer", "label": "Eine Nummer nennen", "per": "part", "levels": [1, 0.5, 0], "appliesIf": "full" }
   ],
+  "errorPolicy": { "a1": { "verb-ending": "flag", "negation": "flag" } },
   "zeroRules": [],
   "capRules": [],
   "spelling": "not-scored",

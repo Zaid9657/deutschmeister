@@ -230,6 +230,8 @@ function cueFindings(doc, item, path, where, pos) {
 // ── error_correction: the prompt names what to correct (a1.1-u04 r5 F01) ─────────────────────────
 const ARTICLE_TAGS = new Set(['gender-article', 'case-np', 'case-pp']);
 const ORDER_TAGS = new Set(['v2-inv', 'verb-final', 'connector-position', 'satzklammer']);
+// haben or sein (a1.1-u12 r1 F02): the correction names the auxiliary („haben oder sein?", „das Hilfsverb")
+const AUX_CATEGORY_RE = /\b(?:haben oder sein|sein oder haben|Hilfsverb|Perfekt|Partizip)\b/u;
 const ARTICLE_CATEGORY_RE = /\b(?:Artikel|Artikeln|Endung|Endungen|Kasus|Pronomen|Präposition|Form|Wortform|Nomen)\b/u;
 const ORDER_CATEGORY_RE = /\b(?:Wortstellung|Satzstellung|Stellung|Stelle|Position|Reihenfolge|Verbposition|Satzbau|Satzklammer)\b/u;
 const VERB_CATEGORY_RE = /\b(?:Verbform|Verb|Verben|Konjugation|Verneinung|Negation)\b/u;
@@ -241,6 +243,7 @@ export function correctionFamily(item) {
   if (!tag) return 'any';
   if (ARTICLE_TAGS.has(tag)) return 'article';
   if (ORDER_TAGS.has(tag)) return 'order';
+  if (tag === 'perfekt-aux-participle') return 'aux';
   return null;
 }
 
@@ -249,6 +252,7 @@ export function namesCategory(promptDe, family) {
   const frame = stripQuoted(promptDe);
   if (family === 'article') return ARTICLE_CATEGORY_RE.test(frame);
   if (family === 'order') return ORDER_CATEGORY_RE.test(frame);
+  if (family === 'aux') return AUX_CATEGORY_RE.test(frame) || VERB_CATEGORY_RE.test(frame);
   return ARTICLE_CATEGORY_RE.test(frame) || ORDER_CATEGORY_RE.test(frame) || VERB_CATEGORY_RE.test(frame);
 }
 
@@ -306,9 +310,10 @@ function correctionFindings(ctx, doc, lexIndex) {
     const named = namesCategory(item.promptDe, family);
     const explained = alternativesExplained(item);
     if (!named && !explained) {
-      const want = family === 'article' ? '„den Artikel", „die Endung", „das Pronomen"' : family === 'order' ? '„die Wortstellung", „die Position des Verbs"' : '„den Artikel", „die Endung", „die Wortstellung", „die Verbform"';
+      const want = family === 'article' ? '„den Artikel", „die Endung", „das Pronomen"' : family === 'order' ? '„die Wortstellung", „die Position des Verbs"' : family === 'aux' ? '„haben oder sein?", „das Hilfsverb"' : '„den Artikel", „die Endung", „die Wortstellung", „die Verbform"';
       out.push(blocker(doc, `${path}.promptDe`, `error correction (${item.errorTag || arr(item.errorTags)[0] || 'no errorTag'}) with a bare prompt: name what to correct (${want}) outside the quoted sentence, or accept every other correct correction with acceptedWhy — „Korrigieren Sie:" alone admits corrections the grader rejects`, item.id));
     }
+    if (family === 'aux') continue;
     if (family === 'order') {
       // every order the enumerator derives from the key's constituents (a1.1-u02 r2 F01 / r3 F08)
       const key = String(item.answer || '').trim();
@@ -373,7 +378,10 @@ function thirdRoundFindings(doc, item, path, where, nouns, step, list, index) {
   // the answer class promptEn restricts (u01 r1 F04)
   if (typed) {
     const cue = answerClassCue(en);
-    if (cue && !cue.de.test(de)) out.push(blocker(doc, `${path}.promptDe`, `promptEn restricts the answer to „${cue.phrase}", promptDe does not (${cue.de.source.split('|').slice(0, 3).map((w) => `„${w.replace(/\\[bs]|[()+{}_,2]/g, '')}"`).join(' / ')}) — another answer fits the German frame and is graded wrong`, item.id));
+    // a name class („the name") is carried by the frame itself as a rule („bei ___ melden" wants a person):
+    // advisory; a place, language, job, day … class that the frame leaves open is graded wrong: blocker
+    const sev = cue && /name/.test(cue.phrase) ? advisory : blocker;
+    if (cue && !cue.de.test(de)) out.push(sev(doc, `${path}.promptDe`, `promptEn restricts the answer to „${cue.phrase}", promptDe does not (${cue.de.source.split('|').slice(0, 3).map((w) => `„${w.replace(/\\[bs]|[()+{}_,2]/g, '')}"`).join(' / ')}) — another answer fits the German frame and is graded wrong`, item.id));
   }
   // a plural-capable determiner cue before a noun whose plural equals its singular (u06 r1 F04 / r3 F04)
   if (typed) {
@@ -406,6 +414,23 @@ function thirdRoundFindings(doc, item, path, where, nouns, step, list, index) {
       if (!SINGULAR_VERB_RE.test(verbNext.replace(/[.,!?]/g, '')) && withPlural !== String(item.answer) && !accepted.some((a) => norm(a) === norm(withPlural))) {
         out.push(blocker(doc, `${path}.accepted`, `„${alt.noun}" has the same form in the plural (${e.id}): „${withPlural}" is a correct correction too — accept it with acceptedWhy`, item.id));
       }
+    }
+  }
+  // a bracketed cue that IS the key (case aside) hands the answer over (a1.1-u11 r2 F02a) — ADVISORY
+  if (typed) {
+    for (const m of de.matchAll(/\(([^)]+)\)/g)) {
+      if (norm(m[1]) && norm(m[1]) === norm(item.answer)) out.push(advisory(doc, `${path}.promptDe`, `the bracketed cue „${m[1]}" is the key itself — the item asks the learner to copy it`, item.id));
+    }
+  }
+  // a tense item whose quoted stimulus and question share the time word (a1.1-u11 r3 F03) — ADVISORY
+  if (where === 'structured' && /^g\.(?:perfekt|praeteritum)/.test(String(item.topic || ''))) {
+    const TIME = /\b(?:heute|gestern|vorgestern|jetzt|morgen|letzte Woche|letzten \p{L}+|am (?:Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag|Wochenende))\b/giu;
+    const q = de.match(/[„"‚]([^“"‘]+)[“"‘]/);
+    if (q) {
+      const inQuote = new Set((q[1].match(TIME) || []).map((x) => x.toLowerCase()));
+      const rest = stripQuoted(de);
+      const shared = (rest.match(TIME) || []).filter((x) => inQuote.has(x.toLowerCase()));
+      if (shared.length) out.push(advisory(doc, `${path}.promptDe`, `the stimulus and the question share the time word „${shared[0]}" — the tense can be matched, not understood`, item.id));
     }
   }
   // a gist item answered by its own step or input title (u06 r1 F07)

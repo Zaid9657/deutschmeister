@@ -5,7 +5,8 @@
 
 import { walkItems } from '../lib-validate/walk.mjs';
 import { wordCount } from '../lib-validate/text.mjs';
-import { isObj, blocker } from '../lib-validate/helpers.mjs';
+import { isObj, blocker, advisory, arr } from '../lib-validate/helpers.mjs';
+import { norm } from '../lib-validate/text.mjs';
 import { endingContradictions } from '../lib-validate/claims.mjs';
 
 export const id = 'ITM-11';
@@ -21,9 +22,17 @@ export function run({ docs }) {
   let n = 0;
   for (const doc of docs) {
     const aLevel = String(doc.level || '').startsWith('a');
-    for (const { item, path } of walkItems(doc)) {
+    for (const { item, path, step, texts } of walkItems(doc)) {
       if (!isObj(item)) continue;
       n += 1;
+      // „Sophie schreibt: „…“" quotes the step's text exactly, „…" marking a cut (a1.1-u11 r2 F07) — ADVISORY
+      const source = [...arr(step?.input?.lines).map((l) => l?.de), step?.input?.text?.de, ...arr(texts).flatMap((t) => [...arr(t.text?.lines).map((l) => l?.de), t.text?.text])].filter(Boolean).map(norm).join(' | ');
+      if (source) {
+        for (const m of String(item.explanation?.de || '').matchAll(/\b(?:sagt|schreibt|fragt|antwortet|ruft)\s*:\s*„([^“]+)“/gu)) {
+          const parts = m[1].split(/…|\.\.\./).map(norm).filter((x) => x.length > 2);
+          if (parts.length && !parts.every((x) => source.includes(x))) findings.push(advisory(doc, `${path}.explanation.de`, `the explanation quotes „${m[1].slice(0, 60)}" as said or written, but the step's text has no such words — quote it exactly (mark a cut with „…")`, item.id));
+        }
+      }
       const e = item.explanation;
       if (!isObj(e) || !String(e.de || '').trim() || !String(e.en || '').trim()) {
         findings.push(blocker(doc, `${path}.explanation`, 'missing static explanation {de, en}', item.id));

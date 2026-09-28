@@ -155,6 +155,26 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
     return chunkVerbs.some((v) => v.at <= pos && words.some((w) => v.forms.has(w) && !FUNCTION_WORDS.has(w)));
   };
   const templateText = (id) => String(ctx.registries.templates.get(id)?.template?.instructionsDe || '');
+  // multi-word lexicon lemmas (phrases) allocated at or before a position: a hit inside one is the lemma the
+  // lexicon teaches as a word („Tut mir leid", lx.tut-mir-leid; a1.1-u08 r1 F13 / r2 F09), on every surface
+  const phraseLemmas = lexicon
+    .filter((e) => /\s/.test(String(e?.lemma || '').replace(/^(?:der|die|das|sich)\s+/i, '').trim()))
+    .map((e) => ({ at: unitPosition(e.unit), words: tokens(String(e.lemma).replace(/^sich\s+/i, '')).map((t) => t.lower) }))
+    .filter((x) => x.at !== null && x.words.length >= 2);
+  const insidePhrase = (sentence, index, match, pos) => {
+    const toks = tokens(sentence);
+    const hitToks = new Set(tokens(match).map((t) => t.lower));
+    for (const p of phraseLemmas) {
+      if (p.at > pos) continue;
+      for (let i = 0; i + p.words.length <= toks.length; i += 1) {
+        if (!p.words.every((w, k) => toks[i + k].lower === w)) continue;
+        const from = toks[i].index;
+        const to = toks[i + p.words.length - 1].index + toks[i + p.words.length - 1].text.length;
+        if (index >= from && index < to && [...hitToks].every((w) => p.words.includes(w) || FUNCTION_WORDS.has(w))) return true;
+      }
+    }
+    return false;
+  };
 
   let chunkSuppressed = 0;
   let instructionSuppressed = 0;
@@ -185,6 +205,10 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
         const key = `${det.id}|${path}`;
         if (seen.has(key)) continue;
         if (exempted(hit.match, exemptAt(pos, surface, declared))) continue;
+        if (insidePhrase(hit.sentence, hit.index, hit.match, pos)) {
+          instructionSuppressed += 1;
+          continue;
+        }
         if (reportOn === 'chosen') {
           const at = text.indexOf(hit.sentence) + hit.index;
           if (chosen.gap && !(at < chosen.gap[1] && at + String(hit.match).length > chosen.gap[0])) continue;
@@ -197,10 +221,14 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
           const content = htoks.map((t) => t.lower).filter((w) => !FUNCTION_WORDS.has(w));
           let why = null;
           if (frame && at < frame.length) why = 'frame';
+          // the can-do frame's object clause: „Sie können sagen, was Sie gern machen." (a1.1-u08 r2 F09 / r3 F10)
+          else if (frame && /indirekt|Frage mit ob/i.test(det.construction || '') && /\b(?:sagen|fragen|erzählen|verstehen|zeigen|nennen|erklären),\s*$/u.test(hit.sentence.slice(0, hit.index))) why = 'frame';
           else if (template && inOrder(hit.match, templateText(template))) why = 'template';
           else if (htoks.length && ADDRESS_RE.test(htoks[0].text)) why = 'address';
           else if (content.length && content.every((w) => isMetalanguage(w))) why = 'metalanguage';
-          else if (formulaClause(hit.sentence, hit.index, htoks)) why = 'formula';
+          // a one-word construction (welch-, können) in a task formula; a phrase hit („die Frage der
+          // Partnerin") is content even inside a formula
+          else if ((kind === 'prompt' || kind === 'option') && htoks.length === 1 && formulaClause(hit.sentence, hit.index, htoks)) why = 'formula';
           else if (lexicalChunk(hit.sentence, pos) && /reflexiv|trennbar/i.test(det.construction || '')) why = 'lexicon';
           if (why) {
             instructionSuppressed += 1;
@@ -250,7 +278,8 @@ export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
     // stage I, the item surfaces and Redemittel labels — all advisory metalanguage
     const itemsToo = stageOf(doc) !== 'S';
     for (const sf of walkReadSurfaces(doc, { cando: ctx.registries.cando })) {
-      const itemSurface = sf.kind === 'prompt' || sf.kind === 'option' || sf.kind === 'explanation' || sf.kind === 'rmFunction';
+      // item surfaces, Redemittel labels, and the step and input titles (a1.1-u12 r1 F07)
+      const itemSurface = ['prompt', 'option', 'explanation', 'rmFunction', 'stepTitle', 'inputTitle', 'hint'].includes(sf.kind);
       if (!sf.instruction && !(itemsToo && itemSurface)) continue;
       if (sf.owner) {
         const k = `${sf.owner.file}|${sf.owner.path}`;

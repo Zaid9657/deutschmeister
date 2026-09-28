@@ -193,6 +193,52 @@ function toReserveItem(item, minLektion, step) {
   return out;
 }
 
+// ── plural variants (SCHEMA §6 pluralVariants, 2026-09-28) ──────────────────────────────
+/**
+ * Every correct plural of a lexicon noun that has more than one (lx.balkon: Balkone, Balkons),
+ * lower-case plural → all its plurals. Read from every level's lexicon: a plural is a fact about
+ * the word, not about the level that allocates it.
+ */
+function pluralTwinsOf(lexicons) {
+  const twins = new Map();
+  for (const lex of lexicons) {
+    for (const e of Array.isArray(lex && lex.entries) ? lex.entries : []) {
+      const variants = strs(e && e.pluralVariants);
+      if (!variants.length || typeof e.plural !== 'string') continue;
+      const all = [...new Set([e.plural, ...variants].map((p) => p.replace(/^die\s+/i, '').trim()).filter(Boolean))];
+      for (const p of all) twins.set(p.toLowerCase(), all);
+    }
+  }
+  return twins;
+}
+
+/** Item types the learner TYPES an answer into (a choice or tile item offers its forms instead). */
+const TYPED_TYPES = new Set(['fill_blank', 'error_correction', 'dictation', 'notes']);
+const isTyped = (x) => TYPED_TYPES.has(x.type) || (x.type === 'cloze' && !(Array.isArray(x.options) && x.options.length));
+
+/**
+ * The item with every plural twin of its key accepted too: an accepted form that types „Balkone"
+ * also accepts „Balkons" (the checker grades against `accepted`). Returns the item itself when
+ * nothing changes; never touches a choice or tile item.
+ */
+function withPluralTwins(item, twins) {
+  if (!twins.size || !isItem(item) || !isTyped(item)) return item;
+  const base = strs(item.accepted).length ? strs(item.accepted) : [item.answer].filter((a) => typeof a === 'string');
+  const out = [...base];
+  for (const form of base) {
+    for (const m of form.matchAll(/\p{L}+/gu)) {
+      const all = twins.get(m[0].toLowerCase());
+      if (!all) continue;
+      for (const v of all) {
+        const cased = /^\p{Lu}/u.test(m[0]) ? v.charAt(0).toUpperCase() + v.slice(1) : v.charAt(0).toLowerCase() + v.slice(1);
+        const variant = form.slice(0, m.index) + cased + form.slice(m.index + m[0].length);
+        if (!out.includes(variant)) out.push(variant);
+      }
+    }
+  }
+  return out.length === base.length ? item : { ...item, accepted: out };
+}
+
 // ── generated ids, stripping, line seconds ──────────────────────────────────────────────
 /** Give every GeneratorSpec of a step its compiler-assigned item ids (STEP-gNN, in document order). */
 function assignGeneratedIds(step) {
@@ -436,6 +482,7 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
   const profile = docs('levels').flatMap((t) => t.doc.levels).find((l) => l.level === level) || null;
   if (!profile) warnings.push(`${level}: no level profile — minutesPlanned is null`);
   const lexicon = mine('lexicon')[0]?.doc || null;
+  const pluralTwins = pluralTwinsOf(docs('lexicon').map((t) => t.doc));
   const ruleCards = mine('rulecards')[0]?.doc || null;
   const candoText = new Map(docs('cando').flatMap((t) => t.doc.items.map((i) => [i.id, (typeof i.learnerDe === 'string' && i.learnerDe.trim()) || i.de])));
   const spineLabel = new Map(docs('spine').flatMap((t) => t.doc.points.map((p) => [p.id, p.label])));
@@ -514,6 +561,13 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
     const hash = contentHash(u);
     unitHashes[u.id] = hash;
     const chunk = learnerCopy(u);
+    // every correct plural of a noun is accepted where an item's key types one (SCHEMA §6 pluralVariants)
+    if (pluralTwins.size) {
+      eachNode(chunk, (x) => {
+        const twin = withPluralTwins(x, pluralTwins);
+        if (twin !== x) x.accepted = twin.accepted;
+      });
+    }
     const generated = [];
     if (Array.isArray(chunk.steps)) for (const s of chunk.steps) generated.push(...assignGeneratedIds(s));
     collectIds({ ...u, steps: (chunk.steps || u.steps || []).map((s, i) => ({ ...s, reserve: u.steps[i]?.reserve })) }, ids, errors, rel(file));
@@ -524,12 +578,12 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
       for (const it of Array.isArray(st.reserve) ? st.reserve : []) {
         if (!isItem(it)) continue;
         reserveIds.add(it.id);
-        reserveIndex.push({ unit: u.id, ...toReserveItem(it, u.nr, st.id) });
+        reserveIndex.push({ unit: u.id, ...toReserveItem(withPluralTwins(it, pluralTwins), u.nr, st.id) });
       }
     }
     const poolItems = [];
     eachNode(u, (x) => {
-      if (isItem(x) && !reserveIds.has(x.id)) poolItems.push(toPoolItem(x, u.nr));
+      if (isItem(x) && !reserveIds.has(x.id)) poolItems.push(toPoolItem(withPluralTwins(x, pluralTwins), u.nr));
     });
     const lines = [];
     eachNode(u, (x) => {

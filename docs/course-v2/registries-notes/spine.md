@@ -70,6 +70,13 @@ loosens or adds; none moves an intro, so GRM-01/GRM-02 are unchanged for every l
 | `g.praep-akkusativ` `chunkFrom` a1.1-u04 (*für mich, für den …*) | u04's chunk is `g.akkusativ`; the point has no detector, so nothing is reported today |
 | `g.wechselpraep` `chunkFrom` a1.1-u05 (*ziehen in die …*) | u05's chunk is `g.praep-dativ`; the one Folge line stays glossed. A `det.wechselpraep-richtung` was measured on all content: 27 hits, 13 of them correct A1 chunks (*ins Kino, ins Konzert* in a1.1-u08, the plan's own fixed phrase) — not added |
 | `g.adj-dekl-unbestimmt` `chunkFrom` a1.1-u05 (*ein großes Zimmer*) | u05's chunk slot is taken; the unit glosses the form (*eigene*) |
+| split *schon – noch nicht, noch – nicht mehr; nicht …, sondern …* out of `g.nicht-position-gern` (a1.1-u08 r1 F08) | D17 made them the named increment on the depth-2 card `rc.nicht-position-gern-2` at a1.2-u10, deliberately without a new point (a new point there takes an intro slot, GRM-01). A label names the intro content **and** the increments of its depth-2 card (§2), so u08 need not teach them; its one *nicht …, sondern …* item is licensed by the point it introduces |
+| `g.wortbildung-er-in` back to chunk-only (a1.1-u10 r1 F20, the alternative) | the plan was updated instead (`curriculum/a1-1.md` changelog 2026-09-28): u10 follows the spine (D3) and needs no change |
+
+**Second batch (a1.1 u07–u12 reviews, detectors):** `det.genitiv-feminin-attribut` also matches *einer / meiner …*
+after a noun (*die Webseite einer Sprachschule*, u12 r1 F07; measured on all content: two new true hits, in a2.2
+rule-card prose); fixtures for the engine's phone-number and *ihr*-verb skips (u09 r1 F05 / r2 F06) and for
+*verabredet sein* (`det.zustandspassiv`, u08 r3 F10). No spine field changed.
 
 ## 1. What the file holds
 

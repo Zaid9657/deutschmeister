@@ -31,11 +31,11 @@
 //     listen_select, insert, word-bank cloze, match) answer with a key or an
 //     option string: an exact key comparison, never a typo.
 //
-//   - every typed answer is graded with the live per-item options PLUS three opt-in rules
-//     of check.js (v2CheckOptions): Duden doublets are one word (gern/gerne, OK/okay), a
-//     paradigm twin is a grammar error, never a typo (kommt/kommst, schlaft/schläft, willen/
-//     wollen — on g./lx. topics and error corrections), and on a caseSensitive item only the
-//     polite forms decide by case. The live course never passes them.
+//   - every typed answer is graded with the live per-item options PLUS the opt-in rules of
+//     check.js (v2CheckOptions): Duden doublets are one word (gern/gerne, OK/okay), a paradigm
+//     twin is a grammar error, never a typo (kommt/kommst, schlaft/schläft, willen/wollen — on
+//     g./lx. topics and error corrections), on a caseSensitive item only the polite forms
+//     decide by case, and a spacing slip („Wieviel") is a TYPO. The live course never passes them.
 //   - `error_correction`: the item's own quoted wrong sentence is WRONG, never a TYPO (ItemView
 //     prefills it), and a slip in a token where the key corrects the quote is WRONG too — the
 //     correction IS that token (a1.1-u03 r2/r3 F01, u10 r3 F03).
@@ -88,6 +88,7 @@ export function v2CheckOptions(item, accepted = acceptedOf(item)) {
     ...base,
     doublets: true,
     politeCase: true,
+    spacing: true,
     paradigm: !base.dictation && (PARADIGM_TOPIC_RE.test(String((item && item.topic) || '')) || (item && item.type) === 'error_correction'),
   };
 }
@@ -260,10 +261,21 @@ function checkExactNumber(item, input) {
   return again.result === RESULT.WRONG ? out : { result: RESULT.TYPO, expected: again.expected };
 }
 
+/** An answer typed letter by letter („B-E-R-I-S-H-A.", „B, E, R …", „b e r"). */
+const SPELLED_INPUT_RE = /^\p{L}(?:[\s,.;\-\u2010-\u2015]+\p{L})+[\s.,!]*$/u;
+
 function checkName(item, input) {
   const accepted = acceptedOf(item);
   const opts = v2CheckOptions(item, accepted);
   const out = checkAnswer(input, accepted, opts);
+  if (out.result === RESULT.CORRECT) return out;
+  // A name written down letter by letter, as it is spelled on the audio, is the name — whether or
+  // not the item lists a spelled form (a1.1-u02 r3 F02, the q01 proof item): every letter counts.
+  if (SPELLED_INPUT_RE.test(String(input ?? '').trim())) {
+    const letters = normalizeAnswer(normalizeSpelling(input)).replace(/[^\p{L}]/gu, '');
+    const hit = accepted.find((a) => normalizeAnswer(a).replace(/[^\p{L}]/gu, '') === letters);
+    if (hit) return { result: RESULT.CORRECT, expected: hit };
+  }
   // A letter slip is a different name. Only the checker's case rule may still retry.
   if (out.result === RESULT.TYPO && out.reason !== 'case') return { result: RESULT.WRONG, expected: out.expected };
   if (out.result === RESULT.WRONG && opts.spelling) {
@@ -291,10 +303,22 @@ function checkTyped(item, input) {
 
 // ── error_correction ─────────────────────────────────────────────────────────────
 
-/** The first „…" / "…" / «…» quotation of a prompt (the sentence to correct), or null. */
+const QUOTE_RE = /„([^“”"]+)[“”"]|"([^"]+)"|«([^»]+)»/g;
+
+/**
+ * The sentence an error_correction prompt asks to correct (ItemView prefills it): the first
+ * quotation after the prompt's last colon outside quotes, else its longest quotation — never a
+ * word the prompt only names („Korrigieren Sie die Position von „nicht“: „…““, a1.1-u08 r1 F01).
+ */
 export function quotedSentence(promptDe) {
-  const m = /„([^“”"]{2,})[“”"]|"([^"]{2,})"|«([^»]{2,})»/.exec(String(promptDe || ''));
-  return m ? (m[1] || m[2] || m[3]).trim() : null;
+  const text = String(promptDe || '');
+  const quotes = [...text.matchAll(QUOTE_RE)]
+    .map((m) => ({ at: m.index, text: (m[1] || m[2] || m[3]).trim() }))
+    .filter((q) => q.text.length >= 2);
+  if (!quotes.length) return null;
+  const colon = text.replace(QUOTE_RE, (m) => ' '.repeat(m.length)).lastIndexOf(':');
+  const after = colon >= 0 ? quotes.find((q) => q.at > colon) : null;
+  return (after || quotes.reduce((a, b) => (b.text.length > a.text.length ? b : a))).text;
 }
 
 /** An answer as the checker compares it: normalised, punctuation folded, lower-case. */

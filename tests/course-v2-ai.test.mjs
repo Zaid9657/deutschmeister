@@ -830,6 +830,18 @@ test('rounds: the partner prompt has one ABLAUF per part, every card of both sid
   }
 });
 
+test('rounds: the partner is told what each part scores, and never to ask a shortened Teil for what it does not elicit', () => {
+  const u01 = ROUNDS.find((r) => r.key === 'a11-u01-s');
+  if (!u01) return;
+  __setCourseV2DataForTests({ banks: { 'a1.1': REGISTERED['a1.1'] }, rubrics: RUBRICS });
+  const prompt = buildCoursePartnerPrompt({ level: 'A1.1', task: u01.entry });
+  const teil1 = prompt.slice(prompt.indexOf('=== TEIL 1 ==='), prompt.indexOf('=== TEIL 2 ==='));
+  assert.match(teil1, /DAS ZEIGT DEIN GEGENÜBER IN DIESEM TEIL: Sich mit mehreren Sätzen vorstellen\./);
+  assert.match(teil1, /NICHT IN DIESEM TEIL: Ein Wort buchstabieren; Eine Nummer nennen\./);
+  assert.match(prompt.slice(prompt.indexOf('=== TEIL 2 ===')), /Zur Wortkarte eine passende Frage stellen/);
+  __setCourseV2DataForTests(null);
+});
+
 test('rounds: cards-ask runs round by round — the learner asks with its card, then the partner with its own', () => {
   const p = buildCoursePartnerPrompt({
     level: 'A1.1',
@@ -877,10 +889,10 @@ test('rounds: the grading plan covers every part on its own profile and scores n
   const full = speakingPartsPlan({ parts: [{ template: 'sd1.sp1', profile: 'sd1-sp1' }, { template: 'sd1.sp2', profile: 'sd1-sp2' }] }, withRule);
   assert.deepEqual(full.map((p) => p.max), [3, 6], 'at full length all three Sp1 criteria count');
   assert.equal(scoredTarget(SD1_SP1_FULL_ONLY(), { length: 'mini' }), 1);
-  if (P('sd1-sp1').criteria.some((c) => c.appliesIf === 'full')) {
-    const u01 = ROUNDS.find((r) => r.key === 'a11-u01-s');
-    if (u01) assert.equal(speakingPartsPlan(normalizeSpeakingTask(u01.entry), profileOf)[0].max, 1, 'a11-u01-s: the reduced introduction is out of 1');
-  }
+  // the registry carries the rule: sd1-sp1 scores spelling and the number at full length only
+  assert.deepEqual(P('sd1-sp1').criteria.filter((c) => c.appliesIf === 'full').map((c) => c.id), ['buchstabieren', 'nummer']);
+  const u01 = ROUNDS.find((r) => r.key === 'a11-u01-s');
+  if (u01) assert.deepEqual(speakingPartsPlan(normalizeSpeakingTask(u01.entry), profileOf).map((p) => p.max), [1, 6], 'a11-u01-s: the reduced introduction is out of 1, Teil 2 out of 6');
 });
 
 /** A model stub that answers per rubric profile (the parts are graded in parallel). */
@@ -899,7 +911,7 @@ const answer = (criteria, feedback) => ({ criteria, flags: {}, leitpunkte: [], e
 test('rounds: a11-u01-s is graded part by part and summed — a flawless session is full marks, with the score per Teil', async () => {
   const u01 = ROUNDS.find((r) => r.key === 'a11-u01-s');
   if (!u01) return; // the unit is not compiled on this tree
-  __setCourseV2DataForTests({ banks: { 'a1.1': REGISTERED['a1.1'] }, rubrics: { ...RUBRICS, profiles: { ...RUBRICS.profiles, 'sd1-sp1': SD1_SP1_FULL_ONLY() } } });
+  __setCourseV2DataForTests({ banks: { 'a1.1': REGISTERED['a1.1'] }, rubrics: RUBRICS });
   const model = perProfileModel({
     'sd1-sp1': answer({ vorstellen: 1 }, 'Teil-1'),
     'sd1-sp2': answer({ frage: [2, 2], antwort: [1, 1] }, 'Teil-2'),
@@ -980,13 +992,36 @@ test('the graders\' ErrorTag list is the schema checker\'s enum (SCHEMA §3.1), 
   assert.deepEqual([...ERROR_TAGS].sort(), [...enumTags].sort());
 });
 
-test('the sd1 Sprechen Teile 2/3 only flag case and nicht/kein errors at A1 (the A1.1 spine teaches them later)', () => {
+test('the sd1 profiles flag (never score) person endings and nicht/kein at A1, Teile 2/3 also the case endings the A1.1 spine teaches later', () => {
   for (const id of ['sd1-sp2', 'sd1-sp3']) {
-    assert.deepEqual(flaggedErrorTags(P(id), 'a1.1'), ['case-np', 'case-pp', 'negation'], id);
+    assert.deepEqual(flaggedErrorTags(P(id), 'a1.1'), ['case-np', 'case-pp', 'verb-ending', 'negation'], id);
     const system = buildWritingSystemPrompt(P(id), 'a1.1', criteriaPlan(P(id), {}));
-    assert.match(system, /FEHLERPOLITIK: Fehler der Typen case-np, case-pp, negation/);
+    assert.match(system, /FEHLERPOLITIK: Fehler der Typen case-np, case-pp, verb-ending, negation/);
   }
-  assert.deepEqual(flaggedErrorTags(P('sd1-s2'), 'a1.2'), ['negation']);
+  for (const id of ['sd1-sp1', 'sd1-s2']) assert.deepEqual(flaggedErrorTags(P(id), 'a1.2'), ['verb-ending', 'negation'], id);
+  assert.deepEqual(flaggedErrorTags(P('sd1-sp2'), 'a2.1'), [], 'only the A1 band');
+});
+
+test('form-number-exact (sd1-s1) is exact against ANY accepted form, in its digits (a1.1-u09 r1 F04)', () => {
+  const run = (fields) => RULES['form-number-exact'].fn({ fields });
+  const f4 = { criterion: 'f4', expected: '19.30 Uhr', accepted: ['19.30 Uhr', '7.30 Uhr', 'um 19.30 Uhr', 'halb acht'] };
+  for (const given of ['19.30 Uhr', '7.30 Uhr', 'um 19.30 Uhr', '19:30']) assert.equal(run([{ ...f4, given }]), null, given);
+  assert.deepEqual(run([{ ...f4, given: '20.30 Uhr' }]).zero, ['f4']);
+  assert.deepEqual(run([{ criterion: 'f5', expected: '6', accepted: ['6', 'sechs', '6 Personen'], given: '6 Personen' }]), null);
+  assert.deepEqual(run([{ criterion: 'f5', expected: '6', given: '7' }]).zero, ['f5'], 'without accepted[] the key alone decides');
+});
+
+test('the move „nachfragen" a part declares is reported as evidence and changes no level (a1.1-u02 r2/r3 F05)', async () => {
+  const model = stubModel({ criteria: { vorstellen: 1, buchstabieren: 1, nummer: 1 }, moves: { nachfragen: true }, feedback: 'x' });
+  const task = { mode: 'monologue', template: 'sd1.sp1', profile: 'sd1-sp1', moves: ['nachfragen'] };
+  const r = await gradeSubmission({ kind: 'speaking', profile: P('sd1-sp1'), task, level: 'a1.1', text: 'Wie bitte?', transcript: [{ role: 'user', content: 'Wie bitte?' }], callModel: model });
+  assert.equal(r.result.moves.nachfragen, true);
+  assert.equal(r.result.total_score, 3);
+  assert.match(model.calls[0].system, /„nachfragen" heißt/);
+  const prompt = buildCoursePartnerPrompt({ level: 'A1.1', task: { ...task, aiRole: { name: 'Nora' } } });
+  assert.match(prompt, /GESPRÄCHSSCHRITTE: Diese Schritte soll dein Gegenüber selbst machen können: nachfragen/);
+  const none = await gradeSubmission({ kind: 'speaking', profile: P('sd1-sp1'), task: { ...task, moves: [] }, level: 'a1.1', text: 'x', transcript: [{ role: 'user', content: 'x' }], callModel: stubModel({ criteria: { vorstellen: 1, buchstabieren: 1, nummer: 1 } }) });
+  assert.equal(none.result.moves, undefined, 'no declared move, no moves report');
 });
 
 test('ErrorTag verb-ending (Personalendung/Kongruenz) is a tag the graders accept', async () => {

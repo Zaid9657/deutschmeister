@@ -121,12 +121,23 @@ export function* walkReadSurfaces(doc, { cando = null } = {}) {
       // the text is the can-do registry's, not the unit's: `owner` routes a finding to the registry file
       if (text) yield s('lernziel', text, `start.lernziele[${i}]`, c, folgeGlosses, { instruction: true, extra: true, owner: { file: cando.get(c)?.file ?? null, path: `items[${c}].${str(e?.learnerDe) ? 'learnerDe' : 'de'}` } });
     }
+    // the lexicon block titles (the Wortschatz screen) and the Fokus cards (title, body; their own glosses)
+    for (const [i, b] of arr(d.spec?.lexiconBlocks).entries()) if (str(b?.title)) yield s('blockTitle', b.title, `spec.lexiconBlocks[${i}].title`, d.id, [], { extra: true });
+    for (const [i, f] of arr(d.fokus).entries()) {
+      const fg = glossTokens(f?.glosses);
+      if (str(f?.title)) yield s('fokus', f.title, `fokus[${i}].title`, f.id, fg, { extra: true, twin: Boolean(str(f?.bodyEn)) });
+      if (str(f?.bodyDe)) yield s('fokus', f.bodyDe, `fokus[${i}].bodyDe`, f.id, fg, { extra: true, twin: Boolean(str(f?.bodyEn)) });
+    }
     for (const [i, r] of arr(d.redemittel).entries()) {
       if (str(r?.function)) yield s('rmFunction', r.function, `redemittel[${i}].function`, r.id, [], { extra: true, twin: Boolean(str(r?.en)) });
     }
     for (const { step, path } of walkSteps(doc)) {
       if (!isObj(step)) continue;
       if (str(step.title)) yield s('stepTitle', step.title, `${path}.title`, step.id, glossTokens(step.input?.glosses));
+      // the input's own title and the Aussprache focus line are read on the step's screen (StepView;
+      // a1.1-u11 r1 F01, u07 r2 F04c) — advisory surfaces
+      if (str(step.input?.title)) yield s('inputTitle', step.input.title, `${path}.input.title`, step.id, glossTokens(step.input?.glosses), { extra: true });
+      if (str(step.aussprache?.focus)) yield s('ausspracheFocus', step.aussprache.focus, `${path}.aussprache.focus`, step.id, [], { extra: true });
       if (str(step.endLine)) yield s('endLine', step.endLine, `${path}.endLine`, step.id);
       for (const [i, c] of arr(step.strategyCards).entries()) {
         if (str(c?.de)) yield s('strategyCard', c.de, `${path}.strategyCards[${i}].de`, step.id, [], { instruction: true });
@@ -148,7 +159,11 @@ export function* walkReadSurfaces(doc, { cando = null } = {}) {
   }
   for (const { item, path, where, block } of walkItems(doc)) {
     if (!isObj(item)) continue;
-    const g = where === 'exam' ? blockScreen.get(block) || [] : [];
+    // an item's hint is on its screen (ItemView): its words gloss the item's stem, options and explanation
+    // (a1.1-u07 r2 F06 / r3 F05b: „die Praxis: …" in the hint of ls3-s01)
+    const hintWords = readWords(str(item.hint?.de));
+    const g = [...(where === 'exam' ? blockScreen.get(block) || [] : []), ...hintWords];
+    if (str(item.hint?.de)) yield s('hint', item.hint.de, `${path}.hint.de`, item.id, [], { item, extra: true, twin: Boolean(str(item.hint?.en)) });
     // an error-correction item quotes its wrong sentence (prompt) and its wrong form (explanation)
     const planted = item.intentionalError || item.type === 'error_correction';
     const prompt = planted ? stripQuoted(item.promptDe) : item.promptDe;

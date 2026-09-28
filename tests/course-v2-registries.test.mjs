@@ -250,3 +250,46 @@ test('can-dos: the learner lines use only what is known at the unit that shows t
   const onLines = report.results.flatMap((r) => (r.findings || []).filter((f) => /learnerDe/.test(f.path || '')).map((f) => `${r.id} ${f.path}: ${f.message.slice(0, 160)}`));
   assert.deepEqual(onLines, []);
 });
+
+// ── second batch: the a1.1 u07–u12 reviews ────────────────────────────────────────────────────────
+
+test('error_correction may carry tiles (the constituents, never rendered); WritingTask address ihr and textType', () => {
+  const ec = {
+    id: 'a1.1-u07-ls2-p09', type: 'error_correction', role: 'practice', topic: 'g.zeitangaben-inversion',
+    promptDe: 'Korrigieren Sie die Wortstellung: „Am Montag ich arbeite.“', answer: 'Am Montag arbeite ich.', accepted: ['Am Montag arbeite ich.'],
+    intentionalError: true, errorTag: 'v2-inv', tiles: ['am Montag', 'arbeite', 'ich'], explanation: { de: 'Das Verb steht auf Position 2.', en: 'The verb is second.' }, origin: 'agent',
+  };
+  assert.deepEqual(errs(parse('Item'), ec), []);
+  const post = {
+    bankKey: 'a11-u11-w', lane: 'sd1', template: 'sd1.s2', examKey: 'goethe_a1', profile: 'sd1-s2', register: 'informell', address: 'ihr', textType: 'tt.post',
+    title: 'Ein Post', situationDe: 'Sie waren am Wochenende in Dresden.', taskDe: 'Schreiben Sie einen Post.', leitpunkte: [{ id: 'lp1', de: 'Wo waren Sie?', cues: ['Dresden'] }],
+    wordBand: [20, 40], minSubmitWords: 10, checklist: ['Anrede und Gruß'], modelText: 'Hallo zusammen! …',
+  };
+  assert.deepEqual(errs(parse('WritingTask'), post), []);
+  assert.notDeepEqual(errs(parse('WritingTask'), { ...post, address: 'euch' }), []);
+});
+
+test('casts: Dr. Sommer\'s Sprechzeiten are recorded once, the legal minimum marked unverified', () => {
+  const sommer = CASTS.a1.members['cast.dr-sommer'];
+  assert.match(sommer.contact.hoursDe, /Mo–Fr 8–12 Uhr; Mo, Di, Do 15–18 Uhr/);
+  assert.match(sommer.contact.note, /UNVERIFIED/);
+  assert.match(sommer.contact.note, /TODO/);
+  assert.deepEqual(sommer.bands, ['a1', 'a2', 'b1'], 'one entry serves A1–B1: the a2/b1 casts only relate to it');
+  for (const c of ['a2', 'b1']) assert.equal(CASTS[c].members['cast.dr-sommer'], undefined);
+});
+
+test('series: the Praktikum of the A1.1 → A1.2 beat starts in the week between the courses (a1.1-u12 r2 F09)', () => {
+  const beat = CASTS.series.beats.find((b) => b.from === 'a1.1-u12');
+  assert.match(beat.resolution, /Woche zwischen dem Kurs A1\.1 und dem Kurs A1\.2/);
+  assert.match(CASTS.series.members['cast.priya'].role, /A1\.2 Mo–Do 9–12 Uhr/);
+});
+
+test('detectors (second batch): genitive with einer after a noun; the review false positives stay fixtures', () => {
+  assert.ok(hits('det.genitiv-feminin-attribut', 'Auf der Webseite einer Sprachschule steht ein Kurs.'));
+  assert.equal(hits('det.genitiv-feminin-attribut', 'Ich spreche mit einer Freundin.'), 0);
+  assert.equal(hits('det.ordinalzahl', 'Die Nummer ist 0157 38 42 96 10. Priya bestellt einen Kaffee.'), 0);
+  assert.equal(hits('det.possessiv-sein-ihr-unser-euer', 'Mögt ihr Kuchen auch?'), 0);
+  assert.equal(hits('det.possessiv-sein-ihr-unser-euer', 'Mögt auch ihr Kuchen?'), 0);
+  assert.ok(hits('det.possessiv-sein-ihr-unser-euer', 'Das ist sein Fahrrad.'));
+  assert.equal(hits('det.zustandspassiv', 'Wir sind am Samstag verabredet.'), 0);
+});

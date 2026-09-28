@@ -108,6 +108,7 @@ const EN = {
   'mo.revise': 'Revise once',
   'mo.skip': 'Continue without an assessment',
   'mo.register': 'Form of address: {r}',
+  'mo.model': 'Model answer',
 
   'ai.label': 'automated practice assessment',
   'ai.points': '{p} of {max} points (guide value)',
@@ -204,6 +205,8 @@ const EN = {
   'check.aufgabeSprechen': 'speaking',
   'check.aufgabeSchreiben': 'writing',
   'check.aufgabeOpen': 'the {task} task is still open',
+  'check.proofMicro': 'shown in your own answer',
+  'check.microOpen': 'your own short answer is still open',
   'check.rueckschau': 'Grammar review',
   'check.portrait': 'Portrait',
   'check.story': 'How does it go on?',
@@ -354,6 +357,7 @@ const DE = {
   'mo.revise': 'Einmal überarbeiten',
   'mo.skip': 'Ohne Auswertung weiter',
   'mo.register': 'Anrede: {r}',
+  'mo.model': 'Musterantwort',
 
   'ai.label': SCORE_LABEL_DE,
   'ai.points': '{p} von {max} Punkten (Richtwert)',
@@ -450,6 +454,8 @@ const DE = {
   'check.aufgabeSprechen': 'Sprechen',
   'check.aufgabeSchreiben': 'Schreiben',
   'check.aufgabeOpen': 'die Aufgabe {task} ist noch offen',
+  'check.proofMicro': 'in Ihrer eigenen Antwort gezeigt',
+  'check.microOpen': 'Ihre eigene kurze Antwort ist noch offen',
   'check.rueckschau': 'Grammatik-Rückschau',
   'check.portrait': 'Porträt',
   'check.story': 'Wie geht es weiter?',

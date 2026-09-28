@@ -323,6 +323,8 @@ export function checkAnswer(userInput, expected, opts = {}) {
 //   politeCase — on a caseSensitive item only the polite forms decide by case (Sie, Ihnen, Ihr-):
 //                „… ist das Ihre tochter?" is a TYPO, „… ist das ihre Tochter?" WRONG.
 //                (a1.1-u03 r2/r3 F05)
+//   spacing    — an answer that differs from an accepted form only in its spaces („Wieviel" for
+//                „Wie viel", „Online Kurs" for „Onlinekurs") is a TYPO, never WRONG. (a1.1-u12 r3)
 
 /** The second spelling of a Duden doublet → the first, on a prepared (normalised, lower-case) string. */
 const DOUBLET_OF = Object.freeze({ gerne: 'gern', alleine: 'allein', tschues: 'tschuess', okay: 'ok' });
@@ -382,7 +384,7 @@ function politeCaseMiss(rawUser, rawAccepted) {
 
 function compareAnswer(userInput, expected, {
   strict = false, dictation = false, caseSensitive = false, spelling = false,
-  doublets = false, paradigm = false, politeCase = false,
+  doublets = false, paradigm = false, politeCase = false, spacing = false,
 } = {}, numbers = false) {
   const accepted = (Array.isArray(expected) ? expected : [expected]).filter(Boolean);
   const spellingMode = spelling || spellingApplies(accepted);
@@ -418,6 +420,10 @@ function compareAnswer(userInput, expected, {
     for (const a of accepted) {
       if (foldDoublets(prepare(a)) === folded) return { result: dictation ? RESULT.TYPO : RESULT.CORRECT, expected: a };
     }
+  }
+  if (spacing) {
+    const joined = user.replace(/ /g, '');
+    for (const a of accepted) if (prepare(a).replace(/ /g, '') === joined) return { result: RESULT.TYPO, expected: a };
   }
   for (const a of accepted) {
     if (strict && strictApplies(a)) continue;

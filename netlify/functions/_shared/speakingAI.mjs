@@ -7,8 +7,8 @@
 // turned into an AI partner at the end of this file.
 
 import { parseBankKey, levelOfPrefix, isBankKey } from './rubrics/keys.mjs';
-import { bankEntry } from './rubrics/data.mjs';
-import { speakingPartLabels } from './rubrics/grade.mjs';
+import { bankEntry, rubricProfile } from './rubrics/data.mjs';
+import { speakingPartLabels, isAutoScored, appliesTo } from './rubrics/grade.mjs';
 
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
 const HAIKU_MODEL = 'claude-haiku-4-5-20251001';
@@ -323,6 +323,8 @@ export async function teacherReply({ system, history = [], userText = '', maxTok
 
 
 const MODES = new Set(['cards-ask', 'cards-request', 'group', 'get-to-know', 'monologue', 'plan-together', 'discuss', 'photo', 'feedback-question', 'mediate']);
+/** Moves a part may declare (SCHEMA §8 SpeakingPart.moves; 'nachfragen' 2026-09-28). */
+const MOVES_DE = { vorschlagen: 'etwas vorschlagen', reagieren: 'auf einen Vorschlag reagieren', widersprechen: 'widersprechen', einigen: 'sich einigen', verteilen: 'Aufgaben verteilen', nachfragen: 'nachfragen (z. B. „Wie bitte?“)' };
 const SUPPORTS = new Set(['slow-wordbank', 'repeat-on-request', 'clarify', 'learner-leads', 'examiner', 'interrupts']);
 const LENGTHS = new Set(['full', 'reduced', 'mini']);
 const strList = (v, max = 12) => (Array.isArray(v) ? v.filter((x) => typeof x === 'string' && x.trim()).map((x) => x.trim()).slice(0, max) : []);
@@ -363,7 +365,7 @@ export function normalizeSpeakingPart(p) {
     situationDe: strOf(s.situationDe),
     cards: { learner: cardList(s.cards?.learner), partner: cardList(s.cards?.partner) },
     slides: strList(s.slides, 5),
-    moves: strList(s.moves, 5),
+    moves: strList(s.moves, 6).filter((m) => m in MOVES_DE),
     planningRound: objOf(s.planningRound),
     stimulus: materialOf(s.stimulus),
     partnerData: materialOf(s.partnerData),
@@ -595,13 +597,35 @@ function materialLines(p) {
   ].filter(Boolean);
 }
 
-/** SITUATION, AUFGABE, material and ABLAUF of one part, as prompt lines. */
+/**
+ * What this part scores, from its rubric profile: the partner gives the learner room for every
+ * scored component and never asks for one a shortened Teil does not elicit (appliesIf 'full':
+ * a1.1-u01's reduced sd1.sp1 is the introduction only — no spelling, no number; r1 F01).
+ */
+function scoredLines(p, t) {
+  if (t.micro || !p.profile) return [];
+  const profile = rubricProfile(p.profile);
+  const crit = (profile && Array.isArray(profile.criteria) ? profile.criteria : []).filter(isAutoScored);
+  if (!crit.length) return [];
+  const partTask = { ...p, targets: t.targets };
+  const on = crit.filter((c) => appliesTo(c, partTask)).map((c) => c.label);
+  const off = crit.filter((c) => !appliesTo(c, partTask)).map((c) => c.label);
+  return [
+    on.length ? `DAS ZEIGT DEIN GEGENÜBER IN DIESEM TEIL: ${on.join('; ')}. Gib ihm Gelegenheit dazu.` : null,
+    off.length ? `NICHT IN DIESEM TEIL: ${off.join('; ')}. Bitte dein Gegenüber nicht darum.` : null,
+  ];
+}
+
+/** SITUATION, AUFGABE, material, what is scored and the ABLAUF of one part, as prompt lines. */
 function partLines(p, t, { closing }) {
   return [
     p.situationDe ? `SITUATION: ${p.situationDe}` : null,
     p.instructionsDe ? `AUFGABE DEINES GEGENÜBERS: ${p.instructionsDe}` : null,
     ...materialLines(p),
+    ...scoredLines(p, t),
     (MODE_RULES[p.mode] || MODE_RULES.monologue)(p, t, { closing }).filter(Boolean).join('\n'),
+    // plan-together lists its moves in its ABLAUF; any other mode gives the learner room for them here
+    p.mode !== 'plan-together' && p.moves.length ? `GESPRÄCHSSCHRITTE: Diese Schritte soll dein Gegenüber selbst machen können: ${p.moves.map((m) => MOVES_DE[m]).join(', ')}. Lass ihm Raum dafür.` : null,
   ].filter(Boolean);
 }
 
