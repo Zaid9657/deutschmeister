@@ -151,6 +151,25 @@ test('form_fill: words of the situation sentence that states the same fact may s
   assert.equal(res(f1, 'Ismir'), RESULT.TYPO, 'a spelling slip in a place keeps its retry');
 });
 
+test('form_fill: a letter slip in a word of the situation beside the value is a TYPO, as the slip alone is (a1.1-u02 f1/f2)', () => {
+  const f1 = field('Wohnort', 'İzmir', ['İzmir', 'Izmir'], U02);
+  const f2 = field('Land', 'Türkei', ['Türkei'], U02);
+  assert.equal(res(f2, 'Turkei'), RESULT.TYPO, 'the slip alone in the Land field');
+  for (const typed of ['Izmir, Turkei', 'Izmir in der Turkei', 'İzmir / Türke']) assert.equal(res(f1, typed), RESULT.TYPO, typed);
+  assert.equal(checkItem(f1, 'Izmir, Turkei').errorTag, null, 'a TYPO carries no error tag');
+  for (const typed of ['Izmir, Türkei', 'Izmir Tuerkei']) assert.equal(res(f1, typed), RESULT.CORRECT, typed);
+  // never a licence for other information, or for the label's other alternative misspelt
+  for (const typed of ['Izmir, Leipzig', 'Izmir, Leipzg', 'Izmir, Türkisch']) assert.equal(res(f1, typed), RESULT.WRONG, typed);
+  const f5 = field('Kurs: in Leipzig oder online?', 'online', ['online'], U02);
+  assert.equal(res(f5, 'in Leipzg online'), RESULT.WRONG, 'a slip of the other alternative is still that alternative');
+});
+
+test('form_fill: „nur" is a frame word — „nur online" needs no accepted entry (a1.1-u02 f5)', () => {
+  const f5 = field('Kurs: in Leipzig oder online?', 'online', ['online'], U02);
+  for (const typed of ['nur online', 'Nur online.', 'online, nur online']) assert.equal(res(f5, typed), RESULT.CORRECT, typed);
+  assert.equal(res(f5, 'nur in Leipzig'), RESULT.WRONG);
+});
+
 test('form_fill: numbers with their frame words, a street with its postcode and city (a1.1-u05)', () => {
   const alter = field('Alter', '31', ['31'], U05, 'number');
   for (const typed of ['31', '31 Jahre', '31 Jahre alt', 'einunddreißig']) assert.equal(res(alter, typed), RESULT.CORRECT, typed);
