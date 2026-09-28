@@ -168,12 +168,14 @@ export function courseHomeModel(manifest, state = {}, { plateaus = new Set(), cl
   });
 
   // The primary action: the first open stop in path order (a unit, then its Etappe's Plateau).
-  const path = etappen.length
-    ? etappen.flatMap((e) => [...e.units.map((r) => ({ ...r, kind: 'unit' })), ...[e.plateau, e.closing].filter(Boolean)])
-    : rows.map((r) => ({ ...r, kind: 'unit' }));
+  const inEtappe = new Set(etappen.flatMap((e) => e.units.map((r) => r.id)));
+  const path = [
+    ...etappen.flatMap((e) => [...e.units.map((r) => ({ ...r, kind: 'unit' })), ...[e.plateau, e.closing].filter(Boolean)]),
+    ...rows.filter((r) => !inEtappe.has(r.id)).map((r) => ({ ...r, kind: 'unit' })),
+  ];
   const next = path.find((s) => s.available && (s.kind === 'unit' ? !DONE_STATUSES.includes(s.status) : !s.done)) || null;
   const statusMap = new Map([...progress.entries()].map(([id, row]) => [id, row && row.status]));
-  const completion = safeCourseCompletion(manifest, { progress: statusMap });
+  const completion = safeCourseCompletion(manifest, { progress: statusMap, lane: learnerLane });
   const remainingSteps = rows.reduce((n, r) => n + (DONE_STATUSES.includes(r.status) ? 0 : Math.max(0, (r.stepsTotal || stepsPerUnit) - r.stepsDone)), 0);
 
   return {
