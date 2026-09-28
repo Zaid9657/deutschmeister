@@ -347,14 +347,19 @@ function shortenedSpeakingTeile(spec) {
   return out;
 }
 
+const SHORTENED_LENGTHS = ['reduced', 'mini'];
+
 /**
- * One SpeakingPart as the speaking functions read it. `length` is carried from the unit's
- * Prüfungsfokus when the Teil is shortened there: the grader then scores only the criteria a
- * shortened Teil elicits (rubric `appliesIf: 'full'`; review a1.1-u01 r1–r3 F01).
+ * One SpeakingPart as the speaking functions read it. `length` is carried when the Teil is
+ * shortened: the grader then scores only the criteria a shortened Teil elicits (rubric
+ * `appliesIf: 'full'`; review a1.1-u01 r1–r3 F01). The part's own `length` wins (the form EXM-04
+ * and grade.mjs read — the only source a Plateau or closing part has, since those carry no
+ * Prüfungsfokus); else the unit's Prüfungsfokus entry for its template.
  */
 function speakingPart(p, shortened) {
   const out = pick(p, SPEAKING_PART_KEYS);
-  const length = shortened && shortened.get(p.template);
+  const own = SHORTENED_LENGTHS.includes(p.length) ? p.length : null;
+  const length = own || (shortened && shortened.get(p.template));
   return length ? { ...out, length } : out;
 }
 
