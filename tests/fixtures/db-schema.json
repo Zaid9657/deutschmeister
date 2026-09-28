@@ -18,7 +18,7 @@
     "learned_items": ["id","item_id","item_type","learned_at","level","user_id"],
     "lesson_attempts": ["correct","created_at","error_tag","id","item_id","lektion_id","level","stage","user_id"],
     "lesson_progress": ["accuracy","completed_at","lektion_id","level","status","updated_at","user_id"],
-    "lifecycle_customer_state": ["email_opted_out","has_grammar_activity","has_listening_activity","has_reading_activity","is_subscribed","registered_at","status","user_id"],
+    "lifecycle_customer_state": ["email_opted_out","has_grammar_activity","has_lesson_activity","has_listening_activity","has_reading_activity","is_subscribed","registered_at","status","user_id"],
     "lifecycle_emails": ["id","kind","sent_at","user_id"],
     "listening_dialogues": ["audio_url","created_at","dialogue_number","duration_seconds","exercise_id","id","title","transcript"],
     "listening_exercises": ["archived_at","audio_url","created_at","description","exercise_number","exercise_type","id","last_reviewed_at","level","lifecycle_status","next_review_at","owner_id","plays_allowed","reviewer_id","speed","status","title","total_duration_seconds"],
