@@ -160,8 +160,11 @@ export function run({ ctx, docs }) {
     const stepKinds = new Set([...walkSteps(doc)].map((s) => s.step?.kind));
     // a micro-output proof (SCHEMA §8, 2026-09-28): the learner's own output, resolved against the unit's micro-outputs
     const moIds = new Set([...walkMicroOutputs(doc)].map(({ mo }) => mo?.id).filter(Boolean));
+    // a proof item is scored in the Check's proof phase only (CheckView): it is one of check.proofItems
+    const proofItemIds = new Set(arr(d.check.proofItems).map((it) => it?.id).filter(Boolean));
     proofs.forEach((p, i) => {
       if (!p?.item && !p?.aufgabe && !p?.microOutput) findings.push(blocker(doc, `check.proofs[${i}]`, `proof of ${p?.canDo} names neither an item, an Aufgabe nor a micro-output`, p?.canDo));
+      if (p?.item && !proofItemIds.has(p.item)) findings.push(blocker(doc, `check.proofs[${i}].item`, `proof by item "${p.item}", which is not one of check.proofItems — the Check scores a proof item only in its proof phase`, p?.canDo));
       if (p?.aufgabe && !stepKinds.has(p.aufgabe)) findings.push(blocker(doc, `check.proofs[${i}].aufgabe`, `proof by "${p.aufgabe}" but the unit has no ${p.aufgabe} step`, p?.canDo));
       if (p?.microOutput && moIds.size && !moIds.has(p.microOutput)) findings.push(blocker(doc, `check.proofs[${i}].microOutput`, `proof by micro-output "${p.microOutput}", which is not a micro-output of the unit`, p?.canDo));
     });

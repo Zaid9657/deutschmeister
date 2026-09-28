@@ -287,6 +287,47 @@ test('v2 rounds: the A1.1 multi-Teil tasks keep their parts in the compiled bank
   }
 });
 
+test('v2 rounds: A11_ROUNDS is exactly the compiled a1.1 bank\'s multi-Teil entries (no round goes unpinned)', () => {
+  const a11 = COURSES.find((c) => c.level === 'a1.1');
+  if (!a11) return;
+  const compiledUnits = new Set(a11.units.map((u) => u.id));
+  const multi = Object.entries(a11.banks.speaking || {}).filter(([, e]) => Array.isArray(e.parts) && e.parts.length >= 2).map(([k]) => k).sort();
+  // a listed round of a unit that compiles right now is in the bank; every multi-Teil bank entry is listed
+  const expected = A11_ROUNDS.filter((k) => compiledUnits.has(`a1.1-u${k.slice(5, 7)}`)).sort();
+  assert.deepEqual(multi, expected, 'the compiled multi-Teil entries and A11_ROUNDS differ — add the new round to A11_ROUNDS (and a fixture below)');
+});
+
+// a1.1-u08 (review r3, u08 fixer 2026-09-28): Teil 1 introduces, Teil 2 runs two Themen with a card each —
+// learner „Hobby – Musik", „Wochenende – Kino"; partner „Hobby – Sport", „Wochenende – Samstag"
+const U08_ROUND = {
+  key: 'a11-u08-s',
+  parts: [
+    { template: 'sd1.sp1' },
+    { template: 'sd1.sp2', cards: { learner: ['Hobby – Musik', 'Wochenende – Kino'], partner: ['Hobby – Sport', 'Wochenende – Samstag'] } },
+  ],
+};
+
+test('v2 rounds: the a11-u08-s fixture — Teil 1 + Teil 2 with its four Thema cards, each Teil on its own rubric', () => {
+  const a11 = COURSES.find((c) => c.level === 'a1.1');
+  if (!a11 || !a11.units.some((u) => u.id === 'a1.1-u08')) return; // u08 being edited and not compiling right now
+  const entry = a11.banks.speaking[U08_ROUND.key];
+  assert.ok(entry && Array.isArray(entry.parts), `${U08_ROUND.key} is a multi-Teil round in the bank`);
+  assert.deepEqual(entry.parts.map((p) => p.template), U08_ROUND.parts.map((p) => p.template), 'Teil 1 then Teil 2');
+  const prompt = buildCoursePartnerPrompt({ level: 'A1.1', task: entry });
+  assert.equal((prompt.match(/^ABLAUF/gm) || []).length, 2, 'one ABLAUF per Teil');
+  const teil2 = entry.parts[1];
+  for (const side of ['learner', 'partner']) {
+    assert.deepEqual((teil2.cards?.[side] || []).map(cardText), U08_ROUND.parts[1].cards[side], `Teil 2 ${side} cards`);
+    for (const c of U08_ROUND.parts[1].cards[side]) assert.ok(prompt.includes(`„${c}“`), `the partner prompt carries „${c}“`);
+  }
+  const plans = speakingPartsPlan(normalizeSpeakingTask(entry), (id) => V2_RUBRICS[id] || null);
+  assert.equal(plans.length, 2, 'both Teile are graded');
+  U08_ROUND.parts.forEach((p, i) => {
+    assert.equal(plans[i].profileId, rubricOfTemplate(p.template), `Teil ${i + 1} (${p.template}) on its own rubric`);
+    assert.ok(plans[i].plan && plans[i].plan.length, `Teil ${i + 1}: the rubric resolves`);
+  });
+});
+
 test('v2 rounds: one ABLAUF per part with every card, and every part graded on its own profile', () => {
   let rounds = 0;
   for (const { level, banks } of COURSES) {
