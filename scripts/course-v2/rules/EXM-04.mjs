@@ -154,6 +154,35 @@ function checkPart(ctx, doc, part, path, ref, findings) {
   }
 }
 
+// a request needs a request form: „bitte", „Kann ich …", „Können Sie …", „Ich möchte …" (a1.1-u10 r2 F05, the
+// u04 r1-F14 class): the cards-request Teil scores the request, and „Haben Sie Wasser für mich?" is a question
+export const REQUEST_RE = /\b(?:bitte|kann ich|könnte ich|können Sie|könnten Sie|kannst du|könntest du|ich möchte|ich hätte gern|hätten Sie|darf ich|würden Sie|würdest du|gib mir|geben Sie mir)\b/iu;
+const ASKS_FOR_ME_RE = /\b(?:für mich|mir)\b/iu;
+// a W-question asks for information („Wie heißt das auf Deutsch?"), not for a thing
+const W_START_RE = /^\s*(?:wer|wen|wem|was|wo|wohin|woher|wann|wie|warum|welche\p{L}*)\b/iu;
+const lastQuestion = (de) => (String(de || '').match(/[^.!?]*\?\s*$/) || [''])[0];
+
+/** Lines a cards-request Teil offers the learner that end in „?" and carry no request form. */
+export function bareRequests(doc, task, isCardsRequest) {
+  const out = [];
+  const d = doc.kind === 'unit' ? doc.data : null;
+  arr(d?.redemittel).forEach((r, i) => {
+    if (!isCardsRequest(r?.forTemplate)) return;
+    const q = lastQuestion(r?.de);
+    if (q && !W_START_RE.test(q) && !REQUEST_RE.test(String(r.de))) out.push({ path: `redemittel[${i}].de`, de: r.de });
+  });
+  // untagged lines (hint words, model turns): only a question asking for something for the speaker
+  arr(task?.hintWords).forEach((h, i) => {
+    const de = String(h || '');
+    if (/\?\s*$/.test(de) && ASKS_FOR_ME_RE.test(de) && !REQUEST_RE.test(de)) out.push({ path: `hintWords[${i}]`, de });
+  });
+  arr(task?.modelTurns).forEach((t, i) => {
+    const de = String(t?.de || '');
+    if (/\?\s*$/.test(de) && ASKS_FOR_ME_RE.test(de) && !REQUEST_RE.test(de)) out.push({ path: `modelTurns[${i}].de`, de });
+  });
+  return out;
+}
+
 export function run({ ctx, docs }) {
   const findings = [];
   let tasks = 0;
@@ -186,6 +215,14 @@ export function run({ ctx, docs }) {
         }
         if (part.template === 'tb1.m2' && !/Blatt|Meinung/.test(String(task.aiRole?.personaDe || part.aiRole?.personaDe || ''))) {
           findings.push(blocker(doc, `${path}.aiRole.personaDe`, 'tb1.m2: the partner\'s sheet (its quote) belongs in aiRole.personaDe', ref));
+        }
+      }
+      // a cards-request Teil: its request lines carry a request form — ADVISORY
+      const isCardsRequest = (tpl) => ctx.registries.templates.get(tpl)?.template?.interaction === 'cards-request';
+      if (parts.some(({ part }) => isCardsRequest(part?.template))) {
+        for (const b of bareRequests(doc, task, isCardsRequest)) {
+          const at = b.path.startsWith('redemittel') ? b.path : `${path}.${b.path}`;
+          findings.push(advisory(doc, at, `„${b.de}" is offered for the cards-request Teil but is a bare question — a request carries „bitte", „Kann ich …?", „Können Sie …?" or „Ich möchte …"`, ref));
         }
       }
       if (String(doc.level).startsWith('b1') && doc.kind === 'unit' && source === 'ls5') {
