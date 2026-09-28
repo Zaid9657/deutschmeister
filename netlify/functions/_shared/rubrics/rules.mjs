@@ -35,9 +35,12 @@ const SIE_FORMS = new Set(['Sie', 'Ihnen', 'Ihr', 'Ihre', 'Ihren', 'Ihrem', 'Ihr
 
 const INFORMAL_CLOSE_RE = /(tschüss|tschüs|ciao|\bhdl\b|\blg\b|mach['’]s\s+gut|bis\s+dann)/i;
 
-/** The address form a task asks for: `address`, else derived from `register`; null when neither says. */
+/**
+ * The address form a task asks for: `address` (Sie | du | ihr — „ihr" for a group of friends,
+ * a1.1-u11's group post, SCHEMA §8 2026-09-28), else derived from `register`; null when neither says.
+ */
 export function expectedAddress(task) {
-  if (task?.address === 'Sie' || task?.address === 'du') return task.address;
+  if (task?.address === 'Sie' || task?.address === 'du' || task?.address === 'ihr') return task.address;
   if (task?.register === 'formell' || task?.register === 'halbformell') return 'Sie';
   if (task?.register === 'informell') return 'du';
   return null;
@@ -75,8 +78,10 @@ export function textSignals(text, task = {}) {
     });
   }
   const registerMixed = duMarkers > 0 && sieMarkers > 0;
+  // du and ihr are both the informal address (DU_FORMS holds euch/euer too): a group text („ihr")
+  // drifts, like a du text, as soon as a formal Sie form appears
   const addressDrift =
-    (task?.address === 'Sie' && duMarkers > 0) || (task?.address === 'du' && sieMarkers > 0);
+    (task?.address === 'Sie' && duMarkers > 0) || ((task?.address === 'du' || task?.address === 'ihr') && sieMarkers > 0);
   // The WRONG register (telc criterion II): the text holds one address form, but not the one
   // the task asks for — from `address`, else from `register` (halbformell/formell ⇒ Sie,
   // informell ⇒ du) — or it closes a Sie letter with a greeting only friends use.
@@ -84,7 +89,7 @@ export function textSignals(text, task = {}) {
   const informalClose = contentLines.slice(-3).some((l) => INFORMAL_CLOSE_RE.test(l));
   const registerWrong = expected === 'Sie'
     ? (duMarkers > 0 && sieMarkers === 0) || informalClose
-    : expected === 'du' ? sieMarkers > 0 && duMarkers === 0 : false;
+    : expected === 'du' || expected === 'ihr' ? sieMarkers > 0 && duMarkers === 0 : false;
 
   const body = sentences.filter((s) => !ANREDE_RE.test(s) && !GRUSS_RE.test(s) && !BETREFF_RE.test(s));
   const ichWir = body.filter((s) => /^(ich|wir)$/i.test(tokensOf(s)[0] || '')).length;

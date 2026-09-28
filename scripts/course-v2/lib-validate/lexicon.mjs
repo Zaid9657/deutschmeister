@@ -281,6 +281,24 @@ export function namesOf(ctx) {
 }
 
 /**
+ * The lexicon entries known at unit `nr` of `level`: every entry of an earlier level, and this level's entries
+ * allocated to a unit ≤ nr (GRM-05 checks a card's claims against the nouns and verbs its first unit knows).
+ */
+export function entriesKnownAt(ctx, level, nr) {
+  const here = positionOf(level, nr);
+  const out = [];
+  for (const l of LEVELS.slice(0, LEVELS.indexOf(level) + 1)) {
+    for (const e of ctx.levels.get(l)?.lexicon?.entries || []) {
+      const u = parseUnitId(e?.unit);
+      const p = u ? positionOf(u.level, u.nr) : null;
+      if (p !== null && here !== null && p > here) continue;
+      out.push(e);
+    }
+  }
+  return out;
+}
+
+/**
  * The known-token set at a course position: function words, particles, number words; the core list
  * (except a lemma some lexicon allocates to a LATER unit — the lexicon outranks the core); lexicon
  * entries of every earlier level and of this level's units ≤ nr, every inflected form; cast names, origins and languages;

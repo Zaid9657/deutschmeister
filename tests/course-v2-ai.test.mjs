@@ -1002,6 +1002,20 @@ test('the sd1 profiles flag (never score) person endings and nicht/kein at A1, T
   assert.deepEqual(flaggedErrorTags(P('sd1-sp2'), 'a2.1'), [], 'only the A1 band');
 });
 
+test('a group text („ihr", a1.1-u11) catches a Sie slip like a du text does', () => {
+  const group = { address: 'ihr', register: 'informell' };
+  assert.equal(expectedAddress(group), 'ihr');
+  assert.equal(expectedAddress({ address: 'ihr', register: 'halbformell' }), 'ihr', 'the task\'s address wins over its register');
+  const ok = textSignals('Hallo ihr! Habt ihr am Samstag Zeit? Ich koche für euch. Bis dann!', group);
+  assert.equal(ok.addressDrift, false);
+  assert.equal(ok.registerWrong, false);
+  const slip = textSignals('Hallo ihr! Habt ihr am Samstag Zeit? Kommen Sie auch? Ich koche für euch.', group);
+  assert.equal(slip.addressDrift, true, 'one Sie form in the group text');
+  assert.equal(slip.registerMixed, true);
+  const formal = textSignals('Liebe Freunde, haben Sie am Samstag Zeit? Ich lade Sie ein.', group);
+  assert.equal(formal.registerWrong, true, 'Sie throughout, to friends');
+});
+
 test('form-number-exact (sd1-s1) is exact against ANY accepted form, in its digits (a1.1-u09 r1 F04)', () => {
   const run = (fields) => RULES['form-number-exact'].fn({ fields });
   const f4 = { criterion: 'f4', expected: '19.30 Uhr', accepted: ['19.30 Uhr', '7.30 Uhr', 'um 19.30 Uhr', 'halb acht'] };

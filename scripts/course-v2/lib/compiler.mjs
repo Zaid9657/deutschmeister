@@ -304,7 +304,7 @@ const pick = (src, keys) => {
   return o;
 };
 
-function writingEntry(t, level, owner) {
+function writingEntry(t, level, owner, textTypeLabels = null) {
   return withHash({
     level,
     ...owner,
@@ -322,6 +322,9 @@ function writingEntry(t, level, owner) {
     // form tasks (method deterministic): the fields and their keys are scored in code
     ...(t.form ? { form: { fields: t.form.fields } } : {}),
     ...pick(t, ['wordBand', 'wordBandLearning', 'minSubmitWords']),
+    // what the learner writes (SCHEMA §8 WritingTask.textType, 2026-09-28): the grader names the genre,
+    // so a post is not read as a letter without Betreff and Gruß
+    ...(t.textType ? { textType: t.textType, textTypeLabel: (textTypeLabels && textTypeLabels.get(t.textType)) || null } : {}),
   });
 }
 
@@ -483,6 +486,7 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
   if (!profile) warnings.push(`${level}: no level profile — minutesPlanned is null`);
   const lexicon = mine('lexicon')[0]?.doc || null;
   const pluralTwins = pluralTwinsOf(docs('lexicon').map((t) => t.doc));
+  const textTypeLabels = new Map(docs('texttypes').flatMap((t) => (Array.isArray(t.doc.types) ? t.doc.types : []).map((x) => [x.id, x.label])));
   const ruleCards = mine('rulecards')[0]?.doc || null;
   const candoText = new Map(docs('cando').flatMap((t) => t.doc.items.map((i) => [i.id, (typeof i.learnerDe === 'string' && i.learnerDe.trim()) || i.de])));
   const spineLabel = new Map(docs('spine').flatMap((t) => t.doc.points.map((p) => [p.id, p.label])));
@@ -523,7 +527,7 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
         continue;
       }
       const entry =
-        kind === 'writing' ? writingEntry(task, level, owner)
+        kind === 'writing' ? writingEntry(task, level, owner, textTypeLabels)
           : kind === 'speaking' ? speakingEntry(task, level, owner, shortened)
             : microEntry(task, level, owner);
       target.set(task.bankKey, entry);

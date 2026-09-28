@@ -251,6 +251,7 @@ export function buildWritingUserPrompt({ task, text, attemptNr, targetLabels = [
   const lines = [];
   const band = task.wordBand || task.words;
   const meta = [
+    task.textTypeLabel ? `Textsorte: ${task.textTypeLabel}` : null,
     task.register ? `Register: ${task.register}` : null,
     task.address ? `Anrede des Adressaten: ${task.address}` : null,
     Array.isArray(band) ? `${band[0]}–${band[1]} Wörter` : null,
