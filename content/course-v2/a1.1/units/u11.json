@@ -3062,8 +3062,7 @@
       },
       {
         "canDo": "cd.a1.zeitangaben-vergangen",
-        "item": "a1.1-u11-q02",
-        "aufgabe": "sprechen"
+        "item": "a1.1-u11-q02"
       },
       {
         "canDo": "cd.a1.kurze-mitteilungen",
