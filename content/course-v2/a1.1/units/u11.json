@@ -1634,10 +1634,12 @@
           "answer": "Gestern war ich im Kino.",
           "accepted": [
             "Gestern war ich im Kino.",
-            "Ich war gestern im Kino."
+            "Ich war gestern im Kino.",
+            "Im Kino war ich gestern."
           ],
           "acceptedWhy": {
-            "Ich war gestern im Kino.": "auch richtig: „ich“ auf Position 1, „war“ auf Position 2"
+            "Ich war gestern im Kino.": "auch richtig: „ich“ auf Position 1, „war“ auf Position 2",
+            "Im Kino war ich gestern.": "auch richtig: „im Kino“ betont auf Position 1, „war“ auf Position 2"
           },
           "intentionalError": true,
           "errorTag": "v2-inv",
@@ -2216,11 +2218,13 @@
             "accepted": [
               "Ich habe am Sonntag ein Buch gelesen.",
               "Am Sonntag habe ich ein Buch gelesen.",
-              "Ein Buch habe ich am Sonntag gelesen."
+              "Ein Buch habe ich am Sonntag gelesen.",
+              "Ich habe ein Buch am Sonntag gelesen."
             ],
             "acceptedWhy": {
               "Am Sonntag habe ich ein Buch gelesen.": "auch richtig: „am Sonntag“ auf Position 1, „habe“ auf Position 2",
-              "Ein Buch habe ich am Sonntag gelesen.": "auch richtig: „ein Buch“ betont auf Position 1, „habe“ auf Position 2"
+              "Ein Buch habe ich am Sonntag gelesen.": "auch richtig: „ein Buch“ betont auf Position 1, „habe“ auf Position 2",
+              "Ich habe ein Buch am Sonntag gelesen.": "grammatisch, aber betont: „am Sonntag“ ist wichtig; die Satzklammer „habe … gelesen“ ist richtig"
             },
             "intentionalError": true,
             "errorTag": "satzklammer",

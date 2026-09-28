@@ -216,6 +216,18 @@
           "speaker": "cast.olena",
           "de": "Super! Dann essen wir auch etwas. Ich habe Hunger!",
           "en": "Great! Then we’ll eat something too. I’m hungry!"
+        },
+        {
+          "id": "a1.1-u09-start-l10",
+          "speaker": "cast.priya",
+          "de": "Elif, was ist höflich: „Ich möchte …“ oder „Ich nehme …“?",
+          "en": "Elif, what’s polite: “Ich möchte …” or “Ich nehme …”?"
+        },
+        {
+          "id": "a1.1-u09-start-l11",
+          "speaker": "cast.elif",
+          "de": "Beides ist höflich. Aber immer mit „bitte“!",
+          "en": "Both are polite. But always with “bitte”!"
         }
       ],
       "gistItem": {
@@ -736,11 +748,16 @@
             "answer": "Mögt ihr auch Kuchen?",
             "accepted": [
               "Mögt ihr auch Kuchen?",
-              "Mögt ihr Kuchen auch?"
+              "Mögt ihr Kuchen auch?",
+              "Mögt auch ihr Kuchen?"
             ],
             "acceptedWhy": {
-              "Mögt ihr Kuchen auch?": "umgangssprachlich: „auch“ am Ende, das Verb bleibt auf Position 1"
+              "Mögt ihr Kuchen auch?": "umgangssprachlich: „auch“ am Ende, das Verb bleibt auf Position 1",
+              "Mögt auch ihr Kuchen?": "grammatisch: „auch“ vor „ihr“ betont „ihr“ (auch ihr, wie wir); das Verb bleibt auf Position 1"
             },
+            "reviewerConfirmed": [
+              "Mögt auch ihr Kuchen?"
+            ],
             "explanation": {
               "de": "Ja/Nein-Frage: Das Verb „mögt“ steht auf Position 1.",
               "en": "Yes/no question: the verb “mögt” comes first."
@@ -2859,8 +2876,8 @@
             {
               "id": "a1.1-u09-ls4-t6-l04",
               "speaker": "cast.ensemble-a1-4",
-              "de": "Und meine Frau bezahlt den Kuchen und den Tee.",
-              "en": "And my wife is paying for the cake and the tea."
+              "de": "Und meine Frau bezahlt die Suppe, den Kuchen und den Tee.",
+              "en": "And my wife is paying for the soup, the cake and the tea."
             },
             {
               "id": "a1.1-u09-ls4-t6-l05",
@@ -3026,8 +3043,8 @@
                 "Salat"
               ],
               "explanation": {
-                "de": "Der Mann sagt: „Getrennt, bitte. Ich bezahle den Salat und das Bier.“ Er isst also Salat. Kuchen und Tee bezahlt die Frau.",
-                "en": "They pay separately: he pays for the salad and the beer, so he had the salad; his wife pays for the cake and the tea."
+                "de": "Der Mann sagt: „Ich bezahle den Salat und das Bier.“ Er isst also Salat. Suppe, Kuchen und Tee bezahlt die Frau.",
+                "en": "He pays for the salad and the beer, so he had the salad; his wife pays for the soup, the cake and the tea."
               },
               "origin": "agent"
             }
@@ -3233,7 +3250,15 @@
               "accepted": [
                 "Freitag",
                 "am Freitag",
-                "Fr."
+                "Fr.",
+                "Freitagabend",
+                "am Freitagabend",
+                "Freitag Abend",
+                "am Freitag Abend",
+                "Freitag abends",
+                "am Freitag abends",
+                "Freitag am Abend",
+                "am Freitag am Abend"
               ]
             },
             {
@@ -3267,7 +3292,31 @@
                 "halb acht am Abend",
                 "um halb acht am Abend",
                 "halb acht abends",
-                "um halb acht abends"
+                "um halb acht abends",
+                "um 19.30 Uhr abends",
+                "abends um 19.30 Uhr",
+                "um 19.30 Uhr am Abend",
+                "am Abend um 19.30 Uhr",
+                "abends um 19.30",
+                "am Abend um 19.30",
+                "abends 19.30 Uhr",
+                "am Abend 19.30 Uhr",
+                "19.30 abends",
+                "19.30 am Abend",
+                "um 19.30 abends",
+                "um 19.30 am Abend",
+                "abends um 7.30 Uhr",
+                "am Abend um 7.30 Uhr",
+                "abends um 7.30",
+                "am Abend um 7.30",
+                "abends 7.30 Uhr",
+                "am Abend 7.30 Uhr",
+                "7.30 am Abend",
+                "um 7.30 am Abend",
+                "abends um halb acht",
+                "am Abend um halb acht",
+                "abends halb acht",
+                "am Abend halb acht"
               ],
               "exact": "number"
             },
