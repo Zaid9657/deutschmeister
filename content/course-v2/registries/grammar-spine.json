@@ -491,10 +491,10 @@
     },
     {
       "id": "g.perfekt-haben",
-      "label": "Perfekt mit haben: ge-…-t und ge-…-en (Ich habe Pizza gemacht. Wir haben einen Film gesehen.) – zuerst feste Verben, dann das System",
+      "label": "Perfekt mit haben: ge-…-t und ge-…-en (Ich habe Pizza gemacht. Wir haben einen Film gesehen.) – A1.1: eine feste Liste von Verben (gemacht, gekauft, gespielt, gekocht, gearbeitet, gegessen, getrunken, gesehen, gelesen, geschlafen); A1.2 baut das System auf",
       "intro": {
         "receptive": "a1.1-u11",
-        "productive": "a1.2-u05"
+        "productive": "a1.1-u11"
       },
       "detectors": [
         "det.perfekt-haben"
@@ -520,10 +520,10 @@
     },
     {
       "id": "g.perfekt-sein",
-      "label": "Perfekt mit sein: Bewegung und Veränderung (Ich bin nach Köln gefahren.) – zuerst feste Verben, dann das System",
+      "label": "Perfekt mit sein: Bewegung und Veränderung (Ich bin nach Köln gefahren.) – A1.1: eine feste Liste von Verben (gekommen, gefahren, geflogen, gegangen, geblieben); A1.2 baut das System auf: haben oder sein",
       "intro": {
         "receptive": "a1.1-u12",
-        "productive": "a1.2-u08"
+        "productive": "a1.1-u12"
       },
       "detectors": [
         "det.perfekt-sein"

@@ -123,9 +123,9 @@
         {
           "id": "a1.1-ht-sd1-t4-l01",
           "speaker": "durchsage",
-          "de": "Meine Damen und Herren, willkommen im Zug nach München! Um 13.45 Uhr sind wir in München. Das Restaurant im Zug ist heute leider geschlossen. Kaffee gibt es erst am Bahnhof in München. Danke!",
-          "en": "Ladies and gentlemen, welcome aboard the train to Munich! We will be in Munich at 13:45. The restaurant on the train is unfortunately closed today. Coffee is only available at the station in Munich. Thank you!",
-          "say": "Meine Damen und Herren, willkommen im Zug nach München! Um dreizehn Uhr fünfundvierzig sind wir in München. Das Restaurant im Zug ist heute leider geschlossen. Kaffee gibt es erst am Bahnhof in München. Danke!"
+          "de": "Meine Damen und Herren, willkommen im Zug nach München! Das Restaurant im Zug ist heute leider geschlossen. Kaffee gibt es erst in München, am Bahnhof. Wir sind pünktlich um 13.45 Uhr da. Danke!",
+          "en": "Ladies and gentlemen, welcome aboard the train to Munich! The restaurant on the train is unfortunately closed today. Coffee is only available in Munich, at the station. We will arrive on time at 13:45. Thank you!",
+          "say": "Meine Damen und Herren, willkommen im Zug nach München! Das Restaurant im Zug ist heute leider geschlossen. Kaffee gibt es erst in München, am Bahnhof. Wir sind pünktlich um dreizehn Uhr fünfundvierzig da. Danke!"
         }
       ],
       "glosses": []
@@ -404,8 +404,8 @@
             "falsch"
           ],
           "explanation": {
-            "de": "Das Restaurant im Zug ist heute geschlossen. Kaffee gibt es erst am Bahnhof in München.",
-            "en": "The restaurant on the train is closed today; coffee is only available at the station in Munich."
+            "de": "Das Restaurant im Zug ist heute geschlossen. Kaffee gibt es erst in München, am Bahnhof.",
+            "en": "The restaurant on the train is closed today; coffee is only available in Munich, at the station."
           },
           "origin": "agent"
         },
