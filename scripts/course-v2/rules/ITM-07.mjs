@@ -15,9 +15,14 @@
 // alone and „A 204" pass for „B 204", „B1.1" for „A1.1" — so the learner is graded right while wrong:
 // BLOCKER, the key takes exact: "name". A choice item never needs `exact` (checkItem compares its keys
 // exactly; the field is ignored there): the rule no longer asks for it, and one it carries is harmless.
+//
+// Clock hours (a1.1-u07 r1 F03): a typed exact:number key that is an hour 1–12 at a gap before „Uhr" accepts
+// the hour + 12, or the item says the time is before noon. Evening by the item's own words (explanation,
+// promptEn, acceptedWhy) without the hour + 12 is a BLOCKER (the 24-hour answer is graded wrong); undecided is
+// a RATCHET.
 
 import { walkItems, walkLines } from '../lib-validate/walk.mjs';
-import { arr, isObj, blocker, CHOICE_TYPES } from '../lib-validate/helpers.mjs';
+import { arr, isObj, blocker, ratchet, CHOICE_TYPES } from '../lib-validate/helpers.mjs';
 
 /** A level or room code: „A1", „B1.2", „B 204", „C12" — letters that a digits-only comparison would drop. */
 export const IDENTIFIER_RE = /(?:^|[\s(„"])(?:[ABC][12](?:\.[12])?|[A-ZÄÖÜ]\s?\d{2,4})(?=$|[\s.,!?)“"])/u;
@@ -40,6 +45,30 @@ function spelledWords(text) {
   return out;
 }
 
+const EVENING_RE = /\b(?:abends|am Abend|nachmittags|am Nachmittag|in der Nacht|nachts|p\.?m\.?|in the (?:evening|afternoon))\b/iu;
+const MORNING_RE = /\b(?:morgens|am Morgen|vormittags|am Vormittag|früh|a\.?m\.?|in the morning|before noon)\b/iu;
+/**
+ * A typed exact:number item whose key is a clock hour 1–12 at a gap before „Uhr" either accepts the hour + 12
+ * or says the time is before noon (explanation, acceptedWhy or reviewerConfirmed). Evening in the item's own
+ * words and no hour + 12: BLOCKER (the learner who writes „20 Uhr" is graded wrong); undecided: RATCHET.
+ */
+export function clockHourFinding(doc, item, path) {
+  if (item?.exact !== 'number' || !['fill_blank', 'notes', 'cloze'].includes(item.type) || arr(item.options).length) return null;
+  const m = String(item.answer ?? '').trim().match(/^(\d{1,2})(?:[.:](\d{2}))?(?:\s*Uhr)?$/);
+  if (!m) return null;
+  const h = Number(m[1]);
+  if (h < 1 || h > 12) return null;
+  const prompt = String(item.promptDe || '');
+  if (!/_{2,}\s*(?:[.:]\s*_{2,}\s*)?Uhr\b/.test(prompt) && !/\bUhr\b/.test(String(item.answer))) return null;
+  const later = `${h + 12}${m[2] ? `.${m[2]}` : ''}`;
+  const accepted = [item.answer, ...arr(item.accepted)].some((a) => String(a).trim().replace(/\s*Uhr$/, '').split(/[.:]/)[0] === String(h + 12));
+  if (accepted) return null;
+  const said = [item.explanation?.de, item.explanation?.en, item.promptEn, JSON.stringify(item.acceptedWhy || {}), ...arr(item.reviewerConfirmed)].join(' ');
+  if (MORNING_RE.test(said) || arr(item.reviewerConfirmed).length) return null;
+  if (EVENING_RE.test(`${said} ${prompt}`)) return blocker(doc, `${path}.accepted`, `the key „${item.answer}" is an evening hour by the item's own words, but „${later}" is not accepted — the learner who writes the 24-hour time is graded wrong`, item.id);
+  return ratchet(doc, `${path}.accepted`, `the key „${item.answer}" is a clock hour 1–12: accept „${later}" too (acceptedWhy: 24-Stunden-Uhr), or say in the explanation that the time is before noon`, item.id);
+}
+
 export function run({ docs }) {
   const findings = [];
   let n = 0;
@@ -50,6 +79,9 @@ export function run({ docs }) {
       if (!isObj(item)) continue;
       n += 1;
       const forms = [item.answer, ...arr(item.accepted)].map((x) => String(x ?? ''));
+      // a clock hour 1–12 (a1.1-u07 r1 F03): „bis acht Uhr" in the evening is „20 Uhr" too
+      const clock = clockHourFinding(doc, item, path);
+      if (clock) findings.push(clock);
       if (item.type === 'dictation') {
         if (forms.some((f) => hasNumber(f)) && item.exact !== 'number') {
           findings.push(blocker(doc, `${path}.exact`, `dictation „${item.answer}" contains a number and needs exact: "number" (whole-sentence mode: words keep the typo rule, digits exact, „zehn" = „10")${item.exact ? ` — has exact: "${item.exact}"` : ''}`, item.id));

@@ -276,6 +276,8 @@ export function productionSurfaces(doc) {
       for (const { part, path: pp } of speakingParts(task)) arr(part?.cards?.learner).forEach((c, i) => { const de = String(typeof c === 'string' ? c : c?.de || ''); if (!/\?\s*$/.test(de)) out.push({ de, path: `${path}${pp}.cards.learner[${i}]` }); });
     } else {
       arr(task.leitpunkte).forEach((lp, i) => arr(lp?.cues).forEach((c, k) => out.push({ de: String(c), path: `${path}.leitpunkte[${i}].cues[${k}]` })));
+      // the Leitpunkt itself is answered in the learner's text: its nouns are produced (a1.1-u12 r2 F04b / r3 F03b)
+      arr(task.leitpunkte).forEach((lp, i) => { if (lp?.de) out.push({ de: String(lp.de), path: `${path}.leitpunkte[${i}].de`, meta: true, nounsOnly: true }); });
       // the checklist is read while writing: its instruction words („Punkt 2:", „Anrede") are metalanguage
       arr(task.checklist).forEach((c, i) => out.push({ de: String(c), path: `${path}.checklist[${i}]`, meta: true }));
       if (task.modelText) out.push({ de: String(task.modelText), path: `${path}.modelText` });
@@ -309,6 +311,7 @@ function producedFindings(ctx, doc) {
     toks.forEach((t, i) => {
       const w = t.lower;
       if (w.length < 3 || FUNCTION_WORDS.has(w) || NUMBER_WORDS.has(w) || CORE.has(w) || /^\d/.test(w) || (sf.meta && isMetalanguage(w))) return;
+      if (sf.nounsOnly && !/^\p{Lu}/u.test(t.text)) return;
       let cands = byForm.get(w) || [];
       const initial = i === 0 || /[.!?:„"]\s*$/.test(sf.de.slice(0, t.index));
       if (/^\p{Lu}/u.test(t.text) && !initial) cands = cands.filter((c) => c.e.pos === 'NOUN');
