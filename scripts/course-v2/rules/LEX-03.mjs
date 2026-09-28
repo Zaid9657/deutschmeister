@@ -136,23 +136,62 @@ function generatorFindings(ctx, doc) {
     const numbers = keyWords.filter((w) => NUMBER_WORDS.has(w) && w.length > 3);
     if (numbersReceptive && numbers.length) out.push(finding('ratchet', doc, `${path}.answer`, `typed number word(s) ${numbers.map((w) => `„${w}"`).join(', ')}, but every number lemma ${doc.data?.id} allocates is receptive (${numberLemmas.map((e) => e.id).join(', ')}) — make one productive or accept the digits (exact: "number")`, item.id));
   }
-  // authored fill_blank items that hand the learner a receptive lemma in brackets and key another form of it
+  // authored fill_blank items that hand the learner a lemma in brackets („(die Birne)", „(der Kellner → die …)",
+  // „(aufmachen)"): the cue's head word resolves to a lexicon entry, a feminine form to its masculine entry
   const byLemma = new Map();
-  for (const e of lex) {
-    if (!e?.lemma || e.role === 'productive' || promoted.has(e.id) || CORE.has(String(e.lemma).toLowerCase())) continue;
+  for (const e of allLexicon(ctx)) {
+    if (!e?.lemma) continue;
     const bareLemma = String(e.lemma).replace(/^(?:der|die|das|sich)\s+/i, '').toLowerCase();
     if (!byLemma.has(bareLemma)) byLemma.set(bareLemma, e);
+    const fem = typeof e.feminine === 'string' ? e.feminine.replace(/^die\s+/i, '').toLowerCase() : null;
+    if (fem && !byLemma.has(fem)) byLemma.set(fem, e);
   }
-  for (const { item, path } of walkItems(doc)) {
+  const here = unitPosition(doc.data?.id);
+  let knownHere = null;
+  for (const { item, path, where } of walkItems(doc)) {
     if (!item || item.type !== 'fill_blank' || arr(item.options).length || recallFlagged.has(item)) continue;
+    const scored = where === 'check' || where === 'proof' || item.role === 'proof';
     for (const m of String(item.promptDe || '').matchAll(/\(([^)]+)\)/g)) {
-      const cue = m[1].replace(/^(?:der|die|das|sich)\s+/i, '').trim().toLowerCase();
-      const e = byLemma.get(cue);
-      if (!e) continue;
+      const head = cueHead(m[1]);
+      if (!head || head.length < 3 || /\d/.test(head)) continue;
+      let low = head.toLowerCase();
+      // a stem cue („wohn-", „möcht-") asks for the ending: it names the verb whose form it begins
+      if (low.endsWith('-')) {
+        const stem = low.replace(/-+$/, '');
+        if (!knownHere) {
+          knownHere = knownForms(ctx, doc.level, doc.nr);
+          for (const f of licensedForms(ctx, doc.data).forms) knownHere.add(f);
+        }
+        if (stem.length < 2 || [...knownHere].some((f) => f.startsWith(stem))) continue;
+        low = `${stem}en`;
+      }
+      const e = byLemma.get(low);
+      const at = e ? unitPosition(e.unit) : null;
+      if (!e || (at !== null && here !== null && at > here)) {
+        // a cue the unit cannot name: allocated later, or in no lexicon (u07 r2 F05 / r3 F06, u10 r2 F03)
+        if (FUNCTION_WORDS.has(low) || CORE.has(low) || NUMBER_WORDS.has(low) || isMetalanguage(low)) continue;
+        if (!knownHere) {
+          knownHere = knownForms(ctx, doc.level, doc.nr);
+          for (const f of licensedForms(ctx, doc.data).forms) knownHere.add(f);
+        }
+        if (isKnown(low, knownHere)) continue;
+        out.push(finding(scored ? 'ratchet' : 'advisory', doc, `${path}.promptDe`, `the bracketed cue „${m[1]}" names „${head}", ${e ? `allocated only at ${e.unit} (${e.id})` : 'which no lexicon allocates'} — cue a lemma the learner knows at ${doc.data?.id}`, item.id));
+        continue;
+      }
+      if (e.role === 'productive' || promoted.has(e.id) || CORE.has(String(e.lemma).toLowerCase())) continue;
       const key = String(item.answer ?? '').trim().toLowerCase();
-      if (!key || key === cue || /\s/.test(key) || !entryForms(e).forms.has(key)) continue;
-      out.push(finding('advisory', doc, `${path}.answer`, `the learner writes „${item.answer}" from the bracketed lemma „${m[1]}", but ${e.id} is ${e.role} — cue a productive lemma, or promote it`, item.id));
+      if (!key || key === low || /\s/.test(key) || !entryForms(e).forms.has(key)) continue;
+      out.push(finding(scored ? 'ratchet' : 'advisory', doc, `${path}.answer`, `the learner writes „${item.answer}" from the bracketed lemma „${m[1]}", but ${e.id} is ${e.role} — cue a productive lemma, or promote it`, item.id));
     }
+  }
+  // authored dictations: the learner spells no receptive-only lemma of the cumulative lexicon and no word no
+  // lexicon allocates by this unit (a1.1-u10 r2 F03c / r3 F04c, u12 r2 F04a / r3 F03a) — ADVISORY
+  const spellRisk = cumulativeSpellRisk(ctx, doc, promoted);
+  for (const { item, path } of walkItems(doc)) {
+    if (!item || item.type !== 'dictation' || !item.answer) continue;
+    out.checked += 1;
+    const hits = [...new Set(readTokens(String(item.answer)).map((t) => t.lower).filter((w) => spellRisk.has(w)))];
+    if (hits.length) out.push(finding('advisory', doc, `${path}.answer`, `the dictation makes the learner spell ${hits.map((w) => `„${w}" (${spellRisk.get(w)})`).join(', ')} — dictate productive words only`, item.id));
   }
   const lines = content ? content.lineIndex(doc.data) : new Map();
   for (const { step, path } of walkSteps(doc)) {
@@ -174,13 +213,53 @@ function generatorFindings(ctx, doc) {
         g.source.forEach((ref, k) => {
           const line = lines.get(ref);
           if (!line) return;
-          const hits = [...new Set(readTokens(line.de).map((t) => t.lower).filter((w) => risky.has(w)))];
-          if (hits.length) out.push(finding('advisory', doc, `${gp}.source[${k}]`, `dictation source ${ref} makes the learner spell ${hits.map((w) => `„${w}" (${risky.get(w).why}: ${risky.get(w).e.id})`).join(', ')} — dictate a line with productive words only`, ref));
+          const words = [...new Set(readTokens(line.de).map((t) => t.lower))];
+          const hits = words.filter((w) => risky.has(w));
+          // the cumulative lexicon's receptive-only lemmas and the words no lexicon allocates yet, beside the unit's own
+          const more = words.filter((w) => !risky.has(w) && spellRisk.has(w));
+          if (hits.length || more.length) out.push(finding('advisory', doc, `${gp}.source[${k}]`, `dictation source ${ref} makes the learner spell ${[...hits.map((w) => `„${w}" (${risky.get(w).why}: ${risky.get(w).e.id})`), ...more.map((w) => `„${w}" (${spellRisk.get(w)})`)].join(', ')} — dictate a line with productive words only`, ref));
         });
       }
     });
   }
   return out;
+}
+
+/**
+ * The head word of a bracketed cue: the first segment („der Kellner → die …" → „Kellner", „die Teilnehmerin,
+ * Plural" → „Teilnehmerin", „aufmachen" → „aufmachen"), its article or „sich" dropped.
+ */
+export function cueHead(cue) {
+  const seg = String(cue || '').split(/→|->|,|;|\//)[0].trim();
+  const bare = seg.replace(/^(?:der|die|das|ein|eine|sich)\s+/i, '').trim();
+  const tok = bare.split(/\s+/)[0] || '';
+  return /^[\p{L}-]+$/u.test(tok) ? tok : null;
+}
+
+/**
+ * Forms a learner should not have to spell at the unit: a receptive-only lemma of the cumulative lexicon (at or
+ * before the unit, not promoted, no productive lemma sharing the form), and a word no lexicon allocates by then.
+ * Map(form → why).
+ */
+function cumulativeSpellRisk(ctx, doc, promoted) {
+  const here = unitPosition(doc.data?.id);
+  const out = new Map();
+  if (here === null) return out;
+  const safe = new Set();
+  for (const e of allLexicon(ctx)) {
+    const at = unitPosition(e?.unit);
+    if (!e?.lemma || at === null) continue;
+    const forms = entryForms(e).forms;
+    if (at <= here && (e.role === 'productive' || promoted.has(e.id))) for (const f of forms) safe.add(f);
+    else if (at <= here && e.role === 'receptive' && !/\s/.test(String(e.lemma).replace(/^(?:sich|der|die|das)\s+/i, '').trim())) {
+      for (const f of forms) if (f.length > 2 && !FUNCTION_WORDS.has(f) && !NUMBER_WORDS.has(f) && !CORE.has(f)) out.set(f, `receptive: ${e.id}`);
+    }
+  }
+  for (const f of safe) out.delete(f);
+  // words the unit cannot know: in no lexicon by now (a later allocation or none)
+  const known = knownForms(ctx, doc.level, doc.nr);
+  for (const f of licensedForms(ctx, doc.data).forms) known.add(f);
+  return { has: (w) => out.has(w) || (w.length > 2 && !/^\d/.test(w) && !isKnown(w, known) && !knownCompound(w, (x) => isKnown(x, known)) && !SPELLED_CHAIN_RE.test(w)), get: (w) => out.get(w) || 'not known at the unit' };
 }
 
 /** The production surfaces of a unit: [{ de, path, meta? }]. */
