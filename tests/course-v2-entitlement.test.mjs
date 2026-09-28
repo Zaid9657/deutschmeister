@@ -471,7 +471,7 @@ test('the migration is idempotent, RLS-on, and the ledger is service-role-write 
   for (const p of policies) {
     assert.ok(code.includes(`DROP POLICY IF EXISTS ${p.name} ON public.${p.table};`), `${p.name} is created without a DROP … IF EXISTS first`);
   }
-  for (const table of ['course_ai_usage', 'exam_practice_results', 'learner_goals']) {
+  for (const table of ['course_ai_usage', 'exam_practice_results', 'learner_goals', 'course_events']) {
     assert.ok(code.includes(`CREATE TABLE IF NOT EXISTS public.${table} (`), `${table} missing`);
     assert.ok(code.includes(`ALTER TABLE public.${table} ENABLE ROW LEVEL SECURITY;`), `${table} without RLS`);
   }
@@ -482,6 +482,14 @@ test('the migration is idempotent, RLS-on, and the ledger is service-role-write 
   assert.match(code, /WITH CHECK \(auth\.uid\(\) = user_id AND ai_range IS NULL AND model_id IS NULL AND rubric_profile IS NULL\)/,
     'a client must not be able to insert an AI-graded result');
   assert.equal(policies.filter((p) => p.table === 'learner_goals').length, 4);
+  // learner_goals is one row per (user, band): progress.js reads it by band (SCHEMA §14).
+  assert.match(code, /band text NOT NULL CHECK \(band IN \('a1', 'a2', 'b1', 'b2'\)\)/);
+  assert.match(code, /PRIMARY KEY \(user_id, band\)/);
+  // course_events: own-row read, client insert without the server-only names, append-only.
+  const events = policies.filter((p) => p.table === 'course_events').map((p) => p.cmd).sort();
+  assert.deepEqual(events, ['INSERT', 'SELECT'], 'course_events is append-only (no UPDATE/DELETE)');
+  assert.match(code, /name NOT IN \('ai_grade_shown', 'ai_latency_ms', 'speaking_minutes', 'ai_cost_estimate'\)/,
+    'a client must not be able to write the AI-derived events');
 });
 
 test('the ledger columns and CHECKs match what entitlement.mjs writes', () => {

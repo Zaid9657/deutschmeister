@@ -250,6 +250,8 @@ const NOT_LESSON_ACTIVITY = {
   speaking_usage: 'the allowance meter of a speaking session, which is counted',
   speaking_wallet: 'credit balance',
   speaking_wallet_transactions: 'credit ledger',
+  course_ai_usage: 'the AI allowance meter of a v2 course attempt; the attempt itself is a writing_submissions or speaking_sessions row, which is counted',
+  course_events: 'v2 course instrumentation; every lernschritt_completed also writes lesson_progress, which is counted',
 };
 
 // The only files allowed to write through a table name held in a lowercase

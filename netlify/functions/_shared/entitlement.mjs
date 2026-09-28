@@ -232,10 +232,10 @@ export async function hasCourseAccess(admin, userId, level, options = {}) {
 
 // ── 2. the allowance ─────────────────────────────────────────────────────────
 
-async function countRows(admin, table, filters) {
-  let q = admin.from(table).select('id', { count: 'exact', head: true });
-  for (const [op, column, value] of filters) q = q[op](column, value);
-  const { count, error } = await q;
+// Each count query is written out in full (not built from a table name and a filter list), so
+// tests/db-columns.test.mjs can hold its table and columns to the schema.
+async function countOf(query) {
+  const { count, error } = await query;
   return { count: count || 0, error: error || null };
 }
 
@@ -258,17 +258,15 @@ async function degradedAllowance(admin, userId, info, access, dayStart, dailyCap
   // the writing grader stores rule-decided zeros with model = 'deterministic', and those cost
   // no model call, so they must not use up an attempt (E1 integration, 2026-09-27).
   const slotKeys = [info.slotKey, ...LANES.map((l) => `${info.slotKey}-${l}`)];
-  const slot = await countRows(admin, 'writing_submissions', [
-    ['eq', 'user_id', userId],
-    ['in', 'task_key', slotKeys],
-    ['neq', 'model', 'deterministic'],
-  ]);
-  const day = await countRows(admin, 'writing_submissions', [
-    ['eq', 'user_id', userId],
-    ['like', 'task_key', `${info.prefix}-%`],
-    ['neq', 'model', 'deterministic'],
-    ['gte', 'created_at', dayStart.toISOString()],
-  ]);
+  const slot = await countOf(admin.from('writing_submissions').select('id', { count: 'exact', head: true })
+    .eq('user_id', userId)
+    .in('task_key', slotKeys)
+    .neq('model', 'deterministic'));
+  const day = await countOf(admin.from('writing_submissions').select('id', { count: 'exact', head: true })
+    .eq('user_id', userId)
+    .like('task_key', `${info.prefix}-%`)
+    .neq('model', 'deterministic')
+    .gte('created_at', dayStart.toISOString()));
   if (slot.error || day.error) {
     console.error('[entitlement] degraded usage lookup failed:', JSON.stringify(slot.error || day.error));
   }
@@ -302,11 +300,15 @@ export async function checkCourseAiAllowance(admin, userId, bankKey, options = {
   const dayStart = utcDayStart(now);
 
   try {
-    const slot = await countRows(admin, 'course_ai_usage', [['eq', 'user_id', userId], ['eq', 'slot_key', info.slotKey]]);
+    const slot = await countOf(admin.from('course_ai_usage').select('id', { count: 'exact', head: true })
+      .eq('user_id', userId)
+      .eq('slot_key', info.slotKey));
     if (slot.error && isMissingTableError(slot.error)) return degradedAllowance(admin, userId, info, access, dayStart, dailyCap);
     const day = slot.error
       ? slot
-      : await countRows(admin, 'course_ai_usage', [['eq', 'user_id', userId], ['gte', 'created_at', dayStart.toISOString()]]);
+      : await countOf(admin.from('course_ai_usage').select('id', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .gte('created_at', dayStart.toISOString()));
     if (slot.error || day.error) {
       console.error('[entitlement] course_ai_usage lookup failed:', JSON.stringify(slot.error || day.error));
       return denied('usage_lookup_failed');

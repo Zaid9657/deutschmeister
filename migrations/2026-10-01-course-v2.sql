@@ -19,8 +19,12 @@
 --                             rows are written by the functions with the service
 --                             role, so a client cannot forge an AI result.
 --                             Append-only (no UPDATE policy); delete own.
---   3. learner_goals          lane, exam date, pace, reminder (SCHEMA §14). Own
---                             row, all four verbs — nothing here is privileged.
+--   3. learner_goals          lane, exam date, pace, reminder — one row per
+--                             (user, band) (SCHEMA §14). Own rows, all four
+--                             verbs — nothing here is privileged.
+--   3b. course_events         the course instrumentation (BLUEPRINT §7.8).
+--                             Own-row read; the learner inserts only the
+--                             client event names; append-only.
 --   4. review_cards.kind      += 'teil', 'repair' (SCHEMA §2 card keys).
 --   5. lesson_progress.status += 'tested_out' („Ich kann das schon", BLUEPRINT §3.5).
 --
@@ -35,6 +39,7 @@
 --   DROP TABLE IF EXISTS public.course_ai_usage;
 --   DROP TABLE IF EXISTS public.exam_practice_results;
 --   DROP TABLE IF EXISTS public.learner_goals;
+--   DROP TABLE IF EXISTS public.course_events;
 --   and re-add the previous review_cards / lesson_progress CHECKs if no row
 --   carries a new kind/status.
 -- ============================================================================
@@ -117,7 +122,8 @@ CREATE POLICY exam_practice_results_delete_own ON public.exam_practice_results
 -- 3. learner_goals — lane, exam date, pace, reminder (SCHEMA §14)
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS public.learner_goals (
-  user_id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  band text NOT NULL CHECK (band IN ('a1', 'a2', 'b1', 'b2')),  -- one row per band: A1.2 (sd1) and B1.2 (tb1) coexist
   lane text,
   exam_date date,
   purpose text,
@@ -126,7 +132,8 @@ CREATE TABLE IF NOT EXISTS public.learner_goals (
   reminder_time time,
   reminder_channel text NOT NULL DEFAULT 'email',
   integrationskurs boolean,                   -- the DTZ gate question
-  updated_at timestamptz NOT NULL DEFAULT now()
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (user_id, band)
 );
 
 ALTER TABLE public.learner_goals ENABLE ROW LEVEL SECURITY;
@@ -144,6 +151,43 @@ CREATE POLICY learner_goals_update_own ON public.learner_goals
 DROP POLICY IF EXISTS learner_goals_delete_own ON public.learner_goals;
 CREATE POLICY learner_goals_delete_own ON public.learner_goals
   FOR DELETE TO authenticated USING (auth.uid() = user_id);
+
+-- ---------------------------------------------------------------------------
+-- 3b. course_events — the course instrumentation (SCHEMA §14, BLUEPRINT §7.8)
+-- ---------------------------------------------------------------------------
+-- Written by src/lib/course-v2/progress.js logCourseEvent() for the learner's
+-- own events; the AI-derived names are written by the functions with the
+-- service role, so the client INSERT policy admits only the client names.
+-- props never carries learner text or audio. Not a lesson source: every
+-- lernschritt_completed also writes lesson_progress, which is the counted one.
+CREATE TABLE IF NOT EXISTS public.course_events (
+  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  name text NOT NULL CHECK (name IN ('lernschritt_completed', 'micro_output_submitted', 'aufgabe_submitted',
+    'revision_submitted', 'ai_grade_shown', 'teil_attempt', 'modelltest_completed', 'plan_set',
+    'retake_plan_created', 'mic_denied', 'ai_latency_ms', 'speaking_minutes', 'ai_cost_estimate',
+    'consent_given', 'consent_withdrawn')),
+  level text,
+  unit_id text,
+  step_id text,
+  lane text,
+  teil text,
+  props jsonb NOT NULL DEFAULT '{}'::jsonb,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS ce_name_created_idx ON public.course_events (name, created_at);
+CREATE INDEX IF NOT EXISTS ce_user_created_idx ON public.course_events (user_id, created_at);
+
+ALTER TABLE public.course_events ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS course_events_select_own ON public.course_events;
+CREATE POLICY course_events_select_own ON public.course_events
+  FOR SELECT TO authenticated USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS course_events_insert_own ON public.course_events;
+CREATE POLICY course_events_insert_own ON public.course_events
+  FOR INSERT TO authenticated
+  WITH CHECK (auth.uid() = user_id
+    AND name NOT IN ('ai_grade_shown', 'ai_latency_ms', 'speaking_minutes', 'ai_cost_estimate'));
+-- No UPDATE / DELETE policy: an event log is append-only.
 
 -- ---------------------------------------------------------------------------
 -- 4 + 5. Widen two CHECKs of the lesson-engine tables
@@ -183,10 +227,10 @@ END $$;
 -- ---------------------------------------------------------------------------
 -- Verification (run after applying):
 --   SELECT tablename, policyname, cmd FROM pg_policies
---     WHERE tablename IN ('course_ai_usage', 'exam_practice_results', 'learner_goals')
+--     WHERE tablename IN ('course_ai_usage', 'exam_practice_results', 'learner_goals', 'course_events')
 --     ORDER BY 1, 2;
 --     -- course_ai_usage: exactly 1 (SELECT) · exam_practice_results: 3 (SELECT, INSERT, DELETE)
---     -- learner_goals: 4
+--     -- learner_goals: 4 · course_events: 2 (SELECT, INSERT)
 --   SELECT conname, pg_get_constraintdef(oid) FROM pg_constraint
 --     WHERE conname IN ('review_cards_kind_check', 'lesson_progress_status_check');
 --     -- lists 'teil', 'repair' and 'tested_out'

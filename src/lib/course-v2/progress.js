@@ -246,10 +246,10 @@ export async function seedUnitCards(userId, unit, client = supabase) {
   }
   if (sentences.length) {
     const due = new Date().toISOString();
-    const rows = sentences.map((card_key) => ({ user_id: userId, card_key, kind: 'sentence', level: lc(unit.level), step: 0, due_at: due }));
-    const { error } = await client.from('review_cards').upsert(rows, { onConflict: 'user_id,card_key', ignoreDuplicates: true });
+    const sentenceRows = sentences.map((card_key) => ({ user_id: userId, card_key, kind: 'sentence', level: lc(unit.level), step: 0, due_at: due }));
+    const { error } = await client.from('review_cards').upsert(sentenceRows, { onConflict: 'user_id,card_key', ignoreDuplicates: true });
     if (error) console.error('[course-v2] seed sentence cards:', error.message);
-    else n += rows.length;
+    else n += sentenceRows.length;
   }
   return n;
 }
