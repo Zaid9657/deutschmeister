@@ -409,6 +409,117 @@ function collectBankTasks(doc) {
   return out;
 }
 
+// ── Plateau review sets (SCHEMA §10 `review`, §13; BLUEPRINT §5.2) ──────────────────────
+/** FNV-1a of a string → a 32-bit seed (no clock, no environment: the same key, the same draw). */
+function seedOf(key) {
+  let h = 2166136261 >>> 0;
+  for (let i = 0; i < key.length; i += 1) {
+    h ^= key.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+/** mulberry32 — the PRNG of the live course's draws (src/lib/lesson/buildLesson.js). */
+function prng(seed) {
+  let a = seed >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function shuffled(list, rand) {
+  const out = [...list];
+  for (let i = out.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(rand() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
+/** Round-robin over groups (each already in its draw order) until every group is empty. */
+function roundRobin(groups) {
+  const out = [];
+  const queues = groups.map((g) => [...g]);
+  while (queues.some((q) => q.length)) for (const q of queues) if (q.length) out.push(q.shift());
+  return out;
+}
+
+/**
+ * The candidates of one share in the order they are drawn: spread over the units (in unit order)
+ * and, inside a unit, over its Lernschritte (seeded order), so a review set of ≈ 20 maps back to
+ * every Lernschritt it can reach; items not drawn by an earlier Plateau come first.
+ */
+function spreadOrder(cands, units, rand, exclude) {
+  const seq = (list) => roundRobin(units.map((u) => {
+    const mine = list.filter((c) => c.unit === u);
+    const steps = shuffled([...new Set(mine.map((c) => c.step))].sort(), rand);
+    return roundRobin(steps.map((s) => shuffled(mine.filter((c) => c.step === s), rand)));
+  }));
+  return [...seq(cands.filter((c) => !exclude.has(c.id))), ...seq(cands.filter((c) => exclude.has(c.id)))];
+}
+
+/**
+ * Draw the review set of one Plateau from the unit reserves (SCHEMA §10: `review: { draw,
+ * currentShare, from: 'reserve' }`; BLUEPRINT §5.2: ≈ 65 % from the units since the previous
+ * Plateau, the rest from the earlier units). Deterministic: seeded by the Plateau id, no clock.
+ *
+ *   candidates  [{ id, unit, step }]  reserve items that carry banks: ['plateau'] (unit at stage T)
+ *   current     unit ids since the previous Plateau, in order
+ *   earlier     unit ids before them, in order
+ *   exclude     ids an earlier Plateau of the level drew — they go to the back of their share
+ *
+ * A share with too few candidates hands its rest to the other (P1 has no earlier units: all 20
+ * from U1–U3). Returns { current: [cand], earlier: [cand], items: [cand] } — `items` is the
+ * whole set in its seeded serving order.
+ */
+export function drawPlateauReview(candidates, { id, draw = 20, currentShare = 0.65, current = [], earlier = [], exclude = new Set() }) {
+  const rand = prng(seedOf(`${id}|review`));
+  const inCurrent = (candidates || []).filter((c) => current.includes(c.unit));
+  const inEarlier = (candidates || []).filter((c) => earlier.includes(c.unit));
+  const total = Math.max(0, Math.floor(Number(draw) || 0));
+  let wantCurrent = Math.round(total * (Number(currentShare) || 0));
+  let wantEarlier = total - wantCurrent;
+  if (inEarlier.length < wantEarlier) { wantCurrent += wantEarlier - inEarlier.length; wantEarlier = inEarlier.length; }
+  if (inCurrent.length < wantCurrent) { wantEarlier = Math.min(inEarlier.length, wantEarlier + wantCurrent - inCurrent.length); wantCurrent = inCurrent.length; }
+  const cur = spreadOrder(inCurrent, current, rand, exclude).slice(0, wantCurrent);
+  const ear = spreadOrder(inEarlier, earlier, rand, exclude).slice(0, wantEarlier);
+  return { current: cur, earlier: ear, items: shuffled([...cur, ...ear], rand) };
+}
+
+/**
+ * Where each Teil of a .1 closing block comes next (BLUEPRINT §5.3 Teil-Karte, „kommt in A1.2,
+ * Lektion 2"): the first unit of the paired .2 level whose Prüfungsfokus names the template in
+ * the closing's lane. Read from the .2 level's unit files where they exist, else its specs.json
+ * bundle. { level, byTemplate: { [template]: { unit, nr, title } } } — an empty byTemplate when
+ * the .2 level has no specs yet (the player then says „in A1.2").
+ */
+function comesNextOf(level, lane, templates, { unitDocs, bundleEntries }) {
+  const next = /\.1$/.test(level) ? level.replace(/\.1$/, '.2') : null;
+  if (!next) return null;
+  const byNr = new Map();
+  for (const e of bundleEntries) if (isObj(e) && typeof e.id === 'string' && PATTERNS.UNIT.test(e.id) && e.id.startsWith(`${next}-`) && !byNr.has(e.id)) byNr.set(e.id, e);
+  for (const u of unitDocs) if (isObj(u) && u.level === next && typeof u.id === 'string') byNr.set(u.id, u);
+  const rows = [...byNr.values()].sort((a, b) => (a.id < b.id ? -1 : 1));
+  const byTemplate = {};
+  for (const template of templates) {
+    const hit = rows.find((r) => {
+      const l = isObj(r.spec) && isObj(r.spec.lanes) ? r.spec.lanes : {};
+      const list = Array.isArray(l.pruefungsfokus) ? l.pruefungsfokus : [];
+      return (l.primary === lane || l.primary === undefined) && list.some((p) => isObj(p) && p.template === template);
+    });
+    if (hit) byTemplate[template] = { unit: hit.id, nr: Number(hit.id.slice(-2)), title: isObj(hit.title) ? str(hit.title.de) : null };
+  }
+  return { level: next, byTemplate };
+}
+
+/** Kind of one Plateau/closing Teil: an ExamBlock, a WritingTask or a SpeakingTask. */
+const partKindOf = (p) => (!isObj(p) ? null : Array.isArray(p.items) && typeof p.template === 'string' ? 'block'
+  : typeof p.taskDe === 'string' ? 'writing' : isObj(p.aiRole) ? 'speaking' : null);
+
 // ── labels ──────────────────────────────────────────────────────────────────────────────
 function teilLabel(templateId, lanes) {
   const [laneId, teil] = templateId.split('.');
@@ -566,6 +677,8 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
   const rowById = new Map();
 
   const reserveIndex = [];
+  // reserve items a Plateau may draw (banks: ['plateau']), as the learner sees them (SCHEMA §3.1)
+  const plateauCandidates = [];
   for (const { file, doc: u } of units) {
     const hash = contentHash(u);
     unitHashes[u.id] = hash;
@@ -588,6 +701,11 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
         if (!isItem(it)) continue;
         reserveIds.add(it.id);
         reserveIndex.push({ unit: u.id, ...toReserveItem(withPluralTwins(it, pluralTwins), u.nr, st.id) });
+        if (u.stage === 'T' && strs(it.banks).includes('plateau')) {
+          const item = structuredClone(withPluralTwins(it, pluralTwins));
+          for (const k of STRIP_ITEM_KEYS) delete item[k];
+          plateauCandidates.push({ id: it.id, unit: u.id, step: st.id, item });
+        }
       }
     }
     const poolItems = [];
