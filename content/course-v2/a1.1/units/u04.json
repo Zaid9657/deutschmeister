@@ -30,7 +30,7 @@
         "g.moechte"
       ],
       "chunk": [
-        "g.akkusativ"
+        "g.praep-akkusativ"
       ],
       "review": [
         "g.verbposition-2",
@@ -39,7 +39,7 @@
     },
     "lexiconBlocks": [
       {
-        "title": "Lebensmittel",
+        "title": "Brot, Käse, Milch",
         "lemmas": [
           "lx.brot",
           "lx.broetchen",
@@ -67,7 +67,7 @@
         ]
       },
       {
-        "title": "Mengen, Verpackungen und Preise",
+        "title": "Kilo, Gramm und Preise",
         "lemmas": [
           "lx.kilo",
           "lx.gramm",
@@ -80,7 +80,7 @@
         ]
       },
       {
-        "title": "Im Geschäft",
+        "title": "Im Supermarkt und auf dem Markt",
         "lemmas": [
           "lx.kosten",
           "lx.kaufen",
@@ -139,7 +139,7 @@
       "Linie 1 A1 K3–4 (Grammatik: Artikel; nach memo 06)"
     ],
     "deviation": {
-      "reason": "Lesen Teil 2 (Stoffplan a1-1 §4: Prospekt, zwei Anzeigen vergleichen) ist nach u05 verschoben: u04 liest einen Prospekt ohne a/b-Vergleich; sd1.l2 ist Prüfungsfokus in u05 und u06 (COV-1 nicht gefährdet). LS5 beginnt mit einer sd1.sp2-Runde mit zwei Themen, die cd.a1.produkt-infos trägt (r1-F07); sie steht als Chip, aber nicht im Prüfungsfokus, weil COV-3 höchstens vier Teile erlaubt."
+      "reason": "Lesen Teil 2 (Stoffplan a1-1 §4: Prospekt, zwei Anzeigen vergleichen) ist nach u05 verschoben: u04 liest einen Prospekt ohne a/b-Vergleich; sd1.l2 ist Prüfungsfokus in u05 und u06 (COV-1 nicht gefährdet). LS5 beginnt mit einer sd1.sp2-Runde mit zwei Themen, die cd.a1.produkt-infos trägt (r1-F07); sie steht als Chip, aber nicht im Prüfungsfokus, weil COV-3 höchstens vier Teile erlaubt. Grammatik: Chunk der Einheit ist „für“ mit Akkusativ („für die Woche“, „für Sie“; g.praep-akkusativ, Spine chunkFrom a1.1-u04). Der Akkusativ-Chunk („Ich möchte einen Apfel.“) ist ab a1.1-u03 lizenziert („Haben Sie einen Bruder?“) und steht weiter auf der Regelkarte rc.artikel-genus-plural (GRM-01: ein Chunk pro Einheit)."
     },
     "cast": [
       "cast.priya",

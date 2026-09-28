@@ -3013,8 +3013,8 @@
       "gloss": {
         "en": "own"
       },
-      "example": "eine eigene Wohnung",
-      "exampleEn": "a flat of one’s own",
+      "example": "„eigen“ heißt: nur für mich oder für uns.",
+      "exampleEn": "“eigen” (own) means: only for me or for us.",
       "wordId": null
     },
     {
@@ -3034,6 +3034,21 @@
       },
       "example": "Wo ist der Hausmeister?",
       "exampleEn": "Where is the caretaker?",
+      "wordId": null
+    },
+    {
+      "id": "lx.willkommen",
+      "lemma": "willkommen",
+      "pos": "INTJ",
+      "role": "receptive",
+      "unit": "a1.1-u05",
+      "block": 3,
+      "list_ref": "freq:top-5000",
+      "gloss": {
+        "en": "welcome"
+      },
+      "example": "Willkommen im Haus!",
+      "exampleEn": "Welcome to the building!",
       "wordId": null
     },
     {
@@ -7048,13 +7063,19 @@
       "lemma": "lx.wohnort",
       "from": "receptive",
       "to": "productive",
-      "unit": "a1.1-u02"
+      "unit": "a1.1-u01"
     },
     {
       "lemma": "lx.tuerkisch",
       "from": "receptive",
       "to": "productive",
-      "unit": "a1.1-u02"
+      "unit": "a1.1-u01"
+    },
+    {
+      "lemma": "lx.kurs",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u01"
     },
     {
       "lemma": "lx.online",
@@ -7063,7 +7084,19 @@
       "unit": "a1.1-u02"
     },
     {
-      "lemma": "lx.kurs",
+      "lemma": "lx.richtig",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u02"
+    },
+    {
+      "lemma": "lx.empfang",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u02"
+    },
+    {
+      "lemma": "lx.teilnehmer",
       "from": "receptive",
       "to": "productive",
       "unit": "a1.1-u02"
@@ -7075,16 +7108,46 @@
       "unit": "a1.1-u03"
     },
     {
+      "lemma": "lx.jahr",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u03"
+    },
+    {
+      "lemma": "lx.gut",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u03"
+    },
+    {
+      "lemma": "lx.kellner",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u03"
+    },
+    {
+      "lemma": "lx.machen",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u03"
+    },
+    {
+      "lemma": "lx.wie-gehts",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u03"
+    },
+    {
       "lemma": "lx.entschuldigung",
       "from": "receptive",
       "to": "productive",
       "unit": "a1.1-u04"
     },
     {
-      "lemma": "lx.jahr",
+      "lemma": "lx.stueck",
       "from": "receptive",
       "to": "productive",
-      "unit": "a1.1-u05"
+      "unit": "a1.1-u04"
     },
     {
       "lemma": "lx.familienstand",
@@ -7093,13 +7156,31 @@
       "unit": "a1.1-u05"
     },
     {
-      "lemma": "lx.richtig",
+      "lemma": "lx.eins",
       "from": "receptive",
       "to": "productive",
-      "unit": "a1.1-u06"
+      "unit": "a1.1-u07"
     },
     {
-      "lemma": "lx.eins",
+      "lemma": "lx.tag",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u07"
+    },
+    {
+      "lemma": "lx.uhrzeit",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u07"
+    },
+    {
+      "lemma": "lx.fahren",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u07"
+    },
+    {
+      "lemma": "lx.mittwoch",
       "from": "receptive",
       "to": "productive",
       "unit": "a1.1-u07"
@@ -7111,70 +7192,10 @@
       "unit": "a1.1-u08"
     },
     {
-      "lemma": "lx.gut",
-      "from": "receptive",
-      "to": "productive",
-      "unit": "a1.1-u08"
-    },
-    {
-      "lemma": "lx.empfang",
-      "from": "receptive",
-      "to": "productive",
-      "unit": "a1.1-u08"
-    },
-    {
-      "lemma": "lx.tag",
-      "from": "receptive",
-      "to": "productive",
-      "unit": "a1.1-u08"
-    },
-    {
       "lemma": "lx.nachricht",
       "from": "receptive",
       "to": "productive",
       "unit": "a1.1-u08"
-    },
-    {
-      "lemma": "lx.stueck",
-      "from": "receptive",
-      "to": "productive",
-      "unit": "a1.1-u09"
-    },
-    {
-      "lemma": "lx.uhrzeit",
-      "from": "receptive",
-      "to": "productive",
-      "unit": "a1.1-u09"
-    },
-    {
-      "lemma": "lx.fahren",
-      "from": "receptive",
-      "to": "productive",
-      "unit": "a1.1-u10"
-    },
-    {
-      "lemma": "lx.teilnehmer",
-      "from": "receptive",
-      "to": "productive",
-      "unit": "a1.1-u10"
-    },
-    {
-      "lemma": "lx.kellner",
-      "from": "receptive",
-      "to": "productive",
-      "unit": "a1.1-u10"
-    },
-    {
-      "lemma": "lx.mittwoch",
-      "from": "receptive",
-      "to": "productive",
-      "unit": "a1.1-u10"
-    },
-    {
-      "lemma": "lx.machen",
-      "from": "receptive",
-      "to": "productive",
-      "unit": "a1.1-u11"
     },
     {
       "lemma": "lx.sonntag",

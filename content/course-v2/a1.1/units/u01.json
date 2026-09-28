@@ -37,7 +37,7 @@
     },
     "lexiconBlocks": [
       {
-        "title": "Begrüßung und Abschied",
+        "title": "Hallo und Tschüss",
         "lemmas": [
           "lx.hallo",
           "lx.guten-tag",
@@ -55,7 +55,7 @@
         ]
       },
       {
-        "title": "Name, Herkunft, Wohnort",
+        "title": "Name, Land, Wohnort",
         "lemmas": [
           "lx.name",
           "lx.heissen",

@@ -30,7 +30,9 @@
         "g.possessiv-mein-dein",
         "g.vokalwechsel"
       ],
-      "chunk": [],
+      "chunk": [
+        "g.akkusativ"
+      ],
       "review": [
         "g.ja-nein-frage",
         "g.praesens"
@@ -38,7 +40,7 @@
     },
     "lexiconBlocks": [
       {
-        "title": "Familienmitglieder",
+        "title": "Meine Familie",
         "lemmas": [
           "lx.familie",
           "lx.mutter",
@@ -58,7 +60,7 @@
         ]
       },
       {
-        "title": "Wie geht’s? Befinden und Alter",
+        "title": "Wie geht’s? Wie alt sind Sie?",
         "lemmas": [
           "lx.wie-gehts",
           "lx.gut",
@@ -71,7 +73,7 @@
         ]
       },
       {
-        "title": "Was machen sie? Alltag und Arbeit",
+        "title": "Was machen sie? Freunde und Nachrichten",
         "lemmas": [
           "lx.mann",
           "lx.frau",
@@ -123,7 +125,7 @@
       "Linie 1 A1 K2–3, K5 (Grammatik; nach memo 06)"
     ],
     "deviation": {
-      "reason": "Landeskunde: Die Einheit macht keine Sachaussage und hat darum keinen Fact. Von „Familie in D-A-CH: Patchworkfamilie, Doppelnamen, Oma und Opa“ zeigt sie nur das Wort „Oma“ (glossiert, im Chat-Post von Emre, LS3); Patchworkfamilie und Doppelnamen bräuchten einen belegten Fact und neuen Wortschatz, und Großmutter/Großvater sind a1.2-u10 zugeordnet (Review r1 F12). Lesen: Der Chat-Post von Emre hat rund 50 statt ≈ 60 Wörter; das längere Lesen tragen die zwei LS4-Texte (je rund 70 Wörter). Schreiben: Statt der Vorstufe mit 2 Leitpunkten und ≈ 20 Wörtern übt LS6 sd1.s2 „reduced“ mit den 3 Leitpunkten der Vorlage (EXM-03), je eine Frage (Wer? Wo? Was?), 20–30 Wörter; Wohnort und Arbeit verlangt cd.a1.ueber-andere-schreiben (Review r1 F07). Sprechen: Vor Teil 2 fragt Nora „Wie geht es Ihnen?“ (cd.a1.befinden); Situation und Nora sagen, dass Teil 2 erst danach beginnt (Review r1 F08)."
+      "reason": "Landeskunde: Die Einheit macht keine Sachaussage und hat darum keinen Fact. Von „Familie in D-A-CH: Patchworkfamilie, Doppelnamen, Oma und Opa“ zeigt sie nur das Wort „Oma“ (glossiert, im Chat-Post von Emre, LS3); Patchworkfamilie und Doppelnamen bräuchten einen belegten Fact und neuen Wortschatz, und Großmutter/Großvater sind a1.2-u10 zugeordnet (Review r1 F12). Lesen: Der Chat-Post von Emre hat rund 50 statt ≈ 60 Wörter; das längere Lesen tragen die zwei LS4-Texte (je rund 70 Wörter). Schreiben: Statt der Vorstufe mit 2 Leitpunkten und ≈ 20 Wörtern übt LS6 sd1.s2 „reduced“ mit den 3 Leitpunkten der Vorlage (EXM-03), je eine Frage (Wer? Wo? Was?), 20–30 Wörter; Wohnort und Arbeit verlangt cd.a1.ueber-andere-schreiben (Review r1 F07). Sprechen: Vor Teil 2 fragt Nora „Wie geht es Ihnen?“ (cd.a1.befinden); Situation und Nora sagen, dass Teil 2 erst danach beginnt (Review r1 F08). Grammatik: „Haben Sie einen Bruder?“ ist ein Chunk; der Akkusativ-Chunk (g.akkusativ) steht darum ab a1.1-u03 (Spine chunkFrom), nicht erst ab u04. Der Chunk von u04 ist „für“ mit Akkusativ (GRM-01: ein Chunk pro Einheit)."
     },
     "cast": [
       "cast.priya",

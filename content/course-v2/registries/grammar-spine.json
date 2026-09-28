@@ -275,7 +275,7 @@
         "receptive": "a1.1-u06",
         "productive": "a1.1-u06"
       },
-      "chunkFrom": "a1.1-u04",
+      "chunkFrom": "a1.1-u03",
       "detectors": [
         "det.akkusativ-maskulin"
       ],
@@ -1067,6 +1067,7 @@
         "receptive": "a1.2-u11",
         "productive": "a1.2-u11"
       },
+      "chunkFrom": "a1.1-u04",
       "detectors": [],
       "contrast": "g.praep-dativ",
       "errorTags": [

@@ -75,7 +75,7 @@
         ]
       },
       {
-        "title": "Wie finden Sie das? Gefallen und Meinung",
+        "title": "Wie finden Sie das? Das gefällt mir.",
         "lemmas": [
           "lx.gern",
           "lx.leider",
@@ -114,6 +114,12 @@
           "slot": "sprechen"
         },
         {
+          "template": "sd1.sp2",
+          "length": "full",
+          "modeDefault": "lern",
+          "slot": "sprechen"
+        },
+        {
           "template": "sd1.s2",
           "length": "full",
           "modeDefault": "lern",
@@ -129,7 +135,7 @@
       "Linie 1 A1 K4/K7–8 (Grammatik: Modalverben; nach memo 06)"
     ],
     "deviation": {
-      "reason": "Abweichungen vom Stoffplan a1-1 §6 Unit 8 (Review a1.1-u08 r1 F11). (1) Hören: Statt Hören Teil 1 übt LS4 Hören Teil 3 (fünf Nachrichten am Telefon), weil die Verabredungen der Einheit Anrufe und Nachrichten sind; sd1.h1 ist Prüfungsfokus in a1.1-u09. (2) Lesen: Lesen Teil 2 und der Vergleich von zwei Angeboten fehlen. LS2 liest ein Programm auf der Webseite des Parks (tt.programm, 60 Wörter) ohne a/b-Vergleich; sd1.l2 ist Prüfungsfokus in a1.1-u05 und a1.1-u06 (COV-1 nicht gefährdet). (3) Schreiben: Statt einer Einladung (Was? Wann? Wo?) schreibt der Lerner in S2 eine Absage mit einem anderen Tag (sd1.s2). Einladen übt die Mikroaufgabe von LS3 (Olena anrufen: Kommst du mit ins Kino? Was, wo, wann?) und Sprechen Teil 2 („Kommen Sie mit? Wann haben Sie Zeit?“). (4) Sprechen: Prüfungsfokus ist Sprechen Teil 1 (sd1.sp1), nicht Sprechen Teil 2 wie im Stoffplan: Priya stellt sich in der Laufgruppe vor, mit Hobby, Buchstabieren und Nummer. Der geplante Teil 2 (sd1.sp2, Themenkarten „Hobby“ und „Wochenende“) ist der zweite Teil derselben Sprechaufgabe, in voller Länge, und steht als Chip. Das Kartenthema heißt „Hobby“, nicht „Freizeit“: lx.freizeit ist in dieser Einheit rezeptiv, und Lernerkarten sind Produktion. (5) Landeskunde: Vereine in D-A-CH (Sportverein, Chor) und der ruhige Sonntag fehlen. Die Einheit macht keine Sachaussage und hat darum keinen Fact. lx.verein ist erst a2.1 und lx.sonntag a1.1-u11; der Punkt gehört in eine Fokus-Karte (Fokus Alltag: Anmeldung im Sportverein) oder in a1.1-u11 (Wochenende) und ist für die Level-Revision offen. (6) Wortschatz: 35 statt 28 Einträge (Band 24–32; LEX-05 besteht nur mit ±10 %). Die Kürzung auf 32 (lx.rad in lx.fahrrad, lx.planen und lx.interessant als Glossen) und die Rollen liegen beim Lexikon (Review F07). Aussprache: LS1 übt wie geplant ich- und ach-Laut, LS3 zusätzlich ich-Laut und sch."
+      "reason": "Abweichungen vom Stoffplan a1-1 §6 Unit 8 (Review a1.1-u08 r1 F11). (1) Hören: Statt Hören Teil 1 übt LS4 Hören Teil 3 (fünf Nachrichten am Telefon), weil die Verabredungen der Einheit Anrufe und Nachrichten sind; sd1.h1 ist Prüfungsfokus in a1.1-u09. (2) Lesen: Lesen Teil 2 und der Vergleich von zwei Angeboten fehlen. LS2 liest ein Programm auf der Webseite des Parks (tt.programm, 60 Wörter) ohne a/b-Vergleich; sd1.l2 ist Prüfungsfokus in a1.1-u05 und a1.1-u06 (COV-1 nicht gefährdet). (3) Schreiben: Statt einer Einladung (Was? Wann? Wo?) schreibt der Lerner in S2 eine Absage mit einem anderen Tag (sd1.s2). Einladen übt die Mikroaufgabe von LS3 (Olena anrufen: Kommst du mit ins Kino? Was, wo, wann?) und Sprechen Teil 2 („Kommen Sie mit? Wann haben Sie Zeit?“). (4) Sprechen: Prüfungsfokus sind Sprechen Teil 1 (sd1.sp1) und Sprechen Teil 2 (sd1.sp2): Priya stellt sich in der Laufgruppe vor, mit Hobby, Buchstabieren und Nummer. Der geplante Teil 2 (Themenkarten „Hobby“ und „Wochenende“) ist der zweite Teil derselben Sprechaufgabe, in voller Länge. Das Kartenthema heißt „Hobby“, nicht „Freizeit“: lx.freizeit ist in dieser Einheit rezeptiv, und Lernerkarten sind Produktion. (5) Landeskunde: Vereine in D-A-CH (Sportverein, Chor) und der ruhige Sonntag fehlen. Die Einheit macht keine Sachaussage und hat darum keinen Fact. lx.verein ist erst a2.1 und lx.sonntag a1.1-u11; der Punkt gehört in eine Fokus-Karte (Fokus Alltag: Anmeldung im Sportverein) oder in a1.1-u11 (Wochenende) und ist für die Level-Revision offen. (6) Wortschatz: 35 statt 28 Einträge (Band 24–32; LEX-05 besteht mit ±10 %). Die Kürzung auf 32 (Review F07) ist offen: „Rad“ steht in Aufgaben und Antworten dieser Einheit („Bilal fährt gern Rad.“), darum lässt sich lx.rad erst in lx.fahrrad zusammenlegen, wenn die Einheit „Fahrrad“ sagt; „planen“ lesen LS2 und a1.1-u09 LS3 ohne Glosse; lx.interessant produziert a1.1-u11 (Promotion). Aussprache: LS1 übt wie geplant ich- und ach-Laut, LS3 zusätzlich ich-Laut und sch."
     },
     "cast": [
       "cast.priya",

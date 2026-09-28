@@ -7,8 +7,8 @@
       "spine": "g.verbposition-2",
       "depth": 1,
       "modelSentence": "Wie heißen Sie? – Ich heiße Priya.",
-      "de": "Im Aussagesatz und in der W-Frage steht das Verb auf Position 2. Auf Position 1 steht ein Satzteil: das Subjekt (Ich), ein W-Wort (Wie, Wo, Woher, Was) oder eine Angabe. Nach einem W-Wort steht das Subjekt hinter dem Verb: Woher kommen Sie?",
-      "en": "In statements and W-questions the verb is in position 2. Position 1 holds one element: the subject, a question word (wie, wo, woher, was) or another phrase. After a question word the subject follows the verb: Woher kommen Sie?",
+      "de": "Im Aussagesatz und in der W-Frage steht das Verb auf Position 2. Auf Position 1 steht oft das Subjekt: „Ich heiße Priya.“ In der W-Frage steht das W-Wort auf Position 1: „Wie“, „Wo“, „Woher“. Das Subjekt steht dann hinter dem Verb: „Woher kommen Sie?“",
+      "en": "In statements and W-questions the verb is in position 2. Position 1 often holds the subject: Ich heiße Priya. In a W-question the question word takes position 1: wie, wo, woher. The subject then follows the verb: Woher kommen Sie?",
       "table": [
         [
           "Position 1",
@@ -43,11 +43,11 @@
       "spine": "g.praesens",
       "depth": 1,
       "modelSentence": "Ich komme aus Indien. Und woher kommst du?",
-      "de": "Im Präsens hat das Verb eine Endung: ich wohn-e, du wohn-st, er/sie wohn-t, Sie wohn-en. Sie (formell) hat immer -en, für eine Person und für mehrere. sein ist unregelmäßig: ich bin, du bist, er/sie ist, Sie sind. „du“ sagen Sie zu Freunden, in der Familie und im Kurs. „Sie“ sagen Sie zu Frau Schulz und im Amt.",
-      "en": "In the present tense the verb takes an ending: ich wohne, du wohnst, er/sie wohnt, Sie wohnen. Formal Sie always takes -en, for one person or several. sein is irregular: ich bin, du bist, er/sie ist, Sie sind. Say du to friends, in the family and in the course. Say Sie to Mrs Schulz and at offices.",
+      "de": "Im Präsens hat das Verb eine Endung. „ich wohn-e“, „du wohn-st“, „er/sie wohn-t“, „Sie wohn-en“. „Sie“ (formell) hat immer „-en“: „Sie wohnen“, „Sie kommen“. Aber „sein“: „ich bin“, „du bist“, „er/sie ist“, „Sie sind“. „du“ sagen Sie im Kurs und im Chat: „Woher kommst du?“ „Sie“ sagen Sie zu Frau Schulz: „Woher kommen Sie?“",
+      "en": "In the present tense the verb takes an ending: ich wohne, du wohnst, er/sie wohnt, Sie wohnen. Formal Sie always takes -en: Sie wohnen, Sie kommen. But sein is different: ich bin, du bist, er/sie ist, Sie sind. Say du in the course and in the chat: Woher kommst du? Say Sie to Frau Schulz: Woher kommen Sie?",
       "table": [
         [
-          "Person",
+          "Pronomen",
           "wohnen",
           "kommen",
           "heißen",
@@ -89,11 +89,11 @@
       "spine": "g.praesens",
       "depth": 2,
       "modelSentence": "Wir haben heute Kurs. Habt ihr auch Kurs?",
-      "de": "Präsens, alle Personen: „wir wohn-en“, „ihr wohn-t“, „sie/Sie wohn-en“. „wir“, „sie“ und „Sie“ haben die Form vom Infinitiv. „haben“: „ich habe“, „du hast“, „er/sie hat“, „wir haben“, „ihr habt“, „sie/Sie haben“. „sein“: „wir sind“, „ihr seid“, „sie/Sie sind“. Bei „arbeiten“ kommt ein „e“ dazu: „du arbeitest“, „er arbeitet“, „ihr arbeitet“.",
-      "en": "Present tense, all persons: wir wohnen, ihr wohnt, sie/Sie wohnen. wir, sie and Sie use the infinitive form. haben: ich habe, du hast, er/sie hat, wir haben, ihr habt, sie/Sie haben. sein: wir sind, ihr seid, sie/Sie sind. arbeiten adds an e: du arbeitest, er arbeitet, ihr arbeitet.",
+      "de": "Präsens mit „wir“, „ihr“ und „sie/Sie“: „wir wohn-en“, „ihr wohn-t“, „sie/Sie wohn-en“. „wir“, „sie“ und „Sie“ haben die Form vom Infinitiv. „haben“: „ich habe“, „du hast“, „er/sie hat“. „wir haben“, „ihr habt“, „sie/Sie haben“. „sein“: „wir sind“, „ihr seid“, „sie/Sie sind“. Bei „arbeiten“ kommt ein „e“ dazu: „du arbeitest“, „er arbeitet“, „ihr arbeitet“.",
+      "en": "Present tense with wir, ihr and sie/Sie: wir wohnen, ihr wohnt, sie/Sie wohnen. wir, sie and Sie use the infinitive form. haben: ich habe, du hast, er/sie hat; wir haben, ihr habt, sie/Sie haben. sein: wir sind, ihr seid, sie/Sie sind. arbeiten adds an e: du arbeitest, er arbeitet, ihr arbeitet.",
       "table": [
         [
-          "Person",
+          "Pronomen",
           "wohnen",
           "arbeiten",
           "haben",
@@ -149,8 +149,8 @@
       "spine": "g.negation-nicht",
       "depth": 1,
       "modelSentence": "Nein, ich bin nicht Lehrerin. Ich bin Studentin.",
-      "de": "Mit „nicht“ sagen Sie: Das stimmt nicht. „nicht“ steht vor dem Wort: „nicht zwanzig“, „nicht aus Berlin“, „nicht Lehrerin – Studentin“. Am Satzende steht „nicht“ für den Satz: „Ich arbeite heute nicht.“ Achtung: „Ich habe kein Formular.“ (kein: Einheit 6)",
-      "en": "Use nicht to say that something is not true. nicht goes before the word: nicht zwanzig, nicht aus Berlin, nicht Lehrerin – Studentin. At the end of the sentence, nicht negates the whole sentence: Ich arbeite heute nicht. Note: Ich habe kein Formular. (kein: unit 6)",
+      "de": "Mit „nicht“ sagen Sie: Das stimmt nicht. „nicht“ steht vor dem Wort: „nicht zwanzig“, „nicht aus Berlin“. Am Satzende steht „nicht“ für den Satz: „Ich arbeite heute nicht.“ Aber mit „ein“ sagen Sie „kein“: „Ich habe kein Formular.“",
+      "en": "Use nicht to say that something is not true. nicht goes before the word: nicht zwanzig, nicht aus Berlin. At the end of the sentence, nicht negates the whole sentence: Ich arbeite heute nicht. But with ein you say kein: Ich habe kein Formular.",
       "table": [
         [
           "Ich bin",
@@ -175,13 +175,13 @@
       "spine": "g.ja-nein-frage",
       "depth": 1,
       "modelSentence": "Kommen Sie aus Indien? – Ja. / Nein, aus Pakistan.",
-      "de": "In der Ja/Nein-Frage steht das Verb auf Position 1: „Sprechen Sie Englisch?“ Die Antwort ist „ja“ oder „nein“. Achtung bei Fragen mit „nicht“: Die Antwort „ja“ heißt hier „doch“: „Bist du nicht Studentin? – Doch, ich bin Studentin.“",
-      "en": "In a yes/no question the verb is in position 1: Sprechen Sie Englisch? The answer is ja or nein. Careful with questions containing nicht: here the answer ja becomes doch: Bist du nicht Studentin? – Doch, ich bin Studentin.",
+      "de": "In der Ja/Nein-Frage steht das Verb auf Position 1: „Sprechen Sie Englisch?“ Die Antwort ist „ja“ oder „nein“. Wichtig: Bei Fragen mit „nicht“ heißt „ja“ hier „doch“. „Bist du nicht Studentin? – Doch, ich bin Studentin.“",
+      "en": "In a yes/no question the verb is in position 1: Sprechen Sie Englisch? The answer is ja or nein. Important: in questions with nicht, ja becomes doch. Bist du nicht Studentin? – Doch, ich bin Studentin.",
       "table": [
         [
           "Frage",
-          "positiv",
-          "negativ"
+          "ja / doch",
+          "nein"
         ],
         [
           "Sprechen Sie Englisch?",
@@ -201,8 +201,8 @@
       "spine": "g.possessiv-mein-dein",
       "depth": 1,
       "modelSentence": "Das ist meine Mutter, und das ist mein Bruder.",
-      "de": "„mein“ (ich), „dein“ (du), „Ihr“ (Sie). „mein“ steht bei „der“ und „das“, „meine“ bei „die“ und im Plural. Genauso: „dein – deine“, „Ihr – Ihre“. „Ihr“ (formell) schreiben Sie immer mit „I“: Ist das Ihre Tochter?",
-      "en": "mein (ich), dein (du), Ihr (Sie). Use mein with der and das nouns, meine with die nouns and in the plural. The same for dein – deine, Ihr – Ihre. Formal Ihr always starts with a capital I: Ist das Ihre Tochter?",
+      "de": "„mein“ (ich), „dein“ (du), „Ihr“ (Sie). „mein“ steht bei „der“ und „das“, „meine“ bei „die“ und im Plural. Bei „dein“ und „Ihr“ ist es auch so: „deine“, „Ihre“. „Ihr“ (formell) schreiben Sie immer mit „I“: „Ist das Ihre Tochter?“",
+      "en": "mein (ich), dein (du), Ihr (Sie). Use mein with der and das nouns, meine with die nouns and in the plural. The same goes for dein and Ihr: deine, Ihre. Formal Ihr always starts with a capital I: Ist das Ihre Tochter?",
       "table": [
         [
           "Person",
@@ -240,43 +240,38 @@
       "spine": "g.vokalwechsel",
       "depth": 1,
       "modelSentence": "Ich spreche Deutsch. Sprichst du auch Deutsch?",
-      "de": "Einige Verben ändern den Vokal bei „du“ und „er/sie/es“: e → i („sprechen“: „du sprichst“, „er spricht“), e → ie („lesen“: „du liest“, „sie liest“), a → ä („schlafen“: „du schläfst“, „er schläft“). Bei „ich“, „wir“, „ihr“ und „sie/Sie“ bleibt der Vokal. „nehmen“ ist besonders: „du nimmst“, „er nimmt“.",
-      "en": "Some verbs change their vowel with du and er/sie/es: e → i (du sprichst, er spricht), e → ie (du liest, sie liest), a → ä (du schläfst, er schläft). With ich, wir, ihr and sie/Sie the vowel stays. nehmen is special: du nimmst, er nimmt.",
+      "de": "Einige Verben haben bei „du“ und „er/sie/es“ ein „i“, „ie“ oder „ä“. e → i: „du sprichst“, „er spricht“. e → ie: „du liest“, „sie liest“. a → ä: „du schläfst“, „er schläft“. Bei „ich“, „wir“, „ihr“ und „sie/Sie“ ist der Vokal wie im Infinitiv. Auch „nehmen“: „du nimmst“, „er nimmt“.",
+      "en": "Some verbs have i, ie or ä with du and er/sie/es. e → i: du sprichst, er spricht. e → ie: du liest, sie liest. a → ä: du schläfst, er schläft. With ich, wir, ihr and sie/Sie the vowel is the same as in the infinitive. Also nehmen: du nimmst, er nimmt.",
       "table": [
         [
           "Person",
           "sprechen",
           "lesen",
-          "schlafen",
-          "nehmen"
+          "schlafen"
         ],
         [
           "ich",
           "spreche",
           "lese",
-          "schlafe",
-          "nehme"
+          "schlafe"
         ],
         [
           "du",
           "sprichst",
           "liest",
-          "schläfst",
-          "nimmst"
+          "schläfst"
         ],
         [
           "er/sie/es",
           "spricht",
           "liest",
-          "schläft",
-          "nimmt"
+          "schläft"
         ],
         [
           "wir",
           "sprechen",
           "lesen",
-          "schlafen",
-          "nehmen"
+          "schlafen"
         ]
       ],
       "caseMarks": []
@@ -286,8 +281,8 @@
       "spine": "g.artikel-genus-plural",
       "depth": 1,
       "modelSentence": "Der Apfel kostet 50 Cent. Die Äpfel kosten 2 Euro.",
-      "de": "Jedes Nomen hat ein Genus: der (maskulin), das (neutral) oder die (feminin). Lernen Sie jedes Nomen mit Artikel. Unbestimmt (Nominativ): ein (der, das), eine (die). Achtung: Ich möchte einen Apfel. (der → den, ein → einen: Einheit 6) Im Plural: die Äpfel, die Brote. Plural-Endungen: -e, -er, -n, -en, -s oder ohne Endung, oft mit Umlaut. Mengen ohne Artikel: 200 Gramm Käse.",
-      "en": "Every noun has a gender: der (masculine), das (neuter) or die (feminine). Learn each noun with its article. Indefinite (nominative): ein (der, das), eine (die). Note: Ich möchte einen Apfel. (der → den, ein → einen: unit 6) In the plural: die Äpfel, die Brote. Plural endings: -e, -er, -n, -en, -s or none, often with an umlaut. Quantities take no article: 200 Gramm Käse.",
+      "de": "Jedes Nomen hat ein Genus: „der“, „das“ oder „die“. Lernen Sie jedes Nomen mit Artikel. Unbestimmt: „ein“ (der, das), „eine“ (die). Aber nach „möchte“: „Ich möchte einen Apfel.“ (der → den, ein → einen) Im Plural: „die Äpfel“, „die Brote“. Plural-Endungen: -e, -er, -n, -en, -s oder ohne Endung, oft mit Umlaut. Nach „Gramm“ und „Kilo“ ohne Artikel: „200 Gramm Käse“.",
+      "en": "Every noun has a gender: der (masculine), das (neuter) or die (feminine). Learn each noun with its article. Indefinite: ein (der, das), eine (die). But after möchte: Ich möchte einen Apfel. (der → den, ein → einen) In the plural: die Äpfel, die Brote. Plural endings: -e, -er, -n, -en, -s or none, often with an umlaut. No article after Gramm and Kilo: 200 Gramm Käse.",
       "table": [
         [
           "Artikel",
@@ -318,8 +313,8 @@
       "spine": "g.moechte",
       "depth": 1,
       "modelSentence": "Ich möchte ein Kilo Tomaten, bitte.",
-      "de": "möchte ist höflich: im Supermarkt und auf dem Markt. Die Formen: ich möchte, du möchtest, er/sie möchte, wir möchten, ihr möchtet, sie/Sie möchten. Achtung: „ich“ und „er/sie“ haben eine Form, ohne -t. Was möchten Sie? – Ich möchte ein Kilo Äpfel, bitte.",
-      "en": "möchte is polite: in the supermarket and at the market. Forms: ich möchte, du möchtest, er/sie möchte, wir möchten, ihr möchtet, sie/Sie möchten. Note: ich and er/sie share one form, without -t. Was möchten Sie? – Ich möchte ein Kilo Äpfel, bitte.",
+      "de": "Im Supermarkt und auf dem Markt sagen Sie „Ich möchte …, bitte.“ „ich möchte“, „du möchtest“, „er/sie möchte“. „wir möchten“, „ihr möchtet“, „sie/Sie möchten“. Wichtig: „ich“ und „er/sie“ haben eine Form, ohne -t. „Was möchten Sie? – Ich möchte ein Kilo Äpfel, bitte.“",
+      "en": "In the supermarket and at the market you say Ich möchte …, bitte. It is polite. Forms: ich möchte, du möchtest, er/sie möchte; wir möchten, ihr möchtet, sie/Sie möchten. Important: ich and er/sie share one form, without -t. Was möchten Sie? – Ich möchte ein Kilo Äpfel, bitte.",
       "table": [
         [
           "ich",
@@ -353,8 +348,8 @@
       "spine": "g.pronomen-er-es-sie",
       "depth": 1,
       "modelSentence": "Wie ist die Küche? – Sie ist groß und hell.",
-      "de": "Ein Pronomen steht für ein Nomen. Es passt zum Artikel: der Tisch → er, das Bad → es, die Küche → sie, die Möbel (Plural) → sie. Nicht nur für Personen, auch für Tisch, Bad und Küche: Der Tisch? Er ist neu.",
-      "en": "A pronoun stands for a noun. It matches the article: der Tisch → er, das Bad → es, die Küche → sie, die Möbel (plural) → sie. Not only for people, also for things such as Tisch, Bad and Küche: Der Tisch? Er ist neu.",
+      "de": "Ein Pronomen steht für ein Nomen. Es passt zum Artikel: „der Tisch“ → „er“, „das Bad“ → „es“. „die Küche“ → „sie“, „die Möbel“ (Plural) → „sie“. Nicht nur für Personen, auch für Tisch, Bad und Küche: „Der Tisch? – Er ist neu.“",
+      "en": "A pronoun stands for a noun. It matches the article: der Tisch → er, das Bad → es, die Küche → sie, die Möbel (plural) → sie. Not only for people, also for things such as Tisch, Bad and Küche: Der Tisch? – Er ist neu.",
       "table": [
         [
           "der Tisch",
@@ -410,8 +405,8 @@
       "spine": "g.akkusativ",
       "depth": 1,
       "modelSentence": "Ich brauche einen Laptop.",
-      "de": "Nach Verben wie brauchen, haben, suchen, kaufen und möchte steht das Nomen im Akkusativ. Nur maskulin: der → den, ein → einen, kein → keinen, mein → meinen. Neutral, feminin und Plural sind wie im Nominativ: Ich brauche ein Heft, eine Tasche und die Stifte. Achtung: „Gibst du mir bitte das Heft?“ – mir ist Dativ (auch dir), das Heft ist Akkusativ.",
-      "en": "After verbs such as brauchen, haben, suchen, kaufen and möchte the noun is in the accusative. Only the masculine changes: der → den, ein → einen, kein → keinen, mein → meinen. Neuter, feminine and plural look the same as in the nominative: Ich brauche ein Heft, eine Tasche und die Stifte. Note: „Gibst du mir bitte das Heft?“ – mir is dative (so is dir), das Heft is accusative.",
+      "de": "Nach „brauchen“, „haben“, „suchen“, „kaufen“ und „möchte“ steht der Akkusativ. Nur maskulin: „der“ → „den“, „ein“ → „einen“, „kein“ → „keinen“, „mein“ → „meinen“. Neutral, feminin und Plural sind wie im Nominativ. „Ich brauche ein Heft, eine Tasche und die Stifte.“ Wichtig: „mir“ und „dir“ sind Dativ: „Gibst du mir bitte das Heft?“",
+      "en": "After brauchen, haben, suchen, kaufen and möchte the noun is in the accusative. Only the masculine changes: der → den, ein → einen, kein → keinen, mein → meinen. Neuter, feminine and plural look the same as in the nominative. Ich brauche ein Heft, eine Tasche und die Stifte. Important: mir and dir are dative: Gibst du mir bitte das Heft?",
       "table": [
         [
           "Kasus",
@@ -463,8 +458,8 @@
       "spine": "g.kein",
       "depth": 1,
       "modelSentence": "Hast du einen Stift? – Nein, ich habe keinen Stift.",
-      "de": "kein ist die Verneinung von ein: ein Stift → kein Stift, eine Tasche → keine Tasche. Ohne Artikel (Plural, Mengen) heißt die Verneinung auch kein: keine Stifte, keine Zeit. Mit nicht verneinen Sie Verben, Adjektive, Namen und Nomen mit der, das, die: Der Laptop ist nicht neu. Bei Berufen auch nicht: Ich bin nicht Lehrerin.",
-      "en": "kein negates ein: ein Stift → kein Stift, eine Tasche → keine Tasche. Nouns without an article (plural, quantities) are also negated with kein: keine Stifte, keine Zeit. Use nicht for verbs, adjectives, names and nouns with der, das, die: Der Laptop ist nicht neu. With jobs, nicht works too: Ich bin nicht Lehrerin.",
+      "de": "„kein“ ist die Verneinung von „ein“. „ein Stift“ → „kein Stift“, „eine Tasche“ → „keine Tasche“. Nomen ohne Artikel haben auch „kein“: „keine Stifte“, „keine Zeit“. „nicht“ ist für Verben, Adjektive, Namen und Nomen mit „der/das/die“. „Der Laptop ist nicht neu.“ Auch bei Berufen: „Ich bin nicht Lehrerin.“",
+      "en": "kein negates ein: ein Stift → kein Stift, eine Tasche → keine Tasche. Nouns without an article also take kein: keine Stifte, keine Zeit. nicht is for verbs, adjectives, names and nouns with der, das, die. Der Laptop ist nicht neu. Also with jobs: Ich bin nicht Lehrerin.",
       "table": [
         [
           "Kasus",
@@ -500,8 +495,8 @@
       "spine": "g.trennbare-verben",
       "depth": 1,
       "modelSentence": "Ich stehe um sieben Uhr auf.",
-      "de": "Trennbare Verben haben zwei Teile: „aufstehen“, „anfangen“, „einkaufen“, „fernsehen“. Das Verb steht auf Position 2 (in der Ja/Nein-Frage auf Position 1), der erste Teil steht am Ende: „Der Kurs fängt um neun Uhr an.“ Im Infinitiv sind beide Teile zusammen: „aufstehen“, „einkaufen“. Der erste Teil hat den Wortakzent: „AUFstehen“.",
-      "en": "Separable verbs have two parts: aufstehen, anfangen, einkaufen, fernsehen. The verb is in position 2 (position 1 in a yes/no question), and the first part goes to the end: Der Kurs fängt um neun Uhr an. In the infinitive both parts stay together: aufstehen, einkaufen. The first part carries the stress: AUFstehen.",
+      "de": "Trennbare Verben: „aufstehen“, „anfangen“, „einkaufen“, „fernsehen“. Das Verb steht auf Position 2. In der Ja/Nein-Frage steht es auf Position 1. Der Teil vorne („auf“, „an“, „ein“) steht am Ende. „Der Kurs fängt um neun Uhr an.“ Im Infinitiv ist es ein Wort: „aufstehen“, „einkaufen“. Der Teil vorne hat den Akzent: „AUFstehen“.",
+      "en": "Separable verbs: aufstehen, anfangen, einkaufen, fernsehen. The verb is in position 2. In a yes/no question it is in position 1. The front part (auf, an, ein) goes to the end. Der Kurs fängt um neun Uhr an. In the infinitive it is one word: aufstehen, einkaufen. The front part carries the stress: AUFstehen.",
       "table": [
         [
           "Position 1",
@@ -553,8 +548,8 @@
       "spine": "g.zeitangaben-inversion",
       "depth": 1,
       "modelSentence": "Am Montag arbeite ich von neun bis fünf.",
-      "de": "Zeitangaben: „um acht Uhr“, „am Montag“, „am Abend“, „von neun bis fünf“. Die Zeitangabe steht oft auf Position 1. Das Verb bleibt auf Position 2, das Subjekt steht danach: „Um acht Uhr frühstücke ich.“ Genauso nach „zuerst“ und „dann“. „und“, „aber“, „oder“ stehen auf Position 0: „Ich arbeite, und dann lerne ich.“",
-      "en": "Time phrases: um acht Uhr, am Montag, am Abend, von neun bis fünf. A time phrase often takes position 1. The verb stays in position 2 and the subject follows it: Um acht Uhr frühstücke ich. The same after zuerst and dann. und, aber, oder take position 0: Ich arbeite, und dann lerne ich.",
+      "de": "Wörter für „wann?“: „um acht Uhr“, „am Montag“, „am Abend“. Sie stehen oft auf Position 1. Das Verb steht dann auf Position 2, das Subjekt danach. „Um acht Uhr frühstücke ich.“ Auch nach „zuerst“ und „dann“: „Zuerst frühstücke ich.“ „und“, „aber“ und „oder“ stehen auf Position 0. „Ich arbeite, und dann lerne ich.“",
+      "en": "Words that answer wann?: um acht Uhr, am Montag, am Abend. They often take position 1. The verb is then in position 2 and the subject follows it. Um acht Uhr frühstücke ich. The same after zuerst and dann: Zuerst frühstücke ich. und, aber and oder take position 0. Ich arbeite, und dann lerne ich.",
       "table": [
         [
           "Position 0",
@@ -594,8 +589,8 @@
       "spine": "g.koennen",
       "depth": 1,
       "modelSentence": "Ich kann gut schwimmen. Kannst du am Samstag kommen?",
-      "de": "„können“ heißt: „Das kann ich gut“ („Ich kann gut tanzen.“) oder: „Das ist möglich“ („Am Samstag kann ich kommen.“). Die Formen: „ich kann“, „du kannst“, „er/sie kann“, „wir können“, „ihr könnt“, „sie/Sie können“. „können“ steht auf Position 2, der Infinitiv am Ende: Das ist die Satzklammer. Auch „müssen“ hat die Satzklammer: „Ich muss arbeiten.“",
-      "en": "können expresses ability (Ich kann gut tanzen.) or possibility (Am Samstag kann ich kommen.). Forms: ich kann, du kannst, er/sie kann, wir können, ihr könnt, sie/Sie können. können is in position 2 and the infinitive goes to the end: this is the sentence bracket. müssen forms the bracket too: Ich muss arbeiten.",
+      "de": "„können“ heißt: „Das kann ich gut.“ („Ich kann gut tanzen.“) Oder: „Das geht.“ („Am Samstag kann ich kommen.“) „ich kann“, „du kannst“, „er/sie kann“. „wir können“, „ihr könnt“, „sie/Sie können“. „können“ steht auf Position 2, der Infinitiv am Ende. Das ist die Satzklammer. Auch „müssen“ hat die Satzklammer: „Ich muss arbeiten.“",
+      "en": "können means ability, Das kann ich gut. (Ich kann gut tanzen.), or possibility, Das geht. (Am Samstag kann ich kommen.). Forms: ich kann, du kannst, er/sie kann; wir können, ihr könnt, sie/Sie können. können is in position 2 and the infinitive goes to the end: this is the sentence bracket. müssen forms the bracket too: Ich muss arbeiten.",
       "table": [
         [
           "Position 1",
@@ -629,8 +624,8 @@
       "spine": "g.nicht-position-gern",
       "depth": 1,
       "modelSentence": "Ich tanze nicht gern, aber ich schwimme sehr gern.",
-      "de": "„gern“ steht meist nach dem Verb: „Ich lese gern.“ Das Gegenteil: „Ich tanze nicht gern.“ (Auch richtig: Gern tanze ich nicht.) Die Position von „nicht“: am Satzende für den Satz („Ich komme heute nicht.“), vor dem Infinitiv am Ende („Ich kann nicht kommen.“) und meist vor „gern“, Adjektiven und Orten („nicht gut“, „nicht in Leipzig“).",
-      "en": "gern usually comes after the verb: Ich lese gern. The opposite: Ich tanze nicht gern. (Also correct: Gern tanze ich nicht.) Where nicht goes: at the end to negate the whole sentence (Ich komme heute nicht.), before the infinitive at the end (Ich kann nicht kommen.), and usually before gern, adjectives and places (nicht gut, nicht in Leipzig).",
+      "de": "„gern“ steht meist nach dem Verb: „Ich lese gern.“ Das Gegenteil: „Ich tanze nicht gern.“ Auch richtig: „Gern tanze ich nicht.“ Am Satzende steht „nicht“ für den Satz: „Ich komme heute nicht.“ Vor dem Infinitiv am Ende: „Ich kann nicht kommen.“ Meist steht „nicht“ vor „gern“, vor dem Adjektiv und vor dem Ort. „nicht gern“, „nicht gut“, „nicht in Leipzig“.",
+      "en": "gern usually comes after the verb: Ich lese gern. The opposite: Ich tanze nicht gern. Also correct: Gern tanze ich nicht. At the end of the sentence, nicht negates the whole sentence: Ich komme heute nicht. Before the infinitive at the end: Ich kann nicht kommen. nicht usually comes before gern, before the adjective and before the place: nicht gern, nicht gut, nicht in Leipzig.",
       "table": [
         [
           "Ich komme heute",
@@ -660,8 +655,8 @@
       "spine": "g.moegen",
       "depth": 1,
       "modelSentence": "Magst du Fisch? – Nein, Fisch mag ich nicht.",
-      "de": "mögen + Nomen: Ich mag Kaffee. Die Formen: ich mag, du magst, er/sie mag, wir mögen, ihr mögt, sie/Sie mögen. möchte: jetzt, hier (im Café): Ich möchte einen Tee. mag: immer, das finde ich gut: Ich mag Tee. Bei Verben sagen Sie gern: Ich tanze gern.",
-      "en": "mögen + noun: Ich mag Kaffee. Forms: ich mag, du magst, er/sie mag, wir mögen, ihr mögt, sie/Sie mögen. möchte: now, here (in the café): Ich möchte einen Tee. mag: always, you like it: Ich mag Tee. With activities you say gern: Ich tanze gern.",
+      "de": "„mögen“ + Nomen: „Ich mag Kaffee.“ „ich mag“, „du magst“, „er/sie mag“. „wir mögen“, „ihr mögt“, „sie/Sie mögen“. „möchte“: jetzt, hier (im Café): „Ich möchte einen Tee.“ „mag“: immer, das finde ich gut: „Ich mag Tee.“ Bei Verben sagen Sie „gern“: „Ich tanze gern.“",
+      "en": "mögen + noun: Ich mag Kaffee. Forms: ich mag, du magst, er/sie mag; wir mögen, ihr mögt, sie/Sie mögen. möchte: now, here (in the café): Ich möchte einen Tee. mag: always, you like it: Ich mag Tee. With activities you say gern: Ich tanze gern.",
       "table": [
         [
           "Person",
@@ -711,8 +706,8 @@
       "spine": "g.wortbildung-er-in",
       "depth": 1,
       "modelSentence": "Er ist Busfahrer, und sie ist Busfahrerin.",
-      "de": "Beruf und Person: Für eine Frau kommt -in dazu: der Lehrer → die Lehrerin, der Student → die Studentin, der Freund → die Freundin. Plural: die Lehrerinnen. Oft kommt das Wort von einem Verb: fahren → der Busfahrer, die Busfahrerin. Achtung: Nicht alle Wörter auf -er sind der: die Mutter, das Wasser.",
-      "en": "Jobs and people: for a woman, add -in: der Lehrer → die Lehrerin, der Student → die Studentin, der Freund → die Freundin. Plural: die Lehrerinnen. Often the word comes from a verb: fahren → der Busfahrer, die Busfahrerin. Careful: not every noun in -er takes der: die Mutter, das Wasser.",
+      "de": "Beruf und Person: Für eine Frau kommt „-in“ dazu. „der Lehrer“ → „die Lehrerin“, „der Student“ → „die Studentin“. „der Freund“ → „die Freundin“. Plural: „die Lehrerinnen“. Oft kommt das Wort von einem Verb: „fahren“ → „der Busfahrer“, „die Busfahrerin“. Aber: Nicht alle Wörter auf „-er“ sind „der“: „die Mutter“, „das Wasser“.",
+      "en": "Jobs and people: for a woman, add -in. der Lehrer → die Lehrerin, der Student → die Studentin, der Freund → die Freundin. Plural: die Lehrerinnen. Often the word comes from a verb: fahren → der Busfahrer, die Busfahrerin. But: not every noun in -er takes der: die Mutter, das Wasser.",
       "table": [
         [
           "der (ein Mann)",
@@ -742,8 +737,8 @@
       "spine": "g.perfekt-haben",
       "depth": 1,
       "modelSentence": "Am Samstag habe ich Pizza gemacht.",
-      "de": "Über „gestern“ und das Wochenende sprechen Sie meistens im Perfekt: „haben“ auf Position 2, das Partizip am Ende. Lernen Sie die Partizipien als feste Wörter – auf -t: „gemacht“, „gekauft“, „gespielt“, „gekocht“, „gearbeitet“; auf -en: „gegessen“, „getrunken“, „gesehen“, „gelesen“, „geschlafen“. Aber für „sein“ und „haben“ sagen Sie meistens „war“ und „hatte“: „Ich war in Dresden.“ „Der Zug hatte Verspätung.“",
-      "en": "To talk about yesterday or the weekend you mostly use the Perfekt: haben in position 2, the participle at the end. Learn the participles as fixed words – in -t: gemacht, gekauft, gespielt, gekocht, gearbeitet; in -en: gegessen, getrunken, gesehen, gelesen, geschlafen. But for sein and haben you mostly say war and hatte: Ich war in Dresden. Der Zug hatte Verspätung.",
+      "de": "Über „gestern“ und das Wochenende sprechen Sie meist im Perfekt. „haben“ steht auf Position 2, das Partizip am Ende. Das Partizip auf „-t“: „gemacht“, „gekauft“, „gespielt“, „gekocht“, „gearbeitet“. Das Partizip auf „-en“: „gegessen“, „getrunken“, „gesehen“, „gelesen“, „geschlafen“. Aber für „sein“ und „haben“ sagen Sie meist „war“ und „hatte“. „Ich war in Dresden.“ „Der Zug hatte Verspätung.“",
+      "en": "To talk about yesterday or the weekend you mostly use the Perfekt. haben is in position 2, the participle at the end. Participles in -t: gemacht, gekauft, gespielt, gekocht, gearbeitet. Participles in -en: gegessen, getrunken, gesehen, gelesen, geschlafen. But for sein and haben you mostly say war and hatte. Ich war in Dresden. Der Zug hatte Verspätung.",
       "table": [
         [
           "Position 1",
@@ -783,8 +778,8 @@
       "spine": "g.zeitangaben-inversion",
       "depth": 2,
       "modelSentence": "Am Vormittag lerne ich Deutsch.",
-      "de": "Auch „am Vormittag“, „gestern“, „vorgestern“ und „letzte Woche“ stehen oft auf Position 1. Dann steht das Verb auf Position 2 und das Subjekt danach: „Gestern war ich im Park.“ Im Perfekt steht das Partizip am Ende: „Letzte Woche habe ich viel gelernt.“ „und“, „aber“, „oder“ stehen auf Position 0.",
-      "en": "am Vormittag, gestern, vorgestern and letzte Woche also often take position 1. Then the verb is in position 2 and the subject follows it: Gestern war ich im Park. In the Perfekt the participle goes to the end: Letzte Woche habe ich viel gelernt. und, aber, oder take position 0.",
+      "de": "Auch „am Vormittag“, „gestern“ und „letzte Woche“ stehen oft auf Position 1. Dann steht das Verb auf Position 2, das Subjekt danach. „Gestern war ich im Park.“ Im Perfekt steht das Partizip am Ende. „Letzte Woche habe ich viel gelernt.“ „und“, „aber“ und „oder“ stehen auf Position 0.",
+      "en": "am Vormittag, gestern and letzte Woche also often take position 1. Then the verb is in position 2 and the subject follows it. Gestern war ich im Park. In the Perfekt the participle goes to the end. Letzte Woche habe ich viel gelernt. und, aber and oder take position 0.",
       "table": [
         [
           "Position 0",
@@ -830,8 +825,8 @@
       "spine": "g.perfekt-sein",
       "depth": 1,
       "modelSentence": "Ich bin nach Leipzig gekommen.",
-      "de": "Einige Verben bilden das Perfekt mit „sein“: Verben für eine Bewegung („kommen“, „fahren“, „fliegen“, „gehen“, „schwimmen“), „aufstehen“ und „bleiben“. Lernen Sie die Formen fest: „ich bin gekommen“, „gefahren“, „geflogen“, „gegangen“, „geblieben“. Die meisten anderen Verben haben „haben“: „ich habe gemacht“, „ich habe getanzt“. „sein“ oder „haben“ steht auf Position 2, das Partizip am Ende.",
-      "en": "Some verbs form the Perfekt with sein: verbs of movement (kommen, fahren, fliegen, gehen, schwimmen), aufstehen and bleiben. Learn the forms as fixed words: ich bin gekommen, gefahren, geflogen, gegangen, geblieben. Most other verbs take haben: ich habe gemacht, ich habe getanzt. sein or haben is in position 2, the participle at the end.",
+      "de": "Einige Verben bilden das Perfekt mit „sein“. Verben für „von A nach B“: „kommen“, „fahren“, „fliegen“, „gehen“, „schwimmen“. Auch „aufstehen“ und „bleiben“. „ich bin gekommen“, „gefahren“, „geflogen“, „gegangen“, „geblieben“. Die meisten anderen Verben haben „haben“: „ich habe gemacht“. „sein“ oder „haben“ steht auf Position 2, das Partizip am Ende.",
+      "en": "Some verbs form the Perfekt with sein. Verbs for going from A to B: kommen, fahren, fliegen, gehen, schwimmen. Also aufstehen and bleiben. ich bin gekommen, gefahren, geflogen, gegangen, geblieben. Most other verbs take haben: ich habe gemacht. sein or haben is in position 2, the participle at the end.",
       "table": [
         [
           "haben",
@@ -857,8 +852,8 @@
       "spine": "g.wollen",
       "depth": 1,
       "modelSentence": "Ich will im Sommer die Prüfung machen.",
-      "de": "wollen sagt: Das ist mein Plan, mein Ziel. Die Formen: ich will, du willst, er/sie will, wir wollen, ihr wollt, sie/Sie wollen. ich und er/sie haben keine Endung. Wie bei können steht der Infinitiv am Ende. Beim Bestellen und Bitten sagen Sie höflich möchte, nicht will.",
-      "en": "wollen expresses a plan or goal. Forms: ich will, du willst, er/sie will, wir wollen, ihr wollt, sie/Sie wollen. ich and er/sie have no ending. As with können, the infinitive goes to the end. When ordering or asking for something, say möchte, not will: it is more polite.",
+      "de": "„wollen“ sagt: Das ist mein Plan. „ich will“, „du willst“, „er/sie will“. „wir wollen“, „ihr wollt“, „sie/Sie wollen“. „ich“ und „er/sie“ haben keine Endung. Wie bei „können“ steht der Infinitiv am Ende. Beim Bestellen und Bitten sagen Sie höflich „möchte“, nicht „will“.",
+      "en": "wollen says: this is my plan. Forms: ich will, du willst, er/sie will; wir wollen, ihr wollt, sie/Sie wollen. ich and er/sie have no ending. As with können, the infinitive goes to the end. When ordering or asking for something, say möchte, not will: it is more polite.",
       "table": [
         [
           "ich",
