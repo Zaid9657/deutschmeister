@@ -150,7 +150,10 @@ test('the nudge ships off, claims before sending, and mails only unconfirmed acc
   // Hygiene: disposable domains and opted-out profiles are excluded, the
   // per-run cap exists, and the copy's "only reminder" promise is structural.
   assert.ok(src.includes('isBlockedEmail'), 'disposable-domain hygiene missing');
-  assert.ok(src.includes(`eq('email_daily_sentence', false)`), 'opt-out exclusion missing');
+  // Opt-outs go through the one shared reader (which filters
+  // email_daily_sentence = false and throws on error); tests/email-opt-out.test.mjs
+  // runs this selection against it and proves an opted-out account is left out.
+  assert.ok(src.includes('fetchOptedOutIds(client)'), 'opt-out exclusion missing');
   assert.ok(/PER_RUN\s*=\s*\d+/.test(src), 'per-run send cap missing');
 });
 
