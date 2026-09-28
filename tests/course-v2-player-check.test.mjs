@@ -70,6 +70,8 @@ test('paradigm twins on spine topics are WRONG; genuine slips and the umlaut spe
     ['g.vokalwechsel', 'fängt', { fangt: RESULT.WRONG, fängst: RESULT.WRONG, faengt: RESULT.CORRECT }],
     ['g.wollen', 'wollen', { willen: RESULT.WRONG }],
     ['g.wollen', 'willst', { wollst: RESULT.WRONG, wilst: RESULT.TYPO }],
+    ['g.possessiv-mein-dein', 'meine', { deine: RESULT.WRONG, seine: RESULT.WRONG, meine: RESULT.CORRECT }],
+    ['g.akkusativ', 'meinen', { deinen: RESULT.WRONG, meine: RESULT.WRONG }],
   ];
   for (const [topic, key, answers] of cases) {
     for (const [typed, want] of Object.entries(answers)) assert.equal(res(gap(topic, key), typed), want, `${typed} for ${key}`);
@@ -286,4 +288,17 @@ test('a multi-Teil speaking round is recognised as a speaking Aufgabe, card Teil
   assert.equal(isAufgabeSubmitted(round, { speechSeconds: 5, turns: 1 }), false);
   const mono = { ...round, parts: [{ mode: 'monologue' }, { mode: 'monologue' }] };
   assert.equal(isAufgabeSubmitted(mono, { speechSeconds: 5, turns: 3 }), false, 'no card Teil: turns alone do not count');
+});
+
+test('rail (all courses): the determiner swap of a one-word possessive key on a spine topic grades WRONG (ITM-13)', () => {
+  const swap = { m: 'd', d: 'm', s: 'm' };
+  for (const { item } of typedItems) {
+    if (!/^(g|lx)\./.test(String(item.topic || '')) || item.exact) continue;
+    const key = String(item.answer).trim();
+    const m = /^([mds])ein(e|en|em|er|es)?$/i.exec(key);
+    if (!m) continue;
+    const twin = `${swap[m[1].toLowerCase()]}${key.slice(1)}`;
+    if ((item.accepted || []).some((a) => prep(a) === prep(twin))) continue;
+    assert.equal(res(item, twin), RESULT.WRONG, `${item.id}: „${twin}“ for „${key}“`);
+  }
 });

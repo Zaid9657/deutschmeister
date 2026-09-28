@@ -318,8 +318,9 @@ export function checkAnswer(userInput, expected, opts = {}) {
 //                error, never a typo: a person-ending swap (kommt/kommst, findet/findest,
 //                findst/findest, will/willt), a stem-vowel twin of a du/er/ihr form
 //                (schlaft/schläft, lest/liest, sprecht/spricht, fahrst/fährst) and a modal stem
-//                twin (willen/wollen, wollst/willst). A genuine letter slip (kanst, nimst, wilst,
-//                konnen, mögn) keeps its typo retry. (a1.1-u03 r2/r3 F01, u08/u09/u10/u12 r3)
+//                twin (willen/wollen, wollst/willst), and a determiner swap of the same slot
+//                (deine/meine, deinen/meinen: ITM-13). A genuine letter slip (kanst, nimst,
+//                wilst, konnen, mögn) keeps its typo retry. (a1.1-u03 r2/r3 F01, u08/u09/u10/u12 r3)
 //   politeCase — on a caseSensitive item only the polite forms decide by case (Sie, Ihnen, Ihr-):
 //                „… ist das Ihre tochter?" is a TYPO, „… ist das ihre Tochter?" WRONG.
 //                (a1.1-u03 r2/r3 F05)
@@ -356,9 +357,15 @@ function vowelAlternation(a, b) {
   return added === 'i' && long[i + 1] === 'e'; // lest / liest
 }
 
+/** A possessive or (in)definite article form: mein-, dein-, sein-, ihr-, unser-, euer-, ein-, kein- + ending. */
+const DETERMINER_RE = /^(mein|dein|sein|ihr|unser|unsr|euer|eur|ein|kein)(e|en|em|er|es)?$/;
+
 /** True when `u` is another form of the paradigm of `e` (both normalised words), not a letter slip. */
 export function paradigmTwin(u, e) {
   if (!u || !e || u === e) return false;
+  // the m/d/s swap of a possessive („deine" for „meine") or another determiner of the same slot:
+  // the choice of determiner IS the grammar point (a1.1-u03 / u06, ITM-13 known wrong forms)
+  if (DETERMINER_RE.test(u) && DETERMINER_RE.test(e)) return true;
   const cp = commonPrefix(u, e);
   if (cp >= 2 && PERSON_TAILS.has(u.slice(cp)) && PERSON_TAILS.has(e.slice(cp))) return true;
   if (MODAL_STEMS.some(([s, p]) => (u.startsWith(s) && e.startsWith(p)) || (u.startsWith(p) && e.startsWith(s)))) return true;

@@ -95,6 +95,16 @@ test('paradigm: a genuine letter slip keeps its typo retry, and the umlaut spell
   assert.equal(paradigmTwin('leipzg', 'leipzig'), false);
 });
 
+test('paradigm: a determiner swap of the same slot is a grammar error (ITM-13; a1.1-u03 ls1-p01, u06 ls3-p04)', () => {
+  for (const [typed, key] of [['deine', 'meine'], ['meine', 'deine'], ['seine', 'deine'], ['deinen', 'meinen'], ['meinen', 'deinen'], ['keine', 'meine'], ['unsere', 'meine']]) {
+    assert.equal(r(typed, key, V2), RESULT.WRONG, `${typed} for ${key}`);
+    assert.equal(paradigmTwin(typed, key), true, `${typed}/${key}`);
+  }
+  assert.equal(r('Ist das deine Mutter?', 'Ist das meine Mutter?', V2), RESULT.WRONG, 'inside a sentence too');
+  assert.equal(r('deine', 'meine'), RESULT.TYPO, 'the live course (no opt-in) is unchanged');
+  assert.equal(paradigmTwin('meinung', 'meinen'), false, 'only determiner forms');
+});
+
 // ── polite case ────────────────────────────────────────────────────────────────
 test('politeCase: on a caseSensitive item only Sie/Ihnen/Ihr- decide by case (a1.1-u03 r2/r3 F05)', () => {
   const key = 'Frau Schulz, ist das Ihre Tochter?';
