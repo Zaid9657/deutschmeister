@@ -539,11 +539,15 @@ test('a step finished in this visit re-draws itself for a repeat, and a weak Che
 
 test('the recap ticks exactly what the Check proved, and the Check says „Sie können jetzt" only when all is proven', () => {
   const cv = read('src/components/course-v2/CheckView.jsx');
-  assert.match(cv, /onDone\(\{ stepId, correct: score\.correct, total: score\.total, proofs \}\)/, 'the Check reports its proofs');
+  assert.match(cv, /onDone\(\{ stepId, correct: score\.correct, total: score\.total, proofs, proofItems: \{ \.\.\.proofResults \} \}\)/, 'the Check reports its proofs and the proof items\' results');
   assert.match(cv, /\{endLine && allProven && /, 'the closing line waits for every proof');
-  assert.match(read('src/components/course-v2/StepView.jsx'), /finishStep\(r && r\.proofs \? \{ proofs: r\.proofs \} : \{\}\)/, 'StepView passes the proofs on');
+  assert.match(read('src/components/course-v2/StepView.jsx'), /finishStep\(r && r\.proofs \? \{ proofs: r\.proofs, proofItems: r\.proofItems \|\| null \} : \{\}\)/, 'StepView passes the proofs on');
   const page = read('src/pages/course-v2/UnitPlayerPage.jsx');
-  assert.match(page, /proofs: result\.proofs \|\| null/);
+  assert.match(page, /proofs: result\.proofs \|\| null, proofItems: result\.proofItems \|\| null/);
+  // the recap reads a proof rule the way the Check does — every named proof (proofs.js), not the Aufgabe first
+  assert.match(page, /import \{ proofParts, proofShown \} from '\.\.\/\.\.\/lib\/course-v2\/proofs\.js';/);
+  assert.match(page, /return proofShown\(rule, \{ \.\.\.proofEvidence, items: proofItemsOf\(rule\) \}\);/);
+  assert.doesNotMatch(page, /if \(rule && rule\.aufgabe\) return/, 'the old Aufgabe-first shortcut is gone');
   assert.match(page, /\{allProven \? t\('player\.canNow'\) : t\('player\.goalsUnit'\)\}/);
   assert.match(page, /\{proven\(i\)\s*\n?\s*\? <Check /, 'a tick per proven can-do');
   // the fixture's proof rules are the ones the recap reads: two by item, two by Aufgabe

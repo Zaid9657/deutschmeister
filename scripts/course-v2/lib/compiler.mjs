@@ -362,7 +362,7 @@ const SHORTENED_LENGTHS = ['reduced', 'mini'];
  * and grade.mjs read — the only source a Plateau or closing part has, since those carry no
  * Prüfungsfokus); else the unit's Prüfungsfokus entry for its template.
  */
-function speakingPart(p, shortened) {
+export function speakingPart(p, shortened) {
   const out = pick(p, SPEAKING_PART_KEYS);
   const own = SHORTENED_LENGTHS.includes(p.length) ? p.length : null;
   const length = own || (shortened && shortened.get(p.template));
