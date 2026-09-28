@@ -332,8 +332,8 @@
           "promptEn": "What does Frau Schulz ask the class?",
           "options": [
             "Was haben Sie heute dabei?",
-            "Was kostet das heute?",
-            "Wo wohnen Sie heute?"
+            "Was brauchen Sie heute?",
+            "Wo ist Ihr Heft?"
           ],
           "answer": "Was haben Sie heute dabei?",
           "accepted": [
@@ -962,7 +962,7 @@
         "profile": "course-micro-sp",
         "situationDe": "Sie sind im Kurs. Sie haben ein Ladekabel in der Tasche, aber Sie kennen das Wort nicht.",
         "promptDe": "Zeigen Sie es: „Das ist für …“ Fragen Sie: „Wie heißt das?“ Dann: „Ich habe noch … dabei.“",
-        "promptEn": "Point at it and say what it is for (Das ist für …), ask what it is called, then say what else you have with you (Ich habe noch … dabei).",
+        "promptEn": "You have a charging cable for your phone in your bag, but you don’t know the German word. Point at it, say what it is for (Das ist für …), ask what it is called, then say what else you have with you (Ich habe noch … dabei).",
         "planSeconds": 30,
         "seconds": [
           20,
@@ -1047,8 +1047,8 @@
           {
             "id": "a1.1-u06-ls2-l07",
             "speaker": "cast.bilal",
-            "de": "Guten Morgen! Herr Richter, der Drucker funktioniert nicht. Ist er kaputt?",
-            "en": "Good morning! Mr Richter, the printer isn’t working. Is it broken?"
+            "de": "Herr Richter, der Drucker funktioniert nicht. Ist er kaputt?",
+            "en": "Mr Richter, the printer isn’t working. Is it broken?"
           },
           {
             "id": "a1.1-u06-ls2-l08",
@@ -1059,8 +1059,8 @@
           {
             "id": "a1.1-u06-ls2-l09",
             "speaker": "cast.bilal",
-            "de": "Priya, du brauchst ein Ladekabel? Kein Problem, hier ist ein Ladekabel für dich. Und ich helfe dir: Heute Abend suche ich einen Laptop für dich.",
-            "en": "Priya, you need a charging cable? No problem, here’s one for you. And I’ll help you: this evening I’ll look for a laptop for you."
+            "de": "Priya, du brauchst ein Ladekabel? Kein Problem, hier ist ein Ladekabel für dich. Und ich helfe dir. Nach dem Kurs suche ich einen Laptop für dich.",
+            "en": "Priya, you need a charging cable? No problem, here’s one for you. And I’ll help you. After the course I’ll look for a laptop for you."
           },
           {
             "id": "a1.1-u06-ls2-l10",
@@ -1085,20 +1085,20 @@
           "type": "multiple_choice",
           "role": "gist",
           "topic": "hoeren",
-          "promptDe": "Was hat Priya am Ende?",
-          "promptEn": "What has Priya got in the end?",
+          "promptDe": "Was möchte Priya von Herrn Richter?",
+          "promptEn": "What does Priya want from Mr Richter?",
           "options": [
             "einen Laptop",
             "einen Drucker",
-            "das Heft und ein Ladekabel"
+            "ein Ladekabel und das Heft"
           ],
-          "answer": "das Heft und ein Ladekabel",
+          "answer": "ein Ladekabel und das Heft",
           "accepted": [
-            "das Heft und ein Ladekabel"
+            "ein Ladekabel und das Heft"
           ],
           "explanation": {
-            "de": "Herr Richter fragt: „Ist das Ihr Heft?“ Priya sagt: „Ja!“ Und Bilal sagt: „Hier ist ein Ladekabel für dich.“",
-            "en": "Mr Richter finds her exercise book, and Bilal gives her a charging cable; the laptop comes later."
+            "de": "Priya fragt: „Haben Sie vielleicht ein Ladekabel?“ Und: „Mein Heft fehlt. Ist es vielleicht hier im Büro?“",
+            "en": "Priya asks Mr Richter for a charging cable and asks whether her exercise book is in his office."
           },
           "origin": "agent"
         },
@@ -1119,7 +1119,7 @@
             "Bilal"
           ],
           "explanation": {
-            "de": "Herr Richter hat kein Ladekabel. Bilal sagt: „Priya, hier ist ein Ladekabel für dich.“",
+            "de": "Herr Richter hat kein Ladekabel. Bilal sagt: „Kein Problem, hier ist ein Ladekabel für dich.“",
             "en": "Mr Richter has none; Bilal has a charging cable for Priya."
           },
           "origin": "agent"
@@ -1173,15 +1173,15 @@
           "type": "fill_blank",
           "role": "detail",
           "topic": "hoeren",
-          "promptDe": "Bilal sagt: „Heute Abend suche ich einen ___ für dich.“",
+          "promptDe": "Bilal sagt: „Nach dem Kurs suche ich einen ___ für dich.“",
           "promptEn": "What will Bilal look for?",
           "answer": "Laptop",
           "accepted": [
             "Laptop"
           ],
           "explanation": {
-            "de": "Bilal sagt: „Heute Abend suche ich einen Laptop für dich.“ Priya braucht einen Laptop.",
-            "en": "Bilal will look for a laptop for Priya this evening."
+            "de": "Bilal sagt: „Nach dem Kurs suche ich einen Laptop für dich.“ Priya braucht einen Laptop.",
+            "en": "Bilal will look for a laptop for Priya after the course."
           },
           "origin": "agent"
         }
@@ -1807,8 +1807,8 @@
             "Laptop b"
           ],
           "explanation": {
-            "de": "Priya schreibt: „Laptop b ist zu teuer.“ Laptop b kostet 390 Euro.",
-            "en": "Laptop b (390 euros) is too expensive for Priya."
+            "de": "Priya schreibt: „Laptop b ist zu teuer.“ Sie möchte Laptop a.",
+            "en": "Priya writes that laptop b is too expensive; she wants laptop a."
           },
           "origin": "agent"
         },
@@ -2453,8 +2453,8 @@
         "mode": "spoken",
         "profile": "course-micro-sp",
         "situationDe": "Sie sprechen mit Bilal. Laptop a kostet 180 Euro, Laptop b kostet 390 Euro.",
-        "promptDe": "Sagen Sie Bilal: Was möchten Sie? Was brauchen Sie noch? Sagen Sie auch danke.",
-        "promptEn": "Tell Bilal which laptop you want and what else you need, and say thank you.",
+        "promptDe": "Antworten Sie Bilal: „Ich möchte …“ und „Ich brauche noch …“. Sagen Sie auch danke.",
+        "promptEn": "Answer Bilal: say which laptop you would like (Ich möchte …) and what else you need (Ich brauche noch …), and say thank you.",
         "planSeconds": 30,
         "seconds": [
           20,
@@ -2664,7 +2664,7 @@
               "role": "exam",
               "topic": "lesen",
               "textRef": "a1.1-u06-ls4-t3",
-              "promptDe": "Sie brauchen einen Drucker für das Büro. Alt ist okay, aber nicht kaputt. Was passt?",
+              "promptDe": "Sie brauchen einen Drucker für das Büro. Alt ist okay, kaputt nicht. Was passt?",
               "options": [
                 "a",
                 "b"
@@ -2695,7 +2695,7 @@
                 "b"
               ],
               "explanation": {
-                "de": "Tasche a ist klein und nicht für Laptops. Tasche b ist groß und für einen Laptop: Da sind auch Bücher kein Problem.",
+                "de": "Tasche a ist klein und nicht für Laptops. Tasche b ist groß und für einen Laptop: Bücher sind dann auch kein Problem.",
                 "en": "Bag a is small and not for laptops. Bag b is big and takes a laptop, so books are no problem either."
               },
               "origin": "agent"
@@ -2768,7 +2768,7 @@
             "profile": "sd1-sp3",
             "prepMinutes": 0,
             "instructionsDe": "Bitten Sie mit jeder Karte um etwas. Ihre Partnerin bittet auch: Reagieren Sie.",
-            "situationDe": "Sprechen Teil 3: Sie und Ihre Partnerin Nora haben je zwei Karten. In der Prüfung sind auf den Karten Bilder. „Hast du …?“ ist nur eine Frage, keine Bitte. Bitten Sie: Gibst du mir bitte …? Hast du … für mich? Fehlt ein Wort? Zeigen Sie und sagen Sie: „Das ist für …“",
+            "situationDe": "Sprechen Teil 3: Sie und Ihre Partnerin Nora haben je zwei Karten. In der Prüfung sind auf den Karten Bilder. „Hast du …?“ ohne „bitte“ oder „für mich“ ist nur eine Frage. Bitten Sie: Gibst du mir bitte …? Hast du … für mich? Fehlt ein Wort? Zeigen Sie und sagen Sie: „Das ist für …“",
             "cards": {
               "learner": [
                 "Heft",
@@ -2834,7 +2834,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Nein, ich brauche keinen Kalender. Mein Kalender ist im Handy."
+            "de": "Nein, ich brauche keinen Kalender. Mein Kalender ist auf dem Handy."
           },
           {
             "speaker": "learner",
@@ -2888,14 +2888,13 @@
         "leitpunkte": [
           {
             "id": "lp1",
-            "de": "Was fehlt Ihnen für den Onlinekurs?",
+            "de": "Was haben Sie zu Hause? Was haben Sie nicht?",
             "cues": [
+              "nur ein Handy",
+              "keinen Laptop",
               "kein",
               "keinen",
-              "Laptop",
-              "Computer",
-              "fehlt",
-              "nur ein Handy"
+              "Computer"
             ]
           },
           {
@@ -2905,9 +2904,7 @@
               "Haben Sie",
               "Gibt es",
               "für mich",
-              "bitte",
-              "helfen",
-              "Geben Sie"
+              "bitte"
             ]
           },
           {
@@ -2929,14 +2926,14 @@
         "minSubmitWords": 10,
         "checklist": [
           "Anrede: Liebe Frau Schulz,",
-          "Punkt 1: Was fehlt Ihnen?",
+          "Punkt 1: Was haben Sie? Was haben Sie nicht?",
           "Punkt 2: eine Bitte um einen Laptop",
           "Punkt 3: eine Frage zu Seite 24: Ist das Wort richtig?",
           "Sie, nicht du",
           "Gruß und Ihr Name",
           "20 bis 30 Wörter"
         ],
-        "modelText": "Liebe Frau Schulz,\nich habe keinen Laptop, nur ein Handy. Haben Sie vielleicht einen Laptop für mich? Eine Frage zu Seite 24: Heißt es „die Schlüssel“?\nViele Grüße\n(Ihr Name)"
+        "modelText": "Liebe Frau Schulz,\nich habe nur ein Handy, keinen Laptop. Haben Sie vielleicht einen Laptop für mich? Eine Frage zu Seite 24: Heißt es „die Schlüssel“?\nViele Grüße\n(Ihr Name)"
       }
     },
     {

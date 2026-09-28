@@ -13,7 +13,7 @@
     "canDo": "Sie können nach der Uhrzeit fragen, die Uhrzeit sagen, von Ihrem Tag erzählen und Öffnungszeiten und Nachrichten zu Terminen verstehen."
   },
   "spec": {
-    "situation": "Priya erzählt Emre im Videochat von ihrem Tag in Leipzig, Emre von seinem Tag im Elektrogeschäft in İzmir. Priya und Arjun brauchen einen ersten Termin bei Frau Doktor Sommer, ihrer neuen Hausärztin, aber die Praxis ist nur am Morgen offen – und da hat Priya Kurs. Herr Richter spricht auf Priyas Handy eine Nachricht: Der Kurs beginnt am Donnerstag später. Priya bucht online einen Termin für Donnerstag um 8.15 Uhr.",
+    "situation": "Priya erzählt Emre im Videochat von ihrem Tag in Leipzig, Emre von seinem Tag im Elektrogeschäft in İzmir. Priya und Arjun brauchen einen ersten Termin bei Frau Doktor Sommer, ihrer neuen Hausärztin. Die Praxis ist von Montag bis Freitag am Morgen und an drei Nachmittagen offen, aber den ersten Termin gibt es nur am Morgen – und da hat Priya Kurs. Herr Richter spricht auf Priyas Handy eine Nachricht: Der Kurs beginnt am Donnerstag später. Am Mittwochnachmittag ist die Praxis zu; Priya bucht online einen Termin für Donnerstag um 8.15 Uhr.",
     "handlungsfeld": [
       "11",
       "2"
@@ -137,7 +137,7 @@
       "Linie 1 A1 K5 (Grammatik: trennbare Verben; nach memo 06)"
     ],
     "deviation": {
-      "reason": "Landeskunde: Die Einheit macht keine landesweite Sachaussage und hat darum keinen Fact. Vom Plan-Punkt „Zeit in D-A-CH“ zeigt sie die 24-Stunden-Uhr auf Schildern und Terminen (17 Uhr, 20 Uhr, 8.15 Uhr) und sagt sie in einem Satz (Strategiekarte Lesen Teil 3: „Auf Schildern steht oft 17 Uhr. Das ist fünf Uhr am Nachmittag.“); ls1-i05 akzeptiert „20“ für „acht Uhr am Abend“. „halb drei“ üben LS1–LS3, die Prüfungsteile und der Check. Pünktlichkeit ist eine Szene ohne landesweite Aussage (LS3: Termin um 8.15 Uhr, „Bitte kommen Sie pünktlich.“ – Priya: „Wir sind um acht da, dann sind wir pünktlich.“, glossiert). Die Mittagspause kommt nicht vor: Sie gehört zum Arbeitsalltag in a2.1-u01 (lx.mittagspause); Pünktlichkeit als Wort und Thema lernt a1.1-u10 (lx.puenktlich, Bus und Bahn). Szene: Die Plan-Zeile „Fokus Alltag: Sprechzeiten einer Arztpraxis lesen“ ist hier keine Fokus-Karte, sondern das Anliegen von LS2–LS3 (erster Termin in der Praxis von Frau Doktor Sommer, cast.dr-sommer); die Anmeldung im Bürgerbüro bleibt in a1.2-u04 (Review a1.1-u07 r1 F01)."
+      "reason": "Landeskunde: Die Einheit macht keine landesweite Sachaussage und hat darum keinen Fact. Vom Plan-Punkt „Zeit in D-A-CH“ zeigt sie die 24-Stunden-Uhr auf Schildern und Terminen (17 Uhr, 20 Uhr, 8.15 Uhr) und sagt sie in einem Satz (Strategiekarte Lesen Teil 3: „Auf Schildern steht oft 17 Uhr. Das ist fünf Uhr am Nachmittag.“); ls1-i05 akzeptiert „20“ für „acht Uhr am Abend“. „halb drei“ üben LS1–LS3, die Prüfungsteile und der Check. Pünktlichkeit ist eine Szene ohne landesweite Aussage (LS3: Termin um 8.15 Uhr, „Bitte kommen Sie pünktlich.“ – Priya: „Wir sind um acht da, dann sind wir pünktlich.“, glossiert). Die Mittagspause kommt nicht vor: Sie gehört zum Arbeitsalltag in a2.1-u01 (lx.mittagspause); Pünktlichkeit als Wort und Thema lernt a1.1-u10 (lx.puenktlich, Bus und Bahn). Szene: Die Plan-Zeile „Fokus Alltag: Sprechzeiten einer Arztpraxis lesen“ ist hier keine Fokus-Karte, sondern das Anliegen von LS2–LS3 (erster Termin in der Praxis von Frau Doktor Sommer, cast.dr-sommer); die Anmeldung im Bürgerbüro bleibt in a1.2-u04 (Review a1.1-u07 r1 F01). Serienfakt (Review a1.1-u07 r2 F03, für a1.2-u05, a2.1 und b1.1): Die Praxis von Frau Doktor Sommer hat Sprechzeiten Montag bis Freitag 8–12 Uhr und Montag, Dienstag, Donnerstag 15–18 Uhr; den ersten Termin gibt es nur am Morgen, Mittwoch- und Freitagnachmittag ist sie zu."
     },
     "cast": [
       "cast.priya",
@@ -737,8 +737,8 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.trennbare-verben",
-            "promptDe": "Korrigieren Sie: „Ich aufstehe um sieben Uhr.“",
-            "promptEn": "Correct the sentence.",
+            "promptDe": "Korrigieren Sie die Wortstellung: „Ich aufstehe um sieben Uhr.“",
+            "promptEn": "Correct the word order.",
             "answer": "Ich stehe um sieben Uhr auf.",
             "accepted": [
               "Ich stehe um sieben Uhr auf.",
@@ -804,7 +804,7 @@
               "lx.abend",
               "lx.stunde",
               "lx.uhrzeit",
-              "lx.morgen"
+              "lx.woche"
             ]
           },
           {
@@ -912,8 +912,8 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "g.trennbare-verben",
-          "promptDe": "Korrigieren Sie: „Der Kurs anfängt um neun Uhr.“",
-          "promptEn": "Correct the sentence.",
+          "promptDe": "Korrigieren Sie die Wortstellung: „Der Kurs anfängt um neun Uhr.“",
+          "promptEn": "Correct the word order.",
           "answer": "Der Kurs fängt um neun Uhr an.",
           "accepted": [
             "Der Kurs fängt um neun Uhr an.",
@@ -959,7 +959,7 @@
         "register": "du"
       },
       "aussprache": {
-        "focus": "Trennbare Verben: Der erste Teil hat den Akzent, auch am Satzende: aufstehen – Ich stehe um sieben AUF.",
+        "focus": "Trennbare Verben: „auf“, „an“, „ein“ und „fern“ haben den Akzent, auch am Satzende: aufstehen – Ich stehe um sieben AUF.",
         "perception": [
           {
             "id": "a1.1-u07-ls1-x01",
@@ -1095,8 +1095,8 @@
           {
             "id": "a1.1-u07-ls2-l05",
             "speaker": "cast.arjun",
-            "de": "Am Nachmittag und am Abend ist die Praxis geschlossen. Und am Wochenende auch.",
-            "en": "The practice is closed in the afternoon and in the evening. And at the weekend too."
+            "de": "Montag, Dienstag und Donnerstag auch von drei bis sechs. Aber der erste Termin ist nur am Morgen.",
+            "en": "Monday, Tuesday and Thursday also from three to six. But the first appointment is only in the morning."
           },
           {
             "id": "a1.1-u07-ls2-l06",
@@ -1130,8 +1130,8 @@
           }
         ],
         "text": {
-          "de": "Praxis Doktor Julia Sommer\nÖffnungszeiten\nMontag bis Freitag: 8 bis 12 Uhr\nnachmittags und am Wochenende geschlossen\nNur mit Termin (online oder am Telefon)",
-          "en": "Dr Julia Sommer’s practice · Opening hours: Monday to Friday 8 am–12 noon · closed in the afternoons and at the weekend · By appointment only (online or by phone)"
+          "de": "Praxis Doktor Julia Sommer\nÖffnungszeiten\nMontag bis Freitag: 8 bis 12 Uhr\nMontag, Dienstag, Donnerstag: 15 bis 18 Uhr\nam Wochenende geschlossen\nNeu bei uns? Der erste Termin ist nur am Morgen.\nNur mit Termin (online oder am Telefon)",
+          "en": "Dr Julia Sommer’s practice · Opening hours: Monday to Friday 8 am–12 noon · Monday, Tuesday, Thursday 3–6 pm · closed at the weekend · New to the practice? The first appointment is in the morning only. · By appointment only (online or by phone)"
         },
         "glosses": [
           {
@@ -1144,6 +1144,12 @@
             "token": "Doktor",
             "gloss": {
               "en": "doctor (title)"
+            }
+          },
+          {
+            "token": "erste",
+            "gloss": {
+              "en": "first"
             }
           }
         ],
@@ -1189,8 +1195,8 @@
             "Priya hat am Morgen Kurs."
           ],
           "explanation": {
-            "de": "Die Öffnungszeiten sind von 8 bis 12 Uhr. Priya hat dann Kurs, von neun bis halb eins.",
-            "en": "The practice is only open 8–12, and Priya has class from nine to half past twelve."
+            "de": "Für Priya und Arjun gibt es den Termin nur am Morgen, von 8 bis 12 Uhr. Da hat Priya Kurs, von neun bis halb eins.",
+            "en": "For Priya and Arjun, as new patients, the appointment is only in the morning (8–12) – and then Priya has class, from nine to half past twelve."
           },
           "origin": "agent"
         },
@@ -1199,8 +1205,8 @@
           "type": "fill_blank",
           "role": "detail",
           "topic": "lesen",
-          "promptDe": "Lesen Sie die Öffnungszeiten auf der Webseite. Offen bis ___ Uhr.",
-          "promptEn": "Read the opening hours: until when?",
+          "promptDe": "Lesen Sie die Öffnungszeiten auf der Webseite. Am Morgen offen bis ___ Uhr.",
+          "promptEn": "Read the website: open until when in the morning?",
           "answer": "12",
           "accepted": [
             "12",
@@ -1211,8 +1217,8 @@
           },
           "exact": "number",
           "explanation": {
-            "de": "Auf der Webseite steht: „Montag bis Freitag: 8 bis 12 Uhr“.",
-            "en": "The website says: Monday to Friday, 8 to 12."
+            "de": "Auf der Webseite steht: „Montag bis Freitag: 8 bis 12 Uhr“. Von 15 bis 18 Uhr ist am Nachmittag.",
+            "en": "The website says Monday to Friday 8–12; 15–18 are the afternoon hours."
           },
           "origin": "agent"
         },
@@ -1284,8 +1290,8 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.zeitangaben-inversion",
-          "promptDe": "Priya: „Am Mittwoch arbeitet er zu Hause.“ Wer ist am Mittwoch zu Hause?",
-          "promptEn": "“arbeitet er”: who is at home on Wednesday?",
+          "promptDe": "Priya: „Am Mittwoch arbeitet er zu Hause.“ Wer arbeitet am Mittwoch zu Hause?",
+          "promptEn": "“arbeitet er”: who works from home on Wednesday?",
           "options": [
             "Priya",
             "Arjun",
@@ -1564,15 +1570,19 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.zeitangaben-inversion",
-            "promptDe": "Korrigieren Sie: „Am Montag ich arbeite bis fünf.“",
+            "promptDe": "Korrigieren Sie die Wortstellung: „Am Montag ich arbeite bis fünf.“",
             "promptEn": "Correct the word order.",
             "answer": "Am Montag arbeite ich bis fünf.",
             "accepted": [
               "Am Montag arbeite ich bis fünf.",
-              "Ich arbeite am Montag bis fünf."
+              "Ich arbeite am Montag bis fünf.",
+              "Bis fünf arbeite ich am Montag.",
+              "Am Montag bis fünf arbeite ich."
             ],
             "acceptedWhy": {
-              "Ich arbeite am Montag bis fünf.": "grammatisch: das Subjekt auf Position 1, das Verb bleibt auf Position 2"
+              "Ich arbeite am Montag bis fünf.": "grammatisch: das Subjekt auf Position 1, das Verb bleibt auf Position 2",
+              "Bis fünf arbeite ich am Montag.": "grammatisch: bis fünf betont auf Position 1, das Verb bleibt auf Position 2",
+              "Am Montag bis fünf arbeite ich.": "grammatisch: beide Zeitangaben zusammen auf Position 1, das Verb bleibt auf Position 2"
             },
             "intentionalError": true,
             "errorTag": "v2-inv",
@@ -1740,7 +1750,7 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "g.zeitangaben-inversion",
-          "promptDe": "Korrigieren Sie: „Am Abend Arjun sieht fern.“",
+          "promptDe": "Korrigieren Sie die Wortstellung: „Am Abend Arjun sieht fern.“",
           "promptEn": "Correct the word order.",
           "answer": "Am Abend sieht Arjun fern.",
           "accepted": [
@@ -1889,14 +1899,14 @@
           {
             "id": "a1.1-u07-ls3-l09",
             "speaker": "cast.arjun",
-            "de": "Wie spät ist es? Oh, schon halb fünf! Die Praxis ist zu, da ist nur der Anrufbeantworter.",
-            "en": "What time is it? Oh, half past four already! The practice is closed – you’ll only get the answering machine."
+            "de": "Wie spät ist es? Oh, schon halb fünf! Und heute ist Mittwoch: Am Nachmittag ist die Praxis zu.",
+            "en": "What time is it? Oh, half past four already! And it’s Wednesday today: the practice is closed in the afternoon."
           },
           {
             "id": "a1.1-u07-ls3-l10",
             "speaker": "cast.priya",
-            "de": "Stimmt. Aber Termine gibt es auch online. Moment … Tag: Donnerstag. Uhrzeit: Viertel nach acht. Wir sind um acht da, dann sind wir pünktlich.",
-            "en": "True. But you can book appointments online too. Just a moment … Day: Thursday. Time: a quarter past eight. We’ll be there at eight – then we’re on time."
+            "de": "Stimmt, da ist nur der Anrufbeantworter. Aber Termine gibt es auch online. Moment … Tag: Donnerstag. Uhrzeit: Viertel nach acht. Wir sind um acht da, dann sind wir pünktlich.",
+            "en": "True, you’ll only get the answering machine. But you can book appointments online too. Just a moment … Day: Thursday. Time: a quarter past eight. We’ll be there at eight – then we’re on time."
           }
         ],
         "text": {
@@ -2337,8 +2347,8 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.trennbare-verben",
-            "promptDe": "Korrigieren Sie: „Der Kurs fängt an um elf Uhr.“",
-            "promptEn": "Correct the sentence.",
+            "promptDe": "Korrigieren Sie die Wortstellung: „Der Kurs fängt an um elf Uhr.“",
+            "promptEn": "Correct the word order.",
             "answer": "Der Kurs fängt um elf Uhr an.",
             "accepted": [
               "Der Kurs fängt um elf Uhr an.",
@@ -2514,15 +2524,19 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "g.trennbare-verben",
-          "promptDe": "Korrigieren Sie: „Am Donnerstag der Kurs fängt um elf an.“",
+          "promptDe": "Korrigieren Sie die Wortstellung: „Am Donnerstag der Kurs fängt um elf an.“",
           "promptEn": "Correct the word order.",
           "answer": "Am Donnerstag fängt der Kurs um elf an.",
           "accepted": [
             "Am Donnerstag fängt der Kurs um elf an.",
-            "Der Kurs fängt am Donnerstag um elf an."
+            "Der Kurs fängt am Donnerstag um elf an.",
+            "Um elf fängt der Kurs am Donnerstag an.",
+            "Am Donnerstag um elf fängt der Kurs an."
           ],
           "acceptedWhy": {
-            "Der Kurs fängt am Donnerstag um elf an.": "grammatisch: das Subjekt auf Position 1, das Verb bleibt auf Position 2"
+            "Der Kurs fängt am Donnerstag um elf an.": "grammatisch: das Subjekt auf Position 1, das Verb bleibt auf Position 2",
+            "Um elf fängt der Kurs am Donnerstag an.": "grammatisch: um elf betont auf Position 1, das Verb bleibt auf Position 2",
+            "Am Donnerstag um elf fängt der Kurs an.": "grammatisch: beide Zeitangaben zusammen auf Position 1, das Verb bleibt auf Position 2"
           },
           "intentionalError": true,
           "errorTag": "v2-inv",
@@ -3072,7 +3086,7 @@
         "moves": [],
         "aiRole": {
           "name": "Nora",
-          "personaDe": "Teilnehmerin in der Prüfung; spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste. Sagt auf „Wie spät ist es?“ eine Uhrzeit. Fragt mit ihren Karten: „Und jetzt? Wie spät ist es?“ und „Wann stehen Sie am Montag auf?“; akzeptiert jede richtige Uhrzeit.",
+          "personaDe": "Teilnehmerin in der Prüfung; spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste. Sagt auf „Wie spät ist es?“ eine Uhrzeit. Fragt mit ihren Karten: „Und in Ihrem Land? Wie spät ist es da jetzt?“ und „Wann stehen Sie am Montag auf?“; akzeptiert jede richtige Uhrzeit.",
           "register": "Sie",
           "support": "slow-wordbank"
         },
@@ -3085,7 +3099,7 @@
           "Ich stehe um … auf.",
           "von … bis …",
           "Was machen Sie am …?",
-          "Dann …"
+          "Da ist es jetzt …"
         ],
         "modelTurns": [
           {
@@ -3098,11 +3112,11 @@
           },
           {
             "speaker": "partner",
-            "de": "Und jetzt? Wie spät ist es?"
+            "de": "Und in Ihrem Land? Wie spät ist es da jetzt?"
           },
           {
             "speaker": "learner",
-            "de": "Jetzt ist es Viertel vor zehn."
+            "de": "Da ist es jetzt zwei Uhr."
           },
           {
             "speaker": "learner",
@@ -3334,7 +3348,7 @@
         "type": "error_correction",
         "role": "check",
         "topic": "g.zeitangaben-inversion",
-        "promptDe": "Korrigieren Sie: „Am Freitag ich kaufe ein.“",
+        "promptDe": "Korrigieren Sie die Wortstellung: „Am Freitag ich kaufe ein.“",
         "promptEn": "Correct the word order.",
         "answer": "Am Freitag kaufe ich ein.",
         "accepted": [
@@ -3513,7 +3527,7 @@
     }
   ],
   "story": {
-    "beat": "Priya und Emre erzählen im Videochat vom Tag in Leipzig und in İzmir. Priya und Arjun brauchen einen ersten Termin bei Frau Doktor Sommer, ihrer neuen Hausärztin. Aber die Praxis ist nur am Morgen offen, und da hat Priya Kurs. Da kommt eine Nachricht von Herrn Richter: Am Donnerstag fängt der Kurs erst um elf Uhr an. Priya bucht online einen Termin: Donnerstag, 8.15 Uhr.",
+    "beat": "Priya und Emre erzählen im Videochat vom Tag in Leipzig und in İzmir. Priya und Arjun brauchen einen ersten Termin bei Frau Doktor Sommer, ihrer neuen Hausärztin. Aber den ersten Termin gibt es nur am Morgen, und da hat Priya Kurs. Da kommt eine Nachricht von Herrn Richter: Am Donnerstag fängt der Kurs erst um elf Uhr an. Priya bucht online einen Termin: Donnerstag, 8.15 Uhr.",
     "cliffhanger": "Am Donnerstag um acht sind Priya und Arjun bei Frau Sommer. Um elf ist Priya im Kurs, und Emre ist online. Nach dem Kurs schreibt er Priya: „Hast du am Wochenende Zeit? Ich rufe heute Abend an!“",
     "castIn": [
       "cast.emre",

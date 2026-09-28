@@ -547,15 +547,15 @@
           "options": [
             "Nein, sie ist zu teuer.",
             "Nein, sie ist zu billig.",
-            "Ja, die Miete ist okay."
+            "Ja, das ist gut."
           ],
-          "answer": "Ja, die Miete ist okay.",
+          "answer": "Ja, das ist gut.",
           "accepted": [
-            "Ja, die Miete ist okay."
+            "Ja, das ist gut."
           ],
           "explanation": {
-            "de": "„nicht zu teuer“ heißt: Die Miete ist okay.",
-            "en": "“nicht zu teuer” = not too expensive: the rent is fine."
+            "de": "„nicht zu teuer“ heißt: Die Miete ist okay. Das ist gut.",
+            "en": "“nicht zu teuer” = not too expensive: the rent is fine, and that is good."
           },
           "origin": "agent"
         }
@@ -791,15 +791,15 @@
             "options": [
               "Das Sofa ist sehr schön.",
               "Das Wohnzimmer ist sehr groß.",
-              "Das Sofa ist nicht gut für das Wohnzimmer."
+              "Das ist nicht gut."
             ],
-            "answer": "Das Sofa ist nicht gut für das Wohnzimmer.",
+            "answer": "Das ist nicht gut.",
             "accepted": [
-              "Das Sofa ist nicht gut für das Wohnzimmer."
+              "Das ist nicht gut."
             ],
             "explanation": {
-              "de": "„zu groß“: Das ist nicht gut. Das Sofa ist für das Wohnzimmer zu groß.",
-              "en": "“zu groß” = too big – that is a problem: the sofa is too big for the living room."
+              "de": "„zu groß“ heißt: Das ist nicht gut. Das Sofa passt dort nicht.",
+              "en": "“zu groß” = too big, and that is not good: the sofa does not fit there."
             },
             "origin": "agent"
           }
@@ -1229,7 +1229,7 @@
           "promptEn": "“sie” + “ist” = a die-noun, singular. What is small?",
           "options": [
             "die Küche",
-            "der Balkon",
+            "der Tisch",
             "das Bad"
           ],
           "answer": "die Küche",
@@ -1259,8 +1259,8 @@
             "das Sofa und der Sessel"
           ],
           "explanation": {
-            "de": "„sie“ + „sind“ = Plural: das Sofa und der Sessel. Der Tisch und das Bett sind Singular.",
-            "en": "“sie” with “sind” is plural: the sofa and the armchair."
+            "de": "„sie“ + „sind“ = Plural: das Sofa, der Sessel und die Stühle. Der Tisch und das Bett sind Singular.",
+            "en": "“sie” with “sind” is plural: the sofa, the armchair and the chairs. The table and the bed are singular."
           },
           "origin": "agent"
         },
@@ -1709,12 +1709,12 @@
         "mode": "written",
         "profile": "course-micro",
         "situationDe": "Sie sind im Chat mit Olena. Olena fragt: „Und du? Wie ist deine Wohnung?“",
-        "promptDe": "Antworten Sie Olena in 1–2 Sätzen: Wie viele Zimmer hat Ihre Wohnung? Was steht im Zimmer?",
-        "promptEn": "Answer Olena in 1–2 sentences: how many rooms does your flat have, and what furniture is in the room?",
+        "promptDe": "Antworten Sie Olena in 2–3 Sätzen: Wie viele Zimmer? Was steht im Wohnzimmer? Wie ist es?",
+        "promptEn": "Answer Olena in 2–3 sentences: how many rooms, what is in the living room, and what it is like.",
         "planSeconds": 30,
         "words": [
-          3,
-          16
+          8,
+          25
         ],
         "targets": [
           "g.pronomen-er-es-sie"
@@ -1801,8 +1801,8 @@
           }
         ],
         "text": {
-          "de": "Liebe Frau Nair, lieber Herr Nair,\nwillkommen im Haus! Mein Mann, meine Tochter und ich sind oft zu Hause. Brauchen Sie etwas? Dann kommen Sie gern!\nHerr Krause ist der Hausmeister. Er wohnt unten.\nViele Grüße\nAmal Haddad",
-          "en": "Dear Mrs Nair, dear Mr Nair, welcome to the building! My husband, my daughter and I are often at home. Do you need anything? Then do come round! Mr Krause is the caretaker. He lives downstairs. Best wishes, Amal Haddad"
+          "de": "Liebe Frau Nair, lieber Herr Nair,\nwillkommen im Haus! Mein Mann, meine Tochter und ich sind oft zu Hause. Brauchen Sie etwas? Dann kommen Sie gern zu uns!\nHerr Krause ist der Hausmeister. Er wohnt unten.\nViele Grüße\nAmal Haddad",
+          "en": "Dear Mrs Nair, dear Mr Nair, welcome to the building! My husband, my daughter and I are often at home. Do you need anything? Then do come round to us! Mr Krause is the caretaker. He lives downstairs. Best wishes, Amal Haddad"
         },
         "glosses": [
           {
@@ -1815,6 +1815,12 @@
             "token": "ganz oben",
             "gloss": {
               "en": "right at the top (top floor)"
+            }
+          },
+          {
+            "token": "Willkommen im Haus",
+            "gloss": {
+              "en": "welcome to the building"
             }
           }
         ],
@@ -1963,7 +1969,7 @@
           "promptDe": "Priya: „Sie ist klein, aber sehr hell.“ Was ist klein?",
           "promptEn": "“sie” + “ist” = a die-noun, singular. What is small?",
           "options": [
-            "der Balkon",
+            "der Stadtteil",
             "die Wohnung",
             "das Haus"
           ],
@@ -2004,8 +2010,8 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.pronomen-er-es-sie",
-          "promptDe": "„Sie sind alle sehr lieb.“ Wer ist lieb?",
-          "promptEn": "“sie” + “sind” = plural. Who is kind?",
+          "promptDe": "„Sie sind alle sehr lieb.“ Wer ist „sie“?",
+          "promptEn": "“sie” + “sind” = plural. Who is “sie”?",
           "options": [
             "die Nachbarn",
             "Frau Lehmann",
@@ -2561,6 +2567,12 @@
               "gloss": {
                 "en": "caretaker, janitor"
               }
+            },
+            {
+              "token": "willkommen in",
+              "gloss": {
+                "en": "welcome to"
+              }
             }
           ]
         },
@@ -2568,7 +2580,7 @@
           "id": "a1.1-u05-ls4-t7",
           "kind": "text",
           "title": "Eine Nachricht von Olena",
-          "text": "Hallo Priya,\ndeine Wohnung ist wirklich schön, auch per Video! Das Wohnzimmer ist so hell, und der Balkon ist sehr schön. Aber die Lampe im Wohnzimmer ist sehr klein, oder? Sophie und ich haben noch eine Lampe. Sie ist alt, aber sehr schön. Möchtet ihr die Lampe? Morgen bringe ich die Lampe. Und dann sitzen wir zusammen auf dem Balkon!\nBis morgen!\nOlena",
+          "text": "Hallo Priya,\ndeine Wohnung ist wirklich schön, auch per Video! Das Wohnzimmer ist so hell, und der Balkon ist sehr schön. Aber die Lampe im Wohnzimmer ist sehr klein, oder? Sophie und ich haben noch eine Lampe. Sie ist alt, aber sehr schön. Möchtet ihr die Lampe? Ich bringe sie morgen. Und dann sitzen wir zusammen auf dem Balkon!\nBis morgen!\nOlena",
           "glosses": []
         }
       ],
@@ -2658,7 +2670,7 @@
               "role": "exam",
               "topic": "lesen",
               "textRef": "a1.1-u05-ls4-t4",
-              "promptDe": "Sie haben wenig Geld und wohnen gern zusammen mit Freunden. Was passt?",
+              "promptDe": "Sie haben wenig Geld und wohnen gern mit Leuten zusammen. Was passt?",
               "options": [
                 "a",
                 "b"
@@ -2788,8 +2800,8 @@
                 "richtig"
               ],
               "explanation": {
-                "de": "Olena schreibt: „Morgen bringe ich die Lampe.“",
-                "en": "Olena writes that she will bring the lamp tomorrow."
+                "de": "Olena schreibt: „Ich bringe sie morgen.“ „sie“ ist die Lampe.",
+                "en": "Olena writes that she will bring it – the lamp – tomorrow."
               },
               "origin": "agent"
             },
@@ -2825,8 +2837,8 @@
         },
         {
           "template": "sd1.l1",
-          "de": "Lesen Teil 1: Sie lesen zwei Nachrichten und fünf Aussagen. Lesen Sie zuerst die Aussagen. Lesen Sie dann die Nachrichten genau: Wer? Was? Wo? Achtung: Die Aussage und der Text sind oft nicht gleich.",
-          "en": "Reading part 1: two short messages and five statements. Read the statements first, then the messages closely: who, what, where? Careful: the statement usually says it in different words from the text."
+          "de": "Lesen Teil 1: Sie lesen zwei Nachrichten und fünf Aussagen. Lesen Sie zuerst die Aussagen. Lesen Sie dann die Nachrichten genau: Wer? Was? Wo? Wichtig: Die Aussage und der Text sind oft nicht gleich.",
+          "en": "Reading part 1: two short messages and five statements. Read the statements first, then the messages closely: who, what, where? Important: the statement usually says it in different words from the text."
         }
       ]
     },
@@ -2843,7 +2855,7 @@
             "profile": "sd1-sp1",
             "prepMinutes": 0,
             "instructionsDe": "Stellen Sie sich vor. Dann buchstabieren Sie Ihre Straße und sagen Ihre Postleitzahl.",
-            "situationDe": "Sprechen Teil 1: Stellen Sie sich vor wie in der Prüfung: Name, Alter, Land, Wohnort, Sprachen, Beruf. Sagen Sie beim Wohnort auch: „Ich bin neu im Haus.“ Wie ist die Wohnung? Dann sagt Nora: „Buchstabieren Sie bitte Ihre Straße.“ Und sie fragt: „Wie ist Ihre Postleitzahl?“",
+            "situationDe": "Sprechen Teil 1: Stellen Sie sich vor wie in der Prüfung: Name, Alter, Land, Wohnort, Sprachen, Beruf. Beim Wohnort: Stadt und Stadtteil. Sagen Sie auch: „Ich bin neu im Haus.“ Und: Wie ist die Wohnung? Dann sagt Nora: „Buchstabieren Sie bitte Ihre Straße.“ Und sie fragt: „Wie ist Ihre Postleitzahl?“",
             "cards": {
               "learner": [
                 "Name?",
@@ -2893,7 +2905,7 @@
         },
         "openingLine": "Guten Tag! Wir beginnen mit Teil 1. Bitte stellen Sie sich vor. Danach kommt Teil 2 mit den Karten.",
         "hintWords": [
-          "Ich wohne in …",
+          "Ich wohne in … (Stadt), in … (Stadtteil).",
           "Ich bin neu im Haus.",
           "Meine Wohnung ist …",
           "Meine Wohnung hat … Zimmer.",
@@ -2917,7 +2929,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Ich spreche Englisch und ein bisschen Deutsch. Ich lerne Deutsch im Kurs."
+            "de": "Ich spreche drei Sprachen: meine Muttersprache, Englisch und ein bisschen Deutsch. Ich lerne Deutsch im Kurs."
           },
           {
             "speaker": "partner",
@@ -2994,7 +3006,8 @@
               "accepted": [
                 "31",
                 "31 Jahre",
-                "einunddreißig"
+                "einunddreißig",
+                "31 Jahre alt"
               ],
               "exact": "number"
             },
@@ -3014,7 +3027,9 @@
                 "2",
                 "zwei",
                 "2 Leute",
-                "zwei Leute"
+                "zwei Leute",
+                "2 Personen",
+                "zwei Personen"
               ],
               "exact": "number"
             },
@@ -3025,7 +3040,8 @@
               "accepted": [
                 "Berliner Straße 21",
                 "Berliner Str. 21",
-                "Berliner Strasse 21"
+                "Berliner Strasse 21",
+                "Berliner Straße 21, Leipzig"
               ],
               "exact": "name"
             },
@@ -3259,8 +3275,8 @@
           "drei"
         ],
         "explanation": {
-          "de": "Küche, Bad und Balkon sind keine Zimmer. Wohnzimmer, Schlafzimmer, Kinderzimmer: Das sind 3 Zimmer.",
-          "en": "In a German flat ad, kitchen, bathroom and balcony are not counted as rooms: living room, bedroom and child’s room make 3 rooms."
+          "de": "In der Anzeige sind 3 Zimmer: Wohnzimmer, Schlafzimmer, Kinderzimmer. Dazu kommen Küche, Bad und Balkon.",
+          "en": "The ad has 3 rooms: living room, bedroom and child’s room. Kitchen, bathroom and balcony come on top."
         },
         "origin": "agent"
       },
@@ -3367,7 +3383,7 @@
       "id": "a1.1-u05-rm08",
       "de": "Die Wohnung ist schön, aber zu teuer.",
       "en": "The flat is nice, but too expensive.",
-      "function": "eine Wohnung bewerten"
+      "function": "sagen: schön, aber zu teuer"
     }
   ],
   "story": {

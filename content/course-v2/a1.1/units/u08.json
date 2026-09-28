@@ -297,8 +297,8 @@
           {
             "id": "a1.1-u08-ls1-l08",
             "speaker": "cast.priya",
-            "de": "Ich höre jeden Abend Musik. Und Sophie, am Freitag habe ich Zeit!",
-            "en": "I listen to music every evening. And Sophie, I’m free on Friday!"
+            "de": "Sophie, am Freitag habe ich Zeit! Und ich höre jeden Abend Musik.",
+            "en": "Sophie, I’m free on Friday! And I listen to music every evening."
           },
           {
             "id": "a1.1-u08-ls1-l09",
@@ -422,7 +422,7 @@
             "Abend"
           ],
           "explanation": {
-            "de": "Priya sagt: „Ich höre jeden Abend Musik.“",
+            "de": "Priya sagt: „Und ich höre jeden Abend Musik.“",
             "en": "Priya listens to music every evening."
           },
           "origin": "agent"
@@ -733,11 +733,13 @@
             "accepted": [
               "Ich kann gut schwimmen.",
               "Schwimmen kann ich gut.",
-              "Gut schwimmen kann ich."
+              "Gut schwimmen kann ich.",
+              "Gut kann ich schwimmen."
             ],
             "acceptedWhy": {
               "Schwimmen kann ich gut.": "grammatisch: „schwimmen“ betont auf Position 1, wie Olena im Chat: „Laufen kann ich auch nicht gut.“",
-              "Gut schwimmen kann ich.": "grammatisch: „gut schwimmen“ betont auf Position 1, wie „Gut schwimmen kann Olena.“"
+              "Gut schwimmen kann ich.": "grammatisch: „gut schwimmen“ betont auf Position 1, wie „Gut schwimmen kann Olena.“",
+              "Gut kann ich schwimmen.": "grammatisch, aber selten: „gut“ betont auf Position 1, wie „Gern tanze ich nicht.“"
             },
             "intentionalError": true,
             "errorTag": "satzklammer",
@@ -1434,11 +1436,13 @@
             "accepted": [
               "Ich höre gern Musik.",
               "Musik höre ich gern.",
-              "Gern höre ich Musik."
+              "Gern höre ich Musik.",
+              "Ich höre Musik gern."
             ],
             "acceptedWhy": {
               "Musik höre ich gern.": "grammatisch: „Musik“ betont auf Position 1",
-              "Gern höre ich Musik.": "grammatisch: „gern“ betont auf Position 1"
+              "Gern höre ich Musik.": "grammatisch: „gern“ betont auf Position 1",
+              "Ich höre Musik gern.": "grammatisch: „Musik“ vor „gern“"
             },
             "explanation": {
               "de": "„höre“ auf Position 2. „gern“ steht meist nach dem Verb.",
@@ -1464,15 +1468,17 @@
             "accepted": [
               "Olena kann nicht gut laufen.",
               "Laufen kann Olena nicht gut.",
-              "Gut laufen kann Olena nicht."
+              "Gut laufen kann Olena nicht.",
+              "Gut kann Olena nicht laufen."
             ],
             "acceptedWhy": {
               "Laufen kann Olena nicht gut.": "grammatisch: „laufen“ betont auf Position 1, wie Olena im Chat",
-              "Gut laufen kann Olena nicht.": "grammatisch: „gut laufen“ betont auf Position 1"
+              "Gut laufen kann Olena nicht.": "grammatisch: „gut laufen“ betont auf Position 1",
+              "Gut kann Olena nicht laufen.": "grammatisch, aber selten: „gut“ betont auf Position 1, wie „Gern tanze ich nicht.“"
             },
             "explanation": {
-              "de": "„nicht“ steht vor „gut“, „laufen“ am Ende. Auch richtig: „Laufen“ oder „Gut laufen“ auf Position 1.",
-              "en": "“nicht” before “gut”, “laufen” at the end. Also correct: “Laufen” or “Gut laufen” in position 1."
+              "de": "„nicht“ steht vor „gut“, „laufen“ am Ende. Auch richtig: „Laufen“, „Gut laufen“ oder „Gut“ auf Position 1.",
+              "en": "“nicht” before “gut”, “laufen” at the end. Also correct: “Laufen”, “Gut laufen” or “Gut” in position 1."
             },
             "origin": "agent"
           },
@@ -2183,8 +2189,12 @@
             ],
             "answer": "Kann Olena auch kommen?",
             "accepted": [
-              "Kann Olena auch kommen?"
+              "Kann Olena auch kommen?",
+              "Kann auch Olena kommen?"
             ],
+            "acceptedWhy": {
+              "Kann auch Olena kommen?": "grammatisch: „auch“ vor „Olena“, gleiche Bedeutung"
+            },
             "explanation": {
               "de": "Ja/Nein-Frage: „Kann“ auf Position 1, „kommen“ am Ende.",
               "en": "Yes/no question: “Kann” first, “kommen” at the end."
@@ -2848,7 +2858,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Ich wohne jetzt in Leipzig. Ich spreche drei Sprachen: meine Muttersprache, Englisch und ein bisschen Deutsch."
+            "de": "Ich wohne jetzt in Leipzig. In Kochi arbeite ich am Empfang. Ich spreche drei Sprachen: meine Muttersprache, Englisch und ein bisschen Deutsch."
           },
           {
             "speaker": "learner",
@@ -3085,10 +3095,12 @@
         "answer": "Ich höre nicht gern Musik.",
         "accepted": [
           "Ich höre nicht gern Musik.",
-          "Musik höre ich nicht gern."
+          "Musik höre ich nicht gern.",
+          "Ich höre Musik nicht gern."
         ],
         "acceptedWhy": {
-          "Musik höre ich nicht gern.": "grammatisch: „Musik“ betont auf Position 1, wie „Musik höre ich gern.“"
+          "Musik höre ich nicht gern.": "grammatisch: „Musik“ betont auf Position 1, wie „Musik höre ich gern.“",
+          "Ich höre Musik nicht gern.": "grammatisch: „Musik“ vor „nicht gern“; „nicht“ steht vor „gern“"
         },
         "intentionalError": true,
         "explanation": {

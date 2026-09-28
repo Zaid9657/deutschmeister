@@ -893,7 +893,7 @@
           "type": "multiple_choice",
           "role": "practice",
           "topic": "g.possessiv-mein-dein",
-          "promptDe": "Herr Richter: „Wie heißt ___ Mann, Frau Nair?“",
+          "promptDe": "Herr Richter: „Wie alt ist ___ Mann, Frau Nair?“",
           "promptEn": "Herr Richter uses Sie. Choose the word.",
           "options": [
             "Ihre",
@@ -1962,7 +1962,7 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.possessiv-mein-dein",
-          "promptDe": "Priya fragt Emre: „Deine Frau wohnt in Leipzig?“ Wer wohnt in Leipzig?",
+          "promptDe": "Priya fragt Emre: „Deine Frau wohnt hier in Leipzig?“ Wer wohnt in Leipzig?",
           "promptEn": "“deine Frau” = the wife of the person Priya talks to.",
           "options": [
             "die Frau von Emre",
@@ -2198,7 +2198,7 @@
             "type": "multiple_choice",
             "role": "practice",
             "topic": "g.possessiv-mein-dein",
-            "promptDe": "Emre: „Meine Frau wohnt in Leipzig.“ Olena: „Wie heißt ___ Frau?“",
+            "promptDe": "Emre: „Ich bin verheiratet!“ Olena: „Wie alt ist ___ Frau?“",
             "promptEn": "Olena asks Emre. Choose the word.",
             "options": [
               "dein",
@@ -2597,11 +2597,11 @@
         "moves": [],
         "aiRole": {
           "name": "Nora",
-          "personaDe": "Teilnehmerin in der Prüfung; spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste. Beginnt mit „Hallo! Ich bin Nora. Wie geht es Ihnen?“ (vor Teil 2, nicht bewertet) und sagt dann: „Jetzt kommt Teil 2.“ Ihre Karten: „Familie – Eltern“ (sie fragt: „Was machen Ihre Eltern?“) und „Freunde – wohnen“ („Wo wohnen Ihre Freunde?“). Nennt die Antwort kein Alter und keinen Beruf, fragt sie einmal nach: „Wie alt ist Ihre Mutter?“ oder „Was macht Ihr Vater?“, dann weiter. Ihre Familie: zwei Schwestern, 30 und 34, beide Lehrerinnen in Hamburg; Kinder: nein. Ihre Freunde wohnen in Leipzig und sprechen Deutsch und Englisch.",
+          "personaDe": "Teilnehmerin in der Prüfung; spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste. Beginnt mit „Hallo! Ich bin Nora. Wie geht es Ihnen?“ (vor Teil 2, nicht bewertet) und sagt erst nach der Antwort: „Auch gut, danke! Jetzt kommt Teil 2: zuerst „Familie“, dann „Freunde“. Bitte, Sie fragen zuerst!“ Ihre Karten: „Familie – Eltern“ (sie fragt: „Was machen Ihre Eltern?“) und „Freunde – wohnen“ („Wo wohnen Ihre Freunde?“). Nennt die Antwort kein Alter und keinen Beruf, fragt sie einmal nach: „Wie alt ist Ihre Mutter?“ oder „Was macht Ihr Vater?“, dann weiter. Ihre Familie: zwei Schwestern, 30 und 34, beide Lehrerinnen in Hamburg; Kinder: nein. Ihre Freunde wohnen in Leipzig und sprechen Deutsch und Englisch.",
           "register": "Sie",
           "support": "slow-wordbank"
         },
-        "openingLine": "Hallo! Ich bin Nora. Wie geht es Ihnen? … Jetzt kommt Teil 2. Wir sprechen über zwei Themen: zuerst „Familie“, dann „Freunde“. Bitte, Sie fragen zuerst!",
+        "openingLine": "Hallo! Ich bin Nora. Wie geht es Ihnen?",
         "hintWords": [
           "Gut, danke. Und Ihnen?",
           "Haben Sie …?",
@@ -2619,7 +2619,7 @@
           },
           {
             "speaker": "partner",
-            "de": "Auch gut, danke! Jetzt kommt Teil 2."
+            "de": "Auch gut, danke! Jetzt kommt Teil 2: zuerst „Familie“, dann „Freunde“. Bitte, Sie fragen zuerst!"
           },
           {
             "speaker": "learner",

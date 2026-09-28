@@ -424,7 +424,7 @@
           "promptDe": "Wie kommen Priya und Arjun am Samstag zum Hauptbahnhof?",
           "promptEn": "How do Priya and Arjun get to the main station on Saturday?",
           "options": [
-            "mit dem Fahrrad",
+            "mit der Bahn",
             "mit dem Auto",
             "mit dem Bus"
           ],
@@ -943,7 +943,7 @@
         "bankKey": "a11-u10-mo1",
         "mode": "written",
         "profile": "course-micro",
-        "situationDe": "Sie fahren am Samstag auch mit nach Dresden. Olena schreibt im Chat: „Wann fährt der Zug ab? Und wann seid ihr in Dresden?“",
+        "situationDe": "Priya und Arjun fahren am Samstag nach Dresden. Olena schreibt Ihnen im Chat: „Wann fährt der Zug ab? Und wann sind sie in Dresden?“",
         "promptDe": "Schreiben Sie Olena 1–2 Sätze: Wann fährt der Zug ab? Wann kommt er an?",
         "promptEn": "Write Olena 1–2 sentences: when the train leaves and when it arrives.",
         "planSeconds": 30,
@@ -1753,8 +1753,8 @@
           {
             "id": "a1.1-u10-ls3-l08",
             "speaker": "cast.ensemble-a1-2",
-            "de": "Ja, ich wohne da. Ich bin Busfahrerin, und mein Mann ist auch Busfahrer.",
-            "en": "Yes, I live there. I’m a bus driver, and my husband is a bus driver too."
+            "de": "Ich wohne da. Ich bin Busfahrerin, und mein Mann ist auch Busfahrer.",
+            "en": "I live there. I’m a bus driver, and my husband is a bus driver too."
           },
           {
             "id": "a1.1-u10-ls3-l09",
@@ -2230,7 +2230,7 @@
             "count": 2,
             "source": [
               "a1.1-u10-ls3-l03",
-              "a1.1-u10-ls3-l09"
+              "a1.1-u10-ls3-l08"
             ]
           },
           {
@@ -2414,7 +2414,7 @@
         "bankKey": "a11-u10-mo3",
         "mode": "written",
         "profile": "course-micro",
-        "situationDe": "Sie sind mit Priya, Arjun und Sophie im Zug. Emre schreibt aus İzmir: „Hallo! Wer ist da im Zug?“",
+        "situationDe": "Priya ist mit Arjun und Sophie im Zug und schreibt im Chat. Emre schreibt aus İzmir: „Hallo! Wer ist da im Zug?“",
         "promptDe": "Schreiben Sie Emre 1–2 Sätze: Wer ist im Zug? Was ist die Person von Beruf?",
         "promptEn": "Write Emre 1–2 sentences: who is on the train and what that person does.",
         "planSeconds": 30,
@@ -2428,7 +2428,7 @@
         "register": "du"
       },
       "aussprache": {
-        "focus": "sch ist nicht s: Schein – sein. Auch st und sp am Wortanfang und nach einer Vorsilbe sprechen Sie mit „sch“: steigen, einsteigen, umsteigen, Stadt, spät. Aber in „ist“ und „erst“ hören Sie s.",
+        "focus": "sch ist nicht s: Schein – sein. st und sp sprechen Sie wie „scht“ und „schp“: steigen, einsteigen, umsteigen, spät. Aber: ist, erst.",
         "perception": {
           "generator": "perception.pairs",
           "count": 3,
@@ -2849,7 +2849,7 @@
             "profile": "sd1-sp3",
             "prepMinutes": 0,
             "instructionsDe": "Bitten Sie mit jeder Karte um etwas. Ihre Partnerin bittet auch: Reagieren Sie.",
-            "situationDe": "Sprechen Teil 3: Sie und Ihre Partnerin haben je zwei Karten zum Thema Bahnhof und Zug. Sie sind im Zug und fragen auch nach einem Platz. In der Prüfung sind auf den Karten Bilder.",
+            "situationDe": "Sprechen Teil 3: Sie und Ihre Partnerin haben je zwei Karten zum Thema Bahnhof und Zug. Bei der Karte „Platz“ möchten Sie sitzen. In der Prüfung sind auf den Karten Bilder.",
             "cards": {
               "learner": [
                 "Platz",
@@ -2879,7 +2879,7 @@
           "Wann fährt … ab?",
           "Ja, … hin und zurück.",
           "Ja, manchmal … Minuten.",
-          "Entschuldigung, ist hier noch frei?",
+          "Ist hier noch frei? Kann ich hier sitzen?",
           "Eine Fahrkarte nach …, bitte.",
           "Ja, gern. Hier ist noch frei.",
           "Ja, hier, bitte."
@@ -2927,7 +2927,7 @@
           },
           {
             "speaker": "partner",
-            "de": "Haben Sie Wasser für mich?"
+            "de": "Ein Wasser, bitte."
           },
           {
             "speaker": "learner",
@@ -2964,7 +2964,7 @@
         "register": "informell",
         "address": "du",
         "title": "Eine Nachricht an Sophie: Mein Zug hat Verspätung",
-        "situationDe": "Sophie ist noch bis Mittwoch in Dresden. Heute ist Dienstag: Sie fahren noch einmal nach Dresden und treffen Sophie um 14 Uhr am Hauptbahnhof. Aber Ihr Zug hat jetzt 30 Minuten Verspätung.",
+        "situationDe": "Sophie ist noch bis Mittwoch in Dresden. Heute ist Dienstag: Sie fahren nach Dresden und treffen Sophie um 14 Uhr am Hauptbahnhof. Aber Ihr Zug hat jetzt 30 Minuten Verspätung.",
         "taskDe": "Schreiben Sie Sophie eine Nachricht zu allen drei Punkten (25 bis 35 Wörter).",
         "leitpunkte": [
           {
@@ -3132,15 +3132,15 @@
         "type": "fill_blank",
         "role": "check",
         "topic": "g.wortbildung-er-in",
-        "promptDe": "Emre ist Teilnehmer im Kurs A1, und Arta ist auch ___. (der Teilnehmer → die …)",
-        "promptEn": "The feminine form of Teilnehmer.",
-        "answer": "Teilnehmerin",
+        "promptDe": "Arjun ist ein Freund von Sophie, und Olena ist auch eine ___. (der Freund → die …)",
+        "promptEn": "The feminine form of Freund.",
+        "answer": "Freundin",
         "accepted": [
-          "Teilnehmerin"
+          "Freundin"
         ],
         "explanation": {
-          "de": "Arta ist eine Frau: „die Teilnehmerin“ – mit „-in“.",
-          "en": "Arta is a woman: Teilnehmerin, with -in."
+          "de": "Olena ist eine Frau: „die Freundin“ – mit „-in“.",
+          "en": "Olena is a woman: Freundin, with -in."
         },
         "origin": "agent"
       },
@@ -3367,8 +3367,8 @@
     },
     {
       "id": "a1.1-u10-rm06",
-      "de": "Entschuldigung, ist hier noch frei?",
-      "en": "Excuse me, is this seat free?",
+      "de": "Entschuldigung, ist hier noch frei? Kann ich hier sitzen?",
+      "en": "Excuse me, is this seat free? May I sit here?",
       "function": "im Zug nach einem Platz fragen",
       "forTemplate": "sd1.sp3"
     },
