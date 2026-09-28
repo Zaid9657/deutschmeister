@@ -116,7 +116,7 @@ node scripts/course-v2/validate.mjs <level|unit-file|--all> [--json] [--stage S|
   (`validate.mjs a2.1`) and skip on a single file.
 - The validator does not re-check shapes: run the checker too.
 
-### 3.1 Implemented rules (40)
+### 3.1 Implemented rules (43)
 
 | Rule | Stage | What it checks |
 |---|---|---|
@@ -135,11 +135,14 @@ node scripts/course-v2/validate.mjs <level|unit-file|--all> [--json] [--stage S|
 | LEX-04 | S | Off-list share within the level limit; extension words receptive |
 | LEX-05 | spec | New-word counts and productive share per unit; `lexiconBlocks` = the `lexicon.json` allocation |
 | LEX-07 | T | Lexicon hygiene: one gloss per lemma, feminine pairs, `plural_kind`, `wordId: null`; a lemma a lower level allocated is re-allocated only by `promotions` (reported on the higher entry); a `-N` homograph needs its own gloss |
+| TXT-01 | S | Sentence metrics per level (`level-profiles.json` `sentence`): long sentences, the mean and subordinate clauses of the course's texts (ratchet); subordinate clauses in the metalanguage (ratchet); outliers and exam-text sentences (advisory) (§3.1c) |
 | TXT-02 | S | Exam texts within their Teil template's length band |
 | TXT-03 | S | Input sizes: lines, words, seconds per level |
 | TXT-04 | T | Instructions ≤ 90 characters; exam stems within `examStemChars`; template instructions ≤ 200 |
 | ITM-01 … ITM-11 | I | Answer follows from the German prompt; choice items; key balance; R/F not copied; task shapes; pools of 16 + reserves 4–6 (no reserve repeats a pool item's POS-masked key); `exact`; `caseSensitive`; sentence-building orders; accepted forms; static `{de, en}` explanations (extensions: §3.1b) |
+| ITM-12 | I | Error tags and repair pools: a point introduced productively has tagged reserve items; reserve items and error corrections carry a tag (ratchet); register/negation tags (advisory) (§3.1c) |
 | ITM-13 | I | Audio keys: a dictation key is typeable (only characters the checker folds) and its audio (`say`, else `de`) grades CORRECT against it; dictation length per band (advisory); „Frage/Aussage" follows the played text (§3.1b) |
+| CON-01 | S | Cast consistency: phone, address and age as the cast bible (ratchet); an extra's surname, one voice for two people, a speaker missing from `spec.cast` (advisory) (§3.1c) |
 | CON-06 | S | Facts carry https sources, a fresh check date and `verification: "verified"`; in a `draft` unit a sourced `partial`/`pending` fact with a reason in `notes` is a warning (§3.1a); a unit that states a country-wide rule, or whose plan names a Landeskunde point, has a fact or a Landeskunde reason (§3.1b) |
 | EXM-01 | T | Exam blocks match their template: items, options, plays, block choice set (count, kind, reuse), no-match key, every answer a choice key, scaffold limits, each `⟦NN⟧` gap filled once |
 | EXM-02 | T | Scaffolding only where the template allows it; never in .2; pictorial Teile only as the text variant in .1 |
@@ -294,6 +297,69 @@ fifth round of a class is a rail, not a sixth round). Each has a passing and a f
 | a1.1 r4 F01 residual | `grammar-spine.json` — **not changed** | `g.muessen-duerfen-man` keeps `chunkFrom` a1.1-u08. The spine allows one `chunkFrom` per unit (spine.md §2, GRM-01 counts it with the unit's declared chunk), and a1.1-u02 already is `g.wortbildung-er-in`'s; a second would fail GRM-01 on u02. The spine's own remedy for „Wie schreibt man das?" is its D21 Redemittel whitelist, now folded into `detectors.json`: `det.man` („wie schreibt man das", „wie sagt man", „wie spricht man"), `det.akkusativ-pronomen-ihn`, `det.reflexiv-pronomen`, `det.dativ-pronomen` (the four D21 rows). | — |
 | a1.1 r5 F05, unit part (u05, u07, u08, u09) | — | Not edited here (unit files); the genitive instructions are GRM-04 advisories on those units for their fixers. | — |
 
+### 3.1c The a1.1 unit reviews u01–u12 (rule-smith 2026-09-28)
+
+The deferred rail items of the twelve a1.1 unit reviews (r1–r3 each; `rails.txt`, `wf26-rails.txt`,
+`a11-code-deferred.md`: 206 items, deduplicated into the rows below). The class rule of CLAUDE.md holds — a finding
+class is closed with a rule and a test, never with a list of ids. **Severity:** a blocker only where a learner is
+graded wrong or shown wrong German; every other rail is a ratchet (a count that may only go down) or an advisory.
+The new checks have a passing and a failing fixture in `tests/course-v2-validate-rails3.test.mjs` (100 tests; at the
+helper level where a check is a pure function — `answerClassCue`, `baselineSolver`, `learnerTurnGaps`,
+`suffixClaims` …), the false-positive rows are pinned by their fixture sentences there and by the existing suites;
+every rule runs over every course (`validate.mjs --all`). The a1.1 counts are those of the run that closed this round (content was being
+edited at the same time; see the handback for the unit fix list).
+
+**False positives closed** (no new severity):
+
+| Review finding(s) | Where | What changed |
+|---|---|---|
+| u01 r1/r2, u03 r2, u05 r1 (GRM-04, the largest class: 171 → ~45 unit advisories) | GRM-04, `metalanguage.mjs` | The can-do frame („Sie können …", „Ich kann …") on title.canDo, endLines and Lernziele is not the modal it names, and the object clause of an indirect/ob frame after „fragen, …" is not the construction either; the Teil template's own wording, the learner-address „Ihr-/Ihnen", a hit whose content words are all metalanguage, a one-token formula in a prompt or option and a lexicon chunk (a reflexive or separable lemma of the lexicon) are exempt and counted as `instructionSuppressed`. Choice keys are read receptively. A `reportOn: 'chosen'` detector reads only what the learner chooses (the gap filled with the key; an error correction's quoted source is never the hit). Multi-word lemmas allocated by the position license their hits on every surface. Lernziele are reported once, on the can-do registry (`learnerDe`). File mode reads the prose of the rule cards the unit shows first. |
+| u01 r2, u02 r1/r3, u05 r2, u07 r2 (LEX-01/03) | `lexicon.mjs`, `compounds.mjs`, LEX-01, LEX-03 | An apostrophe phrase contributes its parts („Wie geht's" → geht); the cast's `languages` are known; `pluralVariants` (SCHEMA §6) are noun forms; the lexicon outranks the core floor for ordinals and taught adverbs (erste, früher, samstags … before their allocation); „willkommen" is no will+kommen (a finite aux/modal is never a compound's left part); a spelled letter chain is letters; the file's extras are known in production; multi-word glosses gloss each word; `zwo` is a number word. |
+| u02–u06 (detectors) | `detectors.mjs` | `notVerbForm` (a lexicon infinitive is no adjective), `notAfterNumber` (ordinals), `notAfterIhrVerb` — narrowed on the registry handoff to 2nd-plural forms that are never 3rd singular (`IHR_ONLY_VERBS`: „Habt ihr Zeit?" skips, „Sie sucht ihr Handy." hits) —, a separable bracket needs a lexicon verb with a matching finite form for an adverb particle („zusammen", „weiter"), the imperative clause skips option pairs, labels and unknown or capitalised first words, a W-word before a quotation opens no clause, `lexicalNouns` (Name at A1.1), `verabredet` a lexicalised state. The list overlays folded into `detectors.json` were deleted; only scalar fields remain in `DETECTOR_OVERLAYS` (see openIssues for the registry). |
+| u02 r2 F01 / r3 F08, u06 r1 F10 | `orders.mjs` | `constituents()` chunks a key into tiles („um elf Uhr", „zwei Kilo Äpfel", „zu" + infinitive is no phrase); `indefLast` owes a clause-final ein-/kein- object after a time/place adverb its swap; a fronted negated object („Keine Antwort habe ich …") is not owed (contrastive only); `tilesBuildKey()`. |
+
+**New checks:**
+
+| Review finding(s) | Rule | What it checks | Severity (a1.1 now) |
+|---|---|---|---|
+| u02 r2 F01 / r3 F08; SCHEMA §3.1 `tiles` (registry handoff) | **ITM-01** / **ITM-09** | An order-family error correction accepts every order the enumerator derives from its key — from its authored `tiles` (ITM-09) or, without them, the chunker (ITM-01) — unless promptDe fixes position 1. Tiles that do not build the key: advisory. | blocker (0); other levels: b1.2-u04 ls1-p10, ls1-p11, ls3-p11, b2.2-u04 ls1-p11 |
+| u12 r1 F02 | ITM-01 | `perfekt-aux-participle` joins the tag families whose correction names the category („haben oder sein?", „Hilfsverb") or accepts its alternatives. | blocker (0); other levels: a2.2-u04 ls3-p10; b2.1-u04 ls3-p09, ls3-p10, ls3-r05, ls3-r06, c05 |
+| u01 r1 F04 | ITM-01 | promptEn restricting a typed gap's answer class („the city", „(country)") is carried by promptDe; a name class is advisory. | blocker (0) |
+| u04 r2 F03, u05 r2 | ITM-01 | A plural-determiner cue on a same-form-plural noun; an error correction whose fix is a same-form plural. | blocker (0) |
+| u06 r1 F01; u06/u09 r1 F07; u11 r2 F02; u11 r3 F03; u12 r2 F03 | ITM-01 | „Verneinung" names a category; a gist key standing in the step/input title; an explanation quoting a later item's key; a bracketed cue that IS the key; structured distractors all of the other polarity; a tense stimulus and question sharing the time word; the calque „Was spricht …?". | advisory (39) |
+| u08 r3 F05, u09 r3 F04, u10 r1, u12 r2 F05/F07 | **ITM-02** | The no-German baseline solver (key echo = unique maximum overlap with the quoted stem; polarity/function first word; a long coordinated option; a count list); a gist/detail distractor whose content noun or participle the step's input never says. | ratchet on proof items (1: u10 q01), else advisory (68) |
+| u11 r3 F04 | **ITM-04** | A proper name (cast, extras, names.json) in an exam R/F statement occurs in its text. | advisory (0) |
+| u05 r3 | **ITM-06** | A double-plural noun (`DOUBLE_PLURALS`: Balkone/Balkons …) drilled by lex.articlePlural lists both plurals (`pluralVariants`), and a typed key accepts both. | blocker (0) |
+| u01 r1 F05; u07 r1 F03 | **ITM-07** | A level or room code (`IDENTIFIER_RE`) takes exact „name". A typed exact-number clock hour 1–12 accepts the hour + 12 unless the item, its input or a written-digit time places it before noon. | identifiers: blocker (0); an evening hour by the item's own words: blocker (0); undecided: ratchet (3: u07 ls1-i03, ls3-i03, u11 ls2-i04) |
+| u03 r1 F02 | ITM-09 | A Ja/Nein-Frage key names the verb position in promptDe. | advisory (11) |
+| u02 r2, coordinator (SCHEMA form `acceptedWhy`) | **ITM-10** | Form fields: `acceptedWhy` explains accepted forms (blocker); > 12 accepted forms (advisory); an explanation's „‚X' oder ‚Y'" is accepted (advisory). | blocker (0) |
+| u11 r2 F07 | **ITM-11** | A quotation after „X sagt/schreibt/fragt:" in an explanation is in the step's text, the item's stimulus or (outside a step input) any line of the unit, `say` included; „…" marks a cut. | advisory (0) |
+| u01 r1 F15 / r2 F11, u03 r3 F04, u06 r2 F05; ErrorTag `verb-ending`/`negation` | **ITM-12** (new) | A point introduced productively has a tagged reserve item on it; every reserve item and error correction carries a tag; register tags where the frame prints the pronoun; „nicht oder kein" without `negation`. | ratchet (85), advisory (6) |
+| u03 r2 F01 / r3 F01; u08 r1 F03 / r2 F03 (the ITM-14 proposal folded here); the coordinator's typed verb-form class | **ITM-13** | The player's own checkItem grades an unchanged error-correction source WRONG (blocker); a typed gap's person-ending twin, unchanged stem vowel or possessive swap WRONG (ratchet: the checker forgives them, STRICT_TOPIC does not match v2 ids); a Duden doublet (gern/gerne, okay/OK, tschüss/tschüs) of a typed key CORRECT (WRONG: blocker; TYPO: ratchet; a dictation may be TYPO). | blocker (0); ratchet (9: the possessive swaps of u03/u06) |
+| u02 r1 F16 / r2 F09 / r3 F08, u08 r1 F02, u09 r1 F08 | **CON-01** (new) | Phone, street address and age as the cast bible (`contact.phone`, `contact.addresses` by from/until, age + band offset); an extra's surname a cast surname; one voice for two speakers; a speaking cast id missing from `spec.cast`. | ratchet (0), advisory (6) |
+| u02 r1 F07 / r2 F08 / r3 F07, u06 r3 F05, u11 r2 F06 | **TXT-01** (new) | Texts: a sentence over `maxWords`, the mean over `meanWordsMax`, subordinate clauses over the limit (ratchet). Metalanguage (instructions, situations, canDo, Lernziele — reported once on the registry —, endLines, explanations, rule-card prose at first use): subordinate clauses (ratchet), > 1.5 × maxWords (advisory). Exam-text sentences over maxWords (advisory). | ratchet (9), advisory (12) |
+| u04 r1 | **TXT-02** | A template measured „per ad" is measured per ad. | (fewer false blockers) |
+| u03 r2 | **TXT-03** | A micro-output's words/seconds inside the level profile band, unless named in `deviation.reason`. | advisory (1) |
+| u05 r2 | **TXT-04** | A Sie form in the line a du-register prompt hands the learner. | advisory (0) |
+| coordinator (TeilTemplate `speakers`); u09 r2 F04 | **EXM-01** | Distinct voices per text = the template's `speakers`; a pictorial Teil's text-variant option the text never mentions. | advisory (0) |
+| u02 r2; u10 r1 F17; u11 r2 F05 | **EXM-03** | exact „name" on a form answer mixing words and digits; a 1st-person verb cue without its 3rd person; a cue inside the Anrede/Gruß every draft carries. | advisory (6) |
+| u01 r1/r2; u10 r2 F05 | **EXM-04** | A performance criterion (its label an infinitive) the part never asks for: blocker at full length, advisory when the Prüfungsfokus entry is reduced; a bare question offered for the cards-request Teil. | blocker (0), advisory (4) |
+| u01 r1 F06, u03 r2 F07; u06 r2 F06; u10 r1 F08 / r2 F02 / r3 F02; u11 r2 F01 / r3 F01; u12 r2 F03 / F10 / r3 F06; u08 r2 F07 | **GRM-05** | Unquoted cited forms; a drilled form no label or card shows (advisory). At the card's first unit: „Wörter/Nomen auf -X sind der|die|das" against the known nouns in -X, an exhaustive „die anderen Verben haben haben" against the known sein-Perfekt verbs, a „Position N" column without N−1 or with „ich habe" under it (ratchet); the calque; an unconditioned „X steht nach dem Verb" while an item of the point accepts another place (advisory). | ratchet (0), advisory (15) |
+| u08 r1 F08 | **GRM-02** | A point introduced productively is listed under `review` in ≥ 1 later unit spec of the band (silent while there is none). | advisory (3: g.kein, g.moegen, g.wollen) |
+| u01–u12 (the produced-lemma class of eight units), u07 r2 F05 / r3 F06, u10 r2 F03 / r3 F04, u12 r2 F04 / r3 F03 | **LEX-03** | Typed recall of the unit's receptive word; a typed number word when every number lemma is receptive; a lemma PRODUCED (model sentence, Redemittel, learner cards and turns, hintWords, Leitpunkt cues and nouns, checklist, model text, micro-output model) that is receptive or allocated later; a bracketed cue's head word (first noun or verb; a feminine form → its masculine entry; a stem cue „wohn-") allocated later or nowhere; an authored dictation or dictation.fromInput line spelling a receptive-only lemma of the cumulative lexicon or a word not known yet. | ratchet (99: check/proof cues and the produced class), advisory (22) |
+| u01 r3 F05b; u03 r1 F05; u08 r1 F05; u10 r2 F04 / r3 F05; u11 r2 F09 | **LEX-07** | An A-level example with a word not known at its unit (with or without exampleEn); a cast member named before their first unit or against the bible; „Herr/Frau X" not in the cast or names.json. | advisory (24) |
+| u01 r1 F02, u02 r1 F03 / r2 F05, u05 r1 F03, u06 r1 F06; u07 r1 F02, u10 r1 F07; coordinator (`Check.proofs[].microOutput`) | **ALL-02** | A proof may name a micro-output (blocker if unresolved); an interaction can-do proven by an item alone with no spoken performance (ratchet); own data proven by a copied form, a rubric that scores no criterion for the function, an object noun no card names, the learner's own model turns that never ask/answer or never carry the can-do's „wie spät …?" (advisory). | ratchet (0), advisory (13) |
+| u09 r1 F07 | **ALL-03** | A Prüfungsfokus Teil the plan's `examTeile` does not list is named in `deviation.reason` (sd1/ga2 lanes). | advisory (4) |
+| u12 r3 F07 | LEX-01 | A separable lemma in split form („macht … mit") is looked up as the lemma and its allocation checked; the new read surfaces (recap, Folge title, Lernziele, Redemittel function, openingLine, hints, input titles, Aussprache focus, block titles, Fokus) are advisory. | advisory |
+| coordinator (optional) | TXT-03 / walk | `MicroOutput.modelDe` is a production surface (LEX-03, TXT-01). | — |
+
+Not built (see openIssues in the handback): a CON rule against a later unit's productive anchor on ≥ 3 earlier
+surfaces (u07 r1 F01 — LEX-03's produced class covers the production half); ALL-02 textTypes as a hard finding
+(u08 r1 F11 — nobody is graded wrong: stays advisory); the clock-time/Gleis agreement of a lexicon example with its
+unit's text (u10 r2 F04b); ALL-03 grammar differences (plan prose against spine ids); the detector requests
+(det.akkusativ-pronomen for mich/dich/uns/euch, „der Welt" in det.genitiv-feminin-attribut, a letzt-/nächst-/jed- time
+noun detector) — `detectors.json` is the registry owner's.
+
 ### 3.2 Not implemented yet, and why
 
 | Rules | Why not (yet) |
@@ -302,10 +368,10 @@ fifth round of a class is a rail, not a sixth round). Each has a passing and a f
 | ALL-01, ALL-04, ALL-05, ALL-06 | Level/band structure and quota rules; need complete levels (course.json + 12 units) to be meaningful. Next after the first level reaches T. |
 | GRM-03, GRM-06 | Inventory floors need the full A1/A2 allocation; warm-up interleaving needs S/I content across units. |
 | LEX-06 | Needs the private `list_ref` table (`private/list-ref.json`), never committed. |
-| TXT-01 | Sentence metrics (ratchet/hard): not built in E0-2; the level profile's `sentence` limits are ready for it. |
-| ITM-12 | Course-level repair-pool coverage; needs every unit of a level at stage I. |
+| TXT-01 (partly) | Built 2026-09-28 (§3.1c) as ratchets and advisories; the hard form waits until the metalanguage limits are calibrated against each level's own frames. |
+| ITM-12 (partly) | The unit-local half is built (§3.1c); course-level repair-pool coverage (every tag of every level has a pool) needs every unit of a level at stage I. |
 | AUD-01 … AUD-05 | Audio rules need `registries/voices.json` (speaker gender ↔ voice) and the audio run. The compiler already resolves every line's voice from the cast bible or the file's `extras`. |
-| CON-01, CON-02, CON-04, CON-05 | Cast/story consistency rules; need the cast bible checks and S content across units. |
+| CON-02, CON-04, CON-05 | Story consistency across units; need S content across units. CON-01 (persona data, surnames, voices, `spec.cast`) is built (§3.1c). |
 | AST-01, AST-02 | No unit uses images yet (the fixture's `assets` is empty). The checker already enforces the Asset shape (alt text, licence record, prompt when generated). |
 | LNG-01 … LNG-04 | Need Hunspell / LanguageTool / spaCy tool chains; not installed (no new npm dependencies in this phase). |
 | TIM-01 … TIM-05 | Time model not built; the compiler's `minutesPlanned` uses the level profile's design minutes per step kind. |
@@ -395,6 +461,7 @@ node scripts/course-v2/compile.mjs <level|--all> [--check] [--content <dir>] [--
 | `tests/course-v2-schema.test.mjs` | fixture verbatim; SCH-01/REF-01/KEY-01 on the fixture; the §8.1 stage schema (strip to each stage, absent/required per role); §15.4 lane pack and §15.7 choice fixtures in memory; 30+ mutations each failing at the expected path/rule/message; the amended text-type shape; the real `text-types.json` and `lanes/*.json` pass SCH-01/REF-01 (delivery, instructions ≤ 200 characters naming the play count, the four pictorial Teile of BLUEPRINT §4.9 with their text variants); `BANK_KEY_RE` matrix (47,520 keys) and garbage; compiler determinism, idempotency, §15.5 equality, reserve index, ledger tombstones, refusal; both CLIs |
 | `tests/course-v2-compile.test.mjs` | partial levels: 1 of 12 units compiles while the checker still reports REF-01; a missing unit is a `coming` row filled from `specs.json`; a unit failing its check (or not JSON) is skipped with its errors, writes nothing and keeps its ledger ids; another level's broken file is ignored; an error outside the units refuses the level; determinism, idempotency, minified output; `unitOfId`; the CLI's skip line and exit 0 |
 | `tests/course-v2-validate.test.mjs` | every validator rule with a passing and a failing fixture (parsed from SCHEMA.md); §15.6 expectations (incl. the ITM-01 row and its fix); the a1.1-u04 r4–r5 rails (ITM-01 categories and article deletion, the LEX-01 surface walk and its allowlist, CON-06 without facts, LEX-03 glossTyped, the a1.1-u04 detector fixtures, the instruction scope, det.genitiv-feminin-attribut, det.moechte-infinitiv on card prose, GRM-05 chunk forms); stage gates incl. the spec inference and COV-1's stage-T severity; detectors' own examples; the §3.1a morphology, core list (size, bans, precedence), licensed forms and LEX-03 on a complete synthetic lexicon; LEX-07 duplicates vs homographs; CON-06 draft warnings; UnitSpec `lexiconBlocks` `{6..20}`; CLI; every §3.1b rail with its review fixture (the detector review sentences also against the real spine and detectors) |
+| `tests/course-v2-validate-rails3.test.mjs` | the §3.1c rails of the a1.1 unit reviews u01–u12: one failing and one passing synthetic fixture each (the detector narrowing, the chunker and authored tiles, compounds and metalanguage, the lexicon's precedence; ITM-01 answer class, cue = key, polarity, tense time word, the aux family; ITM-02 key echo and input distractors; ITM-04 names; ITM-06 double plurals; ITM-07 identifiers and clock hours; ITM-09 tiles on an error correction; ITM-10 form acceptedWhy; ITM-11 quotations; ITM-12 repair pools; ITM-13 wrong forms and doublets; CON-01; TXT-01/02/03/04; EXM-01/03/04; GRM-02/04/05; LEX-01/03/07 incl. `pluralVariants`; ALL-02 micro-output proofs and learner turns; ALL-03) |
 | `tests/check-answer.test.mjs`, `tests/course-v2-player.test.mjs` | the answer checker's ellipsis and number-word folds (live and v2), `exact: 'number'` on dictations and fill-ins (the a2.2-u04 c07 / a1.2-u04 c08 fixtures, „neun"/„nuen"/„zehn" against „9"), the generator's `exact` |
 | `tests/course-v2-ai.test.mjs`, `…-entitlement…`, `…-completion…` | the graders and speaking functions read the compiled banks; entitlement; the one completion function — incl. the SCHEMA §5 `CLOSING` of both kinds, the learner's lane, the Diagnose never counting, form tasks, and every authored `course.json` and compiled manifest |
 

@@ -163,6 +163,8 @@ export function missingOrders(item) {
     // each frontable tile in the Vorfeld
     seq.forEach((t, i) => {
       if (i === 1 || i === subj || i === 0 || !FRONTABLE.has(kinds[i])) return;
+      // a negated object („keine Antwort") opens the sentence only under contrast: not an order the key owes
+      if (kinds[i] === 'np' && /^kein(?:e|en|em|er|es)?$/.test(bare(words(t)[0] || ''))) return;
       want([t, verb, ...middle.filter((k) => k !== i).map((k) => uncap(seq[k]))], `„${t}" in the Vorfeld`);
     });
   }

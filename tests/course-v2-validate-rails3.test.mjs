@@ -548,3 +548,35 @@ describe('LEX-01 / LEX-03 pluralVariants are known forms (SCHEMA §6, 2026-09-28
   test('fail: without pluralVariants „Kommata" is unknown', () => assert.equal(knownForms(bundle({ units: [unit(5)], lexicon: lex({}) }).ctx, 'a1.1', 5).has('kommata'), false));
   test('pass: with pluralVariants', () => assert.equal(knownForms(bundle({ units: [unit(5)], lexicon: lex({ pluralVariants: ['Kommata'] }) }).ctx, 'a1.1', 5).has('kommata'), true));
 });
+
+describe('ITM-01 a same-form plural behind a plural-capable cue (a1.1-u04 r2 F03)', () => {
+  const lex = [lx('lx.lehrer', 'Lehrer', 'NOUN', 'a1.1-u02', { article: 'der', plural: 'Lehrer', plural_kind: 'regular', feminine: 'die Lehrerin' })];
+  const run = (accepted, acceptedWhy) => rule('ITM-01', bundle({ lexicon: lex, units: [unit(6, { steps: [situation('a1.1-u06-ls1', { pool: { items: [item('a1.1-u06-ls1-p03', { type: 'fill_blank', topic: 'g.possessiv-mein-dein', promptDe: 'Ich suche ___ Lehrer. (mein)', answer: 'meinen', accepted, ...(acceptedWhy ? { acceptedWhy } : {}) })] } })] })] }));
+  test('fail: „meinen Lehrer" keyed, „meine Lehrer" not accepted', async () => has(await run(['meinen']), /same form in the plural/, 'blocker'));
+  test('pass: the plural accepted', async () => hasNot(await run(['meinen', 'meine'], { meine: 'grammatisch: Plural' }), /same form in the plural/));
+});
+
+describe('EXM-04 a performance the rubric scores is asked for (a1.1-u01 r1/r2)', () => {
+  const RUBRIC = JSON.parse(readFileSync(join(REG, 'rubrics', 'speaking', 'sd1-sp1.json'), 'utf8'));
+  const run = (instructionsDe) => {
+    const b = bundle({ units: [unit(1, { spec: { grammar: { new: [], chunk: [], review: [] }, lanes: { primary: 'sd1', pruefungsfokus: [{ template: 'sd1.sp1', length: 'full', slot: 'sprechen' }] } }, steps: [{ id: 'a1.1-u01-ls5', kind: 'sprechen', task: { bankKey: 'a11-u01-s', lane: 'sd1', parts: [{ template: 'sd1.sp1', mode: 'monologue', profile: 'sd1-sp1', situationDe: 'Im Kurs.', instructionsDe }] } }] })] });
+    ingest(b.ctx, RUBRIC, 'registries/rubrics/speaking/sd1-sp1.json');
+    return rule('EXM-04', b);
+  };
+  test('fail: only „Stellen Sie sich vor." — buchstabieren and nummer are scored, never asked', async () => has(await run('Stellen Sie sich vor.'), /performance nobody requested/, 'blocker'));
+  test('pass: all three asked', async () => hasNot(await run('Stellen Sie sich vor. Buchstabieren Sie Ihren Namen und nennen Sie Ihre Telefonnummer.'), /performance nobody requested/));
+});
+
+describe('LEX-03 a produced lemma is productive (the class of eight a1.1 units)', () => {
+  const lex = (role) => [lx('lx.birne', 'Birne', 'NOUN', 'a1.1-u04', { article: 'die', plural: 'Birnen', plural_kind: 'regular', role }), lx('lx.moechten', 'möchten', 'VERB', 'a1.1-u04', { verb_forms: { '3sg': 'möchte' } })];
+  const run = (role) => rule('LEX-03', bundle({ lexicon: lex(role), units: [unit(4, { redemittel: [{ id: 'a1.1-u04-rm01', de: 'Ich möchte eine Birne.', en: 'I would like a pear.', function: 'etwas kaufen' }] })] }));
+  test('fail: a receptive lemma in a Redemittel', async () => has(await run('receptive'), /asked to produce „Birne"/, 'ratchet'));
+  test('pass: productive', async () => hasNot(await run('productive'), /asked to produce/));
+});
+
+describe('LEX-03 a productive phrase covers its words (a1.1-u01: „Guten Tag!" before lx.tag)', () => {
+  const lex = [lx('lx.guten-tag', 'guten Tag', 'PHRASE', 'a1.1-u01'), lx('lx.tag', 'Tag', 'NOUN', 'a1.1-u07', { article: 'der', plural: 'Tage', plural_kind: 'regular' })];
+  const run = (de) => rule('LEX-03', bundle({ lexicon: lex, units: [unit(1, { redemittel: [{ id: 'a1.1-u01-rm01', de, en: 'x', function: 'begrüßen' }] })] }));
+  test('fail: „Der Tag ist schön." — Tag is allocated at u07', async () => has(await run('Der Tag ist schön.'), /asked to produce „Tag"/, 'ratchet'));
+  test('pass: „Guten Tag!" — the phrase is productive at u01', async () => hasNot(await run('Guten Tag!'), /asked to produce „Tag"/));
+});

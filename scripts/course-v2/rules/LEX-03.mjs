@@ -306,10 +306,26 @@ function producedFindings(ctx, doc) {
       byForm.get(f).push({ e, at });
     }
   }
+  // multi-word lemmas the learner may produce here („guten Tag", „auf Wiedersehen"): their words are theirs, not
+  // the single-word lemma a later unit allocates („Tag" a1.1-u07, „Wiedersehen" b1.1-u01)
+  const phrases = [];
+  for (const e of lex) {
+    const at = unitPosition(e?.unit);
+    const words = String(e?.lemma || '').replace(/^sich\s+/i, '').split(/\s+/).map((x) => x.toLowerCase().replace(/[^\p{L}’']/gu, '')).filter(Boolean);
+    if (words.length < 2 || at === null || at > here || !(e.role === 'productive' || promoted.has(e.id))) continue;
+    phrases.push(words);
+  }
   for (const sf of productionSurfaces(doc)) {
     const toks = tokens(sf.de);
+    const covered = new Set();
+    for (const words of phrases) {
+      for (let i = 0; i + words.length <= toks.length; i += 1) {
+        if (words.every((wd, k) => toks[i + k].lower === wd)) for (let k = 0; k < words.length; k += 1) covered.add(i + k);
+      }
+    }
     const bad = [];
     toks.forEach((t, i) => {
+      if (covered.has(i)) return;
       const w = t.lower;
       if (w.length < 3 || FUNCTION_WORDS.has(w) || NUMBER_WORDS.has(w) || CORE.has(w) || /^\d/.test(w) || (sf.meta && isMetalanguage(w))) return;
       if (sf.nounsOnly && !/^\p{Lu}/u.test(t.text)) return;
