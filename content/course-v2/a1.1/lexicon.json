@@ -96,7 +96,7 @@
       "id": "lx.freut-mich",
       "lemma": "freut mich",
       "pos": "PHRASE",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u01",
       "block": 1,
       "list_ref": "derived:freuen",
@@ -136,7 +136,8 @@
       "gloss": {
         "en": "language school"
       },
-      "example": "Ich lerne Deutsch in einer Sprachschule in Leipzig.",
+      "example": "Die Sprachschule ist in Leipzig.",
+      "exampleEn": "The language school is in Leipzig.",
       "wordId": null
     },
     {
@@ -150,7 +151,8 @@
       "gloss": {
         "en": "online"
       },
-      "example": "Wie lange bist du jeden Tag online?",
+      "example": "Emre lernt online Deutsch.",
+      "exampleEn": "Emre is learning German online.",
       "wordId": null
     },
     {
@@ -167,8 +169,8 @@
       "gloss": {
         "en": "chat (online)"
       },
-      "example": "Emre schreibt im Chat: Hallo!",
-      "exampleEn": "Emre writes in the chat: Hello!",
+      "example": "Im Chat: Hallo, Emre!",
+      "exampleEn": "In the chat: Hi, Emre!",
       "wordId": null
     },
     {
@@ -179,15 +181,15 @@
         "3sg": "begrüßt",
         "perfekt": "hat begrüßt"
       },
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u01",
       "block": 1,
       "list_ref": "A2",
       "gloss": {
         "en": "to greet, to welcome"
       },
-      "example": "Frau Schulz begrüßt die neuen Teilnehmenden.",
-      "exampleEn": "Mrs Schulz welcomes the new participants.",
+      "example": "Frau Schulz begrüßt Priya.",
+      "exampleEn": "Mrs Schulz greets Priya.",
       "wordId": null
     },
     {
@@ -284,7 +286,7 @@
       "id": "lx.woher",
       "lemma": "woher",
       "pos": "ADV",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u01",
       "block": 2,
       "list_ref": "A1",
@@ -339,7 +341,7 @@
       "article": "der",
       "plural": "Kurse",
       "plural_kind": "regular",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u01",
       "block": 2,
       "list_ref": "A1",
@@ -379,15 +381,15 @@
       },
       "separable": true,
       "reflexive": "akk",
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u01",
       "block": 2,
       "list_ref": "A1",
       "gloss": {
         "en": "to introduce oneself"
       },
-      "example": "Hallo, ich heiße Priya, ich komme aus Indien und ich wohne in Leipzig.",
-      "exampleEn": "Hello, my name is Priya, I’m from India and I live in Leipzig.",
+      "example": "Bitte stellen Sie sich vor.",
+      "exampleEn": "Please introduce yourself.",
       "wordId": null
     },
     {
@@ -404,8 +406,8 @@
       "gloss": {
         "en": "place of residence"
       },
-      "example": "Mein Wohnort ist Leipzig.",
-      "exampleEn": "I live in Leipzig.",
+      "example": "Wohnort: Leipzig.",
+      "exampleEn": "Place of residence: Leipzig.",
       "wordId": null
     },
     {
@@ -566,8 +568,8 @@
       "gloss": {
         "en": "Turkish (language)"
       },
-      "example": "Emre spricht Türkisch und Englisch.",
-      "exampleEn": "Emre speaks Turkish and English.",
+      "example": "Emre spricht Türkisch und ein bisschen Deutsch.",
+      "exampleEn": "Emre speaks Turkish and a little German.",
       "wordId": null
     },
     {
@@ -602,8 +604,8 @@
       "gloss": {
         "en": "mother tongue, first language"
       },
-      "example": "Meine Muttersprache ist Türkisch.",
-      "exampleEn": "My first language is Turkish.",
+      "example": "Muttersprache: Türkisch.",
+      "exampleEn": "First language: Turkish.",
       "wordId": null
     },
     {
@@ -613,7 +615,7 @@
       "article": "die",
       "plural": "Zahlen",
       "plural_kind": "regular",
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u02",
       "block": 1,
       "list_ref": "A1",
@@ -664,7 +666,7 @@
       "id": "lx.null",
       "lemma": "null",
       "pos": "NUM",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u02",
       "block": 1,
       "list_ref": "A1",
@@ -679,7 +681,7 @@
       "id": "lx.eins",
       "lemma": "eins",
       "pos": "NUM",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u02",
       "block": 1,
       "list_ref": "A1",
@@ -694,7 +696,7 @@
       "id": "lx.zwei",
       "lemma": "zwei",
       "pos": "NUM",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u02",
       "block": 1,
       "list_ref": "A1",
@@ -724,7 +726,7 @@
       "id": "lx.zwanzig",
       "lemma": "zwanzig",
       "pos": "NUM",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u02",
       "block": 1,
       "list_ref": "A1",
@@ -736,33 +738,18 @@
       "wordId": null
     },
     {
-      "id": "lx.dreissig",
-      "lemma": "dreißig",
-      "pos": "NUM",
-      "role": "receptive",
-      "unit": "a1.1-u02",
-      "block": 1,
-      "list_ref": "A1",
-      "gloss": {
-        "en": "thirty"
-      },
-      "example": "Emre ist dreißig.",
-      "exampleEn": "Emre is thirty.",
-      "wordId": null
-    },
-    {
       "id": "lx.hundert",
       "lemma": "hundert",
       "pos": "NUM",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u02",
       "block": 1,
       "list_ref": "A1",
       "gloss": {
         "en": "(one) hundred"
       },
-      "example": "Wir zählen von null bis hundert.",
-      "exampleEn": "We count from zero to a hundred.",
+      "example": "Lernen Sie die Zahlen von null bis hundert.",
+      "exampleEn": "Learn the numbers from zero to a hundred.",
       "wordId": null
     },
     {
@@ -974,7 +961,7 @@
       "plural": "Studenten",
       "plural_kind": "regular",
       "feminine": "die Studentin",
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u02",
       "block": 3,
       "list_ref": "A1",
@@ -1019,8 +1006,8 @@
       "gloss": {
         "en": "waiter"
       },
-      "example": "Mein Bruder ist Kellner.",
-      "exampleEn": "My brother is a waiter.",
+      "example": "Er ist Kellner und Student.",
+      "exampleEn": "He is a waiter and a student.",
       "wordId": null
     },
     {
@@ -1121,7 +1108,7 @@
         "3sg": "versteht",
         "perfekt": "hat verstanden"
       },
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u02",
       "block": 4,
       "list_ref": "A1",
@@ -1178,8 +1165,8 @@
       "gloss": {
         "en": "to fill in (a form)"
       },
-      "example": "Bitte füllen Sie das Formular aus.",
-      "exampleEn": "Please fill in the form.",
+      "example": "Bitte das Formular ausfüllen!",
+      "exampleEn": "Please fill in the form!",
       "wordId": null
     },
     {
@@ -1196,7 +1183,8 @@
       "gloss": {
         "en": "reception (desk)"
       },
-      "example": "Priya arbeitet am Empfang.",
+      "example": "Herr Richter arbeitet am Empfang.",
+      "exampleEn": "Mr Richter works at reception.",
       "wordId": null
     },
     {
@@ -1206,30 +1194,34 @@
       "article": "die",
       "plural": "Anmeldungen",
       "plural_kind": "regular",
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u02",
       "block": 4,
       "list_ref": "A1",
       "gloss": {
         "en": "registration"
       },
-      "example": "Die Anmeldung ist im Büro.",
-      "exampleEn": "Registration is in the office.",
+      "example": "Die Anmeldung ist am Empfang.",
+      "exampleEn": "Registration is at reception.",
       "wordId": null
     },
     {
-      "id": "lx.kurz",
-      "lemma": "kurz",
-      "pos": "ADJ",
+      "id": "lx.rezeptionist",
+      "lemma": "Rezeptionist",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Rezeptionisten",
+      "plural_kind": "regular",
+      "feminine": "die Rezeptionistin",
       "role": "receptive",
       "unit": "a1.1-u02",
       "block": 4,
-      "list_ref": "A1",
+      "list_ref": "off-list:cast-job",
       "gloss": {
-        "en": "short; briefly"
+        "en": "receptionist (e.g. at a hotel)"
       },
-      "example": "Antworten Sie bitte kurz.",
-      "exampleEn": "Please answer briefly.",
+      "example": "Priya ist Rezeptionistin von Beruf.",
+      "exampleEn": "Priya is a receptionist by profession.",
       "wordId": null
     },
     {
@@ -1335,8 +1327,8 @@
       "gloss": {
         "en": "sister"
       },
-      "example": "Meine Schwester studiert in Charkiw.",
-      "exampleEn": "My sister studies in Kharkiv.",
+      "example": "Meine Schwester heißt Anu.",
+      "exampleEn": "My sister is called Anu.",
       "wordId": null
     },
     {
@@ -1346,7 +1338,7 @@
       "article": "der",
       "plural": "Söhne",
       "plural_kind": "regular",
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u03",
       "block": 1,
       "list_ref": "A1",
@@ -1371,8 +1363,8 @@
       "gloss": {
         "en": "daughter"
       },
-      "example": "Die Tochter von Amal heißt Rania.",
-      "exampleEn": "Amal’s daughter is called Rania.",
+      "example": "Die Tochter von Anu ist fünf.",
+      "exampleEn": "Anu’s daughter is five.",
       "wordId": null
     },
     {
@@ -1425,8 +1417,8 @@
       "gloss": {
         "en": "to show"
       },
-      "example": "Priya zeigt ein Foto von ihrer Familie.",
-      "exampleEn": "Priya shows a photo of her family.",
+      "example": "Priya zeigt Olena ein Foto.",
+      "exampleEn": "Priya shows Olena a photo.",
       "wordId": null
     },
     {
@@ -1480,8 +1472,8 @@
       "gloss": {
         "en": "partner"
       },
-      "example": "Sophie lebt mit ihrem Partner in Dresden.",
-      "exampleEn": "Sophie lives with her partner in Dresden.",
+      "example": "Der Partner von Priya heißt Arjun.",
+      "exampleEn": "Priya’s partner is called Arjun.",
       "wordId": null
     },
     {
@@ -1511,10 +1503,10 @@
       "block": 2,
       "list_ref": "derived:gehen",
       "gloss": {
-        "en": "How are you? (informal)"
+        "en": "How are you? – informal: Wie geht’s?; formal: Wie geht es Ihnen?"
       },
-      "example": "Hallo Olena, wie geht’s? – Danke, gut!",
-      "exampleEn": "Hi Olena, how are you? – Fine, thanks!",
+      "example": "Guten Tag, Herr Richter! Wie geht es Ihnen?",
+      "exampleEn": "Hello, Mr Richter! How are you?",
       "wordId": null
     },
     {
@@ -1711,7 +1703,7 @@
         "3sg": "liest",
         "perfekt": "hat gelesen"
       },
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u03",
       "block": 3,
       "list_ref": "A1",
@@ -1731,7 +1723,7 @@
         "3sg": "schläft",
         "perfekt": "hat geschlafen"
       },
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u03",
       "block": 3,
       "list_ref": "A1",
@@ -1782,7 +1774,7 @@
       "id": "lx.lieb",
       "lemma": "lieb",
       "pos": "ADJ",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u03",
       "block": 3,
       "list_ref": "A1",
@@ -1797,7 +1789,7 @@
       "id": "lx.viele-gruesse",
       "lemma": "viele Grüße",
       "pos": "PHRASE",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u03",
       "block": 3,
       "list_ref": "derived:Gruß",
@@ -2598,21 +2590,6 @@
       "wordId": null
     },
     {
-      "id": "lx.per",
-      "lemma": "per",
-      "pos": "PREP",
-      "role": "receptive",
-      "unit": "a1.1-u05",
-      "block": 1,
-      "list_ref": "B1",
-      "gloss": {
-        "en": "by, via (per E-Mail)"
-      },
-      "example": "Priya fragt per E-Mail nach der Wohnung.",
-      "exampleEn": "Priya asks about the flat by e-mail.",
-      "wordId": null
-    },
-    {
       "id": "lx.wg",
       "lemma": "WG",
       "pos": "NOUN",
@@ -2644,8 +2621,8 @@
       "gloss": {
         "en": "district, part of town"
       },
-      "example": "Die Wohnung liegt in einem ruhigen Stadtteil.",
-      "exampleEn": "The flat is in a quiet district.",
+      "example": "Der Stadtteil ist ruhig.",
+      "exampleEn": "The district is quiet.",
       "wordId": null
     },
     {
@@ -2657,15 +2634,15 @@
         "praet": "zog",
         "perfekt": "ist gezogen"
       },
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u05",
       "block": 1,
       "list_ref": "A1",
       "gloss": {
         "en": "to move (house); to pull"
       },
-      "example": "Priya und Arjun ziehen in eine neue Wohnung.",
-      "exampleEn": "Priya and Arjun are moving into a new flat.",
+      "example": "Priya zieht zu Arjun nach Leipzig.",
+      "exampleEn": "Priya is moving to Leipzig to join Arjun.",
       "wordId": null
     },
     {
@@ -2881,7 +2858,7 @@
       "id": "lx.neu",
       "lemma": "neu",
       "pos": "ADJ",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u05",
       "block": 3,
       "list_ref": "A1",
@@ -2896,7 +2873,7 @@
       "id": "lx.schoen",
       "lemma": "schön",
       "pos": "ADJ",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u05",
       "block": 3,
       "list_ref": "A1",
@@ -2911,7 +2888,7 @@
       "id": "lx.hell",
       "lemma": "hell",
       "pos": "ADJ",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u05",
       "block": 3,
       "list_ref": "A1",
@@ -2970,8 +2947,8 @@
       "gloss": {
         "en": "neighbour"
       },
-      "example": "Frau Lehmann ist unsere Nachbarin.",
-      "exampleEn": "Mrs Lehmann is our neighbour.",
+      "example": "Frau Lehmann ist eine Nachbarin von Priya und Arjun.",
+      "exampleEn": "Mrs Lehmann is a neighbour of Priya and Arjun.",
       "wordId": null
     },
     {
@@ -3018,8 +2995,42 @@
       "gloss": {
         "en": "own"
       },
-      "example": "Ich suche eine eigene Wohnung.",
-      "exampleEn": "I am looking for a flat of my own.",
+      "example": "eine eigene Wohnung",
+      "exampleEn": "a flat of one’s own",
+      "wordId": null
+    },
+    {
+      "id": "lx.hausmeister",
+      "lemma": "Hausmeister",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Hausmeister",
+      "plural_kind": "regular",
+      "feminine": "die Hausmeisterin",
+      "role": "receptive",
+      "unit": "a1.1-u05",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "caretaker, janitor"
+      },
+      "example": "Wo ist der Hausmeister?",
+      "exampleEn": "Where is the caretaker?",
+      "wordId": null
+    },
+    {
+      "id": "lx.willkommen",
+      "lemma": "willkommen",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "a1.1-u05",
+      "block": 3,
+      "list_ref": "freq:top-5000",
+      "gloss": {
+        "en": "welcome"
+      },
+      "example": "Willkommen im Haus!",
+      "exampleEn": "Welcome to the building!",
       "wordId": null
     },
     {
@@ -3065,7 +3076,7 @@
       "article": "das",
       "plural": "Hefte",
       "plural_kind": "regular",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u06",
       "block": 1,
       "list_ref": "freq:top-10000",
@@ -3137,7 +3148,7 @@
       "article": "die",
       "plural": "Seiten",
       "plural_kind": "regular",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u06",
       "block": 1,
       "list_ref": "A1",
@@ -3390,7 +3401,7 @@
       "article": "das",
       "plural": "Praktika",
       "plural_kind": "regular",
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u06",
       "block": 2,
       "list_ref": "A2",
@@ -3556,7 +3567,7 @@
         "perfekt": "hat gegeben"
       },
       "rection": "jmdm. etw. (Dat. + Akk.)",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u06",
       "block": 3,
       "list_ref": "A1",
@@ -3609,7 +3620,7 @@
       "article": "das",
       "plural": "Probleme",
       "plural_kind": "regular",
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u06",
       "block": 3,
       "list_ref": "A1",
@@ -7031,5 +7042,12 @@
       "wordId": null
     }
   ],
-  "promotions": []
+  "promotions": [
+    {
+      "lemma": "lx.richtig",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u06"
+    }
+  ]
 }

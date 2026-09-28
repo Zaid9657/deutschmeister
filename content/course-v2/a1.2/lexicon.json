@@ -1143,25 +1143,6 @@
       "wordId": null
     },
     {
-      "id": "lx.hausmeister",
-      "lemma": "Hausmeister",
-      "pos": "NOUN",
-      "article": "der",
-      "plural": "Hausmeister",
-      "plural_kind": "regular",
-      "feminine": "die Hausmeisterin",
-      "role": "productive",
-      "unit": "a1.2-u03",
-      "block": 1,
-      "list_ref": "A2",
-      "gloss": {
-        "en": "caretaker, janitor"
-      },
-      "example": "Der Hausmeister repariert die Tür.",
-      "exampleEn": "The caretaker repairs the door.",
-      "wordId": null
-    },
-    {
       "id": "lx.vermieter",
       "lemma": "Vermieter",
       "pos": "NOUN",
@@ -6372,6 +6353,12 @@
       "from": "receptive",
       "to": "productive",
       "unit": "a1.2-u12"
+    },
+    {
+      "lemma": "lx.hausmeister",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.2-u03"
     }
   ]
 }

@@ -5,7 +5,7 @@
     "etappe": 1,
     "title": {
       "de": "Hallo, ich bin Priya",
-      "canDo": "Sie können andere begrüßen, sich mit Name, Herkunft und Sprachen vorstellen und andere danach fragen."
+      "canDo": "Sie können grüßen, sich vorstellen, andere fragen und Tschüss sagen."
     },
     "spec": {
       "situation": "Erster Kurstag in der Sprachschule in Leipzig: Priya und die anderen Teilnehmenden begrüßen sich, stellen sich vor und fragen nach Name, Herkunft, Wohnort und Sprachen – im Kursraum und im Kurs-Chat; Emre ist online aus İzmir dabei.",
@@ -88,9 +88,9 @@
       "textTypes": [
         "tt.dialog",
         "tt.kurzdialog",
-        "tt.sms",
         "tt.steckbrief",
         "tt.stichwortblatt",
+        "tt.wortkarte",
         "tt.formular"
       ],
       "lanes": {
@@ -104,6 +104,12 @@
           },
           {
             "template": "sd1.sp1",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.sp2",
             "length": "full",
             "modeDefault": "lern",
             "slot": "sprechen"
@@ -123,14 +129,17 @@
         "N A1 K1 Guten Tag!",
         "Linie 1 A1 K1–2 (Grammatik: Präsens, W-Frage; nach memo 06)"
       ],
-      "deviation": null,
+      "deviation": {
+        "reason": "Sprechen: LS5 übt Teil 1 verkürzt (nur die Vorstellung; Buchstabieren und Nummer sind Stoff von u02, daher Prüfungsfokus sd1.sp1 „reduced“) und hängt eine sd1.sp2-Runde mit zwei Themen an („Kurs“, „Sprachen“; Karten Land und Englisch für den Lerner, Wohnort und Deutsch für die Gesprächsleitung; pro Thema fragt zuerst der Lerner mit seiner Karte, dann die Gesprächsleitung mit ihrer), die mit „Danke! Auf Wiedersehen!“ endet; sie trägt cd.a1.person-erfragen und cd.a1.verabschieden als Aufgabe (Review r1 F01/F02). Der Stoffplan nennt für u01 nur Sp1, H1 und S1; COV-3 erlaubt den vierten Teil. Aussprache: Statt „Satzmelodie der W-Frage; Wortakzent in Namen, Ländern und Sprachen“ hören LS1 und LS3 die Personalendungen (komme – kommen, wohnst – wohnt), weil sie der Leitpunkt g.praesens sind. Die Satzmelodie (W-Frage fallend, Ja/Nein-Frage steigend) übt a1.1-u03 LS1, den Wortakzent bei Ländern und Städten a1.1-u12 LS1. Landeskunde: Die Einheit macht keine Sachaussage und hat darum keinen Fact. Von „Grüßen in D-A-CH“ zeigt sie ein „Grüß Gott“ (Herr Braun aus Wien, H1 Gespräch 2, glossiert) und „du oder Sie?“ im Kurs (LS2: „Im Kurs sagen Sie ‚du‘“); Servus, Moin und Grüezi fehlen, damit der Wortschatz am ersten Tag klein bleibt. Deutsch in D-A-CH kommt in a1.1-u12 („Deutsch in der Welt“) wieder. Feste Wendungen: „Wie geht’s? – Gut, danke“ steht nicht in u01, sondern in a1.1-u03 (lx.wie-gehts), aus demselben Grund. Nach Sprachen fragt die Einheit mit der Plan-Wendung „Sprichst du (auch) Englisch?“; „Welche Sprachen sprichst du?“ wartet auf einen Chunk-Eintrag im Spine (g.welch-dies ist erst a1.2-u06 lizenziert). Schreiben: Das eigene Kursprofil (Plan: Steckbrief, ≈ 20 Wörter) schreibt der Lerner in LS2 als Chat-Antwort an Emre (Name, Land, Wohnort und eine Frage nach Sprachen; kürzer als der Plan, weil das Micro-Output-Band der Stufe 3–16 Wörter ist); die Schreiben-Aufgabe ist sd1.s1 im Prüfungsformat (Formular zu einer anderen Person, 5 Felder). Wortschatz: 35 neue Einträge statt 24–32 (Plan 26). lx.geschafft kam nach Review r1 dazu (die Check-Formel „Geschafft!“ der A1.1-Einheiten); ob lx.chat, lx.spanisch und lx.begruessen nur glossiert werden, entscheidet die Lexikon-Datei (Review r2 F05). Lesen: Der Kurs-Chat (LS3) ist länger als die geplanten ≈ 45 Wörter, weil vier kurze Einträge die Detail- und Strukturfragen tragen (Wohnort, Muttersprache, er/sie-Formen); er bleibt im TXT-03-Rahmen."
+      },
       "cast": [
         "cast.priya",
         "cast.frau-schulz",
         "cast.emre",
         "cast.olena",
         "cast.bilal",
-        "cast.arta"
+        "cast.arta",
+        "cast.herr-richter"
       ],
       "fokusPlan": [],
       "source": {
@@ -185,7 +194,6 @@
             "lx.zwei",
             "lx.zwoelf",
             "lx.zwanzig",
-            "lx.dreissig",
             "lx.hundert"
           ]
         },
@@ -230,7 +238,7 @@
             "lx.ausfuellen",
             "lx.empfang",
             "lx.anmeldung",
-            "lx.kurz"
+            "lx.rezeptionist"
           ]
         }
       ],
@@ -578,7 +586,7 @@
     "etappe": 2,
     "title": {
       "de": "Hier wohne ich",
-      "canDo": "Sie können Ihre Wohnung beschreiben, kurze Wohnungsanzeigen verstehen und sich im Haus als neue Nachbarin oder neuer Nachbar vorstellen."
+      "canDo": "Sie können Ihre Wohnung zeigen, Wohnungsanzeigen lesen und im Haus sagen: „Ich bin neu hier.“"
     },
     "spec": {
       "situation": "Priya und Arjun ziehen aus Arjuns WG in eine eigene Wohnung in Leipzig: Sie lesen Wohnungsanzeigen, zeigen Olena die neue Wohnung per Video und stellen sich im Haus bei Herrn Krause, Frau Lehmann und Frau Haddad vor.",
@@ -619,7 +627,6 @@
             "lx.schlafzimmer",
             "lx.toilette",
             "lx.garten",
-            "lx.per",
             "lx.wg",
             "lx.stadtteil",
             "lx.ziehen"
@@ -655,7 +662,9 @@
             "lx.nachbar",
             "lx.anzeige",
             "lx.ruhig",
-            "lx.eigen"
+            "lx.eigen",
+            "lx.hausmeister",
+            "lx.willkommen"
           ]
         }
       ],
@@ -663,11 +672,11 @@
         "tt.internetanzeige",
         "tt.kleinanzeige",
         "tt.telefonat",
-        "tt.dialog",
         "tt.notiz",
         "tt.kurzmitteilung",
         "tt.formular",
-        "tt.stichwortblatt"
+        "tt.stichwortblatt",
+        "tt.wortkarte"
       ],
       "lanes": {
         "primary": "sd1",
@@ -705,7 +714,7 @@
         "Linie 1 A1 K3–4 (Grammatik: er/es/sie; nach memo 06)"
       ],
       "deviation": {
-        "reason": "Menschen (L14) und Netzwerk neu (K9) setzen Wohnen erst in A1.2; die Einheit bleibt mit Schritte plus Neu 1 L4 in A1.1, weil Start Deutsch 1 Lesen Teil 2 Wohnungsanzeigen nutzt (BLUEPRINT §2.8, Zeile 6). Sie steht an Position 5 statt 6 (Tausch mit „Das brauche ich“), weil die Grammatik-Spine g.pronomen-er-es-sie und g.adjektiv-praedikativ an a1.1-u05 einführt (spine.md §6); siehe docs/course-v2/curriculum/a1-1.specs-notes.md."
+        "reason": "Menschen (L14) und Netzwerk neu (K9) setzen Wohnen erst in A1.2; die Einheit bleibt mit Schritte plus Neu 1 L4 in A1.1, weil Start Deutsch 1 Lesen Teil 2 Wohnungsanzeigen nutzt (BLUEPRINT §2.8, Zeile 6). Sie steht an Position 5 statt 6 (Tausch mit „Das brauche ich“), weil die Grammatik-Spine g.pronomen-er-es-sie und g.adjektiv-praedikativ an a1.1-u05 einführt (spine.md §6); siehe docs/course-v2/curriculum/a1-1.specs-notes.md. Prüfungsteile: Der Stoffplan nennt Lesen Teil 2, Sprechen Teil 2 und Schreiben Teil 2. Die Einheit übt Schreiben Teil 1 (ein Formular für die Wohnung) statt Teil 2, weil S1 sonst nur in u01, u02 und u09 steht, S2 aber in acht Einheiten; Lesen Teil 1 und Sprechen Teil 1 kommen dazu. LS5 hängt an Teil 1 eine sd1.sp2-Runde mit zwei Themen an („Wohnung“, „Möbel“). Sie trägt cd.a1.wohnung-beschreiben (Nora fragt „Wie viele Zimmer hat Ihre Wohnung?“ und „Wo steht Ihr Schreibtisch?“, Review r1 F03) und steht als Chip, aber nicht im Prüfungsfokus, weil COV-3 höchstens vier Teile erlaubt. Die geplante E-Mail über die neue Wohnung übernimmt der Chat mit Olena in LS2 (Mikro-Ausgabe: Zimmer und Möbel). Landeskunde: WG und Name an der Tür zeigt die Einheit nur als Szene, ohne Sachaussage, und hat darum keinen Fact; das Erdgeschoss als Stockwerk null kommt mit lx.erdgeschoss in a1.2-u03 (Frau Lehmann wohnt hier nur „hier unten“). Aussprache: ö/o und ü/u wie geplant; die Hörpaare trennen den Vokal von Länge und ach-/ich-Laut (Review r1 F17)."
       },
       "cast": [
         "cast.priya",
