@@ -203,8 +203,8 @@
       "gloss": {
         "en": "done! / made it!"
       },
-      "example": "Geschafft! Die Einheit ist fertig.",
-      "exampleEn": "Done! The unit is finished.",
+      "example": "Geschafft! Auf Wiedersehen, Frau Schulz!",
+      "exampleEn": "Done! Goodbye, Mrs Schulz!",
       "wordId": null
     },
     {
@@ -341,7 +341,7 @@
       "article": "der",
       "plural": "Kurse",
       "plural_kind": "regular",
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u01",
       "block": 2,
       "list_ref": "A1",
@@ -388,8 +388,8 @@
       "gloss": {
         "en": "to introduce oneself"
       },
-      "example": "Thema: Vorstellen. – Ich heiße Priya und komme aus Indien.",
-      "exampleEn": "Topic: introducing yourself. – My name is Priya and I’m from India.",
+      "example": "Stellen Sie sich bitte vor!",
+      "exampleEn": "Please introduce yourself!",
       "wordId": null
     },
     {
@@ -499,8 +499,8 @@
       "gloss": {
         "en": "to learn, to study"
       },
-      "example": "Emre lernt online Deutsch.",
-      "exampleEn": "Emre is learning German online.",
+      "example": "Ich lerne Deutsch in Leipzig.",
+      "exampleEn": "I’m learning German in Leipzig.",
       "wordId": null
     },
     {
@@ -510,7 +510,7 @@
       "article": "das",
       "plural": null,
       "plural_kind": "singular-only",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u01",
       "block": 3,
       "list_ref": "freq:top-2000",
@@ -543,7 +543,7 @@
       "id": "lx.ein-bisschen",
       "lemma": "ein bisschen",
       "pos": "PHRASE",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u01",
       "block": 3,
       "list_ref": "freq:top-2000",
@@ -633,15 +633,15 @@
       "article": "die",
       "plural": "Nummern",
       "plural_kind": "regular",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u02",
       "block": 1,
       "list_ref": "A1",
       "gloss": {
         "en": "number (phone, room)"
       },
-      "example": "Wie ist Ihre Nummer?",
-      "exampleEn": "What is your number?",
+      "example": "Wie ist die Nummer, bitte?",
+      "exampleEn": "What is the number, please?",
       "wordId": null
     },
     {
@@ -741,15 +741,15 @@
       "id": "lx.hundert",
       "lemma": "hundert",
       "pos": "NUM",
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u02",
       "block": 1,
       "list_ref": "A1",
       "gloss": {
         "en": "(one) hundred"
       },
-      "example": "Lernen Sie die Zahlen von null bis hundert.",
-      "exampleEn": "Learn the numbers from zero to a hundred.",
+      "example": "Die Sprachschule hat hundert Teilnehmer.",
+      "exampleEn": "The language school has a hundred participants.",
       "wordId": null
     },
     {
@@ -766,8 +766,8 @@
       "gloss": {
         "en": "address"
       },
-      "example": "Wie ist Ihre Adresse?",
-      "exampleEn": "What is your address?",
+      "example": "Die Adresse ist Berliner Straße 21.",
+      "exampleEn": "The address is Berliner Straße 21.",
       "wordId": null
     },
     {
@@ -820,8 +820,8 @@
       "gloss": {
         "en": "phone number"
       },
-      "example": "Wie ist Ihre Telefonnummer?",
-      "exampleEn": "What is your phone number?",
+      "example": "Wie ist die Telefonnummer?",
+      "exampleEn": "What is the phone number?",
       "wordId": null
     },
     {
@@ -856,8 +856,8 @@
       "gloss": {
         "en": "first name"
       },
-      "example": "Mein Vorname ist Priya.",
-      "exampleEn": "My first name is Priya.",
+      "example": "Vorname: Priya, Familienname: Nair.",
+      "exampleEn": "First name: Priya, surname: Nair.",
       "wordId": null
     },
     {
@@ -874,8 +874,8 @@
       "gloss": {
         "en": "surname, family name"
       },
-      "example": "Mein Familienname ist Nair.",
-      "exampleEn": "My surname is Nair.",
+      "example": "Wie ist der Familienname? – Nair.",
+      "exampleEn": "What is the surname? – Nair.",
       "wordId": null
     },
     {
@@ -930,8 +930,8 @@
       "gloss": {
         "en": "to work"
       },
-      "example": "Arjun arbeitet in Leipzig.",
-      "exampleEn": "Arjun works in Leipzig.",
+      "example": "Frau Schulz arbeitet in Leipzig.",
+      "exampleEn": "Mrs Schulz works in Leipzig.",
       "wordId": null
     },
     {
@@ -968,8 +968,8 @@
       "gloss": {
         "en": "student (university)"
       },
-      "example": "Sophie ist Studentin.",
-      "exampleEn": "Sophie is a student.",
+      "example": "Ich bin Student.",
+      "exampleEn": "I’m a student.",
       "wordId": null
     },
     {
@@ -987,8 +987,8 @@
       "gloss": {
         "en": "to study (at university)"
       },
-      "example": "Sophie studiert in Leipzig.",
-      "exampleEn": "Sophie studies in Leipzig.",
+      "example": "Studierst du, oder arbeitest du?",
+      "exampleEn": "Do you study, or do you work?",
       "wordId": null
     },
     {
@@ -1063,8 +1063,8 @@
       "gloss": {
         "en": "to spell"
       },
-      "example": "Ich buchstabiere: N-A-I-R.",
-      "exampleEn": "I’ll spell it: N-A-I-R.",
+      "example": "Buchstabieren Sie bitte!",
+      "exampleEn": "Please spell it!",
       "wordId": null
     },
     {
@@ -1435,8 +1435,8 @@
       "gloss": {
         "en": "video"
       },
-      "example": "Priya und Olena sprechen per Video.",
-      "exampleEn": "Priya and Olena talk by video.",
+      "example": "Das Video ist von Priya.",
+      "exampleEn": "The video is from Priya.",
       "wordId": null
     },
     {
@@ -1652,8 +1652,8 @@
       "gloss": {
         "en": "woman; wife; Mrs"
       },
-      "example": "Elif ist die Frau von Emre.",
-      "exampleEn": "Elif is Emre’s wife.",
+      "example": "Priya ist die Frau von Arjun.",
+      "exampleEn": "Priya is Arjun’s wife.",
       "wordId": null
     },
     {
@@ -1922,8 +1922,8 @@
       "gloss": {
         "en": "egg"
       },
-      "example": "Sechs Eier kosten 1,99 Euro.",
-      "exampleEn": "Six eggs cost 1.99 euros.",
+      "example": "Zehn Eier kosten 1,99 Euro.",
+      "exampleEn": "Ten eggs cost 1.99 euros.",
       "wordId": null
     },
     {
@@ -2059,7 +2059,7 @@
       "article": "die",
       "plural": "Tomaten",
       "plural_kind": "regular",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u04",
       "block": 2,
       "list_ref": "A1",
@@ -2149,7 +2149,7 @@
       "article": "das",
       "plural": "Gramm",
       "plural_kind": "regular",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u04",
       "block": 3,
       "list_ref": "A1",
@@ -2257,7 +2257,7 @@
       "article": "das",
       "plural": "Angebote",
       "plural_kind": "regular",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u04",
       "block": 3,
       "list_ref": "A1",
@@ -2423,8 +2423,8 @@
       "gloss": {
         "en": "announcement"
       },
-      "example": "Achtung, eine Durchsage!",
-      "exampleEn": "Attention, an announcement!",
+      "example": "Das ist eine Durchsage im Supermarkt.",
+      "exampleEn": "This is an announcement in the supermarket.",
       "wordId": null
     },
     {
@@ -2533,7 +2533,10 @@
       },
       "example": "Die Wohnung hat einen Balkon.",
       "exampleEn": "The flat has a balcony.",
-      "wordId": null
+      "wordId": null,
+      "pluralVariants": [
+        "Balkons"
+      ]
     },
     {
       "id": "lx.schlafzimmer",
@@ -2988,7 +2991,7 @@
       "id": "lx.ruhig",
       "lemma": "ruhig",
       "pos": "ADJ",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u05",
       "block": 3,
       "list_ref": "A1",
@@ -3094,7 +3097,7 @@
       "article": "das",
       "plural": "Papiere",
       "plural_kind": "regular",
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u06",
       "block": 1,
       "list_ref": "A1",
@@ -3193,6 +3196,24 @@
       },
       "example": "Wo ist der Kursraum?",
       "exampleEn": "Where is the classroom?",
+      "wordId": null
+    },
+    {
+      "id": "lx.wort",
+      "lemma": "Wort",
+      "pos": "NOUN",
+      "article": "das",
+      "plural": "Wörter",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a1.1-u06",
+      "block": 1,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "word"
+      },
+      "example": "Wie heißt das Wort auf Deutsch?",
+      "exampleEn": "What is the word in German?",
       "wordId": null
     },
     {
@@ -3390,8 +3411,8 @@
       "gloss": {
         "en": "colleague"
       },
-      "example": "Mein Kollege heißt Jonas.",
-      "exampleEn": "My colleague is called Jonas.",
+      "example": "Mein Kollege macht das morgen.",
+      "exampleEn": "My colleague will do that tomorrow.",
       "wordId": null
     },
     {
@@ -3420,15 +3441,15 @@
         "3sg": "telefoniert",
         "perfekt": "hat telefoniert"
       },
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u06",
       "block": 2,
       "list_ref": "A1",
       "gloss": {
         "en": "to phone, to be on the phone"
       },
-      "example": "Herr Richter telefoniert gerade.",
-      "exampleEn": "Mr Richter is on the phone right now.",
+      "example": "Herr Richter telefoniert.",
+      "exampleEn": "Mr Richter is on the phone.",
       "wordId": null
     },
     {
@@ -3579,21 +3600,6 @@
       "wordId": null
     },
     {
-      "id": "lx.gebraucht",
-      "lemma": "gebraucht",
-      "pos": "ADJ",
-      "role": "receptive",
-      "unit": "a1.1-u06",
-      "block": 3,
-      "list_ref": "derived:brauchen",
-      "gloss": {
-        "en": "used, second-hand"
-      },
-      "example": "Der Laptop ist gebraucht, aber gut.",
-      "exampleEn": "The laptop is used, but good.",
-      "wordId": null
-    },
-    {
       "id": "lx.wissen",
       "lemma": "wissen",
       "pos": "VERB",
@@ -3645,8 +3651,8 @@
       "gloss": {
         "en": "thing"
       },
-      "example": "Ich brauche noch ein paar Dinge für den Kurs.",
-      "exampleEn": "I still need a few things for the course.",
+      "example": "Seite 24: Dinge im Kursraum.",
+      "exampleEn": "Page 24: things in the classroom.",
       "wordId": null
     },
     {
@@ -3666,8 +3672,26 @@
       "gloss": {
         "en": "to ask (for), to request"
       },
-      "example": "Ich bitte meine Nachbarin um Hilfe.",
-      "exampleEn": "I ask my neighbour for help.",
+      "example": "Priya bittet Olena um einen Bleistift.",
+      "exampleEn": "Priya asks Olena for a pencil.",
+      "wordId": null
+    },
+    {
+      "id": "lx.frage",
+      "lemma": "Frage",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Fragen",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a1.1-u06",
+      "block": 3,
+      "list_ref": "A1",
+      "gloss": {
+        "en": "question"
+      },
+      "example": "Ich habe eine Frage.",
+      "exampleEn": "I have a question.",
       "wordId": null
     },
     {
@@ -3713,7 +3737,7 @@
       "article": "die",
       "plural": "Stunden",
       "plural_kind": "regular",
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u07",
       "block": 1,
       "list_ref": "A1",
@@ -4019,8 +4043,8 @@
       "gloss": {
         "en": "to tell (about)"
       },
-      "example": "Priya erzählt von ihrem Tag.",
-      "exampleEn": "Priya talks about her day.",
+      "example": "Emre erzählt von İzmir.",
+      "exampleEn": "Emre talks about İzmir.",
       "wordId": null
     },
     {
@@ -4102,7 +4126,7 @@
       "article": "der",
       "plural": "Donnerstage",
       "plural_kind": "regular",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u07",
       "block": 3,
       "list_ref": "A1",
@@ -5731,7 +5755,7 @@
       "article": "die",
       "plural": "Informationen",
       "plural_kind": "regular",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u10",
       "block": 1,
       "list_ref": "A1",
@@ -5836,7 +5860,7 @@
       "id": "lx.einfach",
       "lemma": "einfach",
       "pos": "ADJ",
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u10",
       "block": 2,
       "list_ref": "A1",
@@ -5925,7 +5949,7 @@
         "perfekt": "ist eingestiegen"
       },
       "separable": true,
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u10",
       "block": 3,
       "list_ref": "A1",
@@ -5945,7 +5969,7 @@
         "perfekt": "ist umgestiegen"
       },
       "separable": true,
-      "role": "productive",
+      "role": "receptive",
       "unit": "a1.1-u10",
       "block": 3,
       "list_ref": "A1",
@@ -6100,8 +6124,8 @@
       "gloss": {
         "en": "to stop; to hold"
       },
-      "example": "Der Zug hält in Riesa.",
-      "exampleEn": "The train stops in Riesa.",
+      "example": "Der Bus hält am Bahnhof.",
+      "exampleEn": "The bus stops at the station.",
       "wordId": null
     },
     {
@@ -6615,24 +6639,6 @@
       "wordId": null
     },
     {
-      "id": "lx.wort",
-      "lemma": "Wort",
-      "pos": "NOUN",
-      "article": "das",
-      "plural": "Wörter",
-      "plural_kind": "regular",
-      "role": "productive",
-      "unit": "a1.1-u12",
-      "block": 1,
-      "list_ref": "A1",
-      "gloss": {
-        "en": "word"
-      },
-      "example": "Wie heißt das Wort auf Deutsch?",
-      "exampleEn": "What is the word in German?",
-      "wordId": null
-    },
-    {
       "id": "lx.satz",
       "lemma": "Satz",
       "pos": "NOUN",
@@ -6737,24 +6743,6 @@
       "wordId": null
     },
     {
-      "id": "lx.frage",
-      "lemma": "Frage",
-      "pos": "NOUN",
-      "article": "die",
-      "plural": "Fragen",
-      "plural_kind": "regular",
-      "role": "productive",
-      "unit": "a1.1-u12",
-      "block": 1,
-      "list_ref": "A1",
-      "gloss": {
-        "en": "question"
-      },
-      "example": "Ich habe eine Frage.",
-      "exampleEn": "I have a question.",
-      "wordId": null
-    },
-    {
       "id": "lx.plan",
       "lemma": "Plan",
       "pos": "NOUN",
@@ -6780,7 +6768,7 @@
         "3sg": "fliegt",
         "perfekt": "ist geflogen"
       },
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u12",
       "block": 2,
       "list_ref": "A1",
@@ -6818,7 +6806,7 @@
         "3sg": "lebt",
         "perfekt": "hat gelebt"
       },
-      "role": "receptive",
+      "role": "productive",
       "unit": "a1.1-u12",
       "block": 2,
       "list_ref": "A1",
@@ -6935,8 +6923,8 @@
       "gloss": {
         "en": "German course"
       },
-      "example": "Der Deutschkurs fängt im Mai an.",
-      "exampleEn": "The German course starts in May.",
+      "example": "Der Deutschkurs fängt um neun Uhr an.",
+      "exampleEn": "The German course starts at nine o’clock.",
       "wordId": null
     },
     {
@@ -7013,8 +7001,8 @@
       "gloss": {
         "en": "to tick, to mark with a cross"
       },
-      "example": "Kreuzen Sie die richtige Antwort an.",
-      "exampleEn": "Tick the correct answer.",
+      "example": "Kreuzen Sie an: a, b oder c.",
+      "exampleEn": "Tick a, b or c.",
       "wordId": null
     },
     {
@@ -7057,6 +7045,36 @@
   ],
   "promotions": [
     {
+      "lemma": "lx.wohnort",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u02"
+    },
+    {
+      "lemma": "lx.tuerkisch",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u02"
+    },
+    {
+      "lemma": "lx.online",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u02"
+    },
+    {
+      "lemma": "lx.kurs",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u02"
+    },
+    {
+      "lemma": "lx.studieren",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u03"
+    },
+    {
       "lemma": "lx.entschuldigung",
       "from": "receptive",
       "to": "productive",
@@ -7064,6 +7082,12 @@
     },
     {
       "lemma": "lx.jahr",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u05"
+    },
+    {
+      "lemma": "lx.familienstand",
       "from": "receptive",
       "to": "productive",
       "unit": "a1.1-u05"
@@ -7099,7 +7123,25 @@
       "unit": "a1.1-u08"
     },
     {
+      "lemma": "lx.tag",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u08"
+    },
+    {
+      "lemma": "lx.nachricht",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u08"
+    },
+    {
       "lemma": "lx.stueck",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u09"
+    },
+    {
+      "lemma": "lx.uhrzeit",
       "from": "receptive",
       "to": "productive",
       "unit": "a1.1-u09"
@@ -7142,6 +7184,48 @@
     },
     {
       "lemma": "lx.spielen",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u11"
+    },
+    {
+      "lemma": "lx.film",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u11"
+    },
+    {
+      "lemma": "lx.fussball",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u11"
+    },
+    {
+      "lemma": "lx.park",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u11"
+    },
+    {
+      "lemma": "lx.freizeit",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u11"
+    },
+    {
+      "lemma": "lx.toll",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u11"
+    },
+    {
+      "lemma": "lx.garten",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u11"
+    },
+    {
+      "lemma": "lx.interessant",
       "from": "receptive",
       "to": "productive",
       "unit": "a1.1-u11"

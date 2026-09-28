@@ -778,7 +778,8 @@
             "lx.tasche",
             "lx.seite",
             "lx.bleistift",
-            "lx.kursraum"
+            "lx.kursraum",
+            "lx.wort"
           ]
         },
         {
@@ -812,11 +813,11 @@
             "lx.fehlen",
             "lx.helfen",
             "lx.geben",
-            "lx.gebraucht",
             "lx.wissen",
             "lx.problem",
             "lx.ding",
-            "lx.bitten"
+            "lx.bitten",
+            "lx.frage"
           ]
         }
       ],
@@ -1625,14 +1626,12 @@
           "title": "Sprachen lernen",
           "target": 8,
           "lemmas": [
-            "lx.wort",
             "lx.satz",
             "lx.woerterbuch",
             "lx.wiederholen",
             "lx.leicht",
             "lx.schwer",
             "lx.ueben",
-            "lx.frage",
             "lx.plan"
           ]
         },
