@@ -785,19 +785,71 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
     rowById.set(u.id, row);
   }
 
-  // Plateaus and closing blocks: learner copies, their items and tasks.
+  // Plateaus and closing blocks: learner copies, their items and tasks; a Plateau's review set is
+  // drawn here from the unit reserves (SCHEMA §10, §13), a .1 closing block learns where each of
+  // its Teile comes next in the .2 level (the Teil-Karte, BLUEPRINT §5.3).
   const extraHashes = {};
+  const assessmentCounts = {
+    plateau: { examBlocks: 0, writingTasks: 0, speakingTasks: 0, microOutputs: 0, items: 0, reviewItems: 0 },
+    closing: { examBlocks: 0, writingTasks: 0, speakingTasks: 0, microOutputs: 0, items: 0 },
+  };
+  const unitNrOf = (id) => Number((String(id).match(/-u(\d{2})$/) || [])[1]) || 0;
+  const unitOrder = course.units.filter((id) => typeof id === 'string').sort((a, b) => unitNrOf(a) - unitNrOf(b));
+  const plateauAfters = mine('plateau').map((t) => unitNrOf(t.doc.after)).filter(Boolean).sort((a, b) => a - b);
+  const drawnBefore = new Set(); // review items an earlier Plateau of the level drew
   for (const kind of ['plateau', 'closing']) {
     for (const { file, doc } of mine(kind).sort((a, b) => a.doc.id.localeCompare(b.doc.id))) {
       extraHashes[doc.id] = contentHash(doc);
       collectIds(doc, ids, errors, rel(file));
-      addBank(collectBankTasks(doc), { source: doc.id }, file);
-      const after = kind === 'plateau' ? Number((doc.after.match(/-u(\d{2})$/) || [])[1]) : 12;
+      const tasks = collectBankTasks(doc);
+      addBank(tasks, { source: doc.id }, file);
+      const after = kind === 'plateau' ? unitNrOf(doc.after) : 12;
       const poolItems = [];
       eachNode(doc, (x) => {
-        if (isItem(x)) poolItems.push(toPoolItem(x, after));
+        if (isItem(x)) poolItems.push(toPoolItem(withPluralTwins(x, pluralTwins), after));
       });
-      const out = { $generated: GENERATED_MARK, ...learnerCopy(doc), poolItems, contentHash: extraHashes[doc.id] };
+      const copy = learnerCopy(doc);
+      if (pluralTwins.size) {
+        eachNode(copy, (x) => {
+          const twin = withPluralTwins(x, pluralTwins);
+          if (twin !== x) x.accepted = twin.accepted;
+        });
+      }
+      const parts = kind === 'plateau' ? (Array.isArray(doc.examTeile) ? doc.examTeile : []) : Array.isArray(doc.parts) ? doc.parts : [];
+      const c = assessmentCounts[kind];
+      c.examBlocks += parts.filter((p) => partKindOf(p) === 'block').length;
+      c.writingTasks += tasks.filter((t) => t.kind === 'writing').length;
+      c.speakingTasks += tasks.filter((t) => t.kind === 'speaking').length;
+      c.microOutputs += tasks.filter((t) => t.kind.startsWith('micro')).length;
+      c.items += poolItems.length;
+
+      if (kind === 'plateau' && isObj(doc.review)) {
+        const previous = plateauAfters.filter((n) => n < after).pop() || 0;
+        const current = unitOrder.filter((id) => unitNrOf(id) > previous && unitNrOf(id) <= after);
+        const earlier = unitOrder.filter((id) => unitNrOf(id) <= previous);
+        const drawn = drawPlateauReview(plateauCandidates, {
+          id: doc.id, draw: doc.review.draw, currentShare: doc.review.currentShare, current, earlier, exclude: drawnBefore,
+        });
+        for (const d of drawn.items) drawnBefore.add(d.id);
+        if (drawn.items.length < doc.review.draw) {
+          warnings.push(`${doc.id}: review set drew ${drawn.items.length} of ${doc.review.draw} items (too few reserve items with banks ['plateau'] in ${[...earlier, ...current].join(', ') || 'no compiled unit'})`);
+        }
+        c.reviewItems += drawn.items.length;
+        copy.review = {
+          ...copy.review,
+          units: { current, earlier },
+          drawn: { current: drawn.current.length, earlier: drawn.earlier.length },
+          items: drawn.items.map((d) => ({ ...d.item, unit: d.unit, step: d.step })),
+        };
+      }
+      if (kind === 'closing' && doc.kind === 'halbtest') {
+        const templates = [...new Set(parts.map((p) => p && p.template).filter((t) => typeof t === 'string'))];
+        copy.comesNext = comesNextOf(level, doc.lane, templates, {
+          unitDocs: docs('unit').map((t) => t.doc),
+          bundleEntries: bundles.flatMap((b) => b.doc),
+        });
+      }
+      const out = { $generated: GENERATED_MARK, ...copy, poolItems, contentHash: extraHashes[doc.id] };
       const name = kind === 'plateau' ? `${doc.id.split('-').pop()}.json` : `${doc.id}.json`;
       outputs.push({ file: path.join(levelOut, kind === 'plateau' ? 'plateaus' : 'closing', name), text: json(out) });
     }
