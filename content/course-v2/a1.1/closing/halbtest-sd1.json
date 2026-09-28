@@ -960,7 +960,7 @@
         },
         {
           "speaker": "learner",
-          "de": "In Kochi arbeite ich am Empfang. Mein Hobby ist Tanzen."
+          "de": "Ich arbeite am Empfang in der Sprachschule Leipzig. Mein Hobby ist Tanzen."
         },
         {
           "speaker": "partner",
@@ -1007,7 +1007,7 @@
       "moves": [],
       "aiRole": {
         "name": "Nora",
-        "personaDe": "Teilnehmerin in der Prüfung, Sprechen Teil 2; spricht langsam und deutlich und zeigt Wörter aus der Wortliste. Ihre Karten: „Reisen – Fahrkarte“ und „Wochenende – Freunde“. In jeder Runde fragt zuerst der Lerner mit seiner Karte, Nora antwortet kurz (sie fährt oft mit dem Zug nach Berlin, am Sonntag besucht sie ihre Eltern); dann fragt Nora mit ihrer Karte, zum Beispiel „Wo kaufen Sie Ihre Fahrkarte?“ oder „Treffen Sie am Wochenende Freunde?“, und der Lerner antwortet.",
+        "personaDe": "Teilnehmerin in der Prüfung, Sprechen Teil 2; spricht langsam und deutlich und zeigt Wörter aus der Wortliste. Ihre Karten: „Reisen – Fahrkarte“ und „Wochenende – Freunde“. In jeder Runde fragt zuerst der Lerner mit seiner Karte, Nora antwortet kurz (sie fährt oft mit dem Zug nach Hamburg, dort wohnen ihre zwei Schwestern; am Sonntag frühstückt sie lange und schwimmt gern); dann fragt Nora mit ihrer Karte, zum Beispiel „Wo kaufen Sie Ihre Fahrkarte?“ oder „Treffen Sie am Wochenende Freunde?“, und der Lerner antwortet.",
         "register": "Sie",
         "support": "slow-wordbank"
       },
@@ -1028,7 +1028,7 @@
         },
         {
           "speaker": "partner",
-          "de": "Ja, oft nach Berlin. Wo kaufen Sie Ihre Fahrkarte?"
+          "de": "Ja, oft nach Hamburg. Da wohnen meine Schwestern. Wo kaufen Sie Ihre Fahrkarte?"
         },
         {
           "speaker": "learner",
@@ -1044,7 +1044,7 @@
         },
         {
           "speaker": "partner",
-          "de": "Ich besuche meine Eltern. Treffen Sie am Wochenende Freunde?"
+          "de": "Ich frühstücke lange. Dann schwimme ich. Treffen Sie am Wochenende Freunde?"
         },
         {
           "speaker": "learner",

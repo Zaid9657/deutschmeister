@@ -1255,7 +1255,7 @@
           "type": "multiple_choice",
           "role": "detail",
           "topic": "hoeren",
-          "promptDe": "Wie oft sagt Emre die ganze Nummer?",
+          "promptDe": "Die Nummer: Wie oft sagt Emre alle Zahlen?",
           "promptEn": "How often does Emre say the whole number?",
           "options": [
             "zweimal",
