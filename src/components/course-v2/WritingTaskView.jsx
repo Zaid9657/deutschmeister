@@ -11,6 +11,7 @@ import { evaluateWriting } from './ai.js';
 import { countWords, laneLabel, teilLabel } from './content.js';
 import { gradeAnswer, RESULT } from './grade.js';
 import { useV2Strings } from './strings.js';
+import { foldNumberWords } from '../../lib/lesson/check.js';
 
 const LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite';
 
@@ -19,8 +20,9 @@ const draftKey = (bankKey) => `dm_v2_writing_${bankKey}`;
 export const readDraft = (bankKey) => safeGetJSON(draftKey(bankKey), null);
 const writeDraft = (bankKey, value) => safeSetJSON(draftKey(bankKey), value);
 
-// „14:30" and „14.30" are one time: a colon between digits folds to the dot (a1.1-u10 r1 F17)
-const fold = (s) => String(s || '').toLowerCase().replace(/(\d):(?=\d)/g, '$1.');
+// „14:30" and „14.30" are one time: a colon between digits folds to the dot (a1.1-u10 r1 F17);
+// a number word is its digits („zwei Kinder" = „2 Kinder", level review s1 #4), on both sides
+const fold = (s) => foldNumberWords(String(s || '')).toLowerCase().replace(/(\d):(?=\d)/g, '$1.');
 
 /** Is there a surface hint of this Leitpunkt? A FORM check only; the KI decides meaning. */
 const cueFound = (lp, text) => {

@@ -249,6 +249,28 @@
         "origin": "agent"
       }
     },
+    "auftakt": {
+      "promptDe": "Jetzt Sie! Frau Schulz fragt Sie im Kurs.",
+      "microOutput": {
+        "id": "a1.1-u01-start-mo",
+        "bankKey": "a11-u01-mo0",
+        "mode": "spoken",
+        "profile": "course-micro-sp",
+        "situationDe": "Im Kurs A1 sagt Frau Schulz: „Guten Morgen! Wie heißen Sie? Woher kommen Sie?“",
+        "promptDe": "Sagen Sie: Ich heiße … Ich komme aus …",
+        "promptEn": "Say your name and where you are from.",
+        "planSeconds": 20,
+        "seconds": [
+          5,
+          20
+        ],
+        "targets": [
+          "g.praesens"
+        ],
+        "register": "Sie",
+        "modelDe": "Guten Morgen! Ich heiße Priya Nair. Ich komme aus Indien."
+      }
+    },
     "testOut": {
       "offered": true
     }
@@ -537,7 +559,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.praesens",
-            "promptDe": "Ich ___ Priya Nair. (heißen)",
+            "promptDe": "Ich ___ Priya Nair. (heiß-)",
             "promptEn": "heißen, ich-form.",
             "answer": "heiße",
             "accepted": [
@@ -557,7 +579,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.praesens",
-            "promptDe": "Woher ___ Sie, Frau Nair? (kommen)",
+            "promptDe": "Woher ___ Sie, Frau Nair? (komm-)",
             "promptEn": "kommen, Sie-form.",
             "answer": "kommen",
             "accepted": [
@@ -577,7 +599,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.praesens",
-            "promptDe": "Ich ___ jetzt in Leipzig. (wohnen)",
+            "promptDe": "Ich ___ jetzt in Leipzig. (wohn-)",
             "promptEn": "wohnen, ich-form.",
             "answer": "wohne",
             "accepted": [
@@ -857,7 +879,7 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "g.praesens",
-          "promptDe": "Guten Tag! Wie ___ Sie? (heißen)",
+          "promptDe": "Guten Tag! Wie ___ Sie? (heiß-)",
           "promptEn": "heißen, Sie-form.",
           "answer": "heißen",
           "accepted": [
@@ -1007,9 +1029,9 @@
         "bankKey": "a11-u01-mo1",
         "mode": "spoken",
         "profile": "course-micro-sp",
-        "situationDe": "Heute ist Kurs. Frau Schulz fragt Sie: „Wie heißen Sie? Woher kommen Sie?“",
-        "promptDe": "Antworten Sie Frau Schulz in 1–2 Sätzen: Name und Land.",
-        "promptEn": "Answer Mrs Schulz in 1–2 sentences: your name and your country.",
+        "situationDe": "Heute ist Kurs. Frau Schulz fragt Sie: „Wie heißen Sie? Woher kommen Sie? Und wo wohnen Sie?“",
+        "promptDe": "Antworten Sie Frau Schulz in 2–3 Sätzen: Name, Land und Wohnort.",
+        "promptEn": "Answer Mrs Schulz in 2–3 sentences: your name, your country and where you live.",
         "planSeconds": 30,
         "seconds": [
           20,
@@ -1019,7 +1041,7 @@
           "g.praesens"
         ],
         "register": "Sie",
-        "modelDe": "Guten Tag, Frau Schulz! Ich heiße Priya Nair und ich komme aus Indien."
+        "modelDe": "Guten Tag, Frau Schulz! Ich heiße Priya Nair und ich komme aus Indien. Jetzt wohne ich in Leipzig."
       },
       "aussprache": {
         "focus": "Endungen hören: ich komme – Sie kommen",
@@ -1397,7 +1419,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.praesens",
-            "promptDe": "Woher ___ du, Olena? (kommen)",
+            "promptDe": "Woher ___ du, Olena? (komm-)",
             "promptEn": "kommen, du-form.",
             "answer": "kommst",
             "accepted": [
@@ -1417,7 +1439,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.praesens",
-            "promptDe": "Und wo ___ du jetzt, Bilal? (wohnen)",
+            "promptDe": "Und wo ___ du jetzt, Bilal? (wohn-)",
             "promptEn": "wohnen, du-form.",
             "answer": "wohnst",
             "accepted": [
@@ -1799,7 +1821,7 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "g.praesens",
-          "promptDe": "Und woher ___ Sie, Frau Schulz? (kommen)",
+          "promptDe": "Und woher ___ Sie, Frau Schulz? (komm-)",
           "promptEn": "kommen, Sie-form.",
           "answer": "kommen",
           "accepted": [
@@ -2093,7 +2115,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.praesens",
-            "promptDe": "Emre ___ in İzmir. (wohnen)",
+            "promptDe": "Emre ___ in İzmir. (wohn-)",
             "promptEn": "wohnen, er-form.",
             "answer": "wohnt",
             "accepted": [
@@ -2113,7 +2135,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.praesens",
-            "promptDe": "Arta ___ online Deutsch. (lernen)",
+            "promptDe": "Arta ___ online Deutsch. (lern-)",
             "promptEn": "lernen, sie-form.",
             "answer": "lernt",
             "accepted": [
@@ -2133,7 +2155,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.praesens",
-            "promptDe": "Olena ___ aus der Ukraine. (kommen)",
+            "promptDe": "Olena ___ aus der Ukraine. (komm-)",
             "promptEn": "kommen, sie-form.",
             "answer": "kommt",
             "accepted": [
@@ -2153,7 +2175,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.praesens",
-            "promptDe": "„Olena, woher ___ du genau?“ (kommen)",
+            "promptDe": "„Olena, woher ___ du genau?“ (komm-)",
             "promptEn": "kommen, du-form.",
             "answer": "kommst",
             "accepted": [
@@ -2430,7 +2452,7 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "g.praesens",
-          "promptDe": "Wo ___ Priya jetzt? – In Leipzig. (wohnen)",
+          "promptDe": "Wo ___ Priya jetzt? – In Leipzig. (wohn-)",
           "promptEn": "wohnen, sie-form.",
           "answer": "wohnt",
           "accepted": [
@@ -2496,7 +2518,7 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "g.praesens",
-          "promptDe": "Arta, wo ___ du? – In Prishtina. (wohnen)",
+          "promptDe": "Arta, wo ___ du? – In Prishtina. (wohn-)",
           "promptEn": "wohnen, du-form.",
           "answer": "wohnst",
           "accepted": [
@@ -3152,54 +3174,52 @@
         "profile": "sd1-s1",
         "register": "formell",
         "address": "Sie",
-        "title": "Kurs A1: Angaben zu Emre",
-        "situationDe": "Emre Yıldız kommt aus der Türkei, aus İzmir. Er wohnt auch dort. Emre lernt online Deutsch, im Kurs A1 von Frau Schulz in Leipzig. Die Muttersprache von Emre ist Türkisch. Er spricht auch ein bisschen Deutsch.",
-        "taskDe": "Lesen Sie den Text. Schreiben Sie: Name, Land, Wohnort, Muttersprache und Kurs von Emre.",
+        "title": "Kurs A1: Angaben zu Arta",
+        "situationDe": "Arta Berisha kommt aus dem Kosovo. Sie wohnt in Prishtina. Arta lernt online Deutsch, im Kurs A1 von Frau Schulz in Leipzig. Die Muttersprache von Arta ist Albanisch. Sie spricht auch Englisch.",
+        "taskDe": "Lesen Sie den Text. Schreiben Sie: Name, Land, Wohnort, Muttersprache und Kurs von Arta.",
         "leitpunkte": [],
         "form": {
           "fields": [
             {
               "id": "f1",
               "labelDe": "Name",
-              "answer": "Emre Yıldız",
+              "answer": "Arta Berisha",
               "accepted": [
-                "Emre Yıldız",
-                "Emre Yildiz",
-                "Yıldız, Emre",
-                "Yildiz, Emre"
+                "Arta Berisha",
+                "Berisha, Arta"
               ],
               "acceptedWhy": {
-                "Emre Yildiz": "ohne das türkische ı",
-                "Yıldız, Emre": "im Formular oft: Familienname, Komma, Vorname",
-                "Yildiz, Emre": "Familienname, Komma, Vorname; ohne das türkische ı"
+                "Berisha, Arta": "im Formular oft: Familienname, Komma, Vorname"
               }
             },
             {
               "id": "f2",
               "labelDe": "Land",
-              "answer": "Türkei",
+              "answer": "Kosovo",
               "accepted": [
-                "Türkei"
+                "Kosovo"
               ]
             },
             {
               "id": "f3",
               "labelDe": "Wohnort",
-              "answer": "İzmir",
+              "answer": "Prishtina",
               "accepted": [
-                "İzmir",
-                "Izmir"
+                "Prishtina",
+                "Pristina",
+                "Priština"
               ],
               "acceptedWhy": {
-                "Izmir": "ohne den Punkt auf dem türkischen İ"
+                "Pristina": "deutsche Schreibweise der Stadt (Duden: Pristina)",
+                "Priština": "Schreibweise mit Hatschek"
               }
             },
             {
               "id": "f4",
               "labelDe": "Muttersprache",
-              "answer": "Türkisch",
+              "answer": "Albanisch",
               "accepted": [
-                "Türkisch"
+                "Albanisch"
               ]
             },
             {
@@ -3223,13 +3243,13 @@
           "documents": []
         },
         "checklist": [
-          "Name: Wie heißt Emre?",
-          "Land: Woher kommt Emre?",
-          "Wohnort: Wo wohnt Emre jetzt?",
+          "Name: Wie heißt Arta?",
+          "Land: Woher kommt Arta?",
+          "Wohnort: Wo wohnt Arta?",
           "Muttersprache: eine Sprache",
           "Kurs: A1? A2?"
         ],
-        "modelText": "Name: Emre Yıldız\nLand: Türkei\nWohnort: İzmir\nMuttersprache: Türkisch\nKurs: A1"
+        "modelText": "Name: Arta Berisha\nLand: Kosovo\nWohnort: Prishtina\nMuttersprache: Albanisch\nKurs: A1"
       }
     },
     {
@@ -3259,7 +3279,7 @@
         "type": "fill_blank",
         "role": "check",
         "topic": "g.praesens",
-        "promptDe": "Wie ___ Sie? – Ich heiße Bilal Ahmed. (heißen)",
+        "promptDe": "Wie ___ Sie? – Ich heiße Bilal Ahmed. (heiß-)",
         "promptEn": "heißen, Sie-form.",
         "answer": "heißen",
         "accepted": [
@@ -3279,7 +3299,7 @@
         "type": "fill_blank",
         "role": "check",
         "topic": "g.praesens",
-        "promptDe": "Woher ___ du? – Aus der Ukraine. (kommen)",
+        "promptDe": "Woher ___ du? – Aus der Ukraine. (komm-)",
         "promptEn": "kommen, du-form.",
         "answer": "kommst",
         "accepted": [

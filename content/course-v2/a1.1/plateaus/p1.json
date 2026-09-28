@@ -110,9 +110,9 @@
       "lines": [
         {
           "id": "a1.1-p1-sd1-t3-l01",
-          "speaker": "x.frau-winkler",
-          "de": "Sprachschule Leipzig, guten Tag!",
-          "en": "Leipzig language school, good afternoon!"
+          "speaker": "cast.herr-richter",
+          "de": "Sprachschule Leipzig, Richter, guten Tag!",
+          "en": "Leipzig language school, Richter speaking, good afternoon!"
         },
         {
           "id": "a1.1-p1-sd1-t3-l02",
@@ -123,7 +123,7 @@
         },
         {
           "id": "a1.1-p1-sd1-t3-l03",
-          "speaker": "x.frau-winkler",
+          "speaker": "cast.herr-richter",
           "de": "Oh! Wie ist die Nummer, bitte?",
           "en": "Oh! What is the number, please?"
         },
@@ -136,7 +136,7 @@
         },
         {
           "id": "a1.1-p1-sd1-t3-l05",
-          "speaker": "x.frau-winkler",
+          "speaker": "cast.herr-richter",
           "de": "0341 28 64 90?",
           "en": "0341 28 64 90?",
           "say": "Null drei vier eins, zwei acht, sechs vier, neun null?"
@@ -150,7 +150,7 @@
         },
         {
           "id": "a1.1-p1-sd1-t3-l07",
-          "speaker": "x.frau-winkler",
+          "speaker": "cast.herr-richter",
           "de": "Danke, Herr Busch!",
           "en": "Thank you, Mr Busch!"
         }
@@ -171,8 +171,8 @@
         {
           "id": "a1.1-p1-sd1-t4-l02",
           "speaker": "x.hanna",
-          "de": "Nein, ich studiere nicht. Ich arbeite hier. Ich bin Kellnerin.",
-          "en": "No, I’m not a student. I work here. I’m a waitress."
+          "de": "Nein, ich arbeite hier. Ich bin Informatikerin.",
+          "en": "No, I work here. I’m an IT specialist."
         },
         {
           "id": "a1.1-p1-sd1-t4-l03",
@@ -368,8 +368,8 @@
             "0341 28 64 19"
           ],
           "explanation": {
-            "de": "Herr Busch sagt: „0341 28 64 19.“ Frau Winkler fragt „90?“, aber er sagt: „am Ende 19“.",
-            "en": "Mr Busch gives 0341 28 64 19. Ms Winkler asks “90?”, but he says the number ends in 19."
+            "de": "Herr Busch sagt: „0341 28 64 19.“ Herr Richter fragt: „90?“ Aber Herr Busch sagt: „Nein, am Ende 19.“",
+            "en": "Mr Busch gives 0341 28 64 19. Mr Richter asks “90?”, but Mr Busch says the number ends in 19."
           },
           "exact": "number",
           "origin": "agent"
@@ -383,16 +383,16 @@
           "options": [
             "Studentin",
             "Lehrerin",
-            "Kellnerin"
+            "Informatikerin"
           ],
           "textRef": "a1.1-p1-sd1-t4",
-          "answer": "Kellnerin",
+          "answer": "Informatikerin",
           "accepted": [
-            "Kellnerin"
+            "Informatikerin"
           ],
           "explanation": {
-            "de": "Hanna sagt: „Ich bin Kellnerin.“ Leon ist Student, und die Schwester von Leon ist Lehrerin.",
-            "en": "Hanna is a waitress. Leon is a student, and Leon’s sister is a teacher."
+            "de": "Hanna sagt: „Ich arbeite hier. Ich bin Informatikerin.“ Leon ist Student, und die Schwester von Leon ist Lehrerin.",
+            "en": "Hanna is an IT specialist. Leon is a student, and Leon’s sister is a teacher."
           },
           "origin": "agent"
         },
@@ -573,7 +573,7 @@
       "address": "Sie",
       "textType": "tt.formular",
       "title": "Sprachschule Leipzig: Anmeldung für Herrn Nasser",
-      "situationDe": "Tarek Nasser kommt aus Syrien, aus Damaskus. Er ist 35 Jahre alt, verheiratet und hat zwei Kinder. In Damaskus ist er Lehrer. Jetzt wohnt er mit der Familie in Leipzig und lernt Deutsch. Er spricht Arabisch, Englisch und ein bisschen Deutsch.",
+      "situationDe": "Tarek Nasser kommt aus Syrien, aus Damaskus. Er ist 35 Jahre alt, verheiratet und hat zwei Kinder. Er ist Lehrer von Beruf. Jetzt wohnt er mit der Familie in Leipzig und lernt Deutsch. Er spricht Arabisch, Englisch und ein bisschen Deutsch.",
       "taskDe": "Lesen Sie den Text. Schreiben Sie: Familienname, Land, Alter, Familienstand und Beruf.",
       "leitpunkte": [],
       "form": {
@@ -613,8 +613,7 @@
             "labelDe": "Familienstand",
             "answer": "verheiratet",
             "accepted": [
-              "verheiratet",
-              "verheiratet, zwei Kinder"
+              "verheiratet"
             ]
           },
           {
@@ -695,7 +694,7 @@
         },
         {
           "speaker": "learner",
-          "de": "In Kochi arbeite ich am Empfang. Hier in Leipzig lerne ich Deutsch."
+          "de": "Ich arbeite am Empfang. Hier in Leipzig lerne ich auch Deutsch."
         },
         {
           "speaker": "partner",
@@ -743,7 +742,7 @@
     "moves": [],
     "aiRole": {
       "name": "Nora",
-      "personaDe": "Teilnehmerin in der Prüfung, Sprechen Teil 2; spricht langsam und deutlich und zeigt Wörter aus der Wortliste. Ihre Karten: „Familie – Kinder“ und „Beruf – Student“. In jeder Runde fragt zuerst der Lerner mit seiner Karte, Nora antwortet kurz (sie hat zwei Brüder, sie ist Lehrerin in Leipzig); dann fragt Nora mit ihrer Karte, zum Beispiel „Haben Sie Kinder?“ oder „Sind Sie Student oder Studentin?“, und der Lerner antwortet. Am Ende sagt sie: „Danke! Auf Wiedersehen!“",
+      "personaDe": "Teilnehmerin in der Prüfung, Sprechen Teil 2; spricht langsam und deutlich und zeigt Wörter aus der Wortliste. Ihre Karten: „Familie – Kinder“ und „Beruf – Student“. In jeder Runde fragt zuerst der Lerner mit seiner Karte, Nora antwortet kurz (Familie: zwei Schwestern in Hamburg; Beruf: in Leipzig arbeitet sie in einem Restaurant, von Beruf ist sie Lehrerin); dann fragt Nora mit ihrer Karte, zum Beispiel „Haben Sie Kinder?“ oder „Sind Sie Student oder Studentin?“, und der Lerner antwortet. Am Ende sagt sie: „Danke! Auf Wiedersehen!“ Nora (immer gleich, in allen Aufgaben): sagt immer Sie; wohnt in Leipzig und lernt dort Deutsch in einem Kurs; in ihrem Land ist sie Lehrerin, in Leipzig arbeitet sie in einem Restaurant; zwei Schwestern in Hamburg, sie fährt oft mit dem Zug zu ihnen; keine Kinder; sie schwimmt gern und frühstückt am Sonntag lange. Ihr Land nennt sie nicht.",
       "register": "Sie",
       "support": "slow-wordbank"
     },
@@ -764,11 +763,11 @@
       },
       {
         "speaker": "partner",
-        "de": "Ja, zwei Brüder. Haben Sie Kinder?"
+        "de": "Ja, zwei Schwestern. Sie wohnen in Hamburg. Haben Sie Kinder?"
       },
       {
         "speaker": "learner",
-        "de": "Ja, ich habe eine Tochter. Sie ist fünf."
+        "de": "Nein. Aber meine Schwester hat eine Tochter. Sie ist fünf."
       },
       {
         "speaker": "partner",
@@ -780,11 +779,11 @@
       },
       {
         "speaker": "partner",
-        "de": "Ich arbeite in Leipzig, in einer Schule. Ich bin Lehrerin. Sind Sie Studentin?"
+        "de": "Hier in Leipzig arbeite ich in einem Restaurant. Aber von Beruf bin ich Lehrerin. Sind Sie Studentin?"
       },
       {
         "speaker": "learner",
-        "de": "Nein, ich bin nicht Studentin. Ich lerne Deutsch."
+        "de": "Nein, ich studiere nicht. Ich lerne hier Deutsch."
       },
       {
         "speaker": "partner",
@@ -919,14 +918,6 @@
       "rate": "-10%",
       "variety": "D"
     },
-    "x.frau-winkler": {
-      "role": "Mitarbeiterin am Empfang einer Sprachschule",
-      "gender": "f",
-      "age": 45,
-      "voice": "de-DE-ElkeNeural",
-      "rate": "-10%",
-      "variety": "D"
-    },
     "x.herr-busch": {
       "role": "Teilnehmer in einem Kurs A1",
       "gender": "m",
@@ -944,7 +935,7 @@
       "variety": "D"
     },
     "x.hanna": {
-      "role": "Kellnerin in Leipzig",
+      "role": "Informatikerin in Leipzig",
       "gender": "f",
       "age": 25,
       "voice": "de-DE-TanjaNeural",

@@ -1973,6 +1973,10 @@
           "accepted": [
             "ein Abendessen im Restaurant"
           ],
+          "hint": {
+            "de": "plant: Was möchte Olena machen?",
+            "en": "plant = is planning (planen)"
+          },
           "explanation": {
             "de": "Olena sagt: „Am Abend möchte ich mit Freunden im Restaurant essen.“",
             "en": "Olena wants to have dinner with friends at a restaurant."
@@ -3207,7 +3211,7 @@
             "cards": {
               "learner": [
                 "Kaffee",
-                "Rechnung"
+                "Milch"
               ],
               "partner": [
                 "Speisekarte",
@@ -3223,7 +3227,7 @@
         ],
         "aiRole": {
           "name": "Nora",
-          "personaDe": "Teilnehmerin in der Prüfung; isst zum Frühstück gern Brötchen mit Käse, mag keinen Fisch und trinkt gern Orangensaft; spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste",
+          "personaDe": "Teilnehmerin in der Prüfung; sagt immer Sie. Sie wohnt in Leipzig und lernt Deutsch in einem Kurs. In ihrem Land ist sie Lehrerin, in Leipzig arbeitet sie in einem Restaurant. Sie hat zwei Schwestern in Hamburg und keine Kinder. Sie schwimmt gern, und am Sonntag frühstückt sie lange. Zum Frühstück isst sie gern Brötchen mit Käse; sie mag keinen Fisch und trinkt gern Orangensaft. Sie spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste. In Teil 3 sitzen Sie und Nora zusammen im Café am Tisch: Nora bittet Sie um die Speisekarte und um den Zucker und gibt Ihnen, worum Sie bitten (Kaffee, Milch).",
           "register": "Sie",
           "support": "slow-wordbank"
         },
@@ -3235,7 +3239,7 @@
           "… mag ich nicht.",
           "Einen …, bitte.",
           "Kann ich bitte … haben?",
-          "Die Rechnung, bitte.",
+          "Die …, bitte.",
           "Ja, gern. Hier, bitte."
         ],
         "modelTurns": [
@@ -3289,7 +3293,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Kann ich bitte die Rechnung haben?"
+            "de": "Kann ich bitte die Milch haben?"
           },
           {
             "speaker": "partner",
@@ -3385,7 +3389,7 @@
         "checklist": [
           "Name: Vorname und Familienname",
           "Telefonnummer: Jede Zahl ist richtig.",
-          "Tag: Wann hat Olena Geburtstag?",
+          "Tag: Welcher Tag? (Montag, Dienstag …)",
           "Uhrzeit: Wann essen sie?",
           "Leute: Wer kommt? Wie viele sind es?"
         ],
@@ -3673,21 +3677,21 @@
       "id": "a1.1-u09-rm01",
       "de": "Magst du Fisch?",
       "en": "Do you like fish?",
-      "function": "fragen, was jemand mag",
+      "function": "fragen: Magst du …? Mögen Sie …?",
       "forTemplate": "sd1.sp2"
     },
     {
       "id": "a1.1-u09-rm02",
       "de": "Ja, Fisch mag ich sehr.",
       "en": "Yes, I really like fish.",
-      "function": "sagen, was ich mag",
+      "function": "sagen: Das mag ich.",
       "forTemplate": "sd1.sp2"
     },
     {
       "id": "a1.1-u09-rm03",
       "de": "Nein, Fisch mag ich nicht.",
       "en": "No, I don’t like fish.",
-      "function": "sagen, was ich nicht mag",
+      "function": "sagen: Das mag ich nicht.",
       "forTemplate": "sd1.sp2"
     },
     {
@@ -3701,14 +3705,14 @@
       "id": "a1.1-u09-rm05",
       "de": "Für mich einen Kaffee, bitte.",
       "en": "A coffee for me, please.",
-      "function": "im Café bestellen (feste Wendung)",
+      "function": "im Café bestellen: Für mich …, bitte.",
       "forTemplate": "sd1.sp3"
     },
     {
       "id": "a1.1-u09-rm06",
       "de": "Entschuldigung, wir möchten bestellen.",
       "en": "Excuse me, we’d like to order.",
-      "function": "jemanden höflich ansprechen",
+      "function": "den Kellner höflich fragen",
       "forTemplate": "sd1.sp3"
     },
     {
@@ -3722,7 +3726,7 @@
       "id": "a1.1-u09-rm08",
       "de": "Wir bezahlen zusammen.",
       "en": "We’re paying together.",
-      "function": "sagen, wie wir bezahlen"
+      "function": "sagen: zusammen oder getrennt"
     }
   ],
   "story": {

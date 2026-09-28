@@ -132,6 +132,57 @@ test('a clock time keeps its value with a leading zero; a phone number keeps eve
   assert.equal(res(phone, '341 90 12 33'), RESULT.WRONG);
 });
 
+// ── 3b. prices (level reviews 2026-09-28) ─────────────────────────────────────
+test('a price is its value however it is written: zero cents, the dash, the currency (level reviews 2026-09-28)', () => {
+  const laptop = { id: 'x-ls1-p01', type: 'fill_blank', topic: 'hoeren', promptDe: 'Wie viel kostet der Laptop? ___', answer: '890', accepted: ['890'], exact: 'number' };
+  for (const typed of ['890', '890,00', '890.00', '890,-', '890,–', '890,– €', '890 €', '890€', '890 EUR', '890 Euro', '€ 890', '890,00 €']) {
+    assert.equal(res(laptop, typed), RESULT.CORRECT, typed);
+  }
+  for (const typed of ['890,50', '8900', '89000', '980', '890 Dollar']) assert.equal(res(laptop, typed), RESULT.WRONG, typed);
+  const tickets = { id: 'x-ls1-p02', type: 'fill_blank', topic: 'hoeren', promptDe: 'Die Karten kosten zusammen ___ Euro.', answer: '88', accepted: ['88'], exact: 'number' };
+  for (const typed of ['88', '88,00', '88.00', '88,-']) assert.equal(res(tickets, typed), RESULT.CORRECT, typed);
+  for (const typed of ['88 Euro', '88,00 Euro', '88,– €', '88 €']) {
+    const out = checkItem(tickets, typed);
+    assert.equal(out.result, RESULT.TYPO, `${typed}: the currency printed next to the gap stays the number-only retry`);
+    assert.equal(out.reason, 'number-only', typed);
+  }
+  assert.equal(res(tickets, '88,50'), RESULT.WRONG, 'cents that are not zero are another price');
+  const cents = { id: 'x-ls1-p03', type: 'fill_blank', topic: 'hoeren', promptDe: 'Das Brot kostet ___', answer: '1,99', accepted: ['1,99'], exact: 'number' };
+  for (const typed of ['1,99', '1.99', '1,99 €', '1.99 Euro']) assert.equal(res(cents, typed), RESULT.CORRECT, typed);
+  for (const typed of ['1,90', '1,98', '2']) assert.equal(res(cents, typed), RESULT.WRONG, typed);
+  const zero = { id: 'x-ls1-p04', type: 'fill_blank', topic: 'hoeren', promptDe: 'Die Miete ist ___ Euro.', answer: '320,00', accepted: ['320,00'], exact: 'number' };
+  for (const typed of ['320,00', '320', '320.00', '320,-']) assert.equal(res(zero, typed), RESULT.CORRECT, typed);
+  const worded = { id: 'x-ls1-p05', type: 'fill_blank', topic: 'hoeren', promptDe: 'Der Preis: ___', answer: '2,50 Euro', accepted: ['2,50 Euro'], exact: 'number' };
+  for (const typed of ['2,50 €', '€ 2,50', '2.50 EUR', '2,50']) assert.equal(res(worded, typed), RESULT.CORRECT, typed);
+  const dict = { id: 'x-ls1-g01', type: 'dictation', topic: 'hoeren', promptDe: 'Hören Sie und schreiben Sie den Satz.', answer: 'Das kostet 890 Euro.', accepted: ['Das kostet 890 Euro.'], exact: 'number' };
+  for (const typed of ['Das kostet 890 Euro.', 'Das kostet 890,00 Euro.', 'Das kostet 890,- Euro.', 'Das kostet 890 €.']) assert.equal(res(dict, typed), RESULT.CORRECT, typed);
+  assert.notEqual(res(dict, 'Das kostet 890.'), RESULT.CORRECT, 'a dictation still needs its word „Euro"');
+  assert.notEqual(res({ ...dict, answer: 'Ich habe 3 Kinder.', accepted: ['Ich habe 3 Kinder.'] }, 'Ich habe 3 € Kinder.'), RESULT.CORRECT, 'nor may it add a currency');
+  assert.equal(res(dict, 'Das kostet 980 Euro.'), RESULT.WRONG);
+  const time = { id: 't2', type: 'fill_blank', topic: 'hoeren', promptDe: 'Der Kurs beginnt um ___ Uhr.', answer: '8.30', accepted: ['8.30', '8:30'], exact: 'number' };
+  assert.equal(res(time, '8.00'), RESULT.WRONG, 'a time is not a price: „8.00" is not „8.30"');
+});
+
+// ── 4a. form_fill: digits and number words ────────────────────────────────────
+test('form_fill: a number written as digits equals its number word, in the entry and its frame (level review s1 #4)', () => {
+  const sit = 'Tarek Nasser kommt aus Syrien, aus Damaskus. Er ist 35 Jahre alt, verheiratet und hat zwei Kinder. In Damaskus ist er Lehrer.';
+  const f4 = { id: 'a11-p1-w1-sd1-f4', type: 'form_fill', topic: 'schreiben', labelDe: 'Familienstand', answer: 'verheiratet', accepted: ['verheiratet', 'verheiratet, zwei Kinder'], situationDe: sit, otherAnswers: ['Nasser', 'Syrien', '35', 'Lehrer'] };
+  for (const typed of ['verheiratet, 2 Kinder', 'verheiratet, zwei Kinder', 'Verheiratet, 2 Kinder', 'verheiratet']) assert.equal(res(f4, typed), RESULT.CORRECT, typed);
+  for (const typed of ['verheiratet, 3 Kinder', 'verheiratet, drei Kinder', 'ledig, 2 Kinder', '2 Kinder']) assert.equal(res(f4, typed), RESULT.WRONG, typed);
+  // the other way round: the field's own form in digits takes the number word
+  const digits = { ...f4, accepted: ['verheiratet', 'verheiratet, 2 Kinder'], situationDe: 'Er ist verheiratet und hat 2 Kinder.' };
+  assert.equal(res(digits, 'verheiratet, zwei Kinder'), RESULT.CORRECT);
+  assert.equal(res(digits, 'verheiratet, drei Kinder'), RESULT.WRONG);
+  const five = { ...f4, accepted: ['verheiratet'], situationDe: 'Er ist verheiratet und hat fünf Kinder.' };
+  for (const typed of ['verheiratet, fünf Kinder', 'verheiratet, 5 Kinder']) assert.equal(res(five, typed), RESULT.CORRECT, `${typed}: an umlaut number word licenses its digits`);
+  assert.equal(res(five, 'verheiratet, 6 Kinder'), RESULT.WRONG);
+  const big = { id: 'y', type: 'form_fill', topic: 'schreiben', labelDe: 'Schüler', answer: 'vierundzwanzig', accepted: ['vierundzwanzig'], situationDe: 'Sie hat vierundzwanzig Schüler.' };
+  assert.equal(res(big, '24'), RESULT.CORRECT, '„24" = „vierundzwanzig"');
+  assert.equal(res(big, '25'), RESULT.WRONG);
+  // the Leitpunkt pre-check reads the same fold (an advisory hint, never the score)
+  assert.match(readFileSync(join(ROOT, 'src/components/course-v2/WritingTaskView.jsx'), 'utf8'), /const fold = \(s\) => foldNumberWords\(/);
+});
+
 // ── 4. form_fill ──────────────────────────────────────────────────────────────
 const U02 = 'Emre Yıldız ist 30 und lernt im Kurs A1. Er lernt online, nicht in Leipzig. Er wohnt in İzmir. İzmir ist in der Türkei. Die Muttersprache von Emre ist Türkisch.';
 const U05 = 'Arjun ist 31 Jahre alt und mit Priya verheiratet. Die beiden wohnen noch in einer WG, Berliner Straße 21, aber die WG ist zu klein. Jetzt möchten sie die Wohnung in der Kölner Straße 18 in Leipzig.';
@@ -279,6 +330,22 @@ test('rail (all courses): every number gap takes its value with the unit word pr
     assert.equal(out.result, RESULT.TYPO, `${item.id}: „${typed}“`);
     assert.equal(out.reason, 'number-only', item.id);
   }
+});
+
+test('rail (all courses): a whole-euro key takes its zero cents and dash, a key with cents its dot', () => {
+  let n = 0;
+  for (const { item } of typedItems) {
+    if (item.exact !== 'number') continue;
+    const key = String(item.answer).trim();
+    if (/^\d+$/.test(key)) {
+      for (const typed of [`${key},00`, `${key}.00`, `${key},-`]) assert.equal(res(item, typed), RESULT.CORRECT, `${item.id}: „${typed}“ for „${key}“`);
+      n += 1;
+    } else if (/^\d+,\d{2}$/.test(key)) {
+      assert.equal(res(item, key.replace(',', '.')), RESULT.CORRECT, `${item.id}: „${key.replace(',', '.')}“ for „${key}“`);
+      n += 1;
+    }
+  }
+  assert.ok(n > 0, 'the rail reads at least one number key');
 });
 
 test('rail (all courses): a clock-time key keeps its value with a leading zero', () => {

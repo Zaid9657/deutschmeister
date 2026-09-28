@@ -24,6 +24,13 @@
 //     like „dreiundzwanzig", „hundertzwanzig") equals its digit value: the key
 //     „9" accepts „neun"; a letter slip in the number word („nuen") is a TYPO
 //     like any word, a wrong value („zehn") is WRONG (review a1.1-u04 r3).
+//   - on every `exact: 'number'` item a PRICE is its value however it is written (level
+//     reviews 2026-09-28): zero cents and the whole-euro dash fold away („890" = „890,00" =
+//     „890.00" = „890,-" = „890,–"; the key „320,00" takes „320"), a key with cents keeps
+//     them digit-exact („1,99" = „1.99", never „1,90"), and a currency next to the number
+//     („€", „EUR", „Euro", before or after) may be added where the key has none („890 €",
+//     „890,– €") — except where the prompt prints it next to the gap, which stays the
+//     number-only TYPO below. Dictations too („Das kostet 890,00 Euro." for „890 Euro").
 //   - `exact: 'name'` (spelled names) — no one-letter tolerance: a letter slip
 //     is WRONG; a case-only miss stays the checker's own TYPO rule, and a spelled
 //     answer (H-A-L-L-O) folds its separators as check.js already does.
@@ -55,6 +62,10 @@
 //     one edit from a licensed word of ≥ 5 letters, never from the label's other alternative — is
 //     the checker's own TYPO class: the entry keeps its retry, it is never WRONG and never CORRECT
 //     („Izmir, Turkei" for İzmir is a TYPO, as „Turkei" alone is in the Land field; a1.1-u02 f1).
+//     A number written as digits equals its number word in a form entry and its frame
+//     („verheiratet, 2 Kinder" = „verheiratet, zwei Kinder"; „24" = „vierundzwanzig"; level
+//     review s1 #4): the numbers must be the same, digits exact — „3 Kinder" stays WRONG, never a
+//     one-letter slip. Content never pads `accepted` for it; the checker owns the rule.
 //
 // The error tag of a miss prefers the item's own SCHEMA tag (`errorTags[0]`,
 // then `errorTag`), which feeds the repair cards (BLUEPRINT §6.2); only an
@@ -248,7 +259,52 @@ function repairNumberSlips(input, accepted) {
 /** A clock time with a leading zero („09.10", „07:30") written without it; any other digit run is untouched. */
 const foldTimeZero = (s) => String(s ?? '').replace(/(^|[^\d.:])0(\d[.:]\d{2})(?![\d])/g, '$1$2');
 
-/** exact: 'number' — digits (dictation: the whole sentence), then the number-word slip rule. */
+// ── prices (2026-09-28, the level reviews: „890,00" / „890,-" for the key „890" was WRONG) ──
+/** The zero cents or the dash of a whole-euro price: „890,00", „890.00", „890,-", „890,–" → „890". */
+const PRICE_TAIL_RE = /(\d)[.,](?:00|-{1,2}|[–—])(?!\d)/g;
+/** A currency written next to a number: „890 €", „890€", „890 EUR", „890 Euro", „€ 890". */
+const CURRENCY_AFTER_RE = /(\d)\s*(?:€|eur\b|euro\b)/gi;
+const CURRENCY_BEFORE_RE = /(?:€|\beur\b|\beuro\b)\s*(\d+(?:[.,]\d+)*)/gi;
+const hasCurrency = (s) => new RegExp(CURRENCY_AFTER_RE.source, 'i').test(s) || new RegExp(CURRENCY_BEFORE_RE.source, 'i').test(s);
+const foldPriceTail = (s) => String(s ?? '').replace(PRICE_TAIL_RE, '$1');
+/** Every currency next to a number as „ Euro" after it („890 €" = „€ 890" = „890 EUR" = „890 Euro"). */
+const canonicalCurrency = (s) => String(s ?? '').replace(CURRENCY_BEFORE_RE, '$1 Euro').replace(CURRENCY_AFTER_RE, '$1 Euro');
+const stripCurrency = (s) => String(s ?? '').replace(CURRENCY_AFTER_RE, '$1').replace(CURRENCY_BEFORE_RE, '$1').replace(/\s+([.,!?])/g, '$1').trim();
+
+/** Is the currency printed right next to the gap („kosten zusammen ___ Euro")? Then writing it is the number-only TYPO. */
+const currencyAtGap = (item) => {
+  const nb = item && item.type === 'fill_blank' ? gapNeighbours(item.promptDe) : null;
+  const cur = (w) => ['euro', 'eur', '€'].includes(w);
+  return Boolean(nb && (cur(nb.before) || cur(nb.after)));
+};
+
+/**
+ * A price is its value however it is written (the level reviews, 2026-09-28): the zero cents and the
+ * whole-euro dash fold away on both sides („890" = „890,00" = „890.00" = „890,-" = „890,–"; the key
+ * „320,00" takes „320"), and a currency next to the number is one thing whichever way it is written
+ * („€", „EUR", „Euro", before or after) — the answer may add it where the key has none („890 €",
+ * „890,– €"), except where the prompt prints it next to the gap: that stays the number-only TYPO of
+ * gapFrameRule. A key with cents keeps its cents („1,99" = „1.99", never „1,90"): the digits stay
+ * exact, as everywhere on an exact-number item. Only ever an upgrade of the plain reading.
+ */
+function priceAlternative(item, input, accepted, grade) {
+  // a dictation transcribes: its currency may be written as „€" for „Euro", never added or left out
+  const stripAllowed = !currencyAtGap(item) && !isDictationTask(item);
+  let best = null;
+  accepted.forEach((a) => {
+    const keyTail = foldPriceTail(a);
+    const keyCur = hasCurrency(keyTail);
+    const key = keyCur ? canonicalCurrency(keyTail) : keyTail;
+    const userTail = foldPriceTail(input);
+    const user = keyCur ? canonicalCurrency(userTail) : stripAllowed ? stripCurrency(userTail) : userTail;
+    if (key === a && user === input) return;
+    const out = grade({ ...item, accepted: [key] }, user);
+    if (out.result !== RESULT.WRONG && (!best || RANK[out.result] > RANK[best.result])) best = { ...out, expected: a };
+  });
+  return best;
+}
+
+/** exact: 'number' — digits (dictation: the whole sentence), a price in any of its forms, then the number-word slip rule. */
 function checkExactNumber(item, input) {
   const accepted = acceptedOf(item);
   const folded = accepted.map(foldTimeZero);
@@ -257,7 +313,10 @@ function checkExactNumber(item, input) {
   const back = (out) => ({ ...out, expected: accepted[folded.indexOf(out.expected)] ?? out.expected });
   const grade = isDictationTask(item) ? checkDictationNumber : checkNumber;
   const userInput = foldTimeZero(input);
-  const out = back(grade(timed, userInput));
+  let out = back(grade(timed, userInput));
+  if (out.result === RESULT.CORRECT) return out;
+  const priced = priceAlternative(timed, userInput, folded, grade);
+  if (priced && RANK[priced.result] > RANK[out.result]) out = back(priced);
   if (out.result !== RESULT.WRONG) return out;
   const repaired = repairNumberSlips(userInput, folded);
   if (!repaired) return out;
@@ -437,9 +496,20 @@ function formContext(item) {
   const own = alternatives.find((set) => [...set].some((t) => answerTokens.has(t))) || null;
   const others = new Set(alternatives.filter((set) => set !== own).flatMap((set) => [...set]));
   const licensed = new Set();
-  const add = (t) => { if (t && !others.has(t) && hasLetter(t)) licensed.add(t); };
+  // a number word licenses its digits too („zwei Kinder" → „2 Kinder", „vierundzwanzig" → „24"):
+  // digits equal the number word in a frame, as on every exact-number item (level review s1 #4)
+  const add = (t) => {
+    if (!t || others.has(t) || !hasLetter(t)) return;
+    licensed.add(t);
+    const v = cardinalValue(t);
+    if (v !== null && !others.has(String(v))) licensed.add(String(v));
+  };
   formTokens(item.labelDe).map(formTok).forEach(add);
-  accepted.flatMap((a) => formTokens(a).map(formTok)).forEach(add);
+  // the field's own forms: a digit in one of them licenses its number word („2 Kinder" → „zwei Kinder")
+  for (const t of accepted.flatMap((a) => formTokens(a).map(formTok))) {
+    add(t);
+    if (/^\d+$/.test(t)) add(formTok(spellCardinal(Number(t)) || ''));
+  }
   const sentences = String(item.situationDe || '').split(/(?<=[.!?])\s+/);
   for (const sentence of sentences) {
     const toks = formTokens(sentence).map(formTok);
@@ -492,9 +562,22 @@ function licensedMask(tokens, ctx) {
 /** Letter words of an entry that are neither frame nor number words („Berliner Straße" of „Berliner Straße 21"). */
 const contentWords = (s) => formTokens(foldNumberWords(s)).map(formTok).filter((t) => hasLetter(t) && !FORM_FRAME.has(t) && !/^\d/.test(t));
 
-/** One candidate value of a form field: the field's own check, case free, a street key's words required. */
+/** Does a text hold a number, as digits or as a German number word? */
+const holdsNumber = (s) => /\d/.test(foldNumberWords(s));
+
+/**
+ * One candidate value of a form field: the field's own check, case free, a street key's words required.
+ * A number written as digits equals its number word („verheiratet, 2 Kinder" = „verheiratet, zwei
+ * Kinder"; level review s1 #4): the entry is then read as checkWholeNumber reads an exact-number key —
+ * the same numbers in the same order, digits exact, the words around them graded as usual — so a
+ * wrong number never becomes a one-letter slip.
+ */
 function formBase(item, value) {
   let out = checkTyped(item, value);
+  if (out.result === RESULT.WRONG && item.exact !== 'name' && item.exact !== 'number' && (holdsNumber(value) || acceptedOf(item).some(holdsNumber))) {
+    const worded = checkWholeNumber(item, value, acceptedOf(item), false);
+    if (worded.result !== RESULT.WRONG) out = worded;
+  }
   if (out.result === RESULT.TYPO && out.reason === 'case') out = { result: RESULT.CORRECT, expected: out.expected };
   if (out.result !== RESULT.WRONG && item.exact === 'number' && contentWords(out.expected).length && !contentWords(value).length) {
     return { result: RESULT.WRONG, expected: out.expected };

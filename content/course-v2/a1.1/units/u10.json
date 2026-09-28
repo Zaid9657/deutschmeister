@@ -2184,8 +2184,12 @@
             ],
             "answer": "Fahren Sie auch nach Dresden?",
             "accepted": [
-              "Fahren Sie auch nach Dresden?"
+              "Fahren Sie auch nach Dresden?",
+              "Fahren auch Sie nach Dresden?"
             ],
+            "acceptedWhy": {
+              "Fahren auch Sie nach Dresden?": "grammatisch: „auch“ vor „Sie“ betont „Sie“ (auch Sie, wie wir); das Verb bleibt auf Position 1"
+            },
             "explanation": {
               "de": "Ja/Nein-Frage: „Fahren“ steht auf Position 1.",
               "en": "Yes/no question: “Fahren” comes first."
@@ -2944,7 +2948,7 @@
         ],
         "aiRole": {
           "name": "Nora",
-          "personaDe": "Teilnehmerin in der Prüfung; spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste. In Teil 2 antwortet sie auf Ihre Fragen zu Preis und Abfahrt wie am Schalter: Eine Fahrkarte nach Dresden kostet 22 Euro, der Zug fährt um 9.10 Uhr ab. Ihre eigenen Fragen stellt sie als Teilnehmerin: „Kaufen Sie oft Fahrkarten hin und zurück?“, „Hat Ihr Zug oft Verspätung?“ In Teil 3 bittet sie um Wasser und um einen Platz („Kann ich hier sitzen?“) und reagiert auf Ihre Bitten.",
+          "personaDe": "Teilnehmerin in der Prüfung; sagt immer Sie. Sie wohnt in Leipzig und lernt Deutsch in einem Kurs. In ihrem Land ist sie Lehrerin, in Leipzig arbeitet sie in einem Restaurant. Sie hat zwei Schwestern in Hamburg und keine Kinder; sie fährt oft mit dem Zug nach Hamburg zu ihren Schwestern. Sie spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste. In Teil 2 kennt sie Preis und Abfahrt nach Dresden: einfach 22 Euro, hin und zurück 44 Euro; der Zug fährt um 9.10 Uhr von Gleis 12 ab. Fragt man sie nach ihren Fahrten, erzählt sie von Hamburg. Ihre eigenen Fragen stellt sie als Teilnehmerin: „Kaufen Sie oft Fahrkarten hin und zurück?“, „Hat Ihr Zug oft Verspätung?“ In Teil 3 bittet sie um Wasser und um einen Platz („Kann ich hier sitzen?“) und reagiert auf Ihre Bitten.",
           "register": "Sie",
           "support": "slow-wordbank"
         },
@@ -2966,7 +2970,7 @@
           },
           {
             "speaker": "partner",
-            "de": "Eine Fahrkarte kostet 22 Euro."
+            "de": "Einfach 22 Euro, hin und zurück 44 Euro."
           },
           {
             "speaker": "partner",
@@ -3072,10 +3076,9 @@
             "cues": [
               "Information",
               "Gleis",
-              "treffe",
-              "trifft",
-              "treffen",
-              "Bahnhof"
+              "Schalter",
+              "Automat",
+              "Café"
             ]
           }
         ],
@@ -3337,21 +3340,20 @@
         "type": "multiple_choice",
         "role": "proof",
         "topic": "lesen",
-        "promptDe": "Automat: „Wie viele Personen?“ Priya und Arjun fahren nach Dresden. Was ist richtig?",
-        "promptEn": "The machine asks how many people. What is right?",
+        "promptDe": "Automat: „Bezahlen: mit Karte oder bar?“ Sie haben keine Karte, nur 50 Euro. Was passt?",
+        "promptEn": "The machine asks: pay by card or in cash? You have no card, only 50 euros. What do you choose?",
         "options": [
-          "1 Person",
-          "2 Personen",
-          "3 Personen"
+          "mit Karte",
+          "bar",
+          "hin und zurück"
         ],
-        "answer": "2 Personen",
+        "answer": "bar",
         "accepted": [
-          "2 Personen"
+          "bar"
         ],
-        "exact": "number",
         "explanation": {
-          "de": "„Wie viele Personen?“: Priya und Arjun, das sind zwei Personen.",
-          "en": "“How many people?” – Priya and Arjun: two people."
+          "de": "„bar“ heißt: mit Geld, ohne Karte. Sie haben keine Karte, also bezahlen Sie bar.",
+          "en": "“bar” means in cash, without a card. You have no card, so you pay in cash."
         },
         "origin": "agent"
       },

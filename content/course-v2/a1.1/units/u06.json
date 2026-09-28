@@ -341,7 +341,7 @@
             "Was haben Sie heute dabei?"
           ],
           "explanation": {
-            "de": "Frau Schulz fragt alle: „Was haben Sie heute dabei?“ Dann sagen alle: „Ich habe …“",
+            "de": "Frau Schulz fragt alle: „Was haben Sie dabei?“ Dann sagen alle: „Ich habe …“",
             "en": "Frau Schulz asks everyone what they have with them today."
           },
           "origin": "agent"
@@ -834,7 +834,7 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "g.akkusativ",
-          "promptDe": "Priya braucht ___ Heft für den Kurs. (ein)",
+          "promptDe": "Priya braucht ___ Heft für den Kurs. (ein, eine oder einen?)",
           "promptEn": "ein → form for das Heft.",
           "answer": "ein",
           "accepted": [
@@ -1117,7 +1117,7 @@
             "Bilal"
           ],
           "explanation": {
-            "de": "Herr Richter hat kein Ladekabel. Bilal sagt: „Kein Problem, hier ist ein Ladekabel für dich.“",
+            "de": "Herr Richter hat kein Ladekabel. Aber Bilal hat ein Ladekabel für Priya.",
             "en": "Mr Richter has none; Bilal has a charging cable for Priya."
           },
           "origin": "agent"
@@ -1301,7 +1301,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.kein",
-            "promptDe": "Das ist ___ Heft, das ist ein Kalender. (kein)",
+            "promptDe": "Das ist ___ Heft, das ist ein Kalender. (kein, keine oder keinen?)",
             "promptEn": "kein → form for das Heft.",
             "answer": "kein",
             "accepted": [
@@ -1852,8 +1852,7 @@
           "promptEn": "Write the price.",
           "answer": "390",
           "accepted": [
-            "390",
-            "390,00"
+            "390"
           ],
           "exact": "number",
           "explanation": {
@@ -2162,24 +2161,24 @@
             "origin": "agent"
           },
           {
-            "id": "a1.1-u06-ls3-p09",
+            "id": "a1.1-u06-ls3-p13",
             "type": "sentence_building",
             "role": "practice",
-            "topic": "lx.kosten",
-            "promptDe": "Bilden Sie die W-Frage.",
-            "promptEn": "Build the W-question.",
+            "topic": "redemittel",
+            "promptDe": "Sie fragen Frau Schulz nach einem Wort. Bilden Sie die Ja/Nein-Frage.",
+            "promptEn": "You ask Frau Schulz about a word. Build the yes/no question: is the word right?",
             "tiles": [
-              "kostet",
-              "was",
-              "der Laptop"
+              "ist",
+              "das Wort",
+              "richtig"
             ],
-            "answer": "Was kostet der Laptop?",
+            "answer": "Ist das Wort richtig?",
             "accepted": [
-              "Was kostet der Laptop?"
+              "Ist das Wort richtig?"
             ],
             "explanation": {
-              "de": "W-Frage: „Was“ auf Position 1, das Verb „kostet“ auf Position 2.",
-              "en": "W-question: “Was” first, the verb “kostet” second."
+              "de": "Ja/Nein-Frage: „Ist“ steht auf Position 1. So fragen Sie: Ist das Wort richtig?",
+              "en": "Yes/no question: “Ist” comes first. This is how you ask whether a word is right."
             },
             "origin": "agent"
           },
@@ -2751,8 +2750,8 @@
             "profile": "sd1-sp2",
             "prepMinutes": 0,
             "instructionsDe": "Zwei Themen: „Im Kurs“, dann „Im Büro“. Fragen und antworten Sie mit den Karten.",
-            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin Nora haben Wortkarten. Es gibt zwei Themen: zuerst „Im Kurs“, dann „Im Büro“. Fragen Sie mit Ihrer Karte: Hast du …? Brauchst du …? Nora fragt auch. Antworten Sie: Ja, ich habe … / Nein, ich habe keinen / kein / keine …",
-            "situationEn": "Speaking part 2: you and your partner Nora have word cards. There are two topics: first “Im Kurs” (in class), then “Im Büro” (at the office). Ask a question with your card: Hast du …? Brauchst du …? Nora asks too. Answer: Ja, ich habe … / Nein, ich habe keinen / kein / keine …",
+            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin Nora haben Wortkarten. Es gibt zwei Themen: zuerst „Im Kurs“, dann „Im Büro“. Fragen Sie mit Ihrer Karte: Haben Sie …? Brauchen Sie …? Nora fragt auch. Antworten Sie: Ja, ich habe … / Nein, ich habe keinen / kein / keine …",
+            "situationEn": "Speaking part 2: you and your partner Nora have word cards. There are two topics: first “Im Kurs” (in class), then “Im Büro” (at the office). Ask a question with your card: Haben Sie …? Brauchen Sie …? Nora asks too. Answer: Ja, ich habe … / Nein, ich habe keinen / kein / keine …",
             "cards": {
               "learner": [
                 "Im Kurs – Heft",
@@ -2775,12 +2774,12 @@
             "profile": "sd1-sp3",
             "prepMinutes": 0,
             "instructionsDe": "Bitten Sie mit jeder Karte um etwas. Ihre Partnerin bittet auch: Reagieren Sie.",
-            "situationDe": "Sprechen Teil 3: Sie und Ihre Partnerin Nora haben je zwei Karten. In der Prüfung sind auf den Karten Bilder. „Hast du …?“ ohne „bitte“ ist nur eine Frage. Bitten Sie: Gibst du mir bitte …? Hast du bitte … für mich? Fehlt ein Wort? Zeigen Sie und sagen Sie: „Das ist für …“",
-            "situationEn": "Speaking part 3: you and your partner Nora each have two cards. In the exam the cards show pictures. “Hast du …?” without “bitte” is only a question. Make a request: Gibst du mir bitte …? Hast du bitte … für mich? Don’t know the word? Point at it and say: “Das ist für …” (It’s for …).",
+            "situationDe": "Sprechen Teil 3: Sie und Ihre Partnerin Nora haben je zwei Karten. In der Prüfung sind auf den Karten Bilder. „Haben Sie …?“ ohne „bitte“ ist nur eine Frage. Bitten Sie: Geben Sie mir bitte …? Haben Sie bitte … für mich? Fehlt ein Wort? Zeigen Sie und sagen Sie: „Das ist für …“",
+            "situationEn": "Speaking part 3: you and your partner Nora each have two cards. In the exam the cards show pictures. “Haben Sie …?” without “bitte” is only a question. Make a request: Geben Sie mir bitte …? Haben Sie bitte … für mich? Don’t know the word? Point at it and say: “Das ist für …” (It’s for …).",
             "cards": {
               "learner": [
                 "Heft",
-                "Bild (Ladekabel): Wie heißt das auf Deutsch?"
+                "Bild: ein Ding für das Handy – Wie heißt das auf Deutsch?"
               ],
               "partner": [
                 "Buch",
@@ -2796,17 +2795,17 @@
         ],
         "aiRole": {
           "name": "Nora",
-          "personaDe": "Teilnehmerin in der Prüfung; sie ist mit Ihnen im Kurs und sagt du. Sie spricht langsam, wiederholt gern und zeigt Wörter aus der Liste. Fehlt ein Wort? Nora hilft mit dem Wort.",
-          "register": "du",
+          "personaDe": "Teilnehmerin in der Prüfung; sie sagt Sie. Sie wohnt in Leipzig und lernt Deutsch in einem Kurs. In ihrem Land ist sie Lehrerin, in Leipzig arbeitet sie in einem Restaurant: Sie hat kein Büro, aber zu Hause einen Computer. Sie spricht langsam, wiederholt gern und zeigt Wörter aus der Liste. Fehlt ein Wort? Nora hilft mit dem Wort.",
+          "register": "Sie",
           "support": "slow-wordbank"
         },
-        "openingLine": "Hallo, ich bin Nora! Wir sind zusammen im Kurs, also sagen wir du. Zuerst Teil 2: Fragen und Antworten, erst „Im Kurs“, dann „Im Büro“. Dann Teil 3: Bitten. Du zuerst!",
+        "openingLine": "Hallo, ich bin Nora! Im Kurs sagen viele du, aber in der Prüfung sagen wir Sie. Zuerst Teil 2: Fragen und Antworten, erst „Im Kurs“, dann „Im Büro“. Dann Teil 3: Bitten. Bitte, Sie zuerst!",
         "hintWords": [
-          "Hast du …? / Brauchst du …?",
+          "Haben Sie …? / Brauchen Sie …?",
           "Ja, ich habe …",
           "Nein, ich habe keinen / kein / keine …",
-          "Gibst du mir bitte …?",
-          "Hast du bitte … für mich?",
+          "Geben Sie mir bitte …?",
+          "Haben Sie bitte … für mich?",
           "Ja, hier, bitte.",
           "Das ist für …",
           "Wie heißt das auf Deutsch?"
@@ -2814,7 +2813,7 @@
         "modelTurns": [
           {
             "speaker": "learner",
-            "de": "Hast du heute ein Heft dabei?"
+            "de": "Haben Sie heute ein Heft dabei?"
           },
           {
             "speaker": "partner",
@@ -2822,7 +2821,7 @@
           },
           {
             "speaker": "partner",
-            "de": "Brauchst du im Kurs ein Buch?"
+            "de": "Brauchen Sie im Kurs ein Buch?"
           },
           {
             "speaker": "learner",
@@ -2830,23 +2829,23 @@
           },
           {
             "speaker": "learner",
-            "de": "Hast du im Büro einen Computer?"
+            "de": "Haben Sie im Büro einen Computer?"
           },
           {
             "speaker": "partner",
-            "de": "Ja, ich habe einen Computer und einen Drucker."
+            "de": "Ich habe kein Büro. Aber zu Hause habe ich einen Computer."
           },
           {
             "speaker": "partner",
-            "de": "Brauchst du im Büro einen Laptop?"
+            "de": "Brauchen Sie im Büro einen Laptop?"
           },
           {
             "speaker": "learner",
-            "de": "Nein, ich brauche keinen Laptop. Ich habe einen Computer."
+            "de": "Nein, ich brauche keinen Laptop. Im Büro gibt es einen Computer."
           },
           {
             "speaker": "learner",
-            "de": "Hast du bitte ein Heft für mich?"
+            "de": "Haben Sie bitte ein Heft für mich?"
           },
           {
             "speaker": "partner",
@@ -2854,7 +2853,7 @@
           },
           {
             "speaker": "partner",
-            "de": "Gibst du mir bitte das Buch?"
+            "de": "Geben Sie mir bitte das Buch?"
           },
           {
             "speaker": "learner",
@@ -2870,11 +2869,11 @@
           },
           {
             "speaker": "partner",
-            "de": "Hast du bitte einen Bleistift für mich?"
+            "de": "Haben Sie bitte einen Bleistift für mich?"
           },
           {
             "speaker": "learner",
-            "de": "Nein, aber ich habe einen Kuli für dich. Hier, bitte."
+            "de": "Nein, aber ich habe einen Kuli für Sie. Hier, bitte."
           }
         ]
       }
@@ -2899,10 +2898,10 @@
             "de": "Was haben Sie zu Hause? Was haben Sie nicht?",
             "cues": [
               "nur ein Handy",
+              "Handy",
               "keinen Laptop",
               "kein",
-              "keinen",
-              "Computer"
+              "keinen"
             ]
           },
           {
@@ -2919,6 +2918,7 @@
             "id": "lp3",
             "de": "Fragen Sie zu Seite 24: Ist ein Wort richtig?",
             "cues": [
+              "richtig",
               "Heißt es",
               "heißt das",
               "der, die oder das",
@@ -2940,7 +2940,7 @@
           "Gruß und Ihr Name",
           "20 bis 30 Wörter"
         ],
-        "modelText": "Liebe Frau Schulz,\nich habe nur ein Handy, keinen Laptop. Haben Sie vielleicht einen Laptop für mich? Eine Frage zu Seite 24: Heißt es „die Schlüssel“?\nViele Grüße\n(Ihr Name)"
+        "modelText": "Liebe Frau Schulz,\nich habe nur ein Handy, keinen Laptop. Haben Sie vielleicht einen Laptop für mich? Eine Frage zu Seite 24: Ist das Wort richtig: die Schlüssel?\nViele Grüße\n(Ihr Name)"
       }
     },
     {
@@ -3193,14 +3193,14 @@
   "redemittel": [
     {
       "id": "a1.1-u06-rm01",
-      "de": "Hast du bitte einen Kuli für mich?",
+      "de": "Haben Sie bitte einen Kuli für mich?",
       "en": "Have you got a pen for me, please?",
       "function": "um etwas bitten",
       "forTemplate": "sd1.sp3"
     },
     {
       "id": "a1.1-u06-rm02",
-      "de": "Gibst du mir bitte das Heft?",
+      "de": "Geben Sie mir bitte das Heft?",
       "en": "Could you give me the exercise book, please?",
       "function": "um etwas bitten („mir“ ist Dativ)",
       "forTemplate": "sd1.sp3"
@@ -3221,9 +3221,9 @@
     },
     {
       "id": "a1.1-u06-rm05",
-      "de": "Brauchst du einen Laptop?",
+      "de": "Brauchen Sie einen Laptop?",
       "en": "Do you need a laptop?",
-      "function": "fragen: Brauchst du etwas?",
+      "function": "fragen: Brauchen Sie etwas?",
       "forTemplate": "sd1.sp2"
     },
     {
@@ -3237,7 +3237,8 @@
       "id": "a1.1-u06-rm07",
       "de": "Ist das Wort richtig: der Schlüssel?",
       "en": "Is the word right: der Schlüssel?",
-      "function": "fragen: Ist das Wort richtig?"
+      "function": "fragen: Ist das Wort richtig?",
+      "forTemplate": "sd1.s2"
     },
     {
       "id": "a1.1-u06-rm08",

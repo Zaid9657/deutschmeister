@@ -187,6 +187,9 @@ function unitShape(stage) {
       'recapDe?': 'de',
       // glosses (optional, S): a word the Folge introduces before its unit glosses it (a1.1-u04 r5 F03)
       folge: staged(stage, { title: 'de', lines: '[Line]{2..12}', 'glosses?': 'Glosses', gistItem: ['I', 'Item'] }),
+      // auftakt: B skeleton, and in the A skeleton too since 2026-09-28 (a1.1 level review r1 s1 major #1:
+      // the scored spoken sentence within the first three screens of U1, BLUEPRINT §3.1 / §7.4). Its micro-output
+      // key carries no Lernschritt number (`a11-u01-mo`, SCHEMA §2), so it never collides with LS1's `-mo1`
       'auftakt?': staged(stage, { 'assetRef?': 'ref(asset)', promptDe: 'de', microOutput: ['T', 'MicroOutput'] }),
       testOut: { offered: 'bool' },
     })],
@@ -213,6 +216,12 @@ function refineUnit(u, emit) {
   }
   if (typeof u.id === 'string' && Number.isInteger(u.nr) && !u.id.endsWith(`-u${String(u.nr).padStart(2, '0')}`)) {
     emit('nr', `nr ${u.nr} does not match unit id "${u.id}"`);
+  }
+  // the Auftakt micro-output's bank key: <prefix>-uNN-mo, without a Lernschritt number (SCHEMA §2)
+  const key = u.start?.auftakt?.microOutput?.bankKey;
+  if (typeof key === 'string' && /^[ab][12]\.[12]$/.test(String(u.level)) && Number.isInteger(u.nr)) {
+    const want = `${u.level.replace('.', '')}-u${String(u.nr).padStart(2, '0')}-mo`;
+    if (key !== want) emit('start.auftakt.microOutput.bankKey', `the Auftakt micro-output's key is "${want}" (no Lernschritt number; LS1 holds -mo1), got "${key}"`, 'KEY-01');
   }
 }
 

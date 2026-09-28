@@ -107,7 +107,14 @@
       "kind": "ad",
       "title": "Laptops",
       "text": "a) Heute im Angebot: Laptop, neu, mit Tasche und Ladekabel. Nur 399 Euro!\nb) Laptop, gebraucht, zwei Jahre alt. Er funktioniert sehr gut. Nur 150 Euro!",
-      "glosses": []
+      "glosses": [
+        {
+          "token": "gebraucht",
+          "gloss": {
+            "en": "second-hand, used (= nicht neu)"
+          }
+        }
+      ]
     },
     {
       "id": "a1.1-p2-sd1-t7",
@@ -121,7 +128,14 @@
       "kind": "ad",
       "title": "Für Ihr Handy",
       "text": "a) Ladekabel für alle Handys: neu und nur 9 Euro! Kaufen Sie hier oder im Internet.\nb) Handys, neu und gebraucht, ab 99 Euro. Kommen Sie und fragen Sie!",
-      "glosses": []
+      "glosses": [
+        {
+          "token": "gebraucht",
+          "gloss": {
+            "en": "second-hand, used (= nicht neu)"
+          }
+        }
+      ]
     },
     {
       "id": "a1.1-p2-sd1-t9",
@@ -286,8 +300,8 @@
             "a"
           ],
           "explanation": {
-            "de": "Laptop a ist neu. Laptop b ist billig, aber er ist gebraucht und zwei Jahre alt.",
-            "en": "Laptop a is new. Laptop b is cheaper, but it is used and two years old."
+            "de": "Laptop a ist neu. Laptop b ist billig, aber er ist nicht neu: Er ist zwei Jahre alt.",
+            "en": "Laptop a is new. Laptop b is cheap, but it is not new: it is two years old."
           },
           "origin": "agent"
         },
@@ -366,7 +380,7 @@
       "address": "du",
       "textType": "tt.kurzmitteilung",
       "title": "Eine Nachricht an Olena: Meine Wohnung",
-      "situationDe": "Sie wohnen jetzt in einer Wohnung in Leipzig. Aber Sie haben noch nicht alle Möbel. Olena aus Ihrem Kurs schreibt: „Wie ist deine Wohnung?“",
+      "situationDe": "Sie wohnen jetzt in einer Wohnung in Leipzig. Aber Sie haben nicht alle Möbel. Olena aus Ihrem Kurs schreibt: „Wie ist deine Wohnung?“",
       "taskDe": "Schreiben Sie Olena eine Nachricht zu allen drei Punkten (25 bis 35 Wörter).",
       "leitpunkte": [
         {
@@ -422,7 +436,7 @@
         "Gruß: Viele Grüße + Ihr Name",
         "25 bis 35 Wörter"
       ],
-      "modelText": "Liebe Olena,\nmeine Wohnung ist klein, aber hell. Sie hat zwei Zimmer und einen Balkon. Aber ich habe noch keinen Tisch und keine Lampe. Hast du eine Lampe für mich?\nViele Grüße\n(Ihr Name)"
+      "modelText": "Liebe Olena,\nmeine Wohnung ist klein, aber hell. Sie hat zwei Zimmer und einen Balkon. Aber ich habe keinen Tisch und keine Lampe. Hast du eine Lampe für mich?\nViele Grüße\n(Ihr Name)"
     },
     {
       "bankKey": "a11-p2-s3-sd1",
@@ -451,7 +465,7 @@
       "moves": [],
       "aiRole": {
         "name": "Nora",
-        "personaDe": "Teilnehmerin in der Prüfung, Sprechen Teil 3; spricht langsam und deutlich und zeigt Wörter aus der Wortliste. Ihre Karten: „Tisch“ und „Schlüssel“. Zuerst bittet der Lerner mit seiner Karte um etwas; Nora reagiert mit „Ja, hier, bitte.“ oder „Ja, gern.“. Dann bittet Nora mit ihrer Karte, zum Beispiel „Ich brauche einen Tisch, bitte.“, und der Lerner reagiert. Eine Frage ohne Bitte („Haben Sie eine Lampe?“) wiederholt sie nicht als Bitte, sondern sagt: „Bitten Sie noch einmal, mit bitte.“",
+        "personaDe": "Teilnehmerin in der Prüfung, Sprechen Teil 3; spricht langsam und deutlich und zeigt Wörter aus der Wortliste. Ihre Karten: „Tisch“ und „Schlüssel“. Zuerst bittet der Lerner mit seiner Karte um etwas; Nora reagiert mit „Ja, hier, bitte.“ oder „Ja, gern.“. Dann bittet Nora mit ihrer Karte, zum Beispiel „Ich brauche einen Tisch, bitte.“, und der Lerner reagiert. Eine Frage ohne Bitte („Haben Sie eine Lampe?“) wiederholt sie nicht als Bitte, sondern sagt: „Bitten Sie noch einmal, mit bitte.“ Nora (immer gleich, in allen Aufgaben): sagt immer Sie; wohnt in Leipzig und lernt dort Deutsch in einem Kurs; in ihrem Land ist sie Lehrerin, in Leipzig arbeitet sie in einem Restaurant; zwei Schwestern in Hamburg, sie fährt oft mit dem Zug zu ihnen; keine Kinder; sie schwimmt gern und frühstückt am Sonntag lange. Ihr Land nennt sie nicht.",
         "register": "Sie",
         "support": "slow-wordbank"
       },
@@ -527,7 +541,7 @@
     "moves": [],
     "aiRole": {
       "name": "Nora",
-      "personaDe": "Teilnehmerin in der Prüfung, Sprechen Teil 2; spricht langsam und deutlich und zeigt Wörter aus der Wortliste. Ihre Karten: „Einkaufen – Markt“ und „Wohnen – Balkon“. In jeder Runde fragt zuerst der Lerner mit seiner Karte, Nora antwortet kurz (sie kauft Obst und Gemüse auf dem Markt, ihre Miete ist 600 Euro); dann fragt Nora mit ihrer Karte, zum Beispiel „Wo kaufen Sie Obst und Gemüse? Auf dem Markt?“ oder „Hat Ihre Wohnung einen Balkon?“, und der Lerner antwortet.",
+      "personaDe": "Teilnehmerin in der Prüfung, Sprechen Teil 2; spricht langsam und deutlich und zeigt Wörter aus der Wortliste. Ihre Karten: „Einkaufen – Markt“ und „Wohnen – Balkon“. In jeder Runde fragt zuerst der Lerner mit seiner Karte, Nora antwortet kurz (sie kauft Obst und Gemüse auf dem Markt, ihre Miete ist 600 Euro); dann fragt Nora mit ihrer Karte, zum Beispiel „Wo kaufen Sie Obst und Gemüse? Auf dem Markt?“ oder „Hat Ihre Wohnung einen Balkon?“, und der Lerner antwortet. Nora (immer gleich, in allen Aufgaben): sagt immer Sie; wohnt in Leipzig und lernt dort Deutsch in einem Kurs; in ihrem Land ist sie Lehrerin, in Leipzig arbeitet sie in einem Restaurant; zwei Schwestern in Hamburg, sie fährt oft mit dem Zug zu ihnen; keine Kinder; sie schwimmt gern und frühstückt am Sonntag lange. Ihr Land nennt sie nicht.",
       "register": "Sie",
       "support": "slow-wordbank"
     },

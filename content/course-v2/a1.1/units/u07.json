@@ -976,7 +976,7 @@
         "modelDe": "Ich stehe um sieben Uhr auf. Um neun fängt der Kurs an. Am Abend kaufe ich ein, dann lerne ich."
       },
       "aussprache": {
-        "focus": "Trennbare Verben: „auf“, „an“, „ein“ und „fern“ haben den Akzent, auch am Satzende: aufstehen – Ich stehe um sieben AUF.",
+        "focus": "Trennbare Verben: Im Wort hat der erste Teil den Akzent: AUFstehen, ANfangen, EINkaufen. Im Satz steht er am Ende: Ich stehe um sieben auf.",
         "perception": [
           {
             "id": "a1.1-u07-ls1-x01",
@@ -994,8 +994,8 @@
               "auf"
             ],
             "explanation": {
-              "de": "„aufstehen“: „Ich stehe um sieben auf.“ Der Teil „auf“ steht am Ende und hat den Akzent.",
-              "en": "aufstehen: the stressed “auf” comes at the end."
+              "de": "„aufstehen“: „Ich stehe um sieben auf.“ Der Teil „auf“ steht am Ende. Sprechen Sie ihn deutlich.",
+              "en": "aufstehen: ‘auf’ comes at the end – say it clearly."
             },
             "origin": "agent"
           },
@@ -1016,7 +1016,7 @@
             ],
             "explanation": {
               "de": "„anfangen“: „Der Kurs fängt um neun an.“ „an“ steht am Ende.",
-              "en": "anfangen: the stressed “an” comes at the end."
+              "en": "anfangen: ‘an’ comes at the end – say it clearly."
             },
             "origin": "agent"
           },
@@ -1037,7 +1037,7 @@
             ],
             "explanation": {
               "de": "„einkaufen“: „Wir kaufen am Freitag ein.“ „ein“ steht am Ende.",
-              "en": "einkaufen: the stressed “ein” comes at the end."
+              "en": "einkaufen: ‘ein’ comes at the end – say it clearly."
             },
             "origin": "agent"
           },
@@ -1058,7 +1058,7 @@
             ],
             "explanation": {
               "de": "„fernsehen“: „Emre sieht am Abend fern.“ „fern“ steht am Ende.",
-              "en": "fernsehen: the stressed “fern” comes at the end."
+              "en": "fernsehen: ‘fern’ comes at the end – say it clearly."
             },
             "origin": "agent"
           }
@@ -2927,7 +2927,7 @@
               "role": "exam",
               "topic": "lesen",
               "textRef": "a1.1-u07-ls4-t2",
-              "promptDe": "Am Büro: „Am Freitag um 15 Uhr ist das Büro geöffnet.“",
+              "promptDe": "An einem Büro: „Am Freitag um 15 Uhr ist das Büro geöffnet.“",
               "options": [
                 "richtig",
                 "falsch"
@@ -3167,7 +3167,7 @@
         "moves": [],
         "aiRole": {
           "name": "Nora",
-          "personaDe": "Teilnehmerin in der Prüfung; spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste. Sagt auf „Wie spät ist es?“ eine Uhrzeit. Fragt mit ihren Karten: „Und in Ihrem Land? Wie spät ist es da jetzt?“ und „Wann stehen Sie am Montag auf?“; akzeptiert jede richtige Uhrzeit.",
+          "personaDe": "Teilnehmerin in der Prüfung; sagt immer Sie, spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste. Sagt auf „Wie spät ist es?“ eine Uhrzeit. Fragt mit ihren Karten: „Und in Ihrem Land? Wie spät ist es da jetzt?“ und „Wann stehen Sie am Montag auf?“; akzeptiert jede richtige Uhrzeit. Noras Fakten, immer gleich: Sie wohnt in Leipzig und lernt Deutsch in einem Kurs. In ihrem Land ist sie Lehrerin, in Leipzig arbeitet sie in einem Restaurant. Sie hat zwei Schwestern in Hamburg und keine Kinder. Sie schwimmt gern. Am Wochenende kauft sie ein, am Sonntag frühstückt sie lange, und oft fährt sie mit dem Zug nach Hamburg zu ihren Schwestern. Ihr Land nennt sie nicht.",
           "register": "Sie",
           "support": "slow-wordbank"
         },
@@ -3237,26 +3237,27 @@
             "id": "lp1",
             "de": "Wann fängt der Kurs am Donnerstag an?",
             "cues": [
-              "Donnerstag",
               "fängt",
               "später",
-              "erst",
+              "erst um",
               "elf Uhr",
-              "11 Uhr"
+              "11 Uhr",
+              "um 11"
             ]
           },
           {
             "id": "lp2",
             "de": "Was machen Sie am Donnerstagmorgen?",
             "cues": [
-              "Morgen",
+              "am Morgen",
               "Donnerstagmorgen",
               "kaufe",
               "kauft",
               "Termin",
               "stehe",
               "steht",
-              "lerne",
+              "ich lerne",
+              "lerne ich",
               "lernt",
               "arbeite",
               "arbeitet",
@@ -3269,9 +3270,9 @@
             "de": "Fragen Sie Bilal: Wann lernen wir zusammen?",
             "cues": [
               "Wann",
-              "Zeit",
+              "Zeit?",
               "zusammen",
-              "lernen"
+              "lernen wir"
             ]
           }
         ],
@@ -3597,14 +3598,14 @@
       "id": "a1.1-u07-rm05",
       "de": "Am Montag arbeite ich von neun bis fünf.",
       "en": "On Monday I work from nine to five.",
-      "function": "sagen, wann etwas ist",
+      "function": "Tage und Uhrzeiten sagen",
       "forTemplate": "sd1.sp2"
     },
     {
       "id": "a1.1-u07-rm06",
       "de": "Was machen Sie am Wochenende?",
       "en": "What do you do at the weekend?",
-      "function": "fragen, was jemand macht",
+      "function": "nach dem Wochenende fragen",
       "forTemplate": "sd1.sp2"
     },
     {

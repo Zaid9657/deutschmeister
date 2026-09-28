@@ -186,9 +186,9 @@
         {
           "id": "a1.1-u03-start-l05",
           "speaker": "cast.herr-richter",
-          "de": "Gut. Alter: 28, Familienstand: verheiratet, Partner: Arjun Nair. Das Formular ist fertig!",
-          "en": "Good. Age: 28, marital status: married, partner: Arjun Nair. The form is complete!",
-          "say": "Gut. Alter: achtundzwanzig, Familienstand: verheiratet, Partner: Arjun Nair. Das Formular ist fertig!"
+          "de": "Gut. Dann schreibe ich hier noch: Alter 28, Familienstand verheiratet, Partner Arjun Nair. So, jetzt ist das Formular wirklich fertig!",
+          "en": "Good. Then I’ll just add here: age 28, marital status married, partner Arjun Nair. There – now the form really is complete!",
+          "say": "Gut. Dann schreibe ich hier noch: Alter achtundzwanzig, Familienstand verheiratet, Partner Arjun Nair. So, jetzt ist das Formular wirklich fertig!"
         },
         {
           "id": "a1.1-u03-start-l06",
@@ -981,7 +981,7 @@
         "modelDe": "Gut, danke. Und dir? Das ist meine Mutter. Sie ist 58 und Lehrerin. Und das ist mein Bruder. Er ist 24. Er studiert."
       },
       "aussprache": {
-        "focus": "Satzmelodie: Ja/Nein-Frage steigend ↗ (auch „Das ist dein Bruder?“), Aussage und W-Frage fallend ↘",
+        "focus": "Satzmelodie: Ja/Nein-Frage ↗ (auch „Das ist dein Bruder?“), Aussage und W-Frage ↘",
         "perception": {
           "generator": "perception.intonation",
           "count": 3,
@@ -2451,7 +2451,7 @@
         "modelDe": "Hallo Emre, wie geht’s? Ist das deine Schwester? Und wie alt ist dein Vater?"
       },
       "aussprache": {
-        "focus": "Vokalwechsel hören: a – ä, e – ie, e – i (ihr schlaft – er schläft, ihr lest – er liest)",
+        "focus": "Hören Sie: a – ä, e – ie, e – i (ihr schlaft – er schläft, ihr lest – er liest)",
         "perception": {
           "generator": "perception.pairs",
           "count": 3,
@@ -2620,8 +2620,8 @@
       "strategyCards": [
         {
           "template": "sd1.l1",
-          "de": "Lesen Teil 1: Sie lesen zwei Texte, zum Beispiel eine E-Mail und eine Nachricht. Dazu gibt es fünf Aussagen. Lesen Sie zuerst die Aussagen. Suchen Sie dann im Text: Wer? Wo? Was? Achtung: Text und Aussage haben oft andere Wörter.",
-          "en": "Reading part 1: you read two texts, e.g. an email and a message, with five statements. Read the statements first, then find the place in the text: who? where? what? Careful: the text and the statement often use different words."
+          "de": "Lesen Teil 1: Sie lesen zwei Texte, eine E-Mail und eine Nachricht, und fünf Aussagen. Lesen Sie zuerst die Aussagen. Lesen Sie dann den Text: Wer? Wo? Was? Wichtig: Text und Aussage haben oft andere Wörter.",
+          "en": "Reading part 1: you read two texts, an email and a message, and five statements. Read the statements first. Then read the text: who? where? what? Important: the text and the statement often use different words."
         }
       ]
     },
@@ -2655,7 +2655,7 @@
         "moves": [],
         "aiRole": {
           "name": "Nora",
-          "personaDe": "Teilnehmerin in der Prüfung; spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste. Beginnt mit „Hallo! Ich bin Nora. Wie geht es Ihnen?“ (vor Teil 2, nicht bewertet) und sagt erst nach der Antwort: „Auch gut, danke! Jetzt kommt Teil 2: zuerst „Familie“, dann „Freunde“. Bitte, Sie fragen zuerst!“ Ihre Karten: „Familie – Eltern“ (sie fragt: „Was machen Ihre Eltern?“) und „Freunde – wohnen“ („Wo wohnen Ihre Freunde?“). Nennt die Antwort kein Alter und keinen Beruf, fragt sie einmal nach: „Wie alt ist Ihre Mutter?“ oder „Was macht Ihr Vater?“, dann weiter. Ihre Familie: zwei Schwestern, 30 und 34, beide Lehrerinnen in Hamburg; Kinder: nein. Ihre Freunde wohnen in Leipzig und sprechen Deutsch und Englisch.",
+          "personaDe": "Teilnehmerin in der Prüfung; spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste. Beginnt mit „Hallo! Ich bin Nora. Wie geht es Ihnen?“ (vor Teil 2, nicht bewertet) und sagt erst nach der Antwort: „Auch gut, danke! Jetzt kommt Teil 2: zuerst „Familie“, dann „Freunde“. Bitte, Sie fragen zuerst!“ Ihre Karten: „Familie – Eltern“ (sie fragt: „Was machen Ihre Eltern?“) und „Freunde – wohnen“ („Wo wohnen Ihre Freunde?“). Nennt die Antwort kein Alter und keinen Beruf, fragt sie einmal nach: „Wie alt ist Ihre Mutter?“ oder „Was macht Ihr Vater?“, dann weiter. Nora (immer gleich, in allen Aufgaben): wohnt in Leipzig und lernt dort Deutsch in einem Kurs; in ihrem Land ist sie Lehrerin, in Leipzig arbeitet sie in einem Restaurant; zwei Schwestern, 30 und 34, beide in Hamburg; keine Kinder. Ihr Land nennt sie nicht. Ihre Freunde wohnen in Leipzig und sprechen Deutsch und Englisch.",
           "register": "Sie",
           "support": "slow-wordbank"
         },
@@ -2709,7 +2709,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Meine Freunde wohnen in Leipzig. Sie studieren hier."
+            "de": "Meine Freunde wohnen in Leipzig. Sie lernen hier auch Deutsch."
           }
         ]
       }
@@ -3115,7 +3115,7 @@
       "id": "a1.1-u03-rm07",
       "de": "Mein Bruder ist 24. Er studiert.",
       "en": "My brother is 24. He’s at university.",
-      "function": "eine Person beschreiben: Alter und Beruf",
+      "function": "über eine Person sprechen: Alter und Beruf",
       "forTemplate": "sd1.s2"
     },
     {

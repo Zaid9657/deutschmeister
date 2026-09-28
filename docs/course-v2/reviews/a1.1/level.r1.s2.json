@@ -1,0 +1,134 @@
+{
+  "total": 29,
+  "scores": {
+    "D": 4,
+    "N": 4,
+    "H": 4,
+    "A": 4,
+    "P": 5,
+    "K": 4,
+    "E": 4
+  },
+  "findings": [
+    {
+      "severity": "major",
+      "where": "content/course-v2/a1.1/units/u06.json > check.proofs[3] (cd.a1.wort-pruefen, aufgabe schreiben); steps[2].pool.items[8] (a1.1-u06-ls3-p09); steps[5].task.modelText; steps[5].task.leitpunkte[2].cues (lp3)",
+      "issue": "The can-do cd.a1.wort-pruefen („Ich kann fragen, ob ich ein Wort … richtig gesagt oder geschrieben habe“) is proven by the S2 Leitpunkt lp3, but the unit never rehearses it. The learner only hears Arta's line (a1.1-u06-ls1-l09) and sees Redemittel rm07 „Ist das Wort richtig: der Schlüssel?“. No pool, reserve or micro-output item asks the learner to produce the question before the proof. The model text then uses a third form that the unit never presents: „Heißt es „die Schlüssel“?“. The pre-check cues for lp3 („Heißt es“, „heißt das“, „der, die oder das“, „Seite 24“) do not include „richtig“. So a learner who writes the unit's own Redemittel („Ist das Wort richtig: die Schlüssel?“) without „Seite 24“ is told that Punkt 3 is missing.",
+      "fix": "(1) Replace ls3-p09 („Was kostet der Laptop?“, an off-structure lx.kosten review) with a new sentence_building item (new id per ID-01). promptDe: „Sie fragen Frau Schulz nach einem Wort. Bilden Sie die Ja/Nein-Frage.“ tiles: [„ist“, „das Wort“, „richtig“]. answer and accepted: [„Ist das Wort richtig?“]. explanation.de: „Ja/Nein-Frage: „Ist“ steht auf Position 1. So fragen Sie: Ist das Wort richtig?“ (2) modelText: „Liebe Frau Schulz,\\nich habe nur ein Handy, keinen Laptop. Haben Sie vielleicht einen Laptop für mich? Eine Frage zu Seite 24: Ist das Wort richtig: die Schlüssel?\\nViele Grüße\\n(Ihr Name)“ (3) leitpunkte[2].cues: [„richtig“, „Heißt es“, „heißt das“, „der, die oder das“, „Seite 24“]."
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/units/u08.json > steps[4].task.modelTurns[1] and modelTurns[16]",
+      "issue": "Teil 1 is explicitly Priya („Am Samstag im Park stellt sich Priya vor“), and the same learner voice continues into Teil 2. modelTurns[1] drops the qualifier from u02: „In Kochi arbeite ich am Empfang. Hier lerne ich Deutsch.“ This reads as if she still works in Kochi. It also says „meine Muttersprache“ where the u05 model now names „Malayalam“. modelTurns[16] („Tut mir leid, am Samstag kann ich nicht. Ich muss arbeiten.“) contradicts this unit's own story: Priya has no job in A1.1, and on Saturday she runs with Elif.",
+      "fix": "modelTurns[1] → „Ich wohne jetzt in Leipzig. In Kochi arbeite ich am Empfang. Hier in Leipzig arbeite ich nicht, ich lerne Deutsch. Ich spreche drei Sprachen: Malayalam, Englisch und ein bisschen Deutsch.“ This is the reviewed u02 wording; „Malayalam“ passes LEX-03, as it does in u05. modelTurns[16] → „Tut mir leid, am Samstag kann ich nicht. Da laufe ich mit Elif. Aber am Freitag habe ich Zeit!“ Keep „Ich muss arbeiten.“ in rm05 and in the S2 model text: neither of those speaks for Priya."
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/units/u07.json > steps[4].task.openingLine (context: u06.json steps[4].task.openingLine and aiRole.register „du“; u05, u08 and p2 Nora register „Sie“)",
+      "issue": "The same AI partner Nora says du in u06 and gives the reason („Wir sind zusammen im Kurs, also sagen wir du“). In the very next unit she says Sie again without a word. In play order the learner meets Nora with Sie (p2), du (u06) and Sie (u07), so the course's own du/Sie lesson looks arbitrary.",
+      "fix": "u07 steps[4].task.openingLine → „Hallo! Heute sprechen wir wie in der Prüfung, mit „Sie“. Zuerst „Mein Tag“, dann „Meine Woche“. Sie fragen zuerst, dann frage ich.“"
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/units/u07.json > steps[0].aussprache.focus (a1.1-u07-ls1); steps[0].aussprache.perception[0].explanation (a1.1-u07-ls1-x01)",
+      "issue": "The focus reads: „„auf“, „an“, „ein“ und „fern“ haben den Akzent, auch am Satzende: … Ich stehe um sieben AUF.“ This turns a word-stress fact (AUFstehen) into a sentence-stress rule. In „Ich stehe um sieben auf.“ the main accent falls on the new information („um SIEben“). The particle keeps its word stress but does not carry the sentence accent, and a learner who copies „um sieben AUF“ in the read-aloud sounds unnatural. x01 repeats the claim („… und hat den Akzent“; en „the stressed auf“). §9.5: a simplification that has become false.",
+      "fix": "focus → „Trennbare Verben: Im Wort hat der erste Teil den Akzent: AUFstehen, ANfangen, EINkaufen. Im Satz steht er am Ende: Ich stehe um sieben auf.“ x01 explanation.de → „„aufstehen“: „Ich stehe um sieben auf.“ Der Teil „auf“ steht am Ende. Sprechen Sie ihn deutlich.“ explanation.en → “aufstehen: ‘auf’ comes at the end – say it clearly.”"
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/units/u05.json > start.folge.lines[3] (a1.1-u05-start-l04)",
+      "issue": "Arjun says „Die Wohnung ist in der Kölner Straße, Hausnummer 18.“ Nobody names a house number like this in speech; you say „in der Kölner Straße 18“. The line is the first spoken model of the new address.",
+      "fix": "„Stimmt. Hier ist die Anzeige von gestern. Die Wohnung ist in der Kölner Straße 18.“"
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/units/u07.json > steps[3].blocks[0].items[1].promptDe (a1.1-u07-ls4-sd1-l3-02)",
+      "issue": "The location tag „Am Büro:“ is not idiomatic. The sign's own title is „An einem Büro“, and the other four tags are idiomatic („Am Supermarkt“, „An der Tür“, „Auf dem Markt“, „Im Kursraum“).",
+      "fix": "„An einem Büro: „Am Freitag um 15 Uhr ist das Büro geöffnet.““"
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/rule-cards.json > cards[12] (rc.kein).de and .en",
+      "issue": "The card first says „Nomen ohne Artikel haben auch „kein““ and then „Auch bei Berufen: „Ich bin nicht Lehrerin.““. A profession is exactly a noun without an article, so the card contradicts itself. It also presents the marked form as the rule, although „Ich bin keine Lehrerin.“ is the default. A Goethe examiner accepts both.",
+      "fix": "de: replace „Auch bei Berufen: „Ich bin nicht Lehrerin.““ with „Bei Berufen geht beides: „Ich bin keine Lehrerin.“ und „Ich bin nicht Lehrerin.““. en: replace „Also with jobs: Ich bin nicht Lehrerin.“ with „With jobs both are correct: Ich bin keine Lehrerin. / Ich bin nicht Lehrerin.“ Re-run GRM-05."
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/rule-cards.json > cards[10] (rc.adjektiv-praedikativ).de",
+      "issue": "„„sehr“ heißt: viel („sehr schön“).“ glosses the intensifier as a quantity word. This invites the typical A1 error „Ich habe sehr Geld“. The English twin correctly says „very“.",
+      "fix": "Replace „„sehr“ heißt: viel („sehr schön“).“ with „„sehr schön“ ist mehr als „schön“.“"
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/rule-cards.json > cards[13] (rc.trennbare-verben).table[4]",
+      "issue": "At u07 the model row „Olena | fährt | um acht Uhr | ab.“ uses abfahren, which is allocated to a1.1-u10. It is the only verb on the card that the learner has not met.",
+      "fix": "table[4] → [„Emre“, „sieht“, „am Abend“, „fern.“]"
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/units/u08.json > start.folge.gistItem.promptDe (a1.1-u08-start-i01); steps[0].inputItems[1].promptDe (a1.1-u08-ls1-i02); redemittel[0].function, [1].function, [4].function, [5].function, [7].function",
+      "issue": "Learner-facing German above the level. The two gist questions use „Worüber …?“ (g.praepositionaladverb, a2.2-u08). The Redemittel labels use indirect questions („fragen, ob jemand Zeit hat“, „sagen, warum ich nicht kann“, „sagen, was ich gut kann / gut finde“, g.indirekte-frage a2.2-u03) and unknown words („einladen“ a1.2-u11, „feste Wendung“). GRM-04 and LEX-01 report these as advisories.",
+      "fix": "gistItem.promptDe → „Emre und Priya sprechen über …“. ls1-i02.promptDe → „Die Freunde sprechen über …“. The options already start with „über“. rm01.function → „fragen: Hast du Zeit? (du und Sie)“. rm02 → „fragen: Kommst du mit?“. rm05 → „sagen: Ich kann nicht, ich muss …“. rm06 → „sagen: Das kann ich gut.“. rm08 → „sagen: Das finde ich gut.“."
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/plateaus/p2.json > examTeile[2].modelText",
+      "issue": "p2 comes after u06, and the S2 model text writes „Aber ich habe noch keinen Tisch und keine Lampe.“ Temporal „noch kein / noch nicht“ belongs to g.nicht-position-gern, which is licensed at a1.1-u08. The model is a production surface.",
+      "fix": "„Liebe Olena,\\nmeine Wohnung ist klein, aber hell. Sie hat zwei Zimmer und einen Balkon. Aber ich habe keinen Tisch und keine Lampe. Hast du eine Lampe für mich?\\nViele Grüße\\n(Ihr Name)“"
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/plateaus/p2.json > texts[5] (a1.1-p2-sd1-t6).glosses, texts[7] (a1.1-p2-sd1-t8).glosses, examTeile[1].items[1].explanation.de (a1.1-p2-sd1-l2-02)",
+      "issue": "Two exam ads say „gebraucht“ in the sense of „second-hand“, and the explanation repeats it, all without a gloss. lexicon.json removed lx.gebraucht on the grounds that every form is a form of lx.brauchen. So LEX-01 counts the word as known, but a learner who knows „brauchen“ reads „Laptop, gebraucht“ as „needed“. The items can still be solved (via „neu“ and „zwei Jahre alt“), but the word is unknown and unglossed on the screen.",
+      "fix": "Add {\"token\": \"gebraucht\", \"gloss\": {\"en\": \"second-hand, used (= nicht neu)\"}} to texts[5].glosses and texts[7].glosses. explanation.de → „Laptop a ist neu. Laptop b ist billig, aber er ist nicht neu: Er ist zwei Jahre alt.“ Rule-smith: known-form lookup should accept „gebraucht“ as brauchen only in the Perfekt („hat gebraucht“), not as a standalone adjective."
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/units/u05.json > steps[3].blocks[0].items[1].promptDe (a1.1-u05-ls4-sd1-l2-02)",
+      "issue": "The situation states the need as „ein Zimmer mit Schreibtisch“. Both ads meet it: a) „Arbeitszimmer mit Schreibtisch“ and b) „Kinderzimmer mit Schreibtisch und Bett“. The key follows only from reading „arbeiten oft zu Hause“ against the Arbeitszimmer gloss, and the explanation has to concede „Beide Wohnungen haben einen Schreibtisch“. That makes b defensible for a childless reader.",
+      "fix": "„Sie arbeiten oft zu Hause. Sie brauchen ein Zimmer nur für die Arbeit. Was passt?“"
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/units/u08.json > steps[2].structuredInput[0].options (a1.1-u08-ls3-s01), steps[2].structuredInput[1].options (a1.1-u08-ls3-s02)",
+      "issue": "In both items the key is the only option that repeats the stem's „am Samstag“, so matching words finds the key without knowing that „kann“ can mean „das geht“ (ITM-02). These two items are the unit's only check of the second meaning of können.",
+      "fix": "s01.options → [„Priya kann am Samstag gut laufen.“, „Priya läuft am Samstag gern.“, „Priya hat am Samstag Zeit.“]. s02.options → [„Sophie kann am Samstag nicht gut laufen.“, „Sophie hat am Samstag keine Zeit.“, „Sophie läuft am Samstag nicht gern.“]. The keys and explanations stay."
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/units/u07.json > steps[5].task.leitpunkte[1].cues (lp2); content/course-v2/a1.1/units/u08.json > steps[5].task.leitpunkte[2].cues (lp3)",
+      "issue": "The pre-submit check ticks Leitpunkte that are missing. u07 lp2 has the cue „Morgen“, which matches „Bis morgen!“ in any closing. u08 lp3 has the cue „Zeit“, which matches LP1's own „Leider habe ich keine Zeit“. A draft without the Leitpunkt is then shown as complete. This is the class the old A1.1 spent six review rounds on.",
+      "fix": "u07 lp2.cues: replace „Morgen“ with „am Morgen“ (keep „Donnerstagmorgen“). u08 lp3.cues: replace „Zeit“ with „Zeit?“ („Hast du am Sonntag Zeit?“ still matches; „keine Zeit.“ does not)."
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/units/u05.json > steps[0].inputItems[2] (a1.1-u05-ls1-i03); content/course-v2/a1.1/units/u06.json > steps[2].inputItems[3].accepted (a1.1-u06-ls3-i04); src/lib/course-v2/checkItem.js (exact: 'number')",
+      "issue": "Tested with the real checker: a price in ordinary German notation is WRONG. „890,00“ on u05 ls1-i03 is wrong, and so is „390,-“ on u06 ls3-i04. u06 lists „390,00“ by hand and u05 does not. This is list-widening, which CLAUDE.md rules out; the rule belongs in the checker.",
+      "fix": "Checker (rule-smith, with a test): on exact: 'number', a trailing zero decimal part („,00“, „.00“) or „,-“ after the digits folds away. Fixtures: u05 ls1-i03 „890,00“ → correct; u06 ls3-i04 „390,-“ → correct; „390,50“ → wrong. Then drop „390,00“ from a1.1-u06-ls3-i04.accepted."
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/units/u05.json > steps[5].task.checklist[0]; content/course-v2/a1.1/units/u08.json > steps[5].task.checklist[1]",
+      "issue": "LEX-03 ratchet: the checklists produce receptive lemmas. u05 has „Alle fünf Angaben sind ausgefüllt.“ (lx.ausfuellen, receptive) and u08 has „Punkt 1: absagen“ (lx.absagen, receptive).",
+      "fix": "u05 checklist[0] → „Alle fünf Angaben sind da.“ u08 checklist[1] → „Punkt 1: Am Samstag kann ich nicht.“ Then re-run the validator; the LEX-03 ratchet drops by 2."
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/units/u06.json > steps[4].task.parts[1].cards.learner[1]",
+      "issue": "The card rehearses the missing-word strategy (cd.a1.wort-fehlt) but prints the word itself: „Bild (Ladekabel): Wie heißt das auf Deutsch?“. The learner reads „Ladekabel“ and then has to pretend not to know it.",
+      "fix": "„Bild: ein Ding für das Handy – Wie heißt das auf Deutsch?“ Nora's modelTurns[13] („Ein Ladekabel? Hier, bitte.“) still supplies the word."
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/units/u05.json > steps[4].task.modelTurns[1] (proof of cd.a1.wohnort-beschreiben)",
+      "issue": "The can-do asks for city, district „und wie es dort ist“. The model now names Lindenau, but no model turn, hint or micro-output ever says what the district is like, so that component is only claimed. Arjun and Frau Lehmann say it receptively („Der Stadtteil ist ruhig“).",
+      "fix": "„Ich bin neu hier im Haus. Ich wohne jetzt in Leipzig, in Lindenau, in der Kölner Straße. Lindenau ist sehr ruhig.“ Lindenau is in names.json and „ruhig“ is productive at u05."
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/units/u12.json > steps[2].pool.items[4] (a1.1-u12-ls3-p05), duplicate of content/course-v2/a1.1/units/u07.json > steps[2].pool.items[7] (a1.1-u07-ls3-p08)",
+      "issue": "An identical item: same prompt („Bilden Sie die W-Frage.“), same four tiles and same key („Wann fängt der Kurs an?“). The u12 copy re-drills the u07 sentence verbatim instead of the u12 scene.",
+      "fix": "u12 ls3-p05 → tiles [„fährt“, „der Zug“, „wann“, „ab“], answer and accepted [„Wann fährt der Zug ab?“], explanation.de „W-Frage: „Wann“ auf Position 1, „fährt“ auf Position 2, „ab“ am Ende.“ (lx.abfahren is productive from u10)."
+    }
+  ]
+}

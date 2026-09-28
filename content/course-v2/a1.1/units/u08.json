@@ -221,7 +221,7 @@
         "type": "multiple_choice",
         "role": "gist",
         "topic": "hoeren",
-        "promptDe": "Worüber sprechen Emre und Priya?",
+        "promptDe": "Emre und Priya sprechen …",
         "promptEn": "What are Emre and Priya talking about?",
         "options": [
           "über die Arbeit in İzmir",
@@ -281,8 +281,8 @@
           {
             "id": "a1.1-u08-ls1-l04",
             "speaker": "cast.priya",
-            "de": "Rad fahren? Das kann ich nicht. Mein Bruder in Kochi fährt jeden Tag Fahrrad. Aber ich kann gut tanzen.",
-            "en": "Cycling? I can’t do that. My brother in Kochi rides his bike every day. But I’m good at dancing."
+            "de": "Fahrrad fahren? Das kann ich nicht. Mein Bruder in Kochi fährt jeden Tag Rad. Aber ich kann gut tanzen.",
+            "en": "Cycling? I can’t do that. My brother in Kochi cycles every day. But I’m good at dancing."
           },
           {
             "id": "a1.1-u08-ls1-l05",
@@ -325,6 +325,12 @@
             "gloss": {
               "en": "count me out (lit. “without me”)"
             }
+          },
+          {
+            "token": "planen",
+            "gloss": {
+              "en": "to plan"
+            }
           }
         ],
         "transcriptAfterUnaidedListen": true
@@ -357,11 +363,11 @@
           "type": "multiple_choice",
           "role": "gist",
           "topic": "hoeren",
-          "promptDe": "Worüber sprechen die Freunde?",
+          "promptDe": "Die Freunde sprechen …",
           "promptEn": "What are the friends talking about?",
           "options": [
-            "über die Arbeit",
-            "über eine Wohnung",
+            "über Kochi",
+            "über Pakistan",
             "über Hobbys"
           ],
           "answer": "über Hobbys",
@@ -406,14 +412,14 @@
           "options": [
             "tanzen",
             "Musik hören",
-            "Rad fahren"
+            "Fahrrad fahren"
           ],
-          "answer": "Rad fahren",
+          "answer": "Fahrrad fahren",
           "accepted": [
-            "Rad fahren"
+            "Fahrrad fahren"
           ],
           "explanation": {
-            "de": "Priya sagt: „Rad fahren? Das kann ich nicht.“ Tanzen kann sie gut.",
+            "de": "Priya sagt: „Fahrrad fahren? Das kann ich nicht.“ Tanzen kann sie gut.",
             "en": "Priya can’t ride a bike; she is good at dancing."
           },
           "origin": "agent"
@@ -726,19 +732,19 @@
               "kann",
               "Priya",
               "nicht",
-              "Rad fahren"
+              "Fahrrad fahren"
             ],
-            "answer": "Priya kann nicht Rad fahren.",
+            "answer": "Priya kann nicht Fahrrad fahren.",
             "accepted": [
-              "Priya kann nicht Rad fahren.",
-              "Rad fahren kann Priya nicht."
+              "Priya kann nicht Fahrrad fahren.",
+              "Fahrrad fahren kann Priya nicht."
             ],
             "acceptedWhy": {
-              "Rad fahren kann Priya nicht.": "grammatisch: „Rad fahren“ betont auf Position 1, wie Priya im Chat"
+              "Fahrrad fahren kann Priya nicht.": "grammatisch: „Fahrrad fahren“ betont auf Position 1, wie Priya im Chat"
             },
             "explanation": {
-              "de": "„kann“ auf Position 2, „nicht“ vor „Rad fahren“ am Ende. Auch richtig: „Rad fahren“ auf Position 1.",
-              "en": "“kann” in position 2, “nicht” before “Rad fahren” at the end. Also correct: “Rad fahren” in position 1."
+              "de": "„kann“ auf Position 2, „nicht“ vor „Fahrrad fahren“ am Ende. Auch richtig: „Fahrrad fahren“ auf Position 1.",
+              "en": "“kann” in position 2, “nicht” before “Fahrrad fahren” at the end. Also correct: “Fahrrad fahren” in position 1."
             },
             "origin": "agent"
           },
@@ -1121,6 +1127,12 @@
             "gloss": {
               "en": "free, available"
             }
+          },
+          {
+            "token": "planst",
+            "gloss": {
+              "en": "to plan"
+            }
           }
         ],
         "transcriptAfterUnaidedListen": true
@@ -1443,17 +1455,17 @@
               "fährt",
               "Bilal",
               "gern",
-              "Rad"
+              "Fahrrad"
             ],
-            "answer": "Bilal fährt gern Rad.",
+            "answer": "Bilal fährt gern Fahrrad.",
             "accepted": [
-              "Bilal fährt gern Rad.",
-              "Rad fährt Bilal gern.",
-              "Gern fährt Bilal Rad."
+              "Bilal fährt gern Fahrrad.",
+              "Fahrrad fährt Bilal gern.",
+              "Gern fährt Bilal Fahrrad."
             ],
             "acceptedWhy": {
-              "Rad fährt Bilal gern.": "grammatisch: „Rad“ betont auf Position 1",
-              "Gern fährt Bilal Rad.": "grammatisch: „gern“ betont auf Position 1"
+              "Fahrrad fährt Bilal gern.": "grammatisch: „Fahrrad“ betont auf Position 1",
+              "Gern fährt Bilal Fahrrad.": "grammatisch: „gern“ betont auf Position 1"
             },
             "explanation": {
               "de": "„fährt“ auf Position 2. „gern“ steht meist nach dem Verb.",
@@ -2063,8 +2075,8 @@
           "promptDe": "Priya: „Am Samstag? Ja, da kann ich.“ Was meint Priya?",
           "promptEn": "“kann” here = it’s possible. What does Priya mean?",
           "options": [
-            "Priya kann gut laufen.",
-            "Priya läuft gern.",
+            "Priya kann am Samstag gut laufen.",
+            "Priya läuft am Samstag gern.",
             "Priya hat am Samstag Zeit."
           ],
           "answer": "Priya hat am Samstag Zeit.",
@@ -2085,13 +2097,16 @@
           "promptDe": "Sophie: „Am Samstag kann ich nicht.“ Was heißt das?",
           "promptEn": "What does it mean?",
           "options": [
-            "Sophie kann nicht gut laufen.",
+            "Sophie kann am Samstag nicht gut laufen.",
             "Sophie hat am Samstag keine Zeit.",
-            "Sophie läuft nicht gern."
+            "Sophie läuft am Samstag nicht gern."
           ],
           "answer": "Sophie hat am Samstag keine Zeit.",
           "accepted": [
             "Sophie hat am Samstag keine Zeit."
+          ],
+          "errorTags": [
+            "negation"
           ],
           "explanation": {
             "de": "„Am Samstag kann ich nicht“ heißt: Am Samstag hat Sophie keine Zeit.",
@@ -2899,7 +2914,7 @@
       "strategyCards": [
         {
           "template": "sd1.h3",
-          "de": "Hören Teil 3: Sie hören fünf Nachrichten am Telefon, jede zweimal. Lesen Sie zuerst die Frage und a, b, c. Oft hören Sie zwei oder drei Zeiten oder Tage. Aber nur eine Antwort passt. Achten Sie auf „nicht“ und „sondern“.",
+          "de": "Hören Teil 3: Sie hören fünf Nachrichten am Telefon, jede zweimal. Lesen Sie zuerst die Frage und a, b, c. Oft hören Sie zwei oder drei Zeiten oder Tage. Aber nur eine Antwort passt. Wichtig sind „nicht“ und „sondern“.",
           "en": "Listening part 3: five phone messages, each played twice. Read the question and the options first. You often hear two or three times or days, but only one answer fits. Listen for “nicht” and “sondern”."
         }
       ]
@@ -2966,7 +2981,7 @@
         ],
         "aiRole": {
           "name": "Nora",
-          "personaDe": "In Teil 1 Gesprächsleitung (KI): hört zu, bittet dann um das Buchstabieren des Vornamens und um die Telefonnummer; wiederholt langsam, wenn die Person nachfragt. In Teil 2 Teilnehmerin in der Prüfung, spricht über Hobbys und Freizeit: hört gern Musik aus Indien, schwimmt gern und hat am Freitag am Abend Zeit; fragt mit der Karte „Sport“ und mit der Karte „Samstag“ und lädt ein (Gehen wir zusammen schwimmen?). Spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste.",
+          "personaDe": "In Teil 1 Gesprächsleitung (KI): hört zu, bittet dann um das Buchstabieren des Vornamens und um die Telefonnummer; wiederholt langsam, wenn die Person nachfragt. In Teil 2 Teilnehmerin in der Prüfung, sagt immer Sie und spricht über Hobbys und Freizeit: hört gern Musik, auch aus Indien, schwimmt gern und hat am Freitag am Abend Zeit; fragt mit der Karte „Sport“ und mit der Karte „Samstag“ und lädt ein (Gehen wir zusammen schwimmen?). Noras Fakten, immer gleich: Sie wohnt in Leipzig und lernt Deutsch in einem Kurs. In ihrem Land ist sie Lehrerin, in Leipzig arbeitet sie in einem Restaurant. Sie hat zwei Schwestern in Hamburg und keine Kinder. Am Sonntag frühstückt sie lange. Oft fährt sie mit dem Zug nach Hamburg zu ihren Schwestern. Ihr Land nennt sie nicht. Spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste.",
           "register": "Sie",
           "support": "slow-wordbank"
         },
@@ -2988,7 +3003,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Ich wohne jetzt in Leipzig. In Kochi arbeite ich am Empfang. Hier lerne ich Deutsch. Ich spreche drei Sprachen: meine Muttersprache, Englisch und ein bisschen Deutsch."
+            "de": "Ich wohne jetzt in Leipzig. Ich arbeite am Empfang in der Sprachschule. Da lerne ich auch Deutsch. Ich spreche drei Sprachen: Malayalam, Englisch und ein bisschen Deutsch."
           },
           {
             "speaker": "learner",
@@ -3048,7 +3063,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Tut mir leid, am Samstag kann ich nicht. Ich muss arbeiten. Aber am Freitag habe ich Zeit!"
+            "de": "Tut mir leid, am Samstag kann ich nicht. Da laufe ich mit Elif. Aber am Freitag habe ich Zeit!"
           }
         ]
       }
@@ -3097,7 +3112,7 @@
             "de": "Wann haben Sie Zeit? Fragen Sie: Hast du da Zeit?",
             "cues": [
               "Hast du",
-              "Zeit",
+              "Zeit?",
               "am Freitag",
               "am Montag",
               "Kannst du",
@@ -3112,7 +3127,7 @@
         "minSubmitWords": 13,
         "checklist": [
           "Anrede: Liebe Olena,",
-          "Punkt 1: absagen",
+          "Punkt 1: Am Samstag kann ich nicht.",
           "Punkt 2: Warum können Sie nicht?",
           "Punkt 3: ein anderer Tag und eine Frage",
           "Gruß mit Ihrem Namen",
@@ -3148,7 +3163,7 @@
         "type": "fill_blank",
         "role": "check",
         "topic": "g.koennen",
-        "promptDe": "Bilal ___ gut Rad fahren. (können)",
+        "promptDe": "Bilal ___ gut Fahrrad fahren. (können)",
         "promptEn": "können: er-form.",
         "answer": "kann",
         "accepted": [
@@ -3360,14 +3375,14 @@
       "id": "a1.1-u08-rm01",
       "de": "Hast du am Samstag Zeit? – Haben Sie am Samstag Zeit?",
       "en": "Are you free on Saturday? (du – Sie)",
-      "function": "fragen, ob jemand Zeit hat (du und Sie)",
+      "function": "fragen: Hast du Zeit? (du und Sie)",
       "forTemplate": "sd1.sp2"
     },
     {
       "id": "a1.1-u08-rm02",
       "de": "Kommst du mit?",
       "en": "Are you coming along?",
-      "function": "jemanden einladen"
+      "function": "fragen: Kommst du mit?"
     },
     {
       "id": "a1.1-u08-rm03",
@@ -3386,14 +3401,14 @@
       "id": "a1.1-u08-rm05",
       "de": "Ich muss arbeiten.",
       "en": "I have to work.",
-      "function": "sagen, warum ich nicht kann (feste Wendung)",
+      "function": "sagen: Ich kann nicht, ich muss …",
       "forTemplate": "sd1.s2"
     },
     {
       "id": "a1.1-u08-rm06",
       "de": "Ich kann gut schwimmen.",
       "en": "I’m good at swimming.",
-      "function": "sagen, was ich gut kann",
+      "function": "sagen: Das kann ich gut.",
       "forTemplate": "sd1.sp1"
     },
     {
@@ -3407,7 +3422,7 @@
       "id": "a1.1-u08-rm08",
       "de": "Das finde ich super.",
       "en": "I think that’s great.",
-      "function": "sagen, was ich gut finde",
+      "function": "sagen: Das finde ich gut.",
       "forTemplate": "sd1.sp2"
     }
   ],

@@ -190,8 +190,8 @@
         {
           "id": "a1.1-u05-start-l04",
           "speaker": "cast.arjun",
-          "de": "Stimmt. Hier ist die Anzeige von gestern. Die Wohnung ist in der Kölner Straße, Hausnummer 18.",
-          "en": "True. Here’s the ad from yesterday. The flat is on Kölner Straße, house number 18."
+          "de": "Stimmt. Hier ist die Anzeige von gestern. Die Wohnung ist in der Kölner Straße 18.",
+          "en": "True. Here’s the ad from yesterday. The flat is at Kölner Straße 18."
         },
         {
           "id": "a1.1-u05-start-l05",
@@ -421,12 +421,8 @@
           "promptEn": "Write the rent of flat number two.",
           "answer": "890",
           "accepted": [
-            "890",
-            "achthundertneunzig"
+            "890"
           ],
-          "acceptedWhy": {
-            "achthundertneunzig": "Zahl als Wort: so hört man es"
-          },
           "exact": "number",
           "explanation": {
             "de": "Arjun sagt: „Die Miete ist 890 Euro.“ „890“ und „achthundertneunzig“ sind richtig.",
@@ -1939,12 +1935,8 @@
           "promptEn": "How many years? Write the number.",
           "answer": "50",
           "accepted": [
-            "50",
-            "fünfzig"
+            "50"
           ],
-          "acceptedWhy": {
-            "fünfzig": "Zahl als Wort: so hört man es"
-          },
           "exact": "number",
           "explanation": {
             "de": "Frau Lehmann sagt: „Ich wohne hier unten, schon fünfzig Jahre.“ „50“ und „fünfzig“ sind richtig.",
@@ -2706,7 +2698,7 @@
               "role": "exam",
               "topic": "lesen",
               "textRef": "a1.1-u05-ls4-t2",
-              "promptDe": "Sie arbeiten oft zu Hause und brauchen ein Zimmer mit Schreibtisch. Was passt?",
+              "promptDe": "Sie arbeiten oft zu Hause. Sie brauchen ein Zimmer nur für die Arbeit. Was passt?",
               "options": [
                 "a",
                 "b"
@@ -2716,8 +2708,8 @@
                 "a"
               ],
               "explanation": {
-                "de": "Beide Wohnungen haben einen Schreibtisch. Aber nur a hat ein Arbeitszimmer: ein Zimmer für die Arbeit. b hat ein Kinderzimmer.",
-                "en": "Both flats have a desk, but only a has a study – a room for work. In b the desk is in a child’s room."
+                "de": "Nur a hat ein Arbeitszimmer: ein Zimmer nur für die Arbeit. b hat ein Kinderzimmer, ein Zimmer für ein Kind.",
+                "en": "Only a has a study – a room just for work. b has a child’s room, a room for a child."
               },
               "origin": "agent"
             },
@@ -2933,8 +2925,8 @@
             "profile": "sd1-sp1",
             "prepMinutes": 0,
             "instructionsDe": "Stellen Sie sich vor. Dann buchstabieren Sie Ihre Straße und sagen Ihre Postleitzahl.",
-            "situationDe": "Sprechen Teil 1: Stellen Sie sich vor wie in der Prüfung: Name, Alter, Land, Wohnort, Sprachen, Beruf. Beim Wohnort: Stadt und Stadtteil. Sagen Sie auch: „Ich bin neu im Haus.“ Und: Wie ist die Wohnung? Dann sagt Nora: „Buchstabieren Sie bitte Ihre Straße.“ Und sie fragt: „Wie ist Ihre Postleitzahl?“",
-            "situationEn": "Speaking part 1: introduce yourself as in the exam – name, age, country, where you live, languages, job. For where you live, give the city and the district. Also say “Ich bin neu im Haus.” (I’m new in the building) and what the flat is like. Then Nora says: “Please spell your street.” And she asks: “What is your postcode?”",
+            "situationDe": "Sprechen Teil 1: Stellen Sie sich vor wie in der Prüfung: Name, Alter, Land, Wohnort, Sprachen, Beruf. Beim Wohnort: Stadt und Stadtteil. Sagen Sie auch: „Ich bin neu im Haus.“ Und: Wie ist die Wohnung? Dann sagt die Gesprächsleitung (KI): „Buchstabieren Sie bitte Ihre Straße.“ Und sie fragt: „Wie ist Ihre Postleitzahl?“",
+            "situationEn": "Speaking part 1: introduce yourself as in the exam – name, age, country, where you live, languages, job. For where you live, give the city and the district. Also say “Ich bin neu im Haus.” (I’m new in the building) and what the flat is like. Then the examiner (AI) says: “Please spell your street.” And she asks: “What is your postcode?”",
             "cards": {
               "learner": [
                 "Name?",
@@ -2979,7 +2971,7 @@
         ],
         "aiRole": {
           "name": "Nora",
-          "personaDe": "In Teil 1 Gesprächsleitung (KI): hört zu, sagt dann: „Buchstabieren Sie bitte Ihre Straße.“ und fragt: „Wie ist Ihre Postleitzahl?“ In Teil 2 Teilnehmerin in der Prüfung: fragt mit ihren Karten „Wie viele Zimmer hat Ihre Wohnung?“ und „Wo steht Ihr Schreibtisch?“; ihre Wohnung ist klein und hat einen Balkon; ihre Küche ist klein, aber schön; ihr Sofa ist alt; ihr Schreibtisch steht im Wohnzimmer am Fenster. Spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste.",
+          "personaDe": "In Teil 1 Gesprächsleitung (KI): hört zu, sagt dann: „Buchstabieren Sie bitte Ihre Straße.“ und fragt: „Wie ist Ihre Postleitzahl?“ In Teil 2 Teilnehmerin in der Prüfung: fragt mit ihren Karten „Wie viele Zimmer hat Ihre Wohnung?“ und „Wo steht Ihr Schreibtisch?“; sie sagt Sie; sie wohnt in Leipzig, ihre Wohnung ist klein und hat einen Balkon; ihre Küche ist klein, aber schön; ihr Sofa ist alt; ihr Schreibtisch steht im Wohnzimmer am Fenster. Spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste.",
           "register": "Sie",
           "support": "slow-wordbank"
         },
@@ -3001,11 +2993,11 @@
           },
           {
             "speaker": "learner",
-            "de": "Ich bin neu hier im Haus. Ich wohne jetzt in Leipzig, in Lindenau, in der Kölner Straße."
+            "de": "Ich bin neu hier im Haus. Ich wohne jetzt in Leipzig, in Lindenau, in der Kölner Straße. Lindenau ist sehr ruhig."
           },
           {
             "speaker": "learner",
-            "de": "Die Wohnung ist klein, aber sehr hell und ruhig."
+            "de": "Die Wohnung ist klein, aber sehr hell."
           },
           {
             "speaker": "learner",
@@ -3135,7 +3127,7 @@
           "documents": []
         },
         "checklist": [
-          "Alle fünf Angaben sind ausgefüllt.",
+          "Alle fünf Angaben sind da.",
           "Die Angaben sind von Arjun, nicht von Ihnen.",
           "Wie viele Leute wohnen dann in der Wohnung? Lesen Sie genau.",
           "Adresse jetzt: Wo wohnt Arjun noch?",

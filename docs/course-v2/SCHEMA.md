@@ -14,7 +14,8 @@ voice registry file (§4.7); names kind `language` (§4.9); lexicon `pluralVaria
 `story.glosses` and the meaning of `story.castIn`, `Fokus.glosses`, `MicroOutput.modelDe`, `SpeakingPart.situationEn`,
 the speaking move `nachfragen`, `acceptedWhy` on form fields and `Check.proofs[].microOutput` (§8). Second batch
 (a1.1 u07–u12 reviews): `tiles` on an error correction (§3.1), cast `contact.hoursDe` (§4.7), `WritingTask.address`
-`ihr` and `WritingTask.textType` (§8).
+`ihr` and `WritingTask.textType` (§8). Third batch (a1.1 level review r1): `start.auftakt` allowed in the A
+skeleton (U1's first scored sentence), with the unnumbered bank key `<prefix>-uNN-mo` (§2, §8).
 **Implementation:** plain JSON content files authored by agents, a zero-dependency schema checker and a deterministic
 compiler written in JavaScript (`scripts/course-v2/lib/`, `scripts/course-v2/compile.mjs`), JS/JSON runtime modules.
 No TypeScript, no ajv/zod (no lockfile churn), **no new content tables** in Supabase.
@@ -110,6 +111,7 @@ export const LEGACY_COURSE_TASK_KEY_RE = /^(a\d\d)-l\d\d$/;
 | `a21-u07-w-ta2` | the same slot's telc A2 variant (a Spur task) |
 | `a21-u07-s` | A2.1 unit 7, speaking Aufgabe |
 | `a21-u07-mo1` | micro-output of LS1 |
+| `a11-u01-mo` | the unit's Auftakt micro-output (`start.auftakt`, no Lernschritt number; A and B skeleton) |
 | `b12-p2-w-dtz` | B1.2 Plateau 2, writing part, DTZ lane |
 | `a22-ma-w1-ga2` | A2.2 Modelltest form A, Schreiben Teil 1, Goethe A2 |
 
@@ -612,7 +614,11 @@ Start = {
   pruefungsfokusChips: [ref(template)],
   recapDe: de?,                                      // U01 only: the stand-alone recap line (casts/series.json beat)
   folge: { title: de, lines: [Line]{2..12}, glosses: [{ token: str, gloss: EnText }]{0..3}?, gistItem: Item },   // ≤ 90 s A1, ≤ 2 min above (TXT-03); glosses: words the Folge uses before their unit (StartView, LEX-01)
-  auftakt: { assetRef: ref(asset)?, promptDe: de, microOutput: MicroOutput }?,   // B skeleton only; no photo → prompt only
+  auftakt: { assetRef: ref(asset)?, promptDe: de, microOutput: MicroOutput }?,   // B skeleton; A skeleton too (2026-09-28): U1 of a
+                                                     // course carries it, so the first scored spoken sentence comes within the
+                                                     // first three screens (BLUEPRINT §3.1, §7.4); rendered after the Folge's
+                                                     // gist item. microOutput.id = <unit>-start-mo, bankKey = <prefix>-uNN-mo
+                                                     // (no Lernschritt number, §2; KEY-01). No photo → prompt only
   testOut: { offered: bool } }
 
 Step = SituationStep | TextStep | SpracheStep | PruefungStep | SprechenStep | SchreibenStep | UeberarbeitenStep | CheckStep

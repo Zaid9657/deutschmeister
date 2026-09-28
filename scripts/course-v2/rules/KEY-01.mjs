@@ -1,6 +1,7 @@
 // KEY-01 — writing, speaking and micro-output bank keys match BANK_KEY_RE (SCHEMA §2) and name
 // their own slot: the level prefix, the unit / Plateau / closing / Modelltest slot, the kind
-// (w · s · mo<LS>) and the lane suffix of a non-primary lane. Keys are unique per level.
+// (w · s · mo<LS>) and the lane suffix of a non-primary lane. Keys are unique per level. A unit's
+// start.auftakt micro-output (A and B skeleton, 2026-09-28) takes the unnumbered `-mo` key.
 
 import { walkTasks, walkMicroOutputs, walkSteps } from '../lib-validate/walk.mjs';
 import { BANK_KEY_RE, LEGACY_COURSE_TASK_KEY_RE, prefixOfLevel } from '../lib-validate/ids.mjs';
@@ -51,8 +52,13 @@ export function run({ ctx, docs }) {
       if (kKind !== kind) findings.push(blocker(doc, path, `"${key}" is a ${kKind} key on a ${kind === 'w' ? 'writing task' : kind === 's' ? 'speaking task' : 'micro-output'}`, key));
       if (kind === 'mo') {
         if (kLane) findings.push(blocker(doc, path, `micro-output key "${key}" carries a lane suffix`, key));
-        if (lsNr && Number(kNr) !== lsNr) findings.push(blocker(doc, path, `micro-output key "${key}" names LS${kNr ?? '?'} but sits in LS${lsNr}`, key));
-        if (!kNr && doc.kind === 'unit') findings.push(blocker(doc, path, `micro-output key "${key}" lacks its Lernschritt number (mo1…mo8)`, key));
+        if (lsNr === 0) {
+          // start.auftakt (A and B skeleton, SCHEMA §2 / §8): the unit's -mo key, no Lernschritt number
+          if (kNr) findings.push(blocker(doc, path, `the Auftakt micro-output key "${key}" carries no Lernschritt number (${kPrefix}-${kSlot}-mo); LS${kNr} holds -mo${kNr}`, key));
+        } else {
+          if (lsNr && Number(kNr) !== lsNr) findings.push(blocker(doc, path, `micro-output key "${key}" names LS${kNr ?? '?'} but sits in LS${lsNr}`, key));
+          if (!kNr && doc.kind === 'unit') findings.push(blocker(doc, path, `micro-output key "${key}" lacks its Lernschritt number (mo1…mo8)`, key));
+        }
       } else if (doc.kind === 'unit') {
         if (lane && lane !== primary && kLane !== lane) findings.push(blocker(doc, path, `"${key}" is a ${lane} task and needs the suffix -${lane}`, key));
         if (lane && lane === primary && kLane) findings.push(blocker(doc, path, `"${key}" is a primary-lane (${primary}) task and carries no lane suffix`, key));
@@ -68,7 +74,9 @@ export function run({ ctx, docs }) {
     };
     for (const { task, kind, path } of walkTasks(doc)) check(task.bankKey, `${path}.bankKey`, kind === 'writing' ? 'w' : 's', { lane: task.lane });
     const lsOf = new Map([...walkSteps(doc)].map(({ step, index }) => [step, index + 1]));
-    for (const { mo, path, step } of walkMicroOutputs(doc)) check(mo.bankKey, `${path}.bankKey`, 'mo', { lsNr: step ? lsOf.get(step) : 1 });
+    // lsNr 0 = a unit's start.auftakt micro-output (unnumbered key); a Plateau's projekt keeps LS1
+    const lsNrOf = (step, path) => (step ? lsOf.get(step) : doc.kind === 'unit' && path.startsWith('start.') ? 0 : 1);
+    for (const { mo, path, step } of walkMicroOutputs(doc)) check(mo.bankKey, `${path}.bankKey`, 'mo', { lsNr: lsNrOf(step, path) });
   }
   return checked ? { findings } : { findings, skipped: 'no writing/speaking task or micro-output in the target yet' };
 }
