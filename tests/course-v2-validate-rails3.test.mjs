@@ -580,3 +580,10 @@ describe('LEX-03 a productive phrase covers its words (a1.1-u01: „Guten Tag!" 
   test('fail: „Der Tag ist schön." — Tag is allocated at u07', async () => has(await run('Der Tag ist schön.'), /asked to produce „Tag"/, 'ratchet'));
   test('pass: „Guten Tag!" — the phrase is productive at u01', async () => hasNot(await run('Guten Tag!'), /asked to produce „Tag"/));
 });
+
+describe('TXT-01 a bracket is no clause (rc.artikel-genus-plural)', () => {
+  test('fail: „…, das nicht stimmt"; pass: „der (maskulin), das (neutral) oder die (feminin)"', () => {
+    assert.equal(subordinateClauses('Klicken Sie auf das Wort, das nicht stimmt.'), 1);
+    assert.equal(subordinateClauses('Jedes Nomen hat ein Genus: der (maskulin), das (neutral) oder die (feminin).'), 0);
+  });
+});

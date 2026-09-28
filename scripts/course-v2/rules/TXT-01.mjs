@@ -37,8 +37,9 @@ const W_WORDS = new Set(['wer', 'was', 'wo', 'wohin', 'woher', 'wann', 'wie', 'w
  */
 export function subordinateClauses(sentence) {
   let n = 0;
-  // a colon opens a new main clause (direct speech, a list); a comma between digits is a decimal comma
-  for (const segment of String(sentence || '').split(/:/)) {
+  // a colon opens a new main clause (direct speech, a list); a comma between digits is a decimal comma; a
+  // bracket is a gloss or a list of forms, never a clause („das (neutral) oder die (feminin)")
+  for (const segment of String(sentence || '').replace(/\([^)]*\)/g, ' ').split(/:/)) {
     const parts = segment.split(/(?<!\d),(?!\d)|;|–/);
     parts.forEach((part, i) => {
       if (clauseCounts(part, i)) n += 1;
