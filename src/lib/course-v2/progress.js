@@ -19,12 +19,18 @@
 //                     it was finished, i.e. the next draw's attempt number.
 //   review_cards      seeded once the unit's Check is done (SCHEMA §2 card keys).
 //
+// A Plateau or closing block is kept the same way under its own id (`a1.1-p2`, `a1.1-ht-sd1`):
+// one marker per finished section (assessment.js), its answered items as rows with the stage
+// 'plateau' / 'abschluss', and 'complete' in lesson_progress once it is submitted — which is what
+// completion.js counts for the course.
+//
 // Fail-soft like src/services/lessonService.js: a blocked network, a missing table
 // or an unapplied migration logs and returns an empty answer; a lesson never stops
 // on a failed write. Every query is RLS-scoped to the caller's own rows.
 import { supabase } from '../../utils/supabase.js';
 import { logAttempts } from '../../services/lessonService.js';
 import { seedCardsForLektion } from '../../services/reviewService.js';
+import { answersFromRows } from './assessment.js';
 
 export const STEP_MARKER_STAGE = 'lernschritt';
 export const TESTOUT_MARKER_STAGE = 'lernschritt-testout';
@@ -90,6 +96,35 @@ export async function fetchUnitState(userId, level, unitId, client = supabase) {
     return { row: prog.data || null, finishedSteps: folded.finishedSteps.get(unitId) || new Set(), stepRuns: folded.stepRuns };
   } catch (err) {
     console.error('[course-v2] fetchUnitState:', err && err.message);
+    return empty;
+  }
+}
+
+/**
+ * A Plateau's or closing block's state (SCHEMA §2: lektion_id = its id; src/lib/course-v2/assessment.js):
+ * the section markers as finished steps and runs, and the latest answer per item for the results card.
+ * → { row, finishedSteps: Set, stepRuns: Map, answers: Map<itemId, correct> }
+ */
+export async function fetchAssessmentState(userId, level, id, client = supabase) {
+  const empty = { row: null, finishedSteps: new Set(), stepRuns: new Map(), answers: new Map() };
+  if (!userId || !id) return empty;
+  try {
+    const [prog, rows] = await Promise.all([
+      client.from('lesson_progress').select('lektion_id, status, accuracy, completed_at').eq('user_id', userId).eq('lektion_id', id).maybeSingle(),
+      client.from('lesson_attempts').select('lektion_id, item_id, stage, correct, created_at').eq('user_id', userId).eq('lektion_id', id).order('created_at', { ascending: true }),
+    ]);
+    if (prog.error) console.error('[course-v2] lesson_progress:', prog.error.message);
+    if (rows.error) console.error('[course-v2] assessment attempts:', rows.error.message);
+    const data = rows.data || [];
+    const folded = foldMarkers(data);
+    return {
+      row: prog.data || null,
+      finishedSteps: folded.finishedSteps.get(id) || new Set(),
+      stepRuns: folded.stepRuns,
+      answers: answersFromRows(data, MARKER_STAGES),
+    };
+  } catch (err) {
+    console.error('[course-v2] fetchAssessmentState:', err && err.message);
     return empty;
   }
 }

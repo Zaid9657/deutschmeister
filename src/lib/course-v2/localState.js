@@ -8,7 +8,9 @@
 // cleared or absent (private window, thumbnail capture); then the player simply
 // starts at step 1.
 //
-// Shape: { v: 1, units: { [unitId]: { level, finished: [stepId], runs: { [stepId]: n }, status } } }
+// Shape: { v: 1, units: { [unitId]: { level, finished: [stepId], runs: { [stepId]: n }, status, answers? } } }
+// A Plateau or closing block is kept under its own id the same way (its sections are the
+// „steps"); `answers` ({ itemId: correct }, the latest per item) feeds its results card.
 // Merging into Supabase on sign-up is not done yet (open issue: the legacy
 // src/lib/course/localProgress.js merge handles only the live A1.1 ids).
 
@@ -43,13 +45,18 @@ function writeLocal(data, store = storage()) {
   }
 }
 
-/** { row, finishedSteps: Set, stepRuns: Map } — the same shape as progress.fetchUnitState. */
+/**
+ * { row, finishedSteps: Set, stepRuns: Map, answers: Map } — the same shape as
+ * progress.fetchUnitState (+ `answers`, as progress.fetchAssessmentState has it).
+ */
 export function localUnitState(unitId, store = storage()) {
   const u = readLocal(store).units[unitId] || {};
+  const answers = u.answers && typeof u.answers === 'object' ? u.answers : {};
   return {
     row: u.status ? { lektion_id: unitId, status: u.status } : null,
     finishedSteps: new Set(u.finished || []),
     stepRuns: new Map(Object.entries(u.runs || {})),
+    answers: new Map(Object.entries(answers).map(([k, v]) => [k, v === true])),
   };
 }
 
@@ -94,4 +101,14 @@ export function localTestOut(unitId, level, stepIds, store = storage()) {
 
 export function localUnitStatus(unitId, level, status, store = storage()) {
   return update(unitId, level, (u) => ({ ...u, status }), store);
+}
+
+/** Record answered items ({ itemId: correct }, the latest wins) — a Plateau's results card reads them. */
+export function localAnswers(unitId, level, answers, store = storage()) {
+  const entries = Object.entries(answers || {});
+  if (!entries.length) return true;
+  return update(unitId, level, (u) => ({
+    ...u,
+    answers: { ...(u.answers && typeof u.answers === 'object' ? u.answers : {}), ...Object.fromEntries(entries.map(([k, v]) => [k, v === true])) },
+  }), store);
 }

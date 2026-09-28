@@ -61,9 +61,11 @@ export function levelCode(level) {
   return String(level || '').toUpperCase();
 }
 
-/** The four routes of the v2 player (all inside the netlify.toml `/course/*` rewrite). */
+/** The routes of the v2 player (all inside the netlify.toml `/course/*` rewrite). */
 export const v2Paths = {
   home: (level) => `/course/${normalizeLevel(level) || level}/v2`,
   unit: (level, nr) => `/course/${normalizeLevel(level) || level}/u/${Number(nr)}`,
   plateau: (level, nr) => `/course/${normalizeLevel(level) || level}/p/${Number(nr)}`,
+  // the closing block of the course: the .1 Halbtest → Teil-Karte (BLUEPRINT §5.3)
+  closing: (level) => `/course/${normalizeLevel(level) || level}/abschluss`,
 };

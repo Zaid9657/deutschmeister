@@ -8,6 +8,7 @@
 //                                                 so the player route stays small (BLUEPRINT §7.1)
 //   src/data/course-v2/<level>/rule-cards.json    the level's rule cards
 //   src/data/course-v2/<level>/plateaus/pN.json   Plateaus, once authored
+//   src/data/course-v2/<level>/closing/<id>.json  the closing block (the .1 Halbtest), once authored
 //   src/data/course-v2/<level>/reserve.json       the compiled reserve index, once it exists
 // A glob over a directory that does not exist yet is simply empty, so every loader
 // here answers null / [] until the content is compiled — the pages then say so.
@@ -48,6 +49,7 @@ const UNITS = withDevFixture(REAL_UNITS, /^[^/]+\/units\/[^/]+\.json$/);
 const MANIFESTS = withDevFixture(REAL_MANIFESTS, /^[^/]+\/manifest\.json$/);
 const RULE_CARDS = withDevFixture(import.meta.glob('../../data/course-v2/*/rule-cards.json'), /^[^/]+\/rule-cards\.json$/);
 const PLATEAUS = withDevFixture(import.meta.glob('../../data/course-v2/*/plateaus/*.json'), /^[^/]+\/plateaus\/[^/]+\.json$/);
+const CLOSINGS = withDevFixture(import.meta.glob('../../data/course-v2/*/closing/*.json'), /^[^/]+\/closing\/[^/]+\.json$/);
 const RESERVES = withDevFixture(import.meta.glob('../../data/course-v2/*/reserve.json'), /^[^/]+\/reserve\.json$/);
 
 const base = (level) => `../../data/course-v2/${level}`;
@@ -100,6 +102,17 @@ export function plateauNrs(level) {
   return out;
 }
 
+/** Ids of the closing blocks whose file is compiled (`a1.1-ht-sd1`, …). Sync. */
+export function closingIds(level) {
+  const l = normalizeLevel(level);
+  const out = new Set();
+  for (const key of Object.keys(CLOSINGS)) {
+    const m = key.match(/course-v2\/([^/]+)\/closing\/([^/]+)\.json$/);
+    if (m && m[1] === l) out.add(m[2]);
+  }
+  return out;
+}
+
 export async function loadManifest(level) {
   const k = manifestKey(level);
   return k ? load(k.table, k.key) : null;
@@ -142,6 +155,12 @@ export async function loadPlayableUnit(level, nr) {
 export async function loadPlateau(level, nr) {
   const l = normalizeLevel(level);
   return l ? load(PLATEAUS, `${base(l)}/plateaus/p${Number(nr)}.json`) : null;
+}
+
+/** The compiled closing block `id` of the level (closing/<id>.json), or null. */
+export async function loadClosing(level, id) {
+  const l = normalizeLevel(level);
+  return l && id ? load(CLOSINGS, `${base(l)}/closing/${id}.json`) : null;
 }
 
 /**

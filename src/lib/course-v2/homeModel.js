@@ -10,9 +10,15 @@
 //   - the GATE is soft (BLUEPRINT §3.5): a unit is `ready` once the previous
 //     unit's Lernschritte are finished; a unit that is not ready is still
 //     openable („Trotzdem öffnen") — nothing reads a score;
-//   - a unit without compiled content is `missing` and shows „kommt bald".
+//   - a unit without compiled content is `missing` and shows „kommt bald";
+//   - a Plateau closes its Etappe and the closing block (the .1 Halbtest) the course: each is
+//     `available` once its file is compiled and `ready` once the Lernschritte of the units it
+//     reviews are finished (the Etappe's, for the closing block all of them) — soft like the
+//     units: not ready still opens („Trotzdem öffnen");
+//   - `next` is the first open stop in path order: units, then the Plateau of their Etappe.
 import { courseCompletion, DONE_STATUSES } from './completion.js';
 import { nrOfId, v2Paths, levelCode } from './ids.js';
+import { closingIdFor } from './assessment.js';
 
 /**
  * The completion block's UNIT part only (lernschritt, aufgabe, unit). A unit's
@@ -91,12 +97,16 @@ export const STATUS_LABEL_DE = Object.freeze({
 });
 
 /**
- * courseHomeModel(manifest, state, { plateaus }) →
+ * courseHomeModel(manifest, state, { plateaus, closings, lane }) →
  *   { level, code, title, honestyLineDe, lane, etappen, next, completion, remainingSteps, stepsPerUnit }
  * state = { progress: Map<id,row>, finishedSteps: Map<unitId,Set> } (progress.js / localState.js)
- * plateaus = Set of Plateau numbers whose file exists (the loader knows).
+ * plateaus = Set of Plateau numbers whose file exists, closings = Set of closing ids whose file
+ * exists (the loader knows both); lane = the learner's lane (learner_goals), which picks the
+ * closing form (completion.js closingFormFor).
+ * Each Etappe: { nr, units, plateau: Stop | null, closing: Stop | null }, where
+ *   Stop = { id, nr?, kind, available, ready, done, started, href }.
  */
-export function courseHomeModel(manifest, state = {}, { plateaus = new Set() } = {}) {
+export function courseHomeModel(manifest, state = {}, { plateaus = new Set(), closings = new Set(), lane: learnerLane = null } = {}) {
   if (!manifest) return null;
   const level = manifest.level;
   const progress = state.progress instanceof Map ? state.progress : new Map();
@@ -134,21 +144,34 @@ export function courseHomeModel(manifest, state = {}, { plateaus = new Set() } =
   rows.forEach((row, i) => { row.ready = i === 0 || rows[i - 1].lernschritteFinished; });
 
   const byId = new Map(rows.map((r) => [r.id, r]));
+  const stopState = (id) => {
+    const status = id ? progress.get(id) && progress.get(id).status : null;
+    return { done: DONE_STATUSES.includes(status), started: Boolean(status) && !DONE_STATUSES.includes(status) };
+  };
+  const closingId = closingIdFor(manifest, learnerLane);
+  const allReady = rows.length > 0 && rows.every((r) => r.lernschritteFinished);
   const etappen = (manifest.etappen || []).map((e) => {
     const closedBy = e.closedBy || null;
     const pNr = closedBy && closedBy !== 'closing' ? nrOfId(closedBy) : null;
-    const pRow = pNr ? progress.get(closedBy) : null;
+    const units = (e.units || []).map((u) => byId.get(rowId(u))).filter(Boolean);
+    const etappeReady = units.length > 0 && units.every((u) => u.lernschritteFinished);
     return {
       nr: e.nr,
-      units: (e.units || []).map((u) => byId.get(rowId(u))).filter(Boolean),
+      units,
       plateau: pNr
-        ? { id: closedBy, nr: pNr, available: plateaus.has(pNr), done: !!(pRow && DONE_STATUSES.includes(pRow.status)), href: v2Paths.plateau(level, pNr) }
+        ? { id: closedBy, nr: pNr, kind: 'plateau', available: plateaus.has(pNr), ready: etappeReady, ...stopState(closedBy), href: v2Paths.plateau(level, pNr) }
         : null,
-      closing: closedBy === 'closing',
+      closing: closedBy === 'closing'
+        ? { id: closingId, kind: 'closing', available: Boolean(closingId) && closings.has(closingId), ready: allReady, ...stopState(closingId), href: v2Paths.closing(level) }
+        : null,
     };
   });
 
-  const next = rows.find((r) => r.available && !DONE_STATUSES.includes(r.status)) || null;
+  // The primary action: the first open stop in path order (a unit, then its Etappe's Plateau).
+  const path = etappen.length
+    ? etappen.flatMap((e) => [...e.units.map((r) => ({ ...r, kind: 'unit' })), ...[e.plateau, e.closing].filter(Boolean)])
+    : rows.map((r) => ({ ...r, kind: 'unit' }));
+  const next = path.find((s) => s.available && (s.kind === 'unit' ? !DONE_STATUSES.includes(s.status) : !s.done)) || null;
   const statusMap = new Map([...progress.entries()].map(([id, row]) => [id, row && row.status]));
   const completion = safeCourseCompletion(manifest, { progress: statusMap });
   const remainingSteps = rows.reduce((n, r) => n + (DONE_STATUSES.includes(r.status) ? 0 : Math.max(0, (r.stepsTotal || stepsPerUnit) - r.stepsDone)), 0);
