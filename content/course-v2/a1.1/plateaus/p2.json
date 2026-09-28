@@ -86,6 +86,12 @@
           "gloss": {
             "en": "customers (sg. der Kunde)"
           }
+        },
+        {
+          "token": "Albrecht",
+          "gloss": {
+            "en": "a family name"
+          }
         }
       ]
     },
@@ -178,7 +184,7 @@
             "richtig"
           ],
           "explanation": {
-            "de": "Die Durchsage sagt: „heute sind alle Lampen im Angebot“. Eine Lampe kostet nur 19 Euro.",
+            "de": "Die Lampen sind heute im Angebot: Eine Lampe kostet nur 19 Euro.",
             "en": "All lamps are on offer today; a lamp costs only 19 euros."
           },
           "origin": "agent"
@@ -269,7 +275,7 @@
           "type": "abc",
           "role": "exam",
           "topic": "lesen",
-          "promptDe": "Sie möchten einen Laptop kaufen. Wichtig für Sie: Er ist neu. Was passt?",
+          "promptDe": "Sie brauchen einen Laptop. Wichtig für Sie: Er ist neu. Was passt?",
           "options": [
             "a",
             "b"
