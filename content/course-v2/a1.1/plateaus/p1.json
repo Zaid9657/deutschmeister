@@ -85,14 +85,14 @@
         {
           "id": "a1.1-p1-sd1-t2-l03",
           "speaker": "x.mia",
-          "de": "Aus Damaskus! Und welche Sprachen sprichst du?",
-          "en": "From Damascus! And which languages do you speak?"
+          "de": "Aus Damaskus! Und sprichst du auch Englisch?",
+          "en": "From Damascus! And do you speak English too?"
         },
         {
           "id": "a1.1-p1-sd1-t2-l04",
           "speaker": "x.tarek-nasser",
-          "de": "Arabisch und Englisch. Und jetzt lerne ich Deutsch. Und du?",
-          "en": "Arabic and English. And now I’m learning German. And you?"
+          "de": "Ja, Arabisch und Englisch. Und jetzt lerne ich Deutsch. Und du?",
+          "en": "Yes, Arabic and English. And now I’m learning German. And you?"
         },
         {
           "id": "a1.1-p1-sd1-t2-l05",
@@ -311,7 +311,7 @@
           "type": "abc",
           "role": "exam",
           "topic": "hoeren",
-          "promptDe": "Welche Hausnummer hat Frau Pohl?",
+          "promptDe": "Wie ist die Hausnummer von Frau Pohl?",
           "options": [
             "7",
             "17",
@@ -334,7 +334,7 @@
           "type": "abc",
           "role": "exam",
           "topic": "hoeren",
-          "promptDe": "Welche Sprache spricht Mia?",
+          "promptDe": "Mia spricht Deutsch und noch eine Sprache. Wie heißt die Sprache?",
           "options": [
             "Arabisch",
             "Spanisch",
@@ -699,7 +699,7 @@
         },
         {
           "speaker": "partner",
-          "de": "Danke. Buchstabieren Sie bitte Ihren Familiennamen."
+          "de": "Danke. Wie schreibt man das? Buchstabieren Sie bitte."
         },
         {
           "speaker": "learner",
@@ -743,7 +743,7 @@
     "moves": [],
     "aiRole": {
       "name": "Nora",
-      "personaDe": "Teilnehmerin in der Prüfung, Sprechen Teil 2; spricht langsam und deutlich und zeigt Wörter aus der Wortliste. Ihre Karten: „Familie – Kinder“ und „Beruf – Student“. In jeder Runde fragt zuerst der Lerner mit seiner Karte, Nora antwortet kurz (sie hat einen Bruder und eine Schwester, sie ist Lehrerin in Leipzig); dann fragt Nora mit ihrer Karte, zum Beispiel „Haben Sie Kinder?“ oder „Sind Sie Student oder Studentin?“, und der Lerner antwortet. Am Ende sagt sie: „Danke! Auf Wiedersehen!“",
+      "personaDe": "Teilnehmerin in der Prüfung, Sprechen Teil 2; spricht langsam und deutlich und zeigt Wörter aus der Wortliste. Ihre Karten: „Familie – Kinder“ und „Beruf – Student“. In jeder Runde fragt zuerst der Lerner mit seiner Karte, Nora antwortet kurz (sie hat zwei Brüder, sie ist Lehrerin in Leipzig); dann fragt Nora mit ihrer Karte, zum Beispiel „Haben Sie Kinder?“ oder „Sind Sie Student oder Studentin?“, und der Lerner antwortet. Am Ende sagt sie: „Danke! Auf Wiedersehen!“",
       "register": "Sie",
       "support": "slow-wordbank"
     },
@@ -764,7 +764,7 @@
       },
       {
         "speaker": "partner",
-        "de": "Ja, ich habe einen Bruder und eine Schwester. Haben Sie Kinder?"
+        "de": "Ja, zwei Brüder. Haben Sie Kinder?"
       },
       {
         "speaker": "learner",
@@ -772,7 +772,7 @@
       },
       {
         "speaker": "partner",
-        "de": "Jetzt das Thema „Beruf“."
+        "de": "Gut. Und jetzt: Beruf."
       },
       {
         "speaker": "learner",
@@ -814,7 +814,7 @@
             "zwölf"
           ],
           "explanation": {
-            "de": "Priya schreibt: „Im Kurs sind wir zwölf Personen.“",
+            "de": "Im Kurs sind zwölf Personen: Priya, Olena, Bilal, Emre, Arta und noch sieben Leute.",
             "en": "Priya writes that there are twelve people in the course."
           },
           "origin": "agent"
@@ -835,7 +835,7 @@
             "falsch"
           ],
           "explanation": {
-            "de": "Priya schreibt: „Sie ist sehr lieb und spricht langsam.“",
+            "de": "Priya schreibt: Frau Schulz ist sehr lieb, und sie spricht langsam, nicht schnell.",
             "en": "Priya writes that Ms Schulz speaks slowly."
           },
           "origin": "agent"
@@ -856,7 +856,7 @@
             "richtig"
           ],
           "explanation": {
-            "de": "Priya schreibt: „Im Kurs sprechen wir nur Deutsch!“",
+            "de": "Priya schreibt: Im Kurs sprechen alle nur Deutsch.",
             "en": "Priya writes that they speak only German in class."
           },
           "origin": "agent"
@@ -878,7 +878,7 @@
             "Sie ist müde."
           ],
           "explanation": {
-            "de": "Priya schreibt: „Jetzt bin ich müde!“",
+            "de": "Priya ist jetzt müde. Morgen schreibt sie mehr.",
             "en": "Priya writes that she is tired now."
           },
           "origin": "agent"
