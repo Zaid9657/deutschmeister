@@ -487,7 +487,7 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.perfekt-sein",
-          "promptDe": "Welcher Satz passt zu „gestern“?",
+          "promptDe": "Gestern: Welcher Satz passt?",
           "promptEn": "Which sentence fits “gestern” (yesterday)?",
           "options": [
             "Ich fahre nach Wien.",
@@ -499,8 +499,8 @@
             "Ich bin nach Wien gefahren."
           ],
           "explanation": {
-            "de": "Zu „gestern“ passt das Perfekt: „Ich bin nach Wien gefahren.“ „Ich fahre“ ist jetzt. „Ich will … fahren“ ist ein Plan.",
-            "en": "“gestern” needs the Perfekt: bin … gefahren. “fahre” = now; “will … fahren” = a plan."
+            "de": "Mit „gestern“ passt das Perfekt: „Ich bin nach Wien gefahren.“ „Ich fahre“ ist jetzt. „Ich will … fahren“ ist ein Plan.",
+            "en": "With “gestern” you need the Perfekt: bin … gefahren. “fahre” = now; “will … fahren” = a plan."
           },
           "origin": "agent"
         },
@@ -841,7 +841,7 @@
               "lx.plan",
               "lx.pruefung",
               "lx.deutschkurs",
-              "lx.beispiel"
+              "lx.hausaufgabe"
             ]
           },
           {
@@ -1313,12 +1313,8 @@
           "promptEn": "How many words? Write the number.",
           "answer": "zehn",
           "accepted": [
-            "zehn",
-            "10"
+            "zehn"
           ],
-          "acceptedWhy": {
-            "10": "Zahl als Ziffer: gleiche Zahl"
-          },
           "exact": "number",
           "explanation": {
             "de": "Priya sagt: „Ich übe jeden Tag zehn Wörter.“ „zehn“ und „10“ sind richtig.",
@@ -1980,8 +1976,8 @@
           {
             "id": "a1.1-u12-ls3-l07",
             "speaker": "cast.herr-richter",
-            "de": "Immer am Samstag, hier in der Sprachschule. Die Anmeldung für die Prüfung ist auch hier im Büro. Aber zuerst kommt der Kurs!",
-            "en": "Always on a Saturday, here at the language school. You also register for the exam here at the office. But first comes the course!"
+            "de": "Immer am Samstag, hier in der Sprachschule. Die Anmeldung ist auch hier im Büro. Aber zuerst kommt der Kurs!",
+            "en": "Always on a Saturday, here at the language school. You register here at the office too. But first comes the course!"
           },
           {
             "id": "a1.1-u12-ls3-l08",
@@ -2120,8 +2116,8 @@
             "am Samstag"
           ],
           "explanation": {
-            "de": "Herr Richter sagt: „Immer am Samstag, hier in der Sprachschule.“",
-            "en": "The exam is always on a Saturday, at the language school."
+            "de": "Herr Richter sagt: Die Prüfung ist am Samstag, hier in der Sprachschule.",
+            "en": "The exam is on a Saturday, at the language school."
           },
           "origin": "agent"
         }
@@ -2892,7 +2888,7 @@
           "id": "a1.1-u12-ls4-t9",
           "kind": "sign",
           "title": "In Kursraum 2",
-          "text": "Hausaufgabe für morgen: Seite 20.\nLesen Sie zuerst das Beispiel. Dann kreuzen Sie an.\nWiederholen Sie auch die Wörter im Heft.",
+          "text": "Hausaufgabe für morgen: Seite 20.\nLesen Sie zuerst das Beispiel. Dann kreuzen Sie an.\nWiederholen Sie auch die Sätze im Heft.",
           "glosses": []
         }
       ],
@@ -3484,16 +3480,12 @@
         "promptEn": "Listen and write the sentence.",
         "answer": "Ich lerne seit drei Monaten Deutsch.",
         "accepted": [
-          "Ich lerne seit drei Monaten Deutsch.",
-          "Ich lerne seit 3 Monaten Deutsch."
+          "Ich lerne seit drei Monaten Deutsch."
         ],
-        "acceptedWhy": {
-          "Ich lerne seit 3 Monaten Deutsch.": "Zahl als Ziffer: gleiche Zahl"
-        },
         "exact": "number",
         "explanation": {
-          "de": "„Monaten“ und „Deutsch“ schreiben Sie groß.",
-          "en": "Nouns are capitalised: Monaten, Deutsch."
+          "de": "„Monaten“ und „Deutsch“ schreiben Sie groß. „drei“ und „3“ sind richtig.",
+          "en": "Nouns are capitalised: Monaten, Deutsch. “drei” and “3” are both correct."
         },
         "origin": "agent"
       },
