@@ -10,7 +10,10 @@
 //   2. an extra's surname is not a series cast surname (x.herr-hoffmann beside cast.frau-hoffmann) — ADVISORY;
 //   3. a named extra's voice is not the voice of another speaker of the same step, and an ensemble or extra
 //      voice is not the voice of a cast member who speaks in the same unit (two people, one voice) — ADVISORY
-//      (the audio run chooses voices; x.herr-schaefer and cast.ensemble-a1-3 shared de-DE-KlausNeural at u02).
+//      (the audio run chooses voices; x.herr-schaefer and cast.ensemble-a1-3 shared de-DE-KlausNeural at u02);
+//   4. every cast id that speaks in the unit (Folge, inputs, exam texts, check lines) is listed in spec.cast —
+//      ADVISORY (a1.1-u09 r1 F08: ensemble-a1-2 and -a1-4 spoke but were missing; the audio run and the story
+//      bible read spec.cast).
 
 import { walkLines, walkTasks, walkItems, walkExamTexts } from '../lib-validate/walk.mjs';
 import { arr, isObj, advisory, ratchet } from '../lib-validate/helpers.mjs';
@@ -96,6 +99,16 @@ export function run({ ctx, docs }) {
       const key = [...sps].sort().join('+');
       if (reported.has(key)) continue;
       findings.push(advisory(doc, 'extras', `${other.join(', ')} and ${castSp.join(', ')} speak in this unit with the same voice (${v}) — a listener hears one person`, other[0]));
+    }
+    // 4. speakers listed in spec.cast
+    if (Array.isArray(d.spec?.cast)) {
+      const listed = new Set(d.spec.cast);
+      const missing = new Map();
+      for (const { line, path } of walkLines(doc)) {
+        const sp = String(line?.speaker || '');
+        if (sp.startsWith('cast.') && !listed.has(sp) && !missing.has(sp)) missing.set(sp, path);
+      }
+      for (const [sp, at] of missing) findings.push(advisory(doc, 'spec.cast', `${sp} speaks in the unit (${at}) but is not in spec.cast — add it`, sp));
     }
     // 1. persona data: phone, address, age
     const blocks = [];

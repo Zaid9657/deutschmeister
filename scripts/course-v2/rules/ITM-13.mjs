@@ -23,6 +23,11 @@
 // (`speak`, the `audioLineRef` line or the prompt's quotation) ends in „?" exactly when the key is
 // „Frage" (review a1.2-u04 r1 F01).
 //
+// Duden doublets (a1.1-u08 r1 F03 / r2 F03, the ITM-14 proposal folded here — the same checker, the same
+// class): a typed key or dictation holding gern/gerne, allein/alleine, tschüss/tschüs, okay/OK is submitted with
+// the twin spelling; WRONG is a BLOCKER (a correct word graded wrong), a TYPO on a typed item a RATCHET (a
+// dictation may be TYPO — the audio decides the spelling).
+//
 // Known wrong forms (the a1.1 unit reviews, rule-smith 2026-09-28, RAILS §3.1c: a1.1-u03 r2 F01 / r3 F01):
 // the player's own checkItem grades the forms a learner who has NOT learnt the point would type —
 //   - an error correction's quoted sentence submitted unchanged must be WRONG (BLOCKER: the learner who
@@ -34,6 +39,25 @@
 //     only the last letter — so the unit cannot fix it: a RATCHET until the checker does (openIssues).
 
 import { walkSteps, walkItems } from '../lib-validate/walk.mjs';
+
+const TYPED = new Set(['fill_blank', 'error_correction', 'dictation']);
+// Duden doublets (both spellings correct): each spelling → its twins
+const DOUBLETS = [['gern', 'gerne'], ['allein', 'alleine'], ['tschüss', 'tschüs'], ['okay', 'OK', 'O. K.']];
+/** The key with each doublet token swapped for its twin(s): [„OK, dann …" for „Okay, dann …"]. */
+export function doubletTwins(key) {
+  const out = [];
+  const k = String(key || '');
+  for (const group of DOUBLETS) {
+    for (const form of group) {
+      const re = new RegExp(`(?<![\\p{L}])${form.replace(/[.]/g, '\\.').replace(/\s/g, '\\s?')}(?![\\p{L}])`, 'iu');
+      const m = k.match(re);
+      if (!m) continue;
+      for (const twin of group) if (twin.toLowerCase() !== form.toLowerCase()) out.push(k.replace(re, /^\p{Lu}/u.test(m[0]) && twin.length > 2 && twin !== twin.toUpperCase() ? twin[0].toUpperCase() + twin.slice(1) : twin));
+      break;
+    }
+  }
+  return out;
+}
 import { sentences, wordCount } from '../lib-validate/text.mjs';
 import { bandOfLevel } from '../lib-validate/ids.mjs';
 import { arr, isObj, blocker, advisory, ratchet, list } from '../lib-validate/helpers.mjs';
@@ -151,6 +175,17 @@ export function run({ ctx, docs }) {
             findings.push(ratchet(doc, `${path}.answer`, `„${w.form}" (${w.why}) is graded ${r.toUpperCase()} against the key „${item.answer}" — a grammar error the checker forgives as a slip (check.js; see RAILS §3.1c)`, item.id));
             break;
           }
+        }
+      }
+      // a Duden doublet in a typed key: its twin is the same word (a1.1-u08 r1 F03 / r2 F03: „gerne", „OK")
+      if (checker && TYPED.has(item.type) && item.answer && !arr(item.options).length) {
+        for (const twin of doubletTwins(item.answer)) {
+          n += 1;
+          const r = checker.checkItem(item, twin).result;
+          const dictation = item.type === 'dictation';
+          if (r === checker.RESULT.WRONG) findings.push(blocker(doc, `${path}.answer`, `„${twin}" (the Duden doublet of the key's spelling) is graded WRONG against „${item.answer}" — accept the doublet (check.js foldDoublets) or avoid the word`, item.id));
+          else if (!dictation && r !== checker.RESULT.CORRECT) findings.push(ratchet(doc, `${path}.answer`, `„${twin}" (the Duden doublet of the key's spelling) is graded ${r.toUpperCase()} against „${item.answer}" — a doublet is the same word`, item.id));
+          if (r !== checker.RESULT.CORRECT) break;
         }
       }
       if (item.type === 'dictation') {
