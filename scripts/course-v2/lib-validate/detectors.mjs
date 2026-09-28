@@ -251,13 +251,12 @@ function runPattern(det, sentence, env = EMPTY_ENV) {
     // bald." is das + lernen + Sie, no adjective ending (a1.1-u01 r2 F10 / r3 F09)
     if (spec.notVerbForm && env.available && env.infinitives.has(lc(text)) && !env.adjectives.has(lc(text))) continue;
     // „ihr" right after a finite ihr-form (habt, mögt, seid, kommt), with at most one particle between, is
-    // the subject pronoun: „Mögt ihr auch Kuchen?" (spec.notAfterIhrVerb)
+    // the subject pronoun: „Mögt ihr auch Kuchen?" (spec.notAfterIhrVerb) — only after a verb form that is
+    // 2nd person plural and cannot be 3rd person singular: „Sie sucht ihr Handy." stays a hit
     if (spec.notAfterIhrVerb && /^ihr\b/.test(text)) {
-      const before = tokens(sentence.slice(0, index)).map((t) => t.text);
-      const prev = before.slice(-2);
-      const verbish = (w) => (/^\p{Ll}+(?:t|d)$/u.test(w || '') && !FUNCTION_WORDS.has(String(w).toLowerCase())) || ['habt', 'seid', 'mögt', 'könnt', 'wollt', 'müsst', 'dürft', 'sollt', 'wart', 'hattet', 'wisst'].includes(String(w).toLowerCase());
-      if (verbish(prev[prev.length - 1]) || (/^(?:auch|noch|schon|denn|mal|heute|morgen|jetzt)$/i.test(prev[prev.length - 1] || '') && verbish(prev[0]))) continue;
-      if (/^(?:Habt|Seid|Mögt|Könnt|Wollt|Müsst|Kommt|Geht|Macht|Esst|Trinkt|Wisst|Hattet)$/u.test(before[before.length - 1] || '')) continue;
+      const before = tokens(sentence.slice(0, index)).map((t) => t.lower);
+      const last = before[before.length - 1];
+      if (IHR_ONLY_VERBS.has(last) || (IHR_BRIDGE_RE.test(last || '') && IHR_ONLY_VERBS.has(before[before.length - 2]))) continue;
     }
     if (spec.notAfterNumber) {
       const before = sentence.slice(0, index).trimEnd();
@@ -847,6 +846,22 @@ export const DETECTOR_OVERLAYS = Object.freeze({
   // „Das war letzte Woche." — a finite verb before an ordinal-like adjective is no participle attribute
   'det.erweitertes-partizipialattribut': { skip: '^(?:letzt|nächst|erst|best|meist)\\p{L}*$' },
 });
+
+/**
+ * Finite forms that are 2nd person plural and never 3rd person singular („habt", not „hat"; „fahrt", not
+ * „fährt"): before „ihr" + noun they make „ihr" the subject („Habt ihr Zeit?", „Mögt auch ihr Kuchen?").
+ * A form shared with the 3rd person („sucht", „kommt", „backt") is left out — „Sie sucht ihr Handy." is a
+ * possessive (detectors.json det.possessiv-sein-ihr-unser-euer).
+ */
+export const IHR_ONLY_VERBS = new Set([
+  'habt', 'seid', 'werdet', 'wisst', 'mögt', 'wollt', 'könnt', 'dürft', 'müsst', 'sollt', 'lasst',
+  'wart', 'wäret', 'wärt', 'hattet', 'hättet', 'würdet', 'möchtet', 'wolltet', 'konntet', 'könntet', 'durftet',
+  'dürftet', 'musstet', 'müsstet', 'solltet', 'mochtet', 'wusstet',
+  'fahrt', 'lest', 'esst', 'nehmt', 'gebt', 'seht', 'sprecht', 'trefft', 'helft', 'schlaft', 'lauft', 'tragt',
+  'haltet', 'fallt', 'gefallt', 'vergesst', 'werft', 'wascht', 'brecht', 'empfehlt', 'sterbt', 'stoßt', 'ratet',
+  'schlagt', 'fangt', 'messt', 'tretet', 'stehlt', 'verlasst', 'verlauft',
+]);
+const IHR_BRIDGE_RE = /^(?:auch|noch|schon|denn|mal|heute|morgen|jetzt|doch|etwa|wirklich)$/;
 
 const overlaid = new WeakMap();
 

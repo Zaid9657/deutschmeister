@@ -8,6 +8,17 @@
 import { walkItems } from '../lib-validate/walk.mjs';
 import { norm, sentences, tokens, FUNCTION_WORDS } from '../lib-validate/text.mjs';
 import { arr, isObj, blocker, advisory } from '../lib-validate/helpers.mjs';
+import { namesOf } from '../lib-validate/lexicon.mjs';
+
+/** Proper names the course uses: the cast (first names, surnames), the unit's extras, names.json (not languages). */
+export function properNameSet(ctx, doc) {
+  const out = new Set();
+  const addName = (name) => { for (const p of String(name || '').split(/[\s-]+/)) if (/^\p{Lu}\p{Ll}{2,}$/u.test(p) && !/^(?:Herr|Frau)$/.test(p)) out.add(p.toLowerCase()); };
+  for (const [, { member }] of ctx?.registries?.casts?.members || []) addName(member?.name);
+  for (const x of Object.values(doc?.data?.extras || {})) addName(x?.name);
+  for (const n of ctx ? namesOf(ctx) : []) if (n.kind !== 'language') addName(n.form);
+  return out;
+}
 
 export const id = 'ITM-04';
 export const title = 'R/F statements are not copied from their text (substring or one-token edit)';
@@ -36,10 +47,11 @@ function withinOneToken(a, b) {
 
 const textOf = (t) => [arr(t?.lines).map((l) => l?.de || '').join(' '), t?.text || ''].join(' ');
 
-export function run({ docs }) {
+export function run({ ctx, docs }) {
   const findings = [];
   let n = 0;
   for (const doc of docs) {
+    const properNames = properNameSet(ctx, doc);
     for (const { item, path, block, step, texts: resolved } of walkItems(doc)) {
       if (!isObj(item) || !TF.has(item.type)) continue;
       let text = '';
@@ -59,14 +71,12 @@ export function run({ docs }) {
         findings.push(blocker(doc, `${path}.promptDe`, 'the statement stands verbatim in its text', item.id));
         continue;
       }
-      // a proper name in an exam statement that its text never names answers „falsch" by itself
-      // (a1.1-u11 r3 F04, RAILS §3.1c) — ADVISORY
+      // a proper name (a cast member, an extra, a names.json person or place) in an exam statement that its text
+      // never names answers „falsch" by itself (a1.1-u11 r3 F04, RAILS §3.1c) — ADVISORY
       if (block) {
-        const names = tokens(statement).filter((t, i) => i > 0 && /^\p{Lu}/u.test(t.text) && !FUNCTION_WORDS.has(t.lower) && /^\p{Lu}\p{Ll}+$/u.test(t.text));
         const textToks = new Set(tokens(text).map((t) => t.lower));
-        const missing = names.filter((t) => !textToks.has(t.lower) && ![...textToks].some((w) => w.startsWith(t.lower.slice(0, Math.max(4, t.lower.length - 2)))));
-        const cast = [...missing].filter((t) => /^[A-ZÄÖÜ][a-zäöüß]+$/.test(t.text) && t.text.length >= 3);
-        if (cast.length && cast.every((t) => !/(?:ung|heit|keit|chen|ion|tät)$/.test(t.lower))) findings.push(advisory(doc, `${path}.promptDe`, `the statement names ${cast.map((t) => `„${t.text}"`).join(', ')}, which its text never names — the name alone answers it`, item.id));
+        const missing = tokens(statement).filter((t) => properNames.has(t.lower) && !textToks.has(t.lower));
+        if (missing.length) findings.push(advisory(doc, `${path}.promptDe`, `the statement names ${[...new Set(missing.map((t) => `„${t.text}"`))].join(', ')}, which its text never names — the name alone answers it`, item.id));
       }
       const stTok = tokens(st).map((t) => t.lower);
       for (const s of sentences(text)) {

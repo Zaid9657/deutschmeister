@@ -243,3 +243,14 @@ export function constituents(sentence) {
   }
   return out;
 }
+
+/**
+ * Do an item's authored `tiles` build its key, word for word (sentence_building; an error correction's
+ * constituents, SCHEMA §3.1 2026-09-28)? Punctuation and case aside.
+ */
+export function tilesBuildKey(item) {
+  const tiles = Array.isArray(item?.tiles) ? item.tiles.filter((t) => typeof t === 'string' && t.trim()) : [];
+  if (tiles.length < 2 || !item?.answer) return false;
+  const bag = (s) => String(s).toLowerCase().replace(/[.,!?;:„“"”‚‘]/g, ' ').split(/\s+/).filter(Boolean).sort().join(' ');
+  return bag(tiles.join(' ')) === bag(item.answer);
+}

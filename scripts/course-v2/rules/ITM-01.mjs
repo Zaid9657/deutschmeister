@@ -55,7 +55,8 @@
 //   - an order-family error correction with a declarative key accepts every order ITM-09's enumerator
 //     (lib-validate/orders.mjs, on the key's constituents) derives — the learner who fronts another phrase
 //     is graded wrong otherwise — unless promptDe fixes the first position (a1.1-u02 r2 F01 / r3 F08).
-//     Blocker;
+//     Blocker. An item that carries authored `tiles` (SCHEMA §3.1) is enumerated by ITM-09 on those tiles;
+//     the chunker covers the rest;
 //   - promptEn restricting the answer class of a typed gap („the city", „(country)", „which language")
 //     is carried by promptDe („Stadt", „(Land)", „Sprache") — another class fits the frame and is graded
 //     wrong otherwise (a1.1-u01 r1 F04). Blocker;
@@ -74,7 +75,7 @@ import { norm, tokens } from '../lib-validate/text.mjs';
 import { compiledItem, CHOICE_TYPES, arr, isObj, blocker, advisory } from '../lib-validate/helpers.mjs';
 import { cumulativeLexicon } from '../lib-validate/context.mjs';
 import { entryForms } from '../lib-validate/lexicon.mjs';
-import { SENTENCE_ADVERBS, constituents, missingOrders, fixesFirstTile } from '../lib-validate/orders.mjs';
+import { SENTENCE_ADVERBS, constituents, missingOrders, fixesFirstTile, tilesBuildKey } from '../lib-validate/orders.mjs';
 
 const { ordinalValue } = await import('../../../src/lib/lesson/check.js');
 
@@ -319,6 +320,9 @@ function correctionFindings(ctx, doc, lexIndex) {
       const key = String(item.answer || '').trim();
       // one declarative sentence only (a key of two sentences is out of the enumerator's reach)
       if (!key || /[?]\s*$/.test(key) || key.includes(',') || /[.!?]\s+\S/.test(key) || fixesFirstTile(item) || /\bPosition\s+1\b|\bam Anfang\b|\bVerb vorn\b/i.test(stripQuoted(item.promptDe))) continue;
+      // authored `tiles` (SCHEMA §3.1, 2026-09-28: the constituents of the corrected sentence, never rendered)
+      // are ITM-09's to enumerate; the chunker stands in only where they are absent or do not build the key
+      if (tilesBuildKey(item)) continue;
       const owed = missingOrders({ tiles: constituents(key), answer: key, accepted: arr(item.accepted), promptDe: item.promptDe });
       if (owed.length) out.push(blocker(doc, `${path}.accepted`, `word-order correction: German also allows ${owed.slice(0, 3).map((o) => `„${o.order}" (${o.why})`).join('; ')}${owed.length > 3 ? ` … (+${owed.length - 3})` : ''} — accept it (acceptedWhy), or fix the first position in promptDe („Beginnen Sie mit …")`, item.id));
       continue;

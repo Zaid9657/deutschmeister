@@ -16,12 +16,17 @@
 //     no punctuation; „Bilden Sie die Frage." alone lets the learner guess between V1 and a W-order
 //     (a1.1-u03 r1 F02). ADVISORY: the learner is not graded wrong, the task is under-specified;
 //   - orders.mjs owes a clause-final indefinite or negated object after a time/place adverb („Ich brauche
-//     einen Kuli heute.", a1.1-u06 r1 F10) — a blocker through the tile-order check above.
+//     einen Kuli heute.", a1.1-u06 r1 F10) — a blocker through the tile-order check above;
+//   - an error_correction may carry `tiles` (SCHEMA §3.1, 2026-09-28): the constituents of the corrected
+//     sentence, never rendered. Its declarative key's other orders are enumerated on them exactly as for a
+//     sentence-building item — BLOCKER when one is not accepted (the learner who writes it is graded wrong),
+//     unless promptDe fixes the first position; tiles that do not build the key are an ADVISORY (ITM-01 then
+//     falls back to its chunker).
 
 import { walkItems } from '../lib-validate/walk.mjs';
 import { tokens } from '../lib-validate/text.mjs';
 import { compiledItem, arr, isObj, blocker, advisory } from '../lib-validate/helpers.mjs';
-import { missingOrders, fixesFirstTile } from '../lib-validate/orders.mjs';
+import { missingOrders, fixesFirstTile, tilesBuildKey } from '../lib-validate/orders.mjs';
 
 const W_WORDS = new Set('wer wen wem wessen was wo wohin woher wann wie warum weshalb wieso welche welcher welches welchen welchem wie viel wie viele'.split(' '));
 /** Does promptDe name the verb-first question? („Ja/Nein-Frage", „Verb auf Position 1", „Verb vorn"/„am Anfang") */
@@ -42,6 +47,16 @@ try {
 
 const bag = (s) => tokens(s).map((t) => t.lower).sort().join(' ');
 
+/** An error correction's authored tiles: they build the key, and every order they allow is accepted. */
+function correctionOrders(doc, item, path) {
+  if (!tilesBuildKey(item)) return [advisory(doc, `${path}.tiles`, `the tiles [${arr(item.tiles).join(' / ')}] do not build the key „${item.answer || ''}" — they are the constituents of the corrected sentence; ITM-01 falls back to its chunker`, item.id)];
+  const key = String(item.answer || '').trim();
+  if (/\?\s*$/.test(key) || /[.!?]\s+\S/.test(key) || fixesFirstTile(item) || /\bPosition\s+1\b|\bam Anfang\b|\bVerb vorn\b/i.test(String(item.promptDe || '').replace(/[„"‚][^“"‘]*[“"‘]/g, ' '))) return [];
+  const owed = missingOrders({ tiles: arr(item.tiles), answer: key, accepted: arr(item.accepted), promptDe: item.promptDe });
+  if (!owed.length) return [];
+  return [blocker(doc, `${path}.accepted`, `word-order correction: its tiles also build ${owed.slice(0, 3).map((o) => `„${o.order}" (${o.why})`).join('; ')}${owed.length > 3 ? ` … (+${owed.length - 3})` : ''} — accept it (acceptedWhy), or fix the first position in promptDe („Beginnen Sie mit …")`, item.id)];
+}
+
 export function run({ docs }) {
   const findings = [];
   const notes = [];
@@ -49,6 +64,11 @@ export function run({ docs }) {
   let n = 0;
   for (const doc of docs) {
     for (const { item, path } of walkItems(doc)) {
+      if (isObj(item) && item.type === 'error_correction' && Array.isArray(item.tiles)) {
+        n += 1;
+        findings.push(...correctionOrders(doc, item, path));
+        continue;
+      }
       if (!isObj(item) || item.type !== 'sentence_building') continue;
       n += 1;
       const tiles = bag(arr(item.tiles).join(' '));
