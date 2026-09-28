@@ -384,8 +384,8 @@
             "Sie lesen Anzeigen."
           ],
           "explanation": {
-            "de": "Arjun hat drei Anzeigen mit Fotos. Priya und Arjun lesen die Anzeigen zusammen.",
-            "en": "Arjun has three ads with photos; they read the ads together."
+            "de": "Arjun hat drei Anzeigen. Priya und Arjun lesen sie zusammen.",
+            "en": "Arjun has three ads, and Priya and Arjun read them together."
           },
           "origin": "agent"
         },
@@ -1166,8 +1166,8 @@
             "wirklich schön"
           ],
           "explanation": {
-            "de": "Priya sagt: „Ja, sie ist wirklich schön.“",
-            "en": "Priya says it is really lovely."
+            "de": "Priya sagt: Die Wohnung ist wirklich schön.",
+            "en": "Priya says the flat is really lovely."
           },
           "origin": "agent"
         },
@@ -1287,16 +1287,16 @@
           "promptEn": "“sie” + “sind” = plural. What is from the flat-share?",
           "options": [
             "der Tisch",
-            "das Sofa und der Sessel",
+            "die Stühle",
             "das Bett"
           ],
-          "answer": "das Sofa und der Sessel",
+          "answer": "die Stühle",
           "accepted": [
-            "das Sofa und der Sessel"
+            "die Stühle"
           ],
           "explanation": {
-            "de": "„sie“ + „sind“ = Plural: das Sofa, der Sessel und die Stühle. Der Tisch und das Bett sind Singular.",
-            "en": "“sie” with “sind” is plural: the sofa, the armchair and the chairs. The table and the bed are singular."
+            "de": "„sie“ + „sind“ = Plural: die Stühle, das Sofa und der Sessel. Der Tisch und das Bett sind Singular.",
+            "en": "“sie” with “sind” is plural: the chairs, the sofa and the armchair. The table and the bed are singular."
           },
           "origin": "agent"
         },
@@ -2957,8 +2957,8 @@
             "profile": "sd1-sp2",
             "prepMinutes": 0,
             "instructionsDe": "Thema „Wohnung“: erst Zimmer, dann Möbel. Fragen und antworten Sie mit den Karten.",
-            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin Nora haben Wortkarten zum Thema „Wohnung“: zuerst die Zimmer, dann die Möbel. Fragen Sie mit der Karte: Wie ist …? Ist … neu? Wo ist …? Antworten Sie auch auf die Fragen von Nora.",
-            "situationEn": "Speaking part 2: you and your partner Nora have word cards on the topic “Wohnung” (flat) – first the rooms, then the furniture. Ask a question with your card: Wie ist …? Ist … neu? Wo ist …? Also answer Nora’s questions.",
+            "situationDe": "Sprechen Teil 2: Ihre Partnerin ist Nora. Sie haben Wortkarten zum Thema „Wohnung“: zuerst die Zimmer, dann die Möbel. Fragen Sie mit der Karte: Wie ist …? Ist … neu? Wo ist …? Antworten Sie auch auf die Fragen von Nora.",
+            "situationEn": "Speaking part 2: your partner is Nora. You have word cards on the topic “Wohnung” (flat) – first the rooms, then the furniture. Ask a question with your card: Wie ist …? Ist … neu? Wo ist …? Also answer Nora’s questions.",
             "cards": {
               "learner": [
                 "Wohnung – Küche",
