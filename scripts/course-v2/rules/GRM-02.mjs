@@ -6,9 +6,15 @@
 // A chunk preview stays a chunk (review a1.2-u04 r1 F06): a point listed only under grammar.chunk may
 // be met as the listed phrases, but it is never a Lernschritt's `structure` and never the point of its
 // rule card — teaching it as structure is introducing it, which is the spine's call.
+//
+// Recycled (the a1.1 unit reviews, rule-smith 2026-09-28, RAILS §3.1c: a1.1-u08 r1 F08): a point a unit
+// introduces productively (spec.grammar.new, the spine's intro.productive is this unit) is listed under
+// spec.grammar.review in ≥ 1 later unit of the band (a1.1 + a1.2 for A1, …), read from the unit files and the
+// level spec bundles. ADVISORY, and silent while the band has no later unit spec to look in (a1.1-u12's points
+// wait for the A1.2 specs; g.nicht-position-gern, intro a1.1-u08, was the fixture).
 
 import { walkSteps, walkMicroOutputs, walkItems } from '../lib-validate/walk.mjs';
-import { unitPosition } from '../lib-validate/ids.mjs';
+import { unitPosition, bandOfLevel, LEVELS } from '../lib-validate/ids.mjs';
 import { pointPositions, describePosition } from '../lib-validate/spine.mjs';
 import { arr, blocker, advisory } from '../lib-validate/helpers.mjs';
 
@@ -18,11 +24,37 @@ export const type = 'hard';
 export const scope = 'unit';
 export const stage = 'T';
 
+/** The later unit specs of `level`'s band after unit `pos`: [{ id, grammar }] from unit files and spec bundles. */
+export function laterBandSpecs(ctx, level, pos) {
+  const band = bandOfLevel(level);
+  const seen = new Map();
+  for (const l of LEVELS) {
+    if (bandOfLevel(l) !== band) continue;
+    const slot = ctx.levels.get(l);
+    if (!slot) continue;
+    for (const [nr, entry] of slot.specs || []) if (entry?.spec) seen.set(`${l}-${nr}`, { id: entry.id || `${l}-u${String(nr).padStart(2, '0')}`, grammar: entry.spec.grammar || {} });
+    for (const [nr, doc] of slot.units || []) if (doc?.data?.spec) seen.set(`${l}-${nr}`, { id: doc.data.id, grammar: doc.data.spec.grammar || {} });
+  }
+  return [...seen.values()].filter((x) => { const p = unitPosition(x.id); return p !== null && p > pos; });
+}
+
 export function run({ ctx, docs }) {
   const spine = ctx.registries.spine?.byId;
   if (!spine) return { findings: [], skipped: 'grammar-spine.json missing' };
   const findings = [];
   let units = 0;
+  for (const doc of docs) {
+    if (doc.kind !== 'unit') continue;
+    const pos = unitPosition(doc.data?.id);
+    if (pos === null) continue;
+    const later = laterBandSpecs(ctx, doc.level, pos);
+    if (!later.length) continue;
+    arr(doc.data.spec?.grammar?.new).forEach((pid, i) => {
+      const p = spine.get(pid)?.point;
+      if (!p || unitPosition(p.intro?.productive) !== pos) return;
+      if (!later.some((x) => arr(x.grammar.review).includes(pid))) findings.push(advisory(doc, `spec.grammar.new[${i}]`, `${pid} is introduced productively here, but no later unit of the band (${later.length} spec(s) read, to ${later[later.length - 1].id}) lists it under spec.grammar.review — plan its recycling`, pid));
+    });
+  }
   const pointOf = (pid) => spine.get(pid)?.point || null;
   for (const doc of docs) {
     if (doc.kind !== 'unit') continue;

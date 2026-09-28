@@ -23,11 +23,14 @@
 //     not name them before their first unit (spec.cast / story.castIn) (a1.1-u03 r1 F05 / r2 F02 / r3 F02:
 //     lx.partner, lx.tuerkisch);
 //   - the heuristic detectors read the examples too (the exact ones block, above) (a1.1-u05 r1 F04 / F11).
+// Fourth round (u07–u12): an unknown word is reported even when exampleEn is present — the German is read at
+// the unit (u10 r2 F04 / r3 F05, u11 r2 F09 / r3 F06); „Herr/Frau X" is a cast member or a names.json person
+// (u08 r1 F05, lx.absagen „Frau Kowalski"). ADVISORY.
 
 import { walkTexts } from '../lib-validate/walk.mjs';
 import { LEVELS, parseUnitId, positionOf, describePosition } from '../lib-validate/ids.mjs';
 import { ceilingChecker } from '../lib-validate/ceiling.mjs';
-import { entryForms, knownForms, licensedForms, readTokens, isKnown } from '../lib-validate/lexicon.mjs';
+import { entryForms, knownForms, licensedForms, readTokens, isKnown, namesOf } from '../lib-validate/lexicon.mjs';
 import { knownCompound } from '../lib-validate/compounds.mjs';
 import { arr, isObj, blocker, finding, list } from '../lib-validate/helpers.mjs';
 
@@ -130,6 +133,9 @@ export function run({ ctx, docs, levels, mode }) {
     }
   }
   const knownAt = new Map();
+  const personNames = new Set();
+  for (const [, { member }] of members) for (const part of String(member?.name || '').split(/[\s-]+/)) if (part) personNames.add(part.toLowerCase());
+  for (const n of namesOf(ctx)) if (n.kind === 'person') for (const part of String(n.form).split(/[\s-]+/)) personNames.add(part.toLowerCase());
   for (const slot of withLex) {
     slot.lexicon.entries.forEach((e, i) => {
       if (!isObj(e) || typeof e.example !== 'string' || !e.example.trim()) return;
@@ -145,7 +151,17 @@ export function run({ ctx, docs, levels, mode }) {
       const known = knownAt.get(key);
       const unknown = [...new Set(readTokens(e.example).map((t) => t.lower).filter((w) => !isKnown(w, known) && !knownCompound(w, (x) => isKnown(x, known))))];
       // A levels only: from B1 on an example is read like the extensive strand, which tolerates unknown words
-      if (unknown.length && /^a/.test(u.level) && !String(e.exampleEn || '').trim()) findings.push(finding('advisory', { file: slot.lexicon.file }, `entries[${i}].example`, `example „${e.example}" uses ${unknown.slice(0, 4).map((w) => `„${w}"`).join(', ')}, not known at ${e.unit} — reword with known words or add exampleEn`, e.id));
+      // (a1.1-u10 r2 F04 / r3 F05, u11 r2 F09 / r3 F06: exampleEn translates the example, but the German still
+      // reads above its unit — lx.ankunft, lx.abfahrt, lx.sprachnachricht, lx.monat)
+      if (unknown.length && /^a/.test(u.level)) {
+        const twin = String(e.exampleEn || '').trim();
+        findings.push(finding('advisory', { file: slot.lexicon.file }, `entries[${i}].example`, `example „${e.example}" uses ${unknown.slice(0, 4).map((w) => `„${w}"`).join(', ')}, not known at ${e.unit} — ${twin ? 'exampleEn translates it, but the German is read at the entry\'s unit: reword with known words' : 'reword with known words or add exampleEn'}`, e.id));
+      }
+      // a person an example names („Frau Kowalski") is a cast member or a names.json person (a1.1-u08 r1 F05:
+      // lx.absagen) — a stranger with a surname reads as a character the story never introduces
+      for (const m of e.example.matchAll(/\b(?:Herr|Frau)\s+(\p{Lu}\p{Ll}+)/gu)) {
+        if (!personNames.has(m[1].toLowerCase())) findings.push(finding('advisory', { file: slot.lexicon.file }, `entries[${i}].example`, `example „${e.example}" names „${m[0]}", who is neither in the cast bible nor in names.json — use a cast member (or add the name to names.json)`, e.id));
+      }
       // the cast bible
       const pos = positionOf(u.level, u.nr);
       for (const [cid, { member }] of members) {
