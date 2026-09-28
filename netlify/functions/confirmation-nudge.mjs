@@ -35,6 +35,7 @@ import { schedule } from '@netlify/functions';
 import { createClient } from '@supabase/supabase-js';
 import { BRAND, emailHeader, ctaCell } from './_shared/brand.mjs';
 import { isBlockedEmail } from './_shared/emailHygiene.mjs';
+import { fetchOptedOutIds } from './_shared/emailOptOut.mjs';
 import { continueToken, TOKEN_TTL_DAYS } from './confirm-continue.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
@@ -103,7 +104,7 @@ export const bodyHtml = (continueUrl) => `<!DOCTYPE html>
 // Unconfirmed, email-provider, aged [MIN_AGE_DAYS, MAX_AGE_DAYS), address not
 // disposable, profile not opted out, never claimed. Oldest first, so the
 // backlog drains from the stale end toward fresh signups.
-async function selectCandidates() {
+export async function selectCandidates(client = supabase) {
   const day = 24 * 60 * 60 * 1000;
   const now = Date.now();
   const newest = new Date(now - MIN_AGE_DAYS * day).toISOString();
@@ -112,7 +113,7 @@ async function selectCandidates() {
   const unconfirmed = [];
   let page = 1;
   while (true) {
-    const { data, error } = await supabase.auth.admin.listUsers({ page, perPage: 1000 });
+    const { data, error } = await client.auth.admin.listUsers({ page, perPage: 1000 });
     if (error) throw new Error(`listUsers: ${error.message}`);
     for (const u of data.users) {
       if (
@@ -136,12 +137,14 @@ async function selectCandidates() {
   // Opt-out lives as profiles.email_daily_sentence = false — the same
   // definition lifecycle_customer_state uses (the view itself can't serve
   // here: it deliberately covers confirmed funnel states, not this cohort).
-  const [{ data: already }, { data: optedOut }] = await Promise.all([
-    supabase.from('lifecycle_emails').select('user_id').eq('kind', 'confirm_nudge').in('user_id', ids),
-    supabase.from('profiles').select('id').eq('email_daily_sentence', false).in('id', ids),
+  // Read through the shared reader, which throws on error: this read used to
+  // ignore its error and filter the cohort by an id list in the URL, the shape
+  // that stopped the daily sentence honouring unsubscribes (2026-09-28).
+  const [{ data: already }, out] = await Promise.all([
+    client.from('lifecycle_emails').select('user_id').eq('kind', 'confirm_nudge').in('user_id', ids),
+    fetchOptedOutIds(client),
   ]);
   const claimed = new Set((already || []).map((r) => r.user_id));
-  const out = new Set((optedOut || []).map((r) => r.id));
 
   return unconfirmed
     .filter((r) => !claimed.has(r.id) && !out.has(r.id))
