@@ -2,6 +2,7 @@ import { schedule } from '@netlify/functions';
 import { createClient } from '@supabase/supabase-js';
 import { createHmac } from 'crypto';
 import sentences from './data/daily-sentences.json' with { type: 'json' };
+import { fetchOptedOutIds } from './_shared/emailOptOut.mjs';
 
 // ─── config ──────────────────────────────────────────────────────────────────
 
@@ -49,13 +50,18 @@ function analyzeUrl(sentenceDe) {
   return `${BASE_URL}/analyze?s=${encodeURIComponent(sentenceDe)}`;
 }
 
-/** Fetch all confirmed users who haven't opted out of daily emails. */
-async function getRecipients() {
+/**
+ * Every confirmed account that has not opted out, in the deterministic order
+ * the idempotency keys need. Throws when the opt-out list cannot be read, and
+ * the handler then sends nothing: until 2026-09-28 a failed read mailed
+ * everyone, unsubscribed accounts included (see _shared/emailOptOut.mjs).
+ */
+export async function getRecipients(client = supabase) {
   // auth.admin.listUsers for verified emails
   const emails = [];
   let page = 1;
   while (true) {
-    const { data, error } = await supabase.auth.admin.listUsers({ page, perPage: 1000 });
+    const { data, error } = await client.auth.admin.listUsers({ page, perPage: 1000 });
     if (error) throw new Error(`listUsers: ${error.message}`);
 
     for (const user of data.users) {
@@ -70,26 +76,10 @@ async function getRecipients() {
 
   if (emails.length === 0) return [];
 
-  // Filter out users who opted out — check profiles.email_daily_sentence = false
-  // (column may not exist yet — if it doesn't, everyone is opted in)
-  const userIds = emails.map((u) => u.id);
-  const { data: profiles, error: profErr } = await supabase
-    .from('profiles')
-    .select('id, email_daily_sentence')
-    .in('id', userIds);
-
-  if (profErr) {
-    // If the column doesn't exist yet, log a warning and send to everyone
-    console.warn('profiles query error (column may not exist yet):', profErr.message);
-    return orderRecipients(emails);
-  }
-
-  const optedOut = new Set(
-    (profiles || [])
-      .filter((p) => p.email_daily_sentence === false)
-      .map((p) => p.id)
-  );
-
+  const optedOut = await fetchOptedOutIds(client);
+  // Counts only — never an address.
+  const excluded = emails.filter((u) => optedOut.has(u.id)).length;
+  console.log(`Opt-outs: ${excluded} of ${emails.length} confirmed accounts excluded`);
   return orderRecipients(emails.filter((u) => !optedOut.has(u.id)));
 }
 
