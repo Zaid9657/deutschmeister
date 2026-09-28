@@ -2428,7 +2428,7 @@
         "register": "du"
       },
       "aussprache": {
-        "focus": "sch ist nicht s: Schein – sein. st und sp sprechen Sie wie „scht“ und „schp“: steigen, einsteigen, umsteigen, spät. Aber: ist, erst.",
+        "focus": "sch ist nicht s: Schein – sein. st, sp wie „scht“, „schp“: steigen, umsteigen, Verspätung, spät. Aber st wie „s-t“: ist, erst, kostet, Samstag, fährst.",
         "perception": {
           "generator": "perception.pairs",
           "count": 3,
