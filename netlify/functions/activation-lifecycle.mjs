@@ -17,8 +17,17 @@
 // THE RULE THIS FUNCTION EXISTS TO KEEP: never tell someone they have not
 // used a lesson when they have. Selection reads public.lifecycle_customer_state
 // (the ONE definition of funnel status — migrations/2026-08-22-activation-
-// lifecycle.sql), and eligibility is RE-READ immediately before the claim, so
-// a user who does their first lesson between selection and send is dropped.
+// lifecycle.sql, widened by 2026-09-28-lifecycle-lesson-activity.sql to count
+// every lesson-activity source, the A1.1 course player included), and
+// eligibility is RE-READ immediately before the claim, so a user who does
+// their first lesson between selection and send is dropped. This file never
+// queries an activity table itself: which tables count is the view's job, and
+// tests/lifecycle.test.mjs fails if a source is missing from it.
+//
+// Both reads also require has_lesson_activity = false. That column exists only
+// once the 2026-09-28 migration is applied, so on the older view the query
+// errors and nothing is sent. The job fails closed and never mails on the
+// three-table definition that let A1.1 learners through.
 //
 // SHIPS OFF, twice over:
 //   1. LIFECYCLE_ACTIVATION_ENABLED must be exactly 'true' or the run no-ops
@@ -128,9 +137,8 @@ export const TEMPLATES = {
 
 // ─── selection ───────────────────────────────────────────────────────────────
 
-// Users inside the window whose funnel status is still 'new' (no lesson in any
-// of the three progress tables, not subscribed), not opted out, message not
-// yet sent.
+// Users inside the window whose funnel status is still 'new' (no lesson
+// activity of any kind, not subscribed), not opted out, message not yet sent.
 async function selectCandidates(kind) {
   const day = 24 * 60 * 60 * 1000;
   const now = Date.now();
@@ -140,13 +148,14 @@ async function selectCandidates(kind) {
 
   const { data: rows, error } = await supabase
     .from('lifecycle_customer_state')
-    .select('user_id, status, email_opted_out')
+    .select('user_id, status, email_opted_out, has_lesson_activity')
     .gte('registered_at', lower)
     .lt('registered_at', upper)
-    .eq('status', 'new');
-  if (error) throw new Error(`lifecycle_customer_state query failed (migration applied?): ${error.message}`);
+    .eq('status', 'new')
+    .eq('has_lesson_activity', false);
+  if (error) throw new Error(`lifecycle_customer_state query failed (2026-09-28-lifecycle-lesson-activity.sql applied?): ${error.message}`);
 
-  const candidates = (rows || []).filter((r) => !r.email_opted_out);
+  const candidates = (rows || []).filter((r) => !r.email_opted_out && r.has_lesson_activity === false);
   if (candidates.length === 0) return [];
 
   const ids = candidates.map((r) => r.user_id);
@@ -182,10 +191,12 @@ async function recheckStillNew(recipients) {
   if (recipients.length === 0) return [];
   const { data, error } = await supabase
     .from('lifecycle_customer_state')
-    .select('user_id, status')
+    .select('user_id, status, has_lesson_activity')
     .in('user_id', recipients.map((r) => r.id));
   if (error) throw new Error(`eligibility re-read failed: ${error.message}`);
-  const stillNew = new Set((data || []).filter((r) => r.status === 'new').map((r) => r.user_id));
+  const stillNew = new Set(
+    (data || []).filter((r) => r.status === 'new' && r.has_lesson_activity === false).map((r) => r.user_id),
+  );
   return recipients.filter((r) => stillNew.has(r.id));
 }
 

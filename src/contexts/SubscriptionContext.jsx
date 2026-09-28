@@ -16,6 +16,7 @@ import {
   checkTrialStatus,
   checkSubscriptionStatus,
 } from '../services/subscriptionService';
+import { settlePendingPlacement } from '../services/placementService';
 
 const SubscriptionContext = createContext({});
 
@@ -92,6 +93,11 @@ export const SubscriptionProvider = ({ children }) => {
         await startFreeTrial(user.id);
         currentProfile = await getUserProfile(user.id);
       }
+
+      // A level-test result taken signed out on this browser ("Sign up free —
+      // save my results", src/lib/placement.js) lands on the account here,
+      // before anything reads current_level. Only fills an empty placement.
+      currentProfile = await settlePendingPlacement(user.id, currentProfile);
 
       setProfile(currentProfile);
     } catch (error) {
