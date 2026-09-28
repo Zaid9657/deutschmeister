@@ -68,10 +68,11 @@ const CheckpointPage = lazy(() => import('./pages/lesson/CheckpointPage'));
 const ReviewPage = lazy(() => import('./pages/lesson/ReviewPage'));
 const CourseCompletePage = lazy(() => import('./pages/CourseCompletePage'));
 const CourseCertificatePage = lazy(() => import('./pages/CourseCertificatePage'));
-// Course v2 player (docs/course-v2/BLUEPRINT.md §7.3): course home, unit player, Plateau.
+// Course v2 player (docs/course-v2/BLUEPRINT.md §7.3): course home, unit player, Plateau, closing block.
 const CourseHomeV2Page = lazy(() => import('./pages/course-v2/CourseHomeV2Page.jsx'));
 const UnitPlayerPage = lazy(() => import('./pages/course-v2/UnitPlayerPage.jsx'));
 const PlateauPage = lazy(() => import('./pages/course-v2/PlateauPage.jsx'));
+const ClosingPage = lazy(() => import('./pages/course-v2/ClosingPage.jsx'));
 const ModelltestHub = lazy(() => import('./pages/Modelltest/ModelltestHub'));
 const ModelltestOverview = lazy(() => import('./pages/Modelltest/ModelltestOverview'));
 const ModelltestRun = lazy(() => import('./pages/Modelltest/ModelltestRun'));
@@ -360,6 +361,9 @@ function Shell() {
                     <Route path="/course/:level/v2" element={<LevelSubscriptionGuard><EmailVerificationGate><CourseHomeV2Page /></EmailVerificationGate></LevelSubscriptionGuard>} />
                     <Route path="/course/:level/u/:nr" element={<LevelSubscriptionGuard><EmailVerificationGate><UnitPlayerPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
                     <Route path="/course/:level/p/:nr" element={<LevelSubscriptionGuard><EmailVerificationGate><PlateauPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
+                    {/* the closing block (.1 Halbtest → Teil-Karte); `courseV2` makes the guard ask the
+                        v2 access question here too, since its path regex names only v2|u|p */}
+                    <Route path="/course/:level/abschluss" element={<LevelSubscriptionGuard courseV2><EmailVerificationGate><ClosingPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
                     <Route path="/course/:level/:itemId" element={<LevelSubscriptionGuard><EmailVerificationGate><CourseLessonPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
 
                     {/* Level-aware routes — A1.1 is free, others require auth + email verification + subscription */}
