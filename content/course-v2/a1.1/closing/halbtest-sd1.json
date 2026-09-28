@@ -245,7 +245,7 @@
       "id": "a1.1-ht-sd1-t10",
       "kind": "text",
       "title": "Nachricht von Frau Schulz",
-      "text": "Liebe Teilnehmerinnen und Teilnehmer,\nam Freitag ist der letzte Tag im Kurs A1. Dann frühstücken wir zusammen im Kursraum! Bitte bringen Sie etwas mit: Brötchen, Käse, Obst oder Kuchen. Ich bringe Kaffee und Tee. Das Frühstück beginnt um 9 Uhr. Danach sprechen wir über die Prüfung.\nViele Grüße\nHeike Schulz",
+      "text": "Liebe Teilnehmerinnen und Teilnehmer,\nam Freitag ist der letzte Tag im Kurs A1.1. Dann frühstücken wir zusammen im Kursraum! Bitte bringen Sie etwas mit: Brötchen, Käse, Obst oder Kuchen. Ich bringe Kaffee und Tee. Das Frühstück beginnt um 9 Uhr. Danach sprechen wir über die Prüfung.\nViele Grüße\nHeike Schulz",
       "glosses": []
     },
     {
@@ -287,7 +287,7 @@
       "id": "a1.1-ht-sd1-t16",
       "kind": "sign",
       "title": "Am Museum",
-      "text": "Museum im Schloss\nDienstag bis Sonntag 10 bis 17 Uhr\nMontag geschlossen\nKinder bezahlen nichts.",
+      "text": "Museum im Schloss\nMittwoch bis Montag 10 bis 17 Uhr\nDienstag geschlossen\nKinder bezahlen nichts.",
       "glosses": []
     }
   ],
@@ -473,10 +473,10 @@
           "type": "abc",
           "role": "exam",
           "topic": "hoeren",
-          "promptDe": "Wann ist der Termin in der Praxis jetzt?",
+          "promptDe": "Wann ist der Termin in der Praxis?",
           "options": [
             "am Donnerstag um 9.15 Uhr",
-            "morgen um 10 Uhr",
+            "am Donnerstag um 9.50 Uhr",
             "am Donnerstag um 10.15 Uhr"
           ],
           "textRef": "a1.1-ht-sd1-t7",
@@ -485,8 +485,8 @@
             "am Donnerstag um 9.15 Uhr"
           ],
           "explanation": {
-            "de": "Morgen um 10 Uhr geht es nicht. „Ihr Termin ist jetzt am Donnerstag um 9.15 Uhr.“",
-            "en": "Tomorrow at 10 is cancelled; the appointment is now on Thursday at 9.15."
+            "de": "Auf der Terminkarte steht 10.15 Uhr, aber das ist falsch. „Ihr Termin ist schon um 9.15 Uhr.“",
+            "en": "The appointment card says 10.15, but that is wrong: the appointment is already at 9.15."
           },
           "exact": "number",
           "origin": "agent"
@@ -846,7 +846,7 @@
       "address": "du",
       "textType": "tt.kurzmitteilung",
       "title": "Eine Nachricht an Bilal: Zusammen lernen",
-      "situationDe": "Sie und Bilal lernen im Kurs A1. Bald machen Sie beide den Kurs A1.2. Sie möchten mit Bilal zusammen Deutsch lernen.",
+      "situationDe": "Sie und Bilal lernen im Kurs A1.1. Bald machen Sie beide den Kurs A1.2. Sie möchten mit Bilal zusammen Deutsch lernen.",
       "taskDe": "Schreiben Sie Bilal eine Nachricht zu allen drei Punkten (25 bis 35 Wörter).",
       "leitpunkte": [
         {

@@ -406,12 +406,12 @@
             "braucht",
             "fehlt",
             "fehlen",
-            "Tisch",
-            "Stuhl",
-            "Lampe",
-            "Schrank",
-            "Sofa",
-            "Bett"
+            "keinen Tisch",
+            "keinen Stuhl",
+            "keine Lampe",
+            "keinen Schrank",
+            "kein Sofa",
+            "kein Bett"
           ]
         },
         {

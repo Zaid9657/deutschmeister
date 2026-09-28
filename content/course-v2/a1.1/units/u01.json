@@ -261,8 +261,8 @@
         "promptEn": "Say your name and where you are from.",
         "planSeconds": 20,
         "seconds": [
-          5,
-          20
+          20,
+          30
         ],
         "targets": [
           "g.praesens"
