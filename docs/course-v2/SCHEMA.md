@@ -15,7 +15,8 @@ voice registry file (§4.7); names kind `language` (§4.9); lexicon `pluralVaria
 the speaking move `nachfragen`, `acceptedWhy` on form fields and `Check.proofs[].microOutput` (§8). Second batch
 (a1.1 u07–u12 reviews): `tiles` on an error correction (§3.1), cast `contact.hoursDe` (§4.7), `WritingTask.address`
 `ihr` and `WritingTask.textType` (§8). Third batch (a1.1 level review r1): `start.auftakt` allowed in the A
-skeleton (U1's first scored sentence), with the unnumbered bank key `<prefix>-uNN-mo` (§2, §8).
+skeleton (U1's first scored sentence), with the unnumbered bank key `<prefix>-uNN-mo` (§2, §8); `SpeakingPart.length`
+(§8).
 **Implementation:** plain JSON content files authored by agents, a zero-dependency schema checker and a deterministic
 compiler written in JavaScript (`scripts/course-v2/lib/`, `scripts/course-v2/compile.mjs`), JS/JSON runtime modules.
 No TypeScript, no ajv/zod (no lockfile churn), **no new content tables** in Supabase.
@@ -712,6 +713,10 @@ SpeakingPart = {
   keyPoints: [de]*,                                            // required for mode 'mediate' (scored on coverage)
   seconds: [int, int]?, turns: [int, int]?,                   // target length within the template band; also the
                                                                // hard session length for the minute allowance
+  length: enum(full|reduced|mini)?,                            // the part's own Teil length where it is shortened (a
+                                                               // Plateau/Halbtest sp1 part); absent = the unit's
+                                                               // Prüfungsfokus entry, else full. Compiler, grade.mjs and
+                                                               // EXM-04 read it (added 2026-09-28)
   moves: [enum(vorschlagen|reagieren|widersprechen|einigen|verteilen|nachfragen)]*,   // nachfragen (sd1.sp1): 2026-09-28
   planningRound: { minutes: int, moves: [str] }? }            // every B1 unit (BLUEPRINT §2.8)
 

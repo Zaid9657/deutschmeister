@@ -181,6 +181,9 @@ const speakingPart = {
   'keyPoints?': '[de]*',
   'seconds?': '[int, int]',
   'turns?': '[int, int]',
+  // length: the part's own Teil length where it is shortened (a Plateau or Halbtest sp1 part); absent = the unit's
+  // Prüfungsfokus entry for the template, else full. The compiler, grade.mjs and EXM-04 read it (2026-09-28)
+  'length?': 'enum(full|reduced|mini)',
   // nachfragen: ask for a repetition, a spelling or a slower turn (a1.1-u02 r1 F19, sd1.sp1)
   moves: '[enum(vorschlagen|reagieren|widersprechen|einigen|verteilen|nachfragen)]*',
   'planningRound?': { minutes: 'int', moves: '[str]' },

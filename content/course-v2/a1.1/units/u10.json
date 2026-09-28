@@ -1010,7 +1010,7 @@
       },
       "input": {
         "kind": "mixed",
-        "title": "Am Automaten und am Schalter",
+        "title": "Fahrkarten kaufen",
         "textType": "tt.dialog",
         "lines": [
           {
