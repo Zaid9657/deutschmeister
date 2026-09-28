@@ -56,6 +56,27 @@ export function canDoNouns(text) {
   return [...new Set((String(text || '').match(/(?<![„\p{L}])\p{Lu}\p{Ll}{3,}/gu) || []).map((w) => w.toLowerCase()).filter((w) => !CONTENT_STOP.has(w)))];
 }
 
+/**
+ * What a can-do asks of the learner's own turns that they do not show: „ask" (a learner turn with „?"),
+ * „answer" (a learner statement), „ask „wie spät …?"" (the W-word of a „fragen, wie spät …" clause in a learner question).
+ */
+export function learnerTurnGaps(canDo, turns) {
+  const text = String(canDo || '');
+  const out = [];
+  const asks = turns.some((x) => /\?\s*$/.test(x));
+  const answers = turns.some((x) => !/\?\s*$/.test(x.trim()));
+  if (/\bfragen\b|\berfragen\b|nachfragen/i.test(text) && !asks) out.push('ask (no learner turn is a question)');
+  if (/\bantworten\b|\bbeantworten\b|\breagieren\b/i.test(text) && !answers) out.push('answer (every learner turn is a question)');
+  // „fragen, wie spät es ist": a learner question carries the W-word (with its adverb: „wie spät", „wie viel")
+  const w = text.match(/\b(?:fragen|erfragen|nachfragen)\s*,\s*(wie viel|wie|wo|wann|was|wer|woher|wohin|welche\p{L}*)\s+(\p{Ll}+)/iu);
+  if (w) {
+    const words = [w[1].toLowerCase(), ...(/^(?:spät|viel|lange|oft|alt|weit|teuer)$/.test(w[2]) ? [w[2]] : [])];
+    const phrase = new RegExp(`(?<![\\p{L}])${words.join('\\s+')}(?![\\p{L}])`, 'iu');
+    if (!turns.some((x) => /\?\s*$/.test(x) && phrase.test(x))) out.push(`ask with the can-do's own „${words.join(' ')} …?" („fragen, ${w[1]} ${w[2]} …")`);
+  }
+  return out;
+}
+
 export const id = 'ALL-02';
 export const title = 'Can-dos: 3–5 per unit, tagged, proven; ≥ 1 productive proven by an Aufgabe';
 export const type = 'hard';
@@ -189,6 +210,16 @@ export function run({ ctx, docs }) {
           const moves = parts.flatMap((x) => arr(x?.moves)).join(' ').toLowerCase();
           const scored = !criteria.length || fns.some(([, cues]) => cues.map((c) => c.trim()).filter((c) => c.length >= 3).some((c) => criteria.some((x) => x.includes(c)) || moves.includes(c)));
           if (!scored) findings.push(advisory(doc, `check.proofs[${i}]`, `the rubric of the ${p.aufgabe} task proving ${p.canDo} (${[...new Set(parts.map((x) => x?.profile))].join(', ')}) scores no criterion for its function (${fns.map(([re]) => fnName(re)).join(', ')}) — prove it by a task that scores it, or by its proof item`, p.canDo));
+        }
+        // the learner's own model turns perform the functions of an interaction can-do (a1.1-u10 r1 F07, the
+        // u04 r1-F07 class: cd.a1.platz-frei needs a learner question AND a learner answer) and carry its fixed
+        // W-phrase („fragen, wie spät es ist" → a turn „Wie spät ist es?", a1.1-u07 r1 F02) — ADVISORY
+        if (t.kind === 'speaking' && /^interaction-/.test(String(e.mode || ''))) {
+          const mine = arr(t.task.modelTurns).filter((x) => x?.speaker === 'learner').map((x) => String(x?.de || ''));
+          if (mine.length) {
+            const gaps = learnerTurnGaps(`${e.de || ''} ${e.learnerDe || ''}`, mine);
+            if (gaps.length) findings.push(advisory(doc, `check.proofs[${i}]`, `the learner's model turns of the task proving ${p.canDo} never ${gaps.join(' and never ')} — a model turn of the learner's own shows the function the can-do names`, p.canDo));
+          }
         }
         // the object of a productive can-do — a noun of the can-do the unit itself allocates („Zimmer", „Möbel"
         // at a1.1-u05) — is named somewhere in the task (a1.1-u05 r1 F03)
