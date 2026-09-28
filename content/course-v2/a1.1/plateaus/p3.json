@@ -18,7 +18,7 @@
         {
           "id": "a1.1-p3-sd1-t1-l01",
           "speaker": "x.paula-hartmann",
-          "de": "Hallo, hier ist Paula. Am Samstag laufen wir nicht um zehn Uhr, sondern schon um halb neun. Um zehn Uhr spielen die Kinder im Park Fußball.",
+          "de": "Hallo, hier ist Paula. Am Samstag laufen wir nicht um zehn Uhr. Wir laufen schon um halb neun. Um zehn Uhr spielen die Kinder im Park Fußball.",
           "en": "Hi, it’s Paula. On Saturday we’re not running at ten, but already at half past eight. At ten the children play football in the park."
         },
         {
@@ -132,7 +132,7 @@
       "id": "a1.1-p3-sd1-t6",
       "kind": "sign",
       "title": "Am Café",
-      "text": "Café am Park\nÖffnungszeiten: Montag bis Freitag 8 bis 18 Uhr, Samstag und Sonntag 9 bis 20 Uhr\nFrühstück bis 12 Uhr",
+      "text": "Café am Park\nMontag bis Freitag 8 bis 18 Uhr\nSamstag und Sonntag 9 bis 20 Uhr\nFrühstück bis 12 Uhr",
       "glosses": []
     },
     {
@@ -198,7 +198,7 @@
             "um halb neun"
           ],
           "explanation": {
-            "de": "Paula sagt: „nicht um zehn Uhr, sondern schon um halb neun“. Um Viertel nach acht ist sie am Café.",
+            "de": "Paula sagt: „Wir laufen schon um halb neun.“ Um zehn Uhr spielen die Kinder Fußball. Um Viertel nach acht ist Paula am Café.",
             "en": "Paula says they run at half past eight, not at ten. At a quarter past eight she will be at the café."
           },
           "origin": "agent"

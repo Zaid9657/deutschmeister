@@ -40,9 +40,9 @@
         {
           "id": "a1.1-p2-sd1-t2-l01",
           "speaker": "durchsage",
-          "de": "Liebe Kunden, heute sind alle Lampen im Angebot: Eine Lampe kostet nur 19 Euro! Und für die Küche: ein Tisch und vier Stühle, zusammen nur 149 Euro. Die Angebote sind hier unten, gleich neben den Betten.",
-          "en": "Dear customers, all lamps are on offer today: a lamp costs only 19 euros! And for the kitchen: a table and four chairs, only 149 euros together. The offers are down here, right next to the beds.",
-          "say": "Liebe Kunden, heute sind alle Lampen im Angebot: Eine Lampe kostet nur neunzehn Euro! Und für die Küche: ein Tisch und vier Stühle, zusammen nur hundertneunundvierzig Euro. Die Angebote sind hier unten, gleich neben den Betten."
+          "de": "Liebe Kunden, heute sind alle Lampen im Angebot! Eine Lampe kostet nur 19 Euro. Für die Küche: ein Tisch und vier Stühle für nur 149 Euro. Die Angebote sind hier unten, gleich neben den Betten.",
+          "en": "Dear customers, all lamps are on offer today! A lamp costs only 19 euros. For the kitchen: a table and four chairs for only 149 euros. The offers are down here, right next to the beds.",
+          "say": "Liebe Kunden, heute sind alle Lampen im Angebot! Eine Lampe kostet nur neunzehn Euro. Für die Küche: ein Tisch und vier Stühle für nur hundertneunundvierzig Euro. Die Angebote sind hier unten, gleich neben den Betten."
         }
       ],
       "glosses": [
@@ -76,7 +76,7 @@
         {
           "id": "a1.1-p2-sd1-t4-l01",
           "speaker": "durchsage",
-          "de": "Liebe Kunden, eine Durchsage für Herrn Albrecht: Herr Albrecht, Ihr Handy ist hier! Es liegt im Büro, hinten, gleich neben dem Supermarkt. Bitte kommen Sie heute noch ins Büro. Danke!",
+          "de": "Liebe Kunden, eine Durchsage für Herrn Albrecht. Herr Albrecht, Ihr Handy ist hier! Es liegt im Büro, hinten, gleich neben dem Supermarkt. Bitte kommen Sie heute noch ins Büro. Danke!",
           "en": "Dear customers, an announcement for Mr Albrecht: Mr Albrecht, your mobile phone is here! It is in the office, at the back, right next to the supermarket. Please come to the office today. Thank you!"
         }
       ],
@@ -610,8 +610,8 @@
         {
           "id": "a1.1-p2-hm-l06",
           "speaker": "cast.priya",
-          "de": "Genau! Und hier ist eine Nachricht von Emre: Morgen lernen wir im Videochat zusammen Deutsch.",
-          "en": "Exactly! And here’s a message from Emre: tomorrow we’ll study German together on video chat."
+          "de": "Genau! Und Emre schreibt: Morgen lernen wir zusammen im Videochat.",
+          "en": "Exactly! And Emre writes: tomorrow we’ll study together on video chat."
         },
         {
           "id": "a1.1-p2-hm-l07",
@@ -699,8 +699,8 @@
             "richtig"
           ],
           "explanation": {
-            "de": "Emre schreibt: Morgen lernen sie im Videochat zusammen Deutsch.",
-            "en": "Emre writes that they will study German together on video chat tomorrow."
+            "de": "Emre schreibt: Morgen lernen sie zusammen im Videochat.",
+            "en": "Emre writes that they will study together on video chat tomorrow."
           },
           "origin": "agent"
         },
