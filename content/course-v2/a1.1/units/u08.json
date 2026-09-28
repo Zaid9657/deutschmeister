@@ -761,16 +761,16 @@
             "promptEn": "Choose the right answer.",
             "options": [
               "Ja, ich kann gut tanzen.",
-              "Ja, am Freitag.",
-              "Ja, ich tanze heute."
+              "Ja, gut! Am Freitag?",
+              "Ja, ich tanze gern."
             ],
             "answer": "Ja, ich kann gut tanzen.",
             "accepted": [
               "Ja, ich kann gut tanzen."
             ],
             "explanation": {
-              "de": "Die Frage ist: Wie gut tanzt du? Die Antwort: „Ich kann gut tanzen.“",
-              "en": "The question asks how well you dance."
+              "de": "„Kannst du gut …?“ fragt: Wie gut? „gern“ und „Ja, gut!“ sind etwas anderes.",
+              "en": "“Kannst du gut …?” asks how well. “gern” (liking) and “Ja, gut!” (agreeing to a plan) answer something else."
             },
             "origin": "agent"
           }
@@ -885,8 +885,8 @@
           "promptDe": "„Kannst du gut Fußball spielen?“ – Was passt?",
           "promptEn": "Choose the right answer.",
           "options": [
-            "Ja, um drei Uhr.",
-            "Ja, im Park.",
+            "Nein, nicht so gern.",
+            "Ja, gut! Um drei Uhr?",
             "Nein, nicht so gut."
           ],
           "answer": "Nein, nicht so gut.",
@@ -899,8 +899,8 @@
           ],
           "difficulty": 1,
           "explanation": {
-            "de": "Die Frage ist: Wie gut? Die Antwort: „nicht so gut“.",
-            "en": "The question asks how well, so the answer is “nicht so gut”."
+            "de": "Die Frage ist: Wie gut? Die Antwort: „nicht so gut“. „nicht so gern“ und „Ja, gut!“ sind etwas anderes.",
+            "en": "The question asks how well, so the answer is “nicht so gut”. “nicht so gern” (liking) and “Ja, gut!” (agreeing to a plan) answer something else."
           },
           "origin": "agent"
         },
@@ -1832,8 +1832,8 @@
           }
         ],
         "text": {
-          "de": "Priya: Hallo ihr drei! Ich bin am Samstag mit Elif verabredet. Wir laufen um 10 Uhr im Park. Und um 19 Uhr gehen Olena und ich ins Konzert. Kommt ihr mit?\nOlena: Ja, gern, ich sage zu! Laufen gefällt mir nicht so, aber mit euch schon!\nSophie: Tut mir leid, ich sage ab. Am Samstag kann ich nicht. Da bin ich nicht in Leipzig, sondern in Dresden. Meine Eltern wohnen dort.\nBilal: Laufen? Leider nicht, am Samstag spiele ich Fußball. Aber für das Konzert am Abend sage ich zu. Super Idee!",
-          "en": "Priya: Hi, you three! I’m meeting Elif on Saturday. We’re running in the park at 10. And at 7 pm Olena and I are going to the concert. Are you coming? · Olena: Yes, gladly – I’m in! I don’t really like running, but with you I do! · Sophie: Sorry, I’m saying no. I can’t on Saturday. I’m not in Leipzig then, but in Dresden. My parents live there. · Bilal: Running? Unfortunately not, I play football on Saturday. But I’m in for the concert in the evening. Great idea!"
+          "de": "Priya: Hallo ihr drei! Ich bin am Samstag mit Elif verabredet. Wir laufen um 10 Uhr im Park. Kommt ihr mit? Und um 19 Uhr gehen Olena und ich ins Konzert.\nOlena: Ja, gern, ich sage zu! Laufen gefällt mir nicht so, aber mit euch schon!\nSophie: Tut mir leid, ich sage ab. Am Samstag kann ich nicht. Da bin ich nicht in Leipzig, sondern in Dresden. Meine Eltern wohnen dort.\nBilal: Laufen? Leider nicht, am Samstag spiele ich Fußball. Aber für das Konzert am Abend sage ich zu. Super Idee!",
+          "en": "Priya: Hi, you three! I’m meeting Elif on Saturday. We’re running in the park at 10. Are you coming? And at 7 pm Olena and I are going to the concert. · Olena: Yes, gladly – I’m in! I don’t really like running, but with you I do! · Sophie: Sorry, I’m saying no. I can’t on Saturday. I’m not in Leipzig then, but in Dresden. My parents live there. · Bilal: Running? Unfortunately not, I play football on Saturday. But I’m in for the concert in the evening. Great idea!"
         },
         "glosses": [
           {
@@ -2292,16 +2292,16 @@
             "promptEn": "Choose the right answer.",
             "options": [
               "Ja, ich kann gut laufen.",
-              "Ja, am Samstag kann ich.",
+              "Ja, da kann ich.",
               "Ja, ich laufe nicht gern."
             ],
-            "answer": "Ja, am Samstag kann ich.",
+            "answer": "Ja, da kann ich.",
             "accepted": [
-              "Ja, am Samstag kann ich."
+              "Ja, da kann ich."
             ],
             "explanation": {
-              "de": "Elif fragt nach Zeit. „Am Samstag kann ich“ heißt: Ich habe Zeit.",
-              "en": "Elif asks if you are free; “Am Samstag kann ich” says yes."
+              "de": "Elif fragt nach Zeit. „Da kann ich“ heißt: Ich habe Zeit.",
+              "en": "Elif asks if you are free; “Da kann ich” says yes."
             },
             "origin": "agent"
           }
@@ -2858,7 +2858,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Ich wohne jetzt in Leipzig. In Kochi arbeite ich am Empfang. Ich spreche drei Sprachen: meine Muttersprache, Englisch und ein bisschen Deutsch."
+            "de": "Ich wohne jetzt in Leipzig. In Kochi arbeite ich am Empfang, hier lerne ich Deutsch. Ich spreche drei Sprachen: meine Muttersprache, Englisch und ein bisschen Deutsch."
           },
           {
             "speaker": "learner",
