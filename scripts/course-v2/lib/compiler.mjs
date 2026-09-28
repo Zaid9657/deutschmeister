@@ -10,7 +10,13 @@
 //   <out>/<level>/reserve.json        the reserve index (SCHEMA §13): every Lernschritt's reserve items
 //                                     in the pool shape, by unit, step, topic and error tag — read by
 //                                     requeue, earlierDraw, Plateau review sets, Mehr üben, repair cards
-//   <out>/<level>/plateaus/pN.json, closing/<id>.json   the same treatment for Plateau/closing files
+//   <out>/<level>/plateaus/pN.json, closing/<id>.json   the same treatment for Plateau/closing files;
+//                                     a Plateau's `review.items` is its review set, DRAWN here from the
+//                                     unit reserves (banks: ['plateau'], seeded by the Plateau id:
+//                                     currentShare from the units since the previous Plateau, the rest
+//                                     from the earlier ones); a .1 Halbtest gets `comesNext` — the first
+//                                     unit of the .2 level whose Prüfungsfokus names each Teil (the
+//                                     Teil-Karte), from that level's unit files or specs.json
 //   <out>/<level>/manifest.json       course manifest: units with titles, can-dos, grammar, Prüfungsfokus,
 //                                     minutes and counts (syllabus rows), Etappen, completion, review,
 //                                     pace, counts for copy, contentHash
@@ -900,6 +906,14 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
     canDos: new Set(rows.flatMap((r) => r.canDoIds)).size,
     plateaus: mine('plateau').length,
     closingBlocks: mine('closing').length,
+    // examBlocks / writingTasks / speakingTasks / microOutputs above count the UNITS only (the
+    // syllabus rows' sums, as the course pages read them). The Plateaus' and the closing block's
+    // own Teile are counted apart, and `inCourse` is everything a learner of the level meets.
+    inPlateaus: assessmentCounts.plateau,
+    inClosing: assessmentCounts.closing,
+    inCourse: Object.fromEntries(['examBlocks', 'writingTasks', 'speakingTasks', 'microOutputs'].map((k) => [
+      k, totals[k] + assessmentCounts.plateau[k] + assessmentCounts.closing[k],
+    ])),
   };
   const minutesByUnit = Object.fromEntries(rows.map((r) => [r.unit, r.minutesPlanned]));
   const plannedTotal = rows.reduce((n, r) => n + (r.minutesPlanned || 0), 0);
