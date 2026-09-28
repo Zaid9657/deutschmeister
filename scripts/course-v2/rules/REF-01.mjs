@@ -132,6 +132,8 @@ export function collectRefs(doc) {
       push('template', part?.template, `${path}${pp}.template`);
       push('rubric', part?.profile, `${path}${pp}.profile`);
     }
+    // WritingTask.textType: what the learner writes (tt.post), SCHEMA §8 2026-09-28
+    if (kind === 'writing' && task?.textType) push('texttype', task.textType, `${path}.textType`);
   }
   for (const { mo, path } of walkMicroOutputs(doc)) {
     // MicroOutput.profile is enum(course-micro|course-micro-sp) in SCHEMA §8, not a ref(rubric)
