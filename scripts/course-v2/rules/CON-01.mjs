@@ -29,7 +29,7 @@ const BAND_OFFSET = { a1: 0, a2: 1, b1: 2, b2: 3 };
 const fold = (s) => String(s || '').toLowerCase().replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
 const digits = (s) => String(s || '').replace(/\D+/g, '');
 /** Phone-like numbers in a text: a leading 0, ≥ 7 digits in groups („0176 38 29 41 06", „0341/225890"). */
-export const phones = (text) => (String(text || '').match(/(?<![\d.,])0\d{2,5}(?:[\s/-]?\d{2,}){1,5}(?![\d.,])/g) || []).filter((p) => digits(p).length >= 7);
+export const phones = (text) => (String(text || '').match(/(?<![\d.,])0\d{2,5}(?:[\s/-]?\d{2,}){1,5}(?!\d|[.,]\d)/g) || []).filter((p) => digits(p).length >= 7);
 /** Street addresses: „Kölner Straße 18", „Berliner Str. 21", „Am Markt 3". */
 export const streets = (text) => [...String(text || '').matchAll(/\b(\p{Lu}[\p{L}-]+(?:er)?\s+(?:Straße|Str\.|Weg|Platz|Allee|Gasse|Ring|Damm)|\p{Lu}[\p{L}-]*(?:straße|weg|platz|allee|gasse|ring|damm))\s+(\d{1,4}[a-z]?)\b/gu)].map((m) => ({ street: m[1], nr: m[2], text: m[0] }));
 const streetKey = (s) => fold(s).replace(/str\.$/, 'strasse').replace(/\s+/g, '');
