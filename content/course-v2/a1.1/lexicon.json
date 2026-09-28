@@ -7102,6 +7102,12 @@
       "unit": "a1.1-u02"
     },
     {
+      "lemma": "lx.rezeptionist",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u02"
+    },
+    {
       "lemma": "lx.studieren",
       "from": "receptive",
       "to": "productive",
@@ -7150,10 +7156,34 @@
       "unit": "a1.1-u04"
     },
     {
+      "lemma": "lx.ei",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u04"
+    },
+    {
+      "lemma": "lx.kartoffel",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u04"
+    },
+    {
+      "lemma": "lx.reis",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u04"
+    },
+    {
       "lemma": "lx.familienstand",
       "from": "receptive",
       "to": "productive",
       "unit": "a1.1-u05"
+    },
+    {
+      "lemma": "lx.geld",
+      "from": "receptive",
+      "to": "productive",
+      "unit": "a1.1-u06"
     },
     {
       "lemma": "lx.eins",

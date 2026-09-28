@@ -1062,7 +1062,7 @@
       "title": "Wir möchten bestellen",
       "structure": "g.akkusativ",
       "modelSentence": "Ich nehme einen Kaffee und einen Kuchen.",
-      "ruleCard": "rc.akkusativ",
+      "ruleCard": "rc.vokalwechsel-2",
       "warmup": {
         "draw": 6,
         "contrastWith": "g.moegen"

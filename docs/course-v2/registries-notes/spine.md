@@ -78,19 +78,35 @@ after a noun (*die Webseite einer Sprachschule*, u12 r1 F07; measured on all con
 rule-card prose); fixtures for the engine's phone-number and *ihr*-verb skips (u09 r1 F05 / r2 F06) and for
 *verabredet sein* (`det.zustandspassiv`, u08 r3 F10). No spine field changed.
 
+## 0b. What the A1.1 level review changed (2026-09-28)
+
+The level review r1 (`docs/course-v2/reviews/a1.1/level.r1.s1–s3.json`) and the level-fix round, applied by the
+registry owner. `node scripts/course-v2/validate.mjs --all` gains no blocker in any level (checked before and after).
+
+| Review item | Change in the JSON | Why |
+|---|---|---|
+| s3 F01 (major): u11/u12 grade the Perfekt productively (typed participles, the *haben/sein* choice, both Checks) while the spine said productive only in A1.2 | `g.perfekt-haben` productive a1.2-u05 → **a1.1-u11**; `g.perfekt-sein` productive a1.2-u08 → **a1.1-u12**. The labels name the A1.1 fixed list (*gemacht, gekauft, gespielt, gekocht, gearbeitet, gegessen, getrunken, gesehen, gelesen, geschlafen*; *gekommen, gefahren, geflogen, gegangen, geblieben*) and say that A1.2 builds the system | Orchestrator decision 2026-09-28 (the review's recommended branch: BLUEPRINT §2.8 row 11, Menschen A1 L11–12, Schritte plus Neu 1 L7). **Supersedes D13.** A1.1 teaches each auxiliary productively on a closed list; forming the participle of a new verb and choosing the auxiliary as a rule is the named increment of the depth-2 cards `rc.perfekt-haben-2` (a1.2-u05) and `rc.perfekt-sein-2` (a1.2-u08). GRM-01 is unchanged in A1.1 (the productive step falls in the intro unit); a1.2-u05 and a1.2-u08 lose a counted intro. The BLUEPRINT §2.5 rule 6 milestones (*haben* ≤ A1.2 U5, *sein* ≤ U8) still hold, earlier |
+| u09/u10 fixers, after the rule-card edits for s1 F11 and s2 F08 | `g.vokalwechsel` +`rc.vokalwechsel-2` (a1.1-u09 LS2 and a1.1-u10 LS2: *nehmen, treffen, fahren*); `g.trennbare-verben` +`rc.trennbare-verben-2` (a1.1-u10 LS1: *abfahren, ankommen, ein-/aus-/umsteigen*) | `rc.vokalwechsel` (u03) no longer shows *nimmst/nimmt* six units early (s1 F11), and `rc.trennbare-verben` (u07) no longer shows *abfahren* (s2 F08). The forms move to the units that drill them, as named increments on depth-2 cards (GRM-05's drilled-form check reads the point's cards) |
+| — (record) | none: `g.akkusativ` `chunkFrom` **a1.1-u03** and `g.praep-akkusativ` `chunkFrom` **a1.1-u04** are already in the JSON | *Haben Sie einen Bruder?* in u03 is the accusative chunk; the one chunk slot of u04 is *für* + Akkusativ (*für die Woche, für Sie*). This replaces the §0a "declined" row for `g.praep-akkusativ` and the old Appendix entry for `g.akkusativ`. The plan `curriculum/a1-1.*` says the same since its level-review changelog |
+| s1 F17 (*sprichst/spricht* in u01–u02) | none | already on the `det.vokalwechsel` whitelist; a `chunkFrom` a1.1-u01 would break GRM-01 (the u01 chunk is `g.imperativ-sie`) |
+
+**Consequence for A1.2 (DEFER to the a1.2 plan and spec owners; the level is paused):** `a1.2/specs.json` still
+lists `g.perfekt-haben` as `new` at a1.2-u05 and `g.perfekt-sein` as `new` at a1.2-u08. From now on they are
+`review` there (increment: the system, on the depth-2 cards), and `curriculum/a1-2.*` should say so.
+
 ## 1. What the file holds
 
 | Level | New points (receptive intro here) | Productive steps of earlier points | Rule cards in this level |
 |---|---|---|---|
-| a1.1 | 21 | — | 22 |
-| a1.2 | 20 | `g.perfekt-haben`, `g.perfekt-sein` | 24 |
+| a1.1 | 21 | — | 24 |
+| a1.2 | 20 | — | 24 |
 | a2.1 | 19 | — | 20 |
 | a2.2 | 19 | — | 19 |
 | b1.1 | 15 | `g.praeteritum` | 16 |
 | b1.2 | 18 | `g.passiv-praesens` | 19 |
 | b2.1 | 19 | `g.konj2-vergangenheit` | 20 |
 | b2.2 | 14 | — | 14 |
-| **all** | **145** | 5 | **154** |
+| **all** | **145** | 3 | **156** |
 - **One point per grammar item the plans teach**: every plan item with `new: true`, and every chunk whose
   structure a later unit makes systematic. Review items (`new: false`, no chunk) create no point. They review
   the original point, which the unit spec lists under `grammar.review`, and their named increment (*Zuwachs*)
@@ -98,13 +114,12 @@ rule-card prose); fixtures for the engine's phone-number and *ihr*-verb skips (u
   pair after the review (D15). One chunk became a point (D7). Two plan items are not grammar and have no point
   (D14). Five items moved to another unit to keep GRM-01 or after the review (D2, D3, D8, D9, D19). Three points were
   added by the review (D16, D18). All of them are listed in §4.
-- **Five points are receptive first** and count as new in both of their units (as the BLUEPRINT §2.8 tables
-  count them): `g.perfekt-haben` a1.1-u11 → a1.2-u05, `g.perfekt-sein` a1.1-u12 → a1.2-u08,
-  `g.praeteritum` a2.1-u11 → b1.1-u01, `g.passiv-praesens` a2.2-u07 → b1.2-u06,
+- **Three points are receptive first** and count as new in both of their units (as the BLUEPRINT §2.8 tables
+  count them): `g.praeteritum` a2.1-u11 → b1.1-u01, `g.passiv-praesens` a2.2-u07 → b1.2-u06,
   `g.konj2-vergangenheit` b1.2-u11 → b2.1-u04. Every other point has `productive` = `receptive`.
-- **The hinge decisions** (BLUEPRINT §2.5) are the intro units of these points: the Perfekt as fixed verbs at the
-  end of A1.1 and as a system in A1.2 (`g.perfekt-haben` a1.1-u11 → a1.2-u05, `g.perfekt-sein` a1.1-u12 → a1.2-u08,
-  `g.perfekt-trennbar-untrennbar` a1.2-u07); the Dativ through fixed-case prepositions (`g.praep-dativ` a1.2-u01)
+- **The hinge decisions** (BLUEPRINT §2.5) are the intro units of these points: the Perfekt productive on a fixed verb list at
+  the end of A1.1 and as a system in A1.2 (`g.perfekt-haben` a1.1-u11, system a1.2-u05; `g.perfekt-sein` a1.1-u12,
+  system a1.2-u08; `g.perfekt-trennbar-untrennbar` a1.2-u07; §0b); the Dativ through fixed-case prepositions (`g.praep-dativ` a1.2-u01)
   before the dative verbs and pronouns (`g.dativverben-pronomen` a1.2-u06); Wechselpräpositionen through verb pairs
   (`g.wechselpraep` + `g.positionsverben` a2.1-u02); *weil/dass/wenn* in A2.1 (u01/u03/u06); the Präteritum ladder
   *war/hatte* a1.2-u02 → modal verbs a2.1-u11 → all verbs receptive a2.1-u11 → *kam/sagte/gab* productive a2.2-u01
@@ -127,7 +142,7 @@ rule-card prose); fixtures for the engine's phone-number and *ihr*-verb skips (u
 | `errorTags` | SCHEMA §3.1 enum only. Since 2026-09-28 it has `verb-ending` (person ending, agreement, stem-vowel change) and `negation` (*nicht* or *kein*, and the place of *nicht*); every point that teaches a verb paradigm carries `verb-ending`, every negation point `negation` (§0a). It still has no tag for Mittelfeld order (b2-1.md §8 asks for one; see §8 item 4). `register` marks du/Sie, politeness and formal-style points. `spelling-meaning` marks forms whose spelling changes the meaning (*konnte/könnte*, *wurde/würde*, *fährt/fahrt*, umlaut comparatives). |
 | `lehrwerk` | Compact codes in the SCHEMA §15.1 style: **M** Menschen (`M A1 L13`), **S*n*** Schritte plus Neu volume *n* (`S2 L11`), **N** Netzwerk neu (`N A1 K7`, `N B1 K12`), **NW** Netzwerk B1 first edition (`NW B1 K6`), **LIN** (Die neue) Linie 1 (`LIN A1 K3`), **As** Aspekte neu (`As B1+ K2`, `As B2 K1`), **Si** Sicher! B1+ / Sicher! aktuell B2 (`Si B1+ L5`, `Si B2 L7`), **MOT** Motive. Taken from the plans' `lehrwerk` strings, checked against memo 06 F3. A placement in another half-level (e.g. `M A2 L21` for *welch-/dies-*) is listed on purpose: it documents the split. Two review additions have no verified Lehrwerk chapter; they cite their source instead (`06 Impl. 13`) or say `(unverified)`, never an invented chapter. |
 | `consensus` | The memo 06 F3 label where the point matches an F3 row. Otherwise it is derived from the placements (strong = every family covering the level puts it here; majority = most do; split = they disagree; single = one book, one inventory or the plan's own design). The B2 labels inherit memo 06's caveat that the Sicher! aktuell B2 L1–6 mapping is (unverified). |
-| `ruleCards` | `rc.<slug>` is the depth-1 card in the level of `intro.receptive`. A second card is a depth-2 card where the productive step or a named increment lies in a later unit. There are nine: `rc.praesens-2`, `rc.perfekt-haben-2`, `rc.perfekt-sein-2`, `rc.pronomen-er-es-sie-2`, `rc.nicht-position-gern-2`, `rc.komparation-2`, `rc.praeteritum-2`, `rc.passiv-praesens-2`, `rc.konj2-vergangenheit-2`. (`rc.verbposition-2` is a depth-1 card: its slug ends in *-2* because the point is *Verbposition 2*.) §7 lists which `<level>/rule-cards.json` must hold each card. The cards are written later, per level. Until they exist, REF-01 only checks the format of these ids. |
+| `ruleCards` | `rc.<slug>` is the depth-1 card in the level of `intro.receptive`. A second card is a depth-2 card where the productive step or a named increment lies in a later unit. There are eleven: `rc.vokalwechsel-2`, `rc.trennbare-verben-2` (§0b), `rc.praesens-2`, `rc.perfekt-haben-2`, `rc.perfekt-sein-2`, `rc.pronomen-er-es-sie-2`, `rc.nicht-position-gern-2`, `rc.komparation-2`, `rc.praeteritum-2`, `rc.passiv-praesens-2`, `rc.konj2-vergangenheit-2`. (`rc.verbposition-2` is a depth-1 card: its slug ends in *-2* because the point is *Verbposition 2*.) §7 lists which `<level>/rule-cards.json` must hold each card. The cards are written later, per level. Until they exist, REF-01 only checks the format of these ids. |
 | `inventory` | `gz-a1` / `gz-a2` per memo 06 F2 (Goethe SD1 Prüfungsziele pp. 100–106; Fit in Deutsch 2 pp. 106–109). Items F2 names explicitly are tagged as listed. The A1 basics (Präsens, question types, articles, negation, possessives, Akk/Dat, pronouns, separable verbs) are tagged by inference from the inventory's scope ("Nominativ, Akkusativ und Dativ aller Nomen der Wortliste"). Points whose inventory status is unclear stay untagged: temporal prepositions, *denn*, ordinals, the review additions `g.indefinitpronomen-personen` and `g.wortbildung-heit-keit` (F2 does not list them for A2). That way GRM-03 can under-check but never fail a correct course. Komparation is `gz-a2` (F2: in Fit 2, not in GZ-A1). `g.praeteritum-kernverben` is `gz-a2` (F2: Präteritum of *kommen, sagen*). |
 | `detectors` | **Generated, never hand-typed**: each point lists exactly the detectors of `registries/detectors.json` whose `spec.spinePoints` name it (E0-4 owns that file; its `spinePoints` is the canonical direction, and this field mirrors it). 109 points carry detectors, 36 carry `[]` because no detector exists for them yet. Regenerate after every detectors.json change and run the mirror check in §3. |
 
@@ -140,8 +155,8 @@ All checks were run by script over the JSON, and all pass:
 - **GRM-02:** `receptive` ≤ `productive`, `chunkFrom` before `receptive`, and every `contrast` introduced no
   later than the point itself.
 - **GRM-03:** every `gz-a1` point is in by a1.2-u12 and every `gz-a2` point by a2.2-u12. The A1.2 Perfekt
-  milestones of BLUEPRINT §2.5 rule 6 hold, now as **productive** steps: *haben* a1.2-u05 ≤ a1.2-u05, *sein*
-  a1.2-u08 ≤ a1.2-u08, *trennbar/untrennbar/-ieren* a1.2-u07 ≤ a1.2-u10. The Goethe A2 Präteritum of
+  milestones of BLUEPRINT §2.5 rule 6 hold, as **productive** steps since §0b: *haben* a1.1-u11 ≤ a1.2-u05, *sein*
+  a1.1-u12 ≤ a1.2-u08, *trennbar/untrennbar/-ieren* a1.2-u07 ≤ a1.2-u10. The Goethe A2 Präteritum of
   *kommen/sagen* (plus *es gab*) is **productive** at a2.2-u01 (`g.praeteritum-kernverben`), before the ga2 exam.
 - **Detector mirror:** for every point, `detectors` equals the set of detector ids whose `spec.spinePoints` contain
   the point; every such id exists in detectors.json; no `spinePoints` entry names an unknown point. The check is
@@ -187,7 +202,7 @@ position GRM-02 checks.
 | D10 | chunk budget | several units name two chunks | one `chunkFrom` per unit, plus a Redemittel whitelist (below) | GRM-01 | see below |
 | D11 | `g.zeitangaben-akkusativ` → a2.1-u07 | new: *von … an, ab, über; jeden/letzten/nächsten* + Akk | label without *ab* | *ab* + time is already `g.temporal-praepositionen` (a1.2-u04), so the plan teaches it twice (§5 E6) | *ab* is review in u07 |
 | D12 | `g.konj2-hoeflichkeit` absorbs *Wie wäre es mit …?* | a2.1-u07 chunk "*Wie wäre es mit …?* und *Hast du Lust, … zu …?*" (two targets) | *Wie wäre es mit* is a reviewed formula of D7. u07's one chunk slot is `g.zu-infinitiv` (*Hast du Lust, … zu …?*, `chunkFrom` a2.1-u07). | both forms would otherwise need a chunk slot, and both detectors (Konjunktiv II list, zu-infinitive) are exact | a2.1-u07 `chunk`: `g.zu-infinitiv` |
-| D13 | `g.perfekt-haben` a1.1-u11 → **a1.2-u05**; `g.perfekt-sein` a1.1-u12 → **a1.2-u08** (productive) | new and productive at a1.1-u11 / a1.1-u12 | **receptive first**: A1.1 introduces each auxiliary with a fixed list of 6–10 verbs (*habe gemacht, habe gegessen … bin gefahren, bin gekommen*), which the learner uses as chunks; the systematic, productive Perfekt (forming participles of new verbs, choosing *haben/sein*) is a1.2-u05 (*haben*) and a1.2-u08 (*sein*), on cards `rc.perfekt-haben-2` / `rc.perfekt-sein-2` | Review 2026-09-27: memo 06 impl. 2 (A1.1 = chunk verbs, A1.2 = system) and BLUEPRINT §2.5 rule 6 (*haben* ≤ A1.2 U5, *sein* ≤ U8). The Menschen/Schritte receptive placement at the end of A1.1 is kept. a1.1-u12, the last unit before the Halbtest, now adds only one productive point (*wollen*). a1.2-u05 had one intro; a1.2-u08's second slot was freed by D15. | a1.1-u11/u12 list the point as `new`; their micro-outputs may use the fixed verbs (the unit declares the point, so GRM-04 licenses it there) but do **not** list it in `targets` (GRM-02: productive only from a1.2-u05/u08). a1.1-u12 … a1.2-u04 list `g.perfekt-haben` as `review` with the same fixed verbs. a1.2-u05 (*Was ist passiert? Ich habe … genommen*) and a1.2-u08 (travel narrative *Ich bin nach … gefahren*) list it as `new` and target it. a1.2-u07's Perfekt of separable/inseparable/-ieren verbs uses *haben* verbs (*abgeholt, bezahlt, repariert*) until u08. |
+| D13 | `g.perfekt-haben` a1.1-u11 → **a1.2-u05**; `g.perfekt-sein` a1.1-u12 → **a1.2-u08** (productive) — **superseded 2026-09-28 (§0b): productive a1.1-u11 / a1.1-u12 on a fixed verb list** | new and productive at a1.1-u11 / a1.1-u12 | **receptive first**: A1.1 introduces each auxiliary with a fixed list of 6–10 verbs (*habe gemacht, habe gegessen … bin gefahren, bin gekommen*), which the learner uses as chunks; the systematic, productive Perfekt (forming participles of new verbs, choosing *haben/sein*) is a1.2-u05 (*haben*) and a1.2-u08 (*sein*), on cards `rc.perfekt-haben-2` / `rc.perfekt-sein-2` | Review 2026-09-27: memo 06 impl. 2 (A1.1 = chunk verbs, A1.2 = system) and BLUEPRINT §2.5 rule 6 (*haben* ≤ A1.2 U5, *sein* ≤ U8). The Menschen/Schritte receptive placement at the end of A1.1 is kept. a1.1-u12, the last unit before the Halbtest, now adds only one productive point (*wollen*). a1.2-u05 had one intro; a1.2-u08's second slot was freed by D15. | a1.1-u11/u12 list the point as `new`; their micro-outputs may use the fixed verbs (the unit declares the point, so GRM-04 licenses it there) but do **not** list it in `targets` (GRM-02: productive only from a1.2-u05/u08). a1.1-u12 … a1.2-u04 list `g.perfekt-haben` as `review` with the same fixed verbs. a1.2-u05 (*Was ist passiert? Ich habe … genommen*) and a1.2-u08 (travel narrative *Ich bin nach … gefahren*) list it as `new` and target it. a1.2-u07's Perfekt of separable/inseparable/-ieren verbs uses *haben* verbs (*abgeholt, bezahlt, repariert*) until u08. |
 | D14 | `g.komposita` (a1.1-u09), `g.zeitangaben-vergangenheit` (a1.1-u11) | two new points | **retired**: no spine point | Review 2026-09-27: both are lexis, not grammar. Compounds are a Wortschatz strategy (*das letzte Wort bestimmt den Artikel*); *gestern, letzte Woche, am Wochenende* are time Redemittel whose word order is already `g.zeitangaben-inversion`. Neither is in the GZ-A1 inventory; both were `single`. | a1.1-u09: compounds are a Wortschatz block (a lexicon tip, no rule card, no LS `structure`). a1.1-u11: the time phrases are Redemittel of the Perfekt LS. `g.temporal-seit-vor` now contrasts with `g.zeitangaben-inversion`. |
 | D15 | `g.wetter-es` (a1.2-u08) → `g.pronomen-er-es-sie` | new point "Wetter mit es" | **merged**: *es* without a referent (*Es regnet. Es ist kalt.*) is the named increment of `g.pronomen-er-es-sie`, on card `rc.pronomen-er-es-sie-2` at a1.2-u08 | Review 2026-09-27: A1.2 load, and a1.2-u08 needed its second intro slot for the productive Perfekt *sein* (D13). Memo 06 impl. 13 asks for *es* as a point; the merged point is that point (referential *es* a1.1-u05, impersonal *es* a1.2-u08). | a1.2-u08 lists `g.pronomen-er-es-sie` as `review` and uses `rc.pronomen-er-es-sie-2`. a2.2-u08 "Unpersönliches *es*: Wiederholung" reviews `g.pronomen-er-es-sie`. |
 | D16 | `g.praeteritum` receptive a2.2-u01 → **a2.1-u11**; new `g.praeteritum-kernverben` a2.2-u01 | a2.2-u01 #2: "Präteritum häufiger Verben erkennen: kam, ging, gab, sagte, fand (rezeptiv)" | full-verb Präteritum is **receptive from a2.1-u11** (productive b1.1-u01, unchanged). The Goethe A2 forms ***kam, sagte, es gab*** are their own point, **productive at a2.2-u01** | Review 2026-09-27: a2.1-u11 and a2.1-u12 prescribe narrative texts (*Erinnerungen an meinen ersten Schultag*, *Die Hochzeit meiner Cousine*), and the exact Präteritum detector blocks exam texts (GRM-04 hard). a2.1-u11 pairs it with the modal-verb Präteritum (one intro there before). GZ-A2 (memo 06 F2) lists the Präteritum of *kommen* and *sagen*, which the learner could not write before the ga2 exam. The spine has no form-level scope, so the three forms are a point; the detector split is E0-4's (§8 item 1, request 1). | a2.1-u11: `new` = `g.praeteritum-modalverben` + `g.praeteritum` (receptive: Erzähltext, glossed where needed). a2.1-u12 and a2.2 list `g.praeteritum` as `review` (receptive). a2.2-u01: `new` = `g.als-temporal` + `g.praeteritum-kernverben`; *ging, fand* stay receptive. |
@@ -260,7 +275,7 @@ the position from here. Every earlier placement below has its written reason (GR
 
 | Point | BLUEPRINT | Spine | Note |
 |---|---|---|---|
-| Perfekt *haben* / *sein* / trennbar | chunks A1.1 U11 → A1.2 U5 / U8 / U10 | receptive a1.1-u11 / a1.1-u12 → **productive a1.2-u05 / a1.2-u08** / a1.2-u07 | Since the review revision (D13) this **matches** the blueprint: A1.1 gives each auxiliary as a fixed list of verbs (Menschen L11–12 and Schritte 1 L7 end A1.1 with it; memo 14 §C A1.1 #11; memo 06 F3 #13 split), and the system becomes productive in A1.2 at the blueprint's milestones. Trennbar/untrennbar/-ieren is productive at a1.2-u07, earlier than U10 (≤ holds). |
+| Perfekt *haben* / *sein* / trennbar | chunks A1.1 U11 → A1.2 U5 / U8 / U10 | productive on a fixed verb list a1.1-u11 / a1.1-u12, the system a1.2-u05 / a1.2-u08 (depth-2 cards; §0b) / a1.2-u07 | Since 2026-09-28 (§0b) the fixed verbs are productive in A1.1, earlier than the blueprint milestones (≤ holds). Before, since the review revision (D13), this **matched** the blueprint: A1.1 gives each auxiliary as a fixed list of verbs (Menschen L11–12 and Schritte 1 L7 end A1.1 with it; memo 14 §C A1.1 #11; memo 06 F3 #13 split), and the system becomes productive in A1.2 at the blueprint's milestones. Trennbar/untrennbar/-ieren is productive at a1.2-u07, earlier than U10 (≤ holds). |
 | Dativ prepositions / dative verbs | A1.2 U3 / U7 | a1.2-u01 / a1.2-u06 | The prepositions-first order is kept |
 | *war/hatte* · Imperativ *Sie* | A1.2 U1 · U4 | a1.2-u02 · a1.2-u01 | — |
 | Komparation · Wortbildung | A1.2 U11 · U12 | a1.2-u10 · a1.1-u10 (-er/-in), a1.2-u10 (un-/-los), a1.2-u11 (-ung/-bar), a2.1-u06 (-t/-kunft), a2.2-u10 (-heit/-keit) | a1.2-u12 is the transfer unit (the .2 template) |
@@ -295,6 +310,7 @@ productive step or a named increment, listed at the unit that uses it first).
 | `rc.ja-nein-frage` | `a1.1/rule-cards.json` | 1 | a1.1-u02 | `g.ja-nein-frage` |
 | `rc.possessiv-mein-dein` | `a1.1/rule-cards.json` | 1 | a1.1-u03 | `g.possessiv-mein-dein` |
 | `rc.vokalwechsel` | `a1.1/rule-cards.json` | 1 | a1.1-u03 | `g.vokalwechsel` |
+| `rc.vokalwechsel-2` | `a1.1/rule-cards.json` | 2 | a1.1-u09 | `g.vokalwechsel` |
 | `rc.artikel-genus-plural` | `a1.1/rule-cards.json` | 1 | a1.1-u04 | `g.artikel-genus-plural` |
 | `rc.moechte` | `a1.1/rule-cards.json` | 1 | a1.1-u04 | `g.moechte` |
 | `rc.pronomen-er-es-sie` | `a1.1/rule-cards.json` | 1 | a1.1-u05 | `g.pronomen-er-es-sie` |
@@ -302,6 +318,7 @@ productive step or a named increment, listed at the unit that uses it first).
 | `rc.akkusativ` | `a1.1/rule-cards.json` | 1 | a1.1-u06 | `g.akkusativ` |
 | `rc.kein` | `a1.1/rule-cards.json` | 1 | a1.1-u06 | `g.kein` |
 | `rc.trennbare-verben` | `a1.1/rule-cards.json` | 1 | a1.1-u07 | `g.trennbare-verben` |
+| `rc.trennbare-verben-2` | `a1.1/rule-cards.json` | 2 | a1.1-u10 | `g.trennbare-verben` |
 | `rc.zeitangaben-inversion` | `a1.1/rule-cards.json` | 1 | a1.1-u07 | `g.zeitangaben-inversion` |
 | `rc.koennen` | `a1.1/rule-cards.json` | 1 | a1.1-u08 | `g.koennen` |
 | `rc.nicht-position-gern` | `a1.1/rule-cards.json` | 1 | a1.1-u08 | `g.nicht-position-gern` |
@@ -514,7 +531,7 @@ Intro = `receptive` (→ `productive` where different). *Detectors* is the gener
 | `g.moechte` | a1.1-u04 | — | — | strong | `det.moechte` | a1.1-u04 #3 |
 | `g.pronomen-er-es-sie` | a1.1-u05 | — | `g.artikel-genus-plural` | strong | — | a1.1-u05 #1 + a1.2-u08 #2 (Wetter mit es) — MERGED 2026-09-27: `g.wetter-es` is now the increment on card `rc.pronomen-er-es-sie-2` (a1.2-u08) |
 | `g.adjektiv-praedikativ` | a1.1-u05 | — | — | majority | — | a1.1-u05 #2 |
-| `g.akkusativ` | a1.1-u06 | a1.1-u04 | `g.artikel-genus-plural` | strong | `det.akkusativ-maskulin` | a1.1-u06 #1; chunk „Ich möchte einen Kaffee“ in a1.1-u04 |
+| `g.akkusativ` | a1.1-u06 | a1.1-u03 | `g.artikel-genus-plural` | strong | `det.akkusativ-maskulin` | a1.1-u06 #1; chunk „Haben Sie einen Bruder?“ in a1.1-u03 (then „Ich möchte einen Kaffee“ in a1.1-u04) |
 | `g.kein` | a1.1-u06 | — | `g.negation-nicht` | strong | `det.negation-kein` | a1.1-u06 #2 |
 | `g.trennbare-verben` | a1.1-u07 | — | `g.verbposition-2` | strong | `det.trennbare-verben` | a1.1-u07 #1 |
 | `g.zeitangaben-inversion` | a1.1-u07 | — | `g.verbposition-2` | strong | — | a1.1-u07 #2 (Uhrzeit, Inversion) + a1.1-u07 #3 (und/aber/oder, zuerst … dann) — MERGED |
@@ -522,8 +539,8 @@ Intro = `receptive` (→ `productive` where different). *Detectors* is the gener
 | `g.nicht-position-gern` | a1.1-u08 | — | `g.negation-nicht` | majority | — | a1.1-u08 #2; increment schon/noch – noch nicht/nicht mehr and nicht …, sondern … on `rc.nicht-position-gern-2` a1.2-u10 (D17) |
 | `g.moegen` | a1.1-u09 | — | `g.moechte` | strong | `det.modal-moegen` | a1.1-u09 #1 |
 | `g.wortbildung-er-in` | a1.1-u10 | a1.1-u02 | `g.artikel-genus-plural` | single | — | a1.1-u02 #3 (-in) — DEMOTED to chunk in a1.1-u02, systematic point (with -er, A1.2 u02 vocabulary) MOVED to a1.1-u10 |
-| `g.perfekt-haben` | a1.1-u11 → a1.2-u05 | — | `g.koennen` | split | `det.perfekt-haben` | a1.1-u11 #1 (receptive: fixed verb list, used as chunks) — productive step MOVED to a1.2-u05 (card `rc.perfekt-haben-2`, D13) |
-| `g.perfekt-sein` | a1.1-u12 → a1.2-u08 | — | `g.perfekt-haben` | split | `det.perfekt-sein` | a1.1-u12 #1 (receptive: fixed verb list, used as chunks) — productive step MOVED to a1.2-u08 (card `rc.perfekt-sein-2`, D13) |
+| `g.perfekt-haben` | a1.1-u11 | — | `g.koennen` | split | `det.perfekt-haben` | a1.1-u11 #1 (productive on a fixed verb list since §0b); the system at a1.2-u05 on `rc.perfekt-haben-2` |
+| `g.perfekt-sein` | a1.1-u12 | — | `g.perfekt-haben` | split | `det.perfekt-sein` | a1.1-u12 #1 (productive on a fixed verb list since §0b); the system and *haben* or *sein* at a1.2-u08 on `rc.perfekt-sein-2` |
 | `g.wollen` | a1.1-u12 | — | `g.moechte` | split | `det.modal-wollen` | a1.1-u12 #2 |
 
 ### A1.2

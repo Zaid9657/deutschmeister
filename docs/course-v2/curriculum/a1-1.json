@@ -245,6 +245,12 @@
           "point": "Verben mit Vokalwechsel e → i/ie und a → ä; nehmen (du sprichst, er liest, du fährst, sie schläft, du nimmst) – nur du und er/sie/es",
           "new": true,
           "lehrwerk": "Menschen A1 L3; Schritte plus Neu 1 L3/L6; Netzwerk neu A1 K2; Die neue Linie 1 A1 K5"
+        },
+        {
+          "point": "Haben Sie einen Bruder? – Ja, ich habe einen Bruder. (maskulines »einen« als feste Wendung; Akkusativ als Grammatik in Einheit 6)",
+          "new": false,
+          "lehrwerk": "Spine g.akkusativ (chunkFrom a1.1-u03); Akkusativ: Menschen A1 L6; Schritte plus Neu 1 L6",
+          "chunk": true
         }
       ],
       "vocabTheme": "Familie, Personen, Befinden",
@@ -328,9 +334,15 @@
           "lehrwerk": "Menschen A1 L6; Schritte plus Neu 1 L3; Netzwerk neu A1 K2"
         },
         {
-          "point": "möchte (ich möchte, Sie möchten) – maskulines »einen« nur als feste Wendung",
+          "point": "möchte (ich möchte, Sie möchten); »Ich möchte einen Apfel.« mit der festen Wendung »einen« aus Einheit 3",
           "new": true,
           "lehrwerk": "Schritte plus Neu 1 L3; Menschen A1 L9; Netzwerk neu A1 K4"
+        },
+        {
+          "point": "für + Akkusativ als feste Wendung (für die Woche, für Sie, 500 Gramm für 90 Cent); Präpositionen mit Akkusativ als Grammatik ab A1.2 Einheit 11",
+          "new": false,
+          "lehrwerk": "Spine g.praep-akkusativ (chunkFrom a1.1-u04)",
+          "chunk": true
         }
       ],
       "vocabTheme": "Lebensmittel, Mengen, Preise, Zahlen bis 1000",
@@ -958,7 +970,7 @@
       ],
       "grammar": [
         {
-          "point": "Perfekt mit haben: ge-…-t und ge-…-en (gemacht, gekauft, gegessen, gesehen – feste Verbliste)",
+          "point": "Perfekt mit haben: ge-…-t und ge-…-en – produktiv mit einer festen Verbliste (gemacht, gekauft, gespielt, gekocht, gearbeitet, gegessen, getrunken, gesehen, gelesen, geschlafen); das System ab A1.2 Einheit 5",
           "new": true,
           "lehrwerk": "Menschen A1 L11; Schritte plus Neu 1 L7; Netzwerk neu A1 K10 (A1.2, split)"
         },
@@ -1051,7 +1063,7 @@
       ],
       "grammar": [
         {
-          "point": "Perfekt mit sein: Bewegung und Veränderung (Ich bin nach Köln gekommen. Wir sind geflogen.)",
+          "point": "Perfekt mit sein: Bewegung und Veränderung (Ich bin nach Köln gekommen. Wir sind geflogen.) – produktiv mit einer festen Verbliste (gekommen, gefahren, geflogen, gegangen, geblieben); haben oder sein als System ab A1.2 Einheit 8",
           "new": true,
           "lehrwerk": "Menschen A1 L12; Schritte plus Neu 1 L7"
         },

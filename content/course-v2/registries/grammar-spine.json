@@ -157,7 +157,8 @@
       ],
       "consensus": "strong",
       "ruleCards": [
-        "rc.vokalwechsel"
+        "rc.vokalwechsel",
+        "rc.vokalwechsel-2"
       ],
       "inventory": [
         "gz-a1"
@@ -350,7 +351,8 @@
       ],
       "consensus": "strong",
       "ruleCards": [
-        "rc.trennbare-verben"
+        "rc.trennbare-verben",
+        "rc.trennbare-verben-2"
       ],
       "inventory": [
         "gz-a1"

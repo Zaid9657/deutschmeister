@@ -379,8 +379,8 @@
       "spine": "g.adjektiv-praedikativ",
       "depth": 1,
       "modelSentence": "Die Wohnung ist nicht groß, aber sehr hell.",
-      "de": "Nach „sein“ steht das Adjektiv ohne Endung: „Das Zimmer ist klein.“ „Die Küche ist klein.“ „Die Zimmer sind klein.“ „sehr schön“ ist mehr als „schön“. „zu“ heißt: zu viel (nicht gut): „Die Wohnung ist zu teuer.“ „nicht“ steht vor dem Adjektiv: „nicht groß“.",
-      "en": "After sein the adjective has no ending: Das Zimmer ist klein. Die Küche ist klein. Die Zimmer sind klein. sehr means very (sehr schön). zu means too much, not good: Die Wohnung ist zu teuer. nicht goes before the adjective: nicht groß.",
+      "de": "Nach „sein“ steht das Adjektiv ohne Endung: „Das Zimmer ist klein.“ „Die Küche ist klein.“ „Die Zimmer sind klein.“ „sehr“ steht vor dem Adjektiv: „sehr schön“. „zu“ heißt: zu viel (nicht gut): „Die Wohnung ist zu teuer.“ „nicht“ steht vor dem Adjektiv: „nicht groß“.",
+      "en": "After sein the adjective has no ending: Das Zimmer ist klein. Die Küche ist klein. Die Zimmer sind klein. sehr (very) goes before the adjective: sehr schön. zu means too much, not good: Die Wohnung ist zu teuer. nicht goes before the adjective: nicht groß.",
       "table": [
         [
           "sehr",
@@ -878,6 +878,94 @@
         [
           "sie/Sie",
           "wollen"
+        ]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.vokalwechsel-2",
+      "spine": "g.vokalwechsel",
+      "depth": 2,
+      "modelSentence": "Was nimmst du? – Ich nehme einen Tee.",
+      "de": "„nehmen“ hat e → i wie „sprechen“: „ich nehme“, „du nimmst“, „er/sie nimmt“. Beim Bestellen mit Akkusativ: „Was nimmst du? – Ich nehme einen Tee.“ Auch „treffen“: „du triffst“, „er trifft“. Bei „fahren“ a → ä: „du fährst“, „sie fährt“. Bei „ich“, „wir“, „ihr“ und „sie/Sie“ ist der Vokal wie im Infinitiv.",
+      "en": "nehmen changes e → i like sprechen: ich nehme, du nimmst, er/sie nimmt. When ordering, with the accusative: Was nimmst du? – Ich nehme einen Tee. treffen too: du triffst, er trifft. fahren changes a → ä: du fährst, sie fährt. With ich, wir, ihr and sie/Sie the vowel is the same as in the infinitive.",
+      "table": [
+        [
+          "Person",
+          "nehmen",
+          "treffen",
+          "fahren"
+        ],
+        [
+          "ich",
+          "nehme",
+          "treffe",
+          "fahre"
+        ],
+        [
+          "du",
+          "nimmst",
+          "triffst",
+          "fährst"
+        ],
+        [
+          "er/sie/es",
+          "nimmt",
+          "trifft",
+          "fährt"
+        ],
+        [
+          "wir",
+          "nehmen",
+          "treffen",
+          "fahren"
+        ]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.trennbare-verben-2",
+      "spine": "g.trennbare-verben",
+      "depth": 2,
+      "modelSentence": "Der Zug fährt um 9.10 Uhr ab.",
+      "de": "Mit Bus und Bahn: „abfahren“, „ankommen“, „einsteigen“, „aussteigen“, „umsteigen“. Wie bei „aufstehen“ steht das Verb auf Position 2, der Teil vorne am Ende: „Der Zug fährt um 9.10 Uhr ab.“ In der W-Frage: „Wann kommt der Zug an?“ „fahren“ hat auch hier a → ä: „du fährst ab“, „er fährt ab“.",
+      "en": "By bus and train: abfahren, ankommen, einsteigen, aussteigen, umsteigen. As with aufstehen, the verb is in position 2 and the front part goes to the end: Der Zug fährt um 9.10 Uhr ab. In a W-question: Wann kommt der Zug an? fahren has a → ä here too: du fährst ab, er fährt ab.",
+      "table": [
+        [
+          "Position 1",
+          "Position 2",
+          "…",
+          "Ende"
+        ],
+        [
+          "Der Zug",
+          "fährt",
+          "um 9.10 Uhr",
+          "ab."
+        ],
+        [
+          "Wir",
+          "kommen",
+          "um 10.25 Uhr in Dresden",
+          "an."
+        ],
+        [
+          "Sie",
+          "steigen",
+          "in Hannover",
+          "um."
+        ],
+        [
+          "Wann",
+          "fährt",
+          "der Zug",
+          "ab?"
+        ],
+        [
+          "Steigen",
+          "Sie",
+          "in Hannover",
+          "um?"
         ]
       ],
       "caseMarks": []

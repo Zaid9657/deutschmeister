@@ -3003,7 +3003,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Ich wohne jetzt in Leipzig. Hier arbeite ich am Empfang. Ich lerne auch Deutsch. Ich spreche drei Sprachen: Malayalam, Englisch und ein bisschen Deutsch."
+            "de": "Ich wohne jetzt in Leipzig. Von Beruf bin ich Rezeptionistin. Hier lerne ich Deutsch. Ich spreche drei Sprachen: Malayalam, Englisch und ein bisschen Deutsch."
           },
           {
             "speaker": "learner",
@@ -3133,7 +3133,7 @@
           "Gruß mit Ihrem Namen",
           "25 bis 35 Wörter"
         ],
-        "modelText": "Liebe Olena,\ndanke für die Nachricht! Leider kann ich am Samstag nicht kommen. Ich muss arbeiten. Hast du am Freitag Zeit? Dann gehen wir zusammen ins Kino.\nViele Grüße\n(Ihr Name)"
+        "modelText": "Liebe Olena,\ndanke für die Nachricht! Leider kann ich am Samstag nicht kommen. Ich muss lernen. Hast du am Freitag Zeit? Dann gehen wir zusammen ins Kino.\nViele Grüße\n(Ihr Name)"
       }
     },
     {
@@ -3399,8 +3399,8 @@
     },
     {
       "id": "a1.1-u08-rm05",
-      "de": "Ich muss arbeiten.",
-      "en": "I have to work.",
+      "de": "Ich muss lernen.",
+      "en": "I have to study.",
       "function": "sagen: Ich kann nicht, ich muss …",
       "forTemplate": "sd1.s2"
     },

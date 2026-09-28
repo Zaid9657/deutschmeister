@@ -242,7 +242,7 @@
       "title": "Wann fährt der Zug ab?",
       "structure": "g.trennbare-verben",
       "modelSentence": "Der Zug fährt um 9.10 Uhr ab.",
-      "ruleCard": "rc.trennbare-verben",
+      "ruleCard": "rc.trennbare-verben-2",
       "warmup": {
         "draw": 6,
         "contrastWith": "g.koennen"
@@ -1003,7 +1003,7 @@
       "title": "Eine Fahrkarte nach Dresden, bitte!",
       "structure": "g.vokalwechsel",
       "modelSentence": "Fährst du am Abend auch zurück?",
-      "ruleCard": "rc.vokalwechsel",
+      "ruleCard": "rc.vokalwechsel-2",
       "warmup": {
         "draw": 6,
         "contrastWith": "g.trennbare-verben"
