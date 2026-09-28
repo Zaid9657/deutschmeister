@@ -2677,8 +2677,8 @@
             {
               "id": "a1.1-u08-ls4-t2-l01",
               "speaker": "cast.ensemble-a1-3",
-              "de": "Guten Tag, hier ist das Schwimmbad am Park. Am Montag und am Dienstag ist das Schwimmbad leider geschlossen.",
-              "en": "Hello, this is the swimming pool by the park. Unfortunately the pool is closed on Monday and Tuesday."
+              "de": "Guten Tag, hier ist das Schwimmbad am Park. Am Montag und am Dienstag ist das Schwimmbad leider geschlossen. Am Mittwoch ist es wieder offen.",
+              "en": "Hello, this is the swimming pool by the park. Unfortunately the pool is closed on Monday and Tuesday. On Wednesday it is open again."
             },
             {
               "id": "a1.1-u08-ls4-t2-l02",
@@ -2990,7 +2990,7 @@
           },
           {
             "speaker": "partner",
-            "de": "Danke. Ihr Vorname ist Priya. Buchstabieren Sie bitte."
+            "de": "Danke. Buchstabieren Sie bitte Ihren Vornamen."
           },
           {
             "speaker": "learner",
