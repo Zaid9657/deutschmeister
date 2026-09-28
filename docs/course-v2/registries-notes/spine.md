@@ -174,7 +174,7 @@ console.log(bad.length ? "drift: "+bad.join(", ") : "spine.detectors mirrors det
 | Level | u01 | u02 | u03 | u04 | u05 | u06 | u07 | u08 | u09 | u10 | u11 | u12 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | a1.1 | 2/1 | 2/1 | 2/0 | 2/1 | 2/1 | 2/1 | 2/0 | 2/1 | 1/0 | 1/0 | 1/1 | 2/1 |
-| a1.2 | 2/1 | 2/0 | 2/0 | 2/1 | 2/1 | 2/1 | 2/0 | 2/1 | 2/0 | 2/1 | 2/0 | 0/0 |
+| a1.2 | 2/1 | 2/0 | 2/0 | 2/1 | 1/1 | 2/1 | 2/0 | 1/1 | 2/0 | 2/1 | 2/0 | 0/0 |
 | a2.1 | 1/0 | 2/0 | 2/0 | 2/0 | 1/0 | 2/0 | 2/1 | 1/0 | 2/0 | 1/0 | 2/0 | 1/0 |
 | a2.2 | 2/0 | 2/0 | 2/0 | 2/0 | 2/0 | 2/0 | 1/1 | 1/0 | 2/0 | 2/0 | 1/0 | 0/0 |
 | b1.1 | 2/0 | 1/0 | 2/0 | 1/0 | 2/0 | 1/0 | 0/0 | 2/0 | 2/0 | 1/0 | 1/0 | 1/0 |
@@ -505,7 +505,9 @@ productive step or a named increment, listed at the unit that uses it first).
    (memo 06 open question 3).
 7. **A1 load — resolved 2026-09-27 (review).** A1.1 went from 23 to 21 new points and A1.2 from 21 to 20: two
    lexis items left the spine (D14), *Wetter-es* merged (D15), and the Perfekt is receptive (fixed verbs) in A1.1 and
-   productive only in A1.2 (D13), so a1.1-u11/u12 add one productive point between them (*wollen*). The count stays
+   productive only in A1.2 (D13), so a1.1-u11/u12 add one productive point between them (*wollen*). **Since
+   2026-09-28 (§0b)** the fixed verbs are productive in u11/u12, which is what those units already did; the intro
+   count per unit (GRM-01) does not change, because each productive step falls in its intro unit. The count stays
    above memo 06 impl. 1 (11–15 per half-level) **on purpose**: the spine gives every F3 row element its own intro so
    that GRM-01 (≤ 2 per unit) and GRM-02 can check it. Counted as memo 06 counts, A1.1 covers F3 A1.1 rows #1–#13
    plus the predicative adjective and the Goethe A1 *-er/-in* word formation: about 15 row-equivalents, the top of
