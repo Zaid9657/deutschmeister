@@ -29,7 +29,8 @@ export function run({ docs }) {
       const source = [...arr(step?.input?.lines).map((l) => l?.de), step?.input?.text?.de, ...arr(texts).flatMap((t) => [...arr(t.text?.lines).map((l) => l?.de), t.text?.text])].filter(Boolean).map(norm).join(' | ');
       if (source) {
         for (const m of String(item.explanation?.de || '').matchAll(/\b(?:sagt|schreibt|fragt|antwortet|ruft)\s*:\s*„([^“]+)“/gu)) {
-          const parts = m[1].split(/…|\.\.\./).map(norm).filter((x) => x.length > 2);
+          // a cut („…") and a sentence boundary both split the quotation: lines are separate strings
+          const parts = m[1].split(/…|\.\.\.|(?<=[.?!])\s+/).map(norm).filter((x) => x.length > 2);
           if (parts.length && !parts.every((x) => source.includes(x))) findings.push(advisory(doc, `${path}.explanation.de`, `the explanation quotes „${m[1].slice(0, 60)}" as said or written, but the step's text has no such words — quote it exactly (mark a cut with „…")`, item.id));
         }
       }

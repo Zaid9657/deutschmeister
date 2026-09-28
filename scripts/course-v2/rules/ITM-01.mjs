@@ -426,6 +426,14 @@ function thirdRoundFindings(doc, item, path, where, nouns, step, list, index) {
       if (norm(m[1]) && norm(m[1]) === norm(item.answer)) out.push(advisory(doc, `${path}.promptDe`, `the bracketed cue „${m[1]}" is the key itself — the item asks the learner to copy it`, item.id));
     }
   }
+  // a structured-input choice whose distractors all share one polarity while the key has the other
+  // („Ja, …" ×2 against „Nein, …") is solved by the odd one out (a1.1-u11 r2 F02b) — ADVISORY
+  if (where === 'structured' && arr(item.options).length >= 3) {
+    const pol = (o) => (/^\s*ja\b/i.test(o) ? 'ja' : /^\s*nein\b/i.test(o) ? 'nein' : null);
+    const keyPol = pol(String(item.answer || ''));
+    const others = arr(item.options).filter((o) => norm(o) !== norm(item.answer)).map((o) => pol(String(o)));
+    if (keyPol && others.length >= 2 && others.every((p) => p && p !== keyPol)) out.push(advisory(doc, `${path}.options`, `the key opens with „${keyPol === 'ja' ? 'Ja' : 'Nein'}" and every distractor with „${keyPol === 'ja' ? 'Nein' : 'Ja'}" — the odd one out is the answer; mix the polarity`, item.id));
+  }
   // a tense item whose quoted stimulus and question share the time word (a1.1-u11 r3 F03) — ADVISORY
   if (where === 'structured' && /^g\.(?:perfekt|praeteritum)/.test(String(item.topic || ''))) {
     const TIME = /\b(?:heute|gestern|vorgestern|jetzt|morgen|letzte Woche|letzten \p{L}+|am (?:Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag|Wochenende))\b/giu;

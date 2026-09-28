@@ -106,11 +106,12 @@ export function run({ docs }) {
       }
       // an input item's distractors come from the text: a distractor noun the input never has is excluded
       // without reading (a1.1-u12 r2 F05) — ADVISORY
-      if (where === 'input' && step?.input && arr(item.options).length >= 2) {
+      if (where === 'input' && (item.role === 'gist' || item.role === 'detail') && step?.input && arr(item.options).length >= 2) {
         const inputWords = new Set(tokens([arr(step.input.lines).map((l) => l?.de).join(' '), step.input.text?.de || ''].join(' ')).map((t) => t.lower));
         for (const o of arr(item.options)) {
           if (norm(o) === norm(item.answer)) continue;
-          const nouns = tokens(o).filter((t, i) => i > 0 && /^\p{Lu}/u.test(t.text) && !FUNCTION_WORDS.has(t.lower));
+          // its content nouns and participles (ge…t / ge…en)
+          const nouns = tokens(o).filter((t, i) => (i > 0 && /^\p{Lu}/u.test(t.text) && !FUNCTION_WORDS.has(t.lower)) || /^ge\p{Ll}{3,}(?:t|en)$/u.test(t.text));
           const absent = nouns.filter((t) => !inputWords.has(t.lower) && ![...inputWords].some((w) => w.length > 4 && (w.startsWith(t.lower.slice(0, -1)) || t.lower.startsWith(w.slice(0, -1)))));
           if (nouns.length && absent.length === nouns.length) findings.push(advisory(doc, `${path}.options`, `distractor „${o}": ${absent.map((t) => `„${t.text}"`).join(', ')} never occurs in the step's input — a reader rules it out without listening`, item.id));
         }
