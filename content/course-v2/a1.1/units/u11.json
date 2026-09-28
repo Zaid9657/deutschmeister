@@ -207,7 +207,7 @@
           "Der Zug hatte Verspätung."
         ],
         "explanation": {
-          "de": "Priya sagt: „Am Abend hatte der Zug eine Stunde Verspätung.“ Das Wetter war gut.",
+          "de": "Priya sagt: „Aber am Abend hatte der Zug eine Stunde Verspätung.“ Das Wetter war gut.",
           "en": "Priya says the train was an hour late in the evening. The weather was good."
         },
         "origin": "agent"
@@ -361,7 +361,7 @@
           },
           "exact": "number",
           "explanation": {
-            "de": "Olena sagt: „Ich habe ein Fahrrad gekauft, für nur 40 Euro!“",
+            "de": "Olena sagt: „Da habe ich ein Fahrrad gekauft, für nur 40 Euro!“",
             "en": "Olena says she bought a bike for only 40 euros."
           },
           "origin": "agent"
@@ -444,15 +444,15 @@
           "options": [
             "Nein, das war gestern.",
             "Ja, sie kocht jetzt.",
-            "Ja, sie kocht heute."
+            "Nein, sie kocht am Mittwoch."
           ],
           "answer": "Nein, das war gestern.",
           "accepted": [
             "Nein, das war gestern."
           ],
           "explanation": {
-            "de": "„habe … gekocht“ ist Perfekt. Heute ist Montag, also war Sonntag gestern.",
-            "en": "“habe … gekocht” is the Perfekt; today is Monday, so Sunday was yesterday."
+            "de": "„habe … gekocht“ ist Perfekt: Das war am Sonntag. Heute ist Montag, also war das gestern. Über Mittwoch sagt Priya nichts.",
+            "en": "“habe … gekocht” is the Perfekt: that was on Sunday. Today is Monday, so that was yesterday. Priya says nothing about Wednesday."
           },
           "origin": "agent"
         },
@@ -461,20 +461,20 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.perfekt-haben",
-          "promptDe": "Bilal: „Ich habe einen Film gesehen.“ Wo steht „gesehen“?",
-          "promptEn": "Where is the participle “gesehen”?",
+          "promptDe": "Bilal: „Ich habe ein Buch gelesen.“ Olena: „Ich lese ein Buch.“ Wer liest jetzt?",
+          "promptEn": "Who is reading now?",
           "options": [
-            "am Ende",
-            "auf Position 2",
-            "auf Position 1"
+            "Bilal",
+            "Olena",
+            "Bilal und Olena"
           ],
-          "answer": "am Ende",
+          "answer": "Olena",
           "accepted": [
-            "am Ende"
+            "Olena"
           ],
           "explanation": {
-            "de": "„habe“ steht auf Position 2, das Partizip „gesehen“ steht am Ende.",
-            "en": "“habe” is in position 2; the participle “gesehen” goes to the end."
+            "de": "„Ich lese“ ist jetzt. „habe … gelesen“ ist Perfekt: Das war schon.",
+            "en": "“Ich lese” is now. “habe … gelesen” is the Perfekt: it already happened."
           },
           "origin": "agent"
         },
@@ -1094,7 +1094,7 @@
             "ruhig"
           ],
           "explanation": {
-            "de": "Elif sagt: „Mein Wochenende war ruhig.“",
+            "de": "Elif sagt: „Mein Wochenende war dann ruhig.“",
             "en": "Elif says her weekend was quiet."
           },
           "origin": "agent"
@@ -1116,7 +1116,7 @@
             "vorgestern"
           ],
           "explanation": {
-            "de": "Priya sagt: „Vorgestern haben wir die Altstadt gesehen.“ Heute ist Montag, vorgestern war Samstag.",
+            "de": "Priya sagt: „Vorgestern haben wir die Altstadt und das Schloss gesehen.“ Heute ist Montag, vorgestern war Samstag.",
             "en": "Priya says “vorgestern” – the day before yesterday, i.e. Saturday."
           },
           "origin": "agent"
@@ -1220,20 +1220,20 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.zeitangaben-inversion",
-          "promptDe": "„Gestern habe ich gekocht.“ Welches Wort steht auf Position 2?",
+          "promptDe": "„Am Sonntag habe ich gekocht.“ Welches Wort steht auf Position 2?",
           "promptEn": "Which word is in position 2?",
           "options": [
             "habe",
-            "gestern",
-            "gekocht"
+            "Sonntag",
+            "ich"
           ],
           "answer": "habe",
           "accepted": [
             "habe"
           ],
           "explanation": {
-            "de": "„Gestern“ steht auf Position 1, das Verb „habe“ auf Position 2, dann „ich“.",
-            "en": "“Gestern” is in position 1, the verb “habe” in position 2, then “ich”."
+            "de": "„Am Sonntag“ ist eine Position: Position 1. Das Verb „habe“ steht auf Position 2, dann „ich“.",
+            "en": "“Am Sonntag” is one position: position 1. The verb “habe” is in position 2, then “ich”."
           },
           "origin": "agent"
         },
@@ -1321,15 +1321,15 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.letzte-woche",
-            "promptDe": "___ war ich in Berlin. (letzte Woche)",
-            "promptEn": "Write “letzte Woche” in the gap.",
-            "answer": "Letzte Woche",
+            "promptDe": "Heute ist Montag. Am Dienstag war ich in Berlin: Das war ___. (gestern / letzte Woche)",
+            "promptEn": "Today is Monday. Was Tuesday yesterday or last week?",
+            "answer": "letzte Woche",
             "accepted": [
-              "Letzte Woche"
+              "letzte Woche"
             ],
             "explanation": {
-              "de": "„Letzte Woche“ steht auf Position 1, dann kommt „war“. Das erste Wort schreiben Sie groß.",
-              "en": "“Letzte Woche” takes position 1, then comes “war”. Capitalise the first word."
+              "de": "Heute ist Montag, gestern war Sonntag. Der Dienstag war letzte Woche.",
+              "en": "Today is Monday, so yesterday was Sunday. The Tuesday was last week."
             },
             "origin": "agent"
           },
@@ -1946,20 +1946,20 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.perfekt-haben",
-          "promptDe": "Sophie: „Am Abend haben wir viel gelacht.“ Wie war der Abend?",
-          "promptEn": "“gelacht” (from lachen = to laugh): how was the evening?",
+          "promptDe": "Sophie: „Heute lese ich. Gestern habe ich viel gelacht.“ Was macht Sophie heute?",
+          "promptEn": "What is Sophie doing today?",
           "options": [
-            "langweilig",
-            "schön",
-            "schlecht"
+            "Sie lacht viel.",
+            "Sie liest.",
+            "Sie ist im Museum."
           ],
-          "answer": "schön",
+          "answer": "Sie liest.",
           "accepted": [
-            "schön"
+            "Sie liest."
           ],
           "explanation": {
-            "de": "„gelacht“ kommt von „lachen“. Viel lachen: Der Abend war schön.",
-            "en": "“gelacht” is from lachen (to laugh): lots of laughing means a nice evening."
+            "de": "„Heute lese ich“ ist jetzt. „habe … gelacht“ ist Perfekt: Das war gestern.",
+            "en": "“Heute lese ich” is now. “habe … gelacht” is the Perfekt: that was yesterday."
           },
           "origin": "agent"
         },
@@ -2555,7 +2555,7 @@
                 "falsch"
               ],
               "explanation": {
-                "de": "Olena schreibt: „Dann kochen wir am Abend zusammen.“ Sie essen in der WG.",
+                "de": "Olena schreibt: „Dann kochen wir am Abend zusammen, und du erzählst alles.“ Sie essen in der WG.",
                 "en": "They are cooking together at the flat, not eating out."
               },
               "origin": "agent"
@@ -2597,7 +2597,7 @@
                 "richtig"
               ],
               "explanation": {
-                "de": "Bilal fragt: „Hast du am Donnerstag nach dem Kurs Zeit? Dann trinken wir einen Kaffee.“",
+                "de": "Bilal fragt: „Hast du am Donnerstag nach dem Kurs Zeit? Dann trinken wir einen Kaffee, und du erzählst mehr.“",
                 "en": "Bilal asks Priya to have a coffee with him on Thursday after class."
               },
               "origin": "agent"
@@ -2982,7 +2982,7 @@
           "am See"
         ],
         "explanation": {
-          "de": "Sie schreibt: „Gestern war ich am See.“ Im Museum ist sie heute.",
+          "de": "Sie schreibt: „Gestern war ich am See, heute bin ich im Museum.“ Gestern war sie am See.",
           "en": "She writes that she was at the lake yesterday; she is at the museum today."
         },
         "origin": "agent"
