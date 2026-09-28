@@ -96,6 +96,17 @@ export function stripFragments(text) {
 }
 
 const readWords = (text) => (String(text || '').match(/[\p{L}\p{M}]+(?:-[\p{L}\p{M}]+)*/gu) || []).map((w) => w.toLowerCase());
+/**
+ * The head words a hint glosses: the words before the colon of each „word: explanation" segment
+ * („die Praxis: Hier arbeitet …" → praxis; „… samstags: am Tag nach Freitag." → samstags), its article dropped.
+ */
+export function hintHeadWords(text) {
+  const out = [];
+  for (const m of String(text || '').matchAll(/(?:^|[.!?;]\s*)([^.!?;:]{1,40}):/gu)) {
+    for (const w of readWords(m[1])) if (!['der', 'die', 'das', 'ein', 'eine'].includes(w)) out.push(w);
+  }
+  return out;
+}
 const glossTokens = (list) => arr(list).map((g) => String(g?.token ?? '').toLowerCase()).filter(Boolean);
 
 /**
@@ -162,8 +173,13 @@ export function* walkReadSurfaces(doc, { cando = null } = {}) {
     // an item's hint is on its screen (ItemView): its words gloss the item's stem, options and explanation
     // (a1.1-u07 r2 F06 / r3 F05b: „die Praxis: …" in the hint of ls3-s01)
     const hintWords = readWords(str(item.hint?.de));
-    const g = [...(where === 'exam' ? blockScreen.get(block) || [] : []), ...hintWords];
-    if (str(item.hint?.de)) yield s('hint', item.hint.de, `${path}.hint.de`, item.id, [], { item, extra: true, twin: Boolean(str(item.hint?.en)) });
+    const screen = where === 'exam' ? blockScreen.get(block) || [] : [];
+    const g = [...screen, ...hintWords];
+    // the hint itself glosses its own item: the head words it explains („die Praxis:", „samstags:"), the words of
+    // the item's stem and options it glosses, and the exam block's screen are not unknown words on it (final code
+    // pass 2026-09-28, a1.1-u07 ls3-s01 / h3-01 / h3-03)
+    const hintGlosses = [...screen, ...hintHeadWords(item.hint?.de), ...readWords([str(item.promptDe), ...arr(item.options).map(str)].join(' '))];
+    if (str(item.hint?.de)) yield s('hint', item.hint.de, `${path}.hint.de`, item.id, [...new Set(hintGlosses)], { item, extra: true, twin: Boolean(str(item.hint?.en)) });
     // an error-correction item quotes its wrong sentence (prompt) and its wrong form (explanation)
     const planted = item.intentionalError || item.type === 'error_correction';
     const prompt = planted ? stripQuoted(item.promptDe) : item.promptDe;
