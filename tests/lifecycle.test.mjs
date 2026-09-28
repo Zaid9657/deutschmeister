@@ -18,10 +18,18 @@
 //      cannot import src/data, so the safe rule is no figures at all), no
 //      "unlimited", and CTA links to prerendered routes must carry their
 //      trailing slash (CLAUDE.md's three-slash-case rule).
+//
+//   6. THE AUDIENCE COUNTS EVERY LESSON. The activation mail goes to status
+//      'new' in lifecycle_customer_state. Until 2026-09-28 that view counted
+//      three progress tables, and the A1.1 course player writes none of them,
+//      so learners in the middle of a Lektion were mailed (scorecard §3 #8c:
+//      6 of 160 mails in 30 days; 30 across every uncounted source). The class
+//      is closed here: every table the app writes is classified as a lesson
+//      source or not, and the newest view must list exactly the sources.
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -194,4 +202,172 @@ test('activation copy carries no figures, no unlimited claims, and slashed CTAs'
     // Prerendered SPA routes must be linked with the trailing slash.
     assert.ok(/\/$/.test(tpl.ctaHref), `${kind}: CTA "${tpl.ctaHref}" missing its trailing slash — 301 on every click`);
   }
+});
+
+// ---------------------------------------------------------------------------
+// 6. The activation audience counts every kind of lesson activity (#8c)
+// ---------------------------------------------------------------------------
+//
+// A lesson-activity source is a table where a row means the learner opened or
+// answered teaching content. The activation copy assumes the reader has none,
+// so every such table must feed lifecycle_customer_state.status. Add a table
+// the app writes and this suite makes you decide which list it belongs in.
+
+const LESSON_ACTIVITY_SOURCES = {
+  user_grammar_progress: 'a grammar lesson opened or finished',
+  user_listening_progress: 'a listening lesson finished',
+  user_reading_progress: 'a reading lesson read',
+  lesson_progress: 'course player: a Lektion opened or finished (/course/:level/l/:nr)',
+  lesson_attempts: 'course player or checkpoint: an answered item',
+  review_cards: 'course spaced review, seeded by a finished Lektion',
+  program_progress: 'a course or program item ticked done',
+  writing_submissions: 'an AI-graded writing task',
+  exam_attempts: 'a mock exam or Abschlusstest section',
+  vocab_srs_cards: 'a word in the vocabulary trainer',
+  speaking_sessions: 'an AI speaking session (the SQL leaves out the placement check)',
+};
+
+// Written by the app or a function, but a row does NOT mean a lesson.
+const NOT_LESSON_ACTIVITY = {
+  profiles: 'account and settings',
+  signup_attempts: 'written before the account exists',
+  audit_logs: 'logins and other events; a login is not a lesson',
+  subscriptions: 'money',
+  purchases: 'money',
+  payment_failures: 'money',
+  webhook_logs: 'money',
+  coupons: 'admin: discount governance',
+  coupon_redemptions: 'money',
+  lifecycle_emails: 'our own mail ledger',
+  weekly_metrics: 'our own metrics',
+  support_tickets: 'support',
+  support_ticket_messages: 'support',
+  admin_audit_log: 'admin',
+  video_library: 'admin content',
+  xray_usage: 'Sentence X-Ray is a tool, used signed out too; the d4 mail recommends it',
+  speaking_messages: 'exists only inside a speaking_sessions row, which is counted',
+  speaking_evaluations: 'exists only after a speaking_sessions row, which is counted',
+  speaking_usage: 'the allowance meter of a speaking session, which is counted',
+  speaking_wallet: 'credit balance',
+  speaking_wallet_transactions: 'credit ledger',
+};
+
+// The only files allowed to write through a table name held in a lowercase
+// variable, which the scan below cannot resolve. They edit content rows, never
+// a learner's. A learner-progress write must name its table literally or
+// through an UPPER_CASE const.
+const DYNAMIC_WRITE_FILES = ['netlify/functions/admin-content.mjs'];
+
+const walk = (dir, out = []) => {
+  for (const name of readdirSync(dir)) {
+    if (name === 'node_modules') continue;
+    const p = join(dir, name);
+    if (statSync(p).isDirectory()) walk(p, out);
+    else if (/\.(m?js|jsx)$/.test(name)) out.push(p);
+  }
+  return out;
+};
+
+// Every table written (insert/upsert/update) by the SPA or a Netlify function.
+// A chain runs from `.from(...)` to the next `.from(` or statement end.
+function writtenTables() {
+  const written = new Map();
+  const dynamic = [];
+  for (const file of [...walk(join(ROOT, 'src')), ...walk(join(ROOT, 'netlify/functions'))]) {
+    const rel = file.slice(ROOT.length + 1);
+    const src = readFileSync(file, 'utf8');
+    const consts = new Map([...src.matchAll(/const\s+([A-Z_][A-Z0-9_]*)\s*=\s*'([a-z_]+)'/g)].map((m) => [m[1], m[2]]));
+    for (const m of src.matchAll(/\.from\(\s*(?:'([a-z_]+)'|([A-Za-z_][A-Za-z0-9_]*))\s*\)/g)) {
+      const rest = src.slice(m.index + m[0].length, m.index + m[0].length + 300);
+      const stop = rest.search(/\.from\(|;\s*\n/);
+      const chain = stop === -1 ? rest : rest.slice(0, stop);
+      if (!/\.(insert|upsert|update)\(/.test(chain)) continue;
+      const table = m[1] || consts.get(m[2]);
+      if (!table) {
+        dynamic.push(rel);
+        continue;
+      }
+      if (!written.has(table)) written.set(table, new Set());
+      written.get(table).add(rel);
+    }
+  }
+  return { written, dynamic };
+}
+
+// The newest migration that (re)defines the view is the definition once it is
+// applied; migrations/README.md says which ones are.
+function newestViewMigration() {
+  const files = readdirSync(join(ROOT, 'migrations'))
+    .filter((f) => f.endsWith('.sql'))
+    .sort()
+    .filter((f) => /CREATE OR REPLACE VIEW public\.lifecycle_customer_state/.test(read(`migrations/${f}`)));
+  assert.ok(files.length > 0, 'no migration defines lifecycle_customer_state');
+  const file = files[files.length - 1];
+  return { file, sql: read(`migrations/${file}`) };
+}
+
+const stripSqlComments = (s) => s.replace(/--[^\n]*/g, '');
+
+test('every table the app writes is classified as a lesson source or not', () => {
+  const { written, dynamic } = writtenTables();
+
+  const both = Object.keys(LESSON_ACTIVITY_SOURCES).filter((t) => t in NOT_LESSON_ACTIVITY);
+  assert.deepEqual(both, [], `classified both ways: ${both.join(', ')}`);
+
+  const unclassified = [...written.keys()]
+    .filter((t) => !(t in LESSON_ACTIVITY_SOURCES) && !(t in NOT_LESSON_ACTIVITY))
+    .map((t) => `${t} (${[...written.get(t)].join(', ')})`);
+  assert.deepEqual(
+    unclassified,
+    [],
+    'new written table(s). If a row means the learner opened or answered teaching content, add it to ' +
+      'LESSON_ACTIVITY_SOURCES and to lifecycle_customer_state in a new migration; otherwise add it to ' +
+      `NOT_LESSON_ACTIVITY with the reason: ${unclassified.join('; ')}`,
+  );
+
+  // Scanner sanity: it must see every source being written, including the
+  // course player's (review_cards is written through a TABLE const).
+  const unseen = Object.keys(LESSON_ACTIVITY_SOURCES).filter((t) => !written.has(t));
+  assert.deepEqual(unseen, [], `scan no longer sees writes to: ${unseen.join(', ')} (scanner broken, or the source is gone)`);
+
+  const hidden = [...new Set(dynamic)].filter((f) => !DYNAMIC_WRITE_FILES.includes(f));
+  assert.deepEqual(hidden, [], `write through an unresolvable table variable in: ${hidden.join(', ')}. Name the table literally or via an UPPER_CASE const`);
+});
+
+test('the newest lifecycle_customer_state counts exactly the lesson sources', () => {
+  const { file, sql } = newestViewMigration();
+  const begin = sql.indexOf('-- lesson-activity sources: begin');
+  const end = sql.indexOf('-- lesson-activity sources: end');
+  assert.ok(begin !== -1 && end > begin, `${file}: lesson-activity source markers missing`);
+
+  const block = stripSqlComments(sql.slice(begin, end));
+  const inView = new Set([...block.matchAll(/FROM\s+public\.([a-z_]+)/g)].map((m) => m[1]));
+  const missing = Object.keys(LESSON_ACTIVITY_SOURCES).filter((t) => !inView.has(t));
+  const extra = [...inView].filter((t) => !(t in LESSON_ACTIVITY_SOURCES));
+  assert.deepEqual(missing, [], `${file}: lesson source(s) missing from the view, so their learners stay 'new' and get mailed: ${missing.join(', ')}`);
+  assert.deepEqual(extra, [], `${file}: table(s) in the view that are not listed as sources: ${extra.join(', ')}`);
+
+  // The block is the has_lesson_activity expression, and status reads it:
+  // the only way to 'activated'.
+  assert.match(sql.slice(end), /^-- lesson-activity sources: end\s*\)\s*AS has_lesson_activity/, `${file}: the source block must close into has_lesson_activity`);
+  const view = stripSqlComments(sql.slice(sql.indexOf('CREATE OR REPLACE VIEW public.lifecycle_customer_state')));
+  assert.match(view, /WHEN\s+a\.has_lesson_activity\s+THEN\s+'activated'/, `${file}: status must read has_lesson_activity`);
+  assert.equal((view.match(/THEN\s+'activated'/g) || []).length, 1, `${file}: a second path to 'activated' bypasses the source list`);
+
+  // Posture: no privilege added, service role only.
+  assert.match(sql, /WITH \(security_invoker = true\)/, `${file}: the view must stay security_invoker`);
+  assert.match(sql, /REVOKE ALL ON public\.lifecycle_customer_state FROM PUBLIC, anon, authenticated/, `${file}: view must not be client-readable (name PUBLIC too)`);
+  assert.match(sql, /GRANT SELECT ON public\.lifecycle_customer_state TO service_role/, `${file}: service role must keep SELECT`);
+});
+
+test('the activation mailer reads the one definition and never re-derives it', () => {
+  const src = read('netlify/functions/activation-lifecycle.mjs');
+  for (const table of Object.keys(LESSON_ACTIVITY_SOURCES)) {
+    assert.ok(!src.includes(`from('${table}')`), `activation-lifecycle.mjs queries ${table} itself; read lifecycle_customer_state instead`);
+  }
+  // Both reads, selection and the pre-claim re-read, require the column only
+  // the 2026-09-28 view has, so an unmigrated view fails closed.
+  assert.ok(src.includes(`.eq('has_lesson_activity', false)`), 'selection must require has_lesson_activity = false');
+  const recheck = src.slice(src.indexOf('async function recheckStillNew'), src.indexOf('async function sendBatch'));
+  assert.ok(recheck.includes('has_lesson_activity === false'), 'the pre-claim re-read must require has_lesson_activity = false');
 });
