@@ -58,7 +58,6 @@
         "lemmas": [
           "lx.gestern",
           "lx.letzte-woche",
-          "lx.sonntag",
           "lx.vorgestern",
           "lx.monat",
           "lx.vormittag",
@@ -292,8 +291,8 @@
           {
             "id": "a1.1-u11-ls1-l10",
             "speaker": "cast.priya",
-            "de": "Ja, am Samstag. Wir haben die Altstadt und das Schloss gesehen. Am Sonntag habe ich lange geschlafen. Dann haben Arjun und ich gekocht.",
-            "en": "Yes, on Saturday. We saw the old town and the palace. On Sunday I slept late. Then Arjun and I cooked."
+            "de": "Ja, am Samstag. Wir haben die Altstadt und das Schloss gesehen. Am Sonntag habe ich viel geschlafen und spät gefrühstückt. Dann haben Arjun und ich gekocht.",
+            "en": "Yes, on Saturday. We saw the old town and the palace. On Sunday I slept a lot and had a late breakfast. Then Arjun and I cooked."
           }
         ],
         "glosses": [],
@@ -398,15 +397,15 @@
           "options": [
             "Sie hat im Garten gearbeitet.",
             "Sie hat Fußball gespielt.",
-            "Sie hat lange geschlafen und gekocht."
+            "Sie hat viel geschlafen und gekocht."
           ],
-          "answer": "Sie hat lange geschlafen und gekocht.",
+          "answer": "Sie hat viel geschlafen und gekocht.",
           "accepted": [
-            "Sie hat lange geschlafen und gekocht."
+            "Sie hat viel geschlafen und gekocht."
           ],
           "explanation": {
-            "de": "Priya sagt: „Am Sonntag habe ich lange geschlafen. Dann haben Arjun und ich gekocht.“",
-            "en": "Priya slept late on Sunday, then cooked with Arjun. Ms Schulz worked in the garden."
+            "de": "Priya sagt: „Am Sonntag habe ich viel geschlafen …“ Dann haben Arjun und sie gekocht.",
+            "en": "Priya slept a lot on Sunday, then cooked with Arjun. Ms Schulz worked in the garden."
           },
           "origin": "agent"
         }
@@ -978,7 +977,7 @@
       "title": "Gestern und vorgestern: eine Sprachnachricht von Elif",
       "structure": "g.zeitangaben-inversion",
       "modelSentence": "Vorgestern war ich wie immer im Park.",
-      "ruleCard": "rc.zeitangaben-inversion",
+      "ruleCard": "rc.zeitangaben-inversion-2",
       "warmup": {
         "draw": 6,
         "contrastWith": "g.perfekt-haben"
@@ -1160,8 +1159,8 @@
             "fünf"
           ],
           "acceptedWhy": {
-            "siebzehn": "Zahl als Wort",
             "5": "auch richtig: fünf Uhr am Nachmittag ist 17 Uhr",
+            "siebzehn": "Zahl als Wort",
             "fünf": "auch richtig: fünf Uhr am Nachmittag ist 17 Uhr"
           },
           "exact": "number",
@@ -1286,14 +1285,15 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.zeitangaben-inversion",
-            "promptDe": "Gestern ___ ich lange geschlafen. (haben)",
+            "promptDe": "Gestern ___ ich viel geschlafen. (haben)",
             "promptEn": "haben after a time word.",
             "answer": "habe",
             "accepted": [
               "habe"
             ],
             "errorTags": [
-              "v2-inv"
+              "v2-inv",
+              "verb-ending"
             ],
             "explanation": {
               "de": "„Gestern“ auf Position 1, „habe“ auf Position 2, dann „ich“.",
@@ -2678,7 +2678,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Am Sonntag habe ich lange geschlafen. Dann habe ich gekocht."
+            "de": "Am Sonntag habe ich viel geschlafen. Dann habe ich gekocht."
           },
           {
             "speaker": "learner",
@@ -3055,8 +3055,8 @@
     },
     {
       "id": "a1.1-u11-rm04",
-      "de": "Am Sonntag habe ich lange geschlafen.",
-      "en": "On Sunday I slept late.",
+      "de": "Am Sonntag habe ich viel geschlafen.",
+      "en": "On Sunday I slept a lot.",
       "function": "erzählen, was man gemacht hat",
       "forTemplate": "sd1.sp2"
     },
