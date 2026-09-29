@@ -385,7 +385,7 @@ test('compile is deterministic and idempotent', () => {
   assert.deepEqual(strip(a.result, a.outDir), strip(b.result, b.outDir));
   const first = writeOutputs(a.result);
   assert.deepEqual(first.map((f) => path.relative(a.outDir, f)).sort(), [
-    'banks/a2.1.banks.json', 'src/a2.1/ids.ledger.json', 'src/a2.1/lines.json', 'src/a2.1/manifest.json', 'src/a2.1/reserve.json', 'src/a2.1/rule-cards.json', 'src/a2.1/units/u07.json',
+    'banks/a2.1.banks.json', 'src/a2.1/ids.ledger.json', 'src/a2.1/lines.json', 'src/a2.1/manifest.json', 'src/a2.1/reserve.json', 'src/a2.1/rule-cards.json', 'src/a2.1/units/u07.json', 'src/a2.1/words.json',
   ]);
   const again = compileFixture(FIXTURES_ROOT, a.outDir);
   assert.deepEqual(writeOutputs(again.result), [], 'a second compile changes nothing');

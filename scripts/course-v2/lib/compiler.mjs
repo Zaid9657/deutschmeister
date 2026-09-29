@@ -22,6 +22,7 @@
 //                                     pace, counts for copy, contentHash
 //   <out>/<level>/ids.ledger.json     every live id of the level + tombstones of removed ids (ID-01)
 //   <out>/<level>/rule-cards.json     the level's rule cards (when authored)
+//   <out>/<level>/words.json          the level's word list for the Kapitel „Wortschatz" page (when a lexicon exists)
 //   <out>/<level>/lines.json          every spoken line with its cast voice — the audio run's input
 //   <banks>/<level>.banks.json        grader input only, every entry keyed by bankKey:
 //                                       writing  = WritingTasks (Leitpunkt cues and `choose` included,
@@ -269,6 +270,59 @@ function estimateSeconds(line) {
  * Learner-facing copy of an authored file (deep clone; the input is not touched). Reserves leave
  * the chunk: they are never served in their Lernschritt and live in the reserve index instead.
  */
+// ── the chapter outline (owner decision 2026-09-29) ─────────────────────────────────────
+// The course must read like a Lehrwerk: every Kapitel shows what it teaches — Wortschatz,
+// Hören or Lesen, Grammatik, Übungen, Sprechen or Schreiben, Aussprache, Prüfungstraining,
+// the Kapiteltest. The outline is DERIVED from the unit's own steps (never authored twice),
+// and rides on the manifest row so the course home can show it without loading the unit.
+
+/** A grammar point's short name: its spine label up to the first „ (", „:", „;" or „ – ". */
+export function shortGrammarLabel(label) {
+  const s = String(label || '');
+  const cut = [' (', ':', ';', ' – '].map((m) => s.indexOf(m)).filter((i) => i > 0);
+  return (cut.length ? s.slice(0, Math.min(...cut)) : s).trim();
+}
+
+const INPUT_SKILLS = { dialog: ['hoeren'], text: ['lesen'], mixed: ['hoeren', 'lesen'] };
+
+/** One entry per step: { nr, id, kind, title, skills, grammar, input, teile, items }. */
+export function outlineOf(u, spineLabel = new Map()) {
+  return (Array.isArray(u.steps) ? u.steps : []).map((s, i) => {
+    const skills = [];
+    const add = (k) => { if (!skills.includes(k)) skills.push(k); };
+    const poolSize = Array.isArray(s.pool?.items) ? s.pool.items.length : 0;
+    if (['situation', 'text', 'sprache'].includes(s.kind)) {
+      add('wortschatz');
+      for (const k of INPUT_SKILLS[s.input?.kind] || []) add(k);
+      if (s.structure) add('grammatik');
+      if (poolSize) add('ueben');
+      if (s.microOutput?.mode === 'spoken') add('sprechen');
+      if (s.microOutput?.mode === 'written') add('schreiben');
+      if (s.aussprache) add('aussprache');
+    } else if (s.kind === 'pruefung') add('pruefung');
+    else if (s.kind === 'sprechen') add('sprechen');
+    else if (s.kind === 'schreiben' || s.kind === 'ueberarbeiten') add('schreiben');
+    else if (s.kind === 'check') add('test');
+    const label = s.structure ? spineLabel.get(s.structure) || s.structure : null;
+    const teile = [
+      ...(Array.isArray(s.blocks) ? s.blocks.map((b) => b && b.template) : []),
+      ...(Array.isArray(s.task?.parts) ? s.task.parts.map((p) => p && p.template) : []),
+      s.task?.template,
+    ].filter((t) => typeof t === 'string');
+    return {
+      nr: i + 1,
+      id: s.id,
+      kind: s.kind,
+      title: typeof s.title === 'string' ? s.title : null,
+      skills,
+      grammar: s.structure ? { id: s.structure, short: shortGrammarLabel(label), label } : null,
+      input: s.input ? { kind: s.input.kind || null, title: s.input.title || null } : null,
+      teile: [...new Set(teile)],
+      items: poolSize,
+    };
+  });
+}
+
 function learnerCopy(doc) {
   const c = structuredClone(doc);
   for (const k of STRIP_TOP_KEYS) delete c[k];
@@ -786,6 +840,7 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
       canDoIds: u.spec.canDos,
       chunk: hasContent ? `units/u${pad2(u.nr)}.json` : null,
       counts,
+      outline: hasContent ? outlineOf(u, spineLabel) : null,
     };
     rows.push(row);
     rowById.set(u.id, row);
@@ -889,6 +944,7 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
       canDoIds,
       chunk: null,
       counts: null,
+      outline: null,
     };
   };
   const rowsInOrder = course.units.map((id) => rowById.get(id) || comingRow(id));
@@ -960,6 +1016,15 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
   // Rule cards (Form segment, repair cards) and the audio line list (input of generate-course-audio:
   // voice from the cast bible, text from `say` when present, else `de`).
   if (ruleCards) outputs.push({ file: path.join(levelOut, 'rule-cards.json'), text: json({ $generated: GENERATED_MARK, level, cards: ruleCards.cards }) });
+  // The level's word list (the Kapitel's „Wortschatz" page): the lexicon as the learner reads it.
+  if (lexicon) {
+    const WORD_KEYS = ['id', 'lemma', 'pos', 'article', 'plural', 'plural_kind', 'role', 'unit', 'example', 'exampleEn'];
+    const words = lexicon.entries.map((e) => ({
+      ...Object.fromEntries(WORD_KEYS.filter((k) => e[k] !== undefined && e[k] !== null).map((k) => [k, e[k]])),
+      gloss: e.gloss && e.gloss.en ? e.gloss.en : null,
+    }));
+    outputs.push({ file: path.join(levelOut, 'words.json'), text: json({ $generated: GENERATED_MARK, level, words }) });
+  }
   // The reserve index (SCHEMA §13 `reserve.js`, JSON here like every v0 output): by unit, step, topic
   // and error tag. Only units at stage T contribute — an earlier stage has no finished reserve.
   const servable = new Set(units.filter((u) => u.doc.stage === 'T').map((u) => u.doc.id));
@@ -1038,7 +1103,7 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
   return {
     outputs,
     syncDirs: [path.join(levelOut, 'units'), path.join(levelOut, 'plateaus'), path.join(levelOut, 'closing')],
-    optionalFiles: [path.join(levelOut, 'rule-cards.json')],
+    optionalFiles: [path.join(levelOut, 'rule-cards.json'), path.join(levelOut, 'words.json')],
     errors,
     warnings,
     skipped,
