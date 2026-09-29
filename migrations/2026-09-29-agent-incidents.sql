@@ -29,7 +29,8 @@
 -- remove agent_incidents from its "pendingApply" block (tests/db-columns.test.mjs).
 --
 -- Rollback: DROP TABLE public.agent_incidents;  (the sentinel then fails its
--- claim and mails nothing — it never mails without a claim).
+-- claim and sends no digest — only its hourly "Supabase unreachable" fallback,
+-- which SENTINEL_MUTE=db-down or SENTINEL_ENABLED=false silences).
 
 BEGIN;
 

@@ -12,8 +12,10 @@
 //   3. The run end to end against an in-memory database and fetch: claim
 //      before send (a second run mails nothing), mailed_elsewhere and
 //      SENTINEL_MUTE suppression, the kill switch, OWNER_ALERT_EMAIL fail-closed,
-//      no claim → no mail, dry mode writes nothing, and resolution only by a
-//      check that ran.
+//      no claim → no digest, dry mode writes nothing, and resolution only by a
+//      check that ran. Supabase unreachable (a failed probe or claim) sends ONE
+//      stateless fallback mail per run instead, under the same switch, mute
+//      (db-down) and fail-closed rules.
 //   4. The migration is service-role only and idempotent, its CHECK lists equal
 //      the JS lists, and the schedule is declared identically in netlify.toml.
 
@@ -339,7 +341,7 @@ test('the digest groups by owner, worst first, one "what to check" line each', (
 // ─── 3. the run, end to end ──────────────────────────────────────────────────
 
 /** An in-memory stand-in for the supabase-js builder — exactly the chain shapes sentinel.mjs uses. */
-function fakeDb(seed, { fail = [] } = {}) {
+function fakeDb(seed, { fail = [], failMessage = null } = {}) {
   const tables = JSON.parse(JSON.stringify(seed));
   const writes = [];
   let seq = 0;
@@ -361,7 +363,7 @@ function fakeDb(seed, { fail = [] } = {}) {
     maybeSingle() { this.single = true; return this; }
     then(res, rej) { return Promise.resolve().then(() => this.run()).then(res, rej); }
     run() {
-      if (fail.includes(this.name)) return { data: null, count: null, error: { message: `relation "public.${this.name}" does not exist` } };
+      if (fail === '*' || fail.includes(this.name)) return { data: null, count: null, error: { message: failMessage ?? `relation "public.${this.name}" does not exist` } };
       const rows = (tables[this.name] ||= []);
       const hit = (r) => this.filters.every((f) => f(r));
       if (this.op === 'upsert') {
@@ -557,13 +559,89 @@ test('OWNER_ALERT_EMAIL or RESEND_API_KEY unset: incidents are recorded, nothing
   }
 });
 
-test('no claim, no mail: an unapplied migration (claim error) sends nothing', async () => {
+// ─── Supabase unreachable: the stateless fallback ────────────────────────────
+
+const OUTAGE = 'TypeError: fetch failed\n    at node:internal/deps/undici (the project is paused)';
+const isFallback = (m) => m.subject.startsWith('[DM sentinel] Supabase unreachable — ');
+
+test('a failed DB probe sends exactly one fallback mail and no digest', async () => {
+  const db = fakeDb(healthyWorld(), { fail: '*', failMessage: OUTAGE });
+  const f = fakeFetch({ '/pricing/': { status: 500 } }); // a real page incident in the same run
+  const res = await run(db, f);
+  assert.equal(res.statusCode, 500);
+  const b = body(res);
+  assert.equal(b.dbDown, true);
+  assert.equal(b.fallbackMailed, true);
+  assert.equal(f.mails.length, 1, 'ONE mail: the fallback, not a digest');
+  const [mail] = f.mails;
+  assert.equal(mail.subject, '[DM sentinel] Supabase unreachable — TypeError: fetch failed', 'first error line only');
+  assert.deepEqual(mail.to, ['owner@example.test']);
+  assert.match(mail.text, /check get_project status; restore_project if INACTIVE/);
+  assert.doesNotMatch(mail.text, /pricing/, 'no digest content');
+  assert.equal(db.writes.length, 0, 'nothing claimed: the ledger is the database');
+  // Stateless on purpose: the next hour, still down, mails again.
+  await run(db, f, { now: new Date(NOW.getTime() + 3600000) });
+  assert.equal(f.mails.length, 2);
+  assert.ok(f.mails.every(isFallback));
+});
+
+test('a failed claim (ledger unreachable or unmigrated) sends the fallback, never the digest', async () => {
   const db = fakeDb(healthyWorld(), { fail: ['agent_incidents'] });
   const f = fakeFetch({ '/': { status: 500 } });
   const res = await run(db, f);
   assert.equal(res.statusCode, 500);
-  assert.match(body(res).error, /agent_incidents|claim failed/);
-  assert.equal(f.mails.length, 0);
+  assert.match(body(res).error, /agent_incidents/);
+  assert.equal(f.mails.length, 1);
+  assert.ok(isFallback(f.mails[0]));
+  assert.match(f.mails[0].subject, /relation "public\.agent_incidents" does not exist/);
+  assert.match(f.mails[0].text, /2026-09-29-agent-incidents\.sql/);
+  assert.doesNotMatch(f.mails[0].text, /answers HTTP 500/, 'no incident is mailed without its claim');
+});
+
+test('a healthy DB sends no fallback', async () => {
+  const db = fakeDb(healthyWorld());
+  const f = fakeFetch({ '/courses/': { status: 404 } });
+  const b = body(await run(db, f));
+  assert.equal(b.dbDown, undefined);
+  assert.equal(f.mails.length, 1);
+  assert.ok(!isFallback(f.mails[0]), 'the digest, not the fallback');
+});
+
+test('the fallback honours SENTINEL_MUTE=db-down, the recipient fail-closed rules, the kill switch and dry mode', async () => {
+  const down = () => fakeDb(healthyWorld(), { fail: '*', failMessage: OUTAGE });
+
+  const muted = fakeFetch();
+  const m = body(await run(down(), muted, { env: { ...ENV, SENTINEL_MUTE: 'signups,db-down' } }));
+  assert.equal(m.fallbackMuted, true);
+  assert.equal(muted.mails.length, 0, 'muted db-down sends nothing');
+
+  for (const missing of ['OWNER_ALERT_EMAIL', 'RESEND_API_KEY']) {
+    const f = fakeFetch();
+    const env = { ...ENV };
+    delete env[missing];
+    const b = body(await run(down(), f, { env }));
+    assert.equal(b.fallbackMailed, false, missing);
+    assert.equal(f.mails.length, 0, `${missing} unset: fail closed`);
+  }
+
+  const off = fakeFetch();
+  assert.deepEqual(body(await run(down(), off, { env: { ...ENV, SENTINEL_ENABLED: 'false' } })), { enabled: false });
+  assert.equal(off.mails.length, 0);
+
+  const dry = fakeFetch();
+  const d = body(await run(down(), dry, { event: { httpMethod: 'GET', queryStringParameters: { secret: ENV.CAMPAIGN_SECRET, dry: '1' } } }));
+  assert.equal(d.dry, true);
+  assert.equal(d.dbError, OUTAGE, 'dry mode reports the outage');
+  assert.equal(dry.mails.length, 0, 'dry mode sends nothing');
+});
+
+test('renderDbDownAlert: first non-empty line, bounded subject, one-line hint', async () => {
+  const { renderDbDownAlert } = await import('../netlify/functions/_shared/sentinelLib.mjs');
+  const { subject, text } = renderDbDownAlert(`\n  ${'x'.repeat(300)}\nsecond line`, NOW);
+  assert.equal(subject, `[DM sentinel] Supabase unreachable — ${'x'.repeat(120)}`);
+  assert.doesNotMatch(text, /second line/);
+  assert.equal(text.split('\n').filter((l) => /get_project/.test(l)).length, 1);
+  assert.match(renderDbDownAlert(null, NOW).subject, /unknown error$/);
 });
 
 test('SENTINEL_MUTE records a check but keeps it out of the mail', async () => {

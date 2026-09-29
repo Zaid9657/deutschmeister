@@ -441,6 +441,32 @@ export function selectForMail(claimed, mute) {
   return { mail, mailedElsewhere, muted };
 }
 
+// ─── Supabase unreachable: the stateless fallback ────────────────────────────
+
+/** The mute key of the fallback (SENTINEL_MUTE=db-down). It is never a ledger row. */
+export const DB_DOWN_CHECK_ID = 'db-down';
+
+/**
+ * The one alert that cannot be claimed: the ledger IS the database. Sent once
+ * per run while Supabase is unreachable, so it repeats hourly on purpose — the
+ * project was paused on 2026-09-14 and two deploys died before anyone looked.
+ */
+export function renderDbDownAlert(error, now) {
+  const firstLine = String(error || 'unknown error').split('\n').map((l) => l.trim()).find(Boolean) || 'unknown error';
+  const subject = `[DM sentinel] Supabase unreachable — ${firstLine.slice(0, 120)}`;
+  const text = [
+    `The sentinel could not reach its Supabase ledger at ${new Date(now).toISOString().slice(0, 16).replace('T', ' ')} UTC.`,
+    '',
+    `Error: ${firstLine.slice(0, 500)}`,
+    'What to check: check get_project status; restore_project if INACTIVE.',
+    'If the error names agent_incidents, the ledger migration is not applied: migrations/2026-09-29-agent-incidents.sql.',
+    '',
+    'No incident could be recorded this hour, so this mail is not deduplicated: it repeats every hour while the database stays unreachable.',
+    'Silence it: SENTINEL_MUTE=db-down. See docs/agents/production-agents.md.',
+  ].join('\n');
+  return { subject, text };
+}
+
 // ─── digest ──────────────────────────────────────────────────────────────────
 
 const SEVERITY_RANK = { critical: 0, high: 1, medium: 2, low: 3 };

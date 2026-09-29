@@ -11,9 +11,14 @@
 // THE RULES IT KEEPS
 //   - Claim before send. An incident is claimed with INSERT … ON CONFLICT (key)
 //     DO NOTHING RETURNING; only rows this run inserted can be mailed, so a
-//     repeated or concurrent run mails nothing twice. No claim, no mail: if the
-//     ledger write fails, the run mails nothing (a Supabase outage is therefore
-//     NOT mailed by this job — Netlify's function log is where it shows).
+//     repeated or concurrent run mails nothing twice. No claim, no digest.
+//   - The one exception is the outage that already happened (the project was
+//     paused on 2026-09-14): when the DB probe fails or the claim errors, the
+//     ledger is unreachable, so the run sends ONE stateless fallback mail
+//     instead — "[DM sentinel] Supabase unreachable — <first error line>" —
+//     and no digest. It repeats every hour while the database stays down, on
+//     purpose; SENTINEL_MUTE=db-down silences it, and the kill switch and the
+//     OWNER_ALERT_EMAIL / RESEND_API_KEY fail-closed rules apply to it too.
 //   - Never mail twice what another job already mails: renewal payment
 //     failures (lemonsqueezy-webhook emails the owner) are recorded with
 //     mailed_elsewhere = true and left out of the digest. The weekly-truth
@@ -39,7 +44,7 @@ import {
   KEY_PAGES, SENTINEL_THRESHOLDS, dayOf,
   checkPage, checkWebhooks, checkPaymentFailures, checkSignups, checkJobs,
   checkSpeakingCloseout, checkSupportSla, checkSpeakingFlows, checkDatabase,
-  shouldResolve, parseMute, selectForMail, renderDigest,
+  shouldResolve, parseMute, isMuted, selectForMail, renderDigest, renderDbDownAlert, DB_DOWN_CHECK_ID,
 } from './_shared/sentinelLib.mjs';
 
 const ALLOWED_ORIGINS = ['https://deutsch-meister.de', 'https://www.deutsch-meister.de'];
@@ -102,6 +107,7 @@ export async function runChecks({ db, fetchImpl, env, now }) {
   const T = SENTINEL_THRESHOLDS;
   const results = [];
   const skipped = [];
+  let dbError = null; // set when the reachability probe fails — the ledger is presumed unreachable
 
   const run = async (name, fn) => {
     try {
@@ -118,10 +124,16 @@ export async function runChecks({ db, fetchImpl, env, now }) {
     // a. key pages
     ...KEY_PAGES.map((page) => run(`page:${page.path}`, async () => checkPage(page, await fetchPage(fetchImpl, siteUrl, page), now))),
 
-    // f(db). one count round trip — also the signup numerator
+    // f(db). one count round trip — the reachability probe, and the signup numerator
     run('db+signups', async () => {
       const t0 = Date.now();
-      const last24 = await exactCount(() => counting(db, 'profiles').gte('created_at', iso(nowMs - 24 * HOUR)));
+      let last24;
+      try {
+        last24 = await exactCount(() => counting(db, 'profiles').gte('created_at', iso(nowMs - 24 * HOUR)));
+      } catch (e) {
+        dbError = e?.message || String(e);
+        throw e;
+      }
       const latency = Date.now() - t0;
       const prior7 = await exactCount(() => counting(db, 'profiles').gte('created_at', iso(nowMs - 8 * 24 * HOUR)).lt('created_at', iso(nowMs - 24 * HOUR)));
       const db1 = checkDatabase(latency, now);
@@ -186,6 +198,7 @@ export async function runChecks({ db, fetchImpl, env, now }) {
     incidents: results.flatMap((r) => r.incidents),
     passing: results.flatMap((r) => r.passing),
     skipped,
+    dbError,
   };
 }
 
@@ -249,6 +262,27 @@ export async function recordIncidents(db, incidents, passing, now) {
   return { claimed: incidents.filter((i) => claimedKeys.has(i.key)), touched, resolved: toResolve.length };
 }
 
+/**
+ * The stateless fallback: Supabase (and with it the ledger) is unreachable, so
+ * nothing can be claimed. ONE short mail per run — hourly repeats while it
+ * stays down are intended — under the same kill switch, mute (`db-down`) and
+ * OWNER_ALERT_EMAIL / RESEND_API_KEY fail-closed rules as the digest.
+ */
+async function sendDbDownFallback(fetchImpl, env, error, now) {
+  if (isMuted({ check_id: DB_DOWN_CHECK_ID }, parseMute(env.SENTINEL_MUTE))) {
+    console.error('[sentinel] Supabase unreachable — fallback muted by SENTINEL_MUTE:', error);
+    return { fallbackMailed: false, fallbackMuted: true };
+  }
+  const to = String(env.OWNER_ALERT_EMAIL || '').trim();
+  if (!to || !env.RESEND_API_KEY) {
+    console.error(`[sentinel] Supabase unreachable and ${!to ? 'OWNER_ALERT_EMAIL' : 'RESEND_API_KEY'} not set — not mailed:`, error);
+    return { fallbackMailed: false };
+  }
+  const { subject, text } = renderDbDownAlert(error, now);
+  const sent = await sendDigest(fetchImpl, { resendKey: env.RESEND_API_KEY, to, subject, text });
+  return { fallbackMailed: sent };
+}
+
 async function sendDigest(fetchImpl, { resendKey, to, subject, text }) {
   try {
     const res = await fetchImpl('https://api.resend.com/emails', {
@@ -289,17 +323,27 @@ export async function runSentinel({ event = {}, env = process.env, db = serviceC
   }
   const dry = qs.dry === '1';
 
-  const { incidents, passing, skipped } = await runChecks({ db, fetchImpl, env, now });
+  const { incidents, passing, skipped, dbError } = await runChecks({ db, fetchImpl, env, now });
   const summary = incidents.map((i) => ({ key: i.key, owner_agent: i.owner_agent, severity: i.severity, title: i.title, mailed_elsewhere: i.mailed_elsewhere }));
 
-  if (dry) return reply(200, { enabled: true, dry: true, day: dayOf(now), incidents: summary, passing, skipped });
+  if (dry) return reply(200, { enabled: true, dry: true, day: dayOf(now), incidents: summary, passing, skipped, dbError });
+
+  // The probe failed: the ledger is unreachable, so no claim and no digest —
+  // only the stateless fallback.
+  if (dbError) {
+    const fb = await sendDbDownFallback(fetchImpl, env, dbError, now);
+    return reply(500, { enabled: true, dbDown: true, error: dbError, ...fb, incidents: summary, skipped });
+  }
 
   let recorded;
   try {
     recorded = await recordIncidents(db, incidents, passing, now);
   } catch (e) {
-    console.error('[sentinel] recording failed — nothing mailed:', e.message);
-    return reply(500, { error: e.message, incidents: summary, skipped });
+    // No claim, no digest. The claim failing is the ledger being unreachable
+    // (or not migrated): send the fallback instead.
+    console.error('[sentinel] recording failed — no digest:', e.message);
+    const fb = await sendDbDownFallback(fetchImpl, env, e.message, now);
+    return reply(500, { enabled: true, dbDown: true, error: e.message, ...fb, incidents: summary, skipped });
   }
 
   const { mail, mailedElsewhere, muted } = selectForMail(recorded.claimed, parseMute(env.SENTINEL_MUTE));

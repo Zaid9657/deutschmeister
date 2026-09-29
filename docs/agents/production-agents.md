@@ -15,10 +15,12 @@ session attached. They share two things:
 `netlify/functions/sentinel.mjs` (checks: `netlify/functions/_shared/sentinelLib.mjs`, tests:
 `tests/sentinel.test.mjs`). Hourly at **:50** (`schedule('50 * * * *')`, mirrored in
 `netlify.toml`). It looks at what fails silently, records every problem in `agent_incidents`, and
-mails the owner **one digest per run containing only the problems it has not mailed before**.
+mails the owner **one digest per run containing only the problems it has not mailed before** — or,
+when Supabase itself is unreachable, one short stateless fallback mail instead (below).
 
-**Status: ships off.** It does nothing until `SENTINEL_ENABLED=true`, and it can mail nothing
-until `migrations/2026-09-29-agent-incidents.sql` is applied (no claim, no mail).
+**Status: ships off.** It does nothing until `SENTINEL_ENABLED=true`, and it sends no digest
+until `migrations/2026-09-29-agent-incidents.sql` is applied (no claim, no digest — only the hourly
+"Supabase unreachable" fallback naming the missing table). Apply the migration first.
 
 ### Switching it on (owner)
 
@@ -82,15 +84,23 @@ an hour. Event-like keys (a webhook row, a payment event) are mailed once, ever.
 - Never mailed: repeats of an incident already claimed; `mailed_elsewhere` rows (renewal payment
   failures); muted checks; the weekly-truth numbers (only a *missed* weekly-truth run is an
   incident).
-- If the claim fails (migration not applied, Supabase down), **nothing is mailed** — the rule is no
-  claim, no mail. A Supabase outage therefore reaches you through Netlify's function log, not this
-  digest. If Resend fails after the claim, the incident stays recorded with `notified_at` null and is
-  not retried (at most one lost mail, never a duplicate).
+- **Supabase unreachable — the one stateless mail.** The ledger is the database, so when the DB probe
+  (the first `profiles` count) fails or the claim errors, nothing can be claimed and **no digest** is
+  sent. Instead the run sends ONE short mail: subject
+  `[DM sentinel] Supabase unreachable — <first error line>`, body with the hint
+  "check get_project status; restore_project if INACTIVE" (the Supabase connector; the project was
+  paused on 2026-09-14). It is not deduplicated: it **repeats every hour** while the database stays
+  down, on purpose — it is critical. If the error names `agent_incidents`, the migration is simply not
+  applied yet. It obeys `SENTINEL_ENABLED`, `SENTINEL_MUTE=db-down`, and the `OWNER_ALERT_EMAIL` /
+  `RESEND_API_KEY` fail-closed rules; `?dry=1` reports it (`dbError`) and sends nothing.
+- If Resend fails after a successful claim, the incident stays recorded with `notified_at` null and
+  is not retried (at most one lost mail, never a duplicate).
 
 ### Silencing
 
 - **One check:** add its `check_id` prefix to `SENTINEL_MUTE`, e.g. `SENTINEL_MUTE=signups,page:/faq/`.
   The incidents are still claimed and recorded, just never mailed; the digest footer counts them.
+- **The Supabase-unreachable fallback:** `SENTINEL_MUTE=db-down` (it has no ledger row to resolve).
 - **Everything:** `SENTINEL_ENABLED=false`.
 - **One incident, by hand:** `update agent_incidents set resolved_at = now() where key = '…';` — it is
   reopened (not re-mailed) if the check fires the same key again.
