@@ -939,7 +939,7 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
     kind: course.kind,
     priceKey: course.priceKey,
     title: course.title,
-    ...pick(course, ['honestyLineDe']),
+    ...pick(course, ['honestyLineDe', 'showcase']),
     lanes: course.lanes,
     units: rowsInOrder,
     etappen: course.etappen,

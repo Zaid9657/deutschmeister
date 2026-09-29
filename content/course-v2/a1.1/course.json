@@ -8,6 +8,28 @@
     "en": "First contacts"
   },
   "honestyLineDe": "A1.1 ist die erste Hälfte des Wegs zur Prüfung Start Deutsch 1. Alle Prüfungsteile lernen Sie hier im Kleinen kennen; die ganze Prüfung üben Sie in A1.2.",
+  "showcase": {
+    "promiseDe": "Sie lernen Deutsch mit Priya. Sie kommt aus Indien und beginnt in Leipzig einen Deutschkurs. Mit ihr lernen Sie Schritt für Schritt Ihre ersten Gespräche auf Deutsch.",
+    "outcomesDe": [
+      "sich vorstellen und andere nach Name, Herkunft und Wohnort fragen",
+      "Ihren Namen buchstabieren, Zahlen und Telefonnummern verstehen und ein Formular ausfüllen",
+      "Ihre Familie vorstellen",
+      "nach Preisen fragen und Durchsagen im Supermarkt verstehen",
+      "Ihre Wohnung zeigen und Wohnungsanzeigen lesen",
+      "im Kurs und im Büro um etwas bitten und eine kurze Nachricht schreiben",
+      "die Uhrzeit sagen, sich verabreden, zusagen und absagen",
+      "im Café bestellen und bezahlen",
+      "Fahrpläne lesen und eine Fahrkarte kaufen",
+      "vom Wochenende erzählen und im Chat schreiben",
+      "Ihren Plan mit Deutsch nennen und per E-Mail nach einem Kurs fragen"
+    ],
+    "etappenDe": [
+      "Ankommen in Leipzig",
+      "Einkaufen und Wohnen",
+      "Alltag und Freizeit",
+      "Unterwegs und Pläne"
+    ]
+  },
   "lanes": {
     "primary": "sd1",
     "secondary": [],

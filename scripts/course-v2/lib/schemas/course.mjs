@@ -16,6 +16,9 @@ export const courseSchema = obj({
   priceKey: 'str | null', // 'course_a2_1'; null for a1.1
   title: 'LText',
   'honestyLineDe?': 'de', // required for .1 courses (refine)
+  // The course home's plan screen (owner decision 2026-09-29: the learner sees the whole plan
+  // first): the promise line, what the learner can do after the level, one name per Etappe.
+  'showcase?': { promiseDe: 'de', outcomesDe: '[de]', etappenDe: '[de]{4}' },
   lanes: { primary: 'ref(lane)', secondary: '[ref(lane)]*', later: '[ref(lane)]*', live: '[ref(lane)]' },
   units: '[ref(unit)]{12}',
   etappen: arr({ nr: 'int[1..4]', units: '[ref(unit)]{3}', closedBy: union('ref(plateau)', "'closing'") }, '{4}'),

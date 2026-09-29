@@ -127,6 +127,51 @@ export const viz = {
 };
 
 /**
+ * THE COURSE THEME — the v2 course player's game layer (owner decision
+ * 2026-09-29: "make it like Duolingo, more fun, I don't like the colours").
+ * It overrides rule 2 ON THE COURSE SURFACES ONLY (/course/:level/v2, /u, /p,
+ * /abschluss): there the palette's `primary` is the one interactive colour, and
+ * XP, streak and the path nodes are colour on purpose. Rule 1 still binds: no
+ * hue below is a kasus hue (no blue, no red-orange, no teal-green Dativ, no
+ * blue-purple), so a rule card that names a case still owns its colour.
+ *
+ * Three candidate palettes were shown on the design canvas
+ * (https://claude.ai/artifact/FdxcgeqJeKwqL6h55DmpLa); COURSE_PALETTE picks the
+ * live one, and the player sets it as CSS variables (`--c-*`, see
+ * src/components/course-v2/CourseTheme.jsx), so switching is this one line.
+ * White on every `primary` is ≥ 3:1 (buttons set 18px+ bold labels).
+ */
+export const coursePalettes = {
+  limette: { primary: '#3FA10E', edge: '#2D7A06', wash: '#EEF8E6', soft: '#D3EEBF', ink: '#2D6A0A', ground: '#FFFFFF' },
+  himbeere: { primary: '#D6336C', edge: '#A81F52', wash: '#FDEBF2', soft: '#F7CADB', ink: '#9A1C4A', ground: '#FFF9F5' },
+  tuerkis: { primary: '#0E9F90', edge: '#0A7468', wash: '#E3F6F3', soft: '#BFEAE3', ink: '#0A6B61', ground: '#FFFFFF' },
+};
+
+export const COURSE_PALETTE = 'limette';
+
+/** The four unit-banner hues of the path (one per unit, cycling), each with its extrusion edge. */
+export const courseHues = {
+  gruen: { bright: '#3FA10E', edge: '#2D7A06' },
+  orange: { bright: '#D9691A', edge: '#A94F10' },
+  beere: { bright: '#D6336C', edge: '#A81F52' },
+  tuerkis: { bright: '#0E9F90', edge: '#0A7468' },
+};
+
+/**
+ * The game's fixed colours: XP gold, the streak flame, right/wrong feedback and
+ * the locked path node. Right is always green and wrong always crimson — the
+ * learner reads them before the words.
+ */
+export const courseGame = {
+  xp: '#FFC21A', xpEdge: '#D99A00', xpInk: '#8A6400', xpWash: '#FFF4CC',
+  flame: '#FF9F1C', flameEdge: '#E0761F',
+  right: '#3FA10E', rightEdge: '#2D7A06', rightWash: '#D9F5C5', rightInk: '#2A6B08',
+  wrong: '#E0435A', wrongEdge: '#A3203A', wrongWash: '#FFE3E6', wrongInk: '#A3203A',
+  locked: '#E5E7EB', lockedEdge: '#C4C9CF', lockedIcon: '#8A939B',
+  line: '#E3E6E9', text: '#2B2F33', muted: '#5B636B',
+};
+
+/**
  * Font stacks. The two brand faces are self-hosted (`fontFaces` below); each
  * is followed by its metric-matched fallback, so the swap from fallback to
  * brand face does not reflow the page.
@@ -338,6 +383,21 @@ export const tailwindColors = {
   ),
   // `bg-viz-pos`, `text-viz-error` … — the admin panel's data colours.
   viz: { ...viz },
+  // The course theme: `bg-course`, `text-course-ink` … read the CSS variables
+  // CourseTheme.jsx sets from the live palette; `bg-game-xp`, `text-game-wrong-ink` …
+  // are the fixed game colours.
+  course: {
+    DEFAULT: 'var(--c-primary)', edge: 'var(--c-edge)', wash: 'var(--c-wash)',
+    soft: 'var(--c-soft)', ink: 'var(--c-ink)', ground: 'var(--c-ground)',
+  },
+  game: {
+    xp: { DEFAULT: courseGame.xp, edge: courseGame.xpEdge, ink: courseGame.xpInk, wash: courseGame.xpWash },
+    flame: { DEFAULT: courseGame.flame, edge: courseGame.flameEdge },
+    right: { DEFAULT: courseGame.right, edge: courseGame.rightEdge, wash: courseGame.rightWash, ink: courseGame.rightInk },
+    wrong: { DEFAULT: courseGame.wrong, edge: courseGame.wrongEdge, wash: courseGame.wrongWash, ink: courseGame.wrongInk },
+    locked: { DEFAULT: courseGame.locked, edge: courseGame.lockedEdge, icon: courseGame.lockedIcon },
+    line: courseGame.line, text: courseGame.text, muted: courseGame.muted,
+  },
 };
 
 /** Both configs spread this into theme.extend.boxShadow. */
@@ -350,6 +410,14 @@ export const tailwindBoxShadow = {
   'raise-limette': shadow.raiseLimette,
   hover: shadow.hover,
   overlay: shadow.overlay,
+  // The course theme's extrusions: a hard bottom edge, no blur (the game look).
+  course: '0 5px 0 0 var(--c-edge)',
+  'course-sm': '0 3px 0 0 var(--c-edge)',
+  'game-right': `0 5px 0 0 ${courseGame.rightEdge}`,
+  'game-wrong': `0 5px 0 0 ${courseGame.wrongEdge}`,
+  'game-locked': `0 6px 0 0 ${courseGame.lockedEdge}`,
+  'game-line': `0 4px 0 0 ${courseGame.line}`,
+  'game-xp': `0 6px 0 0 ${courseGame.xpEdge}`,
 };
 
 /** Both configs spread this into theme.extend.transitionTimingFunction. */
