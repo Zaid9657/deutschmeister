@@ -172,6 +172,17 @@ export const courseGame = {
 };
 
 /**
+ * The course cast's flat busts (src/components/course-v2/CastAvatar.jsx): skin
+ * and hair tones only — garments take a `courseHues` colour. Drawing decisions,
+ * never a course fact.
+ */
+export const castTones = {
+  skinDeep: '#A8704A', skinBrown: '#B97A50', skinTan: '#D6A07A', skinLight: '#F3D2B8', skinRose: '#F0C9A8',
+  hairBlack: '#2B1B14', hairDark: '#1F1A17', hairBrown: '#4A3222', hairBlond: '#E3B54B', hairGrey: '#9AA0A6',
+  backdrop: '#FFF4E8', mouth: '#2B1B14',
+};
+
+/**
  * Font stacks. The two brand faces are self-hosted (`fontFaces` below); each
  * is followed by its metric-matched fallback, so the swap from fallback to
  * brand face does not reflow the page.
