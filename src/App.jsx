@@ -73,6 +73,9 @@ const CourseHomeV2Page = lazy(() => import('./pages/course-v2/CourseHomeV2Page.j
 const UnitPlayerPage = lazy(() => import('./pages/course-v2/UnitPlayerPage.jsx'));
 const PlateauPage = lazy(() => import('./pages/course-v2/PlateauPage.jsx'));
 const ClosingPage = lazy(() => import('./pages/course-v2/ClosingPage.jsx'));
+// the level's back matter: every rule card and every word of the course, Kapitel by Kapitel
+const GrammarPage = lazy(() => import('./pages/course-v2/GrammarPage.jsx'));
+const WordsPage = lazy(() => import('./pages/course-v2/WordsPage.jsx'));
 const ModelltestHub = lazy(() => import('./pages/Modelltest/ModelltestHub'));
 const ModelltestOverview = lazy(() => import('./pages/Modelltest/ModelltestOverview'));
 const ModelltestRun = lazy(() => import('./pages/Modelltest/ModelltestRun'));
@@ -364,6 +367,10 @@ function Shell() {
                     {/* the closing block (.1 Halbtest → Teil-Karte); `courseV2` makes the guard ask the
                         v2 access question here too, since its path regex names only v2|u|p */}
                     <Route path="/course/:level/abschluss" element={<LevelSubscriptionGuard courseV2><EmailVerificationGate><ClosingPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
+                    {/* the level's reference pages (the Kapitel page links them): Grammatik and Wortschatz of
+                        the whole course; `courseV2` for the same reason as the closing route */}
+                    <Route path="/course/:level/grammatik" element={<LevelSubscriptionGuard courseV2><EmailVerificationGate><GrammarPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
+                    <Route path="/course/:level/wortschatz" element={<LevelSubscriptionGuard courseV2><EmailVerificationGate><WordsPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
                     <Route path="/course/:level/:itemId" element={<LevelSubscriptionGuard><EmailVerificationGate><CourseLessonPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
 
                     {/* Level-aware routes — A1.1 is free, others require auth + email verification + subscription */}

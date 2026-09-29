@@ -1,26 +1,32 @@
-import { Check, Headphones, Mic, RefreshCw, X, Zap } from 'lucide-react';
+import { Check, ListOrdered, X } from 'lucide-react';
 import CastAvatar from '../CastAvatar.jsx';
 import { laneLabel } from '../content.js';
-import EtappenPlan from './EtappenPlan.jsx';
 import GameButton from './GameButton.jsx';
+import InhaltPlan from './InhaltPlan.jsx';
+import KapitelAufbau from './KapitelAufbau.jsx';
 import PacePicker from './PacePicker.jsx';
+import ReferenceLinks from './ReferenceLinks.jsx';
 import { hueVars } from './hue.js';
 
-// The COURSE PLAN (#kursplan): what the course is, what the learner can do after
-// it, what is in it (manifest content counts only), how a learning day goes, the
-// pace, the four Etappen and the exam in view. It opens the page on a first visit
-// and folds out of „Kursplan ansehen" afterwards. Every number is the manifest's;
-// a section whose data a level does not have (no showcase yet, units still coming)
-// is left out rather than filled with placeholders.
+// The COURSE PLAN (#kursplan), built like a textbook's front matter: what the course
+// is and what the learner can do after it, how every Kapitel is built (Einstieg → A, B,
+// C → Prüfungstraining → Sprechen → Schreiben → Kapiteltest, a Plateau every 3
+// Kapitel), what is in it (manifest content counts only), the pace, the exam in view,
+// the grammar overview and the word list, and last — it is the long one, and the hero
+// jumps to it — the „Inhalt": per Modul its Kapitel with Kommunikation, Grammatik,
+// Wortschatz, Texte and Prüfung. It opens the page on a first visit and folds out of
+// „Kursplan ansehen" afterwards. Every number is the
+// manifest's; a section whose data a level does not have (no showcase yet, units still
+// coming) is left out rather than filled with placeholders.
 
 const CAST = ['Priya', 'Olena', 'Bilal', 'Emre'];
 const TILE_HUES = ['gruen', 'orange', 'beere', 'tuerkis'];
 
 const H2 = 'text-2xl font-black leading-tight';
 
-function Section({ title, lead = null, children }) {
+function Section({ id = undefined, title, lead = null, children }) {
   return (
-    <section className="px-5 pt-7">
+    <section id={id} className="scroll-mt-36 px-5 pt-7">
       <h2 className={H2}>{title}</h2>
       {lead && <p className="mt-1.5 text-base font-bold leading-relaxed text-game-muted">{lead}</p>}
       <div className="mt-3.5">{children}</div>
@@ -28,15 +34,9 @@ function Section({ title, lead = null, children }) {
   );
 }
 
-function reviewLine(manifest) {
-  const days = (manifest && manifest.review && Array.isArray(manifest.review.ladderDays) ? manifest.review.ladderDays : []).slice(0, 3);
-  const spaced = days.length === 3 ? ` Mit Konto kommen Ihre Wörter nach ${days[0]}, ${days[1]} und ${days[2]} Tagen wieder.` : '';
-  return `Nach jeder Etappe wartet eine Schatzkiste: Wiederholung mit Prüfungsteilen.${spaced}`;
-}
-
 export default function PlanOverview({
   manifest, code, level, firstVisit = true, startHref = null, startLabel = '', firstUnitTitle = null,
-  tiles = [], etappen = [], parts = [], stepMinutes = null,
+  tiles = [], aufbau = [], inhalt = [], links = [], parts = [], stepMinutes = null,
   paceOptions = [], pace, onPace, finishText = null, allDone = false, onClose,
 }) {
   const title = (manifest && manifest.title && manifest.title.de) || `Kurs ${code}`;
@@ -45,13 +45,7 @@ export default function PlanOverview({
   const a1 = String(level || '').startsWith('a1');
   const lane = manifest && manifest.lanes && manifest.lanes.primary;
   const TitleTag = firstVisit ? 'h1' : 'h2';
-
-  const how = [
-    { icon: Headphones, title: '1. Hören und mitlesen', text: 'Eine kurze Szene aus dem Alltag: erst hören, dann den Text mitlesen.' },
-    { icon: Zap, title: '2. Kurz üben', text: 'Kleine Aufgaben mit sofortigem Feedback. Was nicht klappt, kommt gleich noch einmal.' },
-    { icon: Mic, title: '3. Selbst sprechen und schreiben', text: 'Die KI hört zu, liest mit und sagt Ihnen, was schon gut ist und was Sie noch verbessern können.' },
-    { icon: RefreshCw, title: '4. Wiederholen, bevor Sie vergessen', text: reviewLine(manifest) },
-  ];
+  const kapitelCount = inhalt.reduce((n, m) => n + m.kapitel.length, 0);
 
   return (
     <div id="kursplan" className="scroll-mt-36 pb-8">
@@ -81,6 +75,15 @@ export default function PlanOverview({
             </p>
           </>
         )}
+        {kapitelCount > 0 && (
+          <a
+            href="#kursplan-inhalt"
+            className="mt-4 flex min-h-12 items-center justify-center gap-2 rounded-clay border-2 border-b-4 border-course-soft bg-white px-4 py-2.5 text-base font-black text-course-ink hover:bg-course-wash"
+          >
+            <ListOrdered className="h-5 w-5" strokeWidth={2.6} aria-hidden="true" />
+            Inhalt ansehen · {kapitelCount} Kapitel
+          </a>
+        )}
       </div>
 
       {showcase && Array.isArray(showcase.outcomesDe) && showcase.outcomesDe.length > 0 && (
@@ -95,6 +98,15 @@ export default function PlanOverview({
               </li>
             ))}
           </ul>
+        </Section>
+      )}
+
+      {aufbau.length > 0 && (
+        <Section
+          title="So ist jedes Kapitel aufgebaut"
+          lead={stepMinutes ? `Wie in einem Lehrbuch, nur zum Mitmachen. Jeder Schritt dauert etwa ${stepMinutes} Minuten.` : 'Wie in einem Lehrbuch, nur zum Mitmachen.'}
+        >
+          <KapitelAufbau stations={aufbau} />
         </Section>
       )}
 
@@ -113,37 +125,9 @@ export default function PlanOverview({
         </Section>
       )}
 
-      <Section
-        title="So lernen Sie jeden Tag"
-        lead={stepMinutes ? `Ein Lernschritt dauert etwa ${stepMinutes} Minuten – kurz genug für jeden Tag.` : null}
-      >
-        <ol className="flex flex-col gap-2.5">
-          {how.map((s, i) => {
-            const Icon = s.icon;
-            return (
-              <li key={s.title} style={hueVars(TILE_HUES[i % TILE_HUES.length])} className="flex items-center gap-3.5 rounded-2xl border-2 border-b-4 border-game-line bg-white p-3.5">
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-[color:var(--hue)]" aria-hidden="true">
-                  <Icon className="h-6 w-6 text-white" strokeWidth={2.4} />
-                </span>
-                <span className="min-w-0">
-                  <span className="block text-[1.0625rem] font-black leading-snug">{s.title}</span>
-                  <span className="block text-[0.9375rem] font-bold leading-snug text-game-muted">{s.text}</span>
-                </span>
-              </li>
-            );
-          })}
-        </ol>
-      </Section>
-
       {paceOptions.length > 0 && (
         <Section title="Ihr Tempo" lead="Wählen Sie, wie oft Sie lernen.">
           <PacePicker options={paceOptions} pace={pace} onPace={onPace} code={code} finishText={finishText} allDone={allDone} />
-        </Section>
-      )}
-
-      {etappen.length > 0 && (
-        <Section title={`Ihr Weg in ${etappen.length} Etappen`}>
-          <EtappenPlan etappen={etappen} />
         </Section>
       )}
 
@@ -162,11 +146,27 @@ export default function PlanOverview({
         </section>
       )}
 
+      {links.length > 0 && (
+        <Section title="Zum Nachschlagen">
+          <ReferenceLinks links={links} />
+        </Section>
+      )}
+
+      {inhalt.length > 0 && (
+        <Section
+          id="kursplan-inhalt"
+          title="Inhalt"
+          lead={`${inhalt.length} Module mit ${kapitelCount} Kapiteln. Tippen Sie auf ein Kapitel, um es zu öffnen.`}
+        >
+          <InhaltPlan modules={inhalt} />
+        </Section>
+      )}
+
       {firstVisit && startHref ? (
         <div className="mx-5 mt-7 flex flex-col gap-3 rounded-[20px] bg-course p-5 text-white shadow-course">
           <p className="text-[1.375rem] font-black leading-snug">
             {stepMinutes ? `Heute: etwa ${stepMinutes} Minuten.` : 'Heute: ein Lernschritt.'}
-            {firstUnitTitle ? <> Ihre erste Lektion: „{firstUnitTitle}“.</> : null}
+            {firstUnitTitle ? <> Ihr erstes Kapitel: „{firstUnitTitle}“.</> : null}
           </p>
           <GameButton to={startHref} tone="white" className="w-full">{startLabel}</GameButton>
         </div>

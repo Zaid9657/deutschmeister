@@ -9,6 +9,7 @@ import ItemRun from './ItemRun.jsx';
 import MicroOutputView from './MicroOutputView.jsx';
 import UnitIntro from './UnitIntro.jsx';
 import { canDoTexts, canPlay, laneLabel, lineIndex, teilLabel } from './content.js';
+import { cardTitle, cardsByIds, tocRows, unitCardIds, unitWordGroups } from './kapitel.js';
 import { introBubble, narratorOf } from './story.js';
 import { XP } from '../../lib/course-v2/gamify.js';
 import { useV2Strings } from './strings.js';
@@ -33,8 +34,17 @@ import { useV2Strings } from './strings.js';
  * credits the practice steps, the two Aufgaben stay open). Without the test-out `testOut` is null.
  * Optional: onAttempt (every answered item), course (manifest: can-do wording, minutes),
  * canDos, names.
+ *
+ * `chapter` (the player's, optional) makes the intro THE KAPITEL PAGE (UnitIntro.jsx) — the unit's
+ * front page when it opens fresh AND its resume screen:
+ *   finished      [stepId] — the finished steps (the table of contents ticks them)
+ *   currentIndex  the step „Weiter" opens (-1 on a fresh unit: „Kapitel starten" opens the Einstieg)
+ *   resume        true on the resume screen
+ *   proven        { canDoId: bool } — the can-dos proven so far (ticked)
+ *   onOpen(i)     open step i (i ≥ steps.length: the summary) — a row of the table of contents
+ * The Einstieg row always opens the Folge here, so the resume screen reaches it in one tap.
  */
-export default function StartView({ unit, level, onDone, onAttempt, course = null, canDos = null, names = null }) {
+export default function StartView({ unit, level, onDone, onAttempt, course = null, canDos = null, names = null, chapter = null }) {
   const [, t] = useV2Strings();
   const start = unit?.start || {};
   const lines = useMemo(() => lineIndex(unit), [unit]);
@@ -94,20 +104,53 @@ export default function StartView({ unit, level, onDone, onAttempt, course = nul
     const perStep = byStep.length ? Math.round(byStep.reduce((a, b) => a + b, 0) / byStep.length) : 0;
     const chips = Array.isArray(start.pruefungsfokusChips) ? start.pruefungsfokusChips.map((tpl) => teilLabel(tpl)) : [];
     const lane = unit.spec?.lanes?.primary ? laneLabel(unit.spec.lanes.primary) : null;
+    // the Kapitel page: the table of contents with the learner's state, the back matter
+    const finishedIds = new Set((chapter && chapter.finished) || []);
+    const resume = Boolean(chapter && chapter.resume);
+    const currentIndex = chapter && Number.isInteger(chapter.currentIndex) ? chapter.currentIndex : -1;
+    const rows = tocRows({ unit, course, finished: finishedIds, currentIndex });
+    const doneCount = rows.filter((r) => r.state === 'done').length;
+    const allDone = rows.length > 0 && doneCount === rows.length;
+    const next = resume && !allDone ? rows[currentIndex] || rows.find((r) => r.state !== 'done') || null : null;
+    const open = (i) => { if (chapter && typeof chapter.onOpen === 'function') chapter.onOpen(i); else finish(null); };
+    const nextName = (r) => (r.kind === 'check' ? t('kap.test') : r.kind === 'pruefung' ? t('kap.pruefung') : r.kind === 'sprechen' ? t('kap.sprechen') : r.kind === 'schreiben' ? t('kap.schreiben') : r.title || '');
+    const primaryLabel = !resume ? t('kap.start') : next ? (next.letter ? t('kap.continuePart', { l: next.letter }) : t('kap.continueWith', { name: nextName(next) })) : t('kap.toSummary');
+    const onPrimary = !resume ? begin : () => open(next ? next.index : steps.length);
+    const proven = (chapter && chapter.proven) || {};
+    const goalList = Object.entries(goals).map(([id, text]) => ({ text, done: proven[id] === true }));
+    const cards = cardsByIds(unitCardIds(unit), unit.ruleCards).map((card) => ({ card, title: cardTitle(unit, course, card.id) }));
+    // the unit's own words, which the player puts on the unit (`unit.lexicon`, additive)
+    const lexicon = Array.isArray(unit.lexicon) ? unit.lexicon : [];
+    const lernschritteOpen = rows.some((r) => r.state !== 'done' && ['situation', 'text', 'sprache', 'pruefung'].includes(r.kind));
     return (
       <section className="mx-auto w-full max-w-2xl" data-step-id={stepId}>
         <UnitIntro
-          eyebrow={`${String(unit.level || level || '').toUpperCase()} · ${t('player.unit', { n: unit.nr })}`}
+          eyebrow={[String(unit.level || level || '').toUpperCase(), unit.etappe ? t('kap.module', { m: unit.etappe }) : null].filter(Boolean).join(' · ')}
           title={unit.title?.de}
           narrator={narrator}
-          bubble={introBubble(unit)}
-          goals={Object.values(goals)}
+          bubble={resume ? t('player.welcomeTitle') : introBubble(unit)}
+          bubbleNote={resume ? t('kap.progress', { d: doneCount, t: rows.length }) : null}
+          goals={goalList}
           stepCount={steps.length}
           perStepMinutes={perStep}
+          totalMinutes={Number(unit.minutesPlanned && unit.minutesPlanned.total) || 0}
           xp={steps.length * XP.step + XP.unit}
           examFocus={lane && chips.length ? [lane, ...chips] : chips}
-          onStart={begin}
-          onTestOut={start.testOut?.offered ? () => { if (testItems.length) { setTesting(true); top(); } else finish(null); } : null}
+          onStart={onPrimary}
+          primaryLabel={primaryLabel}
+          onTestOut={start.testOut?.offered && lernschritteOpen ? () => { if (testItems.length) { setTesting(true); top(); } else finish(null); } : null}
+          nr={unit.nr}
+          level={unit.level || level}
+          unitId={unit.id}
+          lane={unit.spec?.lanes?.primary || null}
+          rows={rows}
+          intro={folge ? { nr: unit.nr, title: folge.title || null, state: !resume ? 'current' : 'open' } : null}
+          onOpenRow={open}
+          onOpenIntro={begin}
+          cards={cards}
+          wordGroups={unitWordGroups(unit, lexicon)}
+          redemittel={Array.isArray(unit.redemittel) ? unit.redemittel : []}
+          referenceOpen={allDone}
         />
       </section>
     );
@@ -161,7 +204,7 @@ export default function StartView({ unit, level, onDone, onAttempt, course = nul
   const showGist = heard || !canListen;
   return (
     <section className={`mx-auto w-full max-w-2xl ${showGist && !gistItem ? 'pb-32 sm:pb-0' : ''}`} data-step-id={stepId}>
-      <p className="text-[0.75rem] font-extrabold uppercase tracking-[0.08em] text-course-ink">{t('start.episode')}</p>
+      <p className="text-[0.75rem] font-extrabold uppercase tracking-[0.08em] text-course-ink">{t('kap.intro')} · {t('kap.episode', { n: unit.nr })}</p>
       {folge && (
         <div className="mt-1">
           <InputView

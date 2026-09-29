@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Check } from 'lucide-react';
 import ReadAloudLine from '../lesson/ReadAloudLine.jsx';
 import CheckView from './CheckView.jsx';
 import ExamBlockView from './ExamBlockView.jsx';
@@ -10,13 +10,19 @@ import MicroOutputView from './MicroOutputView.jsx';
 import RuleCardView, { RuleTableFill } from './RuleCardView.jsx';
 import SpeakingTaskView from './SpeakingTaskView.jsx';
 import WritingTaskView from './WritingTaskView.jsx';
-import { lineIndex, materialize, skeletonOf, stepNr } from './content.js';
+import WordList from './WordList.jsx';
+import { SkillIcon } from './SkillIcon.jsx';
+import { laneLabel, lineIndex, materialize, skeletonOf, teilLabel } from './content.js';
+import { chapterSections, exerciseNr, sectionOf, stageIcon, stagesOf, stepWords } from './kapitel.js';
 import { useV2Strings } from './strings.js';
+import { SKILL_LABEL } from '../../lib/course-v2/curriculum.js';
 
 const LABEL = 'text-[0.75rem] font-extrabold uppercase tracking-[0.08em] text-game-muted';
 const PANEL = 'rounded-[1.25rem] border-2 border-b-4 border-game-line bg-white p-5';
 const SERVED_MAX = 12;
 const EXIT_COUNT = 3;
+// the „Neue Wörter" box before the input: the unit's words its text uses, when there are enough
+const MIN_WORDS = 3;
 
 /** Split a practice pool: 12 served (fewer if the pool is short), 3 unseen exit items, the rest spare. */
 export function splitPool(all) {
@@ -46,6 +52,7 @@ function segmentsFor(step, extras) {
   const k = step.kind;
   if (k === 'situation' || k === 'text') {
     if (extras.warmupItems && extras.warmupItems.length) segs.push({ id: 'warmup', label: 'seg.warmup' });
+    if (extras.words && extras.words.length >= MIN_WORDS) segs.push({ id: 'words', label: 'stage.words' });
     if (step.input) segs.push({ id: 'input', label: 'seg.input' });
     if (step.examBlock) segs.push({ id: 'inputBlock', label: 'seg.exam', counted: true });
     else if (step.inputItems && step.inputItems.length) segs.push({ id: 'inputItems', label: 'seg.inputItems', counted: true });
@@ -99,6 +106,14 @@ function segmentsFor(step, extras) {
  *   names          { speakerId: display name } from the cast registry
  *   canDos         { canDoId: wording } overrides
  *   onBack         a „Zurück" link in the header
+ *
+ * The textbook frame (owner feedback 2026-09-29: "in a lesson there's no German grammar, no
+ * listening, no questions visible"): above every screen a strip names the step's parts in order —
+ * Wortschatz · Hören · Grammatik · Übungen · Aussprache · Sprechen · Abschluss — the current one
+ * marked, the done ones ticked; and each screen carries a Lehrwerk exercise heading numbered from
+ * the section letter: „A2 Hören: Im Kurs: Wie heißen Sie?", „A3 Grammatik: Präsens", „A4 Übungen ·
+ * 12 Aufgaben", „A6 Jetzt Sie: Sprechen" (kapitel.js stagesOf / exerciseNr). A Situation or Text
+ * step opens with „Neue Wörter": the unit's words (`unit.lexicon`) its input uses.
  */
 export default function StepView({
   unit,
@@ -163,10 +178,16 @@ export default function StepView({
     return hit.length ? hit : all;
   }, [step, unit]);
 
+  // The words of the „Neue Wörter" box, fixed when the step opens (a list arriving later must never
+  // shift the segments under the learner).
+  const [words] = useState(() => (step && (step.kind === 'situation' || step.kind === 'text') ? stepWords(step, unit && unit.lexicon) : []));
   const segments = useMemo(
-    () => (step ? segmentsFor(step, { pool, warmupItems, redemittel }) : []),
-    [step, pool, warmupItems, redemittel],
+    () => (step ? segmentsFor(step, { pool, warmupItems, redemittel, words }) : []),
+    [step, pool, warmupItems, redemittel, words],
   );
+  // the Lehrwerk frame: this step's section (letter, grammar, input) and its stages
+  const section = useMemo(() => (step ? sectionOf(chapterSections(unit, course), step.id) : null), [unit, course, step]);
+  const stages = useMemo(() => stagesOf(segments, step), [segments, step]);
   const [segIdx, setSegIdx] = useState(0);
   const segAt = useRef(0);
   segAt.current = segIdx;
@@ -188,7 +209,6 @@ export default function StepView({
 
   if (!step) return null;
   const seg = segments[segIdx] || segments[segments.length - 1];
-  const nr = stepNr(step.id);
 
   const attempt = (p) => { if (typeof onAttempt === 'function') onAttempt({ ...p, stepId: step.id }); };
   const count = (r) => {
@@ -237,10 +257,22 @@ export default function StepView({
     case 'warmup':
       body = <ItemRun key="warmup" items={warmupItems} {...runProps} onFinish={advance} />;
       break;
-    case 'input':
+    case 'words':
       body = (
         <>
-          <InputView input={step.input} unitId={unitId} names={names} />
+          <p className="text-[1rem] font-semibold leading-snug text-game-muted">{t('stage.wordsLead')}</p>
+          <div className={`mt-4 ${PANEL}`}>
+            <WordList words={words} unitId={unitId} idPrefix={`${step.id}-w`} />
+          </div>
+          <NextBar onNext={advance} label={t('item.next')} />
+        </>
+      );
+      break;
+    case 'input':
+      // the heading above names the input („A2 Hören: Im Kurs: Wie heißen Sie?"), so not twice
+      body = (
+        <>
+          <InputView input={{ ...step.input, title: null }} unitId={unitId} names={names} />
           <NextBar onNext={advance} label={t('item.next')} />
         </>
       );
@@ -267,7 +299,7 @@ export default function StepView({
     case 'form':
       body = (
         <>
-          <RuleCardView card={ruleCard} modelSentence={step.modelSentence} />
+          <RuleCardView card={ruleCard} modelSentence={step.modelSentence} title={(section && section.grammar && section.grammar.short) || null} />
           {!ruleCard && step.ruleCard && <p className="mt-2 text-[0.875rem] text-game-muted">{t('rule.missing')}</p>}
           <NextBar onNext={advance} label={t('item.next')} />
         </>
@@ -430,7 +462,43 @@ export default function StepView({
       );
   }
 
-  const stepTitle = step.title || (step.kind === 'sprechen' ? 'Sprechen' : step.kind === 'schreiben' ? 'Schreiben' : step.kind === 'ueberarbeiten' ? t('step.ueberarbeiten') : step.kind === 'check' ? t('check.title') : step.kind === 'pruefung' ? t('seg.exam') : '');
+  // ── the Lehrwerk frame: section eyebrow, stage strip, numbered exercise heading ──
+  const L = (k) => (SKILL_LABEL[k] ? SKILL_LABEL[k][lang === 'de' ? 'de' : 'en'] : k);
+  const letter = (section && section.letter) || null;
+  const stageAt = stages.findIndex((st) => st.segs.includes(seg.id));
+  const nrLabel = letter ? exerciseNr(stages, seg.id, letter) : null;
+  const inputSkill = step.input && step.input.kind === 'text' ? 'lesen' : 'hoeren';
+  const microSkill = step.microOutput && step.microOutput.mode === 'written' ? 'schreiben' : 'sprechen';
+  const grammarName = (section && section.grammar && section.grammar.short) || null;
+  const focusShort = step.aussprache && step.aussprache.focus ? String(step.aussprache.focus).split(':')[0].trim() : null;
+  const HEADINGS = {
+    warmup: () => `${L('wortschatz')}: ${t('stage.warmup')}`,
+    words: () => `${L('wortschatz')}: ${t('stage.words')}`,
+    input: () => `${L(inputSkill)}${step.input && step.input.title ? `: ${step.input.title}` : ''}`,
+    inputItems: () => `${L(inputSkill)}: ${t('stage.questions')}`,
+    inputBlock: () => `${L(inputSkill)}: ${t('stage.questions')}`,
+    form: () => `${L('grammatik')}${grammarName ? `: ${grammarName}` : ''}`,
+    structured: () => `${L('grammatik')}: ${t('stage.formPractice')}`,
+    table: () => `${L('grammatik')}: ${t('stage.table')}`,
+    practice: () => `${L('ueben')} · ${t('kap.tasks', { n: pool.served.length })}`,
+    cloze: () => `${L('ueben')}: ${t('seg.cloze')}`,
+    aussprache: () => `${L('aussprache')}${focusShort ? `: ${focusShort}` : ''}`,
+    micro: () => `${t('stage.yourTurn')}: ${L(microSkill)}`,
+    redemittel: () => t('seg.redemittel'),
+    exit: () => `${t('stage.exit')} · ${t('kap.tasks', { n: pool.exit.length })}`,
+    sprechen: () => t('kap.sprechen'),
+    schreiben: () => t('kap.schreiben'),
+    ueberarbeiten: () => t('kap.ueberarbeiten'),
+    check: () => t('kap.test'),
+  };
+  const heading = seg.block ? teilLabel(seg.block.template) : HEADINGS[seg.id] ? HEADINGS[seg.id]() : step.title || '';
+  const stageLabel = (st) => (st.block ? teilLabel(st.block.template) : st.skill === 'abschluss' ? t('stage.exit') : st.skill === 'redemittel' ? t('seg.redemittel') : L(st.skill));
+  const kindName = { pruefung: t('kap.pruefung'), sprechen: t('kap.sprechen'), schreiben: t('kap.schreiben'), ueberarbeiten: t('kap.ueberarbeiten'), check: t('kap.test') }[step.kind] || null;
+  const lane = unit && unit.spec && unit.spec.lanes && unit.spec.lanes.primary ? laneLabel(unit.spec.lanes.primary) : null;
+  const eyebrow = letter
+    ? `${t('kap.part', { l: letter })}${step.title ? ` · ${step.title}` : ''}`
+    : [unit && unit.nr ? t('player.unit', { n: unit.nr }) : null, step.kind === 'pruefung' ? kindName : null, ['pruefung', 'sprechen', 'schreiben'].includes(step.kind) ? lane : null].filter(Boolean).join(' · ');
+  const bareHeading = step.kind === 'pruefung' && !seg.block ? kindName : heading;
 
   return (
     <section className="mx-auto w-full max-w-2xl" data-step-id={step.id} data-step-kind={step.kind}>
@@ -440,19 +508,66 @@ export default function StepView({
             <ArrowLeft className="h-4 w-4" aria-hidden="true" /> {t('step.back')}
           </button>
         )}
-        <p className="flex flex-wrap items-center gap-x-2 text-[0.75rem] font-extrabold uppercase tracking-[0.08em] text-course-ink">
-          {nr != null && <span>{t('seg.step', { n: nr })}</span>}
-          {nr != null && seg.label && <span aria-hidden="true">·</span>}
-          {seg.label && <span>{t(seg.label)}</span>}
-        </p>
-        {stepTitle && (
-          <h1 className="mt-1 text-[1.125rem] font-extrabold leading-tight text-game-muted [hyphens:auto] sm:text-[1.25rem]" lang="de">
-            {stepTitle}
+        {stages.length > 1 && <StageStrip stages={stages} at={stageAt} letter={letter} label={stageLabel} t={t} />}
+        {eyebrow && <p className="text-[0.875rem] font-extrabold leading-snug text-course-ink [hyphens:auto]" lang={letter ? 'de' : undefined}>{eyebrow}</p>}
+        {bareHeading && (
+          <h1 className="mt-1 flex items-start gap-2.5 text-[1.25rem] font-extrabold leading-tight text-game-text [hyphens:auto] sm:text-[1.375rem]">
+            {nrLabel ? (
+              <span className="mt-px inline-flex min-w-[2.25rem] shrink-0 items-center justify-center rounded-lg bg-course px-1.5 py-0.5 text-[1rem] font-extrabold tabular-nums text-white">{nrLabel}</span>
+            ) : stageAt >= 0 || kindName ? (
+              <span className="mt-px inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-course-wash text-course-ink" aria-hidden="true">
+                <SkillIcon skill={stageAt >= 0 ? stageIcon(stages[stageAt].skill) : step.kind === 'check' ? 'test' : step.kind === 'ueberarbeiten' ? 'schreiben' : step.kind} className="h-4 w-4" />
+              </span>
+            ) : null}
+            <span className="min-w-0">{bareHeading}</span>
           </h1>
         )}
       </header>
       <div key={seg.id}>{body}</div>
     </section>
+  );
+}
+
+/**
+ * The step's parts in order, like the section strip at the top of a Lehrwerk page: each part with
+ * its skill icon and name, the current one marked (aria-current), the finished ones ticked. It
+ * scrolls sideways on a phone and keeps the current part in view. Not a control: a step is played
+ * in order, so the parts are shown, never jumped to.
+ */
+function StageStrip({ stages, at, letter, label, t }) {
+  const box = useRef(null);
+  const cur = useRef(null);
+  useEffect(() => {
+    const el = cur.current;
+    const c = box.current;
+    if (!el || !c || typeof c.scrollTo !== 'function') return;
+    c.scrollTo({ left: Math.max(0, el.offsetLeft - (c.clientWidth - el.clientWidth) / 2), behavior: 'auto' });
+  }, [at]);
+  return (
+    <div ref={box} className="-mx-4 mb-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <ol className="flex w-max gap-1.5" aria-label={t('stage.aria')}>
+        {stages.map((st, i) => {
+          const done = at >= 0 && i < at;
+          const current = i === at;
+          return (
+            <li
+              key={st.key}
+              ref={current ? cur : undefined}
+              aria-current={current ? 'step' : undefined}
+              className={`inline-flex min-h-9 items-center gap-1.5 whitespace-nowrap rounded-full border-2 px-2.5 py-1 text-[0.8125rem] font-extrabold ${
+                current ? 'border-course bg-course-wash text-course-ink' : done ? 'border-game-line bg-white text-game-text' : 'border-game-line bg-white text-game-muted'
+              }`}
+            >
+              {done
+                ? <Check className="h-3.5 w-3.5 rounded-full bg-game-right p-0.5 text-white" strokeWidth={4} aria-hidden="true" />
+                : <SkillIcon skill={stageIcon(st.skill)} className="h-3.5 w-3.5" />}
+              <span>{letter ? <span className="tabular-nums">{`${letter}${i + 1} `}</span> : null}{label(st)}</span>
+              {done && <span className="sr-only"> ({t('player.doneMark')})</span>}
+            </li>
+          );
+        })}
+      </ol>
+    </div>
   );
 }
 

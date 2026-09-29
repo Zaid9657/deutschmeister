@@ -1,39 +1,41 @@
 import { Link } from 'react-router-dom';
-import { Check } from 'lucide-react';
+import { Check, List } from 'lucide-react';
 import CastAvatar from '../CastAvatar.jsx';
+import { SkillIcon } from '../SkillIcon.jsx';
 import PathNode from './PathNode.jsx';
 import StopNode from './StopNode.jsx';
 import UnitBanner from './UnitBanner.jsx';
 import { hueVars } from './hue.js';
 
-// The learning path (pathModel.js coursePath): per Etappe a divider, per unit its
-// banner and its Lernschritte in a zig-zag (a finished unit as one compact row), and
-// the Etappe's treasure chest (or the closing trophy). Two of the cast keep the learner company — Priya beside the
-// current step, Bilal a unit further down — decorative only (aria-hidden), and only
-// on the A1 levels, whose cast they are.
+// The learning path (pathModel.js coursePath), read like a textbook's table of
+// contents: per Modul a divider, per Kapitel its banner (the link to the Kapitel page)
+// and what it teaches, then its steps — A, B, C, Prüfungstraining, Sprechen, Schreiben,
+// Kapiteltest — each a node in the left rail with its label to the right (a finished
+// Kapitel folds into one row of small checks), and the Modul's Plateau chest or the
+// Abschlusstest trophy. Priya keeps the learner company under the current node —
+// decorative only (aria-hidden), and only on the A1 levels, whose cast she is.
 
-function Companion({ offset = 0, greeting }) {
-  // on the side away from the node's swing, so it never covers the path
-  const side = offset >= 0 ? 'right-full mr-3' : 'left-full ml-3';
+function Companion({ greeting }) {
   return (
-    <div aria-hidden="true" className={`pointer-events-none absolute top-0 flex flex-col items-center gap-1.5 ${side}`}>
-      <span className="max-w-[7.5rem] rounded-2xl border-2 border-game-line bg-white px-3 py-1.5 text-center text-sm font-extrabold leading-snug">{greeting}</span>
-      <CastAvatar name="Priya" size={84} decorative />
-    </div>
+    <span aria-hidden="true" className="pointer-events-none mt-3 flex flex-col items-center gap-1.5">
+      <span className="max-w-[7rem] rounded-2xl border-2 border-game-line bg-white px-2.5 py-1 text-center text-sm font-extrabold leading-snug">{greeting}</span>
+      <CastAvatar name="Priya" size={68} decorative />
+    </span>
   );
 }
 
-// A finished unit folds into one row of small check nodes — still links, still 44 px —
-// so a returning learner reaches the current step without scrolling past every
-// finished zig-zag. The row reads like a shelf of what is done.
+// A finished Kapitel folds into one row of small check nodes — still links, still 44 px —
+// so a returning learner reaches the current step without scrolling past every finished
+// Kapitel. Under each check its letter (A, B, C) or its icon, so the row still reads as
+// the Kapitel's sections.
 function DoneRow({ unit }) {
   return (
     <ol
-      aria-label={`Lernschritte der Lektion ${unit.nr}, alle geschafft`}
+      aria-label={`Kapitel ${unit.nr}, alle Schritte geschafft`}
       className={`grid ${unit.nodes.length > 7 ? 'grid-cols-8' : 'grid-cols-7'} justify-items-center pb-7 pt-5`}
     >
       {unit.nodes.map((node) => (
-        <li key={node.id}>
+        <li key={node.id} className="flex flex-col items-center gap-1">
           <Link
             to={node.href}
             aria-label={node.ariaLabel}
@@ -41,21 +43,24 @@ function DoneRow({ unit }) {
           >
             <Check className="h-5 w-5" strokeWidth={3.4} aria-hidden="true" />
           </Link>
+          <span aria-hidden="true" className="flex h-5 items-center text-sm font-black text-[color:var(--hue-edge)]">
+            {node.letter || <SkillIcon skill={node.skills[0] || 'ueben'} className="h-4 w-4" />}
+          </span>
         </li>
       ))}
     </ol>
   );
 }
 
-function UnitBlock({ unit, etappeNr, stepXp, withCast, bilal, onShowPlan }) {
+function UnitBlock({ unit, stepXp, withCast }) {
   const current = unit.nodes.find((n) => n.state === 'current') || null;
   return (
-    <div style={hueVars(unit.hue)}>
-      <UnitBanner unit={unit} etappeNr={etappeNr} onShowPlan={onShowPlan} />
+    <div style={hueVars(unit.hue)} className="pt-3">
+      <UnitBanner unit={unit} />
       {unit.done && unit.nodes.length > 0 ? (
         <DoneRow unit={unit} />
       ) : unit.nodes.length > 0 ? (
-        <ol aria-label={`Lernschritte der Lektion ${unit.nr}`} className="relative flex flex-col items-center gap-[18px] pb-8 pt-7">
+        <ol aria-label={`Kapitel ${unit.nr}: ${unit.title}`} className="flex flex-col gap-3 pb-8 pt-5">
           {unit.nodes.map((node) => (
             <PathNode
               key={node.id}
@@ -63,14 +68,9 @@ function UnitBlock({ unit, etappeNr, stepXp, withCast, bilal, onShowPlan }) {
               stepsTotal={unit.stepsTotal}
               minutes={unit.minutesPerStep}
               xp={stepXp}
-              companion={withCast && node === current ? <Companion offset={node.offset} greeting={unit.stepsDone > 0 ? 'Weiter geht’s!' : 'Los geht’s!'} /> : null}
+              companion={withCast && node === current ? <Companion greeting={unit.stepsDone > 0 ? 'Weiter geht’s!' : 'Los geht’s!'} /> : null}
             />
           ))}
-          {bilal && (
-            <li aria-hidden="true" className={`pointer-events-none absolute top-24 ${unit.direction > 0 ? 'left-0' : 'right-0'}`}>
-              <CastAvatar name="Bilal" size={80} decorative />
-            </li>
-          )}
         </ol>
       ) : (
         <div className="h-6" aria-hidden="true" />
@@ -81,44 +81,46 @@ function UnitBlock({ unit, etappeNr, stepXp, withCast, bilal, onShowPlan }) {
 
 export default function PathSection({ path, stepXp, withCast = false, onShowPlan }) {
   if (!path) return null;
-  const units = path.sections.flatMap((s) => s.units);
-  const currentAt = units.findIndex((u) => u.nodes.some((n) => n.state === 'current'));
-  const bilalAt = currentAt >= 0 ? units.findIndex((u, i) => i > currentAt && u.nodes.length > 0) : -1;
-  const bilalId = withCast && bilalAt >= 0 ? units[bilalAt].id : null;
-
   return (
-    <div id="lernpfad" className="mx-auto max-w-md overflow-x-hidden px-4 pb-6 pt-2">
-      {path.sections.map((section) => (
-        <section key={section.nr ?? 'rest'} aria-labelledby={`dm-etappe-${section.nr ?? 'rest'}`}>
-          <h2
-            id={`dm-etappe-${section.nr ?? 'rest'}`}
-            className="mb-3 mt-6 flex items-center gap-2.5 text-[0.8125rem] font-black uppercase tracking-[0.08em] text-game-muted"
-          >
-            <span className="h-0.5 flex-1 bg-game-line" aria-hidden="true" />
-            <span className="max-w-[80%] text-center">{section.dividerLabel}</span>
-            <span className="h-0.5 flex-1 bg-game-line" aria-hidden="true" />
-          </h2>
-          {section.units.map((unit) => (
-            <UnitBlock
-              key={unit.id}
-              unit={unit}
-              etappeNr={section.nr}
-              stepXp={stepXp}
-              withCast={withCast}
-              bilal={unit.id === bilalId}
-              onShowPlan={onShowPlan}
-            />
-          ))}
-          {section.stop && (
-            <StopNode
-              stop={section.stop}
-              companion={withCast && section.stop.state === 'current'
-                ? <Companion greeting={section.stop.kind === 'closing' ? 'Endspurt!' : 'Schatzkiste!'} />
-                : null}
-            />
-          )}
-        </section>
-      ))}
+    <div id="lernpfad" className="mx-auto max-w-xl overflow-x-hidden px-4 pb-6 pt-2">
+      {path.sections.map((section) => {
+        const key = section.nr ?? 'rest';
+        return (
+          <section key={key} aria-labelledby={`dm-modul-${key}`}>
+            <div className="mb-1 mt-7 flex items-center gap-2">
+              <h2
+                id={`dm-modul-${key}`}
+                className="flex min-w-0 flex-1 items-center gap-2.5 text-[0.8125rem] font-black uppercase tracking-[0.08em] text-game-muted"
+              >
+                <span className="min-w-0">{section.dividerLabel}</span>
+                <span className="h-0.5 min-w-4 flex-1 bg-game-line" aria-hidden="true" />
+              </h2>
+              {section.nr != null && typeof onShowPlan === 'function' && (
+                <a
+                  href={`#kursplan-modul-${section.nr}`}
+                  onClick={(e) => { e.preventDefault(); onShowPlan(section.nr); }}
+                  aria-label={`Modul ${section.nr} im Inhalt ansehen`}
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-game-muted hover:bg-course-wash hover:text-course-ink"
+                >
+                  <List className="h-5 w-5" strokeWidth={2.6} aria-hidden="true" />
+                </a>
+              )}
+            </div>
+            {section.units.map((unit) => (
+              <UnitBlock key={unit.id} unit={unit} stepXp={stepXp} withCast={withCast} />
+            ))}
+            {section.stop && (
+              <StopNode
+                stop={section.stop}
+                companion={withCast && section.stop.state === 'current'
+                  ? <Companion greeting={section.stop.kind === 'closing' ? 'Endspurt!' : 'Schatzkiste!'} />
+                  : null}
+              />
+            )}
+          </section>
+        );
+      })}
     </div>
   );
 }
+

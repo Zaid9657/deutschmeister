@@ -316,6 +316,7 @@ export function outlineOf(u, spineLabel = new Map()) {
       title: typeof s.title === 'string' ? s.title : null,
       skills,
       grammar: s.structure ? { id: s.structure, short: shortGrammarLabel(label), label } : null,
+      ruleCard: typeof s.ruleCard === 'string' ? s.ruleCard : null,
       input: s.input ? { kind: s.input.kind || null, title: s.input.title || null } : null,
       teile: [...new Set(teile)],
       items: poolSize,

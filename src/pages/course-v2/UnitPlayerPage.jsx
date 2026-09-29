@@ -21,7 +21,8 @@ import {
   seedUnitCards, logCourseEvent,
 } from '../../lib/course-v2/progress.js';
 import { localStepDone, localTestOut, localUnitState, localUnitStatus } from '../../lib/course-v2/localState.js';
-import { loadEarlierItems, loadManifest, loadPlayableUnit, loadRuleCards } from '../../lib/course-v2/loaders.js';
+import { loadEarlierItems, loadManifest, loadPlayableUnit, loadRuleCards, loadWords } from '../../lib/course-v2/loaders.js';
+import { wordsOfUnit } from '../../components/course-v2/kapitel.js';
 import ActionBar from './ActionBar.jsx';
 import StoryCliffhanger from '../../components/course-v2/StoryCliffhanger.jsx';
 import { useV2Strings } from '../../components/course-v2/strings.js';
@@ -59,6 +60,14 @@ import { StartViewSlot, StepViewSlot, KIND_LABEL_DE, hasStartRenderer } from './
 // Aufgabe moved on from); a newly completed unit adds XP.unit once, at the recap.
 // `?s=<n>` (1-based step position, the course home's path nodes) opens step n directly; ?s=1
 // on a unit not started yet shows its Start first (the home's „start" buttons link there).
+//
+// The Kapitel page (owner feedback 2026-09-29: "a CURRICULUM like the books — chapters"): a unit
+// opens on its front page — the table of contents (Einstieg, A / B / C, Prüfungstraining, Sprechen,
+// Schreiben, Kapiteltest), the can-dos, the back matter (Grammatik, Wortschatz, Redemittel). It is
+// StartView's intro (UnitIntro.jsx), fed through the slot's extras as `chapter`: the finished steps,
+// the step „Weiter" opens, the proven can-dos and `onOpen` for a row. The resume screen is the same
+// page with the learner's state, so the phases 'start' and 'resume' render one component. The unit
+// handed to the renderers also carries `lexicon` — its own words from the level's words.json.
 
 const pad2 = (n) => String(n).padStart(2, '0');
 
@@ -73,11 +82,11 @@ function useUnitData(level, nr) {
   useEffect(() => {
     let cancelled = false;
     setData({ status: 'loading' });
-    Promise.all([loadPlayableUnit(level, nr), loadManifest(level), loadRuleCards(level)])
-      .then(([unit, manifest, ruleCards]) => {
+    Promise.all([loadPlayableUnit(level, nr), loadManifest(level), loadRuleCards(level), loadWords(level)])
+      .then(([unit, manifest, ruleCards, words]) => {
         if (cancelled) return;
         if (!unit) { setData({ status: 'missing', manifest }); return; }
-        setData({ status: 'ready', unit: { ...unit, ruleCards }, manifest });
+        setData({ status: 'ready', unit: { ...unit, ruleCards, lexicon: wordsOfUnit(words, unit.id) }, manifest });
       })
       .catch((err) => {
         console.error('[course-v2] unit load failed:', err && err.message);
@@ -479,48 +488,81 @@ export function UnitPlayer({ level, unit, manifest, user, initialStep = null }) 
   const doneCount = steps.filter((s) => finished.has(s.id)).length;
   const progress = steps.length ? doneCount / steps.length : 0;
 
+  // The can-dos and their proofs, read once for the recap AND the Kapitel page (which ticks them).
+  const canDos = (manifestRow && manifestRow.canDos) || [];
+  // Which can-do is proven, by the unit's own proof rule (check.proofs) read the way the Check
+  // reads it — proofShown (src/lib/course-v2/proofs.js): EVERY proof the rule names must be shown,
+  // an item AND an Aufgabe where it names both (the recap used to look at the Aufgabe alone).
+  //   items        the proof items' results of this visit's Check (CheckView's `proofItems`); a
+  //                Check without them reports its per-can-do verdict (`proofs`), which then stands
+  //                for the item; a Check done in an earlier visit left neither, and the item counts
+  //                as shown once the unit is complete;
+  //   aufgaben     submitted now (finished Aufgabe steps) — so an Aufgabe submitted after the Check
+  //                still ticks its can-do;
+  //   microOutputs the learner's own micro-outputs sent.
+  // A can-do without a proof rule is proven by the unit being complete. So the recap never ticks a
+  // can-do the Check has just shown as open.
+  const canDoIds = (manifestRow && manifestRow.canDoIds) || [];
+  const proofRules = (unit.check && unit.check.proofs) || [];
+  const proofEvidence = { aufgaben: rendererExtras.aufgaben, microOutputs: rendererExtras.microOutputs };
+  const proofItemsOf = (rule) => {
+    if (!rule.item) return {};
+    if (checkResult && checkResult.proofItems && rule.item in checkResult.proofItems) return { [rule.item]: checkResult.proofItems[rule.item] === true };
+    if (checkResult && checkResult.proofs && rule.canDo in checkResult.proofs) return { [rule.item]: checkResult.proofs[rule.canDo] === true };
+    return { [rule.item]: complete };
+  };
+  const proven = (i) => {
+    const rule = proofRules.find((p) => p && p.canDo === canDoIds[i]);
+    if (!rule || !proofParts(rule).length) return complete;
+    return proofShown(rule, { ...proofEvidence, items: proofItemsOf(rule) });
+  };
+  const allProven = canDos.length > 0 && canDos.every((_, i) => proven(i));
+  const canDoProven = Object.fromEntries(canDoIds.map((id, i) => [id, proven(i)]));
+
+  // A row of the Kapitel page's table of contents: its step, or the summary past the last one.
+  const openFromChapter = (i) => {
+    if (Number.isInteger(i) && i >= 0 && i < steps.length) { goTo(i); return; }
+    deepLink.current = null;
+    setPhase('recap');
+    if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'auto' });
+  };
+  // …and back from the summary to the Kapitel page, „Weiter" on the first open step.
+  const openOverview = () => {
+    deepLink.current = null;
+    setStepIndex(resumeIndex(unit.steps || [], finished));
+    setPhase('resume');
+    if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'auto' });
+  };
+
   if (phase === 'loading') {
     return <Shell level={level} progress={0}><p className="py-16 text-center text-[1rem] font-semibold text-game-muted">{t('player.loading')}</p></Shell>;
   }
 
-  if (phase === 'start') {
+  if (phase === 'start' || phase === 'resume') {
+    // One Kapitel page for both: fresh („Kapitel starten" opens the Einstieg) and resumed („Weiter
+    // mit Teil B" opens the first open step). StartFallback is the page's own plain version.
+    const resume = phase === 'resume';
+    const next = resume ? steps[stepIndex] : null;
     const fallback = <StartFallback unit={unit} row={manifestRow} steps={steps} finished={finished} onOpen={goTo} />;
+    const chapter = {
+      finished: [...finished],
+      currentIndex: resume ? stepIndex : -1,
+      resume,
+      proven: canDoProven,
+      onOpen: openFromChapter,
+    };
+    const plainFooter = resume
+      ? next && <GameButton caps={false} onClick={() => goTo(stepIndex)}>{t('player.resumeAt', { n: stepIndex + 1, title: stepTitle(next, t) })}</GameButton>
+      : <GameButton onClick={() => onStartDone(null)}>{t('start.begin')}</GameButton>;
     return (
       <Shell
         level={level}
         progress={progress}
         combo={combo}
         xp={sessionXp}
-        footer={hasStartRenderer ? null : <GameButton onClick={() => onStartDone(null)}>{t('start.begin')}</GameButton>}
+        footer={hasStartRenderer ? null : plainFooter}
       >
-        <StartViewSlot unit={unit} level={level} onDone={onStartDone} fallback={fallback} extra={{ course: manifest, onAttempt }} />
-      </Shell>
-    );
-  }
-
-  if (phase === 'resume') {
-    const next = steps[stepIndex];
-    return (
-      <Shell
-        level={level}
-        progress={progress}
-        footer={next && <GameButton caps={false} onClick={() => goTo(stepIndex)}>{t('player.resumeAt', { n: stepIndex + 1, title: stepTitle(next, t) })}</GameButton>}
-      >
-        <div className="space-y-5">
-          <div className="flex items-end gap-3">
-            <CastAvatar name={narrator} size={84} className="shrink-0" />
-            <SpeechBubble tail="left" className="min-w-0 flex-1">
-              <p className="text-[1.125rem] font-extrabold text-game-text">{t('player.welcomeTitle')}</p>
-              <p className="mt-0.5 text-[1rem] font-semibold text-game-muted">{t('player.welcomeBack', { d: doneCount, t: steps.length })}</p>
-            </SpeechBubble>
-          </div>
-          <header>
-            <p className={EYEBROW}>{t('player.unit', { n: unit.nr })}</p>
-            <h1 className={`mt-1 ${H1}`} lang="de">{unit.title && unit.title.de}</h1>
-          </header>
-          <StepList unit={unit} steps={steps} finished={finished} currentIndex={stepIndex} onOpen={goTo} />
-          <QuietButton onClick={() => setPhase('start')}>{t('player.startAgain')}</QuietButton>
-        </div>
+        <StartViewSlot unit={unit} level={level} onDone={onStartDone} fallback={fallback} extra={{ course: manifest, onAttempt, chapter }} />
       </Shell>
     );
   }
@@ -567,34 +609,6 @@ export function UnitPlayer({ level, unit, manifest, user, initialStep = null }) 
   const gold = finalStatus === 'gold';
   const openSteps = steps.map((s, i) => ({ s, i })).filter(({ s }) => !finished.has(s.id) && s.kind !== 'ueberarbeiten');
   const words = Array.isArray(unit.reviewCards) ? unit.reviewCards.filter((k) => String(k).startsWith('word:')).length : 0;
-  const canDos = (manifestRow && manifestRow.canDos) || [];
-  // Which can-do is proven, by the unit's own proof rule (check.proofs) read the way the Check
-  // reads it — proofShown (src/lib/course-v2/proofs.js): EVERY proof the rule names must be shown,
-  // an item AND an Aufgabe where it names both (the recap used to look at the Aufgabe alone).
-  //   items        the proof items' results of this visit's Check (CheckView's `proofItems`); a
-  //                Check without them reports its per-can-do verdict (`proofs`), which then stands
-  //                for the item; a Check done in an earlier visit left neither, and the item counts
-  //                as shown once the unit is complete;
-  //   aufgaben     submitted now (finished Aufgabe steps) — so an Aufgabe submitted after the Check
-  //                still ticks its can-do;
-  //   microOutputs the learner's own micro-outputs sent.
-  // A can-do without a proof rule is proven by the unit being complete. So the recap never ticks a
-  // can-do the Check has just shown as open.
-  const canDoIds = (manifestRow && manifestRow.canDoIds) || [];
-  const proofRules = (unit.check && unit.check.proofs) || [];
-  const proofEvidence = { aufgaben: rendererExtras.aufgaben, microOutputs: rendererExtras.microOutputs };
-  const proofItemsOf = (rule) => {
-    if (!rule.item) return {};
-    if (checkResult && checkResult.proofItems && rule.item in checkResult.proofItems) return { [rule.item]: checkResult.proofItems[rule.item] === true };
-    if (checkResult && checkResult.proofs && rule.canDo in checkResult.proofs) return { [rule.item]: checkResult.proofs[rule.canDo] === true };
-    return { [rule.item]: complete };
-  };
-  const proven = (i) => {
-    const rule = proofRules.find((p) => p && p.canDo === canDoIds[i]);
-    if (!rule || !proofParts(rule).length) return complete;
-    return proofShown(rule, { ...proofEvidence, items: proofItemsOf(rule) });
-  };
-  const allProven = canDos.length > 0 && canDos.every((_, i) => proven(i));
   const units = (manifest && manifest.units) || [];
   const nextRow = units.find((r) => r && nrOfId(r.unit || r.id) === unit.nr + 1) || null;
   const etappe = ((manifest && manifest.etappen) || []).find((e) => (e.units || []).includes(unitId));
@@ -712,6 +726,9 @@ export function UnitPlayer({ level, unit, manifest, user, initialStep = null }) 
             {nextRow.minutesPlanned ? ` · ${t('player.minutes', { n: nextRow.minutesPlanned })}` : ''}
           </p>
         )}
+
+        {/* back to the Kapitel page: its table of contents, the Grammatik, the Wortschatz */}
+        <QuietButton onClick={openOverview}>{t('kap.overview')}</QuietButton>
       </div>
     </Shell>
   );

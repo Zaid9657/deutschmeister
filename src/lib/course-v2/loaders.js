@@ -7,6 +7,8 @@
 //   src/data/course-v2/<level>/units/uNN.json     one unit — each its own lazy chunk,
 //                                                 so the player route stays small (BLUEPRINT §7.1)
 //   src/data/course-v2/<level>/rule-cards.json    the level's rule cards
+//   src/data/course-v2/<level>/words.json         the level's word list (lemma, article, plural,
+//                                                 gloss, example; each word names its unit)
 //   src/data/course-v2/<level>/plateaus/pN.json   Plateaus, once authored
 //   src/data/course-v2/<level>/closing/<id>.json  the closing block (the .1 Halbtest), once authored
 //   src/data/course-v2/<level>/reserve.json       the compiled reserve index, once it exists
@@ -48,6 +50,7 @@ function withDevFixture(table, suffixRe) {
 const UNITS = withDevFixture(REAL_UNITS, /^[^/]+\/units\/[^/]+\.json$/);
 const MANIFESTS = withDevFixture(REAL_MANIFESTS, /^[^/]+\/manifest\.json$/);
 const RULE_CARDS = withDevFixture(import.meta.glob('../../data/course-v2/*/rule-cards.json'), /^[^/]+\/rule-cards\.json$/);
+const WORDS = withDevFixture(import.meta.glob('../../data/course-v2/*/words.json'), /^[^/]+\/words\.json$/);
 const PLATEAUS = withDevFixture(import.meta.glob('../../data/course-v2/*/plateaus/*.json'), /^[^/]+\/plateaus\/[^/]+\.json$/);
 const CLOSINGS = withDevFixture(import.meta.glob('../../data/course-v2/*/closing/*.json'), /^[^/]+\/closing\/[^/]+\.json$/);
 const RESERVES = withDevFixture(import.meta.glob('../../data/course-v2/*/reserve.json'), /^[^/]+\/reserve\.json$/);
@@ -124,6 +127,24 @@ export async function loadRuleCards(level) {
   const data = l ? await load(RULE_CARDS, `${base(l)}/rule-cards.json`) : null;
   const cards = (data && (data.cards || (Array.isArray(data) ? data : []))) || [];
   return Object.fromEntries(cards.filter((c) => c && c.id).map((c) => [c.id, c]));
+}
+
+/**
+ * The level's word list (words.json `words`: { id, lemma, pos, article, plural, plural_kind, role,
+ * unit, example, exampleEn, gloss }) — [] when the level has none compiled. Loaded once per level:
+ * the player, the Kapitel page and the Wortschatz page share one copy.
+ */
+const wordsCache = new Map();
+export function loadWords(level) {
+  const l = normalizeLevel(level);
+  if (!l) return Promise.resolve([]);
+  if (!wordsCache.has(l)) {
+    wordsCache.set(l, load(WORDS, `${base(l)}/words.json`).then((data) => {
+      const words = (data && (Array.isArray(data) ? data : data.words)) || [];
+      return words.filter((w) => w && w.id && w.lemma);
+    }));
+  }
+  return wordsCache.get(l);
 }
 
 /** The compiled unit chunk, or null. */

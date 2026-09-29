@@ -511,7 +511,8 @@ test('the renderers read the player core: StepView serves step.plan and unit.rul
   assert.match(slots, /<LazyStepView key=\{step && step\.id\} \{\.\.\.\(extra \|\| \{\}\)\} unit=/, 'extras spread BEFORE the contract props');
   const page = read('src/pages/course-v2/UnitPlayerPage.jsx');
   assert.match(page, /loadPlayableUnit\(level, nr\)/);
-  assert.match(page, /extra=\{\{ course: manifest, onAttempt \}\}/, 'StartView gets the manifest (can-do wording) and the attempt sink');
+  // (+ `chapter`, the Kapitel page's learner state — tests/course-v2-chapter.test.mjs)
+  assert.match(page, /extra=\{\{ course: manifest, onAttempt(?:, [a-zA-Z]+)* \}\}/, 'StartView gets the manifest (can-do wording) and the attempt sink');
 });
 
 test('the Start’s answers are stored under their own stage, never as a unit step’s items', () => {

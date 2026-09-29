@@ -1,6 +1,6 @@
 import { courseHues } from '../../../data/design-tokens.js';
 
-// A unit's (or an Etappe's) hue as CSS variables: `--hue` (the bright face) and
+// A Kapitel's (or a Modul's) hue as CSS variables: `--hue` (the bright face) and
 // `--hue-edge` (its extrusion). The path's colours vary at runtime, and Tailwind JIT
 // only sees literal class strings, so the classes stay fixed
 // (`bg-[color:var(--hue)]`, `shadow-[0_6px_0_var(--hue-edge)]` …) and the value comes

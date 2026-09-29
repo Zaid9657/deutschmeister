@@ -1,15 +1,17 @@
 import { Link } from 'react-router-dom';
 import { Check, Trophy } from 'lucide-react';
 import { courseGame } from '../../../data/design-tokens.js';
+import { RAIL } from './PathNode.jsx';
 
-// What closes an Etappe on the path (pathModel.js StopNode): a gold treasure chest
-// for a Plateau („Wiederholung N · Schatzkiste") and a trophy for the closing test.
-// Soft like the steps: open still links. A stop that is not compiled yet is grey,
-// not a link, and says „kommt bald".
+// What closes a Modul on the path (pathModel.js StopNode), in the node rail like every
+// step, with its label to the right: a gold treasure chest for a Plateau („Plateau 1 ·
+// Wiederholung — Kapitel 1–3 wiederholen · Prüfungsteile") and a trophy for the
+// Abschlusstest. Soft like the steps: open still links, and the whole row is the link. A
+// stop that is not compiled yet is grey, not a link, and says „kommt bald".
 
-function Chest({ open = false }) {
+export function Chest({ open = false, size = 46 }) {
   return (
-    <svg width="46" height="46" viewBox="0 0 24 24" aria-hidden="true">
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
       <path
         d="M3 10a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"
         fill={courseGame.xp}
@@ -36,41 +38,62 @@ export default function StopNode({ stop, companion = null }) {
       <Check className="h-4 w-4" strokeWidth={3.4} />
     </span>
   );
-
   const face = unavailable ? (
-    <div className={`${FACE} bg-game-locked opacity-80 shadow-game-locked grayscale`} aria-hidden="true">{icon}</div>
+    <span className={`${FACE} bg-game-locked opacity-80 shadow-game-locked grayscale`}>{icon}</span>
   ) : (
-    <Link
-      to={stop.href}
-      aria-label={stop.ariaLabel}
-      className={`${FACE} bg-game-xp-wash shadow-game-xp transition-transform duration-100 hover:brightness-105 active:translate-y-1.5 active:shadow-none`}
-    >
+    <span className={`${FACE} bg-game-xp-wash shadow-game-xp transition-transform duration-100 group-hover:brightness-105 group-active:translate-y-1.5 group-active:shadow-none`}>
       {icon}
       {badge}
-    </Link>
+    </span>
   );
 
-  return (
-    <div className="flex flex-col items-center gap-3 pb-2 pt-4">
-      <div className="relative flex flex-col items-center">
-        {current && (
-          <span
-            aria-hidden="true"
-            className="relative mb-3 rounded-xl border-2 border-game-line bg-white px-3.5 py-1.5 text-[0.9375rem] font-black uppercase tracking-wider text-game-xp-ink motion-safe:animate-[float_2.4s_ease-in-out_infinite]"
-          >
-            Start
-            <span className="absolute left-1/2 top-full -mt-[5px] h-2.5 w-2.5 -translate-x-1/2 rotate-45 border-b-2 border-r-2 border-game-line bg-white" />
-          </span>
-        )}
-        {current ? (
-          <div className="flex h-[116px] w-[124px] items-center justify-center rounded-[30px] border-[7px] border-course-soft">{face}</div>
-        ) : face}
-        {companion}
+  const rail = (
+    <span className={`flex ${RAIL} shrink-0 flex-col items-center`}>
+      {current && (
+        <span
+          aria-hidden="true"
+          className="relative mb-3 rounded-xl border-2 border-game-line bg-white px-3.5 py-1.5 text-[0.9375rem] font-black uppercase tracking-wider text-game-xp-ink motion-safe:animate-[float_2.4s_ease-in-out_infinite]"
+        >
+          Start
+          <span className="absolute left-1/2 top-full -mt-[5px] h-2.5 w-2.5 -translate-x-1/2 rotate-45 border-b-2 border-r-2 border-game-line bg-white" />
+        </span>
+      )}
+      <span aria-hidden="true" className="flex">
+        {current
+          ? <span className="flex h-[104px] w-[112px] items-center justify-center rounded-[30px] border-[6px] border-course-soft">{face}</span>
+          : face}
+      </span>
+      {companion}
+    </span>
+  );
+
+  const label = (
+    <span
+      className={`block min-w-0 flex-1 rounded-2xl px-3 py-2.5 ${
+        unavailable ? 'border-2 border-game-line bg-white' : 'bg-game-xp-wash transition-colors group-hover:bg-game-xp-wash/70'
+      }`}
+    >
+      <span className={`block text-base font-black leading-snug ${unavailable ? 'text-game-muted' : 'text-game-xp-ink'}`}>{stop.label}</span>
+      {stop.detail && (
+        <span className={`mt-0.5 block text-sm font-bold leading-snug ${unavailable ? 'text-game-muted' : 'text-game-xp-ink'}`}>{stop.detail}</span>
+      )}
+      {unavailable && <span className="mt-0.5 block text-sm font-bold text-game-muted">kommt bald</span>}
+      {current && <span className="mt-1 block text-sm font-black uppercase tracking-wide text-game-xp-ink">Jetzt starten</span>}
+    </span>
+  );
+
+  if (unavailable) {
+    return (
+      <div className="flex items-center gap-3 py-4" aria-label={stop.ariaLabel} role="group">
+        {rail}
+        {label}
       </div>
-      <p className={`text-center text-[0.9375rem] font-black ${unavailable ? 'text-game-muted' : 'text-game-xp-ink'}`}>
-        {stop.label}
-        {unavailable && <span className="block text-sm font-bold">kommt bald</span>}
-      </p>
-    </div>
+    );
+  }
+  return (
+    <Link to={stop.href} aria-label={stop.ariaLabel} className="group flex items-center gap-3 rounded-2xl py-4">
+      {rail}
+      {label}
+    </Link>
   );
 }

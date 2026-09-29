@@ -7,14 +7,15 @@ import DailyGoalCard from '../../components/course-v2/home/DailyGoalCard.jsx';
 import GameButton from '../../components/course-v2/home/GameButton.jsx';
 import PathSection from '../../components/course-v2/home/PathSection.jsx';
 import PlanOverview from '../../components/course-v2/home/PlanOverview.jsx';
+import ReferenceLinks from '../../components/course-v2/home/ReferenceLinks.jsx';
 import TopBar from '../../components/course-v2/home/TopBar.jsx';
 import { normalizeLevel, levelCode, bandOf } from '../../lib/course-v2/ids.js';
 import { courseHomeModel } from '../../lib/course-v2/homeModel.js';
 import { planSummary } from '../../lib/course-v2/pacePlan.js';
 import { dailyGoalMinutes } from '../../lib/course-v2/gamify.js';
 import {
-  coursePath, actionLabel, hasProgress, wordsLearned, courseTiles, examParts, planEtappen, paceOptions,
-  resolvePace, paceStorageKey, formatFinishDate, stepMinutes, stepSkeleton, PACE_NAME_DE, STEP_XP,
+  coursePath, actionLabel, hasProgress, wordsLearned, courseTiles, examParts, planInhalt, kapitelAufbau, referenceLinks,
+  paceOptions, resolvePace, paceStorageKey, formatFinishDate, stepMinutes, stepSkeleton, PACE_NAME_DE, STEP_XP,
 } from '../../lib/course-v2/pathModel.js';
 import { fetchLevelState, fetchLearnerGoal } from '../../lib/course-v2/progress.js';
 import { localLevelState } from '../../lib/course-v2/localState.js';
@@ -25,22 +26,29 @@ import ActionBar from './ActionBar.jsx';
 
 // The v2 course home: /course/:level/v2 (BLUEPRINT §7.3 S0; a preview route that
 // works whenever compiled v2 content exists for the level; COURSE_V2_LIVE later
-// decides whether /course/:level itself renders it). Owner decision 2026-09-29:
+// decides whether /course/:level itself renders it). Owner decisions 2026-09-29:
 // "gamify it, make it similar to Duolingo … when the user starts, he should SEE THE
-// PLAN and understand what he will learn and how the course goes".
+// PLAN", then "I want it to be a CURRICULUM — like studio, Aspekte … CHAPTERS, and in
+// each chapter multiple things one can learn".
 //
+// The home speaks the Lehrwerk's language (curriculum.js): a unit is a KAPITEL, three
+// Kapitel make a MODUL, a PLATEAU closes each Modul, the ABSCHLUSSTEST the course.
 // Two states, one page:
 //   - FIRST VISIT (no finished step in the level): the COURSE PLAN on top — the
-//     promise, what the learner can do afterwards, what is in the course (manifest
-//     content counts only), how a learning day goes, the pace, the Etappen and the
-//     exam in view — then the learning path below;
-//   - RETURNING: the top bar (streak, XP, words), the daily-goal card and the path;
-//     „Kursplan ansehen" folds the same plan out in place (#kursplan, no new route).
-// The path (src/lib/course-v2/pathModel.js) is one node per Lernschritt in a
-// zig-zag, a treasure chest per Plateau and a trophy for the closing test; the gate
-// stays SOFT — every node of a compiled unit links, `…/u/<nr>?s=<step>`. The one
-// primary action sits in the thumb zone (ActionBar). Everything shown is computed
-// in homeModel.js + pathModel.js; completion comes from completion.js.
+//     promise, what the learner can do afterwards, how every Kapitel is built, what is
+//     in the course (manifest content counts only), the textbook „Inhalt" (per Kapitel:
+//     Kommunikation, Grammatik, Wortschatz, Texte, Prüfung), the grammar overview and
+//     the word list, the pace and the exam in view — then the learning path below;
+//   - RETURNING: the top bar (streak, XP, words), the daily-goal card, the two
+//     reference links and the path; „Kursplan ansehen" folds the same plan out in place
+//     (#kursplan, no new route).
+// The path (src/lib/course-v2/pathModel.js) is one node per step of each Kapitel's
+// outline — A, B, C, Prüfungstraining, Sprechen, Schreiben, Kapiteltest — each with its
+// label (title, grammar, skills) to the right, a treasure chest per Plateau and a trophy
+// for the Abschlusstest; each Kapitel banner opens the Kapitel page. The gate stays SOFT
+// — every node of a compiled Kapitel links, `…/u/<nr>?s=<step>`. The one primary action
+// sits in the thumb zone (ActionBar). Everything shown is computed in homeModel.js +
+// pathModel.js; completion comes from completion.js.
 
 function stepTitlesOf(unit) {
   const out = {};
@@ -92,9 +100,9 @@ export function CourseHomeV2({ level, manifest, state, goal }) {
     if (el) el.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'start' });
     setScrollTarget(null);
   }, [scrollTarget, showPlan]);
-  const openPlanAt = useCallback((etappeNr) => {
+  const openPlanAt = useCallback((modulNr) => {
     setPlanOpen(true);
-    setScrollTarget(etappeNr ? `kursplan-etappe-${etappeNr}` : 'kursplan');
+    setScrollTarget(modulNr ? `kursplan-modul-${modulNr}` : 'kursplan');
   }, []);
   const togglePlan = useCallback(() => {
     if (planOpen) setPlanOpen(false);
@@ -110,7 +118,8 @@ export function CourseHomeV2({ level, manifest, state, goal }) {
   }, []);
 
   // The step names of the unit the learner opens next (a prefetch of that chunk — the
-  // player loads the same module). Until it arrives, the nodes use the skeleton names.
+  // player loads the same module). The manifest's outline names the steps already; the
+  // chunk's titles only fill a step the outline leaves unnamed.
   const nextUnitNr = model && model.next && model.next.kind === 'unit' ? model.next.nr : null;
   const [stepTitles, setStepTitles] = useState(null);
   useEffect(() => {
@@ -122,8 +131,8 @@ export function CourseHomeV2({ level, manifest, state, goal }) {
 
   const showcase = (manifest && manifest.showcase) || null;
   const path = useMemo(
-    () => coursePath(model, state, { etappenDe: showcase ? showcase.etappenDe : [], stepTitles }),
-    [model, state, showcase, stepTitles],
+    () => coursePath(model, state, { etappenDe: showcase ? showcase.etappenDe : [], stepTitles, manifest }),
+    [model, state, showcase, stepTitles, manifest],
   );
   const plan = useMemo(
     () => (model ? planSummary({ manifest, pace, remainingSteps: model.remainingSteps, examDate: goal && goal.exam_date }) : null),
@@ -132,7 +141,9 @@ export function CourseHomeV2({ level, manifest, state, goal }) {
   const options = useMemo(() => (model ? paceOptions(manifest, { remainingSteps: model.remainingSteps }) : []), [model, manifest]);
   const tiles = useMemo(() => courseTiles(manifest), [manifest]);
   const parts = useMemo(() => examParts(manifest), [manifest]);
-  const etappen = useMemo(() => planEtappen(model, manifest), [model, manifest]);
+  const inhalt = useMemo(() => planInhalt(model, manifest), [model, manifest]);
+  const aufbau = useMemo(() => kapitelAufbau(level, manifest), [level, manifest]);
+  const links = useMemo(() => referenceLinks(level, manifest), [level, manifest]);
 
   if (!model || !path) return null;
   const code = model.code;
@@ -155,7 +166,9 @@ export function CourseHomeV2({ level, manifest, state, goal }) {
       startLabel={cta}
       firstUnitTitle={firstUnit ? firstUnit.title : null}
       tiles={tiles}
-      etappen={etappen}
+      aufbau={aufbau}
+      inhalt={inhalt}
+      links={links}
       parts={parts}
       stepMinutes={perStep}
       paceOptions={options}
@@ -178,7 +191,7 @@ export function CourseHomeV2({ level, manifest, state, goal }) {
               <div className="px-5 pt-4">
                 <h2 className="text-2xl font-black leading-tight">Ihr Lernpfad</h2>
                 <p className="mt-1.5 text-base font-bold leading-relaxed text-game-muted">
-                  Ein Kreis ist ein Lernschritt. Tippen Sie auf „Start“ – der Rest kommt Schritt für Schritt.
+                  Kapitel für Kapitel: Teil A, B und C, dann Prüfungstraining, Sprechen, Schreiben und der Kapiteltest. Tippen Sie auf „Start“.
                 </p>
               </div>
             </>
@@ -196,6 +209,7 @@ export function CourseHomeV2({ level, manifest, state, goal }) {
                 planOpen={planOpen}
                 onTogglePlan={togglePlan}
               />
+              <ReferenceLinks links={links} className="mx-4 mt-3" />
               {planOpen && <div className="mt-5 border-y-2 border-game-line">{planView}</div>}
             </>
           )}

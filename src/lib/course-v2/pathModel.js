@@ -1,35 +1,46 @@
 // Course v2 — the course home's LEARNING PATH and COURSE PLAN view model (owner
-// decision 2026-09-29: "gamify it, make it similar to Duolingo … when the user
-// starts, he should SEE THE PLAN").
+// decisions 2026-09-29: "gamify it, make it similar to Duolingo … when the user
+// starts, he should SEE THE PLAN", then, after seeing it: "I want it to be a
+// CURRICULUM — like studio, Aspekte … CHAPTERS, and in each chapter multiple things
+// one can learn … grammar, listening, questions visible").
 //
 // Pure: courseHomeModel(...) (homeModel.js) + the learner's state + the manifest
 // in, everything the page draws out. Nothing here renders, fetches or stores; the
 // page (src/pages/course-v2/CourseHomeV2Page.jsx) and src/components/course-v2/home/*
 // only draw it. Pinned by tests/course-v2-home.test.mjs.
 //
+// Naming is the Lehrwerk's (docs/course-v2/research/14-lehrwerke-curricula.md §D,
+// src/lib/course-v2/curriculum.js): a unit is a KAPITEL, an Etappe a MODUL, the review
+// after a Modul a PLATEAU, the course's last block the ABSCHLUSSTEST. Inside a Kapitel
+// the situation steps are the Teile A, B, C (Schritte: one structure per step), then
+// Prüfungstraining, Sprechen, Schreiben (Überarbeiten at B) and the Kapiteltest.
+//
 // Rules it carries:
-//   - the path is the fixed skeleton per unit (BLUEPRINT §3.1–§3.2): A levels 7
-//     Lernschritte (ls1–3 situation, ls4 pruefung, ls5 sprechen, ls6 schreiben,
-//     ls7 check), B levels 8 (ls7 ueberarbeiten, ls8 check) — the home has no step
-//     kinds without loading every unit chunk, so it uses the slots, exactly like
-//     homeModel.lernschrittIds;
+//   - a node is one step of the unit's compiled OUTLINE (manifest `units[].outline`,
+//     read through curriculum.sectionsOf); a unit whose row has no outline falls back
+//     to the fixed skeleton per band (BLUEPRINT §3.1–§3.2: A levels 7 steps, B levels 8);
+//   - every node says what it teaches: its label („A · Ich bin Priya. Und Sie?",
+//     „Prüfungstraining · Hören Teil 1"), its grammar short name and its skills;
 //   - a node is `done` when its step id is in state.finishedSteps (or the unit is
 //     complete/gold), `current` when it is the first unfinished step of the model's
 //     `next` unit, `open` otherwise — and EVERY node of a compiled unit links (the
 //     gate stays soft, BLUEPRINT §3.5): `${v2Paths.unit(level, nr)}?s=${stepNr}`;
+//     the Kapitel banner links to the Kapitel page itself, `v2Paths.unit(level, nr)`;
 //   - a unit that is not compiled has no nodes and no link („kommt bald");
 //   - numbers shown come from the manifest only (content counts, never usage
 //     counts — CLAUDE.md "User-facing counts are content counts"); a count that is
 //     missing hides its tile, and a level whose units are not all authored yet
 //     shows no content tiles at all (its counts would describe a fraction).
-import { v2Paths, levelCode } from './ids.js';
+import { v2Paths, levelCode, normalizeLevel } from './ids.js';
 import { DONE_STATUSES } from './completion.js';
 import { XP, dailyGoalMinutes } from './gamify.js';
 import { planSummary } from './pacePlan.js';
+import { sectionsOf, chapterSummary } from './curriculum.js';
+import { teilLabel } from '../../components/course-v2/content.js';
 
 const STEP = (kind, icon) => Object.freeze({ kind, icon });
 
-/** The Lernschritt skeleton of a unit per band: kind + the node's icon name (lucide). */
+/** The step skeleton of a unit per band (the fallback when a row carries no outline): kind + node icon (lucide). */
 export const STEP_SKELETON = Object.freeze({
   a: Object.freeze([
     STEP('situation', 'Star'), STEP('situation', 'Star'), STEP('situation', 'Star'),
@@ -45,28 +56,43 @@ export const STEP_SKELETON = Object.freeze({
 /** The skeleton for a level ('b…' → 8 steps, everything else → 7). */
 export const stepSkeleton = (level) => (String(level || '').toLowerCase().startsWith('b') ? STEP_SKELETON.b : STEP_SKELETON.a);
 
-/** Learner-facing name of a step kind (German, Sie) — the fallback when the chunk's title is not loaded. */
-export const STEP_LABEL_DE = Object.freeze({
-  situation: 'Situation',
-  pruefung: 'Prüfungsteil',
-  sprechen: 'Sprechen mit KI',
-  schreiben: 'Schreiben mit KI',
-  ueberarbeiten: 'Überarbeiten',
-  check: 'Lektionstest',
+/** The node icon (lucide name) per step kind; the situation steps show their letter instead. */
+export const NODE_ICON = Object.freeze({
+  situation: 'Star', text: 'Star', sprache: 'Star',
+  pruefung: 'Target', sprechen: 'Mic', schreiben: 'PenLine', ueberarbeiten: 'RefreshCw', check: 'Crown',
 });
+
+/** The section name a Lehrwerk heads a step with (German, Sie). The situation steps are „Teil A/B/C". */
+export const STEP_LABEL_DE = Object.freeze({
+  situation: 'Teil',
+  text: 'Teil',
+  sprache: 'Teil',
+  pruefung: 'Prüfungstraining',
+  sprechen: 'Sprechen',
+  schreiben: 'Schreiben',
+  ueberarbeiten: 'Überarbeiten',
+  check: 'Kapiteltest',
+});
+
+// A situation step whose outline carries no title (e.g. a B-level „sprache" step).
+const FALLBACK_TITLE = Object.freeze({ situation: 'Situation', text: 'Text', sprache: 'Sprache im Fokus' });
 
 /** Unit banner hues, cycling by unit order (design-tokens.js `courseHues`). */
 export const UNIT_HUES = Object.freeze(['gruen', 'orange', 'beere', 'tuerkis']);
 export const hueFor = (index) => UNIT_HUES[((Number(index) || 0) % UNIT_HUES.length + UNIT_HUES.length) % UNIT_HUES.length];
 
-/** The zig-zag: horizontal node offsets in px, mirrored on every second unit. */
-export const ZIGZAG = Object.freeze([0, 52, 76, 52, 0, -52, -76, -52]);
+/**
+ * The path's wave: horizontal node offsets in px inside the node rail, mirrored on
+ * every second Kapitel. Small on purpose — the labels sit to the RIGHT of the rail at a
+ * fixed x (a textbook „Inhalt" reads down one edge), so the wave only swings the nodes.
+ */
+export const ZIGZAG = Object.freeze([0, 8, 12, 8, 0, -8, -12, -8]);
 export const zigzagOffset = (stepIndex, direction = 1) => ZIGZAG[stepIndex % ZIGZAG.length] * (direction < 0 ? -1 : 1) || 0;
 
 /** The player URL of one step: the unit route plus `?s=<step number>` (the player opens that step). */
 export const stepHref = (level, unitNr, stepNr) => `${v2Paths.unit(level, unitNr)}?s=${Number(stepNr)}`;
 
-/** Minutes of one Lernschritt: the unit's planned minutes over its steps, to the nearest 5 (min 5). */
+/** Minutes of one step: the unit's planned minutes over its steps, to the nearest 5 (min 5). */
 export function stepMinutes(unitMinutes, steps) {
   const m = Number(unitMinutes);
   const n = Number(steps);
@@ -95,9 +121,103 @@ export function wordsLearned(manifest, model) {
   return (model.units || []).reduce((n, u) => n + (ENDED.has(u.status) ? words.get(u.id) || 0 : 0), 0);
 }
 
-const stopLabel = (stop) => (stop.kind === 'closing' ? 'Abschlusstest' : `Wiederholung ${stop.nr} · Schatzkiste`);
+// ---------------------------------------------------------------------------
+// What a step teaches: its Lehrwerk label
+// ---------------------------------------------------------------------------
 
-function stopNode(stop, next) {
+/** 'Aussagesatz und W-Frage: das Verb auf Position 2 (…)' → 'Aussagesatz und W-Frage' (as the compiler shortens). */
+export function shortLabel(label) {
+  const s = String(label || '');
+  const cut = [' (', ':', ';', ' – '].map((m) => s.indexOf(m)).filter((i) => i > 0);
+  return (cut.length ? s.slice(0, Math.min(...cut)) : s).trim();
+}
+
+/**
+ * Exam Teil labels grouped by module: ['Sprechen Teil 1', 'Sprechen Teil 2', 'Schreiben Teil 1']
+ * → ['Sprechen Teil 1 + 2', 'Schreiben Teil 1']. A group whose module IS `drop` (the section's own
+ * name) loses it: with drop 'Sprechen' → ['Teil 1 + 2', 'Schreiben Teil 1'].
+ */
+export function groupTeile(labels = [], drop = null) {
+  const groups = [];
+  for (const raw of labels) {
+    const label = String(raw || '').trim();
+    if (!label) continue;
+    const m = /^(.*\S)\s+Teil\s+(\d+)$/.exec(label);
+    const module = m ? m[1] : label;
+    let g = groups.find((x) => x.module === module);
+    if (!g) {
+      g = { module, nrs: [] };
+      groups.push(g);
+    }
+    if (m && !g.nrs.includes(m[2])) g.nrs.push(m[2]);
+  }
+  return groups.map((g) => {
+    if (!g.nrs.length) return g.module;
+    const teil = `Teil ${[...g.nrs].sort((a, b) => Number(a) - Number(b)).join(' + ')}`;
+    return g.module === drop ? teil : `${g.module} ${teil}`;
+  });
+}
+
+/** Exam templates → one grouped line: ['sd1.sp1', 'sd1.sp2'] with drop 'Sprechen' → 'Teil 1 + 2'. */
+export const teilSummary = (templates = [], drop = null) => groupTeile((templates || []).map(teilLabel), drop).join(' + ');
+
+const stripLetter = (title) => String(title || '').replace(/^(?:Text|Teil)\s+[A-H]\s*[:·–-]\s*/, '').trim();
+
+/**
+ * The Lehrwerk label of one section (curriculum.sectionsOf):
+ *   A/B/C  → { tag: 'Teil A', title: 'Ich bin Priya. Und Sie?', label: 'A · Ich bin Priya. Und Sie?' }
+ *   others → { tag: 'Prüfungstraining', title: 'Hören Teil 1', label: 'Prüfungstraining · Hören Teil 1' },
+ *            'Sprechen · Teil 1 + 2 mit KI', 'Schreiben · Teil 1 mit KI-Korrektur', 'Kapiteltest'.
+ */
+export function stepLabel(section) {
+  const s = section || {};
+  if (s.letter) {
+    const title = stripLetter(s.title) || FALLBACK_TITLE[s.kind] || 'Situation';
+    return { tag: `Teil ${s.letter}`, title, label: `${s.letter} · ${title}` };
+  }
+  const tag = STEP_LABEL_DE[s.kind] || 'Schritt';
+  const teile = teilSummary(s.teile, tag);
+  let title = null;
+  if (s.kind === 'pruefung') title = teile || null;
+  else if (s.kind === 'sprechen') title = teile ? `${teile} mit KI` : 'Aufgabe mit KI';
+  else if (s.kind === 'schreiben') title = teile ? `${teile} mit KI-Korrektur` : 'Aufgabe mit KI-Korrektur';
+  else if (s.kind === 'ueberarbeiten') title = 'Ihren Text verbessern';
+  return { tag, title, label: title ? `${tag} · ${title}` : tag };
+}
+
+const endStop = (s) => (/[.?!…]$/.test(s) ? s : `${s}.`);
+
+/** The unit rows of the manifest by id. */
+const manifestRows = (manifest) => new Map(((manifest && manifest.units) || []).filter(Boolean).map((u) => [u.unit || u.id, u]));
+
+/**
+ * The sections of one unit: its compiled outline (curriculum.sectionsOf), or — for a row
+ * without one — the band's skeleton, with the loaded chunk's titles where it has them.
+ */
+export function unitSections(unitId, level, { row = null, titles = {} } = {}) {
+  const outline = row && Array.isArray(row.outline) && row.outline.length
+    ? row.outline
+    : stepSkeleton(level).map((s, k) => ({ nr: k + 1, id: `${unitId}-ls${k + 1}`, kind: s.kind, title: null, skills: [], grammar: null, input: null, teile: [] }));
+  return sectionsOf(outline).map((s, k) => {
+    const id = s.id || `${unitId}-ls${k + 1}`;
+    return { ...s, nr: Number(s.nr) || k + 1, id, title: s.title || (titles && titles[id]) || null };
+  });
+}
+
+// ---------------------------------------------------------------------------
+// The path
+// ---------------------------------------------------------------------------
+
+const stopLabel = (stop) => (stop.kind === 'closing' ? 'Abschlusstest' : `Plateau ${stop.nr} · Wiederholung`);
+
+function stopDetail(stop, unitNrs) {
+  if (stop.kind === 'closing') return 'Alle Prüfungsteile im Kleinen';
+  const nrs = unitNrs.filter(Boolean);
+  const span = nrs.length > 1 ? `Kapitel ${nrs[0]}–${nrs[nrs.length - 1]}` : nrs.length ? `Kapitel ${nrs[0]}` : 'Das Modul';
+  return `${span} wiederholen · Prüfungsteile`;
+}
+
+function stopNode(stop, next, unitNrs = []) {
   const isNext = Boolean(next && next.kind === stop.kind && next.id === stop.id);
   const state = !stop.available ? 'unavailable' : stop.done ? 'done' : isNext ? 'current' : 'open';
   const label = stopLabel(stop);
@@ -107,6 +227,7 @@ function stopNode(stop, next) {
     id: stop.id,
     nr: stop.nr || null,
     label,
+    detail: stopDetail(stop, unitNrs),
     state,
     started: Boolean(stop.started),
     href: stop.available ? stop.href : null,
@@ -118,96 +239,139 @@ function stopNode(stop, next) {
 /**
  * The current step of the path: the first unfinished step of the model's `next`
  * unit, or the `next` Plateau / closing block. null when everything is done.
- * → { kind: 'step', unitId, unitNr, stepNr, stepId, href } | { kind: 'unit', unitId, unitNr, href }
+ * → { kind: 'step', unitId, unitNr, stepNr, stepId, href, letter, tag } | { kind: 'unit', unitId, unitNr, href }
  *   | { kind: 'plateau' | 'closing', id, nr, started, href }
+ * `manifest` (optional) gives the step its letter and section name from the unit's outline.
  */
-export function currentStop(model, state = {}) {
+export function currentStop(model, state = {}, { manifest = null } = {}) {
   const next = model && model.next;
   if (!next) return null;
   if (next.kind !== 'unit') return { kind: next.kind, id: next.id, nr: next.nr || null, started: Boolean(next.started), href: next.href };
-  const skeleton = stepSkeleton(model.level);
-  const finished = (state.finishedSteps instanceof Map && state.finishedSteps.get(next.id)) || new Set();
-  const i = skeleton.findIndex((_, k) => !finished.has(`${next.id}-ls${k + 1}`));
+  const sections = unitSections(next.id, model.level, { row: manifestRows(manifest).get(next.id) || null });
+  const finished = (state && state.finishedSteps instanceof Map && state.finishedSteps.get(next.id)) || new Set();
+  const i = sections.findIndex((s) => !finished.has(s.id));
   // every step finished but the unit not stored as done (the recap was not reached) → the unit itself
   if (i < 0) return { kind: 'unit', unitId: next.id, unitNr: next.nr, href: next.href };
-  return { kind: 'step', unitId: next.id, unitNr: next.nr, stepNr: i + 1, stepId: `${next.id}-ls${i + 1}`, href: stepHref(model.level, next.nr, i + 1) };
+  const s = sections[i];
+  return {
+    kind: 'step',
+    unitId: next.id,
+    unitNr: next.nr,
+    stepNr: i + 1,
+    stepId: s.id,
+    href: stepHref(model.level, next.nr, i + 1),
+    letter: s.letter || null,
+    tag: stepLabel(s).tag,
+  };
 }
 
 /** The label of the one primary action (the thumb-zone button) for the current stop. */
 export function actionLabel(current, model) {
   if (!current) return '';
-  if (current.kind === 'plateau') return current.started ? `Weiter mit Wiederholung ${current.nr}` : `Wiederholung ${current.nr} starten`;
+  if (current.kind === 'plateau') return current.started ? `Weiter mit Plateau ${current.nr}` : `Plateau ${current.nr} starten`;
   if (current.kind === 'closing') return current.started ? 'Weiter mit dem Abschlusstest' : 'Abschlusstest starten';
-  if (current.kind === 'unit') return `Weiter mit Lektion ${current.unitNr}`;
+  if (current.kind === 'unit') return `Weiter mit Kapitel ${current.unitNr}`;
   const unit = model && (model.units || []).find((u) => u.id === current.unitId);
   const fresh = !unit || (unit.stepsDone === 0 && unit.status !== 'started');
-  return current.stepNr === 1 && fresh ? `Lektion ${current.unitNr} starten` : `Weiter: Lernschritt ${current.stepNr}`;
+  if (current.stepNr === 1 && fresh) return `Kapitel ${current.unitNr} starten`;
+  const where = current.letter ? `Teil ${current.letter}` : current.tag || `Schritt ${current.stepNr}`;
+  return `Weiter: Kapitel ${current.unitNr}, ${where}`;
+}
+
+/** What a Kapitel teaches in one line: „Grammatik: Präsens · Aussagesatz und W-Frage · 35 neue Wörter". */
+export function kapitelSummary(row) {
+  const r = row || {};
+  const outline = Array.isArray(r.outline) && r.outline.length ? r.outline : null;
+  // the outline's structures in step order; a unit whose steps name none (a B-level text
+  // unit) or that is not compiled yet shows the grammar its spec plans
+  const fromOutline = outline ? chapterSummary(outline).grammar.map((g) => g.short || shortLabel(g.label)).filter(Boolean) : [];
+  const grammar = fromOutline.length ? fromOutline : [...new Set((r.grammar || []).map(shortLabel).filter(Boolean))];
+  const n = Number(r.counts && r.counts.newWords);
+  const newWords = Number.isFinite(n) && n > 0 ? n : null;
+  const parts = [];
+  if (grammar.length) parts.push(`Grammatik: ${grammar.join(' · ')}`);
+  if (newWords) parts.push(`${newWords} neue Wörter`);
+  return { grammar, newWords, line: parts.join(' · ') || null };
 }
 
 /**
  * coursePath(model, state, { etappenDe, stepTitles, manifest }) →
  *   { level, code, current, sections: [Section] }
- * Section = { nr, title, dividerLabel, units: [Unit], stop: StopNode | null }
+ * Section = { nr, title, dividerLabel ('Modul 1 · Ankommen in Leipzig'), units: [Unit], stop: StopNode | null }
  * Unit    = { id, nr, index, title, hue, direction, available, status, done, stepsDone, stepsTotal,
- *             bannerLabel, minutesPerStep, hasCurrent, nodes: [Node] }
- * Node    = { id, stepNr, kind, icon, label, title, state: 'done'|'current'|'open', href, offset, ariaLabel }
- * `stepTitles` ({ [stepId]: title }, optional) names the steps of a loaded chunk.
+ *             bannerLabel ('Kapitel 1 · 2 von 7 geschafft'), href (the Kapitel page | null), bannerAria,
+ *             summary: { grammar, newWords, line }, minutesPerStep, hasCurrent, nodes: [Node] }
+ * Node    = { id, stepNr, kind, letter, icon, tag, title, label, grammar, skills, state: 'done'|'current'|'open',
+ *             href, offset, ariaLabel }
+ * StopNode = { kind, id, nr, label ('Plateau 1 · Wiederholung' | 'Abschlusstest'), detail, state, started, href, offset, ariaLabel }
+ * `manifest` supplies the units' outlines, counts and grammar; `stepTitles` ({ [stepId]: title },
+ * optional) names the steps of a loaded chunk where an outline has no title.
  */
-export function coursePath(model, state = {}, { etappenDe = [], stepTitles = null } = {}) {
+export function coursePath(model, state = {}, { etappenDe = [], stepTitles = null, manifest = null } = {}) {
   if (!model) return null;
   const level = model.level;
-  const skeleton = stepSkeleton(level);
   const finishedSteps = state && state.finishedSteps instanceof Map ? state.finishedSteps : new Map();
-  const current = currentStop(model, state);
+  const current = currentStop(model, state, { manifest });
   const order = new Map((model.units || []).map((u, i) => [u.id, i]));
   const titles = stepTitles && typeof stepTitles === 'object' ? stepTitles : {};
+  const rows = manifestRows(manifest);
 
   const unitView = (row) => {
     const index = order.has(row.id) ? order.get(row.id) : 0;
     const direction = index % 2 === 0 ? 1 : -1;
     const done = DONE_STATUSES.includes(row.status);
     const finished = finishedSteps.get(row.id) || new Set();
-    const minutesPerStep = stepMinutes(row.minutes, skeleton.length);
-    const nodes = !row.available ? [] : skeleton.map((s, k) => {
+    const mRow = rows.get(row.id) || null;
+    const sections = row.available ? unitSections(row.id, level, { row: mRow, titles }) : [];
+    const total = sections.length || stepSkeleton(level).length;
+    const minutesPerStep = stepMinutes(row.minutes, total);
+    const nodes = sections.map((s, k) => {
       const stepNr = k + 1;
-      const id = `${row.id}-ls${stepNr}`;
-      const isCurrent = Boolean(current && current.kind === 'step' && current.stepId === id);
-      const nodeState = done || finished.has(id) ? 'done' : isCurrent ? 'current' : 'open';
-      const label = STEP_LABEL_DE[s.kind] || 'Lernschritt';
-      const title = titles[id] || null;
-      const name = title || label;
-      const said = nodeState === 'done' ? 'geschafft' : nodeState === 'current' ? 'jetzt starten' : 'noch offen';
+      const isCurrent = Boolean(current && current.kind === 'step' && current.stepId === s.id);
+      const nodeState = done || finished.has(s.id) ? 'done' : isCurrent ? 'current' : 'open';
+      const { tag, title, label } = stepLabel(s);
+      const grammar = s.grammar ? s.grammar.short || shortLabel(s.grammar.label) || null : null;
+      const said = nodeState === 'done' ? 'Geschafft.' : nodeState === 'current' ? 'Jetzt starten.' : 'Noch offen.';
+      const head = title ? `${tag}: ${title}` : tag;
       return {
-        id,
+        id: s.id,
         stepNr,
         kind: s.kind,
-        icon: s.icon,
-        label,
+        letter: s.letter || null,
+        icon: NODE_ICON[s.kind] || 'Star',
+        tag,
         title,
+        label,
+        grammar,
+        skills: s.skills || [],
         state: nodeState,
         href: stepHref(level, row.nr, stepNr),
         offset: zigzagOffset(k, direction),
-        ariaLabel: `Lernschritt ${stepNr} von ${skeleton.length}, ${name}: ${said}`,
+        ariaLabel: [endStop(`Kapitel ${row.nr}, ${head}`), grammar ? endStop(`Grammatik: ${grammar}`) : null, said].filter(Boolean).join(' '),
       };
     });
-    const stepsDone = done ? skeleton.length : nodes.filter((n) => n.state === 'done').length;
-    let bannerLabel = `Lektion ${row.nr}`;
-    if (!row.available) bannerLabel = `Lektion ${row.nr} · kommt bald`;
-    else if (done) bannerLabel = `Lektion ${row.nr} · geschafft`;
-    else if (stepsDone > 0) bannerLabel = `Lektion ${row.nr} · ${stepsDone} von ${skeleton.length} geschafft`;
+    const stepsDone = done ? total : nodes.filter((n) => n.state === 'done').length;
+    let bannerLabel = `Kapitel ${row.nr}`;
+    if (!row.available) bannerLabel = `Kapitel ${row.nr} · kommt bald`;
+    else if (done) bannerLabel = `Kapitel ${row.nr} · geschafft`;
+    else if (stepsDone > 0) bannerLabel = `Kapitel ${row.nr} · ${stepsDone} von ${total} geschafft`;
+    const title = row.title || `Kapitel ${row.nr}`;
     return {
       id: row.id,
       nr: row.nr,
       index,
-      title: row.title || `Lektion ${row.nr}`,
+      title,
       hue: hueFor(index),
       direction,
       available: row.available,
       status: row.status,
       done,
       stepsDone,
-      stepsTotal: skeleton.length,
+      stepsTotal: total,
       bannerLabel,
+      href: row.available ? v2Paths.unit(level, row.nr) : null,
+      bannerAria: `Kapitelübersicht: ${bannerLabel}, ${title}`,
+      summary: kapitelSummary(mRow),
       minutesPerStep,
       hasCurrent: Boolean(current && (current.kind === 'step' || current.kind === 'unit') && current.unitId === row.id),
       nodes,
@@ -220,14 +384,14 @@ export function coursePath(model, state = {}, { etappenDe = [], stepTitles = nul
     return {
       nr: e.nr,
       title,
-      dividerLabel: title ? `Etappe ${e.nr} · ${title}` : `Etappe ${e.nr}`,
+      dividerLabel: title ? `Modul ${e.nr} · ${title}` : `Modul ${e.nr}`,
       units: e.units.map(unitView),
-      stop: stop ? stopNode(stop, model.next) : null,
+      stop: stop ? stopNode(stop, model.next, stop.kind === 'closing' ? [] : e.units.map((u) => u.nr)) : null,
     };
   });
   const placed = new Set(sections.flatMap((s) => s.units.map((u) => u.id)));
   const orphans = (model.units || []).filter((u) => !placed.has(u.id));
-  if (orphans.length) sections.push({ nr: null, title: null, dividerLabel: 'Weitere Lektionen', units: orphans.map(unitView), stop: null });
+  if (orphans.length) sections.push({ nr: null, title: null, dividerLabel: 'Weitere Kapitel', units: orphans.map(unitView), stop: null });
 
   return { level, code: levelCode(level), current, sections };
 }
@@ -251,10 +415,11 @@ export function courseTiles(manifest) {
   const perStep = planned.length ? stepMinutes(planned.reduce((a, b) => a + b, 0) / planned.length, stepSkeleton(manifest.level).length) : null;
   const lane = (manifest.lanes && manifest.lanes.primary) || null;
   const tiles = [
-    { key: 'units', n: c.units, label: 'Lektionen aus dem Alltag' },
+    { key: 'units', n: c.units, label: 'Kapitel aus dem Alltag' },
     { key: 'lernschritte', n: c.lernschritte, label: perStep ? `Lernschritte à etwa ${perStep} Minuten` : 'Lernschritte' },
     { key: 'items', n: c.items, label: 'Übungen mit sofortigem Feedback' },
     { key: 'newWords', n: c.newWords, label: 'neue Wörter' },
+    { key: 'grammar', n: c.ruleCards, label: 'Regelkarten zur Grammatik' },
     { key: 'speaking', n: inCourse.speakingTasks, label: 'Sprechaufgaben mit KI-Feedback' },
     { key: 'writing', n: inCourse.writingTasks, label: 'Schreibaufgaben mit KI-Korrektur' },
     { key: 'audio', n: c.audioLines, label: 'Sätze zum Anhören' },
@@ -284,25 +449,149 @@ export function examParts(manifest) {
 }
 
 /**
- * The plan's „Ihr Weg in N Etappen": per Etappe its title (showcase.etappenDe, else
- * „Etappe N"), its units and what closes it.
- * → [{ nr, title, hue, units: [{ id, nr, title, href, available, done }], end: { kind, label } | null }]
+ * A Kapitel's Kommunikation column: the part of each can-do before its „:" („grüßen:
+ * Hallo! …" → „grüßen"); a bare verb keeps its first model sentence („sagen: Ich wohne in
+ * Leipzig, in Lindenau." — a lone „sagen" says nothing). Can-dos written as whole „Ich
+ * kann …" sentences (the B-level form) give way to the unit's can-do title, in Sie.
  */
-export function planEtappen(model, manifest) {
+export function kommunikationOf(row) {
+  const r = row || {};
+  const canDos = (Array.isArray(r.canDos) ? r.canDos : []).map((c) => String(c || '').trim()).filter(Boolean);
+  if (canDos.some((c) => c.includes(':')) && !canDos.some((c) => /^Ich kann\b/.test(c))) {
+    const out = [];
+    for (const c of canDos) {
+      const at = c.indexOf(':');
+      let entry;
+      if (at < 0) {
+        entry = c.replace(/^Ich kann\s+/, '').replace(/[.]$/, '').trim();
+      } else {
+        const head = c.slice(0, at).trim();
+        const rest = c.slice(at + 1).trim();
+        entry = head;
+        if (head && !/\s/.test(head) && rest) {
+          const first = (rest.match(/^.*?[.?!…](?=\s|$)/) || [rest])[0].trim();
+          entry = `${head}: ${first}`;
+        }
+      }
+      if (entry && !out.includes(entry)) out.push(entry);
+    }
+    return out;
+  }
+  const t = String(r.canDoTitle || '').trim().replace(/^Sie können\s+/, '').replace(/\.$/, '');
+  if (t) return [t];
+  return canDos.slice(0, 3).map((c) => shortLabel(c.replace(/^Ich kann\s+/, '')).split(', ')[0]);
+}
+
+const TEXT_SKILLS = { dialog: ['hoeren'], text: ['lesen'], mixed: ['hoeren', 'lesen'] };
+
+/**
+ * The plan's textbook „Inhalt": per Modul its Kapitel with the columns every Lehrwerk
+ * Inhalt has — Kommunikation, Grammatik, Wortschatz, Texte, Prüfung — then the Plateau /
+ * Abschlusstest that closes it.
+ * → [{ nr, eyebrow ('Modul 1'), title (showcase.etappenDe | null), hue, kapitel: [Kapitel], end: End | null }]
+ * Kapitel = { id, nr, title, href, available, done, current, kommunikation: [..], grammatik: [..],
+ *             wortschatz: n | null, texte: [{ title, skills }], pruefung: [..] }
+ * End     = { kind, nr, label, detail, href, available, done }
+ */
+export function planInhalt(model, manifest) {
   if (!model) return [];
   const names = (manifest && manifest.showcase && manifest.showcase.etappenDe) || [];
+  const rows = manifestRows(manifest);
+  const nextId = model.next && model.next.kind === 'unit' ? model.next.id : null;
   return (model.etappen || []).map((e, i) => {
     const stop = e.plateau || e.closing || null;
     return {
       nr: e.nr,
-      title: names[e.nr - 1] || `Etappe ${e.nr}`,
+      eyebrow: `Modul ${e.nr}`,
+      title: names[e.nr - 1] || null,
       hue: hueFor(i),
-      units: e.units.map((u) => ({
-        id: u.id, nr: u.nr, title: u.title || `Lektion ${u.nr}`, href: u.available ? u.href : null, available: u.available, done: DONE_STATUSES.includes(u.status),
-      })),
-      end: stop ? { kind: stop.kind, label: stop.kind === 'closing' ? 'Abschlusstest · Pokal' : `Wiederholung ${stop.nr} · Schatzkiste`, done: Boolean(stop.done) } : null,
+      kapitel: e.units.map((u) => {
+        const row = rows.get(u.id) || {};
+        const outline = Array.isArray(row.outline) && row.outline.length ? row.outline : null;
+        const summary = outline ? chapterSummary(outline) : null;
+        const sum = kapitelSummary(row);
+        return {
+          id: u.id,
+          nr: u.nr,
+          title: u.title || `Kapitel ${u.nr}`,
+          href: u.available ? u.href : null,
+          available: u.available,
+          done: DONE_STATUSES.includes(u.status),
+          current: u.id === nextId,
+          kommunikation: kommunikationOf(row),
+          grammatik: sum.grammar,
+          wortschatz: sum.newWords,
+          texte: summary ? summary.texts.map((t) => ({ title: t.title, skills: TEXT_SKILLS[t.kind] || ['lesen'] })) : [],
+          pruefung: summary && summary.teile.length ? groupTeile(summary.teile.map(teilLabel)) : groupTeile(u.pruefungsfokus || []),
+        };
+      }),
+      end: stop
+        ? {
+          kind: stop.kind,
+          nr: stop.nr || null,
+          label: stopLabel(stop),
+          detail: stopDetail(stop, e.units.map((u) => u.nr)),
+          href: stop.available ? stop.href : null,
+          available: Boolean(stop.available),
+          done: Boolean(stop.done),
+        }
+        : null,
     };
   });
+}
+
+/**
+ * „So ist jedes Kapitel aufgebaut": the stations of every Kapitel in order, for the plan's
+ * strip. A levels have 7 steps, B levels add „Überarbeiten" before the Kapiteltest; the
+ * Plateau after every 3 Kapitel closes the list (with the review ladder where the manifest
+ * has one).
+ * → [{ key, title, text, skills: [SKILL_ORDER key] }]
+ */
+export function kapitelAufbau(level, manifest = null) {
+  const b = String(level || '').toLowerCase().startsWith('b');
+  const days = (manifest && manifest.review && Array.isArray(manifest.review.ladderDays) ? manifest.review.ladderDays : []).slice(0, 3);
+  const ladder = days.length === 3 ? ` Mit Konto kommen Ihre Wörter nach ${days[0]}, ${days[1]} und ${days[2]} Tagen wieder.` : '';
+  return [
+    { key: 'einstieg', title: 'Einstieg', text: 'Eine Szene aus der Geschichte und Ihre Lernziele.', skills: [] },
+    {
+      key: 'abc',
+      title: 'Teil A, B und C',
+      text: 'Drei Situationen aus dem Alltag. In jedem Teil:',
+      skills: ['wortschatz', 'hoeren', 'lesen', 'grammatik', 'ueben', 'sprechen', 'schreiben', 'aussprache'],
+    },
+    { key: 'pruefung', title: 'Prüfungstraining', text: 'Prüfungsteile im Prüfungsformat.', skills: ['pruefung'] },
+    { key: 'sprechen', title: 'Sprechen mit KI', text: 'Sie sprechen, die KI hört zu und gibt Feedback.', skills: ['sprechen'] },
+    { key: 'schreiben', title: 'Schreiben mit KI-Korrektur', text: 'Sie schreiben, die KI korrigiert Ihren Text.', skills: ['schreiben'] },
+    ...(b ? [{ key: 'ueberarbeiten', title: 'Überarbeiten', text: 'Sie verbessern Ihren Text mit dem Feedback.', skills: ['schreiben'] }] : []),
+    { key: 'check', title: 'Kapiteltest', text: 'Was Sie im Kapitel gelernt haben, in einem kurzen Test.', skills: ['test'] },
+    { key: 'plateau', title: 'Alle 3 Kapitel: ein Plateau', text: `Wiederholung mit Prüfungsteilen und einer Schatzkiste.${ladder}`, skills: [] },
+  ];
+}
+
+/**
+ * The two reference pages of a level (built by the player side): the grammar overview and
+ * the word list. The word count is the manifest's — the level's total once every unit is
+ * authored, else the new words of the authored units only (a content count, never a plan).
+ * → [{ key, href, title, detail, label, skill }]
+ */
+export function referenceLinks(level, manifest = null) {
+  const l = normalizeLevel(level) || String(level || '').toLowerCase();
+  const c = (manifest && manifest.counts) || {};
+  let words = Number(c.newWords) || 0;
+  if (Number(c.unitsComing) > 0) {
+    words = ((manifest && manifest.units) || []).reduce((n, u) => n + (u && u.chunk ? Number(u.counts && u.counts.newWords) || 0 : 0), 0);
+  }
+  return [
+    { key: 'grammatik', href: `/course/${l}/grammatik`, title: 'Grammatik-Übersicht', detail: 'Alle Regeln', label: 'Grammatik-Übersicht', skill: 'grammatik' },
+    {
+      key: 'wortschatz',
+      href: `/course/${l}/wortschatz`,
+      title: 'Wortliste',
+      detail: words > 0 ? `${words} Wörter` : 'Alle Wörter',
+      label: words > 0 ? `Wortliste · ${words} Wörter` : 'Wortliste',
+      skill: 'wortschatz',
+    },
+  ];
 }
 
 // ---------------------------------------------------------------------------
@@ -362,5 +651,5 @@ export function formatFinishDate(date, today = new Date()) {
   }
 }
 
-/** XP a finished Lernschritt earns (gamify.js XP.step) — the popover's „+20 XP". */
+/** XP a finished step earns (gamify.js XP.step) — the current card's „+20 XP". */
 export const STEP_XP = XP.step;

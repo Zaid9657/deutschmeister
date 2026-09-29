@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Puzzle } from 'lucide-react';
 import Chip from '../ui/Chip.jsx';
 import GameButton from './GameButton.jsx';
 import InlineFeedback from './InlineFeedback.jsx';
@@ -20,40 +21,60 @@ function Cell({ text, caseMarks }) {
 }
 
 /**
- * The rule card of a Lernschritt (SCHEMA §7): model sentence, the rule in German (≤ 60/80
- * words) with its English twin, and the paradigm table. Reference material: flat, with
- * hairlines — never raised, never an interactive colour (BLUEPRINT §7.2).
+ * The rule card of a Lernschritt (SCHEMA §7) as the book's GRAMMATIK box (owner feedback
+ * 2026-09-29: "in a lesson there's no German grammar visible"): a panel every Lehrwerk has — a
+ * header band „Grammatik" (with the grammar point's name when the caller knows it), the model
+ * sentence, the rule in German (≤ 60/80 words) with its English twin, and the paradigm table on
+ * white. The wash is the course palette's (`bg-course-wash`), never a kasus hue: colour means
+ * case, and the case colours stay for the table tokens the card itself names in `caseMarks`.
+ * Reference material: flat, no raised edge, nothing to press.
+ *
+ *   title      the grammar point („Präsens"), from the unit's outline — optional
+ *   headingAs  the element of the band's label ('p' in a step, 'h3' in a reference list)
  */
-export default function RuleCardView({ card, modelSentence = null, compact = false }) {
+export default function RuleCardView({ card, modelSentence = null, compact = false, title = null, headingAs = 'p' }) {
   const [lang, t] = useV2Strings();
   const model = modelSentence || card?.modelSentence || null;
   if (!card && !model) return null;
+  const Heading = headingAs === 'h2' || headingAs === 'h3' ? headingAs : 'p';
   return (
-    <section className="rounded-[1.25rem] border-2 border-game-line bg-white p-4 sm:p-5">
-      <p className={LABEL}>{t('rule.title')}</p>
-      {model && (
-        <>
-          <p className={`mt-3 ${LABEL}`}>{t('rule.model')}</p>
-          <p className="mt-1 text-[1.3125rem] font-extrabold leading-snug text-game-text" lang="de">{model}</p>
-        </>
-      )}
-      {card?.de && <p className="mt-3 text-[1rem] font-semibold leading-relaxed text-game-text" lang="de">{card.de}</p>}
-      {card?.en && lang !== 'de' && !compact && <p className="mt-2 text-[0.875rem] leading-relaxed text-game-muted">{card.en}</p>}
-      {Array.isArray(card?.table) && card.table.length > 0 && (
-        <table className="mt-4 w-full border-collapse text-left text-[0.9375rem]" lang="de">
-          <tbody>
-            {card.table.map((row, r) => (
-              <tr key={r} className="border-t-2 border-game-line first:border-t-0">
-                {row.map((cell, c) => (
-                  <td key={c} className="py-2 pr-4 align-top font-semibold text-game-text">
-                    <Cell text={cell} caseMarks={card.caseMarks} />
-                  </td>
+    <section className="overflow-hidden rounded-[1.25rem] border-2 border-course-soft bg-course-wash" data-rule-card={card?.id || undefined}>
+      <div className="flex items-center gap-2.5 border-b-2 border-course-soft bg-course-soft px-4 py-2.5">
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-course-ink" aria-hidden="true">
+          <Puzzle className="h-[1.125rem] w-[1.125rem]" strokeWidth={2.4} />
+        </span>
+        <Heading className="min-w-0 text-[0.9375rem] font-extrabold leading-tight text-course-ink">
+          <span className="uppercase tracking-[0.08em]">{t('rule.title')}</span>
+          {title && <span className="font-extrabold normal-case tracking-normal" lang="de"> · {title}</span>}
+        </Heading>
+      </div>
+      <div className="p-3 sm:p-5">
+        {model && (
+          <div className="rounded-xl border-l-4 border-course bg-white px-3.5 py-2.5">
+            <p className={LABEL}>{t('rule.model')}</p>
+            <p className="mt-0.5 text-[1.25rem] font-extrabold leading-snug text-game-text" lang="de">{model}</p>
+          </div>
+        )}
+        {card?.de && <p className="mt-3 text-[1rem] font-semibold leading-relaxed text-game-text" lang="de">{card.de}</p>}
+        {card?.en && lang !== 'de' && !compact && <p className="mt-2 text-[0.875rem] leading-relaxed text-game-muted">{card.en}</p>}
+        {Array.isArray(card?.table) && card.table.length > 0 && (
+          <div className="-mx-2 mt-4 overflow-x-auto rounded-xl bg-white sm:mx-0">
+            <table className="w-full border-collapse text-left text-[0.875rem] sm:text-[0.9375rem]" lang="de">
+              <tbody>
+                {card.table.map((row, r) => (
+                  <tr key={r} className="border-t-2 border-game-line first:border-t-0">
+                    {row.map((cell, c) => (
+                      <td key={c} className="px-2 py-1.5 align-top font-semibold text-game-text sm:px-3 sm:py-2">
+                        <Cell text={cell} caseMarks={card.caseMarks} />
+                      </td>
+                    ))}
+                  </tr>
                 ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </section>
   );
 }
@@ -94,37 +115,40 @@ export function RuleTableFill({ table, stepId, onDone, onAttempt }) {
   return (
     <div>
       <p className="text-[1rem] font-semibold text-game-muted">{t('rule.fillTable')}</p>
-      <table className="mt-3 w-full border-collapse text-left text-[0.9375rem]" lang="de">
-        <tbody>
-          {rows.map((row, r) => (
-            <tr key={r} className="border-t-2 border-game-line first:border-t-0">
-              {row.map((cell, c) => (
-                <td key={c} className="py-2 pr-3 align-top">
-                  {isBlank(r, c) ? (
-                    <span className="flex items-center gap-2">
-                      <input
-                        type="text"
-                        aria-label={`${r + 1}/${c + 1}`}
-                        value={values[`${r}-${c}`] || ''}
-                        disabled={!!results}
-                        autoComplete="off"
-                        spellCheck={false}
-                        onChange={(e) => setValues((v) => ({ ...v, [`${r}-${c}`]: e.target.value }))}
-                        className="w-full min-w-[5rem] rounded-xl border-2 border-game-line bg-white px-3 py-2 text-[1rem] font-bold text-game-text outline-none focus:border-course disabled:bg-course-ground"
-                      />
-                      {results && (results[`${r}-${c}`]
-                        ? <span className="font-extrabold text-game-right-ink" aria-label={t('item.srRight')}>✓</span>
-                        : <span className="font-bold text-game-wrong-ink" aria-label={t('item.srWrong')}>✗ <strong>{cell}</strong></span>)}
-                    </span>
-                  ) : (
-                    <span className="font-semibold text-game-text">{cell}</span>
-                  )}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* a wide B-level table scrolls inside its own box, never the page */}
+      <div className="-mx-1 mt-3 overflow-x-auto px-1">
+        <table className="w-full border-collapse text-left text-[0.9375rem]" lang="de">
+          <tbody>
+            {rows.map((row, r) => (
+              <tr key={r} className="border-t-2 border-game-line first:border-t-0">
+                {row.map((cell, c) => (
+                  <td key={c} className="py-2 pr-3 align-top">
+                    {isBlank(r, c) ? (
+                      <span className="flex items-center gap-2">
+                        <input
+                          type="text"
+                          aria-label={`${r + 1}/${c + 1}`}
+                          value={values[`${r}-${c}`] || ''}
+                          disabled={!!results}
+                          autoComplete="off"
+                          spellCheck={false}
+                          onChange={(e) => setValues((v) => ({ ...v, [`${r}-${c}`]: e.target.value }))}
+                          className="w-full min-w-[5rem] rounded-xl border-2 border-game-line bg-white px-3 py-2 text-[1rem] font-bold text-game-text outline-none focus:border-course disabled:bg-course-ground"
+                        />
+                        {results && (results[`${r}-${c}`]
+                          ? <span className="font-extrabold text-game-right-ink" aria-label={t('item.srRight')}>✓</span>
+                          : <span className="font-bold text-game-wrong-ink" aria-label={t('item.srWrong')}>✗ <strong>{cell}</strong></span>)}
+                      </span>
+                    ) : (
+                      <span className="font-semibold text-game-text">{cell}</span>
+                    )}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       {!results && (
         <div className="mt-4 flex justify-end">
           <GameButton size="md" onClick={check} disabled={!allFilled}>{t('item.check')}</GameButton>
