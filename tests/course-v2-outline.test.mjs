@@ -60,3 +60,16 @@ test('the compiled A1.1 word list is the lexicon, with article and plural for no
   }
   assert.ok(words.every((w) => w.unit && w.lemma), 'every word names its Kapitel');
 });
+
+test('sectionsOf letters the situation steps A, B, C and names the rest like a Lehrwerk', async () => {
+  const { sectionsOf, chapterSummary } = await import('../src/lib/course-v2/curriculum.js');
+  const m = read('src/data/course-v2/a1.1/manifest.json');
+  const s = sectionsOf(m.units[0].outline);
+  assert.deepEqual(s.map((x) => x.letter), ['A', 'B', 'C', null, null, null, null]);
+  assert.deepEqual(s.slice(3).map((x) => x.name.de), ['Prüfungstraining', 'Sprechen', 'Schreiben', 'Kapiteltest']);
+  assert.equal(s[0].name.de, 'Ich bin Priya. Und Sie?');
+  const sum = chapterSummary(m.units[0].outline);
+  assert.deepEqual(sum.grammar.map((g) => g.short), ['Präsens', 'Aussagesatz und W-Frage']);
+  assert.ok(sum.skills.includes('grammatik') && sum.skills.includes('hoeren') && sum.skills.includes('lesen'));
+  assert.deepEqual(sectionsOf(null), []);
+});
