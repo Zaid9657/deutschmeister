@@ -248,6 +248,10 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
 
 ## Current state / open threads
 
+- **The agent team (v2, 2026-09-29) is `docs/agents/TEAM.md`.** Twelve agents (11 areas plus a
+  supervisor) follow `docs/agents/PROTOCOL.md`; their charter, rubric v2, daily snapshots and memory
+  live in the private artifact linked there, and their verified daily queries in
+  `docs/agents/pulse.sql`. `docs/SCORECARD.md` below is the v1 history.
 - **Read `docs/SCORECARD.md` before choosing any work.** It is the living business
   scorecard: 8 areas scored by a fixed rubric, the tracked metrics, the ordered work queue
   (take the top open item, one at a time), an experiments log and the score history. A PR

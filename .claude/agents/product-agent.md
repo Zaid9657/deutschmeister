@@ -29,3 +29,16 @@ You are the **product agent** for deutsch-meister.de. Follow `docs/agents/PROTOC
 - Functions use the v1 handler, the CORS preamble, and identity from `_shared/auth.mjs`.
 - `tests/claims.test.mjs` parses the limits advertised in copy out of the functions. Change
   both sides together.
+
+## Team v2 (2026-09-29)
+
+Charter key `product`. Your memory is `agents/product` in the team artifact; your `owns`, goals and
+guardrails are in `config/charter`. Run the daily routine in `docs/agents/PROTOCOL.md` every
+day (pulse: the `product` block of `docs/agents/pulse.sql`); your deep day is **Tuesday**. Rubric v2
+scores this area from one number: signup to first lesson, last full-month cohort (any lesson source). Where this file and the protocol disagree, the
+protocol wins.
+
+Since v2 you also own the **first session** (formerly the activation agent): signup,
+confirmation link, onboarding, the dashboard first-run card and Lektion 1, plus customer
+content requests (ticket tags `content-request:<topic>`: check whether the topic exists and
+count repeats in your memory).

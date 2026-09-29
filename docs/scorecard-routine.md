@@ -1,59 +1,52 @@
-# Scorecard agents — schedule and Routine prompts
+# Agent team — schedule and Routine prompts (v2, 2026-09-29)
 
-Nine scheduled Routines run the scorecard loop, each on its own day so no two runs work on
-the scorecard at the same time. Each one starts a fresh session on this repo.
+The team protocol is `docs/agents/PROTOCOL.md`; the one-page overview is
+`docs/agents/TEAM.md`. This file is the schedule and the prompt used to re-create the Routines.
 
-The prompts point at the agent files rather than repeating them, so the behaviour lives in
-the repo and can't drift from a Routine UI copy. The same convention applies to
-`docs/seo-routines/`.
+## Why the Routines wake one session
 
-The shared loop is in `docs/agents/PROTOCOL.md`: one move per run, and agents open PRs but
-never merge them. Each area's specifics are in `.claude/agents/<name>.md`.
+A Routine that starts a fresh session cannot carry connectors on this account. Measured twice:
+`create_trigger` refused the `connectors` parameter (2026-09-27 and 2026-09-29), and a probe
+Routine on 2026-09-29 reported only the artifact tools, no Supabase, Resend or Netlify, and a
+blocked site. An agent in such a session would "run" every day and see nothing. So every
+Routine below wakes the orchestrating Claude Code session that holds the connectors
+(`session_014ddD3p7VmAqaTAWKQVHJBt`). That session spawns the named agent in its own git
+worktree, reviews what it built, and integrates it.
 
-| Day (Europe/Berlin) | Time | Agent | Why then |
-|---|---|---|---|
-| Monday | 08:47 | `scorecard-steward` | after `weekly-truth` stores the week (06:00 UTC = 08:00 Berlin) |
-| Monday | 10:47 | `revenue-agent` | reads the steward's fresh numbers |
-| Tuesday | 07:47 | `activation-agent` | |
-| Wednesday | 07:47 | `acquisition-agent` | |
-| Thursday | 07:47 | `product-agent` | |
-| Friday | 07:47 | `retention-email-agent` | |
-| Saturday | 07:47 | `web-performance-agent` | |
-| Saturday | 10:47 | `security-agent` | |
-| Sunday | 07:47 | `support-agent` | |
+## Schedule (UTC, every day)
 
-## How the Routines are wired (created 2026-09-27)
+| UTC | Routine | Agent |
+|---|---|---|
+| 05:50, 09:50, 12:50, 15:50, 19:50 | DM team: supervisor | `supervisor` (the first run writes the day's snapshot) |
+| 06:10 | DM team: revenue | `revenue-agent` |
+| 06:20 | DM team: conversion | `conversion-agent` |
+| 06:30 | DM team: product | `product-agent` |
+| 06:40 | DM team: acquisition | `acquisition-agent` |
+| 06:50 | DM team: seo | `seo-agent` |
+| 07:00 | DM team: content | `content-agent` |
+| 07:10 | DM team: retention | `retention-email-agent` |
+| 07:20 | DM team: support | `support-agent` |
+| 07:30 | DM team: website | `website-agent` |
+| 07:40 | DM team: webperf | `web-performance-agent` |
+| 07:50 | DM team: security | `security-agent` |
 
-A Routine that starts a fresh session cannot carry connectors on this account (measured:
-`create_trigger` refused the `connectors` parameter). Such a session would have no Supabase,
-so it could measure nothing. So each of the nine Routines **wakes the orchestrating Claude
-Code session** that holds the Supabase, GitHub, Netlify and Resend connectors
-(`session_014ddD3p7VmAqaTAWKQVHJBt`). That session:
-1. Brings its designated branch up to date with `main`.
-2. Spawns the named agent with the Agent tool in an isolated worktree.
-3. Reviews the diff, runs the steward gates, pushes, and opens or updates the one PR.
-4. Reports three lines to the owner.
+Deep days are listed in the protocol.
 
-The week's agent work therefore collects in **one PR for the owner to review**. The Routines
-are named `DM agent: <area> (<day>)` in the Routines list. A first attempt, the
-fresh-session `DM scorecard steward (Mon)`, is disabled.
+## Prompt (swap `<key>` and `<agent>`)
 
-If that session is ever archived, re-create the nine Routines from a new session that holds
-the connectors, using this prompt with the agent name swapped:
+> Team run: `<key>`.
+> 1. Spawn one agent with the Agent tool, subagent_type `<agent>`, isolation worktree, in the
+>    background. Tell it: do today's run per `docs/agents/PROTOCOL.md` for charter key `<key>`
+>    (the deep day too if today is its deep day); read and write the team artifact
+>    https://claude.ai/artifact/NGaePeB3GXkep9oJmMs5hD with ArtifactData; use the Supabase,
+>    Resend, Netlify and GitHub connectors; commit PR work only in its worktree; never push,
+>    merge, apply migrations or send email.
+> 2. When it reports: if it committed, review the diff, run the steward gates, add it to the
+>    team branch and the open PR (draft). Merge only for action classes the owner authorized.
+> 3. If the agent did not write `agents/<key>`, record `stalled` in `agents/supervisor`.
+> 4. Tell the owner only if its report starts with `URGENT:`.
 
-> Scheduled scorecard run: `<agent-name>`.
-> 1. `git fetch origin main`. If the branch's last PR is merged, restart the designated
->    branch from `origin/main`; otherwise merge `origin/main` into it.
-> 2. Spawn one agent with the Agent tool: subagent_type `<agent-name>`. If that type isn't
->    listed, use general-purpose and tell it to act as defined in
->    `.claude/agents/<agent-name>.md`. Use a worktree, and tell it to do exactly one run
->    per its file and `docs/agents/PROTOCOL.md`, commit in its worktree, and not push.
-> 3. Review its diff, run the steward-skill gates, cherry-pick onto the designated branch,
->    push, and open or update the PR (draft → ready when CI is green).
-> 4. Never merge, never send email, never apply migrations.
-> 5. Tell the owner in 3 lines: score change, what changed, owner actions.
+## What the owner does
 
-## What the owner does each week
-
-Review and merge the agent PRs. The steward's Monday PR lists the open ones in order. A PR
-carrying an **Owner decision** line needs that decision, not only a review.
+Approve experiments in the artifact (set `experiment.status` to `approved`, or say so in chat),
+review the Monday top 3, and do the actions listed under "your actions".

@@ -38,3 +38,11 @@ exactly (one move per run, never merge). This file adds your area's specifics.
   `marketing.js`).
 - Internal links follow the three trailing-slash cases.
 - Never advance a `Stand:` stamp.
+
+## Team v2 (2026-09-29)
+
+Charter key `acquisition`. Your memory is `agents/acquisition` in the team artifact; your `owns`, goals and
+guardrails are in `config/charter`. Run the daily routine in `docs/agents/PROTOCOL.md` every
+day (pulse: the `acquisition` block of `docs/agents/pulse.sql`); your deep day is **Wednesday**. Rubric v2
+scores this area from one number: signups per week, 30-day average. Where this file and the protocol disagree, the
+protocol wins.
