@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Languages, Eye, EyeOff } from 'lucide-react';
-import Card from '../ui/Card.jsx';
+import { Languages, Eye, EyeOff, Headphones } from 'lucide-react';
 import AudioButton from './AudioButton.jsx';
 import { canPlay, speakerName } from './content.js';
 import { useV2Strings } from './strings.js';
 
-const LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite';
+const LABEL = 'text-[0.75rem] font-extrabold uppercase tracking-[0.08em] text-game-muted';
+const TOGGLE = 'inline-flex min-h-11 items-center gap-1.5 rounded-xl border-2 border-game-line bg-white px-3 py-1.5 text-[0.875rem] font-extrabold text-game-muted hover:bg-course-wash hover:text-course-ink';
 const STRIP = /^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu;
 const clean = (s) => String(s || '').replace(STRIP, '').toLowerCase();
 
@@ -58,7 +58,7 @@ function GlossLine({ text, glosses, open, setOpen, idPrefix, lang }) {
           onClick={(e) => { e.stopPropagation(); setOpen(isOpen ? null : gid); }}
           aria-expanded={isOpen}
           aria-describedby={isOpen ? `${gid}-pop` : undefined}
-          className="-my-2.5 inline-flex min-h-11 items-center px-0.5 py-2.5 underline decoration-dotted underline-offset-4 outline-none focus-visible:ring-2 focus-visible:ring-siegel"
+          className="-my-2.5 inline-flex min-h-11 items-center px-0.5 py-2.5 underline decoration-dotted decoration-2 underline-offset-4 outline-none focus-visible:ring-2 focus-visible:ring-course"
         >
           {s.text}
         </button>
@@ -67,11 +67,11 @@ function GlossLine({ text, glosses, open, setOpen, idPrefix, lang }) {
             id={`${gid}-pop`}
             role="tooltip"
             onClick={(e) => e.stopPropagation()}
-            className="absolute left-0 top-full z-10 mt-1 block w-max max-w-[15rem] rounded-clay border border-rule bg-white p-2.5 text-left shadow-overlay"
+            className="absolute left-0 top-full z-10 mt-1 block w-max max-w-[15rem] rounded-xl border-2 border-game-line bg-white p-2.5 text-left shadow-game-line"
           >
-            <span className="block font-display text-[0.9375rem] font-semibold text-ink" lang="de">{s.gloss.token}</span>
-            <span className="block text-[0.8125rem] leading-snug text-graphite">{g.en}</span>
-            {extra && <span className="block text-[0.8125rem] leading-snug text-graphite">{extra}</span>}
+            <span className="block text-[0.9375rem] font-extrabold text-game-text" lang="de">{s.gloss.token}</span>
+            <span className="block text-[0.8125rem] font-semibold leading-snug text-game-muted">{g.en}</span>
+            {extra && <span className="block text-[0.8125rem] font-semibold leading-snug text-game-muted">{extra}</span>}
           </span>
         )}
       </span>
@@ -128,16 +128,19 @@ export default function InputView({ input, unitId, names = null, onHeard }) {
 
   return (
     <div>
-      {input?.title && <h2 className="font-display text-[1.25rem] font-semibold leading-tight text-ink">{input.title}</h2>}
+      {input?.title && <h2 className="text-[1.375rem] font-extrabold leading-tight text-game-text sm:text-[1.5rem]" lang="de">{input.title}</h2>}
 
       {hasAudio && (
-        <Card tone="wash" className="mt-4 p-4">
-          <p className="text-[0.9375rem] text-ink">{gate && !heard ? t('input.listenFirst') : t('audio.playAgain')}</p>
+        <div className="mt-4 rounded-[1.25rem] border-2 border-b-4 border-course bg-course-wash p-4">
+          <p className="flex items-start gap-2 text-[1rem] font-bold text-course-ink">
+            <Headphones className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
+            <span>{gate && !heard ? t('input.listenFirst') : t('audio.playAgain')}</span>
+          </p>
           <div className="mt-3 flex flex-wrap items-center gap-3">
             <AudioButton unitId={unitId} lines={lines} label={heard ? t('audio.playAgain') : t('audio.play')} onPlayed={onPlayedAll} />
             <AudioButton unitId={unitId} lines={lines} label={t('audio.slow')} rate={0.8} size="sm" onPlayed={onPlayedAll} />
           </div>
-        </Card>
+        </div>
       )}
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
@@ -146,7 +149,7 @@ export default function InputView({ input, unitId, names = null, onHeard }) {
             type="button"
             onClick={() => setShowText((s) => !s)}
             aria-pressed={showText}
-            className="inline-flex min-h-11 items-center gap-1.5 rounded-pill border border-rule bg-white px-3 py-1.5 text-[0.8125rem] font-bold text-graphite hover:border-siegel hover:text-siegel-deep"
+            className={TOGGLE}
           >
             {showText ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
             {showText ? t('input.hideText') : t('input.showText')}
@@ -157,7 +160,7 @@ export default function InputView({ input, unitId, names = null, onHeard }) {
             type="button"
             onClick={() => setEnglish((e) => !e)}
             aria-pressed={english}
-            className="inline-flex min-h-11 items-center gap-1.5 rounded-pill border border-rule bg-white px-3 py-1.5 text-[0.8125rem] font-bold text-graphite hover:border-siegel hover:text-siegel-deep"
+            className={TOGGLE}
           >
             <Languages className="h-4 w-4" aria-hidden="true" /> {english ? t('input.translationOff') : t('input.translationOn')}
           </button>
@@ -165,17 +168,17 @@ export default function InputView({ input, unitId, names = null, onHeard }) {
       </div>
 
       {hasAudio && showText && (
-        <ol className="mt-4 space-y-2">
+        <ol className="mt-4 space-y-2.5">
           {lines.map((l) => (
             <li key={l.id}>
-              <div className="flex items-start gap-3 rounded-clay border border-rule bg-white p-3">
+              <div className="flex items-start gap-3 rounded-[1.25rem] border-2 border-game-line bg-white p-3">
                 <AudioButton unitId={unitId} line={l} iconOnly ariaLabel={`${t('audio.play')}: ${speakerName(l.speaker, names)}`} />
                 <div className="min-w-0">
                   <p className={LABEL}>{speakerName(l.speaker, names)}</p>
-                  <p className="mt-0.5 text-[1.0625rem] leading-relaxed text-ink" lang="de">
+                  <p className="mt-0.5 text-[1.125rem] font-semibold leading-relaxed text-game-text" lang="de">
                     <GlossText text={l.de} glosses={glosses} open={open} setOpen={setOpen} idPrefix={`g-${l.id}`} lang={lang} />
                   </p>
-                  {english && l.en && <p className="mt-1 text-[0.875rem] leading-relaxed text-graphite">{l.en}</p>}
+                  {english && l.en && <p className="mt-1 text-[0.875rem] leading-relaxed text-game-muted">{l.en}</p>}
                 </div>
               </div>
             </li>
@@ -184,16 +187,16 @@ export default function InputView({ input, unitId, names = null, onHeard }) {
       )}
 
       {input?.text && (
-        <div className="mt-4 rounded-clay border border-rule bg-white p-4">
+        <div className="mt-4 rounded-[1.25rem] border-2 border-game-line bg-white p-4">
           {!hasAudio && <p className={LABEL}>{t('input.readFirst')}</p>}
-          <p className="mt-1 whitespace-pre-line text-[1.0625rem] leading-relaxed text-ink" lang="de">
+          <p className="mt-1 whitespace-pre-line text-[1.125rem] font-semibold leading-relaxed text-game-text" lang="de">
             <GlossText text={input.text.de} glosses={glosses} open={open} setOpen={setOpen} idPrefix="g-text" lang={lang} />
           </p>
-          {english && input.text.en && <p className="mt-2 whitespace-pre-line text-[0.875rem] leading-relaxed text-graphite">{input.text.en}</p>}
+          {english && input.text.en && <p className="mt-2 whitespace-pre-line text-[0.875rem] leading-relaxed text-game-muted">{input.text.en}</p>}
         </div>
       )}
 
-      {glosses.length > 0 && (showText || input?.text) && <p className="mt-3 text-[0.8125rem] text-graphite">{t('input.glossHint')}</p>}
+      {glosses.length > 0 && (showText || input?.text) && <p className="mt-3 text-[0.875rem] font-semibold text-game-muted">{t('input.glossHint')}</p>}
     </div>
   );
 }

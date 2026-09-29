@@ -1,20 +1,20 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
-import Button from '../ui/Button.jsx';
-import Card from '../ui/Card.jsx';
 import ReadAloudLine from '../lesson/ReadAloudLine.jsx';
 import CheckView from './CheckView.jsx';
 import ExamBlockView from './ExamBlockView.jsx';
+import GameButton from './GameButton.jsx';
 import InputView from './InputView.jsx';
 import ItemRun from './ItemRun.jsx';
 import MicroOutputView from './MicroOutputView.jsx';
 import RuleCardView, { RuleTableFill } from './RuleCardView.jsx';
 import SpeakingTaskView from './SpeakingTaskView.jsx';
 import WritingTaskView from './WritingTaskView.jsx';
-import { lineIndex, materialize, minutesOf, skeletonOf, stepNr } from './content.js';
+import { lineIndex, materialize, skeletonOf, stepNr } from './content.js';
 import { useV2Strings } from './strings.js';
 
-const LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite';
+const LABEL = 'text-[0.75rem] font-extrabold uppercase tracking-[0.08em] text-game-muted';
+const PANEL = 'rounded-[1.25rem] border-2 border-b-4 border-game-line bg-white p-5';
 const SERVED_MAX = 12;
 const EXIT_COUNT = 3;
 
@@ -116,6 +116,7 @@ export default function StepView({
   names = null,
   canDos = null,
   onBack = null,
+  onProgress = null,
 }) {
   const [lang, t] = useV2Strings();
   const unitId = unit?.id || null;
@@ -167,6 +168,17 @@ export default function StepView({
     [step, pool, warmupItems, redemittel],
   );
   const [segIdx, setSegIdx] = useState(0);
+  const segAt = useRef(0);
+  segAt.current = segIdx;
+  // progress inside the current segment (its ItemRun's position), reset on every segment
+  const [inner, setInner] = useState(0);
+  const last = Math.max(0, segments.length - 1);
+  const fraction = last > 0 ? Math.min(1, (Math.min(segIdx, last) + inner) / last) : inner;
+  const progressSink = useRef(onProgress);
+  progressSink.current = onProgress;
+  useEffect(() => {
+    if (typeof progressSink.current === 'function') progressSink.current(fraction);
+  }, [fraction]);
   const tally = useRef({ correct: 0, total: 0 });
   const reported = useRef(false);
   // { [microOutputId]: submitted } — reported with the step so a Check proof by micro-output
@@ -177,7 +189,6 @@ export default function StepView({
   if (!step) return null;
   const seg = segments[segIdx] || segments[segments.length - 1];
   const nr = stepNr(step.id);
-  const minutes = minutesOf(unit, step.id);
 
   const attempt = (p) => { if (typeof onAttempt === 'function') onAttempt({ ...p, stepId: step.id }); };
   const count = (r) => {
@@ -185,17 +196,24 @@ export default function StepView({
     tally.current.correct += r.correct || 0;
     tally.current.total += r.total || 0;
   };
-  const advance = () => setSegIdx((i) => Math.min(i + 1, segments.length - 1));
   const finishStep = (extra = {}) => {
     if (reported.current) return;
     reported.current = true;
     const micro = Object.keys(microDone.current).length ? { microOutputs: { ...microDone.current } } : {};
     if (typeof onDone === 'function') onDone({ stepId: step.id, correct: tally.current.correct, total: tally.current.total, ...micro, ...extra });
   };
+  // The next segment; the closing one ('end') finishes the step straight away — the player's
+  // celebration is the „done" screen.
+  const advance = () => {
+    const to = Math.min(segAt.current + 1, last);
+    setInner(0);
+    if (to !== segAt.current && segments[to] && segments[to].id === 'end') { finishStep(); return; }
+    setSegIdx(to);
+  };
   // The player core's attempt of this step (unitPlan: pool steps and the Check): it seeds the
   // option order of non-exam choice items, so a repeat may reorder and a re-render never does.
   const drawAttempt = Number(step.plan && step.plan.attempt) || 1;
-  const runProps = { unitId, lines, stepId: step.id, level, names, attempt: drawAttempt, onAttempt: attempt };
+  const runProps = { unitId, lines, stepId: step.id, level, names, onProgress: setInner, attempt: drawAttempt, onAttempt: attempt };
 
   let body = null;
   if (seg.block) {
@@ -250,7 +268,7 @@ export default function StepView({
       body = (
         <>
           <RuleCardView card={ruleCard} modelSentence={step.modelSentence} />
-          {!ruleCard && step.ruleCard && <p className="mt-2 text-[0.8125rem] text-graphite">{t('rule.missing')}</p>}
+          {!ruleCard && step.ruleCard && <p className="mt-2 text-[0.875rem] text-game-muted">{t('rule.missing')}</p>}
           <NextBar onNext={advance} label={t('item.next')} />
         </>
       );
@@ -274,10 +292,10 @@ export default function StepView({
     case 'aussprache':
       body = (
         <div>
-          <Card tone="sunk" className="p-4">
+          <div className="rounded-[1.25rem] border-2 border-game-line bg-course-wash p-4">
             <p className={LABEL}>{t('aus.focus')}</p>
-            <p className="mt-1 text-[1rem] font-bold text-ink" lang="de">{step.aussprache.focus}</p>
-          </Card>
+            <p className="mt-1 text-[1.125rem] font-extrabold text-course-ink" lang="de">{step.aussprache.focus}</p>
+          </div>
           <AusspracheRun
             key="aussprache"
             perception={perception}
@@ -318,17 +336,17 @@ export default function StepView({
     case 'redemittel':
       body = (
         <>
-          <Card className="p-5">
+          <div className={PANEL}>
             <p className={LABEL}>{t('seg.redemittel')}</p>
-            <ul className="mt-3 space-y-2">
+            <ul className="mt-3 space-y-2.5">
               {redemittel.map((r) => (
-                <li key={r.id} className="border-t border-rule pt-2 first:border-t-0 first:pt-0">
-                  <p className="text-[1rem] font-bold text-ink" lang="de">{r.de}</p>
-                  <p className="text-[0.8125rem] text-graphite">{lang === 'de' ? r.function : r.en}</p>
+                <li key={r.id} className="border-t-2 border-game-line pt-2.5 first:border-t-0 first:pt-0">
+                  <p className="text-[1.0625rem] font-extrabold text-game-text" lang="de">{r.de}</p>
+                  <p className="text-[0.875rem] font-semibold text-game-muted">{lang === 'de' ? r.function : r.en}</p>
                 </li>
               ))}
             </ul>
-          </Card>
+          </div>
           <NextBar onNext={advance} label={t('item.next')} />
         </>
       );
@@ -362,7 +380,7 @@ export default function StepView({
           onDone={(r) => finishStep({ correct: 0, total: 0, submitted: !!r?.submitted, bankKey: step.of, revision: true })}
         />
       ) : (
-        <p className="text-[0.9375rem] text-graphite">{t('step.unknown')}</p>
+        <p className="text-[0.9375rem] text-game-muted">{t('step.unknown')}</p>
       );
       break;
     }
@@ -383,66 +401,54 @@ export default function StepView({
           lines={lines}
           names={names}
           onAttempt={attempt}
+          onProgress={setInner}
           onDone={(r) => { count(r); finishStep(r && r.proofs ? { proofs: r.proofs, proofItems: r.proofItems || null } : {}); }}
         />
       );
       break;
     case 'end':
+      // reached only by a step with nothing before its close (advance() reports the others)
       body = (
-        <Card tone="wash" className="p-5">
-          <p className="font-display text-[1.375rem] font-semibold text-ink">{t('step.done')}</p>
+        <div className={PANEL}>
+          <p className="text-[1.375rem] font-extrabold text-game-text">{t('step.done')}</p>
           {tally.current.total > 0 && (
-            <p className="mt-2 text-[0.9375rem] text-ink">{t('step.result', { c: tally.current.correct, t: tally.current.total })}</p>
+            <p className="mt-2 text-[1rem] font-semibold text-game-text">{t('step.result', { c: tally.current.correct, t: tally.current.total })}</p>
           )}
-          {step.endLine && <p className="mt-3 text-[1rem] leading-relaxed text-ink" lang="de">{step.endLine}</p>}
-          <div className="mt-5 flex justify-end">
-            <Button onClick={() => finishStep()} size="lg" className="w-full sm:w-auto">{t('step.next')}</Button>
+          {step.endLine && <p className="mt-3 text-[1.0625rem] font-semibold leading-relaxed text-game-text" lang="de">{step.endLine}</p>}
+          <div className="mt-6">
+            <GameButton onClick={() => finishStep()}>{t('step.next')}</GameButton>
           </div>
-        </Card>
+        </div>
       );
       break;
     default:
       body = (
         <>
-          <p className="text-[0.9375rem] text-graphite">{t('step.unknown')}</p>
+          <p className="text-[0.9375rem] text-game-muted">{t('step.unknown')}</p>
           <NextBar onNext={() => finishStep()} label={t('item.next')} />
         </>
       );
   }
 
   const stepTitle = step.title || (step.kind === 'sprechen' ? 'Sprechen' : step.kind === 'schreiben' ? 'Schreiben' : step.kind === 'ueberarbeiten' ? t('step.ueberarbeiten') : step.kind === 'check' ? t('check.title') : step.kind === 'pruefung' ? t('seg.exam') : '');
-  const multi = segments.length > 1;
-  const progress = multi ? Math.round((segIdx / (segments.length - 1)) * 100) : null;
 
   return (
     <section className="mx-auto w-full max-w-2xl" data-step-id={step.id} data-step-kind={step.kind}>
       <header className="mb-5">
         {onBack && (
-          <button type="button" onClick={onBack} className="mb-3 inline-flex min-h-11 items-center gap-1 text-sm font-bold text-graphite hover:text-siegel-deep">
+          <button type="button" onClick={onBack} className="mb-3 inline-flex min-h-11 items-center gap-1 text-[0.9375rem] font-extrabold text-game-muted hover:text-course-ink">
             <ArrowLeft className="h-4 w-4" aria-hidden="true" /> {t('step.back')}
           </button>
         )}
-        <p className="flex flex-wrap items-center gap-x-2 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">
+        <p className="flex flex-wrap items-center gap-x-2 text-[0.75rem] font-extrabold uppercase tracking-[0.08em] text-course-ink">
           {nr != null && <span>{t('seg.step', { n: nr })}</span>}
-          {seg.label && <span aria-hidden="true">·</span>}
+          {nr != null && seg.label && <span aria-hidden="true">·</span>}
           {seg.label && <span>{t(seg.label)}</span>}
-          {minutes != null && <span className="font-normal normal-case tracking-normal text-graphite">{t('start.minutes', { n: minutes })}</span>}
         </p>
         {stepTitle && (
-          <h1 className="mt-2 font-display text-[1.375rem] font-semibold leading-tight tracking-[-0.018em] text-ink [hyphens:auto] sm:text-[1.75rem]" lang="de">
+          <h1 className="mt-1 text-[1.125rem] font-extrabold leading-tight text-game-muted [hyphens:auto] sm:text-[1.25rem]" lang="de">
             {stepTitle}
           </h1>
-        )}
-        {progress != null && (
-          <div
-            className="mt-3 h-1.5 overflow-hidden rounded-pill bg-paper-sunk"
-            role="progressbar"
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={progress}
-          >
-            <div className="h-full rounded-pill bg-accent-limette transition-[width] duration-300 motion-reduce:transition-none" style={{ width: `${progress}%` }} />
-          </div>
         )}
       </header>
       <div key={seg.id}>{body}</div>
@@ -459,8 +465,8 @@ function planEarlier(plan) {
 
 function NextBar({ onNext, label }) {
   return (
-    <div className="mt-6 flex justify-end border-t border-rule pt-4">
-      <Button onClick={onNext} size="lg" className="w-full sm:w-auto">{label}</Button>
+    <div className="mt-8">
+      <GameButton onClick={onNext}>{label}</GameButton>
     </div>
   );
 }
@@ -479,7 +485,7 @@ function AusspracheRun({ perception, readAloud, runProps, readAloudDone, setRead
   if (phase === 'read' && readAloud?.lineDe) {
     return (
       <div className="mt-4">
-        <p className="mb-3 text-[0.9375rem] text-graphite">{t('aus.readAloud')}</p>
+        <p className="mb-3 text-[1.125rem] font-extrabold text-game-text">{t('aus.readAloud')}</p>
         <ReadAloudLine
           lektionId={runProps.unitId}
           lineKey={`${runProps.stepId}-readaloud`}

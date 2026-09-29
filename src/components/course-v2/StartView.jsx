@@ -1,64 +1,78 @@
 import { useMemo, useState } from 'react';
-import { Target } from 'lucide-react';
-import Button from '../ui/Button.jsx';
-import Card from '../ui/Card.jsx';
-import Chip from '../ui/Chip.jsx';
+import { ChevronDown, Mic } from 'lucide-react';
+import CastAvatar from './CastAvatar.jsx';
+import GameButton from './GameButton.jsx';
+import { SpeechBubble, StickyAction } from './GameParts.jsx';
 import InputView from './InputView.jsx';
 import ItemView from './ItemView.jsx';
 import ItemRun from './ItemRun.jsx';
 import MicroOutputView from './MicroOutputView.jsx';
-import { canDoTexts, laneLabel, lineIndex, teilLabel } from './content.js';
+import UnitIntro from './UnitIntro.jsx';
+import { canDoTexts, canPlay, laneLabel, lineIndex, teilLabel } from './content.js';
+import { introBubble, narratorOf } from './story.js';
+import { XP } from '../../lib/course-v2/gamify.js';
 import { useV2Strings } from './strings.js';
-
-const LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite';
 
 /**
  * StartView({ unit, level, onDone }) — the Start slot that opens a unit (SCHEMA §8 Start,
- * BLUEPRINT §3.1 / §3.2, §7.3 S2):
+ * BLUEPRINT §3.1 / §3.2, §7.3 S2), soft (owner feedback 2026-09-29: the unit used to open
+ * with a speaking test before anything was taught):
  *
- *   „Was bisher geschah" (U01 only) → the Lernziele box (3–5 can-dos in our own ich-Form
- *   wording) and the Prüfungsfokus chips → the B-skeleton Auftakt (a question and a 60-s
- *   spoken micro-output) → the serial episode (listen first, transcript after; its optional
- *   `folge.glosses` are tappable like an input's) with its one gist item → „Los geht's", or
- *   „Ich kann das schon" (the test-out, when offered).
+ *   1. the INTRO (UnitIntro): the narrator's speech bubble („Was bisher geschah" / the story's
+ *      opening), „Heute lernen Sie" (3–5 can-dos in our own wording), a meta row, ONE „Los
+ *      geht's"; the Prüfungsfokus folded in a small line; „Test machen und überspringen" (the
+ *      test-out, when offered) as a quiet text button;
+ *   2. the serial EPISODE (listen first, transcript after; its optional `folge.glosses` are
+ *      tappable like an input's) with its one gist item — the first, friendly interaction;
+ *   3. the Auftakt's spoken micro-output, when the unit has one, as an OPTIONAL folded
+ *      „Bonus: Schon mal probieren?" card — never required, never a gate.
  *
- * onDone({ stepId, correct, total, testOut }) once. „Ich kann das schon" runs the test-out
- * here — the unit's Lektions-Check items plus its proof items (BLUEPRINT §3.5) — and reports
- * `testOut: { correct, total }`; the player decides with `testOutPassed()` (≥ 80 % credits the
- * practice steps, the two Aufgaben stay open). Without the test-out `testOut` is null.
+ * onDone({ stepId, correct, total, testOut }) once. „Test machen und überspringen" runs the
+ * test-out here — the unit's Lektions-Check items plus its proof items (BLUEPRINT §3.5) — and
+ * reports `testOut: { correct, total }`; the player decides with `testOutPassed()` (≥ 80 %
+ * credits the practice steps, the two Aufgaben stay open). Without the test-out `testOut` is null.
  * Optional: onAttempt (every answered item), course (manifest: can-do wording, minutes),
  * canDos, names.
  */
 export default function StartView({ unit, level, onDone, onAttempt, course = null, canDos = null, names = null }) {
-  const [lang, t] = useV2Strings();
+  const [, t] = useV2Strings();
   const start = unit?.start || {};
   const lines = useMemo(() => lineIndex(unit), [unit]);
   const goals = useMemo(() => canDoTexts(unit, course, canDos), [unit, course, canDos]);
-  const [auftaktDone, setAuftaktDone] = useState(!start.auftakt?.microOutput);
+  const [stage, setStage] = useState('intro'); // intro | folge | bonus
+  const [heard, setHeard] = useState(false);
   const [gist, setGist] = useState(null);
+  const [bonusOpen, setBonusOpen] = useState(false);
   const [testing, setTesting] = useState(false);
   const stepId = unit ? `${unit.id}-start` : 'start';
 
   if (!unit) return null;
-  const minutes = unit.minutesPlanned?.total ?? null;
   const gistItem = start.folge?.gistItem || null;
   const folge = start.folge || null;
   // the Folge's own tap glosses (SCHEMA §8 Start, optional): a word it uses before its unit glosses it
   const folgeGlosses = Array.isArray(folge?.glosses) ? folge.glosses : [];
-  const ready = auftaktDone && (!gistItem || gist);
+  const auftakt = start.auftakt && start.auftakt.microOutput ? start.auftakt : null;
+  const narrator = narratorOf(unit, level, names);
 
   const finish = (testOut) => {
     if (typeof onDone === 'function') {
       onDone({ stepId, correct: gist && gist.correct ? 1 : 0, total: gist ? 1 : 0, testOut: testOut || null });
     }
   };
+  const top = () => { if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'auto' }); };
+  const toBonusOrSteps = () => {
+    if (auftakt) { setStage('bonus'); top(); } else finish(false);
+  };
+  const begin = () => {
+    if (folge) { setStage('folge'); top(); } else toBonusOrSteps();
+  };
 
   const testItems = [...(unit.check?.items || []), ...(unit.check?.proofItems || [])];
   if (testing && testItems.length) {
     return (
       <section className="mx-auto w-full max-w-2xl" data-step-id={`${stepId}-testout`}>
-        <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{t('start.testOut')}</p>
-        <p className="mb-4 mt-2 text-[0.9375rem] text-graphite">{t('start.testOutLead')}</p>
+        <p className="text-[0.75rem] font-extrabold uppercase tracking-[0.08em] text-course-ink">{t('start.testOut')}</p>
+        <p className="mb-5 mt-1 text-[1rem] font-semibold text-game-muted">{t('start.testOutLead')}</p>
         <ItemRun
           key="testout"
           items={testItems}
@@ -74,97 +88,109 @@ export default function StartView({ unit, level, onDone, onAttempt, course = nul
     );
   }
 
-  return (
-    <section className="mx-auto w-full max-w-2xl space-y-5" data-step-id={stepId}>
-      <header>
-        <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">
-          {String(unit.level || level || '').toUpperCase()} · {lang === 'de' ? 'Lektion' : 'Unit'} {unit.nr}
-          {minutes != null && <span className="ml-2 font-normal normal-case tracking-normal text-graphite">{t('start.minutes', { n: minutes })}</span>}
-        </p>
-        <h1 className="mt-2 font-display text-[1.625rem] font-semibold leading-tight tracking-[-0.018em] text-ink [hyphens:auto] sm:text-[2rem]" lang="de">
-          {unit.title?.de}
-        </h1>
-        {unit.title?.canDo && <p className="mt-2 text-[1rem] leading-relaxed text-graphite" lang="de">{unit.title.canDo}</p>}
-      </header>
+  if (stage === 'intro') {
+    const steps = Array.isArray(unit.steps) ? unit.steps : [];
+    const byStep = unit.minutesPlanned && unit.minutesPlanned.byStep ? Object.values(unit.minutesPlanned.byStep).map(Number).filter(Boolean) : [];
+    const perStep = byStep.length ? Math.round(byStep.reduce((a, b) => a + b, 0) / byStep.length) : 0;
+    const chips = Array.isArray(start.pruefungsfokusChips) ? start.pruefungsfokusChips.map((tpl) => teilLabel(tpl)) : [];
+    const lane = unit.spec?.lanes?.primary ? laneLabel(unit.spec.lanes.primary) : null;
+    return (
+      <section className="mx-auto w-full max-w-2xl" data-step-id={stepId}>
+        <UnitIntro
+          eyebrow={`${String(unit.level || level || '').toUpperCase()} · ${t('player.unit', { n: unit.nr })}`}
+          title={unit.title?.de}
+          narrator={narrator}
+          bubble={introBubble(unit)}
+          goals={Object.values(goals)}
+          stepCount={steps.length}
+          perStepMinutes={perStep}
+          xp={steps.length * XP.step + XP.unit}
+          examFocus={lane && chips.length ? [lane, ...chips] : chips}
+          onStart={begin}
+          onTestOut={start.testOut?.offered ? () => { if (testItems.length) { setTesting(true); top(); } else finish(null); } : null}
+        />
+      </section>
+    );
+  }
 
-      {start.recapDe && (
-        <Card tone="sunk" className="p-4">
-          <p className={LABEL}>{t('start.recap')}</p>
-          <p className="mt-1 text-[0.9375rem] leading-relaxed text-ink" lang="de">{start.recapDe}</p>
-        </Card>
-      )}
-
-      <Card className="p-5">
-        <p className={`flex items-center gap-2 ${LABEL}`}><Target className="h-4 w-4" aria-hidden="true" /> {t('start.goals')}</p>
-        <ul className="mt-3 space-y-2">
-          {Object.entries(goals).map(([id, text]) => (
-            <li key={id} className="flex items-start gap-2 text-[0.9375rem] leading-relaxed text-ink" lang="de">
-              <span aria-hidden="true" className="mt-0.5 text-graphite">›</span> {text}
-            </li>
-          ))}
-        </ul>
-        {Array.isArray(start.pruefungsfokusChips) && start.pruefungsfokusChips.length > 0 && (
-          <div className="mt-4 border-t border-rule pt-4">
-            <p className={LABEL}>{t('start.examFocus')}</p>
-            <div className="mt-2 flex flex-wrap gap-2">
-              {start.pruefungsfokusChips.map((tpl) => (
-                <Chip key={tpl} tone="label">{teilLabel(tpl)}</Chip>
-              ))}
-              {unit.spec?.lanes?.primary && <Chip tone="quiet">{laneLabel(unit.spec.lanes.primary)}</Chip>}
+  if (stage === 'bonus' && auftakt) {
+    return (
+      <section className={`mx-auto w-full max-w-2xl ${bonusOpen ? '' : 'pb-32 sm:pb-0'}`} data-step-id={stepId}>
+        <div className="flex items-end gap-3">
+          <CastAvatar name={narrator} size={84} className="shrink-0" />
+          <SpeechBubble tail="left" className="min-w-0 flex-1">
+            <p className="text-[1.125rem] font-bold leading-snug text-game-text">{t('start.bonusBubble')}</p>
+          </SpeechBubble>
+        </div>
+        <div className="mt-6 rounded-[1.25rem] border-2 border-dashed border-game-line bg-white">
+          <button
+            type="button"
+            onClick={() => setBonusOpen((o) => !o)}
+            aria-expanded={bonusOpen}
+            aria-controls={`${stepId}-bonus`}
+            className="flex min-h-14 w-full items-center gap-3 rounded-[1.25rem] px-4 py-3 text-left hover:bg-course-wash"
+          >
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-game-xp-wash text-game-xp-ink">
+              <Mic className="h-5 w-5" aria-hidden="true" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[1.0625rem] font-extrabold text-game-text">{t('start.bonus')}</span>
+              <span className="block text-[0.875rem] font-semibold text-game-muted">{t('start.bonusLead')}</span>
+            </span>
+            <ChevronDown className={`h-5 w-5 shrink-0 text-game-muted transition-transform motion-reduce:transition-none ${bonusOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+          </button>
+          {bonusOpen && (
+            <div id={`${stepId}-bonus`} className="border-t-2 border-dashed border-game-line p-4">
+              {auftakt.promptDe && <p className="mb-3 text-[1.125rem] font-extrabold text-game-text" lang="de">{auftakt.promptDe}</p>}
+              <MicroOutputView mo={auftakt.microOutput} level={level} onDone={() => finish(false)} />
             </div>
-          </div>
+          )}
+        </div>
+        {!bonusOpen && (
+          <StickyAction>
+            <GameButton onClick={() => finish(false)}>{t('start.toSteps')}</GameButton>
+          </StickyAction>
         )}
-      </Card>
+      </section>
+    );
+  }
 
-      {start.auftakt && (
-        <div>
-          {start.auftakt.promptDe && <p className="mb-3 font-display text-[1.1875rem] font-semibold text-ink" lang="de">{start.auftakt.promptDe}</p>}
-          {!auftaktDone && start.auftakt.microOutput && (
-            <MicroOutputView mo={start.auftakt.microOutput} level={level} onDone={() => setAuftaktDone(true)} />
-          )}
+  // the episode: listen first, the transcript after, then its one gist question
+  const folgeLines = (folge && folge.lines) || [];
+  const canListen = folgeLines.length > 0 && canPlay(unit.id, folgeLines[0].id);
+  const showGist = heard || !canListen;
+  return (
+    <section className={`mx-auto w-full max-w-2xl ${showGist && !gistItem ? 'pb-32 sm:pb-0' : ''}`} data-step-id={stepId}>
+      <p className="text-[0.75rem] font-extrabold uppercase tracking-[0.08em] text-course-ink">{t('start.episode')}</p>
+      {folge && (
+        <div className="mt-1">
+          <InputView
+            input={{ title: folge.title, lines: folge.lines || [], glosses: folgeGlosses, transcriptAfterUnaidedListen: true }}
+            unitId={unit.id}
+            names={names}
+            onHeard={() => setHeard(true)}
+          />
         </div>
       )}
-
-      {auftaktDone && folge && (
-        <div>
-          <p className={LABEL}>{t('start.episode')}</p>
-          <div className="mt-2">
-            <InputView
-              input={{ title: folge.title, lines: folge.lines || [], glosses: folgeGlosses, transcriptAfterUnaidedListen: true }}
-              unitId={unit.id}
-              names={names}
-            />
-          </div>
-          {gistItem && (
-            <div className="mt-4">
-              <ItemView
-                item={gistItem}
-                level={level}
-                stepId={stepId}
-                unitId={unit.id}
-                lines={lines}
-                onResult={(p) => { setGist(p); if (typeof onAttempt === 'function') onAttempt(p); }}
-              />
-            </div>
-          )}
+      {gistItem && showGist && (
+        <div className="mt-8 border-t-2 border-game-line pt-6">
+          <ItemView
+            item={gistItem}
+            level={level}
+            stepId={stepId}
+            unitId={unit.id}
+            lines={lines}
+            names={names}
+            onResult={(p) => { setGist(p); if (typeof onAttempt === 'function') onAttempt(p); }}
+            onNext={toBonusOrSteps}
+          />
         </div>
       )}
-
-      <div className="flex flex-col-reverse gap-3 border-t border-rule pt-4 sm:flex-row sm:items-center sm:justify-between">
-        {start.testOut?.offered ? (
-          <div className="max-w-sm">
-            <button
-              type="button"
-              onClick={() => (testItems.length ? setTesting(true) : finish(null))}
-              className="inline-flex min-h-11 items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-graphite hover:border-siegel hover:text-ink"
-            >
-              {t('start.testOut')}
-            </button>
-            <p className="mt-1 text-[0.75rem] leading-snug text-graphite">{t('start.testOutLead')}</p>
-          </div>
-        ) : <span />}
-        <Button onClick={() => finish(false)} size="lg" disabled={!ready} className="w-full sm:w-auto">{t('start.begin')}</Button>
-      </div>
+      {!gistItem && showGist && (
+        <StickyAction>
+          <GameButton onClick={toBonusOrSteps}>{t('item.next')}</GameButton>
+        </StickyAction>
+      )}
     </section>
   );
 }

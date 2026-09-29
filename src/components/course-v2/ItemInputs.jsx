@@ -1,9 +1,8 @@
 import { useMemo, useState } from 'react';
 import { Check, X } from 'lucide-react';
-import ChoiceTile from '../ui/ChoiceTile.jsx';
 import { useV2Strings } from './strings.js';
 
-const LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite';
+const LABEL = 'text-[0.75rem] font-extrabold uppercase tracking-[0.08em] text-game-muted';
 
 /** A small deterministic hash → shuffle, so a re-render never reorders the screen. */
 function seededOrder(n, seed) {
@@ -30,21 +29,69 @@ export function optionState(value, { picked, resolved, correctValue }) {
   return 'muted';
 }
 
-/** A vertical list of tap options (≤ 4 visible choices per item). */
-export function ChoiceList({ options, picked, onPick, resolved, correctValue, disabled }) {
+// The course tile (design-tokens.js "THE COURSE THEME"): chunky, with a HARD bottom edge
+// (border-2 + border-b-4) that a press flattens. Selected is the palette primary; after the
+// check right is the game green and wrong the game crimson — each state also carries an icon
+// and a visually hidden word, so it is never colour alone. Full literal class strings only.
+const TILE_STATE = {
+  idle: 'border-game-line bg-white text-game-text hover:bg-course-wash active:translate-y-0.5 active:border-b-2',
+  selected: 'border-course bg-course-wash text-course-ink',
+  correct: 'border-game-right bg-game-right-wash text-game-right-ink',
+  wrong: 'border-game-wrong bg-game-wrong-wash text-game-wrong-ink',
+  solution: 'border-dashed border-game-right bg-white text-game-right-ink',
+  muted: 'border-game-line bg-white text-game-muted opacity-60',
+};
+
+const TILE_SR = { correct: 'item.srRight', wrong: 'item.srWrong', solution: 'item.srSolution', selected: 'item.srSelected' };
+
+/** One tappable answer tile (choice, Zuordnung, match). ≥ 56 px tall, full width. */
+export function GameTile({ state = 'idle', disabled = false, onClick, lang, keyLabel = null, compact = false, className = '', children, ...rest }) {
+  const [, t] = useV2Strings();
+  const icon = state === 'wrong'
+    ? <X className="h-5 w-5 shrink-0" strokeWidth={3} aria-hidden="true" />
+    : (state === 'selected' || state === 'correct' || state === 'solution')
+      ? <Check className="h-5 w-5 shrink-0" strokeWidth={3} aria-hidden="true" />
+      : null;
   return (
-    <div className="flex flex-col gap-2">
+    <button
+      type="button"
+      disabled={disabled}
+      onClick={onClick}
+      aria-pressed={state === 'selected'}
+      lang={lang}
+      className={
+        `flex w-full items-center justify-between gap-3 rounded-2xl border-2 border-b-4 px-4 text-left font-extrabold ${compact ? 'min-h-12 py-2 text-[1rem]' : 'min-h-14 py-3 text-[1.125rem]'} ` +
+        'transition-[transform,background-color,border-color] duration-100 ease-snap motion-reduce:transition-none disabled:cursor-default ' +
+        `${TILE_STATE[state] || TILE_STATE.idle} ${className}`
+      }
+      {...rest}
+    >
+      <span className="flex min-w-0 items-baseline gap-2.5">
+        {keyLabel && <span className="shrink-0 rounded-md border-2 border-current px-1.5 text-[0.75rem] uppercase opacity-70">{keyLabel}</span>}
+        <span className="min-w-0">{children}</span>
+      </span>
+      {icon}
+      {TILE_SR[state] && <span className="sr-only">{t(TILE_SR[state])}</span>}
+    </button>
+  );
+}
+
+/** A vertical list of tap options (≤ 4 visible choices per item). */
+export function ChoiceList({ options, picked, onPick, resolved, correctValue, disabled, compact = false }) {
+  return (
+    <div className={`flex flex-col ${compact ? 'gap-2' : 'gap-3'}`}>
       {options.map((opt) => (
-        <ChoiceTile
+        <GameTile
           key={opt.value}
           keyLabel={opt.key || null}
           state={optionState(opt.value, { picked, resolved, correctValue })}
           disabled={disabled || resolved}
           onClick={() => onPick(opt.value)}
+          compact={compact}
           lang="de"
         >
           {opt.label}
-        </ChoiceTile>
+        </GameTile>
       ))}
     </div>
   );
@@ -59,7 +106,7 @@ export function ChoiceSelect({ id, options, picked, onPick, resolved, disabled }
       value={picked || ''}
       disabled={disabled || resolved}
       onChange={(e) => onPick(e.target.value || null)}
-      className="w-full rounded-clay border border-rule bg-white px-4 py-3 text-[1rem] text-ink outline-none focus:border-siegel disabled:bg-paper-sunk"
+      className="min-h-14 w-full rounded-2xl border-2 border-b-4 border-game-line bg-white px-4 py-3 text-[1.0625rem] font-bold text-game-text outline-none focus:border-course disabled:bg-course-ground"
       lang="de"
     >
       <option value="">{t('item.choose')}</option>
@@ -84,7 +131,7 @@ export function TypedInput({ id, value, onChange, onSubmit, disabled, placeholde
     autoCorrect: 'off',
     spellCheck: false,
     onChange: (e) => onChange(e.target.value),
-    className: 'mt-2 w-full rounded-clay border border-rule bg-white px-4 py-3 text-[1.0625rem] text-ink outline-none focus:border-siegel disabled:bg-paper-sunk',
+    className: 'mt-2 w-full rounded-2xl border-2 border-b-4 border-game-line bg-white px-4 py-3.5 text-[1.125rem] font-bold text-game-text outline-none placeholder:text-game-locked-icon focus:border-course disabled:bg-course-ground',
     placeholder: placeholder || '…',
     lang: 'de',
   };
@@ -133,13 +180,14 @@ export function TilesInput({ itemId, tiles, onChange, disabled }) {
   };
 
   const tileBase =
-    'inline-flex min-h-11 items-center gap-1.5 rounded-clay border px-3.5 py-2 text-[0.9375rem] font-bold transition-all duration-100 ease-snap motion-reduce:transition-none disabled:opacity-70';
+    'inline-flex min-h-12 items-center gap-1.5 rounded-xl border-2 border-b-4 px-3.5 py-2 text-[1.0625rem] font-extrabold ' +
+    'transition-[transform,background-color] duration-100 ease-snap active:translate-y-0.5 active:border-b-2 motion-reduce:transition-none disabled:opacity-80';
 
   return (
     <div data-item={itemId}>
-      <p className="text-[0.9375rem] text-graphite">{t('tiles.instructions')}</p>
+      <p className="text-[0.9375rem] font-semibold text-game-muted">{t('tiles.instructions')}</p>
       <p className={`mt-4 ${LABEL}`}>{t('tiles.yourSentence')}</p>
-      <div className="mt-2 flex min-h-[3rem] flex-wrap gap-2 rounded-clay border border-dashed border-rule bg-paper-sunk p-3">
+      <div className="mt-2 flex min-h-[4rem] flex-wrap content-start gap-2 border-b-2 border-game-line py-2">
         {built.map((entry) => (
           <button
             key={entry.key}
@@ -147,15 +195,15 @@ export function TilesInput({ itemId, tiles, onChange, disabled }) {
             disabled={disabled}
             onClick={() => remove(entry)}
             aria-label={t('tiles.remove', { word: entry.tok })}
-            className={`${tileBase} border-siegel bg-siegel text-white shadow-raise-siegel active:translate-y-1 active:shadow-none`}
+            className={`${tileBase} border-course bg-course-wash text-course-ink`}
             lang="de"
           >
             <span>{entry.tok}</span>
-            {!disabled && <X className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />}
+            {!disabled && <X className="h-4 w-4 shrink-0" aria-hidden="true" />}
           </button>
         ))}
       </div>
-      <p className={`mt-4 ${LABEL}`}>{t('tiles.bank')}</p>
+      <p className={`mt-5 ${LABEL}`}>{t('tiles.bank')}</p>
       <div className="mt-2 flex flex-wrap gap-2">
         {bank.map((entry) => (
           <button
@@ -163,7 +211,7 @@ export function TilesInput({ itemId, tiles, onChange, disabled }) {
             type="button"
             disabled={disabled}
             onClick={() => add(entry)}
-            className={`${tileBase} border-rule bg-white text-ink shadow-raise hover:border-siegel active:translate-y-1 active:shadow-none`}
+            className={`${tileBase} border-game-line bg-white text-game-text hover:bg-course-wash`}
             lang="de"
           >
             {entry.tok}
@@ -210,12 +258,13 @@ export function MatchInput({ itemId, pairs, onComplete, disabled }) {
 
   return (
     <div>
-      <p className="text-[0.9375rem] text-graphite">{t('match.instructions')}</p>
+      <p className="text-[0.9375rem] font-semibold text-game-muted">{t('match.instructions')}</p>
       <div className="mt-4 grid grid-cols-2 gap-3">
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2.5">
           {pairs.map((p, i) => (
-            <ChoiceTile
+            <GameTile
               key={`l-${i}`}
+              compact
               state={cls(selected === i, flash && flash.l === i, matched.has(i))}
               disabled={disabled || matched.has(i)}
               onClick={() => pickLeft(i)}
@@ -223,25 +272,26 @@ export function MatchInput({ itemId, pairs, onComplete, disabled }) {
               lang="de"
             >
               {p[0]}
-            </ChoiceTile>
+            </GameTile>
           ))}
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2.5">
           {order.map((i) => (
-            <ChoiceTile
+            <GameTile
               key={`r-${i}`}
+              compact
               state={cls(false, flash && flash.r === i, matched.has(i))}
               disabled={disabled || matched.has(i)}
               onClick={() => pickRight(i)}
               aria-label={`${t('match.right', { n: i + 1 })}: ${pairs[i][1]}`}
             >
               {pairs[i][1]}
-            </ChoiceTile>
+            </GameTile>
           ))}
         </div>
       </div>
       {matched.size === pairs.length && (
-        <p className="mt-3 flex items-center gap-2 text-[0.875rem] font-bold text-siegel-deep">
+        <p className="mt-3 flex items-center gap-2 text-[0.9375rem] font-extrabold text-game-right-ink">
           <Check className="h-4 w-4" aria-hidden="true" /> {pairs.length}/{pairs.length}
         </p>
       )}

@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Loader2, PenTool, Timer } from 'lucide-react';
-import Button from '../ui/Button.jsx';
-import Card from '../ui/Card.jsx';
 import { useAuth } from '../../contexts/AuthContext';
+import GameButton, { QuietButton } from './GameButton.jsx';
 import ResultCard from './ResultCard.jsx';
 import SpeakingRun from './SpeakingRun.jsx';
 import { evaluateWriting } from './ai.js';
 import { countWords } from './content.js';
 import { useV2Strings } from './strings.js';
 
-const LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite';
+const LABEL = 'text-[0.75rem] font-extrabold uppercase tracking-[0.08em] text-game-muted';
+const PANEL = 'rounded-[1.25rem] border-2 border-b-4 border-game-line bg-white p-5';
 
 /** A visible countdown; `onEnd` once at 0. The learner can always skip it. */
 export function Countdown({ seconds, onEnd, label }) {
@@ -24,7 +24,7 @@ export function Countdown({ seconds, onEnd, label }) {
   const mm = String(Math.floor(Math.max(0, left) / 60)).padStart(2, '0');
   const ss = String(Math.max(0, left) % 60).padStart(2, '0');
   return (
-    <p className="inline-flex items-center gap-2 font-data text-[0.9375rem] tabular-nums text-ink" role="timer" aria-live="off">
+    <p className="inline-flex items-center gap-2 text-[1rem] font-extrabold tabular-nums text-game-text" role="timer" aria-live="off">
       <Timer className="h-4 w-4" aria-hidden="true" /> {label ? `${label} ` : ''}{mm}:{ss}
     </p>
   );
@@ -76,31 +76,31 @@ export default function MicroOutputView({ mo, level, onDone }) {
 
   return (
     <div>
-      <Card className="p-5">
-        {mo.situationDe && <p className="text-[0.9375rem] leading-relaxed text-graphite" lang="de">{mo.situationDe}</p>}
-        <p className="mt-2 font-display text-[1.1875rem] font-semibold leading-snug text-ink" lang="de">{mo.promptDe}</p>
-        {mo.promptEn && lang !== 'de' && <p className="mt-1 text-[0.875rem] text-graphite">{mo.promptEn}</p>}
-        <p className="mt-2 font-data text-[0.75rem] text-graphite">
+      <div className={PANEL}>
+        {mo.situationDe && <p className="text-[1rem] font-semibold leading-relaxed text-game-muted" lang="de">{mo.situationDe}</p>}
+        <p className="mt-2 text-[1.25rem] font-extrabold leading-snug text-game-text" lang="de">{mo.promptDe}</p>
+        {mo.promptEn && lang !== 'de' && <p className="mt-1 text-[0.9375rem] font-semibold text-game-muted">{mo.promptEn}</p>}
+        <p className="mt-2 text-[0.8125rem] font-bold text-game-muted">
           {t('mo.register', { r: mo.register === 'du' ? 'du' : 'Sie' })}
           {mo.mode === 'spoken' && Array.isArray(mo.seconds) ? ` · ${mo.seconds[0]}–${mo.seconds[1]} s` : ''}
           {mo.mode === 'written' && band ? ` · ${band[0]}–${band[1]} ${lang === 'de' ? 'Wörter' : 'words'}` : ''}
         </p>
-      </Card>
+      </div>
 
       {phase === 'plan' && (
-        <Card tone="wash" className="mt-4 p-4">
-          <p className="text-[0.9375rem] text-ink">{t('mo.planLead')}</p>
+        <div className="mt-4 rounded-[1.25rem] border-2 border-course bg-course-wash p-4">
+          <p className="text-[1rem] font-bold text-course-ink">{t('mo.planLead')}</p>
           <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
             <Countdown seconds={mo.planSeconds} onEnd={() => setPhase('answer')} label={t('mo.plan', { s: mo.planSeconds })} />
-            <Button variant="secondary" onClick={() => setPhase('answer')}>{t('mo.planSkip')}</Button>
+            <GameButton variant="secondary" size="md" onClick={() => setPhase('answer')}>{t('mo.planSkip')}</GameButton>
           </div>
-        </Card>
+        </div>
       )}
 
       {phase === 'answer' && mo.mode === 'spoken' && (
         <div className="mt-4">
           {Array.isArray(mo.seconds) && (
-            <p className="mb-3 text-[0.875rem] text-graphite">{t('mo.speakLead', { min: mo.seconds[0], max: mo.seconds[1] })}</p>
+            <p className="mb-3 text-[0.9375rem] font-semibold text-game-muted">{t('mo.speakLead', { min: mo.seconds[0], max: mo.seconds[1] })}</p>
           )}
           <SpeakingRun
             bankKey={mo.bankKey}
@@ -116,7 +116,7 @@ export default function MicroOutputView({ mo, level, onDone }) {
         <div className="mt-4">
           {results.map((r, i) => <ResultCard key={i} result={r} className="mb-4" showCorrections={i > 0} />)}
           {attempts < 2 && (
-            <Card className="p-5">
+            <div className={PANEL}>
               <label htmlFor={`mo-${mo.id}`} className={LABEL}>{attempts === 1 ? t('mo.revise') : t('mo.write')}</label>
               <textarea
                 id={`mo-${mo.id}`}
@@ -124,46 +124,40 @@ export default function MicroOutputView({ mo, level, onDone }) {
                 value={text}
                 disabled={busy}
                 onChange={(e) => setText(e.target.value)}
-                className="mt-2 w-full resize-y rounded-clay border border-rule bg-white px-4 py-3 text-[1rem] leading-relaxed text-ink outline-none focus:border-siegel disabled:bg-paper-sunk"
+                className="mt-2 w-full resize-y rounded-2xl border-2 border-game-line bg-white px-4 py-3 text-[1.0625rem] font-semibold leading-relaxed text-game-text outline-none focus:border-course disabled:bg-course-ground"
                 lang="de"
               />
               {band && (
-                <p className={`mt-2 font-data text-[0.75rem] ${words >= band[0] && words <= band[1] ? 'text-siegel-deep' : 'text-graphite'}`}>
+                <p className={`mt-2 text-[0.8125rem] font-bold ${words >= band[0] && words <= band[1] ? 'text-game-right-ink' : 'text-game-muted'}`}>
                   {t('mo.words', { n: words, min: band[0], max: band[1] })}
                 </p>
               )}
               <div className="mt-4 flex justify-end">
-                <Button onClick={submit} disabled={busy || words < minToSend}>
+                <GameButton size="md" onClick={submit} disabled={busy || words < minToSend}>
                   {busy ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <PenTool className="h-4 w-4" aria-hidden="true" />}
                   {busy ? t('mo.submitting') : (canRevise ? t('w.submitRevision') : t('mo.submit'))}
-                </Button>
+                </GameButton>
               </div>
-              {error && <p className="mt-3 text-[0.9375rem] text-ink" role="status">{t(error)}</p>}
-            </Card>
+              {error && <p className="mt-3 text-[0.9375rem] font-semibold text-game-text" role="status">{t(error)}</p>}
+            </div>
           )}
         </div>
       )}
 
       {/* MicroOutput.modelDe (SCHEMA §8, 2026-09-28): one model answer, only after the learner's own attempt */}
       {mo.modelDe && (results.length > 0 || spokenResult) && (
-        <details className="mt-4 rounded-clay border border-rule bg-white p-4">
-          <summary className={`cursor-pointer ${LABEL}`}>{t('mo.model')}</summary>
-          <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink" lang="de">{mo.modelDe}</p>
+        <details className="mt-4 rounded-[1.25rem] border-2 border-game-line bg-white p-4">
+          <summary className={`min-h-11 cursor-pointer ${LABEL}`}>{t('mo.model')}</summary>
+          <p className="mt-2 text-[1rem] font-semibold leading-relaxed text-game-text" lang="de">{mo.modelDe}</p>
         </details>
       )}
 
-      <div className="mt-6 flex flex-wrap items-center justify-end gap-3">
+      <div className="mt-6 flex flex-col items-stretch gap-2">
         {!(results.length || spokenResult) && (
-          <button
-            type="button"
-            onClick={finish}
-            className="inline-flex min-h-11 items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-graphite hover:border-siegel hover:text-ink"
-          >
-            {t('mo.skip')}
-          </button>
+          <QuietButton onClick={finish}>{t('mo.skip')}</QuietButton>
         )}
         {(results.length > 0 || spokenResult) && (
-          <Button onClick={finish} size="lg" className="w-full sm:w-auto">{t('item.next')}</Button>
+          <GameButton onClick={finish}>{t('item.next')}</GameButton>
         )}
       </div>
     </div>

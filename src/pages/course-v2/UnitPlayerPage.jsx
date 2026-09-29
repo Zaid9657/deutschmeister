@@ -1,11 +1,17 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Check } from 'lucide-react';
+import { Navigate, useParams, useSearchParams } from 'react-router-dom';
+import { Check } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import Button from '../../components/ui/Button.jsx';
-import Card from '../../components/ui/Card.jsx';
-import Chip from '../../components/ui/Chip.jsx';
-import { normalizeLevel, levelCode, nrOfId, v2Paths } from '../../lib/course-v2/ids.js';
+import CastAvatar from '../../components/course-v2/CastAvatar.jsx';
+import CourseTheme from '../../components/course-v2/CourseTheme.jsx';
+import GameButton, { QuietButton } from '../../components/course-v2/GameButton.jsx';
+import GameTopBar from '../../components/course-v2/GameTopBar.jsx';
+import { SpeechBubble, StatTile, StreakCard, Trophy, XpIcon, clock } from '../../components/course-v2/GameParts.jsx';
+import StepCelebration from '../../components/course-v2/StepCelebration.jsx';
+import { narratorOf } from '../../components/course-v2/story.js';
+import { nextCombo } from '../../components/lesson/ComboChip.jsx';
+import { XP, recordGame, xpForItem } from '../../lib/course-v2/gamify.js';
+import { normalizeLevel, nrOfId, v2Paths } from '../../lib/course-v2/ids.js';
 import { buildUnitPlan, resumeIndex } from '../../lib/course-v2/unitPlan.js';
 import { LERNSCHRITT_KINDS, AUFGABE_KINDS, testOutPassed, unitCompletion } from '../../lib/course-v2/completion.js';
 import { unitRules } from '../../lib/course-v2/homeModel.js';
@@ -43,6 +49,16 @@ import { StartViewSlot, StepViewSlot, KIND_LABEL_DE, hasStartRenderer } from './
 // Signed out (a free level), the same facts go to localStorage (localState.js).
 // Nothing here reads an AI score (PRG-01), and no gate blocks: the recap lists what
 // is open and lets the learner go there.
+//
+// The game layer (owner decision 2026-09-29, design-tokens.js "THE COURSE THEME"; the rules
+// live in src/lib/course-v2/gamify.js): every screen sits in CourseTheme under a top bar with an
+// X, a thick progress bar, the combo flame and this visit's XP. Each answered item earns XP
+// (xpForItem) and moves the combo (ComboChip.nextCombo); a finished Lernschritt adds XP.step and
+// is written to the game ledger ONCE — recordGame({ xp, minutes, steps: 1 }) — then the
+// celebration phase shows it (not after the Check, whose moment is the recap, and not for an
+// Aufgabe moved on from); a newly completed unit adds XP.unit once, at the recap.
+// `?s=<n>` (1-based step position, the course home's path nodes) opens step n directly; ?s=1
+// on a unit not started yet shows its Start first (the home's „start" buttons link there).
 
 const pad2 = (n) => String(n).padStart(2, '0');
 
@@ -72,38 +88,29 @@ function useUnitData(level, nr) {
   return data;
 }
 
-function Shell({ level, title, progress, children, footer }) {
+function Shell({ level, progress, progressLabel = null, combo = 0, xp = 0, children, footer }) {
   const [, t] = useV2Strings();
-  const pct = Math.round(Math.max(0, Math.min(1, progress || 0)) * 100);
   return (
-    <div className="min-h-screen bg-paper font-body text-ink">
-      <div className={`mx-auto max-w-2xl px-4 pt-4 sm:pt-8 ${footer ? 'pb-32' : 'pb-10'}`}>
-        <div className="mb-5 flex items-center gap-3">
-          <Link
-            to={v2Paths.home(level)}
-            className="inline-flex min-h-11 shrink-0 items-center gap-1 font-data text-sm font-bold text-siegel hover:text-siegel-deep"
-            aria-label={t('player.home')}
-          >
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" /> {levelCode(level)}
-          </Link>
-          <div
-            className="h-1.5 flex-1 overflow-hidden rounded-pill bg-siegel-wash"
-            role="progressbar"
-            aria-label={t('player.progress')}
-            aria-valuenow={pct}
-            aria-valuemin={0}
-            aria-valuemax={100}
-          >
-            <div className="h-full rounded-pill bg-accent-limette transition-all duration-500 ease-snap motion-reduce:transition-none" style={{ width: `${pct}%` }} />
-          </div>
-          {title && <span className="hidden shrink-0 font-data text-[0.6875rem] text-graphite sm:inline">{title}</span>}
-        </div>
+    <CourseTheme>
+      <div className={`mx-auto max-w-2xl px-4 ${footer ? 'pb-32' : 'pb-10'}`}>
+        <GameTopBar
+          homeTo={v2Paths.home(level)}
+          homeLabel={t('player.home')}
+          progress={progress}
+          progressLabel={progressLabel || t('player.progress')}
+          combo={combo}
+          xp={xp}
+        />
         {children}
       </div>
       {footer && <ActionBar>{footer}</ActionBar>}
-    </div>
+    </CourseTheme>
   );
 }
+
+const EYEBROW = 'text-[0.8125rem] font-extrabold uppercase tracking-[0.08em] text-game-muted';
+const H1 = 'text-[1.625rem] font-extrabold leading-tight text-game-text [hyphens:auto] sm:text-[2rem]';
+const PANEL = 'rounded-[1.25rem] border-2 border-b-4 border-game-line bg-white p-4 sm:p-5';
 
 // A step's name as the renderer's heading shows it (StepView: the authored title, else
 // „Sprechen"/„Schreiben" — exam part names, German in both chrome languages — else the
@@ -121,29 +128,32 @@ const minutesOf = (unit, stepId) => (unit.minutesPlanned && unit.minutesPlanned.
 function StepList({ unit, steps, finished, currentIndex, onOpen }) {
   const [, t] = useV2Strings();
   return (
-    <ol className="divide-y divide-rule rounded-clay border border-rule bg-white">
+    <ol className="space-y-2.5">
       {steps.map((s, i) => {
         const done = finished.has(s.id);
+        const current = i === currentIndex;
         const min = minutesOf(unit, s.id);
         return (
           <li key={s.id}>
             <button
               type="button"
               onClick={() => onOpen(i)}
-              className="flex min-h-12 w-full items-center gap-3 px-4 py-3 text-left hover:bg-siegel-wash"
-              aria-current={i === currentIndex ? 'step' : undefined}
+              className={`flex min-h-14 w-full items-center gap-3 rounded-2xl border-2 border-b-4 bg-white px-4 py-3 text-left transition-transform duration-100 ease-snap hover:bg-course-wash active:translate-y-0.5 active:border-b-2 motion-reduce:transition-none ${
+                current ? 'border-course' : 'border-game-line'
+              }`}
+              aria-current={current ? 'step' : undefined}
             >
               <span
-                className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-pill font-data text-xs font-bold ${
-                  done ? 'bg-accent-limette-wash text-accent-limette-ink' : 'border border-rule text-graphite'
+                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[0.9375rem] font-extrabold ${
+                  done ? 'bg-game-right text-white' : current ? 'bg-course text-white' : 'bg-game-locked text-game-muted'
                 }`}
                 aria-hidden="true"
               >
-                {done ? <Check className="h-4 w-4" /> : i + 1}
+                {done ? <Check className="h-5 w-5" strokeWidth={3} /> : i + 1}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-sm font-bold text-ink">{stepTitle(s, t)}</span>
-                <span className="block text-xs text-graphite">
+                <span className="block truncate text-[1rem] font-extrabold text-game-text">{stepTitle(s, t)}</span>
+                <span className="block text-[0.8125rem] font-semibold text-game-muted">
                   {t(`kind.${s.kind}`)}{min ? ` · ${t('player.minutes', { n: min })}` : ''}{done ? ` · ${t('player.doneMark')}` : ''}
                 </span>
               </span>
@@ -158,25 +168,19 @@ function StepList({ unit, steps, finished, currentIndex, onOpen }) {
 function StartFallback({ unit, row, steps, finished, onOpen }) {
   const [, t] = useV2Strings();
   const canDos = (row && row.canDos) || [];
-  const chips = (row && row.pruefungsfokus && Object.values(row.pruefungsfokus)[0]) || [];
   return (
     <div className="space-y-5">
       <header>
-        <Chip tone="label">{t('player.unit', { n: unit.nr })}</Chip>
-        <h1 className="mt-3 font-display text-2xl font-semibold leading-tight tracking-[-0.018em] text-ink [hyphens:auto] sm:text-3xl">{unit.title && unit.title.de}</h1>
-        {unit.title && unit.title.canDo && <p className="mt-2 text-graphite">{unit.title.canDo}</p>}
+        <p className={EYEBROW}>{t('player.unit', { n: unit.nr })}</p>
+        <h1 className={`mt-1 ${H1}`}>{unit.title && unit.title.de}</h1>
+        {unit.title && unit.title.canDo && <p className="mt-2 text-[1.0625rem] font-semibold text-game-muted">{unit.title.canDo}</p>}
       </header>
       {canDos.length > 0 && (
-        <Card className="p-4">
-          <h2 className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">{t('player.goals')}</h2>
-          <ul className="mt-2 space-y-1.5 text-sm text-ink">
-            {canDos.map((c) => <li key={c}>{c}</li>)}
+        <div className={PANEL}>
+          <h2 className={EYEBROW}>{t('start.today')}</h2>
+          <ul className="mt-3 space-y-2">
+            {canDos.map((c) => <li key={c} className="text-[1rem] font-bold text-game-text">{c}</li>)}
           </ul>
-        </Card>
-      )}
-      {chips.length > 0 && (
-        <div className="flex flex-wrap gap-2" aria-label={t('start.examFocus')}>
-          {chips.map((c) => <Chip key={c} tone="aprikose">{c}</Chip>)}
         </div>
       )}
       <StepList unit={unit} steps={steps} finished={finished} currentIndex={-1} onOpen={onOpen} />
@@ -184,7 +188,7 @@ function StartFallback({ unit, row, steps, finished, onOpen }) {
   );
 }
 
-export function UnitPlayer({ level, unit, manifest, user }) {
+export function UnitPlayer({ level, unit, manifest, user, initialStep = null }) {
   const [, t] = useV2Strings();
   const unitId = unit.id;
   const manifestRow = useMemo(
@@ -196,7 +200,7 @@ export function UnitPlayer({ level, unit, manifest, user }) {
 
   const [learner, setLearner] = useState(null); // { row, finishedSteps, stepRuns }
   const [finished, setFinished] = useState(() => new Set());
-  const [phase, setPhase] = useState('loading'); // loading | start | resume | step | recap
+  const [phase, setPhase] = useState('loading'); // loading | start | resume | step | celebrate | recap
   const [stepIndex, setStepIndex] = useState(0);
   const [earlierItems, setEarlierItems] = useState([]);
   const [checkResult, setCheckResult] = useState(null);
@@ -209,6 +213,18 @@ export function UnitPlayer({ level, unit, manifest, user }) {
   const stepStarted = useRef(Date.now());
   const savedStatus = useRef(null); // the status last written in this session
   const cardsSeeded = useRef(false);
+  // the game layer of this visit (gamify.js): XP shown in the top bar, the combo, the step's
+  // share of the progress bar, the celebration of the step just finished
+  const [sessionXp, setSessionXp] = useState(0);
+  const [combo, setCombo] = useState(0);
+  const [stepProgress, setStepProgress] = useState(0);
+  const [celebration, setCelebration] = useState(null); // { index, done, xp, correct, total, seconds, line, title }
+  const [recapSeconds, setRecapSeconds] = useState(null);
+  const stepXp = useRef(new Map()); // stepId → XP of the items answered in this visit, not yet in the ledger
+  const visitStarted = useRef(Date.now());
+  const unitXpAwarded = useRef(false);
+  const deepLink = useRef(initialStep); // ?s=<n>: open step n once the learner state is in
+  const narrator = narratorOf(unit, level);
 
   // Learner state: Supabase when signed in, this browser otherwise.
   useEffect(() => {
@@ -218,7 +234,15 @@ export function UnitPlayer({ level, unit, manifest, user }) {
       setLearner(state);
       setFinished(new Set(state.finishedSteps));
       const idx = resumeIndex(unit.steps || [], state.finishedSteps);
-      if (idx >= (unit.steps || []).length) setPhase('recap');
+      // ?s=<n> jumps to step n — except ?s=1 on a unit with no progress yet (no finished step,
+      // no status beyond the row startUnit opens), which still gets the unit's Start first
+      const asked = deepLink.current;
+      const fresh = state.finishedSteps.size === 0 && !(state.row && state.row.status && state.row.status !== 'started');
+      if (Number.isInteger(asked) && asked >= 1 && asked <= (unit.steps || []).length && !(asked === 1 && fresh)) {
+        setStepIndex(asked - 1);
+        setPhase('step');
+        stepStarted.current = Date.now();
+      } else if (idx >= (unit.steps || []).length) setPhase('recap');
       else if (idx > 0 || state.finishedSteps.size > 0) { setStepIndex(idx); setPhase('resume'); } else setPhase('start');
     };
     if (user) {
@@ -268,7 +292,9 @@ export function UnitPlayer({ level, unit, manifest, user }) {
   }, [user, level, unitId, unit.steps]);
 
   const goTo = useCallback((idx) => {
+    deepLink.current = null;
     setStepIndex(idx);
+    setStepProgress(0);
     setPhase('step');
     stepStarted.current = Date.now();
     if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'auto' });
@@ -276,7 +302,12 @@ export function UnitPlayer({ level, unit, manifest, user }) {
 
   const nextAfter = useCallback((idx, done) => {
     const i = steps.findIndex((s, j) => j > idx && !done.has(s.id));
-    if (i === -1) { setPhase('recap'); if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'auto' }); } else goTo(i);
+    if (i === -1) {
+      deepLink.current = null;
+      setRecapSeconds(Math.round((Date.now() - visitStarted.current) / 1000));
+      setPhase('recap');
+      if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'auto' });
+    } else goTo(i);
   }, [steps, goTo]);
 
   const onAttempt = useCallback((payload) => {
@@ -285,6 +316,11 @@ export function UnitPlayer({ level, unit, manifest, user }) {
     const list = pending.current.get(stepId) || [];
     list.push({ ...payload, stepId });
     pending.current.set(stepId, list);
+    // the game layer: XP per answered item (a miss costs nothing), the combo of right answers
+    const gained = xpForItem({ correct: !!payload.correct, firstTry: !payload.typo });
+    stepXp.current.set(stepId, (stepXp.current.get(stepId) || 0) + gained);
+    if (gained) setSessionXp((x) => x + gained);
+    setCombo((c) => nextCombo(c, !!payload.correct));
   }, [steps, stepIndex]);
 
   const onDone = useCallback((result) => {
@@ -301,7 +337,8 @@ export function UnitPlayer({ level, unit, manifest, user }) {
       nextAfter(stepIndex, finished);
       return;
     }
-    const minutes = Math.round(((Date.now() - stepStarted.current) / 60000) * 10) / 10;
+    const elapsed = Date.now() - stepStarted.current;
+    const minutes = Math.round((elapsed / 60000) * 10) / 10;
     if (user) {
       recordStepDone(user.id, { level, unitId, step }, list);
       logCourseEvent(user.id, {
@@ -317,8 +354,33 @@ export function UnitPlayer({ level, unit, manifest, user }) {
     const done = new Set(finished);
     done.add(step.id);
     setFinished(done);
-    nextAfter(stepIndex, done);
-  }, [steps, stepIndex, user, level, unitId, finished, nextAfter]);
+    // The game ledger, once per finished step: its items' XP plus the step bonus, its minutes, one
+    // step (a learning day). An Überarbeiten moved on from keeps its marker but earns nothing.
+    const itemXp = stepXp.current.get(step.id) || 0;
+    stepXp.current.delete(step.id);
+    if (result && result.submitted === false) { nextAfter(stepIndex, done); return; }
+    const xp = itemXp + XP.step;
+    recordGame({ xp, minutes, steps: 1 });
+    setSessionXp((x) => x + XP.step);
+    if (step.kind === 'check') { nextAfter(stepIndex, done); return; }
+    setCelebration({
+      index: stepIndex, done, xp,
+      correct: Number(result && result.correct) || 0,
+      total: Number(result && result.total) || 0,
+      seconds: Math.round(elapsed / 1000),
+      line: step.endLine || null,
+      title: stepTitle(step, t),
+    });
+    setPhase('celebrate');
+    if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'auto' });
+  }, [steps, stepIndex, user, level, unitId, finished, nextAfter, t]);
+
+  const afterCelebration = useCallback(() => {
+    const c = celebration;
+    setCelebration(null);
+    if (c) nextAfter(c.index, c.done);
+    else nextAfter(stepIndex, finished);
+  }, [celebration, nextAfter, stepIndex, finished]);
 
   const onStartDone = useCallback((result) => {
     // The Start's own answers are written now, under their own stage (see startStage).
@@ -327,6 +389,14 @@ export function UnitPlayer({ level, unit, manifest, user }) {
       if (user) flushAttempts(user.id, { level, unitId, stepKind: startStage(stepId) }, list);
       pending.current.set(stepId, []);
     }
+    // the Start's XP (the gist, the test-out) goes to the ledger now — XP, not a learning day
+    let startXp = 0;
+    for (const [id, xp] of stepXp.current.entries()) {
+      if (!isStartId(unitId, id)) continue;
+      startXp += xp;
+      stepXp.current.delete(id);
+    }
+    if (startXp) recordGame({ xp: startXp });
     const to = result && result.testOut;
     if (to && testOutPassed(to, testOutThreshold)) {
       const credited = (unit.steps || []).filter((s) => LERNSCHRITT_KINDS.includes(s.kind)).map((s) => s.id);
@@ -361,6 +431,15 @@ export function UnitPlayer({ level, unit, manifest, user }) {
   const finalStatus = completion ? statusToStore(storedStatus, completion.status, { accuracy }) : storedStatus;
   const checkStep = (unit.steps || []).find((s) => s.kind === 'check');
   const checkDone = checkStep ? finished.has(checkStep.id) : false;
+  const complete = Boolean(completion && completion.complete);
+  // XP.unit: a unit completed in THIS visit (a step finished now, not complete when it loaded),
+  // shown on the recap and written to the ledger once
+  const unitBonus = phase === 'recap' && complete && sessionRuns.size > 0 && storedStatus !== 'complete' && storedStatus !== 'gold' ? XP.unit : 0;
+  useEffect(() => {
+    if (!unitBonus || unitXpAwarded.current) return;
+    unitXpAwarded.current = true;
+    recordGame({ xp: unitBonus });
+  }, [unitBonus]);
 
   // Written whenever the recap shows a status that is not stored yet — also when the
   // learner went back from the recap to an open Aufgabe and returns — and the review
@@ -390,6 +469,7 @@ export function UnitPlayer({ level, unit, manifest, user }) {
     return {
       ruleCards: unit.ruleCards || null,
       course: manifest || null,
+      onProgress: setStepProgress,
       earlierItems: checkPlan ? (checkPlan.items || []).filter((it) => earlierIds.has(it.id)) : null,
       aufgaben,
       microOutputs: microOutputsSent(unit, microSent, finished),
@@ -400,7 +480,7 @@ export function UnitPlayer({ level, unit, manifest, user }) {
   const progress = steps.length ? doneCount / steps.length : 0;
 
   if (phase === 'loading') {
-    return <Shell level={level} progress={0}><p className="py-16 text-center text-sm italic text-graphite">{t('player.loading')}</p></Shell>;
+    return <Shell level={level} progress={0}><p className="py-16 text-center text-[1rem] font-semibold text-game-muted">{t('player.loading')}</p></Shell>;
   }
 
   if (phase === 'start') {
@@ -409,8 +489,9 @@ export function UnitPlayer({ level, unit, manifest, user }) {
       <Shell
         level={level}
         progress={progress}
-        title={t('player.unit', { n: unit.nr })}
-        footer={hasStartRenderer ? null : <Button size="lg" className="w-full" onClick={() => onStartDone(null)}>{t('start.begin')}</Button>}
+        combo={combo}
+        xp={sessionXp}
+        footer={hasStartRenderer ? null : <GameButton onClick={() => onStartDone(null)}>{t('start.begin')}</GameButton>}
       >
         <StartViewSlot unit={unit} level={level} onDone={onStartDone} fallback={fallback} extra={{ course: manifest, onAttempt }} />
       </Shell>
@@ -423,31 +504,50 @@ export function UnitPlayer({ level, unit, manifest, user }) {
       <Shell
         level={level}
         progress={progress}
-        title={t('player.unit', { n: unit.nr })}
-        footer={next && <Button size="lg" className="w-full" onClick={() => goTo(stepIndex)}>{t('player.resumeAt', { n: stepIndex + 1, title: stepTitle(next, t) })}</Button>}
+        footer={next && <GameButton caps={false} onClick={() => goTo(stepIndex)}>{t('player.resumeAt', { n: stepIndex + 1, title: stepTitle(next, t) })}</GameButton>}
       >
         <div className="space-y-5">
+          <div className="flex items-end gap-3">
+            <CastAvatar name={narrator} size={84} className="shrink-0" />
+            <SpeechBubble tail="left" className="min-w-0 flex-1">
+              <p className="text-[1.125rem] font-extrabold text-game-text">{t('player.welcomeTitle')}</p>
+              <p className="mt-0.5 text-[1rem] font-semibold text-game-muted">{t('player.welcomeBack', { d: doneCount, t: steps.length })}</p>
+            </SpeechBubble>
+          </div>
           <header>
-            <Chip tone="label">{t('player.unit', { n: unit.nr })}</Chip>
-            <h1 className="mt-3 font-display text-2xl font-semibold leading-tight tracking-[-0.018em] text-ink [hyphens:auto] sm:text-3xl">{unit.title && unit.title.de}</h1>
-            <p className="mt-2 text-graphite">{t('player.welcomeBack', { d: doneCount, t: steps.length })}</p>
+            <p className={EYEBROW}>{t('player.unit', { n: unit.nr })}</p>
+            <h1 className={`mt-1 ${H1}`} lang="de">{unit.title && unit.title.de}</h1>
           </header>
           <StepList unit={unit} steps={steps} finished={finished} currentIndex={stepIndex} onOpen={goTo} />
-          <button type="button" onClick={() => setPhase('start')} className="min-h-11 text-sm font-bold text-siegel hover:text-siegel-deep">
-            {t('player.startAgain')}
-          </button>
+          <QuietButton onClick={() => setPhase('start')}>{t('player.startAgain')}</QuietButton>
         </div>
       </Shell>
     );
   }
 
-  if (phase === 'step') {
+  if (phase === 'celebrate' && celebration) {
+    return (
+      <Shell level={level} progress={1} progressLabel={t('player.progressStep')} combo={combo} xp={sessionXp}>
+        <StepCelebration
+          xp={celebration.xp}
+          correct={celebration.correct}
+          total={celebration.total}
+          seconds={celebration.seconds}
+          line={celebration.line}
+          title={celebration.title}
+          onNext={afterCelebration}
+        />
+      </Shell>
+    );
+  }
+
+  if (phase === 'step' || phase === 'celebrate') {
     const step = steps[stepIndex];
     if (!step) return <Navigate to={v2Paths.home(level)} replace />;
     return (
-      <Shell level={level} progress={progress} title={t('player.stepOf', { n: stepIndex + 1, t: steps.length })}>
+      <Shell level={level} progress={stepProgress} progressLabel={t('player.progressStep')} combo={combo} xp={sessionXp}>
         {testOutNote && stepIndex === steps.findIndex((s) => !finished.has(s.id)) && (
-          <p className="mb-4 rounded-clay bg-accent-limette-wash px-4 py-3 text-sm text-accent-limette-ink" role="status">{t('player.testOutNote')}</p>
+          <p className="mb-4 rounded-2xl border-2 border-game-right bg-game-right-wash px-4 py-3 text-[0.9375rem] font-bold text-game-right-ink" role="status">{t('player.testOutNote')}</p>
         )}
         <StepViewSlot
           unit={unit}
@@ -464,7 +564,6 @@ export function UnitPlayer({ level, unit, manifest, user }) {
   }
 
   // Recap (S6 „Lektion geschafft").
-  const complete = Boolean(completion && completion.complete);
   const gold = finalStatus === 'gold';
   const openSteps = steps.map((s, i) => ({ s, i })).filter(({ s }) => !finished.has(s.id) && s.kind !== 'ueberarbeiten');
   const words = Array.isArray(unit.reviewCards) ? unit.reviewCards.filter((k) => String(k).startsWith('word:')).length : 0;
@@ -509,47 +608,63 @@ export function UnitPlayer({ level, unit, manifest, user }) {
         ? { to: v2Paths.unit(level, unit.nr + 1), label: t('player.toUnit', { n: unit.nr + 1 }) }
         : { to: v2Paths.home(level), label: t('player.home') };
 
+  const pct = accuracy !== null ? Math.round(accuracy * 100) : null;
   return (
     <Shell
       level={level}
       progress={progress}
-      title={t('player.unit', { n: unit.nr })}
-      footer={<Button size="lg" className="w-full" to={nextTarget.to}>{nextTarget.label}</Button>}
+      combo={combo}
+      xp={sessionXp + unitBonus}
+      footer={<GameButton to={nextTarget.to}>{nextTarget.label}</GameButton>}
     >
       <div className="space-y-5">
-        <header className="text-center">
+        <header className="flex flex-col items-center text-center">
+          {complete ? <Trophy /> : <CastAvatar name={narrator} size={112} className="motion-safe:animate-pop-in" />}
           {gold && (
-            <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-pill bg-gold text-ink shadow-raise" aria-label="Siegel">
-              <Check className="h-8 w-8" aria-hidden="true" />
-            </div>
+            <span className="mt-2 inline-flex items-center gap-1.5 rounded-xl border-2 border-game-xp-edge bg-game-xp px-3 py-1 text-[0.875rem] font-extrabold text-game-text" aria-label="Siegel">
+              <Check className="h-4 w-4" strokeWidth={3} aria-hidden="true" /> Siegel
+            </span>
           )}
-          <Chip tone="label">{t('player.unit', { n: unit.nr })}</Chip>
-          <h1 className="mt-3 font-display text-2xl font-semibold leading-tight tracking-[-0.018em] text-ink [hyphens:auto] sm:text-3xl">
+          <p className={`mt-3 ${EYEBROW}`}>{t('player.unit', { n: unit.nr })}</p>
+          <h1 className={`mt-1 ${complete ? 'text-game-xp-ink' : 'text-game-text'} text-[1.875rem] font-extrabold leading-tight`}>
             {complete ? t('player.complete') : t('player.almost')}
           </h1>
-          <p className="mt-2 text-graphite">{unit.title && unit.title.de}</p>
+          <p className="mt-1 text-[1.0625rem] font-bold text-game-muted" lang="de">{unit.title && unit.title.de}</p>
+          {unitBonus > 0 && (
+            <p className="mt-3 inline-flex items-center gap-1.5 rounded-xl bg-game-xp-wash px-3 py-1.5 text-[1rem] font-extrabold text-game-xp-ink motion-safe:animate-pop-in">
+              <XpIcon size={18} /> {t('player.unitBonus')} {t('game.xp', { n: unitBonus })}
+            </p>
+          )}
         </header>
 
+        {sessionRuns.size > 0 && (
+          <div className="grid grid-cols-3 gap-2.5">
+            <StatTile tone="xp" label={t('cel.xp')} value={`+${sessionXp + unitBonus}`} />
+            <StatTile tone="course" label={t('cel.right')} value={pct !== null ? `${pct} %` : '–'} />
+            <StatTile tone="time" label={t('cel.time')} value={clock(recapSeconds || 0)} />
+          </div>
+        )}
+
         {!complete && openSteps.length > 0 && (
-          <Card tone="sunk" className="p-4">
-            <h2 className="text-sm font-bold text-ink">{t('player.open')}</h2>
+          <div className="rounded-[1.25rem] border-2 border-b-4 border-accent-aprikose bg-accent-aprikose-wash p-4">
+            <h2 className="text-[1rem] font-extrabold text-accent-aprikose-ink">{t('player.open')}</h2>
             <ul className="mt-2 space-y-1">
               {openSteps.map(({ s, i }) => (
                 <li key={s.id}>
-                  <button type="button" onClick={() => goTo(i)} className="min-h-11 text-left text-sm font-bold text-siegel hover:text-siegel-deep">
+                  <button type="button" onClick={() => goTo(i)} className="min-h-11 text-left text-[1rem] font-extrabold text-course-ink hover:underline">
                     {t('player.openStep', { n: i + 1, title: stepTitle(s, t) })}
                   </button>
                 </li>
               ))}
             </ul>
-          </Card>
+          </div>
         )}
 
         {accuracy !== null && accuracy < 0.6 && (
           // The Check suggests repeating a Lernschritt; the list makes that one tap
           // (a repeat serves a fresh draw — see `attempts`). A suggestion, never a gate.
           <div className="space-y-3">
-            <p className="text-sm text-graphite">{t('player.repeatTip')}</p>
+            <p className="text-[1rem] font-semibold text-game-muted">{t('player.repeatTip')}</p>
             <StepList unit={unit} steps={steps} finished={finished} currentIndex={-1} onOpen={goTo} />
           </div>
         )}
@@ -557,36 +672,43 @@ export function UnitPlayer({ level, unit, manifest, user }) {
         {canDos.length > 0 && (
           // A tick per proven can-do (see `proven`), the same verdict as the Check's
           // „Das kann ich"; „Das können Sie jetzt" only when every one is proven.
-          <Card className="p-4">
-            <h2 className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
+          <div className={PANEL}>
+            <h2 className={EYEBROW}>
               {allProven ? t('player.canNow') : t('player.goalsUnit')}
             </h2>
-            <ul className="mt-2 space-y-1.5 text-sm text-ink">
+            <ul className="mt-3 space-y-2.5">
               {canDos.map((c, i) => (
-                <li key={c} className="flex gap-2">
+                <li key={c} className="flex gap-2.5 text-[1rem] font-bold text-game-text">
                   {proven(i)
-                    ? <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent-limette-ink" aria-hidden="true" />
-                    : <span className="mt-0.5 w-4 shrink-0 text-center text-graphite" aria-hidden="true">›</span>}
+                    ? <Check className="mt-0.5 h-5 w-5 shrink-0 rounded-full bg-game-right p-0.5 text-white" strokeWidth={3.5} aria-hidden="true" />
+                    : <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-game-line" aria-hidden="true" />}
                   <span>{c}{proven(i) && <span className="sr-only"> ({t('player.doneMark')})</span>}</span>
                 </li>
               ))}
             </ul>
-          </Card>
+          </div>
         )}
 
         {words > 0 && checkDone && (
-          <p className="text-sm text-graphite">{t('player.words', { n: words })}</p>
+          <p className="text-[1rem] font-semibold text-game-muted">{t('player.words', { n: words })}</p>
         )}
 
+        {sessionRuns.size > 0 && <StreakCard />}
+
         {unit.story && unit.story.cliffhanger && (
-          <Card tone="wash" className="p-4">
-            <StoryCliffhanger story={unit.story} idPrefix={`${unitId}-recap-story`} className="text-sm italic text-ink" />
-          </Card>
+          // the hook into the next unit, told by the narrator
+          <div className="flex items-end gap-3">
+            <CastAvatar name={narrator} size={72} className="shrink-0" />
+            <SpeechBubble tail="left" className="min-w-0 flex-1">
+              <p className={EYEBROW}>{nextRow && nextRow.chunk && !plateauNext ? t('player.nextTeaser', { n: unit.nr + 1 }) : t('check.story')}</p>
+              <StoryCliffhanger story={unit.story} idPrefix={`${unitId}-recap-story`} className="mt-1 text-[1.0625rem] font-bold leading-snug text-game-text" />
+            </SpeechBubble>
+          </div>
         )}
 
         {nextRow && nextRow.title && !plateauNext && (
-          <p className="text-sm text-graphite">
-            {t('player.nextUp')} <span className="font-bold text-ink">{nextRow.title}</span>
+          <p className="text-[1rem] font-semibold text-game-muted">
+            {t('player.nextUp')} <span className="font-extrabold text-game-text">{nextRow.title}</span>
             {nextRow.minutesPlanned ? ` · ${t('player.minutes', { n: nextRow.minutesPlanned })}` : ''}
           </p>
         )}
@@ -610,6 +732,9 @@ function microOutputsSent(unit, sent, finished) {
 
 export default function UnitPlayerPage() {
   const { level: levelParam, nr: nrParam } = useParams();
+  const [params] = useSearchParams();
+  const asked = Number(params.get('s'));
+  const initialStep = Number.isInteger(asked) && asked >= 1 ? asked : null;
   const level = normalizeLevel(levelParam);
   const nr = Number(nrParam);
   const { user, loading: authLoading } = useAuth();
@@ -619,18 +744,18 @@ export default function UnitPlayerPage() {
 
   if (!valid) return <Navigate to="/courses/" replace />;
   if (data.status === 'loading' || authLoading) {
-    return <Shell level={level} progress={0}><p className="py-16 text-center text-sm italic text-graphite">{t('player.loading')}</p></Shell>;
+    return <Shell level={level} progress={0}><p className="py-16 text-center text-[1rem] font-semibold text-game-muted">{t('player.loading')}</p></Shell>;
   }
   if (data.status === 'missing') {
     return (
-      <Shell level={level} progress={0} footer={<Button size="lg" className="w-full" to={v2Paths.home(level)}>{t('player.home')}</Button>}>
-        <Card className="p-5">
-          <Chip tone="quiet">{t('player.unit', { n: pad2(nr) })}</Chip>
-          <h1 className="mt-3 font-display text-xl font-semibold tracking-[-0.018em] text-ink">{t('player.soonTitle')}</h1>
-          <p className="mt-2 text-sm text-graphite">{t('player.soonBody')}</p>
-        </Card>
+      <Shell level={level} progress={0} footer={<GameButton to={v2Paths.home(level)}>{t('player.home')}</GameButton>}>
+        <div className={PANEL}>
+          <p className={EYEBROW}>{t('player.unit', { n: pad2(nr) })}</p>
+          <h1 className="mt-2 text-[1.375rem] font-extrabold text-game-text">{t('player.soonTitle')}</h1>
+          <p className="mt-2 text-[1rem] font-semibold text-game-muted">{t('player.soonBody')}</p>
+        </div>
       </Shell>
     );
   }
-  return <UnitPlayer key={data.unit.id} level={level} unit={data.unit} manifest={data.manifest} user={user} />;
+  return <UnitPlayer key={data.unit.id} level={level} unit={data.unit} manifest={data.manifest} user={user} initialStep={initialStep} />;
 }

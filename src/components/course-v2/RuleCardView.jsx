@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import Chip from '../ui/Chip.jsx';
-import Button from '../ui/Button.jsx';
+import GameButton from './GameButton.jsx';
 import InlineFeedback from './InlineFeedback.jsx';
 import { gradeAnswer, RESULT } from './grade.js';
 import { useV2Strings } from './strings.js';
 
-const LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite';
+const LABEL = 'text-[0.75rem] font-extrabold uppercase tracking-[0.08em] text-game-muted';
 
 /**
  * A cell of a paradigm table. A token the card names in `caseMarks` is drawn as a kasus
@@ -29,23 +29,23 @@ export default function RuleCardView({ card, modelSentence = null, compact = fal
   const model = modelSentence || card?.modelSentence || null;
   if (!card && !model) return null;
   return (
-    <section className="rounded-clay border border-rule bg-paper-sunk p-4 sm:p-5">
+    <section className="rounded-[1.25rem] border-2 border-game-line bg-white p-4 sm:p-5">
       <p className={LABEL}>{t('rule.title')}</p>
       {model && (
         <>
-          <p className="mt-3 font-data text-[0.625rem] font-bold uppercase tracking-[0.13em] text-graphite">{t('rule.model')}</p>
-          <p className="mt-1 font-display text-[1.25rem] font-semibold leading-snug text-ink" lang="de">{model}</p>
+          <p className={`mt-3 ${LABEL}`}>{t('rule.model')}</p>
+          <p className="mt-1 text-[1.3125rem] font-extrabold leading-snug text-game-text" lang="de">{model}</p>
         </>
       )}
-      {card?.de && <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink" lang="de">{card.de}</p>}
-      {card?.en && lang !== 'de' && !compact && <p className="mt-2 text-[0.875rem] leading-relaxed text-graphite">{card.en}</p>}
+      {card?.de && <p className="mt-3 text-[1rem] font-semibold leading-relaxed text-game-text" lang="de">{card.de}</p>}
+      {card?.en && lang !== 'de' && !compact && <p className="mt-2 text-[0.875rem] leading-relaxed text-game-muted">{card.en}</p>}
       {Array.isArray(card?.table) && card.table.length > 0 && (
         <table className="mt-4 w-full border-collapse text-left text-[0.9375rem]" lang="de">
           <tbody>
             {card.table.map((row, r) => (
-              <tr key={r} className="border-t border-rule first:border-t-0">
+              <tr key={r} className="border-t-2 border-game-line first:border-t-0">
                 {row.map((cell, c) => (
-                  <td key={c} className="py-2 pr-4 align-top text-ink">
+                  <td key={c} className="py-2 pr-4 align-top font-semibold text-game-text">
                     <Cell text={cell} caseMarks={card.caseMarks} />
                   </td>
                 ))}
@@ -93,11 +93,11 @@ export function RuleTableFill({ table, stepId, onDone, onAttempt }) {
 
   return (
     <div>
-      <p className="text-[0.9375rem] text-graphite">{t('rule.fillTable')}</p>
+      <p className="text-[1rem] font-semibold text-game-muted">{t('rule.fillTable')}</p>
       <table className="mt-3 w-full border-collapse text-left text-[0.9375rem]" lang="de">
         <tbody>
           {rows.map((row, r) => (
-            <tr key={r} className="border-t border-rule first:border-t-0">
+            <tr key={r} className="border-t-2 border-game-line first:border-t-0">
               {row.map((cell, c) => (
                 <td key={c} className="py-2 pr-3 align-top">
                   {isBlank(r, c) ? (
@@ -110,14 +110,14 @@ export function RuleTableFill({ table, stepId, onDone, onAttempt }) {
                         autoComplete="off"
                         spellCheck={false}
                         onChange={(e) => setValues((v) => ({ ...v, [`${r}-${c}`]: e.target.value }))}
-                        className="w-full min-w-[5rem] rounded-clay border border-rule bg-white px-3 py-2 text-[1rem] text-ink outline-none focus:border-siegel disabled:bg-paper-sunk"
+                        className="w-full min-w-[5rem] rounded-xl border-2 border-game-line bg-white px-3 py-2 text-[1rem] font-bold text-game-text outline-none focus:border-course disabled:bg-course-ground"
                       />
                       {results && (results[`${r}-${c}`]
-                        ? <span className="text-siegel-deep" aria-label="richtig">✓</span>
-                        : <span className="text-accent-himbeer-ink" aria-label="falsch">✗ <strong>{cell}</strong></span>)}
+                        ? <span className="font-extrabold text-game-right-ink" aria-label={t('item.srRight')}>✓</span>
+                        : <span className="font-bold text-game-wrong-ink" aria-label={t('item.srWrong')}>✗ <strong>{cell}</strong></span>)}
                     </span>
                   ) : (
-                    <span className="text-ink">{cell}</span>
+                    <span className="font-semibold text-game-text">{cell}</span>
                   )}
                 </td>
               ))}
@@ -127,7 +127,7 @@ export function RuleTableFill({ table, stepId, onDone, onAttempt }) {
       </table>
       {!results && (
         <div className="mt-4 flex justify-end">
-          <Button onClick={check} disabled={!allFilled}>{t('item.check')}</Button>
+          <GameButton size="md" onClick={check} disabled={!allFilled}>{t('item.check')}</GameButton>
         </div>
       )}
       {results && (

@@ -1,4 +1,4 @@
-import { Play, Cpu, Mic } from 'lucide-react';
+import { Play, Cpu, Mic, Volume2 } from 'lucide-react';
 import { useV2Strings } from './strings.js';
 import { canPlay, playV2Line, playV2Lines, recordedLine } from './content.js';
 
@@ -11,7 +11,7 @@ export function SourceBadge({ recorded }) {
   const [, t] = useV2Strings();
   const Icon = recorded ? Mic : Cpu;
   return (
-    <span className="inline-flex items-center gap-1 font-data text-[0.625rem] font-bold uppercase tracking-[0.11em] text-graphite">
+    <span className="inline-flex items-center gap-1 text-[0.6875rem] font-extrabold uppercase tracking-[0.08em] text-game-muted">
       <Icon className="h-3 w-3" aria-hidden="true" />
       {recorded ? 'Aufnahme' : t('audio.synthetic')}
     </span>
@@ -23,6 +23,10 @@ export function SourceBadge({ recorded }) {
  * exam play counter: the button disables at 0 and says why (BLUEPRINT §3.6: the lane's
  * play counts). `onPlayed` fires after each start, so the owner can count plays and
  * unlock the transcript after the first unaided listen.
+ *
+ * Looks (the course theme): the labelled button is a chunky white tile with a hard edge;
+ * `iconOnly` is the square speaker key in the palette primary — `size="lg"` for the big one
+ * in an exercise's speech bubble.
  */
 export default function AudioButton({ unitId, line = null, lines = null, label = null, playsLeft = null, onPlayed, rate, size = 'md', iconOnly = false, ariaLabel = null }) {
   const [, t] = useV2Strings();
@@ -35,17 +39,18 @@ export default function AudioButton({ unitId, line = null, lines = null, label =
     const ok = list.length > 1 ? playV2Lines(unitId, list, { rate }) : playV2Line(unitId, first, { rate });
     if (ok && typeof onPlayed === 'function') onPlayed();
   };
-  const pad = size === 'sm' ? 'px-3 py-1.5 text-[0.8125rem]' : 'px-4 py-2.5 text-sm';
+  const pad = size === 'sm' ? 'px-3 py-1.5 text-[0.875rem]' : 'px-4 py-2.5 text-[0.9375rem]';
   if (iconOnly) {
+    const big = size === 'lg';
     return (
       <button
         type="button"
         onClick={play}
         disabled={!available || exhausted}
         aria-label={ariaLabel || label || t('audio.play')}
-        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel transition-transform duration-100 ease-snap hover:bg-siegel hover:text-white active:translate-y-0.5 disabled:opacity-40 motion-reduce:transition-none"
+        className={`flex shrink-0 items-center justify-center rounded-xl bg-course text-white shadow-course-sm transition-[transform,box-shadow] duration-100 ease-snap hover:brightness-105 active:translate-y-[3px] active:shadow-none disabled:bg-game-locked disabled:text-game-locked-icon disabled:shadow-none motion-reduce:transition-none ${big ? 'h-14 w-14' : 'h-11 w-11'}`}
       >
-        <Play className="h-4 w-4" aria-hidden="true" />
+        {big ? <Volume2 className="h-7 w-7" strokeWidth={2.4} aria-hidden="true" /> : <Play className="h-4 w-4" aria-hidden="true" />}
       </button>
     );
   }
@@ -55,17 +60,17 @@ export default function AudioButton({ unitId, line = null, lines = null, label =
         type="button"
         onClick={play}
         disabled={!available || exhausted}
-        className={`inline-flex min-h-11 items-center gap-2 rounded-clay border border-rule bg-white font-bold text-ink shadow-raise transition-all duration-100 ease-snap hover:border-siegel active:translate-y-1 active:shadow-none disabled:opacity-40 disabled:shadow-none motion-reduce:transition-none ${pad}`}
+        className={`inline-flex min-h-11 items-center gap-2 rounded-2xl border-2 border-b-4 border-game-line bg-white font-extrabold text-course-ink transition-[transform] duration-100 ease-snap hover:bg-course-wash active:translate-y-0.5 active:border-b-2 disabled:opacity-40 motion-reduce:transition-none ${pad}`}
       >
-        <Play className="h-4 w-4" aria-hidden="true" /> {label || t('audio.play')}
+        <Volume2 className="h-5 w-5" aria-hidden="true" /> {label || t('audio.play')}
       </button>
       {typeof playsLeft === 'number' && (
-        <span className="font-data text-[0.75rem] text-graphite">
+        <span className="text-[0.8125rem] font-bold text-game-muted">
           {exhausted ? t('audio.playsUsed') : t('audio.playsLeft', { n: playsLeft })}
         </span>
       )}
       {first && <SourceBadge recorded={recordedLine(unitId, first.id)} />}
-      {!available && first && <span className="text-[0.8125rem] text-graphite">{t('audio.none')}</span>}
+      {!available && first && <span className="text-[0.8125rem] text-game-muted">{t('audio.none')}</span>}
     </span>
   );
 }

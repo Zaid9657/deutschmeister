@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Check } from 'lucide-react';
-import Button from '../../components/ui/Button.jsx';
-import Card from '../../components/ui/Card.jsx';
-import Chip from '../../components/ui/Chip.jsx';
+import { Check } from 'lucide-react';
+import CourseTheme from '../../components/course-v2/CourseTheme.jsx';
+import GameButton from '../../components/course-v2/GameButton.jsx';
+import GameTopBar from '../../components/course-v2/GameTopBar.jsx';
 import ItemRun from '../../components/course-v2/ItemRun.jsx';
 import ExamBlockView from '../../components/course-v2/ExamBlockView.jsx';
 import WritingTaskView from '../../components/course-v2/WritingTaskView.jsx';
@@ -37,38 +37,23 @@ import ActionBar from './ActionBar.jsx';
 // unit's Aufgabe does. Nothing here reads a score to decide anything (PRG-01); results are shown as
 // practice values per Teil, never as a total or a pass line.
 
-const LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite';
+const LABEL = 'text-[0.75rem] font-extrabold uppercase tracking-[0.08em] text-game-muted';
+const EYEBROW = 'text-[0.8125rem] font-extrabold uppercase tracking-[0.08em] text-game-muted';
+const H1 = 'text-[1.625rem] font-extrabold leading-tight text-game-text [hyphens:auto] sm:text-[2rem]';
+const PANEL = 'rounded-[1.25rem] border-2 border-b-4 border-game-line bg-white p-5';
 
-function Shell({ level, progress, title, children, footer }) {
+// The course theme's chrome (the unit player's): an X to the course home and the thick
+// progress bar over the sections finished.
+function Shell({ level, progress, children, footer }) {
   const [, t] = useV2Strings();
-  const pct = Math.round(Math.max(0, Math.min(1, progress || 0)) * 100);
   return (
-    <div className="min-h-screen bg-paper font-body text-ink">
-      <div className={`mx-auto max-w-2xl px-4 pt-4 sm:pt-8 ${footer ? 'pb-32' : 'pb-10'}`}>
-        <div className="mb-5 flex items-center gap-3">
-          <Link
-            to={v2Paths.home(level)}
-            className="inline-flex min-h-11 shrink-0 items-center gap-1 font-data text-sm font-bold text-siegel hover:text-siegel-deep"
-            aria-label={t('player.home')}
-          >
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" /> {levelCode(level)}
-          </Link>
-          <div
-            className="h-1.5 flex-1 overflow-hidden rounded-pill bg-siegel-wash"
-            role="progressbar"
-            aria-label={t('as.progress')}
-            aria-valuenow={pct}
-            aria-valuemin={0}
-            aria-valuemax={100}
-          >
-            <div className="h-full rounded-pill bg-accent-limette transition-all duration-500 ease-snap motion-reduce:transition-none" style={{ width: `${pct}%` }} />
-          </div>
-          {title && <span className="hidden shrink-0 font-data text-[0.6875rem] text-graphite sm:inline">{title}</span>}
-        </div>
+    <CourseTheme>
+      <div className={`mx-auto max-w-2xl px-4 ${footer ? 'pb-32' : 'pb-10'}`}>
+        <GameTopBar homeTo={v2Paths.home(level)} homeLabel={t('player.home')} progress={progress} progressLabel={t('as.progress')} />
         {children}
       </div>
       {footer && <ActionBar>{footer}</ActionBar>}
-    </div>
+    </CourseTheme>
   );
 }
 
@@ -100,23 +85,27 @@ const answersOf = (list) => Object.fromEntries((list || []).filter((a) => a && a
 
 function SectionList({ sections, finished, onOpen, t }) {
   return (
-    <ol className="divide-y divide-rule rounded-clay border border-rule bg-white">
+    <ol className="space-y-2.5">
       {sections.map((s, i) => {
         const done = finished.has(s.id);
         return (
           <li key={s.id}>
-            <button type="button" onClick={() => onOpen(i)} className="flex min-h-12 w-full items-center gap-3 px-4 py-3 text-left hover:bg-siegel-wash">
+            <button
+              type="button"
+              onClick={() => onOpen(i)}
+              className="flex min-h-14 w-full items-center gap-3 rounded-2xl border-2 border-b-4 border-game-line bg-white px-4 py-3 text-left transition-transform duration-100 ease-snap hover:bg-course-wash active:translate-y-0.5 active:border-b-2 motion-reduce:transition-none"
+            >
               <span
-                className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-pill font-data text-xs font-bold ${
-                  done ? 'bg-accent-limette-wash text-accent-limette-ink' : 'border border-rule text-graphite'
+                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[0.9375rem] font-extrabold ${
+                  done ? 'bg-game-right text-white' : 'bg-game-locked text-game-muted'
                 }`}
                 aria-hidden="true"
               >
-                {done ? <Check className="h-4 w-4" /> : i + 1}
+                {done ? <Check className="h-5 w-5" strokeWidth={3} /> : i + 1}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-sm font-bold text-ink" lang="de">{sectionTitle(s, t)}</span>
-                <span className="block text-xs text-graphite">{sectionNote(s, done, t)}</span>
+                <span className="block truncate text-[1rem] font-extrabold text-game-text" lang="de">{sectionTitle(s, t)}</span>
+                <span className="block text-[0.8125rem] font-semibold text-game-muted">{sectionNote(s, done, t)}</span>
               </span>
             </button>
           </li>
@@ -268,7 +257,7 @@ export default function AssessmentPlayer({ level, doc, manifest, user }) {
   const nextLevel = doc.comesNext && doc.comesNext.level ? levelCode(doc.comesNext.level) : null;
 
   if (phase === 'loading') {
-    return <Shell level={level} progress={0}><p className="py-16 text-center text-sm italic text-graphite">{t('as.loading')}</p></Shell>;
+    return <Shell level={level} progress={0}><p className="py-16 text-center text-[1rem] font-semibold text-game-muted">{t('as.loading')}</p></Shell>;
   }
 
   if (phase === 'start') {
@@ -281,14 +270,13 @@ export default function AssessmentPlayer({ level, doc, manifest, user }) {
       <Shell
         level={level}
         progress={progress}
-        title={chip}
-        footer={sections.length > 0 && <Button size="lg" className="w-full" onClick={() => goTo(resuming ? resumeAt : 0)}>{startLabel}</Button>}
+        footer={sections.length > 0 && <GameButton caps={!resuming} onClick={() => goTo(resuming ? resumeAt : 0)}>{startLabel}</GameButton>}
       >
         <div className="space-y-5">
           <header>
-            <Chip tone="label">{chip}</Chip>
-            <h1 className="mt-3 font-display text-2xl font-semibold leading-tight tracking-[-0.018em] text-ink [hyphens:auto] sm:text-3xl">{heading}</h1>
-            <p className="mt-2 text-graphite">
+            <p className={EYEBROW}>{chip}</p>
+            <h1 className={`mt-1 ${H1}`}>{heading}</h1>
+            <p className="mt-2 text-[1.0625rem] font-semibold text-game-muted">
               {kind === 'plateau'
                 ? t('as.plateauLead')
                 : t('as.closingLead', { exam: laneLabel(doc.lane), next: nextLevel || levelCode(level) })}
@@ -310,7 +298,7 @@ export default function AssessmentPlayer({ level, doc, manifest, user }) {
     if (s.kind === 'review') {
       body = (
         <div>
-          <p className="mb-4 text-[0.9375rem] text-graphite">
+          <p className="mb-4 text-[1rem] font-semibold text-game-muted">
             {span ? t('as.reviewLead', { n: s.items.length, from: span.from, to: span.to }) : t('exam.lernLead')}
           </p>
           <ItemRun
@@ -343,14 +331,14 @@ export default function AssessmentPlayer({ level, doc, manifest, user }) {
     } else if (s.kind === 'writing') {
       body = (
         <>
-          {s.role === 'productive' && <p className="mb-4 text-[0.9375rem] text-graphite">{t('as.productiveLead')}</p>}
+          {s.role === 'productive' && <p className="mb-4 text-[1rem] font-semibold text-game-muted">{t('as.productiveLead')}</p>}
           <WritingTaskView key={s.id} task={s.part} level={level} stepId={s.id} skeleton="A" mode="write" onAttempt={onAttempt} onDone={(r) => onTaskDone(s, r)} />
         </>
       );
     } else if (s.kind === 'speaking') {
       body = (
         <>
-          {s.role === 'productive' && <p className="mb-4 text-[0.9375rem] text-graphite">{t('as.productiveLead')}</p>}
+          {s.role === 'productive' && <p className="mb-4 text-[1rem] font-semibold text-game-muted">{t('as.productiveLead')}</p>}
           <SpeakingTaskView key={s.id} task={s.part} level={level} onDone={(r) => onTaskDone(s, r)} />
         </>
       );
@@ -358,15 +346,15 @@ export default function AssessmentPlayer({ level, doc, manifest, user }) {
       body = <RewardView key={s.id} reward={s.part} unitId={docId} stepId={s.id} level={level} lines={lines} onAttempt={onAttempt} onDone={() => finishSection(s, null)} />;
     }
     return (
-      <Shell level={level} progress={progress} title={t('as.sectionOf', { n: index + 1, t: sections.length })}>
+      <Shell level={level} progress={progress}>
         <section data-section-id={s.id} data-section-kind={s.kind}>
           <header className="mb-5">
-            <p className="flex flex-wrap items-center gap-x-2 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">
+            <p className="flex flex-wrap items-center gap-x-2 text-[0.75rem] font-extrabold uppercase tracking-[0.08em] text-course-ink">
               <span>{chip}</span>
               <span aria-hidden="true">·</span>
               <span>{t('as.sectionOf', { n: index + 1, t: sections.length })}</span>
             </p>
-            <h1 className="mt-2 font-display text-[1.375rem] font-semibold leading-tight tracking-[-0.018em] text-ink [hyphens:auto] sm:text-[1.75rem]" lang="de">{title}</h1>
+            <h1 className="mt-1 text-[1.125rem] font-extrabold leading-tight text-game-muted [hyphens:auto] sm:text-[1.25rem]" lang="de">{title}</h1>
           </header>
           {body}
         </section>
@@ -378,46 +366,46 @@ export default function AssessmentPlayer({ level, doc, manifest, user }) {
   const complete = progressInfo.complete;
   const openList = progressInfo.open.map((s) => ({ s, i: sections.indexOf(s) }));
   const openCard = !complete && openList.length > 0 && (
-    <Card tone="sunk" className="p-4">
-      <h2 className="text-sm font-bold text-ink">{t('as.open')}</h2>
+    <div className="rounded-[1.25rem] border-2 border-b-4 border-accent-aprikose bg-accent-aprikose-wash p-4">
+      <h2 className="text-[1rem] font-extrabold text-accent-aprikose-ink">{t('as.open')}</h2>
       <ul className="mt-2 space-y-1">
         {openList.map(({ s, i }) => (
           <li key={s.id}>
-            <button type="button" onClick={() => goTo(i)} className="min-h-11 text-left text-sm font-bold text-siegel hover:text-siegel-deep">
+            <button type="button" onClick={() => goTo(i)} className="min-h-11 text-left text-[1rem] font-extrabold text-course-ink hover:underline">
               {t('as.openSection', { n: i + 1, title: sectionTitle(s, t) })}
             </button>
           </li>
         ))}
       </ul>
-    </Card>
+    </div>
   );
 
   if (kind === 'closing') {
     const rows = teilKarte(doc, sections, { answers, finished });
     return (
-      <Shell level={level} progress={progress} title={chip} footer={<Button size="lg" className="w-full" to={v2Paths.home(level)}>{t('player.home')}</Button>}>
+      <Shell level={level} progress={progress} footer={<GameButton to={v2Paths.home(level)}>{t('player.home')}</GameButton>}>
         <div className="space-y-5">
           <header className="text-center">
-            <Chip tone="label">{chip}</Chip>
-            <h1 className="mt-3 font-display text-2xl font-semibold leading-tight tracking-[-0.018em] text-ink [hyphens:auto] sm:text-3xl">
+            <p className={EYEBROW}>{chip}</p>
+            <h1 className={`mt-1 ${H1}`}>
               {complete ? t('as.closingDone') : t('as.almost')}
             </h1>
           </header>
           {openCard}
-          <Card className="p-5">
+          <div className={PANEL}>
             <h2 className={LABEL}>{t('kk.title')}</h2>
-            <p className="mt-2 text-[0.875rem] text-graphite">{t('kk.lead', { exam: laneLabel(doc.lane), level: levelCode(level) })}</p>
-            <ul className="mt-4 divide-y divide-rule">
+            <p className="mt-2 text-[0.9375rem] font-semibold text-game-muted">{t('kk.lead', { exam: laneLabel(doc.lane), level: levelCode(level) })}</p>
+            <ul className="mt-4 divide-y-2 divide-game-line">
               {rows.map((r) => (
                 <li key={r.id} className="py-3">
-                  <p className="text-[0.9375rem] font-bold text-ink" lang="de">{teilLabel(r.template)}</p>
-                  <p className="mt-0.5 text-[0.875rem] text-ink">
+                  <p className="text-[1rem] font-extrabold text-game-text" lang="de">{teilLabel(r.template)}</p>
+                  <p className="mt-0.5 text-[0.9375rem] font-semibold text-game-text">
                     {r.practised
                       ? `${t(r.practised === 'full' ? 'kk.full' : 'kk.miniature')} · ${r.kind === 'block' ? t('exam.score', { c: r.correct, t: r.total }) : t('as.submitted')}`
                       : t('kk.open')}
                   </p>
                   {r.next && (
-                    <p className="mt-0.5 text-[0.8125rem] text-graphite">
+                    <p className="mt-0.5 text-[0.875rem] font-semibold text-game-muted">
                       {r.next.unit
                         ? `${t('kk.next', { level: levelCode(r.next.level), n: r.next.nr })}${r.next.title ? `: ${r.next.title}` : ''}`
                         : t('kk.nextLevel', { level: levelCode(r.next.level) })}
@@ -426,7 +414,7 @@ export default function AssessmentPlayer({ level, doc, manifest, user }) {
                 </li>
               ))}
             </ul>
-          </Card>
+          </div>
         </div>
       </Shell>
     );
@@ -446,22 +434,22 @@ export default function AssessmentPlayer({ level, doc, manifest, user }) {
     : { to: v2Paths.home(level), label: t('player.home') };
 
   return (
-    <Shell level={level} progress={progress} title={chip} footer={<Button size="lg" className="w-full" to={nextTarget.to}>{nextTarget.label}</Button>}>
+    <Shell level={level} progress={progress} footer={<GameButton to={nextTarget.to}>{nextTarget.label}</GameButton>}>
       <div className="space-y-5">
         <header className="text-center">
-          <Chip tone="label">{chip}</Chip>
-          <h1 className="mt-3 font-display text-2xl font-semibold leading-tight tracking-[-0.018em] text-ink [hyphens:auto] sm:text-3xl">
+          <p className={EYEBROW}>{chip}</p>
+          <h1 className={`mt-1 ${H1}`}>
             {complete ? t('as.resultsDone', { n: nr }) : t('as.almost')}
           </h1>
         </header>
         {openCard}
-        <Card className="p-5">
-          <p className="text-[0.875rem] text-graphite">{t('as.resultsLead')}</p>
-          <ul className="mt-3 divide-y divide-rule">
+        <div className={PANEL}>
+          <p className="text-[0.9375rem] font-semibold text-game-muted">{t('as.resultsLead')}</p>
+          <ul className="mt-3 divide-y-2 divide-game-line">
             {results.map(({ s, r }) => (
               <li key={s.id} className="flex flex-wrap items-baseline justify-between gap-x-3 py-2.5">
-                <span className="text-[0.9375rem] font-bold text-ink" lang="de">{sectionTitle(s, t)}</span>
-                <span className="font-data text-[0.8125rem] text-ink">
+                <span className="text-[1rem] font-extrabold text-game-text" lang="de">{sectionTitle(s, t)}</span>
+                <span className="text-[0.875rem] font-bold tabular-nums text-game-text">
                   {s.kind === 'writing' || s.kind === 'speaking'
                     ? (r.submitted ? t('as.submitted') : t('as.notSubmitted'))
                     : (r.done || r.answered ? t('exam.score', { c: r.correct, t: r.total }) : t('as.notDone'))}
@@ -469,14 +457,14 @@ export default function AssessmentPlayer({ level, doc, manifest, user }) {
               </li>
             ))}
           </ul>
-        </Card>
+        </div>
         {(repairs.length > 0 || teilRepairs.length > 0) ? (
-          <Card className="p-5">
+          <div className={PANEL}>
             <h2 className={LABEL}>{t('as.repairTitle')}</h2>
             <ul className="mt-3 space-y-1.5">
               {repairs.map((x) => (
                 <li key={x.step}>
-                  <Link to={v2Paths.unit(level, nrOfId(x.unit))} className="inline-flex min-h-11 items-center text-[0.9375rem] font-bold text-siegel hover:text-siegel-deep">
+                  <Link to={v2Paths.unit(level, nrOfId(x.unit))} className="inline-flex min-h-11 items-center text-[1rem] font-extrabold text-course-ink hover:underline">
                     {t('as.repairStep', { u: nrOfId(x.unit), s: stepNrOf(x.step), m: x.missed, t: x.total })}
                   </Link>
                 </li>
@@ -484,18 +472,18 @@ export default function AssessmentPlayer({ level, doc, manifest, user }) {
               {teilRepairs.map(({ s, r, unit }) => (
                 <li key={s.id}>
                   {unit ? (
-                    <Link to={v2Paths.unit(level, unit.nr)} className="inline-flex min-h-11 items-center text-[0.9375rem] font-bold text-siegel hover:text-siegel-deep">
+                    <Link to={v2Paths.unit(level, unit.nr)} className="inline-flex min-h-11 items-center text-[1rem] font-extrabold text-course-ink hover:underline">
                       {t('as.repairTeil', { teil: teilLabel(s.template), c: r.correct, t: r.total, u: unit.nr })}
                     </Link>
                   ) : (
-                    <span className="inline-flex min-h-11 items-center text-[0.9375rem] text-ink">{`${teilLabel(s.template)}: ${t('exam.score', { c: r.correct, t: r.total })}`}</span>
+                    <span className="inline-flex min-h-11 items-center text-[1rem] font-semibold text-game-text">{`${teilLabel(s.template)}: ${t('exam.score', { c: r.correct, t: r.total })}`}</span>
                   )}
                 </li>
               ))}
             </ul>
-          </Card>
+          </div>
         ) : reviewSection && sectionResult(reviewSection, { answers, finished }).done && (
-          <p className="text-sm text-graphite">{t('as.allRight')}</p>
+          <p className="text-[1rem] font-semibold text-game-muted">{t('as.allRight')}</p>
         )}
       </div>
     </Shell>

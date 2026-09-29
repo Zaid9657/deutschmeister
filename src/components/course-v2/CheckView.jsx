@@ -1,7 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { CheckCircle2, Circle } from 'lucide-react';
-import Button from '../ui/Button.jsx';
-import Card from '../ui/Card.jsx';
+import GameButton from './GameButton.jsx';
 import ItemRun from './ItemRun.jsx';
 import RuleCardView from './RuleCardView.jsx';
 import StoryCliffhanger from './StoryCliffhanger.jsx';
@@ -9,7 +8,8 @@ import { canDoTexts } from './content.js';
 import { useV2Strings } from './strings.js';
 import { proofParts } from '../../lib/course-v2/proofs.js';
 
-const LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite';
+const LABEL = 'text-[0.75rem] font-extrabold uppercase tracking-[0.08em] text-game-muted';
+const PANEL = 'rounded-[1.25rem] border-2 border-b-4 border-game-line bg-white p-5';
 
 /**
  * The Lektions-Check (SCHEMA §8 Check, BLUEPRINT §3.1 LS7 / §3.2 LS8):
@@ -33,8 +33,9 @@ const LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] 
  * { proofItemId: answeredRight } — the item evidence the player's recap re-reads with proofShown
  * once an Aufgabe is submitted after the Check (both additive).
  * `attempt` (the Check's plan.attempt) seeds the option order of its choice items (ItemView).
+ * `onProgress(fraction)` (optional) — the items, then the proof items, then the summary (1).
  */
-export default function CheckView({ unit, level, stepId, endLine = null, earlierItems = [], attempt = 1, aufgaben = null, microOutputs = null, course = null, canDos = null, ruleCards = null, lines, names, onAttempt, onDone }) {
+export default function CheckView({ unit, level, stepId, endLine = null, earlierItems = [], attempt = 1, aufgaben = null, microOutputs = null, course = null, canDos = null, ruleCards = null, lines, names, onAttempt, onDone, onProgress = null }) {
   const [lang, t] = useV2Strings();
   const check = unit?.check || {};
   const items = useMemo(() => [...(check.items || []), ...(earlierItems || [])], [check.items, earlierItems]);
@@ -42,6 +43,13 @@ export default function CheckView({ unit, level, stepId, endLine = null, earlier
   const [phase, setPhase] = useState(items.length ? 'items' : proofItems.length ? 'proofs' : 'summary');
   const [score, setScore] = useState({ correct: 0, total: 0 });
   const [proofResults, setProofResults] = useState({});
+  const progressSink = useRef(onProgress);
+  progressSink.current = onProgress;
+  const itemsShare = proofItems.length ? 0.8 : 0.95;
+  const report = (f) => { if (typeof progressSink.current === 'function') progressSink.current(f); };
+  useEffect(() => {
+    if (phase === 'summary' && typeof progressSink.current === 'function') progressSink.current(1);
+  }, [phase]);
   const texts = useMemo(() => canDoTexts(unit, course, canDos), [unit, course, canDos]);
   const cardsById = useMemo(() => {
     const m = new Map();
@@ -76,7 +84,7 @@ export default function CheckView({ unit, level, stepId, endLine = null, earlier
       <div>
         {/* The count the learner will actually answer: 12 once the earlier-unit draw is filled,
             fewer while earlier units have no reserve (the plan's `earlierMissing`). */}
-        <p className="mb-4 text-[0.9375rem] text-graphite">{t('check.lead', { n: items.length })}</p>
+        <p className="mb-4 text-[1rem] font-semibold text-game-muted">{t('check.lead', { n: items.length })}</p>
         <ItemRun
           key="check-items"
           items={items}
@@ -86,6 +94,7 @@ export default function CheckView({ unit, level, stepId, endLine = null, earlier
           stepId={stepId}
           level={level}
           attempt={attempt}
+          onProgress={(f) => report(f * itemsShare)}
           onAttempt={onAttempt}
           onFinish={(r) => { setScore(r); setPhase(proofItems.length ? 'proofs' : 'summary'); }}
         />
@@ -106,6 +115,7 @@ export default function CheckView({ unit, level, stepId, endLine = null, earlier
           stepId={stepId}
           level={level}
           attempt={attempt}
+          onProgress={(f) => report(itemsShare + f * (0.95 - itemsShare))}
           onAttempt={onProofAttempt}
           onFinish={() => setPhase('summary')}
         />
@@ -124,32 +134,32 @@ export default function CheckView({ unit, level, stepId, endLine = null, earlier
   return (
     <div className="space-y-4">
       {score.total > 0 && (
-        <Card tone="wash" className="p-5">
-          <p className="font-display text-[1.5rem] font-semibold text-ink">{t('check.result', { c: score.correct, t: score.total })}</p>
-          {pct != null && pct < 0.6 && <p className="mt-2 text-[0.9375rem] text-ink">{t('check.repeatSuggest')}</p>}
-        </Card>
+        <div className="rounded-[1.25rem] border-2 border-b-4 border-course bg-course-wash p-5 text-course-ink">
+          <p className="text-[1.5rem] font-extrabold">{t('check.result', { c: score.correct, t: score.total })}</p>
+          {pct != null && pct < 0.6 && <p className="mt-2 text-[1rem] font-semibold">{t('check.repeatSuggest')}</p>}
+        </div>
       )}
 
       {Array.isArray(check.proofs) && check.proofs.length > 0 && (
-        <Card className="p-5">
+        <div className={PANEL}>
           <p className={LABEL}>{t('check.canDo')}</p>
-          <ul className="mt-3 space-y-2.5">
+          <ul className="mt-3 space-y-3">
             {check.proofs.map((p) => {
               const st = proofStatus(p);
               return (
-                <li key={p.canDo} className="flex items-start gap-2.5 text-[0.9375rem]">
+                <li key={p.canDo} className="flex items-start gap-2.5 text-[1rem]">
                   {st.ok
-                    ? <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-accent-limette-ink" aria-hidden="true" />
-                    : <Circle className="mt-0.5 h-5 w-5 shrink-0 text-graphite" aria-hidden="true" />}
+                    ? <CheckCircle2 className="mt-0.5 h-6 w-6 shrink-0 text-game-right" aria-hidden="true" />
+                    : <Circle className="mt-0.5 h-6 w-6 shrink-0 text-game-locked-icon" aria-hidden="true" />}
                   <span>
-                    <span className="text-ink" lang="de">{texts[p.canDo] || p.canDo}</span>
-                    {st.labels.map((label, k) => <span key={k} className="block text-[0.8125rem] text-graphite">{label}</span>)}
+                    <span className="font-bold text-game-text" lang="de">{texts[p.canDo] || p.canDo}</span>
+                    {st.labels.map((label, k) => <span key={k} className="block text-[0.875rem] font-semibold text-game-muted">{label}</span>)}
                   </span>
                 </li>
               );
             })}
           </ul>
-        </Card>
+        </div>
       )}
 
       {rueckschau.length > 0 && (
@@ -160,26 +170,26 @@ export default function CheckView({ unit, level, stepId, endLine = null, earlier
       )}
 
       {check.portrait && (
-        <Card className="p-5">
+        <div className={PANEL}>
           <p className={LABEL}>{t('check.portrait')}</p>
-          <p className="mt-2 text-[1rem] leading-relaxed text-ink" lang="de">{check.portrait.de}</p>
-          {check.portrait.en && lang !== 'de' && <p className="mt-2 text-[0.875rem] leading-relaxed text-graphite">{check.portrait.en}</p>}
-        </Card>
+          <p className="mt-2 text-[1.0625rem] font-semibold leading-relaxed text-game-text" lang="de">{check.portrait.de}</p>
+          {check.portrait.en && lang !== 'de' && <p className="mt-2 text-[0.875rem] leading-relaxed text-game-muted">{check.portrait.en}</p>}
+        </div>
       )}
 
       {unit?.story?.cliffhanger && (
-        <Card tone="sunk" className="p-5">
+        <div className="rounded-[1.25rem] border-2 border-game-line bg-course-wash p-5">
           <p className={LABEL}>{t('check.story')}</p>
-          <StoryCliffhanger story={unit.story} idPrefix={`${stepId}-story`} />
-        </Card>
+          <StoryCliffhanger story={unit.story} idPrefix={`${stepId}-story`} className="mt-2 text-[1.125rem] font-bold leading-snug text-game-text" />
+        </div>
       )}
 
-      {endLine && allProven && <p className="text-[1rem] font-bold text-ink" lang="de">{endLine}</p>}
+      {endLine && allProven && <p className="text-[1.125rem] font-extrabold text-course-ink" lang="de">{endLine}</p>}
 
-      <div className="flex justify-end">
-        <Button onClick={() => onDone && onDone({ stepId, correct: score.correct, total: score.total, proofs, proofItems: { ...proofResults } })} size="lg" className="w-full sm:w-auto">
+      <div className="pt-2">
+        <GameButton onClick={() => onDone && onDone({ stepId, correct: score.correct, total: score.total, proofs, proofItems: { ...proofResults } })}>
           {t('check.done')}
-        </Button>
+        </GameButton>
       </div>
     </div>
   );

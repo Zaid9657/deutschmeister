@@ -7,7 +7,7 @@ import { useV2Strings } from './strings.js';
  * its English twin (`story.cliffhangerEn`, as every twin). A1 learners otherwise meet the hook
  * into the next unit as a German-only line (a1.1 u01 r1-F08 / r2-F09).
  */
-export default function StoryCliffhanger({ story, idPrefix = 'story', className = 'mt-2 font-display text-[1.125rem] leading-snug text-ink' }) {
+export default function StoryCliffhanger({ story, idPrefix = 'story', className = 'mt-2 text-[1.125rem] font-bold leading-snug text-game-text' }) {
   const [lang] = useV2Strings();
   const [open, setOpen] = useGlossPopover();
   if (!story || !story.cliffhanger) return null;
@@ -18,7 +18,7 @@ export default function StoryCliffhanger({ story, idPrefix = 'story', className 
         <GlossText text={story.cliffhanger} glosses={glosses} open={open} setOpen={setOpen} idPrefix={idPrefix} lang={lang} />
       </p>
       {story.cliffhangerEn && lang !== 'de' && (
-        <p className="mt-1 text-[0.875rem] leading-relaxed text-graphite" lang="en">{story.cliffhangerEn}</p>
+        <p className="mt-1 text-[0.875rem] font-semibold leading-relaxed text-game-muted" lang="en">{story.cliffhangerEn}</p>
       )}
     </>
   );

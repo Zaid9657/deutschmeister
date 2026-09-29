@@ -1,12 +1,11 @@
 import { useMemo, useState } from 'react';
-import Button from '../ui/Button.jsx';
-import Card from '../ui/Card.jsx';
+import GameButton, { QuietButton } from './GameButton.jsx';
 import InputView from './InputView.jsx';
 import ItemRun from './ItemRun.jsx';
 import MicroOutputView from './MicroOutputView.jsx';
 import { useV2Strings } from './strings.js';
 
-const LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite';
+const LABEL = 'text-[0.75rem] font-extrabold uppercase tracking-[0.08em] text-course-ink';
 
 /** The pieces of a reward block in the order SCHEMA §10 lists them. */
 export function rewardPieces(reward) {
@@ -42,17 +41,13 @@ export default function RewardView({ reward, unitId, stepId, level, lines = null
   };
 
   const skip = (
-    <button
-      type="button"
-      onClick={() => typeof onDone === 'function' && onDone()}
-      className="inline-flex min-h-11 items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-graphite hover:border-siegel hover:text-ink"
-    >
+    <QuietButton onClick={() => typeof onDone === 'function' && onDone()}>
       {t('as.rewardSkip')}
-    </button>
+    </QuietButton>
   );
 
   if (!piece) {
-    return <div className="flex justify-end">{skip}</div>;
+    return <div className="flex justify-center">{skip}</div>;
   }
 
   const eyebrow = piece.label || (piece.id === 'scene' ? t('as.rewardScene') : t('as.rewardProjekt'));
@@ -60,29 +55,29 @@ export default function RewardView({ reward, unitId, stepId, level, lines = null
   return (
     <div>
       <p className={LABEL}>{eyebrow}</p>
-      <p className="mt-1 text-[0.8125rem] text-graphite">{t('as.rewardLead')}</p>
+      <p className="mt-1 text-[0.9375rem] font-semibold text-game-muted">{t('as.rewardLead')}</p>
 
       {piece.projekt ? (
         <div className="mt-4">
-          <Card tone="sunk" className="mb-4 p-4">
-            <p className="text-[0.9375rem] leading-relaxed text-ink" lang="de">{piece.projekt.promptDe}</p>
-          </Card>
+          <div className="mb-4 rounded-[1.25rem] border-2 border-game-line bg-course-wash p-4">
+            <p className="text-[1rem] font-semibold leading-relaxed text-game-text" lang="de">{piece.projekt.promptDe}</p>
+          </div>
           <MicroOutputView key={`${stepId}-projekt`} mo={piece.projekt.microOutput} level={level} onDone={nextPiece} />
         </div>
       ) : phase === 'read' ? (
         <div className="mt-4">
           <InputView input={piece.input} unitId={unitId} />
-          <div className="mt-6 flex flex-wrap items-center justify-end gap-3 border-t border-rule pt-4">
-            {skip}
-            <Button size="lg" className="w-full sm:w-auto" onClick={() => (piece.items.length ? setPhase('items') : nextPiece())}>
+          <div className="mt-8 flex flex-col items-stretch gap-2">
+            <GameButton onClick={() => (piece.items.length ? setPhase('items') : nextPiece())}>
               {piece.items.length ? t('item.next') : t('as.rewardDone')}
-            </Button>
+            </GameButton>
+            {skip}
           </div>
         </div>
       ) : (
         <div className="mt-4">
-          <details className="mb-5 rounded-clay border border-rule bg-white p-4">
-            <summary className="cursor-pointer text-[0.875rem] font-bold text-graphite">{t('as.textAgain')}</summary>
+          <details className="mb-5 rounded-[1.25rem] border-2 border-game-line bg-white p-4">
+            <summary className="min-h-11 cursor-pointer text-[0.9375rem] font-extrabold text-game-muted">{t('as.textAgain')}</summary>
             <div className="mt-3"><InputView input={piece.input} unitId={unitId} /></div>
           </details>
           <ItemRun

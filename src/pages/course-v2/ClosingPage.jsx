@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Flag } from 'lucide-react';
+import { Navigate, useParams } from 'react-router-dom';
+import { Flag } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import Button from '../../components/ui/Button.jsx';
-import Chip from '../../components/ui/Chip.jsx';
+import CourseTheme from '../../components/course-v2/CourseTheme.jsx';
+import GameButton from '../../components/course-v2/GameButton.jsx';
+import GameTopBar from '../../components/course-v2/GameTopBar.jsx';
 import { useV2Strings } from '../../components/course-v2/strings.js';
-import { normalizeLevel, levelCode, bandOf, v2Paths } from '../../lib/course-v2/ids.js';
+import { normalizeLevel, bandOf, v2Paths } from '../../lib/course-v2/ids.js';
 import { closingIdFor } from '../../lib/course-v2/assessment.js';
 import { fetchLearnerGoal } from '../../lib/course-v2/progress.js';
 import { loadClosing, loadManifest } from '../../lib/course-v2/loaders.js';
@@ -24,23 +25,21 @@ import AssessmentPlayer from './AssessmentPlayer.jsx';
 function Soon({ level }) {
   const [, t] = useV2Strings();
   return (
-    <div className="min-h-screen bg-paper font-body text-ink">
-      <div className="mx-auto max-w-2xl px-4 pb-32 pt-4 sm:pt-8">
-        <Link to={v2Paths.home(level)} className="inline-flex min-h-11 items-center gap-1 font-data text-sm font-bold text-siegel hover:text-siegel-deep">
-          <ArrowLeft className="h-4 w-4" aria-hidden="true" /> {levelCode(level)}
-        </Link>
-        <header className="mt-2">
-          <Chip tone="label">{t('as.closingChip')}</Chip>
-          <h1 className="mt-3 flex items-center gap-2 font-display text-2xl text-ink">
-            <Flag className="h-6 w-6 text-graphite" aria-hidden="true" /> {t('as.soonClosing')}
+    <CourseTheme>
+      <div className="mx-auto max-w-2xl px-4 pb-32">
+        <GameTopBar homeTo={v2Paths.home(level)} homeLabel={t('player.home')} progress={0} progressLabel={t('as.progress')} />
+        <header>
+          <p className="text-[0.8125rem] font-extrabold uppercase tracking-[0.08em] text-game-muted">{t('as.closingChip')}</p>
+          <h1 className="mt-1 flex items-center gap-2 text-[1.625rem] font-extrabold leading-tight text-game-text">
+            <Flag className="h-6 w-6 shrink-0 text-game-muted" aria-hidden="true" /> {t('as.soonClosing')}
           </h1>
-          <p className="mt-2 text-sm text-graphite">{t('as.soonBody')}</p>
+          <p className="mt-2 text-[1rem] font-semibold text-game-muted">{t('as.soonBody')}</p>
         </header>
       </div>
       <ActionBar>
-        <Button size="lg" className="w-full" to={v2Paths.home(level)}>{t('player.home')}</Button>
+        <GameButton to={v2Paths.home(level)}>{t('player.home')}</GameButton>
       </ActionBar>
-    </div>
+    </CourseTheme>
   );
 }
 
@@ -71,9 +70,9 @@ export default function ClosingPage() {
   if (!level) return <Navigate to="/courses/" replace />;
   if (info.loading || authLoading) {
     return (
-      <div className="min-h-screen bg-paper font-body text-graphite">
-        <p className="mx-auto max-w-2xl px-4 py-16 text-sm italic">{t('as.loading')}</p>
-      </div>
+      <CourseTheme>
+        <p className="mx-auto max-w-2xl px-4 py-16 text-center text-[1rem] font-semibold text-game-muted">{t('as.loading')}</p>
+      </CourseTheme>
     );
   }
   if (!info.doc || !Array.isArray(info.doc.parts)) return <Soon level={level} />;

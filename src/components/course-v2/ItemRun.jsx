@@ -1,5 +1,5 @@
-import { useRef, useState } from 'react';
-import Button from '../ui/Button.jsx';
+import { useEffect, useRef, useState } from 'react';
+import GameButton from './GameButton.jsx';
 import ItemView from './ItemView.jsx';
 import RuleCardView from './RuleCardView.jsx';
 import { useV2Strings } from './strings.js';
@@ -12,28 +12,38 @@ export const REQUEUE_CAP = 4;
  * - The eyebrow counts FIRST presentations only; a re-asked miss shows „+1 Wiederholung".
  * - A miss returns once as a DIFFERENT item of the same topic, drawn from `requeuePool`
  *   (the pool's unserved items), never more than REQUEUE_CAP per run; only when no
- *   alternate exists is the same item asked again (the legacy requeue.js rule).
+ *   alternate exists is the same item asked again (the legacy requeue.js rule). The
+ *   feedback sheet of that miss says so („Diese Aufgabe kommt gleich noch einmal.").
  * - Stuck-point repair: after 2 misses of the same item class (topic × type) the rule
  *   card is shown once, after „Weiter" — never a third failure in a row without help.
  *
  * `onFinish({ correct, total })` — first-presentation results only (a requeue never
  * improves the score it repeats). `onAttempt(payload)` for every answer. `attempt` (the
  * step's, default 1) seeds the option order of non-exam choice items (ItemView).
+ * `onProgress(fraction)` (optional) — how far through the run the learner is, 0..1, for
+ * the player's progress bar.
  */
-export default function ItemRun({ items, requeuePool = [], requeue = false, unitId, lines, stepId, level, ruleCard = null, names = null, attempt = 1, onAttempt, onFinish }) {
+export default function ItemRun({ items, requeuePool = [], requeue = false, unitId, lines, stepId, level, ruleCard = null, names = null, attempt = 1, onAttempt, onFinish, onProgress = null }) {
   const [, t] = useV2Strings();
   const [queue, setQueue] = useState(() => (items || []).map((item) => ({ item, requeued: false })));
   const [pos, setPos] = useState(0);
   const [repair, setRepair] = useState(false);
+  const [repeatOf, setRepeatOf] = useState(null); // { pos, kind: 'same' | 'similar' } of the miss just requeued
   const stats = useRef({ correct: 0, total: 0, requeued: 0 });
   const used = useRef(new Set((items || []).map((i) => i.id)));
   const misses = useRef(new Map());
   const repaired = useRef(new Set());
   const finished = useRef(false);
   const pendingRepair = useRef(false);
+  const progressSink = useRef(onProgress);
+  progressSink.current = onProgress;
 
   const firstTotal = (items || []).length;
   const entry = queue[pos] || null;
+
+  useEffect(() => {
+    if (typeof progressSink.current === 'function') progressSink.current(queue.length ? Math.min(1, pos / queue.length) : 1);
+  }, [pos, queue.length]);
 
   const finish = () => {
     if (finished.current) return;
@@ -62,6 +72,7 @@ export default function ItemRun({ items, requeuePool = [], requeue = false, unit
     used.current.add(again.id);
     stats.current.requeued += 1;
     setQueue((q) => [...q, { item: again, requeued: true }]);
+    setRepeatOf({ pos, kind: alt ? 'similar' : 'same' });
   };
 
   const next = () => {
@@ -82,10 +93,10 @@ export default function ItemRun({ items, requeuePool = [], requeue = false, unit
   if (repair) {
     return (
       <div>
-        <p className="mb-3 text-[0.9375rem] font-bold text-ink">{t('rule.repairLead')}</p>
+        <p className="mb-3 text-[1.125rem] font-extrabold text-game-text">{t('rule.repairLead')}</p>
         <RuleCardView card={ruleCard} />
-        <div className="mt-6 flex justify-end">
-          <Button onClick={closeRepair} size="lg" className="w-full sm:w-auto">{t('item.next')}</Button>
+        <div className="mt-8">
+          <GameButton onClick={closeRepair}>{t('item.next')}</GameButton>
         </div>
       </div>
     );
@@ -93,11 +104,7 @@ export default function ItemRun({ items, requeuePool = [], requeue = false, unit
 
   if (!entry) {
     // Nothing (left) to answer: one button that reports the run.
-    return (
-      <div className="flex justify-end">
-        <Button onClick={finish} size="lg">{t('item.next')}</Button>
-      </div>
-    );
+    return <GameButton onClick={finish}>{t('item.next')}</GameButton>;
   }
 
   const firstIndex = entry.requeued ? null : queue.slice(0, pos).filter((e) => !e.requeued).length;
@@ -114,6 +121,7 @@ export default function ItemRun({ items, requeuePool = [], requeue = false, unit
       index={firstIndex}
       total={firstTotal}
       requeued={entry.requeued}
+      repeat={repeatOf && repeatOf.pos === pos ? repeatOf.kind : null}
       attempt={attempt}
       onResult={onResult}
       onNext={next}

@@ -1,19 +1,33 @@
 import { useMemo, useRef, useState } from 'react';
 import { Eye } from 'lucide-react';
-import Button from '../ui/Button.jsx';
-import Card from '../ui/Card.jsx';
-import FeedbackSheet from '../lesson/FeedbackSheet.jsx';
 import ReadAloudLine from '../lesson/ReadAloudLine.jsx';
 import AudioButton from './AudioButton.jsx';
+import CastAvatar from './CastAvatar.jsx';
+import FeedbackSheetV2 from './FeedbackSheetV2.jsx';
+import GameButton, { QuietButton } from './GameButton.jsx';
+import { SpeechBubble, StickyAction } from './GameParts.jsx';
 import InlineFeedback from './InlineFeedback.jsx';
 import { ChoiceList, ChoiceSelect, TypedInput, TilesInput, MatchInput } from './ItemInputs.jsx';
 import { gradeAnswer, attemptPayload, RESULT, acceptedOf } from './grade.js';
 import { orderedOptions } from '../../lib/course-v2/unitPlan.js';
+import { xpForItem } from '../../lib/course-v2/gamify.js';
 import { correctionQuoteOf, quoteOf, resolveText, speakerName } from './content.js';
 import { useV2Strings, ltext } from './strings.js';
 
 /** The one-retry notice per checker reason: case, the value written with the word next to the gap, else spelling. */
 const RETRY_NOTICE = Object.freeze({ case: 'item.caseRetry', 'number-only': 'item.numberOnlyRetry', 'word-only': 'item.wordOnlyRetry' });
+
+/**
+ * The instruction heading of a one-item screen, by item type — only where the prompt itself
+ * is not already the instruction („Bilden Sie …", „Hören Sie …", „Korrigieren Sie …").
+ */
+const INSTRUCTION = Object.freeze({
+  multiple_choice: 'ask.choose',
+  abc: 'ask.choose',
+  fill_blank: 'ask.fill',
+  cloze: 'ask.fill',
+  richtig_falsch: 'ask.tf',
+});
 
 /**
  * ItemView({ item, level, onResult }) — renders ONE item of any SCHEMA §3.1 type and
@@ -32,6 +46,11 @@ const RETRY_NOTICE = Object.freeze({ case: 'item.caseRetry', 'number-only': 'ite
  * presses „Weiter" — so a closed tab never loses an answer; `payload.correct` is the final
  * outcome, `payload.typo` says a slip happened on the way.
  *
+ * The one-item screen (the course theme, 2026-09-29): an instruction heading, the prompt —
+ * in a speech bubble next to the speaker when the item plays a line — chunky answer tiles,
+ * the big „Prüfen" in the thumb zone, and the verdict as a bottom sheet (FeedbackSheetV2)
+ * with the XP the answer earned (gamify.js xpForItem: 10 first try, 5 after a retry).
+ *
  * Optional props (all additive to the contract):
  *   stepId          stamped into the payload
  *   unitId          audio manifest key (recordings), defaults to the item id's unit
@@ -44,6 +63,8 @@ const RETRY_NOTICE = Object.freeze({ case: 'item.caseRetry', 'number-only': 'ite
  *   onNext          one-item screens: „Weiter" after the feedback (bottom sheet). Without
  *                   it the feedback is inline and the parent moves on.
  *   index, total, requeued   the eyebrow („Aufgabe 3 von 12", „+1 Wiederholung")
+ *   repeat          'same' | 'similar' — the run asks this again (ItemRun's requeue): the
+ *                   sheet says so after a miss
  *   allowReveal     offer „Lösung zeigen" before the first check (default: only in the retry)
  *   names           { speakerId: name } for read-aloud / audio labels
  *   attempt         the step's attempt (step.plan.attempt, default 1): a non-exam item's own
@@ -65,6 +86,7 @@ export default function ItemView({
   index = null,
   total = null,
   requeued = false,
+  repeat = null,
   allowReveal = false,
   names = null,
   attempt = 1,
@@ -188,6 +210,10 @@ export default function ItemView({
   const ex = ltext(item.explanation, lang);
   const promptEn = item.promptEn && lang !== 'de' ? item.promptEn : null;
   const textRefObj = item.textRef ? resolveText(item.textRef, block?.texts, texts) : null;
+  // the XP this answer earned, as the sheet shows it (the player adds the same number up)
+  const gained = done && outcome && !outcome.revealed
+    ? xpForItem({ correct: outcome.result !== RESULT.WRONG, firstTry: outcome.result === RESULT.CORRECT })
+    : 0;
 
   // ---- the answer area -----------------------------------------------------------
   let answerArea = null;
@@ -200,6 +226,7 @@ export default function ItemView({
         resolved={done}
         correctValue={correctValue}
         disabled={done}
+        compact={compact}
       />
     );
   } else if (kind === 'select') {
@@ -207,7 +234,7 @@ export default function ItemView({
       <>
         <ChoiceSelect id={`sel-${item.id}`} options={choiceSet} picked={value || null} onPick={(v) => setValue(v || '')} resolved={done} disabled={done} />
         {done && outcome && outcome.result === RESULT.WRONG && (
-          <p className="mt-2 text-[0.875rem] text-graphite">
+          <p className="mt-2 text-[0.9375rem] font-semibold text-game-muted">
             {t('fb.yours')} <strong lang="de">{value || '–'}</strong>
           </p>
         )}
@@ -242,91 +269,146 @@ export default function ItemView({
   }
 
   const needsCheckButton = !done && kind !== 'match' && kind !== 'readaloud' && !(compact && kind === 'choice');
+  // a picked choice shows in the prompt's one gap, the way the sentence will read
+  const gapFill = (kind === 'choice' || kind === 'select') && value ? { text: value, tone: !done ? 'picked' : outcome && outcome.result !== RESULT.WRONG ? 'right' : 'wrong' } : null;
 
-  const body = (
+  if (compact) {
+    return (
+      <div className="py-4" data-item-id={item.id}>
+        {promptText && (
+          <p className="text-[1.0625rem] font-bold leading-snug text-game-text" lang="de">
+            <Prompt text={promptText} fill={gapFill} t={t} />
+          </p>
+        )}
+        {promptEn && <p className="mt-1 text-[0.875rem] leading-snug text-game-muted">{promptEn}</p>}
+        {audioLine && kind !== 'readaloud' && (
+          <div className="mt-3">
+            <AudioButton unitId={uid} line={audioLine} rate={item.type === 'dictation' || item.type === 'notes' ? 0.85 : undefined} />
+          </div>
+        )}
+        <div className="mt-3">{answerArea}</div>
+        {hint.main && !done && phase !== 'retry' && (
+          <p className="mt-2 text-[0.875rem] font-semibold text-game-muted">{t('item.hint', { hint: hint.main })}</p>
+        )}
+        {phase === 'retry' && (
+          <InlineFeedback retry message={t(RETRY_NOTICE[outcome && outcome.reason] || 'item.typoRetry')} />
+        )}
+        {needsCheckButton && (
+          <div className="mt-3 flex flex-wrap items-center justify-end gap-2">
+            {(phase === 'retry' || allowReveal) && (
+              <QuietButton onClick={reveal}><Eye className="h-4 w-4 shrink-0" aria-hidden="true" /> {t('item.showSolution')}</QuietButton>
+            )}
+            <GameButton size="md" onClick={() => submit()} disabled={!canSubmit}>
+              {phase === 'retry' ? t('item.retry') : t('item.check')}
+            </GameButton>
+          </div>
+        )}
+        {done && outcome && !outcome.readAloud && (
+          <InlineFeedback
+            result={outcome.result}
+            revealed={!!outcome.revealed}
+            expected={outcome.result === RESULT.CORRECT ? null : outcome.expected}
+            explanation={outcome.result === RESULT.CORRECT ? null : item.explanation}
+          />
+        )}
+      </div>
+    );
+  }
+
+  const instruction = INSTRUCTION[item.type] ? t(INSTRUCTION[item.type]) : null;
+  const speaker = audioLine && audioLine.speaker ? speakerName(audioLine.speaker, names) : null;
+  const sheetOpen = showSheet && done && outcome && !outcome.readAloud;
+  const promptBody = (
     <>
+      {audioLine && kind !== 'readaloud' && (
+        <div className="mb-3 flex items-center gap-3">
+          <AudioButton
+            unitId={uid}
+            line={audioLine}
+            iconOnly
+            size="lg"
+            rate={item.type === 'dictation' || item.type === 'notes' ? 0.85 : undefined}
+            ariaLabel={speaker ? `${t('audio.play')}: ${speaker}` : t('audio.play')}
+          />
+          <AudioButton unitId={uid} line={audioLine} label={t('audio.slow')} rate={0.7} size="sm" />
+        </div>
+      )}
       {promptText && (
-        <p
-          className={compact
-            ? 'text-[1rem] font-semibold leading-snug text-ink'
-            : 'font-display text-[1.25rem] font-semibold leading-snug text-ink sm:text-[1.375rem]'}
-          lang="de"
-        >
-          <Prompt text={promptText} />
+        <p className={`${instruction ? 'text-[1.25rem]' : 'text-[1.375rem]'} font-extrabold leading-snug text-game-text [hyphens:auto] sm:text-[1.5rem]`} lang="de">
+          <Prompt text={promptText} fill={gapFill} t={t} />
         </p>
       )}
-      {promptEn && <p className="mt-1 text-[0.875rem] leading-snug text-graphite">{promptEn}</p>}
-      {textRefObj && textRefObj.kind !== 'audio' && !compact && (
-        <div className="mt-3 rounded-clay border border-rule bg-paper-sunk p-3 text-[0.9375rem] leading-relaxed text-ink" lang="de">
-          {textRefObj.title && <p className="font-bold">{textRefObj.title}</p>}
+      {promptEn && <p className="mt-1.5 text-[0.9375rem] font-semibold leading-snug text-game-muted">{promptEn}</p>}
+    </>
+  );
+
+  return (
+    <div className={sheetOpen ? 'pb-80 sm:pb-0' : needsCheckButton ? 'pb-36 sm:pb-0' : ''} data-item-id={item.id}>
+      {(index != null || requeued) && (
+        <p className="flex flex-wrap items-center gap-2 text-[0.75rem] font-extrabold uppercase tracking-[0.08em] text-game-muted">
+          {index != null && total != null && <span>{t('item.of', { n: index + 1, total })}</span>}
+          {requeued && <span className="rounded-lg bg-accent-aprikose-wash px-2 py-0.5 text-accent-aprikose-ink">{t('item.repeat')}</span>}
+        </p>
+      )}
+      {instruction && <h2 className="mt-2 text-[1.5rem] font-extrabold leading-tight text-game-text sm:text-[1.625rem]">{instruction}</h2>}
+      <div className="mt-4">
+        {speaker ? (
+          <div className="flex items-end gap-3">
+            <CastAvatar name={speaker} size={76} className="shrink-0" />
+            <SpeechBubble tail="left" className="min-w-0 flex-1">{promptBody}</SpeechBubble>
+          </div>
+        ) : audioLine ? (
+          <SpeechBubble tail={null}>{promptBody}</SpeechBubble>
+        ) : (
+          promptBody
+        )}
+      </div>
+      {textRefObj && textRefObj.kind !== 'audio' && (
+        <div className="mt-4 rounded-2xl border-2 border-game-line bg-white p-4 text-[1rem] leading-relaxed text-game-text" lang="de">
+          {textRefObj.title && <p className="font-extrabold">{textRefObj.title}</p>}
           {textRefObj.text && <p className="whitespace-pre-line">{textRefObj.text}</p>}
         </div>
       )}
-      {audioLine && kind !== 'readaloud' && (
-        <div className="mt-3">
-          <AudioButton unitId={uid} line={audioLine} rate={item.type === 'dictation' || item.type === 'notes' ? 0.85 : undefined} />
-        </div>
-      )}
-      <div className={compact ? 'mt-3' : 'mt-5'}>{answerArea}</div>
+      <div className="mt-6">{answerArea}</div>
       {hint.main && !done && phase !== 'retry' && (
-        <p className="mt-2 text-[0.8125rem] text-graphite">{t('item.hint', { hint: hint.main })}</p>
+        <p className="mt-3 text-[0.9375rem] font-semibold text-game-muted">{t('item.hint', { hint: hint.main })}</p>
       )}
       {phase === 'retry' && (
         <InlineFeedback retry message={t(RETRY_NOTICE[outcome && outcome.reason] || 'item.typoRetry')} />
       )}
       {needsCheckButton && (
-        <div className={`flex flex-wrap items-center justify-end gap-3 ${compact ? 'mt-3' : 'mt-6'}`}>
+        <StickyAction>
           {(phase === 'retry' || allowReveal) && (
-            <button
-              type="button"
-              onClick={reveal}
-              className="inline-flex min-h-11 items-center gap-1.5 rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-graphite transition-colors duration-100 ease-snap hover:border-siegel hover:text-ink motion-reduce:transition-none"
-            >
-              <Eye className="h-4 w-4 shrink-0" aria-hidden="true" /> {t('item.showSolution')}
-            </button>
+            <QuietButton onClick={reveal}><Eye className="h-4 w-4 shrink-0" aria-hidden="true" /> {t('item.showSolution')}</QuietButton>
           )}
-          <Button onClick={() => submit()} size={compact ? 'md' : 'lg'} disabled={!canSubmit} className={compact ? '' : 'w-full sm:w-auto'}>
+          <GameButton onClick={() => submit()} disabled={!canSubmit}>
             {phase === 'retry' ? t('item.retry') : t('item.check')}
-          </Button>
-        </div>
+          </GameButton>
+        </StickyAction>
       )}
       {done && outcome && !outcome.readAloud && !showSheet && (
         <InlineFeedback
           result={outcome.result}
           revealed={!!outcome.revealed}
           expected={outcome.result === RESULT.CORRECT ? null : outcome.expected}
-          explanation={outcome.result === RESULT.CORRECT && compact ? null : item.explanation}
+          explanation={item.explanation}
         />
       )}
-      {done && outcome && outcome.readAloud && typeof onNext === 'function' && !compact && (
-        <div className="mt-6 flex justify-end">
-          <Button onClick={onNext} size="lg" className="w-full sm:w-auto">{t('item.next')}</Button>
+      {done && outcome && outcome.readAloud && typeof onNext === 'function' && (
+        <div className="mt-8">
+          <GameButton onClick={onNext}>{t('item.next')}</GameButton>
         </div>
       )}
-    </>
-  );
-
-  if (compact) {
-    return <div className="py-4" data-item-id={item.id}>{body}</div>;
-  }
-
-  return (
-    <div className={done && showSheet && !outcome?.readAloud ? 'pb-40 sm:pb-0' : ''} data-item-id={item.id}>
-      {(index != null || requeued) && (
-        <p className="flex flex-wrap items-center gap-2 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">
-          {index != null && total != null && <span>{t('item.of', { n: index + 1, total })}</span>}
-          {requeued && <span className="rounded-pill bg-accent-aprikose-wash px-2 py-0.5 text-accent-aprikose-ink">{t('item.repeat')}</span>}
-        </p>
-      )}
-      <Card className="mt-3 p-5 sm:p-6">{body}</Card>
-      {showSheet && done && outcome && !outcome.readAloud && (
-        <FeedbackSheet
+      {sheetOpen && (
+        <FeedbackSheetV2
           result={outcome.result}
           revealed={!!outcome.revealed}
           expected={outcome.result === RESULT.CORRECT ? null : outcome.expected}
           explanation={outcome.result === RESULT.CORRECT ? null : ex.main}
           otherExplanation={outcome.result === RESULT.CORRECT ? null : ex.other}
-          primaryLabel={t('item.next')}
+          xp={gained}
+          seed={item.id}
+          repeat={outcome.result === RESULT.WRONG ? repeat : null}
           onContinue={onNext}
         />
       )}
@@ -334,15 +416,32 @@ export default function ItemView({
   );
 }
 
-/** A prompt with its `___` gaps drawn as a gap, not as three underscores. */
-function Prompt({ text }) {
+/**
+ * A prompt with its `___` gaps drawn as a gap, not as three underscores. `fill` (a picked
+ * choice) shows in a prompt's single gap, in the tone of its state.
+ */
+const GAP_TONE = {
+  empty: 'border-course text-course-ink',
+  picked: 'border-course text-course-ink',
+  right: 'border-game-right text-game-right-ink',
+  wrong: 'border-game-wrong text-game-wrong-ink',
+};
+
+function Prompt({ text, fill = null, t }) {
   const parts = String(text || '').split(/_{3,}/);
   if (parts.length === 1) return text;
+  const single = parts.length === 2;
   return parts.map((p, i) => (
     <span key={i}>
       {p}
       {i < parts.length - 1 && (
-        <span className="mx-0.5 inline-block min-w-[3.5rem] border-b-2 border-ink align-baseline" aria-label="Lücke">&nbsp;</span>
+        single && fill ? (
+          <span className={`mx-0.5 inline-block min-w-[4.5rem] border-b-[3px] border-dashed px-1.5 text-center align-baseline ${GAP_TONE[fill.tone] || GAP_TONE.picked}`}>{fill.text}</span>
+        ) : (
+          <span className={`mx-0.5 inline-block min-w-[4.5rem] border-b-[3px] border-dashed align-baseline ${GAP_TONE.empty}`}>
+            &nbsp;<span className="sr-only">{t('item.gapBlank')}</span>
+          </span>
+        )
       )}
     </span>
   ));
