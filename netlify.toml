@@ -54,6 +54,15 @@
 [functions."speaking-closeout"]
   schedule = "20 * * * *"
 
+# Sentinel (hourly, :50): the watchdog — key pages, payment webhooks, signup
+# drop, scheduled-job evidence, support SLA, speaking flow. Records incidents in
+# public.agent_incidents and mails ONE digest of new ones to OWNER_ALERT_EMAIL.
+# SHIPS OFF — no-op unless SENTINEL_ENABLED=true, and mails nothing until
+# migrations/2026-09-29-agent-incidents.sql is applied (no claim, no mail).
+# The schedule() wrapper in the function is authoritative; this mirrors it.
+[functions."sentinel"]
+  schedule = "50 * * * *"
+
 # Security headers for all pages
 [[headers]]
   for = "/*"

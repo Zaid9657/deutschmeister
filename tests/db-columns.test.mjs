@@ -44,7 +44,18 @@ import { isListeningDone } from '../src/lib/listeningProgress.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SNAPSHOT = JSON.parse(readFileSync(path.join(ROOT, 'tests/fixtures/db-schema.json'), 'utf8'));
-const TABLES = SNAPSHOT.tables;
+// Tables a written, NOT yet applied migration creates (the fixture's
+// "pendingApply" block). Queries may name them — the function that queries
+// one is written to fail closed until the owner applies the file — but only
+// while the test below holds: the file exists, its CREATE TABLE declares
+// exactly those columns, the README says "not yet applied", and the live
+// snapshot does not have the table yet. Same shape as PENDING_APPLY in
+// tests/rls-update-check.test.mjs: the list only shrinks.
+const PENDING = SNAPSHOT.pendingApply?.tables ?? {};
+const TABLES = {
+  ...SNAPSHOT.tables,
+  ...Object.fromEntries(Object.entries(PENDING).map(([t, p]) => [t, p.columns])),
+};
 
 const scanRepo = () => scanFiles(listSourceFiles(['src', 'netlify/functions'], ROOT), ROOT);
 const violationsIn = (source) => findViolations(scanSource(source, 'fixture.js').refs, TABLES);
@@ -60,6 +71,22 @@ test('the schema snapshot is dated, complete and says how to refresh it', () => 
   for (const [t, cols] of Object.entries(TABLES)) {
     assert.ok(Array.isArray(cols) && cols.length > 0, `${t} has no columns`);
     assert.deepEqual([...cols].sort(), cols, `${t}: keep columns sorted so a refresh diffs cleanly`);
+  }
+});
+
+test('every pending table comes from an unapplied migration that creates exactly its columns', () => {
+  const readme = readFileSync(path.join(ROOT, 'migrations/README.md'), 'utf8').split('\n');
+  for (const [table, { migration, columns }] of Object.entries(PENDING)) {
+    assert.ok(!(table in SNAPSHOT.tables), `${table} is live now: refresh the snapshot and delete its pendingApply entry`);
+    assert.deepEqual([...columns].sort(), columns, `${table}: keep pending columns sorted`);
+    const sql = readFileSync(path.join(ROOT, 'migrations', migration), 'utf8').replace(/--[^\n]*/g, ' ');
+    const m = new RegExp(`CREATE TABLE IF NOT EXISTS public\\.${table} \\(([\\s\\S]*?)\\n\\);`).exec(sql);
+    assert.ok(m, `${migration} must CREATE TABLE IF NOT EXISTS public.${table}`);
+    const declared = m[1].split('\n').map((l) => l.trim()).filter(Boolean).map((l) => l.split(/\s+/)[0]).sort();
+    assert.deepEqual(declared, columns, `${migration} declares other columns than the pendingApply entry`);
+    const row = readme.find((l) => l.includes(`\`${migration}\``));
+    assert.ok(row, `migrations/README.md lists ${migration}`);
+    assert.match(row, /not yet applied/i, `${migration} is in pendingApply, so the README must say it is not applied`);
   }
 });
 

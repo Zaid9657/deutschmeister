@@ -140,6 +140,7 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   A session that needs a revenue or usage figure reads the latest row (or calls the function via
   the Supabase connector) instead of re-deriving it — the handoff had to correct a stale
   "9 subs, €75–90/mo" claim once already. `tests/weekly-truth.test.mjs` pins store-before-email.
+- **Production agents (the hourly sentinel, the support agent) are documented in `docs/agents/production-agents.md`** — env vars, checks, owners, what is mailed to `OWNER_ALERT_EMAIL`, how to mute a check; incidents live in `agent_incidents` (service role only), and the sentinel ships off (`SENTINEL_ENABLED`).
 - **The Astro build survives a Supabase outage.** Every build-time read in `astro-site/src/lib/grammar.js`
   retries three times, then serves the whole build from the committed `grammar-content-cache.json`
   with a loud warning (two deploys died on `fetch failed` on 2026-09-14, once because the Supabase
