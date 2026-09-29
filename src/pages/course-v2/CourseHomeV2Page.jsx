@@ -1,123 +1,62 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Check, Flag, Lock } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Navigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import Button from '../../components/ui/Button.jsx';
-import Card from '../../components/ui/Card.jsx';
-import Chip from '../../components/ui/Chip.jsx';
+import CourseTheme from '../../components/course-v2/CourseTheme.jsx';
+import useCourseGame from '../../components/course-v2/useCourseGame.js';
+import DailyGoalCard from '../../components/course-v2/home/DailyGoalCard.jsx';
+import GameButton from '../../components/course-v2/home/GameButton.jsx';
+import PathSection from '../../components/course-v2/home/PathSection.jsx';
+import PlanOverview from '../../components/course-v2/home/PlanOverview.jsx';
+import TopBar from '../../components/course-v2/home/TopBar.jsx';
 import { normalizeLevel, levelCode, bandOf } from '../../lib/course-v2/ids.js';
-import { courseHomeModel, STATUS_LABEL_DE } from '../../lib/course-v2/homeModel.js';
+import { courseHomeModel } from '../../lib/course-v2/homeModel.js';
 import { planSummary } from '../../lib/course-v2/pacePlan.js';
+import { dailyGoalMinutes } from '../../lib/course-v2/gamify.js';
+import {
+  coursePath, actionLabel, hasProgress, wordsLearned, courseTiles, examParts, planEtappen, paceOptions,
+  resolvePace, paceStorageKey, formatFinishDate, stepMinutes, stepSkeleton, PACE_NAME_DE, STEP_XP,
+} from '../../lib/course-v2/pathModel.js';
 import { fetchLevelState, fetchLearnerGoal } from '../../lib/course-v2/progress.js';
 import { localLevelState } from '../../lib/course-v2/localState.js';
-import { closingIds, loadManifest, plateauNrs } from '../../lib/course-v2/loaders.js';
+import { closingIds, loadManifest, loadUnit, plateauNrs } from '../../lib/course-v2/loaders.js';
 import { V2_DEFAULT_PACE } from '../../config/courseV2.js';
+import { safeGet, safeSet } from '../../utils/safeStorage.js';
 import ActionBar from './ActionBar.jsx';
 
 // The v2 course home: /course/:level/v2 (BLUEPRINT §7.3 S0; a preview route that
 // works whenever compiled v2 content exists for the level; COURSE_V2_LIVE later
-// decides whether /course/:level itself renders it).
+// decides whether /course/:level itself renders it). Owner decision 2026-09-29:
+// "gamify it, make it similar to Duolingo … when the user starts, he should SEE THE
+// PLAN and understand what he will learn and how the course goes".
 //
-// The unit path grouped by Etappe, each Etappe closed by its Plateau (or the
-// closing block), with the can-do title, the planned minutes, the Prüfungsfokus
-// chips and the learner's status per unit; one primary action („Weiter mit
-// Lektion N", „Plateau 1 starten", „Abschluss starten"), pinned in the thumb zone;
-// a one-line plan from the pace preset. Everything shown is computed in
-// src/lib/course-v2/homeModel.js; completion comes from completion.js. The gate is
-// soft: a unit whose predecessor is not finished — or a Plateau / the closing block
-// whose units are not — shows „Trotzdem öffnen" and opens anyway.
+// Two states, one page:
+//   - FIRST VISIT (no finished step in the level): the COURSE PLAN on top — the
+//     promise, what the learner can do afterwards, what is in the course (manifest
+//     content counts only), how a learning day goes, the pace, the Etappen and the
+//     exam in view — then the learning path below;
+//   - RETURNING: the top bar (streak, XP, words), the daily-goal card and the path;
+//     „Kursplan ansehen" folds the same plan out in place (#kursplan, no new route).
+// The path (src/lib/course-v2/pathModel.js) is one node per Lernschritt in a
+// zig-zag, a treasure chest per Plateau and a trophy for the closing test; the gate
+// stays SOFT — every node of a compiled unit links, `…/u/<nr>?s=<step>`. The one
+// primary action sits in the thumb zone (ActionBar). Everything shown is computed
+// in homeModel.js + pathModel.js; completion comes from completion.js.
 
-function UnitCard({ row }) {
-  const done = row.status === 'complete' || row.status === 'gold';
-  const pct = row.stepsTotal ? Math.round((row.stepsDone / row.stepsTotal) * 100) : 0;
-  const body = (
-    <div className="flex gap-3 p-4">
-      <span
-        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-pill font-data text-sm font-bold ${
-          row.status === 'gold' ? 'bg-gold text-ink' : done ? 'bg-accent-limette-wash text-accent-limette-ink' : 'border border-rule bg-white text-graphite'
-        }`}
-        aria-hidden="true"
-      >
-        {done ? <Check className="h-5 w-5" /> : row.nr}
-      </span>
-      <div className="min-w-0 flex-1">
-        <p className="font-data text-[0.6875rem] uppercase tracking-[0.13em] text-graphite">
-          Lektion {row.nr}{row.minutes ? ` · ≈ ${row.minutes} Min.${row.minutesMeasured ? '' : ' (geplant)'}` : ''}
-        </p>
-        <h3 className="mt-0.5 text-base font-bold leading-snug text-ink [hyphens:auto]">{row.title || `Lektion ${row.nr}`}</h3>
-        {row.canDoTitle && <p className="mt-1 text-sm text-graphite">{row.canDoTitle}</p>}
-        {row.pruefungsfokus.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            {row.pruefungsfokus.map((t) => <Chip key={t} tone="aprikose">{t}</Chip>)}
-          </div>
-        )}
-        <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-graphite">
-          <span className="font-bold">{STATUS_LABEL_DE[row.status]}</span>
-          {row.status === 'started' && <span>· {row.stepsDone} von {row.stepsTotal} Schritten</span>}
-          {row.available && !row.ready && !done && row.status === 'new' && (
-            <span className="inline-flex items-center gap-1"><Lock className="h-3 w-3" aria-hidden="true" /> Noch nicht dran – trotzdem öffnen</span>
-          )}
-        </div>
-        {row.status === 'started' && (
-          <div className="mt-2 h-1 overflow-hidden rounded-pill bg-siegel-wash" aria-hidden="true">
-            <div className="h-full rounded-pill bg-accent-limette" style={{ width: `${pct}%` }} />
-          </div>
-        )}
-      </div>
-    </div>
-  );
-  if (!row.available) return <Card tone="sunk" className="opacity-80">{body}</Card>;
-  return (
-    <Card as={Link} to={row.href} interactive className="block">
-      {body}
-    </Card>
-  );
+function stepTitlesOf(unit) {
+  const out = {};
+  for (const s of (unit && unit.steps) || []) {
+    const t = s && (typeof s.title === 'string' ? s.title : s.title && s.title.de);
+    if (s && s.id && t) out[s.id] = t;
+  }
+  return out;
 }
 
-// A Plateau (after U3, U6, U9) or the closing block (after U12) in its slot of the path,
-// soft-locked like a unit: not ready (its units' Lernschritte not finished) still opens.
-const STOP_TEXT = {
-  plateau: { title: (s) => `Plateau ${s.nr}`, what: 'Wiederholung und Prüfungsteile der Etappe' },
-  closing: { title: () => 'Abschluss des Kurses', what: 'Halbtest: alle Prüfungsteile im Kleinen, danach Ihre Teil-Karte' },
-};
-
-function StopRow({ stop }) {
-  const text = STOP_TEXT[stop.kind] || STOP_TEXT.plateau;
-  const inner = (
-    <div className="flex items-center gap-3 px-4 py-3">
-      <span
-        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-pill ${
-          stop.done ? 'bg-accent-limette-wash text-accent-limette-ink' : 'border border-rule bg-white text-graphite'
-        }`}
-        aria-hidden="true"
-      >
-        {stop.done ? <Check className="h-5 w-5" /> : <Flag className="h-5 w-5" />}
-      </span>
-      <div className="min-w-0 flex-1">
-        <p className="text-sm font-bold text-ink">{text.title(stop)}</p>
-        <p className="text-xs text-graphite">{stop.available ? text.what : 'Kommt bald'}</p>
-        {stop.available && (
-          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-graphite">
-            <span className="font-bold">{stop.done ? 'Abgegeben' : stop.started ? 'Begonnen' : 'Offen'}</span>
-            {!stop.ready && !stop.done && !stop.started && (
-              <span className="inline-flex items-center gap-1"><Lock className="h-3 w-3" aria-hidden="true" /> Noch nicht dran – trotzdem öffnen</span>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-  return stop.available
-    ? <Card as={Link} to={stop.href} interactive className="block">{inner}</Card>
-    : <Card tone="sunk" className="opacity-80">{inner}</Card>;
-}
-
-/** The primary action's label for the next stop of the path. */
-function nextLabel(next) {
-  if (!next) return '';
-  if (next.kind === 'plateau') return next.started ? `Weiter mit Plateau ${next.nr}` : `Plateau ${next.nr} starten`;
-  if (next.kind === 'closing') return next.started ? 'Weiter mit dem Abschluss' : 'Abschluss starten';
-  return next.status === 'started' ? `Weiter mit Lektion ${next.nr}` : `Lektion ${next.nr} starten`;
+function prefersReducedMotion() {
+  try {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  } catch {
+    return false;
+  }
 }
 
 export function CourseHomeV2({ level, manifest, state, goal }) {
@@ -126,56 +65,149 @@ export function CourseHomeV2({ level, manifest, state, goal }) {
     () => courseHomeModel(manifest, state, { plateaus: plateauNrs(level), closings: closingIds(level), lane }),
     [manifest, state, level, lane],
   );
-  const pace = (goal && goal.pace) || V2_DEFAULT_PACE;
+  const game = useCourseGame();
+
+  // Pace: a pick on this page > the learner's learner_goals pace > this device's pick > the default.
+  const [picked, setPicked] = useState(null);
+  const storedPace = useMemo(() => safeGet(paceStorageKey(level)), [level]);
+  const pace = resolvePace(manifest, { picked, goalPace: goal && goal.pace, storedPace, fallback: V2_DEFAULT_PACE });
+  const choosePace = useCallback((p) => {
+    setPicked(p);
+    safeSet(paceStorageKey(level), p);
+  }, [level]);
+
+  const firstVisit = useMemo(() => !hasProgress(state), [state]);
+  const [planOpen, setPlanOpen] = useState(() => {
+    try {
+      return /^#kursplan/.test(window.location.hash);
+    } catch {
+      return false;
+    }
+  });
+  const showPlan = firstVisit || planOpen;
+  const [scrollTarget, setScrollTarget] = useState(null);
+  useEffect(() => {
+    if (!scrollTarget) return;
+    const el = document.getElementById(scrollTarget);
+    if (el) el.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'start' });
+    setScrollTarget(null);
+  }, [scrollTarget, showPlan]);
+  const openPlanAt = useCallback((etappeNr) => {
+    setPlanOpen(true);
+    setScrollTarget(etappeNr ? `kursplan-etappe-${etappeNr}` : 'kursplan');
+  }, []);
+  const togglePlan = useCallback(() => {
+    if (planOpen) setPlanOpen(false);
+    else openPlanAt(null);
+  }, [planOpen, openPlanAt]);
+  const closePlan = useCallback(() => {
+    setPlanOpen(false);
+    try {
+      window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+    } catch {
+      // no window (tests) → nothing to scroll
+    }
+  }, []);
+
+  // The step names of the unit the learner opens next (a prefetch of that chunk — the
+  // player loads the same module). Until it arrives, the nodes use the skeleton names.
+  const nextUnitNr = model && model.next && model.next.kind === 'unit' ? model.next.nr : null;
+  const [stepTitles, setStepTitles] = useState(null);
+  useEffect(() => {
+    if (!nextUnitNr) return undefined;
+    let cancelled = false;
+    loadUnit(level, nextUnitNr).then((u) => { if (!cancelled && u) setStepTitles(stepTitlesOf(u)); });
+    return () => { cancelled = true; };
+  }, [level, nextUnitNr]);
+
+  const showcase = (manifest && manifest.showcase) || null;
+  const path = useMemo(
+    () => coursePath(model, state, { etappenDe: showcase ? showcase.etappenDe : [], stepTitles }),
+    [model, state, showcase, stepTitles],
+  );
   const plan = useMemo(
     () => (model ? planSummary({ manifest, pace, remainingSteps: model.remainingSteps, examDate: goal && goal.exam_date }) : null),
     [model, manifest, pace, goal],
   );
-  if (!model) return null;
-  const next = model.next;
-  const unitPart = model.completion ? model.completion.parts.find((p) => p.kind === 'unit') : null;
+  const options = useMemo(() => (model ? paceOptions(manifest, { remainingSteps: model.remainingSteps }) : []), [model, manifest]);
+  const tiles = useMemo(() => courseTiles(manifest), [manifest]);
+  const parts = useMemo(() => examParts(manifest), [manifest]);
+  const etappen = useMemo(() => planEtappen(model, manifest), [model, manifest]);
+
+  if (!model || !path) return null;
+  const code = model.code;
+  const title = (model.title && model.title.de) || `Kurs ${code}`;
+  const current = path.current;
+  const cta = actionLabel(current, model);
+  const allDone = Boolean(plan && plan.weeks === 0);
+  const finishText = plan && !allDone ? formatFinishDate(plan.finishDate) : null;
+  const planned = (manifest.units || []).map((u) => Number(u && u.minutesPlanned) || 0).filter(Boolean);
+  const perStep = planned.length ? stepMinutes(planned.reduce((a, b) => a + b, 0) / planned.length, stepSkeleton(level).length) : null;
+  const firstUnit = model.units[0] || null;
+
+  const planView = (
+    <PlanOverview
+      manifest={manifest}
+      code={code}
+      level={level}
+      firstVisit={firstVisit}
+      startHref={current ? current.href : null}
+      startLabel={cta}
+      firstUnitTitle={firstUnit ? firstUnit.title : null}
+      tiles={tiles}
+      etappen={etappen}
+      parts={parts}
+      stepMinutes={perStep}
+      paceOptions={options}
+      pace={pace}
+      onPace={choosePace}
+      finishText={finishText}
+      allDone={allDone}
+      onClose={firstVisit ? undefined : closePlan}
+    />
+  );
 
   return (
-    <div className="min-h-screen bg-paper font-body text-ink">
-      <div className="mx-auto max-w-2xl px-4 pb-32 pt-4 sm:pt-8">
-        <Link to="/courses/" className="inline-flex min-h-11 items-center gap-1 text-sm font-bold text-siegel hover:text-siegel-deep">
-          <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Alle Kurse
-        </Link>
-        <header className="mt-2">
-          <Chip tone="label">{model.code} · Vorschau</Chip>
-          <h1 className="mt-3 font-display text-3xl leading-tight text-ink [hyphens:auto] sm:text-4xl">
-            {(model.title && model.title.de) || `Kurs ${model.code}`}
-          </h1>
-          {model.honestyLineDe && <p className="mt-2 text-sm text-graphite">{model.honestyLineDe}</p>}
-          {unitPart && (
-            <p className="mt-3 font-data text-xs text-graphite">{unitPart.done} von {unitPart.count} Lektionen geschafft</p>
-          )}
-          {plan && <p className="mt-2 text-sm text-ink">{plan.lineDe}</p>}
-        </header>
-
-        <div className="mt-6 space-y-8">
-          {model.etappen.map((e) => (
-            <section key={e.nr} aria-labelledby={`etappe-${e.nr}`}>
-              <h2 id={`etappe-${e.nr}`} className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
-                Etappe {e.nr}
-              </h2>
-              <div className="mt-3 space-y-3">
-                {e.units.map((row) => <UnitCard key={row.id} row={row} />)}
-                {e.plateau && <StopRow stop={e.plateau} />}
-                {e.closing && <StopRow stop={e.closing} />}
+    <CourseTheme>
+      <div className="pb-40 pt-16">
+        <TopBar code={code} streak={game.streak} totalXp={game.totalXp} words={wordsLearned(manifest, model)} />
+        <div className="mx-auto max-w-xl">
+          {firstVisit ? (
+            <>
+              {planView}
+              <div className="px-5 pt-4">
+                <h2 className="text-2xl font-black leading-tight">Ihr Lernpfad</h2>
+                <p className="mt-1.5 text-base font-bold leading-relaxed text-game-muted">
+                  Ein Kreis ist ein Lernschritt. Tippen Sie auf „Start“ – der Rest kommt Schritt für Schritt.
+                </p>
               </div>
-            </section>
-          ))}
+            </>
+          ) : (
+            <>
+              <h1 className="sr-only">{code}: {title}</h1>
+              <DailyGoalCard
+                todayMinutes={game.todayMinutes}
+                goalMinutes={dailyGoalMinutes(manifest, pace)}
+                paceName={PACE_NAME_DE[pace] || pace}
+                code={code}
+                finishText={finishText ? `${code} fertig etwa am ${finishText}` : 'Alle Lernschritte sind geschafft'}
+                planLine={plan && plan.status !== 'no-date' && !allDone ? plan.lineDe : null}
+                week={game.week}
+                planOpen={planOpen}
+                onTogglePlan={togglePlan}
+              />
+              {planOpen && <div className="mt-5 border-y-2 border-game-line">{planView}</div>}
+            </>
+          )}
+          <PathSection path={path} stepXp={STEP_XP} withCast={String(level).startsWith('a1')} onShowPlan={openPlanAt} />
         </div>
       </div>
-      {next && (
+      {current && (
         <ActionBar>
-          <Button size="lg" className="w-full" to={next.href}>
-            {nextLabel(next)}
-          </Button>
+          <GameButton to={current.href} className="mx-auto w-full max-w-xl">{cta}</GameButton>
         </ActionBar>
       )}
-    </div>
+    </CourseTheme>
   );
 }
 
@@ -209,23 +241,21 @@ export default function CourseHomeV2Page() {
   if (!level) return <Navigate to="/courses/" replace />;
   if (manifest === undefined || !state) {
     return (
-      <div className="min-h-screen bg-paper font-body text-graphite">
-        <p className="mx-auto max-w-2xl px-4 py-16 text-sm italic">Kurs wird geladen …</p>
-      </div>
+      <CourseTheme>
+        <p className="mx-auto max-w-xl px-5 pb-16 pt-28 text-base font-bold text-game-muted">Kurs wird geladen …</p>
+      </CourseTheme>
     );
   }
   if (manifest === null) {
     return (
-      <div className="min-h-screen bg-paper font-body text-ink">
-        <div className="mx-auto max-w-2xl px-4 py-12">
-          <Chip tone="quiet">{levelCode(level)}</Chip>
-          <h1 className="mt-3 font-display text-2xl text-ink">Der neue Kurs {levelCode(level)} kommt bald</h1>
-          <p className="mt-2 text-sm text-graphite">Er ist noch in Arbeit.</p>
-          <div className="mt-6">
-            <Button variant="secondary" to={`/course/${level}`}>Zum aktuellen Kurs</Button>
-          </div>
+      <CourseTheme>
+        <div className="mx-auto max-w-xl px-5 pb-16 pt-28">
+          <p className="inline-block rounded-xl border-2 border-game-line px-3 py-1 text-[0.9375rem] font-black text-course-ink">{levelCode(level)}</p>
+          <h1 className="mt-3 text-[1.75rem] font-black leading-tight">Der neue Kurs {levelCode(level)} kommt bald</h1>
+          <p className="mt-2 text-base font-bold text-game-muted">Er ist noch in Arbeit.</p>
+          <GameButton to={`/course/${level}`} className="mt-6">Zum aktuellen Kurs</GameButton>
         </div>
-      </div>
+      </CourseTheme>
     );
   }
   return <CourseHomeV2 level={level} manifest={manifest} state={state} goal={goal} />;
