@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Check, Loader2, PenTool, Sparkles } from 'lucide-react';
-import Button from '../ui/Button.jsx';
+import GameButton from './GameButton.jsx';
 import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
 import { useAuth } from '../../contexts/AuthContext';
@@ -71,7 +71,7 @@ function FormTask({ task, stepId, onDone, onAttempt }) {
               autoComplete="off"
               spellCheck={false}
               onChange={(e) => setValues((v) => ({ ...v, [f.id]: e.target.value }))}
-              className="mt-1.5 w-full rounded-clay border border-rule bg-white px-4 py-2.5 text-[1rem] text-ink outline-none focus:border-siegel disabled:bg-paper-sunk"
+              className="mt-1.5 w-full rounded-clay border border-rule bg-white px-4 py-2.5 text-[1rem] text-ink outline-none focus:border-course disabled:bg-paper-sunk"
               lang="de"
             />
             {results && results[f.id] && (
@@ -87,9 +87,9 @@ function FormTask({ task, stepId, onDone, onAttempt }) {
       </div>
       <div className="mt-5 flex justify-end">
         {!results ? (
-          <Button onClick={check} disabled={!allFilled}>{t('w.formCheck')}</Button>
+          <GameButton size="md" onClick={check} disabled={!allFilled}>{t('w.formCheck')}</GameButton>
         ) : (
-          <Button size="lg" onClick={() => onDone({ bankKey: task.bankKey, submitted: true, result: null })} className="w-full sm:w-auto">{t('w.done')}</Button>
+          <GameButton size="lg" onClick={() => onDone({ bankKey: task.bankKey, submitted: true, result: null })} className="w-full sm:w-auto">{t('w.done')}</GameButton>
         )}
       </div>
     </Card>
@@ -215,11 +215,11 @@ export default function WritingTaskView({ task, level: _level, stepId = null, mo
             value={text}
             disabled={!editable}
             onChange={(e) => setText(e.target.value)}
-            className="mt-2 w-full resize-y rounded-clay border border-rule bg-white px-4 py-3 text-[1rem] leading-relaxed text-ink outline-none focus:border-siegel disabled:bg-paper-sunk"
+            className="mt-2 w-full resize-y rounded-clay border border-rule bg-white px-4 py-3 text-[1rem] leading-relaxed text-ink outline-none focus:border-course disabled:bg-paper-sunk"
             lang="de"
             spellCheck={false}
           />
-          <p className={`mt-2 font-data text-[0.75rem] ${band && words >= band[0] && words <= band[1] ? 'text-siegel-deep' : 'text-graphite'}`}>
+          <p className={`mt-2 font-data text-[0.75rem] ${band && words >= band[0] && words <= band[1] ? 'text-course-ink' : 'text-graphite'}`}>
             {t('w.words', { n: words })}{band ? ` · ${t('w.target', { min: band[0], max: band[1] })}` : ''}
             {words < minSubmit ? ` · ${t('w.minSubmit', { n: minSubmit })}` : ''}
           </p>
@@ -233,7 +233,7 @@ export default function WritingTaskView({ task, level: _level, stepId = null, mo
                   return (
                     <li key={lp.id} className="flex items-start gap-2 text-[0.9375rem]">
                       {found
-                        ? <Check className="mt-0.5 h-4 w-4 shrink-0 text-siegel-deep" aria-hidden="true" />
+                        ? <Check className="mt-0.5 h-4 w-4 shrink-0 text-course-ink" aria-hidden="true" />
                         : <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-graphite" aria-hidden="true" />}
                       <span className="text-ink"><span lang="de">{lp.de}</span> <span className="text-graphite">— {found ? t('w.cueFound') : t('w.cueAi')}</span></span>
                     </li>
@@ -252,7 +252,7 @@ export default function WritingTaskView({ task, level: _level, stepId = null, mo
                       type="checkbox"
                       checked={!!ticks[i]}
                       onChange={(e) => setTicks((tk) => ({ ...tk, [i]: e.target.checked }))}
-                      className="h-5 w-5 accent-siegel"
+                      className="h-5 w-5 accent-course"
                     />
                     <span lang="de">{c}</span>
                   </label>
@@ -268,20 +268,20 @@ export default function WritingTaskView({ task, level: _level, stepId = null, mo
                 <button
                   type="button"
                   onClick={() => { setFirstText(text); setSelfPhase('revise'); setError(null); }}
-                  className="inline-flex min-h-11 items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-graphite hover:border-siegel hover:text-ink"
+                  className="inline-flex min-h-11 items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-graphite hover:border-course hover:text-ink"
                 >
                   {t('w.revise')}
                 </button>
               )}
               {selfPhase === 'revise' && (
-                <Button variant="secondary" onClick={() => setSelfPhase('done')} disabled={!selfChanged}>
+                <GameButton size="md" variant="secondary" onClick={() => setSelfPhase('done')} disabled={!selfChanged}>
                   {t('w.submitRevision')}
-                </Button>
+                </GameButton>
               )}
-              {selfPhase !== 'revise' && <Button onClick={submit} disabled={busy || words < minSubmit}>
+              {selfPhase !== 'revise' && <GameButton size="md" onClick={submit} disabled={busy || words < minSubmit}>
                 {busy ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <PenTool className="h-4 w-4" aria-hidden="true" />}
                 {busy ? t('mo.submitting') : (revising ? t('w.submitRevision') : t('w.submit'))}
-              </Button>}
+              </GameButton>}
             </div>
           )}
           {slow && busy && <p className="mt-2 text-right text-[0.875rem] text-graphite">{t('ai.slow')}</p>}
@@ -299,12 +299,12 @@ export default function WritingTaskView({ task, level: _level, stepId = null, mo
 
       <div className="mt-6 flex flex-wrap items-center justify-end gap-3">
         {(finished || laterRevision || (revising && attempts >= 1 && selfPhase !== 'revise')) ? (
-          <Button onClick={finish} size="lg" className="w-full sm:w-auto">{t('w.done')}</Button>
+          <GameButton onClick={finish} size="lg" className="w-full sm:w-auto">{t('w.done')}</GameButton>
         ) : (
           <button
             type="button"
             onClick={finish}
-            className="inline-flex min-h-11 items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-graphite hover:border-siegel hover:text-ink"
+            className="inline-flex min-h-11 items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-graphite hover:border-course hover:text-ink"
           >
             {t('mo.skip')}
           </button>
@@ -322,7 +322,7 @@ function TaskHeader({ task, t, lang }) {
         {task.lane && <Chip tone="quiet">{laneLabel(task.lane)}</Chip>}
         {task.originLabelDe && <Chip tone="quiet">{t('exam.origin', { label: task.originLabelDe })}</Chip>}
       </div>
-      {task.title && <h2 className="mt-3 font-display text-[1.25rem] font-semibold leading-tight text-ink" lang="de">{task.title}</h2>}
+      {task.title && <h2 className="mt-3 font-body text-[1.25rem] font-extrabold leading-tight text-ink" lang="de">{task.title}</h2>}
       {task.situationDe && <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink" lang="de">{task.situationDe}</p>}
       {task.taskDe && <p className="mt-2 text-[0.9375rem] font-bold leading-relaxed text-ink" lang="de">{task.taskDe}</p>}
       {Array.isArray(task.leitpunkte) && task.leitpunkte.length > 0 && (

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Mic, Loader2 } from 'lucide-react';
-import Button from '../ui/Button.jsx';
+import GameButton from './GameButton.jsx';
 import Card from '../ui/Card.jsx';
 import SpeakingSession from '../speaking/SpeakingSession.jsx';
 import { checkSpeakingSupport } from '../speaking/mediaSupport.js';
@@ -88,10 +88,10 @@ export default function SpeakingRun({ bankKey, level, title = null, hintWords = 
           {!support.supported ? (
             <p className="text-[0.9375rem] text-ink">{support.message || t('sp.noMicLead')}</p>
           ) : (
-            <Button onClick={start} size="lg" disabled={phase === 'starting'} className="w-full sm:w-auto">
+            <GameButton onClick={start} size="lg" disabled={phase === 'starting'} className="w-full sm:w-auto">
               {phase === 'starting' ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Mic className="h-4 w-4" aria-hidden="true" />}
               {phase === 'starting' ? t('sp.starting') : (startLabel || t('sp.start'))}
-            </Button>
+            </GameButton>
           )}
           {slow && phase === 'starting' && <p className="mt-2 text-[0.875rem] text-graphite">{t('ai.slow')}</p>}
           {error && <p className="mt-3 text-[0.9375rem] text-ink" role="status">{t(error)}</p>}
@@ -99,16 +99,16 @@ export default function SpeakingRun({ bankKey, level, title = null, hintWords = 
       )}
       {phase === 'result' && (
         <div className="mt-3">
-          <Button variant="secondary" onClick={() => { setResult(null); setPhase('idle'); }}>
+          <GameButton size="md" variant="secondary" onClick={() => { setResult(null); setPhase('idle'); }}>
             <Mic className="h-4 w-4" aria-hidden="true" /> {t('sp.again')}
-          </Button>
+          </GameButton>
         </div>
       )}
       {typeof onSkip === 'function' && phase !== 'result' && (
         <button
           type="button"
           onClick={onSkip}
-          className="mt-3 inline-flex min-h-11 items-center gap-1.5 rounded-pill border border-rule bg-white px-3 py-1.5 text-[0.8125rem] font-bold text-graphite hover:border-siegel hover:text-siegel-deep"
+          className="mt-3 inline-flex min-h-11 items-center gap-1.5 rounded-pill border border-rule bg-white px-3 py-1.5 text-[0.8125rem] font-bold text-graphite hover:border-course hover:text-course-ink"
         >
           {skipLabel || t('sp.noMic')}
         </button>

@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
-import Button from '../ui/Button.jsx';
+import GameButton from './GameButton.jsx';
 import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
 import AudioButton from './AudioButton.jsx';
@@ -193,7 +193,7 @@ export default function ExamBlockView({ block, unitId, stepId, level, texts = nu
         <Card tone="wash" className="mt-4 flex flex-wrap items-center justify-between gap-3 p-4">
           <p className="text-[1rem] font-bold text-ink">{t('exam.score', { c: correct, t: total })}</p>
           {typeof onDone === 'function' && !reported.current && (
-            <Button onClick={finish} size="lg" className="w-full sm:w-auto">{t('item.next')}</Button>
+            <GameButton onClick={finish} size="lg" className="w-full sm:w-auto">{t('item.next')}</GameButton>
           )}
         </Card>
       )}

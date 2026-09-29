@@ -91,7 +91,7 @@ export default function ResultCard({ result, leitpunkte = null, showCorrections 
           {lang !== 'de' && <span className="text-[0.75rem] text-graphite">({t('ai.label')})</span>}
         </p>
         {typeof total === 'number' && typeof max === 'number' && (
-          <p className="mt-3 font-display text-[1.5rem] font-semibold leading-tight text-ink">
+          <p className="mt-3 font-body text-[1.5rem] font-extrabold leading-tight text-ink">
             {t('ai.points', { p: fmtPoints(total, lang), max: fmtPoints(max, lang) })}
           </p>
         )}
@@ -115,7 +115,7 @@ export default function ResultCard({ result, leitpunkte = null, showCorrections 
             <div className="px-5 pt-4">
               <p className={LABEL} lang="de">{partTitle(part)}</p>
               {typeof part.total_score === 'number' && typeof part.max_score === 'number' && (
-                <p className="mt-1 font-display text-[1.125rem] font-semibold leading-tight text-ink">
+                <p className="mt-1 font-body text-[1.125rem] font-extrabold leading-tight text-ink">
                   {t('ai.points', { p: fmtPoints(part.total_score, lang), max: fmtPoints(part.max_score, lang) })}
                 </p>
               )}

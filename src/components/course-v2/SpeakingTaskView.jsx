@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Button from '../ui/Button.jsx';
+import GameButton from './GameButton.jsx';
 import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
 import SpeakingRun from './SpeakingRun.jsx';
@@ -82,7 +82,7 @@ function PartMaterial({ part, t, lang, chosen, setChosen }) {
                   onChange={() => setChosen((prev) => (part.topicChoice.pick > 1
                     ? (prev.includes(i) ? prev.filter((x) => x !== i) : [...prev, i].slice(-part.topicChoice.pick))
                     : [i]))}
-                  className="h-5 w-5 accent-siegel"
+                  className="h-5 w-5 accent-course"
                 />
                 <span lang="de">{topic}</span>
               </label>
@@ -106,7 +106,6 @@ function PartMaterial({ part, t, lang, chosen, setChosen }) {
           {Array.isArray(part.planningRound.moves) && part.planningRound.moves.length ? ` — ${part.planningRound.moves.join(' · ')}` : ''}
         </p>
       )}
-      {lang !== 'de' && part.mode && <p className="font-data text-[0.6875rem] text-graphite">{part.mode}</p>}
     </div>
   );
 }
@@ -171,8 +170,8 @@ export default function SpeakingTaskView({ task, level, onDone }) {
           <p className="text-[0.9375rem] font-bold text-ink">{t('sp.prep')}</p>
           {examPrep > 0 && <p className="mt-1 text-[0.875rem] text-graphite">{t('sp.prepExam', { n: examPrep })}</p>}
           <div className="mt-3 flex flex-wrap gap-3">
-            <Button onClick={() => setPhase('prep')}>{t('sp.prepStart')}</Button>
-            <Button variant="secondary" onClick={() => setPhase('speak')}>{t('sp.prepSkip')}</Button>
+            <GameButton size="md" onClick={() => setPhase('prep')}>{t('sp.prepStart')}</GameButton>
+            <GameButton size="md" variant="secondary" onClick={() => setPhase('speak')}>{t('sp.prepSkip')}</GameButton>
           </div>
         </Card>
       )}
@@ -181,7 +180,7 @@ export default function SpeakingTaskView({ task, level, onDone }) {
         <Card tone="wash" className="mt-4 p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <Countdown seconds={learnPrep * 60} onEnd={() => setPhase('speak')} label={t('sp.prep')} />
-            <Button variant="secondary" onClick={() => setPhase('speak')}>{t('sp.prepSkip')}</Button>
+            <GameButton size="md" variant="secondary" onClick={() => setPhase('speak')}>{t('sp.prepSkip')}</GameButton>
           </div>
           {examPrep !== learnPrep && <p className="mt-1 text-[0.8125rem] text-graphite">{t('sp.prepExam', { n: examPrep })}</p>}
           <label htmlFor={`notes-${task.bankKey}`} className={`mt-4 block ${LABEL}`}>{t('sp.notes')}</label>
@@ -190,7 +189,7 @@ export default function SpeakingTaskView({ task, level, onDone }) {
             rows={4}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            className="mt-2 w-full resize-y rounded-clay border border-rule bg-white px-4 py-3 text-[1rem] leading-relaxed text-ink outline-none focus:border-siegel"
+            className="mt-2 w-full resize-y rounded-clay border border-rule bg-white px-4 py-3 text-[1rem] leading-relaxed text-ink outline-none focus:border-course"
             lang="de"
           />
         </Card>
@@ -236,12 +235,12 @@ export default function SpeakingTaskView({ task, level, onDone }) {
 
       <div className="mt-6 flex justify-end">
         {(attempted || phase === 'nomic') ? (
-          <Button onClick={finish} size="lg" className="w-full sm:w-auto">{t('item.next')}</Button>
+          <GameButton onClick={finish} size="lg" className="w-full sm:w-auto">{t('item.next')}</GameButton>
         ) : (
           <button
             type="button"
             onClick={finish}
-            className="inline-flex min-h-11 items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-graphite hover:border-siegel hover:text-ink"
+            className="inline-flex min-h-11 items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-graphite hover:border-course hover:text-ink"
           >
             {t('mo.skip')}
           </button>
