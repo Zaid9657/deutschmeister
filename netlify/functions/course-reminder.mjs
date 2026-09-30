@@ -209,25 +209,47 @@ const SHELL = ({ heading, body, ctaHref, ctaLabel, unsubUrl }) => `<!DOCTYPE htm
 // ─── selection ───────────────────────────────────────────────────────────────
 
 /** The candidate rows from the ONE definition, or a thrown error naming the migration. */
-async function fetchCandidates() {
-  const { data, error } = await supabase.rpc('course_reminder_candidates', {
-    p_min_hours: WINDOW_HOURS.minHours,
-    p_max_hours: WINDOW_HOURS.maxHours,
+async function fetchCandidates(client = supabase, hours = WINDOW_HOURS) {
+  const { data, error } = await client.rpc('course_reminder_candidates', {
+    p_min_hours: hours.minHours,
+    p_max_hours: hours.maxHours,
     p_window_days: WINDOW_DAYS,
   });
   if (error) throw new Error(`course_reminder_candidates failed (migration applied?): ${error.message}`);
   return data || [];
 }
 
-async function selectRecipients() {
-  const rows = (await fetchCandidates()).filter((r) => !r.email_opted_out);
+/**
+ * The window, in hours before `now`, that covers every run from `span.first`
+ * to `span.last`: a learner was due at a run t when their last activity lay
+ * 20–44 h before t, so over the span it lies in (first − 44 h, last − 20 h].
+ * The SQL takes whole hours, so both ends are rounded INWARD — the span may
+ * lose an hour at an edge, it never gains a learner who was not due. No span:
+ * today's run, WINDOW_HOURS exactly.
+ */
+export function windowHoursFor(span, now = Date.now(), window = WINDOW_HOURS) {
+  if (!span) return window;
+  const t = new Date(now).getTime();
+  return {
+    minHours: window.minHours + Math.ceil((t - span.last) / 3600000),
+    maxHours: window.maxHours + Math.floor((t - span.first) / 3600000),
+  };
+}
+
+// ONE definition of "who is due", read by this job and by the sentinel. The
+// job passes nothing and gets today's run. The sentinel passes `span` =
+// { first, last } (the scheduled runs since the last course_reminder_* row)
+// and its clock, so a learner who became due after the last run — the next
+// run's work — is not counted as missed.
+export async function selectRecipients({ client = supabase, span = null, now = Date.now() } = {}) {
+  const rows = (await fetchCandidates(client, windowHoursFor(span, now))).filter((r) => !r.email_opted_out);
   if (rows.length === 0) return [];
 
   const ids = rows.map((r) => r.user_id);
 
   // Frequency cap from the ledger: every course_reminder_* claim in 7 days.
-  const since = new Date(Date.now() - 7 * 24 * 3600000).toISOString();
-  const { data: ledger, error: ledgerError } = await supabase
+  const since = new Date(new Date(now).getTime() - 7 * 24 * 3600000).toISOString();
+  const { data: ledger, error: ledgerError } = await client
     .from('lifecycle_emails')
     .select('user_id, kind, sent_at')
     .like('kind', 'course_reminder_%')
@@ -242,21 +264,30 @@ async function selectRecipients() {
 
   // Confirmed, non-disposable addresses only — same hygiene as every other job.
   const emails = new Map();
+  const confirmedAt = new Map();
   let page = 1;
   for (;;) {
-    const { data, error: authError } = await supabase.auth.admin.listUsers({ page, perPage: 1000 });
+    const { data, error: authError } = await client.auth.admin.listUsers({ page, perPage: 1000 });
     if (authError) throw new Error(`listUsers: ${authError.message}`);
     for (const u of data.users) {
-      if (u.email && u.email_confirmed_at) emails.set(u.id, u.email.trim().toLowerCase());
+      if (u.email && u.email_confirmed_at) {
+        emails.set(u.id, u.email.trim().toLowerCase());
+        confirmedAt.set(u.id, Date.parse(u.email_confirmed_at));
+      }
     }
     if (data.users.length < 1000) break;
     page++;
   }
 
+  // Over a span, due at a run means confirmed at it: the run that selects a
+  // learner comes at least minHours after their last activity, so an address
+  // confirmed by then was confirmed at that run. Without a span this is moot.
+  const confirmedInTime = (r) => !span || confirmedAt.get(r.user_id) <= Date.parse(r.last_activity_at) + WINDOW_HOURS.minHours * 3600000;
+
   return rows
-    .filter((r) => emails.has(r.user_id))
+    .filter((r) => emails.has(r.user_id) && confirmedInTime(r))
     .filter((r) => !isBlockedEmail(emails.get(r.user_id)))
-    .filter((r) => !overWeeklyCap(history.get(r.user_id) || []))
+    .filter((r) => !overWeeklyCap(history.get(r.user_id) || [], new Date(now)))
     .map((r) => ({
       id: r.user_id,
       email: emails.get(r.user_id),

@@ -139,16 +139,26 @@ export const TEMPLATES = {
 
 // Users inside the window whose funnel status is still 'new' (no lesson
 // activity of any kind, not subscribed), not opted out, message not yet sent.
-async function selectCandidates(kind) {
+//
+// ONE definition of "who is due", read by this job and by the sentinel. The
+// job passes nothing and gets today's run. The sentinel passes `span` =
+// { first, last }, the scheduled runs since the job's last ledger row: the
+// window then covers all of them ([first - upper, last - lower)), and a user
+// counts only if their address was confirmed by the time their window opened
+// — so nobody who became due (or confirmed) after a run is counted as missed;
+// the next run mails them.
+export async function selectCandidates(kind, { client = supabase, span = null } = {}) {
   const day = 24 * 60 * 60 * 1000;
   const now = Date.now();
+  const first = span ? span.first : now;
+  const last = span ? span.last : now;
   const w = WINDOWS[kind];
-  const lower = new Date(now - w.upperDays * day).toISOString();
-  const upper = new Date(now - w.lowerDays * day).toISOString();
+  const lower = new Date(first - w.upperDays * day).toISOString();
+  const upper = new Date(last - w.lowerDays * day).toISOString();
 
-  const { data: rows, error } = await supabase
+  const { data: rows, error } = await client
     .from('lifecycle_customer_state')
-    .select('user_id, status, email_opted_out, has_lesson_activity')
+    .select('user_id, status, email_opted_out, has_lesson_activity, registered_at')
     .gte('registered_at', lower)
     .lt('registered_at', upper)
     .eq('status', 'new')
@@ -158,29 +168,42 @@ async function selectCandidates(kind) {
   const candidates = (rows || []).filter((r) => !r.email_opted_out && r.has_lesson_activity === false);
   if (candidates.length === 0) return [];
 
+  // A failed ledger read must stop the run: read as "nobody was mailed", it
+  // would re-send to everyone already mailed (the claim upsert ignores
+  // duplicates, the send does not).
   const ids = candidates.map((r) => r.user_id);
-  const { data: already } = await supabase
+  const { data: already, error: ledgerError } = await client
     .from('lifecycle_emails')
     .select('user_id')
     .eq('kind', kind)
     .in('user_id', ids);
+  if (ledgerError) throw new Error(`ledger read failed: ${ledgerError.message}`);
   const sentAlready = new Set((already || []).map((r) => r.user_id));
 
   // Confirmed addresses only — same as trial-lifecycle.
   const emails = new Map();
+  const confirmedAt = new Map();
   let page = 1;
   while (true) {
-    const { data, error: authError } = await supabase.auth.admin.listUsers({ page, perPage: 1000 });
+    const { data, error: authError } = await client.auth.admin.listUsers({ page, perPage: 1000 });
     if (authError) throw new Error(`listUsers: ${authError.message}`);
     for (const u of data.users) {
-      if (u.email && u.email_confirmed_at) emails.set(u.id, u.email.trim().toLowerCase());
+      if (u.email && u.email_confirmed_at) {
+        emails.set(u.id, u.email.trim().toLowerCase());
+        confirmedAt.set(u.id, Date.parse(u.email_confirmed_at));
+      }
     }
     if (data.users.length < 1000) break;
     page++;
   }
 
+  // Over a span, due at a run means confirmed at it: the run that selects a
+  // user comes after their window opens (registered_at + lower), so an address
+  // confirmed by then was confirmed at that run. Without a span this is moot.
+  const confirmedInTime = (r) => !span || confirmedAt.get(r.user_id) <= Date.parse(r.registered_at) + w.lowerDays * day;
+
   return candidates
-    .filter((r) => !sentAlready.has(r.user_id) && emails.has(r.user_id))
+    .filter((r) => !sentAlready.has(r.user_id) && emails.has(r.user_id) && confirmedInTime(r))
     .map((r) => ({ id: r.user_id, email: emails.get(r.user_id) }));
 }
 

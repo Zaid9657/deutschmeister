@@ -261,11 +261,106 @@ export function checkSignups({ last24, prior7 }, now, T = SENTINEL_THRESHOLDS) {
 }
 
 // ─── d. scheduled jobs ───────────────────────────────────────────────────────
+//
+// A ledger job's only evidence is the mail it claimed, so a day on which nobody
+// was due looks exactly like an outage. On 2026-09-30, its first live run, the
+// sentinel mailed "confirmation-nudge has left no evidence for 78 h": the job
+// ran daily, but its backlog had drained on 09-27 and nobody was eligible.
+// With the day in the key, that false HIGH would have been re-mailed every day.
+//
+// So a ledger job is stale ONLY if there was work it should have done: someone
+// was due at one of its scheduled runs since its last ledger row and nobody
+// was mailed. "Due" is the job's own selection (sentinel.mjs calls it with the
+// span of those runs), so the queue the sentinel judges is the queue the job
+// mails. The weekly job always writes a row, so its missing run is always real.
+
+const DAY_MS = 24 * 3600000;
+
+export const LEDGER_JOB_DUE = Object.freeze({
+  // How far back the eligibility read reaches, at most: a week of runs.
+  lookbackDays: 7,
+  // A run at 08:00 is judged from 08:20 on; every job's claim lands within seconds.
+  runGraceMinutes: 20,
+  // The eligibility reads get this long; past it the job is skipped, never guessed at.
+  timeoutMs: 10000,
+});
 
 /**
- * evidence: [{ job, last }] with `job` from adminStatusLib.SCHEDULED_JOBS and
- * `last` its latest ledger timestamp (or null). Staleness is judged by
- * adminStatusLib.jobStaleness against the Monitoring screen's thresholds.
+ * The run times of a daily 'M H * * *' cron in (sinceMs, untilMs], ascending,
+ * in UTC (the scheduler's clock). Any other cron shape → null (not judged).
+ */
+export function dailyRunTimes(cron, sinceMs, untilMs) {
+  const m = /^(\d{1,2}) (\d{1,2}) \* \* \*$/.exec(String(cron || '').trim());
+  if (!m || Number(m[1]) > 59 || Number(m[2]) > 23 || !Number.isFinite(sinceMs) || !Number.isFinite(untilMs)) return null;
+  const d = new Date(sinceMs);
+  let t = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), Number(m[2]), Number(m[1]));
+  while (t <= sinceMs) t += DAY_MS;
+  const runs = [];
+  for (; t <= untilMs; t += DAY_MS) runs.push(t);
+  return runs;
+}
+
+/**
+ * The scheduled runs a quiet ledger job had to answer for: those after its
+ * last ledger row (the run that wrote it is not one of them), no further back
+ * than the lookback, and at least the grace old. { first, last, runs } in ms,
+ * first/last null when there were none; null when the cron is not daily.
+ */
+export function dueSpan(job, last, now, D = LEDGER_JOB_DUE) {
+  const nowMs = new Date(now).getTime();
+  const lastMs = Date.parse(last);
+  const since = Math.max(Number.isFinite(lastMs) ? lastMs : -Infinity, nowMs - D.lookbackDays * DAY_MS);
+  const runs = dailyRunTimes(job.cron, since, nowMs - D.runGraceMinutes * 60000);
+  if (!runs) return null;
+  return { first: runs[0] ?? null, last: runs.at(-1) ?? null, runs: runs.length };
+}
+
+/** Does this job need its eligibility read this run? Only a stale, enabled ledger job does. */
+export function needsDueCheck(job, last, now, env = {}) {
+  if (!job.ledger) return false;
+  if (job.gate && env[job.gate] !== 'true') return false;
+  const { state } = jobStaleness(job, last, now);
+  return state === 'degraded' || state === 'critical';
+}
+
+/** LIFECYCLE_TEST_RECIPIENTS, parsed the way the mailers parse it. */
+export function parseCanary(value) {
+  return new Set(String(value || '').split(',').map((s) => s.trim().toLowerCase()).filter(Boolean));
+}
+
+/**
+ * byKind: { kind: [{ id, email }] } from the job's own selection. A job that
+ * honours the canary allowlist mails only listed addresses while it is set, so
+ * only those count. → { count, byKind: { kind: n } }
+ */
+export function countDue(byKind, { canary = null } = {}) {
+  const counts = {};
+  let count = 0;
+  for (const [kind, list] of Object.entries(byKind || {})) {
+    const n = (canary && canary.size > 0 ? (list || []).filter((r) => canary.has(String(r.email || '').toLowerCase())) : (list || [])).length;
+    counts[kind] = n;
+    count += n;
+  }
+  return { count, byKind: counts };
+}
+
+const isoOrNull = (ms) => (ms === null || ms === undefined ? null : new Date(ms).toISOString());
+
+/**
+ * evidence: [{ job, last, due? }] with `job` from adminStatusLib.SCHEDULED_JOBS,
+ * `last` its latest ledger timestamp (or null) and, for a stale ledger job,
+ * `due` = { count, byKind, first, last, runs } — who the job's own selection
+ * says was due at its runs since `last` — or { count: null, reason } when that
+ * could not be read. Staleness is judged by adminStatusLib.jobStaleness against
+ * the Monitoring screen's thresholds; then, for a ledger job:
+ *
+ *   due.count > 0     → incident, as before, with the count in detail
+ *   due.count === 0   → passing: nobody was due, a quiet day is not an outage
+ *   due.count null    → skipped, "quiet-day ambiguity" — never an incident
+ *
+ * `due` omitted: judged on evidence alone, as the Monitoring screen does (the
+ * sentinel always measures it for a stale ledger job). The weekly job has no
+ * ledger and always writes a row, so a missing run of it is always an incident.
  * A gated-off job and a job with no evidence are SKIPPED with a reason —
  * never guessed at.
  */
@@ -274,7 +369,7 @@ export function checkJobs(evidence, now, env = {}) {
   const incidents = [];
   const passing = [];
   const skipped = [];
-  for (const { job, last } of evidence) {
+  for (const { job, last, due } of evidence) {
     if (job.gate && env[job.gate] !== 'true') {
       skipped.push({ check: job.id, reason: `${job.fn} is gated off (${job.gate} is not "true") — no evidence expected.` });
       continue;
@@ -285,13 +380,27 @@ export function checkJobs(evidence, now, env = {}) {
       continue;
     }
     if (state === 'operational') { passing.push(job.id); continue; }
+    const measured = Boolean(job.ledger) && due !== undefined;
+    if (measured) {
+      const count = due?.count;
+      if (count === null || count === undefined || !Number.isFinite(Number(count))) {
+        skipped.push({ check: job.id, reason: `quiet-day ambiguity: ${job.fn} has left no evidence for ${hours} h, and who was due could not be read (${due?.reason || 'no eligibility read'}) — not judged.` });
+        continue;
+      }
+      if (Number(count) === 0) { passing.push(job.id); continue; }
+    }
     incidents.push(incident({
       key: `${job.id}:stale:${day}`,
       checkId: job.id,
       owner: job.cadence === 'weekly' ? 'website' : 'retention',
       severity: state === 'critical' ? 'high' : 'medium',
-      title: `${job.fn} has left no evidence for ${hours} h`,
-      detail: { job: job.fn, last, hours, threshold: THRESHOLDS[thresholdKey], caveat: job.caveat },
+      title: measured
+        ? `${job.fn} has left no evidence for ${hours} h while ${due.count} recipient(s) were due`
+        : `${job.fn} has left no evidence for ${hours} h`,
+      detail: {
+        job: job.fn, last, hours, threshold: THRESHOLDS[thresholdKey], caveat: job.caveat,
+        ...(measured ? { eligible: Number(due.count), eligibleByKind: due.byKind ?? null, dueRuns: { first: isoOrNull(due.first), last: isoOrNull(due.last), count: due.runs ?? null } } : {}),
+      },
       hint: `Netlify function log for ${job.fn}${job.gate ? ` and the ${job.gate} env var` : ''}; Supabase project status.`,
     }));
   }
