@@ -147,7 +147,8 @@ export const coursePalettes = {
   tuerkis: { primary: '#0E9F90', edge: '#0A7468', wash: '#E3F6F3', soft: '#BFEAE3', ink: '#0A6B61', ground: '#FFFFFF' },
 };
 
-export const COURSE_PALETTE = 'limette';
+// Owner pick 2026-09-30: türkis.
+export const COURSE_PALETTE = 'tuerkis';
 
 /** The four unit-banner hues of the path (one per unit, cycling), each with its extrusion edge. */
 export const courseHues = {
