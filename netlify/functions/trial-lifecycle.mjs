@@ -117,29 +117,45 @@ const TEMPLATES = {
 
 // ─── selection ───────────────────────────────────────────────────────────────
 
+export const TRIAL_KINDS = ['trial_day3', 'trial_day6', 'trial_ended'];
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+// Each window is expressed directly as [lower, upper) offsets in days from the
+// run, because the sign conventions are easy to get backwards: day 6 and the
+// post-trial mail look FORWARD and BACKWARD from the run respectively.
+export const TRIAL_WINDOWS = {
+  // Day 3 of a 7-day trial: it started between 4 and 3 days ago.
+  trial_day3: { col: 'trial_started_at', lowerDays: -4, upperDays: -3 },
+  // The day before it ends: trial_ends_at falls within the next 24 hours.
+  trial_day6: { col: 'trial_ends_at', lowerDays: 0, upperDays: 1 },
+  // The day after it ended: trial_ends_at was 1-2 days ago.
+  trial_ended: { col: 'trial_ends_at', lowerDays: -2, upperDays: -1 },
+};
+
 // Users whose trial day matches, who haven't already had this message, aren't
 // paying, and haven't opted out.
-async function selectRecipients(kind) {
-  // Each window is expressed directly as [lower, upper) offsets in days from
-  // now, because the sign conventions are easy to get backwards: day 6 and the
-  // post-trial mail look FORWARD and BACKWARD from now respectively.
-  const day = 24 * 60 * 60 * 1000;
+//
+// ONE definition of "who is due", read by this job and by the sentinel
+// (sentinel.mjs asks it whether a quiet day was really quiet). The job passes
+// nothing and gets today's run. The sentinel passes `span` = { first, last },
+// the scheduled runs since the job's last ledger row: the window then covers
+// every one of those runs ([first + lower, last + upper)), and a user counts
+// only if their address was confirmed by the time their window opened — so
+// nobody who became due (or confirmed) after a run is counted as missed; the
+// next run mails them.
+export async function selectRecipients(kind, { client = supabase, span = null } = {}) {
   const now = Date.now();
-  const windows = {
-    // Day 3 of a 7-day trial: it started between 4 and 3 days ago.
-    trial_day3: { col: 'trial_started_at', lower: now - 4 * day, upper: now - 3 * day },
-    // The day before it ends: trial_ends_at falls within the next 24 hours.
-    trial_day6: { col: 'trial_ends_at', lower: now, upper: now + day },
-    // The day after it ended: trial_ends_at was 1-2 days ago.
-    trial_ended: { col: 'trial_ends_at', lower: now - 2 * day, upper: now - day },
-  }[kind];
+  const first = span ? span.first : now;
+  const last = span ? span.last : now;
+  const windows = TRIAL_WINDOWS[kind];
 
-  const lower = new Date(windows.lower).toISOString();
-  const upper = new Date(windows.upper).toISOString();
+  const lower = new Date(first + windows.lowerDays * DAY_MS).toISOString();
+  const upper = new Date(last + windows.upperDays * DAY_MS).toISOString();
 
-  const { data: profiles, error } = await supabase
+  const { data: profiles, error } = await client
     .from('profiles')
-    .select('id, email_daily_sentence, is_subscribed')
+    .select('id, email_daily_sentence, is_subscribed, trial_started_at, trial_ends_at')
     .gte(windows.col, lower)
     .lt(windows.col, upper);
   if (error) throw new Error(`profiles query failed: ${error.message}`);
@@ -147,29 +163,42 @@ async function selectRecipients(kind) {
   const candidates = (profiles || []).filter((p) => p.is_subscribed !== true && p.email_daily_sentence !== false);
   if (candidates.length === 0) return [];
 
+  // A failed ledger read must stop the run: read as "nobody was mailed", it
+  // would re-send to everyone already mailed (the claim upsert ignores
+  // duplicates, the send does not).
   const ids = candidates.map((p) => p.id);
-  const { data: already } = await supabase
+  const { data: already, error: ledgerError } = await client
     .from('lifecycle_emails')
     .select('user_id')
     .eq('kind', kind)
     .in('user_id', ids);
+  if (ledgerError) throw new Error(`ledger read failed: ${ledgerError.message}`);
   const sentAlready = new Set((already || []).map((r) => r.user_id));
 
   // Resolve addresses, and only mail confirmed ones.
   const emails = new Map();
+  const confirmedAt = new Map();
   let page = 1;
   while (true) {
-    const { data, error: authError } = await supabase.auth.admin.listUsers({ page, perPage: 1000 });
+    const { data, error: authError } = await client.auth.admin.listUsers({ page, perPage: 1000 });
     if (authError) throw new Error(`listUsers: ${authError.message}`);
     for (const u of data.users) {
-      if (u.email && u.email_confirmed_at) emails.set(u.id, u.email.trim().toLowerCase());
+      if (u.email && u.email_confirmed_at) {
+        emails.set(u.id, u.email.trim().toLowerCase());
+        confirmedAt.set(u.id, Date.parse(u.email_confirmed_at));
+      }
     }
     if (data.users.length < 1000) break;
     page++;
   }
 
+  // Over a span, due at a run means confirmed at it: the run that selects a
+  // user comes after their window opens (col − upper), so an address confirmed
+  // by then was confirmed at that run. Without a span (the job) this is moot.
+  const confirmedInTime = (p) => !span || confirmedAt.get(p.id) <= Date.parse(p[windows.col]) - windows.upperDays * DAY_MS;
+
   return candidates
-    .filter((p) => !sentAlready.has(p.id) && emails.has(p.id))
+    .filter((p) => !sentAlready.has(p.id) && emails.has(p.id) && confirmedInTime(p))
     .map((p) => ({ id: p.id, email: emails.get(p.id) }));
 }
 
@@ -281,7 +310,7 @@ const innerHandler = async (event) => {
   }
 
   const results = [];
-  for (const kind of ['trial_day3', 'trial_day6', 'trial_ended']) {
+  for (const kind of TRIAL_KINDS) {
     try {
       results.push(await sendKind(resendKey, kind));
     } catch (err) {
