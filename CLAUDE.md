@@ -140,6 +140,7 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   A session that needs a revenue or usage figure reads the latest row (or calls the function via
   the Supabase connector) instead of re-deriving it — the handoff had to correct a stale
   "9 subs, €75–90/mo" claim once already. `tests/weekly-truth.test.mjs` pins store-before-email.
+- **Production agents (the hourly sentinel, the support agent) are documented in `docs/agents/production-agents.md`** — env vars, checks, owners, what is mailed to `OWNER_ALERT_EMAIL`, how to mute a check; incidents live in `agent_incidents` (service role only), and the sentinel ships off (`SENTINEL_ENABLED`).
 - **The Astro build survives a Supabase outage.** Every build-time read in `astro-site/src/lib/grammar.js`
   retries three times, then serves the whole build from the committed `grammar-content-cache.json`
   with a loud warning (two deploys died on `fetch failed` on 2026-09-14, once because the Supabase
@@ -248,6 +249,10 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
 
 ## Current state / open threads
 
+- **The agent team (v2, 2026-09-29) is `docs/agents/TEAM.md`.** Twelve agents (11 areas plus a
+  supervisor) follow `docs/agents/PROTOCOL.md`; their charter, rubric v2, daily snapshots and memory
+  live in the private artifact linked there, and their verified daily queries in
+  `docs/agents/pulse.sql`. `docs/SCORECARD.md` below is the v1 history.
 - **Read `docs/SCORECARD.md` before choosing any work.** It is the living business
   scorecard: 8 areas scored by a fixed rubric, the tracked metrics, the ordered work queue
   (take the top open item, one at a time), an experiments log and the score history. A PR

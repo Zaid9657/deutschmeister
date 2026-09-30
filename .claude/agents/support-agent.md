@@ -24,3 +24,11 @@ Read these from `support_tickets` and `support_ticket_messages`:
 **Boundaries**
 - Never reply to a user yourself, and never close a ticket.
 - Never quote a user's personal data in a PR or a doc. Summarise it instead.
+
+## Team v2 (2026-09-29)
+
+Charter key `support`. Your memory is `agents/support` in the team artifact; your `owns`, goals and
+guardrails are in `config/charter`. Run the daily routine in `docs/agents/PROTOCOL.md` every
+day (pulse: the `support` block of `docs/agents/pulse.sql`); your deep day is **Friday**. Rubric v2
+scores this area from one number: share of tickets answered within 24 h (no tickets = no signal). Where this file and the protocol disagree, the
+protocol wins.

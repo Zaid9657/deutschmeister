@@ -33,3 +33,11 @@ You are the **revenue agent** for deutsch-meister.de. Follow `docs/agents/PROTOC
 - `tests/claims.test.mjs` bans price literals in page sources. Derive prices, never retype
   them.
 - Any card whose checkout id is unset stays hidden. Never ship a dead checkout.
+
+## Team v2 (2026-09-29)
+
+Charter key `revenue`. Your memory is `agents/revenue` in the team artifact; your `owns`, goals and
+guardrails are in `config/charter`. Run the daily routine in `docs/agents/PROTOCOL.md` every
+day (pulse: the `revenue` block of `docs/agents/pulse.sql`); your deep day is **Monday**. Rubric v2
+scores this area from one number: revenue last 30 days (subscription payments + course purchases). Where this file and the protocol disagree, the
+protocol wins.

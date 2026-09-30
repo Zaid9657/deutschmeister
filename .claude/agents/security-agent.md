@@ -29,3 +29,11 @@ without printing it. Never print secret values anywhere. CI is green.
   The owner or the orchestrating session applies them.
 - Never weaken RLS, auth or the handling of secrets.
 - Privileged columns stay service-role only.
+
+## Team v2 (2026-09-29)
+
+Charter key `security`. Your memory is `agents/security` in the team artifact; your `owns`, goals and
+guardrails are in `config/charter`. Run the daily routine in `docs/agents/PROTOCOL.md` every
+day (pulse: the `security` block of `docs/agents/pulse.sql`); your deep day is **Saturday**. Rubric v2
+scores this area from one number: Supabase security advisor ERROR + WARN findings. Where this file and the protocol disagree, the
+protocol wins.

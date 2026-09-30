@@ -65,5 +65,11 @@
     "words": ["article","audio_url","category","created_at","english","example_sentence","german","id","level","plural"],
     "writing_submissions": ["created_at","exam_attempt_id","exam_key","feedback","id","max_score","model","submission_text","task_key","total_score","user_id","word_count"],
     "xray_usage": ["anonymous_id","id","ip_hash","sentence","source","used_at","user_id"]
+  },
+  "pendingApply": {
+    "why": "Tables a written migration CREATES but the owner has not applied yet. tests/db-columns.test.mjs lets queries name them, and only while the migration file exists, its CREATE TABLE declares exactly these columns, migrations/README.md marks it not yet applied, and the table is absent from \"tables\" above. Once applied: refresh \"tables\" from the live DB (the table then appears there) and delete its entry here.",
+    "tables": {
+      "agent_incidents": { "migration": "2026-09-29-agent-incidents.sql", "columns": ["check_id","detail","first_seen_at","id","key","last_seen_at","mailed_elsewhere","notified_at","owner_agent","resolved_at","seen_count","severity","title"] }
+    }
   }
 }
