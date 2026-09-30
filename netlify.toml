@@ -64,6 +64,16 @@
 [functions."sentinel"]
   schedule = "50 * * * *"
 
+# Support agent (every 5 minutes): drafts replies to open support tickets from
+# verified facts, holds each one SUPPORT_AGENT_HOLD_MINUTES (default 10) so a
+# person can stop it, never answers cancellation/refund/deletion/billing
+# disputes/legal/abuse, and mails OWNER_ALERT_EMAIL one message per event.
+# SHIPS OFF — no-op unless SUPPORT_AGENT_MODE is 'draft' (never mails a
+# customer) or 'send'; inert without OWNER_ALERT_EMAIL and RESEND_API_KEY.
+# The schedule() wrapper in the function is authoritative; this mirrors it.
+[functions."support-agent"]
+  schedule = "*/5 * * * *"
+
 # Security headers for all pages
 [[headers]]
   for = "/*"

@@ -8,7 +8,8 @@ session attached. They share two things:
   closed: an agent records what it found and sends nothing.
 - **`public.agent_incidents`** — one ledger of problems, each owned by one area
   (`owner_agent`), so an area agent starts its run by reading its open incidents instead of
-  rediscovering them (`migrations/2026-09-29-agent-incidents.sql`, service role only).
+  rediscovering them (`migrations/2026-09-29-agent-incidents.sql`, service role only). The
+  support agent (below) keeps its state on the tickets themselves and writes no incidents.
 
 ## Sentinel
 
@@ -125,3 +126,144 @@ from agent_incidents where owner_agent = 'seo' and resolved_at is null order by 
   due that day, so a stale-job incident can be a quiet day. The incident detail repeats the caveat.
 - Client-side errors, Web Vitals and Search Console data (the property is not verified — see
   `docs/seo-routines/README.md`).
+
+## Support agent
+
+`netlify/functions/support-agent.mjs` (rules: `netlify/functions/_shared/supportAgentLib.mjs`, the
+send path: `adminSupportLib.sendTicketReply`, the catalogue it may quote:
+`_shared/supportCatalog.mjs` + `_shared/pricing.mjs`, tests: `tests/support-agent.test.mjs`). Every
+5 minutes (`schedule('*/5 * * * *')`, mirrored in `netlify.toml`). It drafts replies to open support
+tickets from verified facts only, holds each reply so a person can stop it, never answers the
+topics a machine must not answer, and mails the owner one message per event.
+
+**Status: ships off.** `SUPPORT_AGENT_MODE` unset means `off`: every run is a no-op. It needs **no
+migration**: drafts are `support_ticket_messages` rows the existing CHECK constraints allow, and
+its state lives in `support_tickets.tags` and `support_tickets.context.ai_agent`. It does not use
+`agent_incidents`.
+
+### Modes
+
+| `SUPPORT_AGENT_MODE` | What happens |
+|---|---|
+| unset / `off` / anything else | Nothing. The kill switch. |
+| `draft` | Drafts, escalates, tags and mails the owner. **Never mails a customer.** A draft made in this mode is never sent automatically, even after switching to `send`. |
+| `send` | As `draft`, and a held draft is mailed to the customer once the hold has passed and nobody acted on the ticket. |
+
+Fails closed: without `OWNER_ALERT_EMAIL` **or** `RESEND_API_KEY` the run does nothing at all (no
+draft, no customer mail, no owner mail) and logs `fail closed: … not set`. A reply nobody can be told
+about is a reply nobody can stop.
+
+### Environment
+
+| Variable | Required | Meaning |
+|---|---|---|
+| `SUPPORT_AGENT_MODE` | yes | `off` (default) · `draft` · `send`. |
+| `OWNER_ALERT_EMAIL` | yes | Where the owner mail goes. Unset → inert. Shared with the sentinel. |
+| `RESEND_API_KEY` | yes | Already set for the other mailers. Unset → inert. |
+| `ANTHROPIC_API_KEY` | for drafts | Already set (evaluate-writing, explain-answer). Unset → no drafts; each ticket is mailed to the owner as "not answered". Model: `claude-sonnet-4-6`, the same constant as `evaluate-writing.mjs`. |
+| `SUPPORT_AGENT_HOLD_MINUTES` | no | How long a send-mode draft waits before it may go out. Default **10**; 1–1440, anything else → 10. |
+| `SUPPORT_AGENT_NOTIFY_DRAFTS` | no | `false` stops the "new ticket + draft queued" mail. Escalations, follow-ups, blocked drafts, failed sends and content requests are always mailed. |
+| `SUPABASE_SERVICE_ROLE_KEY` | yes | Already set. Missing → 500. |
+| `CAMPAIGN_SECRET` | manual runs | `?secret=` for a manual run. The scheduler needs none (`next_run` marker). |
+
+Preview without writing: `…/.netlify/functions/support-agent?secret=<CAMPAIGN_SECRET>&dry=1` reports
+what it would do (no model call); add `&preview=1` to also call the model and return the drafts it
+would store, with the validator's verdict. Neither writes, tags or mails anything.
+
+### What one run does
+
+1. **Pending drafts first.** A held AI reply is sent only when **all** hold: it was drafted in `send`
+   mode, the mode is still `send`, `SUPPORT_AGENT_HOLD_MINUTES` have passed, it still passes the
+   validator, and **nobody acted on the ticket since it was drafted** — no team message or note, no
+   admin action row (status change, close, stop), no status / assignee / priority change, no new
+   customer message. Anything that can never become sendable (a human acted, the customer wrote
+   again, older than 24 h, no email address, no draft metadata) stops the draft instead. The send
+   is `sendTicketReply`, the same path the admin "Antworten" button uses: the draft row is claimed by
+   a conditional update (internal + queued → public) **before** Resend is called; `sent` or
+   `failed` is recorded on the row; a **failed send does not count as an answer** (no
+   `first_response_at`, status unchanged) and is mailed to the owner.
+2. **New customer messages.** An open ticket whose latest public message is the customer's is handled
+   once per message (tag `ai:seen:<message id>`), at most 2 model calls per run (the rest wait,
+   unclaimed, for the next run). Messages older than 72 h are left to people and the sentinel's
+   SLA check. In order:
+   - **A person already has it** (assigned, or a team message / admin action after the message):
+     left alone; a follow-up is still mailed to the owner.
+   - **Never answered** — deterministic German + English rules, no model call: cancellation /
+     Kündigung, refund / Erstattung / Rückerstattung / Geld zurück / Widerruf, account or data
+     deletion (Löschung, DSGVO, GDPR), billing dispute / chargeback / Rückbuchung / charged twice,
+     legal / complaint / Anwalt / Verbraucherzentrale / scam, abuse. The ticket gets
+     `ai:escalated:<reason>`; the owner is mailed once. The model can escalate too (same reasons, or
+     `needs-human` when the facts do not answer the question).
+   - **Content we do not have** (C1/C2, TestDaF, DSH, ÖSD, an exam level with no track, or a topic
+     the model names that is not in the library): `content-request:<topic>`, one owner mail per
+     ticket and topic, and the reply still says honestly that it is not available yet.
+   - **Otherwise the model drafts** from a facts object built from the customer's own account
+     (profile trial dates, level, `is_subscribed`; the latest subscription's status and renewal;
+     active purchases; the levels open now, computed as `hasLevelAccess` does) and the catalogue
+     (prices from the synced pricing copy, grammar topics from `grammar_topics`, courses, exam
+     tracks, mock exams, guides, page links) — nothing else. The thread it sees is public messages
+     only. German replies use „Sie“; the signature is „Das DeutschMeister-Team“ / "The
+     DeutschMeister team", never a person; the last line discloses that an AI assistant wrote it and
+     that replying reaches a person.
+   - **Validated before it is stored** (`validateReply`): disclosure present as the last line, team
+     signature, no personal-name sign-off, no claim of an action it did not take ("ich habe …
+     erstattet", "we've reset"), no refund / cancellation / deletion promise, no euro amount that is
+     not a catalogue price, no URL or address outside `deutsch-meister.de` and
+     `https://deutsch-meister.lemonsqueezy.com/billing`. A failed check stores the text as a
+     **blocked** internal row (never sendable) and mails the owner the reasons.
+   - A passing draft is stored as a `support_ticket_messages` row with `author_type = 'system'`,
+     `visibility = 'internal'`, `delivery_status = 'queued'` and a body starting `[KI-Entwurf]`,
+     plus `context.ai_agent` (draft id, mode, language, send time, the status / assignee / priority
+     it was drafted against) and the tag `ai:draft:<id>`. A ticket staff typed in by hand
+     (`context.intake = 'admin'`) is always drafted as a suggestion, never auto-sent.
+
+### What gets mailed
+
+One plain-text mail per event to `OWNER_ALERT_EMAIL`, from `DeutschMeister Support-Agent`, each
+linking `https://deutsch-meister.de/admin/support?ticket=<id>`. Each is claimed through a ticket tag
+(`ai:mail:<kind>:<id>`, a conditional update) **before** it is sent, so a second run never repeats it;
+if Resend then fails, the mail is lost (logged), never duplicated.
+
+| Event | Subject starts | When |
+|---|---|---|
+| Draft queued | `[DM support] KI-Entwurf sendet HH:MM UTC` / `… bereit (Entwurfsmodus)` | a new ticket was drafted (off with `SUPPORT_AGENT_NOTIFY_DRAFTS=false`); the mail holds the draft, the send time and how to stop it |
+| Customer wrote again | `[DM support] Kunde hat erneut geschrieben` | a customer message after a team answer (always mailed) |
+| Not answered | `[DM support] Nicht beantwortet: <reason>` | escalation (rules or model) |
+| Blocked / no model | `[DM support] KI-Antwort nicht gesendet` | validator failed, model error, no email address, no `ANTHROPIC_API_KEY` |
+| Content request | `[DM support] Inhalt gewünscht, den es nicht gibt: <topic>` | once per ticket and topic |
+| Send failed | `[DM support] Versand fehlgeschlagen` | Resend refused the customer mail; the ticket still counts as unanswered |
+
+### Stopping a reply
+
+- **One reply:** Admin → Support → the ticket → **„KI-Antwort stoppen“** beside the queued draft
+  (`admin-support` action `cancel_ai_draft`, capability `support.write`, audited). „In Antwort
+  übernehmen“ copies a draft (or a blocked one) into the reply box instead.
+- **Implicitly:** any note, reply, status, priority or assignee change, or closing the ticket stops
+  every pending draft on it (audited as `support.cancel_ai_draft`, reason `implicit: …`). The agent
+  itself also re-checks for human activity before every send.
+- **Everything:** `SUPPORT_AGENT_MODE=draft` (keeps drafting, sends nothing) or `off`.
+
+### Switching it on (owner)
+
+1. Confirm `OWNER_ALERT_EMAIL`, `RESEND_API_KEY` and `ANTHROPIC_API_KEY` are set in Netlify →
+   Environment variables (functions scope).
+2. Preview: `…/support-agent?secret=<CAMPAIGN_SECRET>&dry=1&preview=1` on a day with an open ticket.
+3. Set `SUPPORT_AGENT_MODE=draft`. Read the next few drafts in the admin screen and the mails; use
+   „In Antwort übernehmen“ when one is good. Nothing reaches a customer in this mode.
+4. After a few tickets whose drafts you would have sent unchanged, set `SUPPORT_AGENT_MODE=send`.
+   Every reply still waits `SUPPORT_AGENT_HOLD_MINUTES` and every "draft queued" mail says when it
+   will go out.
+5. To stop at once: `SUPPORT_AGENT_MODE=off` (or `draft`).
+
+### Known limits
+
+- **Customer follow-ups have no in-app path today.** Replies to a support mail go to
+  `kontakt@deutsch-meister.de` by email; nothing adds them to the ticket, so "customer wrote again"
+  fires only for a follow-up that is logged on the ticket. The rule is in place for when an inbound
+  path exists.
+- Tag claims are a read-then-conditional-write (`NOT tags @> {tag}`). The agent is the only writer
+  of `tags` and runs are 5 minutes apart and end within 30 s, so a lost tag needs a manual run
+  overlapping a scheduled one; the worst case is one repeated owner mail, never a repeated customer
+  mail (the customer send is claimed on the message row).
+- The keyword rules are deliberately broad (e.g. any "cancel", "Beschwerde", "scam"): a false
+  positive costs a human reply, a false negative could cost a wrong promise.
