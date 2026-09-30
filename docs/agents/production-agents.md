@@ -71,6 +71,8 @@ incident, so a failed read never looks like an all-clear.
 | Evaluation coverage (`flow:eval-coverage`) | completed sessions in 24 h evaluated below the Monitoring `evalCoverage` threshold (`reconcileCoverage`); ≥ 5 sessions | product | medium, high below 0.2 | `flow:eval-coverage:<day>` |
 | Database (`db:latency`) | one count round trip above the Monitoring `dbLatencyMs` threshold (2 s / 5 s) | product | medium / high | `db:latency:<day>` |
 
+**Quiet days no longer alert (2026-09-30).** A ledger job's only evidence is the mail it sent, so a day with nobody due looked like an outage (the first live run mailed a false HIGH for the drained confirmation nudge). A stale ledger job now fires only if the job's **own** selection, replayed over its scheduled runs since its last ledger row, finds someone who was due then (count in `detail.eligible`); nobody due → passing; unreadable → skipped as "quiet-day ambiguity". weekly-truth always writes a row, so its missed run still always fires.
+
 Webhook processing failures are reported once, by the webhook check under **revenue**; the broken-
 flow group does not repeat them.
 

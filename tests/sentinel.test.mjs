@@ -33,6 +33,13 @@ import {
 } from '../netlify/functions/_shared/sentinelLib.mjs';
 import { SCHEDULED_JOBS, isJobKind, jobStaleness } from '../netlify/functions/_shared/adminStatusLib.mjs';
 import { runSentinel } from '../netlify/functions/sentinel.mjs';
+// §5: a quiet day is not an outage.
+import { LEDGER_JOB_DUE, dailyRunTimes, dueSpan, needsDueCheck, countDue, parseCanary } from '../netlify/functions/_shared/sentinelLib.mjs';
+import { DUE_READERS } from '../netlify/functions/sentinel.mjs';
+import { selectRecipients as trialRecipients } from '../netlify/functions/trial-lifecycle.mjs';
+import { selectCandidates as activationCandidates } from '../netlify/functions/activation-lifecycle.mjs';
+import { selectCandidates as nudgeCandidates } from '../netlify/functions/confirmation-nudge.mjs';
+import { windowHoursFor, WINDOW_HOURS } from '../netlify/functions/course-reminder.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -340,8 +347,12 @@ test('the digest groups by owner, worst first, one "what to check" line each', (
 
 // ─── 3. the run, end to end ──────────────────────────────────────────────────
 
-/** An in-memory stand-in for the supabase-js builder — exactly the chain shapes sentinel.mjs uses. */
-function fakeDb(seed, { fail = [], failMessage = null } = {}) {
+/**
+ * An in-memory stand-in for the supabase-js builder — exactly the chain shapes sentinel.mjs uses,
+ * plus auth.admin.listUsers (`authUsers`) and rpc (`rpc`: { name: (args) => rows }) for the
+ * lifecycle jobs' own selections, which the sentinel calls to learn who was due.
+ */
+function fakeDb(seed, { fail = [], failMessage = null, authUsers = [], rpc = {} } = {}) {
   const tables = JSON.parse(JSON.stringify(seed));
   const writes = [];
   let seq = 0;
@@ -397,7 +408,27 @@ function fakeDb(seed, { fail = [], failMessage = null } = {}) {
       return { data: out, error: null };
     }
   }
-  return { from: (name) => new Q(name), tables, writes };
+  const calls = { listUsers: 0, rpc: [] };
+  return {
+    from: (name) => new Q(name),
+    rpc: async (name, args) => {
+      calls.rpc.push({ name, args });
+      if (fail === '*' || fail.includes(`rpc:${name}`) || !rpc[name]) return { data: null, error: { message: `function public.${name} does not exist` } };
+      return { data: rpc[name](args), error: null };
+    },
+    auth: {
+      admin: {
+        listUsers: async ({ page = 1, perPage = 50 } = {}) => {
+          calls.listUsers += 1;
+          if (fail === '*' || fail.includes('auth')) return { data: null, error: { message: failMessage ?? 'auth unavailable' } };
+          return { data: { users: authUsers.slice((page - 1) * perPage, page * perPage) }, error: null };
+        },
+      },
+    },
+    tables,
+    writes,
+    calls,
+  };
 }
 
 /** A world in which every check passes. */
@@ -758,4 +789,285 @@ test('admin-status reads the same job list as the sentinel', () => {
   assert.match(src, /for \(const j of SCHEDULED_JOBS\)/);
   assert.match(src, /jobStaleness\(j, last, now\)/);
   assert.doesNotMatch(src, /k\.startsWith\('trial_'\)/, 'the list lives in adminStatusLib only');
+});
+
+// ─── 5. ledger jobs: a quiet day is not an outage ───────────────────────────
+//
+// 2026-09-30, the sentinel's first live run: "confirmation-nudge has left no
+// evidence for 78 h" (HIGH). The job ran daily; its backlog had drained on
+// 09-27 and nobody was eligible. A ledger job is now stale only if someone was
+// due at one of its runs since its last ledger row — asked of the job's OWN
+// selection over those runs.
+//
+// The world below is NOW = 2026-09-29 10:50 UTC with every ledger job stale:
+//   trial      (08:00) last row 50 h ago → runs 09-28 08:00, 09-29 08:00
+//   activation (09:30) last row 60 h ago → runs 09-27, 09-28, 09-29 09:30
+//   confirm    (10:30) last row 78 h ago → runs 09-26 … 09-29 10:30 (production's case)
+//   course     (18:00) last row 40 h ago → run 09-28 18:00
+
+const JOB = Object.fromEntries(SCHEDULED_JOBS.map((j) => [j.id, j]));
+const at = (iso) => new Date(iso).toISOString();
+const authUser = (id, { confirmedAt = null, createdAt = '2026-06-01T00:00:00Z', email = `${id}@learner.test` } = {}) => ({
+  id, email, email_confirmed_at: confirmedAt ? at(confirmedAt) : null, created_at: at(createdAt), app_metadata: { provider: 'email' },
+});
+const hoursBefore = (iso, h) => new Date(Date.parse(iso) - h * 3600000).toISOString();
+
+/** Course learners, and the SQL function's window test on them (course_reminder_candidates, NOW as now()). */
+const courseRpc = (learners) => ({
+  course_reminder_candidates: ({ p_min_hours, p_max_hours }) => learners.filter((l) => {
+    const age = (NOW.getTime() - Date.parse(l.last_activity_at)) / 3600000;
+    return age >= p_min_hours && age < p_max_hours;
+  }),
+});
+
+/**
+ * Every ledger job stale; `due` adds exactly one recipient each job's own
+ * selection says was due at one of its runs. The quiet world holds the traps:
+ * people the job would pick if it ran NOW, but who were not due at any run.
+ */
+function ledgerWorld({ due = false } = {}) {
+  const w = healthyWorld();
+  w.lifecycle_emails = [
+    { id: 'l1', user_id: 'old-trial', kind: 'trial_day3', sent_at: ago(50) },
+    { id: 'l2', user_id: 'old-act', kind: 'activation_d1', sent_at: ago(60) },
+    { id: 'l3', user_id: 'nudged', kind: 'confirm_nudge', sent_at: ago(78) },
+    { id: 'l4', user_id: 'old-learner', kind: 'course_reminder_2026-09-27', sent_at: ago(40) },
+  ];
+  const authUsers = [
+    // confirm: already nudged; turned two days old at 10:40, after the 10:30 run; 100 days old.
+    authUser('nudged', { createdAt: '2026-08-30T00:00:00Z' }),
+    authUser('fresh', { createdAt: '2026-09-27T10:40:00Z' }),
+    authUser('ancient', { createdAt: '2026-06-21T00:00:00Z' }),
+    // trial: day 3 opened 09-29 09:00, after the 08:00 run.
+    authUser('late3', { confirmedAt: '2026-09-26T09:05:00Z', createdAt: '2026-09-26T09:00:00Z' }),
+    // activation: d1 due at the 09-29 09:30 run, but confirmed only at 10:00.
+    authUser('lateconfirm', { confirmedAt: '2026-09-29T10:00:00Z', createdAt: '2026-09-27T20:00:00Z' }),
+    // course: studied 09-28 14:00, four hours before the 18:00 run.
+    authUser('yesterday', { confirmedAt: '2026-09-01T00:00:00Z' }),
+  ];
+  w.profiles.push({ id: 'late3', trial_started_at: '2026-09-26T09:00:00.000Z', trial_ends_at: '2026-10-03T09:00:00.000Z', is_subscribed: false, email_daily_sentence: true });
+  w.lifecycle_customer_state = [
+    { user_id: 'lateconfirm', registered_at: '2026-09-27T20:00:00.000Z', status: 'new', has_lesson_activity: false, email_opted_out: false, is_subscribed: false },
+  ];
+  const learners = [{ user_id: 'yesterday', level: 'a1.1', last_activity_at: '2026-09-28T14:00:00.000Z', next_lektion_nr: 3, email_opted_out: false }];
+
+  if (due) {
+    authUsers.push(
+      authUser('d3', { confirmedAt: '2026-09-25T12:05:00Z', createdAt: '2026-09-25T12:00:00Z' }),
+      authUser('a1', { confirmedAt: '2026-09-27T08:05:00Z', createdAt: '2026-09-27T08:00:00Z' }),
+      authUser('unconfirmed', { createdAt: '2026-09-26T12:00:00Z' }),
+      authUser('c1', { confirmedAt: '2026-09-01T00:00:00Z' }),
+    );
+    // day 3 of this trial fell on the 09-29 08:00 run
+    w.profiles.push({ id: 'd3', trial_started_at: '2026-09-25T12:00:00.000Z', trial_ends_at: '2026-10-02T12:00:00.000Z', is_subscribed: false, email_daily_sentence: true });
+    // d1 fell on the 09-28 09:30 run
+    w.lifecycle_customer_state.push({ user_id: 'a1', registered_at: '2026-09-27T08:00:00.000Z', status: 'new', has_lesson_activity: false, email_opted_out: false, is_subscribed: false });
+    // 22 h before the 09-28 18:00 run
+    learners.push({ user_id: 'c1', level: 'a1.1', last_activity_at: hoursBefore('2026-09-28T18:00:00Z', 22), next_lektion_nr: 2, email_opted_out: false });
+    // ('unconfirmed' was 2 d 22 h old at the 09-29 10:30 run and was never nudged)
+  }
+  return { world: w, opts: { authUsers, rpc: courseRpc(learners) } };
+}
+
+const LEDGER_IDS = ['job-trial', 'job-activation', 'job-confirm', 'job-course'];
+const dryEvent = { httpMethod: 'GET', queryStringParameters: { secret: ENV.CAMPAIGN_SECRET, dry: '1' } };
+
+test('the runs a stale job answers for: after its last row, within the lookback, past the grace', () => {
+  // production's case: last nudge 78 h before a 10:50 run → four 10:30 runs
+  const s = dueSpan(JOB['job-confirm'], ago(78), NOW);
+  assert.deepEqual({ ...s, first: at(s.first), last: at(s.last) }, { first: '2026-09-26T10:30:00.000Z', last: '2026-09-29T10:30:00.000Z', runs: 4 });
+  // the run that wrote the last row is not one it has to answer for
+  const one = dueSpan(JOB['job-trial'], '2026-09-28T08:00:04Z', NOW);
+  assert.equal(at(one.first), '2026-09-29T08:00:00.000Z');
+  assert.equal(one.runs, 1);
+  // grace: at 10:40 the 10:30 run is not judged yet
+  assert.equal(at(dueSpan(JOB['job-confirm'], ago(78), new Date('2026-09-29T10:40:00Z')).last), '2026-09-28T10:30:00.000Z');
+  // lookback: a row 60 days old answers for a week of runs, not sixty
+  assert.equal(dueSpan(JOB['job-course'], ago(60 * 24), NOW).runs, LEDGER_JOB_DUE.lookbackDays);
+  // weekly and malformed crons are not replayed
+  assert.equal(dueSpan(JOB['job-weekly'], ago(9 * 24), NOW), null);
+  assert.equal(dailyRunTimes('*/5 * * * *', 0, 1e12), null);
+  assert.deepEqual(dailyRunTimes('0 18 * * *', Date.parse('2026-09-28T18:00:00Z'), Date.parse('2026-09-29T17:59:00Z')), [], 'strictly after `since`');
+  assert.deepEqual({ ...LEDGER_JOB_DUE }, { lookbackDays: 7, runGraceMinutes: 20, timeoutMs: 10000 });
+});
+
+test('SCHEDULED_JOBS carries each job’s own schedule literal, and every ledger job has an eligibility reader', () => {
+  for (const job of SCHEDULED_JOBS) {
+    const m = read(`netlify/functions/${job.fn}.mjs`).match(/schedule\('([^']+)'/);
+    assert.ok(m, `${job.fn}: no schedule() literal`);
+    assert.equal(job.cron, m[1], `${job.id}: the sentinel would replay the wrong runs`);
+  }
+  assert.deepEqual(Object.keys(DUE_READERS).sort(), SCHEDULED_JOBS.filter((j) => j.ledger).map((j) => j.id).sort());
+  for (const [id, reader] of Object.entries(DUE_READERS)) {
+    const src = read(`netlify/functions/${JOB[id].fn}.mjs`);
+    assert.equal(reader.canary, src.includes('LIFECYCLE_TEST_RECIPIENTS'), `${id}: canary flag must match whether the job honours the allowlist`);
+  }
+});
+
+test('needsDueCheck: only a stale, enabled ledger job pays for an eligibility read', () => {
+  const env = { CONFIRM_NUDGE_ENABLED: 'true' };
+  assert.equal(needsDueCheck(JOB['job-confirm'], ago(78), NOW, env), true);
+  assert.equal(needsDueCheck(JOB['job-confirm'], ago(2), NOW, env), false, 'fresh');
+  assert.equal(needsDueCheck(JOB['job-confirm'], null, NOW, env), false, 'no evidence at all is skipped as before');
+  assert.equal(needsDueCheck(JOB['job-confirm'], ago(78), NOW, {}), false, 'gated off');
+  assert.equal(needsDueCheck(JOB['job-weekly'], ago(9 * 24), NOW, env), false, 'weekly has no ledger');
+  assert.deepEqual(countDue({ a: [{ email: 'x@y.test' }, { email: 'Z@y.test' }], b: [] }, { canary: parseCanary(' z@y.test ,') }), { count: 1, byKind: { a: 1, b: 0 } });
+  assert.deepEqual(countDue({ a: [{ email: 'x@y.test' }] }), { count: 1, byKind: { a: 1 } });
+});
+
+test('a quiet ledger job — nobody due, old evidence — passes instead of firing', () => {
+  const env = { CONFIRM_NUDGE_ENABLED: 'true' };
+  const due = { count: 0, byKind: { confirm_nudge: 0 }, first: Date.parse('2026-09-26T10:30:00Z'), last: Date.parse('2026-09-29T10:30:00Z'), runs: 4 };
+  const r = checkJobs([{ job: JOB['job-confirm'], last: ago(78), due }], NOW, env);
+  assert.deepEqual(r.incidents, [], 'the 2026-09-30 false alarm');
+  assert.deepEqual(r.passing, ['job-confirm'], 'it ran and nobody was due: that resolves an open false alarm');
+  assert.deepEqual(r.skipped, []);
+});
+
+test('a due ledger job — someone due, old evidence — fires as before, with the eligible count', () => {
+  const env = { CONFIRM_NUDGE_ENABLED: 'true' };
+  const due = { count: 3, byKind: { confirm_nudge: 3 }, first: Date.parse('2026-09-26T10:30:00Z'), last: Date.parse('2026-09-29T10:30:00Z'), runs: 4 };
+  const r = checkJobs([{ job: JOB['job-confirm'], last: ago(78), due }], NOW, env);
+  assert.equal(r.incidents.length, 1);
+  const [i] = r.incidents;
+  assert.equal(i.key, `job-confirm:stale:${DAY}`, 'same key as before');
+  assert.equal(i.check_id, 'job-confirm');
+  assert.equal(i.owner_agent, 'retention');
+  assert.equal(i.severity, 'high', '78 h is past the critical threshold');
+  assert.equal(i.detail.eligible, 3);
+  assert.deepEqual(i.detail.eligibleByKind, { confirm_nudge: 3 });
+  assert.deepEqual(i.detail.dueRuns, { first: '2026-09-26T10:30:00.000Z', last: '2026-09-29T10:30:00.000Z', count: 4 });
+  assert.equal(i.detail.hours, 78);
+  assert.match(i.title, /^confirmation-nudge has left no evidence for 78 h while 3 recipient\(s\) were due$/);
+  assert.deepEqual(r.passing, []);
+  // one missed run with one learner due → medium, as before
+  const course = checkJobs([{ job: JOB['job-course'], last: ago(40), due: { count: 1, byKind: { course_reminder: 1 }, first: 1, last: 1, runs: 1 } }], NOW, { COURSE_REMINDER_ENABLED: 'true' });
+  assert.deepEqual(course.incidents.map((x) => [x.key, x.severity]), [[`job-course:stale:${DAY}`, 'medium']]);
+});
+
+test('an unreadable eligibility is quiet-day ambiguity: skipped, never an incident, never a pass', () => {
+  const env = { LIFECYCLE_ACTIVATION_ENABLED: 'true' };
+  for (const due of [{ count: null, reason: 'listUsers: auth unavailable' }, {}, null]) {
+    const r = checkJobs([{ job: JOB['job-activation'], last: ago(60), due }], NOW, env);
+    assert.deepEqual(r.incidents, [], JSON.stringify(due));
+    assert.deepEqual(r.passing, [], 'a check that could not judge resolves nothing');
+    assert.equal(r.skipped.length, 1);
+    assert.match(r.skipped[0].reason, /^quiet-day ambiguity: activation-lifecycle has left no evidence for 60 h/);
+  }
+});
+
+test('a gated-off job is still skipped, whoever was due', () => {
+  const r = checkJobs([{ job: JOB['job-confirm'], last: ago(500), due: { count: 9, byKind: { confirm_nudge: 9 } } }], NOW, { CONFIRM_NUDGE_ENABLED: 'false' });
+  assert.deepEqual(r.incidents, []);
+  assert.deepEqual(r.passing, []);
+  assert.deepEqual(r.skipped.map((s) => s.check), ['job-confirm']);
+  assert.match(r.skipped[0].reason, /gated off/);
+});
+
+test('weekly-truth is unchanged: a missed weekly run fires, whatever else is measured', () => {
+  const stale = checkJobs([{ job: JOB['job-weekly'], last: ago(9 * 24), due: { count: 0, byKind: {} } }], NOW, {});
+  assert.deepEqual(stale.incidents.map((i) => [i.key, i.owner_agent, i.severity]), [[`job-weekly:stale:${DAY}`, 'website', 'medium']]);
+  assert.equal(stale.incidents[0].title, 'weekly-truth has left no evidence for 216 h');
+  assert.equal(stale.incidents[0].detail.eligible, undefined, 'no eligibility for a job that always writes');
+  assert.equal(checkJobs([{ job: JOB['job-weekly'], last: ago(16 * 24) }], NOW, {}).incidents[0].severity, 'high');
+  assert.deepEqual(checkJobs([{ job: JOB['job-weekly'], last: ago(28.8) }], NOW, {}).passing, ['job-weekly']);
+});
+
+test('each job’s own selection, asked about past runs, counts only who was due at them', async () => {
+  const span = (a, b) => ({ first: Date.parse(a), last: Date.parse(b) });
+  const quiet = ledgerWorld();
+  const qdb = fakeDb(quiet.world, quiet.opts);
+  // Each would pick its trap if it ran NOW (the old "due now" reading); none was due at a run.
+  assert.deepEqual(await trialRecipients('trial_day3', { client: qdb, span: span('2026-09-28T08:00:00Z', '2026-09-29T08:00:00Z') }), []);
+  assert.deepEqual(await activationCandidates('activation_d1', { client: qdb, span: span('2026-09-27T09:30:00Z', '2026-09-29T09:30:00Z') }), [], 'confirmed after the run that would have picked them');
+  assert.deepEqual(await nudgeCandidates(qdb, { span: span('2026-09-26T10:30:00Z', '2026-09-29T10:30:00Z'), limit: Infinity }), [], 'already nudged, too young at the run, or too old');
+
+  const due = ledgerWorld({ due: true });
+  const ddb = fakeDb(due.world, due.opts);
+  assert.deepEqual(await trialRecipients('trial_day3', { client: ddb, span: span('2026-09-28T08:00:00Z', '2026-09-29T08:00:00Z') }), [{ id: 'd3', email: 'd3@learner.test' }]);
+  assert.deepEqual(await activationCandidates('activation_d1', { client: ddb, span: span('2026-09-27T09:30:00Z', '2026-09-29T09:30:00Z') }), [{ id: 'a1', email: 'a1@learner.test' }]);
+  assert.deepEqual((await nudgeCandidates(ddb, { span: span('2026-09-26T10:30:00Z', '2026-09-29T10:30:00Z'), limit: Infinity })).map((r) => r.id), ['unconfirmed']);
+
+  // The course window, rounded inward: no span is today's run exactly.
+  assert.deepEqual(windowHoursFor(null), WINDOW_HOURS);
+  const one = Date.parse('2026-09-28T18:00:00Z');
+  assert.deepEqual(windowHoursFor({ first: one, last: one }, NOW.getTime()), { minHours: 37, maxHours: 60 }, '16.8 h after the run: floor rounds up, ceiling down');
+});
+
+test('a failed ledger read stops a selection: "nobody mailed yet" would mean mailing twice', async () => {
+  const { world, opts } = ledgerWorld({ due: true });
+  const db = fakeDb(world, { ...opts, fail: ['lifecycle_emails'] });
+  const s = { first: Date.parse('2026-09-26T10:30:00Z'), last: Date.parse('2026-09-29T10:30:00Z') };
+  await assert.rejects(trialRecipients('trial_day3', { client: db, span: s }), /ledger read failed/);
+  await assert.rejects(activationCandidates('activation_d1', { client: db, span: s }), /ledger read failed/);
+  await assert.rejects(nudgeCandidates(db, { span: s }), /ledger read failed/);
+});
+
+test('end to end, production’s case: every ledger job quiet for days, nobody due → no incident, the false alarm resolves', async () => {
+  const { world, opts } = ledgerWorld();
+  // the row the 2026-09-30 run opened, still open
+  world.agent_incidents.push({ id: 'inc-0', key: `job-confirm:stale:${DAY}`, check_id: 'job-confirm', owner_agent: 'retention', severity: 'high', title: 'confirmation-nudge has left no evidence for 78 h', detail: {}, first_seen_at: ago(1), last_seen_at: ago(1), seen_count: 1, resolved_at: null, notified_at: ago(1) });
+  const db = fakeDb(world, opts);
+  const f = fakeFetch();
+  const b = body(await run(db, f));
+  assert.equal(b.found, 0, JSON.stringify(b));
+  assert.equal(b.claimed, 0);
+  assert.deepEqual(b.skipped, []);
+  assert.equal(f.mails.length, 0, 'no false HIGH mail');
+  assert.ok(db.tables.agent_incidents.find((r) => r.key === `job-confirm:stale:${DAY}`).resolved_at, 'the check ran and nobody was due: resolved');
+  assert.equal(db.calls.rpc.length, 1, 'course-reminder was asked through its own SQL definition');
+
+  const again = ledgerWorld();
+  const dry = body(await run(fakeDb(again.world, again.opts), fakeFetch(), { event: dryEvent }));
+  for (const id of LEDGER_IDS) assert.ok(dry.passing.includes(id), `${id} passes on a quiet day`);
+});
+
+test('end to end: someone due at each job’s runs and no ledger row → one incident per job, count in detail', async () => {
+  const { world, opts } = ledgerWorld({ due: true });
+  const db = fakeDb(world, opts);
+  const f = fakeFetch();
+  const b = body(await run(db, f));
+  assert.equal(b.claimed, 4, JSON.stringify(b));
+  const rows = Object.fromEntries(db.tables.agent_incidents.map((r) => [r.check_id, r]));
+  assert.deepEqual(LEDGER_IDS.map((id) => [id, rows[id]?.severity, rows[id]?.detail.eligible]), [
+    ['job-trial', 'medium', 1],
+    ['job-activation', 'high', 1],
+    ['job-confirm', 'high', 1],
+    ['job-course', 'medium', 1],
+  ]);
+  assert.deepEqual(rows['job-trial'].detail.eligibleByKind, { trial_day3: 1, trial_day6: 0, trial_ended: 0 });
+  assert.equal(rows['job-confirm'].key, `job-confirm:stale:${DAY}`);
+  assert.equal(f.mails.length, 1);
+  assert.match(f.mails[0].text, /confirmation-nudge has left no evidence for 78 h while 1 recipient\(s\) were due/);
+  assert.match(f.mails[0].text, /== retention \(4\)/);
+});
+
+test('end to end: the canary allowlist, the gate, an unreadable queue and weekly-truth', async () => {
+  // Canary: while LIFECYCLE_TEST_RECIPIENTS is set, activation, confirm and course mail only
+  // listed addresses, so only those were due; trial ignores it.
+  const canary = ledgerWorld({ due: true });
+  const c = body(await run(fakeDb(canary.world, canary.opts), fakeFetch(), { event: dryEvent, env: { ...ENV, LIFECYCLE_TEST_RECIPIENTS: 'owner@example.test' } }));
+  assert.deepEqual(c.incidents.map((i) => i.key), [`job-trial:stale:${DAY}`]);
+
+  // Gated off: skipped as before, and its queue is not even read.
+  const gated = ledgerWorld({ due: true });
+  const gdb = fakeDb(gated.world, gated.opts);
+  const g = body(await run(gdb, fakeFetch(), { event: dryEvent, env: { ...ENV, COURSE_REMINDER_ENABLED: 'false' } }));
+  assert.ok(!g.incidents.some((i) => i.key.startsWith('job-course')));
+  assert.match(g.skipped.find((s) => s.check === 'job-course').reason, /gated off/);
+  assert.equal(gdb.calls.rpc.length, 0, 'a gated-off job’s queue is not read');
+
+  // Unreadable: the course SQL function errors → quiet-day ambiguity, not an incident; the rest still judged.
+  const broken = ledgerWorld({ due: true });
+  const bdb = fakeDb(broken.world, { ...broken.opts, rpc: {} });
+  const u = body(await run(bdb, fakeFetch(), { event: dryEvent }));
+  assert.ok(!u.incidents.some((i) => i.key.startsWith('job-course')));
+  assert.match(u.skipped.find((s) => s.check === 'job-course').reason, /^quiet-day ambiguity: .*course_reminder_candidates failed/);
+  assert.equal(u.incidents.length, 3);
+
+  // Weekly: a missed weekly-truth run still fires, eligibility or not.
+  const weekly = ledgerWorld();
+  weekly.world.weekly_metrics = [{ id: 'w1', measured_at: ago(9 * 24), metrics: {} }];
+  const w = body(await run(fakeDb(weekly.world, weekly.opts), fakeFetch(), { event: dryEvent }));
+  assert.deepEqual(w.incidents.map((i) => [i.key, i.owner_agent, i.severity]), [[`job-weekly:stale:${DAY}`, 'website', 'medium']]);
 });

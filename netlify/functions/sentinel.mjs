@@ -27,6 +27,11 @@
 //     check ran this hour and passed. A check whose reads failed passes nothing.
 //   - Every list read is paged past PostgREST's 1,000-row cap (fetchAll), and
 //     every count is a head:true count — never rows.length.
+//   - A quiet day is not an outage. A ledger job (trial, activation, confirm,
+//     course) is stale only if someone was due at its runs since its last
+//     ledger row — asked of the job's OWN selection (DUE_READERS), so the
+//     sentinel judges the queue the job mails. Unreadable → skipped, never an
+//     incident. (2026-09-30: a drained nudge backlog read as a 78 h outage.)
 //
 // SHIPS OFF / FAILS CLOSED
 //   SENTINEL_ENABLED must be exactly 'true' or the run no-ops.
@@ -41,11 +46,16 @@ import { fetchAll, exactCount, counting } from './_shared/adminHttp.mjs';
 import { SCHEDULED_JOBS } from './_shared/adminStatusLib.mjs';
 import { OPEN_STATUSES } from './_shared/adminSupportLib.mjs';
 import {
-  KEY_PAGES, SENTINEL_THRESHOLDS, dayOf,
+  KEY_PAGES, SENTINEL_THRESHOLDS, LEDGER_JOB_DUE, dayOf,
   checkPage, checkWebhooks, checkPaymentFailures, checkSignups, checkJobs,
+  needsDueCheck, dueSpan, countDue, parseCanary,
   checkSpeakingCloseout, checkSupportSla, checkSpeakingFlows, checkDatabase,
   shouldResolve, parseMute, isMuted, selectForMail, renderDigest, renderDbDownAlert, DB_DOWN_CHECK_ID,
 } from './_shared/sentinelLib.mjs';
+import { selectRecipients as trialRecipients, TRIAL_KINDS } from './trial-lifecycle.mjs';
+import { selectCandidates as activationCandidates, WINDOWS as ACTIVATION_WINDOWS } from './activation-lifecycle.mjs';
+import { selectCandidates as nudgeCandidates } from './confirmation-nudge.mjs';
+import { selectRecipients as courseRecipients } from './course-reminder.mjs';
 
 const ALLOWED_ORIGINS = ['https://deutsch-meister.de', 'https://www.deutsch-meister.de'];
 const FROM_ADDRESS = 'DeutschMeister Sentinel <zaid@deutsch-meister.de>';
@@ -94,6 +104,45 @@ async function latestLedger(db, job) {
   const { data, error } = await query.order('sent_at', { ascending: false }).limit(1).maybeSingle();
   if (error) throw new Error(`lifecycle_emails: ${error.message}`);
   return data?.sent_at ?? null;
+}
+
+const eachKind = async (kinds, read) => Object.fromEntries(await Promise.all(kinds.map(async (k) => [k, await read(k)])));
+
+/**
+ * Who each ledger job would have mailed at the runs in `span` — the job's OWN
+ * selection (the one its handler calls with no span), so there is one
+ * definition of "who is due" and the sentinel cannot drift from the mailer.
+ * `canary`: the job honours LIFECYCLE_TEST_RECIPIENTS, so while it is set only
+ * listed addresses count. A ledger job in SCHEDULED_JOBS without a reader here
+ * is skipped as ambiguous, never judged (tests/sentinel.test.mjs pins the set).
+ */
+export const DUE_READERS = Object.freeze({
+  'job-trial': { canary: false, read: (db, span) => eachKind(TRIAL_KINDS, (k) => trialRecipients(k, { client: db, span })) },
+  'job-activation': { canary: true, read: (db, span) => eachKind(Object.keys(ACTIVATION_WINDOWS), (k) => activationCandidates(k, { client: db, span })) },
+  'job-confirm': { canary: true, read: (db, span) => eachKind(['confirm_nudge'], () => nudgeCandidates(db, { span, limit: Infinity })) },
+  'job-course': { canary: true, read: (db, span, now) => eachKind(['course_reminder'], () => courseRecipients({ client: db, span, now: now.getTime() })) },
+});
+
+function withTimeout(promise, ms, what) {
+  let timer;
+  const timeout = new Promise((_, reject) => { timer = setTimeout(() => reject(new Error(`${what} timed out after ${ms} ms`)), ms); });
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
+}
+
+/** Who was due at a stale ledger job's runs since `last`. Never throws: a failed read is { count: null, reason }. */
+async function measureDue(db, job, last, now, env) {
+  const span = dueSpan(job, last, now);
+  if (!span) return { count: null, reason: `${job.fn} has no daily schedule to replay (${job.cron || 'none'})` };
+  if (span.runs === 0) return { count: 0, byKind: {}, ...span };
+  const reader = DUE_READERS[job.id];
+  if (!reader) return { count: null, reason: `no eligibility reader for ${job.fn}` };
+  try {
+    const byKind = await withTimeout(reader.read(db, { first: span.first, last: span.last }, now), LEDGER_JOB_DUE.timeoutMs, `${job.fn} eligibility read`);
+    return { ...countDue(byKind, { canary: reader.canary ? parseCanary(env.LIFECYCLE_TEST_RECIPIENTS) : null }), ...span };
+  } catch (e) {
+    console.error(`[sentinel] eligibility read for ${job.fn} failed:`, e.message);
+    return { count: null, reason: e.message };
+  }
 }
 
 /**
@@ -158,9 +207,14 @@ export async function runChecks({ db, fetchImpl, env, now }) {
       return checkPaymentFailures(rows);
     }),
 
-    // d. scheduled jobs (adminStatusLib's list and thresholds) + speaking-closeout by its effect
+    // d. scheduled jobs (adminStatusLib's list and thresholds) + speaking-closeout by its effect.
+    // A stale ledger job is judged only with who was due (measureDue).
     run('jobs', async () => {
-      const evidence = await Promise.all(SCHEDULED_JOBS.map(async (job) => ({ job, last: await latestLedger(db, job) })));
+      const evidence = await Promise.all(SCHEDULED_JOBS.map(async (job) => {
+        const last = await latestLedger(db, job);
+        if (!needsDueCheck(job, last, now, env)) return { job, last };
+        return { job, last, due: await measureDue(db, job, last, now, env) };
+      }));
       return checkJobs(evidence, now, env);
     }),
     run('job-speaking-closeout', async () => {

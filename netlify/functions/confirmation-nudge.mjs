@@ -104,11 +104,19 @@ export const bodyHtml = (continueUrl) => `<!DOCTYPE html>
 // Unconfirmed, email-provider, aged [MIN_AGE_DAYS, MAX_AGE_DAYS), address not
 // disposable, profile not opted out, never claimed. Oldest first, so the
 // backlog drains from the stale end toward fresh signups.
-export async function selectCandidates(client = supabase) {
+//
+// ONE definition of "who is due", read by this job and by the sentinel. The
+// job passes nothing: today's run, at most PER_RUN. The sentinel passes
+// `span` = { first, last }, the scheduled runs since the last confirm_nudge
+// row, and `limit: Infinity`: the age window then covers all of those runs
+// (created in [first - MAX_AGE_DAYS, last - MIN_AGE_DAYS)), so an account that
+// turned two days old after the last run — the next run's work — is not
+// counted as missed.
+export async function selectCandidates(client = supabase, { span = null, limit = PER_RUN } = {}) {
   const day = 24 * 60 * 60 * 1000;
   const now = Date.now();
-  const newest = new Date(now - MIN_AGE_DAYS * day).toISOString();
-  const oldest = new Date(now - MAX_AGE_DAYS * day).toISOString();
+  const newest = new Date((span ? span.last : now) - MIN_AGE_DAYS * day).toISOString();
+  const oldest = new Date((span ? span.first : now) - MAX_AGE_DAYS * day).toISOString();
 
   const unconfirmed = [];
   let page = 1;
@@ -140,16 +148,19 @@ export async function selectCandidates(client = supabase) {
   // Read through the shared reader, which throws on error: this read used to
   // ignore its error and filter the cohort by an id list in the URL, the shape
   // that stopped the daily sentence honouring unsubscribes (2026-09-28).
-  const [{ data: already }, out] = await Promise.all([
+  // A failed ledger read must stop the run: read as "nobody was nudged", it
+  // would nudge again the accounts the ledger promises one mail, ever.
+  const [{ data: already, error: ledgerError }, out] = await Promise.all([
     client.from('lifecycle_emails').select('user_id').eq('kind', 'confirm_nudge').in('user_id', ids),
     fetchOptedOutIds(client),
   ]);
+  if (ledgerError) throw new Error(`ledger read failed: ${ledgerError.message}`);
   const claimed = new Set((already || []).map((r) => r.user_id));
 
   return unconfirmed
     .filter((r) => !claimed.has(r.id) && !out.has(r.id))
     .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
-    .slice(0, PER_RUN);
+    .slice(0, limit);
 }
 
 function continueUrl(userId) {
