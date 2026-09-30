@@ -7,22 +7,24 @@ import { SkillIcon } from './SkillIcon.jsx';
 import { useV2Strings } from './strings.js';
 import { SKILL_LABEL } from '../../lib/course-v2/curriculum.js';
 
-// The parts of the Kapitel page (UnitIntro.jsx): a row of the table of contents and the back
-// matter — Grammatik, Wortschatz, Redemittel — as the Lehrwerke print them at the end of a chapter.
+// The parts of the Kapitel page — since round 3 the opt-in guide (UnitIntro.jsx, `?view=guide`): a row
+// of the table of contents and the back matter — Grammatik, Wortschatz, Redemittel — as the Lehrwerke
+// print them at the end of a chapter.
 
 const EYEBROW = 'text-[0.75rem] font-extrabold uppercase tracking-[0.08em] text-game-muted';
+// a section heading of the guide (UnitIntro.jsx uses the same)
+const SECTION_H = 'text-[0.8125rem] font-extrabold uppercase tracking-[0.08em] text-game-muted';
 
-/** The chip row of a TOC entry — spans, not a list: the row is one tap target (SkillChips is a <ul>). */
+/**
+ * The other skills of a TOC entry as ONE quiet line („Wortschatz · Üben · Sprechen") — spans, not a
+ * list: the row is one tap target. Round 3 made them plain text (they were bordered chips with icons,
+ * four to a row), so the guide reads calm.
+ */
 function SkillTags({ skills, lang }) {
   if (!skills.length) return null;
   return (
-    <span className="mt-2 flex flex-wrap gap-1.5">
-      {skills.map((k) => (
-        <span key={k} className="inline-flex items-center gap-1 rounded-full border-2 border-game-line bg-white px-2 py-0.5 text-[0.75rem] font-extrabold text-game-muted">
-          <SkillIcon skill={k} className="h-3.5 w-3.5 text-course-ink" />
-          {(SKILL_LABEL[k] && SKILL_LABEL[k][lang === 'de' ? 'de' : 'en']) || k}
-        </span>
-      ))}
+    <span className="mt-1.5 block text-[0.8125rem] font-bold leading-snug text-game-muted">
+      {skills.map((k) => (SKILL_LABEL[k] && SKILL_LABEL[k][lang === 'de' ? 'de' : 'en']) || k).join(' · ')}
     </span>
   );
 }
@@ -30,7 +32,7 @@ function SkillTags({ skills, lang }) {
 /**
  * One entry of the table of contents: a badge (the section letter A/B/C, or the skill icon of
  * Prüfungstraining, Sprechen, Schreiben, Kapiteltest, Einstieg), the title, what the section works
- * on (lines: „Hören: Im Kurs: Wie heißen Sie?", „Grammatik: Präsens"), the other skills as chips,
+ * on (lines: „Hören: Im Kurs: Wie heißen Sie?", „Grammatik: Präsens"), the other skills in one quiet line,
  * tasks and minutes, and its state — done ✓, current („Jetzt"), open ›. The whole row is ONE
  * button (its label is the title plus the state for screen readers); nothing inside it is a list
  * or another control.
@@ -68,7 +70,7 @@ export function TocRow({ letter = null, icon = null, eyebrow = null, title, line
             </span>
           ))}
           <SkillTags skills={skills} lang={lang} />
-          {meta && <span className="mt-1.5 block text-[0.8125rem] font-bold text-game-muted">{meta}</span>}
+          {meta && <span className="mt-0.5 block text-[0.8125rem] font-bold text-game-muted">{meta}</span>}
           {(done || current) && <span className="sr-only"> ({done ? t('player.doneMark') : t('kap.now')})</span>}
         </span>
         <span className="flex min-h-11 shrink-0 items-center" aria-hidden="true">
@@ -128,9 +130,9 @@ export function ReferenceShelf({ level, unitId, cards = [], wordGroups = null, r
   const lvl = String(level || '').toLowerCase();
   const LVL = lvl.toUpperCase();
   return (
-    <section className="mt-8" aria-labelledby={`${unitId}-reference`}>
-      <h2 id={`${unitId}-reference`} className={EYEBROW}>{t('kap.reference')}</h2>
-      <div className="mt-2.5 space-y-3">
+    <section className="mt-10" aria-labelledby={`${unitId}-reference`}>
+      <h2 id={`${unitId}-reference`} className={SECTION_H}>{t('kap.reference')}</h2>
+      <div className="mt-3 space-y-3">
         {cards.length > 0 && (
           <RefPanel icon={<SkillIcon skill="grammatik" className="h-5 w-5" />} title={L('grammatik')} count={t('kap.rules', { n: cards.length })} defaultOpen={defaultOpen} flush>
             <div className="space-y-4">

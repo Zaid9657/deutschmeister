@@ -7,9 +7,10 @@
 //   - the back matter: a unit's words grouped by its lexicon blocks, nouns printed the textbook way
 //     („die Stadt, ¨-e"), the words a step's input uses;
 //   - the level reference: every rule card placed in exactly one Kapitel, every word in one;
-//   - the wiring: the Kapitel page is StartView's intro for a fresh AND a resumed unit, the two
-//     reference routes sit above the legacy catch-all behind the v2 guard, the strings exist in both
-//     chrome languages, and the colours are tokens (an article or a grammar box is never a kasus hue).
+//   - the wiring: the Kapitel page is the opt-in guide behind ?view=guide (round 3 — the unit opens on
+//     a story screen / a welcome-back instead, tests/course-v2-flow.test.mjs), the two reference routes
+//     sit above the legacy catch-all behind the v2 guard, the strings exist in both chrome languages,
+//     and the colours are tokens (an article or a grammar box is never a kasus hue).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -101,16 +102,18 @@ test('a step reads like a Lehrwerk page: its stages in order, numbered from the 
   assert.equal(sectionOf(chapterSections(u01, manifest), ls1.id).letter, 'A');
 });
 
-test('StepView draws the strip and the numbered heading, and opens a Situation step with its words', () => {
+// Round 3 (owner 2026-09-30: "intimidating and too much … step for step"): the strip and the numbered
+// headings left the step (stagesOf / exerciseNr stay pure helpers above); the section is kept for
+// screen readers, and the words still open a Situation step — as cards (tests/course-v2-steps.test.mjs).
+test('StepView shows one thing per screen: no strip, no numbered heading, the section for screen readers, the words first', () => {
   const sv = read('src/components/course-v2/StepView.jsx');
-  assert.match(sv, /const stages = useMemo\(\(\) => stagesOf\(segments, step\), \[segments, step\]\);/);
-  assert.match(sv, /\{stages\.length > 1 && <StageStrip /);
-  assert.match(sv, /aria-current=\{current \? 'step' : undefined\}/, 'the current stage is marked for screen readers');
-  assert.match(sv, /exerciseNr\(stages, seg\.id, letter\)/);
+  assert.doesNotMatch(sv, /StageStrip|stagesOf\(|exerciseNr\(/, 'no stage strip and no „A3 Grammatik" numbering above a screen');
+  assert.match(sv, /\{context && <h1 className="sr-only"[^>]*>\{context\}<\/h1>\}/, 'the section („Teil A: …") is still named, for screen readers');
+  assert.match(sv, /\$\{t\('kap\.part', \{ l: letter \}\)\}\$\{step\.title \? `: \$\{step\.title\}` : ''\}/);
   assert.match(sv, /if \(extras\.words && extras\.words\.length >= MIN_WORDS\) segs\.push\(\{ id: 'words'/);
   assert.match(sv, /const \[words\] = useState\(\(\) =>/, 'the step’s words are fixed when it opens — the segments never shift under the learner');
-  assert.match(sv, /<RuleCardView card=\{ruleCard\} modelSentence=\{step\.modelSentence\} title=/, 'the Grammatik box names its grammar');
-  assert.doesNotMatch(sv, /<StageStrip[^>]*onClick/, 'the strip shows the parts; it is not a way to skip them');
+  assert.match(sv, /<WordCards key="words" words=\{words\}/, 'a Situation step opens with its words, one card each');
+  assert.match(sv, /<RuleCardSteps\s+key="form"\s+card=\{ruleCard\}\s+modelSentence=\{step\.modelSentence\}\s+title=\{\(section && section\.grammar && section\.grammar\.short\) \|\| null\}/, 'the Grammatik-Tipp names its grammar');
 });
 
 // ---------------------------------------------------------------------------
@@ -229,25 +232,40 @@ test('the two reference routes sit above the legacy catch-all, behind the v2 acc
 // The wiring of the Kapitel page
 // ---------------------------------------------------------------------------
 
-test('the Kapitel page is the unit’s front page when it opens fresh AND when it resumes', () => {
+test('the Kapitel page is the opt-in guide (?view=guide): can-dos ticked, the table of contents, the back matter, ONE button at the end', () => {
+  // round 3 (owner 2026-09-30: "it looks intimidating and too much"): the unit no longer OPENS on this
+  // page — a fresh unit opens on the story screen, a resumed one on a welcome-back
+  // (tests/course-v2-flow.test.mjs) — but every part of it stays, one tap deep.
   const page = read('src/pages/course-v2/UnitPlayerPage.jsx');
-  assert.match(page, /if \(phase === 'start' \|\| phase === 'resume'\) \{/, 'one page for both');
-  assert.match(page, /extra=\{\{ course: manifest, onAttempt, chapter \}\}/);
-  assert.match(page, /currentIndex: resume \? stepIndex : -1,/);
-  assert.match(page, /proven: canDoProven,/, 'the can-dos are ticked by the recap’s own proof reading');
-  assert.match(page, /const canDoProven = Object\.fromEntries\(canDoIds\.map\(\(id, i\) => \[id, proven\(i\)\]\)\);/);
+  assert.match(page, /const view = params\.get\('view'\) === 'guide' \? 'guide' : null;/, 'the page reads ?view=guide');
+  assert.match(page, /const screen = screenOf\(phase, view\);/);
+  const guide = page.slice(page.indexOf("if (screen === 'guide') {"), page.indexOf("if (screen === 'story') {"));
+  assert.ok(guide.length > 100, 'the guide branch');
+  for (const prop of ['rows={rows}', 'onOpenRow={openFromChapter}', "onOpenIntro={() => openStart('folge')}", 'cards={', 'wordGroups={', 'redemittel={', 'goals={goals}', 'examFocus={']) {
+    assert.ok(guide.includes(prop), `the guide hands UnitIntro ${prop}`);
+  }
+  // the can-dos, ticked by the recap's own proof reading — every proof the rule names (proofs.js)
+  assert.ok(!guide.includes('referenceOpen='), 'the back matter stays folded until tapped, even on a finished chapter (calm)');
+  assert.match(guide, /\{allProven \? t\('player\.canNow'\) : t\('player\.goalsUnit'\)\}/);
+  assert.match(guide, /\{proven\(i\)\s*\n?\s*\? <Check /, 'a tick per proven can-do');
+  assert.match(guide, /const primaryLabel = !started\s*\? t\('kap\.start'\)/, '„Kapitel starten" on a fresh unit, „Weiter mit Teil B" on a resumed one');
+  assert.match(guide, /const onPrimary = !started \? \(\) => openStart\(null\) : \(\) => openFromChapter\(next \? next\.index : steps\.length\);/);
+  assert.match(guide, /<GuideTopBar title=\{t\('flow\.guideTitle', \{ n: unit\.nr \}\)\} closeLabel=\{t\('flow\.close'\)\} onClose=\{onCloseGuide\} \/>/, '„Kapitel 1 im Überblick" with its X');
+  // leaving the guide by an action drops ?view=guide; the welcome-back and the recap push it; the X goes back
+  assert.match(page, /const openFromChapter = \(i\) => \{\s*leaveGuide\(\);/);
+  assert.match(page, /const openStart = \(entry = null\) => \{\s*leaveGuide\(\);/);
+  assert.match(page, /next\.set\('view', 'guide'\); return next;/);
+  assert.match(page, /next\.delete\('view'\); return next; \}, \{ replace: true \}\);/);
+  assert.match(page, /const to = guideCloseTarget\(location\.key, v2Paths\.home\(level\)\);/);
   assert.match(page, /loadWords\(level\)\]\)/, 'the words load with the unit');
   assert.match(page, /lexicon: wordsOfUnit\(words, unit\.id\)/);
-  assert.match(page, /<QuietButton onClick=\{openOverview\}>\{t\('kap\.overview'\)\}<\/QuietButton>/, 'the summary leads back to the Kapitel page');
-  const sv = read('src/components/course-v2/StartView.jsx');
-  const intro = sv.slice(sv.indexOf("if (stage === 'intro')"), sv.indexOf("if (stage === 'bonus'"));
-  for (const prop of ['rows={rows}', 'onOpenRow={open}', 'onOpenIntro={begin}', 'cards={cards}', 'wordGroups={', 'redemittel={', 'referenceOpen={allDone}']) {
-    assert.ok(intro.includes(prop), `StartView's intro hands the Kapitel page ${prop}`);
-  }
-  assert.match(intro, /const primaryLabel = !resume \? t\('kap\.start'\)/, '„Kapitel starten" on a fresh unit, „Weiter mit Teil B" on a resumed one');
   const ui = read('src/components/course-v2/UnitIntro.jsx');
-  assert.match(ui, /<TocRow[\s\S]{0,300}t\('kap\.episode'/, 'the Einstieg row: Folge n');
-  assert.match(ui, /<ReferenceShelf/);
+  const guidePage = ui.slice(ui.indexOf('export default function UnitIntro('));
+  assert.match(guidePage, /<TocRow[\s\S]{0,300}t\('kap\.episode'/, 'the Einstieg row: Folge n');
+  assert.match(guidePage, /<ReferenceShelf/);
+  assert.ok(!guidePage.includes('<StickyAction'), 'no sticky start bar competing with the page');
+  assert.equal((guidePage.match(/<GameButton/g) || []).length, 1, 'one button');
+  assert.ok(guidePage.indexOf('<GameButton') > guidePage.indexOf('<ReferenceShelf'), '…at the very end');
   const parts = read('src/components/course-v2/KapitelParts.jsx');
   assert.match(parts, /<RuleCardView key=\{card\.id\} card=\{card\} title=\{title\} \/>/, 'Grammatik: the rule cards');
   assert.match(parts, /<WordList words=\{g\.words\}/, 'Wortschatz: the words by block');
@@ -257,7 +275,8 @@ test('the Kapitel page is the unit’s front page when it opens fresh AND when i
 test('the colours are tokens: the grammar box is the course wash, an article is neutral ink, never a kasus hue', () => {
   const V2 = 'src/components/course-v2';
   const files = [`${V2}/UnitIntro.jsx`, `${V2}/KapitelParts.jsx`, `${V2}/WordList.jsx`, `${V2}/ReferenceShell.jsx`, `${V2}/RuleCardView.jsx`,
-    `${V2}/StepView.jsx`, `${V2}/StartView.jsx`, `${V2}/kapitel.js`, 'src/pages/course-v2/GrammarPage.jsx', 'src/pages/course-v2/WordsPage.jsx'];
+    `${V2}/StepView.jsx`, `${V2}/StartView.jsx`, `${V2}/kapitel.js`, `${V2}/story.js`, `${V2}/GameTopBar.jsx`,
+    'src/pages/course-v2/GrammarPage.jsx', 'src/pages/course-v2/WordsPage.jsx', 'src/pages/course-v2/UnitPlayerPage.jsx'];
   for (const f of files) {
     const src = read(f);
     assert.doesNotMatch(src, /#[0-9a-fA-F]{3,8}\b/, `${f}: a hex colour outside design-tokens.js`);
@@ -276,7 +295,7 @@ test('every chrome key of the Kapitel page, the step frame and the reference pag
   const en = strings.slice(strings.indexOf('const EN = {'), strings.indexOf('const DE = {'));
   const de = strings.slice(strings.indexOf('const DE = {'), strings.indexOf('export const V2_STRINGS'));
   const used = new Set();
-  for (const f of ['UnitIntro.jsx', 'KapitelParts.jsx', 'WordList.jsx', 'ReferenceShell.jsx', 'StepView.jsx', 'StartView.jsx', 'RuleCardView.jsx'].map((x) => `src/components/course-v2/${x}`)
+  for (const f of ['UnitIntro.jsx', 'KapitelParts.jsx', 'WordList.jsx', 'ReferenceShell.jsx', 'StepView.jsx', 'StartView.jsx', 'RuleCardView.jsx', 'GameTopBar.jsx'].map((x) => `src/components/course-v2/${x}`)
     .concat(['src/pages/course-v2/GrammarPage.jsx', 'src/pages/course-v2/WordsPage.jsx', 'src/pages/course-v2/UnitPlayerPage.jsx'])) {
     for (const m of read(f).matchAll(/\bt\('([a-z]+\.[A-Za-z0-9]+)'/g)) used.add(m[1]);
   }
@@ -291,4 +310,9 @@ test('every chrome key of the Kapitel page, the step frame and the reference pag
   assert.match(de, /'kap\.start': 'Kapitel starten'/);
   assert.match(de, /'kap\.continuePart': 'Weiter mit Teil \{l\}'/);
   assert.match(de, /'rule\.title': 'Grammatik'/);
+  // round 3: the guide's name and the flow's buttons
+  assert.match(de, /'flow\.guideTitle': 'Kapitel \{n\} im Überblick'/);
+  assert.match(de, /'flow\.overview': 'Kapitel im Überblick'/);
+  assert.match(de, /'flow\.go': 'Los geht’s'/);
+  assert.match(de, /'flow\.testOut': 'Ich kann das schon – Test machen'/);
 });

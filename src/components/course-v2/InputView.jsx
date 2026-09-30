@@ -105,6 +105,9 @@ export function useGlossPopover() {
  * line with its own play button. Sound is never the only channel: when the browser cannot
  * play the audio at all, the transcript is shown at once. English is a toggle, off by
  * default, so the German is read first. `onHeard` fires once after the first full play.
+ *
+ * Inside a Lernschritt the input is told one line at a time (StoryInput.jsx, 2026-09-30); this
+ * whole-input view stays for the Start's Folge and the reward pieces.
  */
 export default function InputView({ input, unitId, names = null, onHeard }) {
   const [lang, t] = useV2Strings();

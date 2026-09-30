@@ -1,55 +1,96 @@
 import { ChevronDown } from 'lucide-react';
 import CastAvatar from './CastAvatar.jsx';
 import GameButton, { QuietButton } from './GameButton.jsx';
-import { SpeechBubble, StickyAction, XpIcon } from './GameParts.jsx';
+import { SpeechBubble, StickyAction } from './GameParts.jsx';
 import { ReferenceShelf, TocRow } from './KapitelParts.jsx';
 import { laneLabel, teilLabel } from './content.js';
 import { useV2Strings } from './strings.js';
 import { SKILL_LABEL } from '../../lib/course-v2/curriculum.js';
 
-const EYEBROW = 'text-[0.75rem] font-extrabold uppercase tracking-[0.08em] text-game-muted';
+// How a Kapitel opens (round 3, owner 2026-09-30: "it looks intimidating and too much … make it in
+// duolingo style and for everything to be step for step"). Duolingo on the surface, the textbook one
+// tap deep:
+//
+//   StoryScreen — ONE thing on the screen: the narrator, big, with one speech bubble, one small line
+//     naming the Kapitel, ONE big button in the thumb zone and at most one quiet text button under it.
+//     It opens a fresh unit (the story's opening, „Los geht's", the test-out as the quiet button) and
+//     it welcomes a returning learner („Willkommen zurück!", „Weiter", „Kapitel im Überblick").
+//   UnitIntro (default) — THE GUIDE: the textbook Kapitel page of round 2, now opt-in behind
+//     `?view=guide` (the home's book button, the welcome-back link, the recap). Nothing on it asks
+//     anything of the learner, and nothing competes with its one button at the very end.
+
+const SECTION_H = 'text-[0.8125rem] font-extrabold uppercase tracking-[0.08em] text-game-muted';
 
 /**
- * THE KAPITEL PAGE — the unit's front page, like opening the book at the chapter (owner feedback
- * 2026-09-29: "I want it to be a CURRICULUM like the books … CHAPTERS, and in each chapter multiple
- * things to learn"). It opens a unit fresh and it is the resume screen; nothing on it asks anything
- * of the learner. Top to bottom:
+ * One screen, one thing (the fresh unit's story, the welcome-back).
  *
- *   „KAPITEL 1" + title; the narrator with the story teaser (fresh) or „welcome back" (resume);
- *   „In diesem Kapitel lernen Sie" — the can-dos, ticked once proven;
- *   INHALT — the table of contents: Einstieg · Folge n, then A / B / C (input, grammar, skills,
- *   tasks, minutes), Prüfungstraining, Sprechen (mit KI), Schreiben (mit KI-Korrektur), Kapiteltest
- *   — every row opens its part; the Prüfungsfokus folded in a small line;
- *   ZUM NACHSCHLAGEN — Grammatik, Wortschatz, Redemittel (closed, open on a finished chapter);
- *   ONE primary („Kapitel starten" / „Weiter mit Teil B"); „Test machen und überspringen" (the
- *   test-out) as a quiet text button.
- *
- * Props: eyebrow, title, narrator, bubble (+ bubbleEn, bubbleNote), goals ([string] or
- * [{ text, done }]), stepCount, perStepMinutes (or totalMinutes), xp, examFocus, onStart,
- * onTestOut, primaryLabel, and for the chapter: nr, level, unitId, lane, rows (kapitel.js tocRows),
- * intro ({ nr, title, state } — the Einstieg row), onOpenRow(index), onOpenIntro, cards,
- * wordGroups, redemittel, referenceOpen.
+ *   heading       the small line above the bubble („Kapitel 1 · Hallo, ich bin Priya") — the screen's h1
+ *   narrator      the cast name (story.js narratorOf)
+ *   bubble        the bubble's main line (German content: the story's opening) — `bubbleLang` says its language
+ *   bubbleEn      its English twin, shown only in English chrome
+ *   bubbleNote    a second, smaller line (the welcome-back's „Weiter geht's mit Teil B: …")
+ *   primaryLabel / onPrimary   the one big button
+ *   quietLabel / onQuiet       the one quiet text button under it (optional)
  */
-export default function UnitIntro({
-  eyebrow,
-  title,
+export function StoryScreen({
+  id,
+  heading,
   narrator,
   bubble,
+  bubbleLang = 'de',
   bubbleEn = null,
   bubbleNote = null,
-  goals,
-  stepCount,
-  perStepMinutes = 0,
-  totalMinutes = 0,
-  xp,
-  examFocus = [],
-  onStart,
-  onTestOut = null,
-  primaryLabel = null,
-  nr = null,
-  level = null,
-  unitId = null,
-  lane = null,
+  primaryLabel,
+  onPrimary,
+  quietLabel = null,
+  onQuiet = null,
+}) {
+  const [lang] = useV2Strings();
+  const headingId = `${id}-heading`;
+  return (
+    <section
+      className="flex min-h-[calc(100dvh-7.5rem)] flex-col items-center justify-center pb-40 text-center sm:min-h-0 sm:pb-0 sm:pt-8"
+      aria-labelledby={headingId}
+      data-step-id={id}
+    >
+      <h1 id={headingId} className="max-w-md text-[0.875rem] font-extrabold uppercase tracking-[0.08em] text-game-muted">{heading}</h1>
+      <SpeechBubble tail="down" className="mt-4 w-full max-w-md motion-safe:animate-pop-in">
+        <p className="text-[1.3125rem] font-extrabold leading-snug text-game-text" lang={bubbleLang}>{bubble}</p>
+        {bubbleEn && lang !== 'de' && <p className="mt-2 text-[0.9375rem] font-semibold leading-snug text-game-muted" lang="en">{bubbleEn}</p>}
+        {bubbleNote && <p className="mt-2 text-[1.0625rem] font-bold leading-snug text-game-muted">{bubbleNote}</p>}
+      </SpeechBubble>
+      <CastAvatar name={narrator} size={140} className="mt-6 shrink-0 motion-safe:animate-pop-in" />
+      <StickyAction>
+        <GameButton onClick={onPrimary}>{primaryLabel}</GameButton>
+        {onQuiet && quietLabel && <QuietButton onClick={onQuiet}>{quietLabel}</QuietButton>}
+      </StickyAction>
+    </section>
+  );
+}
+
+/**
+ * THE GUIDE — the Kapitel page, like opening the book at the chapter (round 2: "a CURRICULUM like the
+ * books … CHAPTERS, and in each chapter multiple things to learn"), reached only through `?view=guide`.
+ * The player's GuideTopBar sits above it (the X, „Kapitel 1 im Überblick"). Top to bottom, spaced out:
+ *
+ *   the title and one quiet line (level · Modul · parts · minutes);
+ *   the can-dos (`goals`: the player's own panel, ticked once proven — it owns the proof reading);
+ *   INHALT — Einstieg · Folge n, then A / B / C (input, grammar, skills, tasks, minutes),
+ *     Prüfungstraining, Sprechen (mit KI), Schreiben (mit KI-Korrektur), Kapiteltest: every row opens
+ *     its part; the Prüfungsfokus folded in one small line;
+ *   ZUM NACHSCHLAGEN — Grammatik, Wortschatz, Redemittel, each closed until tapped (round 2 opened
+ *     all three on a finished chapter: a 7 000 px page);
+ *   at the very end, ONE button („Kapitel starten" / „Weiter mit Teil B") — never sticky, nothing
+ *     competes with the page — and the test-out as a quiet text button while the Lernschritte are open.
+ *
+ * Props: title, meta, goals (a node), rows (kapitel.js tocRows), intro ({ nr, title, state } — the
+ * Einstieg row), onOpenRow(index), onOpenIntro, cards, wordGroups, redemittel, referenceOpen (false), examFocus,
+ * lane, level, unitId, primaryLabel, onPrimary, onTestOut.
+ */
+export default function UnitIntro({
+  title,
+  meta = null,
+  goals = null,
   rows = [],
   intro = null,
   onOpenRow = null,
@@ -58,10 +99,17 @@ export default function UnitIntro({
   wordGroups = null,
   redemittel = [],
   referenceOpen = false,
+  examFocus = [],
+  lane = null,
+  level = null,
+  unitId = null,
+  primaryLabel,
+  onPrimary,
+  onTestOut = null,
+  goalCount = 0,
 }) {
   const [lang, t] = useV2Strings();
   const L = (k) => (SKILL_LABEL[k] ? SKILL_LABEL[k][lang === 'de' ? 'de' : 'en'] : k);
-  const goalList = (goals || []).map((g) => (typeof g === 'string' ? { text: g, done: false } : g));
   const laneName = lane ? laneLabel(lane) : null;
   const minutesLine = (n) => (n ? t('kap.minutes', { n }) : null);
 
@@ -85,72 +133,23 @@ export default function UnitIntro({
       ueberarbeiten: { icon: 'schreiben', title: t('kap.ueberarbeiten') },
       check: { icon: 'test', title: t('kap.test') },
     }[r.kind] || { icon: r.skills[0] || 'ueben', title: r.title || '' };
-    const lines = r.kind === 'check' ? [{ skill: 'test', label: null, text: t('kap.testLine', { n: goalList.length }) }] : examLine;
+    const lines = r.kind === 'check' ? [{ skill: 'test', label: null, text: t('kap.testLine', { n: goalCount }) }] : examLine;
     return { icon: named.icon, title: named.title, lines, skills: [], meta: minutesLine(r.minutes) };
   };
 
-  const minutes = totalMinutes || (stepCount && perStepMinutes ? stepCount * perStepMinutes : 0);
-  const chapter = rows.length > 0;
-
   return (
-    <div className="pb-44 sm:pb-0">
-      <header className="flex items-center gap-3.5">
-        {nr != null && (
-          <span className="flex h-[4.5rem] w-[4.5rem] shrink-0 flex-col items-center justify-center rounded-2xl bg-course text-white shadow-course" aria-hidden="true">
-            <span className="text-[0.625rem] font-extrabold uppercase tracking-[0.1em]">{t('kap.chapter')}</span>
-            <span className="text-[2rem] font-extrabold leading-none tabular-nums">{nr}</span>
-          </span>
-        )}
-        <div className="min-w-0">
-          <p className={EYEBROW}>{nr != null ? <><span className="sr-only">{t('player.unit', { n: nr })} · </span>{eyebrow}</> : eyebrow}</p>
-          {title && <h1 className="mt-0.5 text-[1.625rem] font-extrabold leading-tight text-game-text [hyphens:auto] sm:text-[2rem]" lang="de">{title}</h1>}
-        </div>
+    <article className="pb-16 pt-4" aria-labelledby="kapitel-guide-title">
+      <header>
+        <h1 id="kapitel-guide-title" className="text-[1.75rem] font-extrabold leading-tight text-game-text [hyphens:auto] sm:text-[2rem]" lang="de">{title}</h1>
+        {meta && <p className="mt-1.5 text-[0.9375rem] font-bold text-game-muted">{meta}</p>}
       </header>
 
-      {(bubble || bubbleNote) && (
-        <div className="mt-5 flex items-end gap-3">
-          <CastAvatar name={narrator} size={84} className="shrink-0 motion-safe:animate-pop-in" />
-          <SpeechBubble tail="left" className="min-w-0 flex-1">
-            {bubble && <p className="text-[1.0625rem] font-bold leading-relaxed text-game-text" lang="de">{bubble}</p>}
-            {bubbleEn && lang !== 'de' && <p className="mt-1.5 text-[0.875rem] font-semibold leading-snug text-game-muted" lang="en">{bubbleEn}</p>}
-            {bubbleNote && <p className="mt-0.5 text-[0.9375rem] font-semibold text-game-muted">{bubbleNote}</p>}
-          </SpeechBubble>
-        </div>
-      )}
+      {goals && <div className="mt-8">{goals}</div>}
 
-      {goalList.length > 0 && (
-        <section className="mt-5 rounded-[1.25rem] border-2 border-b-4 border-game-line bg-white p-4 sm:p-5" aria-labelledby="unit-intro-goals">
-          <h2 id="unit-intro-goals" className={EYEBROW}>{chapter ? t('kap.goals') : t('start.today')}</h2>
-          <ul className="mt-3 space-y-2.5">
-            {goalList.map((g) => (
-              <li key={g.text} className="flex items-start gap-2.5 text-[1.0625rem] font-bold leading-snug text-game-text" lang="de">
-                {g.done ? (
-                  <span aria-hidden="true" className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-game-right text-[0.75rem] font-extrabold text-white">✓</span>
-                ) : (
-                  <span aria-hidden="true" className="mt-[0.45rem] h-2.5 w-2.5 shrink-0 rounded-full bg-course" />
-                )}
-                <span>{g.text}{g.done && <span className="sr-only" lang={lang}> ({t('player.doneMark')})</span>}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      <p className="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[0.9375rem] font-extrabold text-game-muted">
-        {stepCount > 0 && <span>{chapter ? t('kap.parts', { n: stepCount }) : t('start.steps', { n: stepCount })}</span>}
-        {minutes > 0 && <><span aria-hidden="true">·</span><span>{t('kap.minutes', { n: minutes })}</span></>}
-        {xp > 0 && (
-          <>
-            <span aria-hidden="true">·</span>
-            <span className="inline-flex items-center gap-1 text-game-xp-ink"><XpIcon size={16} /> {t('game.xp', { n: xp })}</span>
-          </>
-        )}
-      </p>
-
-      {chapter && (
-        <section className="mt-6" aria-labelledby="unit-intro-contents">
-          <h2 id="unit-intro-contents" className={EYEBROW}>{t('kap.contents')}</h2>
-          <ol className="mt-2.5 overflow-hidden rounded-[1.25rem] border-2 border-b-4 border-game-line bg-white">
+      {rows.length > 0 && (
+        <section className="mt-10" aria-labelledby="kapitel-guide-contents">
+          <h2 id="kapitel-guide-contents" className={SECTION_H}>{t('kap.contents')}</h2>
+          <ol className="mt-3 overflow-hidden rounded-[1.25rem] border-2 border-b-4 border-game-line bg-white">
             {intro && (
               <TocRow
                 icon="hoeren"
@@ -158,7 +157,7 @@ export default function UnitIntro({
                 title={`${t('kap.episode', { n: intro.nr })}${intro.title ? `: ${intro.title}` : ''}`}
                 lines={[{ skill: 'hoeren', label: null, text: t('kap.introLine') }]}
                 state={intro.state || 'open'}
-                onOpen={onOpenIntro || onStart}
+                onOpen={onOpenIntro}
                 lang={lang}
               />
             )}
@@ -166,24 +165,23 @@ export default function UnitIntro({
               <TocRow key={r.id} {...rowProps(r)} state={r.state} onOpen={() => onOpenRow && onOpenRow(r.index)} lang={lang} />
             ))}
           </ol>
+          {examFocus.length > 0 && (
+            <details className="group mt-3 rounded-2xl border-2 border-game-line bg-white px-4 py-1.5">
+              <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-[0.9375rem] font-extrabold text-game-muted [&::-webkit-details-marker]:hidden">
+                <span>{t('start.examFocus')}: {examFocus.length}</span>
+                <ChevronDown className="h-4 w-4 shrink-0 transition-transform group-open:rotate-180 motion-reduce:transition-none" aria-hidden="true" />
+              </summary>
+              <ul className="flex flex-wrap gap-2 pb-2 pt-1">
+                {examFocus.map((label) => (
+                  <li key={label} className="rounded-lg bg-course-wash px-2.5 py-1 text-[0.8125rem] font-bold text-course-ink" lang="de">{label}</li>
+                ))}
+              </ul>
+            </details>
+          )}
         </section>
       )}
 
-      {examFocus.length > 0 && (
-        <details className="group mt-4 rounded-2xl border-2 border-game-line bg-white px-4 py-2">
-          <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-[0.875rem] font-extrabold text-game-muted [&::-webkit-details-marker]:hidden">
-            <span>{t('start.examFocus')}: {examFocus.length}</span>
-            <ChevronDown className="h-4 w-4 shrink-0 transition-transform group-open:rotate-180 motion-reduce:transition-none" aria-hidden="true" />
-          </summary>
-          <ul className="flex flex-wrap gap-2 pb-2 pt-1">
-            {examFocus.map((label) => (
-              <li key={label} className="rounded-lg bg-course-wash px-2.5 py-1 text-[0.8125rem] font-bold text-course-ink" lang="de">{label}</li>
-            ))}
-          </ul>
-        </details>
-      )}
-
-      {chapter && (
+      {rows.length > 0 && (
         <ReferenceShelf
           level={level}
           unitId={unitId}
@@ -194,10 +192,10 @@ export default function UnitIntro({
         />
       )}
 
-      <StickyAction>
-        <GameButton onClick={onStart}>{primaryLabel || t('start.begin')}</GameButton>
-        {onTestOut && <QuietButton onClick={onTestOut}>{t('start.skipTest')}</QuietButton>}
-      </StickyAction>
-    </div>
+      <div className="mx-auto mt-12 flex max-w-md flex-col items-stretch gap-2">
+        <GameButton onClick={onPrimary}>{primaryLabel}</GameButton>
+        {onTestOut && <QuietButton onClick={onTestOut}>{t('flow.testOut')}</QuietButton>}
+      </div>
+    </article>
   );
 }

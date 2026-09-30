@@ -1,6 +1,7 @@
-// Course v2 — who tells the unit, and what the intro's speech bubble says. Shared by the
-// Start (StartView's intro and bonus screens) and the player (resume, recap), so the unit
-// has one narrator everywhere. Pure: no React, no storage.
+// Course v2 — who tells the unit, what the story screen's speech bubble says, and which screen of a
+// Kapitel shows when (round 3). Shared by the Start (StartView's story and bonus screens) and the
+// player (the welcome-back, the recap, the opt-in guide), so the unit has one narrator everywhere.
+// Pure: no React, no storage.
 
 import { speakerName } from './content.js';
 
@@ -27,3 +28,43 @@ export function introBubble(unit) {
   if (beat) return beat;
   return (unit && unit.title && unit.title.canDo) || '';
 }
+
+// ---------------------------------------------------------------------------
+// The flow of a Kapitel (round 3, owner 2026-09-30: "it looks intimidating and too much … make it in
+// duolingo style and for everything to be step for step"): Duolingo on the surface, the textbook one
+// tap deep. ONE thing per screen: a fresh unit opens on the narrator's story screen, a resumed one on
+// a welcome-back; the textbook Kapitel page is the opt-in guide behind `?view=guide`.
+// ---------------------------------------------------------------------------
+
+/**
+ * Which screen the player shows for its phase and the URL's `view`: the guide wins over every phase
+ * but loading; 'start' is the story screen, 'resume' the welcome-back; any other phase (step,
+ * celebrate, recap) is its own screen.
+ */
+export function screenOf(phase, view = null) {
+  if (!phase || phase === 'loading') return 'loading';
+  if (view === 'guide') return 'guide';
+  if (phase === 'start') return 'story';
+  if (phase === 'resume') return 'welcome';
+  return phase;
+}
+
+/**
+ * The welcome-back bubble's second line for the part „Weiter" opens (a kapitel.js tocRows row), as
+ * { key, vars } for strings.js: a lettered section by letter and title („Weiter geht's mit Teil B:
+ * Woher …"), any other part by its name (`nameOf(row)`: Prüfungstraining, Kapiteltest …); past the
+ * last part, the summary.
+ */
+export function welcomeLine(row, nameOf = (r) => (r && r.title) || '') {
+  if (!row) return { key: 'flow.nextSummary', vars: {} };
+  if (row.letter && row.title) return { key: 'flow.nextPart', vars: { l: row.letter, title: row.title } };
+  return { key: 'flow.nextName', vars: { name: nameOf(row) } };
+}
+
+/**
+ * Where the guide's X goes: back in the history when the learner came from somewhere in the app (the
+ * router gives the first page of a visit the location key 'default'), else the course home — so a
+ * guide opened from the home returns there, one opened from the welcome-back or the recap returns to
+ * that screen, and a guide opened cold never strands the learner.
+ */
+export const guideCloseTarget = (locationKey, home) => (locationKey && locationKey !== 'default' ? -1 : home);

@@ -1,21 +1,21 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, Check } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import ReadAloudLine from '../lesson/ReadAloudLine.jsx';
 import CheckView from './CheckView.jsx';
 import ExamBlockView from './ExamBlockView.jsx';
-import GameButton from './GameButton.jsx';
-import InputView from './InputView.jsx';
+import GameButton, { QuietButton } from './GameButton.jsx';
 import ItemRun from './ItemRun.jsx';
 import MicroOutputView from './MicroOutputView.jsx';
-import RuleCardView, { RuleTableFill } from './RuleCardView.jsx';
+import { RuleCardSteps, RuleTableFill } from './RuleCardView.jsx';
 import SpeakingTaskView from './SpeakingTaskView.jsx';
+import StepScreen from './StepScreen.jsx';
+import StoryInput from './StoryInput.jsx';
+import WordCards, { PhraseCards } from './WordCards.jsx';
 import WritingTaskView from './WritingTaskView.jsx';
-import WordList from './WordList.jsx';
-import { SkillIcon } from './SkillIcon.jsx';
+import { SayButton } from './WordList.jsx';
 import { laneLabel, lineIndex, materialize, skeletonOf, teilLabel } from './content.js';
-import { chapterSections, exerciseNr, sectionOf, stageIcon, stagesOf, stepWords } from './kapitel.js';
+import { chapterSections, sectionOf, stepWords } from './kapitel.js';
 import { useV2Strings } from './strings.js';
-import { SKILL_LABEL } from '../../lib/course-v2/curriculum.js';
 
 const LABEL = 'text-[0.75rem] font-extrabold uppercase tracking-[0.08em] text-game-muted';
 const PANEL = 'rounded-[1.25rem] border-2 border-b-4 border-game-line bg-white p-5';
@@ -107,13 +107,22 @@ function segmentsFor(step, extras) {
  *   canDos         { canDoId: wording } overrides
  *   onBack         a „Zurück" link in the header
  *
- * The textbook frame (owner feedback 2026-09-29: "in a lesson there's no German grammar, no
- * listening, no questions visible"): above every screen a strip names the step's parts in order —
- * Wortschatz · Hören · Grammatik · Übungen · Aussprache · Sprechen · Abschluss — the current one
- * marked, the done ones ticked; and each screen carries a Lehrwerk exercise heading numbered from
- * the section letter: „A2 Hören: Im Kurs: Wie heißen Sie?", „A3 Grammatik: Präsens", „A4 Übungen ·
- * 12 Aufgaben", „A6 Jetzt Sie: Sprechen" (kapitel.js stagesOf / exerciseNr). A Situation or Text
- * step opens with „Neue Wörter": the unit's words (`unit.lexicon`) its input uses.
+ * One thing per screen (owner feedback 2026-09-30: "it looks intimidating and too much … make it
+ * in duolingo style and for everything to be step for step"). No stage strip, no numbered Lehrwerk
+ * heading: each screen has ONE short instruction as its heading and its one action in the bottom
+ * bar (StepScreen / StickyAction — where an item screen has „Prüfen", so the button never jumps).
+ * The section stays for screen readers as the step's sr-only h1 („Teil A: Ich bin Priya. Und Sie?").
+ *   words       „Neues Wort" — one flashcard per word (WordCards), the unit's words
+ *               (`unit.lexicon`) its input uses
+ *   input       the Story (StoryInput): text chunk by chunk · the unaided listen · the lines one
+ *               at a time, each with its speaker and its voice
+ *   form        „Grammatik-Tipp", then „Auf einen Blick" (RuleCardSteps)
+ *   redemittel  „Nützliche Sätze" — one phrase per screen (PhraseCards)
+ *   aussprache  „Genau hinhören" (the focus), the perception items, „Sprechen Sie nach"
+ *   items       ItemRun — every item brings its own instruction; no heading above it
+ * The segments and their order are segmentsFor's; a stepped segment feeds the step's progress
+ * bar per screen (`setInner`) the way ItemRun does per item. The whole Kapitel stays one tap deep:
+ * the Kapitel page and /course/:level/grammatik and /wortschatz.
  */
 export default function StepView({
   unit,
@@ -133,7 +142,7 @@ export default function StepView({
   onBack = null,
   onProgress = null,
 }) {
-  const [lang, t] = useV2Strings();
+  const [, t] = useV2Strings();
   const unitId = unit?.id || null;
   const lines = useMemo(() => lineIndex(unit), [unit]);
   const skeleton = skeletonOf(level || unit?.level);
@@ -178,16 +187,15 @@ export default function StepView({
     return hit.length ? hit : all;
   }, [step, unit]);
 
-  // The words of the „Neue Wörter" box, fixed when the step opens (a list arriving later must never
+  // The words of the „Neue Wörter" cards, fixed when the step opens (a list arriving later must never
   // shift the segments under the learner).
   const [words] = useState(() => (step && (step.kind === 'situation' || step.kind === 'text') ? stepWords(step, unit && unit.lexicon) : []));
   const segments = useMemo(
     () => (step ? segmentsFor(step, { pool, warmupItems, redemittel, words }) : []),
     [step, pool, warmupItems, redemittel, words],
   );
-  // the Lehrwerk frame: this step's section (letter, grammar, input) and its stages
+  // this step's section (letter, grammar): the sr-only context line and the grammar's name
   const section = useMemo(() => (step ? sectionOf(chapterSections(unit, course), step.id) : null), [unit, course, step]);
-  const stages = useMemo(() => stagesOf(segments, step), [segments, step]);
   const [segIdx, setSegIdx] = useState(0);
   const segAt = useRef(0);
   segAt.current = segIdx;
@@ -206,6 +214,10 @@ export default function StepView({
   // (SCHEMA §8 Check.proofs[].microOutput) can tick when the learner's own output was sent
   const microDone = useRef({});
   const [readAloudDone, setReadAloudDone] = useState(false);
+  // every segment opens at the top of the page (a long story leaves the page scrolled down)
+  useEffect(() => {
+    if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [segIdx]);
 
   if (!step) return null;
   const seg = segments[segIdx] || segments[segments.length - 1];
@@ -258,24 +270,10 @@ export default function StepView({
       body = <ItemRun key="warmup" items={warmupItems} {...runProps} onFinish={advance} />;
       break;
     case 'words':
-      body = (
-        <>
-          <p className="text-[1rem] font-semibold leading-snug text-game-muted">{t('stage.wordsLead')}</p>
-          <div className={`mt-4 ${PANEL}`}>
-            <WordList words={words} unitId={unitId} idPrefix={`${step.id}-w`} />
-          </div>
-          <NextBar onNext={advance} label={t('item.next')} />
-        </>
-      );
+      body = <WordCards key="words" words={words} unitId={unitId} onProgress={setInner} onDone={advance} />;
       break;
     case 'input':
-      // the heading above names the input („A2 Hören: Im Kurs: Wie heißen Sie?"), so not twice
-      body = (
-        <>
-          <InputView input={{ ...step.input, title: null }} unitId={unitId} names={names} />
-          <NextBar onNext={advance} label={t('item.next')} />
-        </>
-      );
+      body = <StoryInput key="input" input={step.input} unitId={unitId} names={names} onProgress={setInner} onDone={advance} />;
       break;
     case 'inputBlock':
       body = (
@@ -298,11 +296,16 @@ export default function StepView({
       break;
     case 'form':
       body = (
-        <>
-          <RuleCardView card={ruleCard} modelSentence={step.modelSentence} title={(section && section.grammar && section.grammar.short) || null} />
-          {!ruleCard && step.ruleCard && <p className="mt-2 text-[0.875rem] text-game-muted">{t('rule.missing')}</p>}
-          <NextBar onNext={advance} label={t('item.next')} />
-        </>
+        <RuleCardSteps
+          key="form"
+          card={ruleCard}
+          modelSentence={step.modelSentence}
+          title={(section && section.grammar && section.grammar.short) || null}
+          missing={!ruleCard && Boolean(step.ruleCard)}
+          unitId={unitId}
+          onProgress={setInner}
+          onDone={advance}
+        />
       );
       break;
     case 'structured':
@@ -323,22 +326,17 @@ export default function StepView({
       break;
     case 'aussprache':
       body = (
-        <div>
-          <div className="rounded-[1.25rem] border-2 border-game-line bg-course-wash p-4">
-            <p className={LABEL}>{t('aus.focus')}</p>
-            <p className="mt-1 text-[1.125rem] font-extrabold text-course-ink" lang="de">{step.aussprache.focus}</p>
-          </div>
-          <AusspracheRun
-            key="aussprache"
-            perception={perception}
-            readAloud={step.aussprache.readAloud}
-            runProps={runProps}
-            readAloudDone={readAloudDone}
-            setReadAloudDone={setReadAloudDone}
-            t={t}
-            onFinish={(r) => { count(r); advance(); }}
-          />
-        </div>
+        <AusspracheRun
+          key="aussprache"
+          focus={step.aussprache.focus}
+          perception={perception}
+          readAloud={step.aussprache.readAloud}
+          runProps={runProps}
+          readAloudDone={readAloudDone}
+          setReadAloudDone={setReadAloudDone}
+          t={t}
+          onFinish={(r) => { count(r); advance(); }}
+        />
       );
       break;
     case 'micro':
@@ -355,33 +353,13 @@ export default function StepView({
       body = <ItemRun key="exit" items={pool.exit} {...runProps} onFinish={(r) => { count(r); advance(); }} />;
       break;
     case 'table':
-      body = (
-        <>
-          <RuleTableFill table={step.ruleTable} stepId={step.id} onAttempt={attempt} onDone={count} />
-          <NextBar onNext={advance} label={t('item.next')} />
-        </>
-      );
+      body = <RuleTableFill table={step.ruleTable} stepId={step.id} onAttempt={attempt} onDone={count} onNext={advance} />;
       break;
     case 'cloze':
       body = <ItemRun key="cloze" items={step.cloze} {...runProps} onFinish={(r) => { count(r); advance(); }} />;
       break;
     case 'redemittel':
-      body = (
-        <>
-          <div className={PANEL}>
-            <p className={LABEL}>{t('seg.redemittel')}</p>
-            <ul className="mt-3 space-y-2.5">
-              {redemittel.map((r) => (
-                <li key={r.id} className="border-t-2 border-game-line pt-2.5 first:border-t-0 first:pt-0">
-                  <p className="text-[1.0625rem] font-extrabold text-game-text" lang="de">{r.de}</p>
-                  <p className="text-[0.875rem] font-semibold text-game-muted">{lang === 'de' ? r.function : r.en}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <NextBar onNext={advance} label={t('item.next')} />
-        </>
-      );
+      body = <PhraseCards key="redemittel" phrases={redemittel} unitId={unitId} onProgress={setInner} onDone={advance} />;
       break;
     case 'sprechen':
       body = <SpeakingTaskView task={step.task} level={level} onDone={(r) => finishStep({ correct: 0, total: 0, submitted: !!r?.submitted, bankKey: r?.bankKey || step.task?.bankKey || null })} />;
@@ -441,133 +419,59 @@ export default function StepView({
     case 'end':
       // reached only by a step with nothing before its close (advance() reports the others)
       body = (
-        <div className={PANEL}>
-          <p className="text-[1.375rem] font-extrabold text-game-text">{t('step.done')}</p>
-          {tally.current.total > 0 && (
-            <p className="mt-2 text-[1rem] font-semibold text-game-text">{t('step.result', { c: tally.current.correct, t: tally.current.total })}</p>
-          )}
-          {step.endLine && <p className="mt-3 text-[1.0625rem] font-semibold leading-relaxed text-game-text" lang="de">{step.endLine}</p>}
-          <div className="mt-6">
-            <GameButton onClick={() => finishStep()}>{t('step.next')}</GameButton>
+        <StepScreen action={<GameButton onClick={() => finishStep()}>{t('step.next')}</GameButton>}>
+          <div className={PANEL}>
+            <p className="text-[1.375rem] font-extrabold text-game-text">{t('step.done')}</p>
+            {tally.current.total > 0 && (
+              <p className="mt-2 text-[1rem] font-semibold text-game-text">{t('step.result', { c: tally.current.correct, t: tally.current.total })}</p>
+            )}
+            {step.endLine && <p className="mt-3 text-[1.0625rem] font-semibold leading-relaxed text-game-text" lang="de">{step.endLine}</p>}
           </div>
-        </div>
+        </StepScreen>
       );
       break;
     default:
       body = (
-        <>
+        <StepScreen action={<GameButton onClick={() => finishStep()}>{t('item.next')}</GameButton>}>
           <p className="text-[0.9375rem] text-game-muted">{t('step.unknown')}</p>
-          <NextBar onNext={() => finishStep()} label={t('item.next')} />
-        </>
+        </StepScreen>
       );
   }
 
-  // ── the Lehrwerk frame: section eyebrow, stage strip, numbered exercise heading ──
-  const L = (k) => (SKILL_LABEL[k] ? SKILL_LABEL[k][lang === 'de' ? 'de' : 'en'] : k);
+  // ── the frame: the section for screen readers, ONE short heading where the screen has none ──
   const letter = (section && section.letter) || null;
-  const stageAt = stages.findIndex((st) => st.segs.includes(seg.id));
-  const nrLabel = letter ? exerciseNr(stages, seg.id, letter) : null;
-  const inputSkill = step.input && step.input.kind === 'text' ? 'lesen' : 'hoeren';
-  const microSkill = step.microOutput && step.microOutput.mode === 'written' ? 'schreiben' : 'sprechen';
-  const grammarName = (section && section.grammar && section.grammar.short) || null;
-  const focusShort = step.aussprache && step.aussprache.focus ? String(step.aussprache.focus).split(':')[0].trim() : null;
-  const HEADINGS = {
-    warmup: () => `${L('wortschatz')}: ${t('stage.warmup')}`,
-    words: () => `${L('wortschatz')}: ${t('stage.words')}`,
-    input: () => `${L(inputSkill)}${step.input && step.input.title ? `: ${step.input.title}` : ''}`,
-    inputItems: () => `${L(inputSkill)}: ${t('stage.questions')}`,
-    inputBlock: () => `${L(inputSkill)}: ${t('stage.questions')}`,
-    form: () => `${L('grammatik')}${grammarName ? `: ${grammarName}` : ''}`,
-    structured: () => `${L('grammatik')}: ${t('stage.formPractice')}`,
-    table: () => `${L('grammatik')}: ${t('stage.table')}`,
-    practice: () => `${L('ueben')} · ${t('kap.tasks', { n: pool.served.length })}`,
-    cloze: () => `${L('ueben')}: ${t('seg.cloze')}`,
-    aussprache: () => `${L('aussprache')}${focusShort ? `: ${focusShort}` : ''}`,
-    micro: () => `${t('stage.yourTurn')}: ${L(microSkill)}`,
-    redemittel: () => t('seg.redemittel'),
-    exit: () => `${t('stage.exit')} · ${t('kap.tasks', { n: pool.exit.length })}`,
+  const kindName = { pruefung: t('kap.pruefung'), sprechen: t('kap.sprechen'), schreiben: t('kap.schreiben'), ueberarbeiten: t('kap.ueberarbeiten'), check: t('kap.test') }[step.kind] || null;
+  const lane = unit && unit.spec && unit.spec.lanes && unit.spec.lanes.primary ? laneLabel(unit.spec.lanes.primary) : null;
+  const context = letter
+    ? `${t('kap.part', { l: letter })}${step.title ? `: ${step.title}` : ''}`
+    : [unit && unit.nr ? t('player.unit', { n: unit.nr }) : null, kindName, ['pruefung', 'sprechen', 'schreiben'].includes(step.kind) ? lane : null].filter(Boolean).join(' · ');
+  // The stepped screens (words, input, form, redemittel, aussprache, table's Prüfen, end) and the
+  // item runs carry their own instruction; these segments get theirs from here.
+  const SCREEN_TITLE = {
+    inputBlock: () => (step.examBlock ? teilLabel(step.examBlock.template) : null),
+    micro: () => t('card.yourTurn'),
+    table: () => t('rule.fillTable'),
     sprechen: () => t('kap.sprechen'),
     schreiben: () => t('kap.schreiben'),
     ueberarbeiten: () => t('kap.ueberarbeiten'),
     check: () => t('kap.test'),
   };
-  const heading = seg.block ? teilLabel(seg.block.template) : HEADINGS[seg.id] ? HEADINGS[seg.id]() : step.title || '';
-  const stageLabel = (st) => (st.block ? teilLabel(st.block.template) : st.skill === 'abschluss' ? t('stage.exit') : st.skill === 'redemittel' ? t('seg.redemittel') : L(st.skill));
-  const kindName = { pruefung: t('kap.pruefung'), sprechen: t('kap.sprechen'), schreiben: t('kap.schreiben'), ueberarbeiten: t('kap.ueberarbeiten'), check: t('kap.test') }[step.kind] || null;
-  const lane = unit && unit.spec && unit.spec.lanes && unit.spec.lanes.primary ? laneLabel(unit.spec.lanes.primary) : null;
-  const eyebrow = letter
-    ? `${t('kap.part', { l: letter })}${step.title ? ` · ${step.title}` : ''}`
-    : [unit && unit.nr ? t('player.unit', { n: unit.nr }) : null, step.kind === 'pruefung' ? kindName : null, ['pruefung', 'sprechen', 'schreiben'].includes(step.kind) ? lane : null].filter(Boolean).join(' · ');
-  const bareHeading = step.kind === 'pruefung' && !seg.block ? kindName : heading;
+  const OWN_TITLE = ['warmup', 'words', 'input', 'inputItems', 'form', 'structured', 'practice', 'aussprache', 'redemittel', 'cloze', 'exit', 'end'];
+  const screenTitle = seg.block
+    ? teilLabel(seg.block.template)
+    : SCREEN_TITLE[seg.id] ? SCREEN_TITLE[seg.id]() : OWN_TITLE.includes(seg.id) ? null : step.title || null;
 
   return (
-    <section className="mx-auto w-full max-w-2xl" data-step-id={step.id} data-step-kind={step.kind}>
-      <header className="mb-5">
-        {onBack && (
-          <button type="button" onClick={onBack} className="mb-3 inline-flex min-h-11 items-center gap-1 text-[0.9375rem] font-extrabold text-game-muted hover:text-course-ink">
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" /> {t('step.back')}
-          </button>
-        )}
-        {stages.length > 1 && <StageStrip stages={stages} at={stageAt} letter={letter} label={stageLabel} t={t} />}
-        {eyebrow && <p className="text-[0.875rem] font-extrabold leading-snug text-course-ink [hyphens:auto]" lang={letter ? 'de' : undefined}>{eyebrow}</p>}
-        {bareHeading && (
-          <h1 className="mt-1 flex items-start gap-2.5 text-[1.25rem] font-extrabold leading-tight text-game-text [hyphens:auto] sm:text-[1.375rem]">
-            {nrLabel ? (
-              <span className="mt-px inline-flex min-w-[2.25rem] shrink-0 items-center justify-center rounded-lg bg-course px-1.5 py-0.5 text-[1rem] font-extrabold tabular-nums text-white">{nrLabel}</span>
-            ) : stageAt >= 0 || kindName ? (
-              <span className="mt-px inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-course-wash text-course-ink" aria-hidden="true">
-                <SkillIcon skill={stageAt >= 0 ? stageIcon(stages[stageAt].skill) : step.kind === 'check' ? 'test' : step.kind === 'ueberarbeiten' ? 'schreiben' : step.kind} className="h-4 w-4" />
-              </span>
-            ) : null}
-            <span className="min-w-0">{bareHeading}</span>
-          </h1>
-        )}
-      </header>
+    <section className="mx-auto w-full max-w-2xl" data-step-id={step.id} data-step-kind={step.kind} data-segment={seg.id}>
+      {onBack && (
+        <button type="button" onClick={onBack} className="mb-3 inline-flex min-h-11 items-center gap-1 text-[0.9375rem] font-extrabold text-game-muted hover:text-course-ink">
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" /> {t('step.back')}
+        </button>
+      )}
+      {context && <h1 className="sr-only" lang={letter ? 'de' : undefined}>{context}</h1>}
+      {screenTitle && <h2 className="mb-5 text-[1.5rem] font-extrabold leading-tight text-game-text [hyphens:auto] sm:text-[1.625rem]">{screenTitle}</h2>}
       <div key={seg.id}>{body}</div>
     </section>
-  );
-}
-
-/**
- * The step's parts in order, like the section strip at the top of a Lehrwerk page: each part with
- * its skill icon and name, the current one marked (aria-current), the finished ones ticked. It
- * scrolls sideways on a phone and keeps the current part in view. Not a control: a step is played
- * in order, so the parts are shown, never jumped to.
- */
-function StageStrip({ stages, at, letter, label, t }) {
-  const box = useRef(null);
-  const cur = useRef(null);
-  useEffect(() => {
-    const el = cur.current;
-    const c = box.current;
-    if (!el || !c || typeof c.scrollTo !== 'function') return;
-    c.scrollTo({ left: Math.max(0, el.offsetLeft - (c.clientWidth - el.clientWidth) / 2), behavior: 'auto' });
-  }, [at]);
-  return (
-    <div ref={box} className="-mx-4 mb-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-      <ol className="flex w-max gap-1.5" aria-label={t('stage.aria')}>
-        {stages.map((st, i) => {
-          const done = at >= 0 && i < at;
-          const current = i === at;
-          return (
-            <li
-              key={st.key}
-              ref={current ? cur : undefined}
-              aria-current={current ? 'step' : undefined}
-              className={`inline-flex min-h-9 items-center gap-1.5 whitespace-nowrap rounded-full border-2 px-2.5 py-1 text-[0.8125rem] font-extrabold ${
-                current ? 'border-course bg-course-wash text-course-ink' : done ? 'border-game-line bg-white text-game-text' : 'border-game-line bg-white text-game-muted'
-              }`}
-            >
-              {done
-                ? <Check className="h-3.5 w-3.5 rounded-full bg-game-right p-0.5 text-white" strokeWidth={4} aria-hidden="true" />
-                : <SkillIcon skill={stageIcon(st.skill)} className="h-3.5 w-3.5" />}
-              <span>{letter ? <span className="tabular-nums">{`${letter}${i + 1} `}</span> : null}{label(st)}</span>
-              {done && <span className="sr-only"> ({t('player.doneMark')})</span>}
-            </li>
-          );
-        })}
-      </ol>
-    </div>
   );
 }
 
@@ -578,38 +482,75 @@ function planEarlier(plan) {
   return plan.items.filter((it) => it && ids.has(it.id));
 }
 
-function NextBar({ onNext, label }) {
-  return (
-    <div className="mt-8">
-      <GameButton onClick={onNext}>{label}</GameButton>
-    </div>
-  );
-}
-
-/** Aussprache: the perception items (≥ 4 voices once recorded), then the read-aloud of the model sentence. */
-function AusspracheRun({ perception, readAloud, runProps, readAloudDone, setReadAloudDone, t, onFinish }) {
-  const [phase, setPhase] = useState(perception.length ? 'perception' : 'read');
+/**
+ * Aussprache, one thing per screen: „Genau hinhören" — the focus on a clean card, its sounds on a
+ * speaker key — then the perception items (≥ 4 voices once recorded), then „Sprechen Sie nach", the
+ * read-aloud of the model sentence. `onFinish({ correct, total })` with the perception score.
+ */
+function AusspracheRun({ focus, perception, readAloud, runProps, readAloudDone, setReadAloudDone, t, onFinish }) {
+  const [phase, setPhase] = useState('focus');
   const [score, setScore] = useState({ correct: 0, total: 0 });
+  const report = runProps.onProgress;
+  const hasRead = Boolean(readAloud && readAloud.lineDe);
+  useEffect(() => {
+    if (typeof report !== 'function') return;
+    if (phase === 'focus') report(0);
+    else if (phase === 'read') report(0.9);
+  }, [phase, report]);
+  const afterFocus = () => {
+    if (perception.length) setPhase('perception');
+    else if (hasRead) setPhase('read');
+    else onFinish(score);
+  };
+  if (phase === 'focus') {
+    const text = String(focus || '');
+    const cut = text.indexOf(':');
+    const head = cut > 0 ? text.slice(0, cut).trim() : text;
+    const sounds = cut > 0 ? text.slice(cut + 1).trim() : '';
+    return (
+      <StepScreen title={t('card.pronounce')} action={<GameButton onClick={afterFocus}>{t('item.next')}</GameButton>}>
+        <div className="flex flex-col items-center rounded-[1.5rem] border-2 border-b-4 border-game-line bg-white px-5 py-7 text-center">
+          <p className={LABEL}>{t('aus.focus')}</p>
+          <p className="mt-2 text-[1.25rem] font-extrabold leading-snug text-course-ink" lang="de">{head}</p>
+          {sounds && <p className="mt-4 text-[1.75rem] font-extrabold leading-snug text-game-text [hyphens:auto]" lang="de">{sounds}</p>}
+          {sounds && (
+            <div className="mt-5">
+              <SayButton unitId={runProps.unitId} id={`${runProps.stepId}-focus`} text={sounds} label={t('card.hearFocus')} />
+            </div>
+          )}
+        </div>
+      </StepScreen>
+    );
+  }
   if (phase === 'perception') {
     return (
-      <div className="mt-4">
-        <ItemRun items={perception} {...runProps} onFinish={(r) => { setScore(r); setPhase(readAloud?.lineDe ? 'read' : 'done'); if (!readAloud?.lineDe) onFinish(r); }} />
-      </div>
+      <ItemRun
+        items={perception}
+        {...runProps}
+        onProgress={(f) => { if (typeof report === 'function') report(0.1 + 0.75 * f); }}
+        onFinish={(r) => { setScore(r); if (hasRead) setPhase('read'); else onFinish(r); }}
+      />
     );
   }
-  if (phase === 'read' && readAloud?.lineDe) {
+  if (phase === 'read' && hasRead) {
     return (
-      <div className="mt-4">
-        <p className="mb-3 text-[1.125rem] font-extrabold text-game-text">{t('aus.readAloud')}</p>
-        <ReadAloudLine
-          lektionId={runProps.unitId}
-          lineKey={`${runProps.stepId}-readaloud`}
-          text={readAloud.lineDe}
-          onResult={() => setReadAloudDone(true)}
-        />
-        <NextBar onNext={() => onFinish(score)} label={readAloudDone ? t('item.next') : t('mo.skip')} />
-      </div>
+      <StepScreen
+        title={t('card.sayIt')}
+        action={readAloudDone
+          ? <GameButton onClick={() => onFinish(score)}>{t('item.next')}</GameButton>
+          : <QuietButton onClick={() => onFinish(score)}>{t('mo.skip')}</QuietButton>}
+      >
+        <p className="text-[1.0625rem] font-semibold leading-snug text-game-muted">{t('aus.readAloud')}</p>
+        <div className="mt-4">
+          <ReadAloudLine
+            lektionId={runProps.unitId}
+            lineKey={`${runProps.stepId}-readaloud`}
+            text={readAloud.lineDe}
+            onResult={() => setReadAloudDone(true)}
+          />
+        </div>
+      </StepScreen>
     );
   }
-  return <NextBar onNext={() => onFinish(score)} label={t('item.next')} />;
+  return <StepScreen action={<GameButton onClick={() => onFinish(score)}>{t('item.next')}</GameButton>}>{null}</StepScreen>;
 }

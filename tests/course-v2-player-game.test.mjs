@@ -1,8 +1,10 @@
 // Course v2 — the Duolingo-style lesson player (owner feedback 2026-09-29: "the design is boring,
 // gamify it … Unit 1 opens with a speaking test before anything is taught … I don't like the
 // colours"). Pins what the redesign promised, where a regression would be silent:
-//   - the soft start: the unit opens on an intro, the Folge is the first interaction, and the
-//     Auftakt micro-output is an optional bonus AFTER the Folge — never the opening, never a gate;
+//   - the soft start: the unit opens on the story screen (round 3: ONE bubble, ONE button — the
+//     screens themselves are pinned in tests/course-v2-flow.test.mjs), the Folge is the first
+//     interaction, and the Auftakt micro-output is an optional bonus AFTER the Folge — never the
+//     opening, never a gate;
 //   - the game ledger: one recordGame per finished Lernschritt, none for a skipped Aufgabe, the
 //     Check goes to the recap (no step celebration), XP.unit once per newly completed unit;
 //   - the ?s=<n> deep link of the course home, with ?s=1 on an unstarted unit showing the Start;
@@ -39,11 +41,11 @@ test('the intro is built from the unit: the narrator, and a bubble that does not
   assert.equal(introBubble({ title: { canDo: 'Sie können x.' } }), 'Sie können x.');
 });
 
-test('the Start is soft: intro → Folge → an optional bonus; the Auftakt never opens or gates the unit', () => {
+test('the Start is soft: story → Folge → gist → an optional bonus; the Auftakt never opens or gates the unit', () => {
   const sv = read(`${V2}/StartView.jsx`);
-  assert.match(sv, /useState\('intro'\); \/\/ intro \| folge \| bonus/, 'the Start opens on the intro');
+  assert.match(sv, /useState\(\(\) => \(entry === 'folge' && start\.folge \? 'folge' : 'intro'\)\); \/\/ intro \| folge \| gist \| bonus/, 'the Start opens on the story screen (the guide may open it on the Folge)');
   const intro = sv.slice(sv.indexOf("if (stage === 'intro')"), sv.indexOf("if (stage === 'bonus'"));
-  assert.ok(intro.includes('<UnitIntro'), 'the intro screen is UnitIntro');
+  assert.ok(intro.includes('<StoryScreen'), 'the first screen is the story screen');
   assert.ok(!intro.includes('MicroOutputView'), 'no speaking task on the first screen');
   const bonus = sv.slice(sv.indexOf("if (stage === 'bonus'"), sv.indexOf('// the episode:'));
   assert.ok(bonus.includes('<MicroOutputView'), 'the Auftakt lives in the bonus card');
@@ -52,8 +54,9 @@ test('the Start is soft: intro → Folge → an optional bonus; the Auftakt neve
   assert.doesNotMatch(sv, /auftaktDone/, 'the old gate on „Los geht\'s" is gone');
   assert.match(sv, /onHeard=\{\(\) => setHeard\(true\)\}/, 'the gist question follows the listen');
   const ui = read(`${V2}/UnitIntro.jsx`);
-  assert.match(ui, /<details[\s\S]{0,400}t\('start\.examFocus'\)/, 'the Prüfungsfokus is a folded line');
-  assert.match(ui, /<QuietButton onClick=\{onTestOut\}>\{t\('start\.skipTest'\)\}/, 'the test-out is a quiet text button');
+  assert.match(ui, /<details[\s\S]{0,400}t\('start\.examFocus'\)/, 'the Prüfungsfokus is a folded line (in the guide)');
+  assert.match(ui, /\{onQuiet && quietLabel && <QuietButton onClick=\{onQuiet\}>\{quietLabel\}<\/QuietButton>\}/, 'the story screen’s test-out is a quiet text button');
+  assert.match(ui, /\{onTestOut && <QuietButton onClick=\{onTestOut\}>\{t\('flow\.testOut'\)\}<\/QuietButton>\}/, '…and the guide’s');
 });
 
 test('the game ledger: one entry per finished step, the Check to the recap, the unit bonus once', () => {
@@ -75,10 +78,14 @@ test('the game ledger: one entry per finished step, the Check to the recap, the 
   assert.match(read(`${V2}/ItemView.jsx`), /xpForItem\(\{ correct: outcome\.result !== RESULT\.WRONG, firstTry: outcome\.result === RESULT\.CORRECT \}\)/);
 });
 
-test('the celebration: star burst, three tiles, the streak week, one button; motion only when allowed', () => {
+test('the celebration: star burst, one headline, three tiles, the streak in one line, one button; motion only when allowed', () => {
   const cel = read(`${V2}/StepCelebration.jsx`);
-  for (const k of ['cel.title', 'cel.xp', 'cel.right', 'cel.time']) assert.ok(cel.includes(`t('${k}')`), k);
-  assert.ok(cel.includes('<StreakCard') && cel.includes('<StarBurst'));
+  for (const k of ['cel.title', 'cel.xp', 'cel.right', 'cel.time', 'game.streak', 'game.streakOne', 'game.streakNone']) assert.ok(cel.includes(`t('${k}'`), k);
+  assert.ok(cel.includes('<StarBurst'));
+  assert.ok(!cel.includes('<StreakCard'), 'round 3: the week grid lives on the home; here the streak is one line');
+  assert.match(cel, /<FlameIcon size=\{26\} lit=\{streak > 0\} \/>/);
+  assert.equal((cel.match(/<h1/g) || []).length, 1, 'one headline');
+  assert.equal((cel.match(/<StatTile\s/g) || []).length, 3, 'three tiles');
   assert.equal((cel.match(/<GameButton/g) || []).length, 1, 'one action');
   const parts = read(`${V2}/GameParts.jsx`);
   assert.ok(!/\banimate-(?!pop-in)/.test(parts.replace(/motion-safe:animate-pop-in/g, '')), 'every animation is motion-safe');
@@ -87,7 +94,7 @@ test('the celebration: star burst, three tiles, the streak week, one button; mot
 
 test('?s=<n> opens a step; ?s=1 on a unit without progress still shows the Start', () => {
   const page = read('src/pages/course-v2/UnitPlayerPage.jsx');
-  assert.match(page, /const \[params\] = useSearchParams\(\);/);
+  assert.match(page, /const \[params, setParams\] = useSearchParams\(\);/);
   assert.match(page, /const fresh = state\.finishedSteps\.size === 0 && !\(state\.row && state\.row\.status && state\.row\.status !== 'started'\);/);
   assert.match(page, /asked <= \(unit\.steps \|\| \[\]\)\.length && !\(asked === 1 && fresh\)\) \{\s*setStepIndex\(asked - 1\);\s*setPhase\('step'\);/);
 });

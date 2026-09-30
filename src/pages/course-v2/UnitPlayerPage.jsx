@@ -1,14 +1,16 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Navigate, useParams, useSearchParams } from 'react-router-dom';
-import { Check } from 'lucide-react';
+import { Navigate, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Check, ChevronDown } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import CastAvatar from '../../components/course-v2/CastAvatar.jsx';
 import CourseTheme from '../../components/course-v2/CourseTheme.jsx';
 import GameButton, { QuietButton } from '../../components/course-v2/GameButton.jsx';
-import GameTopBar from '../../components/course-v2/GameTopBar.jsx';
-import { SpeechBubble, StatTile, StreakCard, Trophy, XpIcon, clock } from '../../components/course-v2/GameParts.jsx';
+import GameTopBar, { GuideTopBar } from '../../components/course-v2/GameTopBar.jsx';
+import { StatTile, Trophy, clock } from '../../components/course-v2/GameParts.jsx';
 import StepCelebration from '../../components/course-v2/StepCelebration.jsx';
-import { narratorOf } from '../../components/course-v2/story.js';
+import UnitIntro, { StoryScreen } from '../../components/course-v2/UnitIntro.jsx';
+import { laneLabel, teilLabel } from '../../components/course-v2/content.js';
+import { guideCloseTarget, narratorOf, screenOf, welcomeLine } from '../../components/course-v2/story.js';
 import { nextCombo } from '../../components/lesson/ComboChip.jsx';
 import { XP, recordGame, xpForItem } from '../../lib/course-v2/gamify.js';
 import { normalizeLevel, nrOfId, v2Paths } from '../../lib/course-v2/ids.js';
@@ -22,9 +24,8 @@ import {
 } from '../../lib/course-v2/progress.js';
 import { localStepDone, localTestOut, localUnitState, localUnitStatus } from '../../lib/course-v2/localState.js';
 import { loadEarlierItems, loadManifest, loadPlayableUnit, loadRuleCards, loadWords } from '../../lib/course-v2/loaders.js';
-import { wordsOfUnit } from '../../components/course-v2/kapitel.js';
+import { cardTitle, cardsByIds, tocRows, unitCardIds, unitWordGroups, wordsOfUnit } from '../../components/course-v2/kapitel.js';
 import ActionBar from './ActionBar.jsx';
-import StoryCliffhanger from '../../components/course-v2/StoryCliffhanger.jsx';
 import { useV2Strings } from '../../components/course-v2/strings.js';
 import { StartViewSlot, StepViewSlot, KIND_LABEL_DE, hasStartRenderer } from './rendererSlots.jsx';
 
@@ -61,13 +62,18 @@ import { StartViewSlot, StepViewSlot, KIND_LABEL_DE, hasStartRenderer } from './
 // `?s=<n>` (1-based step position, the course home's path nodes) opens step n directly; ?s=1
 // on a unit not started yet shows its Start first (the home's „start" buttons link there).
 //
-// The Kapitel page (owner feedback 2026-09-29: "a CURRICULUM like the books — chapters"): a unit
-// opens on its front page — the table of contents (Einstieg, A / B / C, Prüfungstraining, Sprechen,
-// Schreiben, Kapiteltest), the can-dos, the back matter (Grammatik, Wortschatz, Redemittel). It is
-// StartView's intro (UnitIntro.jsx), fed through the slot's extras as `chapter`: the finished steps,
-// the step „Weiter" opens, the proven can-dos and `onOpen` for a row. The resume screen is the same
-// page with the learner's state, so the phases 'start' and 'resume' render one component. The unit
-// handed to the renderers also carries `lexicon` — its own words from the level's words.json.
+// One thing per screen (round 3, owner 2026-09-30: "it looks intimidating and too much … duolingo
+// style … step for step"; story.js screenOf decides the screen): a fresh unit opens on StartView's
+// story screen (the narrator, one bubble, „Los geht's"), a resumed one on a welcome-back (one bubble,
+// „Weiter" into the first open step, „Kapitel im Überblick"). The textbook Kapitel page of round 2
+// (owner 2026-09-29: "a CURRICULUM like the books — chapters") is the opt-in GUIDE behind
+// `?view=guide` — the home's book button, the welcome-back and the recap link to it: the can-dos
+// ticked by the recap's own proof reading, the table of contents (Einstieg, A / B / C,
+// Prüfungstraining, Sprechen, Schreiben, Kapiteltest; every row opens its part), the back matter
+// (Grammatik, Wortschatz, Redemittel) and ONE button at the very end. Its X goes back to where the
+// learner came from (story.js guideCloseTarget). The recap is a trophy, one headline, three tiles and
+// one button. The unit handed to the renderers also carries `lexicon` — its own words from the
+// level's words.json.
 
 const pad2 = (n) => String(n).padStart(2, '0');
 
@@ -97,19 +103,20 @@ function useUnitData(level, nr) {
   return data;
 }
 
-function Shell({ level, progress, progressLabel = null, combo = 0, xp = 0, children, footer }) {
+function Shell({ level, progress, progressLabel = null, combo = 0, bar = null, children, footer }) {
   const [, t] = useV2Strings();
   return (
     <CourseTheme>
-      <div className={`mx-auto max-w-2xl px-4 ${footer ? 'pb-32' : 'pb-10'}`}>
-        <GameTopBar
-          homeTo={v2Paths.home(level)}
-          homeLabel={t('player.home')}
-          progress={progress}
-          progressLabel={progressLabel || t('player.progress')}
-          combo={combo}
-          xp={xp}
-        />
+      <div className={`mx-auto max-w-2xl px-4 ${footer ? 'pb-36' : 'pb-10'}`}>
+        {bar || (
+          <GameTopBar
+            homeTo={v2Paths.home(level)}
+            homeLabel={t('player.home')}
+            progress={progress}
+            progressLabel={progressLabel || t('player.progress')}
+            combo={combo}
+          />
+        )}
         {children}
       </div>
       {footer && <ActionBar>{footer}</ActionBar>}
@@ -197,8 +204,8 @@ function StartFallback({ unit, row, steps, finished, onOpen }) {
   );
 }
 
-export function UnitPlayer({ level, unit, manifest, user, initialStep = null }) {
-  const [, t] = useV2Strings();
+export function UnitPlayer({ level, unit, manifest, user, initialStep = null, view = null, onGuide = null, onLeaveGuide = null, onCloseGuide = null }) {
+  const [lang, t] = useV2Strings();
   const unitId = unit.id;
   const manifestRow = useMemo(
     () => ((manifest && manifest.units) || []).find((r) => r && (r.unit === unitId || r.id === unitId)) || null,
@@ -234,6 +241,12 @@ export function UnitPlayer({ level, unit, manifest, user, initialStep = null }) 
   const unitXpAwarded = useRef(false);
   const deepLink = useRef(initialStep); // ?s=<n>: open step n once the learner state is in
   const narrator = narratorOf(unit, level);
+  // where the guide opens the Start: null (the story screen), 'folge' (its Einstieg row), 'testout'
+  const [startEntry, setStartEntry] = useState(null);
+  const guideOpen = view === 'guide';
+  useEffect(() => {
+    if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'auto' });
+  }, [guideOpen]);
 
   // Learner state: Supabase when signed in, this browser otherwise.
   useEffect(() => {
@@ -488,7 +501,7 @@ export function UnitPlayer({ level, unit, manifest, user, initialStep = null }) 
   const doneCount = steps.filter((s) => finished.has(s.id)).length;
   const progress = steps.length ? doneCount / steps.length : 0;
 
-  // The can-dos and their proofs, read once for the recap AND the Kapitel page (which ticks them).
+  // The can-dos and their proofs, read for the guide (which ticks them).
   const canDos = (manifestRow && manifestRow.canDos) || [];
   // Which can-do is proven, by the unit's own proof rule (check.proofs) read the way the Check
   // reads it — proofShown (src/lib/course-v2/proofs.js): EVERY proof the rule names must be shown,
@@ -500,7 +513,7 @@ export function UnitPlayer({ level, unit, manifest, user, initialStep = null }) 
   //   aufgaben     submitted now (finished Aufgabe steps) — so an Aufgabe submitted after the Check
   //                still ticks its can-do;
   //   microOutputs the learner's own micro-outputs sent.
-  // A can-do without a proof rule is proven by the unit being complete. So the recap never ticks a
+  // A can-do without a proof rule is proven by the unit being complete. So the guide never ticks a
   // can-do the Check has just shown as open.
   const canDoIds = (manifestRow && manifestRow.canDoIds) || [];
   const proofRules = (unit.check && unit.check.proofs) || [];
@@ -517,59 +530,151 @@ export function UnitPlayer({ level, unit, manifest, user, initialStep = null }) 
     return proofShown(rule, { ...proofEvidence, items: proofItemsOf(rule) });
   };
   const allProven = canDos.length > 0 && canDos.every((_, i) => proven(i));
-  const canDoProven = Object.fromEntries(canDoIds.map((id, i) => [id, proven(i)]));
 
-  // A row of the Kapitel page's table of contents: its step, or the summary past the last one.
+  const scrollTop = () => { if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'auto' }); };
+  // Leaving the guide for one of the flow's screens drops `?view=guide` (the page's onLeaveGuide).
+  const leaveGuide = () => { if (guideOpen && typeof onLeaveGuide === 'function') onLeaveGuide(); };
+  // A row of the guide's table of contents: its step, or the summary past the last one.
   const openFromChapter = (i) => {
+    leaveGuide();
     if (Number.isInteger(i) && i >= 0 && i < steps.length) { goTo(i); return; }
     deepLink.current = null;
     setPhase('recap');
-    if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'auto' });
+    scrollTop();
   };
-  // …and back from the summary to the Kapitel page, „Weiter" on the first open step.
-  const openOverview = () => {
+  // …and the Start again, from the guide: its story screen („Kapitel starten" on a fresh unit), the
+  // Folge straight away (the Einstieg row), or the test-out.
+  const openStart = (entry = null) => {
+    leaveGuide();
     deepLink.current = null;
-    setStepIndex(resumeIndex(unit.steps || [], finished));
-    setPhase('resume');
-    if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'auto' });
+    setStartEntry(entry);
+    setPhase('start');
+    scrollTop();
   };
+  // a part of the Kapitel by its name (the welcome-back's line, the guide's „Weiter: …")
+  const partName = (r) => {
+    if (!r) return '';
+    const named = { check: 'kap.test', pruefung: 'kap.pruefung', sprechen: 'kap.sprechen', schreiben: 'kap.schreiben', ueberarbeiten: 'kap.ueberarbeiten' }[r.kind];
+    if (named) return t(named);
+    return r.title || (r.letter ? t('kap.part', { l: r.letter }) : '');
+  };
+  const chapterHeading = <>{t('player.unit', { n: unit.nr })}{unit.title && unit.title.de ? <> · <span lang="de">{unit.title.de}</span></> : null}</>;
+  const screen = screenOf(phase, view);
 
-  if (phase === 'loading') {
+  if (screen === 'loading') {
     return <Shell level={level} progress={0}><p className="py-16 text-center text-[1rem] font-semibold text-game-muted">{t('player.loading')}</p></Shell>;
   }
 
-  if (phase === 'start' || phase === 'resume') {
-    // One Kapitel page for both: fresh („Kapitel starten" opens the Einstieg) and resumed („Weiter
-    // mit Teil B" opens the first open step). StartFallback is the page's own plain version.
-    const resume = phase === 'resume';
-    const next = resume ? steps[stepIndex] : null;
+  if (screen === 'guide') {
+    // THE GUIDE (UnitIntro.jsx): the textbook Kapitel page, one tap deep. „Weiter" is the first open
+    // part once the learner has begun; a fresh unit starts at its story screen.
+    const started = finished.size > 0;
+    const resumeAt = resumeIndex(unit.steps || [], finished);
+    const rows = tocRows({ unit, course: manifest, finished, currentIndex: started ? resumeAt : -1 });
+    const allDone = rows.length > 0 && rows.every((r) => r.state === 'done');
+    const next = started && !allDone ? rows[resumeAt] || rows.find((r) => r.state !== 'done') || null : null;
+    const primaryLabel = !started
+      ? t('kap.start')
+      : next ? (next.letter ? t('kap.continuePart', { l: next.letter }) : t('kap.continueWith', { name: partName(next) })) : t('kap.toSummary');
+    const onPrimary = !started ? () => openStart(null) : () => openFromChapter(next ? next.index : steps.length);
+    const start = unit.start || {};
+    const folge = start.folge || null;
+    const lane = unit.spec && unit.spec.lanes && unit.spec.lanes.primary ? unit.spec.lanes.primary : null;
+    const chips = Array.isArray(start.pruefungsfokusChips) ? start.pruefungsfokusChips.map((tpl) => teilLabel(tpl)) : [];
+    const lernschritteOpen = rows.some((r) => r.state !== 'done' && ['situation', 'text', 'sprache', 'pruefung'].includes(r.kind));
+    const minutes = Number(unit.minutesPlanned && unit.minutesPlanned.total) || 0;
+    const meta = [
+      [String(unit.level || level || '').toUpperCase(), unit.etappe ? t('kap.module', { m: unit.etappe }) : null].filter(Boolean).join(' · '),
+      steps.length ? t('kap.parts', { n: steps.length }) : null,
+      minutes ? t('kap.minutes', { n: minutes }) : null,
+    ].filter(Boolean).join(' · ');
+    // The can-dos, ticked by the recap's own proof reading (see `proven`): a tick per proven can-do,
+    // „Das können Sie jetzt" only when every one is proven.
+    const goals = canDos.length > 0 && (
+      <section aria-labelledby={`${unitId}-guide-goals`}>
+        <h2 id={`${unitId}-guide-goals`} className={EYEBROW}>
+          {allProven ? t('player.canNow') : t('player.goalsUnit')}
+        </h2>
+        <ul className="mt-3 space-y-3 rounded-[1.25rem] border-2 border-b-4 border-game-line bg-white p-4 sm:p-5">
+          {canDos.map((c, i) => (
+            <li key={c} className="flex gap-3 text-[1.0625rem] font-bold leading-snug text-game-text" lang="de">
+              {proven(i)
+                ? <Check className="mt-0.5 h-5 w-5 shrink-0 rounded-full bg-game-right p-0.5 text-white" strokeWidth={3.5} aria-hidden="true" />
+                : <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-game-line" aria-hidden="true" />}
+              <span>{c}{proven(i) && <span className="sr-only" lang={lang}> ({t('player.doneMark')})</span>}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    );
+    return (
+      <Shell level={level} bar={<GuideTopBar title={t('flow.guideTitle', { n: unit.nr })} closeLabel={t('flow.close')} onClose={onCloseGuide} />}>
+        <UnitIntro
+          title={unit.title && unit.title.de}
+          meta={meta}
+          goals={goals}
+          goalCount={canDos.length}
+          rows={rows}
+          intro={folge ? { nr: unit.nr, title: folge.title || null, state: started ? 'open' : 'current' } : null}
+          onOpenRow={openFromChapter}
+          onOpenIntro={() => openStart('folge')}
+          cards={cardsByIds(unitCardIds(unit), unit.ruleCards).map((card) => ({ card, title: cardTitle(unit, manifest, card.id) }))}
+          wordGroups={unitWordGroups(unit, Array.isArray(unit.lexicon) ? unit.lexicon : [])}
+          redemittel={Array.isArray(unit.redemittel) ? unit.redemittel : []}
+          examFocus={lane && chips.length ? [laneLabel(lane), ...chips] : chips}
+          lane={lane}
+          level={unit.level || level}
+          unitId={unitId}
+          primaryLabel={primaryLabel}
+          onPrimary={onPrimary}
+          onTestOut={start.testOut && start.testOut.offered && lernschritteOpen ? () => openStart('testout') : null}
+        />
+      </Shell>
+    );
+  }
+
+  if (screen === 'story') {
+    // The Start (StartView): the story screen, then the Folge and the optional bonus — or, opened from
+    // the guide, the Folge or the test-out straight away (`entry`). StartFallback is the plain version.
+    const entry = startEntry;
     const fallback = <StartFallback unit={unit} row={manifestRow} steps={steps} finished={finished} onOpen={goTo} />;
-    const chapter = {
-      finished: [...finished],
-      currentIndex: resume ? stepIndex : -1,
-      resume,
-      proven: canDoProven,
-      onOpen: openFromChapter,
-    };
-    const plainFooter = resume
-      ? next && <GameButton caps={false} onClick={() => goTo(stepIndex)}>{t('player.resumeAt', { n: stepIndex + 1, title: stepTitle(next, t) })}</GameButton>
-      : <GameButton onClick={() => onStartDone(null)}>{t('start.begin')}</GameButton>;
     return (
       <Shell
         level={level}
         progress={progress}
         combo={combo}
-        xp={sessionXp}
-        footer={hasStartRenderer ? null : plainFooter}
+        footer={hasStartRenderer ? null : <GameButton onClick={() => onStartDone(null)}>{t('start.begin')}</GameButton>}
       >
-        <StartViewSlot unit={unit} level={level} onDone={onStartDone} fallback={fallback} extra={{ course: manifest, onAttempt, chapter }} />
+        <StartViewSlot key={`start-${entry || 'story'}`} unit={unit} level={level} onDone={onStartDone} fallback={fallback} extra={{ course: manifest, onAttempt, entry }} />
+      </Shell>
+    );
+  }
+
+  if (screen === 'welcome') {
+    // Welcome back: one bubble naming the part „Weiter" opens, one button, the guide one quiet tap away.
+    const rows = tocRows({ unit, course: manifest, finished, currentIndex: stepIndex });
+    const line = welcomeLine(rows[stepIndex] || null, partName);
+    return (
+      <Shell level={level} progress={progress} combo={combo}>
+        <StoryScreen
+          id={`${unitId}-welcome`}
+          heading={chapterHeading}
+          narrator={narrator}
+          bubble={t('flow.welcome')}
+          bubbleLang={lang}
+          bubbleNote={t(line.key, line.vars)}
+          primaryLabel={t('item.next')}
+          onPrimary={() => goTo(stepIndex)}
+          quietLabel={t('flow.overview')}
+          onQuiet={onGuide}
+        />
       </Shell>
     );
   }
 
   if (phase === 'celebrate' && celebration) {
     return (
-      <Shell level={level} progress={1} progressLabel={t('player.progressStep')} combo={combo} xp={sessionXp}>
+      <Shell level={level} progress={1} progressLabel={t('player.progressStep')} combo={combo}>
         <StepCelebration
           xp={celebration.xp}
           correct={celebration.correct}
@@ -587,7 +692,7 @@ export function UnitPlayer({ level, unit, manifest, user, initialStep = null }) 
     const step = steps[stepIndex];
     if (!step) return <Navigate to={v2Paths.home(level)} replace />;
     return (
-      <Shell level={level} progress={stepProgress} progressLabel={t('player.progressStep')} combo={combo} xp={sessionXp}>
+      <Shell level={level} progress={stepProgress} progressLabel={t('player.progressStep')} combo={combo}>
         {testOutNote && stepIndex === steps.findIndex((s) => !finished.has(s.id)) && (
           <p className="mb-4 rounded-2xl border-2 border-game-right bg-game-right-wash px-4 py-3 text-[0.9375rem] font-bold text-game-right-ink" role="status">{t('player.testOutNote')}</p>
         )}
@@ -605,10 +710,11 @@ export function UnitPlayer({ level, unit, manifest, user, initialStep = null }) 
     );
   }
 
-  // Recap (S6 „Lektion geschafft").
+  // Recap (S6 „Lektion geschafft"), Duolingo's lesson-complete way: the trophy (or the narrator, while
+  // parts are open), one headline, three tiles, ONE button to the next thing and the guide one quiet
+  // tap away — the can-dos, the open parts and the table of contents live there.
   const gold = finalStatus === 'gold';
-  const openSteps = steps.map((s, i) => ({ s, i })).filter(({ s }) => !finished.has(s.id) && s.kind !== 'ueberarbeiten');
-  const words = Array.isArray(unit.reviewCards) ? unit.reviewCards.filter((k) => String(k).startsWith('word:')).length : 0;
+  const openSteps = steps.filter((s) => !finished.has(s.id) && s.kind !== 'ueberarbeiten');
   const units = (manifest && manifest.units) || [];
   const nextRow = units.find((r) => r && nrOfId(r.unit || r.id) === unit.nr + 1) || null;
   const etappe = ((manifest && manifest.etappen) || []).find((e) => (e.units || []).includes(unitId));
@@ -628,109 +734,69 @@ export function UnitPlayer({ level, unit, manifest, user, initialStep = null }) 
       level={level}
       progress={progress}
       combo={combo}
-      xp={sessionXp + unitBonus}
-      footer={<GameButton to={nextTarget.to}>{nextTarget.label}</GameButton>}
+      footer={(
+        <>
+          <GameButton to={nextTarget.to}>{nextTarget.label}</GameButton>
+          {onGuide && <QuietButton onClick={onGuide}>{t('flow.overview')}</QuietButton>}
+        </>
+      )}
     >
-      <div className="space-y-5">
-        <header className="flex flex-col items-center text-center">
-          {complete ? <Trophy /> : <CastAvatar name={narrator} size={112} className="motion-safe:animate-pop-in" />}
-          {gold && (
-            <span className="mt-2 inline-flex items-center gap-1.5 rounded-xl border-2 border-game-xp-edge bg-game-xp px-3 py-1 text-[0.875rem] font-extrabold text-game-text" aria-label="Siegel">
-              <Check className="h-4 w-4" strokeWidth={3} aria-hidden="true" /> Siegel
-            </span>
-          )}
-          <p className={`mt-3 ${EYEBROW}`}>{t('player.unit', { n: unit.nr })}</p>
-          <h1 className={`mt-1 ${complete ? 'text-game-xp-ink' : 'text-game-text'} text-[1.875rem] font-extrabold leading-tight`}>
-            {complete ? t('player.complete') : t('player.almost')}
-          </h1>
-          <p className="mt-1 text-[1.0625rem] font-bold text-game-muted" lang="de">{unit.title && unit.title.de}</p>
-          {unitBonus > 0 && (
-            <p className="mt-3 inline-flex items-center gap-1.5 rounded-xl bg-game-xp-wash px-3 py-1.5 text-[1rem] font-extrabold text-game-xp-ink motion-safe:animate-pop-in">
-              <XpIcon size={18} /> {t('player.unitBonus')} {t('game.xp', { n: unitBonus })}
-            </p>
-          )}
-        </header>
-
+      <section className="flex min-h-[calc(100dvh-14rem)] flex-col items-center justify-center text-center" aria-labelledby={`${unitId}-recap-title`}>
+        {complete ? <Trophy /> : <CastAvatar name={narrator} size={140} className="motion-safe:animate-pop-in" />}
+        {gold && (
+          <span className="mt-2 inline-flex items-center gap-1.5 rounded-xl border-2 border-game-xp-edge bg-game-xp px-3 py-1 text-[0.875rem] font-extrabold text-game-text" aria-label="Siegel">
+            <Check className="h-4 w-4" strokeWidth={3} aria-hidden="true" /> Siegel
+          </span>
+        )}
+        <h1 id={`${unitId}-recap-title`} className={`mt-3 ${complete ? 'text-game-xp-ink' : 'text-game-text'} text-[1.875rem] font-extrabold leading-tight`}>
+          {complete ? t('player.complete') : t('player.almost')}
+        </h1>
+        {!complete && openSteps.length > 0 && (
+          <p className="mt-2 text-[1.0625rem] font-bold text-game-muted">
+            {openSteps.length === 1 ? t('flow.openLeftOne') : t('flow.openLeft', { n: openSteps.length })}
+          </p>
+        )}
         {sessionRuns.size > 0 && (
-          <div className="grid grid-cols-3 gap-2.5">
+          // the Check's share right only when the Check ran in this visit — never an empty „–" tile
+          <div className={`mt-7 grid w-full max-w-md gap-2.5 ${pct !== null ? 'grid-cols-3' : 'grid-cols-2'}`}>
             <StatTile tone="xp" label={t('cel.xp')} value={`+${sessionXp + unitBonus}`} />
-            <StatTile tone="course" label={t('cel.right')} value={pct !== null ? `${pct} %` : '–'} />
+            {pct !== null && <StatTile tone="course" label={t('cel.right')} value={`${pct} %`} />}
             <StatTile tone="time" label={t('cel.time')} value={clock(recapSeconds || 0)} />
           </div>
         )}
-
-        {!complete && openSteps.length > 0 && (
-          <div className="rounded-[1.25rem] border-2 border-b-4 border-accent-aprikose bg-accent-aprikose-wash p-4">
-            <h2 className="text-[1rem] font-extrabold text-accent-aprikose-ink">{t('player.open')}</h2>
-            <ul className="mt-2 space-y-1">
-              {openSteps.map(({ s, i }) => (
-                <li key={s.id}>
-                  <button type="button" onClick={() => goTo(i)} className="min-h-11 text-left text-[1rem] font-extrabold text-course-ink hover:underline">
-                    {t('player.openStep', { n: i + 1, title: stepTitle(s, t) })}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
         {accuracy !== null && accuracy < 0.6 && (
-          // The Check suggests repeating a Lernschritt; the list makes that one tap
-          // (a repeat serves a fresh draw — see `attempts`). A suggestion, never a gate.
-          <div className="space-y-3">
-            <p className="text-[1rem] font-semibold text-game-muted">{t('player.repeatTip')}</p>
+          // a weak Check suggests repeating a Lernschritt, folded (a repeat serves a fresh draw, see `attempts`); never a gate
+          <RepeatFold id={`${unitId}-repeat`} label={t('flow.repeat')} tip={t('player.repeatTip')}>
             <StepList unit={unit} steps={steps} finished={finished} currentIndex={-1} onOpen={goTo} />
-          </div>
+          </RepeatFold>
         )}
-
-        {canDos.length > 0 && (
-          // A tick per proven can-do (see `proven`), the same verdict as the Check's
-          // „Das kann ich"; „Das können Sie jetzt" only when every one is proven.
-          <div className={PANEL}>
-            <h2 className={EYEBROW}>
-              {allProven ? t('player.canNow') : t('player.goalsUnit')}
-            </h2>
-            <ul className="mt-3 space-y-2.5">
-              {canDos.map((c, i) => (
-                <li key={c} className="flex gap-2.5 text-[1rem] font-bold text-game-text">
-                  {proven(i)
-                    ? <Check className="mt-0.5 h-5 w-5 shrink-0 rounded-full bg-game-right p-0.5 text-white" strokeWidth={3.5} aria-hidden="true" />
-                    : <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-game-line" aria-hidden="true" />}
-                  <span>{c}{proven(i) && <span className="sr-only"> ({t('player.doneMark')})</span>}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {words > 0 && checkDone && (
-          <p className="text-[1rem] font-semibold text-game-muted">{t('player.words', { n: words })}</p>
-        )}
-
-        {sessionRuns.size > 0 && <StreakCard />}
-
-        {unit.story && unit.story.cliffhanger && (
-          // the hook into the next unit, told by the narrator
-          <div className="flex items-end gap-3">
-            <CastAvatar name={narrator} size={72} className="shrink-0" />
-            <SpeechBubble tail="left" className="min-w-0 flex-1">
-              <p className={EYEBROW}>{nextRow && nextRow.chunk && !plateauNext ? t('player.nextTeaser', { n: unit.nr + 1 }) : t('check.story')}</p>
-              <StoryCliffhanger story={unit.story} idPrefix={`${unitId}-recap-story`} className="mt-1 text-[1.0625rem] font-bold leading-snug text-game-text" />
-            </SpeechBubble>
-          </div>
-        )}
-
-        {nextRow && nextRow.title && !plateauNext && (
-          <p className="text-[1rem] font-semibold text-game-muted">
-            {t('player.nextUp')} <span className="font-extrabold text-game-text">{nextRow.title}</span>
-            {nextRow.minutesPlanned ? ` · ${t('player.minutes', { n: nextRow.minutesPlanned })}` : ''}
-          </p>
-        )}
-
-        {/* back to the Kapitel page: its table of contents, the Grammatik, the Wortschatz */}
-        <QuietButton onClick={openOverview}>{t('kap.overview')}</QuietButton>
-      </div>
+      </section>
     </Shell>
+  );
+}
+
+/** The recap's one fold: „Einen Lernschritt wiederholen" → the tip and the step list (a weak Check only). */
+function RepeatFold({ id, label, tip, children }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="mt-6 w-full max-w-md text-left">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        aria-controls={id}
+        className="mx-auto flex min-h-11 items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-[0.9375rem] font-extrabold text-course-ink hover:bg-course-wash"
+      >
+        {label}
+        <ChevronDown className={`h-4 w-4 shrink-0 transition-transform motion-reduce:transition-none ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
+      </button>
+      {open && (
+        <div id={id} className="mt-2 space-y-3">
+          <p className="text-[1rem] font-semibold text-game-muted">{tip}</p>
+          {children}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -749,15 +815,33 @@ function microOutputsSent(unit, sent, finished) {
 
 export default function UnitPlayerPage() {
   const { level: levelParam, nr: nrParam } = useParams();
-  const [params] = useSearchParams();
+  const [params, setParams] = useSearchParams();
+  const location = useLocation();
+  const navigate = useNavigate();
   const asked = Number(params.get('s'));
   const initialStep = Number.isInteger(asked) && asked >= 1 ? asked : null;
+  // ?view=guide: the Kapitel overview instead of the flow's screen (the home's book button links here)
+  const view = params.get('view') === 'guide' ? 'guide' : null;
   const level = normalizeLevel(levelParam);
   const nr = Number(nrParam);
   const { user, loading: authLoading } = useAuth();
   const [, t] = useV2Strings();
   const valid = Boolean(level) && Number.isInteger(nr) && nr >= 1 && nr <= 12;
   const data = useUnitData(valid ? level : null, valid ? nr : null);
+  // The guide is a URL, so the browser's back button and the X agree: the welcome-back and the recap
+  // PUSH it; an action inside it (a part, „Weiter", „Kapitel starten") REPLACES it with the flow's URL;
+  // its X goes back where the learner came from, or to the course home when the guide opened cold.
+  const openGuide = useCallback(() => {
+    setParams((prev) => { const next = new URLSearchParams(prev); next.set('view', 'guide'); return next; });
+  }, [setParams]);
+  const leaveGuide = useCallback(() => {
+    setParams((prev) => { const next = new URLSearchParams(prev); next.delete('view'); return next; }, { replace: true });
+  }, [setParams]);
+  const closeGuide = useCallback(() => {
+    const to = guideCloseTarget(location.key, v2Paths.home(level));
+    if (to === -1) navigate(-1);
+    else navigate(to, { replace: true });
+  }, [location.key, navigate, level]);
 
   if (!valid) return <Navigate to="/courses/" replace />;
   if (data.status === 'loading' || authLoading) {
@@ -774,5 +858,18 @@ export default function UnitPlayerPage() {
       </Shell>
     );
   }
-  return <UnitPlayer key={data.unit.id} level={level} unit={data.unit} manifest={data.manifest} user={user} initialStep={initialStep} />;
+  return (
+    <UnitPlayer
+      key={data.unit.id}
+      level={level}
+      unit={data.unit}
+      manifest={data.manifest}
+      user={user}
+      initialStep={initialStep}
+      view={view}
+      onGuide={openGuide}
+      onLeaveGuide={leaveGuide}
+      onCloseGuide={closeGuide}
+    />
+  );
 }

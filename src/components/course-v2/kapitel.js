@@ -232,6 +232,8 @@ export function stepWords(step, unitWords, max = 8) {
 
 // ---------------------------------------------------------------------------
 // The stages of one step: the textbook section strip and the numbered headings
+// (round 3, 2026-09-30: the step no longer draws them — one thing per screen, steps.js; the
+// helpers stay pure and tested for a guide view that wants the Lehrwerk numbering back)
 // ---------------------------------------------------------------------------
 
 // StepView's segment ids → the Lehrwerk skill they train. The input and its questions are one
