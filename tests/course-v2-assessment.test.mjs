@@ -406,3 +406,52 @@ test('the Plateau and closing pages play the runner, write only brand tokens and
   }
   assert.doesNotMatch(de, /'(?:as|kk)\.[A-Za-z]+': '[^']*\b(?:bestanden|Note \d|Punkte gesamt)/, 'no pass verdict, no total');
 });
+
+// ---------------------------------------------------------------------------
+// 8. The progress bar moves per task in EVERY section (ASSESS-04, 2026-09-30)
+// ---------------------------------------------------------------------------
+// The bar over a Plateau is the sections finished plus the open section's own fraction (`inner`),
+// so each section's view must report into setInner — the review's ItemRun and the reward's pieces
+// used to be left out, and the bar stood at 0 through all 20 review tasks, then jumped.
+
+test('every section view of the runner reports its progress into the bar: review, exam block, reward', () => {
+  const runner = read('src/pages/course-v2/AssessmentPlayer.jsx');
+  for (const tag of ['<ItemRun', '<ExamBlockView', '<RewardView']) {
+    const uses = [...runner.matchAll(new RegExp(`${tag}\\b[\\s\\S]*?/>`, 'g'))];
+    assert.ok(uses.length >= 1, `the runner renders ${tag}`);
+    for (const m of uses) assert.match(m[0], /\bonProgress=\{setInner\}/, `${tag} in the runner must carry onProgress={setInner}`);
+  }
+  // the bar: finished sections, plus the open one's inner fraction — never counted twice once it is finished
+  assert.match(runner, /const sectionProgress = sections\.length \? Math\.min\(1, \(doneCount \+ \(finished\.has\(s\.id\) \? 0 : inner\)\) \/ sections\.length\) : 0;/);
+  assert.match(runner, /const goTo = useCallback\(\(i\) => \{\s*setIndex\(i\);\s*setInner\(0\);/, 'a section opens with its fraction at 0');
+  assert.match(runner, /<GameTopBar[^>]*progress=\{progress\}/, 'the top bar shows the fraction');
+
+  // what the views report: ItemRun pos / queue.length on every advance (the review passes no
+  // `requeue`, so its queue stays at the 20 drawn items)
+  const itemRun = read('src/components/course-v2/ItemRun.jsx');
+  assert.match(itemRun, /onProgress = null \}\)/, 'ItemRun: onProgress is optional');
+  assert.match(itemRun, /useEffect\(\(\) => \{\s*if \(typeof progressSink\.current === 'function'\) progressSink\.current\(queue\.length \? Math\.min\(1, pos \/ queue\.length\) : 1\);\s*\}, \[pos, queue\.length\]\);/);
+  const review = runner.match(/<ItemRun\b[\s\S]*?\/>/)[0];
+  assert.doesNotMatch(review, /requeue/, 'the review never grows its queue: 20 tasks are 20 bar steps');
+
+  // the reward: pieces share the bar equally; a read screen (or the Projekt) stands at its piece's
+  // start, the piece's items move it the way ItemRun reports
+  const reward = read('src/components/course-v2/RewardView.jsx');
+  assert.match(reward, /onDone, onProgress = null \}\)/, 'RewardView: onProgress is optional');
+  assert.match(reward, /const sink = useRef\(onProgress\);\s*sink\.current = onProgress;/, 'held in a ref, like ItemRun and ExamBlockView');
+  assert.match(reward, /useEffect\(\(\) => \{\s*if \(phase !== 'items' && typeof sink\.current === 'function'\) sink\.current\(total \? Math\.min\(1, idx \/ total\) : 0\);\s*\}, \[idx, phase, total\]\);/);
+  assert.match(reward, /<ItemRun\b[\s\S]*?onProgress=\{\(f\) => report\(idx \+ f\)\}[\s\S]*?onFinish=\{nextPiece\}/);
+  assert.match(reward, /const report = \(f\) => \{ if \(typeof sink\.current === 'function'\) sink\.current\(total \? Math\.min\(1, f \/ total\) : 0\); \};/);
+  // ... and the model of it, as the bar will show it over a 7-section Plateau whose review has 20 items
+  // and whose reward is one Lesemagazin of 4 items: the review moves on every task, the reward on
+  // every question — no flat stretch longer than one screen anywhere.
+  const sections = 7;
+  const bar = (done, inner) => Math.round(Math.min(1, (done + inner) / sections) * 100);
+  const reviewTrail = Array.from({ length: 20 }, (_, pos) => bar(0, pos / 20));
+  assert.equal(reviewTrail[0], 0);
+  assert.equal(reviewTrail[19], 14, 'task 20 of the review stands just under the first finished section');
+  assert.ok(reviewTrail.every((v, i) => i === 0 || v >= reviewTrail[i - 1]), 'monotone');
+  assert.ok(new Set(reviewTrail).size >= 10, `the review bar takes distinct values (${new Set(reviewTrail).size}), not one`);
+  const rewardTrail = [bar(6, 0 / 1), ...Array.from({ length: 4 }, (_, pos) => bar(6, (0 + pos / 4) / 1))];
+  assert.deepEqual(rewardTrail, [86, 86, 89, 93, 96], 'read screen, then question 1..4 of the Lesemagazin');
+});

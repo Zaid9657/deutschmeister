@@ -158,13 +158,37 @@ test('the model sentence marks the form the card teaches, read off its table —
   assert.deepEqual(marked('rc.adjektiv-praedikativ'), [], 'nothing clear to mark: nothing marked');
   assert.ok(ruleForms(a11Cards.get('rc.praesens')).has('kommst'));
   assert.ok(!ruleForms(a11Cards.get('rc.praesens')).has('ich'), 'the persons column is a label, not a form');
-  for (const c of CARDS) {
-    const segs = emphasize(c.modelSentence, c);
-    assert.equal(segs.map((s) => s.text).join(''), c.modelSentence, `${c.id}: the segments must give the sentence back`);
+  // DaF review 2026-09-30 (DAF-01): only the taught form is marked — a column whose phrases are all
+  // the same („das / ein Heft" in both rows) teaches no change, so „Heft" is no accusative form; a
+  // separable prefix read off the „Ende" column („um.") is marked where it ends the clause, never as
+  // the preposition of „um 9.10 Uhr"
+  assert.deepEqual(marked('rc.akkusativ', 'Ich habe einen Kuli und ein Heft.'), ['einen'], 'u6’s own model sentence: the Akkusativ article alone');
+  assert.deepEqual(marked('rc.trennbare-verben-2'), ['fährt', 'ab'], 'the verb and its prefix, not the preposition');
+  assert.deepEqual(marked('rc.trennbare-verben-2', 'Wir steigen in Hannover um.'), ['steigen', 'um'], '…and the same prefix where it does end the clause');
+  assert.deepEqual(marked('rc.trennbare-verben-2', 'Wann kommt der Zug an? Um 10 Uhr.'), ['an'], 'a prefix before a question mark ends its clause; the „Um" of the time does not');
+  for (const id of ['heft', 'tasche', 'stifte']) assert.ok(!ruleForms(a11Cards.get('rc.akkusativ')).has(id) && !ruleForms(a11Cards.get('rc.kein')).has(id), `${id} is a noun, not a form`);
+  assert.ok(ruleForms(a11Cards.get('rc.trennbare-verben-2')).has('um'), 'the prefix is still a form of the card');
+  // the invariants hold for EVERY model sentence the course shows: the cards' own and every step's override
+  const sentences = [
+    ...CARDS.map((c) => ({ id: c.id, sentence: c.modelSentence, card: c })),
+    ...LEVELS.flatMap((l) => {
+      const byId = new Map(json(`${DATA}/${l}/rule-cards.json`).cards.map((c) => [c.id, c]));
+      return UNITS.filter((u) => u.id && u.id.startsWith(`${l}-`)).flatMap((u) => (u.steps || [])
+        .filter((s) => s && s.ruleCard && s.modelSentence)
+        .map((s) => ({ id: s.id, sentence: s.modelSentence, card: byId.get(s.ruleCard) || null })));
+    }),
+  ];
+  assert.ok(sentences.length > CARDS.length + 20, 'the step overrides are covered too');
+  for (const { id, sentence, card } of sentences) {
+    const segs = emphasize(sentence, card);
+    assert.equal(segs.map((s) => s.text).join(''), sentence, `${id}: the segments must give the sentence back`);
     const n = segs.filter((s) => s.strong).length;
-    const words = wordCount(c.modelSentence);
-    assert.ok(n <= Math.max(3, Math.floor(words * 0.4)), `${c.id}: ${n} of ${words} words marked`);
-    for (const s of segs.filter((x) => x.strong)) assert.match(s.text, /^[\p{L}\p{N}].*[\p{L}\p{N}]$|^[\p{L}\p{N}]$/u, `${c.id}: punctuation inside a mark`);
+    const words = wordCount(sentence);
+    assert.ok(n <= Math.max(3, Math.floor(words * 0.4)), `${id}: ${n} of ${words} words marked`);
+    for (const s of segs.filter((x) => x.strong)) {
+      assert.match(s.text, /^[\p{L}\p{N}].*[\p{L}\p{N}]$|^[\p{L}\p{N}]$/u, `${id}: punctuation inside a mark`);
+      assert.ok(ruleForms(card).has(s.text.toLowerCase()), `${id}: „${s.text}" is not a form the card teaches`);
+    }
   }
   assert.deepEqual(emphasize('', a11Cards.get('rc.praesens')), []);
   assert.deepEqual(emphasize('Ich komme.', null), [{ text: 'Ich komme.', strong: false }]);
@@ -247,6 +271,30 @@ test('the story keeps the unaided listen, reveals one line per „Weiter" and sp
   const iv = read(`${V2}/InputView.jsx`);
   assert.match(iv, /const gate = hasAudio && input\?\.transcriptAfterUnaidedListen !== false && playable;/);
   assert.match(read(`${V2}/StartView.jsx`), /<InputView/);
+});
+
+test('the paradigm table fits a phone, or says that it scrolls and can be scrolled by keyboard (DAF-06, A11Y-01)', () => {
+  // The „Auf einen Blick" screen cut the sein column of the Präsens table at 390 px and hid it at 360
+  // px behind a clean rounded border; axe flagged the overflow box as scrollable-region-focusable.
+  const rule = read(`${V2}/RuleCardView.jsx`);
+  const table = rule.slice(rule.indexOf('function RuleTable('), rule.indexOf('export function RuleCardSteps('));
+  // the stepped table is sized like the panel below sm, so a five-column A1 table fits 360 px (measured 312 in 324)
+  assert.match(table, /big \? 'text-\[0\.875rem\] sm:text-\[1rem\]' : 'text-\[0\.875rem\] sm:text-\[0\.9375rem\]'/, 'the big table shrinks to the panel size on a phone');
+  assert.match(table, /big \? 'px-1\.5 py-2\.5 sm:px-2\.5' : 'px-2 py-1\.5 sm:px-3 sm:py-2'/, 'the big cells shrink with it');
+  // the overflow box is measured; only a box that scrolls is a named, focusable region, and only
+  // while there is more to the right does its edge fade — nothing when the table fits
+  assert.match(table, /const \{ scrolls, more, onScroll \} = useOverflowX\(box\);/);
+  assert.match(table, /tabIndex=\{scrolls \? 0 : undefined\}\s+role=\{scrolls \? 'region' : undefined\}\s+aria-label=\{scrolls \? t\('card\.table'\) : undefined\}/, 'keyboard-reachable exactly when it scrolls');
+  assert.match(table, /\$\{more \? FADE_RIGHT : ''\}/, 'the scroll cue while there is more');
+  assert.match(rule, /const FADE_RIGHT = '\[mask-image:linear-gradient\(to_right,black_85%,transparent\)\]/, 'a mask, no palette colour');
+  const hook = rule.slice(rule.indexOf('function useOverflowX('), rule.indexOf('function RuleTable('));
+  assert.match(hook, /useLayoutEffect\(/, 'measured before paint');
+  assert.match(hook, /const scrolls = el\.scrollWidth > el\.clientWidth \+ 1;/);
+  assert.match(hook, /const more = scrolls && el\.scrollLeft \+ el\.clientWidth < el\.scrollWidth - 1;/);
+  assert.match(hook, /new ResizeObserver\(measure\)/, 'a table that widens later (the web font) is re-measured');
+  // the mask fades the scrolling box, never the bordered card around it
+  assert.match(table, /<div className=\{`bg-white \$\{big \? 'rounded-\[1\.25rem\] border-2 border-b-4 border-game-line p-1\.5'/);
+  assert.match(table, /className=\{`overflow-x-auto rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-course \$\{more \? FADE_RIGHT : ''\}`\}/);
 });
 
 test('the reference pages keep the panel and the list; the Kapitel page keeps its back matter', () => {

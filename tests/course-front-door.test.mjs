@@ -32,6 +32,15 @@ test('chromeFor: player routes are focused, the course home is slim, everything 
   // Course v2: the unit player and the Plateau are stages; the v2 home is the Duolingo-style
   // learn screen (its own four-tab bar, so no app BottomNav under it).
   for (const p of ['/course/a2.1/u/7', '/course/a2.1/u/7/', '/course/b1.2/p/2', '/course/a1.1/abschluss', '/course/a1.1/abschluss/']) assert.equal(chromeFor(p), 'player', p);
+  // The level reference pages (Grammatik · Wörter from the v2 tab bar) are stages too: ReferenceShell
+  // carries the X and the page tabs in its own sticky bar. Under 'full' the fixed site Navbar covered
+  // that bar (X and tabs unclickable) and the marketing Footer hung under the page.
+  for (const p of ['/course/a1.1/grammatik', '/course/a1.1/grammatik/', '/course/a1.1/wortschatz', '/course/a1.1/wortschatz/', '/course/b1.2/wortschatz']) {
+    assert.equal(chromeFor(p), 'player', p);
+    assert.equal(hasBottomNav(p), false, p);
+  }
+  // …but only the two pages themselves, never a deeper path or a look-alike.
+  for (const p of ['/course/a1.1/grammatik/x', '/course/a1.1/grammatikx', '/grammar/a1.1', '/course/grammatik']) assert.notEqual(chromeFor(p), 'player', p);
   for (const p of ['/course/a2.1/v2', '/course/a2.1/v2/']) {
     assert.equal(chromeFor(p), 'learn', p);
     assert.equal(hasBottomNav(p), false, p);

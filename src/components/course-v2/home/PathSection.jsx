@@ -115,8 +115,12 @@ export default function PathSection({ path, stepXp, withCast = false, onJump, li
   // Priya keeps the learner company beside the current node — decorative, and only on
   // the A1 levels, whose cast she is
   const companion = withCast ? <CastAvatar name="Priya" size={72} decorative /> : null;
+  // pb-32: a popover is absolute, so only this padding gives the scroll-adjust above room at
+  // the END of the path — with less, the trophy's popover ends under the tab bar because the
+  // document has nothing left to scroll (measured 2026-09-30 at 360×740, also with a 34px
+  // safe area and with the signed-in BottomNav under the tab bar)
   return (
-    <div id="lernpfad" className="mx-auto max-w-xl px-4 pb-8">
+    <div id="lernpfad" className="mx-auto max-w-xl px-4 pb-32">
       {/* the way back to the current step; hidden while a popover is open (it would cover it) */}
       {!openId && <JumpButton anchor={anchor} onJump={onJump} lifted={lifted} />}
       {path.sections.map((section, si) => {

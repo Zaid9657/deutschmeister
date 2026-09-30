@@ -75,15 +75,25 @@ export const chapterSections = (unit, course) => sectionsOf(unitOutline(unit, co
 export const sectionOf = (sections, stepId) => (sections || []).find((s) => s.id === stepId) || null;
 
 /**
+ * A writing Aufgabe that is a form to fill (SCHEMA §9 form_fill — sd1.s1, ta2.s1): its fields are
+ * checked deterministically (WritingTaskView FormTask), no KI reads it — so no label may promise
+ * „KI-Korrektur" on it. The fact is the task's own `form`, never a list of templates.
+ */
+export const isFormTask = (task) => Boolean(task && task.form && typeof task.form === 'object');
+
+/**
  * The table of contents of the Kapitel page: one row per step, in order, with its state —
- * 'done' (finished), 'current' (where „Weiter" leads) or 'open' — and its planned minutes.
+ * 'done' (finished), 'current' (where „Weiter" leads) or 'open' — its planned minutes, and
+ * `form` (a Schreiben row whose Aufgabe is a form to fill: „Schreiben (Formular)").
  */
 export function tocRows({ unit, course = null, finished = new Set(), currentIndex = -1 }) {
   const byStep = (unit && unit.minutesPlanned && unit.minutesPlanned.byStep) || {};
+  const steps = (unit && unit.steps) || [];
   return chapterSections(unit, course).map((s, i) => ({
     ...s,
     index: i,
     minutes: Number(byStep[s.id]) || null,
+    form: isFormTask((steps.find((st) => st && st.id === s.id) || {}).task),
     state: finished.has(s.id) ? 'done' : i === currentIndex ? 'current' : 'open',
   }));
 }
@@ -106,8 +116,31 @@ export function cardsByIds(ids, cards) {
   return (ids || []).map((id) => byId.get(id)).filter(Boolean);
 }
 
-/** The grammar point's short name for a rule card of this unit (the outline's label of the step that shows it). */
+/**
+ * The short name of every grammar point the manifest's outlines tag (outline `grammar.id` →
+ * `grammar.short`, the first wording wins): the name a rule card carries is its OWN spine's —
+ * „Verben mit Vokalwechsel" on rc.vokalwechsel-2 even where the step that shows it is tagged
+ * g.akkusativ (a1.1-u09-ls2: the Akkusativ step teaches „nehmen" on the way) — never the step's,
+ * or the chip contradicts the card under it (DaF review 2026-09-30, DAF-04).
+ */
+export function spineShortNames(course) {
+  const out = new Map();
+  for (const r of (course && course.units) || []) {
+    for (const s of (r && Array.isArray(r.outline) ? r.outline : [])) {
+      if (s && s.grammar && s.grammar.id && s.grammar.short && !out.has(s.grammar.id)) out.set(s.grammar.id, s.grammar.short);
+    }
+  }
+  return out;
+}
+
+/**
+ * The grammar point's short name for a rule card of this unit: the card's own spine as the
+ * outlines name it (spineShortNames), else the label of the step that shows it.
+ */
 export function cardTitle(unit, course, cardId) {
+  const card = cardsByIds([cardId], unit && unit.ruleCards)[0] || null;
+  const own = card && card.spine ? spineShortNames(course).get(card.spine) : null;
+  if (own) return own;
   const step = ((unit && unit.steps) || []).find((s) => s && s.ruleCard === cardId);
   const sec = step ? sectionOf(chapterSections(unit, course), step.id) : null;
   return (sec && sec.grammar && sec.grammar.short) || null;

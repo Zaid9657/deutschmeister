@@ -155,21 +155,36 @@ export function ruleScreens(card, modelSentence = null) {
 const clean = (s) => String(s || '').replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, '').toLowerCase();
 const DOTS = /^[…–-]$/;
 
+// The column of a sentence table that holds what goes to the end of the clause — the separable
+// prefix („auf.", „an?", „um."); its header reads „Ende".
+const END_HEADER = /^ende$/i;
+// A word ends a clause when the sentence ends with it or it carries the clause's punctuation
+// („auf.", „an?", „auf, und …").
+const CLAUSE_END = /[.!?,;:]$/;
+
 /**
- * The forms a rule card teaches, read off its table: every one-word cell of a column (the first
- * column holds the persons or labels, a „…" column the rest of the sentence — both skipped), and
- * in a column of phrases the one word that changes („mein Vater", „Ihr Vater" → mein, Ihr).
- * The tokens its `caseMarks` name count too. Lower case.
+ * The forms a rule card teaches, read off its table — { forms: Set, endOnly: Set }:
+ *   every one-word cell of a column (the first column holds the persons or labels, a „…" column
+ *   the rest of the sentence — both skipped), and in a column of phrases the one word that
+ *   changes („mein Vater", „Ihr Vater" → mein, Ihr). A column of phrases that are all the same
+ *   („das / ein Heft" in both rows of the Akkusativ table) teaches no change and gives no form —
+ *   or „Heft" would be read as an accusative form. The tokens its `caseMarks` name count too.
+ *   `endOnly` are the forms read off a column headed „Ende" and nowhere else: „ab", „an", „um"
+ *   of the separable verbs — which also spell a preposition („um 9.10 Uhr"), so the model
+ *   sentence marks them only where they end the clause (emphasize). Lower case.
  */
-export function ruleForms(card) {
+function readForms(card) {
   const table = Array.isArray(card && card.table) ? card.table : [];
   const header = table[0] || [];
   const body = table.slice(1);
   const cols = table.reduce((m, r) => Math.max(m, Array.isArray(r) ? r.length : 0), 0);
-  const out = new Set();
+  const forms = new Set();
+  const atEnd = new Set();
   for (let c = 0; c < cols; c += 1) {
     if (c === 0 && cols > 1) continue;
-    if (DOTS.test(String(header[c] || '').trim())) continue;
+    const head = String(header[c] || '').trim();
+    if (DOTS.test(head)) continue;
+    const out = END_HEADER.test(head) ? atEnd : forms;
     const multi = [];
     for (const row of body) {
       const ws = String((row && row[c]) || '').split(/\s+/).filter(Boolean).map(clean);
@@ -177,6 +192,7 @@ export function ruleForms(card) {
       else if (ws.length > 1) multi.push(ws);
     }
     if (multi.length < 2) continue;
+    if (multi.every((w) => w.join(' ') === multi[0].join(' '))) continue;
     let pre = 0;
     while (multi.every((w) => w.length > pre + 1 && w[pre] === multi[0][pre])) pre += 1;
     let suf = 0;
@@ -187,22 +203,36 @@ export function ruleForms(card) {
       if (mid.length === 1) out.add(mid[0]);
     }
   }
-  for (const m of (card && card.caseMarks) || []) out.add(clean(m && m.token));
-  out.delete('');
-  return out;
+  for (const m of (card && card.caseMarks) || []) forms.add(clean(m && m.token));
+  forms.delete('');
+  atEnd.delete('');
+  const endOnly = new Set([...atEnd].filter((w) => !forms.has(w)));
+  for (const w of atEnd) forms.add(w);
+  return { forms, endOnly };
 }
+
+/** The forms a rule card teaches (readForms), as one Set. */
+export const ruleForms = (card) => readForms(card).forms;
 
 /**
  * The model sentence as segments [{ text, strong }] with the taught forms marked — whitespace kept,
- * so the segments join back to the sentence. Nothing is marked when nothing matches, or when so much
- * would be (more than 3 words and 40 % of the sentence) that the mark would stop meaning anything.
+ * so the segments join back to the sentence. A form the card only lists under „Ende" is marked
+ * where it ends the clause, never as the preposition it also spells („Der Zug fährt um 9.10 Uhr
+ * ab." → fährt, ab). Nothing is marked when nothing matches, or when so much would be (more than
+ * 3 words and 40 % of the sentence) that the mark would stop meaning anything.
  */
 export function emphasize(sentence, card) {
   const src = String(sentence || '');
   if (!src) return [];
-  const forms = ruleForms(card);
+  const { forms, endOnly } = readForms(card);
   const parts = src.split(/(\s+)/);
-  const hit = parts.map((p) => (/\S/.test(p) ? forms.has(clean(p)) : false));
+  const lastWord = parts.reduce((m, p, i) => (/\S/.test(p) ? i : m), -1);
+  const hit = parts.map((p, i) => {
+    if (!/\S/.test(p)) return false;
+    const w = clean(p);
+    if (!forms.has(w)) return false;
+    return !endOnly.has(w) || i === lastWord || CLAUSE_END.test(p);
+  });
   const words = parts.filter((p) => /\S/.test(p)).length;
   const n = hit.filter(Boolean).length;
   if (!n || n > Math.max(3, Math.floor(words * 0.4))) return [{ text: src, strong: false }];

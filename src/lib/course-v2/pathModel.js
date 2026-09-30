@@ -40,7 +40,8 @@ import { DONE_STATUSES } from './completion.js';
 import { XP, dailyGoalMinutes } from './gamify.js';
 import { planSummary } from './pacePlan.js';
 import { sectionsOf, chapterSummary } from './curriculum.js';
-import { teilLabel } from '../../components/course-v2/content.js';
+import { teilLabel, laneLabel } from '../../components/course-v2/content.js';
+import { tv } from '../../components/course-v2/strings.js';
 
 const STEP = (kind, icon) => Object.freeze({ kind, icon });
 
@@ -650,15 +651,18 @@ export function paceOptions(manifest, { remainingSteps = 0, today = new Date() }
   });
 }
 
-/** „22. Dezember" (this year) or „16. März 2027" — the plan's finish date, de-DE. */
-export function formatFinishDate(date, today = new Date()) {
+/** The date locale of each chrome language (strings.js): „22. Dezember" | "22 December". */
+export const DATE_LOCALE = Object.freeze({ de: 'de-DE', en: 'en-GB' });
+
+/** „22. Dezember" (this year) or „16. März 2027" — the plan's finish date, de-DE unless a locale is given. */
+export function formatFinishDate(date, today = new Date(), locale = DATE_LOCALE.de) {
   const d = date instanceof Date ? date : new Date(date);
   if (Number.isNaN(d.getTime())) return '';
   const opts = d.getFullYear() === today.getFullYear()
     ? { day: 'numeric', month: 'long' }
     : { day: 'numeric', month: 'long', year: 'numeric' };
   try {
-    return d.toLocaleDateString('de-DE', opts);
+    return d.toLocaleDateString(locale || DATE_LOCALE.de, opts);
   } catch {
     return d.toISOString().slice(0, 10);
   }
@@ -811,73 +815,108 @@ export function shortPromise(text, max = 120) {
   return both.length <= max ? both : s[0];
 }
 
+/** A can-do's head ends in its verb: an infinitive („fragen", „sammeln", „erinnern", „tun", „sein"). */
+const VERB_END = /(?:e[lr]?n|tun|sein)$/;
+
 /**
- * One can-do as one short line: its first part before „, " or „ und " while that part is
- * still a phrase (two words or more), capitalised. 'sich vorstellen und andere … fragen'
- * → 'Sich vorstellen'; 'Ihre Familie vorstellen' stays. The full list is in the Kursplan.
+ * One can-do as one short line: its first part before a „, " or „ und " that is still a
+ * phrase — two words or more AND ending in a verb — capitalised; when the first cut leaves
+ * no verb, the next cut is tried. 'sich vorstellen und andere … fragen' → 'Sich vorstellen';
+ * 'im Kurs und im Büro um etwas bitten und …' → 'Im Kurs und im Büro um etwas bitten' (never
+ * the stub „Im Kurs"); 'Ihre Familie vorstellen' stays. The full list is in the Kursplan.
  */
 export function outcomeLine(text) {
   const s = String(text || '').replace(/\s+/g, ' ').trim();
   if (!s) return '';
-  const cuts = [', ', ' und '].map((m) => s.indexOf(m)).filter((i) => i > 0);
+  const cuts = [];
+  for (const m of [', ', ' und ']) {
+    for (let i = s.indexOf(m); i > 0; i = s.indexOf(m, i + 1)) cuts.push(i);
+  }
   let out = s;
-  if (cuts.length) {
-    const head = s.slice(0, Math.min(...cuts)).trim();
-    if (head.split(' ').length >= 2) out = head;
+  for (const cut of cuts.sort((a, b) => a - b)) {
+    const head = s.slice(0, cut).trim();
+    if (head.split(' ').length >= 2 && VERB_END.test(head)) {
+      out = head;
+      break;
+    }
   }
   return out.charAt(0).toUpperCase() + out.slice(1);
 }
 
-/** „12 Kapitel · 4 Module · Abschlusstest" — counted from the manifest, never typed. */
-export function courseShape(manifest) {
+/** „12 Kapitel · 4 Module · Abschlusstest" — counted from the manifest, never typed; in the chrome language. */
+export function courseShape(manifest, lang = 'de') {
   const m = manifest || {};
   const units = Array.isArray(m.units) ? m.units.length : 0;
   const modules = Array.isArray(m.etappen) ? m.etappen.length : 0;
   const halbtest = m.closing && m.closing.halbtest && typeof m.closing.halbtest === 'object' ? Object.keys(m.closing.halbtest).length : 0;
   const closing = halbtest > 0 || Number(m.counts && m.counts.closingBlocks) > 0;
   const parts = [];
-  if (units) parts.push(`${units} Kapitel`);
-  if (modules) parts.push(`${modules} ${modules === 1 ? 'Modul' : 'Module'}`);
-  if (closing) parts.push('Abschlusstest');
+  if (units) parts.push(units === 1 ? tv('welcome.chapterOne', lang) : tv('welcome.chapters', lang, { n: units }));
+  if (modules) parts.push(modules === 1 ? tv('welcome.moduleOne', lang) : tv('welcome.modules', lang, { n: modules }));
+  if (closing) parts.push(tv('welcome.finalTest', lang));
   return parts.join(' · ') || null;
 }
 
 /**
- * The welcome's content. A screen whose data the level lacks is left out (no showcase →
- * no „hallo" and no „ziele"); no screen at all → no welcome.
- * → { code, narrator ('Priya' on the A1 levels, whose cast she is | null), promise, heading,
- *     outcomes: [≤ 3 short lines], shape, screens: ['hallo' | 'ziele' | 'tempo'] }
+ * Three can-dos spread over the level — the first, one about two thirds in, the last — so
+ * the promise reaches past Kapitel 1–3 („Sich vorstellen · Im Café bestellen · Ihren Plan
+ * mit Deutsch nennen"), never a level-specific list of indices. Three or fewer: all of them.
  */
-export function welcomeModel(manifest, level) {
+export function spreadOutcomes(lines) {
+  const all = [...new Set((Array.isArray(lines) ? lines : []).map(outcomeLine).filter(Boolean))];
+  if (all.length <= 3) return all;
+  const n = all.length;
+  return [...new Set([0, Math.floor((n * 2) / 3), n - 1])].map((i) => all[i]);
+}
+
+/**
+ * The welcome's content. A screen whose data the level lacks is left out (no showcase →
+ * no „hallo" and no „ziele"); no screen at all → no welcome. Chrome strings follow `lang`;
+ * the promise and the can-dos are content and stay German.
+ * → { code, narrator ('Priya' on the A1 levels, whose cast she is | null), promise, heading,
+ *     outcomes: [≤ 3 short lines spread over the level], shape,
+ *     note ('Kostenlos · Auf dem Weg zum Goethe-Zertifikat A1': the free flag from
+ *     manifest.priceKey === null — the Kursplan's one source — and the primary lane; null
+ *     when neither applies), screens: ['hallo' | 'ziele' | 'tempo'] }
+ */
+export function welcomeModel(manifest, level, { lang = 'de' } = {}) {
   const code = levelCode(level);
   const sc = (manifest && manifest.showcase) || {};
   const promise = shortPromise(sc.promiseDe);
-  const outcomes = [...new Set((Array.isArray(sc.outcomesDe) ? sc.outcomesDe : []).map(outcomeLine).filter(Boolean))].slice(0, 3);
+  const outcomes = spreadOutcomes(sc.outcomesDe);
   const hasPace = Boolean(manifest && manifest.pace && typeof manifest.pace === 'object' && Object.keys(manifest.pace).length);
   const l = normalizeLevel(level) || String(level || '').toLowerCase();
+  const free = Boolean(manifest) && manifest.priceKey === null;
+  const lane = (manifest && manifest.lanes && manifest.lanes.primary) || null;
+  const note = [free ? tv('welcome.free', lang) : null, lane ? tv('welcome.lane', lang, { exam: laneLabel(lane) }) : null].filter(Boolean).join(' · ') || null;
   return {
     code,
     narrator: l.startsWith('a1') ? 'Priya' : null,
     promise,
-    heading: `Das lernen Sie in ${code}`,
+    heading: tv('welcome.outcomes', lang, { code }),
     outcomes,
-    shape: courseShape(manifest),
+    shape: courseShape(manifest, lang),
+    note,
     screens: [promise ? 'hallo' : null, outcomes.length ? 'ziele' : null, hasPace ? 'tempo' : null].filter(Boolean),
   };
 }
 
+const PACE_NAME_KEY = Object.freeze({ leicht: 'welcome.paceLeicht', standard: 'welcome.paceStandard', intensiv: 'welcome.paceIntensiv' });
+
 /**
  * One pace tile of the welcome (paceOptions → the three big tiles of „Wie viel Zeit haben
- * Sie pro Tag?"). → { id, name, title ('35 Minuten'), days ('an 4 Tagen pro Woche'), finish }
+ * Sie pro Tag?"), in the chrome language.
+ * → { id, name ('Standard'), title ('35 Minuten' | '35 minutes'), days ('an 4 Tagen pro
+ *     Woche' | 'on 4 days a week'), finish ('fertig etwa am 22. Dezember' | 'done around 22 December') }
  */
-export function paceTile(option, { allDone = false, today = new Date() } = {}) {
+export function paceTile(option, { allDone = false, today = new Date(), lang = 'de' } = {}) {
   const o = option || {};
-  const finish = !allDone && o.weeks > 0 && o.finishDate ? formatFinishDate(o.finishDate, today) : '';
+  const finish = !allDone && o.weeks > 0 && o.finishDate ? formatFinishDate(o.finishDate, today, DATE_LOCALE[lang] || DATE_LOCALE.de) : '';
   return {
     id: o.id,
-    name: o.name,
-    title: `${o.minutes} Minuten`,
-    days: o.learningDays ? `an ${o.learningDays} Tagen pro Woche` : null,
-    finish: finish ? `fertig etwa am ${finish}` : null,
+    name: PACE_NAME_KEY[o.id] ? tv(PACE_NAME_KEY[o.id], lang) : o.name,
+    title: tv('welcome.minutes', lang, { n: o.minutes }),
+    days: o.learningDays ? tv('welcome.days', lang, { n: o.learningDays }) : null,
+    finish: finish ? tv('welcome.finish', lang, { date: finish }) : null,
   };
 }

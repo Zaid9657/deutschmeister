@@ -137,7 +137,8 @@ export default function AssessmentPlayer({ level, doc, manifest, user }) {
   const [answers, setAnswers] = useState(() => new Map());
   const [phase, setPhase] = useState('loading'); // loading | start | section | results
   const [index, setIndex] = useState(0);
-  // progress inside the open section (an exam block reports it per task), reset on every section
+  // progress inside the open section — every section's view reports it per task (the review's
+  // ItemRun, an exam block, the reward's pieces), so the bar never stands still; reset on every section
   const [inner, setInner] = useState(0);
   const [sessionRuns, setSessionRuns] = useState(() => new Map());
   const pending = useRef(new Map()); // section id → attempts not yet written
@@ -313,6 +314,7 @@ export default function AssessmentPlayer({ level, doc, manifest, user }) {
             level={level}
             attempt={runsOf(s.id)}
             onAttempt={onAttempt}
+            onProgress={setInner}
             onFinish={(r) => finishSection(s, r)}
           />
         </div>
@@ -347,7 +349,7 @@ export default function AssessmentPlayer({ level, doc, manifest, user }) {
         </>
       );
     } else if (s.kind === 'reward') {
-      body = <RewardView key={s.id} reward={s.part} unitId={docId} stepId={s.id} level={level} lines={lines} onAttempt={onAttempt} onDone={() => finishSection(s, null)} />;
+      body = <RewardView key={s.id} reward={s.part} unitId={docId} stepId={s.id} level={level} lines={lines} onAttempt={onAttempt} onProgress={setInner} onDone={() => finishSection(s, null)} />;
     }
     const sectionProgress = sections.length ? Math.min(1, (doneCount + (finished.has(s.id) ? 0 : inner)) / sections.length) : 0;
     return (

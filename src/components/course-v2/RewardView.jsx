@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import GameButton, { QuietButton } from './GameButton.jsx';
 import InputView from './InputView.jsx';
 import ItemRun from './ItemRun.jsx';
@@ -25,13 +25,25 @@ export function rewardPieces(reward) {
  * Lernmodus item, but no result of theirs is shown or counted, and „Überspringen" is always there.
  *
  * onAttempt(payload) per answered item; onDone() once, when the learner moves on.
+ * onProgress(fraction) (optional) — how far through the reward the learner is, 0..1, for the
+ * player's progress bar: the pieces share it equally, a piece's read screen opens at its start
+ * and its items move it the way ItemRun reports (the exam blocks' rule).
  */
-export default function RewardView({ reward, unitId, stepId, level, lines = null, onAttempt, onDone }) {
+export default function RewardView({ reward, unitId, stepId, level, lines = null, onAttempt, onDone, onProgress = null }) {
   const [, t] = useV2Strings();
   const pieces = useMemo(() => rewardPieces(reward), [reward]);
   const [idx, setIdx] = useState(0);
   const [phase, setPhase] = useState('read'); // read | items
   const piece = pieces[idx] || null;
+  const total = pieces.length;
+
+  const sink = useRef(onProgress);
+  sink.current = onProgress;
+  const report = (f) => { if (typeof sink.current === 'function') sink.current(total ? Math.min(1, f / total) : 0); };
+  // a read screen (or the Projekt, which has no items) stands at its piece's start; the items report themselves
+  useEffect(() => {
+    if (phase !== 'items' && typeof sink.current === 'function') sink.current(total ? Math.min(1, idx / total) : 0);
+  }, [idx, phase, total]);
 
   const nextPiece = () => {
     if (idx + 1 >= pieces.length) { if (typeof onDone === 'function') onDone(); return; }
@@ -88,6 +100,7 @@ export default function RewardView({ reward, unitId, stepId, level, lines = null
             stepId={stepId}
             level={level}
             onAttempt={onAttempt}
+            onProgress={(f) => report(idx + f)}
             onFinish={nextPiece}
           />
         </div>

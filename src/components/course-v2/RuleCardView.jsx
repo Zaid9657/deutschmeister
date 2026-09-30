@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Puzzle } from 'lucide-react';
 import Chip from '../ui/Chip.jsx';
 import GameButton from './GameButton.jsx';
@@ -67,23 +67,78 @@ export default function RuleCardView({ card, modelSentence = null, compact = fal
   );
 }
 
-/** A rule card's paradigm table on white (a wide one scrolls inside its own box, never the page). */
+// The right edge of a table that has more to its right fades out (a mask — colour-neutral, no
+// palette class, no copy), the standard cue that it continues; it goes once the box is scrolled to
+// the end. The same idiom as `.marquee` in src/index.css.
+const FADE_RIGHT = '[mask-image:linear-gradient(to_right,black_85%,transparent)] [-webkit-mask-image:linear-gradient(to_right,black_85%,transparent)]';
+
+/**
+ * Does the box scroll sideways (`scrolls`), and is there more to its right (`more`)? Measured
+ * before paint, again when the box or its content resizes (the web font arriving widens a table)
+ * and on every scroll (`onScroll`). Nothing without a DOM.
+ */
+function useOverflowX(ref) {
+  const [state, setState] = useState({ scrolls: false, more: false });
+  const measure = useCallback(() => {
+    const el = ref.current;
+    if (!el) return;
+    const scrolls = el.scrollWidth > el.clientWidth + 1;
+    const more = scrolls && el.scrollLeft + el.clientWidth < el.scrollWidth - 1;
+    setState((s) => (s.scrolls === scrolls && s.more === more ? s : { scrolls, more }));
+  }, [ref]);
+  useLayoutEffect(() => {
+    measure();
+    const el = ref.current;
+    if (el && typeof ResizeObserver === 'function') {
+      const ro = new ResizeObserver(measure);
+      ro.observe(el);
+      if (el.firstElementChild) ro.observe(el.firstElementChild);
+      return () => ro.disconnect();
+    }
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, [measure, ref]);
+  return { scrolls: state.scrolls, more: state.more, onScroll: measure };
+}
+
+/**
+ * A rule card's paradigm table on white. A wide one scrolls inside its own box, never the page —
+ * and the box shows it: while there is more to the right its edge fades (FADE_RIGHT), and only
+ * while it scrolls at all it is a keyboard-reachable region (tabIndex 0, role region, named
+ * „Auf einen Blick") — a table that fits adds no Tab stop (axe scrollable-region-focusable,
+ * a11y review 2026-09-30, A11Y-01). The stepped (`big`) variant sizes its cells as the panel does
+ * below `sm`, so a five-column A1 verb table (rc.praesens: Pronomen · wohnen · kommen · heißen ·
+ * sein) fits a 360 px phone without scrolling — before, the sein column was cut off with nothing to
+ * say the table went on (DaF review 2026-09-30, DAF-06).
+ */
 function RuleTable({ card, big = false }) {
+  const [, t] = useV2Strings();
+  const box = useRef(null);
+  const { scrolls, more, onScroll } = useOverflowX(box);
   return (
-    <div className={`overflow-x-auto bg-white ${big ? 'rounded-[1.25rem] border-2 border-b-4 border-game-line p-1.5' : '-mx-2 mt-4 rounded-xl sm:mx-0'}`}>
-      <table className={`w-full border-collapse text-left ${big ? 'text-[1rem]' : 'text-[0.875rem] sm:text-[0.9375rem]'}`} lang="de">
-        <tbody>
-          {card.table.map((row, r) => (
-            <tr key={r} className="border-t-2 border-game-line first:border-t-0">
-              {row.map((cell, c) => (
-                <td key={c} className={`align-top font-semibold text-game-text ${big ? 'px-2.5 py-2.5' : 'px-2 py-1.5 sm:px-3 sm:py-2'}`}>
-                  <Cell text={cell} caseMarks={card.caseMarks} />
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className={`bg-white ${big ? 'rounded-[1.25rem] border-2 border-b-4 border-game-line p-1.5' : '-mx-2 mt-4 rounded-xl sm:mx-0'}`}>
+      <div
+        ref={box}
+        onScroll={onScroll}
+        tabIndex={scrolls ? 0 : undefined}
+        role={scrolls ? 'region' : undefined}
+        aria-label={scrolls ? t('card.table') : undefined}
+        className={`overflow-x-auto rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-course ${more ? FADE_RIGHT : ''}`}
+      >
+        <table className={`w-full border-collapse text-left ${big ? 'text-[0.875rem] sm:text-[1rem]' : 'text-[0.875rem] sm:text-[0.9375rem]'}`} lang="de">
+          <tbody>
+            {card.table.map((row, r) => (
+              <tr key={r} className="border-t-2 border-game-line first:border-t-0">
+                {row.map((cell, c) => (
+                  <td key={c} className={`align-top font-semibold text-game-text ${big ? 'px-1.5 py-2.5 sm:px-2.5' : 'px-2 py-1.5 sm:px-3 sm:py-2'}`}>
+                    <Cell text={cell} caseMarks={card.caseMarks} />
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

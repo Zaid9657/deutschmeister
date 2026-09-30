@@ -10,6 +10,7 @@ import PlanOverview from '../../components/course-v2/home/PlanOverview.jsx';
 import TabBar from '../../components/course-v2/home/TabBar.jsx';
 import TopBar from '../../components/course-v2/home/TopBar.jsx';
 import Welcome from '../../components/course-v2/home/Welcome.jsx';
+import { useV2Strings } from '../../components/course-v2/strings.js';
 import { normalizeLevel, levelCode, bandOf } from '../../lib/course-v2/ids.js';
 import { courseHomeModel } from '../../lib/course-v2/homeModel.js';
 import { planSummary } from '../../lib/course-v2/pacePlan.js';
@@ -102,8 +103,10 @@ export function CourseHomeV2({ level, manifest, state, goal }) {
     safeSet(paceStorageKey(level), p);
   }, [level]);
 
-  // The welcome: decided once, when the page mounts with the learner's state.
-  const welcome = useMemo(() => welcomeModel(manifest, level), [manifest, level]);
+  // The welcome: decided once, when the page mounts with the learner's state; its chrome
+  // in the lesson language (the player's), its promise and can-dos German.
+  const [lang] = useV2Strings();
+  const welcome = useMemo(() => welcomeModel(manifest, level, { lang }), [manifest, level, lang]);
   const [welcomeOpen, setWelcomeOpen] = useState(
     () => welcome.screens.length > 0 && showWelcome(state, safeGet(welcomeStorageKey(level))),
   );
@@ -194,7 +197,7 @@ export function CourseHomeV2({ level, manifest, state, goal }) {
       <CourseTheme>
         <Welcome
           model={welcome}
-          tiles={options.map((o) => paceTile(o, { allDone }))}
+          tiles={options.map((o) => paceTile(o, { allDone, lang }))}
           pace={pace}
           onPace={choosePace}
           onDone={finishWelcome}

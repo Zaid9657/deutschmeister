@@ -1,3 +1,4 @@
+import { useLayoutEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { X } from 'lucide-react';
 import CourseTheme from './CourseTheme.jsx';
@@ -20,6 +21,18 @@ export const referencePaths = {
  */
 export default function ReferenceShell({ level, page, title, lead = null, children }) {
   const [lang, t] = useV2Strings();
+  // Open at the top. A client-side route change keeps the previous page's scroll offset (no
+  // ScrollToTop in App.jsx), so „Alle Grammatik von A1.1" tapped 3000px down a Kapitel guide opened
+  // this page 3000px down — clamped into whatever stood at the bottom. Before paint, so no frame
+  // of the wrong place; 'instant' because src/index.css sets html { scroll-behavior: smooth }.
+  // Keyed on [level, page] so the Grammatik ↔ Wörter tab switch resets too, while ChapterJump's
+  // in-page #kapitel-n / #wk-n links (a hash change only) do not. A fragment already in the URL
+  // is the browser's to honour, not ours.
+  useLayoutEffect(() => {
+    if (typeof window === 'undefined' || typeof window.scrollTo !== 'function') return;
+    if (window.location.hash) return;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [level, page]);
   const tab = (key, skill) => {
     const current = page === key;
     return (

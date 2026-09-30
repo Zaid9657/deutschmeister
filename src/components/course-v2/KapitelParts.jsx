@@ -77,7 +77,7 @@ export function TocRow({ letter = null, icon = null, eyebrow = null, title, line
           {done ? (
             <Check className="h-6 w-6 rounded-full bg-game-right p-1 text-white" strokeWidth={3.5} />
           ) : current ? (
-            <span className="rounded-lg bg-course px-2 py-1 text-[0.6875rem] font-extrabold uppercase tracking-[0.08em] text-white">{t('kap.now')}</span>
+            <span className="rounded-lg bg-course-ink px-2 py-1 text-[0.6875rem] font-extrabold uppercase tracking-[0.08em] text-white">{t('kap.now')}</span>
           ) : (
             <ChevronRight className="h-5 w-5 text-game-muted" />
           )}

@@ -76,7 +76,8 @@ export function StoryScreen({
  *   the title and one quiet line (level · Modul · parts · minutes);
  *   the can-dos (`goals`: the player's own panel, ticked once proven — it owns the proof reading);
  *   INHALT — Einstieg · Folge n, then A / B / C (input, grammar, skills, tasks, minutes),
- *     Prüfungstraining, Sprechen (mit KI), Schreiben (mit KI-Korrektur), Kapiteltest: every row opens
+ *     Prüfungstraining, Sprechen (mit KI), Schreiben (mit KI-Korrektur — or „Formular" where the
+ *     Aufgabe is a form checked without the KI), Kapiteltest: every row opens
  *     its part; the Prüfungsfokus folded in one small line;
  *   ZUM NACHSCHLAGEN — Grammatik, Wortschatz, Redemittel, each closed until tapped (round 2 opened
  *     all three on a finished chapter: a 7 000 px page);
@@ -129,7 +130,8 @@ export default function UnitIntro({
     const named = {
       pruefung: { icon: 'pruefung', title: t('kap.pruefung') },
       sprechen: { icon: 'sprechen', title: t('kap.sprechen') },
-      schreiben: { icon: 'schreiben', title: t('kap.schreiben') },
+      // a form to fill is checked without the KI (kapitel.js tocRows `form`): its row says so
+      schreiben: { icon: 'schreiben', title: t(r.form ? 'kap.schreibenForm' : 'kap.schreiben') },
       ueberarbeiten: { icon: 'schreiben', title: t('kap.ueberarbeiten') },
       check: { icon: 'test', title: t('kap.test') },
     }[r.kind] || { icon: r.skills[0] || 'ueben', title: r.title || '' };

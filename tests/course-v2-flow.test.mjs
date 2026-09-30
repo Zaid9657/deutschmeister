@@ -107,7 +107,12 @@ test('the Folge and its gist question are two screens; the Start can open on eit
   const folge = sv.slice(sv.indexOf('// the episode: listen first'));
   assert.match(folge, /<InputView/);
   assert.doesNotMatch(folge, /<ItemView/, 'the transcript alone on its screen');
-  assert.match(folge, /\{showNext && \(\s*<StickyAction>\s*<GameButton onClick=\{gistItem \? toGist : toBonusOrSteps\}>/, 'one „Weiter" once the episode is heard');
+  // WT-08: the bar is always there (one instruction, one action, like StoryInput's listen screen) and
+  // the button grey — „not yet" — until the episode is heard; the section keeps room for the fixed bar
+  assert.match(folge, /<StickyAction>\s*<GameButton disabled=\{!showNext\} onClick=\{gistItem \? toGist : toBonusOrSteps\}>\{t\('item\.next'\)\}<\/GameButton>\s*<\/StickyAction>/, 'one „Weiter", grey until the episode is heard');
+  assert.doesNotMatch(folge, /showNext && \(/, 'the bar is never withheld — only the button is disabled');
+  assert.match(folge, /<section className="mx-auto w-full max-w-2xl pb-32 sm:pb-0" data-step-id=\{stepId\}>/, 'room for the fixed bar on a phone, unconditionally');
+  assert.match(folge, /const showNext = heard \|\| !canListen;/, 'heard, or nothing to hear');
   const page = read(PAGE);
   assert.match(page, /<StartViewSlot key=\{`start-\$\{entry \|\| 'story'\}`\}/, 'a new entry mounts a fresh Start');
 });

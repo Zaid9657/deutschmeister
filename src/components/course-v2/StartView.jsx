@@ -173,13 +173,15 @@ export default function StartView({ unit, level, onDone, onAttempt, names = null
     );
   }
 
-  // the episode: listen first, the transcript after — then ONE „Weiter" to its gist question
+  // the episode: listen first, the transcript after — then ONE „Weiter" to its gist question. The bar
+  // is always there and the button grey until the episode is heard (StoryInput's „not yet"), so the
+  // opener reads like every other listen screen: one instruction, one action (WT-08).
   const folgeLines = (folge && folge.lines) || [];
   const canListen = folgeLines.length > 0 && canPlay(unit.id, folgeLines[0].id);
   const showNext = heard || !canListen;
   const toGist = () => { setStage('gist'); top(); };
   return (
-    <section className={`mx-auto w-full max-w-2xl ${showNext ? 'pb-32 sm:pb-0' : ''}`} data-step-id={stepId}>
+    <section className="mx-auto w-full max-w-2xl pb-32 sm:pb-0" data-step-id={stepId}>
       {eyebrow}
       {folge && (
         <div className="mt-1">
@@ -191,11 +193,9 @@ export default function StartView({ unit, level, onDone, onAttempt, names = null
           />
         </div>
       )}
-      {showNext && (
-        <StickyAction>
-          <GameButton onClick={gistItem ? toGist : toBonusOrSteps}>{t('item.next')}</GameButton>
-        </StickyAction>
-      )}
+      <StickyAction>
+        <GameButton disabled={!showNext} onClick={gistItem ? toGist : toBonusOrSteps}>{t('item.next')}</GameButton>
+      </StickyAction>
     </section>
   );
 }

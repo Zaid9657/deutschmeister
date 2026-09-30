@@ -23,8 +23,9 @@ import {
   referenceLinks, stepLabel, groupTeile, teilSummary, kapitelSummary, kommunikationOf, shortLabel, unitSections,
   PACE_NAME_DE, paceStorageKey, resolvePace, paceOptions, formatFinishDate, STEP_XP,
   guideHref, nodeAnchor, currentAnchor, placeholderNodes, stepOfLine, nodePopover, stopPopover, finishNode, unitPercent,
-  goalRing, welcomeStorageKey, showWelcome, shortPromise, outcomeLine, courseShape, welcomeModel, paceTile,
+  goalRing, welcomeStorageKey, showWelcome, shortPromise, outcomeLine, spreadOutcomes, courseShape, welcomeModel, paceTile, DATE_LOCALE,
 } from '../src/lib/course-v2/pathModel.js';
+import { V2_STRINGS } from '../src/components/course-v2/strings.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -462,6 +463,10 @@ test('pace: page pick > learner_goals > this device > default; minutes and weeks
   assert.equal(formatFinishDate(opts[1].finishDate, today), '22. Dezember');
   assert.equal(formatFinishDate(opts[0].finishDate, today), '23. Februar 2027', 'another year carries the year');
   assert.equal(formatFinishDate('nonsense', today), '');
+  // the English chrome reads the same date in its own form
+  assert.deepEqual(DATE_LOCALE, { de: 'de-DE', en: 'en-GB' });
+  assert.equal(formatFinishDate(opts[1].finishDate, today, DATE_LOCALE.en), '22 December');
+  assert.equal(formatFinishDate(opts[0].finishDate, today, DATE_LOCALE.en), '23 February 2027');
 });
 
 // ---------------------------------------------------------------------------
@@ -547,10 +552,23 @@ test('the welcome\'s screens: Priya and the promise, three things to learn, the 
   assert.equal(w.narrator, 'Priya');
   assert.equal(w.promise, 'Sie lernen Deutsch mit Priya. Mit ihr lernen Sie Schritt für Schritt Ihre ersten Gespräche auf Deutsch.');
   assert.equal(w.heading, 'Das lernen Sie in A1.1');
-  assert.deepEqual(w.outcomes, ['Sich vorstellen', 'Ihren Namen buchstabieren', 'Ihre Familie vorstellen']);
+  // the three can-dos span the level (first, about two thirds in, last) — not Kapitel 1–3
+  assert.deepEqual(w.outcomes, ['Sich vorstellen', 'Im Café bestellen', 'Ihren Plan mit Deutsch nennen']);
   assert.ok(w.outcomes.length <= 3, 'no list longer than three');
+  const firstThree = A11.showcase.outcomesDe.slice(0, 3).map(outcomeLine);
+  assert.ok(w.outcomes.some((o) => !firstThree.includes(o)), 'the promise reaches past the first three can-dos');
+  assert.equal(w.outcomes[w.outcomes.length - 1], outcomeLine(A11.showcase.outcomesDe[A11.showcase.outcomesDe.length - 1]), 'the last can-do closes the list');
+  assert.deepEqual(spreadOutcomes(['a b', 'c d', 'e f', 'g h']), ['A b', 'E f', 'G h'], 'first, two thirds, last');
+  assert.deepEqual(spreadOutcomes(['eins zwei', 'drei vier']), ['Eins zwei', 'Drei vier'], 'three or fewer: all');
   assert.equal(w.shape, '12 Kapitel · 4 Module · Abschlusstest');
   assert.equal(w.shape, `${A11.units.length} Kapitel · ${A11.etappen.length} Module · Abschlusstest`, 'counted, never typed');
+  // one muted line under the shape: the free flag from priceKey (the Kursplan's source) and the lane
+  assert.equal(A11.priceKey, null);
+  assert.equal(A11.lanes.primary, 'sd1');
+  assert.equal(w.note, 'Kostenlos · Auf dem Weg zum Goethe-Zertifikat A1');
+  assert.doesNotMatch(w.note, /Vorbereitung|bestehen|garantiert/, 'on the way to, never a preparation or pass claim (honestyLineDe: A1.1 is half the way)');
+  assert.equal(welcomeModel({ ...A11, priceKey: 'course_a1_1' }, 'a1.1').note, 'Auf dem Weg zum Goethe-Zertifikat A1', 'a priced level is not called free');
+  assert.equal(welcomeModel({ ...A11, priceKey: 'course_a1_1', lanes: {} }, 'a1.1').note, null, 'neither → no line');
 
   // shortening: first + last sentence while short, else the first; one line per can-do
   assert.equal(shortPromise('Eins. Zwei. Drei.'), 'Eins. Drei.');
@@ -559,9 +577,13 @@ test('the welcome\'s screens: Priya and the promise, three things to learn, the 
   assert.equal(outcomeLine('nach Preisen fragen und Durchsagen im Supermarkt verstehen'), 'Nach Preisen fragen');
   assert.equal(outcomeLine('die Uhrzeit sagen, sich verabreden, zusagen und absagen'), 'Die Uhrzeit sagen');
   assert.equal(outcomeLine('Zahlen und Telefonnummern verstehen'), 'Zahlen und Telefonnummern verstehen', 'a one-word head keeps the whole line');
+  assert.equal(outcomeLine('im Kurs und im Büro um etwas bitten und eine kurze Nachricht schreiben'), 'Im Kurs und im Büro um etwas bitten', 'a verbless head („Im Kurs") takes the next cut');
+  assert.equal(outcomeLine('Ihre Wohnung zeigen und Wohnungsanzeigen lesen'), 'Ihre Wohnung zeigen');
+  const VERB = /(?:e[lr]?n|tun|sein)$/;
   for (const o of A11.showcase.outcomesDe) {
     const line = outcomeLine(o);
     assert.ok(line.length <= 40 && o.toLowerCase().startsWith(line.toLowerCase()), `„${line}" is the start of „${o}"`);
+    assert.match(line, VERB, `„${line}" is a can-do, not a verbless fragment`);
   }
   assert.equal(courseShape({ units: [{}], etappen: [{}] }), '1 Kapitel · 1 Modul');
   assert.equal(courseShape({}), null);
@@ -571,6 +593,40 @@ test('the welcome\'s screens: Priya and the promise, three things to learn, the 
   assert.deepEqual(b.screens, ['tempo']);
   assert.equal(b.narrator, null, 'Priya is the A1 cast');
   assert.deepEqual(welcomeModel({}, 'a1.1').screens, []);
+  assert.equal(welcomeModel({}, 'a1.1').note, null);
+});
+
+test('the welcome\'s chrome follows the lesson language; the promise and the can-dos stay German', () => {
+  const de = welcomeModel(A11, 'a1.1');
+  const en = welcomeModel(A11, 'a1.1', { lang: 'en' });
+  assert.deepEqual(welcomeModel(A11, 'a1.1', { lang: 'de' }), de, 'German is the default');
+  assert.equal(en.heading, 'What you will learn in A1.1');
+  assert.equal(en.shape, '12 chapters · 4 modules · final test');
+  assert.equal(en.note, 'Free · On the way to the Goethe-Zertifikat A1');
+  assert.equal(courseShape({ units: [{}], etappen: [{}] }, 'en'), '1 chapter · 1 module');
+  assert.equal(en.promise, de.promise, 'content: the promise is German in both chromes');
+  assert.deepEqual(en.outcomes, de.outcomes, 'content: the can-dos are German in both chromes');
+  assert.deepEqual(en.screens, de.screens);
+  // every welcome.* key the model and the component use exists in both tables, and the
+  // German table carries the former literals so the German chrome is unchanged
+  const keys = new Set();
+  for (const f of [`${HOME_DIR}/Welcome.jsx`, 'src/lib/course-v2/pathModel.js']) {
+    for (const m of read(f).matchAll(/'(welcome\.[A-Za-z]+)'/g)) keys.add(m[1]);
+  }
+  assert.ok(keys.size >= 12, `the welcome uses ${keys.size} chrome keys — suspiciously few`);
+  for (const k of keys) {
+    assert.equal(typeof V2_STRINGS.en[k], 'string', `EN lacks ${k}`);
+    assert.equal(typeof V2_STRINGS.de[k], 'string', `DE lacks ${k}`);
+    assert.notEqual(V2_STRINGS.en[k], k, `${k} falls through to its key`);
+  }
+  assert.deepEqual(
+    ['welcome.skip', 'welcome.next', 'welcome.go', 'welcome.tempo', 'welcome.tempoLegend'].map((k) => V2_STRINGS.de[k]),
+    ['Überspringen', 'Weiter', 'Los geht’s', 'Wie viel Zeit haben Sie pro Tag?', 'Ihr Tempo'],
+  );
+  assert.equal(V2_STRINGS.de['welcome.title'], 'Willkommen im Kurs {code}');
+  assert.equal(V2_STRINGS.de['welcome.stepOf'], 'Schritt {n} von {t}');
+  assert.equal(V2_STRINGS.en['welcome.go'], 'Let’s go');
+  for (const k of keys) assert.doesNotMatch(V2_STRINGS.de[k], DU_TOKENS, `${k}: the German chrome is Sie`);
 });
 
 test('the welcome\'s pace tiles: minutes, learning days and the finish date of each preset', () => {
@@ -579,8 +635,17 @@ test('the welcome\'s pace tiles: minutes, learning days and the finish date of e
   assert.deepEqual(tiles.map((t) => t.id), ['leicht', 'standard', 'intensiv']);
   assert.deepEqual(tiles.map((t) => t.title), ['leicht', 'standard', 'intensiv'].map((p) => `${dailyGoalMinutes(A11, p)} Minuten`));
   assert.deepEqual(tiles.map((t) => t.days), ['an 3 Tagen pro Woche', 'an 4 Tagen pro Woche', 'an 6 Tagen pro Woche']);
+  assert.deepEqual(tiles.map((t) => t.name), ['Leicht', 'Standard', 'Intensiv']);
   assert.equal(tiles[1].finish, 'fertig etwa am 22. Dezember');
   assert.equal(paceTile(paceOptions(A11, { remainingSteps: 84, today })[1], { allDone: true, today }).finish, null);
+  // the same tiles in the English chrome: the numbers are the same, the words and the date form are English
+  const en = paceOptions(A11, { remainingSteps: 84, today }).map((o) => paceTile(o, { today, lang: 'en' }));
+  assert.deepEqual(en.map((t) => t.id), tiles.map((t) => t.id));
+  assert.deepEqual(en.map((t) => t.name), ['Light', 'Standard', 'Intensive']);
+  assert.deepEqual(en.map((t) => t.title), ['leicht', 'standard', 'intensiv'].map((p) => `${dailyGoalMinutes(A11, p)} minutes`));
+  assert.deepEqual(en.map((t) => t.days), ['on 3 days a week', 'on 4 days a week', 'on 6 days a week']);
+  assert.equal(en[1].finish, 'done around 22 December');
+  assert.equal(paceTile({ id: 'turbo', name: 'Turbo', minutes: 10, learningDays: 7, weeks: 2, finishDate: today }, { today, lang: 'en' }).name, 'Turbo', 'an unknown preset keeps its own name');
 });
 
 // ---------------------------------------------------------------------------
@@ -688,8 +753,14 @@ test('the tab bar: Lernen · Kursplan · Grammatik · Wörter, fixed at the bott
   assert.match(bar, /<Link to=\{woerter\.href\}/);
   assert.deepEqual(referenceLinks('a1.1', A11).map((l) => [l.key, l.href]), [['grammatik', '/course/a1.1/grammatik'], ['wortschatz', '/course/a1.1/wortschatz']]);
   assert.match(read(PAGE), /<TabBar ref=\{kursplanTab\} links=\{links\}/);
-  // the page leaves room so the last node clears the bar
+  // the page leaves room so the last node clears the bar …
   assert.match(read(PAGE), /pb-28/);
+  // … and the path leaves room so the LAST popover (the trophy's) does too: a popover is
+  // absolute, and PathSection's scroll-adjust (scrollBy the overflow above the bar) can only
+  // move as far as the document scrolls — at the end of the path only this padding gives it
+  // that room. pb-8 left the „Trotzdem starten" button 31 px visible under the bar at 360×740;
+  // pb-32 clears it by ≥ 16 px there, with a 34 px safe area and with the signed-in BottomNav.
+  assert.match(read(`${HOME_DIR}/PathSection.jsx`), /id="lernpfad" className="[^"]*\bpb-32\b/);
 });
 
 test('the path: banners with a book button, big round nodes as disclosures, no label cards', () => {
@@ -735,14 +806,27 @@ test('the welcome: three screens, one thing and one button each, remembered per 
   const w = read(`${HOME_DIR}/Welcome.jsx`);
   for (const screen of ["screen === 'hallo'", "screen === 'ziele'", "screen === 'tempo'"]) assert.ok(w.includes(screen), `the welcome has ${screen}`);
   assert.equal((w.match(/<GameButton/g) || []).length, 1, 'one big button per screen');
-  assert.match(w, /\{last \? 'Los geht’s' : 'Weiter'\}/);
-  assert.match(w, />\s*Überspringen\s*</, 'a quiet way out');
+  // the chrome reads the lesson language (strings.js welcome.*) — no German literal in the component
+  assert.match(w, /import \{ useV2Strings \} from '\.\.\/strings\.js'/);
+  assert.match(w, /\{last \? t\('welcome\.go'\) : t\('welcome\.next'\)\}/);
+  assert.match(w, />\s*\{t\('welcome\.skip'\)\}\s*</, 'a quiet way out');
   assert.match(w, /<CastAvatar name=\{model\.narrator\} size=\{120\} decorative className="motion-safe:animate-pop-in" \/>/);
-  assert.match(w, /Wie viel Zeit haben Sie pro Tag\?/);
+  assert.match(w, /\{t\('welcome\.title', \{ code: model\.code \}\)\}/);
+  assert.match(w, /\{t\('welcome\.tempo'\)\}/);
+  assert.match(w, /<legend className="sr-only">\{t\('welcome\.tempoLegend'\)\}<\/legend>/);
+  assert.doesNotMatch(stripComments(w), /Überspringen|Los geht|Wie viel Zeit|Willkommen im Kurs|Ihr Tempo/, 'no chrome literal outside strings.js');
+  // the promise and the can-dos are content: German, and marked so
+  assert.match(w, /lang="de">\{model\.promise\}/);
+  assert.match(w, /lang="de">\{o\}/);
   assert.match(w, /type="radio"/, 'the pace tiles are a real radio group');
   assert.match(w, /peer-focus-visible:ring-4/, 'the focused tile shows it');
   assert.match(w, /\{model\.shape\}/, 'the counts line is the manifest\'s');
-  assert.match(w, /aria-live="polite">Schritt \{at \+ 1\} von \{screens\.length\}/);
+  assert.match(w, /\{model\.note && <p [^>]*>\{model\.note\}<\/p>\}/, 'the free flag and the lane, one muted line under the shape');
+  assert.match(w, /aria-live="polite">\{t\('welcome\.stepOf', \{ n: at \+ 1, t: screens\.length \}\)\}/);
+  // the page hands the model and the tiles the same language the component reads
+  assert.match(page, /const \[lang\] = useV2Strings\(\);/);
+  assert.match(page, /welcomeModel\(manifest, level, \{ lang \}\), \[manifest, level, lang\]/);
+  assert.match(page, /paceTile\(o, \{ allDone, lang \}\)/);
 });
 
 test('the course home writes only tokens: no hex literal, no raw Tailwind palette class, no built class names', () => {

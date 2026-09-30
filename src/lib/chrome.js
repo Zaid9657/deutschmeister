@@ -24,7 +24,14 @@
 // step"): the site Navbar stays, but the page brings its own four-tab bar (Lernen ·
 // Kursplan · Grammatik · Wörter), so the app BottomNav and the marketing Footer go —
 // two fixed tab bars stacked took a third of a phone screen.
-const PLAYER_ROUTE = /^\/course\/[^/]+\/(l\/[^/]+|checkpoint\/[^/]+|review|u\/[^/]+|p\/[^/]+|abschluss)\/?$/;
+//
+// The two level reference pages /course/:level/grammatik and /course/:level/wortschatz (the
+// book's back matter, read inside the course; the v2 tab bar's Grammatik · Wörter destinations)
+// are 'player' too: ReferenceShell renders its own sticky bar with the X back to the course home
+// and the two pages as tabs. Under the 'full' chrome that bar (sticky top-0 z-30) sat beneath the
+// fixed site Navbar (z-50, h-16), so the X and both tabs were covered and could not be tapped, and
+// the 1188px marketing Footer hung under a course reading page.
+const PLAYER_ROUTE = /^\/course\/[^/]+\/(l\/[^/]+|checkpoint\/[^/]+|review|u\/[^/]+|p\/[^/]+|abschluss|grammatik|wortschatz)\/?$/;
 const COURSE_HOME_ROUTE = /^\/course\/[^/]+\/?$/;
 const LEARN_ROUTE = /^\/course\/[^/]+\/v2\/?$/;
 

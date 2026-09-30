@@ -18,7 +18,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import {
   outlineFromUnit, unitOutline, tocRows, chapterSections, sectionOf, stagesOf, exerciseNr, stageIcon,
-  unitCardIds, cardsByIds, cardTitle, unitWordGroups, wordsOfUnit, pluralSuffix, nounParts, stepWords,
+  unitCardIds, cardsByIds, cardTitle, spineShortNames, isFormTask, unitWordGroups, wordsOfUnit, pluralSuffix, nounParts, stepWords,
   inputText, grammarChapters, wordChapters, searchWords, fold,
 } from '../src/components/course-v2/kapitel.js';
 
@@ -113,7 +113,53 @@ test('StepView shows one thing per screen: no strip, no numbered heading, the se
   assert.match(sv, /if \(extras\.words && extras\.words\.length >= MIN_WORDS\) segs\.push\(\{ id: 'words'/);
   assert.match(sv, /const \[words\] = useState\(\(\) =>/, 'the step’s words are fixed when it opens — the segments never shift under the learner');
   assert.match(sv, /<WordCards key="words" words=\{words\}/, 'a Situation step opens with its words, one card each');
-  assert.match(sv, /<RuleCardSteps\s+key="form"\s+card=\{ruleCard\}\s+modelSentence=\{step\.modelSentence\}\s+title=\{\(section && section\.grammar && section\.grammar\.short\) \|\| null\}/, 'the Grammatik-Tipp names its grammar');
+  // DaF review 2026-09-30 (DAF-04): the chip names the CARD's grammar (its spine, as the outlines name
+  // it), the step's tag only as a fallback — „Akkusativ" no longer sits over the Vokalwechsel card
+  assert.match(sv, /const cardName = \(ruleCard && ruleCard\.spine && spineShort\.get\(ruleCard\.spine\)\) \|\| \(section && section\.grammar && section\.grammar\.short\) \|\| null;/, 'the Grammatik-Tipp names the card’s own grammar');
+  assert.match(sv, /<RuleCardSteps\s+key="form"\s+card=\{ruleCard\}\s+modelSentence=\{step\.modelSentence\}\s+title=\{cardName\}/);
+  assert.match(sv, /const spineShort = useMemo\(\(\) => spineShortNames\(course\), \[course\]\);/);
+  const names = spineShortNames(manifest);
+  assert.equal(names.get('g.vokalwechsel'), 'Verben mit Vokalwechsel');
+  assert.equal(names.get('g.akkusativ'), 'Akkusativ');
+  assert.equal(spineShortNames(null).size, 0);
+  // the u09 pairing (structure g.akkusativ, card rc.vokalwechsel-2) is the documented case, not a mismatch:
+  // every step's card is named by its own spine, and the two agree everywhere else in A1.1
+  for (const row of manifest.units) {
+    const unit = unitAt(row.nr);
+    for (const s of unit.steps.filter((x) => x.ruleCard)) {
+      const card = cards.find((c) => c.id === s.ruleCard);
+      assert.ok(card && names.get(card.spine), `${s.id}: the card ${s.ruleCard} has a named spine`);
+      if (s.id !== 'a1.1-u09-ls2') assert.equal(card.spine, s.structure, `${s.id}: structure and card spine agree`);
+    }
+  }
+});
+
+test('a Schreiben row names a form to fill as one — never as „mit KI-Korrektur" (WT-07)', () => {
+  // the fact is the Aufgabe's own `form` (sd1.s1: fields checked deterministically, no KI)
+  assert.equal(isFormTask({ form: { fields: [] } }), true);
+  assert.equal(isFormTask({ template: 'sd1.s2' }), false);
+  assert.equal(isFormTask(null), false);
+  const rowsOf = (nr) => tocRows({ unit: unitAt(nr), course: manifest });
+  assert.equal(rowsOf(1).find((r) => r.kind === 'schreiben').form, true, 'u01: a form');
+  assert.equal(rowsOf(3).find((r) => r.kind === 'schreiben').form, false, 'u03: a short message, KI-corrected');
+  for (const row of manifest.units) {
+    const unit = unitAt(row.nr);
+    for (const r of rowsOf(row.nr)) {
+      const step = unit.steps.find((s) => s.id === r.id);
+      assert.equal(r.form, Boolean(step.task && step.task.form), `${r.id}: form follows the task`);
+      if (r.form) assert.deepEqual(r.teile, ['sd1.s1'], `${r.id}: the form is Goethe A1 Schreiben Teil 1`);
+    }
+  }
+  const ui = read('src/components/course-v2/UnitIntro.jsx');
+  assert.match(ui, /schreiben: \{ icon: 'schreiben', title: t\(r\.form \? 'kap\.schreibenForm' : 'kap\.schreiben'\) \}/, 'the guide row');
+  const sv = read('src/components/course-v2/StepView.jsx');
+  assert.match(sv, /const schreibenName = isFormTask\(step\.task\) \? t\('kap\.schreibenForm'\) : t\('kap\.schreiben'\);/, 'the step heading and its sr-only context');
+  assert.match(sv, /schreiben: schreibenName,/);
+  assert.match(sv, /schreiben: \(\) => schreibenName,/);
+  const strings = read('src/components/course-v2/strings.js');
+  assert.match(strings, /'kap\.schreibenForm': 'Writing \(form\)'/);
+  assert.match(strings, /'kap\.schreibenForm': 'Schreiben \(Formular\)'/);
+  assert.doesNotMatch(strings.match(/'kap\.schreibenForm': '[^']*'/g).join(' '), /\bKI\b|\bAI\b/, 'the form label promises no KI');
 });
 
 // ---------------------------------------------------------------------------
@@ -174,6 +220,13 @@ test('the Kapitel’s rule cards are the ones its steps show, named by the gramm
   assert.deepEqual(cardsByIds(['rc.none'], byId), []);
   assert.equal(cardTitle(u01, manifest, 'rc.praesens'), 'Präsens');
   assert.equal(cardTitle(u01, manifest, 'rc.verbposition-2'), 'Aussagesatz und W-Frage');
+  // the player hands the unit its level's cards: a card is then named by its OWN spine (DAF-04) —
+  // rc.vokalwechsel-2 in Kapitel 9 is „Verben mit Vokalwechsel", not the step's „Akkusativ"
+  const u09 = { ...unitAt(9), ruleCards: cards };
+  assert.equal(cardTitle(u09, manifest, 'rc.vokalwechsel-2'), 'Verben mit Vokalwechsel');
+  assert.equal(cardTitle(u09, manifest, 'rc.moegen'), 'mögen');
+  assert.equal(cardTitle({ ...u01, ruleCards: cards }, manifest, 'rc.praesens'), 'Präsens');
+  assert.equal(cardTitle(unitAt(9), manifest, 'rc.vokalwechsel-2'), 'Akkusativ', 'without the cards: the step’s label, as before');
 });
 
 // ---------------------------------------------------------------------------
@@ -288,6 +341,38 @@ test('the colours are tokens: the grammar box is the course wash, an article is 
   assert.match(rule, /border-course-soft bg-course-wash/, 'the Grammatik box is the palette wash');
   assert.match(rule, /<Chip tone=\{mark\.kasus\}/, 'a case colour only where the card names the case');
   assert.match(read(`${V2}/WordList.jsx`), /\{p\.article && <span className="font-bold text-game-muted">/, 'the article in neutral ink');
+  // A11Y-05: the TOC's „Jetzt" pill is 11 px bold — small text — so white on the course primary (3.29:1
+  // türkis) fails AA; white on ink (6.39:1 türkis, 6.61 limette, 7.96 himbeere) holds for every palette
+  // and is the home page's „Jetzt" treatment (home/InhaltPlan.jsx). A wash pill would vanish on the
+  // current row, which is itself the wash.
+  const parts = read(`${V2}/KapitelParts.jsx`);
+  const nowPill = parts.match(/<span className="([^"]*)">\{t\('kap\.now'\)\}<\/span>/);
+  assert.ok(nowPill, 'the TocRow „Jetzt" pill');
+  assert.match(nowPill[1], /\bbg-course-ink\b/, 'the pill is ink…');
+  assert.match(nowPill[1], /\btext-white\b/, '…with white text');
+  assert.doesNotMatch(nowPill[1], /\bbg-course(?![\w-])|\bbg-course-wash\b/, 'never the primary (3.29:1 at 11 px) nor the wash (invisible on the wash row)');
+  assert.match(read('src/components/course-v2/home/InhaltPlan.jsx'), /bg-course-ink[^"]*text-white">Jetzt</, 'the home page’s „Jetzt" badge is the same treatment');
+});
+
+test('a reference page opens at its top: ReferenceShell resets the scroll before paint, per page, unless a fragment is the target', () => {
+  // A client-side route change keeps the previous page's scroll offset (App.jsx has no ScrollToTop),
+  // so „Alle Grammatik von A1.1" tapped 3000px down a Kapitel guide opened /grammatik 3000px down —
+  // clamped into the footer. The reset must run before paint (useLayoutEffect, not useEffect), be
+  // 'instant' (src/index.css: html { scroll-behavior: smooth }), re-fire on the Grammatik ↔ Wörter tab
+  // switch ([level, page]) but not on ChapterJump's in-page hash links, and leave a #kapitel-n / #wk-n
+  // fragment to the browser.
+  const shell = read('src/components/course-v2/ReferenceShell.jsx');
+  assert.match(shell, /import \{ useLayoutEffect \} from 'react';/);
+  const reset = shell.match(/useLayoutEffect\(\(\) => \{([\s\S]*?)\}, \[level, page\]\);/);
+  assert.ok(reset, 'the scroll reset is a useLayoutEffect keyed on [level, page]');
+  assert.match(reset[1], /if \(window\.location\.hash\) return;/, 'a fragment in the URL is the browser\'s target');
+  assert.match(reset[1], /window\.scrollTo\(\{ top: 0, behavior: 'instant' \}\);/, "'instant', because html scrolls smoothly");
+  assert.ok(!/useEffect\(\(\) => \{[\s\S]*?scrollTo/.test(shell), 'the reset runs before paint, not after');
+  // The guide links that exposed it stay plain (no hash), so the reset is what places the page.
+  const parts = read('src/components/course-v2/KapitelParts.jsx');
+  assert.match(parts, /<Link to=\{`\/course\/\$\{lvl\}\/grammatik`\}/);
+  assert.match(parts, /<Link to=\{`\/course\/\$\{lvl\}\/wortschatz`\}/);
+  assert.match(read('src/index.css'), /scroll-behavior: smooth;/, 'the reason for instant');
 });
 
 test('every chrome key of the Kapitel page, the step frame and the reference pages exists in both tables', () => {

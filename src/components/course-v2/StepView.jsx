@@ -14,7 +14,7 @@ import WordCards, { PhraseCards } from './WordCards.jsx';
 import WritingTaskView from './WritingTaskView.jsx';
 import { SayButton } from './WordList.jsx';
 import { laneLabel, lineIndex, materialize, skeletonOf, teilLabel } from './content.js';
-import { chapterSections, sectionOf, stepWords } from './kapitel.js';
+import { chapterSections, isFormTask, sectionOf, spineShortNames, stepWords } from './kapitel.js';
 import { useV2Strings } from './strings.js';
 
 const LABEL = 'text-[0.75rem] font-extrabold uppercase tracking-[0.08em] text-game-muted';
@@ -196,6 +196,9 @@ export default function StepView({
   );
   // this step's section (letter, grammar): the sr-only context line and the grammar's name
   const section = useMemo(() => (step ? sectionOf(chapterSections(unit, course), step.id) : null), [unit, course, step]);
+  // the grammar names by spine: the Grammatik-Tipp's chip names the CARD's grammar, never the
+  // step's tag (kapitel.js spineShortNames — DAF-04: „Akkusativ" sat over the Vokalwechsel card)
+  const spineShort = useMemo(() => spineShortNames(course), [course]);
   const [segIdx, setSegIdx] = useState(0);
   const segAt = useRef(0);
   segAt.current = segIdx;
@@ -296,13 +299,15 @@ export default function StepView({
     case 'inputItems':
       body = <ItemRun key="inputItems" items={step.inputItems} {...runProps} onFinish={(r) => { count(r); advance(); }} />;
       break;
-    case 'form':
+    case 'form': {
+      // the chip names the CARD's grammar (its spine), the step's tag only where the card has none
+      const cardName = (ruleCard && ruleCard.spine && spineShort.get(ruleCard.spine)) || (section && section.grammar && section.grammar.short) || null;
       body = (
         <RuleCardSteps
           key="form"
           card={ruleCard}
           modelSentence={step.modelSentence}
-          title={(section && section.grammar && section.grammar.short) || null}
+          title={cardName}
           missing={!ruleCard && Boolean(step.ruleCard)}
           unitId={unitId}
           onProgress={setInner}
@@ -310,6 +315,7 @@ export default function StepView({
         />
       );
       break;
+    }
     case 'structured':
       body = <ItemRun key="structured" items={step.structuredInput} {...runProps} onFinish={(r) => { count(r); advance(); }} />;
       break;
@@ -442,7 +448,10 @@ export default function StepView({
 
   // ── the frame: the section for screen readers, ONE short heading where the screen has none ──
   const letter = (section && section.letter) || null;
-  const kindName = { pruefung: t('kap.pruefung'), sprechen: t('kap.sprechen'), schreiben: t('kap.schreiben'), ueberarbeiten: t('kap.ueberarbeiten'), check: t('kap.test') }[step.kind] || null;
+  // a form to fill (sd1.s1, checked deterministically — WritingTaskView FormTask) is never sold as
+  // „mit KI-Korrektur": the label says what the screen does (walkthrough 2026-09-30, WT-07)
+  const schreibenName = isFormTask(step.task) ? t('kap.schreibenForm') : t('kap.schreiben');
+  const kindName = { pruefung: t('kap.pruefung'), sprechen: t('kap.sprechen'), schreiben: schreibenName, ueberarbeiten: t('kap.ueberarbeiten'), check: t('kap.test') }[step.kind] || null;
   const lane = unit && unit.spec && unit.spec.lanes && unit.spec.lanes.primary ? laneLabel(unit.spec.lanes.primary) : null;
   const context = letter
     ? `${t('kap.part', { l: letter })}${step.title ? `: ${step.title}` : ''}`
@@ -454,7 +463,7 @@ export default function StepView({
     micro: () => t('card.yourTurn'),
     table: () => t('rule.fillTable'),
     sprechen: () => t('kap.sprechen'),
-    schreiben: () => t('kap.schreiben'),
+    schreiben: () => schreibenName,
     ueberarbeiten: () => t('kap.ueberarbeiten'),
     check: () => t('kap.test'),
   };

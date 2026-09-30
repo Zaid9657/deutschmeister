@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Check } from 'lucide-react';
 import CastAvatar from '../CastAvatar.jsx';
+import { useV2Strings } from '../strings.js';
 import GameButton from './GameButton.jsx';
 import { hueVars } from './hue.js';
 
@@ -19,6 +20,10 @@ import { hueVars } from './hue.js';
 //               pick and the same storage as the plan's pace picker.
 // A top bar with a thin dot indicator and a quiet „Überspringen"; one big button at the
 // bottom: „Weiter", and „Los geht’s" on the last screen, which ends the welcome.
+// The chrome (headings, buttons, the tiles' lines) follows the lesson language like the
+// player (strings.js `welcome.*`, English by default) — a complete beginner has to be able
+// to read the screen that asks for their pace. The promise and the can-dos are content and
+// stay German (lang="de"); pathModel.welcomeModel/paceTile take the same `lang`.
 
 const ROW_HUES = ['tuerkis', 'orange', 'beere'];
 
@@ -43,9 +48,10 @@ function Dots({ count, at }) {
 }
 
 function Hallo({ model, headRef }) {
+  const [, t] = useV2Strings();
   return (
     <div className="flex flex-col items-center">
-      <h1 ref={headRef} tabIndex={-1} className="sr-only">Willkommen im Kurs {model.code}</h1>
+      <h1 ref={headRef} tabIndex={-1} className="sr-only">{t('welcome.title', { code: model.code })}</h1>
       {model.narrator ? (
         <CastAvatar name={model.narrator} size={120} decorative className="motion-safe:animate-pop-in" />
       ) : (
@@ -80,16 +86,18 @@ function Ziele({ model, headRef }) {
         ))}
       </ul>
       {model.shape && <p className="mt-5 text-center text-base font-bold text-game-muted">{model.shape}</p>}
+      {model.note && <p className="mt-1.5 text-center text-[0.9375rem] font-bold text-game-muted">{model.note}</p>}
     </div>
   );
 }
 
 function Tempo({ tiles, pace, onPace, headRef }) {
+  const [, t] = useV2Strings();
   return (
     <div>
-      <h1 ref={headRef} tabIndex={-1} className="text-[1.75rem] font-black leading-tight">Wie viel Zeit haben Sie pro Tag?</h1>
+      <h1 ref={headRef} tabIndex={-1} className="text-[1.75rem] font-black leading-tight">{t('welcome.tempo')}</h1>
       <fieldset className="mt-6">
-        <legend className="sr-only">Ihr Tempo</legend>
+        <legend className="sr-only">{t('welcome.tempoLegend')}</legend>
         <div className="flex flex-col gap-3">
           {tiles.map((t) => {
             const on = t.id === pace;
@@ -133,6 +141,7 @@ function Tempo({ tiles, pace, onPace, headRef }) {
 }
 
 export default function Welcome({ model, tiles = [], pace, onPace, onDone, lifted = false }) {
+  const [, t] = useV2Strings();
   const screens = model.screens;
   const [at, setAt] = useState(0);
   const headRef = useRef(null);
@@ -159,13 +168,13 @@ export default function Welcome({ model, tiles = [], pace, onPace, onDone, lifte
     >
       <div className="flex h-16 shrink-0 items-center justify-between gap-4">
         <Dots count={screens.length} at={at} />
-        <p className="sr-only" aria-live="polite">Schritt {at + 1} von {screens.length}</p>
+        <p className="sr-only" aria-live="polite">{t('welcome.stepOf', { n: at + 1, t: screens.length })}</p>
         <button
           type="button"
           onClick={() => onDone('skipped')}
           className="-mr-2 min-h-11 rounded-xl px-3 text-base font-black text-game-muted hover:bg-course-wash hover:text-course-ink"
         >
-          Überspringen
+          {t('welcome.skip')}
         </button>
       </div>
       <div key={screen} className="flex flex-1 flex-col justify-center py-6 motion-safe:animate-fade-in">
@@ -174,7 +183,7 @@ export default function Welcome({ model, tiles = [], pace, onPace, onDone, lifte
         {screen === 'tempo' && <Tempo tiles={tiles} pace={pace} onPace={onPace} headRef={headRef} />}
       </div>
       <div className="shrink-0 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-2">
-        <GameButton onClick={next} className="w-full">{last ? 'Los geht’s' : 'Weiter'}</GameButton>
+        <GameButton onClick={next} className="w-full">{last ? t('welcome.go') : t('welcome.next')}</GameButton>
       </div>
     </div>
   );
