@@ -1,62 +1,103 @@
-# Area agent protocol
+# Agent team protocol (v2, 2026-09-29)
 
-Every area agent in `.claude/agents/` follows this loop. It runs once per scheduled firing
-(see `docs/scorecard-routine.md`) or when a session invokes it by name. The agent's own
-file adds its metrics, levers and boundaries. This file is the part they all share.
+Every area agent in `.claude/agents/` follows this protocol. The agent's own file adds its
+metrics, levers and boundaries. The team's shared memory is the private claude.ai artifact
+**DeutschMeister Agent Team** (`https://claude.ai/artifact/NGaePeB3GXkep9oJmMs5hD`), read and
+written with the `ArtifactData` tool:
 
-## The loop — one run
+| Path | What it holds |
+|---|---|
+| `config/charter` | mission, north star, team goal, principles, autonomy, and per agent: `owns`, `goal`, `second`, `guardrails` |
+| `config/rubric` | the versioned scoring rubric (v2): one measured number per area, fixed bands, weights, pass line 60 |
+| `snapshots/<YYYY-MM-DD>` | the day's scored scorecard (written by the supervisor's first run of the day) |
+| `agents/<key>` | the agent's memory: last run, pulse, goal status, open experiment, learnings, handoffs in, incidents, proposals, log |
+| `roadmap/<id>` | the ordered work list (phase, owner agent, who acts, status) |
 
-1. **Read** `CLAUDE.md`, then `docs/SCORECARD.md` in full, then your own agent file. Work
-   from the latest `main`.
-2. **Close the last experiment.** Find your area's most recent §6 line whose "after" is
-   still open. Measure that metric now, fill in the after value, and set keep or drop with
-   a one-line lesson. This step is how the loop learns. Skip it and the next run repeats
-   blind.
-3. **Measure** every §2 metric for your area with the §7 sources. Never estimate a number
-   you could not measure. Write the reason it failed into §9.
-4. **Score** your area with the §5 rubric only. Update your row in §1 (score, trend arrow,
-   evidence) and your rows in §2.
-5. **Choose exactly one move:**
-   - the top open §3 item for your area; or, if none is open,
-   - one new item you add to §3 in rank order. Pick the highest expected lift per hour of
-     work, with a measurable "done when".
+Charter keys and agent files: `revenue` (revenue-agent), `conversion` (conversion-agent),
+`product` (product-agent, which absorbed activation), `acquisition` (acquisition-agent), `seo`
+(seo-agent), `content` (content-agent), `retention` (retention-email-agent), `support`
+(support-agent), `website` (website-agent), `webperf` (web-performance-agent), `security`
+(security-agent), `supervisor` (supervisor). Verified pulse queries live in
+`docs/agents/pulse.sql`.
 
-   Before choosing, read your area's §6 lines. A move logged as dropped needs a new reason
-   to come back.
+## The daily run (every agent, every day)
 
-   If your area already meets its next §2 target and no item is open, **do nothing** and
-   write "at target" in the PR. Polishing an area that isn't the bottleneck is the failure
-   mode this system exists to prevent: 23 review rounds on a free course while revenue
-   stayed at €0.
-6. **Act.**
-   - **Agent-doable** (one PR, inside your area's files where possible): branch from
-     `main`, build it, and run the gates from `.claude/skills/steward/SKILL.md`. Open a PR
-     whose first line is `Area: <name> · score A → B · move: <one line>`. **Never merge it.**
-     Scheduled agents do not merge without human review. The owner, or a session he is
-     working in, reviews and merges. Say in the PR what to check. If the PR:
-     - changes the schema or needs a migration applied;
-     - changes a price or a claim in `marketing.js`;
-     - changes an email's content or audience;
-     - touches the legal pages;
-     - deletes user data;
+1. **Read** `config/charter` (your block and the principles), your `agents/<key>` document,
+   and every entry in its `handoffs_in` and `incidents_open`. Read `CLAUDE.md` once per run.
+2. **Take incidents** for your area: open rows in `public.agent_incidents` where
+   `owner_agent = <key>` (once the sentinel migration is applied), plus incidents the
+   supervisor copied into your document. Acknowledge each in your log with what you did.
+3. **Pulse.** Run your 3–5 queries from `docs/agents/pulse.sql` and compare each with its
+   7-day average. Record `{metric, today, avg7, delta}` in `pulse`. Never estimate a number
+   you could not measure; write `"not measured: <reason>"` instead. Page every list read
+   past the 1,000-row API cap (use SQL `count(*)` or paged reads; a capped list undercounts
+   without an error).
+4. **React the same day** to anything abnormal (a pulse metric below 50% or above 200% of its
+   7-day average with n ≥ 5, an open incident, a handoff older than 24 h). Put a line starting
+   `URGENT:` at the top of `last_report` with the evidence and a ready-to-fire fix (the exact
+   PR, query or owner click).
+5. **Build approved work.** If the owner approved an experiment of yours (`experiment.status
+   == "approved"`), build it as ONE draft PR from your own git worktree (never the shared
+   checkout), run the gates in `.claude/skills/steward/SKILL.md`, and record the PR in
+   `experiment`.
+6. **Refresh goal progress**: re-measure `goal` and `second`, set `goal_status` to
+   `on track`, `at risk` or `off track` with one line of evidence.
+7. **Write** your `agents/<key>` document (pin `if_version` to the version you read): set
+   `last_run` (ISO time), `status: "ok"` or `"blocked: <tool it stopped on>"`, `last_report`
+   (≤ 8 lines, numbers with n), and append one line to `log` (keep the last 30).
+   **A run that does not write this document did not happen**: the supervisor treats it as
+   a stall.
 
-     put a bold **Owner decision** line at the top saying exactly what he is approving.
-   - **Needs the owner:** write one concrete owner action in the §3 status cell: the exact
-     button, file or command, and why. Don't build around it.
-7. **Log** one §6 line: date, area, move, the metric before, "after" left open for the next
-   run, and your expected effect. The steward writes §8 (history). Area agents never do.
-8. **Stop.** One move per run.
+## The deep day (one weekday per agent)
+
+On your deep day, after the daily run:
+
+1. Close your open experiment first: measure its metric, fill `after`, decide **keep** or
+   **revert** with the numbers, and append the lesson to `learnings` (never repeated).
+2. Diagnose your goal: write at least **three competing hypotheses** for why the number is
+   where it is, each with the evidence for and against from this run's queries.
+3. Propose **one** new experiment into `proposals`: hypothesis, change, metric, baseline,
+   expected effect, judge date, cost in hours, and whether it hits a hard stop. The
+   supervisor ranks proposals every Monday; the owner approves.
+
+| Deep day | Agents |
+|---|---|
+| Monday | revenue, conversion |
+| Tuesday | product |
+| Wednesday | acquisition, seo |
+| Thursday | retention, content |
+| Friday | support, website |
+| Saturday | webperf, security |
+
+## Closing the loop
+
+- An approved experiment is built as a draft PR (step 5). After it merges, the agent tracks
+  the metric on each daily run and on the judge date keeps it or reverts it (a revert is a
+  PR too), with the numbers in `learnings`.
+- **Handoffs**: an agent that finds a problem in another area appends
+  `{from, date, what, evidence}` to that agent's `handoffs_in` (use `update` pinned to the
+  version you read). It never fixes another area's item. The supervisor chases handoffs
+  untouched for 48 h.
+- **Content requests** from customers (ticket tags `content-request:<topic>`) go to the
+  product agent, which checks whether the topic exists and counts repeat requests in its
+  memory.
+
+## Autonomy
+
+Agents act alone on everything reversible inside their area: measuring, incidents, handoffs,
+roadmap updates, and draft PRs. Hard stops that stay with the owner: moving money (refunds,
+prices, discounts, products), deleting customer data, security and auth settings, and
+anything irreversible. Merging to main, applying migrations, sending customer email from a
+new automation and flipping a production kill switch happen only for the action classes the
+owner has authorized in chat. When the safety guard blocks an action, stop, record
+`blocked: <action>` and tell the owner; never route around it.
 
 ## Hard limits (all agents)
 
-- Never merge a PR, including your own.
-- Never send email, post to social accounts, or spend money.
-- Never change prices, apply migrations, or edit Lemon Squeezy.
-- Never advance a `Stand:` stamp on `/vergleich/`.
-- Never commit `astro-site/package-lock.json`.
-- Never skip, disable or loosen a test to get green.
-- Never touch another area's §3 items. If you find a problem in another area, add it to §3
-  under that area and leave it.
-- Never claim a number you did not measure in this run.
-- If an earlier agent PR is still open and unmerged, build on `main` anyway. Say in your PR
-  that it will conflict on `docs/SCORECARD.md`, and keep both sides' rows when resolving.
+- Never print, log or commit a credential; never search files for one. Credentials live only
+  in environment variables the owner sets.
+- Never skip, disable or loosen a test to get green. Never commit
+  `astro-site/package-lock.json` unless the change is a deliberate dependency update.
+- Never advance a `Stand:` stamp on `/vergleich/`. Prices and claims come only from
+  `src/data/pricing.js` and `src/data/marketing.js`.
+- Never claim a number you did not measure in this run. Call small numbers small.

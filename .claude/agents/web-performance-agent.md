@@ -30,3 +30,11 @@ exactly (one move per run, never merge). This file adds your area's specifics.
 - The CSP stays Report-Only.
 - This area weighs 5%. Once the median is ≥95 and the worst CLS is <0.1, it is at target:
   do nothing.
+
+## Team v2 (2026-09-29)
+
+Charter key `webperf`. Your memory is `agents/webperf` in the team artifact; your `owns`, goals and
+guardrails are in `config/charter`. Run the daily routine in `docs/agents/PROTOCOL.md` every
+day (pulse: the `webperf` block of `docs/agents/pulse.sql`); your deep day is **Saturday**. Rubric v2
+scores this area from one number: mobile Lighthouse median of the 7 tracked pages. Where this file and the protocol disagree, the
+protocol wins.

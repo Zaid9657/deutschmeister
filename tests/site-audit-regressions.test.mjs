@@ -74,7 +74,11 @@ test('the full Astro navigation starts at the large breakpoint', () => {
 
 test('pricing distinguishes recurring access from one-time courses in its headline and CTA', () => {
   assert.match(pricing, /Choose recurring access or a one-time course\./);
-  assert.match(pricing, /Start \{TRIAL_DAYS\}-day Pro trial/);
+  // The Pro CTA's words live in astro-site/src/lib/proCta.js since 2026-09-30
+  // (signed out: the trial; signed in: "Go Pro — <price>"), pinned in
+  // tests/pro-cta.test.mjs. The page must render them from there.
+  assert.match(pricing, /\{proCta\(\)\.label\}/);
+  assert.match(read('astro-site/src/lib/proCta.js'), /label: `Start \$\{TRIAL_DAYS\}-day Pro trial`/);
 });
 
 test('AI-facing platform facts use the current measured counts and level-test duration', () => {

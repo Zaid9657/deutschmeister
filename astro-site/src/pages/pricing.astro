@@ -24,6 +24,7 @@
 //     scripts/check-built-html.mjs fails
 import { ORGANIZATION } from '../lib/siteMeta.js';
 import { getTopicsForLevel } from '../lib/grammar.js';
+import { proCta } from '../lib/proCta.js';
 import Layout from '../layouts/Layout.astro';
 import Aurora from '../components/Aurora.astro';
 import '../styles/global.css';
@@ -334,11 +335,14 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-5 py-3 text-ink sha
                 <span class="mt-2 block font-data text-[0.6875rem] leading-snug text-graphite">Starts {TRIAL_DAYS}-day trial · no card</span>
               </td>
               <td class="bg-siegel-wash py-5 pl-4">
+                <!-- Label and note come from lib/proCta.js: signed out it starts the
+                     account trial (no card); the script switches a signed-in
+                     visitor to "Go Pro — <price>" and the checkout. -->
                 <button id="pro-btn" type="button" class={`${BTN_PRIMARY} btn-shimmer relative w-full overflow-hidden`}>
-                  <span class="relative z-10">Start {TRIAL_DAYS}-day Pro trial</span>
+                  <span id="pro-btn-label" class="relative z-10">{proCta().label}</span>
                 </button>
                 <span id="plan-note" class="mt-2 block font-data text-[0.6875rem] leading-snug text-graphite">
-                  {TRIAL_DAYS}-day free trial · cancel anytime
+                  {proCta().note}
                 </span>
               </td>
             </tr>
@@ -478,6 +482,7 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-5 py-3 text-ink sha
   // table above reads, so the toggle cannot show a figure the static HTML
   // contradicts. Variant IDs stay literal: checkout plumbing, not copy.
   import { PLANS as DATA, eur as EUR } from '../data/pricing.js';
+  import { proCta } from '../lib/proCta.js';
 
   const VARIANTS = {
     monthly: 'dfc81ca3-78f5-4bab-9d62-dca75b3f7e21',
@@ -491,10 +496,9 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-5 py-3 text-ink sha
     const plan = DATA[cycle];
     $('pro-price').textContent = EUR(plan.price);
     $('pro-period').textContent = plan.interval;
-    $('plan-note').textContent =
-      cycle === 'yearly'
-        ? EUR(plan.asMonthly) + ' a month, billed yearly · cancel anytime'
-        : EUR(plan.perDay) + ' a day · cancel anytime';
+    const cta = proCta({ signedIn: Boolean(currentUser()), cycle });
+    $('pro-btn-label').textContent = cta.label;
+    $('plan-note').textContent = cta.note;
 
     const on = 'rounded-pill px-4 py-1.5 text-sm font-bold transition-colors bg-ink text-paper';
     const off = 'rounded-pill px-4 py-1.5 text-sm font-bold transition-colors text-graphite hover:text-ink';
@@ -572,7 +576,17 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-5 py-3 text-ink sha
       document.head.appendChild(s);
     }
 
-    $('pro-btn').addEventListener('click', () => open(VARIANTS[cycle], cycle));
+    // Signed out, this button starts the account trial and nothing else: no
+    // buy intent, so signup is not followed by a paid checkout the label never
+    // mentioned. Signed in, it is the checkout it says it is.
+    $('pro-btn').addEventListener('click', () => {
+      const cta = proCta({ signedIn: Boolean(currentUser()), cycle });
+      if (cta.action === 'signup') {
+        window.location.href = cta.href;
+        return;
+      }
+      open(VARIANTS[cycle], cycle);
+    });
 
     // Level-course buttons carry their own checkout id (build-time env).
     document.querySelectorAll('[data-course-variant]').forEach((btn) => {

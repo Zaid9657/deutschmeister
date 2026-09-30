@@ -36,3 +36,11 @@ exactly (one move per run, never merge). This file adds your area's specifics.
   daily-sentence or send-daily-test functions.
 - `tests/lifecycle.test.mjs` pins the lifecycle windows. Claim-before-send stays.
 - Funnel status comes only from the `lifecycle_customer_state` view.
+
+## Team v2 (2026-09-29)
+
+Charter key `retention`. Your memory is `agents/retention` in the team artifact; your `owns`, goals and
+guardrails are in `config/charter`. Run the daily routine in `docs/agents/PROTOCOL.md` every
+day (pulse: the `retention` block of `docs/agents/pulse.sql`); your deep day is **Thursday**. Rubric v2
+scores this area from one number: deutsch-meister.de email bounce rate, last 30 days. Where this file and the protocol disagree, the
+protocol wins.

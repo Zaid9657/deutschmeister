@@ -47,6 +47,44 @@ export function notInstrumented(id, label, reason, unblock) {
   return { id, label, state: 'unknown', value: null, unit: null, threshold: null, reason, unblock, detail: null, action: null };
 }
 
+/**
+ * The scheduled jobs whose runs leave evidence in the database, and where.
+ * ONE list, read by admin-status (the Monitoring screen) and by the hourly
+ * sentinel, so the two can never disagree about what counts as a run.
+ *
+ *   ledger  lifecycle_emails.kind — `prefix` (trial_…) or `eq` (confirm_nudge);
+ *           absent for the weekly job, whose evidence is weekly_metrics.measured_at
+ *   gate    the env var that must be 'true' for the job to do anything at all;
+ *           a gated-off job leaves no evidence by design
+ *
+ * daily-sentence and speaking-closeout write no ledger, so they are not here:
+ * a missing row would say nothing about them. The sentinel watches
+ * speaking-closeout through its effect instead (stale 'active' sessions).
+ */
+export const SCHEDULED_JOBS = Object.freeze([
+  { id: 'job-trial', fn: 'trial-lifecycle', label: 'Trial-Lifecycle (08:00 UTC)', cadence: 'daily', ledger: { prefix: 'trial_' }, gate: null, caveat: 'Nur sichtbar, wenn an dem Tag jemand fällig war — ein ruhiger Tag sieht aus wie ein Ausfall.' },
+  { id: 'job-activation', fn: 'activation-lifecycle', label: 'Activation-Lifecycle (09:30 UTC)', cadence: 'daily', ledger: { prefix: 'activation_' }, gate: 'LIFECYCLE_ACTIVATION_ENABLED', caveat: 'Wie oben; zusätzlich no-op ohne LIFECYCLE_ACTIVATION_ENABLED=true.' },
+  { id: 'job-confirm', fn: 'confirmation-nudge', label: 'Bestätigungs-Erinnerung (10:30 UTC)', cadence: 'daily', ledger: { eq: 'confirm_nudge' }, gate: 'CONFIRM_NUDGE_ENABLED', caveat: 'Wie oben; no-op ohne CONFIRM_NUDGE_ENABLED=true.' },
+  { id: 'job-course', fn: 'course-reminder', label: 'Kurs-Erinnerung (18:00 UTC)', cadence: 'daily', ledger: { prefix: 'course_reminder_' }, gate: 'COURSE_REMINDER_ENABLED', caveat: 'Wie oben; no-op ohne COURSE_REMINDER_ENABLED=true.' },
+  { id: 'job-weekly', fn: 'weekly-truth', label: 'Wöchentliche Messung (Montag 06:00 UTC)', cadence: 'weekly', ledger: null, gate: null, caveat: 'Schreibt IMMER eine Zeile — ein fehlender Lauf ist ein echter Ausfall.' },
+]);
+
+/** Does this lifecycle_emails.kind count as a run of `job`? */
+export function isJobKind(job, kind) {
+  if (!job.ledger || typeof kind !== 'string') return false;
+  if (job.ledger.eq) return kind === job.ledger.eq;
+  return kind.startsWith(job.ledger.prefix);
+}
+
+/** Hours since the job's last evidence, judged against its cadence threshold. No evidence → null/'unknown'. */
+export function jobStaleness(job, lastIso, now = new Date()) {
+  const t = lastIso ? Date.parse(lastIso) : NaN;
+  if (!Number.isFinite(t)) return { hours: null, state: 'unknown', thresholdKey: null };
+  const thresholdKey = job.cadence === 'weekly' ? 'weeklyJobStaleHours' : 'dailyJobStaleHours';
+  const hours = Math.round((new Date(now).getTime() - t) / 3600000);
+  return { hours, state: judge(hours, THRESHOLDS[thresholdKey]), thresholdKey };
+}
+
 /** The worst REAL check; 'unknown' never outranks a real state. All unknown → 'unknown'. */
 export function overallState(checks) {
   const real = checks.filter((c) => c.state !== 'unknown');

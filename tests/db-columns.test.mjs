@@ -68,9 +68,22 @@ function pendingSchema(sql) {
   }
   return { created, added };
 }
-const PENDING = PENDING_MIGRATIONS.map((f) => ({ file: f, ...pendingSchema(readFileSync(path.join(ROOT, f), 'utf8')) }));
-const TABLES = { ...LIVE };
-for (const { created, added } of PENDING) {
+const PENDING_FILES = PENDING_MIGRATIONS.map((f) => ({ file: f, ...pendingSchema(readFileSync(path.join(ROOT, f), 'utf8')) }));
+
+// Tables a written, NOT yet applied migration creates (the fixture's
+// "pendingApply" block). Queries may name them — the function that queries
+// one is written to fail closed until the owner applies the file — but only
+// while the test below holds: the file exists, its CREATE TABLE declares
+// exactly those columns, the README says "not yet applied", and the live
+// snapshot does not have the table yet. Same shape as PENDING_APPLY in
+// tests/rls-update-check.test.mjs: the list only shrinks.
+const PENDING = SNAPSHOT.pendingApply?.tables ?? {};
+const TABLES = {
+  ...LIVE,
+  ...Object.fromEntries(Object.entries(PENDING).map(([t, p]) => [t, p.columns])),
+};
+// …plus what the pending course-v2 migration file creates (read from the file itself)
+for (const { created, added } of PENDING_FILES) {
   Object.assign(TABLES, created);
   for (const [t, cols] of Object.entries(added)) if (TABLES[t]) TABLES[t] = [...new Set([...TABLES[t], ...cols])];
 }
@@ -92,6 +105,22 @@ test('the schema snapshot is dated, complete and says how to refresh it', () => 
   }
 });
 
+test('every pending table comes from an unapplied migration that creates exactly its columns', () => {
+  const readme = readFileSync(path.join(ROOT, 'migrations/README.md'), 'utf8').split('\n');
+  for (const [table, { migration, columns }] of Object.entries(PENDING)) {
+    assert.ok(!(table in SNAPSHOT.tables), `${table} is live now: refresh the snapshot and delete its pendingApply entry`);
+    assert.deepEqual([...columns].sort(), columns, `${table}: keep pending columns sorted`);
+    const sql = readFileSync(path.join(ROOT, 'migrations', migration), 'utf8').replace(/--[^\n]*/g, ' ');
+    const m = new RegExp(`CREATE TABLE IF NOT EXISTS public\\.${table} \\(([\\s\\S]*?)\\n\\);`).exec(sql);
+    assert.ok(m, `${migration} must CREATE TABLE IF NOT EXISTS public.${table}`);
+    const declared = m[1].split('\n').map((l) => l.trim()).filter(Boolean).map((l) => l.split(/\s+/)[0]).sort();
+    assert.deepEqual(declared, columns, `${migration} declares other columns than the pendingApply entry`);
+    const row = readme.find((l) => l.includes(`\`${migration}\``));
+    assert.ok(row, `migrations/README.md lists ${migration}`);
+    assert.match(row, /not yet applied/i, `${migration} is in pendingApply, so the README must say it is not applied`);
+  }
+});
+
 test('the two progress tables are shaped as the 2026-09-28 fix assumes', () => {
   const listening = TABLES.user_listening_progress;
   const reading = TABLES.user_reading_progress;
@@ -100,7 +129,7 @@ test('the two progress tables are shaped as the 2026-09-28 fix assumes', () => {
 });
 
 test('a pending migration is really pending, and is read as a schema', () => {
-  for (const { file, created } of PENDING) {
+  for (const { file, created } of PENDING_FILES) {
     const tables = Object.keys(created);
     assert.ok(tables.length > 0, `${file}: no CREATE TABLE read — the parser no longer matches the file`);
     for (const t of tables) assert.ok(created[t].length >= 3, `${file}: ${t} read with only ${created[t].length} columns`);
@@ -108,7 +137,7 @@ test('a pending migration is really pending, and is read as a schema', () => {
     assert.deepEqual(live, [], `${file} is applied (${live.join(', ')} in the snapshot): delete it from PENDING_MIGRATIONS`);
   }
   // The course v2 migration, read: the columns its queries depend on.
-  const v2 = PENDING.find((p) => p.file.endsWith('2026-10-01-course-v2.sql'));
+  const v2 = PENDING_FILES.find((p) => p.file.endsWith('2026-10-01-course-v2.sql'));
   assert.ok(v2.created.learner_goals.includes('band'), 'learner_goals is keyed by band (progress.js reads it by band)');
   assert.ok(v2.created.course_ai_usage.includes('slot_key'));
   assert.ok(v2.created.course_events.includes('props'));
