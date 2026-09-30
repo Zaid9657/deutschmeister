@@ -17,13 +17,14 @@
 // (the legacy per-item lesson page) and complete/certificate keep the full
 // chrome on purpose — they are reading pages, not a stage.
 //
-// Course v2 (docs/course-v2/BLUEPRINT.md §7.1): the unit player /course/:level/u/:nr
-// and the Plateau /course/:level/p/:nr are stages ('player'). The v2 course home
+// Course v2 (docs/course-v2/BLUEPRINT.md §7.1): the unit player /course/:level/u/:nr,
+// the Plateau /course/:level/p/:nr and the Halbtest /course/:level/abschluss are stages
+// ('player'; each renders GameTopBar's own X back to the course home). The v2 course home
 // /course/:level/v2 is 'learn' (owner feedback 2026-09-30, "Duolingo style, step by
 // step"): the site Navbar stays, but the page brings its own four-tab bar (Lernen ·
 // Kursplan · Grammatik · Wörter), so the app BottomNav and the marketing Footer go —
 // two fixed tab bars stacked took a third of a phone screen.
-const PLAYER_ROUTE = /^\/course\/[^/]+\/(l\/[^/]+|checkpoint\/[^/]+|review|u\/[^/]+|p\/[^/]+)\/?$/;
+const PLAYER_ROUTE = /^\/course\/[^/]+\/(l\/[^/]+|checkpoint\/[^/]+|review|u\/[^/]+|p\/[^/]+|abschluss)\/?$/;
 const COURSE_HOME_ROUTE = /^\/course\/[^/]+\/?$/;
 const LEARN_ROUTE = /^\/course\/[^/]+\/v2\/?$/;
 

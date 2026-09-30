@@ -262,6 +262,7 @@ export default function StepView({
         lines={lines}
         names={names}
         onAttempt={attempt}
+        onProgress={setInner}
         onDone={(r) => { count(r); advance(); }}
       />
     );
@@ -287,6 +288,7 @@ export default function StepView({
           lines={lines}
           names={names}
           onAttempt={attempt}
+          onProgress={setInner}
           onDone={(r) => { count(r); advance(); }}
         />
       );

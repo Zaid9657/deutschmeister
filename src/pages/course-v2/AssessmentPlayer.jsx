@@ -137,6 +137,8 @@ export default function AssessmentPlayer({ level, doc, manifest, user }) {
   const [answers, setAnswers] = useState(() => new Map());
   const [phase, setPhase] = useState('loading'); // loading | start | section | results
   const [index, setIndex] = useState(0);
+  // progress inside the open section (an exam block reports it per task), reset on every section
+  const [inner, setInner] = useState(0);
   const [sessionRuns, setSessionRuns] = useState(() => new Map());
   const pending = useRef(new Map()); // section id → attempts not yet written
   const savedStatus = useRef(null);
@@ -178,6 +180,7 @@ export default function AssessmentPlayer({ level, doc, manifest, user }) {
 
   const goTo = useCallback((i) => {
     setIndex(i);
+    setInner(0);
     setPhase('section');
     if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'auto' });
   }, []);
@@ -325,6 +328,7 @@ export default function AssessmentPlayer({ level, doc, manifest, user }) {
           texts={doc.texts}
           lines={lines}
           onAttempt={onAttempt}
+          onProgress={setInner}
           onDone={(r) => finishSection(s, r)}
         />
       );
@@ -345,8 +349,9 @@ export default function AssessmentPlayer({ level, doc, manifest, user }) {
     } else if (s.kind === 'reward') {
       body = <RewardView key={s.id} reward={s.part} unitId={docId} stepId={s.id} level={level} lines={lines} onAttempt={onAttempt} onDone={() => finishSection(s, null)} />;
     }
+    const sectionProgress = sections.length ? Math.min(1, (doneCount + (finished.has(s.id) ? 0 : inner)) / sections.length) : 0;
     return (
-      <Shell level={level} progress={progress}>
+      <Shell level={level} progress={sectionProgress}>
         <section data-section-id={s.id} data-section-kind={s.kind}>
           <header className="mb-5">
             <p className="flex flex-wrap items-center gap-x-2 text-[0.75rem] font-extrabold uppercase tracking-[0.08em] text-course-ink">
