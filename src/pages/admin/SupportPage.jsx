@@ -11,6 +11,16 @@ const SLA_LABEL = { met: 'SLA eingehalten', breached: 'SLA verletzt', due_soon: 
 const STATUS_TONE = { new: 'info', open: 'warn', waiting_user: 'muted', resolved: 'ok', closed: 'muted' };
 const TABS = [{ id: 'open', label: 'Offen' }, { id: 'new', label: 'Neu' }, { id: 'waiting_user', label: 'Wartet auf Nutzer' }, { id: 'resolved', label: 'Gelöst' }, { id: 'closed', label: 'Geschlossen' }, { id: '', label: 'Alle' }];
 
+// AI drafts (netlify/functions/support-agent.mjs): pending until sent or stopped,
+// blocked when the deterministic checks rejected them (never sendable).
+const AI_TONE = { pending: 'warn', cancelled: 'muted', blocked: 'error' };
+function aiDraftLabel(msg, meta) {
+  if (msg.ai === 'cancelled') return 'gestoppt';
+  if (msg.ai === 'blocked') return 'blockiert: Prüfung nicht bestanden, wird nie gesendet';
+  if (meta?.draft_id === msg.id && meta.mode === 'send' && meta.send_after) return `wartet: sendet ab ${hm(meta.send_after)}, wenn niemand eingreift`;
+  return 'Entwurf: wird nicht automatisch gesendet';
+}
+
 function labelOf(vocab, list, id) {
   return vocab?.[list]?.find((x) => x.id === id)?.label ?? id;
 }
@@ -43,15 +53,24 @@ function Detail({ ticketId, onChanged }) {
       <ol className="mt-2 space-y-2">
         {data.messages.map((msg) => {
           const internal = msg.visibility === 'internal';
+          // An AI draft (support-agent.mjs): its first line is the agent's marker, the rest is the reply.
+          const ai = msg.ai;
+          const text = ai ? msg.body.slice(msg.body.indexOf('\n') + 1) : msg.body;
           return (
             <li key={msg.id} className={`rounded-md border px-3 py-2 text-[0.8125rem] ${internal ? 'ml-6 border-dashed border-rule bg-paper-sunk' : msg.author_type === 'user' ? 'border-rule bg-white' : 'border-siegel/30 bg-siegel-wash/40'}`}>
               <div className="mb-1 flex flex-wrap items-center gap-2 text-xs text-graphite">
-                {internal ? <Badge label="INTERN" tone="muted" /> : <Badge label={msg.author_type === 'user' ? 'Nutzer' : msg.author_type === 'admin' ? 'Team' : 'System'} tone={msg.author_type === 'user' ? 'info' : 'ok'} />}
+                {ai ? <Badge label="KI-ENTWURF" tone="info" /> : internal ? <Badge label="INTERN" tone="muted" /> : <Badge label={msg.author_type === 'user' ? 'Nutzer' : msg.author_type === 'admin' ? 'Team' : 'KI-Antwort'} tone={msg.author_type === 'user' ? 'info' : 'ok'} />}
                 <span>{hm(msg.created_at)}</span>
                 {msg.author_email ? <span>{msg.author_email}</span> : null}
-                {msg.delivery_status ? <Badge label={msg.delivery_status === 'sent' ? 'gesendet' : msg.delivery_status === 'failed' ? `Zustellung fehlgeschlagen: ${msg.delivery_error || ''}` : 'in Warteschlange'} tone={msg.delivery_status === 'sent' ? 'ok' : msg.delivery_status === 'failed' ? 'error' : 'warn'} /> : null}
+                {ai ? <Badge label={aiDraftLabel(msg, t.ai_agent)} tone={AI_TONE[ai]} /> : msg.delivery_status ? <Badge label={msg.delivery_status === 'sent' ? 'gesendet' : msg.delivery_status === 'failed' ? `Zustellung fehlgeschlagen: ${msg.delivery_error || ''}` : 'in Warteschlange'} tone={msg.delivery_status === 'sent' ? 'ok' : msg.delivery_status === 'failed' ? 'error' : 'warn'} /> : null}
               </div>
-              <div className="whitespace-pre-wrap text-ink">{msg.body}</div>
+              <div className="whitespace-pre-wrap text-ink">{text}</div>
+              {writable && (ai === 'pending' || ai === 'blocked') ? (
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {ai === 'pending' ? <SecondaryButton disabled={m.busy} onClick={() => run('cancel_ai_draft', { draftId: msg.id })}>KI-Antwort stoppen</SecondaryButton> : null}
+                  <SecondaryButton disabled={m.busy} onClick={() => setReply(text)}>In Antwort übernehmen</SecondaryButton>
+                </div>
+              ) : null}
             </li>
           );
         })}

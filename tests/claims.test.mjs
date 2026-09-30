@@ -193,6 +193,11 @@ const PRICE_FREE_SURFACES = [
   'src/components/speaking/SpeakingLimitOffer.jsx',
   // The /pricing/ Pro button's label and note (conversion agent, 2026-09-30).
   'astro-site/src/lib/proCta.js',
+  // The support agent quotes prices to customers: only through the synced
+  // pricing copy (_shared/pricing.mjs), never typed (2026-09-30).
+  'netlify/functions/support-agent.mjs',
+  'netlify/functions/_shared/supportAgentLib.mjs',
+  'netlify/functions/_shared/supportCatalog.mjs',
 ];
 
 test('no page source retypes a price literal', () => {
@@ -301,6 +306,30 @@ test('the functions\' synced pricing copy matches the data layer', async () => {
   const shared = await import('../netlify/functions/_shared/pricing.mjs');
   assert.equal(shared.MONTHLY_PRICE_EUR, MONTHLY_PRICE_EUR, 'functions pricing copy drifted from src/data/pricing.js');
   assert.equal(shared.eur(shared.MONTHLY_PRICE_EUR), eur(MONTHLY_PRICE_EUR), 'functions eur() formats differently than the data layer');
+
+  // The catalogue the support agent may quote (and its reply validator allows).
+  assert.equal(shared.YEARLY_PRICE_EUR, YEARLY_PRICE_EUR);
+  assert.equal(shared.COURSE_TELC_B1_PRICE_EUR, COURSE_TELC_B1_PRICE_EUR);
+  assert.equal(shared.COURSE_PRO_DAYS, COURSE_PRO_DAYS);
+  assert.deepEqual({ ...shared.SUBLEVEL_PRICES_EUR }, SUBLEVEL_PRICES_EUR);
+  assert.deepEqual([...shared.COMING_SOON_LEVELS], COMING_SOON_LEVELS);
+  assert.deepEqual([...shared.ALL_LEVELS], ALL_LEVELS);
+  assert.equal(shared.YEARLY_AS_MONTHLY_EUR, YEARLY_AS_MONTHLY_EUR);
+  assert.equal(shared.MONTHLY_PER_DAY_EUR, MONTHLY_PER_DAY_EUR);
+  assert.equal(shared.YEARLY_PER_DAY_EUR, YEARLY_PER_DAY_EUR);
+  for (const p of [MONTHLY_PRICE_EUR, YEARLY_PRICE_EUR, COURSE_TELC_B1_PRICE_EUR, 40]) {
+    assert.equal(shared.deEur(p), deEur(p), `functions deEur(${p}) formats differently than the data layer`);
+  }
+  // Every product key a purchases row can carry resolves to the same levels.
+  const keys = [...Object.keys(COURSES), ...Object.keys(LEVEL_COURSES), ...Object.keys(LEGACY_LEVEL_COURSES)];
+  for (const key of keys) {
+    assert.deepEqual(shared.productInfo(key)?.levels, levelsForProduct(key), `productInfo(${key}).levels drifted`);
+    assert.equal(shared.productKeyForLevel(key.replace(/^course_/, '').replace('_', '.')), productKeyForLevel(key.replace(/^course_/, '').replace('_', '.')));
+  }
+  assert.equal(shared.productInfo('nope'), null);
+  // The allow-list holds every figure a page may state, and nothing else.
+  const pagePrices = [MONTHLY_PRICE_EUR, YEARLY_PRICE_EUR, YEARLY_AS_MONTHLY_EUR, MONTHLY_PER_DAY_EUR, YEARLY_PER_DAY_EUR, COURSE_TELC_B1_PRICE_EUR, ...Object.values(SUBLEVEL_PRICES_EUR)];
+  assert.deepEqual([...shared.CATALOGUE_EURO_AMOUNTS].sort((a, b) => a - b), pagePrices.sort((a, b) => a - b));
 });
 
 test('writing limits match the server that enforces them', () => {

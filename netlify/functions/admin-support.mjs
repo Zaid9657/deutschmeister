@@ -5,16 +5,22 @@
 // (support-ticket-create's thread view, the reply email) filters
 // visibility = 'public'; here, the admin surface, internal rows travel as
 // their own rows and are rendered as such. A reply is `queued` and becomes
-// `sent` only when Resend confirms.
+// `sent` only when Resend confirms — through adminSupportLib.sendTicketReply,
+// the one send path the support agent uses too.
+//
+// AI drafts (netlify/functions/support-agent.mjs) are held internal rows.
+// `cancel_ai_draft` stops one explicitly ("KI-Antwort stoppen"); a note, a
+// reply, a status, priority or assignee change, or closing the ticket stops
+// every pending draft on it, because a person is now handling the ticket.
 import { randomUUID } from 'node:crypto';
 import { adminEndpoint, badRequest, notFound, conflict, fetchAll, exactCount, counting } from './_shared/adminHttp.mjs';
 import { writeAudit } from './_shared/adminRbac.mjs';
 import {
   SLA_HOURS, TICKET_STATUSES, OPEN_STATUSES, PRIORITIES, CATEGORIES, STATUS_LABELS, PRIORITY_LABELS, CATEGORY_LABELS,
   RESOLUTION_CATEGORIES, RESOLUTION_LABELS, CLOSURE_REASONS, CLOSURE_LABELS, slaDueAt, slaState, ticketReference,
+  sendTicketReply, cancelPendingAiDrafts, aiDraftState,
 } from './_shared/adminSupportLib.mjs';
 
-const FROM_ADDRESS = 'DeutschMeister Support <zaid@deutsch-meister.de>';
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 const vocab = () => ({
@@ -45,22 +51,6 @@ async function addMessage(supabase, { ticketId, authorType, authorId, visibility
   const { data, error } = await supabase.from('support_ticket_messages').insert({ ticket_id: ticketId, author_type: authorType, author_id: authorId, visibility, body, delivery_status: deliveryStatus }).select('*').maybeSingle();
   if (error) throw new Error(error.message);
   return data;
-}
-
-async function sendReplyEmail({ to, reference, subject, body }) {
-  const key = process.env.RESEND_API_KEY;
-  if (!key) return { ok: false, error: 'RESEND_API_KEY nicht gesetzt' };
-  const html = `<div style="font-family:system-ui,sans-serif;font-size:15px;line-height:1.6;color:#14201D;max-width:600px">${body
-    .split('\n')
-    .map((l) => `<p style="margin:0 0 12px">${l.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</p>`)
-    .join('')}<p style="margin-top:24px;font-size:13px;color:#5A6360">Ticket ${reference} · Antworten Sie einfach auf diese E-Mail.</p></div>`;
-  const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: FROM_ADDRESS, to: [to], reply_to: 'kontakt@deutsch-meister.de', subject: `[${reference}] ${subject || 'Ihre Anfrage bei DeutschMeister'}`, html }),
-  });
-  if (!res.ok) return { ok: false, error: `Resend ${res.status}: ${(await res.text()).slice(0, 200)}` };
-  return { ok: true };
 }
 
 export const handler = adminEndpoint(
@@ -121,8 +111,8 @@ export const handler = adminEndpoint(
       const { data: people } = ids.length ? await supabase.from('profiles').select('id, email').in('id', ids) : { data: [] };
       const emailOf = new Map((people || []).map((p) => [p.id, p.email]));
       return {
-        ticket: { ...t, sla: slaState(t, now), assignee_email: emailOf.get(t.assignee_id) || null, closed_by_email: emailOf.get(t.closed_by) || null },
-        messages: messages.map((m) => ({ ...m, author_email: emailOf.get(m.author_id) || null })),
+        ticket: { ...t, sla: slaState(t, now), assignee_email: emailOf.get(t.assignee_id) || null, closed_by_email: emailOf.get(t.closed_by) || null, ai_agent: t.context?.ai_agent || null },
+        messages: messages.map((m) => ({ ...m, author_email: emailOf.get(m.author_id) || null, ai: aiDraftState(m) })),
         vocab: vocab(),
         generatedAt: now.toISOString(),
       };
@@ -154,12 +144,29 @@ export const handler = adminEndpoint(
     }
 
     const t = await getTicket(supabase, body.ticketId);
+    // A person is handling the ticket: stop every AI reply still waiting on it.
+    const stopAiDrafts = async (why) => {
+      const ids = await cancelPendingAiDrafts(supabase, t.id, `${why} (${auth.userId})`);
+      if (ids.length) await audit('cancel_ai_draft', t.id, { reason: `implicit: ${why}`, after: { draftIds: ids } });
+      return ids;
+    };
+
+    if (action === 'cancel_ai_draft') {
+      const draftId = String(body.params?.draftId || '');
+      if (!UUID.test(draftId)) throw badRequest('draftId muss eine UUID sein.');
+      const ids = await cancelPendingAiDrafts(supabase, t.id, `stopped by ${auth.userId}${reason ? ` — ${reason}` : ''}`, { draftId });
+      if (!ids.length) throw conflict('Kein wartender KI-Entwurf mit dieser ID — schon gesendet oder gestoppt.');
+      const m = await addMessage(supabase, { ticketId: t.id, authorType: 'system', authorId: auth.userId, visibility: 'internal', body: `KI-Antwort gestoppt${reason ? ` — ${reason}` : ''}` });
+      await audit('cancel_ai_draft', t.id, { reason, after: { draftId, messageId: m.id } });
+      return { stopped: ids };
+    }
 
     if (action === 'status') {
       const status = String(body.params?.status || '');
       if (!TICKET_STATUSES.includes(status)) throw badRequest('Ungültiger Status.');
       if (['resolved', 'closed'].includes(status) && reason.length < 3) throw badRequest('Zum Lösen oder Schließen ist eine Begründung erforderlich.');
       if (status === 'closed') throw badRequest('Schließen läuft über die Aktion „close“ (mit Abschlussgrund).');
+      await stopAiDrafts('status change');
       const patch = { status, resolved_at: status === 'resolved' ? now.toISOString() : t.resolved_at };
       const updated = await patchTicket(supabase, t.id, patch);
       await addMessage(supabase, { ticketId: t.id, authorType: 'system', authorId: auth.userId, visibility: 'internal', body: `Status: ${STATUS_LABELS[t.status]} → ${STATUS_LABELS[status]}${reason ? ` — ${reason}` : ''}` });
@@ -171,6 +178,7 @@ export const handler = adminEndpoint(
       const priority = String(body.params?.priority || '');
       if (!PRIORITIES.includes(priority)) throw badRequest('Ungültige Priorität.');
       if (priority === 'urgent' && reason.length < 3) throw badRequest('Eskalation auf „dringend“ braucht eine Begründung.');
+      await stopAiDrafts('priority change');
       const updated = await patchTicket(supabase, t.id, { priority, sla_due_at: slaDueAt(t.created_at, priority) });
       await audit('priority', t.id, { reason, before: { priority: t.priority }, after: { priority } });
       return { ticket: { ...updated, sla: slaState(updated, now) } };
@@ -183,6 +191,7 @@ export const handler = adminEndpoint(
         const { data: staff } = await supabase.from('profiles').select('role').eq('id', assignee).maybeSingle();
         if (!staff?.role) throw badRequest('Nur Konten mit einer Admin-Rolle können zugewiesen werden.');
       }
+      await stopAiDrafts('assignment');
       const updated = await patchTicket(supabase, t.id, { assignee_id: assignee, status: t.status === 'new' ? 'open' : t.status });
       await audit('assign', t.id, { reason, before: { assignee_id: t.assignee_id }, after: { assignee_id: assignee } });
       return { ticket: { ...updated, sla: slaState(updated, now) } };
@@ -191,6 +200,7 @@ export const handler = adminEndpoint(
     if (action === 'note') {
       const text = String(body.params?.body || '').trim();
       if (!text) throw badRequest('Notiz ist leer.');
+      await stopAiDrafts('internal note');
       const m = await addMessage(supabase, { ticketId: t.id, authorType: 'admin', authorId: auth.userId, visibility: 'internal', body: text });
       await patchTicket(supabase, t.id, {});
       await audit('note', t.id, { after: { messageId: m.id, visibility: 'internal' } });
@@ -200,16 +210,15 @@ export const handler = adminEndpoint(
     if (action === 'reply') {
       const text = String(body.params?.body || '').trim();
       if (!text) throw badRequest('Antwort ist leer.');
-      const to = t.user_email;
-      if (!to) throw conflict('Das Ticket hat keine E-Mail-Adresse; Antwort kann nicht zugestellt werden.');
-      const m = await addMessage(supabase, { ticketId: t.id, authorType: 'admin', authorId: auth.userId, visibility: 'public', body: text, deliveryStatus: 'queued' });
-      const sent = await sendReplyEmail({ to, reference: t.reference, subject: t.subject, body: text });
-      const { data: updatedMsg } = await supabase.from('support_ticket_messages').update({ delivery_status: sent.ok ? 'sent' : 'failed', delivery_error: sent.ok ? null : sent.error }).eq('id', m.id).select('*').maybeSingle();
-      const patch = { status: t.status === 'new' || t.status === 'open' ? 'waiting_user' : t.status };
-      if (!t.first_response_at) patch.first_response_at = now.toISOString();
-      const updated = await patchTicket(supabase, t.id, patch);
-      await audit('reply', t.id, { after: { messageId: m.id, delivery: sent.ok ? 'sent' : 'failed', error: sent.error || null } });
-      return { message: updatedMsg || m, ticket: { ...updated, sla: slaState(updated, now) }, delivered: sent.ok, deliveryError: sent.error || null };
+      if (!t.user_email) throw conflict('Das Ticket hat keine E-Mail-Adresse; Antwort kann nicht zugestellt werden.');
+      const stopped = await stopAiDrafts('human reply');
+      // The one send path (shared with the support agent): claim the row, Resend,
+      // sent | failed, then the ticket — a failed send does not count as answered.
+      const sent = await sendTicketReply({
+        db: supabase, ticket: t, body: text, authorType: 'admin', authorId: auth.userId, now,
+        onAudit: ({ messageId, delivered, error }) => audit('reply', t.id, { after: { messageId, delivery: delivered ? 'sent' : 'failed', error, stoppedAiDrafts: stopped.length } }),
+      });
+      return { message: sent.message, ticket: { ...sent.ticket, sla: slaState(sent.ticket, now) }, delivered: sent.delivered, deliveryError: sent.error || null };
     }
 
     if (action === 'close') {
@@ -219,6 +228,7 @@ export const handler = adminEndpoint(
       if (resolutionCategory && !RESOLUTION_CATEGORIES.includes(resolutionCategory)) throw badRequest('Ungültige Lösungsart.');
       if (reason.length < 3) throw badRequest('Zum Schließen ist eine Begründung erforderlich.');
       if (t.status === 'closed') throw conflict('Das Ticket ist bereits geschlossen.');
+      await stopAiDrafts('close');
       const updated = await patchTicket(supabase, t.id, { status: 'closed', closed_at: now.toISOString(), closed_by: auth.userId, closure_reason: closureReason, resolution_category: resolutionCategory, resolution: reason, resolved_at: t.resolved_at || now.toISOString() });
       await addMessage(supabase, { ticketId: t.id, authorType: 'system', authorId: auth.userId, visibility: 'internal', body: `Geschlossen: ${CLOSURE_LABELS[closureReason]}${resolutionCategory ? ` · ${RESOLUTION_LABELS[resolutionCategory]}` : ''} — ${reason}` });
       await audit('close', t.id, { reason, before: { status: t.status }, after: { status: 'closed', closure_reason: closureReason, resolution_category: resolutionCategory } });
