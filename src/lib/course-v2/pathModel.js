@@ -25,7 +25,11 @@
 //     complete/gold), `current` when it is the first unfinished step of the model's
 //     `next` unit, `open` otherwise — and EVERY node of a compiled unit links (the
 //     gate stays soft, BLUEPRINT §3.5): `${v2Paths.unit(level, nr)}?s=${stepNr}`;
-//     the Kapitel banner links to the Kapitel page itself, `v2Paths.unit(level, nr)`;
+//     a unit keeps its Kapitel page (`href`, v2Paths.unit) and, since round 3, the Kapitel
+//     guide its banner's book button opens (`guideHref`, `…/u/<nr>?view=guide`);
+//   - since round 3 (2026-09-30, "duolingo style … step for step") the path draws no label
+//     beside a node: the label, „Lernschritt n von m" and the one button live in the node's
+//     popover (nodePopover / stopPopover below), the name and state in its ariaLabel;
 //   - a unit that is not compiled has no nodes and no link („kommt bald");
 //   - numbers shown come from the manifest only (content counts, never usage
 //     counts — CLAUDE.md "User-facing counts are content counts"); a count that is
@@ -78,15 +82,17 @@ export const STEP_LABEL_DE = Object.freeze({
 const FALLBACK_TITLE = Object.freeze({ situation: 'Situation', text: 'Text', sprache: 'Sprache im Fokus' });
 
 /** Unit banner hues, cycling by unit order (design-tokens.js `courseHues`). */
-export const UNIT_HUES = Object.freeze(['gruen', 'orange', 'beere', 'tuerkis']);
+// the live palette's hue first (COURSE_PALETTE = türkis, owner pick 2026-09-30), so Kapitel 1 opens in it
+export const UNIT_HUES = Object.freeze(['tuerkis', 'orange', 'beere', 'gruen']);
 export const hueFor = (index) => UNIT_HUES[((Number(index) || 0) % UNIT_HUES.length + UNIT_HUES.length) % UNIT_HUES.length];
 
 /**
- * The path's wave: horizontal node offsets in px inside the node rail, mirrored on
- * every second Kapitel. Small on purpose — the labels sit to the RIGHT of the rail at a
- * fixed x (a textbook „Inhalt" reads down one edge), so the wave only swings the nodes.
+ * The path's wave: horizontal node offsets in px from the centre of the path, mirrored on
+ * every second Kapitel — Duolingo's zig-zag (round 3, owner 2026-09-30: "make it duolingo
+ * style"). The nodes carry no label cards any more, so the wave swings wide; its widest
+ * swing plus half a node (36 px) and half the START bubble still fits a 360 px phone.
  */
-export const ZIGZAG = Object.freeze([0, 8, 12, 8, 0, -8, -12, -8]);
+export const ZIGZAG = Object.freeze([0, 44, 70, 44, 0, -44, -70, -44]);
 export const zigzagOffset = (stepIndex, direction = 1) => ZIGZAG[stepIndex % ZIGZAG.length] * (direction < 0 ? -1 : 1) || 0;
 
 /** The player URL of one step: the unit route plus `?s=<step number>` (the player opens that step). */
@@ -300,7 +306,9 @@ export function kapitelSummary(row) {
  * Section = { nr, title, dividerLabel ('Modul 1 · Ankommen in Leipzig'), units: [Unit], stop: StopNode | null }
  * Unit    = { id, nr, index, title, hue, direction, available, status, done, stepsDone, stepsTotal,
  *             bannerLabel ('Kapitel 1 · 2 von 7 geschafft'), href (the Kapitel page | null), bannerAria,
- *             summary: { grammar, newWords, line }, minutesPerStep, hasCurrent, nodes: [Node] }
+ *             guideHref (the Kapitel guide, the banner's book button | null), eyebrow ('Modul 1 · Kapitel 1'),
+ *             summary: { grammar, newWords, line }, minutesPerStep, hasCurrent, nodes: [Node],
+ *             placeholders: [Placeholder] (the grey nodes of a Kapitel that is not compiled yet) }
  * Node    = { id, stepNr, kind, letter, icon, tag, title, label, grammar, skills, state: 'done'|'current'|'open',
  *             href, offset, ariaLabel }
  * StopNode = { kind, id, nr, label ('Plateau 1 · Wiederholung' | 'Abschlusstest'), detail, state, started, href, offset, ariaLabel }
@@ -370,13 +378,18 @@ export function coursePath(model, state = {}, { etappenDe = [], stepTitles = nul
       stepsTotal: total,
       bannerLabel,
       href: row.available ? v2Paths.unit(level, row.nr) : null,
+      guideHref: row.available ? guideHref(level, row.nr) : null,
+      eyebrow: `Kapitel ${row.nr}`,
       bannerAria: `Kapitelübersicht: ${bannerLabel}, ${title}`,
       summary: kapitelSummary(mRow),
       minutesPerStep,
       hasCurrent: Boolean(current && (current.kind === 'step' || current.kind === 'unit') && current.unitId === row.id),
       nodes,
+      placeholders: row.available ? [] : placeholderNodes(level, row.nr, direction),
     };
   };
+  // the banner's eyebrow names the Modul too: „Modul 1 · Kapitel 1"
+  const inModul = (nr) => (u) => ({ ...u, eyebrow: `Modul ${nr} · Kapitel ${u.nr}` });
 
   const sections = (model.etappen || []).map((e) => {
     const title = (Array.isArray(etappenDe) && etappenDe[e.nr - 1]) || null;
@@ -385,7 +398,7 @@ export function coursePath(model, state = {}, { etappenDe = [], stepTitles = nul
       nr: e.nr,
       title,
       dividerLabel: title ? `Modul ${e.nr} · ${title}` : `Modul ${e.nr}`,
-      units: e.units.map(unitView),
+      units: e.units.map(unitView).map(inModul(e.nr)),
       stop: stop ? stopNode(stop, model.next, stop.kind === 'closing' ? [] : e.units.map((u) => u.nr)) : null,
     };
   });
@@ -653,3 +666,218 @@ export function formatFinishDate(date, today = new Date()) {
 
 /** XP a finished step earns (gamify.js XP.step) — the current card's „+20 XP". */
 export const STEP_XP = XP.step;
+
+// ---------------------------------------------------------------------------
+// The learn screen (round 3, owner 2026-09-30: "it looks intimidating and too much,
+// can we change the view to make it in duolingo style and for everything to be step
+// for step"). Duolingo on the surface, the textbook one tap deep: the path draws big
+// round nodes only, a tapped node's popover names the step and holds its one button,
+// a Kapitel banner's book button opens the Kapitel guide, and a first visit opens on a
+// three-screen welcome instead of the long plan (which moved into the „Kursplan" sheet).
+// ---------------------------------------------------------------------------
+
+/** The Kapitel guide (the banner's book button): the Kapitel page in its guide view. */
+export function guideHref(level, nr) {
+  return `${v2Paths.unit(level, nr)}?view=guide`;
+}
+
+/** The DOM id of a node on the path (a step, a Plateau, the Abschlusstest) — the page scrolls to it. */
+export const nodeAnchor = (id) => `dm-node-${id}`;
+
+/** The DOM id of the path's current place, or null when everything is done. */
+export function currentAnchor(current) {
+  if (!current) return null;
+  if (current.kind === 'step') return nodeAnchor(current.stepId);
+  if (current.kind === 'unit') return nodeAnchor(`${current.unitId}-abschluss`);
+  return nodeAnchor(current.id);
+}
+
+/**
+ * The grey nodes of a Kapitel that is not compiled yet: the band's skeleton, in the
+ * wave, never a link — tapped, their popover says „Kommt bald".
+ * → [{ id, stepNr, kind, icon, state: 'soon', href: null, offset, ariaLabel }]
+ */
+export function placeholderNodes(level, unitNr, direction = 1) {
+  return stepSkeleton(level).map((s, k) => ({
+    id: `kapitel-${unitNr}-soon-${k + 1}`,
+    stepNr: k + 1,
+    kind: s.kind,
+    icon: s.icon,
+    state: 'soon',
+    href: null,
+    offset: zigzagOffset(k, direction),
+    ariaLabel: `Kapitel ${unitNr}, Lernschritt ${k + 1}: kommt bald.`,
+  }));
+}
+
+/** „Lernschritt 1 von 7": where a step sits in its Kapitel (the popover's small line). */
+export const stepOfLine = (stepNr, total) => `Lernschritt ${Number(stepNr)} von ${Number(total)}`;
+
+/**
+ * What the popover under a tapped step node says. → { title, meta, action, href, tone }
+ *   title  'Teil A · Ich bin Priya. Und Sie?' | 'Prüfungstraining · Hören Teil 1' | 'Kapiteltest'
+ *   meta   'Lernschritt 1 von 7'
+ *   action 'Start +20 XP' (current) | 'Wiederholen' (done) | 'Trotzdem starten' (not yet — the
+ *          gate stays soft) | null (not compiled: the title says „Kommt bald")
+ *   tone   'hue' (done, current: the Kapitel's colour) | 'quiet' (not yet) | 'soon'
+ * The page sets the action in capitals (CSS), so screen readers get words, not letters.
+ */
+export function nodePopover(node, { stepsTotal, unitNr = null, xp = STEP_XP } = {}) {
+  const n = node || {};
+  if (n.state === 'soon' || !n.href) {
+    return { title: 'Kommt bald', meta: `${unitNr ? `Kapitel ${unitNr}` : 'Dieses Kapitel'} ist noch in Arbeit.`, action: null, href: null, tone: 'soon' };
+  }
+  const title = n.title ? `${n.tag} · ${n.title}` : n.tag || `Lernschritt ${n.stepNr}`;
+  const meta = stepOfLine(n.stepNr, stepsTotal);
+  if (n.state === 'current') return { title, meta, action: xp ? `Start +${xp} XP` : 'Start', href: n.href, tone: 'hue' };
+  if (n.state === 'done') return { title, meta, action: 'Wiederholen', href: n.href, tone: 'hue' };
+  return { title, meta, action: 'Trotzdem starten', href: n.href, tone: 'quiet' };
+}
+
+/** The popover of a Plateau chest or the Abschlusstest trophy (tone 'xp': the gold of the chest). */
+export function stopPopover(stop) {
+  const s = stop || {};
+  if (s.state === 'unavailable' || !s.href) return { title: s.label, meta: 'Kommt bald', action: null, href: null, tone: 'soon' };
+  if (s.state === 'current') return { title: s.label, meta: s.detail, action: s.started ? 'Weitermachen' : 'Start', href: s.href, tone: 'xp' };
+  if (s.state === 'done') return { title: s.label, meta: s.detail, action: 'Wiederholen', href: s.href, tone: 'xp' };
+  return { title: s.label, meta: s.detail, action: 'Trotzdem starten', href: s.href, tone: 'quiet' };
+}
+
+/**
+ * Every step of a Kapitel finished but its recap not reached (the unit is not stored as
+ * done): the path's current place is the Kapitel itself, so one extra node after its steps
+ * closes it. null for every other Kapitel.
+ */
+export function finishNode(current, unit) {
+  if (!current || current.kind !== 'unit' || !unit || current.unitId !== unit.id) return null;
+  const title = `Kapitel ${unit.nr} abschließen`;
+  return {
+    id: `${unit.id}-abschluss`,
+    state: 'current',
+    icon: 'Flag',
+    href: current.href,
+    offset: 0,
+    ariaLabel: `${title}: alle Lernschritte geschafft. Jetzt weitermachen.`,
+    popover: { title, meta: 'Alle Lernschritte geschafft', action: 'Weiter', href: current.href, tone: 'hue' },
+  };
+}
+
+/** The current node's progress ring: the Kapitel's finished steps, in percent. */
+export function unitPercent(unit) {
+  const total = Number(unit && unit.stepsTotal) || 0;
+  if (!total) return 0;
+  return Math.min(100, Math.round(((Number(unit.stepsDone) || 0) / total) * 100));
+}
+
+/** The top bar's daily-goal ring: minutes today of the pace's minutes per learning day. */
+export function goalRing(todayMinutes, goalMinutes) {
+  const done = Math.max(0, Math.round(Number(todayMinutes) || 0));
+  const goal = Math.max(1, Math.round(Number(goalMinutes) || 0) || 1);
+  const pct = Math.min(100, Math.round((done / goal) * 100));
+  return {
+    done,
+    goal,
+    pct,
+    reached: done >= goal,
+    label: done >= goal ? `Tagesziel geschafft: heute ${done} von ${goal} Minuten` : `Tagesziel: heute ${done} von ${goal} Minuten`,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// The first-visit welcome: three short screens, one thing each
+// ---------------------------------------------------------------------------
+
+/** The localStorage key that remembers, per level and device, that the welcome was finished or skipped. */
+export const welcomeStorageKey = (level) => `dm_course_v2_welcome:${String(level || '').toLowerCase()}`;
+
+/** The welcome shows once: nothing finished in the level, and not finished or skipped on this device. */
+export function showWelcome(state, stored) {
+  return !hasProgress(state) && !stored;
+}
+
+const sentencesOf = (text) => (String(text || '').replace(/\s+/g, ' ').trim().match(/[^.!?…]+[.!?…]+(?=\s|$)|[^.!?…]+$/g) || []).map((s) => s.trim()).filter(Boolean);
+
+/**
+ * The narrator's bubble: the promise's first sentence (who the learner meets) and its
+ * last (what they will do), when both together stay short — else the first alone.
+ * 'Sie lernen Deutsch mit Priya. Sie kommt … Mit ihr lernen Sie Schritt für Schritt …'
+ * → 'Sie lernen Deutsch mit Priya. Mit ihr lernen Sie Schritt für Schritt …'
+ */
+export function shortPromise(text, max = 120) {
+  const s = sentencesOf(text);
+  if (!s.length) return null;
+  if (s.length === 1) return s[0];
+  const both = `${s[0]} ${s[s.length - 1]}`;
+  return both.length <= max ? both : s[0];
+}
+
+/**
+ * One can-do as one short line: its first part before „, " or „ und " while that part is
+ * still a phrase (two words or more), capitalised. 'sich vorstellen und andere … fragen'
+ * → 'Sich vorstellen'; 'Ihre Familie vorstellen' stays. The full list is in the Kursplan.
+ */
+export function outcomeLine(text) {
+  const s = String(text || '').replace(/\s+/g, ' ').trim();
+  if (!s) return '';
+  const cuts = [', ', ' und '].map((m) => s.indexOf(m)).filter((i) => i > 0);
+  let out = s;
+  if (cuts.length) {
+    const head = s.slice(0, Math.min(...cuts)).trim();
+    if (head.split(' ').length >= 2) out = head;
+  }
+  return out.charAt(0).toUpperCase() + out.slice(1);
+}
+
+/** „12 Kapitel · 4 Module · Abschlusstest" — counted from the manifest, never typed. */
+export function courseShape(manifest) {
+  const m = manifest || {};
+  const units = Array.isArray(m.units) ? m.units.length : 0;
+  const modules = Array.isArray(m.etappen) ? m.etappen.length : 0;
+  const halbtest = m.closing && m.closing.halbtest && typeof m.closing.halbtest === 'object' ? Object.keys(m.closing.halbtest).length : 0;
+  const closing = halbtest > 0 || Number(m.counts && m.counts.closingBlocks) > 0;
+  const parts = [];
+  if (units) parts.push(`${units} Kapitel`);
+  if (modules) parts.push(`${modules} ${modules === 1 ? 'Modul' : 'Module'}`);
+  if (closing) parts.push('Abschlusstest');
+  return parts.join(' · ') || null;
+}
+
+/**
+ * The welcome's content. A screen whose data the level lacks is left out (no showcase →
+ * no „hallo" and no „ziele"); no screen at all → no welcome.
+ * → { code, narrator ('Priya' on the A1 levels, whose cast she is | null), promise, heading,
+ *     outcomes: [≤ 3 short lines], shape, screens: ['hallo' | 'ziele' | 'tempo'] }
+ */
+export function welcomeModel(manifest, level) {
+  const code = levelCode(level);
+  const sc = (manifest && manifest.showcase) || {};
+  const promise = shortPromise(sc.promiseDe);
+  const outcomes = [...new Set((Array.isArray(sc.outcomesDe) ? sc.outcomesDe : []).map(outcomeLine).filter(Boolean))].slice(0, 3);
+  const hasPace = Boolean(manifest && manifest.pace && typeof manifest.pace === 'object' && Object.keys(manifest.pace).length);
+  const l = normalizeLevel(level) || String(level || '').toLowerCase();
+  return {
+    code,
+    narrator: l.startsWith('a1') ? 'Priya' : null,
+    promise,
+    heading: `Das lernen Sie in ${code}`,
+    outcomes,
+    shape: courseShape(manifest),
+    screens: [promise ? 'hallo' : null, outcomes.length ? 'ziele' : null, hasPace ? 'tempo' : null].filter(Boolean),
+  };
+}
+
+/**
+ * One pace tile of the welcome (paceOptions → the three big tiles of „Wie viel Zeit haben
+ * Sie pro Tag?"). → { id, name, title ('35 Minuten'), days ('an 4 Tagen pro Woche'), finish }
+ */
+export function paceTile(option, { allDone = false, today = new Date() } = {}) {
+  const o = option || {};
+  const finish = !allDone && o.weeks > 0 && o.finishDate ? formatFinishDate(o.finishDate, today) : '';
+  return {
+    id: o.id,
+    name: o.name,
+    title: `${o.minutes} Minuten`,
+    days: o.learningDays ? `an ${o.learningDays} Tagen pro Woche` : null,
+    finish: finish ? `fertig etwa am ${finish}` : null,
+  };
+}

@@ -20,7 +20,7 @@ import TrialBanner from './components/TrialBanner';
 import FloatingIntroButton from './components/FloatingIntroButton';
 import SessionTimeoutModal from './components/SessionTimeoutModal';
 import { useSessionTimeout } from './hooks/useSessionTimeout';
-import { chromeFor } from './lib/chrome.js';
+import { chromeFor, hasBottomNav } from './lib/chrome.js';
 import { Loader2 } from 'lucide-react';
 
 // Lazy-loaded page components for code splitting
@@ -131,10 +131,10 @@ function Shell() {
                 </a>
                 {!focused && <Navbar />}
                 {!focused && <OutsideAdmin><TrialBanner /></OutsideAdmin>}
-                {/* Course home (chrome === 'course') also hides this: it overlaps
+                {/* The course homes ('course', 'learn') hide this: it overlaps
                     FirstRunTour's first-run tooltip in the same bottom-left corner
                     (docs/evaluation/screenshots/a11-w1-home.jpg). */}
-                {!focused && chrome !== 'course' && <OutsideAdmin><FloatingIntroButton /></OutsideAdmin>}
+                {chrome === 'full' && <OutsideAdmin><FloatingIntroButton /></OutsideAdmin>}
                 <SessionTimeoutWrapper />
                 {/* min-h-screen reserves the page's height across route swaps. A
                     guard that redirects (ProtectedRoute's <Navigate>) commits an
@@ -578,8 +578,9 @@ function Shell() {
                 {/* Mobile app tabs (signed-in only); pb clearance lives on the
                     wrapper so the fixed bar never covers page-end content. Not
                     in the player: its bottom primary button is the only thing
-                    a thumb should find there. */}
-                {!focused && <OutsideAdmin><BottomNav /></OutsideAdmin>}
+                    a thumb should find there. Not on the v2 learn screen: it has
+                    its own four-tab bar. */}
+                {hasBottomNav(pathname) && <OutsideAdmin><BottomNav /></OutsideAdmin>}
               </div>
   );
 }

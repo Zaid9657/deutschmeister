@@ -14,19 +14,20 @@ import { hueVars } from './hue.js';
 // Kapitel), what is in it (manifest content counts only), the pace, the exam in view,
 // the grammar overview and the word list, and last — it is the long one, and the hero
 // jumps to it — the „Inhalt": per Modul its Kapitel with Kommunikation, Grammatik,
-// Wortschatz, Texte and Prüfung. It opens the page on a first visit and folds out of
-// „Kursplan ansehen" afterwards. Every number is the
+// Wortschatz, Texte and Prüfung. Since round 3 (owner 2026-09-30: "too much … make it
+// duolingo style") it no longer opens the page: it lives one tap deep, in the „Kursplan"
+// sheet of the learn screen's tab bar (KursplanSheet.jsx). Every number is the
 // manifest's; a section whose data a level does not have (no showcase yet, units still
 // coming) is left out rather than filled with placeholders.
 
 const CAST = ['Priya', 'Olena', 'Bilal', 'Emre'];
-const TILE_HUES = ['gruen', 'orange', 'beere', 'tuerkis'];
+const TILE_HUES = ['tuerkis', 'orange', 'beere', 'gruen'];
 
 const H2 = 'text-2xl font-black leading-tight';
 
 function Section({ id = undefined, title, lead = null, children }) {
   return (
-    <section id={id} className="scroll-mt-36 px-5 pt-7">
+    <section id={id} className="scroll-mt-20 px-5 pt-7">
       <h2 className={H2}>{title}</h2>
       {lead && <p className="mt-1.5 text-base font-bold leading-relaxed text-game-muted">{lead}</p>}
       <div className="mt-3.5">{children}</div>
@@ -46,9 +47,21 @@ export default function PlanOverview({
   const lane = manifest && manifest.lanes && manifest.lanes.primary;
   const TitleTag = firstVisit ? 'h1' : 'h2';
   const kapitelCount = inhalt.reduce((n, m) => n + m.kapitel.length, 0);
+  const showInhalt = () => {
+    const el = document.getElementById('kursplan-inhalt');
+    if (!el) return;
+    let reduce = false;
+    try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch { reduce = false; }
+    el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    const heading = el.querySelector('h2');
+    if (heading) {
+      heading.setAttribute('tabindex', '-1');
+      heading.focus({ preventScroll: true });
+    }
+  };
 
   return (
-    <div id="kursplan" className="scroll-mt-36 pb-8">
+    <div id="kursplan" className="scroll-mt-20 pb-8">
       <div className="bg-course-wash px-5 pb-7 pt-6">
         <p className="inline-block rounded-full border-2 border-course-soft bg-white px-3 py-1 text-[0.8125rem] font-black uppercase tracking-wider text-course-ink">
           {code}{free ? ' · kostenlos' : ''}
@@ -76,13 +89,16 @@ export default function PlanOverview({
           </>
         )}
         {kapitelCount > 0 && (
-          <a
-            href="#kursplan-inhalt"
-            className="mt-4 flex min-h-12 items-center justify-center gap-2 rounded-clay border-2 border-b-4 border-course-soft bg-white px-4 py-2.5 text-base font-black text-course-ink hover:bg-course-wash"
+          // a button, not an #anchor: the plan lives in the #kursplan sheet, and a hash
+          // change would leave it (the sheet is open while the URL says #kursplan)
+          <button
+            type="button"
+            onClick={showInhalt}
+            className="mt-4 flex min-h-12 w-full items-center justify-center gap-2 rounded-clay border-2 border-b-4 border-course-soft bg-white px-4 py-2.5 text-base font-black text-course-ink hover:bg-course-wash"
           >
             <ListOrdered className="h-5 w-5" strokeWidth={2.6} aria-hidden="true" />
             Inhalt ansehen · {kapitelCount} Kapitel
-          </a>
+          </button>
         )}
       </div>
 

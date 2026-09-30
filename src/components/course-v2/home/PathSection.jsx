@@ -1,121 +1,158 @@
-import { Link } from 'react-router-dom';
-import { Check, List } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
 import CastAvatar from '../CastAvatar.jsx';
-import { SkillIcon } from '../SkillIcon.jsx';
-import PathNode from './PathNode.jsx';
-import StopNode from './StopNode.jsx';
+import JumpButton from './JumpButton.jsx';
+import PathNode, { StepFace } from './PathNode.jsx';
+import { StopFace } from './StopNode.jsx';
 import UnitBanner from './UnitBanner.jsx';
 import { hueVars } from './hue.js';
+import {
+  nodeAnchor, nodePopover, stopPopover, finishNode, unitPercent,
+} from '../../../lib/course-v2/pathModel.js';
 
-// The learning path (pathModel.js coursePath), read like a textbook's table of
-// contents: per Modul a divider, per Kapitel its banner (the link to the Kapitel page)
-// and what it teaches, then its steps — A, B, C, Prüfungstraining, Sprechen, Schreiben,
-// Kapiteltest — each a node in the left rail with its label to the right (a finished
-// Kapitel folds into one row of small checks), and the Modul's Plateau chest or the
-// Abschlusstest trophy. Priya keeps the learner company under the current node —
-// decorative only (aria-hidden), and only on the A1 levels, whose cast she is.
+// The learn path (pathModel.js coursePath), Duolingo's learn screen: per Kapitel its
+// banner (sticky, with the book button to the Kapitel guide) and under it its steps as
+// big round nodes in a zig-zag — no label cards, no skill chips, no grammar lines; a tap
+// on a node opens its popover (one open at a time; a tap outside or Escape closes it).
+// Each Modul ends in its Plateau chest or the Abschlusstest trophy, and a quiet divider
+// line „MODUL 2 · EINKAUFEN UND WOHNEN" separates the Module. A Kapitel whose content is
+// not compiled yet is grey with grey nodes whose popover says „Kommt bald". The gate
+// stays SOFT: every node of a compiled Kapitel opens its step.
 
-function Companion({ greeting }) {
+function UnitBlock({ unit, current, stepXp, openId, toggle, headingLevel, companion }) {
+  const finish = finishNode(current, unit);
+  const percent = unitPercent(unit);
+  const nodes = unit.available ? unit.nodes : unit.placeholders || [];
   return (
-    <span aria-hidden="true" className="pointer-events-none mt-3 flex flex-col items-center gap-1.5">
-      <span className="max-w-[7rem] rounded-2xl border-2 border-game-line bg-white px-2.5 py-1 text-center text-sm font-extrabold leading-snug">{greeting}</span>
-      <CastAvatar name="Priya" size={68} decorative />
-    </span>
-  );
-}
-
-// A finished Kapitel folds into one row of small check nodes — still links, still 44 px —
-// so a returning learner reaches the current step without scrolling past every finished
-// Kapitel. Under each check its letter (A, B, C) or its icon, so the row still reads as
-// the Kapitel's sections.
-function DoneRow({ unit }) {
-  return (
-    <ol
-      aria-label={`Kapitel ${unit.nr}, alle Schritte geschafft`}
-      className={`grid ${unit.nodes.length > 7 ? 'grid-cols-8' : 'grid-cols-7'} justify-items-center pb-7 pt-5`}
-    >
-      {unit.nodes.map((node) => (
-        <li key={node.id} className="flex flex-col items-center gap-1">
-          <Link
-            to={node.href}
-            aria-label={node.ariaLabel}
-            className="flex h-11 w-11 items-center justify-center rounded-full bg-[color:var(--hue)] text-white shadow-[0_3px_0_var(--hue-edge)] transition-transform duration-100 hover:brightness-105 active:translate-y-[3px] active:shadow-none"
-          >
-            <Check className="h-5 w-5" strokeWidth={3.4} aria-hidden="true" />
-          </Link>
-          <span aria-hidden="true" className="flex h-5 items-center text-sm font-black text-[color:var(--hue-edge)]">
-            {node.letter || <SkillIcon skill={node.skills[0] || 'ueben'} className="h-4 w-4" />}
-          </span>
-        </li>
-      ))}
-    </ol>
-  );
-}
-
-function UnitBlock({ unit, stepXp, withCast }) {
-  const current = unit.nodes.find((n) => n.state === 'current') || null;
-  return (
-    <div style={hueVars(unit.hue)} className="pt-3">
-      <UnitBanner unit={unit} />
-      {unit.done && unit.nodes.length > 0 ? (
-        <DoneRow unit={unit} />
-      ) : unit.nodes.length > 0 ? (
-        <ol aria-label={`Kapitel ${unit.nr}: ${unit.title}`} className="flex flex-col gap-3 pb-8 pt-5">
-          {unit.nodes.map((node) => (
+    <div style={hueVars(unit.hue)}>
+      <UnitBanner unit={unit} headingLevel={headingLevel} />
+      <ol aria-label={`Kapitel ${unit.nr}: ${unit.title}`} className="flex flex-col gap-6 pb-12 pt-9">
+        {nodes.map((node) => {
+          const anchor = nodeAnchor(node.id);
+          return (
             <PathNode
               key={node.id}
-              node={node}
-              stepsTotal={unit.stepsTotal}
-              minutes={unit.minutesPerStep}
-              xp={stepXp}
-              companion={withCast && node === current ? <Companion greeting={unit.stepsDone > 0 ? 'Weiter geht’s!' : 'Los geht’s!'} /> : null}
+              anchorId={anchor}
+              offset={node.offset}
+              ariaLabel={node.ariaLabel}
+              current={node.state === 'current'}
+              open={openId === anchor}
+              onToggle={() => toggle(anchor)}
+              popover={nodePopover(node, { stepsTotal: unit.stepsTotal, unitNr: unit.nr, xp: stepXp })}
+              face={<StepFace node={node} percent={percent} />}
+              companion={node.state === 'current' ? companion : null}
             />
-          ))}
-        </ol>
-      ) : (
-        <div className="h-6" aria-hidden="true" />
-      )}
+          );
+        })}
+        {finish && (
+          <PathNode
+            anchorId={nodeAnchor(finish.id)}
+            offset={finish.offset}
+            ariaLabel={finish.ariaLabel}
+            current
+            open={openId === nodeAnchor(finish.id)}
+            onToggle={() => toggle(nodeAnchor(finish.id))}
+            popover={finish.popover}
+            face={<StepFace node={finish} percent={100} />}
+            companion={companion}
+          />
+        )}
+      </ol>
     </div>
   );
 }
 
-export default function PathSection({ path, stepXp, withCast = false, onShowPlan }) {
-  if (!path) return null;
+function Divider({ id, label, visible }) {
+  if (!visible) return <h2 id={id} className="sr-only">{label}</h2>;
   return (
-    <div id="lernpfad" className="mx-auto max-w-xl overflow-x-hidden px-4 pb-6 pt-2">
-      {path.sections.map((section) => {
+    <h2 id={id} className="flex items-center gap-3 pb-2 pt-6 text-[0.8125rem] font-black uppercase tracking-[0.08em] text-game-muted">
+      <span className="h-0.5 min-w-6 flex-1 rounded-full bg-game-line" aria-hidden="true" />
+      <span className="text-center">{label}</span>
+      <span className="h-0.5 min-w-6 flex-1 rounded-full bg-game-line" aria-hidden="true" />
+    </h2>
+  );
+}
+
+export default function PathSection({ path, stepXp, withCast = false, onJump, lifted = false, anchor = null }) {
+  const [openId, setOpenId] = useState(null);
+  const toggle = useCallback((id) => setOpenId((prev) => (prev === id ? null : id)), []);
+
+  // One popover at a time: a tap outside the open node closes it, Escape closes it and
+  // hands focus back to its node; an opened popover scrolls into view above the tab bar.
+  useEffect(() => {
+    if (!openId) return undefined;
+    const onPointer = (e) => {
+      const row = e.target && e.target.closest ? e.target.closest('[data-node-row]') : null;
+      if (!row || row.getAttribute('data-node-row') !== openId) setOpenId(null);
+    };
+    const onKey = (e) => {
+      if (e.key !== 'Escape') return;
+      setOpenId(null);
+      const btn = document.getElementById(openId);
+      if (btn) btn.focus();
+    };
+    document.addEventListener('pointerdown', onPointer);
+    document.addEventListener('keydown', onKey);
+    // (measured by hand: a smooth scrollIntoView({ block: 'nearest' }) does not move in Chrome)
+    const raf = window.requestAnimationFrame(() => {
+      const pop = document.getElementById(`${openId}-popover`);
+      if (!pop) return;
+      const bar = document.querySelector('[data-tab-bar]');
+      const floor = (bar ? bar.getBoundingClientRect().top : window.innerHeight) - 16;
+      const over = pop.getBoundingClientRect().bottom - floor;
+      if (over <= 0) return;
+      let reduce = false;
+      try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch { reduce = false; }
+      window.scrollBy({ top: over, behavior: reduce ? 'auto' : 'smooth' });
+    });
+    return () => {
+      document.removeEventListener('pointerdown', onPointer);
+      document.removeEventListener('keydown', onKey);
+      window.cancelAnimationFrame(raf);
+    };
+  }, [openId]);
+
+  if (!path) return null;
+  // Priya keeps the learner company beside the current node — decorative, and only on
+  // the A1 levels, whose cast she is
+  const companion = withCast ? <CastAvatar name="Priya" size={72} decorative /> : null;
+  return (
+    <div id="lernpfad" className="mx-auto max-w-xl px-4 pb-8">
+      {/* the way back to the current step; hidden while a popover is open (it would cover it) */}
+      {!openId && <JumpButton anchor={anchor} onJump={onJump} lifted={lifted} />}
+      {path.sections.map((section, si) => {
         const key = section.nr ?? 'rest';
+        const stop = section.stop;
+        const stopAnchor = stop ? nodeAnchor(stop.id) : null;
         return (
           <section key={key} aria-labelledby={`dm-modul-${key}`}>
-            <div className="mb-1 mt-7 flex items-center gap-2">
-              <h2
-                id={`dm-modul-${key}`}
-                className="flex min-w-0 flex-1 items-center gap-2.5 text-[0.8125rem] font-black uppercase tracking-[0.08em] text-game-muted"
-              >
-                <span className="min-w-0">{section.dividerLabel}</span>
-                <span className="h-0.5 min-w-4 flex-1 bg-game-line" aria-hidden="true" />
-              </h2>
-              {section.nr != null && typeof onShowPlan === 'function' && (
-                <a
-                  href={`#kursplan-modul-${section.nr}`}
-                  onClick={(e) => { e.preventDefault(); onShowPlan(section.nr); }}
-                  aria-label={`Modul ${section.nr} im Inhalt ansehen`}
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-game-muted hover:bg-course-wash hover:text-course-ink"
-                >
-                  <List className="h-5 w-5" strokeWidth={2.6} aria-hidden="true" />
-                </a>
-              )}
-            </div>
+            <Divider id={`dm-modul-${key}`} label={section.dividerLabel} visible={si > 0} />
             {section.units.map((unit) => (
-              <UnitBlock key={unit.id} unit={unit} stepXp={stepXp} withCast={withCast} />
-            ))}
-            {section.stop && (
-              <StopNode
-                stop={section.stop}
-                companion={withCast && section.stop.state === 'current'
-                  ? <Companion greeting={section.stop.kind === 'closing' ? 'Endspurt!' : 'Schatzkiste!'} />
-                  : null}
+              <UnitBlock
+                key={unit.id}
+                unit={unit}
+                current={path.current}
+                stepXp={stepXp}
+                openId={openId}
+                toggle={toggle}
+                headingLevel={3}
+                companion={companion}
               />
+            ))}
+            {stop && (
+              <ol aria-label={stop.label} className="pb-10">
+                <PathNode
+                  anchorId={stopAnchor}
+                  offset={0}
+                  ariaLabel={stop.ariaLabel}
+                  current={stop.state === 'current'}
+                  bubbleTone="xp"
+                  open={openId === stopAnchor}
+                  onToggle={() => toggle(stopAnchor)}
+                  popover={stopPopover(stop)}
+                  face={<StopFace stop={stop} />}
+                  companion={stop.state === 'current' ? companion : null}
+                />
+              </ol>
             )}
           </section>
         );
@@ -123,4 +160,3 @@ export default function PathSection({ path, stepXp, withCast = false, onShowPlan
     </div>
   );
 }
-

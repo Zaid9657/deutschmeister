@@ -11,7 +11,7 @@ import { hueVars } from './hue.js';
 // icons are the shared skill icons (SkillIcon), so a station looks here like its node on
 // the path.
 
-const HUES = ['gruen', 'orange', 'beere', 'tuerkis'];
+const HUES = ['tuerkis', 'orange', 'beere', 'gruen'];
 const SKILL_OF = { pruefung: 'pruefung', sprechen: 'sprechen', schreiben: 'schreiben', check: 'test' };
 
 function Disc({ station }) {

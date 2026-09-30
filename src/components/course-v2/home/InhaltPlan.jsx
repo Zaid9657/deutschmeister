@@ -9,8 +9,9 @@ import { hueVars } from './hue.js';
 // a card with the columns every Lehrwerk Inhalt has — Kommunikation, Grammatik,
 // Wortschatz, Texte, Prüfung — and the Plateau or the Abschlusstest that closes the
 // Modul. A Kapitel's header opens the Kapitel page (the gate is soft). Each Modul carries
-// the anchor #kursplan-modul-N that the path's Modul dividers jump to. Every value is the
-// manifest's; a column a Kapitel has no data for is left out.
+// the anchor #kursplan-modul-N (a link to #kursplan-modul-N opens the Kursplan sheet with
+// that Modul unfolded). Every value is the manifest's; a column a Kapitel has no data for
+// is left out.
 
 // a column on phones ≥ 360 px (a textbook Inhalt), the label above its value below that
 const DT = 'flex shrink-0 items-start gap-1.5 text-[0.8125rem] font-black text-game-text min-[360px]:w-[8rem]';
@@ -136,7 +137,7 @@ function EndRow({ end }) {
 
 // Folded per Modul so the Inhalt does not run to thousands of pixels on a phone: the Modul
 // with the learner's current Kapitel (else Modul 1) starts open, every Modul header opens
-// and closes its Kapitel, and a jump to #kursplan-modul-N (the path's Modul dividers) opens N.
+// and closes its Kapitel, and a jump to #kursplan-modul-N opens N.
 function initialOpen(modules) {
   const current = modules.find((m) => m.kapitel.some((k) => k.current && !k.done));
   return new Set([current ? current.nr : modules[0] && modules[0].nr]);

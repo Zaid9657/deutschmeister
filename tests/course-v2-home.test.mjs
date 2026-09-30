@@ -5,6 +5,10 @@
 // the textbooks: Kapitel, and in every Kapitel grammar, listening, reading, questions
 // visible". The home speaks the Lehrwerk's language: Kapitel, Modul, Plateau,
 // Abschlusstest; each step says what it teaches; the plan is a textbook „Inhalt".
+// Round 3 (2026-09-30: "it looks intimidating and too much … duolingo style … step for
+// step"): the home became Duolingo's learn screen — a three-screen welcome on a first
+// visit, big round nodes with a popover per node, a tab bar, and the plan one tap deep
+// in the „Kursplan" sheet. The pins at the bottom describe that screen.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
@@ -18,6 +22,8 @@ import {
   hasProgress, wordsLearned, currentStop, actionLabel, coursePath, courseTiles, examParts, planInhalt, kapitelAufbau,
   referenceLinks, stepLabel, groupTeile, teilSummary, kapitelSummary, kommunikationOf, shortLabel, unitSections,
   PACE_NAME_DE, paceStorageKey, resolvePace, paceOptions, formatFinishDate, STEP_XP,
+  guideHref, nodeAnchor, currentAnchor, placeholderNodes, stepOfLine, nodePopover, stopPopover, finishNode, unitPercent,
+  goalRing, welcomeStorageKey, showWelcome, shortPromise, outcomeLine, courseShape, welcomeModel, paceTile,
 } from '../src/lib/course-v2/pathModel.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -150,6 +156,10 @@ test('each Kapitel banner opens the Kapitel page and says what the Kapitel teach
   assert.equal(u1.summary.line, 'Grammatik: Präsens · Aussagesatz und W-Frage · 35 neue Wörter');
   assert.equal(u1.summary.newWords, rowOf(A11, 'a1.1-u01').counts.newWords, 'the word count is the manifest\'s');
   assert.match(u1.bannerAria, /^Kapitelübersicht: Kapitel 1, Hallo, ich bin Priya$/);
+  // the banner's book button: the Kapitel guide, one tap deep; its eyebrow names the Modul
+  assert.deepEqual(units.map((u) => u.guideHref), A11.units.map((u) => `/course/a1.1/u/${u.nr}?view=guide`));
+  assert.equal(guideHref('A1.1', 7), '/course/a1.1/u/7?view=guide');
+  assert.deepEqual(units.slice(0, 4).map((u) => u.eyebrow), ['Modul 1 · Kapitel 1', 'Modul 1 · Kapitel 2', 'Modul 1 · Kapitel 3', 'Modul 2 · Kapitel 4']);
   for (const u of units) {
     assert.deepEqual(u.summary.grammar, chapterSummary(rowOf(A11, u.id).outline).grammar.map((g) => g.short));
     assert.match(u.summary.line, /^Grammatik: .+ · \d+ neue Wörter$/);
@@ -157,17 +167,22 @@ test('each Kapitel banner opens the Kapitel page and says what the Kapitel teach
   assert.deepEqual(kapitelSummary(null), { grammar: [], newWords: null, line: null });
 });
 
-test('Kapitel hues cycle grün → orange → beere → türkis, and the wave mirrors per Kapitel', () => {
-  assert.deepEqual(UNIT_HUES, ['gruen', 'orange', 'beere', 'tuerkis']);
-  assert.equal(hueFor(4), 'gruen');
+test('Kapitel hues cycle türkis (the live palette) → orange → beere → grün, and the zig-zag mirrors per Kapitel', () => {
+  assert.deepEqual(UNIT_HUES, ['tuerkis', 'orange', 'beere', 'gruen']);
+  assert.equal(hueFor(4), 'tuerkis');
   const { path } = pathFor(A11, stateOf());
   const units = path.sections.flatMap((s) => s.units);
   assert.deepEqual(units.map((u) => u.hue), Array.from({ length: 12 }, (_, i) => UNIT_HUES[i % 4]));
-  assert.deepEqual(units[0].nodes.map((n) => n.offset), [0, 8, 12, 8, 0, -8, -12]);
-  assert.deepEqual(units[1].nodes.map((n) => n.offset), [0, -8, -12, -8, 0, 8, 12]);
+  assert.deepEqual(units[0].nodes.map((n) => n.offset), [0, 44, 70, 44, 0, -44, -70]);
+  assert.deepEqual(units[1].nodes.map((n) => n.offset), [0, -44, -70, -44, 0, 44, 70]);
   assert.deepEqual(units.map((u) => u.direction).slice(0, 4), [1, -1, 1, -1]);
   assert.equal(ZIGZAG.length, 8);
-  assert.ok(ZIGZAG.every((x) => Math.abs(x) <= 12), 'a small wave: the labels sit at a fixed x beside the rail');
+  assert.deepEqual(ZIGZAG.map((x, i) => x + ZIGZAG[(i + 4) % 8]), Array(8).fill(0), 'the wave is symmetric about the centre');
+  // Duolingo's wide swing — no label sits beside the nodes any more — yet the widest node
+  // (72 px) and the START bubble over it (≈ 90 px) stay inside a 360 px phone's 16 px gutters
+  const half = (360 - 2 * 16) / 2;
+  assert.ok(ZIGZAG.some((x) => Math.abs(x) >= 40), 'a real zig-zag, not a wobble');
+  assert.ok(ZIGZAG.every((x) => Math.abs(x) + 45 <= half), 'the widest swing fits a 360 px phone');
   assert.ok(Object.is(zigzagOffset(0, -1), 0), 'no -0 offset');
 });
 
@@ -240,8 +255,16 @@ test('a Kapitel without compiled content has no nodes and no link; it says „ko
   for (const u of missing) {
     assert.deepEqual(u.nodes, []);
     assert.equal(u.href, null);
+    assert.equal(u.guideHref, null, 'no book button before the Kapitel is compiled');
     assert.match(u.bannerLabel, /^Kapitel \d+ · kommt bald$/);
+    // grey stand-ins in the wave, never a link, their popover „Kommt bald" without a button
+    assert.equal(u.placeholders.length, 8, 'the B skeleton');
+    assert.ok(u.placeholders.every((n) => n.state === 'soon' && n.href === null));
+    assert.deepEqual(u.placeholders.map((n) => n.offset), placeholderNodes('b1.1', u.nr, u.direction).map((n) => n.offset));
+    const pop = nodePopover(u.placeholders[0], { stepsTotal: 8, unitNr: u.nr });
+    assert.deepEqual(pop, { title: 'Kommt bald', meta: `Kapitel ${u.nr} ist noch in Arbeit.`, action: null, href: null, tone: 'soon' });
   }
+  assert.ok(units.filter((u) => u.available).every((u) => u.placeholders.length === 0));
   assert.deepEqual(missing[0].summary.grammar, ['Präteritum regelmäßiger und unregelmäßiger Verben', 'Adjektive als Nomen'], 'the planned grammar still shows');
   assert.equal(missing[0].summary.newWords, null, 'no word count before the Kapitel is authored');
   for (const s of path.sections) assert.equal(s.stop.state, 'unavailable');
@@ -442,6 +465,125 @@ test('pace: page pick > learner_goals > this device > default; minutes and weeks
 });
 
 // ---------------------------------------------------------------------------
+// The learn screen: popovers, the current place, the goal ring
+// ---------------------------------------------------------------------------
+
+test('a node\'s popover: its name, „Lernschritt n von m" and ONE button by state', () => {
+  const state = stateOf({ finished: { 'a1.1-u01': steps('a1.1-u01', [1, 2]) } });
+  const { path } = pathFor(A11, state);
+  const u1 = path.sections[0].units[0];
+  const pops = u1.nodes.map((n) => nodePopover(n, { stepsTotal: u1.stepsTotal, unitNr: u1.nr }));
+  assert.deepEqual(pops.map((p) => p.title), [
+    'Teil A · Ich bin Priya. Und Sie?', 'Teil B · Woher kommst du?', 'Teil C · Der Chat vom Kurs A1',
+    'Prüfungstraining · Hören Teil 1', 'Sprechen · Teil 1 + 2 mit KI', 'Schreiben · Teil 1 mit KI-Korrektur', 'Kapiteltest',
+  ]);
+  assert.deepEqual(pops.map((p) => p.meta), [1, 2, 3, 4, 5, 6, 7].map((n) => `Lernschritt ${n} von 7`));
+  assert.deepEqual(pops.map((p) => p.action), [
+    'Wiederholen', 'Wiederholen', `Start +${XP.step} XP`, 'Trotzdem starten', 'Trotzdem starten', 'Trotzdem starten', 'Trotzdem starten',
+  ]);
+  assert.deepEqual(pops.map((p) => p.tone), ['hue', 'hue', 'hue', 'quiet', 'quiet', 'quiet', 'quiet']);
+  assert.deepEqual(pops.map((p) => p.href), u1.nodes.map((n) => n.href), 'the soft gate: every button opens its step');
+  assert.equal(stepOfLine(4, 8), 'Lernschritt 4 von 8');
+  assert.equal(nodePopover(u1.nodes[2], { stepsTotal: 7, xp: 0 }).action, 'Start', 'no XP figure the ledger does not award');
+  // the visible label is gone from the path: the node's accessible name carries label and state
+  for (const n of allNodes(path)) assert.match(n.ariaLabel, /^Kapitel \d+, .+ (Geschafft|Jetzt starten|Noch offen)\.$/);
+});
+
+test('a stop\'s popover, the Kapitel-closing node and the current place\'s DOM id', () => {
+  const doneE1 = { 'a1.1-u01': 'complete', 'a1.1-u02': 'gold', 'a1.1-u03': 'complete' };
+  const { path } = pathFor(A11, stateOf({ progress: doneE1 }));
+  const [p1, p2] = path.sections.map((x) => x.stop);
+  assert.deepEqual(stopPopover(p1), { title: 'Plateau 1 · Wiederholung', meta: 'Kapitel 1–3 wiederholen · Prüfungsteile', action: 'Start', href: '/course/a1.1/p/1', tone: 'xp' });
+  assert.equal(stopPopover({ ...p1, started: true }).action, 'Weitermachen');
+  assert.equal(stopPopover({ ...p1, state: 'done' }).action, 'Wiederholen');
+  assert.deepEqual([stopPopover(p2).action, stopPopover(p2).tone], ['Trotzdem starten', 'quiet']);
+  assert.deepEqual(stopPopover({ ...p2, state: 'unavailable', href: null }), { title: p2.label, meta: 'Kommt bald', action: null, href: null, tone: 'soon' });
+  assert.equal(currentAnchor(path.current), 'dm-node-a1.1-p1');
+  assert.equal(nodeAnchor(p1.id), currentAnchor(path.current), 'the page scrolls to the node it draws');
+
+  const fresh = pathFor(A11, stateOf()).path;
+  assert.equal(currentAnchor(fresh.current), 'dm-node-a1.1-u01-ls1');
+  assert.equal(currentAnchor(null), null);
+  assert.equal(finishNode(fresh.current, fresh.sections[0].units[0]), null, 'a step is current: no closing node');
+
+  // every step of Kapitel 1 finished, the recap not reached: one closing node after its steps
+  const recap = pathFor(A11, stateOf({ finished: { 'a1.1-u01': steps('a1.1-u01', [1, 2, 3, 4, 5, 6, 7]) } })).path;
+  const [k1, k2] = recap.sections[0].units;
+  const fin = finishNode(recap.current, k1);
+  assert.equal(fin.href, '/course/a1.1/u/1');
+  assert.equal(nodeAnchor(fin.id), currentAnchor(recap.current));
+  assert.deepEqual(fin.popover, { title: 'Kapitel 1 abschließen', meta: 'Alle Lernschritte geschafft', action: 'Weiter', href: '/course/a1.1/u/1', tone: 'hue' });
+  assert.equal(finishNode(recap.current, k2), null);
+  assert.equal(unitPercent(k1), 100);
+  assert.equal(unitPercent(pathFor(A11, stateOf({ finished: { 'a1.1-u01': steps('a1.1-u01', [1, 2]) } })).path.sections[0].units[0]), 29);
+  assert.equal(unitPercent({}), 0);
+});
+
+test('the top bar\'s goal ring: minutes today of the pace\'s daily minutes', () => {
+  assert.deepEqual(goalRing(0, 35), { done: 0, goal: 35, pct: 0, reached: false, label: 'Tagesziel: heute 0 von 35 Minuten' });
+  assert.equal(goalRing(14, 35).pct, 40);
+  assert.deepEqual(goalRing(40, 35).pct, 100);
+  assert.equal(goalRing(40, 35).label, 'Tagesziel geschafft: heute 40 von 35 Minuten');
+  assert.equal(goalRing(5, 0).goal, 1, 'never a division by zero');
+  assert.equal(goalRing(0, dailyGoalMinutes(A11, 'standard')).goal, dailyGoalMinutes(A11, 'standard'));
+});
+
+// ---------------------------------------------------------------------------
+// The first-visit welcome: three short screens
+// ---------------------------------------------------------------------------
+
+test('the welcome shows once: nothing finished in the level and not finished or skipped on this device', () => {
+  assert.equal(welcomeStorageKey('A1.1'), 'dm_course_v2_welcome:a1.1');
+  assert.notEqual(welcomeStorageKey('a1.1'), paceStorageKey('a1.1'));
+  assert.equal(showWelcome(stateOf(), null), true);
+  assert.equal(showWelcome(stateOf(), '2026-09-30'), false, 'finished or skipped here before');
+  assert.equal(showWelcome(stateOf({ finished: { 'a1.1-u01': ['a1.1-u01-ls1'] } }), null), false, 'a returning learner goes straight to the path');
+  assert.equal(showWelcome(stateOf({ progress: { 'a1.1-u01': 'started' } }), null), true, 'opening a Kapitel is not finishing a step');
+});
+
+test('the welcome\'s screens: Priya and the promise, three things to learn, the pace', () => {
+  const w = welcomeModel(A11, 'a1.1');
+  assert.deepEqual(w.screens, ['hallo', 'ziele', 'tempo']);
+  assert.equal(w.narrator, 'Priya');
+  assert.equal(w.promise, 'Sie lernen Deutsch mit Priya. Mit ihr lernen Sie Schritt für Schritt Ihre ersten Gespräche auf Deutsch.');
+  assert.equal(w.heading, 'Das lernen Sie in A1.1');
+  assert.deepEqual(w.outcomes, ['Sich vorstellen', 'Ihren Namen buchstabieren', 'Ihre Familie vorstellen']);
+  assert.ok(w.outcomes.length <= 3, 'no list longer than three');
+  assert.equal(w.shape, '12 Kapitel · 4 Module · Abschlusstest');
+  assert.equal(w.shape, `${A11.units.length} Kapitel · ${A11.etappen.length} Module · Abschlusstest`, 'counted, never typed');
+
+  // shortening: first + last sentence while short, else the first; one line per can-do
+  assert.equal(shortPromise('Eins. Zwei. Drei.'), 'Eins. Drei.');
+  assert.equal(shortPromise(`Kurz. ${'Sehr lang '.repeat(20)}ende.`), 'Kurz.');
+  assert.equal(shortPromise(''), null);
+  assert.equal(outcomeLine('nach Preisen fragen und Durchsagen im Supermarkt verstehen'), 'Nach Preisen fragen');
+  assert.equal(outcomeLine('die Uhrzeit sagen, sich verabreden, zusagen und absagen'), 'Die Uhrzeit sagen');
+  assert.equal(outcomeLine('Zahlen und Telefonnummern verstehen'), 'Zahlen und Telefonnummern verstehen', 'a one-word head keeps the whole line');
+  for (const o of A11.showcase.outcomesDe) {
+    const line = outcomeLine(o);
+    assert.ok(line.length <= 40 && o.toLowerCase().startsWith(line.toLowerCase()), `„${line}" is the start of „${o}"`);
+  }
+  assert.equal(courseShape({ units: [{}], etappen: [{}] }), '1 Kapitel · 1 Modul');
+  assert.equal(courseShape({}), null);
+
+  // a level without a showcase asks only for the pace; no data at all → no welcome
+  const b = welcomeModel(B11, 'b1.1');
+  assert.deepEqual(b.screens, ['tempo']);
+  assert.equal(b.narrator, null, 'Priya is the A1 cast');
+  assert.deepEqual(welcomeModel({}, 'a1.1').screens, []);
+});
+
+test('the welcome\'s pace tiles: minutes, learning days and the finish date of each preset', () => {
+  const today = new Date(2026, 8, 29, 12);
+  const tiles = paceOptions(A11, { remainingSteps: 84, today }).map((o) => paceTile(o, { today }));
+  assert.deepEqual(tiles.map((t) => t.id), ['leicht', 'standard', 'intensiv']);
+  assert.deepEqual(tiles.map((t) => t.title), ['leicht', 'standard', 'intensiv'].map((p) => `${dailyGoalMinutes(A11, p)} Minuten`));
+  assert.deepEqual(tiles.map((t) => t.days), ['an 3 Tagen pro Woche', 'an 4 Tagen pro Woche', 'an 6 Tagen pro Woche']);
+  assert.equal(tiles[1].finish, 'fertig etwa am 22. Dezember');
+  assert.equal(paceTile(paceOptions(A11, { remainingSteps: 84, today })[1], { allDone: true, today }).finish, null);
+});
+
+// ---------------------------------------------------------------------------
 // Textbook naming: no „Lektion" and no „Etappe" left on the home
 // ---------------------------------------------------------------------------
 
@@ -491,26 +633,116 @@ const DU_TOKENS = /\b(du|Du|dir|Dir|dich|Dich|dein|Dein|deine[mnrs]?|Deine[mnrs]
 test('the course home renders inside the course theme and draws every node from the path model', () => {
   const page = read(PAGE);
   assert.match(page, /import CourseTheme from '\.\.\/\.\.\/components\/course-v2\/CourseTheme\.jsx'/);
-  assert.match(page, /<CourseTheme>[\s\S]*<TopBar[\s\S]*<PathSection[\s\S]*<\/CourseTheme>/);
   assert.match(page, /coursePath\(model, state, \{[^}]*manifest \}\)/, 'the path reads the outlines from the manifest');
   assert.match(page, /safeSet\(paceStorageKey\(level\), p\)/, 'the pace pick is stored through safeStorage');
-  assert.match(page, /<ActionBar>\s*<GameButton to=\{current\.href\}/, 'the thumb-zone action goes to the current step');
-  assert.match(page, /<DailyGoalCard[\s\S]*\/>\s*<ReferenceLinks links=\{links\}/, 'the reference links sit under the daily-goal card');
   assert.match(page, /planInhalt\(model, manifest\)/);
   assert.ok(HOME_FILES.length >= 10, 'the home is split into small components');
   assert.ok(!HOME_FILES.some((f) => /EtappenPlan/.test(f)), 'the Etappen timeline became the Inhalt');
-
-  // the banner opens the Kapitel page; the node label shows grammar + skills; the plan shows the Inhalt
-  assert.match(read(`${HOME_DIR}/UnitBanner.jsx`), /<Link\s+to=\{unit\.href\}/);
-  assert.match(read(`${HOME_DIR}/UnitBanner.jsx`), /unit\.summary\.line/);
-  assert.match(read(`${HOME_DIR}/PathNode.jsx`), /Grammatik: \{node\.grammar\}/);
+  // the plan (one tap deep, in the Kursplan sheet) still holds the textbook Inhalt
   const plan = read(`${HOME_DIR}/PlanOverview.jsx`);
   for (const part of ['<KapitelAufbau', '<InhaltPlan', '<ReferenceLinks', 'So ist jedes Kapitel aufgebaut', 'title="Inhalt"']) assert.ok(plan.includes(part), `the plan has ${part}`);
   for (const col of ['Kommunikation', 'Grammatik', 'Wortschatz', 'Texte', 'Prüfung']) assert.match(read(`${HOME_DIR}/InhaltPlan.jsx`), new RegExp(`label="${col}"`));
   // one set of skill icons: the shared SkillIcon, never a second map
-  for (const f of ['PathNode.jsx', 'PathSection.jsx', 'InhaltPlan.jsx', 'KapitelAufbau.jsx', 'ReferenceLinks.jsx']) {
+  for (const f of ['InhaltPlan.jsx', 'KapitelAufbau.jsx', 'ReferenceLinks.jsx', 'TabBar.jsx']) {
     assert.match(read(`${HOME_DIR}/${f}`), /from '\.\.\/SkillIcon\.jsx'/, `${f} uses SkillIcon`);
   }
+});
+
+// ---------------------------------------------------------------------------
+// Source pins: the learn screen (round 3)
+// ---------------------------------------------------------------------------
+
+test('the learn screen: top bar, path, tab bar and the Kursplan sheet — no bottom CTA, no plan on the page', () => {
+  const page = read(PAGE);
+  assert.match(page, /<CourseTheme>[\s\S]*<TopBar[\s\S]*<PathSection[\s\S]*<TabBar[\s\S]*<KursplanSheet[\s\S]*<PlanOverview[\s\S]*<\/KursplanSheet>[\s\S]*<\/CourseTheme>/);
+  assert.doesNotMatch(stripComments(page), /ActionBar/, 'the START bubble and the popover are the call to action now');
+  assert.doesNotMatch(stripComments(page), /DailyGoalCard|ReferenceLinks/, 'the goal is the top bar\'s ring, the references are tabs');
+  assert.ok(!HOME_FILES.includes(`${HOME_DIR}/DailyGoalCard.jsx`));
+  assert.match(page, /ring=\{goalRing\(game\.todayMinutes, dailyGoalMinutes\(manifest, pace\)\)\}/, 'the goal ring reads the ledger and the pace');
+  const top = read(`${HOME_DIR}/TopBar.jsx`);
+  for (const part of ['<Flame', '<Zap', 'conic-gradient(var(--c-primary)', '<span className="sr-only">{g.label}</span>']) assert.ok(top.includes(part), `the top bar has ${part}`);
+  // the plan opens as a sheet at #kursplan (the back button closes it), not in the page
+  assert.match(page, /hash: '#kursplan'/);
+  assert.match(page, /const SHEET_HASH = \/\^#kursplan\//);
+  assert.match(page, /navigate\(-1\)/, 'closing a sheet it opened goes back in history');
+  const sheet = read(`${HOME_DIR}/KursplanSheet.jsx`);
+  for (const part of ['role="dialog"', 'aria-modal="true"', 'aria-labelledby="dm-kursplan-title"', '>Kursplan</h2>', 'aria-label="Kursplan schließen"',
+    "body.style.overflow = 'hidden'", "e.key === 'Escape'", 'back.focus(', 'sticky top-0']) {
+    assert.ok(sheet.includes(part), `the sheet has ${part}`);
+  }
+  // on load and after the welcome the current node comes to the middle of the screen
+  assert.match(page, /scrollIntoView\(\{ block: 'center', behavior: prefersReducedMotion\(\) \? 'auto' : 'smooth' \}\)/);
+  assert.match(page, /currentAnchor\(path\.current\)/);
+});
+
+test('the tab bar: Lernen · Kursplan · Grammatik · Wörter, fixed at the bottom, the active one marked', () => {
+  const bar = read(`${HOME_DIR}/TabBar.jsx`);
+  const labels = [...bar.matchAll(/^\s+(Lernen|Kursplan|Grammatik|Wörter)$/gm)].map((m) => m[1]);
+  assert.deepEqual(labels, ['Lernen', 'Kursplan', 'Grammatik', 'Wörter'], 'four tabs, in order');
+  assert.match(bar, /grid-cols-4/, 'four equal tabs');
+  assert.match(bar, /fixed inset-x-0/);
+  assert.match(bar, /pb-\[env\(safe-area-inset-bottom\)\]/, 'the safe area');
+  assert.match(bar, /onClick=\{onLernen\} aria-current="page"/, 'Lernen is this page');
+  assert.match(bar, /aria-haspopup="dialog"\s+aria-expanded=\{kursplanOpen\}/, 'Kursplan opens the sheet');
+  assert.match(bar, /<Link to=\{grammatik\.href\}/);
+  assert.match(bar, /<Link to=\{woerter\.href\}/);
+  assert.deepEqual(referenceLinks('a1.1', A11).map((l) => [l.key, l.href]), [['grammatik', '/course/a1.1/grammatik'], ['wortschatz', '/course/a1.1/wortschatz']]);
+  assert.match(read(PAGE), /<TabBar ref=\{kursplanTab\} links=\{links\}/);
+  // the page leaves room so the last node clears the bar
+  assert.match(read(PAGE), /pb-28/);
+});
+
+test('the path: banners with a book button, big round nodes as disclosures, no label cards', () => {
+  const banner = read(`${HOME_DIR}/UnitBanner.jsx`);
+  assert.match(banner, /<Link\s+to=\{unit\.guideHref\}\s+aria-label=\{`Kapitel \$\{unit\.nr\} im Überblick`\}/, 'the book button opens the Kapitel guide');
+  assert.match(banner, /<BookOpen/);
+  assert.match(banner, /\{unit\.eyebrow\}/);
+  assert.match(banner, /sticky top-\[8\.125rem\]/, 'the banner sticks under the top bar');
+  assert.doesNotMatch(banner, /summary\.line|Übersicht/, 'no grammar line under the banner');
+
+  const node = read(`${HOME_DIR}/PathNode.jsx`);
+  assert.match(node, /<button\s+id=\{anchorId\}\s+type="button"\s+onClick=\{onToggle\}\s+aria-expanded=\{open\}\s+aria-controls=\{popId\}/, 'a node is a disclosure button');
+  assert.match(node, /<span className="sr-only">\{ariaLabel\}<\/span>/, 'its label and state are in its name');
+  assert.match(node, /h-16 w-\[72px\]/, 'a big node');
+  assert.match(node, /shadow-\[0_6px_0_var\(--hue-edge\)\]/, 'the 3D edge in the Kapitel\'s hue');
+  assert.match(node, /shadow-game-locked/, 'not yet: the grey locked tokens');
+  assert.match(node, /motion-safe:animate-\[float_2\.4s_ease-in-out_infinite\]/, 'the START bubble bounces only when motion is welcome');
+  assert.match(node, /conic-gradient\(var\(--hue\)/, 'the current node\'s progress ring');
+  for (const f of ['PathNode.jsx', 'PathSection.jsx', 'UnitBanner.jsx']) {
+    const src = read(`${HOME_DIR}/${f}`);
+    assert.doesNotMatch(src, /SkillChips|SkillIcon|Grammatik: |node\.grammar|node\.label|node\.skills/, `${f}: no label cards, skill chips or grammar lines on the path`);
+  }
+
+  const pop = read(`${HOME_DIR}/NodePopover.jsx`);
+  assert.equal((pop.match(/<Link/g) || []).length, 1, 'one button per popover');
+  assert.match(pop, /\{popover\.action\}/);
+  assert.match(pop, /uppercase/, 'the action in capitals by CSS, words for screen readers');
+  const section = read(`${HOME_DIR}/PathSection.jsx`);
+  assert.match(section, /setOpenId\(\(prev\) => \(prev === id \? null : id\)\)/, 'one popover open at a time');
+  assert.match(section, /addEventListener\('pointerdown'/, 'a tap outside closes it');
+  assert.match(section, /e\.key !== 'Escape'/, 'Escape closes it');
+  assert.match(section, /nodePopover\(node, \{ stepsTotal: unit\.stepsTotal/);
+  assert.match(section, /stopPopover\(stop\)/);
+  assert.match(section, /<StopFace stop=\{stop\} \/>/, 'the chest and the trophy stay');
+  assert.match(section, /unit\.available \? unit\.nodes : unit\.placeholders/, 'a Kapitel not compiled yet shows grey nodes');
+  assert.match(read(`${HOME_DIR}/JumpButton.jsx`), /aria-label="Zum aktuellen Lernschritt"/);
+});
+
+test('the welcome: three screens, one thing and one button each, remembered per device', () => {
+  const page = read(PAGE);
+  assert.match(page, /showWelcome\(state, safeGet\(welcomeStorageKey\(level\)\)\)/, 'shown only without progress and not seen here');
+  assert.match(page, /safeSet\(welcomeStorageKey\(level\), /, 'finishing or skipping it is remembered');
+  const w = read(`${HOME_DIR}/Welcome.jsx`);
+  for (const screen of ["screen === 'hallo'", "screen === 'ziele'", "screen === 'tempo'"]) assert.ok(w.includes(screen), `the welcome has ${screen}`);
+  assert.equal((w.match(/<GameButton/g) || []).length, 1, 'one big button per screen');
+  assert.match(w, /\{last \? 'Los geht’s' : 'Weiter'\}/);
+  assert.match(w, />\s*Überspringen\s*</, 'a quiet way out');
+  assert.match(w, /<CastAvatar name=\{model\.narrator\} size=\{120\} decorative className="motion-safe:animate-pop-in" \/>/);
+  assert.match(w, /Wie viel Zeit haben Sie pro Tag\?/);
+  assert.match(w, /type="radio"/, 'the pace tiles are a real radio group');
+  assert.match(w, /peer-focus-visible:ring-4/, 'the focused tile shows it');
+  assert.match(w, /\{model\.shape\}/, 'the counts line is the manifest\'s');
+  assert.match(w, /aria-live="polite">Schritt \{at \+ 1\} von \{screens\.length\}/);
 });
 
 test('the course home writes only tokens: no hex literal, no raw Tailwind palette class, no built class names', () => {

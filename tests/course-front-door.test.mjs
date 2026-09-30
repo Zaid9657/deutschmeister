@@ -14,7 +14,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-import { chromeFor } from '../src/lib/chrome.js';
+import { chromeFor, hasBottomNav } from '../src/lib/chrome.js';
 import { resolveModelltest } from '../src/data/modelltest.js';
 import { isLevelFree } from '../src/config/freeTier.js';
 import { CURRICULA, curriculumPath } from '../src/data/curricula/index.js';
@@ -29,9 +29,15 @@ test('chromeFor: player routes are focused, the course home is slim, everything 
   }
   assert.equal(chromeFor('/course/a1.1'), 'course');
   assert.equal(chromeFor('/course/a1.1/'), 'course');
-  // Course v2: the unit player and the Plateau are stages, the v2 home is the course home.
+  // Course v2: the unit player and the Plateau are stages; the v2 home is the Duolingo-style
+  // learn screen (its own four-tab bar, so no app BottomNav under it).
   for (const p of ['/course/a2.1/u/7', '/course/a2.1/u/7/', '/course/b1.2/p/2']) assert.equal(chromeFor(p), 'player', p);
-  for (const p of ['/course/a2.1/v2', '/course/a2.1/v2/']) assert.equal(chromeFor(p), 'course', p);
+  for (const p of ['/course/a2.1/v2', '/course/a2.1/v2/']) {
+    assert.equal(chromeFor(p), 'learn', p);
+    assert.equal(hasBottomNav(p), false, p);
+  }
+  for (const p of ['/course/a1.1', '/dashboard']) assert.equal(hasBottomNav(p), true, p);
+  assert.equal(hasBottomNav('/course/a1.1/u/1'), false);
   for (const p of ['/', '/dashboard', '/course/a1.1/complete', '/course/a1.1/certificate', '/course/a1.1/a11-w1-d1-lesson', '/courses/', '/level/a1.1', '/modelltest/abschlusstest-a1-1', '']) {
     assert.equal(chromeFor(p), 'full', p);
   }
@@ -41,7 +47,7 @@ test('App.jsx mounts the navbar, footer and bottom nav through chromeFor', () =>
   assert.match(app, /from '\.\/lib\/chrome\.js'/);
   assert.match(app, /\{!focused && <Navbar \/>\}/, 'Navbar must be hidden in the player');
   assert.match(app, /\{chrome === 'full' && <OutsideAdmin><Footer \/><\/OutsideAdmin>\}/, 'Footer only on full-chrome routes');
-  assert.match(app, /\{!focused && <OutsideAdmin><BottomNav \/><\/OutsideAdmin>\}/, 'BottomNav must be hidden in the player');
+  assert.match(app, /\{hasBottomNav\(pathname\) && <OutsideAdmin><BottomNav \/><\/OutsideAdmin>\}/, 'BottomNav must be hidden in the player and on the v2 learn screen');
   // The chrome routes exist as routes at all.
   for (const p of ['/course/:level', '/course/:level/l/:nr', '/course/:level/checkpoint/:nr', '/course/:level/review']) {
     assert.ok(app.includes(`path="${p}"`), `missing route ${p}`);

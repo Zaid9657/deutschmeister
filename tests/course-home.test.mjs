@@ -196,12 +196,12 @@ test('LessonRing is a two-state ring (done vs not) because per-node status is no
   assert.match(src, /prefers-reduced-motion|motion-reduce:/, 'reduced motion must be respected somewhere in the file');
 });
 
-test('FloatingIntroButton is hidden on the course home, not just the player', () => {
+test('FloatingIntroButton is hidden on the course homes, not just the player', () => {
   const src = read('src/App.jsx');
   assert.match(
     src,
-    /\{!focused && chrome !== 'course' && <OutsideAdmin><FloatingIntroButton \/><\/OutsideAdmin>\}/,
-    'the course chrome must be excluded alongside the focused/player chrome',
+    /\{chrome === 'full' && <OutsideAdmin><FloatingIntroButton \/><\/OutsideAdmin>\}/,
+    'only full-chrome routes: the course chrome, the v2 learn screen and the player are excluded',
   );
 });
 
