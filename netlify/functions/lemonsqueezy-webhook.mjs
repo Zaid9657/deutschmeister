@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
+import { BILLING_PORTAL_URL, SIGNED_URL_MAX_AGE_MS, pickUpdatePaymentUrl } from './_shared/dunningLink.mjs';
 
 // Initialize Supabase with service role key (bypasses RLS)
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
@@ -815,8 +816,10 @@ async function handleSubscriptionExpired(data, _meta) {
 }
 
 // subscription_payment_failed: data is a subscription-invoice.
-// attributes.user_email is the customer, attributes.urls.update_payment_method
-// is a signed Lemon Squeezy link to fix the card. Everything beyond the
+// attributes.user_email is the customer. The invoice carries NO
+// update_payment_method link (only invoice_url); updatePaymentLink() finds the
+// signed one on a recent subscription_updated, else the Customer Portal — see
+// _shared/dunningLink.mjs. Everything beyond the
 // payment_failures insert is fail-open: an email error must never 500 the
 // webhook (Lemon Squeezy would retry and we'd double-log).
 async function handlePaymentFailed(data, meta, payload) {
@@ -876,7 +879,8 @@ async function handlePaymentFailed(data, meta, payload) {
   }
 
   const customerEmail = attributes.user_email;
-  const updateUrl = attributes.urls?.update_payment_method || 'https://deutsch-meister.de/dashboard';
+  const { url: updateUrl, source: linkSource } = await updatePaymentLink(attributes, subscriptionId);
+  console.log(`payment_failed: update link for sub ${subscriptionId} from ${linkSource}`);
 
   // 1) Dunning email to the customer.
   if (customerEmail && customerEmail.includes('@')) {
@@ -888,7 +892,7 @@ async function handlePaymentFailed(data, meta, payload) {
           from: 'Zaid from DeutschMeister <zaid@deutsch-meister.de>',
           to: [customerEmail],
           subject: 'Your DeutschMeister payment didn’t go through',
-          html: DUNNING_HTML(updateUrl),
+          html: DUNNING_HTML(updateUrl, BILLING_PORTAL_URL),
         }),
       });
       if (!res.ok) {
@@ -912,7 +916,7 @@ async function handlePaymentFailed(data, meta, payload) {
         from: 'DeutschMeister Alerts <zaid@deutsch-meister.de>',
         to: ['zaid@deutsch-meister.de'],
         subject: `Payment failed — subscription ${subscriptionId}`,
-        text: `Renewal payment failed.\n\nSubscription: ${subscriptionId}\nCustomer: ${customerEmail || 'unknown'}\nUser ID: ${userId || 'unknown'}\nInvoice/event: ${eventId}\n\nThe customer ${customerEmail ? 'was' : 'could NOT be'} sent a dunning email (rate-limited to one per subscription per 7 days).`,
+        text: `Renewal payment failed.\n\nSubscription: ${subscriptionId}\nCustomer: ${customerEmail || 'unknown'}\nUser ID: ${userId || 'unknown'}\nInvoice/event: ${eventId}\n\nThe customer ${customerEmail ? 'was' : 'could NOT be'} sent a dunning email (rate-limited to one per subscription per 7 days).\nUpdate-payment link source: ${linkSource} (subscription_updated = signed link, portal = ${BILLING_PORTAL_URL}).`,
       }),
     });
     if (!res.ok) {
@@ -923,7 +927,30 @@ async function handlePaymentFailed(data, meta, payload) {
   }
 }
 
-const DUNNING_HTML = (updateUrl) => `<!DOCTYPE html>
+// The signed update link for this subscription. Read-only and fail-open: any
+// error falls through to the Customer Portal, never to a page that cannot
+// change a card.
+async function updatePaymentLink(attributes, subscriptionId) {
+  let subscriptionEvents = [];
+  try {
+    const since = new Date(Date.now() - SIGNED_URL_MAX_AGE_MS).toISOString();
+    const { data, error } = await supabase
+      .from('webhook_logs')
+      .select('created_at, payload')
+      .eq('event_type', 'subscription_updated')
+      .eq('payload->data->>id', String(subscriptionId))
+      .gte('created_at', since)
+      .order('created_at', { ascending: false })
+      .limit(5);
+    if (error) console.error('payment_failed: update-link lookup error:', JSON.stringify(error));
+    else subscriptionEvents = data || [];
+  } catch (e) {
+    console.error('payment_failed: update-link lookup threw:', e.message);
+  }
+  return pickUpdatePaymentUrl({ invoiceAttributes: attributes, subscriptionEvents, subscriptionId });
+}
+
+const DUNNING_HTML = (updateUrl, portalUrl) => `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -967,6 +994,10 @@ const DUNNING_HTML = (updateUrl) => `<!DOCTYPE html>
                   </td>
                 </tr>
               </table>
+
+              <p style="margin:0 0 16px;font-size:16px;color:#475569;line-height:1.6;">
+                Button not working any more? Open <a href="${portalUrl}" style="color:#0F766E;">${portalUrl.replace('https://', '')}</a> and sign in with the email address you subscribed with.
+              </p>
 
               <p style="margin:0 0 16px;font-size:16px;color:#475569;line-height:1.6;">
                 We’ll automatically retry the payment over the next few days. If nothing changes, the subscription will lapse on its own — no action needed if you meant to cancel.
