@@ -58,6 +58,39 @@ select
  (select count(*) from profiles where email_daily_sentence is false) as opted_out_total;
 -- Bounces: Resend connector get-email-metrics for the deutsch-meister.de domain, last 24 h and 30 d.
 
+-- content ---------------------------------------------------------------------------------
+-- Posts do not live in Supabase, so read the channels themselves. These reads were verified on
+-- 2026-09-30 07:10 UTC. They go through the Zapier connector and are GET requests only: never
+-- the "Mutating Request" action, never Publish. The daily post Routine runs in another account,
+-- so list_triggers cannot see it, and the channels are the only evidence that it ran.
+--  * Zapier app "Instagram for Business", action "Make API GET Request". Its one connection is
+--    titled kontakt@medmeister.eu, but that Facebook login admins the Deutsch Meister page, so it
+--    reaches the IG account (17841425239004659, @deutschmeisterde) and the FB page (1232346926638010):
+--      GET https://graph.facebook.com/v21.0/17841425239004659?fields=username,followers_count,media_count
+--      GET https://graph.facebook.com/v21.0/17841425239004659/media?fields=id,timestamp,media_type,permalink,like_count,comments_count&limit=50
+--      GET https://graph.facebook.com/v21.0/1232346926638010?fields=name,followers_count,fan_count
+--      GET https://graph.facebook.com/v21.0/1232346926638010/feed?fields=id,created_time,reactions.summary(total_count).limit(0),comments.summary(total_count).limit(0)&limit=25
+--    /published_posts fails with #210 (it needs a page token), and IG insights fail with #10 (no
+--    permission), so reach is not measured. Never request an access_token field: the response would
+--    print a credential.
+--  * Zapier app "YouTube", action "Make API GET Request". That connection belongs to another channel,
+--    so these two calls read public data only:
+--      GET https://www.googleapis.com/youtube/v3/channels?part=statistics,contentDetails&forHandle=@deutschmeister_de
+--      GET https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&playlistId=UUnBauEHinta8cqDstwxA7RQ&maxResults=50
+--  * Telegram: there is no DeutschMeister channel yet (deferred to the week of 2026-10-05). The
+--    Zapier Telegram bot belongs to MedMeister.
+-- Count posts whose timestamp is inside now()-7 d in two ways: per channel (channel-posts), and as
+-- distinct content items (one card on IG + FB = 1). Followers = IG followers_count + FB
+-- followers_count + YT subscriberCount.
+-- Result on 2026-09-30: IG 7 + FB 5 + YT 2 = 14 channel-posts, 7 distinct items. Followers 0 + 1 + 5 = 6.
+-- To see whether the posts brought anyone in, count signups whose first or last touch was a social channel:
+select
+ (select count(*) from profiles where created_at > now()-interval '7 days'
+   and (acquisition_source in ('instagram','facebook','youtube','telegram')
+        or acquisition_last_source in ('instagram','facebook','youtube','telegram'))) as social_signups_7d,
+ (select count(*) from profiles where acquisition_source in ('instagram','facebook','youtube','telegram')
+        or acquisition_last_source in ('instagram','facebook','youtube','telegram')) as social_signups_total;
+
 -- support ---------------------------------------------------------------------------------
 select
  (select count(*) from support_tickets where status not in ('resolved','closed')) as tickets_open,

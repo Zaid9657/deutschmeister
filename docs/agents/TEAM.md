@@ -32,7 +32,7 @@ routines from a session that holds the connectors (`docs/scorecard-routine.md`).
 | acquisition | homepage, signup/login, attribution, landing pages | signups vs 7-day avg, sources | Wed |
 | seo | grammar, Leitfäden, Vergleich, Prüfung, courses pages, sitemaps, llms.txt | landing pages of attributed signups (GSC not yet) | Wed |
 | retention | every mailer, lifecycle ledger, deliverability, win-back | lifecycle sends, opt-outs, bounces (Resend) | Thu |
-| content | social channels, daily-sentence content, podcast feed, FAQ/About copy | posts per 7 d (0: no accounts yet) | Thu |
+| content | social channels, daily-sentence content, podcast feed, FAQ/About copy | posts per 7 d on IG, FB and YT, read through Zapier; followers; social signups | Thu |
 | support | /support, tickets, SLA, the production support agent | open, new, past SLA | Fri |
 | website | all routes, redirects, builds, deploys, CI, sentinel, legal-page presence | incidents, deploy state, CI | Fri |
 | webperf | bundles, fonts, Lighthouse, CLS | merges touching the bundle; weekly Lighthouse | Sat |
