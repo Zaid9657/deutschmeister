@@ -68,15 +68,24 @@ REVOKE ALL ON SEQUENCE public.agent_heartbeats_id_seq FROM PUBLIC, anon, authent
 -- service role (the only writer) cannot.
 DO $$
 BEGIN
+  -- The REVOKE above names the sequence; make sure it is the column's real one
+  -- (a pre-existing relation of that name would make Postgres pick `_seq1`).
+  IF pg_get_serial_sequence('public.agent_heartbeats', 'id') IS DISTINCT FROM 'public.agent_heartbeats_id_seq' THEN
+    RAISE EXCEPTION 'agent_heartbeats: the id sequence is not public.agent_heartbeats_id_seq — the REVOKE missed it';
+  END IF;
   IF NOT (SELECT relrowsecurity FROM pg_class WHERE oid = 'public.agent_heartbeats'::regclass) THEN
     RAISE EXCEPTION 'agent_heartbeats: row level security is off';
   END IF;
   IF EXISTS (SELECT 1 FROM pg_policies WHERE schemaname = 'public' AND tablename = 'agent_heartbeats') THEN
     RAISE EXCEPTION 'agent_heartbeats: a policy exists — this table is service-role only';
   END IF;
-  IF has_table_privilege('anon', 'public.agent_heartbeats', 'SELECT, INSERT, UPDATE, DELETE')
-     OR has_table_privilege('authenticated', 'public.agent_heartbeats', 'SELECT, INSERT, UPDATE, DELETE') THEN
+  IF has_table_privilege('anon', 'public.agent_heartbeats', 'SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER')
+     OR has_table_privilege('authenticated', 'public.agent_heartbeats', 'SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER') THEN
     RAISE EXCEPTION 'agent_heartbeats: a client role still holds a table privilege';
+  END IF;
+  IF has_sequence_privilege('anon', 'public.agent_heartbeats_id_seq', 'USAGE, SELECT, UPDATE')
+     OR has_sequence_privilege('authenticated', 'public.agent_heartbeats_id_seq', 'USAGE, SELECT, UPDATE') THEN
+    RAISE EXCEPTION 'agent_heartbeats: a client role still holds a sequence privilege';
   END IF;
   IF NOT (has_table_privilege('service_role', 'public.agent_heartbeats', 'SELECT')
           AND has_table_privilege('service_role', 'public.agent_heartbeats', 'INSERT')
