@@ -6,7 +6,7 @@ import GameButton from './GameButton.jsx';
 import { SpeechBubble } from './GameParts.jsx';
 import { GlossText, useGlossPopover } from './InputView.jsx';
 import StepScreen, { IconKey } from './StepScreen.jsx';
-import { canPlay, recordedLine, speakerName } from './content.js';
+import { canPlay, recordedLine, speakerName, warmV2Lines } from './content.js';
 import { inputPhases, lineLabel, readingChunks } from './steps.js';
 import { useV2Strings } from './strings.js';
 
@@ -78,6 +78,11 @@ export default function StoryInput({ input, unitId, names = null, onDone, onProg
     const down = Math.min(rect.bottom + BAR_ROOM - window.innerHeight, rect.top - TOP_ROOM);
     if (down > 0) window.scrollTo({ top: window.scrollY + down, behavior: reducedMotion() ? 'instant' : 'smooth' });
   }, [phase, shown]);
+
+  // the server renders a clip on its first request: ask for the whole dialogue as it opens
+  useEffect(() => {
+    warmV2Lines(unitId, lines);
+  }, [unitId, lines]);
 
   // a new line speaks once as it appears (only where it can be played at all)
   useEffect(() => {

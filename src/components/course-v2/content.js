@@ -2,7 +2,8 @@
 // unit (SCHEMA §8 + §13), the two generators whose whole input is inside the unit file,
 // and the audio call. No React here.
 
-import { playLine, speakGermanLines, speechAvailable, audioFor } from '../../lib/lesson/speech.js';
+import { playClips, playLine, speakGermanLines, speechAvailable, audioFor, warmClips } from '../../lib/lesson/speech.js';
+import { V2_SERVER_AUDIO_LEVELS } from '../../config/courseV2.js';
 import { hasNumber } from '../../lib/lesson/check.js';
 
 // ---------------------------------------------------------------------------
@@ -264,27 +265,77 @@ export function materialize(specs, unit, generated = null) {
 /** True when a recording exists for the line; otherwise the browser voice speaks. */
 export const recordedLine = (unitId, lineId) => !!audioFor(unitId, lineId);
 
-/** Can this browser play the line at all (recording or speech synthesis)? */
-export const canPlay = (unitId, lineId) => recordedLine(unitId, lineId) || speechAvailable();
+// Server-rendered voices (owner 2026-10-01: "the voices are not working"). Every speakable of a
+// level in V2_SERVER_AUDIO_LEVELS — dialogue and exam lines, words, their examples, Redemittel —
+// is played from /.netlify/functions/course-audio, which renders it once with a neural voice and
+// redirects to the stored mp3 (netlify/functions/_shared/courseAudio.mjs). The browser's own voice
+// is now only the fallback. Off on the Vite dev server, which has no functions, unless
+// VITE_V2_SERVER_AUDIO=1 (netlify dev).
+let serverAudioOverride = null;
+/** Test seam: force the server voice on (true) or off (false); null restores the build's default. */
+export function __setServerAudioForTests(on) {
+  serverAudioOverride = on === null || on === undefined ? null : !!on;
+}
+function serverAudioOn() {
+  if (serverAudioOverride !== null) return serverAudioOverride;
+  try {
+    const env = import.meta.env;
+    return !!(env && (env.PROD || env.VITE_V2_SERVER_AUDIO === '1'));
+  } catch {
+    return false;
+  }
+}
+
+/** The level of a unit, Plateau or closing id (`a1.1-u01`, `a1.1-p2`, `a1.1-ht-sd1` → `a1.1`). */
+export const levelOfUnitId = (unitId) => {
+  const m = /^([a-z][0-9]\.[0-9])(?:-|$)/i.exec(String(unitId || ''));
+  return m ? m[1].toLowerCase() : null;
+};
+
+/** The server URL of a speakable, or null when its level is not rendered (or the server voice is off). */
+export function serverAudioUrl(unitId, lineId) {
+  const level = levelOfUnitId(unitId);
+  if (!lineId || !level || !V2_SERVER_AUDIO_LEVELS.includes(level) || !serverAudioOn()) return null;
+  return `/.netlify/functions/course-audio?level=${encodeURIComponent(level)}&id=${encodeURIComponent(lineId)}`;
+}
+
+/** Can this browser play the line at all (recording, server voice or speech synthesis)? */
+export const canPlay = (unitId, lineId) => recordedLine(unitId, lineId) || !!serverAudioUrl(unitId, lineId) || speechAvailable();
+
+const textOf = (line) => (line && (line.say || line.de)) || '';
 
 /**
- * Play one Line: the recording from the level's audio manifest when there is one
- * (keyed by the line id), else speech synthesis of `say` (the TTS text, AUD-02) or `de`.
+ * Play one Line: the recording from the level's audio manifest when there is one (keyed by the
+ * line id), else the server voice, else speech synthesis of `say` (the TTS text, AUD-02) or `de`.
  */
 export function playV2Line(unitId, line, opts) {
   if (!line) return false;
-  return playLine(unitId, line.id, line.say || line.de, opts);
+  if (!recordedLine(unitId, line.id)) {
+    const url = serverAudioUrl(unitId, line.id);
+    if (url) return playClips([{ url, text: textOf(line) }], { rate: (opts && opts.rate) || 0.92 }) ? 'server' : false;
+  }
+  return playLine(unitId, line.id, textOf(line), opts);
 }
 
 /**
- * Play a sequence of lines one after the other (speech synthesis queues them) as one turn of
- * speech.js, so one stopSpeech() ends the whole queue (CRITIC-01). With a recording for any of the
- * lines only the first plays (the audio run renders them one by one).
+ * Play a sequence of lines one after the other as one turn of speech.js, so one stopSpeech() ends
+ * the whole queue (CRITIC-01): server clips back to back on one <audio>, else the synthesiser's
+ * queue. With a manifest recording for any of the lines only the first plays (the audio run
+ * renders them one by one).
  */
 export function playV2Lines(unitId, lines, opts) {
   if (!Array.isArray(lines) || !lines.length) return false;
-  if (!speechAvailable() || lines.some((l) => recordedLine(unitId, l.id))) {
-    return playV2Line(unitId, lines[0], opts);
+  const rate = (opts && opts.rate) || 0.92;
+  if (lines.some((l) => recordedLine(unitId, l.id))) return playV2Line(unitId, lines[0], opts);
+  if (serverAudioUrl(unitId, lines[0].id)) {
+    return playClips(lines.map((l) => ({ url: serverAudioUrl(unitId, l.id), text: textOf(l) })), { rate }) ? 'server' : false;
   }
-  return speakGermanLines(lines.map((l) => l.say || l.de || ''), { rate: (opts && opts.rate) || 0.92 }) ? 'tts' : false;
+  if (!speechAvailable()) return false;
+  return speakGermanLines(lines.map(textOf), { rate }) ? 'tts' : false;
+}
+
+/** Ask the server for these lines before they are tapped (first request renders them). */
+export function warmV2Lines(unitId, lines) {
+  const list = (Array.isArray(lines) ? lines : [lines]).filter((l) => l && l.id && !recordedLine(unitId, l.id));
+  warmClips(list.map((l) => serverAudioUrl(unitId, l.id)).filter(Boolean));
 }

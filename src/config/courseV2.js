@@ -32,6 +32,13 @@ export const V2_DEFAULT_PACE = 'standard';
 /** Is /course/:level itself the v2 course? */
 export const isCourseV2Live = (level) => COURSE_V2_LIVE.includes(String(level || '').toLowerCase());
 
+/**
+ * The levels whose audio the server renders (src/components/course-v2/content.js serverAudioUrl).
+ * Mirrors COURSE_AUDIO_LEVELS in netlify/functions/_shared/courseAudio.mjs, which refuses every
+ * other level; tests/course-v2-audio-server.test.mjs keeps the two equal.
+ */
+export const V2_SERVER_AUDIO_LEVELS = ['a1.1'];
+
 /** The v2 course routes (App.jsx): home, unit player, Plateau, closing block, Grammatik, Wortschatz. */
 export const V2_COURSE_ROUTE = /^\/course\/([^/]+)\/(?:v2|u\/[^/]+|p\/[^/]+|abschluss|grammatik|wortschatz)\/?$/;
 

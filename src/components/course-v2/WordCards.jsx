@@ -3,7 +3,7 @@ import AudioButton, { useV2Playback } from './AudioButton.jsx';
 import GameButton from './GameButton.jsx';
 import StepScreen from './StepScreen.jsx';
 import { SayButton } from './WordList.jsx';
-import { canPlay } from './content.js';
+import { canPlay, warmV2Lines } from './content.js';
 import { nounParts } from './kapitel.js';
 import { useV2Strings } from './strings.js';
 
@@ -62,6 +62,11 @@ export default function WordCards({ words, unitId = null, onDone, onProgress = n
   const p = nounParts(w);
   const uid = unitId || (w && w.unit) || null;
   useAutoPlay(uid, w && w.id, p.say);
+  // the deck's words and example sentences, asked for while the first card is read
+  const deckKey = list.map((x) => x.id).join(',');
+  useEffect(() => {
+    warmV2Lines(uid, list.flatMap((x) => (x.example ? [{ id: x.id }, { id: `${x.id}-ex` }] : [{ id: x.id }])));
+  }, [deckKey]); // eslint-disable-line react-hooks/exhaustive-deps
   if (!w) return null;
   const plural = p.note === 'pl'
     ? t('card.pluralOnly')
@@ -107,6 +112,10 @@ export function PhraseCards({ phrases, unitId = null, onDone, onProgress = null 
   const [i, next] = useDeck(list.length, onDone, onProgress);
   const r = list[i] || null;
   useAutoPlay(unitId, r && r.id, r && r.de);
+  const deckKey = list.map((x) => x.id).join(',');
+  useEffect(() => {
+    warmV2Lines(unitId, list);
+  }, [deckKey]); // eslint-disable-line react-hooks/exhaustive-deps
   if (!r) return null;
   const counter = { n: i + 1, total: list.length, label: t('card.phraseOf', { n: i + 1, total: list.length }) };
   const meaning = lang === 'de' ? r.function : r.en;

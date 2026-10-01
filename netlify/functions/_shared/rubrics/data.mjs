@@ -53,6 +53,9 @@ function readJson(fileName) {
   return null;
 }
 
+/** Read one compiled course-v2 JSON file from the shipped directory (null when absent). */
+export const readCourseV2Json = (fileName) => readJson(fileName);
+
 // Per-instance caches. `undefined` = not looked up yet; `null` = looked up, absent.
 const bankCache = new Map();
 let rubricCache;

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { Play, Cpu, Mic, Volume2 } from 'lucide-react';
 import { speechTurn, stopSpeech } from '../../lib/lesson/speech.js';
 import { useV2Strings } from './strings.js';
-import { canPlay, playV2Line, playV2Lines, recordedLine } from './content.js';
+import { canPlay, playV2Line, playV2Lines, recordedLine, warmV2Lines } from './content.js';
 
 /**
  * The one way a course-v2 screen makes sound (CRITIC-01): `line(unitId, line, opts)` and
@@ -67,7 +67,12 @@ export default function AudioButton({ unitId, line = null, lines = null, label =
   const first = list[0] || null;
   const available = first ? canPlay(unitId, first.id) : false;
   const exhausted = typeof playsLeft === 'number' && playsLeft <= 0;
-  const playback = useV2Playback(`${unitId}|${list.map((l) => l && l.id).join(',')}`);
+  const scope = `${unitId}|${list.map((l) => l && l.id).join(',')}`;
+  const playback = useV2Playback(scope);
+  // the server renders a clip on its first request: ask while the screen is read, not on the tap
+  useEffect(() => {
+    warmV2Lines(unitId, list);
+  }, [scope]); // eslint-disable-line react-hooks/exhaustive-deps
   const play = () => {
     if (!first || exhausted) return;
     const ok = list.length > 1 ? playback.lines(unitId, list, { rate }) : playback.line(unitId, first, { rate });
