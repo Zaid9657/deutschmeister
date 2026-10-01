@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ChevronDown, Volume2 } from 'lucide-react';
-import { canPlay, playV2Line } from './content.js';
+import { canPlay } from './content.js';
+import { useV2Playback } from './AudioButton.jsx';
 import { nounParts } from './kapitel.js';
 import { useV2Strings } from './strings.js';
 
@@ -10,11 +11,13 @@ import { useV2Strings } from './strings.js';
  * so it is a white key with the palette's ink, not the chunky primary.
  */
 export function SayButton({ unitId, id, text, label }) {
+  // through the shared playback hook, so leaving the screen stops this line too
+  const playback = useV2Playback(`${unitId}:${id}`);
   if (!text || !canPlay(unitId, id)) return null;
   return (
     <button
       type="button"
-      onClick={() => playV2Line(unitId, { id, de: text })}
+      onClick={() => playback.line(unitId, { id, de: text })}
       aria-label={label}
       className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border-2 border-game-line bg-white text-course-ink hover:bg-course-wash active:translate-y-px motion-reduce:transform-none"
     >

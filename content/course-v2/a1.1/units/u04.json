@@ -1337,7 +1337,7 @@
             "role": "practice",
             "topic": "g.moechte",
             "promptDe": "Ich ___ ein Kilo Tomaten, bitte. (möcht-)",
-            "promptEn": "möchte: ich-form.",
+            "promptEn": "ich-form of möcht- (would like).",
             "answer": "möchte",
             "accepted": [
               "möchte"
@@ -1625,7 +1625,7 @@
           "role": "practice",
           "topic": "g.moechte",
           "promptDe": "Priya ___ drei Birnen. (möcht-)",
-          "promptEn": "möchte: sie-form.",
+          "promptEn": "sie-form of möcht- (would like).",
           "answer": "möchte",
           "accepted": [
             "möchte"

@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Languages, Play, Volume2 } from 'lucide-react';
-import { SourceBadge } from './AudioButton.jsx';
+import { SourceBadge, useV2Playback } from './AudioButton.jsx';
 import CastAvatar from './CastAvatar.jsx';
 import GameButton from './GameButton.jsx';
 import { SpeechBubble } from './GameParts.jsx';
 import { GlossText, useGlossPopover } from './InputView.jsx';
 import StepScreen, { IconKey } from './StepScreen.jsx';
-import { canPlay, playV2Line, playV2Lines, recordedLine, speakerName } from './content.js';
+import { canPlay, recordedLine, speakerName } from './content.js';
 import { inputPhases, lineLabel, readingChunks } from './steps.js';
 import { useV2Strings } from './strings.js';
 
@@ -55,6 +55,8 @@ export default function StoryInput({ input, unitId, names = null, onDone, onProg
   const finished = useRef(false);
   const sink = useRef(onProgress);
   sink.current = onProgress;
+  // its sound stops when the input is left (CRITIC-01)
+  const playback = useV2Playback(`${unitId}|${lines.length ? lines[0].id : ''}`);
 
   const kind = phases[phase] || null;
   const beatsOf = (k) => (k === 'text' ? reading.chunks.length : k === 'lines' ? lines.length : 1);
@@ -82,9 +84,9 @@ export default function StoryInput({ input, unitId, names = null, onDone, onProg
     if (kind !== 'lines') return undefined;
     const line = lines[shown - 1];
     if (!line || !canPlay(unitId, line.id)) return undefined;
-    const timer = setTimeout(() => { playV2Line(unitId, line); }, 200);
+    const timer = setTimeout(() => { playback.line(unitId, line); }, 200);
     return () => clearTimeout(timer);
-  }, [kind, shown, lines, unitId]);
+  }, [kind, shown, lines, unitId, playback]);
 
   const finish = () => {
     if (finished.current) return;
@@ -99,7 +101,7 @@ export default function StoryInput({ input, unitId, names = null, onDone, onProg
   // the whole recording; the learner started it, so the transcript may open (whether or not
   // the browser then managed to speak — the text is never withheld because sound failed)
   const listenAll = (rate) => {
-    playV2Lines(unitId, lines, rate ? { rate } : undefined);
+    playback.lines(unitId, lines, rate ? { rate } : undefined);
     if (!heard) {
       setHeard(true);
       if (typeof onHeard === 'function') onHeard();
@@ -228,7 +230,7 @@ export default function StoryInput({ input, unitId, names = null, onDone, onProg
                   {playable && (
                     <button
                       type="button"
-                      onClick={() => playV2Line(unitId, l)}
+                      onClick={() => playback.line(unitId, l)}
                       aria-label={`${t('audio.play')}: ${name}`}
                       className="-mr-2 -mt-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-course-ink hover:bg-course-wash active:translate-y-px motion-reduce:transform-none"
                     >

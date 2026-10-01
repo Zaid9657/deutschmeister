@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, User, LogOut, Globe, LayoutDashboard, Crown, Sparkles, Mic, ClipboardCheck, BookOpen, BookMarked, ChevronDown, Film, Radio, Scan, Headphones, FileText, PlayCircle, GraduationCap, ShieldCheck, LifeBuoy } from 'lucide-react';
@@ -7,6 +7,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { isAdminEmail } from '../config/admins';
 import { NAV_GROUPS, SUPPORT_LINK } from '../data/navigation';
+import { freeCourseHref } from '../config/courseV2';
 import Logo from './Logo';
 import Button from './ui/Button';
 
@@ -45,6 +46,8 @@ const Navbar = () => {
   const { user, signOut } = useAuth();
   const { isInFreeTrial, getTrialDaysRemaining, hasActiveSubscription } = useSubscription();
   const navigate = useNavigate();
+  // inside the v2 course preview the free A1.1 chip stays in it (config/courseV2.js freeCourseHref)
+  const freeCourse = freeCourseHref(useLocation().pathname);
   const [isOpen, setIsOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
@@ -126,7 +129,7 @@ const Navbar = () => {
               <>
                 <NavSeparator />
                 <Link
-                  to="/course/a1.1"
+                  to={freeCourse}
                   className="flex min-h-11 items-center gap-1.5 whitespace-nowrap px-3 py-1.5 rounded-full border border-siegel/25 bg-siegel-wash text-siegel-deep text-sm font-semibold hover:border-siegel/50 transition-colors"
                 >
                   <Sparkles size={14} />
@@ -303,7 +306,7 @@ const Navbar = () => {
               {!user && (
                 <div className="border-t border-rule mt-2 pt-2">
                   <Link
-                    to="/course/a1.1"
+                    to={freeCourse}
                     onClick={() => setIsOpen(false)}
                     className="flex items-center gap-3 px-4 py-3 rounded-lg border border-siegel/25 bg-siegel-wash text-siegel-deep font-semibold"
                   >

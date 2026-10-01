@@ -15,7 +15,8 @@ import AssessmentPlayer from './AssessmentPlayer.jsx';
 
 // The v2 closing block: /course/:level/abschluss (BLUEPRINT §5.3, §7.3 S10).
 //
-// For a .1 course it is the Halbtest of the learner's lane (completion.js closingFormFor:
+// For a .1 course it is the Halbtest (the SCHEMA kind; the learner reads „Abschlusstest", as on the
+// path — strings.js as.halbtest) of the learner's lane (completion.js closingFormFor:
 // the learner_goals lane, else the primary lane), every Teil in the Lernmodus of A1.1, ending
 // in the Teil-Karte — per Teil what was practised and where it comes next in the .2 course
 // (the compiler's `comesNext`, from the .2 level's units or specs.json). Never a total, never a

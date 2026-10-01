@@ -1357,7 +1357,7 @@
             "role": "practice",
             "topic": "g.akkusativ",
             "promptDe": "Ich möchte ___ Kaffee, bitte. (ein-)",
-            "promptEn": "ein, eine or einen?",
+            "promptEn": "The indefinite article (a/an) with the right ending.",
             "answer": "einen",
             "accepted": [
               "einen"
@@ -1377,7 +1377,7 @@
             "role": "practice",
             "topic": "g.akkusativ",
             "promptDe": "Und ___ Mineralwasser, bitte. (ein-)",
-            "promptEn": "ein, eine or einen?",
+            "promptEn": "The indefinite article (a/an) with the right ending.",
             "answer": "ein",
             "accepted": [
               "ein"
@@ -1662,7 +1662,7 @@
           "role": "practice",
           "topic": "g.akkusativ",
           "promptDe": "Für mich ___ Tomatensuppe, bitte. (ein-)",
-          "promptEn": "ein, eine or einen?",
+          "promptEn": "The indefinite article (a/an) with the right ending.",
           "answer": "eine",
           "accepted": [
             "eine"
@@ -2187,7 +2187,7 @@
             "role": "practice",
             "topic": "g.moechte",
             "promptDe": "Heute ___ ich eine Suppe. (möcht-)",
-            "promptEn": "möchte: ich-form.",
+            "promptEn": "ich-form of möcht- (would like).",
             "answer": "möchte",
             "accepted": [
               "möchte"
@@ -3465,7 +3465,7 @@
         "role": "check",
         "topic": "g.akkusativ",
         "promptDe": "Ich möchte ___ Apfelkuchen, bitte. (ein-)",
-        "promptEn": "ein, eine or einen?",
+        "promptEn": "The indefinite article (a/an) with the right ending.",
         "answer": "einen",
         "accepted": [
           "einen"

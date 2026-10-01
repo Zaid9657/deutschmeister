@@ -109,7 +109,8 @@ export default function FeedbackSheetV2({ result, revealed = false, expected = n
           </p>
         )}
         {explanation && <p className="text-[1rem] font-semibold leading-relaxed">{explanation}</p>}
-        {otherExplanation && <p className="text-[0.875rem] leading-relaxed opacity-80">{otherExplanation}</p>}
+        {/* full ink, no opacity: faded, the wrong ink on its wash fell to 4.32:1 (audit A11Y-04); the smaller size subordinates it */}
+        {otherExplanation && <p className="text-[0.875rem] leading-relaxed">{otherExplanation}</p>}
         {missed && repeat && (
           <p className="text-[0.9375rem] font-extrabold">{t(repeat === 'similar' ? 'fb.repeatSimilar' : 'fb.repeatSame')}</p>
         )}

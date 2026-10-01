@@ -12,17 +12,110 @@ export function germanVoice() {
   return voices.find((v) => /^de[-_]DE/i.test(v.lang)) || voices.find((v) => /^de/i.test(v.lang));
 }
 
+// ---------------------------------------------------------------------------
+// Who is talking (CRITIC-01). There is one voice at a time: every start stops whatever was
+// playing (synthesiser queue AND a recording) and takes a new `turn`. A screen that started sound
+// remembers its turn (speechTurn() right after the play call) and, when it goes away — the learner
+// taps X, „Weiter", the next card — calls stopSpeech(thatTurn): the sound stops only if it is still
+// that screen's, so a screen that unmounts late never silences the next screen's voice. The course
+// player's hook for this is useV2Playback (src/components/course-v2/content.js).
+// ---------------------------------------------------------------------------
+
+let turn = 0;
+let currentAudio = null;
+
+/** The turn of the sound playing now (or of the last one started). */
+export const speechTurn = () => turn;
+
+function halt() {
+  try {
+    if (speechAvailable()) window.speechSynthesis.cancel();
+  } catch {
+    /* nothing to stop */
+  }
+  if (currentAudio) {
+    try {
+      currentAudio.pause();
+    } catch {
+      /* already gone */
+    }
+    currentAudio = null;
+  }
+}
+
+/** A new sound starts: whatever played stops, and the new one owns the next turn. */
+function begin() {
+  halt();
+  turn += 1;
+  return turn;
+}
+
+/**
+ * Stop the sound. With `onlyTurn`, only when that turn is still the one playing (the owner
+ * leaving); without it, whatever plays. Returns true when it stopped something it owned.
+ */
+export function stopSpeech(onlyTurn) {
+  if (onlyTurn !== undefined && onlyTurn !== null && onlyTurn !== turn) return false;
+  halt();
+  turn += 1;
+  return true;
+}
+
+function utter(text, rate) {
+  const utterance = new SpeechSynthesisUtterance(String(text));
+  utterance.lang = 'de-DE';
+  utterance.rate = rate;
+  const voice = germanVoice();
+  if (voice) utterance.voice = voice;
+  window.speechSynthesis.speak(utterance);
+}
+
 /** Speak one German line. Returns false when the browser cannot. */
 export function speakGerman(text, { rate = 0.92 } = {}) {
   if (!speechAvailable() || !text) return false;
   try {
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(String(text));
-    utterance.lang = 'de-DE';
-    utterance.rate = rate;
-    const voice = germanVoice();
-    if (voice) utterance.voice = voice;
-    window.speechSynthesis.speak(utterance);
+    begin();
+    utter(text, rate);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** Speak several German lines one after the other (the synthesiser queues them) as ONE turn. */
+export function speakGermanLines(texts, { rate = 0.92 } = {}) {
+  const list = (Array.isArray(texts) ? texts : []).map((x) => String(x || '')).filter(Boolean);
+  if (!speechAvailable() || !list.length) return false;
+  try {
+    begin();
+    for (const text of list) utter(text, rate);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Play a recording as the new turn; if the browser refuses it, synthesise `text` instead — but only
+ * while the turn is still this one (a pause() from stopSpeech rejects play() too, and a stopped
+ * screen must stay silent). Returns false when there is no recording to try.
+ */
+function playRecording(url, text, opts) {
+  try {
+    const mine = begin();
+    const audio = new Audio(url);
+    currentAudio = audio;
+    const fallback = () => {
+      if (turn !== mine) return;
+      currentAudio = null;
+      try {
+        if (speechAvailable() && text) utter(text, (opts && opts.rate) || 0.92);
+      } catch {
+        /* no voice either */
+      }
+    };
+    const started = audio.play();
+    if (started && typeof started.catch === 'function') started.catch(fallback);
     return true;
   } catch {
     return false;
@@ -31,15 +124,7 @@ export function speakGerman(text, { rate = 0.92 } = {}) {
 
 /** Prefer a real recording, fall back to the synthesiser. */
 export function playWord(audioUrl, text) {
-  if (audioUrl) {
-    try {
-      const audio = new Audio(audioUrl);
-      audio.play().catch(() => speakGerman(text));
-      return true;
-    } catch {
-      /* fall through to synthesis */
-    }
-  }
+  if (audioUrl && playRecording(audioUrl, text)) return true;
   return speakGerman(text);
 }
 
@@ -101,14 +186,6 @@ export function phonetikSpeechText(display) {
 
 export function playLine(lektionId, key, text, opts) {
   const url = audioFor(lektionId, key);
-  if (url) {
-    try {
-      const audio = new Audio(url);
-      audio.play().catch(() => speakGerman(text, opts));
-      return 'recording';
-    } catch {
-      /* fall through */
-    }
-  }
+  if (url && playRecording(url, text, opts)) return 'recording';
   return speakGerman(text, opts) ? 'tts' : false;
 }

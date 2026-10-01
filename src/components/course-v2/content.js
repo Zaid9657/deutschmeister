@@ -2,7 +2,7 @@
 // unit (SCHEMA §8 + §13), the two generators whose whole input is inside the unit file,
 // and the audio call. No React here.
 
-import { playLine, speechAvailable, audioFor } from '../../lib/lesson/speech.js';
+import { playLine, speakGermanLines, speechAvailable, audioFor } from '../../lib/lesson/speech.js';
 import { hasNumber } from '../../lib/lesson/check.js';
 
 // ---------------------------------------------------------------------------
@@ -276,25 +276,15 @@ export function playV2Line(unitId, line, opts) {
   return playLine(unitId, line.id, line.say || line.de, opts);
 }
 
-/** Play a sequence of lines one after the other (speech synthesis queues them). */
+/**
+ * Play a sequence of lines one after the other (speech synthesis queues them) as one turn of
+ * speech.js, so one stopSpeech() ends the whole queue (CRITIC-01). With a recording for any of the
+ * lines only the first plays (the audio run renders them one by one).
+ */
 export function playV2Lines(unitId, lines, opts) {
   if (!Array.isArray(lines) || !lines.length) return false;
-  if (typeof window === 'undefined' || !('speechSynthesis' in window) || lines.some((l) => recordedLine(unitId, l.id))) {
+  if (!speechAvailable() || lines.some((l) => recordedLine(unitId, l.id))) {
     return playV2Line(unitId, lines[0], opts);
   }
-  try {
-    window.speechSynthesis.cancel();
-    const voices = window.speechSynthesis.getVoices() || [];
-    const voice = voices.find((v) => /^de[-_]DE/i.test(v.lang)) || voices.find((v) => /^de/i.test(v.lang));
-    for (const l of lines) {
-      const u = new SpeechSynthesisUtterance(String(l.say || l.de || ''));
-      u.lang = 'de-DE';
-      u.rate = opts?.rate || 0.92;
-      if (voice) u.voice = voice;
-      window.speechSynthesis.speak(u);
-    }
-    return 'tts';
-  } catch {
-    return false;
-  }
+  return speakGermanLines(lines.map((l) => l.say || l.de || ''), { rate: (opts && opts.rate) || 0.92 }) ? 'tts' : false;
 }

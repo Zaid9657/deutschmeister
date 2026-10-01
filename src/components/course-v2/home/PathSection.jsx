@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import CastAvatar from '../CastAvatar.jsx';
+import CourseFinish from './CourseFinish.jsx';
 import JumpButton from './JumpButton.jsx';
 import PathNode, { StepFace } from './PathNode.jsx';
 import { StopFace } from './StopNode.jsx';
@@ -16,7 +17,8 @@ import {
 // Each Modul ends in its Plateau chest or the Abschlusstest trophy, and a quiet divider
 // line „MODUL 2 · EINKAUFEN UND WOHNEN" separates the Module. A Kapitel whose content is
 // not compiled yet is grey with grey nodes whose popover says „Kommt bald". The gate
-// stays SOFT: every node of a compiled Kapitel opens its step.
+// stays SOFT: every node of a compiled Kapitel opens its step. Once every Kapitel is done the
+// path ends in CourseFinish under the trophy (pathModel.courseFinish) — the page scrolls there.
 
 function UnitBlock({ unit, current, stepXp, openId, toggle, headingLevel, companion }) {
   const finish = finishNode(current, unit);
@@ -72,7 +74,7 @@ function Divider({ id, label, visible }) {
   );
 }
 
-export default function PathSection({ path, stepXp, withCast = false, onJump, lifted = false, anchor = null }) {
+export default function PathSection({ path, stepXp, withCast = false, onJump, lifted = false, anchor = null, finish = null }) {
   const [openId, setOpenId] = useState(null);
   const toggle = useCallback((id) => setOpenId((prev) => (prev === id ? null : id)), []);
 
@@ -161,6 +163,7 @@ export default function PathSection({ path, stepXp, withCast = false, onJump, li
           </section>
         );
       })}
+      <CourseFinish finish={finish} />
     </div>
   );
 }

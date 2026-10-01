@@ -35,7 +35,7 @@ export default function InlineFeedback({ result, revealed = false, retry = false
         </p>
       )}
       {!retry && ex.main && <p className="mt-1.5 text-[0.9375rem] font-semibold leading-relaxed">{ex.main}</p>}
-      {!retry && ex.other && <p className="mt-1 text-[0.8125rem] leading-relaxed opacity-80">{ex.other}</p>}
+      {!retry && ex.other && <p className="mt-1 text-[0.8125rem] leading-relaxed">{ex.other}</p>}
     </div>
   );
 }

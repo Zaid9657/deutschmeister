@@ -39,8 +39,8 @@
 // ids under it) resolve in compile mode only; the checker and the validator keep REF-01 as it is.
 // Ids of a unit that is not compiled in a run stay live in the ledger — only a unit that compiles can
 // tombstone its removed ids. Errors in any other file of the level or in a shared registry, and the
-// compile-stage integrity errors (ID-01 duplicates and tombstones, KEY-01 prefix/duplicates) still
-// refuse the whole level.
+// compile-stage integrity errors (ID-01 duplicates and tombstones, KEY-01 prefix/duplicates, ITM-EN
+// a typed item's shown help printing its key — keyInShownHelp) still refuse the whole level.
 //
 // Nothing here reads a clock, the environment or the network: the same content gives the same bytes.
 import fs from 'node:fs';
@@ -187,6 +187,40 @@ export function toPoolItem(item, minLektion) {
   // renderer inputs of the new item types, carried only when the item has them
   for (const k of ['pairs', 'audioLineRef', 'textRef', 'noMatch']) if (item[k] !== undefined) out[k] = item[k];
   return out;
+}
+
+// ── the English twin never prints the key (WT-02) ───────────────────────────────────────
+const wordsOf = (text) => new Set(String(text || '').toLowerCase().split(/[^\p{L}]+/u).filter(Boolean));
+
+/**
+ * The key an item's shown help gives away, or null. The player prints `promptEn` under the German
+ * prompt in the English chrome and `hint` (de/en) under every typed item; for a Sie-/wir-/sie-plural
+ * gap the infinitive IS the answer, so „kommen, Sie-form." under „Woher ___ Sie? (komm-)" hands the
+ * learner the key (a1.1-u01-ls1-p02). The rule: on an item the learner TYPES (no options, tiles or
+ * pairs — there the key is on screen by design) no accepted single-word form of ≥ 3 letters may
+ * stand as a whole word in the help — unless the German prompt shows that word too (a bracket cue
+ * such as „(können)" is the German side's own decision, not a leak of the twin). Name the stem and
+ * the person instead: „Sie-form of komm- (to come)."
+ */
+export function keyInShownHelp(item) {
+  if (!isObj(item) || typeof item.answer !== 'string') return null;
+  if ((Array.isArray(item.options) && item.options.length) || Array.isArray(item.tiles) || Array.isArray(item.pairs)) return null;
+  const hint = isObj(item.hint) ? [item.hint.de, item.hint.en] : [item.hint];
+  const help = wordsOf([item.promptEn, ...hint].filter((x) => typeof x === 'string').join(' '));
+  if (!help.size) return null;
+  const german = wordsOf(item.promptDe);
+  const keys = [item.answer, ...(Array.isArray(item.accepted) ? item.accepted : [])]
+    .map((k) => String(k || '').trim().toLowerCase())
+    .filter((k) => k.length >= 3 && /^\p{L}+$/u.test(k));
+  return keys.find((k) => help.has(k) && !german.has(k)) || null;
+}
+
+function checkShownHelp(doc, errors, where) {
+  eachNode(doc, (x) => {
+    if (!isItem(x)) return;
+    const key = keyInShownHelp(x);
+    if (key) errors.push(`${where}: ITM-EN ${x.id}: promptEn/hint prints the key „${key}" — the help under a typed item must not contain the answer (name the stem and the person: „Sie-form of komm-")`);
+  });
 }
 
 /** A reserve item in the pool shape plus what the reserve index draws by (SCHEMA §3.1 banks/errorTags). */
@@ -754,6 +788,7 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
     const generated = [];
     if (Array.isArray(chunk.steps)) for (const s of chunk.steps) generated.push(...assignGeneratedIds(s));
     collectIds({ ...u, steps: (chunk.steps || u.steps || []).map((s, i) => ({ ...s, reserve: u.steps[i]?.reserve })) }, ids, errors, rel(file));
+    checkShownHelp(u, errors, rel(file));
 
     // pool items: every authored item except the reserves (the reserve index carries those)
     const reserveIds = new Set();
@@ -784,6 +819,7 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
     for (const p of packs) {
       addBank(collectBankTasks(p.doc), { unit: u.id }, p.file);
       collectIds(p.doc, ids, errors, rel(p.file));
+      checkShownHelp(p.doc, errors, rel(p.file));
       eachNode(p.doc, (x) => {
         if (isItem(x)) poolItems.push(toPoolItem(x, u.nr));
       });
@@ -863,6 +899,7 @@ export function compileLevel(level, { contentRoot, exclude = [], outRoot = DEFAU
     for (const { file, doc } of mine(kind).sort((a, b) => a.doc.id.localeCompare(b.doc.id))) {
       extraHashes[doc.id] = contentHash(doc);
       collectIds(doc, ids, errors, rel(file));
+      checkShownHelp(doc, errors, rel(file));
       const tasks = collectBankTasks(doc);
       addBank(tasks, { source: doc.id }, file);
       const after = kind === 'plateau' ? unitNrOf(doc.after) : 12;

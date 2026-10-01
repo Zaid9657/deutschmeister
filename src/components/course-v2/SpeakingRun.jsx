@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Mic, Loader2 } from 'lucide-react';
-import GameButton from './GameButton.jsx';
-import Card from '../ui/Card.jsx';
+import GameButton, { QuietButton } from './GameButton.jsx';
 import SpeakingSession from '../speaking/SpeakingSession.jsx';
 import { checkSpeakingSupport } from '../speaking/mediaSupport.js';
 import { useAuth } from '../../contexts/AuthContext';
 import ResultCard from './ResultCard.jsx';
+import SignInPrompt, { SignInButton } from './SignInPrompt.jsx';
 import { startSpeakingSession } from './ai.js';
 import { useV2Strings } from './strings.js';
+
+const PANEL = 'rounded-[1.25rem] border-2 border-b-4 border-game-line bg-white p-5';
 
 /**
  * One graded speaking attempt for a v2 bank key (a SpeakingTask or a spoken micro-output).
@@ -17,13 +19,19 @@ import { useV2Strings } from './strings.js';
  * the stored session with the task's rubric profile. The result is the v2 shape and is
  * shown with the fixed label (ResultCard).
  *
- * No dead ends (BLUEPRINT §4.7): signed out, no microphone, no access, no allowance or a
- * server error each say why in one line, and `onSkip` (when given) is always offered.
+ * No dead ends (BLUEPRINT §4.7): no microphone, no access, no allowance or a server error each
+ * say why in one line, and `onSkip` (when given) is always offered. Signed out, the start is
+ * replaced by the account prompt and its door (SignInPrompt: /login and back to this step).
+ *
+ * `renderAction({ primary, skip, retry, busy })` (optional): the caller renders the actions in its
+ * own bottom bar (SpeakingTaskView's StickyAction) — `primary` the start or the sign-in door,
+ * `skip` the quiet skip, `retry` a new attempt, `busy` while starting. Without it the actions
+ * stay in flow (MicroOutputView).
  *
  * onResult(result | null) fires once per attempt: the graded result, or null when the
  * learner ended without speaking.
  */
-export default function SpeakingRun({ bankKey, level, title = null, hintWords = [], startLabel = null, onResult, onSkip, skipLabel = null }) {
+export default function SpeakingRun({ bankKey, level, title = null, hintWords = [], startLabel = null, onResult, onSkip, skipLabel = null, renderAction = null }) {
   const { user } = useAuth();
   const [, t] = useV2Strings();
   const [support] = useState(() => checkSpeakingSupport());
@@ -80,22 +88,62 @@ export default function SpeakingRun({ bankKey, level, title = null, hintWords = 
     );
   }
 
+  // Signed out, the start would only refuse: the account prompt and its door stand in its place.
+  const signedOut = !user;
+  const canStart = !signedOut && support.supported;
+  const startButton = (
+    <GameButton onClick={start} disabled={phase === 'starting'} caps={false}>
+      {phase === 'starting' ? <Loader2 className="h-5 w-5 motion-safe:animate-spin" aria-hidden="true" /> : <Mic className="h-5 w-5" aria-hidden="true" />}
+      {phase === 'starting' ? t('sp.starting') : (startLabel || t('sp.start'))}
+    </GameButton>
+  );
+  const notice = (
+    <>
+      {slow && phase === 'starting' && <p className="mt-2 text-[0.875rem] font-semibold text-game-muted">{t('ai.slow')}</p>}
+      {error === 'ai.signIn'
+        ? <SignInPrompt className="mt-3" withButton={!renderAction} />
+        : error && <p className="mt-3 text-[0.9375rem] font-semibold text-game-text" role="status">{t(error)}</p>}
+    </>
+  );
+
+  // The step's bottom bar (SpeakingTaskView): the actions go to the caller, which composes ONE bar
+  // with its own „Weiter" — the start (or the sign-in door) as the primary, the rest quiet.
+  if (typeof renderAction === 'function') {
+    return (
+      <div>
+        {phase === 'result' && result && <ResultCard result={result} />}
+        {phase !== 'result' && signedOut && error !== 'ai.signIn' && <SignInPrompt />}
+        {phase !== 'result' && !signedOut && !support.supported && (
+          <p className={`${PANEL} text-[0.9375rem] font-semibold text-game-text`}>{support.message || t('sp.noMicLead')}</p>
+        )}
+        {notice}
+        {renderAction({
+          primary: phase === 'result' ? null : signedOut ? <SignInButton /> : canStart ? startButton : null,
+          skip: typeof onSkip === 'function' && phase !== 'result' ? <QuietButton onClick={onSkip}>{skipLabel || t('sp.noMic')}</QuietButton> : null,
+          retry: canStart && phase !== 'starting' ? () => { setResult(null); start(); } : null,
+          busy: phase === 'starting',
+        })}
+      </div>
+    );
+  }
+
   return (
     <div>
       {phase === 'result' && result && <ResultCard result={result} />}
       {phase !== 'result' && (
-        <Card tone="wash" className="p-4">
-          {!support.supported ? (
-            <p className="text-[0.9375rem] text-ink">{support.message || t('sp.noMicLead')}</p>
-          ) : (
-            <GameButton onClick={start} size="lg" disabled={phase === 'starting'} className="w-full sm:w-auto">
-              {phase === 'starting' ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Mic className="h-4 w-4" aria-hidden="true" />}
-              {phase === 'starting' ? t('sp.starting') : (startLabel || t('sp.start'))}
-            </GameButton>
-          )}
-          {slow && phase === 'starting' && <p className="mt-2 text-[0.875rem] text-graphite">{t('ai.slow')}</p>}
-          {error && <p className="mt-3 text-[0.9375rem] text-ink" role="status">{t(error)}</p>}
-        </Card>
+        signedOut && error !== 'ai.signIn' ? <SignInPrompt withButton /> : (
+          <div className="rounded-[1.25rem] border-2 border-course-soft bg-course-wash p-4">
+            {!support.supported ? (
+              <p className="text-[0.9375rem] font-semibold text-game-text">{support.message || t('sp.noMicLead')}</p>
+            ) : (
+              <GameButton onClick={start} size="lg" disabled={phase === 'starting'} className="w-full sm:w-auto">
+                {phase === 'starting' ? <Loader2 className="h-4 w-4 motion-safe:animate-spin" aria-hidden="true" /> : <Mic className="h-4 w-4" aria-hidden="true" />}
+                {phase === 'starting' ? t('sp.starting') : (startLabel || t('sp.start'))}
+              </GameButton>
+            )}
+            {notice}
+          </div>
+        )
       )}
       {phase === 'result' && (
         <div className="mt-3">
@@ -105,13 +153,7 @@ export default function SpeakingRun({ bankKey, level, title = null, hintWords = 
         </div>
       )}
       {typeof onSkip === 'function' && phase !== 'result' && (
-        <button
-          type="button"
-          onClick={onSkip}
-          className="mt-3 inline-flex min-h-11 items-center gap-1.5 rounded-pill border border-rule bg-white px-3 py-1.5 text-[0.8125rem] font-bold text-graphite hover:border-course hover:text-course-ink"
-        >
-          {skipLabel || t('sp.noMic')}
-        </button>
+        <QuietButton onClick={onSkip} className="mt-3">{skipLabel || t('sp.noMic')}</QuietButton>
       )}
     </div>
   );

@@ -13,7 +13,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { compileLevel, writeOutputs, unitOfId } from '../scripts/course-v2/lib/compiler.mjs';
+import { compileLevel, writeOutputs, unitOfId, keyInShownHelp } from '../scripts/course-v2/lib/compiler.mjs';
 import { checkLoaded } from '../scripts/course-v2/lib/checker.mjs';
 import { buildIndex } from '../scripts/course-v2/lib/refindex.mjs';
 import { loadTree, FIXTURES_ROOT, REPO_ROOT } from '../scripts/course-v2/lib/tree.mjs';
@@ -230,4 +230,60 @@ test('compile.mjs prints a skipped unit and exits 0; the level is still written'
   assert.match(run.stdout, /REF-01 ref\(cando\) "cd\.a2\.gibt-es-nicht" does not resolve/);
   assert.match(run.stdout, /course-v2 compile a2\.1: 12 units: compiled —; 12 coming \(1 skipped\)/);
   assert.ok(fs.existsSync(path.join(out, 'src/a2.1/manifest.json')));
+});
+
+// WT-02: the English twin under „Woher ___ Sie? (komm-)" read „kommen, Sie-form." — the key, printed
+// under the gap. The rule is keyInShownHelp (a compile-stage integrity error, ITM-EN); these pin it
+// on synthetic items, on the fixture level, and on every compiled A1.1 item the player can show.
+test('keyInShownHelp: a typed item\'s promptEn/hint never prints its key (WT-02)', () => {
+  const item = (promptDe, promptEn, answer, extra = {}) => ({ type: 'fill_blank', promptDe, promptEn, answer, accepted: [answer], ...extra });
+  assert.equal(keyInShownHelp(item('Woher ___ Sie? (komm-)', 'kommen, Sie-form.', 'kommen')), 'kommen');
+  assert.equal(keyInShownHelp(item('___ Sie in Leipzig? (wohn-)', 'Yes/no question: wohnen, Sie-form.', 'Wohnen')), 'wohnen', 'case-folded');
+  assert.equal(keyInShownHelp(item('Ich möchte ___ Kaffee. (ein-)', 'ein, eine or einen?', 'einen')), 'einen');
+  assert.equal(keyInShownHelp(item('Woher ___ Sie? (komm-)', 'Sie-form.', 'kommen', { hint: { de: 'kommen', en: 'to come' } })), 'kommen', 'the hint too');
+  assert.equal(keyInShownHelp(item('Woher ___ Sie? (komm-)', 'Sie-form of komm- (to come).', 'kommen')), null, 'the stem and the person');
+  assert.equal(keyInShownHelp(item('Die Kinder ___ schwimmen. (können)', 'können: sie-plural form.', 'können')), null, 'a bracket cue in the German prompt is the German side\'s decision');
+  assert.equal(keyInShownHelp(item('Ich ___ aus Rom.', 'I come from Rome.', 'komme', { options: ['komme', 'kommst'] })), null, 'a choice shows its key by design');
+  assert.equal(keyInShownHelp(item('___ Tag!', 'Good day: Guten Tag.', 'Gu')), null, 'keys shorter than 3 letters are not checked');
+});
+
+test('a typed item whose English twin prints its key refuses the level (ITM-EN)', () => {
+  const root = partialLevel();
+  const unitPath = path.join(root, 'a2.1-u07.json');
+  const u = readJson(unitPath);
+  u.steps[0].pool.items[0].promptEn = 'sich: reflexive pronoun for Sie.';
+  writeJson(unitPath, u);
+  const { result } = compile(root);
+  assert.ok(result.errors.some((e) => /ITM-EN a2\.1-u07-ls1-p01: promptEn\/hint prints the key „sich"/.test(e)), result.errors.join('\n'));
+  assert.deepEqual(result.outputs, []);
+});
+
+test('no compiled A1.1 item the player can show prints its key under a typed gap (WT-02)', () => {
+  const dir = path.join(REPO_ROOT, 'src/data/course-v2/a1.1');
+  const files = [];
+  const walk = (d) => {
+    for (const f of fs.readdirSync(d)) {
+      const p = path.join(d, f);
+      if (fs.statSync(p).isDirectory()) walk(p);
+      else if (f.endsWith('.json')) files.push(p);
+    }
+  };
+  walk(dir);
+  let checked = 0;
+  const leaks = [];
+  const visit = (x, file) => {
+    if (Array.isArray(x)) return x.forEach((y) => visit(y, file));
+    if (!x || typeof x !== 'object') return;
+    if (typeof x.answer === 'string' && typeof x.type === 'string') {
+      // steps carry promptDe/promptEn; the pool shape (poolItems, reserve.json) questionDe/questionEn
+      const shown = { ...x, promptDe: x.promptDe ?? x.questionDe, promptEn: x.promptEn ?? x.questionEn };
+      checked += 1;
+      const key = keyInShownHelp(shown);
+      if (key) leaks.push(`${path.relative(dir, file)} ${x.id}: „${key}" in „${shown.promptEn}"`);
+    }
+    for (const v of Object.values(x)) visit(v, file);
+  };
+  for (const f of files) visit(readJson(f), f);
+  assert.ok(checked > 1000, `the scan reaches the items (${checked})`);
+  assert.deepEqual(leaks, []);
 });

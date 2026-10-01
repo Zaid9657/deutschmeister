@@ -580,7 +580,7 @@
             "role": "practice",
             "topic": "g.praesens",
             "promptDe": "Woher ___ Sie, Frau Nair? (komm-)",
-            "promptEn": "kommen, Sie-form.",
+            "promptEn": "Sie-form of komm- (to come).",
             "answer": "kommen",
             "accepted": [
               "kommen"
@@ -880,7 +880,7 @@
           "role": "practice",
           "topic": "g.praesens",
           "promptDe": "Guten Tag! Wie ___ Sie? (heiß-)",
-          "promptEn": "heißen, Sie-form.",
+          "promptEn": "Sie-form of heiß- (to be called).",
           "answer": "heißen",
           "accepted": [
             "heißen"
@@ -1822,7 +1822,7 @@
           "role": "practice",
           "topic": "g.praesens",
           "promptDe": "Und woher ___ Sie, Frau Schulz? (komm-)",
-          "promptEn": "kommen, Sie-form.",
+          "promptEn": "Sie-form of komm- (to come).",
           "answer": "kommen",
           "accepted": [
             "kommen"
@@ -3280,7 +3280,7 @@
         "role": "check",
         "topic": "g.praesens",
         "promptDe": "Wie ___ Sie? – Ich heiße Bilal Ahmed. (heiß-)",
-        "promptEn": "heißen, Sie-form.",
+        "promptEn": "Sie-form of heiß- (to be called).",
         "answer": "heißen",
         "accepted": [
           "heißen"

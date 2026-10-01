@@ -91,7 +91,8 @@ function segmentsFor(step, extras) {
  *
  * `correct`/`total` count first presentations of the scored items (input items, Form,
  * Üben, Aussprache perception, Abschluss, exam items, check items); the Aufgaben report
- * `{ correct: 0, total: 0, submitted, bankKey }` — completion reads `submitted`, never a
+ * `{ correct: 0, total: 0, submitted, bankKey }` — except the form_fill Schreiben, which reports
+ * its fields' share for the celebration tile — and completion reads `submitted`, never a
  * score (BLUEPRINT §3.5).
  *
  * Optional, additive props the player core can pass:
@@ -381,7 +382,8 @@ export default function StepView({
           skeleton={skeleton}
           mode="write"
           onAttempt={attempt}
-          onDone={(r) => finishStep({ correct: 0, total: 0, submitted: !!r?.submitted, bankKey: r?.bankKey || step.task?.bankKey || null })}
+          // a form task reports its fields' first-check share (audit WT-06: five wrong fields read „Richtig ✓"); an AI task has none → 0/0
+          onDone={(r) => finishStep({ correct: Number(r?.correct) || 0, total: Number(r?.total) || 0, submitted: !!r?.submitted, bankKey: r?.bankKey || step.task?.bankKey || null })}
         />
       );
       break;

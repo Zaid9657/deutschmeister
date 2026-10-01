@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import AudioButton from './AudioButton.jsx';
+import AudioButton, { useV2Playback } from './AudioButton.jsx';
 import GameButton from './GameButton.jsx';
 import StepScreen from './StepScreen.jsx';
 import { SayButton } from './WordList.jsx';
-import { canPlay, playV2Line } from './content.js';
+import { canPlay } from './content.js';
 import { nounParts } from './kapitel.js';
 import { useV2Strings } from './strings.js';
 
@@ -13,14 +13,16 @@ const CARD = 'flex flex-col items-center rounded-[1.5rem] border-2 border-b-4 bo
 /**
  * Speak one German text once when a card appears — only where the browser can play it at all
  * (a recording, or speech synthesis); never throws, never blocks. The short delay lets the card
- * land first, and cancelling it on unmount keeps a quickly skipped card silent.
+ * land first, and cancelling it on unmount keeps a quickly skipped card silent; a word already
+ * speaking stops with its card (useV2Playback, CRITIC-01).
  */
 export function useAutoPlay(unitId, id, text) {
+  const playback = useV2Playback(`${unitId}|${id}`);
   useEffect(() => {
     if (!text || !id || !canPlay(unitId, id)) return undefined;
-    const timer = setTimeout(() => { playV2Line(unitId, { id, de: text }); }, 250);
+    const timer = setTimeout(() => { playback.line(unitId, { id, de: text }); }, 250);
     return () => clearTimeout(timer);
-  }, [unitId, id, text]);
+  }, [unitId, id, text, playback]);
 }
 
 /**

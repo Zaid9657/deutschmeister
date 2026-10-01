@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { Eye } from 'lucide-react';
 import ReadAloudLine from '../lesson/ReadAloudLine.jsx';
-import AudioButton from './AudioButton.jsx';
+import AudioButton, { SourceBadge } from './AudioButton.jsx';
 import CastAvatar from './CastAvatar.jsx';
 import FeedbackSheetV2 from './FeedbackSheetV2.jsx';
 import GameButton, { QuietButton } from './GameButton.jsx';
@@ -11,7 +11,7 @@ import { ChoiceList, ChoiceSelect, TypedInput, TilesInput, MatchInput } from './
 import { gradeAnswer, attemptPayload, RESULT, acceptedOf } from './grade.js';
 import { orderedOptions } from '../../lib/course-v2/unitPlan.js';
 import { xpForItem } from '../../lib/course-v2/gamify.js';
-import { correctionQuoteOf, quoteOf, resolveText, speakerName } from './content.js';
+import { correctionQuoteOf, quoteOf, recordedLine, resolveText, speakerName } from './content.js';
 import { useV2Strings, ltext } from './strings.js';
 
 /** The one-retry notice per checker reason: case, the value written with the word next to the gap, else spelling. */
@@ -321,7 +321,11 @@ export default function ItemView({
   const promptBody = (
     <>
       {audioLine && kind !== 'readaloud' && (
-        <div className="mb-3 flex items-center gap-3">
+        // the row wraps instead of widening the bubble (A11Y-03: 360 px at 125 % text); the slow
+        // key's group is flex-1 with a min-content floor, so it stays beside the speaker key
+        // wherever it fits and drops under it only where it does not. The source is said once,
+        // here, since the speaker key is icon-only and the slow twin carries no badge (CT-09).
+        <div className="mb-3 flex flex-wrap items-center gap-3">
           <AudioButton
             unitId={uid}
             line={audioLine}
@@ -330,7 +334,10 @@ export default function ItemView({
             rate={item.type === 'dictation' || item.type === 'notes' ? 0.85 : undefined}
             ariaLabel={speaker ? `${t('audio.play')}: ${speaker}` : t('audio.play')}
           />
-          <AudioButton unitId={uid} line={audioLine} label={t('audio.slow')} rate={0.7} size="sm" />
+          <div className="flex min-w-min flex-1 flex-wrap items-center gap-x-3 gap-y-1">
+            <AudioButton unitId={uid} line={audioLine} label={t('audio.slow')} rate={0.7} size="sm" />
+            <SourceBadge recorded={recordedLine(uid, audioLine.id)} />
+          </div>
         </div>
       )}
       {promptText && (

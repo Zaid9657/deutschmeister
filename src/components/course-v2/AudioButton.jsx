@@ -1,6 +1,33 @@
+import { useEffect, useMemo, useRef } from 'react';
 import { Play, Cpu, Mic, Volume2 } from 'lucide-react';
+import { speechTurn, stopSpeech } from '../../lib/lesson/speech.js';
 import { useV2Strings } from './strings.js';
 import { canPlay, playV2Line, playV2Lines, recordedLine } from './content.js';
+
+/**
+ * The one way a course-v2 screen makes sound (CRITIC-01): `line(unitId, line, opts)` and
+ * `lines(unitId, lines, opts)` play like playV2Line / playV2Lines and remember the turn they
+ * started; when the component unmounts (X, „Weiter", the next step) or `scope` changes (the next
+ * card or item in the same component), that sound stops — unless another screen has already taken
+ * the voice over, which is never cut. So a nine-line Folge never talks over the course home.
+ */
+export function useV2Playback(scope = null) {
+  const mine = useRef(null);
+  useEffect(() => () => {
+    if (mine.current !== null) stopSpeech(mine.current);
+    mine.current = null;
+  }, [scope]);
+  return useMemo(() => {
+    const own = (result) => {
+      if (result) mine.current = speechTurn();
+      return result;
+    };
+    return {
+      line: (unitId, line, opts) => own(playV2Line(unitId, line, opts)),
+      lines: (unitId, lines, opts) => own(playV2Lines(unitId, lines, opts)),
+    };
+  }, []);
+}
 
 /**
  * „Recording" vs „Computerstimme" — word and icon, never colour alone, and a label, not
@@ -10,9 +37,10 @@ import { canPlay, playV2Line, playV2Lines, recordedLine } from './content.js';
 export function SourceBadge({ recorded }) {
   const [, t] = useV2Strings();
   const Icon = recorded ? Mic : Cpu;
+  // said once per surface and calmly (CT-09): sentence case in the muted ink, not a shouted label
   return (
-    <span className="inline-flex items-center gap-1 text-[0.6875rem] font-extrabold uppercase tracking-[0.08em] text-game-muted">
-      <Icon className="h-3 w-3" aria-hidden="true" />
+    <span className="inline-flex items-center gap-1 text-[0.8125rem] font-semibold text-game-muted">
+      <Icon className="h-3.5 w-3.5" aria-hidden="true" />
       {recorded ? 'Aufnahme' : t('audio.synthetic')}
     </span>
   );
@@ -27,16 +55,22 @@ export function SourceBadge({ recorded }) {
  * Looks (the course theme): the labelled button is a chunky white tile with a hard edge;
  * `iconOnly` is the square speaker key in the palette primary — `size="lg"` for the big one
  * in an exercise's speech bubble.
+ *
+ * `badge` — the „Computerstimme"/„Aufnahme" label beside a labelled button. A surface says it
+ * ONCE (CT-09): the small (`size="sm"`) twin of a play button — „Langsamer" — never repeats it by
+ * default, the main button carries it; a surface whose main key is `iconOnly` renders its own
+ * <SourceBadge> (ItemView).
  */
-export default function AudioButton({ unitId, line = null, lines = null, label = null, playsLeft = null, onPlayed, rate, size = 'md', iconOnly = false, ariaLabel = null }) {
+export default function AudioButton({ unitId, line = null, lines = null, label = null, playsLeft = null, onPlayed, rate, size = 'md', iconOnly = false, ariaLabel = null, badge = size !== 'sm' }) {
   const [, t] = useV2Strings();
   const list = lines || (line ? [line] : []);
   const first = list[0] || null;
   const available = first ? canPlay(unitId, first.id) : false;
   const exhausted = typeof playsLeft === 'number' && playsLeft <= 0;
+  const playback = useV2Playback(`${unitId}|${list.map((l) => l && l.id).join(',')}`);
   const play = () => {
     if (!first || exhausted) return;
-    const ok = list.length > 1 ? playV2Lines(unitId, list, { rate }) : playV2Line(unitId, first, { rate });
+    const ok = list.length > 1 ? playback.lines(unitId, list, { rate }) : playback.line(unitId, first, { rate });
     if (ok && typeof onPlayed === 'function') onPlayed();
   };
   const pad = size === 'sm' ? 'px-3 py-1.5 text-[0.875rem]' : 'px-4 py-2.5 text-[0.9375rem]';
@@ -69,7 +103,7 @@ export default function AudioButton({ unitId, line = null, lines = null, label =
           {exhausted ? t('audio.playsUsed') : t('audio.playsLeft', { n: playsLeft })}
         </span>
       )}
-      {first && <SourceBadge recorded={recordedLine(unitId, first.id)} />}
+      {badge && first && <SourceBadge recorded={recordedLine(unitId, first.id)} />}
       {!available && first && <span className="text-[0.8125rem] text-game-muted">{t('audio.none')}</span>}
     </span>
   );

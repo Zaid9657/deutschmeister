@@ -24,8 +24,9 @@ import {
   PACE_NAME_DE, paceStorageKey, resolvePace, paceOptions, formatFinishDate, STEP_XP,
   guideHref, nodeAnchor, currentAnchor, placeholderNodes, stepOfLine, nodePopover, stopPopover, finishNode, unitPercent,
   goalRing, welcomeStorageKey, showWelcome, shortPromise, outcomeLine, spreadOutcomes, courseShape, welcomeModel, paceTile, DATE_LOCALE,
+  courseFinish, nextLevelCode, FINISH_ANCHOR,
 } from '../src/lib/course-v2/pathModel.js';
-import { V2_STRINGS } from '../src/components/course-v2/strings.js';
+import { V2_STRINGS, tv } from '../src/components/course-v2/strings.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -601,7 +602,7 @@ test('the welcome\'s chrome follows the lesson language; the promise and the can
   const en = welcomeModel(A11, 'a1.1', { lang: 'en' });
   assert.deepEqual(welcomeModel(A11, 'a1.1', { lang: 'de' }), de, 'German is the default');
   assert.equal(en.heading, 'What you will learn in A1.1');
-  assert.equal(en.shape, '12 chapters · 4 modules · final test');
+  assert.equal(en.shape, '12 chapters · 4 modules · Abschlusstest');
   assert.equal(en.note, 'Free · On the way to the Goethe-Zertifikat A1');
   assert.equal(courseShape({ units: [{}], etappen: [{}] }, 'en'), '1 chapter · 1 module');
   assert.equal(en.promise, de.promise, 'content: the promise is German in both chromes');
@@ -680,6 +681,90 @@ test('the home model speaks Kapitel, Modul, Plateau and Abschlusstest — never 
   assert.ok(strings.length > 500);
   const stale = strings.filter((s) => STALE_NAMES.test(s));
   assert.deepEqual(stale, [], 'learner-facing strings with the old names');
+});
+
+// audit CT-07: the path promised an „Abschlusstest", the player then titled the same block
+// „Halbtest". One learner-facing name; the SCHEMA kind 'halbtest' stays a data key.
+test('the closing block has ONE learner-facing name: the path\'s „Abschlusstest", never „Halbtest"', () => {
+  const { path } = pathFor(A11, stateOf());
+  const trophy = path.sections.map((s) => s.stop).find((st) => st && st.kind === 'closing');
+  assert.equal(trophy.label, 'Abschlusstest');
+  for (const lang of ['de', 'en']) {
+    assert.equal(tv('as.halbtest', lang), trophy.label, `${lang}: the player's heading is the path's name`);
+    for (const k of ['as.toClosing', 'as.startClosing', 'as.closingDone', 'welcome.finalTest']) {
+      assert.ok(tv(k, lang).includes(trophy.label), `${lang} ${k}: „${tv(k, lang)}" names the Abschlusstest`);
+    }
+    const leaks = Object.entries(V2_STRINGS[lang]).filter(([, v]) => /\bHalbtests?\b/.test(v)).map(([k]) => k);
+    assert.deepEqual(leaks, [], `${lang}: learner copy that says „Halbtest"`);
+  }
+  assert.equal(tv('as.startClosing', 'de'), actionLabel({ kind: 'closing', started: false }, null), 'the player and the path use the same start label');
+});
+
+// audit CRITIC-02: a learner who finished everything landed on Kapitel 1 with twelve Kapitel of
+// ticks and no end state. The path now ends in a card under the trophy and scrolls there.
+const EVERY_UNIT = Object.fromEntries(A11.units.map((u) => [u.unit, 'complete']));
+const EVERY_PLATEAU = { 'a1.1-p1': 'complete', 'a1.1-p2': 'complete', 'a1.1-p3': 'complete' };
+
+test('the end of the path: every Kapitel done → a headline and ONE next action, scrolled to', () => {
+  const finishOf = (progress, stops = ALL_STOPS, lang = 'de') => courseFinish(courseHomeModel(A11, stateOf({ progress }), stops), { lang });
+
+  // still something to learn → no end card
+  assert.equal(finishOf({}), null, 'a fresh learner');
+  assert.equal(finishOf({ ...EVERY_UNIT, 'a1.1-u12': 'started' }), null, 'a Kapitel still open');
+  assert.equal(finishOf({ ...EVERY_UNIT, 'a1.1-p1': 'complete', 'a1.1-p2': 'complete' }), null, 'Plateau 3 still open');
+  assert.equal(courseFinish(null), null);
+
+  // every Kapitel and Plateau done, the Abschlusstest open → it is the one action
+  const left = finishOf({ ...EVERY_UNIT, ...EVERY_PLATEAU });
+  assert.deepEqual(left, {
+    anchor: FINISH_ANCHOR,
+    complete: false,
+    title: 'Alle 12 Kapitel geschafft!',
+    body: 'Jetzt fehlt nur noch der Abschlusstest – jeder Prüfungsteil im Kleinen.',
+    action: { label: 'Abschlusstest starten', href: '/course/a1.1/abschluss' },
+  });
+  assert.equal(finishOf({ ...EVERY_UNIT, ...EVERY_PLATEAU, 'a1.1-ht-sd1': 'started' }).action.label, 'Weiter mit dem Abschlusstest');
+  assert.equal(finishOf({ ...EVERY_UNIT, ...EVERY_PLATEAU }, ALL_STOPS, 'en').action.label, 'Start the Abschlusstest');
+
+  // everything done → „A1.1 geschafft!", A1.2 honestly not released, the word list (a live route)
+  const done = finishOf({ ...EVERY_UNIT, ...EVERY_PLATEAU, 'a1.1-ht-sd1': 'complete' });
+  assert.equal(done.complete, true);
+  assert.equal(done.title, 'A1.1 geschafft!');
+  assert.equal(done.body, 'Alle 12 Kapitel und der Abschlusstest sind geschafft. A1.2 ist noch nicht freigeschaltet. Bis dahin können Sie jedes Kapitel wiederholen und jedes Wort in der Wortliste nachschlagen.');
+  assert.deepEqual(done.action, { label: 'Zur Wortliste', href: '/course/a1.1/wortschatz' });
+  assert.ok(referenceLinks('a1.1', A11).some((l) => l.href === done.action.href), 'the action is the tab bar\'s word list');
+  const en = finishOf({ ...EVERY_UNIT, ...EVERY_PLATEAU, 'a1.1-ht-sd1': 'complete' }, ALL_STOPS, 'en');
+  assert.equal(en.title, 'A1.1 complete!');
+  assert.match(en.body, /A1\.2 is not released yet/);
+  assert.equal(en.action.label, 'Open the word list');
+
+  // the Abschlusstest not compiled yet → the chapters are done, the test „kommt bald"
+  const soon = finishOf({ ...EVERY_UNIT, ...EVERY_PLATEAU }, { plateaus: new Set([1, 2, 3]), closings: new Set() });
+  assert.equal(soon.title, 'Alle 12 Kapitel geschafft!');
+  assert.match(soon.body, /^Der Abschlusstest kommt bald\./);
+  assert.equal(soon.action.href, '/course/a1.1/wortschatz');
+
+  // never a link to a level that does not exist, never a price
+  for (const f of [left, done, en, soon]) {
+    assert.doesNotMatch(f.action.href, /a1\.2|pricing|subscription/);
+    assert.doesNotMatch(`${f.title} ${f.body} ${f.action.label}`, /€|\d+[.,]\d\d|Preis|price/i);
+  }
+  assert.deepEqual(['a1.1', 'a1.2', 'b1.2', 'b2.2', 'x'].map(nextLevelCode), ['A1.2', 'A2.1', 'B2.1', null, null]);
+  for (const k of Object.keys(V2_STRINGS.en).filter((x) => x.startsWith('finish.'))) {
+    assert.equal(typeof V2_STRINGS.de[k], 'string', `DE lacks ${k}`);
+  }
+});
+
+test('the page scrolls to the end card once every Kapitel is done; the path draws it under the trophy', () => {
+  const page = read(PAGE);
+  assert.match(page, /const finish = useMemo\(\(\) => courseFinish\(model, \{ lang \}\), \[model, lang\]\);/);
+  assert.match(page, /const anchor = finish \? finish\.anchor : path \? currentAnchor\(path\.current\) : null;/, 'the scroll target is the end card when there is one');
+  assert.match(page, /<PathSection[\s\S]*finish=\{finish\}[\s\S]*\/>/);
+  const section = read(`${HOME_DIR}/PathSection.jsx`);
+  assert.match(section, /\}\)\}\n\s*<CourseFinish finish=\{finish\} \/>\n\s*<\/div>/, 'after the last Modul (its trophy)');
+  const card = read(`${HOME_DIR}/CourseFinish.jsx`);
+  assert.match(card, /id=\{finish\.anchor\}\s+tabIndex=\{-1\}/, 'scroll and focus target, not a tab stop');
+  assert.equal((card.match(/<GameButton/g) || []).length, 1, 'one next action');
 });
 
 // ---------------------------------------------------------------------------

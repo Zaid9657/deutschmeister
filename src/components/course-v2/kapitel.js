@@ -192,14 +192,39 @@ export function pluralSuffix(lemma, plural) {
 }
 
 /**
+ * A language or country name that German uses WITHOUT its article (DAF-05): „Ich lerne Deutsch",
+ * „Ich komme aus Österreich" — never „das Deutsch" on the card a learner copies. Every neuter
+ * language and country name works this way; the feminine and masculine ones keep theirs (die
+ * Schweiz, die Türkei, der Irak) and are printed with it. Decided from the data, not a list of ids —
+ * a neuter noun without a plural whose English gloss is a proper name (English capitalises languages
+ * and countries, never a mass noun: das Wasser „water", das Fleisch „meat", das Geld „money" keep
+ * their article) and that is either
+ *   - a language: the nominalised -isch / -deutsch adjective (Deutsch „German (language)",
+ *     Türkisch, Plattdeutsch), or
+ *   - a country: a one-word name („Austria", „Germany"); a multi-word one („Middle Ages": das
+ *     Mittelalter) keeps its article.
+ * The gender stays in the lexicon (a grammatical fact the rails check); only how the word is shown
+ * and spoken changes.
+ */
+export function isBareName(word) {
+  const w = word || {};
+  if (w.pos !== 'NOUN' || w.article !== 'das' || w.plural || w.plural_kind === 'plural-only') return false;
+  const gloss = String(typeof w.gloss === 'string' ? w.gloss : (w.gloss && w.gloss.en) || '').trim();
+  if (!/^\p{Lu}/u.test(gloss)) return false; // English capitalises a language or a country, never „meat"
+  return /(isch|deutsch)$/i.test(String(w.lemma || '')) || /^\p{Lu}\p{L}*$/u.test(gloss);
+}
+
+/**
  * How a word is printed in a word list: a noun as article + lemma + plural („die Sprachschule, -n",
  * „die Stadt, ¨-e"), a plural-only noun with „die" and a Pl. note, a singular-only one with a Sg.
- * note; everything else as its lemma. `say` is what the audio button speaks.
+ * note; a language or country name bare (isBareName: „Deutsch", „Österreich", but „die Schweiz");
+ * everything else as its lemma. `say` is what the audio button speaks.
  */
 export function nounParts(word) {
   const w = word || {};
   if (w.pos !== 'NOUN') return { article: null, lemma: w.lemma || '', plural: null, note: null, say: w.lemma || '' };
   if (w.plural_kind === 'plural-only') return { article: 'die', lemma: w.lemma, plural: null, note: 'pl', say: `die ${w.lemma}` };
+  if (isBareName(w)) return { article: null, lemma: w.lemma, plural: null, note: 'sg', say: w.lemma };
   const plural = w.plural_kind === 'singular-only' ? null : pluralSuffix(w.lemma, w.plural);
   return {
     article: w.article || null,

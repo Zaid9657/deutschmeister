@@ -19,7 +19,7 @@ import { hasBottomNav } from '../../lib/chrome.js';
 import {
   coursePath, actionLabel, courseTiles, examParts, planInhalt, kapitelAufbau, referenceLinks,
   paceOptions, resolvePace, paceStorageKey, formatFinishDate, stepMinutes, stepSkeleton, STEP_XP,
-  welcomeModel, welcomeStorageKey, showWelcome, paceTile, currentAnchor, goalRing,
+  welcomeModel, welcomeStorageKey, showWelcome, paceTile, currentAnchor, goalRing, courseFinish,
 } from '../../lib/course-v2/pathModel.js';
 import { fetchLevelState, fetchLearnerGoal } from '../../lib/course-v2/progress.js';
 import { localLevelState } from '../../lib/course-v2/localState.js';
@@ -164,7 +164,10 @@ export function CourseHomeV2({ level, manifest, state, goal }) {
   const inhalt = useMemo(() => planInhalt(model, manifest), [model, manifest]);
   const aufbau = useMemo(() => kapitelAufbau(level, manifest), [level, manifest]);
   const links = useMemo(() => referenceLinks(level, manifest), [level, manifest]);
-  const anchor = path ? currentAnchor(path.current) : null;
+  // every Kapitel done: the path ends in the finish card under the trophy, and that is where
+  // the page scrolls (before, currentAnchor(null) left the learner at Kapitel 1 — CRITIC-02)
+  const finish = useMemo(() => courseFinish(model, { lang }), [model, lang]);
+  const anchor = finish ? finish.anchor : path ? currentAnchor(path.current) : null;
 
   // Bring the current node into the middle of the screen: on load, and after the welcome.
   useEffect(() => {
@@ -224,6 +227,7 @@ export function CourseHomeV2({ level, manifest, state, goal }) {
           anchor={anchor}
           onJump={() => scrollToAnchor(anchor, { focus: true })}
           lifted={lifted}
+          finish={finish}
         />
       </div>
       <TabBar ref={kursplanTab} links={links} kursplanOpen={sheetOpen} onLernen={goLernen} onKursplan={openSheet} lifted={lifted} />

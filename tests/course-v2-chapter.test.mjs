@@ -18,7 +18,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import {
   outlineFromUnit, unitOutline, tocRows, chapterSections, sectionOf, stagesOf, exerciseNr, stageIcon,
-  unitCardIds, cardsByIds, cardTitle, spineShortNames, isFormTask, unitWordGroups, wordsOfUnit, pluralSuffix, nounParts, stepWords,
+  unitCardIds, cardsByIds, cardTitle, spineShortNames, isFormTask, unitWordGroups, wordsOfUnit, pluralSuffix, nounParts, isBareName, stepWords,
   inputText, grammarChapters, wordChapters, searchWords, fold,
 } from '../src/components/course-v2/kapitel.js';
 
@@ -179,12 +179,39 @@ test('nouns are printed the Lehrwerk way: article, lemma, plural sign', () => {
   assert.equal(nounParts(byId.get('lx.eltern')).article, 'die', 'a plural-only noun takes the plural article');
   assert.equal(nounParts(byId.get('lx.deutsch')).note, 'sg');
   assert.equal(nounParts(byId.get('lx.heissen')).article, null, 'a verb is its lemma');
-  // every noun of the level prints: an article (or plural-only), and a plural sign unless singular-only
+  // every noun of the level prints: an article (or plural-only, or a bare language/country name),
+  // and a plural sign unless singular-only
   for (const w of words.filter((x) => x.pos === 'NOUN')) {
     const p = nounParts(w);
-    assert.ok(p.article, `${w.id}: no article`);
+    assert.ok(p.article || isBareName(w), `${w.id}: no article`);
     if (w.plural_kind === 'regular') assert.ok(p.plural, `${w.id}: no plural`);
   }
+});
+
+test('a language or country name is shown and spoken without its article; die Schweiz keeps hers (DAF-05)', () => {
+  const byId = new Map(words.map((w) => [w.id, w]));
+  // the first word card of the course: „Deutsch", never „das Deutsch" (the learner copies it: „Ich lerne Deutsch")
+  assert.deepEqual(nounParts(byId.get('lx.deutsch')), { article: null, lemma: 'Deutsch', plural: null, note: 'sg', say: 'Deutsch' });
+  assert.equal(nounParts(byId.get('lx.oesterreich')).say, 'Österreich');
+  assert.equal(nounParts(byId.get('lx.schweiz')).say, 'die Schweiz', 'a feminine country keeps its article');
+  for (const id of ['lx.wasser', 'lx.fleisch', 'lx.geld', 'lx.internet', 'lx.ausland']) {
+    assert.equal(nounParts(byId.get(id)).article, 'das', `${id}: a mass noun keeps its article`);
+  }
+  // the rule, not a list: every neuter language (-isch/-deutsch) and one-word country of the level
+  // is bare, every other noun keeps its article — and the lexicon keeps the gender either way
+  const bare = words.filter(isBareName).map((w) => w.lemma).sort();
+  assert.deepEqual(bare, ['Deutsch', 'Deutschland', 'Englisch', 'Österreich', 'Spanisch', 'Türkisch'].sort());
+  for (const w of words.filter(isBareName)) assert.equal(w.article, 'das', `${w.id}: the gender stays in the data`);
+  // what a later level adds is caught by the same rule
+  const noun = (lemma, article, gloss, extra = {}) => ({ pos: 'NOUN', lemma, article, plural: null, plural_kind: 'singular-only', gloss, ...extra });
+  assert.equal(isBareName(noun('Frankreich', 'das', 'France')), true);
+  assert.equal(isBareName(noun('Italienisch', 'das', 'Italian (language)')), true);
+  assert.equal(isBareName(noun('Plattdeutsch', 'das', { en: 'Low German' })), true, 'a lexicon entry (gloss object) too');
+  assert.equal(isBareName(noun('Türkei', 'die', 'Turkey')), false, 'die Türkei keeps hers');
+  assert.equal(isBareName(noun('Irak', 'der', 'Iraq')), false, 'der Irak keeps his');
+  assert.equal(isBareName(noun('Mittelalter', 'das', 'Middle Ages')), false, 'a multi-word name keeps it');
+  assert.equal(isBareName(noun('Fleisch', 'das', 'meat')), false, '-isch is no language when English does not capitalise it');
+  assert.equal(isBareName(noun('Kino', 'das', 'Cinema', { plural: 'Kinos', plural_kind: 'regular' })), false, 'a noun with a plural is no name');
 });
 
 test('a unit’s words come grouped by its lexicon blocks; a step shows the words its text uses', () => {

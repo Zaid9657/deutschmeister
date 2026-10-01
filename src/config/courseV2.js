@@ -16,6 +16,12 @@
 //
 // V2_DEFAULT_PACE — the pace preset (course.json `pace`) the course home's plan line
 // uses until the learner has chosen one in learner_goals.
+//
+// freeCourseHref(pathname) — where the site Navbar's free „A1.1 · ohne Konto" chip leads.
+// Inside the v2 preview (the v2 home and its player/reference routes) it is the v2 A1.1
+// home: before, one tap on the chip left the v2 course for the LEGACY /course/a1.1 (another
+// design, separate progress) with no way back (audit CRITIC-03). Everywhere else it is
+// /course/a1.1, which becomes the v2 course itself once COURSE_V2_LIVE lists a1.1.
 
 export const COURSE_V2_LIVE = [];
 
@@ -25,3 +31,9 @@ export const V2_DEFAULT_PACE = 'standard';
 
 /** Is /course/:level itself the v2 course? */
 export const isCourseV2Live = (level) => COURSE_V2_LIVE.includes(String(level || '').toLowerCase());
+
+/** The v2 course routes (App.jsx): home, unit player, Plateau, closing block, Grammatik, Wortschatz. */
+export const V2_COURSE_ROUTE = /^\/course\/([^/]+)\/(?:v2|u\/[^/]+|p\/[^/]+|abschluss|grammatik|wortschatz)\/?$/;
+
+/** The free A1.1 chip's target for the route the learner is on (see the header). */
+export const freeCourseHref = (pathname) => (V2_COURSE_ROUTE.test(String(pathname || '')) ? '/course/a1.1/v2' : '/course/a1.1');

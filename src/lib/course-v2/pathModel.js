@@ -696,6 +696,61 @@ export function currentAnchor(current) {
   return nodeAnchor(current.id);
 }
 
+// The end of the path (audit CRITIC-02): a learner who has finished every Kapitel used to
+// land on Kapitel 1 with twelve Kapitel of ticks — currentAnchor(null) had nowhere to scroll,
+// the path said nothing, and the trophy only offered „Wiederholen". Now the path ends in a
+// calm card under the trophy, and the page scrolls there: a headline and ONE next action —
+// the Abschlusstest while it is open, else the word list, with the honest line that the next
+// level is not released yet (no link to a level that does not exist, no price).
+
+/** The DOM id of the end-of-path card; the page scrolls to it once every Kapitel is done. */
+export const FINISH_ANCHOR = 'dm-kurs-ende';
+
+const LEVEL_ORDER = Object.freeze(['a1.1', 'a1.2', 'a2.1', 'a2.2', 'b1.1', 'b1.2', 'b2.1', 'b2.2']);
+
+/** The level after this one, as a code („A1.2"), or null after B2.2. */
+export function nextLevelCode(level) {
+  const i = LEVEL_ORDER.indexOf(normalizeLevel(level) || String(level || '').toLowerCase());
+  return i >= 0 && i < LEVEL_ORDER.length - 1 ? levelCode(LEVEL_ORDER[i + 1]) : null;
+}
+
+/**
+ * The end of the path once every Kapitel of the level is done (and every compiled Plateau):
+ * → null (still Kapitel or a Plateau to go) |
+ *   { anchor, complete, title, body, action: { label, href } }
+ *   complete — the Abschlusstest is submitted too: „A1.1 geschafft!", the next level is not
+ *              released yet (said, not linked), the action opens the word list;
+ *   otherwise — „Alle 12 Kapitel geschafft!", the action is the Abschlusstest (or, while it is
+ *              not compiled, the word list and „kommt bald").
+ * In the chrome language (tv), Sie.
+ */
+export function courseFinish(model, { lang = 'de' } = {}) {
+  if (!model) return null;
+  const units = model.units || [];
+  if (!units.length || !units.every((u) => u.available && DONE_STATUSES.includes(u.status))) return null;
+  const next = model.next || null;
+  if (next && next.kind !== 'closing') return null;
+  const n = units.length;
+  const words = { label: tv('finish.toWords', lang), href: `/course/${normalizeLevel(model.level) || model.level}/wortschatz` };
+  if (next) {
+    return {
+      anchor: FINISH_ANCHOR,
+      complete: false,
+      title: tv('finish.chaptersTitle', lang, { n }),
+      body: tv('finish.closingLeft', lang),
+      action: { label: tv(next.started ? 'finish.resumeClosing' : 'as.startClosing', lang), href: next.href },
+    };
+  }
+  const closing = (model.etappen || []).map((e) => e && e.closing).find(Boolean) || null;
+  if (closing && !closing.done) {
+    // every Kapitel done, the Abschlusstest not compiled yet
+    return { anchor: FINISH_ANCHOR, complete: false, title: tv('finish.chaptersTitle', lang, { n }), body: tv('finish.closingSoon', lang), action: words };
+  }
+  const following = nextLevelCode(model.level);
+  const body = [closing ? tv('finish.courseBody', lang, { n }) : null, following ? tv('finish.nextNotYet', lang, { next: following }) : null].filter(Boolean).join(' ');
+  return { anchor: FINISH_ANCHOR, complete: true, title: tv('finish.courseTitle', lang, { code: model.code || levelCode(model.level) }), body, action: words };
+}
+
 /**
  * The grey nodes of a Kapitel that is not compiled yet: the band's skeleton, in the
  * wave, never a link — tapped, their popover says „Kommt bald".

@@ -9,6 +9,7 @@ import ExamBlockView from '../../components/course-v2/ExamBlockView.jsx';
 import WritingTaskView from '../../components/course-v2/WritingTaskView.jsx';
 import SpeakingTaskView from '../../components/course-v2/SpeakingTaskView.jsx';
 import RewardView from '../../components/course-v2/RewardView.jsx';
+import SignInPrompt from '../../components/course-v2/SignInPrompt.jsx';
 import { laneLabel, teilLabel } from '../../components/course-v2/content.js';
 import { useV2Strings } from '../../components/course-v2/strings.js';
 import { levelCode, nrOfId, stepNrOf, v2Paths } from '../../lib/course-v2/ids.js';
@@ -41,6 +42,8 @@ const LABEL = 'text-[0.75rem] font-extrabold uppercase tracking-[0.08em] text-ga
 const EYEBROW = 'text-[0.8125rem] font-extrabold uppercase tracking-[0.08em] text-game-muted';
 const H1 = 'text-[1.625rem] font-extrabold leading-tight text-game-text [hyphens:auto] sm:text-[2rem]';
 const PANEL = 'rounded-[1.25rem] border-2 border-b-4 border-game-line bg-white p-5';
+// the Teile an account unlocks: their assessment is the AI's, and only a submitted attempt counts
+const AI_KINDS = ['writing', 'speaking'];
 
 // The course theme's chrome (the unit player's): an X to the course home and the thick
 // progress bar over the sections finished.
@@ -286,6 +289,8 @@ export default function AssessmentPlayer({ level, doc, manifest, user }) {
                 : t('as.closingLead', { exam: laneLabel(doc.lane), next: nextLevel || levelCode(level) })}
             </p>
           </header>
+          {/* signed out, the Teil it resumes at needs the AI: say so, with the door (audit ASSESS-03) */}
+          {!user && resuming && AI_KINDS.includes(sections[resumeAt].kind) && <SignInPrompt withButton />}
           <div>
             <p className={`mb-2 ${LABEL}`}>{t('as.sections')}</p>
             <SectionList sections={sections} finished={finished} onOpen={goTo} t={t} />
@@ -372,6 +377,9 @@ export default function AssessmentPlayer({ level, doc, manifest, user }) {
   // Results: the Plateau's results card, or the closing block's Teil-Karte.
   const complete = progressInfo.complete;
   const openList = progressInfo.open.map((s) => ({ s, i: sections.indexOf(s) }));
+  // Signed out, an open speaking/writing Teil cannot be submitted (it needs the AI): the list would
+  // send the learner back into the same task, so the card says why and gives the door (ASSESS-03).
+  const openNeedsAccount = !user && openList.some(({ s }) => AI_KINDS.includes(s.kind));
   const openCard = !complete && openList.length > 0 && (
     <div className="rounded-[1.25rem] border-2 border-b-4 border-accent-aprikose bg-accent-aprikose-wash p-4">
       <h2 className="text-[1rem] font-extrabold text-accent-aprikose-ink">{t('as.open')}</h2>
@@ -384,6 +392,7 @@ export default function AssessmentPlayer({ level, doc, manifest, user }) {
           </li>
         ))}
       </ul>
+      {openNeedsAccount && <SignInPrompt withButton className="mt-3" />}
     </div>
   );
 

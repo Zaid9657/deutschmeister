@@ -15,7 +15,10 @@ import { useV2Strings } from './strings.js';
  * the step in the game ledger (gamify.recordGame) before this shows, so the streak already counts today.
  *
  *   xp       XP of this step, bonus included
- *   correct, total   first-try results of the step's scored items (total 0: an Aufgabe → ✓)
+ *   correct, total   first-try results of the step's scored items; a form Schreiben reports its
+ *                    fields. total 0 (an AI-graded Aufgabe, nothing scored here) → the tile says
+ *                    „Erledigt ✓", never „Richtig" (audit WT-06: a false „Richtig ✓" after five
+ *                    wrong fields)
  *   seconds  time on the step
  *   line     the can-do line (German content) — or null, then `title` says what was done
  */
@@ -47,7 +50,7 @@ export default function StepCelebration({ xp = 0, correct = 0, total = 0, second
         <StatTile tone="xp" label={t('cel.xp')} value={`+${xp}`} />
         <StatTile
           tone="course"
-          label={t('cel.right')}
+          label={pct != null ? t('cel.right') : t('player.doneMark')}
           value={pct != null ? `${pct} %` : (
             <span role="img" aria-label={t('player.doneMark')} className="inline-flex"><Check className="h-7 w-7" strokeWidth={3.5} aria-hidden="true" /></span>
           )}

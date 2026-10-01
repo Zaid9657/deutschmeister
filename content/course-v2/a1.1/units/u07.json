@@ -3384,7 +3384,7 @@
         "role": "check",
         "topic": "g.zeitangaben-inversion",
         "promptDe": "Ich habe ___ Montag bis Freitag Kurs.",
-        "promptEn": "von … bis: the first word.",
+        "promptEn": "From Monday to Friday: the word for “from”.",
         "answer": "von",
         "accepted": [
           "von"

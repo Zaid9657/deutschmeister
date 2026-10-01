@@ -609,7 +609,7 @@
             "role": "practice",
             "topic": "g.praesens",
             "promptDe": "Wie ___ Sie das? – Mit Y. (schreib-)",
-            "promptEn": "schreiben: Sie-form.",
+            "promptEn": "Sie-form of schreib- (to write).",
             "answer": "schreiben",
             "accepted": [
               "schreiben"
@@ -1371,7 +1371,7 @@
             "role": "practice",
             "topic": "g.ja-nein-frage",
             "promptDe": "___ Sie in Leipzig? – Nein, in İzmir. (wohn-)",
-            "promptEn": "Yes/no question: wohnen, Sie-form.",
+            "promptEn": "Yes/no question: Sie-form of wohn- (to live).",
             "answer": "Wohnen",
             "accepted": [
               "Wohnen"
@@ -1671,7 +1671,7 @@
           "role": "practice",
           "topic": "g.ja-nein-frage",
           "promptDe": "___ Sie Türkisch? – Ja, und ein bisschen Deutsch. (sprech-)",
-          "promptEn": "Yes/no question: sprechen, Sie-form.",
+          "promptEn": "Yes/no question: Sie-form of sprech- (to speak).",
           "answer": "Sprechen",
           "accepted": [
             "Sprechen"
@@ -2142,7 +2142,7 @@
             "role": "practice",
             "topic": "g.praesens",
             "promptDe": "Frau Schulz: „Wir ___ jetzt zwölf Teilnehmer.“ (hab-)",
-            "promptEn": "haben: wir-form.",
+            "promptEn": "wir-form of hab- (to have).",
             "answer": "haben",
             "accepted": [
               "haben"
@@ -2182,7 +2182,7 @@
             "role": "practice",
             "topic": "g.praesens",
             "promptDe": "Emre und Arta ___ online. (lern-)",
-            "promptEn": "lernen: sie-plural form.",
+            "promptEn": "sie-plural form of lern- (to learn).",
             "answer": "lernen",
             "accepted": [
               "lernen"
@@ -2457,7 +2457,7 @@
           "role": "practice",
           "topic": "g.praesens",
           "promptDe": "Olena: „Sophie und ich ___ in Leipzig.“ (wohn-)",
-          "promptEn": "wohnen: wir-form.",
+          "promptEn": "wir-form of wohn- (to live).",
           "answer": "wohnen",
           "accepted": [
             "wohnen"

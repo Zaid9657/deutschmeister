@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import GameButton from './GameButton.jsx';
 import ItemView from './ItemView.jsx';
 import RuleCardView from './RuleCardView.jsx';
+import StepScreen from './StepScreen.jsx';
 import { useV2Strings } from './strings.js';
 
 export const REQUEUE_CAP = 4;
@@ -91,20 +92,18 @@ export default function ItemRun({ items, requeuePool = [], requeue = false, unit
   };
 
   if (repair) {
+    // Its one action lives in the bottom bar like every other screen's (audit WT-03: in flow
+    // it sat below the fold under a full rule card).
     return (
-      <div>
-        <p className="mb-3 text-[1.125rem] font-extrabold text-game-text">{t('rule.repairLead')}</p>
+      <StepScreen title={t('rule.repairLead')} action={<GameButton onClick={closeRepair}>{t('item.next')}</GameButton>}>
         <RuleCardView card={ruleCard} />
-        <div className="mt-8">
-          <GameButton onClick={closeRepair}>{t('item.next')}</GameButton>
-        </div>
-      </div>
+      </StepScreen>
     );
   }
 
   if (!entry) {
     // Nothing (left) to answer: one button that reports the run.
-    return <GameButton onClick={finish}>{t('item.next')}</GameButton>;
+    return <StepScreen action={<GameButton onClick={finish}>{t('item.next')}</GameButton>}>{null}</StepScreen>;
   }
 
   const firstIndex = entry.requeued ? null : queue.slice(0, pos).filter((e) => !e.requeued).length;
