@@ -44,6 +44,21 @@
   var SEARCH_HOSTS = ['google.', 'bing.com', 'duckduckgo.com', 'ecosia.org', 'yahoo.', 'yandex.'];
   var OWN_HOSTS = ['deutsch-meister.de', 'localhost', '127.0.0.1', 'netlify.app'];
 
+  // An Android app that opens a link sends the referrer android-app://<package>,
+  // and a package is a reversed domain (com.instagram.android, org.telegram.messenger).
+  // Reversed (android.instagram.com, messenger.telegram.org) it classifies through
+  // the host lists above like any web referrer. Google's own apps all share
+  // com.google.android.*, which reverses to google.com and would read as Google
+  // search, so inside that namespace the package decides; any other Google app is
+  // a referral named by its package. Read as a plain host, every one of them used
+  // to land in source "android".
+  var GOOGLE_APPS = [
+    ['googlequicksearchbox.android.google.com', 'google', 'organic'],
+    ['searchlite.apps.android.google.com', 'google', 'organic'],
+    ['youtube.android.google.com', 'youtube', 'social'],
+    ['gm.android.google.com', 'gmail', 'email'],
+  ];
+
   function clean(v) {
     if (typeof v !== 'string') return null;
     var s = v.trim().toLowerCase().replace(/[^a-z0-9._/ -]+/g, '').slice(0, MAX);
@@ -61,17 +76,30 @@
     return false;
   }
 
+  /** The package of an android-app:// referrer (lowercase), or null for any other referrer. */
+  function androidPackage(referrer) {
+    var m = /^android-app:\/\/([a-z0-9_]+(?:\.[a-z0-9_]+)+)/i.exec(referrer || '');
+    return m ? m[1].toLowerCase().slice(0, MAX) : null;
+  }
+
   /** Classify a referrer host: { source, medium } or null when it is our own site / empty. */
   function classifyReferrer(referrer) {
-    var host = hostOf(referrer || '');
+    var pkg = androidPackage(referrer);
+    var host = pkg ? pkg.split('.').reverse().join('.') : hostOf(referrer || '');
     if (!host || isOwn(host)) return null;
+    if (pkg && endsWithHost(host, 'google.com')) {
+      for (var g = 0; g < GOOGLE_APPS.length; g++) {
+        if (endsWithHost(host, GOOGLE_APPS[g][0])) return { source: GOOGLE_APPS[g][1], medium: GOOGLE_APPS[g][2] };
+      }
+      return { source: pkg, medium: 'referral' };
+    }
     for (var i = 0; i < SOCIAL_HOSTS.length; i++) {
       if (endsWithHost(host, SOCIAL_HOSTS[i][0])) return { source: SOCIAL_HOSTS[i][1], medium: 'social' };
     }
     for (var j = 0; j < SEARCH_HOSTS.length; j++) {
       if (host.indexOf(SEARCH_HOSTS[j]) !== -1) return { source: host.split('.').slice(-2)[0], medium: 'organic' };
     }
-    return { source: host.replace(/^www\./, ''), medium: 'referral' };
+    return { source: pkg || host.replace(/^www\./, ''), medium: 'referral' };
   }
 
   /**

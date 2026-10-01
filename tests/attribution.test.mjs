@@ -69,6 +69,37 @@ test('social referrers classify without any parameter; search and unknown hosts 
   assert.deepEqual(c('https://www.example-blog.org/post'), { source: 'example-blog.org', medium: 'referral' });
 });
 
+test('Android app referrers are reversed package names and classify by the app, never as source "android"', () => {
+  const { api } = load();
+  const c = (u) => ({ ...api.classifyReferrer(u) });
+  // Measured 2026-10-01: 3 of the 24 tracked signups since 2026-09-21 had last-touch
+  // source "android" (referrer com.google.android.googlequicksearchbox, the Google app).
+  assert.deepEqual(c('android-app://com.google.android.googlequicksearchbox/'), { source: 'google', medium: 'organic' });
+  assert.deepEqual(c('android-app://com.google.android.apps.searchlite'), { source: 'google', medium: 'organic' });
+  assert.deepEqual(c('android-app://com.google.android.youtube/'), { source: 'youtube', medium: 'social' });
+  assert.deepEqual(c('android-app://com.google.android.gm/'), { source: 'gmail', medium: 'email' });
+  assert.deepEqual(c('android-app://org.telegram.messenger/'), { source: 'telegram', medium: 'social' });
+  assert.deepEqual(c('android-app://com.instagram.android/'), { source: 'instagram', medium: 'social' });
+  assert.deepEqual(c('android-app://com.facebook.katana/'), { source: 'facebook', medium: 'social' });
+  assert.deepEqual(c('android-app://com.linkedin.android/'), { source: 'linkedin', medium: 'social' });
+  assert.deepEqual(c('android-app://com.whatsapp/'), { source: 'whatsapp', medium: 'social' });
+  assert.deepEqual(c('android-app://com.duckduckgo.mobile.android/'), { source: 'duckduckgo', medium: 'organic' });
+  // Any other app, Google's included, is a referral named by its package.
+  assert.deepEqual(c('android-app://com.google.android.apps.messaging/'), { source: 'com.google.android.apps.messaging', medium: 'referral' });
+  assert.deepEqual(c('android-app://org.example.reader/'), { source: 'org.example.reader', medium: 'referral' });
+  // The rule, not the list: no package in Google's namespace reads as source "android".
+  for (const p of ['googlequicksearchbox', 'gm', 'youtube', 'apps.maps', 'apps.docs', 'apps.photos']) {
+    assert.notEqual(api.classifyReferrer(`android-app://com.google.android.${p}/`).source, 'android', p);
+  }
+  // The stored referrer stays the package, exactly as before.
+  const t = api.parse('', 'android-app://com.google.android.googlequicksearchbox/', '/');
+  assert.equal(t.source, 'google');
+  assert.equal(t.medium, 'organic');
+  assert.equal(t.referrer, 'com.google.android.googlequicksearchbox');
+  // A tag still beats the referrer.
+  assert.equal(api.parse('?utm_source=instagram&utm_medium=bio', 'android-app://com.instagram.android/', '/').medium, 'bio');
+});
+
 test('our own site, empty referrers and direct visits never attribute', () => {
   const { api, stored } = load({ referrer: 'https://deutsch-meister.de/pricing/', path: '/signup' });
   assert.equal(stored(), null, 'an internal navigation must not write a record');
