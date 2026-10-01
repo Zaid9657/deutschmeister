@@ -35,11 +35,11 @@
 //     counts — CLAUDE.md "User-facing counts are content counts"); a count that is
 //     missing hides its tile, and a level whose units are not all authored yet
 //     shows no content tiles at all (its counts would describe a fraction).
-import { v2Paths, levelCode, normalizeLevel } from './ids.js';
+import { v2Paths, levelCode, normalizeLevel, nrOfId } from './ids.js';
 import { DONE_STATUSES } from './completion.js';
 import { XP, dailyGoalMinutes } from './gamify.js';
 import { planSummary } from './pacePlan.js';
-import { sectionsOf, chapterSummary } from './curriculum.js';
+import { sectionsOf, chapterSummary, SKILL_LABEL } from './curriculum.js';
 import { teilLabel, laneLabel } from '../../components/course-v2/content.js';
 import { tv } from '../../components/course-v2/strings.js';
 
@@ -234,6 +234,8 @@ function stopNode(stop, next, unitNrs = []) {
     id: stop.id,
     nr: stop.nr || null,
     label,
+    // the short name under the chest or the trophy on the path („Plateau 1", „Abschlusstest")
+    short: stop.kind === 'closing' ? 'Abschlusstest' : `Plateau ${stop.nr}`,
     detail: stopDetail(stop, unitNrs),
     state,
     started: Boolean(stop.started),
@@ -306,13 +308,15 @@ export function kapitelSummary(row) {
  *   { level, code, current, sections: [Section] }
  * Section = { nr, title, dividerLabel ('Modul 1 · Ankommen in Leipzig'), units: [Unit], stop: StopNode | null }
  * Unit    = { id, nr, index, title, hue, direction, available, status, done, stepsDone, stepsTotal,
- *             bannerLabel ('Kapitel 1 · 2 von 7 geschafft'), href (the Kapitel page | null), bannerAria,
+ *             bannerLabel ('Kapitel 1 · 2 von 7 geschafft'), progressLine ('Kapitel 1 von 12 · 2 von 7 Lernschritten',
+ *             the banner's second line), href (the Kapitel page | null), bannerAria,
  *             guideHref (the Kapitel guide, the banner's book button | null), eyebrow ('Modul 1 · Kapitel 1'),
  *             summary: { grammar, newWords, line }, minutesPerStep, hasCurrent, nodes: [Node],
  *             placeholders: [Placeholder] (the grey nodes of a Kapitel that is not compiled yet) }
  * Node    = { id, stepNr, kind, letter, icon, tag, title, label, grammar, skills, state: 'done'|'current'|'open',
  *             href, offset, ariaLabel }
- * StopNode = { kind, id, nr, label ('Plateau 1 · Wiederholung' | 'Abschlusstest'), detail, state, started, href, offset, ariaLabel }
+ * StopNode = { kind, id, nr, label ('Plateau 1 · Wiederholung' | 'Abschlusstest'), short ('Plateau 1' | 'Abschlusstest',
+ *             shown under the chest or trophy), detail, state, started, href, offset, ariaLabel }
  * `manifest` supplies the units' outlines, counts and grammar; `stepTitles` ({ [stepId]: title },
  * optional) names the steps of a loaded chunk where an outline has no title.
  */
@@ -324,6 +328,7 @@ export function coursePath(model, state = {}, { etappenDe = [], stepTitles = nul
   const order = new Map((model.units || []).map((u, i) => [u.id, i]));
   const titles = stepTitles && typeof stepTitles === 'object' ? stepTitles : {};
   const rows = manifestRows(manifest);
+  const unitsTotal = (model.units || []).length;
 
   const unitView = (row) => {
     const index = order.has(row.id) ? order.get(row.id) : 0;
@@ -365,6 +370,9 @@ export function coursePath(model, state = {}, { etappenDe = [], stepTitles = nul
     else if (done) bannerLabel = `Kapitel ${row.nr} · geschafft`;
     else if (stepsDone > 0) bannerLabel = `Kapitel ${row.nr} · ${stepsDone} von ${total} geschafft`;
     const title = row.title || `Kapitel ${row.nr}`;
+    // the banner's quiet second line: where this Kapitel sits and how far the learner is in it
+    const where = `Kapitel ${row.nr} von ${unitsTotal}`;
+    const progressLine = row.available ? `${where} · ${stepsDone} von ${total} ${total === 1 ? 'Lernschritt' : 'Lernschritten'}` : where;
     return {
       id: row.id,
       nr: row.nr,
@@ -378,6 +386,7 @@ export function coursePath(model, state = {}, { etappenDe = [], stepTitles = nul
       stepsDone,
       stepsTotal: total,
       bannerLabel,
+      progressLine,
       href: row.available ? v2Paths.unit(level, row.nr) : null,
       guideHref: row.available ? guideHref(level, row.nr) : null,
       eyebrow: `Kapitel ${row.nr}`,
@@ -926,13 +935,18 @@ export function spreadOutcomes(lines) {
 
 /**
  * The welcome's content. A screen whose data the level lacks is left out (no showcase →
- * no „hallo" and no „ziele"); no screen at all → no welcome. Chrome strings follow `lang`;
- * the promise and the can-dos are content and stay German.
+ * no „hallo" and no „ziele"; no Module → no „aufbau"; no units → no „kapitel" and no „so");
+ * no screen at all → no welcome. Chrome strings follow `lang`; the promise and the can-dos
+ * are content and stay German.
  * → { code, narrator ('Priya' on the A1 levels, whose cast she is | null), promise, heading,
  *     outcomes: [≤ 3 short lines spread over the level], shape,
  *     note ('Kostenlos · Auf dem Weg zum Goethe-Zertifikat A1': the free flag from
  *     manifest.priceKey === null — the Kursplan's one source — and the primary lane; null
- *     when neither applies), screens: ['hallo' | 'ziele' | 'tempo'] }
+ *     when neither applies),
+ *     map (courseMap, with its heading „So ist A1.1 aufgebaut") | null,
+ *     chapter (chapterSteps) | null,
+ *     screens: ['hallo', 'ziele', 'aufbau', 'kapitel', 'so', 'tempo'] (those the data allows),
+ *     replay: the structure screens the top bar's help button shows again ['aufbau', 'kapitel', 'so'] }
  */
 export function welcomeModel(manifest, level, { lang = 'de' } = {}) {
   const code = levelCode(level);
@@ -944,6 +958,10 @@ export function welcomeModel(manifest, level, { lang = 'de' } = {}) {
   const free = Boolean(manifest) && manifest.priceKey === null;
   const lane = (manifest && manifest.lanes && manifest.lanes.primary) || null;
   const note = [free ? tv('welcome.free', lang) : null, lane ? tv('welcome.lane', lang, { exam: laneLabel(lane) }) : null].filter(Boolean).join(' · ') || null;
+  const map = courseMap(manifest, { lang });
+  const chapter = chapterSteps(manifest, level, { lang });
+  const hasUnits = Boolean(manifest && Array.isArray(manifest.units) && manifest.units.some(Boolean));
+  const structure = [map ? 'aufbau' : null, chapter ? 'kapitel' : null, hasUnits ? 'so' : null].filter(Boolean);
   return {
     code,
     narrator: l.startsWith('a1') ? 'Priya' : null,
@@ -952,7 +970,10 @@ export function welcomeModel(manifest, level, { lang = 'de' } = {}) {
     outcomes,
     shape: courseShape(manifest, lang),
     note,
-    screens: [promise ? 'hallo' : null, outcomes.length ? 'ziele' : null, hasPace ? 'tempo' : null].filter(Boolean),
+    map: map ? { ...map, heading: tv('welcome.aufbau', lang, { code }) } : null,
+    chapter,
+    screens: [promise ? 'hallo' : null, outcomes.length ? 'ziele' : null, ...structure, hasPace ? 'tempo' : null].filter(Boolean),
+    replay: structure,
   };
 }
 
@@ -974,4 +995,198 @@ export function paceTile(option, { allDone = false, today = new Date(), lang = '
     days: o.learningDays ? tv('welcome.days', lang, { n: o.learningDays }) : null,
     finish: finish ? tv('welcome.finish', lang, { date: finish }) : null,
   };
+}
+
+// ---------------------------------------------------------------------------
+// The course's structure, explained once (owner 2026-10-01, after testing on the phone:
+// "still no clear structure for the user as an introduction, tour, etc."). The welcome
+// gains three screens between the can-dos and the pace — how the level is built
+// (courseMap), what one Kapitel holds (chapterSteps), how a screen works („so", strings
+// only) — and the path gains four coach marks (tourStops), shown once per device after the
+// welcome and replayable from the top bar's help button. Everything is counted from the
+// manifest. The path's own names (Modul, Kapitel, Plateau, Abschlusstest) stay German, as
+// they are on the path the learner is about to see; the explanations follow the chrome
+// language (strings.js welcome.* and tour.*).
+// ---------------------------------------------------------------------------
+
+const unitRowsOf = (manifest) => ((manifest && Array.isArray(manifest.units) ? manifest.units : []).filter(Boolean));
+const rowTitle = (row) => (row && (typeof row.title === 'string' ? row.title : row.title && row.title.de)) || null;
+
+/** The lane of the level's closing block (manifest.closing.halbtest: { sd1: 'a1.1-ht-sd1' } → 'sd1') | null. */
+function closingLane(manifest) {
+  const h = manifest && manifest.closing && manifest.closing.halbtest;
+  return h && typeof h === 'object' ? Object.keys(h)[0] || null : null;
+}
+
+/**
+ * „So ist A1.1 aufgebaut": the level as a small map, one row per Modul — its Kapitel as
+ * little blocks in the colour of their banner on the path (hueFor, the same order), then
+ * the chest of the Plateau that closes it or, after the last Modul, the trophy of the
+ * Abschlusstest — and a three-row legend (Kapitel with the first Kapitel's real title as
+ * the example, Plateau, Abschlusstest in the format of its exam). null without Module.
+ * → { label, modules: [{ nr, label ('Modul 1'), kapitel: [{ nr, hue }], stop: { kind, nr, label } | null,
+ *     sr ('Modul 1: Kapitel 1, 2, 3, dann Plateau 1.') }],
+ *     legend: [{ key: 'kapitel' | 'plateau' | 'closing', term, text, example?, nr?, hue? }] }
+ */
+export function courseMap(manifest, { lang = 'de' } = {}) {
+  const rows = unitRowsOf(manifest);
+  const etappen = (manifest && Array.isArray(manifest.etappen) ? manifest.etappen : []).filter((e) => e && Array.isArray(e.units) && e.units.length);
+  if (!rows.length || !etappen.length) return null;
+  const index = new Map(rows.map((u, i) => [u.unit || u.id, i]));
+  const nrOf = (id) => Number(rows[index.get(id)].nr) || index.get(id) + 1;
+  const lane = closingLane(manifest);
+  const closingOn = Boolean(lane) || Number(manifest.counts && manifest.counts.closingBlocks) > 0;
+  const modules = etappen.map((e, i) => {
+    const nr = Number(e.nr) || i + 1;
+    const kapitel = e.units.filter((id) => index.has(id)).map((id) => ({ nr: nrOf(id), hue: hueFor(index.get(id)) }));
+    let stop = null;
+    if (e.closedBy === 'closing') stop = closingOn ? { kind: 'closing', nr: null, label: 'Abschlusstest' } : null;
+    else if (e.closedBy && nrOfId(e.closedBy)) stop = { kind: 'plateau', nr: nrOfId(e.closedBy), label: `Plateau ${nrOfId(e.closedBy)}` };
+    const list = kapitel.map((k) => k.nr).join(', ');
+    const sr = `Modul ${nr}: Kapitel ${list}${stop ? `, ${tv('welcome.mapThen', lang, { stop: stop.label })}` : ''}.`;
+    return { nr, label: `Modul ${nr}`, kapitel, stop, sr };
+  }).filter((m) => m.kapitel.length);
+  if (!modules.length) return null;
+  const first = rows[0];
+  const example = rowTitle(first);
+  const legend = [
+    {
+      key: 'kapitel',
+      term: 'Kapitel',
+      text: tv(example ? 'welcome.legendKapitel' : 'welcome.legendKapitelBare', lang),
+      example,
+      nr: Number(first.nr) || 1,
+      hue: hueFor(0),
+    },
+    modules.some((m) => m.stop && m.stop.kind === 'plateau') ? { key: 'plateau', term: 'Plateau', text: tv('welcome.legendPlateau', lang) } : null,
+    modules.some((m) => m.stop && m.stop.kind === 'closing')
+      ? { key: 'closing', term: 'Abschlusstest', text: lane ? tv('welcome.legendClosing', lang, { exam: laneLabel(lane) }) : tv('welcome.legendClosingBare', lang) }
+      : null,
+  ].filter(Boolean);
+  return { label: tv('welcome.mapLabel', lang), modules, legend };
+}
+
+// what a situation step mainly does with its text: a dialogue is heard, a text is read
+const INPUT_SKILL = Object.freeze({ dialog: 'hoeren', text: 'lesen', mixed: 'hoeren' });
+
+/** A step's 1–3 word name in the chrome language: „Teil A · Hören", „Prüfungstraining", „Kapiteltest". */
+export function stepWord(section, lang = 'de') {
+  const s = section || {};
+  const side = lang === 'en' ? 'en' : 'de';
+  if (s.letter) {
+    const part = tv('welcome.stepPart', lang, { l: s.letter });
+    const skill = s.input && INPUT_SKILL[s.input.kind];
+    return skill ? `${part} · ${SKILL_LABEL[skill][side]}` : part;
+  }
+  return (s.name && s.name[side]) || STEP_LABEL_DE[s.kind] || '';
+}
+
+/**
+ * „Jedes Kapitel: 7 kurze Lernschritte": the steps of the first Kapitel that has an outline
+ * (Kapitel 1 in A1.1), drawn like the path's nodes, each with its short name; the minutes of
+ * one step (the planned minutes of a Kapitel over its steps, as the Kursplan counts them); and
+ * the test-out line ONLY where the completion rules credit a test-out — the player offers
+ * „Ich kann das schon – Test machen" on a Kapitel's first screen, and ≥ threshold credits the
+ * practice steps (completion.testOutPassed). The button's words come from the player's own key
+ * (flow.testOut), so the line names the button the learner will see. null without units.
+ * → { unitNr, hue, count, heading, minutes, minutesLine, steps: [{ nr, kind, icon, label }], testOut | null }
+ */
+export function chapterSteps(manifest, level, { lang = 'de' } = {}) {
+  const rows = unitRowsOf(manifest);
+  if (!rows.length) return null;
+  const k = rows.findIndex((u) => Array.isArray(u.outline) && u.outline.length);
+  const row = k >= 0 ? rows[k] : null;
+  const outline = row ? row.outline : stepSkeleton(level || (manifest && manifest.level)).map((s, i) => ({ nr: i + 1, kind: s.kind, skills: [] }));
+  const steps = sectionsOf(outline).map((s, i) => ({ nr: i + 1, kind: s.kind, icon: NODE_ICON[s.kind] || 'Star', label: stepWord(s, lang) }));
+  const planned = rows.map((u) => Number(u.minutesPlanned) || 0).filter(Boolean);
+  const minutes = planned.length ? stepMinutes(planned.reduce((a, b) => a + b, 0) / planned.length, steps.length) : null;
+  const rule = (manifest && manifest.completion && manifest.completion.unit) || {};
+  const threshold = Number(rule.testOutThreshold);
+  const credited = (Array.isArray(rule.completeWhen) ? rule.completeWhen : []).some((c) => /tested-out/.test(String(c)));
+  const testOut = credited && threshold > 0 && threshold <= 1
+    ? tv('welcome.testOut', lang, { button: tv('flow.testOut', lang), pct: Math.round(threshold * 100) })
+    : null;
+  return {
+    unitNr: row ? Number(row.nr) || k + 1 : null,
+    hue: hueFor(Math.max(0, k)),
+    count: steps.length,
+    heading: tv('welcome.kapitel', lang, { n: steps.length }),
+    minutes,
+    minutesLine: minutes ? tv('welcome.stepMinutes', lang, { n: minutes }) : null,
+    steps,
+    testOut,
+  };
+}
+
+/** The localStorage key that remembers, per level and device, that the coach marks were seen (a flag apart from the welcome's). */
+export const tourStorageKey = (level) => `dm_course_v2_tour:${String(level || '').toLowerCase()}`;
+
+/** The coach marks show once per device: until finished or skipped here — whatever the welcome flag says. */
+export function showTour(stored) {
+  return !stored;
+}
+
+/** The `data-tour` values the coach marks look for on the page, in the tour's order. */
+export const TOUR_TARGETS = Object.freeze(['start', 'banner', 'tabs', 'stats']);
+
+/**
+ * The Kapitel whose banner the coach marks point at: the one holding the current step, else
+ * the last Kapitel before the current Plateau or Abschlusstest, else the first one. → unit id | null
+ */
+export function tourBannerUnit(path) {
+  if (!path) return null;
+  const units = path.sections.flatMap((s) => s.units);
+  const holding = units.find((u) => u.hasCurrent);
+  if (holding) return holding.id;
+  const cur = path.current;
+  if (cur && (cur.kind === 'plateau' || cur.kind === 'closing')) {
+    const section = path.sections.find((s) => s.stop && s.stop.id === cur.id);
+    const last = section && section.units[section.units.length - 1];
+    if (last) return last.id;
+  }
+  const first = units.find((u) => u.available) || units[0];
+  return first ? first.id : null;
+}
+
+/**
+ * The four coach marks on the path, in the chrome language:
+ *   start  — the current node: „Hier geht es los" (nothing done yet) or „Hier geht es weiter",
+ *            with its Kapitel and Lernschritt (a Plateau or the Abschlusstest by name); none once
+ *            everything is done;
+ *   banner — the Kapitel banner (tourBannerUnit), and its book button where it has one;
+ *   tabs   — Kursplan = the whole course, Grammatik and Wörter = look things up;
+ *   stats  — the streak, the XP and today's goal (`goalMinutes`: the pace's minutes per learning day).
+ * `scroll`: the target lives in the path and may need scrolling into view (the bars never do).
+ * → [{ key, target, title, text, scroll }]
+ */
+export function tourStops(path, { lang = 'de', goalMinutes = null } = {}) {
+  if (!path) return [];
+  const units = path.sections.flatMap((s) => s.units);
+  const stops = [];
+  const cur = path.current;
+  if (cur) {
+    const fresh = !units.some((u) => u.done || u.stepsDone > 0) && !path.sections.some((s) => s.stop && s.stop.state === 'done');
+    let text;
+    if (cur.kind === 'step') text = tv('tour.startText', lang, { unit: cur.unitNr, step: cur.stepNr });
+    else if (cur.kind === 'unit') text = tv('tour.unitText', lang, { unit: cur.unitNr });
+    else text = tv('tour.stopText', lang, { name: cur.kind === 'closing' ? 'Abschlusstest' : `Plateau ${cur.nr}` });
+    const first = fresh && cur.kind === 'step' && cur.stepNr === 1;
+    stops.push({ key: 'start', target: 'start', title: tv(first ? 'tour.startTitle' : 'tour.nextTitle', lang), text, scroll: true });
+  }
+  const bannerId = tourBannerUnit(path);
+  const banner = bannerId ? units.find((u) => u.id === bannerId) : null;
+  if (banner) {
+    const text = [tv('tour.bannerText', lang), banner.guideHref ? tv('tour.bannerBook', lang) : null].filter(Boolean).join(' ');
+    stops.push({ key: 'banner', target: 'banner', title: tv('tour.bannerTitle', lang), text, scroll: true });
+  }
+  stops.push({ key: 'tabs', target: 'tabs', title: tv('tour.tabsTitle', lang), text: tv('tour.tabsText', lang), scroll: false });
+  const min = Math.round(Number(goalMinutes) || 0);
+  stops.push({
+    key: 'stats',
+    target: 'stats',
+    title: tv('tour.statsTitle', lang),
+    text: min > 0 ? tv('tour.statsText', lang, { min }) : tv('tour.statsTextBare', lang),
+    scroll: false,
+  });
+  return stops;
 }

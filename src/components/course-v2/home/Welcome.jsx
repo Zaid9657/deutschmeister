@@ -3,6 +3,9 @@ import { Check } from 'lucide-react';
 import CastAvatar from '../CastAvatar.jsx';
 import { useV2Strings } from '../strings.js';
 import GameButton from './GameButton.jsx';
+import WelcomeAufbau from './WelcomeAufbau.jsx';
+import WelcomeKapitel from './WelcomeKapitel.jsx';
+import WelcomeSo from './WelcomeSo.jsx';
 import { hueVars } from './hue.js';
 
 // The first visit's welcome (pathModel.welcomeModel): a few short screens, ONE thing
@@ -15,11 +18,23 @@ import { hueVars } from './hue.js';
 //   2 „ziele" — „Das lernen Sie in A1.1": three big rows from the can-dos
 //               (pathModel.outcomeLine), and „12 Kapitel · 4 Module · Abschlusstest"
 //               counted from the manifest (pathModel.courseShape);
-//   3 „tempo" — „Wie viel Zeit haben Sie pro Tag?": the three pace presets as big tiles
+//   since the tour (owner 2026-10-01: "still no clear structure for the user as an
+//   introduction, tour, etc.") three screens explain how the course is built, one thing each:
+//   3 „aufbau"  — „So ist A1.1 aufgebaut": the Module as a small map — Kapitel blocks, the
+//                 Plateau chests, the Abschlusstest trophy — and a three-row legend
+//                 (WelcomeAufbau.jsx, pathModel.courseMap);
+//   4 „kapitel" — „Jedes Kapitel: 7 kurze Lernschritte": Kapitel 1's steps as the path draws
+//                 them, the minutes of a step, the test-out line (WelcomeKapitel.jsx,
+//                 pathModel.chapterSteps);
+//   5 „so"      — „So lernen Sie": one task per screen, ▶ Anhören, Prüfen (WelcomeSo.jsx);
+//   6 „tempo" — „Wie viel Zeit haben Sie pro Tag?": the three pace presets as big tiles
 //               (minutes per learning day, days per week, the finish date) — the same
 //               pick and the same storage as the plan's pace picker.
 // A top bar with a thin dot indicator and a quiet „Überspringen"; one big button at the
 // bottom: „Weiter", and „Los geht’s" on the last screen, which ends the welcome.
+// The top bar's help button replays screens 3–5 (`only`: the model's `replay`), then the
+// coach marks: the first screen's heading takes focus (`focusFirst`, the button that opened
+// it is gone) and the last button says `lastLabel` („Weiter" — the coach marks follow).
 // The chrome (headings, buttons, the tiles' lines) follows the lesson language like the
 // player (strings.js `welcome.*`, English by default) — a complete beginner has to be able
 // to read the screen that asks for their pace. The promise and the can-dos are content and
@@ -27,7 +42,8 @@ import { hueVars } from './hue.js';
 
 const ROW_HUES = ['tuerkis', 'orange', 'beere'];
 
-function Dots({ count, at }) {
+/** The thin dot indicator: the current screen long, the ones before it filled. */
+export function Dots({ count, at }) {
   if (count < 2) return <span />;
   return (
     <span className="flex items-center gap-1.5" aria-hidden="true">
@@ -140,9 +156,9 @@ function Tempo({ tiles, pace, onPace, headRef }) {
   );
 }
 
-export default function Welcome({ model, tiles = [], pace, onPace, onDone, lifted = false }) {
+export default function Welcome({ model, only = null, tiles = [], pace, onPace, onDone, lifted = false, focusFirst = false, lastLabel = null }) {
   const [, t] = useV2Strings();
-  const screens = model.screens;
+  const screens = only && only.length ? only : model.screens;
   const [at, setAt] = useState(0);
   const headRef = useRef(null);
   const screen = screens[Math.min(at, screens.length - 1)];
@@ -150,13 +166,13 @@ export default function Welcome({ model, tiles = [], pace, onPace, onDone, lifte
 
   // a new screen: its heading takes focus, so a screen reader reads the new screen
   useEffect(() => {
-    if (at > 0 && headRef.current) headRef.current.focus({ preventScroll: true });
+    if ((at > 0 || focusFirst) && headRef.current) headRef.current.focus({ preventScroll: true });
     try {
       window.scrollTo(0, 0);
     } catch {
       // no window (tests)
     }
-  }, [at]);
+  }, [at, focusFirst]);
 
   const next = () => (last ? onDone('done') : setAt((i) => i + 1));
 
@@ -166,7 +182,7 @@ export default function Welcome({ model, tiles = [], pace, onPace, onDone, lifte
         lifted ? 'min-h-[calc(100dvh-4rem)] lg:min-h-[100dvh]' : 'min-h-[100dvh]'
       }`}
     >
-      <div className="flex h-16 shrink-0 items-center justify-between gap-4">
+      <div className="flex h-14 shrink-0 items-center justify-between gap-4">
         <Dots count={screens.length} at={at} />
         <p className="sr-only" aria-live="polite">{t('welcome.stepOf', { n: at + 1, t: screens.length })}</p>
         <button
@@ -177,13 +193,16 @@ export default function Welcome({ model, tiles = [], pace, onPace, onDone, lifte
           {t('welcome.skip')}
         </button>
       </div>
-      <div key={screen} className="flex flex-1 flex-col justify-center py-6 motion-safe:animate-fade-in">
+      <div key={screen} className="flex flex-1 flex-col justify-center py-4 motion-safe:animate-fade-in">
         {screen === 'hallo' && <Hallo model={model} headRef={headRef} />}
         {screen === 'ziele' && <Ziele model={model} headRef={headRef} />}
+        {screen === 'aufbau' && model.map && <WelcomeAufbau map={model.map} headRef={headRef} />}
+        {screen === 'kapitel' && model.chapter && <WelcomeKapitel chapter={model.chapter} headRef={headRef} />}
+        {screen === 'so' && <WelcomeSo headRef={headRef} />}
         {screen === 'tempo' && <Tempo tiles={tiles} pace={pace} onPace={onPace} headRef={headRef} />}
       </div>
       <div className="shrink-0 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-2">
-        <GameButton onClick={next} className="w-full">{last ? t('welcome.go') : t('welcome.next')}</GameButton>
+        <GameButton onClick={next} className="w-full">{last ? lastLabel || t('welcome.go') : t('welcome.next')}</GameButton>
       </div>
     </div>
   );

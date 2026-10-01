@@ -3,6 +3,7 @@ import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext';
 import CourseTheme from '../../components/course-v2/CourseTheme.jsx';
 import useCourseGame from '../../components/course-v2/useCourseGame.js';
+import CourseTour from '../../components/course-v2/home/CourseTour.jsx';
 import GameButton from '../../components/course-v2/home/GameButton.jsx';
 import KursplanSheet from '../../components/course-v2/home/KursplanSheet.jsx';
 import PathSection from '../../components/course-v2/home/PathSection.jsx';
@@ -20,6 +21,7 @@ import {
   coursePath, actionLabel, courseTiles, examParts, planInhalt, kapitelAufbau, referenceLinks,
   paceOptions, resolvePace, paceStorageKey, formatFinishDate, stepMinutes, stepSkeleton, STEP_XP,
   welcomeModel, welcomeStorageKey, showWelcome, paceTile, currentAnchor, goalRing, courseFinish,
+  tourStops, tourStorageKey, showTour,
 } from '../../lib/course-v2/pathModel.js';
 import { fetchLevelState, fetchLearnerGoal } from '../../lib/course-v2/progress.js';
 import { localLevelState } from '../../lib/course-v2/localState.js';
@@ -50,6 +52,18 @@ import { safeGet, safeSet } from '../../utils/safeStorage.js';
 //     the current node to the middle of the screen;
 //   - a bottom TAB BAR: Lernen (this page) · Kursplan (the course plan — PlanOverview with
 //     the textbook „Inhalt" — as a full-screen sheet at #kursplan) · Grammatik · Wörter.
+// Since the tour (owner 2026-10-01, after testing on the phone: "still no clear structure
+// for the user as an introduction, tour, etc.") the structure is explained once and stays
+// findable:
+//   - the welcome has six screens: hallo, ziele, then how the course is built („aufbau":
+//     Module, Kapitel, Plateaus, Abschlusstest), what a Kapitel holds („kapitel": its seven
+//     Lernschritte), how a screen works („so"), and the pace;
+//   - after it, COACH MARKS on the path (CourseTour, pathModel.tourStops): the current node, its
+//     Kapitel banner, the tab bar, the top bar's numbers — once per device and level, with a flag
+//     of their own (pathModel.tourStorageKey), so a learner who finished the welcome before them
+//     sees them once too;
+//   - the top bar's help button („So funktioniert’s") replays the three structure screens and
+//     then the coach marks.
 // The gate stays SOFT — every node of a compiled Kapitel opens its step,
 // `…/u/<nr>?s=<step>`. Everything shown is computed in homeModel.js + pathModel.js;
 // completion comes from completion.js.
@@ -107,20 +121,43 @@ export function CourseHomeV2({ level, manifest, state, goal }) {
 
   // The welcome: decided once, when the page mounts with the learner's state; its chrome
   // in the lesson language (the player's), its promise and can-dos German.
-  const [lang] = useV2Strings();
+  const [lang, t] = useV2Strings();
   const welcome = useMemo(() => welcomeModel(manifest, level, { lang }), [manifest, level, lang]);
   const [welcomeOpen, setWelcomeOpen] = useState(
     () => welcome.screens.length > 0 && showWelcome(state, safeGet(welcomeStorageKey(level))),
   );
   // bumped whenever the path should bring its current node into view (load, after the welcome)
   const [scrollTick, setScrollTick] = useState(() => (welcomeOpen ? 0 : 1));
-  const focusAfterScroll = useRef(false);
+  // what follows once the current node is in view: 'focus' (it takes focus — after the
+  // welcome), 'tour' (the coach marks — after the replay), 'help' (focus back on the help
+  // button — the replay was skipped) or nothing (a plain load)
+  const afterScroll = useRef(null);
   const finishWelcome = useCallback(() => {
     safeSet(welcomeStorageKey(level), new Date().toISOString().slice(0, 10));
     setWelcomeOpen(false);
-    focusAfterScroll.current = true;
+    afterScroll.current = 'focus';
     setScrollTick((n) => n + 1);
   }, [level]);
+
+  // The coach marks: due until finished or skipped on this device (their own flag, read once);
+  // they open once the current node is in view, never over the welcome or the Kursplan sheet.
+  const [tourDue, setTourDue] = useState(() => showTour(safeGet(tourStorageKey(level))));
+  const [tourOpen, setTourOpen] = useState(false);
+  const tourBack = useRef('node'); // where focus goes when they close: the current node, or the help button
+  const helpRef = useRef(null);
+  const closeTour = useCallback(() => {
+    safeSet(tourStorageKey(level), new Date().toISOString().slice(0, 10));
+    setTourDue(false);
+    setTourOpen(false);
+  }, [level]);
+  // „So funktioniert’s": the structure screens again, then the coach marks
+  const [replay, setReplay] = useState(false);
+  const openHelp = useCallback(() => setReplay(true), []);
+  const finishReplay = useCallback((how) => {
+    setReplay(false);
+    afterScroll.current = how === 'done' ? 'tour' : 'help';
+    setScrollTick((n) => n + 1);
+  }, []);
 
   // The Kursplan sheet is open while the URL says #kursplan: the back button closes it.
   const sheetOpen = SHEET_HASH.test(location.hash || '');
@@ -171,17 +208,26 @@ export function CourseHomeV2({ level, manifest, state, goal }) {
   const finish = useMemo(() => courseFinish(model, { lang }), [model, lang]);
   const anchor = finish ? finish.anchor : path ? currentAnchor(path.current) : null;
 
-  // Bring the current node into the middle of the screen: on load, and after the welcome.
+  // Bring the current node into the middle of the screen: on load, after the welcome and after
+  // the replay — then open the coach marks when they are due (they hand focus back to the node).
   useEffect(() => {
-    if (!scrollTick || welcomeOpen) return undefined;
+    if (!scrollTick || welcomeOpen || replay) return undefined;
     const raf = window.requestAnimationFrame(() => {
-      scrollToAnchor(anchor, { focus: focusAfterScroll.current });
-      focusAfterScroll.current = false;
+      const then = afterScroll.current;
+      afterScroll.current = null;
+      const tour = then === 'tour' || (then !== 'help' && tourDue);
+      scrollToAnchor(anchor, { focus: then === 'focus' && !tour });
+      if (tour) {
+        tourBack.current = then === 'tour' ? 'help' : 'node';
+        setTourOpen(true);
+      } else if (then === 'help' && helpRef.current) {
+        helpRef.current.focus({ preventScroll: true });
+      }
     });
     return () => window.cancelAnimationFrame(raf);
     // the anchor is read when the tick changes, not followed as the path updates
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scrollTick, welcomeOpen]);
+  }, [scrollTick, welcomeOpen, replay]);
 
   const goLernen = useCallback(() => {
     if (sheetOpen) closeSheet();
@@ -196,6 +242,7 @@ export function CourseHomeV2({ level, manifest, state, goal }) {
   const finishText = plan && !allDone ? formatFinishDate(plan.finishDate) : null;
   const planned = (manifest.units || []).map((u) => Number(u && u.minutesPlanned) || 0).filter(Boolean);
   const perStep = planned.length ? stepMinutes(planned.reduce((a, b) => a + b, 0) / planned.length, stepSkeleton(level).length) : null;
+  const goalMinutes = dailyGoalMinutes(manifest, pace);
 
   if (welcomeOpen) {
     return (
@@ -212,6 +259,14 @@ export function CourseHomeV2({ level, manifest, state, goal }) {
     );
   }
 
+  if (replay) {
+    return (
+      <CourseTheme>
+        <Welcome model={welcome} only={welcome.replay} onDone={finishReplay} lifted={lifted} focusFirst lastLabel={t('welcome.next')} />
+      </CourseTheme>
+    );
+  }
+
   return (
     <CourseTheme>
       <div className={lifted ? 'pb-40 pt-16 lg:pb-28' : 'pb-28 pt-16'}>
@@ -219,7 +274,10 @@ export function CourseHomeV2({ level, manifest, state, goal }) {
           code={code}
           streak={game.streak}
           totalXp={game.totalXp}
-          ring={goalRing(game.todayMinutes, dailyGoalMinutes(manifest, pace))}
+          ring={goalRing(game.todayMinutes, goalMinutes)}
+          onHelp={welcome.replay.length ? openHelp : null}
+          helpLabel={t('tour.help')}
+          helpRef={helpRef}
         />
         <h1 className="sr-only">{code}: {title}</h1>
         <PathSection
@@ -254,6 +312,13 @@ export function CourseHomeV2({ level, manifest, state, goal }) {
           allDone={allDone}
         />
       </KursplanSheet>
+      {tourOpen && !sheetOpen && (
+        <CourseTour
+          stops={tourStops(path, { lang, goalMinutes })}
+          onClose={closeTour}
+          returnFocus={() => (tourBack.current === 'help' ? helpRef.current : anchor && document.getElementById(anchor))}
+        />
+      )}
     </CourseTheme>
   );
 }

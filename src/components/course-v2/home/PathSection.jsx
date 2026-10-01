@@ -7,7 +7,7 @@ import { StopFace } from './StopNode.jsx';
 import UnitBanner from './UnitBanner.jsx';
 import { hueVars } from './hue.js';
 import {
-  nodeAnchor, nodePopover, stopPopover, finishNode, unitPercent,
+  nodeAnchor, nodePopover, stopPopover, finishNode, unitPercent, tourBannerUnit,
 } from '../../../lib/course-v2/pathModel.js';
 
 // The learn path (pathModel.js coursePath), Duolingo's learn screen: per Kapitel its
@@ -19,14 +19,17 @@ import {
 // not compiled yet is grey with grey nodes whose popover says „Kommt bald". The gate
 // stays SOFT: every node of a compiled Kapitel opens its step. Once every Kapitel is done the
 // path ends in CourseFinish under the trophy (pathModel.courseFinish) — the page scrolls there.
+// The coach marks (CourseTour, 2026-10-01) find their targets here: the current place
+// (`data-tour="start"`) and the banner of its Kapitel (pathModel.tourBannerUnit,
+// `data-tour="banner"`); a chest or trophy shows its short name under it („Plateau 1").
 
-function UnitBlock({ unit, current, stepXp, openId, toggle, headingLevel, companion }) {
+function UnitBlock({ unit, current, stepXp, openId, toggle, headingLevel, companion, tourBanner = false }) {
   const finish = finishNode(current, unit);
   const percent = unitPercent(unit);
   const nodes = unit.available ? unit.nodes : unit.placeholders || [];
   return (
     <div style={hueVars(unit.hue)}>
-      <UnitBanner unit={unit} headingLevel={headingLevel} />
+      <UnitBanner unit={unit} headingLevel={headingLevel} tourTarget={tourBanner} />
       <ol aria-label={`Kapitel ${unit.nr}: ${unit.title}`} className="flex flex-col gap-6 pb-12 pt-9">
         {nodes.map((node) => {
           const anchor = nodeAnchor(node.id);
@@ -42,6 +45,7 @@ function UnitBlock({ unit, current, stepXp, openId, toggle, headingLevel, compan
               popover={nodePopover(node, { stepsTotal: unit.stepsTotal, unitNr: unit.nr, xp: stepXp })}
               face={<StepFace node={node} percent={percent} />}
               companion={node.state === 'current' ? companion : null}
+              tour={node.state === 'current' ? 'start' : null}
             />
           );
         })}
@@ -56,6 +60,7 @@ function UnitBlock({ unit, current, stepXp, openId, toggle, headingLevel, compan
             popover={finish.popover}
             face={<StepFace node={finish} percent={100} />}
             companion={companion}
+            tour="start"
           />
         )}
       </ol>
@@ -117,6 +122,7 @@ export default function PathSection({ path, stepXp, withCast = false, onJump, li
   // Priya keeps the learner company beside the current node — decorative, and only on
   // the A1 levels, whose cast she is
   const companion = withCast ? <CastAvatar name="Priya" size={72} decorative /> : null;
+  const bannerId = tourBannerUnit(path);
   // pb-32: a popover is absolute, so only this padding gives the scroll-adjust above room at
   // the END of the path — with less, the trophy's popover ends under the tab bar because the
   // document has nothing left to scroll (measured 2026-09-30 at 360×740, also with a 34px
@@ -142,6 +148,7 @@ export default function PathSection({ path, stepXp, withCast = false, onJump, li
                 toggle={toggle}
                 headingLevel={3}
                 companion={companion}
+                tourBanner={unit.id === bannerId}
               />
             ))}
             {stop && (
@@ -157,6 +164,9 @@ export default function PathSection({ path, stepXp, withCast = false, onJump, li
                   popover={stopPopover(stop)}
                   face={<StopFace stop={stop} />}
                   companion={stop.state === 'current' ? companion : null}
+                  tour={stop.state === 'current' ? 'start' : null}
+                  caption={stop.short}
+                  captionMuted={stop.state === 'unavailable'}
                 />
               </ol>
             )}

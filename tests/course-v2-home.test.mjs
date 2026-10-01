@@ -6,9 +6,12 @@
 // visible". The home speaks the Lehrwerk's language: Kapitel, Modul, Plateau,
 // Abschlusstest; each step says what it teaches; the plan is a textbook „Inhalt".
 // Round 3 (2026-09-30: "it looks intimidating and too much … duolingo style … step for
-// step"): the home became Duolingo's learn screen — a three-screen welcome on a first
+// step"): the home became Duolingo's learn screen — a short welcome on a first
 // visit, big round nodes with a popover per node, a tab bar, and the plan one tap deep
-// in the „Kursplan" sheet. The pins at the bottom describe that screen.
+// in the „Kursplan" sheet. The pins at the bottom describe that screen. Since 2026-10-01
+// ("still no clear structure for the user as an introduction, tour") the welcome has six
+// screens (three explain the structure) and coach marks follow it — pinned here where they
+// touch the welcome, and in full in tests/course-v2-tour.test.mjs.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
@@ -535,7 +538,7 @@ test('the top bar\'s goal ring: minutes today of the pace\'s daily minutes', () 
 });
 
 // ---------------------------------------------------------------------------
-// The first-visit welcome: three short screens
+// The first-visit welcome: six short screens
 // ---------------------------------------------------------------------------
 
 test('the welcome shows once: nothing finished in the level and not finished or skipped on this device', () => {
@@ -547,9 +550,11 @@ test('the welcome shows once: nothing finished in the level and not finished or 
   assert.equal(showWelcome(stateOf({ progress: { 'a1.1-u01': 'started' } }), null), true, 'opening a Kapitel is not finishing a step');
 });
 
-test('the welcome\'s screens: Priya and the promise, three things to learn, the pace', () => {
+test('the welcome\'s screens: Priya and the promise, three things to learn, the structure, the pace', () => {
   const w = welcomeModel(A11, 'a1.1');
-  assert.deepEqual(w.screens, ['hallo', 'ziele', 'tempo']);
+  assert.deepEqual(w.screens, ['hallo', 'ziele', 'aufbau', 'kapitel', 'so', 'tempo']);
+  assert.deepEqual(w.replay, ['aufbau', 'kapitel', 'so'], 'the help button replays the three structure screens');
+  assert.equal(w.screens[w.screens.length - 1], 'tempo', 'the pace stays last: its button ends the welcome');
   assert.equal(w.narrator, 'Priya');
   assert.equal(w.promise, 'Sie lernen Deutsch mit Priya. Mit ihr lernen Sie Schritt für Schritt Ihre ersten Gespräche auf Deutsch.');
   assert.equal(w.heading, 'Das lernen Sie in A1.1');
@@ -589,9 +594,10 @@ test('the welcome\'s screens: Priya and the promise, three things to learn, the 
   assert.equal(courseShape({ units: [{}], etappen: [{}] }), '1 Kapitel · 1 Modul');
   assert.equal(courseShape({}), null);
 
-  // a level without a showcase asks only for the pace; no data at all → no welcome
+  // a level without a showcase skips Priya and the can-dos, but still explains its structure
+  // and asks for the pace; no data at all → no welcome
   const b = welcomeModel(B11, 'b1.1');
-  assert.deepEqual(b.screens, ['tempo']);
+  assert.deepEqual(b.screens, ['aufbau', 'kapitel', 'so', 'tempo']);
   assert.equal(b.narrator, null, 'Priya is the A1 cast');
   assert.deepEqual(welcomeModel({}, 'a1.1').screens, []);
   assert.equal(welcomeModel({}, 'a1.1').note, null);
@@ -611,7 +617,7 @@ test('the welcome\'s chrome follows the lesson language; the promise and the can
   // every welcome.* key the model and the component use exists in both tables, and the
   // German table carries the former literals so the German chrome is unchanged
   const keys = new Set();
-  for (const f of [`${HOME_DIR}/Welcome.jsx`, 'src/lib/course-v2/pathModel.js']) {
+  for (const f of [`${HOME_DIR}/Welcome.jsx`, `${HOME_DIR}/WelcomeAufbau.jsx`, `${HOME_DIR}/WelcomeKapitel.jsx`, `${HOME_DIR}/WelcomeSo.jsx`, 'src/lib/course-v2/pathModel.js']) {
     for (const m of read(f).matchAll(/'(welcome\.[A-Za-z]+)'/g)) keys.add(m[1]);
   }
   assert.ok(keys.size >= 12, `the welcome uses ${keys.size} chrome keys — suspiciously few`);
@@ -808,7 +814,9 @@ test('the learn screen: top bar, path, tab bar and the Kursplan sheet — no bot
   assert.doesNotMatch(stripComments(page), /ActionBar/, 'the START bubble and the popover are the call to action now');
   assert.doesNotMatch(stripComments(page), /DailyGoalCard|ReferenceLinks/, 'the goal is the top bar\'s ring, the references are tabs');
   assert.ok(!HOME_FILES.includes(`${HOME_DIR}/DailyGoalCard.jsx`));
-  assert.match(page, /ring=\{goalRing\(game\.todayMinutes, dailyGoalMinutes\(manifest, pace\)\)\}/, 'the goal ring reads the ledger and the pace');
+  // the goal ring reads the ledger and the pace (the coach marks name the same minutes)
+  assert.match(page, /const goalMinutes = dailyGoalMinutes\(manifest, pace\);/);
+  assert.match(page, /ring=\{goalRing\(game\.todayMinutes, goalMinutes\)\}/, 'the goal ring reads the ledger and the pace');
   const top = read(`${HOME_DIR}/TopBar.jsx`);
   for (const part of ['<Flame', '<Zap', 'conic-gradient(var(--c-primary)', '<span className="sr-only">{g.label}</span>']) assert.ok(top.includes(part), `the top bar has ${part}`);
   // the plan opens as a sheet at #kursplan (the back button closes it), not in the page
@@ -884,16 +892,21 @@ test('the path: banners with a book button, big round nodes as disclosures, no l
   assert.match(read(`${HOME_DIR}/JumpButton.jsx`), /aria-label="Zum aktuellen Lernschritt"/);
 });
 
-test('the welcome: three screens, one thing and one button each, remembered per device', () => {
+test('the welcome: six screens, one thing and one button each, remembered per device', () => {
   const page = read(PAGE);
   assert.match(page, /showWelcome\(state, safeGet\(welcomeStorageKey\(level\)\)\)/, 'shown only without progress and not seen here');
   assert.match(page, /safeSet\(welcomeStorageKey\(level\), /, 'finishing or skipping it is remembered');
   const w = read(`${HOME_DIR}/Welcome.jsx`);
-  for (const screen of ["screen === 'hallo'", "screen === 'ziele'", "screen === 'tempo'"]) assert.ok(w.includes(screen), `the welcome has ${screen}`);
+  for (const screen of ["screen === 'hallo'", "screen === 'ziele'", "screen === 'aufbau'", "screen === 'kapitel'", "screen === 'so'", "screen === 'tempo'"]) {
+    assert.ok(w.includes(screen), `the welcome has ${screen}`);
+  }
+  for (const f of ['WelcomeAufbau.jsx', 'WelcomeKapitel.jsx', 'WelcomeSo.jsx']) {
+    assert.doesNotMatch(read(`${HOME_DIR}/${f}`), /<GameButton|<button|<Link/, `${f}: the one button stays the welcome's own`);
+  }
   assert.equal((w.match(/<GameButton/g) || []).length, 1, 'one big button per screen');
   // the chrome reads the lesson language (strings.js welcome.*) — no German literal in the component
   assert.match(w, /import \{ useV2Strings \} from '\.\.\/strings\.js'/);
-  assert.match(w, /\{last \? t\('welcome\.go'\) : t\('welcome\.next'\)\}/);
+  assert.match(w, /\{last \? lastLabel \|\| t\('welcome\.go'\) : t\('welcome\.next'\)\}/, '„Los geht’s" ends the welcome; the replay says „Weiter" (the coach marks follow)');
   assert.match(w, />\s*\{t\('welcome\.skip'\)\}\s*</, 'a quiet way out');
   assert.match(w, /<CastAvatar name=\{model\.narrator\} size=\{120\} decorative className="motion-safe:animate-pop-in" \/>/);
   assert.match(w, /\{t\('welcome\.title', \{ code: model\.code \}\)\}/);
@@ -909,7 +922,7 @@ test('the welcome: three screens, one thing and one button each, remembered per 
   assert.match(w, /\{model\.note && <p [^>]*>\{model\.note\}<\/p>\}/, 'the free flag and the lane, one muted line under the shape');
   assert.match(w, /aria-live="polite">\{t\('welcome\.stepOf', \{ n: at \+ 1, t: screens\.length \}\)\}/);
   // the page hands the model and the tiles the same language the component reads
-  assert.match(page, /const \[lang\] = useV2Strings\(\);/);
+  assert.match(page, /const \[lang, t\] = useV2Strings\(\);/);
   assert.match(page, /welcomeModel\(manifest, level, \{ lang \}\), \[manifest, level, lang\]/);
   assert.match(page, /paceTile\(o, \{ allDone, lang \}\)/);
 });

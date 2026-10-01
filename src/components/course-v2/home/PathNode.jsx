@@ -11,9 +11,13 @@ import NodePopover from './NodePopover.jsx';
 // step — a progress ring of its Kapitel. `face` is what the button shows (StepFace here,
 // StopFace for a chest or trophy). The Kapitel's hue arrives as `--hue` / `--hue-edge`
 // from the Kapitel's wrapper (hue.js), so every class stays a literal Tailwind string.
+// Since the tour (2026-10-01) the current place carries `data-tour="start"` (`tour`), the
+// coach marks' first spotlight, and a chest or trophy shows its short name under it
+// (`caption`: „Plateau 1", „Abschlusstest" — decorative, the button's name says it).
 
-const ICONS = { Star, Target, Mic, PenLine, RefreshCw, Crown, Flag };
-const FILLED = new Set(['Star', 'Crown']);
+/** The node icons by lucide name (pathModel NODE_ICON) — the welcome's mini path draws the same ones. */
+export const ICONS = { Star, Target, Mic, PenLine, RefreshCw, Crown, Flag };
+export const FILLED = new Set(['Star', 'Crown']);
 
 const FACE =
   'flex h-16 w-[72px] items-center justify-center rounded-[50%] transition-transform duration-100 ' +
@@ -58,6 +62,7 @@ export function StartBubble({ tone = 'hue' }) {
 
 export default function PathNode({
   anchorId, offset = 0, ariaLabel, current = false, bubbleTone = 'hue', open = false, onToggle, popover, face, companion = null,
+  tour = null, caption = null, captionMuted = false,
 }) {
   const popId = `${anchorId}-popover`;
   return (
@@ -71,7 +76,7 @@ export default function PathNode({
           {companion}
         </span>
       )}
-      <div className="flex flex-col items-center" style={{ transform: `translateX(${Number(offset) || 0}px)` }}>
+      <div className="flex flex-col items-center" style={{ transform: `translateX(${Number(offset) || 0}px)` }} data-tour={tour || undefined}>
         {current && <StartBubble tone={bubbleTone} />}
         <button
           id={anchorId}
@@ -84,6 +89,14 @@ export default function PathNode({
           <span className="sr-only">{ariaLabel}</span>
           <span aria-hidden="true" className="flex">{face}</span>
         </button>
+        {caption && (
+          <span
+            aria-hidden="true"
+            className={`mt-2.5 text-[0.8125rem] font-black uppercase tracking-wider ${captionMuted ? 'text-game-muted' : 'text-game-xp-ink'}`}
+          >
+            {caption}
+          </span>
+        )}
       </div>
       {open && popover && <NodePopover id={popId} popover={popover} offset={offset} />}
     </li>

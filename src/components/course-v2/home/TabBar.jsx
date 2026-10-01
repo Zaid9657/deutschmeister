@@ -9,7 +9,8 @@ import { SkillIcon } from '../SkillIcon.jsx';
 // sheet (#kursplan — the back button closes it), „Grammatik" and „Wörter" open the level's
 // reference pages (pathModel.referenceLinks). The textbook stays one tap deep, never on
 // the path itself. `lifted`: a signed-in learner below lg also has the app's BottomNav
-// (fixed, h-16) — this bar then sits on top of it rather than under it.
+// (fixed, h-16) — this bar then sits on top of it rather than under it. `data-tour="tabs"`:
+// the coach marks' third spotlight.
 
 const TAB = 'flex min-h-[3.75rem] w-full flex-col items-center justify-center gap-0.5 px-1 pb-1.5 pt-2 text-[0.75rem] font-black leading-none';
 const ICON_BOX = 'flex h-8 w-12 items-center justify-center rounded-xl border-2';
@@ -23,6 +24,7 @@ const TabBar = forwardRef(function TabBar({ links = [], kursplanOpen = false, on
     <nav
       aria-label="Kurs"
       data-tab-bar
+      data-tour="tabs"
       className={`fixed inset-x-0 z-40 border-t-2 border-game-line bg-white ${
         lifted ? 'bottom-16 lg:bottom-0' : 'bottom-0 pb-[env(safe-area-inset-bottom)]'
       }`}
