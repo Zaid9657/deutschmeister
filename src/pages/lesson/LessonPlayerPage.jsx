@@ -10,6 +10,7 @@ import { completeLesson, countCompletedRuns, fetchWordsByIds, getLessonProgress,
 import { courseHome } from '../../lib/courseFlow.js';
 import { hasLocalProgress, localRunCount, mergeLocalProgress, recordLocalLesson } from '../../lib/course/localProgress.js';
 import { buildCardIndex, fetchDueCards, seedCardsForLektion } from '../../services/reviewService.js';
+import { clearRun, packRun, readRun, resumeStageIndex, saveRun } from '../../lib/lesson/runState.js';
 import LessonProgressBar from '../../components/lesson/LessonProgressBar.jsx';
 import ComboChip, { nextCombo } from '../../components/lesson/ComboChip.jsx';
 import LangToggle from '../../components/lesson/LangToggle.jsx';
@@ -49,6 +50,14 @@ import { trackLessonCompleted, trackLessonStarted } from '../../lib/funnelTracki
 // here rather than in an auth callback because this and the course home are
 // the only two screens where local course progress can exist.
 //
+// RESUME. The run (stage, item, answers) is saved to sessionStorage on every
+// change and restored on mount (src/lib/lesson/runState.js), so a full page
+// load in the same tab resumes the run instead of restarting the Lektion. The
+// Sprechen stage's hand-off to the speaking coach is such a page load, and the
+// coach's "Zurück zur Lektion" bar used to land the learner back on the intro.
+// A resumed run rebuilds the identical stage list from the snapshot's
+// `attempt` and warm-up cards, skips the intro, and the recap clears it.
+//
 // CHROME LANGUAGE. Every label this page and its stages show comes from
 // src/lib/lesson/strings.js in the learner's chrome language — English by
 // default, German in Deutsch-Modus (the LangToggle in the header row). The
@@ -61,22 +70,26 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [lang] = useLessonLang();
+  // The run this tab was in the middle of, if any (read once, on mount).
+  const [resumed] = useState(() => (preview ? null : readRun(curriculum.level, lektion.id)));
   // The DRAW attempt, derived from how often this learner has already finished
   // this Lektion — never a constant. It was `useState(1)` with no setter, which
   // meant the repeat that the standard makes the remediation path handed back
   // the identical seven for ever (DaF review #9 MAJOR 1). Signed in the count
   // comes from the attempt batches, signed out from the local store; either way
   // it is derived from what is already written, not from a new column.
-  const [attempt, setAttempt] = useState(1);
-  const [stageIndex, setStageIndex] = useState(0);
-  const [itemIndex, setItemIndex] = useState(0);
-  const [attempts, setAttempts] = useState([]);
-  const [misses, setMisses] = useState([]);
+  const [attempt, setAttempt] = useState(() => (resumed ? resumed.attempt : 1));
+  const [stageIndex, setStageIndex] = useState(() => (resumed
+    ? resumeStageIndex(buildLesson({ curriculum, lektion, pool, dueCards: resumed.dueCards, attempt: resumed.attempt }).stages, resumed)
+    : 0));
+  const [itemIndex, setItemIndex] = useState(() => (resumed ? resumed.itemIndex : 0));
+  const [attempts, setAttempts] = useState(() => (resumed ? resumed.attempts : []));
+  const [misses, setMisses] = useState(() => (resumed ? resumed.misses : []));
   // Consecutive first-try corrects across practice + dictation items, reset on
   // a miss (ComboChip.jsx's nextCombo, unit-tested there). Player-level state
   // because the combo spans stage boundaries within one run, not one item.
-  const [combo, setCombo] = useState(0);
-  const [requeued, setRequeued] = useState([]);
+  const [combo, setCombo] = useState(() => (resumed ? resumed.combo : 0));
+  const [requeued, setRequeued] = useState(() => (resumed ? resumed.requeued : []));
   const [wordRows, setWordRows] = useState(() => new Map());
   const [saved, setSaved] = useState(false);
   // Warm-up (stage 0) card state: the same four faces ReviewPage.jsx renders
@@ -89,13 +102,17 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   const [warmupTyped, setWarmupTyped] = useState('');
   const [warmupVerdict, setWarmupVerdict] = useState(null);
   // The intro screen (IntroStage) is player state, not a stage: shown once per
-  // run, before stage 0; preview mode skips it. Start fires lesson_started.
-  const [introDone, setIntroDone] = useState(preview);
-  const [dueCards, setDueCards] = useState(null); // null = not loaded yet
+  // run, before stage 0; preview mode and a resumed run skip it. Start fires
+  // lesson_started.
+  const [introDone, setIntroDone] = useState(preview || !!resumed);
+  // null = not loaded yet. A resumed run keeps the cards it was built with, so
+  // a late fetch cannot insert or drop the warm-up and shift every stage.
+  const [dueCards, setDueCards] = useState(() => (resumed ? resumed.dueCards : null));
 
   // Stage 0 warm-up: up to four cards due from the review ladder.
   useEffect(() => {
-    if (preview || !user) { setDueCards([]); return; }
+    if (resumed) return undefined;
+    if (preview || !user) { setDueCards([]); return undefined; }
     let cancelled = false;
     const index = buildCardIndex(curriculum);
     fetchDueCards(user.id, curriculum.level, 4)
@@ -106,12 +123,12 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
       })
       .catch(() => { if (!cancelled) setDueCards([]); });
     return () => { cancelled = true; };
-  }, [preview, user, curriculum]);
+  }, [preview, user, curriculum, resumed]);
 
   useEffect(() => {
     if (preview) return undefined;
     if (!user) {
-      setAttempt(attemptFromCompletions(localRunCount(curriculum.level, lektion.id)));
+      if (!resumed) setAttempt(attemptFromCompletions(localRunCount(curriculum.level, lektion.id)));
       return undefined;
     }
     let cancelled = false;
@@ -130,10 +147,13 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
           completed: !!(row && row.completed_at),
         });
       })
-      .then((runs) => { if (!cancelled) setAttempt(attemptFromCompletions(runs)); })
+      // A resumed run keeps the draw it was answering; nothing was finished
+      // since it was saved, so the count could only disagree in an edge case,
+      // and a changed draw under a restored item index would be a blank screen.
+      .then((runs) => { if (!cancelled && !resumed) setAttempt(attemptFromCompletions(runs)); })
       .catch(() => { /* fail-soft: attempt 1 */ });
     return () => { cancelled = true; };
-  }, [preview, user, curriculum.level, lektion.id]);
+  }, [preview, user, curriculum.level, lektion.id, resumed]);
 
   const lesson = useMemo(
     () => buildLesson({ curriculum, lektion, pool, dueCards: dueCards || [], attempt }),
@@ -218,6 +238,19 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   }, [stageIndex, stages, attempts, misses, pool, goStage]);
 
   const back = stageIndex > 0 ? () => goStage(stageIndex - 1) : null;
+
+  // Save the run on every stage or item change, so any full page load resumes
+  // it (src/lib/lesson/runState.js). The recap ends the run and clears it, and
+  // a run that has reached the recap is never saved again: "Back" from the
+  // recap must not leave a snapshot whose resume would write the completion a
+  // second time (one attempt batch is one finished run, lessonService.js).
+  useEffect(() => {
+    if (preview || !introDone || !stage) return;
+    if (saved || stage.kind === 'recap') { clearRun(curriculum.level, lektion.id); return; }
+    saveRun(curriculum.level, lektion.id, packRun({
+      stageKey: stage.key, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards: dueCards || [],
+    }));
+  }, [preview, introDone, saved, stage, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, curriculum.level, lektion.id]);
 
   // Persist once, when the recap comes into view. Signed out, the same write
   // goes to localStorage instead of Supabase — never nowhere.

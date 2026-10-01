@@ -10,7 +10,7 @@ import { openCheckout } from '../utils/openCheckout';
 import { clearBuyIntent } from '../lib/buyIntent';
 import { markCheckoutStarted, consumeCheckoutSuccess } from '../lib/funnelTracking';
 import { PLANS, num, levelsForProduct } from '../data/pricing.js';
-import { LEVEL_COUNT, READING_LESSON_COUNT } from '../data/marketing.js';
+import { LEVEL_COUNT, READING_LESSON_COUNT, TRIAL_DAYS } from '../data/marketing.js';
 import Button from '../components/ui/Button.jsx';
 import CouponField from '../components/CouponField.jsx';
 import ReportProblemLink from '../components/ReportProblemLink.jsx';
@@ -454,12 +454,20 @@ const SubscriptionPage = () => {
           ))}
         </div>
 
-        {/* Trial info */}
-        <Reveal as="p" className="text-center text-sm text-graphite mb-8">
-          {isGerman
-            ? 'Alle Pläne beinhalten eine 7-tägige kostenlose Testphase. Jederzeit kündbar.'
-            : 'All plans include a 7-day free trial. Cancel anytime.'}
-        </Reveal>
+        {/* Trial info. The trial belongs to the ACCOUNT (granted at signup); the
+            plans carry none of their own — Lemon Squeezy charges a plan the
+            moment it is bought (12 of 12 subscription_created events were
+            'active' with no trial_ends_at, measured 2026-10-01). Until then this
+            line told every visitor, including those whose trial had ended, that
+            the plans included a free trial. So: said only during the trial, and
+            it says what is true then. tests/claims.test.mjs bans the old claim. */}
+        {inTrial && !isSubscribed && (
+          <Reveal as="p" className="text-center text-sm text-graphite mb-8">
+            {isGerman
+              ? `Ihre ${TRIAL_DAYS}-tägige Testphase gehört zu Ihrem Konto. Ein Plan wird berechnet, sobald Sie ihn abschließen, auch während der Testphase. Jederzeit kündbar.`
+              : `Your ${TRIAL_DAYS}-day trial is on your account. A plan is charged as soon as you buy it, even during the trial. Cancel anytime.`}
+          </Reveal>
+        )}
 
         {/* Level courses — buy a band once, keep it. The bundle is the
             featured card. Rendered only when the LS products exist (variant

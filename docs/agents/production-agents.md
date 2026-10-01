@@ -19,21 +19,23 @@ session attached. They share two things:
 mails the owner **one digest per run containing only the problems it has not mailed before** — or,
 when Supabase itself is unreachable, one short stateless fallback mail instead (below).
 
-**Status: ships off.** It does nothing until `SENTINEL_ENABLED=true`, and it sends no digest
-until `migrations/2026-09-29-agent-incidents.sql` is applied (no claim, no digest — only the hourly
-"Supabase unreachable" fallback naming the missing table). Apply the migration first.
+**Status: ships off.** It does nothing until `SENTINEL_ENABLED=true`. Its ledger is in place:
+`migrations/2026-09-29-agent-incidents.sql` has been applied and `agent_incidents` is live since
+2026-09-30 08:08 UTC (Supabase migration `agent_incidents_2026_09_29`, version `20260930080837`;
+recorded in `migrations/README.md` and `tests/fixtures/db-schema.json` on 2026-10-01).
 
 ### Switching it on (owner)
 
-1. Apply `migrations/2026-09-29-agent-incidents.sql` in the Supabase SQL editor.
+1. ~~Apply `migrations/2026-09-29-agent-incidents.sql`~~ — done 2026-09-30.
 2. In Netlify → Site configuration → Environment variables (functions scope) set
    `SENTINEL_ENABLED=true`. Leave `OWNER_ALERT_EMAIL` unset for a day if you want a silent canary:
    incidents are recorded, nothing is sent.
 3. Preview without writing: `https://deutsch-meister.de/.netlify/functions/sentinel?secret=<CAMPAIGN_SECRET>&dry=1`
    returns the incident list, the passing checks and the skipped ones.
 4. Set `OWNER_ALERT_EMAIL` to the inbox. The next :50 run mails what is new.
-5. Refresh `tests/fixtures/db-schema.json` from the live schema and delete `agent_incidents` from
-   its `pendingApply` block; mark the migration applied in `migrations/README.md`.
+5. ~~Refresh `tests/fixtures/db-schema.json` and mark the migration applied in
+   `migrations/README.md`~~ — done 2026-10-01 (`agent_incidents` is in the snapshot's `tables`, the
+   `pendingApply` block is empty).
 
 ### Environment
 
@@ -93,8 +95,8 @@ an hour. Event-like keys (a webhook row, a payment event) are mailed once, ever.
   `[DM sentinel] Supabase unreachable — <first error line>`, body with the hint
   "check get_project status; restore_project if INACTIVE" (the Supabase connector; the project was
   paused on 2026-09-14). It is not deduplicated: it **repeats every hour** while the database stays
-  down, on purpose — it is critical. If the error names `agent_incidents`, the migration is simply not
-  applied yet. It obeys `SENTINEL_ENABLED`, `SENTINEL_MUTE=db-down`, and the `OWNER_ALERT_EMAIL` /
+  down, on purpose — it is critical. The `agent_incidents` migration is applied (2026-09-30), so an
+  error naming that table means the table itself has changed or gone: check it before anything else. It obeys `SENTINEL_ENABLED`, `SENTINEL_MUTE=db-down`, and the `OWNER_ALERT_EMAIL` /
   `RESEND_API_KEY` fail-closed rules; `?dry=1` reports it (`dbError`) and sends nothing.
 - If Resend fails after a successful claim, the incident stays recorded with `notified_at` null and
   is not retried (at most one lost mail, never a duplicate).

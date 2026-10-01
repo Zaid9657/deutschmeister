@@ -568,7 +568,7 @@ export function renderDbDownAlert(error, now) {
     '',
     `Error: ${firstLine.slice(0, 500)}`,
     'What to check: check get_project status; restore_project if INACTIVE.',
-    'If the error names agent_incidents, the ledger migration is not applied: migrations/2026-09-29-agent-incidents.sql.',
+    'If the error names agent_incidents, check the ledger table still exists (migrations/2026-09-29-agent-incidents.sql, applied 2026-09-30).',
     '',
     'No incident could be recorded this hour, so this mail is not deduplicated: it repeats every hour while the database stays unreachable.',
     'Silence it: SENTINEL_MUTE=db-down. See docs/agents/production-agents.md.',

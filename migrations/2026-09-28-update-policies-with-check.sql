@@ -1,6 +1,6 @@
 -- ============================================================================
 -- Every own-row UPDATE policy states its WITH CHECK (scorecard §3 #17).
--- NOT YET APPLIED — apply by hand (Supabase SQL editor, as postgres).
+-- APPLIED 2026-09-28 via the Supabase connector (see migrations/README.md). Idempotent.
 --
 -- Finding (pg_policies on omqyueddktqeyrrqvnyq, measured 2026-09-28): five
 -- UPDATE policies in public constrain ownership in USING and have no
