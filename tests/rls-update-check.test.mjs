@@ -43,21 +43,24 @@ const FILES = readdirSync(MIGRATIONS).filter((f) => f.endsWith('.sql')).sort();
 const read = (f) => readFileSync(path.join(MIGRATIONS, f), 'utf8');
 const SNAPSHOT = JSON.parse(readFileSync(path.join(ROOT, 'tests/fixtures/db-policies.json'), 'utf8'));
 
+// The five own-row UPDATE policies that had no WITH CHECK in production until
+// OWN_ROW_MIGRATION recreated them (applied 2026-09-28). A fixed list, not
+// derived from PENDING_APPLY, so the scanner and the own-row tests below keep
+// checking that file after it left the pending list.
+const OWN_ROW_MIGRATION = '2026-09-28-update-policies-with-check.sql';
+const OWN_ROW_POLICIES = [
+  'user_grammar_notes.Users can update own grammar notes',
+  'user_grammar_progress.Users can update own grammar progress',
+  'user_progress.Users can update own progress',
+  'user_reading_progress.Users can update own reading progress',
+  'user_script_progress.Users can update own script progress',
+];
 // Live violations that a written, NOT yet applied migration fixes, and the
 // file that fixes each. Remove an entry (and refresh the snapshot) once the
-// owner has applied its file.
-const OWN_ROW_MIGRATION = '2026-09-28-update-policies-with-check.sql';
-const PENDING_APPLY = {
-  'user_grammar_notes.Users can update own grammar notes': OWN_ROW_MIGRATION,
-  'user_grammar_progress.Users can update own grammar progress': OWN_ROW_MIGRATION,
-  'user_progress.Users can update own progress': OWN_ROW_MIGRATION,
-  'user_reading_progress.Users can update own reading progress': OWN_ROW_MIGRATION,
-  'user_script_progress.Users can update own script progress': OWN_ROW_MIGRATION,
-  // USING (true): every signed-in user could rewrite any video row. A check
-  // cannot fix a policy with no owner; the file drops it and admits only the
-  // admins (§3 #18, tests/video-library-writes.test.mjs).
-  'video_library.Authenticated users can update videos': '2026-09-28-video-library-admin-writes.sql',
-};
+// owner has applied its file. Empty since 2026-10-01: the own-row file and
+// 2026-09-28-video-library-admin-writes.sql are both applied (migrations/README.md)
+// and the refreshed snapshot holds no client UPDATE/ALL policy without its check.
+const PENDING_APPLY = {};
 // Live violations with no migration yet, each tracked in docs/SCORECARD.md §3.
 const OPEN_ELSEWHERE = {};
 
@@ -134,8 +137,7 @@ test('the scanner sees the real UPDATE policies in migrations/', () => {
   const updates = REAL.flatMap(([f, sql]) => parsePolicies(sql).filter((p) => p.cmd === 'UPDATE').map((p) => `${f}: ${key(p)}`));
   // lesson-engine (2), exam-attempts, vocab-srs, lifecycle-and-listening, and the five below.
   assert.ok(updates.length >= 10, `expected at least 10 UPDATE policies, saw ${updates.length}`);
-  const ownRow = Object.keys(PENDING_APPLY).filter((k) => PENDING_APPLY[k] === OWN_ROW_MIGRATION);
-  for (const k of ['review_cards.review_cards_update_own', 'user_listening_progress.Users can update own listening progress', ...ownRow]) {
+  for (const k of ['review_cards.review_cards_update_own', 'user_listening_progress.Users can update own listening progress', ...OWN_ROW_POLICIES]) {
     assert.ok(updates.some((u) => u.endsWith(`: ${k}`)), `the scanner should see ${k}`);
   }
 });
@@ -201,8 +203,7 @@ test('each pending migration fixes its policies (recreated with a check, or drop
 });
 
 test('the own-row migration recreates exactly its policies, TO authenticated, in one guarded transaction', () => {
-  const mine = Object.keys(PENDING_APPLY).filter((k) => PENDING_APPLY[k] === OWN_ROW_MIGRATION);
-  if (mine.length === 0) return;
+  const mine = OWN_ROW_POLICIES;
   const sql = read(OWN_ROW_MIGRATION);
   const created = new Map(parsePolicies(sql).map((p) => [key(p), p]));
   for (const k of mine) {
