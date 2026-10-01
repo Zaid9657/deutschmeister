@@ -4,7 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { curriculumFor, curriculumPath } from '../../data/curricula/index.js';
 import buildLesson, { attemptFromCompletions } from '../../lib/lesson/buildLesson.js';
-import { requeueFor } from '../../lib/lesson/requeue.js';
+import { prevStageIndex, requeueFor } from '../../lib/lesson/requeue.js';
 import { firstAttemptAccuracy, masteryStatus } from '../../lib/lesson/mastery.js';
 import { completeLesson, countCompletedRuns, fetchWordsByIds, getLessonProgress, logAttempts, startLesson } from '../../services/lessonService.js';
 import { courseHome } from '../../lib/courseFlow.js';
@@ -237,7 +237,9 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
     goStage(target);
   }, [stageIndex, stages, attempts, misses, pool, goStage]);
 
-  const back = stageIndex > 0 ? () => goStage(stageIndex - 1) : null;
+  // Back skips what advance() skips: an empty requeue stage is a blank screen.
+  const backTo = prevStageIndex(stages, stageIndex, requeued.length);
+  const back = backTo >= 0 ? () => goStage(backTo) : null;
 
   // Save the run on every stage or item change, so any full page load resumes
   // it (src/lib/lesson/runState.js). The recap ends the run and clears it, and
