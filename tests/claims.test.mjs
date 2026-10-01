@@ -330,8 +330,11 @@ const RETYPED_TRIAL_LENGTH = new RegExp(
     '[\\s\\u00a0-]*(?:days?|Tag(?:e|en)?|tägig\\w*)\\b',
   'i',
 );
-/** A line that is about the trial or the free offer, not "the last 7 days". */
-const TRIAL_CONTEXT = /\b(trial|test\w*|probe\w*|pro|kostenlos\w*|free|gratis)\b/i;
+/**
+ * A line that is about the trial or the free offer, not "the last 7 days".
+ * No bare "pro": in German it is "per" ("Anmeldungen pro Tag, rollierend 7 Tage").
+ */
+const TRIAL_CONTEXT = /\b(trial|test\w*|probe\w*|kostenlos\w*|free|gratis)\b/i;
 
 test('no surface says a free account opens every level without saying for how long', () => {
   // The free account opens every level for TRIAL_DAYS, not for good. A line
@@ -361,7 +364,8 @@ test('no paywall retypes the trial length', () => {
   const failures = [];
   for (const file of paywalls) {
     for (const line of renderedCopy(read(file)).split('\n')) {
-      if (RETYPED_TRIAL_LENGTH.test(line)) failures.push(`${file}: ${line.trim().slice(0, 120)}`);
+      // Trial lines only: a "7-day money-back guarantee" is not a trial length.
+      if (RETYPED_TRIAL_LENGTH.test(line) && TRIAL_CONTEXT.test(line)) failures.push(`${file}: ${line.trim().slice(0, 120)}`);
     }
   }
   assert.ok(paywalls.length > 0, 'no paywall surfaces were found — did trackPaywallShown get renamed?');
@@ -383,16 +387,14 @@ test('retyped trial lengths are receding, never spreading', () => {
       .split('\n')
       .some((line) => RETYPED_TRIAL_LENGTH.test(line) && TRIAL_CONTEXT.test(line)),
   );
-  assert.ok(
-    files.length <= MAX_RETYPED_TRIAL_LENGTH_FILES,
-    `the retyped trial length spread to ${files.length} files (ceiling ${MAX_RETYPED_TRIAL_LENGTH_FILES}):\n  ${files.join('\n  ')}`,
+  // A ratchet equals its measurement (CLAUDE.md): above it the retype spread,
+  // below it a fix landed and the ceiling must come down in the same commit.
+  assert.equal(
+    files.length,
+    MAX_RETYPED_TRIAL_LENGTH_FILES,
+    `${files.length} files retype the trial length; MAX_RETYPED_TRIAL_LENGTH_FILES is ${MAX_RETYPED_TRIAL_LENGTH_FILES} — ` +
+      `above it the retype spread, below it lower the ceiling:\n  ${files.join('\n  ')}`,
   );
-  if (files.length < MAX_RETYPED_TRIAL_LENGTH_FILES) {
-    console.warn(
-      `${files.length} files retype the trial length, below the ceiling of ${MAX_RETYPED_TRIAL_LENGTH_FILES}: ` +
-        'lower MAX_RETYPED_TRIAL_LENGTH_FILES so the ratchet keeps ratcheting.',
-    );
-  }
 });
 
 // ---------------------------------------------------------------------------

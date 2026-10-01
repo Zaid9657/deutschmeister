@@ -79,6 +79,8 @@ BEGIN
   IF EXISTS (SELECT 1 FROM pg_policies WHERE schemaname = 'public' AND tablename = 'agent_heartbeats') THEN
     RAISE EXCEPTION 'agent_heartbeats: a policy exists — this table is service-role only';
   END IF;
+  -- The seven privileges every supported Postgres knows. PG17's MAINTAIN is
+  -- left out on purpose (PG15/16 reject the word); REVOKE ALL above removes it.
   IF has_table_privilege('anon', 'public.agent_heartbeats', 'SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER')
      OR has_table_privilege('authenticated', 'public.agent_heartbeats', 'SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER') THEN
     RAISE EXCEPTION 'agent_heartbeats: a client role still holds a table privilege';
