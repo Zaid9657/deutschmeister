@@ -26,7 +26,16 @@ Short form when only the channel matters: `?ref=telegram` (medium defaults to `s
 
 Untagged clicks from Telegram, Instagram, Facebook, LinkedIn, TikTok, YouTube,
 X, WhatsApp, Reddit, Threads and Pinterest are still attributed to the channel
-by referrer — but a tag is the only way to tell posts apart, so tag them.
+by referrer — but a tag is the only way to tell posts apart, so tag them. That
+includes the Android apps, which send `android-app://<package>` instead of a web
+referrer: the package is read as a reversed domain (`org.telegram.messenger` →
+telegram), and Google's own apps are told apart by package (the Google app →
+`google`/organic, YouTube → `youtube`/social, Gmail → `gmail`/email).
+
+Until this rule was deployed (written 2026-10-01; the merge date starts it) every Google app landed in source `android` with
+medium `organic`, and the Telegram app in a referral named `org.telegram.messenger`.
+Read an older `android` row as "Google app on Android" (3 of the 24 tracked last
+touches from 2026-09-21 to 10-01, referrer `com.google.android.googlequicksearchbox`).
 
 ## Reading the result
 

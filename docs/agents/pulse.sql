@@ -46,6 +46,8 @@ select
  (select round(count(*)/7.0,1) from auth.users where created_at between now()-interval '8 days' and now()-interval '24 hours') as signups_7d_avg,
  (select json_object_agg(coalesce(acquisition_source,'untracked'), n) from
    (select acquisition_source, count(*) n from profiles where created_at > now()-interval '7 days' group by 1) s) as by_source_7d;
+-- Source 'android' on rows from before the android-app rule was deployed is the Google app (referrer
+-- com.google.android.googlequicksearchbox), i.e. Google search; see docs/tracking-links.md.
 
 -- seo -------------------------------------------------------------------------------------
 select coalesce(acquisition_landing,'(none)') landing, count(*) n
