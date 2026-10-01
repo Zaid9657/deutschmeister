@@ -26,7 +26,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -69,6 +69,7 @@ import {
   COURSE_WRITING_FREE_TOTAL_A11,
   READALOUD_DAILY_LIMIT,
   READING_LESSON_COUNT,
+  TRIAL_DAYS,
 } from '../src/data/marketing.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -283,6 +284,117 @@ test('no surface says the paid plans include a free trial', () => {
   }
   assert.ok(seen === PRICE_FREE_SURFACES.length && seen > 0, 'no surfaces were checked');
   assert.deepEqual(failures, [], `plan-trial claims:\n  ${failures.join('\n  ')}`);
+});
+
+// ---------------------------------------------------------------------------
+// 2b. The account trial: what it opens, and for how long
+// ---------------------------------------------------------------------------
+//
+// Signup grants every level for TRIAL_DAYS; after that only FREE_LEVELS
+// (src/config/freeTier.js) stay open. Measured 2026-10-01: 152 of 152 signups
+// in 30 days got a trial of exactly 7.000 days, stamped at the signup instant
+// (including the 50 who never signed in), so the trial is the account's, it is
+// server-granted, and it ends on its own.
+//
+// Until 2026-10-01 the signed-out level lock (LockedContentOverlay) said
+// "Create a free account to unlock all levels beyond A1.1" over a retyped
+// "7-day free trial": a permanent unlock on one line, a seven-day one on the
+// next, and the seven typed by hand. These rules walk the source trees rather
+// than a file list, so a new screen is covered the day it is written.
+
+const COPY_ROOTS = ['src', 'astro-site/src', 'netlify/functions'];
+const copyFiles = () => {
+  const out = [];
+  const walk = (dir) => {
+    for (const entry of readdirSync(join(ROOT, dir), { withFileTypes: true })) {
+      if (entry.name === 'node_modules') continue;
+      const rel = `${dir}/${entry.name}`;
+      if (entry.isDirectory()) walk(rel);
+      else if (/\.(jsx?|mjs|astro)$/.test(entry.name)) out.push(rel);
+    }
+  };
+  COPY_ROOTS.forEach(walk);
+  return out;
+};
+/** rendered(), plus the HTML comments an .astro template can carry. */
+const renderedCopy = (src) => rendered(src.replace(/<!--[\s\S]*?-->/g, ' '));
+
+/** The trial length typed as a figure or a word ("7-day", "7 Tage", "sieben Tage"). */
+const SPELLED = {
+  en: ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen'],
+  de: ['null', 'ein', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn', 'elf', 'zwölf', 'dreizehn', 'vierzehn'],
+};
+const spelledTrial = [SPELLED.en[TRIAL_DAYS], SPELLED.de[TRIAL_DAYS]].filter(Boolean);
+const RETYPED_TRIAL_LENGTH = new RegExp(
+  `(?:(?<![\\w.,$€])${TRIAL_DAYS}${spelledTrial.length ? `|\\b(?:${spelledTrial.join('|')})` : ''})` +
+    '[\\s\\u00a0-]*(?:days?|Tag(?:e|en)?|tägig\\w*)\\b',
+  'i',
+);
+/**
+ * A line that is about the trial or the free offer, not "the last 7 days".
+ * No bare "pro": in German it is "per" ("Anmeldungen pro Tag, rollierend 7 Tage").
+ */
+const TRIAL_CONTEXT = /\b(trial|test\w*|probe\w*|kostenlos\w*|free|gratis)\b/i;
+
+test('no surface says a free account opens every level without saying for how long', () => {
+  // The free account opens every level for TRIAL_DAYS, not for good. A line
+  // that ties the account to all levels must carry its time bound on the same
+  // line: the derived TRIAL_DAYS, or the word trial / Testphase.
+  const ACCOUNT = /\b(free\s+account|sign(ing)?[\s-]?up|register(ing)?|registrier(en|e|st|t)|create\s+an?\s+account|kostenlos\w*\s+Konto|Konto\s+(erstellen|anlegen))\b/i;
+  const ALL_LEVELS = /\b((all|every)\s+(\$\{\w+\}\s+|\d+\s+|of\s+the\s+)?(CEFR\s+)?levels?|alle\s+(\$\{\w+\}\s+|\d+\s+)?(Stufen|Level|Niveaus?|Niveaustufen)|jede\s+Stufe|jedes\s+(Level|Niveau))\b/i;
+  const BOUND = /TRIAL_DAYS|\btrial\b|Testphase|Probezeit/i;
+  const files = copyFiles();
+  const failures = [];
+  for (const file of files) {
+    for (const line of renderedCopy(read(file)).split('\n')) {
+      if (ACCOUNT.test(line) && ALL_LEVELS.test(line) && !BOUND.test(line)) {
+        failures.push(`${file}: ${line.trim().slice(0, 120)}`);
+      }
+    }
+  }
+  assert.ok(files.length > 100, `only ${files.length} source files were walked`);
+  assert.deepEqual(failures, [], `free-account claims with no time bound:\n  ${failures.join('\n  ')}`);
+});
+
+test('no paywall retypes the trial length', () => {
+  // A paywall is any surface that reports itself as one (calls
+  // trackPaywallShown). It is the moment of intent, and the place a stale
+  // "7" would cost the most: it must say ${TRIAL_DAYS}, never the digit.
+  const paywalls = copyFiles().filter((f) => /\btrackPaywallShown\(/.test(renderedCopy(read(f))));
+  const failures = [];
+  for (const file of paywalls) {
+    for (const line of renderedCopy(read(file)).split('\n')) {
+      // Trial lines only: a "7-day money-back guarantee" is not a trial length.
+      if (RETYPED_TRIAL_LENGTH.test(line) && TRIAL_CONTEXT.test(line)) failures.push(`${file}: ${line.trim().slice(0, 120)}`);
+    }
+  }
+  assert.ok(paywalls.length > 0, 'no paywall surfaces were found — did trackPaywallShown get renamed?');
+  assert.deepEqual(failures, [], `retyped trial length on a paywall:\n  ${failures.join('\n  ')}`);
+});
+
+/**
+ * Files anywhere that still type the trial length into trial copy. May only go
+ * down. 2026-10-01: 4 — the nav's "Start 7-day trial" in both front ends
+ * (src/components/Navbar.jsx, astro-site/src/layouts/Layout.astro) and the
+ * "7 Tage Pro-Testphase" rows in both twins of competitorComparisons.js. All
+ * four are commons or another area's; lower this in the commit that fixes one.
+ */
+const MAX_RETYPED_TRIAL_LENGTH_FILES = 4;
+
+test('retyped trial lengths are receding, never spreading', () => {
+  const files = copyFiles().filter((f) =>
+    renderedCopy(read(f))
+      .split('\n')
+      .some((line) => RETYPED_TRIAL_LENGTH.test(line) && TRIAL_CONTEXT.test(line)),
+  );
+  // A ratchet equals its measurement (CLAUDE.md): above it the retype spread,
+  // below it a fix landed and the ceiling must come down in the same commit.
+  assert.equal(
+    files.length,
+    MAX_RETYPED_TRIAL_LENGTH_FILES,
+    `${files.length} files retype the trial length; MAX_RETYPED_TRIAL_LENGTH_FILES is ${MAX_RETYPED_TRIAL_LENGTH_FILES} — ` +
+      `above it the retype spread, below it lower the ceiling:\n  ${files.join('\n  ')}`,
+  );
 });
 
 // ---------------------------------------------------------------------------

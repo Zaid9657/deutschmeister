@@ -7,6 +7,7 @@ import Button from './ui/Button';
 import Card from './ui/Card.jsx';
 import Chip from './ui/Chip.jsx';
 import Aurora from './ui/Aurora.jsx';
+import { TRIAL_DAYS } from '../data/marketing.js';
 
 const LockedContentOverlay = ({ level }) => {
   const { i18n } = useTranslation();
@@ -32,16 +33,20 @@ const LockedContentOverlay = ({ level }) => {
           {isGerman ? 'Kostenlos registrieren' : 'Sign Up to Unlock'}
         </h2>
 
+        {/* Signup opens every level for TRIAL_DAYS, then only the free level
+            (src/config/freeTier.js). tests/claims.test.mjs holds both lines:
+            no free-account-opens-every-level claim without its time bound, and
+            no trial length typed by hand. */}
         <p className="text-[0.9375rem] leading-relaxed text-graphite sm:text-base mb-2">
           {isGerman
-            ? 'Erstelle ein kostenloses Konto, um alle Stufen freizuschalten.'
-            : 'Create a free account to unlock all levels beyond A1.1.'}
+            ? `Erstellen Sie ein kostenloses Konto und testen Sie alle Stufen ${TRIAL_DAYS} Tage lang.`
+            : `Create a free account and try every level for ${TRIAL_DAYS} days.`}
         </p>
 
         <p className="text-sm text-graphite mb-6">
           {isGerman
-            ? '7 Tage kostenlos testen — keine Kreditkarte nötig'
-            : '7-day free trial included — no credit card required'}
+            ? 'Keine Kreditkarte nötig · keine automatische Abbuchung, wenn die Testphase endet'
+            : 'No credit card required · no automatic charge when the trial ends'}
         </p>
 
         <div className="flex flex-col gap-3">
