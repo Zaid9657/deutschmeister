@@ -11,8 +11,8 @@
 // Shape: { v: 1, units: { [unitId]: { level, finished: [stepId], runs: { [stepId]: n }, status, answers? } } }
 // A Plateau or closing block is kept under its own id the same way (its sections are the
 // „steps"); `answers` ({ itemId: correct }, the latest per item) feeds its results card.
-// Merging into Supabase on sign-up is not done yet (open issue: the legacy
-// src/lib/course/localProgress.js merge handles only the live A1.1 ids).
+// On the first load with a signed-in user the store is merged into the account and each unit
+// is removed once its writes succeed: src/lib/course-v2/mergeLocal.js (owner decision 2026-10-01).
 
 export const LOCAL_KEY = 'dm_course_v2_progress';
 
@@ -111,4 +111,21 @@ export function localAnswers(unitId, level, answers, store = storage()) {
     ...u,
     answers: { ...(u.answers && typeof u.answers === 'object' ? u.answers : {}), ...Object.fromEntries(entries.map(([k, v]) => [k, v === true])) },
   }), store);
+}
+
+/** Drop one unit from the store (mergeLocal.js, once that unit is in the account); the key goes when empty. */
+export function removeLocalUnit(unitId, store = storage()) {
+  if (!store) return false;
+  const data = readLocal(store);
+  if (!data.units[unitId]) return true;
+  delete data.units[unitId];
+  if (!Object.keys(data.units).length) {
+    try {
+      store.removeItem(LOCAL_KEY);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+  return writeLocal(data, store);
 }

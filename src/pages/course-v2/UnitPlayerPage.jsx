@@ -23,11 +23,14 @@ import {
   seedUnitCards, logCourseEvent,
 } from '../../lib/course-v2/progress.js';
 import { localStepDone, localTestOut, localUnitState, localUnitStatus } from '../../lib/course-v2/localState.js';
+import { mergeLocalV2 } from '../../lib/course-v2/mergeLocal.js';
+import { clearReturnPath } from '../../lib/returnPath.js';
 import { loadEarlierItems, loadManifest, loadPlayableUnit, loadRuleCards, loadWords } from '../../lib/course-v2/loaders.js';
 import { cardTitle, cardsByIds, tocRows, unitCardIds, unitWordGroups, wordsOfUnit } from '../../components/course-v2/kapitel.js';
 import ActionBar from './ActionBar.jsx';
 import { useV2Strings } from '../../components/course-v2/strings.js';
 import { StartViewSlot, StepViewSlot, KIND_LABEL_DE, hasStartRenderer } from './rendererSlots.jsx';
+import { SaveProgressPrompt } from '../../components/course-v2/SignInPrompt.jsx';
 
 // The v2 unit player: /course/:level/u/:nr (BLUEPRINT §3.1–§3.5, §7.1, §7.3 S2/S6).
 //
@@ -268,8 +271,12 @@ export function UnitPlayer({ level, unit, manifest, user, initialStep = null, vi
       else if (idx > 0 || state.finishedSteps.size > 0) { setStepIndex(idx); setPhase('resume'); } else setPhase('start');
     };
     if (user) {
-      startUnit(user.id, level, unitId);
-      fetchUnitState(user.id, level, unitId).then(apply);
+      // signed-out progress from this browser first (mergeLocal.js), then the account's state
+      clearReturnPath();
+      mergeLocalV2(user.id).then(() => {
+        startUnit(user.id, level, unitId);
+        return fetchUnitState(user.id, level, unitId);
+      }).then(apply);
     } else apply(localUnitState(unitId));
     return () => { cancelled = true; };
   }, [user, level, unitId, unit.steps]);
@@ -763,6 +770,10 @@ export function UnitPlayer({ level, unit, manifest, user, initialStep = null, vi
             {pct !== null && <StatTile tone="course" label={t('cel.right')} value={`${pct} %`} />}
             <StatTile tone="time" label={t('cel.time')} value={clock(recapSeconds || 0)} />
           </div>
+        )}
+        {!user && complete && (
+          // signed out: the finished chapter is the moment to keep it — merged on sign-in (mergeLocal.js)
+          <SaveProgressPrompt className="mt-6" />
         )}
         {accuracy !== null && accuracy < 0.6 && (
           // a weak Check suggests repeating a Lernschritt, folded (a repeat serves a fresh draw, see `attempts`); never a gate

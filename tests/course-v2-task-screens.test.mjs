@@ -90,7 +90,7 @@ test('A11Y-04: the feedback sheet never fades its text below AA', () => {
 
 test('ASSESS-03 / CT-03: a signed-out learner on an AI task gets the door back to this step and a way on', () => {
   const prompt = read(`${V2}/SignInPrompt.jsx`);
-  assert.match(prompt, /return \{ to: '\/login', state: \{ from: \{ pathname: `\$\{pathname\}\$\{search \|\| ''\}` \} \} \};/, 'the login returns to the step (LoginPage reads state.from.pathname)');
+  assert.match(prompt, /const here = `\$\{pathname\}\$\{search \|\| ''\}`;\s*return \{ to: '\/login', state: \{ from: \{ pathname: here \} \}, onClick: \(\) => setReturnPath\(here\) \};/, 'the login returns to the step (LoginPage reads state.from.pathname), and the step is remembered for the sign-up round trip');
   assert.match(read('src/pages/LoginPage.jsx'), /location\.state\?\.from\?\.pathname/, 'the login page still honours the way back');
   assert.match(prompt, /<GameButton to=\{link\.to\} state=\{link\.state\}/);
   // every surface that can hear „ai.signIn" carries the prompt
@@ -122,6 +122,8 @@ test('ASSESS-03 / CT-03: a signed-out learner on an AI task gets the door back t
     assert.doesNotMatch(line, /\b(?:du|dich|dir|dein\w*)\b/i, `${k}: the course speaks Sie`);
   }
   const lead = de.split('\n').find((l) => l.includes("'ai.signInLead':"));
-  assert.match(lead, /ab dann/, 'progress is kept from the sign-in on — never „Ihr bisheriger Fortschritt"');
-  assert.doesNotMatch(lead, /bisher|Serie|XP/, 'no promise about progress, streak or XP made before the account');
+  // since 2026-10-01 this browser's progress IS merged into the new account (mergeLocal.js),
+  // so the lead may promise it — but never the streak or XP, which stay per browser
+  assert.match(lead, /schon geschafft/, 'the progress made here so far comes along (mergeLocal.js)');
+  assert.doesNotMatch(lead, /Serie|XP/, 'no promise about the streak or XP, which are per browser');
 });

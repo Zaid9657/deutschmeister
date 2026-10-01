@@ -21,6 +21,8 @@ import {
   fetchAssessmentState, flushAttempts, logCourseEvent, recordStepDone, saveUnitStatus, startUnit,
 } from '../../lib/course-v2/progress.js';
 import { localAnswers, localStepDone, localUnitState, localUnitStatus } from '../../lib/course-v2/localState.js';
+import { mergeLocalV2 } from '../../lib/course-v2/mergeLocal.js';
+import { clearReturnPath } from '../../lib/returnPath.js';
 import ActionBar from './ActionBar.jsx';
 
 // The runner of a Plateau (/course/:level/p/:nr, BLUEPRINT §5.2, §7.3 S8) and of the closing
@@ -158,8 +160,12 @@ export default function AssessmentPlayer({ level, doc, manifest, user }) {
       setPhase(resumeSection(sections, st.finishedSteps) >= sections.length ? 'results' : 'start');
     };
     if (user) {
-      startUnit(user.id, level, docId);
-      fetchAssessmentState(user.id, level, docId).then(apply);
+      // signed-out progress from this browser first (mergeLocal.js), then the account's state
+      clearReturnPath();
+      mergeLocalV2(user.id).then(() => {
+        startUnit(user.id, level, docId);
+        return fetchAssessmentState(user.id, level, docId);
+      }).then(apply);
     } else apply(localUnitState(docId));
     return () => { cancelled = true; };
   }, [user, level, docId, sections]);

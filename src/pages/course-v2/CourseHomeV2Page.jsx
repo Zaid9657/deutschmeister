@@ -23,6 +23,8 @@ import {
 } from '../../lib/course-v2/pathModel.js';
 import { fetchLevelState, fetchLearnerGoal } from '../../lib/course-v2/progress.js';
 import { localLevelState } from '../../lib/course-v2/localState.js';
+import { mergeLocalV2 } from '../../lib/course-v2/mergeLocal.js';
+import { clearReturnPath } from '../../lib/returnPath.js';
 import { closingIds, loadManifest, loadUnit, plateauNrs } from '../../lib/course-v2/loaders.js';
 import { V2_DEFAULT_PACE } from '../../config/courseV2.js';
 import { safeGet, safeSet } from '../../utils/safeStorage.js';
@@ -278,7 +280,10 @@ export default function CourseHomeV2Page() {
       setState(localLevelState(level));
       return undefined;
     }
-    fetchLevelState(user.id, level).then((s) => { if (!cancelled) setState(s); });
+    // This browser's signed-out progress goes into the account first (mergeLocal.js), so the
+    // path shows it on this very load; the post-sign-in return trip ends here.
+    clearReturnPath();
+    mergeLocalV2(user.id).then(() => fetchLevelState(user.id, level)).then((s) => { if (!cancelled) setState(s); });
     fetchLearnerGoal(user.id, bandOf(level)).then((g) => { if (!cancelled) setGoal(g); });
     return () => { cancelled = true; };
   }, [level, user, authLoading]);
