@@ -107,8 +107,9 @@ select
    and first_response_at is null and sla_due_at < now()) as tickets_past_sla;
 
 -- website ---------------------------------------------------------------------------------
--- Once migrations/2026-09-29-agent-incidents.sql is applied:
--- select owner_agent, severity, count(*) from agent_incidents where resolved_at is null group by 1,2;
+-- agent_incidents is live (migrations/2026-09-29-agent-incidents.sql applied 2026-09-30); verified
+-- read-only 2026-10-01 (0 open incidents then):
+select owner_agent, severity, count(*) from agent_incidents where resolved_at is null group by 1,2;
 -- Plus: the Netlify connector (latest production deploy state) and CI status on main (GitHub).
 
 -- security --------------------------------------------------------------------------------

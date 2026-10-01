@@ -1,5 +1,5 @@
 {
-  "dumpedAt": "2026-09-28",
+  "dumpedAt": "2026-10-01",
   "project": "omqyueddktqeyrrqvnyq",
   "why": "Every UPDATE and ALL row-level-security policy in the live public schema, as pg_policies reports it. tests/rls-update-check.test.mjs holds it to the rule that migrations/ is held to: a policy a client role can use states its WITH CHECK, and that check keeps every owner column its USING names. Postgres reuses USING when WITH CHECK is absent, so a NULL with_check is not an open hole by itself, but it reads as one and it ties the write check to whatever USING later becomes (scorecard §3 #17, 2026-09-28).",
   "refresh": "Supabase connector execute_sql: select json_agg(json_build_object('table', tablename, 'policy', policyname, 'cmd', cmd, 'permissive', permissive, 'roles', roles, 'using', qual, 'check', with_check) order by tablename, policyname) from pg_policies where schemaname = 'public' and cmd in ('UPDATE', 'ALL'); -- paste the array into policies, one policy per line, and move dumpedAt. Refresh only AFTER a migration is applied: the snapshot is what production has, not what a migration file intends.",
@@ -11,14 +11,14 @@
     {"table":"speaking_evaluations","policy":"Service role full access evaluations","cmd":"ALL","permissive":"PERMISSIVE","roles":["service_role"],"using":"true","check":"true"},
     {"table":"speaking_messages","policy":"Service role full access messages","cmd":"ALL","permissive":"PERMISSIVE","roles":["service_role"],"using":"true","check":"true"},
     {"table":"speaking_sessions","policy":"Service role full access sessions","cmd":"ALL","permissive":"PERMISSIVE","roles":["service_role"],"using":"true","check":"true"},
-    {"table":"user_grammar_notes","policy":"Users can update own grammar notes","cmd":"UPDATE","permissive":"PERMISSIVE","roles":["public"],"using":"(auth.uid() = user_id)","check":null},
-    {"table":"user_grammar_progress","policy":"Users can update own grammar progress","cmd":"UPDATE","permissive":"PERMISSIVE","roles":["public"],"using":"(auth.uid() = user_id)","check":null},
+    {"table":"user_grammar_notes","policy":"Users can update own grammar notes","cmd":"UPDATE","permissive":"PERMISSIVE","roles":["authenticated"],"using":"(auth.uid() = user_id)","check":"(auth.uid() = user_id)"},
+    {"table":"user_grammar_progress","policy":"Users can update own grammar progress","cmd":"UPDATE","permissive":"PERMISSIVE","roles":["authenticated"],"using":"(auth.uid() = user_id)","check":"(auth.uid() = user_id)"},
     {"table":"user_listening_progress","policy":"Users can update own listening progress","cmd":"UPDATE","permissive":"PERMISSIVE","roles":["authenticated"],"using":"(auth.uid() = user_id)","check":"(auth.uid() = user_id)"},
-    {"table":"user_progress","policy":"Users can update own progress","cmd":"UPDATE","permissive":"PERMISSIVE","roles":["public"],"using":"(auth.uid() = user_id)","check":null},
+    {"table":"user_progress","policy":"Users can update own progress","cmd":"UPDATE","permissive":"PERMISSIVE","roles":["authenticated"],"using":"(auth.uid() = user_id)","check":"(auth.uid() = user_id)"},
     {"table":"user_progress","policy":"enable_update_own_progress","cmd":"UPDATE","permissive":"PERMISSIVE","roles":["public"],"using":"(auth.uid() = user_id)","check":"(auth.uid() = user_id)"},
-    {"table":"user_reading_progress","policy":"Users can update own reading progress","cmd":"UPDATE","permissive":"PERMISSIVE","roles":["public"],"using":"(auth.uid() = user_id)","check":null},
-    {"table":"user_script_progress","policy":"Users can update own script progress","cmd":"UPDATE","permissive":"PERMISSIVE","roles":["public"],"using":"(auth.uid() = user_id)","check":null},
-    {"table":"video_library","policy":"Authenticated users can update videos","cmd":"UPDATE","permissive":"PERMISSIVE","roles":["authenticated"],"using":"true","check":null},
+    {"table":"user_reading_progress","policy":"Users can update own reading progress","cmd":"UPDATE","permissive":"PERMISSIVE","roles":["authenticated"],"using":"(auth.uid() = user_id)","check":"(auth.uid() = user_id)"},
+    {"table":"user_script_progress","policy":"Users can update own script progress","cmd":"UPDATE","permissive":"PERMISSIVE","roles":["authenticated"],"using":"(auth.uid() = user_id)","check":"(auth.uid() = user_id)"},
+    {"table":"video_library","policy":"Admins can update videos","cmd":"UPDATE","permissive":"PERMISSIVE","roles":["authenticated"],"using":"(lower((( SELECT auth.jwt() AS jwt) ->> 'email'::text)) = ANY (ARRAY['zaid199660@gmail.com'::text, 'baraawail101@gmail.com'::text]))","check":"(lower((( SELECT auth.jwt() AS jwt) ->> 'email'::text)) = ANY (ARRAY['zaid199660@gmail.com'::text, 'baraawail101@gmail.com'::text]))"},
     {"table":"vocab_srs_cards","policy":"vocab_srs_update_own","cmd":"UPDATE","permissive":"PERMISSIVE","roles":["authenticated"],"using":"(auth.uid() = user_id)","check":"(auth.uid() = user_id)"}
   ]
 }

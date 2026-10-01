@@ -1,6 +1,6 @@
 -- ============================================================================
 -- Only the admins may write the video library (scorecard §3 #18).
--- NOT YET APPLIED — apply by hand (Supabase SQL editor, as postgres).
+-- APPLIED 2026-09-28 via the Supabase connector (see migrations/README.md). Idempotent.
 --
 -- Finding (pg_policies on omqyueddktqeyrrqvnyq, measured 2026-09-28): every
 -- signed-in account (signup is free) could insert, rewrite or delete the
