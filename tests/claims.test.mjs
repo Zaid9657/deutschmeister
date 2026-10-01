@@ -259,6 +259,32 @@ test('no surface claims unlimited AI usage', () => {
   assert.deepEqual(failures, [], `unlimited claims on metered surfaces:\n  ${failures.join('\n  ')}`);
 });
 
+test('no surface says the paid plans include a free trial', () => {
+  // The free trial belongs to the ACCOUNT: signup grants it, and it ends on its
+  // own. The plans carry no trial of their own; Lemon Squeezy charges a plan the
+  // moment it is bought (12 of 12 subscription_created webhooks were 'active'
+  // with no trial_ends_at, measured 2026-10-01). /subscription told every
+  // visitor, including those whose trial had already ended, that "all plans
+  // include" one — a buyer who believed it would be charged on day one of
+  // what they took for a free week. Say what the trial is (an account trial,
+  // TRIAL_DAYS from marketing.js), never that a plan comes with one.
+  const banned = [
+    /\b(all|every|each|both)\s+(of\s+the\s+|our\s+)?(paid\s+)?plans?\s+(include|includes|come\s+with|comes\s+with|start\s+with|starts\s+with)\b[^\n]{0,40}\btrial/i,
+    /\b(alle|jeder|jede|beide)\s+(unsere\s+)?(Pläne|Plan|Tarife|Tarif|Abos|Abo)\s+(beinhalten|beinhaltet|enthalten|enthält|umfassen|umfasst|starten|startet|beginnen|beginnt)\b[^\n]{0,40}\b(Testphase|Probezeit|Test)/i,
+  ];
+  const failures = [];
+  let seen = 0;
+  for (const file of PRICE_FREE_SURFACES) {
+    seen += 1;
+    const body = rendered(read(file));
+    for (const line of body.split('\n')) {
+      if (banned.some((re) => re.test(line))) failures.push(`${file}: ${line.trim().slice(0, 120)}`);
+    }
+  }
+  assert.ok(seen === PRICE_FREE_SURFACES.length && seen > 0, 'no surfaces were checked');
+  assert.deepEqual(failures, [], `plan-trial claims:\n  ${failures.join('\n  ')}`);
+});
+
 // ---------------------------------------------------------------------------
 // 3. Agreement with the servers that enforce the limits
 // ---------------------------------------------------------------------------
