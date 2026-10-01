@@ -14,7 +14,7 @@ each agent's memory and the roadmap. The rules every agent follows are in
 | Layer | Runs where | When | What |
 |---|---|---|---|
 | 1. Production | Netlify scheduled functions (run with the owner's PC off) | sentinel hourly; support agent every 5 min | detect and act on live problems |
-| 2. Area agents | Routines that wake the orchestrating Claude Code session (it holds the Supabase, Resend, Netlify and GitHub connectors) | daily, 06:10–07:50 UTC, staggered | pulse, react, build approved work, goal progress; one deep day a week |
+| 2. Area agents | Routines that wake the orchestrating Claude Code session (it holds the Supabase, Resend, Netlify and GitHub connectors) | morning run 06:10–07:50 UTC, staggered; build waves 11:10 and 16:10 UTC | pulse, react, and build self-approved improvements every day (continuous mode); one deep day a week |
 | 3. Supervisor | same | 05:50, 09:50, 12:50, 15:50, 19:50 UTC | snapshot, ran-and-reported check, goals, incidents, handoffs, Monday top 3 |
 
 A routine created from a fresh session cannot carry connectors on this account (measured
@@ -39,14 +39,16 @@ routines from a session that holds the connectors (`docs/scorecard-routine.md`).
 | security | advisors, RLS, grants, dependencies, secrets hygiene | advisors, CI | Sat |
 | supervisor | the team itself | ran/reported, goals, incidents, handoffs | Mon ranking |
 
-**Every agent may do alone:** measure; open incidents and handoffs; update its memory and the
-roadmap; build approved experiments as draft PRs from its own worktree; reversible fixes inside
-its own area as PRs.
+**Continuous mode (owner grant 2026-10-01).** Every agent builds and ships improvements inside
+its own area every day, with no weekly approval gate. The orchestrator reviews each change,
+batches what passes into at most 3 releases a day (the deploy budget), merges on green CI, and
+logs each change for its judge date. The rules are in `docs/agents/PROTOCOL.md` § Continuous
+mode.
 
 **Only the owner:** refunds, prices, discounts and products; deleting customer data; security and
-auth settings; anything irreversible. **Only after the owner authorizes the action class in
-chat:** merging to main, applying migrations, customer email from a new automation, and turning
-on a production kill switch.
+auth settings; anything irreversible; and the owner-only paths in the protocol (money and
+entitlement code, who a mailer emails and when, data exposure, loosened guards, measurement
+code). A flag that lets mail reach customers is turned on only after the owner says "flip <FLAG>".
 
 **The owner is notified when:** a line starts with `URGENT:` in an agent's report (same day, with
 a ready fix); the sentinel claims a new incident not already mailed elsewhere (one digest mail);
