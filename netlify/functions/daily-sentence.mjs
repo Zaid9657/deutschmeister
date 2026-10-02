@@ -46,8 +46,29 @@ function unsubscribeUrl(userId) {
   return `${BASE_URL}/.netlify/functions/unsubscribe?uid=${userId}&token=${token}`;
 }
 
-function analyzeUrl(sentenceDe) {
-  return `${BASE_URL}/analyze?s=${encodeURIComponent(sentenceDe)}`;
+// ─── site links ──────────────────────────────────────────────────────────────
+// Every link into the site carries UTM tags, so a click from this email reaches
+// dm_attribution (public/attribution.js) as source "email", and from there the
+// PostHog super-properties and xray_usage.source.last. Measured 2026-10-02: of the
+// 29 link-started X-Ray analyses in the previous 7 days, 26 arrived from a mail
+// client or with no referrer, and none of them named this email. Mail clients
+// strip the referrer (14 recorded "none") or send a webmail host, which the
+// classifier files as a source of its own ("outlook.live.com", "ui-deref.de",
+// "android", and "co" for mail.yahoo.co.jp).
+//   * Labels use hyphens. attribution.js and xraySource.mjs both drop "_".
+//   * The tags are fixed strings, so a Netlify retry still rebuilds byte-identical
+//     batches (see the idempotency note below).
+//   * /analyze/ carries its trailing slash: it is a prerendered route, and the
+//     prerender canonicalises it to the slash form (CLAUDE.md, trailing slashes 2).
+//   * The unsubscribe link is never tagged.
+export const DAILY_UTM = 'utm_source=email&utm_medium=daily&utm_campaign=daily-sentence';
+
+export function analyzeUrl(sentenceDe) {
+  return `${BASE_URL}/analyze/?s=${encodeURIComponent(sentenceDe)}&${DAILY_UTM}&utm_content=xray`;
+}
+
+export function homeUrl() {
+  return `${BASE_URL}/?${DAILY_UTM}&utm_content=footer`;
 }
 
 /**
@@ -153,7 +174,7 @@ function buildEmail({ sentence, recipient, runDate = utcRunDate() }) {
         <tr>
           <td style="padding:20px 32px;border-top:1px solid #f1f5f9;background:#f8fafc;">
             <p style="margin:0;font-size:12px;color:#94a3b8;text-align:center;">
-              You're receiving this because you signed up at <a href="${BASE_URL}" style="color:#94a3b8;">deutsch-meister.de</a>.<br>
+              You're receiving this because you signed up at <a href="${homeUrl()}" style="color:#94a3b8;">deutsch-meister.de</a>.<br>
               <a href="${unsubUrl}" style="color:#94a3b8;">Unsubscribe from daily sentences</a>
             </p>
           </td>
