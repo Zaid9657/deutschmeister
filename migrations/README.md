@@ -74,6 +74,19 @@ would reproduce the same state on a branch or fresh database — with one except
 out in its own header: the answer-option reshuffle in `2026-08-17-audit-remediation.sql`
 picks new positions each run (meaning is preserved; positions are not).
 
+## Live objects with no file here
+
+Some live objects were created by hand before this folder existed. They are recorded
+(never applied) as fixtures, each with its read-only refresh query:
+
+- **The signup trial grant**: the `BEFORE INSERT` trigger `trigger_set_trial_dates` on
+  `public.profiles`, calling `public.set_trial_dates_on_profile_insert()`, which sets
+  `trial_ends_at = trial_started_at + INTERVAL '7 days'` when it is NULL. Not
+  `handle_new_user()`. Recorded verbatim in `tests/fixtures/db-trial-grant.json` (2026-10-02);
+  `tests/trial-grant.test.mjs` holds the interval to `TRIAL_DAYS` in `src/data/marketing.js`,
+  and fails any migration here that redefines the grant with another length or without a
+  refreshed record. Trial length is an owner decision.
+
 ## Conventions
 
 - Name new files `YYYY-MM-DD-short-description.sql`.
