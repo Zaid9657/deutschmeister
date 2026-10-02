@@ -3,6 +3,7 @@ import { NAV_GROUPS, FOOTER_GROUPS, LEGAL_LINKS, SOCIAL_LINKS, SUPPORT_LINK } fr
 import { fontPreloads } from '../data/design-tokens.js';
 import Showtime from '../components/Showtime.astro';
 import { onsiteHref, surfaceForPath } from '../lib/onsiteLinks.js';
+import { TRIAL_DAYS } from '../data/marketing.js';
 import 'atropos/css';
 import '../styles/showtime.css';
 
@@ -186,7 +187,7 @@ const authAttrs = (item) =>
               data-anon-only
               class="whitespace-nowrap px-4 py-2 rounded-clay bg-siegel text-white text-sm font-bold shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none transition-all duration-100 ease-snap select-none"
             >
-              Start 7-day trial
+              Start {TRIAL_DAYS}-day trial
             </a>
             <a
               href="/login"
@@ -200,7 +201,7 @@ const authAttrs = (item) =>
           <!-- Mobile: CTA + full menu (pure HTML disclosure, no client JS) -->
           <div class="lg:hidden flex items-center gap-2">
             <a href={navSignupHref} data-anon-only class="px-3 py-1.5 rounded-clay bg-siegel text-white text-sm font-bold shadow-raise-siegel active:translate-y-1 active:shadow-none transition-all duration-100 ease-snap select-none">
-              7-day trial
+              {TRIAL_DAYS}-day trial
             </a>
             <a href="/dashboard" data-auth-only style="display:none" class="px-3 py-1.5 rounded-clay bg-siegel text-white text-sm font-bold shadow-raise-siegel active:translate-y-1 active:shadow-none transition-all duration-100 ease-snap select-none">
               Dashboard
@@ -226,7 +227,7 @@ const authAttrs = (item) =>
                 ))}
                 <div class="my-2 border-t border-rule"></div>
                 <a href="/login" data-anon-only class="block px-4 py-2 text-sm font-semibold text-graphite hover:bg-siegel-wash">Log in</a>
-                <a href={navSignupHref} data-anon-only class="block px-4 py-2 text-sm font-bold text-siegel-deep hover:bg-siegel-wash">Start 7-day trial</a>
+                <a href={navSignupHref} data-anon-only class="block px-4 py-2 text-sm font-bold text-siegel-deep hover:bg-siegel-wash">Start {TRIAL_DAYS}-day trial</a>
               </div>
             </details>
           </div>
