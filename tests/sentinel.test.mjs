@@ -40,6 +40,8 @@ import { selectRecipients as trialRecipients } from '../netlify/functions/trial-
 import { selectCandidates as activationCandidates } from '../netlify/functions/activation-lifecycle.mjs';
 import { selectCandidates as nudgeCandidates } from '../netlify/functions/confirmation-nudge.mjs';
 import { windowHoursFor, WINDOW_HOURS } from '../netlify/functions/course-reminder.mjs';
+// §6: the team's dead-man switch.
+import { checkHeartbeat, isMissingRelation, HEARTBEAT_THRESHOLD_HOURS, TEAM_SESSION_ID } from '../netlify/functions/_shared/sentinelLib.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -451,6 +453,8 @@ function healthyWorld() {
     speaking_sessions: sessions,
     speaking_evaluations: sessions.map((s) => ({ session_token: s.session_token, score: 75, created_at: ago(2.9) })),
     agent_incidents: [],
+    // The team is awake: the 09:50 supervisor wake wrote its heartbeat.
+    agent_heartbeats: [{ id: 1, agent: 'orchestrator', wake: '2026-09-29 09:50 supervisor', note: null, created_at: ago(0.8) }],
   };
 }
 
@@ -1070,4 +1074,171 @@ test('end to end: the canary allowlist, the gate, an unreadable queue and weekly
   weekly.world.weekly_metrics = [{ id: 'w1', measured_at: ago(9 * 24), metrics: {} }];
   const w = body(await run(fakeDb(weekly.world, weekly.opts), fakeFetch(), { event: dryEvent }));
   assert.deepEqual(w.incidents.map((i) => [i.key, i.owner_agent, i.severity]), [[`job-weekly:stale:${DAY}`, 'website', 'medium']]);
+});
+
+// ─── 6. the team's dead-man switch (roadmap r17) ────────────────────────────
+//
+// The agent team runs inside one orchestrating session; every wake ends with
+// one public.agent_heartbeats row. The sentinel reads max(created_at): a
+// missing or empty table is "not started" (skipped, never an incident, never a
+// pass); a newest row older than 8 h is one critical incident for the
+// supervisor that names the session and says what to do.
+
+const HB = 'team:heartbeat';
+const heartbeatWorld = (rows) => ({ ...healthyWorld(), agent_heartbeats: rows });
+const beat = (hoursAgo, from = NOW) => ({ id: Math.round(hoursAgo * 100), agent: 'orchestrator', wake: 'test wake', note: null, created_at: ago(hoursAgo, from) });
+
+test('heartbeat: a missing table is skipped — never an incident, never a pass', async () => {
+  const r = checkHeartbeat({ missing: true }, NOW);
+  assert.deepEqual(r.incidents, []);
+  assert.deepEqual(r.passing, [], 'a check that could not judge resolves nothing');
+  assert.deepEqual(r.skipped.map((s) => s.check), [HB]);
+  assert.match(r.skipped[0].reason, /does not exist/);
+
+  // What "missing" looks like on the wire: PostgREST 12+ (PGRST205) and bare Postgres (42P01).
+  assert.equal(isMissingRelation({ code: 'PGRST205', message: "Could not find the table 'public.agent_heartbeats' in the schema cache" }), true);
+  assert.equal(isMissingRelation({ code: '42P01', message: 'relation "public.agent_heartbeats" does not exist' }), true);
+  assert.equal(isMissingRelation({ message: 'relation "public.agent_heartbeats" does not exist' }), true);
+  // Anything else is not "missing": it throws and is skipped as could-not-run.
+  assert.equal(isMissingRelation({ code: '42501', message: 'permission denied for table agent_heartbeats' }), false);
+  assert.equal(isMissingRelation({ code: '42703', message: 'column agent_heartbeats.at does not exist' }), false);
+  assert.equal(isMissingRelation({ message: 'TypeError: fetch failed' }), false);
+  assert.equal(isMissingRelation(null), false);
+
+  // End to end: the table's read answers "does not exist" → skipped, no claim, no mail, no db-down fallback.
+  for (const failMessage of [undefined, "Could not find the table 'public.agent_heartbeats' in the schema cache"]) {
+    const db = fakeDb(healthyWorld(), { fail: ['agent_heartbeats'], failMessage });
+    const f = fakeFetch();
+    const res = await run(db, f);
+    const b = body(res);
+    assert.equal(res.statusCode, 200, failMessage);
+    assert.equal(b.found, 0);
+    assert.equal(b.dbDown, undefined, 'a missing heartbeat table is not a database outage');
+    assert.equal(f.mails.length, 0);
+    assert.deepEqual(b.skipped.map((s) => s.check), [HB]);
+    assert.match(b.skipped[0].reason, /does not exist .*not started/);
+  }
+});
+
+test('heartbeat: an empty table (max(created_at) is null) is skipped — the first run after the migration mails nothing', async () => {
+  for (const latest of [{ last: null }, { last: undefined }, {}, null]) {
+    const r = checkHeartbeat(latest, NOW);
+    assert.deepEqual(r.incidents, [], JSON.stringify(latest));
+    assert.deepEqual(r.passing, []);
+    assert.match(r.skipped[0].reason, /is empty/);
+  }
+  const db = fakeDb(heartbeatWorld([]));
+  const f = fakeFetch();
+  const b = body(await run(db, f));
+  assert.equal(b.found, 0, JSON.stringify(b));
+  assert.equal(f.mails.length, 0, 'no false "team is down" before the first wake writes');
+  assert.deepEqual(b.skipped.map((s) => s.check), [HB]);
+  assert.equal(db.tables.agent_incidents.length, 0);
+});
+
+test('heartbeat: a fresh row passes, up to and including exactly 8 h old', () => {
+  for (const h of [0, 0.8, 5, 7.99, HEARTBEAT_THRESHOLD_HOURS]) {
+    const r = checkHeartbeat({ last: ago(h) }, NOW);
+    assert.deepEqual(r.incidents, [], `${h} h`);
+    assert.deepEqual(r.passing, [HB], `${h} h`);
+  }
+  // A clock a little ahead on the writer's side is not an outage either.
+  assert.deepEqual(checkHeartbeat({ last: ago(-0.1) }, NOW).passing, [HB]);
+});
+
+test('heartbeat: a row older than 8 h is one critical incident for the supervisor that names the session', () => {
+  const last = ago(9.25);
+  const r = checkHeartbeat({ last }, NOW);
+  assert.deepEqual(r.passing, []);
+  assert.equal(r.incidents.length, 1);
+  const [i] = r.incidents;
+  assert.equal(i.key, `${HB}:stale:${DAY}`, 'a state: claimed (and mailed) once per day while it lasts');
+  assert.equal(i.check_id, HB);
+  assert.equal(i.owner_agent, 'supervisor');
+  assert.equal(i.severity, 'critical');
+  assert.ok(OWNER_AGENTS.includes(i.owner_agent) && SEVERITIES.includes(i.severity));
+  assert.ok(i.key.startsWith(i.check_id));
+  assert.equal(TEAM_SESSION_ID, 'session_014ddD3p7VmAqaTAWKQVHJBt');
+  assert.match(i.title, /session_014ddD3p7VmAqaTAWKQVHJBt has written no heartbeat for 9\.2 h/);
+  assert.match(i.title, /stopped waking/);
+  assert.match(i.hint, /^Open the session session_014ddD3p7VmAqaTAWKQVHJBt .*or check the Routines/);
+  assert.deepEqual(
+    { last: i.detail.last, hours: i.detail.hours, thresholdHours: i.detail.thresholdHours, session: i.detail.session },
+    { last, hours: 9.2, thresholdHours: 8, session: 'session_014ddD3p7VmAqaTAWKQVHJBt' },
+  );
+  assert.match(i.detail.action, /Open the session .* or check the Routines/);
+  assert.equal(i.mailed_elsewhere, false, 'nothing else mails this: the digest must');
+  // The boundary reads the threshold, not a literal.
+  assert.equal(checkHeartbeat({ last: ago(8 + 1 / 60) }, NOW).incidents.length, 1, 'one minute past 8 h fires');
+  assert.equal(checkHeartbeat({ last: ago(9.25) }, NOW, 10).incidents.length, 0, 'a 10 h threshold lets 9.25 h pass');
+});
+
+test('heartbeat end to end: a stale row mails one critical digest line, a fresh one resolves it, and an unreadable table resolves nothing', async () => {
+  const world = heartbeatWorld([beat(30), beat(9.25)]);
+  const db = fakeDb(world);
+  const f = fakeFetch();
+  const first = body(await run(db, f));
+  assert.equal(first.claimed, 1, JSON.stringify(first));
+  assert.equal(f.mails.length, 1);
+  assert.match(f.mails[0].subject, /1 new incident \(1 critical\/high\) — critical/);
+  assert.match(f.mails[0].text, /== supervisor \(1\)\n\[critical\] The agent team has stopped waking: the orchestrating session session_014ddD3p7VmAqaTAWKQVHJBt/);
+  assert.match(f.mails[0].text, /what to check: Open the session session_014ddD3p7VmAqaTAWKQVHJBt/);
+  const row = () => db.tables.agent_incidents.find((r) => r.key === `${HB}:stale:${DAY}`);
+  assert.equal(row().owner_agent, 'supervisor');
+  assert.ok(row().notified_at);
+
+  // An hour later the read fails for another reason (not "missing"): could not run → stays open, no mail.
+  const later = new Date(NOW.getTime() + 3600000);
+  const flaky = fakeDb({ ...world, agent_incidents: db.tables.agent_incidents }, { fail: ['agent_heartbeats'], failMessage: 'permission denied for table agent_heartbeats' });
+  const second = body(await run(flaky, f, { now: later }));
+  assert.ok(second.skipped.some((s) => s.check === HB && /could not run: agent_heartbeats: permission denied/.test(s.reason)));
+  assert.equal(flaky.tables.agent_incidents.find((r) => r.key === `${HB}:stale:${DAY}`).resolved_at, null);
+  assert.equal(f.mails.length, 1);
+
+  // The session wakes again and writes a heartbeat: the next run resolves the incident and mails nothing.
+  const awake = fakeDb({ ...world, agent_heartbeats: [...world.agent_heartbeats, beat(0.2, later)], agent_incidents: flaky.tables.agent_incidents });
+  const third = body(await run(awake, f, { now: new Date(later.getTime() + 3600000) }));
+  assert.equal(third.resolved, 1, JSON.stringify(third));
+  assert.ok(awake.tables.agent_incidents.find((r) => r.key === `${HB}:stale:${DAY}`).resolved_at);
+  assert.equal(f.mails.length, 1, 'recovery is not mailed');
+});
+
+test('heartbeat: the read is max(created_at) of agent_heartbeats, newest first, one row', () => {
+  const src = read('netlify/functions/sentinel.mjs');
+  assert.match(src, /db\.from\('agent_heartbeats'\)\.select\('created_at'\)\.order\('created_at', \{ ascending: false \}\)\.limit\(1\)\.maybeSingle\(\)/);
+  assert.match(src, /run\('team:heartbeat', async \(\) => checkHeartbeat\(await latestHeartbeat\(db\), now\)\)/);
+  // The live table has id, agent, wake, note, created_at — no `at`, no `status` (roadmap r17 spec drift).
+  const schema = JSON.parse(read('tests/fixtures/db-schema.json'));
+  assert.deepEqual(schema.tables.agent_heartbeats, ['agent', 'created_at', 'id', 'note', 'wake']);
+});
+
+// The UTC times the orchestrating session is woken and ends with a heartbeat
+// (roadmap r17, orchestrator decision 2026-10-01 19:59): the heartbeat-only
+// Routine at 00:50 and the supervisor at 05:50, 09:50, 12:50, 15:50 and 19:50.
+// Move or drop a Routine → update this list; the test then says whether 8 h
+// still holds. Before the 00:50 wake existed the overnight hole was 10 h
+// (19:50 → 05:50), and an 8 h check would have paged the owner every night.
+const ORCHESTRATOR_WAKES_UTC = ['00:50', '05:50', '09:50', '12:50', '15:50', '19:50'];
+
+test('THRESHOLD_HOURS (8) is strictly above the longest scheduled gap between orchestrator wakes (5 h)', () => {
+  const minutes = ORCHESTRATOR_WAKES_UTC.map((t) => { const [h, m] = t.split(':').map(Number); return h * 60 + m; });
+  assert.deepEqual([...minutes].sort((a, b) => a - b), minutes, 'keep the wake list in time order');
+  // Gaps around the clock, including the overnight wrap 19:50 → 00:50.
+  const gaps = minutes.map((m, i) => (i + 1 < minutes.length ? minutes[i + 1] - m : minutes[0] + 1440 - m));
+  assert.equal(gaps.reduce((a, b) => a + b, 0), 1440, 'the gaps cover the whole day');
+  const longestHours = Math.max(...gaps) / 60;
+  assert.equal(longestHours, 5, '00:50 → 05:50 and 19:50 → 00:50');
+  assert.equal(HEARTBEAT_THRESHOLD_HOURS, 8, 'PROTOCOL v3 "Staying alive": 8 hours');
+  assert.ok(HEARTBEAT_THRESHOLD_HOURS > longestHours, `an ${HEARTBEAT_THRESHOLD_HOURS} h threshold must exceed the ${longestHours} h gap or it pages the owner on schedule`);
+
+  // Replay three days of that schedule: every wake writes its heartbeat 10 min in,
+  // the sentinel runs every hour at :50 — not one run may fire.
+  const day0 = Date.parse('2026-10-02T00:00:00Z');
+  const beats = [];
+  for (let d = -1; d < 3; d += 1) for (const m of minutes) beats.push(day0 + d * 86400000 + (m + 10) * 60000);
+  for (let t = day0 + 50 * 60000; t < day0 + 3 * 86400000; t += 3600000) {
+    const last = Math.max(...beats.filter((b) => b <= t));
+    const r = checkHeartbeat({ last: new Date(last).toISOString() }, new Date(t));
+    assert.deepEqual(r.incidents, [], `sentinel run ${new Date(t).toISOString()} saw a heartbeat ${((t - last) / 3600000).toFixed(2)} h old`);
+  }
 });

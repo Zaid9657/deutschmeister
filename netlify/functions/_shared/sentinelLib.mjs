@@ -523,6 +523,77 @@ export function checkDatabase(latencyMs, now) {
   };
 }
 
+// ─── g. the team's dead-man switch ───────────────────────────────────────────
+//
+// The agent team runs inside ONE orchestrating Claude Code session, woken by
+// Routines, and every wake ends by writing one row to public.agent_heartbeats
+// (migrations/2026-10-01-agent-heartbeats.sql; docs/agents/PROTOCOL.md,
+// "Staying alive"). The sentinel runs on Netlify, independent of that session,
+// so it is the one place that can notice the team has gone silent: a newest
+// heartbeat older than HEARTBEAT_THRESHOLD_HOURS is one critical incident for
+// the supervisor, mailed to the owner (roadmap r17).
+//
+// Not started is not stopped. A missing table (the migration rolled back) or an
+// EMPTY one (applied, nothing written yet) is SKIPPED, never an incident and
+// never a pass: otherwise the first run after the migration, before the first
+// wake, would mail the owner a false "the team is down".
+
+/** The orchestrating session every heartbeat comes from. */
+export const TEAM_SESSION_ID = 'session_014ddD3p7VmAqaTAWKQVHJBt';
+
+// PROTOCOL v3 "Staying alive": no heartbeat for 8 hours is the alarm. It must
+// stay strictly above the longest scheduled gap between wakes (5 h since the
+// 00:50 heartbeat-only Routine, 2026-10-02), or it pages the owner every night;
+// tests/sentinel.test.mjs pins both numbers.
+export const HEARTBEAT_THRESHOLD_HOURS = 8;
+
+/**
+ * Is this PostgREST/Postgres error "the table does not exist"? PostgREST 12+
+ * answers PGRST205 ("Could not find the table … in the schema cache"); a bare
+ * Postgres error is 42P01 ("relation … does not exist"). Anything else — a
+ * network failure, a permission error — is not.
+ */
+export function isMissingRelation(error) {
+  if (!error) return false;
+  if (error.code === 'PGRST205' || error.code === '42P01') return true;
+  return /could not find the table|relation "[^"]+" does not exist/i.test(String(error.message || ''));
+}
+
+/**
+ * latest: { missing: true } when public.agent_heartbeats does not exist, or
+ * { last } = max(created_at), null when the table is empty. A newest row older
+ * than the threshold is one critical incident (owner supervisor), keyed per
+ * day; a fresh one passes and resolves it.
+ */
+export function checkHeartbeat(latest, now, thresholdHours = HEARTBEAT_THRESHOLD_HOURS) {
+  const checkId = 'team:heartbeat';
+  if (latest?.missing) {
+    return { incidents: [], passing: [], skipped: [{ check: checkId, reason: 'public.agent_heartbeats does not exist (migrations/2026-10-01-agent-heartbeats.sql) — the team has not started, not judged.' }] };
+  }
+  const lastMs = Date.parse(latest?.last ?? '');
+  if (!Number.isFinite(lastMs)) {
+    return { incidents: [], passing: [], skipped: [{ check: checkId, reason: 'public.agent_heartbeats is empty — no wake has written its first heartbeat yet, not judged.' }] };
+  }
+  const ageMs = new Date(now).getTime() - lastMs;
+  if (ageMs <= thresholdHours * 3600000) return ok([checkId]);
+  const hours = Math.floor(ageMs / 360000) / 10;
+  return {
+    incidents: [incident({
+      key: `${checkId}:stale:${dayOf(now)}`,
+      checkId,
+      owner: 'supervisor',
+      severity: 'critical',
+      title: `The agent team has stopped waking: the orchestrating session ${TEAM_SESSION_ID} has written no heartbeat for ${hours} h`,
+      detail: {
+        last: latest.last, hours, thresholdHours, session: TEAM_SESSION_ID,
+        action: `Open the session ${TEAM_SESSION_ID} on claude.ai/code (unarchive it if it is archived), or check the Routines that wake it.`,
+      },
+      hint: `Open the session ${TEAM_SESSION_ID} on claude.ai/code (unarchive it if archived), or check the Routines that wake it (docs/scorecard-routine.md). Each wake ends with one agent_heartbeats row.`,
+    })],
+    passing: [],
+  };
+}
+
 // ─── lifecycle planning ──────────────────────────────────────────────────────
 
 /** Is an open incident row cleared by this run? Only a check that ran and passed can clear it. */

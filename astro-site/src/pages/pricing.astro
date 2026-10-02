@@ -25,6 +25,7 @@
 import { ORGANIZATION } from '../lib/siteMeta.js';
 import { getTopicsForLevel } from '../lib/grammar.js';
 import { proCta } from '../lib/proCta.js';
+import { BILLING_PORTAL_URL, BILLING_PORTAL_LABEL } from '../lib/billingPortal.js';
 import Layout from '../layouts/Layout.astro';
 import Aurora from '../components/Aurora.astro';
 import '../styles/global.css';
@@ -155,7 +156,15 @@ const FAQS = [
     q: 'What happens when the trial ends?',
     a: `You keep ${FREE_LEVEL_LABEL} and everything else that is free. Nothing is deleted, and your progress is still there if you subscribe later.`,
   },
-  { q: 'Can I cancel anytime?', a: 'Yes, from your account page. You keep Pro until the end of the period you have already paid for.' },
+  // No account page can cancel: the subscription lives with Lemon Squeezy, and
+  // its customer portal is where a subscriber cancels (lib/billingPortal.js,
+  // tests/cancel-path.test.mjs). `link` renders under the answer; the JSON-LD
+  // gets the answer text, which names the same address.
+  {
+    q: 'Can I cancel anytime?',
+    a: `Yes. You cancel in the Lemon Squeezy customer portal (${BILLING_PORTAL_LABEL}), where you sign in with the email address you subscribed with. You keep Pro until the end of the period you have already paid for.`,
+    link: { href: BILLING_PORTAL_URL, text: 'Open the customer portal' },
+  },
   {
     q: 'Is there a one-time option instead of a subscription?',
     a: showLevelCourses
@@ -465,7 +474,12 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-5 py-3 text-ink sha
           {FAQS.map((item, i) => (
             <div class="reveal border-b border-rule py-5" style={`--rd:${i * 70}ms`}>
               <dt class="text-[0.9375rem] font-semibold">{item.q}</dt>
-              <dd class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">{item.a}</dd>
+              <dd class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">
+                {item.a}
+                {item.link && (
+                  <a href={item.link.href} class="mt-2 block font-bold text-siegel transition-colors hover:text-siegel-deep">{item.link.text} →</a>
+                )}
+              </dd>
             </div>
           ))}
         </dl>

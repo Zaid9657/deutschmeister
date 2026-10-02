@@ -32,6 +32,10 @@
 //     ledger row — asked of the job's OWN selection (DUE_READERS), so the
 //     sentinel judges the queue the job mails. Unreadable → skipped, never an
 //     incident. (2026-09-30: a drained nudge backlog read as a 78 h outage.)
+//   - Not started is not stopped. The team's dead-man switch (team:heartbeat,
+//     roadmap r17) reads the newest public.agent_heartbeats row: a missing or
+//     empty table is skipped; only a heartbeat older than 8 h is an incident
+//     (critical, owner supervisor).
 //
 // SHIPS OFF / FAILS CLOSED
 //   SENTINEL_ENABLED must be exactly 'true' or the run no-ops.
@@ -51,6 +55,7 @@ import {
   needsDueCheck, dueSpan, countDue, parseCanary,
   checkSpeakingCloseout, checkSupportSla, checkSpeakingFlows, checkDatabase,
   shouldResolve, parseMute, isMuted, selectForMail, renderDigest, renderDbDownAlert, DB_DOWN_CHECK_ID,
+  checkHeartbeat, isMissingRelation,
 } from './_shared/sentinelLib.mjs';
 import { selectRecipients as trialRecipients, TRIAL_KINDS } from './trial-lifecycle.mjs';
 import { selectCandidates as activationCandidates, WINDOWS as ACTIVATION_WINDOWS } from './activation-lifecycle.mjs';
@@ -143,6 +148,22 @@ async function measureDue(db, job, last, now, env) {
     console.error(`[sentinel] eligibility read for ${job.fn} failed:`, e.message);
     return { count: null, reason: e.message };
   }
+}
+
+/**
+ * The team's newest heartbeat: max(created_at) of public.agent_heartbeats (the
+ * created_at DESC index). { last } — null when the table is empty — or
+ * { missing: true } when the table does not exist; both are "not started" to
+ * checkHeartbeat. Any other error throws, so the check is skipped as "could not
+ * run" and resolves nothing.
+ */
+async function latestHeartbeat(db) {
+  const { data, error } = await db.from('agent_heartbeats').select('created_at').order('created_at', { ascending: false }).limit(1).maybeSingle();
+  if (error) {
+    if (isMissingRelation(error)) return { missing: true };
+    throw new Error(`agent_heartbeats: ${error.message}`);
+  }
+  return { last: data?.created_at ?? null };
 }
 
 /**
@@ -246,6 +267,9 @@ export async function runChecks({ db, fetchImpl, env, now }) {
         : [];
       return checkSpeakingFlows(sessions, evals, now);
     }),
+
+    // g. the team's dead-man switch (roadmap r17): no heartbeat for 8 h → critical, owner supervisor
+    run('team:heartbeat', async () => checkHeartbeat(await latestHeartbeat(db), now)),
   ]);
 
   return {
