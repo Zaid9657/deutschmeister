@@ -11,29 +11,51 @@
 // tests/profile-plan-button.test.mjs fails if the copies ever differ, and it
 // keeps billing-management labels in this file, next to the portal link.
 //
-// The decision has one input: the paid-access answer /profile already had
-// (hasActiveSubscription()). Nothing here reads or changes entitlement.
+// The decision has two inputs, both of which /profile already had: the
+// paid-access answer (hasActiveSubscription()) and the subscription row
+// SubscriptionContext loaded. Nothing here reads or changes entitlement.
 // subscriptionPortalAction (below) is the same portal link on /subscription
 // (tests/subscription-portal-link.test.mjs).
+
+import { SUPPORT_LINK } from '../data/navigation.js';
 
 /** The store's customer portal. The customer signs in with the email address they paid with. */
 export const BILLING_PORTAL_URL = 'https://deutsch-meister.lemonsqueezy.com/billing';
 
 /**
- * The plan button on /profile.
+ * The plan control on /profile. Three answers:
+ *   - 'portal': a live Lemon Squeezy subscription, by the same rule as the
+ *     /subscription link (subscriptionPortalAction): "Manage plan" opens the
+ *     portal.
+ *   - 'upgrade': no paid access (a trial, an ended plan, none): "Upgrade" on
+ *     /pricing/.
+ *   - 'support': paid access with no Lemon Squeezy subscription. The portal's
+ *     sign-in finds no account for a comped row (an owner grant: no Lemon
+ *     Squeezy ids; 2 of 9 live paid periods on 2026-10-02), and a course row
+ *     holds a one-time order, not a plan.
+ *     /pricing/ would sell them what they already have. They get a plain line
+ *     and a link to /support with the payment category preselected, never a
+ *     button.
  *
  * @param {boolean} isSubscribed  hasActiveSubscription() for the signed-in user
- * @returns {{ href: string, label: string, hint: string | null }}
+ * @param {{ plan_type?: string | null, lemonsqueezy_subscription_id?: string | null } | null | undefined} subscription  the row from useSubscription()
+ * @returns {{ kind: 'portal' | 'upgrade' | 'support', href: string, label: string, hint: string | null }}
  */
-export function profilePlanAction(isSubscribed) {
-  if (isSubscribed) {
+export function profilePlanAction(isSubscribed, subscription) {
+  if (!isSubscribed) return { kind: 'upgrade', href: '/pricing/', label: 'Upgrade', hint: null };
+  if (subscriptionPortalAction(isSubscribed, subscription, false)) {
     return {
+      kind: 'portal',
       href: BILLING_PORTAL_URL,
       label: 'Manage plan',
       hint: 'Opens the Lemon Squeezy customer portal. Sign in there with the email address you paid with.',
     };
   }
-  return { href: '/pricing/', label: 'Upgrade', hint: null };
+  const support = { kind: 'support', href: `${SUPPORT_LINK.href}?topic=payment`, label: 'Contact support' };
+  if (subscription?.plan_type === 'course') {
+    return { ...support, hint: 'Your Pro access comes with your course purchase and does not renew, so there is nothing to manage.' };
+  }
+  return { ...support, hint: 'Your plan is managed by our team.' };
 }
 
 /**
