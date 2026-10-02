@@ -414,10 +414,77 @@ export function isAllowedUrl(raw) {
 
 export const allowedEuroAmounts = () => [...CATALOGUE_EURO_AMOUNTS];
 
+// ─── billing: one place does it ──────────────────────────────────────────────
+//
+// The card, invoices, cancelling and resuming are handled by Lemon Squeezy, in
+// the store's customer portal (BILLING_PORTAL_URL, the address the dunning mail
+// uses). No deutsch-meister.de page does any of them: /subscription shows the
+// plan and its end date, /profile the account. FACTS.links names profile,
+// subscription and dashboard next to billingPortal, so "change your card in
+// your profile" is a guess the model can make from a link name, and before
+// this rule it passed every check below. The rule: a sentence that names a
+// billing action and an account place must name the portal too, and a reply
+// that does both across sentences must name the portal somewhere. Otherwise it
+// is blocked and the owner answers. tests/support-billing-place.test.mjs.
+
+const BILLING_ACTIONS = [
+  // cancel, resume, the renewal ("ankündigen" / "angekündigt" announce, they do not cancel)
+  /(?<!an)(?<!ange)k(ue|u)ndig|\bcancel|\bstornier|\babo(nnement)?\s+(beenden|stoppen|pausieren|fortsetzen|reaktivieren)\b|\b(resume|reactivate|pause)\s+(your\s+|the\s+)?(subscription|plan)\b/,
+  /verlaengerung\s+(ab|aus)?schalten|verlaengerung\s+(deaktivieren|beenden|stoppen)|\b(turn\s+off|disable|stop)\s+(the\s+)?auto[\s-]?renew/,
+  // the card and payment details
+  /zahlungs(methode|mittel|art|daten|informationen|angaben)|(kredit|debit|bank)karte|kartendaten|\bkarte\b[^.!?\n]{0,40}\b(aendern|aktualisieren|hinterlegen|tauschen|ersetzen)|\bpayment\s+(method|details|info)|\b(credit|debit)\s+card|\bcard\s+(details|number)|\b(update|change|replace)\s+(your\s+|the\s+)?card\b|\bbilling\s+(details|info|address)/,
+  // invoices and receipts
+  /\brechnung(en)?\b|\bquittung|\binvoices?\b|\breceipts?\b/,
+];
+
+const ACCOUNT_URL_PATH = /^\/(profile|subscription|dashboard|settings|account)(\/|$)/;
+const ACCOUNT_PLACES = [
+  /__account_url__/,
+  /\b(konto|kunden|nutzer|benutzer|profil|abo|abonnement)-?(seite|einstellungen|bereich|uebersicht)\b/,
+  /\b(in|im|ueber|auf|unter)\s+((ihrem|ihr|ihren|ihrer|dem|der|den|das)\s+)?(konto|profil|benutzerkonto|nutzerkonto|kundenkonto|dashboard|einstellungen)\b/,
+  /\b(oeffnen|besuchen)\s+sie\s+(ihr(en)?|das|den)\s+(konto|profil|dashboard)\b|\bgehen\s+sie\s+(in|zu)\s+(ihrem|ihr|ihren|dem|das)\s+(konto|profil|dashboard)\b/,
+  /\baccount\s+(page|settings|area|section)\b|\b(your|the|my)\s+(account|profile|dashboard)\b|\bprofile\s+page\b|\bsubscription\s+(page|settings)\b|\bsettings\s+page\b/,
+];
+const PORTAL_NAMED = /__portal__|kundenportal|customer\s+portal|billing\s+portal|lemon\s?squeezy/;
+
+/** URLs → tokens (portal / one of our account pages), then fold()ed, so one form for every rule. */
+function billingView(text) {
+  const portalHost = new URL(BILLING_PORTAL_URL).hostname;
+  const tokened = String(text || '').replace(URL_RE, (raw) => {
+    let u;
+    try { u = new URL(raw.replace(/[.,;:!?)]+$/, '')); } catch { return raw; }
+    if (u.hostname === portalHost && isAllowedUrl(raw)) return ' __portal__ ';
+    if (OUR_HOSTS.has(u.hostname) && ACCOUNT_URL_PATH.test(u.pathname)) return ' __account_url__ ';
+    return raw;
+  });
+  return fold(tokened);
+}
+
+const namesBilling = (t) => BILLING_ACTIONS.some((re) => re.test(t));
+const namesAccount = (t) => ACCOUNT_PLACES.some((re) => re.test(t));
+
+/** 'billing-place' problems for a model-written body ([] = it never sends billing to an account page). */
+export function billingPlaceProblems(body) {
+  const view = billingView(body);
+  const problems = [];
+  const sentences = String(body || '').split(/(?<=[.!?])\s+|\n+/).filter((s) => s.trim());
+  for (const s of sentences) {
+    const t = billingView(s);
+    if (namesBilling(t) && namesAccount(t) && !PORTAL_NAMED.test(t)) {
+      problems.push({ code: 'billing-place', detail: `"${s.trim().slice(0, 160)}" sends a billing action to an account page; only the customer portal does that` });
+    }
+  }
+  // Split across sentences ("Need a new invoice? Open your account page.").
+  if (problems.length === 0 && namesBilling(view) && namesAccount(view) && !PORTAL_NAMED.test(view)) {
+    problems.push({ code: 'billing-place', detail: 'the reply names a billing action and an account page but never the customer portal' });
+  }
+  return problems;
+}
+
 /**
  * Deterministic checks on the composed reply. Returns problems ([] = sendable).
  * Codes: disclosure-missing, signature-missing, personal-signature,
- * invented-action, promise, euro-amount, foreign-url, internal-marker, empty, too-long.
+ * invented-action, promise, billing-place, euro-amount, foreign-url, internal-marker, empty, too-long.
  */
 export function validateReply(text, { language } = {}) {
   const l = langOf(language);
@@ -465,6 +532,8 @@ export function validateReply(text, { language } = {}) {
   const fb = fold(body);
   for (const re of ACTION_RULES) { const m = fb.match(re); if (m) add('invented-action', m[0]); }
   for (const re of PROMISE_RULES) { const m = fb.match(re); if (m) add('promise', m[0]); }
+  // Billing happens in the customer portal, never on an account page.
+  problems.push(...billingPlaceProblems(body));
 
   // Money: only catalogue figures.
   const allowed = allowedEuroAmounts();
