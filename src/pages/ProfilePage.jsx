@@ -15,6 +15,7 @@ import Chip from '../components/ui/Chip.jsx';
 import SectionHeading from '../components/ui/SectionHeading.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
 import Stat from '../components/ui/Stat.jsx';
+import { profilePlanAction } from '../lib/billingPortal.js';
 
 const FIELD = 'w-full rounded-clay border border-rule bg-white px-4 py-3 text-sm text-ink placeholder:text-graphite focus:border-siegel focus:outline-none';
 
@@ -38,6 +39,9 @@ const ProfilePage = () => {
   const isSubscribed = user ? hasActiveSubscription() : false;
   const inTrial = user ? isInFreeTrial() : false;
   const trialDays = user ? getTrialDaysRemaining() : 0;
+  // A subscriber manages billing in the Lemon Squeezy portal; /pricing/ cannot
+  // (lib/billingPortal.js, tests/profile-plan-button.test.mjs).
+  const plan = profilePlanAction(isSubscribed);
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -133,10 +137,11 @@ const ProfilePage = () => {
                         ? `${trialDays} days left in your free trial.`
                         : 'Upgrade for full access to everything.'}
                   </p>
+                  {plan.hint && <p className="mt-1 text-xs text-graphite">{plan.hint}</p>}
                 </div>
               </div>
-              <Button href="/pricing/" variant={isSubscribed ? 'secondary' : 'primary'} shimmer={!isSubscribed}>
-                {isSubscribed ? 'Manage plan' : 'Upgrade'}
+              <Button href={plan.href} variant={isSubscribed ? 'secondary' : 'primary'} shimmer={!isSubscribed}>
+                {plan.label}
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </div>
