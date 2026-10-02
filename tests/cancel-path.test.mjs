@@ -36,10 +36,11 @@ const rendered = (src) =>
     .filter((line) => !/^\s*(\/\/|import\s|export\s+\{)/.test(line))
     .join('\n');
 
-const CANCEL = String.raw`(?:cancel\w*|kündig\w*|kuendig\w*)`;
+// Word-initial only: "angekündigt" (announced) is not a cancellation.
+const CANCEL = String.raw`(?<![\p{L}])(?:cancel\w*|kündig\w*|kuendig\w*)`;
 const ACCOUNT_PLACE = String.raw`(?:account page|account settings|profile page|Kontoseite|Kontoeinstellungen|Profilseite|(?:in|im|über|auf) (?:Ihrem |dem |der )?(?:Konto|Profil)\b)`;
 /** A sentence that sends the reader to the account or profile screen to cancel. */
-const CANCEL_VIA_ACCOUNT = new RegExp(`${CANCEL}[^.\\n]{0,80}${ACCOUNT_PLACE}|${ACCOUNT_PLACE}[^.\\n]{0,80}${CANCEL}`, 'i');
+const CANCEL_VIA_ACCOUNT = new RegExp(`${CANCEL}[^.\\n]{0,80}${ACCOUNT_PLACE}|${ACCOUNT_PLACE}[^.\\n]{0,80}${CANCEL}`, 'iu');
 
 const ACCOUNT_SCREENS = ['src/pages/SubscriptionPage.jsx', 'src/pages/ProfilePage.jsx'];
 const PORTAL_REFERENCE = /lemonsqueezy\.com\/billing|BILLING_PORTAL_URL|customer_portal/;

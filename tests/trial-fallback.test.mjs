@@ -86,26 +86,18 @@ function loadStartFreeTrial(client) {
   return fn;
 }
 
-/** The end of a trial that starts at `startIso`, TRIAL_DAYS calendar days on. */
-const expectedEnd = (startIso) => {
-  const d = new Date(startIso);
-  d.setDate(d.getDate() + TRIAL_DAYS);
-  return d.toISOString();
-};
-
 const HOUR = 3600 * 1000;
 
 function assertTrialWindow(row, path) {
   assert.ok(row.trial_started_at && row.trial_ends_at, `${path}: the fallback wrote no trial window`);
-  assert.equal(
-    row.trial_ends_at,
-    expectedEnd(row.trial_started_at),
-    `${path}: the client trial fallback grants a different length than TRIAL_DAYS (${TRIAL_DAYS}) in ` +
+  // TRIAL_DAYS × 24 h, ±1 h for a DST change, so calendar-day and millisecond
+  // arithmetic both pass in any local time zone (not only UTC CI).
+  const hours = (Date.parse(row.trial_ends_at) - Date.parse(row.trial_started_at)) / HOUR;
+  assert.ok(
+    Math.abs(hours - TRIAL_DAYS * 24) <= 1,
+    `${path}: the client trial fallback grants ${hours} h, not TRIAL_DAYS (${TRIAL_DAYS}) days as in ` +
       `src/data/marketing.js, which every surface advertises. Derive the fallback from TRIAL_DAYS (owner decision: trial length is a money path).`,
   );
-  // Read independently of the calendar arithmetic: TRIAL_DAYS × 24 h, ±1 h for a DST change.
-  const hours = (Date.parse(row.trial_ends_at) - Date.parse(row.trial_started_at)) / HOUR;
-  assert.ok(Math.abs(hours - TRIAL_DAYS * 24) <= 1, `${path}: the trial window is ${hours} h, not ${TRIAL_DAYS} days`);
 }
 
 test('the client trial fallback grants TRIAL_DAYS when it updates an existing profile', async () => {
