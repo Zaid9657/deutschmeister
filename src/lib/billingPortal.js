@@ -58,6 +58,9 @@ export function profilePlanAction(isSubscribed) {
 export function subscriptionPortalAction(isSubscribed, subscription, isGerman) {
   const lsSubscriptionId = subscription?.lemonsqueezy_subscription_id;
   if (isSubscribed !== true || typeof lsSubscriptionId !== 'string' || lsSubscriptionId.trim() === '') return null;
+  // A course row never has a plan to manage, even when an earlier subscription
+  // left its id on the row (the webhook's course upsert keeps unsent columns).
+  if (subscription?.plan_type === 'course') return null;
   if (isGerman) {
     return {
       href: BILLING_PORTAL_URL,

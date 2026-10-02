@@ -89,6 +89,7 @@ test('only a live Lemon Squeezy subscription gets the link', async () => {
     ['comped row, null ids', true, COMPED],
     ['comped row, empty ids', true, COMPED_EMPTY],
     ['course row: an order, no subscription', true, COURSE_ROW],
+    ['course row that kept an old subscription id', true, { ...COURSE_ROW, lemonsqueezy_subscription_id: '2468531' }],
     ['no row at all', true, null],
   ];
   for (const [why, isSubscribed, row] of none) {
