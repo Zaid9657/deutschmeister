@@ -34,7 +34,7 @@
 // nothing but accuracy owed to the reader. Re-check from a network that can
 // reach the vendors, then update figures and stamps together.
 import { PLANS, deEur } from './pricing.js';
-import { PRO_SPEAKING_SESSIONS_PER_MONTH, PRO_DAILY_LIMIT, LEVEL_COUNT } from './marketing.js';
+import { PRO_SPEAKING_SESSIONS_PER_MONTH, PRO_DAILY_LIMIT, LEVEL_COUNT, TRIAL_DAYS } from './marketing.js';
 
 const PRO_MONTHLY = `${deEur(PLANS.monthly.price)}/Monat`;
 
@@ -54,7 +54,7 @@ const competitorComparisons = {
       { feature: 'Grammatik-Erklärungen auf Englisch', us: '✓ Jedes Thema auf Englisch erklärt — ideal für Nicht-Muttersprachler', them: '✓ Erklärungen in 14 Ausgangssprachen verfügbar' },
       { feature: 'Offline-Modus', us: '✗ Browser-basiert, Internet erforderlich', them: '✓ Lektionen offline in der App verfügbar' },
       { feature: 'Einstufungstest', us: '✓ Kostenloser CEFR-Einstufungstest in 5 Minuten', them: '✓ Einstufungstest beim Kursstart' },
-      { feature: 'Kostenlose Inhalte', us: '✓ A1.1 komplett kostenlos + 7 Tage Pro-Testphase', them: '○ Erste Lektion kostenlos, danach Abo nötig' },
+      { feature: 'Kostenlose Inhalte', us: `✓ A1.1 komplett kostenlos + ${TRIAL_DAYS} Tage Pro-Testphase`, them: '○ Erste Lektion kostenlos, danach Abo nötig' },
       { feature: 'Preis (monatlich, Stand: Mai 2026)', us: `${PRO_MONTHLY} (Pro)`, them: 'ab 6,99 €/Monat (12-Monats-Abo) – 12,99 €/Monat (3-Monats-Abo)' },
       { feature: 'Von Muttersprachlern entwickelt', us: '✓ Von Ärzten in Deutschland entwickelt — sie kennen den Lernweg aus eigener Erfahrung', them: '✓ Team aus Sprachwissenschaftlern in Berlin' },
       { feature: 'Hörübungen mit Alltagsdialogen', us: '✓ Hörverständnis auf jedem Niveau mit authentischen Dialogen', them: '✓ Dialoge und Hörübungen in jeder Lektion' },
@@ -100,7 +100,7 @@ const competitorComparisons = {
       },
     ],
     ctaHeadline: 'Teste Deutschmeister kostenlos — und entscheide selbst.',
-    ctaSubtext: 'A1.1 komplett kostenlos. 7 Tage Pro-Testphase. Kein Risiko.',
+    ctaSubtext: `A1.1 komplett kostenlos. ${TRIAL_DAYS} Tage Pro-Testphase. Kein Risiko.`,
   },
 
   duolingo: {
@@ -117,7 +117,7 @@ const competitorComparisons = {
       { feature: 'Grammatik-Erklärungen', us: '✓ Ausführliche Erklärungen auf Englisch — das WARUM hinter jeder Regel', them: '○ Kurze Tips vor Lektionen, keine tiefgehenden Erklärungen' },
       { feature: 'Prüfungsvorbereitung (Goethe/telc/TestDaF)', us: '✓ Inhalte auf CEFR-Prüfungen abgestimmt, A1–B2', them: '✗ Kein Prüfungsfokus — allgemeines Sprachtraining' },
       { feature: 'B1+ tatsächlich erreichbar', us: '✓ Durchgängige Inhalte bis B2.2 mit steigender Komplexität', them: '○ Offiziell bis B2, aber Tiefe ab B1 stark begrenzt' },
-      { feature: 'Kostenlose Version', us: '✓ A1.1 kostenlos, 7 Tage Pro-Testphase', them: '✓ Komplett kostenlos nutzbar (mit Werbung und Herzen-System)' },
+      { feature: 'Kostenlose Version', us: `✓ A1.1 kostenlos, ${TRIAL_DAYS} Tage Pro-Testphase`, them: '✓ Komplett kostenlos nutzbar (mit Werbung und Herzen-System)' },
       { feature: 'Werbung', us: '✗ Keine Werbung — niemals', them: '✓ Werbung in der Gratisversion (entfällt mit Super-Abo)' },
       { feature: 'Gamification (Streaks, XP, Liga)', us: '✗ Kein Gamification — Fokus auf echten Fortschritt', them: '✓ Stark gamifiziert: Streaks, XP, Ligen, Achievements' },
       { feature: 'Hörübungen mit echten Dialogen', us: '✓ Authentische Dialoge auf jedem Niveau', them: '○ TTS-generierte Sätze, nicht immer authentisch' },
@@ -165,7 +165,7 @@ const competitorComparisons = {
       },
     ],
     ctaHeadline: 'Vom Spielen zum Sprechen — teste Deutschmeister kostenlos.',
-    ctaSubtext: 'A1.1 kostenlos. 7 Tage Pro. Kein Streak nötig.',
+    ctaSubtext: `A1.1 kostenlos. ${TRIAL_DAYS} Tage Pro. Kein Streak nötig.`,
   },
 
   lingoda: {

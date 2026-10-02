@@ -374,13 +374,12 @@ test('no paywall retypes the trial length', () => {
 
 /**
  * Files anywhere that still type the trial length into trial copy. May only go
- * down. 2026-10-01: 4. 2026-10-02: 2 — the nav's trial button in both front
- * ends (src/components/Navbar.jsx, astro-site/src/layouts/Layout.astro) now
- * derives it from TRIAL_DAYS; the "7 Tage Pro-Testphase" rows in both twins of
- * competitorComparisons.js remain. Both are commons; lower this in the commit
- * that fixes them.
+ * down. 2026-10-01: 4. 2026-10-02: 0 — the nav's trial button in both front
+ * ends (Navbar.jsx, Layout.astro, #177) and the "Pro-Testphase" rows in both
+ * twins of competitorComparisons.js now derive the length from TRIAL_DAYS.
+ * At 0 any retyped trial length anywhere fails the suite.
  */
-const MAX_RETYPED_TRIAL_LENGTH_FILES = 2;
+const MAX_RETYPED_TRIAL_LENGTH_FILES = 0;
 
 test('retyped trial lengths are receding, never spreading', () => {
   const files = copyFiles().filter((f) =>
