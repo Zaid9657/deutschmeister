@@ -17,6 +17,14 @@ import {
   FREE_LEVEL_LABEL,
   GRAMMAR_TOPIC_COUNT,
 } from './marketing.js';
+import { BILLING_PORTAL_URL } from '../lib/billingPortal.js';
+
+// Where a subscriber cancels: the Lemon Squeezy customer portal (content agent,
+// 2026-10-02, from support's handoff). The answer used to say you can cancel but
+// not where; the app holds no cancel control. The address is derived from the
+// SPA's one copy (src/lib/billingPortal.js, pinned to the mailed one), shown
+// without the scheme like the /pricing/ answer. tests/cancel-path.test.mjs.
+const BILLING_PORTAL_LABEL = BILLING_PORTAL_URL.replace(/^https:\/\//, '');
 
 export const FAQ_CATEGORIES = [
   {
@@ -78,7 +86,7 @@ export const FAQ_CATEGORIES = [
       },
       {
         q: 'Can I cancel at any time?',
-        a: 'Yes. You keep access through the end of the paid billing period, and the subscription does not renew after cancellation.',
+        a: `Yes. You cancel in the Lemon Squeezy customer portal (${BILLING_PORTAL_LABEL}), where you sign in with the email address you subscribed with. You keep Pro until the end of the period you have already paid for, and the subscription does not renew.`,
       },
       {
         q: 'Can I request a refund?',
