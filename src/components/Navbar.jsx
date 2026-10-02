@@ -11,6 +11,9 @@ import { freeCourseHref } from '../config/courseV2';
 import Logo from './Logo';
 import Button from './ui/Button';
 
+// The trial button derives its length (CLAUDE.md: derive, never retype).
+import { TRIAL_DAYS } from '../data/marketing.js';
+
 // Links come from THE navigation registry (src/data/navigation.js — shared
 // byte-identical with the Astro layout); this file only decides how the app
 // renders them. Icons are presentation, so they live here, keyed by item key.
@@ -252,7 +255,7 @@ const Navbar = () => {
                   {t('nav.login')}
                 </Link>
                 <Button to="/signup" size="sm">
-                  {isGerman ? '7 Tage testen' : 'Start 7-day trial'}
+                  {isGerman ? `${TRIAL_DAYS} Tage testen` : `Start ${TRIAL_DAYS}-day trial`}
                 </Button>
               </div>
             )}
@@ -407,7 +410,7 @@ const Navbar = () => {
                       {t('nav.login')}
                     </Button>
                     <Button to="/signup" size="lg" onClick={() => setIsOpen(false)} className="w-full">
-                      {isGerman ? '7 Tage testen' : 'Start 7-day trial'}
+                      {isGerman ? `${TRIAL_DAYS} Tage testen` : `Start ${TRIAL_DAYS}-day trial`}
                     </Button>
                   </div>
                 )}

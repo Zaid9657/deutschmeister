@@ -14,6 +14,10 @@
 //   2. No copy anywhere says you cancel on the account or profile page while
 //      neither account screen links the portal. When one does, the claim
 //      becomes true and this rule lets it through.
+//   3. The /faq/ answer to the same question (src/data/faqContent.js, content
+//      agent, 2026-10-02) names the same portal, with the address taken from
+//      src/lib/billingPortal.js, and its FAQPage JSON-LD carries that text. It
+//      used to say you can cancel but not where.
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -23,6 +27,8 @@ import { dirname, join } from 'node:path';
 
 import { BILLING_PORTAL_URL, BILLING_PORTAL_LABEL } from '../astro-site/src/lib/billingPortal.js';
 import { BILLING_PORTAL_URL as MAILED_PORTAL_URL } from '../netlify/functions/_shared/dunningLink.mjs';
+import { BILLING_PORTAL_URL as SPA_PORTAL_URL } from '../src/lib/billingPortal.js';
+import { FAQ_CATEGORIES, faqPageJsonLd } from '../src/data/faqContent.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -82,6 +88,46 @@ test('the /pricing/ cancel answer sends people to the portal, derived and not ty
   // The FAQ list renders the link, so the answer is one click from the portal.
   assert.match(page, /\{item\.link && \(/);
   assert.match(page, /href=\{item\.link\.href\}/);
+});
+
+test('the /faq/ cancel answer names the portal, derived and not typed', () => {
+  const FAQ = 'src/data/faqContent.js';
+  const QUESTION = 'Can I cancel at any time?';
+  const portalLabel = MAILED_PORTAL_URL.replace(/^https:\/\//, '');
+
+  // One address: the SPA copy the answer reads equals the mailed one.
+  assert.equal(SPA_PORTAL_URL, MAILED_PORTAL_URL);
+
+  // The source imports the address and never types it.
+  const src = read(FAQ);
+  assert.match(src, /^import \{ BILLING_PORTAL_URL \} from '\.\.\/lib\/billingPortal\.js';$/m);
+  assert.doesNotMatch(rendered(src), /lemonsqueezy\.com\/billing/, `${FAQ} types the portal address`);
+
+  // What ships: the answer the accordion and the prerender both render.
+  const items = FAQ_CATEGORIES.flatMap((c) => c.items).filter((i) => i.q === QUESTION);
+  assert.equal(items.length, 1, `exactly one "${QUESTION}" on /faq/`);
+  const { a } = items[0];
+  assert.ok(a.includes(`(${portalLabel})`), 'the answer names the portal address');
+  assert.match(a, /Lemon Squeezy customer portal/);
+  assert.match(a, /email address you subscribed with/, 'the answer says how to sign in to the portal');
+  assert.match(a, /keep Pro until the end of the period you have already paid for/, 'the answer keeps the paid-period promise of /pricing/');
+  assert.doesNotMatch(a, CANCEL_VIA_ACCOUNT);
+  // HTML-safe: the prerender writes the answer into #root unescaped.
+  assert.doesNotMatch(a, /[<>&"]/);
+
+  // The FAQPage JSON-LD is built from the same data and carries the same text.
+  const ld = JSON.parse(JSON.stringify(faqPageJsonLd()));
+  assert.equal(ld['@type'], 'FAQPage');
+  const all = FAQ_CATEGORIES.flatMap((c) => c.items);
+  assert.equal(ld.mainEntity.length, all.length, 'the JSON-LD covers every question');
+  for (const q of ld.mainEntity) {
+    assert.equal(q['@type'], 'Question');
+    assert.ok(typeof q.name === 'string' && q.name.length > 0);
+    assert.equal(q.acceptedAnswer['@type'], 'Answer');
+    assert.ok(typeof q.acceptedAnswer.text === 'string' && q.acceptedAnswer.text.length > 0, `${q.name}: empty answer`);
+  }
+  const cancel = ld.mainEntity.find((q) => q.name === QUESTION);
+  assert.equal(cancel.acceptedAnswer.text, a);
 });
 
 test('the rule recognises the claim it was written for (the scan is not vacuous)', () => {

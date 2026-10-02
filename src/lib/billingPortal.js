@@ -13,6 +13,8 @@
 //
 // The decision has one input: the paid-access answer /profile already had
 // (hasActiveSubscription()). Nothing here reads or changes entitlement.
+// subscriptionPortalAction (below) is the same portal link on /subscription
+// (tests/subscription-portal-link.test.mjs).
 
 /** The store's customer portal. The customer signs in with the email address they paid with. */
 export const BILLING_PORTAL_URL = 'https://deutsch-meister.lemonsqueezy.com/billing';
@@ -32,4 +34,43 @@ export function profilePlanAction(isSubscribed) {
     };
   }
   return { href: '/pricing/', label: 'Upgrade', hint: null };
+}
+
+/**
+ * The billing link on /subscription (revenue agent, 2026-10-02).
+ *
+ * /subscription showed a subscriber the plan and its end date and no way to
+ * change the card, see an invoice or cancel, so a customer whose renewal failed
+ * could not get from the account screen to the portal that fixes it.
+ *
+ * Shown only for a live Lemon Squeezy subscription: the paid-access answer the
+ * page already has AND a lemonsqueezy_subscription_id on the row it already
+ * loaded (subscriptionService.getSubscription selects every column). A trial
+ * has no row; a comped row has no Lemon Squeezy ids; a course row holds an
+ * order, not a subscription. The portal has nothing of theirs to manage, so
+ * they get no link. Nothing here reads or changes entitlement.
+ *
+ * @param {boolean} isSubscribed  hasActiveSubscription() for the signed-in user
+ * @param {{ lemonsqueezy_subscription_id?: string | null } | null | undefined} subscription  the row from useSubscription()
+ * @param {boolean} isGerman  the page's language switch
+ * @returns {{ href: string, label: string, hint: string } | null}
+ */
+export function subscriptionPortalAction(isSubscribed, subscription, isGerman) {
+  const lsSubscriptionId = subscription?.lemonsqueezy_subscription_id;
+  if (isSubscribed !== true || typeof lsSubscriptionId !== 'string' || lsSubscriptionId.trim() === '') return null;
+  // A course row never has a plan to manage, even when an earlier subscription
+  // left its id on the row (the webhook's course upsert keeps unsent columns).
+  if (subscription?.plan_type === 'course') return null;
+  if (isGerman) {
+    return {
+      href: BILLING_PORTAL_URL,
+      label: 'Abonnement verwalten',
+      hint: 'Karte ändern, Rechnungen ansehen oder kündigen: im Kundenportal von Lemon Squeezy. Melden Sie sich dort mit der E-Mail-Adresse an, mit der Sie bezahlt haben.',
+    };
+  }
+  return {
+    href: BILLING_PORTAL_URL,
+    label: 'Manage billing',
+    hint: 'Change your card, see invoices or cancel in the Lemon Squeezy customer portal. Sign in there with the email address you paid with.',
+  };
 }

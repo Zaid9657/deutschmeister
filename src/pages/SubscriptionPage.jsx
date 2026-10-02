@@ -8,6 +8,7 @@ import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy';
 import SEO from '../components/SEO';
 import { openCheckout } from '../utils/openCheckout';
 import { clearBuyIntent } from '../lib/buyIntent';
+import { subscriptionPortalAction } from '../lib/billingPortal.js';
 import { markCheckoutStarted, consumeCheckoutSuccess } from '../lib/funnelTracking';
 import { PLANS, num, levelsForProduct } from '../data/pricing.js';
 import { LEVEL_COUNT, READING_LESSON_COUNT, TRIAL_DAYS } from '../data/marketing.js';
@@ -45,6 +46,9 @@ const SubscriptionPage = () => {
   const inTrial = isInFreeTrial();
   const daysLeft = getTrialDaysRemaining();
   const isSubscribed = hasActiveSubscription();
+  // Card, invoices, cancelling: the Lemon Squeezy portal, for a live LS
+  // subscription only (lib/billingPortal.js, tests/subscription-portal-link.test.mjs).
+  const portal = subscriptionPortalAction(isSubscribed, subscription, isGerman);
 
   // Safe end-date label: null / unparseable → null (caller hides the line),
   // never the literal string "Invalid Date".
@@ -321,6 +325,16 @@ const SubscriptionPage = () => {
                         </>
                       )}
                     </p>
+                    {portal && (
+                      <>
+                        <p className="mt-2 text-sm">
+                          <a href={portal.href} className="font-bold text-siegel transition-colors hover:text-siegel-deep">
+                            {portal.label} →
+                          </a>
+                        </p>
+                        <p className="mt-1 text-xs text-accent-limette-ink">{portal.hint}</p>
+                      </>
+                    )}
                   </div>
                 </>
               ) : (
