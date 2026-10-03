@@ -13,7 +13,9 @@
 // not start with exactly one "/" (an absolute URL, "//host", "/\host"), or that
 // carries a control character (a URL parser drops tabs and newlines, so
 // "/\n/host" would become "//host"), returns null and LoginPage falls back to
-// postAuthPath() as before.
+// postAuthPath() as before. A backslash anywhere is refused too: a browser
+// reads it as "/", so "/.\\host" would normalise to the pathname "//host", and
+// whatever survives is checked once more the way a browser resolves it.
 
 /** C0 controls and DEL: a URL parser drops some of them and none belongs in a path. */
 const hasControl = (s) => Array.from(s).some((c) => c.charCodeAt(0) < 0x20 || c.charCodeAt(0) === 0x7f);
@@ -28,6 +30,9 @@ export function returnPath(from) {
   if (typeof pathname !== 'string' || !/^\/(?![/\\])/.test(pathname)) return null;
   const search = typeof from.search === 'string' && from.search.startsWith('?') ? from.search : '';
   const hash = typeof from.hash === 'string' && from.hash.startsWith('#') ? from.hash : '';
+  if (pathname.includes('\\')) return null;
   const path = pathname + search + hash;
-  return hasControl(path) ? null : path;
+  if (hasControl(path)) return null;
+  // Resolved as a browser would (dot segments folded): never a "//" pathname.
+  return new URL(path, 'https://return.invalid').pathname.startsWith('//') ? null : path;
 }

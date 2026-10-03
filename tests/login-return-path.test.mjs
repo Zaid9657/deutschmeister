@@ -53,6 +53,10 @@ test('only a same-origin path is honoured', () => {
     '/\n/evil.example',
     '/\r\n/evil.example',
     '/x\u0000y',
+    // Review of eee4418: a backslash after the first character normalises to "//host".
+    '/.\\evil.example',
+    '/a/..\\..\\\\evil.example',
+    '/a\\b',
   ];
   for (const pathname of offsite) {
     assert.equal(returnPath({ pathname, search: '', hash: '' }), null, JSON.stringify(pathname));
@@ -71,10 +75,15 @@ test('whatever returnPath accepts resolves to this origin in a URL parser', () =
     { pathname: '/\\evil.example' },
     { pathname: '/\t/evil.example' },
     { pathname: '\\\\evil.example' },
+    { pathname: '/..//evil.example' },
+    { pathname: '/.\\evil.example' },
   ];
   for (const from of inputs) {
     const path = returnPath(from);
-    if (path !== null) assert.equal(new URL(path, ORIGIN).origin, ORIGIN, path);
+    if (path !== null) {
+      assert.equal(new URL(path, ORIGIN).origin, ORIGIN, path);
+      assert.ok(!new URL(path, ORIGIN).pathname.startsWith('//'), `${path} resolves to a protocol-relative pathname`);
+    }
   }
 });
 
