@@ -290,19 +290,23 @@ test('informalAddressProblems rejects the pre-fix subject and reads only whole p
 // The level fixes in the same round (je … desto and trotz, B2 -> B1) have no rule:
 // levels follow the DaF reviewer, not a parser.
 
-// Rule 6. Only a full desto-clause is checked: "Je früher, desto besser." has no
-// verb to place.
+// Rule 6. Only a je-clause with a verb is checked: "Je früher, desto besser (für
+// alle)." has no verb to place, so a je-clause under three words is skipped.
 function jeDestoProblems({ sentence_de, hint }) {
-  if (!/\bje\b/i.test(sentence_de) || !/\b(?:desto|umso)\s+\p{L}+\s+\p{L}+/iu.test(sentence_de)) return [];
+  if (!/\bje\b/i.test(sentence_de) || !/\b(?:desto|umso)\b/i.test(sentence_de)) return [];
+  if (words(sentence_de.split(',')[0]).length < 3) return [];
   const problems = [];
-  if (!/\bverb\b[^.]*\bend\b/i.test(hint)) problems.push('does not say that the verb of the je-clause goes to the end');
+  if (!/\bverbs?\b[^.]*\b(?:end|final|last)\b|\bverb-final\b/i.test(hint)) problems.push('does not say that the verb of the je-clause goes to the end');
   if (!/'(?:desto|umso) [^']+'/i.test(hint)) problems.push('does not show the start of the desto-clause, where the finite verb follows desto + comparative');
   return problems;
 }
 
 // Rule 7. words() reads whole words, so "geworden" (Er ist Arzt geworden) is not "worden".
-function wordenProblems({ sentence_de, hint }) {
+// Only an entry that teaches the passive owes the reader worden vs geworden: "Er soll
+// verhaftet worden sein." with a hint about sollen does not (review of 4ed0fd92).
+function wordenProblems({ sentence_de, hint, grammar_focus = '' }) {
   if (!words(sentence_de).includes('worden')) return [];
+  if (!/passiv/i.test(`${grammar_focus} ${hint}`)) return [];
   return /\bgeworden\b/i.test(hint) ? [] : ["has the passive participle 'worden', but the hint never says it is 'worden', not 'geworden'"];
 }
 
@@ -311,6 +315,8 @@ function wordenProblems({ sentence_de, hint }) {
 // skipped: there the zu-infinitive is usually an extraposed subject (Es ist wichtig
 // zu üben), and that call stays with the DaF reviewer.
 const SEIN_FINITE = new Set(['bin', 'bist', 'ist', 'sind', 'seid', 'war', 'warst', 'waren', 'wart', 'sei', 'seien', 'wäre', 'wären']);
+// Words that may stand between sein and zu when sein + zu is the construction.
+const SEIN_ZU_ADVERBS = new Set(['nicht', 'nur', 'kaum', 'schwer', 'leicht', 'gut', 'noch', 'sofort', 'unbedingt', 'nirgends', 'nirgendwo', 'heute', 'bis', 'morgen']);
 const ZU_INFINITIVE_CLAIM = /'((?:\p{L}+\s+)*zu\s+\p{L}+)' is (?:a |an |the )?infinitive (?:phrase|clause|construction)/giu;
 
 function seinZuProblems({ sentence_de, hint }) {
@@ -320,6 +326,15 @@ function seinZuProblems({ sentence_de, hint }) {
     if (!clause) continue;
     const ws = words(clause);
     if (ws.includes('es') || !ws.some((w) => SEIN_FINITE.has(w))) continue;
+    // sein must govern the zu-infinitive itself: verb-final "schwer zu verstehen ist",
+    // or "ist (nicht|nur|kaum …) zu öffnen". "Er ist bereit zu helfen." and "Sie war
+    // gezwungen zu gehen." hang on an adjective or participle (review of 4ed0fd92).
+    const zi = ws.lastIndexOf('zu');
+    const verbFinal = zi >= 0 && SEIN_FINITE.has(ws[zi + 2] ?? '');
+    const before = ws.slice(0, zi);
+    const si = before.findLastIndex((w) => SEIN_FINITE.has(w));
+    const mainClause = si >= 0 && before.slice(si + 1).every((w) => SEIN_ZU_ADVERBS.has(w));
+    if (!verbFinal && !mainClause) continue;
     if (!/\bsein\s*\+\s*zu\b/i.test(hint)) {
       problems.push(`calls "${fragment}" an infinitive phrase, but it hangs on a form of sein: name sein + zu + infinitive (a passive with a modal meaning)`);
     }
@@ -334,8 +349,17 @@ const POSSESSIVE = /^(?:mein|dein|sein|ihr|unser|euer|eur)(?:e|en|em|er|es|s)?$/
 
 function possessiveTermProblems({ sentence_de, hint, grammar_focus }) {
   if (!/possessive pronoun/i.test(`${grammar_focus} ${hint}`)) return [];
-  const tokens = sentence_de.match(/\p{L}+/gu) ?? [];
-  const possessives = tokens.flatMap((t, i) => (POSSESSIVE.test(t.toLowerCase()) ? [{ word: t, next: tokens[i + 1] ?? '' }] : []));
+  // Bare "ihr" is skipped: it is as often the dative or plural pronoun (Ich gebe ihr
+  // Blumen.). The next word must follow after spaces only, so a comma or a name
+  // after one (Das ist seiner, Peter …) is not read as the possessive's noun.
+  const tokens = [...sentence_de.matchAll(/\p{L}+/gu)];
+  const possessives = tokens.flatMap((m, i) => {
+    const t = m[0].toLowerCase();
+    if (t === 'ihr' || !POSSESSIVE.test(t)) return [];
+    const nextMatch = tokens[i + 1];
+    const gap = nextMatch ? sentence_de.slice(m.index + m[0].length, nextMatch.index) : ',';
+    return [{ word: m[0], next: /^\s+$/.test(gap) ? nextMatch[0] : '' }];
+  });
   if (!possessives.length || possessives.some(({ next }) => !/^\p{Lu}/u.test(next))) return [];
   return [`calls "${possessives.map(({ word }) => word).join('", "')}" a possessive pronoun, but it stands before its noun: a possessive article (Possessivartikel)`];
 }
@@ -367,9 +391,13 @@ test('the round-2 rules accept the correct German they must not fail', () => {
   // Rule 6: umso, another comparative, and the verbless short form.
   assert.deepEqual(jeDestoProblems({ sentence_de: 'Je älter man wird, umso weniger schläft man.', hint: "The verb of the je-clause goes to the end ('wird'); in 'umso weniger schläft' the finite verb follows the comparative." }), []);
   assert.deepEqual(jeDestoProblems({ sentence_de: 'Je früher, desto besser.', hint: 'A fixed short form with no verb.' }), []);
+  // Review of 4ed0fd92: correct German the first draft rejected.
+  assert.deepEqual(jeDestoProblems({ sentence_de: 'Je früher, desto besser für alle.', hint: 'A fixed short form with no verb.' }), []);
+  assert.deepEqual(jeDestoProblems({ sentence_de: 'Je mehr er lernt, desto besser wird sein Deutsch.', hint: "In the je-clause the verb is final ('lernt'); 'desto besser wird' puts the finite verb right after the comparative." }), []);
   // Rule 7: the full verb werden (geworden) is not the passive participle.
   assert.deepEqual(wordenProblems({ sentence_de: 'Er ist Arzt geworden.', hint: "Perfekt of 'werden' with 'sein'." }), []);
   assert.ok(wordenProblems({ sentence_de: 'Das Haus war 1920 gebaut worden.', hint: 'Passive Plusquamperfekt.' }).length > 0, 'misses a Plusquamperfekt passive');
+  assert.deepEqual(wordenProblems({ sentence_de: 'Er soll verhaftet worden sein.', hint: "'sollen' here reports what others say.", grammar_focus: 'sollen for hearsay' }), []);
   // Rule 8: a zu-infinitive with no sein in its clause, an extraposed subject after
   // "es", and the claim made correctly.
   assert.deepEqual(seinZuProblems({ sentence_de: 'Er behauptet, keine Zeit zu haben.', hint: "'keine Zeit zu haben' is an infinitive clause." }), []);
@@ -377,8 +405,12 @@ test('the round-2 rules accept the correct German they must not fail', () => {
   assert.deepEqual(seinZuProblems({ sentence_de: 'Es ist wichtig zu üben.', hint: "'zu üben' is an infinitive clause, the real subject." }), []);
   assert.deepEqual(seinZuProblems({ sentence_de: 'Die Tür ist nicht zu öffnen.', hint: "'nicht zu öffnen' is an infinitive construction: sein + zu + infinitive." }), []);
   assert.ok(seinZuProblems({ sentence_de: 'Die Tür ist nicht zu öffnen.', hint: "'zu öffnen' is an infinitive phrase." }).length > 0, 'misses sein + zu in a main clause');
+  assert.deepEqual(seinZuProblems({ sentence_de: 'Er ist bereit zu helfen.', hint: "'zu helfen' is an infinitive phrase." }), []);
+  assert.deepEqual(seinZuProblems({ sentence_de: 'Sie war gezwungen zu gehen.', hint: "'zu gehen' is an infinitive clause." }), []);
   // Rule 9: a possessive that stands alone, and the right term before a noun.
   assert.deepEqual(possessiveTermProblems({ sentence_de: 'Das ist nicht sein Buch, das ist meins.', hint: "'meins' is a possessive pronoun.", grammar_focus: 'Possessive pronouns' }), []);
   assert.deepEqual(possessiveTermProblems({ sentence_de: 'Die Frau schreibt ihrem Freund einen Brief.', hint: "'ihrem' is a possessive article.", grammar_focus: 'Possessive articles in the dative' }), []);
   assert.ok(possessiveTermProblems({ sentence_de: 'Wir besuchen unsere Großeltern.', hint: '', grammar_focus: 'Possessive pronouns (accusative)' }).length > 0, 'misses "unsere" before a noun');
+  assert.deepEqual(possessiveTermProblems({ sentence_de: 'Ich gebe ihr Blumen.', hint: '', grammar_focus: 'Possessive pronouns' }), []);
+  assert.deepEqual(possessiveTermProblems({ sentence_de: 'Das ist seiner, Peter hat ihn vergessen.', hint: "'seiner' is a possessive pronoun.", grammar_focus: 'Possessive pronouns' }), []);
 });
