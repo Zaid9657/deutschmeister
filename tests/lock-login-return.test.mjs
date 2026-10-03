@@ -110,6 +110,11 @@ test('the level lock passes the location it is rendered at, not a fixed path', (
 });
 
 test('LoginPage still returns to state.from, the contract every door relies on', () => {
+  // Since 2026-10-03 LoginPage returns to the whole page the door handed over
+  // (path, query and hash, via returnPath in src/lib/loginReturn.js), not only
+  // from.pathname; tests/login-return-path.test.mjs pins that. This keeps the
+  // contract itself: the destination is read from state.from, and without one
+  // it is postAuthPath().
   const src = code(read('src/pages/LoginPage.jsx'));
-  assert.match(src, /location\.state\?\.from\?\.pathname\s*\|\|\s*postAuthPath\(\)/);
+  assert.match(src, /location\.state\?\.from\b[^;\n]*\|\|\s*postAuthPath\(\)/);
 });

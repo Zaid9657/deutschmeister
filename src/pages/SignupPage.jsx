@@ -24,7 +24,8 @@ import {
   TRIAL_WRITING_EVALUATIONS,
 } from '../data/marketing.js';
 import { pendingPlacement } from '../lib/placement.js';
-import { signupOutcome, resendWaitSeconds, RESEND_COOLDOWN_SECONDS } from '../lib/signupConfirmation.js';
+import { postAuthPath } from '../lib/buyIntent';
+import { signupOutcome, resendRefusal, signedInAs, RESEND_COOLDOWN_SECONDS } from '../lib/signupConfirmation.js';
 
 // The playbook form field (docs/design/playbook.md §1), with room for the
 // leading icon. The focus ring comes from the global *:focus-visible rule.
@@ -72,6 +73,10 @@ const SignupPage = () => {
   const [sentTo, setSentTo] = useState('');
   const [resendState, setResendState] = useState('idle'); // 'idle' | 'sending' | 'sent'
   const [cooldown, setCooldown] = useState(0);
+  // Refusals in a row that named no wait, and whether that reached the notice
+  // (the hourly cap, not the 60 s window: src/lib/signupConfirmation.js).
+  const [untimedRefusals, setUntimedRefusals] = useState(0);
+  const [limitReached, setLimitReached] = useState(false);
   const inboxHeading = useRef(null);
 
   useEffect(() => {
@@ -85,6 +90,17 @@ const SignupPage = () => {
   useEffect(() => {
     if (sentTo) inboxHeading.current?.focus();
   }, [sentTo]);
+
+  // Confirmed in another tab: supabase-js signs this tab in too (SIGNED_IN over
+  // its BroadcastChannel), so the panel moves on to where a login would have
+  // gone. Only a session of the address the link went to counts.
+  useEffect(() => {
+    if (!sentTo) return undefined;
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (signedInAs(session, sentTo)) navigate(postAuthPath(), { replace: true });
+    });
+    return () => subscription.unsubscribe();
+  }, [sentTo, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -142,12 +158,21 @@ const SignupPage = () => {
       options: { emailRedirectTo: `${window.location.origin}/login` },
     });
     if (resendError) {
-      const wait = resendWaitSeconds(resendError);
-      if (wait) setCooldown(wait);
-      else setError(resendError.message);
+      const refusal = resendRefusal(resendError, untimedRefusals);
+      if (refusal) {
+        setCooldown(refusal.wait);
+        setUntimedRefusals(refusal.untimed);
+        setLimitReached(refusal.limitReached);
+      } else {
+        setUntimedRefusals(0);
+        setLimitReached(false);
+        setError(resendError.message);
+      }
       setResendState('idle');
     } else {
       trackVerificationEmailResent();
+      setUntimedRefusals(0);
+      setLimitReached(false);
       setResendState('sent');
       setCooldown(RESEND_COOLDOWN_SECONDS);
     }
@@ -157,6 +182,8 @@ const SignupPage = () => {
     setSentTo('');
     setResendState('idle');
     setCooldown(0);
+    setUntimedRefusals(0);
+    setLimitReached(false);
     setError('');
   };
 
@@ -253,6 +280,16 @@ const SignupPage = () => {
                 >
                   <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
                   Sent again. Use the link in the newest email.
+                </p>
+              )}
+
+              {limitReached && (
+                <p
+                  role="status"
+                  className="mb-4 rounded-clay bg-accent-aprikose-wash px-4 py-3 text-left text-sm font-semibold text-accent-aprikose-ink"
+                >
+                  The limit for confirmation emails is reached for now, so we cannot send another one. Please try again
+                  later, and look in your spam folder for the email we already sent.
                 </p>
               )}
 
