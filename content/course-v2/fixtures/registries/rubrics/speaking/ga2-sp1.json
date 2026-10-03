@@ -1,0 +1,104 @@
+{
+  "$schema": "course-v2/rubric@1",
+  "id": "ga2-sp1",
+  "kind": "speaking",
+  "lane": "ga2",
+  "method": "ai",
+  "max": 4,
+  "examMax": 4,
+  "criteria": [
+    {
+      "id": "af",
+      "label": "Aufgabenerfüllung",
+      "per": "part",
+      "levels": [
+        2,
+        1.5,
+        1,
+        0.5,
+        0
+      ],
+      "scoredBy": "ai",
+      "descriptors": [
+        {
+          "points": 2,
+          "de": "Stellt zu jeder Karte eine passende Frage und antwortet auf jede Frage passend."
+        },
+        {
+          "points": 1.5,
+          "de": "Fragen und Antworten passen fast immer; eine Frage oder Antwort fehlt oder passt nur teilweise."
+        },
+        {
+          "points": 1,
+          "de": "Etwa die Hälfte der Fragen und Antworten passt zur Karte."
+        },
+        {
+          "points": 0.5,
+          "de": "Nur einzelne Fragen oder Antworten passen."
+        },
+        {
+          "points": 0,
+          "de": "Keine Frage und keine Antwort passt zur Aufgabe."
+        }
+      ]
+    },
+    {
+      "id": "sp",
+      "label": "Sprache",
+      "per": "part",
+      "levels": [
+        2,
+        1.5,
+        1,
+        0.5,
+        0
+      ],
+      "scoredBy": "ai",
+      "descriptors": [
+        {
+          "points": 2,
+          "de": "Fragen und Antworten sind korrekt gebildet oder haben nur kleine Fehler."
+        },
+        {
+          "points": 1.5,
+          "de": "Meist verständlich gebildet; einige Fehler, zum Beispiel in der Wortstellung der Frage."
+        },
+        {
+          "points": 1,
+          "de": "Häufige Fehler; der Sinn ist aber meistens zu verstehen."
+        },
+        {
+          "points": 0.5,
+          "de": "Viele Fehler; der Sinn ist oft nur mit Mühe zu verstehen."
+        },
+        {
+          "points": 0,
+          "de": "Kaum zu verstehen."
+        }
+      ]
+    }
+  ],
+  "errorPolicy": {
+    "a2": {
+      "v2-inv": "score",
+      "verb-final": "flag",
+      "case-np": "flag",
+      "gender-article": "flag",
+      "adj-ending": "flag"
+    }
+  },
+  "zeroRules": [],
+  "capRules": [],
+  "spelling": "not-scored",
+  "feedbackLanguage": [
+    "de-a2",
+    "en"
+  ],
+  "modelId": "config:speaking-full",
+  "splitVerified": false,
+  "calibration": {
+    "status": "pending",
+    "rangeBands": 1
+  },
+  "source": "https://www.goethe.de/pro/relaunch/prf/materialien/A2/A2_Uebungssatz_Erwachsene.pdf"
+}

@@ -1,0 +1,22 @@
+{
+  "$schema": "course-v2/rubric@1",
+  "id": "sd1-s1",
+  "kind": "writing",
+  "lane": "sd1",
+  "max": 5,
+  "criteria": [
+    { "id": "f1", "label": "Feld 1: passende Angabe aus dem Text eingetragen", "per": "task", "levels": [1, 0] },
+    { "id": "f2", "label": "Feld 2: passende Angabe aus dem Text eingetragen", "per": "task", "levels": [1, 0] },
+    { "id": "f3", "label": "Feld 3: passende Angabe aus dem Text eingetragen", "per": "task", "levels": [1, 0] },
+    { "id": "f4", "label": "Feld 4: passende Angabe aus dem Text eingetragen", "per": "task", "levels": [1, 0] },
+    { "id": "f5", "label": "Feld 5: passende Angabe aus dem Text eingetragen", "per": "task", "levels": [1, 0] }
+  ],
+  "zeroRules": ["form-number-exact"],
+  "capRules": [],
+  "spelling": "only-if-meaning-suffers",
+  "feedbackLanguage": ["de-a1", "en"],
+  "modelId": "deterministic",
+  "splitVerified": true,
+  "calibration": { "status": "pending", "rangeBands": 0 },
+  "source": "https://www.goethe.de/pro/relaunch/prf/de/Durchfuehrungsbestimmungen_A1_Start_Deutsch_1.pdf"
+}

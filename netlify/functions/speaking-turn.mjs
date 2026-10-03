@@ -7,6 +7,10 @@ import {
   transcribeAudio,
   teacherReply,
   synthesizeSpeech,
+  v2TaskKeyFromSession,
+  loadV2SpeakingTask,
+  buildCoursePartnerPrompt,
+  partnerMaxTokens,
 } from './_shared/speakingAI.mjs';
 // One grace window for both "turns stop here" and "the session is stale".
 import { SESSION_GRACE_MINUTES } from './_shared/speakingCloseout.mjs';
@@ -108,6 +112,15 @@ export const handler = async (event) => {
     // every turn stays on the task the lesson promised.
     const courseTask = (!isPlacement && !mission) ? taskFromSession(session) : null;
 
+    // COURSE v2: the session was started from a bank key; reload the same
+    // server-owned SpeakingTask every turn (the key is all the row stores).
+    const v2Key = (!isPlacement && !mission) ? v2TaskKeyFromSession(session) : null;
+    const v2Task = v2Key ? loadV2SpeakingTask(v2Key) : null;
+    if (v2Key && !v2Task) {
+      console.error('[speaking-turn] v2 task no longer in the bank:', v2Key);
+      return { statusCode: 410, headers, body: JSON.stringify({ error: 'Diese Aufgabe ist nicht mehr verfügbar.', stage: 'session', code: 'task_unavailable' }) };
+    }
+
     // 3. Cascade: STT → teacher (Haiku) → TTS. Provider failures surface as
     //    structured errors, never a silent 500.
     let userTranscript = '';
@@ -118,16 +131,22 @@ export const handler = async (event) => {
     try {
       userTranscript = await transcribeAudio({ audioBase64, mimeType });
 
-      const system = buildTeacherSystemPrompt({ level, mission, isPlacement, courseTask });
+      const system = v2Task
+        ? buildCoursePartnerPrompt({ level, task: v2Task.task })
+        : buildTeacherSystemPrompt({ level, mission, isPlacement, courseTask });
       // An unintelligible turn still gets a gentle nudge to repeat.
       const userText = userTranscript || '(Der Schüler hat nichts Verständliches gesagt — bitte freundlich um Wiederholung.)';
       replyText = await teacherReply({
         system,
         history: boundedHistory,
         userText,
-        maxTokens: 120,
+        maxTokens: v2Task ? partnerMaxTokens(level) : 120,
       });
-      if (!replyText) replyText = 'Entschuldigung, kannst du das bitte wiederholen?';
+      if (!replyText) {
+        replyText = v2Task && v2Task.task.aiRole.register === 'Sie'
+          ? 'Entschuldigung, können Sie das bitte wiederholen?'
+          : 'Entschuldigung, kannst du das bitte wiederholen?';
+      }
 
       try {
         replyAudioBase64 = await synthesizeSpeech({ text: replyText });

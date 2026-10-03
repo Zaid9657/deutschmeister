@@ -1,0 +1,21 @@
+{
+  "$schema": "course-v2/rubric@1",
+  "id": "sd1-sp1",
+  "kind": "speaking",
+  "lane": "sd1",
+  "max": 3,
+  "criteria": [
+    { "id": "vorstellen", "label": "Sich mit mehreren Sätzen vorstellen", "per": "part", "levels": [1, 0.5, 0] },
+    { "id": "buchstabieren", "label": "Ein Wort buchstabieren", "per": "part", "levels": [1, 0.5, 0], "appliesIf": "full" },
+    { "id": "nummer", "label": "Eine Nummer nennen", "per": "part", "levels": [1, 0.5, 0], "appliesIf": "full" }
+  ],
+  "errorPolicy": { "a1": { "verb-ending": "flag", "negation": "flag" } },
+  "zeroRules": [],
+  "capRules": [],
+  "spelling": "not-scored",
+  "feedbackLanguage": ["de-a1", "en"],
+  "modelId": "config:speaking-full",
+  "splitVerified": true,
+  "calibration": { "status": "pending", "rangeBands": 1 },
+  "source": "https://www.goethe.de/pro/relaunch/prf/de/Pruefungsziele_Testbeschreibung_A1_SD1.pdf"
+}

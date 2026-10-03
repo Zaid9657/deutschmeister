@@ -1,0 +1,264 @@
+{
+  "review": "a1.1-u09.r3",
+  "unitId": "a1.1-u09",
+  "file": "content/course-v2/a1.1/units/u09.json",
+  "round": 3,
+  "date": "2026-09-28",
+  "reviewers": [
+    {
+      "id": "R1",
+      "persona": "Prüferin (lizenzierte Goethe-A1-Prüferin, Start Deutsch 1): Prüfungstreue, Rubrik, Aufgabenklarheit"
+    },
+    {
+      "id": "R2",
+      "persona": "Kursleiterin DaF (A1.1): Natürlichkeit, Niveau, Didaktik, Szenenplausibilität"
+    }
+  ],
+  "method": "Both reviewers read every German string of the current file (u09.json written 28 Sep 01:28, after r2 at 00:43). That covers the title and title.canDo, the Folge (now 11 lines: l10/l11 are new since r2), the gist item and the gloss, and the three inputs (LS1 dialogue and menu, LS2 dialogue, LS3 dialogue and e-mail). It also covers the 6 H1 texts and the strategy card, both speaking parts (instructionsDe, situationDe, cards, openingLine, hintWords, 16 model turns, aiRole), and the S1 situation, taskDe, 5 fields, checklist and modelText. We read the 2 check lines, the 8 redemittel, both aussprache blocks, the story beat and cliffhanger, every endLine, promptDe, option and explanation.de, and the fact record. Outside the unit we read rc.moegen, rc.akkusativ and the 36 lexicon entries allocated to a1.1-u09, with their examples. We solved all 93 authored items blind from promptDe plus options, tiles or audio line: 1 Folge gist, 15 input, 12 structured-input, 33 pool, 16 reserve, 6 H1, 8 check and 2 proof. We also solved the 4 perception items and the 5 S1 fields. We checked the generator slots against the lexicon roles: every lex.glossTyped source is productive, every lex.articlePlural source has a plural, and no dictation source carries `say`. We permuted the tiles of every sentence_building item, V1 questions included, and tried every correction the named category admits. We ran about 200 candidate answers through the real grader. Form fields went through src/components/course-v2/grade.js gradeAnswer exactly as WritingTaskView FormTask builds them, and items went through src/lib/course-v2/checkItem.js. The candidates covered the r2 stop-gap forms and 60 time, day, name and head-count spellings, and every order of ls1-p09. We also ran a paradigm sweep, typing every other present-tense person form of mögen, nehmen and möchte into every typed item keyed on one of them. We compiled a1.1 in memory with scripts/course-v2/lib/compiler.mjs compileLevel. We ran the live normalizeSpeakingTask and buildCoursePartnerPrompt({ level, task }) of netlify/functions/_shared/speakingAI.mjs on the compiled a11-u09-s entry, and read the profile selection in rubrics/speakingV2.mjs. We checked the exam blocks against content/course-v2/registries/lanes/sd1.json: h1 is 6 × abc, 3 options, 2 plays, 32–53 words, text variant; sp2 is cards-ask with 2 topics; sp3 is cards-request with 2 cards; s1 has 5 fields and a 36–48-word situation. We checked every H1 option against its text. We recomputed every sum against the LS1 menu: LS2 20,90, t2 6,40 → 8,90, t6 11,10, check 9,20, S1 head count Olena + 5 = 6. We ran the validator's own knownForms + licensedForms at a1.1-u09 over every German string of the file. We ran a production-surface scan against lexicon roles: redemittel with forTemplate, hintWords, learner model turns, learner cards, micro-output prompts and the modelText. We looked up the allocation of each unknown token in all eight lexicons. We read cast and story against casts/a1.json and against u08 (cliffhanger), u10 (Sophie's call, „Bis Freitag im Restaurant!“, Dresden the day after the birthday) and u11 (the Kochi report). We re-read both sources of fact a1.1-u09-f01 at gesetze-im-internet.de in this session: § 13 PAngV („Bedienungsgeld und alle sonstigen Zuschläge einschließen“) and § 107 Abs. 3 GewO (the Trinkgeld definition). We verified every r2 finding against the current file and the file dates of the engine, checker, lexicon, rule-card and rail files. We compared the trail classes of a1.1-u04 r1–r5 and of the r3 reviews of u03, u05, u06, u07 and u08. We ran no git command and edited no file except this review.",
+  "validator": {
+    "command": "node scripts/course-v2/validate.mjs content/course-v2/a1.1/units/u09.json",
+    "result": "OK (no blocker findings), exit 0. 40 rules: 33 pass, 0 fail, 3 warn, 4 skipped; 0 blocker, 30 ratchet, 5 advisory. GRM-04 gives 3 advisories, all false positives. One is the „10.“ of Olena's phone number on steps[5].task.situationDe, read as an ordinal. The other two are „ihr Kuchen“ in steps[0].pool.items[8].accepted[1] and accepted[2], read as a possessive. The second accepted[2] hit is the one r2-F06 predicted the F02 fix would add (→ F07). LEX-02 is at 30 ratchet (r2: 31). The drop is the r2-F05 „höflich 0× in inputs“ line, gone now that Folge l10/l11 use the word. The 30 recurrence gaps are unchanged (→ F08). ITM-03 gives 2 informational advisories (the player shuffles non-exam options). LEX-01 has 0 blockers and 0 advisories: the Folge is measured by coverage, which is why „Beides“ passes (→ F05). Skipped: ITM-08 (no caseSensitive item) and the level-scope COV-1/4/5.",
+    "check": "node scripts/course-v2/check.mjs content/course-v2/a1.1/units/u09.json → 0 errors, exit 0",
+    "level": "node scripts/course-v2/validate.mjs a1.1 → FAIL, exit 1, with 2 blockers, neither in u09: COV-3 on a1.1-u01 spec.lanes (specs.json differs) and LEX-05 on a1.1-u04 spec.lexiconBlocks (lx.markt, lx.prospekt, lx.durchsage). ALL-02 has 1 advisory, on u03. COV-1, COV-4, COV-5, ITM-01, ITM-09 and LEX-07 pass on the level. node scripts/course-v2/validate.mjs a2.1 --rule LEX-07 → FAIL with 2 blockers. One is entries[150] lx.getrennt, still duplicated against the a1.1-u09 allocation (→ F06). The other is lx.ueberlegen, not u09's.",
+    "notes": "File dates against r2 (28 Sep 00:43). Written after r2: only u09.json (01:28) and u10–u12 (01:19–01:37). Unchanged since before r2: netlify/functions/_shared/speakingAI.mjs (27 Sep 13:40), rubrics/speakingV2.mjs (13:31), speaking-session.mjs (13:42), the committed netlify/functions/_shared/course-v2/a1.1.banks.json (19:09; it still holds only the a11-u04-* keys), src/lib/course-v2/checkItem.js (19:41), src/lib/lesson/check.js (19:40), src/components/course-v2/ItemView.jsx (20:47), content/course-v2/a1.1/lexicon.json (23:03), a1.1/rule-cards.json (23:06), a1.1/specs.json (23:03), a2.1/lexicon.json (19:27), scripts/course-v2/lib-validate/orders.mjs (19:55), detectors.mjs (22:14), and every file under scripts/course-v2/rules/ (latest 22:35). So every owner-held finding of r2 is still open for the reason r2 gave, and no rail has been written for the classes r2 sent to the rule-smith. JSON.parse of this review file: OK."
+  },
+  "previousFindings": [
+    {
+      "id": "r2-F01",
+      "severity": "blocker",
+      "status": "open",
+      "evidence": "No engine file has changed since 27 Sep 13:42. Fresh in-memory compile: a11-u09-s keeps both parts (sd1.sp2 with the cards Frühstück/Saft vs Fisch/Kaffee; sd1.sp3 with Kaffee/Rechnung vs Speisekarte/Zucker). normalizeSpeakingTask returns mode 'cards-ask', profile 'sd1-sp2', cards { learner: [], partner: [] }, and an empty situation and instructions. buildCoursePartnerPrompt renders „Die Karten deines Gegenübers: —. Deine Karten: —.“ and contains neither „Speisekarte“, „Zucker“ nor „Teil 3“. The committed a1.1.banks.json still has no a11-u09 key → F01."
+    },
+    {
+      "id": "r2-F02",
+      "severity": "major",
+      "status": "fixed-in-unit",
+      "evidence": "ls1-p09 accepts „Mögt ihr auch Kuchen?“, „Mögt ihr Kuchen auch?“ and „Mögt auch ihr Kuchen?“, with an acceptedWhy for each non-key order and reviewerConfirmed [„Mögt auch ihr Kuchen?“]. checkItem → correct for all three. The rail half is open: orders.mjs l. 18–19 still declares questions out of scope → F07."
+    },
+    {
+      "id": "r2-F03",
+      "severity": "major",
+      "status": "partly-fixed",
+      "evidence": "All eight stop-gap forms landed and grade correct: f3 „Freitagabend“, „am Freitagabend“ and „Freitag Abend“; f4 „abends um halb acht“, „am Abend um halb acht“, „abends um 19.30 Uhr“, „um 19.30 Uhr abends“ and „abends um 7.30 Uhr“. The checker rule was not written (checkItem.js is unchanged). The lists grew instead, f3 to 11 forms and f4 to 51 forms for one time of day. The grader still marks extra correct information WRONG („Tisch für 6“, „Frau Olena Kovalenko“) → F03."
+    },
+    {
+      "id": "r2-F04",
+      "severity": "minor",
+      "status": "fixed",
+      "evidence": "t6-l04 is now „Und meine Frau bezahlt die Suppe, den Kuchen und den Tee.“, which puts t6 inside 32–53 (TXT-02 passes). The h1-06 explanation now reads „… Er isst also Salat. Suppe, Kuchen und Tee bezahlt die Frau.“, with the en twin to match. Every option of all six H1 items is now heard in its text."
+    },
+    {
+      "id": "r2-F05",
+      "severity": "minor",
+      "status": "partly-fixed",
+      "evidence": "Fixed: höflich now occurs twice in the unit's inputs (Folge l10, l11), and LEX-02 no longer reports it at 0×. Open: a2.1 entries[150] lx.getrennt is still a LEX-07 blocker, the a2.1 lexicon is unchanged since 27 Sep 19:27, ls2-mo still makes the learner say the receptive „Stück“ (promotions []), and the unit stays at the LEX-05 ceiling of 36 → F06. The new Folge line brought in „Beides“, a word in no lexicon of any level → F05."
+    },
+    {
+      "id": "r2-F06",
+      "severity": "minor",
+      "status": "open",
+      "evidence": "detectors.mjs is unchanged. The same two false-positive classes fire, and there are now 3 hits, because the F02 fix added „Mögt auch ihr Kuchen?“, as r2 predicted → F07."
+    },
+    {
+      "id": "r2-F07",
+      "severity": "minor",
+      "status": "open",
+      "evidence": "LEX-02 is at 30 (r2: 31). The drop is only höflich's input count. u10–u12 were edited after r2 but recycle none of the anchors. Getränk, Frühstück, Mittagessen, Abendessen, Fleisch, Salat, Suppe, lecker, Café, Speisekarte, Rechnung, getrennt, Glas, Tasse, Saft and the six compounds recur in 0 later units → F08."
+    },
+    {
+      "id": "r2-F08",
+      "severity": "minor",
+      "status": "open",
+      "evidence": "rc.moegen is byte-identical to r2. The table stops at wir, and the prose still says „möchte ist ein Wunsch jetzt … mag gilt immer“ → F09."
+    },
+    {
+      "id": "r2-F09",
+      "severity": "minor",
+      "status": "open",
+      "evidence": "The lexicon examples are unchanged: lx.geburtstag „Arjun hat am Samstag Geburtstag.“, lx.fruehstueck „Frühstück gibt es bis 11 Uhr.“, lx.hoeflich „Im Café fragt Priya höflich nach der Speisekarte.“ and lx.abendessen „Das Abendessen ist um sieben.“ → F10."
+    }
+  ],
+  "verdict": "Not exit-ready: 1 BLOCKER, 2 MAJOR and 7 MINOR. The unit author landed every unit edit r2 asked for. ls1-p09 accepts „Mögt auch ihr Kuchen?“. The eight stop-gap S1 forms grade correct. t6 now names the soup, so every option of every H1 item is heard. höflich has two input occurrences. We solved all 93 authored items, the 4 perception items and the 5 form fields blind, and every key is right. All r1 classes stay closed. Nothing outside the unit has moved since r2: engine, checker, lexicon, rule cards and every rail predate it. Three things stop exit. (1) F01, BLOCKER, engine: normalizeSpeakingTask still drops `parts`. The AI partner runs a card round with no cards and never reaches Teil 3, and the session is graded with sd1-sp2 alone. So the unit's Prüfungsfokus Teil for Sprechen (sd1.sp3), and the proofs that rest on it, are neither run nor scored. (2) F02, MAJOR, checker. This is new here: r2 missed it, and the class was found in u03 r3 after our r2. Person-ending and stem-vowel errors on the unit's own paradigms (magt, mögst, nimmt, nimmst) come back TYPO. After one retry they are logged as correct, in seven typed items, the scored c02 among them. (3) F03, MAJOR, checker: the S1 form still marks extra correct information WRONG („Tisch für 6“, „Frau Olena Kovalenko“), and the time-form class has been closed with a 51-form list instead of a rule. Two small unit edits remain. F04: four items whose key is the only option that echoes the question, two of them in the Check. F05: two Folge lines. „Beides“ is in no lexicon of any level, and Olena orders without the „bitte“ that Elif calls obligatory two lines later. Five minors are owner-held carry-overs: F06 lexicon roles, F07 rails and detectors, F08 recycling, F09 rc.moegen and F10 word cards. Another content round on u09 cannot close F01–F03 or F06–F10. They must reach the engine, checker, lexicon, rule-card and rule-smith owners before round 4, or round 4 fails on the same points.",
+  "scores": {
+    "D": 4,
+    "N": 4,
+    "H": 4,
+    "A": 3,
+    "P": 2,
+    "K": 4,
+    "E": 4
+  },
+  "scoreNotes": {
+    "D": "Every line is correct German, and du/Sie fits every relationship: the friends say du; the waiter, Nora and every task say Sie; the e-mail runs „Hallo zusammen … Viele Grüße“. The r1 off-idiom lines stay fixed, and the post-r2 lines (Folge l10/l11, t6-l04) are grammatical. It stays at 4, not 5. The new Folge rule „Aber immer mit „bitte“!“ is an overstatement that Olena's own order to the waiter breaks two lines earlier (F05). The waiter's only check-back is still „Ist alles gut?“, where „Ist alles in Ordnung?“ or „Schmeckt es Ihnen?“ is the standard phrase (r2 note).",
+    "N": "Production stays under the u09 ceiling: mögen is new; möchte, Akkusativ, nehmen and the u07 separable verb in ls3-p07 are review. A knownForms + licensedForms scan of every German string finds only metalanguage, the glossed Hunger, satt and nett, transparent compounds of known parts (Apfelsaft, Handynummer, Freitagabend), and „Beides“ (F05). It is 4, not 5, for owner-held debts. Fisch and Stück are receptive although the unit makes the learner produce them, the unit sits at the LEX-05 ceiling, and a2.1 duplicates getrennt (F06). rc.moegen words its contrast with a2.2 and b1.1 words (F09). Detector noise persists (F07) and nothing is recycled (F08).",
+    "H": "A lively, connected Saturday. It runs from an hour of running to a full café, the last fruit salad, Olena giving in to Saturday apple cake, and Elif paying. The birthday is planned at a restaurant named after Priya's home town, and the new Folge lines let Priya ask the question a learner would ask. The unit follows u08's cliffhanger and agrees with u10 and u11. Every can-do is designed into an Aufgabe or a proof. It is 4 and not 5 because, in the running product, the Teil 3 that carries two proofs is not run (F01).",
+    "A": "All 93 authored items and the 5 form fields were solved blind, and every key is right. Every correction prompt names its category, every sentence-building prompt says Frage or Aussagesatz, and ls1-p09 accepts all three orders. It scores 3 for two MAJORs, both in the grader: paradigm errors pass as typos, in the scored c02 among others (F02), and correct S1 entries with extra correct words are marked WRONG (F03). F04 also leaves four key-echo items, two of them scored.",
+    "P": "H1 is exact to sd1.json: 6 × abc with 3 options and 2 plays, texts of 35–48 words (t6 now 38), and the flagged text variant. The keys run c b a a b c, every option is heard, every text has two voices, the tasks are original, and the „Nein, Moment …“ trap is kept. Sp2 (cards-ask, two topics), Sp3 (cards-request, two cards) and S1 (a 44-word situation, 5 fields, rubric sd1-s1) match their templates. It scores 2 because the speaking Aufgabe is still delivered and scored on the wrong basis (F01): the Prüfungsfokus Teil sd1.sp3 is neither run nor scored, and Teil 2 runs without its cards.",
+    "K": "The cast is consistent: Olena Kovalenko, a pescatarian in every scene, Sophie's WG, and the ensemble genders in every stem and explanation. The prices (20,90 / 8,90 / 11,10 / 9,20) and the head count of 6 agree across the unit, and so does the week (Saturday café, answers by Wednesday, Friday dinner, Saturday Dresden), with u08, u10 and u11 as well. The Trinkgeld fact is current: both sources were re-read today and it claims nothing it did not read. It stays at 4 for the word cards that still nudge against the story (F10) and for the Folge's bitte rule, which contradicts Olena's order two lines earlier (F05).",
+    "E": "Every instruction is ≤ 90 characters. The LS1–LS3 and LS7 endLines name the win, and the inputs meet TXT-03. No 360 px walkthrough was run in this round, as that is the walkthrough reviewer's remit."
+  },
+  "total": 25,
+  "counts": {
+    "blocker": 1,
+    "major": 2,
+    "minor": 7,
+    "unitOwned": {
+      "blocker": 0,
+      "major": 0,
+      "minor": 2
+    },
+    "note": "unitOwned counts the findings whose fix edits u09.json: F04 (four items: three keys and one stem) and F05 (two Folge lines). F03 has an optional unit stop-gap (four accepted forms), but its fix is the checker's. Owned outside the unit: F01 (E1 server track and rubric owner); F02 and F03 (lesson checker, with a test); F06 (a2.1 and a1.1 lexicon owners); F07 (rule-smith); F08 (level reviewer and the u10–u12 authors); F09 (rule-cards owner); F10 (lexicon owner)."
+  },
+  "findings": [
+    {
+      "id": "F01",
+      "reviewer": "R1",
+      "criterion": "P",
+      "severity": "blocker",
+      "scope": "class",
+      "unitId": "a1.1-u09",
+      "path": "steps[4].task.parts[0..1] (sd1.sp2 + sd1.sp3); spec.lanes.pruefungsfokus[1] (sd1.sp3, slot sprechen); check.proofs[0], [1], [3] (→ 'sprechen'); compiled bank entry a11-u09-s; netlify/functions/_shared/speakingAI.mjs normalizeSpeakingTask (l. 340–366), buildCoursePartnerPrompt (l. 502–520); netlify/functions/_shared/rubrics/speakingV2.mjs (l. 38); netlify/functions/_shared/course-v2/a1.1.banks.json",
+      "quote": "compileLevel('a1.1') → a11-u09-s { template: 'sd1.sp2', mode: 'cards-ask', profile: 'sd1-sp2', parts: [sd1.sp2 cards { learner: [„Essen und Trinken – Frühstück“, „Getränke – Saft“], partner: [… Fisch, … Kaffee] }, sd1.sp3 cards { learner: [„Kaffee“, „Rechnung“], partner: [„Speisekarte“, „Zucker“] }] } · normalizeSpeakingTask → cards { learner: [], partner: [] }, situationDe '', instructionsDe '' · buildCoursePartnerPrompt({ level: 'a1.1', task }) → „ABLAUF — Fragen und Antworten mit Wortkarten: - Die Karten deines Gegenübers: —. Deine Karten: —.“ · no „Speisekarte“, „Zucker“ or „Teil 3“ in the prompt · speakingV2: profileId = task.profile → sd1-sp2 · committed a1.1.banks.json (27 Sep 19:09): speaking keys a11-u04-s only",
+      "problem": "r2-F01 is unchanged. Every engine file predates r2, and SCHEMA §12 (l. 792) still says the speaking functions read the bank shard „incl. `parts`“. We compiled the level afresh and ran the live functions. The AI partner Nora is told to run a card round with no cards on either side and no situation. The topics „Essen und Trinken“ and „Getränke“ and the instruction „Sagen Sie auch: Was mögen Sie? Was mögen Sie nicht?“ never reach it, and Teil 3 does not appear in the prompt at all. The grader scores the whole transcript with sd1-sp2 alone, so the requests and reactions of Teil 3 have no criterion (sd1-sp3: 2 points per request, 1 per reaction). In this unit Teil 3 is the Prüfungsfokus entry of the speaking slot, so the Teil the chip promises is the one that is neither run nor scored. Two can-do proofs rest on it: cd.a1.ansprechen-bitten (proof 'sprechen' only) and the spoken half of cd.a1.bestellen-bezahlen („Kann ich bitte einen Kaffee / die Rechnung haben?“). SpeakingTaskView still shows the learner both parts with their cards. Until the next compile, the task also answers 410 task_unavailable, because the committed bank shard holds no a11-u09 key. That is a scorer on the wrong pass rule and a can-do claimed but not performed in the product: BLOCKER (§9.4). The class blocks all eight multi-Teil A1.1 units (u01, u04, u05, u06, u08, u09, u10, u12).",
+      "fix": "The engine owner (E1 server track) fixes this, as in u01 r2-F01, u08 r3-F01 and r2-F01 here. normalizeSpeakingTask keeps `parts` and normalises each part. buildCoursePartnerPrompt renders one ABLAUF per part, in order, with that part's situation, instructions and both card sets, plus a hand-over line („Jetzt Teil 3: …“). speakingV2 grades each part with its own profile (here sd1-sp2, max 6, and sd1-sp3, max 6), and the result card shows both Teile. Then recompile the banks. Unit: no edit, and do not collapse LS5 to one Teil. Verify by playing one a11-u09-s session after the fix. In Teil 2 Nora should ask „Mögen Sie Fisch?“ and „Trinken Sie am Morgen Kaffee?“. In Teil 3 she should react to „Kann ich bitte die Rechnung haben?“ and ask for the Speisekarte and the Zucker, and the result should show a Teil 3 score.",
+      "proposedRule": "As r2-F01. Add a11-u09-s to the failing fixtures of the u01 r2-F01 test (with a11-u01-s, a11-u04-s and a11-u08-s). (a) The partner prompt contains one ABLAUF per part and every part's learner and partner cards. (b) The grading plan covers every part's profile. (c) A Prüfungsfokus template in slot 'sprechen' is a part that is both run and scored. (d) Every unit a compiled level contains has its bank keys in the committed shard. The test runs over all registered courses."
+    },
+    {
+      "id": "F02",
+      "reviewer": "R2",
+      "criterion": "A",
+      "severity": "major",
+      "scope": "class",
+      "unitId": "a1.1-u09",
+      "path": "check.items[1] (a1.1-u09-c02); steps[0].pool.items[1] (ls1-p02), steps[0].pool.items[2] (ls1-p03), steps[2].reserve[0] (ls3-r01); steps[1].pool.items[2] (ls2-p03), steps[1].pool.items[3] (ls2-p04), steps[1].reserve[1] (ls2-r02); src/lib/lesson/check.js endingDiffers (l. 228–232) and the typo branch of compareAnswer; src/components/course-v2/ItemView.jsx submit (l. 135–150)",
+      "quote": "gradeAnswer → typo: c02 (scored) „Was ___ du? – Ich nehme einen Tee. (nehmen)“ ← „nimmt“ · ls1-p02 „Olena, ___ du Wurst? (mögen)“ ← „magt“ · ls3-r01 „Olena, du ___ Kuchen sehr, oder? (mögen)“ ← „magt“ · ls1-p03 „Elif und Olena, ___ ihr Kuchen? (mögen)“ ← „mögst“ · ls2-p03 „Elif, was ___ du? (nehmen)“ ← „nimmt“ · ls2-p04 „Olena ___ einen Apfelkuchen. (nehmen)“ ← „nimmst“ · ls2-r02 „Und Priya? Was ___ sie? (nehmen)“ ← „nimmst“ · explanations: ls1-p02 „„du magst“: mit „a“ und mit „-st““, ls1-p03 „„ihr mögt“: mit „ö“ und mit „-t““, ls2-p04 „„sie nimmt“: wie „du nimmst“, mit „-t““ · endingDiffers: `w.slice(-1) !== e[i].slice(-1)` · ItemView after the retry: `const correct = r.result !== RESULT.WRONG` · boundary: c01 „magst“ and ls1-r05 „Olena magt Fisch.“ → wrong (the last letter differs)",
+      "problem": "r2 missed this: we tested orders and time forms, not person forms. a1.1-u03 r3-F01 found the class after our r2, measured it at 45 typed items in nine A1.1 units („u09 4“), and u08 r3-F03 confirmed it. Our paradigm sweep finds seven items in u09. check.js calls a one-letter difference a typo unless the last letter differs. The person endings -st and -t differ inside the word (magst/magt, mögt/mögst, nimmst/nimmt), so each of these errors comes back TYPO. ItemView gives one retry, then resolves the same answer as correct and logs it as correct, with no error tag. Three of the seven items drill the person forms of the unit's one new point, g.moegen, and their own explanations teach exactly the endings the grader forgives. The other four drill the vowel-change verb nehmen, including c02 in the scored Check. A grader that accepts the error an item exists to remove is a gate hole that lets a finding class through (§9.4, MAJOR). The unit cannot close it: there is no item field for known wrong forms, and CLAUDE.md forbids patching the checker's job in the data. Stop-the-line is in force for this class.",
+      "fix": "The checker owner (the v2 wrapper src/lib/course-v2/checkItem.js, or check.js) fixes this, as in u03 r3-F01 and u08 r3-F03. On a typed item whose topic is a verb spine point (g.moegen, g.vokalwechsel, g.praesens, g.koennen …) or a lexicon verb, an answer that is another form of the key's paradigm is WRONG, never TYPO. That covers another person ending, the unchanged or the changed stem vowel, and „mögst“ for „mögt“. A genuine letter slip („nimst“, „mögn“) stays TYPO. Unit: no edit.",
+      "proposedRule": "As u08 r3-F03: a checker test (node --test) plus a course-v2 rail. For every typed item whose key token is an inflected present-tense verb, build the other person forms of that verb (for a vowel-change verb, also the other stem) and require checkItem to return WRONG for each. New failing fixtures: a1.1-u09 c02 („nimmt“), ls1-p02 („magt“), ls1-p03 („mögst“), ls2-p04 („nimmst“). The test runs over all registered courses."
+    },
+    {
+      "id": "F03",
+      "reviewer": "R1",
+      "criterion": "A",
+      "severity": "major",
+      "scope": "class",
+      "unitId": "a1.1-u09",
+      "path": "steps[5].task.form.fields[4] (f5 „Tisch für wie viele Leute?“), fields[0] (f1 „Name“, exact: 'name'), fields[3] (f4 „Uhrzeit“, 51 accepted forms), fields[2] (f3, 11 forms); graded by src/components/course-v2/WritingTaskView.jsx FormTask (l. 30–50) → grade.js gradeAnswer → src/lib/course-v2/checkItem.js; rubric content/course-v2/registries/rubrics/writing/sd1-s1.json",
+      "quote": "f5 „Tisch für 6“ → wrong · „Tisch für sechs Personen“ → wrong · f1 „Frau Olena Kovalenko“ → wrong · f4 „um 19.30 Uhr am Freitag“ → wrong · while f5 „für 6 Leute“, f4 „abends um halb acht“ and f3 „am Freitagabend“ → correct · f4 accepted list: 51 forms for one time of day · sd1-s1 criteria „Feld n: passende Angabe aus dem Text eingetragen“, spelling „only-if-meaning-suffers“, zeroRules [„form-number-exact“] · FormTask: `if (r.result !== RESULT.WRONG) correct += 1`",
+      "problem": "The unit side of r2-F03 landed: all eight forms r2 listed now grade correct. The checker rule r1-F04 and r2-F03 asked for was not written (checkItem.js predates r2), so the class was closed a second time by widening lists. f3 went from 3 to 11 forms, and f4 went from 27 to 51 forms for the single time „halb acht am Abend“. That is exactly what CLAUDE.md rules out („Never fix an item by widening its accepted list alone“), and the edge has only moved. Entries that repeat the field's own label or add correct information are still WRONG: „Tisch für 6“ in the field „Tisch für wie viele Leute?“, „Frau Olena Kovalenko“ in „Name“ (the checklist asks for „Vorname und Familienname“, and both are there), and „um 19.30 Uhr am Freitag“ in „Uhrzeit“. The lane's own rubric scores each field on the passende Angabe, with digits exact and spelling counted only where meaning suffers. An examiner gives each of these the point, but FormTask costs the learner one of five points in a scored Aufgabe. This is the class of u04 r3-F01, u07 r1-F03 and u05 r3-F01 (the last with the same extra-information fixtures: „für 2 Personen“, „Berliner Straße Nr. 21“), now in its fourth a1.1 unit. A defensible answer not accepted on a scored exam task: MAJOR (§9.4).",
+      "fix": "The checker owner fixes this, with a test. For form_fill fields, accept an answer that contains an accepted form as a contiguous span when every remaining token is one of three things: (a) a content word of the field's own labelDe („Tisch“, „für“, „Leute“, „Uhrzeit“); (b) an Anrede before a name („Frau“, „Herr“); or (c) the key of another field of the same form („am Freitag“). Keep the digit run exact (form-number-exact). Fold „um“, „Uhr“ and one time-of-day word in any order, as r2-F03 proposed. Then prune f3 and f4 back to their core forms. Unit: stop growing the lists. Only if the checker cannot land before round 4, add „Tisch für 6“, „Tisch für sechs“ and „Tisch für 6 Personen“ to f5 and „Frau Olena Kovalenko“ to f1 as the last stop-gap, and log them as such.",
+      "proposedRule": "(a) A checker test over all registered courses: for every form_fill field, the key plus its label words, the key plus an Anrede (exact: 'name'), and the key plus another field's key all grade correct. Failing fixtures: a1.1-u09 ls6 f5 „Tisch für 6“, f1 „Frau Olena Kovalenko“, f4 „um 19.30 Uhr am Freitag“, plus the u05 r3-F01 fixtures. (b) An ITM-10 advisory: a form field whose accepted list exceeds 12 forms is reported as „a list standing in for a checker rule“. Fixture: a1.1-u09 f4 (51)."
+    },
+    {
+      "id": "F04",
+      "reviewer": "R1",
+      "criterion": "A",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u09",
+      "path": "check.items[4] (a1.1-u09-c05), check.items[7] (c08); steps[0].reserve[3] (ls1-r04); steps[1].inputItems[3] (ls2-i04); compare steps[2].structuredInput[3] (ls3-s04, fixed by r1-F06)",
+      "quote": "c05 (scored) „„Magst du Kuchen?“ – Was passt?“: „Einen Kuchen, bitte.“ / „Ja, Kuchen mag ich sehr.“ (key) / „Das macht 3,70 Euro.“ · ls1-r04 „„Magst du Fisch?“ – Was passt?“: „Ja, einen Fisch, bitte.“ / „Nein, Fisch mag ich nicht.“ (key) / „Fisch kostet 12,90 Euro.“ · c08 (scored) „Sie möchten bestellen, aber Sie haben keine Speisekarte. Was sagen Sie?“: „Die Speisekarte, bitte.“ (key) / „Die Rechnung, bitte.“ / „Zusammen, bitte.“ · ls2-i04 „Was sagt der Kellner über den Obstsalat?“: „Er ist heute sehr teuer.“ / „Es gibt nur noch einen Obstsalat.“ (key) / „Er ist nicht lecker.“ · ls3-s04 (fixed): „Einen Fisch, bitte.“ / „Ja, sehr!“ (key) / „Das macht 12,90 Euro.“",
+      "problem": "In each of these items the key is the only option that repeats a content word of the question. In c05 and ls1-r04 it is the verb mögen („Magst“ → „mag“), in c08 „Speisekarte“, and in ls2-i04 „Obstsalat“. No distractor repeats it. A learner who matches words gets all four without deciding what the unit teaches: that „Magst du …?“ asks about liking, not an order. r1-F06 repaired this exact shape on ls3-s04 („Ja, sehr!“), but its twins c05 and ls1-r04 kept the echo, and two of the four are scored Check items. This is the exemplar class u04 r1-F26 / r2-F03, which must not reappear. It has since been raised in u05 r3-F04, u06 r3-F02 and u08 r3-F05, and ITM-02 still has no check for it (the rule files predate r2). A weak distractor set: MINOR.",
+      "fix": "Let meaning decide, not overlap. Keep every distractor and the item types, and re-check ITM-11. (1) c05: key and accepted become „Ja, sehr! Kuchen ist lecker.“ (en: „Yes, a lot! Cake is tasty.“), and the explanation stays. (2) ls1-r04: key and accepted become „Nein, Fisch finde ich nicht gut.“, and the explanation stays. (3) c08: promptDe becomes „Sie möchten bestellen, aber Sie wissen nicht: Was gibt es hier? Was sagen Sie?“ (79 characters), and the options and explanation stay. (4) ls2-i04: key and accepted become „Es gibt nur noch einen.“, and the explanation (which quotes the waiter) stays. After the edits, the only option in each item that shares a word with the stem is a distractor, or no option shares one.",
+      "proposedRule": "u08 r3-F05's ITM-02 advisory, still unwritten: on a response or detail item, report it when a content token of the stem (lemmatised; not ja/nein, pronouns or articles) occurs in the key and in no distractor. Add the fixtures a1.1-u09 c05, c08, ls1-r04 and ls2-i04; the passing fixture is ls3-s04. The class is in ≥ 3 a1.1 units, so it is stop-the-line until the advisory exists. The test runs over all registered courses."
+    },
+    {
+      "id": "F05",
+      "reviewer": "R2",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u09",
+      "path": "start.folge.lines[10] (a1.1-u09-start-l11), start.folge.lines[9] (l10), start.folge.lines[6] (l07), start.folge.glosses",
+      "quote": "l10 Priya: „Elif, was ist höflich: „Ich möchte …“ oder „Ich nehme …“?“ · l11 Elif: „Beides ist höflich. Aber immer mit „bitte“!“ · l07 Olena, to the waiter: „Und ich nehme einen Orangensaft. Gibt es noch Frühstück?“ · glosses: only „Hunger“ · „beide/beides“: no entry in any of the eight lexicons, not in the core list, not glossed · LEX-01: 0 findings (the Folge is measured by coverage)",
+      "problem": "The r2-F05 fix gave höflich its two input occurrences with two new Folge lines, which is good in itself, but it made two small new breaks. (1) The key word of Elif's answer, „Beides“, is in no lexicon of any level and carries no gloss. The Folge passes LEX-01 only because inputs are measured by coverage, so the word the whole exchange turns on is never taught anywhere in the course. That is the „Markt“ class of the exemplar (u04 r2-F07, r5-F03) and of r1-F02 here. (2) Elif's rule „Aber immer mit „bitte“!“ comes two lines after Olena orders from the waiter without „bitte“. The Folge the learner has just heard breaks the rule it states, while every other order placed with a waiter in the unit (Folge l05/l06, ls2-l03, ls2-l06, t1, t2) has „bitte“. This is the third a1.1 round in which a fix brings a small new break (r1-F11 → r2-F04, r1-F09 → r2-F05).",
+      "fix": "l11: „„Ich möchte …“ und „Ich nehme …“ sind höflich. Aber immer mit „bitte“!“ (en unchanged: „Both are polite. But always with “bitte”!“). l07: „Und ich nehme einen Orangensaft, bitte. Gibt es noch Frühstück?“ (en: „And I’ll have an orange juice, please. …“). höflich keeps its two input occurrences (l10, l11), so LEX-02 stays as it is. Alternative for (1): gloss „Beides“ (en „both“), but no lexicon allocates it at any level.",
+      "proposedRule": "LEX-01 (advisory): an input or Folge token that no lexicon of any level allocates and no gloss covers is reported even when the text is above its coverage threshold. Fixture: a1.1-u09 start.folge.lines[10] („Beides“). The test runs over all registered courses."
+    },
+    {
+      "id": "F06",
+      "reviewer": "R2",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u09",
+      "path": "content/course-v2/a2.1/lexicon.json entries[150] (lx.getrennt, a2.1-u05, productive); content/course-v2/a1.1/lexicon.json lx.fisch (a1.1-u09, receptive), lx.stueck (a1.1-u04, receptive), promotions []; redemittel[0..2] (rm01–rm03, forTemplate sd1.sp2); steps[4].task.modelTurns[3] (learner); rc.moegen modelSentence; steps[1].microOutput (ls2-mo); spec.lexiconBlocks (36 entries)",
+      "quote": "validate.mjs a2.1 --rule LEX-07 → „x … entries[150].id (lx.getrennt): … already allocated at a1.1 (receptive, a1.1-u09) … remove this entry and add promotions“ · rm01 „Magst du Fisch?“, rm02 „Ja, Fisch mag ich sehr.“, rm03 „Nein, Fisch mag ich nicht.“ (all forTemplate sd1.sp2) · learner model „Nein, Fisch mag ich nicht. Aber Käse mag ich sehr.“ · rc.moegen „Magst du Fisch? – Nein, Fisch mag ich nicht.“ · lx.fisch role „receptive“ · ls2-mo „Bestellen Sie ein Getränk und ein Stück Kuchen.“ · lx.stueck role „receptive“ · LEX-05: 36 entries = ceil(32 × 1.1)",
+      "problem": "Three parts of r2-F05 are unchanged, and our production scan finds one more lemma of the same class. (1) a2.1 still allocates getrennt, which r1-F02 allocated at a1.1-u09, so the a2.1 level run is red. (2) ls2-mo still makes the learner say „ein Stück Kuchen“, while lx.stueck is receptive. (3) New, and r2 missed it: Fisch is the frame of the unit's new point. The three sd1.sp2 redemittel, the Sp2 learner model and the rule card all have the learner say „Fisch mag ich (nicht)“. Yet the unit's own allocation makes lx.fisch receptive, so SRS schedules only recognition for the word the unit asks the learner to produce most. This is the class of u04 r4-F02, u08 r2-F06 and u08 r3-F07 (receptive lemmas that must be produced), which is stop-the-line until its rail exists. (4) The unit holds 36 entries, the exact LEX-05 ceiling, so any further allocation fails. No key changes.",
+      "fix": "a2.1 lexicon owner: delete entries[150] and add the promotion LEX-07 names ({ lemma: \"lx.getrennt\", from: \"receptive\", to: \"productive\", unit: \"a2.1-u05\" }). a1.1 lexicon owner: make lx.fisch productive at a1.1-u09 and add promotions [{ lemma: \"lx.stueck\", from: \"receptive\", to: \"productive\", unit: \"a1.1-u09\" }]. Re-run LEX-05 for the productive share, and rebalance with a lemma the unit only shows (e.g. lx.mittagessen stays receptive). Keep the unit at 36 entries. Unit: no edit.",
+      "proposedRule": "As u08 r3-F07, LEX-03 (hard): every lemma the unit makes the learner produce is productive at or before that unit. That covers a redemittel with forTemplate, hintWords, learner model turns and learner cards, the modelText, and a micro-output promptDe. New failing fixtures: a1.1-u09 rm01 (lx.fisch) and ls2-mo (lx.stueck). Separately, any lexicon edit at a lower level runs validate.mjs --rule LEX-07 on every level above it before it lands."
+    },
+    {
+      "id": "F07",
+      "reviewer": "R1",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u09",
+      "path": "scripts/course-v2/lib-validate/orders.mjs (l. 18–19: questions out of scope); scripts/course-v2/rules/ITM-09.mjs; scripts/course-v2/lib-validate/detectors.mjs; GRM-04 advisories on steps[5].task.situationDe (det.ordinalzahl) and steps[0].pool.items[8].accepted[1], accepted[2] (det.possessiv-sein-ihr-unser-euer)",
+      "quote": "orders.mjs: „Out of scope, said so: … questions (ITM-09 checks the prompt names the question instead)“ · GRM-04: „instruction uses „10.“ (Ordinalzahlen und Datum …) — licensed from a1.2-u04“ · „produces „ihr Kuchen“ (Possessivartikel …) — licensed productively from a1.2-u03“ ×2 (accepted[1] „Mögt ihr Kuchen auch?“, accepted[2] „Mögt auch ihr Kuchen?“)",
+      "problem": "Two rails that r2 sent to the rule-smith are still unwritten; every file under rules/ and lib-validate/ predates r2. (1) The order rail (the rail half of r2-F02): ls1-p09 is clean today only because of its accepted list. ITM-09 still does not compute orders in V1 questions, so the next unit can reject „Kann auch Olena kommen?“ or „Mögt auch ihr Kuchen?“ unseen. That is the class of u04 r1-F04 / r2-F02, u08 r2-F02 and u09 r2-F02, and it is stop-the-line. (2) Detector noise (r1-F05, r2-F06): the last group of a phone number is still read as an ordinal, and the pronoun ihr after its verb is still read as a possessive, now twice, as r2 predicted. No production line goes over the ceiling, but reviewers re-triage the same hits every round, and in at least six a1.1 units (u01–u05, u08, u09) the noise hides the next real look-ahead.",
+      "fix": "Rule-smith, as r2-F02 and r2-F06. (1) Extend orders.mjs to V1 yes/no questions without a W-word. After the finite verb, a focus particle (auch, nur, noch) may stand before the subject, pronoun or noun phrase, or after the object, and every order the tiles build that way must be accepted unless promptDe fixes it. (2) det.ordinalzahl skips a digit group that ends a phone number (preceded by ≥ 2 digit groups). det.possessiv-sein-ihr-unser-euer skips ihr directly after a finite ihr-form verb, or one focus particle after it. Unit: no edit.",
+      "proposedRule": "(a) ITM-09 + orders.mjs over V1 questions. Fixtures: a1.1-u09 ls1-p09 (all three orders computed), and the a1.1-u08 item behind u08 r2-F02 („Kann auch Olena kommen?“). (b) GRM-04 fixtures: a1.1-u09 steps[5].task.situationDe („0157 38 42 96 10.“), and steps[0].pool.items[8].accepted[1] and accepted[2] must not fire. Both tests run over all registered courses."
+    },
+    {
+      "id": "F08",
+      "reviewer": "R2",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u09",
+      "path": "spec.lexiconBlocks (LEX-02 ratchet 30; r1: 28, r2: 31); a1.1 units u10–u12",
+      "quote": "LEX-02: Saft, Getränk, Glas, Tasse, Frühstück, Mittagessen, Abendessen, Fleisch, Salat, Suppe, lecker, Café, Speisekarte, Rechnung, getrennt and the six compounds recur in 0 later units; Bier, Kuchen, Fisch, essen, voll, bestellen, nehmen, Geburtstag and höflich in 1",
+      "problem": "This is r1-F13 and r2-F07, now in its third round. The ratchet fell by one only because höflich gained input occurrences. u10, u11 and u12 were all edited after r2 and recycle none of the anchors. u10's station café („Dann trinken wir noch einen Kaffee!“) has no Getränk or Rechnung, and u11's Kochi report („Wir haben im Restaurant Kochi gegessen“) has no Abendessen, Fisch or lecker. Seven productive anchors (Getränk, Frühstück, Abendessen, Fleisch, lecker, Speisekarte, Rechnung) never come back in A1.1.",
+      "fix": "Level reviewer and the u10–u12 authors, as r2-F07. u10's station café can carry Getränk, Rechnung, Café and getrennt, u11's Kochi report can carry Abendessen, Fisch, lecker and Speisekarte, and u12 can carry Frühstück, Kuchen and bestellen. Unit: no edit.",
+      "proposedRule": "None new: LEX-02 already measures it. The level round must bring the ratchet down."
+    },
+    {
+      "id": "F09",
+      "reviewer": "R2",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u09",
+      "path": "content/course-v2/a1.1/rule-cards.json rc.moegen (steps[0].ruleCard, steps[2].ruleCard): table, de",
+      "quote": "table rows „ich | mag | möchte“ … „wir | mögen | möchten“, „Bedeutung | immer: Ich mag Tee. | jetzt: Ich möchte einen Tee.“ · de „… möchte ist ein Wunsch jetzt: Ich möchte einen Tee. mag gilt immer: Ich mag Tee. …“",
+      "problem": "This is r1-F14 and r2-F08; the card is byte-identical for the third round. The table stops at wir, while the unit drills „Mögt ihr …?“ (ls1-s02, ls1-p03, ls1-p09) and „sie mögen“ (ls3-p01). The contrast, which is the unit's one grammatical increment, still rests on the unglossed „Wunsch“ (lx.wunsch, a2.2-u02) and „gilt“ (b1.1), with „möchte ist ein Wunsch jetzt“ in unnatural word order. The unit's explanations now say it with known words („möchte: jetzt, hier im Café. mag: Das finde ich immer gut.“), so the card is the only surface that does not.",
+      "fix": "Rule-cards owner, as r2-F08. Add the rows „ihr | mögt | möchtet“ and „sie/Sie | mögen | möchten“, shortening the prose to stay within the word limit. Replace the contrast with the unit's own wording: „möchte: jetzt, hier (im Café): Ich möchte einen Tee. mag: immer, das finde ich gut: Ich mag Tee.“ Unit: no edit.",
+      "proposedRule": "None new. GRM-05 could read rule-card prose against the lexicon at the card's first unit, as LEX-01 does for unit surfaces (rule-smith's option)."
+    },
+    {
+      "id": "F10",
+      "reviewer": "R2",
+      "criterion": "K",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u09",
+      "path": "content/course-v2/a1.1/lexicon.json lx.geburtstag.example, lx.fruehstueck.example, lx.hoeflich.example, lx.abendessen.example (u09 word cards)",
+      "quote": "lx.geburtstag „Arjun hat am Samstag Geburtstag.“ · lx.fruehstueck „Frühstück gibt es bis 11 Uhr.“ · lx.hoeflich „Im Café fragt Priya höflich nach der Speisekarte.“ · lx.abendessen „Das Abendessen ist um sieben.“",
+      "problem": "This is r1-F15 and r2-F09; the lexicon is unchanged since 27 Sep 23:03. The unit's birthday is Olena's, on Friday, but the card gives Arjun a birthday on the Saturday of the Dresden trip. The café serves breakfast until twelve (Folge l08, the menu); the card says eleven. The waiter brings the menu unasked (Folge l04); the card has Priya ask for it. The birthday dinner is at half past seven (e-mail, S1); the Abendessen card says seven, the time of t5's other restaurant. Each card is a generic sentence, but learners read word cards as story facts (u01 r1-F07, u02 r1-F04, u03 r3-F02, u08 r3-F06).",
+      "fix": "Lexicon owner, as r2-F09. lx.geburtstag „Olena hat am Freitag Geburtstag.“; lx.fruehstueck „Frühstück gibt es bis 12 Uhr.“; lx.hoeflich „„Ich möchte …“ und „Ich nehme …“ sind höflich.“ (this now matches F05's Folge line); lx.abendessen „Das Abendessen ist um halb acht.“. Each stays under the u09 ceiling. Unit: no edit.",
+      "proposedRule": "None new: a cast and story check for lexicon examples is the CON rule the u08 r2/r3 notes ask for."
+    }
+  ],
+  "exitCheck": {
+    "blocker": 1,
+    "major": 2,
+    "minor": 7,
+    "criteriaBelow4": [
+      "A",
+      "P"
+    ],
+    "exit": false,
+    "note": "Exit needs 0 BLOCKER, 0 MAJOR, every criterion at 4 or above, and at most 5 logged MINOR. The unit does not own the gate. F01 needs the E1 server track to read `parts` and score each Teil with its own profile. F02 and F03 need one checker change (a paradigm rule plus label, Anrede and extra-field folding in form fields), with tests. With those, A and P return to 4. After the unit edits of F04 (four items) and F05 (two Folge lines), five owner-held minors remain (F06–F10), which is exactly the limit. Re-review needs no full content round. Check P by playing one a11-u09-s session after the engine fix. Check A by re-running the F02 paradigm sweep and the F03 candidates through gradeAnswer. Re-read the six edited strings for K and A, and re-run validate.mjs on a1.1 and a2.1 (F06). Stop-the-line (§9.4) is in force for six classes that touch this unit: the multi-Teil speaking engine (F01; 8 units), paradigm errors graded as typos (F02; nine A1.1 units per u03 r3), form and time keys closed by lists (F03; u04, u05, u07, u09), key-echo options (F04; u04, u05, u06, u08, u09), receptive lemmas that must be produced (F06; u04, u08, u09) and the order rail (F07; u04, u08, u09)."
+  },
+  "notes": [
+    "For the orchestrator (the user asked to be told when a level is finished): A1.1 is NOT finished. u09 is not exit-ready. Its own path is short (F04, F05), but three owner-held defects block every A1.1 unit. The speaking engine ignores `parts` (F01; u01, u04, u05, u06, u08, u09, u10, u12). The checker forgives person-ending and stem-vowel errors as typos (F02). Form fields reject correct entries with extra words (F03). The level validator also fails with 2 blockers (u01 COV-3, u04 LEX-05), and a2.1 carries a LEX-07 blocker left by an A1.1 lexicon edit (F06). A level evaluation of A1.1 is meaningful only after the E1 server track reads `parts` and the checker change lands.",
+    "Exemplar classes (a1.1-u04 r1–r5; the r3 reviews of u03 and u05–u08) that do NOT recur here. Sentence-building prompts that do not say Frage or Aussagesatz (u04 r1-F01/F12). A bare „Korrigieren Sie:“ that rejects a second correction (u04 r5-F01; all six correction prompts name the category, and ls3-p10 accepts „nehme“). Dictation sources with `say` (u04 r2-F01; the six sources are plain lines). Number words rejected in number gaps (u04 r3-F01; ls1-i03 accepts „drei achtzig“, ls2-i05 „zwanzig neunzig“). lex.articlePlural sources without a plural (r3-F03). lex.glossTyped sources on receptive lemmas (r4-F02). Exam texts off-band (r1-F10). A distractor never heard (u04 r1-F19; fixed by r2-F04). Monotone exam keys (u04 r2-F04; c b a a b c). Protagonists retold with other facts in LS4 texts (r2-F06). A proof solvable by matching digits (r1-F06). The genitive on speaking instructions (r5-F05). Factual claims without facts[] (r4-F05). Lexicon examples above the ceiling (r4-F01; LEX-07 passes on a1.1). Structured-input keys given away in the stem (r1-F26 as structured input; u09 r1-F06 stays fixed). H1 texts with three voices (u01 r3-F07).",
+    "Exemplar classes that DO recur: a key that is the only option echoing the stem (u04 r1-F26 / r2-F03, u08 r3-F05 → F04); paradigm errors graded as typos (u03 r3-F01, u08 r3-F03 → F02); correct form entries rejected (u04 r3-F01, u05 r3-F01, u07 r1-F03 → F03); receptive lemmas that must be produced (u04 r4-F02, u08 r3-F07 → F06); a word in no lexicon on a surface the learner needs (u04 r2-F07 / r5-F03 → F05); detector noise and the missing order rail (u04 r5-F05, u08 r3-F10 → F07); a rule card false or above level in context (u04 r2-F09 … r5-F04 → F09); word cards that nudge against the story (u01 r1-F07, u08 r3-F06 → F10); a fix that makes a new small break (F05).",
+    "Verified and still closed from round 1: every correction prompt names its category, LEX-01 is at 0 on the read surfaces, GRM-05 passes, and the instruction wording holds („Sie hören sechs Gespräche zweimal“, „die Frage von Nora“, „Die Handynummer von Olena“). Also verified: structured input decided by form, the deviation logged, continuity (t5 Restaurant Wien, check lines on ensemble guests, u10 „Bis Freitag im Restaurant!“), the off-idiom lines replaced, Sp3 neutral with „Kann ich bitte … haben?“, h1-06 with word options, and perception items that alternate.",
+    "Considered and not raised. (1) ls3-p02 „mochte“ for „möchte“ → typo. That is an umlaut-less keyboard, but also the Präteritum of mögen, the verb the unit contrasts with möchte. We leave it to F02's paradigm rule to decide, not to the unit. (2) ls1-i03, ls1-i05 and ls2-i05 reject „3,80 Euro“ or „3,80 €“ typed into „___ Euro“; this is a checker question already logged by r2. (3) ls3-p06 rejects „Ich möchte eine Suppe heute.“ and ls3-p09 rejects „Den Tisch bestellt online Priya.“; both are marked orders, and rejecting them is right. (4) f2 rejects „+49 (0)157 …“ and „0049 157 …“; the situation gives the national number, and every grouping of it is accepted. (5) f4 rejects „halb acht Uhr“; that is non-standard, and we do not count it for F03. (6) LS2 line ids run l01 … l06, l11, l12, l08 … l10; this is cosmetic, and ID-01 passes. (7) The r2 residue of the stress drill remains: both simple words have final stress (Salat, Getränk), so a test-wise learner can derive „einfaches Wort = Ende“. Swapping x03 „Getränk“ for „Kuchen“ (KU-chen, am Anfang) would still stop that. (8) The Sp3 card „Rechnung“ is an object in the sense of sd1.json, as r2 noted.",
+    "For the curriculum owner: a1.1/specs.json u09 is unchanged since 27 Sep 23:03. It still has deviation null, the pre-r1 title.canDo („… und sagen, was Sie gern essen und trinken.“) and cast null. COV-3 compares only spec.lanes, so nothing flags the drift. For the unit author (no finding): the deviation reason is still incomplete. sd1.l1 is also Prüfungsfokus in u03, and sd1.s2 also in u03 and u04. Complete it at the next edit.",
+    "Legal and claims: no outcome promise, no human-feedback claim and no exam-mark misuse on any surface. The AI partner is a „Teilnehmerin in der Prüfung“ persona. The strategy card and the Sp3 situation say honestly that the exam uses pictures. Every exam task is original in the SD1 format. Fact a1.1-u09-f01 matches § 13 PAngV („… müssen das Bedienungsgeld und alle sonstigen Zuschläge einschließen“) and § 107 Abs. 3 Satz 2 GewO, both re-read at gesetze-im-internet.de on 2026-09-28. It claims nothing about customary tip amounts."
+  ]
+}

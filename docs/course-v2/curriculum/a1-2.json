@@ -1,0 +1,1115 @@
+{
+  "level": "a1.2",
+  "code": "A1.2",
+  "cefr": "A1",
+  "targetExams": [
+    "Goethe-Zertifikat A1: Start Deutsch 1",
+    "telc Deutsch A1"
+  ],
+  "hours": {
+    "guided": 47,
+    "total": 75
+  },
+  "vocabTarget": {
+    "newWords": 310,
+    "cumulative": 650
+  },
+  "units": [
+    {
+      "nr": 1,
+      "id": "a1.2-u01",
+      "title": "Neu in der Stadt",
+      "titleEn": "New in town",
+      "situation": "Die ersten Tage in einer neuen Stadt: wichtige Orte finden, Passanten nach dem Weg fragen, eine Wegbeschreibung und Durchsagen in der U-Bahn verstehen.",
+      "handlungsfeld": "Mobilität (HF 10) · CEFR-Domäne: öffentlich",
+      "unitType": "situation",
+      "canDo": [
+        {
+          "de": "Ich kann Passanten nach dem Weg fragen und das Wesentliche einer Wegbeschreibung verstehen.",
+          "source": "04-cando-a1-a2 · RC 145·A1"
+        },
+        {
+          "de": "Ich kann kurzen, einfachen mündlichen und schriftlichen Wegerklärungen folgen.",
+          "source": "04-cando-a1-a2 · GI-A1 15–16"
+        },
+        {
+          "de": "Ich kann einfache Schilder und Wegweiser in der Stadt verstehen.",
+          "source": "04-cando-a1-a2 · GER-R·A1 (Schilder, Plakate); RC 77·A1 (Wegweiser, angepasst)"
+        },
+        {
+          "de": "Ich kann jemanden auf der Straße höflich ansprechen und um Hilfe bitten.",
+          "source": "04-cando-a1-a2 · RC 55·A1 (angepasst)"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Präpositionen mit Dativ: mit, zu, bei, von, aus, nach (zum Bahnhof, mit dem Bus, bei der Post)",
+          "new": true,
+          "lehrwerk": "Menschen A1 L13; Schritte plus Neu 2 L11; Netzwerk neu A1 K7/K9"
+        },
+        {
+          "point": "Wo? in, an, auf, neben + Dativ (im Zentrum, an der Ampel, neben der Bank)",
+          "new": true,
+          "lehrwerk": "Menschen A1 L13, L15; Schritte plus Neu 2 L11; Netzwerk neu A1 K9"
+        },
+        {
+          "point": "Imperativ mit Sie (Gehen Sie geradeaus! Nehmen Sie die U2!)",
+          "new": true,
+          "lehrwerk": "Netzwerk neu A1 K3; Die neue Linie 1 A1 K3; Menschen A1 L18; Schritte plus Neu 2 L9"
+        },
+        {
+          "point": "»gegenüber«, »an … vorbei« in Wegbeschreibungen – nur verstehen; aktiv ab A2.2",
+          "new": false,
+          "lehrwerk": "Menschen A2 L16–19; Schritte plus Neu 4 L11–12; Netzwerk neu A2 K7 (06, A2.2 #6)",
+          "chunk": true,
+          "receptive": true
+        }
+      ],
+      "vocabTheme": "Orte in der Stadt, Wegbeschreibung",
+      "vocabTarget": 26,
+      "keyWords": [
+        "die Post",
+        "die Bank",
+        "die Apotheke",
+        "die Haltestelle",
+        "die Kreuzung",
+        "die Ampel",
+        "das Zentrum",
+        "der Weg",
+        "die Nähe",
+        "geradeaus",
+        "links",
+        "rechts",
+        "finden"
+      ],
+      "reading": {
+        "textType": "Wegbeschreibung in einer E-Mail und Wegweiser (Schilder)",
+        "words": 60
+      },
+      "listening": {
+        "textType": "Dialoge auf der Straße und Durchsage in der U-Bahn (»Nächster Halt …«)",
+        "seconds": 75
+      },
+      "writing": {
+        "task": "Nachricht an eine Freundin: einen Treffpunkt vorschlagen (3 Leitpunkte: Ort, Uhrzeit, Verkehrsmittel)",
+        "words": 30,
+        "examTeil": "Goethe A1 Schreiben Teil 2"
+      },
+      "speaking": {
+        "task": "Passanten nach dem Weg fragen, die Antwort wiederholen und mit Bildkarten um Hilfe bitten – die KI spielt die Passanten",
+        "examTeil": "Goethe A1 Sprechen Teil 3"
+      },
+      "pronunciation": "Wortakzent in Wortgruppen (zum BAHNhof, mit dem BUS) und hörbares h (Haltestelle, hier)",
+      "examTeile": [
+        "Goethe A1 Hören Teil 1",
+        "Goethe A1 Hören Teil 2",
+        "Goethe A1 Lesen Teil 3",
+        "Goethe A1 Sprechen Teil 3",
+        "Goethe A1 Schreiben Teil 2"
+      ],
+      "landeskunde": "Orientierung in der Stadt: das H-Schild der Haltestelle, Rathaus und Marktplatz im Zentrum, Stadtplan-App"
+    },
+    {
+      "nr": 2,
+      "id": "a1.2-u02",
+      "title": "Mein neuer Job",
+      "titleEn": "My new job",
+      "situation": "Nach der ersten Arbeitswoche: über Beruf und Arbeitstag erzählen, sagen, was man früher gemacht hat, Stellenanzeigen lesen und einen Stundenzettel ausfüllen.",
+      "handlungsfeld": "Arbeit (HF 2) · Arbeitssuche (HF 3) · CEFR-Domäne: beruflich",
+      "unitType": "situation",
+      "canDo": [
+        {
+          "de": "Ich kann mitteilen, was ich besonders gut oder gern tue.",
+          "source": "04-cando-a1-a2 · RC 95·A1"
+        },
+        {
+          "de": "Ich kann das Wesentliche ganz einfacher Arbeitsaufträge verstehen und sagen, dass ich einen Auftrag verstanden habe.",
+          "source": "04-cando-a1-a2 · RC 83·A1"
+        },
+        {
+          "de": "Ich kann Dienstpläne verstehen und einfache Stundenzettel ausfüllen.",
+          "source": "04-cando-a1-a2 · RC 88·A1"
+        },
+        {
+          "de": "Ich kann die wichtigsten Informationen in Stellenanzeigen verstehen, z. B. den gesuchten Beruf.",
+          "source": "04-cando-a1-a2 · RC 98·A1"
+        },
+        {
+          "de": "Ich kann sagen, was ich früher gemacht habe und seit wann ich hier arbeite.",
+          "source": "04-cando-a1-a2 · RC 30·A1 (erlernter Beruf) + GI-A1 15 (Zeitangaben), angepasst"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Präteritum von sein und haben (war, hatte)",
+          "new": true,
+          "lehrwerk": "Menschen A1 L19; Schritte plus Neu 2 L8; Netzwerk neu A1 K6 (A1.1, split)"
+        },
+        {
+          "point": "Temporale Präpositionen seit und vor + Dativ (seit einem Jahr, vor zwei Monaten)",
+          "new": true,
+          "lehrwerk": "Menschen A1 L16; Schritte plus Neu 2 L8; Netzwerk neu A1 K12"
+        }
+      ],
+      "vocabTheme": "Berufe, Arbeitszeit, Arbeitsplatz",
+      "vocabTarget": 28,
+      "keyWords": [
+        "die Arbeit",
+        "die Firma",
+        "der Chef / die Chefin",
+        "die Arbeitszeit",
+        "die Schicht",
+        "die Pause",
+        "der Urlaub",
+        "die Stelle",
+        "der Verkäufer / die Verkäuferin",
+        "der Fahrer / die Fahrerin",
+        "der Kunde / die Kundin",
+        "aufhören",
+        "früher"
+      ],
+      "reading": {
+        "textType": "Stellenanzeigen (zu einer Person die passende Anzeige a oder b wählen)",
+        "words": 80
+      },
+      "listening": {
+        "textType": "Nachricht der Chefin auf der Mailbox: Schichtänderung",
+        "seconds": 50
+      },
+      "writing": {
+        "task": "Stundenzettel bzw. Personalbogen: 5 Angaben aus einem Situationstext eintragen",
+        "words": 12,
+        "examTeil": "Goethe A1 Schreiben Teil 1"
+      },
+      "speaking": {
+        "task": "Sich mit Beruf vorstellen und von früher erzählen (Früher war ich … / Seit … arbeite ich …); Themenkarten »Arbeit«",
+        "examTeil": "Goethe A1 Sprechen Teil 1; Goethe A1 Sprechen Teil 2"
+      },
+      "pronunciation": "Lange und kurze Vokale im Kontrast: war – hatte, Lehrer – Stelle; Dehnungs-h und ie",
+      "examTeile": [
+        "Goethe A1 Lesen Teil 2",
+        "Goethe A1 Hören Teil 3",
+        "Goethe A1 Schreiben Teil 1",
+        "Goethe A1 Sprechen Teil 1",
+        "Goethe A1 Sprechen Teil 2"
+      ],
+      "landeskunde": "Arbeiten in D-A-CH: Vollzeit und Teilzeit, Pausen und Urlaub, Anrede im Team"
+    },
+    {
+      "nr": 3,
+      "id": "a1.2-u03",
+      "title": "Liebe Nachbarn …",
+      "titleEn": "Dear neighbours …",
+      "situation": "Leben im Mietshaus: die Hausordnung verstehen, Nachbarn um Hilfe bitten (ein Paket annehmen) und eine Nachricht vom Hausmeister verstehen.",
+      "handlungsfeld": "Wohnen (HF 12) · CEFR-Domäne: privat/öffentlich",
+      "unitType": "situation",
+      "canDo": [
+        {
+          "de": "Ich kann die wichtigsten Informationen der Hausordnung verstehen, z. B. Ruhezeiten und Müll.",
+          "source": "04-cando-a1-a2 · RC 156·A1"
+        },
+        {
+          "de": "Ich kann Nachbarn mit einfachen Worten um Hilfe bitten, z. B. ein Paket anzunehmen.",
+          "source": "04-cando-a1-a2 · RC 157·A1"
+        },
+        {
+          "de": "Ich kann, auch am Telefon, einfache Mitteilungen des Vermieters verstehen, z. B. wann der Handwerker kommt.",
+          "source": "04-cando-a1-a2 · RC 156·A1 (angepasst)"
+        },
+        {
+          "de": "Ich kann sagen, was man im Haus darf und was man muss.",
+          "source": "04-cando-a1-a2 · RC 156·A1 (Hausordnung), produktiv gewendet"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Modalverben müssen und dürfen; man (Man darf hier nicht parken.)",
+          "new": true,
+          "lehrwerk": "Menschen A1 L21; Schritte plus Neu 2 L9–10; Netzwerk neu A1 K8"
+        },
+        {
+          "point": "Possessivartikel sein, ihr, unser, euer; Genitiv-s bei Namen (Annas Fahrrad)",
+          "new": true,
+          "lehrwerk": "Menschen A1 L14; Schritte plus Neu 2 L10"
+        }
+      ],
+      "vocabTheme": "Haus, Hausordnung, Nachbarschaft",
+      "vocabTarget": 26,
+      "keyWords": [
+        "das Haus",
+        "der Hausmeister / die Hausmeisterin",
+        "der Vermieter / die Vermieterin",
+        "die Hausordnung",
+        "der Müll",
+        "der Keller",
+        "das Paket",
+        "die Ruhe",
+        "laut",
+        "leise",
+        "parken",
+        "müssen",
+        "dürfen"
+      ],
+      "reading": {
+        "textType": "Aushang im Treppenhaus und Auszug aus der Hausordnung (Schilder, richtig/falsch)",
+        "words": 70
+      },
+      "listening": {
+        "textType": "Nachricht des Hausmeisters auf dem Anrufbeantworter",
+        "seconds": 50
+      },
+      "writing": {
+        "task": "Zettel an die Nachbarn: sich vorstellen, um Hilfe bitten (Paket annehmen), sich bedanken",
+        "words": 30,
+        "examTeil": "Goethe A1 Schreiben Teil 2"
+      },
+      "speaking": {
+        "task": "Nachbarn um Hilfe bitten und auf Bitten reagieren; mit Bildkarten Bitten formulieren (Können Sie bitte …?)",
+        "examTeil": "Goethe A1 Sprechen Teil 3"
+      },
+      "pronunciation": "ü im Kontrast zu u und i (müssen, dürfen, Müll – muss – Mitte)",
+      "examTeile": [
+        "Goethe A1 Lesen Teil 3",
+        "Goethe A1 Hören Teil 3",
+        "Goethe A1 Schreiben Teil 2",
+        "Goethe A1 Sprechen Teil 3"
+      ],
+      "landeskunde": "Im Mietshaus: Ruhezeiten (Nachtruhe meist ab 22 Uhr), Namen am Briefkasten, Pakete für Nachbarn annehmen"
+    },
+    {
+      "nr": 4,
+      "id": "a1.2-u04",
+      "title": "Ich brauche einen Termin",
+      "titleEn": "I need an appointment",
+      "situation": "Anmeldung in der neuen Stadt: auf der Webseite des Bürgerbüros die Öffnungszeiten finden, einen Termin vereinbaren, am Schalter nachfragen und ein Formular ausfüllen.",
+      "handlungsfeld": "Ämter und Behörden (HF 1) · CEFR-Domäne: öffentlich",
+      "unitType": "situation",
+      "canDo": [
+        {
+          "de": "Ich kann dem Internet Adressen und Öffnungszeiten von Behörden entnehmen.",
+          "source": "04-cando-a1-a2 · RC 76·A1"
+        },
+        {
+          "de": "Ich kann in einfacher Form einen Terminvorschlag machen und auf einen Terminvorschlag reagieren.",
+          "source": "04-cando-a1-a2 · RC 85·A1"
+        },
+        {
+          "de": "Ich kann am Informationsschalter gezielt Auskünfte erfragen, z. B. nach dem richtigen Ansprechpartner.",
+          "source": "04-cando-a1-a2 · RC 77·A1"
+        },
+        {
+          "de": "Ich kann Sachbearbeiter um Hilfe beim Ausfüllen eines Formulars bitten.",
+          "source": "04-cando-a1-a2 · RC 77·A1"
+        },
+        {
+          "de": "Ich kann Anweisungen verstehen, die langsam und deutlich an mich gerichtet werden.",
+          "source": "04-cando-a1-a2 · GI-A1 16"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Temporale Präpositionen nach, in, ab, bis, für (in zwei Wochen, ab Montag, bis Freitag)",
+          "new": true,
+          "lehrwerk": "Menschen A1 L16; Schritte plus Neu 2 L8/L12; Netzwerk neu A1 K12"
+        },
+        {
+          "point": "Ordinalzahlen und Datum (am dritten Mai, vom 3. bis 5. Juni, ab dem 1. Oktober, Heute ist der 12. März.)",
+          "new": true,
+          "lehrwerk": "Menschen A1 L24; Schritte plus Neu 2 L14; Netzwerk neu A1 K12 (hier vorgezogen, siehe D3)"
+        },
+        {
+          "point": "Ich hätte gern einen Termin. (Konjunktiv II als feste Wendung)",
+          "new": false,
+          "lehrwerk": "Schritte plus Neu 2 L12; 06 F2: Goethe-A1-Inventar – Konjunktiv II nur als lexikalische Einheit",
+          "chunk": true
+        }
+      ],
+      "vocabTheme": "Amt, Termine, Dokumente, Datum",
+      "vocabTarget": 28,
+      "keyWords": [
+        "das Amt",
+        "das Bürgerbüro",
+        "der Sachbearbeiter / die Sachbearbeiterin",
+        "der Schalter",
+        "der Ausweis",
+        "der Pass",
+        "die Unterschrift",
+        "der Antrag",
+        "die Staatsangehörigkeit",
+        "ausfüllen",
+        "unterschreiben",
+        "vereinbaren",
+        "warten"
+      ],
+      "reading": {
+        "textType": "Webseite des Bürgerbüros (Öffnungszeiten, Online-Termin) und Wegweiser im Amt",
+        "words": 80
+      },
+      "listening": {
+        "textType": "Ansage auf dem Anrufbeantworter des Bürgerbüros: Termin verschoben",
+        "seconds": 50
+      },
+      "writing": {
+        "task": "Online-Formular zur Terminvereinbarung: 5 Angaben aus einer Situation eintragen",
+        "words": 12,
+        "examTeil": "Goethe A1 Schreiben Teil 1"
+      },
+      "speaking": {
+        "task": "Mit Wortkarten Fragen zu Terminen und Öffnungszeiten stellen und beantworten; am Telefon einen Termin vereinbaren (die KI spielt das Bürgerbüro)",
+        "examTeil": "Goethe A1 Sprechen Teil 2"
+      },
+      "pronunciation": "Satzmelodie bei höflichen Fragen und Rückfragen (Wie bitte? Am Dienstag?)",
+      "examTeile": [
+        "Goethe A1 Lesen Teil 2",
+        "Goethe A1 Lesen Teil 3",
+        "Goethe A1 Hören Teil 3",
+        "Goethe A1 Schreiben Teil 1",
+        "Goethe A1 Sprechen Teil 2"
+      ],
+      "landeskunde": "Behörden in D-A-CH: Termin oft online, Meldepflicht nach dem Umzug (in Deutschland innerhalb von zwei Wochen), Wartenummer"
+    },
+    {
+      "nr": 5,
+      "id": "a1.2-u05",
+      "title": "Gute Besserung!",
+      "titleEn": "Get well soon!",
+      "situation": "Krank im Alltag: in der Arztpraxis anrufen, beim Arzt sagen, was wehtut, die Hinweise der Apotheke verstehen und sich bei der Arbeit krankmelden.",
+      "handlungsfeld": "Gesundheit (HF 8) · CEFR-Domäne: öffentlich",
+      "unitType": "situation",
+      "canDo": [
+        {
+          "de": "Ich kann bei der Anmeldung beim Arzt Auskünfte zur Person geben, z. B. Name, Versicherung und Grund des Besuchs.",
+          "source": "04-cando-a1-a2 · RC 131·A1"
+        },
+        {
+          "de": "Ich kann mitteilen, wie es mir geht, und – auch mit Gesten – beschreiben, was mir wehtut.",
+          "source": "04-cando-a1-a2 · RC 131·A1"
+        },
+        {
+          "de": "Ich kann einfache Anweisungen von Ärzten oder Apothekern zur Einnahme von Medikamenten verstehen.",
+          "source": "04-cando-a1-a2 · RC 131·A1"
+        },
+        {
+          "de": "Ich kann mich mit einfachen Worten telefonisch und schriftlich krankmelden.",
+          "source": "04-cando-a1-a2 · RC 84, 149·A1"
+        },
+        {
+          "de": "Ich kann einen Notruf machen und die wichtigsten Informationen nennen, z. B. den Ort.",
+          "source": "04-cando-a1-a2 · RC 132·A1 (Fokus-Aufgabe)"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Modalverb sollen (Sie sollen zweimal am Tag eine Tablette nehmen.)",
+          "new": true,
+          "lehrwerk": "Menschen A1 L18; Schritte plus Neu 2 L10"
+        },
+        {
+          "point": "Imperativ mit Sie (Wiederholung: Bleiben Sie im Bett! Trinken Sie viel Tee!)",
+          "new": false,
+          "lehrwerk": "Menschen A1 L18; Netzwerk neu A1 K8"
+        },
+        {
+          "point": "Mir tut der Kopf weh. / Mir ist schlecht. (Dativ als feste Wendung; Dativpronomen in Einheit 6)",
+          "new": false,
+          "lehrwerk": "Menschen A1 L18; Schritte plus Neu 2 L10",
+          "chunk": true
+        }
+      ],
+      "vocabTheme": "Körper, Krankheit, Arztpraxis, Apotheke",
+      "vocabTarget": 30,
+      "keyWords": [
+        "der Kopf",
+        "der Bauch",
+        "der Rücken",
+        "das Bein",
+        "der Hals",
+        "das Fieber",
+        "die Schmerzen",
+        "der Arzt / die Ärztin",
+        "die Praxis",
+        "das Medikament",
+        "das Rezept",
+        "krank",
+        "wehtun"
+      ],
+      "reading": {
+        "textType": "Einnahmehinweis der Apotheke und E-Mail der Arztpraxis (richtig/falsch)",
+        "words": 70
+      },
+      "listening": {
+        "textType": "Ansage einer Arztpraxis auf dem Anrufbeantworter und Gespräch bei der Anmeldung",
+        "seconds": 60
+      },
+      "writing": {
+        "task": "Krankmeldung per E-Mail an die Chefin (3 Leitpunkte: krank, wie lange, Frage nach einem Schichttausch)",
+        "words": 30,
+        "examTeil": "Goethe A1 Schreiben Teil 2"
+      },
+      "speaking": {
+        "task": "Beim Arzt Beschwerden nennen und Anweisungen wiederholen; mit Bildkarten um Dinge bitten (Können Sie mir bitte ein Rezept geben?)",
+        "examTeil": "Goethe A1 Sprechen Teil 3"
+      },
+      "pronunciation": "Diphthonge ei, au, eu (Bein, Bauch, heute) im Kontrast",
+      "examTeile": [
+        "Goethe A1 Hören Teil 3",
+        "Goethe A1 Lesen Teil 1",
+        "Goethe A1 Schreiben Teil 2",
+        "Goethe A1 Sprechen Teil 3"
+      ],
+      "landeskunde": "Zum Arzt in D-A-CH: Hausarztpraxis, Versicherungskarte mitbringen, Apotheken-Notdienst, Notruf 112"
+    },
+    {
+      "nr": 6,
+      "id": "a1.2-u06",
+      "title": "Die Jacke gefällt mir!",
+      "titleEn": "I like the jacket!",
+      "situation": "Kleidung kaufen im Geschäft und online: nach Größe und Farbe fragen, sagen, was gefällt und passt, Komplimente machen und ein Bestellformular ausfüllen.",
+      "handlungsfeld": "Einkaufen (HF 7) · Mediennutzung (HF 9) · CEFR-Domäne: öffentlich",
+      "unitType": "situation",
+      "canDo": [
+        {
+          "de": "Ich kann ein einfaches Verkaufsgespräch führen.",
+          "source": "04-cando-a1-a2 · ÖIF 5"
+        },
+        {
+          "de": "Ich kann mit einfachen Worten fragen, ob es bei einer Ware einen Preisnachlass gibt.",
+          "source": "04-cando-a1-a2 · RC 124·A1"
+        },
+        {
+          "de": "Ich kann mit sehr einfachen Worten ein Kompliment machen, z. B. dass ein Kleidungsstück jemandem steht.",
+          "source": "04-cando-a1-a2 · RC 58·A1"
+        },
+        {
+          "de": "Ich kann im Internet etwas bestellen und in Bestellformulare Größe, Anzahl und Lieferadresse eingeben.",
+          "source": "04-cando-a1-a2 · RC 125·A1"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Verben mit Dativ (gefallen, passen, stehen, gehören, helfen) und Personalpronomen im Dativ (mir, dir, ihm, ihr, Ihnen)",
+          "new": true,
+          "lehrwerk": "Menschen A1 L15; Schritte plus Neu 2 L13; Netzwerk neu A1 K11"
+        },
+        {
+          "point": "Frageartikel welch- und Demonstrativartikel dies- (Welche Jacke? – Diese hier.)",
+          "new": true,
+          "lehrwerk": "Schritte plus Neu 2 L13; Netzwerk neu A1 K11 (Menschen erst A2 L21)"
+        }
+      ],
+      "vocabTheme": "Kleidung, Farben, Größen, Online-Shop",
+      "vocabTarget": 28,
+      "keyWords": [
+        "die Kleidung",
+        "die Jacke",
+        "die Hose",
+        "das Kleid",
+        "der Pullover",
+        "die Schuhe",
+        "die Größe",
+        "die Farbe",
+        "die Kasse",
+        "gefallen",
+        "passen",
+        "rot",
+        "blau"
+      ],
+      "reading": {
+        "textType": "Online-Shop: Produktseiten und Angebote (a oder b)",
+        "words": 80
+      },
+      "listening": {
+        "textType": "Durchsage im Kaufhaus (einmal gehört) und Verkaufsgespräch",
+        "seconds": 75
+      },
+      "writing": {
+        "task": "Online-Bestellformular: Artikel, Größe, Anzahl, Lieferadresse, Zahlungsart aus einer Situation eintragen",
+        "words": 12,
+        "examTeil": "Goethe A1 Schreiben Teil 1"
+      },
+      "speaking": {
+        "task": "Verkaufsgespräch mit der KI: nach Größe und Farbe fragen, sagen, was gefällt; Themenkarten »Kleidung«",
+        "examTeil": "Goethe A1 Sprechen Teil 2"
+      },
+      "pronunciation": "Unbetonte Vorsilben ge-, be-, ver- (gefallen, bezahlen, verkaufen)",
+      "examTeile": [
+        "Goethe A1 Hören Teil 2",
+        "Goethe A1 Hören Teil 1",
+        "Goethe A1 Lesen Teil 2",
+        "Goethe A1 Schreiben Teil 1",
+        "Goethe A1 Sprechen Teil 2"
+      ],
+      "landeskunde": "Kleidergrößen in D-A-CH und international; Kassenbon aufheben; Rücksendung bei Online-Bestellungen"
+    },
+    {
+      "nr": 7,
+      "id": "a1.2-u07",
+      "title": "Kann ich Ihnen helfen?",
+      "titleEn": "Can I help you?",
+      "situation": "Dienstleistungen im Alltag: ein Paket auf der Post abholen, Geld am Automaten abheben, eine Überweisung ausfüllen und beim Kundenservice anrufen – das neue Handy funktioniert nicht.",
+      "handlungsfeld": "Banken und Versicherungen (HF 5) · Einkaufen (HF 7: Dienstleistungen) · CEFR-Domäne: öffentlich",
+      "unitType": "situation",
+      "canDo": [
+        {
+          "de": "Ich kann bei Geldautomaten die einfachsten Anweisungen verstehen und die erforderlichen Daten eingeben.",
+          "source": "04-cando-a1-a2 · RC 110·A1"
+        },
+        {
+          "de": "Ich kann wichtige Formulare im Zahlungsverkehr ausfüllen, z. B. eine Überweisung.",
+          "source": "04-cando-a1-a2 · RC 111·A1"
+        },
+        {
+          "de": "Ich kann am Schalter oder am Telefon höflich um etwas bitten und einfache Rückfragen stellen.",
+          "source": "04-cando-a1-a2 · GI-A1 15 (um etwas bitten) + RC 35·A1 (nachfragen), angepasst"
+        },
+        {
+          "de": "Ich kann sagen, was ich bestellt, bezahlt oder abgeholt habe.",
+          "source": "04-cando-a1-a2 · ÖIF 5–6 (über Vergangenes auf A1-Niveau sprechen), angepasst"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Perfekt: trennbare Verben, untrennbare Verben und Verben auf -ieren (abgeholt, bestellt, bezahlt, repariert)",
+          "new": true,
+          "lehrwerk": "Menschen A1 L19; Schritte plus Neu 2 L8; Netzwerk neu A1 K10–11"
+        },
+        {
+          "point": "Könnten Sie …? Würden Sie …? (höfliche Bitte; Konjunktiv II als feste Wendung)",
+          "new": false,
+          "lehrwerk": "Schritte plus Neu 2 L12; Menschen A1 L24",
+          "chunk": true
+        }
+      ],
+      "vocabTheme": "Post, Bank, Kundenservice",
+      "vocabTarget": 26,
+      "keyWords": [
+        "der Brief",
+        "die Briefmarke",
+        "das Konto",
+        "die Bankkarte",
+        "der Geldautomat",
+        "die Überweisung",
+        "der Kundenservice",
+        "die Bestellung",
+        "abholen",
+        "abheben",
+        "schicken",
+        "reparieren",
+        "zurückrufen"
+      ],
+      "reading": {
+        "textType": "Benachrichtigungskarte der Post, Schild mit Öffnungszeiten, Anleitung am Geldautomaten",
+        "words": 60
+      },
+      "listening": {
+        "textType": "Gespräch am Postschalter und Nachricht des Kundenservice auf der Mailbox",
+        "seconds": 75
+      },
+      "writing": {
+        "task": "Überweisungsformular: 5 Angaben aus einer Situation eintragen",
+        "words": 12,
+        "examTeil": "Goethe A1 Schreiben Teil 1"
+      },
+      "speaking": {
+        "task": "Am Schalter und am Telefon höflich bitten (Könnten Sie …?) und sagen, was passiert ist; Bildkarten »Dienstleistungen«",
+        "examTeil": "Goethe A1 Sprechen Teil 3"
+      },
+      "pronunciation": "Wortakzent im Partizip: trennbar (ABgeholt), untrennbar (beSTELLT), -ieren (repaRIERT)",
+      "examTeile": [
+        "Goethe A1 Hören Teil 1",
+        "Goethe A1 Hören Teil 3",
+        "Goethe A1 Lesen Teil 3",
+        "Goethe A1 Schreiben Teil 1",
+        "Goethe A1 Sprechen Teil 3"
+      ],
+      "landeskunde": "Post und Bank in D-A-CH: Packstation und Paketshop, bar oder mit Karte, die IBAN beginnt mit DE, AT oder CH"
+    },
+    {
+      "nr": 8,
+      "id": "a1.2-u08",
+      "title": "Endlich Urlaub!",
+      "titleEn": "Holidays at last!",
+      "situation": "Eine Reise planen und erleben: Wetter und Jahreszeiten vergleichen, eine Ferienwohnung auswählen, im Hotel ankommen und eine Urlaubskarte schreiben.",
+      "handlungsfeld": "Mobilität (HF 10) · Freizeit (Goethe-A1-Themenliste) · CEFR-Domäne: privat/öffentlich",
+      "unitType": "situation",
+      "canDo": [
+        {
+          "de": "Ich kann über das Wetter sprechen.",
+          "source": "04-cando-a1-a2 · ÖIF 5–6"
+        },
+        {
+          "de": "Ich kann eine kurze, einfache Postkarte schreiben, z. B. Feriengrüße.",
+          "source": "GER-R·A1 Schreiben (CEFR-Raster zur Selbstbeurteilung, Quelle in 04-cando-a1-a2)"
+        },
+        {
+          "de": "Ich kann auf Formularen, z. B. im Hotel, Namen, Adresse und Nationalität eintragen.",
+          "source": "GER-R·A1 Schreiben (CEFR-Raster zur Selbstbeurteilung, Quelle in 04-cando-a1-a2)"
+        },
+        {
+          "de": "Ich kann in Anzeigen und Prospekten konkrete Informationen finden, z. B. Preise und Zimmer.",
+          "source": "04-cando-a1-a2 · GI-A1 16"
+        },
+        {
+          "de": "Ich kann sagen, was mir besser gefällt, und einen Grund nennen.",
+          "source": "04-cando-a1-a2 · RC 41–42·A1 (Gefallen, Vorlieben) + 06 F3 A1.2 #11 (denn)"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Konnektor denn: einen Grund nennen (Ich mag den Sommer, denn es ist warm.)",
+          "new": true,
+          "lehrwerk": "Menschen A1 L23; Schritte plus Neu 2 L14; Netzwerk neu A1 K12"
+        },
+        {
+          "point": "Wetter mit es (Es regnet. Es ist kalt.)",
+          "new": true,
+          "lehrwerk": "Menschen A1 L23"
+        },
+        {
+          "point": "gern – lieber – am liebsten; ans Meer, in die Berge (feste Wendungen; Komparation in Einheit 10, Wechselpräpositionen ab A2.1)",
+          "new": false,
+          "lehrwerk": "Menschen A1 L22–23; Netzwerk neu A1 K12",
+          "chunk": true
+        }
+      ],
+      "vocabTheme": "Reisen, Unterkunft, Wetter, Jahreszeiten, Monate",
+      "vocabTarget": 28,
+      "keyWords": [
+        "die Reise",
+        "die Ferien",
+        "das Hotel",
+        "das Meer",
+        "der Berg",
+        "die Sonne",
+        "der Regen",
+        "der Frühling",
+        "der Sommer",
+        "der Herbst",
+        "der Winter",
+        "warm",
+        "kalt"
+      ],
+      "reading": {
+        "textType": "Anzeigen für Ferienwohnungen und Hotels (a oder b)",
+        "words": 90
+      },
+      "listening": {
+        "textType": "Durchsage am Flughafen (einmal gehört) und kurzer Wetterbericht im Radio",
+        "seconds": 75
+      },
+      "writing": {
+        "task": "Urlaubskarte an Freunde (3 Leitpunkte: Wo sind Sie? Wie ist das Wetter? Was machen Sie?; Anrede und Gruß)",
+        "words": 35,
+        "examTeil": "Goethe A1 Schreiben Teil 2"
+      },
+      "speaking": {
+        "task": "Mit Themenkarten »Reisen und Wetter« Fragen stellen und beantworten und Vorlieben begründen (denn)",
+        "examTeil": "Goethe A1 Sprechen Teil 2"
+      },
+      "pronunciation": "f, v und w (Ferien, viel, Wetter, Winter)",
+      "examTeile": [
+        "Goethe A1 Hören Teil 2",
+        "Goethe A1 Lesen Teil 2",
+        "Goethe A1 Schreiben Teil 2",
+        "Goethe A1 Sprechen Teil 2"
+      ],
+      "landeskunde": "Urlaub in D-A-CH: Nordsee und Ostsee, die Alpen; Temperaturen in Grad Celsius"
+    },
+    {
+      "nr": 9,
+      "id": "a1.2-u09",
+      "title": "Wer macht was?",
+      "titleEn": "Who does what?",
+      "situation": "Zusammen wohnen in der WG oder in der Familie: Aufgaben im Haushalt verteilen, Zettel und Sprachnachrichten verstehen und einander um Hilfe bitten.",
+      "handlungsfeld": "Wohnen (HF 12) · Soziale Kontakte (RC-Bereich D) · CEFR-Domäne: privat",
+      "unitType": "situation",
+      "canDo": [
+        {
+          "de": "Ich kann Mitbewohnern oder Familienmitgliedern mit einfachen Worten Aufgaben geben und selbst um Hilfe bitten.",
+          "source": "04-cando-a1-a2 · GI-A1 15 (um etwas bitten), angepasst"
+        },
+        {
+          "de": "Ich kann in kurzen Mitteilungen Informationen aus dem Alltag erfragen oder weitergeben.",
+          "source": "04-cando-a1-a2 · GI-A1 16"
+        },
+        {
+          "de": "Ich kann einfache mündliche Warnungen verstehen und andere zur Vorsicht auffordern.",
+          "source": "04-cando-a1-a2 · RC 84·A1"
+        },
+        {
+          "de": "Ich kann kurze Notizen und Sprachnachrichten verstehen, z. B. wer was einkaufen soll.",
+          "source": "04-cando-a1-a2 · GI-A1 16 (sehr kurze, einfache Mitteilungen), angepasst"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Imperativ mit du und ihr (Kauf bitte Milch! Räumt bitte die Küche auf!)",
+          "new": true,
+          "lehrwerk": "Menschen A1 L18/L20; Schritte plus Neu 2 L9; Netzwerk neu A1 K8"
+        },
+        {
+          "point": "Personalpronomen im Akkusativ (mich, dich, ihn, sie, es, uns, euch)",
+          "new": true,
+          "lehrwerk": "Menschen A1 L20; Schritte plus Neu 2 L14; Netzwerk neu A1 K6"
+        }
+      ],
+      "vocabTheme": "Haushalt, Aufgaben, Putzplan",
+      "vocabTarget": 26,
+      "keyWords": [
+        "der Haushalt",
+        "die Aufgabe",
+        "die Wäsche",
+        "das Geschirr",
+        "der Kühlschrank",
+        "der Mitbewohner / die Mitbewohnerin",
+        "putzen",
+        "waschen",
+        "spülen",
+        "aufräumen",
+        "sauber",
+        "schmutzig",
+        "Vorsicht!"
+      ],
+      "reading": {
+        "textType": "Zettel und Chat-Nachrichten in der WG (richtig/falsch)",
+        "words": 70
+      },
+      "listening": {
+        "textType": "Sprachnachricht einer Mitbewohnerin",
+        "seconds": 45
+      },
+      "writing": {
+        "task": "Nachricht an die Mitbewohner (3 Leitpunkte: Sie sind heute nicht da, wer macht was, Frage zum Wochenende)",
+        "words": 30,
+        "examTeil": "Goethe A1 Schreiben Teil 2"
+      },
+      "speaking": {
+        "task": "Mit Bildkarten Bitten und Aufforderungen in der du-Form formulieren und darauf reagieren",
+        "examTeil": "Goethe A1 Sprechen Teil 3"
+      },
+      "pronunciation": "Satzmelodie: freundliche Bitte (mit bitte, mal) und strenge Aufforderung",
+      "examTeile": [
+        "Goethe A1 Lesen Teil 1",
+        "Goethe A1 Hören Teil 3",
+        "Goethe A1 Schreiben Teil 2",
+        "Goethe A1 Sprechen Teil 3"
+      ],
+      "landeskunde": "Zusammenleben in der WG: Putzplan, Mülltrennung (Biotonne, gelber Sack), Kehrwoche in Süddeutschland"
+    },
+    {
+      "nr": 10,
+      "id": "a1.2-u10",
+      "title": "Früher und heute",
+      "titleEn": "Then and now",
+      "situation": "Alte und neue Fotos ansehen: Menschen beschreiben (Aussehen und Charakter), vergleichen, wie sie früher waren, und über ein Foto sprechen.",
+      "handlungsfeld": "Soziale Kontakte (RC-Bereich D) · Migrationssituation (RC-Bereich A) · CEFR-Domäne: privat",
+      "unitType": "situation",
+      "canDo": [
+        {
+          "de": "Ich kann das Aussehen und den Charakter von Menschen, die ich kenne, mit einfachen Worten beschreiben.",
+          "source": "04-cando-a1-a2 · GER-R·A1 (Leute beschreiben), erweitert; ÖIF A1.3 (Personen beschreiben)"
+        },
+        {
+          "de": "Ich kann mit einfachen Worten sagen, wer größer, älter oder jünger ist.",
+          "source": "06-grammar-progression F3 A1.2 #10 (Menschen A1 L22, Schritte 2 L13); CEFR setzt Vergleichen auf A2+ (04 GER-M) – hier in einfachster Form"
+        },
+        {
+          "de": "Ich kann über ein Foto sprechen: Wer ist das? Wo sind die Personen? Was machen sie?",
+          "source": "01-exams-a1-a2 · ÖSD ZA1 Sprechen (Foto: Was? Wie viele Personen? Wo? Was machen sie?); 02-exams-b1 · DTZ Sprechen Teil 2 (Einstieg)"
+        },
+        {
+          "de": "Ich kann sagen, wie jemand früher war und was er früher hatte.",
+          "source": "04-cando-a1-a2 · ÖIF 5–6 (über Vergangenes auf A1-Niveau sprechen)"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Komparation: Komparativ mit als, Vergleich mit so … wie; gut – besser – am besten, gern – lieber – am liebsten, viel – mehr",
+          "new": true,
+          "lehrwerk": "Menschen A1 L22; Schritte plus Neu 2 L13; Netzwerk neu A2 K3 (split)"
+        },
+        {
+          "point": "Wortbildung: Adjektive mit un- und -los (unfreundlich, kostenlos)",
+          "new": true,
+          "lehrwerk": "Menschen A1 L19 (un-), L23 (-los); Goethe-A1-Wortbildungsinventar (06 F2)"
+        },
+        {
+          "point": "war/hatte und Perfekt im Kontrast: früher und heute (Wiederholung)",
+          "new": false,
+          "lehrwerk": "Menschen A1 L19; Schritte plus Neu 2 L8"
+        },
+        {
+          "point": "»Er sieht jung aus«, »ein netter Mann« (aussehen; attributives Adjektiv) – nur verstehen; Adjektivdeklination ab A2.1",
+          "new": false,
+          "lehrwerk": "Menschen A1 L19 (Aussehen); Adjektivdeklination: Menschen A2 L4/L5/L9; Netzwerk neu A2 K5–6",
+          "chunk": true,
+          "receptive": true
+        }
+      ],
+      "vocabTheme": "Aussehen, Charakter, Lebensphasen",
+      "vocabTarget": 24,
+      "keyWords": [
+        "die Haare",
+        "die Brille",
+        "das Gesicht",
+        "die Großeltern",
+        "jung",
+        "schlank",
+        "lang",
+        "kurz",
+        "lustig",
+        "nett",
+        "freundlich",
+        "unfreundlich",
+        "ruhig"
+      ],
+      "reading": {
+        "textType": "E-Mail mit Fotos von einem Familientreffen (richtig/falsch)",
+        "words": 90
+      },
+      "listening": {
+        "textType": "Gespräch über alte Fotos",
+        "seconds": 90
+      },
+      "writing": {
+        "task": "Nachricht zu einem alten Foto (3 Leitpunkte: Wer ist das? Wie war die Person früher? Wie ist sie heute?)",
+        "words": 35,
+        "examTeil": "Goethe A1 Schreiben Teil 2"
+      },
+      "speaking": {
+        "task": "Ein Foto beschreiben (Wer? Wo? Was machen die Personen?) und Personen vergleichen; dann Selbstvorstellung mit »früher« – die KI stellt Nachfragen",
+        "examTeil": "Goethe A1 Sprechen Teil 1; Vorbereitung DTZ Sprechen Teil 2 (Einstieg)"
+      },
+      "pronunciation": "Umlaut im Komparativ (alt – älter, jung – jünger, groß – größer)",
+      "examTeile": [
+        "Goethe A1 Sprechen Teil 1",
+        "Goethe A1 Sprechen Teil 2",
+        "Goethe A1 Lesen Teil 1",
+        "Goethe A1 Hören Teil 1",
+        "Goethe A1 Schreiben Teil 2"
+      ],
+      "landeskunde": "Porträt: eine bekannte Person aus D-A-CH früher und heute (Fakten mit Quellenangabe)"
+    },
+    {
+      "nr": 11,
+      "id": "a1.2-u11",
+      "title": "Was ist los in der Stadt?",
+      "titleEn": "What's on in town?",
+      "situation": "Veranstaltungen in einer App finden: ein Stadtfest oder eine Ausstellung auswählen, ein Ticket online kaufen, Freunde einladen und auf Einladungen antworten.",
+      "handlungsfeld": "Mediennutzung (HF 9) · Soziale Kontakte (RC-Bereich D) · CEFR-Domäne: privat/öffentlich",
+      "unitType": "situation",
+      "canDo": [
+        {
+          "de": "Ich kann Ankündigungen für Veranstaltungen wesentliche Informationen entnehmen, z. B. Beginn und Ort.",
+          "source": "04-cando-a1-a2 · RC 138·A1"
+        },
+        {
+          "de": "Ich kann einfache Menüpunkte im Handy verstehen und einfache Anweisungen im Internet befolgen.",
+          "source": "04-cando-a1-a2 · RC 139·A1"
+        },
+        {
+          "de": "Ich kann online ein Ticket bestellen und dabei Anzahl, Datum und Zahlungsart eingeben.",
+          "source": "04-cando-a1-a2 · RC 125·A1 (Bestellungen im Internet), angepasst"
+        },
+        {
+          "de": "Ich kann eine Einladung annehmen oder absagen und einen Grund nennen.",
+          "source": "04-cando-a1-a2 · RC 57·A2 – Vorrangregel F5: Goethe A1 Schreiben Teil 2 prüft Einladung und Absage"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Präpositionen mit Akkusativ: für, ohne, um, durch, bis (ein Ticket für Samstag, ohne Anmeldung, bis Sonntag)",
+          "new": true,
+          "lehrwerk": "Menschen A1 L16 (für), L17 (mit/ohne); 06 F5 (Thema prepositions-accusative: A1.2, übereinstimmend)"
+        },
+        {
+          "point": "Wortbildung: Nomen auf -ung, Adjektive auf -bar (die Anmeldung, die Bestellung; erreichbar)",
+          "new": true,
+          "lehrwerk": "Goethe-A1-Wortbildungsinventar (06 F2)"
+        },
+        {
+          "point": "Imperativ mit Sie und trennbare Verben in Anleitungen (Laden Sie die App herunter!) – Wiederholung",
+          "new": false,
+          "lehrwerk": "Netzwerk neu A1 K3; Menschen A1 L18"
+        }
+      ],
+      "vocabTheme": "Veranstaltungen, Apps, Internet",
+      "vocabTarget": 22,
+      "keyWords": [
+        "die Veranstaltung",
+        "die Ausstellung",
+        "das Ticket",
+        "der Eintritt",
+        "die App",
+        "das Passwort",
+        "die Einladung",
+        "herunterladen",
+        "einladen",
+        "zusagen",
+        "absagen",
+        "kostenlos",
+        "erreichbar"
+      ],
+      "reading": {
+        "textType": "Veranstaltungskalender in einer App (zwei Angebote vergleichen)",
+        "words": 90
+      },
+      "listening": {
+        "textType": "Sprachnachrichten von Freunden: Vorschläge und Absagen",
+        "seconds": 60
+      },
+      "writing": {
+        "task": "Antwort auf eine Einladung (3 Leitpunkte: absagen, Grund mit denn, einen anderen Termin vorschlagen)",
+        "words": 35,
+        "examTeil": "Goethe A1 Schreiben Teil 2"
+      },
+      "speaking": {
+        "task": "Mit Wortkarten »Veranstaltungen« Fragen stellen und beantworten; mit der KI einen Abend planen (vorschlagen, zusagen, absagen)",
+        "examTeil": "Goethe A1 Sprechen Teil 2"
+      },
+      "pronunciation": "Anglizismen und Abkürzungen aussprechen und buchstabieren (App, Link, WLAN, PDF)",
+      "examTeile": [
+        "Goethe A1 Lesen Teil 2",
+        "Goethe A1 Hören Teil 3",
+        "Goethe A1 Schreiben Teil 2",
+        "Goethe A1 Sprechen Teil 2"
+      ],
+      "landeskunde": "Kultur in der Stadt: Stadtfest, Museumsnacht, ermäßigter Eintritt für Studierende"
+    },
+    {
+      "nr": 12,
+      "id": "a1.2-u12",
+      "title": "Herzlichen Glückwunsch!",
+      "titleEn": "Congratulations!",
+      "situation": "Feste feiern: zum Geburtstag gratulieren, zu einer Feier einladen und antworten, Daten nennen und die Feier gemeinsam planen.",
+      "handlungsfeld": "Soziale Kontakte (RC-Bereich D) · CEFR-Domäne: privat",
+      "unitType": "situation",
+      "canDo": [
+        {
+          "de": "Ich kann jemandem gratulieren, auch in einer E-Mail oder auf einer Karte.",
+          "source": "04-cando-a1-a2 · RC 59·A1"
+        },
+        {
+          "de": "Ich kann gute Wünsche aussprechen und mich für Glückwünsche bedanken.",
+          "source": "04-cando-a1-a2 · RC 59·A1"
+        },
+        {
+          "de": "Ich kann Bekannten das Du anbieten und reagieren, wenn man mir das Du anbietet.",
+          "source": "04-cando-a1-a2 · RC 55·A1"
+        },
+        {
+          "de": "Ich kann Daten verstehen und nennen, z. B. Geburtstage und Feiertage.",
+          "source": "04-cando-a1-a2 · GI-A1 15 (Zeitangaben »im November«) + 06 F3 A1.2 #12 (Ordinalzahlen), angepasst"
+        },
+        {
+          "de": "Ich kann mit Hilfe eine kleine Feier mitplanen: Vorschläge machen und sagen, was ich mitbringe.",
+          "source": "04-cando-a1-a2 · GER-R·A2 (praktische Aufgaben, Vorschläge) – hier als Einstieg mit Hilfe; Vorbereitung Goethe A2 Sprechen Teil 3 und DTZ Sprechen Teil 3"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Wiederholung und Transfer: Datum und Ordinalzahlen (aus Einheit 4) bei Festen – Zuwachs: Geburtstage und Feiertage nennen (Ich habe am 12. März Geburtstag. Der Nationalfeiertag ist am 3. Oktober.)",
+          "new": false,
+          "lehrwerk": "Menschen A1 L24; Schritte plus Neu 2 L14; Netzwerk neu A1 K12"
+        },
+        {
+          "point": "würde gern / hätte gern: Wünsche äußern (feste Wendungen)",
+          "new": false,
+          "lehrwerk": "Menschen A1 L24; Schritte plus Neu 2 L12; 06 Implikation 11 (A1.2: Chunks)",
+          "chunk": true
+        },
+        {
+          "point": "Verben mit Dativ bei Glückwünschen (Ich gratuliere dir. Ich wünsche Ihnen alles Gute.) – Wiederholung aus Einheit 6; Zuwachs: gratulieren, wünschen, danken",
+          "new": false,
+          "lehrwerk": "Menschen A1 L15; Schritte plus Neu 2 L13–14"
+        }
+      ],
+      "vocabTheme": "Feste, Feiertage, Glückwünsche",
+      "vocabTarget": 18,
+      "keyWords": [
+        "der Geburtstag",
+        "die Feier",
+        "das Fest",
+        "das Geschenk",
+        "der Feiertag",
+        "Weihnachten",
+        "gratulieren",
+        "feiern",
+        "schenken",
+        "wünschen",
+        "Herzlichen Glückwunsch!",
+        "Alles Gute!"
+      ],
+      "reading": {
+        "textType": "Einladung per E-Mail und Glückwunschkarten (richtig/falsch)",
+        "words": 90
+      },
+      "listening": {
+        "textType": "Gespräche auf einer Geburtstagsfeier und Anrufbeantworter: Wer kommt wann?",
+        "seconds": 90
+      },
+      "writing": {
+        "task": "Einladung zur eigenen Feier (3 Leitpunkte: Was feiern Sie? Wann und wo? Was sollen die Gäste mitbringen?; Anrede und Gruß)",
+        "words": 40,
+        "examTeil": "Goethe A1 Schreiben Teil 2"
+      },
+      "speaking": {
+        "task": "Generalprobe Sprechen: Teil 1 vorstellen, Teil 2 Themenkarten »Feste«, Teil 3 Bitten; danach mit der KI eine Feier planen",
+        "examTeil": "Goethe A1 Sprechen Teil 1–3"
+      },
+      "pronunciation": "Emotionale Intonation: Freude, Glückwünsche und Dank (Herzlichen Glückwunsch! Vielen Dank!)",
+      "examTeile": [
+        "Goethe A1 Schreiben Teil 2",
+        "Goethe A1 Lesen Teil 1",
+        "Goethe A1 Hören Teil 1",
+        "Goethe A1 Sprechen Teil 1",
+        "Goethe A1 Sprechen Teil 2",
+        "Goethe A1 Sprechen Teil 3"
+      ],
+      "landeskunde": "Feste in D-A-CH: nicht vor dem Geburtstag gratulieren, Advent und Weihnachten, Karneval/Fasching; Nationalfeiertage 3. Oktober (D), 26. Oktober (A), 1. August (CH)"
+    }
+  ],
+  "checkpoints": [
+    {
+      "afterUnit": 3,
+      "covers": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "afterUnit": 6,
+      "covers": [
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "afterUnit": 9,
+      "covers": [
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "afterUnit": 12,
+      "covers": [
+        10,
+        11,
+        12
+      ]
+    }
+  ],
+  "levelTest": {
+    "format": "Vollständiger Modelltest Start Deutsch 1 (Goethe-Zertifikat A1 = telc Deutsch A1), der dritte von drei vollen Modelltests als Parallelform (Modelltest 1 = Checkpoint 3, Modelltest 2 = Checkpoint 4; dazu der Diagnose-Mini-Modelltest in Woche 1), in der letzten Woche vor dem Prüfungstermin ohne neuen Stoff: Hören ca. 20 min (15 Items, Teil 2 einmal gehört), Lesen 25 min (15 Items), Schreiben 20 min (Formular + ca. 30 Wörter), ohne Pause 65 min, danach 3–5 min Übertragung auf einen Antwortbogen (wie bei telc); dann ca. 15 min Sprechen (drei Teile, ohne Vorbereitung, die KI in der Rolle der Prüferin (automatische Übungsbewertung) und als Gruppe); Übungswerte je Prüfungsteil, dazu der Satz »nach der Bewertungsregel von Goethe/telc wäre dieses Übungsergebnis …«; kein Bereitschaftsurteil über mehrere Modelltests, nie eine Bestehensprognose",
+    "sections": [
+      "Hören",
+      "Lesen",
+      "Schreiben",
+      "Sprechen"
+    ]
+  }
+}

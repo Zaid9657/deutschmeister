@@ -1,0 +1,284 @@
+{
+  "review": "a1.1-u11.r1",
+  "unitId": "a1.1-u11",
+  "file": "content/course-v2/a1.1/units/u11.json",
+  "round": 1,
+  "date": "2026-09-27",
+  "reviewers": [
+    {
+      "id": "R1",
+      "persona": "Prüferin (lizenzierte Goethe-A1-Prüferin): Prüfungstreue, Rubrik, Aufgabenklarheit"
+    },
+    {
+      "id": "R2",
+      "persona": "Kursleiterin DaF (A1.1): Natürlichkeit, Niveau, Didaktik, Szenenplausibilität"
+    }
+  ],
+  "method": "Both reviewers read every German string: title and title.canDo, spec.situation, the Folge (7 lines and the gist item), the 3 inputs (30 dialogue lines, Elif's written reply, Sophie's postcard and Priya's chat post), 2 exam texts (72 and 68 words, recounted), the L1 strategy card, 8 redemittel, the Sp2 task (instructions, situation, cards, persona, openingLine, hintWords, 8 model turns), the S2 task (situation, taskDe, 3 Leitpunkte with cues, checklist, model text of 33 words), the Check line, both Aussprache blocks, story beat and cliffhanger, every endLine, promptDe, option and explanation.de. We solved all 88 authored items blind from promptDe plus options, tiles or audio line: 1 Folge gist, 15 input items, 12 structuredInput, 33 pool items, 12 reserve, 5 exam items, 8 check items and 2 proof items. For sentence_building we permuted the tiles and checked every V2, V1 and topicalised order against accepted[]; for error_correction we tried every one-word correction. We traced the generators (3 × dictation.fromInput on 6 source lines, none with `say`; numbers.dictation number-0-100 and clock-time; 2 × lex.articlePlural, 2 × lex.glossTyped, 3 × lex.glossMatch) against the lexicon roles. Risky answers were graded with the player's own src/lib/course-v2/checkItem.js (dictation ls2-l09 typed „bis 11 Uhr“ → correct; „Herr Achmed“ → typo; „gestern“ for the key „Gestern“ → typo; ls2-i03 „letzte Woche“ → wrong; ls2-p09 „Hast du gestern was gemacht?“ → wrong). The exam block and the two tasks were checked against content/course-v2/registries/lanes/sd1.json (sd1.l1: 5 R/F items, 2 options, textWords [56, 92] per text; sd1.sp2: 2 rounds, cards-ask, prep 0; sd1.s2: 3 Leitpunkte, target 30 words, purpose types apology/invitation/enquiry) and rubrics sd1-sp2, sd1-s2, course-micro, course-micro-sp (all resolve). The grammar ceiling was checked against grammar-spine.json (g.perfekt-haben receptive a1.1-u11 / productive a1.2-u05, closed list on rc.perfekt-haben; g.praeteritum-sein-haben chunkFrom a1.1-u11; g.perfekt-sein a1.1-u12; g.praep-dativ chunkFrom a1.1-u05, productive a1.2-u01; g.indirekte-frage a2.2-u03; g.adj-dekl-bestimmt a2.1-u05; g.zeitangaben-akkusativ a2.1-u07) and level-profiles.json a1.1 (24–32 new words, 28 here; subordinateClausesMax 0; rule card ≤ 60 words). Every German string of the unit, including the surfaces the LEX-01 rail does not walk, was scanned against knownForms + licensedForms at a1.1-u11 (lib-validate/lexicon.mjs). Can-dos were read in registries/cando/a1.json; cast and story facts against casts/series.json, casts/a1.json and units u01, u03, u09, u10 and u12; the unit against curriculum/a1-1.md §6 unit 11 and BLUEPRINT §2.8 row 11. Every finding class of the u04 review trail (r1–r5) was checked for recurrence. The whole level was also validated once (node scripts/course-v2/validate.mjs a1.1) for the level-scope COV rules.",
+  "validator": {
+    "command": "node scripts/course-v2/validate.mjs content/course-v2/a1.1/units/u11.json",
+    "result": "FAIL — 40 rules: 29 pass, 2 fail (GRM-05: 1 blocker in content/course-v2/a1.1/rule-cards.json rc.perfekt-haben; LEX-01: 4 blocker + 3 advisory in the unit), 5 warn (ALL-02: 1 advisory, tt.post unused; GRM-04: 3 advisory; LEX-02: 2 ratchet, Monat and Nacht; LEX-03: 1 advisory, gelesen; CON-06: 1 advisory, no facts[]), 4 skipped (ITM-08; COV-1, COV-4, COV-5 are level-scope) · 5 blocker, 2 ratchet, 9 advisory",
+    "check": "node scripts/course-v2/check.mjs content/course-v2/a1.1/units/u11.json → 0 errors",
+    "levelRun": "node scripts/course-v2/validate.mjs a1.1 → COV-1, COV-4 and COV-5 pass; the only COV-3 blocker is u01's (spec.lanes differs from specs.json), not u11's"
+  },
+  "verdict": "Not exit-ready: 2 BLOCKER (both reported by the validator: LEX-01 on four read surfaces of the unit, GRM-05 on the shared rule card rc.perfekt-haben), 3 MAJOR and 11 MINOR. A lot is right. The German is correct on every model surface, and du/Sie is right everywhere (Frau Schulz uses Sie with surnames, the course friends use du). All 88 authored keys are right. The L1 block, the Sp2 cards and the S2 task match sd1.json, and the tasks are original. The story continues u09 and u10 exactly: Olena's Friday dinner at the Restaurant Kochi, the 18.35 train with 60 minutes' delay and the coffee at the station (18.35 + 60 + 75 minutes ≈ „erst um neun“), and Sophie staying in Dresden until Wednesday. u12's Folge picks up the cliffhanger. Most u04 classes did not come back: question/statement prompts, missing word orders, number words, dictation audio, word-band display, error corrections with a second repair and proofs solvable without German are all clean. Three things stop exit. First, Sophie's postcard cannot exist as written: it is written on Monday and read in class on Monday morning. It also invites to Dresden two friends who were there with her two days earlier, although Sophie lives in Leipzig. Second, ls2-i03 offers „letzte Woche“ as a distractor, and by the unit's own Sp2 model that option is true. Third, three explanations put „ich habe/wir haben“ on position 2, which is the V3 error that LS2 corrects.",
+  "scores": {
+    "D": 4,
+    "N": 3,
+    "H": 4,
+    "A": 3,
+    "P": 4,
+    "K": 3,
+    "E": 4
+  },
+  "scoreNotes": {
+    "D": "No error on a model surface; isolated unidiomatic phrasing on options, one input line, one stem and the Sp2 opening line (F08).",
+    "N": "Validator LEX-01 blockers (F01), true GRM-04 look-aheads on instruction surfaces and in the cliffhanger (F09), a writing Leitpunkt that elicits the productive dative (F10), and receptive lemmas produced (F14).",
+    "H": "The scenes are lively and believable: Olena's 40-euro bike, Bilal asleep in the cinema, the train delay. All four can-dos are performed (LS1 and LS2 micro-outputs, Sp2, S2). The postcard scene is the weak spot, scored under K.",
+    "A": "One defensible distractor that is graded wrong (F04), three explanations that describe the wrong word order (F05), question prompts that do not name the question type (F06), and one structured-input key that can be found by string matching (F07).",
+    "P": "L1 is exact: 2 texts of 72 and 68 words in [56, 92], 5 items, 2 R / 3 F with no run. Sp2 is exact: 2 rounds with a card each. S2 is on length, has 3 Leitpunkte and Anrede/Gruß, but drifts in purpose, address and Leitpunkt scope (F11).",
+    "K": "The postcard contradicts the unit's own day, u10 and the cast (F03). Smaller breaks: Nora appears twice with different weekends, and the weather differs between Olena and Priya (F12). No facts[] record (F13).",
+    "E": "Each LS fits its minutes at A1.1, instructions are ≤ 90 characters, and the end screens name the win. The ls7 end screen opens with an unknown word (F01)."
+  },
+  "total": 25,
+  "counts": {
+    "blocker": 2,
+    "major": 3,
+    "minor": 11,
+    "unitOwned": {
+      "blocker": 1,
+      "major": 3,
+      "minor": 10
+    },
+    "note": "unitOwned = the fix edits u11.json. F01's four surfaces are the unit's, and moving lx.post is the lexicon owner's. F02 and F16 belong to the rule-cards owner. F14 (b) and (c) belong to the lexicon owner; F14 (a) is the unit's."
+  },
+  "findings": [
+    {
+      "id": "F01",
+      "reviewer": "validator",
+      "criterion": "N",
+      "severity": "blocker",
+      "scope": "class",
+      "unitId": "a1.1-u11",
+      "path": "LEX-01 blockers: title.canDo; steps[2].endLine (ls3); steps[6].endLine (ls7); steps[1].microOutput.situationDe (a1.1-u11-ls2-mo). LEX-01 advisories: steps[1].pool.items[3].explanation.de (ls2-p04), steps[2].structuredInput[0].explanation.de (ls3-s01), check.items[4].explanation.de (c05). Same class on surfaces the rail does not walk: steps[2].input.title; steps[0].aussprache.focus, steps[2].aussprache.focus; steps[3].strategyCards[0].de; redemittel[1].function, redemittel[6].function",
+      "quote": "title.canDo „… und kurze Nachrichten und Posts lesen und schreiben.“ · ls3 endLine „Sie können jetzt Postkarten und kurze Nachrichten im Chat lesen.“ · ls7 endLine „Geschafft! … und kurze Nachrichten lesen und schreiben.“ · ls2-mo „Elif schickt Ihnen auch eine Sprachnachricht …“ · input.title „Eine Postkarte und ein Post“ · aussprache „Das ge- im Partizip ist kurz und leise …“",
+      "problem": "LEX-01 fails the unit with 4 blockers. Words the learner must read on the can-do title, two end screens and a task situation are allocated to later units, or to no unit. „kurze“ (lx.kurz, a1.2-u10) appears 3 times, „Posts“ (lx.post) is at a1.2-u01, „Geschafft“ has no entry, and „schickt“ (lx.schicken) is at a1.2-u07. This is the u04 r3–r5 class. This time the rail caught it. Our scan of every German string at a1.1-u11 finds the same class on surfaces the rail does not walk: „Post“ in the LS3 input title; „kurz“ and „leise“ (a1.2) in both Aussprache focus lines; „anders“ (a2.1-u11) on the L1 strategy card; „feste Wendung“ and „Gruppe“ (a2.1-u07) in the Redemittel function labels. The unit's own can-do (cd.a1.online-post), its text type tt.post and the plan („Online-Post“) all sit at u11, but „Post“ is allocated only at a1.2-u01.",
+      "fix": "Unit (all words known at u11, checked against knownForms): title.canDo „Sie können vom Wochenende erzählen und Nachrichten und Posts lesen und schreiben.“ · ls3 endLine „Sie können jetzt Postkarten und Nachrichten im Chat lesen.“ · ls7 endLine „Gut gemacht! Jetzt können Sie vom Wochenende erzählen: gestern, vorgestern, letzte Woche. Und Sie können Nachrichten lesen und schreiben.“ · ls2-mo situationDe „Elif hat auch eine Sprachnachricht für Sie: „Hallo! Wie war dein Wochenende? Hast du am Freitag Zeit?““ · the Aussprache lines: gloss „kurz“ and „leise“ on that screen, or reword · strategy card: „… aber die Information ist nicht gleich.“ Lexicon owner: move lx.post (receptive) to a1.1-u11, where its can-do and text type live.",
+      "proposedRule": "LEX-01 surface walk: add steps[].input.title, aussprache.focus and redemittel[].function. Each is an advisory where the screen shows an English twin, a blocker where it does not."
+    },
+    {
+      "id": "F02",
+      "reviewer": "validator+R2",
+      "criterion": "N",
+      "severity": "blocker",
+      "scope": "instance",
+      "unitId": "a1.1-u11",
+      "path": "content/course-v2/a1.1/rule-cards.json cards[19] (rc.perfekt-haben), shown in steps[0].ruleCard and steps[2].ruleCard",
+      "quote": "GRM-05: „rc.perfekt-haben is first used at a1.1-u11, which declares the chunk g.praeteritum-sein-haben … neither the card's text, table nor model sentence shows a chunk form („war“ / „hatte“)“ · card: „Über gestern und das Wochenende sprechen Sie meistens im Perfekt: haben auf Position 2, das Partizip am Ende. … Viele Partizipien enden auf -t, andere auf -en. Die Regel für neue Verben kommt in A1.2.“",
+      "problem": "The validator fails the run on the shared card. R2 adds that the simplification is false in this unit's own context. The past of sein and haben comes as war/hatte in almost every input line: „Dresden war super“, „Das Wetter war gut“, „Der Zug hatte eine Stunde Verspätung“, „Am Freitag hatte ich Geburtstag“, „Vorgestern war ich … im Park“. The Redemittel also teach „Es war super!“ as a fixed phrase. A learner who follows the card („the weekend → Perfekt with haben“) writes ✗„Das Wetter hat gut gewesen“ or the unidiomatic „Ich habe Geburtstag gehabt“. This is the u04 r2–r5 rule-card class: the card's rule holds only outside the frames of the unit that shows it.",
+      "fix": "Rule-cards owner: replace „Viele Partizipien enden auf -t, andere auf -en.“ with „Aber sein und haben: meistens war und hatte (Das Wetter war gut.).“ and shorten the last sentence to „Die Regel kommt in A1.2.“ That gives 53 words, within the 60-word A1 limit. Mirror the change in the English twin.",
+      "proposedRule": null
+    },
+    {
+      "id": "F03",
+      "reviewer": "R2",
+      "criterion": "K",
+      "severity": "major",
+      "scope": "instance",
+      "unitId": "a1.1-u11",
+      "path": "steps[2].input.text.de (Postkarte von Sophie); steps[2].input.lines[1], [2] (a1.1-u11-ls3-l02, -l03); spec.situation; story.beat. Checked against u10 story.beat and casts/a1.json cast.sophie, cast.olena",
+      "quote": "Postcard: „Liebe Priya, lieber Arjun, viele Grüße aus Dresden! … Gestern waren wir am Vormittag im Museum im Schloss. … Heute lese ich nur und schlafe viel. Am Mittwoch bin ich wieder in Leipzig. Besucht ihr mich bald hier in Dresden?“ · ls3-l04 „Am Sonntag war sie mit den Eltern im Museum im Schloss.“ · spec.situation „Montagmorgen im Kurs: … Priya liest eine Postkarte von Sophie“ · ls3-l02 (Priya to Olena) „Sie besucht noch bis Mittwoch die Eltern.“",
+      "problem": "(1) The card's „gestern“ is Sunday (ls3-l04, ls3-i03), so Sophie wrote it on Monday. Yet Priya holds it in class on Monday morning (spec.situation; story.beat „Am Montag …“). A card posted in Dresden on Monday cannot be in Leipzig that morning. It cannot date from Sunday either: then „gestern“ would be Saturday, when Sophie was in the Altstadt with Priya and Arjun (Priya's post; u10). (2) „Besucht ihr mich bald hier in Dresden?“ contradicts the cast and u10. Sophie lives and studies in Leipzig (cast.sophie: a WG with Olena), she is back on Wednesday, and Priya and Arjun went to Dresden with her to her family two days earlier (u10 beat). (3) Priya tells Olena, as if it were news, that Sophie is visiting her parents until Wednesday. But Olena is Sophie's flatmate and writes to her in t1: „Hier in der WG ist alles gut … Am Mittwoch kommst du zurück.“ The text that proves the unit's reading can-do is where a learner who has followed the story since u09 sees it break.",
+      "fix": "Set LS3 on Tuesday. Use input.title „Dienstag im Kurs: eine Postkarte und ein Post“ and update spec.situation and story.beat to match. The Monday card then arrives the next day, and „gestern“ = Sunday stays true. Replace the last card sentence with „Danke für den Samstag! Besucht ihr mich bald in der WG?“; this keeps both occurrences of lx.besuchen that LEX-02 counts. Let Olena state the fact she knows. ls3-l02 Priya: „Ja, von Sophie aus Dresden!“ · ls3-l03 Olena: „Von Sophie? Sie besucht noch bis Mittwoch die Eltern. Ich bekomme nie Postkarten! Was schreibt sie?“ All words are known at u11, and the fix uses no Perfekt with sein.",
+      "proposedRule": null
+    },
+    {
+      "id": "F04",
+      "reviewer": "R1",
+      "criterion": "A",
+      "severity": "major",
+      "scope": "instance",
+      "unitId": "a1.1-u11",
+      "path": "steps[1].inputItems[2] (a1.1-u11-ls2-i03). Checked against steps[4].task.modelTurns[4..7] and steps[3].texts[0] (t1)",
+      "quote": "„Heute ist Montag. Wann waren Priya und Arjun in Dresden?“ — options vorgestern / gestern / letzte Woche; key „vorgestern“ · Sp2 model: „Haben Sie letzte Woche einen Ausflug gemacht?“ – „Ja, am Samstag war ich mit Freunden in Berlin.“ · „Haben Sie letzte Woche einen Film gesehen?“ – „Ja, am Freitag im Kino.“",
+      "problem": "On a Monday, last Saturday belongs to „letzte Woche“. The unit's own Sprechen model says so twice: a Saturday trip and a Friday film are its answers to „letzte Woche“. t1 also sets „letzte Woche“ against Sunday. So „letzte Woche“ is a true answer about the Dresden trip. A learner who reasons from the calendar instead of the word heard is graded WRONG (checkItem: „letzte Woche“ → wrong). The item means to test hearing „vorgestern“, but the German prompt „Wann …?“ does not ask for the word that was used.",
+      "fix": "Use a false distractor: options „vorgestern“ / „gestern“ / „heute“ (or „am Freitag“). Keep the explanation as it is.",
+      "proposedRule": "ITM-02 (advisory): when a choice item's options are relative time expressions and its stem fixes the day („Heute ist …“), resolve each option to its span of days and flag every distractor whose span contains the key's day."
+    },
+    {
+      "id": "F05",
+      "reviewer": "R2",
+      "criterion": "A",
+      "severity": "major",
+      "scope": "class",
+      "unitId": "a1.1-u11",
+      "path": "steps[0].pool.items[0].explanation.de (a1.1-u11-ls1-p01); steps[0].reserve[0].explanation.de (ls1-r01); check.items[0].explanation.de (a1.1-u11-c01)",
+      "quote": "ls1-p01 „Am Samstag ___ ich Fußball gespielt. (haben)“ → „„ich habe“ auf Position 2, das Partizip „gespielt“ am Ende.“ · c01 „Am Freitag ___ wir im Restaurant gegessen. (haben)“ → „„wir haben“ auf Position 2, das Partizip „gegessen“ am Ende.“ · ls1-r01 „Wir ___ am Freitag im Restaurant gegessen.“ → „„wir haben“ auf Position 2 …“",
+      "problem": "In ls1-p01 and c01 the time phrase holds position 1, „habe/haben“ holds position 2, and the subject follows. Telling the learner that „ich habe“ / „wir haben“ stands on position 2 describes ✗„Am Samstag ich habe Fußball gespielt“. That is the V3 error the unit plants and corrects in ls2-p10 („Am Sonntag Elif hat gekocht.“) and ls2-r03, and ls2-p02's own explanation gets it right („„Gestern“ auf Position 1, „habe“ auf Position 2, dann „ich““). c01 is a scored Check item. In ls1-r01 the pronoun is on position 1, so the claim is wrong there as well. The explanation does not name the real structure, which is the u04 r1-F05 class: an explanation that teaches the error the unit has to unteach.",
+      "fix": "ls1-p01 „„Am Samstag“ auf Position 1, „habe“ auf Position 2, dann „ich“. „gespielt“ steht am Ende.“ · c01 „„Am Freitag“ auf Position 1, „haben“ auf Position 2, dann „wir“. „gegessen“ steht am Ende.“ · ls1-r01 „„Wir“ auf Position 1, „haben“ auf Position 2, „gegessen“ am Ende.“",
+      "proposedRule": "ITM-11: an explanation.de that says „X auf Position N“ must quote a word that is the N-th constituent of the item's answer sentence. A quoted pronoun+verb pair „auf Position 2“ fails whenever the key has inversion."
+    },
+    {
+      "id": "F06",
+      "reviewer": "R1",
+      "criterion": "A",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u11",
+      "path": "steps[0].pool.items[6] (a1.1-u11-ls1-p07); steps[1].pool.items[8] (ls2-p09); steps[2].pool.items[6] (ls3-p07)",
+      "quote": "ls1-p07 „Bilden Sie die Frage.“ tiles [hast / du / was / gemacht / am Wochenende] → only „Was hast du am Wochenende gemacht?“ · ls2-p09 [was / hast / du / gestern / gemacht] · ls3-p07 promptEn „Build the yes/no question.“, promptDe „Bilden Sie die Frage.“",
+      "problem": "From the tiles of ls1-p07 and ls2-p09, a learner can build „Hast du am Wochenende was gemacht?“ / „Hast du gestern was gemacht?“. That is a grammatical question of everyday spoken German (was = etwas), and the player grades it WRONG (checkItem run). The German prompt does not say which question to build. In ls3-p07 only the English names the yes/no question, which is the u04 r1-F12 shape.",
+      "fix": "ls1-p07 and ls2-p09: promptDe „Bilden Sie die W-Frage.“ · ls3-p07: promptDe „Bilden Sie die Ja/Nein-Frage.“ Both terms are already used by these items' explanations.",
+      "proposedRule": "ITM-09: a sentence_building key that starts with a W-word needs a promptDe that names the W-Frage when a V1 order of the same tiles is grammatical (the tile „was“ read as the indefinite pronoun)."
+    },
+    {
+      "id": "F07",
+      "reviewer": "R2",
+      "criterion": "A",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u11",
+      "path": "steps[0].structuredInput[1] (a1.1-u11-ls1-s02)",
+      "quote": "„Priya: „Am Sonntag habe ich gekocht.“ Heute ist Montag. Kocht Priya jetzt?“ — options „Nein, sie hat gestern gekocht.“ / „Ja, sie kocht jetzt.“ / „Nein, sie kocht am Sonntag.“",
+      "problem": "The key is the only option that repeats the stem's participle „gekocht“. A learner can find it by matching strings, without processing habe … gekocht as past. This is the u04 r2-F03 class. In a structured-input item the form must carry the meaning.",
+      "fix": "Options „Nein, das war gestern.“ / „Ja, sie kocht jetzt.“ / „Ja, sie kocht heute.“ with the key „Nein, das war gestern.“, which shares no string with the stem.",
+      "proposedRule": null
+    },
+    {
+      "id": "F08",
+      "reviewer": "R2",
+      "criterion": "D",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u11",
+      "path": "steps[1].structuredInput[3].options (ls2-s04); steps[2].inputItems[2].options (ls3-i03); steps[1].input.text.de; steps[2].structuredInput[3].promptDe (ls3-s04); steps[4].task.openingLine",
+      "quote": "ls2-s04 „heute am Morgen“, „am Freitag am Morgen“ · ls3-i03 „gestern am Abend“, „gestern am Vormittag“ · Elif „Also Mittwoch, 17 Uhr, vorne am Park.“ · ls3-s04 „Welcher Satz ist über gestern?“ · Nora „Bitte, Sie fragen zuerst!“",
+      "problem": "Nothing here is wrong, but each phrase is marked where A1 learners copy models. The idiomatic forms are „heute Morgen“, „am Freitagmorgen“, „gestern Abend“ and „gestern Vormittag“. „vorne am Park“ names no place you can meet at. „ist über gestern“ is a calque of 'is about yesterday'. „Bitte, Sie fragen zuerst!“ is learner German, while the exemplar u04 has „Bitte, Sie zuerst!“.",
+      "fix": "ls2-s04 options „heute Morgen“ / „am Samstag oder am Sonntag“ / „am Freitagmorgen“ · ls3-i03 options „gestern Abend“ / „heute“ / „gestern Vormittag“, and change answer and accepted to match · text „Also Mittwoch, 17 Uhr, am Park.“ · ls3-s04 „Welcher Satz passt zu „gestern“?“ · openingLine „… Bitte, Sie zuerst!“",
+      "proposedRule": null
+    },
+    {
+      "id": "F09",
+      "reviewer": "R2+validator",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u11",
+      "path": "title.canDo; steps[0].endLine; steps[1].endLine; steps[6].endLine; steps[4].task.situationDe; story.cliffhanger; steps[1].pool.items[3].promptDe (ls2-p04). GRM-04 advisories on title.canDo (×2) and steps[4].task.situationDe",
+      "quote": "title.canDo „Sie können mit einfachen Sätzen erzählen, was Sie am Wochenende gemacht haben …“ · ls1 endLine „Sie können jetzt erzählen, was Sie am Wochenende gemacht haben.“ · ls2 endLine „Sie können jetzt sagen, wann etwas war …“ · Sp2 „… erzählen Sie, was Sie wann gemacht haben.“ · cliffhanger „Im nächsten Monat beginnt der Kurs A1.2.“ · ls2-p04 „___ Woche war ich in Berlin. (letzt-)“",
+      "problem": "Unlike u04's, the 3 GRM-04 hits here are true. Indirect W-questions (g.indirekte-frage, a2.2-u03) and an adjective ending without an article („mit einfachen Sätzen“, g.adj-dekl-nullartikel, a2.2-u05) stand on the can-do title and the Sp2 situation. Three endLines carry more indirect questions that the detector does not report, although level-profiles a1.1 allows 0 subordinate clauses. The cliffhanger is shown without English and has an adjective ending after an article („im nächsten Monat“, g.adj-dekl-bestimmt, a2.1-u05). The cue „(letzt-)“ presents the chunk „letzte Woche“ (lx.letzte-woche) as an ending to inflect, which is g.zeitangaben-akkusativ (a2.1-u07).",
+      "fix": "title.canDo as in F01 · ls1 endLine „Jetzt können Sie vom Wochenende erzählen: Was haben Sie gemacht?“ · ls2 endLine „Jetzt können Sie sagen: gestern, vorgestern, letzte Woche.“ · ls7 endLine as in F01 · Sp2 situationDe last sentence „Ihre Partnerin fragt auch. Antworten Sie: Was haben Sie wann gemacht?“ · cliffhanger „Bald beginnt der Kurs A1.2.“ · ls2-p04 cue „(letzte Woche)“",
+      "proposedRule": "GRM-04: walk endLines as instruction surfaces, and report subordinate clauses on A1 instruction surfaces against level-profiles sentence.subordinateClausesMax."
+    },
+    {
+      "id": "F10",
+      "reviewer": "R2",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u11",
+      "path": "steps[5].task.leitpunkte[1] (lp2) and its cues; redemittel",
+      "quote": "lp2 „Mit wem waren Sie dort?“ — cues „Freund“, „Familie“, „Mann“, „Frau“, „Kind“, „Eltern“, „zusammen“",
+      "problem": "The cues are bare nominatives, but an answer to lp2 needs a dative after mit, usually with a possessive: „mit meiner Familie / meinem Mann / meinen Eltern / Freunden“. The dative after prepositions becomes productive only at a1.2-u01 (g.praep-dativ; chunk from u05). The unit gives the learner only „mit Freunden“ and „mit den Eltern“ in its inputs and no Redemittel. So the cue list invites ✗„mit mein Mann“ and ✗„mit Freund“ in the unit's exam-format task, and the AI feedback then marks them.",
+      "fix": "Give the cues as fixed chunks: „mit Freunden“, „mit meiner Familie“, „mit meinem Mann“, „mit meiner Frau“, „mit meinen Eltern“. Add a Redemittel „Ich war mit Freunden in Berlin.“ (function „sagen, mit wem“, forTemplate sd1.s2).",
+      "proposedRule": null
+    },
+    {
+      "id": "F11",
+      "reviewer": "R1",
+      "criterion": "P",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u11",
+      "path": "steps[5].task (sd1.s2): address, checklist[0], leitpunkte[2] (lp3), taskDe; spec.deviation",
+      "quote": "sd1.json sd1.s2 source „a short message (note or e-mail: apology, invitation, enquiry) on 3 Leitpunkte …“ · address „du“ · checklist „Anrede: Hallo zusammen,“ · lp3 „Was haben Sie gemacht? Wie war es?“",
+      "problem": "Length (25–35, target 30), 3 Leitpunkte, Anrede and Gruß and the rubric all match sd1.s2. The plan (curriculum/a1-1.md u11) asks for exactly this Online-Post, so the format is not wrong. Three details drift from the Teil. (a) An SD1 S2 message always serves a purpose (apology, invitation, enquiry). A report with no purpose trains narration only, and the spec logs no deviation. (b) The address is „du“, but „Hallo zusammen“ addresses a group (ihr). An AI grader told „du“ may flag „Wie war euer Wochenende?“. (c) lp3 bundles two content points, so the scorer cannot tell whether a text that says only what the learner did has met lp3.",
+      "fix": "lp3 „Wie war es?“: this matches cd.a1.online-post („wohin, mit wem und wie es war“), and „was gemacht“ fits naturally under lp1. Update the checklist to match. Set address to the group form, or leave it unset, since the model addresses no one. Record in spec.deviation.reason that this S2 is a post by plan decision and that the purpose types are practised in u04 and u08.",
+      "proposedRule": null
+    },
+    {
+      "id": "F12",
+      "reviewer": "R2",
+      "criterion": "K",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u11",
+      "path": "check.proofItems[0] (a1.1-u11-q01) vs steps[4].task.aiRole (Nora); steps[3].texts[0] (a1.1-u11-ls4-t1)",
+      "quote": "q01 „Postkarte: „Gestern war ich am See, heute bin ich im Museum. Nora““ · Sp2 persona Nora „Am Samstag hat sie mit Freunden Fußball gespielt. Am Freitag war sie im Kino …“ · t1 „Letzte Woche war das Wetter schlecht, aber am Sonntag war es super.“ vs start-l06 „Das Wetter war gut“ and Priya's post „Das Wetter war super“ (Saturday)",
+      "problem": "(a) Nora is the exam partner in every a1.1 speaking step (u03–u11). In this unit she also signs the proof postcard, with a different weekend. (b) The unit counts Saturday as „letzte Woche“ (F04), so Olena's text says the weather was bad on Saturday, while Priya, about 100 km away in Saxony, had great weather that day. Both breaks are small, but reading texts are where attentive learners compare facts.",
+      "fix": "(a) Sign q01 with a person name from registries/names.json other than the exam partner. (b) t1 „Am Freitag war das Wetter schlecht, aber am Sonntag war es super.“",
+      "proposedRule": null
+    },
+    {
+      "id": "F13",
+      "reviewer": "validator+R2",
+      "criterion": "K",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u11",
+      "path": "facts (empty); spec.deviation (null); steps[2].input.lines[3] (ls3-l04) and input.text.de (Museum im Schloss)",
+      "quote": "CON-06: „the plan names the Landeskunde point „Wochenende in D-A-CH: Ausflug ins Grüne, Brunch, Flohmarkt“ but the unit has no facts[] record“",
+      "problem": "The plan's Landeskunde appears only as scenery (Olena's Flohmarkt, the Dresden trip). Brunch and the plan's fixed phrase „ins Grüne“ are absent, and nothing says why. The unit makes one real-world claim, a museum in the Dresden Schloss, without a Fact record. The claim is true: the Residenzschloss houses museums of the Staatliche Kunstsammlungen Dresden. But SCHEMA §3.4 asks for a sourced and dated Fact, and u04 r4-F05 raised the same class. The record blocks from status „review“ on.",
+      "fix": "Add one sourced Fact for the museums in the Residenzschloss Dresden (source: the SKD site, with a checked date). Either add one Landeskunde line, or set spec.deviation.reason, naming „Landeskunde“, to say that Brunch and „ins Grüne“ are left to a later unit.",
+      "proposedRule": null
+    },
+    {
+      "id": "F14",
+      "reviewer": "validator+R2",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u11",
+      "path": "spec.lexiconBlocks (lx.monat, lx.nacht); steps[2].pool.items[1] (ls3-p02); redemittel[3] (rm04); steps[4].task.modelTurns[3]; content/course-v2/a1.1/lexicon.json lx.lesen and lx.schlafen (receptive, a1.1-u03) and lx.sonntag (a1.1-u11)",
+      "quote": "LEX-02 „receptive lemma „Monat“ occurs 1× in the unit's inputs (need ≥ 2)“, the same for „Nacht“ · LEX-03 „the learner writes „gelesen“ from the bracketed lemma „lesen“, but lx.lesen is receptive“ · rm04 „Am Sonntag habe ich lange geschlafen.“",
+      "problem": "(a) Two receptive lemmas occur only once in the inputs (ratchet). (b) The rule card tells the learner to learn „gelesen“ and „geschlafen“ as fixed forms. The pool has the learner write „gelesen“, and the Redemittel and the learner's Sp2 model produce „geschlafen“. Yet lx.lesen and lx.schlafen have been receptive since u03, and the lexicon has no promotions. (c) lx.sonntag is allocated to u11 as a new word, although „Sonntag“ already stands in u04 (6×) and u07 (1×). Its neighbours Montag–Freitag are in u07 and Samstag in u08. The unit's new-word count is overstated, and the SRS schedules Sonntag as new seven units late.",
+      "fix": "Unit: add one more input occurrence each of „Monat“ and „Nacht“, for example in Elif's voice message and in Sophie's card. Lexicon owner: add promotions for lx.lesen and lx.schlafen (from receptive to productive, unit a1.1-u11). Move lx.sonntag to a1.1-u07 with the other days, so that u11 recycles it.",
+      "proposedRule": "LEX-03: a form that a rule card of the unit lists as „Lernen Sie … fest“ must be a productive lemma at that unit."
+    },
+    {
+      "id": "F15",
+      "reviewer": "validator+R2",
+      "criterion": "H",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u11",
+      "path": "spec.textTypes[2] (tt.post); spec.lehrwerk[1]",
+      "quote": "ALL-02 „tt.post is listed but no input, exam text or Teil template of the unit is of that type“ · lehrwerk „M A1 L12 (Perfekt mit sein)“",
+      "problem": "The unit does contain a post: Priya's chat message inside the LS3 input, and the LS6 task. But the LS3 input is typed tt.postkarte and the LS6 template's type is tt.kurzmitteilung, so the spec lists a type that no text carries. This is the u04 r4-F06 class. The Lehrwerk list also claims Menschen A1 L12 (Perfekt mit sein), which u12 teaches, not this unit.",
+      "fix": "Split Priya's post into its own read text of type tt.post, or give the LS6 task tt.post if SCHEMA allows a task text type; otherwise drop tt.post. Delete „M A1 L12 (Perfekt mit sein)“; M A1 L11 and S1 L7 still satisfy ALL-03.",
+      "proposedRule": null
+    },
+    {
+      "id": "F16",
+      "reviewer": "R2",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u11",
+      "path": "steps[1].ruleCard (rc.zeitangaben-inversion, content/course-v2/a1.1/rule-cards.json)",
+      "quote": "card „Zeitangaben: um acht Uhr, am Montag, am Abend, von neun bis fünf. … Um acht Uhr frühstücke ich.“ · LS2 modelSentence „Vorgestern war ich wie immer im Park.“",
+      "problem": "LS2 practises past time words (gestern, vorgestern, letzte Woche) with war/hatte and inside the Perfekt bracket (ls2-p02, p06, r02, p10). The card shown in the step has only present-tense clock-time rows and none of the unit's time words. It has no row for „Gestern habe ich … gekocht“, the construction where verb-second and the participle at the end meet. The card is not wrong, but it does not show what the step asks for. A row cannot simply be added to this card: the card is first used at u07, whose ceiling excludes the Perfekt.",
+      "fix": "Rule-cards owner: add a depth-2 card, rc.zeitangaben-inversion-2, first used at a1.1-u11, with the unit's time words and a row „– | Gestern | habe | ich lange geschlafen.“ (≤ 60 words), and set it as ls2's ruleCard.",
+      "proposedRule": null
+    }
+  ],
+  "exitCheck": {
+    "blocker": 2,
+    "major": 3,
+    "minor": 11,
+    "criteriaBelow4": [
+      "N",
+      "A",
+      "K"
+    ],
+    "exit": false,
+    "note": "Exit needs 0 BLOCKER, 0 MAJOR, every criterion ≥ 4 and ≤ 5 logged MINOR. Unit-side edits: 4 LEX-01 surfaces (F01); the postcard, two LS3 lines, input.title, spec.situation and story.beat (F03); one ls2-i03 distractor (F04); three explanations (F05); three promptDe lines (F06); one option set (F07); the phrasing in F08; the instruction surfaces and the cliffhanger (F09); the lp2 cues and one Redemittel (F10); lp3, address and deviation (F11); q01's name and one t1 sentence (F12); a Fact or a deviation reason (F13); two input occurrences (F14 a); and the spec (F15). The owners' parts are the lx.post move (F01), the rc.perfekt-haben card (F02), the lexicon promotions and the Sonntag allocation (F14 b/c) and the depth-2 card (F16). Once F02 lands and the unit edits are made, the unit would carry at most 3 owner-held minors (F01 lexicon part, F14 b/c, F16). Class findings for the rule-smith: F01 (walk input titles, Aussprache focus and Redemittel labels), F04 (time-span distractors), F05 (position claims in explanations), F06 (naming the W-question), F09 (subordinate clauses on A1 instruction surfaces) and F14 (fixed forms on a card must be productive)."
+  },
+  "notes": [
+    "Checked against the u04 trail and not recurring: question/statement prompts (r1-F01/F12), missing grammatical orders (r1-F04; every V2 and topicalised order is accepted), a proof solvable without German (r1-F06), a can-do claimed but not performed (r1-F07; all four are performed), exam texts under the band (r1-F10), dictation audio vs key (r2-F01; no `say` on a source, and „elf“/„11“ fold), word-band display (r2-F05), number words (r3-F01), receptive generator sources (r4-F02; every glossTyped and articlePlural source is productive), error corrections with an equally correct second repair (r5-F01).",
+    "For the level reviewer: curriculum/a1-1.md §6 u11 lists „Prüfungsteile geübt: L1, H1, H3, Sp2, S2“, while BLUEPRINT §2.8 row 11 lists S2, L1 and Sp2. The unit follows the blueprint, and at level scope COV-1, COV-4 and COV-5 pass.",
+    "For the level reviewer: the story joins cleanly. u09's cliffhanger (everyone comes on Friday) is resolved by Olena's and Elif's lines. u10's cliffhanger (60 minutes' delay, „Dann trinken wir noch einen Kaffee!“) is resolved in the Folge (18.35 + 60 minutes + 1 h 15 min ride ≈ 20.50, „erst um neun“). u12's Folge („Und dann kommt der Kurs A1.2, oder? … Und Olena macht auch mit.“) resolves this unit's cliffhanger, and Olena's move to Munich after A1 (casts/a1.json) remains possible.",
+    "Legal and claims: no outcome promise, no human-feedback claim and no misuse of the exam mark. The AI partner is a „Teilnehmerin“ persona. The L1 texts, Sp2 cards and S2 task are original in the SD1 format. title.canDo is the unit's own Sie-form of the registry can-do, not descriptor text.",
+    "Every fix proposed here was checked against the rails before it was recommended (the r4/r5 lesson). Each proposed word was tested with knownForms + licensedForms at a1.1-u11: euch, bei, meinem, meiner, meinen, Dienstag, WG, Vormittag, and Freitagmorgen via the compound rule; „Satz“ and „passt“ are metalanguage. The F02 card is 53 words, under the 60-word limit. The F03 postcard fix keeps both occurrences of besuchen that LEX-02 counts and uses no Perfekt with sein, whose spine point is at u12. F16 puts the Perfekt row on a new depth-2 card, not on the u07 card, whose ceiling excludes the Perfekt."
+  ]
+}

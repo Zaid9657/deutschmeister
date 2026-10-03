@@ -1,0 +1,10 @@
+{
+  "$schema": "course-v2/cando@1",
+  "band": "a2",
+  "items": [
+    { "id": "cd.a2.mailbox-verstehen", "de": "Ich kann einer Nachricht auf dem Anrufbeantworter die wichtigen Informationen entnehmen: wer anruft, worum es geht und bis wann.", "halfLevel": "a2.1", "band": "A2", "mode": "receptive-spoken", "source": ["GI-A2F 17"], "hf": ["2"], "online": false, "mediation": false },
+    { "id": "cd.a2.rueckruf-weitergeben", "de": "Ich kann auf eine Bitte um Rückruf reagieren und eine Nachricht für eine Kollegin oder einen Kollegen annehmen und weitergeben.", "halfLevel": "a2.1", "band": "A2", "mode": "interaction-spoken", "source": ["RC 84·A2"], "hf": ["2"], "online": false, "mediation": false },
+    { "id": "cd.a2.arbeit-erzaehlen", "de": "Ich kann einfach erzählen, was ich bei der Arbeit mache, und andere danach fragen.", "halfLevel": "a2.1", "band": "A2", "mode": "interaction-spoken", "source": ["GER-R·A2"], "hf": ["2"], "online": false, "mediation": false },
+    { "id": "cd.a2.termin-absagen-mail", "de": "Ich kann in einer kurzen E-Mail einen Termin absagen, einen Grund nennen und einen neuen Termin vorschlagen.", "halfLevel": "a2.1", "band": "A2", "mode": "productive-written", "source": ["US-A2 S2"], "hf": ["2"], "online": false, "mediation": false }
+  ]
+}

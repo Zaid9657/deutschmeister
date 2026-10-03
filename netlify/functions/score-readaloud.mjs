@@ -2,6 +2,7 @@ import { supabase, supabaseKey } from './_shared/supabase.mjs';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 import { AIError, transcribeAudio } from './_shared/speakingAI.mjs';
 import { alignTranscript } from './_shared/readaloud.mjs';
+import { courseAccess, v2LevelOfLektionId } from './_shared/entitlement.mjs';
 
 // Scored read-aloud (plan P3). One short clip in, one word-by-word score out:
 // STT only — no LLM, no TTS, so a clip costs a fraction of a speaking turn and
@@ -73,6 +74,28 @@ export const handler = async (event) => {
     // base64 carries 3 bytes per 4 characters.
     if (Math.floor((audioBase64.length * 3) / 4) > MAX_AUDIO_BYTES) {
       return { statusCode: 413, headers, body: JSON.stringify({ error: 'Aufnahme zu lang', stage: 'input' }) };
+    }
+
+    // Course v2 entitlement (docs/course-v2/ENTITLEMENT.md). A line of a v2
+    // unit, Plateau, closing block or Modelltest is scored only for a learner
+    // who may open that level (free A1.1, or a purchase covering it). Legacy
+    // ids (a1.1-l03, a1.1-cp1) keep the posture they always had: signed-in,
+    // capped per day below.
+    const v2Level = v2LevelOfLektionId(lektionId);
+    if (v2Level) {
+      const access = await courseAccess(supabase, user_id, v2Level);
+      if (!access.allowed) {
+        const lookupFailed = access.reason === 'lookup_failed';
+        return {
+          statusCode: lookupFailed ? 500 : 403,
+          headers,
+          body: JSON.stringify({
+            error: lookupFailed ? 'Zugang konnte nicht geprüft werden' : 'Dieser Kurs ist für Ihr Konto nicht freigeschaltet.',
+            code: access.reason,
+            stage: 'entitlement',
+          }),
+        };
+      }
     }
 
     // Daily cap — today's read-aloud rows for this user, from midnight UTC.

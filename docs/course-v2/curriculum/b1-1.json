@@ -1,0 +1,1195 @@
+{
+  "level": "b1.1",
+  "code": "B1.1",
+  "cefr": "B1",
+  "targetExams": [
+    "telc Deutsch B1 (Zertifikat Deutsch)",
+    "Goethe-Zertifikat B1 (identisch mit ÖSD Zertifikat B1)",
+    "DTZ Deutsch-Test für Zuwanderer (B1-Bereich; nur im Integrationskurssystem)"
+  ],
+  "examLanes": {
+    "rule": "Die Prüfungs-Lane wird einmal beim Onboarding gewählt und über alle Produkte mitgenommen; jede Stufe hat genau einen dokumentierten Standard für Lernende ohne Wahl, die Primär-Lane aus BLUEPRINT.md §1.4 (B1: telc Deutsch B1). Sekundär-Lanes erscheinen als Spur-Karten (hier: Feld laneVariants).",
+    "default": "telc Deutsch B1",
+    "defaultReason": "Nachfrage in Deutschland telc ≫ DTZ > Goethe (02-exams-b1 §5, Implikation 11). Der DTZ ist wegen des Zugangs (nur im Integrationskurssystem) nie Standard; die Goethe-/ÖSD-Lane bedient vor allem Lernende im Ausland. Gleicher Standard in B1.1 und B1.2.",
+    "lanes": [
+      "telc Deutsch B1 (Standard)",
+      "Goethe-Zertifikat B1 (identisch mit ÖSD Zertifikat B1)",
+      "DTZ Deutsch-Test für Zuwanderer (B1-Bereich; nur im Integrationskurssystem)"
+    ],
+    "core": "Der Kern trainiert die sechs gemeinsamen Aufgabenfamilien aller drei Prüfungen (02-exams-b1 §6) und die Goethe- und telc-Formate; die gewählte Lane bestimmt, welche Variante zuerst erscheint und nach welcher Regel bewertet wird.",
+    "dtz": "DTZ-spezifische Formate (Brief mit A/B-Wahl, Foto + eigene Erfahrung + Heimatland ohne Vorbereitung) sind nie die Hauptaufgabe im Kern, sondern Lane-Varianten (Feld laneVariants). Der DTZ ist ein skalierter A2–B1-Test mit einem einzigen Format: in der DTZ-Lane läuft er deshalb schon in B1.1 in voller Länge, jeder Hörtext einmal, ohne Wiederholung; nur die B1-Anforderung steigt (Schreiben 15–20/20, Sprechen 75–100/100, Hören+Lesen 33–45/45)."
+  },
+  "hours": {
+    "guided": 41,
+    "total": 52
+  },
+  "vocabTarget": {
+    "newWords": 540,
+    "cumulative": 1862
+  },
+  "units": [
+    {
+      "nr": 1,
+      "id": "b1.1-u01",
+      "title": "Lange nicht gesehen!",
+      "titleEn": "Long time no see!",
+      "situation": "Eine Freundin aus Ihrem ersten Deutschkurs meldet sich nach zwei Jahren wieder: Sie lesen ihren Blog, erzählen per E-Mail, was Sie inzwischen erlebt haben, und verabreden sich.",
+      "handlungsfeld": "Soziale Kontakte (BSK A) · Mediennutzung (RC Medien) · Online-Interaktion (Begleitband)",
+      "unitType": "texttype",
+      "canDo": [
+        {
+          "de": "Ich kann in einem Brief oder einer E-Mail Neuigkeiten mitteilen, nach Neuigkeiten fragen und von Ereignissen berichten und danach fragen.",
+          "source": "05-cando-b1-b2 (B1.1 #1) · RC 56"
+        },
+        {
+          "de": "Ich kann mich online über Erfahrungen, Ereignisse, Eindrücke und Gefühle austauschen, sofern ich mich darauf vorbereiten kann.",
+          "source": "05-cando-b1-b2 (B1.1 #14) · SB B1, Online-Interaktion"
+        },
+        {
+          "de": "Ich kann in einer persönlichen E-Mail (ca. 80 Wörter) etwas beschreiben, einen Grund nennen und einen Vorschlag machen.",
+          "source": "05-cando-b1-b2 (B1.1 #1) · ≈ GI-B1 Schreiben T1"
+        },
+        {
+          "de": "Ich kann beim ersten Treffen mit einer neuen Person Fragen zu Herkunft, Arbeit, Sprachen und Plänen stellen und selbst ausführlich antworten.",
+          "source": "02-exams-b1 §2 · ≈ telc B1 Mündlicher Ausdruck T1 (Einander kennenlernen)"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Präteritum regelmäßiger und unregelmäßiger Verben im schriftlichen Erzählen (sie zog um, ich fand eine Stelle, wir lernten uns kennen) – produktiv; seit A2.2 nur rezeptiv",
+          "new": true,
+          "lehrwerk": "Schritte plus Neu 5 L1; Menschen B1 L2; Linie 1 B1 K4; Netzwerk B1 K3; Aspekte neu B1+ K1"
+        },
+        {
+          "point": "Adjektive als Nomen (der/die Bekannte, ein Bekannter, die Verwandten, die Deutschen)",
+          "new": true,
+          "lehrwerk": "Menschen B1 L1; Aspekte neu B1+ K2"
+        }
+      ],
+      "vocabTheme": "Kontakte, Freundschaft, Neuigkeiten",
+      "vocabTarget": 44,
+      "keyWords": [
+        "der/die Bekannte",
+        "der/die Verwandte",
+        "die Neuigkeit",
+        "das Erlebnis",
+        "die Gelegenheit",
+        "der Blog",
+        "der Kontakt",
+        "die Stimmung",
+        "sich unterhalten",
+        "sich verstehen mit",
+        "sich ändern",
+        "vorbeikommen",
+        "aufregend",
+        "ehrlich",
+        "übrigens",
+        "neulich",
+        "berichten",
+        "sich verabreden",
+        "zufällig",
+        "vertraut"
+      ],
+      "reading": {
+        "textType": "Persönlicher Blogbeitrag: Zwei Jahre in Leipzig – was ich erlebt habe (Richtig/Falsch) + persönlicher Brief mit Wortlücken",
+        "words": 260
+      },
+      "listening": {
+        "textType": "Gespräch zwischen zwei Freundinnen im Café (Richtig/Falsch)",
+        "seconds": 200
+      },
+      "writing": {
+        "task": "Persönliche E-Mail an die Freundin: von einem Erlebnis erzählen (beschreiben), sagen, warum Sie sich lange nicht gemeldet haben (begründen), ein Treffen vorschlagen",
+        "words": 70,
+        "examTeil": "Goethe B1 Schreiben Teil 1"
+      },
+      "speaking": {
+        "task": "Tandem-Treffen: sich kennenlernen – Fragen zu Herkunft, Wohnen, Arbeit, Sprachen, Freizeit und Plänen stellen und beantworten",
+        "examTeil": "telc B1 Mündlicher Ausdruck Teil 1"
+      },
+      "pronunciation": "Präteritum hörbar machen: Vokalwechsel (kam – kamen, fand, zog) und die Endung -te (machte, sagte, lernte)",
+      "examTeile": [
+        "Goethe B1 Lesen Teil 1",
+        "telc B1 Sprachbausteine Teil 2",
+        "Goethe B1 Hören Teil 3",
+        "Goethe B1 Schreiben Teil 1",
+        "telc B1 Mündlicher Ausdruck Teil 1",
+        "DTZ Sprechen Teil 1"
+      ],
+      "landeskunde": "Das Du anbieten: wann man in Deutschland, Österreich und der Schweiz vom Sie zum Du wechselt"
+    },
+    {
+      "nr": 2,
+      "id": "b1.1-u02",
+      "title": "Neu im Team",
+      "titleEn": "New on the team",
+      "situation": "Sie arbeiten seit einem Monat in einer neuen Firma: Sie schreiben einen kurzen Erfahrungsbericht für die Mitarbeiterzeitung, tauschen eine Schicht und melden sich krank.",
+      "handlungsfeld": "Arbeit (RC 2) · Informationsaustausch (BSK D)",
+      "unitType": "texttype",
+      "canDo": [
+        {
+          "de": "Ich kann mit Kolleginnen und Kollegen Absprachen treffen, z. B. über den Tausch einer Schicht oder über Urlaubszeiten.",
+          "source": "05-cando-b1-b2 (B1.1 #12) · ≈ RC 85"
+        },
+        {
+          "de": "Ich kann bei einer Krankmeldung mitteilen, welche Arbeiten ich nicht erledigen kann, und erklären, was zu tun ist.",
+          "source": "05-cando-b1-b2 (B1.1 #12) · RC 84"
+        },
+        {
+          "de": "Ich kann mich in einer kurzen formellen Nachricht (ca. 40 Wörter) entschuldigen, einen Grund nennen und um etwas bitten.",
+          "source": "05-cando-b1-b2 (B1.1 #13) · ≈ GI-B1 Schreiben T3"
+        },
+        {
+          "de": "Ich kann mit einer Kollegin oder einem Kollegen etwas planen, Vorschläge machen, darauf reagieren und mich einigen.",
+          "source": "05-cando-b1-b2 (B1.1 #3) · ≈ GI-B1 Sprechen T1"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "n-Deklination (der Kollege – den/dem Kollegen; der Kunde, der Praktikant, der Nachbar, Herr); die Genitivform folgt in Einheit 11",
+          "new": true,
+          "lehrwerk": "Menschen B1 L1; Aspekte neu B1+ K2 (Schritte plus Neu 6 L8 und Linie 1 B1 K14 später; split)"
+        },
+        {
+          "point": "Präteritum im Bericht: Hilfs- und Modalverben mit Vollverben mischen (war, hatte, musste, begann) – Wiederholung",
+          "new": false,
+          "lehrwerk": "Menschen B1 L2 (Praktikumsbericht); Schritte plus Neu 5 L1"
+        }
+      ],
+      "vocabTheme": "Arbeitsalltag, Team, Schichten",
+      "vocabTarget": 46,
+      "keyWords": [
+        "der Praktikant / die Praktikantin",
+        "der Mitarbeiter / die Mitarbeiterin",
+        "der/die Auszubildende",
+        "der Betrieb",
+        "der Betriebsrat",
+        "die Leitung",
+        "die Krankmeldung",
+        "die Arbeitsunfähigkeitsbescheinigung",
+        "die Frühschicht",
+        "die Spätschicht",
+        "die Schichtarbeit",
+        "tauschen",
+        "einspringen",
+        "benachrichtigen",
+        "sich krankmelden",
+        "krankgeschrieben",
+        "kollegial",
+        "der Schichtplan",
+        "die Einarbeitung",
+        "selbstständig"
+      ],
+      "reading": {
+        "textType": "Erfahrungsbericht in der Mitarbeiterzeitung: Mein erster Monat (Multiple Choice) + Intranet-Verzeichnis der Abteilungen",
+        "words": 340
+      },
+      "listening": {
+        "textType": "Mailbox-Nachrichten und Durchsagen im Betrieb (fünf kurze Texte)",
+        "seconds": 180
+      },
+      "writing": {
+        "task": "Kurze formelle Nachricht an die Teamleiterin: sich krankmelden, den Grund nennen, um die Übergabe einer dringenden Aufgabe bitten",
+        "words": 40,
+        "examTeil": "Goethe B1 Schreiben Teil 3"
+      },
+      "speaking": {
+        "task": "Mit einem Kollegen den Schichtplan für die Ferienzeit aushandeln: Vorschläge machen, ablehnen, einen Kompromiss finden, festlegen, wer was macht",
+        "examTeil": "Goethe B1 Sprechen Teil 1"
+      },
+      "pronunciation": "Wortakzent bei Fremdwörtern im Beruf: -ant, -ent, -ion, -ieren (Praktikant, Assistent, Information, organisieren)",
+      "examTeile": [
+        "telc B1 Leseverstehen Teil 2",
+        "DTZ Lesen Teil 1",
+        "Goethe B1 Hören Teil 1",
+        "DTZ Hören Teil 1",
+        "Goethe B1 Schreiben Teil 3",
+        "Goethe B1 Sprechen Teil 1",
+        "telc B1 Mündlicher Ausdruck Teil 3",
+        "DTZ Sprechen Teil 3"
+      ],
+      "landeskunde": "Krankmeldung und Arbeitsunfähigkeitsbescheinigung (eAU) in Deutschland: wer wann was braucht (Fakten vor der Veröffentlichung mit Quelle prüfen)"
+    },
+    {
+      "nr": 3,
+      "id": "b1.1-u03",
+      "title": "Die Wohnung, in die ich einziehe",
+      "titleEn": "The flat I am moving into",
+      "situation": "Sie haben eine Wohnung gefunden: Sie lesen den Mietvertrag genau, fragen die Vermieterin nach Nebenkosten und Kaution, organisieren den Umzug und gehen bei der Wohnungsübergabe das Übergabeprotokoll durch.",
+      "handlungsfeld": "Wohnen (RC 12)",
+      "unitType": "texttype",
+      "canDo": [
+        {
+          "de": "Ich kann im Gespräch mit Vermietern Detailinformationen zur Wohnung und zum Vertrag erfragen, z. B. zu Einzugstermin, Nebenkosten und Kaution.",
+          "source": "05-cando-b1-b2 (B1.1 #9) · ≈ RC 155"
+        },
+        {
+          "de": "Ich kann die wichtigsten Regelungen eines Mietvertrags und einer Hausordnung im Detail verstehen, z. B. zu Nebenkosten, Kaution, Haustieren und Kündigung.",
+          "source": "02-exams-b1 §7 (G-L5/D-L4: Regeln und Bedingungen) · ≈ GI-B1 Lesen T5"
+        },
+        {
+          "de": "Ich kann mich schriftlich bei der Vermieterin melden, wenn nach der Übergabe ein Mangel auftaucht, und um eine Lösung bitten.",
+          "source": "05-cando-b1-b2 (B1.1 #9) · RC 156; ≈ telc B1 Schriftlicher Ausdruck"
+        },
+        {
+          "de": "Ich kann Anzeigen gezielt nach den Informationen durchsuchen, die ich brauche, und passende von unpassenden Angeboten unterscheiden.",
+          "source": "02-exams-b1 §7 (G-L3/t-LV3/D-L2) · ≈ GI-B1 Lesen T3 „Zur Orientierung lesen“"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Relativsatz im Dativ und mit Präposition (die Vermieterin, der ich geschrieben habe; die Wohnung, in die ich einziehe; der Vertrag, über den wir gesprochen haben)",
+          "new": true,
+          "lehrwerk": "Menschen B1 L3; Schritte plus Neu 5 L2; Netzwerk B1 K6 (Linie 1 B1 K14 später)"
+        },
+        {
+          "point": "Relativsatz im Nominativ und Akkusativ – Wiederholung aus A2.2; Zuwachs: im selben Text im Kontrast zu Dativ und Präposition (der Mieter, der …; die Kaution, die …; die Vermieterin, der …)",
+          "new": false,
+          "lehrwerk": "Menschen A2 L23; Netzwerk neu A2 K12"
+        }
+      ],
+      "vocabTheme": "Mietvertrag, Nebenkosten, Wohnungsübergabe",
+      "vocabTarget": 46,
+      "keyWords": [
+        "der Mieter / die Mieterin",
+        "der Eigentümer / die Eigentümerin",
+        "der Nachmieter / die Nachmieterin",
+        "die Warmmiete",
+        "die Kaltmiete",
+        "die Nebenkostenabrechnung",
+        "die Vorauszahlung",
+        "die Mieterhöhung",
+        "die Wohnungsübergabe",
+        "der Zustand",
+        "die Wohnfläche",
+        "das Haustier",
+        "die Wohngemeinschaft",
+        "die Untermiete",
+        "vermieten",
+        "ausziehen",
+        "ablesen",
+        "abziehen",
+        "befristet",
+        "möbliert"
+      ],
+      "reading": {
+        "textType": "Auszug aus einem Mietvertrag mit Hausordnung (Multiple Choice) + Kleinanzeigen rund um den Umzug: sieben Suchende, zehn Anzeigen für Umzugshilfe, Transporter, gebrauchte Möbel und Nachmieter (Zuordnung, eine Person ohne Anzeige)",
+        "words": 380
+      },
+      "listening": {
+        "textType": "Telefonat mit der Vermieterin über Nebenkosten und Kaution und Gespräch bei der Wohnungsübergabe (Richtig/Falsch)",
+        "seconds": 240
+      },
+      "writing": {
+        "task": "Halbformelle E-Mail an die Vermieterin nach der Wohnungsübergabe, vier Leitpunkte: sich für die Übergabe bedanken, einen Mangel melden, der nicht im Übergabeprotokoll steht, nach der Nebenkostenvorauszahlung fragen, einen Termin für die Reparatur vorschlagen",
+        "words": 90,
+        "examTeil": "telc B1 Schriftlicher Ausdruck"
+      },
+      "speaking": {
+        "task": "Mit einer Freundin den Umzug planen (Transporter, Helferinnen und Helfer, Termin der Wohnungsübergabe, Ummeldung) und festlegen, wer was macht",
+        "examTeil": "telc B1 Mündlicher Ausdruck Teil 3"
+      },
+      "pronunciation": "Pausen und unbetonte Relativpronomen: die Wohnung | in die ich einziehe",
+      "examTeile": [
+        "Goethe B1 Lesen Teil 5",
+        "Goethe B1 Lesen Teil 3",
+        "telc B1 Leseverstehen Teil 3",
+        "DTZ Lesen Teil 2",
+        "telc B1 Hörverstehen Teil 2",
+        "DTZ Hören Teil 3",
+        "telc B1 Schriftlicher Ausdruck",
+        "telc B1 Mündlicher Ausdruck Teil 3",
+        "Goethe B1 Sprechen Teil 1",
+        "DTZ Sprechen Teil 3",
+        "DTZ Sprechen Teil 2"
+      ],
+      "landeskunde": "Der Mietvertrag in D-A-CH: Kaltmiete, Warmmiete, Nebenkostenabrechnung, Kaution und Übergabeprotokoll; Mietervereine als Beratung (Kautionsregel und Fristen mit Quelle prüfen)",
+      "laneVariants": {
+        "DTZ": {
+          "speaking": "Ein Foto beschreiben (Umzugskartons in einer leeren Wohnung), vom eigenen Umzug erzählen und mit dem Heimatland vergleichen – ohne Vorbereitungszeit (DTZ Sprechen Teil 2)"
+        }
+      }
+    },
+    {
+      "nr": 4,
+      "id": "b1.1-u04",
+      "title": "Das ist nicht in Ordnung!",
+      "titleEn": "This is not acceptable!",
+      "situation": "Ein online bestellter Staubsauger ist nach einer Woche kaputt, und der Shop antwortet nicht: Sie lesen die Garantiebedingungen, rufen die Hotline an und reklamieren schriftlich.",
+      "handlungsfeld": "Einkaufen (RC 7) · Dissens und Konflikte (BSK B)",
+      "unitType": "texttype",
+      "canDo": [
+        {
+          "de": "Ich kann mich mit einfachen Worten beschweren, z. B. über fehlerhafte Ware, und Umtausch oder Geldrückzahlung verlangen.",
+          "source": "05-cando-b1-b2 (B1.1 #8) · ≈ RC 125"
+        },
+        {
+          "de": "Ich kann bei Bestellungen die wichtigsten Punkte der Allgemeinen Geschäftsbedingungen verstehen.",
+          "source": "05-cando-b1-b2 (B1.1 #8) · RC 125"
+        },
+        {
+          "de": "Ich kann sprachliche Probleme des Alltags flexibel bewältigen und mich zum Beispiel beschweren, auch wenn die Situation nicht routinemäßig ist.",
+          "source": "05-cando-b1-b2 §2.2 · ZM B1 (Merkmal 2, in Ich-Form)"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Konzessivsatz mit obwohl im Kontrast zu trotzdem (Obwohl ich zweimal angerufen habe, … / Ich habe zweimal angerufen. Trotzdem …)",
+          "new": true,
+          "lehrwerk": "Menschen B1 L4; Schritte plus Neu 5 L2; Linie 1 B1 K3–4; Netzwerk B1 K1"
+        },
+        {
+          "point": "Konnektoren im formellen Brief: denn, deshalb, trotzdem, weil, obwohl – die drei Satzstellungen im Überblick (Wiederholung)",
+          "new": false,
+          "lehrwerk": "Menschen B1 L4; Prüfungsformat DTZ Lesen T5 und telc Sprachbausteine T1"
+        }
+      ],
+      "vocabTheme": "Reklamation, Garantie, Kundenservice",
+      "vocabTarget": 44,
+      "keyWords": [
+        "die Reklamation",
+        "der Umtausch",
+        "die Rückerstattung",
+        "die Gewährleistung",
+        "die Ware",
+        "der Kassenbon",
+        "der Beleg",
+        "der Mangel",
+        "die Bestellnummer",
+        "die Hotline",
+        "reklamieren",
+        "umtauschen",
+        "zurückgeben",
+        "erstatten",
+        "defekt",
+        "fehlerhaft",
+        "beschädigt",
+        "der Kundendienst",
+        "zurückschicken",
+        "verlangen"
+      ],
+      "reading": {
+        "textType": "Rückgabe- und Garantiebedingungen eines Online-Shops (Multiple Choice) + Lückentext: Beschwerdebrief",
+        "words": 200
+      },
+      "listening": {
+        "textType": "Hotline-Ansagen, Warteschleife und Rückruf des Kundenservice",
+        "seconds": 150
+      },
+      "writing": {
+        "task": "Reklamation an den Online-Shop, vier Leitpunkte: was Sie bestellt haben, was nicht funktioniert, was Sie schon versucht haben, was Sie jetzt erwarten",
+        "words": 80,
+        "examTeil": "telc B1 Schriftlicher Ausdruck"
+      },
+      "speaking": {
+        "task": "Zwei kurze Meinungen zum Online-Einkauf wiedergeben und mit der KI-Partnerin darüber sprechen; im Kernteil: Reklamationsgespräch mit der Hotline",
+        "examTeil": "telc B1 Mündlicher Ausdruck Teil 2"
+      },
+      "pronunciation": "Bestimmt und höflich reklamieren: Satzakzent auf der wichtigen Information (Das Gerät funktioniert NICHT. Ich habe es erst GESTERN bekommen.)",
+      "examTeile": [
+        "Goethe B1 Lesen Teil 5",
+        "DTZ Lesen Teil 5",
+        "telc B1 Sprachbausteine Teil 1",
+        "telc B1 Hörverstehen Teil 3",
+        "DTZ Hören Teil 1",
+        "DTZ Schreiben",
+        "telc B1 Mündlicher Ausdruck Teil 2",
+        "telc B1 Schriftlicher Ausdruck"
+      ],
+      "landeskunde": "Gewährleistung und Garantie: der Unterschied, und wie Verbraucherzentralen helfen",
+      "laneVariants": {
+        "DTZ": {
+          "writing": "Dieselbe Reklamation als DTZ Schreiben mit A/B-Wahl, unter Prüfungsbedingungen"
+        }
+      }
+    },
+    {
+      "nr": 5,
+      "id": "b1.1-u05",
+      "title": "Wie werden wir morgen leben?",
+      "titleEn": "How will we live tomorrow?",
+      "situation": "In der Zeitung und im Radio geht es um Technik im Alltag von morgen: Sie verstehen die Hauptaussagen, äußern Vermutungen und schreiben einen Kommentar im Forum.",
+      "handlungsfeld": "Mediennutzung (RC Medien) · Gefühle, Haltungen und Meinungen (BSK C)",
+      "unitType": "texttype",
+      "canDo": [
+        {
+          "de": "Ich kann vielen Radio- oder Fernsehsendungen über aktuelle Ereignisse die Hauptinformation entnehmen, wenn relativ langsam und deutlich gesprochen wird.",
+          "source": "05-cando-b1-b2 (B1.1 #5) · SB B1"
+        },
+        {
+          "de": "Ich kann mich mit Bekannten oder Freunden über Medienerfahrungen austauschen, z. B. über Internetseiten, die ich häufig besuche.",
+          "source": "05-cando-b1-b2 (B1.1 #5) · RC 138"
+        },
+        {
+          "de": "Ich kann kurz meine Meinungen und Pläne erklären und begründen.",
+          "source": "05-cando-b1-b2 (B1.2 #1) · SB B1"
+        },
+        {
+          "de": "Ich kann in einem kurzen Forumsbeitrag meine Meinung zu einem Alltagsthema äußern und begründen.",
+          "source": "05-cando-b1-b2 (B1.2 #1, hier als Einführung) · ≈ GI-B1 Schreiben T2"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Futur I: Vorhersage, Vermutung und Versprechen (In 20 Jahren werden Autos selbst fahren. Das wird schon klappen.) – die drei Funktionen von werden",
+          "new": true,
+          "lehrwerk": "Menschen B1 L5; Linie 1 B1 K5; Netzwerk B1 K6; Aspekte neu B1+ K6 (Schritte plus Neu 6 L11 später)"
+        },
+        {
+          "point": "Vermutungen mit Modalwörtern: wahrscheinlich, vermutlich, vielleicht, sicher, wohl",
+          "new": true,
+          "lehrwerk": "Menschen B1 L5; Netzwerk B1 K6"
+        }
+      ],
+      "vocabTheme": "Technik, Zukunft, Nachrichten",
+      "vocabTarget": 46,
+      "keyWords": [
+        "die Entwicklung",
+        "die Technik",
+        "die Erfindung",
+        "die Forschung",
+        "der Fortschritt",
+        "der Roboter",
+        "die künstliche Intelligenz",
+        "die Sendung",
+        "der Bericht",
+        "die Umfrage",
+        "vorhersagen",
+        "sich entwickeln",
+        "ersetzen",
+        "erfinden",
+        "steuern",
+        "digital",
+        "vermutlich",
+        "wahrscheinlich",
+        "vermuten",
+        "die Überschrift"
+      ],
+      "reading": {
+        "textType": "Zwei kurze Zeitungsartikel über Technik im Alltag von morgen (Multiple Choice) + fünf Kurzmeldungen mit Überschriften + fünf Leserkommentare",
+        "words": 440
+      },
+      "listening": {
+        "textType": "Radio-Kurzmeldungen und Straßenumfrage: Was halten Sie von Robotern im Alltag?",
+        "seconds": 180
+      },
+      "writing": {
+        "task": "Forumsbeitrag zur Frage „Selbstfahrende Autos – ja oder nein?“: Meinung äußern, begründen, ein Beispiel geben (mit Satzanfängen)",
+        "words": 65,
+        "examTeil": "Goethe B1 Schreiben Teil 2"
+      },
+      "speaking": {
+        "task": "Kurzpräsentation mit drei Folien: Ein Gerät, ohne das ich nicht leben kann (Thema – eigene Erfahrung – Vor- und Nachteile); danach auf eine Frage antworten und der KI-Partnerin eine Rückmeldung geben",
+        "examTeil": "Goethe B1 Sprechen Teil 2"
+      },
+      "pronunciation": "werden – würde – wurde unterscheiden (e – ü – u) und die Satzmelodie bei Vermutungen",
+      "examTeile": [
+        "Goethe B1 Lesen Teil 2",
+        "telc B1 Leseverstehen Teil 1",
+        "Goethe B1 Lesen Teil 4",
+        "DTZ Hören Teil 2",
+        "telc B1 Hörverstehen Teil 1",
+        "Goethe B1 Schreiben Teil 2",
+        "Goethe B1 Sprechen Teil 2",
+        "Goethe B1 Sprechen Teil 3"
+      ],
+      "landeskunde": "Nachrichten in D-A-CH: öffentlich-rechtlicher Rundfunk (ARD, ZDF, ORF, SRF) und langsam gesprochene Nachrichten für Lernende"
+    },
+    {
+      "nr": 6,
+      "id": "b1.1-u06",
+      "title": "Kino, Konzert oder Kabarett?",
+      "titleEn": "Cinema, concert or cabaret?",
+      "situation": "Sie wollen mit Freunden am Wochenende ausgehen: Sie lesen Veranstaltungstipps und eine Filmkritik, hören die Eröffnung eines Stadtfests und planen gemeinsam den Abend.",
+      "handlungsfeld": "Freizeit und Kultur (Goethe-Themen) · Soziale Kontakte (BSK A)",
+      "unitType": "texttype",
+      "canDo": [
+        {
+          "de": "Ich kann eine Geschichte erzählen oder die Handlung eines Buches oder Films wiedergeben und meine Reaktionen beschreiben.",
+          "source": "05-cando-b1-b2 (B1.1 #4) · SB B1"
+        },
+        {
+          "de": "Ich kann nach einem Kinobesuch meine Meinung über den Film äußern.",
+          "source": "05-cando-b1-b2 (B1.1 #4) · ÖIF-B1 §3.1"
+        },
+        {
+          "de": "Ich kann mit einer Partnerin oder einem Partner etwas planen, Vorschläge machen, darauf reagieren und mich einigen.",
+          "source": "05-cando-b1-b2 (B1.1 #3) · ≈ GI-B1 Sprechen T1"
+        },
+        {
+          "de": "Ich kann einer kurzen Rede vor Publikum, z. B. bei der Eröffnung eines Festes, die wichtigsten Informationen entnehmen.",
+          "source": "02-exams-b1 §7 (G-H2) · ≈ GI-B1 Hören T2 „Als Zuhörer im Publikum verstehen“"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Bedingungen mit falls; falls und wenn im Vergleich (Falls es regnet, gehen wir ins Kino.)",
+          "new": true,
+          "lehrwerk": "Menschen B1 L6 (Schritte plus Neu 6 und Linie 1 B1 K10–11 später; split)"
+        },
+        {
+          "point": "Adjektivdeklination in Kritiken und Empfehlungen (ein spannender Film mit tollen Schauspielern) – Wiederholung; Zuwachs: attributiver Komparativ und Superlativ in der Kritik (der spannendste Film des Jahres, ein besserer Schluss). Falls A2.2 E5 ihn nur rezeptiv geführt hat, wird er hier produktiv nachgeholt.",
+          "new": false,
+          "lehrwerk": "Menschen A2 L4–5; Schritte plus Neu 4 L9–12; Menschen B1 L9 (Komparativ attributiv)"
+        }
+      ],
+      "vocabTheme": "Kultur, Ausgehen, Film",
+      "vocabTarget": 44,
+      "keyWords": [
+        "die Vorstellung",
+        "die Aufführung",
+        "das Publikum",
+        "die Handlung",
+        "der Schauspieler / die Schauspielerin",
+        "der Regisseur / die Regisseurin",
+        "die Kritik",
+        "das Kabarett",
+        "die Bühne",
+        "der Auftritt",
+        "auftreten",
+        "ausverkauft",
+        "spannend",
+        "witzig",
+        "unterhaltsam",
+        "beeindruckend",
+        "falls",
+        "die Szene",
+        "die Rolle",
+        "der Humor"
+      ],
+      "reading": {
+        "textType": "Veranstaltungstipps aus dem Stadtmagazin (Zuordnung) und eine Filmkritik",
+        "words": 400
+      },
+      "listening": {
+        "textType": "Eröffnungsrede beim Stadtfest (Multiple Choice) + Kinobesucher sagen ihre Meinung",
+        "seconds": 170
+      },
+      "writing": {
+        "task": "Persönliche E-Mail an einen Freund: einen Film beschreiben, begründen, warum er ihm gefallen wird, einen gemeinsamen Kinoabend vorschlagen",
+        "words": 75,
+        "examTeil": "Goethe B1 Schreiben Teil 1"
+      },
+      "speaking": {
+        "task": "Mit einer Freundin einen Abend in der Stadt planen (was, wann, Treffpunkt, Tickets, was Sie tun, falls es ausverkauft ist) und sich einigen",
+        "examTeil": "Goethe B1 Sprechen Teil 1"
+      },
+      "pronunciation": "Satzakzent in Vorschlag und Gegenvorschlag (Wie wäre es mit KINO? – Lieber ins KONZERT.)",
+      "examTeile": [
+        "Goethe B1 Lesen Teil 3",
+        "telc B1 Leseverstehen Teil 3",
+        "DTZ Lesen Teil 2",
+        "Goethe B1 Hören Teil 2",
+        "DTZ Hören Teil 4",
+        "Goethe B1 Schreiben Teil 1",
+        "Goethe B1 Sprechen Teil 1",
+        "telc B1 Mündlicher Ausdruck Teil 3",
+        "DTZ Sprechen Teil 3"
+      ],
+      "landeskunde": "Kabarett und Kleinkunst im deutschsprachigen Raum; Porträt einer realen Künstlerin mit Quellenangabe"
+    },
+    {
+      "nr": 7,
+      "id": "b1.1-u07",
+      "title": "Was fehlt Ihnen genau?",
+      "titleEn": "What exactly is wrong?",
+      "situation": "Nach einer Grippe gehen Sie zur Hausärztin, verstehen den Beipackzettel Ihres Medikaments und halten im Deutschkurs eine kurze Präsentation über gesundes Leben.",
+      "handlungsfeld": "Gesundheit (RC 8)",
+      "unitType": "texttype",
+      "canDo": [
+        {
+          "de": "Ich kann beim Arzt mit einfachen Worten erklären, was mir fehlt.",
+          "source": "05-cando-b1-b2 (B1.1 #6) · ÖIF-B1 §3.1"
+        },
+        {
+          "de": "Ich kann den Beipackzetteln von Medikamenten Informationen über die Einnahmezeiten entnehmen.",
+          "source": "05-cando-b1-b2 (B1.1 #6) · ÖIF-B1 §3.1"
+        },
+        {
+          "de": "Ich kann ein vertrautes Thema mit fünf Folien in ca. 3 Minuten präsentieren: eigene Erfahrung, Situation im Heimatland, Vor- und Nachteile, meine Meinung.",
+          "source": "05-cando-b1-b2 (B1.2 #2, hier mit Vorlage) · ≈ GI-B1 Sprechen T2"
+        },
+        {
+          "de": "Ich kann auf die Präsentation einer anderen Person mit einer kurzen Rückmeldung und einer Frage reagieren.",
+          "source": "02-exams-b1 §1 · ≈ GI-B1 Sprechen T3"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Infinitiv mit zu nach Verben, Nomen und Adjektiven (Vergessen Sie nicht, die Tablette zu nehmen. Es ist wichtig, genug zu schlafen. Ich habe keine Zeit, Sport zu machen.)",
+          "new": true,
+          "lehrwerk": "Menschen B1 L7; Schritte plus Neu 5 L5; Netzwerk B1 K1; Motive L17"
+        },
+        {
+          "point": "Passiv Präsens im Beipackzettel erkennen (Die Tablette wird unzerkaut geschluckt.) – rezeptiv, Wiederholung aus A2.2",
+          "new": false,
+          "lehrwerk": "Menschen A2 L14; Schritte plus Neu 4 L10",
+          "receptive": true
+        }
+      ],
+      "vocabTheme": "Beschwerden, Medikamente, gesund leben",
+      "vocabTarget": 45,
+      "keyWords": [
+        "die Beschwerden (Pl.)",
+        "die Grippe",
+        "der Beipackzettel",
+        "die Dosierung",
+        "die Einnahme",
+        "die Wirkung",
+        "der Notdienst",
+        "die Entzündung",
+        "der Vortrag",
+        "die Folie",
+        "einnehmen",
+        "wirken",
+        "sich erholen",
+        "vorbeugen",
+        "rezeptfrei",
+        "schädlich",
+        "das Symptom",
+        "die Ursache",
+        "die Salbe",
+        "schwindlig"
+      ],
+      "reading": {
+        "textType": "Beipackzettel (Multiple Choice) und Informationsbroschüre der Krankenkasse (Richtig/Falsch)",
+        "words": 220
+      },
+      "listening": {
+        "textType": "Vortrag in der Volkshochschule: Gesund schlafen (Multiple Choice) + Gesundheitstipp im Radio",
+        "seconds": 200
+      },
+      "writing": {
+        "task": "Kurze formelle Nachricht an die Arztpraxis: einen Termin absagen, den Grund nennen, um einen neuen Termin bitten",
+        "words": 40,
+        "examTeil": "Goethe B1 Schreiben Teil 3"
+      },
+      "speaking": {
+        "task": "Präsentation mit fünf Folien „Gesund leben im Alltag“ nach 15 Minuten Vorbereitung mit Stichpunkten; danach die Frage der KI-Partnerin beantworten und selbst eine Rückmeldung geben",
+        "examTeil": "Goethe B1 Sprechen Teil 2"
+      },
+      "pronunciation": "Vortragen: Pausen setzen und Gliederungssignale betonen (Zuerst … Außerdem … Zum Schluss …)",
+      "examTeile": [
+        "DTZ Lesen Teil 4",
+        "Goethe B1 Lesen Teil 5",
+        "Goethe B1 Hören Teil 2",
+        "DTZ Hören Teil 2",
+        "Goethe B1 Schreiben Teil 3",
+        "Goethe B1 Sprechen Teil 2",
+        "Goethe B1 Sprechen Teil 3"
+      ],
+      "landeskunde": "Hausarztpraxis, Apotheke und ärztlicher Bereitschaftsdienst 116 117 in Deutschland (Entsprechungen in Österreich und der Schweiz mit Quelle ergänzen)"
+    },
+    {
+      "nr": 8,
+      "id": "b1.1-u08",
+      "title": "Weiterkommen: Kurse und Ziele",
+      "titleEn": "Getting ahead: courses and goals",
+      "situation": "Sie möchten sich beruflich weiterbilden: Sie lesen das Kursprogramm der Volkshochschule, hören eine Radiosendung zum Thema, lassen sich beraten und melden sich schriftlich an.",
+      "handlungsfeld": "Aus- und Weiterbildung (RC 4) · Eigenes Sprachenlernen",
+      "unitType": "texttype",
+      "canDo": [
+        {
+          "de": "Ich kann die Ziele beschreiben, die ich mir für einen Sprachkurs oder eine Weiterbildung gesetzt habe.",
+          "source": "05-cando-b1-b2 (B1.1 #11) · ÖIF-B1 §3.1 (um Weiterbildung erweitert)"
+        },
+        {
+          "de": "Ich kann meine Gefühle im Hinblick auf das Lernen der deutschen Sprache äußern, z. B. Unsicherheit oder Freude über Erfolg.",
+          "source": "05-cando-b1-b2 (B1.1 #11) · RC 36"
+        },
+        {
+          "de": "Ich kann einem Radiointerview über Aus- und Weiterbildung die wichtigsten Informationen entnehmen, wenn deutlich gesprochen wird.",
+          "source": "05-cando-b1-b2 (B1.1 #5) · ≈ SB B1 (Hören)"
+        },
+        {
+          "de": "Ich kann in einer Radiodiskussion erkennen, welche Person welche Meinung vertritt, wenn ich den Text zweimal höre.",
+          "source": "05-cando-b1-b2 (B1.2 #14, hier als Einführung) · ≈ GI-B1 Hören T4"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Finalsätze mit um … zu und damit (Ich mache den Kurs, um bessere Chancen zu haben. … damit meine Chefin mir mehr Verantwortung gibt.)",
+          "new": true,
+          "lehrwerk": "Schritte plus Neu 5 L6; Linie 1 B1 K6 (Menschen B1 L23–24 später; split)"
+        },
+        {
+          "point": "Kausalsatz mit da (Da ich abends arbeite, suche ich einen Onlinekurs.)",
+          "new": true,
+          "lehrwerk": "Menschen B1 L8 (Schritte plus Neu 6 und Linie 1 B1 K10–11 später; split)"
+        }
+      ],
+      "vocabTheme": "Weiterbildung, Beratung, Lernziele",
+      "vocabTarget": 46,
+      "keyWords": [
+        "die Fortbildung",
+        "die Qualifikation",
+        "die Volkshochschule",
+        "die Gebühr",
+        "die Teilnahme",
+        "die Förderung",
+        "die Motivation",
+        "die Herausforderung",
+        "sich weiterbilden",
+        "fördern",
+        "beruflich",
+        "erforderlich",
+        "motiviert",
+        "unsicher",
+        "die Beratung",
+        "die Umschulung",
+        "der Nachweis",
+        "die Chance",
+        "anerkennen",
+        "aufsteigen"
+      ],
+      "reading": {
+        "textType": "Kursprogramm der Volkshochschule (Verzeichnis) und Zeitungsartikel „Mit 45 noch einmal lernen“ (Multiple Choice) + Lückentext: Anfrage",
+        "words": 340
+      },
+      "listening": {
+        "textType": "Radiosendung mit Moderatorin und zwei Gästen: Lohnt sich eine Weiterbildung? (Wer sagt was?) + Interview mit einer Berufsberaterin",
+        "seconds": 330
+      },
+      "writing": {
+        "task": "Anfrage an die Volkshochschule, vier Leitpunkte: welcher Kurs, Ihre Vorkenntnisse, passende Zeiten, Kosten und Förderung",
+        "words": 85,
+        "examTeil": "telc B1 Schriftlicher Ausdruck"
+      },
+      "speaking": {
+        "task": "Einander kennenlernen beim Infoabend der Volkshochschule: nach Ausbildung, Beruf, Deutschlernen und Zielen fragen und selbst ausführlich antworten; im Kernteil: Beratungsgespräch mit der KI-Beraterin",
+        "examTeil": "telc B1 Mündlicher Ausdruck Teil 1"
+      },
+      "pronunciation": "Neueinsatz (Knacklaut) vor Vokal: be|antragen, Ab|itur, ich | arbeite | abends",
+      "examTeile": [
+        "DTZ Lesen Teil 1",
+        "telc B1 Leseverstehen Teil 2",
+        "DTZ Lesen Teil 5",
+        "Goethe B1 Hören Teil 4",
+        "telc B1 Hörverstehen Teil 2",
+        "DTZ Schreiben",
+        "DTZ Sprechen Teil 1",
+        "telc B1 Mündlicher Ausdruck Teil 1",
+        "telc B1 Schriftlicher Ausdruck"
+      ],
+      "landeskunde": "Volkshochschulen und Anerkennungsberatung: das Portal „Anerkennung in Deutschland“",
+      "laneVariants": {
+        "DTZ": {
+          "writing": "Dieselbe Anfrage als DTZ Schreiben mit A/B-Wahl, unter Prüfungsbedingungen",
+          "speaking": "Über sich sprechen (Ausbildung, Beruf, Deutschlernen, Ziele) und die Nachfragen der KI in der Rolle der Prüferin beantworten (DTZ Sprechen Teil 1)"
+        }
+      }
+    },
+    {
+      "nr": 9,
+      "id": "b1.1-u09",
+      "title": "Neu anfangen",
+      "titleEn": "Starting over",
+      "situation": "Für den Blog Ihres Vereins erzählen Menschen, wie sich ihr Leben verändert hat: Sie lesen die Geschichten, sprechen über einen Wendepunkt und antworten einer Freundin auf ihre Neuigkeiten.",
+      "handlungsfeld": "Umgang mit der Migrationssituation (RC) · Soziale Kontakte (BSK A)",
+      "unitType": "texttype",
+      "canDo": [
+        {
+          "de": "Ich kann eine mir bekannte Familiengeschichte erzählen.",
+          "source": "05-cando-b1-b2 (B1.1 #2) · ÖIF-B1 §3.1"
+        },
+        {
+          "de": "Ich kann in einfachen zusammenhängenden Sätzen sprechen, um Erfahrungen und Ereignisse oder meine Träume, Hoffnungen und Ziele zu beschreiben.",
+          "source": "05-cando-b1-b2 (B1.1 #2) · SB B1"
+        },
+        {
+          "de": "Ich kann einen persönlichen Blogbeitrag über ein Erlebnis im Detail verstehen, auch wenn die Ereignisse nicht in zeitlicher Reihenfolge erzählt werden.",
+          "source": "02-exams-b1 §7 (G-L1) · ≈ GI-B1 Lesen T1 „Korrespondenz lesen“"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Plusquamperfekt (hatte/war + Partizip II): was vor einem anderen Ereignis in der Vergangenheit passiert war",
+          "new": true,
+          "lehrwerk": "Menschen B1 L11; Schritte plus Neu 5 L1 (Netzwerk B1 K7, Linie 1 B1 K12 und Schritte plus Neu 6 L9 später; split)"
+        },
+        {
+          "point": "Temporalsätze mit nachdem und bevor (Nachdem ich die Prüfung bestanden hatte, … / Bevor ich nach Graz kam, …)",
+          "new": true,
+          "lehrwerk": "Menschen B1 L8/L11; Schritte plus Neu 5 L1"
+        }
+      ],
+      "vocabTheme": "Lebenswege, Wendepunkte, Entscheidungen",
+      "vocabTarget": 44,
+      "keyWords": [
+        "der Neuanfang",
+        "der Wendepunkt",
+        "die Entscheidung",
+        "die Arbeitslosigkeit",
+        "der Mut",
+        "der Zufall",
+        "das Schicksal",
+        "sich entscheiden",
+        "aufgeben",
+        "verlassen",
+        "gelingen",
+        "sich zurechtfinden",
+        "mutig",
+        "plötzlich",
+        "nachdem",
+        "bevor",
+        "der Schritt",
+        "wagen",
+        "sich trauen",
+        "zurückblicken"
+      ],
+      "reading": {
+        "textType": "Beiträge im Vereinsblog: Mein Neuanfang (Richtig/Falsch) + persönlicher Brief mit Grammatiklücken",
+        "words": 260
+      },
+      "listening": {
+        "textType": "Gespräch zweier Bekannter an der Bushaltestelle über Veränderungen (Richtig/Falsch)",
+        "seconds": 220
+      },
+      "writing": {
+        "task": "Antwort auf die E-Mail einer Freundin, die neu angefangen hat, vier Leitpunkte: gratulieren, von einem eigenen Wendepunkt erzählen, einen Rat geben, einen Besuch vorschlagen",
+        "words": 100,
+        "examTeil": "telc B1 Schriftlicher Ausdruck"
+      },
+      "speaking": {
+        "task": "Präsentation mit fünf Folien (mit Vorlage) „Mit 40 noch einmal neu anfangen?“ nach 15 Minuten Vorbereitung: eigene Erfahrung, Situation im Heimatland, Vor- und Nachteile, Meinung; danach Rückfragen der KI-Partnerin beantworten und eine Rückmeldung geben",
+        "examTeil": "Goethe B1 Sprechen Teil 2"
+      },
+      "pronunciation": "Satzmelodie im langen Satz: Nebensatz vorn, Hauptsatz danach (Nachdem ich umgezogen war, ↗ | fand ich schnell Arbeit. ↘)",
+      "examTeile": [
+        "Goethe B1 Lesen Teil 1",
+        "telc B1 Sprachbausteine Teil 1",
+        "Goethe B1 Hören Teil 3",
+        "DTZ Hören Teil 3",
+        "telc B1 Schriftlicher Ausdruck",
+        "DTZ Sprechen Teil 2",
+        "Goethe B1 Sprechen Teil 2",
+        "Goethe B1 Sprechen Teil 3"
+      ],
+      "landeskunde": "Porträt einer realen Person, die in D-A-CH beruflich neu angefangen hat (mit Quellenangabe)",
+      "laneVariants": {
+        "DTZ": {
+          "speaking": "Ein Foto beschreiben (eine Frau um die 40 an ihrem ersten Tag in einer Ausbildungswerkstatt), von einem eigenen Neuanfang erzählen und mit dem Heimatland vergleichen – ohne Vorbereitungszeit (DTZ Sprechen Teil 2)"
+        }
+      }
+    },
+    {
+      "nr": 10,
+      "id": "b1.1-u10",
+      "title": "Vier Tage arbeiten, drei Tage frei?",
+      "titleEn": "Four days on, three days off?",
+      "situation": "In einem Online-Forum wird über die Vier-Tage-Woche diskutiert: Sie lesen die Kommentare, hören eine Radiodiskussion und bringen Ihre eigene Meinung ein.",
+      "handlungsfeld": "Arbeit (RC 2) · Gefühle, Haltungen und Meinungen (BSK C)",
+      "unitType": "texttype",
+      "canDo": [
+        {
+          "de": "Ich kann in einer Diskussion mit Freunden persönliche Standpunkte und Meinungen äußern und erfragen.",
+          "source": "05-cando-b1-b2 (B1.1 #3) · ZM B1"
+        },
+        {
+          "de": "Ich kann in kurzen Leserkommentaren erkennen, ob die Schreibenden für oder gegen etwas sind.",
+          "source": "02-exams-b1 §7 (G-L4) · ≈ GI-B1 Lesen T4"
+        },
+        {
+          "de": "Ich kann in einem Forumsbeitrag (ca. 80 Wörter) meine Meinung zu einem Alltagsthema äußern und begründen.",
+          "source": "05-cando-b1-b2 (B1.2 #1) · ≈ GI-B1 Schreiben T2"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Konjunktiv II: irreale Bedingungen in der Gegenwart (Wenn ich nur vier Tage arbeiten würde, hätte ich mehr Zeit für meine Familie.)",
+          "new": true,
+          "lehrwerk": "Schritte plus Neu 5 L4; Netzwerk B1 K4; Sicher! B1+ L5 (Linie 1 B1 K9)"
+        },
+        {
+          "point": "Meinungen mit dass-Satz und Redemitteln verbinden (Ich bin dafür, dass … / Davon halte ich nicht viel.) – Wiederholung und Ausbau",
+          "new": false,
+          "lehrwerk": "Menschen B1 L18; Netzwerk neu A2 K3"
+        }
+      ],
+      "vocabTheme": "Arbeitszeit, Vor- und Nachteile, Meinung",
+      "vocabTarget": 45,
+      "keyWords": [
+        "die Gleitzeit",
+        "das Homeoffice",
+        "die Belastung",
+        "die Leistung",
+        "der Vorteil",
+        "der Nachteil",
+        "das Argument",
+        "der Standpunkt",
+        "die Gewerkschaft",
+        "der Unternehmer / die Unternehmerin",
+        "zustimmen",
+        "ablehnen",
+        "sich lohnen",
+        "halten von",
+        "gerecht",
+        "ausgeglichen",
+        "die Diskussion",
+        "die Arbeitsbedingungen (Pl.)",
+        "die Einführung",
+        "sinnvoll"
+      ],
+      "reading": {
+        "textType": "Leserkommentare in einem Online-Forum zur Vier-Tage-Woche (Ja/Nein: Ist die Person dafür?)",
+        "words": 330
+      },
+      "listening": {
+        "textType": "Radiodiskussion mit Moderator, einer Unternehmerin und einem Gewerkschafter (Wer sagt was?) + Straßenumfrage",
+        "seconds": 330
+      },
+      "writing": {
+        "task": "Forumsbeitrag „Vier-Tage-Woche für alle?“: Meinung äußern, begründen, auf einen anderen Kommentar eingehen",
+        "words": 80,
+        "examTeil": "Goethe B1 Schreiben Teil 2"
+      },
+      "speaking": {
+        "task": "Zwei kurze Meinungen zur Vier-Tage-Woche wiedergeben, eigene Erfahrungen und Meinung einbringen und mit der KI-Partnerin diskutieren",
+        "examTeil": "telc B1 Mündlicher Ausdruck Teil 2"
+      },
+      "pronunciation": "Kontrastakzent beim Widersprechen (Nicht die ARBEIT ist das Problem, sondern die ZEIT.)",
+      "examTeile": [
+        "Goethe B1 Lesen Teil 4",
+        "Goethe B1 Hören Teil 4",
+        "DTZ Hören Teil 4",
+        "telc B1 Hörverstehen Teil 1",
+        "Goethe B1 Schreiben Teil 2",
+        "telc B1 Mündlicher Ausdruck Teil 2"
+      ],
+      "landeskunde": "Arbeitszeitmodelle in D-A-CH: Teilzeit, Gleitzeit und Pilotprojekte zur Vier-Tage-Woche (Zahlen nur mit Quelle und Stand)"
+    },
+    {
+      "nr": 11,
+      "id": "b1.1-u11",
+      "title": "Im Namen des ganzen Teams",
+      "titleEn": "On behalf of the whole team",
+      "situation": "In Ihrer Firma geht eine langjährige Kollegin in den Ruhestand, und ein Kollege hat einen Trauerfall: Sie planen die Abschiedsfeier, schreiben Einladung und Karte und halten eine kurze Ansprache.",
+      "handlungsfeld": "Arbeit (RC 2) · Soziale Kontakte (BSK A) · Gefühle (BSK C)",
+      "unitType": "texttype",
+      "canDo": [
+        {
+          "de": "Ich kann im Trauerfall mein Beileid ausdrücken.",
+          "source": "05-cando-b1-b2 (B1.1 #10) · RC 40"
+        },
+        {
+          "de": "Ich kann mit einfachen Worten meine Enttäuschung ausdrücken, z. B. wenn eine geplante Feier ausfällt.",
+          "source": "05-cando-b1-b2 (B1.1 #10) · ≈ RC 40"
+        },
+        {
+          "de": "Ich kann mit Kolleginnen und Kollegen eine Feier planen, Aufgaben verteilen und mich einigen, wer was macht.",
+          "source": "02-exams-b1 §2 · ≈ telc B1 Mündlicher Ausdruck T3"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Genitiv: Artikel und Nomen (des Teams, der Firma, meines Kollegen) und Genitivattribut (das Jubiläum unserer Kollegin)",
+          "new": true,
+          "lehrwerk": "Menschen B1 L12; Netzwerk B1 K2; Linie 1 B1 K3; Schritte plus Neu 5 L3"
+        },
+        {
+          "point": "Genitiv oder von + Dativ: geschriebene und gesprochene Sprache (die Feier des Teams / die Feier vom Team)",
+          "new": false,
+          "lehrwerk": "Menschen B1 L12"
+        }
+      ],
+      "vocabTheme": "Feste im Betrieb, Glückwunsch, Beileid",
+      "vocabTarget": 44,
+      "keyWords": [
+        "der Ruhestand",
+        "die Ansprache",
+        "die Rede",
+        "die Geschäftsleitung",
+        "das Beileid",
+        "das Mitgefühl",
+        "die Trauer",
+        "der Trauerfall",
+        "der Verlust",
+        "der Dank",
+        "der Anlass",
+        "verabschieden",
+        "trauern",
+        "bedauern",
+        "langjährig",
+        "ehemalig",
+        "gerührt",
+        "die Tradition",
+        "die Glückwunschkarte",
+        "enttäuscht"
+      ],
+      "reading": {
+        "textType": "Kurzmeldungen aus der Firmenzeitung (Überschriften zuordnen), Rundschreiben der Geschäftsleitung und eine Einladung mit Wortlücken",
+        "words": 300
+      },
+      "listening": {
+        "textType": "Gespräche auf der Abschiedsfeier (Richtig/Falsch und Multiple Choice)",
+        "seconds": 200
+      },
+      "writing": {
+        "task": "Persönliche E-Mail an eine Kollegin: die Abschiedsfeier beschreiben, begründen, warum ihr Beitrag wichtig ist, vorschlagen, was sie mitbringt (dazu eine kurze Beileidskarte fürs Portfolio)",
+        "words": 80,
+        "examTeil": "Goethe B1 Schreiben Teil 1"
+      },
+      "speaking": {
+        "task": "Mit einem Kollegen die Abschiedsfeier planen (Ort, Geschenk, Essen, Rede) und festlegen, wer was macht; im Kernteil: eine kurze Abschiedsansprache halten",
+        "examTeil": "telc B1 Mündlicher Ausdruck Teil 3"
+      },
+      "pronunciation": "Gefühl in der Stimme: Glückwunsch und Beileid (Tonhöhe, Tempo, Pausen); die Genitivendung -s/-es hörbar machen",
+      "examTeile": [
+        "telc B1 Leseverstehen Teil 1",
+        "DTZ Lesen Teil 3",
+        "telc B1 Sprachbausteine Teil 2",
+        "DTZ Hören Teil 3",
+        "Goethe B1 Schreiben Teil 1",
+        "telc B1 Mündlicher Ausdruck Teil 3",
+        "Goethe B1 Sprechen Teil 1",
+        "DTZ Sprechen Teil 3"
+      ],
+      "landeskunde": "Betriebsfeiern, Jubiläen und Kondolenzkarten: Konventionen im Berufsleben in D-A-CH"
+    },
+    {
+      "nr": 12,
+      "id": "b1.1-u12",
+      "title": "Leider fällt der Zug aus",
+      "titleEn": "Unfortunately the train is cancelled",
+      "situation": "Auf der Reise zu einer Familienfeier fällt Ihr Zug aus: Sie verstehen die Durchsagen, erklären einer Mitreisenden, die wenig Deutsch versteht, was los ist, und verlangen später eine Entschädigung.",
+      "handlungsfeld": "Mobilität (RC 10) · Mediation (Begleitband)",
+      "unitType": "texttype",
+      "canDo": [
+        {
+          "de": "Ich kann auch mit weniger routinemäßigen Situationen in öffentlichen Verkehrsmitteln umgehen.",
+          "source": "05-cando-b1-b2 (B1.1 #7) · ZM B1"
+        },
+        {
+          "de": "Ich kann an Informationsschaltern nach Verbindungen fragen und auf entsprechende Fragen reagieren.",
+          "source": "05-cando-b1-b2 (B1.1 #7) · ≈ RC 142"
+        },
+        {
+          "de": "Ich kann Informationen aus klaren, gut strukturierten Informationstexten über vertraute Themen mündlich weitergeben, z. B. eine Durchsage für eine Mitreisende.",
+          "source": "05-cando-b1-b2 (B1.2 #14) · SB B1, Mediation"
+        },
+        {
+          "de": "Ich kann mich schriftlich bei einem Verkehrsunternehmen beschweren und eine Entschädigung verlangen.",
+          "source": "05-cando-b1-b2 (B1.1 #8, Transfer) · ≈ RC 125; ZM B1 „sich beschweren“"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Präpositionen mit Genitiv: wegen, trotz, während (wegen einer Störung, trotz der Reservierung, während der Fahrt); gesprochen oft wegen + Dativ",
+          "new": true,
+          "lehrwerk": "Menschen B1 L12; Schritte plus Neu 5 L3–7; Linie 1 B1 K3; Netzwerk B1 K2 (Profile deutsch: trotz erst B2)"
+        },
+        {
+          "point": "Gründe und Gegengründe umformen: weil ↔ wegen, obwohl ↔ trotz (Wiederholung der Konnektoren)",
+          "new": false,
+          "lehrwerk": "Menschen B1 L4, L12"
+        }
+      ],
+      "vocabTheme": "Bahn, Störungen, Fahrgastrechte",
+      "vocabTarget": 46,
+      "keyWords": [
+        "die Störung",
+        "der Ersatzverkehr",
+        "die Entschädigung",
+        "die Fahrgastrechte (Pl.)",
+        "die Umleitung",
+        "der Streik",
+        "die Weiterfahrt",
+        "der Zugbegleiter / die Zugbegleiterin",
+        "das Reisezentrum",
+        "sich verspäten",
+        "vorübergehend",
+        "planmäßig",
+        "eingeschränkt",
+        "wegen",
+        "trotz",
+        "während (+ Genitiv)",
+        "die Bauarbeiten (Pl.)",
+        "die Panne",
+        "ankündigen",
+        "ärgerlich"
+      ],
+      "reading": {
+        "textType": "Informationsblatt Fahrgastrechte (Richtig/Falsch), Aushang des Verkehrsunternehmens und Zeitungsartikel über Bauarbeiten",
+        "words": 220
+      },
+      "listening": {
+        "textType": "Durchsagen am Bahnhof und im Zug, Anruf bei der Service-Hotline",
+        "seconds": 200
+      },
+      "writing": {
+        "task": "Beschwerde an das Verkehrsunternehmen, vier Leitpunkte: Fahrt und Ticket, was passiert ist, welche Folgen es hatte, welche Entschädigung Sie erwarten",
+        "words": 90,
+        "examTeil": "telc B1 Schriftlicher Ausdruck"
+      },
+      "speaking": {
+        "task": "Mit einer Mitreisenden die Weiterfahrt organisieren (Ersatzverkehr oder Hotel, wer die Familie informiert, wer sich um die Entschädigung kümmert) und sich einigen; im Kernteil: eine Durchsage für die Mitreisende in einfachen Worten wiedergeben",
+        "examTeil": "Goethe B1 Sprechen Teil 1"
+      },
+      "pronunciation": "Durchsagen verstehen und nachsprechen: Konsonantenhäufungen und Zahlen (Gleis, Anschluss, Ersatzverkehr; 17:42 Uhr)",
+      "examTeile": [
+        "DTZ Lesen Teil 4",
+        "DTZ Lesen Teil 3",
+        "Goethe B1 Lesen Teil 2",
+        "Goethe B1 Hören Teil 1",
+        "telc B1 Hörverstehen Teil 3",
+        "DTZ Hören Teil 1",
+        "DTZ Schreiben",
+        "DTZ Sprechen Teil 2",
+        "telc B1 Schriftlicher Ausdruck",
+        "Goethe B1 Sprechen Teil 1",
+        "telc B1 Mündlicher Ausdruck Teil 3",
+        "DTZ Sprechen Teil 3"
+      ],
+      "landeskunde": "Fahrgastrechte bei Verspätung und Ausfall in Deutschland und der EU (Entschädigungsstufen nur mit Quelle und Stand)",
+      "laneVariants": {
+        "DTZ": {
+          "writing": "Dieselbe Beschwerde als DTZ Schreiben mit A/B-Wahl, unter Prüfungsbedingungen",
+          "speaking": "Ein Foto beschreiben (voller Bahnsteig bei einer Störung), von einer eigenen Reisepanne erzählen und mit dem Heimatland vergleichen – ohne Vorbereitungszeit (DTZ Sprechen Teil 2); die Planung als DTZ Sprechen Teil 3"
+        }
+      }
+    }
+  ],
+  "checkpoints": [
+    {
+      "afterUnit": 3,
+      "covers": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "afterUnit": 6,
+      "covers": [
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "afterUnit": 9,
+      "covers": [
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "afterUnit": 12,
+      "covers": [
+        10,
+        11,
+        12
+      ]
+    }
+  ],
+  "levelTest": {
+    "format": "Abschluss nach Einheit 12: Halb-Modelltest auf dem Stoff von B1.1 im Format der beim Onboarding gewählten Prüfungs-Lane (Standard ohne Wahl: telc Deutsch B1). telc Deutsch B1: Leseverstehen 1 + 3, Sprachbausteine 1, Hörverstehen 2 + 3, Schriftlicher Ausdruck, Mündlicher Ausdruck 1 + 3 (ca. 100 + 10 Min.). Goethe-/ÖSD-Zertifikat B1: Lesen Teil 1, 3 und 5, Hören Teil 1 und 3, Schreiben Teil 1 und 3, Sprechen Teil 1 und 2 nach 10 Minuten Vorbereitung (ca. 100 + 12 Min.). DTZ (B1-Bereich; nur im Integrationskurssystem): Hören 1–3, Lesen 2, 4 und 5, Schreiben, Sprechen 1–3 ohne Vorbereitung, in voller Länge und jeder Hörtext einmal. telc- und Goethe-Texte in ca. 85 % der Prüfungslänge. Die KI als Gesprächspartnerin und in der Rolle der Prüferin (automatische Übungsbewertung). Ergebnis als Teil-Karte (Übungswerte je Prüfungsteil) mit datiertem Plan für B1.2: kein Gesamturteil, keine Bestehensregel, nie eine Bestehensprognose. Der Diagnose-Mini-Modelltest in Woche 1 von B1.2 ist ein Ausschnitt einer Parallelform (ein Teil je Modul).",
+    "sections": [
+      "Lesen",
+      "Hören",
+      "Schreiben",
+      "Sprechen"
+    ]
+  }
+}

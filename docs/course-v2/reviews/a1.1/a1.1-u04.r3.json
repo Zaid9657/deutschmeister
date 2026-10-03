@@ -1,0 +1,195 @@
+{
+  "review": "a1.1-u04.r3",
+  "unitId": "a1.1-u04",
+  "file": "content/course-v2/a1.1/units/u04.json",
+  "round": 3,
+  "date": "2026-09-27",
+  "reviewers": [
+    {
+      "id": "R1",
+      "persona": "Prüferin (lizenzierte Goethe-A1-Prüferin): Prüfungstreue, Rubrik, Aufgabenklarheit"
+    },
+    {
+      "id": "R2",
+      "persona": "Kursleiterin DaF (A1.1): Natürlichkeit, Niveau, Didaktik, Szenenplausibilität"
+    }
+  ],
+  "method": "Both reviewers read every German string again: title, start (7 Folge lines and the gist item), 3 inputs (30 lines) plus the flyer, 10 exam texts, 2 strategy cards, 8 redemittel, the 2 speaking parts with cards, openingLine, hintWords and 16 model turns, the writing task (situation, 3 Leitpunkte, checklist, model), 4 check lines, story beat and cliffhanger, every endLine and every explanation.de. We solved every item blind from promptDe plus options, tiles or audio line only: 1 start gist, 15 input items, 12 structuredInput, 33 authored pool items, 12 reserve, 10 exam items, 8 check items and 4 proof items. For sentence_building we permuted the tiles and checked each V2 and V1 order against accepted[]. For generated items we traced what the player builds (src/components/course-v2/content.js dictationItems: answer = line.de, audio = line.say || line.de) and checked all 6 dictation sources for `say` (none has one now). Typed answers were graded the way the v2 player grades them: src/lib/course-v2/checkItem.js (exact:number → checkNumber: digits must match, and an answer without digits is compared only with accepted forms that have none) on top of src/lib/lesson/check.js. Exam blocks were checked against content/course-v2/registries/lanes/sd1.json (h1 6 × abc / 3 options / 2 plays / [32–53] words; h2 4 × R/F / 1 play / [29–47]; sp2 two topics, cards-ask; sp3 cards-request; s2 3 Leitpunkte, about 30 words) and against the rubrics sd1-sp2, sd1-sp3, sd1-s2, course-micro and course-micro-sp (all resolve). Word counts were recomputed with the validator's wordCount: h1 50/41/37/41/37/38, h2 31/31/33/30, flyer 47, model text 26, cliffhanger 25. We ran the validator's known-token machinery (knownForms + licensedForms at a1.1-u04) over every German string of the unit, not only inputs and exam texts, and looked up each unknown token's allocation in all eight lexicons. The grammar ceiling was checked against grammar-spine.json (g.akkusativ chunk a1.1-u04, productive a1.1-u06; g.kein a1.1-u06; g.pronomen-er-es-sie a1.1-u05; g.koennen with the Satzklammer a1.1-u08; g.zeitangaben-inversion a1.1-u07). The new-word load (32 entries, band [24–32]) was checked against level-profiles.json. The can-dos were read against registries/cando/a1.json, the cast against casts/series.json and casts/a1.json (ensemble-a1-1/-2 female, -3/-4 male; Arjun's WG), and the unit against curriculum/a1-1.md §4 and a1-1.json. We recomputed every price sum (market 2,20 + 3,60 + 0,90 + 1,80 + 0,50 = 9,00 ✓; total spend about 23,61 € of 50 € ✓). Every r1 and r2 finding was verified against the current file.",
+  "validator": {
+    "command": "node scripts/course-v2/validate.mjs content/course-v2/a1.1/units/u04.json",
+    "result": "OK. 39 rules: 32 pass, 0 fail, 2 warn, 5 skipped (ITM-08, CON-06, and the level-scope rules COV-1/4/5). GRM-04 gives 7 advisories, all false positives (see F07). LEX-02 gives a ratchet of 32, which is expected while u04 is the only authored a1.1 unit; re-measure at the level round. There are no blocker findings. LEX-07 now passes cleanly: the a1.2 lexicon no longer carries lx.helfen or lx.mitkommen.",
+    "check": "node scripts/course-v2/check.mjs content/course-v2/a1.1/units/u04.json → 0 errors",
+    "notes": "Four rule-smith classes from earlier rounds are still open, and the unit itself no longer triggers any of them. (1) r1-F10: scripts/course-v2/rules/TXT-02.mjs still applies TOLERANCE 0.15 on top of registry bands that are already ±15 % of the official samples. (2) r2-F01: no rule reads `say`, so a line whose spoken form differs from its written form can still become a dictation.fromInput source. (3) r2-F07: LEX-01 (walk.mjs) still does not walk story.cliffhanger. (4) r1-F24/r2-F11: the detectors are unchanged (F07)."
+  },
+  "previousFindings": [
+    { "id": "r1-F01", "severity": "blocker", "status": "fixed", "evidence": "ls2-p08 promptDe is „Bilden Sie die Frage.“ and the tiles have no W-word, so only „Haben Sie auch Birnen?“ is a question." },
+    { "id": "r1-F02", "severity": "blocker", "status": "fixed", "evidence": "a1.2/lexicon.json no longer has lx.helfen or lx.mitkommen. They exist only in a1.1 (u06, u08), and LEX-07 passes." },
+    { "id": "r1-F03", "severity": "blocker", "status": "fixed", "evidence": "b1.1 lx.halten-2 is a homograph with its own gloss, and LEX-07 accepts it." },
+    { "id": "r1-F04", "severity": "major", "status": "fixed", "evidence": "Every statement item says „Bilden Sie einen Aussagesatz.“. ls1-p09 accepts 4 orders and ls3-p09 accepts 6, all with acceptedWhy. The tile permutations found no further grammatical V2 order." },
+    { "id": "r1-F05", "severity": "major", "status": "fixed", "evidence": "The ls1-p02 explanation is „Brot ist neutral: das Brot, ein Brot.“. The chunk „Ich möchte einen Apfel“ appears in ls2-l09 (glossed), in rm08 and in the Sp3 model." },
+    { "id": "r1-F06", "severity": "major", "status": "fixed", "evidence": "q02 is a three-product price list: every option price appears in the stem, so the learner must bind each price to its product. ls1-i06 reads the flyer on its own. L2 is deferred with a logged deviation." },
+    { "id": "r1-F07", "severity": "major", "status": "fixed", "evidence": "The Sp2 round has the learner ask about price and location and answer about quantity and location. A new pragmatic issue in round 2 is logged as F04." },
+    { "id": "r1-F08", "severity": "major", "status": "fixed", "evidence": "Butter costs 1,59 € in both the flyer and ls3-l01." },
+    { "id": "r1-F09", "severity": "major", "status": "fixed", "evidence": "ls3-s04 quotes the announcement, and the Stück rule is true. Its relative clause is logged as part of F02." },
+    { "id": "r1-F10", "severity": "major", "status": "fixed-in-unit", "evidence": "All 10 texts meet the raw registry bands. The TXT-02 double tolerance is still in the rule (validator.notes)." },
+    { "id": "r1-F11", "severity": "major", "status": "fixed", "evidence": "ls3-l01 says „Nur heute!“ and t8 says „Nur heute, nur hier in Ihrem Supermarkt!“." },
+    { "id": "r1-F12", "severity": "major", "status": "fixed", "evidence": "ls2-p06, ls2-p09, ls3-p07 and ls3-p08 say „Bilden Sie die W-Frage.“." },
+    { "id": "r1-F13", "severity": "major", "status": "fixed", "evidence": "ls2-mo („Wiederholen Sie den Preis …“) and the LS1 readAloud price echo rehearse the repeat-to-check half of the can-do." },
+    { "id": "r1-F14", "severity": "minor", "status": "fixed", "evidence": "The Sp3 partner requests are „Ich möchte einen Apfel, bitte.“ and „Eine Flasche Milch, bitte.“. Both are requests." },
+    { "id": "r1-F15", "severity": "minor", "status": "fixed", "evidence": "lp1, lp2 and lp3 are disjoint, and there is no du-Form checklist item. The model ends with „(Ihr Name)“." },
+    { "id": "r1-F16", "severity": "minor", "status": "fixed", "evidence": "ls1-s04 is „Die ist billig.“ with the key die Milch, which matches the input." },
+    { "id": "r1-F17", "severity": "minor", "status": "fixed", "evidence": "The egg count is consistent in the story scenes, ls3-l11 says „sonntags zu“, and the flyer has Pfand." },
+    { "id": "r1-F18", "severity": "minor", "status": "fixed", "evidence": "There is no schau mal or ab sofort, „bei der Milch“ is glossed, and there are no bei/beim options." },
+    { "id": "r1-F19", "severity": "minor", "status": "fixed", "evidence": "Every h1-04 distractor price is heard, and h2-04 tests the binding of price to product. The new h1-01 stem uses a later verb, logged in F05." },
+    { "id": "r1-F20", "severity": "minor", "status": "fixed", "evidence": "The three productions are distinct: a list at home, a chat about offers and a message to Arjun." },
+    { "id": "r1-F21", "severity": "minor", "status": "fixed", "evidence": "„Liebe Kunden“ is glossed 'dear customers (sg. der Kunde)' in ls3, t7 and t10. The missing gloss in t9 is logged in F05." },
+    { "id": "r1-F22", "severity": "minor", "status": "fixed", "evidence": "The budget is motivated („Geld für eine Wohnung“), and the cliffhanger is a message, no longer a newspaper ad." },
+    { "id": "r1-F23", "severity": "minor", "status": "fixed", "evidence": "ls3-p10 and ls3-r04 no longer have the gender-article tag." },
+    { "id": "r1-F24", "severity": "minor", "status": "open-class", "evidence": "The detectors are unchanged, and the same false positives still fire (7 advisories). See F07." },
+    { "id": "r1-F25", "severity": "minor", "status": "expected", "evidence": "The LEX-02 ratchet is 32 and unchanged. This is expected until later a1.1 units exist, so it is not re-raised." },
+    { "id": "r1-F26", "severity": "minor", "status": "fixed", "evidence": "ls1-s03 was reworked (see r2-F03)." },
+    { "id": "r2-F01", "severity": "blocker", "status": "fixed-in-unit", "evidence": "The dictation.fromInput sources are now ls1-l02/l06, ls2-l02/l09 and ls3-l05/l07. None carries `say`, so the key equals the audio. The proposed rule does not exist yet (validator.notes)." },
+    { "id": "r2-F02", "severity": "minor", "status": "fixed", "evidence": "ls3-p09 accepts „Die Butter ist dort auch.“ with acceptedWhy." },
+    { "id": "r2-F03", "severity": "minor", "status": "fixed", "evidence": "The ls1-s03 stem is „Welcher Satz sagt: mehr als ein Ei?“. String-matching now leads to the wrong option („Ein Ei ist billig.“), and there is no kein." },
+    { "id": "r2-F04", "severity": "minor", "status": "fixed", "evidence": "The h1 keys are b, c, a, c, a, b (2/2/2). In the numeric items the key is the middle value in h1-01, the highest in h1-02 and the lowest in h1-04." },
+    { "id": "r2-F05", "severity": "minor", "status": "fixed", "evidence": "wordBandLearning is removed. wordBand [20, 30] matches taskDe and the checklist, and the model has 26 words." },
+    { "id": "r2-F06", "severity": "minor", "status": "fixed", "evidence": "The LS4 texts are spoken only by ensemble voices (a1-1 to a1-4), and their genders match the stems. The model says „Zucker haben wir noch.“." },
+    { "id": "r2-F07", "severity": "minor", "status": "fixed-in-unit", "evidence": "Markt is glossed in LS2, Woche is gone from ls3-l10, and Montag is glossed in t9. The cliffhanger is rewritten and has 1 unknown token (Wohnung) in 25. Two residuals remain: no lexicon has lx.markt (F05), and LEX-01 does not walk the cliffhanger (validator.notes)." },
+    { "id": "r2-F08", "severity": "minor", "status": "fixed", "evidence": "spec.deviation.reason records L2 → u05 and the Sp2 round. „vergleichen“ is gone from spec.situation, sd1.sp2 is in the chips, and Sp2 has two topics. The second topic's pragmatics are logged as F04." },
+    { "id": "r2-F09", "severity": "minor", "status": "open", "evidence": "rc.artikel-genus-plural is unchanged („Unbestimmt heißt es ein (der, das) …“, and the table row has no case label). See F06." },
+    { "id": "r2-F10", "severity": "minor", "status": "fixed", "evidence": "t9 opens with „Liebe Kunden“ and says „Morgen ist der Supermarkt zu.“. The perspective still shifts from „der Supermarkt“ to „sind wir“, which is only a style point. The missing gloss is logged in F05." },
+    { "id": "r2-F11", "severity": "minor", "status": "open-class", "evidence": "There are 7 GRM-04 advisories, all false positives, and the detectors are unchanged. See F07." }
+  ],
+  "verdict": "Not exit-ready, but the round-2 fixes are real, and one data line separates the unit from 0 BLOCKER / 0 MAJOR. All 37 earlier findings were verified: 33 are fixed or fixed-in-unit, one is expected (the LEX-02 ratchet), and 3 are still open (r1-F24 and r2-F11, one detector class for the rule-smith; r2-F09, the rule-cards owner). The German is correct on every model surface, and du/Sie is right everywhere. The LS4 texts no longer contradict the story, the dictations match their audio, and the exam blocks match sd1.json in items, options, plays and word bands. One MAJOR is new: ls2-i05 grades „neun“ as WRONG for a total the learner hears as „neun Euro“, while q04 in the same unit accepts „zehn“ as well as „10“. The 6 minors are one over the exit allowance. F02, F03, F04 and the h1-01 part of F05 are data edits in the unit. F06 is for the rule-cards owner and F07 for the rule-smith.",
+  "scores": {
+    "D": 4,
+    "N": 4,
+    "H": 4,
+    "A": 3,
+    "P": 4,
+    "K": 5,
+    "E": 4
+  },
+  "scoreNotes": {
+    "D": "No errors on model surfaces. Two things keep it at 4: the explanations cite forms without quotation marks, so „die Äpfel ist Plural“ and „Das Verb ist steht …“ read like agreement errors in an agreement unit (F02), and t9 shifts from „der Supermarkt“ to „wir“.",
+    "N": "32 new words (the top of [24–32]), and no productive use exceeds the grammar ceiling. It stays at 4 because of isolated unglossed look-aheads (bezahlt, Durchsage, Essen und Trinken) and a Satzklammer preview on rc.moechte (F04, F05, F06).",
+    "H": "A believable Saturday: the flyer at home, the market, the supermarket. Every can-do is performed. The Sp2 round 2 is a role-play that fits its topic badly (F04).",
+    "A": "The keys are right, and every item can be derived from its German prompt. It scores 3 because a correct worded number is rejected (F01) and nine explanations do not name the order error the learner can actually make (F02).",
+    "P": "H1, H2, Sp3 and S2 match sd1.json exactly. The Sp2 round-2 questions are shop-shelf questions, not Teil-2 questions to the partner (F04).",
+    "K": "No contradiction remains between scenes, exam texts, check lines and the cast. The facts (sonntags zu, Pfand) are current.",
+    "E": "The writing band now matches its instruction, and the step minutes are plausible. No 360 px walkthrough was run in this round."
+  },
+  "total": 28,
+  "counts": {
+    "blocker": 0,
+    "major": 1,
+    "minor": 6
+  },
+  "findings": [
+    {
+      "id": "F01",
+      "reviewer": "R2",
+      "criterion": "A",
+      "severity": "major",
+      "scope": "instance",
+      "unitId": "a1.1-u04",
+      "path": "steps[1].inputItems[4] (a1.1-u04-ls2-i05)",
+      "quote": "promptDe „Alles zusammen kostet ___ Euro.“ · accepted [\"9\", \"9,00\", \"9.00\"] · exact \"number\" · audio ls2-l10 say „… Das macht zusammen neun Euro. …“ — compare check.proofItems[3] (q04) accepted [\"zehn\", \"10\"]",
+      "problem": "The learner hears „neun Euro“, and the gap takes a word: „Alles zusammen kostet neun Euro.“ is correct German and exactly what was said. src/lib/course-v2/checkItem.js grades exact:number items with checkNumber. An input without digits is compared only with accepted forms that contain no digits, and this item has none, so „neun“ is WRONG, not even TYPO, and no widget restricts the input to digits. The same unit accepts the number word in the same task shape (q04 „Arjun möchte ___ Eier.“ → „zehn“ or „10“), so the learner meets two conventions, and a correct listening answer is graded wrong.",
+      "fix": "Add „neun“ to accepted, with acceptedWhy „Zahl als Wort: so hört man es“. Alternatively, write the digit requirement into the prompt: „Schreiben Sie die Zahl: Alles zusammen kostet ___ Euro.“ (≤ 90 characters).",
+      "proposedRule": "ITM-07: a typed `exact: number` item whose key is a bare integer up to 100 must also accept its German number word, unless its promptDe asks for the digit („Schreiben Sie die Zahl“). Failing fixture: key „9“, accepted [„9“, „9,00“] and no „neun“. The test runs over all registered courses."
+    },
+    {
+      "id": "F02",
+      "reviewer": "R2",
+      "criterion": "A",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u04",
+      "path": "explanation.de of steps[0].pool.items[6..8] (ls1-p07, -p08, -p09); steps[1].pool.items[8] (ls2-p09); steps[2].pool.items[4..7] (ls3-p05, -p06, -p07, -p08); steps[2].reserve[1] (ls3-r02); steps[2].structuredInput[0], [3] (ls3-s01, ls3-s04)",
+      "quote": "ls1-p08 tiles [sind / die Äpfel / billig / heute] → „die Äpfel ist Plural, deshalb sind.“ · ls3-p06 tiles [wir / zwei Kilo Kartoffeln / brauchen] → „Menge ohne Artikel: zwei Kilo Kartoffeln.“ · ls3-s01 „Nur zehn Eier ist Plural.“ · ls1-p05 „Das Verb ist steht auf Position 2.“ · ls3-s04 „Stück sagt man bei Sachen, die man zählt …“",
+      "problem": "In sentence_building the verb form is a tile the learner is given, so the only error possible is its position (V2 / V1 / verb-final). Nine explanations explain agreement instead, and ls3-p06 explains the Nullartikel, which the tiles already contain. A learner who builds „Die Äpfel heute billig sind“ is told about the plural, not about position 2, although these items carry the v2 purpose. The explanations also cite German forms without quotation marks, while their en twins quote them. In a unit that teaches ist/sind agreement, the feedback therefore displays apparent agreement errors („die Äpfel ist Plural“, „Nur zehn Eier ist Plural“, „Das Verb ist steht …“). ls3-s04 puts a relative clause („Sachen, die man zählt“) on an A1.1 feedback surface (level profile: subordinateClausesMax 0, feedback de-a1).",
+      "fix": "Lead with the order rule and quote the forms, e.g. ls1-p08 „„sind“ steht auf Position 2 („die Äpfel“ = Plural).“, ls3-p06 „„brauchen“ steht auf Position 2.“, ls3-s01 „„kosten“ = Plural: nur „zehn Eier“ passt.“, ls3-s04 „Stück: für Eier, Birnen, Brötchen. Nicht für Reis oder Milch.“",
+      "proposedRule": "ITM-11: when the verb of a sentence_building item is a tile, its explanation.de must name the position (the word „Position“, or errorTags contains v2-inv), and German forms cited in any explanation.de are quoted („…“). Failing fixture: ls1-p08 as it stands."
+    },
+    {
+      "id": "F03",
+      "reviewer": "R2",
+      "criterion": "A",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u04",
+      "path": "steps[0].pool.generators[2] (lex.articlePlural, source [lx.brot, lx.kaese, lx.milch, lx.apfel])",
+      "quote": "a1.1/lexicon.json: lx.kaese plural null, plural_kind \"singular-only\" · lx.milch plural null, plural_kind \"singular-only\"",
+      "problem": "Two of the four lemmas that the LS1 generator drills for article and plural have no plural. SCHEMA §3.2 does not define what lex.articlePlural builds for a singular-only lemma, and no rule stops such a source. With count 1, about every second run draws Käse or Milch, so the generated card either asks for a plural that does not exist (an item without a derivable key) or depends on player behaviour nobody has specified. The LS3 source (Ei, Tomate, Kartoffel, Flasche) shows the intended kind.",
+      "fix": "Change the source to [\"lx.brot\", \"lx.apfel\", \"lx.banane\", \"lx.birne\"]. All four have plural_kind regular and are u04 lemmas.",
+      "proposedRule": "ITM-06 (or REF-01): every source lemma of lex.articlePlural has plural_kind regular or plural-only, unless SCHEMA §3.2 defines an article-only card for singular-only lemmas. Failing fixture: a pool whose lex.articlePlural drills lx.milch."
+    },
+    {
+      "id": "F04",
+      "reviewer": "R1",
+      "criterion": "P",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u04",
+      "path": "steps[4].task.parts[0] (sd1.sp2): cards, situationDe, modelTurns[4..7]; steps[4].task.openingLine",
+      "quote": "cards learner „Essen und Trinken – Reis“, partner „Essen und Trinken – Milch“ · „Entschuldigung, wo ist der Reis?“ – „Der Reis ist dort.“ · „Wo ist die Milch?“ – „Die Milch ist hier.“",
+      "problem": "In Sprechen Teil 2 the candidates ask each other real questions on the topic word (research/01: „Einkaufen“, „Brot“ → „Wo kaufst du Brot?“). Round 2, which the r2-F08 fix added, is labelled „Essen und Trinken“, but its model is a shop-shelf role-play. Asking where the rice is fits neither the topic nor two candidates at an exam table, and „Der Reis ist dort“ points to nothing. The model therefore trains an off-topic question for the round whose topic the learner reads. The label words „Essen“ and „Trinken“ are also unglossed u09 lexis (lx.essen, lx.trinken a1.1-u09). Round 1 (Einkaufen: price, Gramm) is the same role-play but fits its topic, which is acceptable as an A1.1 scaffold.",
+      "fix": "Either (a) name the second topic after what it asks („Im Supermarkt“) in the cards, situationDe and openingLine, so the location questions (the „wo“ half of cd.a1.produkt-infos) fit their topic, or (b) keep „Essen und Trinken“ and model a real Teil-2 exchange that still asks where: „Wo kaufen Sie Reis?“ – „Im Supermarkt.“ / „Wo kaufen Sie Milch?“ – „Auf dem Markt.“ (all u04 words).",
+      "proposedRule": null
+    },
+    {
+      "id": "F05",
+      "reviewer": "R2",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u04",
+      "path": "steps[3].blocks[0].items[0].promptDe (sd1-h1-01); steps[2].title, steps[2].inputItems[0].promptDe, check.proofItems[2].promptDe, steps[3].blocks[1].instructionsDe, steps[2].endLine, steps[6].endLine (Durchsage); steps[3].texts[8].glosses (t9), check.lines[1] (Kunden); steps[1].title, steps[1].microOutput.situationDe, steps[1].endLine (Markt)",
+      "quote": "„Wie viel bezahlt der Mann?“ (lx.bezahlen a1.1-u09) · „Hören Sie die Durchsage.“ (lx.durchsage a1.1-u10) · t9 „Liebe Kunden, …“ with glosses [Uhr, geöffnet, Montag] only (lx.kunde a1.2-u02) · „Auf dem Markt: Was möchten Sie?“ (no lx.markt in any lexicon)",
+      "problem": "Words the learner must read to do this unit's own tasks are allocated to later units, or to none. „bezahlt“ is the verb of an exam-item stem and is unglossed (u09). „Durchsage“ names the unit's own can-do (cd.a1.durchsage-geschaeft), the LS3 title, the q03 proof prompt and the H2 instruction, yet the lexicon teaches it in u10. „Kunden“ is glossed in ls3, t7 and t10 but not in t9 or in the check line ls7-l02. „Markt“, the LS2 setting, still has no lexicon entry (a residual of r2-F07). LEX-01 walks inputs and exam texts only, so nothing measures prompts, titles or endLines.",
+      "fix": "h1-01: „Wie viel Geld braucht der Mann?“ (u04 words; the key 3,50 Euro is unchanged), or keep the stem and add hint {de: „bezahlen = Geld geben“, en: „to pay“}. Add the „Liebe Kunden“ gloss to t9. Lexicon owner: allocate lx.durchsage and lx.markt (both Goethe-A1 list words, and this unit's own situation) to a1.1-u04, as receptive lemmas if newPerUnit 32 requires a swap, or gloss both at first use.",
+      "proposedRule": "LEX-01 (or a new LEX rule) also walks promptDe, options, instructionsDe, step titles and endLines at the unit's position, and a token allocated to a later unit there must be glossed or carry a hint. Failing fixture: h1-01 „Wie viel bezahlt der Mann?“ at a1.1-u04."
+    },
+    {
+      "id": "F06",
+      "reviewer": "R2",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u04",
+      "path": "content/course-v2/a1.1/rule-cards.json rc.artikel-genus-plural (shown in steps[0], steps[2]); rc.moechte (shown in steps[1])",
+      "quote": "rc.artikel-genus-plural „Unbestimmt heißt es ein (der, das) und eine (die).“ · table „unbestimmt | ein Apfel | ein Brot | eine Tomate“ (unchanged since r2) · rc.moechte „Mit einem zweiten Verb steht der Infinitiv am Ende: Ich möchte bezahlen.“",
+      "problem": "r2-F09 is still open. The card's rule holds only for the nominative and carries no case label, while this unit's frames are accusative (brauchen, möchte, kaufen) and its chunk is „Ich möchte einen Apfel“. A learner who applies the card writes ✗„Wir brauchen ein Käse / Ich möchte ein Apfel“, and u06 then has to unteach it (§9.5: a simplification that has become false in context). New in this round: rc.moechte previews the Satzklammer (möchte + Infinitiv), which the spine introduces with g.koennen at a1.1-u08, and uses bezahlen (a1.1-u09). No line, item or task in u04 uses möchte + Infinitiv, so the card states a rule the unit never practises, in a word the learner cannot yet read.",
+      "fix": "For the rule-cards owner. rc.artikel-genus-plural: label the row „unbestimmt (Nominativ)“ and add „Achtung: Ich möchte einen Apfel. (der → einen, Einheit 6)“. rc.moechte: drop the infinitive sentence at depth 1 (it belongs to u08/u09), or replace it with „Ich möchte ein Kilo Tomaten, bitte.“. Both cards stay within ruleCardMaxWords 60.",
+      "proposedRule": null
+    },
+    {
+      "id": "F07",
+      "reviewer": "R1",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u04",
+      "path": "GRM-04 advisories: start.folge.lines[0], [5]; steps[1].input.lines[7], [8]; steps[3].texts[1].lines[3], [4]; steps[4].task.modelTurns[3]",
+      "quote": "det.adjektiv-endung-unbestimmt on „bisschen“ · det.adjektiv-endung-nullartikel on „eine“ („für eine Wohnung“) and „möchten“ · det.trennbare-verben on „Was macht das zusammen?“ / „Das macht zusammen 7“ · det.imperativ-du-ihr [shape fallback] on „300“ / „200“ („300 Gramm, bitte.“)",
+      "problem": "All 7 advisories are false positives, and no construction goes beyond the ceiling. The detectors are unchanged since r1-F24 and r2-F11. The imperative shape fallback reads a sentence-initial numeral as a verb and will fire in every shopping, time and number unit. The Nullartikel detector fires on an indefinite article. Together they bury real advisories in noise.",
+      "fix": "No change to the unit. For the rule-smith: exclude digits and number words from the det.imperativ-du-ihr shape fallback, skip ein/eine/einen in det.adjektiv-endung-nullartikel, and add a stoplist for „bisschen“, the möchte paradigm and „macht (das) zusammen“.",
+      "proposedRule": "GRM-04 detector fixtures: „300 Gramm, bitte.“, „für eine Wohnung“, „ein bisschen Milch“, „Wir möchten Tomaten.“ and „Was macht das zusammen?“ must each produce no advisory. The test runs over all registered courses."
+    }
+  ],
+  "exitCheck": {
+    "blocker": 0,
+    "major": 1,
+    "minor": 6,
+    "criteriaBelow4": [
+      "A"
+    ],
+    "exit": false,
+    "note": "Exit needs 0 BLOCKER, 0 MAJOR, every criterion ≥ 4 and ≤ 5 logged MINOR. F01 is a one-string fix (add „neun“), and with F02 it lifts A to 4. F02 (explanations), F03 (generator source), F04 (Sp2 round 2) and the h1-01 and t9 parts of F05 are data edits inside the unit. After those edits the unit carries F05's lexicon-allocation residual (lexicon owner), F06 (rule-cards owner) and F07 (rule-smith): 3 logged minors. Class findings for the rule-smith: F01, F02, F03, F05 and F07, plus the still-open r1-F10 (TXT-02 double tolerance), r2-F01 (no rule reads `say`) and r2-F07 (LEX-01 skips the cliffhanger)."
+  },
+  "notes": [
+    "For the level reviewer: the u04 cliffhanger and the cast say that Priya and Arjun look for their own flat („Eine Wohnung in Leipzig … etwas für uns?“; casts/series.json: „in A1.1 ziehen die beiden in eine eigene Wohnung“). The level plan's u05, however, reads „Einzug in eine WG“ (curriculum/a1-1.json). Align u05's situation with the cliffhanger before u05 is authored. u04 needs no change.",
+    "The plan's third can-do for u04 (GI-A1 15, „um etwas bitten und jemandem etwas geben“) is not among spec.canDos, but the Sp3 part performs it. This is acceptable, because u06 („Ich brauche einen Laptop“) owns the bitten can-do. No finding."
+  ]
+}

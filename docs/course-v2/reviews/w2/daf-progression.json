@@ -1,0 +1,153 @@
+{
+  "review": "w2-daf-progression",
+  "role": "DaF-Curriculumdesignerin: grammar-spine progression A1.1→B2.2, realism of the level profiles, casts and du/Sie",
+  "date": "2026-09-27",
+  "scope": [
+    "content/course-v2/registries/grammar-spine.json",
+    "docs/course-v2/registries-notes/spine.md",
+    "content/course-v2/registries/level-profiles.json",
+    "content/course-v2/registries/text-types.json",
+    "content/course-v2/registries/rubrics/writing/course-micro.json",
+    "content/course-v2/registries/rubrics/speaking/course-micro-sp.json",
+    "content/course-v2/casts/{series,a1,a2,b1,b2}.json",
+    "docs/course-v2/curriculum/*.json (all eight plans, unit by unit)",
+    "docs/course-v2/research/06-grammar-progression.md, 14-lehrwerke-curricula.md; BLUEPRINT §2.1–2.8, §3.1–3.2, §9.1, §9.3; SCHEMA §4.2, §4.5–4.7; registries/detectors.json (cross-check only)"
+  ],
+  "method": "All 11 files parse (JSON.parse) and pass scripts/course-v2/check.mjs with 0 errors. The check schema is looser than SCHEMA.md for levels, rubrics and casts, so every file was also read against SCHEMA §4.2/§4.5/§4.6/§4.7. The spine was re-verified by script: no contrast partner is introduced after its point, every chunkFrom comes before its intro, and no unit has more than 2 intros. Per-level point counts: 23/21/18/17/15/18/19/14. Each plan unit's situations, writing Leitpunkte and chunks were compared with the spine intro units and with the exact detectors now published in registries/detectors.json. Casts were checked for exam facts, du/Sie plausibility, `since` switches and voice collisions within a band.",
+  "verdict": "The spine's order is sound DaF progression and matches the research consensus. It has Dativ via prepositions before dative verbs, weil/dass/wenn in A2.1, the Relativsatz and Konjunktiv II ladders, receptive→productive Passiv/Präteritum/KII-Vergangenheit, and B2 connectors, Nominalstil and Konjunktiv I in the right halves. It has no contrast or chunk ordering error, and no wrong exam fact in the cast arcs (Blue Card NE with A1, spouse-of-German A1, telc B1 partial retake, telc B1 HV1 heard once are all correct). The problems are: (1) three files lack fields SCHEMA requires (level profiles, the micro rubrics, the series beats); (2) exact detectors, now published, block core A1/A2 Redemittel several units before their points; (3) A1.1 is overloaded (23 points) with a productive Perfekt the blueprint places in A1.2; (4) a few labels misplace A1 material at B2, and a few items are missing.",
+  "findings": [
+    {
+      "severity": "blocker",
+      "owner": "levels",
+      "file": "content/course-v2/registries/level-profiles.json",
+      "issue": "All eight profiles lack fields that SCHEMA §4.6 requires: review.carryOverMinutes, pool.reserve and examStemChars. BLUEPRINT §2.6 binds the carry-over budget (A1.1 0, A1.2 1, A2 1.5, B1/B2 2 min/day), and SRS-01's cumulative-deck simulation reads it. The TXT-04 exemption for exam item stems reads examStemChars. check.mjs passes only because its levels schema is looser than SCHEMA (the file copies the older SCHEMA §15 excerpt).",
+      "fix": "Add review.carryOverMinutes (0 / 1 / 1.5 / 1.5 / 2 / 2 / 2 / 2), pool.reserve [4,6] and an examStemChars band per level to every profile. Size the band from the lane templates, e.g. A1 [20,90], A2 [30,120], B1 [40,160], B2 [60,220]. Ask the E0 owner to tighten the check schema so the omission fails."
+    },
+    {
+      "severity": "blocker",
+      "owner": "levels",
+      "file": "content/course-v2/registries/rubrics/writing/course-micro.json",
+      "issue": "course-micro.json and course-micro-sp.json are schema-invalid against SCHEMA §4.5. Missing: method, examMax, criteria[].scoredBy, and descriptors, which are required when scoredBy = ai. errorPolicy is missing too, so every error tag defaults to 'score'. A1/A2 micro-outputs would then be penalised for V2/INV, verb-final and adjective-ending errors, against BLUEPRINT §2.5 and memo 06 impl. 15: an inversion error at B1 is flagged, and a missing verb-final at A2 is feedback, not a penalty. Both files also cite the Goethe SD1 Prüfungsziele as source and splitVerified: true, although the rubric is our own design used A1–B2. The B-level Auftakt is scored 'for fluency and task only' (BLUEPRINT §3.2), but the fixed 1-point 'target' criterion makes 5/5 unreachable there.",
+      "fix": "Add method 'ai', examMax 5, scoredBy 'ai' and our own descriptors per level of each criterion (SCHEMA §15 has them). Add errorPolicy per band, e.g. a1: all tags flag except gender-article/register score; a2: verb-final, adj-ending, case-np, n-dekl flag; b1: v2-inv, adj-ending, n-dekl flag; b2: none flag. Set source to the BLUEPRINT §4.3 row and splitVerified to false or not-applicable. Make 'target' apply only when the micro-output has non-empty targets, and rescale max."
+    },
+    {
+      "severity": "blocker",
+      "owner": "casts",
+      "file": "content/course-v2/casts/series.json",
+      "issue": "series.json has no `beats` array. SCHEMA §4.7 and BLUEPRINT §2.7 fix every cross-course beat in P0 as {from: Uxx U12, to: next course U01, cliffhanger, resolution, recapDe}, so that B1.1 U1 (Wave 1) never waits for A2.2 U12 and every U1 stands alone for new buyers. Without the beats, Wave-1 authors of A1.2/A2.1/B1.1/B2.1 U01 and B1.2/B2.2 U01 have nothing to resolve or recap. The plans already imply beats: a2.2-u12 blog portrait → b1.1-u01 Olena reappears; b1.2 Priya's telc result → b2.1 move to Hamburg; Amal's written retake 'Ergebnis in B2.1'.",
+      "fix": "Add the 7 beats: a1.1-u12→a1.2-u01, a1.2-u12→a2.1-u01, a2.1-u12→a2.2-u01, a2.2-u12→b1.1-u01, b1.1-u12→b1.2-u01, b1.2-u12→b2.1-u01, b2.1-u12→b2.2-u01. Each gets a one-line cliffhanger, its resolution and a stand-alone recapDe, all consistent with the unit situations in the plans. Ask the E0 owner to add `beats` to scripts/course-v2/lib/schemas/casts.mjs so CON checks can read it."
+    },
+    {
+      "severity": "major",
+      "owner": "spine",
+      "file": "content/course-v2/registries/grammar-spine.json",
+      "issue": "The exact detectors published in registries/detectors.json block core A1/A2 Redemittel several units before their spine point, and the spine gives them no chunkFrom or whitelist. Examples: det.man (exact → g.muessen-duerfen-man, a1.2-u03) blocks „Wie schreibt man das?“ in the spelling unit a1.1-u02 and „Wie sagt man … auf Deutsch?“. det.akkusativ-pronomen-ihn (exact → g.akk-personalpronomen, a1.2-u09) blocks „Ich nehme ihn“ / „Wie finden Sie ihn?“ in a1.1-u04 (Einkaufen), a1.1-u06 and the clothes unit a1.2-u06. det.reflexiv-pronomen (exact → g.reflexiv-akk, a2.1-u08) blocks „Ich melde mich krank“ in a1.2-u05 (whose writing task is a Krankmeldung), „Ich möchte mich anmelden“ in a1.2-u04 (Bürgerbüro), and „Ich freue mich“, which the a2.1-u01 writing Leitpunkt asks for („sagen, warum Sie sich freuen“). GRM-04 is hard for exact detectors, so expected answers and model texts of these units would fail.",
+      "fix": "Use the free chunk slots. Set g.akk-personalpronomen chunkFrom a1.2-u06 (u06 has no chunk) and g.reflexiv-akk chunkFrom a1.2-u05 (u05's table entry is 1/0; „Mir tut der Kopf weh“ counts for dativverben via a1.1-u06). Add a spine-level Redemittel whitelist in spine.md §4 D10 for „Wie schreibt man das?“, „Wie sagt man … auf Deutsch?“, „Ich freue mich (auf/über …)“ and „Ich möchte mich anmelden“ with their first unit, and hand it to E0-4 for the detectors' `whitelist` fields. Alternatively, the a2.1-u01 Leitpunkt changes to „sagen, warum Sie froh sind“."
+    },
+    {
+      "severity": "major",
+      "owner": "spine",
+      "file": "content/course-v2/registries/grammar-spine.json",
+      "issue": "A1.1 carries 23 new points and A1.2 carries 21. Memo 06 impl. 1 recommends 11–15 per half-level, and the A1.1 budget is about 34 h in the free taster. The spine also makes the Perfekt productive in A1.1 (g.perfekt-haben a1.1-u11, g.perfekt-sein a1.1-u12). BLUEPRINT §2.5 rule 6 says the systematic Perfekt goes early in A1.2 (haben ≤ U5, sein ≤ U8), and memo 06 impl. 2 says it enters A1.1 as 6–10 chunk verbs. Memo 14 does support the end of A1.1 as the Lehrwerk placement. a1.1-u12, the last unit before the Halbtest, adds two new productive points (Perfekt sein + wollen). Two A1.1 'points' are lexis rather than grammar and inflate the count: g.zeitangaben-vergangenheit (gestern, letzte Woche) and g.komposita (no inventory tag, consensus single).",
+      "fix": "Use the receptive/productive split the spine already has. g.perfekt-haben: receptive a1.1-u11 → productive a1.2-u02 (or u05). g.perfekt-sein: receptive a1.1-u12 → productive a1.2-u08. Both keep the GRM-03 milestones and the Menschen/Schritte receptive placement. Reclassify g.zeitangaben-vergangenheit and g.komposita as Wortschatz/Redemittel blocks, not spine points; if they stay, put them in spine.md §6 with the reason. Record the A1.1 load decision in spine.md §8 item 7 as resolved."
+    },
+    {
+      "severity": "major",
+      "owner": "spine",
+      "file": "content/course-v2/registries/grammar-spine.json",
+      "issue": "The Präteritum of full verbs is receptive only from a2.2-u01, and the Präteritum detector is exact (lexicon). The A2.1 plans prescribe narrative and exam inputs that need it: a2.1-u11 Erzähltext „Erinnerungen an meinen ersten Schultag“, a2.1-u12 Erzähltext „Die Hochzeit meiner Cousine“, and the Goethe A2 Lesen newspaper texts in A2.1 LS4 blocks (GRM-04 is hard on exam texts). The Goethe A2 inventory (memo 06 F2) lists the Präteritum of kommen and sagen, but productive use of kam/sagte stays blocked until b1.1-u01. GRM-03 counts receptive as 'in', but the learner can never write them before the ga2 exam.",
+      "fix": "Move the receptive intro of g.praeteritum to a2.1-u11 (1 new point there now). It pairs with g.praeteritum-modalverben, and Menschen places Präteritum review in A2. Keep productive b1.1-u01. Give the detector form-level scope, like the comparison detector: kam, sagte and gab (es) are productive from a2.2-u01, so the Goethe A2 inventory is productive by a2.2-u12. Update spine.md §5 E3 and §8 item 1."
+    },
+    {
+      "severity": "major",
+      "owner": "spine",
+      "file": "content/course-v2/registries/grammar-spine.json",
+      "issue": "The label of g.negation-system (b2.1-u01) presents „nicht mehr / noch nicht / gar nicht“ as B2.1 content. These are A1/A2 forms: schon – noch nicht and noch – nicht mehr belong to the A1.2/A2 Lehrwerk units, and the A2.2 plans already use them (a2.2 „weil ich noch nicht so gut Deutsch spreche“, „Abo, das Sie nicht mehr brauchen“). No earlier point licenses them, so the syllabus page and the B2.1 rule card mislead: they teach A1 material as new B2 grammar and leave A1–A2 without a rule card for it.",
+      "fix": "Add „noch nicht / nicht mehr / schon / noch“ as the named increment of g.nicht-position-gern: a depth-2 card rc.nicht-position-gern-2 in A1.2 or A2.1, with the unit in spine.md §7. Reword the b2.1-u01 label to what is new at B2: Satz- vs Teilnegation, Stellung von nicht im Mittelfeld, nicht … sondern bei Teilnegation, keineswegs/keinesfalls/gar nicht als Verstärkung."
+    },
+    {
+      "severity": "major",
+      "owner": "spine",
+      "file": "content/course-v2/registries/grammar-spine.json",
+      "issue": "Coverage gaps. (a) Wortbildung -heit/-keit (-schaft) has no point. Memo 06 impl. 13 names „-ung/-heit/-keit“ explicitly for the Wortbildung strand, but the spine has -ung, -t/-kunft and the B2 adjective suffixes only. (b) The indefinite pronouns jemand/niemand/etwas/nichts/alles have no point. They are A2 standard and are needed in A2 problem and complaint units (a2.2-u03/u06/u07). (c) Plain „nicht X, sondern Y“ is licensed only as part of the two-part connector g.nicht-nur-sowohl (b1.2-u03). A1–A2 texts need it constantly („Ich komme nicht aus Indien, sondern aus …“).",
+      "fix": "Add g.wortbildung-heit-keit to A2.2, where u03, u07, u08, u10 and u11 each have one free intro slot (e.g. a2.2-u08 Umwelt: Sauberkeit, Sicherheit). Add g.indefinitpronomen-personen (jemand, niemand, etwas, nichts, alles) to a2.1-u10 or a2.2-u03. Add „nicht …, sondern …“ as an increment of g.nicht-position-gern (A1.2) or as its own point in A2.1, with contrast g.negation-nicht. Update rule-card index §7."
+    },
+    {
+      "severity": "major",
+      "owner": "spine",
+      "file": "content/course-v2/registries/grammar-spine.json",
+      "issue": "All 145 points still carry `detectors: []`. SCHEMA §4.2 and BLUEPRINT §9.3 ('each spine point names its detectors') make the spine the place GRM-04 reads, and spine.md §8 item 1 promised to fill the ids once E0-4 published. registries/detectors.json now exists: 129 detectors whose spec.spinePoints resolve to 109 spine points, with no unknown refs. The two directions can now drift.",
+      "fix": "Fill each point's `detectors` from detectors.json spec.spinePoints, generated rather than hand-typed, and keep [] only for the 36 points without a detector. Add a check that the two directions agree, or agree with E0-4 that spinePoints is canonical and say so in SCHEMA."
+    },
+    {
+      "severity": "major",
+      "owner": "levels",
+      "file": "content/course-v2/registries/level-profiles.json",
+      "issue": "lexis.newPerUnit bands contradict the plans' per-unit vocabTarget in 11 units. a1.1 [28,30]: u01 26, u02 32, u04 32, u11 26, u12 24. a1.2 [25,28]: u05 30, u10 24, u11 22, u12 18. a2.2 [28,30]: u12 22. b2.2 [60,70]: u12 57. Totals are within LEX-05 (±10 %), and low U12 transfer units are sound pedagogy, but a per-unit reading of newPerUnit fails them. The allocator would also receive two different numbers per unit. The A1 row also differs from BLUEPRINT §2.6 (A1 26–29).",
+      "fix": "Declare newPerUnit as the level mean band (say so in SCHEMA §4.6 or a note) and let per-unit targets come from the plans. Alternatively, widen: a1.1 [24,32], a1.2 [18,30], a2.2 [22,30], b2.2 [55,70], and allow U12 (transfer/review) at up to −30 %. Align a1.1/a1.2 with the §2.6 table."
+    },
+    {
+      "severity": "major",
+      "owner": "levels",
+      "file": "content/course-v2/registries/text-types.json",
+      "issue": "lengthByLevel does not say whether a band applies to course inputs, exam texts or learner writing, and its upper bounds exceed the TXT-03 hard caps for course inputs (B texts 150–450 words; A1 dialogues 60–120 s). Examples: tt.zeitungsartikel b2.2 [250,700], tt.radiointerview b2.2 [300,1000], tt.dialog b2.2 [40,900], tt.erzaehltext b2.2 [200,900], tt.forumsbeitrag b2.2 [100,700]. A unit author who takes the text-type band would write an input TXT-03 rejects. Exam texts are governed by the Teil templates (TXT-02) anyway.",
+      "fix": "Split each band into {input: [..], writing: [..]}, cap input at TXT-03 (A: per the level's dialogue/text limits; B: ≤ 450 words), and leave exam lengths to the Teil templates. Document the semantics in the file's notes and in SCHEMA §4.7."
+    },
+    {
+      "severity": "major",
+      "owner": "casts",
+      "file": "content/course-v2/casts/series.json",
+      "issue": "Each member has one `exam.lane`, but the arcs span four exams. Priya is sd1 → ga2 (A2.2) → tb1 (B1.2) → tb2 (B2.2), and Emre is sd1 → ga2 → tb1. The structured lane says sd1 in every band. CON-01, which checks persona facts, would treat Priya's B-level scenes as SD1 preparation, and unit authors reading the field get the wrong lane.",
+      "fix": "Model the exam per band: exam: {byBand: {a1: {lane: 'sd1', arc}, a2: {lane: 'ga2', arc}, b1: {lane: 'tb1', arc}, b2: {lane: 'tb2', arc}}}. This is a schema change through the SCHEMA owner; E0 updates casts.mjs. Until then, split each arc into the band files and keep the lane of the band the member first sits."
+    },
+    {
+      "severity": "minor",
+      "owner": "casts",
+      "file": "content/course-v2/casts/series.json",
+      "issue": "Some du/Sie relations are inconsistent or unmotivated. (a) Emre–Amal is 'du' with no `since`, yet Emre only reaches Leipzig in A2, and Priya, Amal's neighbour for a year, switches to du only at a2.1-u01. (b) Amal–Tomasz and Amal–Lina are du with no stated meeting context. The Sprachcafé rule „in dem sich alle duzen“ sits on Ingrid Hahn, who has no relation with Amal. (c) From b2.1-u03 the whole team at Kranich Logistik duzt, which leaves Priya no Sie-addressee in her firm except Herr Wendt. b2.2-u03 („Nachricht an die Vorgesetzte“) then trains a semi-formal telc B2 register against a du relation. (d) Ages are static across a story that spans years („nach zwei Jahren“ in b1.1-u01), e.g. Priya is 28 in A1.1 and in B2.",
+      "fix": "(a) Add since: 'a2.1-u01' (or the Sprachcafé unit) to Emre–Amal. (b) Add Ingrid Hahn–Amal 'du' or name where they meet. (c) Keep one Sie-addressee above the team (e.g. a Bereichsleiterin) for B2 semi-formal writing, or point b2.2-u03 at Herr Wendt. (d) Define age as 'age at A1.1' in a note, or give an age per band."
+    },
+    {
+      "severity": "minor",
+      "owner": "casts",
+      "file": "content/course-v2/casts/a1.json",
+      "issue": "Named characters in the same band share an Azure voice, and the collision is not declared on the characters themselves; some are declared only on ensemble roles. A1: Arta and Sophie (de-DE-MajaNeural −10 %), Elif and Frau Hoffmann (SeraphinaMultilingual). A2: Herr Seidel and Herr Fiedler (Bernd), Frau Kowalski and Frau Engel (Louisa). B1: Anna and Nadine (Maja), Jan Wolf and Samir (Conrad), Olena and Frau Schubert (Louisa), Herr Brandt and Herr Jung (Klaus), Felix and Rico (FlorianMultilingual), Frau Otto and Frau Kühn (Katja). B2: Kerstin Albers and Frau Brodersen (Louisa), Frau Jansen and Esther Adeyemi (Elke), Katharina Vogt and Frau Wiese (Katja), Thu and Amal (Tanja).",
+      "fix": "Declare 'nicht in Szenen mit …' on the named members, as the ensembles already do, or give the second member a different voice or rate (e.g. ±10 %), so AUD checks and scene authors can see the constraint."
+    },
+    {
+      "severity": "minor",
+      "owner": "spine",
+      "file": "content/course-v2/registries/grammar-spine.json",
+      "issue": "g.korrelat-es-da (b2.1-u02) and g.praepositionaladverb (a2.2-u08) overlap. The A2.2 label already teaches da(r)- + dass-Satz („auch mit dass-Satz“), and the B2.1 label teaches „da(r)- + Präposition vor dass- und zu-Sätzen (Ich lege Wert darauf, dass …)“ as new again. That is one form with two intros, against the GRM-02 intent.",
+      "fix": "Reword the B2.1 label to its real increment: the Korrelat es (Es fällt mir schwer, …), da(r)- before zu-Sätze, and obligatory vs optional Korrelat. Mark darauf, dass … as Wiederholung from a2.2-u08."
+    },
+    {
+      "severity": "minor",
+      "owner": "spine",
+      "file": "content/course-v2/registries/grammar-spine.json",
+      "issue": "Some labels, and so the rule cards, are incomplete. g.dativverben-pronomen lists „mir, dir, ihm, ihr, Ihnen“ without uns, euch, ihnen, and no later point adds the plural dative pronouns. g.praep-akkusativ lists „für, ohne, um, durch, bis“ without gegen, which belongs to the standard A1 set.",
+      "fix": "Add uns/euch/ihnen to g.dativverben-pronomen (or as the named increment on a depth-2 card at a2.1-u03), and add gegen to g.praep-akkusativ."
+    },
+    {
+      "severity": "minor",
+      "owner": "spine",
+      "file": "content/course-v2/registries/grammar-spine.json",
+      "issue": "Forms that later points license appear early in the plans with no chunk path. (a) n-Deklination forms (Herrn Brandt, den Kunden, mit dem Kollegen) are unavoidable in the A2 workplace units with the Brandt cast, before g.n-deklination (b1.1-u02). (b) The zu-infinitive is exact-detected, and B1.1 u01–u06 writing tasks (Forumsbeitrag b1.1-u05, Anfrage) naturally call for „Ich habe vor, … zu …“ / „Es ist wichtig, … zu …“ before b1.1-u07. Only „Hast du Lust, … zu …?“ is whitelisted.",
+      "fix": "(a) Whitelist „Herr/Herrn + Name“ in Anrede and address from A1.2 and note n-Dekl as glossed receptive in A2. (b) Either move g.zu-infinitiv to b1.1-u03 or u04 (each has 1 intro; memo 06 places it in B1.1 in all families) or add „Ich habe vor, … zu …“ as a Redemittel whitelist from b1.1-u01."
+    },
+    {
+      "severity": "minor",
+      "owner": "levels",
+      "file": "docs/course-v2/curriculum/b1-2.json",
+      "issue": "The b1.2-u12 writing Leitpunkt asks the learner to write „was gewesen wäre, wenn sie eingetroffen wäre“, i.e. a productive Konjunktiv II der Vergangenheit, which is productive only from b2.1-u04. The plan says „produktiv nur in festen Rahmen“, but the frame is not written down anywhere a detector or grader can read. Similar case: a2.1-u01/a2.2-u02 Leitpunkte „fragen, ob …“ come before g.indirekte-frage (spine.md E8).",
+      "fix": "Name the fixed frames in the unit spec („Was wäre gewesen, wenn …?“ + „Dann hätten wir heute …“) as a whitelisted pattern for b1.2-u11/u12, or rephrase the Leitpunkt („welche Vorhersage Sie überrascht hat und warum“). Keep E8's direct-question model texts."
+    },
+    {
+      "severity": "minor",
+      "owner": "levels",
+      "file": "content/course-v2/registries/text-types.json",
+      "issue": "tt.email-halbformell has parts [anrede, gruss] with no betreff. The B2 plans require „mit Betreff, Anrede und Gruß“ for semi-formal e-mails (b2.1-u04, b2.2-u08), and the tb2 letter is semi-formal. A pre-check driven by `parts` would not ask for the Betreff.",
+      "fix": "Add betreff (and einleitung/schluss from B1.2 on) to tt.email-halbformell, or split it into a B-level variant with those parts."
+    }
+  ]
+}

@@ -16,12 +16,35 @@
 // The regexes are the /course/* URL shapes App.jsx routes; /course/:level/:itemId
 // (the legacy per-item lesson page) and complete/certificate keep the full
 // chrome on purpose — they are reading pages, not a stage.
-const PLAYER_ROUTE = /^\/course\/[^/]+\/(l\/[^/]+|checkpoint\/[^/]+|review)\/?$/;
+//
+// Course v2 (docs/course-v2/BLUEPRINT.md §7.1): the unit player /course/:level/u/:nr,
+// the Plateau /course/:level/p/:nr and the Halbtest /course/:level/abschluss are stages
+// ('player'; each renders GameTopBar's own X back to the course home). The v2 course home
+// /course/:level/v2 is 'learn' (owner feedback 2026-09-30, "Duolingo style, step by
+// step"): the site Navbar stays, but the page brings its own four-tab bar (Lernen ·
+// Kursplan · Grammatik · Wörter), so the app BottomNav and the marketing Footer go —
+// two fixed tab bars stacked took a third of a phone screen.
+//
+// The two level reference pages /course/:level/grammatik and /course/:level/wortschatz (the
+// book's back matter, read inside the course; the v2 tab bar's Grammatik · Wörter destinations)
+// are 'player' too: ReferenceShell renders its own sticky bar with the X back to the course home
+// and the two pages as tabs. Under the 'full' chrome that bar (sticky top-0 z-30) sat beneath the
+// fixed site Navbar (z-50, h-16), so the X and both tabs were covered and could not be tapped, and
+// the 1188px marketing Footer hung under a course reading page.
+const PLAYER_ROUTE = /^\/course\/[^/]+\/(l\/[^/]+|checkpoint\/[^/]+|review|u\/[^/]+|p\/[^/]+|abschluss|grammatik|wortschatz)\/?$/;
 const COURSE_HOME_ROUTE = /^\/course\/[^/]+\/?$/;
+const LEARN_ROUTE = /^\/course\/[^/]+\/v2\/?$/;
 
 export const chromeFor = (pathname) => {
   const p = String(pathname || '');
   if (PLAYER_ROUTE.test(p)) return 'player';
+  if (LEARN_ROUTE.test(p)) return 'learn';
   if (COURSE_HOME_ROUTE.test(p)) return 'course';
   return 'full';
+};
+
+/** Whether the app's mobile BottomNav (fixed, h-16, signed-in only) renders on this route. */
+export const hasBottomNav = (pathname) => {
+  const c = chromeFor(pathname);
+  return c === 'full' || c === 'course';
 };

@@ -1,0 +1,1079 @@
+{
+  "level": "a2.1",
+  "code": "A2.1",
+  "cefr": "A2",
+  "targetExams": [
+    "Goethe-Zertifikat A2",
+    "telc Deutsch A2 (Start Deutsch 2)",
+    "DTZ Deutsch-Test für Zuwanderer (A2-Bereich; nur im Integrationskurssystem)"
+  ],
+  "hours": {
+    "guided": 44,
+    "total": 69
+  },
+  "vocabTarget": {
+    "newWords": 336,
+    "cumulative": 986
+  },
+  "units": [
+    {
+      "nr": 1,
+      "id": "a2.1-u01",
+      "title": "Kontakte knüpfen: Smalltalk bei der Arbeit",
+      "titleEn": "Making contacts: small talk at work",
+      "situation": "In der Mittagspause erzählen Sie neuen Kolleginnen und Kollegen, woher Sie kommen, warum Sie hier sind und was Sie schon erlebt haben.",
+      "handlungsfeld": "Soziale Kontakte (RC D) · Migrationssituation (RC A) · privat/beruflich",
+      "unitType": "situation",
+      "canDo": [
+        {
+          "de": "Ich kann einfache Informationen über mich, meine Familie und mein Umfeld austauschen, z. B. in der Mittagspause.",
+          "source": "04-cando-a1-a2 (A2.1 #1) · RC 56·A2"
+        },
+        {
+          "de": "Ich kann ein sehr kurzes Kontaktgespräch führen.",
+          "source": "04-cando-a1-a2 (A2.1 #1) · GER-R·A2 (Begleitband Anh. 2)"
+        },
+        {
+          "de": "Ich kann kurz und einfach über ein Ereignis oder eine Tätigkeit berichten.",
+          "source": "04-cando-a1-a2 (A2.1 #13) · GI-A2F 16"
+        },
+        {
+          "de": "Ich kann eine Abfolge von einfachen Ausdrücken und Sätzen verfassen, die mit „und“, „oder“ und „weil“ verbunden sind.",
+          "source": "04-cando-a1-a2 (A2.1 #13) · GER-R·A2 (Begleitband Anh. 2)"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Nebensatz mit weil (Verb am Ende)",
+          "new": true,
+          "lehrwerk": "Schritte plus Neu 3 L1; Netzwerk neu A2 K1; Menschen A2 L8"
+        },
+        {
+          "point": "Perfekt: Wiederholung (haben/sein, trennbare, untrennbare und -ieren-Verben)",
+          "new": false,
+          "lehrwerk": "Menschen A2 L1; Schritte plus Neu 3 L1; Netzwerk neu A2 K1"
+        },
+        {
+          "point": "Präteritum war/hatte: Wiederholung",
+          "new": false,
+          "lehrwerk": "Menschen A2 L1; Menschen A1 L19"
+        }
+      ],
+      "vocabTheme": "Herkunft, Ankommen, erste Eindrücke",
+      "vocabTarget": 28,
+      "keyWords": [
+        "der Grund",
+        "die Heimat",
+        "die Erfahrung",
+        "der Eindruck",
+        "die Mittagspause",
+        "die Kantine",
+        "die Gegend",
+        "der Alltag",
+        "kennenlernen",
+        "vermissen",
+        "fremd",
+        "neugierig",
+        "allein",
+        "zufrieden"
+      ],
+      "reading": {
+        "textType": "Persönliche E-Mail einer Freundin, die in eine neue Stadt gezogen ist",
+        "words": 130
+      },
+      "listening": {
+        "textType": "Smalltalk-Dialog in der Mittagspause",
+        "seconds": 90
+      },
+      "writing": {
+        "task": "SMS an eine Freundin: Sie haben in der Kantine eine neue Kollegin aus Ihrem Heimatland kennengelernt – erzählen, wer sie ist, sagen, warum Sie sich freuen (weil), und fragen, ob Ihre Freundin sie am Wochenende kennenlernen möchte",
+        "words": 25,
+        "examTeil": "Goethe A2 Schreiben Teil 1"
+      },
+      "speaking": {
+        "task": "Mit vier Wortkarten (Herkunft? Arbeit? Familie? Sprachen?) Fragen zur Person stellen und beantworten",
+        "examTeil": "Goethe A2 Sprechen Teil 1"
+      },
+      "pronunciation": "Wortakzent im Partizip II: ANgekommen – beSUCHT – stuDIERT",
+      "examTeile": [
+        "Goethe A2 Lesen Teil 3",
+        "Goethe A2 Hören Teil 3",
+        "Goethe A2 Schreiben Teil 1",
+        "Goethe A2 Sprechen Teil 1",
+        "telc A2 Sprechen Teil 1",
+        "DTZ Sprechen Teil 1"
+      ],
+      "landeskunde": "Smalltalk in D-A-CH: übliche Themen und Tabus"
+    },
+    {
+      "nr": 2,
+      "id": "a2.1-u02",
+      "title": "Eine Wohnung finden und einrichten",
+      "titleEn": "Finding and furnishing a flat",
+      "situation": "Sie lesen Wohnungsanzeigen, vereinbaren am Telefon eine Besichtigung und richten nach dem Einzug Ihr Zimmer ein.",
+      "handlungsfeld": "Wohnen (RC 12) · privat/öffentlich",
+      "unitType": "situation",
+      "canDo": [
+        {
+          "de": "Ich kann Wohnungsanzeigen die relevanten Informationen entnehmen und die wichtigsten Abkürzungen verstehen.",
+          "source": "04-cando-a1-a2 (A2.1 #8) · RC 154·A2"
+        },
+        {
+          "de": "Ich kann, auch telefonisch, einen Besichtigungstermin vereinbaren, absagen und neu vereinbaren.",
+          "source": "04-cando-a1-a2 (A2.1 #8) · RC 155·A2"
+        },
+        {
+          "de": "Ich kann bei Besichtigungen den Ausführungen von Vermietern Informationen zu Preisen und Terminen entnehmen.",
+          "source": "04-cando-a1-a2 (A2.1 #8) · RC 155·A2"
+        },
+        {
+          "de": "Ich kann mit einer Reihe von Sätzen und mit einfachen Mitteln meine Wohnsituation beschreiben.",
+          "source": "04-cando-a1-a2 (A2.1 #1) · GER-R·A2 (gekürzt)"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Wechselpräpositionen: Wohin? + Akkusativ (neu) im Kontrast zu Wo? + Dativ (aus A1.2)",
+          "new": true,
+          "lehrwerk": "Menschen A2 L2; Schritte plus Neu 3 L2; Netzwerk neu A2 K10 (dort A2.2)"
+        },
+        {
+          "point": "Positionsverben stellen/stehen, legen/liegen, hängen",
+          "new": true,
+          "lehrwerk": "Schritte plus Neu 3 L2; Menschen A2 L2"
+        }
+      ],
+      "vocabTheme": "Wohnungssuche, Möbel, Einzug",
+      "vocabTarget": 28,
+      "keyWords": [
+        "die Anzeige",
+        "die Besichtigung",
+        "die Nebenkosten",
+        "die Kaution",
+        "der Quadratmeter",
+        "der Flur",
+        "das Regal",
+        "die Kommode",
+        "der Teppich",
+        "die Wand",
+        "stellen",
+        "legen",
+        "hängen",
+        "einziehen"
+      ],
+      "reading": {
+        "textType": "Wohnungsanzeigen im Internet (Situationen zuordnen, eine ohne Lösung)",
+        "words": 150
+      },
+      "listening": {
+        "textType": "Telefonat mit einer Vermieterin: Besichtigungstermin (Telefonnotiz)",
+        "seconds": 75
+      },
+      "writing": {
+        "task": "E-Mail an die Vermieterin nach der Besichtigung (drei Punkte): Interesse zeigen und begründen, fragen, ab wann die Wohnung frei ist, nach der Kaution fragen. Spur DTZ: A oder B wählen, vier Leitpunkte (zusätzlich einen Termin für den Mietvertrag vorschlagen), ca. 45 Wörter",
+        "words": 35,
+        "examTeil": "Goethe A2 Schreiben Teil 2"
+      },
+      "speaking": {
+        "task": "Gemeinsam etwas planen: einen Termin für den Umzug finden (zwei Terminkalender)",
+        "examTeil": "Goethe A2 Sprechen Teil 3"
+      },
+      "pronunciation": "Lange und kurze Vokale: stellen – stehen, legen – liegen, Bett – Beet",
+      "examTeile": [
+        "Goethe A2 Lesen Teil 4",
+        "telc A2 Lesen Teil 3",
+        "DTZ Lesen Teil 2",
+        "DTZ Lesen Teil 4",
+        "DTZ Lesen Teil 5",
+        "telc A2 Hören Teil 1",
+        "telc A2 Hören Teil 3",
+        "Goethe A2 Schreiben Teil 2",
+        "DTZ Schreiben",
+        "Goethe A2 Sprechen Teil 3",
+        "telc A2 Sprechen Teil 3"
+      ],
+      "landeskunde": "Kaltmiete, Warmmiete, Kaution und WG-Kultur"
+    },
+    {
+      "nr": 3,
+      "id": "a2.1-u03",
+      "title": "Immer online? Handy, Internet, Nachrichten",
+      "titleEn": "Always online? Phone, internet, messages",
+      "situation": "Ihr Handy zeigt eine Fehlermeldung: Sie lösen das Problem, lesen eine Meldung über Handynutzung und sprechen mit Freunden über Ihre Mediengewohnheiten.",
+      "handlungsfeld": "Mediennutzung (RC 9) · privat",
+      "unitType": "situation",
+      "canDo": [
+        {
+          "de": "Ich kann einfache Warnhinweise und Fehlermeldungen im Internet verstehen.",
+          "source": "04-cando-a1-a2 (A2.1 #10) · RC 139·A2"
+        },
+        {
+          "de": "Ich kann kurzen Berichten, die stark auf Namen, Zahlen, Überschriften und Bildern aufbauen, wichtige Informationen entnehmen.",
+          "source": "04-cando-a1-a2 (A2.1 #10) · RC 138·A2"
+        },
+        {
+          "de": "Ich kann erklären, was ich an etwas mag bzw. nicht mag.",
+          "source": "04-cando-a1-a2 (A2.1 #3) · GI-A2F 16"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Nebensatz mit dass (Ich finde, dass … / Ich glaube, dass …)",
+          "new": true,
+          "lehrwerk": "Menschen A2 L10; Schritte plus Neu 3 L6; Netzwerk neu A2 K3"
+        },
+        {
+          "point": "Verben mit Dativ (Person) und Akkusativ (Sache) mit Nomen: schicken, schreiben, zeigen (Ich schicke meiner Schwester ein Foto.) – in A1 nur als feste Wendung (Kannst du mir … geben?; schenken); Stellung mit Pronomen in E12",
+          "new": true,
+          "lehrwerk": "Menschen A1 L15; Schritte plus Neu 2 L13"
+        }
+      ],
+      "vocabTheme": "Handy, Internet, soziale Medien",
+      "vocabTarget": 28,
+      "keyWords": [
+        "das Smartphone",
+        "das Gerät",
+        "der Akku",
+        "die Sprachnachricht",
+        "der Bildschirm",
+        "das Netz",
+        "die Datei",
+        "die Meldung",
+        "die Einstellung",
+        "der Nutzer",
+        "hochladen",
+        "speichern",
+        "löschen",
+        "teilen"
+      ],
+      "reading": {
+        "textType": "Zeitungstext mit Zahlen: Wie lange sind wir jeden Tag online?",
+        "words": 150
+      },
+      "listening": {
+        "textType": "Radiointerview: eine Woche ohne Smartphone (Ja/Nein)",
+        "seconds": 120
+      },
+      "writing": {
+        "task": "SMS an einen Freund: Ihr Handy ist kaputt – sagen, was passiert ist, wie er Sie erreicht, und den Treffpunkt bestätigen",
+        "words": 25,
+        "examTeil": "Goethe A2 Schreiben Teil 1"
+      },
+      "speaking": {
+        "task": "Über ein Thema sprechen: Aufgabenkarte „Handy und Internet“ mit vier Stichpunkten, danach Rückfragen",
+        "examTeil": "Goethe A2 Sprechen Teil 2"
+      },
+      "pronunciation": "Wortakzent in Anglizismen und Fremdwörtern: das InterNET, der ComPUter, die APP",
+      "examTeile": [
+        "Goethe A2 Lesen Teil 1",
+        "Goethe A2 Hören Teil 4",
+        "DTZ Hören Teil 4",
+        "Goethe A2 Schreiben Teil 1",
+        "Goethe A2 Sprechen Teil 2"
+      ],
+      "landeskunde": "Handy-Etikette: im Zug, im Restaurant, am Arbeitsplatz"
+    },
+    {
+      "nr": 4,
+      "id": "a2.1-u04",
+      "title": "Einkaufen: fragen, vergleichen, bestellen",
+      "titleEn": "Shopping: asking, comparing, ordering",
+      "situation": "Sie brauchen für Ihre neue Wohnung ein Haushaltsgerät, z. B. einen Staubsauger oder eine Kaffeemaschine: Sie fragen im Kaufhaus und am Telefon nach, vergleichen zwei Angebote und bestellen online.",
+      "handlungsfeld": "Einkaufen (RC 7) · öffentlich",
+      "unitType": "situation",
+      "canDo": [
+        {
+          "de": "Ich kann, auch telefonisch und online, Informationen zu Produkten erfragen, z. B. Herkunft, vorrätige Modelle, Haltbarkeit.",
+          "source": "04-cando-a1-a2 (A2.1 #4) · RC 124·A2"
+        },
+        {
+          "de": "Ich kann einfache Online-Transaktionen erledigen, wie zum Beispiel etwas bestellen.",
+          "source": "04-cando-a1-a2 (A2.1 #4) · GER-R·A2 (Online-Interaktion)"
+        },
+        {
+          "de": "Ich kann auf einfache Weise sagen, wie ich alltägliche Dinge finde, z. B. ein Kleidungsstück.",
+          "source": "04-cando-a1-a2 (A2.1 #4) · RC 43·A2"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Adjektivdeklination nach unbestimmtem Artikel, kein- und Possessivartikel (Nom., Akk., Dat.)",
+          "new": true,
+          "lehrwerk": "Menschen A2 L4; Netzwerk neu A2 K5–6; Schritte plus Neu 4 L9–10 (dort A2.2)"
+        },
+        {
+          "point": "Indefinitpronomen einer/eins/eine, keiner, welche",
+          "new": true,
+          "lehrwerk": "Schritte plus Neu 3 L3; Netzwerk neu A2 K12 (dort A2.2)"
+        },
+        {
+          "point": "Superlativ prädikativ – Wiederholung von am besten / am liebsten (A1.2 E10); Zuwachs: die regelmäßige Bildung am -(e)sten (am günstigsten, am leisesten, am teuersten); Komparativ mit als / so … wie wiederholen",
+          "new": false,
+          "lehrwerk": "Menschen A1 L22 (Komparation, dort A1.2); Schritte plus Neu 4 L9 (Komparation)"
+        }
+      ],
+      "vocabTheme": "Geräte und Produkte, Kaufen und Bestellen",
+      "vocabTarget": 28,
+      "keyWords": [
+        "das Angebot",
+        "die Marke",
+        "das Modell",
+        "die Garantie",
+        "die Lieferung",
+        "die Rücksendung",
+        "der Rabatt",
+        "die Abteilung",
+        "das Stockwerk",
+        "liefern",
+        "vergleichen",
+        "günstig",
+        "praktisch",
+        "gebraucht"
+      ],
+      "reading": {
+        "textType": "Wegweiser im Kaufhaus (Welches Stockwerk? – anderes Stockwerk)",
+        "words": 200
+      },
+      "listening": {
+        "textType": "Kurze Gespräche im Geschäft und am Telefon (Bilder wählen)",
+        "seconds": 100
+      },
+      "writing": {
+        "task": "Online-Bestellformular aus Unterlagen ausfüllen (Kundenkarte, Adresse, Lieferart, Zahlungsart)",
+        "words": 10,
+        "examTeil": "telc A2 Schreiben Teil 1"
+      },
+      "speaking": {
+        "task": "Alltagsgespräch zum Thema „Einkaufen“ mit W-Fragekarten (sechs Beiträge)",
+        "examTeil": "telc A2 Sprechen Teil 2"
+      },
+      "pronunciation": "Endungen deutlich sprechen: -e, -en, -er, -em (ein neuer, einen neuen, mit einem neuen)",
+      "examTeile": [
+        "Goethe A2 Lesen Teil 2",
+        "telc A2 Lesen Teil 1",
+        "DTZ Lesen Teil 1",
+        "Goethe A2 Hören Teil 3",
+        "DTZ Hören Teil 3",
+        "telc A2 Schreiben Teil 1",
+        "telc A2 Sprechen Teil 2"
+      ],
+      "landeskunde": "Ladenöffnungszeiten und Sonntagsruhe"
+    },
+    {
+      "nr": 5,
+      "id": "a2.1-u05",
+      "title": "Essen gehen: reservieren, bestellen, bezahlen",
+      "titleEn": "Eating out: booking, ordering, paying",
+      "situation": "Sie reservieren für einen Geburtstag einen Tisch, fragen nach Zutaten, bestellen und bezahlen.",
+      "handlungsfeld": "Einkaufen/Gastronomie (RC 7) · Soziale Kontakte (RC D) · öffentlich",
+      "unitType": "situation",
+      "canDo": [
+        {
+          "de": "Ich kann in einer Gaststätte Speisen und Getränke bestellen und um Zusatzinformationen bitten, z. B. zu Inhaltsstoffen.",
+          "source": "04-cando-a1-a2 (A2.1 #5) · RC 125·A2"
+        },
+        {
+          "de": "Ich kann, auch telefonisch, mit einfachen Mitteln einen Tisch reservieren.",
+          "source": "04-cando-a1-a2 (A2.1 #5) · RC 125·A2 (gekürzt; Hotelzimmer in A2.2 E3)"
+        },
+        {
+          "de": "Ich kann Servicepersonal bitten, eine Frage zu beantworten, und den Wunsch äußern zu zahlen.",
+          "source": "04-cando-a1-a2 (A2.1 #5) · RC 126·A2"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Adjektivdeklination nach bestimmtem Artikel (Nom., Akk., Dat.)",
+          "new": true,
+          "lehrwerk": "Menschen A2 L5; Netzwerk neu A2 K5–6; Schritte plus Neu 4 L10 (dort A2.2)"
+        },
+        {
+          "point": "Höfliche Bitten: Ich hätte gern … / Könnten Sie …? (Wiederholung der Chunks aus A1.2)",
+          "new": false,
+          "lehrwerk": "Menschen A1 L24; Schritte plus Neu 2 L12"
+        }
+      ],
+      "vocabTheme": "Restaurant, Gerichte, Zutaten",
+      "vocabTarget": 28,
+      "keyWords": [
+        "die Reservierung",
+        "die Vorspeise",
+        "das Hauptgericht",
+        "die Nachspeise",
+        "die Zutat",
+        "die Allergie",
+        "das Gericht",
+        "der Kellner",
+        "das Trinkgeld",
+        "reservieren",
+        "empfehlen",
+        "vegetarisch",
+        "scharf",
+        "getrennt"
+      ],
+      "reading": {
+        "textType": "Restaurant-Anzeigen und Webseiten: Welches Lokal passt zu wem? (eine Person ohne Lösung)",
+        "words": 200
+      },
+      "listening": {
+        "textType": "Telefonische Reservierung und Ansage auf dem Anrufbeantworter eines Restaurants",
+        "seconds": 90
+      },
+      "writing": {
+        "task": "E-Mail an ein Restaurant: Tisch für eine Feier anfragen, Personenzahl und Uhrzeit nennen, nach einem vegetarischen Menü fragen",
+        "words": 35,
+        "examTeil": "Goethe A2 Schreiben Teil 2"
+      },
+      "speaking": {
+        "task": "Über ein Thema sprechen: Aufgabenkarte „Essen gehen“ (Wie oft? Mit wem? Was? Wo?), danach Rückfragen",
+        "examTeil": "Goethe A2 Sprechen Teil 2"
+      },
+      "pronunciation": "ich-Laut und ach-Laut: Küche – Kuchen, Milch – Nachtisch",
+      "examTeile": [
+        "Goethe A2 Lesen Teil 4",
+        "telc A2 Lesen Teil 3",
+        "DTZ Lesen Teil 2",
+        "Goethe A2 Hören Teil 1",
+        "telc A2 Hören Teil 1",
+        "DTZ Hören Teil 1",
+        "Goethe A2 Schreiben Teil 2",
+        "Goethe A2 Sprechen Teil 2"
+      ],
+      "landeskunde": "Bezahlen im Restaurant: zusammen oder getrennt, Trinkgeld"
+    },
+    {
+      "nr": 6,
+      "id": "a2.1-u06",
+      "title": "Mit der Bahn unterwegs",
+      "titleEn": "Travelling by train",
+      "situation": "Sie buchen eine Zugreise, verstehen Durchsagen am Bahnhof und reagieren auf eine Verspätung.",
+      "handlungsfeld": "Mobilität (RC 10) · öffentlich",
+      "unitType": "situation",
+      "canDo": [
+        {
+          "de": "Ich kann wichtige Informationen in einfachen Lautsprecherdurchsagen verstehen, z. B. Gleisänderungen, Verspätungen.",
+          "source": "04-cando-a1-a2 (A2.1 #6) · RC 143·A2"
+        },
+        {
+          "de": "Ich kann eine Reise am Schalter oder telefonisch buchen und die Buchungsbestätigung mit der Buchung vergleichen.",
+          "source": "04-cando-a1-a2 (A2.1 #6) · RC 144·A2"
+        },
+        {
+          "de": "Ich kann relevante Abkürzungen und Symbole in Fahrplänen verstehen, z. B. ICE, RE, Sa, So.",
+          "source": "04-cando-a1-a2 (A2.1 #6) · RC 142·A2"
+        },
+        {
+          "de": "Ich kann Informationen zu Örtlichkeiten am Bahnhof oder Flughafen erfragen, z. B. Toiletten, Gepäckaufbewahrung.",
+          "source": "04-cando-a1-a2 (A2.1 #7) · RC 143·A2"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Nebensatz mit wenn (Bedingung, Zeitpunkt); Nebensatz vor dem Hauptsatz (Wenn …, dann …)",
+          "new": true,
+          "lehrwerk": "Menschen A2 L12; Schritte plus Neu 3 L4; Netzwerk neu A2 K4"
+        },
+        {
+          "point": "Wortbildung: Nomen aus Verben auf -t und -kunft (abfahren → die Abfahrt, ankommen → die Ankunft); die -ung-Nomen aus A1.2 E11 werden erweitert",
+          "new": true,
+          "lehrwerk": "Menschen A2 L3 (Verb + -er/-ung); Goethe-A2-Wortbildungsinventar (06 Impl. 13)"
+        },
+        {
+          "point": "Personen-Nomen auf -er aus Verben (fahren → der Fahrer, verkaufen → der Verkäufer): Wiederholung aus A1.2 E2",
+          "new": false,
+          "lehrwerk": "Menschen A2 L3; a1-2.json E2 (Berufsnamen als Wortschatz)"
+        }
+      ],
+      "vocabTheme": "Bahnreise, Bahnhof, Verspätung",
+      "vocabTarget": 28,
+      "keyWords": [
+        "die Verbindung",
+        "die Ankunft",
+        "der Anschluss",
+        "der Bahnsteig",
+        "die Durchsage",
+        "die Platzreservierung",
+        "die Gepäckaufbewahrung",
+        "der Fahrgast",
+        "der Zuschlag",
+        "die Strecke",
+        "verpassen",
+        "ausfallen",
+        "voraussichtlich",
+        "direkt"
+      ],
+      "reading": {
+        "textType": "Fahrplanauszug und Buchungsbestätigung (Informationen suchen)",
+        "words": 120
+      },
+      "listening": {
+        "textType": "Durchsagen am Bahnhof und im Zug",
+        "seconds": 75
+      },
+      "writing": {
+        "task": "SMS an Ihre Schwester: Sie haben die Zugfahrt zu ihr gebucht – Ankunftszeit und Gleis nennen, sagen, wie viel Gepäck Sie haben, und fragen, ob sie Sie abholen kann",
+        "words": 25,
+        "examTeil": "Goethe A2 Schreiben Teil 1"
+      },
+      "speaking": {
+        "task": "Über ein Thema sprechen: Aufgabenkarte „Bahn fahren“ (Wie oft? Wohin? Was ist gut? Was ist schlecht?), danach Rückfragen. Spur DTZ: ein Foto beschreiben (Bahnsteig mit Reisenden), von eigenen Reiseerfahrungen erzählen und mit dem Heimatland vergleichen, ohne Vorbereitung",
+        "examTeil": "Goethe A2 Sprechen Teil 2"
+      },
+      "pronunciation": "Wortakzent in Komposita: HAUPTbahnhof, FAHRkartenautomat, GEpäckaufbewahrung",
+      "examTeile": [
+        "DTZ Lesen Teil 1",
+        "Goethe A2 Hören Teil 1",
+        "DTZ Hören Teil 1",
+        "Goethe A2 Schreiben Teil 1",
+        "Goethe A2 Sprechen Teil 2",
+        "DTZ Sprechen Teil 2"
+      ],
+      "landeskunde": "Zugtypen und Tickets: ICE, IC, RE, S-Bahn, Verkehrsverbund"
+    },
+    {
+      "nr": 7,
+      "id": "a2.1-u07",
+      "title": "Im Verein: mitmachen und Termine abstimmen",
+      "titleEn": "Joining a club: taking part and agreeing on dates",
+      "situation": "Sie möchten in einem Verein oder Kurs mitmachen: Sie vergleichen Angebote, machen einer Kollegin Vorschläge und finden einen festen wöchentlichen Termin.",
+      "handlungsfeld": "Soziale Kontakte (RC D) · Freizeit (Goethe-Themenliste) · privat",
+      "unitType": "situation",
+      "canDo": [
+        {
+          "de": "Ich kann Vorschläge machen, auf Vorschläge reagieren und Verabredungen treffen.",
+          "source": "04-cando-a1-a2 (A2.1 #3) · GI-A2F 16"
+        },
+        {
+          "de": "Ich kann mit einfachen Worten erklären, warum ich eine Freizeitaktivität nicht mitmachen möchte.",
+          "source": "04-cando-a1-a2 (A2.1 #3) · RC 58·A2"
+        },
+        {
+          "de": "Ich kann in einfachen Alltagstexten wie Anzeigen, Prospekten, Speisekarten oder Fahrplänen konkrete, vorhersehbare Informationen auffinden.",
+          "source": "04-cando-a1-a2 (F5) · GER-R·A2 (Begleitband Anh. 2, S. 3)"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Konjunktiv II könnte für Vorschläge (Wir könnten … / Du könntest …)",
+          "new": true,
+          "lehrwerk": "Menschen A2 L7 (Sport und Fitness – „Wir könnten montags joggen gehen“); Schritte plus Neu 3 L4; Netzwerk neu A2 K5"
+        },
+        {
+          "point": "Redemittel „Wie wäre es mit …?“ und „Hast du Lust, … zu …?“ als feste Wendungen",
+          "new": false,
+          "chunk": true,
+          "lehrwerk": "Goethe A2 Sprechen Teil 3 (Redemittel); wäre regulär A2.2, zu-Infinitiv B1.1"
+        },
+        {
+          "point": "Zeitangaben: von … an, ab, über; jeden/letzten/nächsten + Akkusativ",
+          "new": true,
+          "lehrwerk": "Menschen A2 L6 (über, von … an)"
+        }
+      ],
+      "vocabTheme": "Verein, Sport, Kurse, feste Termine",
+      "vocabTarget": 28,
+      "keyWords": [
+        "der Verein",
+        "das Mitglied",
+        "das Training",
+        "die Mannschaft",
+        "die Halle",
+        "der Chor",
+        "die Probe",
+        "die Ermäßigung",
+        "der Vorschlag",
+        "die Verabredung",
+        "vorschlagen",
+        "stattfinden",
+        "trainieren",
+        "teilnehmen"
+      ],
+      "reading": {
+        "textType": "Kursprogramm der Volkshochschule und Vereinsangebote (Wohin gehen Sie?)",
+        "words": 200
+      },
+      "listening": {
+        "textType": "Zusammenhängendes Gespräch: Was hat Lena in ihrer ersten Woche im Sportverein an welchem Tag gemacht? (Bilder zuordnen)",
+        "seconds": 150
+      },
+      "writing": {
+        "task": "Nachricht an eine Kollegin: ihren Vorschlag (Chorprobe am Dienstag) ablehnen, den Grund nennen, einen anderen Vorschlag machen",
+        "words": 25,
+        "examTeil": "Goethe A2 Schreiben Teil 1"
+      },
+      "speaking": {
+        "task": "Gemeinsam etwas planen: einen festen Termin für ein wöchentliches Training finden (zwei Terminkalender)",
+        "examTeil": "Goethe A2 Sprechen Teil 3"
+      },
+      "pronunciation": "Satzmelodie bei Vorschlägen und Rückfragen (steigend – fallend)",
+      "examTeile": [
+        "Goethe A2 Lesen Teil 2",
+        "telc A2 Lesen Teil 1",
+        "Goethe A2 Hören Teil 2",
+        "telc A2 Hören Teil 2",
+        "DTZ Hören Teil 2",
+        "Goethe A2 Schreiben Teil 1",
+        "Goethe A2 Sprechen Teil 3",
+        "telc A2 Sprechen Teil 3",
+        "DTZ Sprechen Teil 3"
+      ],
+      "landeskunde": "Vereinsleben in D-A-CH: Sportverein, Chor, Freiwillige Feuerwehr"
+    },
+    {
+      "nr": 8,
+      "id": "a2.1-u08",
+      "title": "Im Job: Telefon, Mailbox, Termine",
+      "titleEn": "At work: phone, voicemail, appointments",
+      "situation": "An Ihrem Arbeitsplatz hören Sie die Mailbox ab, notieren Rückrufbitten und verschieben einen Termin mit einer Kollegin.",
+      "handlungsfeld": "Arbeit (RC 2) · beruflich",
+      "unitType": "situation",
+      "canDo": [
+        {
+          "de": "Ich kann deutlich gesprochenen Ansagen auf dem Anrufbeantworter die wesentliche Information entnehmen.",
+          "source": "04-cando-a1-a2 (A2.1 #14) · GI-A2F 17"
+        },
+        {
+          "de": "Ich kann auf die Mailbox gesprochene Mitteilungen verstehen, z. B. eine Bitte um Rückruf, und entsprechend reagieren.",
+          "source": "04-cando-a1-a2 (A2.1 #14) · RC 84·A2"
+        },
+        {
+          "de": "Ich kann mit einer Reihe von Sätzen und mit einfachen Mitteln meine gegenwärtige oder letzte berufliche Tätigkeit beschreiben.",
+          "source": "04-cando-a1-a2 (A2.1 #1) · GER-R·A2 (gekürzt)"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Reflexive Verben mit Reflexivpronomen im Akkusativ (sich melden, sich beeilen, sich entschuldigen)",
+          "new": true,
+          "lehrwerk": "Menschen A2 L11; Schritte plus Neu 3 L5; Netzwerk neu A2 K4"
+        },
+        {
+          "point": "Nebensatz mit wenn im Arbeitsalltag (Transfer)",
+          "new": false,
+          "lehrwerk": "Schritte plus Neu 3 L4"
+        }
+      ],
+      "vocabTheme": "Arbeitsplatz, Telefon, Termine im Job",
+      "vocabTarget": 28,
+      "keyWords": [
+        "der Anruf",
+        "der Rückruf",
+        "die Mailbox",
+        "die Besprechung",
+        "der Auftrag",
+        "der Dienstplan",
+        "der Feierabend",
+        "die Überstunde",
+        "ausrichten",
+        "verbinden",
+        "weiterleiten",
+        "sich melden",
+        "sich beeilen",
+        "beschäftigt"
+      ],
+      "reading": {
+        "textType": "Persönliche E-Mail: Ein Freund erzählt von seiner neuen Stelle",
+        "words": 220
+      },
+      "listening": {
+        "textType": "Nachrichten auf der Mailbox (Telefonnotiz ausfüllen)",
+        "seconds": 90
+      },
+      "writing": {
+        "task": "E-Mail an eine Kollegin: Sie können nicht zur Besprechung kommen – Grund nennen, neuen Termin vorschlagen, um Antwort bitten",
+        "words": 40,
+        "examTeil": "Goethe A2 Schreiben Teil 2"
+      },
+      "speaking": {
+        "task": "Über sich sprechen (Name, Wohnort, Arbeit, Familie) und Nachfragen beantworten – die KI spielt die Prüferin",
+        "examTeil": "telc A2 Sprechen Teil 1"
+      },
+      "pronunciation": "Vokalisiertes r: Arbeiter, Termin, Nummer, Kunde",
+      "examTeile": [
+        "Goethe A2 Lesen Teil 3",
+        "DTZ Lesen Teil 3",
+        "DTZ Lesen Teil 5",
+        "telc A2 Hören Teil 1",
+        "DTZ Hören Teil 1",
+        "telc A2 Hören Teil 3",
+        "Goethe A2 Schreiben Teil 2",
+        "Goethe A2 Sprechen Teil 1",
+        "telc A2 Sprechen Teil 1",
+        "DTZ Sprechen Teil 1"
+      ],
+      "landeskunde": "Du und Sie am Arbeitsplatz"
+    },
+    {
+      "nr": 9,
+      "id": "a2.1-u09",
+      "title": "Gesund bleiben: beim Arzt und im Alltag",
+      "titleEn": "Staying healthy: at the doctor's and every day",
+      "situation": "Sie erzählen in der Arztpraxis von Ihren Beschwerden und Medikamenten und geben einem Kollegen Tipps für einen gesünderen Alltag.",
+      "handlungsfeld": "Gesundheit (RC 8) · öffentlich/privat",
+      "unitType": "situation",
+      "canDo": [
+        {
+          "de": "Ich kann im Gespräch mit Ärzten einfache Informationen zum Gesundheitszustand, zu Vorerkrankungen und Medikation geben.",
+          "source": "04-cando-a1-a2 (A2.1 #9) · RC 131·A2"
+        },
+        {
+          "de": "Ich kann Informationen über Behandlungsmöglichkeiten verstehen, z. B. Dauer, Nebenwirkungen, und darauf reagieren.",
+          "source": "04-cando-a1-a2 (A2.1 #9) · RC 131·A2"
+        },
+        {
+          "de": "Ich kann einfache Ratschläge zur Gesundheit geben, z. B. zu Hausmitteln, Ernährung.",
+          "source": "04-cando-a1-a2 (A2.1 #9) · RC 133·A2"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Konjunktiv II sollte für Ratschläge (Du solltest … / Sie sollten …)",
+          "new": true,
+          "lehrwerk": "Menschen A2 L7; Schritte plus Neu 3 L4; Netzwerk neu A2 K8 (dort A2.2)"
+        },
+        {
+          "point": "Konnektor deshalb (Verb auf Position 2 nach deshalb)",
+          "new": true,
+          "lehrwerk": "Menschen A2 L8; Schritte plus Neu 4 L8 (dort A2.2); Netzwerk neu A2 K9 (dort A2.2)"
+        },
+        {
+          "point": "weil und deshalb im Kontrast (Wiederholung)",
+          "new": false,
+          "lehrwerk": "Menschen A2 L8"
+        }
+      ],
+      "vocabTheme": "Beschwerden, Behandlung, gesunder Alltag",
+      "vocabTarget": 28,
+      "keyWords": [
+        "die Erkältung",
+        "die Tablette",
+        "das Hausmittel",
+        "die Nebenwirkung",
+        "die Behandlung",
+        "die Krankenkasse",
+        "die Vorsorge",
+        "die Bewegung",
+        "die Ernährung",
+        "der Stress",
+        "verschreiben",
+        "sich ausruhen",
+        "regelmäßig",
+        "erschöpft"
+      ],
+      "reading": {
+        "textType": "Ratgeber-Artikel in einer Zeitschrift: Gesund durch den Winter",
+        "words": 180
+      },
+      "listening": {
+        "textType": "Gespräch in der Arztpraxis (richtig/falsch)",
+        "seconds": 120
+      },
+      "writing": {
+        "task": "E-Mail an Ihre Chefin nach dem Arztbesuch (drei Punkte): was die Ärztin gesagt hat, wie lange Sie fehlen, was Sie brauchen. Spur DTZ: A (an die Chefin) oder B (an den Trainer Ihres Sportvereins) wählen, vier Leitpunkte (zusätzlich sich entschuldigen), ca. 50 Wörter",
+        "words": 40,
+        "examTeil": "Goethe A2 Schreiben Teil 2"
+      },
+      "speaking": {
+        "task": "Über ein Thema sprechen: Aufgabenkarte „Gesund leben“ (Bewegung? Essen? Schlaf? Ihr Tipp?), danach Rückfragen; einen Rat mit sollte geben. Spur DTZ: ein Foto beschreiben (Menschen beim Sport im Park), von eigenen Erfahrungen erzählen und mit dem Heimatland vergleichen, ohne Vorbereitung",
+        "examTeil": "Goethe A2 Sprechen Teil 2"
+      },
+      "pronunciation": "ü – u – i unterscheiden: Übung, Fuß – Füße, müssen – missen",
+      "examTeile": [
+        "Goethe A2 Lesen Teil 1",
+        "DTZ Lesen Teil 4",
+        "DTZ Hören Teil 3",
+        "telc A2 Hören Teil 2",
+        "DTZ Hören Teil 2",
+        "Goethe A2 Schreiben Teil 2",
+        "DTZ Schreiben",
+        "Goethe A2 Sprechen Teil 2",
+        "DTZ Sprechen Teil 2"
+      ],
+      "landeskunde": "Hausarzt, Überweisung und Apotheken-Notdienst"
+    },
+    {
+      "nr": 10,
+      "id": "a2.1-u10",
+      "title": "Gute und schlechte Nachrichten: Gefühle zeigen",
+      "titleEn": "Good news, bad news: showing feelings",
+      "situation": "Freunde erzählen im Chat und am Telefon Neuigkeiten – Sie reagieren mit Freude, Mitgefühl oder Ärger.",
+      "handlungsfeld": "Gefühle, Haltungen, Meinungen (RC B) · Soziale Kontakte (RC D) · privat",
+      "unitType": "situation",
+      "canDo": [
+        {
+          "de": "Ich kann Freude und Vorfreude ausdrücken, z. B. über ein Geschenk.",
+          "source": "04-cando-a1-a2 (A2.1 #11) · RC 40·A2"
+        },
+        {
+          "de": "Ich kann sagen, dass mir etwas leidtut, und Verständnis ausdrücken, z. B. wenn jemand krank ist.",
+          "source": "04-cando-a1-a2 (A2.1 #11) · RC 40, 59·A2"
+        },
+        {
+          "de": "Ich kann mich an elementarer sozialer Kommunikation online beteiligen, meine Gefühle ausdrücken und auf Kommentare mit Dank, Entschuldigung oder Antwort auf Fragen reagieren.",
+          "source": "04-cando-a1-a2 (A2.1 #11) · GER-R·A2 (Online-Interaktion)"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Verben mit festen Präpositionen (sich freuen auf/über, sich ärgern über, Angst haben vor, warten auf, sich interessieren für)",
+          "new": true,
+          "lehrwerk": "Schritte plus Neu 3 L5; Menschen A2 L18 (dort A2.2); Netzwerk neu A2 K11 (dort A2.2)"
+        },
+        {
+          "point": "Reflexive Verben: Wiederholung mit Gefühlsverben",
+          "new": false,
+          "lehrwerk": "Menschen A2 L11; Netzwerk neu A2 K4"
+        }
+      ],
+      "vocabTheme": "Gefühle, Beziehungen, Reaktionen",
+      "vocabTarget": 28,
+      "keyWords": [
+        "das Gefühl",
+        "die Freude",
+        "die Angst",
+        "der Ärger",
+        "die Sorge",
+        "die Beziehung",
+        "die Freundschaft",
+        "der Streit",
+        "traurig",
+        "wütend",
+        "stolz",
+        "nervös",
+        "sich freuen",
+        "sich ärgern"
+      ],
+      "reading": {
+        "textType": "Persönliche E-Mail: Eine Freundin erzählt gute und schlechte Neuigkeiten",
+        "words": 200
+      },
+      "listening": {
+        "textType": "Straßenumfrage im Radio: Worüber ärgern Sie sich im Alltag? (Meinungen zuordnen)",
+        "seconds": 120
+      },
+      "writing": {
+        "task": "Brief an eine Freundin, die umzieht: drei von vier Punkten wählen (Gefühle, Hilfe anbieten, Abschiedsfeier, Besuch)",
+        "words": 40,
+        "examTeil": "telc A2 Schreiben Teil 2"
+      },
+      "speaking": {
+        "task": "Alltagsgespräch zum Thema „Freunde“ mit W-Fragekarten und Joker-Karte (sechs Beiträge)",
+        "examTeil": "telc A2 Sprechen Teil 2"
+      },
+      "pronunciation": "Intonation von Gefühlen: Freude, Bedauern, Überraschung",
+      "examTeile": [
+        "Goethe A2 Lesen Teil 3",
+        "DTZ Hören Teil 4",
+        "telc A2 Schreiben Teil 2",
+        "telc A2 Sprechen Teil 2"
+      ],
+      "landeskunde": "Anrede und Gruß: Chat, E-Mail und Karte im Vergleich"
+    },
+    {
+      "nr": 11,
+      "id": "a2.1-u11",
+      "title": "Schulzeit und Ausbildung: hier und dort",
+      "titleEn": "School and training: here and there",
+      "situation": "Sie erzählen einer Kollegin von Ihrer Schulzeit und vergleichen das Schulsystem in Ihrem Land mit dem in Deutschland.",
+      "handlungsfeld": "Aus- und Weiterbildung (RC 4) · Migrationssituation (RC A) · Bildung",
+      "unitType": "situation",
+      "canDo": [
+        {
+          "de": "Ich kann das Leben in meinem Herkunftsland in einfacher Form beschreiben und einzelne Aspekte mit der Situation in Deutschland vergleichen.",
+          "source": "04-cando-a1-a2 (A2.1 #12) · RC 30·A2"
+        },
+        {
+          "de": "Ich kann eine elementare, schematische Beschreibung von vergangenen Ereignissen verfassen.",
+          "source": "04-cando-a1-a2 (A2.1 #13) · GI-A2F 17"
+        },
+        {
+          "de": "Ich kann mit einer Reihe von Sätzen und mit einfachen Mitteln meine Ausbildung beschreiben.",
+          "source": "04-cando-a1-a2 (A2.1 #1) · GER-R·A2 (gekürzt)"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Präteritum der Modalverben (musste, konnte, durfte, wollte, sollte)",
+          "new": true,
+          "lehrwerk": "Schritte plus Neu 3 L6; Netzwerk neu A2 K2; Menschen A2 L20 (dort A2.2)"
+        },
+        {
+          "point": "Vergleiche früher/heute: genauso … wie, anders als (Wiederholung und Ausbau)",
+          "new": false,
+          "lehrwerk": "Menschen A1 L22; Schritte plus Neu 2 L13"
+        }
+      ],
+      "vocabTheme": "Schule, Ausbildung, Abschlüsse",
+      "vocabTarget": 28,
+      "keyWords": [
+        "die Grundschule",
+        "das Gymnasium",
+        "die Ausbildung",
+        "das Studium",
+        "der Abschluss",
+        "das Zeugnis",
+        "die Note",
+        "das Fach",
+        "das Abitur",
+        "die Klasse",
+        "bestehen",
+        "durchfallen",
+        "streng",
+        "freiwillig"
+      ],
+      "reading": {
+        "textType": "Erzähltext: Erinnerungen an meinen ersten Schultag (richtig/falsch)",
+        "words": 200
+      },
+      "listening": {
+        "textType": "Radiointerview mit einer Auszubildenden (Ja/Nein)",
+        "seconds": 150
+      },
+      "writing": {
+        "task": "Online-Anmeldung für einen Abendkurs: fünf Angaben aus Ausweis und Zeugnis übertragen",
+        "words": 10,
+        "examTeil": "telc A2 Schreiben Teil 1"
+      },
+      "speaking": {
+        "task": "Über ein Thema sprechen: Aufgabenkarte „Schule“ (Wie lange? Lieblingsfach? Abschluss? Was war anders?), danach Rückfragen",
+        "examTeil": "Goethe A2 Sprechen Teil 2"
+      },
+      "pronunciation": "Vokalneueinsatz (Knacklaut): die |Ausbildung, |ich |arbeite, be|enden",
+      "examTeile": [
+        "telc A2 Lesen Teil 2",
+        "DTZ Lesen Teil 3",
+        "Goethe A2 Hören Teil 4",
+        "telc A2 Schreiben Teil 1",
+        "Goethe A2 Sprechen Teil 2"
+      ],
+      "landeskunde": "Schulsysteme in Deutschland, Österreich und der Schweiz; duale Ausbildung"
+    },
+    {
+      "nr": 12,
+      "id": "a2.1-u12",
+      "title": "Feste feiern, Geschenke machen",
+      "titleEn": "Celebrating and giving presents",
+      "situation": "Eine Freundin heiratet: Sie antworten auf die Einladung, bereiten mit einem Freund eine Überraschung vor, gratulieren und bedanken sich nach dem Fest.",
+      "handlungsfeld": "Soziale Kontakte (RC D) · privat",
+      "unitType": "situation",
+      "canDo": [
+        {
+          "de": "Ich kann mit einer Postkarte, E-Mail oder Kurzmitteilung zu einer Feier einladen.",
+          "source": "04-cando-a1-a2 (A2.1 #2) · RC 57·A2"
+        },
+        {
+          "de": "Ich kann auf eine Einladung, auch schriftlich, reagieren und zusagen oder freundlich mit Angabe von Gründen absagen.",
+          "source": "04-cando-a1-a2 (A2.1 #2) · RC 57·A2"
+        },
+        {
+          "de": "Ich kann Freunde, auch telefonisch, fragen, ob sie zu einer Feier mitkommen, und einen Termin mit ihnen ausmachen.",
+          "source": "04-cando-a1-a2 (A2.1 #2) · RC 57·A2"
+        },
+        {
+          "de": "Ich kann einen ganz einfachen persönlichen Brief schreiben, in dem ich mich für etwas bedanke oder entschuldige.",
+          "source": "04-cando-a1-a2 (A2.1 #14) · GI-A2F 16"
+        }
+      ],
+      "grammar": [
+        {
+          "point": "Verben mit Dativ und Akkusativ: Stellung, wenn Pronomen beteiligt sind (Ich schenke ihr ein Buch. Ich schenke es ihr. Ich schenke es meiner Schwester.) – baut auf E3 (beide Objekte als Nomen) auf",
+          "new": true,
+          "lehrwerk": "Schritte plus Neu 3 L7; Menschen A2 L15 (dort A2.2); Netzwerk neu A2 K9 (dort A2.2)"
+        },
+        {
+          "point": "Adjektivdeklination: Wiederholung (Glückwünsche, Geschenke beschreiben)",
+          "new": false,
+          "lehrwerk": "Menschen A2 L4–5"
+        }
+      ],
+      "vocabTheme": "Feste, Einladungen, Geschenke",
+      "vocabTarget": 28,
+      "keyWords": [
+        "die Hochzeit",
+        "das Brautpaar",
+        "die Zusage",
+        "die Absage",
+        "der Gutschein",
+        "der Blumenstrauß",
+        "der Gast",
+        "das Jubiläum",
+        "die Überraschung",
+        "verpacken",
+        "überraschen",
+        "sich bedanken",
+        "anstoßen",
+        "herzlich"
+      ],
+      "reading": {
+        "textType": "Erzähltext: Die Hochzeit meiner Cousine (richtig/falsch)",
+        "words": 200
+      },
+      "listening": {
+        "textType": "Gespräch über die Vorbereitungen: Wer macht was an welchem Tag? (Bilder zuordnen)",
+        "seconds": 150
+      },
+      "writing": {
+        "task": "Brief an das Brautpaar nach der Hochzeit: drei von vier Punkten wählen (Dank für das Fest, was Ihnen am besten gefallen hat, Fotos schicken, Gegeneinladung)",
+        "words": 40,
+        "examTeil": "telc A2 Schreiben Teil 2"
+      },
+      "speaking": {
+        "task": "Gemeinsam etwas planen: eine Überraschung für das Brautpaar vorbereiten – ein Video mit Grüßen der Gäste (Wann treffen wir uns? Wen fragen wir? Wer filmt? Wer bringt was mit?)",
+        "examTeil": "Goethe A2 Sprechen Teil 3"
+      },
+      "pronunciation": "Endungen -ig und -ung: zwanzig, lustig, fertig – Einladung, Zeitung",
+      "examTeile": [
+        "telc A2 Lesen Teil 2",
+        "Goethe A2 Hören Teil 2",
+        "telc A2 Schreiben Teil 2",
+        "Goethe A2 Sprechen Teil 3",
+        "telc A2 Sprechen Teil 3",
+        "DTZ Sprechen Teil 3"
+      ],
+      "landeskunde": "Hochzeit, Polterabend und Geschenke in D-A-CH"
+    }
+  ],
+  "checkpoints": [
+    {
+      "afterUnit": 3,
+      "covers": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "afterUnit": 6,
+      "covers": [
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "afterUnit": 9,
+      "covers": [
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "afterUnit": 12,
+      "covers": [
+        10,
+        11,
+        12
+      ]
+    }
+  ],
+  "levelTest": {
+    "format": "Halb-Modelltest auf dem Stoff von A2.1 im Format der Prüfungsspur, die beim Onboarding einmal gewählt wird und für alle Kurse gilt; ohne Wahl: Goethe-Zertifikat A2 (Lesen Teil 2 + 4, Hören Teil 1 + 3, Schreiben Teil 1 + 2, Sprechen Teil 1–3; ca. 60 + 12 Min.). Spur telc Deutsch A2: Lesen Teil 1 + 3, Hören Teil 1 + 3, Schreiben Teil 1 + 2, Sprechen Teil 1–3. Spur DTZ (nur im Integrationskurssystem): Lesen Teil 1 + 2, Hören Teil 1 + 3, Schreiben, Sprechen Teil 1–3 ohne Vorbereitung. Sprechen mit der KI in der Rolle der Prüferin und Partnerin (automatische Übungsbewertung). Ergebnis als Übungswerte je Prüfungsteil nach der Bestehensregel der Spur, ohne Gesamturteil und ohne Prognose, nie als Prüfungsergebnis. Eine Parallelform ist der Diagnose-Minitest in Woche 1 von A2.2.",
+    "sections": [
+      "Lesen",
+      "Hören",
+      "Schreiben",
+      "Sprechen"
+    ]
+  }
+}

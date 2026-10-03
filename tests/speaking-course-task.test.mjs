@@ -230,3 +230,143 @@ test('the client sends the task only when no mission is selected', () => {
   assert.ok(src.includes('taskHintWords: courseTask.hintWords'));
   assert.ok(src.includes('courseTaskActive && !selectedMissionId'), 'a chosen mission must suppress the task fields');
 });
+
+// --- 5. course v2: multi-Teil speaking rounds (a1.1-u01 r2-F01 class) ---------
+//
+// SCHEMA §12: the speaking functions read the bank shard „incl. `parts`". A1.1 has eight
+// rounds (u01, u04, u05, u06, u08, u09, u10, u12: sd1.sp1 + sd1.sp2, or sd1.sp2 + sd1.sp3).
+// Over every registered course, compiled in memory by the real compiler: (a) the partner
+// prompt has one ABLAUF per part and every part's learner and partner cards; (b) the grading
+// plan covers every part on its own profile; (c) every speaking Teil the unit's Prüfungsfokus
+// names (slot 'sprechen') is run as a part and scored on that Teil's rubric.
+
+const { compileLevel, levelsIn } = await import('../scripts/course-v2/lib/compiler.mjs');
+const { CONTENT_ROOT, FIXTURES_ROOT } = await import('../scripts/course-v2/lib/tree.mjs');
+const { buildCoursePartnerPrompt, normalizeSpeakingTask } = await import('../netlify/functions/_shared/speakingAI.mjs');
+const { speakingPartsPlan } = await import('../netlify/functions/_shared/rubrics/grade.mjs');
+const { compileRubrics } = await import('../scripts/course-v2/compile-rubrics.mjs');
+const { mkdtempSync, rmSync } = await import('node:fs');
+const { tmpdir } = await import('node:os');
+
+const V2_RUBRICS = JSON.parse(compileRubrics().text).profiles;
+const LANES = Object.fromEntries(['sd1', 'ga2', 'tb1', 'tb2'].map((l) => [l, JSON.parse(read(`content/course-v2/registries/lanes/${l}.json`))]));
+const rubricOfTemplate = (template) => {
+  const [lane, teil] = String(template).split('.');
+  return LANES[lane]?.teile?.[teil]?.rubric || null;
+};
+
+function compiledCourses() {
+  const tmp = mkdtempSync(join(tmpdir(), 'cv2-speak-'));
+  const out = [];
+  try {
+    for (const level of levelsIn(CONTENT_ROOT, { exclude: [FIXTURES_ROOT] })) {
+      const r = compileLevel(level, { contentRoot: CONTENT_ROOT, exclude: [FIXTURES_ROOT], outRoot: join(tmp, 'o'), banksRoot: join(tmp, 'b') });
+      const banks = r.outputs.find((o) => o.file.endsWith(`${level}.banks.json`));
+      const units = r.outputs.filter((o) => /\/units\/u\d{2}\.json$/.test(o.file)).map((o) => JSON.parse(o.text));
+      if (banks) out.push({ level, banks: JSON.parse(banks.text), units });
+    }
+  } finally {
+    rmSync(tmp, { recursive: true, force: true });
+  }
+  return out;
+}
+const COURSES = compiledCourses();
+const cardText = (c) => (typeof c === 'string' ? c : (c && c.de) || '');
+const A11_ROUNDS = ['a11-u01-s', 'a11-u04-s', 'a11-u05-s', 'a11-u06-s', 'a11-u08-s', 'a11-u09-s', 'a11-u10-s', 'a11-u12-s'];
+
+test('v2 rounds: the A1.1 multi-Teil tasks keep their parts in the compiled bank', () => {
+  const a11 = COURSES.find((c) => c.level === 'a1.1');
+  if (!a11) return;
+  const compiledUnits = new Set(a11.units.map((u) => u.id));
+  for (const key of A11_ROUNDS) {
+    const unitId = `a1.1-u${key.slice(5, 7)}`;
+    if (!compiledUnits.has(unitId)) continue; // a unit being edited that does not compile right now
+    const entry = a11.banks.speaking[key];
+    assert.ok(entry, `${key} is in the bank`);
+    assert.ok(Array.isArray(entry.parts) && entry.parts.length >= 2, `${key} keeps its parts`);
+  }
+});
+
+test('v2 rounds: A11_ROUNDS is exactly the compiled a1.1 bank\'s multi-Teil entries (no round goes unpinned)', () => {
+  const a11 = COURSES.find((c) => c.level === 'a1.1');
+  if (!a11) return;
+  const compiledUnits = new Set(a11.units.map((u) => u.id));
+  const multi = Object.entries(a11.banks.speaking || {}).filter(([, e]) => Array.isArray(e.parts) && e.parts.length >= 2).map(([k]) => k).sort();
+  // a listed round of a unit that compiles right now is in the bank; every multi-Teil bank entry is listed
+  const expected = A11_ROUNDS.filter((k) => compiledUnits.has(`a1.1-u${k.slice(5, 7)}`)).sort();
+  assert.deepEqual(multi, expected, 'the compiled multi-Teil entries and A11_ROUNDS differ — add the new round to A11_ROUNDS (and a fixture below)');
+});
+
+// a1.1-u08 (review r3, u08 fixer 2026-09-28): Teil 1 introduces, Teil 2 runs two Themen with a card each —
+// learner „Hobby – Musik", „Wochenende – Kino"; partner „Hobby – Sport", „Wochenende – Samstag"
+const U08_ROUND = {
+  key: 'a11-u08-s',
+  parts: [
+    { template: 'sd1.sp1' },
+    { template: 'sd1.sp2', cards: { learner: ['Hobby – Musik', 'Wochenende – Kino'], partner: ['Hobby – Sport', 'Wochenende – Samstag'] } },
+  ],
+};
+
+test('v2 rounds: the a11-u08-s fixture — Teil 1 + Teil 2 with its four Thema cards, each Teil on its own rubric', () => {
+  const a11 = COURSES.find((c) => c.level === 'a1.1');
+  if (!a11 || !a11.units.some((u) => u.id === 'a1.1-u08')) return; // u08 being edited and not compiling right now
+  const entry = a11.banks.speaking[U08_ROUND.key];
+  assert.ok(entry && Array.isArray(entry.parts), `${U08_ROUND.key} is a multi-Teil round in the bank`);
+  assert.deepEqual(entry.parts.map((p) => p.template), U08_ROUND.parts.map((p) => p.template), 'Teil 1 then Teil 2');
+  const prompt = buildCoursePartnerPrompt({ level: 'A1.1', task: entry });
+  assert.equal((prompt.match(/^ABLAUF/gm) || []).length, 2, 'one ABLAUF per Teil');
+  const teil2 = entry.parts[1];
+  for (const side of ['learner', 'partner']) {
+    assert.deepEqual((teil2.cards?.[side] || []).map(cardText), U08_ROUND.parts[1].cards[side], `Teil 2 ${side} cards`);
+    for (const c of U08_ROUND.parts[1].cards[side]) assert.ok(prompt.includes(`„${c}“`), `the partner prompt carries „${c}“`);
+  }
+  const plans = speakingPartsPlan(normalizeSpeakingTask(entry), (id) => V2_RUBRICS[id] || null);
+  assert.equal(plans.length, 2, 'both Teile are graded');
+  U08_ROUND.parts.forEach((p, i) => {
+    assert.equal(plans[i].profileId, rubricOfTemplate(p.template), `Teil ${i + 1} (${p.template}) on its own rubric`);
+    assert.ok(plans[i].plan && plans[i].plan.length, `Teil ${i + 1}: the rubric resolves`);
+  });
+});
+
+test('v2 rounds: one ABLAUF per part with every card, and every part graded on its own profile', () => {
+  let rounds = 0;
+  for (const { level, banks } of COURSES) {
+    for (const [key, entry] of Object.entries(banks.speaking || {})) {
+      if (!Array.isArray(entry.parts) || entry.parts.length < 2) continue;
+      rounds += 1;
+      const prompt = buildCoursePartnerPrompt({ level: level.toUpperCase(), task: entry });
+      assert.equal((prompt.match(/^ABLAUF/gm) || []).length, entry.parts.length, `${key}: one ABLAUF per part`);
+      for (const p of entry.parts) {
+        for (const c of [...(p.cards?.learner || []), ...(p.cards?.partner || [])]) {
+          if (cardText(c)) assert.ok(prompt.includes(`„${cardText(c)}“`), `${key}: card „${cardText(c)}“`);
+        }
+      }
+      const plans = speakingPartsPlan(normalizeSpeakingTask(entry), (id) => V2_RUBRICS[id] || null);
+      plans.forEach((pl, i) => {
+        assert.equal(pl.profileId, entry.parts[i].profile, `${key} part ${i + 1}: its own profile`);
+        assert.ok(pl.plan && pl.plan.length, `${key} part ${i + 1}: the profile resolves`);
+      });
+    }
+  }
+  assert.ok(rounds > 0 || COURSES.length === 0, 'the rule ran on at least one round');
+});
+
+test('v2 rounds: every speaking Teil of a unit\'s Prüfungsfokus is run and scored on that Teil\'s rubric', () => {
+  for (const { level, banks, units } of COURSES) {
+    for (const u of units) {
+      const teile = (u.spec?.lanes?.pruefungsfokus || []).filter((p) => p.slot === 'sprechen').map((p) => p.template);
+      if (!teile.length) continue;
+      const step = (u.steps || []).find((s) => s.kind === 'sprechen');
+      if (!step || !step.task || !step.task.bankKey) continue;
+      const entry = banks.speaking[step.task.bankKey];
+      assert.ok(entry, `${u.id}: ${step.task.bankKey} is in the ${level} bank`);
+      const parts = Array.isArray(entry.parts) ? entry.parts : [entry];
+      for (const tpl of teile) {
+        const part = parts.find((p) => p.template === tpl);
+        assert.ok(part, `${u.id}: the Prüfungsfokus Teil ${tpl} is run`);
+        const want = rubricOfTemplate(tpl);
+        if (want) assert.equal(part.profile, want, `${u.id}: ${tpl} is scored on ${want}`);
+      }
+    }
+  }
+});

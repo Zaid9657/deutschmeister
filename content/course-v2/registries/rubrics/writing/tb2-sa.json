@@ -1,0 +1,27 @@
+{
+  "$schema": "course-v2/rubric@1",
+  "id": "tb2-sa",
+  "kind": "writing",
+  "lane": "tb2",
+  "max": 45,
+  "criteria": [
+    { "id": "aufgabe", "label": "Kriterium I – Aufgabenbewältigung: wie viele Leitpunkte (oder ein eigener Aspekt statt eines Leitpunkts) inhaltlich angemessen und jeweils ausführlicher als ein Satzgefüge bearbeitet sind (3 = A, 2 = B, 1 = C, 0 = D)", "per": "task", "levels": [5, 3, 1, 0], "weight": 3 },
+    { "id": "gestaltung", "label": "Kriterium II – Kommunikative Gestaltung: Textlogik, Verknüpfung der Leitpunkte, ein zur Aufgabe passendes und durchgehaltenes Register (halbformell/formell: Sie), Wortschatzspektrum, Betreff, Anrede und Schlussformel", "per": "task", "levels": [5, 3, 1, 0], "weight": 3 },
+    { "id": "richtigkeit", "label": "Kriterium III – Formale Richtigkeit: Grammatik, Rechtschreibung und Zeichensetzung", "per": "task", "levels": [5, 3, 1, 0], "weight": 3 }
+  ],
+  "zeroRules": ["telc-topic-missed-d-all"],
+  "capRules": [
+    "telc-situation-missed-d-crit1",
+    "telc-b2-crit1-by-leitpunkt-count",
+    "telc-b2-crit1-leitpunkt-more-than-one-sentence",
+    "telc-b2-no-a-crit2-textsorte-missing",
+    "telc-b2-no-b-crit2-register-wrong-or-mixed",
+    "telc-b2-no-b-crit2-leitpunkte-unconnected"
+  ],
+  "spelling": "scored",
+  "feedbackLanguage": ["de"],
+  "modelId": "config:writing-full",
+  "splitVerified": true,
+  "calibration": { "status": "pending", "rangeBands": 1 },
+  "source": "https://shop.telc.net/media/catalog/product/file/2/0/20201223_5023-b00-010201_web.pdf"
+}

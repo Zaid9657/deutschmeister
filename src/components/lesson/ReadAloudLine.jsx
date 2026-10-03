@@ -189,11 +189,12 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
         </p>
       )}
 
+      {/* both raw pills carry min-h-11: ≥ 44 px touch targets, like the Buttons beside them (audit WT-05) */}
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <button
           type="button"
           onClick={() => playLine(lektionId, lineKey, text, { rate: 0.85 })}
-          className="inline-flex items-center gap-1.5 rounded-pill border border-rule bg-white px-3 py-1.5 text-[0.8125rem] font-bold text-ink hover:border-siegel"
+          className="inline-flex min-h-11 items-center gap-1.5 rounded-pill border border-rule bg-white px-4 py-1.5 text-[0.8125rem] font-bold text-ink hover:border-siegel"
         >
           <Play className="h-4 w-4" aria-hidden="true" /> {t('speaking.model', lang)}
         </button>
@@ -223,7 +224,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
           <button
             type="button"
             onClick={selfConfirm}
-            className="inline-flex items-center gap-1.5 rounded-pill border border-rule bg-white px-3 py-1.5 text-[0.8125rem] font-bold text-graphite hover:border-siegel hover:text-siegel-deep"
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-pill border border-rule bg-white px-4 py-1.5 text-[0.8125rem] font-bold text-graphite hover:border-siegel hover:text-siegel-deep"
           >
             <Check className="h-4 w-4" aria-hidden="true" /> {t('speaking.iSaidIt', lang)}
           </button>

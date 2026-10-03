@@ -1,0 +1,155 @@
+{
+  "review": "a1.1-level.r1.s1",
+  "level": "a1.1",
+  "slice": "1 of 3 (course start)",
+  "files": [
+    "content/course-v2/a1.1/units/u01.json",
+    "content/course-v2/a1.1/units/u02.json",
+    "content/course-v2/a1.1/units/u03.json",
+    "content/course-v2/a1.1/units/u04.json",
+    "content/course-v2/a1.1/plateaus/p1.json",
+    "content/course-v2/a1.1/rule-cards.json (rc.verbposition-2, rc.praesens, rc.praesens-2, rc.negation-nicht, rc.ja-nein-frage, rc.possessiv-mein-dein, rc.vokalwechsel, rc.artikel-genus-plural, rc.moechte)",
+    "content/course-v2/a1.1/lexicon.json (the 132 entries allocated to a1.1-u01 … a1.1-u04, and the promotions)"
+  ],
+  "continuityRead": [
+    "content/course-v2/a1.1/units/u05.json (the unit after the slice; there is no unit before u01)",
+    "content/course-v2/casts/a1.json",
+    "content/course-v2/casts/series.json",
+    "content/course-v2/registries/grammar-spine.json",
+    "content/course-v2/registries/lanes/sd1.json",
+    "the Nora aiRole of u05, u06, u08 and u12, for the partner persona"
+  ],
+  "date": "2026-09-28",
+  "reviewers": [
+    {
+      "id": "R1",
+      "persona": "Prüferin (lizenzierte Goethe-Zertifikat-A1-Prüferin, Start Deutsch 1): Prüfungstreue, Rubrik, Aufgabenklarheit"
+    },
+    {
+      "id": "R2",
+      "persona": "Kursleiterin DaF (A1.1): Natürlichkeit, Niveau, Didaktik, Szenenplausibilität"
+    }
+  ],
+  "method": "Both reviewers read every learner-visible German string of the five files: Folge, inputs, exam texts, rule cards shown in the steps, redemittel, speaking and writing tasks (situationDe, cards, aiRole, model turns, model text, checklist), check lines, endLines, story beat and cliffhanger. The rule cards and the lexicon entries of u01–u04 were read in full. We solved all 391 authored items blind, from promptDe plus options, tiles or the resolved audio line: u01 99, u02 94, u03 88, u04 95, p1 15. We then compared our answers with answer/accepted. Every key matched our solution. Where an alternative answer was defensible, we ran it through the real grader, src/lib/course-v2/checkItem.js. For the LS6 and P1 forms we built the item the way WritingTaskView.jsx builds it. We ran 60 candidate answers in total. We scanned every surface with the validator's own knownForms and licensedForms, at the unit's position. We checked the story against casts/a1.json and series.json, and every cliffhanger against the next Folge (u01→u02→u03→p1→u04→u05). We checked the exam blocks against lanes/sd1.json. We looked for duplicate items across u01–u05 and p1: none are item-identical. Finally, we ran `node scripts/course-v2/validate.mjs a1.1`: 43 rules, 0 fail, 0 blocker. It gives advisories and ratchets for the slice files: ALL-02 6, GRM-04 3, LEX-01 13, LEX-02 47 (ratchet), LEX-03 3, ITM-01 7, ITM-02 25. The real ones among them are folded into the findings below.",
+  "total": 26,
+  "scores": {
+    "D": 4,
+    "N": 4,
+    "H": 4,
+    "A": 4,
+    "P": 4,
+    "K": 3,
+    "E": 3
+  },
+  "verdict": "Yes, this slice is good enough to show learners once four quick fixes are in: the German is natural, all 391 items we solved blind have the right key, every exam block follows the Start Deutsch 1 format, and the story holds from „Hallo, ich bin Priya“ to Plateau 1. The four fixes: Unit 1 reaches its first scored spoken sentence only about 30 screens in (the blueprint promises the first three); the exam partner Nora changes her family and job between Unit 3 and Plateau 1; a Plateau model answer says „Ich bin nicht Studentin“; and the form grader marks „verheiratet, 2 Kinder“ wrong but „verheiratet, zwei Kinder“ right. The 14 minor findings (among them the same Emre form twice, in Units 1 and 2, and a few unglossed look-ahead words) can follow in the next round.",
+  "findings": [
+    {
+      "severity": "major",
+      "where": "content/course-v2/a1.1/units/u01.json start (no auftakt) and steps[0].microOutput (a1.1-u01-ls1-mo); src/components/course-v2/StepView.jsx segmentsFor (the micro segment comes after practice and Aussprache); docs/course-v2/SCHEMA.md l. 615 (auftakt: „B skeleton only“)",
+      "issue": "E, class. BLUEPRINT §3.1 (LS1 row: „in U1 of every course the micro-output is spoken and scored within the first three screens“) and §7.4 (day 0: „the scored spoken sentence within the first 3 screens“) make this the free course's first win. In u01 the first scored speaking is the LS1 micro-output. The learner reaches it only after the Lernziele, the Folge and its gist item, the 10-line input, 5 input items, the form card, 4 structured items, 12 practice items and the Aussprache block: about 30 screens and 15–20 minutes in. The owner opens A1.1 at exactly this point. No unit edit can move the micro-output: the player fixes the segment order, and the schema allows `start.auftakt` only in the B skeleton, although StartView.jsx already renders `start.auftakt.microOutput` (l. 122).",
+      "fix": "SCHEMA owner: allow `start.auftakt` in the A skeleton for U1 of a course (SCHEMA l. 615), and let the validator accept it. Unit: add after the Folge gist item `\"auftakt\": { \"promptDe\": \"Jetzt Sie! Frau Schulz fragt auch Sie.\", \"microOutput\": { \"id\": \"a1.1-u01-start-mo\", \"bankKey\": \"a11-u01-mo0\", \"mode\": \"spoken\", \"profile\": \"course-micro-sp\", \"situationDe\": \"Frau Schulz sagt: „Guten Morgen! Wie heißen Sie? Woher kommen Sie?“\", \"promptDe\": \"Sagen Sie: Ich heiße … Ich komme aus …\", \"promptEn\": \"Say your name and where you are from.\", \"planSeconds\": 20, \"seconds\": [5, 20], \"targets\": [\"g.praesens\"], \"register\": \"Sie\", \"modelDe\": \"Guten Morgen! Ich heiße Priya Nair. Ich komme aus Indien.\" } }`. Every word of it is in the Folge. Keep ls1-mo as the longer rehearsal at the end of LS1."
+    },
+    {
+      "severity": "major",
+      "where": "content/course-v2/a1.1/plateaus/p1.json productive.aiRole.personaDe, productive.modelTurns[1], [2], [5]; against content/course-v2/a1.1/units/u03.json steps[4].task.aiRole.personaDe and steps[4].task.modelTurns[3], content/course-v2/a1.1/units/u12.json steps[4].task.aiRole.personaDe, content/course-v2/a1.1/units/u02.json steps[1].microOutput.modelDe; content/course-v2/casts/a1.json (no Nora record)",
+      "issue": "K, class. Nora is the learner's exam partner in every speaking task from u03 on, but her facts are invented anew each time. In u03 she has „zwei Schwestern … in Hamburg“ and no children. In P1, the next speaking task, she has „zwei Brüder“ and works „in Leipzig, in einer Schule“ as a teacher. In u12 she is a teacher in her own country and now works in a Leipzig restaurant. u02 uses „Nora“ as the learner's own model name („Ich heiße Nora … Ich bin Studentin“), and u06 (slice 2) switches her to du. In P1 the learner model also answers „Ja, ich habe eine Tochter. Sie ist fünf.“ Yet the Sp1 model in the same Plateau is Priya's own data, and Priya has no child; the five-year-old is her niece. These contradictions stand on model turns the learner reads (§9.4 MAJOR: a persona contradiction).",
+      "fix": "Cast owner: add one fixed record to casts/a1.json, e.g. `x.nora`: „Nora, Teilnehmerin in der Prüfung, Partnerin in allen A1-Sprechen-Aufgaben; sagt Sie; zwei Schwestern (30 und 34) in Hamburg; keine Kinder; in ihrem Land Lehrerin, in Leipzig lernt sie Deutsch“. Every aiRole named Nora then follows it (u06: Sie). P1: personaDe „… Nora antwortet kurz (sie hat zwei Schwestern in Hamburg; von Beruf ist sie Lehrerin, hier lernt sie Deutsch) …“; modelTurns[1] „Ja, zwei Schwestern. Haben Sie Kinder?“; modelTurns[2] „Nein. Aber meine Schwester hat eine Tochter. Sie ist fünf.“; modelTurns[5] „Hier arbeite ich noch nicht, ich lerne Deutsch. Von Beruf bin ich Lehrerin. Sind Sie Studentin?“. u02 ls2-mo modelDe: „Ich heiße Maria. Ich wohne in Leipzig. Ich bin Studentin. Ist der Kurs auch online?“."
+    },
+    {
+      "severity": "major",
+      "where": "content/course-v2/a1.1/plateaus/p1.json productive.modelTurns[6]",
+      "issue": "D. The learner model answers „Sind Sie Studentin?“ with „Nein, ich bin nicht Studentin. Ich lerne Deutsch.“. A predicative noun without an article is negated with kein („Nein, ich bin keine Studentin.“). nicht works only with a contrasting noun („nicht Studentin, sondern …“), as in rc.negation-nicht's model sentence and the u02 read-aloud line. The line that follows here names no second noun, so the model teaches a learner error. This is unnatural German on a model surface (§9.4 MAJOR), and kein comes only in u06.",
+      "fix": "modelTurns[6]: „Nein, ich studiere nicht. Ich lerne hier Deutsch.“ Every word is licensed at p1 (studieren u02, nicht u02)."
+    },
+    {
+      "severity": "major",
+      "where": "content/course-v2/a1.1/plateaus/p1.json examTeile[2].form.fields[3] (Familienstand; accepted „verheiratet“, „verheiratet, zwei Kinder“); src/lib/course-v2/checkItem.js formContext (l. 429–462: `add` licenses only tokens with a letter, and the situation sentence only in its own spelling); tests/course-v2-player-check.test.mjs",
+      "issue": "A, class. We ran the grader on this field. „verheiratet, zwei Kinder“ is CORRECT, and so is „verheiratet, hat zwei Kinder“. But „verheiratet, 2 Kinder“ and „verheiratet (2 Kinder)“ are WRONG, so the same information written with a digit costs the point. A Goethe S1 marker scores all four entries 1, because the field's information („verheiratet“) is there and correct. This is a defensible answer that is not accepted (§9.4 MAJOR). It is also a gate hole: the grader treats digits differently from number words on every form field that is not `exact: 'number'`. CLAUDE.md forbids closing it with another accepted variant.",
+      "fix": "Checker owner, in the v2 wrapper: in formContext, license the digit value of every number word the rule already licenses (from the label, the accepted forms and the situation's same-fact sentence), and the number word of every digit. foldNumberWords is already imported at l. 63; `add` must accept a digit token whose folded value matches. Fixtures in tests/course-v2-player-check.test.mjs: p1 f4 „verheiratet, 2 Kinder“ → CORRECT; „verheiratet (2 Kinder)“ → CORRECT; „ledig, 2 Kinder“ → WRONG. After that, drop the hand variant „verheiratet, zwei Kinder“ from accepted: the rule covers it."
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/units/u01.json steps[5].task (LS6 „Kurs A1: Angaben zu Emre“) against content/course-v2/a1.1/units/u02.json steps[5].task (LS6 „Das Formular für Emre“)",
+      "issue": "Criteria 8 and H. The first two S1 forms of the course are about the same person. Three of their five answers are the same (Wohnort İzmir, Land Türkei, Muttersprache Türkisch). In u02 a learner fills most of the form from memory of yesterday's task, not from the text, which is the skill S1 trains. u02's form belongs to the story (Herr Richter: „Ich schreibe für Herrn Yıldız.“). u01's form does not.",
+      "fix": "Rewrite u01's form about Arta, whom u01 LS3 introduces. title „Kurs A1: Angaben zu Arta“; situationDe „Arta Berisha kommt aus dem Kosovo. Sie wohnt in Prishtina. Arta lernt online Deutsch, im Kurs A1 von Frau Schulz in Leipzig. Die Muttersprache von Arta ist Albanisch. Sie spricht auch Englisch.“; taskDe „Lesen Sie den Text. Schreiben Sie: Name, Land, Wohnort, Muttersprache und Kurs von Arta.“; fields: Name „Arta Berisha“ (accepted „Berisha, Arta“), Land „Kosovo“, Wohnort „Prishtina“ (accepted „Pristina“, „Priština“ with the acceptedWhy of ls3-i03), Muttersprache „Albanisch“, Kurs „A1“; checklist and modelText „Emre“ → „Arta“; the proof and the story are unchanged."
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/plateaus/p1.json examTeile[2].situationDe („In Damaskus ist er Lehrer.“)",
+      "issue": "D/K. The present tense puts Tarek's job in Damascus now, but the next sentence says he now lives with his family in Leipzig. The past tense is not licensed at p1, so the sentence reads as a logic slip. With this sentence, „Lehrer von Beruf“ in the Beruf field is also graded WRONG (we ran it), because „von“ is licensed nowhere.",
+      "fix": "situationDe: „Tarek Nasser kommt aus Syrien, aus Damaskus. Er ist 35 Jahre alt, verheiratet und hat zwei Kinder. Er ist Lehrer von Beruf. Jetzt wohnt er mit der Familie in Leipzig und lernt Deutsch. Er spricht Arabisch, Englisch und ein bisschen Deutsch.“ The checker's same-fact sentence then also licenses „Lehrer von Beruf“."
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/units/u01.json steps[0].pool.items[1] (ls1-p02), steps[0].reserve[0] (ls1-r01), steps[1].reserve[4] (ls2-r05), check.items[0] (c01); validator ITM-01 advisories",
+      "issue": "A. For the Sie form the key is the cue itself („Woher ___ Sie? (kommen)“ → „kommen“, „Wie ___ Sie? (heißen)“ → „heißen“). A learner who copies the bracket gets these items right, including the scored Check item c01. From u02 on, the unit cues give the stem („(schreib-)“, „(wohn-)“, „(möcht-)“), and those items test the ending.",
+      "fix": "Use the u02 cue convention in u01 for the regular verbs: „(heiß-)“ in ls1-p01, ls1-r01, c01; „(komm-)“ in ls1-p02, ls2-p04, ls2-r05, ls3-p03, ls3-p04, c02; „(wohn-)“ in ls1-p03, ls2-p05, ls3-p01, ls3-r01, ls3-r03; „(lern-)“ in ls3-p02. Keep „(sein)“ and „(sprechen)“ as infinitives."
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/units/u02.json steps[1].inputItems[4] (a1.1-u02-ls2-i05)",
+      "issue": "A. „Wie oft sagt Emre die Nummer?“ Key „zweimal“. Emre says the whole number twice (l06, l08) and then the end once more („Nicht sechzehn – sechzig!“, l10). A learner who counts that line has a defensible „dreimal“. The promptEn says „the whole number“, but the German does not.",
+      "fix": "promptDe: „Wie oft sagt Emre die ganze Nummer?“ The explanation stays."
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/units/u03.json start.folge.lines[4] (a1.1-u03-start-l05) against content/course-v2/a1.1/units/u02.json steps[2].input.lines[5] (a1.1-u02-ls3-l06) and steps[2].input.text",
+      "issue": "K. In u02 Herr Richter closes Priya's registration („Dann sind Sie fertig.“), and the form shown has no Alter or Familienstand field. In u03 he fills in „Alter: 28, Familienstand: verheiratet, Partner: Arjun Nair“ and announces a second time „Das Formular ist fertig!“.",
+      "fix": "l05: „Gut. Dann schreibe ich hier noch: Alter 28, verheiratet, Partner: Arjun Nair. So, jetzt ist das Formular wirklich fertig!“ (say: „… Alter achtundzwanzig …“). If „wirklich“ is not wanted, end the line with „Jetzt ist alles fertig!“."
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/units/u03.json steps[4].task.modelTurns[9]",
+      "issue": "K. The learner model is Priya: her mother is a 58-year-old teacher and her parents live in Kochi. It ends with „Meine Freunde wohnen in Leipzig. Sie studieren hier.“ Priya's friends in Leipzig are Olena and Bilal, who work and take the German course; nobody in the cast studies at a university in A1.1 except Sophie.",
+      "fix": "modelTurns[9]: „Meine Freunde wohnen in Leipzig. Sie lernen hier auch Deutsch.“"
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/units/u04.json steps[4].task.parts[0].cards.partner[0] and steps[4].task.modelTurns[2], [3], [4]",
+      "issue": "P. In Sprechen Teil 2 (sd1.sp2) candidates ask one another a question on the topic and answer about themselves. The model has the other candidate act as a stallholder („Wie viel Gramm Zwiebeln möchten Sie?“ – „200 Gramm, bitte.“) and the learner address her as a shop assistant („Entschuldigung, ist die Milch im Angebot?“). That rehearses the shop role-play of Teil 3 in the Teil 2 slot. The examiner persona would accept the question forms but not the frame.",
+      "fix": "partner[0] „Obst und Gemüse – Markt“; modelTurns[2] (partner) „Kaufen Sie Obst und Gemüse auf dem Markt?“; [3] (learner) „Ja, auf dem Markt ist das Gemüse gut und billig.“; [4] (learner) „Ist die Milch heute im Angebot?“ (without „Entschuldigung“)."
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/units/u03.json steps[3].strategyCards[0].de; content/course-v2/a1.1/units/u04.json steps[3].strategyCards[1].de; content/course-v2/a1.1/rule-cards.json rc.vokalwechsel de (shown in u03 LS2)",
+      "issue": "N. Strategy and rule cards use words that the lexicon allocates later, with no gloss. The u03 card has „zum Beispiel“ (lx.beispiel a1.1-u12), „gibt es“ (lx.es-gibt u06), „Suchen“ (lx.suchen u06) and „Achtung“. The u04 card has „Achten“ (lx.achten a2.2-u08). rc.vokalwechsel teaches „nehmen: du nimmst, er nimmt“ six units early (lx.nehmen a1.1-u09). All of these are validator LEX-01 advisories.",
+      "fix": "u03 card: „Lesen Teil 1: Sie lesen zwei Texte, eine E-Mail und eine Nachricht, und fünf Aussagen. Lesen Sie zuerst die Aussagen. Lesen Sie dann den Text: Wer? Wo? Was? Wichtig: Text und Aussage haben oft andere Wörter.“ u04 card: „Hören Teil 2: Sie hören jede Durchsage nur einmal. Lesen Sie zuerst die Aussage. Wichtig sind Zahlen und Preise: Was kostet was?“ rc.vokalwechsel: delete the last sentence („Auch „nehmen“ …“) and its EN twin; u09 can carry „nehmen“ on a depth-2 card."
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/units/u04.json start.folge.lines[5] (a1.1-u04-start-l06; start.folge has no glosses)",
+      "issue": "N/criterion 5. The Folge line „… aber wir brauchen Geld für eine Wohnung.“ carries the story (they save for a flat, and the cliffhanger and u05 follow from it). But „Wohnung“ is lx.wohnung, allocated to a1.1-u05, and the Folge has no gloss list. u05's Folge already uses `start.folge.glosses`.",
+      "fix": "Add to u04 start.folge: `\"glosses\": [{ \"token\": \"Wohnung\", \"gloss\": { \"en\": \"flat, apartment\" } }]`."
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/units/u04.json steps[1].pool.generators[0].source[1] (a1.1-u04-ls2-l04), steps[2].pool.generators[0].source[0] (ls3-l05) and source[1] (ls3-l07); content/course-v2/a1.1/lexicon.json lx.ei, lx.kartoffel, lx.reis (receptive)",
+      "issue": "N. The generated dictations make the learner spell „Kartoffeln“, „Eier“ and „Reis“, which the lexicon plans only for recognition (validator LEX-03 advisories). In u04 these words are also built on tiles („Wo sind die Eier?“, „Wo ist der Reis?“) and heard in the Check (q04). Using them productively is what the unit already does.",
+      "fix": "Lexicon owner: add promotions {lemma: lx.ei, from: receptive, to: productive, unit: a1.1-u04}, the same for lx.kartoffel and lx.reis. Then re-run LEX-05 for the productive share; there is room at 50 %. No unit edit."
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/plateaus/p1.json texts[2] (a1.1-p1-sd1-t3, speakers x.frau-winkler / x.herr-busch) and examTeile[0].items[2].explanation.de",
+      "issue": "K. The exam text answers the phone with „Sprachschule Leipzig, guten Tag!“, which is the story's school, and the caller is in its „Kurs A1“. The receptionist there is Herr Richter (casts/a1.json), and u02 opens with the same greeting in his voice. An unknown Frau Winkler at Priya's school is a small break.",
+      "fix": "Give lines l01, l03, l05 and l07 to cast.herr-richter, and let l01 read „Sprachschule Leipzig, Richter, guten Tag!“. Change the explanation of h1-03 to „Herr Busch sagt: „0341 28 64 19.“ Herr Richter fragt „90?“, aber er sagt: „am Ende 19“.“ and drop x.frau-winkler from extras."
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/plateaus/p1.json examTeile[0].items[3] (a1.1-p1-sd1-h1-04) and texts[3] (t4) against content/course-v2/a1.1/units/u02.json steps[3].blocks[0].items[3] (a1.1-u02-ls4-sd1-h1-04)",
+      "issue": "Criterion 8. The P1 item repeats the u02 item almost exactly: „Was ist … von Beruf?“ with the same option set (Studentin / Lehrerin / Kellnerin) and the same key line „Nein, ich studiere nicht.“; only the key moves from Lehrerin to Kellnerin. The Plateau therefore tests memory of the u02 item.",
+      "fix": "t4 l02: „Nein, ich studiere nicht. Ich bin Informatikerin.“; l03: „Ach so! Ich bin Student und Kellner. Und meine Schwester ist Lehrerin, auch hier in Leipzig.“ Item options: [„Studentin“, „Informatikerin“, „Kellnerin“], key „Informatikerin“. Explanation: „Hanna sagt: „Ich bin Informatikerin.“ Leon ist Student und Kellner.“"
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/rule-cards.json rc.artikel-genus-plural de and en (shown in u04 steps[0].ruleCard and steps[2].ruleCard)",
+      "issue": "§9.5, a simplification that misleads. „Aber nach „möchte“: „Ich möchte einen Apfel.““ suggests that only möchte takes „einen“. The unit's own main verbs are brauchen and kaufen („Wir brauchen ein Brot“), and its S2 Leitpunkt asks „Was brauchen Sie?“. A learner who follows the card writes ✗„Wir brauchen ein Apfel.“.",
+      "fix": "de: „Jedes Nomen hat ein Genus: „der“, „das“ oder „die“. Lernen Sie jedes Nomen mit Artikel. Unbestimmt: „ein“ (der, das), „eine“ (die). Nach „möchte“, „brauchen“ und „kaufen“ aber: „einen“ (der): „Ich möchte einen Apfel.“ „Wir brauchen einen Apfel.“ (mehr in Einheit 6) Plural: „die Äpfel“, „die Brote“, oft mit Umlaut. Nach „Gramm“ und „Kilo“ ohne Artikel: „200 Gramm Käse“.“ The en twin follows the de."
+    },
+    {
+      "severity": "minor",
+      "where": "content/course-v2/a1.1/units/u01.json steps[1].microOutput.modelDe and steps[2].microOutput (promptDe „… Welche Sprachen?“, modelDe „… Welche Sprachen sprichst du?“); content/course-v2/registries/grammar-spine.json g.vokalwechsel (intro a1.1-u03, no chunkFrom); content/course-v2/registries/detectors.json det.vokalwechsel",
+      "issue": "Criterion 4. u01's micro-outputs ask the learner to produce „sprichst“, and its tiles build „spricht“ (ls3-p07, c05). The spine licenses the vowel change only at u03 and records no chunk. The unit's deviation logs the welch- chunk but not this one, so GRM-04 and the level plan miss the look-ahead that r3 F09 named. The spiral itself is good didactics: the chunk comes in u01, the rule in u03.",
+      "fix": "Spine/detector owner: whitelist „sprichst“ and „spricht“ in det.vokalwechsel for a1.1-u01 and a1.1-u02, as det.welch-dies is for „Welche Sprachen“. A chunkFrom would break GRM-01 (u01 already carries g.imperativ-sie). Unit: add one sentence to spec.deviation.reason: „„Sprichst du …? / er spricht“ steht als Chunk ab u01 (Whitelist det.vokalwechsel); die Regel kommt in u03.“"
+    }
+  ]
+}

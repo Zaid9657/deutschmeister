@@ -2,6 +2,13 @@ import { createClient } from '@supabase/supabase-js';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 import { getTier } from './_shared/speakingUsage.mjs';
 import { writingTaskByKey, courseWritingTasks, MAX_WRITING_POINTS } from './_shared/writingTasks.mjs';
+import { BANK_KEY_RE, LEGACY_COURSE_TASK_KEY_RE, bankKeyScope, isBankKey } from './_shared/rubrics/keys.mjs';
+import { handleWritingV2 } from './_shared/rubrics/writingV2.mjs';
+
+// Course v2 bank keys (SCHEMA §2) replace the A-only legacy pattern for every
+// NEW course; the legacy `aNN-lNN` keys of the live A1.1/A1.2 stay on the path
+// below, unchanged. Re-exported so KEY-01 can test the function's own view.
+export { BANK_KEY_RE, LEGACY_COURSE_TASK_KEY_RE };
 
 // AI writing feedback (renovation Phase 5b) — grades an exam-style letter
 // against our rubric and stores the result with the SERVICE ROLE (clients
@@ -85,9 +92,21 @@ const COURSE_TASK_KEY_RE = /^(a\d\d)-l\d\d$/;
 // allowance COUNT to, or null when task_key doesn't match the course task
 // key shape (in which case courseAllowance is never true, so the caller
 // never needs this value).
+//
+// Course v2 keys (`a21-u07-w`, BANK_KEY_RE) have the same scope shape — the
+// course prefix — so this answers for both (KEY-01). The LEGACY allowance below
+// still applies only to legacy keys: courseAllowanceFor() and the lifetime count
+// look at `-lNN` keys alone, and a v2 key never reaches that path (it is handled
+// by handleWritingV2 against the entitlement module's allowance).
+// Course v2 rows (`a21-u07-w`, `b12-p2-w-tb1`, …) as a POSIX regex for PostgREST's
+// `match`. They are billed against the v2 course allowance (_shared/entitlement.mjs),
+// so the legacy tier counts below never see them: a learner's v2 course writing must
+// not use up the exam-bank monthly limit. Exam slugs and `aNN-lNN` keys cannot match.
+export const V2_TASK_KEY_PG_RE = '^(a1[12]|a2[12]|b1[12]|b2[12])-(u(0[1-9]|1[0-2])|p[1-3]|ht|dx|m[abc])-';
+
 export function courseTaskKeyPrefix(taskKey) {
   const m = typeof taskKey === 'string' ? taskKey.match(COURSE_TASK_KEY_RE) : null;
-  return m ? `${m[1]}-` : null;
+  return m ? `${m[1]}-` : bankKeyScope(taskKey);
 }
 
 /**
@@ -97,6 +116,7 @@ export function courseTaskKeyPrefix(taskKey) {
  * the ordinary tier limit rather than inventing an allowance.
  */
 export function courseAllowanceFor(taskKey) {
+  if (typeof taskKey !== 'string' || !COURSE_TASK_KEY_RE.test(taskKey)) return 0;
   const level = LEVEL_OF_PREFIX[courseTaskKeyPrefix(taskKey)];
   const n = level ? courseWritingTasks(level).length : 0;
   return n ? n + CHECKPOINTS_PER_COURSE : 0;
@@ -201,7 +221,17 @@ export const handler = async (event) => {
     const user_id = await getAuthenticatedUserId(event);
     if (!user_id) return unauthorizedResponse(headers);
 
-    const { exam_key, task_key, text, exam_attempt_id } = JSON.parse(event.body || '{}');
+    const body = JSON.parse(event.body || '{}');
+    const { exam_key, task_key, text, exam_attempt_id } = body;
+
+    // COURSE v2: a bank key (`a21-u07-w`, `a21-u07-mo2`) is resolved from the
+    // compiled banks, graded against its rubric profile with the deterministic
+    // zero/cap rules applied after the model, and billed against the purchase-
+    // aware course allowance (_shared/rubrics/writingV2.mjs). Nothing below this
+    // branch changes for the exam bank or the live A1.1/A1.2 course keys.
+    if (isBankKey(body.taskKey ?? task_key)) {
+      return await handleWritingV2({ supabase, userId: user_id, body, headers });
+    }
 
     const task = writingTaskByKey(exam_key, task_key);
     if (!task) {
@@ -246,10 +276,16 @@ export const handler = async (event) => {
       // Lifetime, and only THIS course's own rows — the prefix is derived
       // from the submitted task_key itself, never a fixed literal.
       usedQuery = usedQuery.like('task_key', `${courseTaskKeyPrefix(task_key)}%`);
-    } else if (tier !== 'free_trial') {
-      const now = new Date();
-      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-      usedQuery = usedQuery.gte('created_at', monthStart);
+      // v2 bank keys share the course prefix (`a11-u01-w`); the legacy lifetime
+      // allowance counts only the legacy `-lNN` rows (both filters apply).
+      usedQuery = usedQuery.like('task_key', `${courseTaskKeyPrefix(task_key)}l%`);
+    } else {
+      usedQuery = usedQuery.not('task_key', 'match', V2_TASK_KEY_PG_RE);
+      if (tier !== 'free_trial') {
+        const now = new Date();
+        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+        usedQuery = usedQuery.gte('created_at', monthStart);
+      }
     }
     const { count: used } = await usedQuery;
     if ((used ?? 0) >= limit) {

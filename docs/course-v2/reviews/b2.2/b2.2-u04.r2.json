@@ -1,0 +1,420 @@
+{
+  "review": "b2.2-u04.r2",
+  "unitId": "b2.2-u04",
+  "file": "content/course-v2/b2.2/units/u04.json",
+  "round": 2,
+  "date": "2026-09-27",
+  "reviewers": [
+    {
+      "id": "R1",
+      "role": "Prüferin (lizenzierte telc-B2-Prüferin): exam fidelity, rubric application, task clarity"
+    },
+    {
+      "id": "R2",
+      "role": "Kursleiterin DaF/DaZ, Niveau B2.2: naturalness, level, didactics, scene plausibility"
+    }
+  ],
+  "method": "We read every German string again: start (Folge, gist, Auftakt), the LS1 AGB and its items, the LS2 dialogue, items, Aussprache and generators, the LS3 rule table, pool, reserve and cloze, the LS4 texts t1-t6, both blocks and the strategy cards, the LS5 speaking task (situation, cards, partnerData, aiRole, openingLine, hints, model turns), the LS6 writing task and model text, and check, proof, Porträt, Redemittel, story, Fokus, facts and extras. We solved all 101 authored items blind from promptDe plus options, tiles or audio line, and compared each result with answer and accepted[]. We also traced the two generated LS2 dictations through src/components/course-v2/content.js (dictationItems) and src/lib/lesson/check.js. We checked hv3, sb1, m3 and sa against content/course-v2/registries/lanes/tb2.json and the rubrics tb2-m3 and tb2-sa. We checked the grammar ceiling against grammar-spine.json and rc.konditional-konnektoren (b2.2/rule-cards.json). We checked the lexicon against b2.2/lexicon.json and every lower level's lexicon (exact lemma, compound list_ref, Fugen-s and gloss comparison), and the load and sentence length against level-profiles.json (b2.2: newPerUnit 55-70, maxWords 30). We checked the can-dos against registries/cando/b2.json and curriculum/b2-2.md E4, the cast and story against casts/series.json and the b2-2.md E5 cliffhanger target, the dates and arithmetic by calculation, and the key positions of all choice items by script. Each of the 27 r1 findings was re-verified. Validator: node scripts/course-v2/validate.mjs content/course-v2/b2.2/units/u04.json returned FAIL. KEY-01 has 2 blockers. LEX-02 has 76 ratchet findings (down from 111): 55 are „recurs in 0 later units“, which cannot pass before u05-u12 exist, and 21 are receptive lemmas that occur once in the unit's inputs. LEX-04 has 1 advisory. 32 rules pass and 4 are skipped as level-scope. LEX-03, LEX-05 and LEX-07 now pass. node scripts/course-v2/check.mjs returned 0 errors on the unit and 0 on registries/lanes/tb2.json.",
+  "verdict": "Much improved, but not exitable in round 2. 22 of the 27 r1 findings are fixed in the unit, and r1-F27 is accepted as an advisory. The Sprachbausteine and all other choice keys are now spread (3/4/3 and 9/11/9). Teil 3 is now a genuine plan-together task: the same card for both sides, all figures shared, open preferences and no hidden limit. The story now runs in one line: 200 € (LS2), then the written demand of 648 € (LS6, framed as before the call), then 450 € (t5), then 574 € (LS5). The lexicon validators LEX-03, LEX-05 and LEX-07 pass. The remaining blocker is KEY-01. The r1-F04 renumbering (mo1/mo2/mo3) moved the failure instead of removing it: KEY-01 treats the Auftakt as LS1, and BANK_KEY_RE has no slot for an Auftakt micro-output. No numbering can pass until the schema or the rule changes. Four MAJORs concern the unit's items and lexicon. (1) Letter and word cues still admit a known lemma: fehlerhaft (B1.1) in ls1-p05 and Gegenvorschlag (A2.1) in ls2-p02. (2) The new dictation sources dictate 30-34-word lines whose keys say „10 %“ and „14“ where the audio says „zehn Prozent“ and „vierzehn“. (3) The correction items do not say what to correct, so the dass and verb-first variants taught in this unit are rejected. (4) Three „new“ lemmas are variants of words already taught productively (Schadensersatz/Schadenersatz, Vertragsbedingung/-en, anderenfalls/andernfalls), which LEX-07 does not see. One MAJOR is a gate hole outside the unit: the r1-F01/F02 class rule (ITM-03 or a shuffle) still does not exist. There are 7 minors. Every open fix is small. A round 3 should close the unit-owned items in one pass, once the KEY-01 slot question is decided.",
+  "scores": {
+    "R1": {
+      "D": 4,
+      "N": 4,
+      "H": 4,
+      "A": 3,
+      "P": 4,
+      "K": 4,
+      "E": 4,
+      "total": 27
+    },
+    "R2": {
+      "D": 4,
+      "N": 4,
+      "H": 4,
+      "A": 3,
+      "P": 4,
+      "K": 4,
+      "E": 3,
+      "total": 26
+    },
+    "combined": {
+      "D": 4,
+      "N": 4,
+      "H": 4,
+      "A": 3,
+      "P": 4,
+      "K": 4,
+      "E": 3,
+      "total": 26
+    }
+  },
+  "total": 26,
+  "counts": {
+    "blocker": 1,
+    "major": 5,
+    "minor": 7,
+    "unitOwned": {
+      "blocker": 1,
+      "major": 3,
+      "minor": 5
+    },
+    "note": "unitOwned = the fix edits u04.json. F01 needs the KEY-01/BANK_KEY_RE decision first. F05 (lexicon), F06 (rule-smith/player), F12 (lexicon) and F13 (rule card) are owned outside the unit file."
+  },
+  "previousRound": [
+    {
+      "id": "r1-F01",
+      "status": "fixed (in the unit); class rule missing",
+      "note": "The SB1 keys now run a b c b a c b a c b (3/4/3, no run). Every key was re-solved blind and is still fixed by syntax or valency. ITM-03 still ignores type cloze: see F06."
+    },
+    {
+      "id": "r1-F02",
+      "status": "fixed (in the unit); class rule missing",
+      "note": "The 29 non-exam choice items now have their keys at positions 1/2/3 = 9/11/9 (gist b; LS1 input b b c; structured a c b; pool c a; reserve b a; LS2 input c a b c; structured b a; pool a b; LS3 cloze b c a b c; pool c a; check c b; proof a). There is no rule and no shuffle: see F06."
+    },
+    {
+      "id": "r1-F03",
+      "status": "fixed",
+      "note": "c05 „Darauf ___ wir. (auf etwas bestehen)“: the verb is given in the German prompt, and only the form is tested."
+    },
+    {
+      "id": "r1-F04",
+      "status": "not fixed",
+      "note": "The keys were renumbered to Auftakt mo1, LS1 mo2, LS2 mo3, as r1 proposed. That proposal was wrong: KEY-01 reads the Auftakt as LS1 and requires mo<LS>, so it now reports 2 blockers (mo2 in LS1, mo3 in LS2). See F01."
+    },
+    {
+      "id": "r1-F05",
+      "status": "fixed",
+      "note": "LEX-03 passes. The model text no longer uses Möbelstücke (Möbelstück is in a2.1/lexicon.json anyway)."
+    },
+    {
+      "id": "r1-F06",
+      "status": "fixed",
+      "note": "LEX-05 passes. spec.lexiconBlocks lists the 55 new entries plus the 4 promotions (Kratzer, Pauschale, angemessen, begleichen) in four blocks."
+    },
+    {
+      "id": "r1-F07",
+      "status": "fixed for exact duplicates",
+      "note": "LEX-07 passes. The ten exact duplicates are gone, and angemessen and begleichen are now promotions. Three variant-spelling duplicates remain, and the exact-string comparison cannot see them: see F05."
+    },
+    {
+      "id": "r1-F08",
+      "status": "fixed",
+      "note": "Option (b) was taken: identical cards, all figures in both situations, open preferences (Partnerwerkstatt/Gutschein vs Werkstatt Jessen/Geld), partnerData states „es gibt keine versteckte Grenze“, and a cooperative persona that makes proposals. This is now M3 behaviour and fits the tb2-m3 criterion „eigene Vorschläge machen, auf Vorschläge reagieren und gemeinsam einen Plan erarbeiten“. The choice is not yet recorded in DECISIONS.md, as r1 asked."
+    },
+    {
+      "id": "r1-F09",
+      "status": "fixed",
+      "note": "LS6 is framed as happening before the second call, the LS5 openingLine cites the e-mail („Sie fordern 648 Euro bis zum 20. November“), and story.beat is updated. The LS6 wording still reads as a contradiction: see F09 (1)."
+    },
+    {
+      "id": "r1-F10",
+      "status": "fixed",
+      "note": "t6 no longer has a counter-offer. The estimate now has one story: LS2 l08 and t6 say a Handwerkerin comes tomorrow, t1 says „heute bei Ihnen angesehen“, and LS5 says „hat die Kommode schon geprüft“, all from the Werkstatt Jessen."
+    },
+    {
+      "id": "r1-F11",
+      "status": "fixed",
+      "note": "rm05, readAloud and hint all read „Unter … Euro können wir uns (leider) nicht einigen.“"
+    },
+    {
+      "id": "r1-F12",
+      "status": "partly fixed",
+      "note": "The cues for p06 „(Nomen zu haften)“, p03 „(bestehen)“ and r02 „(Nomen zum Verb)“ are now in German and close those items. p05 „(f…, 10 Buchstaben)“ excludes falsch, but fehlerhaft (B1.1 productive, also 10 letters) is still open: see F02."
+    },
+    {
+      "id": "r1-F13",
+      "status": "fixed",
+      "note": "c02, ls3-p03 and ls3-r02 now read „Formell, Verb zuerst“. Falls and Sofern are excluded by the German prompt."
+    },
+    {
+      "id": "r1-F14",
+      "status": "fixed",
+      "note": "c07 accepts „…, vorausgesetzt, die Summe ist angemessen.“ with acceptedWhy, and the LS3 rule table adds „(ohne dass: Position 2)“. The rule card is not updated (F13), and the sibling correction items were not swept (F04)."
+    },
+    {
+      "id": "r1-F15",
+      "status": "fixed",
+      "note": "ls1-p07 accepts all five V2 orders, and ls3-p10 accepts four. Two parallel items still lack the fronted infinitive: see minor F11."
+    },
+    {
+      "id": "r1-F16",
+      "status": "fixed",
+      "note": "ls2-i03 accepted [„200“, „zweihundert“]. The r1-F26 fix brought the same digit versus number-word gap back in the LS2 dictation generator: see F03."
+    },
+    {
+      "id": "r1-F17",
+      "status": "fixed",
+      "note": "q01 moved to ls1-r06 and now says „Sichtbare Schäden“. The proof is now q02, an unseen clause of another firm („Für Glas haften wir, es sei denn, der Schaden kommt von Ihrer Verpackung“) that asks the learner to infer the claim. Solved blind, the key follows and both distractors are clearly wrong."
+    },
+    {
+      "id": "r1-F18",
+      "status": "fixed",
+      "note": "Every allocated lemma now occurs in the unit's inputs, and the productive lemmas occur at least twice (abweichen in AGB § 5 and t1; begleichen in l13 and t1). 21 of the 34 receptive lemmas occur once (a LEX-02 ratchet, e.g. Schmerzgrenze, Nachfrist, einklagen, kulant). A second exposure in a reserve or check item, or in the Fokus, would lower it. The other 55 LEX-02 findings concern later units that do not exist yet."
+    },
+    {
+      "id": "r1-F19",
+      "status": "fixed",
+      "note": "The explanation now quotes the real heading („Termine“). i01 asks what § 2 regulates, which the heading alone does not answer. i02 is still answerable from its heading, which is acceptable for a gist item."
+    },
+    {
+      "id": "r1-F20",
+      "status": "fixed",
+      "note": "All five phrasings are replaced: „anders als ein Unwetter, das Risiko der Firma“, „kommen wir Ihnen entgegen“, „die Tür lackieren wir neu“ (lackieren glossed), „Ihre Auftragsnummer“ and „Die Schadenshöhe beträgt 500 Euro“ / „Der Schaden liegt bei 500 Euro“."
+    },
+    {
+      "id": "r1-F21",
+      "status": "fixed",
+      "note": "c01 now reads „(s…, 6 Buchstaben: nur falls)“. solange (7 letters) is excluded. sobald (6 letters) is excluded by „nur falls“."
+    },
+    {
+      "id": "r1-F22",
+      "status": "fixed",
+      "note": "ls3-p19 now reads „Die Firma haftet nicht für Glas, es sei denn, ihre Mitarbeiter haben es verpackt.“ This is consistent with l05 and with § 451d Abs. 1 HGB (f04)."
+    },
+    {
+      "id": "r1-F23",
+      "status": "fixed",
+      "note": "„Ich fordere Schadensersatz von 500 Euro für die Kommode und den Spiegel sowie die Erstattung von 148 Euro für die Verspätung, insgesamt 648 Euro.“"
+    },
+    {
+      "id": "r1-F24",
+      "status": "fixed",
+      "note": "Folge l01 sets up the Genossenschaft flat, and l07 „Heute hat es endlich geklappt“ marks the new day. The chest is now a Leipzig flea-market find, which fits series.json (Priya and Arjun lived in Leipzig until b2.1-u01). series.json still has no entry for the second move (level reviewer, not unit)."
+    },
+    {
+      "id": "r1-F25",
+      "status": "fixed",
+      "note": "ls3-p15 is tagged g.verben-praeposition. The SB1 items carry g.weil, g.obwohl, g.relativsatz-akk, g.passiv-vergangenheit, g.verben-praeposition, g.konditional-konnektoren (06, 09), g.um-zu-damit, g.dativverben-pronomen and g.dass."
+    },
+    {
+      "id": "r1-F26",
+      "status": "fixed as stated; regression",
+      "note": "l14 is no longer a dictation source, and c06 is a new line („Sollte die Reparatur teurer werden, …“), so c02 and c06 no longer give each other away. The replacement sources l09 and l13 introduce F03."
+    },
+    {
+      "id": "r1-F27",
+      "status": "accepted (advisory)",
+      "note": "LEX-04 still reports geltend machen as productive off-list. The entry's list_ref „off-list:legal-collocation“ logs the justification, and the word is needed for the formal complaint."
+    }
+  ],
+  "findings": [
+    {
+      "id": "F01",
+      "severity": "blocker",
+      "reviewer": "validator",
+      "criterion": "P",
+      "owner": "SCHEMA §2 BANK_KEY_RE + scripts/course-v2/rules/KEY-01.mjs (rule-smith), then the unit",
+      "unitId": "b2.2-u04",
+      "path": "start.auftakt.microOutput.bankKey (b22-u04-mo1); steps[0].microOutput.bankKey (b22-u04-mo2); steps[1].microOutput.bankKey (b22-u04-mo3)",
+      "quote": "KEY-01 x steps[0].microOutput.bankKey (b22-u04-mo2): micro-output key „b22-u04-mo2“ names LS2 but sits in LS1 · x steps[1].microOutput.bankKey (b22-u04-mo3): … names LS3 but sits in LS2",
+      "problem": "The r1-F04 renumbering moved the failure instead of removing it. KEY-01 maps the Auftakt micro-output to LS1 (walkMicroOutputs yields step null, so lsNr = 1), and BANK_KEY_RE allows only mo1-mo8. BLUEPRINT §3.2 puts the Auftakt into LS1 with its own 60-s micro-output. SCHEMA Start.auftakt requires a microOutput whenever an Auftakt exists, and TextStep requires one for LS1 as well. A B unit that follows the blueprint therefore has two LS1 micro-outputs, and no numbering can pass KEY-01: two mo1 keys collide, and any other number names the wrong slot. b2.2-u04 is the first B unit with an Auftakt (the u04 files of b1.1, b1.2 and b2.1 have none), which is why the conflict has not surfaced before. Nothing is misgraded today, because the three keys are unique, but the unit file fails validation.",
+      "fix": "Rule-smith and schema owner: give the Auftakt its own slot. Change BANK_KEY_RE to `(w|s|mo)([0-8])?`, make KEY-01 map start.auftakt to 0, add the row `b22-u04-mo0` = Auftakt micro-output to the SCHEMA §2 table, and let the evaluate-* functions accept it. Then key the unit as Auftakt b22-u04-mo0, LS1 b22-u04-mo1, LS2 b22-u04-mo2. Unit-only fallback if the rule is not changed: drop start.auftakt (as the other B u04 units do) and key LS1 mo1 and LS2 mo2. That loses the §3.2 Auftakt, so the rule change is preferred.",
+      "scope": "class",
+      "proposedRule": "KEY-01 fixture: a B unit with start.auftakt.microOutput and steps[0].microOutput passes with b22-u04-mo0/mo1 and fails with two mo1 keys. BANK_KEY_RE test covers mo0."
+    },
+    {
+      "id": "F02",
+      "severity": "major",
+      "reviewer": "R1",
+      "criterion": "A",
+      "unitId": "b2.2-u04",
+      "path": "steps[0].pool.items[4] (b2.2-u04-ls1-p05); steps[1].pool.items[1] (b2.2-u04-ls2-p02)",
+      "quote": "p05 „Die Möbelpacker haben nicht aufgepasst. Sie haben ___ gehandelt. (f…, 10 Buchstaben)“ → accepted [fahrlässig] · p02 „200 Euro sind zu wenig. Priya antwortet mit einem ___: 648 Euro. (Nomen mit gegen-)“ → accepted [Gegenangebot]",
+      "problem": "Solved blind, each cue still admits a word the learner already has productively. fehlerhaft (b1.1-u04, productive) has 10 letters and starts with f, and „Sie haben fehlerhaft gehandelt“ is correct German. Gegenvorschlag (a2.1-u07, productive) is a masculine noun with gegen-, fits „mit einem ___“ and is the everyday synonym. Both answers are marked wrong. The r1-F12 letter count excluded falsch but not fehlerhaft.",
+      "fix": "p05: change the cue to „(fa…, 10 Buchstaben)“ or „(Nomen dazu: die Fahrlässigkeit)“. p02: accept Gegenvorschlag with acceptedWhy „Synonym: Gegenvorschlag = Gegenangebot“, or change the cue to „(gegen + Angebot)“.",
+      "scope": "class",
+      "proposedRule": "ITM-01: for a fill_blank item whose promptDe carries a letter cue (initial letters and/or „N Buchstaben“) or a word-formation cue („Nomen mit gegen-“), every lemma in the cumulative lexicon up to the unit that matches the cue, the blank's gender/case and POS must be in accepted or excluded by the German prompt. Fixture: ls1-p05 with b1.1 fehlerhaft fails."
+    },
+    {
+      "id": "F03",
+      "severity": "major",
+      "reviewer": "R2",
+      "criterion": "A",
+      "unitId": "b2.2-u04",
+      "path": "steps[1].pool.generators[0] (dictation.fromInput, source [ls2-l09, ls2-l13, ls2-l03], count 2)",
+      "quote": "l09 de „… eine Teilerstattung von 10 % des Preises …“ / say „… von zehn Prozent des Preises …“ (34 words, 4 sentences) · l13 de „… innerhalb von 14 Tagen …“ / say „… innerhalb von vierzehn Tagen …“ (30 words, 3 sentences) · content.js dictationItems: answer = accepted = [line.de]",
+      "problem": "The r1-F26 fix replaced l14 by l09 and l13. The generator takes the first `count` sources as whole lines and makes line.de the only accepted answer. The learner hears „zehn Prozent“ and „vierzehn Tagen“. A correct transcription with number words, or „10 Prozent“, is rejected, because check.js maps no number words to digits and does not strip „%“ (the same class as r1-F16). The lines are also four and three sentences long, typed on a phone with a single typo allowance for the whole line. The unit's other dictation (c06) has 9 words.",
+      "fix": "Change the source to [ls2-l03, ls2-l06]: „Das tut mir leid. Was genau ist denn beschädigt worden?“ (10 words) and „Ihre Mitarbeiter. Wir hatten das Verpacken bei Ihnen bestellt, das steht auch in unserem Auftrag.“ (15 words). Both are short and contain no numbers. If a numbered line has to stay, the generator must add the say form to accepted.",
+      "scope": "class",
+      "proposedRule": "ITM-07 (or ITM-10) over generators: a dictation.fromInput source line whose say differs from de fails unless the generated item accepts both. Advisory ITM/E rule: a dictation source over 20 words or over 2 sentences is flagged."
+    },
+    {
+      "id": "F04",
+      "severity": "major",
+      "reviewer": "R1",
+      "criterion": "A",
+      "unitId": "b2.2-u04",
+      "path": "steps[2].pool.items[10] (ls3-p11); steps[1].reserve[4] (ls2-r05); steps[1].pool.items[10] (ls2-p11); siblings ls3-p12, ls3-r05, ls1-p11, check.items[6] (c07)",
+      "quote": "ls3-p11 „Korrigieren Sie: „Wir zahlen, es sei denn, Sie den Schaden zu spät melden.““ → only „…, es sei denn, Sie melden den Schaden zu spät.“ · ls2-r05 „Korrigieren Sie: „Falls haben Sie Fragen, rufen Sie uns an.““ → only „Falls Sie Fragen haben, …“ · ls2-p11 „Falls die Firma zahlt nicht, schreibe ich ihr.“ → only „Falls die Firma nicht zahlt, …“ · promptEn in each: „Correct the word order.“",
+      "problem": "The German prompt only says „Korrigieren Sie:“, and the restriction to word order exists only in promptEn. Other one-step corrections give correct German. „…, es sei denn, dass Sie den Schaden zu spät melden.“ is standard (es sei denn, dass + verb-final). „Haben Sie Fragen, rufen Sie uns an.“ and „Zahlt die Firma nicht, schreibe ich ihr.“ delete falls and produce the verb-first condition that this very unit teaches. All three are marked wrong. r1-F14 fixed the same pattern in c07 by accepting the variant, but the sibling items were not swept.",
+      "fix": "Change promptDe to „Korrigieren Sie die Wortstellung:“ in every error_correction item whose errorTag is verb-final, v2-inv, connector-position or satzklammer (ls1-p11, ls2-p11, ls2-r05, ls3-p11, ls3-p12, ls3-r05, c07). Insertions and deletions are then excluded by the German prompt, and c07 can keep its accepted variant. Alternatively, accept the three variants with acceptedWhy.",
+      "scope": "class",
+      "proposedRule": "ITM-01: an error_correction item whose errorTag is a word-order tag (verb-final, v2-inv, connector-position, satzklammer) names the correction in promptDe („Wortstellung“, „Verbform“, „Artikel“ …). Fixture: ls3-p11 with a bare „Korrigieren Sie:“ fails."
+    },
+    {
+      "id": "F05",
+      "severity": "major",
+      "reviewer": "R2",
+      "criterion": "N",
+      "owner": "b2.2/lexicon.json (lexicon owner) + LEX-07 (rule-smith); mirror in spec.lexiconBlocks and specs.json",
+      "unitId": "b2.2-u04",
+      "path": "content/course-v2/b2.2/lexicon.json entries lx.schadensersatz, lx.vertragsbedingung, lx.anderenfalls (unit b2.2-u04); spec.lexiconBlocks[0], [1], [3]",
+      "quote": "b2.2 „Schadensersatz“ (productive, list_ref compound:Schaden+Ersatz) vs b1.2-u07 „Schadenersatz“ (productive, list_ref compound:Schaden+Ersatz, gloss „compensation, damages“) · b2.2 „Vertragsbedingung“ (productive, compound:Vertrag+Bedingung) vs b1.2-u08 „Vertragsbedingungen“ (productive, same list_ref) · b2.2 „anderenfalls“ (receptive) vs b2.1-u04 „andernfalls“ (productive, „otherwise“)",
+      "problem": "Three of the unit's new lemmas are words the learner already has productively, in a variant spelling or number: the Fugen-s variant, the plural lemma and the e-elision variant. LEX-07 compares exact lemma strings, so the r1-F07 class (review words sold as new) survives. Two of the three sit in the productive core, and Schadensersatz is the unit's title word. The SRS creates a second card for a known word, and the B1.2 spelling „Schadenersatz“ in a typed item is at best a TYPO. The gloss „damages, compensation“ is shared with Kompensation (this unit) and Entschädigung (B1.1), so a lex.glossTyped item on it (LS1 generator source) has no unique answer. De-allocating the three leaves 52 new entries, below level-profiles newPerUnit [55, 70].",
+      "fix": "Lexicon owner: make lx.schadensersatz and lx.vertragsbedingung promotions of, or variant notes on, lx.schadenersatz and lx.vertragsbedingungen („auch: Schadensersatz“ accepted in typed items). Handle anderenfalls as a variant of lx.andernfalls; the AGB § 4 and lp4 texts can stay. To stay at ≥ 55 new entries, allocate three receptive lemmas the unit already uses without allocation: Laderaum, Textform and lackieren (all three are glossed today). Give the compensation-type words distinct glosses (Schadensersatz „damages (legal claim)“, Kompensation „compensation (something in return)“). Mirror the result in spec.lexiconBlocks and specs.json.",
+      "scope": "class",
+      "proposedRule": "LEX-07 folds lemma variants before the cross-level comparison: identical compound list_ref, Fugen-s (Schaden(s)-), plural versus singular lemma of one noun, and e-elision (ander(e)nfalls). Fixture: b2.2 Schadensersatz against b1.2 Schadenersatz fails."
+    },
+    {
+      "id": "F06",
+      "severity": "major",
+      "reviewer": "R1",
+      "criterion": "A",
+      "owner": "rule-smith (scripts/course-v2/rules/ITM-03.mjs) or player (src/components/course-v2/ItemInputs.jsx / ItemView.jsx), not this unit",
+      "unitId": "b2.2-u04",
+      "path": "scripts/course-v2/rules/ITM-03.mjs; src/components/course-v2/ItemInputs.jsx (seededOrder)",
+      "quote": "ITM-03: `if (!exam) continue;` … `items.filter((i) => (i.type === 'abc' || i.type === 'multiple_choice') …)` · ItemInputs.jsx: seededOrder is used only for the right-hand match column",
+      "problem": "r1-F01 and r1-F02 are fixed in this unit by hand, but neither proposed rule exists. ITM-03 still ignores type cloze, so a tb2.sb1 block keyed all-a passes. It still skips every non-exam choice set, and the player still renders options in authored order. r1 found the all-first-option pattern in the u04 files of six levels, so the next unit can bring it back unseen. Per §9.4, a gate hole that lets a finding class through is a MAJOR. This one is not unit-owned.",
+      "fix": "Rule-smith: extend ITM-03 to every exam-block item with a 3-option options array (cloze included) and to the non-exam choice items of each step (key index balanced within ±1 across positions). Alternatively, ship the deterministic id-seeded shuffle for non-exam choice items, with a test in tests/ that pins it. Reuse the fixtures proposed in r1-F01 and r1-F02.",
+      "scope": "class",
+      "proposedRule": "As r1-F01/F02: fixture 1, a tb2.sb1 block whose 10 cloze keys are all options[0], fails. Fixture 2, a step with five non-exam MC items all keyed at options[0], fails unless a shuffle is declared and pinned by a test."
+    },
+    {
+      "id": "F07",
+      "severity": "minor",
+      "reviewer": "R2",
+      "criterion": "N",
+      "unitId": "b2.2-u04",
+      "path": "steps[0].input.text.de (AGB § 2, § 4)",
+      "quote": "§ 2 „Kommt der Auftragnehmer mehr als drei Stunden später als vertraglich vereinbart, erhält der Auftraggeber eine Teilerstattung von 10 % des Preises, es sei denn, der Grund für die Verspätung ist höhere Gewalt, zum Beispiel ein Unwetter oder eine gesperrte Straße.“ (40 words) · § 4 „Spätestens sind sie am Tag nach der Lieferung zu melden.“",
+      "problem": "level-profiles b2.2 sets sentence.maxWords to 30. This sentence has 40 words and carries two of the unit's new structures (verb-first condition and es sei denn) plus the glossed „höhere Gewalt“. No rule measures sentence length on inputs. In § 4, fronting spätestens alone and leaving its phrase in the Mittelfeld is marked; conditions would say „Sie sind spätestens am Tag nach der Lieferung zu melden.“",
+      "fix": "§ 2: „Kommt der Auftragnehmer mehr als drei Stunden zu spät, erhält der Auftraggeber eine Teilerstattung von 10 % des Preises, es sei denn, der Grund für die Verspätung ist höhere Gewalt. Höhere Gewalt ist zum Beispiel ein Unwetter oder eine gesperrte Straße.“ The first sentence has 29 words, and the rule-table quote and i03 stay valid. § 4: „Sie sind spätestens am Tag nach der Lieferung zu melden.“",
+      "scope": "class",
+      "proposedRule": "TXT-03 (advisory): sentences of inputs and exam texts longer than level-profiles sentence.maxWords are listed."
+    },
+    {
+      "id": "F08",
+      "severity": "minor",
+      "reviewer": "R1",
+      "criterion": "P",
+      "unitId": "b2.2-u04",
+      "path": "steps[3].texts[2] (b2.2-u04-ls4-t3); scripts/course-v2/rules/TXT-02.mjs band()",
+      "quote": "tb2.hv3 textWords [40, 130], source „±15 % um UT-B2 S. 49 (eigene Zählung 49-112 Wörter)“ · t3 = 131 words · TXT-02: lo = floor(40 × 0.85) = 34, hi = ceil(130 × 1.15) = 150",
+      "problem": "t3 grew from 84 to 131 words when r1-F18 put Nachfrist, androhen, einklagen and Rechtsschutzversicherung into it. It is now 17 % over the longest official sample (112 words) and one word over the registry band, which already contains the ±15 %. TXT-02 applies the tolerance a second time, so the effective gate is 34-150 words for tb2.hv3 and 165-305 for tb2.sb1.",
+      "fix": "Trim t3 without losing an allocated lemma: „Und jetzt unser Tipp für Verbraucher:“ → „Unser Verbrauchertipp:“, and delete „zum Beispiel an einem Gerät,“. That gives 122 words, and hv3-03 still holds. Rule-smith: when the registry source says the band already includes ±15 %, TXT-02 uses the band as is. Otherwise the registry should store the raw sample range and TXT-02 should widen it once.",
+      "scope": "class",
+      "proposedRule": "TXT-02 fixture: a tb2.hv3 text of 140 words fails against textWords [40, 130]."
+    },
+    {
+      "id": "F09",
+      "severity": "minor",
+      "reviewer": "R2",
+      "criterion": "K",
+      "unitId": "b2.2-u04",
+      "path": "steps[5].task.situationDe; steps[3].texts[4].lines[1] (t5) vs steps[4].task.situationDe; steps[1].pool.items[3] (ls2-p04)",
+      "quote": "LS6 „Schriftlicher Ausdruck – vor dem Telefonat mit der Kundenberaterin: … Ein erstes Angebot von 200 Euro haben Sie am Telefon abgelehnt.“ · t5 „Sie wartet bis morgen um zwölf auf deine Antwort. Ruf mich an!“ vs LS5 „Nach Ihrer E-Mail ruft Sie die Kundenberaterin von Blitz Umzüge an.“ · ls2-p04 „Die Firma sagt klar Nein: Sie ___ sich, den Spiegel zu ersetzen.“",
+      "problem": "(1) The LS2 call was already „ein Telefonat mit der Kundenberaterin“, so „vor dem Telefonat … am Telefon abgelehnt“ reads as a contradiction. The flashback needs an ordinal. (2) In t5 the adviser waits for Priya's answer, but in LS5 she calls again without referring to it. (3) Right after the dialogue in which the firm accepts the mirror at once (l07), the pool says the firm refuses to replace it.",
+      "fix": "(1) „Schriftlicher Ausdruck – zeitlich vor dem zweiten Telefonat mit der Kundenberaterin: …“ (2) t5: „Sie ruft dich morgen noch einmal an.“ LS5 stays as it is. (3) ls2-p04: „Die Firma sagt klar Nein: Sie ___ sich, die 10 % für die Verspätung zu erstatten.“ This matches l09, and the key stays weigert.",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F10",
+      "severity": "minor",
+      "reviewer": "R2",
+      "criterion": "D",
+      "unitId": "b2.2-u04",
+      "path": "steps[1].input.lines[13] (ls2-l14); steps[4].task.modelTurns[4]; story.cliffhanger",
+      "quote": "l14 „Vielen Dank. Auf Wiedersehen.“ (end of a phone call) · LS5 turn 5 „Eine Panne ist Ihr Risiko, kein Unwetter.“ · „Ich habe die Studienordnung für mein Studium bekommen …“",
+      "problem": "On the phone the formula is „Auf Wiederhören“. a1.2-u04 and b1.1-u04 teach it, and b1.1 glosses it „goodbye – on the phone“; this B2.2 input line undoes that. „Ihr Risiko, kein Unwetter“ coordinates two predicates that are not parallel. The LS6 model text has the clean form. „Studienordnung für mein Studium“ is redundant.",
+      "fix": "l14: „Vielen Dank. Auf Wiederhören.“ · turn 5: „Eine Panne ist kein Unwetter, sondern Ihr Risiko.“ · cliffhanger: „die Studienordnung für meinen Studiengang“.",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F11",
+      "severity": "minor",
+      "reviewer": "R2",
+      "criterion": "A",
+      "unitId": "b2.2-u04",
+      "path": "steps[0].pool.items[8] (ls1-p09); steps[1].pool.items[6] (ls2-p07)",
+      "quote": "accepted elsewhere: ls1-p08 „Genau gelesen haben wir die Vertragsbedingungen.“ („selten, aber richtig“), ls2-p09 „Für angemessen halten wir 500 Euro.“, ls1-p07 „Schadensersatz für die Kommode fordern wir.“ · not accepted: ls1-p09 „Verlangen kann die Firma ein Gutachten.“ / „Ein Gutachten verlangen kann die Firma.“, ls2-p07 „Nachverhandeln sollten wir den Preis.“",
+      "problem": "The unit accepts marked Vorfeld orders in three items but not the parallel orders in two others. A learner cannot predict which marked orders count. The rejected orders are rare but grammatical.",
+      "fix": "Accept the fronted infinitive in ls1-p09 and ls2-p07, with the acceptedWhy used in ls1-p08. Alternatively, pick one policy for the whole unit.",
+      "scope": "class",
+      "proposedRule": "ITM-09: when any sentence_building item of a unit accepts a fronted non-finite verb (infinitive or participle tile in the Vorfeld), every item of that unit with a non-finite verb tile must accept it too, or state why not."
+    },
+    {
+      "id": "F12",
+      "severity": "minor",
+      "reviewer": "R2",
+      "criterion": "K",
+      "owner": "b2.2/lexicon.json (lexicon owner)",
+      "unitId": "b2.2-u04",
+      "path": "content/course-v2/b2.2/lexicon.json examples of lx.auftraggeber, lx.geltend-machen, lx.glasbruch, lx.haftungsausschluss, lx.gegenangebot",
+      "quote": "„Der Auftraggeber muss den Schaden innerhalb von zehn Tagen melden.“ · „Den Schaden müssen Sie innerhalb von zehn Tagen schriftlich geltend machen.“ · „Glasbruch ist laut AGB nicht versichert.“ · „Im Vertrag steht ein Haftungsausschluss für Glasbruch.“ · „Arjun macht der Kundenberaterin ein Gegenangebot.“",
+      "problem": "The word cards for this unit's lemmas contradict what the unit teaches. They give a ten-day deadline, while the unit teaches the day after delivery or 14 days (AGB § 4, t3, fact f02). They exclude glass, while the unit's AGB and l05 make the firm liable for glass it packed. They give Priya's counter-offer to Arjun. A learner reviewing the cards meets the opposite of the unit.",
+      "fix": "For example: „Der Auftraggeber muss sichtbare Schäden spätestens am Tag nach der Lieferung melden.“ · „Den Schaden müssen Sie rechtzeitig in Textform geltend machen.“ · „Glasbruch meldet man am besten sofort im Schadensprotokoll.“ · „Für selbst gepackte Kartons gilt oft ein Haftungsausschluss.“ · „Priya macht der Kundenberaterin ein Gegenangebot.“",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F13",
+      "severity": "minor",
+      "reviewer": "R1",
+      "criterion": "A",
+      "owner": "b2.2/rule-cards.json (rc.konditional-konnektoren)",
+      "unitId": "b2.2-u04",
+      "path": "rc.konditional-konnektoren (b2.2/rule-cards.json) vs steps[2].ruleTable.rows[2] and check.items[6] (c07)",
+      "quote": "card: „sofern und vorausgesetzt, dass: nur unter dieser Bedingung. im Fall, dass: … Nach diesen Konnektoren steht das Verb am Ende.“ · LS3 rule table: „vorausgesetzt, dass | … | am Ende (ohne dass: Position 2)“ · c07 accepts „Wir zahlen, vorausgesetzt, die Summe ist angemessen.“",
+      "problem": "The LS3 rule table and c07 now teach vorausgesetzt without dass (verb in position 2), as r1-F14 asked. The rule card, shown in LS1, LS2 and LS3 and in the Rückschau, still states only the verb-final rule, so two surfaces of the same unit disagree. es sei denn, dass (verb-final) is taught nowhere, although learners meet it in letters (see F04).",
+      "fix": "Delete the opening sentence („Neben wenn und falls gibt es genauere Konnektoren für Bedingungen.“, 10 words). Add: „vorausgesetzt ohne dass: Verb auf Position 2. Auch möglich: es sei denn, dass + Verb am Ende.“ That is about 78 words, within the 80-word limit.",
+      "scope": "instance",
+      "proposedRule": null
+    }
+  ],
+  "passed": [
+    "tb2.hv3: 5 texts, richtig/falsch, played once (instruction „nur einmal“), one intro line per text, 85/73/131/78/89 words (t3 see F08). Keys F R R F R (60 % true, no run > 2). Each was solved blind: Jessen picks the Kommode up on Monday; online form without waiting; 14 Tage = zwei Wochen; the Verursacher pays, not Frau Nair; 450 € in return for waiving the 10 %. Each statement is a paraphrase, not a copy.",
+    "tb2.sb1: 10 gaps, 3 options each, informal e-mail of 258 words (band 195-265, textType email-informell). Keys weil | obwohl | die | beschädigt | an | sofern | zu prüfen | ihr | Sollte | dass at positions a b c b a c b a c b. Each is uniquely determined when solved blind (06: es sei denn is excluded because the clause is verb-final; 09: only Sollte takes the infinitive zahlen with singular sie = die Firma).",
+    "tb2.sa: an ad-based complaint („pünktlich, sorgfältig, voll versichert. Mit Pünktlichkeitsgarantie!“), 4 Leitpunkte choose 3, min 150 words (wordBand 150-200, minSubmitWords 75), halbformell/Sie, rubric tb2-sa, examKey telc_b2. The model text has 190 words after the Betreff, covers all four points and separates the 500 € Schadensersatz from the 148 € contractual refund.",
+    "tb2.m3: plan-together, prepMinutes 10 (situation states the 20 minutes for Teil 2 and 3), 240-330 s, rubric tb2-m3, identical learner and partner cards, all figures shared, open preferences on both sides, a cooperative persona, moves vorschlagen/reagieren/widersprechen/einigen/verteilen. The model turns show proposals, reactions, a counter-proposal, agreement and task distribution.",
+    "Originality: the AGB, the six LS4 texts, the writing ad and the speaking card are original and set in the unit's story. No telc Modellsatz topic or text is reused.",
+    "Facts f01-f06 match the cited norms (§§ 451d Abs. 1 Nr. 2 and Abs. 3, 451e, 451f, 451g, 451h, 438 Abs. 4 and 5 HGB; § 30 VVG; § 121 BGB; Universalschlichtungsstelle des Bundes, Kehl, since 2020), with exceptions. The fictional AGB are consistent with them. The Porträt states nothing that is outdated.",
+    "Arithmetic and dates: 10 % of 1.480 € = 148 €; 380 + 120 + 148 = 648 €; 380 + 120 + 74 = 574 € (74 € = 5 %). 5 November 2026 is a Thursday, the move took place on Friday 6 November, the Saturday e-mail meets the day-after deadline, and 20 November 2026 is a Friday.",
+    "Grammar ceiling: g.konditional-konnektoren enters at its spine position (b2.2-u04), receptively in LS1/LS2 (AGB, dialogue) before production in LS3. falls (b1.1), Konjunktiv II, Passiv Perfekt (b1.2) and sein + zu (b2.1) are all licensed. GRM-01/02/04/05 pass, and the rule table, the items and the dialogue agree (the card itself: F13).",
+    "Register: every instruction uses Sie. du appears only between Arjun and Priya, in Priya's e-mail to Amal and in the micro-output to a friend. The adviser, Frau Jessen and Herr Matthiesen use Sie. The cast roles match casts/b2.json and series.json, and the cliffhanger leads into E5 (Studienordnung).",
+    "Legal: there is no pass promise and no human-feedback claim, the AI is a „KI-Gesprächspartnerin“, and no descriptor is quoted verbatim. The can-dos are in the registry's own ich-Form, and each has a proof (sprechen ×2, schreiben, q02)."
+  ],
+  "itemsSolvedBlind": {
+    "total": 101,
+    "byType": {
+      "multiple_choice": 24,
+      "fill_blank": 33,
+      "sentence_building": 13,
+      "error_correction": 10,
+      "cloze": 15,
+      "richtig_falsch": 5,
+      "dictation": 1
+    },
+    "keyWrong": [],
+    "secondAnswerNotAccepted": [
+      "b2.2-u04-ls1-p05 (fehlerhaft)",
+      "b2.2-u04-ls2-p02 (Gegenvorschlag)",
+      "b2.2-u04-ls3-p11 (es sei denn, dass …)",
+      "b2.2-u04-ls2-r05 (Haben Sie Fragen, …)",
+      "b2.2-u04-ls2-p11 (Zahlt die Firma nicht, …)",
+      "b2.2-u04-ls1-p09 (fronted infinitive, minor)",
+      "b2.2-u04-ls2-p07 (fronted infinitive, minor)"
+    ],
+    "generated": "The two LS2 dictations from dictation.fromInput (l09, l13) reject number-word transcriptions (F03).",
+    "storyConflict": [
+      "b2.2-u04-ls2-p04 (F09)"
+    ]
+  },
+  "examCheck": {
+    "tb2.hv3": "pass (t3 one word over the registry band: F08)",
+    "tb2.sb1": "pass (key positions fixed; gate: F06)",
+    "tb2.m3": "pass (plan-together, symmetric)",
+    "tb2.sa": "pass"
+  }
+}

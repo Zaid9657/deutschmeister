@@ -1,0 +1,4089 @@
+{
+  "$schema": "course-v2/detectors@1",
+  "detectors": [
+    {
+      "id": "det.negation-nicht",
+      "construction": "Negation mit nicht",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.negation-nicht"
+        ],
+        "tokens": [
+          "nicht"
+        ],
+        "examples": {
+          "hit": [
+            "Ich bin nicht Lehrerin."
+          ],
+          "miss": [
+            "Ich bin Lehrerin."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.bestimmter-artikel",
+      "construction": "bestimmter Artikel vor einem Nomen (der/die/das + Nomen)",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.artikel-genus-plural"
+        ],
+        "regex": "\\b(?:[Dd]er|[Dd]ie|[Dd]as|[Dd]en|[Dd]em)\\s+(?:[a-zäöüß]+(?:e|en|er|es|em)\\s+)?[A-ZÄÖÜ][a-zäöüß]+",
+        "skip": "\\s(?:Verb|Nomen|Artikel|Satz|Wort|Frage|Antwort|Endung|Plural|Singular|Pronomen|Subjekt|Objekt|Genus|Akkusativ|Dativ|Nominativ|Genitiv|Infinitiv|Partizip|Präteritum|Perfekt|Präsens|Imperativ|Regel|Form|Position|Stelle|Beispiel)$",
+        "notes": "Metasprache (das Verb, der Satz …) zählt nicht; Relativ- und Demonstrativpronomen vor einem Nomen können als Artikel gelesen werden.",
+        "examples": {
+          "hit": [
+            "Die Lehrerin kommt aus Wien."
+          ],
+          "miss": [
+            "Das ist Anna.",
+            "Ich heiße Anna."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.unbestimmter-artikel",
+      "construction": "unbestimmter Artikel vor einem Nomen (ein/eine + Nomen)",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.artikel-genus-plural"
+        ],
+        "regex": "\\b(?:[Ee]in|[Ee]ine|[Ee]inen|[Ee]inem|[Ee]iner)\\s+(?:[a-zäöüß]+(?:e|en|er|es|em)\\s+)?[A-ZÄÖÜ][a-zäöüß]+",
+        "skip": "\\s(?:Verb|Nomen|Artikel|Satz|Wort|Frage|Antwort|Endung|Genus|Regel|Form|Beispiel)$",
+        "examples": {
+          "hit": [
+            "Das ist ein Tisch.",
+            "Ich möchte einen Apfel."
+          ],
+          "miss": [
+            "Das ist der Tisch.",
+            "Ich möchte ein bisschen Käse."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.possessiv-mein-dein-ihr",
+      "construction": "Possessivartikel mein, dein, Ihr vor einem Nomen",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.possessiv-mein-dein"
+        ],
+        "regex": "\\b(?:[Mm]ein|[Dd]ein|Ihr)(?:e|en|em|er|es)?\\s+[A-ZÄÖÜ][a-zäöüß]+",
+        "whitelist": [
+          "mein name ist",
+          "wie ist ihr name",
+          "wie ist dein name",
+          "ihr name",
+          "meine muttersprache ist"
+        ],
+        "notes": "Mein Name ist … / Meine Muttersprache ist … / Wie ist Ihr Name? sind Kontakt-Chunks von a1.1-u01 und stehen auf der Whitelist („Meine Muttersprache ist …“: Review a1.1-u01 r2 F09); der Spine kann weitere Chunks über chunkFrom freigeben.",
+        "examples": {
+          "hit": [
+            "Das ist meine Mutter."
+          ],
+          "miss": [
+            "Das ist die Mutter von Anna.",
+            "Mein Name ist Priya.",
+            "Meine Muttersprache ist Malayalam."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.moechte",
+      "construction": "möchte (Wunsch, fester Chunk ab A1.1)",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.moechte"
+        ],
+        "tokens": [
+          "möchte",
+          "möchtest",
+          "möchten",
+          "möchtet"
+        ],
+        "examples": {
+          "hit": [
+            "Ich möchte einen Kaffee."
+          ],
+          "miss": [
+            "Ich mag Kaffee."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.negation-kein",
+      "construction": "Negation mit kein",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.kein"
+        ],
+        "tokens": [
+          "kein",
+          "keine",
+          "keinen",
+          "keinem",
+          "keiner",
+          "keines"
+        ],
+        "examples": {
+          "hit": [
+            "Ich habe keinen Laptop."
+          ],
+          "miss": [
+            "Ich habe einen Laptop."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.akkusativ-maskulin",
+      "construction": "Akkusativ maskulin (einen/keinen/meinen … + Nomen)",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.akkusativ"
+        ],
+        "regex": "\\b(?:[Ee]inen|[Kk]einen|[Mm]einen|[Dd]einen|[Ss]einen|[Ii]hren|[Uu]nseren|[Ee]uren|[Dd]iesen|[Jj]eden|[Ww]elchen)\\s+(?!Sie\\b)(?:[a-zäöüß]+en\\s+)?[A-ZÄÖÜ][a-zäöüß]+",
+        "notes": "den + Nomen ist nicht erfasst (auch Dativ Plural). „Was meinen Sie?\" ist ausgenommen.",
+        "examples": {
+          "hit": [
+            "Ich brauche einen Laptop."
+          ],
+          "miss": [
+            "Ich brauche ein Handy.",
+            "Was meinen Sie?"
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.trennbare-verben",
+      "construction": "trennbare Verben: Satzklammer mit der Vorsilbe am Satzende",
+      "precision": "heuristic",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.trennbare-verben"
+        ],
+        "kind": "separable-bracket",
+        "notes": "Strukturell wie src/data/curricula/constructions.js (separable-verbs-intro): Vorsilbe aus der geschlossenen Klasse am Klauselende, davor ein finites Verb, das keine Form von sein ist. „Was macht das zusammen?\" / „Das macht zusammen 7,80 Euro.\" sind machen + zusammen (die Summe), kein trennbares Verb (skipClause; Review a1.1-u04 r4 F08 / r5 F05). „Stellen Sie sich (bitte) vor“ ist die Arbeitsanweisung von Sprechen Teil 1 und der Chunk von lx.sich-vorstellen ab a1.1-u01 (skipClause; Review a1.1-u01 r3 F05); „Heute stelle ich Arta vor.“ trifft weiter.",
+        "examples": {
+          "hit": [
+            "Ich stehe um sechs Uhr auf.",
+            "Bitte füllen Sie das Formular aus.",
+            "Heute stelle ich Arta vor."
+          ],
+          "miss": [
+            "Die Tür ist zu.",
+            "Der Teppich ist auf der Terrasse.",
+            "Ich stehe um sechs Uhr.",
+            "Was macht das zusammen?",
+            "Das macht zusammen 7,80 Euro.",
+            "Das macht zusammen 7 Euro.",
+            "Stellen Sie sich vor: Name, Land, Wohnort, Sprachen.",
+            "Stellen Sie sich bitte vor: Wie heißen Sie?",
+            "Bitte stellen Sie sich kurz vor."
+          ]
+        },
+        "skipClause": "\\bmach(?:t|en|st)\\s+(?:(?:das|es|alles|dann)\\s+)*zusammen\\b|^(?:bitte\\s+)?stellen\\s+sie\\s+sich\\s+(?:bitte\\s+)?(?:kurz\\s+)?vor\\W*$"
+      }
+    },
+    {
+      "id": "det.modal-koennen",
+      "construction": "Modalverb können (+ Infinitiv, Satzklammer)",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.koennen"
+        ],
+        "tokens": [
+          "kann",
+          "kannst",
+          "können",
+          "könnt"
+        ],
+        "examples": {
+          "hit": [
+            "Ich kann gut schwimmen."
+          ],
+          "miss": [
+            "Ich schwimme gut.",
+            "Wir könnten schwimmen gehen."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.moechte-infinitiv",
+      "construction": "möchte + Infinitiv am Satzende (Satzklammer mit Modalverb)",
+      "precision": "exact",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.koennen"
+        ],
+        "kind": "aux-final",
+        "aux": [
+          "möchte",
+          "möchtest",
+          "möchten",
+          "möchtet"
+        ],
+        "final": "infinitive",
+        "notFinal": [
+          "einen",
+          "keinen",
+          "meinen",
+          "deinen",
+          "seinen",
+          "ihren",
+          "unseren",
+          "euren",
+          "denen",
+          "ihnen",
+          "morgen",
+          "gestern",
+          "vorgestern",
+          "übermorgen",
+          "oben",
+          "unten",
+          "hinten",
+          "innen",
+          "außen",
+          "zusammen",
+          "eben",
+          "gegen",
+          "neben",
+          "selten",
+          "wieder"
+        ],
+        "notes": "möchte als Vollverb (Ich möchte ein Brot.) ist g.moechte (a1.1-u04); möchte + Infinitiv ist die Satzklammer der Modalverben, eingeführt mit g.koennen (a1.1-u08). Liest auch Regelkarten-Prosa beim ersten Einsatz der Karte (GRM-04). Review a1.1-u04 r5 F04.",
+        "examples": {
+          "hit": [
+            "Ich möchte bezahlen.",
+            "Möchten Sie etwas trinken?",
+            "Ich weiß nicht, ob ich kommen möchte."
+          ],
+          "miss": [
+            "Ich möchte ein Kilo Tomaten, bitte.",
+            "Was möchten Sie?",
+            "Ich möchte einen.",
+            "Wir möchten morgen."
+          ],
+          "lexicon": [
+            {
+              "lemma": "bezahlen",
+              "pos": "VERB",
+              "verb_forms": {
+                "3sg": "bezahlt",
+                "perfekt": "hat bezahlt"
+              }
+            },
+            {
+              "lemma": "trinken",
+              "pos": "VERB",
+              "verb_forms": {
+                "3sg": "trinkt",
+                "perfekt": "hat getrunken"
+              }
+            },
+            {
+              "lemma": "kommen",
+              "pos": "VERB",
+              "verb_forms": {
+                "3sg": "kommt",
+                "perfekt": "ist gekommen"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.modal-moegen",
+      "construction": "mögen (Vorlieben)",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.moegen"
+        ],
+        "tokens": [
+          "mag",
+          "magst",
+          "mögen",
+          "mögt"
+        ],
+        "examples": {
+          "hit": [
+            "Ich mag Kaffee."
+          ],
+          "miss": [
+            "Ich möchte Kaffee."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.modal-wollen",
+      "construction": "Modalverb wollen",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.wollen"
+        ],
+        "tokens": [
+          "will",
+          "willst",
+          "wollen",
+          "wollt"
+        ],
+        "examples": {
+          "hit": [
+            "Ich will die Prüfung machen."
+          ],
+          "miss": [
+            "Ich möchte die Prüfung machen."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.modal-muessen",
+      "construction": "Modalverb müssen",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.muessen-duerfen-man"
+        ],
+        "tokens": [
+          "muss",
+          "musst",
+          "müssen",
+          "müsst"
+        ],
+        "examples": {
+          "hit": [
+            "Ich muss heute arbeiten."
+          ],
+          "miss": [
+            "Ich arbeite heute."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.modal-duerfen",
+      "construction": "Modalverb dürfen",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.muessen-duerfen-man"
+        ],
+        "tokens": [
+          "darf",
+          "darfst",
+          "dürfen",
+          "dürft"
+        ],
+        "examples": {
+          "hit": [
+            "Hier darf man nicht parken."
+          ],
+          "miss": [
+            "Hier parkt man nicht."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.modal-sollen",
+      "construction": "Modalverb sollen",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.sollen"
+        ],
+        "tokens": [
+          "soll",
+          "sollst",
+          "sollen",
+          "sollt"
+        ],
+        "examples": {
+          "hit": [
+            "Sie sollen zweimal am Tag eine Tablette nehmen."
+          ],
+          "miss": [
+            "Sie nehmen zweimal am Tag eine Tablette."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.man",
+      "construction": "Indefinitpronomen man",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.muessen-duerfen-man"
+        ],
+        "tokens": [
+          "man"
+        ],
+        "examples": {
+          "hit": [
+            "Hier darf man nicht rauchen."
+          ],
+          "miss": [
+            "Hier rauche ich nicht.",
+            "Wie schreibt man das?"
+          ]
+        },
+        "whitelist": [
+          "wie schreibt man das",
+          "wie sagt man",
+          "wie spricht man"
+        ]
+      }
+    },
+    {
+      "id": "det.perfekt-haben",
+      "construction": "Perfekt mit haben (haben + Partizip II in einer Klausel)",
+      "precision": "exact",
+      "method": "lexicon",
+      "spec": {
+        "spinePoints": [
+          "g.perfekt-haben"
+        ],
+        "kind": "participle-aux",
+        "auxForms": [
+          "habe",
+          "hast",
+          "hat",
+          "haben",
+          "habt"
+        ],
+        "participleAux": "haben",
+        "notes": "Exakt, wenn das Partizip im Lexikon steht (verb_forms.perfekt mit „hat\"); sonst Formerkennung (ge-…-t/-en, -iert, untrennbare Vorsilbe) am Klauselende → heuristisch.",
+        "examples": {
+          "hit": [
+            "Ich habe gestern Pizza gegessen.",
+            "Wir haben einen Laptop gekauft.",
+            "Ich weiß, dass du angerufen hast."
+          ],
+          "miss": [
+            "Ich habe einen Laptop.",
+            "Ich habe Hunger.",
+            "Ich habe einen gebrauchten Laptop.",
+            "Sie haben viel zu erzählen."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.perfekt-sein",
+      "construction": "Perfekt mit sein (Bewegung und Veränderung)",
+      "precision": "exact",
+      "method": "lexicon",
+      "spec": {
+        "spinePoints": [
+          "g.perfekt-sein"
+        ],
+        "kind": "participle-aux",
+        "auxForms": [
+          "bin",
+          "bist",
+          "ist",
+          "sind",
+          "seid"
+        ],
+        "participleAux": "sein",
+        "notes": "Nur lexikongestützt: ohne Lexikoneintrag („ist gekommen\") ist sein + Partizip nicht von Zustandspassiv oder Adjektiv („ist geschlossen\", „bin verheiratet\") zu unterscheiden und wird nicht gemeldet.",
+        "examples": {
+          "lexicon": [
+            {
+              "lemma": "kommen",
+              "pos": "VERB",
+              "verb_forms": {
+                "3sg": "kommt",
+                "perfekt": "ist gekommen"
+              }
+            },
+            {
+              "lemma": "fliegen",
+              "pos": "VERB",
+              "verb_forms": {
+                "3sg": "fliegt",
+                "perfekt": "ist geflogen"
+              }
+            },
+            {
+              "lemma": "schließen",
+              "pos": "VERB",
+              "verb_forms": {
+                "3sg": "schließt",
+                "perfekt": "hat geschlossen"
+              }
+            }
+          ],
+          "hit": [
+            "Ich bin nach Köln gekommen.",
+            "Wir sind nach Wien geflogen."
+          ],
+          "miss": [
+            "Die Tür ist geschlossen.",
+            "Ich bin verheiratet."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.perfekt-trennbar-untrennbar",
+      "construction": "Perfekt trennbarer, untrennbarer und -ieren-Verben (abgeholt, bezahlt, repariert)",
+      "precision": "exact",
+      "method": "lexicon",
+      "spec": {
+        "spinePoints": [
+          "g.perfekt-trennbar-untrennbar"
+        ],
+        "kind": "participle-aux",
+        "auxForms": [
+          "habe",
+          "hast",
+          "hat",
+          "haben",
+          "habt",
+          "bin",
+          "bist",
+          "ist",
+          "sind",
+          "seid"
+        ],
+        "participleAux": "any",
+        "shape": "trennbar-untrennbar",
+        "examples": {
+          "hit": [
+            "Ich habe das Paket abgeholt.",
+            "Wir haben schon bezahlt.",
+            "Er hat das Fahrrad repariert."
+          ],
+          "miss": [
+            "Ich habe das Paket gekauft.",
+            "Er ist gegangen."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.imperativ-sie",
+      "construction": "Imperativ mit Sie (Gehen Sie …!)",
+      "precision": "heuristic",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.imperativ-sie"
+        ],
+        "kind": "imperative",
+        "person": "sie",
+        "examples": {
+          "hit": [
+            "Gehen Sie geradeaus!",
+            "Nehmen Sie die U2."
+          ],
+          "miss": [
+            "Gehen Sie heute ins Kino?",
+            "Sie gehen geradeaus."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.imperativ-du-ihr",
+      "construction": "Imperativ mit du und ihr (Kauf bitte …! Räumt … auf!)",
+      "precision": "heuristic",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.imperativ-du-ihr"
+        ],
+        "kind": "imperative",
+        "person": "du-ihr",
+        "examples": {
+          "hit": [
+            "Kauf bitte Milch!",
+            "Räumt bitte die Küche auf!"
+          ],
+          "miss": [
+            "Kaufst du bitte Milch?",
+            "Guten Morgen!",
+            "Hallo Priya!"
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.praeteritum-sein-haben",
+      "construction": "Präteritum von sein und haben (war, hatte)",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.praeteritum-sein-haben"
+        ],
+        "tokens": [
+          "war",
+          "warst",
+          "waren",
+          "wart",
+          "hatte",
+          "hattest",
+          "hatten",
+          "hattet"
+        ],
+        "examples": {
+          "hit": [
+            "Gestern war ich im Kino.",
+            "Ich hatte keine Zeit."
+          ],
+          "miss": [
+            "Heute bin ich im Kino."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.possessiv-sein-ihr-unser-euer",
+      "construction": "Possessivartikel sein, ihr, unser, euer vor einem Nomen",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.possessiv-sein-ihr"
+        ],
+        "regex": "\\b(?:[Ss]ein|ihr|[Uu]nser|[Ee]uer|[Ee]ur)(?:e|en|em|er|es)?\\s+[A-ZÄÖÜ][a-zäöüß]+",
+        "skip": "^ihr\\s+(?:Sie|Zeit|Lust|Hunger|Durst|Geld)$",
+        "notes": "„ihr\" als Subjektpronomen vor einem Nomen („Habt ihr Zeit?\") ist teilweise ausgenommen.",
+        "examples": {
+          "hit": [
+            "Das ist sein Fahrrad.",
+            "Das ist unser Haus."
+          ],
+          "miss": [
+            "Das ist mein Fahrrad.",
+            "Habt ihr Zeit?",
+            "Mögt ihr Kuchen auch?",
+            "Mögt auch ihr Kuchen?"
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.genitiv-s-name",
+      "construction": "Genitiv-s bei Namen (Annas Fahrrad)",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.possessiv-sein-ihr"
+        ],
+        "regex": "\\b(?!(?:Das|Des|Dies|Dieses|Alles|Etwas|Eines|Keines|Meines|Deines|Seines|Ihres|Unseres|Jedes|Welches|Was|Bis|Als|Uns|Aus|Haus|Kurs|Bus|Preis|Reis|Glas|Eis|Paris|Hans|Klaus|Jens|Markus|Thomas|Andreas|Niklas|Tobias|Lukas|Matthias|Jonas|Elias|Plus|Minus|Zeugnis|Ergebnis|Erlebnis|Schluss|Pass|Spaß|Kuss|Fluss|Nachts|Rechts|Links|Montags|Abends|Morgens|Mittags|Nachmittags|Vormittags|Sonntags|Samstags|Freitags|Donnerstags|Mittwochs|Dienstags)\\b)[A-ZÄÖÜ][a-zäöü]+s\\s+(?!(?:Uhr|Euro|Jahre|Prozent|Mal)\\b)[A-ZÄÖÜ][a-zäöüß]+",
+        "examples": {
+          "hit": [
+            "Annas Fahrrad ist neu."
+          ],
+          "miss": [
+            "Das Fahrrad ist neu.",
+            "Das Haus ist groß."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.ordinalzahl",
+      "construction": "Ordinalzahlen und Datum (am dritten Mai, der 12. März)",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.ordinalzahlen-datum"
+        ],
+        "regex": "\\b\\d{1,2}\\.(?=\\s*[A-ZÄÖÜ][a-zäöü])|\\b(?:ersten|zweiten|dritten|vierten|fünften|sechsten|siebten|achten|neunten|zehnten|elften|zwölften|[a-zäöü]+zehnten|[a-zäöü]+zigsten|zweite|dritte|vierte|fünfte|sechste|siebte|achte|neunte|zehnte)\\b",
+        "examples": {
+          "hit": [
+            "Heute ist der 12. März.",
+            "Ich wohne im dritten Stock.",
+            "Der Kurs fängt am 1. Februar an.",
+            "Die Anmeldung ist im 1. Stock."
+          ],
+          "miss": [
+            "Ich wohne in Zimmer 12.",
+            "Kölner Straße 18. Die Telefonnummer ist 0176 38 29 41 06.",
+            "Münchner Straße 30. Miete: 750 Euro.",
+            "Das Verb steht auf Position 2. Das Subjekt steht danach.",
+            "Er ist 24. Er studiert in Kochi.",
+            "Der Zug fährt ab Gleis 3. Wir steigen ein.",
+            "Die Nummer ist 0157 38 42 96 10. Priya bestellt einen Kaffee."
+          ]
+        },
+        "notes": "Eine Kardinalzahl nach einem Zähl-Nomen (Straße 18. Die …, Position 2. Das …, Gleis 3. Wir …) oder nach einer Kopula am Satzende (Er ist 24. Er …) ist keine Ordinalzahl (notPrecededBy; die Zähl-Nomen aus DETECTOR_OVERLAYS übernommen, die Kopula-Formen neu: Review a1.1-u05 r1 F04, a1.1-u03 r1 F15).",
+        "notPrecededBy": [
+          "teil",
+          "aufgabe",
+          "nummer",
+          "nr",
+          "punkt",
+          "text",
+          "satz",
+          "beispiel",
+          "frage",
+          "seite",
+          "einheit",
+          "lektion",
+          "raum",
+          "zimmer",
+          "gleis",
+          "bus",
+          "linie",
+          "haus",
+          "straße",
+          "tram",
+          "position",
+          "stelle",
+          "zeile",
+          "karte",
+          "ist",
+          "bin",
+          "bist",
+          "sind",
+          "seid",
+          "war",
+          "waren",
+          "kostet",
+          "kosten"
+        ]
+      }
+    },
+    {
+      "id": "det.dativ-pronomen",
+      "construction": "Personalpronomen im Dativ (mir, dir, ihm, Ihnen)",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.dativverben-pronomen"
+        ],
+        "tokens": [
+          "mir",
+          "dir",
+          "ihm",
+          "ihnen"
+        ],
+        "whitelist": [
+          "wie geht es dir",
+          "wie geht es ihnen",
+          "wie geht's dir",
+          "wie geht's ihnen",
+          "mir geht es gut",
+          "mir geht es nicht gut",
+          "mir geht es sehr gut",
+          "und dir",
+          "und ihnen",
+          "danke, mir geht es gut",
+          "tut mir leid",
+          "mir ist schlecht",
+          "mir ist kalt"
+        ],
+        "notes": "Die Begrüßungs-Chunks (Wie geht es dir/Ihnen? Mir geht es gut.) stehen auf der Whitelist.",
+        "examples": {
+          "hit": [
+            "Kannst du mir helfen?",
+            "Das gefällt ihm."
+          ],
+          "miss": [
+            "Wie geht es dir?",
+            "Ich helfe Anna."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.welch-dies",
+      "construction": "Frageartikel welch- und Demonstrativartikel dies-",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.welch-dies"
+        ],
+        "tokens": [
+          "welcher",
+          "welche",
+          "welches",
+          "welchen",
+          "welchem",
+          "dieser",
+          "diese",
+          "dieses",
+          "diesen",
+          "diesem"
+        ],
+        "examples": {
+          "hit": [
+            "Welche Jacke nehmen Sie?",
+            "Diese Jacke ist schön."
+          ],
+          "miss": [
+            "Die Jacke ist schön.",
+            "Welche Sprachen sprichst du?",
+            "Und welche Sprachen sprechen Sie?",
+            "Welche Antwort passt: a, b oder c?"
+          ]
+        },
+        "whitelist": [
+          "welche sprachen",
+          "welche antwort passt"
+        ],
+        "notes": "Whitelist: „Welche Sprachen sprichst du / sprechen Sie?“ ist der Chunk von a1.1-u01 (Review a1.1-u01 r1 F03); „Welche Antwort passt?“ ist die Aufgabenformel von sd1.h1/h3 (a1.1-u02 r2 F10)."
+      }
+    },
+    {
+      "id": "det.konnektor-denn",
+      "construction": "Konnektor denn (Grund, Hauptsatz)",
+      "precision": "heuristic",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.denn"
+        ],
+        "tokens": [
+          "denn"
+        ],
+        "clauseInitial": true,
+        "notQuestion": true,
+        "notes": "Die Abtönungspartikel in Fragen („Was machst du denn?\") ist ausgenommen.",
+        "examples": {
+          "hit": [
+            "Ich mag den Sommer, denn es ist warm."
+          ],
+          "miss": [
+            "Was machst du denn?",
+            "Ich mag den Sommer, weil es warm ist."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.akkusativ-pronomen-ihn",
+      "construction": "Personalpronomen im Akkusativ (ihn)",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.akk-personalpronomen"
+        ],
+        "tokens": [
+          "ihn"
+        ],
+        "examples": {
+          "hit": [
+            "Ich rufe ihn morgen an."
+          ],
+          "miss": [
+            "Ich rufe Jan morgen an.",
+            "Der Pullover ist schön. Ich nehme ihn."
+          ]
+        },
+        "whitelist": [
+          "ich nehme ihn",
+          "wie finden sie ihn",
+          "wie findest du ihn",
+          "ich finde ihn"
+        ]
+      }
+    },
+    {
+      "id": "det.komparativ-als",
+      "construction": "Komparativ mit als (größer als, besser als)",
+      "precision": "exact",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.komparation"
+        ],
+        "regex": "\\b(?:besser|lieber|mehr|weniger|(?!(?:aber|oder|immer|wieder|jeder|dieser|welcher|jener|unser|euer|hier|leider|sicher|lecker|bitter|sauber|munter|teuer|sauer|super|ungefähr|später|früher|vorher|nachher|daher|woher|seither|bisher|außer|über|unter|hinter|oder|weiter|lieber)\\b)[a-zäöüß]{2,}er)\\s+als\\b|\\b(?:später|früher|weiter)\\s+als\\b",
+        "notes": "Grundformen auf -er (teuer, sauer, lecker, sicher …) und Adverbien (hier, leider, bisher …) sind ausgenommen.",
+        "examples": {
+          "hit": [
+            "Berlin ist größer als Leipzig.",
+            "Der Bus ist schneller als die Bahn."
+          ],
+          "miss": [
+            "Ich arbeite als Lehrer.",
+            "Das ist sehr teuer.",
+            "Aber als ich kam, war niemand da."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.superlativ-am",
+      "construction": "Superlativ mit am (am schnellsten, am liebsten)",
+      "precision": "exact",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.komparation"
+        ],
+        "regex": "\\b[Aa]m\\s+(?!(?:ersten|zweiten|dritten|nächsten|letzten|[a-zäöü]+zigsten)\\b)[a-zäöüß]+sten\\b(?!\\s+[A-ZÄÖÜ])",
+        "examples": {
+          "hit": [
+            "Am liebsten trinke ich Tee.",
+            "Der ICE ist am schnellsten."
+          ],
+          "miss": [
+            "Am Montag arbeite ich.",
+            "Das ist am ersten Mai."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.vergleich-so-wie",
+      "construction": "Vergleich mit so … wie",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.komparation"
+        ],
+        "regex": "\\b(?:genau|eben|nicht)?so\\s+[a-zäöüß]+\\s+wie\\b",
+        "examples": {
+          "hit": [
+            "Anna ist so groß wie Jan."
+          ],
+          "miss": [
+            "Wie groß ist Anna?",
+            "So ist das."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.nebensatz-weil",
+      "construction": "Nebensatz mit weil (Verb am Ende)",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.weil"
+        ],
+        "tokens": [
+          "weil"
+        ],
+        "examples": {
+          "hit": [
+            "Ich komme nicht, weil ich krank bin."
+          ],
+          "miss": [
+            "Ich bin krank, deshalb komme ich nicht."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.nebensatz-dass",
+      "construction": "Nebensatz mit dass",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.dass"
+        ],
+        "tokens": [
+          "dass"
+        ],
+        "examples": {
+          "hit": [
+            "Ich glaube, dass er morgen kommt."
+          ],
+          "miss": [
+            "Das ist gut."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.nebensatz-wenn",
+      "construction": "Nebensatz mit wenn (Bedingung, Zeitpunkt)",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.wenn"
+        ],
+        "tokens": [
+          "wenn"
+        ],
+        "examples": {
+          "hit": [
+            "Wenn es regnet, bleibe ich zu Hause."
+          ],
+          "miss": [
+            "Wann kommst du?"
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.nebensatz-ob",
+      "construction": "indirekte Frage mit ob",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.indirekte-frage"
+        ],
+        "tokens": [
+          "ob"
+        ],
+        "examples": {
+          "hit": [
+            "Ich weiß nicht, ob er kommt."
+          ],
+          "miss": [
+            "Oben ist das Bad."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.indirekte-w-frage",
+      "construction": "indirekte W-Frage (Können Sie mir sagen, wann …?)",
+      "precision": "heuristic",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.indirekte-frage"
+        ],
+        "kind": "subordinate",
+        "tokens": [
+          "wann",
+          "wo",
+          "wie",
+          "was",
+          "warum",
+          "wer",
+          "wohin",
+          "woher",
+          "weshalb",
+          "wieso",
+          "wieviel",
+          "welche",
+          "welcher",
+          "welches",
+          "welchen"
+        ],
+        "notFirstClause": true,
+        "notes": "Folgt einem Hauptsatz; Relativsätze mit was/wo (B1.2) fallen teilweise mit darunter.",
+        "examples": {
+          "hit": [
+            "Können Sie mir sagen, wann der Zug fährt?",
+            "Ich weiß nicht, wo er wohnt."
+          ],
+          "miss": [
+            "Wann fährt der Zug?",
+            "Wo wohnst du?"
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.adjektiv-endung-unbestimmt",
+      "construction": "Adjektivdeklination nach ein-, kein- und Possessivartikel",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.adj-dekl-unbestimmt"
+        ],
+        "regex": "\\b(?:[Ee]in|[Ee]ine|[Ee]inen|[Ee]inem|[Ee]iner|[Ee]ines|[Kk]ein|[Kk]eine|[Kk]einen|[Kk]einem|[Kk]einer|[Mm]ein|[Mm]eine|[Mm]einen|[Mm]einem|[Mm]einer|[Dd]ein|[Dd]eine|[Dd]einen|[Dd]einem|[Dd]einer|[Ss]eine|[Ss]einen|[Ss]einem|[Ss]einer|[Ii]hre|[Ii]hren|[Ii]hrem|[Ii]hrer|[Uu]nsere|[Uu]nseren|[Uu]nserem|[Uu]nserer)\\s+([a-zäöüß]{2,}(?:e|en|er|es|em))\\s+[A-ZÄÖÜ]",
+        "group": 1,
+        "skip": "^(?:nicht|auch|noch|schon|bitte|sehr|ganz|andere|anderen|anderer|anderes|anderem|einzige|einzigen|paar)$",
+        "examples": {
+          "hit": [
+            "Ich suche eine kleine Wohnung.",
+            "Das ist ein neuer Laptop."
+          ],
+          "miss": [
+            "Ich suche eine Wohnung.",
+            "Das ist mein Laptop.",
+            "Ich möchte ein bisschen Käse."
+          ]
+        },
+        "skipWords": [
+          "bisschen"
+        ]
+      }
+    },
+    {
+      "id": "det.adjektiv-endung-bestimmt",
+      "construction": "Adjektivdeklination nach bestimmtem Artikel",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.adj-dekl-bestimmt"
+        ],
+        "regex": "\\b(?:[Dd]er|[Dd]ie|[Dd]as|[Dd]en|[Dd]em|[Dd]es|[Dd]iese|[Dd]ieser|[Dd]ieses|[Dd]iesen|[Dd]iesem|[Jj]ede|[Jj]eder|[Jj]edes|[Jj]eden|[Jj]edem)\\s+([a-zäöüß]{2,}(?:e|en|er|es|em))\\s+[A-ZÄÖÜ]",
+        "group": 1,
+        "skip": "^(?:heute|morgen|gestern|bitte|gerne|schon|noch|auch|nicht|immer|jetzt|oft|dann|sehr|ganz|gar|leider|wieder|zuerst|alle|beide|beiden|viele|vielen|meisten|wenigen|andere|anderen|einzige|einzigen|erste|ersten|letzte|letzten|nächste|nächsten|paar|meine|meinen|meinem|meiner|deine|deinen|deinem|deiner|seine|seinen|seinem|seiner|ihre|ihren|ihrem|ihrer|unsere|unseren|unserem|unserer|eure|euren|eurem|eurer|keine|keinen|keinem|keiner|eine|einen|einem|einer)$",
+        "notes": "Ordinalzahlen und erste/letzte/nächste sind ausgenommen (lexikalisch früher). Ein Relativpronomen vor einem Adverb kann fälschlich treffen.",
+        "examples": {
+          "hit": [
+            "Der neue Kollege heißt Jan.",
+            "Ich nehme die blaue Jacke."
+          ],
+          "miss": [
+            "Der Kollege heißt Jan.",
+            "Die Frau, die heute Abend kommt, heißt Anna."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.adjektiv-endung-nullartikel",
+      "construction": "Adjektivdeklination ohne Artikel (bei gutem Wetter, drei große Zimmer)",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.adj-dekl-nullartikel"
+        ],
+        "regex": "\\b(?:[Mm]it|[Bb]ei|[Aa]us|[Vv]on|[Zz]u|[Nn]ach|[Ss]eit|[Ff]ür|[Oo]hne|[Gg]egen|[Dd]urch|[Ii]n|[Aa]n|[Aa]uf|[Üü]ber|[Uu]nter|[Vv]or|[Tt]rotz|[Ww]egen|[Zz]wei|[Dd]rei|[Vv]ier|[Ff]ünf|[Ss]echs|[Ss]ieben|[Aa]cht|[Nn]eun|[Zz]ehn|[Vv]iele|[Vv]ielen|[Ee]inige|[Ee]inigen|[Mm]ehrere|[Mm]ehreren|[Ww]enige|[Ww]enigen|\\d+)\\s+([a-zäöüß]{3,}(?:e|en|er|es|em))\\s+(?!(?:Sie|Ihnen)\\b)[A-ZÄÖÜ][a-zäöüß]+",
+        "group": 1,
+        "skip": "^(?:heute|morgen|gestern|bitte|gerne|schon|noch|auch|nicht|immer|jetzt|oft|dann|sehr|ganz|leider|wieder|zuerst|allen|alle|beide|beiden|viele|vielen|andere|anderen|mehrere|mehreren|einige|einigen|wenige|wenigen|zwischen|gegen|unter|hinter|neben|oben|unten|wegen|außen|innen|meinen|deinen|seinen|ihren|unseren|euren|meine|deine|seine|ihre|unsere|eure|meinem|deinem|seinem|ihrem|unserem|eurem|meiner|deiner|seiner|ihrer|unserer|eurer|einen|einem|einer|keinen|keinem|keiner|diesen|diesem|dieser|jeden|jedem|jeder|welchen|welchem|welcher|ersten|letzten|nächsten|halbe|halben|paar)$",
+        "notes": "Nur nach Präposition oder Zahlwort (ohne Artikel dazwischen); am Satzanfang nicht erfasst. Kein Adjektiv: Formen von möchte, haben, werden und den Modalverben (skipWords) und ein Wort vor „Sie\"/„Ihnen\" (Wie viele möchten Sie?; Review a1.1-u04 r4 F08 / r5 F05).",
+        "examples": {
+          "hit": [
+            "Bei gutem Wetter gehen wir spazieren.",
+            "Die Wohnung hat drei große Zimmer."
+          ],
+          "miss": [
+            "Ich wohne in einer großen Wohnung.",
+            "Wir essen Pizza.",
+            "Vielen Dank!",
+            "Wie viele möchten Sie?",
+            "Dann möchten wir zwei Kilo Kartoffeln.",
+            "Wie viele haben Sie?",
+            "Ich suche für eine Wohnung einen Tisch.",
+            "Dann kommen Sie auf unser Boot!"
+          ]
+        },
+        "skipWords": [
+          "möchte",
+          "möchten",
+          "möchtest",
+          "möchtet",
+          "haben",
+          "habe",
+          "werden",
+          "werde",
+          "können",
+          "müssen",
+          "dürfen",
+          "sollen",
+          "wollen",
+          "mögen",
+          "eine",
+          "keine",
+          "unser",
+          "euer",
+          "jede",
+          "diese",
+          "jene",
+          "welche",
+          "manche",
+          "solche",
+          "dieser",
+          "jener",
+          "solcher",
+          "mancher",
+          "welcher"
+        ]
+      }
+    },
+    {
+      "id": "det.konjunktiv2-koennte",
+      "construction": "Konjunktiv II könnte (Vorschläge, Bitten)",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.konj2-koennte",
+          "g.konj2-hoeflichkeit"
+        ],
+        "tokens": [
+          "könnte",
+          "könntest",
+          "könnten",
+          "könntet"
+        ],
+        "examples": {
+          "hit": [
+            "Wir könnten ins Kino gehen."
+          ],
+          "miss": [
+            "Wir können ins Kino gehen."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.konjunktiv2-sollte",
+      "construction": "sollte (Konjunktiv II: Ratschläge — formgleich mit dem Präteritum von sollen)",
+      "precision": "heuristic",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.konj2-sollte",
+          "g.praeteritum-modalverben"
+        ],
+        "tokens": [
+          "sollte",
+          "solltest",
+          "sollten",
+          "solltet"
+        ],
+        "notes": "Formgleich mit dem Präteritum; der Spine ordnet den Detektor beiden Punkten zu, der frühere Punkt zählt.",
+        "examples": {
+          "hit": [
+            "Du solltest mehr schlafen."
+          ],
+          "miss": [
+            "Du sollst mehr schlafen."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.konjunktiv2-waere-haette-wuerde",
+      "construction": "Konjunktiv II wäre, hätte, würde (+ Infinitiv)",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.konj2-waere-haette-wuerde",
+          "g.konj2-hoeflichkeit"
+        ],
+        "tokens": [
+          "wäre",
+          "wärst",
+          "wärest",
+          "wären",
+          "wärt",
+          "hätte",
+          "hättest",
+          "hätten",
+          "hättet",
+          "würde",
+          "würdest",
+          "würden",
+          "würdet"
+        ],
+        "whitelist": [
+          "hätte gern",
+          "hätte gerne",
+          "hätten gern",
+          "hätten gerne",
+          "hättest du gern",
+          "hätten sie gern"
+        ],
+        "notes": "„Ich hätte gern …\" ist ein Bestell-Chunk ab A1 und steht auf der Whitelist.",
+        "examples": {
+          "hit": [
+            "Das wäre schön.",
+            "Ich würde gern reisen."
+          ],
+          "miss": [
+            "Ich hätte gern einen Kaffee.",
+            "Das war schön."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.reflexiv-pronomen",
+      "construction": "reflexive Verben mit Reflexivpronomen im Akkusativ (ich melde mich, sich beeilen)",
+      "precision": "exact",
+      "method": "lexicon",
+      "spec": {
+        "spinePoints": [
+          "g.reflexiv-akk"
+        ],
+        "kind": "reflexive",
+        "sich": true,
+        "pairs": {
+          "ich": [
+            "mich"
+          ],
+          "du": [
+            "dich"
+          ],
+          "wir": [
+            "uns"
+          ],
+          "ihr": [
+            "euch"
+          ]
+        },
+        "imperativePronouns": [
+          "dich",
+          "euch"
+        ],
+        "whitelist": [
+          "wir sehen uns",
+          "sehen wir uns",
+          "ich freue mich",
+          "wir freuen uns",
+          "ich möchte mich anmelden",
+          "stellen sie sich vor",
+          "stellen sie sich bitte vor",
+          "sich vorstellen",
+          "sich verabreden",
+          "sich anmelden"
+        ],
+        "notes": "„sich\" ist immer reflexiv; mich/dich/uns/euch zählen nur mit dem passenden Subjekt in derselben Klausel oder im Imperativ eines Lexikonverbs mit reflexive: akk|dat. Whitelist der rezeptiven A1.1-Lemmas als ganze Wendung: „Stellen Sie sich (bitte) vor“ und „sich vorstellen“ (lx.sich-vorstellen, a1.1-u01; Review a1.1-u01 r2/r3 F05), „sich verabreden“ (a1.1-u08), „sich anmelden“ (a1.1-u12). Getrennte Stellungen (stellt sich Priya vor) bleiben Hinweise, bis GRM-04 ein zugeteiltes reflexives Lexem selbst lizenziert.",
+        "examples": {
+          "lexicon": [
+            {
+              "lemma": "sich beeilen",
+              "pos": "VERB",
+              "reflexive": "akk",
+              "verb_forms": {
+                "3sg": "beeilt sich",
+                "perfekt": "hat sich beeilt"
+              }
+            }
+          ],
+          "hit": [
+            "Ich melde mich morgen.",
+            "Bitte melden Sie sich bei mir.",
+            "Beeil dich!"
+          ],
+          "miss": [
+            "Ich rufe dich morgen an.",
+            "Er besucht uns.",
+            "Wir sehen uns morgen!",
+            "Stellen Sie sich bitte vor: Wie heißen Sie?",
+            "Sie können grüßen, sich vorstellen und Tschüss sagen.",
+            "Sie können sich verabreden."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.reflexiv-dativ",
+      "construction": "Reflexivpronomen im Dativ (ich wünsche mir, du kaufst dir)",
+      "precision": "heuristic",
+      "method": "lexicon",
+      "spec": {
+        "spinePoints": [
+          "g.reflexiv-dat"
+        ],
+        "kind": "reflexive",
+        "sich": false,
+        "pairs": {
+          "ich": [
+            "mir"
+          ],
+          "du": [
+            "dir"
+          ]
+        },
+        "examples": {
+          "hit": [
+            "Ich wünsche mir ein Fahrrad.",
+            "Kaufst du dir eine Jacke?"
+          ],
+          "miss": [
+            "Kannst du mir helfen?",
+            "Ich gebe dir das Buch."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.konnektor-deshalb",
+      "construction": "Konnektor deshalb (Verb auf Position 2)",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.deshalb"
+        ],
+        "tokens": [
+          "deshalb"
+        ],
+        "examples": {
+          "hit": [
+            "Ich bin krank, deshalb bleibe ich zu Hause."
+          ],
+          "miss": [
+            "Ich bin krank und bleibe zu Hause."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.praeteritum-modalverb",
+      "construction": "Präteritum der Modalverben (musste, konnte, durfte, wollte)",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.praeteritum-modalverben"
+        ],
+        "tokens": [
+          "musste",
+          "musstest",
+          "mussten",
+          "musstet",
+          "konnte",
+          "konntest",
+          "konnten",
+          "konntet",
+          "durfte",
+          "durftest",
+          "durften",
+          "durftet",
+          "wollte",
+          "wolltest",
+          "wollten",
+          "wolltet",
+          "mochte",
+          "mochtest",
+          "mochten"
+        ],
+        "notes": "sollte steht im Detektor konjunktiv2-sollte (formgleich). wollte als Konjunktiv II ist auf diesen Stufen selten.",
+        "examples": {
+          "hit": [
+            "Ich musste gestern arbeiten.",
+            "Wir konnten nicht kommen."
+          ],
+          "miss": [
+            "Ich muss heute arbeiten.",
+            "Wir könnten morgen kommen."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.nebensatz-als-temporal",
+      "construction": "Nebensatz mit als (einmalig in der Vergangenheit)",
+      "precision": "heuristic",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.als-temporal"
+        ],
+        "kind": "subordinate",
+        "tokens": [
+          "als"
+        ],
+        "noMidFinite": true,
+        "examples": {
+          "hit": [
+            "Als ich klein war, wohnte ich in Izmir.",
+            "Ich war müde, als ich nach Hause kam."
+          ],
+          "miss": [
+            "Berlin ist größer als Leipzig.",
+            "Ich arbeite als Lehrer.",
+            "Als Kind habe ich in Izmir gewohnt."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.vokalwechsel",
+      "construction": "Präsens mit Vokalwechsel in der 2./3. Person Singular (du sprichst, er liest, sie fährt, du nimmst)",
+      "precision": "exact",
+      "method": "lexicon",
+      "spec": {
+        "spinePoints": [
+          "g.vokalwechsel"
+        ],
+        "kind": "stem-vowel-change",
+        "forms": [
+          "liest",
+          "isst",
+          "fährst",
+          "fährt",
+          "schläfst",
+          "schläft",
+          "nimmst",
+          "nimmt",
+          "gibst",
+          "gibt",
+          "siehst",
+          "sieht",
+          "triffst",
+          "trifft",
+          "hilfst",
+          "hilft",
+          "trägst",
+          "trägt",
+          "läufst",
+          "läuft",
+          "wäschst",
+          "wäscht",
+          "lädst",
+          "lädt",
+          "hältst",
+          "hält",
+          "lässt",
+          "fällt",
+          "fällst",
+          "vergisst",
+          "empfiehlst",
+          "empfiehlt",
+          "wirfst",
+          "wirft",
+          "stirbt",
+          "brichst",
+          "bricht",
+          "misst",
+          "fängst",
+          "fängt",
+          "rätst",
+          "rät",
+          "stiehlt",
+          "befiehlt",
+          "wächst",
+          "bläst",
+          "gräbt",
+          "stößt",
+          "erfährst",
+          "erfährt",
+          "verlässt",
+          "gefällt",
+          "unterhältst",
+          "unterhält"
+        ],
+        "exclude": [
+          "hat",
+          "hast",
+          "ist",
+          "bist",
+          "wird",
+          "wirst",
+          "weiß",
+          "weißt",
+          "kann",
+          "kannst",
+          "muss",
+          "musst",
+          "darf",
+          "darfst",
+          "will",
+          "willst",
+          "mag",
+          "magst"
+        ],
+        "whitelist": [
+          "sprichst",
+          "spricht"
+        ],
+        "unlessInClause": {
+          "gibt": [
+            "es"
+          ]
+        },
+        "notes": "Geschlossene Liste ∪ verb_forms.2sg/3sg des Lexikons, wo der Stammvokal wechselt. sprichst/spricht sind der A1.1-U1-Chunk („Sprichst du Deutsch?\"), es gibt ist ein eigener Chunk (gibt mit es im selben Teilsatz trifft nicht); hat/wird/weiß und die Modalverben gehören anderen Spine-Punkten.",
+        "examples": {
+          "lexicon": [
+            {
+              "lemma": "backen",
+              "pos": "VERB",
+              "verb_forms": {
+                "3sg": "bäckt",
+                "praet": "backte",
+                "perfekt": "hat gebacken"
+              }
+            }
+          ],
+          "hit": [
+            "Du fährst mit dem Bus.",
+            "Er liest die Zeitung.",
+            "Nimmst du den Kaffee?",
+            "Sie bäckt einen Kuchen.",
+            "Er gibt mir das Buch."
+          ],
+          "miss": [
+            "Sprichst du Deutsch?",
+            "Ich frage, ob es hier etwas gibt.",
+            "Ich fahre mit dem Bus.",
+            "Hier gibt es einen Supermarkt.",
+            "Er macht eine Pause.",
+            "Die Kinder schlafen schon.",
+            "Das Kind hat Hunger."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.praeteritum-vollverb",
+      "construction": "Präteritum der Vollverben (kam, ging, sagte …) — ohne war/hatte und Modalverben",
+      "precision": "exact",
+      "method": "lexicon",
+      "spec": {
+        "spinePoints": [
+          "g.praeteritum"
+        ],
+        "kind": "praeteritum",
+        "forms": [
+          "kam",
+          "ging",
+          "gab",
+          "fand",
+          "sah",
+          "nahm",
+          "las",
+          "schrieb",
+          "sprach",
+          "stand",
+          "lag",
+          "saß",
+          "fuhr",
+          "fiel",
+          "hielt",
+          "ließ",
+          "lief",
+          "rief",
+          "trug",
+          "trank",
+          "aß",
+          "traf",
+          "bekam",
+          "verstand",
+          "begann",
+          "blieb",
+          "stieg",
+          "zog",
+          "flog",
+          "dachte",
+          "brachte",
+          "wusste",
+          "kannte",
+          "nannte",
+          "rannte",
+          "sang",
+          "schwamm",
+          "gewann",
+          "schlief",
+          "fing",
+          "hing",
+          "half",
+          "starb",
+          "warf",
+          "erhielt",
+          "erfuhr",
+          "verlor",
+          "vergaß",
+          "verließ",
+          "entschied",
+          "beschrieb",
+          "bot",
+          "bat",
+          "trat",
+          "schloss",
+          "riet",
+          "lud",
+          "wuchs",
+          "wusch",
+          "stahl",
+          "empfahl",
+          "bewarb",
+          "unterschrieb",
+          "stritt",
+          "litt",
+          "griff",
+          "schwieg",
+          "sprang",
+          "schien",
+          "lieh",
+          "fror",
+          "zwang",
+          "erschien",
+          "gefiel",
+          "geschah",
+          "gelang",
+          "verschwand",
+          "entstand",
+          "bestand",
+          "wies",
+          "verbrachte",
+          "erkannte",
+          "empfand",
+          "betrug",
+          "vertrat",
+          "zerbrach",
+          "brach",
+          "stach",
+          "wog",
+          "bog",
+          "flog",
+          "floh",
+          "schob",
+          "hob",
+          "log",
+          "roch",
+          "goss",
+          "genoss",
+          "schoss",
+          "band",
+          "sank",
+          "trank",
+          "stank",
+          "klang",
+          "zwang"
+        ],
+        "exclude": [
+          "war",
+          "hatte",
+          "musste",
+          "konnte",
+          "durfte",
+          "wollte",
+          "sollte",
+          "mochte",
+          "wurde",
+          "wurden",
+          "wurdest"
+        ],
+        "notes": "Geschlossene Liste starker und gemischter Verben ∪ verb_forms.praet des Lexikons (schwache Verben wie sagte nur über das Lexikon); alle Personen werden gebildet.",
+        "examples": {
+          "lexicon": [
+            {
+              "lemma": "sagen",
+              "pos": "VERB",
+              "verb_forms": {
+                "3sg": "sagt",
+                "praet": "sagte",
+                "perfekt": "hat gesagt"
+              }
+            }
+          ],
+          "hit": [
+            "Sie zog nach Hamburg.",
+            "Ich fand eine Stelle.",
+            "Er sagte nichts."
+          ],
+          "miss": [
+            "Sie zieht nach Hamburg.",
+            "Ich finde eine Stelle.",
+            "Gestern war ich müde."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.komparativ-attributiv",
+      "construction": "Komparativ und Superlativ vor dem Nomen (der günstigere Tarif, das beste Angebot)",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.komparation-attributiv"
+        ],
+        "regex": "\\b(?:[Dd]er|[Dd]ie|[Dd]as|[Dd]en|[Dd]em|[Dd]es|[Ee]in|[Ee]ine|[Ee]inen|[Ee]inem|[Ee]iner|[Kk]ein|[Kk]eine|[Kk]einen|[Mm]ein|[Mm]eine|[Mm]einen|[Uu]nser|[Uu]nsere|[Ii]hr|[Ii]hre|Ihr|Ihre)\\s+([a-zäöüß]{2,}(?:er|st)(?:e|en|er|es|em))\\s+[A-ZÄÖÜ]",
+        "group": 1,
+        "skip": "^(?:sicher|ander|letzt|nächst|erst|besonder|lecker|bitter|sauber|hinter|vorder|ober|unter|inner|äußer|mittler|fest|gest|weiter)|(?:zigst|zehnt|ßigst)(?:e|en|er|es|em)$",
+        "examples": {
+          "hit": [
+            "Wir nehmen den günstigeren Tarif.",
+            "Das ist das beste Angebot."
+          ],
+          "miss": [
+            "Das ist ein günstiger Tarif.",
+            "Das ist die erste Stunde."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.lassen-infinitiv",
+      "construction": "lassen + Infinitiv (etwas reparieren lassen)",
+      "precision": "heuristic",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.lassen"
+        ],
+        "kind": "aux-final",
+        "aux": [
+          "lasse",
+          "lässt",
+          "lasst",
+          "ließ",
+          "ließen",
+          "ließt",
+          "ließest"
+        ],
+        "final": "infinitive",
+        "examples": {
+          "hit": [
+            "Ich lasse mein Fahrrad reparieren."
+          ],
+          "miss": [
+            "Ich lasse das Buch hier."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.konnektor-trotzdem",
+      "construction": "Konnektor trotzdem (Verb auf Position 2)",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.trotzdem"
+        ],
+        "tokens": [
+          "trotzdem"
+        ],
+        "examples": {
+          "hit": [
+            "Es regnet, trotzdem gehen wir spazieren."
+          ],
+          "miss": [
+            "Es regnet, deshalb bleiben wir zu Hause."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.passiv-praesens",
+      "construction": "Passiv Präsens (wird + Partizip II)",
+      "precision": "heuristic",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.passiv-praesens"
+        ],
+        "kind": "aux-final",
+        "aux": [
+          "werde",
+          "wirst",
+          "wird",
+          "werden",
+          "werdet"
+        ],
+        "final": "participle",
+        "notes": "Untrennbare Infinitive (bekommen) sehen aus wie Partizipien; mit Lexikon wird unterschieden.",
+        "examples": {
+          "hit": [
+            "Ihr Antrag wird bearbeitet.",
+            "Die Maschine wird jeden Morgen geprüft.",
+            "Ich weiß, dass der Antrag geprüft wird."
+          ],
+          "miss": [
+            "Es wird kalt.",
+            "Ich werde Erzieherin.",
+            "Er wird morgen kommen."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.praepositionaladverb",
+      "construction": "Präpositionaladverbien (worauf? – darauf, wofür? – dafür)",
+      "precision": "heuristic",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.praepositionaladverb"
+        ],
+        "tokens": [
+          "worauf",
+          "wofür",
+          "worüber",
+          "womit",
+          "wovon",
+          "woran",
+          "worum",
+          "wonach",
+          "darauf",
+          "dafür",
+          "darüber",
+          "davon",
+          "daran"
+        ],
+        "examples": {
+          "hit": [
+            "Ich freue mich darauf.",
+            "Worauf wartest du?"
+          ],
+          "miss": [
+            "Ich warte auf den Bus."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.relativsatz-nom-akk",
+      "construction": "Relativsatz mit Relativpronomen im Nominativ und Akkusativ",
+      "precision": "heuristic",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.relativsatz-nom",
+          "g.relativsatz-akk"
+        ],
+        "kind": "relative",
+        "barePronouns": [
+          "der",
+          "die",
+          "das",
+          "den"
+        ],
+        "examples": {
+          "hit": [
+            "Ich suche eine Stelle, die gut bezahlt ist.",
+            "Das ist der Kollege, den ich kenne."
+          ],
+          "miss": [
+            "Ich glaube, die Kollegin kommt morgen.",
+            "Er sagt, das ist gut."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.nebensatz-bis-seit",
+      "construction": "Nebensätze mit bis und seit(dem)",
+      "precision": "heuristic",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.bis-seitdem"
+        ],
+        "kind": "subordinate",
+        "tokens": [
+          "bis",
+          "seit",
+          "seitdem"
+        ],
+        "noMidFinite": true,
+        "examples": {
+          "hit": [
+            "Bis die Kollegin zurück ist, mache ich das.",
+            "Seitdem wir das neue System haben, geht alles schneller."
+          ],
+          "miss": [
+            "Ich arbeite bis 17 Uhr.",
+            "Seit einem Jahr wohne ich hier."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.n-deklination",
+      "construction": "n-Deklination (den Kollegen, dem Kunden)",
+      "precision": "heuristic",
+      "method": "lexicon",
+      "spec": {
+        "spinePoints": [
+          "g.n-deklination"
+        ],
+        "kind": "n-declension",
+        "nouns": [
+          "kollege",
+          "kunde",
+          "junge",
+          "nachbar",
+          "mensch",
+          "praktikant",
+          "student",
+          "polizist",
+          "journalist",
+          "patient",
+          "assistent",
+          "präsident",
+          "tourist",
+          "kandidat",
+          "soldat",
+          "experte",
+          "franzose",
+          "grieche",
+          "russe",
+          "pole",
+          "türke",
+          "affe",
+          "löwe",
+          "bär",
+          "held",
+          "architekt",
+          "fotograf",
+          "biologe",
+          "psychologe",
+          "bauer",
+          "herr",
+          "kamerad",
+          "demonstrant",
+          "lieferant",
+          "elefant",
+          "automat",
+          "planet",
+          "bote",
+          "erbe",
+          "zeuge",
+          "laie"
+        ],
+        "determiners": [
+          "den",
+          "dem",
+          "des",
+          "einen",
+          "einem",
+          "eines",
+          "meinen",
+          "meinem",
+          "meines",
+          "deinen",
+          "deinem",
+          "deines",
+          "seinen",
+          "seinem",
+          "seines",
+          "ihren",
+          "ihrem",
+          "ihres",
+          "unseren",
+          "unserem",
+          "unseres",
+          "euren",
+          "eurem",
+          "eures",
+          "keinen",
+          "keinem",
+          "keines",
+          "diesen",
+          "diesem",
+          "dieses",
+          "jeden",
+          "jedem",
+          "jedes",
+          "welchen",
+          "welchem"
+        ],
+        "whitelist": [
+          "herrn"
+        ],
+        "notes": "„Herrn\" (Herrn Brandt) ist ein früher Chunk und steht auf der Whitelist. Dativ Plural (den Kollegen) trifft ebenfalls.",
+        "examples": {
+          "hit": [
+            "Ich spreche mit dem Kollegen.",
+            "Wir haben einen neuen Kunden."
+          ],
+          "miss": [
+            "Der Kollege kommt morgen.",
+            "Ich schreibe Herrn Brandt.",
+            "Ich rufe den Herrn an."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.relativsatz-dativ-praeposition",
+      "construction": "Relativsatz im Dativ und mit Präposition (dem ich geholfen habe; in die ich einziehe)",
+      "precision": "heuristic",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.relativsatz-dat-praep"
+        ],
+        "kind": "relative",
+        "prepositions": [
+          "mit",
+          "von",
+          "bei",
+          "zu",
+          "aus",
+          "nach",
+          "seit",
+          "für",
+          "ohne",
+          "gegen",
+          "durch",
+          "um",
+          "in",
+          "an",
+          "auf",
+          "über",
+          "unter",
+          "vor",
+          "hinter",
+          "neben",
+          "zwischen",
+          "wegen",
+          "trotz",
+          "während"
+        ],
+        "pronouns": [
+          "dem",
+          "der",
+          "den",
+          "denen",
+          "die",
+          "das",
+          "deren",
+          "dessen"
+        ],
+        "barePronouns": [
+          "dem",
+          "denen"
+        ],
+        "examples": {
+          "hit": [
+            "Das ist die Wohnung, in die ich einziehe.",
+            "Das ist der Kollege, dem ich geholfen habe.",
+            "Der Vertrag, über den wir gesprochen haben, ist neu."
+          ],
+          "miss": [
+            "Ich fahre mit dem Bus.",
+            "Ich glaube, mit dem Bus geht es schneller."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.nebensatz-obwohl",
+      "construction": "Konzessivsatz mit obwohl",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.obwohl"
+        ],
+        "tokens": [
+          "obwohl"
+        ],
+        "examples": {
+          "hit": [
+            "Obwohl ich zweimal angerufen habe, hat niemand geantwortet."
+          ],
+          "miss": [
+            "Ich habe zweimal angerufen. Trotzdem hat niemand geantwortet."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.futur1",
+      "construction": "Futur I (werden + Infinitiv)",
+      "precision": "heuristic",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.futur1"
+        ],
+        "kind": "aux-final",
+        "aux": [
+          "werde",
+          "wirst",
+          "wird",
+          "werden",
+          "werdet"
+        ],
+        "final": "infinitive",
+        "examples": {
+          "hit": [
+            "In 20 Jahren werden Autos selbst fahren.",
+            "Das wird schon klappen.",
+            "Ich glaube, dass es morgen regnen wird."
+          ],
+          "miss": [
+            "Es wird kalt.",
+            "Der Antrag wird geprüft.",
+            "Ich werde Erzieherin."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.nebensatz-falls",
+      "construction": "Bedingung mit falls",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.falls"
+        ],
+        "tokens": [
+          "falls"
+        ],
+        "examples": {
+          "hit": [
+            "Falls es regnet, gehen wir ins Kino."
+          ],
+          "miss": [
+            "Wenn es regnet, gehen wir ins Kino."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.zu-infinitiv",
+      "construction": "Infinitiv mit zu (… die Tablette zu nehmen; aufzustehen)",
+      "precision": "exact",
+      "method": "lexicon",
+      "spec": {
+        "spinePoints": [
+          "g.zu-infinitiv"
+        ],
+        "kind": "zu-infinitive",
+        "notInfinitive": [
+          "offen",
+          "eben",
+          "selten",
+          "trocken",
+          "golden",
+          "eigen",
+          "verschieden",
+          "zufrieden",
+          "unten",
+          "oben",
+          "hinten",
+          "vorne",
+          "außen",
+          "innen"
+        ],
+        "notes": "Exakt mit dem Infinitiv aus dem Lexikon bzw. der -zu-Infixform trennbarer Lexikonverben; sonst Form (-en am Klauselende) → heuristisch.",
+        "examples": {
+          "hit": [
+            "Vergessen Sie nicht, die Tablette zu nehmen.",
+            "Ich habe keine Zeit, Sport zu machen.",
+            "Es ist wichtig, früh aufzustehen."
+          ],
+          "miss": [
+            "Ich gehe zu Fuß.",
+            "Das ist zu teuer.",
+            "Ich fahre zum Arzt.",
+            "Die Tür ist zu offen."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.um-zu",
+      "construction": "Finalsatz mit um … zu",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.um-zu-damit"
+        ],
+        "regex": "\\b[Uu]m\\b[^,;:.!?]*?\\bzu\\s+[a-zäöüß]+(?:en|ern|eln)\\b|\\b[Uu]m\\b[^,;:.!?]*?\\b(?:an|auf|aus|ein|mit|ab|vor|zurück|nach|weg|los|fern|kennen|teil|her|hin|fest|weiter)zu[a-zäöüß]+en\\b",
+        "examples": {
+          "hit": [
+            "Ich mache den Kurs, um bessere Chancen zu haben."
+          ],
+          "miss": [
+            "Ich komme um acht Uhr.",
+            "Ich gehe um acht zu Anna."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.nebensatz-damit",
+      "construction": "Finalsatz mit damit",
+      "precision": "heuristic",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.um-zu-damit"
+        ],
+        "kind": "subordinate",
+        "tokens": [
+          "damit"
+        ],
+        "examples": {
+          "hit": [
+            "Ich mache den Kurs, damit meine Chefin mir mehr Verantwortung gibt."
+          ],
+          "miss": [
+            "Damit habe ich kein Problem."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.nebensatz-da-kausal",
+      "construction": "Kausalsatz mit da",
+      "precision": "heuristic",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.da-kausal"
+        ],
+        "kind": "subordinate",
+        "tokens": [
+          "da"
+        ],
+        "noMidFinite": true,
+        "examples": {
+          "hit": [
+            "Da ich abends arbeite, suche ich einen Onlinekurs."
+          ],
+          "miss": [
+            "Da ist der Bahnhof.",
+            "Ich bin schon da."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.plusquamperfekt",
+      "construction": "Plusquamperfekt (hatte/war + Partizip II)",
+      "precision": "exact",
+      "method": "lexicon",
+      "spec": {
+        "spinePoints": [
+          "g.plusquamperfekt"
+        ],
+        "kind": "participle-aux",
+        "auxForms": [
+          "hatte",
+          "hattest",
+          "hatten",
+          "hattet",
+          "war",
+          "warst",
+          "waren",
+          "wart"
+        ],
+        "participleAux": "match-aux",
+        "notes": "hatte + Partizip eines haben-Verbs, war + Partizip eines sein-Verbs (Lexikon); war + Partizip eines haben-Verbs ist Zustandspassiv und zählt nicht.",
+        "examples": {
+          "lexicon": [
+            {
+              "lemma": "gehen",
+              "pos": "VERB",
+              "verb_forms": {
+                "3sg": "geht",
+                "perfekt": "ist gegangen"
+              }
+            },
+            {
+              "lemma": "schließen",
+              "pos": "VERB",
+              "verb_forms": {
+                "3sg": "schließt",
+                "perfekt": "hat geschlossen"
+              }
+            }
+          ],
+          "hit": [
+            "Nachdem ich die Prüfung bestanden hatte, habe ich gefeiert.",
+            "Er war schon gegangen."
+          ],
+          "miss": [
+            "Die Tür war geschlossen.",
+            "Ich hatte keine Zeit."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.nebensatz-nachdem",
+      "construction": "Temporalsatz mit nachdem",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.nachdem-bevor"
+        ],
+        "tokens": [
+          "nachdem"
+        ],
+        "examples": {
+          "hit": [
+            "Nachdem ich gegessen hatte, ging ich spazieren."
+          ],
+          "miss": [
+            "Nach dem Essen gehe ich spazieren."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.nebensatz-bevor",
+      "construction": "Temporalsatz mit bevor",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.nachdem-bevor"
+        ],
+        "tokens": [
+          "bevor"
+        ],
+        "examples": {
+          "hit": [
+            "Bevor ich nach Graz kam, wohnte ich in Wien."
+          ],
+          "miss": [
+            "Vor dem Essen wasche ich mir die Hände."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.konjunktiv2-irreal",
+      "construction": "Konjunktiv II: irreale Bedingung (Wenn ich … würde, hätte ich …)",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.konj2-irreal-gegenwart"
+        ],
+        "regex": "\\b[Ww]enn\\b[^.!?]*\\b(?:würde|würdest|würden|würdet|wäre|wärst|wären|wärt|hätte|hättest|hätten|hättet|könnte|könntest|könnten|müsste|müssten|dürfte)\\b",
+        "examples": {
+          "hit": [
+            "Wenn ich nur vier Tage arbeiten würde, hätte ich mehr Zeit für meine Familie."
+          ],
+          "miss": [
+            "Wenn es regnet, bleibe ich zu Hause.",
+            "Ich hätte gern einen Kaffee."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.konjunktiv2-andere",
+      "construction": "Konjunktiv II weiterer Verben (müsste, dürfte, wüsste, käme, ginge, bräuchte)",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.konj2-irreal-gegenwart"
+        ],
+        "tokens": [
+          "müsste",
+          "müsstest",
+          "müssten",
+          "müsstet",
+          "dürfte",
+          "dürftest",
+          "dürften",
+          "wüsste",
+          "wüsstest",
+          "wüssten",
+          "käme",
+          "kämen",
+          "ginge",
+          "gingen",
+          "bräuchte",
+          "bräuchten",
+          "gäbe",
+          "täte"
+        ],
+        "examples": {
+          "hit": [
+            "Das müsste funktionieren.",
+            "Es gäbe eine Lösung."
+          ],
+          "miss": [
+            "Das muss funktionieren."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.genitiv-des",
+      "construction": "Genitiv: Artikel des (des Teams, des Kollegen)",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.genitiv"
+        ],
+        "tokens": [
+          "des"
+        ],
+        "examples": {
+          "hit": [
+            "Das ist das Auto des Kollegen."
+          ],
+          "miss": [
+            "Das ist das Auto von dem Kollegen."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.genitiv-artikel",
+      "construction": "Genitiv: eines/meines … + Nomen (Genitivattribut)",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.genitiv"
+        ],
+        "regex": "\\b(?:[Ee]ines|[Kk]eines|[Mm]eines|[Dd]eines|[Ss]eines|[Ii]hres|[Uu]nseres|[Ee]ures)\\s+(?:[a-zäöüß]+en\\s+)?[A-ZÄÖÜ][a-zäöüß]+",
+        "examples": {
+          "hit": [
+            "Das ist das Büro meines Vaters.",
+            "Eines Tages kam er zurück."
+          ],
+          "miss": [
+            "Das ist mein Vater."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.genitiv-feminin-attribut",
+      "construction": "Genitivattribut mit der (die Frage der Partnerin)",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.genitiv"
+        ],
+        "regex": "(?:^|[^\\p{L}])((?:[Dd](?:ie|er|as|en|em)|(?:[Ee]|[Kk]e|[Mm]e|[Dd]e|[Ss]e)in(?:e|en|em|er)?|[Ii]hr(?:e|en|em|er)?|[Uu]nser(?:e|en|em|er)?|[Aa]m|[Ii]m|[Vv]om|[Zz]um|[Zz]ur|[Bb]eim)\\s+(?:[a-zäöüß]+(?:e|en)\\s+)?[A-ZÄÖÜ][a-zäöüß]+\\s+(?:der|einer|meiner|deiner|seiner|ihrer|unserer|eurer)\\s+(?:[a-zäöüß]+(?:e|en)\\s+)?[A-ZÄÖÜ][a-zäöüß]+)",
+        "group": 1,
+        "skip": "^(?:am|im)\\s+(?:Ende|Anfang)\\s+der\\s",
+        "notes": "Heuristik: Artikel + Nomen + „der\" + Nomen. „der\" kann auch ein Dativobjekt einleiten (Ich gebe das Buch der Lehrerin.); „am Ende der Straße\" ist ein Wegbeschreibungs-Chunk (skip). Liest mit GRM-04 auch die deutschen Arbeitsanweisungen (instructionsDe, situationDe). Review a1.1-u04 r5 F05. Seit 2026-09-28 auch einer / meiner … + Nomen nach einem Nomen („die Webseite einer Sprachschule“; Review a1.1-u12 r1 F07); des und eines + Nomen melden det.genitiv-des und det.genitiv-artikel.",
+        "examples": {
+          "hit": [
+            "Antworten Sie auf die Frage der Partnerin.",
+            "Dann reagieren Sie auf die Bitte der Partnerin.",
+            "Das ist das Auto der Nachbarin.",
+            "Auf der Webseite einer Sprachschule steht ein Kurs."
+          ],
+          "miss": [
+            "Antworten Sie auf die Frage von Nora.",
+            "Die Frau fragt, der Mann antwortet.",
+            "Am Ende der Straße ist die Post.",
+            "Ich gebe der Lehrerin das Buch.",
+            "Ich spreche mit einer Freundin.",
+            "Das ist die Webseite von einer Sprachschule."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.praeposition-genitiv-wegen-trotz-waehrend",
+      "construction": "Präpositionen mit Genitiv: wegen, trotz, während, (an)statt",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.praep-genitiv"
+        ],
+        "regex": "\\b(?:[Ww]egen|[Tt]rotz|[Ww]ährend|[Ss]tatt|[Aa]nstatt)\\s+(?:des|der|eines|einer|meines|meiner|deines|deiner|seines|seiner|ihres|ihrer|unseres|unserer|eures|eurer|dieses|dieser|dem|einem|meinem)\\b",
+        "notes": "Schließt die umgangssprachliche Form wegen + Dativ ein; „während der\" kann auch Konjunktion + Relativ sein.",
+        "examples": {
+          "hit": [
+            "Wegen des Streiks komme ich später.",
+            "Während der Fahrt schlafe ich."
+          ],
+          "miss": [
+            "Während ich warte, lese ich.",
+            "Trotzdem komme ich."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.kausaladverb-deswegen",
+      "construction": "Kausaladverb deswegen",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.kausaladverbien-naemlich"
+        ],
+        "tokens": [
+          "deswegen"
+        ],
+        "examples": {
+          "hit": [
+            "Ich bin müde, deswegen gehe ich nach Hause."
+          ],
+          "miss": [
+            "Ich bin müde, deshalb gehe ich nach Hause."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.kausaladverb-darum-daher",
+      "construction": "Kausaladverbien darum, daher",
+      "precision": "heuristic",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.kausaladverbien-naemlich"
+        ],
+        "tokens": [
+          "darum",
+          "daher"
+        ],
+        "notFollowedBy": [
+          "geht",
+          "ging",
+          "gehen",
+          "kümmere",
+          "kümmert",
+          "kümmern",
+          "bitte",
+          "bitten",
+          "bittet",
+          "kommt",
+          "komme",
+          "kommen"
+        ],
+        "examples": {
+          "hit": [
+            "Ich habe keine Zeit, darum bleibe ich zu Hause."
+          ],
+          "miss": [
+            "Darum geht es.",
+            "Daher kommt er."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.naemlich",
+      "construction": "Kausaladverb nämlich",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.kausaladverbien-naemlich"
+        ],
+        "tokens": [
+          "nämlich"
+        ],
+        "examples": {
+          "hit": [
+            "Ich komme später. Ich muss nämlich noch arbeiten."
+          ],
+          "miss": [
+            "Ich komme später, weil ich noch arbeiten muss."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.partizip-attribut",
+      "construction": "Partizip I und II als Adjektiv (steigende Preise, die reduzierte Ware)",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.partizip-adjektiv"
+        ],
+        "regex": "\\b([a-zäöüß]{3,}end(?:e|en|er|es|em)|ge[a-zäöüß]{3,}(?:t|en)(?:e|en|er|es|em)|[a-zäöüß]{3,}iert(?:e|en|er|es|em))\\s+[A-ZÄÖÜ]",
+        "group": 1,
+        "skip": "^(?:dringend|spannend|anstrengend|wütend|folgend|entscheidend|umfassend|ausreichend|abwesend|anwesend|gebraucht|geehrt|gesamt|genau|gern|gegen|geboren|gesund|gestrig|geschickt|gewiss|gerecht|gelb|gemein|gering|gesamte)",
+        "notes": "Lexikalisierte Adjektive (dringend, spannend, gebraucht, sehr geehrte …) sind ausgenommen.",
+        "examples": {
+          "hit": [
+            "Wir haben steigende Preise.",
+            "Die reduzierte Ware ist hier."
+          ],
+          "miss": [
+            "Die Ware ist reduziert.",
+            "Ich habe einen dringenden Termin.",
+            "Sehr geehrte Damen und Herren"
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.konnektor-nicht-nur-sondern-auch",
+      "construction": "zweiteiliger Konnektor nicht nur … sondern auch",
+      "precision": "exact",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.nicht-nur-sowohl"
+        ],
+        "kind": "pair",
+        "pairs": [
+          [
+            "nicht nur",
+            "sondern"
+          ]
+        ],
+        "examples": {
+          "hit": [
+            "Ich habe nicht nur im Verkauf gearbeitet, sondern auch im Lager."
+          ],
+          "miss": [
+            "Ich habe nicht im Verkauf gearbeitet, sondern im Lager."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.konnektor-sowohl-als-auch",
+      "construction": "zweiteiliger Konnektor sowohl … als auch",
+      "precision": "exact",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.nicht-nur-sowohl"
+        ],
+        "kind": "pair",
+        "pairs": [
+          [
+            "sowohl",
+            "als auch"
+          ]
+        ],
+        "examples": {
+          "hit": [
+            "Ich spreche sowohl Englisch als auch Deutsch."
+          ],
+          "miss": [
+            "Ich spreche Englisch und Deutsch."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.relativsatz-was-wo",
+      "construction": "Relativsatz mit was und wo (alles, was …; die Stadt, wo …)",
+      "precision": "heuristic",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.relativsatz-was-wo"
+        ],
+        "kind": "relative",
+        "barePronouns": [
+          "was",
+          "wo"
+        ],
+        "examples": {
+          "hit": [
+            "Das ist alles, was wir beschlossen haben.",
+            "Das ist die Stadt, wo der Teamtag stattfindet."
+          ],
+          "miss": [
+            "Ich weiß nicht, was er macht.",
+            "Wo wohnst du?"
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.nebensatz-sodass",
+      "construction": "Folgesatz mit sodass",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.sodass"
+        ],
+        "tokens": [
+          "sodass"
+        ],
+        "examples": {
+          "hit": [
+            "Es regnete stark, sodass wir zu Hause blieben."
+          ],
+          "miss": [
+            "Es regnete stark, deshalb blieben wir zu Hause."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.so-dass",
+      "construction": "Folgesatz mit so …, dass",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.sodass"
+        ],
+        "regex": "\\bso\\s+(?:[a-zäöüß]+\\s+){0,2}[a-zäöüß]+\\s*,\\s*dass\\b|\\bso\\s*,\\s*dass\\b",
+        "examples": {
+          "hit": [
+            "Die Musik war so laut, dass ich nicht schlafen konnte."
+          ],
+          "miss": [
+            "Ich glaube, dass die Musik laut war."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.modalpartikeln",
+      "construction": "Modalpartikeln doch, mal, ja, eben, halt, eigentlich, wohl",
+      "precision": "advisory",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.modalpartikeln",
+          "g.modalpartikeln-system"
+        ],
+        "regex": "(?<=[a-zäöüßA-ZÄÖÜ]\\s)(?:doch|mal|ja|eben|halt|eigentlich|wohl)\\b(?!\\s*[,!?.])",
+        "notes": "Viele Fehltreffer (ja als Antwortpartikel, eben als Adverb); nur für die Durchsicht.",
+        "examples": {
+          "hit": [
+            "Das ist ja interessant.",
+            "Könnten Sie mal kurz helfen?"
+          ],
+          "miss": [
+            "Ja, das stimmt.",
+            "Kommst du nicht? – Doch!",
+            "Können Sie noch mal kommen?",
+            "Das ist mal wieder typisch."
+          ]
+        },
+        "notPrecededBy": [
+          "noch"
+        ],
+        "notFollowedBy": [
+          "wieder"
+        ]
+      }
+    },
+    {
+      "id": "det.passiv-modalverb",
+      "construction": "Passiv mit Modalverb (muss geschlossen werden)",
+      "precision": "heuristic",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.passiv-modalverb"
+        ],
+        "kind": "aux-final",
+        "aux": [
+          "muss",
+          "musst",
+          "müssen",
+          "kann",
+          "kannst",
+          "können",
+          "darf",
+          "dürfen",
+          "soll",
+          "sollen",
+          "musste",
+          "mussten",
+          "konnte",
+          "konnten",
+          "sollte",
+          "sollten",
+          "müsste",
+          "könnte",
+          "dürfte"
+        ],
+        "final": "participle+werden",
+        "examples": {
+          "hit": [
+            "Die Tür muss geschlossen werden.",
+            "Hier darf nicht geraucht werden."
+          ],
+          "miss": [
+            "Ich muss heute arbeiten.",
+            "Das kann schwierig werden."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.brauchen-zu",
+      "construction": "nicht/nur brauchen + zu",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.brauchen-zu"
+        ],
+        "regex": "\\b(?:brauche|brauchst|braucht|brauchen)\\b[^,;.!?]*\\b(?:nicht|nur|kein\\w*)\\b[^,;.!?]*(?:\\bzu\\s+[a-zäöüß]+(?:en|ern|eln)\\b|\\b[a-zäöüß]+zu[a-zäöüß]+en\\b)",
+        "examples": {
+          "hit": [
+            "Sie brauchen den Plan nicht auszudrucken.",
+            "Sie brauchen nur zu unterschreiben."
+          ],
+          "miss": [
+            "Ich brauche einen neuen Plan."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.passiv-praeteritum",
+      "construction": "Passiv Präteritum (wurde + Partizip II)",
+      "precision": "heuristic",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.passiv-vergangenheit"
+        ],
+        "kind": "aux-final",
+        "aux": [
+          "wurde",
+          "wurdest",
+          "wurden",
+          "wurdet"
+        ],
+        "final": "participle",
+        "examples": {
+          "hit": [
+            "Ich wurde von einem Auto gestreift."
+          ],
+          "miss": [
+            "Es wurde spät.",
+            "Sie wurde Ärztin."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.passiv-worden",
+      "construction": "Passiv Perfekt/Plusquamperfekt (… worden)",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.passiv-vergangenheit"
+        ],
+        "tokens": [
+          "worden"
+        ],
+        "examples": {
+          "hit": [
+            "Das Rad ist beschädigt worden."
+          ],
+          "miss": [
+            "Er ist Arzt geworden."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.nebensatz-waehrend",
+      "construction": "Temporalsatz mit während (Konjunktion)",
+      "precision": "heuristic",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.temporal-waehrend-sobald"
+        ],
+        "kind": "subordinate",
+        "tokens": [
+          "während"
+        ],
+        "noMidFinite": true,
+        "examples": {
+          "hit": [
+            "Während ich an der Ampel wartete, fuhr ein Auto vorbei."
+          ],
+          "miss": [
+            "Während der Fahrt habe ich geschlafen.",
+            "Während der Fahrt schlafe ich."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.nebensatz-sobald",
+      "construction": "Temporalsatz mit sobald",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.temporal-waehrend-sobald"
+        ],
+        "tokens": [
+          "sobald"
+        ],
+        "examples": {
+          "hit": [
+            "Sobald die Polizei da war, habe ich alles erzählt."
+          ],
+          "miss": [
+            "Die Polizei war bald da."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.nebensatz-solange",
+      "construction": "Temporalsatz mit solange",
+      "precision": "heuristic",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.temporal-waehrend-sobald"
+        ],
+        "kind": "subordinate",
+        "tokens": [
+          "solange"
+        ],
+        "examples": {
+          "hit": [
+            "Solange die Schwellung nicht zurückgeht, sollten Sie nicht laufen."
+          ],
+          "miss": [
+            "Das dauert so lange."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.praeposition-innerhalb-ausserhalb",
+      "construction": "Präpositionen mit Genitiv: innerhalb, außerhalb",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.praep-innerhalb-ausserhalb"
+        ],
+        "tokens": [
+          "innerhalb",
+          "außerhalb"
+        ],
+        "examples": {
+          "hit": [
+            "Sie müssen innerhalb eines Monats antworten."
+          ],
+          "miss": [
+            "Sie müssen in einem Monat antworten."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.nebensatz-indem",
+      "construction": "Modalsatz mit indem (Mittel und Weg)",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.indem"
+        ],
+        "tokens": [
+          "indem"
+        ],
+        "examples": {
+          "hit": [
+            "Man spart Geld, indem man Verträge rechtzeitig kündigt."
+          ],
+          "miss": [
+            "Man spart Geld, wenn man Verträge rechtzeitig kündigt."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.konnektor-je-desto",
+      "construction": "zweiteiliger Konnektor je … desto/umso",
+      "precision": "exact",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.je-desto"
+        ],
+        "kind": "pair",
+        "pairs": [
+          [
+            "je",
+            "desto"
+          ],
+          [
+            "je",
+            "umso"
+          ]
+        ],
+        "examples": {
+          "hit": [
+            "Je größer die Stadt ist, desto teurer sind die Wohnungen."
+          ],
+          "miss": [
+            "Die Stadt ist groß, deshalb sind die Wohnungen teuer."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.praeposition-entlang",
+      "construction": "Präposition entlang",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.praep-entlang-herum"
+        ],
+        "tokens": [
+          "entlang"
+        ],
+        "examples": {
+          "hit": [
+            "Wir gehen den Fluss entlang."
+          ],
+          "miss": [
+            "Wir gehen am Fluss spazieren."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.praeposition-um-herum",
+      "construction": "Präposition um … herum",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.praep-entlang-herum"
+        ],
+        "regex": "\\b[Uu]m\\b[^.!?,]*\\bherum\\b",
+        "examples": {
+          "hit": [
+            "Wir gehen um den Marktplatz herum."
+          ],
+          "miss": [
+            "Wir treffen uns um acht."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.statt-ohne-zu",
+      "construction": "(an)statt … zu, ohne … zu",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.statt-ohne"
+        ],
+        "regex": "\\b(?:[Oo]hne|[Ss]tatt|[Aa]nstatt)\\b[^,;.!?]*(?:\\bzu\\s+[a-zäöüß]+(?:en|ern|eln)\\b|\\b(?:an|auf|aus|ein|mit|ab|vor|zurück|nach|weg|los)zu[a-zäöüß]+en\\b)",
+        "examples": {
+          "hit": [
+            "Man kann reparieren, statt neu zu kaufen.",
+            "Er geht, ohne etwas zu sagen."
+          ],
+          "miss": [
+            "Ich trinke Kaffee ohne Zucker."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.ohne-statt-dass",
+      "construction": "ohne dass, (an)statt dass",
+      "precision": "exact",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.statt-ohne"
+        ],
+        "regex": "\\b(?:[Oo]hne|[Ss]tatt|[Aa]nstatt)\\s+dass\\b",
+        "examples": {
+          "hit": [
+            "Er fährt los, ohne dass jemand es merkt."
+          ],
+          "miss": [
+            "Er fährt los, ohne etwas zu sagen."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.als-ob",
+      "construction": "als ob / als wenn + Konjunktiv II",
+      "precision": "exact",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.als-ob"
+        ],
+        "regex": "\\b[Aa]ls\\s+(?:ob|wenn)\\b",
+        "examples": {
+          "hit": [
+            "Er tut so, als ob er krank wäre."
+          ],
+          "miss": [
+            "Er ist größer als ich."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.konnektor-weder-noch",
+      "construction": "zweiteiliger Konnektor weder … noch",
+      "precision": "exact",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.weder-entweder-zwar"
+        ],
+        "kind": "pair",
+        "pairs": [
+          [
+            "weder",
+            "noch"
+          ]
+        ],
+        "examples": {
+          "hit": [
+            "Ich habe weder Zeit noch Geld."
+          ],
+          "miss": [
+            "Ich habe keine Zeit und kein Geld."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.konnektor-entweder-oder",
+      "construction": "zweiteiliger Konnektor entweder … oder",
+      "precision": "exact",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.weder-entweder-zwar"
+        ],
+        "kind": "pair",
+        "pairs": [
+          [
+            "entweder",
+            "oder"
+          ]
+        ],
+        "examples": {
+          "hit": [
+            "Wir fahren entweder mit dem Bus oder mit der Bahn."
+          ],
+          "miss": [
+            "Wir fahren mit dem Bus oder mit der Bahn."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.konnektor-zwar-aber",
+      "construction": "zweiteiliger Konnektor zwar … aber",
+      "precision": "exact",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.weder-entweder-zwar"
+        ],
+        "kind": "pair",
+        "pairs": [
+          [
+            "zwar",
+            "aber"
+          ]
+        ],
+        "examples": {
+          "hit": [
+            "Die Wohnung ist zwar klein, aber sie ist günstig."
+          ],
+          "miss": [
+            "Die Wohnung ist klein, aber sie ist günstig."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.konjunktiv2-vergangenheit",
+      "construction": "Konjunktiv II der Vergangenheit (hätte/wäre + Partizip II)",
+      "precision": "exact",
+      "method": "lexicon",
+      "spec": {
+        "spinePoints": [
+          "g.konj2-vergangenheit"
+        ],
+        "kind": "participle-aux",
+        "auxForms": [
+          "hätte",
+          "hättest",
+          "hätten",
+          "hättet",
+          "wäre",
+          "wärst",
+          "wären",
+          "wärt"
+        ],
+        "participleAux": "match-aux",
+        "notes": "hätte + Partizip eines haben-Verbs, wäre + Partizip eines sein-Verbs (wäre + Partizip ohne Lexikon wird nicht gemeldet).",
+        "examples": {
+          "hit": [
+            "Wenn ich das früher gewusst hätte, hätte ich früher angefangen."
+          ],
+          "miss": [
+            "Ich hätte gern einen Kaffee.",
+            "Ich habe das gewusst."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.konjunktiv2-modal-vergangenheit",
+      "construction": "Konjunktiv II der Vergangenheit mit Modalverb (hätte … machen sollen)",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.konj2-vergangenheit",
+          "g.konj2-bedeutungen"
+        ],
+        "regex": "\\b(?:hätte|hättest|hätten|hättet)\\b[^,;.!?]*\\b[a-zäöüß]+(?:en|ern|eln)\\s+(?:müssen|sollen|können|dürfen|wollen|lassen)\\b",
+        "examples": {
+          "hit": [
+            "Ich hätte mich früher engagieren sollen.",
+            "Das Hotel hätte uns ein anderes Zimmer geben müssen."
+          ],
+          "miss": [
+            "Ich hätte gern ein anderes Zimmer."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.korrelat-da-praeposition",
+      "construction": "Korrelat da(r) + Präposition vor dass-/zu-Satz (Ich lege Wert darauf, dass …)",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.korrelat-es-da"
+        ],
+        "regex": "\\bda(?:r)?(?:auf|für|über|mit|nach|von|zu|an|in|um|bei|aus|vor|gegen|durch)\\s*,\\s*(?:dass|ob|wie|was|[^,.!?]*\\bzu\\s+[a-zäöüß]+(?:en|ern|eln)\\b|[^,.!?]*\\b[a-zäöüß]+zu[a-zäöüß]+en\\b)",
+        "examples": {
+          "hit": [
+            "Ich lege Wert darauf, dass die Überstunden ausgezahlt werden.",
+            "Ich freue mich darauf, dich zu sehen."
+          ],
+          "miss": [
+            "Ich warte auf den Bus.",
+            "Ich freue mich darauf."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.zu-infinitiv-passiv-perfekt",
+      "construction": "Infinitiv Passiv und Infinitiv Perfekt im zu-Satz (übernommen zu werden, bestanden zu haben)",
+      "precision": "heuristic",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.infinitiv-passiv-perfekt"
+        ],
+        "kind": "aux-final",
+        "aux": [],
+        "final": "participle+zu+aux",
+        "examples": {
+          "hit": [
+            "Ich hoffe, unbefristet übernommen zu werden.",
+            "Ich bin froh, die Probezeit bestanden zu haben."
+          ],
+          "miss": [
+            "Ich hoffe, bald zu kommen."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.konnektor-einerseits-andererseits",
+      "construction": "zweiteiliger Konnektor einerseits … andererseits",
+      "precision": "exact",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.einerseits-andererseits"
+        ],
+        "kind": "pair",
+        "pairs": [
+          [
+            "einerseits",
+            "andererseits"
+          ]
+        ],
+        "examples": {
+          "hit": [
+            "Einerseits ist Billigmode günstig, andererseits hält sie nicht lange."
+          ],
+          "miss": [
+            "Billigmode ist günstig, aber sie hält nicht lange."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.konnektor-zum-einen-zum-anderen",
+      "construction": "zweiteiliger Konnektor zum einen … zum anderen",
+      "precision": "exact",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.einerseits-andererseits"
+        ],
+        "kind": "pair",
+        "pairs": [
+          [
+            "zum einen",
+            "zum anderen"
+          ]
+        ],
+        "examples": {
+          "hit": [
+            "Zum einen ist es billig, zum anderen ist es schnell."
+          ],
+          "miss": [
+            "Es ist billig und schnell."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.passiversatz-sich-lassen",
+      "construction": "Passiversatz sich lassen + Infinitiv (Das lässt sich messen.)",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.passiversatz"
+        ],
+        "regex": "\\b(?:lässt|lassen|ließ|ließen)\\s+sich\\b[^,;.!?]*\\b[a-zäöüß]+(?:en|ern|eln)\\b",
+        "examples": {
+          "hit": [
+            "Das lässt sich leicht messen."
+          ],
+          "miss": [
+            "Ich lasse mein Auto reparieren."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.sein-haben-zu-infinitiv",
+      "construction": "sein/haben + zu + Infinitiv (ist auszufüllen, haben … auszufüllen)",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.passiversatz",
+          "g.haben-zu"
+        ],
+        "regex": "\\b(?:ist|sind|war|waren|hat|haben|hatte|hatten)\\b[^,;.!?]*(?:\\bzu\\s+[a-zäöüß]+(?:en|ern|eln)|\\b(?:an|auf|aus|ein|mit|ab|vor|zurück|nach|weg|los)zu[a-zäöüß]+en)\\s*[.!?]?\\s*$",
+        "examples": {
+          "hit": [
+            "Der Fragebogen ist bis Montag auszufüllen.",
+            "Die Teilnehmenden haben den Fragebogen bis Montag auszufüllen."
+          ],
+          "miss": [
+            "Ich habe keine Zeit, Sport zu machen."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.relativsatz-genitiv",
+      "construction": "Relativpronomen im Genitiv (dessen, deren)",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.relativpronomen-genitiv"
+        ],
+        "regex": ",\\s*(?:[a-zäöüß]+\\s+)?(?:dessen|deren)\\s+[A-ZÄÖÜa-zäöüß]",
+        "examples": {
+          "hit": [
+            "Das ist die Nachbarin, deren Garten wir nutzen."
+          ],
+          "miss": [
+            "Das ist die Nachbarin, die einen Garten hat."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.relativsatz-wer",
+      "construction": "verallgemeinernder Relativsatz ohne Bezugswort (Wer hier wohnt, …; Was mich stört, …)",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.relativsatz-wer-was"
+        ],
+        "regex": "^(?:Wer|Was)\\s+[^,?]*[a-zäöüß](?:t|en|e)\\s*,",
+        "examples": {
+          "hit": [
+            "Wer hier wohnt, kennt den Park.",
+            "Was mich stört, ist der Lärm."
+          ],
+          "miss": [
+            "Wer wohnt hier?",
+            "Was machst du heute?"
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.zustandspassiv",
+      "construction": "Zustandspassiv (sein + Partizip II eines haben-Verbs: Der Antrag ist eingereicht.)",
+      "precision": "heuristic",
+      "method": "lexicon",
+      "spec": {
+        "spinePoints": [
+          "g.zustandspassiv"
+        ],
+        "kind": "participle-aux",
+        "auxForms": [
+          "ist",
+          "sind",
+          "war",
+          "waren",
+          "bin",
+          "bist",
+          "seid"
+        ],
+        "participleAux": "haben",
+        "requireKnown": true,
+        "notes": "Nur lexikongestützt (Partizip eines haben-Verbs); lexikalisierte Adjektive (verheiratet) stehen nicht als Partizip im Lexikon. „verabredet sein“ (lx.sich-verabreden, a1.1-u08) ist ein Zustandsadjektiv (LEXICALISED_STATES der Engine; Review a1.1-u08 r3 F10(b)).",
+        "examples": {
+          "lexicon": [
+            {
+              "lemma": "einreichen",
+              "pos": "VERB",
+              "separable": true,
+              "verb_forms": {
+                "3sg": "reicht ein",
+                "perfekt": "hat eingereicht"
+              }
+            },
+            {
+              "lemma": "beglaubigen",
+              "pos": "VERB",
+              "verb_forms": {
+                "3sg": "beglaubigt",
+                "perfekt": "hat beglaubigt"
+              }
+            },
+            {
+              "lemma": "kommen",
+              "pos": "VERB",
+              "verb_forms": {
+                "3sg": "kommt",
+                "perfekt": "ist gekommen"
+              }
+            },
+            {
+              "lemma": "sich verabreden",
+              "pos": "VERB",
+              "reflexive": "akk",
+              "verb_forms": {
+                "3sg": "verabredet sich",
+                "perfekt": "hat sich verabredet"
+              }
+            }
+          ],
+          "hit": [
+            "Der Antrag ist eingereicht.",
+            "Die Unterlagen sind beglaubigt."
+          ],
+          "miss": [
+            "Er ist gekommen.",
+            "Ich bin verheiratet.",
+            "Wir sind am Samstag verabredet.",
+            "Ich bin heute mit Olena verabredet."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.futur2",
+      "construction": "Futur II (wird … geschlafen haben)",
+      "precision": "heuristic",
+      "method": "clause",
+      "spec": {
+        "spinePoints": [
+          "g.futur2"
+        ],
+        "kind": "aux-final",
+        "aux": [
+          "werde",
+          "wirst",
+          "wird",
+          "werden",
+          "werdet"
+        ],
+        "final": "participle+aux",
+        "examples": {
+          "hit": [
+            "Er wird schlecht geschlafen haben."
+          ],
+          "miss": [
+            "Er wird schlecht schlafen."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.redewiedergabe-laut-zufolge",
+      "construction": "Redewiedergabe mit laut, zufolge, nach Angaben von",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.redewiedergabe"
+        ],
+        "regex": "\\b[Ll]aut\\s+(?:des|der|dem|einer|einem|eines|[A-ZÄÖÜ])|\\bzufolge\\b|\\b[Nn]ach\\s+Angaben\\s+(?:von|des|der)\\b",
+        "examples": {
+          "hit": [
+            "Laut Polizei gab es keinen Unfall.",
+            "Dem Bericht zufolge steigen die Preise."
+          ],
+          "miss": [
+            "Die Musik ist zu laut."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.vergleichssatz-als-konjunktiv",
+      "construction": "irrealer Vergleichssatz als + Verb (Es sah aus, als wäre alles fertig.)",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.als-irreal"
+        ],
+        "regex": ",\\s*als\\s+(?:wäre|wären|hätte|hätten|würde|würden|könnte|könnten|sei|seien)\\b",
+        "examples": {
+          "hit": [
+            "Es sah aus, als wäre alles fertig."
+          ],
+          "miss": [
+            "Es sah aus, als ob alles fertig wäre."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.konjunktiv1",
+      "construction": "Konjunktiv I in der indirekten Rede (er sei, sie habe, es brauche)",
+      "precision": "advisory",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.konj1-gegenwart",
+          "g.konj1-vergangenheit"
+        ],
+        "regex": "(?:\\b(?:er|sie|es|man)|(?<=[a-zäöüß,]\\s)[A-ZÄÖÜ][a-zäöü]+)\\s+(?:sei|seien|habe|werde|könne|müsse|dürfe|wolle|solle|gebe|komme|brauche|wisse|gehe|liege|stehe|mache|arbeite|wohne|lebe|finde|bleibe|sehe|lese|nehme|spreche|trage|halte|bringe|denke|kenne)\\b",
+        "notes": "Mustererkennung ohne Morphologie; nur zur Durchsicht.",
+        "examples": {
+          "hit": [
+            "Sie sagt, echte Freundschaft brauche Zeit.",
+            "Er sagte, er sei krank."
+          ],
+          "miss": [
+            "Er sagt, er ist krank.",
+            "Heute habe ich Zeit.",
+            "Am Samstag arbeite ich.",
+            "Den Bus brauche ich."
+          ]
+        },
+        "notFollowedBy": [
+          "ich"
+        ]
+      }
+    },
+    {
+      "id": "det.dadurch-dass",
+      "construction": "Modalsatz dadurch, dass …",
+      "precision": "exact",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.dadurch-dass"
+        ],
+        "regex": "\\b[Dd]adurch\\s*,\\s*dass\\b",
+        "examples": {
+          "hit": [
+            "Man senkt das Risiko dadurch, dass man sich mehr bewegt."
+          ],
+          "miss": [
+            "Man senkt das Risiko, wenn man sich mehr bewegt."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.konditional-sofern-es-sei-denn",
+      "construction": "konditionale Konnektoren sofern, vorausgesetzt, dass, es sei denn, im Fall(e), dass",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.konditional-konnektoren"
+        ],
+        "tokens": [
+          "sofern"
+        ],
+        "phrases": [
+          [
+            "es",
+            "sei",
+            "denn"
+          ],
+          [
+            "vorausgesetzt",
+            "dass"
+          ],
+          [
+            "im",
+            "falle",
+            "dass"
+          ],
+          [
+            "im",
+            "fall",
+            "dass"
+          ]
+        ],
+        "examples": {
+          "hit": [
+            "Wir kommen, sofern das Wetter gut ist.",
+            "Wir fahren morgen, es sei denn, es regnet."
+          ],
+          "miss": [
+            "Wir kommen, wenn das Wetter gut ist."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.konditional-uneingeleitet",
+      "construction": "uneingeleiteter Konditionalsatz (Sollten Sie nicht zahlen, …)",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.konditional-konnektoren"
+        ],
+        "regex": "^(?:Sollte|Sollten|Hätte|Hätten|Wäre|Wären|Würde|Würden)\\s+[^,?]+,\\s*\\S",
+        "notQuestion": true,
+        "examples": {
+          "hit": [
+            "Sollten Sie bis zum 15. nicht zahlen, erhalten Sie eine Mahnung."
+          ],
+          "miss": [
+            "Sollten wir nicht gehen?",
+            "Wenn Sie nicht zahlen, erhalten Sie eine Mahnung."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.nominalisierung",
+      "construction": "Nominalstil (wegen der Erhöhung der Gebühren, nach der Einschreibung)",
+      "precision": "advisory",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.nominalisierung",
+          "g.nominalgruppen"
+        ],
+        "regex": "\\b(?:[Ww]egen|[Nn]ach|[Vv]or|[Bb]ei|[Ww]ährend|[Tt]rotz|[Ss]eit|[Zz]ur|[Zz]um|[Mm]it|[Dd]urch|[Ii]nfolge|[Aa]ufgrund)\\s+(?:der|des|dem|einer|eines|einem)?\\s*(?:[a-zäöüß]+en\\s+)?[A-ZÄÖÜ][a-zäöüß]+(?:ung|heit|keit|ion|tät|nis)\\s+(?:der|des|von|zur|zum)\\b",
+        "notes": "Nominalgruppe mit Genitiv- oder Präpositionalattribut; ohne Morphologie nur zur Durchsicht.",
+        "examples": {
+          "hit": [
+            "Nach der Einschreibung der Studierenden beginnt das Semester.",
+            "Wegen der Erhöhung der Gebühren protestieren viele."
+          ],
+          "miss": [
+            "Nach dem Essen gehe ich spazieren."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.subjektive-modalverben",
+      "construction": "subjektive Modalverben (Er soll dabei gewesen sein. Das muss 1989 gewesen sein.)",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.modalverben-subjektiv"
+        ],
+        "regex": "\\b(?:soll|sollen|will|wollen|muss|müssen|dürfte|dürften|kann|können|könnte)\\b[^,;.!?]*\\b[a-zäöüß]+(?:t|en)\\s+(?:sein|haben)\\s*[.!?]?\\s*$",
+        "examples": {
+          "hit": [
+            "Er soll dabei gewesen sein.",
+            "Das muss 1989 gewesen sein."
+          ],
+          "miss": [
+            "Du musst pünktlich sein."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.konnektor-obgleich-wenngleich",
+      "construction": "Konzessivkonnektoren obgleich, wenngleich, obschon",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.konzessive-konnektoren"
+        ],
+        "tokens": [
+          "obgleich",
+          "wenngleich",
+          "obschon"
+        ],
+        "examples": {
+          "hit": [
+            "Obgleich es regnete, gingen wir spazieren."
+          ],
+          "miss": [
+            "Obwohl es regnete, gingen wir spazieren."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.konnektor-selbst-auch-wenn",
+      "construction": "Konzessivkonnektoren selbst wenn, auch wenn",
+      "precision": "exact",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.konzessive-konnektoren"
+        ],
+        "regex": "\\b(?:[Ss]elbst|[Aa]uch)\\s+wenn\\b",
+        "examples": {
+          "hit": [
+            "Auch wenn es regnet, gehen wir spazieren.",
+            "Selbst wenn er anruft, gehe ich nicht ran."
+          ],
+          "miss": [
+            "Wenn es regnet, gehen wir auch spazieren."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.konnektor-folglich-hingegen",
+      "construction": "konsekutive und adversative Konnektoren folglich, infolgedessen, hingegen, wohingegen, dennoch, gleichwohl",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.konzessive-konnektoren",
+          "g.konsekutiv-adversativ"
+        ],
+        "tokens": [
+          "folglich",
+          "infolgedessen",
+          "hingegen",
+          "wohingegen",
+          "dennoch",
+          "gleichwohl"
+        ],
+        "examples": {
+          "hit": [
+            "Die Preise steigen, folglich kaufen die Leute weniger.",
+            "Er mag Kaffee, sie hingegen trinkt Tee."
+          ],
+          "miss": [
+            "Die Preise steigen, deshalb kaufen die Leute weniger."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.erweitertes-partizipialattribut",
+      "construction": "erweitertes Partizipialattribut (die von der Firma eingeführten Werkzeuge)",
+      "precision": "advisory",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.partizipialattribut"
+        ],
+        "regex": "\\b(?:[Dd]er|[Dd]ie|[Dd]as|[Dd]en|[Dd]em|[Dd]es|[Ee]in|[Ee]ine|[Ee]inen|[Ee]inem|[Ee]iner|[Ee]ines)\\s+(?:(?:von|mit|in|an|auf|für|bei|aus|zu|seit|nach|über|unter|vor)\\s+(?:der|dem|den|die|das|einer|einem|einen)\\s+[A-ZÄÖÜ][a-zäöüß]+\\s+|[a-zäöüß]+\\s+)((?:ge)?[a-zäöüß]{3,}(?:t|en|end|iert)(?:e|en|er|es|em))\\s+[A-ZÄÖÜ]",
+        "group": 1,
+        "examples": {
+          "hit": [
+            "Die von der Firma eingeführten Werkzeuge sind neu.",
+            "Die ständig wachsende Datenmenge ist ein Problem."
+          ],
+          "miss": [
+            "Die neuen Werkzeuge sind gut."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.praeposition-genitiv-formell",
+      "construction": "Präpositionen mit Genitiv im formellen Stil (aufgrund, infolge, angesichts, hinsichtlich …; gemäß + Dativ)",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.praep-genitiv-formell"
+        ],
+        "tokens": [
+          "aufgrund",
+          "infolge",
+          "angesichts",
+          "hinsichtlich",
+          "bezüglich",
+          "zwecks",
+          "ungeachtet",
+          "zugunsten",
+          "gemäß"
+        ],
+        "examples": {
+          "hit": [
+            "Aufgrund der Baustelle ist die Straße gesperrt."
+          ],
+          "miss": [
+            "Wegen der Baustelle ist die Straße gesperrt."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.temporal-seit-vor",
+      "construction": "seit und vor + Dativ als Zeitangabe (seit einem Jahr, vor zwei Monaten)",
+      "precision": "heuristic",
+      "method": "pattern",
+      "spec": {
+        "spinePoints": [
+          "g.temporal-seit-vor"
+        ],
+        "regex": "\\b[Ss]eit\\s+(?:einem|einer|zwei|drei|vier|fünf|sechs|zehn|vielen|langem|kurzem|\\d+)\\b|\\b[Vv]or\\s+(?:einem|einer|zwei|drei|vier|fünf|sechs|zehn|vielen|\\d+)\\s+(?:Jahr|Jahren|Monat|Monaten|Woche|Wochen|Tag|Tagen|Stunde|Stunden|Minute|Minuten)\\b",
+        "examples": {
+          "hit": [
+            "Ich wohne seit einem Jahr in Leipzig.",
+            "Ich bin vor zwei Monaten gekommen."
+          ],
+          "miss": [
+            "Ich wohne in Leipzig.",
+            "Das Auto steht vor dem Haus."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.zeitadverbien-erzaehlen",
+      "construction": "Zeitadverbien beim Erzählen: damals, inzwischen, schließlich",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.zeitadverbien-erzaehlen"
+        ],
+        "tokens": [
+          "damals",
+          "inzwischen",
+          "schließlich"
+        ],
+        "examples": {
+          "hit": [
+            "Damals habe ich als Koch gearbeitet.",
+            "Inzwischen bin ich Pfleger."
+          ],
+          "miss": [
+            "Zuerst habe ich als Koch gearbeitet, dann als Pfleger."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.vermutung-modalwoerter",
+      "construction": "Vermutungen mit wahrscheinlich, vermutlich",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.vermutung-modalwoerter"
+        ],
+        "tokens": [
+          "wahrscheinlich",
+          "vermutlich"
+        ],
+        "examples": {
+          "hit": [
+            "Er kommt wahrscheinlich morgen."
+          ],
+          "miss": [
+            "Er kommt vielleicht morgen."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.textverweise",
+      "construction": "Textverweise daraufhin, Letzteres, Ersteres",
+      "precision": "exact",
+      "method": "token",
+      "spec": {
+        "spinePoints": [
+          "g.textverweise"
+        ],
+        "tokens": [
+          "daraufhin",
+          "letzteres",
+          "ersteres",
+          "letztere",
+          "erstere",
+          "letzterer",
+          "ersterer"
+        ],
+        "examples": {
+          "hit": [
+            "Daraufhin rief sie die Polizei.",
+            "Letzteres ist wichtig."
+          ],
+          "miss": [
+            "Danach rief sie die Polizei."
+          ]
+        }
+      }
+    }
+  ]
+}

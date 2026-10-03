@@ -1,0 +1,910 @@
+{
+  "$schema": "course-v2/text-types@1",
+  "notes": [
+    "lengthByLevel (Stand 2026-09-27, Befund W2-Review): je Niveau { input: [min, max], writing?: [min, max] }, beide in Wörtern.",
+    "input = Länge eines Kurs-Inputs dieser Textsorte (Situation-Input, Text A/B, Folge, Lesetext in einer Übung). Die Obergrenze ist auf TXT-03 gedeckelt: A-Niveaus Dialogzeilen × sentence.maxWords des Niveauprofils (a1.1 100, a1.2 130, a2.1 220, a2.2 250 Wörter; TXT-03 prüft dort Zeilen und 60–120 s), B-Niveaus 450 Wörter (geschrieben) bzw. ≤ 4 Minuten Audio. TXT-03 gilt für den Haupt-Input eines Lernschritts; kurze Textsorten (Schild, SMS, Anzeige) stehen dort nur als Teil eines gemischten Inputs, dessen Summe TXT-03 erfüllen muss.",
+    "Prüfungstexte (ExamText) richten sich NICHT nach diesem Band, sondern nach textWords der Teil-Vorlage in lanes/<lane>.json (TXT-02, ±15 % der offiziellen Beispiellänge).",
+    "writing = Richtband für einen Lernertext dieser Textsorte im Kurs (Schreiben-Schritt, Portfolio), abgeleitet aus den writing.words der Niveaupläne (docs/course-v2/curriculum/*.json) und den Schreib-Vorlagen der Spuren (sd1 ≈ 30, ga2 20–30 / 30–40, tb1 Design ≈ 100, tb2 ≥ 150). Es steuert nur die Empfehlung im Editor; die Wortvorgabe einer Prüfungsaufgabe steht in der Teil-Vorlage (words). Mikro-Ausgaben folgen microOutput.words im Niveauprofil. Fehlt writing, ist die Textsorte auf diesem Niveau nur Input.",
+    "parts gelten auf allen Niveaus der Textsorte. Deshalb gibt es tt.email-halbformell (A1/A2: Anrede, Gruß) und tt.email-halbformell-b (B1/B2: Betreff, Anrede, Einleitung, Schluss, Gruß, wie telc B1/B2 Schriftlicher Ausdruck)."
+  ],
+  "types": [
+    {
+      "id": "tt.formular",
+      "label": "Formular oder Vordruck",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": { "input": [10, 100], "writing": [5, 15] },
+        "a1.2": { "input": [10, 130], "writing": [5, 20] },
+        "a2.1": { "input": [10, 150], "writing": [5, 25] },
+        "a2.2": { "input": [10, 150], "writing": [5, 25] },
+        "b1.1": { "input": [15, 200], "writing": [5, 40] },
+        "b1.2": { "input": [15, 200], "writing": [5, 40] },
+        "b2.1": { "input": [15, 250], "writing": [5, 40] },
+        "b2.2": { "input": [15, 250], "writing": [5, 40] }
+      }
+    },
+    {
+      "id": "tt.steckbrief",
+      "label": "Steckbrief oder Profil",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": { "input": [15, 100], "writing": [15, 40] },
+        "a1.2": { "input": [15, 130], "writing": [15, 45] },
+        "a2.1": { "input": [20, 150], "writing": [20, 50] },
+        "a2.2": { "input": [20, 150], "writing": [20, 50] }
+      }
+    },
+    {
+      "id": "tt.kurzmitteilung",
+      "label": "Kurze Mitteilung (Nachricht, Notiz oder E-Mail)",
+      "parts": ["anrede", "gruss"],
+      "lengthByLevel": {
+        "a1.1": { "input": [15, 100], "writing": [15, 40] },
+        "a1.2": { "input": [20, 130], "writing": [20, 45] },
+        "a2.1": { "input": [20, 150], "writing": [20, 40] },
+        "a2.2": { "input": [20, 150], "writing": [25, 50] }
+      }
+    },
+    {
+      "id": "tt.notiz",
+      "label": "Notiz oder Zettel",
+      "parts": ["anrede", "gruss"],
+      "lengthByLevel": {
+        "a1.1": { "input": [10, 80], "writing": [10, 30] },
+        "a1.2": { "input": [10, 100], "writing": [10, 35] },
+        "a2.1": { "input": [10, 120], "writing": [10, 40] },
+        "a2.2": { "input": [10, 120], "writing": [10, 40] },
+        "b1.1": { "input": [10, 150], "writing": [15, 60] },
+        "b1.2": { "input": [10, 150], "writing": [15, 60] },
+        "b2.1": { "input": [10, 150], "writing": [20, 80] },
+        "b2.2": { "input": [10, 150], "writing": [20, 80] }
+      }
+    },
+    {
+      "id": "tt.sms",
+      "label": "SMS oder Chat-Nachricht",
+      "parts": ["anrede", "gruss"],
+      "lengthByLevel": {
+        "a1.1": { "input": [5, 80], "writing": [5, 30] },
+        "a1.2": { "input": [5, 100], "writing": [10, 35] },
+        "a2.1": { "input": [10, 150], "writing": [15, 40] },
+        "a2.2": { "input": [10, 150], "writing": [15, 40] },
+        "b1.1": { "input": [10, 200], "writing": [20, 60] },
+        "b1.2": { "input": [10, 200], "writing": [20, 60] },
+        "b2.1": { "input": [10, 200], "writing": [20, 80] },
+        "b2.2": { "input": [10, 200], "writing": [20, 80] }
+      }
+    },
+    {
+      "id": "tt.email-informell",
+      "label": "Persönliche E-Mail",
+      "parts": ["anrede", "gruss"],
+      "lengthByLevel": {
+        "a1.1": { "input": [25, 100], "writing": [15, 40] },
+        "a1.2": { "input": [25, 130], "writing": [20, 45] },
+        "a2.1": { "input": [30, 220], "writing": [20, 50] },
+        "a2.2": { "input": [40, 250], "writing": [25, 60] },
+        "b1.1": { "input": [50, 450], "writing": [60, 120] },
+        "b1.2": { "input": [60, 450], "writing": [70, 130] },
+        "b2.1": { "input": [80, 450], "writing": [100, 180] },
+        "b2.2": { "input": [80, 450], "writing": [120, 220] }
+      }
+    },
+    {
+      "id": "tt.email-halbformell",
+      "label": "Halbformelle E-Mail oder Nachricht (A1/A2)",
+      "parts": ["anrede", "gruss"],
+      "lengthByLevel": {
+        "a1.1": { "input": [15, 100], "writing": [15, 40] },
+        "a1.2": { "input": [20, 130], "writing": [20, 45] },
+        "a2.1": { "input": [25, 220], "writing": [25, 50] },
+        "a2.2": { "input": [25, 250], "writing": [30, 60] }
+      }
+    },
+    {
+      "id": "tt.email-halbformell-b",
+      "label": "Halbformelle E-Mail mit Betreff (Anfrage, Bitte, Beschwerde)",
+      "parts": ["betreff", "anrede", "einleitung", "schluss", "gruss"],
+      "lengthByLevel": {
+        "b1.1": { "input": [30, 300], "writing": [40, 120] },
+        "b1.2": { "input": [30, 300], "writing": [40, 130] },
+        "b2.1": { "input": [50, 350], "writing": [70, 180] },
+        "b2.2": { "input": [60, 350], "writing": [90, 250] }
+      }
+    },
+    {
+      "id": "tt.email-antwort",
+      "label": "Antwort-E-Mail mit Betreff (informell oder halbformell)",
+      "parts": ["betreff", "anrede", "einleitung", "schluss", "gruss"],
+      "lengthByLevel": {
+        "b1.1": { "input": [60, 300], "writing": [80, 130] },
+        "b1.2": { "input": [80, 300], "writing": [80, 140] },
+        "b2.1": { "input": [100, 350], "writing": [120, 200] },
+        "b2.2": { "input": [120, 350], "writing": [150, 250] }
+      }
+    },
+    {
+      "id": "tt.email-formell",
+      "label": "Formelle E-Mail (Anfrage, Beschwerde, Widerspruch)",
+      "parts": ["betreff", "anrede", "einleitung", "schluss", "gruss"],
+      "lengthByLevel": {
+        "b1.1": { "input": [60, 300], "writing": [40, 130] },
+        "b1.2": { "input": [80, 300], "writing": [40, 140] },
+        "b2.1": { "input": [100, 350], "writing": [100, 200] },
+        "b2.2": { "input": [140, 400], "writing": [150, 250] }
+      }
+    },
+    {
+      "id": "tt.brief-persoenlich",
+      "label": "Persönlicher Brief",
+      "parts": ["anrede", "gruss"],
+      "lengthByLevel": {
+        "a2.1": { "input": [30, 220], "writing": [30, 55] },
+        "a2.2": { "input": [30, 250], "writing": [30, 60] },
+        "b1.1": { "input": [60, 350], "writing": [60, 130] },
+        "b1.2": { "input": [60, 350], "writing": [60, 130] },
+        "b2.1": { "input": [80, 400], "writing": [100, 180] },
+        "b2.2": { "input": [80, 400], "writing": [120, 220] }
+      }
+    },
+    {
+      "id": "tt.brief-formell",
+      "label": "Formeller Brief oder Bescheid (Behörde, Versicherung, Firma)",
+      "parts": ["datum", "betreff", "anrede", "gruss", "unterschrift"],
+      "lengthByLevel": {
+        "a2.2": { "input": [50, 250] },
+        "b1.1": { "input": [60, 400], "writing": [60, 130] },
+        "b1.2": { "input": [60, 400], "writing": [70, 140] },
+        "b2.1": { "input": [80, 450], "writing": [100, 200] },
+        "b2.2": { "input": [100, 450], "writing": [150, 250] }
+      }
+    },
+    {
+      "id": "tt.anschreiben",
+      "label": "Bewerbungsschreiben (Anschreiben)",
+      "parts": ["betreff", "anrede", "einleitung", "schluss", "gruss"],
+      "lengthByLevel": {
+        "b1.1": { "input": [80, 300], "writing": [80, 150] },
+        "b1.2": { "input": [80, 300], "writing": [80, 160] },
+        "b2.1": { "input": [100, 350], "writing": [120, 200] },
+        "b2.2": { "input": [120, 350], "writing": [150, 250] }
+      }
+    },
+    {
+      "id": "tt.lebenslauf",
+      "label": "Tabellarischer Lebenslauf",
+      "parts": [],
+      "lengthByLevel": {
+        "a2.2": { "input": [30, 200], "writing": [20, 60] },
+        "b1.1": { "input": [40, 250], "writing": [30, 100] },
+        "b1.2": { "input": [40, 250], "writing": [30, 100] },
+        "b2.1": { "input": [60, 300], "writing": [40, 120] },
+        "b2.2": { "input": [60, 300], "writing": [40, 120] }
+      }
+    },
+    {
+      "id": "tt.einladung",
+      "label": "Einladung",
+      "parts": ["anrede", "gruss"],
+      "lengthByLevel": {
+        "a1.1": { "input": [15, 100], "writing": [15, 40] },
+        "a1.2": { "input": [20, 130], "writing": [20, 45] },
+        "a2.1": { "input": [25, 200], "writing": [20, 50] },
+        "a2.2": { "input": [25, 200], "writing": [20, 50] },
+        "b1.1": { "input": [30, 250], "writing": [40, 100] },
+        "b1.2": { "input": [30, 250], "writing": [40, 100] },
+        "b2.1": { "input": [40, 300], "writing": [60, 150] },
+        "b2.2": { "input": [40, 300], "writing": [60, 150] }
+      }
+    },
+    {
+      "id": "tt.postkarte",
+      "label": "Postkarte oder Glückwunschkarte",
+      "parts": ["anrede", "gruss"],
+      "lengthByLevel": {
+        "a1.1": { "input": [15, 80], "writing": [15, 40] },
+        "a1.2": { "input": [15, 100], "writing": [20, 45] },
+        "a2.1": { "input": [15, 120], "writing": [20, 50] },
+        "a2.2": { "input": [15, 120], "writing": [20, 50] },
+        "b1.1": { "input": [15, 150], "writing": [30, 80] },
+        "b1.2": { "input": [15, 150], "writing": [30, 80] },
+        "b2.1": { "input": [15, 150], "writing": [30, 100] },
+        "b2.2": { "input": [15, 150], "writing": [30, 100] }
+      }
+    },
+    {
+      "id": "tt.post",
+      "label": "Beitrag in sozialen Medien",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": { "input": [10, 80], "writing": [15, 40] },
+        "a1.2": { "input": [10, 100], "writing": [15, 45] },
+        "a2.1": { "input": [15, 150], "writing": [20, 60] },
+        "a2.2": { "input": [15, 150], "writing": [20, 60] },
+        "b1.1": { "input": [20, 250], "writing": [40, 120] },
+        "b1.2": { "input": [20, 250], "writing": [40, 120] },
+        "b2.1": { "input": [20, 300], "writing": [60, 180] },
+        "b2.2": { "input": [20, 300], "writing": [60, 200] }
+      }
+    },
+    {
+      "id": "tt.forumsbeitrag",
+      "label": "Forumsbeitrag (Meinung mit Begründung)",
+      "parts": ["einleitung", "schluss"],
+      "lengthByLevel": {
+        "b1.1": { "input": [40, 450], "writing": [60, 120] },
+        "b1.2": { "input": [50, 450], "writing": [70, 130] },
+        "b2.1": { "input": [80, 450], "writing": [100, 180] },
+        "b2.2": { "input": [100, 450], "writing": [120, 250] }
+      }
+    },
+    {
+      "id": "tt.zusammenfassung",
+      "label": "Zusammenfassung zum Weitergeben",
+      "parts": [],
+      "lengthByLevel": {
+        "b1.1": { "input": [30, 150], "writing": [30, 100] },
+        "b1.2": { "input": [40, 150], "writing": [40, 120] },
+        "b2.1": { "input": [60, 200], "writing": [60, 150] },
+        "b2.2": { "input": [80, 220], "writing": [80, 180] }
+      }
+    },
+    {
+      "id": "tt.telefonnotiz",
+      "label": "Telefon- oder Gesprächsnotiz",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.2": { "input": [5, 130], "writing": [5, 30] },
+        "a2.1": { "input": [5, 220], "writing": [10, 40] },
+        "a2.2": { "input": [5, 250], "writing": [10, 40] },
+        "b1.1": { "input": [10, 450], "writing": [15, 60] },
+        "b1.2": { "input": [10, 450], "writing": [15, 60] },
+        "b2.1": { "input": [10, 450], "writing": [20, 80] },
+        "b2.2": { "input": [10, 450], "writing": [20, 80] }
+      }
+    },
+    {
+      "id": "tt.schild",
+      "label": "Schild, Hinweis oder Aushang",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": { "input": [3, 60] },
+        "a1.2": { "input": [3, 80] },
+        "a2.1": { "input": [5, 120] },
+        "a2.2": { "input": [5, 120] },
+        "b1.1": { "input": [5, 200] },
+        "b1.2": { "input": [5, 200] },
+        "b2.1": { "input": [5, 250] },
+        "b2.2": { "input": [5, 250] }
+      }
+    },
+    {
+      "id": "tt.internetanzeige",
+      "label": "Internetanzeige oder kurzes Online-Angebot",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": { "input": [8, 100] },
+        "a1.2": { "input": [8, 130] },
+        "a2.1": { "input": [15, 220] },
+        "a2.2": { "input": [15, 250] },
+        "b1.1": { "input": [20, 450] },
+        "b1.2": { "input": [20, 450] },
+        "b2.1": { "input": [30, 450] },
+        "b2.2": { "input": [30, 450] }
+      }
+    },
+    {
+      "id": "tt.kleinanzeige",
+      "label": "Kleinanzeige",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": { "input": [8, 100] },
+        "a1.2": { "input": [8, 130] },
+        "a2.1": { "input": [15, 220] },
+        "a2.2": { "input": [15, 250] },
+        "b1.1": { "input": [20, 450] },
+        "b1.2": { "input": [20, 450] },
+        "b2.1": { "input": [30, 450] },
+        "b2.2": { "input": [30, 450] }
+      }
+    },
+    {
+      "id": "tt.stellenanzeige",
+      "label": "Stellenanzeige",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.2": { "input": [15, 130] },
+        "a2.1": { "input": [20, 220] },
+        "a2.2": { "input": [20, 250] },
+        "b1.1": { "input": [30, 450] },
+        "b1.2": { "input": [30, 450] },
+        "b2.1": { "input": [40, 450] },
+        "b2.2": { "input": [40, 450] }
+      }
+    },
+    {
+      "id": "tt.webseite",
+      "label": "Webseite",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": { "input": [15, 100] },
+        "a1.2": { "input": [15, 130] },
+        "a2.1": { "input": [30, 220] },
+        "a2.2": { "input": [30, 250] },
+        "b1.1": { "input": [50, 450] },
+        "b1.2": { "input": [50, 450] },
+        "b2.1": { "input": [80, 450] },
+        "b2.2": { "input": [80, 450] }
+      }
+    },
+    {
+      "id": "tt.prospekt",
+      "label": "Prospekt oder Werbeblatt mit Angeboten",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": { "input": [20, 100] },
+        "a1.2": { "input": [20, 130] },
+        "a2.1": { "input": [30, 220] },
+        "a2.2": { "input": [30, 250] },
+        "b1.1": { "input": [40, 400] },
+        "b1.2": { "input": [40, 400] },
+        "b2.1": { "input": [60, 450] },
+        "b2.2": { "input": [60, 450] }
+      }
+    },
+    {
+      "id": "tt.informationstafel",
+      "label": "Informationstafel, Wegweiser oder Verzeichnis",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": { "input": [5, 80] },
+        "a1.2": { "input": [5, 100] },
+        "a2.1": { "input": [30, 220] },
+        "a2.2": { "input": [30, 250] },
+        "b1.1": { "input": [40, 400] },
+        "b1.2": { "input": [40, 400] },
+        "b2.1": { "input": [40, 450] },
+        "b2.2": { "input": [40, 450] }
+      }
+    },
+    {
+      "id": "tt.programm",
+      "label": "Programm oder Veranstaltungskalender",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": { "input": [20, 100] },
+        "a1.2": { "input": [20, 130] },
+        "a2.1": { "input": [40, 220] },
+        "a2.2": { "input": [40, 250] },
+        "b1.1": { "input": [60, 450] },
+        "b1.2": { "input": [60, 450] },
+        "b2.1": { "input": [80, 450] },
+        "b2.2": { "input": [80, 450] }
+      }
+    },
+    {
+      "id": "tt.fahrplan",
+      "label": "Fahrplan oder Anzeigetafel",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": { "input": [5, 80] },
+        "a1.2": { "input": [5, 100] },
+        "a2.1": { "input": [10, 150] },
+        "a2.2": { "input": [10, 150] },
+        "b1.1": { "input": [10, 200] },
+        "b1.2": { "input": [10, 200] },
+        "b2.1": { "input": [10, 200] },
+        "b2.2": { "input": [10, 200] }
+      }
+    },
+    {
+      "id": "tt.speisekarte",
+      "label": "Speisekarte",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": { "input": [15, 100] },
+        "a1.2": { "input": [15, 130] },
+        "a2.1": { "input": [20, 150] },
+        "a2.2": { "input": [20, 150] },
+        "b1.1": { "input": [20, 200] },
+        "b1.2": { "input": [20, 200] }
+      }
+    },
+    {
+      "id": "tt.beleg",
+      "label": "Beleg oder Bestätigung (Buchung, Rechnung, Abrechnung)",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.2": { "input": [10, 100] },
+        "a2.1": { "input": [15, 180] },
+        "a2.2": { "input": [15, 200] },
+        "b1.1": { "input": [20, 300] },
+        "b1.2": { "input": [20, 300] },
+        "b2.1": { "input": [30, 350] },
+        "b2.2": { "input": [30, 350] }
+      }
+    },
+    {
+      "id": "tt.dokument",
+      "label": "Ausweis, Karte oder Zeugnis",
+      "parts": [],
+      "lengthByLevel": {
+        "a2.1": { "input": [5, 100] },
+        "a2.2": { "input": [5, 120] },
+        "b1.1": { "input": [5, 150] },
+        "b1.2": { "input": [5, 150] },
+        "b2.1": { "input": [5, 200] },
+        "b2.2": { "input": [5, 200] }
+      }
+    },
+    {
+      "id": "tt.anleitung",
+      "label": "Anleitung, Gebrauchshinweis oder Beipackzettel",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.2": { "input": [10, 100] },
+        "a2.1": { "input": [20, 200] },
+        "a2.2": { "input": [20, 250] },
+        "b1.1": { "input": [40, 450] },
+        "b1.2": { "input": [40, 450] },
+        "b2.1": { "input": [60, 450] },
+        "b2.2": { "input": [60, 450] }
+      }
+    },
+    {
+      "id": "tt.regeln",
+      "label": "Hausordnung, Betriebsordnung oder Studienordnung",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.2": { "input": [20, 130] },
+        "a2.1": { "input": [30, 220] },
+        "a2.2": { "input": [30, 250] },
+        "b1.1": { "input": [60, 450] },
+        "b1.2": { "input": [60, 450] },
+        "b2.1": { "input": [100, 450] },
+        "b2.2": { "input": [100, 450] }
+      }
+    },
+    {
+      "id": "tt.bedingungen",
+      "label": "Vertrags- oder Geschäftsbedingungen",
+      "parts": [],
+      "lengthByLevel": {
+        "a2.2": { "input": [40, 250] },
+        "b1.1": { "input": [60, 450] },
+        "b1.2": { "input": [60, 450] },
+        "b2.1": { "input": [100, 450] },
+        "b2.2": { "input": [100, 450] }
+      }
+    },
+    {
+      "id": "tt.broschuere",
+      "label": "Informationsbroschüre oder Merkblatt",
+      "parts": [],
+      "lengthByLevel": {
+        "a2.1": { "input": [40, 220] },
+        "a2.2": { "input": [60, 250] },
+        "b1.1": { "input": [80, 450] },
+        "b1.2": { "input": [80, 450] },
+        "b2.1": { "input": [100, 450] },
+        "b2.2": { "input": [100, 450] }
+      }
+    },
+    {
+      "id": "tt.rundschreiben",
+      "label": "Rundschreiben oder Mitteilung im Betrieb",
+      "parts": ["datum", "betreff", "anrede", "gruss"],
+      "lengthByLevel": {
+        "b1.1": { "input": [50, 350] },
+        "b1.2": { "input": [50, 400] },
+        "b2.1": { "input": [80, 450] },
+        "b2.2": { "input": [80, 450] }
+      }
+    },
+    {
+      "id": "tt.zeitungsartikel",
+      "label": "Zeitungs- oder Zeitschriftenartikel",
+      "parts": [],
+      "lengthByLevel": {
+        "a2.1": { "input": [80, 220] },
+        "a2.2": { "input": [120, 250] },
+        "b1.1": { "input": [150, 450] },
+        "b1.2": { "input": [150, 450] },
+        "b2.1": { "input": [200, 450] },
+        "b2.2": { "input": [250, 450] }
+      }
+    },
+    {
+      "id": "tt.kurzmeldung",
+      "label": "Kurzmeldung (Presse oder Firmenzeitung)",
+      "parts": [],
+      "lengthByLevel": {
+        "a2.2": { "input": [30, 150] },
+        "b1.1": { "input": [40, 450] },
+        "b1.2": { "input": [50, 450] },
+        "b2.1": { "input": [60, 450] },
+        "b2.2": { "input": [80, 450] }
+      }
+    },
+    {
+      "id": "tt.leserkommentar",
+      "label": "Leserkommentar oder kurze Meinung",
+      "parts": [],
+      "lengthByLevel": {
+        "b1.1": { "input": [20, 450], "writing": [40, 100] },
+        "b1.2": { "input": [20, 450], "writing": [40, 100] },
+        "b2.1": { "input": [30, 450], "writing": [60, 150] },
+        "b2.2": { "input": [30, 450], "writing": [60, 150] }
+      }
+    },
+    {
+      "id": "tt.kommentar",
+      "label": "Kommentar (Meinungsbeitrag in der Presse)",
+      "parts": [],
+      "lengthByLevel": {
+        "b1.2": { "input": [120, 450] },
+        "b2.1": { "input": [150, 450] },
+        "b2.2": { "input": [150, 450] }
+      }
+    },
+    {
+      "id": "tt.blogbeitrag",
+      "label": "Blogbeitrag oder Erfahrungsbericht",
+      "parts": [],
+      "lengthByLevel": {
+        "a2.1": { "input": [60, 220] },
+        "a2.2": { "input": [80, 250] },
+        "b1.1": { "input": [100, 450] },
+        "b1.2": { "input": [100, 450] },
+        "b2.1": { "input": [120, 450] },
+        "b2.2": { "input": [150, 450] }
+      }
+    },
+    {
+      "id": "tt.erzaehltext",
+      "label": "Erzähltext (Erinnerung oder Geschichte)",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.2": { "input": [40, 130] },
+        "a2.1": { "input": [80, 220] },
+        "a2.2": { "input": [100, 250] },
+        "b1.1": { "input": [150, 450] },
+        "b1.2": { "input": [150, 450] },
+        "b2.1": { "input": [200, 450] },
+        "b2.2": { "input": [200, 450] }
+      }
+    },
+    {
+      "id": "tt.portraet",
+      "label": "Porträt (Person oder Ort)",
+      "parts": [],
+      "lengthByLevel": {
+        "a2.2": { "input": [80, 250] },
+        "b1.1": { "input": [80, 450] },
+        "b1.2": { "input": [80, 450] },
+        "b2.1": { "input": [100, 450] },
+        "b2.2": { "input": [100, 450] }
+      }
+    },
+    {
+      "id": "tt.kritik",
+      "label": "Kritik oder Rezension",
+      "parts": [],
+      "lengthByLevel": {
+        "b1.1": { "input": [80, 400] },
+        "b1.2": { "input": [80, 450] },
+        "b2.1": { "input": [120, 450] },
+        "b2.2": { "input": [120, 450] }
+      }
+    },
+    {
+      "id": "tt.bericht",
+      "label": "Bericht (über ein Projekt, die Arbeit oder ein Ereignis)",
+      "parts": [],
+      "lengthByLevel": {
+        "b1.1": { "input": [80, 400], "writing": [60, 120] },
+        "b1.2": { "input": [80, 450], "writing": [60, 120] },
+        "b2.1": { "input": [100, 450], "writing": [100, 180] },
+        "b2.2": { "input": [120, 450], "writing": [120, 220] }
+      }
+    },
+    {
+      "id": "tt.kurzdialog",
+      "label": "Kurzdialog im Alltag",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": { "input": [15, 100] },
+        "a1.2": { "input": [20, 130] },
+        "a2.1": { "input": [25, 150] },
+        "a2.2": { "input": [25, 150] },
+        "b1.1": { "input": [30, 200] },
+        "b1.2": { "input": [30, 200] },
+        "b2.1": { "input": [40, 250] },
+        "b2.2": { "input": [40, 250] }
+      }
+    },
+    {
+      "id": "tt.dialog",
+      "label": "Dialog oder Gespräch im Alltag",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": { "input": [15, 100] },
+        "a1.2": { "input": [20, 130] },
+        "a2.1": { "input": [25, 220] },
+        "a2.2": { "input": [25, 250] },
+        "b1.1": { "input": [30, 450] },
+        "b1.2": { "input": [30, 450] },
+        "b2.1": { "input": [40, 450] },
+        "b2.2": { "input": [40, 450] }
+      }
+    },
+    {
+      "id": "tt.telefonat",
+      "label": "Telefonat oder Videotelefonat",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": { "input": [25, 100] },
+        "a1.2": { "input": [25, 130] },
+        "a2.1": { "input": [30, 220] },
+        "a2.2": { "input": [30, 250] },
+        "b1.1": { "input": [60, 450] },
+        "b1.2": { "input": [60, 450] },
+        "b2.1": { "input": [80, 450] },
+        "b2.2": { "input": [80, 450] }
+      }
+    },
+    {
+      "id": "tt.mailbox",
+      "label": "Nachricht auf der Mailbox oder Sprachnachricht",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": { "input": [15, 100] },
+        "a1.2": { "input": [15, 130] },
+        "a2.1": { "input": [20, 220] },
+        "a2.2": { "input": [20, 250] },
+        "b1.1": { "input": [25, 450] },
+        "b1.2": { "input": [25, 450] },
+        "b2.1": { "input": [30, 450] },
+        "b2.2": { "input": [30, 450] }
+      }
+    },
+    {
+      "id": "tt.telefonansage",
+      "label": "Telefonansage oder Nachricht auf dem Anrufbeantworter",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": { "input": [15, 100] },
+        "a1.2": { "input": [15, 130] },
+        "a2.1": { "input": [20, 220] },
+        "a2.2": { "input": [20, 250] },
+        "b1.1": { "input": [25, 450] },
+        "b1.2": { "input": [25, 450] },
+        "b2.1": { "input": [30, 450] },
+        "b2.2": { "input": [30, 450] }
+      }
+    },
+    {
+      "id": "tt.kurzansage",
+      "label": "Kurze Ansage (Radio, Telefon oder Durchsage)",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": { "input": [10, 100] },
+        "a1.2": { "input": [10, 130] },
+        "a2.1": { "input": [20, 220] },
+        "a2.2": { "input": [20, 250] },
+        "b1.1": { "input": [25, 450] },
+        "b1.2": { "input": [25, 450] },
+        "b2.1": { "input": [30, 450] },
+        "b2.2": { "input": [30, 450] }
+      }
+    },
+    {
+      "id": "tt.durchsage",
+      "label": "Durchsage (Bahnhof, Flughafen, Kaufhaus, Betrieb)",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": { "input": [8, 100] },
+        "a1.2": { "input": [8, 130] },
+        "a2.1": { "input": [15, 220] },
+        "a2.2": { "input": [15, 250] },
+        "b1.1": { "input": [20, 450] },
+        "b1.2": { "input": [20, 450] },
+        "b2.1": { "input": [25, 450] },
+        "b2.2": { "input": [25, 450] }
+      }
+    },
+    {
+      "id": "tt.radiomeldung",
+      "label": "Radiomeldung (Nachrichten, Wetter, Verkehr, Tipp)",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.2": { "input": [15, 130] },
+        "a2.1": { "input": [20, 220] },
+        "a2.2": { "input": [20, 250] },
+        "b1.1": { "input": [30, 450] },
+        "b1.2": { "input": [30, 450] },
+        "b2.1": { "input": [40, 450] },
+        "b2.2": { "input": [40, 450] }
+      }
+    },
+    {
+      "id": "tt.radiointerview",
+      "label": "Interview (Radio oder Podcast)",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": { "input": [30, 100] },
+        "a1.2": { "input": [30, 130] },
+        "a2.1": { "input": [80, 220] },
+        "a2.2": { "input": [120, 250] },
+        "b1.1": { "input": [200, 450] },
+        "b1.2": { "input": [200, 450] },
+        "b2.1": { "input": [250, 450] },
+        "b2.2": { "input": [300, 450] }
+      }
+    },
+    {
+      "id": "tt.umfrage",
+      "label": "Straßenumfrage oder kurze Meinungsäußerungen",
+      "parts": [],
+      "lengthByLevel": {
+        "a2.1": { "input": [50, 220] },
+        "a2.2": { "input": [60, 250] },
+        "b1.1": { "input": [80, 450] },
+        "b1.2": { "input": [80, 450] },
+        "b2.1": { "input": [100, 450] },
+        "b2.2": { "input": [100, 450] }
+      }
+    },
+    {
+      "id": "tt.diskussion",
+      "label": "Radiodiskussion oder Gesprächsrunde",
+      "parts": [],
+      "lengthByLevel": {
+        "b1.1": { "input": [200, 450] },
+        "b1.2": { "input": [250, 450] },
+        "b2.1": { "input": [300, 450] },
+        "b2.2": { "input": [300, 450] }
+      }
+    },
+    {
+      "id": "tt.vortrag",
+      "label": "Vortrag, Kurzvortrag oder Ansprache",
+      "parts": [],
+      "lengthByLevel": {
+        "b1.1": { "input": [120, 450] },
+        "b1.2": { "input": [150, 450] },
+        "b2.1": { "input": [200, 450] },
+        "b2.2": { "input": [250, 450] }
+      }
+    },
+    {
+      "id": "tt.fuehrung",
+      "label": "Führung oder Rundgang",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": { "input": [30, 100] },
+        "a1.2": { "input": [30, 130] },
+        "a2.1": { "input": [50, 220] },
+        "a2.2": { "input": [60, 250] },
+        "b1.1": { "input": [120, 450] },
+        "b1.2": { "input": [150, 450] },
+        "b2.1": { "input": [150, 450] },
+        "b2.2": { "input": [150, 450] }
+      }
+    },
+    {
+      "id": "tt.stichwortblatt",
+      "label": "Stichwortblatt (Angaben zur Person)",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": { "input": [3, 20] },
+        "a1.2": { "input": [3, 20] },
+        "a2.1": { "input": [3, 25] },
+        "a2.2": { "input": [3, 25] },
+        "b1.1": { "input": [5, 50] },
+        "b1.2": { "input": [5, 50] },
+        "b2.1": { "input": [5, 60] },
+        "b2.2": { "input": [5, 60] }
+      }
+    },
+    {
+      "id": "tt.wortkarte",
+      "label": "Wortkarte (Thema und Stichwort)",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": { "input": [1, 4] },
+        "a1.2": { "input": [1, 4] },
+        "a2.1": { "input": [1, 4] },
+        "a2.2": { "input": [1, 4] }
+      }
+    },
+    {
+      "id": "tt.bildkarte",
+      "label": "Bildkarte",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": { "input": [0, 3] },
+        "a1.2": { "input": [0, 3] },
+        "a2.1": { "input": [0, 3] },
+        "a2.2": { "input": [0, 3] }
+      }
+    },
+    {
+      "id": "tt.aufgabenkarte",
+      "label": "Aufgabenkarte mit Leitfrage und Stichpunkten",
+      "parts": [],
+      "lengthByLevel": {
+        "a2.1": { "input": [6, 30] },
+        "a2.2": { "input": [6, 30] },
+        "b1.1": { "input": [10, 60] },
+        "b1.2": { "input": [10, 60] },
+        "b2.1": { "input": [10, 80] },
+        "b2.2": { "input": [10, 80] }
+      }
+    },
+    {
+      "id": "tt.terminkalender",
+      "label": "Terminkalender, Dienst- oder Stundenplan",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.2": { "input": [5, 50] },
+        "a2.1": { "input": [5, 60] },
+        "a2.2": { "input": [5, 60] },
+        "b1.1": { "input": [5, 80] },
+        "b1.2": { "input": [5, 80] },
+        "b2.1": { "input": [5, 100] },
+        "b2.2": { "input": [5, 100] }
+      }
+    },
+    {
+      "id": "tt.planungsblatt",
+      "label": "Aufgabenblatt zur gemeinsamen Planung",
+      "parts": [],
+      "lengthByLevel": {
+        "a2.1": { "input": [5, 60] },
+        "a2.2": { "input": [5, 60] },
+        "b1.1": { "input": [15, 80] },
+        "b1.2": { "input": [15, 80] },
+        "b2.1": { "input": [20, 100] },
+        "b2.2": { "input": [20, 100] }
+      }
+    },
+    {
+      "id": "tt.meinungsblatt",
+      "label": "Aufgabenblatt mit zwei kurzen Meinungen",
+      "parts": [],
+      "lengthByLevel": {
+        "b1.1": { "input": [30, 120] },
+        "b1.2": { "input": [30, 120] },
+        "b2.1": { "input": [40, 150] },
+        "b2.2": { "input": [40, 150] }
+      }
+    },
+    {
+      "id": "tt.foto",
+      "label": "Foto zum Beschreiben",
+      "parts": [],
+      "lengthByLevel": {
+        "a1.1": { "input": [0, 15] },
+        "a1.2": { "input": [0, 15] },
+        "a2.1": { "input": [0, 15] },
+        "a2.2": { "input": [0, 15] },
+        "b1.1": { "input": [0, 15] },
+        "b1.2": { "input": [0, 15] },
+        "b2.1": { "input": [0, 15] },
+        "b2.2": { "input": [0, 15] }
+      }
+    },
+    {
+      "id": "tt.praesentation",
+      "label": "Präsentationsfolien",
+      "parts": [],
+      "lengthByLevel": {
+        "b1.1": { "input": [10, 100] },
+        "b1.2": { "input": [10, 100] },
+        "b2.1": { "input": [15, 150] },
+        "b2.2": { "input": [15, 150] }
+      }
+    }
+  ]
+}

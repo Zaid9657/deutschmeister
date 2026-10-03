@@ -1,0 +1,135 @@
+{
+  "review": "w2-pruferin",
+  "role": "Prüferin (Goethe/telc) — exam-format fidelity of lanes, rubric profiles and families",
+  "date": "2026-09-27",
+  "scope": [
+    "content/course-v2/registries/lanes/{sd1,ga2,tb1,tb2}.json",
+    "content/course-v2/registries/rubrics/writing/{sd1-*,ga2-*,tb1-sa,tb2-sa}.json",
+    "content/course-v2/registries/rubrics/speaking/{sd1-*,ga2-*,tb1-m*,tb2-m*}.json",
+    "content/course-v2/registries/families.json",
+    "docs/course-v2/curriculum/*.json (coverage cross-check under the lean one-lane decision)"
+  ],
+  "method": "All 26 files parse (JSON.parse) and pass scripts/course-v2/check.mjs (0 errors). Every Teil template was checked against research memos 01-03 and BLUEPRINT §2.3/§4.3/§4.4 for items, options, plays, minutes, word counts, points and pass rules; Teil points vs rubric max vs criteria sums were computed; families were cross-checked against each template's family field (all consistent, no orphan or duplicate). Plans were mapped to template ids to count primary-lane coverage (COV-1/3/5).",
+  "verdict": "No wrong exam fact was found. Item counts, option counts, play counts (SD1 H2 once; GA2 H2/H3 once; telc B1 HV1 once; telc B2 all once), module times, point weights (telc 5/2.5/1.5), writing scales (SD1 3/1.5/0 + 1/0.5/0; GA2 5/3.5/2/0.5/0; telc 5/3/1/0 × 3) and pass rules (Goethe A1 60/100 without floors; Goethe A2 60 + 45/75 + 15/25; telc 135/225 and 45/75) match the primary sources. sd1, tb1 and tb2 are exam-exact. The open items are (1) how GA2 records oral Aussprache and its pass rule, (2) the mode of telc B1 M1, (3) one incoherent listening family split, (4) Aussprache not marked as not auto-scored, and (5) primary-lane coverage in the plans under the lean decision.",
+  "findings": [
+    {
+      "severity": "major",
+      "owner": "lane-ga2",
+      "file": "content/course-v2/registries/lanes/ga2.json; rubrics/speaking/ga2-sp.json, ga2-sp1.json, ga2-sp2.json, ga2-sp3.json",
+      "issue": "Goethe A2 Aussprache (5 of the 25 oral points) belongs to no Teil template. sp1 + sp2 + sp3 = 4 + 8 + 8 = 20, but scale.parts.sprechen = 25 and the oral pass floor is 15/25. The only file that holds Aussprache is ga2-sp.json, and no template references it. ga2-sp also repeats the t1-t3 criteria of ga2-sp1..3. So a runner that sums Teil points measures the oral against 20, and one that uses both profiles counts Teil 1-3 twice.",
+      "fix": "Make ga2-sp the module profile for a full oral (reference it from modules.sprechen or from a lane field, and raise that field with the schema owner) and keep ga2-sp1..3 for single-Teil blocks only. Write the 5 Aussprache points into scale.parts.sprechen, e.g. { teile: {sp1:4, sp2:8, sp3:8}, aussprache: 5, max: 25 }. Mark Aussprache as not auto-scored and widen the range by 0-5 (BLUEPRINT §4.4)."
+    },
+    {
+      "severity": "major",
+      "owner": "lane-ga2",
+      "file": "content/course-v2/registries/lanes/ga2.json",
+      "issue": "scale.parts is bare ({lesen:25, hoeren:25, schreiben:25, sprechen:25}), unlike sd1, tb1 and tb2, which store the full rule as data. The file has no raw maximum (20), no factor × 1.25, no written floor 45/75, no oral floor 15/25, no total floor 60, no Prädikate, no rounding and no resit rule. The one rule that sets GA2 apart from SD1, the part floors, exists only as prose in openQuestions[0]. The scorer, the EXM-07 boundary tests and the Prüfungsstand would each have to rebuild it from that text.",
+      "fix": "Encode the scale the way sd1 does: lesen and hoeren {rawMax 20, factor 1.25, max 25}; schreiben {rawMax 20, factor 1.25, max 25, rawRounding 'mean-of-two-raters-whole-points'}; sprechen {max 25, factor 1, teile + aussprache}; schriftlich {max 75, min 45}; muendlich {max 25, min 15}; gesamt {max 100, min 60, allPartsTaken true, rounding}; praedikate 90/80/70/60; modular false; partResit 'exceptional-only' (DB-A2 §6-7). Boundary cases to pin: 44.x vs 45 written, 14.5 vs 15 oral."
+    },
+    {
+      "severity": "major",
+      "owner": "lane-ga2",
+      "file": "content/course-v2/registries/rubrics/speaking/ga2-sp.json, ga2-sp1.json, ga2-sp2.json, ga2-sp3.json",
+      "issue": "The zero rule 'goethe-af-e-zeroes-task' sits on every Goethe A2 speaking profile. Its source (US-A2 p. 37, memo 01 §3) is the Schreiben rule: E in Aufgabenerfüllung zeroes the task. No source gives it for Sprechen. The AI cannot override a server-side zero rule, so an unsourced one can wipe out an oral Teil.",
+      "fix": "Remove the rule from the four speaking profiles. Put it back only after the US-A2 'Sprechen – Bewertung' sheet is checked on the page image, and cite that page in the lane's openQuestions."
+    },
+    {
+      "severity": "major",
+      "owner": "lane-tb1",
+      "file": "content/course-v2/registries/lanes/tb1.json (teile.m1)",
+      "issue": "Prüferin sign-off (BLUEPRINT §4.4, EXM-04): interaction 'monologue' is NOT approved for telc B1 Mündlicher Ausdruck Teil 1. 'Einander kennenlernen' is a two-way exchange: each candidate talks about themself and asks the partner (UT-B1 p. 30). Aufgabenbewältigung scores Gesprächsbeteiligung. A monologue task never makes the learner ask, and the AI never asks back, so units inherit a task that cannot earn the interaction share of the 15 points. BLUEPRINT §4.4 already defines the mode 'get-to-know' for this Teil, but the SCHEMA §4.3 enum lacks it.",
+      "fix": "Have the SCHEMA owner add 'get-to-know' to the TeilTemplate.interaction enum, then set tb1.m1 interaction to 'get-to-know'. Until then keep the openQuestion and require every tb1.m1 SpeakingPart to carry turns in both directions (the learner asks at least 2 cue-list questions)."
+    },
+    {
+      "severity": "major",
+      "owner": "families",
+      "file": "content/course-v2/registries/families.json",
+      "issue": "The listening families split identical formats and share skills. (a) tb1.hv3 (h-detail) and tb2.hv3 (h-durchsage) are the same Teil: five short announcements or voicemails, one R/F each, selective understanding, tt.kurzansage. Only the play count differs. (b) tb1.hv2 (h-gespraech) and tb2.hv2 (h-vortrag) are the same Teil, a radio interview with 10 R/F. ga2.h4, also a radio interview, is h-vortrag. (c) ga2.h3 is five SHORT dialogues of 35-75 words with a/b/c, which is the shape of sd1.h1 (h-detail), yet it sits in h-gespraech, whose skill text says 'längeres Gespräch'. (d) Both the h-durchsage skill ('kurze Meldungen … Radio') and the h-vortrag skill ('eine Meldung') fit radio news, so tb2.hv1 matches both. Families drive the A1→B2 progression and later transfersTo, so units would inherit broken lines of progression.",
+      "fix": "h-detail = sd1.h1, sd1.h3, ga2.h1, ga2.h3, tb1.hv3, tb2.hv3. h-durchsage = sd1.h2, tb2.hv1, with the skill 'Durchsagen und Nachrichtenmeldungen beim einmaligen Hören global verstehen'. h-gespraech = ga2.h2. h-vortrag = ga2.h4, tb1.hv2, tb2.hv2, with the skill 'ein Interview oder einen Radiobeitrag im Zusammenhang verstehen'; drop 'Meldung' from this skill. h-meinung stays tb1.hv1. The lane owners (ga2, tb1, tb2) must change the matching family fields in the same pass."
+    },
+    {
+      "severity": "major",
+      "owner": "lane-tb1",
+      "file": "content/course-v2/registries/rubrics/speaking/tb1-m1.json, tb1-m2.json, tb1-m3.json (and all lane rubric profiles)",
+      "issue": "Aussprache und Intonation (3 + 6 + 6 = 15 of 75 oral points) counts toward each profile's max, but nothing in the data marks it as not auto-scored. BLUEPRINT §4.4 says it is never scored by the STT→LLM pipeline, is excluded from the total and widens the range. SCHEMA §4.5 has no scoredBy field, so a grader reading these profiles would ask the model to score pronunciation from a transcript. More generally, every lane profile (sd1, ga2, tb1, tb2) has criterion labels only. None has the per-level descriptors in our own wording, the method or the errorPolicy that BLUEPRINT §4.3 lists as required to drive the grader, so descriptors would be improvised at prompt time, where official descriptor text could leak in (LGL-05).",
+      "fix": "Raise a SCHEMA §4.5 change: criteria[].scoredBy (ai|deterministic|notAutoScored) and criteria[].descriptors {level: de, own wording}, plus a profile-level method (sd1-s1 = deterministic). Set scoredBy 'notAutoScored' on every 'aussprache'/'au' criterion (tb1-m*, tb2-m*, ga2-sp). Until the schema changes, record in each lane's openQuestions which criteria are not auto-scored and the auto-scoreable max (tb1: 12/24/24; tb2: 21/21/21; ga2 oral: 20)."
+    },
+    {
+      "severity": "major",
+      "owner": "lane-tb2",
+      "file": "content/course-v2/registries/rubrics/writing/tb2-sa.json",
+      "issue": "capRule 'telc-b2-no-b-crit2-register-mixed' covers only du/Sie mixing. The official cap on criterion II (no B) also applies when the register is WRONG (memo 03 §2: 'or the register is wrong'). Every tb2.sa task writes to an institution, so the frequent error, a consistently informal letter (du, 'Liebe Grüße') to an insurer or camp operator, escapes the cap.",
+      "fix": "Replace it with 'telc-b2-no-b-crit2-register-wrong-or-mixed'. The rule compares the text's address form and Gruß with the task's register ('halbformell'/'formell' ⇒ Sie). Pin both cases in the EXM-08 test."
+    },
+    {
+      "severity": "major",
+      "owner": "lane-sd1",
+      "file": "content/course-v2/registries/lanes/sd1.json vs docs/course-v2/curriculum/a1-1.json, a1-2.json",
+      "issue": "Coverage that units will inherit (COV-5 productive rotation, 'every 4th unit'): sd1.s1 appears only in A1.1 U1, U2, U12 and in A1.2 U2, U4, U6, U7 (then nothing until the end). sd1.sp1 appears only in A1.1 U1, U2, U12 and A1.2 U2, U10, U12. The 9-unit gap in A1.1 means the form and the spelling/number drill, both 1-point-per-item Teile that are easy to lose, go untrained for most of the course. A1.2 U10 also names 'Vorbereitung DTZ Sprechen Teil 2', a deferred lane.",
+      "fix": "When the units are mapped, add sd1.s1 and sd1.sp1 (Buchstabieren and Nummer suffice) to the Prüfungsfokus of at least A1.1 U5/U8 and A1.2 U10/U11, and drop the DTZ reference. Re-run COV-5 on the unit files."
+    },
+    {
+      "severity": "major",
+      "owner": "lane-ga2",
+      "file": "content/course-v2/registries/lanes/ga2.json vs docs/course-v2/curriculum/a2-1.json, a2-2.json",
+      "issue": "Under the lean decision (ga2 is the only A2 lane) the plans still assign slots to deferred lanes: 51 of the A2.1 and 53 of the A2.2 examTeile references are telc A2 or DTZ. The writing task is telc A2 in A2.1 U4, U10-U12 and A2.2 U7-U9, U12, and no ta2-s1/ta2-s2 profile exists. The speaking task is telc A2 in A2.1 U4, U8, U10 and A2.2 U1, U2, U6-U8, U10. In A2.2, 10 of the 13 ga2 Teile appear only twice, but COV-1 requires ≥ 3 in a .2 course, ≥ 2 of them lane-exact. COV-5 fails for ga2.sp1 (A2.1 U1, U8; A2.2 U1, U10), ga2.s1 and ga2.sp3.",
+      "fix": "In the unit Prüfungsfokus, remap every deferred slot to its ga2 twin: telc A2 S1 form → ga2.s2 or a course-micro form, telc A2 S2 → ga2.s2, telc A2 Sp2 → ga2.sp1, telc A2 Sp3 → ga2.sp3, telc A2 L1 → ga2.l2, telc A2 L3 → ga2.l4, DTZ H → ga2.h1/h3. Then re-run COV-1/3/5 per course."
+    },
+    {
+      "severity": "major",
+      "owner": "lane-tb1",
+      "file": "content/course-v2/registries/lanes/tb1.json vs docs/course-v2/curriculum/b1-1.json, b1-2.json",
+      "issue": "The plans are built for three B1 lanes, but only tb1 ships. The writing task targets Goethe B1 or DTZ, which have no rubric profile under the lean decision, in B1.1 U1, U2, U5-U7, U10, U11 and B1.2 U1, U4-U6, U9-U11. The speaking task is not tb1 in B1.1 U2, U5-U7, U9, U12 and B1.2 U2, U4, U6, U9, U11. B1.1 U7 and B1.2 U6 contain no tb1 Teil at all (COV-3 requires 2-4 per unit). COV-5 fails: tb1.m1 appears only in B1.1 U1, U8 and B1.2 U3, U12; tb1.m2 in B1.1 U4, U10. BLUEPRINT §4.1 asks for a planning round (M3) in every B1.1 unit; the plan has 5.",
+      "fix": "In the unit Prüfungsfokus, remap Goethe/DTZ writing slots to tb1.sa (in Lernmodus, with reduced Leitpunkte allowed only if scaffoldAllowedIn is opened for b1.1), gb1.sp1 and dtz.s3 to tb1.m3, gb1.sp2 to tb1.m2, and dtz.s1 to tb1.m1. Every unit then has 2-4 tb1 Teile and every productive Teil recurs at least every 4th unit."
+    },
+    {
+      "severity": "major",
+      "owner": "lane-tb2",
+      "file": "content/course-v2/registries/lanes/tb2.json vs docs/course-v2/curriculum/b2-1.json, b2-2.json",
+      "issue": "Under the lean decision 9 of the 12 B2.1 writing slots are Goethe B2 or non-exam formats, and gb2-s1/gb2-s2 are deferred. tb2.sa appears only in B2.1 U4, U6, U8. Speaking is Goethe B2 in B2.1 U2, U5, U6, U9, U12 and B2.2 U2, U5, U7, U9, U10. COV-5 fails for tb2.m1 (B2.1 U1, U8; B2.2 U6, U12), tb2.m2 (B2.1 U3, U11) and tb2.m3 (B2.2 U3, U4 only). Most receptive Teile appear exactly twice in B2.2, below the ≥ 3 that COV-1 requires in a .2 course.",
+      "fix": "Remap the Goethe B2 slots: gb2.s2 → tb2.sa (B2.1 at about 120 words, scaffold), gb2.sp2 → tb2.m2, gb2.sp1 → tb2.m1. Give tb2.m1 its seven-topic home-preparation rhythm, one topic every 3-4 units. Re-run COV-1/3/5."
+    },
+    {
+      "severity": "minor",
+      "owner": "lane-tb1",
+      "file": "content/course-v2/registries/rubrics/writing/tb1-sa.json",
+      "issue": "Two points. (1) Prüferin answer to the lane's open question on the Betreff: CONFIRMED. For telc B1 a missing Betreff only triggers a hint. 'telc-b1-no-a-crit2-textsorte-missing' must check Anrede and Grußformel only, never Betreff, Absender or Datum. (2) The official criterion II cap also covers a WRONG register, not only a mixed one. 'telc-b1-no-a-crit2-register-mixed' misses it (e.g. du to a club official in a halbformell task). 'Überwiegend mit Ich/Wir' also needs a pinned threshold.",
+      "fix": "Rename the rule to 'register-wrong-or-mixed', checked against the task's register. Define 'überwiegend' as more than 50 % of main-clause starts and pin it in the EXM-08 test. Record the Betreff decision in openQuestions as resolved."
+    },
+    {
+      "severity": "minor",
+      "owner": "lane-tb1",
+      "file": "content/course-v2/registries/lanes/tb1.json (teile.sa, teile.m1)",
+      "issue": "(1) words {target 100, min 80} is a design value. Because it feeds 'writingMinShareOfLowerBound', a short text could be blocked from submission or read as an official minimum, and telc gives none. (2) BLUEPRINT §2.3 asks the lane agent to record `delivery` (paper/digital), which decides whether the word counter shows in Prüfungsmodus; it is only in prose. (3) m1 prepMinutes 3 assumes the 20-minute preparation covers Teil 1. For telc B2 it covers only Teil 2 and 3 (UT-B2 p. 33).",
+      "fix": "State in openQuestions that the minimum never blocks or caps anything in Prüfungsmodus, and hide the counter there (paper default). Record delivery 'both' with the paper default. Re-read UT-B1 p. 30: if the preparation covers only Teil 2 and 3, set m1 to 0 and m2/m3 to 10/10."
+    },
+    {
+      "severity": "minor",
+      "owner": "lane-tb2",
+      "file": "content/course-v2/registries/lanes/tb2.json; rubrics/writing/tb2-sa.json; rubrics/speaking/tb2-m*.json",
+      "issue": "(1) The strict reading of the Betreff/Anrede/Schlussformel cap (any one missing ⇒ criterion II at most B) is stricter than the conjunctive official wording. It is acceptable for training, but the feedback must not present it as the official rule. (2) tb2.m1 has no template-level trace of 'topic 1 of 7, prepared at home' (BLUEPRINT §2.3 `prepAtHome`), so prepMinutes 0 alone lets a Modelltest runner start M1 cold. (3) The level steps 7/5/3/0 and 4/2/1/0 have splitVerified true, but memo 03 records only the maxima (7/7/7/4). (4) `delivery` (digital/hybrid/paper) is not recorded as data.",
+      "fix": "Word the cap feedback as 'nach unserer strengeren Lesart der telc-Kriterien' and pin it in the E1 test. Add prepAtHome and topicChoice {from 7} with the schema update, or state them in openQuestions for the runner. Cite UT-B2 pp. 40-41 for the level steps in openQuestions, or set splitVerified false until checked. Record delivery 'both'."
+    },
+    {
+      "severity": "minor",
+      "owner": "lane-ga2",
+      "file": "content/course-v2/registries/lanes/ga2.json (teile.h1, teile.l2, teile.sp2)",
+      "issue": "(1) h1 textWords [25, 60] (design) excludes the longest official sample text (≈ 64 words) and starts far below the shortest (≈ 43), so a lane-exact Modelltest text at official length fails its own band. (2) l2's upper bound of 235 equals memo 01's sample exactly, with no ±15 % margin. (3) sp2 minutes 3 is per candidate while every other speaking template gives minutes for the pair or group; the Teil minutes sum to 11 against a 15-minute module.",
+      "fix": "h1 textWords [35, 75], textWordsSource 'official-sample'. l2 [100, 270]. sp2 minutes 6 (pair), with 'ca. 3 Min. pro Person' in source."
+    },
+    {
+      "severity": "minor",
+      "owner": "lane-sd1",
+      "file": "content/course-v2/registries/lanes/sd1.json (teile.l2)",
+      "issue": "sd1.l2 is task 'abc' with options 2 (the official Teil is a/b). A generator or renderer keyed on task 'abc' could default to three options.",
+      "fix": "Keep options 2 authoritative and state in the source line (or in a SCHEMA enum request for 'ab') that Lesen Teil 2 offers exactly two options, a and b. EXM checks must compare options, not task."
+    },
+    {
+      "severity": "minor",
+      "owner": "families",
+      "file": "content/course-v2/registries/families.json",
+      "issue": "Skill texts name only 'Partnerin' (fam.s-fragekarten, fam.s-planen). fam.l-artikel is labelled 'Artikel' but also holds ga2.l3, a personal e-mail.",
+      "fix": "Write 'Partnerin oder Partner' (or 'Gesprächspartner:in' per house style). Either rename the l-artikel skill to 'längere Texte (Artikel, Korrespondenz)' or accept the label as is; the skill text already says 'Artikel, E-Mail'."
+    }
+  ]
+}

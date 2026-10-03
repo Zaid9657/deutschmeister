@@ -1,0 +1,1716 @@
+[
+  {
+    "id": "a2.2-u01",
+    "nr": 1,
+    "etappe": 1,
+    "title": {
+      "de": "Sprachen lernen",
+      "canDo": "Sie können ein Gespräch beginnen, in Gang halten und beenden und von Ihren Sprachen erzählen."
+    },
+    "spec": {
+      "situation": "Priya und Emre gehen zum ersten Mal ins Sprachcafé von Ingrid Hahn. Sie lernen Tomasz und Lina kennen, erzählen, wie sie Deutsch und andere Sprachen gelernt haben, und halten das Gespräch in Gang.",
+      "handlungsfeld": [
+        "11",
+        "E"
+      ],
+      "canDos": [
+        "cd.a2.meine-sprachen",
+        "cd.a2.gespraech-in-gang-halten",
+        "cd.a2.im-gespraech-nachfragen",
+        "cd.a2.themenwechsel-folgen",
+        "cd.a2.zeitungsartikel-verstehen"
+      ],
+      "grammar": {
+        "new": [
+          "g.als-temporal",
+          "g.praeteritum-kernverben"
+        ],
+        "chunk": [],
+        "review": [
+          "g.wenn",
+          "g.praeteritum",
+          "g.praeteritum-modalverben",
+          "g.perfekt-sein"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Sprachen und Sprachkenntnisse",
+          "target": 10,
+          "lemmas": [
+            "lx.perfekt",
+            "lx.fremdsprache",
+            "lx.sprachkenntnisse",
+            "lx.fliessend",
+            "lx.uebersetzen",
+            "lx.akzent",
+            "lx.dialekt",
+            "lx.zweisprachig",
+            "lx.beherrschen",
+            "lx.muttersprachler"
+          ]
+        },
+        {
+          "title": "Lernen: Kurs, Fehler, Aussprache",
+          "target": 10,
+          "lemmas": [
+            "lx.fehler",
+            "lx.aussprache",
+            "lx.wortschatz",
+            "lx.verbessern",
+            "lx.sich-merken",
+            "lx.nachschlagen",
+            "lx.redewendung",
+            "lx.sprachcafe",
+            "lx.tandem",
+            "lx.einstufungstest",
+            "lx.sprachkurs"
+          ]
+        },
+        {
+          "title": "Im Gespräch: nachfragen und reagieren",
+          "target": 9,
+          "lemmas": [
+            "lx.peinlich",
+            "lx.nachfragen",
+            "lx.deutlich",
+            "lx.bedeutung",
+            "lx.begriff",
+            "lx.unterbrechen",
+            "lx.ansprechen",
+            "lx.missverstaendnis",
+            "lx.verwechseln",
+            "lx.meinung",
+            "lx.kontakt",
+            "lx.thema"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.dialog",
+        "tt.zeitungsartikel",
+        "tt.wortkarte",
+        "tt.email-halbformell"
+      ],
+      "lanes": {
+        "primary": "ga2",
+        "pruefungsfokus": [
+          {
+            "template": "ga2.sp1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "sprechen"
+          },
+          {
+            "template": "ga2.l1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.h3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.s2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A2 L13 Sprachen lernen (als)",
+        "N A2 K8 Gelernt ist gelernt!"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.emre",
+        "cast.ingrid-hahn",
+        "cast.amal",
+        "cast.tomasz",
+        "cast.lina"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a2-2.md E1"
+      }
+    }
+  },
+  {
+    "id": "a2.2-u02",
+    "nr": 2,
+    "etappe": 1,
+    "title": {
+      "de": "Wir planen einen Ausflug",
+      "canDo": "Sie können gemeinsam etwas planen: vorschlagen, ablehnen und sich einigen."
+    },
+    "spec": {
+      "situation": "Die Gruppe aus dem Sprachcafé plant einen Ausflug an einen See. Im Gruppenchat und beim nächsten Treffen sagen alle, was sie sich wünschen, machen Vorschläge, lehnen Ideen ab und einigen sich.",
+      "handlungsfeld": [
+        "D"
+      ],
+      "canDos": [
+        "cd.a2.ausflug-mitplanen",
+        "cd.a2.einigung-vorschlagen",
+        "cd.a2.gruppenchat-absprechen",
+        "cd.a2.wochenendwunsch-nachricht",
+        "cd.a2.angebote-zuordnen"
+      ],
+      "grammar": {
+        "new": [
+          "g.konj2-waere-haette-wuerde",
+          "g.reflexiv-dat"
+        ],
+        "chunk": [],
+        "review": [
+          "g.konj2-koennte",
+          "g.konj2-hoeflichkeit",
+          "g.reflexiv-akk",
+          "g.weil"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Wünsche und Pläne",
+          "target": 10,
+          "lemmas": [
+            "lx.wunsch",
+            "lx.traum",
+            "lx.sich-etwas-wuenschen",
+            "lx.sich-etwas-vorstellen",
+            "lx.unbedingt",
+            "lx.geniessen",
+            "lx.traeumen",
+            "lx.moeglichkeit",
+            "lx.hoffentlich",
+            "lx.abwechslung",
+            "lx.ziel"
+          ]
+        },
+        {
+          "title": "Ausflugsziele und Freizeit",
+          "target": 10,
+          "lemmas": [
+            "lx.badesee",
+            "lx.ausflugsziel",
+            "lx.picknick",
+            "lx.grillen",
+            "lx.baden",
+            "lx.boot",
+            "lx.freibad",
+            "lx.insel",
+            "lx.aussicht",
+            "lx.fuehrung",
+            "lx.radtour"
+          ]
+        },
+        {
+          "title": "Im Gruppenchat: vorschlagen und sich einigen",
+          "target": 9,
+          "lemmas": [
+            "lx.sich-einigen",
+            "lx.kompromiss",
+            "lx.ablehnen",
+            "lx.organisieren",
+            "lx.dagegen",
+            "lx.mehrheit",
+            "lx.alternative",
+            "lx.spontan",
+            "lx.gruppenchat",
+            "lx.einverstanden"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.sms",
+        "tt.dialog",
+        "tt.kleinanzeige",
+        "tt.internetanzeige",
+        "tt.planungsblatt",
+        "tt.terminkalender"
+      ],
+      "lanes": {
+        "primary": "ga2",
+        "pruefungsfokus": [
+          {
+            "template": "ga2.sp3",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "sprechen"
+          },
+          {
+            "template": "ga2.h2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.l4",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.s1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "S4 L8 Am Wochenende (Konjunktiv II wäre/hätte)",
+        "N A2 K12 Gute Unterhaltung!",
+        "M A2 L19 Kulturelle Veranstaltungen"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.emre",
+        "cast.lina",
+        "cast.tomasz",
+        "cast.amal"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a2-2.md E2 (Wünsche, SMS S1) + E4 (Ausflug planen, Anzeigen L4)"
+      }
+    }
+  },
+  {
+    "id": "a2.2-u03",
+    "nr": 3,
+    "etappe": 1,
+    "title": {
+      "de": "Im Hotel",
+      "canDo": "Sie können ein Hotelzimmer buchen, eine Buchung ändern und höflich nachfragen."
+    },
+    "spec": {
+      "situation": "Priya und Arjun fahren für ein Wochenende nach Dresden. Priya reserviert am Telefon ein Zimmer, ändert die Buchung, fragt an der Rezeption höflich nach und schreibt dem Hotel nach der Abreise, weil sie etwas im Zimmer vergessen hat.",
+      "handlungsfeld": [
+        "10"
+      ],
+      "canDos": [
+        "cd.a2.hotelzimmer-reservieren",
+        "cd.a2.buchung-aendern",
+        "cd.a2.nach-gruenden-fragen",
+        "cd.a2.mail-an-hotel",
+        "cd.a2.ueber-reisen-erzaehlen"
+      ],
+      "grammar": {
+        "new": [
+          "g.indirekte-frage",
+          "g.indefinitpronomen-personen"
+        ],
+        "chunk": [],
+        "review": [
+          "g.konj2-hoeflichkeit",
+          "g.wenn",
+          "g.dass",
+          "g.indefinitpronomen"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Buchen und umbuchen",
+          "target": 10,
+          "lemmas": [
+            "lx.bestaetigung",
+            "lx.umbuchen",
+            "lx.stornieren",
+            "lx.uebernachtung",
+            "lx.anreise",
+            "lx.inklusive",
+            "lx.abreise",
+            "lx.aufenthalt",
+            "lx.halbpension",
+            "lx.ausgebucht",
+            "lx.unterkunft"
+          ]
+        },
+        {
+          "title": "Zimmer und Ausstattung",
+          "target": 10,
+          "lemmas": [
+            "lx.einzelzimmer",
+            "lx.ausstattung",
+            "lx.klimaanlage",
+            "lx.etage",
+            "lx.blick",
+            "lx.pension",
+            "lx.zentral",
+            "lx.kopfkissen",
+            "lx.steckdose",
+            "lx.minibar"
+          ]
+        },
+        {
+          "title": "An der Rezeption: Service und Probleme",
+          "target": 9,
+          "lemmas": [
+            "lx.sich-beschweren",
+            "lx.sich-kuemmern",
+            "lx.unzufrieden",
+            "lx.wecken",
+            "lx.hinweis",
+            "lx.zimmerservice",
+            "lx.auschecken",
+            "lx.ausnahmsweise",
+            "lx.schluesselkarte",
+            "lx.beantworten"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.telefonat",
+        "tt.dialog",
+        "tt.beleg",
+        "tt.informationstafel",
+        "tt.programm",
+        "tt.kurzansage",
+        "tt.email-halbformell",
+        "tt.aufgabenkarte"
+      ],
+      "lanes": {
+        "primary": "ga2",
+        "pruefungsfokus": [
+          {
+            "template": "ga2.s2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "schreiben"
+          },
+          {
+            "template": "ga2.l2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.h1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.sp2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A2 L16 Im Hotel (indirekte Fragen)",
+        "S4 L12 Reisen",
+        "N A2 K7 Ganz schön mobil"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.ensemble-a2-2",
+        "cast.ensemble-a2-4"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a2-2.md E3"
+      }
+    }
+  },
+  {
+    "id": "a2.2-u04",
+    "nr": 4,
+    "etappe": 2,
+    "title": {
+      "de": "Unterwegs: Wege und Zwischenfälle",
+      "canDo": "Sie können Wege genau beschreiben und von einem Unfall berichten."
+    },
+    "spec": {
+      "situation": "Am Tag des Ausflugs erklärt Emre den anderen den Weg zum Treffpunkt. Unterwegs rutscht Lina aus und verletzt sich; Tomasz ruft den Notruf, und später erzählen alle, wie es passiert ist.",
+      "handlungsfeld": [
+        "10",
+        "8"
+      ],
+      "canDos": [
+        "cd.a2.weg-erklaeren",
+        "cd.a2.wegbeschreibung-schreiben",
+        "cd.a2.unfall-melden",
+        "cd.a2.notruf-anweisungen-folgen"
+      ],
+      "grammar": {
+        "new": [
+          "g.lokale-praep-weg",
+          "g.werden-vollverb"
+        ],
+        "chunk": [],
+        "review": [
+          "g.wechselpraep",
+          "g.praep-dativ",
+          "g.praep-akkusativ",
+          "g.imperativ-sie",
+          "g.perfekt-sein"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Wege und Orte",
+          "target": 10,
+          "lemmas": [
+            "lx.folgen",
+            "lx.abbiegen",
+            "lx.ueberqueren",
+            "lx.umweg",
+            "lx.fussgaenger",
+            "lx.vorbei",
+            "lx.tankstelle",
+            "lx.kiosk",
+            "lx.zebrastreifen"
+          ]
+        },
+        {
+          "title": "Unterwegs in der Natur",
+          "target": 10,
+          "lemmas": [
+            "lx.wanderung",
+            "lx.bruecke",
+            "lx.ufer",
+            "lx.fluss",
+            "lx.ausrutschen",
+            "lx.tour",
+            "lx.wiese",
+            "lx.huegel",
+            "lx.steil",
+            "lx.stein"
+          ]
+        },
+        {
+          "title": "Unfall und Notruf",
+          "target": 9,
+          "lemmas": [
+            "lx.unfall",
+            "lx.sich-verletzen",
+            "lx.krankenwagen",
+            "lx.passieren",
+            "lx.notaufnahme",
+            "lx.verletzung",
+            "lx.notarzt",
+            "lx.bluten",
+            "lx.erste-hilfe"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.dialog",
+        "tt.telefonat",
+        "tt.kurzansage",
+        "tt.radiomeldung",
+        "tt.kleinanzeige",
+        "tt.sms",
+        "tt.planungsblatt",
+        "tt.terminkalender"
+      ],
+      "lanes": {
+        "primary": "ga2",
+        "pruefungsfokus": [
+          {
+            "template": "ga2.h1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.l4",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.s1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "ga2.sp3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A2 L17 Reisen und Verkehr (am/ans Meer)",
+        "M A2 L22 Mobilität und Verkehr",
+        "S4 L11 Unterwegs (woher/wo/wohin)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.emre",
+        "cast.lina",
+        "cast.tomasz",
+        "cast.priya",
+        "cast.amal",
+        "cast.ensemble-a2-4"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "beruf",
+          "title": "Ein Unfall auf dem Weg zur Arbeit: kurz berichten",
+          "hf": "8"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/a2-2.md E4"
+      }
+    }
+  },
+  {
+    "id": "a2.2-u05",
+    "nr": 5,
+    "etappe": 2,
+    "title": {
+      "de": "Handy, Vertrag, Kündigung",
+      "canDo": "Sie können Angebote vergleichen und einen Vertrag ändern oder kündigen."
+    },
+    "spec": {
+      "situation": "Lina braucht als Au-pair einen günstigen Handytarif. Mit Priya vergleicht sie Angebote, beschreibt, was sie braucht, widerspricht an der Hotline höflich und kündigt ein altes Abo.",
+      "handlungsfeld": [
+        "7",
+        "5"
+      ],
+      "canDos": [
+        "cd.a2.vertrag-kuendigen",
+        "cd.a2.dinge-beschreiben-vergleichen",
+        "cd.a2.hoeflich-widersprechen"
+      ],
+      "grammar": {
+        "new": [
+          "g.komparation-attributiv",
+          "g.adj-dekl-nullartikel"
+        ],
+        "chunk": [],
+        "review": [
+          "g.komparation",
+          "g.adj-dekl-bestimmt",
+          "g.adj-dekl-unbestimmt",
+          "g.indirekte-frage"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Handy und Internet",
+          "target": 10,
+          "lemmas": [
+            "lx.tarif",
+            "lx.sim-karte",
+            "lx.surfen",
+            "lx.unbegrenzt",
+            "lx.monatlich",
+            "lx.guthaben",
+            "lx.datenvolumen",
+            "lx.flatrate",
+            "lx.rufnummer",
+            "lx.mobil"
+          ]
+        },
+        {
+          "title": "Verträge und Kündigung",
+          "target": 10,
+          "lemmas": [
+            "lx.vertrag",
+            "lx.kuendigen",
+            "lx.kuendigung",
+            "lx.frist",
+            "lx.schriftlich",
+            "lx.abo",
+            "lx.anbieter",
+            "lx.verlaengern",
+            "lx.bedingung",
+            "lx.laufzeit",
+            "lx.abonnement",
+            "lx.widerruf",
+            "lx.widerrufen",
+            "lx.abschliessen"
+          ]
+        },
+        {
+          "title": "Produkte vergleichen",
+          "target": 9,
+          "lemmas": [
+            "lx.auswahl",
+            "lx.preiswert",
+            "lx.unterschied",
+            "lx.mindestens",
+            "lx.widersprechen",
+            "lx.zusaetzlich",
+            "lx.aehnlich",
+            "lx.insgesamt",
+            "lx.hoechstens"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.internetanzeige",
+        "tt.zeitungsartikel",
+        "tt.informationstafel",
+        "tt.bedingungen",
+        "tt.telefonansage",
+        "tt.telefonat",
+        "tt.email-halbformell",
+        "tt.wortkarte"
+      ],
+      "lanes": {
+        "primary": "ga2",
+        "pruefungsfokus": [
+          {
+            "template": "ga2.l1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.l2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.s2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "ga2.sp1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A2 L14 Post und Telekommunikation",
+        "S4 L9 Meine Sachen (Komparation, Adjektivdeklination)",
+        "S4 L10 Kommunikation"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.lina",
+        "cast.priya",
+        "cast.katrin-weber",
+        "cast.ensemble-a2-1",
+        "cast.ensemble-a2-4"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a2-2.md E5"
+      }
+    }
+  },
+  {
+    "id": "a2.2-u06",
+    "nr": 6,
+    "etappe": 2,
+    "title": {
+      "de": "Mein Geld",
+      "canDo": "Sie können Bankgeschäfte erledigen und einen Verlust melden."
+    },
+    "spec": {
+      "situation": "Priya hat ihre Bankkarte verloren. Sie lässt die Karte sperren, erledigt Bankgeschäfte am Telefon und am Schalter, versteht einen Brief ihrer Versicherung und teilt ihrer Krankenkasse eine Änderung mit.",
+      "handlungsfeld": [
+        "5"
+      ],
+      "canDos": [
+        "cd.a2.bankgeschaefte-erledigen",
+        "cd.a2.karte-verloren-melden",
+        "cd.a2.versicherungsbrief-verstehen",
+        "cd.a2.aenderungen-melden",
+        "cd.a2.gespraeche-einmal-hoeren"
+      ],
+      "grammar": {
+        "new": [
+          "g.lassen",
+          "g.trotzdem"
+        ],
+        "chunk": [],
+        "review": [
+          "g.deshalb",
+          "g.muessen-duerfen-man",
+          "g.indirekte-frage",
+          "g.konj2-hoeflichkeit"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Konto und Karte",
+          "target": 10,
+          "lemmas": [
+            "lx.sperren",
+            "lx.kontostand",
+            "lx.kreditkarte",
+            "lx.abbuchen",
+            "lx.eroeffnen",
+            "lx.verlieren",
+            "lx.girokonto",
+            "lx.online-banking",
+            "lx.kredit",
+            "lx.diebstahl",
+            "lx.ersatz",
+            "lx.lassen"
+          ]
+        },
+        {
+          "title": "Überweisen, bezahlen, sparen",
+          "target": 10,
+          "lemmas": [
+            "lx.sich-etwas-leisten",
+            "lx.sparen",
+            "lx.sparkonto",
+            "lx.ausgeben",
+            "lx.einzahlen",
+            "lx.kontoauszug",
+            "lx.zinsen",
+            "lx.leihen",
+            "lx.schulden",
+            "lx.dauerauftrag",
+            "lx.erledigen"
+          ]
+        },
+        {
+          "title": "Versicherung und Änderungen",
+          "target": 9,
+          "lemmas": [
+            "lx.versicherung",
+            "lx.mitteilen",
+            "lx.adressaenderung",
+            "lx.aendern",
+            "lx.beitrag",
+            "lx.anschrift",
+            "lx.wohnsitz",
+            "lx.haftpflichtversicherung",
+            "lx.versichern"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.telefonat",
+        "tt.dialog",
+        "tt.brief-formell",
+        "tt.email-informell",
+        "tt.formular",
+        "tt.sms",
+        "tt.aufgabenkarte"
+      ],
+      "lanes": {
+        "primary": "ga2",
+        "pruefungsfokus": [
+          {
+            "template": "ga2.sp2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "sprechen"
+          },
+          {
+            "template": "ga2.h3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.l3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.s1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "S4 L13 Auf der Bank (lassen)",
+        "S4 L9 Meine Sachen",
+        "M A2 L21 Staat und Verwaltung (lassen)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.ensemble-a2-1",
+        "cast.ensemble-a2-4"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a2-2.md E7 (Bank und Versicherung)"
+      }
+    }
+  },
+  {
+    "id": "a2.2-u07",
+    "nr": 7,
+    "etappe": 3,
+    "title": {
+      "de": "Die Heizung ist kaputt",
+      "canDo": "Sie können einen Schaden in der Wohnung melden und um eine Reparatur bitten."
+    },
+    "spec": {
+      "situation": "In der Wohnung von Emre und Elif ist die Heizung kaputt, und im Haus wird bald renoviert. Emre meldet den Schaden bei Frau Engel, schreibt eine E-Mail, sagt den Nachbarn Bescheid und sucht mit Elif einen Termin für den Handwerker.",
+      "handlungsfeld": [
+        "12"
+      ],
+      "canDos": [
+        "cd.a2.schaden-melden",
+        "cd.a2.nachbarn-vorwarnen",
+        "cd.a2.mietvertrag-verstehen",
+        "cd.a2.mail-an-hausverwaltung",
+        "cd.a2.reparaturtermin-abstimmen"
+      ],
+      "grammar": {
+        "new": [
+          "g.passiv-praesens"
+        ],
+        "chunk": [
+          "g.nomen-verb-verbindungen"
+        ],
+        "review": [
+          "g.werden-vollverb",
+          "g.lassen",
+          "g.trotzdem",
+          "g.temporal-seit-vor"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Schäden in der Wohnung",
+          "target": 10,
+          "lemmas": [
+            "lx.heizkoerper",
+            "lx.schaden",
+            "lx.wasserhahn",
+            "lx.tropfen-2",
+            "lx.heizen",
+            "lx.undicht",
+            "lx.verstopft",
+            "lx.schimmel",
+            "lx.waschbecken",
+            "lx.feucht",
+            "lx.dringend"
+          ]
+        },
+        {
+          "title": "Vermieterin, Handwerker, Reparatur",
+          "target": 9,
+          "lemmas": [
+            "lx.handwerker",
+            "lx.pruefen",
+            "lx.hausverwaltung",
+            "lx.informieren",
+            "lx.uebernehmen",
+            "lx.mietvertrag",
+            "lx.beauftragen",
+            "lx.moeglichst",
+            "lx.kosten-2"
+          ]
+        },
+        {
+          "title": "Nachbarn und Renovierung",
+          "target": 9,
+          "lemmas": [
+            "lx.renovieren",
+            "lx.ruecksicht",
+            "lx.tagsueber",
+            "lx.rechtzeitig",
+            "lx.streichen",
+            "lx.renovierung",
+            "lx.baustelle",
+            "lx.aushang",
+            "lx.bohren"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.telefonat",
+        "tt.dialog",
+        "tt.schild",
+        "tt.bedingungen",
+        "tt.email-informell",
+        "tt.radiointerview",
+        "tt.email-halbformell",
+        "tt.planungsblatt",
+        "tt.terminkalender"
+      ],
+      "lanes": {
+        "primary": "ga2",
+        "pruefungsfokus": [
+          {
+            "template": "ga2.s2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "schreiben"
+          },
+          {
+            "template": "ga2.h4",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.l3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.sp3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A2 L14 Post und Telekommunikation (Passiv Präsens)",
+        "S4 L13 Auf der Bank (lassen)",
+        "M A2 L21 Staat und Verwaltung (lassen)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.emre",
+        "cast.elif",
+        "cast.frau-engel",
+        "cast.ensemble-a2-3"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a2-2.md E6"
+      }
+    }
+  },
+  {
+    "id": "a2.2-u08",
+    "nr": 8,
+    "etappe": 3,
+    "title": {
+      "de": "Wetter, Klima, Umwelt",
+      "canDo": "Sie können Wetterberichte verstehen und über Umwelt im Alltag sprechen."
+    },
+    "spec": {
+      "situation": "Nach einem Unwetter sprechen Priya, Amal und die Gruppe im Sprachcafé über das Wetter, über Umwelt im Alltag in Deutschland und darüber, was ihnen Sorgen macht.",
+      "handlungsfeld": [
+        "9"
+      ],
+      "canDos": [
+        "cd.a2.radiomeldungen-verstehen",
+        "cd.a2.meinung-alltag-deutschland",
+        "cd.a2.sorgen-aussprechen"
+      ],
+      "grammar": {
+        "new": [
+          "g.praepositionaladverb"
+        ],
+        "chunk": [],
+        "review": [
+          "g.verben-praeposition",
+          "g.pronomen-er-es-sie",
+          "g.dass",
+          "g.weil"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Wetter und Unwetter",
+          "target": 10,
+          "lemmas": [
+            "lx.unwetter",
+            "lx.gewitter",
+            "lx.sturm",
+            "lx.hitze",
+            "lx.baum",
+            "lx.temperatur",
+            "lx.blitz",
+            "lx.ueberschwemmung",
+            "lx.vorhersage",
+            "lx.umfallen"
+          ]
+        },
+        {
+          "title": "Umwelt im Alltag",
+          "target": 10,
+          "lemmas": [
+            "lx.umwelt",
+            "lx.verbrauchen",
+            "lx.strom",
+            "lx.vermeiden",
+            "lx.umweltfreundlich",
+            "lx.klima",
+            "lx.energie",
+            "lx.verpackung",
+            "lx.schuetzen",
+            "lx.plastik",
+            "lx.muelltrennung"
+          ]
+        },
+        {
+          "title": "Meinungen und Sorgen",
+          "target": 8,
+          "lemmas": [
+            "lx.zukunft",
+            "lx.achten",
+            "lx.optimistisch",
+            "lx.gedanke",
+            "lx.befuerchten",
+            "lx.folge",
+            "lx.klimawandel",
+            "lx.pessimistisch"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.radiomeldung",
+        "tt.kurzansage",
+        "tt.radiointerview",
+        "tt.zeitungsartikel",
+        "tt.umfrage",
+        "tt.dialog",
+        "tt.wortkarte"
+      ],
+      "lanes": {
+        "primary": "ga2",
+        "pruefungsfokus": [
+          {
+            "template": "ga2.h4",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.h1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.l1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "input",
+            "step": "a2.2-u08-ls3"
+          },
+          {
+            "template": "ga2.sp1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A2 L18 Wetter und Klima (worauf/darauf)",
+        "N A2 K11 Wie die Zeit vergeht! (Präpositionaladverbien)"
+      ],
+      "deviation": {
+        "reason": "Wetter und Klima steht in den Leitlehrwerken nur bei Menschen A2 L18 (memo 14 §C A2.2 #5; BLUEPRINT §2.8 Leaders: M18); N A2 K11 ist nur die Grammatikplatzierung. Behalten, weil Goethe A2 Hören Teil 1 und 4 Radiomeldungen und Interviews nutzen und das Präpositionaladverb (Spine a2.2-u08) hier seinen Kontext hat."
+      },
+      "cast": [
+        "cast.priya",
+        "cast.amal",
+        "cast.arjun",
+        "cast.tomasz",
+        "cast.ingrid-hahn",
+        "cast.ensemble-a2-2"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a2-2.md E8"
+      }
+    }
+  },
+  {
+    "id": "a2.2-u09",
+    "nr": 9,
+    "etappe": 3,
+    "title": {
+      "de": "Mein Weg",
+      "canDo": "Sie können von Ihrer Schulzeit und Ausbildung erzählen und einen Lebenslauf schreiben."
+    },
+    "spec": {
+      "situation": "Emre hat einen Termin bei Herrn Fiedler von der Berufsberatung. Er erzählt von seiner Schulzeit und seiner Arbeit in einem Elektrogeschäft in der Türkei und schreibt seinen tabellarischen Lebenslauf; Lina erzählt von ihrem Ziel, Pflegefachfrau zu werden.",
+      "handlungsfeld": [
+        "3",
+        "4"
+      ],
+      "canDos": [
+        "cd.a2.schulen-und-abschluesse",
+        "cd.a2.berufserfahrung-erzaehlen",
+        "cd.a2.lebenslauf-schreiben",
+        "cd.a2.laengere-mail-verstehen",
+        "cd.a2.interview-beruf-verstehen"
+      ],
+      "grammar": {
+        "new": [
+          "g.relativsatz-nom",
+          "g.zeitadverbien-erzaehlen"
+        ],
+        "chunk": [],
+        "review": [
+          "g.temporal-seit-vor",
+          "g.temporal-praepositionen",
+          "g.zeitangaben-inversion",
+          "g.praeteritum-modalverben",
+          "g.perfekt-haben"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Schule und Abschlüsse",
+          "target": 10,
+          "lemmas": [
+            "lx.schulabschluss",
+            "lx.zertifikat",
+            "lx.anerkennung",
+            "lx.damals",
+            "lx.hauptschule",
+            "lx.studienplatz",
+            "lx.hochschule",
+            "lx.diplom",
+            "lx.bildung"
+          ]
+        },
+        {
+          "title": "Ausbildung und Berufserfahrung",
+          "target": 9,
+          "lemmas": [
+            "lx.berufserfahrung",
+            "lx.taetigkeit",
+            "lx.sammeln",
+            "lx.inzwischen",
+            "lx.berufsberatung",
+            "lx.pflegefachmann",
+            "lx.branche",
+            "lx.verantwortlich",
+            "lx.werkstatt"
+          ]
+        },
+        {
+          "title": "Der Lebenslauf",
+          "target": 9,
+          "lemmas": [
+            "lx.lebenslauf",
+            "lx.kenntnisse",
+            "lx.weiterbildung",
+            "lx.schliesslich",
+            "lx.zuletzt",
+            "lx.tabellarisch",
+            "lx.zeitraum",
+            "lx.angabe",
+            "lx.anschliessend",
+            "lx.ordnen"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.dialog",
+        "tt.portraet",
+        "tt.lebenslauf",
+        "tt.email-informell",
+        "tt.radiointerview",
+        "tt.aufgabenkarte",
+        "tt.sms"
+      ],
+      "lanes": {
+        "primary": "ga2",
+        "pruefungsfokus": [
+          {
+            "template": "ga2.l3",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.h4",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.sp2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "ga2.s1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A2 L23 Ausbildung und Beruf (Relativsatz Nom./Akk.)",
+        "N A2 K12 Gute Unterhaltung! (Relativsatz)",
+        "S4 L14 Lebensstationen (Zeitadverbien)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.emre",
+        "cast.herr-fiedler",
+        "cast.lina",
+        "cast.priya"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daz",
+          "title": "Kita und Schule: Elternabend und Entschuldigung",
+          "hf": "6"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/a2-2.md E9"
+      }
+    }
+  },
+  {
+    "id": "a2.2-u10",
+    "nr": 10,
+    "etappe": 4,
+    "title": {
+      "de": "Bewerbung und Vorstellungsgespräch",
+      "canDo": "Sie können Stellenanzeigen verstehen und im Vorstellungsgespräch Auskunft geben."
+    },
+    "spec": {
+      "situation": "Brandt Elektrotechnik sucht einen Auszubildenden. Emre liest Stellenanzeigen, schreibt der Firma eine E-Mail und hat ein Vorstellungsgespräch bei Herrn Brandt; Priya und Jan Wolf helfen ihm bei der Vorbereitung.",
+      "handlungsfeld": [
+        "3"
+      ],
+      "canDos": [
+        "cd.a2.stellenanzeigen-verstehen",
+        "cd.a2.bewerbungsgespraech-motivation",
+        "cd.a2.arbeitsbedingungen-klaeren",
+        "cd.a2.mail-auf-stellenanzeige",
+        "cd.a2.arbeitsablaeufe-erklaeren"
+      ],
+      "grammar": {
+        "new": [
+          "g.relativsatz-akk",
+          "g.wortbildung-heit-keit"
+        ],
+        "chunk": [],
+        "review": [
+          "g.relativsatz-nom",
+          "g.komparation-attributiv",
+          "g.konj2-hoeflichkeit",
+          "g.weil"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Stellenanzeigen",
+          "target": 10,
+          "lemmas": [
+            "lx.bewerbung",
+            "lx.bewerber",
+            "lx.arbeitgeber",
+            "lx.anschreiben",
+            "lx.gehalt",
+            "lx.voraussetzung",
+            "lx.azubi",
+            "lx.einstellen",
+            "lx.brutto",
+            "lx.arbeitnehmer"
+          ]
+        },
+        {
+          "title": "Das Vorstellungsgespräch",
+          "target": 9,
+          "lemmas": [
+            "lx.vorstellungsgespraech",
+            "lx.staerke",
+            "lx.schwaeche",
+            "lx.ablauf",
+            "lx.probezeit",
+            "lx.ueberzeugen",
+            "lx.vorgesetzte",
+            "lx.absprache",
+            "lx.protokoll"
+          ]
+        },
+        {
+          "title": "Eigenschaften und Arbeitsbedingungen",
+          "target": 9,
+          "lemmas": [
+            "lx.zuverlaessig",
+            "lx.puenktlichkeit",
+            "lx.flexibel",
+            "lx.hilfsbereit",
+            "lx.zuverlaessigkeit",
+            "lx.sicherheit",
+            "lx.freundlichkeit",
+            "lx.geduld",
+            "lx.arbeitsklima",
+            "lx.arbeitsvertrag"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.stellenanzeige",
+        "tt.kleinanzeige",
+        "tt.dialog",
+        "tt.email-halbformell",
+        "tt.wortkarte"
+      ],
+      "lanes": {
+        "primary": "ga2",
+        "pruefungsfokus": [
+          {
+            "template": "ga2.l4",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.h2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.sp1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "ga2.s2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A2 L23 Ausbildung und Beruf (Relativsatz Akk.)",
+        "M A2 L24 Arbeiten im Ausland"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.emre",
+        "cast.herr-brandt",
+        "cast.jan-wolf",
+        "cast.priya",
+        "cast.frau-otto"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "beruf",
+          "title": "Die erste Arbeitswoche: Abläufe und Urlaubsantrag",
+          "hf": "2"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/a2-2.md E10 (+ E11 „Im Job\" als Fokus-Beruf und More-Can-dos)"
+      }
+    }
+  },
+  {
+    "id": "a2.2-u11",
+    "nr": 11,
+    "etappe": 4,
+    "title": {
+      "de": "Post vom Amt",
+      "canDo": "Sie können Briefe vom Amt verstehen und am Amt nachfragen."
+    },
+    "spec": {
+      "situation": "Priya bekommt einen Brief vom Bürgeramt mit einer Frist. Sie sucht auf der Informationstafel die richtige Stelle, fragt am Amt nach und bittet um eine Erklärung, weil sie nicht alles versteht; Amal geht mit ihr hin.",
+      "handlungsfeld": [
+        "1"
+      ],
+      "canDos": [
+        "cd.a2.behoerdenbrief-verstehen",
+        "cd.a2.am-amt-nachfragen",
+        "cd.a2.um-erklaerung-bitten",
+        "cd.a2.infotafel-amt-nutzen"
+      ],
+      "grammar": {
+        "new": [
+          "g.bis-seitdem"
+        ],
+        "chunk": [],
+        "review": [
+          "g.passiv-praesens",
+          "g.indirekte-frage",
+          "g.temporal-seit-vor",
+          "g.muessen-duerfen-man"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Post vom Amt",
+          "target": 10,
+          "lemmas": [
+            "lx.buergeramt",
+            "lx.zustaendig",
+            "lx.gueltig",
+            "lx.persoenlich",
+            "lx.benoetigen",
+            "lx.bescheid",
+            "lx.schreiben-2",
+            "lx.mahnung",
+            "lx.ablaufen",
+            "lx.aktenzeichen",
+            "lx.einschreiben"
+          ]
+        },
+        {
+          "title": "Auf dem Amt nachfragen",
+          "target": 9,
+          "lemmas": [
+            "lx.erklaerung",
+            "lx.beantragen",
+            "lx.begleiten",
+            "lx.sich-wenden",
+            "lx.verstaendlich",
+            "lx.informationstafel",
+            "lx.dolmetscher",
+            "lx.vorlegen",
+            "lx.anliegen"
+          ]
+        },
+        {
+          "title": "Fristen, Formulare und Unterlagen",
+          "target": 9,
+          "lemmas": [
+            "lx.unterlagen",
+            "lx.bescheinigung",
+            "lx.einreichen",
+            "lx.spaetestens",
+            "lx.vollstaendig",
+            "lx.versaeumen",
+            "lx.stempel",
+            "lx.beilegen",
+            "lx.original",
+            "lx.angeben"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.brief-formell",
+        "tt.informationstafel",
+        "tt.webseite",
+        "tt.telefonansage",
+        "tt.dialog",
+        "tt.sms",
+        "tt.planungsblatt",
+        "tt.terminkalender"
+      ],
+      "lanes": {
+        "primary": "ga2",
+        "pruefungsfokus": [
+          {
+            "template": "ga2.l2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.h3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.s1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "ga2.sp3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A2 L21 Staat und Verwaltung",
+        "M A2 L22 Mobilität und Verkehr (bis, seit(dem))"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.amal",
+        "cast.arjun",
+        "cast.ensemble-a2-1"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daz",
+          "title": "Ein Brief vom Jobcenter oder von der Ausländerbehörde",
+          "hf": "1"
+        },
+        {
+          "kind": "daf",
+          "title": "Eine Reise planen (tauschbar statt Behördenpost)",
+          "hf": "10"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/a2-2.md E7 (Amt)"
+      }
+    }
+  },
+  {
+    "id": "a2.2-u12",
+    "nr": 12,
+    "etappe": 4,
+    "title": {
+      "de": "Lebensstationen",
+      "canDo": "Sie können Ihre Lebensgeschichte zusammenhängend erzählen und aufschreiben."
+    },
+    "spec": {
+      "situation": "Der Stadtteilverein stellt in seinem Blog Menschen aus dem Viertel vor. Ingrid Hahn fragt Priya nach ihrer Lebensgeschichte: Priya erzählt von wichtigen Stationen, von Veränderungen und von ihren Plänen.",
+      "handlungsfeld": [
+        "A",
+        "D"
+      ],
+      "canDos": [
+        "cd.a2.zusammenhaengend-schreiben",
+        "cd.a2.der-reihe-nach-erzaehlen",
+        "cd.a2.leben-erzaehlen",
+        "cd.a2.wochenbericht-folgen",
+        "cd.a2.ziele-nennen"
+      ],
+      "grammar": {
+        "new": [],
+        "chunk": [],
+        "review": [
+          "g.zeitadverbien-erzaehlen",
+          "g.als-temporal",
+          "g.praeteritum-kernverben",
+          "g.bis-seitdem",
+          "g.wenn",
+          "g.weil",
+          "g.dass"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Lebensstationen",
+          "target": 8,
+          "lemmas": [
+            "lx.aufwachsen",
+            "lx.lebensabschnitt",
+            "lx.auswandern",
+            "lx.sich-verlieben",
+            "lx.jugend",
+            "lx.heimatstadt",
+            "lx.geburt",
+            "lx.rente",
+            "lx.station"
+          ]
+        },
+        {
+          "title": "Veränderungen und Erinnerungen",
+          "target": 7,
+          "lemmas": [
+            "lx.veraenderung",
+            "lx.sich-erinnern",
+            "lx.erinnerung",
+            "lx.abschied",
+            "lx.sich-trennen",
+            "lx.heimweh",
+            "lx.paar",
+            "lx.geschichte"
+          ]
+        },
+        {
+          "title": "Pläne für die Zukunft",
+          "target": 7,
+          "lemmas": [
+            "lx.vorhaben",
+            "lx.irgendwann",
+            "lx.unabhaengig",
+            "lx.gruenden",
+            "lx.hoffnung",
+            "lx.vorsatz"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.blogbeitrag",
+        "tt.portraet",
+        "tt.dialog",
+        "tt.sms",
+        "tt.aufgabenkarte"
+      ],
+      "lanes": {
+        "primary": "ga2",
+        "pruefungsfokus": [
+          {
+            "template": "ga2.s1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "schreiben"
+          },
+          {
+            "template": "ga2.h2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.h3",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.sp2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "N A2 K10 Zusammen leben",
+        "N A2 K11 Wie die Zeit vergeht!",
+        "S4 L14 Lebensstationen"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.ingrid-hahn",
+        "cast.amal",
+        "cast.emre",
+        "cast.lina",
+        "cast.tomasz"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a2-2.md E12"
+      }
+    }
+  }
+]

@@ -1,0 +1,227 @@
+{
+  "review": "a1.1-u04.r5",
+  "unitId": "a1.1-u04",
+  "file": "content/course-v2/a1.1/units/u04.json",
+  "round": 5,
+  "date": "2026-09-27",
+  "reviewers": [
+    {
+      "id": "R1",
+      "persona": "Prüferin (lizenzierte Goethe-A1-Prüferin): Prüfungstreue, Rubrik, Aufgabenklarheit"
+    },
+    {
+      "id": "R2",
+      "persona": "Kursleiterin DaF (A1.1): Natürlichkeit, Niveau, Didaktik, Szenenplausibilität"
+    }
+  ],
+  "method": "Both reviewers read every German string of the current file: title and title.canDo, the Folge (7 lines and the gist item), the 3 inputs (30 lines), the flyer (49 words), 10 exam texts, 2 strategy cards, 8 redemittel, both speaking parts (instructionsDe, situationDe, cards, openingLine, hintWords, 16 model turns), the writing task (situation, taskDe, 3 Leitpunkte, checklist, model text), 4 check lines, the story beat and cliffhanger, every endLine, every promptDe, option and explanation.de, and the two new facts[] records. We solved all 95 authored items blind from promptDe plus options, tiles or audio line: 1 start gist, 15 input items, 12 structuredInput, 33 pool items, 12 reserve, 10 exam items, 8 check items and 4 proof items. For sentence_building we permuted the tiles and checked every V2 and V1 order against accepted[]. For error_correction we tried every one-word correction, including deletions. We traced the generators (3 × dictation.fromInput on 6 sources without `say`, 3 × numbers.dictation, 2 × lex.articlePlural, 1 × lex.glossTyped, 3 × lex.glossMatch) against the lexicon roles. We ran 18 candidate learner answers through the real grader, src/lib/course-v2/checkItem.js (for example „Wir brauchen Brot.“ on ls1-p10, „die“ on c01, „10“ on q04, „neun“ on ls2-i05). We confirmed that the player now shuffles non-exam options: src/lib/course-v2/unitPlan.js orderedOptions is called from ItemView.jsx l. 96, with a seed of unit, item and attempt. We checked the exam blocks against content/course-v2/registries/lanes/sd1.json: h1 is 6 × abc with 3 options, 2 plays, [32–53] words and the textVariantDe scaffold; h2 is 4 × R/F with 1 play and [29–47] words; sp2 has two topics with cards-ask; sp3 uses cards-request; s2 has 3 Leitpunkte and about 30 words. Every exam text is original in the official format. We recounted with the validator's wordCount: h1 50/41/37/41/37/38, h2 31/31/32/30, model text 26 and cliffhanger 25. We ran the validator's own knownForms + licensedForms at a1.1-u04 over every German surface (not only inputs: prompts, options, explanations, instructions, checklist, title.canDo, endLines) and looked up each unknown token's allocation in all eight lexicons. We read story and cast against the authored a1.1 units now on disk (u01, u02, u03, u05, u07; u03 and u05 are new since r4), against casts/series.json and casts/a1.json (ensemble genders: -1/-2 f, -3/-4 m, which match every stem and explanation), and against curriculum/a1-1.json u04. We recomputed every sum. The market comes to 2,20 + 3,60 + 0,90 + 1,80 + 0,50 = 9,00 ✓. The whole Saturday comes to 9,24 + 9,00 + 5,37 = 23,61 € plus 2,00 € Pfand (six water and two milk bottles at 0,25 €) out of the 50 € ✓. The agent proxy let gesetze-im-internet.de and revosax.sachsen.de through in this session, so both facts were re-read at the source (see r4-F05). Every r1–r4 finding was verified against the current file and the current rails.",
+  "validator": {
+    "command": "node scripts/course-v2/validate.mjs content/course-v2/a1.1/units/u04.json",
+    "result": "OK (no blocker findings). 40 rules: 33 pass, 0 fail, 3 warn, 4 skipped; 0 blocker, 19 ratchet, 9 advisory. GRM-04 has 5 advisories, all on the rule-smith side (F05): „möchten“ read as an adjective ending (steps[1].input.lines[7]), „Was macht das zusammen?“ and „Das macht zusammen 7“ read as separable verbs (steps[1].input.lines[8], steps[3].texts[1].lines[4]), and a chunk-licensed „Lesen Sie“ in strategyCards[0] and [1]. LEX-02 has 19 ratchet, down from 29 in r4 now that u05, u09 and u10 recycle words; Banane, Birne, Zwiebel, Kilo, Gramm, Preis and Angebot still recur in 0 later units, which is expected before u06, u11 and u12 exist. LEX-03 has 4 advisories: the dictation sources ls2-l02, ls2-l04, ls3-l05 and ls3-l07 make learners spell Tomaten, Kartoffeln, Eier and Reis. r4-F02 route (a) keeps these as recognition spelling on purpose. Skipped: ITM-08 (no caseSensitive item) and the level-scope COV-1/4/5. Every other rule passes: REF-01, ID-01, KEY-01, ALL-02 (tt.notiz is gone), ALL-03, GRM-01/02/05, LEX-01/04/05/07 (the r4 LEX-07 blocker is gone), TXT-02/03/04, ITM-01/02/03 (ITM-03 now passes)/04/05/06/07/09/10/11/13, CON-06 (now run on 2 verified facts, no longer skipped), EXM-01/02/03/04/11 and COV-3.",
+    "check": "node scripts/course-v2/check.mjs content/course-v2/a1.1/units/u04.json → 0 errors",
+    "level": "node scripts/course-v2/validate.mjs a1.1 --rule COV-1,COV-4,COV-5,LEX-07 → COV-1 1 advisory (sd1.l2 appears 1× lane-exact, 9/12 units at stage T); COV-4, COV-5 and LEX-07 pass",
+    "notes": "Rail status since r4. Closed: r4-F03 (the player shuffles non-exam options, unitPlan.orderedOptions; the ITM-03 header comment still says the player shows authored order, which is now stale) and r1-F10 (TXT-02 l. 8–11 and 35 apply the ±15 % only to bands that do not already carry it). Not written yet: r4-F02's hard LEX-03 for lex.glossTyped (the unit now meets it anyway), r4-F04's LEX-01 surface walk (F03, the r3-F05 class in its 3rd round), r4-F05's CON-06 no-skip rule (the unit now has facts anyway), r4-F08's GRM-04 fixtures (F05), and the ITM-01 correction-naming rule proposed in b2.2-u04 r2 F04, whose absence lets F01 through. This is the 5th round, and §9.4 says a 5th round triggers a rail fix, never more rounds. Each finding below therefore names its rail, and its unit edits are small enough to be verified by the validator and the new rails, not by a 6th content round."
+  },
+  "previousFindings": [
+    {
+      "id": "r4-F01",
+      "severity": "blocker",
+      "status": "fixed",
+      "evidence": "LEX-07 passes on the unit and on the level. The lexicon examples were rewritten under their units' ceiling (lx.sprachschule „Ich lerne Deutsch in einer Sprachschule in Leipzig.“, lx.schreiben „Wie schreiben Sie das?“, lx.helfen „Hilfst du mir bitte?“). u04 c06 now explains „Nomen schreiben Sie groß.“, without „man“. The spine gave g.muessen-duerfen-man chunkFrom a1.1-u08, not a1.1-u02, so u02's own title „Wie schreibt man das?“ is still ahead of its licence. That is u02's and the spine owner's issue, not u04's (notes)."
+    },
+    {
+      "id": "r4-F02",
+      "severity": "minor",
+      "status": "fixed",
+      "evidence": "Route (a) was applied. Both lex.articlePlural sources are [lx.brot, lx.apfel, lx.flasche, lx.preis], and lex.glossTyped is [lx.kaese, lx.milch, lx.wasser, lx.obst, lx.gemuese], all productive. c02 asks „Flaschen“, ls1-r02 and ls3-p02 ask „Brote“, ls3-p04 asks „Preise“, ls3-p01 asks „Das (Obst)“, and ls3-r01 asks „ein (Kilo Reis)“. LEX-03 went from 13 advisories to 4, and the 4 left are the dictation lines that r4 said to keep as recognition spelling."
+    },
+    {
+      "id": "r4-F03",
+      "severity": "minor",
+      "status": "fixed",
+      "evidence": "The class is closed twice. ITM-03 passes: LS1, LS2 and LS3 are each 3/3/3, and the Check with the gist is 2/2/2 (gist b, c05 a, c08 c, q01 b, q02 c, q03 a). Also, the player now reorders every non-exam choice item with a seeded shuffle (unitPlan.orderedOptions via ItemView.jsx l. 96), so the authored position no longer reaches the learner."
+    },
+    {
+      "id": "r4-F04",
+      "severity": "minor",
+      "status": "partly-fixed",
+      "evidence": "The unit part is done: no Verkäufer/Verkäuferin and no Sache remain, q02 and ls1-i06 no longer say Prospekt, and title.canDo is „Sie können nach Preisen fragen, Angebote lesen und Durchsagen im Supermarkt verstehen.“ The lexicon part is still open: no lexicon has lx.markt or lx.prospekt, and lx.durchsage is still at a1.1-u10. The replacement „der Mann am Markt“ now carries the unallocated „Markt“ onto 10 LS2 item surfaces, and the q02 heading change made a contradiction visible (F02, F03)."
+    },
+    {
+      "id": "r4-F05",
+      "severity": "minor",
+      "status": "fixed",
+      "evidence": "The flyer says „Milch, 1 Flasche: nur 0,99 Euro plus Pfand“, and ls3-l11 says „… da sind die Supermärkte hier zu.“ facts f01 and f02 are 'verified', and CON-06 passes. We re-read both at the source in this session. § 46 VerpackDG Abs. 1 (≥ 0,25 € per single-use beverage container) and Abs. 4 Satz 1 Nr. 2, 3, 4 and 7 f, plus Satz 2 (the milk exemption does not apply to plastic bottles and cans), match f01 and its three exceptions. § 68 VerpackDG confirms that the Verpackungsgesetz applied only until 11 August 2026, so r4's proposed „VerpackG § 31“ citation was already out of date, and the author was right to replace it. SächsLadÖffG § 3 Abs. 1–2 (Mon–Sat 6–22 Uhr, closed on Sundays and holidays), § 5 (petrol stations), § 6 (stations; Leipzig/Halle airport), § 7 Abs. 1 (bread, flowers, newspapers, fresh milk for up to 6 h between 7 and 18 Uhr) and § 8 Abs. 1 (up to four verkaufsoffene Sonntage, 12–18 Uhr) match f02. Both claims are current and complete for what the unit says."
+    },
+    {
+      "id": "r4-F06",
+      "severity": "minor",
+      "status": "fixed",
+      "evidence": "spec.situation no longer promises an Einkaufszettel („… lesen Angebote im Prospekt, fragen auf dem Wochenmarkt nach Preisen und Mengen und hören eine Durchsage im Supermarkt“), and tt.notiz is gone from spec.textTypes. ALL-02 passes."
+    },
+    {
+      "id": "r4-F07",
+      "severity": "minor",
+      "status": "open",
+      "evidence": "rc.artikel-genus-plural and rc.moechte are byte-identical to r2, r3 and r4. This is the 4th round with the cards unchanged (F04, now with a rail)."
+    },
+    {
+      "id": "r4-F08",
+      "severity": "minor",
+      "status": "partly-fixed",
+      "evidence": "„kurze“ is gone from strategyCards[0] and the H1 instructionsDe („Sie hören sechs Gespräche zweimal.“). The 5 detector advisories on the rule-smith side remain unchanged, and no fixture exists (F05)."
+    },
+    {
+      "id": "r1-F10",
+      "severity": "major",
+      "status": "fixed",
+      "evidence": "The rule side is now closed as well: TXT-02 applies the tolerance once (l. 8–11, 35). Every u04 text meets the raw band."
+    },
+    {
+      "id": "r1-F24 / r2-F11 / r3-F07",
+      "severity": "minor",
+      "status": "partly-fixed",
+      "evidence": "Same class as r4-F08, carried in F05."
+    },
+    {
+      "id": "r1-F25",
+      "severity": "minor",
+      "status": "expected",
+      "evidence": "The LEX-02 ratchet is 19, down from 29. Re-measure at the level round, once u06, u11 and u12 exist."
+    },
+    {
+      "id": "r2-F09 / r3-F06",
+      "severity": "minor",
+      "status": "open",
+      "evidence": "Same cards as r4-F07, carried in F04."
+    },
+    {
+      "id": "r3-F05",
+      "severity": "minor",
+      "status": "partly-fixed",
+      "evidence": "The unit side is done. The lexicon allocation and the LEX-01 surface walk are still open (F03)."
+    },
+    {
+      "id": "r1-F01–F09, F11–F23, F26; r2-F01–F08, F10; r3-F01–F04",
+      "severity": "various",
+      "status": "fixed",
+      "evidence": "Re-verified on the current file. ls2-p08 has no W-word tile. None of the six dictation sources carries `say`. Butter is 1,59 € in the flyer and in ls3-l01. ls3-l01 says „Nur heute!“. ls2-i05 accepts „neun“. Sp2 round 2 is „Im Supermarkt“. wordBand is [20, 30] and the model has 26 words. ls3-p09 accepts „Die Butter ist dort auch.“. „Liebe Kunden“ is glossed in ls3, t7, t9 and t10. The H1 keys are b, c, a, c, a, b, and the H2 keys are F, R, F, R. No regression was found."
+    }
+  ],
+  "verdict": "The unit is close, but it does not exit in round 5. Seven of the eight r4 findings have landed wholly or in their unit part. The lexicon examples are clean (LEX-07 green). The production drills run on productive lemmas. Key positions are balanced, and the player now shuffles non-exam options. The flyer carries the milk Pfand. Both Landeskunde claims have verified Fact records, which we re-read at gesetze-im-internet.de (§§ 46, 68 VerpackDG) and revosax.sachsen.de (SächsLadÖffG §§ 3, 5–8) and found current and complete. The spec no longer promises an Einkaufszettel, and „kurze“ is gone. The validator exits 0. Every one of the 95 keys is right, H1/H2/Sp3/S2 are exact to sd1.json, and the cast and story agree with u01, u02, u03, u05 and u07. The Saturday budget still adds up with the extra 0,50 € Pfand. One MAJOR stops exit (F01). The practice item ls1-p10 asks „Korrigieren Sie: „Wir brauchen eine Brot.““ and accepts only „Wir brauchen ein Brot.“. The grader marks „Wir brauchen Brot.“ wrong, although it is correct German and is the very sentence the unit's own Check dictates (c06 „Wir brauchen Brot und Käse.“). The class has been found before in b2.2-u04 and a2.2-u04, but its rule (error corrections name what to correct) was never written. So this is a gate hole, and in a 5th round it calls for the rail, not another round. There are four minors. The r4 heading change turned q02 into „Angebote: Reis 1,79 €“, which contradicts LS3's „Der Reis ist heute nicht im Angebot“ at the same price (F02). The lexicon still has no lx.markt or lx.prospekt, and lx.durchsage is still at u10, while the r4 fix routed 10 LS2 item surfaces through „der Mann am Markt“, next to the unit's own „auf dem Markt“ (F03). The rule cards are unchanged for the 4th round (F04). The detector false positives persist, and the speaking instructions use a genitive („auf die Fragen der Partnerin“) that no rail reads (F05). Unit-side edits: 4 promptDe lines (F01), one q02 list (F02), „am Markt“ → „auf dem Markt“ on 10 surfaces (F03) and 2 instruction lines (F05). Once they are made and the ITM-01 rail is green, the unit carries 3 owner-held minors (the F03 lexicon allocation, F04 and F05's detector part) and exits.",
+  "scores": {
+    "D": 4,
+    "N": 4,
+    "H": 4,
+    "A": 3,
+    "P": 4,
+    "K": 4,
+    "E": 4
+  },
+  "scoreNotes": {
+    "D": "Every model surface is correct and idiomatic, and du/Sie is right in every relationship (friends and the ensemble couples du; stallholder, shop assistant and exam partner Sie). It stays at 4 for three style points. „der Mann am Markt“ and „auf dem Markt“ are used side by side for the same place (F03). The speaking instructions use a genitive (F05). The openingLine still runs „Zuerst Teil 2 … erst zum Thema … dann … Dann Teil 3“.",
+    "N": "32 new words, and no production line goes over the grammar ceiling. It stays at 4 because unallocated or later words stand unglossed on item and instruction surfaces: Markt (no entry, 15 learner surfaces), Durchsagen on title.canDo (a1.1-u10), and the SD1 task words Gespräch (a2.1-u01), Thema (a2.2-u01) and Karte (a1.2-u07) (F03). The two rule cards also still teach a nominative-only paradigm in an accusative unit (F04).",
+    "H": "A believable Saturday on 50 €: the flyer at home, the market, then the supermarket, the Sunday closure and the flat message that sets up u05 („Zu klein für zwei“ → „Kölner Straße 18“). Every can-do is performed. The spec now describes exactly what the unit does.",
+    "A": "We solved 95 items blind, and every key is right. Distractors are plausible, and every explanation names the real error. It drops to 3 because ls1-p10 rejects a defensible second correction that the grader marks wrong (F01, MAJOR). Also, lp1's parenthesis „(zwei oder drei)“ follows „wie viel?“ and can be read as a quantity rather than as „two or three items“. That is harmless for scoring, since the checklist and cues do not require it, but „Was brauchen Sie? Wie viel? (2–3 Sachen)“ would still need a word the lexicon places later. A future Leitpunkt rewrite should state it with known words.",
+    "P": "H1, H2, Sp3 and S2 are exact to sd1.json (item counts, options, plays, word bands, rubric profiles), with the H1 text-options scaffold flagged. Sp2 is a shop role-play rather than the official questions about the partner. It stays outside the Prüfungsfokus and is recorded in spec.deviation. The deviation's claim that Lesen Teil 2 also comes in u08 no longer matches u08 as authored (notes).",
+    "K": "The cast, prices and budget are consistent across the unit and with u01–u03, u05 and u07. Both facts are current, sourced, re-read and complete with their exceptions, so r4's outdated-Pfand point is closed. It stays at 4 because of one small break: the Check's offer list prices the rice exactly as LS3 does but calls it an Angebot, while LS3 says it is not on offer (F02).",
+    "E": "Every instruction is ≤ 90 characters, and every step's endLine names the win. No 360 px Playwright walkthrough was run in this round (the walkthrough reviewer's remit)."
+  },
+  "total": 27,
+  "counts": {
+    "blocker": 0,
+    "major": 1,
+    "minor": 4,
+    "unitOwned": {
+      "blocker": 0,
+      "major": 1,
+      "minor": 3
+    },
+    "note": "unitOwned = the fix edits u04.json: F01 (4 promptDe lines, plus the ITM-01 rail from the rule-smith), F02 (q02), F03 (the „auf dem Markt“ wording only) and F05 (2 instruction lines only). Owned outside the unit: the lexicon allocation of F03 (lexicon owner), F04 (rule-cards owner and rule-smith) and the detector part of F05 (rule-smith)."
+  },
+  "findings": [
+    {
+      "id": "F01",
+      "reviewer": "R1",
+      "criterion": "A",
+      "severity": "major",
+      "scope": "class",
+      "unitId": "a1.1-u04",
+      "path": "steps[0].pool.items[9] (a1.1-u04-ls1-p10) promptDe/accepted; same prompt shape: steps[2].pool.items[9] (ls3-p10), steps[2].reserve[3] (ls3-r04), check.items[6] (c07)",
+      "quote": "ls1-p10 „Korrigieren Sie: „Wir brauchen eine Brot.““ · accepted [„Wir brauchen ein Brot.“] · checkItem(ls1-p10, „Wir brauchen Brot.“) → wrong, expected „Wir brauchen ein Brot.“ · start.folge l02 „Wir brauchen viel: Brot, Käse, Obst und Gemüse.“ · check line l04 = c06 key „Wir brauchen Brot und Käse.“",
+      "problem": "The German prompt only says „Korrigieren Sie:“. Deleting the wrong article is an equally correct correction. „Wir brauchen Brot.“ is standard German (Brot as a mass noun), and it is the exact frame the unit models in the Folge (l02) and dictates in its own scored Check (c06). The v2 grader, run on the item, marks it wrong and shows „Wir brauchen ein Brot.“. So a learner who writes correct German, in the sentence shape the unit taught, is told it is false. §9.4 lists „a defensible second answer not accepted“ as MAJOR. The unit's other article corrections are safe only by accident. c07's one-word deletion is ungrammatical („Ich brauche Kilo Äpfel“). ls3-p10 admits „Ich möchte die Tomaten.“ only through a two-word deletion. ls3-r04 carries no errorTag at all. The class is not new. b2.2-u04 r1 F14 and r2 F04, and a2.2-u04 r1 F05 (all MAJOR), found bare „Korrigieren Sie:“ items that reject a correct alternative correction. The rule b2.2-u04 r2 F04 proposed (the German prompt names what to correct) was never written. ITM-01 still checks only that the quoted sentence and intentionalError exist. So the gate let the class into a unit that four rounds had passed, and §9.4 also rates a gate hole that lets a finding class through as MAJOR.",
+      "fix": "Unit, 4 promptDe edits, all ≤ 90 characters; the keys do not change: ls1-p10 „Korrigieren Sie den Artikel: „Wir brauchen eine Brot.““ (54), c07 „Korrigieren Sie den Artikel: „Ich brauche eine Kilo Äpfel.““ (59), ls3-p10 „Korrigieren Sie den Artikel: „Ich möchte ein Kilo die Tomaten.““ (63) and ls3-r04 „Korrigieren Sie den Artikel: „Wir brauchen 500 Gramm der Käse.““ (63). „Artikel“ is metalanguage the unit already uses („(bestimmter Artikel)“, „Welcher Artikel passt?“). The prompt then rules out both the article deletion in ls1-p10 and the quantity deletion in ls3-p10. Do not only widen accepted[] (CLAUDE.md: the rule belongs in the checker or the build, with a test). If the author prefers to accept „Wir brauchen Brot.“, it needs acceptedWhy „grammatisch: Brot ohne Artikel, wie in „Wir brauchen Brot und Käse.““ and the rail below. Rule-smith: write the rail. This is the §9.4 5th-round remedy, and it replaces a 6th content round.",
+      "proposedRule": "ITM-01: an error_correction item whose planted error is an article or a word-order error (errorTag or errorTags[0] in gender-article, case, v2-inv, verb-final, connector-position or satzklammer, or no errorTag at all) names the corrected category in promptDe („den Artikel“, „die Endung“, „die Wortstellung“, „die Verbform“ …), unless every alternative correction is in accepted[] with acceptedWhy. Failing fixture: a1.1-u04 ls1-p10 with the bare „Korrigieren Sie:“; passing: „Korrigieren Sie den Artikel: …“. The test runs over all registered courses (b2.2-u04 r2 F04, a2.2-u04 r1 F05 and this finding are the same class)."
+    },
+    {
+      "id": "F02",
+      "reviewer": "R2",
+      "criterion": "K",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u04",
+      "path": "check.proofItems[1] (a1.1-u04-q02) promptDe, options, explanation; against steps[2].input.lines[6] (a1.1-u04-ls3-l08) and lines[7] (ls3-l09)",
+      "quote": "q02 „Angebote: Reis 1,79 € · Zucker 0,89 € · Wurst 1,49 €. Was kostet der Zucker?“ · explanation „… 1,79 € kostet der Reis, 1,49 € die Wurst.“ · ls3-l08 „Der Reis ist hier. Ein Kilo kostet 1,79 Euro. Der Reis ist heute nicht im Angebot.“ · ls3-l09 „Das ist ein bisschen teuer.“",
+      "problem": "The r4-F04 fix changed q02's heading from „Prospekt:“ to „Angebote:“. That removed an unallocated word but made a contradiction explicit. In LS3 the rice costs exactly 1,79 €, it is „heute nicht im Angebot“, and Arjun finds it „ein bisschen teuer“. The Check's proof item for cd.a1.prospekt-preise now lists the same rice, at the same price, as an Angebot, and its explanation repeats „1,79 € kostet der Reis“. A learner who remembers the scene meets two versions of one fact on the screen that proves the can-do. The key (0,89 €) is not affected, so this is a small coherence break, not an item defect.",
+      "fix": "q02 promptDe „Angebote: Butter 1,59 € · Zucker 0,89 € · Wurst 1,49 €. Was kostet der Zucker?“ (78 characters), options [„1,59 Euro“, „1,49 Euro“, „0,89 Euro“], explanation.de „Dort steht: „Zucker 0,89 €“. 1,59 € kostet die Butter, 1,49 € die Wurst.“ (en to match). Butter at 1,59 € is the offer in the flyer and in the LS3 Durchsage, and Wurst at 1,49 € is t10's offer, so every price on the list is then an offer somewhere in the unit. The key, the form class of the options and the proof mapping stay the same.",
+      "proposedRule": null
+    },
+    {
+      "id": "F03",
+      "reviewer": "R2",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u04",
+      "path": "content/course-v2/a1.1/lexicon.json (no lx.markt, no lx.prospekt in any of the eight lexicons; lx.durchsage unit a1.1-u10); u04: start.folge.lines[2]; steps[1].structuredInput[0].options[2], [1].options[1..2], [1].explanation; steps[1].inputItems[2], [4].explanation; steps[1].pool.items[3].promptDe, [9].promptDe and explanation; steps[1].reserve[2].promptDe; title.canDo; steps[3].blocks[0].instructionsDe; steps[4].task.parts[0].instructionsDe/situationDe, parts[1].instructionsDe/situationDe; steps[5].task.checklist[0]",
+      "quote": "ls2-s02 options „Der Mann am Markt fragt Priya.“ / „Priya fragt den Mann am Markt.“ · ls2-p04 „Der Mann am Markt fragt: „Was ___ Sie?““ · against the step title „Auf dem Markt“, ls2-mo „Sie sind auf dem Markt.“, the LS2 endLine „… auf dem Markt …“ and casts/a1.json ensemble-a1-3 „Verkäufer auf dem Markt“ · Folge l03 „Heute ist Markt.“ (StartView passes glosses: []) · title.canDo „… Durchsagen im Supermarkt verstehen.“ (lx.durchsage a1.1-u10) · sp2 „Wortkarten zu zwei Themen“ (lx.thema a2.2-u01, lx.karte a1.2-u07) · H1 „Sie hören sechs Gespräche zweimal.“ (lx.gespraech a2.1-u01) · checklist „Anrede: Hallo Arjun,“ (lx.anrede b1.1-u03)",
+      "problem": "The unit side of r4-F04 has landed, but the lexicon side has not. No lexicon of the eight levels has lx.markt or lx.prospekt. lx.durchsage is still at a1.1-u10, although u04 teaches it: it is glossed in LS3, stands on 19 learner surfaces, and is the noun of cd.a1.durchsage-geschaeft and of H2. The r4 replacement „der Mann am Markt“ made the gap load-bearing. „Markt“ now stands on 10 LS2 item surfaces (3 options, 3 prompts, 4 explanations) and on 15 learner surfaces in all. It is glossed only on the LS2 input screen, and the learner first meets it unglossed on the start screen. LEX-01 sees none of this, because it measures only inputs, exam texts and the cliffhanger. The same replacement adds a second preposition for one place. The step title, the microOutput, the endLine and the cast registry say „auf dem Markt“, while the ten new surfaces say „am Markt“, with no explanation, to learners who have met neither am nor auf + dative. The SD1 task words on German-only instruction surfaces belong to the same class: Gespräch(e) a2.1-u01, Thema/Themen a2.2-u01, Karte(n) a1.2-u07, Durchsagen on title.canDo, and Anrede (b1.1-u03) in the S2 checklist.",
+      "fix": "Lexicon owner: allocate lx.markt and lx.prospekt (receptive) and move lx.durchsage (receptive) to a1.1-u04. newPerUnit is at its maximum of 32, so swap out low-yield u04 lemmas (for example lx.zwiebel or lx.gramm) or declare the three words glossed extras. Level question for the lexicon owner: are the SD1 task words (Gespräch, Durchsage, Thema, Karte, Aussage, Anrede) allocated to the first unit that practises their Teil, or allowlisted as instruction metalanguage? Unit: write one form, „der Mann auf dem Markt“, on the ten surfaces (ls2-s01 option c; ls2-s02 options b and c and its explanation; the ls2-i03 and ls2-i05 explanations; ls2-p04; ls2-p10 prompt and explanation; ls2-r03). No key changes.",
+      "proposedRule": "r4-F04's LEX-01 surface walk, still unwritten (the r3-F05 class, now in its 3rd round). Walk promptDe, options, explanation.de, instructionsDe, situationDe, leitpunkte, checklist, title.canDo, step titles and endLines at the unit's position. A content word allocated later, or nowhere, must be glossed on that screen or be in an explicit metalanguage allowlist. Failing fixture: the a1.1-u04 ls2-s02 options („Markt“, no lexicon entry). The test runs over all registered courses."
+    },
+    {
+      "id": "F04",
+      "reviewer": "R2",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u04",
+      "path": "content/course-v2/a1.1/rule-cards.json rc.artikel-genus-plural (steps[0].ruleCard, steps[2].ruleCard) and rc.moechte (steps[1].ruleCard)",
+      "quote": "rc.artikel-genus-plural „Unbestimmt heißt es ein (der, das) und eine (die). Im Plural ist der Artikel immer die.“ · table „unbestimmt | ein Apfel | ein Brot | eine Tomate | – Äpfel“ · rc.moechte „Mit einem zweiten Verb steht der Infinitiv am Ende: Ich möchte bezahlen.“",
+      "problem": "This is the 4th round with both cards unchanged (r2-F09, r3-F06, r4-F07). The indefinite rule and its unlabelled table row are true only in the nominative, but every frame of the unit is accusative (brauchen, möchte, kaufen). The unit's own chunk, „Ich möchte einen Apfel“ (rm08, the ls2-l09 gloss, the Sp3 model), contradicts the card the learner reads in the same step, so the card leads to ✗„Ich möchte ein Apfel“. rc.moechte previews the Satzklammer (g.koennen, a1.1-u08) with bezahlen (lx.bezahlen, a1.1-u09), which no line, item or task of u04 practises. No rail catches either problem. GRM-04 reads rule-card prose, but no detector covers möchte + infinitive: det.moechte matches only the token, and det.modal-koennen only kann/können. And nothing ties a card to the chunk its first unit declares (spec.grammar.chunk g.akkusativ). §9.4 says a 5th round triggers a rail fix, and this is the finding that has waited longest for one.",
+      "fix": "Rule-cards owner, as in r4-F07: label the row „unbestimmt (Nominativ)“ and add „Achtung: Ich möchte einen Apfel. (der → einen, Einheit 6)“. Replace „Ich möchte bezahlen.“ with „Ich möchte ein Kilo Tomaten, bitte.“ or move it to depth 2. While there: „Im Plural ist der Artikel immer die“ is true only until the dative (den Kindern). „Im Plural: die Äpfel, die Brote.“ teaches the same without „immer“. Both cards stay within ruleCardMaxWords 60. Nothing changes in u04.",
+      "proposedRule": "GRM-05 and a detector. (1) When the first unit that uses a rule card declares a spec.grammar.chunk, the card (de or table) shows that chunk's label form (g.akkusativ → „einen“). (2) A new det.moechte-infinitiv (a möchte form … an infinitive before the sentence end) is placed on g.koennen's Satzklammer and read on rule-card prose at the card's first use. Failing fixtures: rc.artikel-genus-plural and rc.moechte at a1.1-u04. The test runs over all registered courses."
+    },
+    {
+      "id": "F05",
+      "reviewer": "R1",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u04",
+      "path": "GRM-04 advisories: steps[1].input.lines[7], [8]; steps[3].texts[1].lines[4]; steps[3].strategyCards[0].de, [1].de. Not walked: steps[4].task.parts[0].situationDe, parts[1].instructionsDe",
+      "quote": "det.adjektiv-endung-nullartikel on „möchten“ („Dann möchten wir zwei Kilo Kartoffeln …“) · det.trennbare-verben on „Was macht das zusammen?“ and „Das macht zusammen 7“ · det.imperativ-sie on „Lesen Sie“ „— licensed only as a chunk preview (chunkFrom a1.1-u01)“ (×2) · sp2 situationDe „… Antworten Sie auf die Fragen der Partnerin.“ · sp3 instructionsDe „… Dann antworten Sie auf die Bitte der Partnerin.“",
+      "problem": "The unit part of r4-F08 has landed: „kurze“ is gone. The rule-smith part has not. The same five advisories fire as in r4 (the möchte paradigm read as an adjective ending, „macht … zusammen“ read as a separable verb twice, and a chunk-licensed „Lesen Sie“ still reported), and no fixture was added. Meanwhile, the scope question r4-F08 left open (are instruction surfaces under GRM-04?) now has a real instance class. Both speaking instructions use a feminine genitive, „die Fragen der Partnerin“ and „die Bitte der Partnerin“. The genitive belongs to the late grammar spine (g.genitiv), and here it sits on German-only task surfaces of an A1.1 unit, which no detector reads. The same wording recurs in u05, u07, u08 and u09. u03 had already solved it with „Antworten Sie auf die Frage von Nora.“, and aiRole.name is Nora here too. No production line of the unit goes over the ceiling.",
+      "fix": "Unit: sp2 situationDe „… Antworten Sie auf die Fragen von Nora.“ and sp3 instructionsDe „Bitten Sie mit jeder Karte um etwas. Dann antworten Sie auf die Bitte von Nora.“ (u03's wording). The same one-line edit is due in u05, u07, u08 and u09, from their authors. Rule-smith: add the fixtures of r4-F08, and make one scope decision: read instructionsDe, situationDe, strategyCards and title.canDo with the same detectors, as ADVISORY, or read none of them.",
+      "proposedRule": "GRM-04 fixtures at a1.1-u04. „Dann möchten wir zwei Kilo Kartoffeln.“, „Was macht das zusammen?“ and „Lesen Sie zuerst die Frage.“ produce no advisory. A heuristic det.genitiv-feminin-attribut (noun + „der“ + noun after an article, as in „die Fragen der Partnerin“) placed on g.genitiv reports on instructionsDe and situationDe at a1.1-u04. The test runs over all registered courses."
+    }
+  ],
+  "exitCheck": {
+    "blocker": 0,
+    "major": 1,
+    "minor": 4,
+    "criteriaBelow4": [
+      "A"
+    ],
+    "exit": false,
+    "note": "Exit needs 0 BLOCKER, 0 MAJOR, every criterion ≥ 4 and ≤ 5 logged MINOR. The unit misses on F01 (MAJOR, A = 3). This is the 5th round, so per §9.4 the remedy is a rail, not a 6th round: the ITM-01 correction-naming rule plus the four one-line promptDe edits of F01. With F01 fixed, A returns to 4 and the unit carries 4 minors, which is within the limit. After the unit-side edits of F02, F03 and F05 (q02, „auf dem Markt“ on 10 surfaces, 2 instruction lines), 3 owner-held minors remain: F03's lexicon allocation (lexicon owner), F04 (rule-cards owner and rule-smith) and F05's detectors (rule-smith). Verify with validate.mjs once the ITM-01 rail exists; no content reviewer needs to re-read the unit. Class findings for the rule-smith: F01, F03, F04 and F05."
+  },
+  "notes": [
+    "For the level reviewer: spec.deviation says Lesen Teil 2 is deferred from u04 and practised „laut Stoffplan auch in u08 und u12“. The plan still lists it for u08 (curriculum/a1-1.md), but u08 as authored has no sd1.l2, and the level run reports COV-1 advisory „sd1.l2 appears 1× lane-exact“ at 9/12 units. COV-1 now depends on u06 (not on disk) and u12. Either u06 and u12 carry sd1.l2, or u04's deviation reason is updated.",
+    "For the level reviewer: curriculum/a1-1.json u05 still reads „Einzug in eine WG“. The authored u04 cliffhanger and u05 („Priya und Arjun ziehen aus Arjuns WG in eine eigene Wohnung“) agree with each other and with casts/series.json, so only the plan file is stale. u04 needs no change.",
+    "For the spine and u02 owners: r4-F01 proposed chunkFrom a1.1-u02 for „man“. The spine set a1.1-u08, and u02's own title is still „Wie schreibt man das?“. u04 no longer uses „man“ anywhere.",
+    "For the rule-smith: the ITM-03 header still says the player shows non-exam options in authored order. Since unitPlan.orderedOptions it does not, so the comment (and the rule's advisory-only rationale) should be updated.",
+    "The r4 notes warned that a proposed fix should be checked against the rails before it is recommended. Two of r4's own proposals show why. The q02 heading („Prospekt“ → „Angebote“) created F02, and „der Mann am Markt“ moved the lexicon gap onto 10 item surfaces (F03). Every fix proposed in this review was checked against the lexicon, the level's ≤ 90-character rule and the other scenes of the unit.",
+    "Legal and claims: there is no outcome promise, no human-feedback claim and no exam-mark misuse on any surface. The AI partner is a „Teilnehmerin“ persona, the strategy and speaking cards say honestly that the exam uses pictures, every exam task is original in the SD1 format, and the two legal facts are cited to the current statutes."
+  ]
+}

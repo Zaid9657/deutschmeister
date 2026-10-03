@@ -1,5 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
+import { v2TaskKeyFromSession } from './_shared/speakingAI.mjs';
+import { parseBankKey, levelOfPrefix } from './_shared/rubrics/keys.mjs';
+import { evaluateSpeakingV2 } from './_shared/rubrics/speakingV2.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -159,12 +162,14 @@ export const handler = async (event) => {
       return unauthorizedResponse(headers);
     }
 
-    const { session_token, level: requestedLevel, messages, mode } = JSON.parse(event.body || '{}');
+    const { session_token, level: requestedLevel, messages, mode, courseTaskKey: requestedKey } = JSON.parse(event.body || '{}');
 
     const isPlacement = mode === 'placement';
-    const level = isPlacement ? 'placement' : requestedLevel;
+    // A course v2 evaluation names its bank key; the level follows from it.
+    const v2Requested = !isPlacement && !!parseBankKey(requestedKey);
+    const level = isPlacement ? 'placement' : (requestedLevel || (v2Requested ? levelOfPrefix(parseBankKey(requestedKey).prefix) : null));
 
-    if (!session_token || !level || !Array.isArray(messages) || messages.length === 0) {
+    if (!session_token || !level || (!v2Requested && (!Array.isArray(messages) || messages.length === 0))) {
       return {
         statusCode: 400,
         headers,
@@ -174,7 +179,7 @@ export const handler = async (event) => {
 
     // Bound the input — a real session never exceeds this, but an abusive
     // caller could otherwise feed arbitrarily large prompts to Claude.
-    if (messages.length > 200 || messages.some(m => typeof m?.content !== 'string' || m.content.length > 5000)) {
+    if (Array.isArray(messages) && (messages.length > 200 || messages.some(m => typeof m?.content !== 'string' || m.content.length > 5000))) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'messages payload too large' }) };
     }
 
@@ -230,13 +235,34 @@ export const handler = async (event) => {
     if (!isPlacement && session_token) {
       const { data: sessionRow, error: sessionLookupError } = await supabase
         .from('speaking_sessions')
-        .select('mission_id')
+        .select('mission_id, level, topic, scenario, evaluated')
         .eq('session_token', session_token)
         .eq('user_id', user_id)
         .maybeSingle();
       if (sessionLookupError) {
         console.error('Error looking up speaking session:', JSON.stringify(sessionLookupError));
       }
+
+      // COURSE v2: a session started from a bank key is graded against that
+      // task's rubric profile, with the deterministic rules applied last
+      // (_shared/rubrics/speakingV2.mjs). The key comes from the stored row.
+      const courseTaskKey = v2TaskKeyFromSession(sessionRow);
+      if (courseTaskKey) {
+        return await evaluateSpeakingV2({
+          supabase,
+          userId: user_id,
+          sessionToken: session_token,
+          sessionRow,
+          courseTaskKey,
+          requestedKey,
+          transcript,
+          headers,
+        });
+      }
+      if (v2Requested) {
+        return { statusCode: 409, headers, body: JSON.stringify({ error: 'task_mismatch' }) };
+      }
+
       if (sessionRow?.mission_id) {
         const { data: missionRow, error: missionError } = await supabase
           .from('speaking_missions')

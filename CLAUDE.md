@@ -123,6 +123,16 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   the polite `Ihr/Ihre/Ihren`), where it is `WRONG`. Never "fix" an item by widening its `accepted`
   list alone: the rule belongs in the checker or in `scripts/build-lesson-pool.mjs`, with a test.
 
+- **Course v2 voices are rendered on the server (2026-10-01).** The browser's own speech voice was
+  silent on many phones and in in-app browsers, so every course-v2 speaker button now plays
+  `/.netlify/functions/course-audio?level=&id=`. It looks the id up in
+  `netlify/functions/_shared/course-v2/<level>.speak.json` — the client never sends text — renders it
+  once with OpenAI `gpt-4o-mini-tts`, stores it at `audio/course-v2/<level>/<id>.<hash>.mp3`, and
+  302s there. The browser voice is only the fallback. All recordings play on ONE shared `<audio>`
+  element in `src/lib/lesson/speech.js`, because iOS lets only an element that a tap has started
+  play again. **After any course-v2 compile, re-run `node scripts/course-v2/build-speakables.mjs`**,
+  or `tests/course-v2-audio-server.test.mjs` fails. Levels: `COURSE_AUDIO_LEVELS` on the server,
+  equal to `V2_SERVER_AUDIO_LEVELS` on the client.
 - **Acquisition attribution (which link brought each customer, 2026-09-20).** `public/attribution.js`
   is loaded by BOTH heads (`index.html`, `Layout.astro`) and records `utm_*` / `?ref=<source>` / a
   classified social referrer into localStorage `dm_attribution` `{first,last}` — first touch is never

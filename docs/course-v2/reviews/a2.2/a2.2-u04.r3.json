@@ -1,0 +1,288 @@
+{
+  "review": "a2.2-u04.r3",
+  "unitId": "a2.2-u04",
+  "file": "content/course-v2/a2.2/units/u04.json",
+  "round": 3,
+  "date": "2026-09-27",
+  "reviewers": [
+    {
+      "id": "R1",
+      "role": "Prüferin (lizenzierte Goethe-A2-Prüferin): exam fidelity, rubric application, task clarity"
+    },
+    {
+      "id": "R2",
+      "role": "Kursleiterin DaF/DaZ, Niveau A2.2: naturalness, level, didactics, scene plausibility"
+    }
+  ],
+  "method": "We read every German string in the unit again: start, LS1-LS3 inputs, items, pools, reserves, generators, micro-outputs and Aussprache; the LS4 texts, blocks and strategy cards; the LS5 and LS6 Aufgaben; the check, proofs, redemittel, story, fokus and facts. We also read the shared sources the unit renders: a2.2/rule-cards.json (rc.lokale-praep-weg, rc.werden-vollverb) and the 29 a2.2/lexicon.json entries allocated to a2.2-u04. We solved every item blind from promptDe plus its options, tiles or audio line. We ran the answers that looked doubtful through the live grader, src/lib/course-v2/checkItem.js with src/lib/lesson/check.js, including the dictations that src/components/course-v2/content.js generates from input lines. We checked h1, l4, s1 and sp3 against registries/lanes/ga2.json and ExamBlock against SCHEMA.md. We checked grammar against grammar-spine.json, lexis against level-profiles.json (a2.2: newPerUnit [22, 30], productiveShare 0.5), specs.json and curriculum/a2-2.md E4, can-dos against registries/cando/a2.json, and the cast against casts/series.json and casts/a2.json. Each of the 16 r2 findings was re-verified. Validator: node scripts/course-v2/validate.mjs content/course-v2/a2.2/units/u04.json returns FAIL with 1 LEX-05 blocker (lx.entlang), 30 LEX-02 ratchet entries (29 are the expected 'recurs in 0 later units', since no later unit exists yet) and 7 GRM-04 advisories. Every other rule passes. node scripts/course-v2/check.mjs on the unit returns 0 errors.",
+  "verdict": "Not exitable in round 3. The unit author fixed 13 of the 16 r2 findings, and the fixes are sound. The q05 and q04 proofs now fix the order in the German prompt and accept every grammatical order. ls3-r04 and ls3-p03 are cued in German. Arjun is Priya's husband again. The sp3 model shows a refusal with a reason and a counter-proposal. LS1 micro-output, s02, p02/q01, the 'Beim Notruf' wording, t8, the fact hedge, the pf pairs and t10 are all repaired. The story and cast are now consistent throughout. Two r2 findings are still open in shared files the unit author does not own. First, lexicon.json and specs.json still allocate lx.entlang, so LEX-05 fails (F01). Second, rc.werden-vollverb still teaches that 'er wird' has no d (F03); this is its third round. Two new grading faults came to light when we ran the live grader. The generated LS2 dictation of ls2-l10 keys an ellipsis ('Mir wird schlecht … und ein bisschen kalt.'), so every correct transcription is marked wrong (F02, blocker). The r2 F07 fix gave c07 exact: \"number\", and the number checker now scores the bare input '10' as a correct dictation while turning one-letter slips into WRONG (F04). Counts: 2 blockers, 2 majors, 7 minors (two of the minors are carried schema/detector items). Exam fidelity is otherwise sound: h1, l4, s1 and sp3 match ga2.json, every exam key was solved blind, and no task copies a Modellsatz.",
+  "scores": {
+    "R1": {
+      "D": 3,
+      "N": 4,
+      "H": 4,
+      "A": 3,
+      "P": 4,
+      "K": 4,
+      "E": 4,
+      "total": 26
+    },
+    "R2": {
+      "D": 3,
+      "N": 4,
+      "H": 4,
+      "A": 3,
+      "P": 4,
+      "K": 4,
+      "E": 4,
+      "total": 26
+    },
+    "combined": {
+      "D": 3,
+      "N": 4,
+      "H": 4,
+      "A": 3,
+      "P": 4,
+      "K": 4,
+      "E": 4,
+      "total": 26
+    },
+    "notes": "D stays at 3 because a false rule card (F03) is shown in LS2. A is 3 because of the unsolvable generated dictation (F02) and the c07 gate hole (F04). K rises from 3 to 4 because the Arjun persona contradiction is fixed; the remaining K issue is the lexicon/spec disagreement (F01)."
+  },
+  "total": 26,
+  "counts": {
+    "blocker": 2,
+    "major": 2,
+    "minor": 7
+  },
+  "previousRound": [
+    {
+      "id": "r2-F01",
+      "status": "open (shared files)",
+      "note": "Unit side done: lx.treffpunkt is gone from lexiconBlocks[0], so the unit lists 28 new lemmas, 14 of them productive (0.5). a2.2/lexicon.json still allocates lx.entlang (productive, a2.2-u04, block 1). specs.json a2.2-u04 block 1 still lists it (target 10). lx.fluss.example still reads 'Der Weg geht immer am Fluss entlang.' LEX-05 FAILs. See F01."
+    },
+    {
+      "id": "r2-F02",
+      "status": "open (shared file, third round)",
+      "note": "rc.werden-vollverb de still says 'du wirst und er wird – ohne d am Ende' and en 'er wird (no -d)'. The unit's p01/r01/c03 explanations ('mit d am Ende, aber ohne t') contradict it in the same LS. See F03."
+    },
+    {
+      "id": "r2-F03",
+      "status": "fixed",
+      "note": "q05 promptDe gives the order ('zuerst die Tankstelle, dann der Kiosk') and accepts all four grammatical orders of the tiles, each with acceptedWhy and reviewerConfirmed. q04 promptDe now says 'Sagen Sie zuerst, was passiert ist.', which excludes the swapped order."
+    },
+    {
+      "id": "r2-F04",
+      "status": "fixed",
+      "note": "ls3-r04 promptDe ends in '(an)'. Only 'an der' fits."
+    },
+    {
+      "id": "r2-F05",
+      "status": "fixed",
+      "note": "ls3-p03 promptDe has '(K…)', which excludes Rettungswagen/Rettungsdienst in German. The explanation names both words."
+    },
+    {
+      "id": "r2-F06",
+      "status": "fixed",
+      "note": "'Arjun, der Mann von Priya, kommt zum ersten Mal mit.' This matches casts/series.json."
+    },
+    {
+      "id": "r2-F07",
+      "status": "fixed, with a regression",
+      "note": "c07 accepts the digit variant, and the LS3 dictation generator no longer draws on ls3-l09 (sources are now l04, l12). But the added exact: \"number\" changes how c07 is graded. See F04."
+    },
+    {
+      "id": "r2-F08",
+      "status": "fixed",
+      "note": "'Haltestelle am Marktplatz … fünf Minuten zu Fuß'. The prompt's vorbei/abbiegen are now possible."
+    },
+    {
+      "id": "r2-F09",
+      "status": "fixed",
+      "note": "10 Uhr is refused with a reason (Rania's Schwimmen), followed by 'Und am Nachmittag?', the 17-Uhr limit, the park picnic refused because of Lina, and the counter-proposal of the 15-Uhr boat tour (t7). The turns match both calendars."
+    },
+    {
+      "id": "r2-F10",
+      "status": "fixed",
+      "note": "s02 key: 'auf der anderen Seite'."
+    },
+    {
+      "id": "r2-F11",
+      "status": "fixed",
+      "note": "p02 and q01 carry '(zu)' in German."
+    },
+    {
+      "id": "r2-F12",
+      "status": "fixed",
+      "note": "ls3-p11 explanation, ls3-r03 prompt and the ls7 endLine say 'Beim Notruf'. t8 title and heading are both 'Erste-Hilfe-Kurs an einem Tag'."
+    },
+    {
+      "id": "r2-F13",
+      "status": "open (schema side)",
+      "note": "SCHEMA ExamBlock still has no example field. See F10."
+    },
+    {
+      "id": "r2-F14",
+      "status": "fixed",
+      "note": "claimDe is hedged ('unter anderem'), the exception says 'in der Regel', and the notes record that § 26 ÄV/UV was not re-opened. Nothing is overstated any more."
+    },
+    {
+      "id": "r2-F15",
+      "status": "fixed",
+      "note": "Pfund|Fund, Pfand|fand (same vowel) and Pfanne|Panne (pf/p, same vowel)."
+    },
+    {
+      "id": "r2-F16",
+      "status": "fixed in the unit; detector side open",
+      "note": "t10 now reads 'Die Wege sind oft steil, und es geht über viele Hügel.' with heading 'Die große Wanderung' (definite article, g.adj-dekl-bestimmt from a2.1-u05). The 7 GRM-04 advisories are still false positives. See F11."
+    }
+  ],
+  "passed": [
+    "ga2.h1: 5 texts (radio, Mailbox, Durchsage, radio, Anrufbeantworter), 3 options each, plays 2 and the instruction says zweimal, 53-60 words (band 35-75), modeDefault pruefung. Keys solved blind: über die Brücke am Zoo fahren, einen Kuchen, gegenüber vom Rathaus, Es regnet, an der Brücke gegenüber vom Museum. Every distractor is heard in the text but does not answer the question. Key positions a-c-b-a-b.",
+    "ga2.l4: 5 items, 6 ads a-f, noMatch X, ad bodies 31-36 words (band 25-45). Keys solved blind: a (Samstag, Rad, Picknick), f (Sonntag, Familie, kurze Wege; e excluded by 'ab 18'), b (Boot, 'nicht laufen'), c (Samstag; d is Mittwoch), X (e is one day, no Hütte). The personas fit the cast: Tomasz has a son, Amal works Monday to Friday, Lina cannot walk far yet.",
+    "ga2.s1: SMS, informell/du, 3 Leitpunkte (Weg, Uhrzeit bestätigen, mitbringen), 20-30 words, minSubmitWords 10, rubric ga2-s1, examKey goethe_a2. The route list (Rathaus – Tankstelle – Kiosk – Park – Brücke) makes Leitpunkt 1 feasible and elicits vorbei/bis zur/durch. The modelText has 29 words and covers all three points.",
+    "ga2.sp3: plan-together, prep 0, 180-300 s, rubric ga2-sp3, learner-leads. Learner free 9.30-11 and 14-17.30, Amal free 14-17, so there is one shared daytime window. Persona, calendars, model turns and rm08 agree with each other.",
+    "Originality: every text and item is original, in the official format, and set in the unit's story. No Modellsatz content is copied.",
+    "Story and cast: kiosk → park → bridge (start, LS1), the hike behind the hill (LS2), the 112 call from the bank ten minutes from the bridge (LS3), Lina's SMS, Amal's Mailbox (t2), l4 items 1-4, the LS5 Sunday boat plan and the cliffhanger into a2.2-u05 (Handy/Vertrag) are all consistent. Arjun is Priya's husband, Tomasz has a son, Rania is Amal's school-age daughter, and Lina is new in Leipzig. x.leitstelle (KatjaNeural) shares no voice with anyone in this unit.",
+    "Register: every instruction uses Sie; the friends use du; the dispatcher and Tomasz use Sie; LS1/LS2 micro-outputs are du and the LS3 micro-output is Sie, as their situations require.",
+    "Grammar ceiling: g.lokale-praep-weg and g.werden-vollverb enter at their spine position (a2.2-u04). sollen, dürfen, deshalb, wenn, würde gern, the indirect question, reflexive sich verletzen and adjective endings after an article are all licensed earlier. After the t10 fix we found no productive or receptive look-ahead.",
+    "Items: apart from F02, F04, F05 and F06, every typed, choice and sentence-building item has a key that follows from the German prompt, and accepted[] covers the grammatical alternatives (gegenüber dem, zu der, the q05 orders, 10 in ls3-i03).",
+    "Lexis: 28 new lemmas in the unit spec (band 22-30), 14 productive (0.5). Pools 16 items, 12 served, reserves 4. ITM-06 passes.",
+    "Can-dos: 4 registry can-dos, each with a proof: q05 (weg-erklaeren), the schreiben Aufgabe (wegbeschreibung-schreiben), q04 (unfall-melden) and q03 (notruf-anweisungen-folgen). All four are rehearsed in LS1, LS3, LS6 and the check.",
+    "Legal: no pass promise, no human-feedback claim. The fokus makes no outcome claim, and its fact is sourced, hedged and dated 2026-09-27."
+  ],
+  "findings": [
+    {
+      "id": "F01",
+      "severity": "blocker",
+      "reviewer": "validator",
+      "unitId": "a2.2-u04",
+      "path": "content/course-v2/a2.2/lexicon.json (lx.entlang; lx.fluss.example); content/course-v2/a2.2/specs.json (a2.2-u04 lexiconBlocks[0])",
+      "quote": "FAIL LEX-05 x spec.lexiconBlocks (a2.2-u04): lexicon.json allocates to a2.2-u04 but the spec's blocks omit: lx.entlang · lexicon: {\"id\": \"lx.entlang\", \"role\": \"productive\", \"unit\": \"a2.2-u04\", \"block\": 1, \"example\": \"Gehen Sie immer den Fluss entlang.\"} · lx.fluss.example: \"Der Weg geht immer am Fluss entlang.\"",
+      "problem": "This is r1 F08 → r2 F01, now in its third round. The unit side is done. The unit correctly left entlang out: curriculum/a2-2.md E4 says entlang is not taught here, and grammar-spine.json licenses g.praep-entlang-herum only from b1.2-u09. It also removed the A1.2 lemma lx.treffpunkt. But the two shared files were never changed. a2.2/lexicon.json still allocates lx.entlang as productive to a2.2-u04, specs.json still lists it in block 1 (target 10), and the lx.fluss flashcard example still teaches entlang at this level. validate.mjs therefore FAILs the unit, and the unit author cannot fix it under the sole-writer rule.",
+      "fix": "Lexicon/spec owner: in a2.2/lexicon.json, remove lx.entlang (re-allocate it to b1.2 at b1.2-u09, or delete it). Set lx.fluss.example to \"Am Fluss machen wir ein Picknick.\" In specs.json, remove lx.entlang from a2.2-u04 lexiconBlocks[0] and set target 9. The unit then has 28 new lemmas, 14 productive (0.5), and LEX-05 passes with no unit edit.",
+      "scope": "class",
+      "proposedRule": "As in r2: LEX-07 flags a lexicon example that uses a spine point licensed after the entry's unit (fixture: lx.fluss example with entlang at a2.2-u04). The LEX-05 message should name the file whose owner must act (lexicon.json vs the unit spec), so a shared-file fix is routed to that owner instead of coming back to the unit author for a fourth round."
+    },
+    {
+      "id": "F02",
+      "severity": "blocker",
+      "reviewer": "R2",
+      "unitId": "a2.2-u04",
+      "path": "steps[1].pool.generators[0] (dictation.fromInput, source a2.2-u04-ls2-l10); src/components/course-v2/content.js dictationItems; src/lib/lesson/check.js stripPunct",
+      "quote": "source line ls2-l10: „Mir wird schlecht … und ein bisschen kalt.\" → generated item answer = accepted[0] = line.de",
+      "problem": "dictationItems() uses the line's `de` verbatim as the only accepted form. The checker's stripPunct folds . , ! ? ; : and quotes, but not the ellipsis character U+2026. We ran the item through src/lib/course-v2/checkItem.js. 'Mir wird schlecht und ein bisschen kalt.' is WRONG, and 'Mir wird schlecht... und ein bisschen kalt.' is also WRONG. Only an input containing the literal '…' character passes. The ellipsis is a pause in the audio, not a word, so no learner can hear it or reasonably type it. This graded typed pool item therefore rejects every correct transcription. That is a wrong key, a BLOCKER under §9.4. start-l02, ls1-l06 and ls2-l06 also contain '…'. They are not dictation sources today, but they would fail the same way if they became one.",
+      "fix": "Unit: replace a2.2-u04-ls2-l10 in the LS2 dictation generator with a line that has no ellipsis and still practises werden, e.g. a2.2-u04-ls2-l04 („Gern! Ich werde schon müde, und die Wiese ist nicht weit.\"). Alternatively, rewrite l10 as „Mir wird schlecht und ein bisschen kalt.\" (the audio can keep the pause through `say`). Checker owner: fold '…' and '...' to a space in normalizeDictation, as dashes already are.",
+      "scope": "class",
+      "proposedRule": "New ITM rule (or an ITM-10 extension): every dictation answer, and every line named in a dictation.fromInput source, may contain only letters, digits, spaces and the punctuation stripPunct/normalizeDictation fold. '…', '(', ')', '/' and similar fail. Fixture: a2.2-u04-ls2-l10. A checker test: 'Mir wird schlecht und ein bisschen kalt.' must be CORRECT against the l10 key."
+    },
+    {
+      "id": "F03",
+      "severity": "major",
+      "reviewer": "R1",
+      "unitId": "a2.2-u04",
+      "path": "steps[1].ruleCard → content/course-v2/a2.2/rule-cards.json rc.werden-vollverb (de, en)",
+      "quote": "de: „Achtung: du wirst und er wird – ohne d am Ende.\" · en: \"du wirst, er wird (no -d)\" · unit ls2-p01/r01, c03: „es wird – mit d am Ende, aber ohne t.\"",
+      "problem": "This is r1 F02 → r2 F02, now in its third round, and the card is unchanged. It teaches that 'er wird' has no d, which is false: the card's own table prints 'wird'. LS2 shows the card and then three items whose explanations say the opposite, so the learner meets two contradictory rules for the same form in one Lernschritt. A false simplification on a rule card is a §9.5 error and scores D at 1-3. GRM-05 passes the card, so no gate catches it.",
+      "fix": "Rule-card owner: de „Achtung: du wirst – ohne d; er/sie/es wird – mit d, aber ohne t.\" en \"Note: du wirst (no d); er/sie/es wird (with d, no t).\" If this is still open in round 4, route it to the rule-smith as a rail fix (§9.4: a 5th round triggers a rail fix, not more rounds).",
+      "scope": "class",
+      "proposedRule": "GRM-05 extension (proposed in r1 and r2, not yet built): a rule card or item explanation that pairs a token ending in d (wird) with 'ohne d' / 'no -d' fails. Fixtures: the current rc.werden-vollverb de and en."
+    },
+    {
+      "id": "F04",
+      "severity": "major",
+      "reviewer": "R1",
+      "unitId": "a2.2-u04",
+      "path": "check.items[6] (a2.2-u04-c07).exact; src/lib/course-v2/checkItem.js checkNumber; scripts/course-v2/rules/ITM-07.mjs",
+      "quote": "c07: \"exact\": \"number\", accepted [„… zehn Minuten …\", „… 10 Minuten …\"] · checkNumber: „digits are the task; the words around them may be left out, never wrong\"",
+      "problem": "The r2 F07 fix added the digit variant, and ITM-07 then required exact: \"number\". In checkItem, exact: 'number' sends the dictation through checkNumber, which scores only the digits. We ran the live grader on c07. Input '10' alone is CORRECT, so the whole dictated sentence can be skipped in a check item that counts toward test-out. Conversely, the worded version with one slip ('…hinter dem Hugel…' or '…von der Brucke.') is WRONG, while the same input without exact is a TYPO with one retry. The item now accepts a non-answer and punishes the most common dictation slip harder than every other dictation in the course. a1.2-u04-c08 is also a dictation with exact: \"number\", so this is a class.",
+      "fix": "Unit: make c07 a dictation without a number. Change check.lines a2.2-u04-ls7-l03 (the c07 audio) to „Wir sind am Ufer hinter dem Hügel, nicht weit von der Brücke.\", or dictate only „Wir sind am Ufer hinter dem Hügel.\". Then remove exact, the digit variant, acceptedWhy and reviewerConfirmed from c07. rm03 and the LS3 modelSentence can keep 'zehn Minuten'. Checker/rule owner: see proposedRule.",
+      "scope": "class",
+      "proposedRule": "checkItem: for type 'dictation', `exact` must still compare the whole sentence. Words keep the dictation typo rule, digits must match, and a number word counts as its digit; the '!userWords → CORRECT' shortcut must never apply to a dictation. ITM-07: a dictation that contains a number word or digit needs this whole-sentence mode, not the digits-only mode. Fixtures: c07 with input '10' must be WRONG, and c07 with 'Hugel' must be TYPO. Re-run a1.2-u04-c08."
+    },
+    {
+      "id": "F05",
+      "severity": "minor",
+      "reviewer": "R1",
+      "unitId": "a2.2-u04",
+      "path": "steps[2].reserve[0] (a2.2-u04-ls3-r01)",
+      "quote": "promptDe „Wir ___ zu spät an der Brücke angekommen. (sein)\" · promptEn \"Auxiliary for ankommen.\" · explanation „ankommen ist eine Bewegung: Perfekt mit sein\"",
+      "problem": "The cue '(sein)' names the auxiliary, so the item does not test what its promptEn and explanation say it tests (haben or sein?). The learner only conjugates sein. The cue also leaves 'waren' open ('Wir waren zu spät … angekommen' is grammatical Plusquamperfekt), and learners who know the Präteritum 'waren' may write it. The item is in the plateau, mehr-ueben, repair and einstufung banks.",
+      "fix": "promptDe „Wir ___ zu spät an der Brücke angekommen. (Perfekt: haben oder sein?)\"; answer and accepted stay 'sind'.",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F06",
+      "severity": "minor",
+      "reviewer": "R2",
+      "unitId": "a2.2-u04",
+      "path": "steps[2].pool.items[1] (a2.2-u04-ls3-p02)",
+      "quote": "promptDe „Lina hat ___ am Fuß verletzt.\" · promptEn \"Reflexive pronoun for sie (Lina).\" · accepted [\"sich\"]",
+      "problem": "Solved blind, the German frame takes any accusative object: 'Lina hat ihn/mich am Fuß verletzt' is grammatical. Only promptEn and the story context point to the reflexive. The story makes 'sich' the only sensible reading, so this is minor, but the item should not depend on English.",
+      "fix": "promptDe „Lina ist ausgerutscht. Sie hat ___ am Fuß verletzt. (sich verletzen)\".",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F07",
+      "severity": "minor",
+      "reviewer": "R2",
+      "unitId": "a2.2-u04",
+      "path": "steps[0].ruleCard / steps[2].ruleCard → content/course-v2/a2.2/rule-cards.json rc.lokale-praep-weg (de)",
+      "quote": "„Fragen Sie nach der Richtung: Woher? – aus dem Park, vom See. Wo? – im Park, am See. Wohin? – in den Park, an den See.\"",
+      "problem": "'Wo?' asks for a place, not a direction, and 'Fragen Sie nach der Richtung' is an odd instruction on a rule card. The unit's own items insist on exactly this distinction (s04, c05: „am Kiosk + sein ist ein Ort\"). The card is shown twice (LS1, LS3).",
+      "fix": "Rule-card owner: „Achten Sie auf die Frage: Woher? – aus dem Park, vom See. Wo? (Ort) – im Park, am See. Wohin? (Richtung) – in den Park, an den See.\"",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F08",
+      "severity": "minor",
+      "reviewer": "R2",
+      "unitId": "a2.2-u04",
+      "path": "steps[3].texts[2] (t3) + blocks[0].items[2].options[0]; steps[3].texts[6] (t7); story.beat",
+      "quote": "t3 „denn auf der Brücke am Fluss ist eine Baustelle\" · h1-03 option „an der Brücke am Fluss\" · t7 „Das Boot fährt unter vielen Brücken hindurch.\" · beat „Tomasz ruft den Notruf\"",
+      "problem": "These are small wording issues. (1) A bridge spans a river, so 'die Brücke am Fluss' is unidiomatic ('die Brücke über den Fluss'). In a unit whose river bridge is 'nur für Fußgänger', it also reads as if the tram crosses that bridge. (2) 'hindurch' is B1+ and unglossed in an A2 ad; 'durch' is enough. (3) 'den Notruf rufen' is not standard; say 'den Notruf anrufen' or 'die 112 wählen'.",
+      "fix": "t3: „denn auf der Brücke über den Fluss ist eine Baustelle\", and h1-03 option „an der Brücke über den Fluss\" (both distractor and text change together). t7: „Das Boot fährt unter vielen Brücken durch.\" story.beat: „… Tomasz ruft die 112 an, Amal hilft Lina.\"",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F09",
+      "severity": "minor",
+      "reviewer": "R2",
+      "unitId": "a2.2-u04",
+      "path": "content/course-v2/a2.2/lexicon.json (lx.vorbei.role; lx.erste-hilfe.example)",
+      "quote": "lx.vorbei: \"role\": \"receptive\" · lx.erste-hilfe.example: „Emre kennt sich mit Erster Hilfe aus.\"",
+      "problem": "(1) vorbei is the target of the unit's new grammar point (an … vorbei). It is the typed key of ls1-p01 and check c01, a tile in the q05 can-do proof, and a cue in the LS6 Leitpunkt, yet the lexicon files it as receptive, so the SRS deck will only ask for recognition. (2) The Erste-Hilfe flashcard contradicts the story, where Amal has done the course (ls2-l09), and it uses 'sich auskennen mit', which is B1.",
+      "fix": "Lexicon owner: set lx.vorbei role to productive. That makes 15 of 28 productive (0.54, inside 0.5 ± 5 points), and specs.json does not change. lx.erste-hilfe.example: „Bei einem Unfall ist Erste Hilfe wichtig.\"",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F10",
+      "severity": "minor",
+      "reviewer": "R1",
+      "unitId": "a2.2-u04",
+      "path": "steps[3].blocks[1] (ga2.l4); docs/course-v2/SCHEMA.md ExamBlock",
+      "quote": "ga2.json l4 source: „die Anzeige aus dem Beispiel ist verbraucht\" · block: 6 Anzeigen, 5 Items, kein Beispiel",
+      "problem": "This is carried over from r1 F10 and r2 F13. In the official format the Beispiel uses up one ad, so one ad stays unused. Here two ads (d, e) are unused, which makes the X item slightly easier. SCHEMA's ExamBlock still has no example field, so the unit cannot fix this alone.",
+      "fix": "Schema/template owner: add ExamBlock.example ({promptDe, answer, textRef}) and check it in EXM-01. The unit then adds „0 Familie Weber sucht einen Erste-Hilfe-Kurs für Eltern mit Babys.\" → d (Lina's host family, casts/series.json).",
+      "scope": "class",
+      "proposedRule": "EXM-01: when a Teil template's source says the example uses up an option, the block must carry block.example and the unused-option count must be options − items − 1 + (noMatch ? 1 : 0)."
+    },
+    {
+      "id": "F11",
+      "severity": "minor",
+      "reviewer": "validator",
+      "unitId": "a2.2-u04",
+      "path": "GRM-04 (7 advisories): steps[2].input.lines[4], steps[2].input.text, steps[3].texts[3], steps[3].texts[6], steps[0].reserve[1].accepted[1], check.proofItems[1].answer, redemittel[3].de",
+      "quote": "det.zustandspassiv „sind … verletzt\", „ist … gebrochen\", q02/rm04 „ist … verletzt\"; det.adjektiv-endung-nullartikel „eine\" (t4), „unser\" (t7); det.konjunktiv1 „Park gehe\"",
+      "problem": "This is carried over from r2 F16 on the detector side. All 7 advisories are still false positives. verletzt/gebrochen + sein is adjectival at A2. The q02/rm04 match runs across two clauses ('ist ausgerutscht und hat sich … verletzt'). 'eine Jacke' and 'unser Boot' have no adjective, and 'gehe' is 1st-person indicative. The unit's one real look-ahead (t10) is fixed, so no unit change is needed, but the noise hides real hits.",
+      "fix": "Detector owner: tune the detectors as below. No unit change.",
+      "scope": "class",
+      "proposedRule": "As in r2: det.adjektiv-endung-nullartikel requires an attributive adjective + noun with no determiner (positive fixture 'über Hügel und steile Wege'; negatives 'lieber eine Jacke', 'auf unser Boot'). det.zustandspassiv must not match across a clause boundary or a coordinating und, and treats verletzt/gebrochen/kaputt + sein as adjectival. det.konjunktiv1 exempts the 1st person singular."
+    }
+  ]
+}

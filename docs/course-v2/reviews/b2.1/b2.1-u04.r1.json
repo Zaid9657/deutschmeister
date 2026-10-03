@@ -1,0 +1,286 @@
+{
+  "review": "b2.1-u04.r1",
+  "unitId": "b2.1-u04",
+  "file": "content/course-v2/b2.1/units/u04.json",
+  "round": 1,
+  "date": "2026-09-27",
+  "reviewers": [
+    {
+      "id": "R1",
+      "role": "Prüferin (lizenzierte telc-B2-Prüferin): exam fidelity, rubric application, task clarity"
+    },
+    {
+      "id": "R2",
+      "role": "Kursleiterin DaF/DaZ, Niveau B2.1: naturalness, level, didactics, scene plausibility"
+    }
+  ],
+  "method": "Every German string was read: start (Folge, gist item), LS1 Reisebedingungen and all items, LS2 dialogue (14 lines, say overrides) and items, micro-outputs and Aussprache, LS3 rule table, pool, reserve and cloze, LS4 texts t1-t5, both blocks and the strategy cards, LS5 speaking task incl. persona, hint words and model turns, LS6 writing task incl. ad, Leitpunkte, checklist and model text, the endLines, check items, proofs, Rückschau, Porträt, Redemittel, story and facts. All 91 authored items were solved blind from promptDe plus options, tiles or audio line and compared with answer and accepted[]; every sentence-building item was permuted by hand. Exam blocks and tasks were checked against content/course-v2/registries/lanes/tb2.json (sb1, hv3, m3, sa); the grammar ceiling against grammar-spine.json (g.konj2-vergangenheit, g.konj2-bedeutungen, g.praep-genitiv-formell as chunk), b2.1/rule-cards.json and docs/course-v2/curriculum/b2-1.md §8; the new-word load against level-profiles.json (b2.1: 60-70 per unit, productive share 0.375, sentence max 28 words); the can-dos against registries/cando/b2.json; the cast against casts/b2.json and casts/series.json; the plan against b2-1.md E4 and b2.1/specs.json; option rendering against src/components/course-v2/ItemView.jsx and ItemInputs.jsx; the proof rule against scripts/course-v2/rules/ALL-02.mjs and ITM-09 against quality.js missingFrontedOrder. Facts were checked against the cited §§ 651j/k/l/m/o BGB and vzbv from knowledge (no network in this session). Validator: node scripts/course-v2/validate.mjs content/course-v2/b2.1/units/u04.json returned OK (39 rules: 34 pass, 0 fail, 1 warn, 4 skipped at unit scope; 0 blocker, LEX-02 67 ratchet). node scripts/course-v2/check.mjs returned 0 errors.",
+  "verdict": "Not exitable in round 1: 1 BLOCKER, 4 MAJOR, 13 MINOR. The unit is strong in substance: every one of the 91 keys is correct when solved blind, the Sprachbausteine and the reduced HV3 are template-exact and original, the Konjunktiv-II-Vergangenheit strand is well sequenced (rule table, drills, reproach in dass-clauses, production in LS5/LS6), the facts are correct and the scene is lively. What blocks exit is the class already raised for b2.2-u04: outside the exam blocks all 25 choice items, including the Lektions-Check item and all three can-do proofs, are keyed at options[0] and the player does not shuffle (F01). Two proofs do not measure their can-dos (F02, F03), one sentence-building item rejects a natural order (F04), and the HV3 guide message contradicts the LS2 call about the same excursion (F05).",
+  "scores": {
+    "R1": {
+      "D": 4,
+      "N": 4,
+      "H": 4,
+      "A": 2,
+      "P": 4,
+      "K": 3,
+      "E": 4,
+      "total": 25
+    },
+    "R2": {
+      "D": 4,
+      "N": 4,
+      "H": 4,
+      "A": 2,
+      "P": 4,
+      "K": 3,
+      "E": 4,
+      "total": 25
+    },
+    "combined": {
+      "D": 4,
+      "N": 4,
+      "H": 4,
+      "A": 2,
+      "P": 4,
+      "K": 3,
+      "E": 4,
+      "total": 25
+    }
+  },
+  "counts": {
+    "blocker": 1,
+    "major": 4,
+    "minor": 13
+  },
+  "findings": [
+    {
+      "id": "F01",
+      "severity": "blocker",
+      "reviewer": "R2",
+      "unitId": "b2.1-u04",
+      "path": "start.folge.gistItem; steps[0].inputItems[0,1,2,4], pool.items[10,11], reserve[3]; steps[1].inputItems[0,1,3], pool.items[10,11], reserve[3]; steps[2].pool.items[10,11], reserve[3], cloze[0-3]; check.items[5]; check.proofItems[0-2]",
+      "quote": "Outside the exam blocks, 25 of 25 choice items (multiple_choice, and cloze with options) have answer === options[0]. Inside the exam blocks the keys are balanced (SB1 a/b/c = 4/3/3, HV3 R F F R).",
+      "problem": "The v2 player renders item.options in authored order (src/components/course-v2/ItemView.jsx: choiceSet maps item.options 1:1; seededOrder in ItemInputs.jsx is used only for match columns; unitPlan.js shuffles items, not options). The first button is therefore always right. A learner notices this within the Start and LS1, which voids every choice item of the unit, including the Lektions-Check item c06 and all three can-do proofs q01-q03: the „Das kann ich“ ticks can be earned by tapping the top option. ITM-03 checks a/b/c balance only inside exam blocks, so the validator passes. This is the class of b2.2-u04.r1 F02, which had already measured b2.1-u04 at 29/3/3. It recurs in at least three u04 files, so the stop-the-line rule of BLUEPRINT §9.4 applies.",
+      "fix": "Preferred, once for all courses: shuffle non-exam choice options deterministically by item id in ItemView (seededOrder already exists), pin it with a test, and keep authored order only in exam blocks with letter labels. Otherwise re-order this unit's options so that the 25 keys spread about 8/8/9 over positions 1-3, with no run longer than 3 within a step. The keys themselves stay unchanged.",
+      "scope": "class",
+      "proposedRule": "New ITM rule (or an extension of ITM-03) over all registered units: per step and per check, the key index of non-exam multiple_choice/cloze items with options is balanced within ±1 across positions and has no run > 3, unless the player contract declares an option shuffle that a test in tests/course-v2/ pins. Fixture: a step with five MC items all keyed at options[0] fails."
+    },
+    {
+      "id": "F02",
+      "severity": "major",
+      "reviewer": "R1",
+      "unitId": "b2.1-u04",
+      "path": "check.proofs[0]; check.proofItems[2] (b2.1-u04-q03)",
+      "quote": "q03 „Welche Antwort zeigt am Telefon klar, dass Sie ein Entgegenkommen erwarten?“ – „Ein Gutschein reicht nicht. Ich erwarte eine Minderung des Reisepreises.“ / „Na gut, dann nehme ich eben den Gutschein.“ / „Das ist nicht so schlimm, danke trotzdem.“",
+      "problem": "cd.b2.zugestaendnisse-einfordern has registry mode interaction-spoken: einem Anbieter genau erklären, was schiefgelaufen ist, und deutlich machen, dass man ein Entgegenkommen erwartet. Its only proof is a receptive MC item. Two of its three options are capitulations, so the learner only has to spot the one line that does not give in. The item measures neither explaining a problem nor making a demand. SCHEMA's Check block also says proof items serve receptive can-dos. The unit does rehearse the can-do: the LS2 spoken micro-output b21-u04-mo2 is exactly this call to the operator, and ls2-l13 models it. That performance is not the proof, however, and LS5 (planning with Amal) does not perform it either. ALL-02 accepts an item proof for any can-do as long as one productive can-do is proven by an Aufgabe, so this is a gate hole.",
+      "fix": "Prove the can-do by performance. Allow proofs[].microOutput: <mo id> in SCHEMA and ALL-02, and point this proof at b2.1-u04-ls2-mo (spoken, course-micro-sp). If the schema cannot change this round, replace q03 with a pragmatic discrimination in which all three options make a demand. Key: „Ein Gutschein über 50 Euro reicht mir nicht. Wegen des Baulärms erwarte ich eine Minderung des Reisepreises.“ Distractors: „Vielleicht könnten Sie irgendwann noch etwas für uns tun.“ (vague) and „Wenn Sie nicht sofort zahlen, sehen wir uns vor Gericht!“ (aggressive, no reason). Spread the key position as in F01.",
+      "scope": "class",
+      "proposedRule": "ALL-02 extension: a can-do whose registry mode is productive-* or interaction-* must be proven by an Aufgabe (sprechen/schreiben) or by a micro-output of the matching mode, never by a proof item alone. Fixture: b2.1-u04 check.proofs[0] (interaction-spoken → item) fails."
+    },
+    {
+      "id": "F03",
+      "severity": "major",
+      "reviewer": "R1",
+      "unitId": "b2.1-u04",
+      "path": "check.proofItems[0] (b2.1-u04-q01); check.proofs[2]",
+      "quote": "„Regel: „Mängel sofort der Reiseleitung melden.“ Was tun Sie bei Baulärm zuerst?“ – key „Ich melde den Lärm sofort der Reiseleitung.“",
+      "problem": "cd.b2.reisebedingungen-verstehen means finding and understanding, in travel or business terms, the sections that apply to one's own case. The proof quotes the rule in the prompt, and the key repeats it word for word (sofort … der Reiseleitung melden), so the item is solved by string matching. It proves neither finding the section nor applying it. The quoted rule is also the key of i02 (heading of Abschnitt 3), so the proof repeats an input item.",
+      "fix": "Prove the can-do on a case the learner must map to a section, without quoting the rule. For example: „Ein Ausflug aus Ihrem Programm fällt aus. Einen gleichwertigen Ersatz gibt es nicht. Was steht Ihnen nach den Blauwelle-Bedingungen zu?“ Options: (a) der Preis des Ausflugs, per Abschnitt 2 („erstatten wir Ihnen ersatzweise den Preis“); (b) nur ein Gutschein aus Kulanz; (c) die Kündigung des ganzen Reisevertrags. Alternatively, use an unseen two-clause excerpt of another operator's terms plus a case. q01 can stay as a practice item.",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F04",
+      "severity": "major",
+      "reviewer": "R2",
+      "unitId": "b2.1-u04",
+      "path": "steps[0].pool.items[7].accepted (b2.1-u04-ls1-p08)",
+      "quote": "Tiles „die Unterbringung / war / leider / mangelhaft“; accepted: „Die Unterbringung war leider mangelhaft.“, „Leider war die Unterbringung mangelhaft.“, „Mangelhaft war die Unterbringung leider.“",
+      "problem": "„Mangelhaft war leider die Unterbringung.“ is grammatical: the sentence adverb stands before the full-NP subject in the Mittelfeld. It is at least as natural as the accepted „Mangelhaft war die Unterbringung leider.“, yet a learner who builds it is marked wrong. ITM-09 did not catch it because quality.js missingFrontedOrder only enumerates Vorfeld variants. It never permutes a sentence adverb (leider, andernfalls, trotzdem, vorsorglich …) against a full-NP subject inside the Mittelfeld.",
+      "fix": "Add „Mangelhaft war leider die Unterbringung.“ to accepted, with acceptedWhy „grammatisch: mangelhaft im Vorfeld betont; leider vor dem Subjekt im Mittelfeld“.",
+      "scope": "class",
+      "proposedRule": "ITM-09 extension: when one tile is a sentence adverb from a closed list and the subject is a full-NP tile, every accepted V2 order must come with its Mittelfeld permutation (adverb before subject and subject before adverb). Fixture: b2.1-u04-ls1-p08 without the added order fails."
+    },
+    {
+      "id": "F05",
+      "severity": "major",
+      "reviewer": "R2",
+      "unitId": "b2.1-u04",
+      "path": "steps[3].texts[1] (b2.1-u04-ls4-t2) vs steps[1].input.lines[8] (ls2-l09) and lines[10] (ls2-l11); steps[3].blocks[1].items[0] (hv3-01)",
+      "quote": "t2, spoken by the Reiseleitung von Blauwelle Reisen „für alle Gäste hier im Hotel“: „Der Ausflug in die Berge morgen findet statt … Ersatzweise können Sie am Freitag an einer Bootsfahrt teilnehmen.“ – LS2 l11, Priya to Blauwelle: „… und heute ist der Ausflug in die Berge ohne Ersatzleistung ausgefallen.“ – l09: „Ihre Reiseleitung ist seit gestern weder am Telefon noch im Hotel erreichbar.“",
+      "problem": "Both texts concern the same operator, the same hotel and the same excursion. In LS4 the Reiseleitung confirms the mountain trip and offers a boat trip as an Ersatz. In LS2 the trip was cancelled without any Ersatzleistung, and the Reiseleitung has been unreachable since the arrival day. A learner who meets both in one unit hears a contradiction, and it undercuts Priya's complaint because an Ersatz did exist. In addition, the Reiseleitung is voiced by cast.ensemble-b2-1, the same voice as the Blauwelle phone agent in LS2 (l08-l14), so one voice is both the guide on Crete and the call centre in Germany.",
+      "fix": "Detach t2 from the complaint thread. Make it a different excursion, e.g. „Die Stadtführung in Chania morgen findet statt, aber der Bus fährt schon um 7.30 Uhr am Hotel ab …“. Keep the times, so hv3-01 („Der Bus zum Ausflug fährt morgen eine Stunde früher ab als geplant.“) stays richtig. The Ersatz can then remain as an alternative („Wer nicht mitkommen möchte, kann ersatzweise am Freitag an einer Bootsfahrt teilnehmen.“) without touching the cancelled mountain trip. If the spec cast can take another ensemble voice, voice the guide with it.",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F06",
+      "severity": "minor",
+      "reviewer": "R1",
+      "unitId": "b2.1-u04",
+      "path": "steps[2].cloze[0] (b2.1-u04-ls3-p13)",
+      "quote": "„Bitte antworten Sie uns ___ 30. November.“ – bis zum / seit dem / ab dem; promptEn „Choose the deadline phrase.“",
+      "problem": "The deadline constraint appears only in promptEn. From the German stem alone, „ab dem 30. November“ is grammatical and meaningful („please reply from 30 November on“), only pragmatically less likely.",
+      "fix": "Put the Frist into promptDe: „Wir setzen Ihnen eine Frist: Bitte antworten Sie uns ___ 30. November.“ This also recycles lx.fristsetzung.",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F07",
+      "severity": "minor",
+      "reviewer": "R1",
+      "unitId": "b2.1-u04",
+      "path": "check.proofItems[1] (b2.1-u04-q02); check.proofs[4]",
+      "quote": "„Aus einer E-Mail: „…, dass Sie uns früher ___ informieren müssen.“ Welches Wort passt?“ – hätten / wären / würden",
+      "problem": "Without a past anchor, „…, dass Sie uns früher würden informieren müssen“ is grammatical (würde before the double infinitive is the standard order) and has a hypothetical reading. The reproach reading in the explanation needs context that the stem does not give. The sentence is also the same one as sb1-05 and ls3-p05, which the learner has just done, so the proof tests recall of a seen sentence. The can-do (cd.b2.brief-grammatik-kontext) is about choosing correctly even when two options look possible.",
+      "fix": "Use an unseen sentence with a past anchor, e.g. „Aus einer Beschwerde: „Wir finden, dass Sie uns schon bei der Buchung vor der Baustelle ___ warnen sollen.““ with the options hätten / wären / würden.",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F08",
+      "severity": "minor",
+      "reviewer": "R1",
+      "unitId": "b2.1-u04",
+      "path": "steps[3].texts[3].title (b2.1-u04-ls4-t4); steps[3].blocks[1].items[2] (hv3-03)",
+      "quote": "Intro „Sie sind wieder zu Hause und hören eine Nachricht auf Ihrer Mailbox.“ – message „Guten Tag, Frau Nair, …“ – statement „Blauwelle Reisen hat schon entschieden, ob Frau Nair eine Minderung bekommt.“",
+      "problem": "The intro puts the learner in the role of the mailbox owner, but the message is addressed to Frau Nair and the statement names her in the third person. In a text that is heard only once, this mismatch costs the learner a moment of re-orientation. telc HV3 intros are neutral.",
+      "fix": "Change the intro to „Sie hören eine Nachricht auf der Mailbox von Priya Nair.“, or keep the intro and drop the name from the message.",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F09",
+      "severity": "minor",
+      "reviewer": "R2",
+      "unitId": "b2.1-u04",
+      "path": "steps[1].ruleCard, steps[1].modelSentence; steps[1].pool.items[0,7] (ls2-p01, ls2-p08); steps[1].reserve[0,4] (ls2-r01, ls2-r05); check.rueckschau",
+      "quote": "modelSentence „Könnten Sie uns bitte ein anderes Zimmer geben?“ with ruleCard rc.konj2-irreal-gegenwart; p01 „___ Sie uns bitte ein anderes Zimmer geben? (können, höflich)“, p08 „Bilden Sie die höfliche Frage.“, r01 „Ich ___ Sie bitten … (werden, höflich)“, r05 „Könnten Sie uns bitte ein anderes Zimmer gegeben?“ – all four have topic g.konj2-irreal-gegenwart.",
+      "problem": "The LS2 rule card covers unreal conditions (Wenn ich mehr Zeit hätte, würde ich …). The model sentence and the four items are polite requests and demands, which belong to g.konj2-bedeutungen (new in this unit) or the known g.konj2-hoeflichkeit. Topics drive the repair cards (repair:<errorTag>:<ruleCardId>) and the Rückschau, so a learner who gets „Könnten“ wrong is repaired with the unreal-condition card. rc.konj2-bedeutungen, the card of one of the two new points, is attached to no Lernschritt and first appears in the Rückschau; its content is only partly covered by the LS3 rule table.",
+      "fix": "Set the LS2 ruleCard to rc.konj2-bedeutungen, or to rc.konj2-hoeflichkeit if the B-skeleton LS2 must stay on known points. Retag p01, p08, r01 and r05 to g.konj2-bedeutungen. Keep p02 (wenn … wäre) and p09 on g.konj2-irreal-gegenwart.",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F10",
+      "severity": "minor",
+      "reviewer": "R2",
+      "unitId": "b2.1-u04",
+      "path": "steps[5].task.modelText",
+      "quote": "„Ihre Reiseleitung war zwei Tage lang nicht erreichbar, obwohl wir die Mängel sofort gemeldet haben. Sie hätte uns spätestens am Dienstag ein anderes Zimmer anbieten müssen.“",
+      "problem": "The concession is strained: reporting a defect does not lead anyone to expect that the guide will be reachable. It is also the model's only obwohl, and the checklist names obwohl as a connector to imitate. In a letter that addresses the reader as Sie, a sentence-initial „Sie hätte …“ first reads as the polite Sie until the singular verb corrects it.",
+      "fix": "„Obwohl wir die Mängel sofort gemeldet haben, hat sich zwei Tage lang niemand um uns gekümmert: Ihre Reiseleitung war nicht erreichbar. Die Reiseleitung hätte uns spätestens am Dienstag ein anderes Zimmer anbieten müssen.“ The body then has 137 words, still within wordBandLearning 110-140.",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F11",
+      "severity": "minor",
+      "reviewer": "R2",
+      "unitId": "b2.1-u04",
+      "path": "start.folge.lines[7] (start-l08); steps[3].texts[0].text (t1, paragraph 4); steps[0].endLine; steps[1].input.lines[0] (ls2-l01); steps[0].microOutput.situationDe; steps[2].reserve[3].explanation.de (ls3-r04)",
+      "quote": "„Machen wir eine Arbeitsteilung: …“ / „Für die Arbeitsteilung schlagen wir vor, ⟦07⟧ jeder von uns einen Beschwerdebrief schickt …“ / „Sie finden jetzt in Reisebedingungen die Regel …“ / „Ich möchte leider einige Mängel beanstanden.“ / „Sie fragt Sie per Nachricht, …“ / „… sie sind nicht zu spät gekommen.“",
+      "problem": "Each of these is grammatical but unidiomatic or unclear. Nobody „macht eine Arbeitsteilung“ with an indefinite article in speech. In t1, everyone doing the same thing is not a division of labour. The endLine lacks the article. „möchte leider“ clashes; the natural complaint opener is „Ich muss leider …“. The micro-output instruction uses Sie for two different people in one sentence. The r04 explanation says „sie“ about a wir-sentence.",
+      "fix": "l08: „Also, Arbeitsteilung: Du machst die Beweisfotos, und ich dokumentiere alle Mängel schriftlich.“ t1: „Für die Arbeitsteilung schlagen wir vor, ⟦07⟧ wir beide die Belege sammeln und jeder von Ihnen einen Beschwerdebrief schickt …“ (keeps lx.arbeitsteilung). endLine: „in den Reisebedingungen“. l01: „Ich muss leider einige Mängel beanstanden.“ Micro-output: „Sie schreibt Ihnen und fragt, was sie jetzt tun soll.“ r04 explanation: „… wir sind nicht zu spät gekommen.“",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F12",
+      "severity": "minor",
+      "reviewer": "R1",
+      "unitId": "b2.1-u04",
+      "path": "steps[4].task.aiRole.personaDe; steps[4].task.situationDe",
+      "quote": "„… hält aber 350 Euro Minderung pro Person für zu viel und schlägt zuerst 250 Euro vor.“ / Leitfragen „… Wer übernimmt welche Aufgabe? Was tun Sie, falls keine Antwort kommt?“",
+      "problem": "The persona hard-codes the learner's opening figure. A learner who proposes 30 %, 200 € or a refund of the excursion meets an objection to a number they never said. The can-do cd.b2.vorgehen-gemeinsam-planen includes weighing the possible steps by effort and prospect of success, but no Leitfrage asks for that. The last question invites a single answer (the Verbraucherzentrale).",
+      "fix": "Persona: „Sie findet die erste Forderung der Lernenden zu hoch und schlägt etwa zwei Drittel davon vor …“. Last Leitfrage: „Was tun Sie, falls keine Antwort kommt – sich an die Verbraucherzentrale wenden oder einen Rechtsbeistand nehmen? Was spricht dafür, was dagegen?“",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F13",
+      "severity": "minor",
+      "reviewer": "R2",
+      "unitId": "b2.1-u04",
+      "path": "steps[2].pool.items[2] (ls3-p03); steps[2].reserve[1] (ls3-r02); check.items[2] (c03); steps[2].pool.generators[0].source[0] (ls2-l04)",
+      "quote": "p03 „Sie hätten uns vor der Reise ___ müssen. (informieren)“ → informieren; r02 „Die Reiseleitung hätte sich sofort um uns ___ müssen. (kümmern)“ → kümmern; c03 „Die Reiseleitung ___ sich sofort um uns kümmern müssen. (haben, Vorwurf)“",
+      "problem": "p03 and r02 print the key as the cue, so the only decision they test is not to turn it into a participle. They are the weakest items of LS3. c03 is r02's sentence with the gap moved, so a reserve item that is later drawn into Plateaus or the Einstufung shares its stem with this unit's check. The LS3 dictation source ls2-l04 contains the glossed extra Wellnessbereich, which the learner would have to spell.",
+      "fix": "Give c03 a new stem, e.g. „Der Veranstalter ___ uns eine Ersatzleistung anbieten müssen. (haben, Vorwurf)“. Replace the cue of p03 and r02 with a meaning cue (e.g. „(Bescheid geben: ein Verb auf -ieren)“), or turn one of them into an error correction („… informiert müssen“). Use ls2-l05 or ls2-l13 instead of ls2-l04 as the dictation source.",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F14",
+      "severity": "minor",
+      "reviewer": "R1",
+      "unitId": "b2.1-u04",
+      "path": "facts[0].exceptions (b2.1-u04-f01)",
+      "quote": "claimDe „Bei einer erheblichen Beeinträchtigung kann man kündigen, wenn eine selbst gesetzte angemessene Frist zur Abhilfe ohne Erfolg verstrichen ist (§ 651l Abs. 1 BGB).“",
+      "problem": "§ 651l Abs. 1 S. 2 BGB declares § 651k Abs. 2 S. 2 applicable: no deadline is needed if the operator refuses remedy or if immediate remedy is necessary. The fact's exceptions list omits this, and the reviewers' brief asks for facts to be complete with their exceptions. The LS1 AGB („können Sie uns eine angemessene Frist setzen“) remains a correct simplification. This was checked from knowledge of the BGB text, because there was no network in this session; re-read gesetze-im-internet.de/bgb/__651k.html when applying the fix.",
+      "fix": "Add the exception {de: „Eine Frist ist nicht nötig, wenn der Veranstalter die Abhilfe verweigert oder sofortige Abhilfe notwendig ist (§ 651l Abs. 1 S. 2 i. V. m. § 651k Abs. 2 S. 2 BGB).“, en: „No deadline is needed if the operator refuses a remedy or an immediate remedy is necessary.“} and add __651k.html to sources.",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F15",
+      "severity": "minor",
+      "reviewer": "R2",
+      "unitId": "b2.1-u04",
+      "path": "start.folge.lines[2] (start-l03); steps[5].task.situationDe and modelText; steps[2].cloze[3] (ls3-p16)",
+      "quote": "„In der Anzeige steht: „Ruhige Lage, alle Zimmer mit Blick auf das Meer.“ Für diese Zimmerkategorie haben wir mehr bezahlt.“ / ad „… alle Zimmer mit Meerblick … Ab 1.190 Euro pro Person.“ / model „Minderung des Reisepreises um 357 Euro“ / p16 „Amal gibt am Telefon nicht auf.“",
+      "problem": "If all rooms have a sea view, there is no dearer sea-view category they could have paid extra for. The 357 € in the model text is exactly 30 % of the „ab“ price, although the Folge says they paid more than the base price. In the story it is Priya who phones (LS2) and who will phone again (LS5 model, rm08); Amal is never on the phone.",
+      "fix": "Drop the surcharge sentence from l03, e.g. „… Genau dafür haben wir diese Reise gebucht.“, so 357 € = 30 % of 1.190 € holds. Change p16 to „Priya gibt am Telefon nicht auf. Sie bleibt freundlich, aber ___.“",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F16",
+      "severity": "minor",
+      "reviewer": "R1",
+      "unitId": "b2.1-u04",
+      "path": "spec.textTypes",
+      "quote": "„tt.beleg“, „tt.planungsblatt“",
+      "problem": "No input, exam text or stimulus of these two types exists in the unit. The texts are tt.bedingungen, tt.telefonat, tt.kurzansage, a group e-mail and the SA ad. The declared list therefore overstates the unit's text-type coverage, which the level plan and any later coverage check read.",
+      "fix": "Either realise them, e.g. the LS5 Leitfragen as a short Planungsblatt stimulus and a Quittung/Beleg in the LS6 situation, or drop them from spec.textTypes, in b2.1/specs.json and in the unit together.",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F17",
+      "severity": "minor",
+      "reviewer": "R2",
+      "unitId": "b2.1-u04",
+      "path": "steps[0].pool.items[2] (b2.1-u04-ls1-p03); steps[0].reserve[0] (ls1-r01)",
+      "quote": "p03 „Aufgrund ___ Programmänderung fiel unser Ausflug aus. (die Programmänderung)“ – topic g.praep-genitiv-formell; r01 „Wegen ___ Programmänderung fiel der Ausflug in die Berge aus. (eine Programmänderung)“",
+      "problem": "g.praep-genitiv-formell is only a chunk preview here: chunkFrom b2.1-u04, productive from b2.2-u11, and b2-1.md E4 says „aufgrund + Genitiv als feste Wendung … nur als Chunk“. A typed article gap with a new noun treats aufgrund as a free preposition. The case form itself is known from wegen, so nothing false is taught. Still, the item is tagged to a point that is not productive until B2.2, and it nearly duplicates r01.",
+      "fix": "Practise aufgrund only in its chunk form, e.g. a choice item „___ der Mängel fordern wir eine Minderung.“ (Aufgrund / Trotz / Statt), or retag p03 to g.praep-genitiv and give it a noun other than Programmänderung.",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F18",
+      "severity": "minor",
+      "reviewer": "validator",
+      "unitId": "b2.1-u04",
+      "path": "spec.lexiconBlocks (all 67 lemmas)",
+      "quote": "LEX-02 WARN, 67 ratchet: „Reisemangel“ recurs in 0 later unit(s) (need ≥ 2) … and 66 more",
+      "problem": "This is a ratchet warning, not a blocker. All 67 hits concern the later-unit half of LEX-02, and no b2.1 unit after u04 exists yet. The in-unit half (at least two occurrences in the inputs) passes for all 67 lemmas. There is nothing for this unit's author to do; the obligation passes to the authors of b2.1-u05 to u12 and to the level reviewer.",
+      "fix": "No unit change. Allocate recurrence targets for these lemmas in the specs of later b2.1 units, at least the 25 productive ones (Minderung, Mängelanzeige, Fristsetzung, einfordern, sich berufen, Kulanz, Preisnachlass …). Then re-run node scripts/course-v2/validate.mjs b2.1 at level scope.",
+      "scope": "class",
+      "proposedRule": null
+    }
+  ],
+  "passed": [
+    "tb2.sb1 (full): 10 gaps × 3 options; a group e-mail in halbformell register of 269 words (template 195-265 ±15 %). Keys spread a/b/c 4/3/3 without a run > 3. Every key is uniquely determined by syntax, valency or tense when solved blind (wie sehr, Wenn, die, darauf, hätte, hätten, dass, zu schicken, Aufgrund, Falls), and the distractors stay in the key's form class. The text is original.",
+    "tb2.hv3 (reduced, scaffolded, allowed in b2.1): 4 texts (guide's mailbox, airport announcement, customer-service mailbox, radio tip) of 91/75/74/100 words (band 40-130), each with a one-line intro and played once, as in tb2.json. There is one statement per text, R F F R (50 % true). Each statement is a paraphrase and was verified blind: 7.30 vs 8.30 = eine Stunde früher; a delay, not a cancellation; the decision is still pending; report the defect on site.",
+    "tb2.sa (reduced): an original ad-based complaint with 4 Leitpunkte (choose 3), wordBand 150-200, wordBandLearning 110-140, minSubmitWords 75, halbformell/Sie, rubric tb2-sa, examKey telc_b2. The model body has 130 words and covers lp1, lp3 and lp4 with Betreff, Anrede, Einleitung, Schluss and Gruß.",
+    "tb2.m3 (reduced): plan-together, prepMinutes 10, 180-300 s, rubric tb2-m3, moves vorschlagen/reagieren/widersprechen/einigen/verteilen, AI partner Amal in du with interrupts support. The Leitfragen match the plan (Belege, Forderung, Frist, Aufgabenverteilung, Konsequenz), and the model turns perform every move.",
+    "Grammar: g.konj2-vergangenheit enters productively here (receptive since b1.2-u11) and g.konj2-bedeutungen enters here, as grammar-spine.json requires. rc.konj2-vergangenheit-2 and the LS3 rule table are correct („hätte vor den beiden Infinitiven“). The double infinitive stays inside E4, as b2-1.md §8 allows. No production line, model text or expected answer goes beyond the B2.1 ceiling; aufgrund appears in the model text as the whitelisted chunk.",
+    "Lexis: 67 new lemmas, within newPerUnit 60-70; every lemma recurs at least twice in the unit's inputs. LEX-01/03/04/05/07 pass, and only four glossed extras are used (verjähren, gleichwertige, Wellnessbereich, Bootsfahrt). Sentence lengths stay within 28 words.",
+    "Keys: all 91 authored items were solved blind and no wrong key was found. Every sentence-building item was permuted by hand, and only ls1-p08 lacks an order (F04). Number and time items carry exact.",
+    "Register and cast: every instruction addresses the learner with Sie. Priya and Amal use du (series.json, since a2.1-u01) and the staff use Sie. Amal is a Bauingenieurin from Leipzig and Priya lives in Hamburg, as series.json states. ensemble-b2-6 (male) is the receptionist and ensemble-b2-1 (female) the agent, and the explanations use the right gender. The timeline holds: 12-19 October, Donnerstag = half of an 8-day trip, e-mail a week after the return, Beschwerdebrief of 3 November, Frist 30 November.",
+    "Facts: f01 (§§ 651j/l/m/o BGB) and f02 (16 Verbraucherzentralen, vzbv in Berlin) are correct and current. The LS1 AGB paraphrase and the radio tip agree with them: no Beschwerdefrist since the 2018 reform, two-year limitation from the contractual end of the trip, loss of Minderung only for culpable non-notice („oft“). Nothing promises a pass or a legal outcome to the learner.",
+    "Validator: node scripts/course-v2/validate.mjs on the unit returned OK (34 pass, 0 fail, 1 warn LEX-02 ratchet 67, 4 skipped at unit scope). node scripts/course-v2/check.mjs returned 0 errors."
+  ]
+}

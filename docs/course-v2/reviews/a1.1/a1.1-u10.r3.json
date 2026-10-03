@@ -1,0 +1,240 @@
+{
+ "review": "a1.1-u10.r3",
+ "unitId": "a1.1-u10",
+ "file": "content/course-v2/a1.1/units/u10.json",
+ "round": 3,
+ "date": "2026-09-28",
+ "reviewers": [
+  {
+   "id": "R1",
+   "persona": "Prüferin (lizenzierte Goethe-A1-Prüferin, Start Deutsch 1): Prüfungstreue, Rubrik, Aufgabenklarheit"
+  },
+  {
+   "id": "R2",
+   "persona": "Kursleiterin DaF (A1.1): Natürlichkeit, Niveau, Didaktik, Szenenplausibilität"
+  }
+ ],
+ "method": "Both reviewers read every German string of the current file (u10.json, mtime 2026-09-28 01:19, the r2 edits). That covered title and canDo, spec.situation and the four-point spec.deviation (each point checked against the content), the Folge (8 lines) and its gist item, and the three inputs: the LS1 chat (10 lines plus Sophie's timetable), the LS2 machine and counter (10 lines plus the screen) and the LS3 platform and train scene (10 lines plus the board). It also covered the 9 LS4 texts, both strategy cards, 8 redemittel, both speaking parts (instructionsDe, situationDe, cards), aiRole, openingLine, 8 hintWords, 16 model turns, the S2 task (situation, taskDe, 3 Leitpunkte with cues, checklist, model text), the 2 check lines, the 3 micro-outputs, both Aussprache blocks, story.beat and the cliffhanger, every endLine, modelSentence and explanation.de. We read the 31 u10 word cards in a1.1/lexicon.json and the three rule cards the unit shows (rc.trennbare-verben, rc.vokalwechsel, rc.wortbildung-er-in). We solved all 95 authored items blind from promptDe plus options, tiles or audio line: start gist 1, input 15, structured input 12, pool 33, reserve 13, exam 9, check 8, proof 4. We listed every tile permutation of the 18 sentence_building items against their accepted orders. We ran 70 candidate answers through the real grader (src/lib/course-v2/checkItem.js). They covered every key (95/95 correct), the person-ending and stem-vowel twin of every typed verb key (F03), the unedited prefill of every error correction, the number-plus-unit-word echoes (F06), and the two LS3 dictation sources in the generator's shape (content.js dictationItems: exact:number; „Gleis vierzehn“ is accepted). We read ItemView.jsx: the error correction is prefilled with its quote (l. 70), and after a TYPO one retry is resolved as correct (l. 140–149). We compiled a1.1 into the scratchpad (compile.mjs --out/--banks-out), so nothing was written to the repo, and ran the server's own normalizeSpeakingTask and buildCoursePartnerPrompt on the compiled a11-u10-s (F01). We compared file dates. Since r2 (00:42) only u10.json has changed. speakingAI.mjs (09-27 13:40), rubrics/speakingV2.mjs (13:31), check.js and checkItem.js (19:40/19:41), WritingTaskView.jsx (14:45), lexicon.json and specs.json (23:03), rule-cards.json (23:06), rules/ and lib-validate/ (≤ 22:44) and curriculum/a1-1.md (11:52) all predate it. We checked exam fidelity against registries/lanes/sd1.json: h2 has 4 × R/F, 1 play and textWords [29, 47]; l3 has 5 × R/F, signs with their location, [10, 25]; sp2 is cards-ask with 2 rounds, one question and one answer each; sp3 is cards-request with everyday objects, one request and one reaction per round; s2 has 3 Leitpunkte, about 30 words, and Anrede and Gruß outside the Leitpunkte. We checked the cast and story against casts, u09 (Friday dinner at the Restaurant Kochi) and u11. u11 retells the Saturday trip, the one-hour delay, Sophie back on Wednesday, Frau Schulz's „Sie waren in Dresden, oder?“, and in ls3-mo Priya shows the photos in the chat, so the learner is a chat friend there too. We recomputed all times and prices: 9.10 → 10.25 and 18.35 → 19.50 = 1 h 15; 88 € = 2 × 2 × 22 €; 11.20 + 20 = 11.40; 14.00 + 30 = 14.30; 10.25 → 10.40 = 15 min.",
+ "validator": {
+  "command": "node scripts/course-v2/validate.mjs content/course-v2/a1.1/units/u10.json",
+  "result": "OK (no blocker findings), exit 0. 40 rules: 33 pass, 0 fail, 2 warn, 5 skipped · 0 blocker, 25 ratchet, 4 advisory, identical to r2. LEX-01 has 4 advisories that need no change: „mm“ in the explanations of ls2-s04, ls2-p02 and ls2-r01 (letter names, English twin on screen), and the deliberate non-word „Busfahrin“ in ls3-p10. LEX-02 ratchet is 25 (r1-F19, open). LEX-03 passes, but only because its bracket-cue parser and dictation check miss the typed receptive keys (F04). Skipped: ITM-08 (no caseSensitive item), CON-06 (facts[] correctly empty; spec.deviation (1) explains why), and COV-1/4/5 (level scope).",
+  "check": "node scripts/course-v2/check.mjs content/course-v2/a1.1/units/u10.json → 0 errors",
+  "level": "node scripts/course-v2/validate.mjs a1.1 --rule COV-1,COV-3,COV-4,COV-5,LEX-05,LEX-07 → FAIL, 2 blockers, neither in u10. COV-3 fails on a1.1-u01 (spec.lanes differs from specs.json). LEX-05 fails on a1.1-u04: the lexicon now allocates lx.markt, lx.prospekt and lx.durchsage to u04, and the u04 spec omits them. COV-1, COV-4, COV-5 and LEX-07 pass.",
+  "notes": "Rail status since r2: nothing written. Still missing are the multi-part speaking engine (F01), GRM-05 for false rule cards (F02), the checker's paradigm rule and unchanged-quote rule (F03), LEX-03's bracket parser and cumulative dictation check (F04), a LEX-07 fact/word check for word cards (F05), checkNumber's zero fold and unit-word echo (F06), and the client ':' fold in WritingTaskView cueFound (r1-F17; the unit's cues cover both forms)."
+ },
+ "previousFindings": [
+  {
+   "id": "r2-F01",
+   "severity": "blocker",
+   "status": "open",
+   "evidence": "speakingAI.mjs and rubrics/speakingV2.mjs are unchanged (mtimes 2026-09-27 13:40 and 13:31). In a scratch compile of a1.1, a11-u10-s still carries parts [sd1.sp2, sd1.sp3] under a top-level template 'sd1.sp2', mode 'cards-ask' and profile 'sd1-sp2'. normalizeSpeakingTask drops parts and returns empty card lists. The partner prompt has one ABLAUF (cards-ask), „Die Karten deines Gegenübers: —. Deine Karten: —.“, and no „Bitten mit Bildkarten“ block → F01."
+  },
+  {
+   "id": "r2-F02",
+   "severity": "major",
+   "status": "open",
+   "evidence": "rc.wortbildung-er-in is byte-identical (rule-cards.json mtime 2026-09-27 23:06, before r2). This is its third round unchanged (r1-F08, r2-F02) → F02."
+  },
+  {
+   "id": "r2-F03",
+   "severity": "minor",
+   "status": "partly-fixed",
+   "evidence": "The unit fallback landed. c05 is now „Arjun ist ein Freund von Sophie, und Olena ist auch eine ___. (der Freund → die …)“ → „Freundin“, on lx.freund (productive since u03); checkItem „Freundin“ → correct, „Freund“ → wrong. The LS3 dictation source moved from ls3-l09 to ls3-l08. That drops interessant and Informatiker, but keeps Busfahrerin and Busfahrer, which are still in no lexicon. The owner half has not moved (lexicon 23:03, LEX-03 22:27; promotions [], lx.teilnehmer, lx.kellner, lx.frei, lx.platz, lx.hin-und-zurueck receptive, no lx.busfahrer) → F04."
+  },
+  {
+   "id": "r2-F04",
+   "severity": "minor",
+   "status": "open",
+   "evidence": "The six u10 word cards are unchanged: 10.15 Uhr on lx.ankunft and lx.ankommen, Gleis 3 on lx.abfahrt, the change in Riesa on lx.umsteigen, „fällt aus“ on lx.anzeigetafel, and „endet … schon“ on lx.hauptbahnhof → F05."
+  },
+  {
+   "id": "r2-F05",
+   "severity": "minor",
+   "status": "fixed",
+   "evidence": "As proposed. The Teil 3 situationDe is now „Sprechen Teil 3: Sie und Ihre Partnerin haben je zwei Karten zum Thema Bahnhof und Zug. Bei der Karte „Platz“ möchten Sie sitzen. In der Prüfung sind auf den Karten Bilder.“ There is no train scene any more, so „Eine Fahrkarte nach Dresden, bitte.“ – „Ja, hier, bitte.“ is the exemplar's exam-table request. hintWords[4] is „Ist hier noch frei? Kann ich hier sitzen?“ and rm06 is „Entschuldigung, ist hier noch frei? Kann ich hier sitzen?“, both with a request form. modelTurns[10] is „Ein Wasser, bitte.“. hintWords stays at 8. The fix reaches the product only once F01 is closed."
+  },
+  {
+   "id": "r2-F06",
+   "severity": "minor",
+   "status": "fixed",
+   "evidence": "ls1-mo now reads „Priya und Arjun fahren am Samstag nach Dresden. Olena schreibt Ihnen im Chat: …“, ls3-mo „Priya ist mit Arjun und Sophie im Zug und schreibt im Chat. Emre schreibt aus İzmir: …“, and LS6 no longer says „noch einmal“. The learner is a friend in the chat, never a fourth traveller. So „ihr zwei“, „zwei Personen“ and „Drei Plätze, super!“ hold, and the framing matches u11 ls3-mo. This also closes the last part of r1-F11."
+  },
+  {
+   "id": "r2-F07",
+   "severity": "minor",
+   "status": "open",
+   "evidence": "checkItem.js is unchanged (19:41). We re-ran it: ls1-i04 „Gleis 3“ → wrong, ls2-i03 „88 Euro“ → wrong, ls3-i03 „10 Minuten“ → wrong, ls1-i03 „9.10 Uhr“ → wrong. „09.10“ and „09:10“ are correct only because ls1-i03 lists them → F06."
+  },
+  {
+   "id": "r2-F08",
+   "severity": "minor",
+   "status": "fixed",
+   "evidence": "(a) ls1-i05 now offers „mit der Bahn“ / „mit dem Auto“ / „mit dem Bus“. „mit der Bahn“ is Arjun's own heard alternative (ls1-l08), so spotting „Bus“ no longer decides; the key stays in position c. (b) The LS3 focus line is now our r2 wording: 22 words, without „Wortanfang“ or „Vorsilbe“. By dropping the condition, however, that wording states a rule that is false for this unit's own words → F07 (again a residue of our own proposal)."
+  },
+  {
+   "id": "r1-F19",
+   "severity": "minor",
+   "status": "open",
+   "evidence": "LEX-02 ratchet is 25, unchanged since r2. Fifteen u10 lemmas recur in no later unit (U-Bahn, Abfahrt, Ankunft, Hauptbahnhof, Anzeigetafel, einfach, Bahn, Fahrplan, einsteigen, umsteigen, pünktlich, Platz, frei, Kilometer, unterwegs). No u10 edit; carried in notes."
+  },
+  {
+   "id": "r1-F20",
+   "severity": "minor",
+   "status": "open",
+   "evidence": "curriculum/a1-1.md §6 u10 (mtime 09-27 11:52) still says „Einheit 10 bringt keine neue Grammatik.“ specs.json u10 still has deviation null, while the unit logs four points. The decision is with the curriculum and spine owners; carried in notes."
+  },
+  {
+   "id": "r1-F01…F18",
+   "severity": "blocker/major/minor",
+   "status": "as recorded in r2",
+   "evidence": "We re-verified the r2 state. LEX-05 and LEX-01 pass (r1-F01, F02). Every correction names what to correct or accepts both V2 orders (F03). q04 excludes „Platz“ (F04). q01 needs „fährt … ab“ (F06). The Sp2 partner asks as a candidate (F09). ls3-s02 and ls3-s04 need the ending (F10). The topics are right (F13). The t2/t3/t4/ls3-l04 slips are gone (F15). The LS1 pairs are monosyllabic (F16a). The lp2 cues cover „kommt“ and „14:30“ (F17). ls2-i06 tests the screen that needs German (F18). The open r1 findings live on as r2-F02 (F08), r2-F03 (F14) and r2-F07 (F05). r1-F07 is fixed in the unit, and its product half is F01."
+  }
+ ],
+ "verdict": "Not exit-ready: 1 BLOCKER, 2 MAJOR, 4 MINOR. The unit author landed every unit-owned r2 fix, and landed each one as proposed. Teil 3 is an exam-table request round with request forms in its hints (r2-F05). The learner follows the trip from the chat and is never a fourth traveller (r2-F06). ls1-i05 has a heard distractor (r2-F08a). The scored Check now drills -in on a productive noun (r2-F03's fallback). The German is correct and idiomatic on every model surface. All 95 keys are right, and every item is decidable from its German prompt. H2, L3, Sp2, Sp3 and S2 are exact to sd1.json, and every task is original. The validator is green. Nothing outside u10.json has changed since r2, so exit fails on the same owners, plus one class r1 and r2 missed. (1) F01, BLOCKER, E1 server track: normalizeSpeakingTask still drops `parts`. The AI runs Teil 2 without its cards and never runs Teil 3 (the Prüfungsfokus Teil, holding the learner's seat request and the ticket purchase), and the whole session is graded with sd1-sp2. (2) F02, MAJOR, rule-cards owner: the card still says „Wörter auf -er sind der, Wörter auf -in sind die.“ and teaches with nouns the learner does not know. (3) F03, MAJOR, checker owner, new in this trail (a1.1-u03 r3-F01 found it after our r2): the grader calls the unit's target errors typos, so „fahrt“ for „fährt“ in the scored c03, „trefft“, „fähre“ and „nimmst“ pass after one retry, and ls2-p10 is logged correct if the learner presses Prüfen twice on its unedited prefill „Du fahrst am Abend zurück.“. The four minors: three are held by owners and unchanged (receptive lemmas F04, word cards F05, number echo F06). One is a unit edit: the LS3 pronunciation line our r2 wording produced says st/sp = „scht“/„schp“ without condition, which is false for Samstag, kostet and fährst (F07). For the level: A1.1 is not finished (see notes).",
+ "scores": {
+  "D": 4,
+  "N": 3,
+  "H": 4,
+  "A": 3,
+  "P": 2,
+  "K": 4,
+  "E": 4
+ },
+ "scoreNotes": {
+  "D": "Every line on a model surface is grammatical and idiomatic, and du/Sie is right in every relationship: du among the friends and in the chats to Olena, Emre and Sophie; Sie with the clerk, the bus driver, Nora and in every instruction. r2's pragmatic slip (a ticket bought from a fellow passenger) is gone with the train scene. It stays at 4 only because the LS3 pronunciation line, a teaching surface, states a rule that is false for Samstag, kostet and fährst (F07).",
+  "N": "Production stays within the u10 ceiling (separable verbs, vowel change, -er/-in, V1 questions, dative chunks), and the load is in band (31 lemmas, LEX-05). It scores 3 for two reasons. The rule card for the unit's new point is still false as stated and teaches with unknown nouns (F02). The -in point is still drilled in typed production on receptive or unallocated lemmas, and the proof q04 keys a receptive word (F04).",
+  "H": "The trip is lively and connected. Sophie's call continues u09, the timetable arrives in the chat, the machine refuses Priya's card, Arjun buys at the counter, a platform change sends them to Gleis 14, a bus driver shares their seats, and the cliffhanger's delay is what u11 retells. The learner now follows it all from the chat, as in u11. It is 4 and not 5 because, in the running session, the seat request and the ticket purchase sit in a Teil 3 that the engine neither runs nor scores (F01).",
+  "A": "Every key is right, and the German prompt decides every item, including the corrections, which name what to correct. ls1-i05 now has a heard distractor. It scores 3 for two reasons. The grader accepts the unit's own target errors, the missing umlaut, the wrong stem vowel and the wrong person ending, as typos in eleven typed items, two scored Check items among them, and it lets ls2-p10 pass unedited (F03). And a right number written with its unit word („Gleis 3“, „88 Euro“) is still WRONG (F06).",
+  "P": "H2 has 4 announcements within [29, 47] words, one play, and keys F R F R, with the sound trap „zehn Minuten“/„Gleis 10“. L3 has 5 signs with their location, within [10, 25], keys F R R F R. Sp2 has two rounds of candidate question and answer. Sp3 has two rounds of request and reaction, with request forms in the hint words and redemittel. S2 has 3 separate Leitpunkte and 25–35 words, informal, with Anrede and Gruß in the checklist. All of it is original. It scores 2 because the Sprechen task is delivered and scored on the wrong basis: Teil 2 without its cards, Teil 3 (the fokus Teil) not at all, and the whole session graded with sd1-sp2 (F01).",
+  "K": "Cast facts match the registries and the earlier units (Arjun Informatiker, Sophie's parents in Dresden, Emre in İzmir, Frau Schulz a teacher). The handovers to u09 and u11 hold, and r2's four-travellers-for-three-seats break is repaired. It stays at 4 because four u10 word cards still give another arrival time, platform and change (F05).",
+  "E": "Instructions stay within 90 characters, each Lernschritt starts with an easy success, every end screen names the win, and the LS3 focus is one short line again. It is 4 and not 5 because the LS5 screen shows the learner two Teile with cards, while the AI partner knows neither the cards nor Teil 3 (F01)."
+ },
+ "total": 24,
+ "counts": {
+  "blocker": 1,
+  "major": 2,
+  "minor": 4,
+  "unitOwned": {
+   "blocker": 0,
+   "major": 0,
+   "minor": 1
+  },
+  "note": "unitOwned means the fix edits u10.json; that is F07 only (one aussprache.focus string). Owned outside the unit: F01 (E1 server track and rubric owner), F02 (rule-cards owner; the lexicon owner for lx.busfahrer), F03 (checker owner), F04 (lexicon owner and rule-smith), F05 (lexicon owner) and F06 (checker owner)."
+ },
+ "findings": [
+  {
+   "id": "F01",
+   "reviewer": "R1",
+   "criterion": "P",
+   "severity": "blocker",
+   "scope": "class",
+   "unitId": "a1.1-u10",
+   "path": "steps[4].task.parts[0..1] (sd1.sp2 + sd1.sp3); spec.lanes.pruefungsfokus[2] (sd1.sp3, slot 'sprechen'); check.proofs[1] (cd.a1.fahrkarte-schalter → 'sprechen'), check.proofs[4] (cd.a1.platz-frei → q04 + 'sprechen'); compiled bank entry a11-u10-s; netlify/functions/_shared/speakingAI.mjs normalizeSpeakingTask (l. 340–366), MODE_RULES['cards-ask'] and ['cards-request'] (l. 426–438), buildCoursePartnerPrompt (l. 500 ff.); netlify/functions/_shared/rubrics/speakingV2.mjs l. 38",
+   "quote": "Compiled a11-u10-s (scratch compile, 2026-09-28): top level { template 'sd1.sp2', mode 'cards-ask', profile 'sd1-sp2', parts [sd1.sp2, sd1.sp3] }, with no top-level cards or situationDe. normalizeSpeakingTask(entry) → mode 'cards-ask', profile 'sd1-sp2', cards { learner: [], partner: [] }, situationDe '', and no parts. buildCoursePartnerPrompt({ level: 'a1.1', task: entry }) → „ABLAUF — Fragen und Antworten mit Wortkarten: - Die Karten deines Gegenübers: —. Deine Karten: —. … - Wenn alle Karten besprochen sind, bedanke dich kurz.“ There is no „Bitten mit Bildkarten“ block; „Platz“ and „Wasser“ occur only in the persona prose and the word list. speakingV2 l. 38: profileId = task.profile → sd1-sp2.",
+   "problem": "This is r2-F01, and it is unchanged: no engine file has been touched since before r2. The unit side is now clean. After r2-F05, Teil 3 is an exam-table request round, and the learner both asks for a seat and answers the partner's „Kann ich hier sitzen?“. In the product, however, the AI partner gets only Teil 2's procedure, with empty card lists, is told to thank and stop when the cards are done, and never runs Teil 3. speakingV2 grades the whole transcript with sd1-sp2 (2 points per question, 1 per answer). Three things follow. (1) Two can-do halves are performed only in a Teil the product does not run: the Aufgabe half of cd.a1.platz-frei (interaction-spoken: ask and answer) and the buying half of cd.a1.fahrkarte-schalter („Eine Fahrkarte nach Dresden, bitte.“). (2) sd1.sp3 is the unit's Prüfungsfokus Teil for Sprechen, and it is never scored with its own profile (bitte 2, reaktion 1 per round). (3) Teil 2 runs without the four cards the learner sees. That is a scorer on the wrong pass rule and two can-do halves claimed but not performed (§9.4 BLOCKER). The class covers the eight a1.1 units with a multi-Teil task (u01, u04, u05, u06, u08, u09, u10, u12) and stays stop-the-line. The unit cannot fix it.",
+   "fix": "Engine owner (E1 server track), as u01 r2-F01 and u08 r2/r3-F01. normalizeSpeakingTask keeps `parts` and normalises each one. buildCoursePartnerPrompt renders one ABLAUF per part, in order, with that part's situation, instructions and both card sets, plus a hand-over line („Jetzt Teil 3: Bitten mit Karten.“). cards-ask runs round by round. speakingV2 grades each part with its own profile (here sd1-sp2, max 6, plus sd1-sp3, max 6), and the result card shows both Teile. Unit: no edit; keep the r2-F05 Teil 3 and the proofs on 'sprechen'. After the fix, play one a11-u10-s session. In Teil 2 the AI must ask „Kaufen Sie oft Fahrkarten hin und zurück?“. In Teil 3 it must react to the learner's seat request and itself ask „Kann ich hier sitzen?“. The result must show a Teil 3 score.",
+   "proposedRule": "The u01 r2-F01 test over every compiled speaking bank entry with `parts`: (a) the partner prompt contains one ABLAUF per part and every part's learner and partner cards; (b) the grading plan covers every part's profile; (c) a speaking Teil named in spec.lanes.pruefungsfokus is run and scored with its own profile. Failing fixtures: a11-u01-s, a11-u04-s, a11-u08-s, a11-u10-s. The test runs over all registered courses."
+  },
+  {
+   "id": "F02",
+   "reviewer": "R2",
+   "criterion": "N",
+   "severity": "major",
+   "scope": "class",
+   "unitId": "a1.1-u10",
+   "path": "content/course-v2/a1.1/rule-cards.json rc.wortbildung-er-in (shown in steps[2].ruleCard); compare steps[2].pool.items[1] (ls3-p02), [8] (ls3-p09), [10] (ls3-p11), steps[2].reserve[3] (ls3-r04), check.items[4] (c05), steps[4].task.parts[1].cards.partner[0]; content/course-v2/a1.1/lexicon.json (no lx.busfahrer, lx.spieler, lx.verkaufen); a1.2/lexicon.json lx.fahrer, lx.verkaeufer (a1.2-u02)",
+   "quote": "„Aus einem Verb wird eine Person: Verbstamm + -er. fahren → der Fahrer, spielen → der Spieler, verkaufen → der Verkäufer (manchmal mit Umlaut). Für Frauen kommt -in dazu: die Fahrerin, die Spielerin, die Verkäuferin. Wörter auf -er sind der, Wörter auf -in sind die. Plural: die Fahrer, die Fahrerinnen.“ (byte-identical since r1; rule-cards.json mtime 2026-09-27 23:06)",
+   "problem": "r1-F08 and r2-F02, third round unchanged. The rule „Wörter auf -er sind der, Wörter auf -in sind die.“ is false as stated (die Mutter, Schwester, Tochter, Nummer; das Wasser, Zimmer, Fenster; der Termin). The same step shows „Meine Mutter …“ (ls3-r04), and the Sp3 partner card is „Wasser“. All three examples are unknown at u10: Fahrer and Verkäufer are allocated to a1.2-u02, and Spieler and verkaufen are in no lexicon. The card presents -in only as the partner of a verb noun in -er. Yet the unit drills Student → Studentin (ls3-p02, ls3-p09) and Freund → Freundinnen (ls3-p11), and since r2's fallback the scored Check c05 drills Freund → Freundin. A learner who looks up either on the card finds no rule for it. This is the third a1.1 unit with a rule card whose simplification is false (u04 rc.artikel-genus-plural r2–r5, u08 rc.nicht-position-gern r2/r3, here), so the class is stop-the-line (§9.4) until GRM-05 checks it.",
+   "fix": "Rule-cards owner (48 words, ≤ 60; model sentence unchanged): de „Beruf und Person: Für eine Frau kommt -in dazu: der Lehrer → die Lehrerin, der Student → die Studentin, der Freund → die Freundin. Plural: die Lehrerinnen. Oft kommt das Wort von einem Verb: fahren → der Busfahrer, die Busfahrerin. Achtung: Nicht alle Wörter auf -er sind der: die Mutter, das Wasser.“, with the en twin to match. Table header [„der (ein Mann)“, „die (eine Frau)“, „Plural“]; rows Lehrer / Lehrerin / „die Lehrer / die Lehrerinnen“, Student / Studentin / „die Studenten / die Studentinnen“, Busfahrer / Busfahrerin / „die Busfahrer / die Busfahrerinnen“. Lexicon owner: allocate lx.busfahrer at a1.1-u10 (F04), so that the card's head example and the modelSentence are known words. Unit: no edit.",
+   "proposedRule": "GRM-05, as r2-F02: (a) a sentence of the form „Wörter/Nomen auf -X sind der|die|das“ is checked against every lexicon noun in -X known at the card's first unit, and fails unless an „Achtung“ line names the known exceptions; (b) every lemma a rule card uses as an example is known at the card's first unit or is a new lemma of that unit. Failing fixture: rc.wortbildung-er-in at a1.1-u10 (die Mutter, das Wasser; Spieler, Verkäufer, Fahrer). The test runs over all registered courses."
+  },
+  {
+   "id": "F03",
+   "reviewer": "R1",
+   "criterion": "A",
+   "severity": "major",
+   "scope": "class",
+   "unitId": "a1.1-u10",
+   "path": "check.items[0] (a1.1-u10-c01), check.items[2] (c03); steps[1].pool.items[0] (ls2-p01), [1] (ls2-p02), [2] (ls2-p12), [3] (ls2-p04), [9] (ls2-p10); steps[1].reserve[0] (ls2-r01), [3] (ls2-r04); steps[0].pool.items[0] (ls1-p01); steps[0].reserve[0] (ls1-r01); src/lib/lesson/check.js endingDiffers (l. 228–232), compareAnswer typo branch (l. 340), STRICT_TOPIC (l. 244); src/components/course-v2/ItemView.jsx l. 70 (error_correction prefilled with its quoted sentence), l. 140–149 (TYPO → one retry → correct)",
+   "quote": "checkItem → typo: c03 (scored) „Sophie ___ erst am Mittwoch zurück. (fahren)“ ← „fahrt“, ← „fährst“ · c01 (scored) „Der Bus ___ um 8.45 Uhr am Bahnhof an. (ankommen)“ ← „kommst“ · ls2-p01 „Sophie, ___ du am Abend auch zurück? (fahren)“ ← „fahrst“, ← „fährt“ · ls2-p04 „Ich ___ erst am Mittwoch zurück. (fahren)“ ← „fähre“ (its explanation: „Bei „ich“ gibt es kein „ä““) · ls2-p12 ← „trefft“, ← „triffst“ · ls2-p02 ← „nimmst“ · ls2-r01 ← „nimmt“ · ls2-r04 ← „Arjun nimmst die Fahrkarten.“ · ls1-p01, ls1-r01 ← „fahrt“, ← „fährst“ · ls2-p10 „Korrigieren Sie das Verb: „Du fahrst am Abend zurück.““ ← the unchanged prefill „Du fahrst am Abend zurück.“ → typo · by contrast, the letter swap „färht“ (c03) → wrong · ItemView after the retry: `const correct = r.result !== RESULT.WRONG`",
+   "problem": "This class is new in u10's trail; r1 and r2 missed it, because we tested orders, doublets and numbers, not person and vowel forms. a1.1-u03 r3-F01 found it after our r2 and counted eight u10 items, and a1.1-u08 r3-F03 confirmed it. check.js calls a one-letter difference a typo unless the last letter changes. Three kinds of error change an inner letter and so come back TYPO: the stem umlaut (fahrt/fährt, fahre/fähre), the stem vowel of treffen (trefft/trifft), and the person endings -st/-t (nimmst/nimmt, kommst/kommt, fährst/fährt). ItemView gives one retry and then logs the same answer as correct. In u10 this hits the whole of LS2's point, g.vokalwechsel. Its rule card says exactly „a → ä … Bei ich, wir, ihr und sie/Sie bleibt der Vokal“, yet the missing umlaut („fahrst“) and the wrongly added one („fähre“) both pass. It hits both scored Check items on verbs (c01, c03). It hits ls2-p10 hardest: the player prefills an error correction with its quoted sentence, so a learner who presses „Prüfen“ twice without touching „Du fahrst am Abend zurück.“ has the item logged as correct. On this point the grader is inverted: a genuine slip such as the transposition „färht“ is WRONG, while the target error „fahrt“ is a TYPO. We checked every other typed item: the -in items are safe (the ending changes the last letter), and so are the separable-verb corrections (a two-token change). A grader that accepts the error an item exists to remove is a gate hole that lets a finding class through (§9.4 MAJOR). The class is in at least nine a1.1 units (u03 r3 count) and has no rule, so it is stop-the-line. The unit cannot fix it: there is no item field for known wrong forms, and CLAUDE.md puts the rule in the checker, never in accepted[].",
+   "fix": "Checker owner, as u03 r3-F01 and u08 r3-F03, in the v2 wrapper src/lib/course-v2/checkItem.js so that the live course is untouched. (1) On a typed single-token item whose topic is a v2 verb spine point (g.vokalwechsel, g.trennbare-verben, g.praesens, g.koennen …), an answer that is another form of the key's paradigm is WRONG, never TYPO. That covers another person ending and an unchanged or wrongly added stem vowel or umlaut. The ae/oe/ue fold stays („faehrt“ is correct), and a genuine slip such as „nimt“ stays TYPO. (2) error_correction: an answer equal to its own quoted sentence after normalisation is WRONG, and the tokens in which quote and key differ are compared strictly („Du fährt am Abend zurück.“ → WRONG). Unit: no edit.",
+   "proposedRule": "A checker test (node --test) over every typed item of every registered course whose topic is a verb spine point: the key's person-ending twin and its stem-vowel twin grade WRONG, and every error_correction's own quoted sentence grades WRONG. Failing fixtures from this unit: a1.1-u10 c03 („fahrt“), ls2-p01 („fahrst“), ls2-p04 („fähre“), ls2-p12 („trefft“) and ls2-p10 (its own quote). Passing fixtures: c03 „faehrt“ → CORRECT, ls2-p02 „nimt“ → TYPO. Add them to the fixture list of u03 r3-F01."
+  },
+  {
+   "id": "F04",
+   "reviewer": "R2",
+   "criterion": "N",
+   "severity": "minor",
+   "scope": "class",
+   "unitId": "a1.1-u10",
+   "path": "steps[2].pool.items[0] (ls3-p01), [2] (ls3-p03), [3] (ls3-p04); steps[2].reserve[4] (ls3-r05); steps[2].pool.generators[0] (dictation.fromInput, source a1.1-u10-ls3-l08); check.proofItems[3] (q04); steps[4].task.modelTurns[3], [8], [15]; steps[4].task.hintWords[2], [4], [6]; redemittel[5], [6] (rm06, rm07, forTemplate sd1.sp3); content/course-v2/a1.1/lexicon.json lx.teilnehmer (u01), lx.kellner (u02), lx.frei, lx.platz, lx.hin-und-zurueck (u10), all receptive, promotions []; no lx.busfahrer in any lexicon; scripts/course-v2/rules/LEX-03.mjs (bracket-cue parser, dictation check)",
+   "quote": "ls3-p01 „(der Kellner → die …)“ → „Kellnerin“ · ls3-p04 „(die Teilnehmerin, Plural)“ → „Teilnehmerinnen“ · ls3-r05 „(die Kellnerin, Plural)“ → „Kellnerinnen“ · ls3-p03 „(der Busfahrer → die …)“ → „Busfahrerin“ · dictation ls3-l08 „Ich wohne da. Ich bin Busfahrerin, und mein Mann ist auch Busfahrer.“ · q04 (scored proof) key „frei“ · learner turns and hints „… hin und zurück.“, „Ist hier noch frei?“, „Hier ist noch frei.“ · validator: LEX-03 PASS, no advisory",
+   "problem": "r2-F03 is partly fixed. The unit took r2's fallback for the scored Check (c05 now drills Freund → Freundin on a productive noun), and the dictation no longer makes the learner spell interessant and Informatiker. The owner half has not moved: the lexicon and LEX-03 both predate r2. Three practice items still have the learner type Kellnerin, Kellnerinnen and Teilnehmerinnen on receptive lemmas. The head word of the grammar point, Busfahrer(in), has no lexicon entry at all, although the learner types it (ls3-p03), builds it (ls3-p05) and writes it in the dictation. The scored proof q04 keys the receptive „frei“. The Aufgabe's learner turns and the sd1.sp3 redemittel produce „frei“, „Platz“ and „hin und zurück“. So SRS schedules only the recognition of words the unit makes the learner write and say. LEX-03 is still silent: its bracket parser reads „(der Kellner → die …)“ whole, and its dictation check reads only the unit's own receptive lemmas. The class (u04 r4-F02, u08 r2-F06 and r3-F07, u10 r1-F14 and r2-F03) stays stop-the-line until the rail exists.",
+   "fix": "Lexicon owner, as r2-F03. Add lexicon.promotions at a1.1-u10 for lx.teilnehmer and lx.kellner (receptive → productive). Make lx.frei, lx.platz and lx.hin-und-zurueck productive and, in exchange, lx.u-bahn and lx.hauptbahnhof receptive, since the learner never produces them. Allocate lx.busfahrer at a1.1-u10, productive (see F02). Re-run LEX-05 for the productive share. Unit: no further edit.",
+   "proposedRule": "As r2-F03, LEX-03: (a) parse the first noun of a bracket cue and resolve a feminine pair to its masculine entry; (b) make the check hard, not advisory, for scored Check and proof items; (c) the dictation.fromInput check covers every receptive-only and unallocated lemma of the cumulative lexicon. Failing fixtures: a1.1-u10 ls3-p01, ls3-p04, ls3-r05, q04 and the ls3-l08 dictation. The test runs over all registered courses."
+  },
+  {
+   "id": "F05",
+   "reviewer": "R2",
+   "criterion": "K",
+   "severity": "minor",
+   "scope": "class",
+   "unitId": "a1.1-u10",
+   "path": "content/course-v2/a1.1/lexicon.json lx.ankunft.example, lx.ankommen.example, lx.abfahrt.example, lx.umsteigen.example, lx.anzeigetafel.example, lx.hauptbahnhof.example (the u10 word cards); compare steps[0].input.text, steps[0].input.lines[4] (ls1-l05), steps[0].structuredInput[0..1] (ls1-s01, ls1-s02), steps[0].pool.items[10] (ls1-p11)",
+   "quote": "lx.ankunft „Ankunft in Dresden: 10.15 Uhr.“ · lx.ankommen „Der Zug kommt um 10.15 Uhr an.“ · lx.abfahrt „Abfahrt: 9.10 Uhr, Gleis 3.“ · lx.umsteigen „In Riesa steigen wir um.“ · lx.anzeigetafel „Auf der Anzeigetafel steht: Zug fällt aus.“ · lx.hauptbahnhof „Der Zug endet heute schon am Hauptbahnhof.“ — unit: „Ankunft: Dresden Hauptbahnhof, 10.25 Uhr“, „Abfahrt: Leipzig Hauptbahnhof, 9.10 Uhr, Gleis 12“, Priya „Wir steigen nicht um.“",
+   "problem": "r2-F04, unchanged; the lexicon predates r2. Four of u10's own word cards tell the trip with another timetable. On the cards the 9.10 train arrives at 10.15 (the unit says 10.25), leaves from Gleis 3 (the evening train's platform) and needs a change in Riesa (the unit says „Wir steigen nicht um.“). The learner reads these cards in LS1, where ls1-s01, ls1-s02 and ls1-p11 ask exactly for the arrival time and whether they change trains. Two more cards use verbs far above the level: „fällt aus“ (lx.ausfallen, a2.1-u06) and „endet“ (lx.enden, b1.2-u08). This is the word-card class of u01 r1-F07, u03 r3-F02 and u08 r2-F05 and r3-F06, now in four a1.1 units. LEX-07 checks the grammar of the examples, not their facts or their words.",
+   "fix": "Lexicon owner, as r2-F04: lx.ankunft „Ankunft in Dresden: 10.25 Uhr.“; lx.ankommen „Der Zug kommt um 10.25 Uhr in Dresden an.“; lx.abfahrt „Abfahrt: 9.10 Uhr, Gleis 12.“; lx.umsteigen „In Hannover steigen Sie um.“ (the t3 and c07 frame); lx.anzeigetafel „Auf der Anzeigetafel steht: Dresden, Gleis 14.“; lx.hauptbahnhof „Wir treffen Sophie am Hauptbahnhof.“ Update the exampleEn twins. Unit: no edit.",
+   "proposedRule": "As r2-F04, LEX-07 advisory: (a) the example of a lemma uses only lemmas known at the lemma's unit (the LEX-01 knownForms walk); (b) an example that pairs a clock time or a Gleis number with a place named in its unit's inputs must match the unit's text. Failing fixtures: lx.ankunft, lx.abfahrt, lx.umsteigen and lx.anzeigetafel at a1.1-u10. The test runs over all registered courses."
+  },
+  {
+   "id": "F06",
+   "reviewer": "R1",
+   "criterion": "A",
+   "severity": "minor",
+   "scope": "class",
+   "unitId": "a1.1-u10",
+   "path": "steps[0].inputItems[2] (a1.1-u10-ls1-i03), [3] (ls1-i04); steps[1].inputItems[2] (ls2-i03); steps[2].inputItems[2] (ls3-i03); src/lib/course-v2/checkItem.js checkNumber (l. 107 ff.)",
+   "quote": "checkItem (re-run 2026-09-28): ls1-i04 „Gleis 3“ → wrong · ls2-i03 „88 Euro“ → wrong · ls3-i03 „10 Minuten“ → wrong · ls1-i03 „9.10 Uhr“ → wrong · ls1-i03 „09.10“ and „09:10“ → correct, only because the item lists them",
+   "problem": "This is r2-F07 (the checker half of r1-F05), unchanged; checkItem.js predates r2. On four u10 input items, a learner who writes the right number and repeats the unit word printed next to the gap gets WRONG, with no retry. Every clock-time key in the course that does not list the leading-zero forms still rejects the format of boards and tickets. CLAUDE.md puts the rule in the checker („never fix an item by widening its accepted list alone“).",
+   "fix": "Checker owner (src/lib/course-v2/checkItem.js, with a node --test case). Fold a leading zero in H.MM and H:MM keys. When the input's digits equal the key's and the only extra words are the word printed directly before or after the gap in promptDe, return TYPO with the hint „Schreiben Sie nur die Zahl.“. Unit: no edit; the listed zero forms in ls1-i03 may stay.",
+   "proposedRule": "As r2-F07: a checker test over all registered courses. For every exact:number typed item with a clock-time key, 0H.MM and 0H:MM grade CORRECT; for every exact:number gap, the key plus the adjacent unit word grades TYPO. Failing fixtures: a1.1-u10 ls1-i04 („Gleis 3“), ls2-i03 („88 Euro“), ls3-i03 („10 Minuten“) and a synthetic „9.10“ key without listed zero forms."
+  },
+  {
+   "id": "F07",
+   "reviewer": "R2",
+   "criterion": "N",
+   "severity": "minor",
+   "scope": "instance",
+   "unitId": "a1.1-u10",
+   "path": "steps[2].aussprache.focus (LS3); compare start.folge.lines[0..2] and steps[0].input.lines[0], [7], [9] („Samstag“), steps[1].modelSentence („Fährst du am Abend auch zurück?“), redemittel[3] (rm04 „Was kostet die Fahrkarte?“, forTemplate sd1.sp2), steps[4].task.hintWords[0] and modelTurns[0] („Was kostet …?“)",
+   "quote": "„sch ist nicht s: Schein – sein. st und sp sprechen Sie wie „scht“ und „schp“: steigen, einsteigen, umsteigen, spät. Aber: ist, erst.“",
+   "problem": "This is again a residue of our own proposal (r2-F08b). To remove „Wortanfang“ and „Vorsilbe“, r2 dropped the condition. So the line now says, without condition, that st and sp sound like „scht“ and „schp“, and gives two word-final exceptions. That is false for words this unit has the learner say: Samstag [ˈzamstaːk] (the Folge, LS1, the micro-outputs), kostet (rm04, the Sp2 hint word and the learner's first model turn) and the du-forms in -st that LS2 drills (fährst, nimmst; LS2's model sentence is „Fährst du am Abend auch zurück?“). A learner who applies the rule says „Samschtag“, „koschtet“ and „fährscht“, which is regional (Swabian) or wrong. The two exceptions suggest „only at the end“, which still misleads for kostet, Samstag, Schwester (u03) and Fenster. The perception pairs (sein|Schein …) and the read-aloud line are correct; only the rule line is false. It is the §9.5 class of a simplification that has become false, on a small surface, so we rate it minor. The exemplar gives examples only (u04: „ei und ie: drei, Eier, Preis – vier, die, wie“).",
+   "fix": "LS3 focus, 24 words, examples only, every word known at u10: „sch ist nicht s: Schein – sein. st, sp wie „scht“, „schp“: steigen, umsteigen, Verspätung, spät. Aber st wie „s-t“: ist, erst, kostet, Samstag, fährst.“ The read-aloud line („Entschuldigung, ist hier noch frei? Wir steigen erst in Dresden aus.“) already contrasts both groups and stays.",
+   "proposedRule": null
+  }
+ ],
+ "exitCheck": {
+  "blocker": 1,
+  "major": 2,
+  "minor": 4,
+  "criteriaBelow4": [
+   "N",
+   "A",
+   "P"
+  ],
+  "exit": false,
+  "note": "Exit needs 0 BLOCKER, 0 MAJOR, every criterion at 4 or above and at most 5 logged MINOR. None of the three gates is in the unit: F01 needs the E1 server track, F02 the rule-cards owner (plus lx.busfahrer from the lexicon owner), and F03 the checker owner. With those, P, N and A return to 4, and F04 stays a logged minor. After the one unit edit (F07), three owner-held minors remain (F04, F05, F06), within the limit. This is round 3 of the 4 planned. The unit's content is ready, so a round 4 needs no full content re-read, only four checks: (a) play one a11-u10-s session after the engine fix (the result must show a Teil 3 score); (b) read the new rule card; (c) run the F03 fixtures through checkItem; (d) read the new focus line. If the owners have not acted by then, the 5th-round rule of §9.4 calls for the rails, not for more unit rounds. Stop-the-line (§9.4) remains in force for five classes that recur in three or more a1.1 units: the multi-Teil speaking engine (F01), rule cards whose simplification is false (F02: u04, u08, u10), paradigm errors graded as typos (F03: u03, u08, u10 and six more), receptive lemmas that must be produced (F04: u04, u08, u10), and word cards that contradict their unit (F05: u01, u03, u08, u10)."
+ },
+ "notes": [
+  "Exemplar classes (u04 r1–r5) and later a1.1 classes that do NOT recur here. Every sentence-building prompt names Aussagesatz, W-Frage, Ja/Nein-Frage or Frage (u04 r1-F01/F12). The dictation sources ls1-l04/l06, ls2-l03/l06, ls3-l03/l08 and c06 carry no `say` that diverges from the key, and „Gleis 14“ accepts „vierzehn“ through exact:number (u04 r2-F01). Number words are accepted in number gaps (u04 r3-F01). All lex.articlePlural sources have plurals (u04 r3-F03), and all lex.glossTyped sources are productive (u04 r4-F02). Exam texts are within band (u04 r1-F10), and no protagonist appears in an LS4 text. Every error correction names what to correct or accepts both V2 orders (u04 r5-F01). No lexicon example exceeds the ceiling (u04 r4-F01), and no Landeskunde claim stands without facts[] (u04 r4-F05). Key positions are balanced (u04 r4-F03), and the proofs need German (u04 r1-F06). The Sp2 and Sp3 partner acts as a candidate, not in a clerk role-play (u04 r3-F04), and the Sp3 hints carry request forms (u04 r1-F14). No response item has a key that alone repeats the question's words (u08 r3-F05; ls1-p11's key repeats nothing).",
+  "Classes that DO recur: F01, the speaking engine drops `parts` (u01 r2-F01, u08 r2/r3-F01); F02, a rule card whose simplification is false (u04 r2-F09 … r5-F04, u08 r2-F07/r3-F08); F03, paradigm errors graded as typos (u03 r3-F01, u08 r3-F03); F04, receptive lemmas that must be produced (u04 r4-F02, u08 r3-F07); F05, word cards that contradict their unit (u01 r1-F07, u03 r3-F02, u08 r3-F06); F06, the number-gap grading family (u04 r3-F01). F07 is a residue of our own r2 proposal, as r2-F08 was of r1's; we name it as such.",
+  "For the orchestrator (the user asked to be told when a level is finished): A1.1 is not finished, and u10 cannot finish it from the unit side. (a) F01 blocks eight units, including the approved exemplar u04, until the E1 server track reads `parts`. (b) The level-scope validator fails. COV-3 fails on u01. LEX-05 fails on u04: the lexicon now allocates lx.markt, lx.prospekt and lx.durchsage to u04, whose spec omits them, so the approved exemplar no longer validates at level scope. (c) Five stop-the-line classes (exitCheck) have no rule yet. u10's own content is one string edit (F07) from its unit-owned floor.",
+  "For the curriculum and spine owners (r1-F20): curriculum/a1-1.md §6 u10 still says „Einheit 10 bringt keine neue Grammatik“, while grammar-spine.json and specs.json make g.wortbildung-er-in new at u10. The unit follows the spine and logs the conflict in spec.deviation (2). a1.1/specs.json u10 still has deviation null, while the unit carries four points; under „one plan, one truth“ specs.json should be updated from the unit.",
+  "For the level reviewer and the u11, u12 and a1.2-u01 authors (r1-F19): LEX-02 is 25. U-Bahn, Abfahrt, Ankunft, Hauptbahnhof, Anzeigetafel, einfach, Bahn, Fahrplan, einsteigen, umsteigen, pünktlich, Platz, frei, Kilometer and unterwegs recur in no later unit. u11 retells this very trip, and a1.2-u01 is the natural second place.",
+  "Considered and not flagged. (1) The gist items start-i01 (nach Hannover / nach Dresden / nach Berlin), ls1-i01 and ls1-i02 have distractors that are not heard in their own input, so spotting the key decides. The approved exemplar's gist items do the same (u04 ls2-i01: „Brot und Käse“ and „Milch und Wasser“ are not in LS2), and the u04 r1-F19 / u10 r2-F08 class concerns detail and exam items, so we leave the gist items. (2) ls3-mo has the learner answer Emre about a train they are not on. Priya is „im Chat“, and u11 ls3-mo uses the same relay (Priya shows photos, the learner answers), so it is coherent. (3) personaDe calls the learner „Ihre“ inside a prompt that addresses the AI with du and calls the learner „dein Gegenüber“. u06 does the same („mit Ihnen im Kurs“), and the model reads it from context; a course-wide wording rule would belong to the SCHEMA owner. (4) ls2-p10 rejects „Am Abend fährst du zurück.“: the prompt names „das Verb“, and the reorder changes more than was asked. ls3-p09 rejects „Sophie ist eine Studentin.“ for the same reason (ls3-p05 teaches „Beim Beruf steht kein Artikel“). (5) ls3-p04 „Teilnehmerinen“ → TYPO. That is a spelling slip in -nen, not a paradigm error, and the explanation shows the form. (6) l3-04 „An der Tür können Sie gut stehen.“ is idiomatic, and „Bitte hier nicht stehen!“ falsifies it. (7) In Sp2 Nora answers the learner's price and time questions with „22 Euro“ and „Um 9.10 Uhr, von Gleis 12.“. These are a candidate's answers to fact questions the card allows (sd1.sp2: one question on the topic, one answer), and r1-F09's fix stands. (8) Both candidates hold „Platz“ in Teil 3 (spec.deviation 3). (9) The double full stop „… Bitten..“ in the partner prompt comes from the engine appending „.“ to a personaDe that already ends in one; it is engine cosmetics in every unit. (10) The -in items and the separable-verb corrections are safe in the grader, so F03 lists only verb items.",
+  "We checked every proposed fix against the rails before recommending it. F02's card has 48 words (≤ 60) and uses only nouns known at u10 once lx.busfahrer is allocated. It adds „Freund → Freundin“ because c05 has drilled it since r2, and it replaces r2's „jedes“ with „alle“. F07's line has 24 words, and every word is known at u10 (Samstag u08, kostet u04, Verspätung and fährst u10). It keeps the exemplar's examples-only form and adds nothing to the metalanguage list.",
+  "Legal and claims: no surface promises an outcome, claims human feedback or misuses exam marks. The AI partner is „Nora — Teilnehmerin in der Prüfung“ and is never called a Prüferin. The four announcements, five signs, the Sp2 and Sp3 cards and the S2 situation are original in the SD1 format; both strategy cards and the block instructions are paraphrases. No CEFR or Goethe descriptor is quoted. Tasks use Sie, and du is used only among friends. facts[] is correctly empty.",
+  "Process: this review is the only file written. The a1.1 compile went to the scratchpad. At the start one read-only git call (log/status) was made against the brief; it changed nothing, and the file dates above come from ls."
+ ]
+}

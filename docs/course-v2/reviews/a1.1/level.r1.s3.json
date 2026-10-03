@@ -1,0 +1,126 @@
+{
+  "review": "a1.1-level.r1.s3",
+  "slice": "3 of 3 (course end): u09, u10, u11, u12, p3, halbtest-sd1 — plus the whole-level story arc u01 → Halbtest",
+  "files": [
+    "content/course-v2/a1.1/units/u09.json",
+    "content/course-v2/a1.1/units/u10.json",
+    "content/course-v2/a1.1/units/u11.json",
+    "content/course-v2/a1.1/units/u12.json",
+    "content/course-v2/a1.1/plateaus/p3.json",
+    "content/course-v2/a1.1/closing/halbtest-sd1.json"
+  ],
+  "date": "2026-09-28",
+  "reviewers": [
+    { "id": "R1", "persona": "lizenzierte Prüferin Goethe-Zertifikat A1: Start Deutsch 1 — Prüfungstreue, Aufgabenklarheit, Schlüssel" },
+    { "id": "R2", "persona": "Kursleiterin DaF A1.1 — Natürlichkeit, Niveau, Didaktik, Szenenplausibilität, Kontinuität" }
+  ],
+  "method": "Read every German string of the six files (dumped per file), plus u08 (unit before) and the a1.2-u01 spec (unit after), the A1 cast bible (casts/a1.json, series.json), grammar-spine.json, lanes/sd1.json and the story beats/cliffhangers of u01–u12. Solved every authored item of the slice blind from promptDe + options/tiles/audio line (u09 ≈ 97, u10 ≈ 100, u11 ≈ 95, u12 ≈ 100, p3 14 + 5 form fields, Halbtest 17 + 5 form fields); no wrong key found. Graded all 934 answer/accepted strings of the 413 items with the real grader (src/lib/course-v2/checkItem.js): 0 fail. Ran 34 further candidate answers through checkItem; the misses are quoted in the findings. Recomputed every price and time chain (u09 bill 20,90 / 8,90 / 11,10 / 9,20; u10 9.10→10.25 and 18.35→19.50 = 1 h 15; u11 +60 min → ‚um neun‘): all consistent. Ran node scripts/course-v2/validate.mjs a1.1: 43 rules, 0 blocker; for these files only advisories/ratchets (GRM-02 recycling of g.moegen/g.wollen — waits for A1.2 specs; GRM-04 heuristic hits on Redemittel labels; LEX-01 labels/Aussprache focus; LEX-02 recurrence of u09/u10 lemmas — structurally expected at the end of the level, A1.2 must recycle; LEX-03 u09 checklist ‚Geburtstag‘ is a read surface, a false positive; TXT-01 three u12 exam sentences of 13–16 words). No official Modellsatz text was found copied; all exam texts are original and story-bound. No content was edited.",
+  "total": 26,
+  "scores": { "D": 4, "N": 3, "H": 4, "A": 4, "P": 4, "K": 3, "E": 4 },
+  "findings": [
+    {
+      "severity": "major",
+      "where": "units/u11.json spec.grammar.new[0] (g.perfekt-haben) with steps[0].pool.items[2] (a1.1-u11-ls1-p03), steps[0].pool.items[3] (p04), steps[0].reserve[1] (r02), steps[2].pool.items[0..3] (ls3-p01…p04), check.items[1] (a1.1-u11-c02), steps[5].task.leitpunkte[0], steps[0].microOutput.targets, steps[1].microOutput.targets; units/u12.json spec.grammar.new[0] (g.perfekt-sein) with steps[0].pool.items[0..3,9] (ls1-p01…p04, p10), check.items[0] (a1.1-u12-c01), check.items[3] (a1.1-u12-c04), steps[0].microOutput.targets; registries/grammar-spine.json g.perfekt-haben.intro.productive = a1.2-u05, g.perfekt-sein.intro.productive = a1.2-u08",
+      "issue": "Criterion (4): the spine makes the Perfekt productive only in A1.2 (haben U5, sein U8), but u11/u12 grade it productively: typed participles from the infinitive (gesehen, gearbeitet, gekauft, gegessen, gelesen, getrunken, gemacht, gespielt), typed/chosen auxiliaries incl. the haben/sein choice (u12 ls1-p04, p10, c04), both in the Lektions-Check, and the u11 S2 Leitpunkt ‚was haben Sie gemacht?‘ plus Sp2 cards in the Perfekt. The micro-outputs whose models are all Perfekt are targeted at g.zeitangaben-inversion (u11 mo1–mo3) and g.verbposition-2 (u12 mo1), so GRM-02's ‚productive target before intro.productive‘ check never fires, and GRM-04 treats a declared point as licensed — a gate hole. Net effect for the learner: three new grammar systems (Perfekt haben, Perfekt sein with auxiliary choice, wollen) in the last two units before the Halbtest, while BLUEPRINT §2.8 row 11/12 plans ‚Vergangenheit als Chunks (8–10 Formen)‘ and ‚Wiederholung‘.",
+      "fix": "Decide once, in the spine (owner of grammar-spine.json), then align the gate. Recommended (matches BLUEPRINT row 11, Menschen A1 L11–12, Schritte plus Neu 1 L7): set g.perfekt-haben.intro.productive = \"a1.1-u11\" with the label note „A1.1: feste Liste – gemacht, gekauft, gespielt, gekocht, gearbeitet, gegessen, getrunken, gesehen, gelesen, geschlafen, gelacht; das System ab a1.2-u05“, and g.perfekt-sein.intro.productive = \"a1.1-u12\" with „A1.1: gekommen, gefahren, geflogen, geblieben“. Then set u11 steps[0].microOutput.targets = [\"g.perfekt-haben\"], steps[1].microOutput.targets = [\"g.perfekt-haben\", \"g.zeitangaben-inversion\"], u12 steps[0].microOutput.targets = [\"g.perfekt-haben\", \"g.verbposition-2\"], and extend GRM-02 so that a typed item (fill_blank/error_correction/sentence_building) whose topic is a spine point counts as productive use. If the spine stays at A1.2 instead: drop a1.1-u11-c02, a1.1-u12-c01 and a1.1-u12-c04 from the Checks (replace with choice items: „Welcher Satz sagt: Das war gestern?“) and move u12 ls1-p04/p10 (haben oder sein?) to the reserve with banks [\"mehr-ueben\"] only."
+    },
+    {
+      "severity": "major",
+      "where": "closing/halbtest-sd1.json parts[8].modelTurns[2] (Sprechen Teil 1, learner model); same class in units/u08.json steps[4].task.modelTurns[1]",
+      "issue": "Model turn „In Kochi arbeite ich am Empfang. Mein Hobby ist Tanzen.“ follows „Jetzt wohne ich in Leipzig.“ — the present tense says Priya works in Kochi now, which contradicts the persona (she left Kochi, u12: „In Kochi habe ich am Empfang gearbeitet“, redemittel[1]) and is the model a learner copies for the Stichwort ‚Beruf‘ in the one test that closes the course. u08 carries the identical sentence.",
+      "fix": "Halbtest parts[8].modelTurns[2].de → „Ich bin Rezeptionistin von Beruf. Mein Hobby ist Tanzen.“ (lx.rezeptionist a1.1-u02; alternatively, after u12: „In Kochi habe ich am Empfang gearbeitet. Mein Hobby ist Tanzen.“). u08 steps[4].task.modelTurns[1].de → „Ich wohne jetzt in Leipzig. Ich bin Rezeptionistin. Hier lerne ich Deutsch. Ich spreche drei Sprachen: meine Muttersprache, Englisch und ein bisschen Deutsch.“ (the Perfekt is not available at u08)."
+    },
+    {
+      "severity": "major",
+      "where": "units/u11.json steps[2].input.text.de (Postkarte von Sophie, 2nd sentence „Meine Eltern sehe ich nur einmal im Monat.“) and steps[2].input.text.en",
+      "issue": "Story contradiction across the arc: Sophie is with her parents in Dresden on the u08 Saturday (u08 LS3 chat: „Da bin ich nicht in Leipzig, sondern in Dresden. Meine Eltern wohnen dort.“) and goes there again the very next Saturday (u10 Folge, P3 Lesemagazin), yet her postcard says she sees them only once a month.",
+      "fix": "Replace the sentence with „Meine Eltern finden euch sehr nett!“ and the English twin with „My parents think you are very nice!“. No item reads the old sentence; lx.monat keeps its recurrence in ls2-l05 („einmal im Monat“)."
+    },
+    {
+      "severity": "major",
+      "where": "units/u11.json steps[1].inputItems[4] (a1.1-u11-ls2-i05) accepted",
+      "issue": "„Am Mittwoch um ___ Uhr ist Elif am Park.“ — checkItem grades „17.00“ and „17:00“ WRONG (only „17“ and „5“ are accepted). „um 17.00 Uhr“ is standard written German and a defensible answer.",
+      "fix": "accepted → [\"17\", \"5\", \"17.00\", \"17:00\"], acceptedWhy add „17.00“/„17:00“: „auch richtig: 17.00 Uhr ist 17 Uhr“."
+    },
+    {
+      "severity": "major",
+      "where": "units/u10.json steps[2].pool.items[6] (a1.1-u10-ls3-p07) accepted",
+      "issue": "Tiles [fahren, Sie, auch, nach Dresden]: checkItem grades „Fahren auch Sie nach Dresden?“ WRONG, although u09 ls1-p09 accepts the exact parallel „Mögt auch ihr Kuchen?“ (reviewerConfirmed). A learner taught in u09 that this order is right is marked wrong one unit later.",
+      "fix": "accepted → [\"Fahren Sie auch nach Dresden?\", \"Fahren auch Sie nach Dresden?\"], acceptedWhy „Fahren auch Sie nach Dresden?“: „grammatisch: „auch“ vor „Sie“ betont „Sie“ (auch Sie, wie wir); das Verb bleibt auf Position 1“."
+    },
+    {
+      "severity": "major",
+      "where": "units/u12.json steps[0].pool.items[4] (ls1-p05), [5] (p06), [6] (p07), [8] (p09), steps[0].reserve[1] (r02), steps[1].pool.items[4] (ls2-p05), [5] (p06), steps[1].reserve[1] (r02), check.items[2] (a1.1-u12-c03)",
+      "issue": "Inconsistent acceptance across adjacent units: u11 accepts the fronted non-finite verb in 12 sentence-building items („Gekocht habe ich am Sonntag.“, „Kommen kann ich am Mittwoch.“ — acceptedWhy „grammatisch, aber stark betont“), but u12 grades the same construction WRONG (checked: „Gekommen bin ich nach Leipzig.“, „Geblieben ist Emre in İzmir.“, „Arbeiten will ich in Leipzig.“, „Finden will Bilal Arbeit.“, „Machen wollen wir die Prüfung.“).",
+      "fix": "One policy for the level. Recommended (never mark grammatical German wrong): add to accepted, with u11's acceptedWhy wording „grammatisch, aber stark betont: das Partizip/der Infinitiv auf Position 1, das Verb bleibt auf Position 2“ — ls1-p05 „Gekommen bin ich nach Leipzig.“, ls1-p06 „Geblieben ist Emre in İzmir.“, ls1-p07 „Gefahren sind wir mit dem Zug.“, ls1-p09 „Gefahren ist Frau Schulz nach Wien.“, ls1-r02 „Geblieben sind Emre und Arta in İzmir und Prishtina.“, ls2-p05 „Arbeiten will ich in Leipzig.“, ls2-p06 „Machen will Arta die Prüfung.“, ls2-r02 „Finden will Bilal Arbeit.“, c03 „Machen wollen wir die Prüfung.“. If the rail instead excludes fronted non-finite verbs, remove them from u11 and state the exclusion in ITM-09."
+    },
+    {
+      "severity": "minor",
+      "where": "plateaus/p3.json texts[5].text (a1.1-p3-sd1-t6, „Am Café“) and examTeile[1].items[0] (a1.1-p3-sd1-l3-01); vs units/u09.json steps[0].input.text.de",
+      "issue": "The same place, „Café am Park“, has different opening days: u09's menu „Dienstag bis Sonntag, 8 bis 18 Uhr“ (closed Monday), P3 — one screen later in the course — „Montag bis Freitag 8 bis 18 Uhr, Samstag und Sonntag 9 bis 20 Uhr“.",
+      "fix": "p3 t6 text → „Café am Park\\nDienstag bis Sonntag 8 bis 18 Uhr\\nMontag geschlossen\\nFrühstück bis 12 Uhr“; l3-01 promptDe → „Am Café: „Am Sonntag um 17 Uhr ist das Café offen.““ (key stays richtig, R/F balance kept), explanation.de → „Von Dienstag bis Sonntag ist das Café von 8 bis 18 Uhr offen. Um 17 Uhr ist es also offen.“"
+    },
+    {
+      "severity": "minor",
+      "where": "plateaus/p3.json examTeile[2].situationDe (sd1.s1, a11-p3-w1-sd1) and form.fields[3]",
+      "issue": "Within the same Plateau the running group meets „jeden Samstag um 10 Uhr“ (t9 sign, also u08 LS2/LS3), Paula's message moves one Saturday to 8.30, and the S1 text then says „Laufen, jeden Samstag um halb neun“. The key follows from the S1 text, but the three texts contradict each other.",
+      "fix": "situationDe → „… Jetzt macht sie einen Kurs im Park: Laufen, jeden Sonntag um halb neun, eine Stunde.“; fields[3] answer „Sonntag“, accepted [\"Sonntag\", \"am Sonntag\", \"sonntags\", \"jeden Sonntag\", \"So.\"]; modelText „Tag: Sonntag“."
+    },
+    {
+      "severity": "minor",
+      "where": "closing/halbtest-sd1.json texts[0].lines[3] (a1.1-ht-sd1-t1-l04), parts[0].items[0] (a1.1-ht-sd1-h1-01), texts[10].text (ad b), parts[4].items[0].explanation",
+      "issue": "Leipzig–Dresden by train costs 22 € single / 44 € return in u10 (88 € for two returns; Nora's persona 22 €), but 19 € / 38 € in the Halbtest, whose ad also says „nur eine Stunde“ against u10's „eine Stunde und fünfzehn Minuten“.",
+      "fix": "t1-l04 de → „Hin und zurück kostet 44 Euro. Einfach kostet 22 Euro.“ (say: „vierundvierzig … zweiundzwanzig“); h1-01 options → [\"22 Euro\", \"44 Euro\", \"24 Euro\"], answer/accepted „44 Euro“, explanation with 44/22; ad b) → „Mit dem Zug nach Dresden: schnell, nur eine Stunde und fünfzehn Minuten. Hin und zurück 44 Euro.“; l2-01 explanation „38 Euro“ → „44 Euro“."
+    },
+    {
+      "severity": "minor",
+      "where": "closing/halbtest-sd1.json texts[15].text (a1.1-ht-sd1-t16, „Am Museum“)",
+      "issue": "„Museum im Schloss … Dienstag bis Sonntag 10 bis 17 Uhr, Montag geschlossen“ sits in a Dresden-themed test and contradicts the course's own verified fact a1.1-u11-f01 (Residenzschloss: täglich 10–17 Uhr, Dienstag geschlossen).",
+      "fix": "text → „Museum im Schloss\\nMittwoch bis Montag 10 bis 17 Uhr\\nDienstag geschlossen\\nKinder bezahlen nichts.“ (item l3-03 unaffected)."
+    },
+    {
+      "severity": "minor",
+      "where": "units/u12.json steps[1].input.lines[9] (a1.1-u12-ls2-l10) de + en",
+      "issue": "Priya: „Jetzt will ich die Prüfung machen. Dann will ich wieder am Empfang arbeiten. Aber zuerst will ich ein Praktikum …“ — ‚jetzt Prüfung‘ contradicts the story order the unit itself sets (first the A1.2 course, Herr Richter: „Aber zuerst kommt der Kurs!“), and jetzt/dann/zuerst in one breath is hard to follow at A1.1.",
+      "fix": "de → „Mein Plan? Ich lerne seit drei Monaten Deutsch. Zuerst will ich ein Praktikum in einem Hotel machen und den Kurs A1.2. Dann will ich die Prüfung machen und wieder am Empfang arbeiten.“ (items ls2-i01, ls2-r01 stay true); en twin accordingly."
+    },
+    {
+      "severity": "minor",
+      "where": "closing/halbtest-sd1.json texts[3] (a1.1-ht-sd1-t4) and parts[1].items[0] (a1.1-ht-sd1-h2-01); units/u12.json steps[3].texts[1] (a1.1-u12-ls4-t2)",
+      "issue": "Near-duplicates (criterion 8): the Halbtest's first H2 announcement (Gleis 5, Zug nach Berlin, 20 Minuten Verspätung, statement ‚fährt … um X ab‘ → falsch) repeats u10 ls4-t1 almost exactly; u12 ls4-t2 („In ein paar Minuten kommen wir in … an … steigen Sie … um“) repeats u10 ls4-t3. Six of the last ten H2 texts are train delays or platform changes, so the Halbtest partly tests recall of a pattern.",
+      "fix": "Halbtest t4 de → „Achtung an Gleis 9! Der Zug nach München fährt heute nicht von Gleis 9 ab. Bitte gehen Sie zu Gleis 11. Die Abfahrt ist wie immer um 14.10 Uhr.“ (say with „neun … elf … vierzehn Uhr zehn“); h2-01 promptDe → „Der Zug nach München fährt heute später ab.“ (key stays falsch), explanation.de → „Nur das Gleis ist neu: Gleis 11. Der Zug fährt wie immer um 14.10 Uhr ab.“ Optionally re-set u12 t2 in a supermarket or at the Sprachschule."
+    },
+    {
+      "severity": "minor",
+      "where": "units/u10.json check.proofItems[1] (a1.1-u10-q02), proof of cd.a1.fahrkartenautomat",
+      "issue": "„Automat: „Wie viele Personen?“ Priya und Arjun fahren nach Dresden.“ → „2 Personen“ is solvable by counting two names; it does not show that the learner can read the machine's instructions (the can-do).",
+      "fix": "promptDe → „Automat: „Bezahlen: mit Karte oder bar?“ Sie haben keine Karte, nur 50 Euro. Was wählen Sie?“, options [\"mit Karte\", \"bar\", \"hin und zurück\"], answer/accepted „bar“, drop exact, explanation.de → „„bar“ heißt: mit Geld, ohne Karte. Sie haben keine Karte, also bezahlen Sie bar.“"
+    },
+    {
+      "severity": "minor",
+      "where": "units/u12.json steps[2].pool.items[9] (a1.1-u12-ls3-p10)",
+      "issue": "The error correction „Wann der Kurs fängt an?“ has the same answer as ls3-p05 (build „Wann fängt der Kurs an?“) in the same 16-item pool; a learner served both builds the identical sentence twice.",
+      "fix": "promptDe → „Korrigieren Sie die Wortstellung: „Wann die Prüfung ist?““, tiles [\"wann\", \"ist\", \"die Prüfung\"], answer/accepted „Wann ist die Prüfung?“, explanation.de → „In der W-Frage steht das Verb „ist“ auf Position 2, gleich nach „Wann“.“"
+    },
+    {
+      "severity": "minor",
+      "where": "units/u10.json steps[1].inputItems[2] (a1.1-u10-ls2-i03) accepted",
+      "issue": "„Die zwei Fahrkarten kosten zusammen ___ Euro.“ — „88,00“ and „88.00“ are graded WRONG, while u12 ls3-i03 accepts „320,00“ for the same kind of gap.",
+      "fix": "accepted → [\"88\", \"88,00\", \"88.00\"]."
+    },
+    {
+      "severity": "minor",
+      "where": "units/u12.json steps[3].texts[5].text (a1.1-u12-ls4-t6), steps[2].microOutput.modelDe; closing/halbtest-sd1.json texts[9].text (a1.1-ht-sd1-t10)",
+      "issue": "In-story naming: the current course is „Kurs A1“ right next to „Kurs A1.2“ (u12 sign „Kurs A1 von Frau Schulz“, model „Ich bin im Kurs A1 von Frau Schulz“, Halbtest „der letzte Tag im Kurs A1“). Read together this suggests A1 is complete; the product calls the level A1.1.",
+      "fix": "From the point where A1.2 is named, say „Kurs A1.1“: t6 „Kurs A1.1 von Frau Schulz: Heute nicht hier!“, u12 mo3 modelDe „… Ich bin im Kurs A1.1 von Frau Schulz. …“, Halbtest t10 „am Freitag ist der letzte Tag im Kurs A1.1.“ (spoken lines need say „A eins eins“)."
+    },
+    {
+      "severity": "minor",
+      "where": "units/u09.json steps[4].task.parts[1].cards.learner[1] („Rechnung“) + modelTurns[12]; closing/halbtest-sd1.json parts[10].cards.partner[1] („Rechnung“) + modelTurns[6..7]",
+      "issue": "Pragmatics in Sprechen Teil 3: at the café table the learner asks fellow guest Nora „Kann ich bitte die Rechnung haben?“ (and Nora asks the learner „Die Rechnung, bitte!“) — one asks the waiter for the bill, not the person at the table.",
+      "fix": "u09 learner card „Rechnung“ → „Milch“, modelTurns[12] → „Kann ich bitte die Milch haben?“ (lx.milch productive u04); Halbtest partner card „Rechnung“ → „Zucker“, modelTurns[6] → „Können Sie mir bitte den Zucker geben?“, [7] → „Ja, gern. Hier ist der Zucker.“, and the aiRole.personaDe card list accordingly."
+    }
+  ],
+  "arc": "u01–u12 + P3 + Halbtest read as one believable, well-paced story: first day and registration (u01–u02) → family and Arjun (u03) → saving and moving to Kölner Straße 18 (u04–u05) → laptop (u06) → day and doctor (u07) → Emre links Priya to Elif, running group (u08) → café after the run, Olena's birthday booking (u09, P3 chat) → Dresden with Sophie the day after the party, delayed train home (u10) → Monday weekend talk, postcard (u11) → last week, plans, A1.2 registration, internship e-mail (u12) → Halbtest set in the same world (Emre's e-mail, Frau Schulz's breakfast, Herr Richter's message) → a1.2-u01 opens exactly on the internship Monday. Every cliffhanger pays off in the next Folge; names, phone numbers (0176 38 29 41 06), address, ages, du/Sie relations and the u09 prices/u10 times match the cast bible and each other. The only arc breaks are the two majors above (Sophie's ‚nur einmal im Monat‘, Priya ‚arbeitet in Kochi‘) and the four minor fact drifts (café hours, Paula's time, Dresden fare, museum closing day).",
+  "verdict": "Yes, this end of A1.1 is good enough to show learners once a short fix list is done: the story arc from u01 to the Halbtest is coherent and lively, the German is clean and natural, every one of the 413 items has a correct key (934 answer strings grade correct), and all Start-Deutsch-1 blocks, the Plateau and the Halbtest are format-correct and original. Before the owner plays it, fix the two story breaks a careful learner will notice (Sophie ‚sees her parents once a month‘, the Halbtest model ‚In Kochi arbeite ich am Empfang‘) and add the handful of correct answers the grader still rejects (17.00, „Fahren auch Sie …“, the fronted participles u11 accepts but u12 rejects). The one real decision is grammatical: u11–u12 teach the Perfekt productively while the grammar spine says A1.2, so the owner should confirm the Menschen/Schritte-style end of A1.1 and the spine should follow — none of this needs rewriting, it is about a day of edits."
+}
