@@ -31,7 +31,7 @@
   },
   {
     "sentence_de": "Sie ist seit drei Jahren in Deutschland.",
-    "hint": "German uses 'seit' + present tense for something still going on: 'ist seit drei Jahren in Deutschland' = 'has been in Germany for three years', where English uses the present perfect. 'seit' + Perfekt is also correct, e.g. for something that has not happened since: 'Ich habe sie seit Mai nicht gesehen.'",
+    "hint": "German uses 'seit' + present tense for something still going on: 'ist seit drei Jahren in Deutschland' = 'has been in Germany for three years', where English uses the present perfect. 'seit' + Perfekt is also correct, e.g. for something that has not happened since a point in time: 'Ich habe sie seit Mai nicht gesehen.'",
     "level": "A2",
     "grammar_focus": "Seit + present tense"
   },
@@ -55,7 +55,7 @@
   },
   {
     "sentence_de": "Der Roman, den Anna empfohlen hat, ist sehr spannend.",
-    "hint": "'den' is accusative masculine: its gender comes from 'der Roman', its case from its role in the relative clause, where it is the object of 'empfohlen hat'. In the Perfekt, the conjugated 'hat' goes to the very end of the relative clause.",
+    "hint": "'den' is accusative masculine: its gender comes from 'der Roman', its case from its role in the relative clause, where it is the object of 'empfohlen hat'. In a relative clause the conjugated verb goes to the very end: 'empfohlen hat'.",
     "level": "B1",
     "grammar_focus": "Relative clauses (accusative)"
   },
@@ -133,7 +133,7 @@
   },
   {
     "sentence_de": "Sie ist nach Berlin gefahren.",
-    "hint": "Verbs of movement from one place to another, like 'fahren' here, form the Perfekt with 'sein': 'ist … gefahren'. With a direct object, 'fahren' takes 'haben': 'Sie hat das Auto in die Werkstatt gefahren.'",
+    "hint": "Verbs of movement from one place to another, like 'fahren' here, form the Perfekt with 'sein': 'ist … gefahren'. When 'fahren' means driving something or someone somewhere, it takes 'haben': 'Sie hat das Auto in die Werkstatt gefahren.'",
     "level": "A2",
     "grammar_focus": "Perfekt with sein (motion verbs)"
   },
