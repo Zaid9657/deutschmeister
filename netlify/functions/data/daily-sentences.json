@@ -79,7 +79,7 @@
   },
   {
     "sentence_de": "Das Paket wird morgen geliefert.",
-    "hint": "Passive voice in Futur I — 'werden' does double duty for both future and passive here.",
+    "hint": "Vorgangspassiv in the present tense: 'wird' + past participle. 'morgen' already places it in the future, so no second 'werden' is needed.",
     "level": "B1",
     "grammar_focus": "Passive voice (Vorgangspassiv)"
   },
@@ -91,7 +91,7 @@
   },
   {
     "sentence_de": "Trotz seiner Müdigkeit arbeitete er weiter.",
-    "hint": "'Trotz' takes the genitive — and 'seiner' is a genitive masculine possessive pronoun.",
+    "hint": "'Trotz' takes the genitive — and 'seiner' is genitive feminine, because 'Müdigkeit' is feminine (die Müdigkeit). With a masculine noun it would be 'seines': trotz seines Fehlers.",
     "level": "B2",
     "grammar_focus": "Genitive preposition: trotz"
   },
@@ -109,13 +109,13 @@
   },
   {
     "sentence_de": "Er behauptet, keine Zeit zu haben.",
-    "hint": "Accusative-and-infinitive — 'keine Zeit zu haben' is the whole object of 'behauptet'.",
+    "hint": "An infinitive clause as the object — 'keine Zeit zu haben' is what he claims. Both verbs share one subject (er), so German drops the second subject and uses zu + infinitive.",
     "level": "B2",
     "grammar_focus": "Infinitive clauses as objects"
   },
   {
     "sentence_de": "Das Haus, in dem wir wohnen, wurde 1920 gebaut.",
-    "hint": "A dative relative clause with a preposition — 'dem' is dative masculine because 'in' + dative = location.",
+    "hint": "A relative clause with a preposition — 'dem' is dative neuter: it refers back to 'das Haus', and 'in' takes the dative for a location (wo?).",
     "level": "B2",
     "grammar_focus": "Relative clauses with prepositions (dative)"
   },
@@ -144,8 +144,8 @@
     "grammar_focus": "Genitive relative pronouns (dessen/deren)"
   },
   {
-    "sentence_de": "Er fragte, ob sie Zeit hätte.",
-    "hint": "Indirect speech with 'ob' shifts the verb to Konjunktiv I — the grammar of reported speech.",
+    "sentence_de": "Er fragte, ob sie Zeit habe.",
+    "hint": "Reported speech: 'habe' is the Konjunktiv I of 'haben' (the indicative is 'hat'). In everyday German you will also hear 'hätte' (Konjunktiv II) or plain 'hat'.",
     "level": "B2",
     "grammar_focus": "Konjunktiv I in indirect speech"
   },
