@@ -21,6 +21,9 @@ const PAIRS = [
   // THE exam-track registry — /pruefung/ hubs, dashboard exam goal, and the
   // mock-exam/writing keys all resolve exams through this one module.
   ['src/data/examTracks.js', 'astro-site/src/data/examTracks.js'],
+  // THE funnel event registry — one name and one meaning per analytics event on
+  // both front ends, so a report never mixes two definitions of the same step.
+  ['src/data/events.js', 'astro-site/src/data/events.js'],
   // Writing task bank: the SPA renders tasks, the grading function validates
   // keys and derives the rubric — grading a task the UI doesn't show (or vice
   // versa) is exactly the drift this pair-check exists for.

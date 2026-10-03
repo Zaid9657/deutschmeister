@@ -9,6 +9,7 @@ import Card from '../components/ui/Card.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
 import ReportProblemLink from '../components/ReportProblemLink.jsx';
 import confettiBurst from '../lib/confetti.js';
+import { consumeCheckoutSuccess } from '../lib/funnelTracking';
 import { COURSE_PRO_MONTHS, courseForProduct } from '../data/pricing.js';
 
 const SubscriptionSuccessPage = () => {
@@ -51,6 +52,10 @@ const SubscriptionSuccessPage = () => {
   useEffect(() => {
     if (!verified || celebratedRef.current) return;
     celebratedRef.current = true;
+    // A checkout opened on a static page (/pricing/, /courses/) armed the
+    // dm_checkout_pending flag there; this is the first place the app sees it
+    // finish. Consumed once, so a reload never counts a second completion.
+    consumeCheckoutSuccess();
     confettiBurst();
   }, [verified]);
 

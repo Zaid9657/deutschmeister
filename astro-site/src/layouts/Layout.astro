@@ -390,5 +390,11 @@ const authAttrs = (item) =>
       })();
     </script>
     <Showtime />
+    <script>
+      // Funnel events for the static pages (src/data/events.js). Consent-gated
+      // inside track(); before Accept every call is a no-op.
+      import { autoTrack } from '../lib/track.js';
+      autoTrack();
+    </script>
   </body>
 </html>
