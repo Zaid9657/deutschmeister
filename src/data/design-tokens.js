@@ -363,3 +363,151 @@ export const tailwindFontFamily = {
   body: ['Nunito Sans', 'Nunito Sans Fallback', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
   data: ['ui-monospace', 'SFMono-Regular', 'SF Mono', 'Menlo', 'Consolas', 'monospace'],
 };
+
+// ===========================================================================
+// v3 — "DIE LINIE · DEUTSCH, IN BEWEGUNG" (2026-10-04)
+// docs/redesign-2026-10/art-direction.md holds the why; this holds the values.
+//
+// The marketing site and the commerce screens become a German transit line:
+// the CEFR ladder is a line of eight stations, A1.1 the free first stop, each
+// paid level a one-time ticket. The section is ADDITIVE on purpose — nothing
+// above changes value, so every existing screen, the lesson player and the
+// course theme keep rendering exactly as before; a surface opts in by using
+// these classes. Placed at the end of the file so it never shares a hunk with
+// the course theme's edits.
+//
+// RULE 2, AMENDED. `siegel` stays the action colour on LIGHT grounds (paper,
+// white). On a `nacht` ground the action colour is `linie` with `linie.ink`
+// text. Signal yellow on paper is ~1.4:1, so `linie` is NEVER text and never a
+// meaningful line on a light ground — there it may only fill a shape that has
+// ink text or an ink outline on it (a station dot, the ticket stub).
+// RULE 1 still binds: linie is yellow — distinct from all four kasus hues —
+// and is never used to mark a case.
+// ===========================================================================
+
+/** The line itself: signal yellow, as on German wayfinding signs. */
+export const linie = {
+  DEFAULT: '#FFD23F',
+  deep: '#E0AE00', // hover/press on nacht; the line's shadow side
+  edge: '#B98C00', // the hard bottom edge under a linie face (rule 3)
+  wash: '#FFF6D6', // a quiet highlight behind ink text on a light ground
+  ink: '#2B2100', // text on a linie face (11:1, AAA)
+};
+
+/** The night grounds: hero, the line section, the final decision. */
+export const nacht = {
+  DEFAULT: '#0E1513',
+  raised: '#17211E', // cards and the ticket on nacht
+  sunk: '#08100E', // the track bed under the line
+  rule: '#2C3833', // hairlines on nacht
+  text: '#F4F2EC', // body text on nacht (≥ 15:1)
+  muted: '#A9B3AE', // secondary text on nacht and nacht.raised (≥ 7:1)
+};
+
+/**
+ * Motion v3 — three tiers, strong curves (adopted from emilkowalski/skills
+ * `emil-design-eng`): feedback answers a press, a control transition changes a
+ * state, a signature moment explains something (the train advancing, the line
+ * drawing). Only transform, opacity and clip-path move. Never ease-in on UI.
+ * Reduced motion keeps opacity/colour and drops movement.
+ */
+export const motionLinie = {
+  ease: {
+    out: 'cubic-bezier(0.23, 1, 0.32, 1)', // enter/exit, presses
+    inOut: 'cubic-bezier(0.77, 0, 0.175, 1)', // on-screen movement (the train)
+    drawer: 'cubic-bezier(0.32, 0.72, 0, 1)', // the mobile menu sheet
+  },
+  duration: { feedback: '140ms', control: '220ms', section: '420ms', signature: '800ms' },
+  stagger: '60ms',
+};
+
+/**
+ * Breakpoints the redesign is checked at (360, 390, 768, 1280, 1440 px). They
+ * DOCUMENT the QA matrix; Tailwind's own screens (sm 640, md 768, lg 1024,
+ * xl 1280, 2xl 1536) stay unchanged so no existing layout moves.
+ */
+export const qaWidths = [360, 390, 768, 1280, 1440];
+
+/**
+ * The SIGN face: Archivo (Omnibus-Type, SIL OFL 1.1), variable wght 400–900 ×
+ * wdth 62–100 — subset to latin/latin-ext and instanced to that axis range
+ * from @fontsource-variable/archivo 5.3.0 (Google Fonts v25). The copyright and
+ * OFL notice travel in each file's name table; the build recipe (fontTools
+ * subset + instancer) is in docs/redesign-2026-10/art-direction.md. Signs are set in Archivo (marketing
+ * pages, the station line, buttons, the commerce screens); the LIBRARY stays in
+ * Fraunces/Nunito (grammar, guides, the lesson player).
+ *
+ * Fallbacks were MEASURED in Chromium 141 (2026-10-04) against Liberation Sans
+ * (Arial's metric twin) over six of the site's own lines: Archivo 400 = 0.986×,
+ * 500 = 1.001×, 600 vs Arial Bold = 0.954×, 700 = 0.985×, 800 = 1.032×; the
+ * condensed display (wdth 72–80, wght 700–850) = 0.796–0.817× Arial Bold. The
+ * fallback faces are split by font-stretch, so a condensed headline swaps from
+ * a narrowed Arial Bold and a normal-width label from a full-width one. Archivo's
+ * vertical metrics: ascent 0.878, descent 0.210, no line gap (UPM 1000).
+ */
+const archivoFace = (file, unicodeRange) => ({
+  '@font-face': {
+    fontFamily: "'Archivo'",
+    fontStyle: 'normal',
+    fontWeight: '400 900',
+    fontStretch: '62% 100%',
+    fontDisplay: 'swap',
+    src: `url('/fonts/${file}.woff2') format('woff2')`,
+    unicodeRange,
+  },
+});
+const archivoFallback = (weight, stretch, locals, sizeAdjust, ascent, descent) => ({
+  '@font-face': {
+    fontFamily: "'Archivo Fallback'",
+    fontWeight: weight,
+    fontStretch: stretch,
+    src: locals.map((name) => `local('${name}')`).join(', '),
+    sizeAdjust,
+    ascentOverride: ascent,
+    descentOverride: descent,
+    lineGapOverride: '0%',
+  },
+});
+const ARIAL = ['Arial', 'ArialMT', 'Liberation Sans', 'LiberationSans', 'Arimo', 'Arimo-Regular', 'Roboto', 'Roboto-Regular'];
+const ARIAL_BOLD = ['Arial Bold', 'Arial-BoldMT', 'Liberation Sans Bold', 'LiberationSans-Bold', 'Arimo Bold', 'Arimo-Bold', 'Roboto Bold', 'Roboto-Bold'];
+
+export const signFontFaces = [
+  archivoFace('archivo-v25-latin', UNICODE_LATIN),
+  archivoFace('archivo-v25-latin-ext', UNICODE_LATIN_EXT),
+  // Normal width: 0.986–1.001× Arial (400–500), 0.954–1.032× Arial Bold (600–900).
+  archivoFallback('100 500', '88% 100%', ARIAL, '99%', '88.69%', '21.21%'),
+  archivoFallback('600 900', '88% 100%', ARIAL_BOLD, '99%', '88.69%', '21.21%'),
+  // Condensed display: 0.796–0.817× Arial Bold.
+  archivoFallback('100 900', '62% 87%', ARIAL_BOLD, '80%', '109.75%', '26.25%'),
+];
+
+/** The sign face's above-the-fold file — preloaded only on the pages that set signs in the first screen. */
+export const signFontPreloads = ['/fonts/archivo-v25-latin.woff2'];
+
+/** Spread into both tailwind configs: `font-sign`. */
+export const tailwindSignFont = {
+  sign: ['Archivo', 'Archivo Fallback', 'Arial', 'Helvetica Neue', 'sans-serif'],
+};
+
+/** Spread into both tailwind configs: `bg-linie`, `text-linie-ink`, `bg-nacht-raised`, `text-nacht-muted` … */
+export const tailwindLinieColors = {
+  linie: { ...linie },
+  nacht: { ...nacht },
+};
+
+/** Spread into both tailwind configs' boxShadow: the linie key's extrusion and the ticket's lift. */
+export const tailwindLinieShadow = {
+  'raise-linie': `0 4px 0 0 ${linie.edge}`,
+  'raise-nacht': `0 4px 0 0 ${nacht.sunk}`,
+  ticket: `0 2px 0 0 ${color.edge}, 0 30px 60px -30px rgba(14, 21, 19, 0.45)`,
+};
+
+/** Spread into both tailwind configs: `ease-out-strong`, `ease-in-out-strong`, `ease-drawer`. */
+export const tailwindLinieEasing = {
+  'out-strong': motionLinie.ease.out,
+  'in-out-strong': motionLinie.ease.inOut,
+  drawer: motionLinie.ease.drawer,
+};
+
+/** Spread into both tailwind configs' transitionDuration: `duration-feedback` … `duration-signature`. */
+export const tailwindLinieDuration = { ...motionLinie.duration };

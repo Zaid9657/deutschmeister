@@ -21,7 +21,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import viteConfig from '../vite.config.js';
-import { fontFaces, fontFacesItalic, fontPreloads, tailwindFontFamily } from '../src/data/design-tokens.js';
+import { fontFaces, fontFacesItalic, fontPreloads, signFontFaces, signFontPreloads, tailwindFontFamily, tailwindSignFont } from '../src/data/design-tokens.js';
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 const root = new URL('..', import.meta.url).pathname;
@@ -57,7 +57,7 @@ test('no source file imports lucide-react as a namespace', () => {
 
 // ── 2. Fonts: self-hosted, preloaded, metric-matched ────────────────────────
 
-const faceRules = [...fontFaces, ...fontFacesItalic].map((rule) => rule['@font-face']);
+const faceRules = [...fontFaces, ...fontFacesItalic, ...signFontFaces].map((rule) => rule['@font-face']);
 const faceFiles = faceRules
   .map((face) => /url\('([^']+)'\)/.exec(face.src)?.[1])
   .filter(Boolean);
@@ -69,9 +69,12 @@ test('every @font-face file exists in public/fonts, and nothing there is unrefer
 
 test('every named face in the display and body stacks is declared', () => {
   const declared = new Set(faceRules.map((face) => face.fontFamily.replace(/'/g, '')));
-  for (const role of ['display', 'body']) {
-    const stack = tailwindFontFamily[role];
-    for (const family of stack.filter((f) => /^(Fraunces|Nunito Sans)/.test(f))) {
+  // v3 adds the sign role (Archivo); it must obey the same contract.
+  const stacks = { ...tailwindFontFamily, ...tailwindSignFont };
+  for (const role of ['display', 'body', 'sign']) {
+    const stack = stacks[role];
+    assert.ok(stack, `${role} stack exists`);
+    for (const family of stack.filter((f) => /^(Fraunces|Nunito Sans|Archivo)/.test(f))) {
       assert.ok(declared.has(family), `${role} stack names "${family}" but no @font-face declares it`);
     }
     // The metric-matched fallback must come straight after the brand face.
@@ -86,13 +89,32 @@ test('every named face in the display and body stacks is declared', () => {
 
 test('both heads preload exactly the token fontPreloads, and nothing points at Google Fonts', () => {
   assert.ok(fontPreloads.length > 0 && fontPreloads.every((href) => faceFiles.includes(href)));
+  assert.ok(signFontPreloads.length > 0 && signFontPreloads.every((href) => faceFiles.includes(href)));
   const shell = read('index.html');
   const preloaded = [...shell.matchAll(/<link rel="preload" href="([^"]+)" as="font" type="font\/woff2" crossorigin>/g)].map((m) => m[1]);
   assert.deepEqual(preloaded.sort(), [...fontPreloads].sort());
 
   const layout = read('astro-site/src/layouts/Layout.astro');
-  assert.match(layout, /import \{ fontPreloads \} from '\.\.\/data\/design-tokens\.js'/);
-  assert.match(layout, /fontPreloads\.map\(\(href\) => \(\s*<link rel="preload" href=\{href\} as="font" type="font\/woff2" crossorigin \/>/);
+  assert.match(layout, /import \{ fontPreloads[^}]*\} from '\.\.\/data\/design-tokens\.js'/);
+  // v4: a page may pass its own `preloads` (the homepage sets signs above the
+  // fold); every other page gets the token list, rendered by the same map.
+  assert.match(layout, /preloads = fontPreloads,/);
+  assert.match(layout, /preloads\.map\(\(href\) => \(\s*<link rel="preload" href=\{href\} as="font" type="font\/woff2" crossorigin \/>/);
+  // A page that passes preloads builds them only from the token lists.
+  const pagesDir = join(root, 'astro-site/src/pages');
+  const pageFiles = [];
+  const walkPages = (dir) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      if (entry.isDirectory()) walkPages(join(dir, entry.name));
+      else if (entry.name.endsWith('.astro')) pageFiles.push(join(dir, entry.name));
+    }
+  };
+  walkPages(pagesDir);
+  for (const file of pageFiles) {
+    const src = readFileSync(file, 'utf8');
+    if (!/preloads=\{/.test(src)) continue;
+    assert.match(src, /const preloads = \[\.\.\.signFontPreloads, \.\.\.fontPreloads\.filter/, `${file}: preloads must come from the token lists`);
+  }
 
   for (const file of ['index.html', 'astro-site/src/layouts/Layout.astro', 'netlify.toml']) {
     assert.doesNotMatch(read(file), /fonts\.(googleapis|gstatic)\.com/, `${file} still references Google Fonts`);
@@ -101,8 +123,8 @@ test('both heads preload exactly the token fontPreloads, and nothing points at G
 });
 
 test('both tailwind configs emit the faces into their base layer', () => {
-  assert.match(read('tailwind.config.js'), /addBase\(\[\.\.\.fontFaces, \.\.\.fontFacesItalic\]\)/);
-  assert.match(read('astro-site/tailwind.config.mjs'), /addBase\(fontFaces\)/);
+  assert.match(read('tailwind.config.js'), /addBase\(\[\.\.\.fontFaces, \.\.\.fontFacesItalic, \.\.\.signFontFaces\]\)/);
+  assert.match(read('astro-site/tailwind.config.mjs'), /addBase\(\[\.\.\.fontFaces, \.\.\.signFontFaces\]\)/);
 });
 
 // ── 3. Hero text is visible in the first frame ──────────────────────────────
