@@ -109,12 +109,32 @@ test('the classifier reads the tags back without losing a label', () => {
   assert.equal(touch.medium, 'daily');
   assert.equal(touch.campaign, 'daily-sentence');
   assert.equal(touch.content, 'xray');
-  // attribution.js and xraySource.mjs keep [a-z0-9._/ -] at most: an underscore
-  // in a label would be silently dropped ("daily_sentence" -> "dailysentence").
+  // Every label stays inside what BOTH readers pass through unchanged:
+  // attribution.js keeps [a-z0-9._/ -] (stripping the rest) and xraySource.mjs
+  // voids a whole label outside [a-z0-9._:/-]. Both keep "_"; hyphens are the
+  // house convention, so this pins the narrower [a-z0-9.-].
   for (const [, v] of new URLSearchParams(DAILY_UTM)) assert.match(v, /^[a-z0-9.-]+$/);
 });
 
 test('the links are fixed strings, so a retry rebuilds the same bytes', async () => {
   assert.equal(await mailedHtml(), await mailedHtml());
   assert.ok(!/utm_[a-z]+=[^&"]*\d{4}-\d{2}-\d{2}/.test(await mailedHtml()), 'no date or clock in a tag');
+});
+
+// Pins what the comments above say (corrected 2026-10-03): hyphens are a house
+// convention, not a limit of either reader. An earlier comment here and in
+// daily-sentence.mjs claimed both readers drop "_"; neither does.
+test('both label readers keep "_": the hyphen rule is a convention, not a parser limit', async () => {
+  const { parse } = attribution();
+  const now = Date.UTC(2026, 9, 3);
+  const touch = parse('?utm_source=email&utm_medium=daily&utm_campaign=daily_sentence&utm_content=x_ray', '', '/analyze/', now);
+  assert.equal(touch.campaign, 'daily_sentence');
+  assert.equal(touch.content, 'x_ray');
+  // attribution.js strips a character outside its set and keeps the rest
+  assert.equal(parse('?utm_source=email&utm_campaign=daily!sentence', '', '/', now).campaign, 'dailysentence');
+
+  const { cleanSource } = await import('../netlify/functions/_shared/xraySource.mjs');
+  assert.equal(cleanSource({ first: 'daily_sentence' }).first, 'daily_sentence');
+  // xraySource never strips: one character outside its set voids the whole label
+  assert.equal(cleanSource({ ref: 'email', first: 'daily sentence' }).first, null);
 });
