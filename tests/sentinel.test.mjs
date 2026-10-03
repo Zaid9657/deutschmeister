@@ -1078,11 +1078,12 @@ test('end to end: the canary allowlist, the gate, an unreadable queue and weekly
 
 // ─── 6. the team's dead-man switch (roadmap r17) ────────────────────────────
 //
-// The agent team runs inside one orchestrating session; every wake ends with
-// one public.agent_heartbeats row. The sentinel reads max(created_at): a
-// missing or empty table is "not started" (skipped, never an incident, never a
-// pass); a newest row older than 8 h is one critical incident for the
-// supervisor that names the session and says what to do.
+// The agent team runs inside one orchestrating session; every scheduled wake
+// writes a public.agent_heartbeats row at its START and another at its END (a
+// wake that dies midway still leaves its start row). The sentinel reads
+// max(created_at): a missing or empty table is "not started" (skipped, never an
+// incident, never a pass); a newest row older than 8 h is one critical incident
+// for the supervisor that names the session and says what to do.
 
 const HB = 'team:heartbeat';
 const heartbeatWorld = (rows) => ({ ...healthyWorld(), agent_heartbeats: rows });
@@ -1173,6 +1174,35 @@ test('heartbeat: a row older than 8 h is one critical incident for the superviso
   assert.equal(checkHeartbeat({ last: ago(9.25) }, NOW, 10).incidents.length, 0, 'a 10 h threshold lets 9.25 h pass');
 });
 
+test('heartbeat: the hint states the start-and-end rule — a row at the START and at the END of every scheduled wake — and reads the threshold', () => {
+  // The operating rule since 2026-10-02 (changes/2026-10-02-website-heartbeat-check):
+  // the start row keeps the 8 h switch honest when a wake dies midway, so a
+  // silence means no wake started. The hint must not teach the old "one row at
+  // the end" rule to whoever reads the owner's mail.
+  const [i] = checkHeartbeat({ last: ago(9.25) }, NOW).incidents;
+  assert.equal(
+    i.hint,
+    'Open the session session_014ddD3p7VmAqaTAWKQVHJBt on claude.ai/code (unarchive it if archived), or check the Routines that wake it (docs/scorecard-routine.md). '
+      + 'Every scheduled wake writes an agent_heartbeats row at its start and another at its end, so 8 h with no row means no wake even started.',
+  );
+  assert.doesNotMatch(i.hint, /\bends with\b|\bone agent_heartbeats row\b/i, 'the pre-2026-10-02 wording ("each wake ends with one row") is gone');
+  // The number in the hint is the threshold the check judged by, never a literal.
+  const [ten] = checkHeartbeat({ last: ago(11) }, NOW, 10).incidents;
+  assert.match(ten.hint, /, so 10 h with no row means no wake even started\.$/);
+  // Copy only: the title, the action, the key, the owner and the severity are what they were.
+  assert.match(i.title, /^The agent team has stopped waking: the orchestrating session session_014ddD3p7VmAqaTAWKQVHJBt has written no heartbeat for 9\.2 h$/);
+  assert.equal(i.detail.action, 'Open the session session_014ddD3p7VmAqaTAWKQVHJBt on claude.ai/code (unarchive it if it is archived), or check the Routines that wake it.');
+  assert.deepEqual([i.key, i.owner_agent, i.severity, i.detail.thresholdHours], [`${HB}:stale:${DAY}`, 'supervisor', 'critical', HEARTBEAT_THRESHOLD_HOURS]);
+  // The owner's mail carries the whole hint on one line.
+  assert.ok(renderDigest([i], NOW).text.includes(`    what to check: ${i.hint}\n`));
+  // The section comment above checkHeartbeat says the same, and no longer the old rule.
+  const src = read('netlify/functions/_shared/sentinelLib.mjs');
+  const section = src.slice(src.indexOf("// ─── g. the team's dead-man switch"), src.indexOf('export function checkHeartbeat')).replace(/\n\/\/ ?/g, ' ');
+  assert.match(section, /every scheduled wake writes a row to public\.agent_heartbeats at its START and another at its END/);
+  assert.match(section, /a wake that dies midway still proves the team woke/);
+  assert.doesNotMatch(section, /every wake ends by writing one row/);
+});
+
 test('heartbeat end to end: a stale row mails one critical digest line, a fresh one resolves it, and an unreadable table resolves nothing', async () => {
   const world = heartbeatWorld([beat(30), beat(9.25)]);
   const db = fakeDb(world);
@@ -1212,8 +1242,8 @@ test('heartbeat: the read is max(created_at) of agent_heartbeats, newest first, 
   assert.deepEqual(schema.tables.agent_heartbeats, ['agent', 'created_at', 'id', 'note', 'wake']);
 });
 
-// The UTC times the orchestrating session is woken and ends with a heartbeat
-// (roadmap r17, orchestrator decision 2026-10-01 19:59): the heartbeat-only
+// The UTC times the orchestrating session is woken and writes its start and end
+// heartbeats (roadmap r17, orchestrator decision 2026-10-01 19:59): the heartbeat-only
 // Routine at 00:50 and the supervisor at 05:50, 09:50, 12:50, 15:50 and 19:50.
 // Move or drop a Routine → update this list; the test then says whether 8 h
 // still holds. Before the 00:50 wake existed the overnight hole was 10 h
