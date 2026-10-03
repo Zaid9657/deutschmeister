@@ -152,7 +152,7 @@
   {
     "sentence_de": "Das Fenster ist geöffnet worden.",
     "hint": "Passive in the Perfekt: 'ist' + past participle ('geöffnet') + 'worden'. In the passive, the participle of 'werden' is 'worden', without 'ge-'; 'geworden' is the participle of the full verb 'werden', 'to become' ('Es ist kalt geworden'). Both form the Perfekt with 'sein', not 'haben'.",
-    "level": "B2",
+    "level": "B1",
     "grammar_focus": "Passive Perfekt (worden)"
   },
   {
@@ -176,7 +176,7 @@
   {
     "sentence_de": "Obwohl das Buch schwer zu verstehen ist, liest sie es gern.",
     "hint": "'Obwohl' sends its verb to the end, so 'ist' closes the clause. 'zu verstehen ist' is sein + zu + infinitive, which here works like 'können' + passive: the book 'kann nur schwer verstanden werden', it can only be understood with difficulty.",
-    "level": "B1",
+    "level": "B2",
     "grammar_focus": "Obwohl + sein + zu + infinitive"
   }
 ]
