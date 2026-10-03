@@ -1,11 +1,13 @@
 ---
 import { NAV_GROUPS, FOOTER_GROUPS, LEGAL_LINKS, SOCIAL_LINKS, SUPPORT_LINK } from '../data/navigation.js';
-import { fontPreloads } from '../data/design-tokens.js';
+import { fontPreloads, color, nacht, linie } from '../data/design-tokens.js';
 import Showtime from '../components/Showtime.astro';
 import { onsiteHref, surfaceForPath } from '../lib/onsiteLinks.js';
 import { TRIAL_DAYS } from '../data/marketing.js';
+import { STATIONS, FREE_COURSE_HREF } from '../data/offers.js';
 import 'atropos/css';
 import '../styles/showtime.css';
+import '../styles/linie.css';
 
 export interface Props {
   title: string;
@@ -17,6 +19,10 @@ export interface Props {
   noindex?: boolean;
   keywords?: string;
   lang?: string;
+  /** 'nacht' renders the night nav (pages whose first screen is a nacht ground). */
+  tone?: 'paper' | 'nacht';
+  /** Font files to preload; defaults to the token list. Pages that set signs above the fold add signFontPreloads. */
+  preloads?: string[];
 }
 
 const {
@@ -29,6 +35,8 @@ const {
   noindex = false,
   keywords,
   lang = 'en',
+  tone = 'paper',
+  preloads = fontPreloads,
 } = Astro.props;
 
 // `canonical={null}` means emit none. Only 404.html uses it: the page is served
@@ -55,6 +63,17 @@ const navItems = NAV_GROUPS.flatMap((g) => g.items);
 // up from the nav. Everywhere else it stays the bare route.
 const surface = surfaceForPath(Astro.url.pathname);
 const navSignupHref = surface ? onsiteHref('signup', surface, 'nav') : '/signup';
+// v3 chrome ("Die Linie"): Courses and Pricing sit in the bar itself — the two
+// doors a buyer looks for — and leave their groups so no link appears twice.
+const PROMOTED = ['courses', 'pricing'];
+const promoted = PROMOTED.map((key) => navItems.find((i) => i.key === key)).filter(Boolean);
+const navGroups = NAV_GROUPS.map((g) => ({ ...g, items: g.items.filter((i) => !PROMOTED.includes(i.key)) })).filter((g) => g.items.length);
+const night = tone === 'nacht';
+// theme-color matches the top of the page (mobile-native: status bar = header).
+const themeColor = night ? nacht.DEFAULT : color.paper;
+// Token values for the two inline scripts below (they cannot import modules):
+// one place, so the course return bar never carries its own hex again.
+const rootVars = `:root{--dm-siegel:${color.siegel};--dm-siegel-edge:${color.siegelEdge};--dm-edge:${color.edge};--dm-graphite:${color.graphite};--dm-linie:${linie.DEFAULT};--dm-nacht:${nacht.DEFAULT}}`;
 const authAttrs = (item) =>
   item.auth === 'authed'
     ? { 'data-auth-only': '', style: 'display:none' }
@@ -67,7 +86,7 @@ const authAttrs = (item) =>
 <html lang={lang}>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <!-- Stamped before first paint: the .reveal hidden state (showtime.css)
          exists only under html.js, so no-JS visitors and crawlers see everything. -->
     <script is:inline>document.documentElement.classList.add('js');</script>
@@ -83,7 +102,7 @@ const authAttrs = (item) =>
     {keywords && <meta name="keywords" content={keywords} />}
     {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
     {noindex && <meta name="robots" content="noindex, nofollow" />}
-    <meta name="theme-color" content="#0F766E" />
+    <meta name="theme-color" content={themeColor} />
 
     <!-- Open Graph -->
     <meta property="og:type" content={ogType} />
@@ -113,7 +132,7 @@ const authAttrs = (item) =>
          /consent.js); the @font-face rules ship in this site's stylesheet via
          tailwind.config.mjs. Preloads come from the token, same list as the
          SPA shell (design-tokens.js `fontPreloads`). -->
-    {fontPreloads.map((href) => (
+    {preloads.map((href) => (
       <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />
     ))}
 
@@ -122,12 +141,7 @@ const authAttrs = (item) =>
       <script type="application/ld+json" set:html={JSON.stringify(schema)} />
     ))}
 
-    <style is:global>
-      :focus-visible {
-        outline: 3px solid #0f766e;
-        outline-offset: 2px;
-      }
-    </style>
+    <style is:global set:html={`${rootVars}:focus-visible{outline:3px solid var(--dm-siegel);outline-offset:2px}`}></style>
   </head>
 
   <body class="font-body bg-paper text-ink antialiased">
@@ -137,39 +151,59 @@ const authAttrs = (item) =>
     >
       Skip to content
     </a>
-    <!-- Navbar -->
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-paper/90 backdrop-blur-md border-b border-rule">
+    <!-- Navbar — v3 "Die Linie": the bar is a station sign. Paper by default;
+         night (`tone="nacht"`) on pages whose first screen is a nacht ground,
+         so the top of the page reads as one surface. -->
+    <nav
+      class:list={[
+        'fixed top-0 left-0 right-0 z-50 border-b backdrop-blur-md pt-[env(safe-area-inset-top)]',
+        night ? 'bg-nacht/90 border-nacht-rule text-nacht-text' : 'bg-paper/90 border-rule text-ink',
+      ]}
+      data-ground={night ? 'nacht' : 'paper'}
+      aria-label="Main"
+    >
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 2xl:max-w-[1536px]">
         <div class="flex items-center justify-between h-16">
-          <!-- Logo — the Meister-Siegel seal, same mark as the app (src/components/Logo.jsx) -->
-          <a href="https://deutsch-meister.de/" class="flex items-center gap-2.5">
-            <svg width="40" height="40" viewBox="0 0 64 64" role="img" aria-label="DeutschMeister">
+          <!-- Logo — the Meister-Siegel seal, same mark as the app (src/components/Logo.jsx); colours from the tokens -->
+          <a href="/" class="flex items-center gap-2.5">
+            <svg width="38" height="38" viewBox="0 0 64 64" role="img" aria-label="DeutschMeister">
               <defs>
                 <linearGradient id="dmSealNav" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stop-color="#0F766E" />
-                  <stop offset="1" stop-color="#0D9488" />
+                  <stop offset="0" stop-color={color.siegel} />
+                  <stop offset="1" stop-color={color.siegelLift} />
                 </linearGradient>
               </defs>
               <circle cx="32" cy="32" r="30" fill="url(#dmSealNav)" />
               <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.2" stroke-dasharray="1.5 4" />
-              <circle cx="32" cy="8.5" r="3.4" fill="#FBBF24" />
-              <text x="32" y="45" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="700" font-size="34" fill="#fff">M</text>
+              <circle cx="32" cy="8.5" r="3.4" fill={color.gold} />
+              <text x="32" y="45" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="700" font-size="34" fill={color.white}>M</text>
             </svg>
-            <span class="font-display font-semibold text-xl text-ink hidden sm:block">
-              Deutsch<span class="text-siegel-deep">Meister</span>
-            </span>
+            {night ? (
+              <span class="sign-label hidden text-[1.1875rem] text-nacht-text sm:block">Deutsch<span class="text-linie">Meister</span></span>
+            ) : (
+              <span class="sign-label hidden text-[1.1875rem] text-ink sm:block">Deutsch<span class="text-siegel-deep">Meister</span></span>
+            )}
           </a>
 
           <!-- Desktop nav — rendered from the shared navigation registry -->
           <div class="hidden lg:flex items-center gap-1">
-            {NAV_GROUPS.map((group) => (
+            {promoted.map((item) => (
+              <a
+                href={item.href}
+                {...authAttrs(item)}
+                class:list={['sign-label flex min-h-11 items-center whitespace-nowrap rounded-pill px-3.5 py-2 text-[0.9375rem] transition-colors', night ? 'text-nacht-text hover:bg-nacht-raised' : 'text-ink hover:bg-paper-sunk']}
+              >
+                {item.labelEn}
+              </a>
+            ))}
+            {NAV_GROUPS.map((group) => navGroups.some((g) => g.key === group.key) && (
               <details class="group relative">
-                <summary class="flex min-h-11 cursor-pointer list-none items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold text-graphite transition-colors hover:bg-siegel-wash hover:text-ink [&::-webkit-details-marker]:hidden">
+                <summary class="flex min-h-11 cursor-pointer list-none items-center gap-1.5 whitespace-nowrap rounded-pill px-3.5 py-2 text-[0.9375rem] sign-label text-graphite transition-colors hover:bg-paper-sunk hover:text-ink [&::-webkit-details-marker]:hidden [[data-ground=nacht]_&]:text-nacht-muted [[data-ground=nacht]_&]:hover:bg-nacht-raised [[data-ground=nacht]_&]:hover:text-nacht-text">
                   {group.labelEn}
                   <svg class="h-3.5 w-3.5 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 7.5 5 5 5-5" /></svg>
                 </summary>
-                <div class="absolute left-0 top-full z-50 mt-1 min-w-56 rounded-clay border border-rule bg-white p-2 shadow-overlay">
-                  {group.items.map((item) => (
+                <div class="dm-sheet absolute left-0 top-full z-50 mt-1 min-w-56 rounded-clay border border-rule bg-white p-2 text-ink shadow-overlay">
+                  {navGroups.find((g) => g.key === group.key).items.map((item) => (
                     <a
                       href={item.href}
                       {...authAttrs(item)}
@@ -181,53 +215,84 @@ const authAttrs = (item) =>
                 </div>
               </details>
             ))}
-            <div class="w-px h-5 bg-rule mx-1"></div>
+            <div class:list={['mx-2 h-5 w-px', night ? 'bg-nacht-rule' : 'bg-rule']}></div>
+            <a
+              href="/login"
+              data-anon-only
+              class:list={['sign-label whitespace-nowrap px-3 py-2 text-[0.9375rem] transition-colors', night ? 'text-nacht-muted hover:text-nacht-text' : 'text-graphite hover:text-ink']}
+            >
+              Log in
+            </a>
             <a
               href={navSignupHref}
               data-anon-only
-              class="whitespace-nowrap px-4 py-2 rounded-clay bg-siegel text-white text-sm font-bold shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none transition-all duration-100 ease-snap select-none"
+              class:list={['sign-label whitespace-nowrap px-3 py-2 text-[0.9375rem] underline decoration-2 underline-offset-4 transition-colors', night ? 'text-nacht-text decoration-nacht-rule hover:decoration-linie' : 'text-ink decoration-rule hover:decoration-siegel']}
             >
               Start {TRIAL_DAYS}-day trial
             </a>
             <a
-              href="/login"
+              href={FREE_COURSE_HREF}
               data-anon-only
-              class="whitespace-nowrap px-3 py-2 text-sm font-semibold text-graphite hover:text-ink transition-colors"
+              data-track="course_selected"
+              data-track-level="a1.1"
+              data-track-surface="nav"
+              class:list={['dm-key ml-1 !min-h-10 !px-4 !py-2 !text-[0.9375rem]', night ? 'dm-key-linie' : 'dm-key-ink']}
             >
-              Log in
+              Start A1.1 free
+            </a>
+            <a
+              href="/dashboard"
+              data-auth-only
+              style="display:none"
+              class:list={['dm-key ml-1 !min-h-10 !px-4 !py-2 !text-[0.9375rem]', night ? 'dm-key-linie' : 'dm-key-ink']}
+            >
+              Continue learning
             </a>
           </div>
 
-          <!-- Mobile: CTA + full menu (pure HTML disclosure, no client JS) -->
+          <!-- Mobile: the free first stop + the full menu (pure HTML disclosure, no client JS) -->
           <div class="lg:hidden flex items-center gap-2">
-            <a href={navSignupHref} data-anon-only class="px-3 py-1.5 rounded-clay bg-siegel text-white text-sm font-bold shadow-raise-siegel active:translate-y-1 active:shadow-none transition-all duration-100 ease-snap select-none">
-              {TRIAL_DAYS}-day trial
+            <a href={FREE_COURSE_HREF} data-anon-only data-track="course_selected" data-track-level="a1.1" data-track-surface="nav_mobile" class:list={['dm-key !min-h-10 !px-3.5 !py-2 !text-[0.875rem]', night ? 'dm-key-linie' : 'dm-key-ink']}>
+              Start A1.1 free
             </a>
-            <a href="/dashboard" data-auth-only style="display:none" class="px-3 py-1.5 rounded-clay bg-siegel text-white text-sm font-bold shadow-raise-siegel active:translate-y-1 active:shadow-none transition-all duration-100 ease-snap select-none">
+            <a href="/dashboard" data-auth-only style="display:none" class:list={['dm-key !min-h-10 !px-3.5 !py-2 !text-[0.875rem]', night ? 'dm-key-linie' : 'dm-key-ink']}>
               Dashboard
             </a>
             <details class="relative">
-              <summary
-                class="list-none cursor-pointer p-2 rounded-lg hover:bg-siegel-wash flex items-center [&::-webkit-details-marker]:hidden"
-                aria-label="Menu"
-              >
-                <svg class="w-6 h-6 text-ink" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              <summary class:list={['flex min-h-11 cursor-pointer list-none items-center justify-center rounded-pill p-2.5 [&::-webkit-details-marker]:hidden', night ? 'hover:bg-nacht-raised' : 'hover:bg-paper-sunk']} aria-label="Menu">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h10" />
                 </svg>
               </summary>
-              <div class="absolute right-0 top-full mt-2 w-56 bg-white rounded-clay border border-rule shadow-overlay py-2 z-50">
-                {navItems.map((item) => (
+              <!-- The sheet: a timetable of every door, on the night ground. -->
+              <div class="dm-sheet fixed inset-x-0 top-16 z-50 max-h-[calc(100svh-4rem)] overflow-y-auto border-t border-nacht-rule bg-nacht px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-4 text-nacht-text shadow-overlay" data-ground="nacht">
+                <ol class="mb-4 grid grid-cols-4 gap-2" aria-label="Courses by level">
+                  {STATIONS.map((st) => (
+                    <li>
+                      <a href={st.coursePage} class="flex min-h-11 flex-col items-center justify-center rounded-xl border border-nacht-rule bg-nacht-raised px-1 py-2 text-center">
+                        <span class="sign-code text-[1rem]">{st.code}</span>
+                        <span class:list={['mt-0.5 font-data text-[0.625rem]', st.status === 'free' ? 'text-linie' : 'text-nacht-muted']}>{st.status === 'free' ? 'free' : st.status === 'building' ? 'Im Bau' : st.priceLabel}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+                {promoted.map((item) => (
+                  <a href={item.href} {...authAttrs(item)} class="sign-label flex min-h-11 items-center border-b border-nacht-rule text-[1.0625rem]">{item.labelEn}</a>
+                ))}
+                {navItems.filter((item) => !PROMOTED.includes(item.key)).map((item) => (
                   <a
                     href={item.href}
                     {...authAttrs(item)}
-                    class="block px-4 py-2 text-sm font-semibold text-graphite hover:bg-siegel-wash hover:text-siegel-deep"
+                    class="flex min-h-11 items-center border-b border-nacht-rule text-[0.9375rem] font-semibold text-nacht-muted"
                   >
                     {item.labelEn}
                   </a>
                 ))}
-                <div class="my-2 border-t border-rule"></div>
-                <a href="/login" data-anon-only class="block px-4 py-2 text-sm font-semibold text-graphite hover:bg-siegel-wash">Log in</a>
-                <a href={navSignupHref} data-anon-only class="block px-4 py-2 text-sm font-bold text-siegel-deep hover:bg-siegel-wash">Start {TRIAL_DAYS}-day trial</a>
+                <div class="mt-5 grid gap-3">
+                  <a href={FREE_COURSE_HREF} data-anon-only class="dm-key dm-key-linie w-full">Start A1.1 free — no account</a>
+                  <a href={navSignupHref} data-anon-only class="dm-key dm-key-ghost-nacht w-full">Start {TRIAL_DAYS}-day trial</a>
+                  <a href="/login" data-anon-only class="dm-link-nacht py-2 text-center text-sm font-semibold">Log in</a>
+                </div>
               </div>
             </details>
           </div>
@@ -236,36 +301,53 @@ const authAttrs = (item) =>
     </nav>
 
     <!-- Page content -->
-    <main id="main" class="pt-16">
+    <main id="main" class="pt-[calc(4rem+env(safe-area-inset-top))]">
       <slot />
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-ink text-paper/60 mt-20">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+    <!-- Footer — the end of the line: every station, then every door. -->
+    <footer class="mt-20 bg-nacht text-nacht-muted" data-ground="nacht">
+      <div class="mx-auto max-w-7xl px-4 pt-12 sm:px-6 lg:px-8">
+        <!-- The line, flat: eight stations, each a link to its course page. -->
+        <nav aria-label="Courses by level" class="relative pb-10">
+          <div class="absolute left-0 right-0 top-[1.0625rem] h-1.5 rounded-pill bg-linie" aria-hidden="true"></div>
+          <ol class="relative grid grid-cols-4 gap-y-6 sm:grid-cols-8">
+            {STATIONS.map((st) => (
+              <li class="flex flex-col items-start sm:items-center">
+                <a href={st.coursePage} class="group flex flex-col items-start gap-2 sm:items-center">
+                  <span class:list={['dm-station-dot block h-[2.375rem] w-[2.375rem] rounded-full border-[5px]', st.status === 'building' ? 'border-nacht-rule bg-nacht' : 'border-linie bg-nacht']} aria-hidden="true"></span>
+                  <span class="sign-code text-[1.125rem] text-nacht-text">{st.code}</span>
+                  <span class="font-data text-[0.6875rem]">{st.status === 'free' ? 'Free' : st.status === 'building' ? 'Im Bau' : st.priceLabel}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+
+        <div class="grid gap-10 border-t border-nacht-rule py-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <div class="flex items-center gap-2 mb-3">
+            <div class="mb-3 flex items-center gap-2">
               <svg width="32" height="32" viewBox="0 0 64 64" role="img" aria-label="DeutschMeister">
                 <defs>
                   <linearGradient id="dmSealFoot" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0" stop-color="#0F766E" />
-                    <stop offset="1" stop-color="#0D9488" />
+                    <stop offset="0" stop-color={color.siegel} />
+                    <stop offset="1" stop-color={color.siegelLift} />
                   </linearGradient>
                 </defs>
                 <circle cx="32" cy="32" r="30" fill="url(#dmSealFoot)" />
                 <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.2" stroke-dasharray="1.5 4" />
-                <circle cx="32" cy="8.5" r="3.4" fill="#FBBF24" />
-                <text x="32" y="45" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="700" font-size="34" fill="#fff">M</text>
+                <circle cx="32" cy="8.5" r="3.4" fill={color.gold} />
+                <text x="32" y="45" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="700" font-size="34" fill={color.white}>M</text>
               </svg>
-              <span class="font-display font-semibold text-white">Deutsch<span class="text-siegel-wash">Meister</span></span>
+              <span class="sign-label text-[1.0625rem] text-white">Deutsch<span class="text-siegel-wash">Meister</span></span>
             </div>
             <p class="text-sm leading-relaxed">
-              Learn German with AI — from A1.1 to B2.2. Grammar, speaking, listening, and reading.
+              German from A1.1 to B2.2, one stop at a time: guided courses, grammar, listening, reading and AI speaking practice.
             </p>
-            <!-- Off-site channels. Same registry as the SPA footer, so the
-                 YouTube link is on every static page too, not just the
-                 homepage's closing paragraph. -->
+            <p class="mt-4">
+              <a href={navSignupHref} data-anon-only class="dm-link-nacht text-sm font-semibold">Create a free account</a>
+            </p>
+            <!-- Off-site channels. Same registry as the SPA footer. -->
             <ul class="mt-4 flex items-center gap-4 text-sm">
               {SOCIAL_LINKS.map((item) => (
                 <li>
@@ -273,7 +355,7 @@ const authAttrs = (item) =>
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="inline-flex items-center gap-2 hover:text-white transition-colors"
+                    class="inline-flex min-h-11 items-center gap-2 transition-colors hover:text-white"
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                       <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.2 3.6-6.2 3.6Z" />
@@ -287,8 +369,8 @@ const authAttrs = (item) =>
                  footer). /support is an SPA route: signed in it opens the
                  ticket form, signed out it offers sign-in or the contact
                  address — so a static-page visitor is never a dead end. -->
-            <p class="mt-3 text-sm">
-              <a href={SUPPORT_LINK.href} class="inline-flex items-center gap-2 font-semibold text-white hover:text-siegel-wash transition-colors">
+            <p class="mt-1 text-sm">
+              <a href={SUPPORT_LINK.href} class="inline-flex min-h-11 items-center gap-2 font-semibold text-white transition-colors hover:text-linie">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="4" />
                   <path d="m4.93 4.93 4.24 4.24M14.83 9.17l4.24-4.24M14.83 14.83l4.24 4.24M9.17 14.83l-4.24 4.24" />
@@ -299,21 +381,21 @@ const authAttrs = (item) =>
           </div>
           {FOOTER_GROUPS.map((group) => (
             <div>
-              <h2 class="text-white font-semibold text-sm mb-3">{group.titleEn}</h2>
-              <ul class="space-y-2 text-sm">
+              <h2 class="text-white font-semibold sign-label mb-3 text-sm">{group.titleEn}</h2>
+              <ul class="space-y-1 text-sm">
                 {group.items.map((item) => (
-                  <li><a href={item.href} class="hover:text-white transition-colors">{item.labelEn}</a></li>
+                  <li><a href={item.href} class="inline-flex min-h-9 items-center transition-colors hover:text-white">{item.labelEn}</a></li>
                 ))}
               </ul>
             </div>
           ))}
         </div>
-        <div class="border-t border-white/10 pt-6 text-center text-xs">
+        <div class="border-t border-nacht-rule py-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] text-center text-xs">
           <p class="mb-2">
             {LEGAL_LINKS.map((item, i) => (
               <>
                 {i > 0 && <span class="mx-2">·</span>}
-                <a href={item.href} class="hover:text-white transition-colors">{item.labelEn}</a>
+                <a href={item.href} class="transition-colors hover:text-white">{item.labelEn}</a>
               </>
             ))}
           </p>
@@ -376,13 +458,13 @@ const authAttrs = (item) =>
           if (!ctx || !ctx.level || !ctx.itemId) return;
           var bar = document.createElement('div');
           bar.setAttribute('data-course-return-bar', '');
-          bar.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(255,255,255,.95);border-top:1px solid #D8DFDB;backdrop-filter:blur(6px);';
+          bar.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(255,255,255,.95);border-top:1px solid var(--dm-edge);backdrop-filter:blur(6px);padding-bottom:env(safe-area-inset-bottom);';
           var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
           bar.innerHTML =
             '<div style="max-width:48rem;margin:0 auto;display:flex;align-items:center;gap:.75rem;padding:.625rem 1rem;font-family:inherit">' +
-            '<a href="/course/' + esc(ctx.level) + '" style="font-weight:700;color:#0F766E;text-decoration:none;font-size:.875rem;white-space:nowrap">&#8592; ' + esc(ctx.code || ctx.level.toUpperCase()) + '</a>' +
-            '<p style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.8125rem;color:#5A6360;margin:0">' + esc(ctx.position) + '/' + esc(ctx.total) + ' &middot; ' + esc(ctx.title || '') + '</p>' +
-            '<a href="/course/' + esc(ctx.level) + '/' + encodeURIComponent(ctx.itemId) + '?done=1" style="background:#0F766E;color:#fff;font-weight:700;font-size:.875rem;padding:.5rem 1rem;border-radius:.75rem;text-decoration:none;box-shadow:0 4px 0 0 #07423D;white-space:nowrap">&#10003; Done &#8594; next</a>' +
+            '<a href="/course/' + esc(ctx.level) + '" style="font-weight:700;color:var(--dm-siegel);text-decoration:none;font-size:.875rem;white-space:nowrap">&#8592; ' + esc(ctx.code || ctx.level.toUpperCase()) + '</a>' +
+            '<p style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.8125rem;color:var(--dm-graphite);margin:0">' + esc(ctx.position) + '/' + esc(ctx.total) + ' &middot; ' + esc(ctx.title || '') + '</p>' +
+            '<a href="/course/' + esc(ctx.level) + '/' + encodeURIComponent(ctx.itemId) + '?done=1" style="background:var(--dm-siegel);color:white;font-weight:700;font-size:.875rem;padding:.5rem 1rem;border-radius:.75rem;text-decoration:none;box-shadow:0 4px 0 0 var(--dm-siegel-edge);white-space:nowrap">&#10003; Done &#8594; next</a>' +
             '</div>';
           document.body.appendChild(bar);
           document.body.style.paddingBottom = '4rem';

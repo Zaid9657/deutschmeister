@@ -102,7 +102,10 @@ test('bright accent chips use dark ink instead of low-contrast white glyphs', ()
   assert.doesNotMatch(dashboard, /bg-accent-aprikose text-white/);
   assert.doesNotMatch(courseComplete, /bg-accent-himbeer text-white/);
   assert.doesNotMatch(button, /bg-accent-himbeer text-white/);
-  for (const source of [homepage, examHub, completePrep]) {
+  // The homepage stopped using the candy accents in v4 ("Die Linie", 2026-10-04):
+  // the ban on white glyphs still holds there, the presence check does not.
+  assert.doesNotMatch(homepage, /bg-accent-(?:himbeer|aprikose|limette)[^"`]*text-white/);
+  for (const source of [examHub, completePrep]) {
     assert.doesNotMatch(source, /\$\{(?:s\.accent|w\.accent|ACCENTS\[[^}]+\])\}[^"`]*text-white/);
     for (const accent of ['himbeer', 'aprikose', 'limette']) {
       assert.match(source, new RegExp(`bg-accent-${accent} text-ink`));

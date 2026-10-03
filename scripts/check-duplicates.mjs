@@ -24,6 +24,10 @@ const PAIRS = [
   // THE funnel event registry — one name and one meaning per analytics event on
   // both front ends, so a report never mixes two definitions of the same step.
   ['src/data/events.js', 'astro-site/src/data/events.js'],
+  // What each course contains, and the offer built on it: the static pages
+  // sell a ticket and the app's checkout/success screens describe the same one.
+  ['src/data/courseContents.js', 'astro-site/src/data/courseContents.js'],
+  ['src/data/offers.js', 'astro-site/src/data/offers.js'],
   // Writing task bank: the SPA renders tasks, the grading function validates
   // keys and derives the rubric — grading a task the UI doesn't show (or vice
   // versa) is exactly the drift this pair-check exists for.
