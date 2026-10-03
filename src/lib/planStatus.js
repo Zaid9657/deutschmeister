@@ -9,8 +9,10 @@
 // told they hold a monthly subscription. (0 'course' rows on 2026-10-03, so
 // nobody has seen it yet; the first course sale would.)
 //
-// The rule: the card names a billing cadence only when the row carries one,
-// and calls a course row what it is. Copy only. hasActiveSubscription() still
+// The rule: the card names a cadence only for a 'monthly' or 'yearly' row and
+// calls a course row what it is. (An owner comp grant from admin-actions.mjs
+// grant_pro_days is written as 'monthly', so it still reads "Monthly Plan", as
+// it did before this file.) Copy only. hasActiveSubscription() still
 // decides whether the card shows at all; nothing here reads or changes
 // entitlement. tests/plan-status.test.mjs.
 
@@ -34,7 +36,11 @@ export function planStatusCopy(subscription, isGerman) {
       ? { title: 'Pro-Zugang', plan: 'Im Kurskauf enthalten' }
       : { title: 'Pro access', plan: 'Included with your course purchase' };
   }
-  const cadence = typeof planType === 'string' && Object.hasOwn(CADENCE, planType) ? CADENCE[planType] : null;
+  // hasOwnProperty.call, not Object.hasOwn: the SPA's build target includes
+  // Safari 14, which lacks Object.hasOwn, and esbuild does not polyfill it.
+  const cadence = typeof planType === 'string' && Object.prototype.hasOwnProperty.call(CADENCE, planType)
+    ? CADENCE[planType]
+    : null;
   return {
     title: isGerman ? 'Aktives Abonnement' : 'Active Subscription',
     // A plan_type the card does not know names no cadence rather than a wrong one.

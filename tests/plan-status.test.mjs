@@ -49,7 +49,7 @@ const CADENCE_WORD = /\b(?:month(?:ly)?|year(?:ly)?|annual|monat\w*|jahr\w*|jäh
 const SUBSCRIPTION_WORD = /\b(?:subscription|abonnement|abo)\b/i;
 
 // Row shapes as lemonsqueezy-webhook.mjs writes them (subscription_created and
-// the course order) and as an owner grant leaves them.
+// the course order).
 const MONTHLY = { plan_type: 'monthly', status: 'active', lemonsqueezy_subscription_id: '2468531' };
 const YEARLY = { plan_type: 'yearly', status: 'active', lemonsqueezy_subscription_id: '2468532' };
 const COURSE_ROW = { plan_type: 'course', status: 'active', lemonsqueezy_order_id: '9001' };
