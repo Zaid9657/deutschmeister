@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useLocation } from 'react-router-dom';
 import {
   Mic, ArrowRight, Loader2, AlertTriangle, Monitor, Lock, Play,
   Wallet, MessageCircle, CheckCircle2, RotateCcw, Clock,
@@ -151,6 +151,10 @@ const SpeakingPage = () => {
   // Default the level to the user's placement level, once — unless the
   // course player handed one over (?level=a1.1&mission=<mission_order>).
   const [searchParams] = useSearchParams();
+  // The signed-out screen's "Log in" hands /login this page (state.from), as
+  // every gate does; a bare /login returned the learner to /dashboard.
+  // tests/page-login-return.test.mjs holds every page to that rule.
+  const location = useLocation();
   const wantedLevel = String(searchParams.get('level') || '').toUpperCase();
   const wantedMission = Number(searchParams.get('mission')) || null;
   useEffect(() => {
@@ -430,7 +434,7 @@ const SpeakingPage = () => {
             <Button to="/signup" size="lg" shimmer>
               Sign up free <ArrowRight className="w-5 h-5" />
             </Button>
-            <Button to="/login" size="lg" variant="secondary">
+            <Button to="/login" state={{ from: location }} size="lg" variant="secondary">
               Log in
             </Button>
           </Reveal>
