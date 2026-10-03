@@ -9,6 +9,7 @@ import SEO from '../components/SEO';
 import { openCheckout } from '../utils/openCheckout';
 import { clearBuyIntent } from '../lib/buyIntent';
 import { subscriptionPortalAction } from '../lib/billingPortal.js';
+import { planStatusCopy } from '../lib/planStatus.js';
 import { markCheckoutStarted, consumeCheckoutSuccess } from '../lib/funnelTracking';
 import { PLANS, num, levelsForProduct } from '../data/pricing.js';
 import { LEVEL_COUNT, READING_LESSON_COUNT, TRIAL_DAYS } from '../data/marketing.js';
@@ -49,6 +50,9 @@ const SubscriptionPage = () => {
   // Card, invoices, cancelling: the Lemon Squeezy portal, for a live LS
   // subscription only (lib/billingPortal.js, tests/subscription-portal-link.test.mjs).
   const portal = subscriptionPortalAction(isSubscribed, subscription, isGerman);
+  // What the status card calls the row: a course row is Pro included with the
+  // course, not a monthly plan (lib/planStatus.js, tests/plan-status.test.mjs).
+  const planStatus = planStatusCopy(subscription, isGerman);
 
   // Safe end-date label: null / unparseable → null (caller hides the line),
   // never the literal string "Invalid Date".
@@ -311,12 +315,10 @@ const SubscriptionPage = () => {
                   <Shield className="w-5 h-5 text-accent-limette-ink flex-shrink-0" aria-hidden="true" />
                   <div>
                     <p className="font-bold text-accent-limette-ink">
-                      {isGerman ? 'Aktives Abonnement' : 'Active Subscription'}
+                      {planStatus.title}
                     </p>
                     <p className="text-sm text-accent-limette-ink">
-                      {subscription?.plan_type === 'yearly'
-                        ? isGerman ? 'Jahresplan' : 'Yearly Plan'
-                        : isGerman ? 'Monatsplan' : 'Monthly Plan'}
+                      {planStatus.plan}
                       {validUntil && (
                         <>
                           {' — '}
