@@ -16,6 +16,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { returnPath } from '../src/lib/loginReturn.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -90,8 +91,9 @@ test('A11Y-04: the feedback sheet never fades its text below AA', () => {
 
 test('ASSESS-03 / CT-03: a signed-out learner on an AI task gets the door back to this step and a way on', () => {
   const prompt = read(`${V2}/SignInPrompt.jsx`);
-  assert.match(prompt, /const here = `\$\{pathname\}\$\{search \|\| ''\}`;\s*return \{ to: '\/login', state: \{ from: \{ pathname: here \} \}, onClick: \(\) => setReturnPath\(here\) \};/, 'the login returns to the step (LoginPage reads state.from.pathname), and the step is remembered for the sign-up round trip');
-  assert.match(read('src/pages/LoginPage.jsx'), /location\.state\?\.from\?\.pathname/, 'the login page still honours the way back');
+  assert.match(prompt, /const here = `\$\{pathname\}\$\{search \|\| ''\}`;\s*return \{ to: '\/login', state: \{ from: \{ pathname: here \} \}, onClick: \(\) => setReturnPath\(here\) \};/, 'the login returns to the step (LoginPage reads state.from through returnPath), and the step is remembered for the sign-up round trip');
+  assert.match(read('src/pages/LoginPage.jsx'), /returnPath\(location\.state\?\.from\)/, 'the login page still honours the way back (src/lib/loginReturn.js)');
+  assert.equal(returnPath({ pathname: '/course/a1.1/u/3?s=4' }), '/course/a1.1/u/3?s=4', 'the step and its ?s= survive the login round trip');
   assert.match(prompt, /<GameButton to=\{link\.to\} state=\{link\.state\}/);
   // every surface that can hear „ai.signIn" carries the prompt
   for (const f of [`${V2}/SpeakingRun.jsx`, `${V2}/WritingTaskView.jsx`, 'src/pages/course-v2/AssessmentPlayer.jsx']) {
