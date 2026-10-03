@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Lock, Sparkles } from 'lucide-react';
 import { trackPaywallShown } from '../lib/funnelTracking';
@@ -11,6 +11,11 @@ import { TRIAL_DAYS } from '../data/marketing.js';
 
 const LockedContentOverlay = ({ level }) => {
   const { i18n } = useTranslation();
+  // The page this lock stands in front of. "Log In" hands it to /login the way
+  // every guard's redirect does (state.from, read by LoginPage), so a returning
+  // learner lands back on this level, or, without access, on the offer the
+  // guard shows there, instead of on /dashboard. tests/lock-login-return.test.mjs.
+  const location = useLocation();
 
   useEffect(() => { trackPaywallShown(level || 'unknown'); }, [level]);
   const isGerman = i18n.language === 'de';
@@ -54,7 +59,7 @@ const LockedContentOverlay = ({ level }) => {
             {isGerman ? 'Kostenlos registrieren' : 'Sign Up Free'}
           </Button>
 
-          <Button to="/login" variant="secondary" size="lg" className="w-full">
+          <Button to="/login" state={{ from: location }} variant="secondary" size="lg" className="w-full">
             {isGerman ? 'Anmelden' : 'Log In'}
           </Button>
 

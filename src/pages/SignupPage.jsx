@@ -1,9 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { trackSignupStarted } from '../lib/funnelTracking';
+import {
+  trackSignupStarted,
+  trackVerificationPageViewed,
+  trackVerificationEmailResent,
+} from '../lib/funnelTracking';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Mail, Lock, Eye, EyeOff, AlertCircle, Loader2, Check } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, AlertCircle, Loader2, Check, RefreshCw, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../utils/supabase';
 import SEO from '../components/SEO';
@@ -20,6 +24,7 @@ import {
   TRIAL_WRITING_EVALUATIONS,
 } from '../data/marketing.js';
 import { pendingPlacement } from '../lib/placement.js';
+import { signupOutcome, resendWaitSeconds, RESEND_COOLDOWN_SECONDS } from '../lib/signupConfirmation.js';
 
 // The playbook form field (docs/design/playbook.md §1), with room for the
 // leading icon. The focus ring comes from the global *:focus-visible rule.
@@ -60,6 +65,27 @@ const SignupPage = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Set once signUp answers without a session: the address the confirmation
+  // link went to. It swaps the form for the check-your-inbox panel, because
+  // /verify-email needs a session and would bounce the learner to /login
+  // (src/lib/signupConfirmation.js has the evidence).
+  const [sentTo, setSentTo] = useState('');
+  const [resendState, setResendState] = useState('idle'); // 'idle' | 'sending' | 'sent'
+  const [cooldown, setCooldown] = useState(0);
+  const inboxHeading = useRef(null);
+
+  useEffect(() => {
+    if (cooldown <= 0) return undefined;
+    const tick = setTimeout(() => setCooldown((s) => s - 1), 1000);
+    return () => clearTimeout(tick);
+  }, [cooldown]);
+
+  // The panel replaces the form the learner just submitted; move focus to its
+  // heading so a screen reader announces it and a phone scrolls to it.
+  useEffect(() => {
+    if (sentTo) inboxHeading.current?.focus();
+  }, [sentTo]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -77,13 +103,23 @@ const SignupPage = () => {
     setLoading(true);
 
     try {
-      const { error } = await signUp(email, password);
-      if (error) {
+      const { data, error } = await signUp(email, password);
+      const outcome = signupOutcome({ data, error });
+      if (outcome === 'error') {
         setError(error.message);
         logFailedSignup(email, error);
-      } else {
+      } else if (outcome === 'signed-in') {
         navigate('/verify-email', { replace: true });
         return;
+      } else {
+        // The event /verify-email fired on mount for this step, kept so the
+        // signup funnel reads the same before and after.
+        trackVerificationPageViewed();
+        setSentTo(email.trim());
+        setPassword('');
+        setConfirmPassword('');
+        setResendState('idle');
+        setCooldown(RESEND_COOLDOWN_SECONDS);
       }
     } catch (err) {
       setError('An unexpected error occurred');
@@ -91,6 +127,37 @@ const SignupPage = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Session-less resend: supabase.auth.resend needs only the address. The link
+  // goes to /login like the first one (AuthContext signUp's emailRedirectTo),
+  // which forwards a visitor who arrives signed in.
+  const handleResend = async () => {
+    if (!sentTo || cooldown > 0 || resendState === 'sending') return;
+    setError('');
+    setResendState('sending');
+    const { error: resendError } = await supabase.auth.resend({
+      type: 'signup',
+      email: sentTo,
+      options: { emailRedirectTo: `${window.location.origin}/login` },
+    });
+    if (resendError) {
+      const wait = resendWaitSeconds(resendError);
+      if (wait) setCooldown(wait);
+      else setError(resendError.message);
+      setResendState('idle');
+    } else {
+      trackVerificationEmailResent();
+      setResendState('sent');
+      setCooldown(RESEND_COOLDOWN_SECONDS);
+    }
+  };
+
+  const changeAddress = () => {
+    setSentTo('');
+    setResendState('idle');
+    setCooldown(0);
+    setError('');
   };
 
   return (
@@ -158,6 +225,67 @@ const SignupPage = () => {
             </motion.div>
           )}
 
+          {sentTo ? (
+            <div className="text-center">
+              <div className="w-14 h-14 mx-auto mb-5 rounded-full bg-siegel-wash flex items-center justify-center">
+                <Mail className="w-7 h-7 text-siegel" aria-hidden="true" />
+              </div>
+              <h2
+                ref={inboxHeading}
+                tabIndex={-1}
+                className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink mb-3"
+              >
+                Check your inbox
+              </h2>
+              <p className="text-graphite mb-1">We sent a confirmation link to:</p>
+              <p className="font-data text-[0.8125rem] font-semibold text-siegel-deep mb-5 break-all">{sentTo}</p>
+              <p className="text-left text-sm leading-relaxed text-graphite mb-6">
+                Open the email with the subject{' '}
+                <span className="font-semibold text-ink">&ldquo;Confirm your DeutschMeister account&rdquo;</span> and
+                click its link. It activates your account and signs you in. If a welcome email arrives too, the link
+                you need is still in the confirmation email. Check your spam folder as well.
+              </p>
+
+              {resendState === 'sent' && (
+                <p
+                  role="status"
+                  className="mb-4 flex items-center justify-center gap-2 rounded-clay bg-accent-limette-wash px-4 py-3 text-sm font-semibold text-accent-limette-ink"
+                >
+                  <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
+                  Sent again. Use the link in the newest email.
+                </p>
+              )}
+
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={handleResend}
+                disabled={cooldown > 0 || resendState === 'sending'}
+              >
+                {resendState === 'sending' ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <RefreshCw className="w-4 h-4" />
+                )}
+                {cooldown > 0 ? `Send it again in ${cooldown} s` : 'Send it again'}
+              </Button>
+
+              <p className="mt-6 text-sm text-graphite">
+                Wrong address?{' '}
+                <button type="button" onClick={changeAddress} className={TEXT_LINK}>
+                  Use a different email
+                </button>
+              </p>
+              <p className="mt-2 text-sm text-graphite">
+                Signed up with this address before?{' '}
+                <Link to="/login" className={TEXT_LINK}>
+                  Log in
+                </Link>
+              </p>
+            </div>
+          ) : (
+            <>
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email */}
             <div>
@@ -257,6 +385,8 @@ const SignupPage = () => {
               {t('auth.login')}
             </Link>
           </p>
+            </>
+          )}
         </Card>
       </motion.div>
     </div>
