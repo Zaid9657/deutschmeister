@@ -19,8 +19,8 @@
   },
   {
     "sentence_de": "Wegen des schlechten Wetters bleiben wir zu Hause.",
-    "hint": "'Wegen' always demands the genitive — and most learners never see it coming.",
-    "level": "A2",
+    "hint": "'wegen' takes the genitive in standard German: 'des' and the '-s' on 'Wetters' mark it, and the adjective after 'des' ends in '-en'. In everyday speech you will also hear the dative ('wegen dem Wetter'); in writing, use the genitive.",
+    "level": "B1",
     "grammar_focus": "Genitive preposition: wegen"
   },
   {
@@ -31,7 +31,7 @@
   },
   {
     "sentence_de": "Sie ist seit drei Jahren in Deutschland.",
-    "hint": "'Seit' uses present tense in German — past tense would be wrong here, unlike English.",
+    "hint": "German uses 'seit' + present tense for something still going on: 'ist seit drei Jahren in Deutschland' = 'has been in Germany for three years', where English uses the present perfect. 'seit' + Perfekt is also correct, e.g. for something that has not happened since a point in time: 'Ich habe sie seit Mai nicht gesehen.'",
     "level": "A2",
     "grammar_focus": "Seit + present tense"
   },
@@ -54,14 +54,14 @@
     "grammar_focus": "Relative clauses (nominative)"
   },
   {
-    "sentence_de": "Das Buch, das ich dir empfohlen habe, ist ausverkauft.",
-    "hint": "The relative pronoun here is 'das' in accusative — its form depends on the noun and its case in the clause.",
+    "sentence_de": "Der Roman, den Anna empfohlen hat, ist sehr spannend.",
+    "hint": "'den' is accusative masculine: its gender comes from 'der Roman', its case from its role in the relative clause, where it is the object of 'empfohlen hat'. In a relative clause the conjugated verb goes to the very end: 'empfohlen hat'.",
     "level": "B1",
     "grammar_focus": "Relative clauses (accusative)"
   },
   {
     "sentence_de": "Wenn ich mehr Zeit hätte, würde ich Deutsch intensiver lernen.",
-    "hint": "Konjunktiv II: the classic 'if I had…, I would…' structure — entirely built without 'würden' in the if-clause.",
+    "hint": "Konjunktiv II for something contrary to fact: 'if I had…, I would…'. With 'haben', the wenn-clause normally uses 'hätte' rather than 'haben würde'; the main clause uses 'würde' + infinitive ('würde … lernen').",
     "level": "B1",
     "grammar_focus": "Konjunktiv II: contrary-to-fact conditionals"
   },
@@ -97,7 +97,7 @@
   },
   {
     "sentence_de": "Das Ergebnis hängt davon ab, wie viel Zeit wir investieren.",
-    "hint": "A da-compound ('davon') replaces a preposition + pronoun, followed by a full subordinate clause.",
+    "hint": "Here 'davon' is a placeholder (Korrelat) that points forward to the wie-clause, which says what the result depends on. 'abhängen' needs 'von', but 'von' cannot take a clause directly, so 'davon' fills that slot in the main clause.",
     "level": "B2",
     "grammar_focus": "Da-compounds with subordinate clauses"
   },
@@ -121,7 +121,7 @@
   },
   {
     "sentence_de": "Er kann Klavier spielen.",
-    "hint": "Modal verb 'können' + infinitive: the infinitive always goes to the end in present tense.",
+    "hint": "In a main clause, the modal 'kann' stands in second position and the infinitive 'spielen' goes to the end, without 'zu'. The Präteritum works the same way: 'Er konnte Klavier spielen.'",
     "level": "A1",
     "grammar_focus": "Modal verbs (können)"
   },
@@ -133,7 +133,7 @@
   },
   {
     "sentence_de": "Sie ist nach Berlin gefahren.",
-    "hint": "Motion verbs use 'sein' in the Perfekt, not 'haben' — a rule that trips up almost every learner.",
+    "hint": "Verbs of movement from one place to another, like 'fahren' here, form the Perfekt with 'sein': 'ist … gefahren'. When 'fahren' means driving something or someone somewhere, it takes 'haben': 'Sie hat das Auto in die Werkstatt gefahren.'",
     "level": "A2",
     "grammar_focus": "Perfekt with sein (motion verbs)"
   },
@@ -163,7 +163,7 @@
   },
   {
     "sentence_de": "Sie hat sich die Hände gewaschen.",
-    "hint": "Reflexive verb in Perfekt — 'sich' stays close to the subject, and the accusative body-part takes a definite article.",
+    "hint": "Reflexive verbs form the Perfekt with 'haben'. 'sich' is dative here, because 'die Hände' is the accusative object. 'sich' has one form for both cases, but 'ich' shows the difference: 'Ich wasche mich', but 'Ich wasche mir die Hände'. The body part normally takes 'die', not 'ihre'.",
     "level": "B1",
     "grammar_focus": "Reflexive verbs in Perfekt"
   },

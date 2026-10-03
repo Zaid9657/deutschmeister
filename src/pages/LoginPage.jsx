@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { postAuthPath } from '../lib/buyIntent';
+import { returnPath } from '../lib/loginReturn';
 import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -38,7 +39,8 @@ const LoginPage = () => {
   const [resendState, setResendState] = useState('idle');
 
   // A pending checkout (set on /pricing/ before the signup detour) beats the dashboard.
-  const from = location.state?.from?.pathname || postAuthPath();
+  // The door's page comes back whole, query and hash included (src/lib/loginReturn.js).
+  const from = returnPath(location.state?.from) || postAuthPath();
 
   // The signup confirmation link lands HERE already signed in: signUp's
   // emailRedirectTo is /login (AuthContext), and supabase-js reads the session
