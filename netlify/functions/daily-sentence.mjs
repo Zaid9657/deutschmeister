@@ -55,7 +55,11 @@ function unsubscribeUrl(userId) {
 // strip the referrer (14 recorded "none") or send a webmail host, which the
 // classifier files as a source of its own ("outlook.live.com", "ui-deref.de",
 // "android", and "co" for mail.yahoo.co.jp).
-//   * Labels use hyphens. attribution.js and xraySource.mjs both drop "_".
+//   * Labels use hyphens: a house convention (every label in
+//     docs/tracking-links.md uses them), not a parser limit. Both readers keep
+//     "_": public/attribution.js keeps [a-z0-9._/ -] and strips anything else,
+//     and _shared/xraySource.mjs keeps a label only when all of it matches
+//     /^[a-z0-9._:/-]{1,60}$/ (otherwise null; it never strips).
 //   * The tags are fixed strings, so a Netlify retry still rebuilds byte-identical
 //     batches (see the idempotency note below).
 //   * /analyze/ carries its trailing slash: it is a prerendered route, and the
