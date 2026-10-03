@@ -228,3 +228,38 @@ test('the Futur and Konjunktiv rules accept the correct forms they guard', () =>
   assert.deepEqual(futurProblems({ sentence_de: 'Ich werde kommen, wenn ich Zeit habe.', hint: '', grammar_focus: 'Futur I' }), []);
   assert.deepEqual(aciProblems({ sentence_de: 'Ich sehe ihn zu den Kindern laufen.', hint: '', grammar_focus: 'AcI with sehen' }), []);
 });
+
+// ── Rule 5: the sentence is the subject line, so it never says "du" ───────────
+// Added 2026-10-03. daily-sentence.mjs mails `🇩🇪 ${sentence_de}` as the subject
+// and prints the same sentence as the headline, so in the inbox the sentence is
+// read as the product talking to the learner. The product speaks Sie (CLAUDE.md).
+// Until 2026-10-03 one entry read "Das Buch, das ich dir empfohlen habe, ist
+// ausverkauft.": "dir" to the reader, and what looks like a sold-out notice.
+// The rule bans the informal second-person pronouns and possessives (du, ihr-plural
+// forms) in every sentence_de. It reads whole words, not verb endings, so an
+// imperative ("Komm mit!") still needs the DaF reviewer. "ihr" itself is left out
+// because it is also "her" (ihr Buch) and "to her" (mit ihr); the formal "Sie" is
+// allowed.
+const INFORMAL_ADDRESS = /^(?:du|dich|dir|dein(?:e|en|em|er|es|s)?|euch|eu(?:er|re|ren|rem|rer|res))$/;
+
+function informalAddressProblems({ sentence_de }) {
+  const hits = words(sentence_de).filter((w) => INFORMAL_ADDRESS.test(w));
+  return hits.length ? [`the email subject addresses the reader informally ("${hits.join('", "')}"); the product speaks Sie`] : [];
+}
+
+test('informalAddressProblems: no entry in the rotation breaks it', () => {
+  const found = SENTENCES.flatMap((s) => informalAddressProblems(s).map((p) => `"${s.sentence_de}": ${p}`));
+  assert.deepEqual(found, []);
+});
+
+test('informalAddressProblems rejects the pre-fix subject and reads only whole pronoun words', () => {
+  assert.ok(informalAddressProblems({ sentence_de: 'Das Buch, das ich dir empfohlen habe, ist ausverkauft.' }).length > 0, 'the pre-fix #9');
+  for (const s of ['Hast du Zeit?', 'Kommst Du mit?', 'Ich rufe dich morgen an.', 'Ist das dein Fahrrad?', 'Das ist deins.', 'Wir sehen euch morgen.', 'Ist das eure Wohnung?']) {
+    assert.ok(informalAddressProblems({ sentence_de: s }).length > 0, `misses "${s}"`);
+  }
+  // Not informal address: the formal Sie, "ihr" as "her", third person, and words
+  // that only begin like a pronoun (Dirigent, Dutzend, deutlich, Europa).
+  for (const s of ['Können Sie mir helfen?', 'Sie hat ihr Buch vergessen.', 'Der Roman, den Anna empfohlen hat, ist sehr spannend.', 'Der Dirigent kauft ein Dutzend Eier.', 'Er spricht deutlich über Europa.']) {
+    assert.deepEqual(informalAddressProblems({ sentence_de: s }), [], s);
+  }
+});
