@@ -22,7 +22,9 @@
 //   3. "accusative-and-infinitive" (AcI) never labels a zu-infinitive;
 //   4. "'<word>' is <case> <gender>" must name a cell of the paradigm in which that
 //      word exists, and a relative pronoun's gender must be one its antecedent's
-//      article allows.
+//      article allows;
+//   5. sentence_de is also the email subject, so it never addresses the learner with
+//      du/dich/dir/dein/euch/euer (the product speaks Sie; 2026-10-03, old entry #9).
 // The pre-fix texts are kept below as fixtures, so each rule is shown to reject the
 // mistake it was written for. The rules check the claims they can parse; a DaF
 // reviewer still reads every new hint.
