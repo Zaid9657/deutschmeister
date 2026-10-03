@@ -26,6 +26,10 @@
 // The pre-fix texts are kept below as fixtures, so each rule is shown to reject the
 // mistake it was written for. The rules check the claims they can parse; a DaF
 // reviewer still reads every new hint.
+//
+// The rules are deliberately narrow (closed word lists, a light parser). If one
+// fails on German that is correct, the rule is too narrow: widen the rule here,
+// with a case below, and never reword correct content to satisfy it.
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -44,12 +48,18 @@ const WERDEN = new Set(['werde', 'wirst', 'wird', 'werden', 'werdet']);
 // An infinitive ends in -en, -ern or -eln. A weak participle (geliefert,
 // repariert) ends in -t, which is the confusion this rule exists for.
 const INFINITIVE_END = /(?:en|ern|eln)$/;
+// The two infinitives that do not end in -n after a vowel+e: sein, tun.
+const SHORT_INFINITIVES = new Set(['sein', 'tun']);
+const isInfinitive = (w) => INFINITIVE_END.test(w) || SHORT_INFINITIVES.has(w);
+// The verb bracket closes at the end of a clause, so check each comma-separated
+// clause (Ich werde kommen, wenn ich Zeit habe. / Wenn ..., werde ich kommen.).
+const clauseEndsWithInfinitive = (s) => s.split(',').some((c) => isInfinitive(lastWord(c)));
 
 function futurProblems({ sentence_de, hint, grammar_focus }) {
   if (!/\bFutur\b/i.test(`${grammar_focus} ${hint}`)) return [];
   const problems = [];
   if (!words(sentence_de).some((w) => WERDEN.has(w))) problems.push('names the Futur, but the sentence has no form of werden');
-  if (!INFINITIVE_END.test(lastWord(sentence_de))) {
+  if (!clauseEndsWithInfinitive(sentence_de)) {
     problems.push(`names the Futur, but the sentence ends in "${lastWord(sentence_de)}", not an infinitive (werden + participle is the Vorgangspassiv)`);
   }
   return problems;
@@ -85,9 +95,14 @@ function konjunktivProblems({ sentence_de, grammar_focus }) {
 }
 
 // ── Rule 3: accusative-and-infinitive ─────────────────────────────────────────
+const ZU_PREPOSITION_DETERMINERS = new Set([
+  'den', 'denen', 'einen', 'keinen', 'meinen', 'deinen', 'seinen', 'ihren', 'unseren', 'euren',
+  'diesen', 'jenen', 'allen', 'welchen', 'beiden', 'vielen', 'manchen',
+]);
 function aciProblems({ sentence_de, hint, grammar_focus }) {
   if (!/accusative[\s-]+and[\s-]+infinitive|\bAcI\b|accusativus cum infinitivo/i.test(`${grammar_focus} ${hint}`)) return [];
-  const zu = sentence_de.match(/\bzu\s+\p{L}+(?:en|ern|eln)\b/u);
+  // zu + a dative determiner (zu den Eltern, zu meinen Freunden) is the preposition.
+  const zu = [...sentence_de.matchAll(/\bzu\s+(\p{L}+(?:en|ern|eln))\b/gu)].find(([, w]) => !ZU_PREPOSITION_DETERMINERS.has(w.toLowerCase()));
   return zu ? [`calls a zu-infinitive ("${zu[0]}") an accusative-and-infinitive, which takes a bare infinitive`] : [];
 }
 
@@ -193,7 +208,9 @@ test('each rule rejects the mistake it was written for (the pre-fix texts)', () 
 
 test('the case-claim parser reads the claims in the rotation (it is not silently vacuous)', () => {
   const claims = SENTENCES.flatMap((s) => caseClaims(s.hint));
-  assert.ok(claims.length >= 3, `parsed ${claims.length} case/gender claims`);
+  // At least one, so the rule is not vacuous; not an exact count, so rewording a
+  // hint does not fail the suite.
+  assert.ok(claims.length >= 1, `parsed ${claims.length} case/gender claims`);
   assert.deepEqual(caseClaims("'dem' is dative neuter"), [{ word: 'dem', kasus: 'dative', gender: 'neuter' }]);
   assert.equal(fitsParadigm('seines', 'genitive', 'masculine'), true);
   assert.equal(fitsParadigm('seiner', 'genitive', 'masculine'), false);
@@ -205,4 +222,9 @@ test('the Futur and Konjunktiv rules accept the correct forms they guard', () =>
   assert.deepEqual(futurProblems({ sentence_de: 'Ich werde morgen früher aufstehen.', hint: '', grammar_focus: 'Futur I (werden + infinitive)' }), []);
   assert.deepEqual(konjunktivProblems({ sentence_de: 'Er fragte, ob sie Zeit habe.', grammar_focus: 'Konjunktiv I in indirect speech' }), []);
   assert.deepEqual(konjunktivProblems({ sentence_de: 'Wenn ich mehr Zeit hätte, würde ich lernen.', grammar_focus: 'Konjunktiv II' }), []);
+  // Review of 9d1948c: correct German the first draft of these rules rejected.
+  assert.deepEqual(futurProblems({ sentence_de: 'Er wird wohl krank sein.', hint: '', grammar_focus: 'Futur I (Vermutung)' }), []);
+  assert.deepEqual(futurProblems({ sentence_de: 'Was wirst du morgen tun?', hint: '', grammar_focus: 'Futur I' }), []);
+  assert.deepEqual(futurProblems({ sentence_de: 'Ich werde kommen, wenn ich Zeit habe.', hint: '', grammar_focus: 'Futur I' }), []);
+  assert.deepEqual(aciProblems({ sentence_de: 'Ich sehe ihn zu den Kindern laufen.', hint: '', grammar_focus: 'AcI with sehen' }), []);
 });
