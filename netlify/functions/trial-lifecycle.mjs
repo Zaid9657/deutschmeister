@@ -17,6 +17,7 @@ import { schedule } from '@netlify/functions';
 import { createClient } from '@supabase/supabase-js';
 import { createHmac } from 'crypto';
 import { MONTHLY_PRICE_EUR, eur } from './_shared/pricing.mjs';
+import { tagEmailLink } from './_shared/emailLinks.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -40,7 +41,7 @@ function unsubscribeUrl(userId) {
 
 // ─── copy ────────────────────────────────────────────────────────────────────
 
-const SHELL = ({ heading, body, ctaHref, ctaLabel, unsubUrl }) => `<!DOCTYPE html>
+const SHELL = ({ heading, body, ctaHref, ctaLabel, footerHref, unsubUrl }) => `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${heading}</title></head>
 <body style="margin:0;padding:0;background:#f8fafc;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
@@ -71,7 +72,7 @@ const SHELL = ({ heading, body, ctaHref, ctaLabel, unsubUrl }) => `<!DOCTYPE htm
         <tr>
           <td style="padding:20px 32px;border-top:1px solid #f1f5f9;text-align:center;">
             <p style="margin:0;font-size:12px;color:#94a3b8;line-height:1.6;">
-              DeutschMeister · <a href="${BASE_URL}" style="color:#94a3b8;">deutsch-meister.de</a><br>
+              DeutschMeister · <a href="${footerHref}" style="color:#94a3b8;">deutsch-meister.de</a><br>
               <a href="${unsubUrl}" style="color:#94a3b8;">Unsubscribe from these emails</a>
             </p>
           </td>
@@ -114,6 +115,24 @@ const TEMPLATES = {
       P('And if the timing just isn\'t right, that\'s genuinely fine. The free tier and the daily sentence keep working, and German isn\'t going anywhere.'),
   },
 };
+
+// Every link into the site carries the lifecycle UTM tags, so a click reaches
+// dm_attribution as source "email" instead of untracked or a webmail host
+// (docs/tracking-links.md, "Our own email"). The campaign is the kind with
+// hyphens (trial_day6 -> trial-day6); utm_content names the link. The
+// unsubscribe link is never tagged. Exported for tests/lifecycle-links.test.mjs.
+export function renderHtml(kind, userId) {
+  const tpl = TEMPLATES[kind];
+  const tags = { medium: 'lifecycle', campaign: kind.replaceAll('_', '-') };
+  return SHELL({
+    heading: tpl.subject,
+    body: tpl.body,
+    ctaHref: tagEmailLink(tpl.ctaHref, { ...tags, content: 'cta' }),
+    ctaLabel: tpl.ctaLabel,
+    footerHref: tagEmailLink(`${BASE_URL}/`, { ...tags, content: 'footer' }),
+    unsubUrl: unsubscribeUrl(userId),
+  });
+}
 
 // ─── selection ───────────────────────────────────────────────────────────────
 
@@ -238,13 +257,7 @@ async function sendKind(resendKey, kind) {
       to: [r.email],
       reply_to: 'zaid@deutsch-meister.de',
       subject: tpl.subject,
-      html: SHELL({
-        heading: tpl.subject,
-        body: tpl.body,
-        ctaHref: tpl.ctaHref,
-        ctaLabel: tpl.ctaLabel,
-        unsubUrl: unsubscribeUrl(r.id),
-      }),
+      html: renderHtml(kind, r.id),
     }));
 
     try {
