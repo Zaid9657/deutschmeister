@@ -130,9 +130,17 @@ agreed to receive offers: signup has no opt-in, the only email preference
 (profiles.email_daily_sentence) is an opt-out, and /privacy/ section 8 names
 account and service messages and requested learning emails, not offers.
 The team rule is "promotional mail needs recorded consent (§7 UWG)".
-The existing-customer route (§ 7 Abs. 3 UWG) is narrow: it needs an address
-obtained with a sale and a notice at collection that the customer may object.
-On 2026-10-04 at most 11 of the 1,097 accounts this would mail had ever paid.
+The general route is prior express consent, provable in practice by double
+opt-in. The existing-customer route (§ 7 Abs. 3 UWG) is narrow: the address was
+obtained by the seller with a sale, the ad is for the seller's own similar
+products, the customer has not objected, and a clear notice that they may
+object was given at collection AND is repeated in every mail. On 2026-10-04 at
+most 11 of the 1,097 accounts counted had ever paid; the addresses were
+collected at a free signup without such a notice, so possibly none qualify.
+
+The basis must cover EVERYONE this script mails: it has no "include only"
+filter, so a basis that covers some recipients does not make the send lawful
+for the rest.
 
 Decide the basis first (a legal call, not an agent's), then write it down:
   LAUNCH_CONSENT_BASIS='<who decided, when, on what basis>'
