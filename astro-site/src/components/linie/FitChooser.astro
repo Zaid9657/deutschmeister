@@ -65,12 +65,12 @@ const results = FIT_CHOICES.map((c) => ({ ...c, station: c.level ? stationFor(c.
                     {planLine(c.station) && <p class="mt-1 text-[0.875rem] leading-relaxed text-graphite">{planLine(c.station)}</p>}
                     <div class="mt-4 flex flex-wrap items-center gap-3">
                       {c.station.status === 'free' && (
-                        <a href={FREE_COURSE_HREF} class="dm-key dm-key-ink" data-track="course_selected" data-track-level="a1.1" data-track-surface="fit_result">Start A1.1 free</a>
+                        <a href={FREE_COURSE_HREF} class="dm-key dm-key-siegel" data-track="course_selected" data-track-level="a1.1" data-track-surface="fit_result">Start A1.1 free</a>
                       )}
                       {c.station.status === 'ticket' && variants[c.station.productKey] && (
                         <button
                           type="button"
-                          class="dm-key dm-key-ink"
+                          class="dm-key dm-key-siegel"
                           data-course-variant={variants[c.station.productKey]}
                           data-course-key={c.station.productKey}
                           data-course-price={c.station.price}

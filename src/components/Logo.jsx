@@ -22,6 +22,8 @@
  *                 bypass (showing the divergent SPA versions instead).
  *   className   — extra classes on the wrapper
  */
+import { color } from '../data/design-tokens.js';
+
 export default function Logo({
   size = 38,
   showWordmark = true,
@@ -48,8 +50,8 @@ export default function Logo({
       >
         <defs>
           <linearGradient id={gid} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#0F766E" />
-            <stop offset="1" stopColor="#0D9488" />
+            <stop offset="0" stopColor={color.siegel} />
+            <stop offset="1" stopColor={color.siegelLift} />
           </linearGradient>
         </defs>
         <circle cx="32" cy="32" r="30" fill={`url(#${gid})`} />
@@ -62,7 +64,7 @@ export default function Logo({
           strokeWidth="1.2"
           strokeDasharray="1.5 4"
         />
-        <circle cx="32" cy="8.5" r="3.4" fill="#FBBF24" />
+        <circle cx="32" cy="8.5" r="3.4" fill={color.gold} />
         <text
           x="32"
           y="45"

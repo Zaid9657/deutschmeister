@@ -1,14 +1,16 @@
 // Guard suite for the v3 "Die Linie" design layer (src/data/design-tokens.js,
-// the section at the end; docs/redesign-2026-10/art-direction.md).
+// the section at the end; docs/redesign-2026-10/art-direction.md), in its v4
+// colours: TÜRKIS (owner pick 2026-10-04, over night + signal yellow).
 //
-//   1. The new palette is legible where the rules allow it to be used, and the
-//      rule that keeps it honest — signal yellow is never text on a light
-//      ground — is checked against the actual sources.
-//   2. The line's yellow can never be mistaken for a case colour (rule 1).
+//   1. The türkis palette is legible where the rules use it (AA contrast for
+//      text, 3:1 for the line on its tint), checked against the token values.
+//   2. One action colour: the line IS the siegel türkis, and never lands on a
+//      case hue (rule 1).
 //   3. The motion contract from the art direction holds in the Linie
 //      stylesheet and components: strong curves, no `transition: all`, no
 //      ease-in on UI, hover motion only behind a fine pointer, a reduced-motion
 //      gate, and no scale(0) entrances.
+//   4. The app chrome speaks the same design as the Astro chrome.
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -46,32 +48,27 @@ const hue = (hex) => {
   return (h * 60 + 360) % 360;
 };
 
-test('the Linie palette is legible where the rules use it', () => {
-  assert.ok(contrast(linie.ink, linie.DEFAULT) >= 7, 'ink on a linie key (AAA)');
-  assert.ok(contrast(linie.DEFAULT, nacht.DEFAULT) >= 7, 'the line and linie text on nacht');
-  assert.ok(contrast(linie.DEFAULT, nacht.raised) >= 7, 'linie on a nacht card');
-  assert.ok(contrast(nacht.text, nacht.DEFAULT) >= 15, 'body text on nacht');
-  assert.ok(contrast(nacht.muted, nacht.raised) >= 7, 'secondary text on a nacht card');
-  assert.ok(contrast(linie.ink, linie.wash) >= 12, 'ink on the linie wash');
-  // The reason for the amended rule 2: yellow on paper is not text.
-  assert.ok(contrast(linie.DEFAULT, color.paper) < 2, 'signal yellow on paper is ~1.4:1 — never text there');
+test('the Türkis palette is legible where the rules use it (v4, owner pick 2026-10-04)', () => {
+  assert.ok(contrast(linie.ink, linie.DEFAULT) >= 4.5, 'white text on a türkis key (AA)');
+  assert.ok(contrast(linie.DEFAULT, nacht.raised) >= 4.5, 'türkis text on a white card (AA)');
+  assert.ok(contrast(linie.DEFAULT, color.paper) >= 4.5, 'türkis text on paper (AA)');
+  assert.ok(contrast(linie.DEFAULT, nacht.DEFAULT) >= 3, 'the line and large türkis text on the tint');
+  assert.ok(contrast(nacht.text, nacht.DEFAULT) >= 12, 'body text on the tint');
+  assert.ok(contrast(nacht.muted, nacht.DEFAULT) >= 4.5, 'secondary text on the tint (AA)');
+  assert.ok(contrast(nacht.muted, nacht.raised) >= 7, 'secondary text on a white card');
+  assert.ok(contrast(nacht.text, linie.wash) >= 12, 'ink on the türkis wash');
+  assert.ok(contrast(color.white, color.siegel) >= 4.5, 'white text on a siegel button (AA)');
 });
 
-test('signal yellow is never mistaken for a case colour (rule 1)', () => {
+test('one action colour: the line is the siegel family, and never a case colour (rules 1 and 2)', () => {
+  assert.equal(linie.DEFAULT, color.siegel, 'linie and siegel must be the same türkis');
+  // Türkis sits close to the Dativ green, as siegel teal always has; the guard is
+  // that it never lands ON a case hue, and that a case colour always carries its label.
   for (const [name, k] of Object.entries(kasus)) {
     const d = Math.abs(hue(linie.DEFAULT) - hue(k.line));
-    assert.ok(Math.min(d, 360 - d) >= 25, `linie vs ${name}: ${Math.min(d, 360 - d).toFixed(0)}° apart`);
+    assert.ok(Math.min(d, 360 - d) >= 10, `linie vs ${name}: ${Math.min(d, 360 - d).toFixed(0)}° apart`);
+    assert.ok(k.abbr, `${name} has its label`);
   }
-});
-
-test('linie text appears only on dark grounds (nacht or ink)', () => {
-  const files = [...walk('astro-site/src'), ...walk('src')].filter((f) => /\.(astro|jsx|js|mjs)$/.test(f));
-  const offenders = files.filter((f) => {
-    const src = read(f);
-    return /\btext-linie(?![-\w])/.test(src) && !/\bbg-(nacht|ink)\b/.test(src);
-  });
-  assert.deepEqual(offenders, [], 'a file that writes text in signal yellow must set it on a nacht or ink ground');
-  assert.ok(contrast(linie.DEFAULT, color.ink) >= 7, 'linie on ink');
 });
 
 test('motion tokens are the strong curves, and nothing eases in', () => {

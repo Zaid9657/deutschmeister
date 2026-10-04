@@ -18,9 +18,9 @@
 //     clients, and a gradient that fails to paint leaves white text on white.
 
 export const BRAND = {
-  siegel: '#0F766E',
-  siegelLift: '#0D9488',
-  siegelWash: '#E6F2F0',
+  siegel: '#0A8276',
+  siegelLift: '#0A7468',
+  siegelWash: '#E3F6F3',
   gold: '#FBBF24',
   ink: '#14201D',
   graphite: '#5A6360',

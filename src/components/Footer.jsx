@@ -62,7 +62,7 @@ const Footer = () => {
         <div className="grid gap-10 border-t border-nacht-rule py-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <div className="mb-3 flex items-center gap-2">
-              <Logo size={32} wordmarkTone="inverse" face="chrome" />
+              <Logo size={32} face="chrome" />
             </div>
             <p className="text-sm leading-relaxed">
               {isGerman
@@ -88,7 +88,7 @@ const Footer = () => {
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex min-h-11 items-center gap-2 hover:text-white transition-colors"
+                    className="inline-flex min-h-11 items-center gap-2 hover:text-nacht-text transition-colors"
                   >
                     <Youtube className="w-4 h-4" aria-hidden="true" />
                     {isGerman ? item.labelDe : item.labelEn}
@@ -98,7 +98,7 @@ const Footer = () => {
             </ul>
             {/* The one way to reach a human — on every full-chrome screen. */}
             <p className="mt-1 text-sm">
-              <FooterLink item={SUPPORT_LINK} className="inline-flex min-h-11 items-center gap-2 font-semibold text-white hover:text-linie transition-colors">
+              <FooterLink item={SUPPORT_LINK} className="inline-flex min-h-11 items-center gap-2 font-semibold text-nacht-text hover:text-siegel-deep transition-colors">
                 <LifeBuoy className="w-4 h-4" aria-hidden="true" />
                 {isGerman ? SUPPORT_LINK.labelDe : SUPPORT_LINK.labelEn}
               </FooterLink>
@@ -106,13 +106,13 @@ const Footer = () => {
           </div>
           {FOOTER_GROUPS.map((group) => (
             <div key={group.key}>
-              <h2 className="mb-3 font-body text-sm font-[650] text-white">
+              <h2 className="mb-3 font-body text-sm font-[650] text-nacht-text">
                 {isGerman ? group.titleDe : group.titleEn}
               </h2>
               <ul className="space-y-1 text-sm">
                 {group.items.map((item) => (
                   <li key={item.href + item.labelEn}>
-                    <FooterLink item={item} className="inline-flex min-h-9 items-center hover:text-white transition-colors">
+                    <FooterLink item={item} className="inline-flex min-h-9 items-center hover:text-nacht-text transition-colors">
                       {isGerman ? item.labelDe : item.labelEn}
                     </FooterLink>
                   </li>
@@ -126,7 +126,7 @@ const Footer = () => {
             {LEGAL_LINKS.map((item, i) => (
               <span key={item.href}>
                 {i > 0 && <span className="mx-2">·</span>}
-                <FooterLink item={item} className="hover:text-white transition-colors">
+                <FooterLink item={item} className="hover:text-nacht-text transition-colors">
                   {isGerman ? item.labelDe : item.labelEn}
                 </FooterLink>
               </span>

@@ -128,7 +128,6 @@ const Navbar = () => {
             showWordmark
             face="chrome"
             to="/"
-            wordmarkTone={night ? 'inverse' : 'default'}
             wordmarkClassName={user ? '' : 'hidden sm:inline'}
           />
 
@@ -292,7 +291,7 @@ const Navbar = () => {
               )}
 
               {user && (
-                <Button to={continueHref} variant={night ? 'linie' : 'ink'} shape="pill" className="ml-1 whitespace-nowrap">
+                <Button to={continueHref} variant="primary" shape="pill" className="ml-1 whitespace-nowrap">
                   {isGerman ? 'Weiterlernen' : 'Continue learning'}
                 </Button>
               )}
@@ -300,7 +299,7 @@ const Navbar = () => {
 
             {/* The free first stop: one key at every width (Layout.astro "Start A1.1 free"). */}
             {!user && (
-              <Button to="/course/a1.1" variant={night ? 'linie' : 'ink'} shape="pill" className="whitespace-nowrap lg:ml-1">
+              <Button to="/course/a1.1" variant="primary" shape="pill" className="whitespace-nowrap lg:ml-1">
                 {isGerman ? 'A1.1 gratis starten' : 'Start A1.1 free'}
               </Button>
             )}

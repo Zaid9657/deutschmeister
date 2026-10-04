@@ -247,7 +247,7 @@ const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes(
                   </span>
                   {c.variantId ? (
                     <span data-course-door={c.levels[0]} data-course-code={c.code} data-course-open-class="dm-key dm-key-ghost !min-h-10 !px-4 !py-2 !text-[0.875rem]">
-                      <button type="button" class="dm-key dm-key-ink !min-h-10 !px-4 !py-2 !text-[0.875rem]" data-course-variant={c.variantId} data-course-key={c.key} data-course-price={c.price} data-track-surface="pricing_list">
+                      <button type="button" class="dm-key dm-key-siegel !min-h-10 !px-4 !py-2 !text-[0.875rem]" data-course-variant={c.variantId} data-course-key={c.key} data-course-price={c.price} data-track-surface="pricing_list">
                         Buy {c.code}
                       </button>
                     </span>
@@ -388,7 +388,7 @@ const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes(
                   <!-- Label and note come from lib/proCta.js: signed out it starts the
                        account trial (no card); the script switches a signed-in
                        visitor to "Go Pro — <price>" and the checkout. -->
-                  <button id="pro-btn" type="button" class="dm-key dm-key-ink w-full !text-[0.875rem]" data-track-surface="pricing_pro">
+                  <button id="pro-btn" type="button" class="dm-key dm-key-siegel w-full !text-[0.875rem]" data-track-surface="pricing_pro">
                     <span id="pro-btn-label">{proCta().label}</span>
                   </button>
                   <span id="plan-note" class="mt-2 block font-data text-[0.6875rem] leading-snug text-graphite">

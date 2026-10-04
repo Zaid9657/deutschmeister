@@ -87,10 +87,14 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   against a config that never extended `borderRadius`, so the billing toggle rendered square and
   nothing said so.** Only `pill` is wired: the token `sm`/`md`/`lg` values collide with Tailwind's
   own defaults and adopting them would reshape every `rounded-lg` in the app.
-- **"Die Linie" (v3 tokens, 2026-10 redesign, `docs/redesign-2026-10/`) amends rule 2:** `siegel`
-  teal stays the action colour on LIGHT grounds; on `nacht` (night) grounds the action colour is
-  `linie` yellow with ink text. Yellow is never text or a meaningful line on light grounds (1.4:1) —
-  `tests/linie-design.test.mjs` allows `text-linie` only in files that also draw `bg-nacht`/`bg-ink`.
+- **"Die Linie" (v3 tokens, 2026-10 redesign, `docs/redesign-2026-10/`), in v4 colours: TÜRKIS.**
+  The owner picked türkis over night + signal yellow on 2026-10-04 (the palette they had already
+  chosen for the Course v2 player). The token NAMES stayed: `nacht` is now the light türkis feature
+  ground (hero, line section, footer, tab bar — read it as "feature ground", not night) and `linie`
+  is the same türkis as `siegel` (`#0A8276`, white text 4.7:1). Rule 2 is whole again: one action
+  colour on every ground. Never put `text-white`/inverse tones on a `nacht` ground any more — use
+  `text-nacht-text`/`-muted`. `tests/linie-design.test.mjs` pins the contrast values and
+  `linie === siegel`; `netlify/functions/_shared/brand.mjs` (email colours) must match the tokens.
   The `sign` face (Archivo, `sign-display/head/label/code` in `astro-site/src/styles/linie.css`) is
   for the four marketing/commerce pages that pass `preloads={[...signFontPreloads, …]}` to `Layout`
   (`/`, `/pricing/`, `/courses/`, `/courses/<level>/`). Every other page renders `data-sign="off"`

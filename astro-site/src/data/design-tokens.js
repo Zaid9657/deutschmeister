@@ -66,11 +66,13 @@ export const color = {
   white: '#FFFFFF',
 
   // Primary. Sampled from the Meister-Siegel gradient in src/components/Logo.jsx.
-  siegel: '#0F766E',
-  siegelLift: '#0D9488', // the gradient's far stop; hover
-  siegelDeep: '#0B5A54', // press, and text-on-paper when the link must darken
-  siegelWash: '#E6F2F0', // selected rows, quiet fills
-  siegelEdge: '#07423D', // the bottom edge under a siegel button face
+  // v4 (owner pick 2026-10-04, "A · Türkis"): the brightest türkis that still
+  // carries white button text at AA (4.7:1). Was #0F766E.
+  siegel: '#0A8276',
+  siegelLift: '#0A7468', // hover (darkens, keeps AA); the seal gradient's far stop
+  siegelDeep: '#0A6B61', // press, and text-on-paper when the link must darken
+  siegelWash: '#E3F6F3', // selected rows, quiet fills — the course palette's wash
+  siegelEdge: '#075A51', // the bottom edge under a siegel button face
 
   // The seal's dot. Rule 2: the seal, and at most one marker per page.
   gold: '#FBBF24',
@@ -365,7 +367,7 @@ export const tailwindFontFamily = {
 };
 
 // ===========================================================================
-// v3 — "DIE LINIE · DEUTSCH, IN BEWEGUNG" (2026-10-04)
+// v3 — "DIE LINIE · DEUTSCH, IN BEWEGUNG" (2026-10-04), v4 colours: TÜRKIS
 // docs/redesign-2026-10/art-direction.md holds the why; this holds the values.
 //
 // The marketing site and the commerce screens become a German transit line:
@@ -376,32 +378,37 @@ export const tailwindFontFamily = {
 // these classes. Placed at the end of the file so it never shares a hunk with
 // the course theme's edits.
 //
-// RULE 2, AMENDED. `siegel` stays the action colour on LIGHT grounds (paper,
-// white). On a `nacht` ground the action colour is `linie` with `linie.ink`
-// text. Signal yellow on paper is ~1.4:1, so `linie` is NEVER text and never a
-// meaningful line on a light ground — there it may only fill a shape that has
-// ink text or an ink outline on it (a station dot, the ticket stub).
-// RULE 1 still binds: linie is yellow — distinct from all four kasus hues —
-// and is never used to mark a case.
+// v4 COLOURS (owner pick 2026-10-04: "A · Türkis", over night + signal yellow;
+// docs/redesign-2026-10/screenshots/palette-compare.jpg). The owner had already
+// chosen türkis for the Course v2 player, so site, app and course now share one
+// palette. The token NAMES stay (`nacht`, `linie`) so no component changed:
+//   `nacht` is now the line's light türkis ground (hero, line section, footer,
+//           tab bar) — read it as "the feature ground", not as night;
+//   `linie` is türkis, the same family as `siegel`: the line, its stations and
+//           the keys on that ground, with white text (4.7:1 AA).
+// RULE 2 is whole again: ONE action colour, türkis, on every ground.
+// RULE 1 still binds: türkis sits ~13° of hue from the Dativ green — as siegel
+// teal always has — so the line is never used to mark a case, and a case colour
+// never appears without its NOM/AKK/DAT/GEN label.
 // ===========================================================================
 
-/** The line itself: signal yellow, as on German wayfinding signs. */
+/** The line itself: türkis (v4). Same family as `siegel`. */
 export const linie = {
-  DEFAULT: '#FFD23F',
-  deep: '#E0AE00', // hover/press on nacht; the line's shadow side
-  edge: '#B98C00', // the hard bottom edge under a linie face (rule 3)
-  wash: '#FFF6D6', // a quiet highlight behind ink text on a light ground
-  ink: '#2B2100', // text on a linie face (11:1, AAA)
+  DEFAULT: '#0A8276', // the line, station rings, keys (white text 4.7:1)
+  deep: '#0A7468', // hover/press; the line's shadow side
+  edge: '#075A51', // the hard bottom edge under a linie face (rule 3)
+  wash: '#E3F6F3', // a quiet highlight behind ink text
+  ink: '#FFFFFF', // text on a linie face
 };
 
-/** The night grounds: hero, the line section, the final decision. */
+/** The feature ground (v4: light türkis, was night): hero, the line section, footer, tab bar. */
 export const nacht = {
-  DEFAULT: '#0E1513',
-  raised: '#17211E', // cards and the ticket on nacht
-  sunk: '#08100E', // the track bed under the line
-  rule: '#2C3833', // hairlines on nacht
-  text: '#F4F2EC', // body text on nacht (≥ 15:1)
-  muted: '#A9B3AE', // secondary text on nacht and nacht.raised (≥ 7:1)
+  DEFAULT: '#E3F6F3', // the türkis tint
+  raised: '#FFFFFF', // cards and the ticket on the tint
+  sunk: '#BFEAE3', // the track bed under the line
+  rule: '#BFE3DB', // hairlines on the tint
+  text: '#10302C', // body text on the tint (12.6:1)
+  muted: '#3F5A55', // secondary text on the tint (6.7:1) and on white (7.5:1)
 };
 
 /**

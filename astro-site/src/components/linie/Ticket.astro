@@ -68,13 +68,13 @@ const H = headingLevel === 3 ? 'h3' : 'h2';
           </ul>
           <div class="mt-7 flex flex-wrap items-center gap-3 border-t border-rule pt-6">
             {variants[st.productKey] ? (
-              <div data-course-door={st.level} data-course-code={st.code} data-course-open-class="dm-key dm-key-ink">
-                <button type="button" class="dm-key dm-key-ink" data-course-variant={variants[st.productKey]} data-course-key={st.productKey} data-course-price={st.price} data-track-surface={surface}>
+              <div data-course-door={st.level} data-course-code={st.code} data-course-open-class="dm-key dm-key-siegel">
+                <button type="button" class="dm-key dm-key-siegel" data-course-variant={variants[st.productKey]} data-course-key={st.productKey} data-course-price={st.price} data-track-surface={surface}>
                   Buy {st.code} · {st.priceLabel}
                 </button>
               </div>
             ) : (
-              <a href={st.coursePage} class="dm-key dm-key-ink">See {st.code}</a>
+              <a href={st.coursePage} class="dm-key dm-key-siegel">See {st.code}</a>
             )}
             <a href={st.coursePage} class="dm-link text-[0.9375rem]">Full contents of {st.code}</a>
           </div>

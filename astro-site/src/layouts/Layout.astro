@@ -241,7 +241,7 @@ const authAttrs = (item) =>
               data-track="course_selected"
               data-track-level="a1.1"
               data-track-surface="nav"
-              class:list={['dm-key ml-1 !min-h-10 !px-4 !py-2 !text-[0.9375rem]', night ? 'dm-key-linie' : 'dm-key-ink']}
+              class:list={['dm-key ml-1 !min-h-10 !px-4 !py-2 !text-[0.9375rem]', night ? 'dm-key-linie' : 'dm-key-siegel']}
             >
               Start A1.1 free
             </a>
@@ -249,7 +249,7 @@ const authAttrs = (item) =>
               href="/dashboard"
               data-auth-only
               style="display:none"
-              class:list={['dm-key ml-1 !min-h-10 !px-4 !py-2 !text-[0.9375rem]', night ? 'dm-key-linie' : 'dm-key-ink']}
+              class:list={['dm-key ml-1 !min-h-10 !px-4 !py-2 !text-[0.9375rem]', night ? 'dm-key-linie' : 'dm-key-siegel']}
             >
               Continue learning
             </a>
@@ -257,10 +257,10 @@ const authAttrs = (item) =>
 
           <!-- Mobile: the free first stop + the full menu (pure HTML disclosure, no client JS) -->
           <div class="lg:hidden flex items-center gap-2">
-            <a href={FREE_COURSE_HREF} data-anon-only data-track="course_selected" data-track-level="a1.1" data-track-surface="nav_mobile" class:list={['dm-key !min-h-10 !px-3.5 !py-2 !text-[0.875rem]', night ? 'dm-key-linie' : 'dm-key-ink']}>
+            <a href={FREE_COURSE_HREF} data-anon-only data-track="course_selected" data-track-level="a1.1" data-track-surface="nav_mobile" class:list={['dm-key !min-h-10 !px-3.5 !py-2 !text-[0.875rem]', night ? 'dm-key-linie' : 'dm-key-siegel']}>
               Start A1.1 free
             </a>
-            <a href="/dashboard" data-auth-only style="display:none" class:list={['dm-key !min-h-10 !px-3.5 !py-2 !text-[0.875rem]', night ? 'dm-key-linie' : 'dm-key-ink']}>
+            <a href="/dashboard" data-auth-only style="display:none" class:list={['dm-key !min-h-10 !px-3.5 !py-2 !text-[0.875rem]', night ? 'dm-key-linie' : 'dm-key-siegel']}>
               Dashboard
             </a>
             <details class="relative">
@@ -344,7 +344,7 @@ const authAttrs = (item) =>
                 <circle cx="32" cy="8.5" r="3.4" fill={color.gold} />
                 <text x="32" y="45" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="700" font-size="34" fill={color.white}>M</text>
               </svg>
-              <span class="sign-label text-[1.0625rem] text-white">Deutsch<span class="text-siegel-wash">Meister</span></span>
+              <span class="sign-label text-[1.0625rem] text-nacht-text">Deutsch<span class="text-siegel-deep">Meister</span></span>
             </div>
             <p class="text-sm leading-relaxed">
               German from A1.1 to B2.2, one stop at a time: guided courses, grammar, listening, reading and AI speaking practice.
@@ -360,7 +360,7 @@ const authAttrs = (item) =>
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="inline-flex min-h-11 items-center gap-2 transition-colors hover:text-white"
+                    class="inline-flex min-h-11 items-center gap-2 transition-colors hover:text-nacht-text"
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                       <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.2 3.6-6.2 3.6Z" />
@@ -375,7 +375,7 @@ const authAttrs = (item) =>
                  ticket form, signed out it offers sign-in or the contact
                  address — so a static-page visitor is never a dead end. -->
             <p class="mt-1 text-sm">
-              <a href={SUPPORT_LINK.href} class="inline-flex min-h-11 items-center gap-2 font-semibold text-white transition-colors hover:text-linie">
+              <a href={SUPPORT_LINK.href} class="inline-flex min-h-11 items-center gap-2 font-semibold text-nacht-text transition-colors hover:text-siegel-deep">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="4" />
                   <path d="m4.93 4.93 4.24 4.24M14.83 9.17l4.24-4.24M14.83 14.83l4.24 4.24M9.17 14.83l-4.24 4.24" />
@@ -386,10 +386,10 @@ const authAttrs = (item) =>
           </div>
           {FOOTER_GROUPS.map((group) => (
             <div>
-              <h2 class="text-white font-semibold sign-label mb-3 text-sm">{group.titleEn}</h2>
+              <h2 class="text-nacht-text font-semibold sign-label mb-3 text-sm">{group.titleEn}</h2>
               <ul class="space-y-1 text-sm">
                 {group.items.map((item) => (
-                  <li><a href={item.href} class="inline-flex min-h-9 items-center transition-colors hover:text-white">{item.labelEn}</a></li>
+                  <li><a href={item.href} class="inline-flex min-h-9 items-center transition-colors hover:text-nacht-text">{item.labelEn}</a></li>
                 ))}
               </ul>
             </div>
@@ -400,7 +400,7 @@ const authAttrs = (item) =>
             {LEGAL_LINKS.map((item, i) => (
               <>
                 {i > 0 && <span class="mx-2">·</span>}
-                <a href={item.href} class="transition-colors hover:text-white">{item.labelEn}</a>
+                <a href={item.href} class="transition-colors hover:text-nacht-text">{item.labelEn}</a>
               </>
             ))}
           </p>
