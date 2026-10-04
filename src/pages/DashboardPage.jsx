@@ -311,6 +311,8 @@ const DashboardPage = () => {
                   <>You've completed every topic — <span className="font-bold text-ink">Meisterhaft.</span></>
                 ) : isBrandNew || firstRun ? (
                   <>Welcome to your German journey — let's take the <span className="font-bold text-ink">first step</span>.</>
+                ) : courseStep?.kind === 'step' ? (
+                  <>Keep it going — <span className="font-bold text-ink">{courseStep.total - courseStep.done} step{courseStep.total - courseStep.done !== 1 ? 's' : ''} left</span> in your {courseStep.code} course.</>
                 ) : (
                   <>Keep it going — <span className="font-bold text-ink">{remainingInLevel} topic{remainingInLevel !== 1 ? 's' : ''} left</span> in {levelLabel}.</>
                 )}
@@ -422,7 +424,7 @@ const DashboardPage = () => {
         <div className="mb-8">
           <SectionHeading
             eyebrow={`${levelLabel} · ${BAND_NAME[band]}`}
-            title="Your path"
+            title={courseStep ? 'Your grammar path' : 'Your path'}
             lead={loading
               ? 'Mapping your path…'
               : cur.allDone

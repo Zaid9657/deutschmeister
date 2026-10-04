@@ -112,7 +112,7 @@ const SubscriptionSuccessPage = () => {
   const stopIndex = firstLevel ? ALL_LEVELS.indexOf(firstLevel) : -1;
 
   return (
-    <div className="min-h-screen bg-nacht px-4 py-12 font-body text-nacht-text sm:py-20" data-ground="nacht">
+    <div className="min-h-screen bg-nacht px-4 pb-16 pt-24 font-body text-nacht-text sm:pb-20 sm:pt-28" data-ground="nacht">
       <SEO title={seoTitle} description="Your DeutschMeister purchase." path="/subscription/success" noindex />
       <div className="mx-auto w-full max-w-xl">
         {loading ? (
@@ -183,12 +183,15 @@ const SubscriptionSuccessPage = () => {
 
             {/* The one `celebrate` moment is the confetti; the door is the line's key. */}
             <div className="mt-8 flex flex-col items-start gap-4">
-              <Button variant="linie" size="lg" onClick={() => navigate(startHref)}>
+              <Button variant="linie" size="lg" to={startHref}>
                 {courseBought ? `Start ${firstLevel.toUpperCase()} — day 1` : telcBought ? 'Open the plan' : 'Start learning'}
                 <ArrowRight className="h-5 w-5" aria-hidden="true" />
               </Button>
               <p className="text-[0.875rem] text-nacht-muted">Your place is saved after every answer, on any device you sign in on.</p>
-              <ReportProblemLink topic="payment" />
+              {/* On nacht the link takes the line's colour (siegel teal is ~3:1 here). */}
+              <span className="[&_a]:!text-linie [&_a:hover]:!text-linie-deep">
+                <ReportProblemLink topic="payment" />
+              </span>
             </div>
           </>
         ) : (

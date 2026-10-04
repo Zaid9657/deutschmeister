@@ -206,7 +206,7 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden flex items-center justify-center bg-paper px-4 py-12 font-body">
+    <div className="relative min-h-screen overflow-hidden flex items-center justify-center bg-paper px-4 pb-12 pt-24 font-body">
       <SEO title="Sign Up Free" description="Create a free DeutschMeister account and start mastering German grammar with clear English explanations." path="/signup" />
       <Aurora />
       <motion.div
