@@ -74,7 +74,7 @@ const LOSES_EVERYTHING = new RegExp(
 // also name one; a line that limits the loss (except, else, other levels) or
 // denies it (won't lose, verlieren nichts) states a different, true thing.
 const ABOUT_ACCESS = /\b(trial|testphase|probezeit|access|zugang|zugriff|abo|abonnement|subscription|features?|funktionen)\b/i;
-const LIMITED_OR_DENIED = /\b(except|else|other|außer|ander\w*)\b|\b(won't|will not|wo not)\s+lose\b|\bverlier\w*\s+(sie\s+)?nichts\b/i;
+const LIMITED_OR_DENIED = /\b(except|else|other|außer|ander\w*)\b|\b(won[’']t|will not)\s+lose\b|\bverlier\w*\s+(sie\s+)?nichts\b/i;
 const losesEverything = (line) => LOSES_EVERYTHING.test(line) && ABOUT_ACCESS.test(line) && !LIMITED_OR_DENIED.test(line);
 
 test('the pattern catches the line it was written for, and not its fix', () => {
@@ -92,6 +92,7 @@ test('the pattern catches the line it was written for, and not its fix', () => {
     'Ich habe alles verloren.',
     'Er verliert alle Punkte.',
     "You won't lose anything, and all levels reopen when you upgrade.",
+    'You won’t lose anything when your trial ends, all levels reopen.',
     'Sie verlieren nichts: alle Fortschritte bleiben gespeichert.',
     'After the trial you lose access to all levels except A1.1.',
     'You lose access to everything else.',
