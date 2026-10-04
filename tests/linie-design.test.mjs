@@ -102,3 +102,23 @@ test('the Linie stylesheet and components keep the motion contract', () => {
     }
   }
 });
+
+test('only the pages that preload the sign face use it; library pages never fetch Archivo', () => {
+  // Measured 2026-10-04: the nav's sign labels made every grammar and guide page
+  // fetch the 55 KB face at top priority (+~450 ms lab FCP). Layout.astro marks
+  // a page data-sign="off" unless it preloads the face, and linie.css then sets
+  // every sign role (and the key) in the body face.
+  const layout = readFileSync(join(ROOT, 'astro-site/src/layouts/Layout.astro'), 'utf8');
+  assert.match(layout, /const signOn = signFontPreloads\.every\(\(href\) => preloads\.includes\(href\)\);/);
+  assert.match(layout, /<html lang=\{lang\} data-sign=\{signOn \? undefined : 'off'\}>/);
+  const css = readFileSync(join(ROOT, 'astro-site/src/styles/linie.css'), 'utf8');
+  assert.match(css, /html\[data-sign='off'\] :is\(\.sign-display, \.sign-head, \.sign-label, \.sign-code, \.dm-key\) \{\s*font-family: theme\('fontFamily\.body'\);/);
+  // Every page whose own markup uses a sign role preloads the face.
+  const pagesDir = join(ROOT, 'astro-site/src/pages');
+  const walk = (d) => readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(join(d, e.name)) : [join(d, e.name)]));
+  for (const file of walk(pagesDir).filter((f) => f.endsWith('.astro'))) {
+    const src = readFileSync(file, 'utf8');
+    const usesSign = /\bsign-(display|head|label|code)\b|from '\.\.\/(\.\.\/)?components\/linie\//.test(src);
+    if (usesSign) assert.match(src, /signFontPreloads/, `${file.replace(ROOT, '')} uses the sign face, so it must preload it`);
+  }
+});

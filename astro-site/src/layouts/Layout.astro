@@ -1,6 +1,6 @@
 ---
 import { NAV_GROUPS, FOOTER_GROUPS, LEGAL_LINKS, SOCIAL_LINKS, SUPPORT_LINK } from '../data/navigation.js';
-import { fontPreloads, color, nacht, linie } from '../data/design-tokens.js';
+import { fontPreloads, signFontPreloads, color, nacht, linie } from '../data/design-tokens.js';
 import Showtime from '../components/Showtime.astro';
 import { onsiteHref, surfaceForPath } from '../lib/onsiteLinks.js';
 import { TRIAL_DAYS } from '../data/marketing.js';
@@ -38,6 +38,11 @@ const {
   tone = 'paper',
   preloads = fontPreloads,
 } = Astro.props;
+// The sign face (Archivo) is for the pages that preload it — the marketing and
+// commerce pages. Everywhere else (grammar, guides, exams …) the chrome sets its
+// labels in the body face, so a library page never fetches a 55 KB font for its
+// nav alone (it cost ~450 ms of lab FCP there; linie.css `data-sign="off"`).
+const signOn = signFontPreloads.every((href) => preloads.includes(href));
 
 // `canonical={null}` means emit none. Only 404.html uses it: the page is served
 // at /404.html and as the fallback body for arbitrary unknown paths, so there is
@@ -83,7 +88,7 @@ const authAttrs = (item) =>
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={lang} data-sign={signOn ? undefined : 'off'}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />

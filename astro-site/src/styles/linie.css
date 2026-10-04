@@ -77,6 +77,12 @@ summary {
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
 }
+/* Library pages do not load the sign face (Layout.astro `signOn`): the same
+   roles fall back to the body face, upright, so nothing waits on Archivo. */
+html[data-sign='off'] :is(.sign-display, .sign-head, .sign-label, .sign-code, .dm-key) {
+  font-family: theme('fontFamily.body');
+  font-stretch: 100%;
+}
 
 /* ── The key: a button you press (rule 3) ─────────────────────────────── */
 .dm-key {
