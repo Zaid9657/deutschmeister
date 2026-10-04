@@ -1,5 +1,6 @@
-// Guard suite: the app's German UI copy says Sie, never du (product agent,
-// 2026-10-04).
+// Guard suite: the German branch of every `isGerman ? … : …` UI string says Sie,
+// never du (product agent, 2026-10-04). German-only screens and data fields
+// (labelDe, descriptionDe) are not scanned yet; see agents/product backlog.
 //
 // The finding this closes (conversion handoff conv-b1): the listening results
 // card asked "DeutschMeister gefällt dir?" and "Abonniere, um nach deinem Test
@@ -137,14 +138,15 @@ export function stringsIn(text) {
 const DU_WORD = /\b(?:du|Du|dich|Dich|dir|Dir|dein|Dein|deine|Deine|deinen|Deinen|deinem|Deinem|deiner|Deiner|deines|Deines)\b/;
 
 // Common du-imperatives of UI copy. Words that are also nouns or numerals at a sentence
-// start (Folge, Frage, Sage, Achte, Merke) are left out on purpose: no false positives.
+// start (Folge, Frage, Sage, Achte, Merke; also Sichere, Buche, Bleibe, Klick, which
+// are adjectives or nouns: "Sichere Zahlung", "Klick für Klick") are left out on purpose.
 const DU_IMPERATIVES = [
-  'Abonniere', 'Antworte', 'Beantworte', 'Beginne', 'Benutze', 'Bestätige', 'Bleib', 'Bleibe',
-  'Buche', 'Entdecke', 'Ergänze', 'Erstelle', 'Erzähle', 'Fang', 'Finde', 'Füge', 'Geh', 'Gehe',
-  'Gib', 'Hilf', 'Hol', 'Hole', 'Hör', 'Höre', 'Kaufe', 'Klick', 'Klicke', 'Komm', 'Lade', 'Lass',
+  'Abonniere', 'Antworte', 'Beantworte', 'Beginne', 'Benutze', 'Bestätige', 'Bleib',
+  'Entdecke', 'Ergänze', 'Erstelle', 'Erzähle', 'Fang', 'Finde', 'Füge', 'Geh', 'Gehe',
+  'Gib', 'Hilf', 'Hol', 'Hole', 'Hör', 'Höre', 'Kaufe', 'Klicke', 'Komm', 'Lade', 'Lass',
   'Lerne', 'Lern', 'Lies', 'Logge', 'Mach', 'Mache', 'Markiere', 'Melde', 'Nimm', 'Nutze', 'Öffne',
   'Ordne', 'Probiere', 'Prüfe', 'Registriere', 'Sammle', 'Schau', 'Schick', 'Schicke', 'Schließe',
-  'Schreib', 'Schreibe', 'Sende', 'Setze', 'Sichere', 'Sieh', 'Spare', 'Speichere', 'Sprich',
+  'Schreib', 'Schreibe', 'Sende', 'Setze', 'Sieh', 'Spare', 'Speichere', 'Sprich',
   'Starte', 'Teste', 'Tippe', 'Trage', 'Übe', 'Überprüfe', 'Vergiss', 'Verbessere', 'Verfolge',
   'Versuche', 'Verwandle', 'Wähl', 'Wähle', 'Warte', 'Wechsle', 'Wiederhole', 'Zeig', 'Zeige',
 ];
@@ -198,6 +200,10 @@ test('the du detector: du words and du-imperatives fail, Sie and infinitives pas
     'Hören Sie sich den Dialog an und beantworten Sie die Fragen unten.',
     'Wählen Sie a, b oder c',
     'Deutsch lernen mit Videozusammenfassungen und Folien',
+    // Review of e4a2ea33: adjectives and nouns that look like du-imperatives.
+    'Sichere Zahlung über Lemon Squeezy',
+    'Klick für Klick zum Ziel',
+    'Bleibe gesucht? Unser Leitfaden hilft.',
     'Folge 3: Im Café',
     'Frage 2 von 5',
     'Durchsuchen Sie die Videothek',
