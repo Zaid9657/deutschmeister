@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1350" />
+    <title>Hero Line Mobile</title>
+    <!-- GSAP 3.14.2, vendored: the CDN is unreachable from this environment -->
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1350px;
+        overflow: hidden;
+        background: #ffffff;
+      }
+      #stage {
+        position: relative;
+        width: 1080px;
+        height: 1350px;
+        overflow: hidden;
+        background: #ffffff;
+      }
+      #el-linie {
+        position: absolute;
+        inset: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Phone hero (4:5): the vertical Linie, 14 s seamless loop. All motion lives in compositions/linie.html. -->
+    <div
+      id="stage"
+      data-composition-id="hero-line-mobile"
+      data-start="0"
+      data-duration="14"
+      data-fps="30"
+      data-width="1080"
+      data-height="1350"
+    >
+      <div
+        id="el-linie"
+        data-composition-id="linie"
+        data-composition-src="compositions/linie.html"
+        data-start="0"
+        data-duration="14"
+        data-track-index="0"
+        data-width="1080"
+        data-height="1350"
+      ></div>
+    </div>
+    <script>
+      window.__timelines["hero-line-mobile"] = gsap.timeline({ paused: true });
+    </script>
+  </body>
+</html>

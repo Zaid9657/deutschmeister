@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hero Line — line scene</title>
+    <!-- Sub-composition: the runtime mounts only the <template> contents. -->
+  </head>
+  <body>
+    <template>
+      <style>
+        /* Fonts: unique aliases so the owner's local files are what renders (see shot-plan font_notes). */
+        @font-face {
+          font-family: "Archivo DM";
+          src: url("assets/fonts/archivo-v25-latin.woff2") format("woff2");
+          font-weight: 400 900;
+          font-stretch: 62% 100%;
+          font-style: normal;
+          font-display: block;
+        }
+        @font-face {
+          font-family: "Nunito Sans DM";
+          src: url("assets/fonts/nunito-sans-v19-latin.woff2") format("woff2");
+          font-weight: 300 700;
+          font-style: normal;
+          font-display: block;
+        }
+
+        #root * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        /* Die Linie v4 "Türkis" — every colour defined once, on the root (sub-composition CSS is scoped to it). */
+        #root {
+          --bg: #ffffff;
+          --line: #0a8276;
+          --line-deep: #0a7468;
+          --edge: #075a51;
+          --wash: #e3f6f3;
+          --pale: #bfeae3;
+          --rule: #bfe3db;
+          --ink: #10302c;
+          --muted: #3f5a55;
+          --sun: #fbbf24;
+          --bubble-shadow: 0 8px 24px rgba(16, 48, 44, 0.08);
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          background: var(--bg);
+        }
+
+        /* ---------- track ---------- */
+        #track {
+          position: absolute;
+          inset: 0;
+          width: 1600px;
+          height: 560px;
+          overflow: visible;
+        }
+        #hairline {
+          stroke: var(--rule);
+          stroke-width: 2;
+          fill: none;
+        }
+        #track-solid {
+          stroke: var(--line);
+          stroke-width: 10;
+          stroke-linecap: butt;
+          fill: none;
+          stroke-dasharray: 710;
+          stroke-dashoffset: 710;
+        }
+        #track-shadow {
+          stroke: var(--line-deep);
+          stroke-width: 3;
+          stroke-linecap: butt;
+          fill: none;
+          stroke-dasharray: 710;
+          stroke-dashoffset: 710;
+        }
+        /* Dashed (Im Bau) segment in its own HTML wrapper so clip-path has a clean reference box. */
+        #track-dashed {
+          position: absolute;
+          left: 800px;
+          top: 379px;
+          width: 710px;
+          height: 10px;
+          clip-path: inset(0% 100% 0% 0%);
+        }
+        #track-dashed svg {
+          display: block;
+          width: 710px;
+          height: 10px;
+        }
+        #track-dashed line {
+          stroke: var(--pale);
+          stroke-width: 10;
+          stroke-dasharray: 16 12;
+          stroke-linecap: butt;
+        }
+
+        /* ---------- stations ---------- */
+        .stn {
+          position: absolute;
+          top: 364px;
+          left: calc(var(--x) * 1px - 20px);
+          width: 40px;
+          height: 40px;
+        }
+        .ring-wrap {
+          position: absolute;
+          inset: 0;
+          width: 40px;
+          height: 40px;
+        }
+        .ring-wrap svg {
+          display: block;
+          width: 40px;
+          height: 40px;
+        }
+        .ring-back {
+          fill: var(--bg);
+        }
+        .ring {
+          fill: var(--bg);
+          stroke-width: 6;
+        }
+        .stn.built .ring {
+          stroke: var(--line);
+        }
+        .stn.building .ring {
+          /* Solid, not dashed: a dashed ring around the pale disc read as a cog.
+             The dashed TRACK alone says "under construction". */
+          stroke: var(--pale);
+        }
+        .disc {
+          position: absolute;
+          left: 6px;
+          top: 6px;
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+        }
+        .stn.built .disc {
+          /* 1px over the ring's inner edge: same colour, closes the anti-alias seam at r = 14 */
+          left: 5px;
+          top: 5px;
+          width: 30px;
+          height: 30px;
+          background: var(--line);
+        }
+        .stn.building .disc {
+          background: var(--pale);
+        }
+
+        .code {
+          position: absolute;
+          top: 420px;
+          left: calc(var(--x) * 1px - 60px);
+          width: 120px;
+          text-align: center;
+          font-family: "Archivo DM", sans-serif;
+          font-weight: 800;
+          font-stretch: 80%;
+          font-variant-numeric: tabular-nums;
+          letter-spacing: -0.01em;
+          font-size: 28px;
+          line-height: 28px;
+        }
+        .code.built {
+          color: var(--ink);
+        }
+        .code.building {
+          color: var(--muted);
+        }
+
+        .free-slot {
+          position: absolute;
+          top: 458px;
+          left: 30px;
+          width: 120px;
+          display: flex;
+          justify-content: center;
+        }
+        #free-tag {
+          display: block;
+          padding: 4px 12px;
+          border-radius: 999px;
+          background: var(--sun);
+          color: var(--ink);
+          font-family: "Archivo DM", sans-serif;
+          font-weight: 800;
+          font-stretch: 80%;
+          letter-spacing: -0.01em;
+          font-size: 26px;
+          line-height: 26px;
+        }
+
+        /* ---------- train ---------- */
+        #train {
+          position: absolute;
+          left: 0;
+          top: 313px;
+          width: 88px;
+          height: 42px;
+        }
+        #train-body {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 88px;
+          height: 42px;
+          border-radius: 21px;
+          background: var(--line);
+          box-shadow: 0 3px 0 var(--edge); /* the hard .dm-key edge */
+        }
+        .window {
+          position: absolute;
+          top: 10px;
+          width: 24px;
+          height: 14px;
+          border-radius: 5px;
+          background: var(--bg);
+        }
+        .window.w1 {
+          left: 12px;
+        }
+        .window.w2 {
+          left: 52px;
+        }
+
+        /* ---------- speech bubbles ---------- */
+        .bubble {
+          position: absolute;
+          bottom: 272px; /* body bottom at y = 288; grows upward */
+          left: 40px; /* replaced by the centre-then-clamp layout at build */
+          width: max-content;
+          max-width: 900px;
+        }
+        .card {
+          position: relative;
+          background: var(--bg);
+          border: 2px solid var(--rule);
+          border-radius: 16px;
+          box-shadow: var(--bubble-shadow);
+          padding: 18px 26px;
+        }
+        .chips {
+          display: flex;
+          gap: 10px;
+          align-items: center;
+        }
+        .chip {
+          display: block;
+          padding: 4px 14px;
+          border-radius: 999px;
+          border: 2px solid transparent;
+          font-family: "Archivo DM", sans-serif;
+          font-weight: 800;
+          font-stretch: 80%;
+          font-variant-numeric: tabular-nums;
+          letter-spacing: -0.01em;
+          font-size: 26px;
+          line-height: 26px;
+        }
+        .chip.level {
+          color: var(--line);
+          background: var(--wash);
+          border-color: var(--wash);
+        }
+        .chip.bau {
+          color: var(--muted);
+          background: var(--bg);
+          border: 2px dashed var(--pale);
+        }
+        .sentence {
+          margin-top: 10px;
+          font-family: "Nunito Sans DM", sans-serif;
+          font-weight: 700;
+          font-size: 38px;
+          line-height: 1.18;
+          letter-spacing: -0.005em;
+          color: var(--ink);
+        }
+        .sentence .ln {
+          display: block;
+          white-space: nowrap;
+        }
+        .tail {
+          position: absolute;
+          top: calc(100% - 2px); /* overlaps the card's 2px bottom border */
+          left: 38px; /* replaced at build: tail centre = station x */
+          width: 24px;
+          height: 16px;
+          overflow: visible;
+        }
+        .tail-fill {
+          fill: var(--bg);
+        }
+        .tail-edge {
+          fill: none;
+          stroke: var(--rule);
+          stroke-width: 2;
+          stroke-linejoin: round;
+        }
+      </style>
+
+      <div id="root" data-composition-id="line-scene" data-width="1600" data-height="560" data-duration="14">
+        <!-- hairline bed (static) + solid track and its shadow side -->
+        <svg id="track" viewBox="0 0 1600 560" xmlns="http://www.w3.org/2000/svg">
+          <line id="hairline" x1="90" y1="384" x2="1510" y2="384" />
+          <path id="track-solid" d="M 90 384 H 800" />
+          <path id="track-shadow" d="M 90 387.5 H 800" />
+        </svg>
+
+        <!-- dashed Im Bau track -->
+        <div id="track-dashed">
+          <svg viewBox="0 0 710 10" xmlns="http://www.w3.org/2000/svg">
+            <line x1="0" y1="5" x2="710" y2="5" />
+          </svg>
+        </div>
+
+        <!-- station rings + lit discs -->
+        <div id="stn-0" class="stn built" style="--x: 90">
+          <div id="ring-0" class="ring-wrap"><svg viewBox="0 0 40 40"><circle class="ring-back" cx="20" cy="20" r="20" /><circle class="ring" cx="20" cy="20" r="17" /></svg></div>
+          <div id="disc-0" class="disc"></div>
+        </div>
+        <div id="stn-1" class="stn built" style="--x: 292.86">
+          <div id="ring-1" class="ring-wrap"><svg viewBox="0 0 40 40"><circle class="ring-back" cx="20" cy="20" r="20" /><circle class="ring" cx="20" cy="20" r="17" /></svg></div>
+          <div id="disc-1" class="disc"></div>
+        </div>
+        <div id="stn-2" class="stn built" style="--x: 495.71">
+          <div id="ring-2" class="ring-wrap"><svg viewBox="0 0 40 40"><circle class="ring-back" cx="20" cy="20" r="20" /><circle class="ring" cx="20" cy="20" r="17" /></svg></div>
+          <div id="disc-2" class="disc"></div>
+        </div>
+        <div id="stn-3" class="stn built" style="--x: 698.57">
+          <div id="ring-3" class="ring-wrap"><svg viewBox="0 0 40 40"><circle class="ring-back" cx="20" cy="20" r="20" /><circle class="ring" cx="20" cy="20" r="17" /></svg></div>
+          <div id="disc-3" class="disc"></div>
+        </div>
+        <div id="stn-4" class="stn building" style="--x: 901.43">
+          <div id="ring-4" class="ring-wrap"><svg viewBox="0 0 40 40"><circle class="ring-back" cx="20" cy="20" r="20" /><circle class="ring" cx="20" cy="20" r="17" /></svg></div>
+          <div id="disc-4" class="disc"></div>
+        </div>
+        <div id="stn-5" class="stn building" style="--x: 1104.29">
+          <div id="ring-5" class="ring-wrap"><svg viewBox="0 0 40 40"><circle class="ring-back" cx="20" cy="20" r="20" /><circle class="ring" cx="20" cy="20" r="17" /></svg></div>
+          <div id="disc-5" class="disc"></div>
+        </div>
+        <div id="stn-6" class="stn building" style="--x: 1307.14">
+          <div id="ring-6" class="ring-wrap"><svg viewBox="0 0 40 40"><circle class="ring-back" cx="20" cy="20" r="20" /><circle class="ring" cx="20" cy="20" r="17" /></svg></div>
+          <div id="disc-6" class="disc"></div>
+        </div>
+        <div id="stn-7" class="stn building" style="--x: 1510">
+          <div id="ring-7" class="ring-wrap"><svg viewBox="0 0 40 40"><circle class="ring-back" cx="20" cy="20" r="20" /><circle class="ring" cx="20" cy="20" r="17" /></svg></div>
+          <div id="disc-7" class="disc"></div>
+        </div>
+
+        <!-- station codes + Free tag -->
+        <div id="code-0" class="code built" style="--x: 90">A1.1</div>
+        <div id="code-1" class="code built" style="--x: 292.86">A1.2</div>
+        <div id="code-2" class="code built" style="--x: 495.71">A2.1</div>
+        <div id="code-3" class="code built" style="--x: 698.57">A2.2</div>
+        <div id="code-4" class="code building" style="--x: 901.43">B1.1</div>
+        <div id="code-5" class="code building" style="--x: 1104.29">B1.2</div>
+        <div id="code-6" class="code building" style="--x: 1307.14">B2.1</div>
+        <div id="code-7" class="code building" style="--x: 1510">B2.2</div>
+        <div class="free-slot"><span id="free-tag">Free</span></div>
+
+        <!-- the tram (enters / leaves partly off-canvas) -->
+        <div id="train" data-layout-allow-overflow="true">
+          <div id="train-body">
+            <div class="window w1"></div>
+            <div class="window w2"></div>
+          </div>
+        </div>
+
+        <!-- one speech card per stop; exactly one visible at a time -->
+        <div id="bubble-0" class="bubble" data-x="90">
+          <div class="card">
+            <div id="chips-0" class="chips"><span class="chip level">A1.1</span></div>
+            <div id="sent-0" class="sentence"><span class="ln">Guten Tag! Ich heiße Ana.</span></div>
+          </div>
+          <svg class="tail" viewBox="0 0 24 16"><path class="tail-fill" d="M 1.5 0 L 12 14 L 22.5 0 Z" /><path class="tail-edge" d="M 1.5 0 L 12 14 L 22.5 0" /></svg>
+        </div>
+        <div id="bubble-1" class="bubble" data-x="292.86">
+          <div class="card">
+            <div id="chips-1" class="chips"><span class="chip level">A1.2</span></div>
+            <div id="sent-1" class="sentence"><span class="ln">Was kostet das Brot?</span></div>
+          </div>
+          <svg class="tail" viewBox="0 0 24 16"><path class="tail-fill" d="M 1.5 0 L 12 14 L 22.5 0 Z" /><path class="tail-edge" d="M 1.5 0 L 12 14 L 22.5 0" /></svg>
+        </div>
+        <div id="bubble-2" class="bubble" data-x="495.71">
+          <div class="card">
+            <div id="chips-2" class="chips"><span class="chip level">A2.1</span></div>
+            <div id="sent-2" class="sentence"><span class="ln">Gestern war ich beim Arzt.</span></div>
+          </div>
+          <svg class="tail" viewBox="0 0 24 16"><path class="tail-fill" d="M 1.5 0 L 12 14 L 22.5 0 Z" /><path class="tail-edge" d="M 1.5 0 L 12 14 L 22.5 0" /></svg>
+        </div>
+        <div id="bubble-3" class="bubble" data-x="698.57">
+          <div class="card">
+            <div id="chips-3" class="chips"><span class="chip level">A2.2</span></div>
+            <div id="sent-3" class="sentence"><span class="ln">Ich hätte gern einen Termin.</span></div>
+          </div>
+          <svg class="tail" viewBox="0 0 24 16"><path class="tail-fill" d="M 1.5 0 L 12 14 L 22.5 0 Z" /><path class="tail-edge" d="M 1.5 0 L 12 14 L 22.5 0" /></svg>
+        </div>
+        <div id="bubble-4" class="bubble" data-x="901.43">
+          <div class="card">
+            <div id="chips-4" class="chips"><span class="chip level">B1.1</span><span class="chip bau">Im Bau</span></div>
+            <div id="sent-4" class="sentence"><span class="ln">Ich glaube, dass es klappt.</span></div>
+          </div>
+          <svg class="tail" viewBox="0 0 24 16"><path class="tail-fill" d="M 1.5 0 L 12 14 L 22.5 0 Z" /><path class="tail-edge" d="M 1.5 0 L 12 14 L 22.5 0" /></svg>
+        </div>
+        <div id="bubble-5" class="bubble" data-x="1104.29">
+          <div class="card">
+            <div id="chips-5" class="chips"><span class="chip level">B1.2</span><span class="chip bau">Im Bau</span></div>
+            <div id="sent-5" class="sentence"><span class="ln">Obwohl es regnet, fahre ich.</span></div>
+          </div>
+          <svg class="tail" viewBox="0 0 24 16"><path class="tail-fill" d="M 1.5 0 L 12 14 L 22.5 0 Z" /><path class="tail-edge" d="M 1.5 0 L 12 14 L 22.5 0" /></svg>
+        </div>
+        <div id="bubble-6" class="bubble" data-x="1307.14">
+          <div class="card">
+            <div id="chips-6" class="chips"><span class="chip level">B2.1</span><span class="chip bau">Im Bau</span></div>
+            <div id="sent-6" class="sentence"><span class="ln">Hätte ich Zeit, würde ich kommen.</span></div>
+          </div>
+          <svg class="tail" viewBox="0 0 24 16"><path class="tail-fill" d="M 1.5 0 L 12 14 L 22.5 0 Z" /><path class="tail-edge" d="M 1.5 0 L 12 14 L 22.5 0" /></svg>
+        </div>
+        <div id="bubble-7" class="bubble" data-x="1510">
+          <div class="card">
+            <div id="chips-7" class="chips"><span class="chip level">B2.2</span><span class="chip bau">Im Bau</span></div>
+            <div id="sent-7" class="sentence"><span class="ln">Einerseits ist es teuer,</span><span class="ln">andererseits lohnt es sich.</span></div>
+          </div>
+          <svg class="tail" viewBox="0 0 24 16"><path class="tail-fill" d="M 1.5 0 L 12 14 L 22.5 0 Z" /><path class="tail-edge" d="M 1.5 0 L 12 14 L 22.5 0" /></svg>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          var COMP_ID = "line-scene";
+          // Timing table — shot-plan.json content.stations[k].timing (seconds). ring/code: draw-in entrances;
+          // travel: stop start; fill: lit disc; bin/chips/sent: card + contents in; bout: card out; reset: station clears.
+          var S = [
+            { x: 90, ring: 0, code: 0.06, travel: 1.2, fill: 1.52, bin: 1.48, chips: 1.5, sent: 1.53, bout: 2.6, reset: 13.24 },
+            { x: 292.86, ring: 0.274, code: 0.354, travel: 2.6, fill: 2.92, bin: 2.88, chips: 2.9, sent: 2.93, bout: 4.0, reset: 13.4 },
+            { x: 495.71, ring: 0.396, code: 0.476, travel: 4.0, fill: 4.32, bin: 4.28, chips: 4.3, sent: 4.33, bout: 5.45, reset: 13.47 },
+            { x: 698.57, ring: 0.489, code: 0.569, travel: 5.45, fill: 5.77, bin: 5.73, chips: 5.75, sent: 5.78, bout: 6.9, reset: 13.52 },
+            { x: 901.43, ring: 0.571, code: 0.651, travel: 6.9, fill: 7.22, bin: 7.18, chips: 7.2, sent: 7.23, bout: 8.35, reset: 13.56 },
+            { x: 1104.29, ring: 0.664, code: 0.744, travel: 8.35, fill: 8.67, bin: 8.63, chips: 8.65, sent: 8.68, bout: 9.85, reset: 13.61 },
+            { x: 1307.14, ring: 0.786, code: 0.866, travel: 9.85, fill: 10.17, bin: 10.13, chips: 10.15, sent: 10.18, bout: 11.4, reset: 13.68 },
+            { x: 1510, ring: 1.08, code: 1.16, travel: 11.4, fill: 11.72, bin: 11.68, chips: 11.7, sent: 11.73, bout: 13.2, reset: 13.74 }
+          ];
+          var CLAMP_L = 40, CLAMP_R = 1560; // card body clamp (safe area)
+          var TAIL_MIN = 32; // tail centre stays >= 32px from the card corners
+          var TAIL_DEPTH = 12; // tip at y = 300, card body bottom at y = 288
+          var HALF = 44; // tram is 88 wide: its x tween = station x - 44
+          var SETTLE = 6; // brake overshoot (px)
+          var EXIT_X = 1600; // tram centre leaves to the canvas edge
+
+          function $(id) {
+            return document.getElementById(id);
+          }
+
+          // Card layout: body centred on the station x, clamped to [40, 1560]; tail centre on the station x;
+          // scale origin at the tail tip. Measured from laid-out text, hence after the fonts load.
+          function layoutBubbles() {
+            S.forEach(function (s, k) {
+              var b = $("bubble-" + k), w = b.offsetWidth, h = b.offsetHeight;
+              var left = Math.min(Math.max(Math.round(s.x - w / 2), CLAMP_L), CLAMP_R - w);
+              var tail = Math.min(Math.max(s.x - left, TAIL_MIN), w - TAIL_MIN);
+              b.style.left = left + "px";
+              b.querySelector(".tail").style.left = tail - 12 + "px";
+              b.style.transformOrigin = tail + "px " + (h + TAIL_DEPTH) + "px";
+            });
+          }
+
+          function build() {
+            layoutBubbles();
+            var tl = gsap.timeline({ paused: true });
+
+            // 0.00–1.10 draw-in. power2.in then power2.out over equal halves = one continuous power2.inOut front.
+            var solid = [$("track-solid"), $("track-shadow")];
+            var L = $("track-solid").getTotalLength() || 710;
+            solid.forEach(function (p) {
+              p.style.strokeDasharray = L;
+            });
+            tl.fromTo(solid, { strokeDashoffset: L }, { strokeDashoffset: 0, duration: 0.55, ease: "power2.in" }, 0);
+            tl.fromTo("#track-dashed", { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.55, ease: "power2.out" }, 0.55);
+            S.forEach(function (s, k) {
+              tl.fromTo("#ring-" + k, { autoAlpha: 0, scale: 0.4 }, { autoAlpha: 1, scale: 1, duration: 0.28, ease: "power3.out" }, s.ring);
+              tl.fromTo("#code-" + k, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.3, ease: "power2.out" }, s.code);
+              tl.fromTo("#disc-" + k, { scale: 0 }, { scale: 1, duration: 0.28, ease: "power3.out" }, s.fill); // lit as the tram parks
+            });
+            tl.fromTo("#free-tag", { autoAlpha: 0, scale: 0.92 }, { autoAlpha: 1, scale: 1, duration: 0.3, ease: "power2.out" }, 0.14);
+
+            // 1.20–13.20 the tram runs the line. Stop 1 fades in from station - 60; every stop overshoots 6px and brakes back.
+            tl.fromTo("#train", { x: S[0].x - 60 - HALF }, { x: S[0].x + SETTLE - HALF, duration: 0.4, ease: "power2.out" }, S[0].travel);
+            tl.fromTo("#train-body", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.2, ease: "power2.out" }, S[0].travel);
+            S.forEach(function (s, k) {
+              if (k > 0) tl.fromTo("#train", { x: S[k - 1].x - HALF }, { immediateRender: false, x: s.x + SETTLE - HALF, duration: 0.4, ease: "power2.inOut" }, s.travel);
+              tl.fromTo("#train", { x: s.x + SETTLE - HALF }, { immediateRender: false, x: s.x - HALF, duration: 0.14, ease: "power2.out" }, s.travel + 0.4);
+            });
+
+            // Speech cards: lift in from the tail tip, contents follow 0.02/0.05 s later, lift away as the tram departs.
+            S.forEach(function (s, k) {
+              tl.fromTo("#bubble-" + k, { autoAlpha: 0, y: 14, scale: 0.96 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.22, ease: "power3.out" }, s.bin);
+              tl.fromTo("#chips-" + k, { autoAlpha: 0, y: 6 }, { autoAlpha: 1, y: 0, duration: 0.2, ease: "power2.out" }, s.chips);
+              tl.fromTo("#sent-" + k, { autoAlpha: 0, y: 6 }, { autoAlpha: 1, y: 0, duration: 0.2, ease: "power2.out" }, s.sent);
+              tl.fromTo("#bubble-" + k, { autoAlpha: 1, y: 0 }, { immediateRender: false, autoAlpha: 0, y: -8, duration: 0.2, ease: "power2.in" }, s.bout);
+            });
+
+            // 13.20–13.90 reset: the tram rolls off, the line clears behind it, stations fade as the tail passes.
+            var last = S[S.length - 1];
+            tl.fromTo("#train", { x: last.x - HALF }, { immediateRender: false, x: EXIT_X - HALF, duration: 0.4, ease: "power2.in" }, 13.2);
+            tl.fromTo("#train-body", { autoAlpha: 1 }, { immediateRender: false, autoAlpha: 0, duration: 0.24, ease: "power2.in" }, 13.36);
+            tl.fromTo(solid, { strokeDashoffset: 0 }, { immediateRender: false, strokeDashoffset: -L, duration: 0.3, ease: "power2.in" }, 13.24);
+            tl.fromTo("#track-dashed", { clipPath: "inset(0% 0% 0% 0%)" }, { immediateRender: false, clipPath: "inset(0% 0% 0% 100%)", duration: 0.3, ease: "power2.out" }, 13.54);
+            S.forEach(function (s, k) {
+              var t = ["#stn-" + k, "#code-" + k].concat(k === 0 ? ["#free-tag"] : []);
+              tl.fromTo(t, { autoAlpha: 1 }, { immediateRender: false, autoAlpha: 0, duration: 0.16, ease: "power2.in" }, s.reset);
+            });
+            // 13.90–14.00 rest: white ground + hairline only — identical to t = 0, so the MP4 loops without a seam.
+
+            window.__timelines[COMP_ID] = tl; // registered only after the build completes
+            tl.seek(0);
+            if (typeof window.__hfForceTimelineRebind === "function") window.__hfForceTimelineRebind();
+          }
+
+          Promise.all([document.fonts.load("800 28px 'Archivo DM'"), document.fonts.load("700 38px 'Nunito Sans DM'")])
+            .catch(function () {})
+            .then(function () {
+              return document.fonts.ready;
+            })
+            .then(build);
+        })();
+      </script>
+    </template>
+  </body>
+</html>

@@ -14,10 +14,11 @@ test('brand wordmarks use contrast-safe colors on light and dark surfaces', asyn
   assert.match(logo, /wordmarkTone === 'inverse'/);
   assert.match(logo, /text-siegel-deep/);
   assert.doesNotMatch(logo, /color:\s*'#0D9488'/);
-  assert.match(footer, /wordmarkTone="inverse"/);
-  assert.doesNotMatch(footer, /<Logo size=\{32\} \/>[\s\S]{0,200}Deutsch/);
-  assert.match(layout, /Deutsch<span class="text-siegel-deep">Meister<\/span>/);
-  assert.match(layout, /Deutsch<span class="text-siegel-wash">Meister<\/span>/);
+  // v4 (türkis): both footers stand on the light tint, so the wordmark takes the
+  // light-surface tones — ink with siegel-deep — in the app and on the site.
+  assert.match(footer, /<Logo size=\{32\} face="chrome" \/>/);
+  assert.doesNotMatch(footer, /wordmarkTone="inverse"/);
+  assert.equal((layout.match(/Deutsch<span class="text-siegel-deep">Meister<\/span>/g) || []).length, 2, 'nav + footer wordmark');
 });
 
 test('footer navigation headings do not skip from the page heading to h3', async () => {
@@ -28,7 +29,7 @@ test('footer navigation headings do not skip from the page heading to h3', async
 
   assert.match(footer, /<h2 className=/);
   assert.doesNotMatch(footer, /<h3 className=/);
-  assert.match(layout, /<h2 class="text-white font-semibold/);
+  assert.match(layout, /<h2 class="text-nacht-text font-semibold/);
   assert.doesNotMatch(layout, /<h3 class="text-white font-semibold/);
 });
 

@@ -87,10 +87,19 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   against a config that never extended `borderRadius`, so the billing toggle rendered square and
   nothing said so.** Only `pill` is wired: the token `sm`/`md`/`lg` values collide with Tailwind's
   own defaults and adopting them would reshape every `rounded-lg` in the app.
-- **"Die Linie" (v3 tokens, 2026-10 redesign, `docs/redesign-2026-10/`) amends rule 2:** `siegel`
-  teal stays the action colour on LIGHT grounds; on `nacht` (night) grounds the action colour is
-  `linie` yellow with ink text. Yellow is never text or a meaningful line on light grounds (1.4:1) —
-  `tests/linie-design.test.mjs` allows `text-linie` only in files that also draw `bg-nacht`/`bg-ink`.
+- **"Die Linie" (v3 tokens, 2026-10 redesign, `docs/redesign-2026-10/`), in v4 colours: TÜRKIS.**
+  The owner picked türkis over night + signal yellow on 2026-10-04 (the palette they had already
+  chosen for the Course v2 player). The token NAMES stayed: `nacht` is now the light türkis feature
+  ground (hero, line section, footer, tab bar — read it as "feature ground", not night) and `linie`
+  is the same türkis as `siegel` (`#0A8276`, white text 4.7:1). Rule 2 is whole again: one action
+  colour on every ground. Never put `text-white`/inverse tones on a `nacht` ground any more — use
+  `text-nacht-text`/`-muted`. `tests/linie-design.test.mjs` pins the contrast values and
+  `linie === siegel`; `netlify/functions/_shared/brand.mjs` (email colours) must match the tokens.
+  The homepage hero carries **the line board** (`components/linie/LineBoard.astro`): a HyperFrames loop
+  whose sources are `videos/hero-line` (1600×560) and `videos/hero-line-mobile` (1080×1350). Edit the
+  composition, run `hyperframes check` + `render` there (`HYPERFRAMES_BROWSER_PATH=/opt/pw-browsers/chromium`
+  in cloud sessions; GSAP is vendored because the CDN is blocked), then `videos/encode-web.sh` writes
+  `public/motion/` (MP4 + VP9 WebM + poster). The sentences must match the plan and the page (test).
   The `sign` face (Archivo, `sign-display/head/label/code` in `astro-site/src/styles/linie.css`) is
   for the four marketing/commerce pages that pass `preloads={[...signFontPreloads, …]}` to `Layout`
   (`/`, `/pricing/`, `/courses/`, `/courses/<level>/`). Every other page renders `data-sign="off"`
@@ -270,7 +279,11 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   direction, copy deck and the measurement plan (event map in `src/data/events.js`, experiments
   E1–E6). The homepage sells the level ladder as a transit line; the hero copy is data
   (`astro-site/src/data/homepage.js`, `ACTIVE_HERO`), so a sequential test is a one-line change.
-  The SPA Navbar/Footer/BottomNav restyle waits for Course v2 (PR #149) to merge.
+  The SPA chrome (Navbar, Footer, BottomNav) was ported to Die Linie on 2026-10-04 without waiting
+  for Course v2: same promoted doors as `Layout.astro`, night footer with the station line, a night
+  timetable menu and tab bar, labels in the body face (the app never loads Archivo). A route whose
+  first screen is night goes in `groundFor` (`src/lib/chrome.js`). PR #149 then needs one re-merge
+  in `Navbar.jsx`: its `freeCourseHref` swap now lands on the bar key and the menu key.
 
 - **The agent team (v2, 2026-09-29) is `docs/agents/TEAM.md`.** Twelve agents (11 areas plus a
   supervisor) follow `docs/agents/PROTOCOL.md`; their charter, rubric v2, daily snapshots and memory

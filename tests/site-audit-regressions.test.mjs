@@ -58,8 +58,9 @@ test('Sentence X-Ray explains that example chips consume the daily allowance', (
 test('the SPA navigation switches at the large breakpoint and exposes 44px controls', () => {
   assert.match(navbar, /2xl:max-w-\[1536px\]/);
   assert.match(navbar, /className="hidden lg:flex items-center gap-1"/);
-  assert.match(navbar, /className="lg:hidden flex h-11 w-11/);
-  assert.match(navbar, /className="lg:hidden max-h-\[calc\(100vh-4rem\)\] overflow-y-auto bg-paper border-b border-rule"/);
+  assert.match(navbar, /className=\{?[`"]lg:hidden flex h-11 w-11/);
+  // The phone menu scrolls inside the viewport under the bar (v3: on the night ground).
+  assert.match(navbar, /className=\{?[`"]lg:hidden max-h-\[calc\(100svh-4rem\)\] overflow-y-auto border-t border-nacht-rule bg-nacht/);
   assert.match(navbar, /aria-label=\{i18n\.language === 'en' \? 'Switch to German' : 'Switch to English'\}/);
   assert.match(navbar, /w-11 h-11/);
   assert.match(button, /rounded-clay min-h-11/);

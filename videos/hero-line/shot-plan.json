@@ -1,0 +1,1767 @@
+{
+  "category": "maps",
+  "category_rationale": "maps → vector lane, as a SCHEMATIC transit-line map (a Liniennetzplan), not geography. The piece is exactly the maps signature set: a route drawn on with stroke-dashoffset, a traveller (\"flyer\") moving along it, stops lit in sequence (pin-rollout) and a callout card pinned to the current stop (the module's callout-card overlay). The maps module's hard rules are the ones this hero must obey: restraint (no glows / blobs / particles; colour carries meaning — türkis = built, pale = Im Bau, sun = free), legibility (labels offset from shapes, callouts clamped to the safe area, never on another label) and determinism (no tl.call, pre-hold hidden states). kinetic-type was the runner-up — the sentences are the payoff — but its caption-* blocks animate captions, and here the text only rides in on a card; its \"no bounce on text\" restraint is carried over. No D3 / TopoJSON / basemap is used.",
+  "variant": "desktop (wide, horizontal line)",
+  "sibling_plan": "/home/user/deutschmeister/videos/hero-line-mobile/shot-plan.json",
+  "duration_s": 14,
+  "fps": 30,
+  "total_frames": 420,
+  "canvas": {
+    "w": 1600,
+    "h": 560,
+    "aspect": "20:7"
+  },
+  "style": "Die Linie v4 \"Türkis\": a flat, Swiss-transit-diagram hero on white. One türkis line, ring stations, a little tram and a white speech card — editorial, calm, confident; motion is the only flourish. Restraint: no decoration, no particles, no gradient sweeps, no glow.",
+  "palette": [
+    "#FFFFFF",
+    "#0A8276",
+    "#0A7468",
+    "#075A51",
+    "#E3F6F3",
+    "#BFEAE3",
+    "#BFE3DB",
+    "#10302C",
+    "#3F5A55",
+    "#FBBF24"
+  ],
+  "palette_roles": {
+    "bg": "#FFFFFF",
+    "line": "#0A8276",
+    "line_shadow_side": "#0A7468",
+    "hard_edge": "#075A51",
+    "wash": "#E3F6F3",
+    "track_bed_pale": "#BFEAE3",
+    "hairline": "#BFE3DB",
+    "ink": "#10302C",
+    "muted": "#3F5A55",
+    "sun": "#FBBF24",
+    "bubble_shadow": "rgba(16,48,44,.08) — the only non-hex value: 0 8px 24px"
+  },
+  "palette_rules": [
+    "Define every colour once as a CSS custom property on the root (--bg, --line, --line-deep, --edge, --wash, --pale, --rule, --ink, --muted, --sun); no inline hex in markup.",
+    "Sun #FBBF24 appears ONLY as the \"Free\" tag fill on A1.1. Nothing else is yellow.",
+    "Built (A1.1–A2.2): türkis rings, solid track, ink codes. Im Bau (B1.1–B2.2): pale #BFEAE3 dashed rings, dashed pale track, muted #3F5A55 codes.",
+    "No gradients, no glows, no particles, no sweeps, no decorative shapes. The hairline bed is structure, not decoration (design-token rule 3: hairlines, not resting shadows)."
+  ],
+  "font": "Archivo (local @font-face, aliased \"Archivo DM\") + Nunito Sans (local @font-face, aliased \"Nunito Sans DM\")",
+  "fonts": [
+    {
+      "family": "Archivo DM",
+      "role": "station codes, level chips, \"Im Bau\" chip, \"Free\" tag (the site's .sign-code)",
+      "src": "/home/user/deutschmeister/public/fonts/archivo-v25-latin.woff2",
+      "dest": "/home/user/deutschmeister/videos/hero-line/assets/fonts/archivo-v25-latin.woff2",
+      "font_face": {
+        "font-family": "'Archivo DM'",
+        "src": "url('assets/fonts/archivo-v25-latin.woff2') format('woff2')",
+        "font-weight": "400 900",
+        "font-stretch": "62% 100%",
+        "font-style": "normal",
+        "font-display": "block"
+      },
+      "use": {
+        "font-weight": 800,
+        "font-stretch": "80%",
+        "font-variant-numeric": "tabular-nums",
+        "letter-spacing": "-0.01em"
+      },
+      "note": "variable wght 400–900 × wdth 62–100 (design-tokens.js signFontFaces); latin subset covers every glyph used"
+    },
+    {
+      "family": "Nunito Sans DM",
+      "role": "the eight sentences",
+      "src": "/home/user/deutschmeister/public/fonts/nunito-sans-v19-latin.woff2",
+      "dest": "/home/user/deutschmeister/videos/hero-line/assets/fonts/nunito-sans-v19-latin.woff2",
+      "font_face": {
+        "font-family": "'Nunito Sans DM'",
+        "src": "url('assets/fonts/nunito-sans-v19-latin.woff2') format('woff2')",
+        "font-weight": "300 700",
+        "font-style": "normal",
+        "font-display": "block"
+      },
+      "use": {
+        "font-weight": 700
+      },
+      "note": "variable wght 300–700; latin subset includes ä, ß, ü"
+    }
+  ],
+  "font_notes": [
+    "Aliased family names ('Archivo DM', 'Nunito Sans DM') on purpose: the compiler bundles / Google-fetches fonts BY NAME, and a unique alias guarantees the owner's local files are what renders. The in-file @font-face also satisfies lint font_family_without_font_face.",
+    "Build the timeline after document.fonts.ready (supported by hyperframes-core) because bubble widths and clamps are measured from the laid-out text.",
+    "Relative url() paths assume the composition HTML sits at the project root next to assets/; adjust the prefix (../assets/…) if it lives in compositions/."
+  ],
+  "beats": [
+    0,
+    0.55,
+    1.1,
+    1.2,
+    2.6,
+    4,
+    5.45,
+    6.9,
+    7.1,
+    8.35,
+    9.85,
+    11.4,
+    12.6,
+    13.2,
+    13.9
+  ],
+  "poster_time_s": 12.6,
+  "poster_frame": 378,
+  "poster_note": "All eight stations lit (4 türkis discs + 4 pale discs), the train parked at B2.2, the B2.2 bubble (\"Einerseits ist es teuer, / andererseits lohnt es sich.\" + B2.2 and Im Bau chips) fully in, and the A1.1 Free tag visible. Export the still with `npx hyperframes snapshot --at 12.6` for the reduced-motion poster.",
+  "export": "mp4",
+  "render": {
+    "output": "renders/hero-line.mp4",
+    "audio": "none (silent autoplay loop)",
+    "loop": {
+      "rest_state": "white ground + the static hairline track bed only — identical at t=0.000 and from t=13.900 to 13.967 (frames 0 and 417–419).",
+      "seam": "frames 417, 418, 419 and 0 are pixel-identical (≈133 ms of rest), so the MP4 loops without a pop.",
+      "check": "snapshot at 0.0 and at 13.95 and compare — they must match exactly. Any element with a non-zero opacity / non-full dashoffset at 13.95 is a loop bug."
+    }
+  },
+  "asset_needs": [],
+  "local_assets": [
+    {
+      "copy_from": "/home/user/deutschmeister/public/fonts/archivo-v25-latin.woff2",
+      "copy_to": "/home/user/deutschmeister/videos/hero-line/assets/fonts/archivo-v25-latin.woff2",
+      "cmd": "mkdir -p /home/user/deutschmeister/videos/hero-line/assets/fonts && cp /home/user/deutschmeister/public/fonts/archivo-v25-latin.woff2 /home/user/deutschmeister/videos/hero-line/assets/fonts/archivo-v25-latin.woff2"
+    },
+    {
+      "copy_from": "/home/user/deutschmeister/public/fonts/nunito-sans-v19-latin.woff2",
+      "copy_to": "/home/user/deutschmeister/videos/hero-line/assets/fonts/nunito-sans-v19-latin.woff2",
+      "cmd": "mkdir -p /home/user/deutschmeister/videos/hero-line/assets/fonts && cp /home/user/deutschmeister/public/fonts/nunito-sans-v19-latin.woff2 /home/user/deutschmeister/videos/hero-line/assets/fonts/nunito-sans-v19-latin.woff2"
+    }
+  ],
+  "block": "hand-author: schematic transit line + tram traveler + pinned speech-bubble callouts (catalog gap — 18 queries, see content.catalog_queries; 3 misses logged with `hyperframes feedback --search-miss`)",
+  "customize": "see content.customize",
+  "content": {
+    "lane": "vector",
+    "shot": "pin-rollout + flow on a schematic line (stops light in sequence as a traveller reaches them) with a callout-card overlay per stop",
+    "regions": [],
+    "basemap": null,
+    "headline": null,
+    "headline_note": "No on-video headline — the page supplies \"From Guten Tag to B2, one stop at a time.\" above the video.",
+    "block": "hand-author: schematic transit line + tram traveler + pinned speech-bubble callouts (catalog gap — 18 queries, see content.catalog_queries; 3 misses logged with `hyperframes feedback --search-miss`)",
+    "borrow": [
+      {
+        "kind": "component",
+        "id": "svg-stroke-trace",
+        "take": "its measured draw: getTotalLength() → stroke-dasharray = L, stroke-dashoffset L → 0",
+        "drop": "the color-mix drop-shadow glow, the hold drift (would break the exact loop), the stage fade and its green/blue/violet accent enum",
+        "install": "optional `npx hyperframes add svg-stroke-trace` for reference only — do not wire it in as-is"
+      },
+      {
+        "kind": "rule",
+        "id": "hyperframes-animation/rules/svg-path-draw",
+        "take": "dash draw recipe; a drawn line must land on something (it lands on A1.1 and B2.2)"
+      },
+      {
+        "kind": "blueprint",
+        "id": "hyperframes-animation/blueprints/spatial-pan-stations",
+        "variant": "Hook",
+        "take": "evenly spaced markers on one horizontal timeline, a bordered callout box + triangle tail revealed per stop with transform-origin at the tail tip, held final station",
+        "change": "NO camera pan — the whole line stays in frame and the train travels instead of the camera; power3.out lift instead of the spring overshoot (brief: no bounce on text)"
+      },
+      {
+        "kind": "component-idea",
+        "id": "state-chip-rail",
+        "take": "station states pending (hollow ring) → active (train parked, bubble up) → done (filled disc), all scheduled on the one paused timeline",
+        "drop": "its chip visuals and data-state snaps (rings fill with a scale tween, not a class swap)"
+      }
+    ],
+    "rejected_candidates": [
+      "soft-blur-in — tweens filter:blur (brief allows only transform / opacity / stroke-dashoffset / clip-path)",
+      "spring-pop, badge-pop — overshoot / elastic entrance (brief: no bounce)",
+      "hw-text-cloud — handwritten wobble bubble, wrong register for Die Linie",
+      "offset-path-traveler, arc-motion-path — curved-path travelers with tangent rotation; a straight track with dwells is a plain x / y tween",
+      "pan-stations — camera pan across stations; here the line IS the frame",
+      "us-map / world-map family — geographic D3, no geography in this piece"
+    ],
+    "blueprint": "spatial-pan-stations (Hook variant, adapted — see borrow)",
+    "rules": [
+      "hyperframes-animation/rules/svg-path-draw",
+      "references/motion-vocabulary.md: slide_bottom (bubble lift, softened to 14px / power3.out), scale_grow (ring-in, lit disc), fade_in, fade_out / slide_out (bubble exit, train exit), underline_sweep logic (dashed clip reveal)"
+    ],
+    "catalog_queries": [
+      {
+        "q": "line draw on stroke dashoffset",
+        "top": [
+          "svg-line-draw-loader",
+          "svg-stroke-trace",
+          "mk-line-graph"
+        ],
+        "verdict": "borrow svg-stroke-trace technique (measured dash draw); drop its glow + drift"
+      },
+      {
+        "q": "transit line metro map subway route",
+        "top": [
+          "us-map-bubble",
+          "us-map-flow",
+          "world-map"
+        ],
+        "verdict": "MISS (geographic D3 maps only) — logged via hyperframes feedback --search-miss"
+      },
+      {
+        "q": "train moving along path between stops",
+        "top": [
+          "hw-path-text",
+          "arc-motion-path",
+          "offset-path-traveler"
+        ],
+        "verdict": "MISS for a dwell-at-stops traveler (path travelers auto-rotate on curves, no dwell) — logged"
+      },
+      {
+        "q": "station ring node fill timeline",
+        "top": [
+          "pan-stations",
+          "conic-progress-ring",
+          "beat-timeline"
+        ],
+        "verdict": "no ring-on-line station; pan-stations is a camera pan (rejected: whole line stays in frame)"
+      },
+      {
+        "q": "speech bubble pop in",
+        "top": [
+          "hw-text-cloud",
+          "spring-pop",
+          "badge-pop"
+        ],
+        "verdict": "MISS for a flat card bubble — hw-text-cloud is handwritten, spring-pop/badge-pop overshoot (brief: no bounce) — logged"
+      },
+      {
+        "q": "dashed line under construction",
+        "top": [
+          "line-by-line-slide",
+          "svg-line-draw-loader"
+        ],
+        "verdict": "miss — dashed track hand-authored"
+      },
+      {
+        "q": "roadmap timeline progress milestones",
+        "top": [
+          "conic-progress-ring",
+          "mk-progress-stat",
+          "beat-timeline",
+          "onboarding-stepper-flow"
+        ],
+        "verdict": "UI-flow / stat looks, not a line diagram"
+      },
+      {
+        "q": "pill tag chip label badge",
+        "top": [
+          "caption-pill-karaoke",
+          "badge-pop",
+          "state-chip-rail"
+        ],
+        "verdict": "chips are static inside the bubble — hand-author (two CSS pills)"
+      },
+      {
+        "q": "seamless loop reset",
+        "top": [
+          "scroll-feed",
+          "grain-field",
+          "aurora-drift",
+          "drift-hold"
+        ],
+        "verdict": "ambient loopers only — loop is authored by the reset choreography"
+      },
+      {
+        "q": "stepper milestone rail active step",
+        "top": [
+          "onboarding-stepper-flow",
+          "state-chip-rail"
+        ],
+        "verdict": "state-chip-rail's pending/active/done idea reused as station states; its chip visuals are not"
+      },
+      {
+        "q": "card pop in with soft shadow callout",
+        "top": [
+          "soft-blur-in",
+          "lt-soft-pill",
+          "spring-pop"
+        ],
+        "verdict": "soft-blur-in animates filter:blur (outside the allowed properties) — rejected"
+      },
+      {
+        "q": "sentence text reveal clean minimal",
+        "top": [
+          "lt-clean-bar",
+          "text-shimmer",
+          "scramble-reveal"
+        ],
+        "verdict": "none fit restrained bubble text"
+      },
+      {
+        "q": "progress line with stops and labels",
+        "top": [
+          "mk-progress-stat",
+          "conic-progress-ring",
+          "mk-line-graph"
+        ],
+        "verdict": "miss"
+      },
+      {
+        "q": "vehicle icon travels along a line",
+        "top": [
+          "icon-swap",
+          "hw-path-text",
+          "icon-morph-beat"
+        ],
+        "verdict": "miss"
+      },
+      {
+        "q": "tram train icon",
+        "top": [
+          "icon-swap",
+          "icon-morph-beat"
+        ],
+        "verdict": "miss — train hand-authored as a flat SVG pill"
+      },
+      {
+        "q": "route map with stops",
+        "top": [
+          "us-map-bubble",
+          "us-map-flow",
+          "world-map"
+        ],
+        "verdict": "miss (geographic only)"
+      },
+      {
+        "q": "callout card with tail pointer",
+        "top": [
+          "yt-circle-pointer",
+          "mk-callout-highlight",
+          "spotlight-card"
+        ],
+        "verdict": "miss"
+      },
+      {
+        "q": "station dwell timeline hook",
+        "top": [
+          "pan-stations",
+          "beat-timeline",
+          "svg-line-draw-loader"
+        ],
+        "verdict": "pan-stations = camera pan; adapt the spatial-pan-stations blueprint instead"
+      }
+    ],
+    "customize": {
+      "composition_id": "hero-line",
+      "root": {
+        "data-composition-id": "hero-line",
+        "data-width": 1600,
+        "data-height": 560,
+        "data-duration": 14,
+        "background": "#FFFFFF"
+      },
+      "layers_bottom_to_top": [
+        "hairline bed (static)",
+        "solid track (+ shadow side) and dashed track",
+        "station rings (white interiors cover the track)",
+        "lit discs",
+        "code labels + Free tag",
+        "train",
+        "bubble (one of eight, pre-laid-out, absolutely positioned at its clamped anchor)"
+      ],
+      "chips": {
+        "level": "Archivo DM 800 / 80% / tabular, #0A8276 text on #E3F6F3, pill radius",
+        "im-bau": "Archivo DM 800 / 80%, #3F5A55 text on #FFFFFF, 2px DASHED #BFEAE3 border, pill radius — sits right of the level chip"
+      },
+      "bubble_card": "white #FFFFFF, 2px solid #BFE3DB border, 16px radius, box-shadow 0 8px 24px rgba(16,48,44,.08) (the maximum — no more), tail drawn as a rotated square or SVG triangle with the same fill + border so the border runs continuous",
+      "text": "all text is static once a bubble is in — no per-word / per-letter animation; chips and sentence just follow the card in with a 0.03 s offset",
+      "geometry": {
+        "orientation": "horizontal (left → right)",
+        "line_axis_y": 384,
+        "start": 90,
+        "end": 1510,
+        "switch_at": 800,
+        "solid_length": 710,
+        "dashed_length": 710,
+        "solid": {
+          "stroke": 10,
+          "color": "#0A8276",
+          "cap": "round at the A1.1 end only",
+          "shadow_side": {
+            "stroke": 3,
+            "color": "#0A7468",
+            "side": "lower edge (y+3.5), drawn with the same dashoffset"
+          }
+        },
+        "dashed": {
+          "stroke": 10,
+          "color": "#BFEAE3",
+          "dasharray": "16 12",
+          "cap": "butt"
+        },
+        "hairline_bed": {
+          "stroke": 2,
+          "color": "#BFE3DB",
+          "from": 90,
+          "to": 1510,
+          "animated": false
+        },
+        "ring": {
+          "r": 17,
+          "stroke": 6,
+          "outer_diameter": 40,
+          "interior": "#FFFFFF",
+          "built_stroke": "#0A8276",
+          "building_stroke": "#BFEAE3",
+          "building_dash": "10 dashes around the circumference (≈6.4 / 4.3)"
+        },
+        "lit_disc": {
+          "r": 14,
+          "built": "#0A8276",
+          "building": "#BFEAE3"
+        },
+        "code_label": {
+          "size_px": 28,
+          "align": "centred on the station x, cap top ≈ y 420 (baseline ≈ 446)",
+          "built": "#10302C",
+          "building": "#3F5A55"
+        },
+        "free_tag": {
+          "text": "Free",
+          "size_px": 26,
+          "fill": "#FBBF24",
+          "ink": "#10302C",
+          "radius": "pill",
+          "padding": "4px 12px",
+          "position": "centred under the A1.1 code at x=90, top y=458 (≈458–492)"
+        },
+        "train": {
+          "shape": "horizontal pill 88 × 42, radius 21 (a little tram, symmetric — trams run both ways)",
+          "body": "#0A8276",
+          "hard_edge": "#075A51, 3px, offset straight down (the site's .dm-key edge)",
+          "windows": "two #FFFFFF windows 24 × 14, radius 5, centred at x −20 and +20, y −4 from the train centre",
+          "lane_center_y": 334,
+          "lane_note": "body y 313–355, edge to 358: rides just above the line, 6px clear of the ring tops (y 364) — a vehicle marker beside the line, as on a live transit map",
+          "parked": "train centre x = station x",
+          "settle_overshoot_px": 6,
+          "enter_from": "station x − 60 (fading in)",
+          "exit_to": "x 1600 (fading out)"
+        },
+        "bubble": {
+          "side": "above the train",
+          "tail": "points DOWN, 20 × 12, tip at y=300, tail centre x = station x (clamped ≥ 32px from the bubble's corners)",
+          "body_bottom_y": 288,
+          "max_width": 900,
+          "padding": "18px 26px",
+          "clamp_x": [
+            40,
+            1560
+          ],
+          "anchor": "body horizontally centred on the station x, then clamped; grows upward",
+          "enter_from": {
+            "y": 14,
+            "scale": 0.96,
+            "opacity": 0,
+            "origin": "the tail tip"
+          },
+          "exit_to": {
+            "y": -8,
+            "opacity": 0
+          }
+        },
+        "chip": {
+          "size_px": 26,
+          "padding": "4px 14px",
+          "gap_px": 10
+        },
+        "sentence": {
+          "size_px": 38,
+          "line_height": 1.18,
+          "letter_spacing": "-0.005em",
+          "color": "#10302C",
+          "gap_after_chips_px": 10
+        },
+        "code_in_from": {
+          "y": 10,
+          "opacity": 0
+        }
+      }
+    },
+    "stations": [
+      {
+        "index": 0,
+        "code": "A1.1",
+        "level": "a1.1",
+        "status": "free",
+        "pos": {
+          "x": 90,
+          "y": 384
+        },
+        "ring": "türkis #0A8276, solid",
+        "lit_disc": "#0A8276",
+        "code_color": "#10302C",
+        "free_tag": true,
+        "bubble": {
+          "chips": [
+            {
+              "text": "A1.1",
+              "style": "level"
+            }
+          ],
+          "sentence": "Guten Tag! Ich heiße Ana.",
+          "lines": [
+            "Guten Tag! Ich heiße Ana."
+          ]
+        },
+        "timing": {
+          "stop": 1,
+          "code": "A1.1",
+          "stop_window": [
+            1.2,
+            2.6
+          ],
+          "draw_in": {
+            "front_reaches_s": 0,
+            "ring_in": [
+              0,
+              0.28
+            ],
+            "code_in": [
+              0.06,
+              0.36
+            ]
+          },
+          "train": {
+            "enter": [
+              1.2,
+              1.6
+            ],
+            "enter_opacity": [
+              1.2,
+              1.4
+            ],
+            "settle": [
+              1.6,
+              1.74
+            ]
+          },
+          "ring_fill": [
+            1.52,
+            1.8
+          ],
+          "bubble_in": [
+            1.48,
+            1.7
+          ],
+          "bubble_inner": {
+            "chips_at": 1.5,
+            "sentence_at": 1.53,
+            "duration": 0.2
+          },
+          "readable": [
+            1.7,
+            2.6
+          ],
+          "readable_s": 0.9,
+          "bubble_out": [
+            2.6,
+            2.8
+          ],
+          "reset_fade": [
+            13.24,
+            13.4
+          ]
+        }
+      },
+      {
+        "index": 1,
+        "code": "A1.2",
+        "level": "a1.2",
+        "status": "open",
+        "pos": {
+          "x": 292.86,
+          "y": 384
+        },
+        "ring": "türkis #0A8276, solid",
+        "lit_disc": "#0A8276",
+        "code_color": "#10302C",
+        "free_tag": false,
+        "bubble": {
+          "chips": [
+            {
+              "text": "A1.2",
+              "style": "level"
+            }
+          ],
+          "sentence": "Was kostet das Brot?",
+          "lines": [
+            "Was kostet das Brot?"
+          ]
+        },
+        "timing": {
+          "stop": 2,
+          "code": "A1.2",
+          "stop_window": [
+            2.6,
+            4
+          ],
+          "draw_in": {
+            "front_reaches_s": 0.294,
+            "ring_in": [
+              0.274,
+              0.554
+            ],
+            "code_in": [
+              0.354,
+              0.654
+            ]
+          },
+          "train": {
+            "travel": [
+              2.6,
+              3
+            ],
+            "settle": [
+              3,
+              3.14
+            ]
+          },
+          "ring_fill": [
+            2.92,
+            3.2
+          ],
+          "bubble_in": [
+            2.88,
+            3.1
+          ],
+          "bubble_inner": {
+            "chips_at": 2.9,
+            "sentence_at": 2.93,
+            "duration": 0.2
+          },
+          "readable": [
+            3.1,
+            4
+          ],
+          "readable_s": 0.9,
+          "bubble_out": [
+            4,
+            4.2
+          ],
+          "reset_fade": [
+            13.4,
+            13.56
+          ]
+        }
+      },
+      {
+        "index": 2,
+        "code": "A2.1",
+        "level": "a2.1",
+        "status": "open",
+        "pos": {
+          "x": 495.71,
+          "y": 384
+        },
+        "ring": "türkis #0A8276, solid",
+        "lit_disc": "#0A8276",
+        "code_color": "#10302C",
+        "free_tag": false,
+        "bubble": {
+          "chips": [
+            {
+              "text": "A2.1",
+              "style": "level"
+            }
+          ],
+          "sentence": "Gestern war ich beim Arzt.",
+          "lines": [
+            "Gestern war ich beim Arzt."
+          ]
+        },
+        "timing": {
+          "stop": 3,
+          "code": "A2.1",
+          "stop_window": [
+            4,
+            5.45
+          ],
+          "draw_in": {
+            "front_reaches_s": 0.416,
+            "ring_in": [
+              0.396,
+              0.676
+            ],
+            "code_in": [
+              0.476,
+              0.776
+            ]
+          },
+          "train": {
+            "travel": [
+              4,
+              4.4
+            ],
+            "settle": [
+              4.4,
+              4.54
+            ]
+          },
+          "ring_fill": [
+            4.32,
+            4.6
+          ],
+          "bubble_in": [
+            4.28,
+            4.5
+          ],
+          "bubble_inner": {
+            "chips_at": 4.3,
+            "sentence_at": 4.33,
+            "duration": 0.2
+          },
+          "readable": [
+            4.5,
+            5.45
+          ],
+          "readable_s": 0.95,
+          "bubble_out": [
+            5.45,
+            5.65
+          ],
+          "reset_fade": [
+            13.47,
+            13.63
+          ]
+        }
+      },
+      {
+        "index": 3,
+        "code": "A2.2",
+        "level": "a2.2",
+        "status": "open",
+        "pos": {
+          "x": 698.57,
+          "y": 384
+        },
+        "ring": "türkis #0A8276, solid",
+        "lit_disc": "#0A8276",
+        "code_color": "#10302C",
+        "free_tag": false,
+        "bubble": {
+          "chips": [
+            {
+              "text": "A2.2",
+              "style": "level"
+            }
+          ],
+          "sentence": "Ich hätte gern einen Termin.",
+          "lines": [
+            "Ich hätte gern einen Termin."
+          ]
+        },
+        "timing": {
+          "stop": 4,
+          "code": "A2.2",
+          "stop_window": [
+            5.45,
+            6.9
+          ],
+          "draw_in": {
+            "front_reaches_s": 0.509,
+            "ring_in": [
+              0.489,
+              0.769
+            ],
+            "code_in": [
+              0.569,
+              0.869
+            ]
+          },
+          "train": {
+            "travel": [
+              5.45,
+              5.85
+            ],
+            "settle": [
+              5.85,
+              5.99
+            ]
+          },
+          "ring_fill": [
+            5.77,
+            6.05
+          ],
+          "bubble_in": [
+            5.73,
+            5.95
+          ],
+          "bubble_inner": {
+            "chips_at": 5.75,
+            "sentence_at": 5.78,
+            "duration": 0.2
+          },
+          "readable": [
+            5.95,
+            6.9
+          ],
+          "readable_s": 0.95,
+          "bubble_out": [
+            6.9,
+            7.1
+          ],
+          "reset_fade": [
+            13.52,
+            13.68
+          ]
+        }
+      },
+      {
+        "index": 4,
+        "code": "B1.1",
+        "level": "b1.1",
+        "status": "building",
+        "pos": {
+          "x": 901.43,
+          "y": 384
+        },
+        "ring": "pale #BFEAE3, dashed",
+        "lit_disc": "#BFEAE3",
+        "code_color": "#3F5A55",
+        "free_tag": false,
+        "bubble": {
+          "chips": [
+            {
+              "text": "B1.1",
+              "style": "level"
+            },
+            {
+              "text": "Im Bau",
+              "style": "im-bau"
+            }
+          ],
+          "sentence": "Ich glaube, dass es klappt.",
+          "lines": [
+            "Ich glaube, dass es klappt."
+          ]
+        },
+        "timing": {
+          "stop": 5,
+          "code": "B1.1",
+          "stop_window": [
+            6.9,
+            8.35
+          ],
+          "draw_in": {
+            "front_reaches_s": 0.591,
+            "ring_in": [
+              0.571,
+              0.851
+            ],
+            "code_in": [
+              0.651,
+              0.951
+            ]
+          },
+          "train": {
+            "travel": [
+              6.9,
+              7.3
+            ],
+            "settle": [
+              7.3,
+              7.44
+            ]
+          },
+          "ring_fill": [
+            7.22,
+            7.5
+          ],
+          "bubble_in": [
+            7.18,
+            7.4
+          ],
+          "bubble_inner": {
+            "chips_at": 7.2,
+            "sentence_at": 7.23,
+            "duration": 0.2
+          },
+          "readable": [
+            7.4,
+            8.35
+          ],
+          "readable_s": 0.95,
+          "bubble_out": [
+            8.35,
+            8.55
+          ],
+          "reset_fade": [
+            13.56,
+            13.72
+          ]
+        }
+      },
+      {
+        "index": 5,
+        "code": "B1.2",
+        "level": "b1.2",
+        "status": "building",
+        "pos": {
+          "x": 1104.29,
+          "y": 384
+        },
+        "ring": "pale #BFEAE3, dashed",
+        "lit_disc": "#BFEAE3",
+        "code_color": "#3F5A55",
+        "free_tag": false,
+        "bubble": {
+          "chips": [
+            {
+              "text": "B1.2",
+              "style": "level"
+            },
+            {
+              "text": "Im Bau",
+              "style": "im-bau"
+            }
+          ],
+          "sentence": "Obwohl es regnet, fahre ich.",
+          "lines": [
+            "Obwohl es regnet, fahre ich."
+          ]
+        },
+        "timing": {
+          "stop": 6,
+          "code": "B1.2",
+          "stop_window": [
+            8.35,
+            9.85
+          ],
+          "draw_in": {
+            "front_reaches_s": 0.684,
+            "ring_in": [
+              0.664,
+              0.944
+            ],
+            "code_in": [
+              0.744,
+              1.044
+            ]
+          },
+          "train": {
+            "travel": [
+              8.35,
+              8.75
+            ],
+            "settle": [
+              8.75,
+              8.89
+            ]
+          },
+          "ring_fill": [
+            8.67,
+            8.95
+          ],
+          "bubble_in": [
+            8.63,
+            8.85
+          ],
+          "bubble_inner": {
+            "chips_at": 8.65,
+            "sentence_at": 8.68,
+            "duration": 0.2
+          },
+          "readable": [
+            8.85,
+            9.85
+          ],
+          "readable_s": 1,
+          "bubble_out": [
+            9.85,
+            10.05
+          ],
+          "reset_fade": [
+            13.61,
+            13.77
+          ]
+        }
+      },
+      {
+        "index": 6,
+        "code": "B2.1",
+        "level": "b2.1",
+        "status": "building",
+        "pos": {
+          "x": 1307.14,
+          "y": 384
+        },
+        "ring": "pale #BFEAE3, dashed",
+        "lit_disc": "#BFEAE3",
+        "code_color": "#3F5A55",
+        "free_tag": false,
+        "bubble": {
+          "chips": [
+            {
+              "text": "B2.1",
+              "style": "level"
+            },
+            {
+              "text": "Im Bau",
+              "style": "im-bau"
+            }
+          ],
+          "sentence": "Hätte ich Zeit, würde ich kommen.",
+          "lines": [
+            "Hätte ich Zeit, würde ich kommen."
+          ]
+        },
+        "timing": {
+          "stop": 7,
+          "code": "B2.1",
+          "stop_window": [
+            9.85,
+            11.4
+          ],
+          "draw_in": {
+            "front_reaches_s": 0.806,
+            "ring_in": [
+              0.786,
+              1.066
+            ],
+            "code_in": [
+              0.866,
+              1.166
+            ]
+          },
+          "train": {
+            "travel": [
+              9.85,
+              10.25
+            ],
+            "settle": [
+              10.25,
+              10.39
+            ]
+          },
+          "ring_fill": [
+            10.17,
+            10.45
+          ],
+          "bubble_in": [
+            10.13,
+            10.35
+          ],
+          "bubble_inner": {
+            "chips_at": 10.15,
+            "sentence_at": 10.18,
+            "duration": 0.2
+          },
+          "readable": [
+            10.35,
+            11.4
+          ],
+          "readable_s": 1.05,
+          "bubble_out": [
+            11.4,
+            11.6
+          ],
+          "reset_fade": [
+            13.68,
+            13.84
+          ]
+        }
+      },
+      {
+        "index": 7,
+        "code": "B2.2",
+        "level": "b2.2",
+        "status": "building",
+        "pos": {
+          "x": 1510,
+          "y": 384
+        },
+        "ring": "pale #BFEAE3, dashed",
+        "lit_disc": "#BFEAE3",
+        "code_color": "#3F5A55",
+        "free_tag": false,
+        "bubble": {
+          "chips": [
+            {
+              "text": "B2.2",
+              "style": "level"
+            },
+            {
+              "text": "Im Bau",
+              "style": "im-bau"
+            }
+          ],
+          "sentence": "Einerseits ist es teuer, andererseits lohnt es sich.",
+          "lines": [
+            "Einerseits ist es teuer,",
+            "andererseits lohnt es sich."
+          ]
+        },
+        "timing": {
+          "stop": 8,
+          "code": "B2.2",
+          "stop_window": [
+            11.4,
+            13.2
+          ],
+          "draw_in": {
+            "front_reaches_s": 1.1,
+            "ring_in": [
+              1.08,
+              1.36
+            ],
+            "code_in": [
+              1.16,
+              1.46
+            ]
+          },
+          "train": {
+            "travel": [
+              11.4,
+              11.8
+            ],
+            "settle": [
+              11.8,
+              11.94
+            ]
+          },
+          "ring_fill": [
+            11.72,
+            12
+          ],
+          "bubble_in": [
+            11.68,
+            11.9
+          ],
+          "bubble_inner": {
+            "chips_at": 11.7,
+            "sentence_at": 11.73,
+            "duration": 0.2
+          },
+          "readable": [
+            11.9,
+            13.2
+          ],
+          "readable_s": 1.3,
+          "bubble_out": [
+            13.2,
+            13.4
+          ],
+          "reset_fade": [
+            13.74,
+            13.9
+          ]
+        }
+      }
+    ],
+    "timeline": {
+      "draw_in": {
+        "window": [
+          0,
+          1.1
+        ],
+        "solid": {
+          "tween": "stroke-dashoffset L_solid → 0 (dasharray = L_solid) on the solid stroke AND its shadow-side stroke",
+          "window": [
+            0,
+            0.55
+          ],
+          "ease": "power2.in"
+        },
+        "dashed": {
+          "tween": "clip-path inset(0 100% 0 0) → inset(0 0% 0 0) (reveals rightward)",
+          "window": [
+            0.55,
+            1.1
+          ],
+          "ease": "power2.out",
+          "implement": "put the dashed segment in its own HTML wrapper (div + inline svg) sized to the segment and clip the WRAPPER — CSS clip-path on SVG children is reference-box-ambiguous; an SVG <mask> whose solid stroke is dash-drawn is the fallback"
+        },
+        "why_piecewise": "power2.in then power2.out with equal halves gives one continuous power2.inOut front (velocity matches at the switch) without a proxy / onUpdate",
+        "stations": "each ring scales 0.4 → 1 + fades in (0.28 s, power3.out) as the front reaches it; its code follows 0.06 s later (0.30 s, power2.out); the Free tag at 0.14–0.44 (opacity + scale 0.92 → 1, power2.out). Times per station: stations[k].timing.draw_in"
+      },
+      "per_stop": {
+        "offsets_from_stop_start_s": {
+          "travel": [
+            0,
+            0.4
+          ],
+          "settle": [
+            0.4,
+            0.54
+          ],
+          "bubble_in": [
+            0.28,
+            0.5
+          ],
+          "chips_in": 0.3,
+          "sentence_in": 0.33,
+          "ring_fill": [
+            0.32,
+            0.6
+          ],
+          "bubble_out": "stop_end → stop_end + 0.20 (overlaps the next stop's travel: the bubble leaves as the train departs)"
+        },
+        "stop_durations_s": [
+          1.4,
+          1.4,
+          1.45,
+          1.45,
+          1.45,
+          1.5,
+          1.55,
+          1.8
+        ],
+        "dwell_rationale": "dwell grows with the sentence (1.40 → 1.80 s) so every bubble holds ≥ 0.90 s fully in and B2.2 — the longest sentence and the poster — holds 1.30 s; the 8 windows still sum to exactly 12.00 s",
+        "train_travel": "prev station → station + 6px in the travel direction (0.40 s, power2.inOut), then back to the station (0.14 s, power2.out) — the brake settle. Stop 1 instead fades in from station − 60 (opacity 0.20 s, x 0.40 s power2.out) then settles.",
+        "ring_fill": "lit disc scale 0 → 1 (0.28 s, power3.out) while the train pulls over the station",
+        "bubble_in": "card fromTo opacity 0, y +14, scale 0.96 → 1 (0.22 s, power3.out), origin at the tail tip; chips then sentence fromTo opacity 0, y +6 → 0 (0.20 s, power2.out)",
+        "bubble_out": "to opacity 0, y −8 (0.20 s, power2.in)",
+        "pattern_interrupt": "Stop 5 (B1.1): the train crosses the solid → dashed switch at exactly t=7.1 s (mid-travel, x=800); from here rings are pale and dashed, codes muted, and every bubble carries the Im Bau chip. The train itself does not change — it keeps going."
+      },
+      "beat_table": [
+        {
+          "stop": 1,
+          "code": "A1.1",
+          "stop_window": [
+            1.2,
+            2.6
+          ],
+          "draw_in": {
+            "front_reaches_s": 0,
+            "ring_in": [
+              0,
+              0.28
+            ],
+            "code_in": [
+              0.06,
+              0.36
+            ]
+          },
+          "train": {
+            "enter": [
+              1.2,
+              1.6
+            ],
+            "enter_opacity": [
+              1.2,
+              1.4
+            ],
+            "settle": [
+              1.6,
+              1.74
+            ]
+          },
+          "ring_fill": [
+            1.52,
+            1.8
+          ],
+          "bubble_in": [
+            1.48,
+            1.7
+          ],
+          "bubble_inner": {
+            "chips_at": 1.5,
+            "sentence_at": 1.53,
+            "duration": 0.2
+          },
+          "readable": [
+            1.7,
+            2.6
+          ],
+          "readable_s": 0.9,
+          "bubble_out": [
+            2.6,
+            2.8
+          ],
+          "reset_fade": [
+            13.24,
+            13.4
+          ]
+        },
+        {
+          "stop": 2,
+          "code": "A1.2",
+          "stop_window": [
+            2.6,
+            4
+          ],
+          "draw_in": {
+            "front_reaches_s": 0.294,
+            "ring_in": [
+              0.274,
+              0.554
+            ],
+            "code_in": [
+              0.354,
+              0.654
+            ]
+          },
+          "train": {
+            "travel": [
+              2.6,
+              3
+            ],
+            "settle": [
+              3,
+              3.14
+            ]
+          },
+          "ring_fill": [
+            2.92,
+            3.2
+          ],
+          "bubble_in": [
+            2.88,
+            3.1
+          ],
+          "bubble_inner": {
+            "chips_at": 2.9,
+            "sentence_at": 2.93,
+            "duration": 0.2
+          },
+          "readable": [
+            3.1,
+            4
+          ],
+          "readable_s": 0.9,
+          "bubble_out": [
+            4,
+            4.2
+          ],
+          "reset_fade": [
+            13.4,
+            13.56
+          ]
+        },
+        {
+          "stop": 3,
+          "code": "A2.1",
+          "stop_window": [
+            4,
+            5.45
+          ],
+          "draw_in": {
+            "front_reaches_s": 0.416,
+            "ring_in": [
+              0.396,
+              0.676
+            ],
+            "code_in": [
+              0.476,
+              0.776
+            ]
+          },
+          "train": {
+            "travel": [
+              4,
+              4.4
+            ],
+            "settle": [
+              4.4,
+              4.54
+            ]
+          },
+          "ring_fill": [
+            4.32,
+            4.6
+          ],
+          "bubble_in": [
+            4.28,
+            4.5
+          ],
+          "bubble_inner": {
+            "chips_at": 4.3,
+            "sentence_at": 4.33,
+            "duration": 0.2
+          },
+          "readable": [
+            4.5,
+            5.45
+          ],
+          "readable_s": 0.95,
+          "bubble_out": [
+            5.45,
+            5.65
+          ],
+          "reset_fade": [
+            13.47,
+            13.63
+          ]
+        },
+        {
+          "stop": 4,
+          "code": "A2.2",
+          "stop_window": [
+            5.45,
+            6.9
+          ],
+          "draw_in": {
+            "front_reaches_s": 0.509,
+            "ring_in": [
+              0.489,
+              0.769
+            ],
+            "code_in": [
+              0.569,
+              0.869
+            ]
+          },
+          "train": {
+            "travel": [
+              5.45,
+              5.85
+            ],
+            "settle": [
+              5.85,
+              5.99
+            ]
+          },
+          "ring_fill": [
+            5.77,
+            6.05
+          ],
+          "bubble_in": [
+            5.73,
+            5.95
+          ],
+          "bubble_inner": {
+            "chips_at": 5.75,
+            "sentence_at": 5.78,
+            "duration": 0.2
+          },
+          "readable": [
+            5.95,
+            6.9
+          ],
+          "readable_s": 0.95,
+          "bubble_out": [
+            6.9,
+            7.1
+          ],
+          "reset_fade": [
+            13.52,
+            13.68
+          ]
+        },
+        {
+          "stop": 5,
+          "code": "B1.1",
+          "stop_window": [
+            6.9,
+            8.35
+          ],
+          "draw_in": {
+            "front_reaches_s": 0.591,
+            "ring_in": [
+              0.571,
+              0.851
+            ],
+            "code_in": [
+              0.651,
+              0.951
+            ]
+          },
+          "train": {
+            "travel": [
+              6.9,
+              7.3
+            ],
+            "settle": [
+              7.3,
+              7.44
+            ]
+          },
+          "ring_fill": [
+            7.22,
+            7.5
+          ],
+          "bubble_in": [
+            7.18,
+            7.4
+          ],
+          "bubble_inner": {
+            "chips_at": 7.2,
+            "sentence_at": 7.23,
+            "duration": 0.2
+          },
+          "readable": [
+            7.4,
+            8.35
+          ],
+          "readable_s": 0.95,
+          "bubble_out": [
+            8.35,
+            8.55
+          ],
+          "reset_fade": [
+            13.56,
+            13.72
+          ]
+        },
+        {
+          "stop": 6,
+          "code": "B1.2",
+          "stop_window": [
+            8.35,
+            9.85
+          ],
+          "draw_in": {
+            "front_reaches_s": 0.684,
+            "ring_in": [
+              0.664,
+              0.944
+            ],
+            "code_in": [
+              0.744,
+              1.044
+            ]
+          },
+          "train": {
+            "travel": [
+              8.35,
+              8.75
+            ],
+            "settle": [
+              8.75,
+              8.89
+            ]
+          },
+          "ring_fill": [
+            8.67,
+            8.95
+          ],
+          "bubble_in": [
+            8.63,
+            8.85
+          ],
+          "bubble_inner": {
+            "chips_at": 8.65,
+            "sentence_at": 8.68,
+            "duration": 0.2
+          },
+          "readable": [
+            8.85,
+            9.85
+          ],
+          "readable_s": 1,
+          "bubble_out": [
+            9.85,
+            10.05
+          ],
+          "reset_fade": [
+            13.61,
+            13.77
+          ]
+        },
+        {
+          "stop": 7,
+          "code": "B2.1",
+          "stop_window": [
+            9.85,
+            11.4
+          ],
+          "draw_in": {
+            "front_reaches_s": 0.806,
+            "ring_in": [
+              0.786,
+              1.066
+            ],
+            "code_in": [
+              0.866,
+              1.166
+            ]
+          },
+          "train": {
+            "travel": [
+              9.85,
+              10.25
+            ],
+            "settle": [
+              10.25,
+              10.39
+            ]
+          },
+          "ring_fill": [
+            10.17,
+            10.45
+          ],
+          "bubble_in": [
+            10.13,
+            10.35
+          ],
+          "bubble_inner": {
+            "chips_at": 10.15,
+            "sentence_at": 10.18,
+            "duration": 0.2
+          },
+          "readable": [
+            10.35,
+            11.4
+          ],
+          "readable_s": 1.05,
+          "bubble_out": [
+            11.4,
+            11.6
+          ],
+          "reset_fade": [
+            13.68,
+            13.84
+          ]
+        },
+        {
+          "stop": 8,
+          "code": "B2.2",
+          "stop_window": [
+            11.4,
+            13.2
+          ],
+          "draw_in": {
+            "front_reaches_s": 1.1,
+            "ring_in": [
+              1.08,
+              1.36
+            ],
+            "code_in": [
+              1.16,
+              1.46
+            ]
+          },
+          "train": {
+            "travel": [
+              11.4,
+              11.8
+            ],
+            "settle": [
+              11.8,
+              11.94
+            ]
+          },
+          "ring_fill": [
+            11.72,
+            12
+          ],
+          "bubble_in": [
+            11.68,
+            11.9
+          ],
+          "bubble_inner": {
+            "chips_at": 11.7,
+            "sentence_at": 11.73,
+            "duration": 0.2
+          },
+          "readable": [
+            11.9,
+            13.2
+          ],
+          "readable_s": 1.3,
+          "bubble_out": [
+            13.2,
+            13.4
+          ],
+          "reset_fade": [
+            13.74,
+            13.9
+          ]
+        }
+      ],
+      "reset": {
+        "window": [
+          13.2,
+          13.9
+        ],
+        "bubble_8_out": [
+          13.2,
+          13.4
+        ],
+        "train_exit": {
+          "move": "x 1510 → 1600",
+          "window": [
+            13.2,
+            13.6
+          ],
+          "ease": "power2.in",
+          "opacity": {
+            "to": 0,
+            "window": [
+              13.36,
+              13.6
+            ],
+            "ease": "power2.in"
+          }
+        },
+        "track_clear": {
+          "solid": {
+            "tween": "stroke-dashoffset 0 → −L_solid (the tail chases the train)",
+            "window": [
+              13.24,
+              13.54
+            ],
+            "ease": "power2.in"
+          },
+          "dashed": {
+            "tween": "clip-path inset(0 0 0 0%) → inset(0 0 0 100%)",
+            "window": [
+              13.54,
+              13.84
+            ],
+            "ease": "power2.out"
+          }
+        },
+        "stations_clear": "ring + lit disc + code (+ Free tag on A1.1) fade to opacity 0 (0.16 s, power2.in) as the tail passes — stations[k].timing.reset_fade; the last ends at 13.90",
+        "rest": [
+          13.9,
+          14
+        ]
+      },
+      "loop": {
+        "rest_state": "white ground + the static hairline track bed only — identical at t=0.000 and from t=13.900 to 13.967 (frames 0 and 417–419).",
+        "seam": "frames 417, 418, 419 and 0 are pixel-identical (≈133 ms of rest), so the MP4 loops without a pop.",
+        "check": "snapshot at 0.0 and at 13.95 and compare — they must match exactly. Any element with a non-zero opacity / non-full dashoffset at 13.95 is a loop bug."
+      }
+    },
+    "motion_rules": [
+      "ONE paused GSAP timeline on window.__timelines[\"<composition-id>\"]; tl.seek(0); deterministic; no tl.call, no proxies/onUpdate (dash and clip values are tweened directly so a suppressed seek still renders them).",
+      "Only transform (x, y, scale), opacity, stroke-dashoffset and clip-path are tweened. No filter, no colour tweens, no width/height.",
+      "Entrances: power2.out / power3.out. Train travel: power2.inOut. Exits: power2.in. No back / elastic / bounce anywhere.",
+      "Every later-entering element uses fromTo with an explicit hidden start (immediateRender) so frames before its entrance are correct under seek in both directions. Never tween a .clip itself — animate children inside one full-duration clip.",
+      "Author each station as <g transform=\"translate(x y)\"> holding an inner <g> centred on 0,0 that GSAP scales — avoids SVG transform-origin / fill-box pitfalls (svg-icon-enrichment note).",
+      "Exactly ONE bubble visible at any time: bubble k is out by stop_window_end+0.20 and bubble k+1 starts at its stop+0.28 — a 0.08 s gap, never an overlap.",
+      "No <br> in text (determinism-rules): sentence lines are display:block spans with white-space:nowrap; bubble width = max-content of its longest line.",
+      "Mark the train data-layout-allow-overflow=\"true\" (it enters / leaves partly off-canvas)."
+    ],
+    "verify": {
+      "proof_times_s": [
+        0,
+        0.55,
+        1.1,
+        1.9,
+        4.9,
+        7.1,
+        7.9,
+        10.8,
+        12.6,
+        13.5,
+        13.95
+      ],
+      "what_each_shows": {
+        "0": "rest state (hairline only)",
+        "0.55": "draw front at the solid → dashed switch",
+        "1.1": "line fully drawn, all rings in",
+        "1.9": "A1.1 bubble + train parked + Free tag",
+        "4.9": "A2.1 mid-hold",
+        "7.1": "train crossing onto the dashed track",
+        "7.9": "B1.1 bubble with Im Bau chip",
+        "10.8": "B2.1 mid-hold",
+        "12.6": "POSTER — all stations lit, B2.2 bubble",
+        "13.5": "reset mid-way",
+        "13.95": "must equal 0.0 exactly (loop seam)"
+      },
+      "gates": [
+        "npx hyperframes lint .",
+        "npx hyperframes check . (0 overflow except the train; text contrast passes: #0A8276 on #E3F6F3 is large-text AA at ≥ 26px bold)",
+        "only one bubble visible at every proof time",
+        "no bubble touches the canvas edge (clamp) or overlaps a code label"
+      ]
+    }
+  },
+  "shot_brief": "A white card; a faint hairline marks the route. In the first second the line draws itself across the lower half in türkis — solid through the four built stops, then pale and dashed through the four that are Im Bau — and each station ring pops in as the front passes it, its code beneath it and a small sun-yellow \"Free\" tag under A1.1. A little türkis tram pulls in at A1.1 and from then on glides stop to stop (left to right), braking with a tiny settle; as it parks, the station fills and a white speech card lifts in above it with that level's German sentence — growing from \"Guten Tag! Ich heiße Ana.\" to \"Einerseits ist es teuer, andererseits lohnt es sich.\" — so the viewer watches the promise of the line come true. The one pattern-interrupt: at the B-levels the track turns dashed and pale and every card gains an \"Im Bau\" chip, yet the tram keeps going. After B2.2 (the poster frame, every station lit) the card lifts away, the tram rolls off the right edge, the line clears behind it and the frame returns to the bare hairline it started from — a 14-second loop with no seam. Single dominant motif: THE LINE."
+}

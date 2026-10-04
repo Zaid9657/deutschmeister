@@ -16,6 +16,7 @@ import { FREE_LEVEL_LABEL } from '../../data/marketing.js';
 import { COURSE_CONTENTS, LEVEL_OUTCOME_EN, levelToSlug } from '../../data/courseContents.js';
 import { curriculumFor } from '../../data/curricula/index.js';
 import { hasSyllabus, wortfeldRunningTotals, wortlisteTotalFor, checkpointAfter, primaryGrammarTitle, kannBeschreibungenCount, pruefungsteileCoverage, goetheRichtwertFor, courseTimeSplit, hoursDe, LEKTION_ANATOMY } from '../../lib/syllabus.js';
+import StationArt from '../../components/linie/StationArt.astro';
 
 export async function getStaticPaths() {
   return ALL_LEVELS.map((level) => ({ params: { level: levelToSlug(level) }, props: { level } }));
@@ -51,7 +52,7 @@ const wortfeldTotal = wortfeldRows.at(-1)?.running ?? 0;
 const time = showSyllabus ? courseTimeSplit(curriculum) : null;
 
 // v4 "Die Linie" keys (styles/linie.css): ink on paper, linie on the night hero.
-const BTN_PRIMARY = 'dm-key dm-key-ink';
+const BTN_PRIMARY = 'dm-key dm-key-siegel';
 const BTN_SECONDARY = 'dm-key dm-key-ghost';
 const BTN_HERO = 'dm-key dm-key-linie';
 const station = stationFor(level);
@@ -85,7 +86,7 @@ const jsonLd = {
     <!-- The station: where this level sits on the line, what it costs, the door. -->
     <section class="relative bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="hero-h">
       <div class="mx-auto max-w-5xl px-4 pb-14 pt-10 sm:px-6 sm:pt-14">
-        <nav class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-linie" aria-label="Breadcrumb">
+        <nav class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep" aria-label="Breadcrumb">
           <a href="/courses/" class="underline decoration-nacht-rule underline-offset-4 hover:decoration-linie">Courses</a> · Stop {station.index + 1} of {STATIONS.length} · {code}
         </nav>
 
@@ -112,6 +113,7 @@ const jsonLd = {
             {planLine(station) && <p class="mt-2 max-w-xl text-[0.9375rem] leading-relaxed text-nacht-muted">{planLine(station)}</p>}
           </div>
           <div class="rounded-[1.25rem] border border-nacht-rule bg-nacht-raised p-6">
+            <StationArt level={level} eager class="-mx-6 -mt-6 mb-5 h-44 w-[calc(100%+3rem)] rounded-t-[1.25rem] border-b border-nacht-rule" />
             <p class="sign-code text-[2.5rem] leading-none text-linie">{isFree ? 'Free' : eur(course.price)}</p>
             <p class="mt-2 text-[0.875rem] text-nacht-muted">
               {isFree

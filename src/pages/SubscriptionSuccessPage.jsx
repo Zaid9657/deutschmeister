@@ -125,7 +125,7 @@ const SubscriptionSuccessPage = () => {
           </Card>
         ) : verified ? (
           <>
-            <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-linie">Payment confirmed</p>
+            <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Payment confirmed</p>
             <h1 className="mt-3 font-sign text-[clamp(2.25rem,8vw,3.5rem)] font-extrabold leading-[0.95] [font-stretch:78%]">
               {courseBought || telcBought ? 'Your ticket is valid.' : 'Welcome to Pro.'}
             </h1>
@@ -189,7 +189,7 @@ const SubscriptionSuccessPage = () => {
               </Button>
               <p className="text-[0.875rem] text-nacht-muted">Your place is saved after every answer, on any device you sign in on.</p>
               {/* On nacht the link takes the line's colour (siegel teal is ~3:1 here). */}
-              <span className="[&_a]:!text-linie [&_a:hover]:!text-linie-deep">
+              <span className="[&_a]:!text-siegel-deep [&_a:hover]:!text-siegel">
                 <ReportProblemLink topic="payment" />
               </span>
             </div>

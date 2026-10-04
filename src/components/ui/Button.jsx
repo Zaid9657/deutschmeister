@@ -40,12 +40,24 @@ const VARIANTS = {
   secondary: `border border-rule bg-white text-ink shadow-raise hover:border-siegel hover:text-siegel-deep ${PRESS}`,
   ghost: 'text-graphite hover:bg-siegel-wash hover:text-siegel-deep',
   celebrate: `bg-accent-himbeer text-ink shadow-raise-himbeer hover:brightness-105 ${PRESS}`,
-  // v4 "Die Linie" (design-tokens.js, the section at the end): the commerce
-  // screens' keys. `ink` is the action on paper with the line's yellow edge;
-  // `linie` is the action on a nacht ground (rule 2, amended).
-  ink: `bg-ink text-white shadow-raise-linie hover:bg-nacht-raised ${PRESS}`,
+  // "Die Linie" keys (design-tokens.js, the section at the end). Since the v4
+  // türkis palette `linie` and `primary` are the same colour family (one action
+  // colour again); `ink` stays for the rare dark key.
+  ink: `bg-ink text-white shadow-raise-linie hover:bg-graphite ${PRESS}`,
   linie: `bg-linie text-linie-ink shadow-raise-linie hover:bg-linie-deep ${PRESS}`,
+  // The secondary key on a nacht ground (Layout.astro `dm-key-ghost-nacht`):
+  // an outline, flat like `ghost`, whose rule lights up in the line's yellow.
+  ghostNacht: 'border-[1.5px] border-nacht-rule bg-transparent text-nacht-text hover:border-linie',
 };
+
+// `shape="pill"`: the chrome's keys (the Astro bar's `dm-key` is a pill).
+// Swapped IN the base string rather than appended as a class: rounded-pill and
+// rounded-clay are both single-property utilities, and which one wins is decided
+// by their order in the emitted CSS, never by their order in className. Today
+// pill happens to be emitted after clay, so an appended class worked by luck of
+// ordering; the same trap is why `size="sm"` loses its padding to BASE's px-5
+// py-2.5 (checked against dist/ on 2026-10-04).
+const SHAPES = { clay: 'rounded-clay', pill: 'rounded-pill' };
 
 const SIZES = {
   sm: 'px-3.5 py-1.5 text-[0.8125rem]',
@@ -54,13 +66,13 @@ const SIZES = {
 };
 
 const Button = forwardRef(function Button(
-  { variant = 'primary', size = 'md', shimmer = false, to, href, type = 'button', className = '', children, ...rest },
+  { variant = 'primary', size = 'md', shape = 'clay', shimmer = false, to, href, type = 'button', className = '', children, ...rest },
   ref,
 ) {
   // `shimmer`: the periodic highlight sweep (index.css .btn-shimmer) — for
   // the ONE primary action on a screen, never on every button.
   const classes = [
-    BASE,
+    BASE.replace('rounded-clay', SHAPES[shape] ?? SHAPES.clay),
     VARIANTS[variant] ?? VARIANTS.primary,
     SIZES[size] ?? '',
     shimmer ? 'btn-shimmer relative overflow-hidden' : '',

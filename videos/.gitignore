@@ -1,0 +1,6 @@
+# HyperFrames working output — the web-encoded files live in public/motion/
+*/renders/
+*/snapshots/
+*/.hyperframes/
+*/node_modules/
+*/.media/

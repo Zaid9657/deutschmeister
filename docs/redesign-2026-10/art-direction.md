@@ -1,5 +1,8 @@
 # Art direction: three routes, one chosen
 
+> **v4 colours, 2026-10-04: Türkis.** The owner rejected night + signal yellow ("I don't like the choosing of colors") and picked option A of three light palettes rendered on the real homepage (`screenshots/palette-compare.jpg`), the same türkis they chose for the Course v2 player. The structure below (the line, stations, tickets, motion tiers, type) is unchanged; only the values moved. `nacht` is now the light türkis feature ground and `linie` equals `siegel` (`#0A8276`). Where this file says "night" or "yellow", read "türkis tint" and "türkis".
+
+
 ## The three directions
 
 | | A · "Der Satz" | **B · "Die Linie" (chosen)** | C · "Das Studio" |

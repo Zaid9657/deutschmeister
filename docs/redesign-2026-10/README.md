@@ -77,13 +77,51 @@ The four sign pages pay about 0.6 s of lab FCP for the Archivo face. That is the
 
 ## Known defects and limits (honest list)
 
-1. **The SPA chrome is not restyled.** `Navbar.jsx`, `Footer.jsx` and `BottomNav.jsx` keep the paper/teal look, because Course v2 (PR #149) edits `Navbar.jsx` hunks. Do it after #149 merges.
-2. **A paper band can show between a nacht SPA screen and the footer on phones.** It comes from the App's bottom padding for BottomNav (`App.jsx`, #149 territory). Cosmetic only.
+1. ~~**The SPA chrome is not restyled.**~~ Fixed 2026-10-04: `Navbar.jsx`, `Footer.jsx` and `BottomNav.jsx` are ported from `Layout.astro` (see "The app chrome" below). PR #149 needs one re-merge in `Navbar.jsx`.
+2. ~~**A paper band can show between a nacht SPA screen and the footer on phones.**~~ Fixed 2026-10-04 without touching `App.jsx`: the footer drops its top margin on night routes (`groundFor`), and BottomNav's spacer takes the footer's ground.
 3. **Sign pages: FCP is about 0.6 s slower in the lab** (perf 98–99, CLS 0).
 4. **No JS on `/` at 1280:** the hero line's station pulse keeps running, because nothing can pause it without JS. It animates transform and opacity only.
 5. **Pre-existing, unchanged:** `/level-test/` at 84 and `/login` at 88 (SPA bundle weight).
 6. **The content cache is old.** `grammar-content-cache.json` is from 2026-08-24, and CI warns when it is over 30 days. It was not refreshed here (Supabase is not reachable from the sandbox).
 7. **Client-side completion events.** `checkout_completed` is the browser's view, and revenue truth stays in `purchases` / `weekly_truth`.
+
+## The app chrome (2026-10-04, follow-up)
+
+The SPA's bar, footer and phone tab bar now speak the same design as the Astro pages, so crossing from `/courses/` into `/dashboard` no longer changes the frame.
+
+| Piece | What it does now |
+|---|---|
+| Bar | Paper; night on routes whose first screen is night (`groundFor` in `src/lib/chrome.js`, today only `/subscription/success`). Courses and Pricing are promoted into the bar, as in `Layout.astro`. One key: **Start A1.1 free** signed out, **Continue learning** signed in (it resumes the learner's course, never a bare `/dashboard`). |
+| Phone menu | A night timetable: the eight stations with their price or status first, then every door. Signed in, it scrolls clear of the tab bar. |
+| Footer | Night, with the eight stations on the yellow line, then the link groups. No top margin on night routes. |
+| Tab bar | Night; the current tab is the lit stop (yellow label and top bar). Its spacer takes the footer's ground. |
+| Type | Labels in the body face at 650, which is what the Astro chrome renders on every library page. The app never loads Archivo (owner decision 4). |
+| Focus | A yellow ring on night grounds (`src/index.css`, twin of `linie.css`). |
+| Motion | Opacity and transform only; the menus drop travel under reduced motion. |
+
+Verified with a Playwright run against the built app, Supabase stubbed: 320, 360, 390, 1024 and 1280 px, signed out, signed in and on the night route. Horizontal overflow was 0 everywhere, and the focus ring was visible on both grounds. Pinned by `tests/linie-design.test.mjs`.
+
+## v4: Türkis, the line board, station artwork (2026-10-04, owner feedback)
+
+The owner's verdict on v3: "I don't like the choosing of colors … why does it say till B1 … the graphics can be a lot better — use hyperframes to include motion graphics … we have higgsfield api". What changed:
+
+| Ask | Done |
+|---|---|
+| Colours | Three light palettes rendered on the real homepage (`screenshots/palette-compare.jpg`); the owner picked **A · Türkis**. Tokens moved, names kept (`nacht` = light türkis feature ground, `linie` = `siegel` = `#0A8276`). Small türkis labels use `siegel-deep` for AA. |
+| "till B1" | The hero now reads "From Guten Tag to B2, one stop at a time." (`astro-site/src/data/homepage.js`). |
+| Motion | **The line board**: a HyperFrames loop under the hero (`components/linie/LineBoard.astro`) — the line draws itself, a train rides A1.1 → B2.2 and each stop shows a sentence of that level. Two compositions: `videos/hero-line` (1600×560) and `videos/hero-line-mobile` (1080×1350). Poster-first, plays only when on screen and when motion is allowed. |
+| Higgsfield | Station illustrations (Recraft V4.1 vector, palette-locked): 4 of 8 generated, the rest blocked by the account's daily limit — see `station-art.md`. Placed once all eight exist. |
+
+### Re-rendering the line board
+
+```bash
+cd videos/hero-line          # and again in videos/hero-line-mobile
+HYPERFRAMES_BROWSER_PATH=/opt/pw-browsers/chromium npx --yes hyperframes@0.8.122 check .
+HYPERFRAMES_BROWSER_PATH=/opt/pw-browsers/chromium npx --yes hyperframes@0.8.122 render . -q high -o ./renders/video.mp4
+videos/encode-web.sh        # → public/motion/: MP4 (H.264), VP9 WebM fallback, poster still
+```
+
+GSAP is vendored in each project (`assets/vendor/gsap.min.js`) because the agent proxy blocks the CDN; the fonts are the site's own woff2 files.
 
 ## Not verifiable from this environment
 

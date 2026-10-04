@@ -11,6 +11,7 @@
 import { STATIONS, EXAM_ROUTE, FREE_COURSE_HREF, planLine } from '../../data/offers.js';
 import { LEVEL_COUNT } from '../../data/marketing.js';
 import { levelCoursesWithVariants } from '../../lib/courseVariants.js';
+import StationArt from './StationArt.astro';
 
 const variants = Object.fromEntries(levelCoursesWithVariants().map((c) => [c.key, c.variantId]));
 const live = STATIONS.filter((s) => s.status !== 'building');
@@ -19,7 +20,7 @@ const building = STATIONS.filter((s) => s.status === 'building');
 
 <section id="line" class="dm-defer relative overflow-hidden bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="line-h" data-track-view="line">
   <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
-    <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-linie">Die Linie · {LEVEL_COUNT} stations, A1.1 to B2.2</p>
+    <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Die Linie · {LEVEL_COUNT} stations, A1.1 to B2.2</p>
     <h2 id="line-h" class="sign-head mt-3 text-[clamp(2.25rem,5.6vw,4rem)]">
       <span class="block">Every level is a stop.</span>
       <span class="block text-linie">Buy the one you’re at.</span>
@@ -49,6 +50,7 @@ const building = STATIONS.filter((s) => s.status === 'building');
         <li class="relative pb-6 pl-14 lg:pb-0 lg:pl-0 lg:pr-4">
           <span class:list={['absolute left-0 top-4 h-[2.375rem] w-[2.375rem] rounded-full border-[6px] border-linie lg:hidden', st.status === 'free' ? 'bg-linie' : 'bg-nacht']} aria-hidden="true"></span>
           <article class="dm-lift flex h-full flex-col rounded-[1.25rem] border border-nacht-rule bg-nacht-raised p-5" aria-labelledby={`st-${st.level}`}>
+            <StationArt level={st.level} class="-mx-5 -mt-5 mb-4 w-[calc(100%+2.5rem)] rounded-t-[1.25rem] border-b border-nacht-rule" />
             <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-nacht-muted">Stop {st.index + 1} · {st.band}</p>
             <h3 id={`st-${st.level}`} class="sign-code mt-1 text-[2.25rem] leading-none">{st.code}</h3>
             <p class="sign-label mt-1 text-[0.9375rem] text-nacht-muted">{st.name}</p>
@@ -89,7 +91,7 @@ const building = STATIONS.filter((s) => s.status === 'building');
           </ul>
           <ul class="mt-5 grid grid-cols-4 gap-2 border-t border-nacht-rule pt-4">
             {building.map((st) => (
-              <li><a href={st.coursePage} class="block text-center font-data text-[0.75rem] text-nacht-muted underline decoration-nacht-rule underline-offset-4">{st.code}</a></li>
+              <li><a href={st.coursePage} class="block text-center font-data text-[0.75rem] text-nacht-muted underline decoration-nacht-rule underline-offset-4"><StationArt level={st.level} class="mb-2 w-full rounded-lg border border-nacht-rule" />{st.code}</a></li>
             ))}
           </ul>
         </article>
