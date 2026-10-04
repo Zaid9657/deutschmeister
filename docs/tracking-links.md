@@ -115,11 +115,29 @@ https://deutsch-meister.de/?utm_source=email&utm_medium=daily&utm_campaign=daily
 `tests/daily-sentence-links.test.mjs` pins them: every site link is tagged with its
 own `utm_content`, the tags are fixed strings, and `public/attribution.js` reads
 them back. It also checks that the unsubscribe link is untagged and byte-identical.
-On 2026-10-02 this is the only mailer that tags its links. `trial-lifecycle`,
-`activation-lifecycle`, `course-reminder`, `confirmation-nudge`,
-`send-welcome-email` and `send-campaign` carry no `utm_` (grep of
-`netlify/functions/`). The unsent launch draft `drafts/launch-sublevel-1.mjs`
-already follows the scheme (`utm_medium=launch&utm_campaign=sublevel-2026-09`).
+**Lifecycle** (2026-10-04): `trial-lifecycle` and `activation-lifecycle` tag every
+site link through `tagEmailLink()` in `netlify/functions/_shared/emailLinks.mjs`.
+The medium is `lifecycle`, the campaign is the mail kind with hyphens, and the
+content is `cta` (the button) or `footer` (the home link).
+
+| Mail | `utm_campaign` | `cta` lands on |
+|---|---|---|
+| trial day 3 | `trial-day3` | `/analyze/` |
+| trial day 6 | `trial-day6` | `/pricing/` |
+| trial ended | `trial-ended` | `/pricing/` |
+| activation day 1 | `activation-d1` | `/level-test/` |
+| activation day 4 | `activation-d4` | `/analyze/` |
+
+```
+https://deutsch-meister.de/pricing/?utm_source=email&utm_medium=lifecycle&utm_campaign=trial-day6&utm_content=cta
+https://deutsch-meister.de/?utm_source=email&utm_medium=lifecycle&utm_campaign=trial-day6&utm_content=footer
+```
+
+`tests/lifecycle-links.test.mjs` pins them the same way, unsubscribe link included.
+`course-reminder`, `confirmation-nudge`, `send-welcome-email` and `send-campaign`
+still carry no `utm_` (grep of `netlify/functions/`). The unsent launch draft
+`drafts/launch-sublevel-1.mjs` already follows the scheme
+(`utm_medium=launch&utm_campaign=sublevel-2026-09`).
 
 ### Where a click lands
 
@@ -149,9 +167,11 @@ already follows the scheme (`utm_medium=launch&utm_campaign=sublevel-2026-09`).
    gives `entry = 'link'` (arrived with `?s=`) and `last = 'email'`. `first` is
    the browser's first-touch source. `ref` is the referrer host, or `none` when
    the mail client stripped it. Only the source label travels; campaign and
-   content do not. Once a second mailer tags with `utm_source=email`,
-   `xray_usage` cannot tell the mails apart. Use `dm_attribution` or PostHog for
-   that.
+   content do not. Since 2026-10-04 a second mailer tags with `utm_source=email`:
+   the `/analyze/` buttons in `trial-day3` and `activation-d4` also give
+   `last = 'email'`, so `xray_usage` cannot tell the mails apart. Those links carry
+   no `?s=`, so `entry = 'link'` (the query below) still means the daily sentence.
+   Use `dm_attribution` or PostHog to split the rest.
 
 ```sql
 select source->>'last' last_touch, source->>'ref' ref, count(*)
