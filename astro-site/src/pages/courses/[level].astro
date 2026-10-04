@@ -5,8 +5,9 @@
 // same page with a "Start free" door instead of a checkout.
 import Layout from '../../layouts/Layout.astro';
 import '../../styles/global.css';
-import Aurora from '../../components/Aurora.astro';
 import CourseCheckout from '../../components/CourseCheckout.astro';
+import { fontPreloads, signFontPreloads } from '../../data/design-tokens.js';
+import { STATIONS, stationFor, ticketLines, planLine } from '../../data/offers.js';
 import { ORGANIZATION } from '../../lib/siteMeta.js';
 import { getTopicsForLevel } from '../../lib/grammar.js';
 import { levelCoursesWithVariants } from '../../lib/courseVariants.js';
@@ -49,9 +50,13 @@ const wortfeldTotal = wortfeldRows.at(-1)?.running ?? 0;
 // are derived from the curriculum's own minutes, never typed in here.
 const time = showSyllabus ? courseTimeSplit(curriculum) : null;
 
-const BTN = 'inline-flex items-center justify-center gap-2 rounded-clay text-sm font-bold transition-all duration-100 ease-snap select-none';
-const BTN_PRIMARY = `${BTN} bg-siegel px-6 py-3 text-white shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none`;
-const BTN_SECONDARY = `${BTN} border border-rule bg-white px-6 py-3 text-ink shadow-raise hover:border-siegel hover:text-siegel-deep active:translate-y-1 active:shadow-none`;
+// v4 "Die Linie" keys (styles/linie.css): ink on paper, linie on the night hero.
+const BTN_PRIMARY = 'dm-key dm-key-ink';
+const BTN_SECONDARY = 'dm-key dm-key-ghost';
+const BTN_HERO = 'dm-key dm-key-linie';
+const station = stationFor(level);
+const lines = ticketLines(level);
+const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes('nunito'))];
 
 const priceLine = isFree ? 'Free' : `${eur(course.price)} once`;
 const title = `German ${code} Course — ${isFree ? 'free' : course.comingSoon ? 'coming soon' : priceLine} | DeutschMeister`;
@@ -75,58 +80,92 @@ const jsonLd = {
 };
 ---
 
-<Layout title={title} description={description} canonical={`https://deutsch-meister.de/courses/${slug}/`} jsonLd={jsonLd} lang="en">
+<Layout title={title} description={description} canonical={`https://deutsch-meister.de/courses/${slug}/`} jsonLd={jsonLd} lang="en" tone="nacht" preloads={preloads}>
   <div class="overflow-x-clip bg-paper text-ink">
-    <section class="relative" aria-labelledby="hero-h">
-      <Aurora />
-      <div class="relative mx-auto max-w-3xl px-5 pb-10 pt-14 sm:pt-20">
-        <nav class="hero-line font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel" style="--d:0ms" aria-label="Breadcrumb">
-          <a href="/courses/" class="transition-colors hover:text-siegel-deep">Courses</a> · {code}
+    <!-- The station: where this level sits on the line, what it costs, the door. -->
+    <section class="relative bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="hero-h">
+      <div class="mx-auto max-w-5xl px-4 pb-14 pt-10 sm:px-6 sm:pt-14">
+        <nav class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-linie" aria-label="Breadcrumb">
+          <a href="/courses/" class="underline decoration-nacht-rule underline-offset-4 hover:decoration-linie">Courses</a> · Stop {station.index + 1} of {STATIONS.length} · {code}
         </nav>
-        <h1 id="hero-h" class="hero-line mt-3 font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.025em] sm:text-[3rem]" style="--d:80ms">
-          German {code} Course
-        </h1>
-        <p class="hero-line mt-5 text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]" style="--d:220ms">{LEVEL_OUTCOME_EN[level]}</p>
 
-        <div class="hero-line mt-8 flex flex-col gap-4 rounded-clay border border-rule bg-white p-6 shadow-raise sm:flex-row sm:items-center sm:justify-between" style="--d:300ms">
+        <!-- The line, with this stop lit. Each station links to its page. -->
+        <ol class="mt-6 flex items-center" aria-label="The line">
+          {STATIONS.map((st) => (
+            <li class="relative flex flex-1 flex-col items-center">
+              {st.index > 0 && <span class:list={['absolute right-1/2 top-[0.625rem] h-1.5 w-full', st.status === 'building' ? 'bg-nacht-rule' : 'bg-linie']} aria-hidden="true"></span>}
+              <a href={st.coursePage} class="relative z-10 flex flex-col items-center" aria-current={st.level === level ? 'page' : undefined}>
+                <span class:list={['block rounded-full border-4', st.level === level ? 'h-7 w-7 -mt-[0.1875rem] border-linie bg-linie ring-4 ring-linie/30' : st.status === 'building' ? 'h-[1.375rem] w-[1.375rem] border-nacht-rule bg-nacht' : 'h-[1.375rem] w-[1.375rem] border-linie bg-nacht']} aria-hidden="true"></span>
+                <span class:list={['sign-code mt-1.5 text-[0.75rem] sm:text-[0.875rem]', st.level === level ? 'text-linie' : 'text-nacht-muted']}>{st.code}</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+
+        <div class="mt-10 grid gap-8 md:grid-cols-[1.2fr_0.8fr] md:items-end">
           <div>
-            <p class="font-display text-[2rem] font-semibold leading-none tracking-[-0.02em] text-ink">
-              {isFree ? 'Free' : eur(course.price)}
-              {!isFree && <span class="ml-1 font-body text-sm font-normal tracking-normal text-graphite">one time · lifetime</span>}
-            </p>
-            <p class="mt-2 font-data text-[0.75rem] text-graphite">
+            <h1 id="hero-h" class="sign-display text-[clamp(2.75rem,10vw,5.5rem)]">
+              <span class="block whitespace-nowrap">German {code}</span>
+              <span class="mt-3 block text-[clamp(1.25rem,4vw,2rem)] leading-tight text-nacht-muted">{station.name}</span>
+            </h1>
+            <p class="mt-5 max-w-xl text-[1.0625rem] leading-relaxed text-nacht-muted sm:text-[1.1875rem]">{LEVEL_OUTCOME_EN[level]}</p>
+            {planLine(station) && <p class="mt-2 max-w-xl text-[0.9375rem] leading-relaxed text-nacht-muted">{planLine(station)}</p>}
+          </div>
+          <div class="rounded-[1.25rem] border border-nacht-rule bg-nacht-raised p-6">
+            <p class="sign-code text-[2.5rem] leading-none text-linie">{isFree ? 'Free' : eur(course.price)}</p>
+            <p class="mt-2 text-[0.875rem] text-nacht-muted">
               {isFree
                 ? 'No account, no card. The whole level is open.'
                 : course.comingSoon
-                  ? 'Being rebuilt to the A1/A2 standard. Not for sale yet, on purpose.'
-                  : `${COURSE_PRO_MONTHS} months of Pro included · no subscription`}
+                  ? 'Im Bau: being rebuilt to the A1/A2 standard. Not for sale yet, on purpose.'
+                  : `One time · yours to keep · ${COURSE_PRO_MONTHS} months of Pro included · no subscription`}
             </p>
-          </div>
-          <div class="flex flex-col gap-2 sm:items-end">
-            <div data-course-door={level} data-course-code={code} data-course-open-class={BTN_PRIMARY}>
-            {isFree ? (
-              <a href={`/course/${level}`} class={BTN_PRIMARY}>Start the free {code} course</a>
-            ) : buyable ? (
-              <button type="button" class={BTN_PRIMARY} data-course-variant={course.variantId} data-course-key={course.key}>Buy {code} — {eur(course.price)}</button>
-            ) : (
-              <span class={`${BTN_SECONDARY} cursor-not-allowed opacity-60`} aria-disabled="true">Coming soon</span>
-            )}
+            <div class="mt-5 flex flex-col gap-3">
+              <div data-course-door={level} data-course-code={code} data-course-open-class={`${BTN_HERO} w-full`}>
+              {isFree ? (
+                <a href={`/course/${level}`} class={`${BTN_HERO} w-full`}>Start the free {code} course</a>
+              ) : buyable ? (
+                <button type="button" class={`${BTN_HERO} w-full`} data-course-variant={course.variantId} data-course-key={course.key} data-course-price={course.price} data-track-surface="course_page">Buy {code} — {eur(course.price)}</button>
+              ) : course.comingSoon ? (
+                <a href="/pricing/#pro" class="dm-key dm-key-ghost-nacht w-full">Ride {code} today with Pro</a>
+              ) : (
+                <a href="/pricing/" class="dm-key dm-key-ghost-nacht w-full">Checkout not open here — see pricing</a>
+              )}
+              </div>
+              {!isFree && !course.comingSoon && (
+                <a href="/pricing/#pro" class="dm-link-nacht text-center text-[0.8125rem] font-semibold">
+                  or Pro for every level — {eur(PLANS.monthly.price)}/month
+                </a>
+              )}
             </div>
-            {!isFree && (
-              <a href="/pricing/" class="text-xs font-bold text-siegel transition-colors hover:text-siegel-deep">
-                or Pro for every level — {eur(PLANS.monthly.price)}/month →
-              </a>
-            )}
           </div>
         </div>
       </div>
     </section>
 
-    <div class="mx-auto max-w-3xl px-5 pb-20">
+    {lines.length > 0 && (
+      <!-- What the ticket carries — the same lines as the homepage ticket. -->
+      <section class="border-b border-rule bg-paper" aria-labelledby="ticket-h" data-track-view="course_ticket" data-track-level={level}>
+        <div class="mx-auto max-w-5xl px-4 py-14 sm:px-6">
+          <h2 id="ticket-h" class="sign-head text-[clamp(1.875rem,4.4vw,2.75rem)]">What one {code} ticket carries</h2>
+          <ul class="mt-8 grid gap-6 sm:grid-cols-2">
+            {lines.map((line) => (
+              <li class="border-t border-ink pt-4">
+                <p class="sign-label text-[1.125rem] text-ink">{line.title}</p>
+                <p class="mt-1.5 text-[0.9375rem] leading-relaxed text-graphite">{line.body}</p>
+                <p class="mt-1 font-data text-[0.75rem] text-graphite">No more {line.removes}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )}
+
+    <div class="mx-auto max-w-3xl px-5 pb-20 pt-12">
       {showSyllabus && (
         <!-- Lehrplan -->
         <section class="reveal mt-4" aria-labelledby="lehrplan-h">
-          <h2 id="lehrplan-h" class="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.015em] sm:text-[1.75rem]">Lehrplan: 12 Lektionen</h2>
+          <h2 id="lehrplan-h" class="sign-head text-[1.75rem] sm:text-[2.125rem]">Lehrplan: 12 Lektionen</h2>
           <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">
             Jede Lektion ist eine Situation aus dem Alltag, keine Grammatikliste — mit Kann-Beschreibungen
             aus den Goethe-Prüfungszielen, dem geübten Prüfungsteil und einem Ausschnitt aus der
@@ -180,7 +219,7 @@ const jsonLd = {
           </div>
 
           <!-- Lektion anatomy strip -->
-          <h3 class="mt-8 font-display text-[1.125rem] font-semibold text-ink">So läuft eine Lektion ab</h3>
+          <h3 class="mt-8 sign-label text-[1.125rem] text-ink">So läuft eine Lektion ab</h3>
           <div class="mt-3 overflow-x-auto">
             <ol class="flex min-w-max gap-2">
               {LEKTION_ANATOMY.map((step) => (
@@ -197,20 +236,20 @@ const jsonLd = {
           <dl class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
             <div class="rounded-clay border border-rule bg-white p-4">
               <dt class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-graphite">Wörter / Wortliste</dt>
-              <dd class="mt-1 font-display text-[1.375rem] font-semibold text-ink">{wortfeldTotal}{wortlisteTotal ? `/${wortlisteTotal}` : ''}</dd>
+              <dd class="mt-1 sign-code text-[1.5rem] text-ink">{wortfeldTotal}{wortlisteTotal ? `/${wortlisteTotal}` : ''}</dd>
             </div>
             <div class="rounded-clay border border-rule bg-white p-4">
               <dt class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-graphite">Geführte Lektionszeit</dt>
-              <dd class="mt-1 font-display text-[1.375rem] font-semibold text-ink">{hoursDe(time.guidedHours)} h</dd>
+              <dd class="mt-1 sign-code text-[1.5rem] text-ink">{hoursDe(time.guidedHours)} h</dd>
               <dd class="mt-1 font-data text-[0.6875rem] leading-relaxed text-graphite">+ {hoursDe(time.practiceHours)} h Übungsmaterial</dd>
             </div>
             <div class="rounded-clay border border-rule bg-white p-4">
               <dt class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-graphite">Kann-Beschreibungen</dt>
-              <dd class="mt-1 font-display text-[1.375rem] font-semibold text-ink">{kannCount}</dd>
+              <dd class="mt-1 sign-code text-[1.5rem] text-ink">{kannCount}</dd>
             </div>
             <div class="rounded-clay border border-rule bg-white p-4">
               <dt class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-graphite">Prüfungsteile geübt</dt>
-              <dd class="mt-1 font-display text-[1.375rem] font-semibold text-ink">{teileCoverage.covered} von {teileCoverage.of}</dd>
+              <dd class="mt-1 sign-code text-[1.5rem] text-ink">{teileCoverage.covered} von {teileCoverage.of}</dd>
             </div>
           </dl>
 
@@ -231,7 +270,7 @@ const jsonLd = {
 
       <!-- Grammar -->
       <section class="reveal mt-4" aria-labelledby="grammar-h">
-        <h2 id="grammar-h" class="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.015em] sm:text-[1.75rem]">{topics.length} grammar topics, in order</h2>
+        <h2 id="grammar-h" class="sign-head text-[1.75rem] sm:text-[2.125rem]">{topics.length} grammar topics, in order</h2>
         <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">
           Every topic: rules in plain language, worked examples with audio, and exercises where you type
           the answer — not multiple choice. The rules are free to read at every level; the practice is part of the course.
@@ -249,7 +288,7 @@ const jsonLd = {
       <!-- Reading + listening -->
       <section class="reveal mt-12 grid gap-8 sm:grid-cols-2" style="--rd:80ms" aria-labelledby="skills-h">
         <div>
-          <h2 id="skills-h" class="font-display text-[1.375rem] font-semibold leading-tight tracking-[-0.015em]">{content.reading.length} reading texts</h2>
+          <h2 id="skills-h" class="sign-head text-[1.5rem]">{content.reading.length} reading texts</h2>
           <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">
             {content.finalTest ? 'Short, in-level texts with richtig/falsch checks and exam-style parts.' : 'Longer texts on the level\'s themes; checks arrive with the rebuild.'}
           </p>
@@ -258,7 +297,7 @@ const jsonLd = {
           </ul>
         </div>
         <div>
-          <h2 class="font-display text-[1.375rem] font-semibold leading-tight tracking-[-0.015em]">{content.listening.length} listening exercises</h2>
+          <h2 class="sign-head text-[1.5rem]">{content.listening.length} listening exercises</h2>
           <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">
             Native-speaker dialogues, {content.listeningQuestions} questions{content.dictation ? `, ${content.dictation} of them dictation` : ''}.
           </p>
@@ -301,7 +340,7 @@ const jsonLd = {
       <section class="reveal mt-12 rounded-clay border border-rule bg-white p-6 shadow-raise" style="--rd:160ms">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p class="font-display text-[1.25rem] font-semibold text-ink">{isFree ? `${code} is free — start now.` : course.comingSoon ? `${code} is coming soon.` : `Own ${code} for ${eur(course.price)}.`}</p>
+            <p class="sign-head text-[1.375rem] text-ink">{isFree ? `${code} is free — start now.` : course.comingSoon ? `${code} is Im Bau.` : `Own ${code} for ${eur(course.price)}.`}</p>
             <p class="mt-1 text-[0.875rem] text-graphite">
               {isFree ? `${FREE_LEVEL_LABEL} needs no account. A free account adds a trial of Pro on top.` : course.comingSoon ? 'Pro opens every level today, including this one.' : `Pay once. Nothing renews, nothing expires. ${COURSE_PRO_MONTHS} months of Pro included.`}
             </p>
@@ -310,7 +349,7 @@ const jsonLd = {
           {isFree ? (
             <a href={`/course/${level}`} class={BTN_PRIMARY}>Start the free {code} course</a>
           ) : buyable ? (
-            <button type="button" class={BTN_PRIMARY} data-course-variant={course.variantId} data-course-key={course.key}>Buy {code} — {eur(course.price)}</button>
+            <button type="button" class={BTN_PRIMARY} data-course-variant={course.variantId} data-course-key={course.key} data-course-price={course.price} data-track-surface="course_page_bottom">Buy {code} — {eur(course.price)}</button>
           ) : (
             <a href="/pricing/" class={BTN_SECONDARY}>See Pro</a>
           )}
@@ -319,9 +358,9 @@ const jsonLd = {
       </section>
 
       <nav class="mt-8 flex justify-between font-data text-[0.75rem] text-graphite" aria-label="Neighbouring levels">
-        {prev ? <a href={`/courses/${levelToSlug(prev)}/`} class="font-bold text-siegel hover:text-siegel-deep">← {prev.toUpperCase()}</a> : <span />}
-        <a href="/courses/" class="font-bold text-siegel hover:text-siegel-deep">All courses</a>
-        {next ? <a href={`/courses/${levelToSlug(next)}/`} class="font-bold text-siegel hover:text-siegel-deep">{next.toUpperCase()} →</a> : <span />}
+        {prev ? <a href={`/courses/${levelToSlug(prev)}/`} class="dm-link">← {prev.toUpperCase()}</a> : <span />}
+        <a href="/courses/" class="dm-link">All courses</a>
+        {next ? <a href={`/courses/${levelToSlug(next)}/`} class="dm-link">{next.toUpperCase()} →</a> : <span />}
       </nav>
     </div>
   </div>

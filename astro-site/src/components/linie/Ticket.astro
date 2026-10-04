@@ -3,7 +3,7 @@
 // obstacle it removes (offers.js ticketLines). One ticket per buyable level,
 // switched by real radios (CSS :has — works without JS). Every figure derives;
 // no valuations, no "most popular", no clock.
-import { TICKET_STATIONS, ticketLines, proAloneLine } from '../../data/offers.js';
+import { STATIONS, TICKET_STATIONS, ticketLines, proAloneLine } from '../../data/offers.js';
 import { COURSE_PRO_MONTHS } from '../../data/pricing.js';
 import { levelCoursesWithVariants } from '../../lib/courseVariants.js';
 
@@ -33,6 +33,16 @@ const H = headingLevel === 3 ? 'h3' : 'h2';
             <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em]">Einzelfahrschein · one ticket</p>
             <H id={`ticket-${surface}-${st.level}`} class="sign-display mt-3 text-[3.5rem] leading-none">{st.code}</H>
             <p class="sign-label mt-1 text-[1rem]">{st.name}</p>
+            <!-- Where this ticket sits on the line. -->
+            <p class="mt-6 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em]">Stop {st.index + 1} of {STATIONS.length}</p>
+            <ol class="mt-2 flex items-center" aria-hidden="true">
+              {STATIONS.map((x) => (
+                <li class="relative flex flex-1 justify-center">
+                  {x.index > 0 && <span class:list={['absolute right-1/2 top-1/2 h-1 w-full -translate-y-1/2', x.status === 'building' ? 'bg-linie-ink/25' : 'bg-linie-ink']}></span>}
+                  <span class:list={['relative block rounded-full border-[3px]', x.level === st.level ? 'h-4 w-4 border-linie-ink bg-white' : x.status === 'building' ? 'h-2.5 w-2.5 border-linie-ink/30 bg-linie' : 'h-2.5 w-2.5 border-linie-ink bg-linie']}></span>
+                </li>
+              ))}
+            </ol>
           </div>
           <div>
             <p class="sign-code text-[2.25rem] leading-none">{st.priceLabel}</p>
