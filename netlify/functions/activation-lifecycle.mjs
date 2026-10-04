@@ -44,6 +44,7 @@ import { schedule } from '@netlify/functions';
 import { createClient } from '@supabase/supabase-js';
 import { createHmac } from 'crypto';
 import { BRAND, emailHeader, ctaCell } from './_shared/brand.mjs';
+import { tagEmailLink } from './_shared/emailLinks.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -81,7 +82,7 @@ export const WINDOWS = {
 // claim tests ban them here. Both messages assume, correctly by construction,
 // that the reader has not started a lesson.
 
-const SHELL = ({ heading, body, ctaHref, ctaLabel, unsubUrl }) => `<!DOCTYPE html>
+const SHELL = ({ heading, body, ctaHref, ctaLabel, footerHref, unsubUrl }) => `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${heading}</title></head>
 <body style="margin:0;padding:0;background:${BRAND.paper};font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
@@ -101,7 +102,7 @@ const SHELL = ({ heading, body, ctaHref, ctaLabel, unsubUrl }) => `<!DOCTYPE htm
         <tr>
           <td style="padding:20px 32px;border-top:1px solid ${BRAND.rule};text-align:center;">
             <p style="margin:0;font-size:12px;color:${BRAND.graphite};line-height:1.6;">
-              DeutschMeister · <a href="${BASE_URL}" style="color:${BRAND.graphite};">deutsch-meister.de</a><br>
+              DeutschMeister · <a href="${footerHref}" style="color:${BRAND.graphite};">deutsch-meister.de</a><br>
               <a href="${unsubUrl}" style="color:${BRAND.graphite};">Unsubscribe from these emails</a>
             </p>
           </td>
@@ -134,6 +135,26 @@ export const TEMPLATES = {
       P('Paste a sentence from anywhere — a song, a meme, a letter from the Amt. Three seconds later it makes sense.'),
   },
 };
+
+// Every link into the site carries the lifecycle UTM tags, so a click reaches
+// dm_attribution as source "email" instead of untracked or a webmail host
+// (docs/tracking-links.md, "Our own email"). The campaign is the kind with
+// hyphens (activation_d1 -> activation-d1); utm_content names the link. The
+// CTA keeps its trailing slash before the query (test 5 in
+// tests/lifecycle.test.mjs). The unsubscribe link is never tagged. Exported
+// for tests/lifecycle-links.test.mjs.
+export function renderHtml(kind, userId) {
+  const tpl = TEMPLATES[kind];
+  const tags = { medium: 'lifecycle', campaign: kind.replaceAll('_', '-') };
+  return SHELL({
+    heading: tpl.subject,
+    body: tpl.body,
+    ctaHref: tagEmailLink(tpl.ctaHref, { ...tags, content: 'cta' }),
+    ctaLabel: tpl.ctaLabel,
+    footerHref: tagEmailLink(`${BASE_URL}/`, { ...tags, content: 'footer' }),
+    unsubUrl: unsubscribeUrl(userId),
+  });
+}
 
 // ─── selection ───────────────────────────────────────────────────────────────
 
@@ -267,13 +288,7 @@ async function sendKind(resendKey, kind, { dry, canary }) {
       to: [r.email],
       reply_to: 'zaid@deutsch-meister.de',
       subject: tpl.subject,
-      html: SHELL({
-        heading: tpl.subject,
-        body: tpl.body,
-        ctaHref: tpl.ctaHref,
-        ctaLabel: tpl.ctaLabel,
-        unsubUrl: unsubscribeUrl(r.id),
-      }),
+      html: renderHtml(kind, r.id),
     }));
 
     try {
