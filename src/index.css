@@ -93,6 +93,15 @@
   @apply outline-none ring-[3px] ring-siegel ring-offset-2 ring-offset-paper;
 }
 
+/* …except on a night ground, where siegel teal is ~3.4:1. There the ring takes
+   the line's yellow on a nacht offset (12.8:1) — the twin of the Astro rule in
+   astro-site/src/styles/linie.css. Only the ring's colours change; same width,
+   same offset, so nothing moves. Grounds: the nav on a night route, the menu
+   sheet, BottomNav, the Footer and any screen marked data-ground="nacht". */
+[data-ground='nacht'] *:focus-visible {
+  @apply ring-linie ring-offset-nacht;
+}
+
 /* Selection colour — same reason. Was bg-amber-200 / text-amber-900. */
 ::selection {
   @apply bg-siegel-wash text-ink;

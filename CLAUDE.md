@@ -270,7 +270,11 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   direction, copy deck and the measurement plan (event map in `src/data/events.js`, experiments
   E1–E6). The homepage sells the level ladder as a transit line; the hero copy is data
   (`astro-site/src/data/homepage.js`, `ACTIVE_HERO`), so a sequential test is a one-line change.
-  The SPA Navbar/Footer/BottomNav restyle waits for Course v2 (PR #149) to merge.
+  The SPA chrome (Navbar, Footer, BottomNav) was ported to Die Linie on 2026-10-04 without waiting
+  for Course v2: same promoted doors as `Layout.astro`, night footer with the station line, a night
+  timetable menu and tab bar, labels in the body face (the app never loads Archivo). A route whose
+  first screen is night goes in `groundFor` (`src/lib/chrome.js`). PR #149 then needs one re-merge
+  in `Navbar.jsx`: its `freeCourseHref` swap now lands on the bar key and the menu key.
 
 - **The agent team (v2, 2026-09-29) is `docs/agents/TEAM.md`.** Twelve agents (11 areas plus a
   supervisor) follow `docs/agents/PROTOCOL.md`; their charter, rubric v2, daily snapshots and memory

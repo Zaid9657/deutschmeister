@@ -122,3 +122,63 @@ test('only the pages that preload the sign face use it; library pages never fetc
     if (usesSign) assert.match(src, /signFontPreloads/, `${file.replace(ROOT, '')} uses the sign face, so it must preload it`);
   }
 });
+
+// ── The SPA chrome (2026-10-04): Navbar, Footer and BottomNav speak Die Linie ──
+// Before this, the app's bar and footer kept the paper/teal look while every
+// Astro page had moved to the line, so crossing from /courses/ into /dashboard
+// changed the whole frame. These pins keep the two chromes one design.
+const chromeSrc = {
+  navbar: read('src/components/Navbar.jsx'),
+  footer: read('src/components/Footer.jsx'),
+  bottomNav: read('src/components/BottomNav.jsx'),
+};
+
+test('the SPA bar promotes the same two doors as the Astro bar', () => {
+  const layout = read('astro-site/src/layouts/Layout.astro');
+  const promotedIn = (src) => src.match(/const PROMOTED = (\[[^\]]*\]);/)?.[1];
+  assert.ok(promotedIn(layout), 'Layout.astro declares PROMOTED');
+  assert.equal(promotedIn(chromeSrc.navbar), promotedIn(layout), 'Navbar.jsx and Layout.astro promote different items');
+  assert.match(chromeSrc.navbar, /groundFor\(pathname\) === 'nacht'/, 'the bar must follow the route ground');
+});
+
+test('the SPA footer and phone menu draw the stations; footer and tab bar stand on night', () => {
+  assert.match(chromeSrc.footer, /className=\{`bg-nacht /, 'footer ground');
+  assert.match(chromeSrc.footer, /STATIONS\.map/, 'footer stations');
+  assert.match(chromeSrc.footer, /rounded-pill bg-linie/, 'the line under the stations');
+  assert.match(chromeSrc.navbar, /bg-nacht px-4[\s\S]*?STATIONS\.map/, 'the phone menu opens on the stations, on night');
+  assert.match(chromeSrc.navbar, /user \? 'pb-\[calc\(5\.5rem\+env\(safe-area-inset-bottom\)\)\]'/, 'signed in, the sheet must scroll clear of BottomNav');
+  assert.match(chromeSrc.bottomNav, /bg-nacht\/95/, 'tab bar ground');
+  assert.match(chromeSrc.bottomNav, /active \? 'text-linie'/, 'the current tab is the lit stop');
+});
+
+test('the app chrome never sets the sign face (the app does not load Archivo)', () => {
+  for (const [name, src] of Object.entries(chromeSrc)) {
+    assert.doesNotMatch(src, /\bfont-sign\b|\bsign-(display|head|label|code)\b/, `${name} uses the sign face`);
+  }
+});
+
+test('focus stays visible on night grounds in the app', () => {
+  const css = read('src/index.css');
+  assert.match(css, /\[data-ground='nacht'\] \*:focus-visible \{\s*@apply ring-linie ring-offset-nacht;/);
+  for (const [name, src] of Object.entries(chromeSrc)) {
+    if (/bg-nacht/.test(src)) assert.match(src, /data-ground="nacht"|data-ground=\{night/, `${name} draws night without marking the ground`);
+  }
+});
+
+test('groundFor: night only where the first screen is night', async () => {
+  const { groundFor } = await import('../src/lib/chrome.js');
+  assert.equal(groundFor('/subscription/success'), 'nacht');
+  assert.equal(groundFor('/subscription/success/'), 'nacht');
+  for (const p of ['/', '/dashboard', '/subscription', '/course/a1.1', '', undefined]) assert.equal(groundFor(p), 'paper', String(p));
+  assert.match(read('src/pages/SubscriptionSuccessPage.jsx'), /min-h-screen bg-nacht/, 'the night route must open on a night screen');
+});
+
+test('a Button is made a pill by its shape, never by an appended class', () => {
+  // rounded-clay and rounded-pill are both single-property utilities; the one
+  // emitted later in the CSS wins whatever the className order. Pill is emitted
+  // after clay today, so an appended class works only by luck of ordering.
+  assert.match(read('src/components/ui/Button.jsx'), /BASE\.replace\('rounded-clay', SHAPES\[shape\]/);
+  const offenders = walk('src').filter((f) => f.endsWith('.jsx'))
+    .filter((f) => /<Button\b[^>]*className="[^"]*\brounded-pill\b/.test(read(f)));
+  assert.deepEqual(offenders, []);
+});
