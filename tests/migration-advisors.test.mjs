@@ -249,15 +249,41 @@ const PRIV_TABLE = /^(GRANT|REVOKE)\s+(GRANT\s+OPTION\s+FOR\s+)?([\s\S]+?)\s+ON\
 
 /** Dynamic SQL in a DO block that the replay could not follow. */
 const DO_FORBIDDEN = [
-  [/\bCREATE\s+(?:OR\s+REPLACE\s+)?(?:(?:GLOBAL|LOCAL)\s+)?(?:(?:TEMP|TEMPORARY|UNLOGGED)\s+)?(?:RECURSIVE\s+)?(?:MATERIALIZED\s+)?(?:TABLE|VIEW|FUNCTION|PROCEDURE)\b/i, 'creates a table, view or function'],
+  [/\bCREATE\s+(?:OR\s+REPLACE\s+)?(?:(?:GLOBAL|LOCAL)\s+)?(?!(?:TEMP|TEMPORARY)\b)(?:UNLOGGED\s+)?(?:RECURSIVE\s+)?(?:MATERIALIZED\s+)?(?:TABLE|VIEW|FUNCTION|PROCEDURE)\b/i, 'creates a table, view or function'],
   [/\bSECURITY\s+DEFINER\b/i, 'sets SECURITY DEFINER'],
   [/\bDISABLE\s+ROW\s+LEVEL\s+SECURITY\b/i, 'disables RLS'],
   [/\bsecurity_invoker\b/i, 'changes security_invoker'],
   [/\b(?:SET|RESET)\s+search_path\b|\bRESET\s+ALL\b/i, 'changes a search_path'],
-  [/\bGRANT\b[^;]*?\bTO\b[^;]*?\b(?:anon|authenticated|PUBLIC)\b/i, 'grants to a client role'],
+  // The role list right after TO; a %-placeholder there is a role the replay cannot read.
+  [/\bGRANT\b[^;]*?\bTO\s+(?:"?\w+"?\s*,\s*)*(?:"?(?:anon|authenticated|PUBLIC)"?\b|%)/i, 'grants to a client role'],
 ];
 
 const stripLineComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/--[^\n]*/g, ' ');
+
+/**
+ * A DO body with every '…' literal blanked except those an EXECUTE in the same
+ * statement runs (or formats). A RAISE message or a reloptions check that only
+ * names a rule is not dynamic SQL (review of 49c0f639, finding 2).
+ */
+function blankInertLiterals(text) {
+  let out = '';
+  let sinceSemicolon = '';
+  for (let i = 0; i < text.length; i += 1) {
+    const ch = text[i];
+    if (ch === "'") {
+      let j = i + 1;
+      while (j < text.length && !(text[j] === "'" && text[j + 1] !== "'")) j += text[j] === "'" ? 2 : 1;
+      const literal = text.slice(i, j + 1);
+      out += /\bEXECUTE\b/i.test(sinceSemicolon) ? literal : "''";
+      i = j;
+      continue;
+    }
+    if (ch === ';') sinceSemicolon = '';
+    else sinceSemicolon += ch;
+    out += ch;
+  }
+  return out;
+}
 
 /**
  * Replay every file in order. Returns the end state plus everything that broke
@@ -298,7 +324,7 @@ export function replay(files) {
 
       if (/^DO\b/i.test(code)) {
         doBlocks += 1;
-        const text = stripLineComments(st.body);
+        const text = blankInertLiterals(stripLineComments(st.body));
         for (const [re, what] of DO_FORBIDDEN) {
           if (re.test(text)) immediate.push(`${file}: a DO block ${what}; write it as a plain statement this guard can read`);
         }
@@ -611,6 +637,9 @@ test('a DO block may not hide what the replay would judge', () => {
     "EXECUTE format('GRANT SELECT ON public.%I TO anon', t);",
     "EXECUTE 'ALTER VIEW public.v SET (security_invoker = false)';",
     "EXECUTE 'ALTER FUNCTION public.f() RESET search_path';",
+    "EXECUTE format('GRANT SELECT ON public.t TO %I', r);",
+    "EXECUTE format('GRANT EXECUTE ON FUNCTION %s TO service_role, \"anon\"', fn);",
+    "IF true THEN EXECUTE 'CREATE TABLE public.y (id int)'; END IF;",
   ]) {
     assert.equal(one(doBlock(bad)).length, 1, bad);
   }
@@ -622,6 +651,13 @@ test('a DO block may not hide what the replay would judge', () => {
     "EXECUTE format('CREATE POLICY %I ON public.%I FOR SELECT TO anon USING (true)', p, t);",
     "IF NOT (SELECT relrowsecurity FROM pg_class WHERE oid = 'public.t'::regclass) THEN RAISE EXCEPTION 'row level security is off'; END IF;",
     '-- CREATE TABLE in a comment is not SQL',
+    // Read-only guards in the style of the agent_heartbeats/agent_incidents files (review of 49c0f639).
+    "IF NOT (SELECT coalesce(reloptions,'{}') @> ARRAY['security_invoker=true'] FROM pg_class WHERE oid='public.v'::regclass) THEN RAISE EXCEPTION 'v is not security_invoker'; END IF;",
+    "RAISE EXCEPTION 'f: a SECURITY DEFINER function is still executable by anon';",
+    "RAISE EXCEPTION 'g3: missing SET search_path';",
+    "RAISE EXCEPTION 'apply the CREATE TABLE file first';",
+    'CREATE TEMP TABLE _ids ON COMMIT DROP AS SELECT 1 AS id;',
+    "EXECUTE format('GRANT EXECUTE ON FUNCTION %s TO service_role', 'public.weekly_truth_metrics()');",
   ]) {
     assert.deepEqual(one(doBlock(ok)), [], ok);
   }
@@ -647,13 +683,12 @@ test('the replay sees the real migrations (coverage floor)', () => {
   assert.ok(view && view.invoker && !view.materialized, 'lifecycle_customer_state is a security_invoker view');
   assert.deepEqual([...view.select], [], 'lifecycle_customer_state is service-role only');
 
+  // A floor, not a list: a new definer function is judged by violations(), not by
+  // editing this test (review of 49c0f639, finding 1).
   const definers = [...fns].filter(([, f]) => f.created && f.definer).map(([k]) => k).sort();
-  assert.deepEqual(definers, [
-    'public.course_reminder_candidates',
-    'public.handle_new_user',
-    'public.notify_welcome_email',
-    'public.weekly_truth_metrics',
-  ], 'the SECURITY DEFINER functions migrations/ creates');
+  for (const k of ['public.course_reminder_candidates', 'public.handle_new_user', 'public.notify_welcome_email', 'public.weekly_truth_metrics']) {
+    assert.ok(definers.includes(k), `the replay sees the SECURITY DEFINER function ${k}`);
+  }
   for (const k of definers) assert.deepEqual([...fns.get(k).exec], [], `${k} is closed to clients`);
   assert.equal(fns.get('public.protect_profile_privileged_columns')?.definer, false, 'the privileged-column trigger stays SECURITY INVOKER');
 });
