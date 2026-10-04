@@ -18,8 +18,14 @@
 
 export const EMAIL_LABEL = /^[a-z0-9.-]{1,60}$/;
 
-/** `href` (a site URL) with the four email tags appended. */
+/**
+ * `href` (a site URL) with the four email tags set. Built with URL so the tags
+ * land before a #fragment, an existing utm_ key is replaced rather than
+ * repeated, and a label is percent-encoded if it ever strays from EMAIL_LABEL.
+ */
 export function tagEmailLink(href, { medium, campaign, content }) {
-  const sep = href.includes('?') ? '&' : '?';
-  return `${href}${sep}utm_source=email&utm_medium=${medium}&utm_campaign=${campaign}&utm_content=${content}`;
+  const url = new URL(href);
+  const tags = { utm_source: 'email', utm_medium: medium, utm_campaign: campaign, utm_content: content };
+  for (const [key, value] of Object.entries(tags)) url.searchParams.set(key, value);
+  return url.href;
 }

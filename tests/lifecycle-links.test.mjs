@@ -120,10 +120,20 @@ test('labels follow the naming rule and are fixed strings, so a mail renders the
     }
   }
   // The helper appends with "&" when the link already has a query.
+  const tags = { medium: 'lifecycle', campaign: 'x', content: 'y' };
   assert.equal(
-    tagEmailLink(`${SITE}/analyze/?s=Hallo`, { medium: 'lifecycle', campaign: 'x', content: 'y' }),
+    tagEmailLink(`${SITE}/analyze/?s=Hallo`, tags),
     `${SITE}/analyze/?s=Hallo&utm_source=email&utm_medium=lifecycle&utm_campaign=x&utm_content=y`,
   );
+  // A fragment stays last, so the tags still reach the page (review of c7bcea03).
+  assert.equal(
+    tagEmailLink(`${SITE}/pricing/#plans`, tags),
+    `${SITE}/pricing/?utm_source=email&utm_medium=lifecycle&utm_campaign=x&utm_content=y#plans`,
+  );
+  // A link that already carries a utm_ key gets the mail's value once, not twice.
+  const retagged = new URL(tagEmailLink(`${SITE}/?utm_source=old&utm_content=old`, tags));
+  assert.deepEqual(retagged.searchParams.getAll('utm_source'), ['email']);
+  assert.deepEqual(retagged.searchParams.getAll('utm_content'), ['y']);
 });
 
 test('the classifier reads the tags back without losing a label', () => {
