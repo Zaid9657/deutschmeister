@@ -7,9 +7,10 @@
 // the swap can never move the page). Figures are never typed here — the
 // template fills them from pricing.js / marketing.js / offers.js.
 //
-// Why "to B1": of the 70 signups in the 30 days to 2026-10-03 who named an
-// exam goal, 41 named B1 (docs/redesign-2026-10/baseline.md). B1 is where most
-// visitors are going; the line shows them the stop they are at now.
+// Why "to B2" (owner, 2026-10-04: "why does it say till B1"): the line runs
+// A1.1 → B2.2, so the hero names its last stop. It said "to B1" first because
+// 41 of 70 signups who named an exam goal named B1 (docs/redesign-2026-10/
+// baseline.md); the fit chooser still sends B1-bound visitors to their stop.
 
 export const HERO_VARIANTS = {
   // Outcome + mechanism: the destination most visitors named, and the line.
@@ -18,7 +19,7 @@ export const HERO_VARIANTS = {
     eyebrow: 'Deutsch, in Bewegung · A1.1 → B2.2',
     lines: [
       [{ t: 'From ' }, { t: 'Guten Tag', de: true, mark: true }],
-      [{ t: 'to B1, one stop' }],
+      [{ t: 'to B2, one stop' }],
       [{ t: 'at a time.' }],
     ],
     // `{proMonths}` is filled from pricing.js COURSE_PRO_MONTHS.

@@ -22,7 +22,7 @@
 
 | Route | H1 | Subline (figures filled at build) | Why |
 |---|---|---|---|
-| **route** (live) | **From *Guten Tag* / to B1, one stop / at a time.** | "Eight levels, laid out like a train line. The first stop is free, with no account. When you're ready for the next, buy that level once and keep it — with 3 months of AI speaking and writing practice on board." | Names the destination most visitors gave (41 of 70 named B1) and the mechanism in one line. |
+| **route** (live) | **From *Guten Tag* / to B2, one stop / at a time.** (was "to B1" until 2026-10-04; the owner asked for the whole line) | "Eight levels, laid out like a train line. The first stop is free, with no account. When you're ready for the next, buy that level once and keep it — with 3 months of AI speaking and writing practice on board." | Names the destination most visitors gave (41 of 70 named B1) and the mechanism in one line. |
 | mechanism | German, / one stop / at a time. | "A course line from your first Guten Tag to B2. Ride the first stop free, with no account. Every next stop is one payment — yours to keep, with 3 months of AI speaking and writing practice on board." | The shortest form of the idea. Loses the destination. |
 | guess | Stop guessing / what to learn / next. | "Eight levels on one line, each a guided plan with a final test. Start at the first stop free, or buy the stop you're at — once, and it's yours, with 3 months of AI practice on board." | Anti-pain framing. Strongest for people who have already bounced off apps. |
 
