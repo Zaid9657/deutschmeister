@@ -172,7 +172,7 @@ const jsonLd = {
             offiziellen Wortliste.
           </p>
 
-          <div class="mt-5 overflow-x-auto rounded-clay border border-rule">
+          <div class="mt-5 overflow-x-auto rounded-clay border border-rule" tabindex="0" role="region" aria-label="Lehrplan">
             <table class="w-full min-w-[720px] border-collapse text-left text-[0.8125rem]">
               <thead>
                 <tr class="border-b border-rule bg-paper-sunk font-data text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-graphite">
@@ -220,7 +220,7 @@ const jsonLd = {
 
           <!-- Lektion anatomy strip -->
           <h3 class="mt-8 sign-label text-[1.125rem] text-ink">So läuft eine Lektion ab</h3>
-          <div class="mt-3 overflow-x-auto">
+          <div class="mt-3 overflow-x-auto" tabindex="0" role="region" aria-label="So läuft eine Lektion ab">
             <ol class="flex min-w-max gap-2">
               {LEKTION_ANATOMY.map((step) => (
                 <li class="flex w-32 flex-none flex-col rounded-clay border border-rule bg-white p-3">
