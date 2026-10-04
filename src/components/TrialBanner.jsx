@@ -5,6 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { safeGet, safeSet } from '../utils/safeStorage';
 import Button from './ui/Button.jsx';
+import { FREE_LEVEL_LABEL } from '../data/marketing.js';
 
 const DISMISS_KEY = 'dm_trial_banner_dismissed';
 
@@ -54,7 +55,11 @@ const TrialBanner = () => {
   } else if (daysRemaining <= 3) {
     urgency = 'urgent';
     icon = <AlertTriangle className="w-4 h-4 flex-shrink-0" aria-hidden="true" />;
-    message = `Only ${daysRemaining} ${daysRemaining === 1 ? 'day' : 'days'} left! Don't lose access to all features.`;
+    // The end of the trial closes the other levels, not the account: the free
+    // level stays open (src/config/freeTier.js), as SpeakingLimitOffer says.
+    // Until 2026-10-04 this line read "Don't lose access to all features".
+    // tests/trial-end-claims.test.mjs.
+    message = `Only ${daysRemaining} ${daysRemaining === 1 ? 'day' : 'days'} left in your trial. After that, your ${FREE_LEVEL_LABEL} lessons stay free.`;
     bandClass = 'bg-accent-aprikose-wash text-accent-aprikose-ink border-b border-accent-aprikose/40';
     dismissClass = 'text-accent-aprikose-ink hover:bg-accent-aprikose/20';
   } else {
