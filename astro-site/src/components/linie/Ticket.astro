@@ -1,0 +1,88 @@
+---
+// The flagship: what one ticket carries, line by line, each line naming the
+// obstacle it removes (offers.js ticketLines). One ticket per buyable level,
+// switched by real radios (CSS :has — works without JS). Every figure derives;
+// no valuations, no "most popular", no clock.
+import { STATIONS, TICKET_STATIONS, ticketLines, proAloneLine } from '../../data/offers.js';
+import { COURSE_PRO_MONTHS } from '../../data/pricing.js';
+import { levelCoursesWithVariants } from '../../lib/courseVariants.js';
+
+interface Props { surface?: string; defaultLevel?: string; headingLevel?: 2 | 3 }
+const { surface = 'ticket', defaultLevel = 'a1.2', headingLevel = 2 } = Astro.props;
+const variants = Object.fromEntries(levelCoursesWithVariants().map((c) => [c.key, c.variantId]));
+const H = headingLevel === 3 ? 'h3' : 'h2';
+---
+
+<div class="tickets" data-track-view={surface}>
+  <div role="radiogroup" aria-label="Choose a ticket" class="flex flex-wrap gap-2">
+    {TICKET_STATIONS.map((st) => (
+      <label class="dm-choice flex min-h-11 items-center gap-2 rounded-pill border border-rule bg-white px-4 py-2">
+        <input type="radio" name={`ticket-${surface}`} value={st.level} checked={st.level === defaultLevel} class="h-4 w-4 accent-ink" data-track="course_selected" data-track-level={st.level} data-track-surface={surface} />
+        <span class="sign-code text-[1.0625rem]">{st.code}</span>
+        <span class="font-data text-[0.75rem] text-graphite">{st.priceLabel}</span>
+      </label>
+    ))}
+  </div>
+
+  {TICKET_STATIONS.map((st) => (
+    <div class="ticket-panel mt-6" data-level={st.level}>
+      <article class="dm-ticket-tilt grid overflow-hidden rounded-[1.5rem] border border-ink bg-white shadow-ticket md:grid-cols-[15rem_1fr]" aria-labelledby={`ticket-${surface}-${st.level}`}>
+        <!-- The stub: what it is and what it costs. -->
+        <div class="relative flex flex-col justify-between gap-6 bg-linie p-6 text-linie-ink md:border-r-[3px] md:border-dashed md:border-linie-ink/30">
+          <div>
+            <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em]">Einzelfahrschein · one ticket</p>
+            <H id={`ticket-${surface}-${st.level}`} class="sign-display mt-3 text-[3.5rem] leading-none">{st.code}</H>
+            <p class="sign-label mt-1 text-[1rem]">{st.name}</p>
+            <!-- Where this ticket sits on the line. -->
+            <p class="mt-6 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em]">Stop {st.index + 1} of {STATIONS.length}</p>
+            <ol class="mt-2 flex items-center" aria-hidden="true">
+              {STATIONS.map((x) => (
+                <li class="relative flex flex-1 justify-center">
+                  {x.index > 0 && <span class:list={['absolute right-1/2 top-1/2 h-1 w-full -translate-y-1/2', x.status === 'building' ? 'bg-linie-ink/25' : 'bg-linie-ink']}></span>}
+                  <span class:list={['relative block rounded-full border-[3px]', x.level === st.level ? 'h-4 w-4 border-linie-ink bg-white' : x.status === 'building' ? 'h-2.5 w-2.5 border-linie-ink/30 bg-linie' : 'h-2.5 w-2.5 border-linie-ink bg-linie']}></span>
+                </li>
+              ))}
+            </ol>
+          </div>
+          <div>
+            <p class="sign-code text-[2.25rem] leading-none">{st.priceLabel}</p>
+            <p class="mt-1 text-[0.875rem] font-semibold">Paid once · yours to keep</p>
+            <p class="mt-1 text-[0.8125rem]">Includes {COURSE_PRO_MONTHS} months of Pro</p>
+          </div>
+        </div>
+        <!-- The body: what the ticket carries. -->
+        <div class="p-6 sm:p-8">
+          <ul class="space-y-5">
+            {ticketLines(st.level).map((line) => (
+              <li class="grid grid-cols-[1.75rem_1fr] gap-3">
+                <span class="mt-0.5 flex h-7 w-7 items-center justify-center rounded-full bg-ink text-linie" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7.5 5.5 10.5 11.5 3.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                </span>
+                <div>
+                  <p class="sign-label text-[1.0625rem] text-ink">{line.title}</p>
+                  <p class="mt-1 text-[0.9375rem] leading-relaxed text-graphite">{line.body}</p>
+                  <p class="mt-1 font-data text-[0.75rem] text-graphite">No more {line.removes}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <div class="mt-7 flex flex-wrap items-center gap-3 border-t border-rule pt-6">
+            {variants[st.productKey] ? (
+              <div data-course-door={st.level} data-course-code={st.code} data-course-open-class="dm-key dm-key-ink">
+                <button type="button" class="dm-key dm-key-ink" data-course-variant={variants[st.productKey]} data-course-key={st.productKey} data-course-price={st.price} data-track-surface={surface}>
+                  Buy {st.code} · {st.priceLabel}
+                </button>
+              </div>
+            ) : (
+              <a href={st.coursePage} class="dm-key dm-key-ink">See {st.code}</a>
+            )}
+            <a href={st.coursePage} class="dm-link text-[0.9375rem]">Full contents of {st.code}</a>
+          </div>
+          <p class="mt-4 text-[0.8125rem] text-graphite">
+            {proAloneLine()} <a href="/pricing/#pro" class="dm-link">Compare with Pro</a>
+          </p>
+        </div>
+      </article>
+    </div>
+  ))}
+</div>

@@ -1,0 +1,59 @@
+---
+// What happens after you pay — the ride, step by step. Real structure only:
+// the checkout and the webhook (minutes, not days), the 28-day guided plan,
+// the AI practice and the final test, then the next stop. Figures derive.
+import { COURSE_PRO_MONTHS } from '../../data/pricing.js';
+import { PRO_SPEAKING_SESSIONS_PER_MONTH, PRO_WRITING_EVALUATIONS_PER_MONTH } from '../../data/marketing.js';
+import { GUIDED_PLANS } from '../../data/courseContents.js';
+import { minutesPerDay } from '../../data/offers.js';
+
+const plan = GUIDED_PLANS['a1.2'];
+const STEPS = [
+  {
+    when: 'Checkout',
+    title: 'Pay once at a secure checkout',
+    body: 'Lemon Squeezy handles the payment and your invoice. Use the email address you sign in with, so the ticket finds your account.',
+  },
+  {
+    when: 'Seconds later',
+    title: 'Your level opens in your account',
+    body: `The level and your ${COURSE_PRO_MONTHS} months of Pro are added as soon as the payment is confirmed. Nothing to redeem, no code to type.`,
+  },
+  {
+    when: 'Day 1',
+    title: 'Open the plan and start step one',
+    body: `Each of the ${plan.days} plan days is about ${minutesPerDay(plan)} minutes, in short steps: grammar with exercises, a reading or listening text, words to review. Your place is saved after every answer.`,
+  },
+  {
+    when: 'Every week',
+    title: 'Speak and write, and get corrected',
+    body: `Practise conversations with the AI partner (${PRO_SPEAKING_SESSIONS_PER_MONTH} sessions a month) and get your writing marked (${PRO_WRITING_EVALUATIONS_PER_MONTH} a month) while Pro is on board.`,
+  },
+  {
+    when: `Day ${plan.days}`,
+    title: 'Take the final test, then ride on',
+    body: 'The final test in the exam’s format shows what is solid and what to revisit. Then the next stop is one ticket away.',
+  },
+];
+---
+
+<section class="dm-defer border-y border-rule bg-paper-sunk" aria-labelledby="ride-h">
+  <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
+    <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">After you buy</p>
+    <h2 id="ride-h" class="sign-head mt-3 text-[clamp(2.125rem,5.2vw,3.5rem)]">
+      <span class="block">The ride, from ticket</span>
+      <span class="block">to the next stop.</span>
+    </h2>
+    <ol class="relative mt-12 grid gap-8 lg:grid-cols-5 lg:gap-5">
+      <span class="absolute bottom-2 left-[0.9375rem] top-2 w-1.5 rounded-pill bg-ink lg:bottom-auto lg:left-2 lg:right-2 lg:top-[0.9375rem] lg:h-1.5 lg:w-auto" aria-hidden="true"></span>
+      {STEPS.map((step, i) => (
+        <li class="relative pl-12 lg:pl-0 lg:pt-12">
+          <span class="absolute left-0 top-0 flex h-9 w-9 items-center justify-center rounded-full border-[5px] border-ink bg-linie font-data text-[0.8125rem] font-bold text-linie-ink" aria-hidden="true">{i + 1}</span>
+          <p class="font-data text-[0.75rem] font-bold uppercase tracking-[0.13em] text-graphite">{step.when}</p>
+          <h3 class="sign-label mt-1.5 text-[1.1875rem] leading-snug text-ink">{step.title}</h3>
+          <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">{step.body}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

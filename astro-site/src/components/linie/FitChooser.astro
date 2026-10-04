@@ -1,0 +1,105 @@
+---
+// "Where do you get on?" — five answers, one recommended stop. Real radios;
+// the recommendation follows the checked answer with CSS :has() alone
+// (linie.css), so it works with JavaScript off. It never blocks buying: the
+// full line is the next section, and a visitor can skip this entirely.
+import { FIT_CHOICES, EXAM_ROUTE, FREE_COURSE_HREF, stationFor, planLine, stationStatusLine } from '../../data/offers.js';
+import { levelCoursesWithVariants } from '../../lib/courseVariants.js';
+
+const variants = Object.fromEntries(levelCoursesWithVariants().map((c) => [c.key, c.variantId]));
+const results = FIT_CHOICES.map((c) => ({ ...c, station: c.level ? stationFor(c.level) : null }));
+---
+
+<section id="fit" class="dm-defer border-b border-rule bg-paper" aria-labelledby="fit-h">
+  <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
+    <div class="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+      <div>
+        <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Where do you get on?</p>
+        <h2 id="fit-h" class="sign-head mt-3 text-[clamp(2.125rem,5.2vw,3.5rem)]">
+          <span class="block">Pick what you</span>
+          <span class="block">can already do.</span>
+        </h2>
+        <p class="mt-5 max-w-md text-[1.0625rem] leading-relaxed text-graphite">
+          Your answer points to the stop that starts where you are. No test needed — and if you’d rather be sure, the
+          <a href="/level-test/" class="dm-link">20-minute level test</a> places you on the line.
+        </p>
+      </div>
+
+      <div class="fit" role="group" aria-label="Find your stop">
+        <fieldset>
+          <legend class="sr-only">What can you already do in German?</legend>
+          <div class="grid gap-3 sm:grid-cols-2">
+            {results.map((c) => (
+              <label
+                class="dm-choice flex items-start gap-3 rounded-clay border border-rule bg-white p-4 sm:p-5"
+                data-track="course_selected"
+                data-track-choice={c.id}
+                data-track-level={c.level || undefined}
+                data-track-surface="fit"
+              >
+                <input type="radio" name="fit" value={c.id} class="mt-1 h-5 w-5 shrink-0 accent-ink" />
+                <span>
+                  <span class="sign-label block text-[1.0625rem] leading-snug text-ink">{c.label}</span>
+                  <span class="mt-1 block text-[0.875rem] leading-relaxed text-graphite">{c.detail}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <div class="fit-results mt-6" aria-live="polite">
+          <div class="fit-default rounded-clay border border-dashed border-rule px-5 py-6 text-[0.9375rem] text-graphite">
+            Choose an answer and your stop appears here — or <a href="#line" class="dm-link">see every stop on the line</a>.
+          </div>
+          {results.map((c) => (
+            <div class="fit-result" data-fit={c.id}>
+              {c.station ? (
+                <div class="flex flex-col gap-5 rounded-clay border border-ink bg-white p-5 shadow-raise sm:flex-row sm:items-center sm:p-6">
+                  <div class="flex h-20 w-20 shrink-0 flex-col items-center justify-center rounded-full border-[6px] border-ink bg-linie text-linie-ink">
+                    <span class="sign-code text-[1.375rem] leading-none">{c.station.code}</span>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">Your stop · {stationStatusLine(c.station)}</p>
+                    <p class="sign-head mt-1 text-[1.5rem]">{c.station.code} — {c.station.name}</p>
+                    <p class="mt-1 text-[0.9375rem] leading-relaxed text-graphite">{c.station.outcome}</p>
+                    {planLine(c.station) && <p class="mt-1 text-[0.875rem] leading-relaxed text-graphite">{planLine(c.station)}</p>}
+                    <div class="mt-4 flex flex-wrap items-center gap-3">
+                      {c.station.status === 'free' && (
+                        <a href={FREE_COURSE_HREF} class="dm-key dm-key-ink" data-track="course_selected" data-track-level="a1.1" data-track-surface="fit_result">Start A1.1 free</a>
+                      )}
+                      {c.station.status === 'ticket' && variants[c.station.productKey] && (
+                        <button
+                          type="button"
+                          class="dm-key dm-key-ink"
+                          data-course-variant={variants[c.station.productKey]}
+                          data-course-key={c.station.productKey}
+                          data-course-price={c.station.price}
+                          data-track-surface="fit_result"
+                        >
+                          Buy {c.station.code} · {c.station.priceLabel}
+                        </button>
+                      )}
+                      <a href={c.station.coursePage} class="dm-link text-[0.9375rem]">What’s inside {c.station.code}</a>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div class="rounded-clay border border-ink bg-nacht p-5 text-nacht-text sm:p-6" data-ground="nacht">
+                  <p class="sign-head text-[1.5rem]">{EXAM_ROUTE.title}</p>
+                  <p class="mt-2 text-[0.9375rem] leading-relaxed text-nacht-muted">{EXAM_ROUTE.body}</p>
+                  <ul class="mt-4 flex flex-wrap gap-3">
+                    {EXAM_ROUTE.links.map((l, i) => (
+                      <li>
+                        <a href={l.href} class:list={['dm-key', i === 0 ? 'dm-key-linie' : 'dm-key-ghost-nacht']} hreflang={l.lang || undefined}>{l.label}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

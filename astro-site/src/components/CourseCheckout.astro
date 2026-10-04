@@ -7,6 +7,8 @@
 // pricing page's behaviour, so the two entry points cannot drift.
 ---
 <script>
+  import { track } from '../lib/track.js';
+
   function currentUser() {
     try {
       for (let i = 0; i < localStorage.length; i++) {
@@ -26,13 +28,19 @@
     return 'https://deutsch-meister.lemonsqueezy.com/checkout/buy/' + variant + '?' + params.toString();
   }
 
-  function open(variant, intentKey) {
+  function open(variant, intentKey, amount, surface) {
     const u = currentUser();
+    track('checkout_intent', { product: intentKey, surface, signed_in: Boolean(u) });
     if (!u) {
       try { localStorage.setItem('dm_buy_intent', intentKey); } catch (e) { /* private mode */ }
       window.location.href = 'https://deutsch-meister.de/signup';
       return;
     }
+    // The SPA's checkout_completed observer (src/lib/funnelTracking.js) consumes
+    // this same sessionStorage flag on /subscription/success, so a checkout that
+    // starts on a static page is still seen finishing in the app.
+    try { sessionStorage.setItem('dm_checkout_pending', JSON.stringify({ plan: intentKey, amount: amount || null })); } catch (e) { /* private mode */ }
+    track('checkout_opened', { product: intentKey, surface, amount: amount || undefined });
     const url = checkoutUrl(variant, u.email, u.id);
     if (window.LemonSqueezy && window.LemonSqueezy.Url && window.LemonSqueezy.Url.Open) {
       window.LemonSqueezy.Url.Open(url);
@@ -62,7 +70,12 @@
     }
     document.querySelectorAll('[data-course-variant]').forEach((btn) => {
       btn.addEventListener('click', () =>
-        open(btn.getAttribute('data-course-variant'), btn.getAttribute('data-course-key')),
+        open(
+          btn.getAttribute('data-course-variant'),
+          btn.getAttribute('data-course-key'),
+          Number(btn.getAttribute('data-course-price')) || null,
+          btn.getAttribute('data-track-surface') || undefined,
+        ),
       );
     });
 

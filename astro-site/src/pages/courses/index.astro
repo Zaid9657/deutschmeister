@@ -6,8 +6,9 @@
 // grammar counts from the content cache, the rest from data/courseContents.js.
 import Layout from '../../layouts/Layout.astro';
 import '../../styles/global.css';
-import Aurora from '../../components/Aurora.astro';
 import CourseCheckout from '../../components/CourseCheckout.astro';
+import LineSection from '../../components/linie/LineSection.astro';
+import { fontPreloads, signFontPreloads } from '../../data/design-tokens.js';
 import { ORGANIZATION } from '../../lib/siteMeta.js';
 import { getTopicsForLevel } from '../../lib/grammar.js';
 import { levelCoursesWithVariants } from '../../lib/courseVariants.js';
@@ -17,9 +18,10 @@ import { COURSE_CONTENTS, LEVEL_OUTCOME_EN, levelToSlug } from '../../data/cours
 import { curriculumFor } from '../../data/curricula/index.js';
 import { hasSyllabus } from '../../lib/syllabus.js';
 
-const BTN = 'inline-flex items-center justify-center gap-2 rounded-clay text-sm font-bold transition-all duration-100 ease-snap select-none';
-const BTN_PRIMARY = `${BTN} bg-siegel px-5 py-3 text-white shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none`;
-const BTN_SECONDARY = `${BTN} border border-rule bg-white px-5 py-3 text-ink shadow-raise hover:border-siegel hover:text-siegel-deep active:translate-y-1 active:shadow-none`;
+// v4 "Die Linie" keys (styles/linie.css).
+const BTN_PRIMARY = 'dm-key dm-key-ink';
+const BTN_SECONDARY = 'dm-key dm-key-ghost';
+const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes('nunito'))];
 
 const courses = levelCoursesWithVariants();
 const byKey = Object.fromEntries(courses.map((c) => [c.key, c]));
@@ -46,28 +48,29 @@ const jsonLd = {
 };
 ---
 
-<Layout title={title} description={description} canonical="https://deutsch-meister.de/courses/" jsonLd={jsonLd} lang="en">
+<Layout title={title} description={description} canonical="https://deutsch-meister.de/courses/" jsonLd={jsonLd} lang="en" tone="nacht" preloads={preloads}>
   <div class="overflow-x-clip bg-paper text-ink">
-    <section class="relative" aria-labelledby="hero-h">
-      <Aurora />
-      <div class="relative mx-auto max-w-3xl px-5 pb-10 pt-14 sm:pt-20">
-        <header>
-          <p class="hero-line font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel" style="--d:0ms">Courses</p>
-          <h1 id="hero-h" class="hero-line mt-3 font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.025em] sm:text-[3rem]" style="--d:80ms">
-            One German level. One payment. Yours for good.
-          </h1>
-          <p class="hero-line mt-5 text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]" style="--d:220ms">
-            Each sub-level is a complete course: the grammar with typed practice, reading texts with
-            checks, listening with dictation, the vocabulary list, a final test in the exam format and
-            a 28-day plan. {FREE_LEVEL_LABEL} is free. Not sure where you stand? The
-            <a href="/level-test/" class="font-bold text-siegel transition-colors hover:text-siegel-deep">level test is free</a> and takes ten minutes.
-          </p>
-        </header>
+    <section class="bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="hero-h">
+      <div class="mx-auto max-w-7xl px-4 pt-12 sm:px-6 sm:pt-16 lg:px-8">
+        <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-linie">Courses · A1.1 → B2.2</p>
+        <h1 id="hero-h" class="sign-display mt-4 text-[clamp(2.5rem,9vw,5rem)]">
+          <span class="block whitespace-nowrap">One level.</span>
+          <span class="block whitespace-nowrap">One payment.</span>
+          <span class="block whitespace-nowrap text-linie">Yours for good.</span>
+        </h1>
+        <p class="mt-6 max-w-2xl text-[1.0625rem] leading-relaxed text-nacht-muted sm:text-[1.1875rem]">
+          Each sub-level is a complete course: grammar with typed practice, reading texts with checks, listening with
+          dictation, the vocabulary list, a final test in the exam format and a 28-day plan. {FREE_LEVEL_LABEL} is free.
+          Not sure where you stand? The <a href="/level-test/" class="dm-link-nacht font-semibold">level test is free</a> and takes about 20 minutes.
+        </p>
       </div>
     </section>
 
-    <div class="mx-auto max-w-3xl px-5 pb-20">
-      <ol class="grid gap-5 sm:grid-cols-2">
+    <LineSection />
+
+    <section class="mx-auto max-w-5xl px-5 pb-20 pt-16" aria-labelledby="inside-h">
+      <h2 id="inside-h" class="sign-head text-[clamp(1.875rem,4.4vw,2.75rem)]">What each stop contains</h2>
+      <ol class="mt-8 grid gap-5 sm:grid-cols-2">
         {rungs.map((r, i) => (
           <li class="reveal" style={`--rd:${i * 70}ms`}>
             <article class={`relative flex h-full flex-col rounded-clay border border-rule bg-white p-6 shadow-raise ${r.course?.comingSoon ? 'opacity-85' : ''}`}>
@@ -77,10 +80,10 @@ const jsonLd = {
               {!r.course && (
                 <span class="absolute -top-3 left-6 inline-flex items-center rounded-pill bg-siegel-wash px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Free</span>
               )}
-              <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{r.code}</p>
-              <h2 class="mt-2 font-display text-[1.375rem] font-semibold leading-snug text-ink">
+              <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Stop {i + 1} · {r.code}</p>
+              <h3 class="mt-2 sign-head text-[1.5rem] text-ink">
                 <a href={`/courses/${r.slug}/`} class="transition-colors hover:text-siegel-deep">German {r.code} Course</a>
-              </h2>
+              </h3>
               <p class="mt-2 flex-1 text-[0.9375rem] leading-relaxed text-graphite">{LEVEL_OUTCOME_EN[r.level]}</p>
               <ul class="mt-4 grid grid-cols-2 gap-x-4 gap-y-1 font-data text-[0.75rem] text-graphite">
                 <li>{r.topics} grammar topics</li>
@@ -89,7 +92,7 @@ const jsonLd = {
                 <li>{r.content.words} words</li>
               </ul>
               <div class="mt-5 flex items-end justify-between gap-3">
-                <p class="font-display text-[1.5rem] font-semibold leading-none tracking-[-0.02em] text-ink">
+                <p class="sign-code text-[1.75rem] leading-none text-ink">
                   {r.course ? eur(r.course.price) : 'Free'}
                   {r.course && <span class="ml-1 font-body text-xs font-normal tracking-normal text-graphite">one time</span>}
                 </p>
@@ -101,9 +104,9 @@ const jsonLd = {
               <div data-course-door={r.level} data-course-code={r.code} data-course-open-class={`${BTN_PRIMARY} mt-4 w-full`}>
               {r.course ? (
                 r.course.variantId ? (
-                  <button type="button" class={`${BTN_PRIMARY} mt-4 w-full`} data-course-variant={r.course.variantId} data-course-key={r.course.key}>Buy {r.code}</button>
+                  <button type="button" class={`${BTN_PRIMARY} mt-4 w-full`} data-course-variant={r.course.variantId} data-course-key={r.course.key} data-course-price={r.course.price} data-track-surface="courses_hub">Buy {r.code}</button>
                 ) : (
-                  <span class={`${BTN_SECONDARY} mt-4 w-full cursor-not-allowed opacity-60`} aria-disabled="true">Coming soon</span>
+                  <span class={`${BTN_SECONDARY} mt-4 w-full cursor-not-allowed opacity-60`} aria-disabled="true">{r.course.comingSoon ? 'Im Bau · coming soon' : 'Checkout not open here'}</span>
                 )
               ) : (
                 <a href={`/course/${r.level}`} class={`${BTN_SECONDARY} mt-4 w-full`}>Start the free course</a>
@@ -114,12 +117,12 @@ const jsonLd = {
         ))}
       </ol>
 
-      <p class="reveal mt-10 border-t border-rule pt-6 text-[0.9375rem] leading-relaxed text-graphite" style="--rd:200ms">
+      <p class="mt-10 border-t border-rule pt-6 text-[0.9375rem] leading-relaxed text-graphite" style="--rd:200ms">
         Every paid course includes {COURSE_PRO_MONTHS} months of Pro (AI speaking coach, writing feedback,
         Sentence X-Ray). Prefer everything at once? <a href="/pricing/" class="font-bold text-siegel transition-colors hover:text-siegel-deep">Pro opens all eight levels</a> for a monthly fee.
         Preparing for a specific exam? <a href="/pruefung/" class="font-bold text-siegel transition-colors hover:text-siegel-deep">See the exam tracks</a>.
       </p>
-    </div>
+    </section>
   </div>
   <CourseCheckout />
 </Layout>

@@ -40,6 +40,11 @@ const VARIANTS = {
   secondary: `border border-rule bg-white text-ink shadow-raise hover:border-siegel hover:text-siegel-deep ${PRESS}`,
   ghost: 'text-graphite hover:bg-siegel-wash hover:text-siegel-deep',
   celebrate: `bg-accent-himbeer text-ink shadow-raise-himbeer hover:brightness-105 ${PRESS}`,
+  // v4 "Die Linie" (design-tokens.js, the section at the end): the commerce
+  // screens' keys. `ink` is the action on paper with the line's yellow edge;
+  // `linie` is the action on a nacht ground (rule 2, amended).
+  ink: `bg-ink text-white shadow-raise-linie hover:bg-nacht-raised ${PRESS}`,
+  linie: `bg-linie text-linie-ink shadow-raise-linie hover:bg-linie-deep ${PRESS}`,
 };
 
 const SIZES = {

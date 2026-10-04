@@ -11,6 +11,7 @@ import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { DOORS } from '../astro-site/src/lib/onsiteLinks.js';
+import { FREE_COURSE_HREF } from '../src/data/offers.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const PAGES = join(root, 'astro-site', 'src', 'pages');
@@ -42,7 +43,10 @@ const isTrialSignup = ({ href }) => /\/signup\/?$/.test(href);
 // exactly as written, and an expression this suite cannot read fails the rules
 // below — a "start free" anchor must keep a destination it can resolve.
 const ONSITE_CALL = /^onsiteHref\('(\w+)'/;
+// The one named constant a door may use: offers.js FREE_COURSE_HREF.
+const NAMED = { FREE_COURSE_HREF: '/course/a1.1' };
 function destination(href) {
+  if (Object.prototype.hasOwnProperty.call(NAMED, href.trim())) return NAMED[href.trim()];
   const call = href.trim().match(ONSITE_CALL);
   if (call) {
     assert.ok(DOORS[call[1]], `onsiteHref: unknown door "${call[1]}"`);
@@ -64,7 +68,10 @@ function startFreeAnchors(source) {
   return found;
 }
 
-const pages = walk(PAGES);
+// The v4 homepage renders most of its doors from components (2026-10-04); they
+// are held to the same rule as the pages.
+const COMPONENTS = join(root, 'astro-site', 'src', 'components', 'linie');
+const pages = [...walk(PAGES), ...walk(COMPONENTS)];
 const byPage = new Map(pages.map((p) => [relative(root, p), startFreeAnchors(readFileSync(p, 'utf8'))]));
 
 test('every "start free" CTA on the Astro site opens the course, never the grammar index', () => {
@@ -78,6 +85,10 @@ test('every "start free" CTA on the Astro site opens the course, never the gramm
       assert.doesNotMatch(href, /\/$/, `${page}: "${text}" — SPA route, no trailing slash (${href})`);
     }
   }
+});
+
+test('the named free-course door is the course', () => {
+  assert.equal(FREE_COURSE_HREF, NAMED.FREE_COURSE_HREF);
 });
 
 test('the known front-door CTAs still exist (the scan is not vacuous)', () => {

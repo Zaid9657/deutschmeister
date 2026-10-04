@@ -1,0 +1,253 @@
+---
+// "Der erste Halt" — the homepage's signature interaction: three real items
+// from A1.1 Lektion 1, graded by the course's own checker
+// (src/lib/lesson/check.js, loaded on the first answer — never copied, so the
+// demo can never grade differently from the course). Each right answer moves
+// the train one segment; the third ends at the station and opens the ticket to
+// the free course.
+//
+// The items come from the built pool at BUILD time (only these three reach the
+// page). tests/first-stop.test.mjs pins the ids, checks every verdict the demo
+// promises against the real checker, and fails when the A1.1 course is
+// replaced (Course v2, COURSE_V2_LIVE) so the demo is re-pointed in the same PR.
+//
+// No JavaScript: every item renders with its answer behind a <details>, so the
+// sample is still readable and checkable by eye. Reduced motion: the train
+// jumps instead of gliding.
+import pool from '../../../../src/data/lessonPools/a11.extra.json';
+import explanationsEn from '../../../../src/data/lessonPools/a11.explanationsEn.json';
+import { FREE_COURSE_HREF } from '../../data/offers.js';
+import { DEMO_ITEM_IDS, DEMO_ITEM_LABELS as labels } from '../../data/firstStop.js';
+
+const byId = Object.fromEntries(pool.items.map((it) => [it.id, it]));
+const bold = (s) => String(s || '').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+const items = DEMO_ITEM_IDS.map((id) => {
+  const it = byId[id];
+  const [before, after] = String(it.questionDe).split('___');
+  return {
+    id,
+    type: it.type,
+    questionDe: it.questionDe,
+    before,
+    after: after ?? '',
+    questionEn: it.questionEn,
+    answer: it.answer,
+    // What the page needs to grade with the real checker: the accepted
+    // answers and the item fields checkOptionsFor() reads. Nothing else.
+    grade: { accepted: it.accepted, answer: it.answer, topic: it.topic, type: it.type, caseSensitive: it.caseSensitive === true },
+    explanation: bold(explanationsEn[id]),
+    prefill: it.type === 'error_correction' ? (String(it.questionDe).match(/„(.+?)“/) || [])[1] || '' : '',
+  };
+});
+---
+
+<article
+  class="firststop relative rounded-[1.75rem] border border-nacht-rule bg-nacht-raised p-5 text-nacht-text shadow-overlay sm:p-7"
+  aria-labelledby="fs-h"
+  data-ground="nacht"
+  data-track-view="demo"
+  data-first-stop
+>
+  <header>
+    <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-linie">Halt 1 · A1.1 · Lektion 1</p>
+    <h2 id="fs-h" class="sign-head mt-2 text-[1.75rem] sm:text-[2rem]">Try the first stop</h2>
+    <p class="mt-1.5 text-[0.9375rem] leading-relaxed text-nacht-muted">
+      Three real exercises from Lektion 1, <span lang="de">An der Rezeption</span> — checked exactly the way the course checks them.
+    </p>
+  </header>
+
+  <!-- The track: three segments, three stations, one train. -->
+  <div class="relative mt-6 h-10" aria-hidden="true">
+    <div class="absolute inset-x-[0.6875rem] top-1/2 h-2 -translate-y-1/2 rounded-pill bg-nacht-sunk"></div>
+    <div class="fs-progress dm-train absolute inset-x-[0.6875rem] top-1/2 -mt-1 h-2 origin-left rounded-pill bg-linie" style="transform:scaleX(0)"></div>
+    <ol class="absolute inset-0 flex items-center justify-between">
+      {[0, 1, 2, 3].map((n) => (
+        <li class="dm-station-dot h-[1.375rem] w-[1.375rem] rounded-full border-4 border-nacht-rule bg-nacht" data-fs-dot={n}></li>
+      ))}
+    </ol>
+    <div class="dm-train fs-train absolute left-0 top-1/2 -mt-[0.875rem] flex h-7 w-11 items-center justify-center rounded-pill bg-linie text-linie-ink shadow-raise-linie">
+      <svg width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true"><rect x="1" y="1" width="18" height="9" rx="3" fill="currentColor" opacity=".9" /><circle cx="5.5" cy="12" r="1.6" fill="currentColor" /><circle cx="14.5" cy="12" r="1.6" fill="currentColor" /></svg>
+    </div>
+  </div>
+  <p class="sr-only" role="status" aria-live="polite" data-fs-status></p>
+
+  <ol class="mt-5 space-y-6" data-fs-items>
+    {items.map((it, i) => (
+      <li class:list={['fs-item', i === 0 && 'is-current']} data-fs-item={i} data-grade={JSON.stringify(it.grade)}>
+        <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-nacht-muted">
+          {i + 1} / {items.length} · {labels[i]}
+        </p>
+        <p class="sign-label mt-2 text-[1.375rem] leading-snug sm:text-[1.5rem]" lang="de">
+          {it.type === 'error_correction' ? it.questionDe : (<>{it.before}<span class="mx-1 inline-block w-[4.5rem] border-b-[3px] border-linie align-baseline" aria-hidden="true">&nbsp;</span><span class="sr-only">(blank)</span>{it.after}</>)}
+        </p>
+        <p class="mt-1 text-[0.875rem] text-nacht-muted">{it.questionEn}</p>
+
+        <form class="fs-form mt-4 flex gap-2" data-fs-form>
+          <label class="sr-only" for={`fs-input-${i}`}>Your answer</label>
+          <input
+            id={`fs-input-${i}`}
+            class="fs-input min-w-0 flex-1 rounded-xl border-2 border-nacht-rule bg-nacht px-4 py-3 text-[1.0625rem] text-nacht-text placeholder:text-nacht-muted focus:border-linie"
+            type="text"
+            lang="de"
+            autocomplete="off"
+            autocapitalize="none"
+            autocorrect="off"
+            spellcheck="false"
+            enterkeyhint="go"
+            value={it.prefill}
+            placeholder={it.type === 'error_correction' ? '' : 'Type your answer'}
+          />
+          <button type="submit" class="dm-key dm-key-linie shrink-0">Check</button>
+        </form>
+        <p class="fs-feedback mt-3 rounded-xl px-4 py-3 text-[0.9375rem] leading-relaxed" data-fs-feedback></p>
+
+        <details class="fs-answer mt-3 text-[0.875rem] text-nacht-muted">
+          <summary class="inline-flex min-h-11 cursor-pointer items-center font-semibold text-nacht-text underline decoration-nacht-rule decoration-2 underline-offset-4">Show the answer</summary>
+          <p class="mt-1"><strong class="text-linie" lang="de">{it.answer}</strong> — <span set:html={it.explanation} /></p>
+        </details>
+      </li>
+    ))}
+  </ol>
+
+  <div class="fs-nav mt-5 flex items-center justify-between gap-3" hidden data-fs-nav>
+    <button type="button" class="dm-key dm-key-ghost-nacht" data-fs-next>Next exercise →</button>
+  </div>
+
+  <!-- Arrival: the ticket to the rest of the course. -->
+  <div class="fs-done mt-6 rounded-[1.25rem] bg-linie p-5 text-linie-ink" hidden data-fs-done>
+    <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em]">Halt 1 erreicht</p>
+    <p class="sign-head mt-1 text-[1.5rem]">That was Lektion 1, three answers in.</p>
+    <p class="mt-1.5 text-[0.9375rem] leading-relaxed">
+      The free A1.1 course continues from here: the dialogue at the reception, the words, the grammar, speaking and a short writing task.
+    </p>
+    <a href={FREE_COURSE_HREF} class="dm-key dm-key-ink mt-4" data-track="course_selected" data-track-level="a1.1" data-track-surface="demo_done">Start A1.1 free — no account</a>
+  </div>
+</article>
+
+<script>
+  import { track } from '../../lib/track.js';
+
+  const root = document.querySelector('[data-first-stop]');
+  if (root) {
+    const items = [...root.querySelectorAll('[data-fs-item]')];
+    const dots = [...root.querySelectorAll('[data-fs-dot]')];
+    const train = root.querySelector('.fs-train');
+    const progress = root.querySelector('.fs-progress');
+    const status = root.querySelector('[data-fs-status]');
+    const nav = root.querySelector('[data-fs-nav]');
+    const next = root.querySelector('[data-fs-next]');
+    const done = root.querySelector('[data-fs-done]');
+    const total = items.length;
+    let current = 0;
+    let reached = 0;
+    let checker = null; // src/lib/lesson/check.js, loaded on the first answer
+    let started = false;
+    let allRight = true;
+
+    const loadChecker = () => (checker ||= import('../../../../src/lib/lesson/check.js'));
+
+    // Move the train to station n (0..total). Signature tier: 800 ms in-out.
+    // Transform only: the train translates, the filled track scales.
+    const moveTo = (n) => {
+      const first = dots[0].getBoundingClientRect();
+      const last = dots[dots.length - 1].getBoundingClientRect();
+      const span = Math.max(0, last.left - first.left);
+      train.style.transform = `translateX(${(span * n) / total}px)`;
+      progress.style.transform = `scaleX(${n / total})`;
+      dots.forEach((dot, i) => {
+        const on = i <= n;
+        dot.classList.toggle('is-reached', on);
+        dot.classList.toggle('bg-linie', on);
+        dot.classList.toggle('border-linie', on);
+        dot.classList.toggle('bg-nacht', !on);
+        dot.classList.toggle('border-nacht-rule', !on);
+      });
+    };
+    moveTo(0);
+    window.addEventListener('resize', () => moveTo(reached), { passive: true });
+
+    const show = (i) => {
+      items.forEach((el, k) => el.classList.toggle('is-current', k === i));
+      nav.hidden = true;
+      const input = items[i].querySelector('input');
+      if (input && document.activeElement && root.contains(document.activeElement)) input.focus({ preventScroll: true });
+    };
+
+    const feedback = (el, kind, html) => {
+      const box = el.querySelector('[data-fs-feedback]');
+      box.className = 'fs-feedback mt-3 rounded-xl px-4 py-3 text-[0.9375rem] leading-relaxed ' + (
+        kind === 'correct' ? 'bg-linie text-linie-ink' : kind === 'typo' ? 'bg-nacht text-nacht-text ring-2 ring-linie' : 'bg-nacht text-nacht-text ring-2 ring-nacht-rule'
+      );
+      box.innerHTML = html;
+      status.textContent = box.textContent;
+    };
+
+    const finish = () => {
+      nav.hidden = true;
+      done.hidden = false;
+      done.classList.add('is-shown');
+      track('demo_completed', { surface: 'first_stop', result: allRight ? 'correct' : 'wrong' });
+    };
+
+    items.forEach((el, i) => {
+      const form = el.querySelector('[data-fs-form]');
+      const input = el.querySelector('input');
+      const grade = JSON.parse(el.getAttribute('data-grade'));
+      const explanation = el.querySelector('.fs-answer p span')?.innerHTML || '';
+      let attempts = 0;
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const value = input.value.trim();
+        if (!value) {
+          input.focus();
+          return;
+        }
+        if (!started) {
+          started = true;
+          track('demo_started', { surface: 'first_stop' });
+        }
+        attempts += 1;
+        let verdict = 'wrong';
+        try {
+          const { checkAnswer, checkOptionsFor } = await loadChecker();
+          verdict = checkAnswer(value, grade.accepted, checkOptionsFor(grade)).result;
+        } catch {
+          verdict = grade.accepted.includes(value) ? 'correct' : 'wrong';
+        }
+        input.classList.remove('is-correct', 'is-wrong');
+        void input.offsetWidth;
+        if (verdict === 'correct') {
+          input.classList.add('is-correct');
+          feedback(el, 'correct', `<strong>Richtig.</strong> ${explanation}`);
+          el.querySelector('.fs-answer')?.setAttribute('hidden', '');
+          reached = Math.max(reached, i + 1);
+          moveTo(reached);
+          if (i + 1 < total) {
+            nav.hidden = false;
+          } else {
+            finish();
+          }
+        } else if (verdict === 'typo' && attempts < 3) {
+          input.classList.add('is-wrong');
+          feedback(el, 'typo', grade.caseSensitive
+            ? '<strong>Almost.</strong> Look at the capital letters — here they are the point.'
+            : '<strong>Almost.</strong> One small slip — try once more.');
+        } else {
+          allRight = false;
+          input.classList.add('is-wrong');
+          feedback(el, 'wrong', `<strong>Not quite.</strong> The answer is <strong lang="de">${grade.answer}</strong>. ${explanation}`);
+          reached = Math.max(reached, i + 1);
+          moveTo(reached);
+          if (i + 1 < total) nav.hidden = false;
+          else finish();
+        }
+      });
+    });
+
+    next.addEventListener('click', () => {
+      current = Math.min(total - 1, current + 1);
+      show(current);
+      items[current].querySelector('input')?.focus({ preventScroll: true });
+    });
+  }
+</script>

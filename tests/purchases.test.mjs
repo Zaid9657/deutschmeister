@@ -123,7 +123,12 @@ test('a checkout interrupted by signup resumes, and a purchase lands on our succ
   // post-auth redirect consults it; /subscription opens it once.
   const pricing = read('astro-site/src/pages/pricing.astro');
   assert.ok(pricing.includes("localStorage.setItem('dm_buy_intent'"), 'pricing.astro must store the buy intent before redirecting to signup');
-  assert.ok(pricing.includes("'Checkout.Success'"), 'pricing.astro must route the overlay success to /subscription/success');
+  // Since v4 the level buttons and the overlay setup live in the shared
+  // checkout component the page renders (one handler per page, not two).
+  assert.ok(pricing.includes('<CourseCheckout />'), 'pricing.astro renders the shared checkout');
+  const checkout = read('astro-site/src/components/CourseCheckout.astro');
+  assert.ok(checkout.includes("localStorage.setItem('dm_buy_intent', intentKey)"), 'the shared checkout stores the intent before signup');
+  assert.ok(checkout.includes("'Checkout.Success'") && checkout.includes('/subscription/success'), 'the overlay success lands on /subscription/success');
   for (const file of ['src/pages/VerifyEmailPage.jsx', 'src/pages/LoginPage.jsx']) {
     assert.ok(read(file).includes('postAuthPath()'), `${file} must send authenticated users to the pending checkout`);
   }

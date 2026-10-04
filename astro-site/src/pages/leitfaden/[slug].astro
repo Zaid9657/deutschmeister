@@ -152,7 +152,7 @@ const CARD_INTERACTIVE =
               )}
 
               {block.type === 'table' && (
-                <div class="mt-6 overflow-x-auto">
+                <div class="mt-6 overflow-x-auto" tabindex="0" role="region" aria-label={block.caption || 'Tabelle'}>
                   <table class="w-full min-w-[32rem] border-collapse text-left">
                     <thead>
                       <tr class="border-b border-ink">

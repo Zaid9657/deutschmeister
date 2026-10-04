@@ -1,0 +1,99 @@
+---
+// The line — the offer, laid out as what it is: eight stations, four of them
+// open (A1.1 free, A1.2–A2.2 one-time tickets) and four "Im Bau". The live
+// stops get wide station boards hanging from the track; the stops under
+// construction share one board that routes B1/B2 visitors to what exists
+// today. Desktop: a horizontal track over an 8-column grid (live stops 2fr,
+// Im Bau 1fr). Phone: a vertical track down the left edge.
+//
+// Buy buttons render only when the level's checkout id is set
+// (lib/courseVariants.js) — otherwise the board links to the course page.
+import { STATIONS, EXAM_ROUTE, FREE_COURSE_HREF, planLine } from '../../data/offers.js';
+import { LEVEL_COUNT } from '../../data/marketing.js';
+import { levelCoursesWithVariants } from '../../lib/courseVariants.js';
+
+const variants = Object.fromEntries(levelCoursesWithVariants().map((c) => [c.key, c.variantId]));
+const live = STATIONS.filter((s) => s.status !== 'building');
+const building = STATIONS.filter((s) => s.status === 'building');
+---
+
+<section id="line" class="dm-defer relative overflow-hidden bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="line-h" data-track-view="line">
+  <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+    <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-linie">Die Linie · {LEVEL_COUNT} stations, A1.1 to B2.2</p>
+    <h2 id="line-h" class="sign-head mt-3 text-[clamp(2.25rem,5.6vw,4rem)]">
+      <span class="block">Every level is a stop.</span>
+      <span class="block text-linie">Buy the one you’re at.</span>
+    </h2>
+    <p class="mt-5 max-w-2xl text-[1.0625rem] leading-relaxed text-nacht-muted">
+      The first stop is free. Each next one is a single payment that stays yours, and every ticket carries the Pro tools for the first months of the ride.
+    </p>
+
+    <!-- Desktop: the track runs across the top of the station boards. -->
+    <div class="relative mt-14 hidden lg:block" aria-hidden="true">
+      <div class="grid grid-cols-[repeat(4,minmax(0,2fr))_repeat(4,minmax(0,1fr))] items-center">
+        {STATIONS.map((st) => (
+          <div class="relative flex h-10 items-center">
+            <span class:list={['absolute inset-x-0 top-1/2 h-2 -translate-y-1/2', st.status === 'building' ? 'border-t-[3px] border-dashed border-nacht-rule bg-transparent' : 'bg-linie', st.index === 0 && 'left-[1.1875rem] rounded-l-pill', st.index === STATIONS.length - 1 && 'right-1/2']}></span>
+            <span class:list={['dm-station-dot relative z-10 ml-0 block h-[2.375rem] w-[2.375rem] rounded-full border-[6px]', st.status === 'building' ? 'border-nacht-rule bg-nacht' : 'border-linie bg-nacht', st.status === 'free' && '!bg-linie']}></span>
+            {st.status === 'free' && <span class="dm-pulse absolute left-0 top-1/2 -mt-[1.1875rem] h-[2.375rem] w-[2.375rem] rounded-full border-2 border-linie"></span>}
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <ol class="relative mt-8 grid gap-0 lg:mt-6 lg:grid-cols-[repeat(4,minmax(0,2fr))_repeat(4,minmax(0,1fr))] lg:gap-0">
+      <!-- Phone: the track runs down the left edge. -->
+      <span class="absolute bottom-6 left-[1.1875rem] top-4 w-2 rounded-pill bg-linie lg:hidden" aria-hidden="true"></span>
+
+      {live.map((st) => (
+        <li class="relative pb-6 pl-14 lg:pb-0 lg:pl-0 lg:pr-4">
+          <span class:list={['absolute left-0 top-4 h-[2.375rem] w-[2.375rem] rounded-full border-[6px] border-linie lg:hidden', st.status === 'free' ? 'bg-linie' : 'bg-nacht']} aria-hidden="true"></span>
+          <article class="dm-lift flex h-full flex-col rounded-[1.25rem] border border-nacht-rule bg-nacht-raised p-5" aria-labelledby={`st-${st.level}`}>
+            <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-nacht-muted">Stop {st.index + 1} · {st.band}</p>
+            <h3 id={`st-${st.level}`} class="sign-code mt-1 text-[2.25rem] leading-none">{st.code}</h3>
+            <p class="sign-label mt-1 text-[0.9375rem] text-nacht-muted">{st.name}</p>
+            <p class="mt-3 flex-1 text-[0.9375rem] leading-relaxed">{st.outcome}</p>
+            {planLine(st) && <p class="mt-3 text-[0.8125rem] leading-relaxed text-nacht-muted">{planLine(st)}</p>}
+            <p class="mt-4 flex items-baseline gap-2 border-t border-nacht-rule pt-4">
+              <span class="sign-code text-[1.75rem] leading-none text-linie">{st.status === 'free' ? 'Free' : st.priceLabel}</span>
+              <span class="text-[0.8125rem] text-nacht-muted">{st.status === 'free' ? 'no account' : 'once · yours to keep'}</span>
+            </p>
+            <div class="mt-4 flex flex-col gap-2">
+              {st.status === 'free' ? (
+                <a href={FREE_COURSE_HREF} class="dm-key dm-key-linie w-full" data-track="course_selected" data-track-level={st.level} data-track-surface="line">Start A1.1 free</a>
+              ) : variants[st.productKey] ? (
+                <div data-course-door={st.level} data-course-code={st.code} data-course-open-class="dm-key dm-key-linie w-full">
+                  <button type="button" class="dm-key dm-key-linie w-full" data-course-variant={variants[st.productKey]} data-course-key={st.productKey} data-course-price={st.price} data-track-surface="line">
+                    Buy {st.code} · {st.priceLabel}
+                  </button>
+                </div>
+              ) : null}
+              <a href={st.coursePage} class="dm-link-nacht py-1 text-center text-[0.875rem] font-semibold">What’s inside {st.code}</a>
+            </div>
+          </article>
+        </li>
+      ))}
+
+      <!-- Im Bau: B1.1–B2.2 share one board under their four stations. -->
+      <li class="relative pl-14 lg:col-span-4 lg:pl-0">
+        <span class="absolute left-0 top-4 h-[2.375rem] w-[2.375rem] rounded-full border-[6px] border-dashed border-nacht-rule bg-nacht lg:hidden" aria-hidden="true"></span>
+        <article class="flex h-full flex-col rounded-[1.25rem] border border-dashed border-nacht-rule p-5" aria-labelledby="st-building">
+          <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-nacht-muted">Stops 5–8 · Im Bau</p>
+          <h3 id="st-building" class="sign-code mt-1 text-[1.75rem] leading-none">{building.map((s) => s.code).join(' · ')}</h3>
+          <p class="sign-label mt-3 text-[1.0625rem]">{EXAM_ROUTE.title}</p>
+          <p class="mt-2 flex-1 text-[0.9375rem] leading-relaxed text-nacht-muted">{EXAM_ROUTE.body}</p>
+          <ul class="mt-4 flex flex-wrap gap-2">
+            {EXAM_ROUTE.links.map((l, i) => (
+              <li><a href={l.href} class:list={['dm-key !text-[0.875rem]', i === 0 ? 'dm-key-linie' : 'dm-key-ghost-nacht']} hreflang={l.lang || undefined}>{l.label}</a></li>
+            ))}
+          </ul>
+          <ul class="mt-5 grid grid-cols-4 gap-2 border-t border-nacht-rule pt-4">
+            {building.map((st) => (
+              <li><a href={st.coursePage} class="block text-center font-data text-[0.75rem] text-nacht-muted underline decoration-nacht-rule underline-offset-4">{st.code}</a></li>
+            ))}
+          </ul>
+        </article>
+      </li>
+    </ol>
+  </div>
+</section>
