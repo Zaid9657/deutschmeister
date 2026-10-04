@@ -32,7 +32,7 @@ import { ORGANIZATION_FULL } from '../data/organization.js';
 import Layout from '../layouts/Layout.astro';
 import '../styles/global.css';
 import CourseCheckout from '../components/CourseCheckout.astro';
-import HeroLine from '../components/linie/HeroLine.astro';
+import LineBoard from '../components/linie/LineBoard.astro';
 import FirstStop from '../components/linie/FirstStop.astro';
 import FitChooser from '../components/linie/FitChooser.astro';
 import LineSection from '../components/linie/LineSection.astro';
@@ -42,7 +42,6 @@ import Proof from '../components/linie/Proof.astro';
 import OfferFaq from '../components/linie/OfferFaq.astro';
 import { fontPreloads, signFontPreloads } from '../data/design-tokens.js';
 import { COURSE_PRO_MONTHS, COURSE_FROM_PRICE_EUR, eur } from '../data/pricing.js';
-import { LEVEL_COUNT } from '../data/marketing.js';
 import { OFFER_FAQ, STATIONS } from '../data/offers.js';
 import { HERO_VARIANTS, ACTIVE_HERO } from '../data/homepage.js';
 
@@ -81,10 +80,9 @@ const firstTicket = STATIONS.find((s) => s.status === 'ticket');
 
     <!-- ═══ HERO: the line, and the first stop you can ride right now ═══ -->
     <section class="relative isolate overflow-hidden bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="hero-h" data-hero-variant={hero.id}>
-      <HeroLine />
-      <div class="relative mx-auto grid max-w-7xl items-start gap-12 px-4 pb-16 pt-10 sm:px-6 sm:pt-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14 lg:px-8 lg:pb-[19rem] lg:pt-16">
+      <div class="relative mx-auto grid max-w-7xl items-start gap-12 px-4 pb-12 pt-10 sm:px-6 sm:pt-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14 lg:px-8 lg:pt-16">
         <div class="min-w-0">
-          <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-linie">{hero.eyebrow}</p>
+          <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">{hero.eyebrow}</p>
           <h1 id="hero-h" class="sign-display mt-5 text-[clamp(2.75rem,11.4vw,5.75rem)]">
             {hero.lines.map((line) => (
               <span class="block whitespace-nowrap">
@@ -106,19 +104,11 @@ const firstTicket = STATIONS.find((s) => s.status === 'ticket');
             A1.1 needs no account.
             Not sure where you are? <a href="#fit" class="dm-link-nacht font-semibold">Find your stop</a> or take the <a href="/level-test/" class="dm-link-nacht font-semibold">20-minute level test</a>.
           </p>
-          <!-- Phone: the line, flat, under the copy (the 3D plane is desktop-only). -->
-          <ol class="mt-10 flex items-center justify-between lg:hidden" aria-label={`The line: ${LEVEL_COUNT} levels`}>
-            {STATIONS.map((st, i) => (
-              <li class="relative flex flex-1 flex-col items-center">
-                {i > 0 && <span class:list={['absolute right-1/2 top-[0.6875rem] h-1.5 w-full', st.status === 'building' ? 'bg-nacht-rule' : 'bg-linie']} aria-hidden="true"></span>}
-                <span class:list={['relative z-10 block h-[1.375rem] w-[1.375rem] rounded-full border-4', st.status === 'building' ? 'border-nacht-rule bg-nacht' : 'border-linie', st.status === 'free' ? 'bg-linie' : 'bg-nacht']} aria-hidden="true"></span>
-                <span class="sign-code mt-1.5 text-[0.75rem] text-nacht-text">{st.code}</span>
-              </li>
-            ))}
-          </ol>
         </div>
         <FirstStop />
       </div>
+      <!-- The line board: the HyperFrames loop (videos/hero-line*), poster-first. -->
+      <LineBoard />
     </section>
 
     <FitChooser />

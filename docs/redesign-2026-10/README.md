@@ -101,6 +101,28 @@ The SPA's bar, footer and phone tab bar now speak the same design as the Astro p
 
 Verified with a Playwright run against the built app, Supabase stubbed: 320, 360, 390, 1024 and 1280 px, signed out, signed in and on the night route. Horizontal overflow was 0 everywhere, and the focus ring was visible on both grounds. Pinned by `tests/linie-design.test.mjs`.
 
+## v4: Türkis, the line board, station artwork (2026-10-04, owner feedback)
+
+The owner's verdict on v3: "I don't like the choosing of colors … why does it say till B1 … the graphics can be a lot better — use hyperframes to include motion graphics … we have higgsfield api". What changed:
+
+| Ask | Done |
+|---|---|
+| Colours | Three light palettes rendered on the real homepage (`screenshots/palette-compare.jpg`); the owner picked **A · Türkis**. Tokens moved, names kept (`nacht` = light türkis feature ground, `linie` = `siegel` = `#0A8276`). Small türkis labels use `siegel-deep` for AA. |
+| "till B1" | The hero now reads "From Guten Tag to B2, one stop at a time." (`astro-site/src/data/homepage.js`). |
+| Motion | **The line board**: a HyperFrames loop under the hero (`components/linie/LineBoard.astro`) — the line draws itself, a train rides A1.1 → B2.2 and each stop shows a sentence of that level. Two compositions: `videos/hero-line` (1600×560) and `videos/hero-line-mobile` (1080×1350). Poster-first, plays only when on screen and when motion is allowed. |
+| Higgsfield | Station illustrations (Recraft V4.1 vector, palette-locked): 4 of 8 generated, the rest blocked by the account's daily limit — see `station-art.md`. Placed once all eight exist. |
+
+### Re-rendering the line board
+
+```bash
+cd videos/hero-line          # and again in videos/hero-line-mobile
+HYPERFRAMES_BROWSER_PATH=/opt/pw-browsers/chromium npx --yes hyperframes@0.8.122 check .
+HYPERFRAMES_BROWSER_PATH=/opt/pw-browsers/chromium npx --yes hyperframes@0.8.122 render . -q high -o ./renders/video.mp4
+videos/encode-web.sh        # → public/motion/: MP4 (H.264), VP9 WebM fallback, poster still
+```
+
+GSAP is vendored in each project (`assets/vendor/gsap.min.js`) because the agent proxy blocks the CDN; the fonts are the site's own woff2 files.
+
 ## Not verifiable from this environment
 
 - A real Lemon Squeezy payment, and the webhook granting access on live data (the functions-scope numeric variant ids). Owner decision 1 in `strategy.md` covers this.

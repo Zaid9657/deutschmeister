@@ -22,9 +22,9 @@ import { chromeFor } from '../lib/chrome.js';
 //     (five tabs), and a Pro/trial learner gets six.
 //
 // v3 "Die Linie": the bar stands on the night ground, like the footer it sits
-// under and the Astro menu sheet. The current tab is the lit stop: the line's
-// yellow, as label and as a bar along its top edge (12.8:1 on nacht; yellow is
-// never text on paper). The in-flow spacer takes the footer's ground on routes
+// under and the Astro menu sheet. The current tab is the lit stop: a türkis bar
+// along its top edge and the label in the deeper türkis (small text needs AA on
+// the tint: siegel-deep 5.7:1, where linie itself is 4.2:1). The in-flow spacer takes the footer's ground on routes
 // that render the footer, so no paper band shows under it on a phone.
 const buildTabs = ({ hasAccess, courseHome }) => {
   const course = { key: 'course', label: 'Kurs', href: courseHome, Icon: Route };
@@ -72,7 +72,7 @@ const BottomNav = () => {
         {tabs.map((tab) => {
           const active = pathname === tab.href || pathname.startsWith(`${tab.href.replace(/\/$/, '')}/`);
           const cls = `relative flex flex-col items-center gap-0.5 py-2.5 text-[0.6875rem] font-semibold transition-colors ${
-            active ? 'text-linie' : 'hover:text-nacht-text'
+            active ? 'text-siegel-deep' : 'hover:text-nacht-text'
           }`;
           const inner = (
             <>

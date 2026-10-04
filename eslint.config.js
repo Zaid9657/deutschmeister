@@ -13,6 +13,9 @@ export default [
       'astro-site/**', // separate package; lint it from its own config later
       'node_modules/**',
       'lighthouse-reports/**',
+      // HyperFrames motion projects (the hero line board): their own toolchain,
+      // vendored GSAP, compositions verified by `hyperframes lint/check`.
+      'videos/**',
     ],
   },
   js.configs.recommended,

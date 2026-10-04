@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Linie</title>
+    <!-- head is metadata only; everything the render needs lives inside <template> -->
+  </head>
+  <body>
+    <template>
+      <style>
+        /* Local fonts, aliased so the owner's files are what renders (shot-plan font_notes).
+           Paths are project-root-relative: compositions are served with the project root as base URL. */
+        @font-face {
+          font-family: "Archivo DM";
+          src: url("assets/fonts/archivo-v25-latin.woff2") format("woff2");
+          font-weight: 400 900;
+          font-stretch: 62% 100%;
+          font-style: normal;
+          font-display: block;
+        }
+        @font-face {
+          font-family: "Nunito Sans DM";
+          src: url("assets/fonts/nunito-sans-v19-latin.woff2") format("woff2");
+          font-weight: 300 700;
+          font-style: normal;
+          font-display: block;
+        }
+
+        /* Die Linie v4 "Türkis" palette: every colour is defined once, here. */
+        #linie-root {
+          --bg: #ffffff;
+          --line: #0a8276;
+          --line-deep: #0a7468;
+          --edge: #075a51;
+          --wash: #e3f6f3;
+          --pale: #bfeae3;
+          --rule: #bfe3db;
+          --ink: #10302c;
+          --muted: #3f5a55;
+          --sun: #fbbf24;
+          --bubble-shadow: 0 8px 24px rgba(16, 48, 44, 0.08);
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1350px;
+          overflow: hidden;
+          background: var(--bg);
+        }
+        #linie-root * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        #linie-root .layer {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 1080px;
+          height: 1350px;
+          overflow: visible;
+        }
+
+        /* track */
+        .bed { stroke: var(--rule); stroke-width: 3; fill: none; }
+        .solid { stroke: var(--line); stroke-width: 14; stroke-linecap: butt; fill: none; }
+        .solid-edge { stroke: var(--line-deep); stroke-width: 4; stroke-linecap: butt; fill: none; }
+        #dash-wrap { position: absolute; left: 213px; top: 675px; width: 14px; height: 505px; }
+        #dash-wrap svg { display: block; }
+        .dashed { stroke: var(--pale); stroke-width: 14; stroke-dasharray: 22 16; stroke-linecap: butt; fill: none; }
+
+        /* stations */
+        .ring-back { fill: var(--bg); }
+        .ring { fill: var(--bg); stroke-width: 8; }
+        .ring-built { stroke: var(--line); }
+        /* 10 dashes round r=23 (C = 144.51): 8.870 dash / 5.581 gap, offset half a dash so gaps sit at 12 and 6 o'clock */
+        .ring-bau { stroke: var(--pale); } /* solid: dashed read as a cog; the dashed track says Im Bau */
+        .disc-built { fill: var(--line); }
+        .disc-bau { fill: var(--pale); }
+
+        /* labels: right edge at x = 170, centred on each station */
+        .lab { position: absolute; right: 910px; height: 48px; }
+        .code {
+          display: block;
+          font-family: "Archivo DM", sans-serif;
+          font-weight: 800;
+          font-stretch: 80%;
+          font-variant-numeric: tabular-nums;
+          letter-spacing: -0.01em;
+          font-size: 40px;
+          line-height: 48px;
+          white-space: nowrap;
+        }
+        .code-built { color: var(--ink); }
+        .code-bau { color: var(--muted); }
+        #free-wrap { position: absolute; right: 910px; top: 200px; }
+        #free {
+          display: block;
+          font-family: "Archivo DM", sans-serif;
+          font-weight: 800;
+          font-stretch: 80%;
+          letter-spacing: -0.01em;
+          font-size: 40px;
+          line-height: 42px;
+          padding: 6px 16px;
+          border-radius: 999px;
+          background: var(--sun);
+          color: var(--ink);
+          white-space: nowrap;
+        }
+
+        /* train: #train carries y down the line, #train-body carries opacity */
+        #train { position: absolute; left: 257px; top: 112px; width: 58px; height: 116px; }
+        #train-body {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 58px;
+          height: 116px;
+          opacity: 0; /* hidden until the tram pulls in at 1.2 s */
+          border-radius: 29px;
+          background: var(--line);
+          box-shadow: 0 4px 0 var(--edge);
+        }
+        .win { position: absolute; left: 13px; width: 32px; height: 22px; border-radius: 7px; background: var(--bg); }
+        .win-top { top: 21px; }
+        .win-bot { top: 73px; }
+
+        /* speech cards */
+        .bslot {
+          position: absolute;
+          left: 343px;
+          width: 697px; /* body may run to x = 1040 */
+          height: 400px;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: center;
+        }
+        .bslot-top { justify-content: flex-start; }
+        .bslot-bottom { justify-content: flex-end; }
+        .bubble {
+          position: relative;
+          width: max-content;
+          background: var(--bg);
+          border: 2px solid var(--rule);
+          border-radius: 16px;
+          box-shadow: var(--bubble-shadow);
+          padding: 24px 30px;
+          transform-origin: -14px 50%; /* the tail tip */
+        }
+        .bubble-top { transform-origin: -14px 114px; }
+        .bubble-bottom { transform-origin: -14px calc(100% - 114px); }
+        .tail {
+          position: absolute;
+          left: -16px; /* tip at x = 329; the base overlaps the 2px border */
+          top: calc(50% - 11px);
+          width: 16px;
+          height: 22px;
+          overflow: visible;
+        }
+        .bubble-top .tail { top: 101px; }
+        .bubble-bottom .tail { top: auto; bottom: 101px; }
+        .tail-fill { fill: var(--bg); }
+        .tail-edge { fill: none; stroke: var(--rule); stroke-width: 2; stroke-linejoin: round; }
+        .chips { display: flex; gap: 12px; margin-bottom: 14px; }
+        .chip {
+          display: block;
+          font-family: "Archivo DM", sans-serif;
+          font-weight: 800;
+          font-stretch: 80%;
+          font-variant-numeric: tabular-nums;
+          letter-spacing: -0.01em;
+          font-size: 40px;
+          line-height: 44px;
+          padding: 8px 18px;
+          border-radius: 999px;
+          white-space: nowrap;
+        }
+        .chip-level { background: var(--wash); color: var(--line); border: 2px solid var(--wash); }
+        .chip-bau { background: var(--bg); color: var(--muted); border: 2px dashed var(--pale); }
+        .sentence {
+          font-family: "Nunito Sans DM", sans-serif;
+          font-weight: 700;
+          font-size: 52px;
+          line-height: 1.16;
+          letter-spacing: -0.005em;
+          color: var(--ink);
+        }
+        .ln { display: block; white-space: nowrap; }
+      </style>
+
+      <div id="linie-root" data-composition-id="linie" data-width="1080" data-height="1350">
+        <!-- 1 · hairline bed (static) + solid track with its shadow side -->
+        <svg id="bed" class="layer" width="1080" height="1350" viewBox="0 0 1080 1350">
+          <line class="bed" x1="220" y1="170" x2="220" y2="1180" />
+          <path id="solid" class="solid" d="M220 170 L220 675" />
+          <path id="solid-edge" class="solid-edge" d="M225 170 L225 675" />
+        </svg>
+
+        <!-- 2 · dashed "Im Bau" track, clipped as an HTML wrapper -->
+        <div id="dash-wrap">
+          <svg width="14" height="505" viewBox="0 0 14 505"><line class="dashed" x1="7" y1="0" x2="7" y2="505" /></svg>
+        </div>
+
+        <!-- 3 · station rings + lit discs (lit disc r=20, not 19: 1px under the ring stroke hides the AA seam; inner groups are centred on 0,0 so GSAP scales about the station) -->
+        <svg id="stations" class="layer" width="1080" height="1350" viewBox="0 0 1080 1350">
+          <g transform="translate(220 170)"><g id="st-0-out">
+            <g id="st-0-ring"><circle class="ring-back" r="27" /><circle class="ring ring-built" r="23" /></g>
+            <g id="st-0-disc"><circle class="disc-built" r="20" /></g>
+          </g></g>
+          <g transform="translate(220 314.29)"><g id="st-1-out">
+            <g id="st-1-ring"><circle class="ring-back" r="27" /><circle class="ring ring-built" r="23" /></g>
+            <g id="st-1-disc"><circle class="disc-built" r="20" /></g>
+          </g></g>
+          <g transform="translate(220 458.57)"><g id="st-2-out">
+            <g id="st-2-ring"><circle class="ring-back" r="27" /><circle class="ring ring-built" r="23" /></g>
+            <g id="st-2-disc"><circle class="disc-built" r="20" /></g>
+          </g></g>
+          <g transform="translate(220 602.86)"><g id="st-3-out">
+            <g id="st-3-ring"><circle class="ring-back" r="27" /><circle class="ring ring-built" r="23" /></g>
+            <g id="st-3-disc"><circle class="disc-built" r="20" /></g>
+          </g></g>
+          <g transform="translate(220 747.14)"><g id="st-4-out">
+            <g id="st-4-ring"><circle class="ring-back" r="27" /><circle class="ring ring-bau" r="23" /></g>
+            <g id="st-4-disc"><circle class="disc-bau" r="20" /></g>
+          </g></g>
+          <g transform="translate(220 891.43)"><g id="st-5-out">
+            <g id="st-5-ring"><circle class="ring-back" r="27" /><circle class="ring ring-bau" r="23" /></g>
+            <g id="st-5-disc"><circle class="disc-bau" r="20" /></g>
+          </g></g>
+          <g transform="translate(220 1035.71)"><g id="st-6-out">
+            <g id="st-6-ring"><circle class="ring-back" r="27" /><circle class="ring ring-bau" r="23" /></g>
+            <g id="st-6-disc"><circle class="disc-bau" r="20" /></g>
+          </g></g>
+          <g transform="translate(220 1180)"><g id="st-7-out">
+            <g id="st-7-ring"><circle class="ring-back" r="27" /><circle class="ring ring-bau" r="23" /></g>
+            <g id="st-7-disc"><circle class="disc-bau" r="20" /></g>
+          </g></g>
+        </svg>
+
+        <!-- 4 · station codes + the Free tag -->
+        <div class="lab" id="lab-0" style="top: 146px"><span class="code code-built" id="code-0">A1.1</span></div>
+        <div class="lab" id="lab-1" style="top: 290.29px"><span class="code code-built" id="code-1">A1.2</span></div>
+        <div class="lab" id="lab-2" style="top: 434.57px"><span class="code code-built" id="code-2">A2.1</span></div>
+        <div class="lab" id="lab-3" style="top: 578.86px"><span class="code code-built" id="code-3">A2.2</span></div>
+        <div class="lab" id="lab-4" style="top: 723.14px"><span class="code code-bau" id="code-4">B1.1</span></div>
+        <div class="lab" id="lab-5" style="top: 867.43px"><span class="code code-bau" id="code-5">B1.2</span></div>
+        <div class="lab" id="lab-6" style="top: 1011.71px"><span class="code code-bau" id="code-6">B2.1</span></div>
+        <div class="lab" id="lab-7" style="top: 1156px"><span class="code code-bau" id="code-7">B2.2</span></div>
+        <div id="free-wrap"><span id="free">Free</span></div>
+
+        <!-- 5 · the tram (enters above A1.1 and leaves below B2.2) -->
+        <div id="train" data-layout-allow-overflow="true">
+          <div id="train-body" data-layout-allow-overflow="true"><div class="win win-top"></div><div class="win win-bot"></div></div>
+        </div>
+
+        <!-- 6 · speech cards: one per stop, pre-laid-out at the clamped anchor (y 56 to 1294) -->
+        <div class="bslot bslot-top" id="bslot-0" style="top: 56px">
+          <div class="bubble bubble-top" id="bubble-0">
+            <svg class="tail" width="16" height="22" viewBox="0 0 16 22"><polygon class="tail-fill" points="16,0 1,11 16,22" /><polyline class="tail-edge" points="15,0 1,11 15,22" /></svg>
+            <div class="chips" id="chips-0"><span class="chip chip-level">A1.1</span></div>
+            <div class="sentence" id="sent-0"><span class="ln">Guten Tag!</span><span class="ln">Ich heiße Ana.</span></div>
+          </div>
+        </div>
+        <div class="bslot" id="bslot-1" style="top: 114.29px">
+          <div class="bubble" id="bubble-1">
+            <svg class="tail" width="16" height="22" viewBox="0 0 16 22"><polygon class="tail-fill" points="16,0 1,11 16,22" /><polyline class="tail-edge" points="15,0 1,11 15,22" /></svg>
+            <div class="chips" id="chips-1"><span class="chip chip-level">A1.2</span></div>
+            <div class="sentence" id="sent-1"><span class="ln">Was kostet das Brot?</span></div>
+          </div>
+        </div>
+        <div class="bslot" id="bslot-2" style="top: 258.57px">
+          <div class="bubble" id="bubble-2">
+            <svg class="tail" width="16" height="22" viewBox="0 0 16 22"><polygon class="tail-fill" points="16,0 1,11 16,22" /><polyline class="tail-edge" points="15,0 1,11 15,22" /></svg>
+            <div class="chips" id="chips-2"><span class="chip chip-level">A2.1</span></div>
+            <div class="sentence" id="sent-2"><span class="ln">Gestern war ich</span><span class="ln">beim Arzt.</span></div>
+          </div>
+        </div>
+        <div class="bslot" id="bslot-3" style="top: 402.86px">
+          <div class="bubble" id="bubble-3">
+            <svg class="tail" width="16" height="22" viewBox="0 0 16 22"><polygon class="tail-fill" points="16,0 1,11 16,22" /><polyline class="tail-edge" points="15,0 1,11 15,22" /></svg>
+            <div class="chips" id="chips-3"><span class="chip chip-level">A2.2</span></div>
+            <div class="sentence" id="sent-3"><span class="ln">Ich hätte gern</span><span class="ln">einen Termin.</span></div>
+          </div>
+        </div>
+        <div class="bslot" id="bslot-4" style="top: 547.14px">
+          <div class="bubble" id="bubble-4">
+            <svg class="tail" width="16" height="22" viewBox="0 0 16 22"><polygon class="tail-fill" points="16,0 1,11 16,22" /><polyline class="tail-edge" points="15,0 1,11 15,22" /></svg>
+            <div class="chips" id="chips-4"><span class="chip chip-level">B1.1</span><span class="chip chip-bau">Im Bau</span></div>
+            <div class="sentence" id="sent-4"><span class="ln">Ich glaube,</span><span class="ln">dass es klappt.</span></div>
+          </div>
+        </div>
+        <div class="bslot" id="bslot-5" style="top: 691.43px">
+          <div class="bubble" id="bubble-5">
+            <svg class="tail" width="16" height="22" viewBox="0 0 16 22"><polygon class="tail-fill" points="16,0 1,11 16,22" /><polyline class="tail-edge" points="15,0 1,11 15,22" /></svg>
+            <div class="chips" id="chips-5"><span class="chip chip-level">B1.2</span><span class="chip chip-bau">Im Bau</span></div>
+            <div class="sentence" id="sent-5"><span class="ln">Obwohl es regnet,</span><span class="ln">fahre ich.</span></div>
+          </div>
+        </div>
+        <div class="bslot" id="bslot-6" style="top: 835.71px">
+          <div class="bubble" id="bubble-6">
+            <svg class="tail" width="16" height="22" viewBox="0 0 16 22"><polygon class="tail-fill" points="16,0 1,11 16,22" /><polyline class="tail-edge" points="15,0 1,11 15,22" /></svg>
+            <div class="chips" id="chips-6"><span class="chip chip-level">B2.1</span><span class="chip chip-bau">Im Bau</span></div>
+            <div class="sentence" id="sent-6"><span class="ln">Hätte ich Zeit,</span><span class="ln">würde ich kommen.</span></div>
+          </div>
+        </div>
+        <div class="bslot bslot-bottom" id="bslot-7" style="top: 894px">
+          <div class="bubble bubble-bottom" id="bubble-7">
+            <svg class="tail" width="16" height="22" viewBox="0 0 16 22"><polygon class="tail-fill" points="16,0 1,11 16,22" /><polyline class="tail-edge" points="15,0 1,11 15,22" /></svg>
+            <div class="chips" id="chips-7"><span class="chip chip-level">B2.2</span><span class="chip chip-bau">Im Bau</span></div>
+            <div class="sentence" id="sent-7"><span class="ln">Einerseits ist es teuer,</span><span class="ln">andererseits lohnt es sich.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        // One paused timeline; every value comes from shot-plan.json (beat_table + reset).
+        const tl = gsap.timeline({ paused: true });
+        const Y = [170, 314.29, 458.57, 602.86, 747.14, 891.43, 1035.71, 1180];
+        const DY = Y.map((y) => y - Y[0]); // train offset from its rest box (centred on A1.1)
+        const RING_IN = [0, 0.274, 0.396, 0.489, 0.571, 0.664, 0.786, 1.08];
+        const CODE_IN = [0.06, 0.354, 0.476, 0.569, 0.651, 0.744, 0.866, 1.16];
+        const STOP = [[1.2, 2.6], [2.6, 4.0], [4.0, 5.45], [5.45, 6.9], [6.9, 8.35], [8.35, 9.85], [9.85, 11.4], [11.4, 13.2]];
+        const RESET_FADE = [13.24, 13.4, 13.47, 13.52, 13.56, 13.61, 13.68, 13.74];
+        const SETTLE = 5; // brake overshoot in px, in the travel direction (down)
+        const O = "50% 50%";
+
+        // draw-in: solid (power2.in) then dashed (power2.out) = one continuous front
+        const solid = document.getElementById("solid");
+        const solidEdge = document.getElementById("solid-edge");
+        const L = solid.getTotalLength();
+        solid.style.strokeDasharray = L + " " + L;
+        solidEdge.style.strokeDasharray = L + " " + L;
+        tl.fromTo([solid, solidEdge], { strokeDashoffset: L }, { strokeDashoffset: 0, duration: 0.55, ease: "power2.in" }, 0);
+        tl.fromTo("#dash-wrap", { clipPath: "inset(0% 0% 100% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.55, ease: "power2.out" }, 0.55);
+
+        // rings pop in as the front passes, codes follow; the Free tag under A1.1
+        Y.forEach((_, k) => {
+          tl.fromTo("#st-" + k + "-ring", { scale: 0.4, opacity: 0, transformOrigin: O }, { scale: 1, opacity: 1, transformOrigin: O, duration: 0.28, ease: "power3.out" }, RING_IN[k]);
+          tl.fromTo("#code-" + k, { x: 10, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, CODE_IN[k]);
+        });
+        tl.fromTo("#free", { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" }, 0.14);
+
+        // stop 1: the tram fades in from station - 60, overshoots 5px, settles
+        tl.fromTo("#train-body", { opacity: 0 }, { opacity: 1, duration: 0.2, ease: "power1.out" }, 1.2);
+        tl.fromTo("#train", { y: -60 }, { y: SETTLE, duration: 0.4, ease: "power2.out" }, 1.2);
+        tl.fromTo("#train", { y: SETTLE }, { y: 0, duration: 0.14, ease: "power2.out", immediateRender: false }, 1.6);
+
+        STOP.forEach(([s, e], k) => {
+          if (k > 0) {
+            // glide stop to stop (power2.inOut), brake 5px past the station, settle back
+            tl.fromTo("#train", { y: DY[k - 1] }, { y: DY[k] + SETTLE, duration: 0.4, ease: "power2.inOut", immediateRender: false }, s);
+            tl.fromTo("#train", { y: DY[k] + SETTLE }, { y: DY[k], duration: 0.14, ease: "power2.out", immediateRender: false }, s + 0.4);
+          }
+          // the station fills while the tram pulls over it
+          tl.fromTo("#st-" + k + "-disc", { scale: 0, transformOrigin: O }, { scale: 1, transformOrigin: O, duration: 0.28, ease: "power3.out" }, s + 0.32);
+          // the card lifts in from its tail tip; chips, then the sentence, follow
+          tl.fromTo("#bubble-" + k, { opacity: 0, x: -18, scale: 0.96 }, { opacity: 1, x: 0, scale: 1, duration: 0.22, ease: "power3.out" }, s + 0.28);
+          tl.fromTo("#chips-" + k, { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: 0.2, ease: "power2.out" }, s + 0.3);
+          tl.fromTo("#sent-" + k, { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: 0.2, ease: "power2.out" }, s + 0.33);
+          // and leaves as the tram departs (0.08 s before the next card starts: never two at once)
+          tl.fromTo("#bubble-" + k, { opacity: 1, y: 0 }, { opacity: 0, y: -8, duration: 0.2, ease: "power2.in", immediateRender: false }, e);
+        });
+
+        // reset: the tram rolls off, the line clears behind it, stations fade as the tail passes
+        tl.fromTo("#train", { y: DY[7] }, { y: 1290 - Y[0], duration: 0.4, ease: "power2.in", immediateRender: false }, 13.2);
+        tl.fromTo("#train-body", { opacity: 1 }, { opacity: 0, duration: 0.24, ease: "power2.in", immediateRender: false }, 13.36);
+        tl.fromTo([solid, solidEdge], { strokeDashoffset: 0 }, { strokeDashoffset: -L, duration: 0.3, ease: "power2.in", immediateRender: false }, 13.24);
+        tl.fromTo("#dash-wrap", { clipPath: "inset(0% 0% 0% 0%)" }, { clipPath: "inset(100% 0% 0% 0%)", duration: 0.3, ease: "power2.out", immediateRender: false }, 13.54);
+        RESET_FADE.forEach((t, k) => {
+          const targets = ["#st-" + k + "-out", "#lab-" + k].concat(k === 0 ? ["#free-wrap"] : []);
+          tl.fromTo(targets, { opacity: 1 }, { opacity: 0, duration: 0.16, ease: "power2.in", immediateRender: false }, t);
+        });
+        // 13.90 to 14.00: rest (the hairline bed only), identical to frame 0.
+
+        window.__timelines["linie"] = tl;
+        tl.seek(0);
+      </script>
+    </template>
+  </body>
+</html>

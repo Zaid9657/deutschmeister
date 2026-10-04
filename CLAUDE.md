@@ -95,6 +95,11 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   colour on every ground. Never put `text-white`/inverse tones on a `nacht` ground any more — use
   `text-nacht-text`/`-muted`. `tests/linie-design.test.mjs` pins the contrast values and
   `linie === siegel`; `netlify/functions/_shared/brand.mjs` (email colours) must match the tokens.
+  The homepage hero carries **the line board** (`components/linie/LineBoard.astro`): a HyperFrames loop
+  whose sources are `videos/hero-line` (1600×560) and `videos/hero-line-mobile` (1080×1350). Edit the
+  composition, run `hyperframes check` + `render` there (`HYPERFRAMES_BROWSER_PATH=/opt/pw-browsers/chromium`
+  in cloud sessions; GSAP is vendored because the CDN is blocked), then `videos/encode-web.sh` writes
+  `public/motion/` (MP4 + VP9 WebM + poster). The sentences must match the plan and the page (test).
   The `sign` face (Archivo, `sign-display/head/label/code` in `astro-site/src/styles/linie.css`) is
   for the four marketing/commerce pages that pass `preloads={[...signFontPreloads, …]}` to `Layout`
   (`/`, `/pricing/`, `/courses/`, `/courses/<level>/`). Every other page renders `data-sign="off"`

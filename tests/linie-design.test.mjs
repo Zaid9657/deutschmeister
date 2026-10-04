@@ -145,7 +145,8 @@ test('the SPA footer and phone menu draw the stations; footer and tab bar stand 
   assert.match(chromeSrc.navbar, /bg-nacht px-4[\s\S]*?STATIONS\.map/, 'the phone menu opens on the stations, on night');
   assert.match(chromeSrc.navbar, /user \? 'pb-\[calc\(5\.5rem\+env\(safe-area-inset-bottom\)\)\]'/, 'signed in, the sheet must scroll clear of BottomNav');
   assert.match(chromeSrc.bottomNav, /bg-nacht\/95/, 'tab bar ground');
-  assert.match(chromeSrc.bottomNav, /active \? 'text-linie'/, 'the current tab is the lit stop');
+  assert.match(chromeSrc.bottomNav, /active \? 'text-siegel-deep'/, 'the current tab is the lit stop (AA label)');
+  assert.match(chromeSrc.bottomNav, /bg-linie" aria-hidden="true"/, 'and carries the türkis bar');
 });
 
 test('the app chrome never sets the sign face (the app does not load Archivo)', () => {
@@ -178,4 +179,41 @@ test('a Button is made a pill by its shape, never by an appended class', () => {
   const offenders = walk('src').filter((f) => f.endsWith('.jsx'))
     .filter((f) => /<Button\b[^>]*className="[^"]*\brounded-pill\b/.test(read(f)));
   assert.deepEqual(offenders, []);
+});
+
+test('türkis text is for large type only; small labels on the tint use siegel-deep (AA)', () => {
+  // linie on the tint is 4.2:1: enough for large text (3:1), not for small text
+  // (4.5:1). Small = the eyebrow/data sizes and text-xs/sm.
+  assert.ok(contrast(color.siegelDeep, nacht.DEFAULT) >= 4.5, 'siegel-deep on the tint');
+  const SMALL = /\b(text-xs|text-sm|text-\[0\.[0-9]+rem\]|font-data)\b/;
+  const offenders = [];
+  for (const f of [...walk('astro-site/src'), ...walk('src')].filter((x) => /\.(astro|jsx)$/.test(x))) {
+    for (const m of read(f).matchAll(/class(?:Name)?=["{`]([^"`]*)/g)) {
+      const cls = m[1];
+      if (/\btext-linie(?![-\w])/.test(cls) && SMALL.test(cls) && !/\bbg-(white|nacht-raised)\b/.test(cls)) offenders.push(`${f}: ${cls.slice(0, 80)}`);
+    }
+  }
+  assert.deepEqual(offenders, []);
+});
+
+// ── The line board: the hero's HyperFrames loop (owner, 2026-10-04) ──
+test('the homepage carries the line board, poster-first and motion-safe', async () => {
+  const home = read('astro-site/src/pages/index.astro');
+  assert.match(home, /<LineBoard \/>/, 'the hero shows the line board');
+  const board = read('astro-site/src/components/linie/LineBoard.astro');
+  for (const f of ['hero-line.mp4', 'hero-line.webm', 'hero-line-poster.webp', 'hero-line-mobile.mp4', 'hero-line-mobile.webm', 'hero-line-mobile-poster.webp']) {
+    assert.ok(existsSync(join(ROOT, 'public/motion', f)), `public/motion/${f} is missing — run videos/encode-web.sh`);
+    assert.match(board, new RegExp(f.replace('.', '\\.')), `LineBoard references ${f}`);
+  }
+  assert.match(board, /preload="none"/, 'no video bytes before it is on screen');
+  assert.match(board, /prefers-reduced-motion: reduce/, 'reduced motion keeps the poster');
+  assert.match(board, /data-src=/, 'the src is attached only when visible');
+  const { STATIONS } = await import('../src/data/offers.js');
+  const sentences = board.match(/const LINE_SENTENCES = \[([\s\S]*?)\];/)[1].match(/'[^']+'/g);
+  assert.equal(sentences.length, STATIONS.length, 'one sentence per station');
+  // The two compositions speak the same sentences as the page's screen-reader list.
+  for (const p of ['videos/hero-line/shot-plan.json', 'videos/hero-line-mobile/shot-plan.json']) {
+    const plan = read(p);
+    for (const s of sentences) assert.ok(plan.includes(s.slice(1, -1)), `${p} lacks ${s}`);
+  }
 });
