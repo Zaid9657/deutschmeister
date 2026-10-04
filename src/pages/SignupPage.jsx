@@ -25,6 +25,23 @@ import {
 } from '../data/marketing.js';
 import { pendingPlacement } from '../lib/placement.js';
 import { postAuthPath } from '../lib/buyIntent';
+import { peekBuyIntent } from '../lib/buyIntent.js';
+import { COURSES, PLANS, courseForProduct, eur } from '../data/pricing.js';
+
+// A signed-out Buy click (/pricing/, /courses/, the homepage line) stored what
+// the visitor wanted before sending them here (lib/buyIntent.js). Say so: the
+// account is step one of two, and the checkout resumes on its own afterwards —
+// otherwise a buyer reads "Start your Pro trial" and thinks the purchase was lost.
+const pendingPurchase = () => {
+  const key = peekBuyIntent();
+  if (!key) return null;
+  const course = courseForProduct(key);
+  if (course) return { label: `Deutsch ${course.code}`, price: course.price, once: true };
+  if (key === 'telc_b1_komplett') return { label: COURSES.telc_b1_komplett.name, price: COURSES.telc_b1_komplett.price, once: true };
+  const plan = PLANS[key];
+  if (plan) return { label: plan.name, price: plan.price, once: false, interval: plan.interval };
+  return null;
+};
 import { signupOutcome, resendRefusal, signedInAs, RESEND_COOLDOWN_SECONDS } from '../lib/signupConfirmation.js';
 
 // The playbook form field (docs/design/playbook.md §1), with room for the
@@ -58,6 +75,7 @@ const SignupPage = () => {
   // (src/lib/placement.js). Read once: the line below names the level the
   // visitor came here to keep.
   const [placedLevel] = useState(() => pendingPlacement());
+  const [purchase] = useState(() => pendingPurchase());
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -188,7 +206,7 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden flex items-center justify-center bg-paper px-4 py-12">
+    <div className="relative min-h-screen overflow-hidden flex items-center justify-center bg-paper px-4 py-12 font-body">
       <SEO title="Sign Up Free" description="Create a free DeutschMeister account and start mastering German grammar with clear English explanations." path="/signup" />
       <Aurora />
       <motion.div
@@ -198,6 +216,15 @@ const SignupPage = () => {
       >
         {/* Header */}
         <div className="text-center mb-8">
+          {purchase && (
+            <div className="mb-6 rounded-clay border border-ink bg-linie-wash px-4 py-3 text-left shadow-raise-linie" role="status">
+              <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-ink">Step 1 of 2 · your account</p>
+              <p className="mt-1 text-[0.9375rem] leading-relaxed text-ink">
+                Then your checkout for <strong>{purchase.label}</strong> — {eur(purchase.price)}
+                {purchase.once ? ', one payment' : ` a ${purchase.interval}`} — opens on its own when you are back on this browser after confirming your email.
+              </p>
+            </div>
+          )}
           {/* The Meister-Siegel, not a "D" tile: the D was the retired identity, and
               a second mark beside the seal in the nav reads as two products. Logo
               renders a plain <a>, which matters — "/" is served by the Astro build,
