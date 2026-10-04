@@ -16,6 +16,7 @@ import { FREE_LEVEL_LABEL } from '../../data/marketing.js';
 import { COURSE_CONTENTS, LEVEL_OUTCOME_EN, levelToSlug } from '../../data/courseContents.js';
 import { curriculumFor } from '../../data/curricula/index.js';
 import { hasSyllabus, wortfeldRunningTotals, wortlisteTotalFor, checkpointAfter, primaryGrammarTitle, kannBeschreibungenCount, pruefungsteileCoverage, goetheRichtwertFor, courseTimeSplit, hoursDe, LEKTION_ANATOMY } from '../../lib/syllabus.js';
+import StationArt from '../../components/linie/StationArt.astro';
 
 export async function getStaticPaths() {
   return ALL_LEVELS.map((level) => ({ params: { level: levelToSlug(level) }, props: { level } }));
@@ -112,6 +113,7 @@ const jsonLd = {
             {planLine(station) && <p class="mt-2 max-w-xl text-[0.9375rem] leading-relaxed text-nacht-muted">{planLine(station)}</p>}
           </div>
           <div class="rounded-[1.25rem] border border-nacht-rule bg-nacht-raised p-6">
+            <StationArt level={level} eager class="-mx-6 -mt-6 mb-5 h-44 w-[calc(100%+3rem)] rounded-t-[1.25rem] border-b border-nacht-rule" />
             <p class="sign-code text-[2.5rem] leading-none text-linie">{isFree ? 'Free' : eur(course.price)}</p>
             <p class="mt-2 text-[0.875rem] text-nacht-muted">
               {isFree

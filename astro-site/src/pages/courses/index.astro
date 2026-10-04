@@ -8,6 +8,7 @@ import Layout from '../../layouts/Layout.astro';
 import '../../styles/global.css';
 import CourseCheckout from '../../components/CourseCheckout.astro';
 import LineSection from '../../components/linie/LineSection.astro';
+import StationArt from '../../components/linie/StationArt.astro';
 import { fontPreloads, signFontPreloads } from '../../data/design-tokens.js';
 import { ORGANIZATION } from '../../lib/siteMeta.js';
 import { getTopicsForLevel } from '../../lib/grammar.js';
@@ -80,6 +81,7 @@ const jsonLd = {
               {!r.course && (
                 <span class="absolute -top-3 left-6 inline-flex items-center rounded-pill bg-siegel-wash px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Free</span>
               )}
+              <StationArt level={r.level} class="-mx-6 -mt-6 mb-5 h-48 w-[calc(100%+3rem)] rounded-t-clay border-b border-rule" />
               <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Stop {i + 1} · {r.code}</p>
               <h3 class="mt-2 sign-head text-[1.5rem] text-ink">
                 <a href={`/courses/${r.slug}/`} class="transition-colors hover:text-siegel-deep">German {r.code} Course</a>

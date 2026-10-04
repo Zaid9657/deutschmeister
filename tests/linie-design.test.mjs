@@ -217,3 +217,28 @@ test('the homepage carries the line board, poster-first and motion-safe', async 
     for (const s of sentences) assert.ok(plan.includes(s.slice(1, -1)), `${p} lacks ${s}`);
   }
 });
+
+// ── Station artwork: Higgsfield scenes, placed only as a full set (2026-10-04) ──
+test('station art ships whole or not at all, from clean files', async () => {
+  const { STATION_ART, ART_COMPLETE, artFor } = await import('../astro-site/src/data/stationArt.js');
+  const { ALL_LEVELS } = await import('../src/data/pricing.js');
+  for (const [level, art] of Object.entries(STATION_ART)) {
+    assert.ok(ALL_LEVELS.includes(level), `${level} is not a station`);
+    const p = join('public/art/stations', art.file);
+    assert.ok(existsSync(join(ROOT, p)), `${p} is missing`);
+    const svg = read(p);
+    assert.match(svg, /^<svg [^>]*viewBox="0 0 2048 1509"/, `${p} keeps the shared 4:3 viewBox`);
+    // Generated files arrive with a C2PA manifest; scripts or external refs never belong in an <img> asset.
+    assert.doesNotMatch(svg, /<metadata|c2pa|<script|href=|preserveAspectRatio="none"/i, `${p} is not cleaned`);
+    assert.ok(svg.length < 40_000, `${p} is not minified (${svg.length} bytes)`);
+  }
+  assert.equal(ART_COMPLETE, ALL_LEVELS.every((l) => STATION_ART[l]));
+  for (const level of ALL_LEVELS) {
+    if (ART_COMPLETE) assert.match(artFor(level).src, /^\/art\/stations\/[a-z0-9-]+\.svg$/);
+    else assert.equal(artFor(level), null, 'no scene renders until all eight exist');
+  }
+  // Every course surface places it, so finishing the set needs no template edit.
+  for (const p of ['astro-site/src/pages/courses/index.astro', 'astro-site/src/pages/courses/[level].astro', 'astro-site/src/components/linie/LineSection.astro']) {
+    assert.match(read(p), /<StationArt level=/, `${p} places the station art`);
+  }
+});

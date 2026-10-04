@@ -1,4 +1,4 @@
-# Station artwork (Higgsfield · Recraft V4.1 vector) — in progress
+# Station artwork (Higgsfield · Recraft V4.1 vector): 4 of 8, wired, waiting on the last four
 
 One flat vector scene per station, in the v4 Türkis palette, for the course cards on `/`,
 `/courses/` and the `/courses/<level>/` heroes. Generated with Higgsfield (model
@@ -23,19 +23,31 @@ suitcase neon cyan — keep the skin tones in the list.)
 
 | Station | Scene | Job | Status |
 |---|---|---|---|
-| A1.1 | Hotel reception, a greeting | `a9a71091-88bf-4cb4-bcea-9661d0544560` | generated |
+| A1.1 | Hotel reception, a greeting | `a9a71091-88bf-4cb4-bcea-9661d0544560` | in repo (`a1-1.svg`) |
 | A1.2 | Bakery counter, buying bread | — | blocked: Higgsfield daily limit (grace period) |
 | A2.1 | Doctor's practice | — | blocked: daily limit |
-| A2.2 | Service office, booking an appointment | `489f80cf-4e3e-478c-863a-090871ffd963` | generated |
+| A2.2 | Service office, booking an appointment | `489f80cf-4e3e-478c-863a-090871ffd963` | in repo (`a2-2.svg`) |
 | B1.1 | Colleagues discussing a plan | — | blocked: daily limit |
-| B1.2 | Rainy train platform, umbrella | `bc31c4c4-1e55-4d3e-b59d-378184aa8b6b` | generated |
-| B2.1 | Phone call by a window, planning a visit | `26526b42-a126-47d0-99f8-4d42e05cecd5` | generated |
+| B1.2 | Rainy train platform, umbrella | `bc31c4c4-1e55-4d3e-b59d-378184aa8b6b` | in repo (`b1-2.svg`) |
+| B2.1 | Phone call by a window, planning a visit | `26526b42-a126-47d0-99f8-4d42e05cecd5` | in repo (`b2-1.svg`) |
 | B2.2 | Three people weighing pros and cons | — | blocked: daily limit |
 
-The four missing scenes need the Higgsfield daily limit to reset (the account is in a grace
-period) or a plan update. The set is placed on the site only when all eight exist, so no level
-looks unfinished next to another.
+**Where they go (wired 2026-10-04, renders nothing yet).** `astro-site/src/data/stationArt.js` lists the
+scenes; `components/linie/StationArt.astro` places one on the homepage line boards (live stops on top of
+each board, the four Im Bau stops as thumbnails), on every `/courses/` card (a 12rem band) and on top of the
+price card in each `/courses/<level>/` hero (11rem, loaded eagerly). `artFor()` returns null until all
+eight levels have a file, so the set appears whole or not at all. Finishing it is: drop the SVG into
+`public/art/stations/<level-with-dash>.svg`, add its line to `STATION_ART`, run `node --test
+tests/linie-design.test.mjs` (it checks each file is cleaned, minified and on the shared 2048×1509 viewBox).
+
+**Why four are missing.** The Higgsfield app account (starter plan, grace period) caps generations per
+day; its credits were never the limit. The separate Higgsfield API (pay per image, $0.035 at 1k for
+`recraft/v4.1/text-to-image`, base `https://api.higgsfield.ai`, header `Authorization: Key <key>`) needs
+the environment to allow `api.higgsfield.ai` and to carry the key as `HF_API_KEY`; the agent proxy
+answers 403 to that host today.
 
 **Transfer note.** The agent proxy blocks Higgsfield's CDN (`*.cloudfront.net`) and Composio's
-file links; the files reach the repo by fetching, minifying and gzip+base64-encoding them in
-Composio's remote sandbox and decoding them here.
+file links; the files reach the repo by fetching them in Composio's remote sandbox, stripping the C2PA
+`<metadata>`, running `svgo --multipass -p 0` (integer coordinates: on a 2048-unit viewBox that is under
+0.2 px at card size, mean pixel difference 0.2–0.5/255) and moving a base64 `tar.xz` across (4 scenes,
+18 KB). Verify the md5 on both ends.
