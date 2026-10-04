@@ -14,6 +14,9 @@ import { deriveCurrent, isTopicCompleted, topicPercent } from '../services/curre
 import { examTrackByKey } from '../data/examTracks';
 import { courseForProduct } from '../data/pricing.js';
 import { courseFor } from '../data/courses/index.js';
+import { getProgramProgress } from '../services/programProgress';
+import { courseLevelFor, courseNextStep, programKeyForCourse } from '../lib/courseNext.js';
+import { levelToSlug } from '../data/courseContents.js';
 import { loadDashboardStats, DAILY_GOAL_TARGET } from '../services/dashboardStats';
 import { GRAMMAR_TOPIC_COUNT } from '../data/marketing.js';
 import { listAttempts } from '../services/examService';
@@ -227,14 +230,59 @@ const DashboardPage = () => {
     { label: 'Sentence X-Ray', value: stats?.xrayChecks ?? 0, Icon: ScanSearch, edge: 'paper', iconClass: 'bg-siegel-wash text-siegel' },
   ];
 
-  // Grammar lessons are Astro-served — the hero is a full-load <a>, trailing-slash class.
-  const heroHref = cur.nextTopic ? `/grammar/${cur.level}/${cur.nextTopic.slug}/` : '/grammar/';
-  const heroTitle = cur.allDone ? 'All done!' : (cur.nextTopic?.titleEn || 'Start here');
-  const heroDe = cur.allDone ? "You've finished every topic." : (cur.nextTopic?.titleDe || '');
-  const heroMinutes = cur.nextTopic?.estimatedTime || 15;
-  const heroProgress = cur.nextTopic ? topicPercent(progress, cur.level, cur.nextTopic.id) : 100;
   const isBrandNew = !loading && stats && stats.streak === 0 && completedInLevel === 0
     && !cur.started && stats.speakingSessions === 0 && stats.xrayChecks === 0;
+
+  // The hero continues the learner's COURSE (src/lib/courseNext.js): the level
+  // they bought, else the placed level, else the walk's level — only when it has
+  // a course they may open. The grammar walk below is the fallback.
+  const courseLevel = user
+    ? courseLevelFor({ purchases, currentLevel: profile?.current_level, walkLevel: cur.level, hasLevelAccess })
+    : null;
+  const [courseDone, setCourseDone] = useState(null); // null = not read yet
+  useEffect(() => {
+    let alive = true;
+    setCourseDone(null);
+    if (!user || !courseLevel) return undefined;
+    getProgramProgress(user.id, programKeyForCourse(courseLevel)).then((set) => { if (alive) setCourseDone(set); });
+    return () => { alive = false; };
+  }, [user, courseLevel]);
+  const courseStep = courseLevel && courseDone ? courseNextStep(courseLevel, courseDone) : null;
+  const heroLoading = loading || (!!courseLevel && !courseDone);
+
+  // A finished course points at the next stop: its course when the learner may
+  // open it, else its ticket page (Astro, full load). B1 has no course yet.
+  const nextStop = courseStep?.kind === 'complete' && courseStep.next && courseFor(courseStep.next) ? courseStep.next : null;
+  const hero = courseStep?.kind === 'step' ? {
+    chip: courseStep.started ? 'Continue where you left off' : `Your ${courseStep.code} course`,
+    title: courseStep.title,
+    de: '',
+    meta: `Step ${courseStep.position + 1} of ${courseStep.total}`,
+    minutes: courseStep.minutes,
+    label: courseStep.code,
+    progress: Math.round((courseStep.done / courseStep.total) * 100),
+    link: { to: courseStep.href },
+    cta: courseStep.started ? 'Continue the course' : 'Start the course',
+  } : nextStop ? {
+    chip: 'Course complete',
+    title: `${courseStep.code} done. Next stop: ${nextStop.toUpperCase()}`,
+    de: '',
+    meta: null,
+    label: courseStep.code,
+    link: hasLevelAccess(nextStop) ? { to: `/course/${nextStop}` } : { href: `/courses/${levelToSlug(nextStop)}/` },
+    cta: hasLevelAccess(nextStop) ? `Start ${nextStop.toUpperCase()}` : `See the ${nextStop.toUpperCase()} ticket`,
+  } : {
+    // Grammar lessons are Astro-served — a full-load <a>, trailing-slash class.
+    chip: isBrandNew ? 'Start here' : cur.allDone ? 'All done' : 'Continue where you left off',
+    title: cur.allDone ? 'All done!' : (cur.nextTopic?.titleEn || 'Start here'),
+    de: cur.allDone ? "You've finished every topic." : (cur.nextTopic?.titleDe || ''),
+    meta: cur.allDone ? null : `Lesson ${cur.nextIndex + 1} of ${cur.topics.length}`,
+    minutes: cur.nextTopic?.estimatedTime || 15,
+    label: levelLabel,
+    progress: cur.nextTopic ? topicPercent(progress, cur.level, cur.nextTopic.id) : 100,
+    link: { href: cur.nextTopic ? `/grammar/${cur.level}/${cur.nextTopic.slug}/` : '/grammar/' },
+    cta: isBrandNew ? 'Start now' : cur.allDone ? 'Browse topics' : 'Keep learning',
+  };
 
   return (
     <div className="min-h-screen bg-paper font-body text-ink">
@@ -320,7 +368,7 @@ const DashboardPage = () => {
 
         {/* ── Hero: next action ── */}
         <Reveal delay={120} className="mb-8">
-          {loading ? (
+          {heroLoading ? (
             <Sk className="h-48 sm:h-52" />
           ) : firstRun ? (
             <FirstRunCard action={firstRun} />
@@ -330,39 +378,39 @@ const DashboardPage = () => {
                 <div className="max-w-xl">
                   <Chip tone="label" className="mb-4">
                     <Sparkles className="w-3 h-3" />
-                    {isBrandNew ? 'Start here' : cur.allDone ? 'All done' : 'Continue where you left off'}
+                    {hero.chip}
                   </Chip>
                   <h2 className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[2.125rem]">
-                    {heroTitle}
+                    {hero.title}
                   </h2>
-                  {heroDe && (
+                  {hero.de && (
                     <p className="mt-1 text-[0.9375rem] text-graphite">
-                      <span className="font-bold">{heroDe}</span>
+                      <span className="font-bold">{hero.de}</span>
                     </p>
                   )}
-                  {!cur.allDone && (
+                  {hero.meta && (
                     <>
                       <div className="mt-5 flex flex-wrap items-center gap-4 font-data text-[0.8125rem] text-graphite">
                         <span className="inline-flex items-center gap-1.5">
-                          <BookOpen className="w-4 h-4" /> Lesson {cur.nextIndex + 1} of {cur.topics.length}
+                          <BookOpen className="w-4 h-4" /> {hero.meta}
                         </span>
-                        <span className="inline-flex items-center gap-1.5"><Clock className="w-4 h-4" /> ~{heroMinutes} min</span>
-                        <Chip tone="label">{levelLabel}</Chip>
+                        {hero.minutes ? <span className="inline-flex items-center gap-1.5"><Clock className="w-4 h-4" /> ~{hero.minutes} min</span> : null}
+                        <Chip tone="label">{hero.label}</Chip>
                       </div>
                       <div className="mt-3 h-1.5 w-full max-w-sm overflow-hidden rounded-pill bg-paper-sunk">
-                        <div className="h-full rounded-pill bg-siegel" style={{ width: `${heroProgress}%` }} />
+                        <div className="h-full rounded-pill bg-siegel" style={{ width: `${hero.progress}%` }} />
                       </div>
                     </>
                   )}
                 </div>
                 <Button
-                  href={heroHref}
+                  {...hero.link}
                   size="lg"
                   shimmer
                   variant={goalMet ? 'celebrate' : 'primary'}
                   className="group shrink-0"
                 >
-                  {isBrandNew ? 'Start now' : cur.allDone ? 'Browse topics' : 'Keep learning'}
+                  {hero.cta}
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
                 </Button>
               </div>
