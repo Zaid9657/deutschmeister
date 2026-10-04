@@ -25,6 +25,13 @@
 //      article allows;
 //   5. sentence_de is also the email subject, so it never addresses the learner with
 //      du/dich/dir/dein/euch/euer (the product speaks Sie; 2026-10-03, old entry #9).
+// DaF review round 2 (2026-10-03) added four more, one per class it found:
+//   6. a je … desto hint shows the word order of both halves;
+//   7. a sentence with the passive participle "worden" says it is not "geworden";
+//   8. a zu-infinitive that hangs on a form of sein is named sein + zu, not left
+//      as a plain "infinitive phrase";
+//   9. a possessive in front of its noun is a possessive article, never a
+//      "possessive pronoun".
 // The pre-fix texts are kept below as fixtures, so each rule is shown to reject the
 // mistake it was written for. The rules check the claims they can parse; a DaF
 // reviewer still reads every new hint.
@@ -264,4 +271,146 @@ test('informalAddressProblems rejects the pre-fix subject and reads only whole p
   for (const s of ['Können Sie mir helfen?', 'Sie hat ihr Buch vergessen.', 'Der Roman, den Anna empfohlen hat, ist sehr spannend.', 'Der Dirigent kauft ein Dutzend Eier.', 'Er spricht deutlich über Europa.']) {
     assert.deepEqual(informalAddressProblems({ sentence_de: s }), [], s);
   }
+});
+
+// ── Rules 6-9: DaF review round 2 (2026-10-03) ────────────────────────────────
+// The second DaF review of the rotation found four more classes of loose or
+// incomplete teaching, each mailed since 21c4503 (2026-04-11):
+//   - "Je mehr er lernt, desto besser wird sein Deutsch." called je … desto a
+//     "comparative intensifier" (not a standard term) and never said where the
+//     verbs go, which is the whole difficulty of the construction;
+//   - "Das Fenster ist geöffnet worden." listed "ist + participle + worden" but
+//     never said the point: the passive participle is "worden", not "geworden";
+//   - "Obwohl das Buch schwer zu verstehen ist, ..." called "zu verstehen" an
+//     infinitive phrase; it is sein + zu + infinitive, a passive with a modal
+//     meaning (= kann nur schwer verstanden werden);
+//   - "Das Mädchen schreibt ihrem Freund einen Brief." called "ihrem" a possessive
+//     pronoun; before a noun it is a possessive article (Possessivartikel), the
+//     term the site's own A1.1 lesson uses.
+// The level fixes in the same round (je … desto and trotz, B2 -> B1) have no rule:
+// levels follow the DaF reviewer, not a parser.
+
+// Rule 6. Only a je-clause with a verb is checked: "Je früher, desto besser (für
+// alle)." has no verb to place, so a je-clause under three words is skipped.
+function jeDestoProblems({ sentence_de, hint }) {
+  if (!/\bje\b/i.test(sentence_de) || !/\b(?:desto|umso)\b/i.test(sentence_de)) return [];
+  if (words(sentence_de.split(',')[0]).length < 3) return [];
+  const problems = [];
+  if (!/\bverbs?\b[^.]*\b(?:end|final|last)\b|\bverb-final\b/i.test(hint)) problems.push('does not say that the verb of the je-clause goes to the end');
+  if (!/'(?:desto|umso) [^']+'/i.test(hint)) problems.push('does not show the start of the desto-clause, where the finite verb follows desto + comparative');
+  return problems;
+}
+
+// Rule 7. words() reads whole words, so "geworden" (Er ist Arzt geworden) is not "worden".
+// Only an entry that teaches the passive owes the reader worden vs geworden: "Er soll
+// verhaftet worden sein." with a hint about sollen does not (review of 4ed0fd92).
+function wordenProblems({ sentence_de, hint, grammar_focus = '' }) {
+  if (!words(sentence_de).includes('worden')) return [];
+  if (!/passiv/i.test(`${grammar_focus} ${hint}`)) return [];
+  return /\bgeworden\b/i.test(hint) ? [] : ["has the passive participle 'worden', but the hint never says it is 'worden', not 'geworden'"];
+}
+
+// Rule 8. Reads a claim "'… zu <infinitive>' is an infinitive phrase/clause" and
+// checks the clause it sits in for a finite form of sein. A clause with "es" is
+// skipped: there the zu-infinitive is usually an extraposed subject (Es ist wichtig
+// zu üben), and that call stays with the DaF reviewer.
+const SEIN_FINITE = new Set(['bin', 'bist', 'ist', 'sind', 'seid', 'war', 'warst', 'waren', 'wart', 'sei', 'seien', 'wäre', 'wären']);
+// Words that may stand between sein and zu when sein + zu is the construction.
+const SEIN_ZU_ADVERBS = new Set(['nicht', 'nur', 'kaum', 'schwer', 'leicht', 'gut', 'noch', 'sofort', 'unbedingt', 'nirgends', 'nirgendwo', 'heute', 'bis', 'morgen']);
+const ZU_INFINITIVE_CLAIM = /'((?:\p{L}+\s+)*zu\s+\p{L}+)' is (?:a |an |the )?infinitive (?:phrase|clause|construction)/giu;
+
+function seinZuProblems({ sentence_de, hint }) {
+  const problems = [];
+  for (const [, fragment] of hint.matchAll(ZU_INFINITIVE_CLAIM)) {
+    const clause = sentence_de.split(',').find((c) => c.toLowerCase().includes(fragment.toLowerCase()));
+    if (!clause) continue;
+    const ws = words(clause);
+    if (ws.includes('es') || !ws.some((w) => SEIN_FINITE.has(w))) continue;
+    // sein must govern the zu-infinitive itself: verb-final "schwer zu verstehen ist",
+    // or "ist (nicht|nur|kaum …) zu öffnen". "Er ist bereit zu helfen." and "Sie war
+    // gezwungen zu gehen." hang on an adjective or participle (review of 4ed0fd92).
+    const zi = ws.lastIndexOf('zu');
+    const verbFinal = zi >= 0 && SEIN_FINITE.has(ws[zi + 2] ?? '');
+    const before = ws.slice(0, zi);
+    const si = before.findLastIndex((w) => SEIN_FINITE.has(w));
+    const mainClause = si >= 0 && before.slice(si + 1).every((w) => SEIN_ZU_ADVERBS.has(w));
+    if (!verbFinal && !mainClause) continue;
+    if (!/\bsein\s*\+\s*zu\b/i.test(hint)) {
+      problems.push(`calls "${fragment}" an infinitive phrase, but it hangs on a form of sein: name sein + zu + infinitive (a passive with a modal meaning)`);
+    }
+  }
+  return problems;
+}
+
+// Rule 9. A possessive followed by a capitalised word stands before its noun. The
+// rule only fires when no possessive in the sentence stands alone (Das ist meins.),
+// since then "possessive pronoun" may be the right term.
+const POSSESSIVE = /^(?:mein|dein|sein|ihr|unser|euer|eur)(?:e|en|em|er|es|s)?$/;
+
+function possessiveTermProblems({ sentence_de, hint, grammar_focus }) {
+  if (!/possessive pronoun/i.test(`${grammar_focus} ${hint}`)) return [];
+  // Bare "ihr" is skipped: it is as often the dative or plural pronoun (Ich gebe ihr
+  // Blumen.). The next word must follow after spaces only, so a comma or a name
+  // after one (Das ist seiner, Peter …) is not read as the possessive's noun.
+  const tokens = [...sentence_de.matchAll(/\p{L}+/gu)];
+  const possessives = tokens.flatMap((m, i) => {
+    const t = m[0].toLowerCase();
+    if (t === 'ihr' || !POSSESSIVE.test(t)) return [];
+    const nextMatch = tokens[i + 1];
+    const gap = nextMatch ? sentence_de.slice(m.index + m[0].length, nextMatch.index) : ',';
+    return [{ word: m[0], next: /^\s+$/.test(gap) ? nextMatch[0] : '' }];
+  });
+  if (!possessives.length || possessives.some(({ next }) => !/^\p{Lu}/u.test(next))) return [];
+  return [`calls "${possessives.map(({ word }) => word).join('", "')}" a possessive pronoun, but it stands before its noun: a possessive article (Possessivartikel)`];
+}
+
+const RULES_ROUND_2 = { jeDestoProblems, wordenProblems, seinZuProblems, possessiveTermProblems };
+
+// The four entries as they were mailed until this change.
+const PRE_FIX_ROUND_2 = [
+  { rule: 'jeDestoProblems', sentence_de: 'Je mehr er lernt, desto besser wird sein Deutsch.', hint: "'Je…desto' is a comparative intensifier — both parts need a comparative adjective or adverb.", grammar_focus: 'Je…desto comparative' },
+  { rule: 'wordenProblems', sentence_de: 'Das Fenster ist geöffnet worden.', hint: 'Passive perfect tense: three verbs in a row — ist + past participle + worden.', grammar_focus: 'Passive Perfekt (worden)' },
+  { rule: 'seinZuProblems', sentence_de: 'Obwohl das Buch schwer zu verstehen ist, liest sie es gern.', hint: "'Obwohl' sends its verb to the end — and 'zu verstehen' is an infinitive phrase within that clause.", grammar_focus: 'Obwohl + embedded infinitive phrase' },
+  { rule: 'possessiveTermProblems', sentence_de: 'Das Mädchen schreibt ihrem Freund einen Brief.', hint: 'Three cases again — but this time with a possessive pronoun doing the heavy lifting.', grammar_focus: 'Possessive pronouns in dative' },
+];
+
+for (const [name, rule] of Object.entries(RULES_ROUND_2)) {
+  test(`${name}: no entry in the rotation breaks it`, () => {
+    const found = SENTENCES.flatMap((s) => rule(s).map((p) => `"${s.sentence_de}": ${p}`));
+    assert.deepEqual(found, []);
+  });
+}
+
+test('each round-2 rule rejects the mistake it was written for (the pre-fix texts)', () => {
+  for (const { rule, ...entry } of PRE_FIX_ROUND_2) {
+    assert.ok(RULES_ROUND_2[rule](entry).length > 0, `${rule} accepts the pre-fix "${entry.sentence_de}"`);
+  }
+});
+
+test('the round-2 rules accept the correct German they must not fail', () => {
+  // Rule 6: umso, another comparative, and the verbless short form.
+  assert.deepEqual(jeDestoProblems({ sentence_de: 'Je älter man wird, umso weniger schläft man.', hint: "The verb of the je-clause goes to the end ('wird'); in 'umso weniger schläft' the finite verb follows the comparative." }), []);
+  assert.deepEqual(jeDestoProblems({ sentence_de: 'Je früher, desto besser.', hint: 'A fixed short form with no verb.' }), []);
+  // Review of 4ed0fd92: correct German the first draft rejected.
+  assert.deepEqual(jeDestoProblems({ sentence_de: 'Je früher, desto besser für alle.', hint: 'A fixed short form with no verb.' }), []);
+  assert.deepEqual(jeDestoProblems({ sentence_de: 'Je mehr er lernt, desto besser wird sein Deutsch.', hint: "In the je-clause the verb is final ('lernt'); 'desto besser wird' puts the finite verb right after the comparative." }), []);
+  // Rule 7: the full verb werden (geworden) is not the passive participle.
+  assert.deepEqual(wordenProblems({ sentence_de: 'Er ist Arzt geworden.', hint: "Perfekt of 'werden' with 'sein'." }), []);
+  assert.ok(wordenProblems({ sentence_de: 'Das Haus war 1920 gebaut worden.', hint: 'Passive Plusquamperfekt.' }).length > 0, 'misses a Plusquamperfekt passive');
+  assert.deepEqual(wordenProblems({ sentence_de: 'Er soll verhaftet worden sein.', hint: "'sollen' here reports what others say.", grammar_focus: 'sollen for hearsay' }), []);
+  // Rule 8: a zu-infinitive with no sein in its clause, an extraposed subject after
+  // "es", and the claim made correctly.
+  assert.deepEqual(seinZuProblems({ sentence_de: 'Er behauptet, keine Zeit zu haben.', hint: "'keine Zeit zu haben' is an infinitive clause." }), []);
+  assert.deepEqual(seinZuProblems({ sentence_de: 'Das Ziel ist, jeden Tag zu üben.', hint: "'jeden Tag zu üben' is an infinitive clause." }), []);
+  assert.deepEqual(seinZuProblems({ sentence_de: 'Es ist wichtig zu üben.', hint: "'zu üben' is an infinitive clause, the real subject." }), []);
+  assert.deepEqual(seinZuProblems({ sentence_de: 'Die Tür ist nicht zu öffnen.', hint: "'nicht zu öffnen' is an infinitive construction: sein + zu + infinitive." }), []);
+  assert.ok(seinZuProblems({ sentence_de: 'Die Tür ist nicht zu öffnen.', hint: "'zu öffnen' is an infinitive phrase." }).length > 0, 'misses sein + zu in a main clause');
+  assert.deepEqual(seinZuProblems({ sentence_de: 'Er ist bereit zu helfen.', hint: "'zu helfen' is an infinitive phrase." }), []);
+  assert.deepEqual(seinZuProblems({ sentence_de: 'Sie war gezwungen zu gehen.', hint: "'zu gehen' is an infinitive clause." }), []);
+  // Rule 9: a possessive that stands alone, and the right term before a noun.
+  assert.deepEqual(possessiveTermProblems({ sentence_de: 'Das ist nicht sein Buch, das ist meins.', hint: "'meins' is a possessive pronoun.", grammar_focus: 'Possessive pronouns' }), []);
+  assert.deepEqual(possessiveTermProblems({ sentence_de: 'Die Frau schreibt ihrem Freund einen Brief.', hint: "'ihrem' is a possessive article.", grammar_focus: 'Possessive articles in the dative' }), []);
+  assert.ok(possessiveTermProblems({ sentence_de: 'Wir besuchen unsere Großeltern.', hint: '', grammar_focus: 'Possessive pronouns (accusative)' }).length > 0, 'misses "unsere" before a noun');
+  assert.deepEqual(possessiveTermProblems({ sentence_de: 'Ich gebe ihr Blumen.', hint: '', grammar_focus: 'Possessive pronouns' }), []);
+  assert.deepEqual(possessiveTermProblems({ sentence_de: 'Das ist seiner, Peter hat ihn vergessen.', hint: "'seiner' is a possessive pronoun.", grammar_focus: 'Possessive pronouns' }), []);
 });

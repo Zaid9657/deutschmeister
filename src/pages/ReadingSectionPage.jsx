@@ -210,7 +210,7 @@ const ReadingSectionPage = () => {
               size="page"
               title={isGerman ? 'Lesen' : 'Reading'}
               lead={isGerman
-                ? 'Verbessere dein Leseverständnis Schritt für Schritt'
+                ? 'Verbessern Sie Ihr Leseverständnis Schritt für Schritt'
                 : 'Improve your reading comprehension step by step'}
             />
           </div>

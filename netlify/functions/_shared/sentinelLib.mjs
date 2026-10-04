@@ -526,12 +526,15 @@ export function checkDatabase(latencyMs, now) {
 // ─── g. the team's dead-man switch ───────────────────────────────────────────
 //
 // The agent team runs inside ONE orchestrating Claude Code session, woken by
-// Routines, and every wake ends by writing one row to public.agent_heartbeats
-// (migrations/2026-10-01-agent-heartbeats.sql; docs/agents/PROTOCOL.md,
-// "Staying alive"). The sentinel runs on Netlify, independent of that session,
-// so it is the one place that can notice the team has gone silent: a newest
-// heartbeat older than HEARTBEAT_THRESHOLD_HOURS is one critical incident for
-// the supervisor, mailed to the owner (roadmap r17).
+// Routines, and every scheduled wake writes a row to public.agent_heartbeats
+// at its START and another at its END (migrations/2026-10-01-agent-heartbeats.sql;
+// docs/agents/PROTOCOL.md, "Staying alive"; the operating rule recorded with
+// the team's change 2026-10-02-website-heartbeat-check). The start row is what
+// keeps this switch honest: a wake that dies midway still proves the team woke,
+// so a silence here means no wake started at all. The sentinel runs on Netlify,
+// independent of that session, so it is the one place that can notice the team
+// has gone silent: a newest heartbeat older than HEARTBEAT_THRESHOLD_HOURS is
+// one critical incident for the supervisor, mailed to the owner (roadmap r17).
 //
 // Not started is not stopped. A missing table (the migration rolled back) or an
 // EMPTY one (applied, nothing written yet) is SKIPPED, never an incident and
@@ -588,7 +591,7 @@ export function checkHeartbeat(latest, now, thresholdHours = HEARTBEAT_THRESHOLD
         last: latest.last, hours, thresholdHours, session: TEAM_SESSION_ID,
         action: `Open the session ${TEAM_SESSION_ID} on claude.ai/code (unarchive it if it is archived), or check the Routines that wake it.`,
       },
-      hint: `Open the session ${TEAM_SESSION_ID} on claude.ai/code (unarchive it if archived), or check the Routines that wake it (docs/scorecard-routine.md). Each wake ends with one agent_heartbeats row.`,
+      hint: `Open the session ${TEAM_SESSION_ID} on claude.ai/code (unarchive it if archived), or check the Routines that wake it (docs/scorecard-routine.md). Every scheduled wake writes an agent_heartbeats row at its start and another at its end, so ${thresholdHours} h with no row means no wake even started.`,
     })],
     passing: [],
   };
