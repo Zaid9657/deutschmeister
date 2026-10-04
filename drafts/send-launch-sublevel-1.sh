@@ -120,7 +120,9 @@ cannot take back.
 EOF
     exit 1
   fi
-  if [[ -z "${LAUNCH_CONSENT_BASIS:-}" ]]; then
+  # Whitespace alone is no record of a decision (review of 9a2a9a71).
+  consent_basis="${LAUNCH_CONSENT_BASIS:-}"
+  if [[ -z "${consent_basis//[[:space:]]/}" ]]; then
     cat >&2 <<'EOF'
 REFUSING LIVE SEND: LAUNCH_CONSENT_BASIS is not set.
 

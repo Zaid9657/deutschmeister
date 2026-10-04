@@ -31,7 +31,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const read = (rel) => readFileSync(join(ROOT, rel), 'utf8');
 
-const CONSENT_CHECK = '[[ -z "${LAUNCH_CONSENT_BASIS:-}" ]]';
+const CONSENT_CHECK = '[[ -z "${consent_basis//[[:space:]]/}" ]]';
 
 const isRetired = (sh) => {
   const firstCommand = sh.split('\n').slice(1).find((l) => l.trim() && !l.trim().startsWith('#'));
@@ -120,6 +120,16 @@ test('an empty LAUNCH_CONSENT_BASIS counts as unset', () => {
   assert.equal(r.status, 1, r.stderr);
   assert.match(r.stderr, /LAUNCH_CONSENT_BASIS is not set/);
   assert.equal(r.curlCalled, false);
+});
+
+test('a LAUNCH_CONSENT_BASIS of only whitespace counts as unset', () => {
+  for (const blank of [' ', '   ', '\n', ' \t\n ']) {
+    const r = runLive({ LAUNCH_CONSENT_BASIS: blank });
+    assert.equal(r.status, 1, JSON.stringify(blank));
+    assert.match(r.stderr, /LAUNCH_CONSENT_BASIS is not set/, JSON.stringify(blank));
+    assert.equal(r.curlCalled, false);
+    assert.equal(r.liveStamped, false);
+  }
 });
 
 test('with a stated basis the gate opens, and the next guard (an untested copy) still stops the run', () => {
