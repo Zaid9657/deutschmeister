@@ -1,0 +1,150 @@
+{
+  "review": "w2-daf-cando",
+  "role": "Senior DaF teacher — can-do registries A1-B2 (level placement, own wording, completeness for the eight plans and the four primary lanes, plan-line mapping)",
+  "date": "2026-09-27",
+  "scope": [
+    "content/course-v2/registries/cando/{a1,a2,b1,b2}.json",
+    "docs/course-v2/registries-notes/cando-{a1,a2,b1,b2}.md",
+    "docs/course-v2/curriculum/*.json (all 370 can-do lines)",
+    "docs/course-v2/BLUEPRINT.md §2.2, §2.8, §9.1 (ALL-02/04/06)",
+    "docs/course-v2/research/04-cando-a1-a2.md, 05-cando-b1-b2.md, 02-exams-b1.md, 03-exams-b2.md",
+    "content/course-v2/registries/lanes/{sd1,ga2,tb1,tb2}.json (Teil ids)"
+  ],
+  "method": "All four registries parse and pass scripts/course-v2/check.mjs (0 errors; validate.mjs has no content to run on yet). Ids are unique; every id named in a notes file resolves. Plan-line mapping was checked by script: A1 105/105 and B1 88/88 lines are quoted in the notes with an id; A2 81/81 and B2 96/96 lines are mapped by unit·line index, and the per-unit counts equal the plan counts. Wording was checked by a longest-common-word-run script against every ich-Form descriptor in memos 04/05: maximum 6 words (cd.a1.nachfragen), 4-5 in A2/B1/B2, so no verbatim CEFR/Goethe/RC descriptor was found. Each can-do was read for half-level placement against memo 04 F1/F3/F5 and memo 05, against the other three registries (cross-band steps) and against the BLUEPRINT §2.8 Kern-Kann column per row. Lane Teil mappings were compared with the lane files and memos 01-03.",
+  "verdict": "No blocker: all JSON is schema-valid, no wrong exam fact was found in the can-do layer, no descriptor is copied, and every plan line maps to an id. The four registries are individually careful but not yet one system. (1) They key units differently: A1 and B1 map onto BLUEPRINT §2.8 rows, A2 and B2 onto W2 draft numbers that collide with blueprint unit ids, and A1 swaps A1.2 U2/U3. (2) band, online and mediation are defined differently in each file. (3) Several cross-band pairs repeat the same performance, and in one case the order is inverted: irony at B1.2, plain for/against at B2.1. B1+ items are core Lernziele in B2 courses. (4) A2 and B2 miss blueprint Kern-Kann lines, and B1 misses its HF 6 Fokus card. Fix the majors before the registry freeze; the minors can ride along.",
+  "findings": [
+    {
+      "severity": "major",
+      "owner": "cando-a1",
+      "file": "docs/course-v2/registries-notes/cando-a1.md §2, §7",
+      "issue": "The notes say §2 follows the BLUEPRINT §2.8 rows, but A1.2 U2 and U3 are swapped. The notes have a1.2-u02 = 'Einen Termin machen' (H3, S1) and a1.2-u03 = 'Wie komme ich zum Rathaus?' (L3, H1). The blueprint has U2 = Rathaus (Dativ lokal, L3/H1) and U3 = Termin (temporale Präpositionen, Datum, H3/S1). A unit author who looks up a1.2-u02 gets the Termin can-dos for the Weg unit, and the swap flows into the 'core in' column of §7.",
+      "fix": "Swap the two rows. a1.2-u02 = Wie komme ich zum Rathaus?: weg-fragen, weg-folgen, wegweiser, aushang-hinweise; more: ansprechen-bitten, gespraech-details. a1.2-u03 = Einen Termin machen: termin-vereinbaren, datum, sprachnachricht-verstehen, behoerde-internet, info-schalter; more: formular-hilfe, anweisungen-verstehen, formular-person. Update the §7 'core in' cells. halfLevels do not change."
+    },
+    {
+      "severity": "major",
+      "owner": "cando-a2",
+      "file": "docs/course-v2/registries-notes/cando-a2.md §3, §5, §7",
+      "issue": "The A2 notes key units on W2 draft numbers, and those numbers collide with BLUEPRINT unit ids. Examples: a2.1-u03 is 'Immer online?' here but 'Kommst du zu meiner Feier?' in the blueprint; a2.1-u07 is 'Im Verein' here, but the blueprint and the SCHEMA §15 fixture make it 'Am Telefon im Job'; a2.2-u02 is 'Wünsche, Träume, Sorgen' here but 'Wir planen einen Ausflug' in the blueprint. A1 and B1 key on blueprint rows, so the bands disagree. The §7 crosswalk also does not give a usable core set per row. Blueprint rows A2.1-12, A2.2-2 and A2.2-6 are assembled from single lines. E1 line 3 is used for row 1 and row 12. Draft units A2.1 E7 and A2.2 E2/E11 have no row. The 1:1 core placement and the ALL-02 limit of 3-5 per unit therefore cannot be read off for the units that will actually be built.",
+      "fix": "Re-key §3 on the BLUEPRINT §2.8 rows in the A1/B1 format: unit id = blueprint row, Core (3-5), More, W2 lines. Place the SCHEMA fixture's four ids on a2.1-u07. Put the ids of the orphan drafts (Verein, Wünsche/Sorgen, Job-Abläufe) either as core on the nearest row (e.g. ziele-nennen/hoffnungen-aeussern on A2.2 U9 'Mein Weg', arbeitsablaeufe-erklaeren/arbeitsstand-absprechen on A2.2 U10) or as More. Each id stays core in exactly one row."
+    },
+    {
+      "severity": "major",
+      "owner": "cando-a2",
+      "file": "content/course-v2/registries/cando/a2.json",
+      "issue": "A2 has no id for several BLUEPRINT §2.8 Kern-Kann lines. A1 and B1 each added 'neu (Blueprint-Zeile)' ids for this case; A2 did not. Missing: A2.1 U2 'sagen, wohin etwas kommt und wo es steht' (Möbel stellen, Wechselpräpositionen), U3 'über Geschenke sprechen', U5 'höflich reklamieren' (Restaurant), U11 'Ärger ausdrücken', U12 'von einer Reise erzählen' (only an A2.2 Übernachten id exists); A2.2 U3 'eine Buchung ändern', U6 'Bankgeschäfte erledigen' (only karte-verloren-melden), U10 'Stellenanzeigen verstehen' (only the writing id mail-auf-stellenanzeige). The units would have to invent ids (REF-01) or leave the row's core function without a Lernziel.",
+      "fix": "Add one id per missing Kern-Kann line, in our own ich-Form wording, with a verified RC·A2 / GI-A2F / US-A2 tag and the row's halfLevel. Examples: cd.a2.moebel-platzieren, cd.a2.geschenke-besprechen, cd.a2.im-restaurant-reklamieren, cd.a2.aerger-ausdruecken, cd.a2.reise-erzaehlen, cd.a2.buchung-aendern, cd.a2.bankgeschaefte-erledigen, cd.a2.stellenanzeigen-verstehen. Mark them 'neu (Blueprint-Zeile)' in the notes."
+    },
+    {
+      "severity": "major",
+      "owner": "cando-a2",
+      "file": "content/course-v2/registries/cando/a2.json",
+      "issue": "Several A2 ids describe the same performance as an A1 id that is already core in A1.2 or A1.1, so a learner 'gains' the can-do twice with no new step. (a) cd.a2.online-bestellen ('im Internet etwas bestellen und die nötigen Angaben im Bestellformular richtig eintragen') = cd.a1.online-bestellen. (b) cd.a2.durchsagen-verstehen ('anderes Gleis, Verspätung, Zugausfall') = cd.a1.durchsage-reise ('Verspätung oder neues Gleis'), which A1 already moved down by the F5 precedence rule. (c) cd.a2.einladung-beantworten ('zusagen oder absagen und sagen, warum') = cd.a1.einladung-antworten. (d) cd.a2.fragen-zur-person (question from a keyword card, and answer) = cd.a1.fragen-thema. (e) cd.a2.zum-fest-verabreden is very close to cd.a1.verabreden.",
+      "fix": "Reword the A2 ids so each one names its A2 step (memo 04 F3: recombined chunks, und/aber/weil, normal pace). (a) Complete an order and contact customer service about a delivery or a return. (b) Longer announcements with several details: Ersatzverkehr, Anschluss, what to do now. (c) A written reply in the right register with a reason and a counter-proposal. (d) A follow-up question plus an answer in several connected sentences. Alternatively keep an A1 twin in 'more' only. Record each pair's step in the notes, as B1 does for mietvertrag and stoerung-umbuchen."
+    },
+    {
+      "severity": "major",
+      "owner": "cando-a2",
+      "file": "content/course-v2/registries/cando/a2.json (online flags); cando-a2.md §2",
+      "issue": "online:true means something different in each registry. A2 sets it on the receptive angebote-zuordnen and on notiz-hinterlassen ('per E-Mail oder auf einem Zettel'). A1 sets it on the receptive behoerde-internet and handy-menue. B1 sets it on the productive-written meinung-forum. B2 sets it only on online-interaction lines and says forum posts stay false, calling that 'the same rule as the A2 registry'. ALL-06 asks for ≥ 1 online-interaction can-do per half-level. A checker that counts online:true would pass A2.2 on a reading item, even though the A2.2 plan has no online-interaction line and depends on the suggested gruppenchat-absprechen.",
+      "fix": "Adopt one rule for all four registries: online:true only when the can-do is carried out as interaction in a digital channel (mode interaction-written, or interaction-spoken in a video call). Set angebote-zuordnen and notiz-hinterlassen to false. Ask the validator owner to define ALL-06 as online ∧ mode ∈ {interaction-written, interaction-spoken}. Make gruppenchat-absprechen core on the A2.2 Ausflug row, not only a suggestion."
+    },
+    {
+      "severity": "major",
+      "owner": "cando-b1",
+      "file": "content/course-v2/registries/cando/b1.json (cd.b1.kommentare-ironie, cd.b1.meinungsbeitraege-einmal)",
+      "issue": "Placement. kommentare-ironie asks B1.2 learners to recognise stance 'wenn er es ironisch … sagt'. Recognising irony and inferring an implicit attitude sits at B2 and above (memo 05; CEFR identifying cues/inferring). Its format source, Goethe B1 Lesen Teil 4, asks only whether a writer is for or against. It also inverts the progression: cd.b2.leserkommentare-haltung (B2.1) asks only for dafür/dagegen/unentschieden. Similarly, meinungsbeitraege-einmal expects the main point of statements heard once 'auch wenn sie ihre Meinung nicht direkt ausspricht'. Item writers would build B1 items that are too hard.",
+      "fix": "Reword kommentare-ironie to 'auch wenn jemand seine Meinung mit Einschränkungen oder nur andeutungsweise äußert' (new id if the meaning changes, ID-01). Move irony to a B2 step (see the cando-b2 finding on leserkommentare-haltung). In meinungsbeitraege-einmal drop the 'nicht direkt' clause, or limit it to 'mit Einschränkungen'."
+    },
+    {
+      "severity": "major",
+      "owner": "cando-b1",
+      "file": "docs/course-v2/registries-notes/cando-b1.md §2 (b1.1-u08, b1.1-u03), §11 open issue 2; b1.json (beratung-gespraech, kursanfrage-schreiben, durchsage-weitergeben)",
+      "issue": "Three things in the B1 notes do not match the current blueprint. (1) B1.1 U8 is 'Weiterbildung im Betrieb' there: Beratungsgespräch mit der Personalabteilung, HF 2, 4. The notes call it 'Welcher Kurs passt zu mir?'. (2) The blueprint tags B1.1 U3 as HF 10, 2 (Verspätung auf dem Weg zur Arbeit; die Durchsage für das Team weitergeben). (3) The blueprint's ALL-06 recount lists the B1.1 work units as U3, U7 and U8. Open issue 2 concludes that only two B1.1 rows are work units and proposes re-framing U2 or U11. That is a stale reading which would push the curriculum agents into an unnecessary deviation. The can-dos also lack the work framing: beratung-gespraech (hf 4), kursanfrage-schreiben (VHS, hf 4, 11) and durchsage-weitergeben (for 'einer Mitreisenden') carry no workplace context or HF 2.",
+      "fix": "Retitle b1.1-u08 as the blueprint does. Reword beratung-gespraech to a betriebliche Weiterbildungsberatung (Personalabteilung) with hf [2, 4], and keep kursanfrage-schreiben as the SA task. Reword durchsage-weitergeben to relay the announcement to Kolleginnen or the Team, with hf [10, 2], as blueprint U3 names it. Withdraw open issue 2 and its U2/U11 proposal."
+    },
+    {
+      "severity": "major",
+      "owner": "cando-b1",
+      "file": "content/course-v2/registries/cando/b1.json; cando-b1.md §11 open issue 4",
+      "issue": "B1 has no HF 6 (Kinder/Betreuung) can-do, although BLUEPRINT §2.8 plans a Fokus-DaZ card 'Betreuungsvertrag und Kita-Ordnung' (HF 6) on B1.2 U8 and ALL-04 is hard at B1. The notes say no B1 RC goal in HF 6 was found. Memo 04 F2 counts 6 RC goals at B1 in HF 6. The card will need a Lernziel id, and REF-01 forbids inventing one.",
+      "fix": "Add one id, e.g. cd.b1.betreuungsvertrag-verstehen: receptive-written, halfLevel b1.2, hf ['6'], ich-Form: find the rules on fees, pick-up times, illness and notice periods in a Kita contract or house rules. Source it from an RC HF 6 B1 goal after a page check. Place it as More/Fokus on B1.2 U8."
+    },
+    {
+      "severity": "major",
+      "owner": "cando-b1",
+      "file": "docs/course-v2/registries-notes/cando-b1.md §2 (b1.2-u06), §10",
+      "issue": "cd.b1.symptome-genau (describing symptoms to a doctor precisely, B1+) is core in B1.2 U6 'Einspruch!', whose situation is 'falsche Rechnung, Versicherung, Fristen · 1, 5'. The unit would have to invent a doctor scene to prove it, which works against ALL-05 and situational coherence. It also puts the Konsultation spiral step in a non-consultation unit. The notes see this (open issue 1) but make the incoherent option the default.",
+      "fix": "Make the in-situation id the default core: versicherung-gespraech, or unfall-schildern if U6 keeps the accident. Carry symptome-genau as More plus a Fokus-Karte Gesundheit on U6, or as More on B1.2 U4/U10, and name it there as the thread's B1.2 step."
+    },
+    {
+      "severity": "major",
+      "owner": "cando-b2",
+      "file": "content/course-v2/registries/cando/b2.json (cd.b2.telefonnotiz-weitergeben, cd.b2.weg-zum-ziel-erklaeren); cando-b2.md §2 band",
+      "issue": "Two core Lernziele in the B2 courses are B1+ and repeat B1.2 ids. telefonnotiz-weitergeben (B2.1 core, band B1+, a call turned into a note for colleagues) is the same performance as cd.b1.nachricht-notieren (B1.2 core, B1+, mediation). weg-zum-ziel-erklaeren (B2.2 core, B1+) corresponds to cd.b1.ablaeufe-erklaeren (B1+). Memo 05 §3 places B2.2 at 'B2 → B2+', so a B1+ core item there misplaces the level. The band field also means different things per registry. A1 and B1 use the level the course expects. A2 and B2 use the level of the source descriptor. For B2 that reads as 'this B2 course teaches B1+'.",
+      "fix": "Rewrite both ids to a B2 performance and tag them B2. For the note: several callers or a complex problem, marking the priority and next step (SB·B2 Mediation, relaying specific information in writing). For the path to a goal: compare alternative ways and justify one with reasons (ZM·B2). Otherwise move them to More. Adopt the A1/B1 semantics for band (the level of the expected performance; the source level stays in the source tag) and update §2."
+    },
+    {
+      "severity": "major",
+      "owner": "cando-b2",
+      "file": "content/course-v2/registries/cando/b2.json (leserkommentare-haltung, fest-planen-kompromiss, kursanzeigen-auswaehlen, meldungen-ueberschriften)",
+      "issue": "Several B2 ids name no step beyond a B1 id. cd.b2.leserkommentare-haltung (B2.1: dafür, dagegen oder unentschieden) is word for word the performance of cd.b1.kommentare-haltung (B1.1), and it is easier than cd.b1.kommentare-ironie (B1.2), so the progression is inverted. cd.b2.fest-planen-kompromiss ≈ cd.b1.gemeinsam-planen plus aufgaben-verteilen (B1.1 U2, also a Fest). kursanzeigen-auswaehlen and beratungsangebote-auswaehlen ≈ cd.b1.anzeigen-gezielt and angebot-fuer-andere. meldungen-ueberschriften ≈ cd.b1.pressemeldungen-ueberschriften. The telc formats are the same at B1 and B2, but the Lernziel must say what is harder.",
+      "fix": "Name the B2 step in the wording. Stance: implicit or qualified positions, irony, concessions (take over the irony clause removed from B1). Planning: negotiate under constraints and justify trade-offs. Ads and headlines: longer texts, close distractors, paraphrased rather than repeated keywords. Record each B1→B2 pair in the notes, as cando-b1.md §5 does against A2."
+    },
+    {
+      "severity": "major",
+      "owner": "cando-b2",
+      "file": "docs/course-v2/registries-notes/cando-b2.md §3, §7",
+      "issue": "Like A2, the B2 notes key on W2 draft numbers that collide with blueprint unit ids. b2.1-u05 is Konsum here, but the blueprint's U5 is Zusammen wohnen. b2.1-u06 is Wissen here, but the blueprint's U6 is Presse mit Haltung. b2.2-u02 is Ernährung here, but the blueprint's U2 is Ein Vortrag. A1 and B1 key on rows. The §7 crosswalk cannot give 1:1 core sets per row. Draft b2.2-u02 feeds rows 3 and 5, draft u10 feeds rows 2 and 12, and B2.1 row 10 'Radio und Podcast' has no unit. The eigene-Fehler goal of blueprint B2.1 U12 sits in draft u01. Units built on the blueprint rows cannot read their 3-5 Lernziele from this file.",
+      "fix": "Re-key §3 on the BLUEPRINT §2.8 rows with Core, More and W2-lines columns, as cando-a1.md and cando-b1.md do. Split the double-used drafts so each id is core in exactly one row. Give B2.1 row 10 its listening ids (radio-standpunkte-erfassen, radiodiskussion-meinungen-zuordnen, nachrichten-einmal-hoeren or the like). Keep the draft map as a secondary column."
+    },
+    {
+      "severity": "major",
+      "owner": "cando-b2",
+      "file": "content/course-v2/registries/cando/b2.json",
+      "issue": "Several BLUEPRINT §2.8 Kern-Kann lines have no B2 id. (a) B2.1 U11 'Sachtexte verstehen und für andere zusammenfassen (Mediation)': draft u06, the row's source, has no mediation id, and vortrag-schriftlich-weitergeben is about a talk, not a Sachtext. (b) B2.2 U7 'Kritiken verstehen und verfassen': there is no review/Rezension id, receptive or productive. (c) B2.2 U10 'Bescheide verstehen': only the Widerspruch writing id exists. (d) B2.2 U11 'Reportagen verstehen; Varietäten erkennen': reportagen-verstehen is reserve only, and no id covers recognising regional varieties.",
+      "fix": "Add the ids in our own wording with ZM/SB/BSK tags: cd.b2.sachtext-fuer-andere-zusammenfassen (mediation, b2.1); cd.b2.kritik-verstehen and cd.b2.kritik-schreiben (b2.2, HF 9); cd.b2.bescheid-verstehen (receptive-written, HF 1); cd.b2.varietaeten-erkennen (receptive-spoken, HF 9/10). Promote reportagen-verstehen from reserve to the U11 core."
+    },
+    {
+      "severity": "minor",
+      "owner": "cando-b2",
+      "file": "docs/course-v2/registries-notes/cando-b2.md §5.2",
+      "issue": "The tb2 Teil table mis-files several ids. LV1 is headline matching over five reports (memo 03 §2), but it lists stance-reading ids from Goethe L1/L4: forum-einstellungen-erkennen, leserkommentare-haltung, karriereforum-haltungen, forum-aussagen-zuordnen, stellungnahmen-einordnen. SB1 in B2.1 lists brief-gefuehle-abstufen, which is a writing can-do. SB2 lists sachtext-verweise-verstehen (Goethe L2) and nominalstil-umformen (productive). So B2.1 SB1 and B2.2 SB2 have no genuine Sprachbausteine can-do, and an author who follows the table could write LV1 proofs in the wrong format.",
+      "fix": "List only headline-matching ids under LV1 and file the stance-reading ids under '— (course can-do, Goethe format)'. Either add one SB1 id for B2.1 and one SB2 id for B2.2, or state that SB is trained in LS4 without a Lernziel in those halves."
+    },
+    {
+      "severity": "minor",
+      "owner": "cando-b2",
+      "file": "content/course-v2/registries/cando/b2.json (forumsbeitrag-150-woerter, referat-vier-minuten, nachricht-vorgesetzte-100, forumsbeitrag-vier-punkte)",
+      "issue": "Learner-facing Lernziele carry Goethe-B2 exam lengths and formats ('in Prüfungslänge von rund 150 Wörtern', 'etwa vier Minuten', 'rund 100 Wörtern', 'vier vorgegebene Punkte'), but the only live B2 lane is telc. There, SA is an e-mail ≥ 150 words on 3 of 4 Leitpunkte and M1 is about 1½ minutes. A learner reading 'Prüfungslänge' will assume it describes the exam they are preparing for.",
+      "fix": "Drop 'Prüfungslänge' and the Goethe-specific counts from the de text; keep them in the unit's task spec. Write the telc form ('mindestens drei von vier Punkten') only where a can-do is filed under tb2.sa."
+    },
+    {
+      "severity": "minor",
+      "owner": "cando-a2",
+      "file": "content/course-v2/registries/cando/a2.json (persoenliche-mail-verstehen, laengere-mail-verstehen, zeitungsartikel-verstehen)",
+      "issue": "Source tag and level do not match the wording. Both mail ids tag GER-R·A2, whose reading cell covers short, simple personal letters. What they describe (a longer personal e-mail with events, feelings, plans and reasons) is the B1 cell of the grid. zeitungsartikel-verstehen promises 'die Hauptaussagen und wichtige Einzelheiten' of a newspaper article, which reads above A2.",
+      "fix": "Keep US-A2 L3 / L1 as the primary source and drop GER-R·A2, or add a precedence note (exam tests it at A2). Limit the wording to 'kurze/einfache' texts and concrete, predictable information for a2.1, and allow 'längere' only in the a2.2 id."
+    },
+    {
+      "severity": "minor",
+      "owner": "cando-a2",
+      "file": "content/course-v2/registries/cando/a2.json (urlaubsantrag-ausfuellen, einladung-beantworten); cando-a2.md §5.2, §5.3",
+      "issue": "(1) mode differs from the sibling registries. urlaubsantrag-ausfuellen is interaction-written, while every A1 form (formular-person, ueberweisung, dienstplan) is productive-written. einladung-beantworten is interaction-written although it says 'mündlich oder schriftlich'. (2) A2.2, the exam course, has no Lernziel of its own for ga2 L2 and H3. (3) The blueprint's A2.1 U10 Fokus-DaZ 'Ein Elternbrief aus Kita und Schule' (HF 6) has no a2.1 id. All HF 6 reserve ids are a2.2, and none of them is reading a parent letter.",
+      "fix": "Set forms to productive-written and fix one channel per id. Add a2.2 twins for L2 (orientation board or directory) and H3 (short dialogues heard once), with their own step, if a slot frees up. Add cd.a2.elternbrief-verstehen (receptive-written, a2.1, hf ['6'], RC HF 6 A2 goal) for the Fokus card."
+    },
+    {
+      "severity": "minor",
+      "owner": "cando-a1",
+      "file": "content/course-v2/registries/cando/a1.json (behoerde-internet, handy-menue); cando-a1.md §8",
+      "issue": "(1) online:true is set on two receptive-written items, which diverges from B2's online-interaction rule (see the cando-a2 major on the online flag). (2) §8 says the draft lines were 'none … copied into the registry'. In fact several de texts reproduce draft lines almost verbatim: frueher-arbeit is identical to a1.2-u02 #5, and gefallen, koennen-gern, schalter-telefon-bitten, im-haus-regeln and bestellt-bezahlt share runs of 8-12 words with draft lines. This is legally harmless, because the drafts are already paraphrases (the longest run against memo 04 descriptors is 6 words, in nachfragen), but the statement is inaccurate.",
+      "fix": "Set online:false on both items once the shared rule is adopted. Correct the §8 sentence ('reworded against the descriptors; some lines keep the draft's paraphrase') and give the measured maximum run, as the A2/B1/B2 notes do."
+    },
+    {
+      "severity": "minor",
+      "owner": "cando-b1",
+      "file": "content/course-v2/registries/cando/b1.json (mediation flags); cando-b1.md §9",
+      "issue": "The mediation flag has two rules. B1 sets mediation:true on interaction-spoken (meinungen-wiedergeben-vergleichen) and productive-written ids (infotext-zusammenfassen, besprechung-ergebnisse-weitergeben). B2 sets it 'exactly when mode is mediation'. The ALL-06 mediation quota could then be counted two ways.",
+      "fix": "Agree one rule with cando-b2 and the validator owner. Recommended: mediation:true whenever the can-do relays or relates content for a third party, whatever the mode; ALL-06 counts the flag, not the mode. State it the same way in both notes."
+    }
+  ]
+}

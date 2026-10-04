@@ -1,0 +1,312 @@
+{
+  "review": "a1.1-u01.r2",
+  "unitId": "a1.1-u01",
+  "file": "content/course-v2/a1.1/units/u01.json",
+  "round": 2,
+  "date": "2026-09-27",
+  "reviewers": [
+    {
+      "id": "R1",
+      "persona": "Prüferin (lizenzierte Goethe-A1-Prüferin): Prüfungstreue, Rubrik, Aufgabenklarheit"
+    },
+    {
+      "id": "R2",
+      "persona": "Kursleiterin DaF (A1.1): Natürlichkeit, Niveau, Didaktik, Szenenplausibilität"
+    }
+  ],
+  "method": "Both reviewers read every German string of the unit again. This covered title and title.canDo, spec.situation and the new spec.deviation, and the start: recapDe, the Folge title, its 9 lines and the gist item. It covered the LS1 and LS2 dialogues (10 lines each), the LS3 chat, the 6 H1 texts (27 lines), the strategy card and the 8 redemittel. For LS5 we read both speaking parts (situation, instructions, cards), aiRole, openingLine, the 8 hintWords and the 15 modelTurns. For LS6 we read the S1 task (title, situation, taskDe, 5 labels, checklist, model). We also read the 2 check lines, story.beat and the cliffhanger, every endLine and modelSentence, every explanation, the u01 entries of a1.1/lexicon.json, and the rule cards rc.praesens and rc.verbposition-2. We solved all 99 authored items blind from promptDe plus their options, tiles or audio line: start gist 1, input items 15, structured input 12, pool 37, reserve 15, exam 6, check 9, proof 4. We also solved the 5 form fields. For sentence_building we permuted the tiles and checked each V2 and V1 order against accepted[] and the prompt frame. We graded candidate answers with src/lib/course-v2/checkItem.js itself (results quoted in previousFindings and F06). We compiled a1.1 into the scratchpad with node scripts/course-v2/compile.mjs a1.1 --out <scratch> --banks-out <scratch>, so nothing was written to the repo. We then ran the server's own normalizeSpeakingTask, buildCoursePartnerPrompt and criteriaPlan on the compiled a11-u01-s entry, and on a11-u04-s for comparison (F01). LEX-01 does not walk some surfaces: recapDe, the Folge title and lines, story.beat, the cliffhanger, openingLine, hintWords, modelTurns, the strategy card, redemittel, the S1 title/situation/labels/model, step titles, modelSentences and readAloud lines. We measured unknown tokens on them with the validator's knownForms, licensedForms, knownCompound and INSTRUCTION_METALANGUAGE. We recomputed word counts with the validator's wordCount: h1 46/46/36/38/36/51, S1 situation 36, LS3 chat 110, Folge 85, cliffhanger 22, Sp1/Sp2 situations 28/29. We checked the exam blocks against content/course-v2/registries/lanes/sd1.json: h1 = 6 × abc, 3 options, 2 plays, [32–53] words; sp1 = monologue from a keyword sheet, rubric sd1-sp1 with 3 criteria; sp2 = cards-ask, 2 rounds, 2 points per question and 1 per answer, 6 in all; s1 = a 5-gap form with a situation of [36–48] words. We also checked them against the rubric files sd1-sp1, sd1-sp2, sd1-s1, course-micro and course-micro-sp. We read the grammar ceiling against grammar-spine.json and curriculum/a1-1.md §6 U1 and §9, and the new-word load against level-profiles.json (a1.1: 24–32 new entries, productive share 0.5, sentences ≤ 12 words). We read the can-dos against registries/cando/a1.json. We checked the cast against casts/a1.json and series.json: languages, origins, Uwe Richter's office role and the voices. We checked the story against u02 (Empfang, „Neir“), u03 (Satzmelodie in LS1, „Wie geht's?“) and u12 (Wortakzent in LS1), each of which the new deviation cites. We re-read the u04 exemplar and its five review rounds and checked each of their finding classes here (see notes). No 360 px walkthrough was run; that is the walkthrough reviewer's remit.",
+  "validator": {
+    "command": "node scripts/course-v2/validate.mjs content/course-v2/a1.1/units/u01.json",
+    "result": "FAIL (exit 1). 40 rules: 30 pass, 3 fail, 2 warn, 5 skipped. Findings: 3 blocker, 9 ratchet, 32 advisory. In r1 the result was OK with 0 blockers. The 3 blockers are all in F02. (1) LEX-02: „geschafft“ is allocated to a1.1-u01 but occurs in none of its authored German strings. (2) LEX-05: lexicon.json and specs.json allocate lx.geschafft to a1.1-u01, but spec.lexiconBlocks omits it. (3) COV-3: spec.lanes differs from a1.1/specs.json at pruefungsfokus[1] and [2]. The LEX-02 ratchet is 10 (r1: 7). begrüßen recurs in 0 later units. geschafft occurs 0× in the inputs and in 0 later units. woher recurs in 1 later unit (r1: 0). sich vorstellen occurs 1× in the inputs and in 0 later units, because the r1-F09 fix removed its two inflected input uses. Wohnort, Spanisch and Muttersprache recur in 1 later unit each (F05). GRM-04 gives 24 advisories (r1: 16), and none is a real ceiling breach (F10). 19 are bestimmter/unbestimmter Artikel: „der Türkei“, „der Ukraine“, „der Kurs“, „eine Stadt“, „der Prüfung“, „die Gesprächsleitung“, „den Karten“, and 4 on item answers, 3 of them the plan chunk „aus der Türkei“. det.modal-koennen and det.reflexiv-pronomen fire on title.canDo „Sie können grüßen, sich vorstellen …“. det.trennbare-verben and det.reflexiv-pronomen fire on the Sp1 instruction „Stellen Sie sich vor“. det.adjektiv-endung-bestimmt fires on „Das lernen Sie bald.“ LEX-01 gives 8 advisories. story.cliffhanger is at 90.9 % (Anmeldung, schreibt) (F09). Urdu, Malayalam and Albanisch appear on item prompts and explanations; they are glossed on the input screens and have an English twin on the item screens, which is acceptable. „St“ is the ls3-p06 first-letter cue (a false positive, F10). „groß“ in the c08 explanation is lx.gross a1.1-u05, with an English twin on the screen.",
+    "check": "node scripts/course-v2/check.mjs content/course-v2/a1.1/units/u01.json → 0 errors",
+    "notes": "The unit compiles (course-v2 compile a1.1 into the scratchpad: 12 units compiled, 0 coming). The compiled speaking bank entry a11-u01-s is the evidence for F01. The validator is red, but not because the unit regressed in content. The lexicon owner allocated a new lemma to u01 after r1, and specs.json was not updated to the r1 fixes."
+  },
+  "previousFindings": [
+    {
+      "id": "r1-F01",
+      "severity": "blocker",
+      "status": "open",
+      "evidence": "The unit part landed. spec.lanes.pruefungsfokus[1].length is 'reduced'. aiRole.personaDe says „Teil 1: Nur die Vorstellung: kein Buchstabieren, keine Zahl (das kommt in Einheit 2).“ situationDe no longer promises the exam parts in unknown words. The owner part did not land. registries/rubrics/speaking/sd1-sp1.json still has vorstellen / buchstabieren / nummer with max 3, and grade.mjs appliesTo() still knows only appliesIf 'targets'. A second, deeper cause was found: the speaking functions ignore `parts` altogether. Carried forward as F01 (blocker, class)."
+    },
+    {
+      "id": "r1-F02",
+      "severity": "major",
+      "status": "fixed-in-unit",
+      "evidence": "LS5 now has an sd1.sp2 round: topics „Kurs“ and „Sprachen“, learner cards „Kurs – Land“ and „Sprachen – Englisch“, and a model that asks „Woher kommen Sie?“ and „Sprechen Sie Englisch?“ and ends „Danke, auf Wiedersehen!“. cd.a1.person-erfragen and cd.a1.verabschieden carry aufgabe 'sprechen'. ls3-mo now asks „Woher? Wo? Sprachen?“. rm09 („Sprechen Sie Englisch? – Ja, und ein bisschen Deutsch.“) asks about languages, and the round is logged in spec.deviation. In the running session, however, the AI is never set up for this round and the grader does not score it. That is F01."
+    },
+    {
+      "id": "r1-F03",
+      "severity": "major",
+      "status": "fixed-in-unit",
+      "evidence": "No unit string contains „Was sprichst du / Was sprechen Sie“ any more. ls2-l01 to -l03, t3-l01 and the q04 stem use the plan chunk „Sprichst du (auch) Englisch?“. ls2-p07 is now „Was lernen Sie hier?“. The deviation records why „Welche Sprachen …?“ waits for a spine chunk (g.welch-dies a1.2-u06). The row „Was | sprechen | Sie?“ on rc.verbposition-2 is unchanged and is carried forward as F04."
+    },
+    {
+      "id": "r1-F04",
+      "severity": "major",
+      "status": "partly-fixed",
+      "evidence": "ls1-i04, ls2-i04 and ls3-i03 now carry „(Stadt)“ in promptDe, so „Deutschland“ is excluded by the German prompt and no longer only by promptEn. „Pristina“ was not added to ls3-i03. checkItem: „Prishtina“ → correct, „Pristina“ → typo, „Priština“ → wrong. The residue is logged in F06 (minor)."
+    },
+    {
+      "id": "r1-F05",
+      "severity": "major",
+      "status": "fixed",
+      "evidence": "f5 now has exact 'name' and accepted [„A1“, „A 1“, „Kurs A1“, „Deutschkurs A1“, „A1 online“]. checkItem: „A1“, „Kurs A1“, „A1, online“ → correct; „a1“ → typo; „1“, „eins“, „B1“ → wrong. The gist MC still carries exact 'name', which is harmless on a choice item."
+    },
+    {
+      "id": "r1-F06",
+      "severity": "major",
+      "status": "fixed-in-unit",
+      "evidence": "The ls1-r05 promptDe is now „Im Kurs sagen die Teilnehmer „du“. Olena fragt Bilal. Was passt?“, so the du convention is on the screen wherever the reserve item is drawn. ls1-p04 is „Und wer bist du?“. rc.praesens is unchanged („du sagen Sie zu Freunden …, Sie zu fremden Erwachsenen …“) and is carried forward in F04."
+    },
+    {
+      "id": "r1-F07",
+      "severity": "major",
+      "status": "open",
+      "evidence": "lx.tuerkisch.example is still „Emre spricht Türkisch und Englisch.“. Carried forward as F03 (major, lexicon owner)."
+    },
+    {
+      "id": "r1-F08",
+      "severity": "minor",
+      "status": "fixed",
+      "evidence": "With the validator's own knownForms, licensedForms and metalanguage allowlist, every German-only task surface now reads as known or instruction metalanguage. That includes both speaking situations (28 and 29 words), both speaking instructions, openingLine, recapDe („… Heute beginnt der Kurs A1.“), the Folge title „Heute im Kurs A1“, ls1-mo, the S1 checklist („Name: Vorname und Name“, „Kurs: A1? A2?“), h1-03 („Was lernt Lukas?“), the LS3 gist prompts, title.canDo („… und Tschüss sagen.“) and the LS7 endLine. „Herkunft“ is gone from every learner surface. The one residue is the cliffhanger (Anmeldung, schreibt, man, Ihr), now named and placed, which F09 carries."
+    },
+    {
+      "id": "r1-F09",
+      "severity": "minor",
+      "status": "fixed-in-unit",
+      "evidence": "Both separable-verb previews are gone. The Folge l08 now reads „Er ist auch Teilnehmer, online aus İzmir …“ and the chat reads „Das ist Arta. Arta lernt online.“. The spine part has not landed: g.praep-dativ chunkFrom is still a1.1-u05, g.artikel-genus-plural has no receptive intro at u01, and g.vokalwechsel has no chunkFrom. The detector noise grew from 16 to 24 advisories. Both points are carried forward in F10."
+    },
+    {
+      "id": "r1-F10",
+      "severity": "minor",
+      "status": "open",
+      "evidence": "The lexicon roles are unchanged: lx.woher and lx.freut-mich are receptive, and lx.begruessen and lx.sich-vorstellen are productive. The examples of lx.begruessen, lx.online and lx.sich-vorstellen are unchanged. The unit now has 35 entries, because lx.geschafft was added. Carried forward as F05."
+    },
+    {
+      "id": "r1-F11",
+      "severity": "minor",
+      "status": "fixed",
+      "evidence": "Every listed line was rewritten: ls1-l01 „So, jetzt bitte auf Deutsch: …“, ls1-l09 „Aha, aus Kochi! …“, ls2-l01 „… Im Kurs sagen Sie „du“: …“, ls2-l02 „Hallo, Priya! Ich bin Bilal. Sprichst du Englisch?“, t5-l04 „Kommen Sie bitte! Der Kurs beginnt jetzt.“. The ls3-i05 explanation now reads „Englisch sprechen nur Arta und Olena.“ (for its scope, see F08), and ls2-p08 and ls2-r02 use „… auf Position 1? Dann …“. One new instance of the class („Und jetzt frage ich Sie:“) is logged in F09."
+    },
+    {
+      "id": "r1-F12",
+      "severity": "minor",
+      "status": "partly-fixed",
+      "evidence": "Every H1 option is now heard in its text: „Guten Tag“ by Tom in t5, and „in Hamburg“ by Tom in t6. t4 is new („So, jetzt ist der Kurs zu Ende. …“). h1-04 is now an information item („Wann ist der Kurs wieder?“ heute / jetzt / morgen, all three heard). x.ana is now x.anna. x.peter-braun speaks with de-AT-JonasNeural (variety A), which fits his Vienna origin and his „Grüß Gott“. h1-05 still asks which greeting formula a speaker uses (F07)."
+    },
+    {
+      "id": "r1-F13",
+      "severity": "minor",
+      "status": "partly-fixed",
+      "evidence": "ls3-s04 now quotes the chat („Wohnort: Prishtina.“). The hintWord „Meine Muttersprache ist …“ was added. The cliffhanger introduces Herr Richter („Ich bin Uwe Richter, von der Anmeldung.“), and castIn includes cast.herr-richter. The ls3-i02 prompt is „Was schreiben …?“ with the key „Name, Wohnort und Sprachen“. The Sp1 model still says only „Ich spreche Englisch und ein bisschen Deutsch.“ (F08)."
+    },
+    {
+      "id": "r1-F14",
+      "severity": "minor",
+      "status": "fixed",
+      "evidence": "spec.deviation now names every departure and where it lands, and we checked each claim. The W-question melody is in u03 LS1 („Satzmelodie: Ja/Nein-Frage steigend ↗ … W-Frage fallend ↘“). The word stress of countries is in u12 LS1. „Wie geht's?“ occurs 12× in u03. The D-A-CH point is a glossed „Grüß Gott“ (t2, Peter Braun from Vienna), and „du oder Sie?“ is LS2. tt.sms was dropped. The deviation's LS2 description does not match the micro-output it describes (F08)."
+    },
+    {
+      "id": "r1-F15",
+      "severity": "minor",
+      "status": "open",
+      "evidence": "SCHEMA §3.1 ErrorTag and grade.mjs ERROR_TAGS still have no verb-ending tag, and ls3-r04 still carries no errorTag. Carried forward as F11 with one new instance: the ending items are mis-tagged 'register'."
+    },
+    {
+      "id": "r1-F16",
+      "severity": "minor",
+      "status": "fixed",
+      "evidence": "ls2-p11 and c06 now accept all four V2 orders with acceptedWhy (checkItem: „In Leipzig wohne ich jetzt.“ and „Deutsch lerne ich heute.“ → correct). The dictation source ls2-l10 is now „Bis morgen, Priya!“, with no tschüs/tschüss variant. The ls3-s02 explanation explains the sentence-initial capital. Key positions no longer matter, because the player seeds the order of non-exam options (src/lib/course-v2/unitPlan.js orderedOptions)."
+    }
+  ],
+  "verdict": "Not exit-ready: 2 BLOCKER, 2 MAJOR, 7 MINOR. The unit's own content is much better than in r1. 12 of the 16 r1 findings are fixed or fixed in the unit, the German on every unit surface is correct, and du/Sie is right everywhere. Every one of the 99 keys is right. H1 and S1 are exact to sd1.json, and every German-only task surface now uses known words. What stops exit lies mostly outside the unit file. (1) The Sprechen fix does not reach the learner (F01, blocker, class). The speaking functions ignore `parts`, although SCHEMA §12 says they read them. The AI partner is therefore given only the Teil 1 monologue script, without the learner's Teil 2 cards. The whole session is then graded with sd1-sp1 alone, which still scores „buchstabieren“ and „nummer“. So the new Teil 2 round is neither run nor scored, and a flawless session shows at most „1 von 3“. The same defect sits in 8 A1.1 units, including the u04 exemplar. That makes it a stop-the-line class: A1.1 cannot be declared finished until the engine reads `parts`. (2) The validator is red with 3 blockers (F02). lx.geschafft was allocated to u01 after r1 but is neither listed nor used, and specs.json still describes the pre-r1 Sprechen. (3) Two owner-held MAJORs from r1 are untouched. The u01 word card still says Emre speaks English (F03). The LS2 rule card still models „Was sprechen Sie?“, and rc.praesens still reads like „du sagen“ (F04). The minors are residues: the lexicon roles and load, 5 small item points, one formula item in H1, 5 small scene breaks, 5 small wording and look-ahead points, detector noise, and the missing verb-ending ErrorTag.",
+  "scores": {
+    "D": 3,
+    "N": 4,
+    "H": 4,
+    "A": 4,
+    "P": 2,
+    "K": 3,
+    "E": 4
+  },
+  "scoreNotes": {
+    "D": "The unit's own German is correct and mostly idiomatic, and du/Sie is right in every relationship. It stays at 3 because the rule card LS2 shows still prints the calque „Was sprechen Sie?“ as its model W-question, and rc.praesens cites „du“ and „Sie“ unquoted in a sentence that reads like an agreement error (F04). There are also two stilted lines (F09).",
+    "N": "Production lines stay inside the u01 ceiling, and every German-only task surface is known words or metalanguage. It is 4 and not 5 for four reasons. The unit carries 35 new entries against a band of 24–32 and a plan of 26, with receptive lemmas typed (F05). The cliffhanger is German-only and above level (F09). One hint word produces a u03 possessive (F09). An unglossed ihr-form sits in LS2 (F09).",
+    "H": "The first day is believable: a corridor Folge, the intro round, pair questions with Olena late and forgetting a name, an evening chat, and Sp1 plus Sp2 closing with „Auf Wiedersehen“. The Austrian „Grüß Gott“ adds a little colour. It is 4 and not 5 because the LS3 micro-output has the learner ask Olena what the chat just told them (F08). The unit designs every can-do's performance correctly, but in the live session the Sp2 performance depends on F01.",
+    "A": "Every key is right, every sentence-building order is accepted, and explanations name the position. It is 4 and not 5 because of small residues (F06): „Pristina“ and „Priština“ are not accepted, a „was“ tile under „Bilden Sie die Frage“ admits a colloquial V1 question, one input item's distractors are ruled out by its own prompt, the one bare „Korrigieren Sie:“ is left, and one sentence-building explanation explains agreement.",
+    "P": "H1 and S1 are exact to sd1.json. H1 has 46/46/36/38/36/51 words, all inside the raw band, 6 × abc with 2 plays, all options heard and keys 2/2/2. S1 has 5 gaps and a 36-word situation, and every task is original. It scores 2 because the Sprechen task is delivered and scored on the wrong rubric (F01). The AI runs Teil 1's monologue script with no Teil 2 cards, and one sd1-sp1 score covers both Teile while it still counts buchstabieren and nummer. h1-05 still tests a formula (F07).",
+    "K": "The cast facts, the new Herr Richter introduction and the step into u02 (Empfang, „Neir“) are consistent, and the deviation's cross-references are true. It scores 3 because this unit's word card contradicts the chat and the cast bible about Emre's English (F03). The validator shows specs.json and the lexicon out of step with the unit (F02). Several small breaks remain (F08).",
+    "E": "Instructions are ≤ 90 characters. The German-only screens are now readable, early success is there, and the check endLine names the win. It is 4 and not 5 because the LS2 endLine claims „Sie können „Tschüss“ sagen“ after a step in which the learner only recognises it (F08). No 360 px walkthrough was run."
+  },
+  "total": 24,
+  "counts": {
+    "blocker": 2,
+    "major": 2,
+    "minor": 7
+  },
+  "findings": [
+    {
+      "id": "F01",
+      "reviewer": "R1",
+      "criterion": "P",
+      "severity": "blocker",
+      "scope": "class",
+      "unitId": "a1.1-u01",
+      "path": "steps[4].task.parts[0..1] (sd1.sp1 + sd1.sp2); compiled bank entry a11-u01-s; scripts/course-v2/lib/compiler.mjs speakingEntry (l. 287–303); netlify/functions/_shared/speakingAI.mjs normalizeSpeakingTask (l. 340–366), MODE_RULES['cards-ask'] (l. 427), buildCoursePartnerPrompt (l. 500); netlify/functions/_shared/rubrics/speakingV2.mjs (l. 38–56); netlify/functions/_shared/rubrics/grade.mjs appliesTo (l. 49), criteriaPlan (l. 98); registries/rubrics/speaking/sd1-sp1.json",
+      "quote": "The compiled a11-u01-s has at its top level { template: 'sd1.sp1', mode: 'monologue', profile: 'sd1-sp1', parts: [ …sp1…, …sp2 cards „Kurs – Land“, „Sprachen – Englisch“… ] }. normalizeSpeakingTask(entry) → mode 'monologue', profile 'sd1-sp1', cards { learner: [], partner: [] }, situationDe '', instructionsDe ''. criteriaPlan(sd1-sp1) → vorstellen 1 · buchstabieren 1 · nummer 1 (target 3). The partner prompt contains „ABLAUF — zusammenhängendes Sprechen: Dein Gegenüber spricht zuerst allein zum Thema. … Danach stellst du eine bis zwei Nachfragen zum Gesagten.“. The same functions on a11-u04-s → mode 'cards-ask', profile 'sd1-sp2', target 6; the Sp3 part is neither prompted nor scored.",
+      "problem": "The unit half of the r1 fixes has landed. Sp1 is marked 'reduced', the persona says „Nur die Vorstellung“, and an sd1.sp2 round now carries the Aufgabe proof of cd.a1.person-erfragen and cd.a1.verabschieden. None of it reaches the session or the result. The compiler writes `parts` into the bank and copies only parts[0]'s template, mode, profile and prepMinutes to the top level. The speaking functions read only that top level: normalizeSpeakingTask has no `parts`, and SCHEMA §12 says they read them. Run on the compiled entry, this has two effects. (1) The AI partner gets Teil 1's monologue script with no SITUATION and no AUFGABE. It never sees the learner's Teil 2 cards; only its own cards appear, inside the persona prose. It is told to ask follow-up questions after the monologue, not to answer card questions and then ask its own. SpeakingTaskView meanwhile shows the learner both parts and their cards. (2) The whole transcript is graded with sd1-sp1 alone. The Teil 2 questions and answers (sd1-sp2: 2 per question, 1 per answer, 6 in all) have no criterion. buchstabieren and nummer are still scored, although the unit tells the learner they come in Einheit 2: sd1-sp1.json is unchanged and appliesTo() knows only 'targets', so the rubric/grader half of r1-F01 has not landed either. A flawless session therefore shows at most „1 von 3 Punkten (Richtwert)“. That is a scorer on the wrong pass rule for both Teile (§9.4 BLOCKER). It also means the interaction can-dos the unit now performs correctly depend on an AI that is not told to run that Teil. The class is wider than u01. Eight A1.1 units carry a multi-Teil task: u01, u04, u05, u06, u08, u09, u10 and u12. In the u04 exemplar the session is graded with sd1-sp2 only, and its Sp3 request round is neither prompted nor scored. A class in ≥ 3 units of a level is stop-the-line (§9.4). Even once `parts` are read, MODE_RULES['cards-ask'] has the learner ask all their cards first and answer afterwards. The unit's model and SD1 itself alternate topic by topic.",
+      "fix": "Engine owner (E1 server track). normalizeSpeakingTask keeps `parts`, normalising each part. buildCoursePartnerPrompt renders one ABLAUF per part in order, with that part's situation, instructions and both card sets, plus a hand-over line („Jetzt Teil 2: …“). cards-ask runs round by round: the learner asks with the round's card, the partner answers, the partner asks with its card, the learner answers. speakingV2 grades each part with its own profile and sums the scores; ResultCard shows the score per Teil. Rubric owner (r1-F01, still open). A SpeakingPart declares the criteria it elicits (e.g. `criteria: [\"vorstellen\"]`), or buchstabieren and nummer get `appliesIf: 'full'` and appliesTo honours it when the Prüfungsfokus length is 'reduced'. u01 is then scored out of 1 + 6. Unit: no further edit. After the engine fix, play one session to check that the AI runs Teil 2 with the learner's cards and ends with „Danke! Auf Wiedersehen!“, and that the result card shows both Teile. No A1.1 unit with a multi-Teil task can exit before this lands, and u04's approval should be re-opened on this point only.",
+      "proposedRule": "A test over every compiled speaking bank (tests/course-v2-ai.test.mjs, or an EXM rail on the compiler output), covering each entry with `parts`. (a) buildCoursePartnerPrompt(entry) contains one ABLAUF per part and every part's learner and partner cards. (b) The grading plan covers every part's profile and scores no criterion the part does not elicit: sd1-sp1 in a 'reduced' Prüfungsfokus slot has max 1. Failing fixtures: a11-u01-s (monologue prompt, max 3 on sd1-sp1) and a11-u04-s (Sp3 unscored). The test runs over all registered courses."
+    },
+    {
+      "id": "F02",
+      "reviewer": "R1",
+      "criterion": "K",
+      "severity": "blocker",
+      "scope": "instance",
+      "unitId": "a1.1-u01",
+      "path": "spec.lexiconBlocks[0]; steps[6].endLine; content/course-v2/a1.1/lexicon.json lx.geschafft (unit a1.1-u01, receptive); content/course-v2/a1.1/specs.json [0].spec.lanes (and title.canDo, textTypes, cast, deviation)",
+      "quote": "The validator exits 1 with 3 blockers. LEX-02: „„geschafft\" is allocated to a1.1-u01 but occurs in none of its authored German strings“. LEX-05: „… allocate to a1.1-u01, the unit spec omits: lx.geschafft“. COV-3: „spec.lanes differs from a1.1/specs.json (pruefungsfokus[1], pruefungsfokus[2])“. In specs.json, u01 has sd1.sp1 'full' and no sd1.sp2, and its lexicon block 1 lists lx.geschafft. The LS7 endLines of u04, u05, u06, u08, u09, u10, u11 and u12 all begin „Geschafft! …“.",
+      "problem": "After r1 the lexicon owner allocated lx.geschafft ('done! / made it!') to u01, because every other A1.1 check endLine opens with it. u01 neither lists it nor uses it, and its own LS7 endLine is the one that lacks the word. The unit's r1 fixes (Sp1 reduced, Sp2 added, the new can-do title, text types and cast) were not copied into specs.json. The syllabus page reads spec.lanes, so the curriculum file now misstates this unit's exam parts. §10.6 requires a fix run to leave the full gate set green, and this one leaves 3 blockers. The exemplar trail treats a red validator the same way (u04 r4-F01).",
+      "fix": "Unit, two edits. Add „lx.geschafft“ to spec.lexiconBlocks[0]. Open the LS7 endLine with the level's formula: „Geschafft! Sie können jetzt grüßen und sich vorstellen. Sie können nach Name, Land und Sprachen fragen und „Auf Wiedersehen“ sagen.“ One use clears the LEX-02 blocker; a second one, for example Frau Schulz in ls2-l08 („So, geschafft! Das ist alles für heute. …“), also clears its ratchet line. Re-run TXT-03 after that. Curriculum owner: copy the unit's spec.lanes (sp1 'reduced', sp2 'full'), title.canDo, textTypes (without tt.sms, with tt.wortkarte), cast (+ cast.herr-richter) and deviation into specs.json [0]. The load becomes 35 new entries (see F05).",
+      "proposedRule": null
+    },
+    {
+      "id": "F03",
+      "reviewer": "R2",
+      "criterion": "K",
+      "severity": "major",
+      "scope": "instance",
+      "unitId": "a1.1-u01",
+      "path": "content/course-v2/a1.1/lexicon.json lx.tuerkisch.example / exampleEn (a u01 word card); steps[2].input.text (LS3 chat); steps[2].inputItems[4].explanation (ls3-i05); casts/series.json cast.emre.languages",
+      "quote": "lx.tuerkisch „Emre spricht Türkisch und Englisch.“ · LS3 chat Arta: „Sprichst du auch Englisch?“ – Emre: „Nein, nur Türkisch und ein bisschen Deutsch.“ · ls3-i05 „… Englisch sprechen nur Arta und Olena.“ · cast.emre languages [Türkisch, Deutsch]",
+      "problem": "This is unchanged since r1 (r1-F07). The word card the learner studies in this unit says Emre speaks English. The unit's own chat, an item explanation and the cast bible all say he does not. A persona contradiction that the learner meets inside one unit is a MAJOR (§9.4). The owner is the lexicon file, but the card is shown on this unit.",
+      "fix": "Lexicon owner: lx.tuerkisch example „Emre spricht Türkisch und ein bisschen Deutsch.“, exampleEn 'Emre speaks Turkish and a little German.'. The sentence uses only u01 words, so LEX-07 stays green.",
+      "proposedRule": "As r1-F07, still unwritten. Under LEX-07 or a CON rule, a lexicon example that names a cast member may not give that member a language (after sprechen) that the member's `languages` in the cast bible lacks, nor an origin other than `from`. Failing fixture: lx.tuerkisch. The test runs over all registered courses."
+    },
+    {
+      "id": "F04",
+      "reviewer": "R2",
+      "criterion": "D",
+      "severity": "major",
+      "scope": "class",
+      "unitId": "a1.1-u01",
+      "path": "content/course-v2/a1.1/rule-cards.json rc.verbposition-2 table[4] (shown by steps[1].ruleCard); rc.praesens de (shown by steps[0].ruleCard and steps[2].ruleCard)",
+      "quote": "rc.verbposition-2 row „Was | sprechen | Sie?“ · rc.praesens „… du sagen Sie zu Freunden und in der Familie, Sie zu fremden Erwachsenen und im Amt.“ · ls2-l01 „Im Kurs sagen Sie „du““ · Sp2 learner card „Sprachen – Englisch“",
+      "problem": "The unit has removed the calque from every one of its own surfaces (r1-F03). The rule card LS2 shows, however, still prints „Was sprechen Sie?“ as its model W-question. The learner reads it one step before a Sp2 round whose card says „Sprachen – Englisch“, so the card models the very question the unit worked to remove. That is unnatural German on a model surface (§9.4 MAJOR). rc.praesens (LS1, LS3) is also unchanged (the r1-F06 card part). The pronouns are unquoted, so „du sagen Sie“ reads like the agreement error the card teaches against. „zu fremden Erwachsenen“ carries an adjective ending. „Sie zu fremden Erwachsenen“ is contradicted by the unit's own course convention, since adult strangers duzen each other from the Folge on, and only LS2 states that convention. The class is the one the u04 trail logged four times (r2-F09, r3-F06, r4-F07, r5-F04): rule cards left unchanged while the unit moves.",
+      "fix": "Rule-cards owner, 2 edits. rc.verbposition-2 row 4: „Was | lernen | Sie?“ (the unit's ls2-p07). rc.praesens last sentence: „„du“ sagen Sie zu Freunden, in der Familie und im Kurs. „Sie“ sagen Sie zu Frau Schulz und im Amt.“ That keeps the card within ruleCardMaxWords 60 and removes the adjective ending. Nothing changes in u01.",
+      "proposedRule": "GRM-05 (the r1-F06 proposal, still unwritten): a German form cited in rule-card prose is quoted („du“, „ist“), as ITM-11 does for explanations. Failing fixture: rc.praesens. The test runs over all registered courses."
+    },
+    {
+      "id": "F05",
+      "reviewer": "R2",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u01",
+      "path": "content/course-v2/a1.1/lexicon.json u01 entries: roles of lx.woher and lx.freut-mich (receptive) and of lx.begruessen and lx.sich-vorstellen (productive); examples of lx.begruessen, lx.online, lx.sprachschule and lx.sich-vorstellen. Also spec.lexiconBlocks (34 + lx.geschafft = 35); steps[1].pool.items[0] (ls2-p01); steps[0].pool.items[4] (ls1-p05); steps[4].task.hintWords[5]; steps[0].input.lines[0] (ls1-l01)",
+      "quote": "ls2-p01 „___ kommst du? – Aus der Türkei.“ → „Woher“ (lx.woher receptive) · ls1-p05 „Freut ___!“ → „mich“ (lx.freut-mich receptive) · hintWord „Woher kommen Sie?“ · lx.begruessen „Frau Schulz begrüßt die neuen Teilnehmenden.“ · lx.online „Wie lange bist du jeden Tag online?“ · lx.sprachschule „Ich lerne Deutsch in einer Sprachschule in Leipzig.“ · LEX-02 „productive lemma „sich vorstellen\" occurs 1× in the unit's inputs“",
+      "problem": "r1-F10 is open. The learner types and speaks two lemmas that SRS plans only for recognition: woher, the plan's own productive anchor, now also a Sp2 hint; and the „Freut mich!“ chunk. begrüßen and sich vorstellen are productive, yet no task asks the learner to produce them. Three card examples are above level: an adjective ending plus a participle noun, „Wie lange … jeden Tag“, and „in einer“. The load is now 35 entries against a 24–32 band and a plan of 26, and LEX-05 passes only through its ±10 % tolerance. That is heavy for day one. One side effect of the r1-F09 fix: removing „stelle ich Emre/Arta vor“ left sich vorstellen with one input occurrence, which is part of why the LEX-02 ratchet rose from 7 to 10.",
+      "fix": "Lexicon owner, as r1-F10. Make lx.woher and lx.freut-mich productive and lx.begruessen and lx.sich-vorstellen receptive; the share stays 50 %. Use the examples „Frau Schulz begrüßt Priya.“, „Emre lernt online Deutsch.“, „Ich lerne Deutsch in Leipzig.“ and „Bitte stellen Sie sich vor.“. Either bring the unit back to ≤ 32 by glossing lx.chat, lx.spanisch and lx.begruessen in place, or log the 35 in spec.deviation. Unit: give sich vorstellen its second input use where the scene asks for it, Frau Schulz ls1-l01 „So, jetzt bitte auf Deutsch. Stellen Sie sich bitte vor: Wie heißen Sie? Woher kommen Sie? Und wo wohnen Sie?“. This is the Sie-imperative chunk the plan licenses at u01; GRM-04 will report it as a heuristic advisory. Level reviewer: woher now recurs in u12 only.",
+      "proposedRule": "LEX-03 (the r1-F10 / u04 r4-F02 proposal, still unwritten; LEX-03 passes ls2-p01 today): an authored typed item whose answer is a form of a receptive lemma of the unit is a hard finding. Failing fixture: ls2-p01 with lx.woher receptive. The test runs over all registered courses."
+    },
+    {
+      "id": "F06",
+      "reviewer": "R1",
+      "criterion": "A",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u01",
+      "path": "steps[2].inputItems[2] (ls3-i03); steps[1].pool.items[6] (ls2-p07) and the W-question tile items ls1-p08, ls1-p10, ls1-r02, ls2-p06, ls2-p10, ls3-p10, ls3-p11, q03; steps[1].inputItems[4] (ls2-i05); steps[0].pool.items[10] (ls1-p11); steps[0].reserve[3].explanation (ls1-r04)",
+      "quote": "ls3-i03 accepted [„Prishtina“]: checkItem „Pristina“ → typo, „Priština“ → wrong · ls2-p07 „Bilden Sie die Frage.“ tiles [lernen / Sie / was / hier]: checkItem „Lernen Sie hier was?“ → wrong · ls2-i05 „Was sagt Bilal am Ende zu Priya?“ [„Auf Wiedersehen, Frau Schulz!“ / „Bis morgen, Priya!“ / „Freut mich, Priya!“] · ls1-p11 „Korrigieren Sie: „Frau Schulz, woher kommst du?““ · ls1-r04 „… Mit „Sie“ ist die Endung -en.“",
+      "problem": "These are five small residues; every key is right. (1) The r1-F04 spelling part did not land. Duden's „Pristina“ must be retried as a typo, and „Priština“ is graded wrong. (2) „Bilden Sie die Frage.“ with a „was“ tile admits the spoken yes/no question „Lernen Sie hier was?“ (was = etwas), which the grader rejects. u04 settled this with „Bilden Sie die W-Frage.“ (u04 r1-F12), but the unit's nine W-question tile items still say „die Frage“. (3) In ls2-i05, only one option is a goodbye addressed to Priya, so the prompt alone decides the item and the audio is not needed. (4) ls1-p11 is the unit's last bare „Korrigieren Sie:“, the form of u04 r5-F01. ITM-01 exempts it because its tag is 'register'. Its source sentence is grammatical, so without a German cue the learner has to guess what is wrong. (5) ls1-r04 explains agreement in a sentence-building item whose verb form is a given tile (u04 r3-F02 class).",
+      "fix": "(1) ls3-i03 accepted + „Pristina“ and „Priština“, with acceptedWhy „deutsche Schreibweise der Stadt (Duden)“. (2) Change the nine items' promptDe to „Bilden Sie die W-Frage.“ („W-Frage“ is instruction metalanguage). (3) Give ls2-i05 the options „Tschüss, Priya!“ / „Bis morgen, Priya!“ / „Auf Wiedersehen, Priya!“. All three are goodbyes to Priya, so only the audio decides. Use the explanation „Bilal sagt: „Bis morgen, Priya!“ „Tschüss“ sagt Priya zu Olena und Bilal.“ (4) ls1-p11 promptDe: „Korrigieren Sie: du oder Sie? „Frau Schulz, woher kommst du?““ (62 characters). (5) ls1-r04 explanation.de: „Das Verb „wohnen“ steht auf Position 2.“",
+      "proposedRule": null
+    },
+    {
+      "id": "F07",
+      "reviewer": "R1",
+      "criterion": "P",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u01",
+      "path": "steps[3].blocks[0].items[4] (sd1-h1-05); steps[3].texts[4] (t5)",
+      "quote": "h1-05 „Was sagt Anna zu Frau Lindner?“ [Hallo! / Guten Morgen! / Guten Tag!] → „Guten Morgen!“ · sd1.json h1 textVariantDe „Statt der drei Bilder stehen drei kurze Antworten (ein Wort, eine Zahl oder eine Uhrzeit) zur Wahl.“",
+      "problem": "This is the last residue of r1-F12. SD1 Hören Teil 1 asks for a piece of information a picture can show: a person, a place, a number or a time. h1-05 asks which greeting formula a speaker chose. All three options are appropriate morning greetings, so the item trains attention to formula choice rather than the exam's construct. The options are now all heard, and h1-04 has been recast, so this is the one formula item left.",
+      "fix": "Recast h1-05 as information on the h1-04 model. For example, ask „Wann beginnt der Kurs?“ with the options jetzt / heute Abend / morgen, the key „jetzt“ from t5-l04, and „heute Abend“ and „morgen“ planted in Anna's and Tom's lines. Keep t5 inside [32–53] words and the block's keys at 2/2/2.",
+      "proposedRule": null
+    },
+    {
+      "id": "F08",
+      "reviewer": "R2",
+      "criterion": "K",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u01",
+      "path": "steps[4].task.modelTurns[4]; steps[2].inputItems[4].explanation (ls3-i05); steps[2].microOutput (ls3-mo); steps[1].microOutput (ls2-mo) against spec.deviation.reason; steps[1].endLine",
+      "quote": "Sp1 model „Ich spreche Englisch und ein bisschen Deutsch.“ (cd.a1.sprachen-nennen: „meine Muttersprache, andere Sprachen und Deutsch“) · ls3-i05 „… Englisch sprechen nur Arta und Olena.“ vs ls2-l03/-l04 (Priya and Bilal speak English) · ls3-mo „Olena fragt Sie online: „Hallo! Sprichst du Englisch?““ – „Fragen Sie dann: Woher? Wo? Sprachen?“ · deviation „… in LS2 als Chat-Antwort an Emre (Name, Land, Wohnort und eine Frage)“, plan ≈ 20 Wörter, vs ls2-mo „Antworten Sie Emre in 1–3 Sätzen. Fragen Sie auch: Wo? Sprachen?“, words [3, 16] · LS2 endLine „… Und Sie können „Tschüss“ sagen.“",
+      "problem": "These are small breaks. (1) The Sp1 model still drops Priya's Muttersprache, which the can-do names and LS2 establishes (r1-F13 residue). (2) The r1-F11 rewording of the ls3-i05 explanation says only Arta and Olena speak English, but Priya and Bilal do too (LS2). It is true only of the chat. (3) The LS3 micro-output has the learner ask Olena where she comes from, where she lives and which languages she speaks, right after reading her answers in the chat (and hearing them in LS2). There is no information gap, and the interaction reads as a drill. (4) The deviation says the learner's own profile is written in LS2 with Wohnort, one question and about 20 words. The micro-output instead asks for name and Land plus two questions in 1–3 sentences within 16 words. One of those questions, „Wo?“, goes to Emre, who has just written „aus İzmir“. (5) The LS2 endLine claims „Tschüss“ as a win, but in LS2 the learner only recognises it (p12 is a choice item). The goodbye is produced in LS5.",
+      "fix": "(1) Sp1 model: „Ich spreche Malayalam, Englisch und ein bisschen Deutsch.“ (2) ls3-i05 explanation.de: „Emre: „Muttersprache: Türkisch.“ Er spricht ein bisschen Deutsch. Im Chat sprechen nur Arta und Olena Englisch.“, with the explanation.en to match. (3) ls3-mo: give the learner a partner whose data they have not read. For example, add an extra x.marco and use „Marco ist auch im Kurs. Er fragt Sie online: „Hallo! Sprichst du Englisch?““ with the unchanged promptDe. (4) ls2-mo promptDe: „Antworten Sie Emre: Name, Land, Wohnort. Fragen Sie auch: Sprachen?“ (69 characters; a full answer takes about 14 words, inside [3, 16]). The deviation's „(Name, Land, Wohnort und eine Frage)“ then matches the task. Next to the plan's „≈ 20 Wörter“, add that the micro-output band is 3–16 words. (5) LS2 endLine: „Sie können jetzt fragen: Wie heißt du? Woher kommst du? Sprichst du Englisch?“",
+      "proposedRule": null
+    },
+    {
+      "id": "F09",
+      "reviewer": "R2",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.1-u01",
+      "path": "steps[0].input.lines[6] (ls1-l07), [8] (ls1-l09), [9] (ls1-l10); steps[1].input.lines[4] (ls2-l05); steps[4].task.hintWords[4]; story.cliffhanger; registries/grammar-spine.json g.possessiv-mein-dein",
+      "quote": "„Danke, Herr Ahmed. Und jetzt frage ich Sie: Wie heißen Sie, und woher kommen Sie?“ · Priya to Frau Schulz, after „Aha, aus Kochi!“: „… Kochi ist eine Stadt in Indien.“ · „Entschuldigung! Hallo, ihr zwei! …“ · hintWord „Meine Muttersprache ist …“ · cliffhanger „… Ich bin Uwe Richter, von der Anmeldung. Bitte kommen Sie morgen. Ihr Name – wie schreibt man das?“ (LEX-01 90.9 %: Anmeldung, schreibt; plus „man“ and „Ihr“)",
+      "problem": "These are small wording and level points. ls1-l07 is the meta-talk class of r1-F11 in a new line. In ls1-l10 Priya volunteers an encyclopaedic fact to a teacher who has just repeated it. „ihr zwei“ is the ihr-form, and the plan's u01 grammar is Präsens Singular ich/du/Sie; it is unglossed. The hint word „Meine Muttersprache ist …“, which r1 proposed, has the learner produce a possessive that the spine licenses only at u03 (g.possessiv-mein-dein has no chunkFrom), although the unit already uses „Mein Name ist“ as a chunk (ls1-l02, the lx.name and lx.muttersprache cards; Lehrwerk anchor S1 L1 „Guten Tag. Mein Name ist …“). The cliffhanger is German-only with four above-level tokens and no gloss or English twin (the u04 r2-F07 class; LEX-01 reads it as advisory only).",
+      "fix": "Unit. ls1-l07: „Danke, Herr Ahmed. Und Sie? Wie heißen Sie, und woher kommen Sie?“. Move the fact to the teacher, who says it for the class: ls1-l09 „Aha, aus Kochi – das ist eine Stadt in Indien. Und wo wohnen Sie jetzt, Frau Nair?“, and ls1-l10 „Ja, jetzt wohne ich auch hier in Leipzig.“ (word count unchanged, so TXT-03 holds). ls2-l05: „Entschuldigung! Hallo, Priya! Ich bin Olena. Und du? Wie heißt du noch mal?“. Spine owner: register „Mein Name ist … / Meine Muttersprache ist …“ as an a1.1-u01 chunk of g.possessiv-mein-dein. Otherwise the unit's hint becomes „Muttersprache: …“. SCHEMA owner: give Story optional glosses or an en twin, so that the cliffhanger can gloss „Anmeldung“ and „wie schreibt man das?“ ('registration office', 'how do you spell that?').",
+      "proposedRule": null
+    },
+    {
+      "id": "F10",
+      "reviewer": "R1",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u01",
+      "path": "GRM-04 advisories on title.canDo, steps[4].task.parts[0].situationDe/instructionsDe, steps[1].inputItems[1].answer, steps[2].pool.items[8], steps[2].reserve[3] and 15 article hits; LEX-01 on steps[2].pool.items[5].promptDe; registries/grammar-spine.json g.praep-dativ.chunkFrom, g.artikel-genus-plural.intro, g.vokalwechsel",
+      "quote": "det.modal-koennen on „Sie können grüßen …“ (title.canDo) · det.reflexiv-pronomen on „sich vorstellen“ (title.canDo) and on „Stellen Sie sich vor“ (Sp1 instruction), which also triggers det.trennbare-verben · det.adjektiv-endung-bestimmt on „Das lernen Sie bald.“ · det.bestimmter-artikel on the MC answer „Der Kurs ist zu Ende.“ („produces“) and on „aus der Türkei“ (the plan's u01 chunk) · LEX-01 „St“ in the cue „(St…)“",
+      "problem": "None of the 24 GRM-04 advisories is a real ceiling breach. The unit's two real previews were removed in r1. The noise grew instead, and three new false-positive classes appeared. The course's can-do formula „Sie können …“ stands on every unit title and is read as the Modalverb können (u08). The unit's own lemma and the SD1 instruction „Stellen Sie sich vor“ are read as a reflexive (a2.1) and a separable verb (u07). „Das lernen Sie bald“ is read as an adjective ending. The detector also reports a multiple-choice key as something the learner „produces“. The spine part of r1-F09 is unchanged, so every „aus der Türkei“, „der Kurs“ and „eine Stadt“ in a first unit still fires. LEX-01 reads the first-letter cue „(St…)“ as a word.",
+      "fix": "Rule-smith: exempt the can-do formula „Sie können …“ in title.canDo. Treat the unit's own lexicon lemmas in Sie-imperative instructions as licensed (g.imperativ-sie chunk a1.1-u01). Stop treating a finite verb after „Das“ as an adjective. Read MC answers as receptive. Skip „(X…)“ first-letter cues in LEX-01. Spine owner (r1-F09): set g.praep-dativ chunkFrom to a1.1-u01 for aus/in + Land/Stadt (plan §9), add a receptive intro a1.1-u01 for the articles (productive stays u04), and set g.vokalwechsel chunkFrom to a1.1-u01 for sprichst/spricht (BLUEPRINT §2.5).",
+      "proposedRule": "GRM-04 and LEX-01 fixtures at a1.1-u01. title.canDo „Sie können grüßen, sich vorstellen …“, the instruction „Stellen Sie sich vor: Name, Land, Wohnort, Sprachen.“, „Das lernen Sie bald.“, the MC answer „Der Kurs ist zu Ende.“ and the cue „Prishtina ist eine ___ im Kosovo. (St…)“ produce no advisory, while „Heute stelle ich Arta vor.“ still does. The test runs over all registered courses."
+    },
+    {
+      "id": "F11",
+      "reviewer": "R1",
+      "criterion": "A",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.1-u01",
+      "path": "SCHEMA §3.1 ErrorTag; netlify/functions/_shared/rubrics/grade.mjs ERROR_TAGS; steps[2].reserve[3] (ls3-r04); steps[0].pool.items[1] (ls1-p02); steps[1].reserve[4] (ls2-r05)",
+      "quote": "ErrorTag = v2-inv | verb-final | satzklammer | case-np | case-pp | gender-article | adj-ending | perfekt-aux-participle | connector-position | n-dekl | reflexive | register | spelling-meaning · ls3-r04 „Korrigieren Sie die Verbform: „Emre kommen aus der Türkei.““ (no errorTag) · ls1-p02 „Woher ___ Sie, Frau Nair? (kommen)“ errorTags [register] · ls2-r05 „Und woher ___ Sie, Frau Schulz? (kommen)“ errorTags [register]",
+      "problem": "r1-F15 is open. The unit's Leitpunkt error, the personal ending („Emre kommen“, „Sie kommst“), still has no tag and so no repair pool. The authors now use 'register' as a stand-in on two ending gaps. In those gaps „Sie“ is already printed in the frame, so a wrong „kommst“ is an agreement error, not a register choice. The learner who misses one is therefore routed to the du/Sie repair cards. That is the wrong-repair-card class of u04 r1-F23.",
+      "fix": "SCHEMA/BLUEPRINT owner: add 'verb-ending' (Personalendung/Kongruenz) to ErrorTag and to the graders' ERROR_TAGS. Unit, after that: tag the ending items 'verb-ending' (ls1-p01 to -p03, ls1-r01, -r03, ls2-p04, -p05, ls2-r05, ls3-p01 to -p04, ls3-r01, -r03, c01, c02, q04), move ls1-p02 and ls2-r05 from 'register' to 'verb-ending', and set ls3-r04 errorTag 'verb-ending'. Keep 'register' on the true du/Sie choices (ls1-p11, ls1-p12, ls1-r05, c09).",
+      "proposedRule": "ITM-12 (the r1-F15 proposal): every spine point introduced productively in a unit has ≥ 1 ErrorTag with a repair pool there; and a 'register' tag on a fill_blank whose frame already prints the pronoun is a finding. Failing fixtures: g.praesens at a1.1-u01, ls1-p02. The test runs over all registered courses."
+    }
+  ],
+  "exitCheck": {
+    "blocker": 2,
+    "major": 2,
+    "minor": 7,
+    "criteriaBelow4": [
+      "D",
+      "P",
+      "K"
+    ],
+    "exit": false,
+    "note": "Exit needs 0 BLOCKER, 0 MAJOR, every criterion ≥ 4 and ≤ 5 logged MINOR. F01 is the gate. It needs the E1 server track (read `parts`, one prompt and one score per Teil) and the rubric owner (a reduced criteria scope for sd1-sp1). It blocks every A1.1 unit with a multi-Teil task, not only u01, so A1.1 cannot be called finished before it lands. F02 is two unit edits plus the specs.json copy. F03 and F04 are one lexicon line and two rule-card lines. The unit-side edits are F02, F06, F07, F08, and the unit parts of F05 (ls1-l01) and F09 (ls1-l07, -l09/-l10, ls2-l05). Once they and the owner fixes are made, the unit carries 4 owner-held minors (F05 lexicon, the F09 spine/SCHEMA parts, F10 rule-smith and spine, F11 SCHEMA owner), within the limit. Re-review only P (play one session after F01 and read the result card), D and K, plus validate.mjs green. Class findings for the rule-smith: F01 (compiled-bank test), F04 (GRM-05), F05 (LEX-03), F10 (GRM-04/LEX-01 fixtures), F11 (ITM-12)."
+  },
+  "notes": [
+    "Exemplar classes (u04 r1–r5) that do NOT recur. Dictation sources carry no `say` (r2-F01); the four u01 sources and c08 are plain lines. Number words are not rejected: f5 is now exact 'name' and „1“/„eins“ are correctly wrong (r3-F01). Key positions: the player seeds non-exam options, and H1 keys are 2/2/2 with no ascending-option pattern (r4-F03, r2-F04). Sentence-building orders are complete, with Aussagesatz and Frage frames (r1-F01/F04). Exam texts are on band, 46/46/36/38/36/51 in the raw band (r1-F10). LS4 texts do not retell the unit's scene with other facts (r2-F06). Generator sources are productive lemmas (r4-F02 generator part). LEX-07 is green (r4-F01). Every H1 distractor is heard (r1-F19). The spec's text types are all present (r4-F06). No genitive appears on speaking instructions (r5-F05). No proof item contradicts the scene (r5-F02). No error-correction rejects a second correct correction (r5-F01): every word-order correction now names „die Wortstellung“ and accepts all V2 orders.",
+    "Exemplar classes that DO recur, in small form. Rule cards left unchanged across rounds (r2-F09 … r5-F04 → F04). A bare „Korrigieren Sie:“ (r5-F01 form, no rejected answer → F06). An explanation that explains agreement in sentence building (r3-F02 → F06). Receptive lemmas typed (r4-F02 → F05). A German-only cliffhanger above level (r2-F07 → F09). Detector false positives (r1-F24/r2-F11/r3-F07/r4-F08 → F10). A wrong errorTag sends learners to the wrong repair card (r1-F23 → F11).",
+    "For the orchestrator and the level reviewer: F01 was found in u01 but lives in the engine. `parts` are compiled into the bank (RAILS: banks carry 'tasks with parts'), and SCHEMA §12 lists them as read by the speaking functions, but normalizeSpeakingTask drops them. The 8 A1.1 units with a multi-Teil LS5 are u01, u04, u05, u06, u08, u09, u10 and u12, and all are affected, including the approved u04 exemplar. Its approval should be re-opened on the engine point only; its content findings stand. tests/course-v2-ai.test.mjs exercises buildCoursePartnerPrompt only on one-part tasks, which is why no test caught it.",
+    "For the SCHEMA owner (r1 note, unchanged): check.earlierDraw is count 3 from 'previous-3', but u01 has no earlier unit, so planCheck draws nothing and the u01 Check serves 9 items. Consider count 0 / cumulativeShare 0 for nr 1.",
+    "Every fix proposed here was checked against the rails before it is recommended. We checked the ≤ 90-character rule for ls1-p11 (62) and ls2-mo (69), the word band [3, 16] for ls2-mo, TXT-03 line and word counts for the ls1-l09/-l10 swap, the known-word status of every inserted word („Anmeldung“ and „schreibt“ are not, which is why F09 asks for a gloss rather than a rewrite), and ruleCardMaxWords 60 for rc.praesens. We also checked the cast bible for every fact. One r1 proposal of ours produced a residue that this round logs: „Meine Muttersprache ist …“ in F09. Another, the r1-F11 rewording of ls3-i05, lost its „im Chat“ scope (F08).",
+    "Legal and claims: there is no outcome promise, no human-feedback claim and no exam-mark misuse on any surface. The AI role is „Gesprächsleitung (KI)“, and the H1 strategy card honestly says the exam uses pictures. Every exam task is original in the SD1 format. The one Landeskunde gloss („Grüß Gott = hello (in Austria and southern Germany)“) is correct, and the unit makes no other factual claim, so facts[] may stay empty. „der Kosovo“ as a Land matches Germany's recognition."
+  ]
+}

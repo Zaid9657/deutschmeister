@@ -1,0 +1,26 @@
+{
+  "$schema": "course-v2/voices@1",
+  "voices": {
+    "de-DE-AmalaNeural": { "gender": "f", "locale": "de-DE", "ageBand": "adult" },
+    "de-DE-BerndNeural": { "gender": "m", "locale": "de-DE", "ageBand": "adult" },
+    "de-DE-ChristophNeural": { "gender": "m", "locale": "de-DE", "ageBand": "adult" },
+    "de-DE-ConradNeural": { "gender": "m", "locale": "de-DE", "ageBand": "adult" },
+    "de-DE-ElkeNeural": { "gender": "f", "locale": "de-DE", "ageBand": "adult" },
+    "de-DE-FlorianMultilingualNeural": { "gender": "m", "locale": "de-DE", "ageBand": "adult" },
+    "de-DE-GiselaNeural": { "gender": "f", "locale": "de-DE", "ageBand": "young" },
+    "de-DE-KasperNeural": { "gender": "m", "locale": "de-DE", "ageBand": "adult" },
+    "de-DE-KatjaNeural": { "gender": "f", "locale": "de-DE", "ageBand": "adult" },
+    "de-DE-KillianNeural": { "gender": "m", "locale": "de-DE", "ageBand": "adult" },
+    "de-DE-KlarissaNeural": { "gender": "f", "locale": "de-DE", "ageBand": "adult" },
+    "de-DE-KlausNeural": { "gender": "m", "locale": "de-DE", "ageBand": "adult" },
+    "de-DE-LouisaNeural": { "gender": "f", "locale": "de-DE", "ageBand": "adult" },
+    "de-DE-MajaNeural": { "gender": "f", "locale": "de-DE", "ageBand": "adult" },
+    "de-DE-RalfNeural": { "gender": "m", "locale": "de-DE", "ageBand": "adult" },
+    "de-DE-SeraphinaMultilingualNeural": { "gender": "f", "locale": "de-DE", "ageBand": "adult" },
+    "de-DE-TanjaNeural": { "gender": "f", "locale": "de-DE", "ageBand": "adult" },
+    "de-AT-IngridNeural": { "gender": "f", "locale": "de-AT", "ageBand": "adult" },
+    "de-AT-JonasNeural": { "gender": "m", "locale": "de-AT", "ageBand": "adult" },
+    "de-CH-JanNeural": { "gender": "m", "locale": "de-CH", "ageBand": "adult" },
+    "de-CH-LeniNeural": { "gender": "f", "locale": "de-CH", "ageBand": "adult" }
+  }
+}

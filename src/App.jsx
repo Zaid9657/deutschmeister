@@ -20,7 +20,7 @@ import TrialBanner from './components/TrialBanner';
 import FloatingIntroButton from './components/FloatingIntroButton';
 import SessionTimeoutModal from './components/SessionTimeoutModal';
 import { useSessionTimeout } from './hooks/useSessionTimeout';
-import { chromeFor } from './lib/chrome.js';
+import { chromeFor, hasBottomNav } from './lib/chrome.js';
 import { Loader2 } from 'lucide-react';
 
 // Lazy-loaded page components for code splitting
@@ -68,6 +68,14 @@ const CheckpointPage = lazy(() => import('./pages/lesson/CheckpointPage'));
 const ReviewPage = lazy(() => import('./pages/lesson/ReviewPage'));
 const CourseCompletePage = lazy(() => import('./pages/CourseCompletePage'));
 const CourseCertificatePage = lazy(() => import('./pages/CourseCertificatePage'));
+// Course v2 player (docs/course-v2/BLUEPRINT.md §7.3): course home, unit player, Plateau.
+const CourseHomeV2Page = lazy(() => import('./pages/course-v2/CourseHomeV2Page.jsx'));
+const UnitPlayerPage = lazy(() => import('./pages/course-v2/UnitPlayerPage.jsx'));
+const PlateauPage = lazy(() => import('./pages/course-v2/PlateauPage.jsx'));
+const ClosingPage = lazy(() => import('./pages/course-v2/ClosingPage.jsx'));
+// the level's back matter: every rule card and every word of the course, Kapitel by Kapitel
+const GrammarPage = lazy(() => import('./pages/course-v2/GrammarPage.jsx'));
+const WordsPage = lazy(() => import('./pages/course-v2/WordsPage.jsx'));
 const ModelltestHub = lazy(() => import('./pages/Modelltest/ModelltestHub'));
 const ModelltestOverview = lazy(() => import('./pages/Modelltest/ModelltestOverview'));
 const ModelltestRun = lazy(() => import('./pages/Modelltest/ModelltestRun'));
@@ -123,10 +131,10 @@ function Shell() {
                 </a>
                 {!focused && <Navbar />}
                 {!focused && <OutsideAdmin><TrialBanner /></OutsideAdmin>}
-                {/* Course home (chrome === 'course') also hides this: it overlaps
+                {/* The course homes ('course', 'learn') hide this: it overlaps
                     FirstRunTour's first-run tooltip in the same bottom-left corner
                     (docs/evaluation/screenshots/a11-w1-home.jpg). */}
-                {!focused && chrome !== 'course' && <OutsideAdmin><FloatingIntroButton /></OutsideAdmin>}
+                {chrome === 'full' && <OutsideAdmin><FloatingIntroButton /></OutsideAdmin>}
                 <SessionTimeoutWrapper />
                 {/* min-h-screen reserves the page's height across route swaps. A
                     guard that redirects (ProtectedRoute's <Navigate>) commits an
@@ -348,6 +356,21 @@ function Shell() {
                     <Route path="/course/:level/l/:nr" element={<LevelSubscriptionGuard><EmailVerificationGate><LessonPlayerPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
                     <Route path="/course/:level/checkpoint/:nr" element={<LevelSubscriptionGuard><EmailVerificationGate><CheckpointPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
                     <Route path="/course/:level/review" element={<LevelSubscriptionGuard><EmailVerificationGate><ReviewPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
+                    {/* Course v2 (docs/course-v2/BLUEPRINT.md, SCHEMA.md): preview routes that work
+                        whenever compiled v2 content exists for the level; all three sit inside the
+                        netlify.toml "/course/*" rewrite, and LevelSubscriptionGuard asks the v2
+                        access question (hasCourseAccess) for these paths. They must stay ABOVE the
+                        legacy catch-all /course/:level/:itemId. */}
+                    <Route path="/course/:level/v2" element={<LevelSubscriptionGuard><EmailVerificationGate><CourseHomeV2Page /></EmailVerificationGate></LevelSubscriptionGuard>} />
+                    <Route path="/course/:level/u/:nr" element={<LevelSubscriptionGuard><EmailVerificationGate><UnitPlayerPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
+                    <Route path="/course/:level/p/:nr" element={<LevelSubscriptionGuard><EmailVerificationGate><PlateauPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
+                    {/* the closing block (.1 Halbtest → Teil-Karte); `courseV2` makes the guard ask the
+                        v2 access question here too, since its path regex names only v2|u|p */}
+                    <Route path="/course/:level/abschluss" element={<LevelSubscriptionGuard courseV2><EmailVerificationGate><ClosingPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
+                    {/* the level's reference pages (the Kapitel page links them): Grammatik and Wortschatz of
+                        the whole course; `courseV2` for the same reason as the closing route */}
+                    <Route path="/course/:level/grammatik" element={<LevelSubscriptionGuard courseV2><EmailVerificationGate><GrammarPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
+                    <Route path="/course/:level/wortschatz" element={<LevelSubscriptionGuard courseV2><EmailVerificationGate><WordsPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
                     <Route path="/course/:level/:itemId" element={<LevelSubscriptionGuard><EmailVerificationGate><CourseLessonPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
 
                     {/* Level-aware routes — A1.1 is free, others require auth + email verification + subscription */}
@@ -555,8 +578,9 @@ function Shell() {
                 {/* Mobile app tabs (signed-in only); pb clearance lives on the
                     wrapper so the fixed bar never covers page-end content. Not
                     in the player: its bottom primary button is the only thing
-                    a thumb should find there. */}
-                {!focused && <OutsideAdmin><BottomNav /></OutsideAdmin>}
+                    a thumb should find there. Not on the v2 learn screen: it has
+                    its own four-tab bar. */}
+                {hasBottomNav(pathname) && <OutsideAdmin><BottomNav /></OutsideAdmin>}
               </div>
   );
 }

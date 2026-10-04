@@ -1,0 +1,144 @@
+{
+  "$schema": "course-v2/rubric@1",
+  "id": "tb1-m1",
+  "kind": "speaking",
+  "lane": "tb1",
+  "method": "ai",
+  "max": 12,
+  "examMax": 15,
+  "criteria": [
+    {
+      "id": "ausdruck",
+      "label": "Ausdrucksfähigkeit: Wortschatz, passende Ausdrucksweise, Sprechabsicht umgesetzt",
+      "per": "part",
+      "levels": [
+        4,
+        3,
+        1,
+        0
+      ],
+      "scoredBy": "ai",
+      "descriptors": [
+        {
+          "points": 4,
+          "de": "Sie erzählen anschaulich und mit passenden Wörtern von sich und formulieren Ihre Fragen so, wie man es beim ersten Kennenlernen tut."
+        },
+        {
+          "points": 3,
+          "de": "Sie sagen im Großen und Ganzen, was Sie sagen wollen; manchmal fehlt ein Wort oder eine Formulierung passt nicht ganz zur Situation."
+        },
+        {
+          "points": 1,
+          "de": "Sie können nur einen Teil dessen ausdrücken, was Sie sagen möchten; oft fehlen Wörter, und Ihre Fragen bleiben unklar."
+        },
+        {
+          "points": 0,
+          "de": "Was Sie über sich sagen oder fragen wollen, wird fast nie verständlich."
+        }
+      ]
+    },
+    {
+      "id": "aufgabe",
+      "label": "Aufgabenbewältigung: Gesprächsbeteiligung, Strategien (auch Nachfragen und Hilfestellung), Flüssigkeit",
+      "per": "part",
+      "levels": [
+        4,
+        3,
+        1,
+        0
+      ],
+      "scoredBy": "ai",
+      "descriptors": [
+        {
+          "points": 4,
+          "de": "Sie erzählen von sich, stellen Ihrer Partnerin mehrere eigene Fragen, greifen ihre Antworten auf und halten das Gespräch ohne lange Pausen in Gang."
+        },
+        {
+          "points": 3,
+          "de": "Sie beteiligen sich aktiv und stellen auch Fragen; manchmal stockt das Gespräch oder Sie brauchen Hilfe, finden aber wieder hinein."
+        },
+        {
+          "points": 1,
+          "de": "Sie antworten meist nur und fragen kaum selbst; lange Pausen oder Abbrüche sind häufig."
+        },
+        {
+          "points": 0,
+          "de": "Ein Gespräch kommt kaum zustande; Sie antworten nicht oder nur mit einzelnen Wörtern."
+        }
+      ]
+    },
+    {
+      "id": "richtigkeit",
+      "label": "Formale Richtigkeit: Satzbau und Formen",
+      "per": "part",
+      "levels": [
+        4,
+        3,
+        1,
+        0
+      ],
+      "scoredBy": "ai",
+      "descriptors": [
+        {
+          "points": 4,
+          "de": "Satzbau und Formen sitzen weitgehend; Fehler sind selten und fallen kaum auf."
+        },
+        {
+          "points": 3,
+          "de": "Fehler kommen vor, aber Ihre Partnerin versteht Sie trotzdem ohne Mühe."
+        },
+        {
+          "points": 1,
+          "de": "An wichtigen Stellen führen Fehler dazu, dass man Sie nur mit Mühe oder falsch versteht."
+        },
+        {
+          "points": 0,
+          "de": "Fast jede Äußerung enthält Fehler; die Verständigung gelingt kaum oder gar nicht."
+        }
+      ]
+    },
+    {
+      "id": "aussprache",
+      "label": "Aussprache und Intonation (nicht automatisch bewertet)",
+      "per": "part",
+      "levels": [
+        3,
+        2,
+        1,
+        0
+      ],
+      "scoredBy": "notAutoScored",
+      "descriptors": []
+    }
+  ],
+  "bands": [],
+  "errorPolicy": {
+    "b1": {
+      "v2-inv": "flag",
+      "verb-final": "score",
+      "satzklammer": "score",
+      "case-np": "flag",
+      "case-pp": "flag",
+      "gender-article": "flag",
+      "adj-ending": "flag",
+      "perfekt-aux-participle": "score",
+      "connector-position": "score",
+      "n-dekl": "flag",
+      "reflexive": "flag",
+      "register": "score"
+    }
+  },
+  "zeroRules": [],
+  "capRules": [],
+  "spelling": "not-scored",
+  "feedbackLanguage": [
+    "de"
+  ],
+  "modelId": "config:speaking-full",
+  "splitVerified": true,
+  "calibration": {
+    "status": "pending",
+    "rangeBands": 1
+  },
+  "source": "https://shop.telc.net/media/catalog/product/file/telc_deutsch_b1_zd_uebungstest_1.pdf"
+}

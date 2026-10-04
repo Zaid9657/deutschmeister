@@ -1,0 +1,364 @@
+import { useEffect, useMemo, useState } from 'react';
+import { Check, Loader2, PenTool, Sparkles } from 'lucide-react';
+import GameButton, { QuietButton } from './GameButton.jsx';
+import { useAuth } from '../../contexts/AuthContext';
+import { safeGetJSON, safeSetJSON } from '../../utils/safeStorage.js';
+import InlineFeedback from './InlineFeedback.jsx';
+import ResultCard from './ResultCard.jsx';
+import SignInPrompt, { SignInButton } from './SignInPrompt.jsx';
+import StepScreen from './StepScreen.jsx';
+import { evaluateWriting } from './ai.js';
+import { countWords, laneLabel, teilLabel } from './content.js';
+import { gradeAnswer, RESULT } from './grade.js';
+import { useV2Strings } from './strings.js';
+import { foldNumberWords } from '../../lib/lesson/check.js';
+
+const LABEL = 'text-[0.75rem] font-extrabold uppercase tracking-[0.08em] text-game-muted';
+const PANEL = 'rounded-[1.25rem] border-2 border-b-4 border-game-line bg-white p-5';
+const FIELD = 'w-full rounded-2xl border-2 border-game-line bg-white px-4 text-[1.0625rem] font-semibold text-game-text outline-none focus:border-course disabled:bg-course-ground';
+const TAG = 'inline-flex items-center rounded-full bg-course-wash px-2.5 py-0.5 text-[0.8125rem] font-extrabold text-course-ink';
+const QUIET_TAG = 'inline-flex items-center rounded-full border-2 border-game-line bg-white px-2.5 py-0.5 text-[0.8125rem] font-bold text-game-muted';
+
+/** The draft and results of one Aufgabe, per viewer, on this device (a convenience only). */
+const draftKey = (bankKey) => `dm_v2_writing_${bankKey}`;
+export const readDraft = (bankKey) => safeGetJSON(draftKey(bankKey), null);
+const writeDraft = (bankKey, value) => safeSetJSON(draftKey(bankKey), value);
+
+// „14:30" and „14.30" are one time: a colon between digits folds to the dot (a1.1-u10 r1 F17);
+// a number word is its digits („zwei Kinder" = „2 Kinder", level review s1 #4), on both sides
+const fold = (s) => foldNumberWords(String(s || '')).toLowerCase().replace(/(\d):(?=\d)/g, '$1.');
+
+/** Is there a surface hint of this Leitpunkt? A FORM check only; the KI decides meaning. */
+const cueFound = (lp, text) => {
+  const body = fold(text);
+  return (lp.cues || []).some((c) => c && body.includes(fold(c)));
+};
+
+/**
+ * The form_fill variant (sd1.s1, ta2.s1): fields checked deterministically, no AI. Its one
+ * primary sits in the bottom bar: „Formular prüfen" (the grey „not yet" look until every field
+ * has a value), then „Weiter". Done reports the fields' share right at the check — `correct` of
+ * `total: fields.length` (a typo counts as right, as InlineFeedback shows it) — for the step's
+ * celebration tile (audit WT-06: five wrong fields read „Richtig ✓"); completion still reads
+ * `submitted`, and XP stays per field (onAttempt).
+ */
+function FormTask({ task, stepId, onDone, onAttempt, header }) {
+  const [, t] = useV2Strings();
+  const fields = task.form?.fields || [];
+  const [values, setValues] = useState({});
+  const [results, setResults] = useState(null);
+  const allFilled = fields.every((f) => String(values[f.id] || '').trim());
+
+  const check = () => {
+    const out = {};
+    let correct = 0;
+    for (const f of fields) {
+      // labelDe, the task's situation and the other fields' keys feed the form rule (checkItem: value + the field's frame)
+      const otherAnswers = fields.filter((g) => g.id !== f.id).map((g) => g.answer);
+      const item = { id: `${task.bankKey}-${f.id}`, type: 'form_fill', topic: 'schreiben', answer: f.answer, accepted: f.accepted?.length ? f.accepted : [f.answer], exact: f.exact, labelDe: f.labelDe, situationDe: task.situationDe, otherAnswers };
+      const r = gradeAnswer(item, values[f.id] || '');
+      out[f.id] = r;
+      if (r.result !== RESULT.WRONG) correct += 1;
+      if (typeof onAttempt === 'function') {
+        onAttempt({ itemId: item.id, stepId, correct: r.result !== RESULT.WRONG, answer: values[f.id] || '', errorTag: r.result === RESULT.WRONG ? 'spelling-meaning' : null, typo: r.result === RESULT.TYPO });
+      }
+    }
+    setResults(out);
+    return correct;
+  };
+
+  const done = () => {
+    const correct = Object.values(results || {}).filter((r) => r.result !== RESULT.WRONG).length;
+    onDone({ bankKey: task.bankKey, submitted: true, result: null, correct, total: fields.length });
+  };
+
+  return (
+    <StepScreen
+      action={!results
+        ? <GameButton onClick={check} disabled={!allFilled}>{t('w.formCheck')}</GameButton>
+        : <GameButton onClick={done}>{t('w.done')}</GameButton>}
+    >
+      {header}
+      <div className={`mt-4 ${PANEL}`}>
+        <p className={LABEL}>{t('w.form')}</p>
+        <div className="mt-3 space-y-4">
+          {fields.map((f) => (
+            <div key={f.id}>
+              <label htmlFor={`${task.bankKey}-${f.id}`} className="text-[0.9375rem] font-bold text-game-text" lang="de">{f.labelDe}</label>
+              <input
+                id={`${task.bankKey}-${f.id}`}
+                type="text"
+                value={values[f.id] || ''}
+                disabled={!!results}
+                autoComplete="off"
+                spellCheck={false}
+                onChange={(e) => setValues((v) => ({ ...v, [f.id]: e.target.value }))}
+                className={`mt-1.5 min-h-12 py-2.5 ${FIELD}`}
+                lang="de"
+              />
+              {results && results[f.id] && (
+                <InlineFeedback
+                  result={results[f.id].result}
+                  expected={results[f.id].expected}
+                  // why a variant form also counts (SCHEMA §8 form.fields[].acceptedWhy, ITM-10)
+                  explanation={f.acceptedWhy && f.acceptedWhy[results[f.id].expected] ? { de: f.acceptedWhy[results[f.id].expected] } : null}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </StepScreen>
+  );
+}
+
+/**
+ * SchreibenStep / UeberarbeitenStep (SCHEMA §8 WritingTask, BLUEPRINT §4.2 and §3.1 LS6,
+ * §3.2 LS6–LS7).
+ *
+ *   plan → draft with the live pre-check (word count against the band, one row per
+ *   Leitpunkt — „ein Hinweis ist da" by form, else „prüft die KI" —, the task's own
+ *   checklist to tick) → submit → evaluate-writing with the bank key → the result as a
+ *   practice value with the fixed label and self-correction places → revision → second
+ *   result → the model text (only now, never before the learner revised).
+ *
+ * A skeleton: the revision follows at once. B skeleton (`mode: 'write'` at B levels): the
+ * revision is its own Lernschritt the next learning day (`mode: 'revise'`), which picks the
+ * first version up from this device.
+ *
+ * onDone({ bankKey, submitted, result }) once, when the learner moves on. `submitted` is
+ * true after a graded attempt (the server row is the completion evidence, BLUEPRINT §3.5).
+ *
+ * The round-3 screen (audit WT-04): each phase's ONE primary sits in the bottom bar
+ * (StepScreen / StickyAction) — „Abgeben", „Überarbeitung abgeben" or „Weiter" — with the
+ * skips as quiet buttons under it. Signed out, the primary is the sign-in door (SignInPrompt:
+ * /login and back to this step, the draft waits on this device) and the learner can still
+ * revise on their own or go on without an assessment — never a dead end (ASSESS-03, CT-03).
+ */
+export default function WritingTaskView({ task, level: _level, stepId = null, mode = 'write', skeleton = 'A', onDone, onAttempt }) {
+  const { user } = useAuth();
+  const [lang, t] = useV2Strings();
+  const saved = useMemo(() => (task?.bankKey ? readDraft(task.bankKey) : null), [task?.bankKey]);
+  const [text, setText] = useState(() => saved?.text || '');
+  const [results, setResults] = useState(() => (Array.isArray(saved?.results) ? saved.results : []));
+  const [firstText, setFirstText] = useState(() => saved?.firstText || null);
+  const [ticks, setTicks] = useState({});
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState(null);
+  const [selfPhase, setSelfPhase] = useState(null); // null | 'revise' | 'done' — the path without an AI result
+  const [slow, setSlow] = useState(false);
+
+  useEffect(() => {
+    if (!task?.bankKey) return;
+    writeDraft(task.bankKey, { text, results, firstText });
+  }, [task?.bankKey, text, results, firstText]);
+
+  useEffect(() => {
+    if (!busy) return undefined;
+    const id = window.setTimeout(() => setSlow(true), 10000);
+    return () => { window.clearTimeout(id); setSlow(false); };
+  }, [busy]);
+
+  // a new result (or the end) opens at the top, where it is shown
+  useEffect(() => {
+    if (results.length && typeof window !== 'undefined' && typeof window.scrollTo === 'function') window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [results.length]);
+
+  if (!task) return null;
+  if (task.form) {
+    return <FormTask task={task} stepId={stepId} onDone={onDone} onAttempt={onAttempt} header={<TaskHeader task={task} t={t} lang={lang} />} />;
+  }
+
+  const band = task.wordBandLearning || task.wordBand || null;
+  const words = countWords(text);
+  const minSubmit = task.minSubmitWords || (band ? Math.ceil(band[0] * 0.5) : 5);
+  const attempts = results.length;
+  const revising = (attempts === 1 && (skeleton === 'A' || mode === 'revise')) || selfPhase === 'revise';
+  const finished = attempts >= 2 || selfPhase === 'done';
+  const laterRevision = skeleton === 'B' && mode === 'write' && attempts >= 1;
+  const canWrite = !finished && !laterRevision && (attempts === 0 || revising);
+  const editable = !busy && canWrite;
+  const leitpunkte = task.leitpunkte || [];
+  const signedOut = !user;
+
+  const submit = async () => {
+    if (!editable || words < minSubmit) return;
+    if (!user) { setError('ai.signIn'); return; }
+    setBusy(true);
+    setError(null);
+    const r = await evaluateWriting({ bankKey: task.bankKey, text });
+    setBusy(false);
+    if (!r.ok) { setError(r.errorKey); return; }
+    if (attempts === 0) setFirstText(text);
+    setResults((prev) => [...prev, r.data]);
+  };
+
+  const finish = () => {
+    if (typeof onDone === 'function') onDone({ bankKey: task.bankKey, submitted: results.length > 0, result: results[results.length - 1] || null });
+  };
+
+  // Without an AI result (signed out, no access, allowance used up, offline) the learner
+  // can still revise on their own; the model text follows that revision, never the draft.
+  const canSelfRevise = attempts === 0 && (!!error || signedOut) && !selfPhase && words >= minSubmit;
+  const selfChanged = selfPhase === 'revise' && firstText != null && text.trim() !== firstText.trim();
+  const selfRevise = () => { setFirstText(text); setSelfPhase('revise'); setError(null); };
+
+  // ── the bottom bar: ONE primary for the phase, the rest quiet under it ──
+  const skip = <QuietButton onClick={finish}>{t('mo.skip')}</QuietButton>;
+  let action;
+  if (!canWrite) {
+    action = <GameButton onClick={finish}>{t('w.done')}</GameButton>;
+  } else if (selfPhase === 'revise') {
+    action = (
+      <>
+        <GameButton onClick={() => setSelfPhase('done')} disabled={!selfChanged}>{t('w.submitRevision')}</GameButton>
+        {skip}
+      </>
+    );
+  } else if (signedOut && attempts === 0) {
+    action = (
+      <>
+        <SignInButton />
+        {canSelfRevise && <QuietButton onClick={selfRevise}>{t('w.revise')}</QuietButton>}
+        {skip}
+      </>
+    );
+  } else {
+    action = (
+      <>
+        <GameButton onClick={submit} disabled={busy || words < minSubmit}>
+          {busy ? <Loader2 className="h-5 w-5 motion-safe:animate-spin" aria-hidden="true" /> : <PenTool className="h-5 w-5" aria-hidden="true" />}
+          {busy ? t('mo.submitting') : (revising ? t('w.submitRevision') : t('w.submit'))}
+        </GameButton>
+        {canSelfRevise && <QuietButton onClick={selfRevise}>{t('w.revise')}</QuietButton>}
+        {revising && attempts >= 1 ? <QuietButton onClick={finish}>{t('w.done')}</QuietButton> : skip}
+      </>
+    );
+  }
+
+  return (
+    <StepScreen action={action}>
+      <TaskHeader task={task} t={t} lang={lang} />
+
+      {mode === 'revise' && (
+        <p className={`mt-4 ${PANEL} text-[0.9375rem] font-semibold text-game-text`}>{attempts === 0 && !text ? t('w.noDraft') : t('w.reviseLead')}</p>
+      )}
+
+      {results.map((r, i) => (
+        <div key={i} className="mt-4">
+          <ResultCard result={r} leitpunkte={leitpunkte} showCorrections={i > 0} />
+        </div>
+      ))}
+
+      {revising && !finished && <p className="mt-4 text-[1rem] font-extrabold text-game-text">{t('w.reviseLead')}</p>}
+      {laterRevision && !finished && (
+        <p className="mt-4 rounded-[1.25rem] border-2 border-course-soft bg-course-wash p-4 text-[0.9375rem] font-semibold text-game-text">{t('w.reviseLater')}</p>
+      )}
+
+      {firstText && attempts >= 1 && (revising || finished) && (
+        <details className="mt-4 rounded-[1.25rem] border-2 border-game-line bg-white px-4 py-1">
+          <summary className="flex min-h-11 cursor-pointer items-center text-[0.9375rem] font-extrabold text-game-muted">{t('w.previous')}</summary>
+          <p className="pb-3 whitespace-pre-line text-[1rem] font-semibold leading-relaxed text-game-text" lang="de">{firstText}</p>
+        </details>
+      )}
+
+      {!laterRevision && !finished && (
+        <div className={`mt-4 ${PANEL}`}>
+          <label htmlFor={`w-${task.bankKey}`} className={LABEL}>{t('w.yourText')}</label>
+          <textarea
+            id={`w-${task.bankKey}`}
+            rows={8}
+            value={text}
+            disabled={!editable}
+            onChange={(e) => setText(e.target.value)}
+            className={`mt-2 resize-y py-3 leading-relaxed ${FIELD}`}
+            lang="de"
+            spellCheck={false}
+          />
+          <p className={`mt-2 text-[0.8125rem] font-bold ${band && words >= band[0] && words <= band[1] ? 'text-course-ink' : 'text-game-muted'}`}>
+            {t('w.words', { n: words })}{band ? ` · ${t('w.target', { min: band[0], max: band[1] })}` : ''}
+            {words < minSubmit ? ` · ${t('w.minSubmit', { n: minSubmit })}` : ''}
+          </p>
+
+          {leitpunkte.length > 0 && (
+            <div className="mt-5">
+              <p className={LABEL}>{t('w.checklist')}</p>
+              <ul className="mt-2 space-y-2">
+                {leitpunkte.map((lp) => {
+                  const found = cueFound(lp, text);
+                  return (
+                    <li key={lp.id} className="flex items-start gap-2 text-[0.9375rem]">
+                      {found
+                        ? <Check className="mt-0.5 h-4 w-4 shrink-0 text-course-ink" aria-hidden="true" />
+                        : <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-game-muted" aria-hidden="true" />}
+                      <span className="font-semibold text-game-text"><span lang="de">{lp.de}</span> <span className="text-game-muted">— {found ? t('w.cueFound') : t('w.cueAi')}</span></span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
+
+          {Array.isArray(task.checklist) && task.checklist.length > 0 && (
+            <ul className="mt-4 space-y-1.5">
+              {task.checklist.map((c, i) => (
+                <li key={i}>
+                  <label className="flex min-h-11 cursor-pointer items-center gap-3 text-[0.9375rem] font-semibold text-game-text">
+                    <input
+                      type="checkbox"
+                      checked={!!ticks[i]}
+                      onChange={(e) => setTicks((tk) => ({ ...tk, [i]: e.target.checked }))}
+                      className="h-5 w-5 accent-course"
+                    />
+                    <span lang="de">{c}</span>
+                  </label>
+                </li>
+              ))}
+            </ul>
+          )}
+          <p className="mt-3 text-[0.8125rem] font-semibold leading-relaxed text-game-muted">{t('w.formcheck')}</p>
+          {slow && busy && <p className="mt-2 text-[0.875rem] font-semibold text-game-muted">{t('ai.slow')}</p>}
+          {error && error !== 'ai.signIn' && <p className="mt-3 text-[0.9375rem] font-semibold text-game-text" role="status">{t(error)}</p>}
+        </div>
+      )}
+
+      {/* signed out: what an account brings, next to its door in the bar */}
+      {signedOut && attempts === 0 && canWrite && selfPhase !== 'revise' && <SignInPrompt className="mt-4" />}
+
+      {finished && task.modelText && (
+        <div className={`mt-4 ${PANEL}`}>
+          <p className={LABEL}>{t('w.model')}</p>
+          <p className="mt-2 whitespace-pre-line text-[1.0625rem] font-semibold leading-relaxed text-game-text" lang="de">{task.modelText}</p>
+        </div>
+      )}
+      {!finished && task.modelText && attempts >= 1 && <p className="mt-3 text-[0.8125rem] font-semibold text-game-muted">{t('w.modelAfter')}</p>}
+    </StepScreen>
+  );
+}
+
+function TaskHeader({ task, t, lang }) {
+  return (
+    <div className={PANEL}>
+      <div className="flex flex-wrap items-center gap-2">
+        {task.template && <span className={TAG} lang="de">{teilLabel(task.template)}</span>}
+        {task.lane && <span className={QUIET_TAG}>{laneLabel(task.lane)}</span>}
+        {task.originLabelDe && <span className={QUIET_TAG}>{t('exam.origin', { label: task.originLabelDe })}</span>}
+      </div>
+      {task.title && <h2 className="mt-3 font-body text-[1.25rem] font-extrabold leading-tight text-game-text" lang="de">{task.title}</h2>}
+      {task.situationDe && <p className="mt-2 text-[1rem] font-semibold leading-relaxed text-game-text" lang="de">{task.situationDe}</p>}
+      {task.taskDe && <p className="mt-2 text-[1rem] font-extrabold leading-relaxed text-game-text" lang="de">{task.taskDe}</p>}
+      {Array.isArray(task.leitpunkte) && task.leitpunkte.length > 0 && (
+        <ul className="mt-3 space-y-1 rounded-2xl bg-course-ground p-4">
+          {task.leitpunkte.map((lp) => (
+            <li key={lp.id} className="text-[0.9375rem] font-semibold text-game-text" lang="de">
+              <span aria-hidden="true" className="mr-2 text-game-muted">›</span>{lp.de}
+            </li>
+          ))}
+        </ul>
+      )}
+      {task.choose && (
+        <p className="mt-2 text-[0.875rem] font-semibold text-game-muted">{lang === 'de' ? `Wählen Sie ${task.choose.pick} von ${task.choose.from}.` : `Choose ${task.choose.pick} of ${task.choose.from}.`}</p>
+      )}
+    </div>
+  );
+}

@@ -1,0 +1,431 @@
+{
+  "$schema": "course-v2/names@1",
+  "version": 1,
+  "names": [
+    {
+      "form": "Deutschland",
+      "kind": "place",
+      "level": "a1.1",
+      "note": "also a lexicon entry (a1.1-u01): the lexicon allocation decides where it is known"
+    },
+    {
+      "form": "Österreich",
+      "kind": "place",
+      "level": "a1.1",
+      "note": "lexicon entry at a1.1-u12: not known before that unit (the lexicon outranks this list)"
+    },
+    {
+      "form": "Schweiz",
+      "kind": "place",
+      "level": "a1.1",
+      "note": "lexicon entry at a1.1-u12: not known before that unit; Schweizer via -er"
+    },
+    {
+      "form": "Liechtenstein",
+      "kind": "place",
+      "level": "a1.1"
+    },
+    {
+      "form": "Luxemburg",
+      "kind": "place",
+      "level": "a1.1"
+    },
+    {
+      "form": "D-A-CH",
+      "kind": "place",
+      "level": "a1.1",
+      "note": "Germany, Austria, Switzerland"
+    },
+    {
+      "form": "Irland",
+      "kind": "place",
+      "level": "a1.1"
+    },
+    {
+      "form": "Sachsen",
+      "kind": "place",
+      "level": "a1.1",
+      "note": "the series is set in Leipzig, Saxony"
+    },
+    {
+      "form": "Thüringen",
+      "kind": "place",
+      "level": "a1.1"
+    },
+    {
+      "form": "Bayern",
+      "kind": "place",
+      "level": "a1.1"
+    },
+    {
+      "form": "Leipzig",
+      "kind": "place",
+      "level": "a1.1",
+      "note": "the series city; Leipzigs, Leipziger via -s/-er"
+    },
+    {
+      "form": "Dresden",
+      "kind": "place",
+      "level": "a1.1"
+    },
+    {
+      "form": "Berlin",
+      "kind": "place",
+      "level": "a1.1"
+    },
+    {
+      "form": "Hamburg",
+      "kind": "place",
+      "level": "a1.1"
+    },
+    {
+      "form": "München",
+      "kind": "place",
+      "level": "a1.1"
+    },
+    {
+      "form": "Münchner",
+      "kind": "place",
+      "level": "a1.1",
+      "note": "adjective/demonym of München (irregular, so listed on its own)"
+    },
+    {
+      "form": "Köln",
+      "kind": "place",
+      "level": "a1.1"
+    },
+    {
+      "form": "Hannover",
+      "kind": "place",
+      "level": "a1.1"
+    },
+    {
+      "form": "Wien",
+      "kind": "place",
+      "level": "a1.1"
+    },
+    {
+      "form": "Graz",
+      "kind": "place",
+      "level": "a1.1"
+    },
+    {
+      "form": "Nordsee",
+      "kind": "place",
+      "level": "a1.2"
+    },
+    {
+      "form": "Ostsee",
+      "kind": "place",
+      "level": "a1.2"
+    },
+    {
+      "form": "Alpen",
+      "kind": "place",
+      "level": "a1.2"
+    },
+    {
+      "form": "Rhein",
+      "kind": "place",
+      "level": "a1.2"
+    },
+    {
+      "form": "Kreta",
+      "kind": "place",
+      "level": "a1.2"
+    },
+    {
+      "form": "Sächsische Schweiz",
+      "kind": "place",
+      "level": "b1.2",
+      "note": "national park south-east of Dresden"
+    },
+    {
+      "form": "Nikolaikirche",
+      "kind": "place",
+      "level": "b1.2",
+      "note": "church in Leipzig city centre"
+    },
+    {
+      "form": "Plagwitz",
+      "kind": "place",
+      "level": "b1.2",
+      "note": "district of Leipzig"
+    },
+    {
+      "form": "Gohlis",
+      "kind": "place",
+      "level": "b1.2",
+      "note": "district of Leipzig"
+    },
+    {
+      "form": "Connewitz",
+      "kind": "place",
+      "level": "b1.2",
+      "note": "district of Leipzig; Connewitzer (Kreuz) via -er"
+    },
+    {
+      "form": "Markkleeberg",
+      "kind": "place",
+      "level": "b1.2",
+      "note": "town south of Leipzig"
+    },
+    {
+      "form": "Cospuden",
+      "kind": "place",
+      "level": "b1.2",
+      "note": "former open-cast mine south of Leipzig; Cospudener via -er"
+    },
+    {
+      "form": "Cospudener See",
+      "kind": "place",
+      "level": "b1.2",
+      "note": "lake south of Leipzig („See“ is a lexicon word, a1.1-u11)"
+    },
+    {
+      "form": "Leipziger Auwald",
+      "kind": "place",
+      "level": "b1.2",
+      "note": "the floodplain forest in Leipzig"
+    },
+    {
+      "form": "Nordwald",
+      "kind": "place",
+      "level": "b1.2",
+      "note": "invented: Kletterpark Nordwald (b1.2 pilot)"
+    },
+    {
+      "form": "Nordplatz",
+      "kind": "place",
+      "level": "b1.2",
+      "note": "invented: Bowling am Nordplatz (b1.2 pilot)"
+    },
+    {
+      "form": "Kehl",
+      "kind": "place",
+      "level": "b2.2",
+      "note": "Kehl am Rhein, seat of the federal consumer arbitration board"
+    },
+    {
+      "form": "Straßburg",
+      "kind": "place",
+      "level": "b2.2"
+    },
+    {
+      "form": "Goethe-Institut",
+      "kind": "org",
+      "level": "a1.1"
+    },
+    {
+      "form": "Goethe-Zertifikat",
+      "kind": "brand",
+      "level": "a1.1",
+      "note": "exam name"
+    },
+    {
+      "form": "telc",
+      "kind": "brand",
+      "level": "a1.1",
+      "note": "exam provider"
+    },
+    {
+      "form": "ÖSD",
+      "kind": "brand",
+      "level": "a1.1",
+      "note": "Österreichisches Sprachdiplom"
+    },
+    {
+      "form": "DTZ",
+      "kind": "brand",
+      "level": "a1.1",
+      "note": "Deutsch-Test für Zuwanderer"
+    },
+    {
+      "form": "Warentest",
+      "kind": "org",
+      "level": "b1.1",
+      "note": "Stiftung Warentest („Stiftung“ is a common noun, so only the name part is listed)"
+    },
+    {
+      "form": "Bundestag",
+      "kind": "org",
+      "level": "b1.1"
+    },
+    {
+      "form": "Hellwig",
+      "kind": "brand",
+      "level": "b1.1",
+      "note": "invented: Hellwig Haushalt customer service (b1.1 pilot)"
+    },
+    {
+      "form": "Elster-Reisen",
+      "kind": "org",
+      "level": "b1.2",
+      "note": "invented bus company (b1.2 pilot)"
+    },
+    {
+      "form": "Lichtblick",
+      "kind": "brand",
+      "level": "b1.2",
+      "note": "invented: Fotostudio Lichtblick (b1.2 pilot)"
+    },
+    {
+      "form": "Expo",
+      "kind": "event",
+      "level": "b1.2",
+      "note": "Expo 2000"
+    },
+    {
+      "form": "Blauwelle",
+      "kind": "brand",
+      "level": "b2.1",
+      "note": "invented: Blauwelle Reisen (b2.1 pilot)"
+    },
+    {
+      "form": "Bücherhalle",
+      "kind": "org",
+      "level": "b2.1",
+      "note": "Hamburg’s public library (Bücherhallen Hamburg)"
+    },
+    {
+      "form": "Kranich",
+      "kind": "org",
+      "level": "b2.1",
+      "note": "invented employer: Kranich Logistik (B2); „Logistik“ is a lexicon word (b2.1-u01)"
+    },
+    {
+      "form": "Nora",
+      "kind": "person",
+      "level": "a1.1"
+    },
+    {
+      "form": "Pristina",
+      "kind": "place",
+      "level": "a1.1",
+      "note": "German spelling of Prishtina (Duden: Pristina); cast.arta is from Prishtina, so an answer may use either spelling (a1.1-u01 r1 F04 / r2 F06 / r3 F06)"
+    },
+    {
+      "form": "Priština",
+      "kind": "place",
+      "level": "a1.1",
+      "note": "spelling of Prishtina with the háček (a1.1-u01 r1 F04 / r2 F06 / r3 F06)"
+    },
+    {
+      "form": "Lindenau",
+      "kind": "place",
+      "level": "a1.1",
+      "note": "district of Leipzig, PLZ 04177: Priya's and Arjun's flat in the Kölner Straße from a1.1-u05 (casts/series.json contact; a1.1-u05 r2 F04 / r3 F02)"
+    },
+    {
+      "form": "Malayalam",
+      "kind": "language",
+      "level": "a1.1",
+      "note": "cast.priya, cast.arjun (a1.1-u01 r1 F13, a1.1-u05 r1 F06)"
+    },
+    {
+      "form": "Hindi",
+      "kind": "language",
+      "level": "a1.1",
+      "note": "cast.arjun"
+    },
+    {
+      "form": "Arabisch",
+      "kind": "language",
+      "level": "a1.1",
+      "note": "cast.amal (a1 band); a lexicon allocation would outrank this entry"
+    },
+    {
+      "form": "Russisch",
+      "kind": "language",
+      "level": "a1.1",
+      "note": "cast.frau-schulz, cast.olena, cast.frau-lehmann (a1.1-u01 r1 F13)"
+    },
+    {
+      "form": "Ukrainisch",
+      "kind": "language",
+      "level": "a1.1",
+      "note": "cast.olena (a1.1-u01 r1 F13)"
+    },
+    {
+      "form": "Urdu",
+      "kind": "language",
+      "level": "a1.1",
+      "note": "cast.bilal (a1.1-u01 r1 F13)"
+    },
+    {
+      "form": "Punjabi",
+      "kind": "language",
+      "level": "a1.1",
+      "note": "cast.bilal"
+    },
+    {
+      "form": "Albanisch",
+      "kind": "language",
+      "level": "a1.1",
+      "note": "cast.arta (a1.1-u01 r1 F13)"
+    },
+    {
+      "form": "Rahul",
+      "kind": "person",
+      "level": "a1.1",
+      "note": "Priya's brother in Kochi, named in a1.1-u03 inputs, no voice (a1.1-u03 r1 F01 / r2 F09 / r3 F10)"
+    },
+    {
+      "form": "Anu",
+      "kind": "person",
+      "level": "a1.1",
+      "note": "Priya's sister in Kochi, a1.1-u03 (a1.1-u03 r1 F01)"
+    },
+    {
+      "form": "Iryna",
+      "kind": "person",
+      "level": "a1.1",
+      "note": "Olena's sister in Berlin, a1.1-u03 (a1.1-u03 r1 F01)"
+    },
+    {
+      "form": "Zeynep",
+      "kind": "person",
+      "level": "a1.1",
+      "note": "Emre's sister in İzmir, a1.1-u03 (a1.1-u03 r1 F01)"
+    },
+    {
+      "form": "Drita",
+      "kind": "person",
+      "level": "a1.1",
+      "note": "Arta's sister, a1.1-u03 (a1.1-u03 r1 F01)"
+    },
+    {
+      "form": "Mira",
+      "kind": "person",
+      "level": "a1.2"
+    },
+    {
+      "form": "Marta",
+      "kind": "person",
+      "level": "a2.1"
+    },
+    {
+      "form": "Markus",
+      "kind": "person",
+      "level": "b1.2",
+      "note": "Markus Lehmann, Seminarhaus am See (b1.2 pilot)"
+    },
+    {
+      "form": "Alex Berger",
+      "kind": "person",
+      "level": "b1.2"
+    },
+    {
+      "form": "Jessen",
+      "kind": "person",
+      "level": "b2.2",
+      "note": "Werkstatt Jessen (b2.2 pilot)"
+    },
+    {
+      "form": "Matthiesen",
+      "kind": "person",
+      "level": "b2.2",
+      "note": "housing cooperative (b2.2 pilot)"
+    }
+  ]
+}

@@ -14,10 +14,11 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-import { chromeFor } from '../src/lib/chrome.js';
+import { chromeFor, hasBottomNav } from '../src/lib/chrome.js';
 import { resolveModelltest } from '../src/data/modelltest.js';
 import { isLevelFree } from '../src/config/freeTier.js';
 import { CURRICULA, curriculumPath } from '../src/data/curricula/index.js';
+import { freeCourseHref, V2_COURSE_ROUTE, COURSE_V2_LIVE } from '../src/config/courseV2.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -29,6 +30,24 @@ test('chromeFor: player routes are focused, the course home is slim, everything 
   }
   assert.equal(chromeFor('/course/a1.1'), 'course');
   assert.equal(chromeFor('/course/a1.1/'), 'course');
+  // Course v2: the unit player and the Plateau are stages; the v2 home is the Duolingo-style
+  // learn screen (its own four-tab bar, so no app BottomNav under it).
+  for (const p of ['/course/a2.1/u/7', '/course/a2.1/u/7/', '/course/b1.2/p/2', '/course/a1.1/abschluss', '/course/a1.1/abschluss/']) assert.equal(chromeFor(p), 'player', p);
+  // The level reference pages (Grammatik · Wörter from the v2 tab bar) are stages too: ReferenceShell
+  // carries the X and the page tabs in its own sticky bar. Under 'full' the fixed site Navbar covered
+  // that bar (X and tabs unclickable) and the marketing Footer hung under the page.
+  for (const p of ['/course/a1.1/grammatik', '/course/a1.1/grammatik/', '/course/a1.1/wortschatz', '/course/a1.1/wortschatz/', '/course/b1.2/wortschatz']) {
+    assert.equal(chromeFor(p), 'player', p);
+    assert.equal(hasBottomNav(p), false, p);
+  }
+  // …but only the two pages themselves, never a deeper path or a look-alike.
+  for (const p of ['/course/a1.1/grammatik/x', '/course/a1.1/grammatikx', '/grammar/a1.1', '/course/grammatik']) assert.notEqual(chromeFor(p), 'player', p);
+  for (const p of ['/course/a2.1/v2', '/course/a2.1/v2/']) {
+    assert.equal(chromeFor(p), 'learn', p);
+    assert.equal(hasBottomNav(p), false, p);
+  }
+  for (const p of ['/course/a1.1', '/dashboard']) assert.equal(hasBottomNav(p), true, p);
+  assert.equal(hasBottomNav('/course/a1.1/u/1'), false);
   for (const p of ['/', '/dashboard', '/course/a1.1/complete', '/course/a1.1/certificate', '/course/a1.1/a11-w1-d1-lesson', '/courses/', '/level/a1.1', '/modelltest/abschlusstest-a1-1', '']) {
     assert.equal(chromeFor(p), 'full', p);
   }
@@ -38,7 +57,7 @@ test('App.jsx mounts the navbar, footer and bottom nav through chromeFor', () =>
   assert.match(app, /from '\.\/lib\/chrome\.js'/);
   assert.match(app, /\{!focused && <Navbar \/>\}/, 'Navbar must be hidden in the player');
   assert.match(app, /\{chrome === 'full' && <OutsideAdmin><Footer \/><\/OutsideAdmin>\}/, 'Footer only on full-chrome routes');
-  assert.match(app, /\{!focused && <OutsideAdmin><BottomNav \/><\/OutsideAdmin>\}/, 'BottomNav must be hidden in the player');
+  assert.match(app, /\{hasBottomNav\(pathname\) && <OutsideAdmin><BottomNav \/><\/OutsideAdmin>\}/, 'BottomNav must be hidden in the player and on the v2 learn screen');
   // The chrome routes exist as routes at all.
   for (const p of ['/course/:level', '/course/:level/l/:nr', '/course/:level/checkpoint/:nr', '/course/:level/review']) {
     assert.ok(app.includes(`path="${p}"`), `missing route ${p}`);
@@ -94,7 +113,25 @@ test('the rival A1.1 pages point at the guided course and do not call themselves
   assert.match(level, /to=\{`\/course\/\$\{level\}`\}/, '/level/:level must link to /course/:level');
   const navbar = read('src/components/Navbar.jsx');
   assert.ok(!navbar.includes('to="/level/a1.1"'), 'the free CTA in the navbar must open the course, not the library');
-  assert.equal((navbar.match(/to="\/course\/a1\.1"/g) || []).length, 2, 'desktop + mobile free CTA');
+  assert.equal((navbar.match(/to=\{freeCourse\}/g) || []).length, 2, 'desktop + mobile free CTA');
+  assert.match(navbar, /const freeCourse = freeCourseHref\(useLocation\(\)\.pathname\);/, 'the chip target follows the route');
+});
+
+// audit CRITIC-03: inside the v2 course preview the navbar's free A1.1 chip led to the LEGACY
+// /course/a1.1 (another design, separate progress) with no way back. On a v2 route it now stays
+// in the v2 course; everywhere else nothing changed (COURSE_V2_LIVE is still empty).
+test('the free A1.1 chip stays in the v2 course on v2 routes and opens /course/a1.1 everywhere else', () => {
+  for (const p of ['/course/a1.1/v2', '/course/a1.1/v2/', '/course/a1.1/u/1', '/course/a1.1/u/12', '/course/a1.1/p/2', '/course/a1.1/abschluss', '/course/a1.1/grammatik', '/course/a1.1/wortschatz/']) {
+    assert.equal(freeCourseHref(p), '/course/a1.1/v2', p);
+  }
+  for (const p of ['/', '/courses/', '/course/a1.1', '/course/a1.1/', '/course/a1.1/l/3', '/course/a1.1/checkpoint/1', '/course/a1.1/review', '/course/a1.1/complete', '/dashboard', '', undefined]) {
+    assert.equal(freeCourseHref(p), '/course/a1.1', String(p));
+  }
+  assert.deepEqual(COURSE_V2_LIVE, [], 'the legacy course is still /course/a1.1');
+  // every v2 route App.jsx declares is one the chip recognises
+  const v2Routes = [...app.matchAll(/path="(\/course\/:level\/(?:v2|u\/:nr|p\/:nr|abschluss|grammatik|wortschatz))"/g)].map((m) => m[1]);
+  assert.equal(v2Routes.length, 6, 'the six v2 routes');
+  for (const r of v2Routes) assert.ok(V2_COURSE_ROUTE.test(r.replace(':level', 'a1.1').replace(':nr', '1')), r);
 });
 
 test('the chrome added in Wave 0 siezt (no du-register token)', () => {

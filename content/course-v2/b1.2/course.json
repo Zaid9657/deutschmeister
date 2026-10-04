@@ -1,0 +1,193 @@
+{
+  "$schema": "course-v2/course@1",
+  "level": "b1.2",
+  "kind": "dot2",
+  "priceKey": "course_b1_2",
+  "title": {
+    "de": "Selbstständig handeln und Stellung nehmen",
+    "en": "Acting independently and taking a stand"
+  },
+  "honestyLineDe": "B1.2 schließt die Stufe B1 ab und übt alle Teile von telc Deutsch B1 unter Prüfungsbedingungen. Alle Werte sind Übungswerte aus einer automatisierten Übungsbewertung – kein Prüfungsergebnis und keine Prognose.",
+  "lanes": {
+    "primary": "tb1",
+    "secondary": [],
+    "later": [],
+    "live": [
+      "tb1"
+    ]
+  },
+  "units": [
+    "b1.2-u01",
+    "b1.2-u02",
+    "b1.2-u03",
+    "b1.2-u04",
+    "b1.2-u05",
+    "b1.2-u06",
+    "b1.2-u07",
+    "b1.2-u08",
+    "b1.2-u09",
+    "b1.2-u10",
+    "b1.2-u11",
+    "b1.2-u12"
+  ],
+  "etappen": [
+    {
+      "nr": 1,
+      "units": [
+        "b1.2-u01",
+        "b1.2-u02",
+        "b1.2-u03"
+      ],
+      "closedBy": "b1.2-p1"
+    },
+    {
+      "nr": 2,
+      "units": [
+        "b1.2-u04",
+        "b1.2-u05",
+        "b1.2-u06"
+      ],
+      "closedBy": "b1.2-p2"
+    },
+    {
+      "nr": 3,
+      "units": [
+        "b1.2-u07",
+        "b1.2-u08",
+        "b1.2-u09"
+      ],
+      "closedBy": "b1.2-p3"
+    },
+    {
+      "nr": 4,
+      "units": [
+        "b1.2-u10",
+        "b1.2-u11",
+        "b1.2-u12"
+      ],
+      "closedBy": "closing"
+    }
+  ],
+  "plateaus": [
+    "b1.2-p1",
+    "b1.2-p2",
+    "b1.2-p3"
+  ],
+  "closing": {
+    "diagnose": {
+      "tb1": "b1.2-dx-tb1"
+    },
+    "modelltests": {
+      "tb1": [
+        "b1.2-ma-tb1",
+        "b1.2-mb-tb1"
+      ]
+    },
+    "wiederholungsplan": true
+  },
+  "completion": {
+    "lernschritt": {
+      "finishedWhen": "all-items-answered"
+    },
+    "aufgabe": {
+      "submittedWhen": {
+        "writingMinShareOfLowerBound": 0.5,
+        "formAllFieldsNonEmpty": true,
+        "speakingMinSeconds": 20,
+        "cardModeMinTurns": 2
+      }
+    },
+    "unit": {
+      "completeWhen": [
+        "lernschritte-finished-or-tested-out",
+        "aufgaben-submitted"
+      ],
+      "testOutThreshold": 0.8
+    },
+    "course": {
+      "required": [
+        {
+          "kind": "unit",
+          "status": "complete",
+          "count": 12
+        },
+        {
+          "kind": "plateau",
+          "status": "submitted",
+          "count": 3
+        },
+        {
+          "kind": "modelltest",
+          "form": "a",
+          "lane": "learner",
+          "status": "submitted"
+        }
+      ],
+      "neverRequired": [
+        "score",
+        "fokus",
+        "mehr-ueben",
+        "extensive",
+        "diagnose",
+        "modelltest:b",
+        "modelltest:c"
+      ]
+    }
+  },
+  "review": {
+    "ladderDays": [
+      1,
+      3,
+      7,
+      14,
+      30,
+      60
+    ],
+    "examCapShare": 0.15,
+    "budgetMinutes": 9,
+    "firstReviewCeiling": 40,
+    "secondsPerReview": 10,
+    "graduateAfterDays": 60,
+    "examCriticalKinds": [
+      "teil",
+      "sentence"
+    ],
+    "carryOverMinutes": 2
+  },
+  "pace": {
+    "leicht": {
+      "unitsPerWeek": 0.5,
+      "learningDays": 3
+    },
+    "standard": {
+      "unitsPerWeek": 1,
+      "learningDays": 4
+    },
+    "intensiv": {
+      "unitsPerWeek": 2,
+      "learningDays": 6
+    }
+  },
+  "targets": {
+    "newWords": [
+      520,
+      580
+    ],
+    "productiveShare": 0.45,
+    "aufgaben": 24,
+    "microOutputs": 36
+  },
+  "einstufung": {
+    "fromUnits": [
+      4,
+      8,
+      12
+    ],
+    "itemsPerUnit": 4,
+    "itemTypes": "deterministic",
+    "routing": {
+      "testOutMin": 0.8,
+      "recommendDot2Min": 0.8
+    }
+  }
+}

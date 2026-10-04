@@ -1,0 +1,21 @@
+{
+  "$schema": "course-v2/rubric@1",
+  "id": "tb2-m1",
+  "kind": "speaking",
+  "lane": "tb2",
+  "max": 25,
+  "criteria": [
+    { "id": "ausdruck", "label": "Ausdrucksfähigkeit: passender und abwechslungsreicher Ausdruck, die Sprechabsicht wird erreicht", "per": "part", "levels": [7, 5, 3, 0] },
+    { "id": "aufgabe", "label": "Aufgabenbewältigung: frei über eine Erfahrung zu einem zu Hause vorbereiteten Thema (eines von sieben) sprechen (bis 1½ Minuten, nicht auswendig), Fragen beantworten und Anschlussfragen stellen; Strategien (auch Nachfragen und Hilfestellung) und Flüssigkeit", "per": "part", "levels": [7, 5, 3, 0] },
+    { "id": "richtigkeit", "label": "Formale Richtigkeit: Satzbau und Formen", "per": "part", "levels": [7, 5, 3, 0] },
+    { "id": "aussprache", "label": "Aussprache und Intonation", "per": "part", "levels": [4, 2, 1, 0] }
+  ],
+  "zeroRules": [],
+  "capRules": [],
+  "spelling": "not-scored",
+  "feedbackLanguage": ["de"],
+  "modelId": "config:speaking-full",
+  "splitVerified": false,
+  "calibration": { "status": "pending", "rangeBands": 1 },
+  "source": "https://shop.telc.net/media/catalog/product/file/2/0/20201223_5023-b00-010201_web.pdf"
+}

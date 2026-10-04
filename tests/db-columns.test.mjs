@@ -44,6 +44,32 @@ import { isListeningDone } from '../src/lib/listeningProgress.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SNAPSHOT = JSON.parse(readFileSync(path.join(ROOT, 'tests/fixtures/db-schema.json'), 'utf8'));
+const LIVE = SNAPSHOT.tables;
+
+// Migrations committed but NOT yet applied by hand (migrations/README.md). Code
+// may query what they create only because its caller is fail-soft until then
+// and the feature it serves is off (course v2: COURSE_V2_LIVE is empty). The
+// columns are read from the migration file itself, never typed here, so a query
+// that names something the migration does not create still fails. Once the
+// owner applies one: refresh the snapshot and delete its line — the test below
+// fails until you do.
+const PENDING_MIGRATIONS = ['migrations/2026-10-01-course-v2.sql'];
+
+const COLUMN_LINE = /^\s+([a-z_][a-z0-9_]*)\s+(?:uuid|text|bigserial|serial|bigint|integer|int|smallint|numeric|real|double|boolean|date|timestamptz|time|jsonb)\b/i;
+function pendingSchema(sql) {
+  const code = sql.split('\n').filter((l) => !l.trim().startsWith('--')).join('\n');
+  const created = {};
+  for (const m of code.matchAll(/CREATE TABLE IF NOT EXISTS public\.(\w+) \(([\s\S]*?)\n\);/g)) {
+    created[m[1]] = m[2].split('\n').map((l) => l.match(COLUMN_LINE)?.[1]).filter(Boolean).sort();
+  }
+  const added = {};
+  for (const m of code.matchAll(/ALTER TABLE public\.(\w+) ADD COLUMN IF NOT EXISTS (\w+)/g)) {
+    (added[m[1]] ||= []).push(m[2]);
+  }
+  return { created, added };
+}
+const PENDING_FILES = PENDING_MIGRATIONS.map((f) => ({ file: f, ...pendingSchema(readFileSync(path.join(ROOT, f), 'utf8')) }));
+
 // Tables a written, NOT yet applied migration creates (the fixture's
 // "pendingApply" block). Queries may name them — the function that queries
 // one is written to fail closed until the owner applies the file — but only
@@ -53,9 +79,14 @@ const SNAPSHOT = JSON.parse(readFileSync(path.join(ROOT, 'tests/fixtures/db-sche
 // tests/rls-update-check.test.mjs: the list only shrinks.
 const PENDING = SNAPSHOT.pendingApply?.tables ?? {};
 const TABLES = {
-  ...SNAPSHOT.tables,
+  ...LIVE,
   ...Object.fromEntries(Object.entries(PENDING).map(([t, p]) => [t, p.columns])),
 };
+// …plus what the pending course-v2 migration file creates (read from the file itself)
+for (const { created, added } of PENDING_FILES) {
+  Object.assign(TABLES, created);
+  for (const [t, cols] of Object.entries(added)) if (TABLES[t]) TABLES[t] = [...new Set([...TABLES[t], ...cols])];
+}
 
 const scanRepo = () => scanFiles(listSourceFiles(['src', 'netlify/functions'], ROOT), ROOT);
 const violationsIn = (source) => findViolations(scanSource(source, 'fixture.js').refs, TABLES);
@@ -95,6 +126,21 @@ test('the two progress tables are shaped as the 2026-09-28 fix assumes', () => {
   const reading = TABLES.user_reading_progress;
   assert.ok(listening.includes('completed_at') && !listening.includes('completed'));
   assert.ok(reading.includes('completed') && reading.includes('last_read_at') && !reading.includes('completed_at'));
+});
+
+test('a pending migration is really pending, and is read as a schema', () => {
+  for (const { file, created } of PENDING_FILES) {
+    const tables = Object.keys(created);
+    assert.ok(tables.length > 0, `${file}: no CREATE TABLE read — the parser no longer matches the file`);
+    for (const t of tables) assert.ok(created[t].length >= 3, `${file}: ${t} read with only ${created[t].length} columns`);
+    const live = tables.filter((t) => t in LIVE);
+    assert.deepEqual(live, [], `${file} is applied (${live.join(', ')} in the snapshot): delete it from PENDING_MIGRATIONS`);
+  }
+  // The course v2 migration, read: the columns its queries depend on.
+  const v2 = PENDING_FILES.find((p) => p.file.endsWith('2026-10-01-course-v2.sql'));
+  assert.ok(v2.created.learner_goals.includes('band'), 'learner_goals is keyed by band (progress.js reads it by band)');
+  assert.ok(v2.created.course_ai_usage.includes('slot_key'));
+  assert.ok(v2.created.course_events.includes('props'));
 });
 
 // ── the rule ─────────────────────────────────────────────────────────────

@@ -1,0 +1,315 @@
+{
+  "review": "b1.1-u04.r2",
+  "unitId": "b1.1-u04",
+  "file": "content/course-v2/b1.1/units/u04.json",
+  "round": 2,
+  "date": "2026-09-27",
+  "reviewers": [
+    {
+      "id": "R1",
+      "role": "Prüferin (lizenzierte telc-B1-Prüferin): exam fidelity, rubric application, task clarity"
+    },
+    {
+      "id": "R2",
+      "role": "Kursleiterin DaF/DaZ, Niveau B1.1: naturalness, level, didactics, scene plausibility"
+    }
+  ],
+  "method": "We read every German string again: start and Folge; LS1 Text A with its items, pool, reserve and micro-output; LS2 dialogue, items, structured input, pool, reserve, micro-output and Aussprache; the LS3 rule table, pool and reserve; the LS4 texts t1-t6, the tb1.sb1 and tb1.hv3 blocks and their strategy cards; the LS5 and LS6 Aufgaben; the LS7/LS8 end lines; check, proof items, portrait, Redemittel, story, Fokus and facts. We solved every item blind from promptDe plus its options, tiles or audio line, and compared the result with answer and accepted[]. Where a second answer looked defensible, we ran it through the real checker (src/lib/course-v2/checkItem.js). We recorded every key position. We checked the exam blocks and Aufgaben against content/course-v2/registries/lanes/tb1.json (sb1, hv3, sa, m2). We traced the speaking and writing tasks through the runtime: SpeakingTaskView.jsx, WritingTaskView.jsx, speakingAI.mjs normalizeSpeakingTask and buildCoursePartnerPrompt, and compiler.mjs. We checked grammar against grammar-spine.json and detectors.json, the lexicon against b1.1/lexicon.json and level-profiles.json, the can-dos against registries/cando/b1.json, the cast against casts/b1.json, casts/series.json and casts/a1.json, and the rule cards against b1.1/rule-cards.json. Each of the 19 r1 findings was re-verified. For the four r1 class rules we rebuilt the r1 defects in a scratch copy of the unit (outside the repo) and ran the validator on it. Validator: node scripts/course-v2/validate.mjs content/course-v2/b1.1/units/u04.json returned OK: 39 rules, 33 pass, 0 fail, 2 warn (LEX-02: 41 ratchet; GRM-04: 14 advisory), 4 skipped (level scope), 0 blocker. node scripts/course-v2/check.mjs on the unit returned 0 errors.",
+  "verdict": "Not exitable in round 2, but close on the unit side. 15 of the 19 r1 findings are fixed in the unit, including both blockers. F04, F05 and F15 are partly fixed, and F17 needed no unit change. Betreff is allocated. The keys are balanced (11/10/11; sb1 3/3/2). The complaint call is now performed in the planning round. The rule table teaches obwohl and trotzdem correctly, and the story timeline holds. Every key is correct and the four Teile match tb1.json. Open: 0 blocker, 5 major, 7 minor. Majors: (F01) none of the four class rules proposed in r1 exists, and a scratch copy with the r1 defects passes the validator; (F02) the tb1.m2 runtime shows the learner the partner's sheet, never gives the AI that sheet, and does not brief the planning round or the switch to the Kundenservice, which the reklamieren proof now depends on; (F03) the q02 explanation and rc.obwohl still misplace the Gegengrund, a residual of r1 F04; (F04) Beweis and zurückerstattet are rejected; (F05) the c06 dictation rejects „2 E-Mails“, the same class as a2.2-u04.r2 F07. F01 and the class halves of F02 and F05 need the rule-smith and the runtime owners, not the unit author. The unit-side fixes for F02-F05 are small.",
+  "scores": {
+    "R1": {
+      "D": 4,
+      "N": 4,
+      "H": 4,
+      "A": 3,
+      "P": 3,
+      "K": 4,
+      "E": 4,
+      "total": 26
+    },
+    "R2": {
+      "D": 4,
+      "N": 5,
+      "H": 4,
+      "A": 3,
+      "P": 4,
+      "K": 4,
+      "E": 3,
+      "total": 27
+    },
+    "combined": {
+      "D": 4,
+      "N": 4,
+      "H": 4,
+      "A": 3,
+      "P": 3,
+      "K": 4,
+      "E": 3,
+      "total": 25
+    }
+  },
+  "total": 25,
+  "counts": {
+    "blocker": 0,
+    "major": 5,
+    "minor": 7
+  },
+  "previousRound": [
+    {
+      "id": "r1-F01",
+      "status": "fixed",
+      "note": "lx.betreff is allocated to b1.1-u04 and listed in lexiconBlocks[3]; LEX-03 and LEX-05 pass."
+    },
+    {
+      "id": "r1-F02",
+      "status": "fixed in the unit; rule side open",
+      "note": "The 32 three-option keys are 11/10/11 (a/b/c); sb1 is a,c,b,a,c,b,b,a = 3/3/2; the proofs are a and c. ITM-03 still skips cloze. See F01."
+    },
+    {
+      "id": "r1-F03",
+      "status": "fixed in the data; runtime caveat",
+      "note": "The planning round now ends with the call: the partner plays the Kundenservice, persona and model turns carry the complaint and the demand, and mo2 asks „Was verlangen Sie jetzt?“. The AI brief does not carry the role switch. See F02."
+    },
+    {
+      "id": "r1-F04",
+      "status": "partly fixed",
+      "note": "The rule table (unerwartete Folge, header „Beispiel“, Text B example), ls3-p04, c02, sb1-03 and s03 are corrected. The q02 explanation and rc.obwohl still misplace the Gegengrund. See F03."
+    },
+    {
+      "id": "r1-F05",
+      "status": "fixed in the unit, one gap; rule side open",
+      "note": "Cues or accepted forms added to ls3-p04, c02, ls2-r04 (+ Kundenservice), ls3-p03 (+ Beschwerde), ls1-r01, ls3-r04 (vollem Akku), ls1-r05, ls2-p05. The new cue of ls1-p05 admits Beweis: see F04. ITM-01 cue check not implemented: see F01."
+    },
+    {
+      "id": "r1-F06",
+      "status": "fixed in the unit; rule side open",
+      "note": "ls1-p10, ls1-r03, ls2-p11 and ls3-r03 accept the variants with acceptedWhy. ITM-10 extension not implemented: see F01."
+    },
+    {
+      "id": "r1-F07",
+      "status": "fixed",
+      "note": "Key „Sie hat sich schriftlich beim Onlineshop beschwert.“ and the explanation quotes l08 verbatim."
+    },
+    {
+      "id": "r1-F08",
+      "status": "fixed in the unit; rule side open",
+      "note": "hv3-01: „Bei einem kaputten Gerät soll man am Telefon ‚Rückgabe‘ sagen.“ The detector still misses quoted Wer-clauses (verified with detectInText): see F01."
+    },
+    {
+      "id": "r1-F09",
+      "status": "fixed, one follow-on",
+      "note": "Stimulus signed by Sabine Lange, register halbformell, Anrede „Sehr geehrte Frau Lange“, taskDe says telc sets no word count. The recommended 80–120 disagrees with the on-screen Lernmodus target 60–100: see F07."
+    },
+    {
+      "id": "r1-F10",
+      "status": "fixed",
+      "note": "Text A (spätestens nach 14 Tagen, über die Zahlungsart), ls1-p03, l07, t4 (ein neues), t3 (erste Etage), s02 (abgenommen), LS5 instructions (wiedergeben), model turn (neue Lampe), Folge l04 (hing am Ladekabel), modelText/rm04 (erstatten Sie mir bitte den Kaufpreis)."
+    },
+    {
+      "id": "r1-F11",
+      "status": "fixed",
+      "note": "„zweimal“ in l08, s02 and ls2-p02; no „zwei Mal“ left."
+    },
+    {
+      "id": "r1-F12",
+      "status": "fixed",
+      "note": "Timeline consistent (ordered 10 days before the Saturday call, delivered a week before, broke on Monday, complaint on Monday, t1 „nach zwei Tagen“), error message on the display in Folge and l06, serial number asked in l05, ls2-p08 „Trotzdem ist Priya zufrieden.“"
+    },
+    {
+      "id": "r1-F13",
+      "status": "fixed",
+      "note": "q01 now weighs 30-day return against a 3-year Garantie; q02 makes weil and obwohl compete on meaning. The q02 explanation and its missing letter frame: see F03 and F09."
+    },
+    {
+      "id": "r1-F14",
+      "status": "fixed",
+      "note": "hv3-02 keeps „das man dort gekauft hat“; sb1-08 is an adjective ending (neue/neuen/neuer). sb1-06 is still an A1 gap: see F10."
+    },
+    {
+      "id": "r1-F15",
+      "status": "partly fixed",
+      "note": "Thomas's age and job are reported, and the partner makes a counter-proposal (zuerst eine E-Mail). The timing is fixed only in the text: see F07."
+    },
+    {
+      "id": "r1-F16",
+      "status": "fixed",
+      "note": "LS7 end line is neutral and sends the learner to the model text."
+    },
+    {
+      "id": "r1-F17",
+      "status": "no unit change needed; rule side open",
+      "note": "14 advisories now (13 false positives + the receptive „doch“ formula): see F12."
+    },
+    {
+      "id": "r1-F18",
+      "status": "fixed",
+      "note": "Zahlungsart (Text A, l02), enttäuschend (Folge, l08) and Frechheit (Folge, t1) each occur at least twice; no within-unit LEX-02 finding remains."
+    },
+    {
+      "id": "r1-F19",
+      "status": "fixed",
+      "note": "t5 „auf die Rückerstattung warten Sie oft zwei Wochen“; portrait „Das Geld kommt vor allem von den Menschen, die die Hefte und Tests kaufen.“"
+    }
+  ],
+  "findings": [
+    {
+      "id": "F01",
+      "severity": "major",
+      "reviewer": "R1",
+      "unitId": "b1.1-u04",
+      "path": "Rule side of r1 F02, F05, F06 and F08: scripts/course-v2/rules/ITM-03.mjs (line 46), ITM-01.mjs, ITM-10.mjs; content/course-v2/registries/detectors.json det.relativsatz-wer",
+      "quote": "ITM-03.mjs:46 const abc = items.filter((i) => (i.type === 'abc' || i.type === 'multiple_choice') && …) · det.relativsatz-wer regex \"^(?:Wer|Was)\\s+[^,?]*…\"",
+      "problem": "The unit fixed every instance of the four r1 finding classes, but none of the four class rules proposed in r1 exists. We rebuilt the r1 defects in a scratch copy of the unit: sb1 keys back to 8/0/0; hv3-01 back to „Wer ein kaputtes Gerät hat, soll …“; c02 without its cue „(trotzdem oder deshalb?)“; ls1-p10 without the Mittelfeld variant. validate.mjs returned OK on that copy. ITM-01, ITM-03 and ITM-10 all PASS, and GRM-04 reports no wer-clause. detectInText(det.relativsatz-wer) returns [] for the quoted sentence but a hit for the same sentence without „. The next unit that repeats one of these patterns will pass the gate. r1 already measured the key-first pattern in a1.2, a2.1, a2.2 and b2.2 u04. BLUEPRINT §9.4 counts a gate hole that lets a finding class through as MAJOR.",
+      "fix": "No unit change. Rule-smith: implement the four proposedRules of b1.1-u04.r1 (F02, F05, F06, F08) with the fixtures named there, add the scratch-copy defects above as failing fixtures, and re-validate every registered unit.",
+      "scope": "class",
+      "proposedRule": "ITM-03: count every item with a 3-element options array, including cloze, per block (fixture: tb1.sb1 keys 8/0/0). ITM-01: a typed fill_blank whose key is a noun, an adjective or a sentence adverb in position 1 needs a German cue (fixture: c02 without its cue). ITM-10: an error_correction on a connector must accept the Mittelfeld and clause-order variants that its unit accepts elsewhere (fixture: ls1-p10 with one accepted form). GRM-04: strip leading „ \" » ‚ before ^-anchored detectors (fixture: the quoted hv3-01 must hit det.relativsatz-wer)."
+    },
+    {
+      "id": "F02",
+      "severity": "major",
+      "reviewer": "R1",
+      "unitId": "b1.1-u04",
+      "path": "steps[4].task.stimulus.items[1] and aiRole (support, personaDe) (b1.1-u04-ls5, tb1.m2); src/components/course-v2/SpeakingTaskView.jsx:57-59; netlify/functions/_shared/speakingAI.mjs normalizeSpeakingTask (l. 340-365), MODE_RULES.discuss, buildCoursePartnerPrompt",
+      "quote": "stimulus.items[1]: „Blatt der Partnerin – Monika, 58, Bibliothekarin: „Ich kaufe lieber im Geschäft …““ · normalizeSpeakingTask returns no stimulus · discuss brief: „Vertritt freundlich die Gegenposition … Bitte am Ende um eine kurze Zusammenfassung.“ · global rules: „Verlasse deine Rolle nicht.“, „verwendest keine Rollenbezeichnungen“ · modelTurns[11]: „Gut, jetzt spiele ich den Kundenservice.“",
+      "problem": "Three runtime facts break this unit's tb1.m2 format and endanger the reklamieren call that fixed r1 F03. First, SpeakingTaskView prints every stimulus item under „Material“, so the learner reads Monika's sheet before the partner reports it. tb1.json says the learner sees the partner's opinion only when she reports it, and in the exam A and B hold different sheets. Second, normalizeSpeakingTask drops stimulus, so the AI partner never receives Monika's quote. It must invent her opinion, age and job from „berichtet die Meinung von Monika“, and that version can contradict the sheet on the learner's screen. Third, the discuss brief never mentions planningRound (only plan-together does) and asks for a summary at the end. The global rules forbid leaving the role and using role labels. The switch to the Kundenservice is now the only place where cd.b1.reklamieren is performed, and it relies on personaDe alone, against those rules. Model turn 11 contains exactly the role label the brief forbids. Two smaller effects: support „examiner“ makes the UI say „Gesprächsleitung (KI)“, although this AI is a fellow candidate. And each quote renders inside a second pair of „…“, because the items already contain quotation marks.",
+      "fix": "Unit: keep only the learner's sheet in stimulus.items („Ihr Blatt – Thomas, 34, Krankenpfleger: Ich kaufe fast alles online, …“, with no inner quotation marks). Move Monika's full quote into aiRole.personaDe („Dein Blatt – Monika, 58, Bibliothekarin: …“). Also state the sequence there: „Nach der Diskussion planst du mit deinem Gegenüber den Anruf; dann bist du der Kundenservice (Sie) …“. Class (owners: speakingAI.mjs, SpeakingTaskView.jsx, SCHEMA §8 comment „tb1.m2 two quotes“): pass the partner side of the stimulus and planningRound into the brief for every mode; allow a role switch that the task declares; never render the partner's sheet; label a tb1.m2 partner with aiRole.name.",
+      "scope": "class",
+      "proposedRule": "EXM-04: for tb1.m2 (the partner's sheet is hidden), stimulus.items holds exactly one quote, the learner's, and the partner's quote must appear in aiRole.personaDe. Runtime test: buildCoursePartnerPrompt for b11-u04-s contains Monika's quote and the planning-round/role-switch instruction; SpeakingTaskView renders one quote for tb1.m2."
+    },
+    {
+      "id": "F03",
+      "severity": "major",
+      "reviewer": "R2",
+      "unitId": "b1.1-u04",
+      "path": "check.proofItems[1].explanation.de (b1.1-u04-q02); content/course-v2/b1.1/rule-cards.json rc.obwohl.de (shown in LS2, LS3 and the Rückschau)",
+      "quote": "q02: „Man hat die Anleitung gelesen und erwartet: Das Gerät läuft. Es geht aber aus – ein Gegengrund, also Obwohl.“ · rc.obwohl: „Mit obwohl nennen Sie einen Gegengrund: Etwas passiert, aber man erwartet es nicht. … trotzdem bedeutet dasselbe, steht aber im Hauptsatz …“",
+      "problem": "r1 F04 is only partly fixed. The rule table, its header and the explanations of ls3-p04, c02, sb1-03 and s03 are corrected. The q02 explanation was missed: it calls „Es geht aber aus“ the Gegengrund. That clause is the unexpected result. The Gegengrund is „ich mache alles richtig“, and obwohl belongs to it. A learner who follows this explanation writes „Obwohl das Gerät ausgeht, mache ich alles richtig“. This is the error the unit exists to prevent, and the explanation appears right after the can-do proof of cd.b1.brief-formen-erkennen. The rule card has the same problem. Its gloss after the colon describes the unexpected event, not the Gegengrund. „trotzdem bedeutet dasselbe, steht aber im Hauptsatz“ also does not say that trotzdem stands in the other sentence, at the unexpected result. The unit's own s03 now says this correctly, and the card contradicts it on the same screen.",
+      "fix": "q02.explanation.de: „„Ich mache alles richtig“ ist der Gegengrund: Man erwartet dann, dass das Gerät läuft. obwohl steht beim Gegengrund, das Verb mache am Ende. Trotzdem passt nicht, denn danach kommt sofort das Verb.“ rc.obwohl (owner: b1.1 rule cards, then check GRM-05 again): „Mit obwohl nennen Sie einen Gegengrund: Er passt nicht zum Ergebnis im Hauptsatz. … trotzdem steht im anderen Satz, beim unerwarteten Ergebnis: auf Position 1 mit dem Verb direkt danach oder hinter dem Verb.“",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F04",
+      "severity": "major",
+      "reviewer": "R1",
+      "unitId": "b1.1-u04",
+      "path": "steps[0].pool.items[4] (b1.1-u04-ls1-p05); check.items[4] (b1.1-u04-c05)",
+      "quote": "ls1-p05: „Kassenbon oder Rechnung – beides ist ein ___ (B…) für Ihren Kauf.“ accepted [„Beleg“] · c05: „Der Shop hat mir das Geld schon ___. (erstatten)“ accepted [„erstattet“]",
+      "problem": "Two defensible answers are marked wrong. We ran both through checkItem (src/lib/course-v2/checkItem.js), and both returned wrong. ls1-p05: the letter cue „(B…)“ was the r1 F05 fix, but it still admits Beweis. „Kassenbon oder Rechnung – beides ist ein Beweis für Ihren Kauf“ is correct, natural German, and Beweis is a B1 word. c05 is a graded check item. „Der Shop hat mir das Geld schon zurückerstattet“ is the usual collocation in a customer's mouth. It is also a participle without ge-, which is exactly the point the explanation makes about erstatten.",
+      "fix": "ls1-p05: accept „Beweis“ with acceptedWhy „richtig: auch ein Beweis für den Kauf“, or tighten the cue to „(B…g)“. c05: accept „zurückerstattet“ with acceptedWhy „richtig: zurückerstatten hat auch kein ge-“.",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F05",
+      "severity": "major",
+      "reviewer": "R2",
+      "unitId": "b1.1-u04",
+      "path": "check.items[5] (b1.1-u04-c06, dictation of check.lines[0]); steps[1].pool.generators[0] (dictation.fromInput: b1.1-u04-ls2-l06 „nach zwei Minuten“, b1.1-u04-ls2-l08 „zweimal“)",
+      "quote": "c06 accepted: [„Obwohl ich zwei E-Mails geschrieben habe, warte ich noch auf eine Antwort.“]",
+      "problem": "A learner who types „Obwohl ich 2 E-Mails geschrieben habe, …“ has transcribed the audio correctly. checkItem marks it wrong in a graded check item (verified). normalizeDictation in src/lib/lesson/check.js folds only digit grouping, not number words. a2.2-u04.r2 F07 reported this class with a proposed ITM-07 extension, and the rule is not implemented yet. The two generated dictations from ls2-l06 („nach zwei Minuten“) and ls2-l08 („zweimal“ vs „2-mal“) have the same exposure. This is the second level with the same finding.",
+      "fix": "Unit: add „Obwohl ich 2 E-Mails geschrieben habe, warte ich noch auf eine Antwort.“ to c06 accepted[], with acceptedWhy „richtig: Zahl als Ziffer“. If F06 replaces the line, the new line should contain no number word. Class (owners: check.js dictation mode, rule-smith): fold null to zwölf and their digit forms in dictation mode, or implement the a2.2 r2 F07 rule.",
+      "scope": "class",
+      "proposedRule": "As a2.2-u04.r2 F07: a dictation item, or a dictation.fromInput source line, whose answer contains a number word must accept the digit variant, unless the checker folds the two. Fixtures: a2.2-u04-c07 and b1.1-u04-c06."
+    },
+    {
+      "id": "F06",
+      "severity": "minor",
+      "reviewer": "R2",
+      "unitId": "b1.1-u04",
+      "path": "check.lines[0] (b1.1-u04-ls8-l01, speaker cast.priya); steps[5].task.modelText (signature)",
+      "quote": "„Obwohl ich zwei E-Mails geschrieben habe, warte ich noch auf eine Antwort.“ · modelText: „Am 2. Oktober habe ich bei Ihnen einen Wasserkocher für 39 Euro bestellt … Mit freundlichen Grüßen Priya Nair“",
+      "problem": "Two small story breaks. In the story Priya writes one Reklamation, on Monday (Folge l06, LS2 l08, t1). The hotline solves the case on Saturday and promises an e-mail „heute noch“. The check line, in Priya's voice, says she wrote two e-mails and is still waiting. The LS6 model text is signed Priya Nair. That gives Priya a second defective appliance from Hellwig Haushalt, although the Aufgabe addresses the learner's own Wasserkocher order.",
+      "fix": "check.lines[0]: use a neutral voice (ensemble), or change the text to „Obwohl ich schon am Montag geschrieben habe, hat der Shop nicht geantwortet.“ (update c06 answer/accepted). modelText: sign it with a neutral name (for example „Maria Klein“) or with „[Ihr Name]“.",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F07",
+      "severity": "minor",
+      "reviewer": "R1",
+      "unitId": "b1.1-u04",
+      "path": "steps[4].task.situationDe, seconds, planningRound (ls5); steps[5].task.taskDe vs wordBandLearning (ls6); src/components/course-v2/SpeakingTaskView.jsx (learnPrep, sp.prepExam), WritingTaskView.jsx:140",
+      "quote": "situationDe: „In der Prüfung haben Sie 20 Minuten Vorbereitung für alle drei Teile, hier 8 Minuten für diesen Teil. Danach folgt eine Planungsrunde mit eigener Zeit (4 Minuten) …“ · taskDe: „wir empfehlen 80–120 Wörter“ · wordBandLearning [60, 100] · seconds [330, 390]",
+      "problem": "The numbers on screen disagree. In LS5 the text says 8 minutes of preparation. The .1 Lernmodus timer runs min(prepMinutes, 3), which is 3 minutes. The UI label says „In der Prüfung: 8 Min. Vorbereitung“, which is false for telc B1 (20 minutes). In LS6 the task text recommends 80–120 words. The counter shows the Lernmodus target of 60–100 (WritingTaskView reads wordBandLearning first) and turns grey from 101 words. The planning round's „eigene Zeit“ exists only in the text. seconds is still [330, 390], and SCHEMA §8 defines seconds as the hard session length, so the timing part of r1 F15 remains open on the schema side. situationDe is also 127 words (787 characters), about one and a half screens at 360 px. It mixes the exam explanation, the planning scenario and the role-play order.",
+      "fix": "LS5: drop the timing sentence (the UI states the time) and split situationDe into „Teil 2: …“ and „Danach: Planungsrunde und Anruf beim Kundenservice …“. UI owner: for tb1, sp.prepExam must show the lane's exam preparation (20 Min. für die ganze mündliche Prüfung), not prepMinutes. LS6: „telc nennt keine Wortzahl; hier im Lernmodus etwa 60–100 Wörter.“, or set wordBandLearning to [80, 120]. SCHEMA owner: state whether planningRound.minutes is added to seconds.",
+      "scope": "class",
+      "proposedRule": null
+    },
+    {
+      "id": "F08",
+      "severity": "minor",
+      "reviewer": "R1",
+      "unitId": "b1.1-u04",
+      "path": "steps[5].task.leitpunkte[0..3].cues (ls6); src/components/course-v2/WritingTaskView.jsx cueFound (lines 25-28) and its server pre-check twin",
+      "quote": "lp1 cues [„bestellt“, „Bestellnummer“, „am“, „angekommen“, „Paket“, „Wasserkocher“] · lp3 [„versucht“, „ausprobiert“, „obwohl“, „trotzdem“, „noch mal“, „geprüft“] · lp4 [„erwarte“, „verlange“, „neue“, „Geld zurück“, „Reparatur“, „bitte“, „Umtausch“] · cueFound: body.includes(fold(c))",
+      "problem": "The pre-check matches cues as lowercase substrings. „am“ occurs inside „Reklamation“ (the Betreff the checklist demands), „Samstag“, „kam“ and „zusammen“. „Wasserkocher“ occurs wherever the learner describes the problem. So Leitpunkt 1 shows as covered for almost every text. Any obwohl or trotzdem ticks Leitpunkt 3, and the checklist requires one of them anyway. Any „bitte“ or „neue“ ticks Leitpunkt 4. A learner who left out a Leitpunkt sees it as covered before submitting. The SCHEMA exemplar teaches the same pattern (lp3 cues „am“, „um“).",
+      "fix": "lp1: [„bestellt“, „Bestellnummer“, „angekommen“, „geliefert“, „Lieferung“]. lp3: [„versucht“, „ausprobiert“, „geprüft“, „noch einmal“, „Steckdose“]. lp4: [„erwarte“, „verlange“, „Geld zurück“, „Reparatur“, „neuen Wasserkocher“, „Umtausch“, „erstatten“]. Class: match cues on word boundaries in cueFound and in the server twin, and fix the SCHEMA §15 exemplar.",
+      "scope": "class",
+      "proposedRule": "EXM-03: every cue has at least 4 letters, is not a grammar target of the task's checklist (obwohl, trotzdem, weil, denn, deshalb), and is not the task's product noun. Fixture: this lp1."
+    },
+    {
+      "id": "F09",
+      "severity": "minor",
+      "reviewer": "R2",
+      "unitId": "b1.1-u04",
+      "path": "steps[5].task.taskDe and checklist[2] (ls6); steps[1].structuredInput[1].promptDe (ls2-s02); steps[1].structuredInput[3].options[2] (ls2-s04); steps[2].pool.items[0] (ls3-p01); check.proofItems[1].promptDe (q02); steps[1].input.lines[2].en (ls2-l03)",
+      "quote": "„Antworten Sie zu allen 4 Punkten.“ · „Einleitung: ein Satz zu Ihrer Nachricht“ · „Was hat die Frau erwartet?“ · „die Zeit von dem Anruf“ · „obwohl der Händler mir ein neues Gerät ___. (schicken)“ · q02 promptEn „From a letter“ · l03 en „good afternoon“",
+      "problem": "Small wording problems. „antworten“ takes auf + Akkusativ, so „zu allen 4 Punkten“ is unidiomatic in an instruction. In a checklist that addresses the learner, „Ihrer Nachricht“ reads as the learner's own message, but the shop's answer is meant. s02 quotes a sentence without a speaker and then asks about „die Frau“. The s04 option is clumsy. In ls3-p01 the concession works with an offer, not with a delivery: a learner does not prefer a refund „obwohl der Händler … schickt“. The German prompt of q02 has no letter frame, although its can-do is about reading a letter. l03 is set on a Saturday morning, so „good afternoon“ is wrong.",
+      "fix": "„Schreiben Sie zu allen vier Punkten.“ · „Einleitung: ein Satz zur Antwort vom Shop (Dank)“ · „Was hat die Person erwartet?“ · „wann Priya anruft“ · ls3-p01: „… obwohl der Händler mir ein neues Gerät ___. (anbieten)“ with answer „anbietet“ · q02: „Aus einer Reklamation: „Ich habe die Anleitung genau gelesen. ___ …““ · l03 en: „Customer service, hello.“",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F10",
+      "severity": "minor",
+      "reviewer": "R1",
+      "unitId": "b1.1-u04",
+      "path": "steps[3].blocks[0].items[5] (b1.1-u04-ls4-tb1-sb1-06); steps[3].texts[0] gap ⟦06⟧",
+      "quote": "„Das alte Gerät schicke ich ⟦06⟧ Montag zurück.“ options [„im“, „am“, „um“]",
+      "problem": "am + Wochentag is an A1 gap. It is the kind of trivial item that r1 F14 removed at sb1-08. telc SB1 tests prepositions at B1 level, for example verbs with a fixed preposition. g.verben-praeposition is licensed from a2.1-u10.",
+      "fix": "t1: „Jetzt warte ich ⟦06⟧ das Ersatzgerät.“ (move the Montag information to a sentence without a gap), options [„für“, „auf“, „an“] so the key stays at b, explanation „warten auf + Akkusativ“. Re-check TXT-02 (scaffold band 60–150).",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F11",
+      "severity": "minor",
+      "reviewer": "R2",
+      "unitId": "b1.1-u04",
+      "path": "steps[1].pool.generators[0].source (dictation.fromInput: b1.1-u04-ls2-l06, b1.1-u04-ls2-l08)",
+      "quote": "l06: 32 words, 3 sentences („Die Bestellnummer ist 58213, die Seriennummer ist 4471. Das Problem ist: … Fehlermeldung.“) · l08: 34 words, 4 sentences",
+      "problem": "dictation.fromInput dictates the whole line and checks it as one string (answer = line.de, scripts/course-v2/walk-fixture.mjs:43). 32–34 words in three or four sentences is a paragraph dictation, more than twice the length of c06 (13 words). One slip anywhere makes the whole paragraph a retry or a miss. l06 also mixes the spoken „fünf, acht, zwei, eins, drei“ with the written „58213“.",
+      "fix": "Use l12 (21 words) and a shorter source, or let the generator take a single sentence of a line (for example „b1.1-u04-ls2-l06#3“ = „Der Staubsauger geht nach zwei Minuten aus, obwohl ich den Akku ganz aufgeladen habe.“).",
+      "scope": "class",
+      "proposedRule": "ITM-06: a dictation.fromInput source (line or selected sentence) has at most 15 words at B1 and at most one sentence."
+    },
+    {
+      "id": "F12",
+      "severity": "minor",
+      "reviewer": "validator",
+      "unitId": "b1.1-u04",
+      "path": "GRM-04: start.folge.lines[2]; steps[3].texts[5].lines[0]; steps[0].pool.items[9..10]; steps[1].reserve[2]; steps[2].reserve[2]; check.items[2]; steps[4].task.modelTurns[2] · LEX-02: spec.lexiconBlocks (41 lemmas)",
+      "quote": "validate.mjs: 39 rules, 33 pass, 0 fail, 2 warn, 4 skipped · 0 blocker, 41 ratchet (LEX-02), 14 advisory (GRM-04) · result OK",
+      "problem": "No blocker. 13 of the 14 GRM-04 advisories are false positives. „ich … habe“ (Frage, Beleg, Probleme) is first-person indicative, not Konjunktiv I, and „ist … beschädigt“ uses the unit's own adjective lx.beschaedigt. The one real hit is the receptive formula „Das gibt es doch nicht!“. The detector tuning proposed in r1 F17 has not been done, so this noise will return in every unit. All 41 LEX-02 ratchets are later-unit recurrences (including the new lx.betreff) and cannot be measured while u04 is the only B1.1 unit. The r1 F18 recurrence inside the unit is fixed.",
+      "fix": "No unit change. Rule side: the det.konjunktiv1 and det.zustandspassiv exemptions of r1 F17.",
+      "scope": "class",
+      "proposedRule": null
+    }
+  ],
+  "passed": [
+    "tb1.sb1: reduced and scaffolded as allowed in b1.1. 8 gaps (≥ minItems 5), 3 options each, text 144 words (scaffold band 60–150, official band 110–150); an informal e-mail from Priya to Olena, du. Keys solved blind: denn, obwohl, Trotzdem, der, dem, am, ob, neue. Each distractor is excluded by verb position, case or meaning; key positions 3/3/2.",
+    "tb1.hv3: 5 texts of 65–76 words (band 40–110): Kundenservice-Ansage, Kaufhaus-Durchsage, Werkstatt-Anrufbeantworter, Radiotipp, Paketdienst-Ansage. Plays 2, and the instruction says zweimal. R/F keys F, R, F, R, F (40 % true, no run > 3), solved blind; no statement copied from its text; hv3-01 and hv3-02 are now unambiguous.",
+    "tb1.sa: an answer to the shop's e-mail (87 words, band 75–105). Its 4 Leitpunkte map one to one onto the four questions and onto cd.b1.beschwerde-schriftlich. Register halbformell, addressee named; rubric tb1-sa, examKey telc_b1, bank key b11-u04-w. The model text has 98 words (84 without Betreff, Anrede and Gruß), covers all four points and uses obwohl, trotzdem and deshalb within the spine.",
+    "tb1.m2: two 47-word opinion quotes with name, age and job; mode discuss, prep 8 min (design share of the 20 exam minutes), rubric tb1-m2, bank key b11-u04-s. The planning round (4 min) has the five BLUEPRINT §2.8 moves plus the complaint call; the model turns show report, own experience, disagreement, counter-proposal, agreement, task split and the call with a clear demand.",
+    "Blind solve: every key of the 32 three-option items, the 5 R/F statements, all typed gaps, sentence-building items and error corrections was re-derived from promptDe plus options or tiles. No key is wrong. The only rejected correct answers are those in F04 and F05.",
+    "Grammar ceiling: g.obwohl enters new at its spine position, with trotzdem (a2.2-u06) as the contrast. Licensed: lassen (a2.2-u06, hv3-02), als (a2.2-u01, Folge), ob (a2.2-u03, sb1-07), relative clauses (a2.2-u09, b1.1-u03), zu-Infinitiv (b1.1-u03), warten auf (a2.1-u10). No genitive in learner-facing text (licensed from u11). The wer-clause and the Zustandspassiv example of r1 are gone.",
+    "Lexicon: 41 new entries (band 38–53); LEX-01, LEX-03, LEX-04, LEX-05 and LEX-07 pass; Etikett, Hersteller, Anleitung and Wiederhören are glossed.",
+    "Can-dos: 4 can-dos, each rehearsed and proven: reklamieren by the LS5 call, agb-verstehen by q01, beschwerde-schriftlich by LS6, brief-formen-erkennen by q02.",
+    "Cast and story: Priya Nair and Arjun (du), the male hotline voice (ensemble-b1-4), the female Werkstatt voice (ensemble-b1-1) and Olena in München („Kommst du bald wieder nach Leipzig?“) match casts/*.json. The robot cliffhanger fits the agent's „in drei oder vier Tagen“ and bridges to u05.",
+    "Facts f01–f06 are sourced and dated 2026-09-27, with exceptions. The Fokus text and the Stiftung Warentest portrait simplify them without becoming false.",
+    "Legal and register: no pass promise and no claim of human feedback; the AI partner is labelled as KI. Every instruction uses Sie, friends use du, and the shop, the hotline and the Ansagen use Sie.",
+    "Originality: every exam text and task is original and set in the story, in the official format; nothing follows a telc Übungstest text.",
+    "node scripts/course-v2/check.mjs on the unit: 0 errors. JSON parses."
+  ]
+}

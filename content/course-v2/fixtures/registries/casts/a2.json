@@ -1,0 +1,22 @@
+{
+  "members": {
+    "cast.priya": { "name": "Priya Nair", "age": 28, "from": "Kochi, Indien", "languages": ["Malayalam", "Englisch", "Deutsch"], "role": "arbeitet am Empfang von Brandt Elektrotechnik in Leipzig", "exam": { "lane": "ga2", "arc": "Goethe-Zertifikat A2 im Frühjahr" }, "voice": { "azure": "de-DE-AmalaNeural", "rate": "-10%" }, "bands": ["a1", "a2", "b1", "b2"] },
+    "cast.jan-wolf": { "name": "Jan Wolf", "age": 31, "from": "Leipzig", "languages": ["Deutsch", "Englisch"], "role": "Kollege von Priya, Techniker-Disposition", "voice": { "azure": "de-DE-ConradNeural", "rate": "-5%" }, "bands": ["a2"] },
+    "cast.herr-brandt": { "name": "Thomas Brandt", "age": 55, "from": "Halle", "languages": ["Deutsch"], "role": "Chef der Firma", "voice": { "azure": "de-DE-KlausNeural", "rate": "-5%" }, "bands": ["a2"] },
+    "cast.frau-otto": { "name": "Sabine Otto", "age": 48, "from": "Leipzig", "languages": ["Deutsch"], "role": "Buchhaltung, leitet die Teambesprechung", "voice": { "azure": "de-DE-KatjaNeural", "rate": "-5%" }, "bands": ["a2"] },
+    "cast.monika-kowalski": { "name": "Monika Kowalski", "age": 40, "from": "Leipzig", "languages": ["Deutsch", "Polnisch"], "role": "Kundin, Firma Hansen Bau", "voice": { "azure": "de-DE-LouisaNeural", "rate": "-5%" }, "bands": ["a2"] },
+    "cast.herr-seidel": { "name": "Peter Seidel", "age": 60, "from": "Leipzig", "languages": ["Deutsch"], "role": "Kunde", "voice": { "azure": "de-DE-BerndNeural", "rate": "-5%" }, "bands": ["a2"] },
+    "cast.anna": { "name": "Anna Krüger", "age": 29, "from": "Leipzig", "languages": ["Deutsch", "Englisch"], "role": "Freundin von Priya", "voice": { "azure": "de-DE-MajaNeural", "rate": "-5%" }, "bands": ["a2", "b1"] },
+    "cast.emre": { "name": "Emre Yıldız", "age": 30, "from": "İzmir, Türkei", "languages": ["Türkisch", "Deutsch"], "role": "Priyas Lernpartner aus dem A1-Kurs", "exam": { "lane": "ta2", "arc": "telc Deutsch A2 für die Ausbildung" }, "voice": { "azure": "de-DE-KillianNeural", "rate": "-5%" }, "bands": ["a1", "a2", "b1"] }
+  },
+  "relations": [
+    { "a": "cast.priya", "b": "cast.jan-wolf", "address": "du" },
+    { "a": "cast.priya", "b": "cast.herr-brandt", "address": "Sie" },
+    { "a": "cast.priya", "b": "cast.frau-otto", "address": "Sie" },
+    { "a": "cast.jan-wolf", "b": "cast.frau-otto", "address": "Sie" },
+    { "a": "cast.priya", "b": "cast.monika-kowalski", "address": "Sie" },
+    { "a": "cast.priya", "b": "cast.herr-seidel", "address": "Sie" },
+    { "a": "cast.priya", "b": "cast.anna", "address": "du" },
+    { "a": "cast.priya", "b": "cast.emre", "address": "du" }
+  ]
+}

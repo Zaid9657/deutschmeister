@@ -1,0 +1,244 @@
+{
+ "review": "a1.1-u02.r3",
+ "unitId": "a1.1-u02",
+ "file": "content/course-v2/a1.1/units/u02.json",
+ "round": 3,
+ "date": "2026-09-28",
+ "reviewers": [
+  {
+   "id": "R1",
+   "persona": "Prüferin (lizenzierte Goethe-A1-Prüferin, Start Deutsch 1): Prüfungstreue, Rubrik, Aufgabenklarheit"
+  },
+  {
+   "id": "R2",
+   "persona": "Kursleiterin DaF (A1.1): Natürlichkeit, Niveau, Didaktik, Szenenplausibilität"
+  }
+ ],
+ "method": "Both reviewers read every German string of the current file again: title and title.canDo, spec.situation and spec.deviation, the Folge (10 lines, gist item), the three inputs (3 × 10 lines) and the LS3 form, the six H1 texts, the strategy card, the 8 redemittel, the Sp1 task (instructions, situation, 5 cards, aiRole.personaDe, openingLine, 8 hintWords, 9 modelTurns), the S1 task (situation, taskDe, 5 labels, 4 checklist lines, model), the 3 check lines, story, fact f01, every endLine, modelSentence, aussprache line, promptDe, option and explanation.de, the 36 u02 cards of a1.1/lexicon.json and the three rule cards the unit shows (rc.negation-nicht, rc.ja-nein-frage, rc.praesens-2). We solved all 94 authored items blind from promptDe plus options, tiles or audio line (start gist 1; LS1 and LS2 each 5 input + 4 structured + 11 pool + 5 reserve; LS3 5 + 4 + 11 + 6 reserve, the new ls3-r06 included; 6 H1; 8 Check; 3 proof) and the 5 S1 fields; every key is right. We graded 90 candidate answers with the real grader (src/components/course-v2/grade.js gradeAnswer → src/lib/course-v2/checkItem.js), the S1 fields exactly as WritingTaskView.jsx FormTask builds them (type form_fill), and the same FormTask grading on the S1 forms of u01, u05 and u09 (F01). We simulated every proposed accepted-list change with the same grader before recommending it (F01, F02). We measured unknown words with the validator's own knownForms + licensedForms + unknownOnSurface at a1.1-u02 on every read surface (walked and unwalked), on the three rule cards and on the 36 word cards, and ran every placed GRM-04 detector over the surfaces GRM-04 does not read (promptDe, options, explanation.de, endLines, micro-output prompts, story, openingLine, hintWords, modelTurns). Every German line proposed below was checked the same way and against TXT-04's 90 characters. We read the exam blocks against content/course-v2/registries/lanes/sd1.json (h1, sp1, s1) and the rubrics sd1-sp1 and sd1-s1; every task is original in the SD1 format. We read the can-dos (registries/cando/a1.json), the cast and voices (casts/series.json, casts/a1.json), the story against u01 (cliffhanger, beat), u03 (Folge), u05 (address, Arjun's number), u08 and u12 (Priya's number), the level profile (level-profiles.json a1.1), the grammar spine and the partner prompt the speaking engine builds (netlify/functions/_shared/speakingAI.mjs buildCoursePartnerPrompt, monologue ABLAUF). We checked the modification times of every owner file r2 routed work to (lexicon.json, rule-cards.json, names.json, casts, grammar-spine.json, rules/, lib-validate/, checkItem.js): none changed after r2; u12 changed shortly before r2 was written. We also ran the level validator on a1.1. Exemplar: u04 and its trail r1–r5 and the u01 trail r1–r3; every class is checked in notes. No 360 px walkthrough was run; that is the walkthrough reviewer's remit. No MCP tool and no git command was used.",
+ "validator": {
+  "command": "node scripts/course-v2/validate.mjs content/course-v2/a1.1/units/u02.json",
+  "result": "OK (no blocker findings), exit 0. 40 rules: 33 pass, 0 fail, 3 warn, 4 skipped; 0 blocker, 17 ratchet, 65 advisory. GRM-04: 61 advisory (r2: 60); the one new hit is det.bestimmter-artikel on the new accepted form of ls1-r04 („04109 ist die Postleitzahl nicht.“). The classes are unchanged: about 46 article hits before the a1.1-u04 intro, „das Emre“, „Kurs habt ihr heute“ (possessive), „Wir lernen zusammen“ and „Fragen Sie nach“ / „Stellen Sie sich vor“ (separable), „Sie können“ ×3, „Ihren (Familien)Namen“ ×3 (F08). LEX-01: 4 advisory, all on screens with an English twin: „zwo“ on ls2-i04 (prompt and explanation, glossed on the input screen) and „Malayalam“ on ls3-i03 (F06). LEX-02: 17 ratchet (r2: 18; it moved during this review because later units are being edited in parallel: Empfang now recurs in 2 later units, kurz in 1). Hausnummer, null, dreißig, hundert, Vorname, Familienname, verstehen and ausfüllen still recur in 0 later units. Skipped: ITM-08 (no caseSensitive item) and the level-scope COV-1/4/5.",
+  "check": "node scripts/course-v2/check.mjs content/course-v2/a1.1/units/u02.json → 0 errors",
+  "level": "node scripts/course-v2/validate.mjs a1.1 → FAIL (exit 1): 2 blockers, neither in u02. COV-3 on u01 spec.lanes (specs.json still differs, u01 r3-F02) and LEX-05 on u04 spec.lexiconBlocks (the lexicon now allocates lx.markt, lx.prospekt and lx.durchsage to a1.1-u04, the u04 spec omits them). COV-1, COV-4, COV-5, LEX-07, ITM-01 and ITM-09 pass on the level.",
+  "notes": "No rail was written since r2. Still missing: the ITM-01 alternative-order check (r2-F01), the form_fill content rule (r2-F02 → F01), GRM-04 on item surfaces (r2-F03), the ALL-02 proof-evidence rule (r2-F05), the LEX-03 number-word rule and cast languages (r2-F07), TXT-01 (r1-F07/r2-F08), CON-01 (r1-F16/r2-F09) and the GRM-04 fixtures (r1-F20/r2-F10). New gaps found this round: no rule reads microOutput.words/seconds against the level profile (F04), det.akkusativ-pronomen-ihn sees only „ihn“ (F04), LEX-01 does not walk rule-card model sentences (F07), and LEX-07 checks the grammar ceiling of card examples but not their words (F06)."
+ },
+ "previousFindings": [
+  {
+   "id": "r2-F01",
+   "severity": "major",
+   "status": "fixed-in-unit",
+   "evidence": "ls1-r04 now accepts „04109 ist die Postleitzahl nicht.“ with acceptedWhy „grammatisch: 04109 betont auf Position 1, das Verb bleibt auf Position 2“; checkItem → correct. The rail half is still unwritten: ITM-01.mjs stops the order family after the naming check (l. 294 `if (family === 'order') continue;`). A scan of every order-family error_correction in a1.1 found no declarative key with fewer than 2 accepted orders, so no live instance escapes today → F08 (1)."
+  },
+  {
+   "id": "r2-F02",
+   "severity": "major",
+   "status": "partly-fixed",
+   "evidence": "Every entry r2 quoted now passes: f5 „Online-Kurs“, „Onlinekurs“, „nur online“ and f1 „İzmir, Türkei“, „Izmir (Türkei)“ → correct. f5 now hand-lists 10 variants and f1 8. The checker rule was not written (checkItem.js unchanged), and the next variants fail: „Online-Kurs, nicht in Leipzig“, „Izmir in der Türkei“, „İzmir / Türkei“, „Izmir, Turkei“ → wrong. The same method loses points in u01, u05 and u09 → F01 (MAJOR, stop-the-line)."
+  },
+  {
+   "id": "r2-F03",
+   "severity": "minor",
+   "status": "fixed-in-unit",
+   "evidence": "All eleven strings changed as proposed or better: h1-05 „Die Frau spricht ___.“; ls2-s02 „Was ist die Frage?“ with „sagen Sie“; h1-02 „Der Name: Wie schreibt er das?“ (better than our proposal, which would have printed „Schaefer“ and so the key „mit A und E“ in the stem); c03, ls2-p03, ls2-r03 „Dann sagen Sie „Doch““; ls2-i04 „Viele sagen …“; c06 „beginnt immer mit „S““; ls2-s03 „versteht Emre“; ls2-i05 „die Nummer“; ls3-i02 „Wer kommt dann?“. Our detector run over every item surface finds no welch-, man, ihn, den Namen, adjective ending or zum left. Residue of the class the detector cannot see (accusative sie/mich) → F04 (2); the GRM-04 scope rail → F08 (2)."
+  },
+  {
+   "id": "r2-F04",
+   "severity": "minor",
+   "status": "fixed",
+   "evidence": "ls2-i01 options are the three questions („Wie ist die Telefonnummer?“ …); ls3-i01 option c „Und die E-Mail?“; ls3-l10 „Ich schreibe für Herrn Yıldız.“; checklist „Die Telefonnummer: Lesen Sie jede Zahl noch einmal.“; ls2-mo „Sie können auch eine andere Nummer schreiben.“; c01 „Das E ist ___ richtig. Nair: mit A. (Verneinung)“; LS1 focus „Buchstaben: E und I, A und R, Ä und E, Ü und U. E auf Deutsch – A auf Englisch.“ All known words at a1.1-u02. Our ls2-mo wording narrowed the German permission to the number only → F04 (1)."
+  },
+  {
+   "id": "r2-F05",
+   "severity": "minor",
+   "status": "partly-fixed",
+   "evidence": "Unit lines landed: the Sp1 situation and persona no longer promise „schnell“. SCHEMA l. 683 (proofs: item | aufgabe) and sd1-sp1 (vorstellen, buchstabieren, nummer) are unchanged, so both proofs are still ticked without evidence. The persona's repeat rule is new residue → F05."
+  },
+  {
+   "id": "r2-F06",
+   "severity": "minor",
+   "status": "fixed",
+   "evidence": "ls3-s01 is „Frau Schulz: „Emre? Arta? … Ja, sie lernen online.“ Wer lernt online?“, and the reserve twin ls3-r06 („… Ja, sie lernt online.“ → „nur Arta“) exists, so the ending now decides both. The twin's scene contradicts the story (Emre learns online) → F03."
+  },
+  {
+   "id": "r2-F07",
+   "severity": "minor",
+   "status": "open",
+   "evidence": "a1.1/lexicon.json (last written 2026-09-27 23:03) and registries/names.json are unchanged: lx.empfang, lx.ausfuellen, the receptive number lemmas, lx.kurz, no Rezeptionistin, no Malayalam. Carried forward with new instances → F06. r1-F21 (LEX-02 recycling, ratchet 17) is part of it."
+  },
+  {
+   "id": "r2-F08",
+   "severity": "minor",
+   "status": "open",
+   "evidence": "a1.1/rule-cards.json (last written 2026-09-27 23:06) is unchanged; rc.negation-nicht still explains with a relative clause and states the unlimited position rule. 3rd round → F07, with two new model-sentence look-aheads."
+  },
+  {
+   "id": "r2-F09",
+   "severity": "minor",
+   "status": "partly-fixed",
+   "evidence": "u12 steps[4].task.modelTurns[7] now reads „Die Nummer ist 0176 38 29 41 06.“, so u02, u08 and u12 agree. x.herr-schaefer now speaks with de-AT-JonasNeural, which no other LS4 speaker and no a1 cast member uses. story.castIn lists only first appearances (ensemble-a1-2, -3, -4; none speaks in u01). Open: the cast bible records no contact data and CON-01 has no rule file → F08 (6)."
+  },
+  {
+   "id": "r2-F10",
+   "severity": "minor",
+   "status": "open",
+   "evidence": "No fixture added, no instruction chunk licensed; 61 advisories (+1 from the new ls1-r04 accepted form). r1-F20 is part of it → F08 (3)–(5)."
+  }
+ ],
+ "findings": [
+  {
+   "id": "F01",
+   "reviewer": "R1+R2",
+   "criterion": "A",
+   "severity": "major",
+   "scope": "class",
+   "unitId": "a1.1-u02",
+   "path": "steps[5].task.form.fields[0] (f1 „Wohnort“, exact 'name', 8 hand variants) and fields[4] (f5 „Kurs: in Leipzig oder online?“, 10 hand variants); src/components/course-v2/WritingTaskView.jsx FormTask → grade.js gradeAnswer → checkItem (type form_fill); registries/rubrics/writing/sd1-s1.json („spelling“: „only-if-meaning-suffers“); the same method in a1.1-u01 f3, u05 f2/f4, u09 f3",
+   "quote": "u02 f5 „Online-Kurs, nicht in Leipzig“ → wrong · „Online-Kurs (nicht in Leipzig)“ → wrong · „nicht in Leipzig, online“ → wrong · f1 „Izmir in der Türkei“ → wrong · „in Izmir, Türkei“ → wrong · „İzmir / Türkei“ → wrong · „Izmir, Turkei“ → wrong while f2 „Turkei“ → typo (counted) · „Ismir“ → wrong · u01 f3 „Izmir, Türkei“ → wrong (u02 f1 accepts it) · u05 f4 „Berliner Str. 21, Leipzig“ → wrong · u05 f2 „verheiratet mit Priya“ → wrong · u09 f3 „Freitag, am Abend“ → wrong",
+   "problem": "The unit side of r2-F02 landed: every entry r2 quoted now passes. The checker rule r2 asked for was not written, so the class is still open, and the next obvious variants fail. A learner who combines two accepted entries („Online-Kurs, nicht in Leipzig“), who copies the situation's own phrase („Izmir in der Türkei“), or who writes a slash gets 0 for a field that a Goethe S1 marker scores 1: the information is right. On top of that, f1 carries exact: 'name', which makes every letter slip WRONG. That contradicts the lane rubric sd1-s1, where spelling costs the point only if meaning suffers. It also contradicts the unit's own f2, where the same missing umlaut („Turkei“) is a TYPO and counts. So one form marks one slip in two ways. §9.4: a defensible second answer not accepted is MAJOR. The class is the method, and it is not u02's alone. The same FormTask grading loses correct entries in the S1 forms of u01, u05 and u09. Four A1.1 units without a rule meets the §9.4 stop-the-line threshold. Every new hand variant only moves the failure to the next variant.",
+   "fix": "Unit, now: remove exact: 'name' from f1. Wohnort is copied from the text, not spelled; ITM-07 does not require it, and the checker's typo rule then scores „Ismir“ and „Izmir, Turkei“ as TYPO, which FormTask counts. Add no further hand variants. Checker owner, which is what closes the MAJOR: write the form_fill content rule below with its test. After that, the hand lists in u01, u02, u05 and u09 can shrink to the key and its spelling variants.",
+   "proposedRule": "form_fill grading in checkItem (type 'form_fill'; test over all registered courses). Fold case, hyphens and the separators „, / ( ) –“. An answer is correct when all of the following hold. (a) It contains an accepted form as a word or as a compound part („Online|kurs“). (b) Every other token is a negation of an alternative that labelDe offers („nicht in Leipzig“), or a word of the situation text that names the same fact („Türkei“, „in der Türkei“, „am Abend“, „mit Priya“, „Leipzig“ after a street). (c) It contains no un-negated alternative from labelDe. Spelling follows the Teil rubric's `spelling` field: under sd1-s1, one letter slip per word is a TYPO and counts. `exact: 'number'` stays digit-exact. Failing fixtures: a1.1-u02 f5 „Online-Kurs, nicht in Leipzig“; f1 „Izmir in der Türkei“ and „Izmir, Turkei“; a1.1-u01 f3 „Izmir, Türkei“; a1.1-u05 f4 „Berliner Str. 21, Leipzig“ and f2 „verheiratet mit Priya“; a1.1-u09 f3 „Freitag, am Abend“. These must stay wrong: u02 f5 „in Leipzig“ and „in Leipzig online“; f1 „Leipzig“ and „Türkei“."
+  },
+  {
+   "id": "F02",
+   "reviewer": "R1",
+   "criterion": "A",
+   "severity": "major",
+   "scope": "instance",
+   "unitId": "a1.1-u02",
+   "path": "check.proofItems[0] (a1.1-u02-q01; exact 'name'; accepted [„Berisha“]); check.lines[0].say; check.proofs[0] (cd.a1.buchstabieren); src/lib/lesson/check.js spellingApplies / normalizeSpelling",
+   "quote": "„Hören Sie. Arta buchstabiert. Der Familienname von Arta ist ___.“ · audio „… Ich buchstabiere: Be – E – Err – I – Ess – Ha – A.“ · checkItem(q01, „B-E-R-I-S-H-A“) → wrong, tag Wortschatz · „B E R I S H A“ → wrong · „BERISHA“ → typo · can-do „… einen buchstabierten Namen oder eine Adresse mitschreiben“",
+   "problem": "q01 is the Check proof of the unit's lead can-do, and that can-do asks the learner to write down a spelled name. The learner hears the name letter by letter. A learner who takes it down letter by letter („B-E-R-I-S-H-A“ or „B E R I S H A“) has every letter right, and the grader marks the answer WRONG, tagged Wortschatz. The course checker already treats „HALLO“, „H A L L O“ and „H-A-L-L-O“ as the same answer (CLAUDE.md; check.js normalizeSpelling). But check.js switches that fold on only when one accepted form is itself spelled (spellingApplies). q01 accepts only „Berisha“, so the fold never runs. §9.4: a defensible second answer not accepted is MAJOR, and here it sits on the proof item. Neither r1 nor r2 tried this input. We scanned every v2 unit: no other typed item has an audio line that spells its key, so this is one instance.",
+   "fix": "Add „B-E-R-I-S-H-A“ to q01 accepted, with acceptedWhy „buchstabiert geschrieben: auch richtig“ (ITM-10). This switches check.js's separator fold on for the item. We simulated it with the real grader. „Berisha“, „B-E-R-I-S-H-A“, „B E R I S H A“, „b-e-r-i-s-h-a“ and „BERISHA“ → correct. „Berischa“, „Berisa“ and „B-E-R-I-S-A“ stay wrong, because exact: 'name' keeps letter slips wrong. Key, prompt and audio stay as they are.",
+   "proposedRule": "ITM-13 (audio keys): when a typed item's audio line (the line de or its `say`) spells the key letter by letter („B – E – R …“), the item accepts the spelled form, so check.js folds the separators. Failing fixture: a1.1-u02 q01. The test runs over all registered courses; it is cheap and stops the next spelling unit from repeating this."
+  },
+  {
+   "id": "F03",
+   "reviewer": "R2",
+   "criterion": "K",
+   "severity": "minor",
+   "scope": "instance",
+   "unitId": "a1.1-u02",
+   "path": "steps[2].reserve[5] (a1.1-u02-ls3-r06; banks plateau, mehr-ueben); against start.folge.lines[1], steps[1].input.lines[3], steps[5].task.situationDe and a1.1-u01 story.beat",
+   "quote": "„Frau Schulz: „Emre? Arta? … Ja, sie lernt online.“ Wer ist „sie“?“ · options „nur Arta“ / „Emre und Arta“ / „nur Emre“ · key „nur Arta“ · Folge l02 (Emre) „Ich lerne online im Kurs A1.“ · u01 beat „Emre und Arta lernen online, in İzmir und in Prishtina.“",
+   "problem": "The reserve twin that r2-F06 asked for landed, and its key follows from the ending. But its scene contradicts the story. Frau Schulz is asked about Emre and Arta and answers that only she learns online. Yet Emre learns online in the Folge, in LS2, in the S1 situation and in u01. The options say „nur“, so the key reads as „only Arta learns online“. A learner who knows the story is pulled towards „Emre und Arta“, the key of the twin ls3-s01. That is exactly the confusion the pair is meant to separate. The item is drawn into plateau and mehr-üben, where learners meet it after they know the story well. The residue is ours: r2 proposed the twin without checking its scene.",
+   "fix": "Stem „Frau Schulz: „Bilal? Arta? … Ja, sie lernt online.“ Wer ist „sie“?“ with the options „nur Arta“ / „Bilal und Arta“ / „nur Bilal“, key „nur Arta“, and the explanation „„sie lernt“ mit „-t“: nur eine Frau, also Arta. Bilal ist „er“.“. promptEn stays. Bilal is in the Leipzig classroom (u01 beat „Im Kurs sind auch Olena und Bilal.“), so the ending and the story now agree. Every word is known at a1.1-u02 (validator knownForms), and no detector fires.",
+   "proposedRule": null
+  },
+  {
+   "id": "F04",
+   "reviewer": "R2",
+   "criterion": "N",
+   "severity": "minor",
+   "scope": "class",
+   "unitId": "a1.1-u02",
+   "path": "steps[1].microOutput (a1.1-u02-ls2-mo: words [8, 25], situationDe, promptDe) against registries/level-profiles.json a1.1 microOutput.words [3, 16] and spec.deviation; steps[1].reserve[4] (ls2-r05) answer; steps[1].inputItems[1].options[0] (ls2-i02); steps[2].microOutput.situationDe (ls3-mo); grammar-spine g.akk-personalpronomen (receptive a1.2-u09, chunkFrom a1.2-u06); registries/detectors.json det.akkusativ-pronomen-ihn (tokens [„ihn“])",
+   "quote": "ls2-mo „Schreiben Sie die fünf Angaben. Stellen Sie Herrn Richter auch eine Ja/Nein-Frage.“, words [8, 25], player label „8–25 Wörter“ · profile a1.1 „microOutput“: {„words“: [3, 16]} · situationDe „… Sie können auch eine andere Nummer schreiben.“ vs promptEn „(invented ones are fine)“ · ls2-r05 key „Verstehen Sie mich?“ · ls2-i02 „Ja, er versteht sie sofort.“ · ls3-mo „… Sie verstehen sie nicht.“",
+   "problem": "No rail reads either of two level points. (1) The r1-F03 fix moved the learner's own data into ls2-mo and widened its band to 8–25 words. The a1.1 profile caps micro-outputs at 3–16, but the player shows the learner „8–25 Wörter“. spec.deviation does not log this, and no rule compares microOutput.words or seconds with the profile (no reader in rules/ or lib-validate/). u05 ls1-mo has the same [8, 25]; every other a1.1 micro-output keeps [3, 16]. The same task sends five personal data to the AI, but our r2 wording lets the German say only that the number may be invented. The English twin says that any detail may be invented (BLUEPRINT §4.8 minimisation). (2) The r2-F03 class has three residues that no detector sees, because det.akkusativ-pronomen-ihn matches only „ihn“. Accusative „sie“ stands on an ls2-i02 option and in the ls3-mo situation, and „mich“ stands in the expected answer of ls2-r05. The spine licenses accusative pronouns from a1.2-u06 (chunk). „Verstehen Sie mich?“ / „Ich verstehe Sie nicht.“ is the classroom chunk that the unit's own input presents (ls2-l02, ls2-l07, Folge l03 and l10), so the learner reorders a phrase they have heard instead of applying a rule. That is why this is MINOR and not a production breach. The spine does not know the chunk, though.",
+   "fix": "Unit. (1) ls2-mo: promptDe „Schreiben Sie Name, Wohnort und Beruf. Stellen Sie auch eine Ja/Nein-Frage.“ (75 characters). situationDe „Eine E-Mail von Herrn Richter: „Bitte schreiben Sie: Name, Wohnort, Beruf.“ Name und Wohnort: Sie können auch andere schreiben.“ Set words to [3, 16] and adjust promptEn to match. Update deviation (5) to „Name, Wohnort, Beruf“. The task then fits the profile, no phone number goes to the AI, and German and English say the same. The other route is to keep five data and log the band in spec.deviation. (2) ls2-i02 option a „Ja, er versteht die Nummer sofort.“; ls3-mo „… Sie verstehen Frau Schulz nicht.“; ls2-r05 stays if the spine owner licenses the chunk. Otherwise it becomes „Korrigieren Sie die Wortstellung in der Frage: „Sprechen Türkisch Sie?““ → „Sprechen Sie Türkisch?“, with the explanation „Ja/Nein-Frage: zuerst das Verb, dann das Subjekt „Sie“.“. Every line was checked against knownForms at a1.1-u02, no detector fires, and every prompt is ≤ 90 characters. Spine owner: license „Ich verstehe Sie nicht. / Verstehen Sie mich?“ as a fixed phrase from a1.1-u02, because cd.a1.nachfragen rests on it.",
+   "proposedRule": "TXT-03 (or EXM-03/04): a micro-output's `words` and `seconds` lie inside the level profile's microOutput band unless spec.deviation names that micro-output. Failing fixtures: a1.1-u02 ls2-mo and a1.1-u05 ls1-mo. det.akkusativ-pronomen-ihn: add the tokens „mich“ and „dich“, and „sie“ as the object after a finite verb with a nominative pronoun or name before it („er versteht sie“), with the licensed chunk as its whitelist. Failing fixture: a1.1-u02 ls2-i02 options[0]. Both tests run over all registered courses."
+  },
+  {
+   "id": "F05",
+   "reviewer": "R1+R2",
+   "criterion": "H",
+   "severity": "minor",
+   "scope": "class",
+   "unitId": "a1.1-u02",
+   "path": "check.proofs[2] (cd.a1.formular-person → aufgabe schreiben = the S1 form for Emre); check.proofs[4] (cd.a1.nachfragen → q03 + aufgabe sprechen); docs/course-v2/SCHEMA.md l. 683; registries/rubrics/speaking/sd1-sp1.json; steps[4].task.aiRole.personaDe; netlify/functions/_shared/speakingAI.mjs buildCoursePartnerPrompt",
+   "quote": "SCHEMA „proofs: [{ canDo: ref(cando), item: ref(item)? , aufgabe: enum(sprechen|schreiben)? }]{3..5}“ (unchanged) · sd1-sp1 criteria „vorstellen“, „buchstabieren“, „nummer“ (unchanged) · persona „Bei „Wie bitte?“ oder „Noch einmal, bitte“ wiederholt sie die Frage ganz … Fragt der Lerner nicht nach, wiederholt sie die Frage nach einer Pause.“",
+   "problem": "The unit lines of r2-F05 landed: nothing promises „schnell“ any more. The owner parts did not. SCHEMA still lets a proof name only an item or an Aufgabe, so the can-do record „mit meinen Angaben“ is still ticked by Emre's third-person form. sd1-sp1 still has no nachfragen criterion, so cd.a1.nachfragen is ticked by a move that nobody scores (deviation (5) logs both honestly). One new unit-side point: the persona now tells the AI to repeat the phone question whenever the learner does not ask back. The partner prompt runs turn by turn and has no timer, so „nach einer Pause“ means nothing to it. A learner who understood and gave the number at once can be asked for it again. In a scored exam simulation, that reads as „your number was wrong“.",
+   "fix": "Unit, one line of the AI prompt (not a learner surface): „… Nennt der Lerner keine Nummer, fragt sie noch einmal: „Wie ist die Telefonnummer, bitte?““. SCHEMA owner and rubric owner, as in r2-F05: a proof may name a micro-output (then proofs[2] points to ls2-mo), and a course move „nachfragen“ may be scored by course-micro-sp on a lane task (or ls3-mo may prove cd.a1.nachfragen).",
+   "proposedRule": "As r2-F05. ALL-02: a proof by aufgabe counts only if the task's rubric, or a declared course move, scores the can-do; otherwise it is advisory. Failing fixture: a1.1-u02 proofs[4]. The test runs over all registered courses."
+  },
+  {
+   "id": "F06",
+   "reviewer": "R2",
+   "criterion": "N",
+   "severity": "minor",
+   "scope": "class",
+   "unitId": "a1.1-u02",
+   "path": "content/course-v2/a1.1/lexicon.json (unchanged since r2): lx.empfang, lx.ausfuellen, the roles of lx.null … lx.hundert, lx.kurz, and the examples of lx.kellner, lx.anmeldung and lx.hundert; no a1.1 entry for Rezeptionistin; registries/names.json (no Malayalam); u02 check.items[7] (c08), steps[1].pool.items[3] (ls2-p04), steps[1].reserve[3] (ls2-r04), steps[4].task.modelTurns[1]; LEX-02 ratchet 17",
+   "quote": "lx.empfang „Priya arbeitet am Empfang.“ (no place, no exampleEn) vs the ls3-i05 distractor „Ja, am Empfang.“ · lx.ausfuellen „Bitte füllen Sie das Formular aus.“ · lx.kellner „Mein Bruder ist Kellner.“ (Bruder a1.1-u03, possessive a1.1-u03) · lx.anmeldung „Die Anmeldung ist im Büro.“ (Büro a1.1-u06) · lx.hundert „Wir zählen von null bis hundert.“ (zählen: in no lexicon) · c08 „(Zahl als Wort)“ → dreiundvierzig, number lemmas receptive · LS3 form „Sprache(n): Malayalam, Englisch, Deutsch“ vs Sp1 model „Ich spreche Englisch und ein bisschen Deutsch.“",
+   "problem": "Nothing of r2-F07 has landed: the lexicon and names.json are unchanged. Points (1)–(6) of r2-F07 stand: the empfang card primes a distractor, the ausfüllen card splits the separable verb, number words are typed from receptive lemmas (3 items, one of them the scored c08), lx.kurz recurs nowhere while Rezeptionistin is not allocated, Malayalam is unknown, and LEX-02 is at 17 (18 at the start of this review; later units are being edited in parallel). Two points are new or sharper. First, measured with the validator's own knownForms at a1.1-u02, three u02 word cards use words the learner meets only later or never (Bruder, Büro, zählen), plus a possessive from u03. LEX-07 checks the grammar ceiling of card examples but not their words. Second, the unit now states Priya's languages itself: the LS3 form (glossed) lists Malayalam first. Her own Sp1 model, the text the learner imitates, still drops her mother tongue, because Malayalam is not a known name. The receptive-number class (u04, u01, u02) and the cast-language class (u01, u02, u12) have now each reached 3 A1.1 units without a rule, which meets the stop-the-line threshold.",
+   "fix": "Lexicon owner, as r2-F07: lx.empfang.example „Herr Richter arbeitet am Empfang.“ with an exampleEn; lx.ausfuellen.example „Bitte das Formular ausfüllen!“; make lx.null, lx.eins, lx.zwei, lx.zwanzig and lx.hundert productive; swap lx.kurz for a receptive lx.rezeptionist with its feminine form. New: lx.kellner „Er ist Kellner und Student.“ (H1 t4), lx.anmeldung „Die Anmeldung ist am Empfang.“, lx.hundert „Die Sprachschule hat hundert Teilnehmer.“ (ls3-l08); all three use only known words at a1.1-u02. Names/SCHEMA owner: make cast languages known, like `from`. Then the unit's modelTurns[1] reads „Ich wohne jetzt in Leipzig. Ich spreche Malayalam, Englisch und ein bisschen Deutsch.“",
+   "proposedRule": "LEX-07: a lexicon example uses only words known at its entry's unit (validator knownForms + licensedForms), not just the grammar ceiling. Failing fixtures: lx.kellner, lx.anmeldung and lx.hundert (a1.1-u02). Also the two rules r2-F07 proposed: LEX-03 for typed number-word keys (fixture a1.1-u02 c08), and cast `languages` as known names (fixture a1.1-u02 ls3-i03). All tests run over all registered courses."
+  },
+  {
+   "id": "F07",
+   "reviewer": "R2",
+   "criterion": "N",
+   "severity": "minor",
+   "scope": "class",
+   "unitId": "a1.1-u02",
+   "path": "content/course-v2/a1.1/rule-cards.json (unchanged since r2): rc.negation-nicht de and modelSentence (shown by steps[0].ruleCard); rc.praesens-2 modelSentence (shown by steps[2].ruleCard)",
+   "quote": "rc.negation-nicht „nicht steht vor dem Wort, das nicht stimmt: Ich bin nicht Lehrerin. …“ · modelSentence „Nein, ich bin nicht Lehrerin. Ich bin Ärztin.“ (lx.arzt / die Ärztin: a1.2-u05) · rc.praesens-2 modelSentence „Wir haben am Montag Kurs. Habt ihr auch Kurs?“ (lx.montag: a1.1-u07)",
+   "problem": "This is the 3rd round with rc.negation-nicht unchanged (r1-F07/F10, r2-F08). The card still explains with a relative clause at a level that allows 0 subordinate clauses. Its position rule has no limit, which yields ✗„Ich habe nicht Formular“ and which rc.kein must contradict in u06. New this round: the model sentences of both cards shown in u02 carry an unglossed word from a later unit (Ärztin, a1.2-u05; Montag, a1.1-u07). The model sentence is the one sentence per card that the learner copies. GRM-04 and GRM-05 walk rule cards, but no rail checks their words. The lexicon.mjs licensedForms comment even names „Montag“ on an a1.1 card as a known case. Rule cards left unchanged across rounds now occur in u04 (r2–r5), u01 (r1–r3) and u02 (r1–r3). That meets the stop-the-line threshold, and no owner has acted on it.",
+   "fix": "Rule-cards owner. rc.negation-nicht de as in r2-F08: „nicht steht vor dem Wort: nicht zwanzig, nicht aus Berlin, nicht Lehrerin – Studentin. Achtung: Ich habe kein Formular. (kein: Einheit 6)“. modelSentence „Nein, ich bin nicht Lehrerin. Ich bin Studentin.“ rc.praesens-2 modelSentence „Wir haben heute Kurs. Habt ihr auch Kurs?“. Update the English twins to match. Both new model sentences use only known words at a1.1-u02, and no detector fires on them. No change in u02.",
+   "proposedRule": "LEX-01: walk each rule card's modelSentence and its table cells (below the header row) at the card's first use, with that unit's knownForms + licensedForms; the prose stays metalanguage. Failing fixtures: rc.negation-nicht („Ärztin“) and rc.praesens-2 („Montag“) at a1.1-u02. TXT-01, unimplemented since r1-F07, covers the relative clause. Both tests run over all registered courses."
+  },
+  {
+   "id": "F08",
+   "reviewer": "validator",
+   "criterion": "N",
+   "severity": "minor",
+   "scope": "class",
+   "unitId": "a1.1-u02",
+   "path": "scripts/course-v2/rules/ITM-01.mjs (order family: l. 294 `continue`); scripts/course-v2/rules/GRM-04.mjs (no item-surface scope, no fixtures); registries/grammar-spine.json (no instruction chunks; g.muessen-duerfen-man chunkFrom a1.1-u08 vs title.de); casts/series.json and casts/a1.json (no contact data); no rules/CON-01.mjs; GRM-04 advisories (61)",
+   "quote": "GRM-04 61 advisory (r2: 60): „das Emre“, „Kurs habt ihr heute“, „Wir lernen zusammen“, about 46 article hits before a1.1-u04, „Stellen Sie sich vor“, „Ihren Familiennamen“ ×3, „Fragen Sie nach“, „Sie können“ ×3 · unwalked frames: „Sie können jetzt Ihren Namen buchstabieren …“ (endLines), „Bilden Sie einen Aussagesatz.“ ×11 · title.de „Wie schreibt man das?“ · Priya 0176 38 29 41 06 in u02, u08 and u12, recorded nowhere",
+   "problem": "The rule-smith and the spine owner have written none of the rails that r1 and r2 asked them for; every file under rules/ and lib-validate/ predates r2. (1) ITM-01's order family still stops after the naming check. The r2-F01 class is closed in u02 only by its accepted list, although no a1.1 correction has a live instance today. (2) GRM-04 still does not read promptDe, options or explanation.de. The u02 item surfaces are clean now, except for the accusative pronouns of F04, which no detector could see anyway. (3) The r1-F20 fixtures are still missing. The count rose to 61 because the new accepted form of ls1-r04 adds one article hit. (4) The spine has no instruction chunks, so the SD1's own instruction German and the „Sie können …“ formula keep firing. The same frames also stand, unwalked, on every endLine, on 11 „Bilden Sie einen Aussagesatz.“ prompts and on the micro-output prompts. They would all fire as soon as (2) is written. (5) The unit title still uses man before its chunk (r2 notes). (6) u12 now agrees with u02 and u08 on Priya's number, so no contradiction is left. The cast bible still records no contact data and CON-01 has no rule file, so the next drift will again be found by hand. GRM-04 false positives without fixtures now occur in u04, u01 and u02, which meets the stop-the-line threshold.",
+   "fix": "No unit change. Rule-smith: the ITM-01 alternative-order check (r2-F01), the GRM-04 item scope (r2-F03), and the fixtures (r2-F10). Spine owner, first: license these instruction chunks from a1.1-u01 for GRM-04's instruction scope: „Stellen Sie sich vor“, „Buchstabieren Sie (bitte) Ihren (Familien)Namen“, „Fragen Sie nach“, „Sie können …“ (title.canDo and endLines), „Bilden Sie einen Aussagesatz“, „Sagen Sie Ihren Beruf“. Also license the fixed phrase „Wie schreibt man das?“ from a1.1-u02. Cast-bible owner: record Priya's contact data (0176 38 29 41 06; Berliner Straße 21, 04105 Leipzig until u05) and Arjun's (0176 52 83 91 40).",
+   "proposedRule": "The rules r2-F01 (ITM-01 order family), r2-F03 (GRM-04 item scope), r2-F10 (GRM-04 fixtures at a1.1-u02) and r2-F09 (CON-01) proposed, unchanged. Order of work: the chunk list first, then the scope extension. Otherwise (2) alone adds about 20 false positives to u02."
+  }
+ ],
+ "verdict": "Not exit-ready: 0 BLOCKER, 2 MAJOR, 6 MINOR. The unit author did everything r2 asked of the unit. All r2 unit edits landed: the ls1-r04 order, the eleven look-ahead strings, the seven phrasing points, the ls3-s01 rewrite and its twin, the Sp1 speed promise, Herr Schaefer's voice and castIn. u12 now agrees on Priya's number. Every one of the 94 keys and 5 form fields is right, H1, Sp1 and S1 are exact to sd1.json, every German-only item surface is now free of welch-, man, ihn and the other r2 look-aheads, and the validator exits 0. No owner or rail acted since r2. The lexicon, rule cards, names registry, cast bible, spine, checker and every validator rule are unchanged. That is why the two MAJORs are both correct answers that the real grader rejects. (1) F01: the S1 form still loses correct entries („Online-Kurs, nicht in Leipzig“, „Izmir in der Türkei“, „Izmir, Turkei“). The same hand-list method also loses correct entries in the S1 forms of u01, u05 and u09, and f1's exact: 'name' contradicts the sd1-s1 spelling rule. This is a stop-the-line class that only the checker owner's form_fill rule can close. (2) F02, new: the Check proof of cd.a1.buchstabieren marks a correct letter-by-letter transcription („B-E-R-I-S-H-A“) wrong, which one accepted form fixes. The six minors are two unit residues and four owner-held items. The unit residues: the new ls3-r06 twin contradicts the story (F03), and ls2-mo exceeds the profile's micro-output band, with three accusative pronouns that no detector sees (F04). The owner-held items: the proof evidence and one persona line (F05), the lexicon and names registry (F06), the rule cards, now with two model-sentence look-aheads (F07), and the rails and detectors (F08). Unit edits needed: drop one exact flag (F01), add one accepted form (F02), change one item (F03), make three to five string edits (F04), and change one persona line (F05). With those edits and the form_fill rule, A returns to 4 and u02 carries 4 owner-held minors (F05, F06, F07, F08), which is within the exit limit.",
+ "scores": {
+  "D": 4,
+  "N": 4,
+  "H": 4,
+  "A": 3,
+  "P": 4,
+  "K": 4,
+  "E": 4
+ },
+ "scoreNotes": {
+  "D": "The Folge, the three dialogues, the form and the six H1 texts are correct and idiomatic. The r2 phrasing points are fixed, and du/Sie is right in every relationship. It is 4 and not 5 because both rule cards the learner reads in LS1 and LS3 model sentences with words from later units, and the negation card's rule is over-general (F07). A few unit lines stay terse, e.g. „E auf Deutsch – A auf Englisch.“ and „Ich schreibe für Herrn Yıldız.“, but they are acceptable.",
+  "N": "Every German-only item surface uses known words, and no welch-, man, ihn or adjective ending is left. The only LEX-01 advisories are twinned and glossed (zwo, Malayalam). It is 4 and not 5 for four reasons. Accusative sie/mich appears on three surfaces (one of them an expected answer). ls2-mo's band exceeds the profile (F04). Three word cards and two rule-card model sentences carry unknown words (F06, F07). The number words the learner types are receptive (F06).",
+  "H": "A believable Anmeldung: „Neir“, 20 for 21, „zwo“, the callback, participant number 100 and the Arjun e-mail that u03 picks up. All five can-dos are performed. It is 4 and not 5 because two proofs are ticked by evidence that does not score them, and the AI may ask for a number the learner has already given (F05).",
+  "A": "We solved all 94 items and the 5 fields blind, and every key is right. The distractors are heard and plausible, and the explanations name the real point. A is 3 because the real grader rejects defensible answers in two places. The S1 form still loses correct entries, and the class spans four units (F01, MAJOR). The proof q01 rejects a correct spelled transcription (F02, MAJOR).",
+  "P": "H1 is exact to sd1.json: 6 × abc, 3 options, 2 plays, two speakers per text, every option heard, keys b a c b c a, and the textVariantDe scaffold is flagged. Sp1 runs vorstellen, buchstabieren and nummer on sd1-sp1, with a keyword sheet within „not all needed“. S1 has 5 fields from the situation on sd1-s1. Every task is original. It is 4 and not 5 because the deterministic S1 marking departs from the rubric's own spelling rule (F01, counted under A).",
+  "K": "The cast, numbers and story are consistent across u01 → u02 → u03, u05, u08 and u12. Emre is 30 with a Turkish mobile number, Priya lives at Berliner Straße 21, 04105 Leipzig, and her number now agrees in all three units. Fact f01 carries its Postfach exception. It is 4 and not 5 because the new ls3-r06 contradicts the story (F03), and the persona data live in no record (F08).",
+  "E": "Every instruction is ≤ 90 characters. LS1 opens with recognition for an early success, every endLine names the win, and error corrections are prefilled with the sentence. It is 4 and not 5 because the Sp1 persona can repeat a question the learner has already answered (F05), and because no 360 px walkthrough was run."
+ },
+ "total": 27,
+ "counts": {
+  "blocker": 0,
+  "major": 2,
+  "minor": 6,
+  "unitOwned": {
+   "blocker": 0,
+   "major": 2,
+   "minor": 3
+  },
+  "note": "unitOwned means the fix edits u02.json. F01 needs the unit edit (drop exact on f1) and the checker owner's form_fill rule. F02 is one accepted form. F03 and F04 are unit edits; F04 also asks the spine owner for a chunk licence and the rule-smith for the band and detector rules. F05's unit part is one persona line; the rest of F05 belongs to the SCHEMA and rubric owners. Owner-held only: F06 (lexicon owner, names/SCHEMA owner, level reviewer), F07 (rule-cards owner) and F08 (rule-smith, spine owner, cast-bible owner)."
+ },
+ "exitCheck": {
+  "blocker": 0,
+  "major": 2,
+  "minor": 6,
+  "criteriaBelow4": [
+   "A"
+  ],
+  "exit": false,
+  "note": "Exit needs 0 BLOCKER, 0 MAJOR, every criterion ≥ 4 and ≤ 5 logged MINOR. u02 misses on F01 and F02 (both MAJOR, A = 3) and on 6 minors. Path to exit. Unit: F01 (drop exact: 'name' on f1), F02 (accepted += „B-E-R-I-S-H-A“ with acceptedWhy), F03 (ls3-r06 → Bilal), F04 (ls2-mo prompt, situation and band, the ls2-i02 option, the ls3-mo situation, and ls2-r05 unless the chunk is licensed) and F05 (one persona line). All proposed lines were measured against knownForms, the detectors and TXT-04. Checker owner: the form_fill rule with its fixtures (F01). Without it F01 stays MAJOR, because every hand list fails on the next variant. After both, A returns to 4 and u02 carries 4 owner-held minors (F05, F06, F07, F08). Round 4 then needs only A: run gradeAnswer on the F01 fixtures and on q01 „B-E-R-I-S-H-A“, and check that validate.mjs stays green. Stop-the-line (§9.4, a class in ≥ 3 A1.1 units without a rule): (a) form_fill hand lists (u01, u02, u05, u09; new, F01); (b) receptive number lemmas typed (u04, u01, u02; F06); (c) cast languages unknown to the validator (u01, u02, u12; F06); (d) GRM-04 false positives without fixtures (u04, u01, u02; F08); (e) rule cards unchanged across rounds (u04, u01, u02; F07). (a) decides points in the unit's exam task, so its rule should land before any further A1.1 round. Class findings for the rule-smith and owners: F01 (checker owner), F02 (optional ITM-13 rail), F04, F05 (SCHEMA and rubric owners), F06, F07 and F08."
+ },
+ "notes": [
+  "Exemplar classes (u04 r1–r5, u01 r1–r3) that do NOT recur in u02. (1) Every error correction names its category („die Wortstellung“, „die Wortstellung in der Frage“, „die Verbform“, „die Endung“), and every order-family correction accepts its topicalised order (u04 r5-F01). (2) Every sentence-building item accepts every V2 order; ITM-09 is green, and permuting by hand found none missing (u04 r1-F04/F12). (3) Every W-question and Ja/Nein tile item says which question it wants (u04 r1-F01). (4) Every H1 option is heard, the keys are 2/2/2 with no ascending pattern, and every H1 text has two speakers (u04 r1-F19, r2-F04; u01 r3-F07). (5) No dictation source carries `say` (u04 r2-F01). (6) Number words count as digits on every exact: 'number' item (u04 r3-F01; ls1-i04 „einundzwanzig“ and ls3-i04 „hundert“ → correct). (7) Sentence-building explanations name the position, not agreement (u04 r3-F02). (8) No genitive stands on a task surface (u04 r5-F05). (9) The Landeskunde claim has a verified Fact (u04 r4-F05). (10) No proof item contradicts its scene (u04 r5-F02). (11) c07's gender-article tag is the spine's own tag for g.wortbildung-er-in, so the repair route is right (u04 r1-F23).",
+  "Exemplar classes that DO recur. Defensible answers rejected by the grader (u04 r3-F01, r5-F01 → F01, F02). Receptive lemmas typed and card examples above level (u04 r4-F02, u01 r3-F05 → F06). Rule cards unchanged across rounds (u04 r2–r5, u01 r3-F04 → F07). Detector noise (u04 r1-F24 … r4-F08, u01 r3-F09 → F08). A fix of ours creating the next finding: our r2 proposals produced ls3-r06's story clash (F03) and the German-only „eine andere Nummer“ limit on ls2-mo (F04). Every fix in this review was measured before it was proposed.",
+  "For the orchestrator and the user's question („let me know when one level is finished“): A1.1 is not finished. The level validator exits 1 on two blockers outside u02. One is u01 COV-3 (specs.json, u01 r3-F02). The other is new: u04 LEX-05, because the lexicon now allocates lx.markt, lx.prospekt and lx.durchsage to u04 while the approved pilot's spec omits them. u01 r3-F01 (the speaking engine ignores `parts`) is still open and affects 8 of 12 units. For u02, five small unit edits and one checker rule separate it from exit. Five stop-the-line classes have no rule yet. Their owners are the checker, lexicon, rule-cards, names, spine and cast-bible owners and the rule-smith. None of them acted between r2 and r3, so a round 4 scheduled before they act will find the same points.",
+  "Cross-unit observations for other owners, not findings against u02. u05's S1 checklist still reads „Die Telefonnummer: Jede Zahl ist richtig.“, the wording r2-F04 (4) fixed in u02 only. u05 ls1-mo has the same [8, 25] band as ls2-mo (F04). u04 story.castIn lists cast.ensemble-a1-3, whose first appearance is u02.",
+  "Engine: u02's Sp1 has no `parts`, so the u01 r3-F01 blocker does not reach u02's scoring. The monologue ABLAUF („danach … eine bis zwei Nachfragen“) matches the persona's two moves (spell, number), and sd1-sp1's three criteria match the three parts the task asks for. Error-correction items are prefilled with the quoted sentence (ItemView), so a learner does not retype the number word; „Die Hausnummer ist nicht 20.“ on ls1-p10 (→ wrong) is therefore not raised.",
+  "Fact f01 (address order) could not be re-read: this session may not use MCP tools and has no route to deutschepost.de. CON-06 passes on the author's check of 2026-09-27, and the claim is the standard German postal format with its Postfach exception.",
+  "Open question for the owner, not a finding: every phone number in u02 has a real format: Leipzig 0341 (the school 0341 97 63 20, H1 0341 26 58 17) and O2 0176 (Priya 0176 38 29 41 06). No rule reserves fictional numbers, and this round could not check whether any is assigned. Before launch, legal review should decide whether the course uses number ranges the Bundesnetzagentur keeps for fictional use in media. That would be one registry rule for every level.",
+  "Legal and claims: no outcome promise, no human-feedback claim and no exam-mark misuse on any surface. The AI is „Gesprächsleitung (KI)“, the strategy card honestly says the exam uses pictures, and the Sp1 situation says any number is fine. Every exam task is original in the SD1 format. No official Modellsatz wording was found, and the can-do texts are our own ich-Form wording with source ids."
+ ]
+}

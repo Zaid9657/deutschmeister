@@ -1,0 +1,437 @@
+{
+  "$schema": "course-v2/levels@1",
+  "levels": [
+    {
+      "level": "a1.1",
+      "band": "A1",
+      "skeleton": "A",
+      "steps": ["situation", "situation", "situation", "pruefung", "sprechen", "schreiben", "check"],
+      "minutes": {
+        "situation": 20,
+        "pruefung": 20,
+        "sprechen": 20,
+        "schreiben": 20,
+        "check": 15,
+        "reviewPerDay": 6
+      },
+      "sentence": {
+        "meanWordsMax": 7,
+        "maxWords": 12,
+        "subordinateClausesMax": 0
+      },
+      "lexis": {
+        "newPerUnit": [24, 32],
+        "productiveShare": 0.5,
+        "offListMax": 0.15,
+        "coverageMin": 0.95
+      },
+      "review": {
+        "budgetMinutes": 6,
+        "secondsPerReview": 8,
+        "firstReviewCeiling": 30,
+        "carryOverMinutes": 0
+      },
+      "pool": {
+        "size": 16,
+        "served": 12,
+        "reserve": [4, 6],
+        "generatedMax": 0.4,
+        "mix": {
+          "typedGapDictation": [0.45, 0.55],
+          "sentenceBuildingMin": 0.25,
+          "errorCorrectionMax": 0.1,
+          "choiceMax": 0.2,
+          "recallMin": 0.7,
+          "clozeInTypedGap": false
+        }
+      },
+      "examStemChars": [15, 90],
+      "microOutput": {
+        "seconds": [20, 30],
+        "words": [3, 16]
+      },
+      "ruleCardMaxWords": 60,
+      "partnerSupport": "slow-wordbank",
+      "feedbackLanguage": ["de-a1", "en"]
+    },
+    {
+      "level": "a1.2",
+      "band": "A1",
+      "skeleton": "A",
+      "steps": ["situation", "situation", "situation", "pruefung", "sprechen", "schreiben", "check"],
+      "minutes": {
+        "situation": 20,
+        "pruefung": 20,
+        "sprechen": 25,
+        "schreiben": 20,
+        "check": 15,
+        "reviewPerDay": 6
+      },
+      "sentence": {
+        "meanWordsMax": 8,
+        "maxWords": 14,
+        "subordinateClausesMax": 0
+      },
+      "lexis": {
+        "newPerUnit": [18, 30],
+        "productiveShare": 0.5,
+        "offListMax": 0.15,
+        "coverageMin": 0.95
+      },
+      "review": {
+        "budgetMinutes": 6,
+        "secondsPerReview": 8,
+        "firstReviewCeiling": 30,
+        "carryOverMinutes": 1
+      },
+      "pool": {
+        "size": 16,
+        "served": 12,
+        "reserve": [4, 6],
+        "generatedMax": 0.4,
+        "mix": {
+          "typedGapDictation": [0.45, 0.55],
+          "sentenceBuildingMin": 0.25,
+          "errorCorrectionMax": 0.1,
+          "choiceMax": 0.2,
+          "recallMin": 0.7,
+          "clozeInTypedGap": false
+        }
+      },
+      "examStemChars": [15, 90],
+      "microOutput": {
+        "seconds": [20, 40],
+        "words": [4, 24]
+      },
+      "ruleCardMaxWords": 60,
+      "partnerSupport": "repeat-on-request",
+      "feedbackLanguage": ["de-a1", "en"]
+    },
+    {
+      "level": "a2.1",
+      "band": "A2",
+      "skeleton": "A",
+      "steps": ["situation", "situation", "situation", "pruefung", "sprechen", "schreiben", "check"],
+      "minutes": {
+        "situation": 22,
+        "pruefung": 25,
+        "sprechen": 22,
+        "schreiben": 22,
+        "check": 15,
+        "reviewPerDay": 7
+      },
+      "sentence": {
+        "meanWordsMax": 9,
+        "maxWords": 16,
+        "subordinateClausesMax": 1
+      },
+      "lexis": {
+        "newPerUnit": [28, 30],
+        "productiveShare": 0.5,
+        "offListMax": 0.15,
+        "coverageMin": 0.95
+      },
+      "review": {
+        "budgetMinutes": 7,
+        "secondsPerReview": 9,
+        "firstReviewCeiling": 30,
+        "carryOverMinutes": 1.5
+      },
+      "pool": {
+        "size": 16,
+        "served": 12,
+        "reserve": [4, 6],
+        "generatedMax": 0.4,
+        "mix": {
+          "typedGapDictation": [0.45, 0.55],
+          "sentenceBuildingMin": 0.2,
+          "errorCorrectionMax": 0.12,
+          "choiceMax": 0.2,
+          "recallMin": 0.7,
+          "clozeInTypedGap": false
+        }
+      },
+      "examStemChars": [20, 120],
+      "microOutput": {
+        "seconds": [30, 40],
+        "words": [8, 30]
+      },
+      "ruleCardMaxWords": 80,
+      "partnerSupport": "clarify",
+      "feedbackLanguage": ["de-a2", "en"]
+    },
+    {
+      "level": "a2.2",
+      "band": "A2",
+      "skeleton": "A",
+      "steps": ["situation", "situation", "situation", "pruefung", "sprechen", "schreiben", "check"],
+      "minutes": {
+        "situation": 22,
+        "pruefung": 25,
+        "sprechen": 25,
+        "schreiben": 22,
+        "check": 15,
+        "reviewPerDay": 7
+      },
+      "sentence": {
+        "meanWordsMax": 10,
+        "maxWords": 18,
+        "subordinateClausesMax": 1
+      },
+      "lexis": {
+        "newPerUnit": [22, 30],
+        "productiveShare": 0.5,
+        "offListMax": 0.15,
+        "coverageMin": 0.95
+      },
+      "review": {
+        "budgetMinutes": 7,
+        "secondsPerReview": 9,
+        "firstReviewCeiling": 30,
+        "carryOverMinutes": 1.5
+      },
+      "pool": {
+        "size": 16,
+        "served": 12,
+        "reserve": [4, 6],
+        "generatedMax": 0.4,
+        "mix": {
+          "typedGapDictation": [0.45, 0.55],
+          "sentenceBuildingMin": 0.2,
+          "errorCorrectionMax": 0.12,
+          "choiceMax": 0.2,
+          "recallMin": 0.7,
+          "clozeInTypedGap": false
+        }
+      },
+      "examStemChars": [20, 120],
+      "microOutput": {
+        "seconds": [30, 40],
+        "words": [8, 30]
+      },
+      "ruleCardMaxWords": 80,
+      "partnerSupport": "learner-leads",
+      "feedbackLanguage": ["de-a2", "en"]
+    },
+    {
+      "level": "b1.1",
+      "band": "B1",
+      "skeleton": "B",
+      "steps": ["text", "text", "sprache", "pruefung", "sprechen", "schreiben", "ueberarbeiten", "check"],
+      "minutes": {
+        "text": 25,
+        "sprache": 25,
+        "pruefung": 25,
+        "sprechen": 25,
+        "schreiben": 25,
+        "ueberarbeiten": 12,
+        "check": 15,
+        "reviewPerDay": 9
+      },
+      "sentence": {
+        "meanWordsMax": 12,
+        "maxWords": 22,
+        "subordinateClausesMax": 2
+      },
+      "lexis": {
+        "newPerUnit": [43, 48],
+        "productiveShare": 0.45,
+        "offListMax": 0.25,
+        "coverageMin": 0.95
+      },
+      "review": {
+        "budgetMinutes": 9,
+        "secondsPerReview": 10,
+        "firstReviewCeiling": 40,
+        "carryOverMinutes": 2
+      },
+      "pool": {
+        "size": 16,
+        "served": 12,
+        "reserve": [4, 6],
+        "generatedMax": 0.3,
+        "mix": {
+          "typedGapDictation": [0.4, 0.5],
+          "sentenceBuildingMin": 0.15,
+          "errorCorrectionMax": 0.15,
+          "choiceMax": 0.2,
+          "recallMin": 0.7,
+          "clozeInTypedGap": false
+        }
+      },
+      "examStemChars": [25, 160],
+      "microOutput": {
+        "seconds": [40, 60],
+        "words": [40, 60]
+      },
+      "ruleCardMaxWords": 80,
+      "partnerSupport": "examiner",
+      "feedbackLanguage": ["de"]
+    },
+    {
+      "level": "b1.2",
+      "band": "B1",
+      "skeleton": "B",
+      "steps": ["text", "text", "sprache", "pruefung", "sprechen", "schreiben", "ueberarbeiten", "check"],
+      "minutes": {
+        "text": 25,
+        "sprache": 25,
+        "pruefung": 30,
+        "sprechen": 45,
+        "schreiben": 35,
+        "ueberarbeiten": 12,
+        "check": 15,
+        "reviewPerDay": 9
+      },
+      "sentence": {
+        "meanWordsMax": 13,
+        "maxWords": 24,
+        "subordinateClausesMax": 2
+      },
+      "lexis": {
+        "newPerUnit": [43, 48],
+        "productiveShare": 0.45,
+        "offListMax": 0.25,
+        "coverageMin": 0.95
+      },
+      "review": {
+        "budgetMinutes": 9,
+        "secondsPerReview": 10,
+        "firstReviewCeiling": 40,
+        "carryOverMinutes": 2
+      },
+      "pool": {
+        "size": 16,
+        "served": 12,
+        "reserve": [4, 6],
+        "generatedMax": 0.3,
+        "mix": {
+          "typedGapDictation": [0.4, 0.5],
+          "sentenceBuildingMin": 0.15,
+          "errorCorrectionMax": 0.15,
+          "choiceMax": 0.2,
+          "recallMin": 0.7,
+          "clozeInTypedGap": true
+        }
+      },
+      "examStemChars": [25, 160],
+      "microOutput": {
+        "seconds": [40, 60],
+        "words": [40, 60]
+      },
+      "ruleCardMaxWords": 80,
+      "partnerSupport": "examiner",
+      "feedbackLanguage": ["de"]
+    },
+    {
+      "level": "b2.1",
+      "band": "B2",
+      "skeleton": "B",
+      "steps": ["text", "text", "sprache", "pruefung", "sprechen", "schreiben", "ueberarbeiten", "check"],
+      "minutes": {
+        "text": 25,
+        "sprache": 25,
+        "pruefung": 25,
+        "sprechen": 25,
+        "schreiben": 25,
+        "ueberarbeiten": 12,
+        "check": 15,
+        "reviewPerDay": 11
+      },
+      "sentence": {
+        "meanWordsMax": 15,
+        "maxWords": 28,
+        "subordinateClausesMax": 3
+      },
+      "lexis": {
+        "newPerUnit": [60, 70],
+        "productiveShare": 0.375,
+        "offListMax": 0.25,
+        "coverageMin": 0.95
+      },
+      "review": {
+        "budgetMinutes": 11,
+        "secondsPerReview": 10,
+        "firstReviewCeiling": 50,
+        "carryOverMinutes": 2
+      },
+      "pool": {
+        "size": 16,
+        "served": 12,
+        "reserve": [4, 6],
+        "generatedMax": 0.25,
+        "mix": {
+          "typedGapDictation": [0.4, 0.5],
+          "sentenceBuildingMin": 0.1,
+          "errorCorrectionMax": 0.15,
+          "choiceMax": 0.25,
+          "recallMin": 0.7,
+          "clozeInTypedGap": true
+        }
+      },
+      "examStemChars": [30, 220],
+      "microOutput": {
+        "seconds": [50, 70],
+        "words": [50, 70]
+      },
+      "ruleCardMaxWords": 80,
+      "partnerSupport": "interrupts",
+      "feedbackLanguage": ["de"]
+    },
+    {
+      "level": "b2.2",
+      "band": "B2",
+      "skeleton": "B",
+      "steps": ["text", "text", "sprache", "pruefung", "sprechen", "schreiben", "ueberarbeiten", "check"],
+      "minutes": {
+        "text": 25,
+        "sprache": 25,
+        "pruefung": 30,
+        "sprechen": 45,
+        "schreiben": 35,
+        "ueberarbeiten": 12,
+        "check": 15,
+        "reviewPerDay": 11
+      },
+      "sentence": {
+        "meanWordsMax": 16,
+        "maxWords": 30,
+        "subordinateClausesMax": 3
+      },
+      "lexis": {
+        "newPerUnit": [55, 70],
+        "productiveShare": 0.375,
+        "offListMax": 0.25,
+        "coverageMin": 0.95
+      },
+      "review": {
+        "budgetMinutes": 11,
+        "secondsPerReview": 10,
+        "firstReviewCeiling": 50,
+        "carryOverMinutes": 2
+      },
+      "pool": {
+        "size": 16,
+        "served": 12,
+        "reserve": [4, 6],
+        "generatedMax": 0.25,
+        "mix": {
+          "typedGapDictation": [0.4, 0.5],
+          "sentenceBuildingMin": 0.1,
+          "errorCorrectionMax": 0.15,
+          "choiceMax": 0.25,
+          "recallMin": 0.7,
+          "clozeInTypedGap": true
+        }
+      },
+      "examStemChars": [30, 220],
+      "microOutput": {
+        "seconds": [50, 70],
+        "words": [50, 70]
+      },
+      "ruleCardMaxWords": 80,
+      "partnerSupport": "interrupts",
+      "feedbackLanguage": ["de"]
+    }
+  ]
+}

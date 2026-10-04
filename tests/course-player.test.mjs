@@ -90,7 +90,7 @@ test('the registry covers the four A sub-levels with their final tests, and the 
 // four lines while every other course screen siezt. Glob it in exactly like
 // the other two, and see the derived-directory guard below for what stops a
 // fourth directory from going unnoticed the same way.
-const CHROME_DIRS = ['src/components/lesson', 'src/components/course', 'src/components/ui', 'src/components/illustrations'];
+const CHROME_DIRS = ['src/components/lesson', 'src/components/course', 'src/components/ui', 'src/components/illustrations', 'src/components/course-v2'];
 const CHROME_FILES = [
   ...CHROME_DIRS.flatMap((dir) => readdirSync(join(ROOT, dir)).filter((f) => f.endsWith('.jsx')).map((f) => `${dir}/${f}`)),
   // MAJOR 10 (DaF review #5, last sentence): the register test must also cover
@@ -101,6 +101,10 @@ const CHROME_FILES = [
   // The string table IS the German chrome now (Deutsch-Modus): its `de` values
   // must sieze like the literals they replaced.
   'src/lib/lesson/strings.js',
+  // Course v2 (docs/course-v2/BLUEPRINT.md §1.6: tasks address the learner with Sie):
+  // the player pages and the renderers' string table.
+  ...readdirSync(join(ROOT, 'src/pages/course-v2')).filter((f) => f.endsWith('.jsx')).map((f) => `src/pages/course-v2/${f}`),
+  'src/components/course-v2/strings.js',
 ];
 
 // Pronouns, the du-forms of the verbs these screens use, and the du-imperatives
@@ -157,6 +161,11 @@ const REGISTER_EXEMPT = [
     file: 'src/pages/SpeakingPage.jsx',
     line: "anrede: ctx.anrede === 'du' ? 'du' : 'Sie',",
     reason: "normalises a stored anrede VALUE ('du'/'Sie') from the course context into the speaking task sent to the coach — not learner-facing chrome text.",
+  },
+  {
+    file: 'src/components/course-v2/MicroOutputView.jsx',
+    line: "{t('mo.register', { r: mo.register === 'du' ? 'du' : 'Sie' })}",
+    reason: "names the register a micro-output asks the learner to USE (a voicemail to a colleague is in du) — a label of the task's content, not the chrome addressing the learner.",
   },
 ];
 

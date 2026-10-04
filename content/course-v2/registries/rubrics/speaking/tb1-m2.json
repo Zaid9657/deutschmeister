@@ -1,0 +1,144 @@
+{
+  "$schema": "course-v2/rubric@1",
+  "id": "tb1-m2",
+  "kind": "speaking",
+  "lane": "tb1",
+  "method": "ai",
+  "max": 24,
+  "examMax": 30,
+  "criteria": [
+    {
+      "id": "ausdruck",
+      "label": "Ausdrucksfähigkeit: Wortschatz, passende Ausdrucksweise, Sprechabsicht umgesetzt (Meinung berichten, eigene Meinung und Erfahrung)",
+      "per": "part",
+      "levels": [
+        8,
+        6,
+        2,
+        0
+      ],
+      "scoredBy": "ai",
+      "descriptors": [
+        {
+          "points": 8,
+          "de": "Sie geben die Meinung von Ihrem Blatt klar mit eigenen Worten wieder, begründen Ihre Sicht mit treffenden Wörtern und erzählen passend von eigenen Erfahrungen."
+        },
+        {
+          "points": 6,
+          "de": "Sie berichten die Meinung verständlich und sagen, was Sie selbst denken; bei Begründungen fehlen manchmal Wörter oder passende Wendungen."
+        },
+        {
+          "points": 2,
+          "de": "Die Meinung vom Blatt kommt nur bruchstückhaft an, und Ihre eigene Sicht bleibt vage; für Begründungen fehlen meist die Mittel."
+        },
+        {
+          "points": 0,
+          "de": "Weder die Meinung vom Blatt noch Ihre eigene Sicht wird verständlich."
+        }
+      ]
+    },
+    {
+      "id": "aufgabe",
+      "label": "Aufgabenbewältigung: Gesprächsbeteiligung, Strategien (auch Nachfragen und Hilfestellung), Flüssigkeit",
+      "per": "part",
+      "levels": [
+        8,
+        6,
+        2,
+        0
+      ],
+      "scoredBy": "ai",
+      "descriptors": [
+        {
+          "points": 8,
+          "de": "Sie gehen auf die Meinung Ihrer Partnerin ein, stimmen zu oder widersprechen mit Gründen, fragen nach und halten die Diskussion flüssig in Gang."
+        },
+        {
+          "points": 6,
+          "de": "Sie diskutieren aktiv mit und reagieren auf Ihre Partnerin; gelegentlich stockt es oder Sie brauchen einen Anstoß."
+        },
+        {
+          "points": 2,
+          "de": "Sie sagen vor allem Vorbereitetes auf und reagieren kaum auf Ihre Partnerin; lange Pausen sind häufig."
+        },
+        {
+          "points": 0,
+          "de": "Eine Diskussion kommt nicht zustande."
+        }
+      ]
+    },
+    {
+      "id": "richtigkeit",
+      "label": "Formale Richtigkeit: Satzbau und Formen",
+      "per": "part",
+      "levels": [
+        8,
+        6,
+        2,
+        0
+      ],
+      "scoredBy": "ai",
+      "descriptors": [
+        {
+          "points": 8,
+          "de": "Satzbau und Formen sitzen weitgehend; Fehler sind selten und fallen kaum auf."
+        },
+        {
+          "points": 6,
+          "de": "Fehler kommen vor, aber Ihre Partnerin versteht Sie trotzdem ohne Mühe."
+        },
+        {
+          "points": 2,
+          "de": "An wichtigen Stellen führen Fehler dazu, dass man Sie nur mit Mühe oder falsch versteht."
+        },
+        {
+          "points": 0,
+          "de": "Fast jede Äußerung enthält Fehler; die Verständigung gelingt kaum oder gar nicht."
+        }
+      ]
+    },
+    {
+      "id": "aussprache",
+      "label": "Aussprache und Intonation (nicht automatisch bewertet)",
+      "per": "part",
+      "levels": [
+        6,
+        4,
+        2,
+        0
+      ],
+      "scoredBy": "notAutoScored",
+      "descriptors": []
+    }
+  ],
+  "bands": [],
+  "errorPolicy": {
+    "b1": {
+      "v2-inv": "flag",
+      "verb-final": "score",
+      "satzklammer": "score",
+      "case-np": "flag",
+      "case-pp": "flag",
+      "gender-article": "flag",
+      "adj-ending": "flag",
+      "perfekt-aux-participle": "score",
+      "connector-position": "score",
+      "n-dekl": "flag",
+      "reflexive": "flag",
+      "register": "score"
+    }
+  },
+  "zeroRules": [],
+  "capRules": [],
+  "spelling": "not-scored",
+  "feedbackLanguage": [
+    "de"
+  ],
+  "modelId": "config:speaking-full",
+  "splitVerified": true,
+  "calibration": {
+    "status": "pending",
+    "rangeBands": 1
+  },
+  "source": "https://shop.telc.net/media/catalog/product/file/telc_deutsch_b1_zd_uebungstest_1.pdf"
+}

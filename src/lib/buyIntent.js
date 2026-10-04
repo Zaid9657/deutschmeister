@@ -7,6 +7,7 @@
 // destination that resumes it: /subscription?buy=<key>, which opens the
 // checkout once and clears the intent. Only known product keys are honoured.
 import { safeGet, safeSet, safeRemove } from '../utils/safeStorage';
+import { peekReturnPath } from './returnPath.js';
 
 const KEY = 'dm_buy_intent';
 // Sub-level keys carry a second underscore (course_a1_2). The pattern used to
@@ -28,8 +29,9 @@ export const peekBuyIntent = () => {
 
 export const clearBuyIntent = () => safeRemove(KEY);
 
-/** Where to send a user once they are authenticated: the pending checkout, else the dashboard. */
+/** Where to send a user once they are authenticated: the pending checkout, else the course step they left, else the dashboard. */
 export const postAuthPath = () => {
   const key = peekBuyIntent();
-  return key ? `/subscription?buy=${encodeURIComponent(key)}` : '/dashboard';
+  if (key) return `/subscription?buy=${encodeURIComponent(key)}`;
+  return peekReturnPath() || '/dashboard';
 };

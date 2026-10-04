@@ -1,0 +1,1785 @@
+[
+  {
+    "id": "a1.2-u01",
+    "nr": 1,
+    "etappe": 1,
+    "title": {
+      "de": "Wie komme ich zum Hotel?",
+      "canDo": "Sie können nach dem Weg fragen, Wegbeschreibungen verstehen und Schilder lesen."
+    },
+    "spec": {
+      "situation": "Priyas Praktikum im Hotel beginnt am Montag um sieben Uhr. Sie fährt allein mit der Straßenbahn in die Innenstadt, versteht die Durchsagen, liest Wegweiser und fragt Passanten nach dem Weg.",
+      "handlungsfeld": [
+        "10"
+      ],
+      "canDos": [
+        "cd.a1.weg-fragen",
+        "cd.a1.weg-folgen",
+        "cd.a1.wegweiser",
+        "cd.a1.aushang-hinweise"
+      ],
+      "grammar": {
+        "new": [
+          "g.praep-dativ",
+          "g.imperativ-sie"
+        ],
+        "chunk": [
+          "g.lokale-praep-weg"
+        ],
+        "review": [
+          "g.akkusativ",
+          "g.trennbare-verben",
+          "g.zeitangaben-inversion"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Orte in der Stadt",
+          "target": 9,
+          "lemmas": [
+            "lx.post",
+            "lx.bank",
+            "lx.apotheke",
+            "lx.hotel",
+            "lx.zentrum",
+            "lx.rathaus",
+            "lx.marktplatz",
+            "lx.kirche",
+            "lx.innenstadt",
+            "lx.mitten",
+            "lx.schild",
+            "lx.polizei"
+          ]
+        },
+        {
+          "title": "Nach dem Weg fragen",
+          "target": 9,
+          "lemmas": [
+            "lx.weg",
+            "lx.kreuzung",
+            "lx.ampel",
+            "lx.naehe",
+            "lx.geradeaus",
+            "lx.links",
+            "lx.rechts",
+            "lx.weit",
+            "lx.gegenueber",
+            "lx.erklaeren",
+            "lx.meter",
+            "lx.ecke"
+          ]
+        },
+        {
+          "title": "Unterwegs mit Bus und Bahn",
+          "target": 8,
+          "lemmas": [
+            "lx.haltestelle",
+            "lx.strassenbahn",
+            "lx.linie",
+            "lx.halt",
+            "lx.richtung",
+            "lx.stadtplan",
+            "lx.zu-fuss",
+            "lx.fahrgast",
+            "lx.allein"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.kurzdialog",
+        "tt.email-informell",
+        "tt.informationstafel",
+        "tt.schild",
+        "tt.durchsage",
+        "tt.bildkarte",
+        "tt.kurzmitteilung"
+      ],
+      "lanes": {
+        "primary": "sd1",
+        "pruefungsfokus": [
+          {
+            "template": "sd1.l3",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.h2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.sp3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.s2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A1 L13 Wir suchen das Hotel Maritim (lokale Präpositionen + Dativ)",
+        "M A1 L15 In Giesing wohnt das Leben! (Stadt, Wege)",
+        "S2 L11 In der Stadt unterwegs (mit + Dativ, Weg)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.jonas",
+        "cast.olena",
+        "cast.ensemble-a1-2",
+        "cast.ensemble-a1-4"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daz",
+          "title": "Den Weg zum Bürgerbüro oder zur Sprachschule planen",
+          "hf": "10"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/a1-2.md §6 unit 1 (a1-2.json units[0])"
+      }
+    }
+  },
+  {
+    "id": "a1.2-u02",
+    "nr": 2,
+    "etappe": 1,
+    "title": {
+      "de": "Mein Arbeitsalltag",
+      "canDo": "Sie können über Ihre Arbeit sprechen und sagen, was Sie früher gemacht haben."
+    },
+    "spec": {
+      "situation": "Nach der ersten Woche im Praktikum erzählt Priya, wie ihr Arbeitstag im Hotel aussieht und was sie früher in Kochi gemacht hat; sie füllt ihren Stundenzettel aus, und Bilal liest Stellenanzeigen.",
+      "handlungsfeld": [
+        "2",
+        "3"
+      ],
+      "canDos": [
+        "cd.a1.arbeitsalltag",
+        "cd.a1.frueher-arbeit",
+        "cd.a1.arbeitsauftraege",
+        "cd.a1.dienstplan",
+        "cd.a1.stellenanzeigen"
+      ],
+      "grammar": {
+        "new": [
+          "g.praeteritum-sein-haben",
+          "g.temporal-seit-vor"
+        ],
+        "chunk": [],
+        "review": [
+          "g.perfekt-haben",
+          "g.wortbildung-er-in",
+          "g.praep-dativ"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Berufe und Arbeitsplatz",
+          "target": 10,
+          "lemmas": [
+            "lx.firma",
+            "lx.chef",
+            "lx.mitarbeiter",
+            "lx.kunde",
+            "lx.gast",
+            "lx.rezeption",
+            "lx.team",
+            "lx.arbeitsplatz",
+            "lx.fabrik",
+            "lx.ausbildung",
+            "lx.verkaeufer",
+            "lx.fahrer",
+            "lx.aufgabe"
+          ]
+        },
+        {
+          "title": "Arbeitszeit und Dienstplan",
+          "target": 9,
+          "lemmas": [
+            "lx.arbeitszeit",
+            "lx.schicht",
+            "lx.pause",
+            "lx.urlaub",
+            "lx.aufhoeren",
+            "lx.frueher",
+            "lx.dienstplan",
+            "lx.stundenzettel",
+            "lx.feierabend"
+          ]
+        },
+        {
+          "title": "Stellenanzeigen",
+          "target": 9,
+          "lemmas": [
+            "lx.stelle",
+            "lx.verdienen",
+            "lx.job",
+            "lx.stellenanzeige",
+            "lx.erfahrung",
+            "lx.vollzeit",
+            "lx.teilzeit",
+            "lx.fuehrerschein",
+            "lx.sich-bewerben"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.dialog",
+        "tt.stellenanzeige",
+        "tt.internetanzeige",
+        "tt.telefonansage",
+        "tt.terminkalender",
+        "tt.formular",
+        "tt.stichwortblatt"
+      ],
+      "lanes": {
+        "primary": "sd1",
+        "pruefungsfokus": [
+          {
+            "template": "sd1.l2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.h3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.sp1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.s1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "S2 L8 Beruf und Arbeit",
+        "N A1 K7 Arbeitsalltag",
+        "M A1 L19 (Präteritum war/hatte)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.jonas",
+        "cast.frau-hoffmann",
+        "cast.bilal",
+        "cast.emre"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "beruf",
+          "title": "Minijob-Anzeigen lesen",
+          "hf": "3"
+        },
+        {
+          "kind": "beruf",
+          "title": "Dienstplan und Schichttausch",
+          "hf": "2"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/a1-2.md §6 unit 2 (a1-2.json units[1])"
+      }
+    }
+  },
+  {
+    "id": "a1.2-u03",
+    "nr": 3,
+    "etappe": 1,
+    "title": {
+      "de": "Liebe Nachbarn …",
+      "canDo": "Sie können die Hausordnung verstehen und Nachbarn um Hilfe bitten."
+    },
+    "spec": {
+      "situation": "Im Mietshaus von Priya und Arjun hängt eine neue Hausordnung. Der Hausmeister Herr Krause spricht eine Nachricht auf den Anrufbeantworter, und Priya bittet Frau Lehmann, ein Paket für sie anzunehmen.",
+      "handlungsfeld": [
+        "12"
+      ],
+      "canDos": [
+        "cd.a1.hausordnung",
+        "cd.a1.im-haus-regeln",
+        "cd.a1.vermieter-mitteilung",
+        "cd.a1.nachbarn-hilfe"
+      ],
+      "grammar": {
+        "new": [
+          "g.muessen-duerfen-man",
+          "g.possessiv-sein-ihr"
+        ],
+        "chunk": [],
+        "review": [
+          "g.koennen",
+          "g.possessiv-mein-dein",
+          "g.praep-dativ"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Im Mietshaus",
+          "target": 9,
+          "lemmas": [
+            "lx.hausmeister",
+            "lx.vermieter",
+            "lx.keller",
+            "lx.mieter",
+            "lx.treppenhaus",
+            "lx.erdgeschoss",
+            "lx.aufzug",
+            "lx.briefkasten",
+            "lx.hof",
+            "lx.ansage",
+            "lx.mietshaus"
+          ]
+        },
+        {
+          "title": "Die Hausordnung",
+          "target": 9,
+          "lemmas": [
+            "lx.hausordnung",
+            "lx.muell",
+            "lx.ruhe",
+            "lx.leise",
+            "lx.parken",
+            "lx.muessen",
+            "lx.duerfen",
+            "lx.verboten",
+            "lx.laerm",
+            "lx.regel",
+            "lx.erlauben",
+            "lx.ordnung"
+          ]
+        },
+        {
+          "title": "Nachbarn um Hilfe bitten",
+          "target": 8,
+          "lemmas": [
+            "lx.paket",
+            "lx.hilfe",
+            "lx.annehmen",
+            "lx.klingeln",
+            "lx.zettel",
+            "lx.bescheid-sagen",
+            "lx.dank"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.regeln",
+        "tt.schild",
+        "tt.telefonansage",
+        "tt.dialog",
+        "tt.notiz",
+        "tt.kurzmitteilung",
+        "tt.bildkarte"
+      ],
+      "lanes": {
+        "primary": "sd1",
+        "pruefungsfokus": [
+          {
+            "template": "sd1.h3",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.l3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.sp3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.s2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A1 L14 Wie findest du Ottos Haus? (sein/ihr, Genitiv-s)",
+        "M A1 L21 (Regeln: dürfen, müssen)",
+        "N A1 K9 Meine Wohnung"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.herr-krause",
+        "cast.frau-lehmann",
+        "cast.amal"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daz",
+          "title": "Eine Mitteilung zur Heizungsablesung verstehen",
+          "hf": "12"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/a1-2.md §6 unit 3 (a1-2.json units[2])"
+      }
+    }
+  },
+  {
+    "id": "a1.2-u04",
+    "nr": 4,
+    "etappe": 2,
+    "title": {
+      "de": "Ich brauche einen Termin",
+      "canDo": "Sie können einen Termin vereinbaren und ein Datum sagen und verstehen."
+    },
+    "spec": {
+      "situation": "Arjun und Priya müssen ins Bürgerbüro. Sie finden auf der Webseite die Öffnungszeiten, vereinbaren online einen Termin, hören eine Ansage mit einem neuen Termin und fragen am Schalter nach dem richtigen Zimmer.",
+      "handlungsfeld": [
+        "1"
+      ],
+      "canDos": [
+        "cd.a1.behoerde-internet",
+        "cd.a1.termin-vereinbaren",
+        "cd.a1.datum",
+        "cd.a1.info-schalter",
+        "cd.a1.sprachnachricht-verstehen"
+      ],
+      "grammar": {
+        "new": [
+          "g.temporal-praepositionen",
+          "g.ordinalzahlen-datum"
+        ],
+        "chunk": [
+          "g.konj2-hoeflichkeit"
+        ],
+        "review": [
+          "g.temporal-seit-vor",
+          "g.zeitangaben-inversion",
+          "g.imperativ-sie"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Im Bürgerbüro",
+          "target": 10,
+          "lemmas": [
+            "lx.amt",
+            "lx.buergerbuero",
+            "lx.sachbearbeiter",
+            "lx.warten",
+            "lx.vereinbaren",
+            "lx.wartenummer",
+            "lx.eingang",
+            "lx.ausgang",
+            "lx.verschieben",
+            "lx.behoerde"
+          ]
+        },
+        {
+          "title": "Dokumente und Formulare",
+          "target": 9,
+          "lemmas": [
+            "lx.ausweis",
+            "lx.pass",
+            "lx.unterschrift",
+            "lx.unterschreiben",
+            "lx.geburtsdatum",
+            "lx.antrag",
+            "lx.staatsangehoerigkeit",
+            "lx.geburtsort",
+            "lx.kopie"
+          ]
+        },
+        {
+          "title": "Datum und Ordinalzahlen",
+          "target": 9,
+          "lemmas": [
+            "lx.datum",
+            "lx.erste",
+            "lx.dritte",
+            "lx.januar",
+            "lx.februar",
+            "lx.maerz",
+            "lx.april",
+            "lx.mai",
+            "lx.juni"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.webseite",
+        "tt.informationstafel",
+        "tt.kurzdialog",
+        "tt.telefonansage",
+        "tt.telefonat",
+        "tt.formular",
+        "tt.wortkarte"
+      ],
+      "lanes": {
+        "primary": "sd1",
+        "pruefungsfokus": [
+          {
+            "template": "sd1.h3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.h1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.sp2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.s1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "S2 L9 Ämter und Behörden",
+        "M A1 L16 Wir haben hier ein Problem. (temporale Präpositionen)",
+        "M A1 L24 (Ordinalzahlen, Datum)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.ensemble-a1-2",
+        "cast.ensemble-a1-4",
+        "cast.herr-richter"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daf",
+          "title": "Sich in einem Prüfungszentrum zur A1-Prüfung anmelden",
+          "hf": "11"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/a1-2.md §6 unit 4 (a1-2.json units[3])"
+      }
+    }
+  },
+  {
+    "id": "a1.2-u05",
+    "nr": 5,
+    "etappe": 2,
+    "title": {
+      "de": "Gute Besserung!",
+      "canDo": "Sie können beim Arzt sagen, was Ihnen wehtut, und sich krankmelden."
+    },
+    "spec": {
+      "situation": "Priya ist krank. Sie ruft in der Praxis von Frau Doktor Sommer an, meldet sich an, sagt, was ihr wehtut, versteht die Hinweise zu den Tabletten und meldet sich im Hotel und im Kurs krank.",
+      "handlungsfeld": [
+        "8",
+        "2"
+      ],
+      "canDos": [
+        "cd.a1.arzt-anmeldung",
+        "cd.a1.beschwerden",
+        "cd.a1.medikamente",
+        "cd.a1.krankmelden",
+        "cd.a1.absage-entschuldigung"
+      ],
+      "grammar": {
+        "new": [
+          "g.sollen",
+          "g.perfekt-haben"
+        ],
+        "chunk": [
+          "g.reflexiv-akk"
+        ],
+        "review": [
+          "g.imperativ-sie",
+          "g.muessen-duerfen-man",
+          "g.praeteritum-sein-haben"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Der Körper",
+          "target": 8,
+          "lemmas": [
+            "lx.kopf",
+            "lx.bauch",
+            "lx.ruecken",
+            "lx.hals",
+            "lx.bein",
+            "lx.arm",
+            "lx.hand",
+            "lx.auge"
+          ]
+        },
+        {
+          "title": "Beschwerden und Krankheit",
+          "target": 8,
+          "lemmas": [
+            "lx.krank",
+            "lx.gesund",
+            "lx.fieber",
+            "lx.schmerz",
+            "lx.wehtun",
+            "lx.husten",
+            "lx.erkaeltung",
+            "lx.schnupfen",
+            "lx.gesundheit"
+          ]
+        },
+        {
+          "title": "In der Arztpraxis",
+          "target": 7,
+          "lemmas": [
+            "lx.arzt",
+            "lx.praxis",
+            "lx.versicherungskarte",
+            "lx.wartezimmer",
+            "lx.sprechstunde",
+            "lx.sich-krankmelden",
+            "lx.krankenhaus",
+            "lx.telefonisch",
+            "lx.patient"
+          ]
+        },
+        {
+          "title": "Apotheke und Medikamente",
+          "target": 7,
+          "lemmas": [
+            "lx.medikament",
+            "lx.rezept",
+            "lx.tablette",
+            "lx.gute-besserung",
+            "lx.einnehmen",
+            "lx.tropfen",
+            "lx.notruf"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.telefonansage",
+        "tt.dialog",
+        "tt.anleitung",
+        "tt.email-halbformell",
+        "tt.stichwortblatt",
+        "tt.bildkarte",
+        "tt.kurzmitteilung"
+      ],
+      "lanes": {
+        "primary": "sd1",
+        "pruefungsfokus": [
+          {
+            "template": "sd1.h3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.sp1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.sp3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.s2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A1 L18 Geben Sie ihm doch diesen Tee! (Imperativ Sie, sollen)",
+        "S2 L10 Gesundheit und Krankheit (sollen)",
+        "N A1 K8 Fit und gesund"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.dr-sommer",
+        "cast.ensemble-a1-1",
+        "cast.frau-hoffmann",
+        "cast.frau-schulz",
+        "cast.emre"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daz",
+          "title": "Krankmeldung bei der Arbeit",
+          "hf": "2"
+        },
+        {
+          "kind": "daz",
+          "title": "Das Kind in der Kita krankmelden",
+          "hf": "6"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/a1-2.md §6 unit 5 (a1-2.json units[4])"
+      }
+    }
+  },
+  {
+    "id": "a1.2-u06",
+    "nr": 6,
+    "etappe": 2,
+    "title": {
+      "de": "Die Jacke gefällt mir!",
+      "canDo": "Sie können Kleidung kaufen, nach Größe und Preis fragen und Komplimente machen."
+    },
+    "spec": {
+      "situation": "Priya braucht eine Jacke für den Herbst. Mit Elif geht sie ins Kaufhaus, fragt nach Größe, Farbe und Rabatt und hört die Durchsagen; zu Hause vergleicht sie Angebote im Online-Shop und bestellt.",
+      "handlungsfeld": [
+        "7",
+        "9"
+      ],
+      "canDos": [
+        "cd.a1.verkaufsgespraech",
+        "cd.a1.preisnachlass",
+        "cd.a1.kompliment"
+      ],
+      "grammar": {
+        "new": [
+          "g.dativverben-pronomen",
+          "g.welch-dies"
+        ],
+        "chunk": [
+          "g.akk-personalpronomen"
+        ],
+        "review": [
+          "g.akkusativ",
+          "g.praep-dativ",
+          "g.adjektiv-praedikativ"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Kleidung",
+          "target": 10,
+          "lemmas": [
+            "lx.kleidung",
+            "lx.jacke",
+            "lx.hose",
+            "lx.kleid",
+            "lx.pullover",
+            "lx.schuh",
+            "lx.hemd",
+            "lx.t-shirt",
+            "lx.rock",
+            "lx.mantel",
+            "lx.mode"
+          ]
+        },
+        {
+          "title": "Farben und Größen",
+          "target": 9,
+          "lemmas": [
+            "lx.farbe",
+            "lx.groesse",
+            "lx.rot",
+            "lx.blau",
+            "lx.schwarz",
+            "lx.weiss",
+            "lx.gruen",
+            "lx.gelb",
+            "lx.grau"
+          ]
+        },
+        {
+          "title": "Im Kaufhaus und im Online-Shop",
+          "target": 9,
+          "lemmas": [
+            "lx.passen",
+            "lx.gehoeren",
+            "lx.tragen",
+            "lx.anprobieren",
+            "lx.kaufhaus",
+            "lx.rabatt",
+            "lx.warenkorb",
+            "lx.liefern",
+            "lx.umtauschen",
+            "lx.prozent",
+            "lx.kasse",
+            "lx.kompliment",
+            "lx.online-shop"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.dialog",
+        "tt.durchsage",
+        "tt.internetanzeige",
+        "tt.formular",
+        "tt.wortkarte"
+      ],
+      "lanes": {
+        "primary": "sd1",
+        "pruefungsfokus": [
+          {
+            "template": "sd1.h2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.l2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.sp2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.s1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "S2 L13 Neue Kleider (welch-, Dativ)",
+        "M A1 L22 Am besten sind seine Schuhe! (Kleidung)",
+        "M A1 L15 (Verben mit Dativ)",
+        "N A1 K11 Die Jacke gefällt mir!"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.elif",
+        "cast.ensemble-a1-1",
+        "cast.ensemble-a1-3"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daz",
+          "title": "Second-Hand und Flohmarkt",
+          "hf": "7"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/a1-2.md §6 unit 6 (a1-2.json units[5])"
+      }
+    }
+  },
+  {
+    "id": "a1.2-u07",
+    "nr": 7,
+    "etappe": 3,
+    "title": {
+      "de": "Kann ich Ihnen helfen?",
+      "canDo": "Sie können am Schalter und am Telefon höflich bitten und ein Problem melden."
+    },
+    "spec": {
+      "situation": "Priya holt ein Paket auf der Post ab, hebt am Automaten Geld ab und füllt eine Überweisung aus. Ihr neues Handy funktioniert nicht: Sie ruft beim Kundenservice an und bittet höflich um Hilfe.",
+      "handlungsfeld": [
+        "5",
+        "7"
+      ],
+      "canDos": [
+        "cd.a1.schalter-telefon-bitten",
+        "cd.a1.problem-melden",
+        "cd.a1.bestellt-bezahlt",
+        "cd.a1.ueberweisung",
+        "cd.a1.geldautomat"
+      ],
+      "grammar": {
+        "new": [
+          "g.perfekt-trennbar-untrennbar",
+          "g.konj2-hoeflichkeit"
+        ],
+        "chunk": [],
+        "review": [
+          "g.perfekt-haben",
+          "g.trennbare-verben",
+          "g.dativverben-pronomen"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Auf der Post",
+          "target": 9,
+          "lemmas": [
+            "lx.brief",
+            "lx.briefmarke",
+            "lx.schicken",
+            "lx.abholen",
+            "lx.paeckchen",
+            "lx.absender",
+            "lx.empfaenger",
+            "lx.packstation",
+            "lx.filiale",
+            "lx.karte"
+          ]
+        },
+        {
+          "title": "Bank und Geldautomat",
+          "target": 9,
+          "lemmas": [
+            "lx.konto",
+            "lx.bankkarte",
+            "lx.geldautomat",
+            "lx.ueberweisung",
+            "lx.abheben",
+            "lx.ueberweisen",
+            "lx.geheimzahl",
+            "lx.betrag",
+            "lx.iban",
+            "lx.bildschirm",
+            "lx.verwendungszweck",
+            "lx.benutzen"
+          ]
+        },
+        {
+          "title": "Beim Kundenservice",
+          "target": 8,
+          "lemmas": [
+            "lx.kundenservice",
+            "lx.bestellung",
+            "lx.reparieren",
+            "lx.zurueckrufen",
+            "lx.garantie",
+            "lx.reparatur",
+            "lx.kundennummer",
+            "lx.geraet"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.kurzdialog",
+        "tt.beleg",
+        "tt.schild",
+        "tt.anleitung",
+        "tt.mailbox",
+        "tt.telefonat",
+        "tt.formular",
+        "tt.bildkarte"
+      ],
+      "lanes": {
+        "primary": "sd1",
+        "pruefungsfokus": [
+          {
+            "template": "sd1.h1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.l3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.sp3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.s1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "S2 L12 Kundenservice (höfliche Bitten mit würde/könnte)",
+        "M A1 L19 (Perfekt untrennbarer Verben)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.ensemble-a1-1",
+        "cast.ensemble-a1-4"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daz",
+          "title": "Bezahlen: Karte, Überweisung, Kontoauszug",
+          "hf": "5"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/a1-2.md §6 unit 7 (a1-2.json units[6])"
+      }
+    }
+  },
+  {
+    "id": "a1.2-u08",
+    "nr": 8,
+    "etappe": 3,
+    "title": {
+      "de": "Endlich Urlaub!",
+      "canDo": "Sie können über Wetter und Reisen sprechen und eine Urlaubskarte schreiben."
+    },
+    "spec": {
+      "situation": "Priya und Arjun machen eine Woche Urlaub. Sie wählen eine Ferienwohnung am Meer, hören Durchsagen am Bahnhof und am Flughafen und den Wetterbericht, erzählen von der Reise und schreiben eine Karte an Elif.",
+      "handlungsfeld": [
+        "10",
+        "D"
+      ],
+      "canDos": [
+        "cd.a1.wetter",
+        "cd.a1.durchsage-reise",
+        "cd.a1.reise-erzaehlen",
+        "cd.a1.postkarte",
+        "cd.a1.besser-gefallen"
+      ],
+      "grammar": {
+        "new": [
+          "g.denn",
+          "g.perfekt-sein"
+        ],
+        "chunk": [
+          "g.komparation"
+        ],
+        "review": [
+          "g.pronomen-er-es-sie",
+          "g.perfekt-haben",
+          "g.zeitangaben-inversion"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Reisen und Unterkunft",
+          "target": 7,
+          "lemmas": [
+            "lx.reise",
+            "lx.ferien",
+            "lx.meer",
+            "lx.berg",
+            "lx.ferienwohnung",
+            "lx.strand",
+            "lx.doppelzimmer"
+          ]
+        },
+        {
+          "title": "Am Flughafen und am Bahnhof",
+          "target": 7,
+          "lemmas": [
+            "lx.flughafen",
+            "lx.flugzeug",
+            "lx.koffer",
+            "lx.flug",
+            "lx.gepaeck",
+            "lx.landen",
+            "lx.passagier"
+          ]
+        },
+        {
+          "title": "Das Wetter",
+          "target": 7,
+          "lemmas": [
+            "lx.sonne",
+            "lx.regen",
+            "lx.warm",
+            "lx.kalt",
+            "lx.regnen",
+            "lx.grad",
+            "lx.wolke",
+            "lx.norden",
+            "lx.sueden",
+            "lx.osten",
+            "lx.westen"
+          ]
+        },
+        {
+          "title": "Jahreszeiten und Monate",
+          "target": 7,
+          "lemmas": [
+            "lx.fruehling",
+            "lx.sommer",
+            "lx.herbst",
+            "lx.winter",
+            "lx.juli",
+            "lx.august",
+            "lx.september",
+            "lx.jahreszeit"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.internetanzeige",
+        "tt.kleinanzeige",
+        "tt.durchsage",
+        "tt.radiomeldung",
+        "tt.dialog",
+        "tt.postkarte",
+        "tt.wortkarte"
+      ],
+      "lanes": {
+        "primary": "sd1",
+        "pruefungsfokus": [
+          {
+            "template": "sd1.h2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.l2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.sp2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.s2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A1 L23 Ins Wasser gefallen? (Wetter, denn)",
+        "N A1 K12 Ab in den Urlaub! (denn)",
+        "S2 L14 (denn)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.emre",
+        "cast.elif",
+        "cast.ensemble-a1-2",
+        "cast.ensemble-a1-3"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daf",
+          "title": "Einen Hotel-Meldeschein ausfüllen",
+          "hf": "10"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/a1-2.md §6 unit 8 (a1-2.json units[7])"
+      }
+    }
+  },
+  {
+    "id": "a1.2-u09",
+    "nr": 9,
+    "etappe": 3,
+    "title": {
+      "de": "Wer macht was?",
+      "canDo": "Sie können Aufgaben im Haushalt verteilen und kurze Nachrichten austauschen."
+    },
+    "spec": {
+      "situation": "In der WG von Olena und Sophie gibt es Streit um den Putzplan. Priya hilft beim Verteilen der Aufgaben, liest Zettel und Chat-Nachrichten und hört eine Sprachnachricht von Sophie.",
+      "handlungsfeld": [
+        "12",
+        "D"
+      ],
+      "canDos": [
+        "cd.a1.aufgaben-verteilen",
+        "cd.a1.warnungen",
+        "cd.a1.mitteilungen-austauschen"
+      ],
+      "grammar": {
+        "new": [
+          "g.imperativ-du-ihr",
+          "g.akk-personalpronomen"
+        ],
+        "chunk": [],
+        "review": [
+          "g.imperativ-sie",
+          "g.muessen-duerfen-man",
+          "g.dativverben-pronomen"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Im Haushalt",
+          "target": 9,
+          "lemmas": [
+            "lx.haushalt",
+            "lx.waesche",
+            "lx.geschirr",
+            "lx.putzen",
+            "lx.waschen",
+            "lx.spuelen",
+            "lx.staubsauger",
+            "lx.waschmaschine",
+            "lx.buegeln",
+            "lx.kuehlschrank",
+            "lx.sache"
+          ]
+        },
+        {
+          "title": "Putzplan und Müll",
+          "target": 9,
+          "lemmas": [
+            "lx.mitbewohner",
+            "lx.aufraeumen",
+            "lx.sauber",
+            "lx.schmutzig",
+            "lx.putzplan",
+            "lx.muelltonne",
+            "lx.wegbringen",
+            "lx.trennen",
+            "lx.biotonne",
+            "lx.streit"
+          ]
+        },
+        {
+          "title": "Bitten und Warnungen",
+          "target": 8,
+          "lemmas": [
+            "lx.vorsicht",
+            "lx.aufpassen",
+            "lx.vergessen",
+            "lx.gefaehrlich",
+            "lx.ausmachen",
+            "lx.anmachen",
+            "lx.licht",
+            "lx.heizung",
+            "lx.notiz"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.notiz",
+        "tt.sms",
+        "tt.mailbox",
+        "tt.dialog",
+        "tt.kurzmitteilung",
+        "tt.stichwortblatt",
+        "tt.bildkarte"
+      ],
+      "lanes": {
+        "primary": "sd1",
+        "pruefungsfokus": [
+          {
+            "template": "sd1.l1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.sp1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.sp3",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.s2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A1 L20 Komm sofort runter! (Imperativ du/ihr, Akkusativpronomen)",
+        "M A1 L21 (Regeln im Haushalt)",
+        "S2 L9 (Imperativ)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.olena",
+        "cast.sophie",
+        "cast.arjun"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daz",
+          "title": "Aufgaben für Kinder und ein Zettel für den Babysitter",
+          "hf": "6"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/a1-2.md §6 unit 9 (a1-2.json units[8])"
+      }
+    }
+  },
+  {
+    "id": "a1.2-u10",
+    "nr": 10,
+    "etappe": 4,
+    "title": {
+      "de": "Früher und heute",
+      "canDo": "Sie können Menschen beschreiben, vergleichen und erzählen, wie jemand früher war."
+    },
+    "spec": {
+      "situation": "Frau Lehmann zeigt Priya alte Fotos vom Haus und von ihrer Familie. Sie sprechen darüber, wie die Menschen früher aussahen und wie sie heute sind; Priya zeigt Fotos aus Kochi.",
+      "handlungsfeld": [
+        "D",
+        "A"
+      ],
+      "canDos": [
+        "cd.a1.aussehen-charakter",
+        "cd.a1.vergleichen",
+        "cd.a1.foto-sprechen",
+        "cd.a1.frueher-war-hatte"
+      ],
+      "grammar": {
+        "new": [
+          "g.komparation",
+          "g.wortbildung-un-los"
+        ],
+        "chunk": [
+          "g.adj-dekl-unbestimmt"
+        ],
+        "review": [
+          "g.praeteritum-sein-haben",
+          "g.perfekt-haben",
+          "g.nicht-position-gern",
+          "g.adjektiv-praedikativ"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Aussehen",
+          "target": 8,
+          "lemmas": [
+            "lx.haar",
+            "lx.brille",
+            "lx.gesicht",
+            "lx.schlank",
+            "lx.lang",
+            "lx.kurz",
+            "lx.bart",
+            "lx.aussehen",
+            "lx.beschreiben"
+          ]
+        },
+        {
+          "title": "Charakter",
+          "target": 8,
+          "lemmas": [
+            "lx.lustig",
+            "lx.nett",
+            "lx.freundlich",
+            "lx.unfreundlich",
+            "lx.sympathisch",
+            "lx.fleissig",
+            "lx.ehrlich",
+            "lx.ernst",
+            "lx.charakter"
+          ]
+        },
+        {
+          "title": "Lebensphasen und Familie",
+          "target": 8,
+          "lemmas": [
+            "lx.grosseltern",
+            "lx.jung",
+            "lx.grossmutter",
+            "lx.grossvater",
+            "lx.enkel",
+            "lx.kindheit",
+            "lx.baby",
+            "lx.rentner",
+            "lx.vorher",
+            "lx.sich-ansehen"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.email-informell",
+        "tt.dialog",
+        "tt.kurzdialog",
+        "tt.foto",
+        "tt.kurzmitteilung",
+        "tt.stichwortblatt"
+      ],
+      "lanes": {
+        "primary": "sd1",
+        "pruefungsfokus": [
+          {
+            "template": "sd1.l1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.h1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.sp1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.s2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A1 L19 Der hatte doch keinen Bauch! (Aussehen, war/hatte, un-)",
+        "M A1 L22 (Komparation)",
+        "S2 L13 (Komparation)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.frau-lehmann",
+        "cast.amal",
+        "cast.arjun"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daz",
+          "title": "Ein Foto aus dem Alltag beschreiben und mit dem Herkunftsland vergleichen",
+          "hf": "A"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/a1-2.md §6 unit 10 (a1-2.json units[9])"
+      }
+    }
+  },
+  {
+    "id": "a1.2-u11",
+    "nr": 11,
+    "etappe": 4,
+    "title": {
+      "de": "Was ist los in der Stadt?",
+      "canDo": "Sie können Veranstaltungen finden und online ein Ticket bestellen."
+    },
+    "spec": {
+      "situation": "Am Wochenende ist Stadtfest. Priya sucht in einer App Veranstaltungen, bestellt online Tickets für eine Ausstellung und bekommt Nachrichten von Olena und Bilal mit Vorschlägen und Absagen.",
+      "handlungsfeld": [
+        "9",
+        "D"
+      ],
+      "canDos": [
+        "cd.a1.veranstaltungen",
+        "cd.a1.handy-menue",
+        "cd.a1.online-bestellen"
+      ],
+      "grammar": {
+        "new": [
+          "g.praep-akkusativ",
+          "g.wortbildung-ung-bar"
+        ],
+        "chunk": [],
+        "review": [
+          "g.imperativ-sie",
+          "g.denn",
+          "g.praep-dativ",
+          "g.trennbare-verben"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Veranstaltungen",
+          "target": 8,
+          "lemmas": [
+            "lx.veranstaltung",
+            "lx.ausstellung",
+            "lx.eintritt",
+            "lx.ticket",
+            "lx.kostenlos",
+            "lx.stadtfest",
+            "lx.programm",
+            "lx.ermaessigt",
+            "lx.plakat",
+            "lx.bibliothek"
+          ]
+        },
+        {
+          "title": "Apps und Internet",
+          "target": 7,
+          "lemmas": [
+            "lx.app",
+            "lx.passwort",
+            "lx.herunterladen",
+            "lx.klicken",
+            "lx.link",
+            "lx.wlan",
+            "lx.erreichbar",
+            "lx.waehlen"
+          ]
+        },
+        {
+          "title": "Einladen, zusagen, absagen",
+          "target": 7,
+          "lemmas": [
+            "lx.einladung",
+            "lx.einladen",
+            "lx.schade",
+            "lx.stattfinden",
+            "lx.treffpunkt",
+            "lx.vorschlag"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.programm",
+        "tt.internetanzeige",
+        "tt.sms",
+        "tt.kurzmitteilung",
+        "tt.mailbox",
+        "tt.formular",
+        "tt.wortkarte"
+      ],
+      "lanes": {
+        "primary": "sd1",
+        "pruefungsfokus": [
+          {
+            "template": "sd1.l2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.l1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.sp2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.s1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "RC HF 9 Mediennutzung (A1-Lernziele 138, 139)",
+        "M A1 L16 (für + Akkusativ)",
+        "M A1 L17 (mit/ohne)"
+      ],
+      "deviation": {
+        "reason": "Kein Lehrwerk hat in A1.2 eine Lektion zu Veranstaltungen, Apps und Online-Tickets (Plan a1-2.md D7). Die Einheit deckt das Handlungsfeld 9 Mediennutzung des Rahmencurriculums (A1-Ziele 138 und 139) ab, das keine A1.2-Lektion trägt, und ist der Ort der Akkusativ-Präpositionen und der Wortbildung -ung/-bar (grammar-spine a1.2-u11). Dafür bekommt Menschen L17 „Pläne und Wünsche“ keine eigene Einheit."
+      },
+      "cast": [
+        "cast.priya",
+        "cast.olena",
+        "cast.bilal",
+        "cast.arjun"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "beruf",
+          "title": "Eine Teambesprechung in der Kalender-App annehmen oder ablehnen",
+          "hf": "9"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/a1-2.md §6 unit 11 (a1-2.json units[10])"
+      }
+    }
+  },
+  {
+    "id": "a1.2-u12",
+    "nr": 12,
+    "etappe": 4,
+    "title": {
+      "de": "Herzlichen Glückwunsch!",
+      "canDo": "Sie können gratulieren, auf Einladungen antworten und eine kleine Feier planen."
+    },
+    "spec": {
+      "situation": "Arjun hat Geburtstag, und Priya plant mit Elif und Olena eine kleine Feier. Die Gäste antworten auf die Einladung und sagen, was sie mitbringen; Emre gratuliert per Videoanruf aus İzmir.",
+      "handlungsfeld": [
+        "D"
+      ],
+      "canDos": [
+        "cd.a1.gratulieren",
+        "cd.a1.wuensche-danken",
+        "cd.a1.du-anbieten",
+        "cd.a1.feier-planen",
+        "cd.a1.einladung-antworten"
+      ],
+      "grammar": {
+        "new": [],
+        "chunk": [],
+        "review": [
+          "g.ordinalzahlen-datum",
+          "g.dativverben-pronomen",
+          "g.konj2-hoeflichkeit",
+          "g.denn"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Feste und Feiertage",
+          "target": 6,
+          "lemmas": [
+            "lx.feiertag",
+            "lx.weihnachten",
+            "lx.fest",
+            "lx.oktober",
+            "lx.november",
+            "lx.dezember"
+          ]
+        },
+        {
+          "title": "Glückwünsche und Geschenke",
+          "target": 6,
+          "lemmas": [
+            "lx.geschenk",
+            "lx.gratulieren",
+            "lx.herzlichen-glueckwunsch",
+            "lx.schenken",
+            "lx.alles-gute",
+            "lx.danken",
+            "lx.glueck"
+          ]
+        },
+        {
+          "title": "Eine Feier planen",
+          "target": 6,
+          "lemmas": [
+            "lx.feier",
+            "lx.feiern",
+            "lx.wuenschen",
+            "lx.duzen",
+            "lx.torte",
+            "lx.liste"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.einladung",
+        "tt.postkarte",
+        "tt.email-informell",
+        "tt.dialog",
+        "tt.telefonansage",
+        "tt.stichwortblatt",
+        "tt.wortkarte",
+        "tt.bildkarte",
+        "tt.kurzmitteilung"
+      ],
+      "lanes": {
+        "primary": "sd1",
+        "pruefungsfokus": [
+          {
+            "template": "sd1.sp1",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.sp2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.sp3",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.s2",
+            "length": "full",
+            "modeDefault": "pruefung",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A1 L24 Ich würde am liebsten jeden Tag feiern. (Feste, Ordinalzahlen, würde)",
+        "S2 L14 Feste (Datum, denn)"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.emre",
+        "cast.elif",
+        "cast.olena",
+        "cast.frau-lehmann"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daz",
+          "title": "Kurse an der Volkshochschule",
+          "hf": "4"
+        },
+        {
+          "kind": "daz",
+          "title": "Feste im Herkunftsland und in D-A-CH",
+          "hf": "D"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/a1-2.md §6 unit 12 (a1-2.json units[11])"
+      }
+    }
+  }
+]

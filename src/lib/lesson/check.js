@@ -37,8 +37,19 @@ export function levenshtein(a, b) {
   return prev[n];
 }
 
-const stripPunct = (s) =>
-  s.replace(/[“”„‟«»‹›]/g, '"').replace(/[‘’‚‛ʼ´`]/g, "'")
+/** An ellipsis, typographic (U+2026) or typed as three or more dots: a pause, never a word. */
+const ELLIPSIS_RE = /\u2026|\.{3,}/g;
+
+/**
+ * Punctuation folding for every check. An ellipsis becomes a space first
+ * (course-v2 review a2.2-u04 r3 F02, a plain bug fix: „…" survived this fold, so
+ * the key „Mir wird schlecht… und ein bisschen kalt." rejected every typed
+ * transcription — the pause is heard, the character is not; „...", typed, lost
+ * its dots here but glued the neighbouring words together).
+ */
+export const stripPunct = (s) =>
+  String(s ?? '').replace(ELLIPSIS_RE, ' ')
+    .replace(/[“”„‟«»‹›]/g, '"').replace(/[‘’‚‛ʼ´`]/g, "'")
     .replace(/[.,!?;:"']/g, '').replace(/\s+/g, ' ').trim();
 
 /**
@@ -47,15 +58,147 @@ const stripPunct = (s) =>
  * choice of the writer, not of the speaker, and a dash is unhearable. So for a
  * dictation — and only there — every dash form becomes a space, the separators
  * inside a run of digits are removed, and the run is compared as one number.
- * Typographic quotes are folded by stripPunct above, for every check.
+ * An ellipsis is a pause and becomes a space like a dash (course-v2 a2.2-u04 r3
+ * F02). Typographic quotes are folded by stripPunct above, for every check.
  */
 export function normalizeDictation(text) {
   return String(text ?? '')
+    .replace(ELLIPSIS_RE, ' ')
     .replace(/[\u2010-\u2015\u2212\uFF0D-]/g, ' ')
     .replace(/(\d)[\s./]+(?=\d)/g, '$1')
     .replace(/\s+/g, ' ')
     .trim();
 }
+
+/**
+ * The characters of `text` that no dictation fold removes and that are neither a
+ * letter, a digit nor whitespace — „(", „)", „/" between words, „%", „€", „&" …
+ * A dictation key containing one can never be typed from what is heard
+ * (course-v2 rule ITM-13, review a2.2-u04 r3 F02). De-duplicated, in order.
+ */
+export function unfoldedDictationChars(text) {
+  const rest = stripPunct(normalizeDictation(text)).replace(/[\p{L}\p{M}\p{N}\s]/gu, '');
+  return [...new Set(rest)];
+}
+
+// ── number words ↔ digits (dictation) ──────────────────────────────────────────
+//
+// A dictation hears „fünfzehn Euro"; „15 Euro" is the same transcription. The
+// course-v2 reviews found the class three times (a2.2-u04 r2 F07, b1.1-u04 r2
+// F05, a1.1-u04 r2 F01), and the live A1.1 course dictates „Der Tisch kostet
+// fünfzehn Euro." and „Die Pause ist um eins." as well. foldNumberWords turns
+// every cardinal (null … 9999) and ordinal word (erste … neunundneunzigste) into
+// digits, so both spellings compare equal. „ein/eine/einen" are articles and
+// never fold; only the counting form „eins" is a number.
+
+const UNITS = { null: 0, eins: 1, zwei: 2, drei: 3, vier: 4, fünf: 5, sechs: 6, sieben: 7, acht: 8, neun: 9 };
+const TEENS = { zehn: 10, elf: 11, zwölf: 12, dreizehn: 13, vierzehn: 14, fünfzehn: 15, sechzehn: 16, siebzehn: 17, achtzehn: 18, neunzehn: 19 };
+const TENS = { zwanzig: 20, dreißig: 30, vierzig: 40, fünfzig: 50, sechzig: 60, siebzig: 70, achtzig: 80, neunzig: 90 };
+/** The first element of „einundzwanzig", „einhundert", „eintausend". */
+const UNIT_PREFIX = { ein: 1, zwei: 2, drei: 3, vier: 4, fünf: 5, sechs: 6, sieben: 7, acht: 8, neun: 9 };
+const TENS_ALT = Object.keys(TENS).join('|');
+
+/** 1–99: „drei", „dreizehn", „dreiundzwanzig", „dreißig". */
+function below100(w) {
+  if (!w) return null;
+  if (w in TEENS) return TEENS[w];
+  if (w in TENS) return TENS[w];
+  if (w !== 'null' && w in UNITS) return UNITS[w];
+  const m = new RegExp(`^(ein|zwei|drei|vier|fünf|sechs|sieben|acht|neun)und(${TENS_ALT})$`).exec(w);
+  return m ? UNIT_PREFIX[m[1]] + TENS[m[2]] : null;
+}
+
+/** 1–999: „hundert", „zweihundertfünf", „hundertelf". */
+function below1000(w) {
+  const i = w.indexOf('hundert');
+  if (i < 0) return below100(w);
+  const head = w.slice(0, i);
+  const tail = w.slice(i + 'hundert'.length);
+  const h = head === '' ? 1 : UNIT_PREFIX[head];
+  if (!h) return null;
+  if (!tail) return h * 100;
+  const t = below100(tail);
+  return t === null ? null : h * 100 + t;
+}
+
+/** Spelling variants a learner types without German letters: ss → ß, ue/oe → ü/ö. */
+const germanLetters = (word) => String(word ?? '').toLowerCase()
+  .replace(/ss/g, 'ß').replace(/ue/g, 'ü').replace(/oe/g, 'ö');
+
+/** A cardinal word (0–9999) as a number, or null: „zweitausendvierundzwanzig" → 2024. */
+export function cardinalValue(word) {
+  const w = germanLetters(word);
+  if (!w) return null;
+  if (w === 'null') return 0;
+  const i = w.indexOf('tausend');
+  if (i < 0) return below1000(w);
+  const head = w.slice(0, i);
+  const tail = w.slice(i + 'tausend'.length);
+  const k = head === '' ? 1 : UNIT_PREFIX[head];
+  if (!k) return null;
+  if (!tail) return k * 1000;
+  const r = below1000(tail);
+  return r === null ? null : k * 1000 + r;
+}
+
+const ORDINAL_SPECIAL = { erst: 1, dritt: 3, siebt: 7, siebent: 7, acht: 8 };
+
+/** An ordinal word as a number, or null: „dritten" → 3, „zwanzigste" → 20. */
+export function ordinalValue(word) {
+  const m = /^(\p{L}+?)(e|en|er|es|em)$/u.exec(germanLetters(word));
+  if (!m) return null;
+  const stem = m[1];
+  if (stem in ORDINAL_SPECIAL) return ORDINAL_SPECIAL[stem];
+  if (stem.endsWith('st')) {
+    const v = cardinalValue(stem.slice(0, -2));
+    if (v !== null && v >= 20) return v;
+  }
+  if (stem.endsWith('t')) {
+    const v = cardinalValue(stem.slice(0, -1));
+    if (v !== null && v >= 2 && v < 20) return v;
+  }
+  return null;
+}
+
+/** Every cardinal and ordinal word of `text` as digits („am dritten Juni" → „am 3. Juni"). */
+export function foldNumberWords(text) {
+  return String(text ?? '').replace(/\p{L}+/gu, (word) => {
+    const c = cardinalValue(word);
+    if (c !== null) return String(c);
+    const o = ordinalValue(word);
+    return o !== null ? `${o}.` : word;
+  });
+}
+
+const UNIT_WORDS = ['null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun'];
+const TEEN_WORDS = Object.fromEntries(Object.entries(TEENS).map(([w, v]) => [v, w]));
+const TEN_WORDS = Object.fromEntries(Object.entries(TENS).map(([w, v]) => [v, w]));
+
+/** 1–99 spelled, with „ein" before „und" („einundzwanzig") and „eins" alone. */
+function spellBelow100(n) {
+  if (n < 10) return UNIT_WORDS[n];
+  if (n < 20) return TEEN_WORDS[n];
+  const t = Math.floor(n / 10) * 10;
+  const u = n % 10;
+  return u ? `${u === 1 ? 'ein' : UNIT_WORDS[u]}und${TEN_WORDS[t]}` : TEN_WORDS[t];
+}
+
+/** A number 0–9999 spelled as one German word („dreiundzwanzig", „hundertzwanzig"), else null. */
+export function spellCardinal(n) {
+  if (!Number.isInteger(n) || n < 0 || n > 9999) return null;
+  if (n === 0) return 'null';
+  const k = Math.floor(n / 1000);
+  const h = Math.floor((n % 1000) / 100);
+  const r = n % 100;
+  let out = '';
+  if (k) out += `${k === 1 ? '' : UNIT_WORDS[k]}tausend`;
+  if (h) out += `${h === 1 ? '' : UNIT_WORDS[h]}hundert`;
+  if (r) out += spellBelow100(r);
+  return out;
+}
+
+/** True when `text` holds a digit or a number word (ITM-07's test on a dictation). */
+export const hasNumber = (text) => /\d/.test(foldNumberWords(text));
 
 /**
  * Spelled-out-word normalisation (REVIEW #4 BLOCKER 1). "Buchstabieren Sie den
@@ -68,6 +211,9 @@ export function normalizeDictation(text) {
 export function normalizeSpelling(text) {
   return String(text ?? '')
     .replace(/[\u2010-\u2015\u2212\uFF0D-]/g, ' ')
+    // punctuation right after a single letter is a separator too: \u201EB, E, R \u2026" and a closing
+    // full stop (\u201EB-E-R-I-S-H-A.") used to keep the last letter apart (course-v2 a1.1-u02 r3)
+    .replace(/(?<=(^|\s)\p{L})[.,;:!?]+(?=\s|$)/gu, ' ')
     .replace(/\s+/g, ' ')
     .replace(/(?<=(^|\s)\p{L})\s+(?=\p{L}(\s|$))/gu, '')
     .trim();
@@ -132,8 +278,10 @@ function caseOnlyDiff(rawUser, rawAccepted) {
  * UI can say so.
  *
  * strict = true disables the typo allowance for single-token answers (pass
- * STRICT_TOPIC.test(item.topic)); dictation = true additionally folds dashes and
- * digit grouping (see normalizeDictation); spelling = true folds the separators
+ * STRICT_TOPIC.test(item.topic)); dictation = true additionally folds dashes,
+ * ellipses and digit grouping (see normalizeDictation) and, when that alone does
+ * not accept the answer, reads every number word as its digits (foldNumberWords:
+ * „fünfzehn Euro" = „15 Euro", course-v2 2026-09-27); spelling = true folds the separators
  * of a spelled-out word (see normalizeSpelling) and is turned on automatically
  * when an accepted answer looks like one (REVIEW #4 BLOCKER 1).
  *
@@ -144,14 +292,113 @@ function caseOnlyDiff(rawUser, rawAccepted) {
  * what the standard §3 says capitalisation is worth; it is NOT silently correct
  * any more. Spelled-out words have no meaningful case and are exempt.
  */
-export function checkAnswer(userInput, expected, {
+export function checkAnswer(userInput, expected, opts = {}) {
+  const first = compareAnswer(userInput, expected, opts, false);
+  // A dictation hears „fünfzehn" and „15" alike (see foldNumberWords). The
+  // folded comparison runs only when the plain one did not already accept the
+  // answer, and it is kept only when it is better, so a dictation can only gain
+  // from it: nothing that was CORRECT or TYPO before is graded worse. A plain
+  // bug fix for the live A1.1 dictations too („Der Tisch kostet fünfzehn Euro.").
+  if (!opts.dictation || first.result === RESULT.CORRECT) return first;
+  const folded = compareAnswer(userInput, expected, opts, true);
+  const rank = { [RESULT.CORRECT]: 2, [RESULT.TYPO]: 1, [RESULT.WRONG]: 0 };
+  return rank[folded.result] > rank[first.result] ? folded : first;
+}
+
+// ── opt-in rules (course v2) ────────────────────────────────────────────────────
+//
+// Three options the live course never passes — checkOptionsFor() does not set them, so the
+// live A1.1 grading is unchanged — and the course-v2 wrapper (src/lib/course-v2/checkItem.js)
+// does. Each closes a class the v2 unit reviews found, with a rule rather than accepted[] lists:
+//
+//   doublets   — Duden doublets are one word: gern/gerne, allein/alleine, tschüss/tschüs,
+//                okay/OK/O. K. An answer that differs from an accepted form only by such a twin
+//                is CORRECT (a dictation, where the audio decides: TYPO). (a1.1-u08 r2/r3 F02/F03)
+//   paradigm   — a one-letter „slip" that yields another form of the key's paradigm is a grammar
+//                error, never a typo: a person-ending swap (kommt/kommst, findet/findest,
+//                findst/findest, will/willt), a stem-vowel twin of a du/er/ihr form
+//                (schlaft/schläft, lest/liest, sprecht/spricht, fahrst/fährst) and a modal stem
+//                twin (willen/wollen, wollst/willst), and a determiner swap of the same slot
+//                (deine/meine, deinen/meinen: ITM-13). A genuine letter slip (kanst, nimst,
+//                wilst, konnen, mögn) keeps its typo retry. (a1.1-u03 r2/r3 F01, u08/u09/u10/u12 r3)
+//   politeCase — on a caseSensitive item only the polite forms decide by case (Sie, Ihnen, Ihr-):
+//                „… ist das Ihre tochter?" is a TYPO, „… ist das ihre Tochter?" WRONG.
+//                (a1.1-u03 r2/r3 F05)
+//   spacing    — an answer that differs from an accepted form only in its spaces („Wieviel" for
+//                „Wie viel", „Online Kurs" for „Onlinekurs") is a TYPO, never WRONG. (a1.1-u12 r3)
+
+/** The second spelling of a Duden doublet → the first, on a prepared (normalised, lower-case) string. */
+const DOUBLET_OF = Object.freeze({ gerne: 'gern', alleine: 'allein', tschues: 'tschuess', okay: 'ok' });
+
+/** Fold every Duden doublet of a PREPARED answer to one spelling („o k" → „ok", „gerne" → „gern"). */
+export function foldDoublets(prepared) {
+  return String(prepared ?? '').replace(/\bo k\b/g, 'ok').split(' ').map((w) => DOUBLET_OF[w] || w).join(' ');
+}
+
+/** Endings of a finite verb (and of the e-epenthesis) whose swap is a person/number change. */
+const PERSON_TAILS = new Set(['', 'e', 'st', 't', 'est', 'et', 'en']);
+/** Modal (and wissen) stem pairs, normalised: the singular stem ↔ the plural/infinitive stem. */
+const MODAL_STEMS = Object.freeze([['will', 'woll'], ['kann', 'koenn'], ['muss', 'muess'], ['darf', 'duerf'], ['mag', 'moeg'], ['weiss', 'wiss']]);
+const VOWELS = 'aeiou';
+
+/** One vowel edit between two normalised words: an umlaut marker (a/o/u + e), e → ie, or a vowel for a vowel. */
+function vowelAlternation(a, b) {
+  if (a.length === b.length) {
+    const diff = [...a].map((ch, i) => (ch === b[i] ? -1 : i)).filter((i) => i >= 0);
+    return diff.length === 1 && VOWELS.includes(a[diff[0]]) && VOWELS.includes(b[diff[0]]);
+  }
+  if (Math.abs(a.length - b.length) !== 1) return false;
+  const [short, long] = a.length < b.length ? [a, b] : [b, a];
+  let i = 0;
+  while (i < short.length && short[i] === long[i]) i += 1;
+  if (long.slice(0, i) + long.slice(i + 1) !== short) return false;
+  const added = long[i];
+  if (added === 'e' && i > 0 && 'aou'.includes(long[i - 1])) return true; // schlaft / schlaeft
+  return added === 'i' && long[i + 1] === 'e'; // lest / liest
+}
+
+/** A possessive or (in)definite article form: mein-, dein-, sein-, ihr-, unser-, euer-, ein-, kein- + ending. */
+const DETERMINER_RE = /^(mein|dein|sein|ihr|unser|unsr|euer|eur|ein|kein)(e|en|em|er|es)?$/;
+
+/** True when `u` is another form of the paradigm of `e` (both normalised words), not a letter slip. */
+export function paradigmTwin(u, e) {
+  if (!u || !e || u === e) return false;
+  // the m/d/s swap of a possessive („deine" for „meine") or another determiner of the same slot:
+  // the choice of determiner IS the grammar point (a1.1-u03 / u06, ITM-13 known wrong forms)
+  if (DETERMINER_RE.test(u) && DETERMINER_RE.test(e)) return true;
+  const cp = commonPrefix(u, e);
+  if (cp >= 2 && PERSON_TAILS.has(u.slice(cp)) && PERSON_TAILS.has(e.slice(cp))) return true;
+  if (MODAL_STEMS.some(([s, p]) => (u.startsWith(s) && e.startsWith(p)) || (u.startsWith(p) && e.startsWith(s)))) return true;
+  return /s?t$/.test(u) && /s?t$/.test(e) && vowelAlternation(u, e);
+}
+
+/** The one word two same-length sentences differ in is a paradigm twin (see paradigmTwin). */
+function paradigmDiffers(user, expected) {
+  const u = user.split(' '); const e = expected.split(' ');
+  if (u.length !== e.length) return false;
+  return u.some((w, i) => w !== e[i] && paradigmTwin(w, e[i]));
+}
+
+/** The polite forms whose capital letter IS the task (Sie, Ihnen, Ihr, Ihre …). */
+const POLITE_RE = /^(sie|ihnen|ihr|ihre|ihren|ihrem|ihrer|ihres)$/;
+
+/** A case-only miss that touches a polite form (raw strings, same letters). */
+function politeCaseMiss(rawUser, rawAccepted) {
+  const u = rawUser.split(' '); const a = rawAccepted.split(' ');
+  if (u.length !== a.length) return true;
+  return a.some((w, i) => w !== u[i] && POLITE_RE.test(w.toLowerCase()));
+}
+
+function compareAnswer(userInput, expected, {
   strict = false, dictation = false, caseSensitive = false, spelling = false,
-} = {}) {
+  doublets = false, paradigm = false, politeCase = false, spacing = false,
+} = {}, numbers = false) {
   const accepted = (Array.isArray(expected) ? expected : [expected]).filter(Boolean);
   const spellingMode = spelling || spellingApplies(accepted);
   const fold = (s) => {
     let t = String(s ?? '');
     if (dictation) t = normalizeDictation(t);
+    if (numbers) t = normalizeDictation(foldNumberWords(t));
     if (spellingMode) t = normalizeSpelling(t);
     return t;
   };
@@ -169,9 +416,21 @@ export function checkAnswer(userInput, expected, {
   for (const a of accepted) {
     if (prepare(a) !== user) continue;
     if (spellingMode || !caseOnlyDiff(rawUser, raw(a))) return { result: RESULT.CORRECT, expected: a };
+    // opt-in: on a caseSensitive item only a polite form decides by its capital letter
+    if (caseSensitive && politeCase && !politeCaseMiss(rawUser, raw(a))) return { result: RESULT.TYPO, expected: a, reason: 'case' };
     return caseSensitive
       ? { result: RESULT.WRONG, expected: a, reason: 'case' }
       : { result: RESULT.TYPO, expected: a, reason: 'case' };
+  }
+  if (doublets) {
+    const folded = foldDoublets(user);
+    for (const a of accepted) {
+      if (foldDoublets(prepare(a)) === folded) return { result: dictation ? RESULT.TYPO : RESULT.CORRECT, expected: a };
+    }
+  }
+  if (spacing) {
+    const joined = user.replace(/ /g, '');
+    for (const a of accepted) if (prepare(a).replace(/ /g, '') === joined) return { result: RESULT.TYPO, expected: a };
   }
   for (const a of accepted) {
     if (strict && strictApplies(a)) continue;
@@ -179,6 +438,7 @@ export function checkAnswer(userInput, expected, {
     const shortFunctionWord = norm.length <= 4 && !norm.includes(' ');
     if (shortFunctionWord) continue;
     if (norm.length >= 5 && levenshtein(user, norm) === 1 && !endingDiffers(user, norm)) {
+      if (paradigm && paradigmDiffers(user, norm)) continue;
       return { result: RESULT.TYPO, expected: a };
     }
   }

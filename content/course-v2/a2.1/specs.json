@@ -1,0 +1,1727 @@
+[
+  {
+    "id": "a2.1-u01",
+    "nr": 1,
+    "etappe": 1,
+    "title": {
+      "de": "Kontakte knüpfen: Smalltalk bei der Arbeit",
+      "canDo": "Sie können mit neuen Kolleginnen und Kollegen ins Gespräch kommen, von sich erzählen und Gründe nennen."
+    },
+    "spec": {
+      "situation": "Priya hat die Stelle am Empfang von Brandt Elektrotechnik bekommen. In der Mittagspause erzählt sie Jan Wolf und den neuen Kolleginnen und Kollegen, woher sie kommt und warum sie in Leipzig ist; am Abend gratuliert ihr die Nachbarin Amal und bietet ihr das Du an.",
+      "handlungsfeld": [
+        "D",
+        "A"
+      ],
+      "canDos": [
+        "cd.a2.ueber-mich-austauschen",
+        "cd.a2.kontakt-smalltalk",
+        "cd.a2.erlebnis-berichten",
+        "cd.a2.saetze-verbinden-weil",
+        "cd.a2.nachfragen-ausfuehrlich-antworten"
+      ],
+      "grammar": {
+        "new": [
+          "g.weil"
+        ],
+        "chunk": [],
+        "review": [
+          "g.denn",
+          "g.perfekt-haben",
+          "g.perfekt-sein",
+          "g.perfekt-trennbar-untrennbar",
+          "g.praeteritum-sein-haben"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Herkunft und Ankommen",
+          "target": 10,
+          "lemmas": [
+            "lx.heimat",
+            "lx.entscheidung",
+            "lx.grund",
+            "lx.vermissen",
+            "lx.verlassen",
+            "lx.heimatland",
+            "lx.herkunft",
+            "lx.visum",
+            "lx.chance",
+            "lx.selbst",
+            "lx.elektrotechnik"
+          ]
+        },
+        {
+          "title": "Erste Eindrücke",
+          "target": 9,
+          "lemmas": [
+            "lx.eindruck",
+            "lx.gegend",
+            "lx.alltag",
+            "lx.neugierig",
+            "lx.zufrieden",
+            "lx.fremd",
+            "lx.umgebung",
+            "lx.kultur",
+            "lx.gewohnheit",
+            "lx.besonders",
+            "lx.erleben",
+            "lx.gespraech",
+            "lx.gerade"
+          ]
+        },
+        {
+          "title": "In der Mittagspause",
+          "target": 9,
+          "lemmas": [
+            "lx.mittagspause",
+            "lx.kantine",
+            "lx.mahlzeit",
+            "lx.smalltalk",
+            "lx.sich-unterhalten",
+            "lx.siezen",
+            "lx.anbieten",
+            "lx.tipp"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.dialog",
+        "tt.kurzdialog",
+        "tt.email-informell",
+        "tt.sms",
+        "tt.wortkarte"
+      ],
+      "lanes": {
+        "primary": "ga2",
+        "pruefungsfokus": [
+          {
+            "template": "ga2.l3",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.h3",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.s1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "ga2.sp1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A2 L1",
+        "M A2 L8",
+        "S3 L1",
+        "N A2 K1"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.jan-wolf",
+        "cast.frau-otto",
+        "cast.herr-brandt",
+        "cast.amal",
+        "cast.arjun"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "beruf",
+          "title": "Sich dem neuen Team per E-Mail vorstellen",
+          "hf": "2"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/a2-1.md E1"
+      }
+    }
+  },
+  {
+    "id": "a2.1-u02",
+    "nr": 2,
+    "etappe": 1,
+    "title": {
+      "de": "Eine Wohnung finden und einrichten",
+      "canDo": "Sie können Wohnungsanzeigen verstehen, eine Besichtigung vereinbaren und sagen, wohin die Möbel kommen."
+    },
+    "spec": {
+      "situation": "Emre zieht zu Elif nach Leipzig. Die beiden lesen Wohnungsanzeigen, vereinbaren mit der Vermieterin Frau Engel eine Besichtigung und schreiben ihr danach. Beim Einzug helfen Priya und Arjun: Wohin kommt das Regal, und wo steht der Schrank?",
+      "handlungsfeld": [
+        "12"
+      ],
+      "canDos": [
+        "cd.a2.moebel-platzieren",
+        "cd.a2.wohnsituation-beschreiben",
+        "cd.a2.wohnungsanzeigen-verstehen",
+        "cd.a2.besichtigung-vereinbaren",
+        "cd.a2.mail-an-vermieterin"
+      ],
+      "grammar": {
+        "new": [
+          "g.wechselpraep",
+          "g.positionsverben"
+        ],
+        "chunk": [],
+        "review": [
+          "g.praep-dativ",
+          "g.temporal-praepositionen"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Wohnungssuche und Anzeigen",
+          "target": 10,
+          "lemmas": [
+            "lx.lage",
+            "lx.besichtigung",
+            "lx.nebenkosten",
+            "lx.kaution",
+            "lx.quadratmeter",
+            "lx.kaltmiete",
+            "lx.warmmiete",
+            "lx.moebliert",
+            "lx.altbau",
+            "lx.wohngemeinschaft",
+            "lx.interesse"
+          ]
+        },
+        {
+          "title": "Möbel und Zimmer",
+          "target": 9,
+          "lemmas": [
+            "lx.regal",
+            "lx.kommode",
+            "lx.teppich",
+            "lx.wand",
+            "lx.flur",
+            "lx.einbaukueche",
+            "lx.spiegel",
+            "lx.pflanze",
+            "lx.vorhang",
+            "lx.modern",
+            "lx.moebelstueck"
+          ]
+        },
+        {
+          "title": "Einzug und Umzug",
+          "target": 9,
+          "lemmas": [
+            "lx.stellen",
+            "lx.legen",
+            "lx.haengen",
+            "lx.einziehen",
+            "lx.umzug",
+            "lx.ausziehen",
+            "lx.einrichten",
+            "lx.aufbauen",
+            "lx.karton",
+            "lx.einzug",
+            "lx.besprechen"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.kleinanzeige",
+        "tt.internetanzeige",
+        "tt.telefonat",
+        "tt.kurzansage",
+        "tt.dialog",
+        "tt.email-halbformell",
+        "tt.planungsblatt"
+      ],
+      "lanes": {
+        "primary": "ga2",
+        "pruefungsfokus": [
+          {
+            "template": "ga2.l4",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.h1",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.s2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "ga2.sp3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A2 L2",
+        "S3 L2",
+        "N A2 K10"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.emre",
+        "cast.elif",
+        "cast.frau-engel",
+        "cast.priya",
+        "cast.arjun"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daz",
+          "title": "Die Wohnungsgeberbestätigung für die Anmeldung",
+          "hf": "1"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/a2-1.md E2"
+      }
+    }
+  },
+  {
+    "id": "a2.1-u03",
+    "nr": 3,
+    "etappe": 1,
+    "title": {
+      "de": "Immer online? Handy, Internet, Nachrichten",
+      "canDo": "Sie können Meldungen am Handy verstehen, kurze Berichte mit Zahlen lesen und sagen, wie Sie Medien nutzen."
+    },
+    "spec": {
+      "situation": "Priyas Handy zeigt eine Fehlermeldung, und Anna kann sie nicht erreichen. Priya löst das Problem, schreibt Anna eine kurze Nachricht, liest einen Artikel über Handynutzung und spricht mit Arjun darüber, wie viel Zeit sie jeden Tag online sind.",
+      "handlungsfeld": [
+        "9"
+      ],
+      "canDos": [
+        "cd.a2.fehlermeldungen-verstehen",
+        "cd.a2.kurzmeldung-mit-zahlen",
+        "cd.a2.gefallen-begruenden",
+        "cd.a2.nachricht-handyproblem",
+        "cd.a2.radiointerview-alltag"
+      ],
+      "grammar": {
+        "new": [
+          "g.dass",
+          "g.dat-akk-objekte"
+        ],
+        "chunk": [],
+        "review": [
+          "g.weil",
+          "g.dativverben-pronomen"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Handy und Gerät",
+          "target": 10,
+          "lemmas": [
+            "lx.smartphone",
+            "lx.akku",
+            "lx.speicher",
+            "lx.einstellung",
+            "lx.kabel",
+            "lx.aufladen",
+            "lx.einschalten",
+            "lx.ausschalten",
+            "lx.taste",
+            "lx.erreichen",
+            "lx.loesen",
+            "lx.produkt"
+          ]
+        },
+        {
+          "title": "Internet und Dateien",
+          "target": 9,
+          "lemmas": [
+            "lx.netz",
+            "lx.datei",
+            "lx.meldung",
+            "lx.speichern",
+            "lx.loeschen",
+            "lx.update",
+            "lx.internetseite",
+            "lx.anhang"
+          ]
+        },
+        {
+          "title": "Soziale Medien und Nachrichten",
+          "target": 9,
+          "lemmas": [
+            "lx.nutzer",
+            "lx.hochladen",
+            "lx.teilen",
+            "lx.posten",
+            "lx.kommentar",
+            "lx.profil",
+            "lx.privat",
+            "lx.oeffentlich",
+            "lx.zeitung",
+            "lx.radio"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.schild",
+        "tt.zeitungsartikel",
+        "tt.radiointerview",
+        "tt.dialog",
+        "tt.sms",
+        "tt.aufgabenkarte"
+      ],
+      "lanes": {
+        "primary": "ga2",
+        "pruefungsfokus": [
+          {
+            "template": "ga2.l1",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.h4",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.s1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "ga2.sp2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "N A2 K3",
+        "M A2 L10",
+        "S3 L6",
+        "M A2 L15"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.anna",
+        "cast.arjun",
+        "cast.ensemble-a2-2",
+        "cast.ensemble-a2-4"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a2-1.md E3"
+      }
+    }
+  },
+  {
+    "id": "a2.1-u04",
+    "nr": 4,
+    "etappe": 2,
+    "title": {
+      "de": "Einkaufen: fragen, vergleichen, bestellen",
+      "canDo": "Sie können nach Produkten fragen, Angebote vergleichen und bei Problemen mit einer Bestellung schreiben."
+    },
+    "spec": {
+      "situation": "Priya und Arjun brauchen eine neue Kaffeemaschine. Priya sucht im Kaufhaus die richtige Abteilung, fragt nach Modellen und Garantie, vergleicht zwei Angebote und bestellt online. Dann kommt das falsche Gerät, und sie schreibt dem Kundenservice.",
+      "handlungsfeld": [
+        "7"
+      ],
+      "canDos": [
+        "cd.a2.produktinfos-erfragen",
+        "cd.a2.alltagsdinge-bewerten",
+        "cd.a2.wegweiser-nutzen",
+        "cd.a2.alltagstexte-durchsuchen",
+        "cd.a2.online-bestellung-klaeren"
+      ],
+      "grammar": {
+        "new": [
+          "g.adj-dekl-unbestimmt",
+          "g.indefinitpronomen"
+        ],
+        "chunk": [],
+        "review": [
+          "g.komparation",
+          "g.kein",
+          "g.welch-dies"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Geräte und Produkte",
+          "target": 10,
+          "lemmas": [
+            "lx.vorteil",
+            "lx.marke",
+            "lx.modell",
+            "lx.qualitaet",
+            "lx.praktisch",
+            "lx.nuetzlich",
+            "lx.foehn",
+            "lx.kaffeemaschine",
+            "lx.mikrowelle",
+            "lx.wasserkocher"
+          ]
+        },
+        {
+          "title": "Im Kaufhaus",
+          "target": 9,
+          "lemmas": [
+            "lx.abteilung",
+            "lx.stockwerk",
+            "lx.beratung",
+            "lx.guenstig",
+            "lx.vergleichen",
+            "lx.rolltreppe",
+            "lx.sonderangebot",
+            "lx.wegweiser",
+            "lx.vorraetig"
+          ]
+        },
+        {
+          "title": "Online bestellen und liefern",
+          "target": 9,
+          "lemmas": [
+            "lx.lieferung",
+            "lx.ruecksendung",
+            "lx.zurueckschicken",
+            "lx.versand",
+            "lx.kundenkonto",
+            "lx.bewertung",
+            "lx.artikel",
+            "lx.zahlung",
+            "lx.lieferzeit"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.informationstafel",
+        "tt.prospekt",
+        "tt.internetanzeige",
+        "tt.dialog",
+        "tt.telefonat",
+        "tt.email-halbformell",
+        "tt.wortkarte"
+      ],
+      "lanes": {
+        "primary": "ga2",
+        "pruefungsfokus": [
+          {
+            "template": "ga2.l2",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.h3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.s2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "ga2.sp1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A2 L4",
+        "S3 L3",
+        "N A2 K5–6",
+        "S4 L9"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.ensemble-a2-1",
+        "cast.ensemble-a2-3",
+        "cast.ensemble-a2-4"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a2-1.md E4"
+      }
+    }
+  },
+  {
+    "id": "a2.1-u05",
+    "nr": 5,
+    "etappe": 2,
+    "title": {
+      "de": "Essen gehen: reservieren, bestellen, bezahlen",
+      "canDo": "Sie können einen Tisch reservieren, im Restaurant bestellen und höflich reklamieren."
+    },
+    "spec": {
+      "situation": "Anna hat Geburtstag. Priya sucht ein passendes Restaurant, reserviert einen Tisch für sechs Personen und fragt nach vegetarischen Gerichten. Am Abend bestellen alle zusammen, aber auf der Rechnung steht ein Gericht zu viel.",
+      "handlungsfeld": [
+        "7",
+        "D"
+      ],
+      "canDos": [
+        "cd.a2.tisch-reservieren",
+        "cd.a2.im-restaurant-bestellen",
+        "cd.a2.im-restaurant-reklamieren",
+        "cd.a2.mail-an-restaurant",
+        "cd.a2.kurze-gespraeche-verstehen"
+      ],
+      "grammar": {
+        "new": [
+          "g.adj-dekl-bestimmt"
+        ],
+        "chunk": [],
+        "review": [
+          "g.konj2-hoeflichkeit",
+          "g.adj-dekl-unbestimmt",
+          "g.moechte"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Reservieren und bestellen",
+          "target": 10,
+          "lemmas": [
+            "lx.reservierung",
+            "lx.reservieren",
+            "lx.bedienung",
+            "lx.empfehlen",
+            "lx.allergie",
+            "lx.portion",
+            "lx.menue",
+            "lx.kneipe",
+            "lx.bestaetigen",
+            "lx.terrasse",
+            "lx.moeglich"
+          ]
+        },
+        {
+          "title": "Gerichte und Zutaten",
+          "target": 9,
+          "lemmas": [
+            "lx.vorspeise",
+            "lx.hauptgericht",
+            "lx.nachspeise",
+            "lx.gericht",
+            "lx.zutat",
+            "lx.vegetarisch",
+            "lx.scharf",
+            "lx.beilage",
+            "lx.gebraten",
+            "lx.speise",
+            "lx.typisch"
+          ]
+        },
+        {
+          "title": "Bezahlen und reklamieren",
+          "target": 9,
+          "lemmas": [
+            "lx.trinkgeld",
+            "lx.reklamieren",
+            "lx.quittung",
+            "lx.kartenzahlung",
+            "lx.service",
+            "lx.getrennt",
+            "lx.versehen",
+            "lx.berechnen",
+            "lx.wechselgeld"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.kleinanzeige",
+        "tt.webseite",
+        "tt.speisekarte",
+        "tt.telefonansage",
+        "tt.kurzansage",
+        "tt.dialog",
+        "tt.email-halbformell",
+        "tt.aufgabenkarte"
+      ],
+      "lanes": {
+        "primary": "ga2",
+        "pruefungsfokus": [
+          {
+            "template": "ga2.l4",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.h1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.s2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "ga2.sp2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A2 L10",
+        "M A2 L5",
+        "S3 L3",
+        "N A2 K5–6"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.anna",
+        "cast.felix",
+        "cast.arjun",
+        "cast.ensemble-a2-1",
+        "cast.ensemble-a2-3"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a2-1.md E5"
+      }
+    }
+  },
+  {
+    "id": "a2.1-u06",
+    "nr": 6,
+    "etappe": 2,
+    "title": {
+      "de": "Mit der Bahn unterwegs",
+      "canDo": "Sie können eine Zugreise buchen, Durchsagen verstehen und auf Änderungen reagieren."
+    },
+    "spec": {
+      "situation": "Priya fährt mit dem Zug zu ihrer Freundin nach München. Sie bucht die Fahrt am Schalter, prüft die Buchungsbestätigung und versteht die Durchsagen am Bahnhof. Der Anschluss fällt aus: Priya schreibt, wann sie jetzt ankommt, und plant mit Arjun die Rückfahrt.",
+      "handlungsfeld": [
+        "10"
+      ],
+      "canDos": [
+        "cd.a2.durchsage-anschluss-verstehen",
+        "cd.a2.zugreise-buchen",
+        "cd.a2.fahrplan-lesen",
+        "cd.a2.am-bahnhof-fragen",
+        "cd.a2.ankunft-mitteilen"
+      ],
+      "grammar": {
+        "new": [
+          "g.wenn",
+          "g.wortbildung-t-kunft"
+        ],
+        "chunk": [],
+        "review": [
+          "g.wortbildung-er-in",
+          "g.wortbildung-ung-bar",
+          "g.weil"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Fahrkarten und Verbindungen",
+          "target": 10,
+          "lemmas": [
+            "lx.verbindung",
+            "lx.direkt",
+            "lx.platzreservierung",
+            "lx.zuschlag",
+            "lx.strecke",
+            "lx.buchung",
+            "lx.buchungsbestaetigung",
+            "lx.hinfahrt",
+            "lx.rueckfahrt",
+            "lx.abkuerzung",
+            "lx.buchen",
+            "lx.verschieden"
+          ]
+        },
+        {
+          "title": "Am Bahnhof",
+          "target": 9,
+          "lemmas": [
+            "lx.bahnsteig",
+            "lx.auskunft",
+            "lx.gepaeckaufbewahrung",
+            "lx.reisende",
+            "lx.fundbuero",
+            "lx.wagen",
+            "lx.zugbegleiter",
+            "lx.schliessfach",
+            "lx.speisewagen"
+          ]
+        },
+        {
+          "title": "Verspätung und Anschluss",
+          "target": 9,
+          "lemmas": [
+            "lx.anschluss",
+            "lx.verpassen",
+            "lx.ausfallen",
+            "lx.voraussichtlich",
+            "lx.aenderung",
+            "lx.planmaessig",
+            "lx.ersatzverkehr",
+            "lx.ausfall",
+            "lx.weiterfahrt",
+            "lx.starten"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.fahrplan",
+        "tt.beleg",
+        "tt.informationstafel",
+        "tt.durchsage",
+        "tt.kurzansage",
+        "tt.dialog",
+        "tt.sms",
+        "tt.planungsblatt"
+      ],
+      "lanes": {
+        "primary": "ga2",
+        "pruefungsfokus": [
+          {
+            "template": "ga2.l2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.h1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.s1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "ga2.sp3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A2 L3",
+        "M A2 L12",
+        "S3 L4",
+        "N A2 K4"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.ensemble-a2-1",
+        "cast.ensemble-a2-2",
+        "cast.ensemble-a2-3"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a2-1.md E6"
+      }
+    }
+  },
+  {
+    "id": "a2.1-u07",
+    "nr": 7,
+    "etappe": 3,
+    "title": {
+      "de": "Im Verein: mitmachen und Termine abstimmen",
+      "canDo": "Sie können Vorschläge machen, auf Vorschläge reagieren und einen festen Termin pro Woche finden."
+    },
+    "spec": {
+      "situation": "Priya möchte in Leipzig Sport machen. Sie vergleicht das Programm der Volkshochschule mit den Angeboten eines Sportvereins, sagt Jan Wolf freundlich ab, der sie in seinen Chor einlädt, und findet mit Amal und Anna einen festen Termin für das Training.",
+      "handlungsfeld": [
+        "D"
+      ],
+      "canDos": [
+        "cd.a2.aktivitaet-vorschlagen",
+        "cd.a2.gespraech-wochentage-folgen",
+        "cd.a2.freizeit-absagen",
+        "cd.a2.vorschlag-ablehnen-schriftlich"
+      ],
+      "grammar": {
+        "new": [
+          "g.konj2-koennte",
+          "g.zeitangaben-akkusativ"
+        ],
+        "chunk": [
+          "g.zu-infinitiv"
+        ],
+        "review": [
+          "g.konj2-hoeflichkeit",
+          "g.temporal-praepositionen"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Verein und Mitgliedschaft",
+          "target": 10,
+          "lemmas": [
+            "lx.verein",
+            "lx.mitglied",
+            "lx.ermaessigung",
+            "lx.chor",
+            "lx.probe",
+            "lx.mitgliedschaft",
+            "lx.mitgliedsbeitrag",
+            "lx.mitmachen",
+            "lx.feuerwehr",
+            "lx.ehrenamtlich"
+          ]
+        },
+        {
+          "title": "Sport und Kurse",
+          "target": 9,
+          "lemmas": [
+            "lx.training",
+            "lx.mannschaft",
+            "lx.halle",
+            "lx.trainieren",
+            "lx.volkshochschule",
+            "lx.kursleiter",
+            "lx.turnier",
+            "lx.anfaenger",
+            "lx.ausprobieren",
+            "lx.gruppe",
+            "lx.trainer",
+            "lx.aktivitaet",
+            "lx.sich-bewegen",
+            "lx.gewinnen"
+          ]
+        },
+        {
+          "title": "Termine und Vorschläge",
+          "target": 9,
+          "lemmas": [
+            "lx.gegenvorschlag",
+            "lx.verabredung",
+            "lx.vorschlagen",
+            "lx.teilnehmen",
+            "lx.woechentlich",
+            "lx.abstimmen",
+            "lx.abwechselnd",
+            "lx.gemeinsam"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.programm",
+        "tt.informationstafel",
+        "tt.dialog",
+        "tt.sms",
+        "tt.planungsblatt",
+        "tt.terminkalender"
+      ],
+      "lanes": {
+        "primary": "ga2",
+        "pruefungsfokus": [
+          {
+            "template": "ga2.l2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.h2",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.s1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "ga2.sp3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A2 L7",
+        "M A2 L6",
+        "S3 L5",
+        "N A2 K5"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.jan-wolf",
+        "cast.amal",
+        "cast.anna",
+        "cast.ensemble-a2-1"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a2-1.md E7"
+      }
+    }
+  },
+  {
+    "id": "a2.1-u08",
+    "nr": 8,
+    "etappe": 3,
+    "title": {
+      "de": "Im Job: Telefon, Mailbox, Termine",
+      "canDo": "Sie können Nachrichten am Telefon verstehen, notieren und weitergeben."
+    },
+    "spec": {
+      "situation": "Priya ist allein am Empfang: Sie hört die Mailbox ab, gibt Nachrichten an Jan Wolf und Frau Otto weiter, nimmt einen Anruf für Herrn Brandt an und verschiebt einen Termin mit einer Kundin.",
+      "handlungsfeld": [
+        "2"
+      ],
+      "canDos": [
+        "cd.a2.mailbox-verstehen",
+        "cd.a2.rueckruf-weitergeben",
+        "cd.a2.arbeit-erzaehlen",
+        "cd.a2.termin-absagen-mail"
+      ],
+      "grammar": {
+        "new": [
+          "g.reflexiv-akk"
+        ],
+        "chunk": [],
+        "review": [
+          "g.wenn",
+          "g.perfekt-haben",
+          "g.akk-personalpronomen"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Telefon und Mailbox",
+          "target": 10,
+          "lemmas": [
+            "lx.anruf",
+            "lx.rueckruf",
+            "lx.mailbox",
+            "lx.sich-melden",
+            "lx.weiterleiten",
+            "lx.durchwahl",
+            "lx.hinterlassen",
+            "lx.telefonnotiz",
+            "lx.sich-verspaeten",
+            "lx.zurzeit",
+            "lx.notieren"
+          ]
+        },
+        {
+          "title": "Im Büro",
+          "target": 9,
+          "lemmas": [
+            "lx.besprechung",
+            "lx.auftrag",
+            "lx.fruehschicht",
+            "lx.spaetschicht",
+            "lx.ueberstunde",
+            "lx.buchhaltung",
+            "lx.konferenzraum",
+            "lx.techniker",
+            "lx.raum"
+          ]
+        },
+        {
+          "title": "Am Apparat",
+          "target": 9,
+          "lemmas": [
+            "lx.verbinden",
+            "lx.ausrichten",
+            "lx.sich-beeilen",
+            "lx.beschaeftigt",
+            "lx.apparat",
+            "lx.leitung",
+            "lx.sich-entschuldigen",
+            "lx.stau"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.mailbox",
+        "tt.kurzansage",
+        "tt.telefonnotiz",
+        "tt.dialog",
+        "tt.email-informell",
+        "tt.email-halbformell",
+        "tt.wortkarte"
+      ],
+      "lanes": {
+        "primary": "ga2",
+        "pruefungsfokus": [
+          {
+            "template": "ga2.l3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.h1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.s2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "ga2.sp1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A2 L9",
+        "M A2 L11",
+        "S3 L4",
+        "S3 L5",
+        "N A2 K6",
+        "N A2 K4"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.jan-wolf",
+        "cast.herr-brandt",
+        "cast.frau-otto",
+        "cast.monika-kowalski",
+        "cast.herr-seidel"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "beruf",
+          "title": "Den Dienstplan lesen und um einen Tausch bitten",
+          "hf": "2"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/a2-1.md E8"
+      }
+    }
+  },
+  {
+    "id": "a2.1-u09",
+    "nr": 9,
+    "etappe": 3,
+    "title": {
+      "de": "Gesund bleiben: beim Arzt und im Alltag",
+      "canDo": "Sie können beim Arzt über Beschwerden sprechen, eine Behandlung verstehen und anderen Tipps für die Gesundheit geben."
+    },
+    "spec": {
+      "situation": "Priya hat eine starke Erkältung und geht zu ihrer Hausärztin, Frau Doktor Sommer. Danach schreibt sie Herrn Brandt, wie lange sie nicht kommt. Zurück im Büro gibt sie Jan Wolf, der viel Stress hat, Tipps für einen gesünderen Alltag.",
+      "handlungsfeld": [
+        "8"
+      ],
+      "canDos": [
+        "cd.a2.beim-arzt-auskunft-geben",
+        "cd.a2.behandlung-verstehen",
+        "cd.a2.gesundheitstipps-geben",
+        "cd.a2.mail-an-chefin-krank",
+        "cd.a2.ratgeber-verstehen"
+      ],
+      "grammar": {
+        "new": [
+          "g.konj2-sollte",
+          "g.deshalb"
+        ],
+        "chunk": [],
+        "review": [
+          "g.weil",
+          "g.sollen",
+          "g.konj2-koennte"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Beschwerden",
+          "target": 10,
+          "lemmas": [
+            "lx.halsschmerzen",
+            "lx.grippe",
+            "lx.erschoepft",
+            "lx.stress",
+            "lx.uebelkeit",
+            "lx.schwindlig",
+            "lx.beschwerde",
+            "lx.hausarzt",
+            "lx.vorerkrankung",
+            "lx.blutdruck",
+            "lx.krankheit",
+            "lx.schlimm",
+            "lx.stark"
+          ]
+        },
+        {
+          "title": "Beim Arzt und in der Apotheke",
+          "target": 9,
+          "lemmas": [
+            "lx.behandlung",
+            "lx.nebenwirkung",
+            "lx.verschreiben",
+            "lx.krankenkasse",
+            "lx.hausmittel",
+            "lx.salbe",
+            "lx.facharzt",
+            "lx.untersuchen",
+            "lx.krankschreiben"
+          ]
+        },
+        {
+          "title": "Gesund leben",
+          "target": 9,
+          "lemmas": [
+            "lx.vorsorge",
+            "lx.bewegung",
+            "lx.ernaehrung",
+            "lx.regelmaessig",
+            "lx.sich-ausruhen",
+            "lx.schlaf",
+            "lx.fit",
+            "lx.abnehmen",
+            "lx.spaziergang",
+            "lx.taeglich",
+            "lx.zeitschrift"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.zeitungsartikel",
+        "tt.dialog",
+        "tt.kurzdialog",
+        "tt.broschuere",
+        "tt.email-halbformell",
+        "tt.aufgabenkarte"
+      ],
+      "lanes": {
+        "primary": "ga2",
+        "pruefungsfokus": [
+          {
+            "template": "ga2.l1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.h3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.s2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "ga2.sp2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A2 L8",
+        "M A2 L7",
+        "S3 L5",
+        "S3 L4"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.dr-sommer",
+        "cast.herr-brandt",
+        "cast.jan-wolf",
+        "cast.ensemble-a2-2"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daz",
+          "title": "Ein krankes Kind in der Kita abmelden",
+          "hf": "6"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/a2-1.md E9"
+      }
+    }
+  },
+  {
+    "id": "a2.1-u10",
+    "nr": 10,
+    "etappe": 4,
+    "title": {
+      "de": "Gute und schlechte Nachrichten: Gefühle zeigen",
+      "canDo": "Sie können Freude, Ärger und Mitgefühl zeigen, auch im Chat, und einer Freundin Hilfe anbieten."
+    },
+    "spec": {
+      "situation": "Im Chat und am Telefon erzählen Priyas Freunde Neuigkeiten: Anna und Felix heiraten im Sommer, Emre hat auf eine Bewerbung eine Absage bekommen, und Amal ärgert sich über den Lärm im Haus. Priya freut sich mit, tröstet, ärgert sich mit und plant mit Arjun einen Besuch bei Emre und Elif.",
+      "handlungsfeld": [
+        "B",
+        "D"
+      ],
+      "canDos": [
+        "cd.a2.freude-zeigen",
+        "cd.a2.aerger-ausdruecken",
+        "cd.a2.mitgefuehl-zeigen",
+        "cd.a2.online-reagieren",
+        "cd.a2.brief-gefuehle-hilfe"
+      ],
+      "grammar": {
+        "new": [
+          "g.verben-praeposition"
+        ],
+        "chunk": [],
+        "review": [
+          "g.reflexiv-akk",
+          "g.weil",
+          "g.dass"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Gefühle",
+          "target": 10,
+          "lemmas": [
+            "lx.gefuehl",
+            "lx.freude",
+            "lx.angst",
+            "lx.aerger",
+            "lx.sorge",
+            "lx.traurig",
+            "lx.wuetend",
+            "lx.enttaeuschung",
+            "lx.froh",
+            "lx.sauer"
+          ]
+        },
+        {
+          "title": "Freunde und Beziehungen",
+          "target": 9,
+          "lemmas": [
+            "lx.beziehung",
+            "lx.freundschaft",
+            "lx.stolz",
+            "lx.neuigkeit",
+            "lx.verliebt",
+            "lx.pech",
+            "lx.laune",
+            "lx.sich-streiten",
+            "lx.heiraten"
+          ]
+        },
+        {
+          "title": "Reagieren und trösten",
+          "target": 9,
+          "lemmas": [
+            "lx.nervoes",
+            "lx.sich-freuen",
+            "lx.sich-aergern",
+            "lx.troesten",
+            "lx.reagieren",
+            "lx.sich-interessieren",
+            "lx.weinen",
+            "lx.verstaendnis",
+            "lx.sich-aufregen",
+            "lx.versuchen"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.email-informell",
+        "tt.post",
+        "tt.sms",
+        "tt.telefonat",
+        "tt.umfrage",
+        "tt.planungsblatt"
+      ],
+      "lanes": {
+        "primary": "ga2",
+        "pruefungsfokus": [
+          {
+            "template": "ga2.l3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.s1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "ga2.sp3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "N A2 K4",
+        "S3 L5",
+        "M A2 L18"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.anna",
+        "cast.felix",
+        "cast.emre",
+        "cast.elif",
+        "cast.amal",
+        "cast.arjun",
+        "cast.ensemble-a2-3",
+        "cast.ensemble-a2-4"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a2-1.md E10"
+      }
+    }
+  },
+  {
+    "id": "a2.1-u11",
+    "nr": 11,
+    "etappe": 4,
+    "title": {
+      "de": "Schulzeit und Ausbildung: hier und dort",
+      "canDo": "Sie können von Ihrer Schulzeit und Ausbildung erzählen und Schulen in zwei Ländern vergleichen."
+    },
+    "spec": {
+      "situation": "Felix ist Grundschullehrer. Beim Abendessen erzählen Priya, Felix und Emre von ihrer Schulzeit: was sie mussten, durften und konnten. Priya vergleicht die Schule in Indien mit der Schule in Deutschland, und Emre hört ein Radiointerview mit einer Auszubildenden und meldet sich für einen Abendkurs an.",
+      "handlungsfeld": [
+        "4",
+        "A"
+      ],
+      "canDos": [
+        "cd.a2.ausbildung-beschreiben",
+        "cd.a2.vergangenes-aufschreiben",
+        "cd.a2.persoenliche-mail-verstehen",
+        "cd.a2.leben-hier-und-dort"
+      ],
+      "grammar": {
+        "new": [
+          "g.praeteritum-modalverben",
+          "g.praeteritum"
+        ],
+        "chunk": [],
+        "review": [
+          "g.praeteritum-sein-haben",
+          "g.komparation",
+          "g.konj2-koennte",
+          "g.konj2-sollte"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Schule und Fächer",
+          "target": 10,
+          "lemmas": [
+            "lx.grundschule",
+            "lx.gymnasium",
+            "lx.klasse",
+            "lx.fach",
+            "lx.note",
+            "lx.lieblingsfach",
+            "lx.stundenplan",
+            "lx.mathematik",
+            "lx.realschule",
+            "lx.schuluniform",
+            "lx.schulzeit"
+          ]
+        },
+        {
+          "title": "Abschlüsse und Ausbildung",
+          "target": 9,
+          "lemmas": [
+            "lx.berufsschule",
+            "lx.studium",
+            "lx.abschluss",
+            "lx.abitur",
+            "lx.zeugnis",
+            "lx.bestehen",
+            "lx.lehre",
+            "lx.auszubildende",
+            "lx.betrieb"
+          ]
+        },
+        {
+          "title": "Früher und heute",
+          "target": 9,
+          "lemmas": [
+            "lx.streng",
+            "lx.durchfallen",
+            "lx.freiwillig",
+            "lx.schulpflicht",
+            "lx.schulsystem",
+            "lx.abendkurs",
+            "lx.semester",
+            "lx.tafel",
+            "lx.schultuete",
+            "lx.anders",
+            "lx.interview"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.email-informell",
+        "tt.erzaehltext",
+        "tt.radiointerview",
+        "tt.dialog",
+        "tt.email-halbformell",
+        "tt.wortkarte"
+      ],
+      "lanes": {
+        "primary": "ga2",
+        "pruefungsfokus": [
+          {
+            "template": "ga2.l3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.h4",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.s2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "ga2.sp1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "S3 L6",
+        "N A2 K2",
+        "M A2 L20",
+        "M A2 L23"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.felix",
+        "cast.emre",
+        "cast.anna",
+        "cast.arjun",
+        "cast.ensemble-a2-2",
+        "cast.ensemble-a2-1"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daz",
+          "title": "Ein Elternbrief aus Kita und Schule",
+          "hf": "6"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/a2-1.md E11"
+      }
+    }
+  },
+  {
+    "id": "a2.1-u12",
+    "nr": 12,
+    "etappe": 4,
+    "title": {
+      "de": "Feste feiern, Geschenke machen",
+      "canDo": "Sie können auf eine Einladung antworten, ein Fest mit anderen vorbereiten, Geschenke besprechen und sich bedanken."
+    },
+    "spec": {
+      "situation": "Anna und Felix heiraten. Priya antwortet auf die Einladung, überlegt mit Amal, wem sie was schenken, bereitet mit Emre eine Überraschung vor und bedankt sich nach dem Fest. Am Montag danach liegt ein Brief von Herrn Brandt auf ihrem Schreibtisch.",
+      "handlungsfeld": [
+        "D"
+      ],
+      "canDos": [
+        "cd.a2.zur-feier-einladen",
+        "cd.a2.einladung-schriftlich-beantworten",
+        "cd.a2.geschenke-besprechen",
+        "cd.a2.zum-fest-absprechen",
+        "cd.a2.dank-oder-entschuldigung-schreiben"
+      ],
+      "grammar": {
+        "new": [
+          "g.dat-akk-stellung"
+        ],
+        "chunk": [],
+        "review": [
+          "g.dat-akk-objekte",
+          "g.adj-dekl-bestimmt",
+          "g.adj-dekl-unbestimmt",
+          "g.praeteritum",
+          "g.weil"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Hochzeit und Feste",
+          "target": 10,
+          "lemmas": [
+            "lx.hochzeit",
+            "lx.brautpaar",
+            "lx.jubilaeum",
+            "lx.rede",
+            "lx.trauung",
+            "lx.standesamt",
+            "lx.braut",
+            "lx.ring",
+            "lx.polterabend",
+            "lx.stimmung",
+            "lx.vorbereiten"
+          ]
+        },
+        {
+          "title": "Einladen, zusagen, absagen",
+          "target": 9,
+          "lemmas": [
+            "lx.zusage",
+            "lx.absage",
+            "lx.herzlich",
+            "lx.ueberraschung",
+            "lx.ueberraschen",
+            "lx.verhindert",
+            "lx.anlass",
+            "lx.festlich",
+            "lx.rueckmeldung"
+          ]
+        },
+        {
+          "title": "Geschenke und Glückwünsche",
+          "target": 9,
+          "lemmas": [
+            "lx.gutschein",
+            "lx.blumenstrauss",
+            "lx.verpacken",
+            "lx.anstossen",
+            "lx.sich-bedanken",
+            "lx.sekt",
+            "lx.kerze",
+            "lx.geschenkpapier",
+            "lx.dankbar",
+            "lx.ueberlegen",
+            "lx.kamera"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.einladung",
+        "tt.erzaehltext",
+        "tt.dialog",
+        "tt.sms",
+        "tt.postkarte",
+        "tt.planungsblatt"
+      ],
+      "lanes": {
+        "primary": "ga2",
+        "pruefungsfokus": [
+          {
+            "template": "ga2.h2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "ga2.s1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          },
+          {
+            "template": "ga2.sp3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "S3 L7",
+        "M A1 L24",
+        "M A2 L15",
+        "N A2 K9"
+      ],
+      "deviation": null,
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.anna",
+        "cast.felix",
+        "cast.emre",
+        "cast.elif",
+        "cast.amal",
+        "cast.herr-brandt"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a2-1.md E12"
+      }
+    }
+  }
+]

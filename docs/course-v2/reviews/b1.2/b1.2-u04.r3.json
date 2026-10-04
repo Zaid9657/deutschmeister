@@ -1,0 +1,160 @@
+{
+  "review": "b1.2-u04.r3",
+  "unitId": "b1.2-u04",
+  "file": "content/course-v2/b1.2/units/u04.json",
+  "round": 3,
+  "date": "2026-09-27",
+  "reviewers": [
+    { "id": "R1", "role": "Prüferin (lizenzierte telc-B1-Prüferin): exam fidelity, rubric application, task clarity" },
+    { "id": "R2", "role": "Kursleiterin DaF/DaZ, Niveau B1.2: naturalness, level, didactics, scene plausibility" }
+  ],
+  "method": "Both reviewers read every German string again. That covers start.folge (6 lines), the LS1 Rundschreiben (now 304 words), the LS2 Sitzung and the call (14 lines, 460 words), the 13 LS4 texts (SB2 letter with 172 words of body, 12 ads of 30–40 words), all input, structured, pool, reserve, cloze and check items, the LS3 rule table and end line, the micro-outputs, the Aussprache sources, the M3 task and model turns, the SA task (Frau Ottos 107-word mail with greeting and signature, the notes, the Leitpunkte, the 111-word model body), the redemittel, the story, the strategy cards, the facts and the Porträt. Every item was solved blind from promptDe plus options, tiles or the audio line and then compared with answer and accepted[]: 1 start gist, 10 input, 8 structured, 36 pool, 12 reserve, 5 cloze, 10 LV3, 10 SB2, 8 check items and 3 proof items. tb1.lv3, tb1.sb2, tb1.m3 and tb1.sa were checked against content/course-v2/registries/lanes/tb1.json. The grammar ceiling was checked against registries/grammar-spine.json (falls b1.1-u06, um-zu-damit b1.1-u08, indirekte-frage a2.2-u03, praep-genitiv b1.1-u12, zu-infinitiv b1.1-u03, passiv-praesens productive b1.2-u06, sodass b1.2-u05, relativsatz-wer-was b2.1-u07). The lexicon was checked against b1.2/lexicon.json (40 u04 entries, 17 productive = 0.425) and level-profiles.json (b1.2: newPerUnit 43–48 ±10 %, productive 0.45 ±5 points, minutes.pruefung 30, ruleCardMaxWords 80). The can-dos were checked against registries/cando/b1.json, the cast against casts/a2.json, casts/b1.json and series.json, the rule cards against b1.2/rule-cards.json, the plan against b1.2/specs.json and curriculum/b1-2.json, and the Porträt fact against a web search (last coal train on 7 October 1992, flooding 1993–2000: claimDe holds). Each of the 11 r2 findings was re-verified. Validator: node scripts/course-v2/validate.mjs content/course-v2/b1.2/units/u04.json returned OK: 39 rules — 33 pass, 0 fail, 1 warn, 5 skipped; 0 blocker, 0 advisory. The one WARN is LEX-02 with a ratchet of 40, and all 40 notes read „recurs in 0 later unit(s)“. No lemma now occurs fewer than twice in the unit's inputs. The later-unit half cannot be measured while u04 is the only b1.2 unit file, so it is not logged as a unit finding. GRM-04 now passes with no advisory (r2 F11 closed on the rule side). node scripts/course-v2/check.mjs on the unit returned 0 errors.",
+  "verdict": "Not exitable in round 3. The unit has moved a long way: 7 of the 11 r2 findings are fully fixed, two more are fixed on the unit side, and the validator is clean. The terrace plot now holds together (Frau Otto took the evening last week, asked about the terrace because the house was on Priya's list, and Herr Lehmann holds it until Monday, after Friday's Zwischenstand). The model mail relays Herrn Brandts request in the right register. l08's „das Einzige, was noch fehlt“ is true in its scene, tb1.sa is declared in the Prüfungsfokus and the chips, ls1-p06, ls1-p08 and the SB2 letter are repaired, every lemma occurs at least twice, and GRM-04 is silent. The exam layer is sound. LV3 has 10 situations, 12 ads and two x. SB2 has 10 gaps, 15 words and 5 left over. M3 and SA match tb1.json. Every key survived a blind solve, and no task copies a Modellsatz. Three MAJOR remain. (1) rc.brauchen-zu is unchanged for the third round (r1 F14, r2 F02), and the unit still shows it in LS1 and the Rückschau next to its own nicht/kein/nichts/nur teaching. This cannot be fixed inside the unit (sole-writer rule), so the orchestrator must route it to the rule-card owner before r4. (2) Three sentence-building items accept the rare split fronting „Zu bestellen brauche ich den Bus nicht.“ but reject the more natural whole-group fronting „Den Bus zu bestellen brauche ich nicht.“, which ls1-p06 accepts. (3) The proof item q02 („bestätigen bis ___“) rejects „Do.“, the normal abbreviation in a written note, although r2 asked for it. Six MINOR: the proof of nachricht-notieren links only the phone-number item and leaves q01/q02 orphaned; two lexical-recurrence insertions read unnaturally; Frau Otto asks whether the Seminarhaus called although LS2 had Priya write her a Gesprächsnotiz; LV3 06 depends on knowing that Dresden is in Sachsen; specs.json is still out of sync; LS4 still runs 35 min without an exam-time marker. Counts: 0 blocker, 3 major, 6 minor.",
+  "scores": {
+    "R1": { "D": 4, "N": 4, "H": 4, "A": 3, "P": 4, "K": 4, "E": 4, "total": 27 },
+    "R2": { "D": 3, "N": 4, "H": 4, "A": 3, "P": 4, "K": 4, "E": 4, "total": 26 },
+    "combined": { "D": 3, "N": 4, "H": 4, "A": 3, "P": 4, "K": 4, "E": 4, "total": 26 }
+  },
+  "total": 26,
+  "counts": { "blocker": 0, "major": 3, "minor": 6 },
+  "previousRound": [
+    { "id": "r2-F01", "status": "fixed", "note": "The circular (Monday) says Frau Otto has already volunteered for the evening; l11 adds „das hat sie mir schon letzte Woche angeboten“. Her mail says Brandt confirmed her task and that she asked „vor der Fortbildung … weil das Haus auf Ihrer Liste stand“. l14: „Ich halte sie bis nächsten Montag vorläufig für Ihre Firma frei. Wenn Sie sie nehmen, brauchen wir bis dahin die Teilnehmerzahl“, and the `say` line is in sync. The notes and the lp4 cue read Montag, and the model text gives „noch nichts buchen – Freitag Zwischenstand – bis Montag“ as one plan." },
+    { "id": "r2-F02", "status": "not fixed", "note": "rc.brauchen-zu is byte-unchanged in b1.2/rule-cards.json for the third round (r1 F14). See F01." },
+    { "id": "r2-F03", "status": "fixed", "note": "The evening is assigned before the Sitzung, so the bus really is the only open task after the Raumbuchung." },
+    { "id": "r2-F04", "status": "fixed", "note": "The model reads „Herr Brandt bittet Sie, bis Freitag zwei Vorschläge zu sammeln.“ and l11 reads „Oh, das Empfangstelefon klingelt. Gehen Sie bitte ans Telefon.“" },
+    { "id": "r2-F05", "status": "partly fixed", "note": "Unit side fixed: spec.lanes.pruefungsfokus and start.pruefungsfokusChips now carry tb1.sa, and LV3 sits in slot ls4. b1.2/specs.json still has tb1.lv3 in slot input, step b1.2-u04-ls1, and no tb1.sa. See F08." },
+    { "id": "r2-F06", "status": "not fixed", "note": "LS4 still holds 20 + 15 = 35 min in Prüfungsmodus against the 30-min .2 slot. SCHEMA's PruefungStep has no field to mark an exam-time session, so this is on the rail side. See F09." },
+    { "id": "r2-F07", "status": "fixed", "note": "ls1-p08 promptDe is now „Bilden Sie die W-Frage.“" },
+    { "id": "r2-F08", "status": "fixed", "note": "The SB2 letter reads „…, ⟦07⟧ wir die Kosten planen können.“ (key damit unchanged); ls1-p06 reads „Wir brauchen am Freitag nicht ins Büro zu kommen.“ with three orders." },
+    { "id": "r2-F09", "status": "fixed", "note": "„sich zu Wort melden“ now occurs in the circular and in l05, and every allocated lemma occurs at least twice in the inputs (LEX-02 notes are all later-unit recurrence). Two of the insertions read unnaturally: see F05." },
+    { "id": "r2-F10", "status": "partly fixed", "note": "The single gap was split into three notes items (q01 price, q02 deadline, q03 number), but check.proofs[1] references only q03, q01/q02 are orphaned, and q02 does not accept „Do.“ as r2 asked. See F03 and F04." },
+    { "id": "r2-F11", "status": "fixed", "note": "GRM-04 PASS with 0 advisory: det.zustandspassiv no longer fires on „im Preis enthalten“, and det.konjunktiv1 no longer fires on first-person indicatives." },
+    { "id": "r1-F14", "status": "not fixed", "note": "= r2-F02 / r3 F01." },
+    { "id": "r1-F21", "status": "partly fixed", "note": "= r2-F05 / r3 F08 (specs.json side only)." },
+    { "id": "r1-F24", "status": "partly fixed", "note": "= r2-F10 / r3 F03, F04." },
+    { "id": "r1-F26", "status": "fixed", "note": "= r2-F11." }
+  ],
+  "findings": [
+    {
+      "id": "F01",
+      "severity": "major",
+      "reviewer": "R2",
+      "unitId": "b1.2-u04",
+      "path": "content/course-v2/b1.2/rule-cards.json rc.brauchen-zu.de, .en (shown at steps[0].ruleCard and check.rueckschau[1]); vs steps[0].modelSentence, steps[0].structuredInput[2] (ls1-s03), steps[0].microOutput.promptDe, steps[1].input.lines[5] (ls2-l06), steps[2].ruleTable.rows[4], steps[2].endLine",
+      "quote": "Karte: „Ohne nicht oder nur benutzt man brauchen + zu nicht.“ / „Without nicht or nur, brauchen + zu is not used.“ · LS1-Mustersatz „Sie brauchen nichts selbst zu bezahlen.“ · ls1-s03 „Sie brauchen keinen Urlaub zu nehmen.“ · LS1-Mikro-Output „…, was niemand zu tun braucht.“ · LS3-Tabelle „nicht / kein / nichts / nur brauchen“ · LS3-Endzeile „… brauchen + zu mit nicht, kein, nichts oder nur benutzen.“",
+      "problem": "r1 F14 and r2 F02 are not fixed in the third round: rule-cards.json is byte-unchanged. Meanwhile the unit has moved further from the card. The LS3 table now also lists nichts, and the LS1 micro-output uses niemand. So the learner reads the card's absolute restriction in LS1 directly under a model sentence with nichts, then learns nicht / kein / nichts / nur in LS3, and meets the false rule again in the Rückschau. A rule-card simplification that has become false is a D error on a model surface (§9.4, §9.5). The unit author cannot close it, because rule-cards.json has another sole writer (§10.8). That is why it has survived three unit fix loops.",
+      "fix": "Rule-card owner, before round 4: replace the last sentence of de with „Das gilt auch mit kein, nichts oder niemand: Sie brauchen nichts zu bezahlen. Ohne Verneinung und ohne nur sagt man müssen.“ The card then has about 76 words, within ruleCardMaxWords 80; re-run GRM-05. en: „The same holds with kein, nichts and niemand. Without a negation or nur, use müssen.“ Add the table row [„kein / nichts / niemand … brauchen … zu“, „Sie brauchen nichts selbst zu bezahlen.“]. Orchestrator: assign this to the rule-card owner now rather than to the unit author. If the card is still unchanged at r4, treat it as a rail case under §9.4, because a 5th round cannot close a finding that sits outside the unit file.",
+      "scope": "class",
+      "proposedRule": "GRM-05 extension (as r2 F02): when a rule card states a licensing restriction (de „Ohne A oder B …“, en „Without A or B …“), every sentence that carries the card's spine point on a surface showing the card (the step's modelSentence and ruleTable rows, the check.rueckschau units) must contain one of the listed words. Fixture: rc.brauchen-zu × b1.2-u04 steps[0].modelSentence („nichts“)."
+    },
+    {
+      "id": "F02",
+      "severity": "major",
+      "reviewer": "R1",
+      "unitId": "b1.2-u04",
+      "path": "steps[0].pool.items[6] (ls1-p07).accepted; steps[0].reserve[1] (ls1-r02).accepted; steps[2].pool.items[7] (ls3-p08).accepted",
+      "quote": "ls1-p07 tiles „ich / brauche / den Bus / nicht / zu bestellen“, accepted incl. „Zu bestellen brauche ich den Bus nicht.“ — missing „Den Bus zu bestellen brauche ich nicht.“ · ls1-r02 tiles „du / brauchst / mich / nicht / abzuholen“, accepted incl. „Abzuholen brauchst du mich nicht.“ — missing „Mich abzuholen brauchst du nicht.“ · ls3-p08 tiles „Sie / brauchen / das Protokoll / nicht / auszudrucken“, accepted incl. „Auszudrucken brauchen Sie das Protokoll nicht.“ — missing „Das Protokoll auszudrucken brauchen Sie nicht.“ · ls1-p06 accepts „Ins Büro zu kommen brauchen wir am Freitag nicht.“",
+      "problem": "Each of these items accepts the rare split fronting, where the bare zu-infinitive is in the Vorfeld and the object is left behind („… aber selten“ in acceptedWhy). Each rejects the more natural fronting of the whole infinitive group with its object („Das zu erklären brauche ich wohl nicht.“ is an everyday pattern). A learner who has just been taught that the zu-infinitive can be fronted is more likely to build the group than the split form. The unit is also inconsistent with itself: ls1-p06 accepts whole-group fronting („Ins Büro zu kommen brauchen wir am Freitag nicht.“) only because the object sits inside the same tile there. A defensible answer that is rejected is MAJOR (§9.4). ls1-p07 and ls3-p08 are served in the pools, and ls1-r02 feeds requeue, Plateaus and the Einstufung.",
+      "fix": "Add „Den Bus zu bestellen brauche ich nicht.“ (ls1-p07), „Mich abzuholen brauchst du nicht.“ (ls1-r02) and „Das Protokoll auszudrucken brauchen Sie nicht.“ (ls3-p08) to accepted[]. For each, set acceptedWhy „grammatisch: der ganze Infinitiv mit zu steht im Vorfeld“ and reviewerConfirmed. The nur-items (c04, ls3-r03, ls1-p09) need no change, because there the group fronting would strand nur at the end („Das Formular auszufüllen brauchen Sie nur.“) and is not a natural sentence.",
+      "scope": "class",
+      "proposedRule": "ITM-09 / lib-validate/orders.mjs extension: when accepted[] contains an order with a zu-infinitive tile alone in the Vorfeld and an object tile in the Mittelfeld, the order with the object tile and the zu-infinitive tile fronted together („[Objekt] [zu-Infinitiv] V Subjekt nicht“) must also be accepted, unless the Mittelfeld keeps a focus particle (nur) that would be stranded. Fixtures: b1.2-u04 ls1-p07, ls1-r02, ls3-p08 (fail); ls1-p06 (pass); c04 (exempt, nur)."
+    },
+    {
+      "id": "F03",
+      "severity": "major",
+      "reviewer": "R1",
+      "unitId": "b1.2-u04",
+      "path": "check.proofItems[1] (b1.2-u04-q02).accepted",
+      "quote": "promptDe „Notiz für Emre – Elster-Reisen, Bus am 19.6.: bestätigen bis ___“ · audio „Bitte bestätigen Sie bis Donnerstag: 0341 47 11 30.“ · accepted [„Donnerstag“]",
+      "problem": "The item trains a written note, a genre that abbreviates. The prompt itself writes „19.6.“, and „Do.“ is the normal way to note a weekday. „Do.“ (and „Do“ without the point) is a correct answer, yet the item has no exact and no acceptedWhy for it, so the checker marks it WRONG. r2 F10 asked for „Donnerstag, Do. and bis Donnerstag“, and only the full form went in. q02 sits in the proof set of the unit's note-taking can-do, so a learner who takes the note well is marked down for it.",
+      "fix": "accepted: [„Donnerstag“, „Do.“, „Do“], with acceptedWhy „übliche Abkürzung für Donnerstag in einer Notiz“ and reviewerConfirmed. Keep the item free of exact, as now.",
+      "scope": "class",
+      "proposedRule": "ITM-07 extension: a notes / form_fill item whose answer is a weekday or month name must accept the standard German abbreviation (Mo., Di., Mi., Do., Fr., Sa., So.; Jan., Feb. …), with and without the point. Fixture: b1.2-u04-q02."
+    },
+    {
+      "id": "F04",
+      "severity": "minor",
+      "reviewer": "R1",
+      "unitId": "b1.2-u04",
+      "path": "check.proofs[1] (cd.b1.nachricht-notieren → item b1.2-u04-q03); check.proofItems[0] (q01), [1] (q02)",
+      "quote": "proofs[1] { canDo: „cd.b1.nachricht-notieren“, item: „b1.2-u04-q03“ } · q03 „… Rückruf unter ___“ → „0341 47 11 30“ · can-do: „Ich kann für eine Kollegin eine Notiz schreiben, …, sodass sie weiß, worum es geht und was zu tun ist.“ (mode mediation)",
+      "problem": "r2 F10 is only half fixed. The one-gap note was split into three notes items, but the proof still links one item, and now it is the phone number. A mediation can-do („… sodass sie weiß, worum es geht und was zu tun ist“) is therefore credited, also in Test-out, on transcribing seven digits. q01 (price) and q02 (deadline) are proof items that no proof references. SCHEMA §8 allows „one per receptive can-do“, and this can-do is not receptive. The can-do is actually performed in the LS2 micro-output (a Gesprächsnotiz for Frau Otto) and in LS6 lp4 (Herrn Lehmanns message relayed so that she knows what to do).",
+      "fix": "Prove it by the Aufgabe that performs it: proofs[1] → { canDo: „cd.b1.nachricht-notieren“, aufgabe: „schreiben“ } (ALL-02 allows two can-dos on one Aufgabe; lp4 is the mediation). Move the three notes items into the check: they are good listening practice but not a proof. For example, replace c05 (einstimmig MC) with q01 and set earlierDraw.count to 3 so that items + drawn = 12, or keep proofItems empty. If the item route must stay, the schema needs proofs[].items[] with all three required.",
+      "scope": "class",
+      "proposedRule": "ALL-02 extension: every check.proofItems entry must be referenced by a proof, and a can-do whose registry mode is productive-*, interaction-* or mediation may be proven by an item only if that item produces ≥ 2 content fields; otherwise it needs an Aufgabe. Fixture: b1.2-u04 (q01/q02 orphaned; mediation can-do on q03)."
+    },
+    {
+      "id": "F05",
+      "severity": "minor",
+      "reviewer": "R2",
+      "unitId": "b1.2-u04",
+      "path": "steps[1].input.lines[12] (ls2-l13), lines[13] (ls2-l14) and `say`; steps[0].input.text.de (Rundschreiben, paragraph 4)",
+      "quote": "l13 „Kann ich ihr etwas ausrichten? Ich schreibe ihr gern eine Gesprächsnotiz.“ · l14 „Ja, gern. Für Ihre Gesprächsnotiz: Die Terrasse ist …“ · Rundschreiben „Sie können sich auch ohne Sitzung zu Wort melden.“",
+      "problem": "These are the r2 F09 recurrence insertions, and two of them read like lexicon quotas. On the phone nobody names the genre of the note the other person will write, and certainly not the caller („Für Ihre Gesprächsnotiz:“). „sich ohne Sitzung zu Wort melden“ mixes the meeting sense of the phrase (ask for the floor, as in l05 „Gut, dass Sie sich zu Wort gemeldet haben“) with the public sense, and the collocation „ohne Sitzung“ does not fit either. The German is grammatical, so this is isolated unidiomatic phrasing on an input (D 3), not an error.",
+      "fix": "l13: „Kann ich ihr etwas ausrichten? Ich lege ihr eine Gesprächsnotiz auf den Tisch.“ l14: „Ja, gern. Bitte notieren Sie: Die Terrasse ist …“ Keep `say` in sync. Circular: „Wer nicht in der Sitzung ist, kann sich auch schriftlich zu Wort melden: Dafür brauchen Sie nur eine kurze Nachricht an Frau Nair zu schreiben.“ (one sentence replaces two, and the brauchen-zu sentence stays). Re-run LEX-02: Gesprächsnotiz must still occur ≥ 2× in the inputs. If l14 loses it, the LS6 notes (Gesprächsnotiz, Anruf Herr Lehmann) or LS2 l11 („… und legen Sie Frau Otto bitte eine Gesprächsnotiz hin“) can carry the second occurrence.",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F06",
+      "severity": "minor",
+      "reviewer": "R2",
+      "unitId": "b1.2-u04",
+      "path": "steps[5].task.situationDe (Frau Ottos Mail); vs steps[1].microOutput (LS2: „Schreiben Sie Frau Otto eine Gesprächsnotiz“)",
+      "quote": "Mail: „ich bin wieder zurück aus Dresden … Und noch etwas: Hat jemand vom Seminarhaus am See für mich angerufen?“ · LS2-Mikro-Output: „Schreiben Sie Frau Otto eine Gesprächsnotiz: Wer hat angerufen, warum, was soll sie tun?“",
+      "problem": "In LS2 the learner, as Priya, writes Frau Otto a Gesprächsnotiz about Herrn Lehmanns call. In LS6 Frau Otto is „wieder zurück“ and asks whether the Seminarhaus has called, as if no note existed. It is a small continuity break between two surfaces, and the learner writes both.",
+      "fix": "Let Frau Otto write before she is back at her desk: „ich bin wieder zurück aus Dresden, aber erst am Donnerstag wieder im Büro.“ The rest of the mail and lp4 stay unchanged. Alternatively: „Auf meinem Tisch liegt wohl eine Notiz vom Seminarhaus – ich bin aber noch nicht im Büro. Worum geht es?“",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F07",
+      "severity": "minor",
+      "reviewer": "R1",
+      "unitId": "b1.2-u04",
+      "path": "steps[3].blocks[0].items[5] (b1.2-u04-ls4-tb1-lv3-06); steps[3].texts[7] (ad g, t8)",
+      "quote": "Situation 06 „Ihr Team möchte einen Tagesausflug nach Dresden machen, aber niemand möchte selbst Auto fahren.“ · Anzeige g „… Ziele in ganz Sachsen. Preis pro Tag: ab 450 Euro.“ · key g",
+      "problem": "The match needs world knowledge that the German text does not supply: that Dresden lies in Sachsen. A candidate who does not know it has grounds to choose x, since no ad names Dresden. telc LV3 situations are built so that the condition can be found in the ad text (§9.4 A: „the answer follows from the German prompt“). The key is right and the item works by elimination, so this is MINOR.",
+      "fix": "Situation 06: „Ihr Team möchte einen Tagesausflug in eine andere Stadt in Sachsen machen, aber niemand möchte selbst Auto fahren.“ The ad stays as it is, and the key stays g.",
+      "scope": "instance",
+      "proposedRule": null
+    },
+    {
+      "id": "F08",
+      "severity": "minor",
+      "reviewer": "R1",
+      "unitId": "b1.2-u04",
+      "path": "content/course-v2/b1.2/specs.json (b1.2-u04 spec.lanes.pruefungsfokus) vs unit spec.lanes.pruefungsfokus",
+      "quote": "specs.json: tb1.lv3 { slot: „input“, step: „b1.2-u04-ls1“ } · tb1.sb2@ls4 · tb1.m3@sprechen (no tb1.sa) — unit: tb1.lv3@ls4 · tb1.sb2@ls4 · tb1.m3@sprechen · tb1.sa@schreiben",
+      "problem": "The unit half of r2 F05 is fixed. The level plan still disagrees with the unit about where LV3 runs and whether the unit trains tb1.sa. The level-scope COV rules (COV-1/4/5) and the syllabus page read one or the other, so the unit-level coverage of tb1.sa is undercounted and LV3 is placed in the wrong slot.",
+      "fix": "specs.json owner: set u04's pruefungsfokus to the unit's four entries (tb1.lv3 slot ls4 without step, tb1.sb2 ls4, tb1.m3 sprechen, tb1.sa schreiben), then run node scripts/course-v2/validate.mjs b1.2 for the level-scope rules.",
+      "scope": "class",
+      "proposedRule": "Spec-sync rule (as r2 F05): a unit's spec.lanes.pruefungsfokus must equal its specs.json entry, as LEX-05 already requires for lexiconBlocks. Fixture: b1.2-u04."
+    },
+    {
+      "id": "F09",
+      "severity": "minor",
+      "reviewer": "R1",
+      "unitId": "b1.2-u04",
+      "path": "steps[3] (blocks b1.2-u04-ls4-tb1-lv3, b1.2-u04-ls4-tb1-sb2)",
+      "quote": "tb1.lv3 minutes 20 + tb1.sb2 minutes 15 = 35 min in Prüfungsmodus, plus two strategy cards · level-profiles b1.2 minutes.pruefung: 30",
+      "problem": "r2 F06 is unchanged. LS4 runs 35 min of exam time against the 30-min .2 slot. §3.1 lets a .2 exam session run the lane's real time only when it is „marked as such“, but SCHEMA's PruefungStep has no field for that mark, so the unit cannot comply. Resume is at item level (§3.1), so the learner loses nothing. The finding stays open because the plan and the unit disagree on LS4's length (E: one LS runs long).",
+      "fix": "Rail side, not unit side: add PruefungStep.examTime: true (or derive it from two full-length blocks) and let the player save after every block. The E1 timing check then allows the sum of the blocks' template minutes. No unit edit is needed once the field exists, apart from setting it.",
+      "scope": "class",
+      "proposedRule": "TXT-03/E timing check (as r2 F06): warn when the sum of block minutes in a PruefungStep exceeds minutes.pruefung, unless the step is marked examTime with a save point after each block. Fixture: b1.2-u04 LS4 (35 > 30)."
+    }
+  ],
+  "passed": [
+    "tb1.lv3 (LS4): 10 situations, 12 ads a–l of 30–40 words (band 10–65, ≈ 399 words in all against ≈ 390 in the Übungstest), noMatch x twice (05, 09), instruction = the registry paraphrase, Prüfungsmodus, unscaffolded. Blind solve: c, e, i, h, x, g, j, a, x, k. Every key is unique and every ad is used once. The unused ads b, d, f and l are genuine near-misses (children under 12, must swim, 4–6 per room, weekends only). The only soft spot is the Dresden/Sachsen inference in 06 (F07).",
+    "tb1.sb2 (LS4): a formal inquiry to the Seminarhaus (172 words of body, band 130–180), 10 gaps, 15 words a–o, 5 left over (denn, keine, trotzdem, um, wer). Blind solve: dass, was, dafür, zu, ob, kein, damit, falls, wo, würde. Each is unique against the bank, and trotzdem at ⟦03⟧ and dass at ⟦05⟧/⟦07⟧ were checked and rejected as non-fitting. The letter now fits the plot: the team has chosen the house, and the offer is for planning the costs.",
+    "tb1.m3 (LS5): plan-together, the same Planungsblatt for both with „…“, 9 min preparation plus a 3-min planning round, 330–390 s, rubric tb1-m3, du with Jan, support examiner (= the B1 design in §4.4). The situation fixes what the Sitzung decided, and the model plans only the open points (rain, meeting point, schedule, drinks, invitation) and ends with who does what by when. cd.b1.projekt-planen-einwaende is performed and proven by the Aufgabe.",
+    "tb1.sa (LS6): halbformell/Sie. „Sie sind Priya Nair“; the four Leitpunkte map onto Frau Ottos four questions; rubric tb1-sa, examKey telc_b1. The model body has 111 words, covers all four points, passes on Herrn Brandts request in the right register and resolves Friday against Monday. cd.b1.besprechung-ergebnisse-weitergeben is performed and proven by the Aufgabe.",
+    "Keys: every item was solved blind (1 start gist, 10 input, 8 structured, 36 pool, 12 reserve, 5 cloze, 10 LV3, 10 SB2, 8 check, 3 proof). No key is wrong. The accepted[] gaps are F02 and F03. The r1/r2 orders (c04, ls3-r03, ls3-p09, ls2-r03, ls2-p09, ls1-r02, ls3-p08, ls1-p06) are all accepted with acceptedWhy.",
+    "Originality: no text or item copies a telc Übungstest or Modellsatz. All texts are original, in the official format, and set in the unit's story.",
+    "Register: every instruction uses Sie. Brandt uses Sie with Priya and Emre (Herr Yıldız); Jan–Priya and Jan–Emre use du, as casts/a2.json fixes. The LS1 micro-output (to Jan) is du; the LS2 micro-output and LS6 (to Frau Otto) are Sie; Herr Lehmann and Frau Wendt use Sie.",
+    "Grammar ceiling: g.relativsatz-was-wo and g.brauchen-zu are productive only from this unit. falls (b1.1-u06), damit (b1.1-u08), ob (a2.2-u03), the zu-infinitive after bitten (b1.1-u03) and während + Genitiv (b1.1-u12) are licensed. There is no passive on any learner surface (passive appears only in explanations, and in claimDe, which is not shown), no sodass (b1.2-u05) and no free relative clause (b2.1-u07).",
+    "Lexicon: 40 u04 entries (within ±10 % of 43–48), 17 productive = 0.425 (within ±5 points of 0.45). Every entry occurs at least twice in the unit's inputs. LEX-01, LEX-03, LEX-04, LEX-05 and LEX-07 pass.",
+    "Facts: the Cospudener See claim (coal to 1992, flooding 1993–2000 with ground and mine water, about 4.36 km², almost 200 berths at the east-shore harbour) is supported by the cited sources, and independently by the LMBV/Wikipedia record of the last coal train on 7 October 1992. The Porträt says only what claimDe carries.",
+    "Cast and story: Priya „seit gut zwei Jahren“ in Leipzig and at the Empfang; Jan in the Techniker-Disposition chairs because Frau Otto (Buchhaltung, normally chairs) is away; Emre, the Azubi, takes the minutes and the bus. The Rahmenprogramm, terrace and deadline timeline is consistent from the circular to the model mail. The voices within each scene are distinct (Lehmann Christoph, Wendt Louisa). The cliffhanger (F. Böhm, bicycles) leads into u05."
+  ]
+}

@@ -1,0 +1,518 @@
+{
+  "$schema": "course-v2/rulecards@1",
+  "level": "b1.2",
+  "cards": [
+    {
+      "id": "rc.kausaladverbien-naemlich",
+      "spine": "g.kausaladverbien-naemlich",
+      "depth": 1,
+      "modelSentence": "Ich habe die Nachricht falsch verstanden, deswegen war ich nervös.",
+      "de": "Mit darum, deswegen und daher nennen Sie eine Folge. Zuerst kommt der Grund, dann die Folge. Das Wort steht auf Position 1 oder nach dem Verb, das Verb bleibt auf Position 2: Deswegen war ich nervös. / Ich war deswegen nervös. Mit nämlich nennen Sie den Grund danach. Nämlich steht nie auf Position 1, sondern nach dem Verb: Ich komme später. Ich muss nämlich noch arbeiten.",
+      "en": "darum, deswegen and daher introduce a consequence: the reason comes first, the result second. They stand in position 1 (the verb stays in position 2) or after the verb. nämlich gives the reason afterwards; it never stands in position 1 but after the verb.",
+      "table": [
+        [
+          "Grund → Folge",
+          "Ich hatte keine Zeit. Darum / Deswegen / Daher habe ich nicht angerufen."
+        ],
+        [
+          "Folge → Grund",
+          "Ich habe nicht angerufen. Ich hatte nämlich keine Zeit."
+        ],
+        [
+          "zum Vergleich",
+          "…, weil ich keine Zeit hatte. / …, denn ich hatte keine Zeit."
+        ]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.partizip-adjektiv",
+      "spine": "g.partizip-adjektiv",
+      "depth": 1,
+      "modelSentence": "Die reduzierte Waschmaschine ist ein lohnendes Angebot.",
+      "de": "Partizipien können vor einem Nomen stehen wie ein Adjektiv. Dann bekommen sie die normalen Adjektivendungen. Partizip I ist der Infinitiv mit -d: steigend, lohnend. Es beschreibt, was gerade passiert: steigende Preise (die Preise steigen). Partizip II beschreibt, was schon passiert ist oder was jemand gemacht hat: die reduzierte Ware (jemand hat die Ware reduziert), ein gebrauchtes Gerät.",
+      "en": "Participles can stand before a noun like an adjective and then take the usual adjective endings. Participle I (infinitive + -d) describes something happening now: steigende Preise = prices that are rising. Participle II describes something already done: die reduzierte Ware = goods someone has reduced.",
+      "table": [
+        [
+          "Partizip I",
+          "steigen → steigend",
+          "steigende Preise, ein lohnendes Angebot"
+        ],
+        [
+          "Partizip II",
+          "reduzieren → reduziert",
+          "die reduzierte Ware, ein gebrauchtes Gerät"
+        ]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.nicht-nur-sowohl",
+      "spine": "g.nicht-nur-sowohl",
+      "depth": 1,
+      "modelSentence": "Ich habe nicht nur im Verkauf gearbeitet, sondern auch im Lager.",
+      "de": "Zweiteilige Konnektoren verbinden zwei Informationen. Mit nicht nur … sondern auch betonen Sie die zweite Information: Sie ist ein Plus. Mit sowohl … als auch sind beide Informationen gleich wichtig. Die Teile stehen direkt vor den Wörtern, die sie verbinden: Ich spreche sowohl Englisch als auch Deutsch. Auch zwei Sätze können Sie so verbinden: Ich arbeite nicht nur im Büro, sondern ich helfe auch im Lager.",
+      "en": "Two-part connectors link two pieces of information. nicht nur … sondern auch stresses the second one as an extra; with sowohl … als auch both are equally important. Each part stands right before the words it links. You can also link two clauses this way.",
+      "table": [
+        [
+          "nicht nur … sondern auch",
+          "Sie spricht nicht nur Englisch, sondern auch Deutsch."
+        ],
+        [
+          "sowohl … als auch",
+          "Ich habe sowohl im Verkauf als auch im Lager gearbeitet."
+        ]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.relativsatz-was-wo",
+      "spine": "g.relativsatz-was-wo",
+      "depth": 1,
+      "modelSentence": "Das ist alles, was wir beschlossen haben.",
+      "de": "Nach alles, etwas, nichts und vieles und nach das Einzige oder das Beste beginnt der Relativsatz mit was: Das Einzige, was noch fehlt, ist der Ort. Nach einem Ort kann der Relativsatz mit wo beginnen: die Stadt, wo der Teamtag stattfindet (= in der). Wie in jedem Nebensatz steht das Verb am Ende.",
+      "en": "After alles, etwas, nichts, vieles and after das Einzige or das Beste, the relative clause starts with was. After a place it can start with wo (= in der / in dem). The verb goes to the end, as in every subordinate clause.",
+      "table": [
+        [
+          "alles / etwas / nichts / vieles",
+          "Alles, was du brauchst, ist im Ordner."
+        ],
+        [
+          "das Einzige / das Beste",
+          "Das Beste, was wir machen können, ist ein klarer Plan."
+        ],
+        [
+          "Ort",
+          "die Stadt, wo wir den Teamtag machen"
+        ]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.brauchen-zu",
+      "spine": "g.brauchen-zu",
+      "depth": 1,
+      "modelSentence": "Sie brauchen den Plan nicht auszudrucken.",
+      "de": "nicht brauchen + zu + Infinitiv bedeutet dasselbe wie nicht müssen: Sie brauchen nicht zu kommen. = Sie müssen nicht kommen. nur brauchen + zu bedeutet: Das ist alles, was Sie tun müssen: Sie brauchen nur zu unterschreiben. Der Infinitiv mit zu steht am Ende. Bei trennbaren Verben steht zu in der Mitte: auszudrucken, anzurufen. Ohne nicht oder nur benutzt man brauchen + zu nicht.",
+      "en": "nicht brauchen + zu + infinitive means the same as nicht müssen (you don't have to). nur brauchen + zu means „all you have to do is …“. The zu-infinitive goes to the end; with separable verbs zu goes in the middle (anzurufen). Without nicht or nur, brauchen + zu is not used.",
+      "table": [
+        [
+          "nicht brauchen … zu",
+          "Sie brauchen nicht zu warten. (= Sie müssen nicht warten.)"
+        ],
+        [
+          "nur brauchen … zu",
+          "Sie brauchen nur zu unterschreiben."
+        ],
+        [
+          "trennbare Verben",
+          "Sie brauchen nicht anzurufen."
+        ]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.sodass",
+      "spine": "g.sodass",
+      "depth": 1,
+      "modelSentence": "Die Musik war so laut, dass ich nicht schlafen konnte.",
+      "de": "Mit sodass und so …, dass nennen Sie eine Folge. sodass leitet einen Nebensatz ein, das Verb steht am Ende: Er hat die Haustür offen gelassen, sodass es im Treppenhaus kalt war. Bei so …, dass steht so vor einem Adjektiv oder Adverb im Hauptsatz: Es war so laut, dass ich nicht schlafen konnte. Vergleichen Sie deshalb: Es war laut, deshalb konnte ich nicht schlafen.",
+      "en": "sodass and so …, dass express a consequence. sodass starts a subordinate clause with the verb at the end. With so …, dass, so stands before an adjective or adverb in the main clause. Compare deshalb, which starts a main clause with the verb in position 2.",
+      "table": [
+        [
+          "sodass",
+          "Die Nachbarn feierten lange, sodass niemand schlafen konnte."
+        ],
+        [
+          "so + Adjektiv …, dass",
+          "Die Musik war so laut, dass ich aufgewacht bin."
+        ],
+        [
+          "deshalb (Hauptsatz)",
+          "Die Musik war laut, deshalb bin ich aufgewacht."
+        ]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.modalpartikeln",
+      "spine": "g.modalpartikeln",
+      "depth": 1,
+      "modelSentence": "Könnten Sie die Musik doch mal etwas leiser machen?",
+      "de": "Modalpartikeln wie doch, mal, ja und eben ändern nicht den Inhalt, aber den Ton eines Satzes. mal macht eine Bitte freundlicher: Kommen Sie mal kurz? doch mal macht sie dringender, manchmal wie ein Vorwurf: Hören Sie doch mal zu! ja zeigt Überraschung oder etwas, das alle wissen: Das ist ja laut! eben bedeutet: Es ist so, man kann es nicht ändern. Die Partikeln sind unbetont.",
+      "en": "Modal particles such as doch, mal, ja and eben do not change the content but the tone. mal softens a request; doch (mal) makes it more urgent, sometimes reproachful; ja signals surprise or something everyone knows; eben means „that's just how it is“. They are unstressed.",
+      "table": [
+        [
+          "mal",
+          "Bitte freundlicher",
+          "Können Sie mal kurz kommen?"
+        ],
+        [
+          "doch (mal)",
+          "dringender, auch Vorwurf",
+          "Machen Sie doch die Tür zu!"
+        ],
+        [
+          "ja",
+          "Überraschung, bekannte Sache",
+          "Das ist ja unglaublich!"
+        ],
+        [
+          "eben",
+          "Es ist so, man kann es nicht ändern.",
+          "Das ist eben so."
+        ]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.passiv-praesens-2",
+      "spine": "g.passiv-praesens",
+      "depth": 2,
+      "modelSentence": "Die Maschine wird jeden Morgen geprüft.",
+      "de": "Jetzt bilden Sie das Passiv selbst: werden auf Position 2, das Partizip II am Ende. Das Passiv zeigt, was passiert, nicht wer es macht: Die Maschine wird geprüft. Wenn die Person wichtig ist, nennen Sie sie mit von + Dativ: Der Plan wird von der Chefin gemacht. Aus dem Akkusativ im Aktiv wird der Nominativ im Passiv: Man prüft den Plan. → Der Plan wird geprüft.",
+      "en": "Now you form the passive yourself: werden in position 2, the past participle at the end. The passive shows what happens, not who does it. If the person matters, add von + dative. The accusative object of the active sentence becomes the nominative subject of the passive one.",
+      "table": [
+        [
+          "ich",
+          "werde … geprüft"
+        ],
+        [
+          "du",
+          "wirst … geprüft"
+        ],
+        [
+          "er / sie / es",
+          "wird … geprüft"
+        ],
+        [
+          "wir",
+          "werden … geprüft"
+        ],
+        [
+          "ihr",
+          "werdet … geprüft"
+        ],
+        [
+          "sie / Sie",
+          "werden … geprüft"
+        ]
+      ],
+      "caseMarks": [
+        {
+          "token": "den Plan",
+          "kasus": "akkusativ"
+        },
+        {
+          "token": "Der Plan",
+          "kasus": "nominativ"
+        },
+        {
+          "token": "der Chefin",
+          "kasus": "dativ"
+        }
+      ]
+    },
+    {
+      "id": "rc.passiv-modalverb",
+      "spine": "g.passiv-modalverb",
+      "depth": 1,
+      "modelSentence": "Die Tür muss geschlossen werden.",
+      "de": "Mit einem Modalverb bildet man das Passiv so: das Modalverb auf Position 2, am Ende das Partizip II und werden: Hier darf nicht geraucht werden. Die Schutzkleidung muss getragen werden. Das Modalverb zeigt, ob etwas Pflicht, erlaubt oder möglich ist. In Regeln und Betriebsordnungen ist diese Form sehr häufig.",
+      "en": "Passive with a modal verb: the modal verb in position 2, and at the end the past participle + werden. The modal verb shows whether something is required, allowed or possible. This form is very common in rules and workplace regulations.",
+      "table": [
+        [
+          "müssen",
+          "Die Tür muss geschlossen werden."
+        ],
+        [
+          "dürfen",
+          "Hier darf nicht geraucht werden."
+        ],
+        [
+          "können",
+          "Der Raum kann gebucht werden."
+        ],
+        [
+          "sollen",
+          "Die Maschine soll jeden Tag geprüft werden."
+        ]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.passiv-vergangenheit",
+      "spine": "g.passiv-vergangenheit",
+      "depth": 1,
+      "modelSentence": "Ich wurde von einem Auto gestreift.",
+      "de": "Im Präteritum bildet man das Passiv mit wurde + Partizip II: Das Fahrrad wurde beschädigt. Im Perfekt mit sein + Partizip II + worden: Das Rad ist beschädigt worden. Achtung: Im Passiv heißt es worden, ohne ge-. geworden gehört zu werden als Vollverb: Es ist spät geworden. In Berichten und Briefen steht meistens das Präteritum.",
+      "en": "Past passive: Präteritum wurde + past participle; Perfekt sein + past participle + worden. In the passive it is worden without ge-; geworden belongs to werden as a full verb („become“). Reports and letters mostly use the Präteritum.",
+      "table": [
+        [
+          "Präsens",
+          "Das Rad wird repariert."
+        ],
+        [
+          "Präteritum",
+          "Das Rad wurde repariert."
+        ],
+        [
+          "Perfekt",
+          "Das Rad ist repariert worden."
+        ],
+        [
+          "werden als Vollverb",
+          "Es ist spät geworden."
+        ]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.temporal-waehrend-sobald",
+      "spine": "g.temporal-waehrend-sobald",
+      "depth": 1,
+      "modelSentence": "Während ich an der Ampel wartete, kam das Auto von rechts.",
+      "de": "während: Zwei Dinge passieren zur gleichen Zeit. sobald: Etwas passiert direkt danach: Sobald die Polizei da war, habe ich alles erzählt. solange: Etwas dauert genauso lange wie etwas anderes: Solange die Schwellung nicht zurückgeht, dürfen Sie nicht arbeiten. Alle drei leiten einen Nebensatz ein, das Verb steht am Ende. Achtung: während + Genitiv ist eine Präposition: während der Fahrt.",
+      "en": "während: two things happen at the same time. sobald: something happens immediately afterwards. solange: something lasts as long as something else. All three start a subordinate clause with the verb at the end. Note: während + genitive is a preposition (während der Fahrt).",
+      "table": [
+        [
+          "während",
+          "zur gleichen Zeit",
+          "Während ich wartete, …"
+        ],
+        [
+          "sobald",
+          "direkt danach",
+          "Sobald die Polizei da war, …"
+        ],
+        [
+          "solange",
+          "genauso lange",
+          "Solange es wehtut, …"
+        ]
+      ],
+      "caseMarks": [
+        {
+          "token": "der Fahrt",
+          "kasus": "genitiv"
+        }
+      ]
+    },
+    {
+      "id": "rc.praep-innerhalb-ausserhalb",
+      "spine": "g.praep-innerhalb-ausserhalb",
+      "depth": 1,
+      "modelSentence": "Bitte zahlen Sie den Betrag innerhalb eines Monats zurück.",
+      "de": "innerhalb und außerhalb stehen mit dem Genitiv. Bei einer Frist bedeutet innerhalb: vor ihrem Ende: innerhalb einer Woche, innerhalb der Frist. außerhalb bedeutet: nicht in diesem Ort oder in dieser Zeit: außerhalb der Stadt, außerhalb der Öffnungszeiten. Ohne Artikel benutzt man innerhalb von + Dativ: innerhalb von zwei Wochen.",
+      "en": "innerhalb and außerhalb take the genitive. With a deadline, innerhalb means „before the end of“ it; außerhalb means „outside“ a place or a time. Without an article, use innerhalb von + dative (innerhalb von zwei Wochen).",
+      "table": [
+        [
+          "innerhalb + Genitiv",
+          "innerhalb eines Monats, innerhalb der Frist"
+        ],
+        [
+          "außerhalb + Genitiv",
+          "außerhalb der Öffnungszeiten"
+        ],
+        [
+          "innerhalb von + Dativ",
+          "innerhalb von zwei Wochen"
+        ]
+      ],
+      "caseMarks": [
+        {
+          "token": "eines Monats",
+          "kasus": "genitiv"
+        },
+        {
+          "token": "der Frist",
+          "kasus": "genitiv"
+        },
+        {
+          "token": "der Öffnungszeiten",
+          "kasus": "genitiv"
+        },
+        {
+          "token": "zwei Wochen",
+          "kasus": "dativ"
+        }
+      ]
+    },
+    {
+      "id": "rc.indem",
+      "spine": "g.indem",
+      "depth": 1,
+      "modelSentence": "Sie können die Abbuchung stoppen, indem Sie der Lastschrift widersprechen.",
+      "de": "Mit indem sagen Sie, wie man etwas erreicht: auf welchem Weg oder mit welchem Mittel. Der indem-Satz ist ein Nebensatz, das Verb steht am Ende. Die Frage dazu heißt: Wie? Wie kann man Geld sparen? – Man spart Geld, indem man Verträge rechtzeitig kündigt. Vergleichen Sie um … zu und damit: Damit nennen Sie ein Ziel, nicht den Weg.",
+      "en": "indem says how something is achieved – the way or the means. It starts a subordinate clause with the verb at the end and answers the question Wie?. Compare um … zu and damit, which name a goal, not the way.",
+      "table": [
+        [
+          "Wie?",
+          "…, indem Sie der Lastschrift widersprechen."
+        ],
+        [
+          "Wozu?",
+          "…, um Geld zu sparen. / …, damit das Studio nicht mehr abbucht."
+        ]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.je-desto",
+      "spine": "g.je-desto",
+      "depth": 1,
+      "modelSentence": "Je größer die Stadt ist, desto teurer sind die Wohnungen.",
+      "de": "je … desto verbindet zwei Vergleiche: Wenn sich das eine ändert, ändert sich auch das andere. Der je-Teil ist ein Nebensatz: je + Komparativ, das Verb am Ende. Der desto-Teil ist der Hauptsatz: desto + Komparativ, dann gleich das Verb. Statt desto können Sie auch umso sagen: Je länger ich pendle, umso müder bin ich.",
+      "en": "je … desto links two comparisons: when one thing changes, the other changes too. The je part is a subordinate clause (comparative, verb at the end); the desto part is the main clause (comparative, then the verb straight away). umso can replace desto.",
+      "table": [
+        [
+          "je + Komparativ …, Verb am Ende",
+          "Je weiter man vom Zentrum wohnt,"
+        ],
+        [
+          "desto / umso + Komparativ + Verb",
+          "desto günstiger ist die Miete."
+        ]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.praep-entlang-herum",
+      "spine": "g.praep-entlang-herum",
+      "depth": 1,
+      "modelSentence": "Wir gehen jetzt den Fluss entlang und dann um den Marktplatz herum.",
+      "de": "entlang beschreibt einen Weg neben etwas, zum Beispiel neben einem Fluss oder einer Mauer. Meistens steht entlang nach dem Nomen, das Nomen steht dann im Akkusativ: den Fluss entlang. Vor dem Nomen steht entlang mit dem Genitiv: entlang der Stadtmauer. um … herum beschreibt einen Weg im Kreis und steht mit dem Akkusativ: um den Marktplatz herum.",
+      "en": "entlang describes a path along something. Usually it follows the noun, which is then accusative (den Fluss entlang); before the noun it takes the genitive (entlang der Stadtmauer). um … herum describes a path around something and takes the accusative.",
+      "table": [
+        [
+          "Nomen im Akkusativ + entlang",
+          "den Fluss entlang"
+        ],
+        [
+          "entlang + Genitiv",
+          "entlang der Stadtmauer"
+        ],
+        [
+          "um + Akkusativ + herum",
+          "um den Marktplatz herum"
+        ]
+      ],
+      "caseMarks": [
+        {
+          "token": "den Fluss",
+          "kasus": "akkusativ"
+        },
+        {
+          "token": "der Stadtmauer",
+          "kasus": "genitiv"
+        },
+        {
+          "token": "den Marktplatz",
+          "kasus": "akkusativ"
+        }
+      ]
+    },
+    {
+      "id": "rc.statt-ohne",
+      "spine": "g.statt-ohne",
+      "depth": 1,
+      "modelSentence": "Man kann Geräte reparieren, statt neue zu kaufen.",
+      "de": "Mit (an)statt … zu sagen Sie: Man macht das eine und nicht das andere. Mit ohne … zu sagen Sie: Etwas passiert nicht, obwohl man es erwarten könnte: Er fährt los, ohne sich zu verabschieden. Beide Teile haben dann dasselbe Subjekt. Wenn die Subjekte verschieden sind, benutzt man (an)statt dass oder ohne dass: Er fährt los, ohne dass jemand es merkt.",
+      "en": "statt … zu: you do one thing instead of another. ohne … zu: something you might expect does not happen. Both parts then share the same subject. With different subjects, use statt dass or ohne dass.",
+      "table": [
+        [
+          "(an)statt … zu",
+          "gleiches Subjekt",
+          "Wir reparieren das Radio, statt es wegzuwerfen."
+        ],
+        [
+          "ohne … zu",
+          "gleiches Subjekt",
+          "Er kauft ein, ohne Preise zu vergleichen."
+        ],
+        [
+          "(an)statt dass / ohne dass",
+          "verschiedene Subjekte",
+          "Er fährt los, ohne dass jemand es merkt."
+        ]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.als-ob",
+      "spine": "g.als-ob",
+      "depth": 1,
+      "modelSentence": "Er tut so, als ob ein Repair-Café das Klima retten könnte.",
+      "de": "Mit als ob beschreiben Sie einen Eindruck, der nicht stimmt oder nicht sicher ist. Nach als ob steht meistens der Konjunktiv II, das Verb steht am Ende: Sie tut so, als ob sie alles wüsste. Typische Anfänge sind: so tun, als ob …; es sieht so aus, als ob …; es klingt, als ob … Allein steht Als ob …! oft in kritischen Kommentaren: Als ob das so einfach wäre!",
+      "en": "als ob describes an impression that is not true or not certain. It is usually followed by Konjunktiv II with the verb at the end. Typical frames: so tun, als ob; es sieht so aus, als ob; es klingt, als ob. On its own, Als ob …! often appears in critical comments.",
+      "table": [
+        [
+          "so tun, als ob",
+          "Er tut so, als ob er keine Zeit hätte."
+        ],
+        [
+          "aussehen, als ob",
+          "Es sieht so aus, als ob es gleich regnen würde."
+        ],
+        [
+          "Als ob …!",
+          "Als ob das so einfach wäre!"
+        ]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.weder-entweder-zwar",
+      "spine": "g.weder-entweder-zwar",
+      "depth": 1,
+      "modelSentence": "Ich habe weder Zeit noch Geld für ein Ehrenamt.",
+      "de": "weder … noch verneint zwei Dinge: nicht das eine und auch nicht das andere. Nach weder … noch steht kein zusätzliches nicht. entweder … oder nennt zwei Möglichkeiten, nur eine davon gilt: Entweder helfen wir am Samstag oder am Sonntag. zwar … aber nennt zuerst einen Punkt und dann eine Einschränkung: Das Ehrenamt macht zwar Arbeit, aber es macht auch Spaß.",
+      "en": "weder … noch negates two things (neither … nor); do not add an extra nicht. entweder … oder offers two alternatives, only one of which applies. zwar … aber states a point and then a restriction.",
+      "table": [
+        [
+          "weder … noch",
+          "nicht A und nicht B",
+          "Sie hat weder Zeit noch Lust."
+        ],
+        [
+          "entweder … oder",
+          "A oder B",
+          "Entweder helfe ich mit oder ich spende."
+        ],
+        [
+          "zwar … aber",
+          "A, aber mit Einschränkung",
+          "Das ist zwar anstrengend, aber sinnvoll."
+        ]
+      ],
+      "caseMarks": []
+    },
+    {
+      "id": "rc.konj2-vergangenheit",
+      "spine": "g.konj2-vergangenheit",
+      "depth": 1,
+      "modelSentence": "Wenn ich das früher gewusst hätte, hätte ich schon viel früher angefangen.",
+      "de": "Mit dem Konjunktiv II der Vergangenheit sprechen Sie über etwas, das nicht passiert ist: hätte oder wäre + Partizip II. Wie im Perfekt nehmen Verben mit haben die Form hätte, Verben mit sein die Form wäre: Ich wäre gern mitgekommen. Mit Modalverb: hätte + Infinitiv + Modalverb im Infinitiv: Ich hätte früher anfangen sollen. In B1.2 verstehen Sie die Form und benutzen feste Muster.",
+      "en": "The past subjunctive talks about things that did not happen: hätte or wäre + past participle, chosen as in the Perfekt. With a modal verb: hätte + infinitive + modal infinitive (Ich hätte früher anfangen sollen). In B1.2 you understand the form and use fixed patterns.",
+      "table": [
+        [
+          "hätte + Partizip II",
+          "Ich hätte mehr gelernt."
+        ],
+        [
+          "wäre + Partizip II",
+          "Wir wären früher gekommen."
+        ],
+        [
+          "hätte + Infinitiv + sollen",
+          "Ich hätte früher fragen sollen."
+        ],
+        [
+          "Wenn …, hätte …",
+          "Wenn ich das gewusst hätte, hätte ich geholfen."
+        ]
+      ],
+      "caseMarks": []
+    }
+  ]
+}

@@ -1,0 +1,498 @@
+{
+  "$schema": "course-v2/lexicon@1",
+  "level": "a2.1",
+  "entries": [
+    {
+      "id": "lx.anruf",
+      "lemma": "Anruf",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Anrufe",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a2.1-u07",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "phone call"
+      },
+      "example": "Heute gibt es viele Anrufe.",
+      "wordId": null
+    },
+    {
+      "id": "lx.rueckruf",
+      "lemma": "Rückruf",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Rückrufe",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a2.1-u07",
+      "block": 1,
+      "list_ref": "derived:rufen",
+      "gloss": {
+        "en": "call back"
+      },
+      "example": "Der Rückruf kommt morgen früh.",
+      "wordId": null
+    },
+    {
+      "id": "lx.mailbox",
+      "lemma": "Mailbox",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Mailboxen",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a2.1-u07",
+      "block": 1,
+      "list_ref": "off-list:situation",
+      "gloss": {
+        "en": "voicemail"
+      },
+      "example": "Auf der Mailbox sind drei Nachrichten.",
+      "wordId": null
+    },
+    {
+      "id": "lx.besprechung",
+      "lemma": "Besprechung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Besprechungen",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a2.1-u07",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "meeting"
+      },
+      "example": "Die Besprechung beginnt um neun.",
+      "wordId": null
+    },
+    {
+      "id": "lx.auftrag",
+      "lemma": "Auftrag",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Aufträge",
+      "plural_kind": "regular",
+      "role": "productive",
+      "unit": "a2.1-u07",
+      "block": 2,
+      "list_ref": "B1",
+      "gloss": {
+        "en": "order, job"
+      },
+      "example": "Wir haben einen neuen Auftrag.",
+      "wordId": null
+    },
+    {
+      "id": "lx.techniker",
+      "lemma": "Techniker",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Techniker",
+      "plural_kind": "regular",
+      "feminine": "die Technikerin",
+      "role": "productive",
+      "unit": "a2.1-u07",
+      "block": 2,
+      "list_ref": "derived:Technik",
+      "gloss": {
+        "en": "technician"
+      },
+      "example": "Der Techniker kommt um acht.",
+      "wordId": null
+    },
+    {
+      "id": "lx.ausrichten",
+      "lemma": "ausrichten",
+      "pos": "VERB",
+      "separable": true,
+      "verb_forms": {
+        "3sg": "richtet aus",
+        "perfekt": "hat ausgerichtet"
+      },
+      "rection": "jmdm. etw. (Dat. + Akk.)",
+      "role": "productive",
+      "unit": "a2.1-u07",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to pass on (a message)"
+      },
+      "example": "Kann ich ihm etwas ausrichten?",
+      "wordId": null
+    },
+    {
+      "id": "lx.verbinden",
+      "lemma": "verbinden",
+      "pos": "VERB",
+      "verb_forms": {
+        "3sg": "verbindet",
+        "perfekt": "hat verbunden"
+      },
+      "rection": "jmdn. mit jmdm.",
+      "role": "productive",
+      "unit": "a2.1-u07",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to put through (on the phone)"
+      },
+      "example": "Ich verbinde Sie mit Frau Otto.",
+      "wordId": null
+    },
+    {
+      "id": "lx.sich-melden",
+      "lemma": "sich melden",
+      "pos": "VERB",
+      "reflexive": "akk",
+      "verb_forms": {
+        "3sg": "meldet sich",
+        "perfekt": "hat sich gemeldet"
+      },
+      "rection": "bei jmdm.",
+      "role": "productive",
+      "unit": "a2.1-u07",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to get in touch"
+      },
+      "example": "Bitte melden Sie sich bei mir.",
+      "wordId": null
+    },
+    {
+      "id": "lx.sich-verspaeten",
+      "lemma": "sich verspäten",
+      "pos": "VERB",
+      "reflexive": "akk",
+      "verb_forms": {
+        "3sg": "verspätet sich",
+        "perfekt": "hat sich verspätet"
+      },
+      "role": "productive",
+      "unit": "a2.1-u07",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to be late"
+      },
+      "example": "Ich verspäte mich leider.",
+      "wordId": null
+    },
+    {
+      "id": "lx.sich-beeilen",
+      "lemma": "sich beeilen",
+      "pos": "VERB",
+      "reflexive": "akk",
+      "verb_forms": {
+        "3sg": "beeilt sich",
+        "perfekt": "hat sich beeilt"
+      },
+      "role": "productive",
+      "unit": "a2.1-u07",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to hurry"
+      },
+      "example": "Beeil dich!",
+      "wordId": null
+    },
+    {
+      "id": "lx.sich-entschuldigen",
+      "lemma": "sich entschuldigen",
+      "pos": "VERB",
+      "reflexive": "akk",
+      "verb_forms": {
+        "3sg": "entschuldigt sich",
+        "perfekt": "hat sich entschuldigt"
+      },
+      "rection": "bei jmdm.",
+      "role": "productive",
+      "unit": "a2.1-u07",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to apologise"
+      },
+      "example": "Ich entschuldige mich bei Frau Otto.",
+      "wordId": null
+    },
+    {
+      "id": "lx.besetzt",
+      "lemma": "besetzt",
+      "pos": "ADJ",
+      "role": "productive",
+      "unit": "a2.1-u07",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "engaged, busy (line)"
+      },
+      "example": "Die Leitung ist besetzt.",
+      "wordId": null
+    },
+    {
+      "id": "lx.dringend",
+      "lemma": "dringend",
+      "pos": "ADJ",
+      "role": "productive",
+      "unit": "a2.1-u07",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "urgent"
+      },
+      "example": "Ist es dringend?",
+      "wordId": null
+    },
+    {
+      "id": "lx.leitung",
+      "lemma": "Leitung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Leitungen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.1-u07",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "(phone) line"
+      },
+      "example": "Die Leitung ist besetzt.",
+      "wordId": null
+    },
+    {
+      "id": "lx.durchwahl",
+      "lemma": "Durchwahl",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Durchwahlen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.1-u07",
+      "block": 3,
+      "list_ref": "off-list:situation",
+      "gloss": {
+        "en": "direct dial number"
+      },
+      "example": "Die Durchwahl von Frau Otto ist 17.",
+      "wordId": null
+    },
+    {
+      "id": "lx.buchhaltung",
+      "lemma": "Buchhaltung",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": null,
+      "plural_kind": "singular-only",
+      "role": "receptive",
+      "unit": "a2.1-u07",
+      "block": 3,
+      "list_ref": "off-list:situation",
+      "gloss": {
+        "en": "accounts department"
+      },
+      "example": "Frau Otto arbeitet in der Buchhaltung.",
+      "wordId": null
+    },
+    {
+      "id": "lx.empfang",
+      "lemma": "Empfang",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Empfänge",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.1-u07",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "reception (desk)"
+      },
+      "example": "Priya arbeitet am Empfang.",
+      "wordId": null
+    },
+    {
+      "id": "lx.kantine",
+      "lemma": "Kantine",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Kantinen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.1-u07",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "canteen"
+      },
+      "example": "Die Kantine ist heute zu.",
+      "wordId": null
+    },
+    {
+      "id": "lx.konferenzraum",
+      "lemma": "Konferenzraum",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Konferenzräume",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.1-u07",
+      "block": 2,
+      "list_ref": "compound:Konferenz+Raum",
+      "gloss": {
+        "en": "meeting room"
+      },
+      "example": "Die Besprechung ist im Konferenzraum.",
+      "wordId": null
+    },
+    {
+      "id": "lx.stau",
+      "lemma": "Stau",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Staus",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.1-u07",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "traffic jam"
+      },
+      "example": "Jan steht im Stau.",
+      "wordId": null
+    },
+    {
+      "id": "lx.autobahn",
+      "lemma": "Autobahn",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Autobahnen",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.1-u07",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "motorway"
+      },
+      "example": "Auf der Autobahn ist Stau.",
+      "wordId": null
+    },
+    {
+      "id": "lx.feierabend",
+      "lemma": "Feierabend",
+      "pos": "NOUN",
+      "article": "der",
+      "plural": "Feierabende",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.1-u07",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "end of the working day"
+      },
+      "example": "Um fünf ist Feierabend.",
+      "wordId": null
+    },
+    {
+      "id": "lx.ueberstunde",
+      "lemma": "Überstunde",
+      "pos": "NOUN",
+      "article": "die",
+      "plural": "Überstunden",
+      "plural_kind": "regular",
+      "role": "receptive",
+      "unit": "a2.1-u07",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "overtime (hour)"
+      },
+      "example": "Heute mache ich eine Überstunde.",
+      "wordId": null
+    },
+    {
+      "id": "lx.weiterleiten",
+      "lemma": "weiterleiten",
+      "pos": "VERB",
+      "separable": true,
+      "verb_forms": {
+        "3sg": "leitet weiter",
+        "perfekt": "hat weitergeleitet"
+      },
+      "role": "receptive",
+      "unit": "a2.1-u07",
+      "block": 3,
+      "list_ref": "derived:leiten",
+      "gloss": {
+        "en": "to forward"
+      },
+      "example": "Ich leite die E-Mail an Herrn Brandt weiter.",
+      "wordId": null
+    },
+    {
+      "id": "lx.sich-setzen",
+      "lemma": "sich setzen",
+      "pos": "VERB",
+      "reflexive": "akk",
+      "verb_forms": {
+        "3sg": "setzt sich",
+        "perfekt": "hat sich gesetzt"
+      },
+      "role": "receptive",
+      "unit": "a2.1-u07",
+      "block": 2,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to sit down"
+      },
+      "example": "Setzen Sie sich bitte.",
+      "wordId": null
+    },
+    {
+      "id": "lx.sich-anmelden",
+      "lemma": "sich anmelden",
+      "pos": "VERB",
+      "separable": true,
+      "reflexive": "akk",
+      "verb_forms": {
+        "3sg": "meldet sich an",
+        "perfekt": "hat sich angemeldet"
+      },
+      "rection": "für etw.",
+      "role": "receptive",
+      "unit": "a2.1-u07",
+      "block": 1,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "to register, sign up"
+      },
+      "example": "Bitte melden Sie sich bis Ende April an.",
+      "wordId": null
+    },
+    {
+      "id": "lx.beschaeftigt",
+      "lemma": "beschäftigt",
+      "pos": "ADJ",
+      "role": "receptive",
+      "unit": "a2.1-u07",
+      "block": 3,
+      "list_ref": "A2",
+      "gloss": {
+        "en": "busy (person)"
+      },
+      "example": "Herr Brandt ist gerade beschäftigt.",
+      "wordId": null
+    }
+  ],
+  "promotions": []
+}

@@ -1,0 +1,48 @@
+{
+  "$schema": "course-v2/stubs@1",
+  "note": "Fixture only. Ids the SCHEMA §15 example references that exist in the full registries but are not excerpted in §15.1 (§15.1: g.wenn and g.perfekt-haben exist in the full registry; §15.6: stub files for U1–U6). ta2 is a deferred secondary lane (lean execution 2026-09-27): its lane and templates are listed here instead of a lane file.",
+  "ids": {
+    "spine": [
+      "g.akk-personalpronomen",
+      "g.perfekt-haben",
+      "g.wenn"
+    ],
+    "texttype": [
+      "tt.dialog",
+      "tt.email-halbformell",
+      "tt.kurzansage",
+      "tt.mailbox",
+      "tt.telefonansage",
+      "tt.telefonnotiz",
+      "tt.wortkarte"
+    ],
+    "family": [
+      "fam.h-detail",
+      "fam.s-fragekarten",
+      "fam.w-nachricht"
+    ],
+    "detector": [
+      "det.reflexiv-pronomen"
+    ],
+    "lane": [
+      "ta2"
+    ],
+    "template": [
+      "ta2.h1",
+      "ta2.sp2"
+    ],
+    "unit": [
+      "a2.1-u01",
+      "a2.1-u02",
+      "a2.1-u03",
+      "a2.1-u04",
+      "a2.1-u05",
+      "a2.1-u06",
+      "a2.1-u08",
+      "a2.1-u09",
+      "a2.1-u10",
+      "a2.1-u11",
+      "a2.1-u12"
+    ]
+  }
+}

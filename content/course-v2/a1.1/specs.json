@@ -1,0 +1,1770 @@
+[
+  {
+    "id": "a1.1-u01",
+    "nr": 1,
+    "etappe": 1,
+    "title": {
+      "de": "Hallo, ich bin Priya",
+      "canDo": "Sie können grüßen, sich vorstellen, andere fragen und Tschüss sagen."
+    },
+    "spec": {
+      "situation": "Erster Kurstag in der Sprachschule in Leipzig: Priya und die anderen Teilnehmenden begrüßen sich, stellen sich vor und fragen nach Name, Herkunft, Wohnort und Sprachen – im Kursraum und im Kurs-Chat; Emre ist online aus İzmir dabei.",
+      "handlungsfeld": [
+        "D",
+        "11"
+      ],
+      "canDos": [
+        "cd.a1.begruessen",
+        "cd.a1.verabschieden",
+        "cd.a1.sich-vorstellen",
+        "cd.a1.person-erfragen",
+        "cd.a1.sprachen-nennen"
+      ],
+      "grammar": {
+        "new": [
+          "g.verbposition-2",
+          "g.praesens"
+        ],
+        "chunk": [
+          "g.imperativ-sie"
+        ],
+        "review": []
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Hallo und Tschüss",
+          "target": 8,
+          "lemmas": [
+            "lx.hallo",
+            "lx.guten-tag",
+            "lx.guten-morgen",
+            "lx.guten-abend",
+            "lx.tschuess",
+            "lx.auf-wiedersehen",
+            "lx.freut-mich",
+            "lx.entschuldigung",
+            "lx.sprachschule",
+            "lx.online",
+            "lx.chat",
+            "lx.begruessen",
+            "lx.geschafft"
+          ]
+        },
+        {
+          "title": "Name, Land, Wohnort",
+          "target": 9,
+          "lemmas": [
+            "lx.name",
+            "lx.heissen",
+            "lx.kommen",
+            "lx.wohnen",
+            "lx.woher",
+            "lx.stadt",
+            "lx.fragen",
+            "lx.kurs",
+            "lx.teilnehmer",
+            "lx.sich-vorstellen",
+            "lx.wohnort"
+          ]
+        },
+        {
+          "title": "Länder und Sprachen",
+          "target": 9,
+          "lemmas": [
+            "lx.land",
+            "lx.sprache",
+            "lx.deutsch",
+            "lx.sprechen",
+            "lx.lernen",
+            "lx.englisch",
+            "lx.deutschland",
+            "lx.ein-bisschen",
+            "lx.tuerkisch",
+            "lx.spanisch",
+            "lx.muttersprache"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.dialog",
+        "tt.kurzdialog",
+        "tt.steckbrief",
+        "tt.stichwortblatt",
+        "tt.wortkarte",
+        "tt.formular"
+      ],
+      "lanes": {
+        "primary": "sd1",
+        "pruefungsfokus": [
+          {
+            "template": "sd1.h1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.sp1",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.sp2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.s1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A1 L1 Hallo! Ich bin Nicole … (Konjugation Singular, W-Fragen)",
+        "S1 L1 Guten Tag. Mein Name ist …",
+        "N A1 K1 Guten Tag!",
+        "Linie 1 A1 K1–2 (Grammatik: Präsens, W-Frage; nach memo 06)"
+      ],
+      "deviation": {
+        "reason": "Sprechen: LS5 übt Teil 1 verkürzt (nur die Vorstellung; Buchstabieren und Nummer sind Stoff von u02, daher Prüfungsfokus sd1.sp1 „reduced“) und hängt eine sd1.sp2-Runde mit zwei Themen an („Kurs“, „Sprachen“; Karten Land und Englisch für den Lerner, Wohnort und Deutsch für die Gesprächsleitung; pro Thema fragt zuerst der Lerner mit seiner Karte, dann die Gesprächsleitung mit ihrer), die mit „Danke! Auf Wiedersehen!“ endet; sie trägt cd.a1.person-erfragen und cd.a1.verabschieden als Aufgabe (Review r1 F01/F02). Der Stoffplan nennt für u01 nur Sp1, H1 und S1; COV-3 erlaubt den vierten Teil. Aussprache: Statt „Satzmelodie der W-Frage; Wortakzent in Namen, Ländern und Sprachen“ hören LS1 und LS3 die Personalendungen (komme – kommen, wohnst – wohnt), weil sie der Leitpunkt g.praesens sind. Die Satzmelodie (W-Frage fallend, Ja/Nein-Frage steigend) übt a1.1-u03 LS1, den Wortakzent bei Ländern und Städten a1.1-u12 LS1. Landeskunde: Die Einheit macht keine Sachaussage und hat darum keinen Fact. Von „Grüßen in D-A-CH“ zeigt sie ein „Grüß Gott“ (Herr Huber aus Wien, H1 Gespräch 2, glossiert) und „du oder Sie?“ im Kurs (LS2: „Im Kurs sagen Sie ‚du‘“); Servus, Moin und Grüezi fehlen, damit der Wortschatz am ersten Tag klein bleibt. Deutsch in D-A-CH kommt in a1.1-u12 („Deutsch in der Welt“) wieder. Feste Wendungen: „Wie geht’s? – Gut, danke“ steht nicht in u01, sondern in a1.1-u03 (lx.wie-gehts), aus demselben Grund. Nach Sprachen fragt die Einheit mit der Plan-Wendung „Sprichst du (auch) Englisch?“ und mit dem Chunk „Welche Sprachen sprichst du / sprechen Sie?“ (Whitelist von det.welch-dies für a1.1-u01, Review r1 F03; g.welch-dies selbst ist erst a1.2-u06 lizenziert). „Sprichst du …? / er spricht“ steht als Chunk ab u01 (Whitelist det.vokalwechsel); die Regel kommt in u03. Schreiben: Das eigene Kursprofil (Plan: Steckbrief, ≈ 20 Wörter) schreibt der Lerner in LS2 als Chat-Antwort an Emre (Name, Land, Wohnort und eine Frage nach Sprachen; kürzer als der Plan, weil das Micro-Output-Band der Stufe 3–16 Wörter ist); die Schreiben-Aufgabe ist sd1.s1 im Prüfungsformat (Formular zu einer anderen Person, 5 Felder). Wortschatz: 35 neue Einträge statt 24–32 (Plan 26). lx.geschafft kam nach Review r1 dazu (die Check-Formel „Geschafft!“ der A1.1-Einheiten); ob lx.chat, lx.spanisch und lx.begruessen nur glossiert werden, entscheidet die Lexikon-Datei (Review r2 F05). Lesen: Der Kurs-Chat (LS3) ist länger als die geplanten ≈ 45 Wörter, weil vier kurze Einträge die Detail- und Strukturfragen tragen (Wohnort, Muttersprache, er/sie-Formen); er bleibt im TXT-03-Rahmen."
+      },
+      "cast": [
+        "cast.priya",
+        "cast.frau-schulz",
+        "cast.emre",
+        "cast.olena",
+        "cast.bilal",
+        "cast.arta",
+        "cast.herr-richter"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a1-1.md §6 Unit 1 (a1.1-u01 „Freut mich!“)"
+      }
+    }
+  },
+  {
+    "id": "a1.1-u02",
+    "nr": 2,
+    "etappe": 1,
+    "title": {
+      "de": "Wie schreibt man das?",
+      "canDo": "Sie können buchstabieren, Zahlen und Telefonnummern sagen und verstehen und ein Formular ausfüllen."
+    },
+    "spec": {
+      "situation": "Anmeldung am Empfang in der Sprachschule: Priya buchstabiert bei Herrn Richter ihren Namen, nennt Adresse, Telefonnummer und Beruf und füllt das Anmeldeformular aus; Emre ruft noch einmal an und gibt seine Daten am Telefon durch. Der Lerner schreibt seine eigenen Angaben (LS2) und füllt das Formular für Emre aus (S1).",
+      "handlungsfeld": [
+        "1",
+        "11"
+      ],
+      "canDos": [
+        "cd.a1.buchstabieren",
+        "cd.a1.zahlen",
+        "cd.a1.formular-person",
+        "cd.a1.daten-angeben",
+        "cd.a1.nachfragen"
+      ],
+      "grammar": {
+        "new": [
+          "g.negation-nicht",
+          "g.ja-nein-frage"
+        ],
+        "chunk": [
+          "g.wortbildung-er-in"
+        ],
+        "review": [
+          "g.praesens",
+          "g.verbposition-2"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Zahlen",
+          "target": 10,
+          "lemmas": [
+            "lx.zahl",
+            "lx.nummer",
+            "lx.hausnummer",
+            "lx.null",
+            "lx.eins",
+            "lx.zwei",
+            "lx.zwoelf",
+            "lx.zwanzig",
+            "lx.hundert"
+          ]
+        },
+        {
+          "title": "Adresse und Telefonnummer",
+          "target": 8,
+          "lemmas": [
+            "lx.adresse",
+            "lx.strasse",
+            "lx.postleitzahl",
+            "lx.telefonnummer",
+            "lx.e-mail",
+            "lx.vorname",
+            "lx.familienname",
+            "lx.schreiben"
+          ]
+        },
+        {
+          "title": "Berufe",
+          "target": 8,
+          "lemmas": [
+            "lx.beruf",
+            "lx.arbeiten",
+            "lx.lehrer",
+            "lx.student",
+            "lx.studieren",
+            "lx.kellner",
+            "lx.informatiker",
+            "lx.schueler"
+          ]
+        },
+        {
+          "title": "Am Empfang",
+          "target": 6,
+          "lemmas": [
+            "lx.buchstabieren",
+            "lx.wie-bitte",
+            "lx.formular",
+            "lx.verstehen",
+            "lx.richtig",
+            "lx.falsch",
+            "lx.ausfuellen",
+            "lx.empfang",
+            "lx.anmeldung",
+            "lx.rezeptionist"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.dialog",
+        "tt.kurzdialog",
+        "tt.telefonat",
+        "tt.formular",
+        "tt.stichwortblatt"
+      ],
+      "lanes": {
+        "primary": "sd1",
+        "pruefungsfokus": [
+          {
+            "template": "sd1.h1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.sp1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.s1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A1 L2 Ich bin Journalistin. (Plural, nicht, -in)",
+        "S1 L1 Teil E (Formular)",
+        "N A1 K2 Freunde, Kollegen und ich",
+        "Linie 1 A1 K2–3 (Grammatik: sein/haben, nicht; nach memo 06)"
+      ],
+      "deviation": {
+        "reason": "Abweichungen vom Stoffplan a1-1 u02 (Review a1.1-u02 r1 F03, F14; r2 F05; r3 F04, F05). (1) „das Alter“ (Plan-Schlüsselwort): Das Lexikon führt lx.alt erst in a1.1-u03 ein (dort „Alter: 28“ im Formular und „Ich bin … Jahre alt“). Darum steht „Alter?“ nicht auf dem Sp1-Stichwortblatt dieser Einheit; das Alter kommt in u03. (2) Landeskunde: Die Adressform (zuerst Straße und Hausnummer, dann Postleitzahl und Ort) steht im endLine von LS1 und ist mit dem Fact a1.1-u02-f01 belegt. Telefonnummern in Zweiergruppen hört der Lerner in allen Nummern-Texten (H1 Gespräch 1, Check-Zeile l02: „null drei vier eins, siebenundneunzig, dreiundsechzig, zwanzig“); die Einheit formuliert dazu keine Regel und hat dafür keinen Fact. (3) Aussprache: Statt „lange und kurze Vokale“ hört LS1 das Alphabet mit den Umlauten beim Buchstabieren (E–I, A–R, Ä–E, Ü–U; H1 Gespräch 2: „Schaefer“ mit A und E, nicht mit Ä), LS3 hört ü–u, und „zwo“ steht glossiert in LS2. Lange und kurze Vokale übt a1.1-u09 LS1. (4) Grammatik: Die Grammatik-Spine setzt g.ja-nein-frage (mit doch) an a1.1-u02 statt an Plan-u03. Die Einheit trägt damit g.negation-nicht und g.ja-nein-frage neu, g.praesens (alle Personen, haben) als Wiederholung und -in als Chunk (GRM-01: höchstens 2 neu, 1 Chunk). (5) cd.a1.formular-person: Die eigenen Angaben (Name, Wohnort, Beruf; Name und Wohnort dürfen erfunden sein, keine Telefonnummer) schreibt der Lerner in der Mikroaufgabe von LS2, im Rahmen des Niveauprofils (3–16 Wörter). Diese Mikroaufgabe ist auch der Nachweis in check.proofs (microOutput, SCHEMA §8 seit 2026-09-28); das S1-Formular für Emre übt die Prüfungsform. cd.a1.nachfragen: Die Sprechen-Aufgabe trägt den Kurs-Zug „nachfragen“ (moves); die Rubrik sd1-sp1 selbst bewertet nur vorstellen, buchstabieren und nummer. Der Nachweis bleibt q03 und die Sprechen-Aufgabe."
+      },
+      "cast": [
+        "cast.priya",
+        "cast.herr-richter",
+        "cast.emre",
+        "cast.frau-schulz",
+        "cast.arta",
+        "cast.ensemble-a1-2",
+        "cast.ensemble-a1-3",
+        "cast.ensemble-a1-4"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a1-1.md §6 Unit 2 (a1.1-u02 „Wie ist Ihre Telefonnummer?“)"
+      }
+    }
+  },
+  {
+    "id": "a1.1-u03",
+    "nr": 3,
+    "etappe": 1,
+    "title": {
+      "de": "Meine Familie",
+      "canDo": "Sie können sagen: Das ist meine Familie. Und Sie können fragen: Ist das deine Schwester?"
+    },
+    "spec": {
+      "situation": "Priya zeigt Olena im Videotelefonat Fotos von ihrer Familie in Kochi; beide stellen ihre Familien vor und fragen nach Eltern, Geschwistern und Kindern. Im Kurs-Chat postet Emre ein Foto von seiner Familie.",
+      "handlungsfeld": [
+        "D",
+        "A"
+      ],
+      "canDos": [
+        "cd.a1.familie-erzaehlen",
+        "cd.a1.personen-beschreiben",
+        "cd.a1.befinden",
+        "cd.a1.ueber-andere-schreiben",
+        "cd.a1.fragen-thema"
+      ],
+      "grammar": {
+        "new": [
+          "g.possessiv-mein-dein",
+          "g.vokalwechsel"
+        ],
+        "chunk": [
+          "g.akkusativ"
+        ],
+        "review": [
+          "g.ja-nein-frage",
+          "g.praesens"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Meine Familie",
+          "target": 10,
+          "lemmas": [
+            "lx.familie",
+            "lx.mutter",
+            "lx.vater",
+            "lx.eltern",
+            "lx.bruder",
+            "lx.schwester",
+            "lx.sohn",
+            "lx.tochter",
+            "lx.kind",
+            "lx.geschwister",
+            "lx.zeigen",
+            "lx.video",
+            "lx.familienstand",
+            "lx.partner",
+            "lx.person"
+          ]
+        },
+        {
+          "title": "Wie geht’s? Wie alt sind Sie?",
+          "target": 8,
+          "lemmas": [
+            "lx.wie-gehts",
+            "lx.gut",
+            "lx.muede",
+            "lx.alt",
+            "lx.alter",
+            "lx.jahr",
+            "lx.verheiratet",
+            "lx.ledig"
+          ]
+        },
+        {
+          "title": "Was machen sie? Freunde und Nachrichten",
+          "target": 10,
+          "lemmas": [
+            "lx.mann",
+            "lx.frau",
+            "lx.freund",
+            "lx.machen",
+            "lx.lesen",
+            "lx.schlafen",
+            "lx.foto",
+            "lx.nachricht",
+            "lx.lieb",
+            "lx.viele-gruesse"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.telefonat",
+        "tt.post",
+        "tt.kurzmitteilung",
+        "tt.wortkarte"
+      ],
+      "lanes": {
+        "primary": "sd1",
+        "pruefungsfokus": [
+          {
+            "template": "sd1.l1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.sp2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.s2",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A1 L3 Das ist meine Mutter. (Ja/Nein-Frage, doch, mein/dein, Vokalwechsel)",
+        "S1 L2 Meine Familie",
+        "N A1 K5 Alltag und Familie",
+        "Linie 1 A1 K2–3, K5 (Grammatik; nach memo 06)"
+      ],
+      "deviation": {
+        "reason": "Landeskunde: Die Einheit macht keine Sachaussage und hat darum keinen Fact. Von „Familie in D-A-CH: Patchworkfamilie, Doppelnamen, Oma und Opa“ zeigt sie nur das Wort „Oma“ (glossiert, im Chat-Post von Emre, LS3); Patchworkfamilie und Doppelnamen bräuchten einen belegten Fact und neuen Wortschatz, und Großmutter/Großvater sind a1.2-u10 zugeordnet (Review r1 F12). Lesen: Der Chat-Post von Emre hat rund 50 statt ≈ 60 Wörter; das längere Lesen tragen die zwei LS4-Texte (je rund 70 Wörter). Schreiben: Statt der Vorstufe mit 2 Leitpunkten und ≈ 20 Wörtern übt LS6 sd1.s2 „reduced“ mit den 3 Leitpunkten der Vorlage (EXM-03), je eine Frage (Wer? Wo? Was?), 20–30 Wörter; Wohnort und Arbeit verlangt cd.a1.ueber-andere-schreiben (Review r1 F07). Sprechen: Vor Teil 2 fragt Nora „Wie geht es Ihnen?“ (cd.a1.befinden); Situation und Nora sagen, dass Teil 2 erst danach beginnt (Review r1 F08). Grammatik: „Haben Sie einen Bruder?“ ist ein Chunk; der Akkusativ-Chunk (g.akkusativ) steht darum ab a1.1-u03 (Spine chunkFrom), nicht erst ab u04. Der Chunk von u04 ist „für“ mit Akkusativ (GRM-01: ein Chunk pro Einheit)."
+      },
+      "cast": [
+        "cast.priya",
+        "cast.olena",
+        "cast.emre",
+        "cast.arjun",
+        "cast.bilal",
+        "cast.herr-richter",
+        "cast.frau-schulz",
+        "cast.arta",
+        "cast.ensemble-a1-2"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a1-1.md §6 Unit 3 (a1.1-u03 „Das ist meine Familie“)"
+      }
+    }
+  },
+  {
+    "id": "a1.1-u04",
+    "nr": 4,
+    "etappe": 2,
+    "title": {
+      "de": "Was kostet das?",
+      "canDo": "Sie können nach Preisen fragen, Angebote lesen und Durchsagen im Supermarkt verstehen."
+    },
+    "spec": {
+      "situation": "Priya und Arjun kaufen für die Woche ein: Sie lesen Angebote im Prospekt, fragen auf dem Wochenmarkt nach Preisen und Mengen und hören eine Durchsage im Supermarkt.",
+      "handlungsfeld": [
+        "7"
+      ],
+      "canDos": [
+        "cd.a1.produkt-infos",
+        "cd.a1.preise",
+        "cd.a1.prospekt-preise",
+        "cd.a1.durchsage-geschaeft",
+        "cd.a1.gespraech-details"
+      ],
+      "grammar": {
+        "new": [
+          "g.artikel-genus-plural",
+          "g.moechte"
+        ],
+        "chunk": [
+          "g.praep-akkusativ"
+        ],
+        "review": [
+          "g.verbposition-2",
+          "g.ja-nein-frage"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Brot, Käse, Milch",
+          "target": 10,
+          "lemmas": [
+            "lx.brot",
+            "lx.broetchen",
+            "lx.kaese",
+            "lx.milch",
+            "lx.wasser",
+            "lx.butter",
+            "lx.ei",
+            "lx.reis",
+            "lx.zucker",
+            "lx.wurst"
+          ]
+        },
+        {
+          "title": "Obst und Gemüse",
+          "target": 8,
+          "lemmas": [
+            "lx.obst",
+            "lx.gemuese",
+            "lx.apfel",
+            "lx.banane",
+            "lx.tomate",
+            "lx.kartoffel",
+            "lx.birne",
+            "lx.zwiebel"
+          ]
+        },
+        {
+          "title": "Kilo, Gramm und Preise",
+          "target": 8,
+          "lemmas": [
+            "lx.kilo",
+            "lx.gramm",
+            "lx.flasche",
+            "lx.stueck",
+            "lx.preis",
+            "lx.euro",
+            "lx.geld",
+            "lx.angebot"
+          ]
+        },
+        {
+          "title": "Im Supermarkt und auf dem Markt",
+          "target": 6,
+          "lemmas": [
+            "lx.kosten",
+            "lx.kaufen",
+            "lx.brauchen",
+            "lx.billig",
+            "lx.teuer",
+            "lx.supermarkt",
+            "lx.markt",
+            "lx.prospekt",
+            "lx.durchsage"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.dialog",
+        "tt.kurzdialog",
+        "tt.durchsage",
+        "tt.prospekt",
+        "tt.kurzmitteilung",
+        "tt.bildkarte"
+      ],
+      "lanes": {
+        "primary": "sd1",
+        "pruefungsfokus": [
+          {
+            "template": "sd1.h1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.h2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.sp3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.s2",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "S1 L3 Einkaufen",
+        "N A1 K4 Guten Appetit!",
+        "M A1 L4–5 (Preise, Gegenstände)",
+        "Linie 1 A1 K3–4 (Grammatik: Artikel; nach memo 06)"
+      ],
+      "deviation": {
+        "reason": "Lesen Teil 2 (Stoffplan a1-1 §4: Prospekt, zwei Anzeigen vergleichen) ist nach u05 verschoben: u04 liest einen Prospekt ohne a/b-Vergleich; sd1.l2 ist Prüfungsfokus in u05 und u06 (COV-1 nicht gefährdet). LS5 beginnt mit einer sd1.sp2-Runde mit zwei Themen, die cd.a1.produkt-infos trägt (r1-F07); sie steht als Chip, aber nicht im Prüfungsfokus, weil COV-3 höchstens vier Teile erlaubt. Grammatik: Chunk der Einheit ist „für“ mit Akkusativ („für die Woche“, „für Sie“; g.praep-akkusativ, Spine chunkFrom a1.1-u04). Der Akkusativ-Chunk („Ich möchte einen Apfel.“) ist ab a1.1-u03 lizenziert („Haben Sie einen Bruder?“) und steht weiter auf der Regelkarte rc.artikel-genus-plural (GRM-01: ein Chunk pro Einheit)."
+      },
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.ensemble-a1-1",
+        "cast.ensemble-a1-3",
+        "cast.ensemble-a1-2",
+        "cast.ensemble-a1-4"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a1-1.md §6 Unit 4 (a1.1-u04 „Was kostet das?“)"
+      }
+    }
+  },
+  {
+    "id": "a1.1-u05",
+    "nr": 5,
+    "etappe": 2,
+    "title": {
+      "de": "Hier wohne ich",
+      "canDo": "Sie können Ihre Wohnung zeigen, Wohnungsanzeigen lesen und im Haus sagen: „Ich bin neu hier.“"
+    },
+    "spec": {
+      "situation": "Priya und Arjun ziehen aus Arjuns WG in eine eigene Wohnung in Leipzig: Sie lesen Wohnungsanzeigen, zeigen Olena die neue Wohnung per Video und stellen sich im Haus bei Herrn Krause, Frau Lehmann und Frau Haddad vor.",
+      "handlungsfeld": [
+        "12"
+      ],
+      "canDos": [
+        "cd.a1.wohnort-beschreiben",
+        "cd.a1.wohnung-beschreiben",
+        "cd.a1.neuer-mieter",
+        "cd.a1.anzeigen-infos",
+        "cd.a1.angebot-waehlen"
+      ],
+      "grammar": {
+        "new": [
+          "g.pronomen-er-es-sie",
+          "g.adjektiv-praedikativ"
+        ],
+        "chunk": [
+          "g.praep-dativ"
+        ],
+        "review": [
+          "g.artikel-genus-plural",
+          "g.negation-nicht"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Zimmer und Wohnung",
+          "target": 9,
+          "lemmas": [
+            "lx.wohnung",
+            "lx.zimmer",
+            "lx.kueche",
+            "lx.bad",
+            "lx.wohnzimmer",
+            "lx.balkon",
+            "lx.schlafzimmer",
+            "lx.toilette",
+            "lx.garten",
+            "lx.per",
+            "lx.wg",
+            "lx.stadtteil",
+            "lx.ziehen"
+          ]
+        },
+        {
+          "title": "Möbel",
+          "target": 9,
+          "lemmas": [
+            "lx.tisch",
+            "lx.stuhl",
+            "lx.bett",
+            "lx.sofa",
+            "lx.schrank",
+            "lx.lampe",
+            "lx.sessel",
+            "lx.moebel",
+            "lx.fenster",
+            "lx.schreibtisch"
+          ]
+        },
+        {
+          "title": "Wie ist die Wohnung? Adjektive",
+          "target": 10,
+          "lemmas": [
+            "lx.gross",
+            "lx.klein",
+            "lx.neu",
+            "lx.schoen",
+            "lx.hell",
+            "lx.dunkel",
+            "lx.miete",
+            "lx.nachbar",
+            "lx.anzeige",
+            "lx.ruhig",
+            "lx.eigen",
+            "lx.hausmeister",
+            "lx.willkommen"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.internetanzeige",
+        "tt.kleinanzeige",
+        "tt.telefonat",
+        "tt.notiz",
+        "tt.kurzmitteilung",
+        "tt.formular",
+        "tt.stichwortblatt",
+        "tt.wortkarte"
+      ],
+      "lanes": {
+        "primary": "sd1",
+        "pruefungsfokus": [
+          {
+            "template": "sd1.l2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.l1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.sp1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.s1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "S1 L4 Meine Wohnung",
+        "M A1 L4 (Möbel; das Thema Wohnen selbst erst in L14, A1.2)",
+        "Linie 1 A1 K3–4 (Grammatik: er/es/sie; nach memo 06)"
+      ],
+      "deviation": {
+        "reason": "Menschen (L14) und Netzwerk neu (K9) setzen Wohnen erst in A1.2; die Einheit bleibt mit Schritte plus Neu 1 L4 in A1.1, weil Start Deutsch 1 Lesen Teil 2 Wohnungsanzeigen nutzt (BLUEPRINT §2.8, Zeile 6). Sie steht an Position 5 statt 6 (Tausch mit „Das brauche ich“), weil die Grammatik-Spine g.pronomen-er-es-sie und g.adjektiv-praedikativ an a1.1-u05 einführt (spine.md §6); siehe docs/course-v2/curriculum/a1-1.specs-notes.md. Prüfungsteile: Der Stoffplan nennt Lesen Teil 2, Sprechen Teil 2 und Schreiben Teil 2. Die Einheit übt Schreiben Teil 1 (ein Formular für die Wohnung) statt Teil 2, weil S1 sonst nur in u01, u02 und u09 steht, S2 aber in acht Einheiten; Lesen Teil 1 und Sprechen Teil 1 kommen dazu. LS5 hängt an Teil 1 eine sd1.sp2-Runde an: ein Thema („Wohnung“) in zwei Runden, erst Zimmer, dann Möbel. Die Karten nennen „Wohnung“, nicht „Möbel“, weil lx.moebel rezeptiv ist. Sie trägt cd.a1.wohnung-beschreiben (Nora fragt „Wie viele Zimmer hat Ihre Wohnung?“ und „Wo steht Ihr Schreibtisch?“, Review r1 F03) und steht als Chip, aber nicht im Prüfungsfokus, weil COV-3 höchstens vier Teile erlaubt. Die geplante E-Mail über die neue Wohnung übernimmt der Chat mit Olena in LS2 (Mikro-Ausgabe: Zimmer und Möbel). Landeskunde: WG und Name an der Tür zeigt die Einheit nur als Szene, ohne Sachaussage, und hat darum keinen Fact; das Erdgeschoss als Stockwerk null kommt mit lx.erdgeschoss in a1.2-u03 (Frau Lehmann wohnt hier nur „hier unten“). Aussprache: ö/o und ü/u wie geplant; die Hörpaare trennen den Vokal von Länge und ach-/ich-Laut (Review r1 F17)."
+      },
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.herr-krause",
+        "cast.frau-lehmann",
+        "cast.amal",
+        "cast.olena"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a1-1.md §6 Unit 5 (a1.1-u05 „Meine Wohnung“)"
+      }
+    }
+  },
+  {
+    "id": "a1.1-u06",
+    "nr": 6,
+    "etappe": 2,
+    "title": {
+      "de": "Das brauche ich",
+      "canDo": "Sie können im Kurs und im Büro um etwas bitten. Und Sie schreiben Frau Schulz eine Nachricht mit Anrede und Gruß."
+    },
+    "spec": {
+      "situation": "In der Sprachschule fehlt Priya vieles: Sie fragt im Kurs und im Büro von Herrn Richter nach Stift, Heft und Ladekabel, bittet andere um Dinge und sucht mit Bilal im Internet einen Laptop für den Kurs: nicht neu und nicht teuer.",
+      "handlungsfeld": [
+        "11",
+        "2"
+      ],
+      "canDos": [
+        "cd.a1.besitz-fragen",
+        "cd.a1.um-etwas-bitten",
+        "cd.a1.wort-fehlt",
+        "cd.a1.wort-pruefen",
+        "cd.a1.nachricht-anrede"
+      ],
+      "grammar": {
+        "new": [
+          "g.akkusativ",
+          "g.kein"
+        ],
+        "chunk": [
+          "g.dativverben-pronomen"
+        ],
+        "review": [
+          "g.artikel-genus-plural",
+          "g.moechte",
+          "g.negation-nicht"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Im Kursraum",
+          "target": 9,
+          "lemmas": [
+            "lx.kuli",
+            "lx.stift",
+            "lx.heft",
+            "lx.papier",
+            "lx.buch",
+            "lx.tasche",
+            "lx.seite",
+            "lx.bleistift",
+            "lx.kursraum",
+            "lx.wort"
+          ]
+        },
+        {
+          "title": "Im Büro",
+          "target": 10,
+          "lemmas": [
+            "lx.computer",
+            "lx.laptop",
+            "lx.handy",
+            "lx.buero",
+            "lx.kalender",
+            "lx.schluessel",
+            "lx.drucker",
+            "lx.ladekabel",
+            "lx.internet",
+            "lx.telefon",
+            "lx.kollege",
+            "lx.praktikum",
+            "lx.telefonieren",
+            "lx.webseite"
+          ]
+        },
+        {
+          "title": "Brauchen, suchen, haben",
+          "target": 9,
+          "lemmas": [
+            "lx.suchen",
+            "lx.funktionieren",
+            "lx.kaputt",
+            "lx.es-gibt",
+            "lx.fehlen",
+            "lx.helfen",
+            "lx.geben",
+            "lx.wissen",
+            "lx.problem",
+            "lx.ding",
+            "lx.bitten",
+            "lx.frage"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.dialog",
+        "tt.kurzdialog",
+        "tt.internetanzeige",
+        "tt.sms",
+        "tt.kurzmitteilung",
+        "tt.bildkarte",
+        "tt.wortkarte"
+      ],
+      "lanes": {
+        "primary": "sd1",
+        "pruefungsfokus": [
+          {
+            "template": "sd1.l2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.sp3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.s2",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A1 L6 Ich brauche kein Büro. (Akkusativ)",
+        "M A1 L5 (Gegenstände)",
+        "S1 L6 (Akkusativ)",
+        "N A1 K4 (Akkusativ)",
+        "Linie 1 A1 K4/K6 (Grammatik: Akkusativ; nach memo 06)"
+      ],
+      "deviation": {
+        "reason": "Position 6 statt 5 (Tausch mit „Hier wohne ich“, BLUEPRINT §2.8 Zeile 5): die Grammatik-Spine führt g.akkusativ und g.kein an a1.1-u06 ein, und die Registries gewinnen (spine.md §6). Das Thema Büro und Technik steht nur in Menschen (L5–6); Schritte plus Neu 1 und Netzwerk neu platzieren hier nur den Akkusativ. Siehe docs/course-v2/curriculum/a1-1.specs-notes.md. Weitere Abweichungen vom Stoffplan (Review r1-F14): Situation Sprachschule statt „Erster Tag im Praktikum“; das Praktikum steht nur in Lesen Teil 2 (t5), HF 2 tragen das Büro von Herrn Richter und t5. Hören Teil 1 entfällt hier; sd1.h1 ist Prüfungsfokus in u01, u02, u04 und u09. Die sd1.sp2-Runde trägt cd.a1.besitz-fragen und steht als Chip, nicht im Prüfungsfokus (der Slot „sprechen“ trägt sd1.sp3). Landeskunde „duzen oder siezen?“ nur als Szene (im Kurs du, Frau Schulz und Herr Richter Sie, Nora nennt die Regel in ihrer Eröffnung), keine Tatsachenbehauptung und darum kein facts[]-Eintrag; Wortakzent nur in LS3: Laptop und Handy (vorne), Büro und Papier (hinten)."
+      },
+      "cast": [
+        "cast.priya",
+        "cast.frau-schulz",
+        "cast.herr-richter",
+        "cast.bilal",
+        "cast.olena",
+        "cast.arta"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a1-1.md §6 Unit 6 (a1.1-u06 „Ich brauche einen Laptop“)"
+      }
+    }
+  },
+  {
+    "id": "a1.1-u07",
+    "nr": 7,
+    "etappe": 3,
+    "title": {
+      "de": "Mein Tag",
+      "canDo": "Sie können nach der Uhrzeit fragen und die Uhrzeit sagen. Sie erzählen von Ihrem Tag und verstehen Öffnungszeiten und Nachrichten zu Terminen."
+    },
+    "spec": {
+      "situation": "Priya erzählt Emre im Videochat von ihrem Tag in Leipzig, Emre von seinem Tag im Elektrogeschäft in İzmir. Priya und Arjun brauchen einen ersten Termin bei Frau Doktor Sommer, ihrer neuen Hausärztin. Die Praxis ist von Montag bis Freitag am Morgen und an drei Nachmittagen offen, aber den ersten Termin gibt es nur am Morgen – und da hat Priya Kurs. Herr Richter spricht auf Priyas Handy eine Nachricht: Der Kurs beginnt am Donnerstag später. Am Mittwochnachmittag ist die Praxis zu; Priya bucht online einen Termin für Donnerstag um 8.15 Uhr.",
+      "handlungsfeld": [
+        "11",
+        "2"
+      ],
+      "canDos": [
+        "cd.a1.uhrzeit-tagesablauf",
+        "cd.a1.zeitangaben",
+        "cd.a1.oeffnungszeiten",
+        "cd.a1.ab-termin"
+      ],
+      "grammar": {
+        "new": [
+          "g.trennbare-verben",
+          "g.zeitangaben-inversion"
+        ],
+        "chunk": [],
+        "review": [
+          "g.verbposition-2",
+          "g.vokalwechsel"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Uhrzeit und Tageszeiten",
+          "target": 8,
+          "lemmas": [
+            "lx.uhr",
+            "lx.uhrzeit",
+            "lx.stunde",
+            "lx.morgen",
+            "lx.abend",
+            "lx.nachmittag",
+            "lx.halb",
+            "lx.viertel"
+          ]
+        },
+        {
+          "title": "Mein Tag: trennbare Verben",
+          "target": 10,
+          "lemmas": [
+            "lx.aufstehen",
+            "lx.anfangen",
+            "lx.einkaufen",
+            "lx.fahren",
+            "lx.gehen",
+            "lx.fernsehen",
+            "lx.anrufen",
+            "lx.fruehstuecken",
+            "lx.tag",
+            "lx.nach-hause",
+            "lx.erzaehlen"
+          ]
+        },
+        {
+          "title": "Wochentage",
+          "target": 6,
+          "lemmas": [
+            "lx.woche",
+            "lx.montag",
+            "lx.dienstag",
+            "lx.mittwoch",
+            "lx.donnerstag",
+            "lx.freitag",
+            "lx.sonntag"
+          ]
+        },
+        {
+          "title": "Öffnungszeiten und Termine",
+          "target": 6,
+          "lemmas": [
+            "lx.oeffnungszeit",
+            "lx.termin",
+            "lx.geschlossen",
+            "lx.wochenende",
+            "lx.spaet",
+            "lx.offen",
+            "lx.aufmachen",
+            "lx.zumachen",
+            "lx.geschaeft"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.telefonat",
+        "tt.dialog",
+        "tt.schild",
+        "tt.telefonansage",
+        "tt.wortkarte",
+        "tt.kurzmitteilung"
+      ],
+      "lanes": {
+        "primary": "sd1",
+        "pruefungsfokus": [
+          {
+            "template": "sd1.l3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.h3",
+            "length": "reduced",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.sp2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.s2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "S1 L5 Mein Tag",
+        "M A1 L8 (am/um, Uhrzeit)",
+        "M A1 L10 (trennbare Verben)",
+        "N A1 K5 Alltag und Familie",
+        "Linie 1 A1 K5 (Grammatik: trennbare Verben; nach memo 06)"
+      ],
+      "deviation": {
+        "reason": "Landeskunde: Die Einheit macht keine landesweite Sachaussage und hat darum keinen Fact. Vom Plan-Punkt „Zeit in D-A-CH“ zeigt sie die 24-Stunden-Uhr auf Schildern und Terminen (17 Uhr, 20 Uhr, 8.15 Uhr) und sagt sie in einem Satz (Strategiekarte Lesen Teil 3: „Dort steht oft 17 Uhr. Das ist fünf Uhr am Nachmittag.“); ls1-i05 akzeptiert „20“ für „acht Uhr am Abend“. „halb drei“ üben LS1–LS3, die Prüfungsteile und der Check. Pünktlichkeit ist eine Szene ohne landesweite Aussage (LS3: Termin um 8.15 Uhr, „Bitte kommen Sie pünktlich.“ – Priya: „Wir sind um acht da, dann sind wir pünktlich.“, glossiert). Die Mittagspause kommt nicht vor: Sie gehört zum Arbeitsalltag in a2.1-u01 (lx.mittagspause); Pünktlichkeit als Wort und Thema lernt a1.1-u10 (lx.puenktlich, Bus und Bahn). Szene: Die Plan-Zeile „Fokus Alltag: Sprechzeiten einer Arztpraxis lesen“ ist hier keine Fokus-Karte, sondern das Anliegen von LS2–LS3 (erster Termin in der Praxis von Frau Doktor Sommer, cast.dr-sommer); die Anmeldung im Bürgerbüro bleibt in a1.2-u04 (Review a1.1-u07 r1 F01). Serienfakt (Review a1.1-u07 r2 F03, für a1.2-u05, a2.1 und b1.1): Die Praxis von Frau Doktor Sommer hat Sprechzeiten Montag bis Freitag 8–12 Uhr und Montag, Dienstag, Donnerstag 15–18 Uhr; den ersten Termin gibt es nur am Morgen, Mittwoch- und Freitagnachmittag ist sie zu."
+      },
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.emre",
+        "cast.herr-richter",
+        "cast.ensemble-a1-1",
+        "cast.bilal",
+        "cast.sophie",
+        "cast.olena"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a1-1.md §6 Unit 7 (a1.1-u07 „Von morgens bis abends“)"
+      }
+    }
+  },
+  {
+    "id": "a1.1-u08",
+    "nr": 8,
+    "etappe": 3,
+    "title": {
+      "de": "Hast du am Samstag Zeit?",
+      "canDo": "Sie können sich verabreden, zusagen oder absagen und sagen, was Sie gut können und gern machen."
+    },
+    "spec": {
+      "situation": "Das Wochenende planen: Über Emre lernt Priya seine Frau Elif in Leipzig kennen. Im Chat vergleichen Priya, Olena, Sophie und Bilal Hobbys, lesen Freizeitangebote, verabreden sich zum Laufen im Park und sagen zu oder ab; in der Laufgruppe stellt sich Priya vor.",
+      "handlungsfeld": [
+        "D",
+        "9"
+      ],
+      "canDos": [
+        "cd.a1.verabreden",
+        "cd.a1.zeit-zusagen-absagen",
+        "cd.a1.gefallen",
+        "cd.a1.koennen-gern"
+      ],
+      "grammar": {
+        "new": [
+          "g.koennen",
+          "g.nicht-position-gern"
+        ],
+        "chunk": [
+          "g.muessen-duerfen-man"
+        ],
+        "review": [
+          "g.zeitangaben-inversion",
+          "g.trennbare-verben",
+          "g.kein"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Hobbys und Sport",
+          "target": 10,
+          "lemmas": [
+            "lx.hobby",
+            "lx.freizeit",
+            "lx.sport",
+            "lx.musik",
+            "lx.fahrrad",
+            "lx.schwimmen",
+            "lx.spielen",
+            "lx.laufen",
+            "lx.fussball",
+            "lx.tanzen",
+            "lx.rad"
+          ]
+        },
+        {
+          "title": "Sich verabreden",
+          "target": 9,
+          "lemmas": [
+            "lx.samstag",
+            "lx.kino",
+            "lx.konzert",
+            "lx.treffen",
+            "lx.zeit-haben",
+            "lx.lust-haben",
+            "lx.mitkommen",
+            "lx.park",
+            "lx.tut-mir-leid",
+            "lx.idee",
+            "lx.planen",
+            "lx.sich-verabreden",
+            "lx.absagen",
+            "lx.zusagen"
+          ]
+        },
+        {
+          "title": "Wie finden Sie das? Das gefällt mir.",
+          "target": 9,
+          "lemmas": [
+            "lx.gern",
+            "lx.leider",
+            "lx.hoeren",
+            "lx.finden",
+            "lx.gefallen",
+            "lx.toll",
+            "lx.super",
+            "lx.interessant",
+            "lx.film",
+            "lx.meinen"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.sms",
+        "tt.programm",
+        "tt.telefonat",
+        "tt.telefonansage",
+        "tt.kurzmitteilung",
+        "tt.stichwortblatt"
+      ],
+      "lanes": {
+        "primary": "sd1",
+        "pruefungsfokus": [
+          {
+            "template": "sd1.h3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.sp1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.sp2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.s2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A1 L7–8 (können, Verabredungen)",
+        "S1 L6 Freizeit",
+        "N A1 K6 Zeit mit Freunden",
+        "Linie 1 A1 K4/K7–8 (Grammatik: Modalverben; nach memo 06)"
+      ],
+      "deviation": {
+        "reason": "Abweichungen vom Stoffplan a1-1 §6 Unit 8 (Review a1.1-u08 r1 F11). (1) Hören: Statt Hören Teil 1 übt LS4 Hören Teil 3 (fünf Nachrichten am Telefon), weil die Verabredungen der Einheit Anrufe und Nachrichten sind; sd1.h1 ist Prüfungsfokus in a1.1-u09. (2) Lesen: Lesen Teil 2 und der Vergleich von zwei Angeboten fehlen. LS2 liest ein Programm auf der Webseite des Parks (tt.programm, 60 Wörter) ohne a/b-Vergleich; sd1.l2 ist Prüfungsfokus in a1.1-u05 und a1.1-u06 (COV-1 nicht gefährdet). (3) Schreiben: Statt einer Einladung (Was? Wann? Wo?) schreibt der Lerner in S2 eine Absage mit einem anderen Tag (sd1.s2). Einladen übt die Mikroaufgabe von LS3 (Olena anrufen: Kommst du mit ins Kino? Was, wo, wann?) und Sprechen Teil 2 („Kommen Sie mit? Wann haben Sie Zeit?“). (4) Sprechen: Prüfungsfokus sind Sprechen Teil 1 (sd1.sp1) und Sprechen Teil 2 (sd1.sp2): Priya stellt sich in der Laufgruppe vor, mit Hobby, Buchstabieren und Nummer. Der geplante Teil 2 (Themenkarten „Hobby“ und „Wochenende“) ist der zweite Teil derselben Sprechaufgabe, in voller Länge. Das Kartenthema heißt „Hobby“, nicht „Freizeit“: lx.freizeit ist in dieser Einheit rezeptiv, und Lernerkarten sind Produktion. (5) Landeskunde: Vereine in D-A-CH (Sportverein, Chor) und der ruhige Sonntag fehlen. Die Einheit macht keine Sachaussage und hat darum keinen Fact. lx.verein ist erst a2.1 und lx.sonntag a1.1-u11; der Punkt gehört in eine Fokus-Karte (Fokus Alltag: Anmeldung im Sportverein) oder in a1.1-u11 (Wochenende) und ist für die Level-Revision offen. (6) Wortschatz: 35 statt 28 Einträge (Band 24–32; LEX-05 besteht mit ±10 %). Die Kürzung auf 32 (Review F07) ist offen: „Rad“ steht in Aufgaben und Antworten dieser Einheit („Bilal fährt gern Rad.“), darum lässt sich lx.rad erst in lx.fahrrad zusammenlegen, wenn die Einheit „Fahrrad“ sagt; „planen“ lesen LS2 und a1.1-u09 LS3 ohne Glosse; lx.interessant produziert a1.1-u11 (Promotion). Aussprache: LS1 übt wie geplant ich- und ach-Laut, LS3 zusätzlich ich-Laut und sch."
+      },
+      "cast": [
+        "cast.priya",
+        "cast.emre",
+        "cast.elif",
+        "cast.olena",
+        "cast.sophie",
+        "cast.bilal",
+        "cast.ensemble-a1-3"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a1-1.md §6 Unit 8 (a1.1-u08 „Hast du am Samstag Zeit?“)"
+      }
+    }
+  },
+  {
+    "id": "a1.1-u09",
+    "nr": 9,
+    "etappe": 3,
+    "title": {
+      "de": "Im Café",
+      "canDo": "Sie können eine Speisekarte lesen, im Café bestellen und bezahlen. Sie können sagen: Das mag ich, das mag ich nicht."
+    },
+    "spec": {
+      "situation": "Priya trifft Elif und Olena im Café: Sie lesen die Speisekarte, sagen: Das mag ich, das mag ich nicht, bestellen, essen und bezahlen. Danach füllt Priya das Online-Formular für einen Tisch zum Geburtstag von Olena aus.",
+      "handlungsfeld": [
+        "7",
+        "D"
+      ],
+      "canDos": [
+        "cd.a1.essen-vorlieben",
+        "cd.a1.ansprechen-bitten",
+        "cd.a1.speisekarte",
+        "cd.a1.bestellen-bezahlen"
+      ],
+      "grammar": {
+        "new": [
+          "g.moegen"
+        ],
+        "chunk": [],
+        "review": [
+          "g.moechte",
+          "g.akkusativ",
+          "g.vokalwechsel"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Getränke",
+          "target": 8,
+          "lemmas": [
+            "lx.kaffee",
+            "lx.tee",
+            "lx.saft",
+            "lx.bier",
+            "lx.getraenk",
+            "lx.trinken",
+            "lx.glas",
+            "lx.tasse"
+          ]
+        },
+        {
+          "title": "Essen im Café",
+          "target": 10,
+          "lemmas": [
+            "lx.kuchen",
+            "lx.fruehstueck",
+            "lx.mittagessen",
+            "lx.abendessen",
+            "lx.fleisch",
+            "lx.fisch",
+            "lx.salat",
+            "lx.suppe",
+            "lx.lecker",
+            "lx.essen",
+            "lx.restaurant",
+            "lx.voll",
+            "lx.cafe"
+          ]
+        },
+        {
+          "title": "Bestellen und bezahlen",
+          "target": 6,
+          "lemmas": [
+            "lx.speisekarte",
+            "lx.rechnung",
+            "lx.bestellen",
+            "lx.bezahlen",
+            "lx.nehmen",
+            "lx.moegen",
+            "lx.geburtstag",
+            "lx.hoeflich",
+            "lx.getrennt"
+          ]
+        },
+        {
+          "title": "Apfel + Kuchen = Apfelkuchen",
+          "target": 6,
+          "lemmas": [
+            "lx.apfelkuchen",
+            "lx.orangensaft",
+            "lx.kaesebrot",
+            "lx.tomatensuppe",
+            "lx.obstsalat",
+            "lx.mineralwasser"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.speisekarte",
+        "tt.dialog",
+        "tt.kurzdialog",
+        "tt.email-informell",
+        "tt.formular",
+        "tt.bildkarte"
+      ],
+      "lanes": {
+        "primary": "sd1",
+        "pruefungsfokus": [
+          {
+            "template": "sd1.h1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.sp3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.s1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A1 L9 Ich möchte was essen, Onkel Harry.",
+        "N A1 K4 Guten Appetit!",
+        "S1 L3 (möchte)"
+      ],
+      "deviation": {
+        "reason": "Abweichungen vom Stoffplan a1-1 u09 (Review a1.1-u09 r1 F07). (1) Prüfungsteile: Der Plan nennt Sprechen Teil 3, Hören Teil 1, Lesen Teil 1 und Schreiben Teil 2. Lesen Teil 1 ist hier kein Prüfungsfokus; sd1.l1 ist Prüfungsfokus in u05 und u11. Schreiben Teil 2 (Antwort auf die Einladung, ≈ 30 Wörter) wird hier Schreiben Teil 1: Die Reservierung im Restaurant Kochi ist ein natürliches Formular (sd1.s1), und sd1.s2 ist Prüfungsfokus in u06, u07, u08, u10, u11 und u12; die Antwort auf die Einladung bleibt als Mikro-Output in LS3 (1–2 Sätze). (2) LS5 beginnt mit einer sd1.sp2-Runde mit zwei Themen, die cd.a1.essen-vorlieben trägt; sie steht als Chip, aber nicht im Prüfungsfokus, weil der Plan für u09 nur Sprechen Teil 3 nennt. (3) Komposita (Plan: neu) haben keinen Spine-Punkt und keine Regelkarte; die Regel „Das letzte Wort bestimmt den Artikel.“ steht im Prompt von ls2-s01, der ersten Aufgabe, die sie braucht (das Beispiel das Wasser → das Mineralwasser im englischen Zwilling, der Apfelkuchen in der Erklärung), und wird in LS3 geübt (ls3-p03, ls3-p04, ls3-r02) und in der Aussprache gehört (ls3-x02, ls3-x04). Eine Regelkarte fehlt noch (Regelkarten-Datei). (4) Feste Wendungen: „Ich bin satt“ und die höfliche Ablehnung („Nein, danke, ich bin satt.“) stehen im LS2-Dialog (ls2-l12); die Ablehnung wird in ls2-r06 geübt. „satt“ ist glossiert, weil es noch keinen Lexikon-Eintrag hat. (5) Hören: Die Inputs sind kürzer als die geplanten ≈ 75 s (TXT-03-Minimum 60 s); die Café-Bestellung ist auf LS1 (Speisekarte) und LS2 (Bestellen, Essen, Bezahlen) verteilt. (6) Landeskunde: Trinkgeld hat einen Fact (a1.1-u09-f01; die Szene ist t2: „Stimmt so.“); „Zusammen oder getrennt?“ ist eine Szene (LS2, t6); Frühstück, Kaffee und Kuchen zeigt die Speisekarte, ohne landesweite Sachaussage."
+      },
+      "cast": [
+        "cast.priya",
+        "cast.elif",
+        "cast.olena",
+        "cast.ensemble-a1-1",
+        "cast.ensemble-a1-3",
+        "cast.ensemble-a1-2",
+        "cast.ensemble-a1-4"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a1-1.md §6 Unit 9 (a1.1-u09 „Guten Appetit!“)"
+      }
+    }
+  },
+  {
+    "id": "a1.1-u10",
+    "nr": 10,
+    "etappe": 4,
+    "title": {
+      "de": "Mit Bus und Bahn",
+      "canDo": "Sie können Fahrpläne lesen, eine Fahrkarte kaufen und Durchsagen am Bahnhof verstehen."
+    },
+    "spec": {
+      "situation": "Priya und Arjun fahren mit Sophie zu ihrer Familie nach Dresden: Sie lesen Fahrplan und Anzeigetafel, kaufen am Automaten und am Schalter eine Fahrkarte, verstehen die Durchsagen am Bahnhof und fragen im Zug, ob ein Platz frei ist.",
+      "handlungsfeld": [
+        "10"
+      ],
+      "canDos": [
+        "cd.a1.fahrplan",
+        "cd.a1.fahrkarte-schalter",
+        "cd.a1.fahrkartenautomat",
+        "cd.a1.durchsage-bahnhof",
+        "cd.a1.platz-frei"
+      ],
+      "grammar": {
+        "new": [
+          "g.wortbildung-er-in"
+        ],
+        "chunk": [],
+        "review": [
+          "g.trennbare-verben",
+          "g.vokalwechsel",
+          "g.zeitangaben-inversion"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Am Bahnhof",
+          "target": 10,
+          "lemmas": [
+            "lx.bahnhof",
+            "lx.zug",
+            "lx.bus",
+            "lx.u-bahn",
+            "lx.gleis",
+            "lx.abfahrt",
+            "lx.ankunft",
+            "lx.verspaetung",
+            "lx.information",
+            "lx.hauptbahnhof",
+            "lx.anzeigetafel"
+          ]
+        },
+        {
+          "title": "Fahrkarten und Preise",
+          "target": 8,
+          "lemmas": [
+            "lx.fahrkarte",
+            "lx.automat",
+            "lx.schalter",
+            "lx.einfach",
+            "lx.hin-und-zurueck",
+            "lx.bahn",
+            "lx.minute",
+            "lx.fahrplan"
+          ]
+        },
+        {
+          "title": "Unterwegs: Verben und Personen",
+          "target": 10,
+          "lemmas": [
+            "lx.einsteigen",
+            "lx.umsteigen",
+            "lx.aussteigen",
+            "lx.ankommen",
+            "lx.busfahrer",
+            "lx.abfahren",
+            "lx.puenktlich",
+            "lx.platz",
+            "lx.frei",
+            "lx.halten",
+            "lx.unterwegs",
+            "lx.ein-paar"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.fahrplan",
+        "tt.durchsage",
+        "tt.schild",
+        "tt.dialog",
+        "tt.sms",
+        "tt.kurzmitteilung",
+        "tt.bildkarte"
+      ],
+      "lanes": {
+        "primary": "sd1",
+        "pruefungsfokus": [
+          {
+            "template": "sd1.h2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.l3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.sp3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.s2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A1 L10 Ich steige jetzt in die U-Bahn ein.",
+        "N A1 K3 In Hamburg"
+      ],
+      "deviation": {
+        "reason": "Abweichungen vom Stoffplan a1-1 §6 Unit 10 (Review a1.1-u10 r1 F12, F18, F20). (1) Landeskunde: Die Einheit macht keine landesweite Sachaussage und hat darum keinen Fact. Vom Plan-Punkt „Bahnfahren in D-A-CH“ zeigt sie „Fahrkarte vor der Fahrt kaufen“ als Szene: Sophie hat schon eine Fahrkarte, Priya und Arjun kaufen ihre vor der Abfahrt am Automaten und am Schalter (LS2). DB, ÖBB, SBB und das Deutschlandticket fehlen: Preis und Geltungsbereich des Deutschlandtickets ändern sich und bräuchten einen belegten, frischen Fact und neuen Wortschatz; der Punkt ist für eine Fokus-Karte oder die Level-Revision offen. Leipzig hat keine U-Bahn: Die Einheit schickt die Figuren darum nicht mit der U-Bahn; die U-Bahn steht nur in einer Durchsage aus einer anderen Stadt (LS4, Hören Teil 2). (2) Grammatik: Die Einheit folgt der Grammatik-Spine und specs.json (g.wortbildung-er-in neu in LS3). Der Stoffplan nennt für Unit 10 keine neue Grammatik; die Entscheidung liegt bei den Ownern von Stoffplan und Spine (Review r1 F20). (3) Sprechen: LS5 beginnt mit einer sd1.sp2-Runde mit zwei Themen („Fahrkarten“, „Zug“); sie trägt cd.a1.fahrkarte-schalter und steht als Chip, aber nicht im Prüfungsfokus, weil COV-3 höchstens vier Teile erlaubt. In Sprechen Teil 3 fragt der Lerner selbst nach einem Platz und antwortet auf die Frage der Partnerin (cd.a1.platz-frei, Review r1 F07). (4) Der Fahrkartenautomat in LS2 ist nur Text, ohne Bilder (assets leer), bis es eine Asset-Pipeline gibt (Review r1 F18)."
+      },
+      "cast": [
+        "cast.priya",
+        "cast.arjun",
+        "cast.sophie",
+        "cast.ensemble-a1-3",
+        "cast.ensemble-a1-2"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a1-1.md §6 Unit 10 (a1.1-u10 „Mit Bus und Bahn“)"
+      }
+    }
+  },
+  {
+    "id": "a1.1-u11",
+    "nr": 11,
+    "etappe": 4,
+    "title": {
+      "de": "Wie war dein Wochenende?",
+      "canDo": "Sie können vom Wochenende erzählen, Postkarten lesen und im Chat Nachrichten schreiben."
+    },
+    "spec": {
+      "situation": "Montagmorgen im Kurs: Priya, Olena und Bilal erzählen Frau Schulz vom Wochenende. Priya hört eine Sprachnachricht von Elif. Am Dienstag liest sie im Kurs eine Postkarte von Sophie aus Dresden und schreibt im Chat eine Nachricht über den Ausflug.",
+      "handlungsfeld": [
+        "D",
+        "9"
+      ],
+      "canDos": [
+        "cd.a1.wochenende-erzaehlen",
+        "cd.a1.zeitangaben-vergangen",
+        "cd.a1.kurze-mitteilungen",
+        "cd.a1.online-post"
+      ],
+      "grammar": {
+        "new": [
+          "g.perfekt-haben"
+        ],
+        "chunk": [
+          "g.praeteritum-sein-haben"
+        ],
+        "review": [
+          "g.zeitangaben-inversion",
+          "g.koennen"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Wochenende und Ausflug",
+          "target": 9,
+          "lemmas": [
+            "lx.ausflug",
+            "lx.museum",
+            "lx.party",
+            "lx.wetter",
+            "lx.besuchen",
+            "lx.zoo",
+            "lx.altstadt",
+            "lx.schloss",
+            "lx.flohmarkt",
+            "lx.see",
+            "lx.sprachnachricht"
+          ]
+        },
+        {
+          "title": "Gestern, vorgestern, letzte Woche",
+          "target": 7,
+          "lemmas": [
+            "lx.gestern",
+            "lx.letzte-woche",
+            "lx.vorgestern",
+            "lx.monat",
+            "lx.vormittag",
+            "lx.nacht"
+          ]
+        },
+        {
+          "title": "Was haben Sie gemacht? Wie war es?",
+          "target": 10,
+          "lemmas": [
+            "lx.kochen",
+            "lx.sehen",
+            "lx.langweilig",
+            "lx.schlecht",
+            "lx.spass",
+            "lx.spazieren-gehen",
+            "lx.fotografieren",
+            "lx.postkarte",
+            "lx.lachen",
+            "lx.bekommen"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.dialog",
+        "tt.postkarte",
+        "tt.post",
+        "tt.mailbox",
+        "tt.kurzmitteilung",
+        "tt.wortkarte"
+      ],
+      "lanes": {
+        "primary": "sd1",
+        "pruefungsfokus": [
+          {
+            "template": "sd1.l1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.sp2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.s2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "M A1 L11 Was hast du heute gemacht? (Perfekt mit haben)",
+        "S1 L7 (Perfekt)"
+      ],
+      "deviation": {
+        "reason": "Abweichungen vom Stoffplan a1-1 §6 Unit 11 (Review a1.1-u11 r1 F11, F13, F15). (1) Schreiben: S2 (sd1.s2) ist hier nach dem Stoffplan ein Beitrag im Chat an eine Gruppe („Hallo zusammen“) über den Ausflug am Wochenende. Er hat keinen der Zwecke einer Mitteilung in Start Deutsch 1 (Entschuldigung, Einladung, Anfrage); diese Zwecke übt S2 in a1.1-u08 (Absage), a1.1-u10 (Verspätung) und a1.1-u12 (Anfrage an eine Sprachschule). Die drei Leitpunkte folgen cd.a1.online-post: wo und was, mit wem, wie es war. `address` ist „ihr“, weil die Nachricht an die Gruppe im Chat geht („Hallo zusammen“), und `textType` ist tt.post (Beitrag im Chat, Wortband 15–40 Wörter bei a1.1). (2) Landeskunde: Die Einheit macht eine Sachaussage, das Museum im Schloss in Dresden, und belegt sie mit dem Fact a1.1-u11-f01. Vom Plan-Punkt „Wochenende in D-A-CH: Ausflug ins Grüne, Brunch, Flohmarkt“ zeigt sie den Flohmarkt (Olena, LS1 und Lesen Teil 1) und den Ausflug (Priya in Dresden) als Szene, ohne landesweite Aussage. Brunch und „ins Grüne“ fehlen: lx.gruen ist a1.2-u06 zugeordnet, und „Brunch“ hat keinen Lexikon-Eintrag; der Punkt bleibt für a1.2 oder eine Fokus-Karte offen. (3) Texte: Priyas Beitrag im Chat steht im selben Input wie die Postkarte (LS3, tt.postkarte), weil SCHEMA einem Situationsschritt einen Input mit einem Texttyp gibt. tt.post steht in spec.textTypes, weil die Schreibaufgabe (LS6, task.textType) ein Beitrag im Chat ist. „Post“ (lx.post, a1.2-u01) steht auf keinem Bildschirm: Die Einheit sagt „Nachricht im Chat“. (4) Prüfungsteile: Der Stoffplan nennt Lesen Teil 1, Hören Teil 1, Hören Teil 3, Sprechen Teil 2 und Schreiben Teil 2; die Einheit folgt BLUEPRINT §2.8, Zeile 11 (Lesen Teil 1, Sprechen Teil 2, Schreiben Teil 2)."
+      },
+      "cast": [
+        "cast.priya",
+        "cast.frau-schulz",
+        "cast.olena",
+        "cast.bilal",
+        "cast.sophie",
+        "cast.elif"
+      ],
+      "fokusPlan": [],
+      "source": {
+        "w2Draft": "curriculum/a1-1.md §6 Unit 11 (a1.1-u11 „Wie war dein Wochenende?“)"
+      }
+    }
+  },
+  {
+    "id": "a1.1-u12",
+    "nr": 12,
+    "etappe": 4,
+    "title": {
+      "de": "Deutsch lernen – mein Plan",
+      "canDo": "Sie können sich mit allen Stichwörtern vorstellen. Sie können Ihren Plan nennen und per E-Mail nach einem Kurs fragen."
+    },
+    "spec": {
+      "situation": "Der Kurs geht zu Ende: Priya, Emre, Arta und Bilal erzählen, woher sie kommen, wie sie nach Leipzig gekommen sind oder kommen wollen und was sie mit Deutsch wollen. Priya liest das Kursangebot der Sprachschule, fragt per E-Mail nach dem Kurs A1.2 und meldet sich bei Herrn Richter an.",
+      "handlungsfeld": [
+        "11",
+        "E",
+        "A"
+      ],
+      "canDos": [
+        "cd.a1.vorstellung-sp1",
+        "cd.a1.herkunft-situation",
+        "cd.a1.lernziele",
+        "cd.a1.kurs-erfragen",
+        "cd.a1.anweisungen-kurs"
+      ],
+      "grammar": {
+        "new": [
+          "g.perfekt-sein",
+          "g.wollen"
+        ],
+        "chunk": [
+          "g.temporal-seit-vor"
+        ],
+        "review": [
+          "g.perfekt-haben",
+          "g.moechte",
+          "g.verbposition-2"
+        ]
+      },
+      "lexiconBlocks": [
+        {
+          "title": "Sprachen lernen",
+          "target": 8,
+          "lemmas": [
+            "lx.satz",
+            "lx.woerterbuch",
+            "lx.wiederholen",
+            "lx.leicht",
+            "lx.schwer",
+            "lx.ueben",
+            "lx.plan"
+          ]
+        },
+        {
+          "title": "Nach Deutschland kommen",
+          "target": 8,
+          "lemmas": [
+            "lx.fliegen",
+            "lx.bleiben",
+            "lx.leben",
+            "lx.oesterreich",
+            "lx.schweiz",
+            "lx.ausland",
+            "lx.welt",
+            "lx.kennenlernen"
+          ]
+        },
+        {
+          "title": "Kurs und Anmeldung",
+          "target": 8,
+          "lemmas": [
+            "lx.deutschkurs",
+            "lx.pruefung",
+            "lx.hausaufgabe",
+            "lx.sich-anmelden",
+            "lx.ankreuzen",
+            "lx.beispiel",
+            "lx.antworten"
+          ]
+        }
+      ],
+      "textTypes": [
+        "tt.webseite",
+        "tt.dialog",
+        "tt.durchsage",
+        "tt.schild",
+        "tt.stichwortblatt",
+        "tt.email-halbformell"
+      ],
+      "lanes": {
+        "primary": "sd1",
+        "pruefungsfokus": [
+          {
+            "template": "sd1.h2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.l3",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "ls4"
+          },
+          {
+            "template": "sd1.sp1",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "sprechen"
+          },
+          {
+            "template": "sd1.s2",
+            "length": "full",
+            "modeDefault": "lern",
+            "slot": "schreiben"
+          }
+        ],
+        "spur": {}
+      },
+      "lehrwerk": [
+        "RC Unterricht (HF 11) und Sprachenlernen (Bereich E)",
+        "M A1 L12 (Perfekt mit sein)",
+        "S1 L7 (Perfekt)"
+      ],
+      "deviation": {
+        "reason": "Die Leitwerke teilen sich hier nach Zielgruppe: Schritte plus Neu 1 L7 hat Kinder und Schule (DaZ), Menschen A1 L12 hat Feste (DaF). Gewählt ist das neutrale Feld Unterricht und Sprachenlernen (BLUEPRINT §2.8, Zeile 12); Kita und Schule werden eine Fokus-DaZ-Karte (HF 6), Feste folgen in A1.2 U12. Prüfungsfokus: Die Einheit übt Hören Teil 2 (Durchsagen), Lesen Teil 3 (Schilder in der Sprachschule) und Schreiben Teil 2 (E-Mail an die Sprachschule) statt Hören Teil 1, Lesen Teil 2 und Schreiben Teil 1 des Plans. Die E-Mail ist die Kursanfrage der Einheit; Hören Teil 1, Lesen Teil 2 und Schreiben Teil 1 üben schon u01, u02, u04, u05, u06 und u09."
+      },
+      "cast": [
+        "cast.priya",
+        "cast.frau-schulz",
+        "cast.herr-richter",
+        "cast.emre",
+        "cast.arta",
+        "cast.bilal"
+      ],
+      "fokusPlan": [
+        {
+          "kind": "daz",
+          "title": "Kita und Schule: auf einen Elternbrief antworten",
+          "hf": "6"
+        }
+      ],
+      "source": {
+        "w2Draft": "curriculum/a1-1.md §6 Unit 12 (a1.1-u12 „Deutsch und ich“)"
+      }
+    }
+  }
+]
