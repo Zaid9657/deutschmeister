@@ -43,6 +43,14 @@ No outcome promises, no exam fees, no usage numbers. Content counts only if quot
    hidden).
 3. The agent verifies the `course_a2_1` purchases row and the 90-day `plan_type='course'` Pro
    row; the owner deactivates the code. Only then `LAUNCH_PRECONDITION_VERIFIED=yes`.
+4. **Consent basis (added 2026-10-04).** These emails sell, so they are advertising by email,
+   and nothing records consent to it: no opt-in at signup, no consent column (the one email
+   preference, `profiles.email_daily_sentence`, is an opt-out), and `/privacy/` §8 names
+   account/service messages and requested learning emails, not offers. Team rule: promotional
+   mail needs recorded consent (§7 UWG, `docs/agents/PROTOCOL.md`). The owner decides the
+   basis (a legal call) and passes it as `LAUNCH_CONSENT_BASIS='<who, when, basis>'`; the send
+   script refuses a live run without it and copies it into the live stamp. Measured
+   2026-10-04: 1,097 confirmed accounts not opted out, of which 11 ever paid.
 
 **Send days:** Day 0 → Day 3 → Day 7. Every send first with `"testMode": true`.
 

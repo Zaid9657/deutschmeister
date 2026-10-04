@@ -9,9 +9,20 @@
 # src/data/pricing.js at run time: derive, never retype.
 #
 # Mechanics are those of the retired drafts/send-launch-email-1.sh: the site's
-# own send-campaign function derives the audience at send time (confirmed,
-# opted-in accounts), applies `exclude`, appends the per-user HMAC unsubscribe
-# footer, and has a true test mode. Never a Resend broadcast.
+# own send-campaign function derives the audience at send time (confirmed
+# accounts that have not opted out; nobody has opted IN, see the consent gate
+# below), applies `exclude`, appends the per-user HMAC unsubscribe footer, and
+# has a true test mode. Never a Resend broadcast.
+#
+# CONSENT GATE (added 2026-10-04, revenue agent). This email sells a product,
+# so it is advertising by email, and nothing in the product records consent to
+# that: there is no opt-in at signup and no consent column (the one email
+# preference, profiles.email_daily_sentence, is an opt-out), and /privacy/
+# section 8 names account and service messages and requested learning emails,
+# not offers. The team rule is "promotional mail needs recorded consent (§7
+# UWG)" (docs/agents/PROTOCOL.md). So a live run also needs
+# LAUNCH_CONSENT_BASIS: the owner's written basis for mailing this audience,
+# copied into the live stamp as the record. Deciding it is a legal call.
 #
 # Exclude: `subscribed` (any live paid or course Pro period) and
 # `purchased:<key>` for every product that already owns a level this email
@@ -28,8 +39,11 @@
 #   2. Only after the agent has confirmed the €0 A2.1 test purchase (a
 #      `course_a2_1` purchases row + the 90-day plan_type='course' Pro row),
 #      you have deactivated the 100% code, and every level the email prices
-#      shows a Buy button on /pricing/:
-#        CAMPAIGN_SECRET=… LAUNCH_PRECONDITION_VERIFIED=yes ./drafts/send-launch-sublevel-1.sh live
+#      shows a Buy button on /pricing/, and you have decided the consent basis
+#      (the gate above):
+#        CAMPAIGN_SECRET=… LAUNCH_PRECONDITION_VERIFIED=yes \
+#        LAUNCH_CONSENT_BASIS='<who decided, when, on what basis>' \
+#          ./drafts/send-launch-sublevel-1.sh live
 #      You will be asked to type SEND. Run it ONCE.
 #
 # CAMPAIGN_SECRET is in the Netlify environment variables. Never write it into
@@ -53,7 +67,7 @@ MODE="${1:-}"
 if [[ "$MODE" != "preview" && "$MODE" != "test" && "$MODE" != "live" ]]; then
   echo "usage: $0 preview" >&2
   echo "       CAMPAIGN_SECRET=… $0 test" >&2
-  echo "       CAMPAIGN_SECRET=… LAUNCH_PRECONDITION_VERIFIED=yes $0 live" >&2
+  echo "       CAMPAIGN_SECRET=… LAUNCH_PRECONDITION_VERIFIED=yes LAUNCH_CONSENT_BASIS='…' $0 live" >&2
   exit 1
 fi
 
@@ -106,6 +120,26 @@ cannot take back.
 EOF
     exit 1
   fi
+  if [[ -z "${LAUNCH_CONSENT_BASIS:-}" ]]; then
+    cat >&2 <<'EOF'
+REFUSING LIVE SEND: LAUNCH_CONSENT_BASIS is not set.
+
+This email sells a product, so it is advertising by email. It goes to every
+confirmed account that has not opted out, and nothing records that any of them
+agreed to receive offers: signup has no opt-in, the only email preference
+(profiles.email_daily_sentence) is an opt-out, and /privacy/ section 8 names
+account and service messages and requested learning emails, not offers.
+The team rule is "promotional mail needs recorded consent (§7 UWG)".
+The existing-customer route (§ 7 Abs. 3 UWG) is narrow: it needs an address
+obtained with a sale and a notice at collection that the customer may object.
+On 2026-10-04 at most 11 of the 1,097 accounts this would mail had ever paid.
+
+Decide the basis first (a legal call, not an agent's), then write it down:
+  LAUNCH_CONSENT_BASIS='<who decided, when, on what basis>'
+The text is copied into the live stamp as the record.
+EOF
+    exit 1
+  fi
   if [[ -f "$LIVE_STAMP" && "${LAUNCH_ALLOW_SECOND_LIVE_SEND:-}" != "yes" ]]; then
     echo "REFUSING LIVE SEND: this email was already sent live (stamp: $LIVE_STAMP)." >&2
     cat "$LIVE_STAMP" >&2
@@ -125,8 +159,8 @@ EOF
   fi
   cat >&2 <<'EOF'
 ============================================================================
- LIVE SEND. This mails every confirmed, opted-in DeutschMeister account
- (about 1,080 on 2026-09-27) minus subscribers and course owners.
+ LIVE SEND. This mails every confirmed DeutschMeister account that has not
+ opted out (about 1,080 on 2026-09-27) minus subscribers and course owners.
  It can be done once. A second live run re-mails everyone.
 ============================================================================
 EOF
@@ -150,6 +184,7 @@ if [[ "$MODE" == "live" ]]; then
   # Claim before send, like lifecycle_emails: a crash or timeout after this
   # line leaves the stamp, so the next run stops and asks you to check Resend.
   printf '%s\nlive request started %s\n' "$HASH" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "$LIVE_STAMP"
+  printf 'consent basis: %s\n' "$LAUNCH_CONSENT_BASIS" >> "$LIVE_STAMP"
 fi
 
 echo "Sending (${MODE}: testMode=${TEST_MODE}) …"
