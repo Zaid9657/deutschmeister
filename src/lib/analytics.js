@@ -6,6 +6,7 @@
 // was already correct; only the delivery was wrong.
 
 import { getAttribution } from './attribution';
+import { isFunnelEvent, sanitizeProps } from '../data/events';
 
 const key = import.meta.env.VITE_POSTHOG_KEY;
 const host = import.meta.env.VITE_POSTHOG_HOST;
@@ -64,7 +65,30 @@ export function identify(userId, traits) {
   posthog.identify(userId, traits);
 }
 
+// The funnel events (src/data/events.js) also go to GA4, the one tool both
+// front ends share: the static pages have no PostHog, so without this mirror a
+// visitor who starts on /pricing/ and finishes in the app is two half-funnels.
+// GA4 only exists after consent (public/consent.js injects it on Accept), and
+// only registry events with sanitised props are sent.
+function mirrorToGa(event, props) {
+  if (typeof window === 'undefined' || typeof window.gtag !== 'function') return;
+  if (!hasConsent() || !isFunnelEvent(event)) return;
+  try {
+    const a = getAttribution();
+    window.gtag('event', event, sanitizeProps({
+      dm_source: a?.first?.source || undefined,
+      dm_medium: a?.first?.medium || undefined,
+      dm_campaign: a?.first?.campaign || undefined,
+      entry_page: window.location.pathname,
+      ...props,
+    }));
+  } catch {
+    /* analytics must never break the app */
+  }
+}
+
 export function track(event, props) {
+  mirrorToGa(event, props);
   if (!initialized || !posthog) return;
   posthog.capture(event, props);
 }

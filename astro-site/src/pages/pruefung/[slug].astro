@@ -181,7 +181,7 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-6 py-3.5 text-ink s
             Quellen: {hub.sources.map((s, i) => (
               <Fragment>
                 {i > 0 && ', '}
-                <a href={s.url} rel="nofollow noopener" target="_blank" class="text-siegel underline-offset-2 hover:underline">{s.label}</a>
+                <a href={s.url} rel="nofollow noopener" target="_blank" class="text-siegel underline underline-offset-2 hover:text-siegel-deep">{s.label}</a>
               </Fragment>
             ))}
           </p>
@@ -192,7 +192,7 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-6 py-3.5 text-ink s
           </p>
           <p class="mt-3 text-[0.75rem] leading-relaxed text-graphite">
             {FOUNDER_LINE_DE}{' '}
-            <a href="/ueber-uns/" class="text-siegel underline-offset-2 hover:underline">Wer hinter DeutschMeister steht →</a>
+            <a href="/ueber-uns/" class="text-siegel underline underline-offset-2 hover:text-siegel-deep">Wer hinter DeutschMeister steht →</a>
           </p>
         </footer>
 

@@ -100,7 +100,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden flex items-center justify-center bg-paper px-4 py-12">
+    <div className="relative min-h-screen overflow-hidden flex items-center justify-center bg-paper px-4 pb-12 pt-24 font-body">
       <SEO title="Log In" description="Log in to your DeutschMeister account to continue learning German grammar from A1 to B2." path="/login" />
       <Aurora />
       <motion.div
@@ -228,9 +228,10 @@ const LoginPage = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 rounded-md text-graphite transition-colors hover:text-siegel-deep"
+                  className="absolute right-1 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-md text-graphite transition-colors hover:text-siegel-deep"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? <EyeOff className="w-5 h-5" aria-hidden="true" /> : <Eye className="w-5 h-5" aria-hidden="true" />}
                 </button>
               </div>
             </div>

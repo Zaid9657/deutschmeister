@@ -199,6 +199,15 @@ const PRICE_FREE_SURFACES = [
   'netlify/functions/support-agent.mjs',
   'netlify/functions/_shared/supportAgentLib.mjs',
   'netlify/functions/_shared/supportCatalog.mjs',
+  // v4 "Die Linie" (2026-10-04): the offer layer and every surface that renders it.
+  'src/data/offers.js',
+  'astro-site/src/data/offers.js',
+  'astro-site/src/data/homepage.js',
+  'astro-site/src/components/linie/LineSection.astro',
+  'astro-site/src/components/linie/FitChooser.astro',
+  'astro-site/src/components/linie/Ticket.astro',
+  'astro-site/src/components/linie/Progression.astro',
+  'astro-site/src/components/linie/OfferFaq.astro',
 ];
 
 test('no page source retypes a price literal', () => {

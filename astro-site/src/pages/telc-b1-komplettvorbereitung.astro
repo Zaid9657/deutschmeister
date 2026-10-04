@@ -241,3 +241,41 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-6 py-3.5 text-ink s
     </div>
   </div>
 </Layout>
+
+<script>
+  // Tie the purchase to the account when one is signed in (2026-10-04). The
+  // links above are plain hosted-checkout URLs — they work without JS, and a
+  // guest buyer is matched by e-mail in the webhook. But a signed-in buyer who
+  // pays with a different address used to land unmatched (the webhook answers
+  // 500 until Lemon Squeezy gives up): now the click carries the account's
+  // e-mail and user id, the same two fields every other checkout sends.
+  import { track } from '../lib/track.js';
+
+  function currentUser() {
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && /^sb-.*-auth-token$/.test(k)) {
+          const v = JSON.parse(localStorage.getItem(k) || 'null');
+          const u = (v && (v.user || (v.currentSession && v.currentSession.user))) || null;
+          if (u && u.id) return { email: u.email || '', id: u.id };
+        }
+      }
+    } catch (e) { /* private mode — guest checkout */ }
+    return null;
+  }
+
+  document.querySelectorAll('a[data-checkout="telc-b1-komplett"]').forEach((a) => {
+    a.addEventListener('click', () => {
+      const u = currentUser();
+      track('checkout_intent', { product: 'telc_b1_komplett', surface: 'telc_page', signed_in: Boolean(u) });
+      if (!u) return; // guest checkout, matched by e-mail
+      const url = new URL(a.href);
+      url.searchParams.set('checkout[email]', u.email);
+      url.searchParams.set('checkout[custom][user_id]', u.id);
+      a.href = url.toString();
+      try { sessionStorage.setItem('dm_checkout_pending', JSON.stringify({ plan: 'telc_b1_komplett', amount: null })); } catch (e) { /* private mode */ }
+      track('checkout_opened', { product: 'telc_b1_komplett', surface: 'telc_page' });
+    });
+  });
+</script>

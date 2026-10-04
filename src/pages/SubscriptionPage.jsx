@@ -256,7 +256,7 @@ const SubscriptionPage = () => {
   ];
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-paper pt-24 pb-12 px-4">
+    <div className="relative min-h-screen overflow-hidden bg-paper pt-24 pb-12 px-4 font-body">
       <SEO title="Subscription" description="Manage your DeutschMeister subscription." path="/subscription" noindex />
       <Aurora />
       <div className="relative max-w-4xl mx-auto">
@@ -403,6 +403,80 @@ const SubscriptionPage = () => {
           </div>
         )}
 
+        {/* Level courses — own a level (v4 "Die Linie": the product comes first,
+            Pro second). Rendered only when the LS products exist (variant
+            configured) or the buyer already owns one. */}
+        {visibleLevelCourses.length > 0 && (
+          <Reveal className="mb-12">
+            <SectionHeading
+              level={2}
+              align="center"
+              title={isGerman ? 'Eine Stufe besitzen: einmal zahlen, behalten' : 'Own a level: pay once, keep it'}
+              lead={isGerman
+                ? `Eine Teilstufe für immer, plus ${course.proMonths} Monate Pro (KI-Sprechen, Schreibkorrektur, Satz-Röntgen) inklusive. Danach bleibt die Stufe Ihre, und nichts verlängert sich.`
+                : `One sub-level for good, plus ${course.proMonths} months of Pro (AI speaking, writing feedback, Sentence X-Ray) included. After that the level stays yours, and nothing renews.`}
+            />
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {visibleLevelCourses.map((c) => {
+                const firstLevel = c.levels[0];
+                const owned = hasProduct(c.key) || ownsBundle || ownsLevel(firstLevel);
+                return (
+                  <Card
+                    key={c.key}
+                    raised
+                    edge="paper"
+                    className={`relative flex flex-col p-5 ${c.comingSoon ? 'opacity-80' : ''}`}
+                  >
+                    {c.comingSoon && (
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                        <span className="inline-flex items-center rounded-pill bg-paper-sunk px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite shadow-raise">
+                          {isGerman ? 'Bald verfügbar' : 'Coming soon'}
+                        </span>
+                      </div>
+                    )}
+                    <Chip tone="label" className="mb-2 self-start">{c.code}</Chip>
+                    <h3 className="text-[1.0625rem] font-bold leading-tight text-ink">{isGerman ? c.nameDe : c.name}</h3>
+                    <p className="mt-2 font-display text-[1.75rem] font-semibold leading-none tracking-[-0.02em] text-ink">
+                      €{num(c.price)}
+                      <span className="ml-1 font-body text-xs font-normal tracking-normal text-graphite">
+                        {isGerman ? 'einmalig' : 'one time'}
+                      </span>
+                    </p>
+                    <p className="mt-2 text-xs text-graphite">
+                      {isGerman ? `${c.code} · lebenslang` : `${c.code} · lifetime`}
+                    </p>
+                    {owned ? (
+                      <Button to={`/level/${firstLevel}`} variant="secondary" size="md" className="mt-4 w-full">
+                        {isGerman ? 'Gekauft · öffnen →' : 'Owned · open →'}
+                      </Button>
+                    ) : c.comingSoon || !c.variantId ? (
+                      <Button variant="secondary" size="md" className="mt-4 w-full" disabled aria-disabled="true">
+                        {isGerman ? 'Bald verfügbar' : 'Coming soon'}
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={() => startPurchase(c.key, c.variantId, c.price)}
+                        variant="secondary"
+                        size="md"
+                        className="mt-4 w-full"
+                      >
+                        {isGerman ? 'Kaufen' : 'Buy'}
+                      </Button>
+                    )}
+                  </Card>
+                );
+              })}
+            </div>
+          </Reveal>
+        )}
+
+        {/* Pro — rent the whole line. */}
+        <SectionHeading
+          level={2}
+          align="center"
+          title={isGerman ? 'Oder die ganze Linie mieten: Pro' : 'Or rent the whole line: Pro'}
+          lead={isGerman ? 'Jede Stufe und das volle KI-Kontingent, solange Sie zahlen. Jederzeit kündbar.' : 'Every level and the full AI allowance while you pay. Cancel anytime.'}
+        />
         {/* Plan Cards — the grid a learner chooses from, so they tilt. The
             featured plan rests on a siegel edge and carries the page's one
             gold marker (design-tokens.js rule 2). */}
@@ -482,73 +556,6 @@ const SubscriptionPage = () => {
             {isGerman
               ? `Ihre ${TRIAL_DAYS}-tägige Testphase gehört zu Ihrem Konto. Ein Plan wird berechnet, sobald Sie ihn abschließen, auch während der Testphase. Jederzeit kündbar.`
               : `Your ${TRIAL_DAYS}-day trial is on your account. A plan is charged as soon as you buy it, even during the trial. Cancel anytime.`}
-          </Reveal>
-        )}
-
-        {/* Level courses — buy a band once, keep it. The bundle is the
-            featured card. Rendered only when the LS products exist (variant
-            configured) or the buyer already owns one. */}
-        {visibleLevelCourses.length > 0 && (
-          <Reveal className="mb-12">
-            <SectionHeading
-              level={2}
-              align="center"
-              title={isGerman ? 'Oder: eine Stufe kaufen und behalten' : 'Or: buy a level and keep it'}
-              lead={isGerman
-                ? `Einmal zahlen, für immer lernen — eine Teilstufe, plus ${course.proMonths} Monate Pro (KI-Sprechen, Schreibkorrektur, Satz-Röntgen) inklusive.`
-                : `Pay once, learn forever — one sub-level, plus ${course.proMonths} months of Pro (AI speaking, writing feedback, Sentence X-Ray) included.`}
-            />
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {visibleLevelCourses.map((c) => {
-                const firstLevel = c.levels[0];
-                const owned = hasProduct(c.key) || ownsBundle || ownsLevel(firstLevel);
-                return (
-                  <Card
-                    key={c.key}
-                    raised
-                    edge="paper"
-                    className={`relative flex flex-col p-5 ${c.comingSoon ? 'opacity-80' : ''}`}
-                  >
-                    {c.comingSoon && (
-                      <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                        <span className="inline-flex items-center rounded-pill bg-paper-sunk px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite shadow-raise">
-                          {isGerman ? 'Bald verfügbar' : 'Coming soon'}
-                        </span>
-                      </div>
-                    )}
-                    <Chip tone="label" className="mb-2 self-start">{c.code}</Chip>
-                    <h3 className="text-[1.0625rem] font-bold leading-tight text-ink">{isGerman ? c.nameDe : c.name}</h3>
-                    <p className="mt-2 font-display text-[1.75rem] font-semibold leading-none tracking-[-0.02em] text-ink">
-                      €{num(c.price)}
-                      <span className="ml-1 font-body text-xs font-normal tracking-normal text-graphite">
-                        {isGerman ? 'einmalig' : 'one time'}
-                      </span>
-                    </p>
-                    <p className="mt-2 text-xs text-graphite">
-                      {isGerman ? `${c.code} · lebenslang` : `${c.code} · lifetime`}
-                    </p>
-                    {owned ? (
-                      <Button to={`/level/${firstLevel}`} variant="secondary" size="md" className="mt-4 w-full">
-                        {isGerman ? 'Gekauft · öffnen →' : 'Owned · open →'}
-                      </Button>
-                    ) : c.comingSoon || !c.variantId ? (
-                      <Button variant="secondary" size="md" className="mt-4 w-full" disabled aria-disabled="true">
-                        {isGerman ? 'Bald verfügbar' : 'Coming soon'}
-                      </Button>
-                    ) : (
-                      <Button
-                        onClick={() => startPurchase(c.key, c.variantId, c.price)}
-                        variant="secondary"
-                        size="md"
-                        className="mt-4 w-full"
-                      >
-                        {isGerman ? 'Kaufen' : 'Buy'}
-                      </Button>
-                    )}
-                  </Card>
-                );
-              })}
-            </div>
           </Reveal>
         )}
 

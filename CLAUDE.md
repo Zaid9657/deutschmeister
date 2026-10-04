@@ -87,6 +87,18 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   against a config that never extended `borderRadius`, so the billing toggle rendered square and
   nothing said so.** Only `pill` is wired: the token `sm`/`md`/`lg` values collide with Tailwind's
   own defaults and adopting them would reshape every `rounded-lg` in the app.
+- **"Die Linie" (v3 tokens, 2026-10 redesign, `docs/redesign-2026-10/`) amends rule 2:** `siegel`
+  teal stays the action colour on LIGHT grounds; on `nacht` (night) grounds the action colour is
+  `linie` yellow with ink text. Yellow is never text or a meaningful line on light grounds (1.4:1) —
+  `tests/linie-design.test.mjs` allows `text-linie` only in files that also draw `bg-nacht`/`bg-ink`.
+  The `sign` face (Archivo, `sign-display/head/label/code` in `astro-site/src/styles/linie.css`) is
+  for the four marketing/commerce pages that pass `preloads={[...signFontPreloads, …]}` to `Layout`
+  (`/`, `/pricing/`, `/courses/`, `/courses/<level>/`). Every other page renders `data-sign="off"`
+  and the same roles fall back to the body face — so a page that starts using a sign role must also
+  preload the face (the test walks every page). Motion uses the token tiers (140/220/420/800 ms) and
+  the `ease-out-strong`/`in-out-strong`/`drawer` curves; only transform/opacity/clip-path move,
+  hover motion only under `(hover:hover) and (pointer:fine)`. Astro files carry no hex literals
+  (`tests/astro-hex.test.mjs`); offers and station data are `src/data/offers.js` (+ twin).
 - **The app has one button and one card: `src/components/ui/`.** Before them the primary CTA was
   `bg-gradient-to-r from-amber-500 to-rose-500 …` copy-pasted into twenty files, which is why the
   retired brand outlived its own retirement. `Button.jsx` carries the same treatment as the Astro
@@ -112,8 +124,10 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   checkout. Entitlement is `hasLevelAccess(level)` in `SubscriptionContext` (free ∨ trial/sub ∨
   bought course); every level lock must read it, and `tests/purchases.test.mjs` pins the list.
   A signed-out Buy click stores `dm_buy_intent` and resumes at `/subscription?buy=<key>`.
-  **Grammar lessons on the Astro side are ungated at every level** — the SPA lock is cosmetic;
-  see the open decision in `docs/HANDOFF-2026-09-03.md` §11 before selling grammar access.
+  **Grammar rule text on the Astro side is public at every level; the exercises above A1.1 are
+  locked client-side** by `astro-site/src/components/ExercisePlayer.jsx` (decision 2026-09-03,
+  `docs/HANDOFF-2026-09-03.md` §11) — a UX lock, not a security boundary, so never sell "grammar
+  rules" as the paid thing.
   Lemon Squeezy products, discounts and redirect URLs are **dashboard-only** (API read-only);
   paste-ready owner prompts are in `docs/owner-prompts.md`; ids in
   `docs/monetization-2026-09-03.md`.
@@ -187,7 +201,8 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   a line in `GUIDES`, and a line in `scripts/check-built-html.mjs`'s MANIFEST — nothing in
   `netlify.toml` (the whole `/leitfaden/` directory is already copied) and nothing in the
   sitemap config (the filter already whitelists the prefix). A new **top-level** segment
-  would need its own `cp -r` step. Guides get **no SPA twin**: Netlify serves the static
+  needs nothing either: `scripts/merge-site-builds.mjs` copies every Astro output directory.
+  Guides get **no SPA twin**: Netlify serves the static
   page, so `src/pages/leitfaden/TelcB1Page.jsx` is dead code on the dev server only.
   `tests/guides.test.mjs` pins slug/title/description/anchor integrity, the three
   trailing-slash cases on every internal link, and the ban on outcome promises and fee
@@ -238,8 +253,9 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   identity from the verified JWT via `_shared/auth.mjs` — never from the request body.
   The scheduled function `daily-sentence` distinguishes scheduler calls by the
   `next_run` body marker.
-- The Netlify build command in `netlify.toml` is one long line that also copies Astro
-  output into `dist/` — when adding a new top-level Astro route, add its copy step there.
+- The Netlify build command in `netlify.toml` runs `scripts/merge-site-builds.mjs`, which copies
+  every Astro output directory into `dist/` (CI runs the same script) — a new top-level Astro route
+  needs no extra build step, only its `check-built-html.mjs` MANIFEST line.
 - **`public/llms.txt` and `public/llms-full.txt` are generated** — `node scripts/build-llms.mjs`
   derives them from `pricing.js`, `marketing.js`, the guide and exam registries and
   `grammar-content-cache.json`; `tests/llms.test.mjs` fails when they are stale. Never hand-edit them:
@@ -248,6 +264,13 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   localStorage flag; new analytics must hook the same consent (`dm-consent-accepted`).
 
 ## Current state / open threads
+
+- **The October redesign ("Die Linie", branch `claude/wonderful-davinci-071dhj`) is documented in
+  `docs/redesign-2026-10/`** — baseline, strategy (offers, revenue model, owner decisions), art
+  direction, copy deck and the measurement plan (event map in `src/data/events.js`, experiments
+  E1–E6). The homepage sells the level ladder as a transit line; the hero copy is data
+  (`astro-site/src/data/homepage.js`, `ACTIVE_HERO`), so a sequential test is a one-line change.
+  The SPA Navbar/Footer/BottomNav restyle waits for Course v2 (PR #149) to merge.
 
 - **The agent team (v2, 2026-09-29) is `docs/agents/TEAM.md`.** Twelve agents (11 areas plus a
   supervisor) follow `docs/agents/PROTOCOL.md`; their charter, rubric v2, daily snapshots and memory
