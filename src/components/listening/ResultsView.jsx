@@ -67,7 +67,7 @@ const ResultsView = ({ exercise, questions, answers, score, dialogues, playsUsed
         headline={isGerman ? 'Übung abgeschlossen!' : 'Exercise complete!'}
         detail={
           isGerman
-            ? 'Das zählt für deinen Streak und dein Tagesziel.'
+            ? 'Das zählt für Ihren Streak und Ihr Tagesziel.'
             : 'That counts toward your streak and daily goal.'
         }
         nextLabel={
@@ -122,12 +122,12 @@ const ResultsView = ({ exercise, questions, answers, score, dialogues, playsUsed
             <div className="flex items-center justify-center gap-2 mb-2">
               <Sparkles size={16} className="text-siegel" />
               <span className="font-bold text-siegel-deep text-sm">
-                {isGerman ? 'DeutschMeister gefällt dir?' : 'Enjoying DeutschMeister?'}
+                {isGerman ? 'Gefällt Ihnen DeutschMeister?' : 'Enjoying DeutschMeister?'}
               </span>
             </div>
             <p className="text-xs text-graphite mb-3">
               {isGerman
-                ? 'Abonniere, um nach deinem Test weiter zu lernen.'
+                ? 'Abonnieren Sie, um nach Ihrer Testphase weiterzulernen.'
                 : 'Subscribe to keep learning after your trial ends.'}
             </p>
             <Button href="/pricing/" size="sm">
