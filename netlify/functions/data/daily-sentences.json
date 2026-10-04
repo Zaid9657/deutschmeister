@@ -12,10 +12,10 @@
     "grammar_focus": "Dative indirect object"
   },
   {
-    "sentence_de": "Das Mädchen schreibt ihrem Freund einen Brief.",
-    "hint": "Three cases again — but this time with a possessive pronoun doing the heavy lifting.",
+    "sentence_de": "Die Frau schreibt ihrem Freund einen Brief.",
+    "hint": "Three cases again: 'die Frau' is nominative, 'ihrem Freund' dative and 'einen Brief' accusative. 'ihrem' stands before a noun, so it is a possessive article (Possessivartikel): 'ihr-' means 'her', and '-em' is the dative masculine ending.",
     "level": "A2",
-    "grammar_focus": "Possessive pronouns in dative"
+    "grammar_focus": "Possessive articles in the dative"
   },
   {
     "sentence_de": "Wegen des schlechten Wetters bleiben wir zu Hause.",
@@ -85,14 +85,14 @@
   },
   {
     "sentence_de": "Je mehr er lernt, desto besser wird sein Deutsch.",
-    "hint": "'Je…desto' is a comparative intensifier — both parts need a comparative adjective or adverb.",
-    "level": "B2",
+    "hint": "'Je … desto' joins two comparatives: the more he learns, the better his German gets. The je-clause is a subordinate clause, so its verb goes to the end ('je mehr er lernt'). In the desto-clause, 'desto' + comparative comes first and the finite verb follows directly ('desto besser wird'), then the subject. 'umso' can replace 'desto'.",
+    "level": "B1",
     "grammar_focus": "Je…desto comparative"
   },
   {
     "sentence_de": "Trotz seiner Müdigkeit arbeitete er weiter.",
     "hint": "'Trotz' takes the genitive — and 'seiner' is genitive feminine, because 'Müdigkeit' is feminine (die Müdigkeit). With a masculine noun it would be 'seines': trotz seines Fehlers.",
-    "level": "B2",
+    "level": "B1",
     "grammar_focus": "Genitive preposition: trotz"
   },
   {
@@ -151,8 +151,8 @@
   },
   {
     "sentence_de": "Das Fenster ist geöffnet worden.",
-    "hint": "Passive perfect tense: three verbs in a row — ist + past participle + worden.",
-    "level": "B2",
+    "hint": "Passive in the Perfekt: 'ist' + past participle ('geöffnet') + 'worden'. In the passive, the participle of 'werden' is 'worden', without 'ge-'; 'geworden' is the participle of the full verb 'werden', 'to become' ('Es ist kalt geworden'). Both form the Perfekt with 'sein', not 'haben'.",
+    "level": "B1",
     "grammar_focus": "Passive Perfekt (worden)"
   },
   {
@@ -175,8 +175,8 @@
   },
   {
     "sentence_de": "Obwohl das Buch schwer zu verstehen ist, liest sie es gern.",
-    "hint": "'Obwohl' sends its verb to the end — and 'zu verstehen' is an infinitive phrase within that clause.",
-    "level": "B1",
-    "grammar_focus": "Obwohl + embedded infinitive phrase"
+    "hint": "'Obwohl' sends its verb to the end, so 'ist' closes the clause. 'zu verstehen ist' is sein + zu + infinitive, which here works like 'können' + passive: the book 'kann nur schwer verstanden werden', it can only be understood with difficulty.",
+    "level": "B2",
+    "grammar_focus": "Obwohl + sein + zu + infinitive"
   }
 ]
