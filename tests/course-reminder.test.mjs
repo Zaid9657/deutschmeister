@@ -37,6 +37,8 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { createHmac } from 'node:crypto';
+import vm from 'node:vm';
 
 import {
   WINDOW_HOURS, WINDOW_DAYS, MAX_PER_7_DAYS,
@@ -308,4 +310,116 @@ test('netlify.toml declares the same schedule (integrator step)', (t) => {
   }
   const fn = SRC.match(/schedule\('([^']+)'/);
   assert.equal(block[1], fn[1], 'the two schedule declarations disagree');
+});
+
+// ---------------------------------------------------------------------------
+// 8. the links (UTM tags, 2026-10-05)
+// ---------------------------------------------------------------------------
+// Until 2026-10-05 the reminder linked /course/<level> and the homepage
+// untagged, so a click from it reached dm_attribution as untracked or as a
+// webmail host. Same scheme as tests/lifecycle-links.test.mjs: every site link
+// carries utm_source=email, utm_medium=lifecycle, utm_campaign=course-reminder
+// and its own utm_content; the unsubscribe link is untouched, signed token and
+// all; the CTA keeps its path with NO trailing slash (case 3).
+//
+// The mailer reads UNSUB_SECRET at import and fails closed without it, and the
+// import at the top of this file ran with none set. A second instance (the
+// query string makes it a separate module) is loaded with a test-only secret,
+// so the signed unsubscribe link can be compared byte for byte. Ids here are
+// synthetic; no real recipient appears.
+
+process.env.UNSUB_SECRET = 'test-only-unsub-secret';
+const linked = await import('../netlify/functions/course-reminder.mjs?links');
+const { EMAIL_LABEL } = await import('../netlify/functions/_shared/emailLinks.mjs');
+
+const SITE = 'https://deutsch-meister.de';
+const USER_ID = '00000000-0000-4000-8000-000000000001';
+const UTM = { utm_source: 'email', utm_medium: 'lifecycle', utm_campaign: 'course-reminder' };
+
+// Every shape the copy can take: each Lektion, a clamped number, an
+// uppercase level code, a level with no titles, with and without a name.
+const VARIANTS = [
+  ...LEKTION_TITLES['a1.1'].map((_, i) => ({ level: 'a1.1', nextNr: i + 1 })),
+  { level: 'a1.1', nextNr: 99 },
+  { level: 'A1.1', nextNr: 4, vorname: 'Ana' },
+  { level: 'b1.1', nextNr: 2 },
+];
+
+const hrefs = (html) => [...html.matchAll(/href="([^"]*)"/g)].map((m) => m[1]);
+const isUnsubscribe = (href) => new URL(href).pathname === '/.netlify/functions/unsubscribe';
+const render = (v) => linked.renderHtml(linked.buildMessage(v), USER_ID);
+
+test('the send loop mails the tagged render, not a bare SHELL', () => {
+  assert.ok(SRC.includes('html: renderHtml(msg, r.id)'), 'the batch must build its html through renderHtml');
+  assert.ok(!SRC.includes('html: SHELL('), 'a second, untagged render path in the send loop');
+});
+
+test('every link into the site carries the four email tags, one utm_content per link', () => {
+  for (const v of VARIANTS) {
+    const links = hrefs(render(v)).filter((h) => !isUnsubscribe(h));
+    assert.equal(links.length, 2, `${JSON.stringify(v)}: the CTA button and the footer link`);
+    for (const href of links) {
+      assert.ok(href.startsWith(`${SITE}/`), href);
+      const p = new URL(href).searchParams;
+      for (const [key, value] of Object.entries(UTM)) assert.equal(p.get(key), value, `${key} on ${href}`);
+    }
+    const contents = links.map((h) => new URL(h).searchParams.get('utm_content')).sort();
+    assert.deepEqual(contents, ['cta', 'footer'], 'each link names itself');
+  }
+});
+
+test('the unsubscribe link is untouched: no tag, same function path, same signed token', () => {
+  const token = createHmac('sha256', process.env.UNSUB_SECRET).update(USER_ID).digest('hex');
+  for (const v of VARIANTS) {
+    const unsub = hrefs(render(v)).filter(isUnsubscribe);
+    assert.equal(unsub.length, 1, JSON.stringify(v));
+    assert.equal(unsub[0], `${SITE}/.netlify/functions/unsubscribe?uid=${USER_ID}&token=${token}`);
+    assert.ok(!unsub[0].includes('utm_'), 'the unsubscribe link must never carry a tag');
+  }
+});
+
+test('the CTA opens /course/<level> with NO trailing slash; the footer opens the homepage', () => {
+  for (const v of VARIANTS) {
+    const byContent = Object.fromEntries(
+      hrefs(render(v)).filter((h) => !isUnsubscribe(h)).map((h) => [new URL(h).searchParams.get('utm_content'), new URL(h)]),
+    );
+    assert.equal(byContent.cta.origin, SITE);
+    // CLAUDE.md case 3: /course/:level is a netlify.toml rewrite to app.html.
+    assert.equal(byContent.cta.pathname, `/course/${v.level.toLowerCase()}`, 'SPA rewrite route, no trailing slash');
+    assert.equal(byContent.footer.origin, SITE);
+    assert.equal(byContent.footer.pathname, '/');
+    for (const url of Object.values(byContent)) assert.equal(url.hash, '');
+  }
+  // The template stays bare: the tags are added at render time only.
+  assert.equal(linked.buildMessage({ level: 'a1.1', nextNr: 4 }).ctaHref, `${SITE}/course/a1.1`);
+});
+
+test('the labels follow the naming rule and are fixed strings: no date, id or address', () => {
+  for (const v of VARIANTS) {
+    const html = render(v);
+    assert.equal(html, render(v), 'the same mail renders the same bytes');
+    for (const href of hrefs(html).filter((h) => !isUnsubscribe(h))) {
+      for (const [key, value] of new URL(href).searchParams) {
+        assert.ok(key.startsWith('utm_'), `only the four tags on a site link, found ${key}`);
+        assert.match(value, EMAIL_LABEL, `${key}=${value}`);
+        // The ledger kind carries the run date (course_reminder_2026-09-13); the tag must not.
+        assert.ok(!/\d{4}-\d{2}-\d{2}/.test(value), `no date in ${key}`);
+        assert.ok(!value.includes(USER_ID) && !value.includes('@'), `no id or address in ${key}`);
+      }
+    }
+  }
+});
+
+test('the classifier reads the reminder tags back as source "email"', () => {
+  const window = { localStorage: { getItem: () => null, setItem() {}, removeItem() {} }, location: { search: '', pathname: '/' } };
+  const ctx = { window, document: { referrer: '' }, URL, URLSearchParams, Date, JSON };
+  vm.createContext(ctx);
+  vm.runInContext(read('public/attribution.js'), ctx);
+  const cta = new URL(hrefs(render({ level: 'a1.1', nextNr: 4 })).find((h) => new URL(h).searchParams.get('utm_content') === 'cta'));
+  const touch = window.dmAttribution.parse(cta.search, '', cta.pathname, Date.UTC(2026, 9, 5));
+  assert.equal(touch.source, 'email');
+  assert.equal(touch.medium, 'lifecycle');
+  assert.equal(touch.campaign, 'course-reminder');
+  assert.equal(touch.content, 'cta');
+  assert.equal(touch.landing, '/course/a1.1');
 });

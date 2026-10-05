@@ -35,6 +35,7 @@ import { createClient } from '@supabase/supabase-js';
 import { createHmac } from 'crypto';
 import { BRAND, emailHeader, ctaCell } from './_shared/brand.mjs';
 import { isBlockedEmail } from './_shared/emailHygiene.mjs';
+import { tagEmailLink } from './_shared/emailLinks.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -175,7 +176,7 @@ export function buildMessage({ level, nextNr, vorname = null }) {
   };
 }
 
-const SHELL = ({ heading, body, ctaHref, ctaLabel, unsubUrl }) => `<!DOCTYPE html>
+const SHELL = ({ heading, body, ctaHref, ctaLabel, footerHref, unsubUrl }) => `<!DOCTYPE html>
 <html lang="de">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${heading}</title></head>
 <body style="margin:0;padding:0;background:${BRAND.paper};font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
@@ -195,7 +196,7 @@ const SHELL = ({ heading, body, ctaHref, ctaLabel, unsubUrl }) => `<!DOCTYPE htm
         <tr>
           <td style="padding:20px 32px;border-top:1px solid ${BRAND.rule};text-align:center;">
             <p style="margin:0;font-size:12px;color:${BRAND.graphite};line-height:1.6;">
-              DeutschMeister · <a href="${BASE_URL}" style="color:${BRAND.graphite};">deutsch-meister.de</a><br>
+              DeutschMeister · <a href="${footerHref}" style="color:${BRAND.graphite};">deutsch-meister.de</a><br>
               <a href="${unsubUrl}" style="color:${BRAND.graphite};">Diese E-Mails abbestellen</a>
             </p>
           </td>
@@ -205,6 +206,26 @@ const SHELL = ({ heading, body, ctaHref, ctaLabel, unsubUrl }) => `<!DOCTYPE htm
   </table>
 </body>
 </html>`;
+
+// Both links into the site carry the lifecycle UTM tags, so a click reaches
+// dm_attribution as source "email" instead of untracked or a webmail host
+// (docs/tracking-links.md, "Our own email"). The campaign is one fixed label
+// for every day's run: the ledger kind carries the date, a tag never does.
+// The tags are added here, at render time, so buildMessage's ctaHref stays the
+// bare /course/<level> (no trailing slash, case 3) the copy test reads. The
+// unsubscribe link is never tagged. Exported for tests/course-reminder.test.mjs.
+const REMINDER_UTM = { medium: 'lifecycle', campaign: 'course-reminder' };
+
+export function renderHtml(msg, userId) {
+  return SHELL({
+    heading: msg.subject,
+    body: msg.body,
+    ctaHref: tagEmailLink(msg.ctaHref, { ...REMINDER_UTM, content: 'cta' }),
+    ctaLabel: msg.ctaLabel,
+    footerHref: tagEmailLink(`${BASE_URL}/`, { ...REMINDER_UTM, content: 'footer' }),
+    unsubUrl: unsubscribeUrl(userId),
+  });
+}
 
 // ─── selection ───────────────────────────────────────────────────────────────
 
@@ -394,13 +415,7 @@ const innerHandler = async (event) => {
           to: [r.email],
           reply_to: 'zaid@deutsch-meister.de',
           subject: msg.subject,
-          html: SHELL({
-            heading: msg.subject,
-            body: msg.body,
-            ctaHref: msg.ctaHref,
-            ctaLabel: msg.ctaLabel,
-            unsubUrl: unsubscribeUrl(r.id),
-          }),
+          html: renderHtml(msg, r.id),
         };
       });
 

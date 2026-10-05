@@ -127,14 +127,18 @@ content is `cta` (the button) or `footer` (the home link).
 | trial ended | `trial-ended` | `/pricing/` |
 | activation day 1 | `activation-d1` | `/level-test/` |
 | activation day 4 | `activation-d4` | `/analyze/` |
+| course reminder (2026-10-05) | `course-reminder` | `/course/<level>` (no slash) |
 
 ```
 https://deutsch-meister.de/pricing/?utm_source=email&utm_medium=lifecycle&utm_campaign=trial-day6&utm_content=cta
 https://deutsch-meister.de/?utm_source=email&utm_medium=lifecycle&utm_campaign=trial-day6&utm_content=footer
+https://deutsch-meister.de/course/a1.1?utm_source=email&utm_medium=lifecycle&utm_campaign=course-reminder&utm_content=cta
 ```
 
 `tests/lifecycle-links.test.mjs` pins them the same way, unsubscribe link included.
-`course-reminder`, `confirmation-nudge`, `send-welcome-email` and `send-campaign`
+The course reminder's ledger kind carries the run date (`course_reminder_<date>`), so
+its campaign is one fixed label instead of the kind; `tests/course-reminder.test.mjs`
+pins its links. `confirmation-nudge`, `send-welcome-email` and `send-campaign`
 still carry no `utm_` (grep of `netlify/functions/`). The unsent launch draft
 `drafts/launch-sublevel-1.mjs` already follows the scheme
 (`utm_medium=launch&utm_campaign=sublevel-2026-09`).
