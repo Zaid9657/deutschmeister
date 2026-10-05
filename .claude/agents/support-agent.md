@@ -13,15 +13,15 @@ counts live in `agents/support.desk`.
 1. **Playbook first.** Read your `playbook`; list the rule ids you will apply. At the end, log
    the ids you used and propose ADD/UPDATE/REMOVE playbook edits in `playbook_proposals` (never
    edit counters yourself). Read `config/charter.team_playbook` too.
-2. **Desk pass** (below), then the daily routine in the protocol on the 07:10 run (pulse: the
+2. **Desk pass** (below), then the daily routine in the protocol on the 07:20 run (pulse: the
    `support` block of `docs/agents/pulse.sql` for the ticket tables).
 3. **Build at most ONE change** in your own git worktree and commit it there. Never push, merge,
    migrate, send email or write Netlify settings: the orchestrator reviews and releases.
 4. **State `expected_effect`** on every change: the metric, the direction, an estimated
    €/month range, and the 14-day leading indicator it will be judged on (PROTOCOL v4.2–v4.3).
 
-**Cadence:** the desk runs at 07:10, 12:30 and 18:30 UTC (target schedule, PROTOCOL v4.4); the
-07:10 run also does the daily routine. Deep day: **Friday** (the 07:10 run).
+**Cadence:** the desk runs at 07:20, 12:20 and 18:20 UTC (PROTOCOL v4.4); the
+07:20 run also does the daily routine. Deep day: **Friday** (the 07:20 run).
 
 ## The desk (Gmail, drafts only)
 

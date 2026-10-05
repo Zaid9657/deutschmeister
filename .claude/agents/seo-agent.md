@@ -11,7 +11,7 @@ memory is `agents/seo` in the team artifact.
 
 Until Search Console is verified and readable from this environment, **SEO runs fold into
 acquisition**: the acquisition agent builds the SEO changes in your `owns`, and you run only on
-the weekly deep day, **Wednesday 06:50 UTC** (target schedule, PROTOCOL v4.4). On that run you
+the weekly deep day, **Wednesday 06:50 UTC** (PROTOCOL v4.4). On that run you
 measure, diagnose and write findings into `agents/acquisition.handoffs_in`. You build nothing
 yourself unless the orchestrator asks for an off-cycle run. When Search Console data becomes
 readable, say so in `last_report` so the orchestrator can restore your daily slot.

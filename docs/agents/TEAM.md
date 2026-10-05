@@ -46,11 +46,11 @@ Target schedule (UTC). The orchestrator applies it to the Routines.
 | revenue | Lemon Squeezy, entitlements, dunning, course products, launches | revenue last 30 d + new payers; keeps `owner_queue` (€/week per owner decision) | daily 06:10 | Mon |
 | conversion | /pricing/, paywalls, trial → paid, signup → checkout | new paying per 100 signups (30 d), reported jointly with revenue | daily 06:20 | Mon |
 | product | first session, A1.1 course, every learning tool, content requests | signup → first lesson, last full-month cohort | daily 06:30 | Tue |
-| acquisition | homepage, signup/login, attribution, landing pages; **SEO work until Search Console is verified** | signups/week (30-day average) | twice daily 06:10 + 13:10 | Wed |
+| acquisition | homepage, signup/login, attribution, landing pages; **SEO work until Search Console is verified** | signups/week (30-day average) | twice daily 06:40 + 13:40 | Wed |
 | seo | grammar, Leitfäden, Vergleich, Prüfung, courses pages, sitemaps, llms.txt | non-home landing share (measured weekly; builds go through acquisition) | weekly, Wed 06:50 | Wed |
 | content | social channels, daily-sentence content, podcast feed, FAQ/About copy | signups attributed to social (IG, FB, YT, Telegram, TikTok) per 7 d; posts per 7 d secondary | daily 07:00 | Thu |
 | retention | every mailer, lifecycle ledger, deliverability, win-back | reactivated learners/week (activity after ≥ 14 idle days) + offer-email clicks; bounce rate is a guardrail | daily 07:10 | Thu |
-| support | the Gmail support desk, /support, tickets, the production support agent | customer threads/day, hours to first draft, drafts sent unchanged, escalations (`agents/support.desk`) | desk 3× daily 07:10, 12:30, 18:30 (drafts only) | Fri |
+| support | the Gmail support desk, /support, tickets, the production support agent | customer threads/day, hours to first draft, drafts sent unchanged, escalations (`agents/support.desk`) | desk 3× daily 07:20, 12:20, 18:20 (drafts only) | Fri |
 | website | all routes, redirects, builds, deploys, CI, sentinel, legal-page presence | sentinel key-page checks passing (unchanged) | weekly, Mon 07:30, fix-only | Mon |
 | webperf | bundles, fonts, Lighthouse, CLS | mobile Lighthouse median of 7 pages (unchanged) | weekly, Wed 07:40, fix-only | Wed |
 | security | advisors, RLS, grants, dependencies, secrets hygiene | advisor ERROR + WARN findings (unchanged) | weekly, Fri 07:50, fix-only | Fri |

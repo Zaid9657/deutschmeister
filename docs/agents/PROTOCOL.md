@@ -114,18 +114,18 @@ names the same numbers.
   the stated range; ties go to the smaller € error; at least 2 judged changes to rank). The top
   2 estimators get one extra build slot that week.
 
-### v4.4 Cadence (target schedule; the orchestrator applies it to the Routines)
+### v4.4 Cadence (live on the Routines since 2026-10-05)
 
 | UTC | Who | What |
 |---|---|---|
 | 05:50, 09:50, 12:50, 15:50, 19:50 daily | supervisor | as v3; Monday's first run adds the Curator pass and the estimator score |
-| 06:10 and 13:10 daily | acquisition | daily run twice a day; it also does SEO work (below) |
 | 06:10 daily | revenue | daily run; maintains `owner_queue` |
 | 06:20 daily | conversion | daily run; reports jointly with revenue |
 | 06:30 daily | product | daily run |
+| 06:40 and 13:40 daily | acquisition | daily run twice a day; it also does SEO work (below) |
 | 07:00 daily | content | daily run |
 | 07:10 daily | retention | daily run |
-| 07:10, 12:30, 18:30 daily | support desk | Gmail drafts and labels only (v4.5); sending is owner-only |
+| 07:20, 12:20, 18:20 daily | support desk | Gmail drafts and labels only (v4.5); sending is owner-only |
 | Monday 07:30 | website | weekly, fix-only |
 | Wednesday 06:50 | seo | weekly measurement and diagnosis only |
 | Wednesday 07:40 | webperf | weekly, fix-only (Lighthouse on the 7 tracked pages) |

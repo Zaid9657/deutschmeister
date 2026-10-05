@@ -13,26 +13,24 @@ Routine below wakes the orchestrating Claude Code session that holds the connect
 (`session_014ddD3p7VmAqaTAWKQVHJBt`). That session spawns the named agent in its own git
 worktree, reviews what it built, and integrates it.
 
-## Schedule (UTC) — v4 target
+## Schedule (UTC) — v4
 
-This is the **target schedule** from PROTOCOL v4.4 (owner-approved plan, 2026-10-04). The
-orchestrator applies it to the Routines: it adds the acquisition 13:10 run and the two extra
-support-desk runs, moves support from 07:20 to 07:10, moves website, webperf and security to one
-weekly slot each, and keeps one weekly seo slot (Wednesday) for measurement and diagnosis only:
-SEO building is acquisition's work until Search Console is verified. Until a Routine is changed,
-the v3 slot it still fires on runs the agent under v4 rules (a weekly agent woken on another day
-logs an idle run).
+This is the live schedule from PROTOCOL v4.4 (owner-approved plan, 2026-10-04; applied to the
+Routines on 2026-10-05). Acquisition runs twice a day, the support desk three times, website,
+webperf and security once a week, and seo keeps one weekly slot (Wednesday) for measurement and
+diagnosis only: SEO building is acquisition's work until Search Console is verified. Acquisition
+sits at :40 and the desk at :20 so neither shares a slot with another agent.
 
 | UTC | Routine | Agent |
 |---|---|---|
 | 05:50, 09:50, 12:50, 15:50, 19:50 daily | DM team: supervisor | `supervisor` (the first run writes the day's snapshot; Monday's first run adds the Curator pass) |
 | 06:10 daily | DM team: revenue | `revenue-agent` |
-| 06:10 and 13:10 daily | DM team: acquisition | `acquisition-agent` (also does SEO work until Search Console is verified) |
 | 06:20 daily | DM team: conversion | `conversion-agent` |
 | 06:30 daily | DM team: product | `product-agent` |
+| 06:40 and 13:40 daily | DM team: acquisition | `acquisition-agent` (also does SEO work until Search Console is verified) |
 | 07:00 daily | DM team: content | `content-agent` |
 | 07:10 daily | DM team: retention | `retention-email-agent` |
-| 07:10, 12:30, 18:30 daily | DM team: support desk | `support-agent` (Gmail drafts and labels only; sending is owner-only) |
+| 07:20, 12:20, 18:20 daily | DM team: support desk | `support-agent` (Gmail drafts and labels only; sending is owner-only) |
 | Monday 07:30 | DM team: website | `website-agent` (weekly, fix-only) |
 | Wednesday 06:50 | DM team: seo | `seo-agent` (weekly measurement and diagnosis) |
 | Wednesday 07:40 | DM team: webperf | `web-performance-agent` (weekly, fix-only) |
@@ -76,7 +74,7 @@ the deploy budget, switches) are in `docs/agents/PROTOCOL.md` § Continuous mode
 > AI/drafted; label every thread that matches supportAgentLib ESCALATION_REASONS, or that the
 > sources cannot answer, AI/needs-owner with no draft; create only: never update or delete a
 > draft, never send, reply, forward, trash or mark spam; write counts only into
-> agents/support.desk; on the 07:10 run also do the daily routine under PROTOCOL rules 1–8 (one
+> agents/support.desk; on the 07:20 run also do the daily routine under PROTOCOL rules 1–8 (one
 > change in a worktree; the orchestrator reviews, gates and releases it with a `changes/` record)."
 > Tell the owner when a thread was labelled AI/needs-owner or drafts are waiting.
 
