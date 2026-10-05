@@ -162,15 +162,19 @@ function Shell() {
                       }
                     />
 
-                    {/* Subscription/pricing pages (require auth only, not subscription) */}
+                    {/* Subscription/pricing pages (require auth only, not subscription).
+                        No OnboardingGate on /subscription or /subscription/success: a
+                        signed-out Buy resumes here after signup (postAuthPath →
+                        /subscription?buy=<key>) on an account whose onboarding is not
+                        done yet, and the gate rendered IntroSlides instead, whose exits
+                        dropped the checkout. The intro still runs on the next learning
+                        route. tests/purchase-route-gates.test.mjs */}
                     <Route
                       path="/subscription"
                       element={
                         <ProtectedRoute>
                           <EmailVerificationGate>
-                            <OnboardingGate>
-                              <SubscriptionPage />
-                            </OnboardingGate>
+                            <SubscriptionPage />
                           </EmailVerificationGate>
                         </ProtectedRoute>
                       }
@@ -304,9 +308,7 @@ function Shell() {
                       element={
                         <ProtectedRoute>
                           <EmailVerificationGate>
-                            <OnboardingGate>
-                              <SubscriptionSuccessPage />
-                            </OnboardingGate>
+                            <SubscriptionSuccessPage />
                           </EmailVerificationGate>
                         </ProtectedRoute>
                       }
