@@ -6,6 +6,8 @@ import CharacterAvatar from '../illustrations/CharacterAvatar.jsx';
 import { audioFor, playLine, speechAvailable } from '../../lib/lesson/speech.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 import { buildLexicon, glossTokens, parseLektionId } from '../../lib/lesson/gloss.js';
+import { supportKeys } from '../../lib/lesson/support.js';
+import SupportText from './SupportText.jsx';
 
 /**
  * Stage 2a — Input. The dialogue arrives line by line: you reveal the next
@@ -54,10 +56,10 @@ export function AudioSourceBadge({ recorded, className = '' }) {
  * so a tap on line 3 closes line 1's popover); Escape and a tap outside close
  * it, both wired once in the parent via a document listener.
  */
-function GlossLine({ line, lineIndex, lexicon, lang, openGloss, setOpenGloss }) {
+function GlossLine({ line, lineIndex, lexicon, lang, level, openGloss, setOpenGloss }) {
   const segments = useMemo(() => glossTokens(line, lexicon), [line, lexicon]);
   return (
-    <p className="mt-1 text-[1.0625rem] leading-relaxed text-ink" lang="de">
+    <p className="mt-1 text-[1.0625rem] leading-relaxed text-ink" lang="de" dir="ltr">
       {segments.map((seg, i) => {
         if (seg.type !== 'gloss') {
           return <span key={i}>{i > 0 ? ' ' : ''}{seg.text}</span>;
@@ -86,13 +88,13 @@ function GlossLine({ line, lineIndex, lexicon, lang, openGloss, setOpenGloss }) 
                 id={popoverId}
                 role="tooltip"
                 onClick={(e) => e.stopPropagation()}
-                className="absolute left-0 top-full z-10 mt-1 block w-max max-w-[15rem] rounded-clay border border-rule bg-white p-2.5 text-left shadow-md transition-opacity duration-100 ease-snap motion-reduce:transition-none"
+                className="absolute start-0 top-full z-10 mt-1 block w-max max-w-[15rem] rounded-clay border border-rule bg-white p-2.5 text-start shadow-md transition-opacity duration-100 ease-snap motion-reduce:transition-none"
               >
-                <span className="block font-display text-[0.9375rem] font-semibold text-ink" lang="de">{entry.de}</span>
-                <span className="block text-[0.8125rem] leading-snug text-graphite">{entry.en}</span>
+                <span className="block font-display text-[0.9375rem] font-semibold text-ink" lang="de" dir="ltr">{entry.de}</span>
+                <SupportText as="span" level={level} k={entry.wordId ? supportKeys.word(entry.wordId) : null} en={entry.en} className="block text-[0.8125rem] leading-snug text-graphite" />
                 {entry.plural && (
                   <span className="block text-[0.75rem] text-graphite">
-                    {t('wortfeld.plural', lang)} {entry.plural}
+                    {t('wortfeld.plural', lang)} <span lang="de" dir="ltr">{entry.plural}</span>
                   </span>
                 )}
               </span>
@@ -139,11 +141,14 @@ export default function DialogStage({ stage, lektionId, onBack, onDone }) {
     playLine(id, `line-${i}`, text);
   };
 
+  const level = parsed ? parsed.level : null;
   return (
     <StageShell
       eyebrow={t('stage.input.eyebrow', lang)}
-      title={stage.dialog?.title || t('stage.input.title', lang)}
-      lead={stage.dialog?.setting}
+      title={stage.dialog?.title ? <span lang="de" dir="ltr">{stage.dialog.title}</span> : t('stage.input.title', lang)}
+      lead={stage.dialog?.setting ? (
+        <SupportText level={level} k={id ? supportKeys.dialogSetting(id) : null} de={stage.dialog.setting} />
+      ) : null}
       onBack={onBack}
       primaryLabel={allShown ? t('action.next', lang) : t('action.nextLine', lang)}
       onPrimary={allShown ? onDone : () => setShown((n) => Math.min(n + 1, lines.length))}
@@ -187,10 +192,13 @@ export default function DialogStage({ stage, lektionId, onBack, onDone }) {
                       lineIndex={i}
                       lexicon={lexicon}
                       lang={lang}
+                      level={level}
                       openGloss={openGloss}
                       setOpenGloss={setOpenGloss}
                     />
-                    {gloss && <p className="mt-1 text-[0.875rem] leading-relaxed text-graphite">{l.en}</p>}
+                    {gloss && (
+                      <SupportText as="p" level={level} k={l.id ? supportKeys.dialogLine(l.id) : null} en={l.en} className="mt-1 text-[0.875rem] leading-relaxed text-graphite" />
+                    )}
                     {played.has(i) && !recorded && !speechAvailable() && (
                       <p className="mt-1 text-[0.75rem] text-graphite">{t('dialog.noSpeech', lang)}</p>
                     )}

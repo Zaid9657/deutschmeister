@@ -1,0 +1,142 @@
+---
+// /ar/ — the Arabic home of the Arabic edition (docs/arabic/README.md §5).
+// Twin of / (reciprocal hreflang via Layout `alternates`). Its one job: let an
+// Arabic-speaking beginner understand the offer and start A1.1 in Arabic —
+// every start button opens /course/a1.1?lang=ar (Arabic chosen explicitly).
+//
+// CLAIMS. Every price and count derives from the data modules; the Arabic copy
+// is a DRAFT (data/i18n/ar.js) and says exactly how far the Arabic reaches:
+// lesson support in A1.1 Lektionen 1–3, English beyond, German grading.
+import Layout from '../../layouts/Layout.astro';
+import '../../styles/global.css';
+import CoverageTable from '../../components/ar/CoverageTable.astro';
+import { ORGANIZATION } from '../../lib/siteMeta.js';
+import { STATIONS } from '../../data/offers.js';
+import { COURSE_FROM_PRICE_EUR, COURSE_PRO_MONTHS, eur } from '../../data/pricing.js';
+import { CURRICULUM_A11 } from '../../data/curricula/a11.js';
+import SIDECAR from '../../data/curricula/a11.ar.js';
+import { AR_COURSE_HREF, AR_LINES, LEVEL_OUTCOME_AR, arMinutes, arMonths, arRich } from '../../data/i18n/ar.js';
+
+const ar = (key) => SIDECAR.entries[key]?.ar || '';
+const STEP_KEYS = ['pretest', 'dialog', 'wortfeld', 'notice', 'practice', 'dictation', 'speaking', 'writing', 'recap'];
+const steps = STEP_KEYS.map((key) => ({ key, label: ar(`course.howStep.${key}.label`), body: ar(`course.howStep.${key}.description`) })).filter((s) => s.label && s.body);
+const minutes = CURRICULUM_A11.lektionen[0]?.minutes;
+
+const title = 'تعلّم الألمانية من الصفر: A1.1 مجانًا | DeutschMeister';
+const description = `دورة ألمانية من A1.1 إلى B2.2. المستوى A1.1 مجاني ودون حساب، والشرح العربي متوفر الآن في الدروس 1–3. المستويات التالية تُشترى مرة واحدة ابتداءً من ${eur(COURSE_FROM_PRICE_EUR)}.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: title,
+  description,
+  url: 'https://deutsch-meister.de/ar/',
+  inLanguage: 'ar',
+  isPartOf: { '@type': 'WebSite', name: 'DeutschMeister', url: 'https://deutsch-meister.de/' },
+  publisher: ORGANIZATION,
+};
+---
+
+<Layout title={title} description={description} canonical="https://deutsch-meister.de/ar/" jsonLd={jsonLd} lang="ar" tone="nacht" alternates={{ en: '/', ar: '/ar/' }}>
+  <div class="overflow-x-clip bg-paper text-ink">
+
+    <!-- ═══ HERO: what this is, and the one door ═══ -->
+    <section class="bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="hero-h">
+      <div class="mx-auto max-w-5xl px-4 pb-14 pt-10 sm:px-6 sm:pt-14">
+        <p class="text-[0.875rem] font-bold text-siegel-deep">DeutschMeister بالعربية · نسخة تجريبية</p>
+        <h1 id="hero-h" class="mt-4 text-[clamp(2rem,7vw,3.5rem)] font-bold leading-tight">تعلّم الألمانية من الصفر، خطوة بخطوة.</h1>
+        <p class="mt-5 max-w-2xl text-[1.125rem] leading-relaxed text-nacht-muted">
+          ابدأ المستوى الأول <bdi dir="ltr">A1.1</bdi> مجانًا ودون حساب. في الدروس 1–3 تجد التعليمات ومعاني الكلمات والقواعد والتصحيح بالعربية. {AR_LINES.germanContent}
+        </p>
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <a href="/course/a1.1?lang=ar" class="dm-key dm-key-linie" data-anon-only data-track="course_selected" data-track-level="a1.1" data-track-surface="ar_hero">ابدأ A1.1 مجانًا</a>
+          <a href="/dashboard" class="dm-key dm-key-linie" data-auth-only style="display:none">تابع التعلّم</a>
+          <a href="/ar/courses/a1-1/" class="dm-key dm-key-ghost-nacht">ماذا ستتعلّم في A1.1</a>
+        </div>
+        <p class="mt-5 text-[0.9375rem] leading-relaxed text-nacht-muted">
+          لا تحتاج إلى حساب ولا إلى بطاقة دفع. يُحفظ تقدّمك على هذا الجهاز، ويمكنك إنشاء حساب مجاني لاحقًا لحفظه في حسابك.
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══ HOW A LESSON GOES ═══ -->
+    <section aria-labelledby="how-h" class="mx-auto max-w-5xl px-4 py-14 sm:px-6">
+      <h2 id="how-h" class="text-[1.625rem] font-bold leading-snug">كيف يسير الدرس</h2>
+      <p class="mt-3 max-w-2xl leading-relaxed text-graphite">
+        {CURRICULUM_A11.lektionen.length} درسًا قصيرًا في <bdi dir="ltr">A1.1</bdi>، كل درس نحو {arMinutes(minutes)}، ومبني حول موقف يومي واحد. هذه خطواته بالترتيب:
+      </p>
+      <ol class="mt-6 grid gap-3 sm:grid-cols-2">
+        {steps.map((s, i) => (
+          <li class="rounded-clay border border-rule bg-white p-4">
+            <p class="font-bold text-ink"><span class="text-siegel-deep">{i + 1}.</span> {s.label}</p>
+            <p class="mt-1 text-[0.9375rem] leading-relaxed text-graphite" set:html={arRich(s.body)} />
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <CoverageTable />
+
+    <!-- ═══ THE LEVELS, with what they cost ═══ -->
+    <section aria-labelledby="levels-h" class="mx-auto max-w-5xl px-4 py-14 sm:px-6">
+      <h2 id="levels-h" class="text-[1.625rem] font-bold leading-snug">المستويات والأسعار</h2>
+      <p class="mt-3 max-w-2xl leading-relaxed text-graphite">
+        <bdi dir="ltr">A1.1</bdi> مجاني. كل مستوى بعده دورة تُشترى مرة واحدة وتبقى لك، ومعها {arMonths(COURSE_PRO_MONTHS)} من Pro. لا اشتراك ولا تجديد تلقائي.
+      </p>
+      <ul class="mt-6 divide-y divide-rule rounded-clay border border-rule bg-white">
+        {STATIONS.map((st) => (
+          <li class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 px-4 py-3">
+            <span class="min-w-0">
+              <bdi dir="ltr" class="font-bold text-ink">{st.code}</bdi>
+              <span class="ms-2 text-[0.9375rem] text-graphite" set:html={arRich(LEVEL_OUTCOME_AR[st.level])} />
+            </span>
+            <span class="text-[0.9375rem] font-bold text-ink">
+              {st.status === 'free' ? 'مجاني' : st.status === 'building' ? 'قيد الإعداد' : <><bdi dir="ltr">{st.priceLabel}</bdi> مرة واحدة <span class="font-normal text-graphite">· {AR_LINES.englishOnly}</span></>}
+            </span>
+          </li>
+        ))}
+      </ul>
+      <p class="mt-4 flex flex-wrap gap-x-6 gap-y-2">
+        <a href="/ar/pricing/" class="dm-link font-semibold">الأسعار بالتفصيل</a>
+        <a href="/ar/courses/" class="dm-link font-semibold">كل الدورات</a>
+      </p>
+    </section>
+
+    <!-- ═══ QUESTIONS A BEGINNER ASKS FIRST ═══ -->
+    <section aria-labelledby="faq-h" class="mx-auto max-w-5xl px-4 py-14 sm:px-6">
+      <h2 id="faq-h" class="text-[1.625rem] font-bold leading-snug">أسئلة قبل أن تبدأ</h2>
+      <dl class="mt-6 grid gap-5">
+        <div>
+          <dt class="font-bold text-ink">هل الدورة كلها بالعربية؟</dt>
+          <dd class="mt-1 leading-relaxed text-graphite">ليس بعد. أزرار الدورة ورسائلها بالعربية، والشرح داخل الدروس 1–3 بالعربية. من الدرس 4 يظهر الشرح بالإنجليزية مع وسم «بالإنجليزية»، ونعمل على ترجمته.</dd>
+        </div>
+        <div>
+          <dt class="font-bold text-ink">هل أحتاج إلى معرفة الإنجليزية؟</dt>
+          <dd class="mt-1 leading-relaxed text-graphite">لا في الدروس 1–3. لكن بعض الأشياء ليست بالعربية بعد: رسائل البريد الإلكتروني (بالإنجليزية)، وصفحة الدفع (بلغة متصفحك إن كانت مدعومة، وإلا بالإنجليزية)، والشرح في الدروس اللاحقة (بالإنجليزية). أمّا تقييم الكتابة والتحدّث بالذكاء الاصطناعي فبالألمانية.</dd>
+        </div>
+        <div>
+          <dt class="font-bold text-ink">هل في الدروس صوت؟</dt>
+          <dd class="mt-1 leading-relaxed text-graphite">نعم. بعض الكلمات لها تسجيلات صوتية، وما لا تسجيل له — ومنه سطور الحوار — ينطقه صوت حاسوبي من متصفحك، ويُكتب ذلك بجانبه. وإن لم تسمع شيئًا فالحلول في <a href="/ar/help/#audio" class="dm-link">صفحة المساعدة</a>.</dd>
+        </div>
+        <div>
+          <dt class="font-bold text-ink">كيف أكتب ä وö وü وß؟</dt>
+          <dd class="mt-1 leading-relaxed text-graphite">تحت كل خانة إجابة ألمانية أزرار لهذه الحروف. ويمكنك أيضًا كتابة ae وoe وue وss بدلًا منها. التفاصيل في <a href="/ar/help/#typing" class="dm-link">صفحة المساعدة</a>.</dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- ═══ FINAL DOOR ═══ -->
+    <section class="bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="close-h">
+      <div class="mx-auto max-w-5xl px-4 py-14 sm:px-6">
+        <h2 id="close-h" class="text-[clamp(1.75rem,5vw,2.5rem)] font-bold leading-snug">الدرس الأول ينتظرك.</h2>
+        <p class="mt-4 max-w-2xl leading-relaxed text-nacht-muted">{ar('intro.a1.1-l01.situation')} — في نحو {arMinutes(minutes)}.</p>
+        <div class="mt-6 flex flex-wrap items-center gap-3">
+          <a href="/course/a1.1?lang=ar" class="dm-key dm-key-linie" data-anon-only data-track="course_selected" data-track-level="a1.1" data-track-surface="ar_close">ابدأ A1.1 مجانًا</a>
+          <a href="/ar/help/" class="dm-key dm-key-ghost-nacht">المساعدة بالعربية</a>
+        </div>
+        <p class="mt-6 text-[0.8125rem] leading-relaxed text-nacht-muted">{AR_LINES.draftNote}</p>
+      </div>
+    </section>
+
+  </div>
+</Layout>

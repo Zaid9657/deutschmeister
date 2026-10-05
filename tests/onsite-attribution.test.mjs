@@ -154,6 +154,9 @@ test('the grammar hub and the nav carry the surface', () => {
 
   const layout = read('astro-site/src/layouts/Layout.astro');
   assert.match(layout, /const navSignupHref = surface \? onsiteHref\('signup', surface, 'nav'\) : '\/signup';/);
-  assert.equal((layout.match(/href=\{navSignupHref\}/g) || []).length, 3, 'desktop, mobile and menu trial buttons');
+  // An Arabic page (docs/arabic/README.md) sends the same three buttons to the
+  // Arabic sign-up; every other page keeps the surface-tagged href.
+  assert.match(layout, /const signupHref = lang === 'ar' \? '\/signup\?lang=ar' : navSignupHref;/);
+  assert.equal((layout.match(/href=\{signupHref\}/g) || []).length, 3, 'desktop, mobile and menu trial buttons');
   assert.doesNotMatch(layout, /href="\/signup"/, 'a nav signup button bypasses the surface tag');
 });

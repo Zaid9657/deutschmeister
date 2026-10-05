@@ -62,6 +62,9 @@ export function track(name, props = {}) {
     ...attributionProps(),
     entry_page: window.location.pathname,
     signed_in: signedIn(),
+    // The language this page is in (en | de | ar) — a product setting for
+    // comparing funnels by language, never a proxy for nationality.
+    ui_locale: typeof document !== 'undefined' ? document.documentElement.getAttribute('lang') || undefined : undefined,
     ...props,
   });
   try {

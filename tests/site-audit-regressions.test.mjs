@@ -61,8 +61,14 @@ test('the SPA navigation switches at the large breakpoint and exposes 44px contr
   assert.match(navbar, /className=\{?[`"]lg:hidden flex h-11 w-11/);
   // The phone menu scrolls inside the viewport under the bar (v3: on the night ground).
   assert.match(navbar, /className=\{?[`"]lg:hidden max-h-\[calc\(100svh-4rem\)\] overflow-y-auto border-t border-nacht-rule bg-nacht/);
-  assert.match(navbar, /aria-label=\{i18n\.language === 'en' \? 'Switch to German' : 'Switch to English'\}/);
-  assert.match(navbar, /w-11 h-11/);
+  // The globe button became the three-language switch (Arabic edition): a
+  // named group whose every pill is a 44px target in the navigation.
+  assert.match(navbar, /<LangToggle surface="navbar" size="touch" \/>/);
+  const toggle = read('src/components/lesson/LangToggle.jsx');
+  assert.match(toggle, /role="group"\s*\n\s*aria-label=\{GROUP_LABEL\[lang\] \|\| GROUP_LABEL\.en\}/);
+  assert.doesNotMatch(toggle, /lesson\/strings\.js/, 'the navbar must not pull the lesson tables into the main bundle');
+  // (Its 44 × 44 floor replaces the globe button's `w-11 h-11`.)
+  assert.match(toggle, /size === 'touch' \? 'min-h-11 min-w-11 px-3'/);
   assert.match(button, /rounded-clay min-h-11/);
 });
 

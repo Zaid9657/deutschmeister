@@ -63,7 +63,7 @@ export default function StageShell({
             onClick={onBack}
             className="inline-flex items-center gap-1 self-start text-sm font-bold text-graphite hover:text-siegel-deep"
           >
-            <ArrowLeft className="h-4 w-4" /> {t('shell.back', lang)}
+            <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" aria-hidden="true" /> {t('shell.back', lang)}
           </button>
         ) : (
           <span />

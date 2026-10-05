@@ -99,14 +99,21 @@ test('placedAbove compares on the level ladder in either case and never promises
   const src = read(HOME);
   assert.match(src, /LEVEL_ORDER\.indexOf\(String\(placed \|\| ''\)\.toUpperCase\(\)\)/, 'DB level is UPPERCASE; normalise before comparing');
   assert.ok(LEVEL_ORDER[0] === 'A1.1', 'the ladder starts at A1.1');
-  assert.match(src, /Your test suggests a level above/, 'the endowed label says "your test suggests"');
-  assert.doesNotMatch(src, /you will pass|guaranteed|you are (now )?[AB][12]\.[12]/i, 'no pass or level promise');
+  // The copy lives in the lesson string table since the Arabic edition.
+  const { STRINGS } = await import('../src/lib/lesson/strings.js');
+  assert.match(src, /t\('course\.endowed', lang/);
+  assert.match(STRINGS.en['course.endowed'], /^Your test suggests a level above \{code\}/, 'the endowed label says "your test suggests"');
+  for (const text of [src, ...['en', 'de'].flatMap((l) => Object.entries(STRINGS[l]).filter(([k]) => k.startsWith('course.')).map(([, v]) => v))]) {
+    assert.doesNotMatch(text, /you will pass|guaranteed|you are (now )?[AB][12]\.[12]|Sie bestehen|garantiert/i, 'no pass or level promise');
+  }
 });
 
-test('the footer tells a signed-out visitor where their progress lives', () => {
+test('the footer tells a signed-out visitor where their progress lives', async () => {
   const src = read(HOME);
-  assert.match(src, /Your progress saves on this device until you sign in\./);
-  assert.match(src, /user \? ' On any device\.' : ' Your progress saves on this device until you sign in\.'/, 'the sentence is conditional on `user`');
+  const { STRINGS } = await import('../src/lib/lesson/strings.js');
+  assert.equal(STRINGS.en['course.footer.thisDevice'], 'Your progress saves on this device until you sign in.');
+  assert.equal(STRINGS.en['course.footer.anyDevice'], 'On any device.');
+  assert.match(src, /t\(user \? 'course\.footer\.anyDevice' : 'course\.footer\.thisDevice', lang\)/, 'the sentence is conditional on `user`');
 });
 
 // ---------------------------------------------------------------------------
@@ -133,21 +140,28 @@ test('IntroStage exists, the player imports it, and it is player state that prev
 
 test('Start fires lesson_started and the recap write fires lesson_completed', () => {
   const player = read(PLAYER);
-  assert.match(player, /import \{ trackLessonCompleted, trackLessonStarted \} from '\.\.\/\.\.\/lib\/funnelTracking\.js'/);
+  assert.match(player, /import \{ trackLessonCompleted, trackLessonResumed, trackLessonStarted \} from '\.\.\/\.\.\/lib\/funnelTracking\.js'/);
   assert.match(player, /onStart=\{\(\) => \{ trackLessonStarted\(curriculum\.level, lektion\.id\); setIntroDone\(true\); \}\}/);
-  assert.match(player, /setSaved\(true\);\s*trackLessonCompleted\(curriculum\.level, lektion\.id\);/, 'completed is tracked exactly where the lesson is persisted');
+  // Deduped per run since the Arabic edition (tests/arabic-journey.test.mjs): a
+  // second mount of the same recap no longer reports a second completion.
+  assert.match(player, /setSaved\(true\);\s*(?:\/\/[^\n]*\n\s*)*if \(claimRunCompletion\(runId\)\) trackLessonCompleted\(curriculum\.level, lektion\.id\);/, 'completed is tracked exactly where the lesson is persisted');
   const funnel = read('src/lib/funnelTracking.js');
   assert.match(funnel, /export const trackLessonStarted = \(level, topic\) => track\('lesson_started'/);
   assert.match(funnel, /export const trackLessonCompleted = \(level, topic\) => track\('lesson_completed'/);
 });
 
-test('the intro string table is complete in both languages and the German is Sie', () => {
+test('the intro string table is complete in both languages and the German is Sie', async () => {
+  // The intro's own side table moved into the lesson string table (one table
+  // per chrome language, parity pinned in tests/course-player.test.mjs).
   const src = read(INTRO);
-  const en = [...src.matchAll(/'(intro\.[a-zA-Z]+)':/g)].map((m) => m[1]);
-  const keys = [...new Set(en)];
+  assert.doesNotMatch(src, /INTRO_STRINGS/, 'no second string table beside STRINGS');
+  const { STRINGS } = await import('../src/lib/lesson/strings.js');
+  const keys = Object.keys(STRINGS.en).filter((k) => k.startsWith('intro.'));
   assert.ok(keys.length >= 6, 'the intro table is suspiciously small');
-  for (const k of keys) assert.equal(en.filter((x) => x === k).length, 2, `${k} must appear in both the en and de tables`);
-  assert.doesNotMatch(src, /\b(du|dich|dir|dein|deine[mnrs]?|kannst|hast)\b/, 'German chrome must be Sie');
+  for (const k of keys) assert.ok(STRINGS.de[k] && STRINGS.de[k].trim(), `${k} must appear in both the en and de tables`);
+  for (const k of [...src.matchAll(/t\('(intro\.[a-zA-Z]+)'/g)].map((m) => m[1])) assert.ok(keys.includes(k), `${k} is used but not in the table`);
+  assert.doesNotMatch(src.replace(/\bdir=/g, ''), /\b(du|dich|dir|dein|deine[mnrs]?|kannst|hast)\b/, 'German chrome must be Sie');
+  for (const k of keys) assert.doesNotMatch(STRINGS.de[k], /\b(du|dich|dir|dein|deine[mnrs]?|kannst|hast)\b/, `${k}: German chrome must be Sie`);
 });
 
 test('every A1.1 Lektion has a cast, a chapter and an intro to render', () => {
@@ -210,7 +224,7 @@ test('RecapStage mounts WordsLearnedCards from the recap stage\'s own wortfeld',
   const src = read('src/components/lesson/RecapStage.jsx');
   assert.match(src, /import WordsLearnedCards from '\.\/WordsLearnedCards\.jsx'/);
   assert.match(src, /stage\.wortfeld && stage\.wortfeld\.length > 0/);
-  assert.match(src, /<WordsLearnedCards words=\{stage\.wortfeld\} \/>/);
+  assert.match(src, /<WordsLearnedCards words=\{stage\.wortfeld\} level=\{level\} \/>/);
   // SaveProgressCard for signed-out learners must still be there (P4 requirement kept).
   assert.match(src, /!user && level \? <SaveProgressCard level=\{level\} \/> : null/);
 });

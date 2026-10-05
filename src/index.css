@@ -31,6 +31,25 @@
   }
 }
 
+/* ── Arabic (docs/arabic/README.md) ──────────────────────────────────────
+   Letter-spacing pulls apart the joins of a cursive script, so no tracking
+   utility or role applies to Arabic text (a German run inside carries
+   lang="de" but inherits the normal spacing — harmless). Arabic also needs
+   more room above and below the line than Latin at the same size: the tight
+   leadings open up to 1.45 so marks are never clipped. The face itself comes
+   from the token stacks (IBM Plex Sans Arabic, design-tokens.js). */
+:lang(ar) {
+  letter-spacing: normal !important;
+}
+:lang(ar):is(.leading-none, .leading-tight, .leading-snug, [class*='leading-[']) {
+  line-height: 1.45;
+}
+/* The data role is a monospace stack: on Arabic text its spaces come from the
+   mono face and the words drift apart, so an Arabic label takes the body face. */
+.font-data:lang(ar) {
+  font-family: theme('fontFamily.body');
+}
+
 /* Custom components */
 @layer components {
   /* Hide scrollbar for horizontal scroll areas */

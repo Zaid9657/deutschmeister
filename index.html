@@ -2,6 +2,12 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- First-paint interface language (src/lib/locale.js): `?lang=` → saved choice
+         (`dm_locale`, legacy `dm_lesson_lang`) → English. Arabic renders right-to-left,
+         but only on the routes translated for the pilot (the same pattern as
+         AR_READY_PATTERN, pinned by tests/locale.test.mjs) — so the layout never
+         flips after the bundle loads. -->
+    <script>(function(){try{var L=['en','de','ar'],q=new URLSearchParams(location.search).get('lang'),v=L.indexOf(q)>-1?q:null;if(!v){var r=localStorage.getItem('dm_locale');if(r){try{v=JSON.parse(r).lang}catch(e){v=r}}if(L.indexOf(v)<0){v=localStorage.getItem('dm_lesson_lang')}if(L.indexOf(v)<0){v=localStorage.getItem('dm_lang')==='de'?'de':null}}if(L.indexOf(v)<0)return;var p=/^\/(course\/a1\.1(\/(l\/\d+|review|checkpoint\/\d+))?|login|signup|reset-password|update-password|verify-email)\/?$/;if(v==='ar'&&!p.test(location.pathname))v='en';var h=document.documentElement;h.lang=v;h.dir=v==='ar'?'rtl':'ltr';if(v==='ar'){var k=document.createElement('link');k.rel='preload';k.as='font';k.type='font/woff2';k.crossOrigin='';k.href='/fonts/ibm-plex-sans-arabic-v15-arabic-400.woff2';document.head.appendChild(k)}}catch(e){}})();</script>
     <!-- Analytics is loaded only after cookie consent — see /consent.js -->
     <script src="/consent.js" defer></script>
     <!-- Which link brought this visitor (utm_* / ?ref= / social referrer) — see /attribution.js -->

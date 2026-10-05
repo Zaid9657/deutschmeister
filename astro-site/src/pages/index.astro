@@ -75,7 +75,7 @@ const preloads = [...signFontPreloads, ...fontPreloads.filter((f) => f.includes(
 const firstTicket = STATIONS.find((s) => s.status === 'ticket');
 ---
 
-<Layout title={title} description={description} canonical="https://deutsch-meister.de/" jsonLd={jsonLd} tone="nacht" preloads={preloads}>
+<Layout title={title} description={description} canonical="https://deutsch-meister.de/" jsonLd={jsonLd} tone="nacht" preloads={preloads} alternates={{ en: '/', ar: '/ar/' }}>
   <div class="overflow-x-clip bg-paper text-ink">
 
     <!-- ═══ HERO: the line, and the first stop you can ride right now ═══ -->

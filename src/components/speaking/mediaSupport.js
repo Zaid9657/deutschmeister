@@ -96,6 +96,21 @@ export function isLiveStream(stream) {
   }
 }
 
+/**
+ * The same four cases as micErrorMessage, as a key of the lesson string table
+ * (`speaking.micError.<key>`), so the course screens can say it in the
+ * learner's interface language. The speaking coach keeps micErrorMessage.
+ */
+export function micErrorKey(err) {
+  const msg = (err?.message || err?.name || '').toLowerCase();
+  if (msg.includes('not allowed') || msg.includes('permission') || err?.name === 'NotAllowedError') {
+    return isIOS() ? 'deniedIos' : 'denied';
+  }
+  if (msg.includes('not found') || err?.name === 'NotFoundError') return 'notFound';
+  if (msg.includes('not readable') || err?.name === 'NotReadableError') return 'notReadable';
+  return 'generic';
+}
+
 export function micErrorMessage(err) {
   const msg = (err?.message || err?.name || '').toLowerCase();
   if (msg.includes('not allowed') || msg.includes('permission') || err?.name === 'NotAllowedError') {

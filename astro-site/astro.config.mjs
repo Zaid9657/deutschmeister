@@ -19,6 +19,8 @@ export default defineConfig({
       filter: (page) =>
         page === 'https://deutsch-meister.de/' ||
         page === 'https://deutsch-meister.de/pricing/' ||
+        // The Arabic edition: /ar/, /ar/courses/…, /ar/pricing/, /ar/help/.
+        page.startsWith('https://deutsch-meister.de/ar/') ||
         page.includes('/courses/') ||
         page.includes('/grammar/') ||
         page.includes('/vergleich') ||

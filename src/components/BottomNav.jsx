@@ -6,6 +6,7 @@ import { useSubscription } from '../contexts/SubscriptionContext';
 import { fetchDeckCounts } from '../services/srsService';
 import { courseHomeFor } from '../lib/courseEntry.js';
 import { chromeFor } from '../lib/chrome.js';
+import { effectiveLocale, useLocale } from '../lib/locale.js';
 
 // Mobile bottom navigation (renovation Phase 4b) — the app previously offered
 // phones only a hamburger accordion of 12+ links. Thumb-reach tabs for
@@ -26,22 +27,31 @@ import { chromeFor } from '../lib/chrome.js';
 // along its top edge and the label in the deeper türkis (small text needs AA on
 // the tint: siegel-deep 5.7:1, where linie itself is 4.2:1). The in-flow spacer takes the footer's ground on routes
 // that render the footer, so no paper band shows under it on a phone.
-const buildTabs = ({ hasAccess, courseHome }) => {
+// The tab labels stay the short German words the app has always used — except
+// in the Arabic interface (src/lib/locale.js), where each tab names its screen
+// in Arabic. The labels of tabs whose screen is not translated yet carry no
+// marker here (four letters of room); the screen itself says so on arrival.
+const TAB_LABELS_AR = { course: 'الدورة', home: 'الرئيسية', practice: 'تدرّب', exams: 'الامتحان', words: 'الكلمات', profile: 'الملف' };
+
+const buildTabs = ({ hasAccess, courseHome, arabic = false }) => {
   const course = { key: 'course', label: 'Kurs', href: courseHome, Icon: Route };
   const home = { key: 'home', label: 'Home', href: '/dashboard', Icon: LayoutDashboard };
-  return [
+  const tabs = [
     ...(hasAccess ? [home, course] : [course]),
     { key: 'practice', label: 'Üben', href: '/listening/', Icon: Headphones },
     { key: 'exams', label: 'Prüfung', href: '/pruefung/', Icon: GraduationCap, fullLoad: true },
     { key: 'words', label: 'Wörter', href: '/vocabulary', Icon: BookMarked },
     { key: 'profile', label: 'Profil', href: '/profile', Icon: User },
   ];
+  return arabic ? tabs.map((tab) => ({ ...tab, label: TAB_LABELS_AR[tab.key] || tab.label, lang: 'ar' })) : tabs;
 };
 
 const BottomNav = () => {
   const { user } = useAuth();
   const { hasAccess, hasLevelAccess, profile } = useSubscription();
   const { pathname } = useLocation();
+  const [locale] = useLocale();
+  const arabic = effectiveLocale(locale, pathname) === 'ar';
   const [dueCount, setDueCount] = useState(0);
 
   // Due-card badge on the Wörter tab — the in-app reason to come back today.
@@ -54,7 +64,7 @@ const BottomNav = () => {
 
   if (!user) return null;
 
-  const tabs = buildTabs({ hasAccess, courseHome: courseHomeFor({ level: profile?.current_level, hasLevelAccess }) });
+  const tabs = buildTabs({ hasAccess, courseHome: courseHomeFor({ level: profile?.current_level, hasLevelAccess }), arabic });
 
   // chromeFor 'full' is exactly the routes App.jsx gives the (night) Footer.
   const spacer = chromeFor(pathname) === 'full' ? 'bg-nacht' : '';
@@ -66,7 +76,7 @@ const BottomNav = () => {
     <nav
       className="lg:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-nacht-rule bg-nacht/95 pb-[env(safe-area-inset-bottom)] text-nacht-muted backdrop-blur-md"
       data-ground="nacht"
-      aria-label="App navigation"
+      aria-label={arabic ? 'التنقّل في التطبيق' : 'App navigation'}
     >
       <div className={tabs.length === 6 ? 'grid grid-cols-6' : 'grid grid-cols-5'}>
         {tabs.map((tab) => {
@@ -80,12 +90,12 @@ const BottomNav = () => {
               <span className="relative">
                 <tab.Icon size={20} strokeWidth={active ? 2.4 : 2} />
                 {tab.key === 'words' && dueCount > 0 && (
-                  <span className="absolute -top-1.5 -right-2.5 min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-linie text-linie-ink text-[0.625rem] font-bold flex items-center justify-center">
+                  <span className="absolute -top-1.5 -end-2.5 min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-linie text-linie-ink text-[0.625rem] font-bold flex items-center justify-center">
                     {dueCount > 99 ? '99+' : dueCount}
                   </span>
                 )}
               </span>
-              {tab.label}
+              <span lang={tab.lang || undefined}>{tab.label}</span>
             </>
           );
           return tab.fullLoad ? (

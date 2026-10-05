@@ -2,6 +2,8 @@ import { useCallback, useState } from 'react';
 import StageShell from './StageShell.jsx';
 import GradedWriting from './GradedWriting.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { levelOfLektion, supportKeys } from '../../lib/lesson/support.js';
+import SupportText from './SupportText.jsx';
 
 /**
  * Stage 6 — Schreiben. A Formular (fields) or a Mitteilung (short message),
@@ -26,7 +28,10 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
 /** Below this share of the maximum the Lektion counts the writing as a miss. */
 const PASS_PCT = 0.6;
 
-export default function WritingStage({ stage, onBack, onDone, onResult }) {
+export default function WritingStage({ stage, lektionId = null, onBack, onDone, onResult }) {
+  // The player passes the Lektion id (it used to read `stage.lektionId`, which
+  // buildLesson never sets, so the writing submission carried no Lektion).
+  const id = lektionId || stage.lektionId || null;
   const schreiben = stage.schreiben || {};
   const [graded, setGraded] = useState(false);
   const [lang] = useLessonLang();
@@ -50,8 +55,8 @@ export default function WritingStage({ stage, onBack, onDone, onResult }) {
   return (
     <StageShell
       eyebrow={t('stage.writing.eyebrow', lang)}
-      title={schreiben.taskDe}
-      lead={schreiben.taskEn || null}
+      title={schreiben.taskDe ? <span lang="de" dir="ltr">{schreiben.taskDe}</span> : null}
+      lead={schreiben.taskEn ? <SupportText level={levelOfLektion(id)} k={id ? supportKeys.writingTask(id) : null} en={schreiben.taskEn} /> : null}
       onBack={onBack}
       primaryLabel={t('action.next', lang)}
       onPrimary={onDone}
@@ -69,7 +74,7 @@ export default function WritingStage({ stage, onBack, onDone, onResult }) {
           maxWords: schreiben.maxWords,
           sample: schreiben.sample,
         }}
-        lektionId={stage.lektionId || null}
+        lektionId={id}
         onResult={handleResult}
       />
     </StageShell>

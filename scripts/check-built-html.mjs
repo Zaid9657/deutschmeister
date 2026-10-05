@@ -87,6 +87,12 @@ const REQUIRED = [
   'pruefung/telc-b2/index.html',
   'pruefung/start-deutsch-1/index.html',
   'pruefung/goethe-a2/index.html',
+  // The Arabic edition (docs/arabic/README.md).
+  'ar/index.html',
+  'ar/courses/index.html',
+  'ar/courses/a1-1/index.html',
+  'ar/pricing/index.html',
+  'ar/help/index.html',
   ...SPA_ROUTES.map((r) => `${r}/index.html`),
 ];
 
@@ -181,6 +187,8 @@ const decode = (s) =>
 
 const titles = new Map();
 const descriptions = new Map();
+/** page → { canonical, alternates: Map(hreflang → href) }, for the reciprocity pass. */
+const hreflangs = new Map();
 let checked = 0;
 let skipped = 0;
 
@@ -265,6 +273,20 @@ for (const entry of MANIFEST) {
     if (text.length < MIN_BODY_CHARS) note(fail, page, `body has ${text.length} chars of text (min ${MIN_BODY_CHARS})`);
   }
 
+  // --- language direction and hreflang (Arabic edition) ----------------------
+  // An Arabic document must say it is right-to-left; a page that names
+  // alternates is checked for reciprocity after the loop.
+  if (langs.length === 1 && /^ar\b/i.test(langs[0]) && !/<html[^>]*\sdir="rtl"/i.test(structural)) {
+    note(fail, page, '<html lang="ar"> without dir="rtl"');
+  }
+  const alternates = new Map(
+    [...structural.matchAll(/<link[^>]+rel="alternate"[^>]+hreflang="([^"]+)"[^>]+href="([^"]+)"/gi)].map((m) => [m[1], m[2]]),
+  );
+  if (alternates.size) {
+    const canonical = structural.match(/<link[^>]+rel="canonical"[^>]+href="([^"]*)"/i);
+    hreflangs.set(page, { canonical: canonical ? canonical[1] : '', alternates });
+  }
+
   // --- banned literals ------------------------------------------------------
   for (const literal of BANNED_LITERALS) {
     // Case-insensitive: the page said "Full transcripts" while the ban listed
@@ -273,6 +295,33 @@ for (const entry of MANIFEST) {
     if (html.toLowerCase().includes(literal.toLowerCase())) note(fail, page, `contains banned literal "${literal}"`);
   }
 }
+
+// --- hreflang reciprocity ---------------------------------------------------
+// hreflang is only honoured when every page of a set names every other one and
+// itself, each target is its own canonical, and x-default is present. A one-way
+// or self-less set is ignored by search engines — silently, which is why it is
+// checked against the build rather than trusted.
+const pageForUrl = (url) => {
+  const route = url.replace(/^https?:\/\/[^/]+/, '').replace(/^\/|\/$/g, '');
+  return route ? `${route}/index.html` : 'index.html';
+};
+for (const [page, { canonical, alternates }] of hreflangs) {
+  for (const required of ['x-default']) {
+    if (!alternates.has(required)) note(fail, page, `hreflang set has no ${required}`);
+  }
+  if (![...alternates.values()].includes(canonical)) note(fail, page, `hreflang set does not include the page itself (${canonical})`);
+  for (const [code, href] of alternates) {
+    if (!href.startsWith('https://')) { note(fail, page, `hreflang="${code}" is not absolute: ${href}`); continue; }
+    const target = pageForUrl(href);
+    const other = hreflangs.get(target);
+    if (!found.has(target)) { note(fail, page, `hreflang="${code}" points at ${href}, which is not built`); continue; }
+    if (!other) { note(fail, page, `hreflang="${code}" → ${href} does not link back (no hreflang there)`); continue; }
+    if (other.canonical !== href) note(fail, page, `hreflang="${code}" → ${href} is not that page's canonical (${other.canonical})`);
+    const same = other.alternates.size === alternates.size && [...alternates].every(([c, h]) => other.alternates.get(c) === h);
+    if (!same) note(fail, page, `hreflang set differs on ${href} (not reciprocal)`);
+  }
+}
+if (hreflangs.size) console.log(`hreflang: ${hreflangs.size} page(s) in alternate sets checked for reciprocity`);
 
 // --- sitemap integrity ------------------------------------------------------
 // Every URL we advertise must be a real, indexable file. A sitemap entry for a

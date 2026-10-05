@@ -99,7 +99,11 @@ test('both heads preload exactly the token fontPreloads, and nothing points at G
   // v4: a page may pass its own `preloads` (the homepage sets signs above the
   // fold); every other page gets the token list, rendered by the same map.
   assert.match(layout, /preloads = fontPreloads,/);
-  assert.match(layout, /preloads\.map\(\(href\) => \(\s*<link rel="preload" href=\{href\} as="font" type="font\/woff2" crossorigin \/>/);
+  // The Arabic edition: an Arabic page on the default list swaps the display
+  // face (not set there) for the token Arabic face; every other page renders
+  // its preloads untouched.
+  assert.match(layout, /const fontLinks = isArabic && preloads === fontPreloads \? \[\.\.\.arabicFontPreloads, \.\.\.fontPreloads\.filter\(\(f\) => f\.includes\('nunito'\)\)\] : preloads;/);
+  assert.match(layout, /fontLinks\.map\(\(href\) => \(\s*<link rel="preload" href=\{href\} as="font" type="font\/woff2" crossorigin \/>/);
   // A page that passes preloads builds them only from the token lists.
   const pagesDir = join(root, 'astro-site/src/pages');
   const pageFiles = [];

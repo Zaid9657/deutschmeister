@@ -7,14 +7,25 @@ export const GOLD_THRESHOLD = 0.8;
 
 /**
  * firstAttemptAccuracy(attempts) → 0…1 over the first response per item.
- * `attempts` is the player's log: `{ itemId, correct }` in the order answered.
- * Warm-up and requeue replays carry ids already seen, so they are ignored here
- * by construction.
+ * `attempts` is the player's log: `{ itemId, stage, correct, support }` in the
+ * order answered.
+ *
+ * Two kinds of response are NOT first-try evidence and are left out:
+ *   - the requeue stage ("Step 7 · Try again"). Its items are DIFFERENT
+ *     variants with NEW ids (requeue.js), so the old comment here — "requeue
+ *     replays carry ids already seen, so they are ignored by construction" —
+ *     was false: every requeue answer, and every "Show answer" reveal in it,
+ *     used to count as a fresh first try and pulled the recap figure (and gold)
+ *     around after the learner had already been shown the rule;
+ *   - an answer given with the transcript open after the audio failed
+ *     (`support: 'transcript'`, AudioTrouble.jsx): it was read, not heard, and
+ *     is never counted as listening evidence.
  */
 export function firstAttemptAccuracy(attempts = []) {
   const seen = new Map();
   for (const a of attempts) {
     if (!a || !a.itemId) continue;
+    if (a.stage === 'requeue' || a.support === 'transcript') continue;
     if (seen.has(a.itemId)) continue;
     seen.set(a.itemId, !!a.correct);
   }
@@ -30,6 +41,28 @@ export const accuracyPercent = (accuracy) => Math.min(100, Math.round((Number(ac
 /** 'gold' at ≥ 80 % first-attempt accuracy, 'complete' at anything else. */
 export function masteryStatus(accuracy) {
   return (Number(accuracy) || 0) >= GOLD_THRESHOLD ? 'gold' : 'complete';
+}
+
+/** started < complete < gold — a finished Lektion is never written back down. */
+export const STATUS_RANK = { started: 0, complete: 1, gold: 2 };
+
+/**
+ * keepBest(prev, next) → { status, accuracy } for a lesson_progress write.
+ * A repeat of a gold Lektion at 60 % used to overwrite the row with
+ * 'complete' / 0.6 (completeLesson upserted unconditionally, and the guest
+ * merge goes through the same write), so practising again LOST progress.
+ * The best status and the best accuracy are kept; an unknown previous row
+ * (no row, a failed read) keeps the new values.
+ */
+export function keepBest(prev, next) {
+  const p = prev || {};
+  const n = next || {};
+  const rank = (s) => (Object.prototype.hasOwnProperty.call(STATUS_RANK, s) ? STATUS_RANK[s] : -1);
+  const status = rank(p.status) > rank(n.status) ? p.status : n.status;
+  const pa = Number(p.accuracy);
+  const na = Number(n.accuracy);
+  const accuracy = Number.isFinite(pa) && (!Number.isFinite(na) || pa > na) ? pa : na;
+  return { status, accuracy };
 }
 
 export const MASTERY_LABELS = {

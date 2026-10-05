@@ -81,7 +81,7 @@ const jsonLd = {
 };
 ---
 
-<Layout title={title} description={description} canonical={`https://deutsch-meister.de/courses/${slug}/`} jsonLd={jsonLd} lang="en" tone="nacht" preloads={preloads}>
+<Layout title={title} description={description} canonical={`https://deutsch-meister.de/courses/${slug}/`} jsonLd={jsonLd} lang="en" tone="nacht" preloads={preloads} alternates={level === 'a1.1' ? { en: '/courses/a1-1/', ar: '/ar/courses/a1-1/' } : null}>
   <div class="overflow-x-clip bg-paper text-ink">
     <!-- The station: where this level sits on the line, what it costs, the door. -->
     <section class="relative bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="hero-h">

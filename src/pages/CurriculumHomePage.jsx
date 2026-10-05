@@ -21,6 +21,10 @@ import Chip from '../components/ui/Chip.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
 import SituationScene from '../components/illustrations/SituationScene.jsx';
+import SupportText from '../components/lesson/SupportText.jsx';
+import LangToggle from '../components/lesson/LangToggle.jsx';
+import { t, useLessonLang } from '../lib/lesson/strings.js';
+import { SUPPORT_SCOPE, loadSupport, supportKeys, lektionHasSupport } from '../lib/lesson/support.js';
 
 // Course home for a REBUILT level (docs/course-standard-2026-09-12.md): the
 // path is 12 Lektionen + 4 checkpoints + the level test, grouped in four
@@ -82,8 +86,10 @@ const hrefFor = (level, node) => {
 // FREE_LEVELS. A signed-out visitor is asked to sign in there, never to pay.
 // Say so on the node and in the footer, so the last step of the free course
 // never reads like an unmarked paywall (Wave 0 front door).
-const finalTestLabel = (level) => (isLevelFree(level) ? 'Abschlusstest · frei' : 'Abschlusstest');
-const kindLabelFor = (level) => ({ lektion: 'Lektion', checkpoint: 'Checkpoint', leveltest: finalTestLabel(level) });
+// Every label on this page comes from the lesson string table (`course.*`) in
+// the interface language — English, German or Arabic (src/lib/locale.js).
+const finalTestLabel = (level, lang) => t(isLevelFree(level) ? 'course.kind.leveltestFree' : 'course.kind.leveltest', lang);
+const kindLabelFor = (level, lang) => ({ lektion: t('course.kind.lektion', lang), checkpoint: t('course.kind.checkpoint', lang), leveltest: finalTestLabel(level, lang) });
 const KIND_ICON = { lektion: BookOpen, checkpoint: ClipboardCheck, leveltest: Trophy };
 const SWAY = [0, 44, 72, 44, 0, -44, -72, -44];
 
@@ -92,9 +98,14 @@ export default function CurriculumHomePage({ curriculum }) {
   const { profile } = useSubscription() || {};
   const [searchParams] = useSearchParams();
   const level = curriculum.level;
+  const [lang] = useLessonLang();
   const meta = courseMetaFor(level);
   const programKey = programKeyFor(level);
-  const KIND_LABEL = kindLabelFor(level);
+  const KIND_LABEL = kindLabelFor(level, lang);
+  const arScope = lang === 'ar' ? (SUPPORT_SCOPE[`ar:${String(level).toLowerCase()}`] || []) : null;
+  // The Arabic chapter and situation lines come from the support sidecar; it
+  // is small enough to load with the course home (re-renders when it lands).
+  useEffect(() => { loadSupport(level, lang); }, [level, lang]);
   const [done, setDone] = useState(() => new Set());
   const [loaded, setLoaded] = useState(false);
   const [streak, setStreak] = useState(0);
@@ -153,7 +164,7 @@ export default function CurriculumHomePage({ curriculum }) {
           <Aurora />
           <div className="relative px-2 py-4">
             <Reveal className="flex flex-wrap items-center justify-between gap-2">
-              <Chip tone="label">{curriculum.code} · Course</Chip>
+              <Chip tone="label"><span dir="ltr">{curriculum.code}</span> · {t('course.chip', lang)}</Chip>
               {meta && !fresh && (
                 <button
                   type="button"
@@ -162,49 +173,54 @@ export default function CurriculumHomePage({ curriculum }) {
                   aria-controls="dm-course-welcome-panel"
                   className="inline-flex items-center gap-1 rounded-pill bg-white/70 px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep ring-1 ring-rule hover:bg-siegel-wash"
                 >
-                  <Compass className="h-3.5 w-3.5" aria-hidden="true" /> How this course works
+                  <Compass className="h-3.5 w-3.5" aria-hidden="true" /> {t('course.howItWorks', lang)}
                 </button>
               )}
+              <LangToggle surface="course" className="ms-auto" />
             </Reveal>
             <Reveal as="h1" delay={60} className="mt-3 font-display text-[2rem] font-semibold leading-[1.05] tracking-[-0.022em] sm:text-[2.75rem]">
-              German {curriculum.code}
+              {t('course.title', lang)} <span dir="ltr">{curriculum.code}</span>
             </Reveal>
             <Reveal as="p" delay={100} className="mt-2 text-[0.9375rem] text-graphite sm:text-base">
-              {curriculum.lektionen.length} Lektionen · {curriculum.checkpoints.length} checkpoints · {wordsTotal} words · ends with the {curriculum.examName} final test
+              {(() => {
+                // The exam's name is German and keeps its own language inside the sentence.
+                const [before, after = ''] = t('course.summary', lang, { lektionen: curriculum.lektionen.length, checkpoints: curriculum.checkpoints.length, words: wordsTotal }).split('{exam}');
+                return <>{before}<span lang="de" dir="ltr">{curriculum.examName}</span>{after}</>;
+              })()}
             </Reveal>
 
             <Reveal delay={140} className="mt-5 grid grid-cols-3 gap-3">
-              <Stat icon={Zap} label="XP" value={xp} tone="siegel" />
-              <Stat icon={Flame} label="Day streak" value={streak} tone="aprikose" />
-              <Stat icon={Trophy} label="Done" value={`${doneCount}/${path.length}`} tone="gold" />
+              <Stat icon={Zap} label={t('course.stat.xp', lang)} value={xp} tone="siegel" />
+              <Stat icon={Flame} label={t('course.stat.streak', lang)} value={streak} tone="aprikose" />
+              <Stat icon={Trophy} label={t('course.stat.done', lang)} value={<span dir="ltr">{`${doneCount}/${path.length}`}</span>} tone="gold" />
             </Reveal>
 
             {loaded && <MilestoneCard streak={streak} />}
 
             <Reveal delay={180} className="mt-4">
-              <div className="h-3 overflow-hidden rounded-pill bg-siegel-wash" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
+              <div className="h-3 overflow-hidden rounded-pill bg-siegel-wash" role="progressbar" aria-label={t('course.stat.done', lang)} aria-valuetext={`${doneCount}/${path.length}`} aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
                 <div className="h-full rounded-pill bg-siegel transition-all duration-700 motion-reduce:transition-none" style={{ width: `${pct}%` }} />
               </div>
               {endowed && (
                 <p className="mt-2 inline-flex items-center gap-1.5 rounded-pill bg-white/80 px-3 py-1 font-data text-[0.6875rem] font-bold text-siegel-deep ring-1 ring-rule" data-endowed>
                   <Compass className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                  Your test suggests a level above {curriculum.code} — everything here is open; start where you like.
+                  {t('course.endowed', lang, { code: curriculum.code })}
                 </p>
               )}
               {complete ? (
-                <div className="mt-4"><Button to={`/course/${level}/complete`} variant="celebrate" size="lg">Course complete · see your result →</Button></div>
+                <div className="mt-4"><Button to={`/course/${level}/complete`} variant="celebrate" size="lg">{t('course.complete', lang)}</Button></div>
               ) : current ? (
                 <div className="mt-4 flex flex-col gap-3 rounded-clay border border-rule bg-white p-4 shadow-raise sm:flex-row sm:items-center sm:justify-between" data-tour="continue">
                   <div className="flex min-w-0 items-center gap-3">
                     {(() => { const I = KIND_ICON[current.kind]; return <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel"><I className="h-5 w-5" /></span>; })()}
                     <div className="min-w-0">
-                      <p className="font-data text-[0.625rem] font-bold uppercase tracking-[0.13em] text-graphite">{doneCount === 0 ? 'Start here' : 'Up next'} · {firstOpenIndex + 1} of {path.length}</p>
-                      <p className="truncate font-bold text-ink">{current.title}</p>
-                      <p className="font-data text-[0.6875rem] text-graphite">{KIND_LABEL[current.kind]}{current.minutes ? ` · ${current.minutes} min` : ''}</p>
+                      <p className="font-data text-[0.625rem] font-bold uppercase tracking-[0.13em] text-graphite">{t(doneCount === 0 ? 'course.startHere' : 'course.upNext', lang)} · {t('course.position', lang, { n: firstOpenIndex + 1, total: path.length })}</p>
+                      <p className="truncate font-bold text-ink" lang="de" dir="ltr">{current.title}</p>
+                      <p className="font-data text-[0.6875rem] text-graphite">{KIND_LABEL[current.kind]}{current.minutes ? ` · ${t('course.minutes', lang, { n: current.minutes })}` : ''}</p>
                     </div>
                   </div>
                   <Button to={hrefFor(level, current)} variant="primary" size="lg" shimmer disabled={!loaded && !!user} className="shrink-0">
-                    {doneCount === 0 ? 'Start' : 'Continue'} →
+                    {t(doneCount === 0 ? 'course.start' : 'course.continue', lang)}
                   </Button>
                 </div>
               ) : null}
@@ -227,8 +243,9 @@ export default function CurriculumHomePage({ curriculum }) {
           const isFinal = nodes.find((n) => n.kind === 'leveltest') && lektionen.length === 0;
           const chapterMeta = !isFinal && meta ? meta.chapters[ci] : null;
           const title = isFinal
-            ? 'Final test'
-            : chapterMeta?.titleEn ?? `Lektion ${lektionen[0]?.nr}–${lektionen[lektionen.length - 1]?.nr}`;
+            ? t('course.finalTest', lang)
+            : (chapterMeta?.titleEn ? <SupportText level={level} k={supportKeys.chapterTitle(chapterMeta.nr)} en={chapterMeta?.titleEn} de={chapterMeta.titleDe} /> : null)
+              ?? `Lektion ${lektionen[0]?.nr}–${lektionen[lektionen.length - 1]?.nr}`;
           const canDos = lektionen.flatMap((l) => l.canDo || []);
           const teile = [...new Set(lektionen.flatMap((l) => l.examTeile || []))];
           const words = lektionen.reduce((s, l) => s + (l.wortfeld?.length || 0), 0);
@@ -242,29 +259,32 @@ export default function CurriculumHomePage({ curriculum }) {
                     className="mb-3 h-20 w-full rounded-clay object-cover opacity-90 sm:h-24"
                   />
                 )}
-                <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-white/80">Chapter {ci + 1}</p>
+                <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-white">{t('course.chapter', lang, { n: ci + 1 })}</p>
                 <h2 className="mt-1 font-display text-[1.25rem] font-semibold leading-tight">{title}</h2>
                 {chapterMeta && (
-                  <p className="font-data text-[0.75rem] text-white/80" lang="de">{chapterMeta.titleDe} · Lektion {lektionen[0]?.nr}–{lektionen[lektionen.length - 1]?.nr}</p>
+                  <p className="font-data text-[0.75rem] text-white"><span lang="de" dir="ltr">{chapterMeta.titleDe}</span> · {t('course.lektionRange', lang, { from: lektionen[0]?.nr, to: lektionen[lektionen.length - 1]?.nr })}</p>
                 )}
                 {chapterMeta ? (
-                  <p className="mt-2 text-[0.8125rem] leading-snug text-white/90">{chapterMeta.storyEn}</p>
+                  <SupportText as="p" level={level} k={supportKeys.chapterStory(chapterMeta.nr)} en={chapterMeta.storyEn} className="mt-2 block text-[0.8125rem] leading-snug text-white" />
                 ) : (
-                  <p className="mt-1 text-[0.8125rem] text-white/85">{lektionen.map((l) => l.title).join(' · ')}</p>
+                  <p className="mt-1 text-[0.8125rem] text-white/85" lang="de" dir="ltr">{lektionen.map((l) => l.title).join(' · ')}</p>
                 )}
-                <p className="mt-2 font-data text-[0.75rem] text-white/80">{chapterDone}/{nodes.length} done{words ? ` · ${words} words` : ''}</p>
+                {arScope && lektionen.some((l) => !arScope.includes(l.id)) && (
+                  <p className="mt-2 rounded-clay bg-siegel-deep px-3 py-1.5 text-[0.8125rem] text-white">{t('course.scopeNote', lang)}</p>
+                )}
+                <p className="mt-2 font-data text-[0.75rem] text-white">{t('course.chapterDone', lang, { done: chapterDone, total: nodes.length })}{words ? ` · ${t('course.words', lang, { n: words })}` : ''}</p>
                 {canDos.length > 0 && (
                   <button type="button" onClick={() => setOpenChapter(open ? null : ci)} aria-expanded={open}
-                    className="mt-3 inline-flex items-center gap-1 rounded-pill bg-white/15 px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-white hover:bg-white/25">
-                    Lehrplan <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
+                    className="mt-3 inline-flex items-center gap-1 rounded-pill bg-siegel-deep px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-white hover:bg-ink">
+                    {t('course.syllabus', lang)} <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
                   </button>
                 )}
               </div>
               {open && (
                 <div className="mt-2 rounded-clay border border-rule bg-white p-4 text-[0.875rem]">
-                  <p className="font-data text-[0.625rem] font-bold uppercase tracking-[0.13em] text-graphite">Das kann ich danach</p>
-                  <ul className="mt-2 list-disc space-y-1 pl-5 text-ink">{canDos.map((c) => <li key={c}>{c}</li>)}</ul>
-                  {teile.length > 0 && <p className="mt-3 text-graphite"><span className="font-bold text-ink">Prüfungsteile:</span> {teile.join(' · ')}</p>}
+                  <p className="font-data text-[0.625rem] font-bold uppercase tracking-[0.13em] text-graphite">{t('course.canDoHeading', lang)}</p>
+                  <ul className="mt-2 list-disc space-y-1 ps-5 text-ink" lang="de" dir="ltr">{canDos.map((c) => <li key={c}>{c}</li>)}</ul>
+                  {teile.length > 0 && <p className="mt-3 text-graphite"><span className="font-bold text-ink">{t('course.examParts', lang)}</span> <span lang="de" dir="ltr">{teile.join(' · ')}</span></p>}
                 </div>
               )}
 
@@ -282,14 +302,17 @@ export default function CurriculumHomePage({ curriculum }) {
                     <li key={node.id} className="relative flex w-full flex-col items-center pt-3" style={{ transform: `translateX(${sway}px)` }}>
                       <span aria-hidden="true" className={`h-6 w-0.5 border-l-2 border-dashed ${isDone ? 'border-siegel' : 'border-rule'}`} />
                       {isCurrent && (
-                        <span className="mb-1 animate-bounce rounded-pill bg-white px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel shadow-raise ring-1 ring-siegel motion-reduce:animate-none">Start</span>
+                        <span className="mb-1 animate-bounce rounded-pill bg-white px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel shadow-raise ring-1 ring-siegel motion-reduce:animate-none">{t('course.startBubble', lang)}</span>
                       )}
                       <LessonRing state={state} size={node.kind !== 'lektion' ? 112 : 96}>
-                        <Node to={unlocked || isDone ? hrefFor(level, node) : null} state={state} Icon={Icon} label={node.title} big={node.kind !== 'lektion'} />
+                        <Node to={unlocked || isDone ? hrefFor(level, node) : null} state={state} Icon={Icon} label={node.title} lockedLabel={t('course.locked', lang, { title: node.title })} big={node.kind !== 'lektion'} />
                       </LessonRing>
-                      <p className={`mt-2 max-w-[14rem] text-center text-[0.8125rem] font-bold leading-snug ${isDone || unlocked ? 'text-ink' : 'text-graphite'}`}>{node.title}</p>
-                      <p className="font-data text-[0.6875rem] text-graphite">
-                        {KIND_LABEL[node.kind]}{node.minutes ? ` · ${node.minutes} min` : ''}{lektion?.situation ? ` · ${lektion.situation}` : ''}
+                      <p className={`mt-2 max-w-[14rem] text-center text-[0.8125rem] font-bold leading-snug ${isDone || unlocked ? 'text-ink' : 'text-graphite'}`} lang="de" dir="ltr">{node.title}</p>
+                      <p className="max-w-[16rem] text-center font-data text-[0.6875rem] text-graphite">
+                        {KIND_LABEL[node.kind]}{node.minutes ? ` · ${t('course.minutes', lang, { n: node.minutes })}` : ''}
+                        {lektion?.situation ? <> · {lang === 'ar' && lektionHasSupport('ar', level, lektion.id) && meta?.lektionIntro?.[lektion.id]?.situationEn
+                          ? <SupportText level={level} k={supportKeys.introSituation(lektion.id)} en={meta.lektionIntro[lektion.id].situationEn} />
+                          : <span lang="de" dir="ltr">{lektion.situation}</span>}</> : null}
                       </p>
                     </li>
                   );
@@ -303,15 +326,17 @@ export default function CurriculumHomePage({ curriculum }) {
         {loaded && meta && <FirstRunTour curriculum={curriculum} meta={meta} />}
 
         <footer className="mt-4 border-t border-rule pt-6 text-sm text-graphite">
-          {endowed ? 'Every Lektion is open for you and saves on every step.' : 'Lektionen open in order and save on every step.'}
-          {user ? ' On any device.' : ' Your progress saves on this device until you sign in.'}{' '}
-          <Link to={`/course/${level}/review`} className="font-bold text-siegel hover:text-siegel-deep">Wiederholen</Link> ·{' '}
-          <Link to={`/modelltest/${curriculum.testSlug}`} className="font-bold text-siegel hover:text-siegel-deep">{finalTestLabel(level)}</Link> ·{' '}
-          <Link to={`/courses/${level.replace('.', '-')}/`} className="font-bold text-siegel hover:text-siegel-deep" reloadDocument>Lehrplan</Link> ·{' '}
-          <Link to="/courses/" className="font-bold text-siegel hover:text-siegel-deep" reloadDocument>All courses</Link> ·{' '}
+          {t(endowed ? 'course.footer.endowed' : 'course.footer.ordered', lang)}{' '}
+          {t(user ? 'course.footer.anyDevice' : 'course.footer.thisDevice', lang)}{' '}
+          <Link to={`/course/${level}/review`} className="font-bold text-siegel hover:text-siegel-deep">{t('course.review', lang)}</Link> ·{' '}
+          <Link to={`/modelltest/${curriculum.testSlug}`} className="font-bold text-siegel hover:text-siegel-deep">{finalTestLabel(level, lang)}</Link> ·{' '}
+          {/* An Arabic learner's syllabus and catalogue are the Arabic public pages. */}
+          <Link to={`${lang === 'ar' ? '/ar' : ''}/courses/${level.replace('.', '-')}/`} className="font-bold text-siegel hover:text-siegel-deep" reloadDocument>{t('course.syllabus', lang)}</Link> ·{' '}
+          <Link to={lang === 'ar' ? '/ar/courses/' : '/courses/'} className="font-bold text-siegel hover:text-siegel-deep" reloadDocument>{t('course.allCourses', lang)}</Link> ·{' '}
+          {lang === 'ar' && <><a href="/ar/help/" className="font-bold text-siegel hover:text-siegel-deep">{t('course.help', lang)}</a> ·{' '}</>}
           {/* The course home drops the site footer (src/lib/chrome.js), so the
               way to reach a human has to live in this one-line footer too. */}
-          <Link to={SUPPORT_LINK.href} className="font-bold text-siegel hover:text-siegel-deep">{SUPPORT_LINK.labelDe}</Link>
+          <Link to={SUPPORT_LINK.href} className="font-bold text-siegel hover:text-siegel-deep">{lang === 'ar' ? t('course.support', lang) : SUPPORT_LINK.labelDe}</Link>
         </footer>
       </div>
     </div>
@@ -335,7 +360,7 @@ function Stat({ icon: Icon, label, value, tone }) {
   );
 }
 
-function Node({ to, state, Icon, label, big }) {
+function Node({ to, state, Icon, label, lockedLabel, big }) {
   const size = big ? 'h-[5.25rem] w-[5.25rem]' : 'h-[4.5rem] w-[4.5rem]';
   const base = `relative flex ${size} items-center justify-center rounded-full transition-all duration-100 ease-snap motion-reduce:transition-none`;
   const styles = {
@@ -345,7 +370,8 @@ function Node({ to, state, Icon, label, big }) {
     locked: `${base} bg-paper-sunk text-graphite/60 ring-1 ring-rule cursor-not-allowed`,
   };
   const inner = state === 'done' ? <Check className="h-7 w-7" aria-hidden="true" /> : state === 'locked' ? <Lock className="h-6 w-6" aria-hidden="true" /> : <Icon className="h-7 w-7" aria-hidden="true" />;
-  if (!to) return <span className={styles.locked} aria-label={`${label} (locked)`}>{inner}</span>;
+  // role="img": an aria-label on a bare span is not exposed (axe aria-prohibited-attr).
+  if (!to) return <span className={styles.locked} role="img" aria-label={lockedLabel || `${label} (locked)`}>{inner}</span>;
   return (
     <Link to={to} className={styles[state]} aria-label={label}>
       {state === 'current' && <span aria-hidden="true" className="absolute inset-0 -m-2 animate-ping rounded-full bg-siegel/20 motion-reduce:animate-none" />}

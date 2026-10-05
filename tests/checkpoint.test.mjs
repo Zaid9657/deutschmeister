@@ -1581,6 +1581,10 @@ test('the review_cards migration carries own-row RLS and the checkpoint marker',
 // ("Hören Sie zu und schreiben Sie den Satz.") are written HERE, not in the page,
 // and a du-form reintroduced in either place puts two Anreden on one screen.
 const DU_TOKENS = /\b(du|Du|dir|Dir|dich|Dich|dein|Dein|deine[mnrs]?|Deine[mnrs]?|kannst|musst|hast|willst|machst|hörst|schreibst|Schreib|Tippe|Lies|Hör|Sprich|Melde|Probier|bestätige|Versuch es)\b/;
+// `dir="ltr"` is the HTML bidi attribute every German run carries since the
+// Arabic edition (docs/arabic/README.md), never the pronoun: a German „dir“ is
+// never followed by `=`. Only the attribute NAME is removed before the scan.
+const BIDI_ATTR = /\bdir=/g;
 
 test('the checkpoint and review screens (and the prompts the builder writes) sieze', () => {
   const offenders = [];
@@ -1592,7 +1596,7 @@ test('the checkpoint and review screens (and the prompts the builder writes) sie
   ]) {
     const src = readFileSync(new URL(`../${file}`, import.meta.url), 'utf8');
     src.split('\n').forEach((line, i) => {
-      if (DU_TOKENS.test(line)) offenders.push(`${file}:${i + 1}  ${line.trim()}`);
+      if (DU_TOKENS.test(line.replace(BIDI_ATTR, ''))) offenders.push(`${file}:${i + 1}  ${line.trim()}`);
     });
   }
   assert.deepEqual(offenders, [], `du-register on the checkpoint/review screens:\n${offenders.join('\n')}`);

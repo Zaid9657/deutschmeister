@@ -3,7 +3,10 @@ import { ArrowLeft, Clock3, CheckCircle2 } from 'lucide-react';
 import StageShell from './StageShell.jsx';
 import CharacterAvatar from '../illustrations/CharacterAvatar.jsx';
 import SituationScene from '../illustrations/SituationScene.jsx';
-import { useLessonLang } from '../../lib/lesson/strings.js';
+import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { lektionHasSupport, supportKeys } from '../../lib/lesson/support.js';
+import { switchLocale } from '../../locales';
+import SupportText from './SupportText.jsx';
 import { A11_META } from '../../data/curricula/a11.meta.js';
 import { courseHome } from '../../lib/courseFlow.js';
 
@@ -25,44 +28,20 @@ import { courseHome } from '../../lib/courseFlow.js';
 //   * the minutes (`lektion.minutes`, never typed);
 //   * ONE primary action, Start.
 //
-// Chrome strings live in INTRO_STRINGS below, keyed `intro.*` in the same shape
-// as src/lib/lesson/strings.js (`en` default, `de` in Sie), and are picked by
-// the same `useLessonLang()` flag — so the language toggle in the player header
-// governs this screen too. They are local rather than in the shared table only
-// because that file is being rewritten in the same wave (W1.2); the keys are
-// ready to be lifted into STRINGS verbatim.
+// Chrome strings are `intro.*` keys of the lesson string table
+// (src/lib/lesson/strings.js, en / de / ar), picked by the same useLessonLang()
+// flag as every stage. The situation, the can-dos, the chapter and the roles
+// are learning support (src/lib/lesson/support.js): English and German from the
+// meta module and the curriculum, Arabic from the sidecar.
+//
+// A Lektion OUTSIDE the translated scope of the learner's language (Arabic
+// covers Lektionen 1–3 for now) says so on this screen, before the first
+// stage, with a one-tap way to the language that is complete — never a silent
+// switch to English halfway through.
 //
 // A level without a meta module (anything but A1.1 today) still gets the
 // screen: the German can-dos and situation from the curriculum, and the cast
 // read off the dialogue lines.
-
-export const INTRO_STRINGS = {
-  en: {
-    'intro.eyebrow': 'Before you start',
-    'intro.chapter': 'Chapter {nr} · {title}',
-    'intro.lektion': 'Lektion {nr} · {title}',
-    'intro.byTheEnd': 'By the end you can …',
-    'intro.people': 'Who speaks in this Lektion',
-    'intro.minutes': 'about {n} min',
-    'intro.start': 'Start',
-    'intro.backToCourse': 'Back to the course',
-  },
-  de: {
-    'intro.eyebrow': 'Bevor Sie beginnen',
-    'intro.chapter': 'Kapitel {nr} · {title}',
-    'intro.lektion': 'Lektion {nr} · {title}',
-    'intro.byTheEnd': 'Am Ende können Sie …',
-    'intro.people': 'Wer in dieser Lektion spricht',
-    'intro.minutes': 'etwa {n} Min.',
-    'intro.start': 'Starten',
-    'intro.backToCourse': 'Zurück zum Kurs',
-  },
-};
-
-const ti = (key, lang, vars) => {
-  const s = (INTRO_STRINGS[lang] || INTRO_STRINGS.en)[key] ?? INTRO_STRINGS.en[key] ?? key;
-  return vars ? s.replace(/\{(\w+)\}/g, (m, name) => (vars[name] == null ? m : String(vars[name]))) : s;
-};
 
 /** The orientation module for a level, when one exists (A1.1 only today). */
 export const courseMetaFor = (level) => (String(level).toLowerCase() === A11_META.level ? A11_META : null);
@@ -81,12 +60,13 @@ export function castFor(lektion, meta) {
 export default function IntroStage({ curriculum, lektion, meta = courseMetaFor(curriculum?.level), onStart }) {
   const [lang] = useLessonLang();
   const de = lang === 'de';
+  const level = curriculum?.level;
   const chapter = meta?.chapters.find((c) => c.lektionen.includes(lektion.nr)) || null;
   const intro = meta?.lektionIntro?.[lektion.id] || null;
-  const canDos = !de && intro?.canDoEn?.length ? intro.canDoEn : lektion.canDo || [];
-  const situation = !de && intro?.situationEn ? intro.situationEn : lektion.situation || '';
+  const canDosDe = lektion.canDo || [];
+  const canDosEn = intro?.canDoEn?.length ? intro.canDoEn : null;
   const cast = castFor(lektion, meta);
-  const chapterTitle = chapter ? (de ? chapter.titleDe : chapter.titleEn) : null;
+  const outOfScope = !lektionHasSupport(lang, level, lektion.id);
 
   return (
     <div className="min-h-screen bg-paper font-body text-ink" data-intro-stage>
@@ -95,13 +75,13 @@ export default function IntroStage({ curriculum, lektion, meta = courseMetaFor(c
           <Link
             to={courseHome(curriculum.level)}
             className="inline-flex items-center gap-1 text-sm font-bold text-siegel hover:text-siegel-deep"
-            aria-label={ti('intro.backToCourse', lang)}
+            aria-label={t('intro.backToCourse', lang)}
           >
-            <ArrowLeft className="h-4 w-4" /> {curriculum.code}
+            <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" aria-hidden="true" /> <span dir="ltr">{curriculum.code}</span>
           </Link>
           {lektion.minutes ? (
             <span className="inline-flex items-center gap-1 rounded-pill bg-siegel-wash px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">
-              <Clock3 className="h-3.5 w-3.5" aria-hidden="true" /> {ti('intro.minutes', lang, { n: lektion.minutes })}
+              <Clock3 className="h-3.5 w-3.5" aria-hidden="true" /> {t('intro.minutes', lang, { n: lektion.minutes })}
             </span>
           ) : null}
         </div>
@@ -109,28 +89,49 @@ export default function IntroStage({ curriculum, lektion, meta = courseMetaFor(c
         <SituationScene lektionId={lektion.id} className="mb-4 h-32 w-full rounded-clay border border-rule object-cover sm:h-40" />
 
         <StageShell
-          eyebrow={chapter ? ti('intro.chapter', lang, { nr: chapter.nr, title: chapterTitle }) : ti('intro.eyebrow', lang)}
-          title={ti('intro.lektion', lang, { nr: lektion.nr, title: lektion.title })}
-          lead={situation}
-          primaryLabel={ti('intro.start', lang)}
+          eyebrow={chapter
+            ? <>{t('intro.chapterLabel', lang, { nr: chapter.nr })} · <SupportText level={level} k={supportKeys.chapterTitle(chapter.nr)} en={chapter.titleEn} de={chapter.titleDe} /></>
+            : t('intro.eyebrow', lang)}
+          title={<>{t('intro.lektionLabel', lang, { nr: lektion.nr })} · <span lang="de" dir="ltr">{lektion.title}</span></>}
+          lead={de || !intro?.situationEn
+            ? <span lang="de" dir="ltr">{lektion.situation || ''}</span>
+            : <SupportText level={level} k={supportKeys.introSituation(lektion.id)} en={intro.situationEn} />}
+          primaryLabel={t('intro.start', lang)}
           onPrimary={onStart}
         >
+          {outOfScope && (
+            <div className="-mt-1 mb-5 rounded-clay border border-siegel/30 bg-siegel-wash p-4 text-[0.9375rem] leading-relaxed text-ink" role="note">
+              <p>{t('intro.supportScope', lang)}</p>
+              <button
+                type="button"
+                onClick={() => switchLocale('en', { surface: 'scope_notice' })}
+                className="mt-2 inline-flex min-h-11 items-center rounded-pill border border-siegel px-4 text-sm font-bold text-siegel-deep hover:bg-white"
+                lang="en"
+                dir="ltr"
+              >
+                English
+              </button>
+            </div>
+          )}
           {chapter && !de && (
             <p className="-mt-2 mb-5 font-data text-[0.75rem] text-graphite">
-              {chapter.titleDe} · {chapter.storyEn}
+              <span lang="de" dir="ltr">{chapter.titleDe}</span> · <SupportText level={level} k={supportKeys.chapterStory(chapter.nr)} en={chapter.storyEn} />
             </p>
           )}
+          <p className="mb-5 text-[0.8125rem] leading-relaxed text-graphite">{t('intro.stopResume', lang)}</p>
 
-          {canDos.length > 0 && (
+          {canDosDe.length > 0 && (
             <section aria-labelledby="dm-intro-cando" className="rounded-clay border border-rule bg-white p-4">
               <h2 id="dm-intro-cando" className="font-data text-[0.625rem] font-bold uppercase tracking-[0.13em] text-graphite">
-                {ti('intro.byTheEnd', lang)}
+                {t('intro.byTheEnd', lang)}
               </h2>
               <ul className="mt-3 space-y-2">
-                {canDos.map((line) => (
-                  <li key={line} className="flex items-start gap-2.5 text-[0.9375rem] leading-relaxed text-ink">
+                {canDosDe.map((lineDe, i) => (
+                  <li key={lineDe} className="flex items-start gap-2.5 text-[0.9375rem] leading-relaxed text-ink">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-siegel" aria-hidden="true" />
-                    <span>{line}</span>
+                    {de || !canDosEn
+                      ? <span lang="de" dir="ltr">{lineDe}</span>
+                      : <SupportText level={level} k={supportKeys.introCanDo(lektion.id, i)} en={canDosEn[i]} />}
                   </li>
                 ))}
               </ul>
@@ -140,7 +141,7 @@ export default function IntroStage({ curriculum, lektion, meta = courseMetaFor(c
           {cast.length > 0 && (
             <section aria-labelledby="dm-intro-cast" className="mt-5">
               <h2 id="dm-intro-cast" className="font-data text-[0.625rem] font-bold uppercase tracking-[0.13em] text-graphite">
-                {ti('intro.people', lang)}
+                {t('intro.people', lang)}
               </h2>
               <ul className="mt-3 flex flex-wrap gap-3">
                 {cast.map((c) => (
@@ -150,7 +151,7 @@ export default function IntroStage({ curriculum, lektion, meta = courseMetaFor(c
                     </span>
                     <span className="min-w-0">
                       <span className="block text-[0.875rem] font-bold leading-tight text-ink">{c.name}</span>
-                      {!de && c.roleEn ? <span className="block max-w-[14rem] text-[0.75rem] leading-snug text-graphite">{c.roleEn}</span> : null}
+                      {!de && c.roleEn ? <SupportText as="span" level={level} k={supportKeys.character(c.name)} en={c.roleEn} className="block max-w-[14rem] text-[0.75rem] leading-snug text-graphite" /> : null}
                     </span>
                   </li>
                 ))}

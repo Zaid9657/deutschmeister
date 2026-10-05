@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Check, X, Loader2, CheckCircle, XCircle, PenTool, Sparkles } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { getAuthHeaders } from '../../utils/supabase';
@@ -7,6 +7,9 @@ import { scoreWriting, countWords, formularText } from '../../lib/lesson/writing
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { levelOfLektion, supportKeys } from '../../lib/lesson/support.js';
+import SupportText from './SupportText.jsx';
+import GermanKeys from './GermanKeys.jsx';
 
 /**
  * The graded writing exercise, reusable by any stage that has a task.
@@ -57,12 +60,53 @@ const AI_ROW_LABEL_EN = {
   liveSignedOut: 'the AI checks this — after you sign in',
   fallback: 'cannot be checked without the AI assessment',
 };
+// The Arabic twin (docs/arabic/README.md): the same three moments, the same
+// honesty — a row the form check cannot decide is never ticked or crossed.
+const AI_ROW_LABEL_AR = {
+  live: 'يتحقق منه التقييم الآلي',
+  liveSignedOut: 'يتحقق منه التقييم الآلي — بعد تسجيل الدخول',
+  fallback: 'لا يمكن التحقق منه دون التقييم الآلي',
+};
+
+/**
+ * One checklist row's label. The exam terms stay German (they are what the
+ * learner meets on the paper — strings.js header); in Arabic each carries its
+ * meaning after it, from the sidecar for the task's own fields and Leitpunkte.
+ */
+function RowLabel({ c, task, lang, lektionId }) {
+  const level = levelOfLektion(lektionId);
+  if (c.key === 'length') {
+    return <span>{t('writing.row.length', lang, { min: Number(task?.minWords) || 0, max: Number(task?.maxWords) || '∞' })}</span>;
+  }
+  if (c.key === 'anrede' || c.key === 'gruss') {
+    return (
+      <span>
+        <span lang="de" dir="ltr">{c.label}</span>
+        {lang === 'ar' && <span className="text-graphite"> ({t(`writing.row.${c.key}`, lang)})</span>}
+      </span>
+    );
+  }
+  const fieldIndex = (task?.fields || []).indexOf(c.key);
+  const lpIndex = /^lp\d+$/.test(c.key) ? Number(c.key.slice(2)) : -1;
+  const k = !lektionId ? null
+    : fieldIndex >= 0 ? supportKeys.writingField(lektionId, fieldIndex)
+      : lpIndex >= 0 ? supportKeys.writingPoint(lektionId, lpIndex) : null;
+  return (
+    <span>
+      <span lang="de" dir="ltr">{c.label}</span>
+      {lang === 'ar' && k && (
+        <span className="text-graphite"> — <SupportText level={level} k={k} de={c.label} /></span>
+      )}
+    </span>
+  );
+}
 
 /** The Formcheck rows — live under the text, or as the fallback card after a submission without the KI. */
-function Checklist({ checks, mode, signedIn, lang }) {
+function Checklist({ checks, mode, signedIn, lang, task, lektionId }) {
   const aiLabelDe = mode === 'fallback' ? AI_ROW_LABEL.fallback : (signedIn ? AI_ROW_LABEL.live : AI_ROW_LABEL.liveSignedOut);
   const aiLabelEn = mode === 'fallback' ? AI_ROW_LABEL_EN.fallback : (signedIn ? AI_ROW_LABEL_EN.live : AI_ROW_LABEL_EN.liveSignedOut);
-  const aiLabel = lang === 'de' ? aiLabelDe : aiLabelEn;
+  const aiLabelAr = mode === 'fallback' ? AI_ROW_LABEL_AR.fallback : (signedIn ? AI_ROW_LABEL_AR.live : AI_ROW_LABEL_AR.liveSignedOut);
+  const aiLabel = lang === 'de' ? aiLabelDe : lang === 'ar' ? aiLabelAr : aiLabelEn;
   return (
     <ul className="mt-3 space-y-2">
       {checks.map((c) => {
@@ -78,7 +122,7 @@ function Checklist({ checks, mode, signedIn, lang }) {
           return (
             <li key={c.key} className="flex items-start gap-2 text-[0.9375rem]">
               <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-graphite" aria-hidden="true" />
-              <span className="text-graphite">{c.label} — {aiLabel}</span>
+              <span className="text-graphite"><RowLabel c={c} task={task} lang={lang} lektionId={lektionId} /> — {aiLabel}</span>
             </li>
           );
         }
@@ -90,7 +134,7 @@ function Checklist({ checks, mode, signedIn, lang }) {
               <X className="mt-0.5 h-4 w-4 shrink-0 text-accent-himbeer" aria-hidden="true" />
             )}
             <span className={c.ok ? 'text-ink' : 'text-graphite'}>
-              {c.label} — {t(c.ok ? 'writing.done' : 'writing.missing', lang)}
+              <RowLabel c={c} task={task} lang={lang} lektionId={lektionId} /> — {t(c.ok ? 'writing.done' : 'writing.missing', lang)}
             </span>
           </li>
         );
@@ -106,6 +150,8 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
   const points = (isFormular ? task?.fields : task?.leitpunkte) || [];
 
   const [text, setText] = useState('');
+  const textRef = useRef(null);
+  const level = levelOfLektion(lektionId);
   const [fields, setFields] = useState({});
   const [busy, setBusy] = useState(false);
   const [outcome, setOutcome] = useState(null); // the r object, once submitted
@@ -217,12 +263,22 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
       <Card className="p-5">
         {isFormular ? (
           <div className="space-y-3">
-            {(task?.fields || []).map((field) => (
+            {(task?.fields || []).map((field, fi) => (
               <div key={field}>
-                <label htmlFor={`f-${field}`} className={FIELD_LABEL}>{field}</label>
+                <label htmlFor={`f-${field}`} className={FIELD_LABEL}>
+                  <span lang="de" dir="ltr">{field}</span>
+                  {lang === 'ar' && lektionId && (
+                    <span className="ms-2 font-body normal-case tracking-normal text-graphite">
+                      <SupportText level={level} k={supportKeys.writingField(lektionId, fi)} de={field} />
+                    </span>
+                  )}
+                </label>
                 <input
                   id={`f-${field}`}
                   type="text"
+                  lang="de"
+                  dir="ltr"
+                  autoComplete="off"
                   value={fields[field] || ''}
                   disabled={done}
                   onChange={(e) => setFields((prev) => ({ ...prev, [field]: e.target.value }))}
@@ -235,9 +291,12 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
           <>
             {points.length > 0 && (
               <ul className="mb-4 space-y-1 rounded-clay bg-paper-sunk p-4">
-                {points.map((lp) => (
+                {points.map((lp, li) => (
                   <li key={lp} className="text-[0.9375rem] text-graphite">
-                    <span aria-hidden="true" className="mr-2 text-siegel">›</span>{lp}
+                    <span aria-hidden="true" className="me-2 text-siegel">›</span><span lang="de" dir="ltr">{lp}</span>
+                    {lang === 'ar' && lektionId && (
+                      <SupportText as="span" level={level} k={supportKeys.writingPoint(lektionId, li)} de={lp} className="block ps-5 text-[0.875rem]" />
+                    )}
                   </li>
                 ))}
               </ul>
@@ -245,12 +304,17 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
             <label htmlFor="writing-text" className={FIELD_LABEL}>{t('writing.yourText', lang)}</label>
             <textarea
               id="writing-text"
+              ref={textRef}
               rows={6}
               value={text}
               disabled={done}
+              lang="de"
+              dir="ltr"
+              spellCheck={false}
               onChange={(e) => setText(e.target.value)}
               className="mt-2 w-full resize-y rounded-clay border border-rule bg-white px-4 py-3 text-[1rem] leading-relaxed text-ink outline-none focus:border-siegel disabled:bg-paper-sunk"
             />
+            <GermanKeys inputRef={textRef} value={text} onChange={setText} disabled={done} className="mt-2" />
             <p className={`mt-2 font-data text-[0.75rem] ${inRange ? 'text-siegel-deep' : 'text-graphite'}`}>
               {count} {t(count === 1 ? 'writing.word' : 'writing.words', lang)} · {t('writing.target', lang, { min, max })}
             </p>
@@ -260,7 +324,7 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
         {!done && check.checks.length > 0 && (
           <div className="mt-5">
             <p className={FIELD_LABEL}>{t('writing.checklist', lang)}</p>
-            <Checklist checks={check.checks} mode="live" signedIn={!!user} lang={lang} />
+            <Checklist checks={check.checks} mode="live" signedIn={!!user} lang={lang} task={task} lektionId={lektionId} />
             {/* Deutsch-Modus: „Formcheck: nur die Form (Länge, Punkte, Anrede und Gruß), noch keine
                 Bewertung." — the FernUSG line tests/writing-course.test.mjs pins; the English
                 twin says the same thing (writing.formcheckLive). */}
@@ -285,10 +349,16 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
           <Card className="mt-4 p-5 text-center">
             <p className="font-display text-[2rem] font-semibold leading-none tabular-nums text-ink">
               {outcome.total}
-              <span className="ml-1 font-display text-[1rem] text-graphite">/ {outcome.max}</span>
+              <span className="ms-1 font-display text-[1rem] text-graphite">/ {outcome.max}</span>
             </p>
             {outcome.feedback && (
-              <p className="mt-3 text-[0.9375rem] leading-relaxed text-graphite">{outcome.feedback}</p>
+              <>
+                {/* The grader writes its feedback in German (evaluate-writing.mjs has no
+                    language parameter); it is said, not hidden or machine-translated, so the
+                    scores and corrections stay exactly what the grader returned. */}
+                {lang !== 'de' && <p className="mt-3 text-[0.8125rem] font-bold text-graphite">{t('writing.aiFeedbackGerman', lang)}</p>}
+                <p className="mt-1 text-[0.9375rem] leading-relaxed text-graphite" lang="de" dir="ltr">{outcome.feedback}</p>
+              </>
             )}
             <p className="mt-3 font-data text-[0.75rem] leading-relaxed text-graphite">
               {t('writing.assessmentNote', lang)}
@@ -320,7 +390,7 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
                     {outcome.leitpunktCheck[i]
                       ? <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-accent-limette-ink" aria-hidden="true" />
                       : <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-accent-himbeer-ink" aria-hidden="true" />}
-                    <span className="text-graphite">{p}</span>
+                    <span className="text-graphite" lang="de" dir="ltr">{p}</span>
                   </li>
                 ))}
               </ul>
@@ -332,7 +402,7 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
               <p className={FIELD_LABEL}>{t('writing.corrections', lang)}</p>
               <ul className="mt-3 space-y-3">
                 {outcome.corrections.map((c, i) => (
-                  <li key={`${c.original}-${i}`} className="text-[0.9375rem] leading-relaxed">
+                  <li key={`${c.original}-${i}`} className="text-[0.9375rem] leading-relaxed" lang="de" dir="ltr">
                     <span className="text-accent-himbeer-ink line-through">{c.original}</span>
                     {' → '}
                     <span className="font-bold text-accent-limette-ink">{c.corrected}</span>
@@ -350,7 +420,7 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
           <p className={FIELD_LABEL}>{t('writing.checklist', lang)}</p>
           {/* The FALLBACK without the KI: the same rows as under the text, and an `ai` row now says
               the KI did not run rather than that it is checking (DaF review #21, Minor 33). */}
-          <Checklist checks={check.checks} mode="fallback" signedIn={!!user} lang={lang} />
+          <Checklist checks={check.checks} mode="fallback" signedIn={!!user} lang={lang} task={task} lektionId={lektionId} />
           <p className="mt-4 text-[0.8125rem] leading-relaxed text-graphite">
             {note || t('writing.fallbackPlain', lang)} {t('writing.fallbackNote', lang)}
           </p>
@@ -360,7 +430,7 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
       {done && task?.sample && (
         <Card className="mt-4 p-5">
           <p className={FIELD_LABEL}>{t('writing.sample', lang)}</p>
-          <p className="mt-2 whitespace-pre-line text-[1rem] leading-relaxed text-ink" lang="de">{task.sample}</p>
+          <p className="mt-2 whitespace-pre-line text-[1rem] leading-relaxed text-ink" lang="de" dir="ltr">{task.sample}</p>
         </Card>
       )}
     </div>

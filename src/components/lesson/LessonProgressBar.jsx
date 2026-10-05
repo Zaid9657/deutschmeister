@@ -9,7 +9,10 @@ export default function LessonProgressBar({ step, total, label }) {
   const pct = total > 0 ? Math.round((step / total) * 100) : 0;
   const [lang] = useLessonLang();
   return (
-    <div className="flex items-center gap-3">
+    // `flex-1 min-w-0`: the bar takes the room the header row leaves it. Without
+    // it the root shrank to its label and the bar itself rendered 0 px wide
+    // (docs/evaluation/screenshots/after/14-practice-item8-match.jpg).
+    <div className="flex min-w-0 flex-1 items-center gap-3">
       <div
         className="h-1.5 flex-1 overflow-hidden rounded-pill bg-siegel-wash"
         role="progressbar"

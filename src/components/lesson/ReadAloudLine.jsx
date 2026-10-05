@@ -10,7 +10,7 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
 import {
   blobToBase64,
   checkSpeakingSupport,
-  micErrorMessage,
+  micErrorKey,
   pickAudioMimeType,
 } from '../speaking/mediaSupport.js';
 
@@ -140,7 +140,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
       timerRef.current = setTimeout(stopRecording, MAX_RECORD_MS);
     } catch (err) {
       console.error('[ReadAloudLine] mic error:', err);
-      setMicError(micErrorMessage(err));
+      setMicError(micErrorKey(err));
       releaseMic();
       setPhase('idle');
     }
@@ -162,31 +162,36 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
 
       {/* Before an attempt the plain line; afterwards the same line, word by word. */}
       {result ? (
-        <p className="mt-1 text-[1.0625rem] leading-relaxed text-ink" lang="de">
+        <p className="mt-1 text-[1.0625rem] leading-relaxed text-ink" lang="de" dir="ltr">
           {result.words.map((w, i) => (
             <span
               key={`${w.word}-${i}`}
-              className={`mr-1.5 inline-flex items-baseline gap-1 ${w.hit ? 'text-accent-limette-ink' : 'text-accent-himbeer-ink'}`}
+              className={`me-1.5 inline-flex items-baseline gap-1 ${w.hit ? 'text-accent-limette-ink' : 'text-accent-himbeer-ink'}`}
             >
               {w.hit
                 ? <Check className="h-3.5 w-3.5 self-center" aria-hidden="true" />
                 : <X className="h-3.5 w-3.5 self-center" aria-hidden="true" />}
               <span className={w.hit ? '' : 'font-bold underline decoration-dotted'}>{w.word}</span>
-              <span className="sr-only">{t(w.hit ? 'speaking.heard' : 'speaking.notHeard', lang)}</span>
+              <span className="sr-only" lang={lang}>{t(w.hit ? 'speaking.heard' : 'speaking.notHeard', lang)}</span>
             </span>
           ))}
         </p>
       ) : (
-        <p className="mt-1 text-[1.0625rem] leading-relaxed text-ink" lang="de">{text}</p>
+        <p className="mt-1 text-[1.0625rem] leading-relaxed text-ink" lang="de" dir="ltr">{text}</p>
       )}
 
       {result && (
         <p className="mt-2 text-sm font-bold text-ink">
           {t('speaking.intelligibility', lang, { pct: pctLabel })}
-          <span className="ml-2 font-normal text-graphite">
+          <span className="ms-2 font-normal text-graphite">
             {t('speaking.wordsHeard', lang, { hit: result.words.filter((w) => w.hit).length, total: result.words.length })}
           </span>
         </p>
+      )}
+      {result && (
+        // What the number is and is not: word recognition by a speech-to-text
+        // engine, never a judgement of sounds, stress, vowel length or melody.
+        <p className="mt-1 text-xs text-graphite">{t('speaking.recognitionNote', lang)}</p>
       )}
 
       <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -239,7 +244,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
         <p className="mt-2 text-xs text-graphite">{t('speaking.recording', lang, { s: MAX_RECORD_MS / 1000 })}</p>
       )}
       {reason && <p className="mt-2 text-xs text-graphite">{t(`speaking.fallback.${reason}`, lang)}</p>}
-      {micError && <p className="mt-2 text-xs text-accent-himbeer-ink">{micError}</p>}
+      {micError && <p className="mt-2 text-xs text-accent-himbeer-ink" role="alert">{t(`speaking.micError.${micError}`, lang)}</p>}
     </Card>
   );
 }

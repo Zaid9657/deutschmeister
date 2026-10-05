@@ -78,12 +78,15 @@ test('the free finish line: the last node of every live curriculum links to a co
   assert.match(ctx, /if \(isLevelFree\(level\)\) return true;/, 'hasLevelAccess must short-circuit on free levels');
 });
 
-test('the course home labels the free finish line as free, on the node and in the footer', () => {
+test('the course home labels the free finish line as free, on the node and in the footer', async () => {
   const src = read('src/pages/CurriculumHomePage.jsx');
-  assert.match(src, /'Abschlusstest · frei'/);
-  assert.match(src, /isLevelFree\(level\)/, 'the label must be derived from FREE_LEVELS, never hard-coded');
+  // The label moved into the lesson string table with the Arabic edition (one
+  // table per chrome language); the German exam name stays German in every table.
+  const { STRINGS } = await import('../src/lib/lesson/strings.js');
+  for (const lang of ['en', 'de']) assert.equal(STRINGS[lang]['course.kind.leveltestFree'], 'Abschlusstest · frei', lang);
+  assert.match(src, /isLevelFree\(level\) \? 'course\.kind\.leveltestFree' : 'course\.kind\.leveltest'/, 'the label must be derived from FREE_LEVELS, never hard-coded');
   assert.ok(!/leveltest: 'Final test'/.test(src), 'the unmarked "Final test" label is back');
-  assert.match(src, /\{finalTestLabel\(level\)\}<\/Link>/, 'the footer link must carry the same label');
+  assert.match(src, /\{finalTestLabel\(level, lang\)\}<\/Link>/, 'the footer link must carry the same label');
 });
 
 test('the rival A1.1 pages point at the guided course and do not call themselves the course', () => {
@@ -100,7 +103,8 @@ test('the rival A1.1 pages point at the guided course and do not call themselves
 test('the chrome added in Wave 0 siezt (no du-register token)', () => {
   const DU = /\b(du|Du|dir|Dir|dich|Dich|dein|Dein|deine[mnrs]?|Deine[mnrs]?|kannst|musst|hast|willst|machst)\b/;
   for (const f of ['src/pages/A11PhasePage.jsx', 'src/components/BottomNav.jsx', 'src/components/CourseReturnBar.jsx', 'src/pages/CurriculumHomePage.jsx']) {
-    const offenders = read(f).split('\n').map((l, i) => [i + 1, l]).filter(([, l]) => DU.test(l));
+    // `dir=` is the HTML bidi attribute (Arabic edition), never the pronoun.
+    const offenders = read(f).split('\n').map((l, i) => [i + 1, l]).filter(([, l]) => DU.test(l.replace(/\bdir=/g, '')));
     assert.deepEqual(offenders, [], `${f} duzt`);
   }
 });

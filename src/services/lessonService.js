@@ -1,5 +1,6 @@
 import { supabase } from '../utils/supabase.js';
 import { setProgramItemDone } from './programProgress.js';
+import { keepBest } from '../lib/lesson/mastery.js';
 
 // Persistence for the lesson engine (migrations/2026-09-12-lesson-engine.sql).
 // Fail-soft like programProgress.js: a logged-out learner, a blocked network or
@@ -45,18 +46,28 @@ export const startLesson = async (userId, level, lektionId) => {
  * "Persistence"). The course tick is deliberately last — a failed lesson row
  * must not leave the path stuck.
  */
-export const completeLesson = async (userId, { level, lektionId, accuracy = 0, status = 'complete' }) => {
+export const completeLesson = async (userId, { level, lektionId, accuracy = 0, status = 'complete' }, client = supabase) => {
   if (!userId || !lektionId) return false;
   const lvl = String(level).toLowerCase();
-  const { error } = await supabase
+  // Never write a finished Lektion DOWN (mastery.js keepBest): read the row
+  // first; a failed read keeps the new values, as before.
+  const { data: prev } = await client
+    .from('lesson_progress')
+    .select('status, accuracy')
+    .eq('user_id', userId)
+    .eq('lektion_id', lektionId)
+    .maybeSingle()
+    .then((r) => r, () => ({ data: null }));
+  const best = keepBest(prev, { status, accuracy });
+  const { error } = await client
     .from('lesson_progress')
     .upsert(
       {
         user_id: userId,
         level: lvl,
         lektion_id: lektionId,
-        status,
-        accuracy,
+        status: best.status,
+        accuracy: best.accuracy,
         completed_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       },

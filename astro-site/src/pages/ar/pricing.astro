@@ -1,0 +1,135 @@
+---
+// /ar/pricing/ — prices in Arabic (twin of /pricing/). Three ways in, exactly as
+// the English page sells them: A1.1 free; a level course bought once (with the
+// included Pro window); or Pro by the month or year. Every figure derives from
+// data/pricing.js and data/marketing.js — nothing is typed into a sentence.
+//
+// HONESTY. Paid courses explain in English for now, and the page says so on
+// every one of them. The checkout (Lemon Squeezy), its receipts and the account
+// emails are English; the page says that too. Buy buttons come from the shared
+// CourseCheckout script and exist only for a course whose checkout id is set —
+// never a dead checkout; otherwise the card links to the course's English page.
+import Layout from '../../layouts/Layout.astro';
+import '../../styles/global.css';
+import CourseCheckout from '../../components/CourseCheckout.astro';
+import { ORGANIZATION } from '../../lib/siteMeta.js';
+import { STATIONS } from '../../data/offers.js';
+import { levelCoursesWithVariants } from '../../lib/courseVariants.js';
+import { COURSE_FROM_PRICE_EUR, COURSE_PRO_MONTHS, CURRENCY, PLANS, eur } from '../../data/pricing.js';
+import { LEVEL_COUNT, PRO_DAILY_LIMIT, PRO_SPEAKING_SESSIONS_PER_MONTH, PRO_WRITING_EVALUATIONS_PER_MONTH, TRIAL_DAYS } from '../../data/marketing.js';
+import { AR_LINES, LEVEL_OUTCOME_AR, arDays, arMonths, arRich } from '../../data/i18n/ar.js';
+
+const variants = Object.fromEntries(levelCoursesWithVariants().map((c) => [c.key, c.variantId]));
+const paid = STATIONS.filter((s) => s.status !== 'free');
+
+const title = 'أسعار DeutschMeister: A1.1 مجاني ودورات تُشترى مرة واحدة';
+const description = `A1.1 مجاني دون حساب. كل مستوى بعده يُشترى مرة واحدة ابتداءً من ${eur(COURSE_FROM_PRICE_EUR)} ويبقى لك، ومعه ${arMonths(COURSE_PRO_MONTHS)} من Pro. أو اشتراك Pro بـ${eur(PLANS.monthly.price)} شهريًا.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: title,
+  description,
+  url: 'https://deutsch-meister.de/ar/pricing/',
+  inLanguage: 'ar',
+  publisher: ORGANIZATION,
+  mainEntity: {
+    '@type': 'OfferCatalog',
+    name: 'دورات الألمانية',
+    itemListElement: paid.filter((s) => s.status === 'ticket').map((s) => ({
+      '@type': 'Offer',
+      name: `الألمانية ${s.code}`,
+      price: String(s.price),
+      priceCurrency: CURRENCY,
+      url: 'https://deutsch-meister.de/ar/pricing/',
+    })),
+  },
+};
+---
+
+<Layout title={title} description={description} canonical="https://deutsch-meister.de/ar/pricing/" jsonLd={jsonLd} lang="ar" tone="nacht" alternates={{ en: '/pricing/', ar: '/ar/pricing/' }}>
+  <div class="overflow-x-clip bg-paper text-ink">
+    <section class="bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="hero-h">
+      <div class="mx-auto max-w-5xl px-4 pb-12 pt-10 sm:px-6 sm:pt-14">
+        <p class="text-[0.875rem] font-bold text-siegel-deep">الأسعار</p>
+        <h1 id="hero-h" class="mt-4 text-[clamp(2rem,7vw,3.25rem)] font-bold leading-tight">ابدأ مجانًا، وادفع فقط للمستوى الذي تحتاجه.</h1>
+        <p class="mt-5 max-w-2xl text-[1.0625rem] leading-relaxed text-nacht-muted">
+          ثلاث طرق، تختار منها ما يناسبك: المستوى الأول مجانًا، أو دورة مستوى تشتريها مرة واحدة، أو اشتراك Pro شهري أو سنوي. الأسعار باليورو.
+        </p>
+      </div>
+    </section>
+
+    <!-- 1. Free -->
+    <section aria-labelledby="free-h" class="mx-auto max-w-5xl px-4 pt-14 sm:px-6">
+      <div class="rounded-clay border border-rule bg-white p-6">
+        <h2 id="free-h" class="text-[1.5rem] font-bold"><bdi dir="ltr">A1.1</bdi> — مجاني</h2>
+        <p class="mt-2 leading-relaxed text-graphite" set:html={arRich(LEVEL_OUTCOME_AR['a1.1'])} />
+        <p class="mt-2 leading-relaxed text-graphite">دون حساب ودون بطاقة دفع. الشرح العربي متوفر في الدروس 1–3.</p>
+        <a href="/course/a1.1?lang=ar" class="dm-key dm-key-siegel mt-5" data-anon-only data-track="course_selected" data-track-level="a1.1" data-track-surface="ar_pricing">ابدأ A1.1 مجانًا</a>
+      </div>
+    </section>
+
+    <!-- 2. Level courses, once -->
+    <section aria-labelledby="courses-h" class="mx-auto max-w-5xl px-4 pt-14 sm:px-6">
+      <h2 id="courses-h" class="text-[1.625rem] font-bold leading-snug">دورات المستويات — تُشترى مرة واحدة</h2>
+      <p class="mt-3 max-w-2xl leading-relaxed text-graphite">
+        تدفع مرة واحدة ويبقى المستوى لك. مع كل دورة {arMonths(COURSE_PRO_MONTHS)} من Pro، ثم تعود أدوات الذكاء الاصطناعي إلى الحصة المجانية. لا اشتراك ولا تجديد تلقائي. <strong>{AR_LINES.englishOnly}</strong> في هذه الدورات حاليًا.
+      </p>
+      <ul class="mt-6 grid gap-4 md:grid-cols-2">
+        {paid.map((st) => (
+          <li class="flex flex-col rounded-clay border border-rule bg-white p-5">
+            <div class="flex items-baseline justify-between gap-3">
+              <h3 class="text-[1.25rem] font-bold"><bdi dir="ltr">{st.code}</bdi></h3>
+              <p class="text-[1.125rem] font-bold">{st.status === 'building' ? 'قيد الإعداد' : <bdi dir="ltr">{st.priceLabel}</bdi>}</p>
+            </div>
+            <p class="mt-2 flex-1 text-[0.9375rem] leading-relaxed text-graphite" set:html={arRich(LEVEL_OUTCOME_AR[st.level])} />
+            <p class="mt-2 text-[0.8125rem] font-semibold text-graphite">
+              {st.status === 'building' ? 'لا يُباع بعد' : `مرة واحدة · ${AR_LINES.proMonths} · ${AR_LINES.englishOnly}`}
+            </p>
+            <div class="mt-4">
+              {st.status === 'ticket' && variants[st.productKey]
+                ? <button type="button" class="dm-key dm-key-siegel w-full" data-course-variant={variants[st.productKey]} data-course-key={st.productKey} data-course-price={st.price} data-track-surface="ar_pricing">اشترِ <bdi dir="ltr">{st.code}</bdi> — صفحة الدفع ليست بالعربية</button>
+                : <a href={st.coursePage} hreflang="en" class="dm-link font-semibold">التفاصيل <span lang="en">(English)</span></a>}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- 3. Pro -->
+    <section id="pro" aria-labelledby="pro-h" class="mx-auto max-w-5xl px-4 pt-14 sm:px-6">
+      <div class="rounded-clay border border-rule bg-white p-6">
+        <h2 id="pro-h" class="text-[1.5rem] font-bold">اشتراك Pro</h2>
+        <p class="mt-2 text-[1.125rem] font-bold">
+          <bdi dir="ltr">{eur(PLANS.monthly.price)}</bdi> شهريًا · أو <bdi dir="ltr">{eur(PLANS.yearly.price)}</bdi> سنويًا <span class="text-[0.9375rem] font-semibold text-graphite">(أرخص بنسبة {PLANS.yearly.savingPercent}%)</span>
+        </p>
+        <ul class="mt-4 grid gap-1.5 text-[0.9375rem] leading-relaxed text-graphite">
+          <li>• كل المستويات الـ{LEVEL_COUNT} مفتوحة طوال مدة الاشتراك</li>
+          <li>• {PRO_SPEAKING_SESSIONS_PER_MONTH} جلسة تحدّث بالذكاء الاصطناعي شهريًا</li>
+          <li>• {PRO_WRITING_EVALUATIONS_PER_MONTH} تصحيحًا للكتابة شهريًا</li>
+          <li>• {PRO_DAILY_LIMIT} تحليلًا للجمل يوميًا (<bdi lang="en" dir="ltr">Sentence X-Ray</bdi>)</li>
+          <li>• الإلغاء في أي وقت من بوابة الفواتير</li>
+        </ul>
+        <p class="mt-4 text-[0.9375rem] leading-relaxed text-graphite">
+          أدوات Pro (التحدّث والكتابة والتحليل) تعمل بالإنجليزية والألمانية، وليس فيها شرح عربي بعد. يمكنك تجربتها {arDays(TRIAL_DAYS)} بحساب مجاني ودون بطاقة.
+        </p>
+        <div class="mt-5 flex flex-wrap gap-3">
+          <a href="/signup?lang=ar" class="dm-key dm-key-ghost" data-anon-only>ابدأ تجربة {arDays(TRIAL_DAYS)}</a>
+          <a href="/pricing/#pro" hreflang="en" class="dm-link self-center font-semibold">الاشتراك من صفحة الأسعار <span lang="en">(English)</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. What to expect when paying -->
+    <section aria-labelledby="pay-h" class="mx-auto max-w-5xl px-4 py-14 sm:px-6">
+      <h2 id="pay-h" class="text-[1.625rem] font-bold leading-snug">عند الدفع</h2>
+      <ul class="mt-4 grid gap-2 leading-relaxed text-graphite">
+        <li>• الشراء يحتاج إلى حساب. إن لم تكن مسجّلًا، ننقلك أولًا إلى صفحة إنشاء الحساب (بالعربية)، ثم تعود إلى الشراء.</li>
+        <li>• صفحة الدفع من <bdi lang="en" dir="ltr">Lemon Squeezy</bdi> وهي لا تدعم العربية: تظهر بلغة متصفحك إن كانت مدعومة، وإلا بالإنجليزية. الإيصال ورسائل البريد الإلكتروني بالإنجليزية.</li>
+        <li>• الأسعار باليورو.</li>
+      </ul>
+      <p class="mt-6 text-[0.8125rem] leading-relaxed text-graphite">{AR_LINES.draftNote}</p>
+    </section>
+  </div>
+  <CourseCheckout />
+</Layout>

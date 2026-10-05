@@ -10,6 +10,8 @@ import Button from '../components/ui/Button';
 import Card from '../components/ui/Card.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
 import Logo from '../components/Logo';
+import { useArabicT } from '../locales/useArabic';
+import AuthErrorText from '../components/AuthErrorText.jsx';
 
 // The playbook form field (docs/design/playbook.md §1), with room for the
 // leading icon. The focus ring comes from the global *:focus-visible rule.
@@ -23,6 +25,8 @@ const ResetPasswordPage = () => {
 
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
+  const [errorCause, setErrorCause] = useState(null);
+  const ta = useArabicT();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -35,12 +39,14 @@ const ResetPasswordPage = () => {
       const { error } = await resetPassword(email);
       if (error) {
         setError(error.message);
+        setErrorCause(error);
       } else {
         logAuditEvent(AUDIT_EVENTS.PASSWORD_RESET_REQUESTED, { email });
         setSuccess(true);
       }
     } catch {
       setError('An unexpected error occurred');
+      setErrorCause({ code: 'unexpected' });
     } finally {
       setLoading(false);
     }
@@ -60,19 +66,20 @@ const ResetPasswordPage = () => {
               <CheckCircle2 className="w-8 h-8 text-accent-limette-ink" aria-hidden="true" />
             </div>
             <h2 className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink mb-4">
-              Check Your Email
+              {ta ? ta('account.reset.checkTitle') : 'Check Your Email'}
             </h2>
             <p className="text-graphite mb-6">
               {t('auth.checkEmail')}
               <br />
-              <span className="font-data text-[0.8125rem] text-siegel-deep">{email}</span>
+              <span className="font-data text-[0.8125rem] text-siegel-deep" dir="ltr">{email}</span>
+              {ta && <span className="mt-3 block text-sm">{ta('account.emailInEnglish')}</span>}
             </p>
             <Link
               to="/login"
               className={`inline-flex items-center gap-2 px-6 py-3 ${TEXT_LINK}`}
             >
-              <ArrowLeft className="w-4 h-4" aria-hidden="true" />
-              Back to Login
+              <ArrowLeft className="w-4 h-4 rtl:-scale-x-100" aria-hidden="true" />
+              {ta ? ta('account.reset.backToLogin') : 'Back to Login'}
             </Link>
           </Card>
         </motion.div>
@@ -82,7 +89,7 @@ const ResetPasswordPage = () => {
 
   return (
     <div className="relative min-h-screen overflow-hidden flex items-center justify-center bg-paper px-4 py-12">
-      <SEO title="Reset Password" description="Reset your DeutschMeister account password." path="/reset-password" noindex />
+      <SEO title={ta ? ta('account.reset.seoTitle') : 'Reset Password'} description="Reset your DeutschMeister account password." path="/reset-password" noindex />
       <Aurora />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -104,7 +111,7 @@ const ResetPasswordPage = () => {
             {t('auth.resetPassword')}
           </h1>
           <p className="hero-line text-[0.9375rem] leading-relaxed text-graphite sm:text-base" style={{ '--d': '220ms' }}>
-            Enter your email to receive a reset link
+            {ta ? ta('account.reset.lead') : 'Enter your email to receive a reset link'}
           </p>
         </div>
 
@@ -117,19 +124,22 @@ const ResetPasswordPage = () => {
               className="mb-6 flex items-center gap-3 rounded-clay bg-accent-himbeer-wash px-4 py-3 text-accent-himbeer-ink"
             >
               <AlertCircle className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
-              <p className="text-sm font-semibold">{error}</p>
+              <AuthErrorText ta={ta} message={error} cause={errorCause} />
             </motion.div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email */}
             <div>
-              <label className="block text-sm font-bold text-ink mb-2">
+              <label htmlFor="reset-email" className="block text-sm font-bold text-ink mb-2">
                 {t('auth.email')}
               </label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-graphite" aria-hidden="true" />
                 <input
+                  id="reset-email"
+                  dir="ltr"
+                  autoComplete="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -156,7 +166,7 @@ const ResetPasswordPage = () => {
           {/* Back to login */}
           <p className="mt-6 text-center">
             <Link to="/login" className={`inline-flex items-center gap-2 ${TEXT_LINK}`}>
-              <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+              <ArrowLeft className="w-4 h-4 rtl:-scale-x-100" aria-hidden="true" />
               Back to Login
             </Link>
           </p>

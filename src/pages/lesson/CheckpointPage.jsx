@@ -33,6 +33,9 @@ import LangToggle from '../../components/lesson/LangToggle.jsx';
 import LandeskundeCard from '../../components/course/LandeskundeCard.jsx';
 import { LANDESKUNDE } from '../../data/curricula/a11.meta.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import SupportText from '../../components/lesson/SupportText.jsx';
+import { intlLocaleFor } from '../../lib/locale.js';
+import { loadSupport, supportKeys } from '../../lib/lesson/support.js';
 
 // The checkpoint screen (standard §3): 20 items, one per screen, a thin
 // progress bar, then a result that says what to do next. Design rules it
@@ -91,7 +94,7 @@ function PracticeItem({ item, onAnswer }) {
 
   const header = (
     <div className="mb-3 flex flex-wrap items-center gap-2">
-      <Chip tone="label">{SECTION_LABELS[item.section] || item.section}</Chip>
+      <Chip tone="label"><span lang="de">{SECTION_LABELS[item.section] || item.section}</span></Chip>
       {item.register && <Chip tone="quiet">{t(item.register === 'formular' ? 'checkpoint.formular' : 'checkpoint.mitteilung', lang)}</Chip>}
       {item.hint && <span className="font-data text-[0.6875rem] uppercase tracking-[0.13em] text-graphite">{item.hint}</span>}
     </div>
@@ -104,8 +107,8 @@ function PracticeItem({ item, onAnswer }) {
     return (
       <Card className="p-5 sm:p-6">
         {header}
-        <p className="font-display text-lg leading-snug text-ink" lang="de">{item.promptDe}</p>
-        {item.promptEn && <p className="mt-1 text-sm text-graphite">{item.promptEn}</p>}
+        <p className="font-display text-lg leading-snug text-ink" lang="de" dir="ltr">{item.promptDe}</p>
+        {item.promptEn && <SupportText as="p" level={item.level || 'a1.1'} k={item.id ? supportKeys.itemQuestion(item.id) : null} en={item.promptEn} className="mt-1 block text-sm text-graphite" />}
         <div className="mt-4">
           <ReadAloudLine
             lektionId={item.lektionId}
@@ -124,7 +127,7 @@ function PracticeItem({ item, onAnswer }) {
           disabled={!pending}
           onClick={() => onAnswer(item, pending?.usedMic ? { usedMic: true, pct: pending.pct } : true)}
         >
-          {t('action.next', lang)} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          {t('action.next', lang)} <ArrowRight className="h-4 w-4 rtl:-scale-x-100" aria-hidden="true" />
         </Button>
       </Card>
     );
@@ -145,7 +148,7 @@ function PracticeItem({ item, onAnswer }) {
     return (
       <Card className="p-5 sm:p-6">
         {header}
-        <p className="font-display text-lg leading-snug text-ink" lang="de">{item.promptDe}</p>
+        <p className="font-display text-lg leading-snug text-ink" lang="de" dir="ltr">{item.promptDe}</p>
         {item.task?.taskEn && <p className="mt-1 text-sm text-graphite">{item.task.taskEn}</p>}
         <div className="mt-4">
           <GradedWriting task={item.task} lektionId={item.lektionId} onResult={setPending} />
@@ -156,7 +159,7 @@ function PracticeItem({ item, onAnswer }) {
             : t('checkpoint.writingUnscored', lang)}
         </p>
         <Button className="mt-4" disabled={!pending} onClick={() => onAnswer(item, verdict)}>
-          {t('action.next', lang)} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          {t('action.next', lang)} <ArrowRight className="h-4 w-4 rtl:-scale-x-100" aria-hidden="true" />
         </Button>
       </Card>
     );
@@ -168,8 +171,8 @@ function PracticeItem({ item, onAnswer }) {
     <Card className="p-5 sm:p-6">
       {header}
 
-      <p className="font-display text-lg leading-snug text-ink" lang="de">{item.promptDe}</p>
-      {item.promptEn && <p className="mt-1 text-sm text-graphite">{item.promptEn}</p>}
+      <p className="font-display text-lg leading-snug text-ink" lang="de" dir="ltr">{item.promptDe}</p>
+      {item.promptEn && <SupportText as="p" level={item.level || 'a1.1'} k={item.id ? supportKeys.itemQuestion(item.id) : null} en={item.promptEn} className="mt-1 block text-sm text-graphite" />}
 
       {isAudio && (
         <div className="mt-4">
@@ -181,7 +184,7 @@ function PracticeItem({ item, onAnswer }) {
       )}
 
       {item.text && (
-        <Card tone="sunk" className="mt-4 p-4 text-[0.9375rem] leading-relaxed text-ink" lang="de">{item.text}</Card>
+        <Card tone="sunk" className="mt-4 p-4 text-[0.9375rem] leading-relaxed text-ink" lang="de" dir="ltr">{item.text}</Card>
       )}
 
       {item.mode === 'options' && (
@@ -250,11 +253,13 @@ function PracticeItem({ item, onAnswer }) {
             {t(item.mode === 'confirm' ? 'checkpoint.doneLabel' : feedback.correct ? 'feedback.correct' : 'checkpoint.wrong', lang)}
           </p>
           {!feedback.correct && item.mode !== 'confirm' && (
-            <p className="mt-1 text-sm text-ink">{t('feedback.correctIs', lang)} <strong className="font-bold" lang="de">{item.answer}</strong></p>
+            <p className="mt-1 text-sm text-ink">{t('feedback.correctIs', lang)} <strong className="font-bold" lang="de" dir="ltr">{item.answer}</strong></p>
           )}
-          {(item.explanationEn || item.explanationDe) && <p className="mt-1 text-sm text-graphite">{lang !== 'de' && item.explanationEn ? item.explanationEn : item.explanationDe}</p>}
+          {(item.explanationEn || item.explanationDe) && (
+            <SupportText as="p" level={item.level || 'a1.1'} k={item.id ? supportKeys.itemExplanation(item.id) : null} en={item.explanationEn} de={item.explanationDe} className="mt-1 block text-sm text-graphite" />
+          )}
           <Button className="mt-4" onClick={advance}>
-            {t('action.next', lang)} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            {t('action.next', lang)} <ArrowRight className="h-4 w-4 rtl:-scale-x-100" aria-hidden="true" />
           </Button>
         </div>
       )}
@@ -308,6 +313,10 @@ export default function CheckpointPage() {
     load().then((mod) => { if (!cancelled) setPool(mod.default || mod); });
     return () => { cancelled = true; };
   }, [level]);
+
+  // The interface language's support sidecar (Arabic): the checkpoint re-uses
+  // pool items, so their meanings and explanations come from the same entries.
+  useEffect(() => { if (level) loadSupport(level, lang); }, [level, lang]);
 
   useEffect(() => {
     if (!checkpoint) return;
@@ -365,9 +374,9 @@ export default function CheckpointPage() {
   return (
     <div className="min-h-screen bg-paper font-body text-ink">
       <div className="mx-auto max-w-2xl px-4 pb-8 pt-6 sm:pb-12 sm:pt-10">
-        <div className="mb-6 flex items-center gap-3">
+        <div className="mb-6 flex flex-wrap items-center gap-3">
           <Link to={`/course/${curriculum.level}`} className="inline-flex items-center gap-1 text-sm font-bold text-siegel hover:text-siegel-deep">
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" /> {curriculum.code}
+            <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" aria-hidden="true" /> {curriculum.code}
           </Link>
           {phase === 'run' && (
             <>
@@ -377,7 +386,7 @@ export default function CheckpointPage() {
               <span className="font-data text-xs text-graphite">{index + 1}/{items.length}</span>
             </>
           )}
-          <LangToggle className="ml-auto" />
+          <LangToggle className="ms-auto" />
         </div>
 
         {phase === 'intro' && (
@@ -394,13 +403,13 @@ export default function CheckpointPage() {
             <p className="mt-2 text-sm text-graphite">
               {attempts
                 ? attempts.blocked
-                  ? t('checkpoint.blocked', lang, { time: attempts.nextAllowedAt?.toLocaleTimeString(lang === 'de' ? 'de-DE' : 'en-GB', { hour: '2-digit', minute: '2-digit' }) })
+                  ? t('checkpoint.blocked', lang, { time: attempts.nextAllowedAt?.toLocaleTimeString(intlLocaleFor(lang), { hour: '2-digit', minute: '2-digit' }) })
                   : t('checkpoint.remaining', lang, { remaining: attempts.remaining, limit: ATTEMPT_LIMIT, hours: ATTEMPT_WINDOW_HOURS })
                 : t('checkpoint.limit', lang, { limit: ATTEMPT_LIMIT, hours: ATTEMPT_WINDOW_HOURS })}
             </p>
             <div className="mt-6">
               <Button disabled={!items.length || Boolean(attempts?.blocked)} onClick={() => { setPhase('run'); setIndex(0); setAnswers({}); }}>
-                {t('checkpoint.start', lang)} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                {t('checkpoint.start', lang)} <ArrowRight className="h-4 w-4 rtl:-scale-x-100" aria-hidden="true" />
               </Button>
               {!items.length && <p className="mt-2 text-sm text-graphite">{t('checkpoint.loadingItems', lang)}</p>}
             </div>
@@ -438,7 +447,7 @@ export default function CheckpointPage() {
               <div className="mt-6 flex flex-wrap gap-3">
                 {result.passed ? (
                   <Button to={nextHref}>
-                    {nextLektion ? t('checkpoint.nextLesson', lang, { nr: nextLektion.nr }) : t('action.backToCourse', lang)} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    {nextLektion ? t('checkpoint.nextLesson', lang, { nr: nextLektion.nr }) : t('action.backToCourse', lang)} <ArrowRight className="h-4 w-4 rtl:-scale-x-100" aria-hidden="true" />
                   </Button>
                 ) : (
                   <Button

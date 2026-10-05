@@ -4,6 +4,8 @@ import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
 import { AudioSourceBadge } from './DialogStage.jsx';
 import { t } from '../../lib/lesson/strings.js';
+import { useSupport } from './SupportText.jsx';
+import { inline } from './richText.jsx';
 
 // The per-mode review-card renderer, pulled out of src/pages/lesson/ReviewPage.jsx
 // (the Wiederholen screen) so the lesson player's warm-up stage (stage 0) can
@@ -44,7 +46,23 @@ export default function ReviewCard({
   hasRecording,
   onGrade,
 }) {
+  // The meaning side in the interface language: the sidecar entry when the
+  // learner's language has one (Arabic), else the card's own English/German.
+  const support = useSupport(content && content.level ? content.level : 'a1.1');
   if (!content) return null;
+  const back = content.supportKey
+    ? support(content.supportKey, { en: content.backEn || (content.kind === 'pattern' ? null : content.back), de: content.kind === 'pattern' ? content.back : null })
+    : { text: content.back || '', lang: null, fallback: false };
+  const backNode = back.text ? (
+    <span lang={back.lang || undefined} dir={back.lang === 'ar' ? 'rtl' : back.lang ? 'ltr' : undefined}>
+      {inline(back.text, { rtl: back.lang === 'ar' })}
+    </span>
+  ) : null;
+  const detail = content.plural
+    ? <>{t('wortfeld.plural', lang)} <span lang="de" dir="ltr">{content.plural}</span></>
+    : content.speaker
+      ? t('review.fromLesson', lang, { speaker: content.speaker, nr: content.lektionNr })
+      : content.detail;
   return (
     <Card className="mt-6 p-5 sm:p-6">
       <div className="mb-3 flex flex-wrap items-center gap-2">
@@ -64,11 +82,11 @@ export default function ReviewCard({
             </Button>
             <AudioSourceBadge recorded={hasRecording} />
           </div>
-          {revealed && <p className="mt-4 font-display text-xl text-ink" lang="de">{content.front}</p>}
+          {revealed && <p className="mt-4 font-display text-xl text-ink" lang="de" dir="ltr">{content.front}</p>}
         </>
       ) : mode === 'typed' ? (
         <>
-          <p className="font-display text-xl text-ink">{content.back || content.front}</p>
+          <p className="font-display text-xl text-ink">{backNode || <span lang="de" dir="ltr">{content.front}</span>}</p>
           <form
             className="mt-4 flex flex-col gap-3 sm:flex-row"
             onSubmit={(event) => { event.preventDefault(); onCheckTyped(); }}
@@ -81,6 +99,8 @@ export default function ReviewCard({
               disabled={revealed}
               autoComplete="off"
               spellCheck={false}
+              lang="de"
+              dir="ltr"
               className="w-full rounded-clay border border-rule bg-white px-4 py-3 font-body text-base text-ink placeholder:text-graphite/60 disabled:bg-paper-sunk"
               placeholder={t('review.typePlaceholder', lang)}
             />
@@ -95,9 +115,9 @@ export default function ReviewCard({
         </>
       ) : (
         <>
-          <p className="font-display text-xl text-ink" lang="de">{content.front}</p>
-          {content.detail && <p className="mt-1 text-sm text-graphite">{content.detail}</p>}
-          {revealed && content.back && <p className="mt-3 text-[0.9375rem] text-ink">{content.back}</p>}
+          <p className="font-display text-xl text-ink" lang="de" dir="ltr">{content.front}</p>
+          {detail && <p className="mt-1 text-sm text-graphite">{detail}</p>}
+          {revealed && backNode && <p className="mt-3 text-[0.9375rem] text-ink">{backNode}</p>}
         </>
       )}
 

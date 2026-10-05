@@ -164,7 +164,9 @@ test('the lesson chrome sieze: no du-register token in any screen the player ren
   const offenders = [];
   for (const f of CHROME_FILES) {
     read(f).split('\n').forEach((line, i) => {
-      if (!DU_TOKENS.test(line)) return;
+      // `dir="ltr"` is the HTML bidi attribute every German run carries since the
+      // Arabic edition, never the pronoun (a German „dir“ is never followed by `=`).
+      if (!DU_TOKENS.test(line.replace(/\bdir=/g, ''))) return;
       const trimmed = line.trim();
       if (REGISTER_EXEMPT.some((ex) => ex.file === f && ex.line === trimmed)) return;
       offenders.push(`${f}:${i + 1}  ${trimmed}`);
@@ -359,7 +361,7 @@ test('every stage screen the player renders reads its chrome through useLessonLa
     assert.match(read(f), /useLessonLang\(\)|lang\b/, `${f} renders chrome without a chrome language`);
   }
   const player = read('src/pages/lesson/LessonPlayerPage.jsx');
-  assert.ok(player.includes('<LangToggle />'), 'the player header carries the Deutsch-Modus toggle');
+  assert.ok(player.includes('<LangToggle className="ms-auto" />'), 'the player header carries the Deutsch-Modus toggle');
   assert.ok(read('src/pages/lesson/CheckpointPage.jsx').includes('<LangToggle'), 'the checkpoint header carries the toggle');
   assert.ok(read('src/pages/lesson/ReviewPage.jsx').includes('<LangToggle'), 'the review header carries the toggle');
   const toggle = read('src/components/lesson/LangToggle.jsx');

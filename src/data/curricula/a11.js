@@ -203,16 +203,16 @@ export const CURRICULUM_A11 = {
         title: 'An der Rezeption',
         setting: 'Ana kommt im Hostel an. Frau Kaya arbeitet an der Rezeption.',
         lines: [
-          { speaker: 'Frau Kaya', de: 'Guten Tag und willkommen!', en: 'Good day and welcome!' },
-          { speaker: 'Ana', de: 'Guten Tag. Ich heiße Ana Chakiri.', en: 'Good day. My name is Ana Chakiri.' },
-          { speaker: 'Frau Kaya', de: 'Buchstabieren Sie bitte Chakiri.', en: 'Please spell Chakiri.' },
-          { speaker: 'Ana', de: 'C-H-A-K-I-R-I.', en: 'C-H-A-K-I-R-I.' },
-          { speaker: 'Frau Kaya', de: 'Danke. Und wie buchstabiert man Ana?', en: 'Thank you. And how do you spell Ana?' },
-          { speaker: 'Ana', de: 'A-N-A.', en: 'A-N-A.' },
-          { speaker: 'Frau Kaya', de: 'Gut. Wie geht es Ihnen?', en: 'Good. How are you?' },
-          { speaker: 'Ana', de: 'Mir geht es gut, danke.', en: 'I\'m fine, thank you.' },
-          { speaker: 'Frau Kaya', de: 'Auf Wiedersehen, Ana.', en: 'Goodbye, Ana.' },
-          { speaker: 'Ana', de: 'Tschüss! Bis morgen.', en: 'Bye! See you tomorrow.' },
+          { id: 'a1.1-l01-d01', speaker: 'Frau Kaya', de: 'Guten Tag und willkommen!', en: 'Good day and welcome!' },
+          { id: 'a1.1-l01-d02', speaker: 'Ana', de: 'Guten Tag. Ich heiße Ana Chakiri.', en: 'Good day. My name is Ana Chakiri.' },
+          { id: 'a1.1-l01-d03', speaker: 'Frau Kaya', de: 'Buchstabieren Sie bitte Chakiri.', en: 'Please spell Chakiri.' },
+          { id: 'a1.1-l01-d04', speaker: 'Ana', de: 'C-H-A-K-I-R-I.', en: 'C-H-A-K-I-R-I.' },
+          { id: 'a1.1-l01-d05', speaker: 'Frau Kaya', de: 'Danke. Und wie buchstabiert man Ana?', en: 'Thank you. And how do you spell Ana?' },
+          { id: 'a1.1-l01-d06', speaker: 'Ana', de: 'A-N-A.', en: 'A-N-A.' },
+          { id: 'a1.1-l01-d07', speaker: 'Frau Kaya', de: 'Gut. Wie geht es Ihnen?', en: 'Good. How are you?' },
+          { id: 'a1.1-l01-d08', speaker: 'Ana', de: 'Mir geht es gut, danke.', en: 'I\'m fine, thank you.' },
+          { id: 'a1.1-l01-d09', speaker: 'Frau Kaya', de: 'Auf Wiedersehen, Ana.', en: 'Goodbye, Ana.' },
+          { id: 'a1.1-l01-d10', speaker: 'Ana', de: 'Tschüss! Bis morgen.', en: 'Bye! See you tomorrow.' },
         ],
       },
       pretest: {
@@ -365,8 +365,8 @@ export const CURRICULUM_A11 = {
           // „das Amt“ and „die Post“ stood in the Wortfeld of the Ämter-Handlungsfeld and in no
           // line of its own Lektion (DaF review #3, Wortfeld ↔ Input): they are carried here and in
           // line 8 rather than by a Wortfeld entry nobody ever hears.
-          { speaker: 'Herr Weber', de: 'Guten Tag! Ich bin Herr Weber vom Amt.', en: 'Good day! I am Mr Weber from the public office.' },
-          { speaker: 'Ana', de: 'Freut mich! Ich bin Ana.', en: 'Nice to meet you! I am Ana.' },
+          { id: 'a1.1-l02-d01', speaker: 'Herr Weber', de: 'Guten Tag! Ich bin Herr Weber vom Amt.', en: 'Good day! I am Mr Weber from the public office.' },
+          { id: 'a1.1-l02-d02', speaker: 'Ana', de: 'Freut mich! Ich bin Ana.', en: 'Nice to meet you! I am Ana.' },
           // THE FAMILIENSTAND IS ASKED AND ANSWERED, NOT DECLARED (round 19, DaF review #18, Minor
           // 12). Round 18 put „Familienstand: Ich bin ledig oder verheiratet.“ into the notice so
           // that RULE 23b would report 0 — a sentence nobody says, written for the rule. The two
@@ -379,8 +379,8 @@ export const CURRICULUM_A11 = {
           // ledig.“ from hearing it). The notice example
           // „Ich bin Studentin.“ and „Was sind Sie von Beruf?“ (indices 6/7) stay verbatim lines,
           // which is why the pair does not ride on them. Sie throughout — strangers at a counter.
-          { speaker: 'Herr Weber', de: 'Bitte füllen Sie das Formular aus. Ihr Familienstand: ledig oder verheiratet?', en: 'Please fill out the form. Your marital status: single or married?' },
-          { speaker: 'Ana', de: 'Ich bin ledig. Ist das Formular für die Adresse?', en: 'I am single. Is that form for the address?' },
+          { id: 'a1.1-l02-d03', speaker: 'Herr Weber', de: 'Bitte füllen Sie das Formular aus. Ihr Familienstand: ledig oder verheiratet?', en: 'Please fill out the form. Your marital status: single or married?' },
+          { id: 'a1.1-l02-d04', speaker: 'Ana', de: 'Ich bin ledig. Ist das Formular für die Adresse?', en: 'I am single. Is that form for the address?' },
           // THE ORIGIN, ASKED AND ANSWERED (round 18, DaF review #17, MAJOR 3). The can-do line
           // „Ich kann sagen, woher ich komme“ had exactly two L2 surfaces — the notice and the graded
           // model text — and the learner PRACTISES neither; every line of this dialogue skipped the
@@ -391,14 +391,14 @@ export const CURRICULUM_A11 = {
           // Ana's answer (index 5, 12 words — the RULE 5 maximum) sits in no window, and the
           // dictation window [7,3] does not move. Sie throughout — Ana and Herr Weber are strangers
           // at a counter.
-          { speaker: 'Herr Weber', de: 'Ja. Vorname, Nachname und Wohnort, bitte. Und woher kommen Sie?', en: 'Yes. First name, surname and place of residence, please. And where do you come from?' },
-          { speaker: 'Ana', de: 'Mein Nachname ist Chakiri. Ich komme aus Marokko und wohne in Bremen.', en: 'My surname is Chakiri. I come from Morocco and live in Bremen.' },
-          { speaker: 'Herr Weber', de: 'Was sind Sie von Beruf?', en: 'What is your profession?' },
-          { speaker: 'Ana', de: 'Ich bin Studentin.', en: 'I am a student.' },
+          { id: 'a1.1-l02-d05', speaker: 'Herr Weber', de: 'Ja. Vorname, Nachname und Wohnort, bitte. Und woher kommen Sie?', en: 'Yes. First name, surname and place of residence, please. And where do you come from?' },
+          { id: 'a1.1-l02-d06', speaker: 'Ana', de: 'Mein Nachname ist Chakiri. Ich komme aus Marokko und wohne in Bremen.', en: 'My surname is Chakiri. I come from Morocco and live in Bremen.' },
+          { id: 'a1.1-l02-d07', speaker: 'Herr Weber', de: 'Was sind Sie von Beruf?', en: 'What is your profession?' },
+          { id: 'a1.1-l02-d08', speaker: 'Ana', de: 'Ich bin Studentin.', en: 'I am a student.' },
           // The Zahlen can-do is carried by the input, not only by the Wortfeld entry: these two
           // lines are the only place a learner hears digits in L2 (DaF review #2, L2).
-          { speaker: 'Herr Weber', de: 'Danke. Hier ist auch die Post. Wie ist Ihre Telefonnummer?', en: 'Thank you. The post office is here too. What is your phone number?' },
-          { speaker: 'Ana', de: 'Meine Telefonnummer ist null eins sieben sechs.', en: 'My phone number is zero one seven six.' },
+          { id: 'a1.1-l02-d09', speaker: 'Herr Weber', de: 'Danke. Hier ist auch die Post. Wie ist Ihre Telefonnummer?', en: 'Thank you. The post office is here too. What is your phone number?' },
+          { id: 'a1.1-l02-d10', speaker: 'Ana', de: 'Meine Telefonnummer ist null eins sieben sechs.', en: 'My phone number is zero one seven six.' },
         ],
       },
       pretest: {
@@ -573,18 +573,18 @@ export const CURRICULUM_A11 = {
         title: 'Ein Foto von zu Hause',
         setting: 'Lena sieht ein Foto auf Anas Handy.',
         lines: [
-          { speaker: 'Lena', de: 'Ana, ist das deine Familie?', en: 'Ana, is that your family?' },
-          { speaker: 'Ana', de: 'Ja. Das sind meine Eltern und meine Geschwister: ein Bruder, eine Schwester.', en: 'Yes. Those are my parents and my siblings: a brother, a sister.' },
-          { speaker: 'Lena', de: 'Wie alt ist er?', en: 'How old is he?' },
-          { speaker: 'Ana', de: 'Er ist zwanzig. Sie ist noch jung.', en: 'He is twenty. She is still young.' },
-          { speaker: 'Lena', de: 'Welche Sprachen sprechen deine Eltern?', en: 'Which languages do your parents speak?' },
-          { speaker: 'Ana', de: 'Sie sprechen Arabisch und Deutsch.', en: 'They speak Arabic and German.' },
-          { speaker: 'Lena', de: 'Spricht dein Bruder auch Englisch?', en: 'Does your brother speak English too?' },
-          { speaker: 'Ana', de: 'Ja, er spricht Englisch und Deutsch.', en: 'Yes, he speaks English and German.' },
-          { speaker: 'Lena', de: 'Und dein Bruder? Hat er einen Sohn oder eine Tochter?', en: 'And your brother? Does he have a son or a daughter?' },
+          { id: 'a1.1-l03-d01', speaker: 'Lena', de: 'Ana, ist das deine Familie?', en: 'Ana, is that your family?' },
+          { id: 'a1.1-l03-d02', speaker: 'Ana', de: 'Ja. Das sind meine Eltern und meine Geschwister: ein Bruder, eine Schwester.', en: 'Yes. Those are my parents and my siblings: a brother, a sister.' },
+          { id: 'a1.1-l03-d03', speaker: 'Lena', de: 'Wie alt ist er?', en: 'How old is he?' },
+          { id: 'a1.1-l03-d04', speaker: 'Ana', de: 'Er ist zwanzig. Sie ist noch jung.', en: 'He is twenty. She is still young.' },
+          { id: 'a1.1-l03-d05', speaker: 'Lena', de: 'Welche Sprachen sprechen deine Eltern?', en: 'Which languages do your parents speak?' },
+          { id: 'a1.1-l03-d06', speaker: 'Ana', de: 'Sie sprechen Arabisch und Deutsch.', en: 'They speak Arabic and German.' },
+          { id: 'a1.1-l03-d07', speaker: 'Lena', de: 'Spricht dein Bruder auch Englisch?', en: 'Does your brother speak English too?' },
+          { id: 'a1.1-l03-d08', speaker: 'Ana', de: 'Ja, er spricht Englisch und Deutsch.', en: 'Yes, he speaks English and German.' },
+          { id: 'a1.1-l03-d09', speaker: 'Lena', de: 'Und dein Bruder? Hat er einen Sohn oder eine Tochter?', en: 'And your brother? Does he have a son or a daughter?' },
           // „Mein Mann und ich …“ made Ana married while the Formular of this very Lektion files her as
           // ledig (DaF review #5, MAJOR 12). der Mann stays covered through her sister's husband.
-          { speaker: 'Ana', de: 'Ja, ein Baby. Der Mann von meiner Schwester kommt auch aus Marokko.', en: 'Yes, a baby. My sister’s husband is also from Morocco.' },
+          { id: 'a1.1-l03-d10', speaker: 'Ana', de: 'Ja, ein Baby. Der Mann von meiner Schwester kommt auch aus Marokko.', en: 'Yes, a baby. My sister’s husband is also from Morocco.' },
         ],
       },
       pretest: {
@@ -684,17 +684,17 @@ export const CURRICULUM_A11 = {
         title: 'Am Stand',
         setting: 'Tim sucht Möbel für sein Zimmer. Frau Wolf verkauft.',
         lines: [
-          { speaker: 'Tim', de: 'Entschuldigung, was ist das?', en: 'Excuse me, what is that?' },
-          { speaker: 'Frau Wolf', de: 'Das ist eine Lampe. Sie kostet acht Euro.', en: 'That is a lamp. It costs eight euros.' },
-          { speaker: 'Tim', de: 'Und der Tisch? Was kostet er?', en: 'And the table? What does it cost?' },
-          { speaker: 'Frau Wolf', de: 'Der Tisch kostet fünfzehn Euro.', en: 'The table costs fifteen euros.' },
-          { speaker: 'Tim', de: 'Das ist teuer. Und der Stuhl?', en: 'That is expensive. And the chair?' },
-          { speaker: 'Frau Wolf', de: 'Der Stuhl kostet zwölf Euro.', en: 'The chair costs twelve euros.' },
-          { speaker: 'Tim', de: 'Ich kaufe den Stuhl und die Lampe.', en: 'I will buy the chair and the lamp.' },
-          { speaker: 'Frau Wolf', de: 'Das macht zusammen zwanzig Euro.', en: 'That comes to twenty euros altogether.' },
+          { id: 'a1.1-l04-d01', speaker: 'Tim', de: 'Entschuldigung, was ist das?', en: 'Excuse me, what is that?' },
+          { id: 'a1.1-l04-d02', speaker: 'Frau Wolf', de: 'Das ist eine Lampe. Sie kostet acht Euro.', en: 'That is a lamp. It costs eight euros.' },
+          { id: 'a1.1-l04-d03', speaker: 'Tim', de: 'Und der Tisch? Was kostet er?', en: 'And the table? What does it cost?' },
+          { id: 'a1.1-l04-d04', speaker: 'Frau Wolf', de: 'Der Tisch kostet fünfzehn Euro.', en: 'The table costs fifteen euros.' },
+          { id: 'a1.1-l04-d05', speaker: 'Tim', de: 'Das ist teuer. Und der Stuhl?', en: 'That is expensive. And the chair?' },
+          { id: 'a1.1-l04-d06', speaker: 'Frau Wolf', de: 'Der Stuhl kostet zwölf Euro.', en: 'The chair costs twelve euros.' },
+          { id: 'a1.1-l04-d07', speaker: 'Tim', de: 'Ich kaufe den Stuhl und die Lampe.', en: 'I will buy the chair and the lamp.' },
+          { id: 'a1.1-l04-d08', speaker: 'Frau Wolf', de: 'Das macht zusammen zwanzig Euro.', en: 'That comes to twenty euros altogether.' },
           // „Preise bis hundert Euro“ needs a price above twenty somewhere in the input (DaF review #2, L4).
-          { speaker: 'Tim', de: 'Und das Regal? Kostet es fünfzig Euro?', en: 'And the shelf? Does it cost fifty euros?' },
-          { speaker: 'Frau Wolf', de: 'Nein, das Regal kostet dreißig Euro.', en: 'No, the shelf costs thirty euros.' },
+          { id: 'a1.1-l04-d09', speaker: 'Tim', de: 'Und das Regal? Kostet es fünfzig Euro?', en: 'And the shelf? Does it cost fifty euros?' },
+          { id: 'a1.1-l04-d10', speaker: 'Frau Wolf', de: 'Nein, das Regal kostet dreißig Euro.', en: 'No, the shelf costs thirty euros.' },
         ],
       },
       pretest: {
@@ -794,14 +794,14 @@ export const CURRICULUM_A11 = {
         title: 'Vor dem Kurs',
         setting: 'Lena und Tim packen ihre Taschen aus.',
         lines: [
-          { speaker: 'Lena', de: 'Tim, wo ist das Wörterbuch?', en: 'Tim, where is the dictionary?' },
-          { speaker: 'Tim', de: 'Das Wörterbuch ist hier. Der Stift ist da.', en: 'The dictionary is here. The pen is there.' },
-          { speaker: 'Lena', de: 'Und die Schere? Wo ist sie?', en: 'And the scissors (die Schere, singular)? Where is it?' },
-          { speaker: 'Tim', de: 'Die Schere ist hier. Das Lineal auch.', en: 'The scissors are here. The ruler too.' },
-          { speaker: 'Lena', de: 'Ist der Stift blau oder schwarz?', en: 'Is the pen blue or black?' },
-          { speaker: 'Tim', de: 'Der Stift ist blau, der Bleistift ist gelb.', en: 'The pen is blue, the pencil is yellow.' },
-          { speaker: 'Lena', de: 'Und das Heft? Ist es rot?', en: 'And the notebook? Is it red?' },
-          { speaker: 'Tim', de: 'Nein, das Heft ist grün.', en: 'No, the notebook is green.' },
+          { id: 'a1.1-l05-d01', speaker: 'Lena', de: 'Tim, wo ist das Wörterbuch?', en: 'Tim, where is the dictionary?' },
+          { id: 'a1.1-l05-d02', speaker: 'Tim', de: 'Das Wörterbuch ist hier. Der Stift ist da.', en: 'The dictionary is here. The pen is there.' },
+          { id: 'a1.1-l05-d03', speaker: 'Lena', de: 'Und die Schere? Wo ist sie?', en: 'And the scissors (die Schere, singular)? Where is it?' },
+          { id: 'a1.1-l05-d04', speaker: 'Tim', de: 'Die Schere ist hier. Das Lineal auch.', en: 'The scissors are here. The ruler too.' },
+          { id: 'a1.1-l05-d05', speaker: 'Lena', de: 'Ist der Stift blau oder schwarz?', en: 'Is the pen blue or black?' },
+          { id: 'a1.1-l05-d06', speaker: 'Tim', de: 'Der Stift ist blau, der Bleistift ist gelb.', en: 'The pen is blue, the pencil is yellow.' },
+          { id: 'a1.1-l05-d07', speaker: 'Lena', de: 'Und das Heft? Ist es rot?', en: 'And the notebook? Is it red?' },
+          { id: 'a1.1-l05-d08', speaker: 'Tim', de: 'Nein, das Heft ist grün.', en: 'No, the notebook is green.' },
           // Zimmer, Schlüssel and Bild were flashcards only; the last two lines bring them into the
           // input, which is what the Wohnen can-do needs (DaF review #2, L5 and §A).
           // `die Farbe` is a FIELD of the graded Formular of this Lektion („Farbe: grün“) and stood
@@ -824,8 +824,8 @@ export const CURRICULUM_A11 = {
           // as its second surface.
           // `der Schlüssel` keeps its line; `in der Tasche` is the one Dativ the line always had,
           // and the setting („packen ihre Taschen aus“) carries `die Tasche` as well.
-          { speaker: 'Lena', de: 'Mein Schlüssel ist da. Welche Farbe hat das Bild?', en: 'My key is there. What colour is the picture?' },
-          { speaker: 'Tim', de: 'Es ist blau. Das Bild ist für mein Zimmer.', en: 'It is blue. The picture is for my room.' },
+          { id: 'a1.1-l05-d09', speaker: 'Lena', de: 'Mein Schlüssel ist da. Welche Farbe hat das Bild?', en: 'My key is there. What colour is the picture?' },
+          { id: 'a1.1-l05-d10', speaker: 'Tim', de: 'Es ist blau. Das Bild ist für mein Zimmer.', en: 'It is blue. The picture is for my room.' },
         ],
       },
       pretest: { promptDe: 'Fragen Sie, wo das Buch ist.', promptEn: 'Ask where the book is.', model: 'Wo ist das Buch?', accepted: ['Wo ist', 'Wo sind'] },
@@ -913,16 +913,16 @@ export const CURRICULUM_A11 = {
         // only narrative bracket the level has (DaF review #2, L2).
         setting: 'Anas erster Arbeitstag im Bürgerbüro. Herr Weber zeigt ihr den Arbeitsplatz.',
         lines: [
-          { speaker: 'Ana', de: 'Guten Morgen, Herr Weber!', en: 'Good morning, Mr Weber!' },
-          { speaker: 'Herr Weber', de: 'Guten Morgen, Ana. Das ist Ihr Büro.', en: 'Good morning, Ana. This is your office.' },
-          { speaker: 'Ana', de: 'Danke. Ich brauche einen Computer und ein Telefon.', en: 'Thank you. I need a computer and a telephone.' },
-          { speaker: 'Herr Weber', de: 'Hier sind ein Computer und ein Telefon. Ihr Kollege ist Ingenieur.', en: 'Here are a computer and a telephone. Your colleague is an engineer.' },
-          { speaker: 'Ana', de: 'Und ein Handy?', en: 'And a mobile phone?' },
-          { speaker: 'Herr Weber', de: 'Wir haben kein Handy.', en: 'We do not have a mobile phone.' },
-          { speaker: 'Ana', de: 'Und wie ist die Telefonnummer?', en: 'And what is the telephone number?' },
-          { speaker: 'Herr Weber', de: 'Null vier zwei – drei drei acht eins.', en: 'Zero four two – three three eight one.' },
-          { speaker: 'Ana', de: 'Danke! Wann ist die Pause?', en: 'Thank you! When is the break?' },
-          { speaker: 'Herr Weber', de: 'Die Pause ist um eins.', en: 'The break is at one.' },
+          { id: 'a1.1-l06-d01', speaker: 'Ana', de: 'Guten Morgen, Herr Weber!', en: 'Good morning, Mr Weber!' },
+          { id: 'a1.1-l06-d02', speaker: 'Herr Weber', de: 'Guten Morgen, Ana. Das ist Ihr Büro.', en: 'Good morning, Ana. This is your office.' },
+          { id: 'a1.1-l06-d03', speaker: 'Ana', de: 'Danke. Ich brauche einen Computer und ein Telefon.', en: 'Thank you. I need a computer and a telephone.' },
+          { id: 'a1.1-l06-d04', speaker: 'Herr Weber', de: 'Hier sind ein Computer und ein Telefon. Ihr Kollege ist Ingenieur.', en: 'Here are a computer and a telephone. Your colleague is an engineer.' },
+          { id: 'a1.1-l06-d05', speaker: 'Ana', de: 'Und ein Handy?', en: 'And a mobile phone?' },
+          { id: 'a1.1-l06-d06', speaker: 'Herr Weber', de: 'Wir haben kein Handy.', en: 'We do not have a mobile phone.' },
+          { id: 'a1.1-l06-d07', speaker: 'Ana', de: 'Und wie ist die Telefonnummer?', en: 'And what is the telephone number?' },
+          { id: 'a1.1-l06-d08', speaker: 'Herr Weber', de: 'Null vier zwei – drei drei acht eins.', en: 'Zero four two – three three eight one.' },
+          { id: 'a1.1-l06-d09', speaker: 'Ana', de: 'Danke! Wann ist die Pause?', en: 'Thank you! When is the break?' },
+          { id: 'a1.1-l06-d10', speaker: 'Herr Weber', de: 'Die Pause ist um eins.', en: 'The break is at one.' },
         ],
       },
       pretest: {
@@ -1034,20 +1034,20 @@ export const CURRICULUM_A11 = {
         title: 'Was machst du am Wochenende?',
         setting: 'Lena und Tim nach dem Kurs.',
         lines: [
-          { speaker: 'Lena', de: 'Tim, was ist dein Hobby?', en: 'Tim, what is your hobby?' },
-          { speaker: 'Tim', de: 'Ich höre gern Musik. Und du?', en: 'I like listening to music. And you?' },
-          { speaker: 'Lena', de: 'Mein Hobby ist Sport. Ich spiele am Wochenende Fußball.', en: 'My hobby is sport. I play football at the weekend.' },
-          { speaker: 'Tim', de: 'Spielst du jede Woche Fußball?', en: 'Do you play football every week?' },
-          { speaker: 'Lena', de: 'Ja, immer. Am Wochenende arbeite ich nicht. Ich bin frei.', en: 'Yes, always. At the weekend I do not work. I am free.' },
+          { id: 'a1.1-l07-d01', speaker: 'Lena', de: 'Tim, was ist dein Hobby?', en: 'Tim, what is your hobby?' },
+          { id: 'a1.1-l07-d02', speaker: 'Tim', de: 'Ich höre gern Musik. Und du?', en: 'I like listening to music. And you?' },
+          { id: 'a1.1-l07-d03', speaker: 'Lena', de: 'Mein Hobby ist Sport. Ich spiele am Wochenende Fußball.', en: 'My hobby is sport. I play football at the weekend.' },
+          { id: 'a1.1-l07-d04', speaker: 'Tim', de: 'Spielst du jede Woche Fußball?', en: 'Do you play football every week?' },
+          { id: 'a1.1-l07-d05', speaker: 'Lena', de: 'Ja, immer. Am Wochenende arbeite ich nicht. Ich bin frei.', en: 'Yes, always. At the weekend I do not work. I am free.' },
           // lesen, kochen, schwimmen, tanzen and das Kino were added to the Wortfeld in #115 and
           // appeared in no line of the Lektion; the Hobby can-do rested on Musik and Sport alone
           // (DaF review #2, L7 and §A). The weekdays moved to L8, so the dialogue says am Wochenende.
-          { speaker: 'Tim', de: 'Ich lese auch gern. Und ich koche gern.', en: 'I also like reading. And I like cooking.' },
-          { speaker: 'Lena', de: 'Ich schwimme jede Woche. Gehst du ins Kino?', en: 'I swim every week. Do you go to the cinema?' },
-          { speaker: 'Tim', de: 'Ja, sehr gern! Und tanzt du auch?', en: 'Yes, very gladly! And do you dance too?' },
+          { id: 'a1.1-l07-d06', speaker: 'Tim', de: 'Ich lese auch gern. Und ich koche gern.', en: 'I also like reading. And I like cooking.' },
+          { id: 'a1.1-l07-d07', speaker: 'Lena', de: 'Ich schwimme jede Woche. Gehst du ins Kino?', en: 'I swim every week. Do you go to the cinema?' },
+          { id: 'a1.1-l07-d08', speaker: 'Tim', de: 'Ja, sehr gern! Und tanzt du auch?', en: 'Yes, very gladly! And do you dance too?' },
           // der Freund and vielleicht were taught and never heard (DaF review #3, RULE 10).
-          { speaker: 'Lena', de: 'Nein, ich tanze nicht gut. Mein Freund und meine Freundin tanzen gern.', en: 'No, I do not dance well. My friend and my girlfriend like dancing.' },
-          { speaker: 'Tim', de: 'Vielleicht hören wir am Wochenende zusammen Musik?', en: 'Maybe we will listen to music together at the weekend?' },
+          { id: 'a1.1-l07-d09', speaker: 'Lena', de: 'Nein, ich tanze nicht gut. Mein Freund und meine Freundin tanzen gern.', en: 'No, I do not dance well. My friend and my girlfriend like dancing.' },
+          { id: 'a1.1-l07-d10', speaker: 'Tim', de: 'Vielleicht hören wir am Wochenende zusammen Musik?', en: 'Maybe we will listen to music together at the weekend?' },
         ],
       },
       pretest: {
@@ -1155,22 +1155,22 @@ export const CURRICULUM_A11 = {
         title: 'Wann hast du Zeit?',
         setting: 'Ana und Lena machen einen Termin aus.',
         lines: [
-          { speaker: 'Ana', de: 'Lena, wann stehst du morgens auf?', en: 'Lena, when do you get up in the morning?' },
-          { speaker: 'Lena', de: 'Ich stehe um sechs Uhr auf.', en: 'I get up at six o’clock.' },
-          { speaker: 'Ana', de: 'Und wann ist dein Termin?', en: 'And when is your appointment?' },
-          { speaker: 'Lena', de: 'Der Termin ist am Montag um Viertel vor acht.', en: 'The appointment is on Monday at a quarter to eight.' },
+          { id: 'a1.1-l08-d01', speaker: 'Ana', de: 'Lena, wann stehst du morgens auf?', en: 'Lena, when do you get up in the morning?' },
+          { id: 'a1.1-l08-d02', speaker: 'Lena', de: 'Ich stehe um sechs Uhr auf.', en: 'I get up at six o’clock.' },
+          { id: 'a1.1-l08-d03', speaker: 'Ana', de: 'Und wann ist dein Termin?', en: 'And when is your appointment?' },
+          { id: 'a1.1-l08-d04', speaker: 'Lena', de: 'Der Termin ist am Montag um Viertel vor acht.', en: 'The appointment is on Monday at a quarter to eight.' },
           // heute and die Verspätung were taught and never heard (DaF review #3, RULE 10).
-          { speaker: 'Ana', de: 'Kommst du heute pünktlich? Oder hast du Verspätung?', en: 'Will you be on time today? Or will you be late?' },
+          { id: 'a1.1-l08-d05', speaker: 'Ana', de: 'Kommst du heute pünktlich? Oder hast du Verspätung?', en: 'Will you be on time today? Or will you be late?' },
           // NOT „Ich habe einen guten Wecker“: that is Adjektivdeklination im Akkusativ, a fifth
           // Vorgriff the course never names, in the Lektion whose exam part is Hören Teil 1.
-          { speaker: 'Lena', de: 'Ja, immer. Mein Wecker ist gut.', en: 'Yes, always. My alarm clock is good.' },
-          { speaker: 'Ana', de: 'Und am Dienstag? Hast du nachmittags Zeit?', en: 'And on Tuesday? Do you have time in the afternoon?' },
-          { speaker: 'Lena', de: 'Am Dienstag habe ich abends Zeit.', en: 'On Tuesday I have time in the evening.' },
+          { id: 'a1.1-l08-d06', speaker: 'Lena', de: 'Ja, immer. Mein Wecker ist gut.', en: 'Yes, always. My alarm clock is good.' },
+          { id: 'a1.1-l08-d07', speaker: 'Ana', de: 'Und am Dienstag? Hast du nachmittags Zeit?', en: 'And on Tuesday? Do you have time in the afternoon?' },
+          { id: 'a1.1-l08-d08', speaker: 'Lena', de: 'Am Dienstag habe ich abends Zeit.', en: 'On Tuesday I have time in the evening.' },
           // Mittwoch, Donnerstag and Freitag were in the Wortfeld and in no line (DaF review #2, §A).
-          { speaker: 'Ana', de: 'Und am Mittwoch, am Donnerstag oder am Freitag?', en: 'And on Wednesday, Thursday or Friday?' },
+          { id: 'a1.1-l08-d09', speaker: 'Ana', de: 'Und am Mittwoch, am Donnerstag oder am Freitag?', en: 'And on Wednesday, Thursday or Friday?' },
           // Samstag and Sonntag came over from L7 with the rest of the week but appeared in no line,
           // no item and no task of L8 — the week was a set on paper only (DaF review #3).
-          { speaker: 'Lena', de: 'Am Mittwoch beim Arzt. Am Samstag und am Sonntag habe ich frei!', en: 'On Wednesday at the doctor’s. On Saturday and Sunday I am free!' },
+          { id: 'a1.1-l08-d10', speaker: 'Lena', de: 'Am Mittwoch beim Arzt. Am Samstag und am Sonntag habe ich frei!', en: 'On Wednesday at the doctor’s. On Saturday and Sunday I am free!' },
         ],
       },
       pretest: { promptDe: 'Fragen Sie nach der Uhrzeit.', promptEn: 'Ask what time it is.', model: 'Wie spät ist es?', accepted: ['Wie spät', 'Wie viel Uhr', 'Wann'] },
@@ -1271,20 +1271,20 @@ export const CURRICULUM_A11 = {
         title: 'Bestellen im Café',
         setting: 'Ana sitzt im Café. Paul ist Kellner.',
         lines: [
-          { speaker: 'Paul', de: 'Guten Tag! Was möchten Sie trinken?', en: 'Good day! What would you like to drink?' },
-          { speaker: 'Ana', de: 'Ich habe Durst. Ich möchte einen Kaffee, bitte.', en: 'I am thirsty. I would like a coffee, please.' },
+          { id: 'a1.1-l09-d01', speaker: 'Paul', de: 'Guten Tag! Was möchten Sie trinken?', en: 'Good day! What would you like to drink?' },
+          { id: 'a1.1-l09-d02', speaker: 'Ana', de: 'Ich habe Durst. Ich möchte einen Kaffee, bitte.', en: 'I am thirsty. I would like a coffee, please.' },
           // die Suppe and der Salat were added to the Wortfeld in #115 and ordered by nobody (§A).
-          { speaker: 'Paul', de: 'Haben Sie auch Hunger? Wir haben Suppe, Salat und Kuchen.', en: 'Are you hungry too? We have soup, salad and cake.' },
-          { speaker: 'Ana', de: 'Ja, ich habe Hunger. Ich möchte Kuchen, bitte.', en: 'Yes, I am hungry. I would like cake, please.' },
-          { speaker: 'Paul', de: 'Möchten Sie auch Wasser?', en: 'Would you like water as well?' },
+          { id: 'a1.1-l09-d03', speaker: 'Paul', de: 'Haben Sie auch Hunger? Wir haben Suppe, Salat und Kuchen.', en: 'Are you hungry too? We have soup, salad and cake.' },
+          { id: 'a1.1-l09-d04', speaker: 'Ana', de: 'Ja, ich habe Hunger. Ich möchte Kuchen, bitte.', en: 'Yes, I am hungry. I would like cake, please.' },
+          { id: 'a1.1-l09-d05', speaker: 'Paul', de: 'Möchten Sie auch Wasser?', en: 'Would you like water as well?' },
           // Eight of the 23 Wortfeld entries of the Café-Lektion were ordered by nobody: Bier,
           // Mineralwasser, Orangensaft, Tasse, Kellnerin, essen, Brot, Frühstück (and Wein).
           // The closing four lines carry them instead of repeating Wasser and Tee (DaF review #3).
-          { speaker: 'Ana', de: 'Ja, ein Glas Mineralwasser, bitte. Und einen Orangensaft.', en: 'Yes, a glass of mineral water, please. And an orange juice.' },
-          { speaker: 'Paul', de: 'Gern. Wir haben auch Tee, Bier und Wein.', en: 'Gladly. We also have tea, beer and wine.' },
-          { speaker: 'Ana', de: 'Nein, danke. Ich esse gern ein Brot mit Salat.', en: 'No, thank you. I like eating a bread roll with salad.' },
-          { speaker: 'Paul', de: 'Gut. Die Kellnerin kommt sofort mit dem Brot.', en: 'Good. The waitress is coming right away with the bread.' },
-          { speaker: 'Ana', de: 'Danke! Zum Frühstück trinke ich immer eine Tasse Kaffee.', en: 'Thank you! For breakfast I always drink a cup of coffee.' },
+          { id: 'a1.1-l09-d06', speaker: 'Ana', de: 'Ja, ein Glas Mineralwasser, bitte. Und einen Orangensaft.', en: 'Yes, a glass of mineral water, please. And an orange juice.' },
+          { id: 'a1.1-l09-d07', speaker: 'Paul', de: 'Gern. Wir haben auch Tee, Bier und Wein.', en: 'Gladly. We also have tea, beer and wine.' },
+          { id: 'a1.1-l09-d08', speaker: 'Ana', de: 'Nein, danke. Ich esse gern ein Brot mit Salat.', en: 'No, thank you. I like eating a bread roll with salad.' },
+          { id: 'a1.1-l09-d09', speaker: 'Paul', de: 'Gut. Die Kellnerin kommt sofort mit dem Brot.', en: 'Good. The waitress is coming right away with the bread.' },
+          { id: 'a1.1-l09-d10', speaker: 'Ana', de: 'Danke! Zum Frühstück trinke ich immer eine Tasse Kaffee.', en: 'Thank you! For breakfast I always drink a cup of coffee.' },
         ],
       },
       pretest: {
@@ -1375,20 +1375,20 @@ export const CURRICULUM_A11 = {
         title: 'Am Schalter',
         setting: 'Ana fragt am Bahnhof nach dem Zug.',
         lines: [
-          { speaker: 'Ana', de: 'Entschuldigung, fährt der Zug nach Österreich?', en: 'Excuse me, does the train go to Austria?' },
-          { speaker: 'Herr Schmidt', de: 'Ja, der Zug fährt um neun Uhr von Gleis vier.', en: 'Yes, the train leaves at nine o’clock from platform four.' },
-          { speaker: 'Ana', de: 'Hat der Zug Verspätung?', en: 'Is the train delayed?' },
-          { speaker: 'Herr Schmidt', de: 'Nein, er ist pünktlich.', en: 'No, it is on time.' },
-          { speaker: 'Ana', de: 'Kostet die Fahrkarte zwanzig Euro?', en: 'Does the ticket cost twenty euros?' },
-          { speaker: 'Herr Schmidt', de: 'Nein, sie kostet fünfzehn Euro.', en: 'No, it costs fifteen euros.' },
-          { speaker: 'Ana', de: 'Fährt der Bus auch in die Schweiz? Ist der Bahnhof weit?', en: 'Does the bus go to Switzerland too? Is the station far?' },
-          { speaker: 'Herr Schmidt', de: 'Nein, leider nicht. Die Abfahrt ist hier an Gleis vier.', en: 'No, unfortunately not. The departure is here on platform four.' },
+          { id: 'a1.1-l10-d01', speaker: 'Ana', de: 'Entschuldigung, fährt der Zug nach Österreich?', en: 'Excuse me, does the train go to Austria?' },
+          { id: 'a1.1-l10-d02', speaker: 'Herr Schmidt', de: 'Ja, der Zug fährt um neun Uhr von Gleis vier.', en: 'Yes, the train leaves at nine o’clock from platform four.' },
+          { id: 'a1.1-l10-d03', speaker: 'Ana', de: 'Hat der Zug Verspätung?', en: 'Is the train delayed?' },
+          { id: 'a1.1-l10-d04', speaker: 'Herr Schmidt', de: 'Nein, er ist pünktlich.', en: 'No, it is on time.' },
+          { id: 'a1.1-l10-d05', speaker: 'Ana', de: 'Kostet die Fahrkarte zwanzig Euro?', en: 'Does the ticket cost twenty euros?' },
+          { id: 'a1.1-l10-d06', speaker: 'Herr Schmidt', de: 'Nein, sie kostet fünfzehn Euro.', en: 'No, it costs fifteen euros.' },
+          { id: 'a1.1-l10-d07', speaker: 'Ana', de: 'Fährt der Bus auch in die Schweiz? Ist der Bahnhof weit?', en: 'Does the bus go to Switzerland too? Is the station far?' },
+          { id: 'a1.1-l10-d08', speaker: 'Herr Schmidt', de: 'Nein, leider nicht. Die Abfahrt ist hier an Gleis vier.', en: 'No, unfortunately not. The departure is here on platform four.' },
           // Bahnhof, Abfahrt, Ankunft and umsteigen were Wortfeld-only, and the „Durchsagen“ can-do
           // had no announcement to understand. The announcement is read out by the man at the counter
           // rather than given its own speaker, because a dialogue has exactly two speakers
           // (scripts/validate-curriculum.mjs RULE 5). It is now the dictation line (review #2, L10, §A).
-          { speaker: 'Ana', de: 'Danke! Und die Durchsage? Wann ist die Ankunft?', en: 'Thank you! And the announcement? When is the arrival?' },
-          { speaker: 'Herr Schmidt', de: 'Der Zug nach Österreich hat Verspätung. Bitte umsteigen!', en: 'The train to Austria is delayed. Please change trains!' },
+          { id: 'a1.1-l10-d09', speaker: 'Ana', de: 'Danke! Und die Durchsage? Wann ist die Ankunft?', en: 'Thank you! And the announcement? When is the arrival?' },
+          { id: 'a1.1-l10-d10', speaker: 'Herr Schmidt', de: 'Der Zug nach Österreich hat Verspätung. Bitte umsteigen!', en: 'The train to Austria is delayed. Please change trains!' },
         ],
       },
       pretest: {
@@ -1497,18 +1497,18 @@ export const CURRICULUM_A11 = {
         title: 'Was hast du gestern gemacht?',
         setting: 'Tim und Lena am Donnerstag im Kurs.',
         lines: [
-          { speaker: 'Lena', de: 'Tim, was hast du gestern gemacht?', en: 'Tim, what did you do yesterday?' },
-          { speaker: 'Tim', de: 'Ich habe gearbeitet. Heute lerne ich Deutsch.', en: 'I worked. Today I am studying German.' },
-          { speaker: 'Lena', de: 'Und wann stehst du morgens auf?', en: 'And when do you get up in the morning?' },
-          { speaker: 'Tim', de: 'Ich stehe um sechs auf. Ich bin müde.', en: 'I get up at six. I am tired.' },
-          { speaker: 'Lena', de: 'Kaufst du heute ein?', en: 'Are you going shopping today?' },
-          { speaker: 'Tim', de: 'Ja, ich kaufe am Freitag ein. Kommst du mit?', en: 'Yes, I am going shopping on Friday. Are you coming along?' },
-          { speaker: 'Lena', de: 'Ja, ich komme mit. Rufst du mich an?', en: 'Yes, I am coming along. Will you call me?' },
-          { speaker: 'Tim', de: 'Ja, ich rufe dich an.', en: 'Yes, I will call you.' },
+          { id: 'a1.1-l11-d01', speaker: 'Lena', de: 'Tim, was hast du gestern gemacht?', en: 'Tim, what did you do yesterday?' },
+          { id: 'a1.1-l11-d02', speaker: 'Tim', de: 'Ich habe gearbeitet. Heute lerne ich Deutsch.', en: 'I worked. Today I am studying German.' },
+          { id: 'a1.1-l11-d03', speaker: 'Lena', de: 'Und wann stehst du morgens auf?', en: 'And when do you get up in the morning?' },
+          { id: 'a1.1-l11-d04', speaker: 'Tim', de: 'Ich stehe um sechs auf. Ich bin müde.', en: 'I get up at six. I am tired.' },
+          { id: 'a1.1-l11-d05', speaker: 'Lena', de: 'Kaufst du heute ein?', en: 'Are you going shopping today?' },
+          { id: 'a1.1-l11-d06', speaker: 'Tim', de: 'Ja, ich kaufe am Freitag ein. Kommst du mit?', en: 'Yes, I am going shopping on Friday. Are you coming along?' },
+          { id: 'a1.1-l11-d07', speaker: 'Lena', de: 'Ja, ich komme mit. Rufst du mich an?', en: 'Yes, I am coming along. Will you call me?' },
+          { id: 'a1.1-l11-d08', speaker: 'Tim', de: 'Ja, ich rufe dich an.', en: 'Yes, I will call you.' },
           // frühstücken, duschen, schlafen and mitbringen were Wortfeld-only, so the Tagesablauf
           // can-do rested on three verbs; the last line shows the schlafen vowel change (review #2, §A).
-          { speaker: 'Lena', de: 'Ich dusche und frühstücke jeden Tag. Ich bringe Kuchen mit.', en: 'I shower and have breakfast every day. I bring cake along.' },
-          { speaker: 'Tim', de: 'Ich schlafe am Sonntag bis neun. Mein Bruder schläft auch.', en: 'On Sunday I sleep until nine. My brother sleeps in too.' },
+          { id: 'a1.1-l11-d09', speaker: 'Lena', de: 'Ich dusche und frühstücke jeden Tag. Ich bringe Kuchen mit.', en: 'I shower and have breakfast every day. I bring cake along.' },
+          { id: 'a1.1-l11-d10', speaker: 'Tim', de: 'Ich schlafe am Sonntag bis neun. Mein Bruder schläft auch.', en: 'On Sunday I sleep until nine. My brother sleeps in too.' },
         ],
       },
       pretest: { promptDe: 'Sagen Sie, was Sie gestern gemacht haben.', promptEn: 'Say what you did yesterday.', model: 'Ich habe gearbeitet.', accepted: ['Ich habe', 'Gestern habe ich'] },
@@ -1609,24 +1609,24 @@ export const CURRICULUM_A11 = {
         title: 'Eine Einladung',
         setting: 'Lena und Ana planen Anas Geburtstag.',
         lines: [
-          { speaker: 'Lena', de: 'Ana, wann ist dein Geburtstag?', en: 'Ana, when is your birthday?' },
+          { id: 'a1.1-l12-d01', speaker: 'Lena', de: 'Ana, wann ist dein Geburtstag?', en: 'Ana, when is your birthday?' },
           // A birthday is a DATE, not a weekday: „Mein Geburtstag ist am Freitag“ says the party is on
           // Friday, and can-do 2 („in welchem Monat“) was covered by no sentence at all. The month is
           // in the dialogue, the dictation line, the pretest model and the pool now (review #2, L12).
-          { speaker: 'Ana', de: 'Mein Geburtstag ist im Mai. Wir feiern am Freitag.', en: 'My birthday is in May. We celebrate on Friday.' },
-          { speaker: 'Lena', de: 'Mai ist ein schöner Monat! Kommt deine Mama auch?', en: 'May is a lovely month! Is your mum coming too?' },
-          { speaker: 'Ana', de: 'Ja, meine Mama und mein Papa kommen.', en: 'Yes, my mum and my dad are coming.' },
-          { speaker: 'Lena', de: 'Und dein Bruder? Kommt seine Frau auch?', en: 'And your brother? Is his wife coming too?' },
+          { id: 'a1.1-l12-d02', speaker: 'Ana', de: 'Mein Geburtstag ist im Mai. Wir feiern am Freitag.', en: 'My birthday is in May. We celebrate on Friday.' },
+          { id: 'a1.1-l12-d03', speaker: 'Lena', de: 'Mai ist ein schöner Monat! Kommt deine Mama auch?', en: 'May is a lovely month! Is your mum coming too?' },
+          { id: 'a1.1-l12-d04', speaker: 'Ana', de: 'Ja, meine Mama und mein Papa kommen.', en: 'Yes, my mum and my dad are coming.' },
+          { id: 'a1.1-l12-d05', speaker: 'Lena', de: 'Und dein Bruder? Kommt seine Frau auch?', en: 'And your brother? Is his wife coming too?' },
           // `der Gast` is the noun of the third Leitpunkt of this Lektion's graded task („Was die
           // Gäste mitbringen sollen“) and stood on no input surface (round 18, DaF review #17,
           // Minor 15 / RULE 23b, hard 0). The line now says the thing the task asks about — the
           // guests bring something — with the L11 Satzklammer the learner has met. Index 5 is in
           // neither window ([1,3] dictation, [0,9] read-aloud).
-          { speaker: 'Ana', de: 'Ja. Ich lade auch meine Kollegin ein. Die Gäste bringen Kuchen mit.', en: 'Yes. I am inviting my colleague too. The guests are bringing cake.' },
-          { speaker: 'Lena', de: 'Was möchtest du zum Geburtstag?', en: 'What would you like for your birthday?' },
-          { speaker: 'Ana', de: 'Vielleicht ein Buch. Mein Bruder kauft das Geschenk.', en: 'Maybe a book. My brother is buying the present.' },
-          { speaker: 'Lena', de: 'Deine Party ist bestimmt schön!', en: 'Your party is sure to be lovely!' },
-          { speaker: 'Ana', de: 'Ja! Mach\'s gut, Lena. Bis bald!', en: 'Yes! Take care, Lena. See you soon!' },
+          { id: 'a1.1-l12-d06', speaker: 'Ana', de: 'Ja. Ich lade auch meine Kollegin ein. Die Gäste bringen Kuchen mit.', en: 'Yes. I am inviting my colleague too. The guests are bringing cake.' },
+          { id: 'a1.1-l12-d07', speaker: 'Lena', de: 'Was möchtest du zum Geburtstag?', en: 'What would you like for your birthday?' },
+          { id: 'a1.1-l12-d08', speaker: 'Ana', de: 'Vielleicht ein Buch. Mein Bruder kauft das Geschenk.', en: 'Maybe a book. My brother is buying the present.' },
+          { id: 'a1.1-l12-d09', speaker: 'Lena', de: 'Deine Party ist bestimmt schön!', en: 'Your party is sure to be lovely!' },
+          { id: 'a1.1-l12-d10', speaker: 'Ana', de: 'Ja! Mach\'s gut, Lena. Bis bald!', en: 'Yes! Take care, Lena. See you soon!' },
         ],
       },
       pretest: {

@@ -3,6 +3,7 @@ import { Link, Navigate, useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { curriculumFor } from '../../data/curricula/index.js';
+import { loadSupport } from '../../lib/lesson/support.js';
 import { fetchDueCards, gradeCard, fetchNextDueAt, buildCardIndex, parseCardKey } from '../../services/reviewService.js';
 import { fetchWordsByIds } from '../../services/lessonService.js';
 import { audioFor, playLine, playWord, speakGerman } from '../../lib/lesson/speech.js';
@@ -49,6 +50,8 @@ export default function ReviewPage() {
   const { user } = useAuth();
   const [lang] = useLessonLang();
   const curriculum = curriculumFor(level);
+  // The interface language's meanings for the cards (Arabic sidecar).
+  useEffect(() => { if (level) loadSupport(level, lang); }, [level, lang]);
 
   const [cards, setCards] = useState(null);
   const [index, setIndex] = useState(0);
@@ -145,14 +148,14 @@ export default function ReviewPage() {
   return (
     <div className="min-h-screen bg-paper font-body text-ink">
       <div className="mx-auto max-w-2xl px-4 pb-8 pt-6 sm:pb-12 sm:pt-10">
-        <div className="mb-6 flex items-center gap-3">
+        <div className="mb-6 flex flex-wrap items-center gap-3">
           <Link to={`/course/${curriculum.level}`} className="inline-flex items-center gap-1 text-sm font-bold text-siegel hover:text-siegel-deep">
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" /> {curriculum.code}
+            <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" aria-hidden="true" /> {curriculum.code}
           </Link>
           {cards && cards.length > 0 && !done && (
             <span className="font-data text-xs text-graphite">{index + 1}/{cards.length}</span>
           )}
-          <LangToggle className="ml-auto" />
+          <LangToggle className="ms-auto" />
         </div>
 
         <h1 className="font-display text-2xl text-ink sm:text-3xl">{t('review.title', lang)}</h1>
@@ -200,7 +203,7 @@ export default function ReviewPage() {
               {formatDue(nextDueAt, lang) ? t('review.nextOn', lang, { date: formatDue(nextDueAt, lang) }) : t('review.newCards', lang)}
             </p>
             <Button className="mt-4" to={`/course/${curriculum.level}`}>
-              {t('action.toCoursePlan', lang)} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              {t('action.toCoursePlan', lang)} <ArrowRight className="h-4 w-4 rtl:-scale-x-100" aria-hidden="true" />
             </Button>
           </Card>
         )}

@@ -1,0 +1,114 @@
+---
+// The public language switch (docs/arabic/README.md §3): „العربية · English ·
+// Deutsch", each named in its own language, no flags. Rendered only on the pages
+// that HAVE an Arabic twin (Layout.astro `alternates`), so every link lands on
+// the same page in the other language, never on a home page by default.
+//
+// German: these pages have no German version. "Deutsch" opens the English page
+// with ?lang=de, which (like every ?lang=) is stored as the visitor's explicit
+// interface choice, so the app (course, lessons, sign-in) opens in German; the
+// page says so in one German line instead of pretending to be translated.
+//
+// The choice is written to the same store the app reads (src/lib/locale.js:
+// `dm_locale` {lang, at, source:'explicit'} plus the two legacy keys), so it
+// survives the jump into the app and on to signup. An Arabic browser on an
+// English page is OFFERED the Arabic twin once (dismissible) — never switched,
+// and never by IP.
+import { LANGUAGE_SWITCH } from '../data/i18n/ar.js';
+
+interface Props {
+  current: 'en' | 'ar';
+  en: string;
+  ar: string;
+  /** Colour only: 'sheet' sits on the night (türkis) ground, 'bar' on paper. */
+  variant?: 'bar' | 'sheet';
+}
+
+const { current, en, ar, variant = 'bar' } = Astro.props;
+const night = variant === 'sheet';
+const links = [
+  { code: 'ar', name: 'العربية', href: ar, dir: 'rtl' },
+  { code: 'en', name: 'English', href: en, dir: 'ltr' },
+  { code: 'de', name: 'Deutsch', href: `${en}?lang=de`, dir: 'ltr' },
+];
+---
+
+<nav aria-label={LANGUAGE_SWITCH.label} class:list={['dm-lang-switch', variant === 'sheet' && 'mb-4']}>
+  <ul class="flex flex-wrap items-center">
+    {links.map((l, i) => (
+      <li class="flex items-center">
+        {i > 0 && <span class:list={['px-0.5', night ? 'text-nacht-muted' : 'text-graphite']} aria-hidden="true">·</span>}
+        <a
+          href={l.href}
+          lang={l.code}
+          dir={l.dir}
+          hreflang={l.code === 'de' ? 'en' : l.code}
+          data-locale={l.code}
+          aria-current={l.code === current ? 'true' : undefined}
+          class:list={[
+            'inline-flex min-h-11 min-w-11 items-center justify-center rounded-pill px-2.5 text-[0.875rem] font-semibold transition-colors',
+            l.code === current
+              ? (night ? 'text-nacht-text underline decoration-linie decoration-2 underline-offset-4' : 'text-ink underline decoration-siegel decoration-2 underline-offset-4')
+              : (night ? 'text-nacht-muted hover:text-nacht-text' : 'text-graphite hover:text-ink'),
+          ]}
+        >
+          {l.name}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+{current === 'en' && (
+  <>
+    <!-- In the language bar at the top, not a bottom sheet: the cookie banner
+         owns the bottom edge until the visitor decides, and would cover it. -->
+    <p data-ar-suggest style="display:none" lang="ar" dir="rtl" class:list={['basis-full flex-wrap items-center justify-center gap-x-3 gap-y-1 border-t py-1 text-[0.9375rem] font-semibold', night ? 'border-nacht-rule text-nacht-text' : 'border-rule text-ink']}>
+      <span>{LANGUAGE_SWITCH.suggest}</span>
+      <a href={ar} hreflang="ar" data-locale="ar" class="inline-flex min-h-11 items-center font-bold underline underline-offset-4">{LANGUAGE_SWITCH.suggestLink}</a>
+      <button type="button" data-ar-suggest-dismiss class="inline-flex min-h-11 items-center px-2 font-normal underline underline-offset-4">{LANGUAGE_SWITCH.dismiss}</button>
+    </p>
+    <p data-de-notice style="display:none" lang="de" class:list={['basis-full border-t py-2 text-center text-[0.875rem]', night ? 'border-nacht-rule text-nacht-text' : 'border-rule text-graphite']}>{LANGUAGE_SWITCH.germanNotice}</p>
+  </>
+)}
+
+<script>
+  const SUPPORTED = ['en', 'de', 'ar'];
+  // Inline display:none, not [hidden]: Tailwind's display utilities outrank the
+  // preflight [hidden] rule (same note as Layout.astro's auth-aware nav).
+  const show = (el, display = 'block') => { if (el) el.style.display = display; };
+  const remember = (lang) => {
+    try {
+      localStorage.setItem('dm_locale', JSON.stringify({ lang, at: Date.now(), source: 'explicit' }));
+      localStorage.setItem('dm_lesson_lang', lang);
+      localStorage.setItem('dm_lang', lang);
+    } catch (e) { /* storage blocked: the link still goes to the right page */ }
+  };
+  const stored = () => {
+    try { return JSON.parse(localStorage.getItem('dm_locale') || 'null'); } catch (e) { return null; }
+  };
+
+  document.querySelectorAll('a[data-locale]').forEach((a) => {
+    a.addEventListener('click', () => remember(a.getAttribute('data-locale') || 'en'));
+  });
+
+  // ?lang= is an explicit choice wherever it appears (same rule as the app).
+  const q = new URLSearchParams(location.search).get('lang');
+  if (q && SUPPORTED.includes(q)) {
+    remember(q);
+    if (q === 'de') show(document.querySelector('[data-de-notice]'));
+  }
+
+  // An Arabic-language browser with no choice made yet is offered the twin.
+  const offer = document.querySelector('[data-ar-suggest]');
+  if (offer) {
+    let dismissed = false;
+    try { dismissed = localStorage.getItem('dm_locale_suggestion_dismissed') === '1'; } catch (e) { dismissed = true; }
+    const prefersArabic = (navigator.languages || [navigator.language]).some((l) => /^ar\b/i.test(String(l || '')));
+    if (prefersArabic && !dismissed && !q && !stored()) show(offer, 'flex');
+    offer.querySelector('[data-ar-suggest-dismiss]')?.addEventListener('click', () => {
+      offer.style.display = 'none';
+      try { localStorage.setItem('dm_locale_suggestion_dismissed', '1'); } catch (e) { /* session only */ }
+    });
+  }
+</script>

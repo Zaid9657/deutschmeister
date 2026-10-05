@@ -208,6 +208,13 @@ const PRICE_FREE_SURFACES = [
   'astro-site/src/components/linie/Ticket.astro',
   'astro-site/src/components/linie/Progression.astro',
   'astro-site/src/components/linie/OfferFaq.astro',
+  // The Arabic edition (docs/arabic/README.md): its pages and its copy module.
+  'astro-site/src/pages/ar/index.astro',
+  'astro-site/src/pages/ar/courses/index.astro',
+  'astro-site/src/pages/ar/courses/a1-1.astro',
+  'astro-site/src/pages/ar/pricing.astro',
+  'astro-site/src/pages/ar/help.astro',
+  'astro-site/src/data/i18n/ar.js',
 ];
 
 test('no page source retypes a price literal', () => {

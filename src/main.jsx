@@ -5,6 +5,8 @@ import ErrorBoundary from './components/ErrorBoundary';
 import App from './App';
 import { initAnalytics, withdrawAnalytics } from './lib/analytics';
 import './utils/i18n';
+import { getLocale } from './lib/locale';
+import { ensureLocaleResources } from './locales';
 import './index.css';
 
 // No-op until the visitor accepts analytics cookies; consent.js fires
@@ -20,7 +22,11 @@ window.addEventListener('dm-consent-declined', withdrawAnalytics);
 // (scripts/prerender-spa-routes.mjs); this covers every other route.
 document.querySelector('body > h1[style*="position:absolute"]')?.remove();
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+// The interface language is resolved before anything renders (src/lib/locale.js:
+// `?lang=` → saved choice → default). A non-inline bundle (Arabic) is loaded
+// FIRST, so the first meaningful screen is already in the learner's language —
+// no English flash, and English/German visitors download nothing extra.
+const render = () => ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ErrorBoundary>
       <HelmetProvider>
@@ -29,3 +35,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     </ErrorBoundary>
   </React.StrictMode>
 );
+
+ensureLocaleResources(getLocale()).finally(render);

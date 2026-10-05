@@ -7,6 +7,10 @@ import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../../lib/lesson
 import { audioFor, playLine, speechAvailable } from '../../lib/lesson/speech.js';
 import { AudioSourceBadge } from './DialogStage.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { levelOfLektion, supportKeys } from '../../lib/lesson/support.js';
+import AudioTrouble from './AudioTrouble.jsx';
+import GermanKeys from './GermanKeys.jsx';
+import { useSupport } from './SupportText.jsx';
 
 /**
  * The listening item of stage 4: a dialogue line is played, the learner types
@@ -19,18 +23,26 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
  * The clip is the recording when the manifest has it (key `line-<i>`, the same
  * key the dialogue screen uses — a dictation line IS a dialogue line) and
  * browser speech otherwise; the badge says which.
+ *
+ * When the sound does not reach the learner (no voice in the browser, or "I
+ * can't hear anything"), AudioTrouble offers a retry and then the line as
+ * READING support; an answer typed with it open is reported with
+ * `support: 'transcript'` and never counts as listening evidence.
  */
 export default function DictationItem({ line, lektionId, index, total, onResult, onNext }) {
   const [value, setValue] = useState('');
   const [state, setState] = useState(null);
+  const [transcript, setTranscript] = useState(false);
   const ref = useRef(null);
   const id = lektionId || line.lektionId || null;
   const key = `line-${line.index}`;
   const recorded = !!audioFor(id, key);
+  const available = recorded || speechAvailable();
   const [lang] = useLessonLang();
+  const support = useSupport(levelOfLektion(id));
 
   useEffect(() => {
-    setValue(''); setState(null);
+    setValue(''); setState(null); setTranscript(false);
     if (ref.current) ref.current.focus();
   }, [line.index]);
 
@@ -48,7 +60,12 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
     const { result, expected } = checkAnswer(value, item.accepted, checkOptionsFor(item));
     const correct = result !== RESULT.WRONG;
     setState({ result, expected });
-    onResult(item, { result, correct, errorTag: correct ? null : tagError(item, value, line.de) });
+    onResult(item, {
+      result,
+      correct,
+      errorTag: correct ? null : tagError(item, value, line.de),
+      ...(transcript ? { support: 'transcript' } : {}),
+    });
   };
 
   return (
@@ -69,11 +86,7 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
           </button>
           <AudioSourceBadge recorded={recorded} />
         </div>
-        {!recorded && !speechAvailable() && (
-          <p className="mt-2 text-[0.8125rem] text-graphite">
-            {t('dictation.noSpeech', lang)} <strong lang="de">{line.de}</strong>
-          </p>
-        )}
+        <AudioTrouble available={available} transcript={line.de} shown={transcript} onShow={() => setTranscript(true)} disabled={!!state} />
 
         <label htmlFor={itemId} className="mt-5 block font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
           {t('dictation.whatDoYouHear', lang)}
@@ -85,11 +98,15 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
           value={value}
           disabled={!!state}
           autoComplete="off"
+          autoCapitalize="off"
           spellCheck={false}
+          lang="de"
+          dir="ltr"
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={(e) => { if (e.key === 'Enter') submit(); }}
           className="mt-2 w-full rounded-clay border border-rule bg-white px-4 py-3 text-[1.0625rem] text-ink outline-none focus:border-siegel disabled:bg-paper-sunk"
         />
+        <GermanKeys inputRef={ref} value={value} onChange={setValue} disabled={!!state} className="mt-2" />
 
       </Card>
 
@@ -102,7 +119,7 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
       <FeedbackSheet
         result={state && state.result}
         expected={state && state.expected}
-        explanation={state ? line.en : null}
+        explanation={state ? support(line.id ? supportKeys.dialogLine(line.id) : null, { en: line.en }) : null}
         onContinue={onNext}
       />
     </div>

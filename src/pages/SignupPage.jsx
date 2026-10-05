@@ -15,6 +15,8 @@ import Button from '../components/ui/Button';
 import Card from '../components/ui/Card.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
 import Logo from '../components/Logo';
+import { useArabicT } from '../locales/useArabic';
+import AuthErrorText from '../components/AuthErrorText.jsx';
 import {
   GRAMMAR_TOPIC_COUNT,
   LEVEL_COUNT,
@@ -82,6 +84,11 @@ const SignupPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  // The cause behind `error`, so the Arabic screen can explain it by code.
+  const [errorCause, setErrorCause] = useState(null);
+  // Arabic on this screen (null unless the interface is Arabic); the English
+  // stays inline below (tests pin it), the Arabic is src/locales/ar/app.js.
+  const ta = useArabicT();
   const [loading, setLoading] = useState(false);
 
   // Set once signUp answers without a session: the address the confirmation
@@ -123,14 +130,17 @@ const SignupPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setErrorCause(null);
 
     if (password !== confirmPassword) {
       setError('Passwords do not match');
+      setErrorCause({ code: 'passwords_mismatch' });
       return;
     }
 
     if (password.length < 6) {
       setError('Password must be at least 6 characters');
+      setErrorCause({ code: 'password_short' });
       return;
     }
 
@@ -141,6 +151,7 @@ const SignupPage = () => {
       const outcome = signupOutcome({ data, error });
       if (outcome === 'error') {
         setError(error.message);
+        setErrorCause(error);
         logFailedSignup(email, error);
       } else if (outcome === 'signed-in') {
         navigate('/verify-email', { replace: true });
@@ -157,6 +168,7 @@ const SignupPage = () => {
       }
     } catch (err) {
       setError('An unexpected error occurred');
+      setErrorCause({ code: 'unexpected' });
       logFailedSignup(email, { code: 'unexpected', message: err.message || 'Unexpected error' });
     } finally {
       setLoading(false);
@@ -185,6 +197,7 @@ const SignupPage = () => {
         setUntimedRefusals(0);
         setLimitReached(false);
         setError(resendError.message);
+        setErrorCause(resendError);
       }
       setResendState('idle');
     } else {
@@ -207,7 +220,7 @@ const SignupPage = () => {
 
   return (
     <div className="relative min-h-screen overflow-hidden flex items-center justify-center bg-paper px-4 pb-12 pt-24 font-body">
-      <SEO title="Sign Up Free" description="Create a free DeutschMeister account and start mastering German grammar with clear English explanations." path="/signup" />
+      <SEO title={ta ? ta('account.signup.seoTitle') : 'Sign Up Free'} description="Create a free DeutschMeister account and start mastering German grammar with clear English explanations." path="/signup" />
       <Aurora />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -217,12 +230,16 @@ const SignupPage = () => {
         {/* Header */}
         <div className="text-center mb-8">
           {purchase && (
-            <div className="mb-6 rounded-clay border border-ink bg-linie-wash px-4 py-3 text-left shadow-raise-linie" role="status">
-              <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-ink">Step 1 of 2 · your account</p>
-              <p className="mt-1 text-[0.9375rem] leading-relaxed text-ink">
-                Then your checkout for <strong>{purchase.label}</strong> — {eur(purchase.price)}
-                {purchase.once ? ', one payment' : ` a ${purchase.interval}`} — opens on its own when you are back on this browser after confirming your email.
-              </p>
+            <div className="mb-6 rounded-clay border border-ink bg-linie-wash px-4 py-3 text-start shadow-raise-linie" role="status">
+              <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-ink">{ta ? ta('account.signup.purchaseStep') : 'Step 1 of 2 · your account'}</p>
+              {ta ? (
+                <p className="mt-1 text-[0.9375rem] leading-relaxed text-ink">{ta('account.signup.purchaseBody', { label: purchase.label, price: eur(purchase.price) })}</p>
+              ) : (
+                <p className="mt-1 text-[0.9375rem] leading-relaxed text-ink">
+                  Then your checkout for <strong>{purchase.label}</strong> — {eur(purchase.price)}
+                  {purchase.once ? ', one payment' : ` a ${purchase.interval}`} — opens on its own when you are back on this browser after confirming your email.
+                </p>
+              )}
             </div>
           )}
           {/* The Meister-Siegel, not a "D" tile: the D was the retired identity, and
@@ -235,19 +252,24 @@ const SignupPage = () => {
             className="hero-line font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] text-ink mb-2"
             style={{ '--d': '120ms' }}
           >
-            Start your {TRIAL_DAYS}-day Pro trial
+            {ta ? ta('account.signup.title') : <>Start your {TRIAL_DAYS}-day Pro trial</>}
           </h1>
           <p className="hero-line text-[0.9375rem] leading-relaxed text-graphite sm:text-base mb-4" style={{ '--d': '220ms' }}>
-            Creating a free account starts your trial. No payment details are requested.
+            {ta ? ta('account.signup.lead', { days: TRIAL_DAYS }) : 'Creating a free account starts your trial. No payment details are requested.'}
           </p>
           {/* Free tier value list */}
-          <ul className="hero-line text-left inline-block space-y-1 mb-2" style={{ '--d': '320ms' }}>
-            {[
+          <ul className="hero-line text-start inline-block space-y-1 mb-2" style={{ '--d': '320ms' }}>
+            {(ta ? [
+              ta('account.signup.benefitSave'),
+              ta('account.signup.benefitReview'),
+              ta('account.signup.benefitTrial', { levels: LEVEL_COUNT }),
+              ta('account.signup.benefitAi', { writing: TRIAL_WRITING_EVALUATIONS, speaking: TRIAL_SPEAKING_SESSIONS }),
+            ] : [
               `All ${LEVEL_COUNT} levels and ${GRAMMAR_TOPIC_COUNT} grammar topics during the trial`,
               `${TRIAL_SPEAKING_SESSIONS} AI speaking sessions during the trial`,
               `${TRIAL_DAILY_LIMIT} Sentence X-Ray analyses per day during the trial`,
               `${TRIAL_WRITING_EVALUATIONS} AI writing evaluations during the trial`,
-            ].map((item) => (
+            ]).map((item) => (
               <li key={item} className="flex items-center gap-2 text-sm text-graphite">
                 <Check className="w-4 h-4 text-siegel flex-shrink-0" aria-hidden="true" />
                 {item}
@@ -255,8 +277,14 @@ const SignupPage = () => {
             ))}
           </ul>
           <p className="hero-line mt-3 text-sm text-graphite" style={{ '--d': '380ms' }}>
-            Want to look around first?{' '}
-            <a href="/grammar/a1.1/" className={TEXT_LINK}>Explore A1.1 without an account.</a>
+            {ta ? (
+              <>{ta('account.signup.lookAround')}{' '}<a href="/course/a1.1" className={TEXT_LINK}>{ta('account.signup.startWithoutAccount')}</a></>
+            ) : (
+              <>
+                Want to look around first?{' '}
+                <a href="/grammar/a1.1/" className={TEXT_LINK}>Explore A1.1 without an account.</a>
+              </>
+            )}
           </p>
         </div>
 
@@ -264,8 +292,12 @@ const SignupPage = () => {
         <Card raised className="p-8">
           {placedLevel && (
             <p className="mb-6 rounded-clay border border-rule bg-siegel-wash px-4 py-3 text-sm leading-relaxed text-ink">
-              Your level test result, <span className="font-bold">{placedLevel}</span>, is saved to your
-              account the first time you sign in on this browser.
+              {ta ? ta('account.signup.placed', { level: placedLevel }) : (
+                <>
+                  Your level test result, <span className="font-bold">{placedLevel}</span>, is saved to your
+                  account the first time you sign in on this browser.
+                </>
+              )}
             </p>
           )}
           {error && (
@@ -275,7 +307,7 @@ const SignupPage = () => {
               className="mb-6 flex items-center gap-3 rounded-clay bg-accent-himbeer-wash px-4 py-3 text-accent-himbeer-ink"
             >
               <AlertCircle className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
-              <p className="text-sm font-semibold">{error}</p>
+              <AuthErrorText ta={ta} message={error} cause={errorCause} />
             </motion.div>
           )}
 
@@ -289,16 +321,20 @@ const SignupPage = () => {
                 tabIndex={-1}
                 className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink mb-3"
               >
-                Check your inbox
+                {ta ? ta('account.signup.inboxTitle') : 'Check your inbox'}
               </h2>
-              <p className="text-graphite mb-1">We sent a confirmation link to:</p>
-              <p className="font-data text-[0.8125rem] font-semibold text-siegel-deep mb-5 break-all">{sentTo}</p>
-              <p className="text-left text-sm leading-relaxed text-graphite mb-6">
-                Open the email with the subject{' '}
-                <span className="font-semibold text-ink">&ldquo;Confirm your DeutschMeister account&rdquo;</span> and
-                click its link. It activates your account and signs you in. If a welcome email arrives too, the link
-                you need is still in the confirmation email. Check your spam folder as well.
-              </p>
+              <p className="text-graphite mb-1">{ta ? ta('account.signup.inboxSentTo') : 'We sent a confirmation link to:'}</p>
+              <p className="font-data text-[0.8125rem] font-semibold text-siegel-deep mb-5 break-all" dir="ltr">{sentTo}</p>
+              {ta ? (
+                <p className="text-start text-sm leading-relaxed text-graphite mb-6">{ta('account.signup.inboxBody')}</p>
+              ) : (
+                <p className="text-left text-sm leading-relaxed text-graphite mb-6">
+                  Open the email with the subject{' '}
+                  <span className="font-semibold text-ink">&ldquo;Confirm your DeutschMeister account&rdquo;</span> and
+                  click its link. It activates your account and signs you in. If a welcome email arrives too, the link
+                  you need is still in the confirmation email. Check your spam folder as well.
+                </p>
+              )}
 
               {resendState === 'sent' && (
                 <p
@@ -306,7 +342,7 @@ const SignupPage = () => {
                   className="mb-4 flex items-center justify-center gap-2 rounded-clay bg-accent-limette-wash px-4 py-3 text-sm font-semibold text-accent-limette-ink"
                 >
                   <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
-                  Sent again. Use the link in the newest email.
+                  {ta ? ta('account.signup.sentAgain') : 'Sent again. Use the link in the newest email.'}
                 </p>
               )}
 
@@ -315,8 +351,12 @@ const SignupPage = () => {
                   role="status"
                   className="mb-4 rounded-clay bg-accent-aprikose-wash px-4 py-3 text-left text-sm font-semibold text-accent-aprikose-ink"
                 >
-                  The limit for confirmation emails is reached for now, so we cannot send another one. Please try again
-                  later, and look in your spam folder for the email we already sent.
+                  {ta ? ta('account.signup.limitReached') : (
+                    <>
+                      The limit for confirmation emails is reached for now, so we cannot send another one. Please try again
+                      later, and look in your spam folder for the email we already sent.
+                    </>
+                  )}
                 </p>
               )}
 
@@ -332,19 +372,21 @@ const SignupPage = () => {
                 ) : (
                   <RefreshCw className="w-4 h-4" />
                 )}
-                {cooldown > 0 ? `Send it again in ${cooldown} s` : 'Send it again'}
+                {ta
+                  ? (cooldown > 0 ? ta('account.signup.sendAgainIn', { s: cooldown }) : ta('account.signup.sendAgain'))
+                  : (cooldown > 0 ? `Send it again in ${cooldown} s` : 'Send it again')}
               </Button>
 
               <p className="mt-6 text-sm text-graphite">
-                Wrong address?{' '}
+                {ta ? ta('account.signup.wrongAddress') : 'Wrong address?'}{' '}
                 <button type="button" onClick={changeAddress} className={TEXT_LINK}>
-                  Use a different email
+                  {ta ? ta('account.signup.useDifferent') : 'Use a different email'}
                 </button>
               </p>
               <p className="mt-2 text-sm text-graphite">
-                Signed up with this address before?{' '}
+                {ta ? ta('account.signup.signedUpBefore') : 'Signed up with this address before?'}{' '}
                 <Link to="/login" className={TEXT_LINK}>
-                  Log in
+                  {ta ? ta('auth.login') : 'Log in'}
                 </Link>
               </p>
             </div>
@@ -360,6 +402,7 @@ const SignupPage = () => {
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-graphite" aria-hidden="true" />
                 <input
                   id="signup-field-1"
+                  dir="ltr"
                   name="email"
                   type="email"
                   autoComplete="email"
@@ -381,6 +424,7 @@ const SignupPage = () => {
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-graphite" aria-hidden="true" />
                 <input
                   id="signup-field-2"
+                  dir="ltr"
                   name="password"
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="new-password"
@@ -390,12 +434,14 @@ const SignupPage = () => {
                   minLength={6}
                   className={`${FIELD} pr-12`}
                   placeholder="At least 6 characters"
+                  {...(ta ? { placeholder: ta('account.minPasswordPlaceholder') } : {})}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-1 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-md text-graphite transition-colors hover:text-siegel-deep"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  {...(ta ? { 'aria-label': ta(showPassword ? 'account.hidePassword' : 'account.showPassword') } : {})}
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" aria-hidden="true" /> : <Eye className="w-5 h-5" aria-hidden="true" />}
                 </button>
@@ -411,6 +457,7 @@ const SignupPage = () => {
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-graphite" aria-hidden="true" />
                 <input
                   id="signup-field-3"
+                  dir="ltr"
                   name="confirmPassword"
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="new-password"
@@ -419,6 +466,7 @@ const SignupPage = () => {
                   required
                   className={FIELD}
                   placeholder="Confirm your password"
+                  {...(ta ? { placeholder: ta('account.confirmPlaceholder') } : {})}
                 />
               </div>
             </div>
@@ -428,7 +476,7 @@ const SignupPage = () => {
               {loading ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  Creating account...
+                  {ta ? ta('account.signup.creating') : 'Creating account...'}
                 </>
               ) : (
                 t('auth.signup')
@@ -439,7 +487,7 @@ const SignupPage = () => {
           {/* Trust line */}
           {/* EN: No credit card required · Cancel anytime */}
           <p className="mt-3 text-center font-data text-[0.6875rem] tracking-[0.02em] text-graphite">
-            Free account · no credit card · no automatic charge when the trial ends
+            {ta ? ta('account.signup.trust') : 'Free account · no credit card · no automatic charge when the trial ends'}
           </p>
 
           {/* Login link */}

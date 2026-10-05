@@ -134,9 +134,9 @@ export const viz = {
  * brand face does not reflow the page.
  */
 export const font = {
-  display: "'Fraunces', 'Fraunces Fallback', 'Fraunces Fallback Times', 'Iowan Old Style', Georgia, serif",
-  body: "'Nunito Sans', 'Nunito Sans Fallback', system-ui, -apple-system, 'Segoe UI', sans-serif",
-  data: "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace",
+  display: "'Fraunces', 'Fraunces Fallback', 'Fraunces Fallback Times', 'IBM Plex Sans Arabic', 'Iowan Old Style', Georgia, serif",
+  body: "'Nunito Sans', 'Nunito Sans Fallback', 'IBM Plex Sans Arabic', system-ui, -apple-system, 'Segoe UI', sans-serif",
+  data: "'IBM Plex Sans Arabic', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace",
 };
 
 // ---------------------------------------------------------------------------
@@ -171,12 +171,27 @@ export const font = {
 // 1.01–1.02, 600–700 vs Arial Bold 0.99–1.02. The overrides are the brand
 // face's own vertical metrics (Fraunces ascent 0.978 / descent 0.255, Nunito
 // Sans 1.011 / 0.353, no line gap) divided by that size-adjust.
+//
+// ARABIC (2026-10-05, docs/arabic/README.md). IBM Plex Sans Arabic v15 (SIL OFL
+// 1.1, docs/licenses/IBM-Plex-Sans-Arabic-OFL.txt), the `arabic` subset only,
+// 400 and 600, as fontsource 5.3.0 ships it from google/fonts. It sits in every
+// stack right after the metric fallbacks and carries an Arabic-only
+// unicode-range, so a page without Arabic letters never downloads a byte of it.
+// For it to be reached, the metric fallbacks must not claim Arabic first (local
+// Arial HAS Arabic glyphs on Windows and macOS): they carry NOT_ARABIC, which is
+// every code point except the Arabic blocks — Latin text falls back exactly as
+// before. The data stack (mono) puts it FIRST, since a mono face with Arabic is
+// not on most devices and the range keeps it off every Latin character.
 // ---------------------------------------------------------------------------
 
 const UNICODE_LATIN =
   'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD';
 const UNICODE_LATIN_EXT =
   'U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF';
+
+const UNICODE_ARABIC =
+  'U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC';
+const NOT_ARABIC = 'U+0000-05FF, U+0700-074F, U+0780-086F, U+0900-FB4F, U+FE00-FE6F, U+FEFF-10FFFF';
 
 const webFace = (family, file, weight, unicodeRange, fontStyle = 'normal') => ({
   '@font-face': {
@@ -200,6 +215,7 @@ const fallbackFace = (family, weight, locals, sizeAdjust, ascent, descent) => ({
     ascentOverride: ascent,
     descentOverride: descent,
     lineGapOverride: '0%',
+    unicodeRange: NOT_ARABIC,
   },
 });
 
@@ -234,6 +250,10 @@ export const fontFaces = [
     ['Arial Bold', 'Arial-BoldMT', 'Liberation Sans Bold', 'LiberationSans-Bold', 'Arimo Bold', 'Arimo-Bold', 'Roboto Bold', 'Roboto-Bold'],
     '100%', '101.1%', '35.3%',
   ),
+  // 400 serves 100–500 and 600 serves 600–900, so a `font-bold` Arabic line
+  // takes the real semibold instead of a synthesised one.
+  webFace('IBM Plex Sans Arabic', 'ibm-plex-sans-arabic-v15-arabic-400', '100 500', UNICODE_ARABIC),
+  webFace('IBM Plex Sans Arabic', 'ibm-plex-sans-arabic-v15-arabic-600', '600 900', UNICODE_ARABIC),
 ];
 
 export const fontFacesItalic = [
@@ -243,6 +263,9 @@ export const fontFacesItalic = [
 
 /** Above-the-fold on every page: the display face and the upright body face, latin subset. */
 export const fontPreloads = ['/fonts/fraunces-v38-latin.woff2', '/fonts/nunito-sans-v19-latin.woff2'];
+
+/** Above the fold on an Arabic page only (the /ar/ pages, and the SPA when its interface is Arabic). */
+export const arabicFontPreloads = ['/fonts/ibm-plex-sans-arabic-v15-arabic-400.woff2'];
 
 /**
  * Named type roles, each with its mobile step-down. Roles, not a raw scale:
@@ -361,9 +384,9 @@ export const tailwindEasing = {
 };
 
 export const tailwindFontFamily = {
-  display: ['Fraunces', 'Fraunces Fallback', 'Fraunces Fallback Times', 'Iowan Old Style', 'Georgia', 'serif'],
-  body: ['Nunito Sans', 'Nunito Sans Fallback', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
-  data: ['ui-monospace', 'SFMono-Regular', 'SF Mono', 'Menlo', 'Consolas', 'monospace'],
+  display: ['Fraunces', 'Fraunces Fallback', 'Fraunces Fallback Times', 'IBM Plex Sans Arabic', 'Iowan Old Style', 'Georgia', 'serif'],
+  body: ['Nunito Sans', 'Nunito Sans Fallback', 'IBM Plex Sans Arabic', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+  data: ['IBM Plex Sans Arabic', 'ui-monospace', 'SFMono-Regular', 'SF Mono', 'Menlo', 'Consolas', 'monospace'],
 };
 
 // ===========================================================================
@@ -473,6 +496,7 @@ const archivoFallback = (weight, stretch, locals, sizeAdjust, ascent, descent) =
     ascentOverride: ascent,
     descentOverride: descent,
     lineGapOverride: '0%',
+    unicodeRange: NOT_ARABIC,
   },
 });
 const ARIAL = ['Arial', 'ArialMT', 'Liberation Sans', 'LiberationSans', 'Arimo', 'Arimo-Regular', 'Roboto', 'Roboto-Regular'];
@@ -493,7 +517,7 @@ export const signFontPreloads = ['/fonts/archivo-v25-latin.woff2'];
 
 /** Spread into both tailwind configs: `font-sign`. */
 export const tailwindSignFont = {
-  sign: ['Archivo', 'Archivo Fallback', 'Arial', 'Helvetica Neue', 'sans-serif'],
+  sign: ['Archivo', 'Archivo Fallback', 'IBM Plex Sans Arabic', 'Arial', 'Helvetica Neue', 'sans-serif'],
 };
 
 /** Spread into both tailwind configs: `bg-linie`, `text-linie-ink`, `bg-nacht-raised`, `text-nacht-muted` … */

@@ -6,6 +6,7 @@ import { useSubscription } from '../contexts/SubscriptionContext';
 import { safeGet, safeSet } from '../utils/safeStorage';
 import Button from './ui/Button.jsx';
 import { FREE_LEVEL_LABEL } from '../data/marketing.js';
+import { useArabicT } from '../locales/useArabic';
 
 const DISMISS_KEY = 'dm_trial_banner_dismissed';
 
@@ -16,6 +17,8 @@ const TrialBanner = () => {
   const [dismissed, setDismissed] = useState(
     () => safeGet(DISMISS_KEY, { session: true }) === '1'
   );
+  // Arabic copy (null unless the route renders in Arabic, src/locales/useArabic.js).
+  const ta = useArabicT();
 
   if (loading || !user || dismissed) return null;
   if (location.pathname === '/pricing') return null;
@@ -49,7 +52,7 @@ const TrialBanner = () => {
   if (under24h) {
     urgency = 'critical';
     icon = <Clock className="w-4 h-4 flex-shrink-0" aria-hidden="true" />;
-    message = 'Your trial ends today!';
+    message = ta ? ta('account.trial.endsToday') : 'Your trial ends today!';
     bandClass = 'bg-accent-aprikose-wash text-accent-aprikose-ink border-b-2 border-accent-aprikose';
     dismissClass = 'text-accent-aprikose-ink hover:bg-accent-aprikose/20';
   } else if (daysRemaining <= 3) {
@@ -59,13 +62,15 @@ const TrialBanner = () => {
     // level stays open (src/config/freeTier.js), as SpeakingLimitOffer says.
     // Until 2026-10-04 this line read "Don't lose access to all features".
     // tests/trial-end-claims.test.mjs.
-    message = `Only ${daysRemaining} ${daysRemaining === 1 ? 'day' : 'days'} left in your trial. After that, ${FREE_LEVEL_LABEL} stays free.`;
+    message = ta
+      ? ta('account.trial.lastDays', { n: daysRemaining, free: FREE_LEVEL_LABEL })
+      : `Only ${daysRemaining} ${daysRemaining === 1 ? 'day' : 'days'} left in your trial. After that, ${FREE_LEVEL_LABEL} stays free.`;
     bandClass = 'bg-accent-aprikose-wash text-accent-aprikose-ink border-b border-accent-aprikose/40';
     dismissClass = 'text-accent-aprikose-ink hover:bg-accent-aprikose/20';
   } else {
     urgency = 'normal';
     icon = <Zap className="w-4 h-4 flex-shrink-0 text-siegel" aria-hidden="true" />;
-    message = `You have ${daysRemaining} days of full access remaining.`;
+    message = ta ? ta('account.trial.daysLeft', { n: daysRemaining }) : `You have ${daysRemaining} days of full access remaining.`;
     bandClass = 'bg-siegel-wash text-siegel-deep border-b border-rule';
     dismissClass = 'text-siegel-deep hover:bg-siegel/10';
   }
@@ -81,11 +86,11 @@ const TrialBanner = () => {
         <div className="flex items-center gap-3 flex-shrink-0">
           <Button href="/pricing/" size="sm" className="whitespace-nowrap">
             <Zap className="w-3 h-3" aria-hidden="true" />
-            Upgrade to Pro
+            {ta ? ta('account.trial.upgrade') : 'Upgrade to Pro'}
           </Button>
           <button
             onClick={handleDismiss}
-            aria-label="Dismiss"
+            aria-label={ta ? ta('account.trial.dismiss') : 'Dismiss'}
             className={`p-1 rounded-md transition-colors ${dismissClass}`}
           >
             <X className="w-4 h-4" />

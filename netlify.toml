@@ -160,6 +160,14 @@
   status = 301
   force = true
 
+# Arabic edition (docs/arabic/README.md): the Arabic A1.1 page uses the same
+# slug as its English twin (/courses/a1-1/); the dotted form a learner may type
+# from the app's /course/a1.1 lands there instead of a 404.
+[[redirects]]
+  from = "/ar/courses/a1.1"
+  to = "/ar/courses/a1-1/"
+  status = 301
+
 # Force lowercase grammar level URLs
 [[redirects]]
   from = "/grammar/A1.1"

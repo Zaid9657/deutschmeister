@@ -1,0 +1,136 @@
+---
+// /ar/courses/a1-1/ — the Arabic page of the free A1.1 course (twin of
+// /courses/a1-1/; the dotted /ar/courses/a1.1/ is 301'd here in netlify.toml).
+//
+// The course copy is NOT retyped here: the paragraph, the outcomes, the four
+// chapters and the lesson steps come from the A1.1 Arabic sidecar
+// (data/curricula/a11.ar.js — the same entries the app shows, keyed by stable
+// ids and hash-checked against their English source), the Lektionen and
+// checkpoints from the curriculum itself. A Lektion outside the translated
+// scope says so instead of showing English.
+import Layout from '../../../layouts/Layout.astro';
+import '../../../styles/global.css';
+import CoverageTable from '../../../components/ar/CoverageTable.astro';
+import { ORGANIZATION } from '../../../lib/siteMeta.js';
+import { CURRICULUM_A11 } from '../../../data/curricula/a11.js';
+import SIDECAR from '../../../data/curricula/a11.ar.js';
+import { GUIDED_PLANS } from '../../../data/courseContents.js';
+import { AR_LINES, arDays, arLessons, arMinutes, arRich } from '../../../data/i18n/ar.js';
+
+const ar = (key) => SIDECAR.entries[key]?.ar || '';
+const fill = (text, vars) => String(text).replace(/\{(\w+)\}/g, (m, k) => (vars[k] === undefined ? m : String(vars[k])));
+
+const c = CURRICULUM_A11;
+const checkpoints = c.checkpoints; // Lektion numbers a checkpoint follows: [3, 6, 9, 12]
+const perChapter = checkpoints[0];
+// A chapter is the run of Lektionen up to and including a checkpoint.
+const chapters = checkpoints.map((after, i) => ({
+  nr: i + 1,
+  title: ar(`chapter.${i + 1}.title`),
+  story: ar(`chapter.${i + 1}.story`),
+  lektionen: c.lektionen.filter((l) => l.nr > (checkpoints[i - 1] ?? 0) && l.nr <= after),
+}));
+const about = fill(ar('course.about'), { code: c.code, lektionen: c.lektionen.length, perChapter, exam: c.examName });
+const outcomes = Object.keys(SIDECAR.entries).filter((k) => /^course\.outcome\.\d+$/.test(k)).map((k) => ar(k));
+const STEP_KEYS = ['pretest', 'dialog', 'wortfeld', 'notice', 'practice', 'dictation', 'speaking', 'writing', 'recap'];
+const steps = STEP_KEYS.map((key) => ({ label: ar(`course.howStep.${key}.label`), body: ar(`course.howStep.${key}.description`) })).filter((s) => s.label && s.body);
+const situation = (l) => ar(`intro.${l.id}.situation`);
+const minutes = c.lektionen[0]?.minutes;
+const plan = GUIDED_PLANS[c.level];
+
+const title = `الألمانية ${c.code} مجانًا: ${arLessons(c.lektionen.length)} وشرح عربي | DeutschMeister`;
+const description = `المستوى الأول من الألمانية مجانًا ودون حساب: ${arLessons(c.lektionen.length)} قصيرة حول مواقف يومية، واختبار مرحلي بعد كل ${arLessons(perChapter)}، واختبار نهائي بصيغة ${c.examName}. الشرح العربي متوفر الآن في الدروس 1–3.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Course',
+  name: `الألمانية ${c.code}`,
+  description,
+  url: 'https://deutsch-meister.de/ar/courses/a1-1/',
+  inLanguage: 'ar',
+  educationalLevel: c.code,
+  provider: ORGANIZATION,
+  isAccessibleForFree: true,
+  hasCourseInstance: { '@type': 'CourseInstance', courseMode: 'online', courseWorkload: `PT${plan ? plan.days : 28}D` },
+};
+---
+
+<Layout title={title} description={description} canonical="https://deutsch-meister.de/ar/courses/a1-1/" jsonLd={jsonLd} lang="ar" tone="nacht" alternates={{ en: '/courses/a1-1/', ar: '/ar/courses/a1-1/' }}>
+  <div class="overflow-x-clip bg-paper text-ink">
+    <section class="bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="hero-h">
+      <div class="mx-auto max-w-5xl px-4 pb-12 pt-10 sm:px-6 sm:pt-14">
+        <nav class="text-[0.875rem] font-bold text-siegel-deep" aria-label="مسار التنقّل">
+          <a href="/ar/courses/" class="underline decoration-nacht-rule underline-offset-4 hover:decoration-linie">الدورات</a> · <bdi dir="ltr">{c.code}</bdi>
+        </nav>
+        <h1 id="hero-h" class="mt-4 text-[clamp(2rem,7vw,3.25rem)] font-bold leading-tight">الألمانية <bdi dir="ltr">{c.code}</bdi> — المستوى الأول، مجانًا</h1>
+        <p class="mt-5 max-w-2xl text-[1.0625rem] leading-relaxed text-nacht-muted" set:html={arRich(about)} />
+        <div class="mt-7 flex flex-wrap gap-3">
+          <a href="/course/a1.1?lang=ar" class="dm-key dm-key-linie" data-anon-only data-track="course_selected" data-track-level="a1.1" data-track-surface="ar_course_page">ابدأ A1.1 مجانًا</a>
+          <a href="/dashboard" class="dm-key dm-key-linie" data-auth-only style="display:none">تابع التعلّم</a>
+          <a href="/ar/help/" class="dm-key dm-key-ghost-nacht">المساعدة بالعربية</a>
+        </div>
+        <p class="mt-5 text-[0.9375rem] text-nacht-muted">دون حساب ودون بطاقة دفع. كل درس نحو {arMinutes(minutes)}{plan ? `، والخطة المقترحة ${arDays(plan.days)}` : ''}.</p>
+      </div>
+    </section>
+
+    <section aria-labelledby="outcomes-h" class="mx-auto max-w-5xl px-4 py-14 sm:px-6">
+      <h2 id="outcomes-h" class="text-[1.625rem] font-bold leading-snug">في نهاية <bdi dir="ltr">{c.code}</bdi> تستطيع أن…</h2>
+      <ul class="mt-5 grid gap-2 sm:grid-cols-2">
+        {outcomes.map((line) => (
+          <li class="rounded-clay border border-rule bg-white px-4 py-3 leading-relaxed" set:html={arRich(line)} />
+        ))}
+      </ul>
+    </section>
+
+    <section aria-labelledby="chapters-h" class="mx-auto max-w-5xl px-4 pb-14 sm:px-6">
+      <h2 id="chapters-h" class="text-[1.625rem] font-bold leading-snug">الفصول الأربعة والدروس</h2>
+      <p class="mt-3 max-w-2xl leading-relaxed text-graphite">عنوان كل درس بالألمانية كما يظهر في الدورة. بعد كل فصل اختبار مرحلي قصير، وفي النهاية اختبار بصيغة <bdi lang="de" dir="ltr">{c.examName}</bdi>.</p>
+      <div class="mt-6 grid gap-5">
+        {chapters.map((ch) => (
+          <article class="rounded-clay border border-rule bg-white p-5" aria-labelledby={`ch-${ch.nr}`}>
+            <h3 id={`ch-${ch.nr}`} class="text-[1.25rem] font-bold text-ink">الفصل {ch.nr}: {ch.title}</h3>
+            <p class="mt-1 text-[0.9375rem] leading-relaxed text-graphite" set:html={arRich(ch.story)} />
+            <ol class="mt-4 grid gap-2">
+              {ch.lektionen.map((l) => (
+                <li class="flex flex-wrap items-baseline gap-x-3 gap-y-1 border-t border-rule pt-2">
+                  <span class="font-bold text-ink">الدرس {l.nr}</span>
+                  <span lang="de" dir="ltr" class="text-ink">{l.title}</span>
+                  {situation(l)
+                    ? <span class="text-[0.9375rem] text-graphite">— {situation(l)} <span class="whitespace-nowrap text-[0.8125rem] font-semibold text-siegel-deep">· شرح عربي</span></span>
+                    : <span class="text-[0.8125rem] font-semibold text-graphite">· الشرح بالإنجليزية حاليًا</span>}
+                </li>
+              ))}
+              <li class="border-t border-rule pt-2 text-[0.9375rem] text-graphite">اختبار مرحلي {ch.nr}{ch.nr === checkpoints.length ? ' · ثم الاختبار النهائي' : ''}</li>
+            </ol>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section aria-labelledby="how-h" class="mx-auto max-w-5xl px-4 pb-4 sm:px-6">
+      <h2 id="how-h" class="text-[1.625rem] font-bold leading-snug">خطوات كل درس</h2>
+      <ol class="mt-5 grid gap-3 sm:grid-cols-3">
+        {steps.map((s, i) => (
+          <li class="rounded-clay border border-rule bg-white p-4">
+            <p class="font-bold"><span class="text-siegel-deep">{i + 1}.</span> {s.label}</p>
+            <p class="mt-1 text-[0.9375rem] leading-relaxed text-graphite" set:html={arRich(s.body)} />
+          </li>
+        ))}
+      </ol>
+      <p class="mt-4 text-[0.9375rem] leading-relaxed text-graphite">{AR_LINES.germanContent}</p>
+    </section>
+
+    <CoverageTable />
+
+    <section aria-labelledby="save-h" class="mx-auto max-w-5xl px-4 pb-14 sm:px-6">
+      <h2 id="save-h" class="text-[1.625rem] font-bold leading-snug">أين يُحفظ تقدّمك؟</h2>
+      <p class="mt-3 max-w-2xl leading-relaxed text-graphite">
+        دون حساب تُحفظ الدروس التي أكملتها على هذا الجهاز وفي هذا المتصفح فقط. إذا أنشأت حسابًا مجانيًا أو سجّلت الدخول ثم فتحت الدورة، تُنقل هذه الدروس إلى حسابك وتتابع من أي جهاز. التفاصيل في <a href="/ar/help/#progress" class="dm-link">صفحة المساعدة</a>.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href="/course/a1.1?lang=ar" class="dm-key dm-key-siegel" data-anon-only data-track="course_selected" data-track-level="a1.1" data-track-surface="ar_course_page_end">ابدأ A1.1 مجانًا</a>
+      </div>
+      <p class="mt-6 text-[0.8125rem] leading-relaxed text-graphite">{AR_LINES.draftNote}</p>
+    </section>
+  </div>
+</Layout>

@@ -15,14 +15,22 @@ import { isUsableItem } from '../../data/lessonPools/quality.js';
 export const REQUEUE_CAP = 4;
 
 /**
- * requeueFor(missedItems, pool, usedIds, { avoidIds }) → up to 4 items to replay.
+ * requeueFor(missedItems, pool, usedIds, { avoidIds, maxLektion }) → up to 4 items to replay.
  * `usedIds` are the items already seen this lesson (the controlled seven and
  * anything requeued before), so the learner never meets the same id twice.
  * `avoidIds` are items planned for OTHER Lektionen: avoided when the topic has
  * anything else left, used when it does not — a shorter requeue would be worse.
+ *
+ * `maxLektion` (the Lektion being played) keeps the replacement inside what has
+ * been taught: an item stamped `minLektion` 5 uses words Lektion 5 introduces,
+ * and the controlled seven never draw it before then (RULE 11b) — but the
+ * requeue used to, by the back door, for 38 of the 94 same-topic items Lektionen
+ * 1–3 could reach. When nothing taught is left in the topic the missed item
+ * itself comes back, exactly as when the topic is exhausted.
  */
-export function requeueFor(missedItems = [], pool = [], usedIds = [], { avoidIds } = {}) {
-  const items = poolItems(pool).filter(isUsableItem);
+export function requeueFor(missedItems = [], pool = [], usedIds = [], { avoidIds, maxLektion = null } = {}) {
+  const taught = (it) => !Number.isFinite(maxLektion) || !Number.isFinite(Number(it.minLektion)) || Number(it.minLektion) <= maxLektion;
+  const items = poolItems(pool).filter(isUsableItem).filter(taught);
   const used = new Set(usedIds);
   const avoid = avoidIds instanceof Set ? avoidIds : new Set(avoidIds || []);
   const out = [];

@@ -41,8 +41,11 @@ const asIndex = (n) => {
 const asList = (v) => (Array.isArray(v) ? v : []);
 
 /** The serialisable snapshot of a run. `now` is a seam for tests. */
-export function packRun({ stageKey, stageIndex = 0, itemIndex = 0, attempt = 1, attempts = [], misses = [], requeued = [], combo = 0, dueCards = [] } = {}, now = Date.now()) {
+export function packRun({ stageKey, stageIndex = 0, itemIndex = 0, attempt = 1, attempts = [], misses = [], requeued = [], combo = 0, dueCards = [], runId = null } = {}, now = Date.now()) {
   return {
+    // Optional and additive (v stays 1): a snapshot written before run ids existed
+    // simply resumes with a fresh one.
+    ...(typeof runId === 'string' && runId ? { runId } : {}),
     v: RUN_VERSION,
     savedAt: now,
     stageKey: String(stageKey || ''),
@@ -84,3 +87,22 @@ export function resumeStageIndex(stages, run) {
 export const saveRun = (level, lektionId, run) => safeSetJSON(runKey(level, lektionId), run, { session: true });
 export const readRun = (level, lektionId, now = Date.now()) => unpackRun(safeGetJSON(runKey(level, lektionId), null, { session: true }), now);
 export const clearRun = (level, lektionId) => safeRemove(runKey(level, lektionId), { session: true });
+
+/** A fresh id for one run of a Lektion (analytics dedupe; never sent anywhere else). */
+export const newRunId = () => `r${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
+
+const COMPLETED_RUNS_KEY = 'dm_lesson_runs_completed';
+
+/**
+ * True the FIRST time a run's completion is claimed in this tab, false after —
+ * so `lesson_completed` is reported once per run, however often the recap
+ * mounts. Kept in sessionStorage with the run itself; a blocked storage
+ * degrades to "report it" (the old behaviour), never to a crash.
+ */
+export function claimRunCompletion(runId) {
+  if (!runId) return true;
+  const list = asList(safeGetJSON(COMPLETED_RUNS_KEY, [], { session: true }));
+  if (list.includes(runId)) return false;
+  safeSetJSON(COMPLETED_RUNS_KEY, [...list.slice(-49), runId], { session: true });
+  return true;
+}

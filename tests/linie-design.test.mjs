@@ -107,7 +107,8 @@ test('only the pages that preload the sign face use it; library pages never fetc
   // every sign role (and the key) in the body face.
   const layout = readFileSync(join(ROOT, 'astro-site/src/layouts/Layout.astro'), 'utf8');
   assert.match(layout, /const signOn = signFontPreloads\.every\(\(href\) => preloads\.includes\(href\)\);/);
-  assert.match(layout, /<html lang=\{lang\} data-sign=\{signOn \? undefined : 'off'\}>/);
+  // (`dir` is the Arabic edition's: rtl on an Arabic page, absent elsewhere.)
+  assert.match(layout, /<html lang=\{lang\} dir=\{isArabic \? 'rtl' : undefined\} data-sign=\{signOn \? undefined : 'off'\}>/);
   const css = readFileSync(join(ROOT, 'astro-site/src/styles/linie.css'), 'utf8');
   assert.match(css, /html\[data-sign='off'\] :is\(\.sign-display, \.sign-head, \.sign-label, \.sign-code, \.dm-key\) \{\s*font-family: theme\('fontFamily\.body'\);/);
   // Every page whose own markup uses a sign role preloads the face.

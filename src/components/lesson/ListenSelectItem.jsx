@@ -7,6 +7,7 @@ import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../../lib/lesson
 import { audioFor, playLine, speechAvailable } from '../../lib/lesson/speech.js';
 import { AudioSourceBadge } from './DialogStage.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import AudioTrouble from './AudioTrouble.jsx';
 
 /**
  * One `derived` exercise (buildLesson.js `derivedItems`): play one of the
@@ -15,17 +16,25 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
  * PracticeItem's chip branch — `checkAnswer` decides, this component never
  * hand-builds the check options (tests/course-player.test.mjs GRADING_SITES).
  * A miss here is always tagged 'Hören' (check.js `tagError`).
+ *
+ * No sound (no browser voice, or "I can't hear anything")? AudioTrouble offers
+ * a retry, then the line as READING support — which makes this a reading
+ * match, so the answer is reported with `support: 'transcript'` and is never
+ * counted as listening evidence.
  */
 export default function ListenSelectItem({ item, lektionId, index, total, onResult, onNext }) {
   const [lang] = useLessonLang();
   const [picked, setPicked] = useState(null);
   const [state, setState] = useState(null);
+  const [transcript, setTranscript] = useState(false);
   const key = `line-${item.lineIndex}`;
   const recorded = !!audioFor(lektionId, key);
+  const available = recorded || speechAvailable();
 
   useEffect(() => {
     setPicked(null);
     setState(null);
+    setTranscript(false);
   }, [item.id]);
 
   const canSubmit = !!picked;
@@ -36,7 +45,12 @@ export default function ListenSelectItem({ item, lektionId, index, total, onResu
     const { result, expected } = checkAnswer(picked, accepted, checkOptionsFor(item));
     const correct = result !== RESULT.WRONG;
     setState({ result, expected });
-    onResult(item, { result, correct, errorTag: correct ? null : tagError(item, picked, item.answer) });
+    onResult(item, {
+      result,
+      correct,
+      errorTag: correct ? null : tagError(item, picked, item.answer),
+      ...(transcript ? { support: 'transcript' } : {}),
+    });
   };
 
   return (
@@ -57,6 +71,7 @@ export default function ListenSelectItem({ item, lektionId, index, total, onResu
           </button>
           <AudioSourceBadge recorded={recorded} />
         </div>
+        <AudioTrouble available={available} transcript={item.answer} shown={transcript} onShow={() => setTranscript(true)} disabled={!!state} />
 
         <div className="mt-5 flex flex-col gap-2">
           {(item.options || []).map((opt) => {
@@ -68,10 +83,11 @@ export default function ListenSelectItem({ item, lektionId, index, total, onResu
                 disabled={!!state}
                 onClick={() => setPicked(opt)}
                 aria-pressed={on}
-                className={`flex min-h-11 w-full items-center justify-between gap-2 rounded-clay border px-4 py-2.5 text-left text-[0.9375rem] font-bold transition-all duration-100 ease-snap disabled:opacity-70 motion-reduce:transition-none ${
+                className={`flex min-h-11 w-full items-center justify-between gap-2 rounded-clay border px-4 py-2.5 text-start text-[0.9375rem] font-bold transition-all duration-100 ease-snap disabled:opacity-70 motion-reduce:transition-none ${
                   on ? 'border-siegel bg-siegel text-white shadow-raise-siegel' : 'border-rule bg-white text-ink shadow-raise hover:border-siegel active:translate-y-1 active:shadow-none'
                 }`}
                 lang="de"
+                dir="ltr"
               >
                 <span>{opt}</span>
                 {on && <Check className="h-4 w-4 shrink-0" aria-hidden="true" />}

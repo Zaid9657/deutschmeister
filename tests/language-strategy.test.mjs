@@ -62,7 +62,9 @@ test('the lesson chrome defaults to English and only the learner switches it to 
   const { DEFAULT_LESSON_LANG, LESSON_LANG_KEY, LESSON_LANGS, readLessonLang, t } = await import('../src/lib/lesson/strings.js');
   assert.equal(DEFAULT_LESSON_LANG, 'en');
   assert.equal(LESSON_LANG_KEY, 'dm_lesson_lang');
-  assert.deepEqual(LESSON_LANGS, ['en', 'de']);
+  // The Arabic edition (docs/arabic/README.md) adds a third chrome language;
+  // the default stays English and the store is still the learner's choice.
+  assert.deepEqual(LESSON_LANGS, ['en', 'de', 'ar']);
   assert.equal(readLessonLang(), 'en', 'no window, no flag → English');
   assert.equal(t('stage.pretest.eyebrow'), 'Step 1 · Try first');
   const player = read('src/pages/lesson/LessonPlayerPage.jsx');

@@ -2,19 +2,11 @@ import { useState } from 'react';
 import Card from '../ui/Card.jsx';
 import StageShell from './StageShell.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { inline } from './richText.jsx';
+import SupportText from './SupportText.jsx';
+import { levelOfLektion, supportKeys } from '../../lib/lesson/support.js';
 
-/** **bold** → <strong>, *italic* → <em>. The curriculum's notice body is plain
- * text with at most those two marks, so nothing here needs a markdown parser
- * and nothing renders raw HTML. Exported: the practice feedback renders the
- * pool's `explanationEn` / `explanationDe`, which use the same two marks. */
-export function inline(text) {
-  const parts = String(text || '').split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g);
-  return parts.filter(Boolean).map((part, i) => {
-    if (part.startsWith('**') && part.endsWith('**')) return <strong key={i} className="font-bold text-ink">{part.slice(2, -2)}</strong>;
-    if (part.startsWith('*') && part.endsWith('*')) return <em key={i}>{part.slice(1, -1)}</em>;
-    return <span key={i}>{part}</span>;
-  });
-}
+export { inline } from './richText.jsx';
 
 /**
  * The paragraph in the OTHER language, behind a small disclosure. In English
@@ -22,7 +14,7 @@ export function inline(text) {
  * in Deutsch-Modus it is inverted. Exported for the practice feedback, which
  * shows `explanationEn` / `explanationDe` the same way.
  */
-export function OtherLanguage({ text, lang, className = '' }) {
+export function OtherLanguage({ text, lang, className = '', otherLang = null }) {
   const [open, setOpen] = useState(false);
   if (!text) return null;
   return (
@@ -36,7 +28,7 @@ export function OtherLanguage({ text, lang, className = '' }) {
         {t('lang.readOther', lang)}
       </button>
       {open && (
-        <p className="mt-2 text-[0.9375rem] leading-relaxed text-graphite" lang={lang === 'de' ? 'en' : 'de'}>
+        <p className="mt-2 text-[0.9375rem] leading-relaxed text-graphite" lang={otherLang || (lang === 'de' ? 'en' : 'de')} dir="ltr">
           {inline(text)}
         </p>
       )}
@@ -55,22 +47,37 @@ export function OtherLanguage({ text, lang, className = '' }) {
  * in both modes rather than nothing. The examples are German either way —
  * they are the content.
  */
-export default function NoticeStage({ stage, onBack, onDone }) {
+export default function NoticeStage({ stage, lektionId, onBack, onDone }) {
   const notice = stage.notice || {};
   const [lang] = useLessonLang();
-  const english = lang !== 'de' && notice.bodyEn;
-  const main = english ? notice.bodyEn : notice.bodyDe;
-  const other = english ? notice.bodyDe : notice.bodyEn;
+  const id = lektionId || stage.lektionId || null;
+  const level = levelOfLektion(id);
+  // The rule in the interface language: English, German (Deutsch-Modus) or the
+  // Arabic sidecar — and the German original one tap away in every language
+  // but German itself.
+  const english = lang === 'en' && notice.bodyEn;
+  const other = lang === 'de' ? notice.bodyEn : notice.bodyDe;
   return (
-    <StageShell eyebrow={t('stage.notice.eyebrow', lang)} title={notice.title} onBack={onBack} primaryLabel={t('action.understood', lang)} onPrimary={onDone}>
+    <StageShell
+      eyebrow={t('stage.notice.eyebrow', lang)}
+      title={notice.title ? <span lang="de" dir="ltr">{notice.title}</span> : null}
+      lead={lang === 'ar' && notice.title ? <SupportText level={level} k={id ? supportKeys.noticeTitle(id) : null} de={notice.title} /> : null}
+      onBack={onBack}
+      primaryLabel={t('action.understood', lang)}
+      onPrimary={onDone}
+    >
       <Card className="p-5 sm:p-6">
-        <p className="text-[1rem] leading-relaxed text-graphite" lang={english ? 'en' : 'de'}>{inline(main)}</p>
-        <OtherLanguage text={other} lang={lang} className="mt-3" />
+        {lang !== 'ar' ? (
+          <p className="text-[1rem] leading-relaxed text-graphite" lang={english ? 'en' : 'de'}>{inline(english ? notice.bodyEn : notice.bodyDe)}</p>
+        ) : (
+          <SupportText as="p" level={level} k={id ? supportKeys.noticeBody(id) : null} en={notice.bodyEn} de={notice.bodyDe} className="block text-[1rem] leading-relaxed text-graphite" />
+        )}
+        <OtherLanguage text={other} lang={lang} otherLang={lang === 'de' ? 'en' : 'de'} className="mt-3" />
         {(notice.examples || []).length > 0 && (
-          <ul className="mt-5 space-y-2 border-t border-rule pt-4" lang="de">
+          <ul className="mt-5 space-y-2 border-t border-rule pt-4" lang="de" dir="ltr">
             {notice.examples.map((ex) => (
               <li key={ex} className="text-[1.0625rem] leading-relaxed text-ink">
-                <span aria-hidden="true" className="mr-2 text-siegel">›</span>
+                <span aria-hidden="true" className="me-2 text-siegel">›</span>
                 {ex}
               </li>
             ))}

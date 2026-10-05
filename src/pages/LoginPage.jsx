@@ -13,6 +13,8 @@ import Button from '../components/ui/Button';
 import Card from '../components/ui/Card.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
 import Logo from '../components/Logo';
+import { useArabicT } from '../locales/useArabic';
+import AuthErrorText from '../components/AuthErrorText.jsx';
 
 // The playbook form field (docs/design/playbook.md §1), with room for the
 // leading icon. `focus:border-siegel` is the only focus treatment the field
@@ -23,6 +25,9 @@ const TEXT_LINK = 'font-bold text-siegel transition-colors hover:text-siegel-dee
 
 const LoginPage = () => {
   const { t } = useTranslation();
+  // Arabic on this screen (null unless the interface is Arabic): the English
+  // stays inline below, the Arabic comes from src/locales/ar/app.js.
+  const ta = useArabicT();
   const navigate = useNavigate();
   const location = useLocation();
   const { signIn, user, loading: authLoading } = useAuth();
@@ -33,6 +38,8 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  // The error behind `error`, so the Arabic screen can explain it by its code.
+  const [errorCause, setErrorCause] = useState(null);
   const [loading, setLoading] = useState(false);
   // 'idle' | 'sending' | 'sent' — the unconfirmed-account rescue path below.
   const [unconfirmed, setUnconfirmed] = useState(false);
@@ -58,6 +65,7 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setErrorCause(null);
     setUnconfirmed(false);
     setResendState('idle');
     setLoading(true);
@@ -74,12 +82,14 @@ const LoginPage = () => {
           setUnconfirmed(true);
         } else {
           setError(error.message);
+          setErrorCause(error);
         }
       } else {
         navigate(from, { replace: true });
       }
     } catch {
       setError('An unexpected error occurred');
+      setErrorCause({ code: 'unexpected' });
     } finally {
       setLoading(false);
     }
@@ -92,6 +102,7 @@ const LoginPage = () => {
     const { error: resendError } = await supabase.auth.resend({ type: 'signup', email });
     if (resendError) {
       setError(resendError.message);
+      setErrorCause(resendError);
       setResendState('idle');
     } else {
       trackVerificationEmailResent();
@@ -101,7 +112,7 @@ const LoginPage = () => {
 
   return (
     <div className="relative min-h-screen overflow-hidden flex items-center justify-center bg-paper px-4 pb-12 pt-24 font-body">
-      <SEO title="Log In" description="Log in to your DeutschMeister account to continue learning German grammar from A1 to B2." path="/login" />
+      <SEO title={ta ? ta('account.login.seoTitle') : 'Log In'} description="Log in to your DeutschMeister account to continue learning German grammar from A1 to B2." path="/login" />
       <Aurora />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -120,10 +131,10 @@ const LoginPage = () => {
             className="hero-line font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] text-ink mb-2"
             style={{ '--d': '120ms' }}
           >
-            Welcome Back
+            {ta ? ta('account.login.title') : 'Welcome Back'}
           </h1>
           <p className="hero-line text-[0.9375rem] leading-relaxed text-graphite sm:text-base" style={{ '--d': '220ms' }}>
-            {t('auth.login')} to continue your German journey
+            {ta ? ta('account.login.subtitle') : <>{t('auth.login')} to continue your German journey</>}
           </p>
         </div>
 
@@ -132,7 +143,7 @@ const LoginPage = () => {
           {timedOut && (
             <div className="mb-6 flex items-center gap-3 rounded-clay bg-siegel-wash px-4 py-3 text-sm text-siegel-deep">
               <AlertCircle className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
-              You were signed out because you were inactive.
+              {ta ? ta('account.login.timedOut') : 'You were signed out because you were inactive.'}
             </div>
           )}
 
@@ -145,18 +156,22 @@ const LoginPage = () => {
               <div className="flex items-start gap-3">
                 <Mail className="mt-0.5 w-5 h-5 flex-shrink-0" aria-hidden="true" />
                 <div className="text-sm">
-                  <p className="font-bold">Your account exists — it just isn't activated yet.</p>
-                  <p className="mt-1">
-                    Look for an email with the subject{' '}
-                    <span className="font-semibold">&ldquo;Confirm your DeutschMeister account&rdquo;</span> and click
-                    the link in the newest one. Check your spam folder too.
-                  </p>
+                  <p className="font-bold">{ta ? ta('account.login.unconfirmedTitle') : "Your account exists — it just isn't activated yet."}</p>
+                  {ta ? (
+                    <p className="mt-1">{ta('account.login.unconfirmedBody')}</p>
+                  ) : (
+                    <p className="mt-1">
+                      Look for an email with the subject{' '}
+                      <span className="font-semibold">&ldquo;Confirm your DeutschMeister account&rdquo;</span> and click
+                      the link in the newest one. Check your spam folder too.
+                    </p>
+                  )}
                 </div>
               </div>
               {resendState === 'sent' ? (
                 <p className="mt-3 flex items-center gap-2 text-sm font-semibold">
                   <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
-                  Sent to {email} — click the link in that email, then log in here.
+                  {ta ? ta('account.login.sentTo', { email }) : <>Sent to {email} — click the link in that email, then log in here.</>}
                 </p>
               ) : (
                 <Button
@@ -172,7 +187,7 @@ const LoginPage = () => {
                   ) : (
                     <RefreshCw className="w-4 h-4" />
                   )}
-                  Send me a fresh confirmation email
+                  {ta ? ta('account.login.resend') : 'Send me a fresh confirmation email'}
                 </Button>
               )}
             </motion.div>
@@ -185,7 +200,7 @@ const LoginPage = () => {
               className="mb-6 flex items-center gap-3 rounded-clay bg-accent-himbeer-wash px-4 py-3 text-accent-himbeer-ink"
             >
               <AlertCircle className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
-              <p className="text-sm font-semibold">{error}</p>
+              <AuthErrorText ta={ta} message={error} cause={errorCause} />
             </motion.div>
           )}
 
@@ -199,6 +214,7 @@ const LoginPage = () => {
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-graphite" aria-hidden="true" />
                 <input
                   id="login-email"
+                  dir="ltr"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -218,18 +234,21 @@ const LoginPage = () => {
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-graphite" aria-hidden="true" />
                 <input
                   id="login-password"
+                  dir="ltr"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   className={`${FIELD} pr-12`}
                   placeholder="Your password"
+                  {...(ta ? { placeholder: ta('account.passwordPlaceholder') } : {})}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-1 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-md text-graphite transition-colors hover:text-siegel-deep"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  {...(ta ? { 'aria-label': ta(showPassword ? 'account.hidePassword' : 'account.showPassword') } : {})}
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" aria-hidden="true" /> : <Eye className="w-5 h-5" aria-hidden="true" />}
                 </button>
@@ -248,7 +267,7 @@ const LoginPage = () => {
               {loading ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  Loading...
+                  {ta ? ta('account.loading') : 'Loading...'}
                 </>
               ) : (
                 t('auth.login')
