@@ -66,7 +66,7 @@ test('the SPA navigation switches at the large breakpoint and exposes 44px contr
   assert.match(navbar, /<LangToggle surface="navbar" size="touch" \/>/);
   const toggle = read('src/components/lesson/LangToggle.jsx');
   assert.match(toggle, /role="group"\s*\n\s*aria-label=\{GROUP_LABEL\[lang\] \|\| GROUP_LABEL\.en\}/);
-  assert.doesNotMatch(toggle, /lesson\/strings\.js/, 'the navbar must not pull the lesson tables into the main bundle');
+  assert.doesNotMatch(toggle, /from ['"][^'"]*\/strings\.js['"]/, 'the navbar must not pull the lesson tables into the main bundle');
   // (Its 44 × 44 floor replaces the globe button's `w-11 h-11`.)
   assert.match(toggle, /size === 'touch' \? 'min-h-11 min-w-11 px-3'/);
   assert.match(button, /rounded-clay min-h-11/);
