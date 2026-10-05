@@ -86,7 +86,8 @@ failure lost the run (now kept locally, and the recap says so) · the language s
 second AI explanation call · `lesson_completed` fired on every recap mount (now once per run) ·
 course home a11y: nameless progress bar, `aria-label` on bare spans, white-on-teal text below
 4.5:1, an unfocusable scrolling list · reset/update-password inputs had no labels · the navbar's
-switch had pulled the lesson string tables into the main bundle (removed before release; see §8).
+switch had pulled the lesson string tables into the main bundle, and its word „العربية“ pulled the
+Arabic face onto the English homepage (both removed before release; see §8).
 
 Documented, not fixed (outside the Arabic scope): `countCompletedRuns` counts explanation and
 read-aloud rows; the guest store holds one level; guest checkpoint passes are not saved (the help
@@ -112,7 +113,54 @@ New suites: `locale` (15), `arabic-coverage` (11), `arabic-journey` (15), `arabi
 
 ## 8. Verification results
 
-{{VERIFICATION}}
+All on the final branch head unless marked. "Before" = the clean `main` at `4500159`.
+
+| Check | Status | Before → after |
+|---|---|---|
+| `npm run lint` (errors and warnings) | passed | 0 → 0 |
+| `npm run check:duplicates` | passed | 18 twin pairs identical (one new: the Arabic sidecar) |
+| `node --check` on every function | passed | 73 files |
+| `npm test` | see the final line below | baseline 1615 tests / 1614 pass / 0 fail / 1 skipped → merged head `42a89fc`: 1677 / 1675 / 1 / 1 (the assertion fixed in `a476b09`) |
+| GitHub CI on the merged head `42a89fc` | failed, then fixed | 1677 / 1675 / 1 fail / 1 skipped — the one failure was a new bundle-guard assertion matching its own comment; fixed in `a476b09` |
+| `build-lesson-pool.mjs a1.1` → `validate-curriculum.mjs` | passed | pool unchanged (no diff); ratchets unchanged 14 / 59 / 4 / 23 / 3 / 57 |
+| `i18n-coverage.mjs --check` | passed | pilot 363 / 363 present, 0 stale, 0 reviewed |
+| Clean full build → merge → prerender (once) → `check-built-html.mjs dist` | passed | 138 → 143 pages, 0 failures, 0 warnings; crawl guard 133 → 138 URLs; hreflang reciprocity 8 pages |
+| Netlify deploy preview (Netlify's own build) | passed | built for every pushed commit |
+| Browser walkthrough `scripts/evaluate-arabic.mjs` | passed | 73 / 73 checks (`walkthrough.json`) |
+
+What the 73 browser checks cover: the five `/ar/` pages at 360 / 390 / 768 / 1440 px (200, `lang=ar
+dir=rtl`, one h1, no horizontal scroll, no unlabelled English inside Arabic), axe-core WCAG A/AA
+with no serious or critical finding on every Arabic page, the course home, a lesson and Arabic
+login; the switch on English twins, the Arabic offer to an Arabic browser, the „Deutsch“ notice,
+the 301; `/ar/` → start → first rendered course screen already Arabic and RTL (no English flash);
+Lessons 1, 2 and 3 played to the recap as a guest (wrong answers, typos, match, word order,
+dictation with the audio-trouble → transcript path, speaking skipped, writing checklist with the
+AI unavailable, requeue), with no developer key and no unlabelled English on any screen; match tiles
+named by their visible words; a language switch mid-item keeps the typed answer; a reload
+mid-practice resumes the same step without re-logging answers; Lesson 4 states the Arabic scope;
+cookie banner in Arabic at 360 px; keyboard (skip link first, visible focus on every stop); 200 %
+zoom; reduced motion; English and German unchanged; Arabic on an untranslated route → English
+document with an Arabic notice; Arabic login.
+
+**Bundles (SPA, from the Vite build):** main chunk 349.2 → 361.6 kB (gzip 105.7 → 110.1, +4.5);
+second shell chunk 151.3 → 153.5 kB (gzip 50.4 → 50.9); `LessonPlayerPage` 87.5 → 94.4 kB (gzip
+23.2 → 24.8). Lazy, loaded only when needed: the lesson string tables 39.3 kB (gzip 12.2, course
+pages), the Arabic interface 23.6 kB (gzip 10.3) and the Arabic A1.1 sidecar 45.1 kB (gzip 15.5),
+both only when the interface is Arabic. The Arabic font: 42 + 45 kB, fetched only where Arabic
+letters are drawn in it.
+
+**Lighthouse (lab, mobile preset, 3 runs each, medians; no field data):**
+
+| Page | Perf | FCP | LCP | CLS | Bytes | A11y / SEO / BP |
+|---|---|---|---|---|---|---|
+| `/` before | 89 | 2.40 s | 3.30 s | 0 | 419 kB | 100 / 100 / 100 |
+| `/` after | 88 | 2.48 s | 3.46 s | 0 | 429 kB | 100 / 100 / 100 |
+| `/ar/` | 92 | 2.26 s | 3.00 s | 0 | 350 kB | 100 / 100 / 100 |
+
+The first "after" measurement of `/` was 84 (LCP 3.75 s): the switch's word „العربية“ pulled the
+45 kB Arabic face onto the English homepage. Fixed before release (`font-endonym`, system faces for
+a language's own name on a page in another language; pinned in `tests/locale.test.mjs`). What is
+left on `/` (+10 kB, +0.15 s lab LCP) is the language bar itself.
 
 Screenshots: `screenshots/before/` (12, English, taken before any change) and `screenshots/after/`
 (from `node scripts/evaluate-arabic.mjs`; the full machine report is `walkthrough.json`).
@@ -142,8 +190,8 @@ Screenshots: `screenshots/before/` (12, English, taken before any change) and `s
 
 - **Lektionen 4–12:** add the Lektion id to `SUPPORT_SCOPE['ar:a1.1']` (`src/lib/lesson/support.js`),
   run `node scripts/i18n-coverage.mjs` — the report lists every missing key — translate into the
-  sidecar (+ copy to the Astro twin), and the pilot test then gates the new scope too. Add the
-  Lektion's route nothing: the routes are already Arabic-ready.
+  sidecar (+ copy to the Astro twin), and the pilot test then gates the new scope too. No route
+  change is needed: every A1.1 Lektion route is already Arabic-ready.
 - **Another level:** a new sidecar `<level>.ar.js`, its `SUPPORT_SCOPE` entry, a coverage run.
 - **Another language:** add it to `SUPPORTED_LOCALES`, `LOCALE_NAMES` and the first-paint whitelist
   in `index.html` (a test keeps them equal), a `src/locales/<lang>/` folder registered in

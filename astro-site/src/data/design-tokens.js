@@ -387,6 +387,11 @@ export const tailwindFontFamily = {
   display: ['Fraunces', 'Fraunces Fallback', 'Fraunces Fallback Times', 'IBM Plex Sans Arabic', 'Iowan Old Style', 'Georgia', 'serif'],
   body: ['Nunito Sans', 'Nunito Sans Fallback', 'IBM Plex Sans Arabic', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
   data: ['IBM Plex Sans Arabic', 'ui-monospace', 'SFMono-Regular', 'SF Mono', 'Menlo', 'Consolas', 'monospace'],
+  // `font-endonym`: a language's own name („العربية") in the language switch on a
+  // page that is NOT in that language. System faces only, so naming Arabic on
+  // an English page never downloads the Arabic face (measured 2026-10-05: the
+  // switch alone fetched 45 kB on the homepage and cost ~0.4 s of lab LCP).
+  endonym: ['system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
 };
 
 // ===========================================================================

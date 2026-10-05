@@ -47,6 +47,8 @@ const links = [
           aria-current={l.code === current ? 'true' : undefined}
           class:list={[
             'inline-flex min-h-11 min-w-11 items-center justify-center rounded-pill px-2.5 text-[0.875rem] font-semibold transition-colors',
+            // Naming a language on a page in another language never fetches its face (design-tokens.js `endonym`).
+            l.code === 'ar' && current !== 'ar' && 'font-endonym',
             l.code === current
               ? (night ? 'text-nacht-text underline decoration-linie decoration-2 underline-offset-4' : 'text-ink underline decoration-siegel decoration-2 underline-offset-4')
               : (night ? 'text-nacht-muted hover:text-nacht-text' : 'text-graphite hover:text-ink'),

@@ -53,7 +53,9 @@ export default function LangToggle({ className = '', surface = 'lesson', size = 
             onClick={() => choose(code)}
             aria-pressed={on}
             aria-busy={busy === code || undefined}
-            className={`${size === 'touch' ? 'min-h-11 min-w-11 px-3' : 'min-h-8 px-2'} rounded-pill py-0.5 text-[0.75rem] font-bold transition-colors duration-100 motion-reduce:transition-none ${
+            // The Arabic name on a non-Arabic screen uses system faces only, so naming
+            // Arabic never downloads the Arabic face (design-tokens.js `endonym`).
+            className={`${code === 'ar' && lang !== 'ar' ? 'font-endonym ' : ''}${size === 'touch' ? 'min-h-11 min-w-11 px-3' : 'min-h-8 px-2'} rounded-pill py-0.5 text-[0.75rem] font-bold transition-colors duration-100 motion-reduce:transition-none ${
               on ? 'bg-siegel text-white' : 'text-graphite hover:text-siegel-deep'
             }`}
           >

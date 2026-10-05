@@ -129,6 +129,10 @@ test('an Arabic first paint preloads the token Arabic face; nothing else ever lo
   // The metric fallbacks would otherwise paint Arabic in local Arial first.
   for (const f of faces.filter((x) => /Fallback/.test(x.fontFamily))) assert.match(f.unicodeRange, /U\+0000-05FF, U\+0700-074F/, `${f.fontFamily} must not claim Arabic`);
   for (const stack of [tailwindFontFamily.display, tailwindFontFamily.body, tailwindFontFamily.data, tailwindSignFont.sign]) assert.ok(stack.includes('IBM Plex Sans Arabic'), stack.join());
+  // Naming Arabic in a switch on a non-Arabic page must not fetch the face (+45 kB, ~0.4 s lab LCP on /).
+  assert.ok(!tailwindFontFamily.endonym.some((f) => /Plex|Nunito|Fraunces|Archivo/.test(f)), 'the endonym stack is system faces only');
+  assert.match(read('src/components/lesson/LangToggle.jsx'), /code === 'ar' && lang !== 'ar' \? 'font-endonym '/);
+  assert.match(read('astro-site/src/components/LanguageSwitch.astro'), /l\.code === 'ar' && current !== 'ar' && 'font-endonym'/);
 });
 
 test('main.jsx loads a non-inline locale bundle BEFORE the first render (no English flash)', () => {
