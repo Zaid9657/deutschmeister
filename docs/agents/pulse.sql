@@ -3,6 +3,9 @@
 -- 2026-09-29 and returned a value. Run them through the Supabase connector (execute_sql).
 -- Compare each "_24h" value with the matching 7-day daily average. SQL counts are not capped;
 -- a REST list read is capped at 1,000 rows, so never count by listing.
+-- v4 (2026-10-04, PROTOCOL v4.6): the retention reactivation query and the tiktok source in the
+-- content block were added and run against production on 2026-10-04. The support metric now comes
+-- from the Gmail desk (agents/support.desk in the team artifact), not from a query.
 
 -- revenue ---------------------------------------------------------------------------------
 select
@@ -15,7 +18,8 @@ select
  (select coalesce(sum((payload->'data'->'attributes'->>'total')::numeric)/100,0) from webhook_logs
    where event_type='subscription_payment_success' and created_at > now()-interval '30 days')
  + (select coalesce(sum(price_paid),0) from purchases where coalesce(price_paid,0) > 0 and created_at > now()-interval '30 days') as rev_30d_eur;
--- rev_30d_eur is the rubric's revenue number. Do not add order_created: a subscription's first order
+-- rev_30d_eur is the rubric's revenue number. v4: revenue also reports new payers (30 d), the
+-- new_paying_30d column of the conversion block, in the joint line with conversion. Do not add order_created: a subscription's first order
 -- arrives as both order_created and subscription_payment_success, so it would count twice.
 
 -- conversion ------------------------------------------------------------------------------
@@ -49,7 +53,7 @@ select
 -- Source 'android' on rows from before the android-app rule was deployed is the Google app (referrer
 -- com.google.android.googlequicksearchbox), i.e. Google search; see docs/tracking-links.md.
 
--- seo -------------------------------------------------------------------------------------
+-- seo (run by acquisition while SEO is folded into it; the seo agent itself runs on Wednesdays) --
 select coalesce(acquisition_landing,'(none)') landing, count(*) n
 from profiles where created_at >= '2026-09-20' and acquisition_source is not null group by 1 order by 2 desc;
 -- Search Console / DataForSEO: not reachable yet (roadmap r12). Record "not measured".
@@ -59,6 +63,34 @@ select
  (select json_object_agg(kind, n) from (select kind, count(*) n from lifecycle_emails where sent_at > now()-interval '24 hours' group by 1) s) as lifecycle_24h,
  (select count(*) from profiles where email_daily_sentence is false) as opted_out_total;
 -- Bounces: Resend connector get-email-metrics for the deutsch-meister.de domain, last 24 h and 30 d.
+-- v4 the bounce rate is retention's guardrail; the operating metric is reactivated learners per week:
+-- users with lesson activity in the last 7 days whose previous activity day was >= 14 days earlier.
+-- Sources = the has_lesson_activity sources of lifecycle_customer_state
+-- (migrations/2026-09-28-lifecycle-lesson-activity.sql), each with its best activity timestamp.
+-- Tables without an updated_at only date the row's first write, so repeat activity there is
+-- undercounted; say so when n is small. Run 2026-10-04 ~23:20 UTC: 2 / 1 / 14.
+with ev as (
+  select user_id, created_at ts from user_grammar_progress
+  union all select user_id, completed_at from user_grammar_progress
+  union all select user_id, completed_at from user_listening_progress
+  union all select user_id, coalesce(last_read_at, updated_at, created_at) from user_reading_progress
+  union all select user_id, coalesce(updated_at, completed_at) from lesson_progress
+  union all select user_id, created_at from lesson_attempts
+  union all select user_id, created_at from review_cards
+  union all select user_id, completed_at from program_progress
+  union all select user_id, created_at from writing_submissions
+  union all select user_id, coalesce(started_at, created_at) from exam_attempts
+  union all select user_id, coalesce(last_reviewed_at, created_at) from vocab_srs_cards
+  union all select user_id, coalesce(started_at, created_at) from speaking_sessions where coalesce(mode,'') <> 'placement'
+),
+d as (select distinct user_id, (ts at time zone 'UTC')::date as day from ev where ts is not null and user_id is not null),
+g as (select user_id, day, lag(day) over (partition by user_id order by day) as prev from d)
+select
+ (select count(distinct user_id) from g where day > current_date - 7 and prev is not null and day - prev >= 14) as reactivated_7d,
+ (select count(distinct user_id) from g where day > current_date - 14 and day <= current_date - 7 and prev is not null and day - prev >= 14) as reactivated_prev_7d,
+ (select count(distinct user_id) from g where day > current_date - 7) as active_learners_7d;
+-- Offer-email clicks: Resend get-email-metrics, dimension 'email', unique clicks on the site links of
+-- offer/campaign sends only, per send, unsubscribe clicks removed. 0 offer sends as of 2026-10-04.
 
 -- content ---------------------------------------------------------------------------------
 -- Posts do not live in Supabase, so read the channels themselves. These reads were verified on
@@ -91,15 +123,19 @@ select
 -- Followers = IG followers_count + FB followers_count + YT subscriberCount.
 -- Result on 2026-09-30: IG 7 + FB 5 + YT 2 = 14 channel-posts, 7 distinct items. Followers 0 + 1 + 5 = 6.
 -- Result on 2026-10-01 07:05 UTC: IG 8 + FB 6 + YT 2 = 16 channel-posts, 8 distinct items. Followers 0 + 2 + 7 = 9.
--- To see whether the posts brought anyone in, count signups whose first or last touch was a social channel:
+-- v4 operating metric (posts are secondary): signups whose first or last touch was a social channel.
+-- tiktok added 2026-10-04 (public/attribution.js classifies tiktok.com as 'tiktok'). Run 2026-10-04: 0 / 0.
 select
  (select count(*) from profiles where created_at > now()-interval '7 days'
-   and (acquisition_source in ('instagram','facebook','youtube','telegram')
-        or acquisition_last_source in ('instagram','facebook','youtube','telegram'))) as social_signups_7d,
- (select count(*) from profiles where acquisition_source in ('instagram','facebook','youtube','telegram')
-        or acquisition_last_source in ('instagram','facebook','youtube','telegram')) as social_signups_total;
+   and (acquisition_source in ('instagram','facebook','youtube','telegram','tiktok')
+        or acquisition_last_source in ('instagram','facebook','youtube','telegram','tiktok'))) as social_signups_7d,
+ (select count(*) from profiles where acquisition_source in ('instagram','facebook','youtube','telegram','tiktok')
+        or acquisition_last_source in ('instagram','facebook','youtube','telegram','tiktok')) as social_signups_total;
 
 -- support ---------------------------------------------------------------------------------
+-- v4: the operating metric (customer threads/day, hours to first draft, drafts sent unchanged,
+-- escalations) is written by the Gmail desk into agents/support.desk. The ticket query below stays
+-- for the /support form and the production support function, and for the rubric's ticket number.
 select
  (select count(*) from support_tickets where status not in ('resolved','closed')) as tickets_open,
  (select count(*) from support_tickets where created_at > now()-interval '24 hours') as tickets_24h,
@@ -116,5 +152,5 @@ select owner_agent, severity, count(*) from agent_incidents where resolved_at is
 -- Supabase connector get_advisors(type: security): count ERROR and WARN findings.
 
 -- webperf ---------------------------------------------------------------------------------
--- Daily: merged commits in the last 24 h touching vite.config.js, package.json, src/ or
--- astro-site/ (GitHub). Weekly (Saturday): mobile Lighthouse on the 7 tracked pages.
+-- Weekly run (v4: Wednesday): merged commits in the last 7 d touching vite.config.js, package.json,
+-- src/ or astro-site/ (GitHub), then mobile Lighthouse on the 7 tracked pages.
