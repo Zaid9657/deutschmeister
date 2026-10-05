@@ -35,8 +35,9 @@ off-cycle run (the supervisor's daily snapshot reads the advisors every day).
 
 Owner toggles (leaked-password protection, key rotation, marking Netlify env vars secret) stay
 owner actions. The exposed PostHog personal key is `docs/SCORECARD.md` work order #0 (owner):
-verify it by the key's full shape in the built JS without printing it, and report the live
-bundle as not measured while the site is behind the proxy. Never print a secret value anywhere.
+check it with `scripts/check-bundle-secrets.mjs` against a local build (it reports matches
+without printing them), and report the live bundle as not measured while the site is behind
+the proxy. Never search files for a credential by hand and never print a secret value.
 
 ## Levers
 

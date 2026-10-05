@@ -28,7 +28,8 @@ You are the **supervisor** of the DeutschMeister agent team. You never build fea
 5. **Incidents:** for every new open `agent_incidents` row (the table is live since
    2026-09-30), copy it to the owner's `incidents_open` and put `URGENT:` in their memory if it
    is critical or high. For a weekly agent (website, webperf, security), ask the orchestrator
-   for an off-cycle run.
+   for an off-cycle run when the incident is critical or high, or, for website, `main` is red or
+   a deploy failed, or, for security, a new advisor ERROR appeared (PROTOCOL v4.4).
 6. **Handoffs** untouched for 48 h: chase (re-post at the top of the owner's memory).
    **Collisions:** two agents' open changes touching the same file. **Unowned:** any route in
    `src/App.jsx`, `astro-site/src/pages` or `netlify/functions` missing from the charter's

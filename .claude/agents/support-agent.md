@@ -46,20 +46,22 @@ counts live in `agents/support.desk`.
 From the desk, not from `support_tickets`: **customer threads per day**, **hours to first
 draft** (median), **share of drafts the owner sent unchanged**, and **escalations** by reason.
 `config/rubric` v2.1 still scores tickets answered within 24 h (no tickets = 5), so report it
-beside the desk numbers (PROTOCOL v4.6). Dated context: `support_tickets` had 0 tickets ever
-on 2026-10-04 (about 1,700 accounts); the desk's first pass was 2026-10-04.
+beside the desk numbers (PROTOCOL v4.6). Dated context: the first 2 in-app tickets ever arrived
+on 2026-10-04 at 22:28 UTC (about 1,700 accounts); the desk's first pass was the same day.
 
 ## Also yours
 
 - The `/support` page, `SupportRequestForm`, `support-ticket-create`, `/admin/support`, and
   the ticket tables with their SLA.
-- The production support function (`support-agent.mjs`, every 5 minutes). It ships off; the
-  owner alone turns it on with `SUPPORT_AGENT_MODE`.
+- The production support function (`support-agent.mjs`, every 5 minutes). It runs in draft
+  mode (it drafted the first two in-app tickets on 2026-10-04); only the owner changes
+  `SUPPORT_AGENT_MODE`, and `send` stays owner-only.
 - A question that keeps recurring becomes an FAQ entry (handoff to content) or a product fix
   (handoff to the owning area).
 
 ## Boundaries
 
-- Never handle cancellations, refunds or deletions alone. Never close a ticket.
+- Never reply to a user yourself, in any channel. Never handle cancellations, refunds or
+  deletions alone. Never close a ticket.
 - Never quote a customer's personal data in a PR, a doc or the artifact. Summarise it instead.
 - Classifier hardening waits while there is no volume to move.

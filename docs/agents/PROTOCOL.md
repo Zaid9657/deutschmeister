@@ -151,18 +151,24 @@ names the same numbers.
 - **Where.** The shared Google Workspace inbox that the DeutschMeister contact addresses
   forward to (`config/charter.owner_contacts`). MedMeister mail lands there too.
 - **What a desk run does.** Read new threads since the last pass through the Gmail connector.
-  Label each customer thread by brand, `AI/DM` or `AI/MM`. Where verified facts answer it,
-  create a **draft** reply and label the thread `AI/drafted`. When the thread matches an
-  escalation reason, label it `AI/needs-owner` and write no reply draft.
+  Label each customer thread by brand, `AI/DM` or `AI/MM`, and by topic
+  (`AI/t-question`, `AI/t-access`, `AI/t-billing`, `AI/t-bug`, `AI/t-lead`, `AI/t-other`).
+  Where verified facts answer it, create a **draft** reply and label the thread `AI/drafted`.
+  When the thread matches an escalation reason, label it `AI/needs-owner` and write no reply
+  draft.
 - **Escalation list:** identical to `ESCALATION_REASONS` in
   `netlify/functions/_shared/supportAgentLib.mjs`: `legal-complaint`, `abuse`,
   `billing-dispute`, `refund`, `deletion`, `cancellation`, `needs-human`. Use the same patterns
   (`classifyEscalation`); when in doubt, `needs-human`. The lib is the single source: when it
   changes, the desk follows it.
-- **Drafts** use verified facts only (`pricing.js`, `marketing.js`, the support catalogue), the
-  team signature and the AI disclosure, and German replies speak Sie.
-- **Never send.** No `send_message`, no reply, no forward, no trash or spam marking, and never
-  delete or overwrite a draft the owner has edited. Sending is owner-only.
+- **Drafts** use verified facts only. DeutschMeister: `src/data/faqContent.js`,
+  `src/data/offers.js` (the refund truth), `src/data/pricing.js`, `src/data/marketing.js`.
+  MedMeister: only facts stated in the `medmeister-email-triage` skill; never run that skill's
+  Notion or Supabase writes. A question the sources do not answer gets `AI/needs-owner`, not a
+  guess. Drafts carry the team signature and the AI disclosure, and German replies speak Sie.
+- **Create only.** The desk may create drafts and labels. It never updates or deletes a draft,
+  never sends, replies, forwards, trashes or marks spam, and never replies to a user itself in
+  any channel. Sending is owner-only.
 - **Counts only into the artifact** (`agents/support.desk`): threads scanned, customer
   threads, DM vs MM, drafted, escalated by reason, median hours to first draft, and drafts sent
   unchanged, edited or discarded. Never an address, a name or message text.
@@ -427,9 +433,10 @@ A change is self-approvable only if **all** of these hold:
 ### Staying alive
 
 - The team runs inside one orchestrating session, woken by Routines (`docs/scorecard-routine.md`
-  says why). Every wake ends by writing a heartbeat. Once the heartbeat table and its sentinel
-  check ship, the sentinel, which runs on Netlify independent of the session, mails the owner
-  if no heartbeat arrives for 8 hours. That is the alarm for "the team has stopped".
+  says why). Every wake writes a heartbeat at its start and at its end. The sentinel, which
+  runs on Netlify independent of the session, mails the owner if no heartbeat arrives for
+  8 hours (`team:heartbeat`, live since 2026-10-01). That is the alarm for "the team has
+  stopped"; an owner plan review that pauses the session trips it too.
 - After a context compaction, state comes from the artifact (`config/charter`,
   `changes/`, agent memories) and from GitHub and Netlify, never from the conversation summary.
 

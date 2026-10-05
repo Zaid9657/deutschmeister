@@ -18,8 +18,10 @@ worktree, reviews what it built, and integrates it.
 This is the **target schedule** from PROTOCOL v4.4 (owner-approved plan, 2026-10-04). The
 orchestrator applies it to the Routines: it adds the acquisition 13:10 run and the two extra
 support-desk runs, moves support from 07:20 to 07:10, moves website, webperf and security to one
-weekly slot each, and keeps seo to Wednesdays. Until a Routine is changed, the v3 slot it still
-fires on runs the agent under v4 rules (a weekly agent woken on another day logs an idle run).
+weekly slot each, and keeps one weekly seo slot (Wednesday) for measurement and diagnosis only:
+SEO building is acquisition's work until Search Console is verified. Until a Routine is changed,
+the v3 slot it still fires on runs the agent under v4 rules (a weekly agent woken on another day
+logs an idle run).
 
 | UTC | Routine | Agent |
 |---|---|---|
@@ -67,11 +69,15 @@ the deploy budget, switches) are in `docs/agents/PROTOCOL.md` § Continuous mode
 
 > Team run: support desk (PROTOCOL v4.5). Spawn `support-agent` in its own worktree with: "Desk
 > pass: read your `playbook` and list the rule ids you will apply; read new threads in the
-> shared inbox with the Gmail connector; label each customer thread AI/DM or AI/MM; draft
-> replies from verified facts only and label them AI/drafted; label every thread that matches
-> supportAgentLib ESCALATION_REASONS AI/needs-owner with no draft; never send, reply, forward or
-> trash; write counts only into agents/support.desk; on the 07:10 run also do the daily routine."
-> Tell the owner when a thread was labelled AI/needs-owner.
+> shared inbox with the Gmail connector; label each customer thread AI/DM or AI/MM plus one
+> topic label (AI/t-question, AI/t-access, AI/t-billing, AI/t-bug, AI/t-lead, AI/t-other);
+> create draft replies from the verified sources in PROTOCOL v4.5 only and label them
+> AI/drafted; label every thread that matches supportAgentLib ESCALATION_REASONS, or that the
+> sources cannot answer, AI/needs-owner with no draft; create only: never update or delete a
+> draft, never send, reply, forward, trash or mark spam; write counts only into
+> agents/support.desk; on the 07:10 run also do the daily routine under PROTOCOL rules 1–8 (one
+> change in a worktree; the orchestrator reviews, gates and releases it with a `changes/` record)."
+> Tell the owner when a thread was labelled AI/needs-owner or drafts are waiting.
 
 ## What the owner does
 

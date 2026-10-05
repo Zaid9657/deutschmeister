@@ -17,7 +17,7 @@ decisions are priced in €/week.
 
 | Layer | Runs where | When | What |
 |---|---|---|---|
-| 1. Production | Netlify scheduled functions (run with the owner's PC off) | sentinel hourly; support agent every 5 min (ships off) | detect and act on live problems |
+| 1. Production | Netlify scheduled functions (run with the owner's PC off) | sentinel hourly; support agent every 5 min (draft mode; `send` is owner-only) | detect and act on live problems |
 | 2. Area agents | Routines that wake the orchestrating Claude Code session (it holds the Supabase, Resend, Netlify, Gmail and GitHub connectors) | morning runs 06:10–07:50 UTC, acquisition again at 13:10, the support desk at 07:10/12:30/18:30, weekly agents on their day; build waves 11:10 and 16:10 UTC | pulse, react, and build one change per run in a worktree; the orchestrator reviews and releases |
 | 3. Supervisor | same | 05:50, 09:50, 12:50, 15:50, 19:50 UTC | snapshot, ran-and-reported check, goals, incidents, handoffs, change judging; Monday Curator pass and top 3 |
 
@@ -58,8 +58,9 @@ Target schedule (UTC). The orchestrator applies it to the Routines.
 
 Where a v4 metric differs from `config/rubric` (content, retention, support), the agent reports
 both until the rubric bands for the v4 metric are approved. The supervisor's daily snapshot
-measures every area every day, including the weekly ones; a critical incident wakes a weekly
-agent off-cycle.
+measures every area every day, including the weekly ones; a critical or high incident in its
+area (for website also a red `main` or a failed deploy, for security a new advisor ERROR) wakes a
+weekly agent off-cycle (PROTOCOL v4.4).
 
 **Continuous mode (owner grant 2026-10-01).** Every agent builds and ships improvements inside
 its own area, with no weekly approval gate. Each run builds at most one change in its own
