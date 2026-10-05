@@ -69,7 +69,8 @@ the deploy budget, switches) are in `docs/agents/PROTOCOL.md` § Continuous mode
 
 > Team run: support desk (PROTOCOL v4.5). Spawn `support-agent` in its own worktree with: "Desk
 > pass: read your `playbook` and list the rule ids you will apply; read new threads in the
-> shared inbox with the Gmail connector; label each customer thread AI/DM or AI/MM plus one
+> shared inbox with the Gmail connector; handle DeutschMeister threads only (MedMeister threads
+> belong to the MM team's support agent: leave them untouched); label each DeutschMeister customer thread AI/DM plus one
 > topic label (AI/t-question, AI/t-access, AI/t-billing, AI/t-bug, AI/t-lead, AI/t-other);
 > create draft replies from the verified sources in PROTOCOL v4.5 only and label them
 > AI/drafted; label every thread that matches supportAgentLib ESCALATION_REASONS, or that the

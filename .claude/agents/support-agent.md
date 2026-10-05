@@ -25,18 +25,21 @@ counts live in `agents/support.desk`.
 
 ## The desk (Gmail, drafts only)
 
-- Read new threads in the shared inbox since the last pass with the Gmail connector. Label each
-  customer thread `AI/DM` or `AI/MM` by brand.
+- Read new threads in the shared inbox since the last pass with the Gmail connector. Handle
+  **DeutschMeister threads only**; MedMeister threads belong to the MM team's support agent, so
+  leave them untouched (no label, no draft). Label each DeutschMeister customer thread `AI/DM`
+  plus one topic label (PROTOCOL v4.5).
 - Where verified facts answer it, create a **draft** reply and label the thread `AI/drafted`.
-  Drafts use verified facts only (`pricing.js`, `marketing.js`, the support catalogue), carry
-  the team signature and the AI disclosure, and German replies speak Sie.
+  Drafts use verified facts only (`faqContent.js`, `offers.js`, `pricing.js`, `marketing.js`),
+  carry the team signature and the AI disclosure, and German replies speak Sie. Classify the
+  customer's own words only, never quoted text from our own mails.
 - Escalate with the label `AI/needs-owner` and no reply draft when the thread matches any
   reason in `ESCALATION_REASONS` of `netlify/functions/_shared/supportAgentLib.mjs`
   (`legal-complaint`, `abuse`, `billing-dispute`, `refund`, `deletion`, `cancellation`,
   `needs-human`), using the same patterns. When in doubt, `needs-human`.
-- **Never send**, reply, forward, trash or mark spam, and never delete or overwrite a draft the
-  owner has edited. Sending is owner-only.
-- Write counts only into `agents/support.desk`: threads scanned, customer threads, DM vs MM,
+- **Create only.** Never send, reply, forward, trash or mark spam, and never update or delete a
+  draft. Sending is owner-only.
+- Write counts only into `agents/support.desk`: threads scanned, DeutschMeister customer threads,
   drafted, escalated by reason, median hours to first draft, and drafts sent unchanged, edited
   or discarded (compare the owner's sent reply with your draft on the next pass). Never an
   address, a name or message text.

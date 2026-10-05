@@ -149,9 +149,14 @@ names the same numbers.
 ### v4.5 The support desk (Gmail)
 
 - **Where.** The shared Google Workspace inbox that the DeutschMeister contact addresses
-  forward to (`config/charter.owner_contacts`). MedMeister mail lands there too.
+  forward to (`config/charter.owner_contacts`). MedMeister mail lands there too, but it belongs to
+  the MedMeister team's own support agent (Routine "MM team: support", its own Supabase ledger),
+  which already drafts MedMeister replies in this inbox and skips DeutschMeister mail. **The
+  DeutschMeister desk handles DeutschMeister threads only** (sent to a `deutsch-meister.de`
+  address or about DeutschMeister) and leaves MedMeister threads untouched: no label, no draft.
+  Two agents drafting in one thread would double the owner's work.
 - **What a desk run does.** Read new threads since the last pass through the Gmail connector.
-  Label each customer thread by brand, `AI/DM` or `AI/MM`, and by topic
+  Label each DeutschMeister customer thread `AI/DM` and one topic
   (`AI/t-question`, `AI/t-access`, `AI/t-billing`, `AI/t-bug`, `AI/t-lead`, `AI/t-other`).
   Where verified facts answer it, create a **draft** reply and label the thread `AI/drafted`.
   When the thread matches an escalation reason, label it `AI/needs-owner` and write no reply
@@ -162,15 +167,14 @@ names the same numbers.
   (`classifyEscalation`); when in doubt, `needs-human`. The lib is the single source: when it
   changes, the desk follows it.
 - **Drafts** use verified facts only. DeutschMeister: `src/data/faqContent.js`,
-  `src/data/offers.js` (the refund truth), `src/data/pricing.js`, `src/data/marketing.js`.
-  MedMeister: only facts stated in the `medmeister-email-triage` skill; never run that skill's
-  Notion or Supabase writes. A question the sources do not answer gets `AI/needs-owner`, not a
-  guess. Drafts carry the team signature and the AI disclosure, and German replies speak Sie.
+  `src/data/offers.js` (the refund truth), `src/data/pricing.js`, `src/data/marketing.js`. A
+  question the sources do not answer gets `AI/needs-owner`, not a guess. Classify the customer's
+  own words only, never quoted text from our own mails. Drafts carry the team signature and the AI disclosure, and German replies speak Sie.
 - **Create only.** The desk may create drafts and labels. It never updates or deletes a draft,
   never sends, replies, forwards, trashes or marks spam, and never replies to a user itself in
   any channel. Sending is owner-only.
 - **Counts only into the artifact** (`agents/support.desk`): threads scanned, customer
-  threads, DM vs MM, drafted, escalated by reason, median hours to first draft, and drafts sent
+  threads (DeutschMeister only), drafted, escalated by reason, median hours to first draft, and drafts sent
   unchanged, edited or discarded. Never an address, a name or message text.
 
 ### v4.6 Metrics and revenue focus
