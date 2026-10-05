@@ -120,7 +120,7 @@ All on the final branch head unless marked. "Before" = the clean `main` at `4500
 | `npm run lint` (errors and warnings) | passed | 0 → 0 |
 | `npm run check:duplicates` | passed | 18 twin pairs identical (one new: the Arabic sidecar) |
 | `node --check` on every function | passed | 73 files |
-| `npm test` | see the final line below | baseline 1615 tests / 1614 pass / 0 fail / 1 skipped → merged head `42a89fc`: 1677 / 1675 / 1 / 1 (the assertion fixed in `a476b09`) |
+| `npm test` | passed | 1615 tests / 1614 pass / 0 fail / 1 skipped → **1677 / 1676 / 0 / 1** (local, on the final tree; GitHub CI green on `a476b09`) |
 | GitHub CI on the merged head `42a89fc` | failed, then fixed | 1677 / 1675 / 1 fail / 1 skipped — the one failure was a new bundle-guard assertion matching its own comment; fixed in `a476b09` |
 | `build-lesson-pool.mjs a1.1` → `validate-curriculum.mjs` | passed | pool unchanged (no diff); ratchets unchanged 14 / 59 / 4 / 23 / 3 / 57 |
 | `i18n-coverage.mjs --check` | passed | pilot 363 / 363 present, 0 stale, 0 reviewed |
