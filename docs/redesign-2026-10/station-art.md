@@ -1,4 +1,4 @@
-# Station artwork (Higgsfield · Recraft V4.1 vector): 4 of 8, wired, waiting on the last four
+# Station artwork (Higgsfield · Recraft V4.1 vector): all eight, live on the course surfaces
 
 One flat vector scene per station, in the v4 Türkis palette, for the course cards on `/`,
 `/courses/` and the `/courses/<level>/` heroes. Generated with Higgsfield (model
@@ -19,32 +19,35 @@ Palette parameter: `#0A8276 #E3F6F3 #BFEAE3 #10302C #FBBF24 #FFFFFF #F2C9A0 #C68
 (The first test, without skin tones in the palette, painted a guest's skin sun-yellow and a
 suitcase neon cyan — keep the skin tones in the list.)
 
-## Status (2026-10-04)
+## Status (complete 2026-10-05)
 
 | Station | Scene | Job | Status |
 |---|---|---|---|
 | A1.1 | Hotel reception, a greeting | `a9a71091-88bf-4cb4-bcea-9661d0544560` | in repo (`a1-1.svg`) |
-| A1.2 | Bakery counter, buying bread | — | blocked: Higgsfield daily limit (grace period) |
-| A2.1 | Doctor's practice | — | blocked: daily limit |
+| A1.2 | Bakery counter, buying bread | `d6e2cd3e-9cbb-493e-91d4-a9c792a8a920` | in repo (`a1-2.svg`); customer's face, neck and hands recoloured from white to `#F2C9A0`, neon sun `#FEF501` → `#FBBF24` (see below) |
+| A2.1 | Doctor's practice | `7a2fac39-e07d-4845-ba69-450a8f96217d` | in repo (`a2-1.svg`) |
 | A2.2 | Service office, booking an appointment | `489f80cf-4e3e-478c-863a-090871ffd963` | in repo (`a2-2.svg`) |
-| B1.1 | Colleagues discussing a plan | — | blocked: daily limit |
+| B1.1 | Colleagues discussing a plan | `61cdff3b-bd7b-4b7a-a817-aa4a1df78f38` | in repo (`b1-1.svg`) |
 | B1.2 | Rainy train platform, umbrella | `bc31c4c4-1e55-4d3e-b59d-378184aa8b6b` | in repo (`b1-2.svg`) |
 | B2.1 | Phone call by a window, planning a visit | `26526b42-a126-47d0-99f8-4d42e05cecd5` | in repo (`b2-1.svg`) |
-| B2.2 | Three people weighing pros and cons | — | blocked: daily limit |
+| B2.2 | Three people weighing pros and cons | `f98a9fe4-ba3d-417f-b2a0-3bbe5ffe63f3` | in repo (`b2-2.svg`); second take, the first (`55d57eed…`) gave one face pale türkis |
 
-**Where they go (wired 2026-10-04, renders nothing yet).** `astro-site/src/data/stationArt.js` lists the
-scenes; `components/linie/StationArt.astro` places one on the homepage line boards (live stops on top of
-each board, the four Im Bau stops as thumbnails), on every `/courses/` card (a 12rem band) and on top of the
-price card in each `/courses/<level>/` hero (11rem, loaded eagerly). `artFor()` returns null until all
-eight levels have a file, so the set appears whole or not at all. Finishing it is: drop the SVG into
-`public/art/stations/<level-with-dash>.svg`, add its line to `STATION_ART`, run `node --test
-tests/linie-design.test.mjs` (it checks each file is cleaned, minified and on the shared 2048×1509 viewBox).
+**Where they go.** `astro-site/src/data/stationArt.js` lists the scenes; `components/linie/StationArt.astro`
+places one on the homepage line boards (live stops on top of each board, the four Im Bau stops as
+thumbnails), on every `/courses/` card (a 12rem band) and on top of the price card in each
+`/courses/<level>/` hero (11rem, loaded eagerly). `artFor()` returns null unless all eight levels have a file,
+so a missing scene hides the whole set rather than leaving one level bare.
 
-**Why four are missing.** The Higgsfield app account (starter plan, grace period) caps generations per
-day; its credits were never the limit. The separate Higgsfield API (pay per image, $0.035 at 1k for
-`recraft/v4.1/text-to-image`, base `https://api.higgsfield.ai`, header `Authorization: Key <key>`) needs
-the environment to allow `api.higgsfield.ai` and to carry the key as `HF_API_KEY`; the agent proxy
-answers 403 to that host today.
+**Skin is the one thing to check by eye.** The palette lock does not stop Recraft from filling a light-skinned
+face with white or with the pale türkis surface colour (two of five takes on 2026-10-05). Name each person's
+skin colour in the scene prompt ("light peach skin (#F2C9A0) … every face and hand is filled with its skin
+colour, never white, grey or pale türkis") — the B2.2 retake did that and came out right. When the daily
+cap blocks a retake, a white face can be fixed in the SVG: find the shape by its bounding box (Chromium
+`getBBox()`), split a compound path at its `M` if the skin shares it with other white areas, and refill it.
+
+**Daily cap.** The Higgsfield app account (starter plan, grace period) allows about five generations a day;
+its credits are not the limit. The separate Higgsfield API cannot produce vector output (only jpg/png/webp,
+checked 2026-10-04), so the app/MCP route is the only one that matches this set.
 
 **Transfer note.** The agent proxy blocks Higgsfield's CDN (`*.cloudfront.net`) and Composio's
 file links; the files reach the repo by fetching them in Composio's remote sandbox, stripping the C2PA
