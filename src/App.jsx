@@ -167,8 +167,9 @@ function Shell() {
                         signed-out Buy resumes here after signup (postAuthPath →
                         /subscription?buy=<key>) on an account whose onboarding is not
                         done yet, and the gate rendered IntroSlides instead, whose exits
-                        dropped the checkout. The intro still runs on the next learning
-                        route. tests/purchase-route-gates.test.mjs */}
+                        dropped the checkout. The intro still runs on /dashboard and the
+                        other OnboardingGate routes (/course/** has none).
+                        tests/purchase-route-gates.test.mjs */}
                     <Route
                       path="/subscription"
                       element={
