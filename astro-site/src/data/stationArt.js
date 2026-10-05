@@ -19,9 +19,13 @@ export const ART_HEIGHT = 1509;
 
 export const STATION_ART = {
   'a1.1': { file: 'a1-1.svg', scene: 'Hotel reception: a receptionist greets a guest with a suitcase' },
+  'a1.2': { file: 'a1-2.svg', scene: 'Bakery counter: a customer points at the loaf the baker holds up' },
+  'a2.1': { file: 'a2-1.svg', scene: "Doctor's practice: a doctor talks with a seated patient holding a form" },
   'a2.2': { file: 'a2-2.svg', scene: 'Service office: booking an appointment at the counter' },
+  'b1.1': { file: 'b1-1.svg', scene: 'Office table: two colleagues discuss a plan on a laptop' },
   'b1.2': { file: 'b1-2.svg', scene: 'Rainy platform: a commuter with an umbrella walks to the train' },
   'b2.1': { file: 'b2-1.svg', scene: 'At home by the window: planning a visit on the phone' },
+  'b2.2': { file: 'b2-2.svg', scene: 'Around a table: three people weigh pros and cons' },
 };
 
 /** True once every station of the line has its scene. */
