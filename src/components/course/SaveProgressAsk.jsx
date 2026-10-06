@@ -15,7 +15,10 @@ import { lektionPath, rememberPlace, saveProgressSignupHref, settleAsk } from '.
 //
 // The signup door is a plain href (the door tag is read on a page load). The
 // login link is a router <Link> carrying the Lektion as `state.from`, which
-// LoginPage honours; the run itself survives in this tab's sessionStorage.
+// LoginPage honours in this tab. It remembers the place exactly like the
+// signup door (`save`), because "I already have an account" can still turn
+// into /login → /signup, or into a confirmation e-mail opened in a new tab,
+// where only the stored return path and the run hand-off survive.
 
 export default function SaveProgressAsk({ level, lektion, onContinue }) {
   const [lang] = useLessonLang();
@@ -73,7 +76,7 @@ export default function SaveProgressAsk({ level, lektion, onContinue }) {
         <Link
           to="/login"
           state={{ from: { pathname: here } }}
-          onClick={settle}
+          onClick={save}
           className="mt-4 inline-block font-data text-[0.75rem] font-bold uppercase tracking-[0.13em] text-siegel hover:text-siegel-deep"
         >
           {t('save.haveAccount', lang)}

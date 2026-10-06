@@ -83,7 +83,17 @@ export function resumeStageIndex(stages, run) {
 }
 
 export const saveRun = (level, lektionId, run) => safeSetJSON(runKey(level, lektionId), run, { session: true });
-export const clearRun = (level, lektionId) => safeRemove(runKey(level, lektionId), { session: true });
+
+/**
+ * End this Lektion's run: this tab's snapshot AND a hand-off of the same
+ * Lektion (below). The recap calls it, so a run finished in this tab can never
+ * be resumed — answers and all — by a tab opened later from the hand-off.
+ */
+export function clearRun(level, lektionId) {
+  safeRemove(runKey(level, lektionId), { session: true });
+  const handoff = safeGetJSON(HANDOFF_KEY, null);
+  if (handoff && typeof handoff === 'object' && handoff.key === runKey(level, lektionId)) safeRemove(HANDOFF_KEY);
+}
 
 // THE ONE EXCEPTION TO "THIS TAB'S RUN": THE ACCOUNT ROUND TRIP (2026-10-06).
 // The save-progress ask (src/lib/course/saveProgressAsk.js) sends a signed-out
@@ -93,7 +103,8 @@ export const clearRun = (level, lektionId) => safeRemove(runKey(level, lektionId
 // copies this tab's run into localStorage (handOffRun), and the next tab that
 // opens the same Lektion WITHOUT a run of its own takes it over, once
 // (takeHandedOffRun, called by readRun). A tab that has its own run keeps it.
-// The hand-off ages out like any run (RUN_MAX_AGE_MS).
+// The hand-off ages out like any run (RUN_MAX_AGE_MS), and clearRun (the
+// recap) drops it with the run it copied.
 export const HANDOFF_KEY = 'dm_lesson_run_handoff';
 
 /** Copy this tab's run of one Lektion to localStorage for the sign-up round trip. False when there is none. */

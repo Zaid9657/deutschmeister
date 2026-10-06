@@ -73,7 +73,7 @@ function inWindow(win, fn) {
 const ask = await import('../src/lib/course/saveProgressAsk.js');
 const { setReturnPath, peekReturnPath, clearReturnPath, isCourseReturnPath } = await import('../src/lib/returnPath.js');
 const { postAuthPath, setBuyIntent, clearBuyIntent } = await import('../src/lib/buyIntent.js');
-const { packRun, saveRun, readRun, runKey, HANDOFF_KEY } = await import('../src/lib/lesson/runState.js');
+const { packRun, saveRun, readRun, clearRun, runKey, HANDOFF_KEY } = await import('../src/lib/lesson/runState.js');
 const { signupAttributionMetadata } = await import('../src/lib/attribution.js');
 
 const NOW = Date.UTC(2026, 9, 6, 17, 0, 0);
@@ -215,11 +215,29 @@ test('mid-Lektion, the run crosses into the tab the confirmation e-mail opens, o
   inWindow(b.tab(), () => assert.equal(readRun('a1.1', 'a1.1-l01', NOW + 13 * 3600_000), null));
 });
 
+test('a run finished in the saving tab takes its hand-off with it: a later tab cannot resume it (review of 6278791d)', () => {
+  // Save → Back → finish Lektion 1 in the same tab → open Lektion 1 in a new tab within 12 h.
+  const b = browser();
+  const tabA = b.tab();
+  const run = packRun({ stageKey: 'practice', stageIndex: 5, itemIndex: 1, attempts: [{ itemId: 'p1', stage: 'practice', correct: true }] }, NOW);
+  inWindow(tabA, () => {
+    saveRun('a1.1', 'a1.1-l01', run);
+    ask.rememberPlace({ level: 'a1.1', lektionId: 'a1.1-l01', lektionNr: 1 });
+    clearRun('a1.1', 'a1.1-l02');
+  });
+  assert.ok(b.localStorage.map.has(HANDOFF_KEY), 'ending ANOTHER Lektion leaves this hand-off alone');
+  inWindow(tabA, () => clearRun('a1.1', 'a1.1-l01')); // the recap of Lektion 1, in the saving tab
+  assert.ok(!b.localStorage.map.has(HANDOFF_KEY), 'the recap drops the hand-off of the run it ends');
+  inWindow(b.tab(), () => assert.equal(readRun('a1.1', 'a1.1-l01', NOW + 3600_000), null, 'a new tab starts Lektion 1 fresh, no old answer re-logged'));
+  // The player's recap is what calls clearRun, for this Lektion's key.
+  assert.match(code(read('src/pages/lesson/LessonPlayerPage.jsx')), /if \(saved \|\| stage\.kind === 'recap'\) \{ clearRun\(curriculum\.level, lektion\.id\); return; \}/);
+});
+
 // --- 4. THE WIRING ----------------------------------------------------------------------------
 
 test('the player shows the ask through saveAskDue for a signed-out learner, from the attempts onResult writes', () => {
   const src = code(read('src/pages/lesson/LessonPlayerPage.jsx'));
-  assert.match(src, /saveAskDue\(\{ signedOut: !user, preview, settled: askSettled, firstAnswerAt, at: \{ stageIndex, itemIndex \}, stageKind: stage\.kind \}\)/);
+  assert.match(src, /saveAskDue\(\{ signedOut: !authLoading && !user, preview, settled: askSettled, firstAnswerAt, at: \{ stageIndex, itemIndex \}, stageKind: stage\.kind \}\)/);
   assert.match(src, /body = <SaveProgressAsk level=\{curriculum\.level\} lektion=\{lektion\} onContinue=\{\(\) => setAskSettled\(true\)\} \/>/);
   assert.match(src, /if \(firstAnswerAt \|\| !attempts\.length\) return;\s*setFirstAnswerAt\(\{ stageIndex, itemIndex \}\);/,
     'the first answer is the first attempt recordResult stores, wherever it was given');
@@ -229,6 +247,26 @@ test('the player shows the ask through saveAskDue for a signed-out learner, from
   // The ask decides nothing about the answer itself: every item still checks through check.js.
   for (const f of ['PracticeItem', 'DictationItem', 'WordOrderItem', 'ListenSelectItem']) {
     assert.match(read(`src/components/lesson/${f}.jsx`), /from '\.\.\/\.\.\/lib\/lesson\/check\.js'/, f);
+  }
+});
+
+test('"signed out" means the session has loaded and there is none, so a member never sees the ask flash (review of 6278791d)', () => {
+  // Why `!user` alone is not enough: AuthContext starts with user null and loading true,
+  // getSession may take up to 8 s, and LevelSubscriptionGuard renders a free level
+  // (A1.1) without waiting for it.
+  const auth = read('src/contexts/AuthContext.jsx');
+  assert.match(auth, /const \[user, setUser\] = useState\(null\);\s*const \[loading, setLoading\] = useState\(true\);/);
+  assert.match(auth, /withTimeout\(supabase\.auth\.getSession\(\), \d+\)/);
+  const guard = code(read('src/components/LevelSubscriptionGuard.jsx'));
+  assert.ok(guard.indexOf('if (isLevelFree(level))') < guard.indexOf('if (authLoading || subLoading)'), 'a free level renders before auth has loaded');
+  // So the player reads the flag, and the decision takes it.
+  const src = code(read('src/pages/lesson/LessonPlayerPage.jsx'));
+  assert.match(src, /const \{ user, loading: authLoading \} = useAuth\(\);/);
+  assert.match(src, /signedOut: !authLoading && !user/);
+  assert.doesNotMatch(src, /signedOut: !user\b/);
+  const due = { preview: false, settled: false, firstAnswerAt: FEEDBACK, at: NEXT, stageKind: 'practice' };
+  for (const [authLoading, user, expected] of [[true, null, false], [false, null, true], [false, { id: 'u' }, false], [true, { id: 'u' }, false]]) {
+    assert.equal(ask.saveAskDue({ ...due, signedOut: !authLoading && !user }), expected, JSON.stringify({ authLoading, user }));
   }
 });
 
@@ -247,7 +285,9 @@ test('the ask: an attributed signup href that remembers the place, a way on with
   assert.match(src, /onClick=\{\(\) => \{ settle\(\); onContinue\(\); \}\}/, '"Continue without saving" settles the ask and goes on');
   assert.match(src, /\{t\('saveAsk\.cta', lang\)\}/);
   assert.match(src, /\{t\('saveAsk\.skip', lang\)\}/);
-  assert.match(src, /to="\/login"\s*state=\{\{ from: \{ pathname: here \} \}\}/);
+  assert.match(src, /to="\/login"\s*state=\{\{ from: \{ pathname: here \} \}\}\s*onClick=\{save\}/,
+    '"I already have an account" remembers the place like the signup door: /login can turn into /signup or a new confirmation tab');
+  assert.equal((src.match(/onClick=\{save\}/g) || []).length, 2, 'both account doors take the same save path');
   const card = code(read('src/components/course/SaveProgressCard.jsx'));
   assert.match(card, /href=\{saveProgressSignupHref\(\{ door: 'recap', level \}\)\} onClick=\{\(\) => rememberPlace\(\{ level \}\)\}/);
 });

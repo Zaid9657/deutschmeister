@@ -71,7 +71,7 @@ const ITEM_STAGES = new Set(['practice', 'derived', 'dictation', 'requeue', 'war
 
 export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [lang] = useLessonLang();
   // The run this tab was in the middle of, if any (read once, on mount).
   const [resumed] = useState(() => (preview ? null : readRun(curriculum.level, lektion.id)));
@@ -408,7 +408,10 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
     default:
       body = null;
   }
-  if (saveAskDue({ signedOut: !user, preview, settled: askSettled, firstAnswerAt, at: { stageIndex, itemIndex }, stageKind: stage.kind })) {
+  // Signed out means the session has LOADED and there is none: getSession can
+  // take up to 8 s (AuthContext), and LevelSubscriptionGuard renders a free
+  // level while it loads, so `!user` alone would flash the ask at a member.
+  if (saveAskDue({ signedOut: !authLoading && !user, preview, settled: askSettled, firstAnswerAt, at: { stageIndex, itemIndex }, stageKind: stage.kind })) {
     body = <SaveProgressAsk level={curriculum.level} lektion={lektion} onContinue={() => setAskSettled(true)} />;
   }
 
