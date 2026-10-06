@@ -45,6 +45,7 @@ const pendingPurchase = () => {
   return null;
 };
 import { signupOutcome, resendRefusal, signedInAs, RESEND_COOLDOWN_SECONDS } from '../lib/signupConfirmation.js';
+import { existingAccount } from '../lib/signupConfirmation.js';
 
 // The playbook form field (docs/design/playbook.md §1), with room for the
 // leading icon. The focus ring comes from the global *:focus-visible rule.
@@ -102,6 +103,11 @@ const SignupPage = () => {
   // (the hourly cap, not the 60 s window: src/lib/signupConfirmation.js).
   const [untimedRefusals, setUntimedRefusals] = useState(0);
   const [limitReached, setLimitReached] = useState(false);
+  // Set when signUp answered for an address that already has an account:
+  // Supabase sent no mail, so the inbox panel would promise one that never
+  // comes (existingAccount in src/lib/signupConfirmation.js).
+  const [knownAddress, setKnownAddress] = useState('');
+  const knownHeading = useRef(null);
   const inboxHeading = useRef(null);
 
   useEffect(() => {
@@ -115,6 +121,12 @@ const SignupPage = () => {
   useEffect(() => {
     if (sentTo) inboxHeading.current?.focus();
   }, [sentTo]);
+
+  // Same for the has-an-account notice: it sits above the form, out of view on
+  // a phone whose learner just pressed the button at the bottom.
+  useEffect(() => {
+    if (knownAddress) knownHeading.current?.focus();
+  }, [knownAddress]);
 
   // Confirmed in another tab: supabase-js signs this tab in too (SIGNED_IN over
   // its BroadcastChannel), so the panel moves on to where a login would have
@@ -130,6 +142,7 @@ const SignupPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setKnownAddress('');
     setErrorCause(null);
 
     if (password !== confirmPassword) {
@@ -156,6 +169,11 @@ const SignupPage = () => {
       } else if (outcome === 'signed-in') {
         navigate('/verify-email', { replace: true });
         return;
+      } else if (existingAccount({ data, error })) {
+        // No mail went out, so no inbox panel: say where the account is.
+        setKnownAddress(email.trim());
+        setPassword('');
+        setConfirmPassword('');
       } else {
         // The event /verify-email fired on mount for this step, kept so the
         // signup funnel reads the same before and after.
@@ -309,6 +327,26 @@ const SignupPage = () => {
               <AlertCircle className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
               <AuthErrorText ta={ta} message={error} cause={errorCause} />
             </motion.div>
+          )}
+
+          {knownAddress && (
+            <div role="status" className="mb-6 rounded-clay border border-rule bg-siegel-wash px-4 py-3 text-start text-sm leading-relaxed text-ink">
+              <p ref={knownHeading} tabIndex={-1} className="font-bold">
+                {ta ? ta('account.signup.knownTitle') : 'This address already has an account'}
+              </p>
+              <p className="mt-1 font-data text-[0.8125rem] font-semibold text-siegel-deep break-all" dir="ltr">{knownAddress}</p>
+              <p className="mt-2 text-graphite">
+                {ta ? ta('account.signup.knownBody') : 'No new email was sent. Log in with your password, or set a new one if you have forgotten it.'}
+              </p>
+              <p className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
+                <Link to="/login" className={TEXT_LINK}>
+                  {ta ? ta('auth.login') : 'Log in'}
+                </Link>
+                <Link to="/reset-password" className={TEXT_LINK}>
+                  {ta ? ta('auth.resetPassword') : 'Reset your password'}
+                </Link>
+              </p>
+            </div>
           )}
 
           {sentTo ? (

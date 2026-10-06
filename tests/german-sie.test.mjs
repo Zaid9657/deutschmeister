@@ -29,9 +29,9 @@
 //
 // MAX_DU_BRANCHES is a ratchet over what is left. It only goes down, and it must
 // equal its measurement, so whoever fixes one lowers it in the same commit. On
-// 2026-10-04 it counts six lines product cannot change today: four on
-// SubscriptionPage (revenue's route, and inside the owner's open redesign PR
-// #181), and the two "Wähle …" headings in ReadingChecks.jsx, which a merged PR
+// 2026-10-04 it counted six lines product could not change that day: four on
+// SubscriptionPage (revenue's route; revenue moved them to Sie on 2026-10-05,
+// 6 -> 2), and the two "Wähle …" headings in ReadingChecks.jsx, which a merged PR
 // changed on 2026-09-06 (PROTOCOL rule 6 holds them until 2026-10-07).
 
 import { test } from 'node:test';
@@ -43,7 +43,7 @@ import { dirname, join, relative } from 'node:path';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SRC = join(ROOT, 'src');
 
-const MAX_DU_BRANCHES = 6;
+const MAX_DU_BRANCHES = 2;
 
 /** Course data and lesson pools are content (dialogues duzen on purpose); validate-curriculum owns them. */
 const CONTENT_DIRS = new Set(['curricula', 'lessonPools']);

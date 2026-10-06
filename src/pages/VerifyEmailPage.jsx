@@ -58,9 +58,14 @@ const VerifyEmailPage = () => {
     setResending(true);
     setError('');
     setResent(false);
+    // The link must land on /login, where supabase-js reads the session out of
+    // the URL and the learner is sent on, as signUp's link and the /login and
+    // /signup resends do. Without emailRedirectTo GoTrue uses the Site URL (the
+    // Astro homepage, which reads no session): confirmed, but signed out.
     const { error: resendError } = await supabase.auth.resend({
       type: 'signup',
       email: user.email,
+      options: { emailRedirectTo: `${window.location.origin}/login` },
     });
     setResending(false);
     if (resendError) {

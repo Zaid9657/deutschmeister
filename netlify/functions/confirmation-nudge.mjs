@@ -37,6 +37,7 @@ import { BRAND, emailHeader, ctaCell } from './_shared/brand.mjs';
 import { isBlockedEmail } from './_shared/emailHygiene.mjs';
 import { fetchOptedOutIds } from './_shared/emailOptOut.mjs';
 import { continueToken, TOKEN_TTL_DAYS } from './confirm-continue.mjs';
+import { tagEmailLink } from './_shared/emailLinks.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -66,6 +67,11 @@ const SUBJECT = 'Your DeutschMeister account is one click from ready';
 
 const P = (text) => `<p style="margin:0 0 16px;font-size:16px;color:${BRAND.graphite};line-height:1.6;">${text}</p>`;
 
+// Only the footer is a site link, so only the footer is tagged
+// (docs/tracking-links.md). The button is a function URL carrying a signed,
+// expiring token: it is not a page and is never tagged.
+export const FOOTER_HREF = tagEmailLink(`${BASE_URL}/`, { medium: 'lifecycle', campaign: 'confirm-nudge', content: 'footer' });
+
 export const bodyHtml = (continueUrl) => `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${SUBJECT}</title></head>
@@ -88,7 +94,7 @@ export const bodyHtml = (continueUrl) => `<!DOCTYPE html>
         <tr>
           <td style="padding:20px 32px;border-top:1px solid ${BRAND.rule};text-align:center;">
             <p style="margin:0;font-size:12px;color:${BRAND.graphite};line-height:1.6;">
-              DeutschMeister · <a href="${BASE_URL}" style="color:${BRAND.graphite};">deutsch-meister.de</a><br>
+              DeutschMeister · <a href="${FOOTER_HREF}" style="color:${BRAND.graphite};">deutsch-meister.de</a><br>
               You're receiving this once because this address was used to sign up at deutsch-meister.de.
             </p>
           </td>

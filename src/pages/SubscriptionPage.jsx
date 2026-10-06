@@ -231,7 +231,7 @@ const SubscriptionPage = () => {
       price: num(PLANS.yearly.price),
       period: isGerman ? '/Jahr' : '/year',
       savings: isGerman
-        ? `Spare ${PLANS.yearly.savingPercent}%`
+        ? `Sie sparen ${PLANS.yearly.savingPercent} %`
         : `Save ${PLANS.yearly.savingPercent}%`,
       monthlyEquiv: num(PLANS.yearly.asMonthly),
       features: isGerman
@@ -369,7 +369,7 @@ const SubscriptionPage = () => {
                 </p>
                 <p className="text-sm text-accent-himbeer-ink">
                   {isGerman
-                    ? 'Abonniere jetzt, um weiter auf alle Inhalte zuzugreifen.'
+                    ? 'Abonnieren Sie jetzt, um weiter auf alle Inhalte zuzugreifen.'
                     : 'Subscribe now to continue accessing all content.'}
                 </p>
               </div>
@@ -573,7 +573,7 @@ const SubscriptionPage = () => {
                 <>
                   <p className="text-sm text-graphite mt-2">
                     {isGerman
-                      ? 'Du hast den Kurs. Dein 4-Wochen-Plan wartet.'
+                      ? 'Sie haben den Kurs. Ihr 4-Wochen-Plan wartet.'
                       : 'You own this course. Your 4-week plan is waiting.'}
                   </p>
                   <Button to="/telc-b1-kurs" size="lg" className="mt-4">
@@ -610,7 +610,7 @@ const SubscriptionPage = () => {
         {/* Features grid — reference cards, flat */}
         <div className="text-center">
           <Reveal as="h2" className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink mb-6">
-            {isGerman ? 'Was du bekommst' : 'What You Get'}
+            {isGerman ? 'Was Sie bekommen' : 'What You Get'}
           </Reveal>
           <div className="grid sm:grid-cols-3 gap-4">
             {[
