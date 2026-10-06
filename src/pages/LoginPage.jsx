@@ -41,6 +41,20 @@ const LoginPage = () => {
   // The last refused resend when the refusal was the send-rate limit (what
   // resendRefusal returns), shown as a plain line instead of GoTrue's text.
   const [resendRefused, setResendRefused] = useState(null);
+  // A refusal names its wait ("after 44 seconds"); the button sits that out
+  // with a countdown instead of taking clicks GoTrue will refuse again. Auth
+  // logs, 09-28: one learner was refused three times in a row (44, 42, 3 s)
+  // before the fourth click sent the mail; 6 of the 7 resends from 09-29 to
+  // 10-06 were refused. The wait is for the address it was named for, so
+  // typing another address frees the button.
+  const [cooldown, setCooldown] = useState({ to: '', seconds: 0 });
+  const waiting = cooldown.seconds > 0 && cooldown.to === email;
+
+  useEffect(() => {
+    if (cooldown.seconds <= 0) return undefined;
+    const tick = setTimeout(() => setCooldown((c) => ({ ...c, seconds: c.seconds - 1 })), 1000);
+    return () => clearTimeout(tick);
+  }, [cooldown]);
 
   // A pending checkout (set on /pricing/ before the signup detour) beats the dashboard.
   // The door's page comes back whole, query and hash included (src/lib/loginReturn.js).
@@ -101,7 +115,7 @@ const LoginPage = () => {
   // with the send-rate limit (429): a wait, not a failure, so it gets a plain
   // line (resendRefusal, src/lib/signupConfirmation.js), never the raw text.
   const handleResend = async () => {
-    if (!email || resendState === 'sending') return;
+    if (!email || waiting || resendState === 'sending') return;
     setError('');
     setResendState('sending');
     const { error: resendError } = await supabase.auth.resend({
@@ -112,6 +126,7 @@ const LoginPage = () => {
     if (resendError) {
       const refusal = resendRefusal(resendError, resendRefused?.untimed ?? 0);
       setResendRefused(refusal);
+      setCooldown({ to: email, seconds: refusal?.wait ?? 0 });
       if (!refusal) setError(resendError.message);
       setResendState('idle');
     } else {
@@ -194,14 +209,14 @@ const LoginPage = () => {
                   size="sm"
                   className="mt-3"
                   onClick={handleResend}
-                  disabled={resendState === 'sending'}
+                  disabled={waiting || resendState === 'sending'}
                 >
                   {resendState === 'sending' ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
                     <RefreshCw className="w-4 h-4" />
                   )}
-                  Send me a fresh confirmation email
+                  {waiting ? `Send a fresh email in ${cooldown.seconds} s` : 'Send me a fresh confirmation email'}
                 </Button>
               )}
             </motion.div>

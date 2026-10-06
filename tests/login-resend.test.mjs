@@ -67,7 +67,8 @@ function confirmationMailCalls() {
 // 1 on 2026-10-05: the /verify-email resend, product's route (routed to product
 // by the supervisor on 2026-10-03). That page needs a session, which 0 of 40
 // unconfirmed accounts had in 30 days, so no logged /resend came from it.
-const MAX_CONFIRMATION_MAILS_WITHOUT_REDIRECT = 1;
+// 0 on 2026-10-06: product gave the /verify-email resend the /login redirect.
+const MAX_CONFIRMATION_MAILS_WITHOUT_REDIRECT = 0;
 
 test('every confirmation mail says where its link lands: /login, where the session is read', () => {
   const calls = confirmationMailCalls();
@@ -136,4 +137,55 @@ test('/login renders the refusal in words, never GoTrue\'s text', () => {
   assert.ok(squash(read('src/pages/SignupPage.jsx')).includes(LIMIT));
   // A success and a new login attempt each clear it.
   assert.ok((src.match(/setResendRefused\(null\);/g) || []).length >= 2);
+});
+
+// A rule over every resend, not a list of pages: a resend anywhere under src/
+// (today /signup, /login and /verify-email) sends the /signup panel's mail,
+// the same type and the same /login redirect. Added 2026-10-06 with the
+// /verify-email fix (product), which took the ratchet above to 0.
+test('every resend under src/ is the /signup panel\'s call: same type, same redirect', () => {
+  const resends = confirmationMailCalls().filter((c) => c.method === 'resend');
+  assert.ok(resends.some((c) => c.at.startsWith('src/pages/VerifyEmailPage.jsx:')), 'the walker sees the /verify-email resend');
+  for (const c of resends) {
+    assert.match(c.arg, /type: 'signup'/, `${c.at}: a confirmation resend is type 'signup'`);
+    assert.ok(c.arg.includes(`options: { ${REDIRECT_TO_LOGIN} }`), `${c.at}: pass options: { ${REDIRECT_TO_LOGIN} }`);
+  }
+});
+
+// The wait a refusal names is honoured (the #187 review, 2026-10-05: "no
+// cooldown on refusal.wait"). /login showed the plain line but left the button
+// live, so a learner could click straight into the next refusal: auth logs
+// 2026-09-28 show three refusals in a row (44, 42, 3 s) before the fourth click
+// sent the mail, and 6 of the 7 resends from 09-29 to 10-06 were refused. The
+// /signup panel always waited its countdown out. The rule covers every page
+// that folds a refusal through resendRefusal, so a third resend cannot skip it.
+test('every page that folds a refused resend waits out the wait it names', () => {
+  const pages = sourceFiles().filter(
+    (f) => f !== 'src/lib/signupConfirmation.js' && /\bresendRefusal\(/.test(read(f)),
+  );
+  for (const file of ['src/pages/LoginPage.jsx', 'src/pages/SignupPage.jsx']) {
+    assert.ok(pages.includes(file), `${file} folds its refusals through resendRefusal`);
+  }
+  for (const file of pages) {
+    const src = squash(read(file));
+    assert.match(src, /setCooldown\([^)]*refusal\??\.wait/, `${file}: start the countdown from the refusal's wait`);
+    assert.match(src, /setTimeout\(\(\) => setCooldown\(/, `${file}: count the wait down once a second`);
+    // While it runs, the button is disabled and the handler refuses the click.
+    const disabled = /disabled=\{(.+?) \|\| resendState === 'sending'\}/.exec(src);
+    assert.ok(disabled, `${file}: the resend button is disabled while the countdown runs`);
+    const guard = disabled[1];
+    assert.ok(
+      src.includes(`|| ${guard} || resendState === 'sending') return;`),
+      `${file}: handleResend returns early while ${guard}`,
+    );
+  }
+});
+
+test('/login counts down the named wait, for the address it was named for', () => {
+  // The wait the button sits out is the one GoTrue named, first click to last.
+  assert.deepEqual([timed(44), timed(42), timed(3)].map((e) => resendRefusal(e, 0).wait), [44, 42, 3]);
+  const src = squash(read('src/pages/LoginPage.jsx'));
+  assert.ok(src.includes('setCooldown({ to: email, seconds: refusal?.wait ?? 0 });'), 'a refusal starts the countdown; any other error clears it');
+  assert.ok(src.includes('const waiting = cooldown.seconds > 0 && cooldown.to === email;'), 'another address is not held by this wait');
+  assert.ok(src.includes('{waiting ? `Send a fresh email in ${cooldown.seconds} s` : \'Send me a fresh confirmation email\'}'), 'the button names the seconds left');
 });

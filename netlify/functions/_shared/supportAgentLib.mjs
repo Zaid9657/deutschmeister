@@ -24,6 +24,7 @@ import {
   SITE, FREE_LEVELS, EXAM_TRACKS, MOCK_EXAMS, GUIDES, PLAN_CLAIMS, SITE_LINKS,
   grammarTopicUrl, guideUrl, examHubUrl, courseUrl,
 } from './supportCatalog.mjs';
+import { PRACTICE_AREAS, areaUrl } from './supportCatalog.mjs';
 import { BILLING_PORTAL_URL } from './dunningLink.mjs';
 import { classifyAccess } from './adminOpsLib.mjs';
 
@@ -275,6 +276,7 @@ export function buildFacts({ ticket, profile = null, subscription = null, purcha
       exam_tracks: EXAM_TRACKS.map((x) => ({ name: x.nameDe, level: x.level, mock_exam: MOCK_EXAMS.includes(x.key), writing_practice: x.hasWriting, hub: examHubUrl(x.slug) })),
       guides: GUIDES.map((g) => ({ title: g.title, url: guideUrl(g.slug) })),
       grammar_topics: grammar,
+      areas: PRACTICE_AREAS.map((a) => ({ name: a.title, url: areaUrl(a.route) })),
       not_offered: ['C1', 'C2', 'TestDaF', 'DSH', 'ÖSD'],
     },
     links: SITE_LINKS,
@@ -299,6 +301,8 @@ Rules. Code checks every one after you answer; a reply that breaks one is never 
 6. Answer in German if the customer wrote German, otherwise in English. German always uses "Sie", never "du".
 7. Write the body only: a greeting line ("Guten Tag," or "Hello,"), then the answer in short paragraphs. No sign-off, no name, no signature: the system adds the team signature and the AI disclosure.
 8. If the customer asks for content (a grammar topic, a level, an exam, a course) that is not in FACTS.library, say honestly that it is not available yet, without a date, and set "content_request" to a short name of what they asked for.
+   Every area in FACTS.library.areas exists and is live: never say an area is not available, and rule 8 does not apply to areas. FACTS describes nothing inside an area. If the customer asks about something inside one (a transcript, a translation, an exercise type, a format), never say whether it exists or not: set "escalate" to "needs-human" (rule 1).
+   FACTS.library.areas says nothing about access: never tell a customer they can open an area or a level because it is listed there. Answer access questions only from FACTS.customer.levels_open_now; if that does not answer it, set "escalate" to "needs-human".
 9. At most 180 words. Plain text, no Markdown.
 
 Answer with one JSON object and nothing else:
@@ -481,6 +485,52 @@ export function billingPlaceProblems(body) {
   return problems;
 }
 
+// ─── areas: a listed practice area is never called unavailable ───────────────
+//
+// FACTS names the practice areas (supportCatalog PRACTICE_AREAS) but describes
+// nothing inside them, so a reply that names an area AND says something is "not
+// available" states what the facts cannot back. On 2026-10-04 a draft said "a
+// podcast feature is not currently available"; the reading translation and the
+// listening transcript are live too. Read over the whole body, not one sentence:
+// "The podcasts are at <url>. Transcripts are not available yet." denies a part
+// in a sentence of its own. A rule-8 reply ("C1 is not available yet") that also
+// points to an area is blocked as well: the owner answers that one by hand.
+// Code: area-denied.
+const AREA_DENIAL = [
+  /\bnot (?:\w+ ){0,2}?(?:available|offered|supported|included|part of)\b/,
+  /\bno longer (?:available|offered)\b/,
+  /\bunavailable\b/,
+  /\b(?:do|does|did)(?: not|n['’]?t) (?:\w+ )?(?:exist|offer|have|include|provide|support)\b/,
+  /\bnicht (?:\w+ ){0,2}?(?:verfuegbar|angeboten|vorhanden|enthalten|moeglich)\b/,
+  /\bgibt es (?:\w+ ){0,3}?(?:nicht|kein\w*)\b/,
+  /\b(?:bieten|haben) wir (?:\w+ ){0,4}?(?:nicht|kein\w*)\b/,
+];
+
+/** `w` occurs in `text` at a word start (a token that starts with '/' may follow anything). */
+function hasWord(text, w) {
+  for (let i = text.indexOf(w); i !== -1; i = text.indexOf(w, i + 1)) {
+    if (!/[a-z0-9]/.test(w[0]) || i === 0 || !/[a-z0-9]/.test(text[i - 1])) return true;
+  }
+  return false;
+}
+
+/** The first practice area a reply names, by one of its words or its route. */
+export function areaNamedIn(body) {
+  const fb = fold(body);
+  return PRACTICE_AREAS.find((a) => [...a.words, `${a.route}/`].some((w) => hasWord(fb, fold(w)))) || null;
+}
+
+export function areaDenialProblems(body) {
+  const area = areaNamedIn(body);
+  if (!area) return [];
+  const fb = fold(body);
+  for (const re of AREA_DENIAL) {
+    const m = fb.match(re);
+    if (m) return [{ code: 'area-denied', detail: `names ${area.route}/ and says "${m[0]}": FACTS describes nothing inside an area, so this goes to a person` }];
+  }
+  return [];
+}
+
 /**
  * Deterministic checks on the composed reply. Returns problems ([] = sendable).
  * Codes: disclosure-missing, signature-missing, personal-signature,
@@ -549,6 +599,8 @@ export function validateReply(text, { language } = {}) {
   for (const m of rest.matchAll(EMAIL_RE)) if (!OUR_HOSTS.has(m[1].toLowerCase())) add('foreign-url', m[0]);
   rest = rest.replace(EMAIL_RE, ' ');
   for (const m of rest.matchAll(DOMAIN_RE)) if (!OUR_HOSTS.has(m[0].toLowerCase())) add('foreign-url', m[0]);
+  // A listed area: never "not available", in whole or in part (code area-denied).
+  problems.push(...areaDenialProblems(body));
 
   return problems;
 }
