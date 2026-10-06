@@ -11,6 +11,7 @@ import { curriculumPath } from '../data/curricula/index.js';
 import { SUPPORT_LINK } from '../data/navigation.js';
 import { isLevelFree } from '../config/freeTier.js';
 import { hasLocalProgress, localDoneIds, mergeLocalProgress } from '../lib/course/localProgress.js';
+import { clearReturnPath } from '../lib/returnPath.js';
 import ExamDatePlan from '../components/course/ExamDatePlan.jsx';
 import CourseWelcome from '../components/course/CourseWelcome.jsx';
 import FirstRunTour from '../components/course/FirstRunTour.jsx';
@@ -121,6 +122,12 @@ export default function CurriculumHomePage({ curriculum }) {
     else load();
     return () => { cancelled = true; };
   }, [user, programKey, level]);
+
+  // The recap's save-progress card remembered this page for the sign-up round
+  // trip (src/lib/returnPath.js); signed in and here, that is done.
+  useEffect(() => {
+    if (user) clearReturnPath();
+  }, [user]);
 
   const firstOpenIndex = path.findIndex((n) => !done.has(n.id));
   const current = firstOpenIndex === -1 ? null : path[firstOpenIndex];

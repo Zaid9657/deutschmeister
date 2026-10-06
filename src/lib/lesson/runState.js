@@ -16,7 +16,8 @@
 // restores it on mount, and the recap clears it. So every full page load in
 // the same tab resumes where the learner was, whichever screen caused it.
 // sessionStorage, not localStorage: the snapshot belongs to this tab's run.
-// A new tab or a new day starts a new run, as before.
+// A new tab or a new day starts a new run, as before — except the one hand-off
+// at the end of this file, for the sign-up round trip.
 //
 // WHAT A RESUMED RUN NEEDS TO BE THE SAME RUN. buildLesson is deterministic in
 // (curriculum, lektion, pool, dueCards, attempt). The snapshot therefore keeps
@@ -82,5 +83,36 @@ export function resumeStageIndex(stages, run) {
 }
 
 export const saveRun = (level, lektionId, run) => safeSetJSON(runKey(level, lektionId), run, { session: true });
-export const readRun = (level, lektionId, now = Date.now()) => unpackRun(safeGetJSON(runKey(level, lektionId), null, { session: true }), now);
 export const clearRun = (level, lektionId) => safeRemove(runKey(level, lektionId), { session: true });
+
+// THE ONE EXCEPTION TO "THIS TAB'S RUN": THE ACCOUNT ROUND TRIP (2026-10-06).
+// The save-progress ask (src/lib/course/saveProgressAsk.js) sends a signed-out
+// learner to /signup in the middle of a Lektion, and the confirmation e-mail
+// opens /login in a NEW tab, whose sessionStorage is empty: the learner would
+// land on the intro of the Lektion they were in the middle of. So the click
+// copies this tab's run into localStorage (handOffRun), and the next tab that
+// opens the same Lektion WITHOUT a run of its own takes it over, once
+// (takeHandedOffRun, called by readRun). A tab that has its own run keeps it.
+// The hand-off ages out like any run (RUN_MAX_AGE_MS).
+export const HANDOFF_KEY = 'dm_lesson_run_handoff';
+
+/** Copy this tab's run of one Lektion to localStorage for the sign-up round trip. False when there is none. */
+export function handOffRun(level, lektionId, now = Date.now()) {
+  const run = unpackRun(safeGetJSON(runKey(level, lektionId), null, { session: true }), now);
+  if (!run) return false;
+  return safeSetJSON(HANDOFF_KEY, { key: runKey(level, lektionId), run });
+}
+
+/** The run handed off to this Lektion, taken once: it moves into this tab's sessionStorage. */
+export function takeHandedOffRun(level, lektionId, now = Date.now()) {
+  const handoff = safeGetJSON(HANDOFF_KEY, null);
+  if (!handoff || typeof handoff !== 'object' || handoff.key !== runKey(level, lektionId)) return null;
+  safeRemove(HANDOFF_KEY);
+  const run = unpackRun(handoff.run, now);
+  if (run) saveRun(level, lektionId, run);
+  return run;
+}
+
+/** This tab's run, else a run the sign-up round trip handed off to this Lektion, else null. */
+export const readRun = (level, lektionId, now = Date.now()) =>
+  unpackRun(safeGetJSON(runKey(level, lektionId), null, { session: true }), now) || takeHandedOffRun(level, lektionId, now);

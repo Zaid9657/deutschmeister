@@ -3,32 +3,33 @@ import { Save } from 'lucide-react';
 import Card from '../ui/Card.jsx';
 import Button from '../ui/Button.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { coursePath as coursePathOf, rememberPlace, saveProgressSignupHref } from '../../lib/course/saveProgressAsk.js';
 
-// "Fortschritt speichern — kostenlos": the one ask a signed-out learner sees,
-// and only AFTER they have finished a Lektion (P4, "first lesson before
-// sign-up"). Everything they just did is already in localStorage
-// (src/lib/course/localProgress.js) and is merged into their account on the
-// first render after sign-in, so this card promises nothing the code does not
-// do — and it is not a wall: the next Lektion stays open either way.
+// "Fortschritt speichern — kostenlos": the ask a signed-out learner sees on the
+// recap, after they have finished a Lektion (P4, "first lesson before
+// sign-up"). Since 2026-10-06 the same ask also comes once after the first
+// checked answer (SaveProgressAsk.jsx; the rule is in
+// src/lib/course/saveProgressAsk.js). Everything they just did is already in
+// localStorage (src/lib/course/localProgress.js) and is merged into their
+// account on the first render after sign-in, so this card promises nothing the
+// code does not do — and it is not a wall: the next Lektion stays open either
+// way.
 //
-// The destination carries the course home twice, because the SPA has two
-// post-auth conventions and neither is ours to change from here:
-//   * `?redirect=<path>` — the spelling P4 specifies, and what a human reads
-//     in the URL. SignupPage does not honour it yet (it always goes to
-//     /verify-email); wiring it is an integrator step, noted in the P4 report.
-//   * `state.from` — what LoginPage already honours
-//     (`location.state?.from?.pathname`), so a learner who signs up, confirms
-//     and then logs in lands back on the course.
-// Either way the merge does not depend on the redirect: it runs wherever the
-// learner next opens the course.
+// The signup door is a plain href with the on-site door tag
+// `ref=save-progress-recap` (a router <Link> would drop the tag:
+// public/attribution.js reads it on a page load). The click remembers the
+// course home (src/lib/returnPath.js), and postAuthPath returns there after
+// the confirmation e-mail, where the merge runs. It used to hand /signup a
+// `?redirect=` and a `state.from` that SignupPage never read, so a learner who
+// signed up from here landed on /dashboard. The login link keeps `state.from`,
+// which LoginPage honours.
 //
 // Copy comes from the lesson string table in the chrome language (English by
 // default, Deutsch-Modus on the toggle) — the card sits on the recap screen.
 
 export default function SaveProgressCard({ level }) {
   const [lang] = useLessonLang();
-  const coursePath = `/course/${level}`;
-  const to = { pathname: '/signup', search: `?redirect=${encodeURIComponent(coursePath)}` };
+  const coursePath = coursePathOf(level);
 
   return (
     <Card raised edge="siegel" className="mt-4 p-5">
@@ -42,7 +43,7 @@ export default function SaveProgressCard({ level }) {
             {t('save.body', lang)}
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-3">
-            <Button to={to} state={{ from: { pathname: coursePath } }} variant="primary" size="md">
+            <Button href={saveProgressSignupHref({ door: 'recap', level })} onClick={() => rememberPlace({ level })} variant="primary" size="md">
               {t('save.cta', lang)}
             </Button>
             <Link
