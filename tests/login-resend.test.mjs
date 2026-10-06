@@ -151,3 +151,41 @@ test('every resend under src/ is the /signup panel\'s call: same type, same redi
     assert.ok(c.arg.includes(`options: { ${REDIRECT_TO_LOGIN} }`), `${c.at}: pass options: { ${REDIRECT_TO_LOGIN} }`);
   }
 });
+
+// The wait a refusal names is honoured (the #187 review, 2026-10-05: "no
+// cooldown on refusal.wait"). /login showed the plain line but left the button
+// live, so a learner could click straight into the next refusal: auth logs
+// 2026-09-28 show three refusals in a row (44, 42, 3 s) before the fourth click
+// sent the mail, and 6 of the 7 resends from 09-29 to 10-06 were refused. The
+// /signup panel always waited its countdown out. The rule covers every page
+// that folds a refusal through resendRefusal, so a third resend cannot skip it.
+test('every page that folds a refused resend waits out the wait it names', () => {
+  const pages = sourceFiles().filter(
+    (f) => f !== 'src/lib/signupConfirmation.js' && /\bresendRefusal\(/.test(read(f)),
+  );
+  for (const file of ['src/pages/LoginPage.jsx', 'src/pages/SignupPage.jsx']) {
+    assert.ok(pages.includes(file), `${file} folds its refusals through resendRefusal`);
+  }
+  for (const file of pages) {
+    const src = squash(read(file));
+    assert.match(src, /setCooldown\([^)]*refusal\??\.wait/, `${file}: start the countdown from the refusal's wait`);
+    assert.match(src, /setTimeout\(\(\) => setCooldown\(/, `${file}: count the wait down once a second`);
+    // While it runs, the button is disabled and the handler refuses the click.
+    const disabled = /disabled=\{(.+?) \|\| resendState === 'sending'\}/.exec(src);
+    assert.ok(disabled, `${file}: the resend button is disabled while the countdown runs`);
+    const guard = disabled[1];
+    assert.ok(
+      src.includes(`|| ${guard} || resendState === 'sending') return;`),
+      `${file}: handleResend returns early while ${guard}`,
+    );
+  }
+});
+
+test('/login counts down the named wait, for the address it was named for', () => {
+  // The wait the button sits out is the one GoTrue named, first click to last.
+  assert.deepEqual([timed(44), timed(42), timed(3)].map((e) => resendRefusal(e, 0).wait), [44, 42, 3]);
+  const src = squash(read('src/pages/LoginPage.jsx'));
+  assert.ok(src.includes('setCooldown({ to: email, seconds: refusal?.wait ?? 0 });'), 'a refusal starts the countdown; any other error clears it');
+  assert.ok(src.includes('const waiting = cooldown.seconds > 0 && cooldown.to === email;'), 'another address is not held by this wait');
+  assert.ok(src.includes('{waiting ? `Send a fresh email in ${cooldown.seconds} s` : \'Send me a fresh confirmation email\'}'), 'the button names the seconds left');
+});
