@@ -33,6 +33,17 @@
 //     to where a login would have gone, but only for a session of the address
 //     the link went to: an account already signed in on this browser is not the
 //     one that was just created.
+//
+// A third case (2026-10-06): an address that already has a CONFIRMED account.
+// Supabase answers its signUp with HTTP 200, no session and no mail (auth logs
+// it as user_repeated_signup: 8 times in the 14 days to 2026-10-06 16:30 UTC),
+// so "We sent a confirmation link" promised a mail that never came. Supabase
+// marks that answer itself: the user it returns is a stand-in whose
+// `identities` list is empty (existingAccount below). /signup then says the
+// address has an account and offers log in and password reset. That tells the
+// visitor nothing the signUp response has not already told their browser. An
+// address that signed up but never confirmed comes back WITH its identity and
+// does get a fresh confirmation mail, so it keeps the inbox panel.
 
 /** Supabase lets one address receive one auth mail per this many seconds. */
 export const RESEND_COOLDOWN_SECONDS = 60;
@@ -58,6 +69,20 @@ const namedWaitSeconds = (error) => {
 export function signupOutcome(result) {
   if (result?.error) return 'error';
   return result?.data?.session ? 'signed-in' : 'check-email';
+}
+
+/**
+ * Whether a session-less signUp answered for an address that already has a
+ * confirmed account, so no mail was sent. Only an explicit empty `identities`
+ * array counts (GoTrue's sanitizeUser stand-in); a user without the list, an
+ * error or a session is not this case, and the page keeps its other paths.
+ * @param {{ data?: { user?: { identities?: unknown[] }|null, session?: object|null }|null, error?: object|null }} result  what signUp returned
+ * @returns {boolean}
+ */
+export function existingAccount(result) {
+  if (result?.error || result?.data?.session) return false;
+  const identities = result?.data?.user?.identities;
+  return Array.isArray(identities) && identities.length === 0;
 }
 
 /**

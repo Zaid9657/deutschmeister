@@ -271,6 +271,8 @@ export const STRINGS = {
     'recap.vocabBridge.adding': 'Adding …',
     'recap.vocabBridge.added': 'Added to your vocab deck.',
     'recap.vocabBridge.signInHint': 'Sign in to save these words to your vocab deck.',
+    'recap.follow.title': 'German in your feed',
+    'recap.follow.body': 'One post a day: the sentence of the day, a common mistake, an exam fact.',
 
     // ── words-learned flip cards (recap) ─────────────────────────────────────
     'words.tapToFlip': 'Tap a card for the translation',
@@ -610,6 +612,8 @@ export const STRINGS = {
     'recap.vocabBridge.adding': 'Wird hinzugefügt …',
     'recap.vocabBridge.added': 'Zu Ihrem Wortschatz hinzugefügt.',
     'recap.vocabBridge.signInHint': 'Melden Sie sich an, um diese Wörter in Ihrem Wortschatz zu speichern.',
+    'recap.follow.title': 'Deutsch im Feed',
+    'recap.follow.body': 'Jeden Tag ein Post: der Satz des Tages, ein typischer Fehler, ein Prüfungsfakt.',
 
     // ── words-learned flip cards (recap) ─────────────────────────────────────
     'words.tapToFlip': 'Für die Übersetzung antippen',

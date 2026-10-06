@@ -13,6 +13,9 @@ import { lessonDateFormat, t, useLessonLang } from '../../lib/lesson/strings.js'
 import { curriculumFor } from '../../data/curricula/index.js';
 import { enqueueWords } from '../../services/srsService.js';
 import { supabase } from '../../utils/supabase.js';
+import { SOCIAL_LINKS } from '../../data/navigation.js';
+import { SOCIAL_ICONS } from '../socialIcons.js';
+import { trackSocialClicked } from '../../lib/funnelTracking.js';
 
 /**
  * Stage 8 — Recap. Words learned, the grammar point, the first-attempt
@@ -247,6 +250,34 @@ export default function RecapStage({ stage, accuracy, status, skills = [], sync 
       )}
 
       {!user && level ? <SaveProgressCard level={level} /> : null}
+
+      {/* Follow the channels: signed-in learners only, and last on the screen.
+          A signed-out learner's one extra ask is the save-progress card above;
+          sending them off-site before they have an account loses the signup. */}
+      {user && (
+        <Card className="mt-5 p-5 sm:p-6">
+          <h3 className="font-display text-lg text-ink">{t('recap.follow.title', lang)}</h3>
+          <p className="mt-1 text-sm text-graphite">{t('recap.follow.body', lang)}</p>
+          <ul className="mt-3 flex flex-wrap gap-x-5">
+            {SOCIAL_LINKS.map((item) => {
+              const Icon = SOCIAL_ICONS[item.key];
+              return (
+                <li key={item.key}>
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackSocialClicked(item.key, 'lesson_recap')}
+                    className="inline-flex min-h-11 items-center gap-1.5 text-sm font-bold text-siegel hover:text-siegel-deep"
+                  >
+                    <Icon className="h-4 w-4" aria-hidden="true" /> {lang === 'de' ? item.labelDe : item.labelEn}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </Card>
+      )}
 
     </StageShell>
   );

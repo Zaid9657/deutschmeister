@@ -31,6 +31,7 @@ Every Astro event also carries `entry_page`, `signed_in` and the first-touch `dm
 | Paid (observed) | `checkout_completed` | The app sees the success screen once (`dm_checkout_pending` → `consumeCheckoutSuccess`) | `plan`, `amount` |
 | Paid (real) | — | A `purchases` row exists (webhook) | `weekly_truth_metrics()` |
 | First lesson | `lesson_started` / `lesson_completed` | A course Lektion opens / reaches its recap | `level`, `topic` |
+| Social | `social_clicked` | A link to YouTube / Instagram / Facebook is clicked (site footer, lesson recap) | `channel`, `surface` |
 
 **The `signup_completed` fix.** It used to fire only within 60 seconds of account creation, and email confirmation usually takes longer. It now also fires when the email was confirmed in the last 30 minutes on an account under 14 days old, once per browser.
 

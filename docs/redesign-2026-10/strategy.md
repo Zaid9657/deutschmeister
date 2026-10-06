@@ -146,7 +146,7 @@ Visits cannot be measured from this environment (GA4 is consent-gated, and Searc
 1. **Confirm the functions-scope numeric variant ids** for A1.2, A2.1 and A2.2 with a €0 (100% discount) test purchase. Production already shows Buy for these three, so this is what proves a buyer actually receives access. **Do this before the launch email.**
 2. **D1: Pro opens every paid level**, so one €9.99 month undercuts a €40 ticket.
    - Recommendation: **keep it for now**. Frame it as own versus rent (done), and revisit after the first 10 ticket sales with real data on who buys which.
-3. **Refund wording.** `src/data/faqContent.js` mentions a 7-day money-back guarantee, but no sales surface states it.
+3. **Refund wording.** `src/data/faqContent.js` used to mention a 7-day money-back guarantee; it was removed on 2026-10-05 (#186) and `tests/refund-claims.test.mjs` now bans any refund promise until this decision is made. No sales surface states one.
    - Recommendation: confirm the policy in the Lemon Squeezy settings, then decide whether it belongs on the ticket. An honest refund line usually lifts one-time purchases.
 4. **The global body-font swap (Archivo in the app)** waits until Course v2 (PR #149) merges.
    - Recommendation: keep the library in Fraunces/Nunito and use the sign face for commerce screens only (what this branch does).

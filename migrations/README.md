@@ -94,6 +94,12 @@ Some live objects were created by hand before this folder existed. They are reco
 - Make every statement idempotent (`DROP POLICY IF EXISTS`, `CREATE OR REPLACE`,
   `ADD COLUMN IF NOT EXISTS`) so a file can be re-run safely.
 - Put a header comment in each file: what it fixes, how to test, how to roll back.
+- `tests/migration-advisors.test.mjs` replays every file here in order and fails on a
+  Supabase security-advisor class that is at 0 live: a public table without
+  `ENABLE ROW LEVEL SECURITY`, a `CREATE [OR REPLACE] VIEW` without
+  `WITH (security_invoker = true)` (a replace drops it), a function without `SET search_path`,
+  a `SECURITY DEFINER` function still executable by `PUBLIC`, `anon` or `authenticated`, or
+  any of those done inside a `DO` block, which it cannot read. A new file must pass on its own.
 
 ## Legacy SQL at the repo root
 

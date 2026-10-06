@@ -1,3 +1,13 @@
+import { tagEmailLink } from './_shared/emailLinks.mjs';
+import { socialFooterLine } from './_shared/socialLinks.mjs';
+
+// The two site links carry the email tags (docs/tracking-links.md, "Our own
+// email"), so a click from the welcome mail is filed as email/lifecycle/welcome
+// instead of untracked or a webmail host. Fixed strings: no id, address or date.
+const WELCOME_UTM = { medium: 'lifecycle', campaign: 'welcome' };
+export const WELCOME_CTA_HREF = tagEmailLink('https://deutsch-meister.de/analyze/', { ...WELCOME_UTM, content: 'cta' });
+export const WELCOME_FOOTER_HREF = tagEmailLink('https://deutsch-meister.de/', { ...WELCOME_UTM, content: 'footer' });
+
 const WELCOME_HTML = (_email) => `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,7 +48,7 @@ const WELCOME_HTML = (_email) => `<!DOCTYPE html>
               <table cellpadding="0" cellspacing="0" style="margin:28px 0;">
                 <tr>
                   <td style="border-radius:10px;background:#0F766E;">
-                    <a href="https://deutsch-meister.de/analyze/"
+                    <a href="${WELCOME_CTA_HREF}"
                        style="display:inline-block;padding:14px 28px;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none;letter-spacing:-0.2px;">
                       Try Sentence X-Ray →
                     </a>
@@ -60,7 +70,7 @@ const WELCOME_HTML = (_email) => `<!DOCTYPE html>
           <tr>
             <td style="padding:20px 32px;border-top:1px solid #f1f5f9;text-align:center;">
               <p style="margin:0;font-size:12px;color:#94a3b8;line-height:1.6;">
-                DeutschMeister · <a href="https://deutsch-meister.de" style="color:#94a3b8;">deutsch-meister.de</a>
+                DeutschMeister · <a href="${WELCOME_FOOTER_HREF}" style="color:#94a3b8;">deutsch-meister.de</a>${socialFooterLine('#94a3b8')}
               </p>
             </td>
           </tr>
@@ -71,6 +81,8 @@ const WELCOME_HTML = (_email) => `<!DOCTYPE html>
   </table>
 </body>
 </html>`;
+
+export { WELCOME_HTML as welcomeHtml };
 
 export const handler = async (event) => {
   const headers = { 'Content-Type': 'application/json' };

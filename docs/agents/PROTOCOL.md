@@ -1,4 +1,4 @@
-# Agent team protocol (v3, 2026-10-01: continuous mode)
+# Agent team protocol (v4, 2026-10-04: playbooks, expected effects, revenue focus)
 
 Every area agent in `.claude/agents/` follows this protocol. The agent's own file adds its
 metrics, levers and boundaries. The team's shared memory is the private claude.ai artifact
@@ -7,10 +7,11 @@ written with the `ArtifactData` tool:
 
 | Path | What it holds |
 |---|---|
-| `config/charter` | mission, north star, team goal, principles, autonomy, and per agent: `owns`, `goal`, `second`, `guardrails` |
-| `config/rubric` | the versioned scoring rubric (v2): one measured number per area, fixed bands, weights, pass line 60 |
+| `config/charter` | mission, north star, team goal, principles, autonomy, and per agent: `owns`, `goal`, `second`, `guardrails`; since v4 also `team_playbook` (rules shared by ≥ 2 agents) and `judging_v4` (classes, keep/revert rule, estimator scoring, target cadence) |
+| `config/rubric` | the versioned scoring rubric (v2.1): one measured number per area, fixed bands, weights, pass line 60 |
 | `snapshots/<YYYY-MM-DD>` | the day's scored scorecard (written by the supervisor's first run of the day) |
-| `agents/<key>` | the agent's memory: last run, pulse, goal status, open experiment, learnings, handoffs in, incidents, proposals, log |
+| `agents/<key>` | the agent's memory: last run, pulse, goal status, open experiment, learnings, handoffs in, incidents, proposals, log; since v4 also `playbook`, `playbook_proposals`, and for revenue `owner_queue`, for support `desk` |
+| `changes/<id>` | one record per shipped change (the ledger the supervisor judges from); since v4 it must carry `expected_effect` |
 | `roadmap/<id>` | the ordered work list (phase, owner agent, who acts, status) |
 
 Charter keys and agent files: `revenue` (revenue-agent), `conversion` (conversion-agent),
@@ -20,12 +21,199 @@ Charter keys and agent files: `revenue` (revenue-agent), `conversion` (conversio
 (security-agent), `supervisor` (supervisor). Verified pulse queries live in
 `docs/agents/pulse.sql`.
 
+## v4 (owner-approved plan, 2026-10-04)
+
+v4 amends v3. Where they disagree, v4 wins. The v3 text below stays in force wherever v4 does
+not change it, and is kept as history. Two aims: make the team's learning loop real, and point
+every run at revenue. The learning loop follows the "playbook" pattern of *Agentic Context
+Engineering* (ACE, arXiv, ICLR 2026): itemized rules with helpful/harmful counters, a
+Generator → Reflector → Curator cycle, a deterministic merge, and pruning of rules that hurt.
+
+**What a run is, in v4.** A run builds at most ONE change, in the agent's own git worktree, and
+commits it there. It never pushes, merges, migrates, sends email or writes Netlify settings.
+The orchestrator reviews every change, releases what passes (PROTOCOL v3 § Integration and
+release) and holds the rest. Older agent files that say "one move per run, never merge" mean
+the same thing.
+
+### v4.1 The playbook
+
+- **Where.** Each area agent has `agents/<key>.playbook`: at most 15 rules, each
+  `{id: "<key>-NN", rule: "<one imperative sentence>", helpful, harmful, source}`. Rules shared
+  by two or more agents live once in `config/charter.team_playbook` (same shape, ids `team-NN`).
+  `learnings` stay as the narrative record; the playbook is the distilled, countable form. The
+  first playbooks (2026-10-04) were distilled from each agent's `learnings` and log, counters 0.
+- **Generator (start of every run).** Read your `playbook`; list the rule ids you will apply.
+  Read `config/charter.team_playbook` too. Write the list into `last_report`.
+- **Reflector (end of every run).** Log the ids you used (the `log` line carries
+  `rules: <id>, <id>`) and copy them into the change record (`changes/<id>.playbook_ids`).
+  Propose ADD/UPDATE/REMOVE playbook edits in `playbook_proposals`, each
+  `{op, id (UPDATE/REMOVE), rule (ADD/UPDATE), evidence, date}`. Never edit counters yourself,
+  and never write `playbook` directly.
+- **Curator (supervisor only, Monday's first run).** Only the supervisor writes `playbook`,
+  the counters and `team_playbook`. In this fixed order:
+  1. **Counters** from outcomes since the last Curator pass. For each judged change, every rule
+     id in its `playbook_ids`: kept and the leading indicator moved in the expected direction
+     (class L/A), or kept with guardrails held (class B) → `helpful + 1`; reverted, or a
+     guardrail breach → `harmful + 1`; not yet judged → nothing. For support desk drafts: sent
+     unchanged → `helpful + 1` on the rule ids that pass used; discarded → `harmful + 1`; edited
+     → nothing.
+  2. **Prune** every rule with `harmful ≥ 2` and `harmful > helpful` (move it to
+     `playbook_pruned` with the date and counts; never silently delete).
+  3. **Merge duplicates** inside one playbook: keep the lower id, sum both counters, name the
+     merged id in `source`.
+  4. **Promote** a rule that two or more agents hold in substance to `team_playbook`
+     (counters summed, origin ids in `source`) and remove it from those playbooks.
+  5. **Apply `playbook_proposals`** in order (agent key, then date, then position): ADD gets the
+     next free id with counters 0 unless it duplicates a rule (then it is a merge); UPDATE keeps
+     the counters when the meaning is unchanged and resets them to 0 when it changes; REMOVE
+     applies only with evidence that the rule is wrong or with `harmful ≥ helpful`. Over 15
+     rules, drop the lowest `helpful − harmful`, oldest first. Move each processed proposal to
+     `playbook_proposals_done` with its verdict.
+- **Into the prompts (monthly).** On the first Monday of a month the supervisor asks the
+  orchestrator for one PR proposal that moves the top 3 `team_playbook` rules (highest
+  `helpful − harmful`, `helpful ≥ 3`) into prompt text (`.claude/agents/*.md` or this file). It
+  lives on an `owner-decision/playbook-<YYYY-MM>` branch, because `.claude/**` and
+  `docs/agents/**` are owner-only paths (v3 rule 3).
+
+### v4.2 Every change states its expected effect
+
+No change is released without `changes/<id>.expected_effect`, written by the agent that built
+it:
+
+```
+expected_effect: {
+  metric, direction: "up" | "down",
+  baseline: {value, n, window},                 // measured in this run
+  eur_per_month: [low, high]  or  signups_per_week: [low, high],
+  leading_indicator: {metric, baseline, expected, judge_at},   // judge_at = deploy + 14 d
+  guardrail                                      // what is reverted on, and the threshold
+}
+```
+
+A range is an honest estimate, and 0 is a legitimate low end. A class B fix states its range
+(often `[0, x]`) and the reason it can move money at all. The building agent's `last_report`
+names the same numbers.
+
+### v4.3 Small-n judging: class L
+
+- **Class A** (v3 rule 5) stays, but at about 2–3 signups a day almost no funnel metric reaches
+  the n a powered test needs within a quarter. Expect few.
+- **Class B** (fix) is unchanged: judged on guardrails only.
+- **Class L (leading indicator)** is the default for changes that claim an effect. The change
+  names a 14-day leading indicator that is measurable at current volume (clicks on the new
+  CTA, checkout starts from a door, stage reach in the lesson player, desk drafts sent
+  unchanged). It is judged at `deploy_published_at + 14 days` on that indicator, plus the €
+  effect re-estimated from the actual indicator.
+- **Keep or revert:** revert only on a guardrail breach (the change's `revert_trigger`). A
+  missed leading indicator is recorded, not reverted. Two live class-L changes may not share a
+  leading indicator; the second waits.
+- **Record:** at the judge date write `changes/<id>.actual` =
+  `{leading_indicator, metric_delta, eur_per_month, judged_at, verdict}`. Actual against
+  expected is what the supervisor's estimator score uses: each Monday it scores each agent's
+  `expected_effect` accuracy over its judged changes (the share whose actual indicator fell in
+  the stated range; ties go to the smaller € error; at least 2 judged changes to rank). The top
+  2 estimators get one extra build slot that week.
+
+### v4.4 Cadence (live on the Routines since 2026-10-05)
+
+| UTC | Who | What |
+|---|---|---|
+| 05:50, 09:50, 12:50, 15:50, 19:50 daily | supervisor | as v3; Monday's first run adds the Curator pass and the estimator score |
+| 06:10 daily | revenue | daily run; maintains `owner_queue` |
+| 06:20 daily | conversion | daily run; reports jointly with revenue |
+| 06:30 daily | product | daily run |
+| 06:40 and 13:40 daily | acquisition | daily run twice a day; it also does SEO work (below) |
+| 07:00 daily | content | daily run |
+| 07:10 daily | retention | daily run |
+| 07:20, 12:20, 18:20 daily | support desk | Gmail drafts and labels only (v4.5); sending is owner-only |
+| Monday 07:30 | website | weekly, fix-only |
+| Wednesday 06:50 | seo | weekly measurement and diagnosis only |
+| Wednesday 07:40 | webperf | weekly, fix-only (Lighthouse on the 7 tracked pages) |
+| Friday 07:50 | security | weekly, fix-only |
+| 11:10 and 16:10 daily | build waves | as v3 (at most 3 build-only runs, one batched release) |
+
+- **SEO folds into acquisition** until Search Console is verified and readable from this
+  environment. Acquisition builds SEO changes inside the seo area's `owns` (rule 1 counts them
+  as its own) and v3 rule 7 still holds (proven defects only, never rewrites). The seo agent
+  runs only on its weekly deep day to measure, diagnose and hand builds to acquisition.
+- **Weekly fix-only agents** (website, webperf, security) have one slot each, and that run is
+  also their deep day. They build only defect fixes backed by evidence (v3 rule 8), whatever
+  their score. The supervisor's daily snapshot still measures their numbers every day, and a
+  critical or high incident in their area (for website also a red `main` or a failed deploy;
+  for security a new advisor ERROR) makes the supervisor ask the orchestrator for an off-cycle
+  run.
+- **Deep days in v4:** Monday revenue, conversion, website; Tuesday product; Wednesday
+  acquisition, seo, webperf; Thursday retention, content; Friday support (the 07:10 desk run),
+  security. This replaces the v3 deep-day table below.
+
+### v4.5 The support desk (Gmail)
+
+- **Where.** The shared Google Workspace inbox that the DeutschMeister contact addresses
+  forward to (`config/charter.owner_contacts`). MedMeister mail lands there too, but it belongs to
+  the MedMeister team's own support agent (Routine "MM team: support", its own Supabase ledger),
+  which already drafts MedMeister replies in this inbox and skips DeutschMeister mail. **The
+  DeutschMeister desk handles DeutschMeister threads only** (sent to a `deutsch-meister.de`
+  address or about DeutschMeister) and leaves MedMeister threads untouched: no label, no draft.
+  Two agents drafting in one thread would double the owner's work.
+- **What a desk run does.** Read new threads since the last pass through the Gmail connector.
+  Label each DeutschMeister customer thread `AI/DM` and one topic
+  (`AI/t-question`, `AI/t-access`, `AI/t-billing`, `AI/t-bug`, `AI/t-lead`, `AI/t-other`).
+  Where verified facts answer it, create a **draft** reply and label the thread `AI/drafted`.
+  When the thread matches an escalation reason, label it `AI/needs-owner` and write no reply
+  draft.
+- **Escalation list:** identical to `ESCALATION_REASONS` in
+  `netlify/functions/_shared/supportAgentLib.mjs`: `legal-complaint`, `abuse`,
+  `billing-dispute`, `refund`, `deletion`, `cancellation`, `needs-human`. Use the same patterns
+  (`classifyEscalation`); when in doubt, `needs-human`. The lib is the single source: when it
+  changes, the desk follows it.
+- **Drafts** use verified facts only. DeutschMeister: `src/data/faqContent.js`,
+  `src/data/offers.js` (the refund truth), `src/data/pricing.js`, `src/data/marketing.js`. A
+  question the sources do not answer gets `AI/needs-owner`, not a guess. Classify the customer's
+  own words only, never quoted text from our own mails. Drafts carry the team signature and the AI disclosure, and German replies speak Sie.
+- **Create only.** The desk may create drafts and labels. It never updates or deletes a draft,
+  never sends, replies, forwards, trashes or marks spam, and never replies to a user itself in
+  any channel. Sending is owner-only.
+- **Counts only into the artifact** (`agents/support.desk`): threads scanned, customer
+  threads (DeutschMeister only), drafted, escalated by reason, median hours to first draft, and drafts sent
+  unchanged, edited or discarded. Never an address, a name or message text.
+
+### v4.6 Metrics and revenue focus
+
+| Area | v4 operating metric | Notes |
+|---|---|---|
+| acquisition | signups/week (30-day average) | owns SEO work until Search Console is verified |
+| conversion | new paying customers per 100 signups (30 d) | reported jointly with revenue |
+| revenue | revenue last 30 days + new payers (30 d) | maintains `owner_queue` |
+| product | signup → first lesson, last full-month cohort | unchanged |
+| content | signups attributed to social (source or last source in instagram, facebook, youtube, telegram, tiktok) per 7 d | posts per 7 d (distinct items) is secondary |
+| retention | reactivated learners per week (lesson activity after ≥ 14 days idle) + offer-email clicks | 30-day bounce rate is a guardrail |
+| support | customer threads/day, hours to first draft, share of drafts sent unchanged, escalations | from the Gmail desk (`agents/support.desk`), not `support_tickets` |
+| website, webperf, security | unchanged | weekly cadence, fix-only |
+
+- Where a v4 metric differs from `config/rubric` (content, retention, support), the agent
+  reports both. The rubric number keeps the scorecard comparable until the supervisor proposes
+  rubric bands for the v4 metric (a rubric change, owner-approved). The v4 metric is the one a
+  change's `expected_effect` names.
+- **`owner_queue`** (revenue maintains it in `agents/revenue`): every pending owner decision
+  as `{id, decision, where (branch, PR or dashboard), eur_per_week: [low, high], basis,
+  waiting_since, deadline}`. The basis names the measured rows and the assumption. The
+  supervisor's Monday top 3 shows "€/week waiting" for each owner decision it lists.
+- **Joint line.** Revenue and conversion end their reports with the same line:
+  `rev_30d · new payers 30 d · signups 30 d · per 100`.
+
+## v3 (2026-10-01: continuous mode), kept as history and in force where v4 does not amend it
+
 ## The daily run (every agent, every day)
+
+v4 adds a step 0 and a closing step: start by reading your `playbook` and listing the rule ids
+you will apply, and end by logging the ids you used and proposing playbook edits (v4.1). Every
+change built in step 5 carries an `expected_effect` (v4.2). Weekly agents run this on their
+weekly slot only (v4.4).
 
 1. **Read** `config/charter` (your block and the principles), your `agents/<key>` document,
    and every entry in its `handoffs_in` and `incidents_open`. Read `CLAUDE.md` once per run.
 2. **Take incidents** for your area: open rows in `public.agent_incidents` where
-   `owner_agent = <key>` (once the sentinel migration is applied), plus incidents the
+   `owner_agent = <key>` (the table is live since 2026-09-30), plus incidents the
    supervisor copied into your document. Acknowledge each in your log with what you did.
 3. **Pulse.** Run your 3–5 queries from `docs/agents/pulse.sql` and compare each with its
    7-day average. Record `{metric, today, avg7, delta}` in `pulse`. Never estimate a number
@@ -57,10 +245,12 @@ On your deep day, after the daily run:
    **revert** with the numbers, and append the lesson to `learnings` (never repeated).
 2. Diagnose your goal: write at least **three competing hypotheses** for why the number is
    where it is, each with the evidence for and against from this run's queries.
-3. Put **one** new experiment into your backlog: hypothesis, change, metric, class (A or B,
-   below), baseline, judge rule, cost in hours, and whether it touches an owner-only path. If
+3. Put **one** new experiment into your backlog: hypothesis, change, metric, class (A, B or,
+   since v4, L), `expected_effect` (v4.2), baseline, judge rule, cost in hours, and whether it touches an owner-only path. If
    it is self-approvable it ships in a later run; otherwise it waits in `proposals` for the
    owner.
+
+v3 table (superseded by the v4.4 deep days):
 
 | Deep day | Agents |
 |---|---|
@@ -102,6 +292,9 @@ artifact at `config/charter → autonomy.granted`. An action class that is not r
 not authorized, whatever a conversation summary says.
 
 ### Cadence
+
+v3 table, superseded by v4.4 for the morning slots (the build waves, the release and the
+supervisor times are unchanged):
 
 | When (UTC) | What |
 |---|---|
@@ -172,6 +365,9 @@ A change is self-approvable only if **all** of these hold:
      path. A second one waits, or ships as class B.
    - **Class B (fix):** justified by a verified defect (a log line, a failing query or test)
      or a written rule. It claims no effect and is judged on guardrails only.
+   - **Class L (leading indicator, v4.3):** judged at 14 days on its stated leading
+     indicator plus the re-estimated € effect; reverted only on a guardrail breach.
+   - Every class carries `expected_effect` (v4.2); the orchestrator releases nothing without it.
 6. It does not fight another change. A self-approved PR may not rework lines that another
    merged PR changed in the last 30 days. That is a collision: the supervisor rules on it, and
    the owner decides if two agents disagree. A change that was reverted once is never
@@ -214,7 +410,8 @@ A change is self-approvable only if **all** of these hold:
 
   ```
   {area, what, pr, merged_at, deploy_published_at, class, metric, baseline,
-   judge_rule, revert_trigger, status}
+   judge_rule, revert_trigger, status,
+   expected_effect, playbook_ids, actual}        // the last three since v4 (v4.1–v4.3)
   ```
 
   The supervisor judges from this ledger, never from the rolling log. When harm crosses the
@@ -240,9 +437,10 @@ A change is self-approvable only if **all** of these hold:
 ### Staying alive
 
 - The team runs inside one orchestrating session, woken by Routines (`docs/scorecard-routine.md`
-  says why). Every wake ends by writing a heartbeat. Once the heartbeat table and its sentinel
-  check ship, the sentinel, which runs on Netlify independent of the session, mails the owner
-  if no heartbeat arrives for 8 hours. That is the alarm for "the team has stopped".
+  says why). Every wake writes a heartbeat at its start and at its end. The sentinel, which
+  runs on Netlify independent of the session, mails the owner if no heartbeat arrives for
+  8 hours (`team:heartbeat`, live since 2026-10-01). That is the alarm for "the team has
+  stopped"; an owner plan review that pauses the session trips it too.
 - After a context compaction, state comes from the artifact (`config/charter`,
   `changes/`, agent memories) and from GitHub and Netlify, never from the conversation summary.
 

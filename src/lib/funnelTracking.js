@@ -53,6 +53,8 @@ export const trackFAQViewed = () => track('faq_viewed');
 
 export const trackAboutViewed = () => track('about_viewed');
 
+export const trackSocialClicked = (channel, surface) => track('social_clicked', { channel, surface });
+
 export const trackVerificationPageViewed = () => track('verification_page_viewed');
 export const trackVerificationEmailResent = () => track('verification_email_resent');
 export const trackEmailVerified = () => track('email_verified');

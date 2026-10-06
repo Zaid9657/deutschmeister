@@ -34,6 +34,7 @@ import { schedule } from '@netlify/functions';
 import { createClient } from '@supabase/supabase-js';
 import { createHmac } from 'crypto';
 import { BRAND, emailHeader, ctaCell } from './_shared/brand.mjs';
+import { socialFooterLine } from './_shared/socialLinks.mjs';
 import { isBlockedEmail } from './_shared/emailHygiene.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
@@ -195,7 +196,7 @@ const SHELL = ({ heading, body, ctaHref, ctaLabel, unsubUrl }) => `<!DOCTYPE htm
         <tr>
           <td style="padding:20px 32px;border-top:1px solid ${BRAND.rule};text-align:center;">
             <p style="margin:0;font-size:12px;color:${BRAND.graphite};line-height:1.6;">
-              DeutschMeister · <a href="${BASE_URL}" style="color:${BRAND.graphite};">deutsch-meister.de</a><br>
+              DeutschMeister · <a href="${BASE_URL}" style="color:${BRAND.graphite};">deutsch-meister.de</a>${socialFooterLine(BRAND.graphite, 'de')}<br>
               <a href="${unsubUrl}" style="color:${BRAND.graphite};">Diese E-Mails abbestellen</a>
             </p>
           </td>

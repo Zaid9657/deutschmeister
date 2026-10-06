@@ -90,7 +90,7 @@ export const FAQ_CATEGORIES = [
       },
       {
         q: 'Can I request a refund?',
-        a: 'Deutschmeister advertises a 7-day money-back guarantee. Contact support within that period so the request can be reviewed and processed under the applicable purchase terms.',
+        a: 'Write to support with the email address you paid with, and the request will be reviewed. Payments are processed by Lemon Squeezy, and your statutory rights as a consumer are not affected.',
       },
       {
         q: 'Which payment methods are available?',
