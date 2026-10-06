@@ -47,6 +47,10 @@ export const EVENTS = {
   lesson_started: { when: 'A course Lektion is opened in the lesson player.', once: false },
   lesson_completed: { when: 'A course Lektion reaches its recap.', once: false },
   paywall_shown: { when: 'A lock, paywall or speaking-limit offer is rendered.', once: false },
+  social_clicked: {
+    when: 'A link to one of our social channels (SOCIAL_LINKS in navigation.js) is clicked; `surface` says where, `channel` which.',
+    once: false,
+  },
   checkout_started: { when: 'The app opens a checkout (the SPA name for checkout_opened).', once: false },
   checkout_completed: {
     when: 'The browser observes a successful checkout once (overlay success, or access appearing after a pending checkout). Not revenue.',
@@ -69,6 +73,7 @@ export const ALLOWED_PROPS = [
   'topic', // grammar/lesson slug
   'signed_in', // boolean
   'entry_page', // first path of this page view
+  'channel', // a SOCIAL_LINKS key: youtube | instagram | facebook
   'dm_source', 'dm_medium', 'dm_campaign', // first-touch attribution labels (public/attribution.js)
 ];
 

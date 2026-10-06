@@ -1,4 +1,5 @@
 import { tagEmailLink } from './_shared/emailLinks.mjs';
+import { socialFooterLine } from './_shared/socialLinks.mjs';
 
 // The two site links carry the email tags (docs/tracking-links.md, "Our own
 // email"), so a click from the welcome mail is filed as email/lifecycle/welcome
@@ -69,7 +70,7 @@ const WELCOME_HTML = (_email) => `<!DOCTYPE html>
           <tr>
             <td style="padding:20px 32px;border-top:1px solid #f1f5f9;text-align:center;">
               <p style="margin:0;font-size:12px;color:#94a3b8;line-height:1.6;">
-                DeutschMeister · <a href="${WELCOME_FOOTER_HREF}" style="color:#94a3b8;">deutsch-meister.de</a>
+                DeutschMeister · <a href="${WELCOME_FOOTER_HREF}" style="color:#94a3b8;">deutsch-meister.de</a>${socialFooterLine('#94a3b8')}
               </p>
             </td>
           </tr>

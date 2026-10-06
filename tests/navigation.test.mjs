@@ -157,8 +157,10 @@ test('Instagram and Facebook are listed, canonical and tracker-free', () => {
 });
 
 test('every off-site channel has a footer icon on both front ends', () => {
+  const iconsSrc = readFileSync(join(root, 'src/components/socialIcons.js'), 'utf8');
+  assert.match(footerSrc, /SOCIAL_ICONS\[item\.key\]/, 'Footer.jsx draws the shared icon map');
   for (const { key } of SOCIAL_LINKS) {
-    assert.match(footerSrc, new RegExp(`\\b${key}:`), `Footer.jsx SOCIAL_ICONS has no icon for ${key}`);
+    assert.match(iconsSrc, new RegExp(`\\b${key}:`), `socialIcons.js SOCIAL_ICONS has no icon for ${key}`);
     assert.match(layoutSrc, new RegExp(`item\\.key === '${key}'`), `Layout.astro draws no icon for ${key}`);
   }
 });

@@ -1,13 +1,13 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { FOOTER_GROUPS, LEGAL_LINKS, SOCIAL_LINKS, SUPPORT_LINK } from '../data/navigation';
-
-const SOCIAL_ICONS = { youtube: Youtube, instagram: Instagram, facebook: Facebook };
+import { SOCIAL_ICONS } from './socialIcons';
+import { trackSocialClicked } from '../lib/funnelTracking';
 import { STATIONS } from '../data/offers.js';
 import { groundFor } from '../lib/chrome.js';
 import { useAuth } from '../contexts/AuthContext';
 import Logo from './Logo';
-import { Youtube, Instagram, Facebook, LifeBuoy } from 'lucide-react';
+import { LifeBuoy } from 'lucide-react';
 
 // The app previously had NO footer: the guides, FAQ, Über uns and the
 // comparison pages were linked only from the Astro site's footer, so anyone
@@ -92,6 +92,7 @@ const Footer = () => {
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => trackSocialClicked(item.key, 'footer')}
                     className="inline-flex min-h-11 items-center gap-2 hover:text-nacht-text transition-colors"
                   >
                     <Icon className="w-4 h-4" aria-hidden="true" />
