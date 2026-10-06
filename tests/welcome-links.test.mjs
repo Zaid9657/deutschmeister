@@ -30,6 +30,7 @@ delete process.env.SUPABASE_SERVICE_ROLE_KEY; // no live client in tests
 const welcome = await import('../netlify/functions/send-welcome-email.mjs');
 const nudge = await import('../netlify/functions/confirmation-nudge.mjs');
 const { EMAIL_LABEL } = await import('../netlify/functions/_shared/emailLinks.mjs');
+const { isSocialHref } = await import('../netlify/functions/_shared/socialLinks.mjs');
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -38,7 +39,9 @@ const USER_ID = '00000000-0000-4000-8000-000000000001';
 const ADDRESS = 'learner@example.com';
 const CONTINUE = `${SITE}/.netlify/functions/confirm-continue?uid=${USER_ID}&exp=1790000000&token=abc123`;
 
-const hrefs = (html) => [...html.matchAll(/href="([^"]*)"/g)].map((m) => m[1]);
+// Social-channel links leave the site, so they carry no utm_* tags; they are
+// pinned separately in tests/email-social.test.mjs and skipped here.
+const hrefs = (html) => [...html.matchAll(/href="([^"]*)"/g)].map((m) => m[1]).filter((h) => !isSocialHref(h));
 const isFunction = (href) => new URL(href).pathname.startsWith('/.netlify/functions/');
 
 // The expected links per mail, written out rather than derived, so a renamed

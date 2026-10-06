@@ -122,6 +122,9 @@ export const YOUTUBE_CHANNEL_URL = 'https://www.youtube.com/@deutschmeister_de';
 // it is addressed by its numeric id, which Facebook redirects to whatever name
 // it gets later. Telegram is NOT listed until the owner confirms the channel —
 // t.me/deutschmeister exists but is not verified as ours.
+// The learner mails' footer reads a synced copy of this list
+// (netlify/functions/_shared/socialLinks.mjs; tests/email-social.test.mjs), so a
+// channel added here must be added there too.
 export const INSTAGRAM_URL = 'https://www.instagram.com/deutschmeisterde/';
 export const FACEBOOK_URL = 'https://www.facebook.com/1232346926638010';
 

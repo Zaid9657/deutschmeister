@@ -27,6 +27,7 @@ import vm from 'node:vm';
 process.env.UNSUB_SECRET = 'test-only-unsub-secret';
 delete process.env.SUPABASE_SERVICE_ROLE_KEY; // no live client in tests
 const { sendDailyBatches, analyzeUrl, DAILY_UTM } = await import('../netlify/functions/daily-sentence.mjs');
+const { isSocialHref } = await import('../netlify/functions/_shared/socialLinks.mjs');
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -54,7 +55,9 @@ async function mailedHtml(sentence = SENTENCES[0]) {
   return item.html;
 }
 
-const hrefs = (html) => [...html.matchAll(/href="([^"]*)"/g)].map((m) => m[1]);
+// Social-channel links leave the site, so they carry no utm_* tags; they are
+// pinned separately in tests/email-social.test.mjs and skipped here.
+const hrefs = (html) => [...html.matchAll(/href="([^"]*)"/g)].map((m) => m[1]).filter((h) => !isSocialHref(h));
 const isUnsubscribe = (href) => new URL(href).pathname === '/.netlify/functions/unsubscribe';
 
 /** public/attribution.js run against a fake window, as tests/attribution.test.mjs does. */
