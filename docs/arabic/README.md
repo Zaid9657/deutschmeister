@@ -57,7 +57,25 @@ rendered course screen is already Arabic and RTL (no English flash).
 | Public copy | `astro-site/src/data/i18n/ar.js` + the sidecar | draft |
 
 Every Arabic string is machine-authored Modern Standard Arabic following
-`translation-guide.md`. **Reviewed: 0.** An entry may only become `reviewed` with a named
+`translation-guide.md`. **Reviewed: 0.**
+
+**AI review, 2026-10-06 (not a human sign-off; every entry stays `draft`).** OpenAI Codex read
+all four layers twice: once as the repository's GitHub reviewer on the PR (5 findings) and once
+through the Codex CLI in three read-only passes (31 findings). Each finding was checked against
+its English/German source and the test rules before anything changed. Applied: number agreement
+everywhere a count is filled in (the largest class — „12 دروس“, „2 يوم“, „8 ساعة“, „2 تقييمات“
+were on screen; now one helper, `src/lib/arabicCount.js`, and a test that refuses a bare
+`{n} noun`), „تتحدّث“ (speaks) → „تُحدَّث“ (is updated) on the verify screen, „تعرّف بنفسك“ →
+„عرّف بنفسك“ (introduce yourself), the course-home footer regained „saves on every step“,
+„Student“ → „الطالب الجامعي“, the Marokkaner plural attached to the man, one term for vowel
+(„الحرف المتحرّك“), the help page's resume sentence, cursor and score wording, and three
+smoother phrasings. Rejected, with the reason: „كلمتا المرور غير متطابقتين“ (Codex wanted
+„متطابقتان“; after „غير“ the genitive is correct), „البريد الإلكتروني أو كلمة المرور غير صحيحة“
+(agreement with the nearer noun after „أو“ is standard), „ليس بعد“ for „Not yet“ (natural), and
+four nationality/„ein Lehrer“ explanations Codex wanted narrowed — the Arabic is faithful to the
+DaF-reviewed English rule („in a sentence the nationality is a noun“, „never ein Lehrer“); if that
+rule should be narrowed, it is narrowed in `a11.js` first and the Arabic follows (the source hash
+flags it). An entry may only become `reviewed` with a named
 reviewer and a date (the test refuses otherwise). The gate before any wider promotion is a native
 Arabic editor (ideally DaF-trained) — owner prompt in `docs/owner-prompts.md`.
 
@@ -108,8 +126,9 @@ page says so); the English hub footer says "saves on every step" more strongly t
 | `linie-design`, `web-performance` | `<html dir>`; Arabic preload swap pinned exactly | |
 | `claims` PRICE_FREE_SURFACES, `astro-course-front-door` | **extended** to the five Arabic pages and the copy module | |
 | `course-meta` | unchanged — the source sentence was shortened to ≤ 10 words instead | |
+| `arabic-coverage` placeholder parity | a counted placeholder `{n:…}` counts as `{n}`; names must still match English exactly | Arabic number agreement (`src/lib/arabicCount.js`) |
 
-New suites: `locale` (15), `arabic-coverage` (11), `arabic-journey` (15), `arabic-public` (11).
+New suites: `locale` (15), `arabic-coverage` (11), `arabic-journey` (15), `arabic-public` (11), `arabic-count` (5).
 
 ## 8. Verification results
 

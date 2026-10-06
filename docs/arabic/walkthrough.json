@@ -1,5 +1,5 @@
 {
-  "generatedOn": "2026-10-05T21:49:41.198Z",
+  "generatedOn": "2026-10-06T17:45:30.121Z",
   "dist": "/home/user/deutschmeister/dist",
   "checks": [
     {
@@ -190,7 +190,7 @@
     {
       "id": "following the offer stores an explicit Arabic choice",
       "status": "passed",
-      "detail": "{\"lang\":\"ar\",\"at\":1791236997030,\"source\":\"explicit\"}"
+      "detail": "{\"lang\":\"ar\",\"at\":1791308746996,\"source\":\"explicit\"}"
     },
     {
       "id": "\"Deutsch\" lands on the English page with a German one-line notice",
@@ -200,7 +200,7 @@
     {
       "id": "…and stores German as the app choice",
       "status": "passed",
-      "detail": "{\"lang\":\"de\",\"at\":1791236997212,\"source\":\"explicit\"}"
+      "detail": "{\"lang\":\"de\",\"at\":1791308747163,\"source\":\"explicit\"}"
     },
     {
       "id": "/ar/courses/a1.1 → 301 /ar/courses/a1-1/ (netlify.toml rule, emulated)",
@@ -265,7 +265,7 @@
     {
       "id": "match tiles are named by their visible words (no numbers, Arabic meanings in Arabic)",
       "status": "passed",
-      "detail": "[{\"lang\":\"de\",\"name\":\"Bitte\"},{\"lang\":\"de\",\"name\":\"buchstabieren\"},{\"lang\":\"de\",\"name\":\"der Gruß\"},{\"lang\":\"de\",\"name\":\"Freut mich\"},{\"lang\":\"ar\",\"name\":\"التحية\"},{\"lang\":\"ar\",\"name\":\"من فضلك / عفوًا\"},{\"lang\":\"ar\",\"name"
+      "detail": "[{\"lang\":\"de\",\"name\":\"Bitte\"},{\"lang\":\"de\",\"name\":\"buchstabieren\"},{\"lang\":\"de\",\"name\":\"Freut mich\"},{\"lang\":\"de\",\"name\":\"der Gruß\"},{\"lang\":\"ar\",\"name\":\"تشرّفت بمعرفتك\"},{\"lang\":\"ar\",\"name\":\"التحية\"},{\"lang\":\"ar\",\"name\""
     },
     {
       "id": "recap says when review starts truthfully for a guest (after saving to an account)",
@@ -807,8 +807,8 @@
             "Deutsch",
             "Bitte",
             "buchstabieren",
-            "der Gruß",
-            "Freut mich"
+            "Freut mich",
+            "der Gruß"
           ]
         },
         {
@@ -1101,19 +1101,11 @@
           },
           {
             "lang": "de",
-            "name": "der Gruß"
-          },
-          {
-            "lang": "de",
             "name": "Freut mich"
           },
           {
-            "lang": "ar",
-            "name": "التحية"
-          },
-          {
-            "lang": "ar",
-            "name": "من فضلك / عفوًا"
+            "lang": "de",
+            "name": "der Gruß"
           },
           {
             "lang": "ar",
@@ -1121,7 +1113,15 @@
           },
           {
             "lang": "ar",
+            "name": "التحية"
+          },
+          {
+            "lang": "ar",
             "name": "يتهجّى (الكلمة حرفًا حرفًا)"
+          },
+          {
+            "lang": "ar",
+            "name": "من فضلك / عفوًا"
           }
         ]
       ]
@@ -1538,9 +1538,9 @@
             "العربية",
             "English",
             "Deutsch",
-            "der Nachname",
-            "geboren",
             "ausfüllen",
+            "geboren",
+            "der Nachname",
             "der Wohnort"
           ]
         },
@@ -1830,7 +1830,7 @@
         [
           {
             "lang": "de",
-            "name": "der Nachname"
+            "name": "ausfüllen"
           },
           {
             "lang": "de",
@@ -1838,7 +1838,7 @@
           },
           {
             "lang": "de",
-            "name": "ausfüllen"
+            "name": "der Nachname"
           },
           {
             "lang": "de",
@@ -1846,7 +1846,7 @@
           },
           {
             "lang": "ar",
-            "name": "مكان السكن"
+            "name": "يملأ (استمارة)"
           },
           {
             "lang": "ar",
@@ -1854,11 +1854,11 @@
           },
           {
             "lang": "ar",
-            "name": "مولود («ich bin am … geboren» = وُلدتُ في …)"
+            "name": "مكان السكن"
           },
           {
             "lang": "ar",
-            "name": "يملأ (استمارة)"
+            "name": "مولود («ich bin am … geboren» = وُلدتُ في …)"
           }
         ]
       ]
@@ -2272,10 +2272,10 @@
             "العربية",
             "English",
             "Deutsch",
-            "alt",
             "Arabisch",
             "sprechen",
-            "die Eltern"
+            "die Eltern",
+            "alt"
           ]
         },
         {
@@ -2560,10 +2560,6 @@
         [
           {
             "lang": "de",
-            "name": "alt"
-          },
-          {
-            "lang": "de",
             "name": "Arabisch"
           },
           {
@@ -2575,8 +2571,8 @@
             "name": "die Eltern"
           },
           {
-            "lang": "ar",
-            "name": "يتكلّم"
+            "lang": "de",
+            "name": "alt"
           },
           {
             "lang": "ar",
@@ -2589,6 +2585,10 @@
           {
             "lang": "ar",
             "name": "اللغة العربية"
+          },
+          {
+            "lang": "ar",
+            "name": "يتكلّم"
           }
         ]
       ]

@@ -29,6 +29,12 @@ pilot scope, and an editor re-checks the Arabic and runs
   one pass across all three files, never piecemeal.
 - **Digits:** Latin digits everywhere (`ar-u-nu-latn`). German number and time exercises are
   learning content and are never re-digitised.
+- **Counted nouns:** never write a fixed noun after a number placeholder — „{n} دروس“ is wrong for
+  1, 2 and 11+. Give the four forms and let `src/lib/arabicCount.js` pick: lesson tables
+  `{n:درس واحد|درسان|دروس|درسًا}`, i18next `{{n, arcount(forms: يوم واحد|يومين|أيام|يومًا)}}`,
+  Astro pages `arLessons(n)` & co. Write the 1 and 2 forms in the case the sentence needs (after
+  `من`/`في`/`بعد` the dual is genitive: `يومين`), and avoid an adjective after a count unless its
+  forms are counted too. `tests/arabic-count.test.mjs` fails on a bare `{n} يوم`.
 - **Arrows:** where English points forward with `→`, Arabic uses `←` (arrows are not mirrored by
   the bidi algorithm).
 - **Grammar terms:** explain, do not name-drop. `الفعل` (verb), `الاسم` (noun), `أداة التعريف`

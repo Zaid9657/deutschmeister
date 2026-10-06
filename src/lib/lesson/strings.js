@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { DEFAULT_LOCALE, LEGACY_LESSON_KEY, SUPPORTED_LOCALES, getLocale, intlLocaleFor, normalizeLocale, setLocale, useLocale } from '../locale.js';
+import { fillCounted } from '../arabicCount.js';
 
 // The lesson chrome's string table (Wave 1, 2026-09-19).
 //
@@ -886,7 +887,8 @@ export function t(key, lang = DEFAULT_LESSON_LANG, vars = null) {
   if (s === undefined) s = STRINGS.en[key];
   if (s === undefined) return key;
   if (!vars) return s;
-  return s.replace(/\{(\w+)\}/g, (m, name) => (vars[name] === undefined || vars[name] === null ? m : String(vars[name])));
+  // Arabic counted nouns ({n:يوم واحد|يومان|أيام|يومًا}) first: src/lib/arabicCount.js.
+  return fillCounted(s, vars).replace(/\{(\w+)\}/g, (m, name) => (vars[name] === undefined || vars[name] === null ? m : String(vars[name])));
 }
 
 /**

@@ -60,7 +60,9 @@ test('the three lesson chrome tables carry the same keys and placeholders, none 
     assert.deepEqual(Object.keys(table).filter((k) => !en.includes(k)), [], 'extra keys');
     assert.deepEqual(en.filter((k) => !(k in table)), [], 'missing keys');
   }
-  const ph = (s) => (String(s).match(/\{\w+\}/g) || []).sort().join();
+  // An Arabic counted placeholder {n:يوم واحد|…} is still the placeholder {n}
+  // (src/lib/arabicCount.js); its name must match the English one exactly.
+  const ph = (s) => (String(s).match(/\{\w+(?::[^{}]+)?\}/g) || []).map((m) => m.replace(/:[^{}]+\}$/, '}')).sort().join();
   const LATIN_OK = new Set(['lang.de', 'lang.en']);
   for (const k of en) {
     assert.ok(AR_LESSON[k] && AR_LESSON[k].trim(), `ar.${k} is empty`);

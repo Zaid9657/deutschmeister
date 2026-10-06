@@ -1,6 +1,7 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { LEGACY_APP_KEY, effectiveLocale, getLocale } from '../lib/locale.js';
+import { registerArabicCount } from '../lib/arabicCount.js';
 
 const resources = {
   en: {
@@ -366,5 +367,8 @@ i18n.use(initReactI18next).init({
     escapeValue: false,
   },
 });
+
+// {{n, arcount(forms: …)}}: Arabic number agreement (src/lib/arabicCount.js).
+registerArabicCount(i18n);
 
 export default i18n;
