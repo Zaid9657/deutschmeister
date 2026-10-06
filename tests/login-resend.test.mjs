@@ -67,7 +67,8 @@ function confirmationMailCalls() {
 // 1 on 2026-10-05: the /verify-email resend, product's route (routed to product
 // by the supervisor on 2026-10-03). That page needs a session, which 0 of 40
 // unconfirmed accounts had in 30 days, so no logged /resend came from it.
-const MAX_CONFIRMATION_MAILS_WITHOUT_REDIRECT = 1;
+// 0 on 2026-10-06: product gave the /verify-email resend the /login redirect.
+const MAX_CONFIRMATION_MAILS_WITHOUT_REDIRECT = 0;
 
 test('every confirmation mail says where its link lands: /login, where the session is read', () => {
   const calls = confirmationMailCalls();
@@ -136,4 +137,17 @@ test('/login renders the refusal in words, never GoTrue\'s text', () => {
   assert.ok(squash(read('src/pages/SignupPage.jsx')).includes(LIMIT));
   // A success and a new login attempt each clear it.
   assert.ok((src.match(/setResendRefused\(null\);/g) || []).length >= 2);
+});
+
+// A rule over every resend, not a list of pages: a resend anywhere under src/
+// (today /signup, /login and /verify-email) sends the /signup panel's mail,
+// the same type and the same /login redirect. Added 2026-10-06 with the
+// /verify-email fix (product), which took the ratchet above to 0.
+test('every resend under src/ is the /signup panel\'s call: same type, same redirect', () => {
+  const resends = confirmationMailCalls().filter((c) => c.method === 'resend');
+  assert.ok(resends.some((c) => c.at.startsWith('src/pages/VerifyEmailPage.jsx:')), 'the walker sees the /verify-email resend');
+  for (const c of resends) {
+    assert.match(c.arg, /type: 'signup'/, `${c.at}: a confirmation resend is type 'signup'`);
+    assert.ok(c.arg.includes(`options: { ${REDIRECT_TO_LOGIN} }`), `${c.at}: pass options: { ${REDIRECT_TO_LOGIN} }`);
+  }
 });
