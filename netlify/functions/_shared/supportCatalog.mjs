@@ -10,6 +10,7 @@
 //   GUIDES       ⟷ astro-site/src/data/guides/index.js (slug + h1, hub order)
 //   PLAN_CLAIMS  ⟷ src/data/marketing.js (each constant by name)
 //   FREE_LEVELS  ⟷ src/config/freeTier.js
+//   PRACTICE_AREAS ⟷ src/data/seoRoutes.js (route + title; tests/support-areas.test.mjs)
 // Grammar topics are NOT copied: the agent reads grammar_topics at run time,
 // the same table the Astro build renders /grammar/ from.
 //
@@ -46,6 +47,20 @@ export const GUIDES = Object.freeze([
   { slug: 'modelltest-deutsch-b1', title: 'Modelltest Deutsch B1: Wo du ihn findest — und wie du ihn richtig nutzt' },
 ]);
 
+/**
+ * The practice areas a learner can open, by their src/data/seoRoutes.js key and
+ * page title. Without them the agent told a customer on 2026-10-04 that
+ * DeutschMeister has no podcasts. Identity only: no episode or lesson counts.
+ */
+export const PRACTICE_AREAS = Object.freeze([
+  { route: '/speaking', title: 'German Speaking Practice with AI' },
+  { route: '/level-test', title: 'Free German Level Test (A1–B2)' },
+  { route: '/analyze', title: 'Sentence X-Ray — Analyze German Sentences' },
+  { route: '/podcasts', title: 'German Podcasts for Learners A1–B2' },
+  { route: '/listening', title: 'German Listening Practice A1–B2' },
+  { route: '/reading', title: 'German Reading Practice A1–B2' },
+]);
+
 /** Product claims, by their marketing.js names. */
 export const PLAN_CLAIMS = Object.freeze({
   TRIAL_DAYS: 7,
@@ -72,6 +87,7 @@ export const SITE_LINKS = Object.freeze({
   exams: `${SITE}/pruefung/`,
   levelTest: `${SITE}/level-test/`,
   faq: `${SITE}/faq/`,
+  about: `${SITE}/ueber-uns/`,
   mockExams: `${SITE}/modelltest`,
   dashboard: `${SITE}/dashboard`,
   profile: `${SITE}/profile`,
@@ -85,3 +101,5 @@ export const grammarTopicUrl = (level, slug) => `${SITE}/grammar/${String(level)
 export const courseUrl = (level) => `${SITE}/courses/${String(level).toLowerCase().replace('.', '-')}/`;
 export const guideUrl = (slug) => `${SITE}/leitfaden/${slug}/`;
 export const examHubUrl = (slug) => `${SITE}/pruefung/${slug}/`;
+/** Prerendered SPA routes canonicalise to the trailing-slash form (CLAUDE.md case 2). */
+export const areaUrl = (route) => `${SITE}${route}/`;

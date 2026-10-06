@@ -24,6 +24,7 @@ import {
   SITE, FREE_LEVELS, EXAM_TRACKS, MOCK_EXAMS, GUIDES, PLAN_CLAIMS, SITE_LINKS,
   grammarTopicUrl, guideUrl, examHubUrl, courseUrl,
 } from './supportCatalog.mjs';
+import { PRACTICE_AREAS, areaUrl } from './supportCatalog.mjs';
 import { BILLING_PORTAL_URL } from './dunningLink.mjs';
 import { classifyAccess } from './adminOpsLib.mjs';
 
@@ -275,6 +276,7 @@ export function buildFacts({ ticket, profile = null, subscription = null, purcha
       exam_tracks: EXAM_TRACKS.map((x) => ({ name: x.nameDe, level: x.level, mock_exam: MOCK_EXAMS.includes(x.key), writing_practice: x.hasWriting, hub: examHubUrl(x.slug) })),
       guides: GUIDES.map((g) => ({ title: g.title, url: guideUrl(g.slug) })),
       grammar_topics: grammar,
+      areas: PRACTICE_AREAS.map((a) => ({ name: a.title, url: areaUrl(a.route) })),
       not_offered: ['C1', 'C2', 'TestDaF', 'DSH', 'ÖSD'],
     },
     links: SITE_LINKS,
@@ -299,6 +301,7 @@ Rules. Code checks every one after you answer; a reply that breaks one is never 
 6. Answer in German if the customer wrote German, otherwise in English. German always uses "Sie", never "du".
 7. Write the body only: a greeting line ("Guten Tag," or "Hello,"), then the answer in short paragraphs. No sign-off, no name, no signature: the system adds the team signature and the AI disclosure.
 8. If the customer asks for content (a grammar topic, a level, an exam, a course) that is not in FACTS.library, say honestly that it is not available yet, without a date, and set "content_request" to a short name of what they asked for.
+   Every area in FACTS.library.areas exists and is live: never say it is not available. If the customer asks for something inside an area that FACTS does not describe (a transcript, a feature, a format), say that part is not available yet, give the area's URL from FACTS, and set "content_request" as above.
 9. At most 180 words. Plain text, no Markdown.
 
 Answer with one JSON object and nothing else:
