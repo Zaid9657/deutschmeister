@@ -145,6 +145,26 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   `TYPO` (one retry) rather than `WRONG` — except where capitalisation IS the task (`caseSensitive`,
   the polite `Ihr/Ihre/Ihren`), where it is `WRONG`. Never "fix" an item by widening its `accepted`
   list alone: the rule belongs in the checker or in `scripts/build-lesson-pool.mjs`, with a test.
+- **What a Lektion's numbers mean (2026-10 remediation, `docs/course-factory/a11-rebuild/REMEDIATION-2026-10.md`).**
+  The practice score is the FIRST response to each first-pass practice / derived / dictation item,
+  one per (stage, item) — never a retry (`requeue`), a reveal, warm-up, writing, speaking, or a
+  dictation read as text (`listened:false`) (`mastery.js` `practiceScore`). "Practice gold" is that
+  score ≥ 80 % and says nothing about speaking or writing, which the recap states on their own lines
+  (`skillStatus.js`); a weaker repeat never overwrites a better run (`betterRun`, on the server and on
+  the device). A wrong match pairing is `corrected` (complete, not first-try correct), never a typo.
+  Learner-facing durations are `a11.meta.js` `lektionMinutesEstimate` (labelled "estimate");
+  `lektion.minutes` stays the validator's 15-minute design target and is never shown as a duration.
+- **Bank text in the course pool is corrected in `src/data/lessonPools/a11.corrections.json`, not in the
+  DB-derived cache.** The pool build applies it (and, for reviewed levels only, prefers the reviewed
+  `explanationsEn` sidecar over bank English); the DB half is an unapplied migration
+  (`scripts/pool-corrections-sql.mjs`). A generated item is fixed in its build template instead.
+- **A finished Lektion is saved local-first (`src/lib/course/syncOutbox.js`).** Signed in, the run goes to
+  a localStorage outbox BEFORE any write, then three idempotent steps (stamped attempt batch, better-run
+  progress row, review cards) are retried until they land; the recap says where the run is saved. The
+  in-progress run snapshot is localStorage for 7 days (`runState.js`), and a guest merge clears the
+  guest store only when every write succeeded. `countCompletedRuns` ignores explain/read-aloud rows.
+- **On Windows, run `node scripts/validate-curriculum.mjs` from the repo root** — before 2026-10-05 its
+  main guard compared a POSIX path and the script silently did nothing on Windows.
 
 - **Acquisition attribution (which link brought each customer, 2026-09-20).** `public/attribution.js`
   is loaded by BOTH heads (`index.html`, `Layout.astro`) and records `utm_*` / `?ref=<source>` / a

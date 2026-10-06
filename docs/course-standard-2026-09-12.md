@@ -110,7 +110,9 @@ writing from Lektion 3 (the A1 exam has it).
 **Wrong answers:** reveal immediately with a one-line why and a link to the Notice card; one retry for
 typo-class errors (Levenshtein ≤ 1 on words ≥ 5 chars, diacritics, capitalisation); article and ending
 errors are never typos; re-queue as a different variant, cap 4, then mark Weak and schedule for
-tomorrow; no hearts; lesson complete at any accuracy, gold at ≥ 80 % first attempt; every error tagged
+tomorrow; no hearts; lesson complete at any accuracy, gold at ≥ 80 % first attempt (defined precisely, and
+named "Practice gold", in `docs/course-factory/a11-rebuild/REMEDIATION-2026-10.md` §3 — first-pass practice only,
+never retries or reveals; speaking and writing are reported on their own lines); every error tagged
 (Artikel, Kasus, Verbstellung, Konjugation, Plural, Rechtschreibung, Hören); an Explain-my-answer button
 on every item, grounded in the item's rule card.
 

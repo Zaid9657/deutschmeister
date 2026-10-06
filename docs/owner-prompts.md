@@ -56,16 +56,23 @@ by this test.
 
 ## Run the A1.1 course audio
 
-**Why it needs you.** The recordings are rendered with Azure Neural TTS and written to
-Supabase Storage with the service-role key. Neither secret exists in a cloud agent session
-(and neither `*.supabase.co` nor Azure is reachable through the agent proxy), so the run
-happens on your machine. It takes a couple of minutes and costs single-digit cents.
+**Status (2026-10-06): not run.** The course has no recorded clip yet (`src/data/curricula/a11.audio.js`
+is the empty stub), so every listening surface plays the browser's voice and says „Computerstimme" /
+"Computer voice". Since the 2026-10 remediation the player checks that German actually started
+(a German voice exists, the utterance began) and tells the learner when it did not, with "Try again"
+and "Show the text instead". A dictation answered from the text is recorded as read, not heard.
 
-**Before the first run**, apply the word migration once in the Supabase SQL editor:
-`migrations/2026-09-13-a1-1-course-words.sql` — it seeds the 18 Wortfeld words that have no
-`words` row yet. The audio script looks each one up by `(german, level)` and writes its
-`audio_url`; without the migration those 18 clips fail with
-`no words row for "…" at a1.1`.
+**Why it needs you.** The recordings are rendered with Azure Neural TTS and written to Supabase
+Storage with the service-role key. Agent sessions have neither secret (checked by presence only),
+and neither `*.supabase.co` nor Azure is reachable through the agent proxy, so the run happens on
+your machine. It takes a couple of minutes and costs single-digit cents.
+
+**What it renders — 168 clips** (counted from `planRenders()` on 2026-10-06, not retyped):
+120 dialogue lines (these also serve the dictations and the checkpoint listening items, which
+dictate the same lines), 12 pretest models and 36 Phonetik items; 5,194 characters, about 8.3 US
+cents at $16 per million. There are no word clips in this plan any more: every Wortfeld entry
+carries a `wordId`, and word audio is `generate-example-audio.mjs`'s job (second command below).
+The dry run prints the exact figures; if they differ from these, the curriculum changed since.
 
 **Environment** (four variables, nothing else):
 
@@ -82,34 +89,27 @@ export SUPABASE_SERVICE_ROLE_KEY=...   # service role — never the anon key
 node scripts/generate-course-audio.mjs a1.1 --dry
 ```
 
-It prints the plan and the cost before you spend anything:
-
-```
-a1.1: 181 clips — 115 dialogue lines, 12 pretest models, 36 Phonetik items, 18 Wortfeld words
-a1.1: 4298 characters ≈ 6.88 US cents at $16/1M
-…
-Summary (dry): rendered 0 / skipped 0 / failed 0 / ≈ 6.88 cents if all 181 are rendered.
-```
-
 **The real run:**
 
 ```bash
 node scripts/generate-course-audio.mjs a1.1
-node scripts/generate-example-audio.mjs --table words   # the 31 course words seeded 2026-09-12 have rows but no audio yet
+node scripts/generate-example-audio.mjs --table words   # word audio for Wortfeld rows that have none yet
 ```
 
-Expected last line (first run — the numbers are what you paste back):
+It is idempotent: every manifest entry stores the sha1 of the text it rendered, so a second run
+renders nothing and re-renders only lines whose German changed. If it stops early
+(`Too many failures`), run it again — it resumes.
 
-```
-Summary: rendered 181 / skipped 0 / failed 0 / ≈ 6.88 cents (4298 characters this run).
-```
+**Listen before you commit** (about 15 minutes, the part no script can do):
+- names and loan words: Chakiri, Kaya, Bremen, Marokko — stress and vowels as a German speaker says them;
+- the Phonetik items: the capitalised syllable is the stressed one (`Bü-RO`, `WANN kommst du?`), and the
+  long/short contrasts the notices teach (`Sie [iː]` vs `bin [ɪ]`, `Bruder [uː]` vs `Mütter [ʏ]`) are audible;
+- pace: a beginner must catch every word at normal speed (the player also offers a slower button);
+- one consistent voice per character across all twelve Lektionen, and an even volume from clip to clip;
+- the spelling lines in L1 (`H-A-L-L-O`) are letter names, not a word read fast.
+Fix a bad clip by editing the curriculum text or the voice and re-running; never hand-edit the manifest.
 
-It is idempotent: every manifest entry stores the sha1 of the text it rendered, so a second
-run prints `rendered 0 / skipped 181 / failed 0` and re-renders only lines whose German
-changed. If it stops early (`Too many failures`), just run it again — it resumes.
-
-**Afterwards, commit the manifest** and sync the Astro twin, or `npm run check:duplicates`
-(and CI) fails:
+**Afterwards, commit the manifest** and sync the Astro twin, or `npm run check:duplicates` (and CI) fails:
 
 ```bash
 node scripts/sync-curricula.mjs
@@ -117,9 +117,10 @@ git add src/data/curricula/a11.audio.js astro-site/src/data/curricula/a11.audio.
 git commit -m "chore(audio): A1.1 course audio manifest from the Azure run"
 ```
 
-Then paste the summary line back to the agent. Until the manifest lands, every screen falls
-back to the browser voice and honestly labels itself "Computerstimme" instead of "Aufnahme" —
-nothing is broken, it is just not yet the promised product.
+`tests/course-audio.test.mjs` then guards it: a clip whose sha1 no longer matches its line's text
+fails the suite, so a recording of last month's sentence is never served. Paste the summary line
+back to the agent. Until the manifest lands, nothing is broken; the audio is simply the browser's
+voice, and every screen says so.
 
 ---
 
