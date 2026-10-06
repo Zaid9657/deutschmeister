@@ -1,7 +1,9 @@
 ---
 import { NAV_GROUPS, FOOTER_GROUPS, LEGAL_LINKS, SOCIAL_LINKS, SUPPORT_LINK } from '../data/navigation.js';
-import { fontPreloads, signFontPreloads, color, nacht, linie } from '../data/design-tokens.js';
+import { fontPreloads, signFontPreloads, arabicFontPreloads, color, nacht, linie } from '../data/design-tokens.js';
 import Showtime from '../components/Showtime.astro';
+import LanguageSwitch from '../components/LanguageSwitch.astro';
+import { AR_CHROME, AR_COURSE_HREF } from '../data/i18n/ar.js';
 import { onsiteHref, surfaceForPath } from '../lib/onsiteLinks.js';
 import { TRIAL_DAYS } from '../data/marketing.js';
 import { STATIONS, FREE_COURSE_HREF } from '../data/offers.js';
@@ -23,6 +25,8 @@ export interface Props {
   tone?: 'paper' | 'nacht';
   /** Font files to preload; defaults to the token list. Pages that set signs above the fold add signFontPreloads. */
   preloads?: string[];
+  /** The page's twin in the other language (root-relative paths, trailing slash). Only real equivalents. */
+  alternates?: { en: string; ar: string } | null;
 }
 
 const {
@@ -37,6 +41,7 @@ const {
   lang = 'en',
   tone = 'paper',
   preloads = fontPreloads,
+  alternates = null,
 } = Astro.props;
 // The sign face (Archivo) is for the pages that preload it — the marketing and
 // commerce pages. Everywhere else (grammar, guides, exams …) the chrome sets its
@@ -50,6 +55,23 @@ const signOn = signFontPreloads.every((href) => preloads.includes(href));
 // self-referencing would claim a /404/ route that does not exist.
 const canonicalUrl = canonical === null ? null : (canonical ?? Astro.url.href);
 const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+
+// The Arabic edition (docs/arabic/README.md). An Arabic page is right-to-left,
+// its chrome comes from data/i18n/ar.js, its nav prefers each item's Arabic twin
+// (`hrefAr`) and labels the rest with the language they open in, and it preloads
+// the Arabic face instead of the Latin display face it does not set (linie.css
+// sets Arabic headings in the body face). `alternates` pairs a page with its
+// twin: reciprocal hreflang (en, ar, x-default = English) and the switch.
+const isArabic = lang === 'ar';
+const SITE = 'https://deutsch-meister.de';
+const abs = (path) => new URL(path, SITE).href;
+const OG_LOCALE = { en: 'en_US', de: 'de_DE', ar: 'ar_AR' };
+const ogAlternates = isArabic ? ['en_US'] : [lang === 'de' ? 'en_US' : 'de_DE', ...(alternates ? ['ar_AR'] : [])];
+const label = (item) => (isArabic && (item.labelAr || item.titleAr)) || item.labelEn || item.titleEn;
+const hrefFor = (item) => (isArabic && item.hrefAr) || item.href;
+const freeHref = isArabic ? AR_COURSE_HREF : FREE_COURSE_HREF;
+const stationHref = (st) => (isArabic && st.status === 'free' ? '/ar/courses/a1-1/' : st.coursePage);
+const fontLinks = isArabic && preloads === fontPreloads ? [...arabicFontPreloads, ...fontPreloads.filter((f) => f.includes('nunito'))] : preloads;
 
 // Nav links come from THE navigation registry (src/data/navigation.js — the
 // byte-identical twin of the SPA's copy; scripts/check-duplicates.mjs guards
@@ -68,6 +90,10 @@ const navItems = NAV_GROUPS.flatMap((g) => g.items);
 // up from the nav. Everywhere else it stays the bare route.
 const surface = surfaceForPath(Astro.url.pathname);
 const navSignupHref = surface ? onsiteHref('signup', surface, 'nav') : '/signup';
+// From an Arabic page the app doors carry the language (an explicit choice: the
+// visitor is reading Arabic), so sign-up and sign-in open in Arabic too.
+const signupHref = lang === 'ar' ? '/signup?lang=ar' : navSignupHref;
+const loginHref = lang === 'ar' ? '/login?lang=ar' : '/login';
 // v3 chrome ("Die Linie"): Courses and Pricing sit in the bar itself — the two
 // doors a buyer looks for — and leave their groups so no link appears twice.
 const PROMOTED = ['courses', 'pricing'];
@@ -88,7 +114,7 @@ const authAttrs = (item) =>
 ---
 
 <!doctype html>
-<html lang={lang} data-sign={signOn ? undefined : 'off'}>
+<html lang={lang} dir={isArabic ? 'rtl' : undefined} data-sign={signOn ? undefined : 'off'}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -106,6 +132,9 @@ const authAttrs = (item) =>
     <meta name="description" content={description} />
     {keywords && <meta name="keywords" content={keywords} />}
     {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+    {alternates && <link rel="alternate" hreflang="en" href={abs(alternates.en)} />}
+    {alternates && <link rel="alternate" hreflang="ar" href={abs(alternates.ar)} />}
+    {alternates && <link rel="alternate" hreflang="x-default" href={abs(alternates.en)} />}
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <meta name="theme-color" content={themeColor} />
 
@@ -117,10 +146,10 @@ const authAttrs = (item) =>
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="The Meister-Siegel seal beside the words “Learn German grammar, listening and speaking — A1 to B2”" />
+    <meta property="og:image:alt" content={isArabic ? AR_CHROME.ogImageAlt : 'The Meister-Siegel seal beside the words “Learn German grammar, listening and speaking — A1 to B2”'} />
     <meta property="og:site_name" content="DeutschMeister" />
-    <meta property="og:locale" content={lang === 'de' ? 'de_DE' : 'en_US'} />
-    <meta property="og:locale:alternate" content={lang === 'de' ? 'en_US' : 'de_DE'} />
+    <meta property="og:locale" content={OG_LOCALE[lang] || 'en_US'} />
+    {ogAlternates.map((loc) => <meta property="og:locale:alternate" content={loc} />)}
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -136,8 +165,9 @@ const authAttrs = (item) =>
     <!-- Fonts: self-hosted from /fonts/ (root public/, merged into dist/ like
          /consent.js); the @font-face rules ship in this site's stylesheet via
          tailwind.config.mjs. Preloads come from the token, same list as the
-         SPA shell (design-tokens.js `fontPreloads`). -->
-    {preloads.map((href) => (
+         SPA shell (design-tokens.js `fontPreloads`); an Arabic page swaps the
+         display face for the Arabic one (`arabicFontPreloads`). -->
+    {fontLinks.map((href) => (
       <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />
     ))}
 
@@ -152,9 +182,9 @@ const authAttrs = (item) =>
   <body class="font-body bg-paper text-ink antialiased">
     <a
       href="#main"
-      class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[60] focus:bg-white focus:px-4 focus:py-2 focus:rounded-lg focus:shadow"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:start-2 focus:z-[60] focus:bg-white focus:px-4 focus:py-2 focus:rounded-lg focus:shadow"
     >
-      Skip to content
+      {isArabic ? AR_CHROME.skip : 'Skip to content'}
     </a>
     <!-- Navbar — v3 "Die Linie": the bar is a station sign. Paper by default;
          night (`tone="nacht"`) on pages whose first screen is a nacht ground,
@@ -165,7 +195,7 @@ const authAttrs = (item) =>
         night ? 'bg-nacht/90 border-nacht-rule text-nacht-text' : 'bg-paper/90 border-rule text-ink',
       ]}
       data-ground={night ? 'nacht' : 'paper'}
-      aria-label="Main"
+      aria-label={isArabic ? AR_CHROME.mainNav : 'Main'}
     >
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 2xl:max-w-[1536px]">
         <div class="flex items-center justify-between h-16">
@@ -194,27 +224,27 @@ const authAttrs = (item) =>
           <div class="hidden lg:flex items-center gap-1">
             {promoted.map((item) => (
               <a
-                href={item.href}
+                href={hrefFor(item)}
                 {...authAttrs(item)}
                 class:list={['sign-label flex min-h-11 items-center whitespace-nowrap rounded-pill px-3.5 py-2 text-[0.9375rem] transition-colors', night ? 'text-nacht-text hover:bg-nacht-raised' : 'text-ink hover:bg-paper-sunk']}
               >
-                {item.labelEn}
+                {label(item)}
               </a>
             ))}
             {NAV_GROUPS.map((group) => navGroups.some((g) => g.key === group.key) && (
               <details class="group relative">
                 <summary class="flex min-h-11 cursor-pointer list-none items-center gap-1.5 whitespace-nowrap rounded-pill px-3.5 py-2 text-[0.9375rem] sign-label text-graphite transition-colors hover:bg-paper-sunk hover:text-ink [&::-webkit-details-marker]:hidden [[data-ground=nacht]_&]:text-nacht-muted [[data-ground=nacht]_&]:hover:bg-nacht-raised [[data-ground=nacht]_&]:hover:text-nacht-text">
-                  {group.labelEn}
+                  {label(group)}
                   <svg class="h-3.5 w-3.5 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 7.5 5 5 5-5" /></svg>
                 </summary>
-                <div class="dm-sheet absolute left-0 top-full z-50 mt-1 min-w-56 rounded-clay border border-rule bg-white p-2 text-ink shadow-overlay">
+                <div class="dm-sheet absolute start-0 top-full z-50 mt-1 min-w-56 rounded-clay border border-rule bg-white p-2 text-ink shadow-overlay">
                   {navGroups.find((g) => g.key === group.key).items.map((item) => (
                     <a
-                      href={item.href}
+                      href={hrefFor(item)}
                       {...authAttrs(item)}
                       class="flex min-h-11 items-center whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold text-graphite transition-colors hover:bg-siegel-wash hover:text-siegel-deep"
                     >
-                      {item.labelEn}
+                      {label(item)}
                     </a>
                   ))}
                 </div>
@@ -222,81 +252,82 @@ const authAttrs = (item) =>
             ))}
             <div class:list={['mx-2 h-5 w-px', night ? 'bg-nacht-rule' : 'bg-rule']}></div>
             <a
-              href="/login"
+              href={loginHref}
               data-anon-only
               class:list={['sign-label whitespace-nowrap px-3 py-2 text-[0.9375rem] transition-colors', night ? 'text-nacht-muted hover:text-nacht-text' : 'text-graphite hover:text-ink']}
             >
-              Log in
+              {isArabic ? AR_CHROME.logIn : 'Log in'}
             </a>
             <a
-              href={navSignupHref}
+              href={signupHref}
               data-anon-only
               class:list={['sign-label whitespace-nowrap px-3 py-2 text-[0.9375rem] underline decoration-2 underline-offset-4 transition-colors', night ? 'text-nacht-text decoration-nacht-rule hover:decoration-linie' : 'text-ink decoration-rule hover:decoration-siegel']}
             >
-              Start {TRIAL_DAYS}-day trial
+              {isArabic ? AR_CHROME.startTrial : <>Start {TRIAL_DAYS}-day trial</>}
             </a>
             <a
-              href={FREE_COURSE_HREF}
+              href={freeHref}
               data-anon-only
               data-track="course_selected"
               data-track-level="a1.1"
               data-track-surface="nav"
-              class:list={['dm-key ml-1 !min-h-10 !px-4 !py-2 !text-[0.9375rem]', night ? 'dm-key-linie' : 'dm-key-siegel']}
+              class:list={['dm-key ms-1 !min-h-10 !px-4 !py-2 !text-[0.9375rem]', night ? 'dm-key-linie' : 'dm-key-siegel']}
             >
-              Start A1.1 free
+              {isArabic ? AR_CHROME.startFree : 'Start A1.1 free'}
             </a>
             <a
               href="/dashboard"
               data-auth-only
               style="display:none"
-              class:list={['dm-key ml-1 !min-h-10 !px-4 !py-2 !text-[0.9375rem]', night ? 'dm-key-linie' : 'dm-key-siegel']}
+              class:list={['dm-key ms-1 !min-h-10 !px-4 !py-2 !text-[0.9375rem]', night ? 'dm-key-linie' : 'dm-key-siegel']}
             >
-              Continue learning
+              {isArabic ? AR_CHROME.continueLearning : 'Continue learning'}
             </a>
           </div>
 
           <!-- Mobile: the free first stop + the full menu (pure HTML disclosure, no client JS) -->
           <div class="lg:hidden flex items-center gap-2">
-            <a href={FREE_COURSE_HREF} data-anon-only data-track="course_selected" data-track-level="a1.1" data-track-surface="nav_mobile" class:list={['dm-key !min-h-10 !px-3.5 !py-2 !text-[0.875rem]', night ? 'dm-key-linie' : 'dm-key-siegel']}>
-              Start A1.1 free
+            <a href={freeHref} data-anon-only data-track="course_selected" data-track-level="a1.1" data-track-surface="nav_mobile" class:list={['dm-key !min-h-10 !px-3.5 !py-2 !text-[0.875rem]', night ? 'dm-key-linie' : 'dm-key-siegel']}>
+              {isArabic ? AR_CHROME.startFree : 'Start A1.1 free'}
             </a>
             <a href="/dashboard" data-auth-only style="display:none" class:list={['dm-key !min-h-10 !px-3.5 !py-2 !text-[0.875rem]', night ? 'dm-key-linie' : 'dm-key-siegel']}>
-              Dashboard
+              {isArabic ? AR_CHROME.dashboard : 'Dashboard'}
             </a>
             <details class="relative">
-              <summary class:list={['flex min-h-11 cursor-pointer list-none items-center justify-center rounded-pill p-2.5 [&::-webkit-details-marker]:hidden', night ? 'hover:bg-nacht-raised' : 'hover:bg-paper-sunk']} aria-label="Menu">
+              <summary class:list={['flex min-h-11 cursor-pointer list-none items-center justify-center rounded-pill p-2.5 [&::-webkit-details-marker]:hidden', night ? 'hover:bg-nacht-raised' : 'hover:bg-paper-sunk']} aria-label={isArabic ? AR_CHROME.menu : 'Menu'}>
                 <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h10" />
                 </svg>
               </summary>
               <!-- The sheet: a timetable of every door, on the night ground. -->
               <div class="dm-sheet fixed inset-x-0 top-16 z-50 max-h-[calc(100svh-4rem)] overflow-y-auto border-t border-nacht-rule bg-nacht px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-4 text-nacht-text shadow-overlay" data-ground="nacht">
-                <ol class="mb-4 grid grid-cols-4 gap-2" aria-label="Courses by level">
+                <ol class="mb-4 grid grid-cols-4 gap-2" aria-label={isArabic ? AR_CHROME.coursesByLevel : 'Courses by level'}>
                   {STATIONS.map((st) => (
                     <li>
-                      <a href={st.coursePage} class="flex min-h-11 flex-col items-center justify-center rounded-xl border border-nacht-rule bg-nacht-raised px-1 py-2 text-center">
+                      <a href={stationHref(st)} class="flex min-h-11 flex-col items-center justify-center rounded-xl border border-nacht-rule bg-nacht-raised px-1 py-2 text-center">
                         <span class="sign-code text-[1rem]">{st.code}</span>
-                        <span class:list={['mt-0.5 font-data text-[0.625rem]', st.status === 'free' ? 'text-linie' : 'text-nacht-muted']}>{st.status === 'free' ? 'free' : st.status === 'building' ? 'Im Bau' : st.priceLabel}</span>
+                        <span class:list={['mt-0.5 font-data text-[0.625rem]', st.status === 'free' ? 'text-linie' : 'text-nacht-muted']}>{st.status === 'free' ? (isArabic ? AR_CHROME.free : 'free') : st.status === 'building' ? (isArabic ? AR_CHROME.building : 'Im Bau') : <bdi dir="ltr">{st.priceLabel}</bdi>}</span>
                       </a>
                     </li>
                   ))}
                 </ol>
                 {promoted.map((item) => (
-                  <a href={item.href} {...authAttrs(item)} class="sign-label flex min-h-11 items-center border-b border-nacht-rule text-[1.0625rem]">{item.labelEn}</a>
+                  <a href={hrefFor(item)} {...authAttrs(item)} class="sign-label flex min-h-11 items-center border-b border-nacht-rule text-[1.0625rem]">{label(item)}</a>
                 ))}
                 {navItems.filter((item) => !PROMOTED.includes(item.key)).map((item) => (
                   <a
-                    href={item.href}
+                    href={hrefFor(item)}
                     {...authAttrs(item)}
                     class="flex min-h-11 items-center border-b border-nacht-rule text-[0.9375rem] font-semibold text-nacht-muted"
                   >
-                    {item.labelEn}
+                    {label(item)}
                   </a>
                 ))}
+                {isArabic && <a href="/ar/help/" class="flex min-h-11 items-center border-b border-nacht-rule text-[0.9375rem] font-semibold text-nacht-muted">{AR_CHROME.help}</a>}
                 <div class="mt-5 grid gap-3">
-                  <a href={FREE_COURSE_HREF} data-anon-only class="dm-key dm-key-linie w-full">Start A1.1 free — no account</a>
-                  <a href={navSignupHref} data-anon-only class="dm-key dm-key-ghost-nacht w-full">Start {TRIAL_DAYS}-day trial</a>
-                  <a href="/login" data-anon-only class="dm-link-nacht py-2 text-center text-sm font-semibold">Log in</a>
+                  <a href={freeHref} data-anon-only class="dm-key dm-key-linie w-full">{isArabic ? AR_CHROME.startFreeNoAccount : 'Start A1.1 free — no account'}</a>
+                  <a href={signupHref} data-anon-only class="dm-key dm-key-ghost-nacht w-full">{isArabic ? AR_CHROME.startTrial : <>Start {TRIAL_DAYS}-day trial</>}</a>
+                  <a href={loginHref} data-anon-only class="dm-link-nacht py-2 text-center text-sm font-semibold">{isArabic ? AR_CHROME.logIn : 'Log in'}</a>
                 </div>
               </div>
             </details>
@@ -307,6 +338,13 @@ const authAttrs = (item) =>
 
     <!-- Page content -->
     <main id="main" class="pt-[calc(4rem+env(safe-area-inset-top))]">
+      {alternates && (
+        <div class:list={['border-b', night ? 'border-nacht-rule bg-nacht text-nacht-text' : 'border-rule bg-paper']} data-ground={night ? 'nacht' : 'paper'}>
+          <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-end px-2 sm:px-4 lg:px-6">
+            <LanguageSwitch current={isArabic ? 'ar' : 'en'} en={alternates.en} ar={alternates.ar} variant={night ? 'sheet' : 'bar'} />
+          </div>
+        </div>
+      )}
       <slot />
     </main>
 
@@ -314,15 +352,15 @@ const authAttrs = (item) =>
     <footer class="mt-20 bg-nacht text-nacht-muted" data-ground="nacht">
       <div class="mx-auto max-w-7xl px-4 pt-12 sm:px-6 lg:px-8">
         <!-- The line, flat: eight stations, each a link to its course page. -->
-        <nav aria-label="Courses by level" class="relative pb-10">
+        <nav aria-label={isArabic ? AR_CHROME.coursesByLevel : 'Courses by level'} class="relative pb-10">
           <div class="absolute left-0 right-0 top-[1.0625rem] h-1.5 rounded-pill bg-linie" aria-hidden="true"></div>
           <ol class="relative grid grid-cols-4 gap-y-6 sm:grid-cols-8">
             {STATIONS.map((st) => (
               <li class="flex flex-col items-start sm:items-center">
-                <a href={st.coursePage} class="group flex flex-col items-start gap-2 sm:items-center">
+                <a href={stationHref(st)} class="group flex flex-col items-start gap-2 sm:items-center">
                   <span class:list={['dm-station-dot block h-[2.375rem] w-[2.375rem] rounded-full border-[5px]', st.status === 'building' ? 'border-nacht-rule bg-nacht' : 'border-linie bg-nacht']} aria-hidden="true"></span>
                   <span class="sign-code text-[1.125rem] text-nacht-text">{st.code}</span>
-                  <span class="font-data text-[0.6875rem]">{st.status === 'free' ? 'Free' : st.status === 'building' ? 'Im Bau' : st.priceLabel}</span>
+                  <span class="font-data text-[0.6875rem]">{st.status === 'free' ? (isArabic ? AR_CHROME.free : 'Free') : st.status === 'building' ? (isArabic ? AR_CHROME.building : 'Im Bau') : <bdi dir="ltr">{st.priceLabel}</bdi>}</span>
                 </a>
               </li>
             ))}
@@ -347,10 +385,10 @@ const authAttrs = (item) =>
               <span class="sign-label text-[1.0625rem] text-nacht-text">Deutsch<span class="text-siegel-deep">Meister</span></span>
             </div>
             <p class="text-sm leading-relaxed">
-              German from A1.1 to B2.2, one stop at a time: guided courses, grammar, listening, reading and AI speaking practice.
+              {isArabic ? AR_CHROME.footerBlurb : 'German from A1.1 to B2.2, one stop at a time: guided courses, grammar, listening, reading and AI speaking practice.'}
             </p>
             <p class="mt-4">
-              <a href={navSignupHref} data-anon-only class="dm-link-nacht text-sm font-semibold">Create a free account</a>
+              <a href={signupHref} data-anon-only class="dm-link-nacht text-sm font-semibold">{isArabic ? AR_CHROME.createAccount : 'Create a free account'}</a>
             </p>
             <!-- Off-site channels. Same registry as the SPA footer. -->
             <ul class="mt-4 flex items-center gap-4 text-sm">
@@ -365,7 +403,7 @@ const authAttrs = (item) =>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                       <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.2 3.6-6.2 3.6Z" />
                     </svg>
-                    {item.labelEn}
+                    {label(item)}
                   </a>
                 </li>
               ))}
@@ -380,16 +418,21 @@ const authAttrs = (item) =>
                   <circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="4" />
                   <path d="m4.93 4.93 4.24 4.24M14.83 9.17l4.24-4.24M14.83 14.83l4.24 4.24M9.17 14.83l-4.24 4.24" />
                 </svg>
-                {SUPPORT_LINK.labelEn}
+                {label(SUPPORT_LINK)}
               </a>
             </p>
+            {isArabic && (
+              <p class="text-sm">
+                <a href="/ar/help/" class="inline-flex min-h-11 items-center font-semibold text-nacht-text transition-colors hover:text-siegel-deep">{AR_CHROME.help}</a>
+              </p>
+            )}
           </div>
           {FOOTER_GROUPS.map((group) => (
             <div>
-              <h2 class="text-nacht-text font-semibold sign-label mb-3 text-sm">{group.titleEn}</h2>
+              <h2 class="text-nacht-text font-semibold sign-label mb-3 text-sm">{label(group)}</h2>
               <ul class="space-y-1 text-sm">
                 {group.items.map((item) => (
-                  <li><a href={item.href} class="inline-flex min-h-9 items-center transition-colors hover:text-nacht-text">{item.labelEn}</a></li>
+                  <li><a href={hrefFor(item)} class="inline-flex min-h-9 items-center transition-colors hover:text-nacht-text">{label(item)}</a></li>
                 ))}
               </ul>
             </div>
@@ -400,11 +443,11 @@ const authAttrs = (item) =>
             {LEGAL_LINKS.map((item, i) => (
               <>
                 {i > 0 && <span class="mx-2">·</span>}
-                <a href={item.href} class="transition-colors hover:text-nacht-text">{item.labelEn}</a>
+                <a href={item.href} class="transition-colors hover:text-nacht-text">{label(item)}</a>
               </>
             ))}
           </p>
-          © {new Date().getFullYear()} DeutschMeister · All rights reserved
+          © <bdi dir="ltr">{new Date().getFullYear()} DeutschMeister</bdi> · {isArabic ? AR_CHROME.rights : 'All rights reserved'}
         </div>
       </div>
     </footer>
@@ -413,11 +456,15 @@ const authAttrs = (item) =>
          so an English speaker following the "Grammar" nav link landed on an
          all-German page. German stays the default (it is what crawlers index
          and what these pages rank for); elements carrying data-en swap to
-         English when the visitor has chosen it. -->
+         English when the visitor has chosen it.
+         Only then: a page with no [data-en] element has nothing English to
+         show, and rewriting its <html lang> would mislabel it — an Arabic page
+         or a German guide read aloud in an English voice (Arabic edition, G7). -->
     <script is:inline>
       (function () {
         try {
           if (localStorage.getItem('dm_lang') !== 'en') return;
+          if (!document.querySelector('[data-en]')) return;
           document.documentElement.lang = 'en';
           document.querySelectorAll('[data-en]').forEach(function (el) {
             el.textContent = el.getAttribute('data-en');

@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { X } from 'lucide-react';
 import Button from '../ui/Button.jsx';
 import { safeGet, safeSet } from '../../utils/safeStorage.js';
 import { prefersReducedMotion } from '../../lib/motion.js';
+import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
 // Three coach-marks for the first visit to the A1.1 course home: the path,
 // the Continue card and the exam-date plan. Shown once per browser
@@ -33,23 +34,23 @@ export const TOUR_KEY = 'dm_tour_a11';
  * (never typed — a content edit must carry the tour with it); without them the
  * wording stays generic.
  */
-export const defaultSteps = ({ curriculum, meta } = {}) => [
+export const defaultSteps = ({ curriculum, meta, lang = 'en' } = {}) => [
   {
     target: 'path',
-    title: 'This is your path',
+    title: t('tour.path.title', lang),
     body: curriculum && meta
-      ? `${curriculum.lektionen.length} short Lektionen in ${meta.chapters.length} chapters. Each Lektion is one everyday situation, and every ${meta.chapters[0]?.lektionen.length ?? 3} Lektionen a checkpoint shows you what stuck.`
-      : 'Short Lektionen in a few chapters. Each Lektion is one everyday situation, and a checkpoint after each chapter shows you what stuck.',
+      ? t('tour.path.body', lang, { lektionen: curriculum.lektionen.length, chapters: meta.chapters.length, perChapter: meta.chapters[0]?.lektionen.length ?? 3 })
+      : t('tour.path.bodyGeneric', lang),
   },
   {
     target: 'continue',
-    title: 'One thing to press',
-    body: 'This card always shows the next unit. Come back any time, tap it, and you are back where you left off — no account needed for that.',
+    title: t('tour.continue.title', lang),
+    body: t('tour.continue.body', lang),
   },
   {
     target: 'plan',
-    title: 'Your exam date, if you have one',
-    body: 'Set a date and the course tells you how many units a week are enough. It only ever suggests a pace; it never locks a Lektion.',
+    title: t('tour.plan.title', lang),
+    body: t('tour.plan.body', lang),
   },
 ];
 
@@ -64,7 +65,9 @@ const findTarget = (name) => {
 export const tourSeen = (key = TOUR_KEY) => safeGet(key) === '1';
 
 export default function FirstRunTour({ curriculum, meta, steps: stepsProp, storageKey = TOUR_KEY, onDone, className = '' }) {
-  const [steps] = useState(() => stepsProp ?? defaultSteps({ curriculum, meta }));
+  const [lang] = useLessonLang();
+  // Recomputed per render, so a language switch while the tour is open relabels it.
+  const steps = useMemo(() => stepsProp ?? defaultSteps({ curriculum, meta, lang }), [stepsProp, curriculum, meta, lang]);
   const [open, setOpen] = useState(() => !tourSeen(storageKey) && steps.length > 0);
   const [index, setIndex] = useState(0);
   const cardRef = useRef(null);
@@ -125,13 +128,13 @@ export default function FirstRunTour({ curriculum, meta, steps: stepsProp, stora
     >
       <div className="flex items-start justify-between gap-3">
         <p className="font-data text-[0.625rem] font-bold uppercase tracking-[0.13em] text-graphite">
-          Quick tour · {index + 1} of {steps.length}
+          {t('tour.label', lang, { n: index + 1, total: steps.length })}
         </p>
         <button
           type="button"
           onClick={close}
-          aria-label="Close the tour"
-          className="-mr-1 -mt-1 flex h-8 w-8 items-center justify-center rounded-full text-graphite hover:bg-siegel-wash hover:text-siegel-deep"
+          aria-label={t('tour.close', lang)}
+          className="-me-1 -mt-1 flex h-8 w-8 items-center justify-center rounded-full text-graphite hover:bg-siegel-wash hover:text-siegel-deep"
         >
           <X className="h-4 w-4" aria-hidden="true" />
         </button>
@@ -144,16 +147,16 @@ export default function FirstRunTour({ curriculum, meta, steps: stepsProp, stora
           onClick={close}
           className="font-data text-[0.75rem] font-bold uppercase tracking-[0.13em] text-graphite hover:text-ink"
         >
-          Skip
+          {t('tour.skip', lang)}
         </button>
         <div className="flex items-center gap-2">
           {index > 0 && (
             <Button variant="ghost" size="sm" onClick={() => setIndex((i) => Math.max(0, i - 1))}>
-              Back
+              {t('shell.back', lang)}
             </Button>
           )}
           <Button variant="primary" size="sm" onClick={last ? close : () => setIndex((i) => i + 1)}>
-            {last ? 'Got it' : 'Next'}
+            {t(last ? 'action.understood' : 'tour.next', lang)}
           </Button>
         </div>
       </div>

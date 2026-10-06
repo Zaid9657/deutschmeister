@@ -61,6 +61,9 @@ export default function FeedbackSheet({ result, expected, hint, explanation, oth
   const [lang] = useLessonLang();
   if (!result) return null;
   const { Icon, key, className } = revealed ? TONE.revealed : (TONE[result] || TONE[RESULT.WRONG]);
+  // `explanation` is a plain string (German/English callers) or the
+  // { text, lang, fallback } a support lookup returns (src/lib/lesson/support.js).
+  const expl = typeof explanation === 'string' ? { text: explanation, lang: null, fallback: false } : explanation;
   return (
     <div
       className={
@@ -78,11 +81,16 @@ export default function FeedbackSheet({ result, expected, hint, explanation, oth
         </p>
         {result !== RESULT.CORRECT && expected && (
           <p className="mt-2 text-[0.9375rem]">
-            {t('feedback.correctIs', lang)} <strong className="font-bold" lang="de">{expected}</strong>
+            {t('feedback.correctIs', lang)} <strong className="font-bold" lang="de" dir="ltr">{expected}</strong>
           </p>
         )}
         {hint && <p className="mt-2 text-[0.9375rem] font-bold">{hint}</p>}
-        {explanation && <p className="mt-2 text-[0.875rem] leading-relaxed opacity-90">{inline(explanation)}</p>}
+        {expl && expl.text && (
+          <p className="mt-2 text-[0.875rem] leading-relaxed opacity-90" lang={expl.lang || undefined} dir={expl.lang === 'ar' ? 'rtl' : expl.lang ? 'ltr' : undefined}>
+            {inline(expl.text, { rtl: expl.lang === 'ar' })}
+            {expl.fallback && <span lang={lang} className="ms-1 text-[0.75em] font-normal">{t(expl.lang === 'de' ? 'support.inGerman' : 'support.inEnglish', lang)}</span>}
+          </p>
+        )}
         {otherExplanation && <OtherLanguage text={otherExplanation} lang={lang} className="mt-2" />}
         <div className="mt-3 flex flex-wrap items-center gap-3">
           {onExplain && (
@@ -94,7 +102,7 @@ export default function FeedbackSheet({ result, expected, hint, explanation, oth
               <Sparkles className="h-4 w-4" aria-hidden="true" /> {t('feedback.explain', lang)}
             </button>
           )}
-          <Button onClick={onContinue} size="lg" className="w-full sm:ml-auto sm:w-auto">
+          <Button onClick={onContinue} size="lg" className="w-full sm:ms-auto sm:w-auto">
             {primaryLabel || t('action.next', lang)}
           </Button>
         </div>

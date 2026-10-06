@@ -7,7 +7,7 @@ import { ruleCard, ruleCardText } from './_shared/ruleCards.mjs';
 // src/components/lesson/PracticeItem.jsx used to be a placeholder.
 //
 // THE ANSWER IS IN THE CHROME LANGUAGE (Wave 1, 2026-09-19). The client sends
-// `lang` ('en' | 'de'); English is what a day-one learner can read, German is
+// `lang` ('en' | 'de' | 'ar'); English is what a day-one learner can read, German is
 // Deutsch-Modus. Both variants are the same teacher with the same rule card —
 // only the language of the explanation changes, never its grounding. `lang` is
 // validated here like every other field and defaults to German when absent or
@@ -29,15 +29,22 @@ const CLAUDE_MODEL = process.env.EXPLAIN_MODEL || 'claude-haiku-4-5';
 
 const MAX_FIELD_CHARS = 300;
 
+// ARABIC (2026-10-05, docs/arabic/README.md): the same teacher for learners
+// whose interface language is Arabic. Simple Modern Standard Arabic, German
+// forms quoted unchanged in Latin script and never transliterated, the same
+// 60-word cap and the same rule card. Only the explanation's language changes:
+// no score, quota, model or permission depends on `lang`.
 const SYSTEM_RULES = {
   de: 'Du bist eine freundliche DaF-Lehrkraft. Erkläre auf A1-Deutsch in höchstens 60 Wörtern, warum die richtige Antwort richtig ist; nenne die Regel kurz; keine Einleitung.',
   en: 'You are a friendly teacher of German as a foreign language. In plain English and at most 60 words, explain why the correct answer is correct; name the rule briefly, quoting the German forms as they are; no preamble. Stay within the course rule below — do not add rules it does not state.',
+  ar: 'أنت معلّم ودود للغة الألمانية لغير الناطقين بها. اشرح بالعربية الفصحى البسيطة وفي 60 كلمة على الأكثر لماذا الإجابة الصحيحة صحيحة؛ اذكر القاعدة باختصار، واكتب الكلمات الألمانية كما هي بالحروف اللاتينية دون نقلها إلى الحروف العربية؛ بلا مقدمة. التزم بقاعدة الدورة أدناه ولا تُضف قواعد لا تذكرها.',
 };
 const RULE_CARD_HEADING = {
   de: 'Grundlage — die Regel dieses Kurses:',
   en: "Ground truth — this course's own rule card (German; explain it, do not contradict it):",
+  ar: 'المرجع — قاعدة هذه الدورة (بالألمانية؛ اشرحها ولا تخالفها):',
 };
-const LANGS = new Set(['en', 'de']);
+const LANGS = new Set(['en', 'de', 'ar']);
 
 const trim = (v) => (typeof v === 'string' ? v.trim().slice(0, MAX_FIELD_CHARS) : '');
 
@@ -139,9 +146,12 @@ export const handler = async (event) => {
       .filter(Boolean)
       .join('\n\n');
 
-    const L = lang === 'en'
-      ? { task: 'Task', expected: 'Correct answer', user: "Learner's answer", level: 'Level' }
-      : { task: 'Aufgabe', expected: 'Richtige Antwort', user: 'Antwort der Lernenden', level: 'Niveau' };
+    const PROMPT_LABELS = {
+      en: { task: 'Task', expected: 'Correct answer', user: "Learner's answer", level: 'Level' },
+      de: { task: 'Aufgabe', expected: 'Richtige Antwort', user: 'Antwort der Lernenden', level: 'Niveau' },
+      ar: { task: 'التمرين', expected: 'الإجابة الصحيحة', user: 'إجابة المتعلّم', level: 'المستوى' },
+    };
+    const L = PROMPT_LABELS[lang] || PROMPT_LABELS.de;
     const userText = [
       `${L.task}: ${questionDe}`,
       `${L.expected}: ${expected}`,

@@ -15,6 +15,26 @@ let posthog = null; // resolved module, once consent is given
 let initialized = false;
 let loading = null; // in-flight import, so concurrent callers share one fetch
 
+/** The language the current screen is rendered in (<html lang>, set by src/lib/locale.js). */
+function pageLocale() {
+  try {
+    const l = document.documentElement.getAttribute('lang');
+    return l === 'en' || l === 'de' || l === 'ar' ? l : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+// An explicit language switch is a product event; the super-property follows it.
+if (typeof window !== 'undefined') {
+  window.addEventListener('dm-locale-changed', (e) => {
+    const d = (e && e.detail) || {};
+    if (d.source !== 'explicit') return;
+    if (initialized && posthog) posthog.register({ ui_locale: d.to });
+    track('locale_changed', { ui_locale: d.to, locale_from: d.from, surface: d.surface || undefined });
+  });
+}
+
 // Same consent flag the cookie banner (public/consent.js) writes for GA.
 function hasConsent() {
   try {
@@ -48,6 +68,10 @@ export async function initAnalytics() {
       if (a) {
         posthog.register({ dm_source: a.first.source, dm_medium: a.first.medium || null, dm_campaign: a.first.campaign || null });
       }
+      // The interface language as a product setting (en | de | ar), so funnels
+      // can be compared by language. Never inferred from anything else and
+      // never a proxy for nationality or origin (docs/arabic/measurement.md).
+      posthog.register({ ui_locale: pageLocale() || null });
     })
     .catch((err) => {
       // Analytics must never break the app — a blocked or failed chunk is fine.
@@ -80,6 +104,7 @@ function mirrorToGa(event, props) {
       dm_medium: a?.first?.medium || undefined,
       dm_campaign: a?.first?.campaign || undefined,
       entry_page: window.location.pathname,
+      ui_locale: pageLocale(),
       ...props,
     }));
   } catch {

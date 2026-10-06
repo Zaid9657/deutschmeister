@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
@@ -10,7 +10,7 @@ import { completeLesson, countCompletedRuns, fetchWordsByIds, getLessonProgress,
 import { courseHome } from '../../lib/courseFlow.js';
 import { hasLocalProgress, localRunCount, mergeLocalProgress, recordLocalLesson } from '../../lib/course/localProgress.js';
 import { buildCardIndex, fetchDueCards, seedCardsForLektion } from '../../services/reviewService.js';
-import { clearRun, packRun, readRun, resumeStageIndex, saveRun } from '../../lib/lesson/runState.js';
+import { claimRunCompletion, clearRun, newRunId, packRun, readRun, resumeStageIndex, saveRun } from '../../lib/lesson/runState.js';
 import LessonProgressBar from '../../components/lesson/LessonProgressBar.jsx';
 import ComboChip, { nextCombo } from '../../components/lesson/ComboChip.jsx';
 import LangToggle from '../../components/lesson/LangToggle.jsx';
@@ -34,7 +34,8 @@ import SpeakingStage from '../../components/lesson/SpeakingStage.jsx';
 import WritingStage from '../../components/lesson/WritingStage.jsx';
 import RecapStage from '../../components/lesson/RecapStage.jsx';
 import IntroStage from '../../components/lesson/IntroStage.jsx';
-import { trackLessonCompleted, trackLessonStarted } from '../../lib/funnelTracking.js';
+import { trackLessonCompleted, trackLessonResumed, trackLessonStarted } from '../../lib/funnelTracking.js';
+import { loadSupport, supportLoaded } from '../../lib/lesson/support.js';
 
 // The lesson player: route /course/:level/l/:nr, one stage per screen
 // (docs/course-standard-2026-09-12.md §3). Everything it shows comes from the
@@ -59,9 +60,14 @@ import { trackLessonCompleted, trackLessonStarted } from '../../lib/funnelTracki
 // `attempt` and warm-up cards, skips the intro, and the recap clears it.
 //
 // CHROME LANGUAGE. Every label this page and its stages show comes from
-// src/lib/lesson/strings.js in the learner's chrome language — English by
-// default, German in Deutsch-Modus (the LangToggle in the header row). The
-// content (dialogue, questions, answers) is German in both.
+// src/lib/lesson/strings.js in the learner's interface language — English by
+// default, German in Deutsch-Modus, Arabic (right-to-left) for the translated
+// pilot Lektionen (src/lib/locale.js; the LangToggle in the header row). The
+// learning-support text (meanings, explanations, tasks) comes from the
+// curriculum in English/German and from a sidecar in Arabic
+// (src/lib/lesson/support.js), loaded with the pool before the first screen.
+// The content (dialogue, questions, answers) is German in every language.
+// Switching language never remounts a stage: the answers and the run stay.
 
 /** The multi-item stages the player pages through one item at a time. */
 const ITEM_STAGES = new Set(['practice', 'derived', 'dictation', 'requeue', 'warmup']);
@@ -79,6 +85,13 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   // comes from the attempt batches, signed out from the local store; either way
   // it is derived from what is already written, not from a new column.
   const [attempt, setAttempt] = useState(() => (resumed ? resumed.attempt : 1));
+  // One id per run (kept in the snapshot), so a completion is reported once
+  // per run however often the recap mounts (analytics dedupe).
+  const [runId] = useState(() => (resumed && resumed.runId) || newRunId());
+  // Signed-in save of the finished Lektion: 'saving' → 'saved', or 'local' when
+  // the account write failed and the run was kept on this device for the next
+  // merge (src/lib/course/localProgress.js) instead of being lost.
+  const [saveState, setSaveState] = useState(null);
   const [stageIndex, setStageIndex] = useState(() => (resumed
     ? resumeStageIndex(buildLesson({ curriculum, lektion, pool, dueCards: resumed.dueCards, attempt: resumed.attempt }).stages, resumed)
     : 0));
@@ -204,16 +217,26 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
     const i = path.findIndex((p) => p.kind === 'lektion' && p.nr === lektion.nr);
     const next = i >= 0 ? path[i + 1] : null;
     if (!next) return { to: courseHome(curriculum.level), label: t('action.backToCourse', lang) };
-    if (next.kind === 'checkpoint') return { to: `/course/${curriculum.level}/checkpoint/${next.nr}`, label: `${next.title} →` };
+    if (next.kind === 'checkpoint') return { to: `/course/${curriculum.level}/checkpoint/${next.nr}`, label: t('player.nextCheckpoint', lang, { nr: next.nr }) };
     if (next.kind === 'leveltest') return { to: `/modelltest/${next.testSlug || curriculum.testSlug}`, label: t('player.finalTest', lang) };
     return { to: `/course/${curriculum.level}/l/${next.nr}`, label: t('player.nextLesson', lang, { nr: next.nr }) };
   }, [path, lektion.nr, curriculum.level, curriculum.testSlug, lang]);
 
   const accuracy = firstAttemptAccuracy(attempts);
   const status = masteryStatus(accuracy);
+  const transcriptCount = attempts.filter((a) => a && a.support === 'transcript').length;
 
-  const recordResult = useCallback((item, { correct, errorTag, result }) => {
-    setAttempts((prev) => [...prev, { itemId: item.id, stage: item.stage || 'practice', correct, errorTag, result }]);
+  const recordResult = useCallback((item, { correct, errorTag, result, support }) => {
+    const stageName = item.stage || 'practice';
+    let duplicate = false;
+    setAttempts((prev) => {
+      // A reload between "Check" and "Continue" resumes on the same item (the
+      // snapshot is saved per item, src/lib/lesson/runState.js); answering it
+      // again must not log a second attempt for it — the first one stands.
+      if (prev.some((a) => a.itemId === item.id && a.stage === stageName)) { duplicate = true; return prev; }
+      return [...prev, { itemId: item.id, stage: stageName, correct, errorTag, result, ...(support ? { support } : {}) }];
+    });
+    if (duplicate) return;
     if (!correct) setMisses((prev) => (prev.some((m) => m.id === item.id) ? prev : [...prev, item]));
     if (item.stage === 'practice' || item.stage === 'dictation') setCombo((c) => nextCombo(c, correct));
   }, []);
@@ -230,12 +253,12 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
     // The requeue stage is skipped when nothing was missed.
     if (nextStage && nextStage.kind === 'requeue') {
       const used = attempts.map((a) => a.itemId);
-      const items = requeueFor(misses, pool, used);
+      const items = requeueFor(misses, pool, used, { maxLektion: lektion.nr });
       setRequeued(items);
       if (!items.length) { goStage(target + 1); return; }
     }
     goStage(target);
-  }, [stageIndex, stages, attempts, misses, pool, goStage]);
+  }, [stageIndex, stages, attempts, misses, pool, goStage, lektion.nr]);
 
   // Back skips what advance() skips: an empty requeue stage is a blank screen.
   const backTo = prevStageIndex(stages, stageIndex, requeued.length);
@@ -250,24 +273,44 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
     if (preview || !introDone || !stage) return;
     if (saved || stage.kind === 'recap') { clearRun(curriculum.level, lektion.id); return; }
     saveRun(curriculum.level, lektion.id, packRun({
-      stageKey: stage.key, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards: dueCards || [],
+      stageKey: stage.key, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards: dueCards || [], runId,
     }));
-  }, [preview, introDone, saved, stage, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, curriculum.level, lektion.id]);
+  }, [preview, introDone, saved, stage, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, curriculum.level, lektion.id, runId]);
+
+  // A run picked up again after a page load is a RESUME, reported once.
+  useEffect(() => {
+    if (resumed && !preview) trackLessonResumed(curriculum.level, lektion.id);
+  }, [resumed, preview, curriculum.level, lektion.id]);
 
   // Persist once, when the recap comes into view. Signed out, the same write
   // goes to localStorage instead of Supabase — never nowhere.
   useEffect(() => {
     if (preview || saved || !stage || stage.kind !== 'recap') return;
     setSaved(true);
-    trackLessonCompleted(curriculum.level, lektion.id);
+    // Once per run, however often the recap mounts (Back from the recap and
+    // forward again, a re-render): the completion event is deduped by run id.
+    if (claimRunCompletion(runId)) trackLessonCompleted(curriculum.level, lektion.id);
     if (!user) {
       recordLocalLesson({ level: curriculum.level, lektionId: lektion.id, status, accuracy, attempts });
       return;
     }
-    logAttempts(user.id, { level: curriculum.level, lektionId: lektion.id }, attempts);
-    completeLesson(user.id, { level: curriculum.level, lektionId: lektion.id, accuracy, status });
+    setSaveState('saving');
+    Promise.all([
+      attempts.length ? logAttempts(user.id, { level: curriculum.level, lektionId: lektion.id }, attempts) : Promise.resolve(true),
+      completeLesson(user.id, { level: curriculum.level, lektionId: lektion.id, accuracy, status }),
+    ])
+      .then(([logged, completed]) => {
+        if (logged && completed) { setSaveState('saved'); return; }
+        // Not lost: kept on this device, merged on the next course open.
+        recordLocalLesson({ level: curriculum.level, lektionId: lektion.id, status, accuracy, attempts });
+        setSaveState('local');
+      })
+      .catch(() => {
+        recordLocalLesson({ level: curriculum.level, lektionId: lektion.id, status, accuracy, attempts });
+        setSaveState('local');
+      });
     seedCardsForLektion(user.id, lektion, curriculum.level);
-  }, [preview, saved, stage, user, curriculum.level, lektion, attempts, accuracy, status]);
+  }, [preview, saved, stage, user, curriculum.level, lektion, attempts, accuracy, status, runId]);
 
   if (!stage) return <Navigate to={courseHome(curriculum.level)} replace />;
   if (!introDone) {
@@ -315,10 +358,10 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
       body = <DialogStage stage={stage} lektionId={lektion.id} onBack={back} onDone={advance} />;
       break;
     case 'wortfeld':
-      body = <WortfeldStage stage={{ ...stage, words: wortfeld }} onBack={back} onDone={advance} />;
+      body = <WortfeldStage stage={{ ...stage, words: wortfeld }} lektionId={lektion.id} onBack={back} onDone={advance} />;
       break;
     case 'notice':
-      body = <NoticeStage stage={stage} onBack={back} onDone={advance} />;
+      body = <NoticeStage stage={stage} lektionId={lektion.id} onBack={back} onDone={advance} />;
       break;
     case 'phonetik':
       body = <PhonetikStage stage={stage} lektionId={lektion.id} onBack={back} onDone={advance} />;
@@ -379,6 +422,8 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
           level={curriculum.level}
           accuracy={accuracy}
           status={status}
+          saveState={saveState}
+          transcriptCount={transcriptCount}
           nextLabel={nextTarget.label}
           onBack={back}
           onNext={() => navigate(nextTarget.to)}
@@ -394,17 +439,21 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   return (
     <div className="min-h-screen bg-paper font-body text-ink">
       <div className="mx-auto max-w-2xl px-4 pb-6 pt-6 sm:pb-10 sm:pt-10">
-        <div className="mb-5 flex items-center gap-3">
+        {/* Wraps at phone width: the three-language switch drops under the
+            progress row instead of squeezing the bar to nothing. */}
+        <div className="mb-5 flex flex-wrap items-center gap-3">
           <Link
             to={courseHome(curriculum.level)}
             className="inline-flex items-center gap-1 text-sm font-bold text-siegel hover:text-siegel-deep"
             aria-label={t('player.backToCourse', lang)}
           >
-            <ArrowLeft className="h-4 w-4" /> {curriculum.code}
+            <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" aria-hidden="true" /> <span dir="ltr">{curriculum.code}</span>
           </Link>
-          <LessonProgressBar step={step} total={stages.length} label={t('player.lesson', lang, { nr: lektion.nr })} />
-          <ComboChip combo={combo} />
-          <LangToggle />
+          <div className="flex min-w-[8rem] flex-1 items-center gap-3">
+            <LessonProgressBar step={step} total={stages.length} label={t('player.lesson', lang, { nr: lektion.nr })} />
+            <ComboChip combo={combo} />
+          </div>
+          <LangToggle className="ms-auto" />
         </div>
         {body}
       </div>
@@ -429,8 +478,23 @@ const POOL_LOADERS = {
 export default function LessonPlayerPage() {
   const { level, nr } = useParams();
   const curriculum = curriculumFor(level);
+  const [lang] = useLessonLang();
   const [pool, setPool] = useState(null);
   const [poolFailed, setPoolFailed] = useState(false);
+  // The learning-support sidecar of the interface language (Arabic), loaded
+  // beside the pool so the first screen is already in that language. A level
+  // with no sidecar resolves at once and every support text falls back,
+  // marked as English (src/lib/lesson/support.js).
+  const [supportReady, setSupportReady] = useState(() => !curriculum || supportLoaded(lang, curriculum.level));
+  const mountedOnce = useRef(false);
+  useEffect(() => {
+    if (!curriculum) return undefined;
+    if (supportLoaded(lang, curriculum.level)) { setSupportReady(true); return undefined; }
+    let cancelled = false;
+    setSupportReady(false);
+    loadSupport(curriculum.level, lang).finally(() => { if (!cancelled) setSupportReady(true); });
+    return () => { cancelled = true; };
+  }, [curriculum, lang]);
   const lektionNr = Number(nr);
   const lektion = curriculum ? (curriculum.lektionen || []).find((l) => l.nr === lektionNr) : null;
 
@@ -451,6 +515,9 @@ export default function LessonPlayerPage() {
 
   if (!curriculum) return <Navigate to="/courses/" replace />;
   if (!lektion) return <Navigate to={courseHome(curriculum.level)} replace />;
+  // Wait for the sidecar only before the FIRST screen. A language switch in
+  // the middle of a run must not unmount the player (it would drop the typed
+  // answer); the support texts re-render in place once the sidecar registers.
   if (!pool && !poolFailed) {
     return (
       <div className="min-h-screen bg-paper font-body text-graphite">
@@ -458,6 +525,14 @@ export default function LessonPlayerPage() {
       </div>
     );
   }
+  if (!supportReady && !mountedOnce.current) {
+    return (
+      <div className="min-h-screen bg-paper font-body text-graphite">
+        <p className="mx-auto max-w-2xl px-4 py-16 text-sm italic">{t('player.loading', readLessonLang())}</p>
+      </div>
+    );
+  }
 
+  mountedOnce.current = true;
   return <LessonPlayer curriculum={curriculum} lektion={lektion} pool={pool || []} />;
 }

@@ -7,6 +7,9 @@ import FeedbackSheet from './FeedbackSheet.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../../lib/lesson/check.js';
 import { isTypedItem } from '../../lib/lesson/buildLesson.js';
+import { supportKeys } from '../../lib/lesson/support.js';
+import GermanKeys from './GermanKeys.jsx';
+import SupportText, { useSupport } from './SupportText.jsx';
 
 /**
  * Shown when the only thing wrong with an answer is its capitalisation — in
@@ -53,6 +56,7 @@ export const caseHint = (lang) => t('practice.caseHint', lang);
  */
 export default function PracticeItem({ item, index, total, onResult, onNext, level, lektionId, eyebrowKey = 'stage.practice.eyebrow', allowReveal = false }) {
   const [lang] = useLessonLang();
+  const support = useSupport(level);
   const [value, setValue] = useState('');
   const [picked, setPicked] = useState(null);
   const [state, setState] = useState(null);
@@ -112,8 +116,10 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
         {t(eyebrowKey, lang, { n: index + 1, total })}
       </p>
       <Card className="mt-4 p-5 sm:p-6">
-        <p className="font-display text-[1.25rem] font-semibold leading-snug text-ink sm:text-[1.375rem]" lang="de">{item.questionDe}</p>
-        {item.questionEn && <p className="mt-1.5 text-[0.875rem] leading-snug text-graphite">{item.questionEn}</p>}
+        <p className="font-display text-[1.25rem] font-semibold leading-snug text-ink sm:text-[1.375rem]" lang="de" dir="ltr">{item.questionDe}</p>
+        {item.questionEn && (
+          <SupportText as="p" level={level} k={supportKeys.itemQuestion(item.id)} en={item.questionEn} className="mt-1.5 block text-[0.875rem] leading-snug text-graphite" />
+        )}
 
         {chips ? (
           // Full-width, stacked options on mobile (one thumb-width tap target
@@ -129,7 +135,9 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
                   disabled={!!state}
                   onClick={() => setPicked(opt)}
                   aria-pressed={on}
-                  className={`flex min-h-11 w-full items-center justify-between gap-2 rounded-clay border px-4 py-2.5 text-left text-[0.9375rem] font-bold transition-all duration-100 ease-snap disabled:opacity-70 motion-reduce:transition-none sm:w-auto ${
+                  lang="de"
+                  dir="ltr"
+                  className={`flex min-h-11 w-full items-center justify-between gap-2 rounded-clay border px-4 py-2.5 text-start text-[0.9375rem] font-bold transition-all duration-100 ease-snap disabled:opacity-70 motion-reduce:transition-none sm:w-auto ${
                     on ? 'border-siegel bg-siegel text-white shadow-raise-siegel' : 'border-rule bg-white text-ink shadow-raise hover:border-siegel active:translate-y-1 active:shadow-none'
                   }`}
                 >
@@ -153,12 +161,20 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
               autoComplete="off"
               autoCapitalize="off"
               spellCheck={false}
+              lang="de"
+              dir="ltr"
               onChange={(e) => setValue(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') submit(); }}
               className="mt-2 w-full rounded-clay border border-rule bg-white px-4 py-3 text-[1.0625rem] text-ink outline-none focus:border-siegel disabled:bg-paper-sunk"
               placeholder={item.type === 'sentence_building' ? t('practice.wholeSentence', lang) : '…'}
             />
-            {item.hint && !state && <p className="mt-2 text-[0.8125rem] text-graphite">{t('practice.tip', lang, { hint: item.hint })}</p>}
+            <GermanKeys inputRef={inputRef} value={value} onChange={setValue} disabled={!!state} className="mt-2" />
+            {item.hint && !state && (
+              <p className="mt-2 text-[0.8125rem] text-graphite">
+                {t('practice.tipLabel', lang)}{' '}
+                <SupportText level={level} k={supportKeys.itemHint(item.id)} de={item.hint} />
+              </p>
+            )}
           </div>
         )}
 
@@ -194,7 +210,9 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
         expected={state && state.expected}
         hint={state && state.hint}
         revealed={!!(state && state.revealed)}
-        explanation={state && state.result !== RESULT.CORRECT ? (lang !== 'de' && item.explanationEn ? item.explanationEn : item.explanationDe) : null}
+        explanation={state && state.result !== RESULT.CORRECT
+          ? support(supportKeys.itemExplanation(item.id), { en: item.explanationEn, de: item.explanationDe })
+          : null}
         otherExplanation={state && state.result !== RESULT.CORRECT ? (lang !== 'de' && item.explanationEn ? item.explanationDe : item.explanationEn) : null}
         onExplain={state && state.result !== RESULT.CORRECT ? () => setExplain(true) : null}
         onContinue={onNext}

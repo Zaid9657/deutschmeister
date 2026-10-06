@@ -1,0 +1,2639 @@
+{
+  "generatedOn": "2026-10-06T17:45:30.121Z",
+  "dist": "/home/user/deutschmeister/dist",
+  "checks": [
+    {
+      "id": "/ar/ @360: 200, lang=ar dir=rtl, one h1, no horizontal scroll",
+      "status": "passed",
+      "detail": "status 200 lang ar dir rtl h1 1 overflow 0px"
+    },
+    {
+      "id": "/ar/courses/ @360: 200, lang=ar dir=rtl, one h1, no horizontal scroll",
+      "status": "passed",
+      "detail": "status 200 lang ar dir rtl h1 1 overflow 0px"
+    },
+    {
+      "id": "/ar/courses/a1-1/ @360: 200, lang=ar dir=rtl, one h1, no horizontal scroll",
+      "status": "passed",
+      "detail": "status 200 lang ar dir rtl h1 1 overflow 0px"
+    },
+    {
+      "id": "/ar/pricing/ @360: 200, lang=ar dir=rtl, one h1, no horizontal scroll",
+      "status": "passed",
+      "detail": "status 200 lang ar dir rtl h1 1 overflow 0px"
+    },
+    {
+      "id": "/ar/help/ @360: 200, lang=ar dir=rtl, one h1, no horizontal scroll",
+      "status": "passed",
+      "detail": "status 200 lang ar dir rtl h1 1 overflow 0px"
+    },
+    {
+      "id": "/ar/ @390: 200, lang=ar dir=rtl, one h1, no horizontal scroll",
+      "status": "passed",
+      "detail": "status 200 lang ar dir rtl h1 1 overflow 0px"
+    },
+    {
+      "id": "/ar/ @390: no unlabelled English sentence inside Arabic text",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "axe /ar/ @390: no serious/critical WCAG A/AA violations",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "/ar/courses/ @390: 200, lang=ar dir=rtl, one h1, no horizontal scroll",
+      "status": "passed",
+      "detail": "status 200 lang ar dir rtl h1 1 overflow 0px"
+    },
+    {
+      "id": "/ar/courses/ @390: no unlabelled English sentence inside Arabic text",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "axe /ar/courses/ @390: no serious/critical WCAG A/AA violations",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "/ar/courses/a1-1/ @390: 200, lang=ar dir=rtl, one h1, no horizontal scroll",
+      "status": "passed",
+      "detail": "status 200 lang ar dir rtl h1 1 overflow 0px"
+    },
+    {
+      "id": "/ar/courses/a1-1/ @390: no unlabelled English sentence inside Arabic text",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "axe /ar/courses/a1-1/ @390: no serious/critical WCAG A/AA violations",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "/ar/pricing/ @390: 200, lang=ar dir=rtl, one h1, no horizontal scroll",
+      "status": "passed",
+      "detail": "status 200 lang ar dir rtl h1 1 overflow 0px"
+    },
+    {
+      "id": "/ar/pricing/ @390: no unlabelled English sentence inside Arabic text",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "axe /ar/pricing/ @390: no serious/critical WCAG A/AA violations",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "/ar/help/ @390: 200, lang=ar dir=rtl, one h1, no horizontal scroll",
+      "status": "passed",
+      "detail": "status 200 lang ar dir rtl h1 1 overflow 0px"
+    },
+    {
+      "id": "/ar/help/ @390: no unlabelled English sentence inside Arabic text",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "axe /ar/help/ @390: no serious/critical WCAG A/AA violations",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "/ar/ @768: 200, lang=ar dir=rtl, one h1, no horizontal scroll",
+      "status": "passed",
+      "detail": "status 200 lang ar dir rtl h1 1 overflow 0px"
+    },
+    {
+      "id": "/ar/courses/ @768: 200, lang=ar dir=rtl, one h1, no horizontal scroll",
+      "status": "passed",
+      "detail": "status 200 lang ar dir rtl h1 1 overflow 0px"
+    },
+    {
+      "id": "/ar/courses/a1-1/ @768: 200, lang=ar dir=rtl, one h1, no horizontal scroll",
+      "status": "passed",
+      "detail": "status 200 lang ar dir rtl h1 1 overflow 0px"
+    },
+    {
+      "id": "/ar/pricing/ @768: 200, lang=ar dir=rtl, one h1, no horizontal scroll",
+      "status": "passed",
+      "detail": "status 200 lang ar dir rtl h1 1 overflow 0px"
+    },
+    {
+      "id": "/ar/help/ @768: 200, lang=ar dir=rtl, one h1, no horizontal scroll",
+      "status": "passed",
+      "detail": "status 200 lang ar dir rtl h1 1 overflow 0px"
+    },
+    {
+      "id": "/ar/ @1440: 200, lang=ar dir=rtl, one h1, no horizontal scroll",
+      "status": "passed",
+      "detail": "status 200 lang ar dir rtl h1 1 overflow 0px"
+    },
+    {
+      "id": "/ar/ @1440: no unlabelled English sentence inside Arabic text",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "/ar/courses/ @1440: 200, lang=ar dir=rtl, one h1, no horizontal scroll",
+      "status": "passed",
+      "detail": "status 200 lang ar dir rtl h1 1 overflow 0px"
+    },
+    {
+      "id": "/ar/courses/ @1440: no unlabelled English sentence inside Arabic text",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "/ar/courses/a1-1/ @1440: 200, lang=ar dir=rtl, one h1, no horizontal scroll",
+      "status": "passed",
+      "detail": "status 200 lang ar dir rtl h1 1 overflow 0px"
+    },
+    {
+      "id": "/ar/courses/a1-1/ @1440: no unlabelled English sentence inside Arabic text",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "/ar/pricing/ @1440: 200, lang=ar dir=rtl, one h1, no horizontal scroll",
+      "status": "passed",
+      "detail": "status 200 lang ar dir rtl h1 1 overflow 0px"
+    },
+    {
+      "id": "/ar/pricing/ @1440: no unlabelled English sentence inside Arabic text",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "/ar/help/ @1440: 200, lang=ar dir=rtl, one h1, no horizontal scroll",
+      "status": "passed",
+      "detail": "status 200 lang ar dir rtl h1 1 overflow 0px"
+    },
+    {
+      "id": "/ar/help/ @1440: no unlabelled English sentence inside Arabic text",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "English home carries the switch „العربية · English · Deutsch“",
+      "status": "passed",
+      "detail": " العربية  ·  English  ·  Deutsch "
+    },
+    {
+      "id": "an Arabic browser on the English home is OFFERED the Arabic twin (not switched)",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "following the offer stores an explicit Arabic choice",
+      "status": "passed",
+      "detail": "{\"lang\":\"ar\",\"at\":1791308746996,\"source\":\"explicit\"}"
+    },
+    {
+      "id": "\"Deutsch\" lands on the English page with a German one-line notice",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "…and stores German as the app choice",
+      "status": "passed",
+      "detail": "{\"lang\":\"de\",\"at\":1791308747163,\"source\":\"explicit\"}"
+    },
+    {
+      "id": "/ar/courses/a1.1 → 301 /ar/courses/a1-1/ (netlify.toml rule, emulated)",
+      "status": "passed",
+      "detail": "301 /ar/courses/a1-1/"
+    },
+    {
+      "id": "first rendered course screen is already Arabic and right-to-left (no English flash)",
+      "status": "passed",
+      "detail": "{\"lang\":\"ar\",\"dir\":\"rtl\",\"text\":\"انتقل إلى المحتوى\\nM\\nابدأ A1.1 مجانًا\"}"
+    },
+    {
+      "id": "course home: no developer key on screen",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "course home: no unlabelled English sentence inside Arabic",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "axe /course/a1.1 (ar) @390: no serious/critical WCAG A/AA violations",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "Lesson 1 intro renders Arabic, rtl",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "axe lesson 1 intro (ar) @390: no serious/critical WCAG A/AA violations",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "language switch mid-item keeps the typed answer and the item, and switches the chrome",
+      "status": "passed",
+      "detail": "ar \"الخطوة 4 · تمرين 1/7\" → en \"STEP 4 · PRACTICE 1/7\" → ar \"الخطوة 4 · تمرين 1/7\", value \"Guten\""
+    },
+    {
+      "id": "a reload mid-practice resumes the same step without re-logging answers",
+      "status": "passed",
+      "detail": "before \"الخطوة 4 · تمرين 2/7\" (2) after \"الخطوة 4 · تمرين 2/7\" (2)"
+    },
+    {
+      "id": "Lesson 1 (guest, Arabic) reaches the recap",
+      "status": "passed",
+      "detail": "55 steps"
+    },
+    {
+      "id": "Lesson 1: no developer key on any screen",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "Lesson 1: no unlabelled English sentence inside Arabic",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "match tiles are named by their visible words (no numbers, Arabic meanings in Arabic)",
+      "status": "passed",
+      "detail": "[{\"lang\":\"de\",\"name\":\"Bitte\"},{\"lang\":\"de\",\"name\":\"buchstabieren\"},{\"lang\":\"de\",\"name\":\"Freut mich\"},{\"lang\":\"de\",\"name\":\"der Gruß\"},{\"lang\":\"ar\",\"name\":\"تشرّفت بمعرفتك\"},{\"lang\":\"ar\",\"name\":\"التحية\"},{\"lang\":\"ar\",\"name\""
+    },
+    {
+      "id": "recap says when review starts truthfully for a guest (after saving to an account)",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "Lesson 2 (guest, Arabic) reaches the recap",
+      "status": "passed",
+      "detail": "53 steps"
+    },
+    {
+      "id": "Lesson 2: no developer key, no unlabelled English inside Arabic",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "Lesson 3 (guest, Arabic) reaches the recap",
+      "status": "passed",
+      "detail": "53 steps"
+    },
+    {
+      "id": "Lesson 3: no developer key, no unlabelled English inside Arabic",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "Lesson 4 intro says Arabic support covers lessons 1–3 only and offers English",
+      "status": "passed",
+      "detail": "A1.1\nنحو 15 دقيقة\n\nالفصل 2 · التسوّق والأشياء\n\nالدرس 4 · Auf dem Flohmarkt\n\nShopping, furniture and prices(بالإنجليزية)\n\nالدعم العربي متوفر حاليًا للدروس 1–3 فقط. في هذا الدرس تظهر الشروحات بالإنجليزي"
+    },
+    {
+      "id": "cookie banner speaks Arabic and is rtl on an Arabic screen",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "lesson @360: no horizontal scroll",
+      "status": "passed",
+      "detail": "0px"
+    },
+    {
+      "id": "keyboard: the first Tab reaches the Arabic skip link",
+      "status": "passed",
+      "detail": "{\"text\":\"تخطَّ إلى المحتوى\",\"href\":\"#main\"}"
+    },
+    {
+      "id": "keyboard: every focus stop on /ar/ shows a focus indicator",
+      "status": "passed",
+      "detail": "[]"
+    },
+    {
+      "id": "200% zoom /ar/: no horizontal scroll",
+      "status": "passed",
+      "detail": "0px"
+    },
+    {
+      "id": "200% zoom /ar/pricing/: no horizontal scroll",
+      "status": "passed",
+      "detail": "0px"
+    },
+    {
+      "id": "200% zoom /course/a1.1?lang=ar: no horizontal scroll",
+      "status": "passed",
+      "detail": "0px"
+    },
+    {
+      "id": "200% zoom /course/a1.1/l/1?lang=ar: no horizontal scroll",
+      "status": "passed",
+      "detail": "0px"
+    },
+    {
+      "id": "no choice → English, ltr",
+      "status": "passed",
+      "detail": "{\"lang\":\"en\",\"dir\":\"ltr\"}"
+    },
+    {
+      "id": "?lang=de → German chrome, ltr",
+      "status": "passed",
+      "detail": "{\"lang\":\"de\",\"dir\":\"ltr\"}"
+    },
+    {
+      "id": "Arabic on an untranslated route: English document under an Arabic notice",
+      "status": "passed",
+      "detail": "{\"lang\":\"en\",\"dir\":\"ltr\"}"
+    },
+    {
+      "id": "sign-in renders in Arabic, rtl",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "axe /login (ar) @1440: no serious/critical WCAG A/AA violations",
+      "status": "passed",
+      "detail": ""
+    },
+    {
+      "id": "no uncaught page errors in any journey",
+      "status": "passed",
+      "detail": ""
+    }
+  ],
+  "journeys": {
+    "lesson1": {
+      "reachedRecap": true,
+      "trace": [
+        {
+          "step": 0,
+          "eyebrow": "الفصل 1 · الوصول",
+          "buttons": [
+            "A1.1",
+            "ابدأ"
+          ]
+        },
+        {
+          "step": 1,
+          "eyebrow": "الخطوة 1 · جرّب أولًا",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اعرض الإجابة"
+          ]
+        },
+        {
+          "step": 2,
+          "eyebrow": "الخطوة 1 · جرّب أولًا",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "استمع",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 3,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Frau Kaya",
+            "Guten Tag",
+            "willkommen!",
+            "اعرض كل الأسطر"
+          ]
+        },
+        {
+          "step": 4,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Frau Kaya",
+            "Guten Tag",
+            "willkommen!",
+            "شغّل جملة Ana"
+          ]
+        },
+        {
+          "step": 5,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Frau Kaya",
+            "Guten Tag",
+            "willkommen!",
+            "شغّل جملة Ana"
+          ]
+        },
+        {
+          "step": 6,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Frau Kaya",
+            "Guten Tag",
+            "willkommen!",
+            "شغّل جملة Ana"
+          ]
+        },
+        {
+          "step": 7,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Frau Kaya",
+            "Guten Tag",
+            "willkommen!",
+            "شغّل جملة Ana"
+          ]
+        },
+        {
+          "step": 8,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Frau Kaya",
+            "Guten Tag",
+            "willkommen!",
+            "شغّل جملة Ana"
+          ]
+        },
+        {
+          "step": 9,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Frau Kaya",
+            "Guten Tag",
+            "willkommen!",
+            "شغّل جملة Ana"
+          ]
+        },
+        {
+          "step": 10,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Frau Kaya",
+            "Guten Tag",
+            "willkommen!",
+            "شغّل جملة Ana"
+          ]
+        },
+        {
+          "step": 11,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Frau Kaya",
+            "Guten Tag",
+            "willkommen!",
+            "شغّل جملة Ana"
+          ]
+        },
+        {
+          "step": 12,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Frau Kaya",
+            "Guten Tag",
+            "willkommen!",
+            "شغّل جملة Ana"
+          ]
+        },
+        {
+          "step": 13,
+          "eyebrow": "الخطوة 2 · المفردات",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اعرض كل المعاني",
+            "Hallo",
+            "استمع إلى Hallo",
+            "Guten Morgen"
+          ]
+        },
+        {
+          "step": 14,
+          "eyebrow": "الخطوة 3 · القاعدة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "رجوع",
+            "فهمت"
+          ]
+        },
+        {
+          "step": 15,
+          "eyebrow": "الخطوة 3 · النطق",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "استمع إلى Hallo",
+            "كرّرها بعد الصوت",
+            "استمع إلى Danke",
+            "كرّرها بعد الصوت"
+          ]
+        },
+        {
+          "step": 16,
+          "eyebrow": "الخطوة 4 · تمرين 1/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 17,
+          "eyebrow": "الخطوة 4 · تمرين 1/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 18,
+          "eyebrow": "الخطوة 4 · تمرين 2/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 19,
+          "eyebrow": "الخطوة 4 · تمرين 2/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 20,
+          "eyebrow": "الخطوة 4 · تمرين 2/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 21,
+          "eyebrow": "الخطوة 4 · تمرين 2/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 22,
+          "eyebrow": "الخطوة 4 · تمرين 3/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 23,
+          "eyebrow": "الخطوة 4 · تمرين 3/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 24,
+          "eyebrow": "الخطوة 4 · تمرين 4/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "Dane",
+            "Danke",
+            "Dnake"
+          ]
+        },
+        {
+          "step": 25,
+          "eyebrow": "الخطوة 4 · تمرين 4/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 26,
+          "eyebrow": "الخطوة 4 · تمرين 5/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 27,
+          "eyebrow": "الخطوة 4 · تمرين 5/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 28,
+          "eyebrow": "الخطوة 4 · تمرين 6/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 29,
+          "eyebrow": "الخطوة 4 · تمرين 6/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 30,
+          "eyebrow": "الخطوة 4 · تمرين 7/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 31,
+          "eyebrow": "الخطوة 4 · تمرين 7/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 32,
+          "eyebrow": "الخطوة 4 · تمرين إضافي 1/3",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "Bitte",
+            "buchstabieren",
+            "Freut mich",
+            "der Gruß"
+          ]
+        },
+        {
+          "step": 33,
+          "eyebrow": "الخطوة 4 · تمرين إضافي 1/3",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 34,
+          "eyebrow": "الخطوة 4 · تمرين إضافي 2/3",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "danke.",
+            "Mir",
+            "geht",
+            "gut,"
+          ]
+        },
+        {
+          "step": 35,
+          "eyebrow": "الخطوة 4 · تمرين إضافي 2/3",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 36,
+          "eyebrow": "الخطوة 4 · تمرين إضافي 3/3",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "استمع",
+            "لا تسمع شيئًا؟",
+            "Buchstabieren Sie bitte Chakiri.",
+            "Gut. Wie geht es Ihnen?"
+          ]
+        },
+        {
+          "step": 37,
+          "eyebrow": "الخطوة 4 · تمرين إضافي 3/3",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "استمع",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 38,
+          "eyebrow": "الخطوة 4 · استماع 1/2",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "تشغيل",
+            "لا تسمع شيئًا؟",
+            "ä",
+            "ö"
+          ]
+        },
+        {
+          "step": 39,
+          "eyebrow": "الخطوة 4 · استماع 1/2",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "تشغيل",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 40,
+          "eyebrow": "الخطوة 4 · استماع 2/2",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "تشغيل",
+            "لا تسمع شيئًا؟",
+            "ä",
+            "ö"
+          ]
+        },
+        {
+          "step": 41,
+          "eyebrow": "الخطوة 4 · استماع 2/2",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "تشغيل",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 42,
+          "eyebrow": "الخطوة 5 · التحدّث",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "استمع إليها",
+            "قلتها",
+            "استمع إليها",
+            "قلتها"
+          ]
+        },
+        {
+          "step": 43,
+          "eyebrow": "الخطوة 6 · الكتابة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "رجوع"
+          ]
+        },
+        {
+          "step": 44,
+          "eyebrow": "الخطوة 6 · الكتابة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "رجوع",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 45,
+          "eyebrow": "الخطوة 7 · محاولة أخرى 1/4",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 46,
+          "eyebrow": "الخطوة 7 · محاولة أخرى 1/4",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 47,
+          "eyebrow": "الخطوة 7 · محاولة أخرى 2/4",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 48,
+          "eyebrow": "الخطوة 7 · محاولة أخرى 2/4",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 49,
+          "eyebrow": "الخطوة 7 · محاولة أخرى 3/4",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 50,
+          "eyebrow": "الخطوة 7 · محاولة أخرى 3/4",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 51,
+          "eyebrow": "الخطوة 7 · محاولة أخرى 4/4",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 52,
+          "eyebrow": "الخطوة 7 · محاولة أخرى 4/4",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 53,
+          "eyebrow": "الخطوة 8 · الخلاصة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "Hallo\nاعرض المعنى",
+            "Guten Morgen\nاعرض المعنى",
+            "Guten Tag\nاعرض المعنى",
+            "Guten Abend\nاعرض المعنى"
+          ]
+        },
+        {
+          "step": 53,
+          "recap": true
+        }
+      ],
+      "leaks": [],
+      "keys": [],
+      "matchNames": [
+        [
+          {
+            "lang": "de",
+            "name": "Bitte"
+          },
+          {
+            "lang": "de",
+            "name": "buchstabieren"
+          },
+          {
+            "lang": "de",
+            "name": "Freut mich"
+          },
+          {
+            "lang": "de",
+            "name": "der Gruß"
+          },
+          {
+            "lang": "ar",
+            "name": "تشرّفت بمعرفتك"
+          },
+          {
+            "lang": "ar",
+            "name": "التحية"
+          },
+          {
+            "lang": "ar",
+            "name": "يتهجّى (الكلمة حرفًا حرفًا)"
+          },
+          {
+            "lang": "ar",
+            "name": "من فضلك / عفوًا"
+          }
+        ]
+      ]
+    },
+    "lesson2": {
+      "reachedRecap": true,
+      "trace": [
+        {
+          "step": 0,
+          "eyebrow": "الفصل 1 · الوصول",
+          "buttons": [
+            "A1.1",
+            "ابدأ"
+          ]
+        },
+        {
+          "step": 1,
+          "eyebrow": "الخطوة 1 · جرّب أولًا",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اعرض الإجابة"
+          ]
+        },
+        {
+          "step": 2,
+          "eyebrow": "الخطوة 1 · جرّب أولًا",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "استمع",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 3,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Herr Weber",
+            "Guten Tag!",
+            "Amt.",
+            "اعرض كل الأسطر"
+          ]
+        },
+        {
+          "step": 4,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Herr Weber",
+            "Guten Tag!",
+            "Amt.",
+            "شغّل جملة Ana"
+          ]
+        },
+        {
+          "step": 5,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Herr Weber",
+            "Guten Tag!",
+            "Amt.",
+            "شغّل جملة Ana"
+          ]
+        },
+        {
+          "step": 6,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Herr Weber",
+            "Guten Tag!",
+            "Amt.",
+            "شغّل جملة Ana"
+          ]
+        },
+        {
+          "step": 7,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Herr Weber",
+            "Guten Tag!",
+            "Amt.",
+            "شغّل جملة Ana"
+          ]
+        },
+        {
+          "step": 8,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Herr Weber",
+            "Guten Tag!",
+            "Amt.",
+            "شغّل جملة Ana"
+          ]
+        },
+        {
+          "step": 9,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Herr Weber",
+            "Guten Tag!",
+            "Amt.",
+            "شغّل جملة Ana"
+          ]
+        },
+        {
+          "step": 10,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Herr Weber",
+            "Guten Tag!",
+            "Amt.",
+            "شغّل جملة Ana"
+          ]
+        },
+        {
+          "step": 11,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Herr Weber",
+            "Guten Tag!",
+            "Amt.",
+            "شغّل جملة Ana"
+          ]
+        },
+        {
+          "step": 12,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Herr Weber",
+            "Guten Tag!",
+            "Amt.",
+            "شغّل جملة Ana"
+          ]
+        },
+        {
+          "step": 13,
+          "eyebrow": "الخطوة 2 · المفردات",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اعرض كل المعاني",
+            "Vorname\n\nDER\nالجمع: Vornamen",
+            "استمع إلى der Vorname",
+            "Nachname\n\nDER\nالجمع: Nachnamen"
+          ]
+        },
+        {
+          "step": 14,
+          "eyebrow": "الخطوة 3 · القاعدة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "رجوع",
+            "فهمت"
+          ]
+        },
+        {
+          "step": 15,
+          "eyebrow": "الخطوة 3 · النطق",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "استمع إلى Ich bin",
+            "كرّرها بعد الصوت",
+            "استمع إلى Du bist",
+            "كرّرها بعد الصوت"
+          ]
+        },
+        {
+          "step": 16,
+          "eyebrow": "الخطوة 4 · تمرين 1/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 17,
+          "eyebrow": "الخطوة 4 · تمرين 1/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 18,
+          "eyebrow": "الخطوة 4 · تمرين 2/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 19,
+          "eyebrow": "الخطوة 4 · تمرين 2/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 20,
+          "eyebrow": "الخطوة 4 · تمرين 3/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 21,
+          "eyebrow": "الخطوة 4 · تمرين 3/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 22,
+          "eyebrow": "الخطوة 4 · تمرين 4/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 23,
+          "eyebrow": "الخطوة 4 · تمرين 4/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 24,
+          "eyebrow": "الخطوة 4 · تمرين 5/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 25,
+          "eyebrow": "الخطوة 4 · تمرين 5/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 26,
+          "eyebrow": "الخطوة 4 · تمرين 6/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ist",
+            "bin",
+            "bist",
+            "sind"
+          ]
+        },
+        {
+          "step": 27,
+          "eyebrow": "الخطوة 4 · تمرين 6/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 28,
+          "eyebrow": "الخطوة 4 · تمرين 7/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "Bist",
+            "Bin",
+            "Ist",
+            "Sind"
+          ]
+        },
+        {
+          "step": 29,
+          "eyebrow": "الخطوة 4 · تمرين 7/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 30,
+          "eyebrow": "الخطوة 4 · تمرين إضافي 1/3",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ausfüllen",
+            "geboren",
+            "der Nachname",
+            "der Wohnort"
+          ]
+        },
+        {
+          "step": 31,
+          "eyebrow": "الخطوة 4 · تمرين إضافي 1/3",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 32,
+          "eyebrow": "الخطوة 4 · تمرين إضافي 2/3",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "Studentin.",
+            "bin",
+            "Ich"
+          ]
+        },
+        {
+          "step": 33,
+          "eyebrow": "الخطوة 4 · تمرين إضافي 2/3",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 34,
+          "eyebrow": "الخطوة 4 · تمرين إضافي 3/3",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "استمع",
+            "لا تسمع شيئًا؟",
+            "Meine Telefonnummer ist null eins sieben sechs.",
+            "Bitte füllen Sie das Formular aus. Ihr Familienstand: ledig oder verheiratet?"
+          ]
+        },
+        {
+          "step": 35,
+          "eyebrow": "الخطوة 4 · تمرين إضافي 3/3",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "استمع",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 36,
+          "eyebrow": "الخطوة 4 · استماع 1/2",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "تشغيل",
+            "لا تسمع شيئًا؟",
+            "ä",
+            "ö"
+          ]
+        },
+        {
+          "step": 37,
+          "eyebrow": "الخطوة 4 · استماع 1/2",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "تشغيل",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 38,
+          "eyebrow": "الخطوة 4 · استماع 2/2",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "تشغيل",
+            "لا تسمع شيئًا؟",
+            "ä",
+            "ö"
+          ]
+        },
+        {
+          "step": 39,
+          "eyebrow": "الخطوة 4 · استماع 2/2",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "تشغيل",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 40,
+          "eyebrow": "الخطوة 5 · التحدّث",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "استمع إليها",
+            "قلتها",
+            "استمع إليها",
+            "قلتها"
+          ]
+        },
+        {
+          "step": 41,
+          "eyebrow": "الخطوة 6 · الكتابة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 42,
+          "eyebrow": "الخطوة 6 · الكتابة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "رجوع",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 43,
+          "eyebrow": "الخطوة 7 · محاولة أخرى 1/4",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "sind",
+            "seid",
+            "bist",
+            "ist"
+          ]
+        },
+        {
+          "step": 44,
+          "eyebrow": "الخطوة 7 · محاولة أخرى 1/4",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 45,
+          "eyebrow": "الخطوة 7 · محاولة أخرى 2/4",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ist",
+            "bin",
+            "sind",
+            "seid"
+          ]
+        },
+        {
+          "step": 46,
+          "eyebrow": "الخطوة 7 · محاولة أخرى 2/4",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 47,
+          "eyebrow": "الخطوة 7 · محاولة أخرى 3/4",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 48,
+          "eyebrow": "الخطوة 7 · محاولة أخرى 3/4",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 49,
+          "eyebrow": "الخطوة 7 · محاولة أخرى 4/4",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 50,
+          "eyebrow": "الخطوة 7 · محاولة أخرى 4/4",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 51,
+          "eyebrow": "الخطوة 8 · الخلاصة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "DER\nVorname\nاعرض المعنى",
+            "DER\nNachname\nاعرض المعنى",
+            "DER\nBeruf\nاعرض المعنى",
+            "DIE\nAdresse\nاعرض المعنى"
+          ]
+        },
+        {
+          "step": 51,
+          "recap": true
+        }
+      ],
+      "leaks": [],
+      "keys": [],
+      "matchNames": [
+        [
+          {
+            "lang": "de",
+            "name": "ausfüllen"
+          },
+          {
+            "lang": "de",
+            "name": "geboren"
+          },
+          {
+            "lang": "de",
+            "name": "der Nachname"
+          },
+          {
+            "lang": "de",
+            "name": "der Wohnort"
+          },
+          {
+            "lang": "ar",
+            "name": "يملأ (استمارة)"
+          },
+          {
+            "lang": "ar",
+            "name": "اسم العائلة (= «Familienname»)"
+          },
+          {
+            "lang": "ar",
+            "name": "مكان السكن"
+          },
+          {
+            "lang": "ar",
+            "name": "مولود («ich bin am … geboren» = وُلدتُ في …)"
+          }
+        ]
+      ]
+    },
+    "lesson3": {
+      "reachedRecap": true,
+      "trace": [
+        {
+          "step": 0,
+          "eyebrow": "الفصل 1 · الوصول",
+          "buttons": [
+            "A1.1",
+            "ابدأ"
+          ]
+        },
+        {
+          "step": 1,
+          "eyebrow": "الخطوة 1 · جرّب أولًا",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اعرض الإجابة"
+          ]
+        },
+        {
+          "step": 2,
+          "eyebrow": "الخطوة 1 · جرّب أولًا",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "استمع",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 3,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Lena",
+            "Familie?",
+            "اعرض كل الأسطر",
+            "رجوع"
+          ]
+        },
+        {
+          "step": 4,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Lena",
+            "Familie?",
+            "شغّل جملة Ana",
+            "Eltern"
+          ]
+        },
+        {
+          "step": 5,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Lena",
+            "Familie?",
+            "شغّل جملة Ana",
+            "Eltern"
+          ]
+        },
+        {
+          "step": 6,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Lena",
+            "Familie?",
+            "شغّل جملة Ana",
+            "Eltern"
+          ]
+        },
+        {
+          "step": 7,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Lena",
+            "Familie?",
+            "شغّل جملة Ana",
+            "Eltern"
+          ]
+        },
+        {
+          "step": 8,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Lena",
+            "Familie?",
+            "شغّل جملة Ana",
+            "Eltern"
+          ]
+        },
+        {
+          "step": 9,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Lena",
+            "Familie?",
+            "شغّل جملة Ana",
+            "Eltern"
+          ]
+        },
+        {
+          "step": 10,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Lena",
+            "Familie?",
+            "شغّل جملة Ana",
+            "Eltern"
+          ]
+        },
+        {
+          "step": 11,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Lena",
+            "Familie?",
+            "شغّل جملة Ana",
+            "Eltern"
+          ]
+        },
+        {
+          "step": 12,
+          "eyebrow": "الخطوة 2 · الاستماع والقراءة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "شغّل جملة Lena",
+            "Familie?",
+            "شغّل جملة Ana",
+            "Eltern"
+          ]
+        },
+        {
+          "step": 13,
+          "eyebrow": "الخطوة 2 · المفردات",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اعرض كل المعاني",
+            "Familie\n\nDIE\nالجمع: Familien",
+            "استمع إلى die Familie",
+            "Eltern\n\nDIE\nالجمع: Eltern"
+          ]
+        },
+        {
+          "step": 14,
+          "eyebrow": "الخطوة 3 · القاعدة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "رجوع",
+            "فهمت"
+          ]
+        },
+        {
+          "step": 15,
+          "eyebrow": "الخطوة 3 · النطق",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "استمع إلى Der Bruder",
+            "كرّرها بعد الصوت",
+            "استمع إلى Die Brüder",
+            "كرّرها بعد الصوت"
+          ]
+        },
+        {
+          "step": 16,
+          "eyebrow": "الخطوة 4 · تمرين 1/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 17,
+          "eyebrow": "الخطوة 4 · تمرين 1/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 18,
+          "eyebrow": "الخطوة 4 · تمرين 2/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 19,
+          "eyebrow": "الخطوة 4 · تمرين 2/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 20,
+          "eyebrow": "الخطوة 4 · تمرين 3/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 21,
+          "eyebrow": "الخطوة 4 · تمرين 3/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 22,
+          "eyebrow": "الخطوة 4 · تمرين 4/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "Sie",
+            "Er",
+            "Es"
+          ]
+        },
+        {
+          "step": 23,
+          "eyebrow": "الخطوة 4 · تمرين 4/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 24,
+          "eyebrow": "الخطوة 4 · تمرين 5/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 25,
+          "eyebrow": "الخطوة 4 · تمرين 5/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 26,
+          "eyebrow": "الخطوة 4 · تمرين 6/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 27,
+          "eyebrow": "الخطوة 4 · تمرين 6/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 28,
+          "eyebrow": "الخطوة 4 · تمرين 7/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 29,
+          "eyebrow": "الخطوة 4 · تمرين 7/7",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 30,
+          "eyebrow": "الخطوة 4 · تمرين إضافي 1/3",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "Arabisch",
+            "sprechen",
+            "die Eltern",
+            "alt"
+          ]
+        },
+        {
+          "step": 31,
+          "eyebrow": "الخطوة 4 · تمرين إضافي 1/3",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 32,
+          "eyebrow": "الخطوة 4 · تمرين إضافي 2/3",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "spricht",
+            "er",
+            "und",
+            "Englisch"
+          ]
+        },
+        {
+          "step": 33,
+          "eyebrow": "الخطوة 4 · تمرين إضافي 2/3",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 34,
+          "eyebrow": "الخطوة 4 · تمرين إضافي 3/3",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "استمع",
+            "لا تسمع شيئًا؟",
+            "Wie alt ist er?",
+            "Und dein Bruder? Hat er einen Sohn oder eine Tochter?"
+          ]
+        },
+        {
+          "step": 35,
+          "eyebrow": "الخطوة 4 · تمرين إضافي 3/3",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "استمع",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 36,
+          "eyebrow": "الخطوة 4 · استماع 1/2",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "تشغيل",
+            "لا تسمع شيئًا؟",
+            "ä",
+            "ö"
+          ]
+        },
+        {
+          "step": 37,
+          "eyebrow": "الخطوة 4 · استماع 1/2",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "تشغيل",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 38,
+          "eyebrow": "الخطوة 4 · استماع 2/2",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "تشغيل",
+            "لا تسمع شيئًا؟",
+            "ä",
+            "ö"
+          ]
+        },
+        {
+          "step": 39,
+          "eyebrow": "الخطوة 4 · استماع 2/2",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "تشغيل",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 40,
+          "eyebrow": "الخطوة 5 · التحدّث",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "استمع إليها",
+            "قلتها",
+            "استمع إليها",
+            "قلتها"
+          ]
+        },
+        {
+          "step": 41,
+          "eyebrow": "الخطوة 6 · الكتابة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "رجوع"
+          ]
+        },
+        {
+          "step": 42,
+          "eyebrow": "الخطوة 6 · الكتابة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "رجوع",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 43,
+          "eyebrow": "الخطوة 7 · محاولة أخرى 1/4",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ist",
+            "bin",
+            "bist",
+            "sind"
+          ]
+        },
+        {
+          "step": 44,
+          "eyebrow": "الخطوة 7 · محاولة أخرى 1/4",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 45,
+          "eyebrow": "الخطوة 7 · محاولة أخرى 2/4",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 46,
+          "eyebrow": "الخطوة 7 · محاولة أخرى 2/4",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 47,
+          "eyebrow": "الخطوة 7 · محاولة أخرى 3/4",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 48,
+          "eyebrow": "الخطوة 7 · محاولة أخرى 3/4",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 49,
+          "eyebrow": "الخطوة 7 · محاولة أخرى 4/4",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "ä",
+            "ö",
+            "ü",
+            "ß"
+          ]
+        },
+        {
+          "step": 50,
+          "eyebrow": "الخطوة 7 · محاولة أخرى 4/4",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "اقرأ النص الأصلي بالألمانية",
+            "اشرح لي ذلك",
+            "متابعة"
+          ]
+        },
+        {
+          "step": 51,
+          "eyebrow": "الخطوة 8 · الخلاصة",
+          "buttons": [
+            "A1.1",
+            "العربية",
+            "English",
+            "Deutsch",
+            "DIE\nFamilie\nاعرض المعنى",
+            "DIE\nEltern\nاعرض المعنى",
+            "DER\nVater\nاعرض المعنى",
+            "DIE\nMutter\nاعرض المعنى"
+          ]
+        },
+        {
+          "step": 51,
+          "recap": true
+        }
+      ],
+      "leaks": [],
+      "keys": [],
+      "matchNames": [
+        [
+          {
+            "lang": "de",
+            "name": "Arabisch"
+          },
+          {
+            "lang": "de",
+            "name": "sprechen"
+          },
+          {
+            "lang": "de",
+            "name": "die Eltern"
+          },
+          {
+            "lang": "de",
+            "name": "alt"
+          },
+          {
+            "lang": "ar",
+            "name": "الوالدان"
+          },
+          {
+            "lang": "ar",
+            "name": "كبير السن؛ قديم"
+          },
+          {
+            "lang": "ar",
+            "name": "اللغة العربية"
+          },
+          {
+            "lang": "ar",
+            "name": "يتكلّم"
+          }
+        ]
+      ]
+    }
+  },
+  "axe": {
+    "/ar/ @390": [],
+    "/ar/courses/ @390": [],
+    "/ar/courses/a1-1/ @390": [],
+    "/ar/pricing/ @390": [],
+    "/ar/help/ @390": [],
+    "/course/a1.1 (ar) @390": [],
+    "lesson 1 intro (ar) @390": [],
+    "/login (ar) @1440": []
+  },
+  "notVerifiable": [
+    "Sign-in, sign-up, password reset and email confirmation against the live Supabase project (egress-blocked here; the Arabic screens and error mapping are checked, the round trip is not).",
+    "Saving a lesson to an account and the guest→account merge (mocked in unit tests only).",
+    "The ui_lang account preference round trip (supabase.auth.updateUser) on a real account.",
+    "AI writing/speaking grading and the Arabic explain-answer prompt (Netlify functions are answered 503 here).",
+    "Real audio output and real-device screen readers (VoiceOver, TalkBack, NVDA).",
+    "Lemon Squeezy checkout language and receipts."
+  ],
+  "consoleErrors": [
+    "lessons: [lessonService] fetchWordsByIds: TypeError: Failed to fetch",
+    "lessons: [lessonService] fetchWordsByIds: TypeError: Failed to fetch",
+    "lessons: [RecapStage] reading link lookup: TypeError: Failed to fetch",
+    "lessons: [lessonService] fetchWordsByIds: TypeError: Failed to fetch",
+    "lessons: [lessonService] fetchWordsByIds: TypeError: Failed to fetch",
+    "lessons: [RecapStage] reading link lookup: TypeError: Failed to fetch",
+    "lessons: [lessonService] fetchWordsByIds: TypeError: Failed to fetch",
+    "360: [lessonService] fetchWordsByIds: TypeError: Failed to fetch",
+    "regress: [lessonService] fetchWordsByIds: TypeError: Failed to fetch",
+    "regress: [vocabularyService] countWordsForLevel ERROR: TypeError: Failed to fetch",
+    "regress: [vocabularyService] countWordsForLevel ERROR: TypeError: Failed to fetch",
+    "regress: [vocabularyService] countWordsForLevel ERROR: TypeError: Failed to fetch",
+    "regress: [vocabularyService] countWordsForLevel ERROR: TypeError: Failed to fetch",
+    "regress: [vocabularyService] countWordsForLevel ERROR: TypeError: Failed to fetch",
+    "regress: [vocabularyService] countWordsForLevel ERROR: TypeError: Failed to fetch",
+    "regress: [vocabularyService] countWordsForLevel ERROR: TypeError: Failed to fetch",
+    "regress: [vocabularyService] countWordsForLevel ERROR: TypeError: Failed to fetch"
+  ],
+  "summary": {
+    "total": 73,
+    "passed": 73,
+    "failed": 0
+  }
+}

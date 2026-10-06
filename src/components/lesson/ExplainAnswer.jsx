@@ -12,12 +12,16 @@ import { t } from '../../lib/lesson/strings.js';
  * reached, outage) is said in one line of the chrome language, in the same
  * paragraph box the text would appear in — the box is the only thing that
  * appears, so nothing below it moves twice. `lang` travels to the function,
- * which answers in English or German (both grounded in the same rule card).
+ * which answers in English, German or Arabic (all grounded in the same rule
+ * card; German examples stay German). The language is fixed when the learner
+ * asks: switching the interface afterwards does not spend a second call of the
+ * daily allowance — the answer stays, marked with the language it is in.
  */
 const BOX = 'mt-3 rounded-clay bg-paper-sunk p-3 text-[0.875rem] leading-relaxed text-graphite';
 
-export default function ExplainAnswer({ item, expected, userAnswer, level, lektionId, lang = 'en' }) {
+export default function ExplainAnswer({ item, expected, userAnswer, level, lektionId, lang: currentLang = 'en' }) {
   const [state, setState] = useState({ status: 'loading' });
+  const [lang] = useState(currentLang);
 
   useEffect(() => {
     let alive = true;
@@ -48,7 +52,7 @@ export default function ExplainAnswer({ item, expected, userAnswer, level, lekti
         if (res.status === 401) { setState({ status: 'anon' }); return; }
         if (res.status === 429) { setState({ status: 'limit', limit: data.limit }); return; }
         if (!res.ok || !data.explanation) { setState({ status: 'error' }); return; }
-        setState({ status: 'ok', explanation: data.explanation, used: data.used, limit: data.limit });
+        setState({ status: 'ok', explanation: data.explanation, lang: data.lang || lang, used: data.used, limit: data.limit });
       } catch (e) {
         console.error('explain-answer call failed:', e);
         if (alive) setState({ status: 'error' });
@@ -59,24 +63,28 @@ export default function ExplainAnswer({ item, expected, userAnswer, level, lekti
   }, [item.id, item.topic, item.questionDe, item.answer, expected, userAnswer, level, lektionId, lang]);
 
   if (state.status === 'loading') {
-    return <p className={BOX} role="status" aria-live="polite">{t('explain.loading', lang)}</p>;
+    return <p className={BOX} role="status" aria-live="polite">{t('explain.loading', currentLang)}</p>;
   }
   if (state.status === 'anon') {
-    return <p className={BOX} role="status" aria-live="polite">{t('explain.anon', lang)}</p>;
+    return <p className={BOX} role="status" aria-live="polite">{t('explain.anon', currentLang)}</p>;
   }
   if (state.status === 'limit') {
     return (
       <p className={BOX} role="status" aria-live="polite">
-        {t('explain.limit', lang, { limit: state.limit ? ` (${state.limit})` : '' })}
+        {t('explain.limit', currentLang, { limit: state.limit ? ` (${state.limit})` : '' })}
       </p>
     );
   }
   if (state.status === 'error') {
     return (
       <p className={BOX} role="status" aria-live="polite">
-        {t('explain.error', lang)}
+        {t('explain.error', currentLang)}
       </p>
     );
   }
-  return <p className={BOX} role="status" aria-live="polite">{state.explanation}</p>;
+  return (
+    <p className={BOX} role="status" aria-live="polite" lang={state.lang} dir={state.lang === 'ar' ? 'rtl' : 'ltr'}>
+      {state.explanation}
+    </p>
+  );
 }

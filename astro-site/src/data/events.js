@@ -45,7 +45,10 @@ export const EVENTS = {
   email_verified: { when: 'The verify-email screen sees the address confirmed.', once: true },
   onboarding_completed: { when: 'The onboarding slides are finished or left.', once: true },
   lesson_started: { when: 'A course Lektion is opened in the lesson player.', once: false },
-  lesson_completed: { when: 'A course Lektion reaches its recap.', once: false },
+  lesson_completed: { when: 'A course Lektion reaches its recap — once per run (run id in the snapshot), however often the recap mounts.', once: false },
+  lesson_resumed: { when: 'A Lektion run is picked up again after a page load (the run snapshot is restored).', once: false },
+  locale_changed: { when: 'The visitor explicitly switches the interface language (العربية · English · Deutsch).', once: false },
+  help_opened: { when: 'A help page or an in-lesson help disclosure is opened.', once: true },
   paywall_shown: { when: 'A lock, paywall or speaking-limit offer is rendered.', once: false },
   checkout_started: { when: 'The app opens a checkout (the SPA name for checkout_opened).', once: false },
   checkout_completed: {
@@ -70,6 +73,8 @@ export const ALLOWED_PROPS = [
   'signed_in', // boolean
   'entry_page', // first path of this page view
   'dm_source', 'dm_medium', 'dm_campaign', // first-touch attribution labels (public/attribution.js)
+  'ui_locale', // the interface language the screen was rendered in: en | de | ar — a product setting, never a proxy for nationality
+  'locale_from', // locale_changed only: the language switched away from
 ];
 
 const MAX_LEN = 64;

@@ -1,0 +1,78 @@
+---
+// /ar/courses/ — the Arabic catalogue (twin of /courses/). Eight levels, each
+// described in Arabic; A1.1 links to its Arabic page, every other level to its
+// English page, marked as English before the click. Prices, plans and counts
+// derive from the data modules; the copy is a DRAFT (data/i18n/ar.js).
+import Layout from '../../../layouts/Layout.astro';
+import '../../../styles/global.css';
+import CoverageTable from '../../../components/ar/CoverageTable.astro';
+import { ORGANIZATION } from '../../../lib/siteMeta.js';
+import { STATIONS } from '../../../data/offers.js';
+import { COURSE_FROM_PRICE_EUR, COURSE_PRO_MONTHS, eur } from '../../../data/pricing.js';
+import { AR_LINES, LEVEL_OUTCOME_AR, arDays, arHours, arMonths, arRich, arSteps } from '../../../data/i18n/ar.js';
+
+const planAr = (st) => (st.plan ? `خطة موجَّهة لمدة ${arDays(st.plan.days)}: ${arSteps(st.plan.steps)}، ونحو ${arHours(Math.round(st.plan.minutes / 60))} من التدريب.` : null);
+
+const title = 'دورات الألمانية من A1.1 إلى B2.2 | DeutschMeister';
+const description = `ثمانية مستويات للألمانية. A1.1 مجاني مع شرح عربي في الدروس 1–3؛ كل مستوى بعده يُشترى مرة واحدة ابتداءً من ${eur(COURSE_FROM_PRICE_EUR)} ومعه ${arMonths(COURSE_PRO_MONTHS)} من Pro. B1 وB2 قيد الإعداد.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'دورات الألمانية',
+  description,
+  url: 'https://deutsch-meister.de/ar/courses/',
+  inLanguage: 'ar',
+  publisher: ORGANIZATION,
+};
+---
+
+<Layout title={title} description={description} canonical="https://deutsch-meister.de/ar/courses/" jsonLd={jsonLd} lang="ar" tone="nacht" alternates={{ en: '/courses/', ar: '/ar/courses/' }}>
+  <div class="overflow-x-clip bg-paper text-ink">
+    <section class="bg-nacht text-nacht-text" data-ground="nacht" aria-labelledby="hero-h">
+      <div class="mx-auto max-w-5xl px-4 pb-12 pt-10 sm:px-6 sm:pt-14">
+        <p class="text-[0.875rem] font-bold text-siegel-deep">الدورات · <bdi dir="ltr">A1.1 → B2.2</bdi></p>
+        <h1 id="hero-h" class="mt-4 text-[clamp(2rem,7vw,3.25rem)] font-bold leading-tight">مستوى واحد، دفعة واحدة، ويبقى لك.</h1>
+        <p class="mt-5 max-w-2xl text-[1.0625rem] leading-relaxed text-nacht-muted">
+          كل مستوى من مستويات الألمانية دورة مستقلة. المستوى الأول <bdi dir="ltr">A1.1</bdi> مجاني، وفيه شرح عربي في الدروس 1–3. كل مستوى بعده يُشترى مرة واحدة ومعه {arMonths(COURSE_PRO_MONTHS)} من Pro، وشرحه حاليًا بالإنجليزية.
+        </p>
+        <div class="mt-7 flex flex-wrap gap-3">
+          <a href="/course/a1.1?lang=ar" class="dm-key dm-key-linie" data-anon-only data-track="course_selected" data-track-level="a1.1" data-track-surface="ar_courses">ابدأ A1.1 مجانًا</a>
+          <a href="/ar/pricing/" class="dm-key dm-key-ghost-nacht">الأسعار</a>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="levels-h" class="mx-auto max-w-5xl px-4 py-14 sm:px-6">
+      <h2 id="levels-h" class="text-[1.625rem] font-bold leading-snug">المستويات الثمانية</h2>
+      <ol class="mt-6 grid gap-4 md:grid-cols-2">
+        {STATIONS.map((st) => (
+          <li class="flex flex-col rounded-clay border border-rule bg-white p-5">
+            <div class="flex items-baseline justify-between gap-3">
+              <h3 class="text-[1.375rem] font-bold text-ink"><bdi dir="ltr">{st.code}</bdi></h3>
+              <p class="text-[0.9375rem] font-bold text-ink">
+                {st.status === 'free' ? 'مجاني' : st.status === 'building' ? 'قيد الإعداد' : <><bdi dir="ltr">{st.priceLabel}</bdi> مرة واحدة</>}
+              </p>
+            </div>
+            <p class="mt-2 flex-1 leading-relaxed text-graphite" set:html={arRich(LEVEL_OUTCOME_AR[st.level])} />
+            {planAr(st) && <p class="mt-2 text-[0.875rem] leading-relaxed text-graphite">{planAr(st)}</p>}
+            <p class="mt-3 text-[0.8125rem] font-semibold text-graphite">
+              {st.status === 'free' ? 'شرح عربي في الدروس 1–3' : st.status === 'building' ? 'لا يُباع بعد' : AR_LINES.englishOnly}
+            </p>
+            <p class="mt-3">
+              {st.status === 'free'
+                ? <a href="/ar/courses/a1-1/" class="dm-link font-semibold">تفاصيل <bdi dir="ltr">A1.1</bdi> بالعربية</a>
+                : <a href={st.coursePage} hreflang="en" class="dm-link font-semibold">التفاصيل <span lang="en">(English)</span></a>}
+            </p>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <CoverageTable />
+
+    <section class="mx-auto max-w-5xl px-4 pb-14 sm:px-6">
+      <p class="text-[0.8125rem] leading-relaxed text-graphite">{AR_LINES.draftNote}</p>
+    </section>
+  </div>
+</Layout>

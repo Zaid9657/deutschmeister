@@ -1,0 +1,42 @@
+---
+// "What is in Arabic today" — one table, the same rows on the Arabic home,
+// catalogue and A1.1 pages (data/i18n/ar.js COVERAGE_ROWS), so the edition never
+// promises more Arabic on one page than another. Yes/no is said in words, never
+// by colour alone.
+import { COVERAGE_HEAD, COVERAGE_ROWS } from '../../data/i18n/ar.js';
+
+interface Props {
+  headingId?: string;
+  heading?: string;
+}
+const { headingId = 'coverage-h', heading = 'ما المتوفر بالعربية الآن' } = Astro.props;
+---
+
+<section aria-labelledby={headingId} class="mx-auto max-w-5xl px-4 py-14 sm:px-6">
+  <h2 id={headingId} class="text-[1.625rem] font-bold leading-snug text-ink">{heading}</h2>
+  <!-- A scrolling region must be reachable by keyboard (WCAG 2.1.1, axe
+       scrollable-region-focusable): it is focusable and named. -->
+  <div class="mt-6 overflow-x-auto rounded-clay border border-rule bg-white" tabindex="0" role="region" aria-labelledby={headingId}>
+    <table class="w-full min-w-[34rem] text-start text-[0.9375rem]">
+      <thead class="bg-paper-sunk text-[0.8125rem] text-graphite">
+        <tr>
+          <th scope="col" class="px-4 py-3 text-start font-bold">{COVERAGE_HEAD.what}</th>
+          <th scope="col" class="px-4 py-3 text-start font-bold">{COVERAGE_HEAD.where}</th>
+          <th scope="col" class="px-4 py-3 text-start font-bold">{COVERAGE_HEAD.status}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {COVERAGE_ROWS.map((row) => (
+          <tr class="border-t border-rule align-top">
+            <td class="px-4 py-3 text-ink">{row.what}</td>
+            <td class="px-4 py-3 text-graphite">{row.where}</td>
+            <td class="px-4 py-3">
+              <span class:list={['font-bold', row.ar ? 'text-siegel-deep' : 'text-graphite']}>{row.ar ? `✓ ${COVERAGE_HEAD.yes}` : COVERAGE_HEAD.no}</span>
+              {row.note && <span class="block text-[0.8125rem] text-graphite">{row.note}</span>}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</section>

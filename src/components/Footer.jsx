@@ -17,16 +17,16 @@ import { Youtube, LifeBuoy } from 'lucide-react';
 // flat on the yellow line (each a link to its course page), then every door.
 // On a route whose page is itself night (src/lib/chrome.js `groundFor`) the top
 // margin goes, so no paper band separates the page from the footer.
-const FooterLink = ({ item, children, className }) =>
+const FooterLink = ({ item, children, className, arabic = false }) =>
   item.kind === 'static' ? (
-    <a href={item.href} className={className}>{children}</a>
+    <a href={(arabic && item.hrefAr) || item.href} className={className}>{children}</a>
   ) : (
     <Link to={item.href} className={className}>{children}</Link>
   );
 
-const stationNote = (st, isGerman) => {
-  if (st.status === 'free') return isGerman ? 'Kostenlos' : 'Free';
-  if (st.status === 'building') return 'Im Bau';
+const stationNote = (st, isGerman, isArabic = false) => {
+  if (st.status === 'free') return isArabic ? 'مجاني' : isGerman ? 'Kostenlos' : 'Free';
+  if (st.status === 'building') return isArabic ? 'قيد الإعداد' : 'Im Bau';
   return st.priceLabel;
 };
 
@@ -35,14 +35,18 @@ const Footer = () => {
   const { user } = useAuth();
   const { pathname } = useLocation();
   const isGerman = i18n.language === 'de';
+  const isArabic = i18n.language === 'ar';
+  // One label rule for every registry item (navigation.js labelAr marks a
+  // non-Arabic destination „· EN“ / „· DE“).
+  const label = (item) => (isArabic ? item.labelAr || item.labelEn : isGerman ? item.labelDe : item.labelEn);
   const flush = groundFor(pathname) === 'nacht';
 
   return (
     <footer className={`bg-nacht text-nacht-muted ${flush ? '' : 'mt-20'}`} data-ground="nacht">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
         {/* The line, flat: eight stations, each a link to its course page (Astro-served). */}
-        <nav aria-label={isGerman ? 'Kurse nach Niveau' : 'Courses by level'} className="relative pb-10">
-          <div className="absolute left-0 right-0 top-[1.0625rem] h-1.5 rounded-pill bg-linie" aria-hidden="true" />
+        <nav aria-label={isArabic ? 'الدورات حسب المستوى' : isGerman ? 'Kurse nach Niveau' : 'Courses by level'} className="relative pb-10">
+          <div className="absolute inset-x-0 top-[1.0625rem] h-1.5 rounded-pill bg-linie" aria-hidden="true" />
           <ol className="relative grid grid-cols-4 gap-y-6 sm:grid-cols-8">
             {STATIONS.map((st) => (
               <li key={st.level} className="flex flex-col items-start sm:items-center">
@@ -51,8 +55,8 @@ const Footer = () => {
                     className={`block h-[2.375rem] w-[2.375rem] rounded-full border-[5px] bg-nacht ${st.status === 'building' ? 'border-nacht-rule' : 'border-linie'}`}
                     aria-hidden="true"
                   />
-                  <span className="font-body text-[1.125rem] font-extrabold tabular-nums text-nacht-text">{st.code}</span>
-                  <span className="font-data text-[0.6875rem]">{stationNote(st, isGerman)}</span>
+                  <span className="font-body text-[1.125rem] font-extrabold tabular-nums text-nacht-text" dir="ltr">{st.code}</span>
+                  <span className="font-data text-[0.6875rem]">{stationNote(st, isGerman, isArabic)}</span>
                 </a>
               </li>
             ))}
@@ -65,9 +69,11 @@ const Footer = () => {
               <Logo size={32} face="chrome" />
             </div>
             <p className="text-sm leading-relaxed">
-              {isGerman
-                ? 'Deutsch von A1.1 bis B2.2, Halt für Halt: geführte Kurse, Grammatik, Hören, Lesen und KI-Sprechtraining.'
-                : 'German from A1.1 to B2.2, one stop at a time: guided courses, grammar, listening, reading and AI speaking practice.'}
+              {isArabic
+                ? 'الألمانية من A1.1 إلى B2.2، محطة بعد محطة: دورات موجَّهة وقواعد واستماع وقراءة وتدريب على التحدّث بالذكاء الاصطناعي. الدعم العربي متوفر حاليًا لدروس A1.1 من 1 إلى 3.'
+                : isGerman
+                  ? 'Deutsch von A1.1 bis B2.2, Halt für Halt: geführte Kurse, Grammatik, Hören, Lesen und KI-Sprechtraining.'
+                  : 'German from A1.1 to B2.2, one stop at a time: guided courses, grammar, listening, reading and AI speaking practice.'}
             </p>
             {!user && (
               <p className="mt-4">
@@ -75,7 +81,7 @@ const Footer = () => {
                   to="/signup"
                   className="text-sm font-semibold text-nacht-text underline decoration-linie decoration-2 underline-offset-4"
                 >
-                  {isGerman ? 'Kostenloses Konto erstellen' : 'Create a free account'}
+                  {isArabic ? 'أنشئ حسابًا مجانيًا' : isGerman ? 'Kostenloses Konto erstellen' : 'Create a free account'}
                 </Link>
               </p>
             )}
@@ -91,7 +97,7 @@ const Footer = () => {
                     className="inline-flex min-h-11 items-center gap-2 hover:text-nacht-text transition-colors"
                   >
                     <Youtube className="w-4 h-4" aria-hidden="true" />
-                    {isGerman ? item.labelDe : item.labelEn}
+                    {label(item)}
                   </a>
                 </li>
               ))}
@@ -100,20 +106,20 @@ const Footer = () => {
             <p className="mt-1 text-sm">
               <FooterLink item={SUPPORT_LINK} className="inline-flex min-h-11 items-center gap-2 font-semibold text-nacht-text hover:text-siegel-deep transition-colors">
                 <LifeBuoy className="w-4 h-4" aria-hidden="true" />
-                {isGerman ? SUPPORT_LINK.labelDe : SUPPORT_LINK.labelEn}
+                {label(SUPPORT_LINK)}
               </FooterLink>
             </p>
           </div>
           {FOOTER_GROUPS.map((group) => (
             <div key={group.key}>
               <h2 className="mb-3 font-body text-sm font-[650] text-nacht-text">
-                {isGerman ? group.titleDe : group.titleEn}
+                {isArabic ? group.titleAr || group.titleEn : isGerman ? group.titleDe : group.titleEn}
               </h2>
               <ul className="space-y-1 text-sm">
                 {group.items.map((item) => (
                   <li key={item.href + item.labelEn}>
-                    <FooterLink item={item} className="inline-flex min-h-9 items-center hover:text-nacht-text transition-colors">
-                      {isGerman ? item.labelDe : item.labelEn}
+                    <FooterLink item={item} arabic={isArabic} className="inline-flex min-h-9 items-center hover:text-nacht-text transition-colors">
+                      {label(item)}
                     </FooterLink>
                   </li>
                 ))}
@@ -127,12 +133,12 @@ const Footer = () => {
               <span key={item.href}>
                 {i > 0 && <span className="mx-2">·</span>}
                 <FooterLink item={item} className="hover:text-nacht-text transition-colors">
-                  {isGerman ? item.labelDe : item.labelEn}
+                  {label(item)}
                 </FooterLink>
               </span>
             ))}
           </p>
-          © {new Date().getFullYear()} DeutschMeister · All rights reserved
+          © <span dir="ltr">{new Date().getFullYear()}</span> DeutschMeister · {isArabic ? 'جميع الحقوق محفوظة' : 'All rights reserved'}
         </div>
       </div>
     </footer>

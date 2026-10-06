@@ -45,6 +45,9 @@ const PAIRS = [
   ['src/data/curricula/a11.audio.js', 'astro-site/src/data/curricula/a11.audio.js'],
   ['src/data/curricula/index.js', 'astro-site/src/data/curricula/index.js'],
   ['src/data/curricula/constructions.js', 'astro-site/src/data/curricula/constructions.js'],
+  // The Arabic learning-support sidecar (docs/arabic/README.md): the lesson
+  // player and the Arabic public A1.1 page read the same Arabic can-dos.
+  ['src/data/curricula/a11.ar.js', 'astro-site/src/data/curricula/a11.ar.js'],
 ];
 
 let failed = false;

@@ -269,6 +269,25 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   derives them from `pricing.js`, `marketing.js`, the guide and exam registries and
   `grammar-content-cache.json`; `tests/llms.test.mjs` fails when they are stale. Never hand-edit them:
   hand-typed, they had drifted to 64 of 84 topics, 4 of 8 guides, no exam hubs and no courses.
+- **Three interface locales (`en | de | ar`, Arabic edition 2026-10-05, `docs/arabic/README.md`).**
+  ONE store, `src/lib/locale.js` (`dm_locale` {lang, at, source}; the old `dm_lesson_lang`/`dm_lang`
+  are written in sync for old bundles): `?lang=` → saved explicit choice → account
+  `user_metadata.ui_lang` (newest `at` wins) → English, with an Arabic browser only *offered* Arabic.
+  Arabic renders only on the routes in `AR_READY_PATTERN` (A1.1 course/lessons/review/checkpoints and
+  the five auth screens) — everywhere else the document stays English under an Arabic notice; the
+  pattern is duplicated in `index.html`'s first-paint script and a test keeps them equal. Lesson
+  chrome is `STRINGS.<lang>` (Arabic table lazy, `src/locales/ar/`); learning support (meanings,
+  instructions, explanations) is a **sidecar keyed by stable ids with a source hash**
+  (`src/data/curricula/a11.ar.js` + twin): edit a German/English source and the entry turns STALE,
+  `tests/arabic-coverage.test.mjs` fails for the pilot (A1.1 Lektionen 1–3) until an editor re-checks
+  it and runs `node scripts/i18n-coverage.mjs --accept <key>`. All Arabic is `draft` — never mark it
+  `reviewed` without a named reviewer and date. Public Arabic pages are `astro-site/src/pages/ar/*`,
+  copy in `astro-site/src/data/i18n/ar.js`, paired with English twins through Layout `alternates`
+  (reciprocal hreflang, checked against `dist/` by `check-built-html.mjs`). German inside Arabic is
+  isolated (`<bdi lang="de" dir="ltr">`, `richText.jsx`/`arRich`), never reversed or transliterated;
+  use logical utilities (`ms-/me-/start-/end-/text-start`) in anything an Arabic screen renders.
+  Never import `src/lib/lesson/strings.js` from the shell (Navbar & co.): it put the lesson tables in
+  the main bundle once. Browser check: `node scripts/evaluate-arabic.mjs` after a full build.
 - `public/consent.js` gates GA4 **and** PostHog behind the `dm_cookie_consent`
   localStorage flag; new analytics must hook the same consent (`dm-consent-accepted`).
 

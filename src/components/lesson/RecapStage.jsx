@@ -6,10 +6,12 @@ import Chip from '../ui/Chip.jsx';
 import Button from '../ui/Button.jsx';
 import StageShell from './StageShell.jsx';
 import WordsLearnedCards from './WordsLearnedCards.jsx';
-import { accuracyPercent, nextReviewDate } from '../../lib/lesson/mastery.js';
+import { accuracyPercent } from '../../lib/lesson/mastery.js';
+import { supportKeys } from '../../lib/lesson/support.js';
+import SupportText from './SupportText.jsx';
 import { useAuth } from '../../contexts/AuthContext';
 import SaveProgressCard from '../course/SaveProgressCard.jsx';
-import { lessonDateFormat, t, useLessonLang } from '../../lib/lesson/strings.js';
+import { t, useLessonLang } from '../../lib/lesson/strings.js';
 import { curriculumFor } from '../../data/curricula/index.js';
 import { enqueueWords } from '../../services/srsService.js';
 import { supabase } from '../../utils/supabase.js';
@@ -27,12 +29,16 @@ import { supabase } from '../../utils/supabase.js';
  * about something the learner already owns. The lesson is in localStorage by
  * the time this renders (LessonPlayerPage's recap effect).
  */
-export default function RecapStage({ stage, accuracy, status, nextLabel, onNext, onBack, level }) {
+export default function RecapStage({ stage, accuracy, status, nextLabel, onNext, onBack, level, saveState = null, transcriptCount = 0 }) {
   const { user } = useAuth();
   const [lang] = useLessonLang();
   const pct = accuracyPercent(accuracy);
-  const review = nextReviewDate();
-  const date = lessonDateFormat(lang, { day: 'numeric', month: 'long' });
+  // WHEN the material comes back, said truthfully. Signed in, the Lektion's
+  // cards are seeded due NOW (reviewService.seedCardsForLektion, ladder step 0):
+  // they open the next lesson's warm-up and the Wiederholen deck today, then
+  // follow the 1 → 4 → 7 … ladder. The recap used to print "tomorrow's" date
+  // from the ladder helper, which no card was scheduled for. Signed out, no card
+  // exists yet — the review starts once the progress is saved to an account.
 
   // "Go deeper": the Lektion this recap belongs to, found by reference — the
   // player hands the stage its Lektion's OWN wortfeld array unchanged
@@ -128,19 +134,24 @@ export default function RecapStage({ stage, accuracy, status, nextLabel, onNext,
             <dt className="flex items-center gap-1.5 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
               <Target className="h-3.5 w-3.5" aria-hidden="true" /> {t('recap.grammar', lang)}
             </dt>
-            <dd className="mt-1 text-[0.9375rem] font-bold leading-snug text-ink">{stage.grammar || '—'}</dd>
+            <dd className="mt-1 text-[0.9375rem] font-bold leading-snug text-ink">
+              {stage.grammar ? <span lang="de" dir="ltr">{stage.grammar}</span> : '—'}
+              {lang === 'ar' && lektion?.notice?.title && (
+                <SupportText as="span" level={level} k={supportKeys.noticeTitle(lektion.id)} de={lektion.notice.title} className="mt-0.5 block font-normal text-graphite" />
+              )}
+            </dd>
           </div>
           <div>
             <dt className="flex items-center gap-1.5 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
               <CalendarClock className="h-3.5 w-3.5" aria-hidden="true" /> {t('recap.review', lang)}
             </dt>
-            <dd className="mt-1 text-[0.9375rem] font-bold leading-snug text-ink">{t('recap.reviewOn', lang, { date: date.format(review) })}</dd>
+            <dd className="mt-1 text-[0.9375rem] font-bold leading-snug text-ink">{t(user ? 'recap.reviewNow' : 'recap.reviewAfterSave', lang)}</dd>
           </div>
         </dl>
 
         {stage.wortfeld && stage.wortfeld.length > 0 && (
           <div className="mt-5 border-t border-rule pt-4">
-            <WordsLearnedCards words={stage.wortfeld} />
+            <WordsLearnedCards words={stage.wortfeld} level={level} />
           </div>
         )}
 
@@ -152,6 +163,16 @@ export default function RecapStage({ stage, accuracy, status, nextLabel, onNext,
         <p className="mt-5 border-t border-rule pt-4 text-[0.875rem] leading-relaxed text-graphite">
           {t(status === 'gold' ? 'recap.gold' : 'recap.done', lang)}
         </p>
+        {transcriptCount > 0 && (
+          // Honest skill evidence: an answer given with the transcript open was
+          // read, not heard — it is left out of the first-try figure above.
+          <p className="mt-2 text-[0.8125rem] leading-relaxed text-graphite">{t('recap.transcriptNote', lang, { n: transcriptCount })}</p>
+        )}
+        {user && saveState && (
+          <p className="mt-2 text-[0.8125rem] font-bold leading-relaxed text-graphite" role="status" aria-live="polite">
+            {t(`recap.save.${saveState}`, lang)}
+          </p>
+        )}
       </Card>
 
       {hasGoDeeper && (

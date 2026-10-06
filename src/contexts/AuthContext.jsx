@@ -6,6 +6,8 @@ import { trackSignupCompleted } from '../lib/funnelTracking';
 import { claimSignupCompletion } from '../lib/signupCompletion';
 import { logAuditEvent, AUDIT_EVENTS } from '../lib/auditLogger';
 import { withTimeout } from '../utils/withTimeout';
+import { pushAccountLocale, signupLocaleMetadata, syncAccountLocale } from '../lib/localeAccount';
+import { getDeviceChoice } from '../lib/locale';
 
 const AuthContext = createContext({});
 
@@ -64,6 +66,25 @@ export const AuthProvider = ({ children }) => {
     return () => subscription.unsubscribe();
   }, []);
 
+  // The interface language follows the account across devices: on sign-in the
+  // newer explicit choice wins (src/lib/locale.js reconcileAccount), and an
+  // explicit switch while signed in is written to user_metadata. A choice that
+  // came FROM the account is not echoed back.
+  const userId = user?.id || null;
+  useEffect(() => {
+    if (!user) return undefined;
+    syncAccountLocale(user);
+    const onChange = (e) => {
+      const detail = e && e.detail;
+      if (!detail || detail.source !== 'explicit') return;
+      pushAccountLocale(getDeviceChoice());
+    };
+    window.addEventListener('dm-locale-changed', onChange);
+    return () => window.removeEventListener('dm-locale-changed', onChange);
+    // Keyed on the id: a metadata update (USER_UPDATED) must not re-run the sync.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
+
   const signUp = async (email, password) => {
     const { data, error } = await supabase.auth.signUp({
       email,
@@ -71,8 +92,10 @@ export const AuthProvider = ({ children }) => {
       options: {
         emailRedirectTo: `${window.location.origin}/login`,
         // Which link brought them (public/attribution.js); the profiles
-        // trigger copies these keys into profiles.acquisition_*.
-        data: signupAttributionMetadata(),
+        // trigger copies these keys into profiles.acquisition_*. The interface
+        // language rides along as metadata (src/lib/localeAccount.js), so the
+        // first sign-in on another device opens in the same language.
+        data: { ...signupAttributionMetadata(), ...signupLocaleMetadata() },
       },
     });
     return { data, error };

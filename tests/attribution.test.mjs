@@ -135,7 +135,9 @@ test('both front ends load /attribution.js and it is cached like consent.js', ()
 
 test('signup sends the record as user metadata and the trigger copies every key', async () => {
   const auth = read('src/contexts/AuthContext.jsx');
-  assert.ok(auth.includes('data: signupAttributionMetadata()'), 'auth.signUp must carry options.data');
+  // The Arabic edition adds the interface language to the same metadata object
+  // (src/lib/localeAccount.js); the attribution record is still spread into it whole.
+  assert.ok(/data: \{ \.\.\.signupAttributionMetadata\(\)(, \.\.\.\w+\(\))* \}/.test(auth), 'auth.signUp must carry options.data');
   const sql = read('migrations/2026-09-20-acquisition-attribution.sql');
   const lib = read('src/lib/attribution.js');
   const keys = [...lib.matchAll(/^\s+(acquisition_[a-z_]+):/gm)].map((m) => m[1]);

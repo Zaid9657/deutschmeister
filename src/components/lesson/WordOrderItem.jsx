@@ -15,6 +15,14 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
  * grader's decision, never this component's (tests/course-player.test.mjs
  * GRADING_SITES).
  */
+
+// The announcement is chrome-language text around a German sentence: the German
+// part carries its own language so a screen reader reads it in a German voice.
+const SENTENCE_MARK = '\u0000';
+function withGermanSentence(template, sentence) {
+  const [before, after = ''] = String(template).split(SENTENCE_MARK);
+  return <>{before}<bdi lang="de" dir="ltr">{sentence}</bdi>{after}</>;
+}
 export default function WordOrderItem({ item, index, total, onResult, onNext }) {
   const [lang] = useLessonLang();
   const [bank, setBank] = useState(() => item.tokens.map((tok, i) => ({ tok, key: i })));
@@ -66,7 +74,9 @@ export default function WordOrderItem({ item, index, total, onResult, onNext }) 
           <p className="mt-5 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
             {t('wordOrder.yourSentence', lang)}
           </p>
-          <div className="mt-2 flex min-h-[3rem] flex-wrap gap-2 rounded-clay border border-dashed border-rule bg-paper-sunk p-3">
+          {/* German is built left to right in every interface language: the
+              tile rows are LTR islands inside an Arabic page. */}
+          <div className="mt-2 flex min-h-[3rem] flex-wrap gap-2 rounded-clay border border-dashed border-rule bg-paper-sunk p-3" dir="ltr" lang="de">
             {built.map((entry) => (
               <button
                 key={entry.key}
@@ -88,7 +98,7 @@ export default function WordOrderItem({ item, index, total, onResult, onNext }) 
           <p className="mt-5 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
             {t('wordOrder.wordBank', lang)}
           </p>
-          <div className="mt-2 flex flex-wrap gap-2">
+          <div className="mt-2 flex flex-wrap gap-2" dir="ltr" lang="de">
             {bank.map((entry) => (
               <button
                 key={entry.key}
@@ -111,6 +121,9 @@ export default function WordOrderItem({ item, index, total, onResult, onNext }) 
         </div>
       )}
 
+      <p className="sr-only" aria-live="polite" lang={lang}>
+        {built.length ? withGermanSentence(t('wordOrder.builtAnnounce', lang, { sentence: SENTENCE_MARK }), joined) : ''}
+      </p>
       <FeedbackSheet
         result={state && state.result}
         expected={state && state.expected}

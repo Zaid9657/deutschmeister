@@ -1032,7 +1032,9 @@ function buildMatchItem(lektion, attempt, rng) {
     id: `derived-${lektion.id}-match-${attempt}`,
     type: 'match',
     topic: lektion.primarySlug || null,
-    pairs: picked.map((w) => ({ de: w.de, en: w.en })),
+    // wordId: the stable key the support sidecars translate the meaning under
+    // (src/lib/lesson/support.js) — without it an Arabic match fell back to English.
+    pairs: picked.map((w) => ({ de: w.de, en: w.en, ...(w.wordId ? { wordId: w.wordId } : {}) })),
   };
 }
 

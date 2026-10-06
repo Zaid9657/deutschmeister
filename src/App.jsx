@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useLayoutEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -16,6 +16,11 @@ import PurchaseGuard from './components/PurchaseGuard';
 import LevelSubscriptionGuard from './components/LevelSubscriptionGuard';
 import EmailVerificationGate from './components/EmailVerificationGate';
 import OnboardingGate from './components/onboarding/OnboardingGate';
+import LocaleFallbackNotice from './components/locale/LocaleFallbackNotice';
+import LocaleSuggestion from './components/locale/LocaleSuggestion';
+import { applyDocumentLocale, effectiveLocale, useLocale } from './lib/locale';
+import i18n from './utils/i18n';
+import { useTranslation } from 'react-i18next';
 import TrialBanner from './components/TrialBanner';
 import FloatingIntroButton from './components/FloatingIntroButton';
 import SessionTimeoutModal from './components/SessionTimeoutModal';
@@ -111,17 +116,30 @@ function Shell() {
   const { pathname } = useLocation();
   const chrome = chromeFor(pathname);
   const focused = chrome === 'player';
+  // ONE interface locale (src/lib/locale.js); the route decides whether it can
+  // render in it — Arabic only on the screens translated for the pilot, English
+  // with an Arabic notice everywhere else. <html lang dir> and i18next follow
+  // before paint, so a switch or a route change never shows a mixed frame.
+  const [locale] = useLocale();
+  const docLocale = effectiveLocale(locale, pathname);
+  const { t: tr } = useTranslation();
+  useLayoutEffect(() => {
+    if (i18n.language !== docLocale) i18n.changeLanguage(docLocale);
+    applyDocumentLocale(docLocale);
+  }, [docLocale]);
   return (
               <div className="min-h-screen bg-paper">
                 {/* Keyboard users land here first and can jump the nav. The SPA
                     had no skip link and no <main> landmark at all. */}
                 <a
                   href="#main"
-                  className="sr-only focus:not-sr-only focus:absolute focus:z-[200] focus:top-3 focus:left-3 focus:px-4 focus:py-2 focus:rounded-lg focus:bg-white focus:text-ink focus:shadow-overlay focus:ring-2 focus:ring-siegel"
+                  className="sr-only focus:not-sr-only focus:absolute focus:z-[200] focus:top-3 focus:start-3 focus:px-4 focus:py-2 focus:rounded-lg focus:bg-white focus:text-ink focus:shadow-overlay focus:ring-2 focus:ring-siegel"
                 >
-                  Skip to content
+                  {tr('a11y.skipToContent')}
                 </a>
                 {!focused && <Navbar />}
+                <LocaleFallbackNotice />
+                <LocaleSuggestion />
                 {!focused && <OutsideAdmin><TrialBanner /></OutsideAdmin>}
                 {/* Course home (chrome === 'course') also hides this: it overlaps
                     FirstRunTour's first-run tooltip in the same bottom-left corner

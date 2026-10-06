@@ -6,6 +6,8 @@ import { AudioSourceBadge } from './DialogStage.jsx';
 import { audioFor, playLine, speechAvailable } from '../../lib/lesson/speech.js';
 import { normalizeAnswer } from '../../utils/answerMatch.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { levelOfLektion, supportKeys } from '../../lib/lesson/support.js';
+import SupportText from './SupportText.jsx';
 
 /**
  * Stage 1 — one production attempt BEFORE anything is taught, then the model
@@ -39,8 +41,8 @@ export default function PretestStage({ stage, lektionId, onBack, onDone }) {
   return (
     <StageShell
       eyebrow={t('stage.pretest.eyebrow', lang)}
-      title={pretest.promptDe}
-      lead={pretest.promptEn}
+      title={pretest.promptDe ? <span lang="de" dir="ltr">{pretest.promptDe}</span> : null}
+      lead={<SupportText level={levelOfLektion(id)} k={id ? supportKeys.pretest(id) : null} en={pretest.promptEn} />}
       onBack={onBack}
       primaryLabel={revealed ? t('action.next', lang) : t('action.showAnswer', lang)}
       onPrimary={revealed ? onDone : () => setRevealed(true)}
@@ -55,6 +57,10 @@ export default function PretestStage({ stage, lektionId, onBack, onDone }) {
           value={value}
           onChange={(e) => setValue(e.target.value)}
           disabled={revealed}
+          lang="de"
+          dir="ltr"
+          autoCapitalize="off"
+          spellCheck={false}
           className="mt-2 w-full resize-none rounded-clay border border-rule bg-white px-4 py-3 text-[1.0625rem] text-ink outline-none focus:border-siegel disabled:bg-paper-sunk"
           placeholder={t('pretest.placeholder', lang)}
         />
@@ -66,7 +72,7 @@ export default function PretestStage({ stage, lektionId, onBack, onDone }) {
       {revealed && (
         <Card tone="wash" className="mt-4 p-5">
           <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">{t('pretest.model', lang)}</p>
-          <p className="mt-2 text-[1.125rem] font-semibold text-ink" lang="de">{pretest.model}</p>
+          <p className="mt-2 text-[1.125rem] font-semibold text-ink" lang="de" dir="ltr">{pretest.model}</p>
           <div className="mt-3 flex flex-wrap items-center gap-3">
             <button
               type="button"

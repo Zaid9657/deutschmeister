@@ -20,6 +20,7 @@ export const trackOnboardingSkipped = () => track('onboarding_skipped');
 
 export const trackLessonStarted = (level, topic) => track('lesson_started', { level, topic });
 export const trackLessonCompleted = (level, topic) => track('lesson_completed', { level, topic });
+export const trackLessonResumed = (level, topic) => track('lesson_resumed', { level, topic });
 
 export const trackSpeakingSessionStarted = () => track('speaking_session_started');
 export const trackSpeakingSessionCompleted = (score) => track('speaking_session_completed', { score });

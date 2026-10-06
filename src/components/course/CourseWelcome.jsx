@@ -5,6 +5,9 @@ import Chip from '../ui/Chip.jsx';
 import Reveal from '../ui/Reveal.jsx';
 import CourseOutcomes from './CourseOutcomes.jsx';
 import CharacterAvatar from '../illustrations/CharacterAvatar.jsx';
+import SupportText, { useSupport } from '../lesson/SupportText.jsx';
+import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { fillVars, supportKeys } from '../../lib/lesson/support.js';
 
 // The welcome screen of the free A1.1 course — the orientation a lost
 // first-time learner needs before the path makes sense: what this is, how one
@@ -29,6 +32,8 @@ import CharacterAvatar from '../illustrations/CharacterAvatar.jsx';
 // case colours: nothing on this screen names a grammatical case.
 
 export default function CourseWelcome({ curriculum, meta, startHref, placementHref = '/level-test/', className = '' }) {
+  const [lang] = useLessonLang();
+  const support = useSupport(curriculum?.level);
   if (!curriculum || !meta) return null;
   const level = curriculum.level;
   const firstNr = curriculum.lektionen[0]?.nr ?? 1;
@@ -36,49 +41,54 @@ export default function CourseWelcome({ curriculum, meta, startHref, placementHr
   const time = meta.weeklyEstimate(curriculum);
   const how = meta.howItWorksEn;
   const characters = meta.characters ?? [];
+  // The course paragraph: English/German from the meta module, Arabic from the
+  // sidecar with its figures filled in here (derived, never typed in a translation).
+  const about = support(supportKeys.courseAbout(), { en: meta.aboutEn });
+  const aboutVars = { lektionen: curriculum.lektionen.length, perChapter: meta.chapters?.[0]?.lektionen.length ?? 3, exam: curriculum.examName, code: curriculum.code };
 
   return (
     <section className={`mx-auto max-w-2xl px-4 ${className}`.trim()} aria-labelledby="dm-course-welcome">
       {/* ── what this course is ─────────────────────────────────────────── */}
       <Reveal>
-        <Chip tone="label">{curriculum.code} · Free course</Chip>
+        <Chip tone="label"><span dir="ltr">{curriculum.code}</span> · {t('welcome.chip', lang)}</Chip>
         <h1 id="dm-course-welcome" className="mt-3 font-display text-[2rem] font-semibold leading-[1.05] tracking-[-0.022em] text-ink sm:text-[2.5rem]">
-          German {curriculum.code}, from the first „Hallo“
+          {t('welcome.title', lang, { code: curriculum.code })}
         </h1>
-        <p className="mt-3 text-[0.9375rem] leading-relaxed text-graphite sm:text-base">{meta.aboutEn}</p>
+        <p className="mt-3 text-[0.9375rem] leading-relaxed text-graphite sm:text-base" lang={about.lang} dir={about.lang === 'ar' ? 'rtl' : 'ltr'}>{fillVars(about.text, aboutVars)}</p>
       </Reveal>
 
       {/* ── the one thing to press ─────────────────────────────────────── */}
       <Reveal delay={60} className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
         <Button to={start} variant="primary" size="lg" shimmer className="w-full sm:w-auto">
-          Start Lektion {firstNr} — no account needed
+          {t('welcome.start', lang, { nr: firstNr })}
         </Button>
         {/* No minute figure here: the test's own landing page (LevelTestLanding.jsx) says
             15–20 minutes, and a figure this screen cannot derive is a figure it must not claim. */}
         <Button to={placementHref} variant="secondary" className="w-full sm:w-auto">
-          Not sure {curriculum.code} is your level? Take the placement test
+          {t('welcome.placement', lang, { code: curriculum.code })}
         </Button>
       </Reveal>
 
       {/* ── how a Lektion works ────────────────────────────────────────── */}
       <Reveal delay={100} as="section" aria-labelledby="dm-how-it-works" className="mt-10">
         <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-          <h2 id="dm-how-it-works" className="font-display text-xl font-semibold leading-tight text-ink">How a Lektion works</h2>
-          <p className="font-data text-[0.75rem] text-graphite">about {how.minutesPerLektion} min each</p>
+          <h2 id="dm-how-it-works" className="font-display text-xl font-semibold leading-tight text-ink">{t('welcome.howTitle', lang)}</h2>
+          <p className="font-data text-[0.75rem] text-graphite">{t('welcome.howMinutes', lang, { n: how.minutesPerLektion })}</p>
         </div>
-        <ol className="mt-4 flex snap-x gap-3 overflow-x-auto pb-2 [scrollbar-width:thin]">
+        {/* A scrolling list must be reachable by keyboard (axe scrollable-region-focusable). */}
+        <ol className="mt-4 flex snap-x gap-3 overflow-x-auto pb-2 [scrollbar-width:thin]" tabIndex={0} aria-label={t('welcome.howTitle', lang)}>
           {how.steps.map((step, i) => (
             <li key={step.key} className="flex w-36 shrink-0 snap-start flex-col rounded-clay border border-rule bg-white p-3">
               <span className="font-data text-[0.625rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">
                 {String(i + 1).padStart(2, '0')}
               </span>
-              <span className="mt-1 font-bold text-ink">{step.label}</span>
-              <span className="mt-1 text-[0.8125rem] leading-snug text-graphite">{step.descriptionEn}</span>
+              <SupportText as="span" level={level} k={supportKeys.howStepLabel(step.key)} en={step.label} className="mt-1 font-bold text-ink" />
+              <SupportText as="span" level={level} k={supportKeys.howStepDescription(step.key)} en={step.descriptionEn} className="mt-1 text-[0.8125rem] leading-snug text-graphite" />
             </li>
           ))}
         </ol>
         <p className="mt-2 font-data text-[0.6875rem] text-graphite">
-          Swipe for the rest. The warm-up appears once you have review cards due.
+          {t('welcome.swipe', lang)}
         </p>
       </Reveal>
 
@@ -90,12 +100,10 @@ export default function CourseWelcome({ curriculum, meta, startHref, placementHr
           </span>
           <div className="min-w-0">
             <p className="font-bold text-ink">
-              About {how.minutesPerLektion} minutes per Lektion · about {time.hoursPerWeek} hours a week
+              {t('welcome.timeTitle', lang, { minutes: how.minutesPerLektion, hours: time.hoursPerWeek })}
             </p>
             <p className="mt-0.5 text-[0.875rem] leading-relaxed text-graphite">
-              At {time.unitsPerWeek} units a week — a pace you can hold next to a job — the {time.units} units
-              ({curriculum.lektionen.length} Lektionen, {curriculum.checkpoints.length} checkpoints and the final test) take
-              about {time.weeks} weeks. Faster is fine; slower is fine too. Nothing here locks.
+              {t('welcome.timeBody', lang, { perWeek: time.unitsPerWeek, units: time.units, lektionen: curriculum.lektionen.length, checkpoints: curriculum.checkpoints.length, weeks: time.weeks })}
             </p>
           </div>
         </Card>
@@ -106,10 +114,10 @@ export default function CourseWelcome({ curriculum, meta, startHref, placementHr
         <Reveal delay={180} as="section" aria-labelledby="dm-course-cast" className="mt-10">
           <div className="flex items-center gap-2">
             <Users className="h-4 w-4 text-siegel" aria-hidden="true" />
-            <h2 id="dm-course-cast" className="font-display text-xl font-semibold leading-tight text-ink">Who you will meet</h2>
+            <h2 id="dm-course-cast" className="font-display text-xl font-semibold leading-tight text-ink">{t('welcome.castTitle', lang)}</h2>
           </div>
           <p className="mt-1 text-[0.875rem] text-graphite">
-            The same people run through all {curriculum.lektionen.length} dialogues, so each new one starts on familiar ground.
+            {t('welcome.castBody', lang, { n: curriculum.lektionen.length })}
           </p>
           <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
             {characters.map((c) => (
@@ -119,10 +127,10 @@ export default function CourseWelcome({ curriculum, meta, startHref, placementHr
                 </span>
                 <div className="min-w-0">
                   <p className="font-bold text-ink">{c.name}</p>
-                  <p className="text-[0.8125rem] leading-snug text-graphite">{c.roleEn}</p>
+                  <SupportText as="p" level={level} k={supportKeys.character(c.name)} en={c.roleEn} className="text-[0.8125rem] leading-snug text-graphite" />
                   <p className="mt-1 font-data text-[0.6875rem] text-graphite">
-                    From Lektion {c.firstLektion}
-                    {c.appearsIn.length > 1 ? ` · in ${c.appearsIn.length} Lektionen` : ''}
+                    {t('welcome.castFrom', lang, { nr: c.firstLektion })}
+                    {c.appearsIn.length > 1 ? ` · ${t('welcome.castIn', lang, { n: c.appearsIn.length })}` : ''}
                   </p>
                 </div>
               </li>
@@ -133,15 +141,15 @@ export default function CourseWelcome({ curriculum, meta, startHref, placementHr
 
       {/* ── outcomes ───────────────────────────────────────────────────── */}
       <Reveal delay={220} className="mt-10">
-        <CourseOutcomes code={curriculum.code} outcomes={meta.outcomesEn} />
+        <CourseOutcomes code={curriculum.code} level={level} outcomes={meta.outcomesEn} />
       </Reveal>
 
       {/* ── the same door again, for whoever read to the end ───────────── */}
       <Reveal delay={260} className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
         <Button to={start} variant="primary" size="lg" className="w-full sm:w-auto">
-          Start Lektion {firstNr} — no account needed
+          {t('welcome.start', lang, { nr: firstNr })}
         </Button>
-        <p className="font-data text-[0.75rem] text-graphite">Your progress is kept in this browser until you choose to save it.</p>
+        <p className="font-data text-[0.75rem] text-graphite">{t('welcome.keptInBrowser', lang)}</p>
       </Reveal>
     </section>
   );

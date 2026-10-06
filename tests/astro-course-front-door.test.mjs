@@ -27,10 +27,11 @@ function walk(dir, out = []) {
 
 // Visible text says "start free" in either language; expressions like
 // {FREE_LEVEL_LABEL} or {code} are left in place — they never change the verdict.
-const START_FREE = /start.*(free|kostenlos)|(free|kostenlos).*start|start a1\.1/i;
+const START_FREE = /start.*(free|kostenlos)|(free|kostenlos).*start|start a1\.1|ابدأ.*مجان|مجان.*ابدأ/i;
 // Literal `/course/a1.1`, or a template that fills the level in (`/course/${level}`,
 // `/course/${r.level}`) on the pages that render the free level from data.
-const COURSE_DOOR = /^\/course\/(a1\.1|\$\{[\w.]*level\})$/;
+// The Arabic pages add `?lang=ar` (an explicit interface choice, src/lib/locale.js).
+const COURSE_DOOR = /^\/course\/(a1\.1|\$\{[\w.]*level\})(\?lang=ar)?$/;
 // The account door is a different door (conversion-trust.test.mjs keeps
 // no-account exploration, account trial and paid Pro apart): "Start free — 7
 // days of Pro" / „Kostenlos starten" next to a trial subtext may open signup.
@@ -97,6 +98,11 @@ test('the known front-door CTAs still exist (the scan is not vacuous)', () => {
     'astro-site/src/pages/pricing.astro': 1,
     'astro-site/src/pages/courses/index.astro': 1,
     'astro-site/src/pages/courses/[level].astro': 2,
+    'astro-site/src/pages/ar/index.astro': 2,
+    'astro-site/src/pages/ar/courses/index.astro': 1,
+    'astro-site/src/pages/ar/courses/a1-1.astro': 2,
+    'astro-site/src/pages/ar/pricing.astro': 1,
+    'astro-site/src/pages/ar/help.astro': 1,
   };
   for (const [page, count] of Object.entries(expected)) {
     const anchors = byPage.get(page) ?? [];

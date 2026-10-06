@@ -1,11 +1,13 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { safeGet, safeSet } from './safeStorage';
+import { LEGACY_APP_KEY, effectiveLocale, getLocale } from '../lib/locale.js';
+import { registerArabicCount } from '../lib/arabicCount.js';
 
 const resources = {
   en: {
     translation: {
       // Navigation
+      a11y: { skipToContent: 'Skip to content' },
       nav: {
         home: 'Home',
         dashboard: 'Dashboard',
@@ -174,6 +176,7 @@ const resources = {
   de: {
     translation: {
       // Navigation
+      a11y: { skipToContent: 'Zum Inhalt springen' },
       nav: {
         home: 'Startseite',
         dashboard: 'Dashboard',
@@ -344,11 +347,17 @@ const resources = {
 // The chosen language was never stored: init hardcoded `lng: 'en'` and the
 // navbar toggle only called changeLanguage(), so every full page load — and
 // every crossing into the static Astro pages — silently reverted to English.
-// `dm_lang` is the shared key; the Astro shell reads the same value.
-export const LANG_STORAGE_KEY = 'dm_lang';
+// Since 2026-10-05 the choice lives in ONE store, src/lib/locale.js (`dm_locale`,
+// with `dm_lang` kept written for the Astro shell and older bundles). i18next
+// starts in the locale the CURRENT route renders in — Arabic only on the routes
+// translated for the pilot — and the app shell (App.jsx) follows route changes.
+// The Arabic bundle is registered by src/locales/ar/index.js before the first
+// render (main.jsx), so `fallbackLng` is never what an Arabic visitor reads.
+export const LANG_STORAGE_KEY = LEGACY_APP_KEY;
 
-const storedLang = safeGet(LANG_STORAGE_KEY);
-const initialLang = storedLang === 'de' || storedLang === 'en' ? storedLang : 'en';
+const initialLang = typeof window === 'undefined'
+  ? 'en'
+  : effectiveLocale(getLocale(), window.location.pathname);
 
 i18n.use(initReactI18next).init({
   resources,
@@ -359,14 +368,7 @@ i18n.use(initReactI18next).init({
   },
 });
 
-// Persist centrally rather than in the toggle, so every caller of
-// changeLanguage() is covered, and keep <html lang> honest for screen readers
-// and search engines.
-i18n.on('languageChanged', (lng) => {
-  safeSet(LANG_STORAGE_KEY, lng);
-  if (typeof document !== 'undefined') document.documentElement.lang = lng;
-});
-
-if (typeof document !== 'undefined') document.documentElement.lang = initialLang;
+// {{n, arcount(forms: …)}}: Arabic number agreement (src/lib/arabicCount.js).
+registerArabicCount(i18n);
 
 export default i18n;

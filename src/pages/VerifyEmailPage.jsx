@@ -15,6 +15,8 @@ import SEO from '../components/SEO';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
+import { useArabicT } from '../locales/useArabic';
+import AuthErrorText from '../components/AuthErrorText.jsx';
 
 const VerifyEmailPage = () => {
   const navigate = useNavigate();
@@ -22,6 +24,8 @@ const VerifyEmailPage = () => {
   const [resending, setResending] = useState(false);
   const [resent, setResent] = useState(false);
   const [error, setError] = useState('');
+  const [errorCause, setErrorCause] = useState(null);
+  const ta = useArabicT();
 
   useEffect(() => { trackVerificationPageViewed(); }, []);
 
@@ -66,6 +70,7 @@ const VerifyEmailPage = () => {
     setResending(false);
     if (resendError) {
       setError(resendError.message);
+      setErrorCause(resendError);
     } else {
       setResent(true);
       trackVerificationEmailResent();
@@ -81,7 +86,7 @@ const VerifyEmailPage = () => {
 
   return (
     <div className="relative min-h-screen overflow-hidden flex items-center justify-center bg-paper px-4 py-12">
-      <SEO title="Verify Your Email" description="Confirm your email address to activate your DeutschMeister account." path="/verify-email" noindex />
+      <SEO title={ta ? ta('account.verify.seoTitle') : 'Verify Your Email'} description="Confirm your email address to activate your DeutschMeister account." path="/verify-email" noindex />
       <Aurora />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -94,21 +99,21 @@ const VerifyEmailPage = () => {
           </div>
 
           <h1 className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink mb-3">
-            Confirm your email
+            {ta ? ta('account.verify.title') : 'Confirm your email'}
           </h1>
 
           <p className="text-graphite mb-2">
-            We sent a confirmation email to:
+            {ta ? ta('account.verify.sentTo') : 'We sent a confirmation email to:'}
           </p>
-          <p className="font-data text-[0.8125rem] font-semibold text-siegel-deep mb-6">{user.email}</p>
+          <p className="font-data text-[0.8125rem] font-semibold text-siegel-deep mb-6" dir="ltr">{user.email}</p>
 
           <p className="text-sm text-graphite mb-6">
-            Click the link in that email to activate your account. This page updates automatically.
+            {ta ? ta('account.verify.body') : 'Click the link in that email to activate your account. This page updates automatically.'}
           </p>
 
           <div className="flex items-center justify-center gap-2 font-data text-[0.6875rem] uppercase tracking-[0.13em] text-graphite mb-6">
             <Loader2 className="w-3.5 h-3.5 animate-spin text-siegel" aria-hidden="true" />
-            Waiting for confirmation…
+            {ta ? ta('account.verify.waiting') : 'Waiting for confirmation…'}
           </div>
 
           {resent && (
@@ -118,7 +123,7 @@ const VerifyEmailPage = () => {
               className="mb-4 flex items-center justify-center gap-2 rounded-clay bg-accent-limette-wash px-4 py-3 text-sm font-semibold text-accent-limette-ink"
             >
               <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
-              Email sent again.
+              {ta ? ta('account.verify.sentAgain') : 'Email sent again.'}
             </motion.div>
           )}
 
@@ -129,7 +134,7 @@ const VerifyEmailPage = () => {
               className="mb-4 flex items-center justify-center gap-2 rounded-clay bg-accent-himbeer-wash px-4 py-3 text-sm font-semibold text-accent-himbeer-ink"
             >
               <AlertCircle className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
-              {error}
+              <AuthErrorText ta={ta} message={error} cause={errorCause} />
             </motion.div>
           )}
 
@@ -141,17 +146,17 @@ const VerifyEmailPage = () => {
               ) : (
                 <RefreshCw className="w-5 h-5" />
               )}
-              Resend email
+              {ta ? ta('account.verify.resend') : 'Resend email'}
             </Button>
 
             <Button onClick={handleSignOut} variant="secondary" size="lg" className="w-full">
               <LogOut className="w-4 h-4" />
-              Sign out and use a different email
+              {ta ? ta('account.verify.signOut') : 'Sign out and use a different email'}
             </Button>
           </div>
 
           <p className="mt-6 text-xs text-graphite">
-            Tip: check your spam folder too.
+            {ta ? ta('account.verify.tip') : 'Tip: check your spam folder too.'}
           </p>
         </Card>
       </motion.div>

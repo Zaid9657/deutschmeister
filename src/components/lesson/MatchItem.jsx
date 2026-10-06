@@ -5,6 +5,9 @@ import Card from '../ui/Card.jsx';
 import FeedbackSheet from './FeedbackSheet.jsx';
 import { RESULT } from '../../lib/lesson/check.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { levelOfLektion, supportKeys } from '../../lib/lesson/support.js';
+import { useSupport } from './SupportText.jsx';
+import { inline } from './richText.jsx';
 
 /**
  * Display-order shuffle for the two columns (Fisher–Yates). This has no
@@ -14,6 +17,9 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
  */
 function shuffledColumn(values) {
   const out = values.map((value, pairIndex) => ({ value, pairIndex }));
+  // `value` is only the shuffle's payload; what a tile SHOWS is read at render
+  // time (German from the pair, the meaning from the support lookup), so a
+  // language switch mid-item relabels the tiles without reshuffling them.
   for (let i = out.length - 1; i > 0; i -= 1) {
     const j = Math.floor(Math.random() * (i + 1));
     [out[i], out[j]] = [out[j], out[i]];
@@ -32,9 +38,25 @@ function shuffledColumn(values) {
  *
  * State is never colour-only: a matched tile carries a check icon, a
  * mismatched tap flashes an X icon on both tiles, not just a colour change.
+ *
+ * Accessible names are the VISIBLE words. The tiles used to be named "German
+ * word 3" / "English translation 3" — a hidden pairing number that told a
+ * screen-reader user nothing about the word and, worse, gave the answer away
+ * (3 goes with 3). Selection, a match and a miss are announced in a polite
+ * live region, in words.
+ *
+ * The meaning column is in the learner's interface language: English, German
+ * (Deutsch-Modus keeps the English glosses — the Wortfeld has no German
+ * definitions), or Arabic from the sidecar (src/lib/lesson/support.js). The
+ * pairs themselves are drawn so that no two meanings are the same in any
+ * language (buildLesson.js + tests/arabic-coverage.test.mjs), so a match is
+ * always uniquely gradable.
  */
-export default function MatchItem({ item, index, total, onResult, onNext }) {
+export default function MatchItem({ item, index, total, lektionId, onResult, onNext }) {
   const [lang] = useLessonLang();
+  const support = useSupport(levelOfLektion(lektionId));
+  const meaningOf = (pair) => support(pair.wordId ? supportKeys.word(pair.wordId) : null, { en: pair.en });
+  const [announce, setAnnounce] = useState('');
   const [deCol, setDeCol] = useState(() => shuffledColumn(item.pairs.map((p) => p.de)));
   const [enCol, setEnCol] = useState(() => shuffledColumn(item.pairs.map((p) => p.en)));
   const [selectedDe, setSelectedDe] = useState(null);
@@ -51,6 +73,7 @@ export default function MatchItem({ item, index, total, onResult, onNext }) {
     setFlash(null);
     setMisses(0);
     setState(null);
+    setAnnounce('');
   }, [item.id, item.pairs]);
 
   const total4 = item.pairs.length;
@@ -60,18 +83,27 @@ export default function MatchItem({ item, index, total, onResult, onNext }) {
     if (state || matched.has(pairIndex)) return;
     setFlash(null);
     setSelectedDe(pairIndex);
+    setAnnounce(t('match.selected', lang, { word: item.pairs[pairIndex].de }));
   };
 
   const pickEn = (pairIndex) => {
-    if (state || matched.has(pairIndex) || selectedDe == null) return;
+    if (state || matched.has(pairIndex)) return;
+    if (selectedDe == null) {
+      setAnnounce(t('match.pickGermanFirst', lang));
+      return;
+    }
+    const de = item.pairs[selectedDe].de;
+    const meaning = meaningOf(item.pairs[pairIndex]).text;
     if (selectedDe === pairIndex) {
       setMatched((prev) => new Set(prev).add(pairIndex));
       setSelectedDe(null);
+      setAnnounce(t('match.matchedAnnounce', lang, { word: de, meaning }));
     } else {
       const wrongDe = selectedDe;
       setMisses((m) => m + 1);
       setFlash({ de: wrongDe, en: pairIndex });
       setSelectedDe(null);
+      setAnnounce(t('match.missAnnounce', lang, { word: de, meaning }));
       window.setTimeout(() => setFlash((f) => (f && f.de === wrongDe && f.en === pairIndex ? null : f)), 500);
     }
   };
@@ -84,7 +116,7 @@ export default function MatchItem({ item, index, total, onResult, onNext }) {
   };
 
   const tileClass = (on, wrong, done) =>
-    `flex min-h-11 w-full items-center justify-between gap-2 rounded-clay border px-4 py-2.5 text-left text-[0.9375rem] font-bold transition-all duration-100 ease-snap disabled:opacity-70 motion-reduce:transition-none ${
+    `flex min-h-11 w-full items-center justify-between gap-2 rounded-clay border px-4 py-2.5 text-start text-[0.9375rem] font-bold transition-all duration-100 ease-snap disabled:opacity-70 motion-reduce:transition-none ${
       done
         ? 'border-siegel bg-siegel-wash text-siegel-deep'
         : wrong
@@ -113,12 +145,13 @@ export default function MatchItem({ item, index, total, onResult, onNext }) {
                   type="button"
                   disabled={!!state || done}
                   aria-pressed={on}
-                  aria-label={t('match.germanLabel', lang, { n: pairIndex + 1 })}
                   onClick={() => pickDe(pairIndex)}
                   className={tileClass(on, wrong, done)}
                   lang="de"
+                  dir="ltr"
                 >
                   <span>{value}</span>
+                  {done && <span className="sr-only" lang={lang}>{t('match.matchedState', lang)}</span>}
                   {done && <Check className="h-4 w-4 shrink-0" aria-hidden="true" />}
                   {wrong && <X className="h-4 w-4 shrink-0" aria-hidden="true" />}
                 </button>
@@ -126,19 +159,23 @@ export default function MatchItem({ item, index, total, onResult, onNext }) {
             })}
           </div>
           <div className="flex flex-col gap-2">
-            {enCol.map(({ value, pairIndex }) => {
+            {enCol.map(({ pairIndex }) => {
               const done = matched.has(pairIndex);
               const wrong = flash && flash.en === pairIndex;
+              const meaning = meaningOf(item.pairs[pairIndex]);
               return (
                 <button
                   key={pairIndex}
                   type="button"
                   disabled={!!state || done}
-                  aria-label={t('match.englishLabel', lang, { n: pairIndex + 1 })}
                   onClick={() => pickEn(pairIndex)}
                   className={tileClass(false, wrong, done)}
+                  lang={meaning.lang}
+                  dir={meaning.lang === 'ar' ? 'rtl' : 'ltr'}
                 >
-                  <span>{value}</span>
+                  {/* German quoted inside an Arabic meaning («ich bin am … geboren») is isolated like everywhere else. */}
+                  <span>{meaning.lang === 'ar' ? inline(meaning.text, { rtl: true }) : meaning.text}</span>
+                  {done && <span className="sr-only" lang={lang}>{t('match.matchedState', lang)}</span>}
                   {done && <Check className="h-4 w-4 shrink-0" aria-hidden="true" />}
                   {wrong && <X className="h-4 w-4 shrink-0" aria-hidden="true" />}
                 </button>
@@ -154,6 +191,7 @@ export default function MatchItem({ item, index, total, onResult, onNext }) {
         </div>
       )}
 
+      <p className="sr-only" aria-live="polite" lang={lang}>{announce}</p>
       <FeedbackSheet result={state && state.result} onContinue={onNext} />
     </div>
   );

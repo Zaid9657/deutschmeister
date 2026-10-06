@@ -9,6 +9,8 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
 import { WORTFELD_ICONS, WORTFELD_ICON_FALLBACK } from '../../data/curricula/a11.meta.js';
 import { CURRICULUM_A11 } from '../../data/curricula/a11.js';
 import { WORTFELD_ICON_COMPONENTS } from './wortfeldIcons.js';
+import SupportText from './SupportText.jsx';
+import { levelOfLektion, supportKeys } from '../../lib/lesson/support.js';
 
 /**
  * Stage 2b — the new words as picture cards: icon, article, plural, English
@@ -59,11 +61,15 @@ function iconFor(word) {
   return WORTFELD_ICON_COMPONENTS[name] || WORTFELD_ICON_COMPONENTS[WORTFELD_ICON_FALLBACK];
 }
 
-function WordCard({ w, lang, flipped, onToggle }) {
+function WordCard({ w, lang, level, flipped, onToggle }) {
   const article = w.article || (w.db && w.db.article) || '';
   const plural = w.plural || (w.db && w.db.plural) || '';
   const audioUrl = (w.db && w.db.audioUrl) || w.audioUrl || '';
   const spoken = w.de || w.word || '';
+  // The article is its own chip, so the headword is the bare noun: `de` already
+  // carries the article ("der Gruß"), and showing both printed "der | der Gruß".
+  // The audio still speaks the article with the noun — that is how it is learned.
+  const headword = article && w.word ? w.word : spoken;
   const english = w.en || (w.db && w.db.english) || '';
   const Icon = iconFor(w.word || w.de);
 
@@ -86,18 +92,18 @@ function WordCard({ w, lang, flipped, onToggle }) {
         {flipped ? (
           <>
             <Chip tone="quiet">{t('wortfeld.en', lang)}</Chip>
-            <p className="text-[0.9375rem] leading-snug text-ink">{english}</p>
+            <SupportText as="p" level={level} k={w.wordId ? supportKeys.word(w.wordId) : null} en={english} className="text-[0.9375rem] leading-snug text-ink" />
           </>
         ) : (
           <>
-            <p className="truncate font-display text-[1.0625rem] font-semibold text-ink" lang="de">
-              {spoken}
+            <p className="truncate font-display text-[1.0625rem] font-semibold text-ink" lang="de" dir="ltr">
+              {headword}
             </p>
             <div className="flex flex-wrap items-center justify-center gap-1.5">
-              {article && <Chip tone="quiet">{article}</Chip>}
+              {article && <Chip tone="quiet"><span lang="de" dir="ltr">{article}</span></Chip>}
               {plural && (
                 <span className="font-data text-[0.6875rem] text-graphite">
-                  {t('wortfeld.plural', lang)} {plural}
+                  {t('wortfeld.plural', lang)} <span lang="de" dir="ltr">{plural}</span>
                 </span>
               )}
             </div>
@@ -149,6 +155,7 @@ export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
   const words = stage.words || [];
   const [lang] = useLessonLang();
   const id = lektionId || stage.lektionId || lektionIdFromWords(words);
+  const level = levelOfLektion(id);
 
   const toggle = (i) =>
     setOpen((prev) => {
@@ -195,7 +202,7 @@ export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
           const spoken = w.de || w.word || '';
           return (
             <li key={`${spoken}-${i}`}>
-              <WordCard w={w} lang={lang} flipped={open.has(i)} onToggle={() => toggle(i)} />
+              <WordCard w={w} lang={lang} level={level} flipped={open.has(i)} onToggle={() => toggle(i)} />
             </li>
           );
         })}

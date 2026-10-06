@@ -10,6 +10,8 @@ import Button from '../components/ui/Button';
 import Card from '../components/ui/Card.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
 import Logo from '../components/Logo';
+import { useArabicT } from '../locales/useArabic';
+import AuthErrorText from '../components/AuthErrorText.jsx';
 
 // The playbook form field (docs/design/playbook.md §1), with room for the
 // leading icon. The focus ring comes from the global *:focus-visible rule.
@@ -25,6 +27,8 @@ const UpdatePasswordPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [errorCause, setErrorCause] = useState(null);
+  const ta = useArabicT();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -34,11 +38,13 @@ const UpdatePasswordPage = () => {
 
     if (password !== confirmPassword) {
       setError('Passwords do not match');
+      setErrorCause({ code: 'passwords_mismatch' });
       return;
     }
 
     if (password.length < 6) {
       setError('Password must be at least 6 characters');
+      setErrorCause({ code: 'password_short' });
       return;
     }
 
@@ -48,6 +54,7 @@ const UpdatePasswordPage = () => {
       const { error } = await updatePassword(password);
       if (error) {
         setError(error.message);
+        setErrorCause(error);
       } else {
         logAuditEvent(AUDIT_EVENTS.PASSWORD_CHANGED);
         setSuccess(true);
@@ -55,6 +62,7 @@ const UpdatePasswordPage = () => {
       }
     } catch {
       setError('An unexpected error occurred');
+      setErrorCause({ code: 'unexpected' });
     } finally {
       setLoading(false);
     }
@@ -74,12 +82,12 @@ const UpdatePasswordPage = () => {
               <CheckCircle2 className="w-8 h-8 text-accent-limette-ink" aria-hidden="true" />
             </div>
             <h2 className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink mb-4">
-              Password Updated!
+              {ta ? ta('account.update.doneTitle') : 'Password Updated!'}
             </h2>
             <p className="text-graphite mb-6">
               {t('auth.passwordUpdated')}
               <br />
-              Redirecting to login...
+              {ta ? ta('account.update.redirecting') : 'Redirecting to login...'}
             </p>
           </Card>
         </motion.div>
@@ -89,7 +97,7 @@ const UpdatePasswordPage = () => {
 
   return (
     <div className="relative min-h-screen overflow-hidden flex items-center justify-center bg-paper px-4 py-12">
-      <SEO title="Update Password" description="Choose a new password for your DeutschMeister account." path="/update-password" noindex />
+      <SEO title={ta ? ta('account.update.seoTitle') : 'Update Password'} description="Choose a new password for your DeutschMeister account." path="/update-password" noindex />
       <Aurora />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -111,7 +119,7 @@ const UpdatePasswordPage = () => {
             {t('auth.updatePassword')}
           </h1>
           <p className="hero-line text-[0.9375rem] leading-relaxed text-graphite sm:text-base" style={{ '--d': '220ms' }}>
-            Enter your new password
+            {ta ? ta('account.update.lead') : 'Enter your new password'}
           </p>
         </div>
 
@@ -124,19 +132,22 @@ const UpdatePasswordPage = () => {
               className="mb-6 flex items-center gap-3 rounded-clay bg-accent-himbeer-wash px-4 py-3 text-accent-himbeer-ink"
             >
               <AlertCircle className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
-              <p className="text-sm font-semibold">{error}</p>
+              <AuthErrorText ta={ta} message={error} cause={errorCause} />
             </motion.div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* New Password */}
             <div>
-              <label className="block text-sm font-bold text-ink mb-2">
+              <label htmlFor="update-password" className="block text-sm font-bold text-ink mb-2">
                 {t('auth.newPassword')}
               </label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-graphite" aria-hidden="true" />
                 <input
+                  id="update-password"
+                  dir="ltr"
+                  autoComplete="new-password"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -144,11 +155,13 @@ const UpdatePasswordPage = () => {
                   minLength={6}
                   className={`${FIELD} pr-12`}
                   placeholder="At least 6 characters"
+                  {...(ta ? { placeholder: ta('account.minPasswordPlaceholder') } : {})}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 rounded-md text-graphite transition-colors hover:text-siegel-deep"
+                  aria-label={ta ? ta(showPassword ? 'account.hidePassword' : 'account.showPassword') : showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -157,18 +170,22 @@ const UpdatePasswordPage = () => {
 
             {/* Confirm Password */}
             <div>
-              <label className="block text-sm font-bold text-ink mb-2">
+              <label htmlFor="update-password-confirm" className="block text-sm font-bold text-ink mb-2">
                 {t('auth.confirmPassword')}
               </label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-graphite" aria-hidden="true" />
                 <input
+                  id="update-password-confirm"
+                  dir="ltr"
+                  autoComplete="new-password"
                   type={showPassword ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                   className={FIELD}
                   placeholder="Confirm your password"
+                  {...(ta ? { placeholder: ta('account.confirmPlaceholder') } : {})}
                 />
               </div>
             </div>

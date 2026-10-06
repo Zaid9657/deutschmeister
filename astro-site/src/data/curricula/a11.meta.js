@@ -332,7 +332,7 @@ const HOW_STEPS = [
   { key: 'notice', label: 'Rule', descriptionEn: 'One grammar point, explained in a short card.' },
   { key: 'practice', label: 'Practice', descriptionEn: 'Short typed and tapped exercises, checked instantly.' },
   { key: 'dictation', label: 'Listen', descriptionEn: 'Hear a line from the dialogue and write it down.' },
-  { key: 'speaking', label: 'Speak', descriptionEn: 'Read a line aloud; the app scores your pronunciation.' },
+  { key: 'speaking', label: 'Speak', descriptionEn: 'Read a line aloud; see which words were recognised.' },
   { key: 'writing', label: 'Write', descriptionEn: 'A short real-life text, checked by AI.' },
   { key: 'recap', label: 'Recap', descriptionEn: 'What you can do now, and what comes next.' },
 ];

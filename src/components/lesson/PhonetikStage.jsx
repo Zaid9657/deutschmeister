@@ -5,6 +5,8 @@ import Card from '../ui/Card.jsx';
 import Button from '../ui/Button.jsx';
 import { playLine, phonetikSpeechText } from '../../lib/lesson/speech.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { levelOfLektion, supportKeys } from '../../lib/lesson/support.js';
+import SupportText from './SupportText.jsx';
 
 /**
  * One Phonetik item ("HAL-lo", "Te-le-FON", a question item with a rising
@@ -63,7 +65,10 @@ export default function PhonetikStage({ stage, lektionId, onBack, onDone }) {
     >
       {phonetik.focus && (
         <div className="mb-5">
-          <p className="font-display text-xl text-ink" lang="de">{phonetik.focus}</p>
+          <p className="font-display text-xl text-ink" lang="de" dir="ltr">{phonetik.focus}</p>
+          {lang === 'ar' && (
+            <SupportText as="p" level={levelOfLektion(lektionId)} k={lektionId ? supportKeys.phonetikFocus(lektionId) : null} de={phonetik.focus} className="mt-1 block text-sm text-ink" />
+          )}
           <p className="mt-1 text-sm text-graphite">{t('phonetik.listenFor', lang)}</p>
         </div>
       )}
@@ -71,9 +76,9 @@ export default function PhonetikStage({ stage, lektionId, onBack, onDone }) {
         {items.map((item, i) => (
           <li key={`${item}-${i}`}>
             <Card className="flex flex-wrap items-center justify-between gap-3 p-4">
-              <p className="font-display text-xl text-ink" lang="de">{renderSyllables(item)}</p>
+              <p className="font-display text-xl text-ink" lang="de" dir="ltr">{renderSyllables(item)}</p>
               <div className="flex items-center gap-2">
-                <Button variant="secondary" onClick={() => play(item, i)} aria-label={t('action.listen', lang)}>
+                <Button variant="secondary" onClick={() => play(item, i)} aria-label={t('phonetik.listenTo', lang, { word: phonetikSpeechText(item) })}>
                   <Volume2 className="h-4 w-4" aria-hidden="true" />
                 </Button>
                 <Button

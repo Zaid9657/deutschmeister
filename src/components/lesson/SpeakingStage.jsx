@@ -7,6 +7,8 @@ import StageShell from './StageShell.jsx';
 import ReadAloudLine from './ReadAloudLine.jsx';
 import { saveCourseContext } from '../../lib/courseFlow.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { levelOfLektion, supportKeys } from '../../lib/lesson/support.js';
+import SupportText from './SupportText.jsx';
 
 /**
  * Stage 5 — Sprechen. Two halves:
@@ -103,16 +105,21 @@ export default function SpeakingStage({ stage, level, code, lektion, onBack, onD
       {open && (
         <Card tone="wash" className="mt-5 p-5">
           <div className="flex flex-wrap items-center gap-2">
-            <Chip tone="label">{open.teil || t('speaking.teilDefault', lang)}</Chip>
+            <Chip tone="label">{open.teil ? <span lang="de" dir="ltr">{open.teil}</span> : t('speaking.teilDefault', lang)}</Chip>
             {(open.hintWords || []).map((w) => (
-              <Chip key={w} tone="quiet">{w}</Chip>
+              <Chip key={w} tone="quiet"><span lang="de" dir="ltr">{w}</span></Chip>
             ))}
           </div>
-          <p className="mt-3 text-[1.0625rem] font-semibold text-ink" lang="de">{open.promptDe}</p>
-          {open.promptEn && <p className="mt-1 text-[0.9375rem] leading-relaxed text-graphite">{open.promptEn}</p>}
+          <p className="mt-3 text-[1.0625rem] font-semibold text-ink" lang="de" dir="ltr">{open.promptDe}</p>
+          {open.promptEn && (
+            <SupportText as="p" level={levelOfLektion(lektion.id)} k={supportKeys.speakingPrompt(lektion.id)} en={open.promptEn} className="mt-1 block text-[0.9375rem] leading-relaxed text-graphite" />
+          )}
           <p className="mt-2 text-[0.875rem] text-graphite">
             {t('speaking.coachLead', lang)}
           </p>
+          {lang === 'ar' && (
+            <p className="mt-2 text-[0.875rem] text-graphite">{t('speaking.coachLanguageNote', lang)}</p>
+          )}
           <div className="mt-4">
             <Button onClick={goSpeak} variant="secondary">
               <Mic className="h-4 w-4" aria-hidden="true" /> {t('speaking.speakFree', lang)}

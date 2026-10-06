@@ -38,6 +38,31 @@ summary {
   }
 }
 
+/* ── Arabic (docs/arabic/README.md) ──────────────────────────────────────
+   Letter-spacing pulls apart the joins of a cursive script, so no tracking
+   utility or role applies to Arabic text (a German run inside carries
+   lang="de" but inherits the normal spacing — harmless). Arabic also needs
+   more room above and below the line than Latin at the same size: the tight
+   leadings open up to 1.45 so marks are never clipped. The face itself comes
+   from the token stacks (IBM Plex Sans Arabic, design-tokens.js). */
+:lang(ar) {
+  letter-spacing: normal !important;
+}
+:lang(ar):is(.leading-none, .leading-tight, .leading-snug, [class*='leading-[']) {
+  line-height: 1.45;
+}
+/* The data role is a monospace stack: on Arabic text its spaces come from the
+   mono face and the words drift apart, so an Arabic label takes the body face. */
+.font-data:lang(ar) {
+  font-family: theme('fontFamily.body');
+}
+/* On an Arabic page the headings and the display role take the body face:
+   Fraunces has no Arabic, and a serif Latin run beside sans Arabic in one
+   heading reads as two typefaces. (The app keeps Fraunces for German titles.) */
+html[lang='ar'] :is(h1, h2, h3, h4, .font-display) {
+  font-family: theme('fontFamily.body');
+}
+
 /* ── Focus on night grounds: the siegel ring would be 3.4:1 on nacht ──── */
 [data-ground='nacht'] *:focus-visible,
 .bg-nacht *:focus-visible {

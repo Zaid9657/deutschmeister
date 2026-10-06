@@ -1,0 +1,27 @@
+{
+  "generatedOn": "2026-10-06",
+  "scope": [
+    "a1.1-l01",
+    "a1.1-l02",
+    "a1.1-l03"
+  ],
+  "pilot": {
+    "total": 363,
+    "draft": 363
+  },
+  "checkpoint1": {
+    "total": 38,
+    "missing": 38
+  },
+  "laterLektionen": {
+    "total": 982,
+    "missing": 982
+  },
+  "interface": {
+    "lessonKeys": 353,
+    "lessonMissing": []
+  },
+  "orphans": [],
+  "reviewedWithoutSignoff": [],
+  "problems": []
+}

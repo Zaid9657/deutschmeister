@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { Menu, X, User, LogOut, Globe, Crown, Sparkles, ChevronDown, Film, ShieldCheck, LifeBuoy } from 'lucide-react';
+import { Menu, X, User, LogOut, Crown, Sparkles, ChevronDown, Film, ShieldCheck, LifeBuoy } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { isAdminEmail } from '../config/admins';
@@ -12,6 +12,7 @@ import { groundFor } from '../lib/chrome.js';
 import { courseHomeFor } from '../lib/courseEntry.js';
 import Logo from './Logo';
 import Button from './ui/Button';
+import LangToggle from './lesson/LangToggle.jsx';
 
 // The trial button derives its length (CLAUDE.md: derive, never retype).
 import { TRIAL_DAYS } from '../data/marketing.js';
@@ -39,16 +40,18 @@ const isVisible = (item, user) =>
 
 // kind 'static' pages are served by the Astro build — an in-app <Link> would
 // render a dead or shadowed SPA twin, so they must be full page loads.
-const NavItem = ({ item, className, children, onClick }) =>
+// An Arabic interface follows a link to its Arabic twin page when one exists
+// (navigation.js `hrefAr`: /ar/courses/, /ar/pricing/).
+const NavItem = ({ item, className, children, onClick, arabic = false }) =>
   item.kind === 'static' ? (
-    <a href={item.href} className={className} onClick={onClick}>{children}</a>
+    <a href={(arabic && item.hrefAr) || item.href} className={className} onClick={onClick}>{children}</a>
   ) : (
     <Link to={item.href} className={className} onClick={onClick}>{children}</Link>
   );
 
-const stationNote = (st, isGerman) => {
-  if (st.status === 'free') return isGerman ? 'kostenlos' : 'free';
-  if (st.status === 'building') return 'Im Bau';
+const stationNote = (st, isGerman, isArabic = false) => {
+  if (st.status === 'free') return isArabic ? 'مجاني' : isGerman ? 'kostenlos' : 'free';
+  if (st.status === 'building') return isArabic ? 'قيد الإعداد' : 'Im Bau';
   return st.priceLabel;
 };
 
@@ -65,10 +68,6 @@ const Navbar = () => {
   // JS, so the menus ask for themselves: fade only, no travel, no scale.
   const reduceMotion = useReducedMotion();
 
-  const toggleLanguage = () => {
-    const newLang = i18n.language === 'en' ? 'de' : 'en';
-    i18n.changeLanguage(newLang);
-  };
 
   const handleSignOut = async () => {
     setUserMenuOpen(false);
@@ -90,6 +89,9 @@ const Navbar = () => {
 
   const night = groundFor(pathname) === 'nacht';
   const isGerman = i18n.language === 'de';
+  // Arabic renders only on the routes translated for the pilot; i18next is in
+  // the route's effective language (App.jsx), so this is false everywhere else.
+  const isArabic = i18n.language === 'ar';
   const inTrial = user ? isInFreeTrial() : false;
   const isSubscribed = user ? hasActiveSubscription() : false;
   const trialDays = user ? getTrialDaysRemaining() : 0;
@@ -101,7 +103,7 @@ const Navbar = () => {
   // (a paywall for a free learner — the same rule as BottomNav's Kurs tab).
   const continueHref = courseHomeFor({ level: profile?.current_level, hasLevelAccess });
 
-  const label = (item) => (isGerman ? item.labelDe : item.labelEn);
+  const label = (item) => (isArabic ? item.labelAr || item.labelEn : isGerman ? item.labelDe : item.labelEn);
   const allItems = NAV_GROUPS.flatMap((g) => g.items).filter((item) => isVisible(item, user));
   const promoted = PROMOTED.map((key) => allItems.find((i) => i.key === key)).filter(Boolean);
   const visibleGroups = NAV_GROUPS.map((g) => ({
@@ -109,7 +111,7 @@ const Navbar = () => {
     items: g.items.filter((item) => isVisible(item, user) && !PROMOTED.includes(item.key)),
   })).filter((g) => g.items.length > 0);
   const sheetItems = allItems.filter((item) => !PROMOTED.includes(item.key));
-  const trialLabel = isGerman ? `${TRIAL_DAYS} Tage testen` : `Start ${TRIAL_DAYS}-day trial`;
+  const trialLabel = isArabic ? `جرّب Pro مجانًا ${TRIAL_DAYS} أيام` : isGerman ? `${TRIAL_DAYS} Tage testen` : `Start ${TRIAL_DAYS}-day trial`;
 
   // Tone pairs: [paper, night].
   const tone = (paper, nacht) => (night ? nacht : paper);
@@ -119,7 +121,7 @@ const Navbar = () => {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 border-b backdrop-blur-md ${tone('bg-paper/90 border-rule text-ink', 'bg-nacht/90 border-nacht-rule text-nacht-text')}`}
       data-ground={night ? 'nacht' : 'paper'}
-      aria-label="Main"
+      aria-label={isArabic ? 'القائمة الرئيسية' : 'Main'}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 2xl:max-w-[1536px]">
         <div className="flex items-center justify-between h-16">
@@ -138,6 +140,7 @@ const Navbar = () => {
                 <NavItem
                   key={item.key}
                   item={item}
+                  arabic={isArabic}
                   className={`${LABEL} flex min-h-11 items-center whitespace-nowrap rounded-pill px-3.5 py-2 text-[0.9375rem] transition-colors ${tone('text-ink hover:bg-paper-sunk', 'text-nacht-text hover:bg-nacht-raised')}`}
                 >
                   {label(item)}
@@ -146,14 +149,15 @@ const Navbar = () => {
               {visibleGroups.map((group) => (
                 <details key={group.key} className="group relative">
                   <summary className={`${LABEL} flex min-h-11 cursor-pointer list-none items-center gap-1.5 whitespace-nowrap rounded-pill px-3.5 py-2 text-[0.9375rem] transition-colors [&::-webkit-details-marker]:hidden ${tone('text-graphite hover:bg-paper-sunk hover:text-ink', 'text-nacht-muted hover:bg-nacht-raised hover:text-nacht-text')}`}>
-                    {isGerman ? group.labelDe : group.labelEn}
+                    {label(group)}
                     <ChevronDown size={14} className="transition-transform group-open:rotate-180" aria-hidden="true" />
                   </summary>
-                  <div className="absolute left-0 top-full z-50 mt-1 min-w-56 rounded-clay border border-rule bg-white p-2 text-ink shadow-overlay">
+                  <div className="absolute start-0 top-full z-50 mt-1 min-w-56 rounded-clay border border-rule bg-white p-2 text-ink shadow-overlay">
                     {group.items.map((item) => (
                       <NavItem
                         key={item.key}
                         item={item}
+                        arabic={isArabic}
                         className="flex min-h-11 items-center whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold text-graphite transition-colors hover:bg-siegel-wash hover:text-siegel-deep"
                       >
                         {label(item)}
@@ -180,7 +184,7 @@ const Navbar = () => {
                   <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-gold animate-ping opacity-75" />
                   <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-gold" />
                   <Sparkles size={12} />
-                  {trialDays}d {isGerman ? 'Test' : 'trial'}
+                  {isArabic ? `${trialDays} يوم تجربة` : <>{trialDays}d {isGerman ? 'Test' : 'trial'}</>}
                 </a>
               )}
               {user && !inTrial && !isSubscribed && (
@@ -189,19 +193,12 @@ const Navbar = () => {
                   className={`flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-pill px-3 py-1.5 text-xs font-bold transition-colors ${chip}`}
                 >
                   <Crown size={12} />
-                  Upgrade
+                  {isArabic ? 'ترقية' : 'Upgrade'}
                 </a>
               )}
 
-              {/* Language Toggle — icon only */}
-              <button
-                onClick={toggleLanguage}
-                className={`flex items-center justify-center w-11 h-11 rounded-pill transition-colors ${tone('text-graphite hover:bg-paper-sunk hover:text-ink', 'text-nacht-muted hover:bg-nacht-raised hover:text-nacht-text')}`}
-                title={i18n.language === 'en' ? 'Deutsch' : 'English'}
-                aria-label={i18n.language === 'en' ? 'Switch to German' : 'Switch to English'}
-              >
-                <Globe size={18} />
-              </button>
+              {/* Language switch — العربية · English · Deutsch (src/lib/locale.js). */}
+              <LangToggle surface="navbar" size="touch" />
 
               {/* User Menu / Auth */}
               {user ? (
@@ -209,7 +206,7 @@ const Navbar = () => {
                   <button
                     onClick={() => setUserMenuOpen(!userMenuOpen)}
                     className={`flex min-h-11 items-center gap-1.5 rounded-pill px-2.5 py-2 transition-colors ${tone('text-graphite hover:bg-paper-sunk', 'text-nacht-muted hover:bg-nacht-raised')}`}
-                    aria-label={isGerman ? 'Konto' : 'Account'}
+                    aria-label={isArabic ? 'الحساب' : isGerman ? 'Konto' : 'Account'}
                     aria-expanded={userMenuOpen}
                   >
                     <span className={`w-7 h-7 rounded-full flex items-center justify-center ${tone('bg-paper-sunk', 'bg-nacht-raised')}`}>
@@ -225,7 +222,7 @@ const Navbar = () => {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 4, scale: 0.97 }}
                         transition={{ duration: 0.14, ease: [0.23, 1, 0.32, 1] }}
-                        className="absolute right-0 mt-1 w-48 origin-top-right bg-white rounded-clay border border-rule shadow-overlay p-1 z-50 text-ink"
+                        className="absolute end-0 mt-1 w-48 origin-top-right bg-white rounded-clay border border-rule shadow-overlay p-1 z-50 text-ink"
                       >
                         <Link
                           to="/profile"
@@ -241,7 +238,7 @@ const Navbar = () => {
                           className="flex min-h-11 items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold text-graphite hover:bg-siegel-wash hover:text-siegel-deep transition-colors"
                         >
                           <Crown size={16} />
-                          {isGerman ? 'Preise' : 'Pricing'}
+                          {isArabic ? 'الأسعار' : isGerman ? 'Preise' : 'Pricing'}
                         </a>
                         <Link
                           to={SUPPORT_LINK.href}
@@ -291,16 +288,16 @@ const Navbar = () => {
               )}
 
               {user && (
-                <Button to={continueHref} variant="primary" shape="pill" className="ml-1 whitespace-nowrap">
-                  {isGerman ? 'Weiterlernen' : 'Continue learning'}
+                <Button to={continueHref} variant="primary" shape="pill" className="ms-1 whitespace-nowrap">
+                  {isArabic ? 'تابع التعلّم' : isGerman ? 'Weiterlernen' : 'Continue learning'}
                 </Button>
               )}
             </div>
 
             {/* The free first stop: one key at every width (Layout.astro "Start A1.1 free"). */}
             {!user && (
-              <Button to="/course/a1.1" variant="primary" shape="pill" className="whitespace-nowrap lg:ml-1">
-                {isGerman ? 'A1.1 gratis starten' : 'Start A1.1 free'}
+              <Button to="/course/a1.1" variant="primary" shape="pill" className="whitespace-nowrap lg:ms-1">
+                {isArabic ? 'ابدأ A1.1 مجانًا' : isGerman ? 'A1.1 gratis starten' : 'Start A1.1 free'}
               </Button>
             )}
 
@@ -308,7 +305,7 @@ const Navbar = () => {
             <button
               onClick={() => setIsOpen(!isOpen)}
               className={`lg:hidden flex h-11 w-11 items-center justify-center rounded-pill transition-colors ${tone('hover:bg-paper-sunk', 'hover:bg-nacht-raised')}`}
-              aria-label={isOpen ? 'Close menu' : 'Open menu'}
+              aria-label={isArabic ? (isOpen ? 'أغلق القائمة' : 'افتح القائمة') : isOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isOpen}
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -330,16 +327,16 @@ const Navbar = () => {
             className={`lg:hidden max-h-[calc(100svh-4rem)] overflow-y-auto border-t border-nacht-rule bg-nacht px-4 pt-4 text-nacht-text shadow-overlay ${user ? 'pb-[calc(5.5rem+env(safe-area-inset-bottom))]' : 'pb-[calc(1.5rem+env(safe-area-inset-bottom))]'}`}
             data-ground="nacht"
           >
-            <ol className="mb-4 grid grid-cols-4 gap-2" aria-label={isGerman ? 'Kurse nach Niveau' : 'Courses by level'}>
+            <ol className="mb-4 grid grid-cols-4 gap-2" aria-label={isArabic ? 'الدورات حسب المستوى' : isGerman ? 'Kurse nach Niveau' : 'Courses by level'}>
               {STATIONS.map((st) => (
                 <li key={st.level}>
                   <a
                     href={st.coursePage}
                     className="flex min-h-11 flex-col items-center justify-center rounded-xl border border-nacht-rule bg-nacht-raised px-1 py-2 text-center"
                   >
-                    <span className="font-body text-[1rem] font-extrabold tabular-nums">{st.code}</span>
+                    <span className="font-body text-[1rem] font-extrabold tabular-nums" dir="ltr">{st.code}</span>
                     <span className={`mt-0.5 font-data text-[0.625rem] ${st.status === 'free' ? 'text-linie' : 'text-nacht-muted'}`}>
-                      {stationNote(st, isGerman)}
+                      {stationNote(st, isGerman, isArabic)}
                     </span>
                   </a>
                 </li>
@@ -350,6 +347,7 @@ const Navbar = () => {
               <NavItem
                 key={item.key}
                 item={item}
+                arabic={isArabic}
                 onClick={() => setIsOpen(false)}
                 className={`${LABEL} flex min-h-11 items-center border-b border-nacht-rule text-[1.0625rem]`}
               >
@@ -360,6 +358,7 @@ const Navbar = () => {
               <NavItem
                 key={item.key}
                 item={item}
+                arabic={isArabic}
                 onClick={() => setIsOpen(false)}
                 className="flex min-h-11 items-center border-b border-nacht-rule text-[0.9375rem] font-semibold text-nacht-muted"
               >
@@ -377,12 +376,14 @@ const Navbar = () => {
                 <Crown size={18} className="text-gold" />
                 <span>
                   <span className="block text-sm font-semibold">
-                    {inTrial
-                      ? `${trialDays} ${isGerman ? 'Tage Test verbleibend' : `day${trialDays !== 1 ? 's' : ''} trial left`}`
-                      : isGerman ? 'Abonnieren' : 'Subscribe'}
+                    {isArabic
+                      ? (inTrial ? `يتبقى ${trialDays} يوم من التجربة` : 'اشترك')
+                      : inTrial
+                        ? `${trialDays} ${isGerman ? 'Tage Test verbleibend' : `day${trialDays !== 1 ? 's' : ''} trial left`}`
+                        : isGerman ? 'Abonnieren' : 'Subscribe'}
                   </span>
                   {inTrial && (
-                    <span className="block text-xs text-nacht-muted">{isGerman ? 'Jetzt upgraden' : 'Upgrade now'}</span>
+                    <span className="block text-xs text-nacht-muted">{isArabic ? 'رقِّ الآن' : isGerman ? 'Jetzt upgraden' : 'Upgrade now'}</span>
                   )}
                 </span>
               </a>
@@ -395,13 +396,9 @@ const Navbar = () => {
             )}
 
             {/* Language + account */}
-            <button
-              onClick={() => { toggleLanguage(); setIsOpen(false); }}
-              className="mt-2 flex min-h-11 w-full items-center gap-3 border-b border-nacht-rule text-[0.9375rem] font-semibold text-nacht-muted"
-            >
-              <Globe size={18} />
-              {i18n.language === 'en' ? 'Deutsch' : 'English'}
-            </button>
+            <div className="mt-2 flex min-h-11 w-full items-center gap-3 border-b border-nacht-rule py-2">
+              <LangToggle surface="menu" size="touch" />
+            </div>
 
             {user ? (
               <>
@@ -442,7 +439,7 @@ const Navbar = () => {
             ) : (
               <div className="mt-5 grid gap-3">
                 <Button to="/course/a1.1" variant="linie" shape="pill" size="lg" onClick={() => setIsOpen(false)} className="w-full">
-                  {isGerman ? 'A1.1 kostenlos starten — ohne Konto' : 'Start A1.1 free — no account'}
+                  {isArabic ? 'ابدأ A1.1 مجانًا — دون حساب' : isGerman ? 'A1.1 kostenlos starten — ohne Konto' : 'Start A1.1 free — no account'}
                 </Button>
                 <Button to="/signup" variant="ghostNacht" shape="pill" size="lg" onClick={() => setIsOpen(false)} className="w-full">
                   {trialLabel}

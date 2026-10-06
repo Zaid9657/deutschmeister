@@ -288,3 +288,46 @@ Three notes for whoever runs this:
   - **Filling the manifest is reversible.** Setting `src`/`srcSmall` back to `null` on any entry
     (or all of them) instantly reverts that character or scene to the code-drawn placeholder —
     nothing else needs to change, so a bad generation can be backed out one entry at a time.
+
+## Arabic edition — three owner actions (2026-10-05, docs/arabic/README.md §10)
+
+Nothing here is required for the code to run; each closes an honest "not in Arabic yet" the
+Arabic pages currently state. None has been done.
+
+**1. Native review of the Arabic (before promoting `/ar/` beyond a test audience).** Every Arabic
+entry ships `status: 'draft'`. Hand a native Arabic editor (ideally with DaF experience)
+`docs/arabic/translation-guide.md`, `docs/arabic/coverage-a11.md`, the sidecar
+`src/data/curricula/a11.ar.js`, the interface table `src/locales/ar/lesson.js`, the account
+screens `src/locales/ar/app.js` and the page copy `astro-site/src/data/i18n/ar.js`. An entry
+becomes `reviewed` only with `reviewer: '<name>'` and `reviewedOn: 'YYYY-MM-DD'`
+(`tests/arabic-coverage.test.mjs` refuses `reviewed` without both). Paste into Claude Code:
+
+```
+Apply the Arabic review in <file/notes>. For every entry the reviewer signed off, set
+status: 'reviewed', reviewer: '<name>', reviewedOn: '<date>'; apply their wording changes;
+re-run node scripts/i18n-coverage.mjs and npm test; copy src/data/curricula/a11.ar.js to its
+astro-site twin; open a draft PR.
+```
+
+**2. Supabase auth emails in Arabic (Dashboard → Authentication → Emails → Templates).** The
+interface language rides in `user_metadata.ui_lang` (set at sign-up and on every explicit
+switch; `src/lib/localeAccount.js`). Supabase templates expose user metadata as `{{ .Data }}`
+with Go-template conditionals (verified in the Supabase docs, 2026-10-05). For *Confirm signup*
+and *Reset password*, wrap the existing English body:
+
+```
+{{ if eq .Data.ui_lang "ar" }}
+<div dir="rtl" lang="ar"> … Arabic body, same {{ .ConfirmationURL }} … </div>
+{{ else }}
+… the current English body, unchanged …
+{{ end }}
+```
+
+Keep the subject line as it is unless you also change the Arabic screens that quote it
+(`src/locales/ar/app.js`, `account.signup.inboxBody` quotes «Confirm your DeutschMeister
+account»; `/ar/help/` quotes it too). Send yourself a test sign-up with `?lang=ar` first.
+
+**3. Checkout language (Lemon Squeezy → Design → Checkout → Language).** Lemon Squeezy has no
+Arabic checkout (34 languages, Arabic not among them — LS docs/blog, checked 2026-10-05). Leave
+it on *Automatic* (browser language, English when unsupported); the Arabic pricing page already
+says exactly this. Nothing to change unless LS adds Arabic.
