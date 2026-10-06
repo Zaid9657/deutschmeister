@@ -454,7 +454,7 @@ function alphabetItems(curriculum) {
       accepted,
       explanationDe: `Der Buchstabe ${letter} heißt ${name}.`,
       explanationEn: `In German the letter ${letter} is called ${name}.`,
-      hint: 'Der Name des Buchstaben, nicht der Laut.',
+      hint: 'Der Name, nicht der Laut.',
     });
   }
 
@@ -486,7 +486,11 @@ function alphabetItems(curriculum) {
       accepted: [word],
       explanationDe: `${word} — ${spellOut(word)}.`,
       explanationEn: `${word} is spelled ${spellOut(word)}.`,
-      hint: 'Achte auf Doppelbuchstaben, Umlaute und ß.',
+      // Sie, like every course instruction, and naming only what THIS word has (2026-10 review:
+      // „Achte auf Doppelbuchstaben, Umlaute und ß“ stood on „Danke“).
+      hint: /(.)\1/i.test(word) ? 'Achten Sie auf Doppelbuchstaben.'
+        : /[äöüß]/i.test(word) ? 'Achten Sie auf Umlaute und ß.'
+          : 'Achten Sie auf die Reihenfolge der Buchstaben.',
     });
   }
 
@@ -939,6 +943,37 @@ const items = [...keptTaught, ...supplement, ...extra].sort(
   (a, b) => a.topic.localeCompare(b.topic) || a.stage - b.stage || a.order - b.order,
 );
 
+// THE CORRECTIONS LAYER (2026-10-05) — src/data/lessonPools/<level>.corrections.json.
+// The sidecar used to lose to ANY bank text, so 117 hand-corrected English
+// explanations of bank items were silently ignored — among them the fixed L8
+// „hour + Uhr + minutes“ while the pool kept shipping „Uhr + hour + minutes“.
+// Now the sidecar (the hand-edited layer) wins wherever it differs from the bank,
+// except for the ids reviewed and kept in `keepBankExplanationEn`; and
+// `items` holds field-level corrections of bank rows, applied LAST. A correction
+// that no longer changes anything (the next cache dump carries the database fix)
+// is reported as stale so it can be removed.
+const correctionsUrl = new URL(`../src/data/lessonPools/${level.replace('.', '')}.corrections.json`, import.meta.url);
+const reviewedLevel = existsSync(correctionsUrl);
+const corrections = reviewedLevel ? JSON.parse(readFileSync(correctionsUrl, 'utf8')) : {};
+const keepBankEn = corrections.keepBankExplanationEn || {};
+const fieldFixes = corrections.items || {};
+
+// Applied BEFORE minLektion is stamped below: a correction can change the words an item uses,
+// and the stamp has to measure what ships.
+const corrected = [];
+const staleCorrections = [];
+for (const [id, fix] of Object.entries(fieldFixes)) {
+  const item = items.find((it) => it.id === id);
+  if (!item) { staleCorrections.push(`${id} (no such item)`); continue; }
+  let changed = false;
+  for (const [field, value] of Object.entries(fix)) {
+    if (field === 'reason') continue;
+    if (JSON.stringify(item[field]) !== JSON.stringify(value)) changed = true;
+    item[field] = value;
+  }
+  if (changed) corrected.push(id); else staleCorrections.push(`${id} (already in the bank)`);
+}
+
 // ── minLektion: the earliest Lektion an item may be SERVED in (round 10) ─────
 //
 // The gate above asks „does the course teach these words AT ALL?“. This asks the
@@ -998,19 +1033,28 @@ if (existsSync(sidecarUrl)) {
   sidecar = parsed;
 }
 const enText = (v) => (typeof v === 'string' ? v.trim() : '');
-const enSource = { bank: 0, sidecar: 0, template: 0, missing: [] };
+const enSource = { bank: 0, sidecar: 0, template: 0, missing: [], keptBank: 0 };
 for (const item of items) {
   const own = enText(item.explanationEn);          // bank row, or the template's own text
   const fromSidecar = enText(sidecar[item.id]);
-  // bank → sidecar → template: a generated item's own text is the floor, a bank
-  // item's own text is the ceiling.
-  const chosen = item.generated ? fromSidecar || own : own || fromSidecar;
+  // sidecar → bank → template. A bank text survives a differing sidecar only when
+  // a reviewer kept it on purpose (keepBankExplanationEn).
+  // Only a level whose divergences were reviewed (it has a corrections file) takes the sidecar
+  // over the bank; the others keep the old bank-first order until someone reviews theirs.
+  const keepBank = !item.generated && own && fromSidecar && own !== fromSidecar && (!reviewedLevel || keepBankEn[item.id]);
+  if (keepBank && reviewedLevel) enSource.keptBank += 1;
+  // A field correction of the English wins over both (it was applied to the item above).
+  const fixedEn = fieldFixes[item.id] && fieldFixes[item.id].explanationEn;
+  const chosen = fixedEn || (keepBank ? own : fromSidecar || own);
   item.explanationEn = chosen;
   if (!chosen) enSource.missing.push(item.id);
   else if (chosen === fromSidecar) enSource.sidecar += 1;
   else if (item.generated) enSource.template += 1;
   else enSource.bank += 1;
 }
+console.log(`corrections: ${corrected.length} item(s) corrected, ${enSource.keptBank} bank English text(s) kept over the sidecar` +
+  `${staleCorrections.length ? `; STALE (remove from corrections.json): ${staleCorrections.join(', ')}` : ''}`);
+
 const unusedSidecar = Object.keys(sidecar).filter((id) => !items.some((it) => it.id === id));
 console.log(
   `explanationEn: ${enSource.bank} from the bank, ${enSource.sidecar} from the sidecar, ${enSource.template} from the templates, ` +

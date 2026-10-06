@@ -12,7 +12,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import {
-  RUN_MAX_AGE_MS, RUN_VERSION, clearRun, packRun, readRun, resumeStageIndex, runKey, saveRun, unpackRun,
+  RUN_MAX_AGE_MS, RUN_VERSION, clearRun, latestRun, packRun, readRun, resumeStageIndex, runKey, saveRun, unpackRun,
 } from '../src/lib/lesson/runState.js';
 import buildLesson from '../src/lib/lesson/buildLesson.js';
 import { curriculumFor } from '../src/data/curricula/index.js';
@@ -34,7 +34,7 @@ function fakeSessionStorage({ throws = false } = {}) {
 function withWindow(storage, fn) {
   const had = Object.prototype.hasOwnProperty.call(globalThis, 'window');
   const prev = globalThis.window;
-  globalThis.window = { sessionStorage: storage, localStorage: fakeSessionStorage() };
+  globalThis.window = { localStorage: storage, sessionStorage: fakeSessionStorage() };
   try { return fn(); } finally {
     if (had) globalThis.window = prev; else delete globalThis.window;
   }
@@ -93,7 +93,7 @@ test('A1.1 Lektion 1: the rebuilt run is the same run, and resumes on the Sprech
   assert.equal(after.stages[resumeStageIndex(after.stages, run)].kind, 'speaking');
 });
 
-test('saveRun / readRun / clearRun use sessionStorage under one key per level and Lektion', () => {
+test('saveRun / readRun / clearRun use localStorage under one key per level and Lektion', () => {
   const storage = fakeSessionStorage();
   withWindow(storage, () => {
     const run = packRun({ stageKey: 'dictation', stageIndex: 8, itemIndex: 1 }, NOW);
@@ -104,6 +104,23 @@ test('saveRun / readRun / clearRun use sessionStorage under one key per level an
     clearRun('a1.1', 'a1.1-l01');
     assert.equal(readRun('a1.1', 'a1.1-l01', NOW), null);
   });
+});
+
+test('a run survives the end of the sitting: resumed for 7 days and offered on the course home', () => {
+  assert.equal(RUN_MAX_AGE_MS, 7 * 24 * 60 * 60 * 1000, 'stop on the bus, resume at home — and next weekend');
+  const storage = fakeSessionStorage();
+  withWindow(storage, () => {
+    saveRun('a1.1', 'a1.1-l02', packRun({ runId: 'r1', stageKey: 'practice', stageIndex: 5 }, NOW - 2 * 86400000));
+    saveRun('a1.1', 'a1.1-l03', packRun({ runId: 'r2', stageKey: 'dialog', stageIndex: 2 }, NOW - 3600000));
+    saveRun('a1.1', 'a1.1-l04', packRun({ runId: 'r3', stageKey: 'notice' }, NOW - RUN_MAX_AGE_MS - 1));
+    assert.equal(readRun('a1.1', 'a1.1-l02', NOW).runId, 'r1', 'two days later the run (and its analytics id) resumes');
+    assert.equal(readRun('a1.1', 'a1.1-l04', NOW), null, 'older than a week starts fresh');
+    const latest = latestRun('a1.1', ['a1.1-l01', 'a1.1-l02', 'a1.1-l03', 'a1.1-l04'], NOW);
+    assert.equal(latest.lektionId, 'a1.1-l03', 'the course home offers the most recent unfinished run');
+    assert.equal(latestRun('a1.1', ['a1.1-l01'], NOW), null);
+  });
+  const snapshot = JSON.stringify(packRun({ runId: 'r', stageKey: 'writing', attempts: [{ itemId: 'x', stage: 'practice', correct: false }], skills: { writing: { state: 'assessed', pct: 70 } } }, NOW));
+  assert.doesNotMatch(snapshot, /"text"|"answer"|"typed"/, 'a snapshot holds ids, correctness and summaries — no learner text');
 });
 
 test('storage that throws costs the resume, never the lesson', () => {

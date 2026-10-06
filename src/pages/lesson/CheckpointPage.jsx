@@ -333,8 +333,12 @@ export default function CheckpointPage() {
     (finalAnswers) => {
       const scored = scoreCheckpoint(items, finalAnswers);
       setPhase('result');
-      recordAttempt(user?.id, { level, checkpointId: checkpoint.id, items, answers: finalAnswers, result: scored });
-      fetchAttemptState(user?.id, checkpoint.id).then(setAttempts);
+      // The attempt count is read AFTER the attempt is written — reading it in
+      // parallel showed the count from before this attempt.
+      recordAttempt(user?.id, { level, checkpointId: checkpoint.id, items, answers: finalAnswers, result: scored })
+        .catch(() => false)
+        .then(() => fetchAttemptState(user?.id, checkpoint.id))
+        .then(setAttempts);
       // The bound the paper itself was drawn under (see servableBy): a remediation
       // item must not be the first place the learner meets a word.
       if (!scored.passed && pool) {

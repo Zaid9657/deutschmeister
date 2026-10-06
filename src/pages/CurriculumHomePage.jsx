@@ -4,13 +4,15 @@ import { BookOpen, ClipboardCheck, Trophy, Check, Lock, Flame, Zap, ChevronDown,
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { LEVEL_ORDER } from '../config/levels.js';
-import { A11_META } from '../data/curricula/a11.meta.js';
+import { A11_META, lektionMinutesEstimate } from '../data/curricula/a11.meta.js';
 import { getProgramProgress } from '../services/programProgress';
 import { loadDashboardStats } from '../services/dashboardStats';
 import { curriculumPath } from '../data/curricula/index.js';
 import { SUPPORT_LINK } from '../data/navigation.js';
 import { isLevelFree } from '../config/freeTier.js';
 import { hasLocalProgress, localDoneIds, mergeLocalProgress } from '../lib/course/localProgress.js';
+import { flushOutbox } from '../lib/course/syncOutbox.js';
+import { latestRun } from '../lib/lesson/runState.js';
 import ExamDatePlan from '../components/course/ExamDatePlan.jsx';
 import CourseWelcome from '../components/course/CourseWelcome.jsx';
 import FirstRunTour from '../components/course/FirstRunTour.jsx';
@@ -85,7 +87,10 @@ const hrefFor = (level, node) => {
 const finalTestLabel = (level) => (isLevelFree(level) ? 'Abschlusstest · frei' : 'Abschlusstest');
 const kindLabelFor = (level) => ({ lektion: 'Lektion', checkpoint: 'Checkpoint', leveltest: finalTestLabel(level) });
 const KIND_ICON = { lektion: BookOpen, checkpoint: ClipboardCheck, leveltest: Trophy };
-const SWAY = [0, 44, 72, 44, 0, -44, -72, -44];
+// The path's sideways sway, as a share of `--sway-amp` (set on the <ol>): 24px on a phone, 72px from
+// `sm` up. A fixed ±72px on full-width rows pushed the document to 416px at a 360px viewport
+// (2026-10 review); rows are now content-wide and the sway scales with the screen.
+const SWAY = [0, 0.6, 1, 0.6, 0, -0.6, -1, -0.6];
 
 export default function CurriculumHomePage({ curriculum }) {
   const { user } = useAuth();
@@ -95,13 +100,27 @@ export default function CurriculumHomePage({ curriculum }) {
   const meta = courseMetaFor(level);
   const programKey = programKeyFor(level);
   const KIND_LABEL = kindLabelFor(level);
-  const [done, setDone] = useState(() => new Set());
-  const [loaded, setLoaded] = useState(false);
+  // A visitor's progress is synchronous (localStorage), so their FIRST render is already final.
+  // It used to wait for an effect: the 2,585 px welcome panel then appeared after first paint and
+  // pushed the whole path down — CLS 0.365 on a cold mobile load (2026-10 measurement).
+  const [done, setDone] = useState(() => (user ? new Set() : localDoneIds(curriculum.level)));
+  const [loaded, setLoaded] = useState(() => !user);
   const [streak, setStreak] = useState(0);
   const [openChapter, setOpenChapter] = useState(null);
   const [showWelcome, setShowWelcome] = useState(false);
 
   const path = useMemo(() => curriculumPath(curriculum), [curriculum]);
+  // A Lektion's time as the estimated range (a11.meta.js), a checkpoint's as its own minutes.
+  const timeOf = (node) => {
+    const l = node.kind === 'lektion' ? curriculum.lektionen.find((x) => x.id === node.id) : null;
+    if (l) { const e = lektionMinutesEstimate(l); return ` · ≈${e.lo}–${e.hi} min`; }
+    return node.minutes ? ` · ${node.minutes} min` : '';
+  };
+  // A Lektion left half-way (runState.js keeps it 7 days): offered by name, so stopping is never losing.
+  const [unfinished] = useState(() => {
+    const run = latestRun(curriculum.level, curriculum.lektionen.map((l) => l.id));
+    return run ? curriculum.lektionen.find((l) => l.id === run.lektionId) || null : null;
+  });
 
   useEffect(() => {
     // Signed out: the only progress that can exist is local (a free Lektion
@@ -115,10 +134,12 @@ export default function CurriculumHomePage({ curriculum }) {
         .then((s) => { if (!cancelled && s) setStreak(s.streakForgiving ?? s.streak ?? 0); })
         .catch(() => {});
     };
-    // Merge first when there is something local to merge, so the very first
-    // signed-in render already shows the visitor's own work as done.
-    if (hasLocalProgress(level)) mergeLocalProgress(user.id).finally(load);
-    else load();
+    // Merge first when there is something local to merge, and send any finished
+    // run still waiting in the sync outbox (syncOutbox.js), so the very first
+    // signed-in render already shows the learner's own work as done.
+    (hasLocalProgress(level) ? mergeLocalProgress(user.id) : Promise.resolve())
+      .then(() => flushOutbox(user.id))
+      .finally(load);
     return () => { cancelled = true; };
   }, [user, programKey, level]);
 
@@ -182,7 +203,7 @@ export default function CurriculumHomePage({ curriculum }) {
             {loaded && <MilestoneCard streak={streak} />}
 
             <Reveal delay={180} className="mt-4">
-              <div className="h-3 overflow-hidden rounded-pill bg-siegel-wash" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
+              <div className="h-3 overflow-hidden rounded-pill bg-siegel-wash" role="progressbar" aria-label="Course progress" aria-valuetext={`${doneCount} of ${path.length} done`} aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
                 <div className="h-full rounded-pill bg-siegel transition-all duration-700 motion-reduce:transition-none" style={{ width: `${pct}%` }} />
               </div>
               {endowed && (
@@ -200,7 +221,7 @@ export default function CurriculumHomePage({ curriculum }) {
                     <div className="min-w-0">
                       <p className="font-data text-[0.625rem] font-bold uppercase tracking-[0.13em] text-graphite">{doneCount === 0 ? 'Start here' : 'Up next'} · {firstOpenIndex + 1} of {path.length}</p>
                       <p className="truncate font-bold text-ink">{current.title}</p>
-                      <p className="font-data text-[0.6875rem] text-graphite">{KIND_LABEL[current.kind]}{current.minutes ? ` · ${current.minutes} min` : ''}</p>
+                      <p className="font-data text-[0.6875rem] text-graphite">{KIND_LABEL[current.kind]}{timeOf(current)}</p>
                     </div>
                   </div>
                   <Button to={hrefFor(level, current)} variant="primary" size="lg" shimmer disabled={!loaded && !!user} className="shrink-0">
@@ -208,6 +229,13 @@ export default function CurriculumHomePage({ curriculum }) {
                   </Button>
                 </div>
               ) : null}
+              {unfinished && !done.has(unfinished.id) && (
+                <p className="mt-3 text-[0.875rem] text-graphite">
+                  <Link to={`/course/${level}/l/${unfinished.nr}`} className="inline-flex min-h-11 items-center font-bold text-siegel-deep underline underline-offset-2 hover:text-ink">
+                    Lektion {unfinished.nr} is half-done — pick up where you stopped →
+                  </Link>
+                </p>
+              )}
               <div data-tour="plan"><ExamDatePlan curriculum={curriculum} path={path} doneIds={done} /></div>
             </Reveal>
           </div>
@@ -242,20 +270,20 @@ export default function CurriculumHomePage({ curriculum }) {
                     className="mb-3 h-20 w-full rounded-clay object-cover opacity-90 sm:h-24"
                   />
                 )}
-                <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-white/80">Chapter {ci + 1}</p>
+                <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-white">Chapter {ci + 1}</p>
                 <h2 className="mt-1 font-display text-[1.25rem] font-semibold leading-tight">{title}</h2>
                 {chapterMeta && (
-                  <p className="font-data text-[0.75rem] text-white/80" lang="de">{chapterMeta.titleDe} · Lektion {lektionen[0]?.nr}–{lektionen[lektionen.length - 1]?.nr}</p>
+                  <p className="font-data text-[0.75rem] text-white" lang="de">{chapterMeta.titleDe} · Lektion {lektionen[0]?.nr}–{lektionen[lektionen.length - 1]?.nr}</p>
                 )}
                 {chapterMeta ? (
-                  <p className="mt-2 text-[0.8125rem] leading-snug text-white/90">{chapterMeta.storyEn}</p>
+                  <p className="mt-2 text-[0.8125rem] leading-snug text-white">{chapterMeta.storyEn}</p>
                 ) : (
-                  <p className="mt-1 text-[0.8125rem] text-white/85">{lektionen.map((l) => l.title).join(' · ')}</p>
+                  <p className="mt-1 text-[0.8125rem] text-white">{lektionen.map((l) => l.title).join(' · ')}</p>
                 )}
-                <p className="mt-2 font-data text-[0.75rem] text-white/80">{chapterDone}/{nodes.length} done{words ? ` · ${words} words` : ''}</p>
+                <p className="mt-2 font-data text-[0.75rem] text-white">{chapterDone}/{nodes.length} done{words ? ` · ${words} words` : ''}</p>
                 {canDos.length > 0 && (
                   <button type="button" onClick={() => setOpenChapter(open ? null : ci)} aria-expanded={open}
-                    className="mt-3 inline-flex items-center gap-1 rounded-pill bg-white/15 px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-white hover:bg-white/25">
+                    className="mt-3 inline-flex min-h-11 items-center gap-1 rounded-pill bg-siegel-deep px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-white ring-1 ring-white/40 hover:bg-siegel-edge">
                     Lehrplan <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
                   </button>
                 )}
@@ -268,7 +296,7 @@ export default function CurriculumHomePage({ curriculum }) {
                 </div>
               )}
 
-              <ol className="relative mx-auto mt-4 flex w-full max-w-md flex-col items-center pb-4">
+              <ol className="relative mx-auto mt-4 flex w-full max-w-md flex-col items-center pb-4 [--sway-amp:24px] sm:[--sway-amp:72px]">
                 {nodes.map((node) => {
                   const idx = nodeCounter; nodeCounter += 1;
                   const isDone = done.has(node.id);
@@ -279,7 +307,7 @@ export default function CurriculumHomePage({ curriculum }) {
                   const lektion = node.kind === 'lektion' ? curriculum.lektionen.find((l) => l.id === node.id) : null;
                   const state = isDone ? 'done' : isCurrent ? 'current' : unlocked ? 'open' : 'locked';
                   return (
-                    <li key={node.id} className="relative flex w-full flex-col items-center pt-3" style={{ transform: `translateX(${sway}px)` }}>
+                    <li key={node.id} className="relative flex max-w-full flex-col items-center pt-3" style={{ transform: `translateX(calc(var(--sway-amp) * ${sway}))` }}>
                       <span aria-hidden="true" className={`h-6 w-0.5 border-l-2 border-dashed ${isDone ? 'border-siegel' : 'border-rule'}`} />
                       {isCurrent && (
                         <span className="mb-1 animate-bounce rounded-pill bg-white px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel shadow-raise ring-1 ring-siegel motion-reduce:animate-none">Start</span>
@@ -288,8 +316,8 @@ export default function CurriculumHomePage({ curriculum }) {
                         <Node to={unlocked || isDone ? hrefFor(level, node) : null} state={state} Icon={Icon} label={node.title} big={node.kind !== 'lektion'} />
                       </LessonRing>
                       <p className={`mt-2 max-w-[14rem] text-center text-[0.8125rem] font-bold leading-snug ${isDone || unlocked ? 'text-ink' : 'text-graphite'}`}>{node.title}</p>
-                      <p className="font-data text-[0.6875rem] text-graphite">
-                        {KIND_LABEL[node.kind]}{node.minutes ? ` · ${node.minutes} min` : ''}{lektion?.situation ? ` · ${lektion.situation}` : ''}
+                      <p className="max-w-[14rem] text-center font-data text-[0.6875rem] text-graphite">
+                        {KIND_LABEL[node.kind]}{timeOf(node)}{lektion?.situation ? ` · ${lektion.situation}` : ''}
                       </p>
                     </li>
                   );
@@ -328,7 +356,7 @@ function Stat({ icon: Icon, label, value, tone }) {
     <div className={`flex items-center gap-2 rounded-clay px-3 py-2 ${tones[tone] || tones.siegel}`}>
       <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
       <div className="min-w-0">
-        <p className="font-data text-[0.625rem] font-bold uppercase tracking-[0.13em] opacity-80">{label}</p>
+        <p className="font-data text-[0.625rem] font-bold uppercase tracking-[0.13em]">{label}</p>
         <p className="truncate font-display text-[1.125rem] font-semibold leading-none">{value}</p>
       </div>
     </div>
@@ -342,12 +370,15 @@ function Node({ to, state, Icon, label, big }) {
     done: `${base} bg-siegel text-white shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none`,
     current: `${base} bg-white text-siegel ring-4 ring-siegel shadow-raise-lg hover:-translate-y-0.5 active:translate-y-1 active:shadow-none`,
     open: `${base} bg-white text-siegel ring-2 ring-siegel shadow-raise hover:-translate-y-0.5 active:translate-y-1 active:shadow-none`,
-    locked: `${base} bg-paper-sunk text-graphite/60 ring-1 ring-rule cursor-not-allowed`,
+    locked: `${base} bg-paper-sunk text-graphite ring-1 ring-rule cursor-not-allowed`,
   };
   const inner = state === 'done' ? <Check className="h-7 w-7" aria-hidden="true" /> : state === 'locked' ? <Lock className="h-6 w-6" aria-hidden="true" /> : <Icon className="h-7 w-7" aria-hidden="true" />;
-  if (!to) return <span className={styles.locked} aria-label={`${label} (locked)`}>{inner}</span>;
+  // The name says the state in words (never by colour or icon alone). A role-less <span> may not
+  // carry aria-label (aria-prohibited-attr), so a locked node's words are sr-only text.
+  if (!to) return <span className={styles.locked}>{inner}<span className="sr-only">{`${label} (locked)`}</span></span>;
+  const stateWord = state === 'done' ? ' (done)' : state === 'current' ? ' (next)' : '';
   return (
-    <Link to={to} className={styles[state]} aria-label={label}>
+    <Link to={to} className={styles[state]} aria-label={`${label}${stateWord}`}>
       {state === 'current' && <span aria-hidden="true" className="absolute inset-0 -m-2 animate-ping rounded-full bg-siegel/20 motion-reduce:animate-none" />}
       <span className="relative">{inner}</span>
     </Link>

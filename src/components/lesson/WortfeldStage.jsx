@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Volume2, Mic, Cpu } from 'lucide-react';
 import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
@@ -9,10 +9,16 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
 import { WORTFELD_ICONS, WORTFELD_ICON_FALLBACK } from '../../data/curricula/a11.meta.js';
 import { CURRICULUM_A11 } from '../../data/curricula/a11.js';
 import { WORTFELD_ICON_COMPONENTS } from './wortfeldIcons.js';
+import { groupWords, lineFor } from '../../lib/lesson/wortfeldPacing.js';
 
 /**
  * Stage 2b — the new words as picture cards: icon, article, plural, English
  * (behind a flip), audio.
+ *
+ * PACING (2026-10 review). The 18–25 words of a Lektion used to arrive on one
+ * screen. They now come in balanced groups of at most six ("Words 1–5 of 20"),
+ * paged by the primary button, and each card carries the dialogue line the
+ * word was met in, so a word arrives with its context, not as a list entry.
  *
  * NOTE ON COLOUR. The design tokens name colours for the four grammatical
  * CASES and nothing else (design-tokens.js rule 1: "colour means case"), so
@@ -59,7 +65,7 @@ function iconFor(word) {
   return WORTFELD_ICON_COMPONENTS[name] || WORTFELD_ICON_COMPONENTS[WORTFELD_ICON_FALLBACK];
 }
 
-function WordCard({ w, lang, flipped, onToggle }) {
+function WordCard({ w, lang, flipped, onToggle, line }) {
   const article = w.article || (w.db && w.db.article) || '';
   const plural = w.plural || (w.db && w.db.plural) || '';
   const audioUrl = (w.db && w.db.audioUrl) || w.audioUrl || '';
@@ -105,6 +111,13 @@ function WordCard({ w, lang, flipped, onToggle }) {
         )}
       </button>
 
+      {/* Outside the flip button, so the button's name (the word) still matches what it shows. */}
+      {line && (
+        <p className="text-[0.8125rem] italic leading-snug text-graphite [overflow-wrap:anywhere]" lang="de">
+          <span className="sr-only">{t('wortfeld.inDialog', lang)}: </span>„{line}“
+        </p>
+      )}
+
       <button
         type="button"
         onClick={() => playWord(audioUrl, spoken)}
@@ -146,9 +159,23 @@ function WortfeldAudioBadge({ words, lang }) {
 export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
   const [open, setOpen] = useState(() => new Set());
   const [allOpen, setAllOpen] = useState(false);
+  const [group, setGroup] = useState(0);
   const words = stage.words || [];
   const [lang] = useLessonLang();
   const id = lektionId || stage.lektionId || lektionIdFromWords(words);
+  const headingRef = useRef(null);
+
+  // Index-keyed so the flip state survives paging. Every word stays in a group: each one can come
+  // up in the match exercise, the checkpoints and review, so none may be presented as optional.
+  const groups = groupWords(words.map((w, i) => ({ w, i })));
+  const shown = groups[group] || [];
+  const last = group >= groups.length - 1;
+  const from = groups.slice(0, group).reduce((n, g) => n + g.length, 0) + 1;
+
+  // A new group is a new screen: the learner hears where they are.
+  useEffect(() => {
+    if (group > 0 && headingRef.current) headingRef.current.focus({ preventScroll: false });
+  }, [group]);
 
   const toggle = (i) =>
     setOpen((prev) => {
@@ -165,20 +192,32 @@ export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
     });
   };
 
+  const card = ({ w, i }) => {
+    const spoken = w.de || w.word || '';
+    return (
+      <li key={`${spoken}-${i}`}>
+        <WordCard w={w} lang={lang} flipped={open.has(i)} onToggle={() => toggle(i)} line={lineFor(spoken, stage.lines)} />
+      </li>
+    );
+  };
+
   return (
     <StageShell
       eyebrow={t('stage.wortfeld.eyebrow', lang)}
       title={t('stage.wortfeld.title', lang, { n: words.length })}
       lead={t('stage.wortfeld.lead', lang)}
-      onBack={onBack}
-      primaryLabel={t('action.next', lang)}
-      onPrimary={onDone}
+      onBack={group > 0 ? () => setGroup(group - 1) : onBack}
+      primaryLabel={last ? t('action.next', lang) : t('wortfeld.nextGroup', lang)}
+      onPrimary={last ? onDone : () => setGroup(group + 1)}
     >
-      {id && (
+      {id && group === 0 && (
         <SituationScene lektionId={id} className="mb-4 h-32 w-full rounded-clay border border-rule object-cover sm:h-40" />
       )}
 
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+        <h3 ref={headingRef} tabIndex={-1} className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite outline-none">
+          {t('wortfeld.group', lang, { from, to: from + shown.length - 1, n: words.length })}
+        </h3>
         <WortfeldAudioBadge words={words} lang={lang} />
         <button
           type="button"
@@ -191,14 +230,7 @@ export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
       </div>
 
       <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-        {words.map((w, i) => {
-          const spoken = w.de || w.word || '';
-          return (
-            <li key={`${spoken}-${i}`}>
-              <WordCard w={w} lang={lang} flipped={open.has(i)} onToggle={() => toggle(i)} />
-            </li>
-          );
-        })}
+        {shown.map(card)}
       </ul>
     </StageShell>
   );

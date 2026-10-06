@@ -370,3 +370,30 @@ test('Landeskunde notes carry no outcome promise or exam-fee figure', () => {
     }
   }
 });
+
+// ---------------------------------------------------------------------------
+// Durations the learner is shown are an ESTIMATE from the Lektion's own steps (2026-10 review)
+// ---------------------------------------------------------------------------
+
+test('the duration estimate counts what the player actually builds, and no screen shows the 15-minute target as a duration', async () => {
+  const { ESTIMATE_COUNTS, lektionMinutesEstimate, courseMinutesEstimate } = await import('../src/data/curricula/a11.meta.js');
+  const { default: buildLesson, PRACTICE_SIZE } = await import('../src/lib/lesson/buildLesson.js');
+  const pool = JSON.parse(readFileSync(new URL('../src/data/lessonPools/a11.json', import.meta.url), 'utf8'));
+  assert.equal(ESTIMATE_COUNTS.practice, PRACTICE_SIZE);
+  for (const l of LEKTIONEN) {
+    const stages = buildLesson({ curriculum: CURRICULUM_A11, lektion: l, pool }).stages;
+    assert.equal(stages.find((s) => s.kind === 'derived').items.length, ESTIMATE_COUNTS.derived, `L${l.nr}: derived count`);
+    assert.equal(stages.find((s) => s.kind === 'practice').items.length, ESTIMATE_COUNTS.practice, `L${l.nr}: practice count`);
+    const e = lektionMinutesEstimate(l);
+    assert.ok(e.lo > l.minutes && e.hi > e.lo, `L${l.nr}: the estimate (${e.lo}–${e.hi}) is a range above the ${l.minutes}-minute design target`);
+  }
+  assert.deepEqual(A11_META.howItWorksEn.minutesEstimate, courseMinutesEstimate());
+  const surfaces = {
+    'src/components/lesson/IntroStage.jsx': /lektion\.minutes/,
+    'src/pages/CurriculumHomePage.jsx': /\$\{current\.minutes\}|KIND_LABEL\[node\.kind\]\}\{node\.minutes/,
+    'src/components/course/CourseWelcome.jsx': /how\.minutesPerLektion|hoursPerWeek/,
+  };
+  for (const [file, banned] of Object.entries(surfaces)) {
+    assert.doesNotMatch(readFileSync(new URL(`../${file}`, import.meta.url), 'utf8'), banned, `${file} shows the design target as a duration`);
+  }
+});

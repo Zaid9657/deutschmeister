@@ -7,6 +7,8 @@ import { resolveModelltest } from '../../data/modelltest';
 import { verdictFor } from '../../services/examScoring';
 import { loadAttempt, listAttempts } from '../../services/examService';
 import { readinessFromAttempts } from '../../services/readiness';
+import { completeLevelTest } from '../../services/lessonService.js';
+import { curriculumForTestSlug, levelTestNodeId } from '../../data/curricula/index.js';
 import confettiBurst from '../../lib/confetti.js';
 import CompletionMoment from '../../components/CompletionMoment';
 import SEO from '../../components/SEO';
@@ -134,6 +136,17 @@ const ModelltestResult = () => {
     return () => { alive = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, resolved?.key, attempt?.id]);
+
+  // A pass on a course's own final test completes that course's path (and so
+  // opens its certificate). Upserted, so a revisit is harmless.
+  useEffect(() => {
+    if (!user || !attempt || attempt.status !== 'completed' || !attempt.max_score || !mock) return;
+    const curriculum = curriculumForTestSlug(examSlug);
+    if (!curriculum) return;
+    const percent = Math.round((attempt.score / attempt.max_score) * 100);
+    if (verdictFor(percent, mock.passPercent) === 'nicht-bereit') return;
+    completeLevelTest(user.id, curriculum.level, levelTestNodeId(curriculum));
+  }, [user, attempt, mock, examSlug]);
 
   // The one confetti burst for the readiness moment — separate from, and
   // never doubling, the pass-moment burst CompletionMoment fires below.

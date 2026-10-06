@@ -51,10 +51,10 @@ export const abschlusstestA11 = {
   formatOf: 'goethe_a1',
   title: 'Abschlusstest A1.1 (Kurzversion im Start-Deutsch-1-Format)',
   intro:
-    'Das ist der Abschlusstest deines A1.1-Kurses. Er hat den Aufbau der echten Prüfung Start Deutsch 1, aber nur ' +
-    'die halbe Länge, damit du das Prüfungsformat schon früh kennenlernst. Dieser Test ist eigenes Übungsmaterial ' +
-    'von DeutschMeister und keine offizielle Prüfung. Wie bei der echten Prüfung bestehst du ab 60 % der ' +
-    'bewerteten Aufgaben. Sprechen trainierst du im Speaking-Missions-Trainer, nicht hier. Wenn du bestehst, geht ' +
+    'Das ist der Abschlusstest Ihres A1.1-Kurses. Er hat den Aufbau der Prüfung Start Deutsch 1, aber nur ' +
+    'die halbe Länge, damit Sie das Prüfungsformat schon früh kennenlernen. Dieser Test ist eigenes Übungsmaterial ' +
+    'von DeutschMeister: keine offizielle Prüfung, kein Zertifikat über ein Sprachniveau. Wie bei der echten Prüfung ' +
+    'bestehen Sie ab 60 % der bewerteten Aufgaben. Sprechen üben Sie im Speaking-Missions-Trainer, nicht hier. Wenn Sie bestehen, geht ' +
     'es weiter mit A1.2 und später mit der vollständigen Übungsprüfung im Start-Deutsch-1-Format.',
   passPercent: 60,
 
@@ -63,7 +63,7 @@ export const abschlusstestA11 = {
       key: 'hoeren',
       title: 'Hören',
       minutes: 15,
-      instructions: 'Eine Hörübung mit 10 kurzen Dialogen und Durchsagen; du darfst die Aufnahme zweimal abspielen.',
+      instructions: 'Eine Hörübung mit 10 kurzen Dialogen und Durchsagen; Sie dürfen die Aufnahme zweimal abspielen.',
       parts: [
         {
           key: 'hoeren-1',

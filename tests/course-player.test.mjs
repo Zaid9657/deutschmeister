@@ -50,6 +50,7 @@ test('every program item type the runner styles has an instruction', () => {
 test('the registry covers the four A sub-levels with their final tests, and the routes exist in all three places', async () => {
   const { COURSES, COURSE_LEVELS } = await import('../src/data/courses/index.js');
   assert.deepEqual(COURSE_LEVELS, ['a1.1', 'a1.2', 'a2.1', 'a2.2']);
+  assert.deepEqual(Object.keys(COURSES), COURSE_LEVELS, 'levels.js lists exactly the registry, in order');
   const tests = read('src/data/courseTests/index.js');
   for (const c of Object.values(COURSES)) {
     assert.ok(tests.includes(`slug: '${c.testSlug}'`), `${c.level} final test ${c.testSlug} is not a registered course test`);
@@ -370,7 +371,9 @@ test('every stage screen the player renders reads its chrome through useLessonLa
 // eyebrow AFTER "Step 6 · Writing", so the lesson appeared to go backwards.
 test('the requeue stage has its own eyebrow (Step 7 · Try again)', () => {
   const player = read('src/pages/lesson/LessonPlayerPage.jsx');
-  assert.ok(player.includes("eyebrowKey={stage.kind === 'requeue' ? 'stage.requeue.eyebrow' : 'stage.practice.eyebrow'}"), 'the player must pass the requeue eyebrow key');
+  assert.ok(player.includes("const retry = stage.kind === 'requeue';"), 'the player must know when it is in the requeue stage');
+  assert.ok(player.includes("eyebrowKey={retry ? 'stage.requeue.eyebrow' : 'stage.practice.eyebrow'}"), 'the player must pass the requeue eyebrow key');
+  assert.ok(player.includes("...(retry ? { eyebrowKey: 'stage.requeue.eyebrow' } : {})"), 'a retried match/word order/listen item/dictation carries the requeue eyebrow too');
   const item = read('src/components/lesson/PracticeItem.jsx');
   assert.ok(item.includes("eyebrowKey = 'stage.practice.eyebrow'"), 'PracticeItem defaults to the practice eyebrow');
   assert.ok(item.includes('{t(eyebrowKey, lang, { n: index + 1, total })}'), 'PracticeItem renders the eyebrow it is given');
@@ -384,7 +387,10 @@ test('SpeakingStage offers "Skip for now" that advances without recording a resu
   const src = read('src/components/lesson/SpeakingStage.jsx');
   assert.ok(src.includes('primaryDisabled={lines.length > 0 && !allDone}'), 'the primary still waits for every line');
   assert.match(src, /secondary=\{\s*lines\.length > 0 && !allDone \? \(/, 'the skip is a secondary control, shown only while lines are unconfirmed');
-  assert.match(src, /onClick=\{onDone\}[^]*?t\('speaking\.skip', lang\)/, 'the skip calls onDone directly');
+  assert.match(src, /onClick=\{finish\}[^]*?t\('speaking\.skip', lang\)/, 'the skip moves on through finish()');
+  // finish() reports what was measured — "skipped" when nothing was — and calls onDone; it never
+  // writes a result for a line (skillStatus.speakingSummary).
+  assert.match(src, /const finish = \(\) => \{\s*if \(typeof onReport === 'function'\) onReport\(speakingSummary\(lines\.length, results\)\);\s*onDone\(\);/, 'finish reports and moves on');
   // recordResult is the ONLY writer of `results`; the skip must not call it.
   const skipBlock = src.slice(src.indexOf('secondary={'), src.indexOf('</button>', src.indexOf('secondary={')));
   assert.ok(!skipBlock.includes('recordResult'), 'skipping must not fabricate a result for the unconfirmed lines');
@@ -411,11 +417,12 @@ test('explain-answer carries lang end to end and defaults to German server-side'
 
 test('FeedbackSheet renders all three result tones, each with its own icon, string-table label and token tone class (never a kasus colour)', () => {
   const src = read('src/components/lesson/FeedbackSheet.jsx');
-  assert.ok(src.includes("import { Check, AlertTriangle, X, Sparkles, Eye } from 'lucide-react';"), 'each tone needs its own icon (Eye for the revealed tone)');
+  assert.ok(src.includes("import { Check, AlertTriangle, X, Sparkles, Eye, RotateCcw } from 'lucide-react';"), 'each tone needs its own icon (Eye for revealed, RotateCcw for corrected)');
   for (const [state, key, tone] of [
     ['RESULT.CORRECT', 'feedback.correct', 'siegel'],
     ['RESULT.TYPO', 'feedback.typo', 'accent-aprikose'],
     ['RESULT.WRONG', 'feedback.wrong', 'accent-himbeer'],
+    ['RESULT.CORRECTED', 'feedback.corrected', 'accent-aprikose'],
   ]) {
     assert.ok(src.includes(`[${state}]`), `no tone entry for ${state}`);
     assert.ok(src.includes(`key: '${key}'`), `${state} does not use the ${key} string-table label`);
@@ -510,8 +517,10 @@ test('StageShell accepts a variant prop that only changes the background wash, v
 
 test('PhonetikStage plays through speech.js, splits syllables on the capitalised stress, and reads its strings from the table', () => {
   const src = read('src/components/lesson/PhonetikStage.jsx');
-  assert.match(src, /playLine\(lektionId, `phonetik-\$\{i\}`, phonetikSpeechText\(item\)\)/, 'the play button must speak the normalised text through the recorded/fallback path, keyed phonetik-<i>');
-  assert.ok(src.includes("import { playLine, phonetikSpeechText } from '../../lib/lesson/speech.js';"), 'phonetikSpeechText must be imported from speech.js, not re-implemented here');
+  // Checked playback since 2026-10: the result says whether German was actually heard, and a failure is shown.
+  assert.match(src, /playChecked\(lektionId, `phonetik-\$\{i\}`, phonetikSpeechText\(item\)\)/, 'the play button must speak the normalised text through the recorded/fallback path, keyed phonetik-<i>');
+  assert.ok(src.includes("import { playChecked, phonetikSpeechText } from '../../lib/lesson/speech.js';"), 'phonetikSpeechText must be imported from speech.js, not re-implemented here');
+  assert.match(src, /<AudioFailureNotice reason=\{audioFail\} \/>/, 'a failed playback is said, never silent');
   assert.match(src, /part === part\.toUpperCase\(\)/, 'the stressed syllable must be found by its own capitalisation, not a hand-picked index');
   assert.ok(src.includes('<strong'), 'the stressed syllable must render as <strong>');
   for (const key of ["t('stage.phonetik.eyebrow', lang)", "t('stage.phonetik.title', lang)", "t('phonetik.listenFor', lang)", "t('phonetik.sayAfter', lang)", "t('phonetik.said', lang)"]) {
@@ -674,7 +683,7 @@ test('PracticeItem gates a "Show answer" reveal control on allowReveal, and only
   assert.ok(item.includes('min-h-11'), 'the reveal control must meet the 44px target');
 
   const player = read('src/pages/lesson/LessonPlayerPage.jsx');
-  assert.ok(player.includes("allowReveal={stage.kind === 'requeue'}"), 'only the requeue stage may pass allowReveal to PracticeItem');
+  assert.ok(player.includes("const retry = stage.kind === 'requeue';") && player.includes('allowReveal={retry}'), 'only the requeue stage may pass allowReveal to PracticeItem');
 });
 
 test('revealing an answer fires onResult exactly once with correct:false and revealed:true, and never as a correct result', () => {
@@ -692,7 +701,7 @@ test('revealing an answer fires onResult exactly once with correct:false and rev
 
 test('FeedbackSheet renders a neutral "revealed" tone (Eye icon, feedback.revealed label), never the WRONG red, when revealed', () => {
   const src = read('src/components/lesson/FeedbackSheet.jsx');
-  assert.ok(src.includes("import { Check, AlertTriangle, X, Sparkles, Eye } from 'lucide-react';"), 'FeedbackSheet must import the Eye icon for the revealed tone');
+  assert.ok(src.includes("import { Check, AlertTriangle, X, Sparkles, Eye, RotateCcw } from 'lucide-react';"), 'FeedbackSheet must import the Eye icon for the revealed tone');
   assert.ok(src.includes('revealed: {'), 'FeedbackSheet must define a revealed tone entry');
   assert.ok(src.includes("Icon: Eye,") && src.includes("key: 'feedback.revealed',"), 'the revealed tone must use the Eye icon and the feedback.revealed label');
   assert.ok(src.includes('revealed ? TONE.revealed : (TONE[result] || TONE[RESULT.WRONG])'), 'a revealed feedback must never fall back to the WRONG (red) tone');
@@ -729,7 +738,7 @@ test('requeueFor is only invoked when entering the requeue stage, never again fr
 // should the combo ever be extended to cover the requeue stage later.
 test('a revealed item never extends the combo: requeue is excluded from the combo gate, and nextCombo(combo, false) always resets to zero', () => {
   const player = read('src/pages/lesson/LessonPlayerPage.jsx');
-  assert.ok(player.includes("if (item.stage === 'practice' || item.stage === 'dictation') setCombo((c) => nextCombo(c, correct));"), 'only practice/dictation items may update the combo — requeue (where reveal lives) must stay excluded');
+  assert.ok(player.includes("if (stageKind === 'practice' || stageKind === 'dictation') setCombo((c) => nextCombo(c, correct));"), 'only practice/dictation items may update the combo — requeue (where reveal lives) must stay excluded');
   const nextCombo = new Function('combo', 'correct', 'return correct ? combo + 1 : 0;');
   assert.equal(nextCombo(3, false), 0, 'a reveal reports correct:false, which nextCombo hard-resets to zero');
 });

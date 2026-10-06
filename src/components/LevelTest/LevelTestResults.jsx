@@ -373,7 +373,8 @@ const LevelTestResults = ({
               <div className="mt-4 flex flex-col gap-3">
                 {Object.entries(speakingScoresObj).map(([key, value]) => {
                   const labels = {
-                    pronunciation: 'Aussprache',
+                    // The key is historical: the score is transcript-based clarity, not pronunciation.
+                    pronunciation: 'Verständlichkeit',
                     grammar: 'Grammatik',
                     vocabulary: 'Wortschatz',
                     fluency: 'Flüssigkeit',
@@ -444,7 +445,7 @@ const LevelTestResults = ({
             <span className="min-w-0">
               <span className="block text-[0.9375rem] font-bold text-ink">Practice Speaking with AI</span>
               <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">
-                Have a real conversation at your {finalSublevel} level and get instant feedback on pronunciation, grammar, and vocabulary.
+                Have a real conversation at your {finalSublevel} level and get instant feedback on grammar, vocabulary and how clearly you got your meaning across.
               </span>
             </span>
           </Card>

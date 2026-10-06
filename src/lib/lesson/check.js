@@ -20,7 +20,22 @@
 // tagSentenceError.
 import { normalizeAnswer } from '../../utils/answerMatch.js';
 
-export const RESULT = { CORRECT: 'correct', TYPO: 'typo', WRONG: 'wrong' };
+// CORRECTED: the exercise was finished, but only after a wrong try that the
+// learner fixed on the spot (matching, where a wrong pair never commits). It is
+// not a typo — a wrong pair is a vocabulary miss — and not a first-try success.
+export const RESULT = { CORRECT: 'correct', TYPO: 'typo', WRONG: 'wrong', CORRECTED: 'corrected' };
+
+/**
+ * The ONE result a matching exercise records, whatever number of taps it took.
+ * `confused` = the pairs the learner got wrong at least once, as the correct
+ * `{ de, en }` (one entry per German word). Any confusion makes the exercise
+ * complete-but-not-first-try, tagged Wortschatz; none makes it correct.
+ */
+export function matchOutcome(confused = []) {
+  return confused.length
+    ? { result: RESULT.CORRECTED, correct: false, errorTag: 'Wortschatz', confused }
+    : { result: RESULT.CORRECT, correct: true, errorTag: null, confused: [] };
+}
 
 export function levenshtein(a, b) {
   if (a === b) return 0;

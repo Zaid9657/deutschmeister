@@ -4,7 +4,7 @@ import StageShell from './StageShell.jsx';
 import CharacterAvatar from '../illustrations/CharacterAvatar.jsx';
 import SituationScene from '../illustrations/SituationScene.jsx';
 import { useLessonLang } from '../../lib/lesson/strings.js';
-import { A11_META } from '../../data/curricula/a11.meta.js';
+import { A11_META, lektionMinutesEstimate } from '../../data/curricula/a11.meta.js';
 import { courseHome } from '../../lib/courseFlow.js';
 
 // The Lektion intro screen (Wave 1, 2026-09-19): the one screen a first-time
@@ -22,7 +22,7 @@ import { courseHome } from '../../lib/courseFlow.js';
 //     (tests/course-meta.test.mjs pins same length, same order);
 //   * the people who speak in this Lektion — A11_META.characters filtered by
 //     `appearsIn`, initial circles carrying `data-avatar-slot` for the Wave 2 art;
-//   * the minutes (`lektion.minutes`, never typed);
+//   * the estimated time (a11.meta.js `lektionMinutesEstimate`, labelled as an estimate);
 //   * ONE primary action, Start.
 //
 // Chrome strings live in INTRO_STRINGS below, keyed `intro.*` in the same shape
@@ -43,7 +43,7 @@ export const INTRO_STRINGS = {
     'intro.lektion': 'Lektion {nr} · {title}',
     'intro.byTheEnd': 'By the end you can …',
     'intro.people': 'Who speaks in this Lektion',
-    'intro.minutes': 'about {n} min',
+    'intro.minutes': 'about {lo}–{hi} min (estimate)',
     'intro.start': 'Start',
     'intro.backToCourse': 'Back to the course',
   },
@@ -53,7 +53,7 @@ export const INTRO_STRINGS = {
     'intro.lektion': 'Lektion {nr} · {title}',
     'intro.byTheEnd': 'Am Ende können Sie …',
     'intro.people': 'Wer in dieser Lektion spricht',
-    'intro.minutes': 'etwa {n} Min.',
+    'intro.minutes': 'etwa {lo}–{hi} Min. (Schätzung)',
     'intro.start': 'Starten',
     'intro.backToCourse': 'Zurück zum Kurs',
   },
@@ -81,6 +81,8 @@ export function castFor(lektion, meta) {
 export default function IntroStage({ curriculum, lektion, meta = courseMetaFor(curriculum?.level), onStart }) {
   const [lang] = useLessonLang();
   const de = lang === 'de';
+  // An estimate from the Lektion's own step counts, labelled as one — never the 15-minute design target.
+  const estimate = lektionMinutesEstimate(lektion);
   const chapter = meta?.chapters.find((c) => c.lektionen.includes(lektion.nr)) || null;
   const intro = meta?.lektionIntro?.[lektion.id] || null;
   const canDos = !de && intro?.canDoEn?.length ? intro.canDoEn : lektion.canDo || [];
@@ -95,13 +97,13 @@ export default function IntroStage({ curriculum, lektion, meta = courseMetaFor(c
           <Link
             to={courseHome(curriculum.level)}
             className="inline-flex items-center gap-1 text-sm font-bold text-siegel hover:text-siegel-deep"
-            aria-label={ti('intro.backToCourse', lang)}
           >
-            <ArrowLeft className="h-4 w-4" /> {curriculum.code}
+            {/* The name CONTAINS the visible text (WCAG 2.5.3): a speech user says "A1.1" and it works. */}
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" /> <span className="sr-only">{ti('intro.backToCourse', lang)}: </span>{curriculum.code}
           </Link>
-          {lektion.minutes ? (
+          {estimate.hi ? (
             <span className="inline-flex items-center gap-1 rounded-pill bg-siegel-wash px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">
-              <Clock3 className="h-3.5 w-3.5" aria-hidden="true" /> {ti('intro.minutes', lang, { n: lektion.minutes })}
+              <Clock3 className="h-3.5 w-3.5" aria-hidden="true" /> {ti('intro.minutes', lang, estimate)}
             </span>
           ) : null}
         </div>

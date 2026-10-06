@@ -46,6 +46,12 @@ export const EVENTS = {
   onboarding_completed: { when: 'The onboarding slides are finished or left.', once: true },
   lesson_started: { when: 'A course Lektion is opened in the lesson player.', once: false },
   lesson_completed: { when: 'A course Lektion reaches its recap.', once: false },
+  lesson_resumed: { when: 'The lesson player reopens a saved, unfinished run of a Lektion (same run_id as its lesson_started).', once: false },
+  lesson_stage_viewed: { when: 'A stage of a Lektion run is shown for the first time in that run (step = the stage key).', once: false },
+  lesson_sync_failed: {
+    when: 'A finished Lektion could not be written to the account; it is kept on the device and retried (step = attempts | progress | cards).',
+    once: false,
+  },
   paywall_shown: { when: 'A lock, paywall or speaking-limit offer is rendered.', once: false },
   checkout_started: { when: 'The app opens a checkout (the SPA name for checkout_opened).', once: false },
   checkout_completed: {
@@ -67,6 +73,7 @@ export const ALLOWED_PROPS = [
   'amount', // gross price in EUR (a number from pricing.js, never typed by the visitor)
   'feature', // paywall feature id
   'topic', // grammar/lesson slug
+  'run_id', // one lesson-player run (runState.js): joins start, stages and completion — random, never personal
   'signed_in', // boolean
   'entry_page', // first path of this page view
   'dm_source', 'dm_medium', 'dm_campaign', // first-touch attribution labels (public/attribution.js)

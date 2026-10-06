@@ -59,7 +59,7 @@ import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../lesson/check.
 import { courseWritingTasks, writingTaskByKey } from '../../data/writingTasks.js';
 import { knownUpTo, untaughtTokens, namesOf } from './lexis.js';
 import { politeCaseItem } from '../../data/lessonPools/quality.js';
-import { leaksAnswer } from '../lesson/buildLesson.js';
+import { leaksAnswer, planPractice } from '../lesson/buildLesson.js';
 import { deferredConstructionHits } from '../../data/curricula/constructions.js';
 
 export const SECTION_ORDER = ['hoeren', 'lesen', 'bausteine', 'schreiben', 'sprechen'];
@@ -482,7 +482,7 @@ function drawPool(
   n,
   rng,
   usedIds,
-  { typedOnly = false, untaught = () => false, afterLektion, accept = () => true, onSeat = () => {}, onRelax = () => {} } = {},
+  { typedOnly = false, untaught = () => false, afterLektion, accept = () => true, onSeat = () => {}, onRelax = () => {}, seen = new Set() } = {},
 ) {
   if (n <= 0 || !topics.length) return [];
   const buckets = topics.map((topic) => {
@@ -490,7 +490,12 @@ function drawPool(
     const pick = (dirty) => {
       const some = all.filter((i) => untaught(i) === dirty);
       const typed = some.filter(isTyped);
-      return typedOnly ? typed : [...typed, ...some.filter((i) => !isTyped(i))];
+      const ordered = typedOnly ? typed : [...typed, ...some.filter((i) => !isTyped(i))];
+      // TRANSFER (2026-10 review): an item the learner already answered in the
+      // chapter's lessons tests memory of that item, not the rule — 3–5 of the
+      // 8 drawn items per checkpoint were exactly that. Unseen items of the
+      // same topic go first; a seen one is only the fallback of a thin topic.
+      return [...ordered.filter((i) => !seen.has(i.id)), ...ordered.filter((i) => seen.has(i.id))];
     };
     return [...pick(false), ...pick(true)];
   });
@@ -1821,14 +1826,14 @@ function buildBausteine(ctx) {
   // (DaF review #14, MAJOR 3 — `a1.1-cp3-bausteine-3` „Nach Montag kommt ___.“
   // → `Dienstag`, beside a read-aloud line that names that very weekday).
   const guard = ctx.poolGuard('bausteine');
-  const drawnEarlier = drawPool(pool, earlierTopics, earlierWanted, rng, usedPoolIds, { untaught, afterLektion, ...guard });
+  const drawnEarlier = drawPool(pool, earlierTopics, earlierWanted, rng, usedPoolIds, { untaught, afterLektion, seen: ctx.lessonSeen, ...guard });
   const drawnChapter = drawPool(
     pool,
     chapterTopics,
     SECTION_COUNTS.bausteine - drawnEarlier.length,
     rng,
     usedPoolIds,
-    { untaught, afterLektion, ...guard },
+    { untaught, afterLektion, seen: ctx.lessonSeen, ...guard },
   );
   return [...drawnChapter, ...drawnEarlier].map((p, i) =>
     fromPoolItem(p, {
@@ -1890,7 +1895,9 @@ function buildSchreiben(ctx) {
     // chapter's other topics, and only when those are exhausted too does the
     // last rung of `drawPool` seat a leaking item and record it.
     const clean = candidates.filter(guard.accept);
-    const pick = clean.find((i) => !untaught(i)) || clean[0];
+    // …and among those, one the learner has not answered in a lesson (transfer).
+    const fresh = clean.filter((i) => !ctx.lessonSeen.has(i.id));
+    const pick = fresh.find((i) => !untaught(i)) || clean.find((i) => !untaught(i)) || fresh[0] || clean[0];
     if (!pick) continue;
     usedPoolIds.add(pick.id);
     guard.onSeat(pick);
@@ -1904,15 +1911,15 @@ function buildSchreiben(ctx) {
   if (chosen.length < drillCount) {
     const used = new Set(chosen.map((c) => c.topic));
     const otherSlugs = slugs.filter((t) => !used.has(t));
-    chosen.push(...drawPool(pool, otherSlugs, drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught, afterLektion, ...guard }));
+    chosen.push(...drawPool(pool, otherSlugs, drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught, afterLektion, seen: ctx.lessonSeen, ...guard }));
   }
   if (chosen.length < drillCount) {
     const used = new Set(chosen.map((c) => c.topic));
     const rest = topicsOf(chapter).filter((t) => !used.has(t));
-    chosen.push(...drawPool(pool, rest, drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught, afterLektion, ...guard }));
+    chosen.push(...drawPool(pool, rest, drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught, afterLektion, seen: ctx.lessonSeen, ...guard }));
   }
   if (chosen.length < drillCount) {
-    chosen.push(...drawPool(pool, topicsOf(chapter), drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught, afterLektion, ...guard }));
+    chosen.push(...drawPool(pool, topicsOf(chapter), drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught, afterLektion, seen: ctx.lessonSeen, ...guard }));
   }
 
   const drills = chosen.map((p, i) =>
@@ -2110,6 +2117,32 @@ function poolIdsBefore(curriculum, checkpoint, pool) {
 }
 
 /**
+ * The pool items the lesson player hands out in the Lektionen up to this
+ * checkpoint — the first run and the repeat (attempts 1 and 2). drawPool puts
+ * them last, so the checkpoint asks the same rules through prompts the learner
+ * has not answered yet.
+ */
+// Memoised per (curriculum object, pool object): a checkpoint also rebuilds every earlier
+// checkpoint (poolIdsBefore), and the validator's mutation tests rebuild all four per clone —
+// recomputing the draw each time multiplied the test suite's run time. One planPractice per
+// attempt covers every Lektion; a curriculum a test clones and mutates is a new object.
+const practicePlanMemo = new WeakMap();
+function lessonSeenIds(curriculum, checkpoint, pool) {
+  if (!pool) return new Set();
+  let byPool = practicePlanMemo.get(curriculum);
+  if (!byPool) { byPool = new WeakMap(); practicePlanMemo.set(curriculum, byPool); }
+  let plans = byPool.get(pool);
+  if (!plans) { plans = [1, 2].map((attempt) => planPractice(curriculum, pool, attempt)); byPool.set(pool, plans); }
+  const seen = new Set();
+  for (const plan of plans) {
+    for (const [nr, items] of plan) {
+      if (nr <= checkpoint.afterLektion) for (const item of items || []) seen.add(item.id);
+    }
+  }
+  return seen;
+}
+
+/**
  * buildCheckpoint({ curriculum, checkpoint, pool, seed }) → 20 items,
  * in section order, deterministic in `seed` (default: the checkpoint id).
  */
@@ -2126,6 +2159,7 @@ export function buildCheckpoint({ curriculum, checkpoint, pool, seed } = {}) {
     chapter,
     earlier: earlierLektionen(curriculum, checkpoint),
     usedPoolIds: poolIdsBefore(curriculum, checkpoint, pool),
+    lessonSeen: lessonSeenIds(curriculum, checkpoint, pool),
     // Every dialogue line this paper has already spent, on ANY of its three
     // skill sections (DaF review #8, MAJOR 2). Hören fills it, Lesen honours
     // and extends it with every line of the windows it prints, Sprechen reads

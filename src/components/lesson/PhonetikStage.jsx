@@ -3,7 +3,8 @@ import { Check, Volume2 } from 'lucide-react';
 import StageShell from './StageShell.jsx';
 import Card from '../ui/Card.jsx';
 import Button from '../ui/Button.jsx';
-import { playLine, phonetikSpeechText } from '../../lib/lesson/speech.js';
+import { playChecked, phonetikSpeechText } from '../../lib/lesson/speech.js';
+import { AudioFailureNotice } from './PlayButton.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
 /**
@@ -45,7 +46,12 @@ export default function PhonetikStage({ stage, lektionId, onBack, onDone }) {
   const items = phonetik.items || [];
   const [said, setSaid] = useState(() => new Set());
 
-  const play = (item, i) => playLine(lektionId, `phonetik-${i}`, phonetikSpeechText(item));
+  // Checked playback: a failure is said in words instead of looking like a silent success.
+  const [audioFail, setAudioFail] = useState(null);
+  const play = (item, i) => {
+    setAudioFail(null); // a new try clears the last failure
+    playChecked(lektionId, `phonetik-${i}`, phonetikSpeechText(item)).then((r) => setAudioFail(r.ok ? null : r.reason));
+  };
   const toggleSaid = (i) => setSaid((prev) => {
     const next = new Set(prev);
     if (next.has(i)) next.delete(i); else next.add(i);
@@ -88,6 +94,7 @@ export default function PhonetikStage({ stage, lektionId, onBack, onDone }) {
           </li>
         ))}
       </ul>
+      <AudioFailureNotice reason={audioFail} />
     </StageShell>
   );
 }

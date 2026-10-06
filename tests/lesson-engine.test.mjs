@@ -127,10 +127,13 @@ test('the draw is deterministic per (level, nr, attempt) and a retry gives a dif
 });
 
 test('the derived stage never moves the pool draw: L1 of the shipped a1.1 curriculum still draws the same seven, attempts 1-3', () => {
+  // Re-pinned 2026-10-05: five L1 spelling items stopped being copy tasks (the word is no longer
+  // on screen — the learner supplies the missing letter), which changes their task shape and so
+  // the seeded draw. RULE 11b still measures 0 (validator), i.e. nothing untaught moved in.
   const PINNED = {
-    1: ['2488cb0f-ea25-5dae-85d8-fea6ed13b2f3', 'extra-a11-l01-04', 'extra-a11-l01-18', '2df8b952-57b5-54ef-8c10-4a0d965d9115', 'extra-a11-l01-17', 'extra-a11-l01-01', 'extra-a11-l01-06'],
-    2: ['extra-a11-l01-16', '61b961a8-1c5a-59b9-8b63-430a94714181', 'extra-a11-l01-12', 'extra-a11-l01-19', 'extra-a11-l01-11', 'extra-a11-l01-03', 'extra-a11-l01-07'],
-    3: ['extra-a11-l01-08', 'extra-a11-l01-02', 'extra-a11-l01-23', 'extra-a11-l01-24', 'extra-a11-l01-20', '448a9516-9d53-5c58-8f77-9ae1e60d9363', 'extra-a11-l01-05'],
+    1: ['2488cb0f-ea25-5dae-85d8-fea6ed13b2f3', 'extra-a11-l01-04', 'extra-a11-l01-05', '2df8b952-57b5-54ef-8c10-4a0d965d9115', 'extra-a11-l01-17', 'extra-a11-l01-01', 'extra-a11-l01-06'],
+    2: ['extra-a11-l01-16', '61b961a8-1c5a-59b9-8b63-430a94714181', 'extra-a11-l01-18', 'extra-a11-l01-19', 'extra-a11-l01-14', 'extra-a11-l01-03', 'extra-a11-l01-21'],
+    3: ['extra-a11-l01-08', 'extra-a11-l01-11', 'extra-a11-l01-02', 'extra-a11-l01-24', 'extra-a11-l01-23', '448a9516-9d53-5c58-8f77-9ae1e60d9363', 'extra-a11-l01-20'],
   };
   for (const attempt of [1, 2, 3]) {
     const ids = planPractice(CURRICULUM_A11, POOL, attempt).get(1).map((i) => i.id);
@@ -1122,7 +1125,14 @@ test('L12 spreads its possessives, and every attempt drills the polite Ihr', () 
     const items = planPractice(CURRICULUM_A11, POOL, attempt).get(12);
     const owners = new Set(items.map((it) => String(it.answer || '').toLowerCase().split(/[^a-zäöüß]+/)[0]).filter(Boolean));
     assert.ok(owners.size >= 4, `L12 attempt ${attempt} draws only ${owners.size} distinct owners: ${[...owners].join(', ')}`);
-    const polite = items.filter((it) => POLITE.includes(it.id));
+    // By property, not by id: a polite Ihr item is case-sensitive and answers with Ihr. The bank has
+    // one more than the three hand items (10b25f5c „Wie ist ___ Name, bitte? (Sie, Höflichkeitsform)“),
+    // and after the 2026-10 rewrite of l12-16 attempt 3 draws that one.
+    const isPolite = (it) => {
+      const src = POOL.items.find((p) => p.id === it.id) || it;
+      return POLITE.includes(it.id) || (src.caseSensitive === true && /^Ihr(?![a-zäöüß])/.test(String(src.answer || '')));
+    };
+    const polite = items.filter(isPolite);
     assert.ok(
       polite.length >= 1,
       `L12 attempt ${attempt} never drills the polite Ihr — the exam form of the last Lektion:\n  ` +
@@ -1231,7 +1241,8 @@ test('no misses means no requeue stage content', () => {
 test('accuracy counts the FIRST response per item only', () => {
   const attempts = [
     { itemId: 'a', correct: false },
-    { itemId: 'a', correct: true }, // the requeue replay — must not rescue the figure
+    { itemId: 'a', correct: true }, // a second answer to the same item — must not rescue the figure
+    // (a requeue retry usually carries a DIFFERENT id; tests/lesson-scoring.test.mjs covers that case)
     { itemId: 'b', correct: true },
     { itemId: 'c', correct: true },
     { itemId: 'd', correct: true },

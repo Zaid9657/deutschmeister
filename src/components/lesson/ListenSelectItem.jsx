@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Check, Play } from 'lucide-react';
+import { Check } from 'lucide-react';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import FeedbackSheet from './FeedbackSheet.jsx';
 import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../../lib/lesson/check.js';
-import { audioFor, playLine, speechAvailable } from '../../lib/lesson/speech.js';
-import { AudioSourceBadge } from './DialogStage.jsx';
+import PlayButton from './PlayButton.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
 /**
@@ -16,12 +15,11 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
  * hand-builds the check options (tests/course-player.test.mjs GRADING_SITES).
  * A miss here is always tagged 'Hören' (check.js `tagError`).
  */
-export default function ListenSelectItem({ item, lektionId, index, total, onResult, onNext }) {
+export default function ListenSelectItem({ item, lektionId, index, total, onResult, onNext, eyebrowKey = 'stage.derived.eyebrow' }) {
   const [lang] = useLessonLang();
   const [picked, setPicked] = useState(null);
   const [state, setState] = useState(null);
   const key = `line-${item.lineIndex}`;
-  const recorded = !!audioFor(lektionId, key);
 
   useEffect(() => {
     setPicked(null);
@@ -41,21 +39,15 @@ export default function ListenSelectItem({ item, lektionId, index, total, onResu
 
   return (
     <div className={state ? 'pb-36 sm:pb-0' : ''}>
-      <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">
-        {t('stage.derived.eyebrow', lang, { n: index + 1, total })}
-      </p>
+      <h2 className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">
+        {t(eyebrowKey, lang, { n: index + 1, total })}
+      </h2>
       <Card className="mt-4 p-5 sm:p-6">
         <p className="text-[0.9375rem] text-graphite">{t('listenSelect.instructions', lang)}</p>
-        <div className="mt-4 flex flex-wrap items-center gap-3">
-          <button
-            type="button"
-            onClick={() => playLine(lektionId, key, item.answer, { rate: 0.9 })}
-            disabled={!recorded && !speechAvailable()}
-            className="inline-flex items-center gap-2 rounded-clay border border-rule bg-white px-4 py-2.5 text-sm font-bold text-ink shadow-raise hover:border-siegel active:translate-y-1 active:shadow-none disabled:opacity-40"
-          >
-            <Play className="h-4 w-4" aria-hidden="true" /> {t('action.listen', lang)}
-          </button>
-          <AudioSourceBadge recorded={recorded} />
+        {/* No sound, no item: showing the text would hand over the answer, so a learner who cannot
+            hear the line skips it — nothing is recorded, it is neither right nor wrong. */}
+        <div className="mt-4">
+          <PlayButton lektionId={lektionId} audioKey={key} text={item.answer} rate={0.9} label={t('action.listen', lang)} onFallback={onNext} fallbackLabel={t('audio.skipItem', lang)} />
         </div>
 
         <div className="mt-5 flex flex-col gap-2">

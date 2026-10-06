@@ -226,7 +226,7 @@ export const OFFER_FAQ = [
   },
   {
     q: 'I’m nervous about speaking.',
-    a: 'Practise with the AI partner first: no audience, as many attempts as your allowance allows, and feedback on grammar, vocabulary and pronunciation after each session. Your microphone is only used when you start a session.',
+    a: 'Practise with the AI partner first: no audience, as many attempts as your allowance allows, and feedback on grammar, vocabulary and clarity after each session. Your microphone is only used when you start a session.',
   },
   {
     q: 'I only have a little time each day.',

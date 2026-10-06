@@ -112,3 +112,95 @@ export function playLine(lektionId, key, text, opts) {
   }
   return speakGerman(text, opts) ? 'tts' : false;
 }
+
+// ---------------------------------------------------------------------------
+// PLAYBACK THAT KNOWS WHETHER ANYTHING WAS HEARD (2026-10 review).
+//
+// `speakGerman` returned true as soon as an utterance was QUEUED, and `playLine` returned
+// 'recording' before the clip had loaded — so a browser without a German voice, a muted engine
+// or a 404 clip looked exactly like success, and the learner pressed Play on silence. These
+// resolve only once sound has actually STARTED (the audio element's `playing` event, the
+// utterance's `start` event) and otherwise report why not:
+//
+//   { ok: true,  source: 'recording' | 'tts' }
+//   { ok: false, reason: 'no-speech' }        — no speechSynthesis in this browser
+//   { ok: false, reason: 'no-german-voice' }  — speechSynthesis, but no de* voice installed
+//   { ok: false, reason: 'did-not-start' }    — the engine accepted the line and never spoke
+//   { ok: false, reason: 'error' }
+//
+// A browser that speaks German through an unnamed default voice is NOT accepted: the existence
+// of speechSynthesis is no proof that German comes out of it.
+
+const VOICE_WAIT_MS = 1500;
+const START_TIMEOUT_MS = 3000;
+
+/** The voice list, waiting once for `voiceschanged` — the first call often sees an empty list. */
+function voicesReady() {
+  const synth = window.speechSynthesis;
+  const now = synth.getVoices() || [];
+  if (now.length) return Promise.resolve(now);
+  return new Promise((resolve) => {
+    const done = () => { synth.removeEventListener?.('voiceschanged', done); resolve(synth.getVoices() || []); };
+    synth.addEventListener?.('voiceschanged', done);
+    setTimeout(done, VOICE_WAIT_MS);
+  });
+}
+
+/** Speak German and resolve when speech has started (or why it has not). */
+export async function speakGermanChecked(text, { rate = 0.92 } = {}) {
+  if (!speechAvailable()) return { ok: false, reason: 'no-speech' };
+  if (!text) return { ok: false, reason: 'error' };
+  const voices = await voicesReady();
+  const voice = voices.find((v) => /^de[-_]DE/i.test(v.lang)) || voices.find((v) => /^de/i.test(v.lang));
+  if (!voice) return { ok: false, reason: 'no-german-voice' };
+  return new Promise((resolve) => {
+    let settled = false;
+    const settle = (result) => { if (!settled) { settled = true; resolve(result); } };
+    try {
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(String(text));
+      u.lang = voice.lang || 'de-DE';
+      u.voice = voice;
+      u.rate = rate;
+      u.onstart = () => settle({ ok: true, source: 'tts' });
+      u.onerror = () => settle({ ok: false, reason: 'error' });
+      window.speechSynthesis.speak(u);
+      setTimeout(() => {
+        if (settled) return;
+        window.speechSynthesis.cancel();
+        settle({ ok: false, reason: 'did-not-start' });
+      }, START_TIMEOUT_MS);
+    } catch {
+      settle({ ok: false, reason: 'error' });
+    }
+  });
+}
+
+/** Play a recording and resolve on `playing`; any failure falls back to checked synthesis. */
+export function playRecordingChecked(url, text, { rate = 1 } = {}) {
+  return new Promise((resolve) => {
+    let settled = false;
+    const fallback = () => { if (!settled) { settled = true; speakGermanChecked(text, { rate: rate < 1 ? 0.75 : 0.92 }).then(resolve); } };
+    try {
+      const audio = new Audio(url);
+      audio.playbackRate = rate;
+      if ('preservesPitch' in audio) audio.preservesPitch = true;
+      audio.addEventListener('playing', () => { if (!settled) { settled = true; resolve({ ok: true, source: 'recording' }); } });
+      audio.addEventListener('error', fallback);
+      audio.play().catch(fallback);
+      setTimeout(() => { if (!settled) { audio.pause(); fallback(); } }, START_TIMEOUT_MS + 2000);
+    } catch {
+      fallback();
+    }
+  });
+}
+
+/**
+ * Play a lesson clip — the recording when the manifest has one, else the synthesiser — and
+ * resolve once sound has started (or why not). `slow` plays at a beginner pace.
+ */
+export function playChecked(lektionId, key, text, { rate = 0.92, slow = false } = {}) {
+  const url = audioFor(lektionId, key);
+  if (url) return playRecordingChecked(url, text, { rate: slow ? 0.75 : 1 });
+  return speakGermanChecked(text, { rate: slow ? 0.75 : rate });
+}

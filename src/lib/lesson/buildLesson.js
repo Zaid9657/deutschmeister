@@ -1119,7 +1119,11 @@ export function buildLesson({ curriculum, lektion, pool, dueCards = [], attempt 
     stages.push({ nr: 2, key: 'dialog', kind: 'dialog', title: lektion.dialog.title || 'Dialog', dialog: lektion.dialog });
   }
   if (lektion.wortfeld && lektion.wortfeld.length) {
-    stages.push({ nr: 2, key: 'wortfeld', kind: 'wortfeld', title: 'Wortfeld', words: lektion.wortfeld });
+    stages.push({
+      nr: 2, key: 'wortfeld', kind: 'wortfeld', title: 'Wortfeld', words: lektion.wortfeld,
+      // The dialogue lines give each word card the sentence it was met in (WortfeldStage lineFor).
+      lines: ((lektion.dialog && lektion.dialog.lines) || []).map((l) => l.de).filter(Boolean),
+    });
   }
   if (lektion.notice) {
     stages.push({ nr: 3, key: 'notice', kind: 'notice', title: lektion.notice.title || 'Grammatik', notice: lektion.notice });

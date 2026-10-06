@@ -351,7 +351,7 @@ export const WRITING_TASKS = [
     minWords: 5,
     maxWords: 40,
     task:
-      'Ana Chakiri kommt aus Marokko. Sie spricht Arabisch. Heute Abend kommt sie im Hostel an. ' +
+      'Ana Chakiri kommt aus Marokko. Sie spricht Arabisch. ' +
       'Füllen Sie das Anmeldeformular im Hostel für Ana aus.',
     leitpunkte: [
       'Familienname',
@@ -373,6 +373,7 @@ export const WRITING_TASKS = [
     // Behörden“ and its Personalien lexis (ledig, verheiratet, Geburtsdatum, Staatsangehörigkeit,
     // Familienstand) was taught and never asked for (DaF review #3). Mirrors a11.js §Lektion 2.
     task:
+      'Sie sind Ana Chakiri, am 3.5.1998 geboren, aus Marokko, ledig. ' +
       'Sie melden sich in der Sprachschule an. Schreiben Sie eine kurze Nachricht mit Ihren Daten. ' +
       'Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
     leitpunkte: [
@@ -409,7 +410,7 @@ export const WRITING_TASKS = [
     minWords: 25,
     maxWords: 45,
     task:
-      'Schreiben Sie Ihrer Freundin eine Nachricht über den Flohmarkt. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+      'Sie sind auf dem Flohmarkt. Schreiben Sie Lena eine Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
     leitpunkte: [
       'Was Sie kaufen',
       'Was es kostet',
@@ -450,7 +451,7 @@ export const WRITING_TASKS = [
     minWords: 25,
     maxWords: 45,
     task:
-      'Schreiben Sie Ihrer Chefin eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+      'Schreiben Sie Ihrer Chefin, Frau Berg, eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
     leitpunkte: [
       'Was Sie brauchen',
       'Ihre Telefonnummer',
@@ -486,7 +487,8 @@ export const WRITING_TASKS = [
     minWords: 25,
     maxWords: 45,
     task:
-      'Schreiben Sie eine Nachricht und verschieben Sie einen Termin. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+      'Ihr Termin mit Lena ist am Montag um acht Uhr, aber am Montag geht es nicht. ' +
+      'Schreiben Sie Lena eine Nachricht und nennen Sie einen neuen Termin. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
     leitpunkte: [
       'Warum Sie schreiben',
       'Neuer Tag und neue Uhrzeit',
@@ -537,7 +539,7 @@ export const WRITING_TASKS = [
     minWords: 5,
     maxWords: 40,
     task:
-      'Tim Berger steht jeden Tag früh auf. Sein Kurs ist am Donnerstag von 9 Uhr bis 12 Uhr, in Zimmer 4. ' +
+      'Tim Berger steht jeden Tag früh auf. Sein Kurs ist am Donnerstag von 9 Uhr bis 12 Uhr, in Zimmer 12. ' +
       'Füllen Sie den Wochenplan für den Kurs aus.',
     leitpunkte: [
       'Name',
@@ -556,7 +558,7 @@ export const WRITING_TASKS = [
     minWords: 25,
     maxWords: 45,
     task:
-      'Schreiben Sie eine Einladung zu Ihrem Geburtstag. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+      'Schreiben Sie eine Einladung zu Ihrem Geburtstag. Sie feiern im Café. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
     leitpunkte: [
       'Warum Sie feiern',
       'Tag und Uhrzeit',

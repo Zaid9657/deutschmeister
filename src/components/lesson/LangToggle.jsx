@@ -29,7 +29,7 @@ export default function LangToggle({ className = '' }) {
             type="button"
             onClick={() => setLang(code)}
             aria-pressed={on}
-            className={`rounded-pill px-2 py-0.5 font-data text-[0.6875rem] font-bold uppercase tracking-[0.08em] transition-colors duration-100 motion-reduce:transition-none ${
+            className={`min-h-[1.75rem] min-w-[2rem] rounded-pill px-2 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.08em] transition-colors duration-100 motion-reduce:transition-none ${
               on ? 'bg-siegel text-white' : 'text-graphite hover:text-siegel-deep'
             }`}
           >

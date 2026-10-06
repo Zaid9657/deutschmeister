@@ -1,5 +1,6 @@
 import { supabase } from '../utils/supabase.js';
 import { setProgramItemDone } from './programProgress.js';
+import { betterRun } from '../lib/lesson/mastery.js';
 
 // Persistence for the lesson engine (migrations/2026-09-12-lesson-engine.sql).
 // Fail-soft like programProgress.js: a logged-out learner, a blocked network or
@@ -26,6 +27,16 @@ export const getLessonProgress = async (userId, level) => {
   return new Map((data || []).map((r) => [r.lektion_id, r]));
 };
 
+/**
+ * A passed course final test (the Modelltest whose slug is the curriculum's
+ * testSlug) completes the last node of the course path — the node the
+ * certificate requires. Nothing wrote it before 2026-10-05, so the certificate
+ * of a rebuilt course could not be reached.
+ */
+export const completeLevelTest = (userId, level, nodeId) => (
+  userId ? setProgramItemDone(userId, programKeyFor(level), nodeId, true) : Promise.resolve(false)
+);
+
 /** Mark a Lektion as opened. Never overwrites a finished row back to 'started'. */
 export const startLesson = async (userId, level, lektionId) => {
   if (!userId || !lektionId) return false;
@@ -44,10 +55,22 @@ export const startLesson = async (userId, level, lektionId) => {
  * keeps the existing course percent and certificate working (CONTRACT.md,
  * "Persistence"). The course tick is deliberately last — a failed lesson row
  * must not leave the path stuck.
+ *
+ * The row keeps the BETTER run (mastery.betterRun): a weaker repeat no longer
+ * overwrites a Gold run's status and accuracy (2026-10 review, finding C). True
+ * only when both writes landed — the sync outbox retries on false.
  */
 export const completeLesson = async (userId, { level, lektionId, accuracy = 0, status = 'complete' }) => {
   if (!userId || !lektionId) return false;
   const lvl = String(level).toLowerCase();
+  const { data: prev } = await supabase
+    .from('lesson_progress')
+    .select('status, accuracy')
+    .eq('user_id', userId)
+    .eq('lektion_id', lektionId)
+    .maybeSingle();
+  const stored = prev && prev.status && prev.status !== 'started' ? { status: prev.status, accuracy: Number(prev.accuracy) || 0 } : null;
+  const kept = betterRun(stored, { status, accuracy });
   const { error } = await supabase
     .from('lesson_progress')
     .upsert(
@@ -55,16 +78,16 @@ export const completeLesson = async (userId, { level, lektionId, accuracy = 0, s
         user_id: userId,
         level: lvl,
         lektion_id: lektionId,
-        status,
-        accuracy,
+        status: kept.status,
+        accuracy: kept.accuracy,
         completed_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       },
       { onConflict: 'user_id,lektion_id' },
     );
   if (error) console.error('[lessonService] completeLesson:', error.message);
-  await setProgramItemDone(userId, programKeyFor(lvl), lektionId, true);
-  return !error;
+  const ticked = await setProgramItemDone(userId, programKeyFor(lvl), lektionId, true);
+  return !error && ticked !== false;
 };
 
 /**
@@ -83,10 +106,25 @@ export const completeLesson = async (userId, { level, lektionId, accuracy = 0, s
  * awaited INSERTs still get distinct `now()` values, so the run count survives
  * either way.
  *
+ * IDEMPOTENT for a stamped batch (2026-10): a batch whose (user, Lektion,
+ * created_at) is already in the table is not written again, so the sync outbox
+ * can retry after a lost response without adding a phantom "completed run".
+ * ponytail: the unstamped fallback below is not idempotent — it only runs if a
+ * policy ever refuses the stamp, which none does today.
+ *
  * `client` is a seam for tests only; production always passes the real one.
  */
 export const logAttempts = async (userId, { level, lektionId, createdAt = null } = {}, attempts = [], client = supabase) => {
   if (!userId || !attempts.length) return false;
+  if (createdAt) {
+    const { data: already, error: readError } = await client
+      .from('lesson_attempts')
+      .select('created_at')
+      .eq('user_id', userId)
+      .eq('lektion_id', lektionId)
+      .eq('created_at', createdAt);
+    if (!readError && already && already.length) return true;
+  }
   const base = attempts.map((a) => ({
     user_id: userId,
     level: String(level).toLowerCase(),
@@ -136,12 +174,18 @@ export const runMarkerAttempt = () => ({ itemId: RUN_MARKER_ITEM_ID, stage: RUN_
  *
  * Fail-soft like everything else here: on any error the answer is 0, i.e.
  * attempt 1 — a learner never loses a lesson to a failed count.
+ *
+ * Rows that are NOT a run are skipped: explain-answer.mjs and score-readaloud.mjs
+ * log one row per call under the Lektion id, each with its own now(), so every
+ * "Explain" tap and every read-aloud used to count as one more finished run.
  */
+const NOT_A_RUN = new Set(['explain', 'readaloud', 'checkpoint']);
+
 export const countCompletedRuns = async (userId, { level, lektionId, completed = false } = {}, client = supabase) => {
   if (!userId || !lektionId) return 0;
   const { data, error } = await client
     .from('lesson_attempts')
-    .select('created_at')
+    .select('created_at, stage')
     .eq('user_id', userId)
     .eq('lektion_id', lektionId)
     .eq('level', String(level || '').toLowerCase());
@@ -150,7 +194,7 @@ export const countCompletedRuns = async (userId, { level, lektionId, completed =
     console.error('[lessonService] countCompletedRuns:', error.message);
     return 0;
   }
-  const runs = new Set((data || []).map((r) => r.created_at)).size;
+  const runs = new Set((data || []).filter((r) => !NOT_A_RUN.has(r.stage)).map((r) => r.created_at)).size;
   return runs || (completed ? 1 : 0);
 };
 

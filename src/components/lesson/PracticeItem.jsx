@@ -108,9 +108,9 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
 
   return (
     <div className={state ? 'pb-36 sm:pb-0' : ''}>
-      <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">
+      <h2 className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">
         {t(eyebrowKey, lang, { n: index + 1, total })}
-      </p>
+      </h2>
       <Card className="mt-4 p-5 sm:p-6">
         <p className="font-display text-[1.25rem] font-semibold leading-snug text-ink sm:text-[1.375rem]" lang="de">{item.questionDe}</p>
         {item.questionEn && <p className="mt-1.5 text-[0.875rem] leading-snug text-graphite">{item.questionEn}</p>}
@@ -154,7 +154,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
               autoCapitalize="off"
               spellCheck={false}
               onChange={(e) => setValue(e.target.value)}
-              onKeyDown={(e) => { if (e.key === 'Enter') submit(); }}
+              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); submit(); } }}
               className="mt-2 w-full rounded-clay border border-rule bg-white px-4 py-3 text-[1.0625rem] text-ink outline-none focus:border-siegel disabled:bg-paper-sunk"
               placeholder={item.type === 'sentence_building' ? t('practice.wholeSentence', lang) : '…'}
             />

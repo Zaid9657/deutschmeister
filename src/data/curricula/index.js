@@ -27,6 +27,12 @@ export const curriculumFor = (level) => CURRICULA[String(level || '').toLowerCas
 /** Any curriculum module, live or draft — never for rendering. */
 export const anyCurriculumFor = (level) => ALL_CURRICULA[String(level || '').toLowerCase()] || null;
 
+/** The path node a passed final test completes (program_progress item id). */
+export const levelTestNodeId = (curriculum) => `${curriculum.level}-leveltest`;
+
+/** The LIVE curriculum whose final test is this Modelltest slug, or null. */
+export const curriculumForTestSlug = (slug) => Object.values(CURRICULA).find((c) => c.testSlug && c.testSlug === slug) || null;
+
 /** Flattened path: lektion, checkpoint, lektion … leveltest — what the course home renders. */
 export function curriculumPath(curriculum) {
   const path = [];
@@ -35,6 +41,6 @@ export function curriculumPath(curriculum) {
     const cp = curriculum.checkpoints.find((c) => c.afterLektion === l.nr);
     if (cp) path.push({ kind: 'checkpoint', id: cp.id, nr: cp.nr, title: cp.title, minutes: 12, afterLektion: l.nr });
   }
-  path.push({ kind: 'leveltest', id: `${curriculum.level}-leveltest`, title: `Abschlusstest ${curriculum.code}`, minutes: 65, testSlug: curriculum.testSlug });
+  path.push({ kind: 'leveltest', id: levelTestNodeId(curriculum), title: `Abschlusstest ${curriculum.code}`, minutes: 65, testSlug: curriculum.testSlug });
   return path;
 }

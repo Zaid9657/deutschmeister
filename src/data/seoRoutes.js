@@ -47,7 +47,7 @@ export const SEO_ROUTES = {
     description:
       'Practice speaking German with an AI conversation partner: guided missions or free conversation, with instant feedback. Levels A1 to B2.',
     keywords:
-      'German speaking practice, speak German with AI, German conversation practice, German pronunciation feedback, practice German online',
+      'German speaking practice, speak German with AI, German conversation practice, practice German online',
   },
   '/level-test': {
     title: 'Free German Level Test (A1–B2)',

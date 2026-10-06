@@ -6,6 +6,22 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Phones: no grey flash over a tapped control (every control has its own :active press
+       state), and no font inflation in landscape. Zoom stays enabled — never disable it. */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* No double-tap-to-zoom wait on controls, so a tap answers at once; text that is CONTENT
+     stays selectable, only controls ignore a long-press selection. */
+  button,
+  [role='button'] {
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  a {
+    touch-action: manipulation;
   }
 
   body {

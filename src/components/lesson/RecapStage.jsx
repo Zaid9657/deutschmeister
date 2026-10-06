@@ -27,7 +27,14 @@ import { supabase } from '../../utils/supabase.js';
  * about something the learner already owns. The lesson is in localStorage by
  * the time this renders (LessonPlayerPage's recap effect).
  */
-export default function RecapStage({ stage, accuracy, status, nextLabel, onNext, onBack, level }) {
+/** The text for one skillStatus line: `recap.skill.<skill>.<state>` with its numbers. */
+function skillText(line, lang) {
+  const pct = typeof line.pct === 'number' ? accuracyPercent(line.pct) : null;
+  const state = line.skill === 'writing' && line.state === 'self-checked' && line.limitReached ? 'self-checked-limit' : line.state;
+  return t(`recap.skill.${line.skill}.${state}`, lang, { ...line, pct });
+}
+
+export default function RecapStage({ stage, accuracy, status, skills = [], sync = null, onRetrySync, nextLabel, onNext, onBack, level }) {
   const { user } = useAuth();
   const [lang] = useLessonLang();
   const pct = accuracyPercent(accuracy);
@@ -117,6 +124,20 @@ export default function RecapStage({ stage, accuracy, status, nextLabel, onNext,
           <span className="font-data text-[0.8125rem] text-graphite">{t('recap.firstTry', lang, { pct })}</span>
         </div>
 
+        {skills.length > 0 && (
+          <div className="mt-5">
+            <h3 className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">{t('recap.skills.title', lang)}</h3>
+            <dl className="mt-2 divide-y divide-rule border-y border-rule">
+              {skills.map((line) => (
+                <div key={line.skill} className="grid grid-cols-1 gap-0.5 py-2 sm:grid-cols-[8rem_1fr] sm:gap-3">
+                  <dt className="text-[0.875rem] font-bold text-ink">{t(`recap.skill.${line.skill}`, lang)}</dt>
+                  <dd className="text-[0.875rem] leading-snug text-graphite">{skillText(line, lang)}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        )}
+
         <dl className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div>
             <dt className="flex items-center gap-1.5 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
@@ -152,6 +173,16 @@ export default function RecapStage({ stage, accuracy, status, nextLabel, onNext,
         <p className="mt-5 border-t border-rule pt-4 text-[0.875rem] leading-relaxed text-graphite">
           {t(status === 'gold' ? 'recap.gold' : 'recap.done', lang)}
         </p>
+
+        {/* Where this run is saved (syncOutbox.js) — said in words, and never a reason to stop: Continue works either way. */}
+        <p role="status" className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.8125rem] leading-snug text-graphite">
+          {sync && <span>{t(`sync.${sync}`, lang)}</span>}
+          {sync === 'failed' && onRetrySync && (
+            <button type="button" onClick={onRetrySync} className="min-h-11 font-bold text-siegel-deep underline underline-offset-2 hover:text-ink">
+              {t('sync.retry', lang)}
+            </button>
+          )}
+        </p>
       </Card>
 
       {hasGoDeeper && (
@@ -181,6 +212,17 @@ export default function RecapStage({ stage, accuracy, status, nextLabel, onNext,
             )}
           </ul>
         </Card>
+      )}
+
+      {/* Coverage said plainly (2026-10 review): a Lektion without a linked listening exercise or
+          reading text says so instead of silently showing fewer links. */}
+      {lektion && (lektion.links?.listeningExercise == null || lektion.links?.readingOrder == null) && (
+        <p className="mt-4 text-[0.8125rem] leading-snug text-graphite">
+          {[
+            lektion.links?.listeningExercise == null && t('recap.coverage.noListening', lang),
+            lektion.links?.readingOrder == null && t('recap.coverage.noReading', lang),
+          ].filter(Boolean).join(' ')}
+        </p>
       )}
 
       {wordIds.length > 0 && (

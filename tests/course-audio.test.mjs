@@ -8,7 +8,7 @@
 // The last one is the one that would actually break a learner: a committed
 // manifest with no entries is the normal state until the owner runs the script,
 // so `audioFor` must return null and every caller must fall back to speech.
-import { test } from 'node:test';
+import { test, mock } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -21,7 +21,7 @@ import {
 } from '../scripts/generate-course-audio.mjs';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import manifest from '../src/data/curricula/a11.audio.js';
-import { audioFor, hasRecordings } from '../src/lib/lesson/speech.js';
+import { audioFor, hasRecordings, speakGermanChecked } from '../src/lib/lesson/speech.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -260,17 +260,20 @@ test('audioFor returns null on the empty manifest and never throws', () => {
 
 test('the three playback screens ask the manifest before they synthesise', () => {
   const dialog = read('src/components/lesson/DialogStage.jsx');
-  assert.match(dialog, /playLine\(id, `line-\$\{i\}`/, 'DialogStage plays line-<i>');
+  // Since 2026-10 the screens call playChecked, which asks the manifest (audioFor) first and reports
+  // whether sound actually started; the keys are unchanged.
+  assert.match(read('src/lib/lesson/speech.js'), /export function playChecked[\s\S]{0,200}const url = audioFor\(lektionId, key\);\s*if \(url\) return playRecordingChecked/, 'playChecked asks the manifest before it synthesises');
+  assert.match(dialog, /playChecked\(id, `line-\$\{i\}`/, 'DialogStage plays line-<i>');
   assert.match(dialog, /Aufnahme/);
   assert.match(dialog, /Computerstimme/);
 
   const dictation = read('src/components/lesson/DictationItem.jsx');
   assert.match(dictation, /line-\$\{line\.index\}/, 'the dictation reuses the dialogue line key');
-  assert.match(dictation, /playLine\(/);
-  assert.match(dictation, /AudioSourceBadge/);
+  assert.match(dictation, /<PlayButton lektionId=\{id\} audioKey=\{key\}/, 'the dictation plays its line-<i> key through the checked PlayButton');
+  assert.match(read('src/components/lesson/PlayButton.jsx'), /<AudioSourceBadge recorded=\{recorded\} \/>/, 'and the PlayButton says recording or computer voice');
 
   const pretest = read('src/components/lesson/PretestStage.jsx');
-  assert.match(pretest, /playLine\(id, 'pretest'/, 'PretestStage plays the model answer');
+  assert.match(pretest, /playChecked\(id, 'pretest'/, 'PretestStage plays the model answer');
 
   const review = read('src/pages/lesson/ReviewPage.jsx');
   assert.match(review, /line-\$\{parsed\.lineIdx\}/, 'sentence:<lektionId>:<idx> → line-<idx>');
@@ -299,4 +302,109 @@ test('the owner instructions name the four env vars and the two runs', () => {
   }
   assert.match(doc, /generate-course-audio\.mjs a1\.1 --dry/);
   assert.match(doc, /sync-curricula\.mjs/);
+});
+
+// ---------------------------------------------------------------------------
+// Audio the learner can rely on (2026-10 review, "Make audio dependable").
+// 1. A recording is only served for the text it was rendered from (sha1 per entry).
+// 2. Playback reports what HAPPENED: no speechSynthesis, no German voice, an engine that never
+//    starts — each is a named failure, not a silent "success".
+// 3. A listening item answered from the text is recorded as read, not heard.
+// ---------------------------------------------------------------------------
+
+test('every recorded clip in the manifest still matches the text it was rendered from', () => {
+  const planned = new Map(planRenders(CURRICULUM_A11).filter((e) => e.lektionId).map((e) => [`${e.lektionId}:${e.key}`, e]));
+  const stale = [];
+  for (const [lektionId, clips] of Object.entries(manifest.lektionen || {})) {
+    for (const [key, entry] of Object.entries(clips || {})) {
+      const plan = planned.get(`${lektionId}:${key}`);
+      if (!plan) stale.push(`${lektionId}:${key} — no such line any more`);
+      else if (entry.sha1 !== sha1(plan.text)) stale.push(`${lektionId}:${key} — rendered from different text; re-run scripts/generate-course-audio.mjs`);
+    }
+  }
+  assert.deepEqual(stale, []);
+  // Honest today: no course clip exists yet (owner run pending), so every badge says computer voice.
+  if (!Object.keys(manifest.lektionen || {}).length) assert.equal(manifest.generatedAt, null);
+});
+
+function stubSpeech({ voices = [], starts = true, errors = false } = {}) {
+  const spoken = [];
+  globalThis.window = {
+    speechSynthesis: {
+      getVoices: () => voices,
+      cancel: () => {},
+      speak: (u) => {
+        spoken.push(u);
+        if (errors) setTimeout(() => u.onerror && u.onerror({}), 0);
+        else if (starts) setTimeout(() => u.onstart && u.onstart({}), 0);
+      },
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    },
+  };
+  globalThis.SpeechSynthesisUtterance = class { constructor(text) { this.text = text; } };
+  return spoken;
+}
+
+test('no speechSynthesis at all is reported, not played', async () => {
+  globalThis.window = {};
+  assert.deepEqual(await speakGermanChecked('Hallo'), { ok: false, reason: 'no-speech' });
+});
+
+test('a browser with speech but no German voice says so — it does not speak German through an English voice', async () => {
+  mock.timers.enable({ apis: ['setTimeout'] });
+  try {
+    const spoken = stubSpeech({ voices: [{ lang: 'en-US', name: 'English' }] });
+    const pending = speakGermanChecked('Guten Tag');
+    mock.timers.tick(1600);
+    assert.deepEqual(await pending, { ok: false, reason: 'no-german-voice' });
+    assert.equal(spoken.length, 0, 'nothing was queued');
+  } finally {
+    mock.timers.reset();
+  }
+});
+
+test('success is reported only once the utterance has STARTED', async () => {
+  mock.timers.enable({ apis: ['setTimeout'] });
+  try {
+    const spoken = stubSpeech({ voices: [{ lang: 'de-DE', name: 'Anna' }] });
+    const pending = speakGermanChecked('Guten Tag', { rate: 0.75 });
+    await Promise.resolve();
+    mock.timers.tick(1);
+    assert.deepEqual(await pending, { ok: true, source: 'tts' });
+    assert.equal(spoken[0].rate, 0.75, 'the slower speed reaches the engine');
+    assert.equal(spoken[0].voice.lang, 'de-DE');
+  } finally {
+    mock.timers.reset();
+  }
+});
+
+test('an engine that accepts the line and never speaks is a failure, not a success', async () => {
+  mock.timers.enable({ apis: ['setTimeout'] });
+  try {
+    stubSpeech({ voices: [{ lang: 'de-DE', name: 'Anna' }], starts: false });
+    const pending = speakGermanChecked('Guten Tag');
+    await Promise.resolve();
+    mock.timers.tick(3100);
+    assert.deepEqual(await pending, { ok: false, reason: 'did-not-start' });
+  } finally {
+    mock.timers.reset();
+  }
+});
+
+test('listening items: no sound offers a way on, and reading the line is recorded as read, not heard', () => {
+  const dictation = read('src/components/lesson/DictationItem.jsx');
+  assert.match(dictation, /<PlayButton[^>]*onFallback=\{\(\) => setReadInstead\(true\)\}/);
+  assert.match(dictation, /listened: !readInstead/);
+  const listen = read('src/components/lesson/ListenSelectItem.jsx');
+  assert.match(listen, /<PlayButton[^>]*onFallback=\{onNext\}/, 'no sound: skip, never show the answer');
+  for (const f of ['DialogStage', 'PhonetikStage', 'PretestStage', 'DictationItem', 'ListenSelectItem']) {
+    assert.doesNotMatch(read(`src/components/lesson/${f}.jsx`), /\bplayLine\(/, `${f} uses the checked player`);
+  }
+  for (const lang of ['en', 'de']) {
+    const strings = read('src/lib/lesson/strings.js');
+    for (const key of ['audio.failed.no-german-voice', 'audio.failed.did-not-start', 'audio.slower', 'audio.retry']) {
+      assert.ok((strings.match(new RegExp(`'${key.replace(/\./g, '\\.')}':`, 'g')) || []).length === 2, `${key} in both chrome languages (${lang})`);
+    }
+  }
 });

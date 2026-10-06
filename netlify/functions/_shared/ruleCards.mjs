@@ -51,7 +51,7 @@ export const RULE_CARDS = {
   },
   "basic-sentence-structure": {
     "titleDe": "Der Satz: das Verb steht auf Position 2",
-    "content": "Im Aussagesatz steht das Verb an zweiter Stelle: Sie gehen geradeaus.\nSteht eine Angabe vorn, rutscht das Subjekt hinter das Verb: Dann gehen Sie links.\nAuch in der W-Frage steht das Verb auf Position 2: Wie komme ich zum Rathaus?\nWeitere Beispiele: Zuerst gehen Sie geradeaus bis zur Kirche.\nDa ist die Apotheke und auch die Bank. Rechts ist die Haltestelle.\nDie U-Bahn fährt ins Zentrum. Da ist auch die Brücke.\nFeste Wendungen für den Weg: zum Rathaus, zur Kirche, an der Ecke.\nDie Regel dahinter kommt in Lektion 11.\nEnglish: the verb is the second element — if anything else opens the sentence, the subject moves behind the verb.",
+    "content": "Im Aussagesatz steht das Verb an zweiter Stelle: Sie gehen geradeaus.\nSteht eine Angabe vorn, rutscht das Subjekt hinter das Verb: Dann gehen Sie links.\nAuch in der W-Frage steht das Verb auf Position 2: Wie komme ich zum Rathaus?\nBeispiele: Zuerst gehen Sie geradeaus bis zur Kirche.\nDa ist die Apotheke und auch die Bank. Rechts ist die Haltestelle.\nDie U-Bahn fährt ins Zentrum. Da ist auch die Brücke.\nFeste Wendungen für den Weg: zum Rathaus, zur Kirche, an der Ecke.\nDie Regel dahinter kommt in Lektion 11.\nEnglish: the verb is the second element — if anything else opens the sentence, the subject moves behind the verb.",
     "commonMistakes": [
       {
         "wrong": "Dann Sie gehen links.",
@@ -61,7 +61,7 @@ export const RULE_CARDS = {
       {
         "wrong": "Wie ich komme zum Rathaus?",
         "correct": "Wie komme ich zum Rathaus?",
-        "explanationDe": "In der W-Frage steht das Verb direkt nach dem Fragewort."
+        "explanationDe": "In der W-Frage steht das Verb auf Position 2."
       },
       {
         "wrong": "Die Haltestelle rechts ist.",
@@ -93,7 +93,7 @@ export const RULE_CARDS = {
   },
   "definite-articles": {
     "titleDe": "der, die, das – der bestimmte Artikel",
-    "content": "Der bestimmte Artikel zeigt: Wir wissen, welche Sache gemeint ist.\nDie Formen sind der (maskulin), die (feminin), das (neutral), im Plural immer die: die Hefte.\nAntworten beginnen zuerst mit hier oder da.\nBeispiele: Das Wörterbuch ist hier. Der Stift ist da. Die Schere ist hier.\nDer Artikel steht immer vor dem Nomen: Der Stift ist blau, der Bleistift ist gelb.\nNein, das Heft ist grün.\nEnglish: der/die/das points at a thing both speakers already have in mind.",
+    "content": "Der bestimmte Artikel zeigt: Wir wissen, welche Sache gemeint ist.\nDie Formen sind der (maskulin), die (feminin), das (neutral), im Plural für alle drei die: die Hefte.\nZuerst antworten Sie mit hier oder da.\nBeispiele: Das Wörterbuch ist hier. Der Stift ist da. Die Schere ist hier.\nDer Artikel steht vor dem Nomen: Der Stift ist blau, der Bleistift ist gelb.\nNein, das Heft ist grün.\nEnglish: der/die/das points at a thing both speakers already have in mind.",
     "commonMistakes": [
       {
         "wrong": "Die Stift ist blau.",
@@ -124,7 +124,7 @@ export const RULE_CARDS = {
       {
         "wrong": "Kommst jetzt!",
         "correct": "Komm jetzt!",
-        "explanationDe": "In dieser Form fällt die Endung -st weg: Komm! Warte! Hilf!"
+        "explanationDe": "Die Endung -st fällt weg: Komm! Warte! Hilf!"
       },
       {
         "wrong": "Mach aus den Fernseher!",
@@ -135,12 +135,12 @@ export const RULE_CARDS = {
   },
   "indefinite-articles": {
     "titleDe": "ein, eine – der unbestimmte Artikel",
-    "content": "Neu oder unbekannt? Dann ein (der/das) oder eine (die): ein Computer, eine Lampe.\nNach Verben wie brauchen, haben, kaufen wird maskulin ein → einen: Ich brauche einen Computer.\nDie Regel dahinter (Akkusativ) kommt in A1.2.\nVerneinung mit kein: Wir haben kein Handy.\nDer Beruf steht ohne Artikel: Ihr Kollege ist Ingenieur.\nDie Uhrzeit um eins folgt in Lektion 8.\nEnglish: German uses no article before a job — Ich bin Ingenieurin, never eine Ingenieurin.",
+    "content": "Neu oder unbekannt? Dann ein (der/das) oder eine (die): ein Computer, eine Lampe.\nNach Verben wie brauchen, haben, kaufen wird maskulin ein → einen: Ich brauche einen Computer.\nDie Regel dahinter (Akkusativ) kommt in A1.2.\nVerneinung mit kein: Wir haben kein Handy.\nNach er ist steht der Beruf meist ohne Artikel: Ihr Kollege ist Ingenieur.\nDie Uhrzeit um eins folgt in Lektion 8.\nEnglish: after ich bin or er ist a job usually stands without an article — Ich bin Ingenieurin.",
     "commonMistakes": [
       {
         "wrong": "Ich bin eine Verkäuferin.",
         "correct": "Ich bin Verkäuferin.",
-        "explanationDe": "Nach sein steht der Beruf ohne Artikel. Richtig: Ich bin Verkäuferin."
+        "explanationDe": "Nach ich bin steht der Beruf meist ohne Artikel: Ich bin Verkäuferin."
       },
       {
         "wrong": "Ich brauche ein Computer.",
@@ -198,7 +198,7 @@ export const RULE_CARDS = {
   },
   "nominative-case": {
     "titleDe": "Der Nominativ: wer oder was?",
-    "content": "Lektion 3 hat das Objekt gezeigt: den Onkel.\nDas Subjekt dagegen steht im Nominativ, und danach fragt man mit wer:\nWer ist das? — Mein Onkel ist groß.\nNach sein steht das zweite Nomen ebenfalls im Nominativ: Das ist mein Bruder.\nDie Artikel im Nominativ: der Opa, die Oma.\nWeitere Beispiele: Wer ist die Frau da? Sie hat lange Haare.\nDas ist meine Tante. Ihr Gesicht ist schön.\nSein Bein und sein Arm sind lang.\nEnglish: the subject stands in the nominative, and so does the noun after sein.",
+    "content": "Lektion 3 hat das Objekt gezeigt: den Onkel.\nDas Subjekt dagegen steht im Nominativ, und danach fragt man mit wer:\nWer ist das? — Mein Onkel ist groß.\nNach sein steht das zweite Nomen ebenfalls im Nominativ: Das ist mein Bruder.\nDie Artikel im Nominativ: der Opa, die Oma.\nBeispiele: Wer ist die Frau da? Sie hat lange Haare.\nDas ist meine Tante. Ihr Gesicht ist schön.\nSein Bein und sein Arm sind lang.\nEnglish: the subject stands in the nominative, and so does the noun after sein.",
     "commonMistakes": [
       {
         "wrong": "Das ist meinen Bruder.",
@@ -227,12 +227,12 @@ export const RULE_CARDS = {
         "explanationDe": "Nomen auf -ung sind die-Wörter."
       },
       {
-        "wrong": "die Mädchen ist jung.",
+        "wrong": "Die Mädchen ist jung.",
         "correct": "Das Mädchen ist jung.",
         "explanationDe": "Nomen auf -chen sind das-Wörter, auch bei Personen."
       },
       {
-        "wrong": "die Lehrer kauft den Stuhl.",
+        "wrong": "Die Lehrer kauft den Stuhl.",
         "correct": "Der Lehrer kauft den Stuhl.",
         "explanationDe": "Männliche Berufsnamen auf -er sind der-Wörter. Die Frau ist die Lehrerin. In der Familie gilt das nicht: die Mutter, die Schwester."
       }
@@ -240,12 +240,12 @@ export const RULE_CARDS = {
   },
   "numbers-counting": {
     "titleDe": "Zahlen ab 20 und die Ordnungszahlen",
-    "content": "Zahlen über 20 liest man von hinten nach vorn:\n21 ist einundzwanzig, 48 ist achtundvierzig.\nZwischen beiden steht und. Man schreibt alles in einem Wort.\nDer Hunderter steht vorn: 480 ist vierhundertachtzig.\nDie Ordnungszahl bekommt bis 19 die Endung -te: das dritte Stockwerk, die erste Wohnung.\nAb 20 heißt die Endung -ste: der zwanzigste Mai.\nIn der Anzeige: Die Miete ist vierhundertachtzig Euro. Der Keller kostet zwanzig Euro.\nDas dritte Stockwerk ist frei. Die erste Wohnung ist frei.\nEnglish: numbers above twenty are read back to front — einundzwanzig is one-and-twenty.",
+    "content": "Zahlen über 20 liest man von hinten nach vorn:\n21 ist einundzwanzig, 48 ist achtundvierzig.\nDie zwei Zahlen stehen mit und in einem Wort: achtundvierzig, einundzwanzig.\nDer Hunderter steht vorn: 480 ist vierhundertachtzig.\nDie Ordnungszahl bekommt bis 19 die Endung -te: das dritte Stockwerk, die erste Wohnung.\nAb 20 heißt die Endung -ste: der zwanzigste Mai.\nIn der Anzeige: Die Miete ist vierhundertachtzig Euro. Der Keller kostet zwanzig Euro.\nDas dritte Stockwerk ist frei. Die erste Wohnung ist frei.\nEnglish: numbers above twenty are read back to front — einundzwanzig is one-and-twenty.",
     "commonMistakes": [
       {
         "wrong": "Die Miete ist achtvierzig Euro.",
         "correct": "Die Miete ist achtundvierzig Euro.",
-        "explanationDe": "Zwischen beiden steht und: achtundvierzig, einundzwanzig."
+        "explanationDe": "Die zwei Zahlen stehen mit und in einem Wort: achtundvierzig, einundzwanzig."
       },
       {
         "wrong": "Das drei Stockwerk ist frei.",
@@ -303,7 +303,7 @@ export const RULE_CARDS = {
   },
   "possessive-articles": {
     "titleDe": "mein, dein, sein, ihr – Possessivartikel",
-    "content": "Der Possessivartikel zeigt, wem etwas gehört: mein Geschenk, dein Bruder, sein Handy (er), ihr Buch (sie), Ihr Büro (Sie, höflich — immer groß!).\nVor femininen Nomen und im Plural kommt -e dazu: meine Mama.\nFür Gruppen: unser Fest (wir), euer Fest (ihr) → vor die-Wörtern unsere, eure.\nDie höfliche Form ist Ihr und steht immer mit großem I.\nBeim Fest: Mein Geburtstag ist im Mai. Mein Bruder kauft das Geschenk.\nEnglish: the polite form Ihr always takes a capital I, also inside a sentence.",
+    "content": "Der Possessivartikel zeigt, wem etwas gehört: mein Geschenk, dein Bruder, sein Handy (er), ihr Buch (sie: eine Frau oder mehrere), Ihr Büro (Sie, immer groß!).\nVor femininen Nomen und im Plural kommt -e dazu: meine Mama.\nFür Gruppen: unser Fest (wir), euer Fest (ihr) → vor die-Wörtern unsere, eure.\nDie höfliche Form ist Ihr und steht immer mit großem I.\nBeim Fest: Mein Geburtstag ist im Mai. Mein Bruder kauft das Geschenk.\nEnglish: the polite form Ihr always takes a capital I, also inside a sentence.",
     "commonMistakes": [
       {
         "wrong": "Das ist mein Mama.",
@@ -387,7 +387,7 @@ export const RULE_CARDS = {
   },
   "separable-verbs-intro": {
     "titleDe": "Trennbare Verben: die Satzklammer",
-    "content": "Trennbare Verben teilen sich: ein|kaufen → Ich kaufe am Freitag ein.\nDas Verb steht auf Position 2, die Vorsilbe am Ende. So auch auf|stehen, an|rufen, mit|bringen.\nBeispiele: Ich stehe um sechs auf. Ich bringe Kuchen mit. Ja, ich komme mit.\nIch rufe dich an ist eine feste Wendung. Rufst du mich an?\nschlafen wechselt den Vokal: er schläft.\nGemacht und gearbeitet lernt man hier als feste Formen. Die Regel dazu (Perfekt) kommt in A1.2.\nEnglish: a separable verb splits — the finite part comes second, the prefix goes last.",
+    "content": "Trennbare Verben teilen sich: ein|kaufen → Ich kaufe am Freitag ein.\nDas Verb steht auf Position 2 (in der Ja/Nein-Frage auf Position 1), die Vorsilbe am Ende. So auch auf|stehen, an|rufen, mit|bringen.\nBeispiele: Ich stehe um sechs auf. Ich bringe Kuchen mit. Ja, ich komme mit.\nIch rufe dich an ist eine feste Wendung. Rufst du mich an?\nschlafen wechselt den Vokal: er schläft.\nGemacht und gearbeitet lernt man hier als feste Formen. Die Regel dazu (Perfekt) kommt in A1.2.\nEnglish: a separable verb splits — the finite part comes second (first in a yes/no question), the prefix goes last.",
     "commonMistakes": [
       {
         "wrong": "Ich einkaufe am Freitag.",
@@ -423,13 +423,13 @@ export const RULE_CARDS = {
       {
         "wrong": "Die Tablette helft gegen Fieber.",
         "correct": "Die Tablette hilft gegen Fieber.",
-        "explanationDe": "helfen wechselt zu hilft. Genauso: man isst, wer schläft."
+        "explanationDe": "helfen wechselt zu hilft. So auch: man isst, wer schläft."
       }
     ]
   },
   "time-and-dates": {
     "titleDe": "um, am – die Uhrzeit sagen",
-    "content": "Uhrzeit mit um: um acht Uhr. Wochentag mit am: am Montag.\nUmgangssprachlich: Viertel nach acht, Viertel vor neun, halb neun (= 8.30!).\nDie Uhrzeit halb neun ist 8.30 und nicht 9.30.\nOffiziell lautet die Uhrzeit acht Uhr dreißig.\nDie Frage lautet: Wie spät ist es?\nFeste Wendung: Hast du Zeit? Am Dienstag habe ich abends Zeit.\nim steht vor Monaten: im Mai.\nDie Ordnungszahl für das Datum lernt man erst in A1.2.\nEnglish: um for clock times, am for days and parts of the day, im for months.",
+    "content": "Uhrzeit mit um: um acht Uhr. Wochentag mit am: am Montag.\nAber: Es ist acht Uhr (ohne um).\nUmgangssprachlich: Viertel nach acht, Viertel vor neun, halb neun (= 8.30!).\nDie Uhrzeit halb neun ist 8.30 und nicht 9.30.\nOffiziell lautet die Uhrzeit acht Uhr dreißig.\nDie Frage lautet: Wie spät ist es?\nFeste Wendung: Hast du Zeit? Am Dienstag habe ich abends Zeit.\nim steht vor Monaten: im Mai.\nDie Ordnungszahl für das Datum lernt man erst in A1.2.\nEnglish: um for clock times, am for days and parts of the day, im for months.",
     "commonMistakes": [
       {
         "wrong": "halb neun ist 9:30.",
@@ -471,17 +471,17 @@ export const RULE_CARDS = {
   },
   "verb-sein": {
     "titleDe": "sein: ich bin, du bist, Sie sind",
-    "content": "sein ist unregelmäßig:\nich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.\nNach sein steht der Beruf ohne Artikel: Ich bin Lehrer. Nicht: Ich bin ein Lehrer.\nDer Beruf in der Frage: Was sind Sie von Beruf? — Ich bin Studentin.\nBeispiele: Ich bin Ana. Ich bin Studentin.\nIm Satz steht die Staatsangehörigkeit als Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner.\nIm Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch.\nIn der Frage steht sein vorn: Ist das Formular für die Adresse?\nEnglish: sein is irregular — learn the six forms as whole words, not from a stem.",
+    "content": "sein ist unregelmäßig:\nich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.\nNach ich bin steht der Beruf meist ohne Artikel: Ich bin Lehrer.\nDer Beruf in der Frage: Was sind Sie von Beruf? — Ich bin Studentin.\nBeispiele: Ich bin Ana. Ich bin Studentin.\nIm Satz steht die Staatsangehörigkeit als Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner.\nIm Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch.\nIn der Ja/Nein-Frage steht sein vorn: Ist das Formular für die Adresse?\nEnglish: sein is irregular — learn the six forms as whole words, not from a stem.",
     "commonMistakes": [
       {
         "wrong": "Ich bin ein Lehrer.",
         "correct": "Ich bin Lehrer.",
-        "explanationDe": "Nach sein steht der Beruf ohne Artikel. Richtig: Ich bin Lehrer."
+        "explanationDe": "Nach ich bin steht der Beruf meist ohne Artikel: Ich bin Lehrer."
       },
       {
         "wrong": "Ana bin Studentin.",
         "correct": "Ana ist Studentin.",
-        "explanationDe": "bin gehört zu ich. Für eine Person steht ist: Ana ist Studentin."
+        "explanationDe": "bin gehört zu ich. Ana = sie, und bei sie steht ist: Ana ist Studentin."
       },
       {
         "wrong": "Wie sind Sie von Beruf?",
@@ -502,7 +502,7 @@ export const RULE_CARDS = {
   },
   "yes-no-questions": {
     "titleDe": "Ja/Nein-Fragen: das Verb steht vorn",
-    "content": "Bei der Ja/Nein-Frage steht das Verb auf Position 1: Der Zug fährt. → Fährt der Zug?\nDas Subjekt steht direkt nach dem Verb.\nDie Antwort ist ja oder nein. Die Satzmelodie steigt am Ende.\nDas Verb fahren ist unregelmäßig mit den Formen ich fahre, du fährst, er fährt.\nBeispiele: Fährt der Zug nach Österreich? Kostet die Fahrkarte zwanzig Euro?\nIst der Bahnhof weit? Hat der Zug Verspätung?\nEnglish: in a written yes/no question the verb comes first and the subject second.",
+    "content": "Bei der Ja/Nein-Frage steht das Verb auf Position 1: Der Zug fährt. → Fährt der Zug?\nDas Subjekt steht direkt nach dem Verb.\nDie Antwort ist ja oder nein. Die Satzmelodie steigt am Ende.\nDas Verb fahren ist unregelmäßig mit den Formen ich fahre, du fährst, er fährt.\nBeispiele: Fährt der Zug nach Österreich? Kostet die Fahrkarte zwanzig Euro?\nIst das Gleis weit? Hat der Zug Verspätung?\nEnglish: in a written yes/no question the verb comes first and the subject second.",
     "commonMistakes": [
       {
         "wrong": "Sie kommen aus Österreich?",

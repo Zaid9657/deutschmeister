@@ -81,6 +81,17 @@ const Button = forwardRef(function Button(
     .filter(Boolean)
     .join(' ');
 
+  // A link cannot be disabled: `disabled` on an <a> is ignored, so the "disabled" Continue on the
+  // course home stayed clickable and looked enabled (the disabled: styles never matched). While a
+  // `to` is disabled it renders as a disabled <button> — same look, really inert.
+  if (to && rest.disabled) {
+    return (
+      <button ref={ref} type="button" className={classes} {...rest}>
+        {children}
+      </button>
+    );
+  }
+
   if (to) {
     return (
       <Link ref={ref} to={to} className={classes} {...rest}>

@@ -162,7 +162,10 @@ export async function recordAttempt(userId, { level, checkpointId, items, answer
     console.error('[checkpointService] recordAttempt:', error.message);
     return false;
   }
-  if (result?.passed) await completeCheckpoint(userId, { level: lvl, checkpointId, accuracy: result.overall });
+  // lesson_progress.accuracy is 0…1 (migrations/2026-09-12-lesson-engine.sql);
+  // scoreCheckpoint's `overall` is a percent. Rows written before 2026-10-05
+  // hold the percent and are left as written.
+  if (result?.passed) await completeCheckpoint(userId, { level: lvl, checkpointId, accuracy: result.overall / 100 });
   return true;
 }
 

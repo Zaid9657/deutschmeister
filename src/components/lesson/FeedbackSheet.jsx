@@ -1,4 +1,5 @@
-import { Check, AlertTriangle, X, Sparkles, Eye } from 'lucide-react';
+import { useEffect, useRef } from 'react';
+import { Check, AlertTriangle, X, Sparkles, Eye, RotateCcw } from 'lucide-react';
 import Button from '../ui/Button.jsx';
 import { OtherLanguage, inline } from './NoticeStage.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
@@ -22,6 +23,14 @@ const TONE = {
     Icon: X,
     key: 'feedback.wrong',
     className: 'border-accent-himbeer bg-accent-himbeer-wash text-accent-himbeer-ink sm:shadow-raise-himbeer',
+  },
+  // Finished after fixing a wrong try on the spot (matching): done, but not a
+  // first-try success and not a typo — the aprikose "attention" tone with its
+  // own icon and words.
+  [RESULT.CORRECTED]: {
+    Icon: RotateCcw,
+    key: 'feedback.corrected',
+    className: 'border-accent-aprikose bg-accent-aprikose-wash text-accent-aprikose-ink sm:shadow-raise-aprikose',
   },
   // Requeue-only "I don't know" escape hatch (after-evaluation gap #3): a
   // reveal is neither a correct nor a graded-wrong answer to LOOK at — it is
@@ -59,46 +68,63 @@ const TONE = {
  */
 export default function FeedbackSheet({ result, expected, hint, explanation, otherExplanation, onExplain, onContinue, primaryLabel, revealed }) {
   const [lang] = useLessonLang();
-  if (!result) return null;
-  const { Icon, key, className } = revealed ? TONE.revealed : (TONE[result] || TONE[RESULT.WRONG]);
+  const continueRef = useRef(null);
+  // The Check button unmounts the moment it is pressed, which dropped keyboard focus to <body>.
+  // Focus lands on the one way forward instead — the verdict itself is read by the live region.
+  // An answer field that checks on Enter must preventDefault that keydown, or the same key press
+  // goes on to activate this Continue and skips the feedback (measured in the browser, 2026-10-06).
+  useEffect(() => {
+    if (result && continueRef.current) continueRef.current.focus({ preventScroll: true });
+  }, [result]);
+  const tone = result ? (revealed ? TONE.revealed : (TONE[result] || TONE[RESULT.WRONG])) : null;
+  const announcement = tone
+    ? [t(tone.key, lang), result !== RESULT.CORRECT && expected ? `${t('feedback.correctIs', lang)} ${expected}` : '', hint || ''].filter(Boolean).join(' ')
+    : '';
   return (
-    <div
-      className={
-        `fixed inset-x-0 bottom-0 z-40 animate-feedback-sheet motion-reduce:animate-none border-t p-4 ` +
-        `pb-[calc(1rem+env(safe-area-inset-bottom))] sm:static sm:z-auto sm:mt-4 sm:rounded-clay sm:border ` +
-        `${className}`
-      }
-      role="status"
-      aria-live="polite"
-    >
-      <div className="mx-auto max-w-2xl">
-        <p className="flex items-center gap-2 font-bold">
-          <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
-          {t(key, lang)}
-        </p>
-        {result !== RESULT.CORRECT && expected && (
-          <p className="mt-2 text-[0.9375rem]">
-            {t('feedback.correctIs', lang)} <strong className="font-bold" lang="de">{expected}</strong>
-          </p>
-        )}
-        {hint && <p className="mt-2 text-[0.9375rem] font-bold">{hint}</p>}
-        {explanation && <p className="mt-2 text-[0.875rem] leading-relaxed opacity-90">{inline(explanation)}</p>}
-        {otherExplanation && <OtherLanguage text={otherExplanation} lang={lang} className="mt-2" />}
-        <div className="mt-3 flex flex-wrap items-center gap-3">
-          {onExplain && (
-            <button
-              type="button"
-              onClick={onExplain}
-              className="inline-flex items-center gap-1.5 rounded-pill border border-current bg-white/60 px-3 py-1.5 text-[0.8125rem] font-bold"
-            >
-              <Sparkles className="h-4 w-4" aria-hidden="true" /> {t('feedback.explain', lang)}
-            </button>
-          )}
-          <Button onClick={onContinue} size="lg" className="w-full sm:ml-auto sm:w-auto">
-            {primaryLabel || t('action.next', lang)}
-          </Button>
+    <>
+      {/* Mounted BEFORE there is anything to say: a live region inserted together with its text
+          is not reliably announced (VoiceOver), and the verdict alone — not the whole sheet with
+          its buttons — is what should be spoken. */}
+      <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">{announcement}</p>
+      {tone && (
+        <div
+          className={
+            // bottom: above the cookie banner while it is open (public/consent.js sets --dm-consent-h).
+            `fixed inset-x-0 bottom-[var(--dm-consent-h,0px)] z-40 animate-feedback-sheet motion-reduce:animate-none border-t p-4 ` +
+            `pb-[calc(1rem+env(safe-area-inset-bottom))] sm:static sm:z-auto sm:mt-4 sm:rounded-clay sm:border ` +
+            `${tone.className}`
+          }
+        >
+          <div className="mx-auto max-w-2xl">
+            <p className="flex items-center gap-2 font-bold">
+              <tone.Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
+              {t(tone.key, lang)}
+            </p>
+            {result !== RESULT.CORRECT && expected && (
+              <p className="mt-2 text-[0.9375rem]">
+                {t('feedback.correctIs', lang)} <strong className="font-bold" lang="de">{expected}</strong>
+              </p>
+            )}
+            {hint && <p className="mt-2 text-[0.9375rem] font-bold">{hint}</p>}
+            {explanation && <p className="mt-2 text-[0.875rem] leading-relaxed">{inline(explanation)}</p>}
+            {otherExplanation && <OtherLanguage text={otherExplanation} lang={lang} className="mt-2" />}
+            <div className="mt-3 flex flex-wrap items-center gap-3">
+              {onExplain && (
+                <button
+                  type="button"
+                  onClick={onExplain}
+                  className="inline-flex min-h-11 items-center gap-1.5 rounded-pill border border-current bg-white/60 px-3 py-1.5 text-[0.8125rem] font-bold"
+                >
+                  <Sparkles className="h-4 w-4" aria-hidden="true" /> {t('feedback.explain', lang)}
+                </button>
+              )}
+              <Button ref={continueRef} onClick={onContinue} size="lg" className="w-full sm:ml-auto sm:w-auto">
+                {primaryLabel || t('action.next', lang)}
+              </Button>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 }

@@ -65,7 +65,7 @@ export default function ComboChip({ combo, className = '' }) {
           if (unmute) tick();
         }}
         aria-label={t(muted ? 'combo.soundOn' : 'combo.soundOff', lang)}
-        className="text-graphite hover:text-siegel-deep"
+        className="inline-flex h-8 w-8 items-center justify-center rounded-full text-graphite hover:text-siegel-deep"
       >
         {muted ? <VolumeX className="h-3.5 w-3.5" aria-hidden="true" /> : <Volume2 className="h-3.5 w-3.5" aria-hidden="true" />}
       </button>

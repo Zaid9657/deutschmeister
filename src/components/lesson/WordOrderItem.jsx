@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { X } from 'lucide-react';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
@@ -15,7 +15,7 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
  * grader's decision, never this component's (tests/course-player.test.mjs
  * GRADING_SITES).
  */
-export default function WordOrderItem({ item, index, total, onResult, onNext }) {
+export default function WordOrderItem({ item, index, total, onResult, onNext, eyebrowKey = 'stage.derived.eyebrow' }) {
   const [lang] = useLessonLang();
   const [bank, setBank] = useState(() => item.tokens.map((tok, i) => ({ tok, key: i })));
   const [built, setBuilt] = useState([]);
@@ -27,15 +27,34 @@ export default function WordOrderItem({ item, index, total, onResult, onNext }) 
     setState(null);
   }, [item.id, item.tokens]);
 
+  // A tapped tile moves to the other list and unmounts, which dropped keyboard focus to <body>
+  // after every word. Focus goes to the tile now in the same place of the list it left (or the
+  // other list when that one is empty), and the sentence so far is read out.
+  const areaRefs = { bank: useRef(null), built: useRef(null) };
+  const [refocus, setRefocus] = useState(null); // { area, index } or null
+  useEffect(() => {
+    if (!refocus) return;
+    const pick = (area) => [...(areaRefs[area].current?.querySelectorAll('button') || [])];
+    const from = pick(refocus.area);
+    const target = from[Math.min(refocus.index, from.length - 1)] || pick(refocus.area === 'bank' ? 'built' : 'bank').pop();
+    if (target) target.focus();
+    setRefocus(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refocus]);
+
   const moveToBuilt = (entry) => {
     if (state) return;
+    const index = bank.findIndex((e) => e.key === entry.key);
     setBank((prev) => prev.filter((e) => e.key !== entry.key));
     setBuilt((prev) => [...prev, entry]);
+    setRefocus({ area: 'bank', index });
   };
   const moveToBank = (entry) => {
     if (state) return;
+    const index = built.findIndex((e) => e.key === entry.key);
     setBuilt((prev) => prev.filter((e) => e.key !== entry.key));
     setBank((prev) => [...prev, entry]);
+    setRefocus({ area: 'built', index });
   };
 
   const joined = built.map((e) => e.tok).join(' ');
@@ -56,9 +75,9 @@ export default function WordOrderItem({ item, index, total, onResult, onNext }) 
 
   return (
     <div className={state ? 'pb-36 sm:pb-0' : ''}>
-      <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">
-        {t('stage.derived.eyebrow', lang, { n: index + 1, total })}
-      </p>
+      <h2 className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">
+        {t(eyebrowKey, lang, { n: index + 1, total })}
+      </h2>
       <Card className="mt-4 p-5 sm:p-6">
         <p className="text-[0.9375rem] text-graphite">{t('wordOrder.instructions', lang)}</p>
 
@@ -66,7 +85,7 @@ export default function WordOrderItem({ item, index, total, onResult, onNext }) 
           <p className="mt-5 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
             {t('wordOrder.yourSentence', lang)}
           </p>
-          <div className="mt-2 flex min-h-[3rem] flex-wrap gap-2 rounded-clay border border-dashed border-rule bg-paper-sunk p-3">
+          <div ref={areaRefs.built} role="group" aria-label={t('wordOrder.yourSentence', lang)} className="mt-2 flex min-h-[3rem] flex-wrap gap-2 rounded-clay border border-dashed border-rule bg-paper-sunk p-3">
             {built.map((entry) => (
               <button
                 key={entry.key}
@@ -88,7 +107,7 @@ export default function WordOrderItem({ item, index, total, onResult, onNext }) 
           <p className="mt-5 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
             {t('wordOrder.wordBank', lang)}
           </p>
-          <div className="mt-2 flex flex-wrap gap-2">
+          <div ref={areaRefs.bank} role="group" aria-label={t('wordOrder.wordBank', lang)} className="mt-2 flex flex-wrap gap-2">
             {bank.map((entry) => (
               <button
                 key={entry.key}
@@ -103,6 +122,7 @@ export default function WordOrderItem({ item, index, total, onResult, onNext }) 
             ))}
           </div>
         </div>
+        <p className="sr-only" aria-live="polite">{joined}</p>
       </Card>
 
       {!state && (

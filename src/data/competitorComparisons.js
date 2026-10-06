@@ -48,7 +48,7 @@ const competitorComparisons = {
     heroHeadline: 'Babbel lehrt dich Deutsch. Deutschmeister bringt es zum Sprechen.',
     heroSubheadline: 'Beide Plattformen haben gute Grammatik. Aber nur eine lässt dich wirklich sprechen üben — mit KI-Feedback in Echtzeit.',
     comparisonTable: [
-      { feature: 'KI-Sprechtraining mit Live-Feedback', us: `✓ ${PRO_SPEAKING_SESSIONS_PER_MONTH} freie KI-Gespräche pro Monat, auf jedem Niveau — mit Auswertung von Grammatik, Wortschatz und Aussprache, abgestimmt auf Prüfungen`, them: '○ Babbel Speak (seit 2025): KI-Gespräche in vorgegebenen Szenarien, Beta, nur in der App' },
+      { feature: 'KI-Sprechtraining mit Live-Feedback', us: `✓ ${PRO_SPEAKING_SESSIONS_PER_MONTH} freie KI-Gespräche pro Monat, auf jedem Niveau — mit Auswertung von Grammatik, Wortschatz und Verständlichkeit, abgestimmt auf Prüfungen`, them: '○ Babbel Speak (seit 2025): KI-Gespräche in vorgegebenen Szenarien, Beta, nur in der App' },
       { feature: 'Sentence X-Ray (Satzanalyse)', us: '✓ Einzigartig: Jeder deutsche Satz wird zerlegt — Fälle, Satzglieder, Wortarten, farbcodiert', them: '✗ Nicht verfügbar' },
       { feature: 'Prüfungsvorbereitung (Goethe/telc/TestDaF)', us: '✓ Inhalte gezielt auf CEFR-Prüfungen abgestimmt, A1–B2', them: '○ Allgemeine Sprachkurse, nicht prüfungsspezifisch' },
       { feature: 'Grammatik-Erklärungen auf Englisch', us: '✓ Jedes Thema auf Englisch erklärt — ideal für Nicht-Muttersprachler', them: '✓ Erklärungen in 14 Ausgangssprachen verfügbar' },
@@ -64,7 +64,7 @@ const competitorComparisons = {
       {
         icon: 'Mic',
         title: 'Sprechtraining mit Prüfungs-Tiefe',
-        body: `Babbel hat mit Babbel Speak ein KI-Sprechtraining in vorgegebenen Szenarien (Beta, nur App). Bei Deutschmeister führst du ${PRO_SPEAKING_SESSIONS_PER_MONTH} freie Gespräche pro Monat auf jedem Niveau — und bekommst Feedback zu Grammatik, Ausdruck und Aussprache, gezielt auf deine Prüfung ausgerichtet. Der Unterschied liegt in Tiefe und Prüfungsfokus, nicht im Ob.`,
+        body: `Babbel hat mit Babbel Speak ein KI-Sprechtraining in vorgegebenen Szenarien (Beta, nur App). Bei Deutschmeister führst du ${PRO_SPEAKING_SESSIONS_PER_MONTH} freie Gespräche pro Monat auf jedem Niveau — und bekommst Feedback zu Grammatik, Ausdruck und Verständlichkeit, gezielt auf deine Prüfung ausgerichtet. Der Unterschied liegt in Tiefe und Prüfungsfokus, nicht im Ob.`,
       },
       {
         icon: 'ScanSearch',

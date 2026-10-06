@@ -424,7 +424,7 @@ const SpeakingPage = () => {
               <Card className="p-5 h-full">
                 <h2 className="font-semibold text-ink text-sm mb-1.5">Feedback you can use</h2>
                 <p className="text-sm text-graphite leading-relaxed">
-                  After each session: grammar, vocabulary and pronunciation, with
+                  After each session: grammar, vocabulary and clarity, with
                   concrete corrections — like a patient tutor with unlimited time.
                 </p>
               </Card>

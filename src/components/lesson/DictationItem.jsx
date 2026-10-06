@@ -1,11 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { Play } from 'lucide-react';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import FeedbackSheet from './FeedbackSheet.jsx';
 import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../../lib/lesson/check.js';
-import { audioFor, playLine, speechAvailable } from '../../lib/lesson/speech.js';
-import { AudioSourceBadge } from './DialogStage.jsx';
+import PlayButton from './PlayButton.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
 /**
@@ -20,17 +18,19 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
  * key the dialogue screen uses — a dictation line IS a dialogue line) and
  * browser speech otherwise; the badge says which.
  */
-export default function DictationItem({ line, lektionId, index, total, onResult, onNext }) {
+export default function DictationItem({ line, lektionId, index, total, onResult, onNext, eyebrowKey = 'stage.dictation.eyebrow' }) {
   const [value, setValue] = useState('');
   const [state, setState] = useState(null);
+  // The learner chose to READ the line (the audio failed, or they asked for the text): the answer
+  // is still checked, but it is recorded as read, not heard — never as listening evidence.
+  const [readInstead, setReadInstead] = useState(false);
   const ref = useRef(null);
   const id = lektionId || line.lektionId || null;
   const key = `line-${line.index}`;
-  const recorded = !!audioFor(id, key);
   const [lang] = useLessonLang();
 
   useEffect(() => {
-    setValue(''); setState(null);
+    setValue(''); setState(null); setReadInstead(false);
     if (ref.current) ref.current.focus();
   }, [line.index]);
 
@@ -40,7 +40,7 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
   // and handed to checkOptionsFor, which reads `kind: 'dictation'` off it.
   const item = {
     id: itemId, topic: 'hoeren', kind: 'dictation', stage: 'dictation', type: 'dictation',
-    answer: line.de, accepted: [line.de],
+    lineIndex: line.index, answer: line.de, accepted: [line.de],
   };
 
   const submit = () => {
@@ -48,30 +48,23 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
     const { result, expected } = checkAnswer(value, item.accepted, checkOptionsFor(item));
     const correct = result !== RESULT.WRONG;
     setState({ result, expected });
-    onResult(item, { result, correct, errorTag: correct ? null : tagError(item, value, line.de) });
+    onResult(item, { result, correct, errorTag: correct ? null : tagError(item, value, line.de), listened: !readInstead });
   };
 
   return (
     <div className={state ? 'pb-36 sm:pb-0' : ''}>
-      <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">
-        {t('stage.dictation.eyebrow', lang, { n: index + 1, total })}
-      </p>
+      <h2 className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">
+        {t(eyebrowKey, lang, { n: index + 1, total })}
+      </h2>
       <Card className="mt-4 p-5 sm:p-6">
         <p className="text-[0.9375rem] text-graphite">{t('dictation.lead', lang)}</p>
-        <div className="mt-4 flex flex-wrap items-center gap-3">
-          <button
-            type="button"
-            onClick={() => playLine(id, key, line.de, { rate: 0.85 })}
-            disabled={!recorded && !speechAvailable()}
-            className="inline-flex items-center gap-2 rounded-clay border border-rule bg-white px-4 py-2.5 text-sm font-bold text-ink shadow-raise hover:border-siegel active:translate-y-1 active:shadow-none disabled:opacity-40"
-          >
-            <Play className="h-4 w-4" aria-hidden="true" /> {t('action.play', lang)}
-          </button>
-          <AudioSourceBadge recorded={recorded} />
+        <div className="mt-4">
+          <PlayButton lektionId={id} audioKey={key} text={line.de} rate={0.85} onFallback={() => setReadInstead(true)} />
         </div>
-        {!recorded && !speechAvailable() && (
-          <p className="mt-2 text-[0.8125rem] text-graphite">
-            {t('dictation.noSpeech', lang)} <strong lang="de">{line.de}</strong>
+        {readInstead && (
+          <p className="mt-3 rounded-clay border border-rule bg-paper-sunk p-3 text-[0.9375rem]">
+            <strong lang="de">{line.de}</strong>
+            <span className="mt-1 block text-[0.8125rem] text-graphite">{t('audio.readInstead', lang)}</span>
           </p>
         )}
 
@@ -87,7 +80,7 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
           autoComplete="off"
           spellCheck={false}
           onChange={(e) => setValue(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Enter') submit(); }}
+          onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); submit(); } }}
           className="mt-2 w-full rounded-clay border border-rule bg-white px-4 py-3 text-[1.0625rem] text-ink outline-none focus:border-siegel disabled:bg-paper-sunk"
         />
 

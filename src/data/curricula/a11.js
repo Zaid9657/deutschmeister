@@ -211,7 +211,7 @@ export const CURRICULUM_A11 = {
           { speaker: 'Ana', de: 'A-N-A.', en: 'A-N-A.' },
           { speaker: 'Frau Kaya', de: 'Gut. Wie geht es Ihnen?', en: 'Good. How are you?' },
           { speaker: 'Ana', de: 'Mir geht es gut, danke.', en: 'I\'m fine, thank you.' },
-          { speaker: 'Frau Kaya', de: 'Auf Wiedersehen, Ana.', en: 'Goodbye, Ana.' },
+          { speaker: 'Frau Kaya', de: 'Auf Wiedersehen, Frau Chakiri.', en: 'Goodbye, Ms Chakiri.' },
           { speaker: 'Ana', de: 'Tschüss! Bis morgen.', en: 'Bye! See you tomorrow.' },
         ],
       },
@@ -219,17 +219,19 @@ export const CURRICULUM_A11 = {
         promptDe: 'Wie heißen Sie? Antworten Sie mit einem Satz.',
         promptEn: 'Say your name in one sentence.',
         model: 'Ich heiße Ana.',
-        accepted: ['Ich heiße', 'Ich bin', 'Mein Name ist'],
+        accepted: ['Ich heiße', 'Ich bin', 'Mein Name ist', 'Hallo', 'Guten Tag'],
       },
       notice: {
         title: 'Das Alphabet: buchstabieren',
-        bodyDe: 'Beim Buchstabieren sagt man jeden Buchstaben einzeln. Vorsicht bei drei Paaren: **E** [eː] und **I** [iː], **G** [geː] und **J** (Jot), **V** (Vau) und **W** [veː]. **Y** heißt Ypsilon, **Z** heißt Zett, **ß** heißt Eszett oder scharfes S. Im Zweifel fragt man: **Wie buchstabiert man das?**',
-        bodyEn: 'When you spell a word in German, you say each letter on its own. Three pairs trip up English speakers: **E** is said like "ay", **I** like "ee"; **G** is said "gay", **J** is called **Jot**; **V** is called **Vau**, **W** sounds like an English "v". **Y** is **Ypsilon**, **Z** is **Zett**, **ß** is **Eszett** (also "scharfes S"). Not sure how a word is written? Ask: **Wie buchstabiert man das?** (How do you spell that?)',
+        bodyDe: 'Beim Buchstabieren sagt man jeden Buchstaben einzeln. Vorsicht bei drei Paaren: **E** [eː] und **I** [iː], **G** [geː] und **J** (Jot), **V** (Vau) und **W** (We [veː]). Der Name ist nicht der Laut: In *Wasser* hört man [v]. **Y** heißt Ypsilon, **Z** heißt Zett, **ß** heißt Eszett oder scharfes S. Im Zweifel fragt man: **Wie buchstabiert man das?**',
+        bodyEn: 'You spell a word letter by letter, saying each German letter name. Easy to mix up: **E** [eː] and **I** [iː]; **G** [geː] and **J** (**Jot**); **V** (**Vau**) and **W** (**We** [veː]). A letter’s name is not its sound: W is called **We**, but in *Wasser* it sounds [v]. **Y** is **Ypsilon**, **Z** is **Zett**, **ß** is **Eszett**. To ask how a word is written: **Wie buchstabiert man das?**',
         examples: ['Buchstabieren Sie bitte Chakiri.', 'Danke. Und wie buchstabiert man Ana?'],
         ruleSlug: 'alphabet-pronunciation',
       },
       phonetik: { focus: 'Wortakzent auf der ersten Silbe', items: ['HAL-lo', 'DAN-ke', 'A-na'] },
-      hoeren: { kind: 'dictation', lines: [1, 7] },
+      // Not line 1: from the audio alone nobody can tell Ana from Anna or Chakiri from
+      // Tschakiri — a dictation tests the ear, not the spelling of a name (2026-10 review).
+      hoeren: { kind: 'dictation', lines: [9, 7] },
       sprechen: {
         readAloud: [0, 6],
         open: {
@@ -248,8 +250,8 @@ export const CURRICULUM_A11 = {
         // SD1 Schreiben Teil 1 is a TRANSFER task: the learner reads a short text about a person and
         // copies that person's data into the form. The six course Formulare had no source text, so
         // evaluate-writing.mjs had no correctness criterion. The bank carries the text (review #2, L1).
-        taskDe: 'Ana Chakiri kommt aus Marokko. Sie spricht Arabisch. Heute Abend kommt sie im Hostel an. Füllen Sie das Anmeldeformular im Hostel für Ana aus.',
-        taskEn: 'Ana Chakiri comes from Morocco. She speaks Arabic. She arrives at the hostel this evening. Fill in the hostel registration form for Ana (surname, first name, country, language, signature).',
+        taskDe: 'Ana Chakiri kommt aus Marokko. Sie spricht Arabisch. Füllen Sie das Anmeldeformular im Hostel für Ana aus.',
+        taskEn: 'Ana Chakiri comes from Morocco. She speaks Arabic. Fill in the hostel registration form for Ana (surname, first name, country, language, signature).',
         fields: ['Familienname', 'Vorname', 'Land', 'Sprache', 'Unterschrift'],
         minWords: 5,
         maxWords: 40,
@@ -269,7 +271,7 @@ export const CURRICULUM_A11 = {
         'Ich kann sagen, woher ich komme und was ich von Beruf bin.',
         'Ich kann nach dem Beruf einer Person fragen.',
         'Ich kann Zahlen von null bis zehn verstehen und sagen.',
-        'Ich kann meine Telefonnummer und meine Adresse nennen.',
+        'Ich kann meine Telefonnummer und meinen Wohnort nennen.',
         'Ich kann in einer kurzen Nachricht Angaben zu meiner Person machen.',
       ],
       // „Lesen Teil 1“ was a claim with no surface: `links.readingOrder` is null and no step of the
@@ -439,12 +441,14 @@ export const CURRICULUM_A11 = {
         // the learner hears and dictates them; the notice keeps the grammar. The class is closed
         // as a rule: RULE 6c fails any notice body that carries a `Feld: Ich bin … oder …` clause.
         // 54 words, read aloud.
-        bodyDe: '**sein** ist unregelmäßig: ich **bin**, du **bist**, er/sie/es **ist**, wir **sind**, ihr **seid**, sie/Sie **sind**. Der Beruf ohne Artikel: Ich bin Lehrer. Nicht: Ich bin ein Lehrer. Staatsangehörigkeit im Satz als Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner. Im Formular als Adjektiv: Staatsangehörigkeit: marokkanisch. Geburtsdatum: Ich bin am 3.5.1998 geboren.',
-        bodyEn: '**sein** (to be) follows no pattern, so learn its forms as a set: ich **bin**, du **bist**, er/sie/es **ist**, wir **sind**, ihr **seid**, sie/Sie **sind**. A job takes no article: **Ich bin Lehrer** – not "Ich bin ein Lehrer". In a sentence, a nationality is a noun: **Ich komme aus Marokko und bin Marokkanerin.** **Ali ist Marokkaner.** On a form it is an adjective: **Staatsangehörigkeit: marokkanisch**. Your date of birth: **Ich bin am 3.5.1998 geboren** (I was born on …).',
+        bodyDe: '**sein** ist unregelmäßig: ich **bin**, du **bist**, er/sie/es **ist**, wir **sind**, ihr **seid**, sie/Sie **sind**. Nach ich bin steht der Beruf meist ohne Artikel: Ich bin Lehrer. Aber: Das ist ein Lehrer. Staatsangehörigkeit im Satz als Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner. Im Formular als Adjektiv: Staatsangehörigkeit: marokkanisch. Geburtsdatum: Ich bin am 3.5.1998 geboren.',
+        bodyEn: '**sein** (to be) is irregular – learn the set: ich **bin**, du **bist**, er/sie/es **ist**, wir **sind**, ihr **seid**, sie/Sie **sind**. After **ich bin** a job usually has no article: **Ich bin Lehrer.** But: **Das ist ein Lehrer.** In a sentence, a nationality is a noun: **Ich komme aus Marokko und bin Marokkanerin.** **Ali ist Marokkaner.** On a form it is an adjective: **Staatsangehörigkeit: marokkanisch**. Your date of birth: **Ich bin am 3.5.1998 geboren** (I was born on …).',
         examples: ['Was sind Sie von Beruf?', 'Ich bin Studentin.'],
         ruleSlug: 'verb-sein',
       },
-      phonetik: { focus: 'Lange und kurze Vokale: bin – bist – sind', items: ['ich BIN', 'du BIST', 'Sie SIND'] },
+      // A real long/short contrast from this Lektion's own words: the i of Sie and wie is long [iː],
+      // the i of bin and sind is short [ɪ]. „bin – bist – sind“ were three short vowels (2026-10 review).
+      phonetik: { focus: 'Langes und kurzes i: Sie, wie [iː] – bin, sind [ɪ]', items: ['wie – Sie', 'bin – sind', 'Sie sind'] },
       // Not line 4: an enumeration with three commas is a punctuation test, not a listening test.
       hoeren: { kind: 'dictation', lines: [7, 3] },
       sprechen: {
@@ -477,8 +481,11 @@ export const CURRICULUM_A11 = {
         // asked for none of the Personalien lexis this Lektion teaches, so ledig/verheiratet/
         // Geburtsdatum/Staatsangehörigkeit/Familienstand lived in the Wortfeld and nowhere else
         // (DaF review #3, Wortfeld ↔ Input, L2: 9 of 23).
-        taskDe: 'Sie melden sich in der Sprachschule an. Schreiben Sie eine kurze Nachricht mit Ihren Daten. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
-        taskEn: 'You are registering at the language school. Write a short message with your personal details. Open with a greeting and close with a sign-off. Cover three points: your name and your date of birth; your country and your nationality; your marital status – single or married.',
+        // A TRANSFER task (2026-10 review): the learner writes Ana's data. Asked for their OWN
+        // nationality, a Turkish, Syrian or German learner had no taught noun (Türkin, Syrerin,
+        // Deutsche) — the course teaches Marokkanerin/Marokkaner only.
+        taskDe: 'Sie sind Ana Chakiri, am 3.5.1998 geboren, aus Marokko, ledig. Sie melden sich in der Sprachschule an. Schreiben Sie eine kurze Nachricht mit Ihren Daten. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        taskEn: 'You are Ana Chakiri, born on 3 May 1998, from Morocco, single. You are registering at the language school. Write a short message with your personal details. Open with a greeting and close with a sign-off. Cover three points: your name and your date of birth; your country and your nationality; your marital status – single or married.',
         leitpunkte: ['Ihr Name und Ihr Geburtsdatum', 'Ihr Land und Ihre Staatsangehörigkeit', 'Ihr Familienstand: ledig oder verheiratet'],
         minWords: 25,
         maxWords: 45,
@@ -581,10 +588,10 @@ export const CURRICULUM_A11 = {
           { speaker: 'Ana', de: 'Sie sprechen Arabisch und Deutsch.', en: 'They speak Arabic and German.' },
           { speaker: 'Lena', de: 'Spricht dein Bruder auch Englisch?', en: 'Does your brother speak English too?' },
           { speaker: 'Ana', de: 'Ja, er spricht Englisch und Deutsch.', en: 'Yes, he speaks English and German.' },
-          { speaker: 'Lena', de: 'Und dein Bruder? Hat er einen Sohn oder eine Tochter?', en: 'And your brother? Does he have a son or a daughter?' },
+          { speaker: 'Lena', de: 'Hat dein Bruder einen Sohn oder eine Tochter?', en: 'Does your brother have a son or a daughter?' },
           // „Mein Mann und ich …“ made Ana married while the Formular of this very Lektion files her as
           // ledig (DaF review #5, MAJOR 12). der Mann stays covered through her sister's husband.
-          { speaker: 'Ana', de: 'Ja, ein Baby. Der Mann von meiner Schwester kommt auch aus Marokko.', en: 'Yes, a baby. My sister’s husband is also from Morocco.' },
+          { speaker: 'Ana', de: 'Eine Tochter, ein Baby. Der Mann von meiner Schwester kommt aus Marokko.', en: 'A daughter, a baby. My sister’s husband comes from Morocco.' },
         ],
       },
       pretest: {
@@ -596,8 +603,8 @@ export const CURRICULUM_A11 = {
         // (DaF review #12, MAJOR 2; jetzt RULE 19). Der Bruder trägt die Zahl des Dialogs, „Er ist
         // Student.“ übt das Personalpronomen, das diese Lektion lehrt, und beides kommt ohne
         // Possessivartikel aus.
-        model: 'Der Bruder ist zwanzig. Er ist Student.',
-        accepted: ['Mein', 'Meine', 'Das ist', 'Er ist', 'Sie ist', 'Der Bruder', 'Die Schwester'],
+        model: 'Er ist zwanzig. Er spricht Arabisch und Deutsch.',
+        accepted: ['Mein', 'Meine', 'Das ist', 'Er ist', 'Sie ist', 'Der Bruder', 'Die Schwester', 'Ich habe'],
       },
       notice: {
         title: 'er, sie, es – die Personalpronomen',
@@ -606,15 +613,16 @@ export const CURRICULUM_A11 = {
         examples: ['Wie alt ist er?', 'Ja, er spricht Englisch und Deutsch.'],
         ruleSlug: 'personal-pronouns',
       },
-      phonetik: { focus: 'Der Umlaut ü in Bruder – Brüder', items: ['der BRU-der', 'die BRÜ-der', 'die MÜT-ter'] },
+      phonetik: { focus: 'u und ü: Bruder [uː] – Brüder [yː] (lang), Mütter [ʏ] (kurz)', items: ['der BRU-der', 'die BRÜ-der', 'die MÜT-ter'] },
       hoeren: { kind: 'dictation', lines: [5, 7] },
       sprechen: {
         readAloud: [2, 3],
         open: {
           teil: 'Sprechen Teil 2',
-          promptDe: 'Fragen und antworten Sie zum Thema Familie: Geschwister? Sohn? Tochter?',
-          promptEn: 'Ask and answer questions about family: brothers and sisters? a son? a daughter?',
-          hintWords: ['die Geschwister', 'der Sohn', 'die Tochter'],
+          // Not „Geschwister? Sohn? Tochter?“: answering those needs haben + Akkusativ (L9, A1.2).
+          promptDe: 'Fragen und antworten Sie zum Thema Familie: Wie alt? Woher? Welche Sprachen?',
+          promptEn: 'Ask and answer questions about family: how old? where from? which languages?',
+          hintWords: ['alt', 'kommen aus', 'sprechen'],
           // Sie — Teil 2 mit der fremden Mitkandidatin; das du im Dialog ist Lena↔Ana, nicht die Rolle des Lernenden.
           anrede: 'Sie',
           missionOrder: 5,
@@ -706,7 +714,7 @@ export const CURRICULUM_A11 = {
       notice: {
         title: 'Jedes Nomen hat ein Genus',
         bodyDe: 'Jedes Nomen hat ein Genus: **der** Tisch, **die** Lampe, **das** Regal. Das Genus ist Teil des Wortes — lernen Sie jedes Nomen mit dem Artikel: nicht Tisch, sondern der Tisch. Im Plural haben alle Nomen **die**. Nach **kaufen** wird **der** zu **den**: Ich kaufe **den** Stuhl. Das ist hier ein fester Ausdruck; die Regel (Akkusativ) kommt in A1.2.',
-        bodyEn: 'Every German noun has a gender, and its article shows it: **der** Tisch (masculine), **die** Lampe (feminine), **das** Regal (neuter). The gender cannot be guessed from the meaning, so learn each noun together with its article: not "Tisch" but **der Tisch**. In the plural, every noun takes **die**. One thing to copy for now: after **kaufen** (to buy), **der** becomes **den** – **Ich kaufe den Stuhl.** The rule behind this (Akkusativ) comes in A1.2.',
+        bodyEn: 'Every German noun has a gender, and its article shows it: **der** Tisch (masculine), **die** Lampe (feminine), **das** Regal (neuter). The gender of a thing usually cannot be guessed from its meaning, so learn each noun together with its article: not "Tisch" but **der Tisch**. In the plural, every noun takes **die**. One thing to copy for now: after **kaufen** (to buy), **der** becomes **den** – **Ich kaufe den Stuhl.** The rule behind this (Akkusativ) comes in A1.2.',
         examples: ['Das ist eine Lampe. Sie kostet acht Euro.', 'Der Tisch kostet fünfzehn Euro.'],
         ruleSlug: 'nouns-gender',
       },
@@ -716,7 +724,7 @@ export const CURRICULUM_A11 = {
         readAloud: [0, 5],
         open: {
           teil: 'Sprechen Teil 3',
-          promptDe: 'Bitten Sie am Stand um einen Preis und reagieren Sie darauf.',
+          promptDe: 'Fragen Sie am Stand nach einem Preis und reagieren Sie auf die Antwort.',
           promptEn: 'At a market stall, ask for the price of something and react to the answer.',
           hintWords: ['kosten', 'Euro', 'teuer'],
           // Sie — Teil 3 am Marktstand: Kundin zu Verkäufer.
@@ -727,8 +735,8 @@ export const CURRICULUM_A11 = {
       schreiben: {
         kind: 'mitteilung',
         taskKey: 'a11-l04',
-        taskDe: 'Schreiben Sie Ihrer Freundin eine Nachricht über den Flohmarkt. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
-        taskEn: 'Write a message to a friend about the flea market. Open with a greeting and close with a sign-off. Cover three points: what you are buying; what it costs; when you are coming.',
+        taskDe: 'Sie sind auf dem Flohmarkt. Schreiben Sie Lena eine Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        taskEn: 'You are at the flea market. Write a message to Lena. Open with a greeting and close with a sign-off. Cover three points: what you are buying; what it costs; when you are coming.',
         leitpunkte: ['Was Sie kaufen', 'Was es kostet', 'Wann Sie kommen'],
         minWords: 25,
         maxWords: 45,
@@ -831,8 +839,8 @@ export const CURRICULUM_A11 = {
       pretest: { promptDe: 'Fragen Sie, wo das Buch ist.', promptEn: 'Ask where the book is.', model: 'Wo ist das Buch?', accepted: ['Wo ist', 'Wo sind'] },
       notice: {
         title: 'der, die, das – der bestimmte Artikel',
-        bodyDe: 'Der bestimmte Artikel zeigt: Wir wissen, welche Sache gemeint ist. **der** (maskulin), **die** (feminin), **das** (neutral), im Plural immer **die**: die Bücher. Antworten beginnen zuerst mit **hier** oder **da**. Sätze wie *auf dem Tisch* (Dativ) folgen in A1.2.',
-        bodyEn: 'The definite article ("the") means both speakers know which thing is meant: **der** with masculine, **die** with feminine, **das** with neuter nouns – and in the plural always **die**: **die Bücher**. When you answer where something is, start with **hier** (here) or **da** (there): **Das Wörterbuch ist hier. Der Stift ist da.** Phrases like *auf dem Tisch* (on the table) change the article again; that pattern (Dativ) is A1.2.',
+        bodyDe: 'Der bestimmte Artikel zeigt: Wir wissen, welche Sache gemeint ist. **der** (maskulin), **die** (feminin), **das** (neutral), im Plural für alle drei **die**: die Bücher. Zuerst antworten Sie mit **hier** oder **da**. Sätze wie *auf dem Tisch* (Dativ) folgen in A1.2.',
+        bodyEn: 'The definite article ("the") means both speakers know which thing is meant: **der** with masculine, **die** with feminine, **das** with neuter nouns – and in the plural always **die**: **die Bücher**. For now, answer **Wo ist …?** with **hier** (here) or **da** (there): **Das Wörterbuch ist hier. Der Stift ist da.** Phrases like *auf dem Tisch* (on the table) change the article again; that pattern (Dativ) is A1.2.',
         examples: ['Das Wörterbuch ist hier. Der Stift ist da.', 'Die Schere ist hier. Das Lineal auch.'],
         ruleSlug: 'definite-articles',
       },
@@ -938,7 +946,7 @@ export const CURRICULUM_A11 = {
         examples: ['Danke. Ich brauche einen Computer und ein Telefon.', 'Wir haben kein Handy.'],
         ruleSlug: 'indefinite-articles',
       },
-      phonetik: { focus: 'Das lange ie in vier und Telefon', items: ['VIER', 'Te-le-FON', 'BÜ-ro'] },
+      phonetik: { focus: 'Lange Vokale: vier, Telefon, Büro', items: ['VIER', 'Te-le-FON', 'Bü-RO'] },
       // NOT line 7: the split telephone number carries an en dash, so „042 3381“ and „Null vier
       // zwei - drei …“ would both be marked wrong. Line 9 has no punctuation trap (DaF review #2, L6).
       hoeren: { kind: 'dictation', lines: [2, 9] },
@@ -960,8 +968,8 @@ export const CURRICULUM_A11 = {
       schreiben: {
         kind: 'mitteilung',
         taskKey: 'a11-l06',
-        taskDe: 'Schreiben Sie Ihrer Chefin eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
-        taskEn: 'Write a short message to your boss. Open with a greeting and close with a sign-off. Cover three points: what you need; your phone number; when you will be in the office.',
+        taskDe: 'Schreiben Sie Ihrer Chefin, Frau Berg, eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        taskEn: 'Write a short message to your boss, Frau Berg. Open with a greeting and close with a sign-off. Cover three points: what you need; your phone number; when you will be in the office.',
         leitpunkte: ['Was Sie brauchen', 'Ihre Telefonnummer', 'Wann Sie im Büro sind'],
         minWords: 25,
         maxWords: 45,
@@ -974,7 +982,7 @@ export const CURRICULUM_A11 = {
         // zu beschriften. Der Possessivartikel („Meine Nummer ist …“) wäre die natürlichste
         // Fassung, steht hier aber nicht: RULE 15b schiebt die Possessivartikel auf Lektion 12, und
         // ein Mustertext ist ein Produktionstext.
-        sample: 'Guten Tag, Frau Berg! Ich brauche einen Computer. Wir brauchen auch ein Handy. Hier ist die Nummer für das Handy: null vier zwei drei drei acht eins. Ich bin um neun Uhr im Büro. Viele Grüße, Ana',
+        sample: 'Guten Tag, Frau Berg! Wir brauchen einen Computer und ein Handy. Hier ist die Telefonnummer: null vier zwei drei drei acht eins. Ich bin um neun Uhr im Büro. Viele Grüße, Ana',
       },
       links: { listeningExercise: 5, readingOrder: null },
       practiceRule: { topics: ['indefinite-articles', 'definite-articles'], typedMin: 3 },
@@ -990,7 +998,7 @@ export const CURRICULUM_A11 = {
         'Ich kann über meine Hobbys sprechen.',
         'Ich kann sagen, was ich gern mache.',
         'Ich kann eine Person nach ihren Hobbys fragen.',
-        'Ich kann sagen, wann ich frei habe.',
+        'Ich kann sagen, wann ich frei bin.',
       ],
       examTeile: ['Lesen Teil 2', 'Sprechen Teil 2'],
       grammarSlugs: ['present-tense-regular', 'personal-pronouns'],
@@ -1043,10 +1051,10 @@ export const CURRICULUM_A11 = {
           // appeared in no line of the Lektion; the Hobby can-do rested on Musik and Sport alone
           // (DaF review #2, L7 and §A). The weekdays moved to L8, so the dialogue says am Wochenende.
           { speaker: 'Tim', de: 'Ich lese auch gern. Und ich koche gern.', en: 'I also like reading. And I like cooking.' },
-          { speaker: 'Lena', de: 'Ich schwimme jede Woche. Gehst du ins Kino?', en: 'I swim every week. Do you go to the cinema?' },
-          { speaker: 'Tim', de: 'Ja, sehr gern! Und tanzt du auch?', en: 'Yes, very gladly! And do you dance too?' },
+          { speaker: 'Lena', de: 'Ich schwimme jede Woche. Gehst du gern ins Kino?', en: 'I swim every week. Do you like going to the cinema?' },
+          { speaker: 'Tim', de: 'Ja, sehr gern! Und tanzt du auch?', en: 'Yes, very much! And do you dance too?' },
           // der Freund and vielleicht were taught and never heard (DaF review #3, RULE 10).
-          { speaker: 'Lena', de: 'Nein, ich tanze nicht gut. Mein Freund und meine Freundin tanzen gern.', en: 'No, I do not dance well. My friend and my girlfriend like dancing.' },
+          { speaker: 'Lena', de: 'Nein, ich tanze nicht gut. Mein Freund und meine Freundin tanzen gern.', en: 'No, I do not dance well. My friend (m) and my friend (f) like dancing.' },
           { speaker: 'Tim', de: 'Vielleicht hören wir am Wochenende zusammen Musik?', en: 'Maybe we will listen to music together at the weekend?' },
         ],
       },
@@ -1055,16 +1063,16 @@ export const CURRICULUM_A11 = {
         promptEn: 'Say what you like doing.',
         model: 'Ich höre gern Musik.',
         // Not the bare prefix 'Ich' — that accepts „Ich bin müde“ as an answer about free time.
-        accepted: ['Ich höre gern', 'Ich spiele gern', 'Ich mache gern', 'Ich lese gern', 'Mein Hobby ist', 'Meine Hobbys sind'],
+        accepted: ['Ich höre gern', 'Ich spiele gern', 'Ich mache gern', 'Ich lese gern', 'Ich koche gern', 'Ich schwimme gern', 'Ich tanze gern', 'Ich gehe gern', 'Mein Hobby ist', 'Meine Hobbys sind'],
       },
       notice: {
         title: 'Präsens: regelmäßige Verben',
         bodyDe: 'Regelmäßige Verben haben feste Endungen am Stamm: ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. **gern** steht nach dem Verb: Ich höre **gern** Musik. Endet der Stamm auf **-t**, kommt ein **e** dazu: du arbeit**e**st, er arbeit**e**t. **Achtung:** einige Verben wechseln den Vokal: sprechen → er **spricht**.',
-        bodyEn: 'A regular verb is a stem plus an ending that shows who is doing it. Take **spielen** (to play): ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. To say you like doing something, put **gern** after the verb: **Ich höre gern Musik.** If the stem ends in **-t**, an **e** is slipped in so you can say it: du arbeit**e**st, er arbeit**e**t. A few verbs also change their vowel: sprechen → er **spricht**.',
+        bodyEn: 'A regular verb is a stem plus an ending: **spielen** → ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. To say you like doing something, put **gern** after the verb: **Ich höre gern Musik.** If the stem ends in **-t**, add an **e**: du arbeit**e**st, er arbeit**e**t. If it ends in -s or -z, du adds only -t: du tanz**t**. Some verbs change their vowel: sprechen → er **spricht**.',
         examples: ['Ich höre gern Musik. Und du?', 'Spielst du jede Woche Fußball?'],
         ruleSlug: 'present-tense-regular',
       },
-      phonetik: { focus: 'Endung -e und -en am Wortende', items: ['ich HÖ-re', 'wir HÖ-ren', 'du SPIELST'] },
+      phonetik: { focus: 'Endungen am Wortende: -e, -en, -st', items: ['ich HÖ-re', 'wir HÖ-ren', 'du SPIELST'] },
       hoeren: { kind: 'dictation', lines: [3, 6] },
       sprechen: {
         readAloud: [1, 4],
@@ -1124,7 +1132,7 @@ export const CURRICULUM_A11 = {
         { de: 'die Verspätung', word: 'Verspätung', article: 'die', plural: 'Verspätungen', en: 'delay', wordId: '00f57653-edbf-480c-8a0a-1b39518744e1' },
         // verspätet/rechtzeitig (neither in the A1 Wortliste) gave way to the clock-time words the
         // notice actually uses, and the week is now learnt as a set (DaF review, L8).
-        { de: 'halb', word: 'halb', article: null, plural: null, en: 'half (past)', wordId: 'cc37acc3-4937-4d79-a6b1-5960406aa578' },
+        { de: 'halb', word: 'halb', article: null, plural: null, en: 'half (to the next hour): halb neun = 8.30', wordId: 'cc37acc3-4937-4d79-a6b1-5960406aa578' },
         { de: 'Viertel nach', word: 'Viertel nach', article: null, plural: null, en: 'quarter past', wordId: 'ed21a1d7-ab09-4aeb-8123-1b057552c7c4' },
         { de: 'Viertel vor', word: 'Viertel vor', article: null, plural: null, en: 'quarter to', wordId: '6d9cc58e-6ce6-4e04-abd1-acc67576d29e' },
         { de: 'der Wecker', word: 'Wecker', article: 'der', plural: 'Wecker', en: 'alarm clock', wordId: '02801836-9974-4da2-9f1c-27c4bb1c5966' },
@@ -1153,7 +1161,7 @@ export const CURRICULUM_A11 = {
       ],
       dialog: {
         title: 'Wann hast du Zeit?',
-        setting: 'Ana und Lena machen einen Termin aus.',
+        setting: 'Ana und Lena suchen einen Termin.',
         lines: [
           { speaker: 'Ana', de: 'Lena, wann stehst du morgens auf?', en: 'Lena, when do you get up in the morning?' },
           { speaker: 'Lena', de: 'Ich stehe um sechs Uhr auf.', en: 'I get up at six o’clock.' },
@@ -1163,7 +1171,7 @@ export const CURRICULUM_A11 = {
           { speaker: 'Ana', de: 'Kommst du heute pünktlich? Oder hast du Verspätung?', en: 'Will you be on time today? Or will you be late?' },
           // NOT „Ich habe einen guten Wecker“: that is Adjektivdeklination im Akkusativ, a fifth
           // Vorgriff the course never names, in the Lektion whose exam part is Hören Teil 1.
-          { speaker: 'Lena', de: 'Ja, immer. Mein Wecker ist gut.', en: 'Yes, always. My alarm clock is good.' },
+          { speaker: 'Lena', de: 'Ich bin immer pünktlich. Mein Wecker ist gut.', en: 'I am always on time. My alarm clock is good.' },
           { speaker: 'Ana', de: 'Und am Dienstag? Hast du nachmittags Zeit?', en: 'And on Tuesday? Do you have time in the afternoon?' },
           { speaker: 'Lena', de: 'Am Dienstag habe ich abends Zeit.', en: 'On Tuesday I have time in the evening.' },
           // Mittwoch, Donnerstag and Freitag were in the Wortfeld and in no line (DaF review #2, §A).
@@ -1173,15 +1181,15 @@ export const CURRICULUM_A11 = {
           { speaker: 'Lena', de: 'Am Mittwoch beim Arzt. Am Samstag und am Sonntag habe ich frei!', en: 'On Wednesday at the doctor’s. On Saturday and Sunday I am free!' },
         ],
       },
-      pretest: { promptDe: 'Fragen Sie nach der Uhrzeit.', promptEn: 'Ask what time it is.', model: 'Wie spät ist es?', accepted: ['Wie spät', 'Wie viel Uhr', 'Wann'] },
+      pretest: { promptDe: 'Fragen Sie nach der Uhrzeit.', promptEn: 'Ask what time it is.', model: 'Wie spät ist es?', accepted: ['Wie spät', 'Wie viel Uhr', 'Wann', 'Um wie viel Uhr', 'Entschuldigung, wie spät'] },
       notice: {
         title: 'um, am – die Uhrzeit sagen',
-        bodyDe: 'Uhrzeit mit **um**: um acht Uhr. Wochentag mit **am**: am Montag. Umgangssprachlich: **Viertel nach** acht, **Viertel vor** neun, **halb** neun (= 8.30!). Offiziell (Bahn, Radio): **acht Uhr dreißig**. Die Frage lautet: **Wie spät ist es?** **Hast du Zeit?** ist eine feste Wendung; haben kommt in Lektion 9.',
-        bodyEn: 'A clock time takes **um**: **um acht Uhr** (at eight). A weekday takes **am**: **am Montag** (on Monday). Everyday speech: **Viertel nach** acht (quarter past eight), **Viertel vor** neun (quarter to nine) – and careful: **halb neun** is half an hour before nine, so 8.30, not 9.30. Timetables and the radio say **acht Uhr dreißig**. To ask the time: **Wie spät ist es?** **Hast du Zeit?** (Do you have time?) is a set phrase for now; haben is Lektion 9.',
+        bodyDe: 'Uhrzeit mit **um**: um acht Uhr. Aber: Es ist acht Uhr (ohne um). Wochentag mit **am**: am Montag. Umgangssprachlich: **Viertel nach** acht, **Viertel vor** neun, **halb** neun (= 8.30!). Offiziell (Bahn, Radio) lautet die Uhrzeit Stunde + Uhr + Minuten, bis 24: **acht Uhr dreißig**, vierzehn Uhr dreißig. **Hast du Zeit?** ist eine feste Wendung; haben kommt in Lektion 9.',
+        bodyEn: 'For when, a clock time takes **um**: **um acht Uhr**. To say the time, no um: Es ist acht Uhr. A weekday takes **am**: **am Montag**. Everyday speech: **Viertel nach** acht (8.15), **Viertel vor** neun (8.45), **halb** neun (8.30, not 9.30!). Timetables and the radio count to 24, hour + Uhr + minutes: **acht Uhr dreißig**, vierzehn Uhr dreißig (14.30). To ask: Wie spät ist es? **Hast du Zeit?** is a set phrase for now; haben comes in Lektion 9.',
         examples: ['Ich stehe um sechs Uhr auf.', 'Der Termin ist am Montag um Viertel vor acht.'],
         ruleSlug: 'time-and-dates',
       },
-      phonetik: { focus: 'Satzmelodie in der W-Frage: fallend', items: ['Wie SPÄT ist es?', 'WANN kommst du?', 'um ACHT Uhr'] },
+      phonetik: { focus: 'Satzmelodie in der W-Frage: fallend', items: ['Wie SPÄT ist es?', 'WANN kommst du?', 'Wie viel UHR ist es?'] },
       hoeren: { kind: 'dictation', lines: [3, 7] },
       sprechen: {
         // RULE 18: Zeile 3 ist Diktatzeile. Zeile 6 und Zeile 8 sind beide Wochentagszeilen und
@@ -1200,13 +1208,13 @@ export const CURRICULUM_A11 = {
       schreiben: {
         kind: 'mitteilung',
         taskKey: 'a11-l08',
-        taskDe: 'Schreiben Sie eine Nachricht und verschieben Sie einen Termin. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
-        taskEn: 'Write a message to move an appointment. Open with a greeting and close with a sign-off. Cover three points: why you are writing; the new day and the new time; a question for Lena.',
+        taskDe: 'Ihr Termin mit Lena ist am Montag um acht Uhr, aber am Montag geht es nicht. Schreiben Sie Lena eine Nachricht und nennen Sie einen neuen Termin. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        taskEn: 'Your appointment with Lena is on Monday at eight, but Monday does not work. Write Lena a message and suggest a new appointment. Open with a greeting and close with a sign-off. Cover three points: why you are writing; the new day and the new time; a question for Lena.',
         leitpunkte: ['Warum Sie schreiben', 'Neuer Tag und neue Uhrzeit', 'Eine Frage an Lena'],
         minWords: 25,
         maxWords: 45,
         // 37 Wörter, mit dem neuen Tag, der neuen Uhrzeit und einer Frage an Lena.
-        sample: 'Hallo Lena! Ich komme am Montag zu spät. Geht es am Dienstag um halb neun? Dann haben wir Zeit für den Termin. Noch eine Frage: Bist du dann pünktlich? Viele Grüße, Ana',
+        sample: 'Hallo Lena! Am Montag komme ich nicht. Ich bin krank. Geht es am Dienstag um halb neun? Noch eine Frage: Bist du dann pünktlich? Viele Grüße, Ana',
       },
       links: { listeningExercise: 4, readingOrder: 3 },
       // Only the primary topic: with two topics the builder drew 5 present-tense items against 2 time
@@ -1282,7 +1290,7 @@ export const CURRICULUM_A11 = {
           // The closing four lines carry them instead of repeating Wasser and Tee (DaF review #3).
           { speaker: 'Ana', de: 'Ja, ein Glas Mineralwasser, bitte. Und einen Orangensaft.', en: 'Yes, a glass of mineral water, please. And an orange juice.' },
           { speaker: 'Paul', de: 'Gern. Wir haben auch Tee, Bier und Wein.', en: 'Gladly. We also have tea, beer and wine.' },
-          { speaker: 'Ana', de: 'Nein, danke. Ich esse gern ein Brot mit Salat.', en: 'No, thank you. I like eating a bread roll with salad.' },
+          { speaker: 'Ana', de: 'Nein, danke. Ich esse ein Brot mit Salat.', en: 'No, thank you. I’ll have a sandwich with salad.' },
           { speaker: 'Paul', de: 'Gut. Die Kellnerin kommt sofort mit dem Brot.', en: 'Good. The waitress is coming right away with the bread.' },
           { speaker: 'Ana', de: 'Danke! Zum Frühstück trinke ich immer eine Tasse Kaffee.', en: 'Thank you! For breakfast I always drink a cup of coffee.' },
         ],
@@ -1291,7 +1299,7 @@ export const CURRICULUM_A11 = {
         promptDe: 'Bestellen Sie im Café etwas zu trinken.',
         promptEn: 'Order something to drink in a café.',
         model: 'Ich möchte einen Kaffee, bitte.',
-        accepted: ['Ich möchte', 'Ich nehme', 'Einen', 'Eine'],
+        accepted: ['Ich möchte', 'Ich nehme', 'Ein'],
       },
       notice: {
         title: 'haben und der Chunk „Ich möchte …“',
@@ -1381,14 +1389,14 @@ export const CURRICULUM_A11 = {
           { speaker: 'Herr Schmidt', de: 'Nein, er ist pünktlich.', en: 'No, it is on time.' },
           { speaker: 'Ana', de: 'Kostet die Fahrkarte zwanzig Euro?', en: 'Does the ticket cost twenty euros?' },
           { speaker: 'Herr Schmidt', de: 'Nein, sie kostet fünfzehn Euro.', en: 'No, it costs fifteen euros.' },
-          { speaker: 'Ana', de: 'Fährt der Bus auch in die Schweiz? Ist der Bahnhof weit?', en: 'Does the bus go to Switzerland too? Is the station far?' },
+          { speaker: 'Ana', de: 'Fährt der Bus auch in die Schweiz? Ist das Gleis weit?', en: 'Does the bus go to Switzerland too? Is the platform far?' },
           { speaker: 'Herr Schmidt', de: 'Nein, leider nicht. Die Abfahrt ist hier an Gleis vier.', en: 'No, unfortunately not. The departure is here on platform four.' },
           // Bahnhof, Abfahrt, Ankunft and umsteigen were Wortfeld-only, and the „Durchsagen“ can-do
           // had no announcement to understand. The announcement is read out by the man at the counter
           // rather than given its own speaker, because a dialogue has exactly two speakers
           // (scripts/validate-curriculum.mjs RULE 5). It is now the dictation line (review #2, L10, §A).
-          { speaker: 'Ana', de: 'Danke! Und die Durchsage? Wann ist die Ankunft?', en: 'Thank you! And the announcement? When is the arrival?' },
-          { speaker: 'Herr Schmidt', de: 'Der Zug nach Österreich hat Verspätung. Bitte umsteigen!', en: 'The train to Austria is delayed. Please change trains!' },
+          { speaker: 'Ana', de: 'Danke! Und wann ist die Ankunft?', en: 'Thank you! And when is the arrival?' },
+          { speaker: 'Herr Schmidt', de: 'Durchsage: Der Zug hat Verspätung. Bitte an Gleis fünf umsteigen!', en: 'Announcement: the train is delayed. Please change to platform five!' },
         ],
       },
       pretest: {
@@ -1501,7 +1509,8 @@ export const CURRICULUM_A11 = {
           { speaker: 'Tim', de: 'Ich habe gearbeitet. Heute lerne ich Deutsch.', en: 'I worked. Today I am studying German.' },
           { speaker: 'Lena', de: 'Und wann stehst du morgens auf?', en: 'And when do you get up in the morning?' },
           { speaker: 'Tim', de: 'Ich stehe um sechs auf. Ich bin müde.', en: 'I get up at six. I am tired.' },
-          { speaker: 'Lena', de: 'Kaufst du heute ein?', en: 'Are you going shopping today?' },
+          // The scene is Thursday: „heute“ was answered „am Freitag“ (2026-10 review). „morgen“ is taught in L10.
+          { speaker: 'Lena', de: 'Kaufst du morgen ein?', en: 'Are you going shopping tomorrow?' },
           { speaker: 'Tim', de: 'Ja, ich kaufe am Freitag ein. Kommst du mit?', en: 'Yes, I am going shopping on Friday. Are you coming along?' },
           { speaker: 'Lena', de: 'Ja, ich komme mit. Rufst du mich an?', en: 'Yes, I am coming along. Will you call me?' },
           { speaker: 'Tim', de: 'Ja, ich rufe dich an.', en: 'Yes, I will call you.' },
@@ -1514,8 +1523,8 @@ export const CURRICULUM_A11 = {
       pretest: { promptDe: 'Sagen Sie, was Sie gestern gemacht haben.', promptEn: 'Say what you did yesterday.', model: 'Ich habe gearbeitet.', accepted: ['Ich habe', 'Gestern habe ich'] },
       notice: {
         title: 'Trennbare Verben: die Satzklammer',
-        bodyDe: 'Trennbare Verben teilen sich: ein|kaufen → Ich **kaufe** am Freitag **ein**. Das Verb steht auf Position 2, die Vorsilbe am Ende. So auch auf|stehen, an|rufen, mit|bringen. **Ich rufe dich an** ist eine feste Wendung. **schlafen** wechselt den Vokal: er **schläft**. **Gemacht** und **gearbeitet** stehen hier als Ganzes — das Muster (Perfekt) kommt in A1.2.',
-        bodyEn: 'Some verbs come in two parts, a prefix and a verb: **ein|kaufen** (to shop). In a sentence they split – the verb stays in second position, the prefix goes to the end: **Ich kaufe am Freitag ein.** Same with **auf|stehen** (get up), **an|rufen** (call), **mit|bringen** (bring along). **Ich rufe dich an** (I will call you) is a set phrase. **schlafen** changes its vowel: er **schläft**. **Gemacht** (did) and **gearbeitet** (worked) are learned whole; the pattern (Perfekt) comes in A1.2.',
+        bodyDe: 'Trennbare Verben teilen sich: ein|kaufen → Ich **kaufe** am Freitag **ein**. Das Verb steht auf Position 2 (in der Ja/Nein-Frage auf Position 1), die Vorsilbe am Ende. So auch auf|stehen, an|rufen, mit|bringen. **Ich rufe dich an** ist eine feste Wendung. **schlafen** wechselt den Vokal: er **schläft**. **Gemacht** und **gearbeitet** stehen hier als Ganzes — das Muster (Perfekt) kommt in A1.2.',
+        bodyEn: 'Some verbs have two parts: **ein|kaufen** (to shop). In a sentence the verb stays in second position (first in a yes/no question) and the prefix goes to the end: **Ich kaufe am Freitag ein.** Same with **auf|stehen** (get up), **an|rufen** (call), **mit|bringen** (bring along). **Ich rufe dich an** is a set phrase. **schlafen** changes its vowel: er **schläft**. **Gemacht** and **gearbeitet** are learned whole; the pattern (Perfekt) comes in A1.2.',
         examples: ['Ich stehe um sechs auf. Ich bin müde.', 'Ja, ich kaufe am Freitag ein. Kommst du mit?'],
         ruleSlug: 'separable-verbs-intro',
       },
@@ -1536,12 +1545,12 @@ export const CURRICULUM_A11 = {
       schreiben: {
         kind: 'formular',
         taskKey: 'a11-l11',
-        taskDe: 'Tim Berger steht jeden Tag früh auf. Sein Kurs ist am Donnerstag von 9 Uhr bis 12 Uhr, in Zimmer 4. Füllen Sie den Wochenplan für den Kurs aus.',
-        taskEn: 'Tim Berger gets up early every day. His course is on Thursday from 9 a.m. to 12 noon, in room 4. Fill in the weekly plan for the course (name, day, course from, course until, room).',
+        taskDe: 'Tim Berger steht jeden Tag früh auf. Sein Kurs ist am Donnerstag von 9 Uhr bis 12 Uhr, in Zimmer 12. Füllen Sie den Wochenplan für den Kurs aus.',
+        taskEn: 'Tim Berger gets up early every day. His course is on Thursday from 9 a.m. to 12 noon, in room 12. Fill in the weekly plan for the course (name, day, course from, course until, room).',
         fields: ['Name', 'Tag', 'Kurs von', 'Kurs bis', 'Zimmer'],
         minWords: 5,
         maxWords: 40,
-        sample: 'Name: Tim Berger / Tag: Donnerstag / Kurs von: 9 Uhr / Kurs bis: 12 Uhr / Zimmer: 4',
+        sample: 'Name: Tim Berger / Tag: Donnerstag / Kurs von: 9 Uhr / Kurs bis: 12 Uhr / Zimmer: 12',
       },
       // A1.1 has six listening exercises and all six are linked elsewhere; reading 5 was the last
       // unlinked text and belongs here (DaF review, L11).
@@ -1637,8 +1646,8 @@ export const CURRICULUM_A11 = {
       },
       notice: {
         title: 'mein, dein, sein, ihr – Possessivartikel',
-        bodyDe: 'Der Possessivartikel zeigt, wem etwas gehört: **mein** Geschenk, **dein** Bruder, **sein** Handy (er), **ihr** Buch (sie), **Ihr** Büro (Sie, höflich — immer groß!). Vor femininen Nomen und im Plural kommt **-e** dazu: **meine** Mama. Für Gruppen: **unser** Fest (wir), **euer** Fest (ihr) — vor die-Wörtern **unsere**, **eure**.',
-        bodyEn: 'A possessive article says who something belongs to: **mein** Geschenk (my present), **dein** Bruder (your brother, informal), **sein** Handy (his phone), **ihr** Buch (her book), **Ihr** Büro (your office, polite – always with a capital I). Before a feminine noun and in the plural, add **-e**: **meine** Mama. For groups: **unser** Fest (our party, wir), **euer** Fest (your party, several people, ihr) – and before die-words **unsere**, **eure**.',
+        bodyDe: 'Der Possessivartikel zeigt, wem etwas gehört: **mein** Geschenk, **dein** Bruder, **sein** Handy (er), **ihr** Buch (sie: eine Frau oder mehrere), **Ihr** Büro (Sie, immer groß!). Vor femininen Nomen und im Plural kommt **-e** dazu: **meine** Mama. Für Gruppen: **unser** Fest (wir), **euer** Fest (ihr) — vor die-Wörtern **unsere**, **eure**.',
+        bodyEn: 'A possessive article says who something belongs to: **mein** Geschenk (my present), **dein** Bruder (your brother, informal), **sein** Handy (his phone), **ihr** Buch (her book, or their book), **Ihr** Büro (your office, polite – always with a capital I). Before a feminine noun and in the plural, add **-e**: **meine** Mama. For groups: **unser** Fest (our party, wir), **euer** Fest (your party, several people, ihr) – and before die-words **unsere**, **eure**.',
         examples: ['Ana, wann ist dein Geburtstag?', 'Und dein Bruder? Kommt seine Frau auch?'],
         ruleSlug: 'possessive-articles',
       },
@@ -1665,8 +1674,8 @@ export const CURRICULUM_A11 = {
       schreiben: {
         kind: 'mitteilung',
         taskKey: 'a11-l12',
-        taskDe: 'Schreiben Sie eine Einladung zu Ihrem Geburtstag. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
-        taskEn: 'Write an invitation to your birthday party. Open with a greeting and close with a sign-off. Cover three points: why you are celebrating; the day and the time; what the guests should bring.',
+        taskDe: 'Schreiben Sie eine Einladung zu Ihrem Geburtstag. Sie feiern im Café. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        taskEn: 'Write an invitation to your birthday party. You are celebrating at the café — say where. Open with a greeting and close with a sign-off. Cover three points: why you are celebrating; the day and the time; what the guests should bring.',
         leitpunkte: ['Warum Sie feiern', 'Tag und Uhrzeit', 'Was die Gäste mitbringen sollen'],
         minWords: 25,
         maxWords: 45,
@@ -1674,7 +1683,7 @@ export const CURRICULUM_A11 = {
         // ROUND 16 (DaF review #15, MAJOR 1, RULE 22): „Der Tag ist der 15. Mai“ war der fünfte
         // Formularsatz des Kurses. Der Grund der Einladung steht jetzt als Grund da („Ich habe im
         // Mai Geburtstag.“, wie im Dialog) und Tag und Uhrzeit als Zeitangaben eines Satzes.
-        sample: 'Hallo Lena! Ich habe im Mai Geburtstag. Wir feiern am Freitag um acht Uhr. Die Gäste bringen Kuchen und Musik mit. Bringst du bitte den Salat mit? Bis bald, Ana',
+        sample: 'Hallo Lena! Ich habe im Mai Geburtstag. Wir feiern am Freitag um acht Uhr im Café. Die Gäste bringen Kuchen und Musik mit. Bringst du bitte den Salat mit? Bis bald, Ana',
       },
       links: { listeningExercise: null, readingOrder: 10 },
       // „Wiederholung“ has to be visible in the practice: the last Lektion before checkpoint 4 mixes

@@ -54,7 +54,7 @@ export const handler = async (event) => {
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: 'Die Aussprache-Bewertung ist gerade nicht verfügbar.', stage: 'config' }),
+      body: JSON.stringify({ error: 'Die Verständlichkeits-Prüfung ist gerade nicht verfügbar.', stage: 'config' }),
     };
   }
 

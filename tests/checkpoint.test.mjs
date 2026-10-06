@@ -1923,3 +1923,25 @@ test('LandeskundeCard is a flat Card (no raised/interactive) and reads its langu
   assert.match(src, /note\.bodyDe|note\.bodyEn/, 'must render the note body');
   assert.match(src, /note\.source/, 'must render the source line');
 });
+
+// TRANSFER (2026-10 review). A checkpoint item the learner already answered in
+// a lesson tests memory of that item. The draw prefers unseen same-topic items;
+// measured 2026-10-05 after the change: 1 / 1 / 2 / 0 of the 8 pool items per
+// checkpoint are still lesson items (the leak cap and taught-lexis rule come
+// first on thin topics) — was 5 / 3 / 5 / 5. A ratchet: it only goes down.
+const MAX_LESSON_SEEN_PER_CHECKPOINT = [1, 1, 2, 0];
+test('checkpoints draw prompts the learner has not answered in a lesson (transfer ratchet)', async () => {
+  const { default: buildLesson } = await import('../src/lib/lesson/buildLesson.js');
+  ALL_CHECKPOINTS.forEach(({ cp: checkpoint, items }, i) => {
+    const seen = new Set();
+    for (const lektion of CURRICULUM_A11.lektionen.filter((l) => l.nr <= checkpoint.afterLektion)) {
+      for (const attempt of [1, 2]) {
+        for (const stage of buildLesson({ curriculum: CURRICULUM_A11, lektion, pool: POOL, attempt }).stages) {
+          for (const it of stage.items || []) seen.add(it.id);
+        }
+      }
+    }
+    const hits = items.filter((it) => it.poolItemId && seen.has(it.poolItemId)).length;
+    assert.ok(hits <= MAX_LESSON_SEEN_PER_CHECKPOINT[i], `${checkpoint.id}: ${hits} pool items already answered in a lesson (ratchet ${MAX_LESSON_SEEN_PER_CHECKPOINT[i]})`);
+  });
+});

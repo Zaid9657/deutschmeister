@@ -313,6 +313,47 @@ export function weeklyEstimate(curriculum = CURRICULUM_A11, perWeek = SUSTAINABL
   };
 }
 
+/**
+ * HOW LONG ONE LEKTION REALLY TAKES — an ESTIMATE, labelled as one wherever it is shown (2026-10).
+ *
+ * `lektion.minutes` (15) is the standard's design target and the validator holds every Lektion to
+ * it; it is not a measurement. The 2026-10 review counted what a Lektion puts in front of a learner
+ * — 10 dialogue lines, 18–25 words, 3 Phonetik items, 7 practice items, 3 derived exercises, 2
+ * dictations, read-aloud plus an open speaking task, a writing task — and that is not 15 minutes.
+ * So the learner-facing label is this range: the Lektion's own counts times the seconds per step
+ * below. The seconds are ASSUMPTIONS (a beginner's pace, low = smooth, high = careful, plus a few
+ * retries), not data; the usability study in docs/course-factory/a11-rebuild/EVIDENCE-PLAN-2026-10.md
+ * measures real completion times, and those replace this table. The guided-hours figure on the
+ * course pages still rests on the 15-minute target (astro-site/src/lib/syllabus.js) — an owner
+ * decision once times are measured, not something to retype from this model.
+ */
+export const STEP_SECONDS = {
+  pretest: [45, 90], dialogLine: [15, 25], word: [8, 15], notice: [60, 120], phonetikItem: [15, 30],
+  practiceItem: [30, 50], derivedItem: [45, 75], dictationLine: [40, 70], readAloudLine: [20, 40],
+  speakingOpen: [60, 120], writing: [240, 420], recap: [30, 60],
+};
+/** The player's fixed stage sizes (buildLesson.js PRACTICE_SIZE and the three derived exercises); a test pins them. */
+export const ESTIMATE_COUNTS = { practice: 7, derived: 3, retriesHigh: 3 };
+
+export function lektionMinutesEstimate(l) {
+  const n = {
+    pretest: l?.pretest ? 1 : 0, dialogLine: l?.dialog?.lines?.length || 0, word: l?.wortfeld?.length || 0,
+    notice: l?.notice ? 1 : 0, phonetikItem: l?.phonetik?.items?.length || 0,
+    practiceItem: ESTIMATE_COUNTS.practice, derivedItem: ESTIMATE_COUNTS.derived,
+    dictationLine: l?.hoeren?.lines?.length || 0, readAloudLine: l?.sprechen?.readAloud?.length || 0,
+    speakingOpen: l?.sprechen?.open ? 1 : 0, writing: l?.schreiben ? 1 : 0, recap: 1,
+  };
+  const total = (side) => Object.entries(n).reduce((acc, [k, count]) => acc + count * STEP_SECONDS[k][side], 0);
+  const hi = total(1) + ESTIMATE_COUNTS.retriesHigh * STEP_SECONDS.practiceItem[1];
+  return { lo: Math.floor(total(0) / 300) * 5, hi: Math.ceil(hi / 300) * 5 };
+}
+
+/** The course-wide range: the quickest Lektion's low end to the longest one's high end. */
+export function courseMinutesEstimate(curriculum = CURRICULUM_A11) {
+  const all = (curriculum.lektionen || []).map(lektionMinutesEstimate);
+  return { lo: Math.min(...all.map((e) => e.lo)), hi: Math.max(...all.map((e) => e.hi)) };
+}
+
 // ---------------------------------------------------------------------------
 // How a Lektion works — the stages the player runs, in the order it runs them
 // ---------------------------------------------------------------------------
@@ -332,13 +373,15 @@ const HOW_STEPS = [
   { key: 'notice', label: 'Rule', descriptionEn: 'One grammar point, explained in a short card.' },
   { key: 'practice', label: 'Practice', descriptionEn: 'Short typed and tapped exercises, checked instantly.' },
   { key: 'dictation', label: 'Listen', descriptionEn: 'Hear a line from the dialogue and write it down.' },
-  { key: 'speaking', label: 'Speak', descriptionEn: 'Read a line aloud; the app scores your pronunciation.' },
+  { key: 'speaking', label: 'Speak', descriptionEn: 'Read aloud; speech recognition checks words, not pronunciation.' },
   { key: 'writing', label: 'Write', descriptionEn: 'A short real-life text, checked by AI.' },
   { key: 'recap', label: 'Recap', descriptionEn: 'What you can do now, and what comes next.' },
 ];
 
 const howItWorksEn = {
   minutesPerLektion: weeklyEstimate(CURRICULUM_A11).minutesPerLektion,
+  // What the learner is told: the estimated range, never the 15-minute design target.
+  minutesEstimate: courseMinutesEstimate(CURRICULUM_A11),
   steps: HOW_STEPS,
 };
 

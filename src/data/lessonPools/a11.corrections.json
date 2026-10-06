@@ -1,0 +1,125 @@
+{
+ "_doc": [
+  "Field-level corrections of BANK items (rows of grammar_exercises, via grammar-content-cache.json), applied LAST by scripts/build-lesson-pool.mjs.",
+  "Each entry carries its reason. The same fix is written for the database in migrations/2026-10-05-a11-exercise-text-fixes.sql (applied by hand, not by the build), so the next cache dump does not undo it: once the dump carries the fix, the build reports the entry as stale and it can go.",
+  "keepBankExplanationEn: bank items whose sidecar English was reviewed (2026-10-05) and REJECTED in favour of the bank text. Every other bank item whose sidecar text differs takes the sidecar — the hand-edited layer; it used to be ignored silently, which is how the corrected L8 explanation never shipped."
+ ],
+ "keepBankExplanationEn": {
+  "58dd25ce-36c5-4e52-a4cc-8ebddbdd8da0": "Sidecar calls \"arbeitst\" unpronounceable, an overstatement; bank is accurate.",
+  "da9e486f-2548-4462-9bdd-c59560ed7276": "Sidecar says das \"is one thing\"; \"Das sind meine Eltern\" contradicts it."
+ },
+ "items": {
+  "ffec1d33-2826-5332-93e5-2b8efe7ece89": {
+   "options": [
+    "Ja, ich komme aus Italien.",
+    "Ja, komme.",
+    "Ja, ich kommst aus Italien.",
+    "Ja, du kommst aus Italien."
+   ],
+   "questionEn": "Answer yes and repeat the statement: Kommst du aus Italien?",
+   "explanationDe": "Ja + die Aussage in der ich-Form: Ja, ich komme aus Italien.",
+   "explanationEn": "Say **Ja** and repeat the statement in the ich-form: **Ja, ich komme aus Italien.** \"Ja, komme.\" has no subject; \"ich kommst\" and \"du kommst\" use the wrong verb form.",
+   "reason": "A correct sentence („Ja, ich bin aus Italien.“) was a wrong option; „Kurzantwort“ was the wrong term (2026-10 review)."
+  },
+  "1ed2c78f-8f65-52e3-9e63-97f2a5b0663b": {
+   "questionDe": "Wie sagt man den Beruf? Schreiben Sie den Satz ohne Artikel: „Ich bin eine Lehrerin.“",
+   "questionEn": "How do you say the job? Write the sentence without the article: \"Ich bin eine Lehrerin.\"",
+   "explanationDe": "Nach ich bin steht ein Beruf meist ohne Artikel: Ich bin Lehrerin. Mit Adjektiv kommt der Artikel zurück: Ich bin eine gute Lehrerin.",
+   "explanationEn": "After **sein**, a plain job normally takes no article: **Ich bin Lehrerin.** English says \"a teacher\"; German does not. With an adjective the article returns: **Ich bin eine gute Lehrerin.**",
+   "reason": "„Ich bin eine Lehrerin.“ is not ungrammatical: the article-free job is the usual form, with an adjective the article returns (2026-10 review, finding 5E)."
+  },
+  "2e4e344c-3116-5304-9f6e-afbed5d037e9": {
+   "explanationDe": "Offizielle Zeit: Stunde + Uhr + Minuten: 14:30 = vierzehn Uhr dreißig.",
+   "explanationEn": "Official (24-hour) time is hour + **Uhr** + minutes: 14:30 = **vierzehn Uhr dreißig**.",
+   "reason": "Official time is hour + Uhr + minutes; the bank said „Uhr + Stunde + Minuten“ (finding 5C)."
+  },
+  "2d34c5aa-a512-50b5-a1c5-57dd04acb619": {
+   "accepted": [
+    "acht Uhr"
+   ],
+   "reason": "The task asks for official time „with Uhr“ and accepted „acht“ alone."
+  },
+  "3e14842d-3e34-5d86-9284-5954e9593b61": {
+   "explanationDe": "Kurz vor der vollen Stunde zählt man mit vor zur nächsten Stunde: 2:50 = zehn vor drei.",
+   "explanationEn": "Shortly before the full hour, count to the next hour with **vor**: 2:50 = **zehn vor drei**.",
+   "reason": "„Nach der halben Stunde zählt man mit vor“ is false (2:35 = fünf nach halb drei)."
+  },
+  "827c155d-7b87-53a3-b047-d53ab532f296": {
+   "accepted": [
+    "zwanzig nach sechs",
+    "zwanzig nach 6"
+   ],
+   "reason": "The task asks for colloquial time; „sechs Uhr zwanzig“ is the official form the notice keeps apart."
+  },
+  "8970aaea-186c-58b0-bcf2-fdc7bbc3a632": {
+   "explanationDe": "am + Tageszeit: am Morgen, am Abend (aber: in der Nacht).",
+   "explanationEn": "Parts of the day take **am**: **am Abend**, am Morgen, am Nachmittag. One exception: **in der Nacht**. Clock times take **um**: um 8 Uhr.",
+   "reason": "„am + Tageszeit“ was absolute; „in der Nacht“ is the exception."
+  },
+  "54801fe3-5b02-56dc-9c28-31bb6f620f04": {
+   "explanationDe": "Ja/Nein-Frage: Das Verb (stehst) steht vorn, die Vorsilbe (auf) am Ende.",
+   "explanationEn": "Yes/no question: the verb (**stehst**) comes first, the prefix (**auf**) goes to the end.",
+   "reason": "„Stamm zuerst“ is wrong: the conjugated verb moves, not the stem."
+  },
+  "8a2be339-3196-5a98-a5e6-e41f4351e703": {
+   "explanationDe": "Ja/Nein-Frage: Das Verb (kauft) steht vorn, die Vorsilbe (ein) am Ende.",
+   "explanationEn": "Yes/no question: the verb (**kauft**) comes first, the prefix (**ein**) goes to the end.",
+   "reason": "„Stamm zuerst“ is wrong: the conjugated verb moves, not the stem."
+  },
+  "fbe490d9-9b31-5e32-a6f3-dea1394f6863": {
+   "explanationDe": "Ja/Nein-Frage: Das Verb (kommt) steht vorn, die Vorsilbe (an) am Ende.",
+   "explanationEn": "Yes/no question: the verb (**kommt**) comes first, the prefix (**an**) goes to the end.",
+   "reason": "„Stamm zuerst“ is wrong: the conjugated verb moves, not the stem."
+  },
+  "9454a0c1-640f-54e9-81db-d63ea1557925": {
+   "explanationDe": "Ja/Nein-Frage: Das Verb (rufst) steht vorn, die Vorsilbe (an) am Ende.",
+   "explanationEn": "Yes/no question: the verb (**rufst**) comes first, the prefix (**an**) goes to the end.",
+   "reason": "„Stamm zuerst“ is wrong: the conjugated verb moves, not the stem."
+  },
+  "c68e4835-4ac3-4cc6-9372-3b67f4a09daf": {
+   "explanationDe": "Frau ist feminin: die Frau.",
+   "explanationEn": "**Frau** is feminine: **die Frau**.",
+   "reason": "„Weibliche Personen sind feminin“ is false (das Mädchen)."
+  },
+  "fbc025da-31e9-44c1-9191-aab034a4e538": {
+   "explanationDe": "Mann ist maskulin: der Mann.",
+   "explanationEn": "**Mann** is masculine: **der Mann**.",
+   "reason": "„Männliche Personen sind maskulin“ is absolute; name the noun instead."
+  },
+  "f153c9f2-8ecc-586d-8b69-550edaf75dd1": {
+   "explanationDe": "Alkoholische Getränke sind meist maskulin: der Wein, der Sekt. Aber: das Bier.",
+   "explanationEn": "Most alcoholic drinks are masculine: **der Wein**, der Sekt. But: **das Bier**.",
+   "reason": "„außer Bier“ as a rule is absolute; most, not all."
+  },
+  "b19be5e4-48c0-5fad-a8a7-e16bf8e1772f": {
+   "explanationDe": "Die Tasche ist feminin, deshalb steht das Pronomen sie: die Tasche → sie.",
+   "explanationEn": "**Die Tasche** is feminine, so the pronoun is **sie**: die Tasche → sie.",
+   "reason": "„wird sie zu sie“ is garbled."
+  },
+  "cb35f9d0-86d8-4f7c-b41d-3e6c1e2e1e4c": {
+   "questionEn": "He is hungry.",
+   "reason": "questionEn repeated the German."
+  },
+  "68be03d3-c547-41dc-9dc0-772fa974f74f": {
+   "questionEn": "I have a car.",
+   "reason": "questionEn repeated the German."
+  },
+  "51c0db3b-9a30-4ccb-8c6c-d1361eec51da": {
+   "questionEn": "He has a car.",
+   "reason": "questionEn repeated the German."
+  },
+  "ea61494a-4f8e-4851-a5f6-1fa8a95364ab": {
+   "questionEn": "You are learning German. (lernen)",
+   "reason": "questionEn repeated the German."
+  },
+  "8908dc09-b16b-57e4-b056-e0f3060766c8": {
+   "questionDe": "[das / ist / sein / Schwester] → Schreiben Sie den Satz.",
+   "reason": "The prompt handed over the inflected possessive (seine) the item tests."
+  },
+  "19f1aa27-7634-5599-8a61-8f69e259f6d4": {
+   "explanationDe": "Das steht mit ist, wenn es um eine Sache geht: Das ist Kaffee. Mit einem Nomen im Plural: Das sind …",
+   "explanationEn": "Here das points to one thing (Kaffee), so sein takes **ist**, like er/sie/es: **Das ist Kaffee.** For a plural noun it is **Das sind …**: Das sind Kollegen.",
+   "reason": "„das always with ist“ is false (Das sind …)."
+  }
+ }
+}
