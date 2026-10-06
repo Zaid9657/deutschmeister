@@ -10,6 +10,7 @@ import { openCheckout } from '../utils/openCheckout';
 import { clearBuyIntent } from '../lib/buyIntent';
 import { subscriptionPortalAction } from '../lib/billingPortal.js';
 import { planStatusCopy } from '../lib/planStatus.js';
+import { proPlanLines } from '../lib/proPlanLines.js';
 import { markCheckoutStarted, consumeCheckoutSuccess } from '../lib/funnelTracking';
 import { PLANS, num, levelsForProduct } from '../data/pricing.js';
 import { LEVEL_COUNT, READING_LESSON_COUNT, TRIAL_DAYS } from '../data/marketing.js';
@@ -206,23 +207,9 @@ const SubscriptionPage = () => {
       name: isGerman ? PLANS.monthly.nameDe : PLANS.monthly.name,
       price: num(PLANS.monthly.price),
       period: isGerman ? '/Monat' : '/month',
-      features: isGerman
-        ? [
-            `Zugang zu allen ${LEVEL_COUNT} Stufen (A1.1–B2.2)`,
-            'Alle Grammatiklektionen mit Übungen',
-            'Hörverständnisübungen',
-            'Podcasts & Video-Inhalte',
-            'Fortschrittsverfolgung',
-            'Jederzeit kündbar',
-          ]
-        : [
-            `Full access to all ${LEVEL_COUNT} levels (A1.1–B2.2)`,
-            'All grammar lessons with exercises',
-            'Listening comprehension exercises',
-            'Podcasts & video content',
-            'Progress tracking',
-            'Cancel anytime',
-          ],
+      // One Pro, two billings: both cards render the same lines, built from
+      // the marketing.js claims (lib/proPlanLines.js, tests/subscription-plan-lines.test.mjs).
+      features: proPlanLines(isGerman),
       highlight: false,
     },
     {
@@ -234,23 +221,7 @@ const SubscriptionPage = () => {
         ? `Sie sparen ${PLANS.yearly.savingPercent} %`
         : `Save ${PLANS.yearly.savingPercent}%`,
       monthlyEquiv: num(PLANS.yearly.asMonthly),
-      features: isGerman
-        ? [
-            'Alles im Monatsplan',
-            `${PLANS.yearly.savingPercent}% günstiger als monatlich`,
-            'Prioritäts-Support',
-            'Frühzeitiger Zugang zu neuen Inhalten',
-            'Fortschrittsverfolgung',
-            'Jederzeit kündbar',
-          ]
-        : [
-            'Everything in Monthly',
-            `Save ${PLANS.yearly.savingPercent}% compared to monthly`,
-            'Priority support',
-            'Early access to new content',
-            'Progress tracking',
-            'Cancel anytime',
-          ],
+      features: proPlanLines(isGerman),
       highlight: true,
     },
   ];
@@ -616,7 +587,7 @@ const SubscriptionPage = () => {
             {[
               {
                 icon: '📚',
-                title: isGerman ? '8 Stufen' : '8 Levels',
+                title: isGerman ? `${LEVEL_COUNT} Stufen` : `${LEVEL_COUNT} Levels`,
                 desc: isGerman ? 'Von A1.1 bis B2.2' : 'From A1.1 to B2.2',
               },
               {
