@@ -13,6 +13,20 @@ August to 74–94 % in the last three weeks, median 1 minute to confirm). The re
 that sends 98 % of confirmed accounts to a paywall, and session handling that signs people out
 or reloads their page behind their back.
 
+## Status (same PR, 2026-10-06)
+
+| Finding | Status |
+|---|---|
+| F1 signup_attempts leak | Migration written: `migrations/2026-10-06-signup-attempts-no-client-read.sql`. **Not applied yet**: the owner applies it, or approves an agent applying it through the connector. |
+| F2 fake delete | Fixed: the button now opens a filled-in deletion email (`src/lib/accountDeletion.js`). |
+| F3 paywall after login | **Owner decided: land on the free course.** The guard change (`/dashboard` → `courseHomeFor()` when there is no trial or plan, `/profile` behind `ProtectedRoute`) was blocked by the agent's safety check because it loosens an access guard, so it is not in this PR and needs an explicit go. |
+| F4 idle global sign-out | Fixed: `useSessionTimeout` and its modal removed. |
+| F5 page remounts | Fixed: `AuthContext` keeps the user object when an event carries the same person (`src/lib/authUser.js`); `SubscriptionContext` reloads the account on screen without flipping `loading`. |
+| F6 audit rows | Corrected below; no code change. |
+| F7–F10 | Open. |
+
+Guarded by `tests/auth-session.test.mjs`.
+
 ## 1. How the track works today (map)
 
 | Step | Component | What happens |
@@ -92,11 +106,13 @@ the last debounce window; A1.1 is free and skips the guard.) *Fix:* keep `user` 
 `AuthContext` (only `setUser` when `id`/`email_confirmed_at` changed), and make the background
 refresh silent (do not flip `loading` once data is loaded).
 
-**F6. `audit_logs` "logins" are tab switches.** Same `SIGNED_IN` cause: 1,176 `auth.login` rows
-from 125 users in 30 days = 5.7 per user-day, max 56 in one day; `auth.signup` has 104 rows for
-34 users and misses most real signups (it only counts a `SIGNED_IN` < 60 s after creation). Any
-dashboard or agent reading login/signup counts from `audit_logs` is wrong. *Fix:* log
-`auth.login` only from `signIn()` success, `auth.signup` only from `signUp()` success.
+**F6. `audit_logs` "logins" are app opens, not logins.** Same `SIGNED_IN` cause: 1,176
+`auth.login` rows from 125 users in 30 days = 5.7 per user-day, max 56 in one day. The admin
+panel's "Login-aktive Nutzer (7/28 T)" counts *distinct* users per window, so it is right as an
+"opened the app while signed in" measure. Do not rename or narrow the event without changing that
+metric. Only raw row counts are inflated. `auth.signup` (104 rows for 34 users, and it only
+counts a `SIGNED_IN` < 60 s after creation) misses most real signups, and nothing reads it. Use
+`profiles.created_at` for signups. *Fix if ever needed:* log `auth.login` once per user per day.
 
 ### P2 — first-session polish
 
@@ -140,5 +156,5 @@ click-time magic link, and the buy-intent resume.
 ## 4. Suggested order
 
 1. F1 (one migration, minutes). 2. F2 (honest button today, real deletion later).
-3. F3 (owner decision, biggest activation lever). 4. F4 + F5 + F6 together (one `AuthContext`
+3. F3 (owner decision, biggest activation lever). 4. F4 + F5 together (one `AuthContext`
 change plus removing the idle hook). 5. F7–F9 as one first-session PR.

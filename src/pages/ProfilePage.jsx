@@ -17,6 +17,7 @@ import SectionHeading from '../components/ui/SectionHeading.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
 import Stat from '../components/ui/Stat.jsx';
 import { profilePlanAction } from '../lib/billingPortal.js';
+import { deletionMailto } from '../lib/accountDeletion.js';
 
 const FIELD = 'w-full rounded-clay border border-rule bg-white px-4 py-3 text-sm text-ink placeholder:text-graphite focus:border-siegel focus:outline-none';
 
@@ -358,27 +359,27 @@ const ProfilePage = () => {
                   <AlertTriangle className="w-6 h-6 text-accent-himbeer-ink" />
                 </div>
                 <div>
-                  <h3 className="font-display font-semibold text-ink">Delete Account?</h3>
-                  <p className="text-graphite text-sm">This action cannot be undone.</p>
+                  <h3 className="font-display font-semibold text-ink">Delete your account</h3>
+                  <p className="text-graphite text-sm">It takes one email from you.</p>
                 </div>
               </div>
               <p className="text-graphite mb-6">
-                All your progress and data will be permanently deleted. Are you sure you want to continue?
+                Send us the email this button opens, from {user?.email || 'your account address'}. We delete your
+                account and all your learning data by hand and reply when it is done, at the latest within one month.
+                Deletion cannot be undone.
               </p>
               <div className="flex gap-3">
                 <Button variant="secondary" className="flex-1" onClick={() => setShowDeleteConfirm(false)}>
                   {t('common.cancel')}
                 </Button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    // Handle account deletion
-                    setShowDeleteConfirm(false);
-                  }}
+                {/* A mail, not a fake delete: src/lib/accountDeletion.js. */}
+                <a
+                  href={deletionMailto(user?.email)}
+                  onClick={() => setShowDeleteConfirm(false)}
                   className="flex-1 inline-flex items-center justify-center gap-2 rounded-clay border border-accent-himbeer-ink bg-accent-himbeer-wash px-5 py-2.5 text-sm font-bold text-accent-himbeer-ink shadow-raise-himbeer transition-all duration-100 ease-snap active:translate-y-1 active:shadow-none"
                 >
-                  <Trash2 className="w-4 h-4" /> Delete
-                </button>
+                  <Trash2 className="w-4 h-4" /> Email us to delete
+                </a>
               </div>
             </Card>
           </div>
