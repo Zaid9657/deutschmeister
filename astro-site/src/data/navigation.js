@@ -116,6 +116,17 @@ export const FOOTER_GROUPS = [
 // kind: 'external' — always a full page load, always target=_blank + noopener.
 // ─────────────────────────────────────────────────────────────────────────────
 export const YOUTUBE_CHANNEL_URL = 'https://www.youtube.com/@deutschmeister_de';
+// Instagram @deutschmeisterde and the "Deutsch Meister" Facebook page are the
+// two accounts the daily post routine publishes to (drafts/instagram-100/
+// ROUTINE.md, both live since 2026-09-28). The page has no vanity name yet, so
+// it is addressed by its numeric id, which Facebook redirects to whatever name
+// it gets later. Telegram is NOT listed until the owner confirms the channel —
+// t.me/deutschmeister exists but is not verified as ours.
+// The learner mails' footer reads a synced copy of this list
+// (netlify/functions/_shared/socialLinks.mjs; tests/email-social.test.mjs), so a
+// channel added here must be added there too.
+export const INSTAGRAM_URL = 'https://www.instagram.com/deutschmeisterde/';
+export const FACEBOOK_URL = 'https://www.facebook.com/1232346926638010';
 
 export const SOCIAL_LINKS = [
   {
@@ -123,6 +134,20 @@ export const SOCIAL_LINKS = [
     labelEn: 'YouTube',
     labelDe: 'YouTube',
     href: YOUTUBE_CHANNEL_URL,
+    kind: 'external',
+  },
+  {
+    key: 'instagram',
+    labelEn: 'Instagram',
+    labelDe: 'Instagram',
+    href: INSTAGRAM_URL,
+    kind: 'external',
+  },
+  {
+    key: 'facebook',
+    labelEn: 'Facebook',
+    labelDe: 'Facebook',
+    href: FACEBOOK_URL,
     kind: 'external',
   },
 ];

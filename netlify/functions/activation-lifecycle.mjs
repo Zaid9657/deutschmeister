@@ -45,6 +45,7 @@ import { createClient } from '@supabase/supabase-js';
 import { createHmac } from 'crypto';
 import { BRAND, emailHeader, ctaCell } from './_shared/brand.mjs';
 import { tagEmailLink } from './_shared/emailLinks.mjs';
+import { socialFooterLine } from './_shared/socialLinks.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -102,7 +103,7 @@ const SHELL = ({ heading, body, ctaHref, ctaLabel, footerHref, unsubUrl }) => `<
         <tr>
           <td style="padding:20px 32px;border-top:1px solid ${BRAND.rule};text-align:center;">
             <p style="margin:0;font-size:12px;color:${BRAND.graphite};line-height:1.6;">
-              DeutschMeister · <a href="${footerHref}" style="color:${BRAND.graphite};">deutsch-meister.de</a><br>
+              DeutschMeister · <a href="${footerHref}" style="color:${BRAND.graphite};">deutsch-meister.de</a>${socialFooterLine(BRAND.graphite)}<br>
               <a href="${unsubUrl}" style="color:${BRAND.graphite};">Unsubscribe from these emails</a>
             </p>
           </td>

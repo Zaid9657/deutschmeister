@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { createHmac } from 'crypto';
 import sentences from './data/daily-sentences.json' with { type: 'json' };
 import { fetchOptedOutIds } from './_shared/emailOptOut.mjs';
+import { socialFooterLine } from './_shared/socialLinks.mjs';
 
 // ─── config ──────────────────────────────────────────────────────────────────
 
@@ -178,7 +179,7 @@ function buildEmail({ sentence, recipient, runDate = utcRunDate() }) {
         <tr>
           <td style="padding:20px 32px;border-top:1px solid #f1f5f9;background:#f8fafc;">
             <p style="margin:0;font-size:12px;color:#94a3b8;text-align:center;">
-              You're receiving this because you signed up at <a href="${homeUrl()}" style="color:#94a3b8;">deutsch-meister.de</a>.<br>
+              You're receiving this because you signed up at <a href="${homeUrl()}" style="color:#94a3b8;">deutsch-meister.de</a>.${socialFooterLine('#94a3b8')}<br>
               <a href="${unsubUrl}" style="color:#94a3b8;">Unsubscribe from daily sentences</a>
             </p>
           </td>

@@ -1,11 +1,13 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { FOOTER_GROUPS, LEGAL_LINKS, SOCIAL_LINKS, SUPPORT_LINK } from '../data/navigation';
+import { SOCIAL_ICONS } from './socialIcons';
+import { trackSocialClicked } from '../lib/funnelTracking';
 import { STATIONS } from '../data/offers.js';
 import { groundFor } from '../lib/chrome.js';
 import { useAuth } from '../contexts/AuthContext';
 import Logo from './Logo';
-import { Youtube, LifeBuoy } from 'lucide-react';
+import { LifeBuoy } from 'lucide-react';
 
 // The app previously had NO footer: the guides, FAQ, Über uns and the
 // comparison pages were linked only from the Astro site's footer, so anyone
@@ -79,22 +81,26 @@ const Footer = () => {
                 </Link>
               </p>
             )}
-            {/* Off-site channels — the YouTube link lives on EVERY app screen
-                from here, not only the podcasts tab. URL from the registry. */}
-            <ul className="mt-4 flex items-center gap-4 text-sm">
-              {SOCIAL_LINKS.map((item) => (
+            {/* Off-site channels — on EVERY app screen, not only the podcasts
+                tab. URLs from the registry; one icon per registry key. */}
+            <ul className="mt-4 flex flex-wrap items-center gap-x-4 text-sm">
+              {SOCIAL_LINKS.map((item) => {
+                const Icon = SOCIAL_ICONS[item.key];
+                return (
                 <li key={item.key}>
                   <a
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => trackSocialClicked(item.key, 'footer')}
                     className="inline-flex min-h-11 items-center gap-2 hover:text-nacht-text transition-colors"
                   >
-                    <Youtube className="w-4 h-4" aria-hidden="true" />
+                    <Icon className="w-4 h-4" aria-hidden="true" />
                     {isGerman ? item.labelDe : item.labelEn}
                   </a>
                 </li>
-              ))}
+                );
+              })}
             </ul>
             {/* The one way to reach a human — on every full-chrome screen. */}
             <p className="mt-1 text-sm">
