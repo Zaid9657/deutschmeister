@@ -145,6 +145,14 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   `TYPO` (one retry) rather than `WRONG` — except where capitalisation IS the task (`caseSensitive`,
   the polite `Ihr/Ihre/Ihren`), where it is `WRONG`. Never "fix" an item by widening its `accepted`
   list alone: the rule belongs in the checker or in `scripts/build-lesson-pool.mjs`, with a test.
+- **Checkpoints measure transfer, and the grader scores content first (2026-10-07, REMEDIATION §8e).**
+  Each checkpoint has its own writing task (`checkpoint.writingTaskKey` → `a11-cpN`, bank `checkpoint: N`,
+  outside `courseWritingTasks()`), a retake is a new paper (seeded per attempt), and `sectionPasses()` is
+  the one pass rule (floor, above the constant-answer score, a graded text that failed fails Schreiben).
+  `gateEvaluation()` in `evaluate-writing.mjs` caps the model's score by Leitpunkt coverage and zeroes a
+  copied task. A sentence-building item whose object or modal adverb could open the sentence gets
+  „(Beginnen Sie mit „…“)" in its prompt (`missingOpeningCue`) — objects and modal adverbs stay out of
+  the answer-key fronting rule (REVIEW #12/#13).
 - **What a Lektion's numbers mean (2026-10 remediation, `docs/course-factory/a11-rebuild/REMEDIATION-2026-10.md`).**
   The practice score is the FIRST response to each first-pass practice / derived / dictation item,
   one per (stage, item) — never a retry (`requeue`), a reveal, warm-up, writing, speaking, or a

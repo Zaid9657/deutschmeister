@@ -279,11 +279,27 @@ pass found two regressions in the first dictation change (a different number for
 an unbounded request, decimal prices) — all fixed and pinned; the second pass approved with no material
 findings. Still open from §8c (Codex-reported, not yet re-verified): Schreiben passable on drills alone,
 checkpoints reusing the Lektion's writing task, retakes that only reshuffle, the grader's weighting of
-task fulfilment, untaught words and du-instructions in the final test, rejected word-order variants.
+task fulfilment, untaught words and du-instructions in the final test, rejected word-order variants
+— all closed in §8e.
 
 **Not this branch, but found by the review:** the untracked `scripts/reprocess_webhook_logs.sql` would
 re-grant Pro to expired/unpaid subscriptions and mark refunds and failed payments as processed without
 acting on them. It was never staged; do not run it as written.
+
+## 8e. The remaining open items (2026-10-07/08)
+
+Each item below was verified against the code first, then fixed with a test in
+`tests/assessment-integrity.test.mjs` (or the suite named) that fails on the old code.
+
+| Item | Fix | Evidence |
+|---|---|---|
+| L10 register | Owner decision 2026-10-07: the colleague is gesiezt. Bank (+ server twin) `register: 'formell'`, the task names her (Frau Kaya, as in L1/L12), the model text greets like L6 („Guten Tag, Frau Kaya!"). | writing-course + curricula 148/148; validator RULE 20 = 0 |
+| Final test: untaught words, du-instructions | Every text the learner must understand to answer (note, situations, Anzeigen, Schilder, form data) uses taught words only; every instruction says Sie. The exam's task words (Anzeige, Schild, richtig/falsch, Formular) stay — they are the format. The honesty line (no official exam, no certificate) is unchanged. A Codex draft that removed it and replaced Richtig/Falsch with Ja/Nein was not applied; nor its swap of Ana into a Saturday party that contradicts her Friday party in L12. | guard test fails on the old file |
+| Checkpoint replayed the Lektion's writing task | Four new tasks `a11-cp1…cp4`: the chapter's Textsorte with new facts (Tim Berger's form, a new message to Frau Berg, a café reservation for Tim, an invitation from Ana to Lena). Codex drafted them; the cast was corrected (its „Chefin Frau Wolf" is the flea-market seller, its „Paul" the waiter everyone siezt). `courseWritingTasks()` still lists one task per Lektion; the grader treats `a11-cpN` as a course key, so the free allowance stays 12 + 4 = 16. | samples pass the Formcheck and the taught-word check at each cutoff |
+| Schreiben passable on two drills with a 0 % text | `sectionPasses()` — one rule for the score and the result row: a graded text that failed fails the section. No grader verdict is still "not attempted", never a fail. | test fails before, passes after |
+| Retake = the same 20 items reshuffled | Each attempt draws a new paper under the same rules; the paper number starts at this window's attempt count, so a reload does not serve the failed paper again. Measured: 5–11 of 20 items new per retake (Hören/Lesen texts, read-aloud lines and the graded task are fixed by design), section sizes equal, an honest paper passes. | retake test |
+| Word-order variants rejected | REVIEW #12/#13 pin objects and modal adverbs as NOT derived into answer keys (`fd-n2`, `fd-n5`). So instead of widening keys, a build repair names the opening in the prompt when an object or a modal adverb could open the sentence: „Bilden Sie den Satz (Beginnen Sie mit „Die Firma"): […]". 10 shipped prompts changed; no `answer`/`accepted` changed. | built-pool diff; class test over the pool and three papers per checkpoint |
+| Grader: task fulfilment did not decide | `gateEvaluation()` in `evaluate-writing.mjs`, applied to whatever the model returns: `task` ≤ the share of Leitpunkte the model marked covered, total ≤ 4 × task, and a Mitteilung whose word trigrams are ≥ 60 % the task's own wording scores 0 (course model texts measure ≤ 0.38, a copied task 1.00; Formulare are exempt). This also applies to the exam-training tasks on /schreiben. | grader test |
 
 ## 9. External blockers (owner actions)
 

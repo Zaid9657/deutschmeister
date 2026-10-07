@@ -79,7 +79,9 @@ const LEVEL_OF_PREFIX = {
 // were never counted (unlimited for free learners) and A1.1 usage could
 // separately lock A1.2 out once its own twelve were exhausted. Derive the
 // course prefix from the task's OWN key instead of a second literal.
-const COURSE_TASK_KEY_RE = /^(a\d\d)-l\d\d$/;
+// A checkpoint's own task (`a11-cp1` … `a11-cp4`, 2026-10-07) is a course task too: it posts
+// under the same prefix and is one of the CHECKPOINTS_PER_COURSE submissions the allowance grants.
+const COURSE_TASK_KEY_RE = /^(a\d\d)-(?:l\d\d|cp\d)$/;
 
 // Returns the `<course>-` prefix (e.g. 'a11-') to scope the lifetime
 // allowance COUNT to, or null when task_key doesn't match the course task
@@ -100,6 +102,54 @@ export function courseAllowanceFor(taskKey) {
   const level = LEVEL_OF_PREFIX[courseTaskKeyPrefix(taskKey)];
   const n = level ? courseWritingTasks(level).length : 0;
   return n ? n + CHECKPOINTS_PER_COURSE : 0;
+}
+
+// TASK FULFILMENT DECIDES (Codex review, 2026-10-07). Four criteria of 0–5 let a text that answered
+// no Leitpunkt — off-topic, or the task copied back — still collect 15/20 from structure, accuracy
+// and vocabulary; the published A1 rubric scores the content points first. Two deterministic rules,
+// applied to whatever the model returned, so they hold without trusting it:
+//   1. `task` ≤ the share of Leitpunkte the model itself marked covered, and the total ≤ 4 × task —
+//      no content, no points; one of three Leitpunkte, at most 8/20.
+//   2. A Mitteilung whose word trigrams are ≥ 60 % the task's own wording is the task copied back:
+//      task 0, total 0. Measured on the course: every model text ≤ 0.38, every copied task 1.00. A
+//      Formular is exempt — copying the given values into the fields IS that task.
+export const COPY_SHARE = 0.6;
+const trigrams = (s) => {
+  const w = String(s || '').toLowerCase().match(/[\p{L}\d]+/gu) || [];
+  const out = [];
+  for (let i = 0; i + 2 < w.length; i += 1) out.push(w.slice(i, i + 3).join(' '));
+  return out;
+};
+
+/** Share of the text's word trigrams that stand verbatim in the task or its Leitpunkte (0–1). */
+export function copiedShare(task, text) {
+  const source = new Set(trigrams([task.task, ...(task.leitpunkte || [])].join(' . ')));
+  const own = trigrams(text);
+  return own.length ? own.filter((g) => source.has(g)).length / own.length : 0;
+}
+
+/** The model's evaluation with both rules applied; `gate` says what changed. */
+export function gateEvaluation(task, text, evaluation) {
+  const s = evaluation.scores || {};
+  const clamp = (n) => Math.max(0, Math.min(5, Math.round(Number(n) || 0)));
+  const scores = { task: clamp(s.task), structure: clamp(s.structure), accuracy: clamp(s.accuracy), vocabulary: clamp(s.vocabulary) };
+  const n = (task.leitpunkte || []).length;
+  const checks = Array.isArray(evaluation.leitpunkt_check) ? evaluation.leitpunkt_check : [];
+  const covered = n && checks.length === n ? checks.filter((c) => c === true || c === 'true').length : null;
+  if (covered !== null) scores.task = Math.min(scores.task, Math.ceil((5 * covered) / n));
+  const copied = task.register !== 'formular' && copiedShare(task, text) >= COPY_SHARE;
+  if (copied) scores.task = 0;
+  const reported = Math.max(0, Math.min(MAX_WRITING_POINTS, Math.round(Number(evaluation.total_score) || 0)));
+  const sum = scores.task + scores.structure + scores.accuracy + scores.vocabulary;
+  const total = Math.min(reported, sum, 4 * scores.task);
+  const improvements = Array.isArray(evaluation.improvements) ? evaluation.improvements : [];
+  return {
+    ...evaluation,
+    scores,
+    total_score: total,
+    improvements: copied ? ['Schreiben Sie eigene Sätze – nicht die Aufgabe abschreiben.', ...improvements] : improvements,
+    gate: { copied, covered, reported_total: reported },
+  };
 }
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
@@ -166,7 +216,7 @@ Antworte NUR mit einem JSON-Objekt in diesem Format (keine Erklärung davor oder
   "improvements": ["<Verbesserung 1>", "<Verbesserung 2>"]
 }
 
-Maximal 6 corrections — wähle die lehrreichsten Fehler. Wenn der Text die Wortzahl deutlich verfehlt oder das Thema verfehlt, spiegelt sich das in Aufgabenbewältigung.${levelLine}`;
+Maximal 6 corrections — wähle die lehrreichsten Fehler. Die Aufgabenbewältigung entscheidet: Ein Text, der keinen Leitpunkt behandelt, das Thema verfehlt oder nur die Aufgabe abschreibt, bekommt bei task 0 Punkte — und damit insgesamt 0. Wenn der Text die Wortzahl deutlich verfehlt, spiegelt sich das in Aufgabenbewältigung.${levelLine}`;
 }
 
 export const handler = async (event) => {
@@ -307,8 +357,9 @@ export const handler = async (event) => {
       };
     }
 
+    evaluation = gateEvaluation(task, text, evaluation);
     const wordCount = text.trim().split(/\s+/).length;
-    const totalScore = Math.max(0, Math.min(MAX_WRITING_POINTS, Math.round(evaluation.total_score)));
+    const totalScore = evaluation.total_score;
 
     const { data: saved, error: saveError } = await supabase
       .from('writing_submissions')

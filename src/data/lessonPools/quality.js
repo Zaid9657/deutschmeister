@@ -921,6 +921,47 @@ const PREPOSITION_RE =
 const ADVERBIAL_ADVERB_RE =
   /^(?:gestern|vorgestern|heute|morgen|übermorgen|jetzt|dann|danach|hier|dort|da)$/i;
 
+/** The modal and frequency adverbs. Not an Angabe at A1.1 (REVIEW #13 pins „Wir tanzen zusammen."
+ * as having nothing to front), yet „Zusammen tanzen wir." is German — so a prompt whose answer
+ * holds one names its opening (`missingOpeningCue`, Codex review 2026-10-07). */
+const MODAL_ADVERB_RE = /^(?:zusammen|gern|gerne|oft|immer|manchmal|bald|später|sofort|leider|zuerst)$/i;
+
+/** The copula forms A1.1 meets: their complement is a predicate („Ich bin Lehrer."), not an object. */
+const COPULA_RE = /^(?:bin|bist|ist|sind|seid|heiße|heißt|heißen|heisse|heisst|heissen|werde|wird|werden)$/i;
+
+/** What may open an object noun phrase: an article, a possessive, kein-, a number word. */
+const NP_DETERMINER_RE =
+  /^(?:der|die|das|den|dem|ein|eine|einen|einem|einer|kein|keine|keinen|mein|meine|meinen|dein|deine|deinen|sein|seine|seinen|ihr|ihre|ihren|unser|unsere|unseren|euer|eure|euren|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|viele)$/i;
+
+/** The canonical opens with its subject: a nominative pronoun, a determiner, or one name. */
+function subjectFirst(words, verbAt) {
+  const first = words[0];
+  return SUBJECT_SHAPED_RE.test(bare(first))
+    || (verbAt === 1 && /^[A-ZÄÖÜ]/.test(first) && !ADVERBIAL_ADVERB_RE.test(bare(first)) && !MODAL_ADVERB_RE.test(bare(first)));
+}
+
+/**
+ * The object fronted: „Die Firma braucht ein Büro." → „Ein Büro braucht die Firma." — the same V2
+ * sentence, marked wrong in a graded checkpoint (Codex review, 2026-10-07). Only the narrowest
+ * shape: [subject] [full verb] [one object noun phrase] and nothing after it — the phrase an
+ * optional determiner, lower-case adjectives and a capitalised noun or name. A copula's
+ * predicate, a pronoun object, a separable prefix, an infinitive or a participle all stay put.
+ * It is NOT derived into an answer key: REVIEW #12/#13 keep objects out of `frontableOrders`.
+ * `missingOpeningCue` uses it to make the prompt name the opening instead.
+ */
+function objectFronted(words, verbAt) {
+  if (COPULA_RE.test(bare(words[verbAt])) || !subjectFirst(words, verbAt)) return null;
+  const subject = words.slice(0, verbAt);
+  const object = words.slice(verbAt + 1);
+  if (!object.length || object.length > 4) return null;
+  const noun = object[object.length - 1];
+  if (!/^[A-ZÄÖÜ]/.test(noun) || /^(?:Sie|Ihnen)$/.test(bare(noun))) return null;
+  const head = object.slice(0, -1);
+  if (head.length && !NP_DETERMINER_RE.test(bare(head[0]))) return null;
+  if (head.slice(1).some((w) => !/^[a-zäöüß]+$/.test(bare(w)))) return null;
+  return [capitalise(object[0]), ...object.slice(1), words[verbAt], lowerSubject(subject[0]), ...subject.slice(1)].join(' ');
+}
+
 /** The determiners that open a bare accusative time phrase („jeden Tag",
  * „nächste Woche") — an Angabe without a preposition. */
 const TIME_DETERMINER_RE =
@@ -953,6 +994,10 @@ const NOT_A_VERB_RE = /^(?:heute|morgen|gestern|dann|danach|jetzt|dort|nicht|oft
  * canonical, where the build cannot tell subject from fronted object. */
 const SUBJECT_SHAPED_RE =
   /^(?:ich|du|er|sie|es|wir|ihr|der|die|das|ein|eine|kein|keine|mein|meine|dein|deine|unser|unsere)$/i;
+
+/** The finite verb's position: the first lower-case word after the opener with a personal ending. */
+const finiteVerbAt = (words) => words.findIndex((w, i) => i >= 1 &&
+  /^[a-zäöüß]/.test(w) && FRONTABLE_FINITE_RE.test(bare(w)) && !NOT_A_VERB_RE.test(bare(w)));
 
 const capitalise = (word) => word.charAt(0).toUpperCase() + word.slice(1);
 const lowerSubject = (word) => (LOWERCASABLE_SUBJECT_RE.test(word) ? word.charAt(0).toLowerCase() + word.slice(1) : word);
@@ -991,8 +1036,7 @@ export function frontableOrders(item) {
   // and the position that matters is „after the finite verb". German spells
   // every noun with a capital and no personal pronoun carries a personal
   // ending, so the subject cannot be mistaken for the verb.
-  const verbAt = words.findIndex((w, i) => i >= 1 &&
-    /^[a-zäöüß]/.test(w) && FRONTABLE_FINITE_RE.test(bare(w)) && !NOT_A_VERB_RE.test(bare(w)));
+  const verbAt = finiteVerbAt(words);
   if (verbAt < 1) return [];
 
   // A chunk of the task's own word bag is frontable when it stands AFTER the
@@ -1059,6 +1103,30 @@ export function frontableOrders(item) {
 export function frontedAcceptedForms(item) {
   const punct = (String(item?.answer || '').trim().match(/[.!]+$/) || ['.'])[0];
   return frontableOrders(item).flatMap((o) => [`${o}${punct}`, o]);
+}
+
+/**
+ * The opening a sentence-building prompt must name, or null. An item whose answer could also open
+ * with its OBJECT („Ein Büro braucht die Firma.") or a modal adverb („Zusammen tanzen wir.")
+ * accepted only the subject-first order, and the task never said which part opens — both were
+ * marked wrong in graded checkpoints (Codex review, 2026-10-07). Neither is an Angabe the answer-key
+ * rule derives (REVIEW #12/#13 pin that), so the PROMPT gains the information instead — the
+ * convention of the determiner cue: „(Beginnen Sie mit „Die Firma“)". `answer`/`accepted` are
+ * never touched.
+ */
+export function missingOpeningCue(item) {
+  if (String(item?.type) !== 'sentence_building') return null;
+  const q = String(item.questionDe || '');
+  if (/\bfrage\b/i.test(q) || /\(Beginnen Sie mit /.test(q) || !BRACKET_LIST_RE.test(q)) return null;
+  const answer = String(item.answer || '').trim();
+  if (!answer || answer.includes('?')) return null;
+  const words = answer.replace(/[.!?]+$/, '').split(/\s+/).filter(Boolean);
+  if (words.length < 3) return null;
+  const verbAt = finiteVerbAt(words);
+  if (verbAt < 1 || !subjectFirst(words, verbAt)) return null;
+  const adverb = words.slice(verbAt + 1).some((w) => MODAL_ADVERB_RE.test(bare(w)));
+  if (!adverb && !objectFronted(words, verbAt)) return null;
+  return words.slice(0, verbAt).join(' ');
 }
 
 /**

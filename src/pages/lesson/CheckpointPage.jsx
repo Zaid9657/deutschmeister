@@ -12,10 +12,8 @@ import {
   SECTION_ORDER,
   PASS_OVERALL_PCT,
   PASS_SECTION_PCT,
+  sectionPasses,
   WRITING_PASS_PCT,
-  shuffle,
-  mulberry32,
-  hashSeed,
 } from '../../lib/checkpoint/buildCheckpoint.js';
 import GradedWriting from '../../components/lesson/GradedWriting.jsx';
 import ReadAloudLine from '../../components/lesson/ReadAloudLine.jsx';
@@ -265,10 +263,12 @@ function PracticeItem({ item, onAnswer }) {
 /** A per-section result row: label, text score, number — and a bar behind it. */
 function SectionRow({ name, section }) {
   const [lang] = useLessonLang();
-  // The same two conditions scoreCheckpoint passes a section on — never a row that looks fine while
-  // the checkpoint fails because the part did not beat answering the same option everywhere.
-  const aboveGuess = !section.guessCeiling || section.correct > section.guessCeiling;
-  const ok = !section.scored || (section.pct >= PASS_SECTION_PCT && aboveGuess);
+  // The rule scoreCheckpoint passes a section on — never a row that looks fine while the checkpoint
+  // fails on that part (a same-option guess, or a graded text that failed).
+  const ok = !section.scored || sectionPasses(section);
+  const why = section.pct < PASS_SECTION_PCT
+    ? t('checkpoint.sectionBelow', lang, { pct: PASS_SECTION_PCT })
+    : t(section.realTask === false ? 'checkpoint.sectionRealTask' : 'checkpoint.sectionGuess', lang);
   return (
     <li className="py-2">
       <div className="flex items-baseline justify-between gap-3">
@@ -281,7 +281,7 @@ function SectionRow({ name, section }) {
       <div className="mt-1.5 h-2 overflow-hidden rounded-pill bg-paper-sunk" role="img" aria-label={t('checkpoint.sectionAria', lang, { name: SECTION_LABELS[name] || name, pct: section.pct })}>
         <div className={`h-full ${ok ? 'bg-siegel' : 'bg-accent-himbeer'}`} style={{ width: `${section.pct}%` }} />
       </div>
-      {section.scored && !ok && <p className="mt-1 text-xs text-accent-himbeer-ink">{section.pct >= PASS_SECTION_PCT ? t('checkpoint.sectionGuess', lang) : t('checkpoint.sectionBelow', lang, { pct: PASS_SECTION_PCT })}</p>}
+      {section.scored && !ok && <p className="mt-1 text-xs text-accent-himbeer-ink">{why}</p>}
     </li>
   );
 }
@@ -321,13 +321,11 @@ export default function CheckpointPage() {
 
   const items = useMemo(() => {
     if (!curriculum || !checkpoint || !pool) return [];
-    // buildCheckpoint already puts the chapter's real writing task in the
-    // Schreiben section when the curriculum names a taskKey (see buildSchreiben).
-    const built = buildCheckpoint({ curriculum, checkpoint, pool });
-    // "Nochmal" reshuffles the ORDER only — the same 20 items, so a second run
-    // is a second look at the same evidence, not a different (easier) test.
-    if (!round) return built;
-    return shuffle(built, mulberry32(hashSeed(`${checkpoint.id}-round-${round}`)));
+    // Every attempt is a NEW paper drawn under the same rules (Codex review, 2026-10-07): "Nochmal"
+    // used to reshuffle the same 20 items right after the result had shown them, which measured
+    // memory of the answers. `round` is the paper number — this window's attempt count at Start,
+    // +1 per retake — so a reload after a failed attempt does not serve that paper again either.
+    return buildCheckpoint({ curriculum, checkpoint, pool, seed: round ? `${checkpoint.id}-round-${round}` : undefined });
   }, [curriculum, checkpoint, pool, round]);
 
   const result = useMemo(() => (items.length ? scoreCheckpoint(items, answers) : null), [items, answers]);
@@ -406,7 +404,7 @@ export default function CheckpointPage() {
                 : t('checkpoint.limit', lang, { limit: ATTEMPT_LIMIT, hours: ATTEMPT_WINDOW_HOURS })}
             </p>
             <div className="mt-6">
-              <Button disabled={!items.length || Boolean(attempts?.blocked)} onClick={() => { setPhase('run'); setIndex(0); setAnswers({}); }}>
+              <Button disabled={!items.length || Boolean(attempts?.blocked)} onClick={() => { setRound(attempts?.used || 0); setPhase('run'); setIndex(0); setAnswers({}); }}>
                 {t('checkpoint.start', lang)} <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Button>
               {!items.length && <p className="mt-2 text-sm text-graphite">{t('checkpoint.loadingItems', lang)}</p>}
@@ -450,7 +448,7 @@ export default function CheckpointPage() {
                 ) : (
                   <Button
                     disabled={Boolean(attempts?.blocked)}
-                    onClick={() => { setRound(round + 1); setAnswers({}); setIndex(0); setRemediation([]); setPhase('run'); }}
+                    onClick={() => { setRound(Math.max(round + 1, attempts?.used || 0)); setAnswers({}); setIndex(0); setRemediation([]); setPhase('run'); }}
                   >
                     <RotateCcw className="h-4 w-4" aria-hidden="true" /> {t('action.again', lang)}
                   </Button>

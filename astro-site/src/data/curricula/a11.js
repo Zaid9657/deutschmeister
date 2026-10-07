@@ -1429,13 +1429,15 @@ export const CURRICULUM_A11 = {
       schreiben: {
         kind: 'mitteilung',
         taskKey: 'a11-l10',
-        taskDe: 'Schreiben Sie Ihrer Kollegin: Sie kommen später. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
-        taskEn: 'Write to a colleague: you will be late. Open with a greeting and close with a sign-off. Cover three points: why you are writing; when you will arrive; what your colleague should do until then.',
+        taskDe: 'Schreiben Sie Ihrer Kollegin Frau Kaya: Sie kommen später. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        taskEn: 'Write to your colleague Frau Kaya (formal, with Sie): you will be late. Open with a greeting and close with a sign-off. Cover three points: why you are writing; when you will arrive; what your colleague should do until then.',
         leitpunkte: ['Warum Sie schreiben', 'Wann Sie kommen', 'Was die Kollegin bis dahin machen soll'],
         minWords: 25,
         maxWords: 45,
         // 29 Wörter. Der dritte Leitpunkt („Was die Kollegin bis dahin machen soll“) war im alten
         // Mustertext gar nicht modelliert; die Kollegin wird gesiezt.
+        // 2026-10-07 (Entscheidung des Inhabers): Register `formell` in der Aufgabenbank, die Kollegin
+        // hat einen Namen (Frau Kaya, wie in L1 und L12) und der Mustertext grüßt wie L6.
         // ROUND 18 (DaF review #17, MAJOR 1 „Fünftens“): „Bitte machen Sie die Arbeit bis zehn Uhr
         // ohne mich.“ ist raus — ein Satz, den niemand schreibt, und er stand da, weil der Formcheck
         // den Auftrags-Leitpunkt am Echo von `machen` entschied (zehn von zwölf richtigen Aufträgen
@@ -1445,7 +1447,7 @@ export const CURRICULUM_A11 = {
         // (hart 0) meldet beide; `beginnen` ist seit Lektion 5 gelehrt. Der Formcheck muss den
         // Auftrag an der Satzart (Imperativ mit Sie / bitte + Verb) erkennen, nicht am Aufgabenverb —
         // das ist die Regel in `src/lib/lesson/writing.js`, die MAJOR 1 „Zweitens“ bestellt.
-        sample: 'Liebe Kollegin, der Zug hat leider Verspätung. Die Kollegen kommen um neun Uhr, ich komme um zehn Uhr. Bitte beginnen Sie ohne mich. Vielen Dank und viele Grüße, Ana',
+        sample: 'Guten Tag, Frau Kaya! Der Zug hat leider Verspätung. Die Kollegen kommen um neun Uhr, ich komme um zehn Uhr. Bitte beginnen Sie ohne mich. Vielen Dank und viele Grüße, Ana',
       },
       links: { listeningExercise: 3, readingOrder: 6 },
       // Only the primary topic: the two-topic rule drew haben items twice over from L9 (DaF review, L10).
@@ -1696,9 +1698,9 @@ export const CURRICULUM_A11 = {
     },
   ],
   checkpoints: [
-    { nr: 1, id: 'a1.1-cp1', afterLektion: 3, title: 'Checkpoint 1: Lektion 1–3' },
-    { nr: 2, id: 'a1.1-cp2', afterLektion: 6, title: 'Checkpoint 2: Lektion 4–6' },
-    { nr: 3, id: 'a1.1-cp3', afterLektion: 9, title: 'Checkpoint 3: Lektion 7–9' },
-    { nr: 4, id: 'a1.1-cp4', afterLektion: 12, title: 'Checkpoint 4: Lektion 10–12' },
+    { nr: 1, id: 'a1.1-cp1', afterLektion: 3, writingTaskKey: 'a11-cp1', title: 'Checkpoint 1: Lektion 1–3' },
+    { nr: 2, id: 'a1.1-cp2', afterLektion: 6, writingTaskKey: 'a11-cp2', title: 'Checkpoint 2: Lektion 4–6' },
+    { nr: 3, id: 'a1.1-cp3', afterLektion: 9, writingTaskKey: 'a11-cp3', title: 'Checkpoint 3: Lektion 7–9' },
+    { nr: 4, id: 'a1.1-cp4', afterLektion: 12, writingTaskKey: 'a11-cp4', title: 'Checkpoint 4: Lektion 10–12' },
   ],
 };

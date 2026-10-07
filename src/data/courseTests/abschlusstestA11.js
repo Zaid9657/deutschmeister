@@ -36,14 +36,19 @@
 //
 // Grammar ceiling for the strings authored in THIS file: present tense,
 // sein/haben, possessives, separable verbs, ja/nein-Fragen, Uhrzeiten,
-// Wochentage, Daten, Zahlen. Three modal forms appear, all recognition-only
-// — the learner reads and judges them inside a richtig/falsch or
-// Anzeigen-matching item, never has to produce one: „kann" einmal und „soll"
-// zweimal in den Lesen-Teil-1/3-Aussagen, „möchte" einmal im
-// Teil-2-Anzeigenblock. No Perfekt/Präteritum, no Nebensätze, no
+// Wochentage, Daten, Zahlen. The one modal form is „möchte" (taught) in the
+// two Teil-2 situations. No Perfekt/Präteritum, no Nebensätze, no
 // Konjunktiv, no Passiv, no sentence over 9 words in any Hören/Lesen text.
 // This is a claim about the strings below only — it says nothing about the
 // reused A1.1 listening-exercise audio itself.
+//
+// 2026-10-07 (Codex all-aspects review): every text the learner must
+// UNDERSTAND to answer — the note, the situations and Anzeigen, the Schilder
+// and their statements, the form data — uses only words the twelve Lektionen
+// teach (checked with `untaughtTokens` from scripts/validate-curriculum.mjs;
+// names excepted). The exam's own task words (Anzeige, Schild, richtig/falsch,
+// Formular, Textfeld) stay: they are the format, as in the real test. Every
+// instruction speaks Sie, like the rest of the course.
 
 export const abschlusstestA11 = {
   examKey: 'a1_1_abschluss',
@@ -85,15 +90,15 @@ export const abschlusstestA11 = {
       title: 'Lesen',
       minutes: 15,
       instructions:
-        'Teil 1: Lies die Notiz und entscheide: richtig oder falsch? Teil 2: Lies die Situation und die zwei ' +
-        'Anzeigen. Welche Anzeige passt? Teil 3: Lies die Schilder und entscheide: richtig oder falsch?',
+        'Teil 1: Lesen Sie die Notiz und entscheiden Sie: richtig oder falsch? Teil 2: Lesen Sie die Situation und ' +
+        'die zwei Anzeigen. Welche Anzeige passt? Teil 3: Lesen Sie die Schilder und entscheiden Sie: richtig oder falsch?',
       parts: [
         {
           key: 'lesen-1',
           type: 'mc-group',
           label: 'Teil 1 · Notiz',
           text:
-            'Liebe Lena, am Samstag ist meine Geburtstagsparty. Sie ist um 15 Uhr bei mir zu Hause. Bring bitte ' +
+            'Liebe Lena, am Samstag ist meine Party. Sie ist um 15 Uhr bei mir zu Hause. Bring bitte ' +
             'deine Schwester mit. Wir haben Kuchen und Tee. Ruf mich bitte an. Bis Samstag! Deine Freundin Mia',
           items: [
             {
@@ -116,7 +121,7 @@ export const abschlusstestA11 = {
             },
             {
               id: 'l1-3',
-              prompt: 'Lena soll ihre Schwester mitbringen.',
+              prompt: 'Mia lädt auch die Schwester von Lena ein.',
               options: [
                 { key: 'r', label: 'Richtig' },
                 { key: 'f', label: 'Falsch' },
@@ -130,10 +135,9 @@ export const abschlusstestA11 = {
           type: 'mc-group',
           label: 'Teil 2 · Situation 1',
           text:
-            'Frau Kaya hat am Dienstag und Donnerstag Zeit. Sie sucht einen Deutschkurs.\n' +
-            'Möchten Sie Deutsch lernen? Hier sind zwei Kurse:\n' +
-            'Anzeige a) Kurs A1 — Montag und Mittwoch, 18 Uhr, Sprachschule Berlin.\n' +
-            'Anzeige b) Kurs A1 — Dienstag und Donnerstag, 18 Uhr, Sprachschule Berlin.',
+            'Frau Kaya hat nur am Dienstag und Donnerstag Zeit. Sie möchte Deutsch lernen.\n' +
+            'Anzeige a) Deutsch lernen — Montag und Mittwoch, 18 Uhr, Berlin.\n' +
+            'Anzeige b) Deutsch lernen — Dienstag und Donnerstag, 18 Uhr, Berlin.',
           items: [
             {
               id: 'l2a-1',
@@ -151,9 +155,9 @@ export const abschlusstestA11 = {
           type: 'mc-group',
           label: 'Teil 2 · Situation 2',
           text:
-            'Herr Bauer sucht ein Zimmer. Er bezahlt maximal 300 Euro pro Monat.\n' +
-            'Anzeige a) Zimmer frei — 18 m², 280 € warm, ab sofort.\n' +
-            'Anzeige b) Zimmer frei — 20 m², 350 € warm, ab 1. Oktober.',
+            'Herr Weber möchte einen Tisch. Er hat nur 30 Euro.\n' +
+            'Anzeige a) Tisch, 25 Euro.\n' +
+            'Anzeige b) Tisch, 35 Euro.',
           items: [
             {
               id: 'l2b-1',
@@ -173,7 +177,7 @@ export const abschlusstestA11 = {
           items: [
             {
               id: 'l3-1',
-              prompt: 'Schild: „Aufzug kaputt. Bitte Treppe benutzen.“ — Man kann jetzt den Aufzug benutzen.',
+              prompt: 'Schild im Büro: „Pause: 12 bis 13 Uhr.“ — Die Pause ist um 14 Uhr.',
               options: [
                 { key: 'r', label: 'Richtig' },
                 { key: 'f', label: 'Falsch' },
@@ -182,7 +186,7 @@ export const abschlusstestA11 = {
             },
             {
               id: 'l3-2',
-              prompt: 'Schild: „Vorsicht, heißes Wasser!“ — Hier ist das Wasser gefährlich.',
+              prompt: 'Schild am Bahnhof: „Bitte an Gleis fünf umsteigen!“ — Man steigt an Gleis fünf um.',
               options: [
                 { key: 'r', label: 'Richtig' },
                 { key: 'f', label: 'Falsch' },
@@ -191,7 +195,7 @@ export const abschlusstestA11 = {
             },
             {
               id: 'l3-3',
-              prompt: 'Schild: „Bitte Handy ausschalten.“ — Man soll das Handy anlassen.',
+              prompt: 'Schild am Bahnhof: „Der Zug nach Berlin kommt um 10:20 Uhr.“ — Der Zug kommt um 10 Uhr.',
               options: [
                 { key: 'r', label: 'Richtig' },
                 { key: 'f', label: 'Falsch' },
@@ -207,17 +211,17 @@ export const abschlusstestA11 = {
       title: 'Schreiben',
       minutes: 10,
       instructions:
-        'Formular ausfüllen: Schreib die fünf Angaben untereinander in das Textfeld. Diese Aufgabe wird nicht ' +
-        'automatisch bewertet — nutze den Selbstcheck.',
+        'Formular ausfüllen: Schreiben Sie die fünf Angaben untereinander in das Textfeld. Diese Aufgabe wird nicht ' +
+        'automatisch bewertet — nutzen Sie den Selbstcheck.',
       parts: [
         {
           key: 'schreiben-1',
           type: 'writing',
           label: 'Teil 1 · Formular',
           task:
-            'Deine Freundin heißt Aylin Demir. Ihre Tochter Elif macht einen Schwimmkurs. Der Familienname ist ' +
-            'Demir, der Vorname ist Elif. Das Geburtsdatum ist der 12. Juli 2016. Die Adresse ist Rosenweg 9. ' +
-            'Die Telefonnummer ist 030 4455667. Füll das Formular für Elif aus. Schreib die fünf Zeilen ' +
+            'Ihre Freundin heißt Aylin Demir. Ihre Tochter Elif möchte schwimmen lernen. Der Familienname ist ' +
+            'Demir, der Vorname ist Elif. Das Geburtsdatum ist der 12. Mai 2016. Die Adresse ist Rosenweg 9. ' +
+            'Die Telefonnummer ist 030 4455667. Füllen Sie das Formular für Elif aus. Schreiben Sie die fünf Zeilen ' +
             'untereinander in das Textfeld: Familienname, Vorname, Geburtsdatum, Straße und Hausnummer, ' +
             'Telefonnummer. Zum Beispiel: „Familienname: Demir“.',
           criteria: [

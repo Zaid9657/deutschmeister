@@ -1848,8 +1848,10 @@ function buildBausteine(ctx) {
 // `buildSchreiben`) that means ONE REAL WRITING TASK plus two sentence-building
 // drills, not three drills with an invented Textsorte label.
 //
-//   - THE REAL TASK is the chapter's last Lektion's `schreiben.taskKey`
-//     (`a11-l03`, `a11-l06`, …), looked up in src/data/writingTasks.js — the
+//   - THE REAL TASK is the checkpoint's own `writingTaskKey` (`a11-cp1` …, the
+//     chapter's Textsorte with new facts — checkpointWritingTask), else the
+//     chapter's last Lektion's `schreiben.taskKey` (`a11-l03`, `a11-l06`, …),
+//     looked up in src/data/writingTasks.js — the
 //     same bank netlify/functions/evaluate-writing.mjs grades against, so the
 //     prompt the learner reads and the prompt the grader scores are one string.
 //     CheckpointPage mounts GradedWriting on it, exactly as the lesson does.
@@ -1949,9 +1951,22 @@ export function chapterWritingTask(chapter, level) {
   return bank ? { lektion, schreiben: lektion.schreiben, bank } : null;
 }
 
+/**
+ * The checkpoint's OWN task (`checkpoint.writingTaskKey`, e.g. `a11-cp1`): the chapter's Textsorte
+ * with new people and facts, so the checkpoint measures transfer instead of replaying the lesson's
+ * task (Codex review, 2026-10-07). Same shape as chapterWritingTask; null without a key.
+ */
+export function checkpointWritingTask(checkpoint, chapter) {
+  const bank = checkpoint?.writingTaskKey ? writingTaskByKey('goethe_a1', checkpoint.writingTaskKey) : null;
+  if (!bank) return null;
+  const lektion = [...(chapter || [])].reverse().find((l) => l?.schreiben?.taskKey) || (chapter || []).at(-1);
+  const kind = bank.register === 'formular' ? 'formular' : 'mitteilung';
+  return { lektion, bank, schreiben: { kind, taskDe: bank.task, fields: kind === 'formular' ? bank.leitpunkte : null, sample: bank.sample || null } };
+}
+
 /** That task as a checkpoint item — rendered by GradedWriting on CheckpointPage. */
 function gradedWritingItem(checkpoint, chapter, level) {
-  const found = chapterWritingTask(chapter, level);
+  const found = checkpointWritingTask(checkpoint, chapter) || chapterWritingTask(chapter, level);
   if (!found) return null;
   const { lektion, schreiben: s, bank } = found;
   return {
@@ -2335,7 +2350,12 @@ export function scoreCheckpoint(items, answers = {}) {
     const total = inSection.length;
     // Sprechen is scored only when EVERY item of it came back from the mic.
     const scored = inSection.every((i) => itemIsScored(i, answers[i.id]));
-    sections[section] = { correct, total, pct: total ? Math.round((correct / total) * 100) : 0, scored, guessCeiling: guessCeiling(inSection) };
+    // The graded text, when a grader scored it (unscored ones were dropped above): null = not attempted.
+    const graded = inSection.find((i) => i.kind === 'gradedWriting');
+    sections[section] = {
+      correct, total, pct: total ? Math.round((correct / total) * 100) : 0, scored, guessCeiling: guessCeiling(inSection),
+      realTask: graded ? isItemCorrect(graded, answers[graded.id]) : null,
+    };
     if (scored) {
       scoredCorrect += correct;
       scoredTotal += total;
@@ -2344,15 +2364,22 @@ export function scoreCheckpoint(items, answers = {}) {
 
   const overall = scoredTotal ? Math.round((scoredCorrect / scoredTotal) * 100) : 0;
   const weakest = Object.values(sections).filter((s) => s.scored);
-  // A section must also beat the score of answering the same option everywhere: reading is two
-  // „richtig" and two „falsch", so always-„Richtig" scored 50 % and cleared the 40 % floor without
-  // reading a word (Codex review, 2026-10-07). With 2/2 that now means 3 of 4.
-  const passed =
-    scoredTotal > 0 && overall >= PASS_OVERALL_PCT
-    && weakest.every((s) => s.pct >= PASS_SECTION_PCT && (!s.guessCeiling || s.correct > s.guessCeiling));
+  const passed = scoredTotal > 0 && overall >= PASS_OVERALL_PCT && weakest.every(sectionPasses);
 
   return { overall, correct: scoredCorrect, total: scoredTotal, sections, passed, errorTags };
 }
+
+/**
+ * Does one scored section pass? The ONE rule scoreCheckpoint and the result row both read.
+ *  - at least PASS_SECTION_PCT;
+ *  - more than answering the same option everywhere: reading is two „richtig" and two „falsch", so
+ *    always-„Richtig" scored 50 % and cleared the floor without reading a word (Codex review,
+ *    2026-10-07). With 2/2 that means 3 of 4;
+ *  - Schreiben: a graded text must pass by itself. Two sentence drills right and the real text at
+ *    0 % was 2 of 3 = 67 % — a pass on a part whose real task failed (same review).
+ */
+export const sectionPasses = (s) =>
+  s.pct >= PASS_SECTION_PCT && (!s.guessCeiling || s.correct > s.guessCeiling) && s.realTask !== false;
 
 /**
  * remediationSet(items, answers, pool) → 10 fresh items aimed at what actually

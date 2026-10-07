@@ -120,3 +120,150 @@ test('final test: submission freezes one answer snapshot, and loading the listen
   const loader = hook.slice(hook.indexOf('export async function fetchExerciseQuestions'), hook.indexOf('export function useExerciseDetails'));
   assert.equal((loader.match(/withTimeout\(/g) || []).length, 2, 'both requests are bounded');
 });
+
+test('final test A1.1: what the learner must understand uses taught words only, and every instruction speaks Sie', async () => {
+  // Codex all-aspects review, 2026-10-07: the Lesen texts asked about a Zimmer „maximal 300 Euro
+  // pro Monat, warm", a „Aufzug kaputt" and „heißes Wasser" — none of it taught in twelve Lektionen —
+  // and the instructions said „Lies … entscheide … Schreib … nutze" to a course that says Sie.
+  const { taughtUpTo, levelSpec, untaughtTokens } = await import('../scripts/validate-curriculum.mjs');
+  const { abschlusstestA11: t } = await import('../src/data/courseTests/abschlusstestA11.js');
+  const spec = levelSpec('a1.1');
+  const known = taughtUpTo(spec.curriculum, spec).get(12);
+  // Names, and the exam's own task words — the format, as the real test prints it.
+  const FORMAT = new Set(['Mia', 'Aylin', 'Demir', 'Elif', 'Rosenweg', 'Anzeige', 'passt', 'Schild', 'Schreiben',
+    'Familienname', 'Straße', 'Hausnummer', 'Zeilen', 'untereinander', 'Textfeld', 'Beispiel']);
+  const lesen = t.sections.find((s) => s.key === 'lesen');
+  const schreiben = t.sections.find((s) => s.key === 'schreiben');
+  const stimuli = [...lesen.parts.flatMap((p) => [p.text, ...p.items.map((i) => i.prompt)]), schreiben.parts[0].task].filter(Boolean);
+  for (const text of stimuli) {
+    const untaught = untaughtTokens({ questionDe: text }, known, spec).filter((w) => !FORMAT.has(w));
+    assert.deepEqual(untaught, [], text);
+  }
+  // The note between two friends duzt in-world; everything said TO the learner says Sie.
+  const toLearner = [t.intro, ...t.sections.map((s) => s.instructions), schreiben.parts[0].task];
+  for (const text of toLearner) assert.doesNotMatch(text, /\b(du|dein\w*|Deine?|Lies|entscheide|Schreib|nutze|Füll)\b/, text);
+});
+
+test('checkpoint Schreiben: a graded text that failed fails the section — two sentence drills cannot carry it', async () => {
+  // Codex review, 2026-10-07: two drills right + the real text at 0 % was 2 of 3 = 67 %, a pass.
+  const { buildCheckpoint, scoreCheckpoint, sectionPasses } = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  const { readFileSync } = await import('node:fs');
+  const pool = JSON.parse(readFileSync(new URL('../src/data/lessonPools/a11.json', import.meta.url), 'utf8'));
+  const checkpoint = CURRICULUM_A11.checkpoints[0];
+  const items = buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint, pool });
+  const graded = items.find((i) => i.kind === 'gradedWriting');
+  assert.ok(graded);
+  const answersWith = (writing) => ({ ...Object.fromEntries(items.map((i) => [i.id, i.answer])), [graded.id]: writing });
+  const failed = scoreCheckpoint(items, answersWith({ graded: true, pct: 0 }));
+  assert.equal(failed.sections.schreiben.realTask, false);
+  assert.equal(failed.passed, false, 'a 0 % text never passes the checkpoint');
+  assert.equal(sectionPasses(failed.sections.schreiben), false, 'and the result row shows the part red');
+  const good = scoreCheckpoint(items, answersWith({ graded: true, pct: 0.8 }));
+  assert.equal(good.sections.schreiben.realTask, true);
+  assert.equal(good.passed, true);
+  // No grader verdict (offline, signed out): the task is not attempted — never a failed section.
+  const none = scoreCheckpoint(items, answersWith(undefined));
+  assert.equal(none.sections.schreiben.realTask, null);
+  assert.equal(none.passed, true);
+  const page = readFileSync(new URL('../src/pages/lesson/CheckpointPage.jsx', import.meta.url), 'utf8');
+  assert.match(page, /sectionPasses\(section\)/, 'the row reads the same rule the score does');
+});
+
+test('checkpoint retake: a new paper under the same rules, never the same 20 items reshuffled', async () => {
+  // Codex review, 2026-10-07: „Nochmal" reshuffled the paper whose answers the result had just shown.
+  const { buildCheckpoint, scoreCheckpoint, SECTION_ORDER } = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  const { readFileSync } = await import('node:fs');
+  const pool = JSON.parse(readFileSync(new URL('../src/data/lessonPools/a11.json', import.meta.url), 'utf8'));
+  const key = (i) => i.poolItemId || i.promptDe || i.id;
+  const counts = (items) => SECTION_ORDER.map((s) => items.filter((i) => i.section === s).length).join(',');
+  for (const cp of CURRICULUM_A11.checkpoints) {
+    const first = buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp, pool });
+    const seen = new Set(first.map(key));
+    for (let round = 1; round <= 3; round++) {
+      const paper = buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp, pool, seed: `${cp.id}-round-${round}` });
+      assert.equal(counts(paper), counts(first), `${cp.id} round ${round}: same section sizes`);
+      assert.ok(paper.filter((i) => !seen.has(key(i))).length >= 4, `${cp.id} round ${round}: new items`);
+      assert.equal(scoreCheckpoint(paper, Object.fromEntries(paper.map((i) => [i.id, i.answer]))).passed, true, 'still passable');
+    }
+  }
+  const page = readFileSync(new URL('../src/pages/lesson/CheckpointPage.jsx', import.meta.url), 'utf8');
+  assert.match(page, /buildCheckpoint\(\{ curriculum, checkpoint, pool, seed: round \?/);
+  assert.match(page, /setRound\(attempts\?\.used \|\| 0\)/, 'a reload starts at this window\'s next paper');
+  assert.doesNotMatch(page, /shuffle\(built/, 'no reshuffle of the old paper');
+});
+
+test('word order: when an object or a modal adverb could open the sentence, the prompt names the opening', async () => {
+  // Codex review, 2026-10-07: checkpoint items marked „Zusammen tanzen wir." and „Ein Büro braucht
+  // die Firma." wrong, and neither task named the opening. Neither is an Angabe the answer-key rule
+  // derives — REVIEW #12/#13 pin both negatives (`fd-n2`, `fd-n5`) — so the PROMPT names the opening
+  // instead: the determiner-cue convention, never a hand-widened accepted list.
+  const { missingOpeningCue, frontableOrders } = await import('../src/data/lessonPools/quality.js');
+  const { buildCheckpoint } = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  const { readFileSync } = await import('node:fs');
+  const sb = (questionDe, answer) => ({ type: 'sentence_building', questionDe, answer, accepted: [answer] });
+  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [die Firma / brauchen / ein / Büro]', 'Die Firma braucht ein Büro.')), 'Die Firma');
+  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [wir / tanzen / zusammen]', 'Wir tanzen zusammen.')), 'Wir');
+  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / trinken / gern / Kaffee]', 'Ich trinke gern Kaffee.')), 'Ich');
+  // Nothing competes for the opening: a copula's predicate, a pronoun object with its prefix.
+  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / sein / Lehrer]', 'Ich bin Lehrer.')), null);
+  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz: [ich / rufen / dich / an]', 'Ich rufe dich an.')), null);
+  // …and a cued prompt is done; the answer-key rule is untouched by any of it.
+  assert.equal(missingOpeningCue(sb('Bilden Sie den Satz (Beginnen Sie mit „Wir“): [wir / tanzen / zusammen]', 'Wir tanzen zusammen.')), null);
+  assert.deepEqual(frontableOrders(sb('Bilden Sie den Satz: [wir / tanzen / zusammen]', 'Wir tanzen zusammen.')), []);
+  const pool = JSON.parse(readFileSync(new URL('../src/data/lessonPools/a11.json', import.meta.url), 'utf8'));
+  const items = pool.items || pool;
+  assert.match(items.find((i) => i.id === 'extra-a11-l06-15').questionDe, /\(Beginnen Sie mit „Die Firma“\)/);
+  assert.match(items.find((i) => i.id === 'extra-a11-l07-05').questionDe, /\(Beginnen Sie mit „Wir“\)/);
+  // The cue is an instruction, not the exercise: the task shape — and so the lesson draw — is
+  // the one the uncued prompt had (Codex review 2026-10-08 measured a changed draw without this).
+  const { taskShape } = await import('../src/lib/lesson/buildLesson.js');
+  const cued = items.filter((i) => /\(Beginnen Sie mit /.test(i.questionDe));
+  assert.ok(cued.length >= 2);
+  for (const i of cued) {
+    assert.equal(taskShape(i), taskShape({ ...i, questionDe: i.questionDe.replace(/ \(Beginnen Sie mit „[^“]*“\)/, '') }), i.id);
+  }
+  // The class, over the built pool and every checkpoint paper the learner can draw.
+  const papers = CURRICULUM_A11.checkpoints.flatMap((checkpoint) => [0, 1, 2].flatMap((r) =>
+    buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint, pool, seed: r ? `${checkpoint.id}-round-${r}` : undefined })));
+  for (const item of [...items, ...papers.map((i) => ({ ...i, questionDe: i.promptDe ?? i.questionDe }))]) {
+    assert.equal(missingOpeningCue(item), null, `${item.id}: „${item.answer}" can open two ways and the prompt names neither`);
+  }
+});
+
+test('writing grader: task fulfilment decides — off-topic and copied texts cannot pass on form alone', async () => {
+  // Codex review, 2026-10-07: four 0–5 criteria let a text that answered no Leitpunkt collect 15/20.
+  const { gateEvaluation, copiedShare, COPY_SHARE } = await import('../netlify/functions/evaluate-writing.mjs');
+  const { writingTaskByKey, WRITING_TASKS } = await import('../src/data/writingTasks.js');
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  const { readFileSync } = await import('node:fs');
+  const model = (scores, checks) => ({ scores, total_score: scores.task + scores.structure + scores.accuracy + scores.vocabulary, leitpunkt_check: checks, improvements: [] });
+  const full = { task: 5, structure: 4, accuracy: 4, vocabulary: 4 };
+  const l10 = writingTaskByKey('goethe_a1', 'a11-l10');
+  // Off-topic: the model marks no Leitpunkt but awards form points — the total is 0.
+  const off = gateEvaluation(l10, 'Ich mag Pizza und Musik. Mein Hund heißt Max. Viele Grüße, Ana', model({ task: 0, structure: 5, accuracy: 5, vocabulary: 5 }, [false, false, false]));
+  assert.equal(off.total_score, 0);
+  // One Leitpunkt of three: task ≤ 2, total ≤ 8 — even when the model said task 4.
+  const one = gateEvaluation(l10, 'Guten Tag, Frau Kaya! Der Zug hat Verspätung. Viele Grüße, Ana', model({ task: 4, structure: 4, accuracy: 4, vocabulary: 4 }, [true, false, false]));
+  assert.equal(one.scores.task, 2);
+  assert.ok(one.total_score <= 8);
+  // The task copied back scores 0, whatever the model said.
+  const copied = gateEvaluation(l10, l10.task, model(full, [true, true, true]));
+  assert.equal(copied.gate.copied, true);
+  assert.equal(copied.total_score, 0);
+  assert.match(copied.improvements[0], /eigene Sätze/);
+  // Every model text of the course, Lektion and checkpoint, keeps its full score.
+  const samples = [
+    ...CURRICULUM_A11.lektionen.map((l) => [writingTaskByKey('goethe_a1', l.schreiben.taskKey), l.schreiben.sample]),
+    ...WRITING_TASKS.filter((t) => t.checkpoint).map((t) => [t, t.sample]),
+  ];
+  for (const [task, sample] of samples) {
+    if (task.register !== 'formular') assert.ok(copiedShare(task, sample) < COPY_SHARE, `${task.taskKey}: the model text reads as copied`);
+    const kept = gateEvaluation(task, sample, model(full, task.leitpunkte.map(() => true)));
+    assert.equal(kept.total_score, 17, `${task.taskKey}: a complete answer loses points to the gate`);
+  }
+  const src = readFileSync(new URL('../netlify/functions/evaluate-writing.mjs', import.meta.url), 'utf8');
+  assert.match(src, /evaluation = gateEvaluation\(task, text, evaluation\);\s*const wordCount/, 'the handler stores the gated score');
+});

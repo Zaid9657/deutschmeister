@@ -129,7 +129,7 @@ import {
   filterPool, REASON, REASONS, isUsableItem, exclusionReason, parseVerbCue,
   articleAnswerKind, ARTICLE_CUE, missingSentenceArticle, SENTENCE_ARTICLE_CUE,
   isPoliteFormItem, minimalArticleCorrection, frontedAcceptedForms,
-  missingDeterminerCue, withDeterminerCue,
+  missingDeterminerCue, withDeterminerCue, missingOpeningCue,
 } from '../src/data/lessonPools/quality.js';
 // The lexis gate below is the VALIDATOR's predicate, imported rather than re-implemented — see the
 // „untaught-lexis“ block near the merge for why, and `levelLexicon`'s own header for why importing
@@ -280,6 +280,24 @@ function repairFrontedOrder(item) {
 }
 
 raw.forEach(repairFrontedOrder);
+
+// ── Codex review 2026-10-07: name the opening when an object or a modal adverb competes ──
+//
+// „Bilden Sie den Satz: [die Firma / brauchen / ein / Büro]" took only „Die Firma braucht ein
+// Büro." and marked „Ein Büro braucht die Firma." wrong (and „Zusammen tanzen wir." likewise) —
+// the same V2 sentence, in a graded checkpoint, and the task never said which part opens. Objects
+// and modal adverbs stay out of the answer-key rule above (REVIEW #12/#13 pin both), so the PROMPT
+// names the opening: the determiner cue's promise —
+// `answer`/`accepted` are never touched.
+const openingCued = [];
+function repairOpeningCue(item) {
+  const opening = missingOpeningCue(item);
+  if (!opening) return;
+  item.questionDe = String(item.questionDe).replace(/:\s*(?=\[)/, ` (Beginnen Sie mit „${opening}“): `);
+  openingCued.push({ id: item.id, questionDe: item.questionDe });
+}
+
+raw.forEach(repairOpeningCue);
 
 // ── REVIEW #14 MAJOR 2: name the element an article repair changes ──────────
 //
@@ -680,6 +698,8 @@ if (existsSync(extraUrl)) {
   // REVIEW #12 BLOCKER 1, same order and for the same reason: the hand items
   // are the ones the learner actually draws, so they face the same repair.
   extra.forEach(repairFrontedOrder);
+  // Codex review 2026-10-07: the hand items are where both measured items live.
+  extra.forEach(repairOpeningCue);
   // REVIEW #14 MAJOR 2: and the same convention — the eight items the review
   // measured are hand-written, so they carry their cue in the JSON; this call is
   // the gate that keeps the next hand-written correction from shipping without
@@ -1108,6 +1128,8 @@ for (const r of determinerCued.slice(0, 5)) {
   console.log(`       ${String(r.id).slice(0, 8)} ${r.topic} · ${r.kind} · ${r.after.replace(/\s+/g, ' ')}`);
 }
 if (determinerCued.length > 5) console.log(`       … and ${determinerCued.length - 5} more`);
+console.log(`opening cues injected (object / modal adverb could open · Codex review 2026-10-07): ${openingCued.length}`);
+for (const r of openingCued) console.log(`       ${String(r.id).slice(0, 16)} ${r.questionDe}`);
 console.log(`fronted word orders accepted (REVIEW #12 BLOCKER 1 · #13 BLOCKER 1): ${frontingRepaired.length}`);
 for (const r of frontingRepaired) console.log(`       ${String(r.id).slice(0, 16)} ${r.topic} · ${r.answer} + ${r.added.filter((x) => /[.!]$/.test(x)).join(' · ')}`);
 console.log(`polite-form caseSensitive (REVIEW #6 BLOCKER 1): ${caseDerived.length} derived` +

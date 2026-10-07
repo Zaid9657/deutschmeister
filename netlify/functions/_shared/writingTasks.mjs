@@ -519,11 +519,12 @@ export const WRITING_TASKS = [
     course: 'a1.1',
     taskKey: 'a11-l10',
     title: 'Lektion 10: Am Bahnhof',
-    register: 'informell',
+    // formell: die Kollegin wird gesiezt (Entscheidung des Inhabers, 2026-10-07).
+    register: 'formell',
     minWords: 25,
     maxWords: 45,
     task:
-      'Schreiben Sie Ihrer Kollegin: Sie kommen später. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+      'Schreiben Sie Ihrer Kollegin Frau Kaya: Sie kommen später. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
     leitpunkte: [
       'Warum Sie schreiben',
       'Wann Sie kommen',
@@ -564,6 +565,72 @@ export const WRITING_TASKS = [
       'Tag und Uhrzeit',
       'Was die Gäste mitbringen sollen',
     ],
+  },
+
+  // ---- A1.1-Checkpoint-Aufgaben (Codex-Review, 2026-10-07) ---------------
+  // Bis hierher schrieb jeder Checkpoint noch einmal die Aufgabe seiner letzten
+  // Lektion — er maß Erinnerung an einen bekannten Auftrag, nicht Transfer.
+  // Jede Aufgabe unten ist die Textsorte dieser Lektion mit neuen Personen und
+  // Fakten, nur aus Wörtern, die bis zum Checkpoint gelehrt sind (Formular-
+  // Feldnamen wie in der Lektion). `checkpoint` hält sie aus courseWritingTasks()
+  // heraus (eine Aufgabe je Lektion); die Freigrenze in evaluate-writing zählt
+  // die vier über CHECKPOINTS_PER_COURSE. Der Mustertext steht hier, weil es
+  // keine Lektion gibt, die ihn trägt.
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.1',
+    checkpoint: 1,
+    taskKey: 'a11-cp1',
+    title: 'Checkpoint 1: Ein Formular für Tim',
+    register: 'formular',
+    minWords: 5,
+    maxWords: 40,
+    task:
+      'Tim Berger ist verheiratet. Er kommt aus Österreich und spricht Englisch und Deutsch. Füllen Sie das Formular für Tim aus.',
+    leitpunkte: ['Vorname', 'Familienname', 'Familienstand', 'Sprachen', 'Land'],
+    sample: 'Vorname: Tim / Familienname: Berger / Familienstand: verheiratet / Sprachen: Englisch, Deutsch / Land: Österreich',
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.1',
+    checkpoint: 2,
+    taskKey: 'a11-cp2',
+    title: 'Checkpoint 2: Eine Nachricht an Frau Berg',
+    register: 'formell',
+    minWords: 25,
+    maxWords: 45,
+    task:
+      'Schreiben Sie Ihrer Chefin, Frau Berg, eine kurze Nachricht: Sie brauchen eine Lampe und einen Stuhl. Ihre Telefonnummer ist 0176 22 44 88. Sie sind um zehn Uhr im Büro. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+    leitpunkte: ['Was Sie brauchen', 'Ihre Telefonnummer', 'Wann Sie im Büro sind'],
+    sample: 'Guten Tag, Frau Berg! Ich brauche eine Lampe und einen Stuhl. Meine Telefonnummer ist 0176 22 44 88. Ich bin um zehn Uhr im Büro. Viele Grüße, Ana',
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.1',
+    checkpoint: 3,
+    taskKey: 'a11-cp3',
+    title: 'Checkpoint 3: Ein Tisch im Café',
+    register: 'formular',
+    minWords: 5,
+    maxWords: 40,
+    task:
+      'Tim Berger ist im Café. Er möchte am Donnerstag um 18 Uhr einen Tisch für vier Personen. Die Telefonnummer ist 030 66 33 99. Füllen Sie das Formular aus.',
+    leitpunkte: ['Name', 'Tag', 'Uhrzeit', 'Personen', 'Telefonnummer'],
+    sample: 'Name: Berger / Tag: Donnerstag / Uhrzeit: 18 Uhr / Personen: 4 / Telefonnummer: 030 66 33 99',
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.1',
+    checkpoint: 4,
+    taskKey: 'a11-cp4',
+    title: 'Checkpoint 4: Essen am Sonntag',
+    register: 'informell',
+    minWords: 25,
+    maxWords: 45,
+    task:
+      'Schreiben Sie Lena eine Karte: Sie kochen am Sonntag um 16 Uhr zu Hause und laden Lena ein. Lena soll Brot und Orangensaft mitbringen. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+    leitpunkte: ['Warum Sie schreiben', 'Tag und Uhrzeit', 'Was Lena mitbringen soll'],
+    sample: 'Hallo Lena! Ich koche am Sonntag und lade dich ein. Wir essen um 16 Uhr bei mir zu Hause. Bringst du bitte Brot und Orangensaft mit? Bis bald, Ana',
   },
 
 
@@ -887,9 +954,9 @@ export const MAX_WRITING_POINTS = 20;
 export const writingTasksForExam = (examKey) =>
   WRITING_TASKS.filter((t) => t.examKey === examKey && !t.course);
 
-/** The course bank for one level, in Lektion order (`a1.1` → a11-l01 … a11-l12). */
+/** The course bank for one level, in Lektion order (`a1.1` → a11-l01 … a11-l12). Checkpoint tasks are not Lektionen. */
 export const courseWritingTasks = (course) =>
-  WRITING_TASKS.filter((t) => t.course === course);
+  WRITING_TASKS.filter((t) => t.course === course && !t.checkpoint);
 
 export const writingTaskByKey = (examKey, taskKey) =>
   WRITING_TASKS.find((t) => t.examKey === examKey && t.taskKey === taskKey) || null;
