@@ -164,16 +164,24 @@ export function headSignals(html) {
 // were pinned only for the guide registry (tests/guides.test.mjs) and the nav
 // (tests/navigation.test.mjs); a link in a grammar lesson, a comparison page,
 // the footer or a prerendered SPA page could 301 or 404 and ship green.
-// Measured on the built dist of 772a91d3 (2026-10-07): 13,719 same-site links
+// Measured on the built dist of d7a70b04 (2026-10-07): 13,612 same-site links
 // on 140 pages, 0 hops, 0 dead ends, so this is a rule at zero, not a list.
 //
-// A link is resolved the way Netlify serves it: a built file first (a slashless
-// link to a built directory is Netlify's pretty-URL 301), then the first
-// netlify.toml [[redirects]] rule that matches (a 200 rewrite serves; a 301 or
-// 302 is a hop; the 404 catch-all or no rule is a dead end). Rules are matched
-// leniently (trailing slash optional, ":name" one segment, "*" any rest, query
-// conditions ignored), so the guard can miss an exotic case but never fails a
-// link Netlify would serve.
+// Only real anchors count: <script> and <template> bodies are dropped before
+// matching, because inline scripts build markup in strings (Layout.astro's
+// course return bar writes '<a href="/course/' + level + '"…' on 130 pages),
+// and such a fragment is not a link a crawler or a visitor follows.
+//
+// A link is resolved the way Netlify serves it: a built file first (also
+// "/x" for a built x.html; a slashless link to a built directory is Netlify's
+// pretty-URL 301), then the first netlify.toml [[redirects]] rule that matches
+// (a 200 rewrite serves; a 301 or 302 is a hop; the 404 catch-all or no rule
+// is a dead end). Paths under /.netlify/ (functions, Netlify's own endpoints)
+// are not files in the build and are out of scope. Rules are matched leniently
+// (trailing slash optional, ":name" one segment, "*" any rest, query
+// conditions ignored), so an exotic rule can be missed. Known gap, left as is:
+// an absolute link to http:// or www.deutsch-meister.de is checked by its path
+// only, so the host hop (www -> apex, http -> https) itself is not reported.
 
 /** netlify.toml [[redirects]] rules in file order, without host-qualified ones. */
 export function redirectRules(tomlText = '') {
@@ -199,10 +207,16 @@ export function redirectMatches(from, path) {
   return new RegExp(`^${body}/?$${splat}`).test(path);
 }
 
-/** Same-site paths of every <a href> in a page (comments ignored), resolved against the page's own path. */
+/** A page without comments and without <script>/<template> bodies: what is left is markup a browser renders as is. */
+const stripInert = (html) =>
+  stripComments(html)
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script\s*>/gi, ' ')
+    .replace(/<template\b[^>]*>[\s\S]*?<\/template\s*>/gi, ' ');
+
+/** Same-site paths of every <a href> in a page (comments, scripts and templates ignored), resolved against the page's own path. */
 export function linkPaths(html, pagePath = '/') {
   const out = [];
-  for (const m of stripComments(html).matchAll(/<a\b[^>]*?\shref\s*=\s*("([^"]*)"|'([^']*)')/gi)) {
+  for (const m of stripInert(html).matchAll(/<a\b[^>]*?\shref\s*=\s*("([^"]*)"|'([^']*)')/gi)) {
     const href = (m[2] ?? m[3] ?? '').replace(/&amp;/g, '&').trim();
     if (!href || /^(#|mailto:|tel:|javascript:|data:|sms:)/i.test(href)) continue;
     let url;
@@ -235,10 +249,12 @@ export function resolveLink(dist, rules, path) {
       return false;
     }
   };
+  if (path.startsWith('/.netlify/')) return { ok: true, via: 'netlify (out of scope)' };
   if (path === '/' || path.endsWith('/')) {
     if (isFile(join(path, 'index.html'))) return { ok: true, via: 'page' };
   } else {
     if (isFile(path)) return { ok: true, via: 'file' };
+    if (isFile(`${path}.html`)) return { ok: true, via: 'file (.html)' };
     if (isFile(join(path, 'index.html'))) return { ok: false, why: `301-hops to ${path}/ (a built page needs its trailing slash)` };
   }
   const rule = rules.find((r) => redirectMatches(r.from, path));

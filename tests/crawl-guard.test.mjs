@@ -217,8 +217,8 @@ test('check-built-html runs the guard in full mode', () => {
 // --- internal links (2026-10-07) ---------------------------------------------------------------
 // Every same-site <a href> on every built page must reach a page without a hop: CLAUDE.md's
 // trailing-slash cases (a slashless link to a built page 301-hops) and the three-place route rule
-// (a SPA route missing from netlify.toml is a hard 404). Measured on the built dist of 772a91d3:
-// 13,872 same-site links on 140 pages, 0 failures, so the class is at zero and each case below is
+// (a SPA route missing from netlify.toml is a hard 404). Measured on the built dist of d7a70b04:
+// 13,612 same-site links on 140 pages, 0 failures, so the class is at zero and each case below is
 // a rule, not a list of known links.
 
 const LINK_TOML = `[[redirects]]
@@ -364,6 +364,33 @@ test('link extraction reads both quote styles, decodes &amp;, keeps the www host
     ['/pricing/', '/signup', '/faq/'],
   );
   assert.deepEqual(resolveLink('/nonexistent-dist', redirectRules(LINK_TOML), '/course/a1.1'), { ok: true, via: 'rewrite /course/*' });
+});
+
+test('markup inside <script> and <template> is not a link: a fragment an inline script builds in a string never counts', () => {
+  // Layout.astro's course return bar writes '<a href="/course/' + esc(ctx.level) + '"…' into a string on
+  // every Astro page; a /grammar/ variant of the same pattern would read as a dead link if it counted.
+  const html = [
+    '<a href="/">real</a>',
+    '<script>bar.innerHTML = \'<a href="/grammar/\' + slug + \'/">x</a>\' + \'<a href="/course/\' + esc(ctx.level) + \'">y</a>\';</script>',
+    '<SCRIPT type="module">\nconst t = `<a href="${href}">z</a>`;\n</SCRIPT>',
+    '<script type="application/ld+json">{"text":"<a href=\'/ld/\'>"}</script>',
+    '<template id="row"><a href="/nowhere/">t</a></template>',
+    '<noscript><a href="/grammar/a1.1/">no-JS visitors follow this one</a></noscript>',
+  ].join('\n');
+  assert.deepEqual(linkPaths(html, '/'), ['/', '/grammar/a1.1/']);
+  const raw = [...html.matchAll(/<a\b[^>]*?\shref\s*=\s*("([^"]*)"|'([^']*)')/gi)].length;
+  assert.equal(raw, 7, 'a plain regex over the page would count the five fragments too');
+  const r = linkFixture(html);
+  assert.deepEqual(r.fail, [], 'no fake 404 from /grammar/\' + slug or ${href}');
+  assert.equal(r.links, 5, 'the two real home-page links plus relative, up and the 404 page home link');
+});
+
+test('Netlify serves /x from a built x.html, and /.netlify/ endpoints are not build files: neither fails', () => {
+  const r = linkSite({
+    'index.html': '<a href="/app">shell</a><a href="/.netlify/functions/podcast-feed">fn</a><a href="/missing">dead</a>',
+    'app.html': '<!doctype html><title>app</title>',
+  });
+  assert.deepEqual(r.fail, ['internal link /missing is a 404 (netlify.toml /* -> /404.html); linked from /']);
 });
 
 test('the crawl guard runs the link check, so check-built-html fails a release on a hopping link', () => {
