@@ -35,6 +35,9 @@ import WritingStage from '../../components/lesson/WritingStage.jsx';
 import RecapStage from '../../components/lesson/RecapStage.jsx';
 import IntroStage from '../../components/lesson/IntroStage.jsx';
 import { trackLessonCompleted, trackLessonStarted } from '../../lib/funnelTracking.js';
+import SaveProgressAsk from '../../components/course/SaveProgressAsk.jsx';
+import { isAskSettled, saveAskDue } from '../../lib/course/saveProgressAsk.js';
+import { clearReturnPath } from '../../lib/returnPath.js';
 
 // The lesson player: route /course/:level/l/:nr, one stage per screen
 // (docs/course-standard-2026-09-12.md §3). Everything it shows comes from the
@@ -68,7 +71,7 @@ const ITEM_STAGES = new Set(['practice', 'derived', 'dictation', 'requeue', 'war
 
 export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [lang] = useLessonLang();
   // The run this tab was in the middle of, if any (read once, on mount).
   const [resumed] = useState(() => (preview ? null : readRun(curriculum.level, lektion.id)));
@@ -269,6 +272,23 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
     seedCardsForLektion(user.id, lektion, curriculum.level);
   }, [preview, saved, stage, user, curriculum.level, lektion, attempts, accuracy, status]);
 
+  // THE SAVE-PROGRESS ASK (owner decision 2026-10-06; the rule is in
+  // src/lib/course/saveProgressAsk.js). Signed out, the screen after this
+  // run's first checked answer is the ask, once per Lektion; the recap keeps
+  // its card. `firstAnswerAt` is where that answer was given, so the ask waits
+  // until the learner has read its feedback and moved on.
+  const [firstAnswerAt, setFirstAnswerAt] = useState(null);
+  const [askSettled, setAskSettled] = useState(() => preview || isAskSettled(curriculum.level, lektion.id));
+  useEffect(() => {
+    if (firstAnswerAt || !attempts.length) return;
+    setFirstAnswerAt({ stageIndex, itemIndex });
+  }, [attempts.length, firstAnswerAt, stageIndex, itemIndex]);
+  // Signed in, the learner is back where the ask's round trip was meant to
+  // bring them: the remembered place has done its job.
+  useEffect(() => {
+    if (user && !preview) clearReturnPath();
+  }, [user, preview]);
+
   if (!stage) return <Navigate to={courseHome(curriculum.level)} replace />;
   if (!introDone) {
     return <IntroStage curriculum={curriculum} lektion={lektion} onStart={() => { trackLessonStarted(curriculum.level, lektion.id); setIntroDone(true); }} />;
@@ -388,6 +408,12 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
     default:
       body = null;
   }
+  // Signed out means the session has LOADED and there is none: getSession can
+  // take up to 8 s (AuthContext), and LevelSubscriptionGuard renders a free
+  // level while it loads, so `!user` alone would flash the ask at a member.
+  if (saveAskDue({ signedOut: !authLoading && !user, preview, settled: askSettled, firstAnswerAt, at: { stageIndex, itemIndex }, stageKind: stage.kind })) {
+    body = <SaveProgressAsk level={curriculum.level} lektion={lektion} onContinue={() => setAskSettled(true)} />;
+  }
 
   const step = stageIndex + (ITEM_STAGES.has(stage.kind) ? itemIndex / Math.max(items.length, 1) : 0) + 1;
 
@@ -459,5 +485,11 @@ export default function LessonPlayerPage() {
     );
   }
 
-  return <LessonPlayer curriculum={curriculum} lektion={lektion} pool={pool || []} />;
+  // Keyed by the Lektion: the recap's "Next lesson" is a client-side hop to the
+  // same route, and without a key React kept the whole run (stage index, intro
+  // done, answers, `saved`). Built-page walk, 2026-10-06: a hop from /l/1 on
+  // its dialogue opened /l/2 on ITS dialogue, with no intro; from the recap the
+  // same index is the next Lektion's recap. Every piece of player state, the
+  // save-progress ask included, is per Lektion.
+  return <LessonPlayer key={`${curriculum.level}:${lektion.id}`} curriculum={curriculum} lektion={lektion} pool={pool || []} />;
 }

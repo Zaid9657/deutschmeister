@@ -60,11 +60,14 @@ are pages, not channels.
 | `grammar` | every grammar lesson (both signup doors, the locked-exercise door, the signed-out finish line, the free-course door on A1 pages), the `/grammar/` hub, the nav trial button on `/grammar/**` | the topic slug, `index`, or `nav` |
 | `leitfaden` | every guide's CTA (level test, account, prices), the `/leitfaden/` hub, the nav trial button on `/leitfaden/**` | the guide slug, `index`, or `nav` |
 | `level-test` | "Sign up free — save my results" under a signed-out level-test result (`src/lib/placement.js`, 2026-09-28). The result itself travels in localStorage `dm_placement` and is written to `profiles.current_level` at the first sign-in on that browser | the placed sub-level (`b1.2`) |
+| `save-progress-first` | "Save my progress — create a free account" on the A1.1 lesson player's save-progress ask, once per Lektion, on the screen after a signed-out learner's first checked answer (`src/lib/course/saveProgressAsk.js`, 2026-10-06) | level and Lektion (`a1.1-l1`) |
+| `save-progress-recap` | "Save progress" on the same ask's recap card, after a signed-out learner finished a Lektion (`SaveProgressCard.jsx`, tagged 2026-10-06) | the level (`a1.1`) |
 
 The grammar and guide doors are built only with `onsiteHref()` in
 `astro-site/src/lib/onsiteLinks.js`; `tests/onsite-attribution.test.mjs` fails on a
 bare door on those pages. The level-test door is `placementSignupHref()`, pinned by
-`tests/placement.test.mjs`. A visitor who follows a guide's level-test link and then
+`tests/placement.test.mjs`; the two save-progress doors are `saveProgressSignupHref()`, pinned by
+`tests/save-progress-ask.test.mjs`. A visitor who follows a guide's level-test link and then
 signs up under the result is filed `level-test` in `acquisition_last_source` (last
 touch wins); the guide shows only if it was the first touch.
 
@@ -77,7 +80,7 @@ the first touch is a channel (say `google`), the channel stays in
 ```sql
 select acquisition_last_source, acquisition_content, count(*) from profiles
 where created_at > now() - interval '30 days'
-  and acquisition_last_source in ('grammar', 'leitfaden', 'xray', 'level-test')
+  and acquisition_last_source in ('grammar', 'leitfaden', 'xray', 'level-test', 'save-progress-first', 'save-progress-recap')
 group by 1, 2 order by 3 desc;
 ```
 
