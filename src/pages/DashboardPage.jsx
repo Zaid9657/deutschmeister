@@ -18,7 +18,7 @@ import { getProgramProgress } from '../services/programProgress';
 import { courseLevelFor, courseNextStep, programKeyForCourse } from '../lib/courseNext.js';
 import { levelToSlug } from '../data/courseContents.js';
 import { loadDashboardStats, DAILY_GOAL_TARGET } from '../services/dashboardStats';
-import { GRAMMAR_TOPIC_COUNT } from '../data/marketing.js';
+import { GRAMMAR_TOPIC_COUNT, FREE_LEVEL_LABEL, SPEAKING_LINE } from '../data/marketing.js';
 import { listAttempts } from '../services/examService';
 import { readinessFromAttempts } from '../services/readiness';
 import { firstRunAction, STARTING_POINT_KEY } from '../lib/firstRun.js';
@@ -553,7 +553,12 @@ const DashboardPage = () => {
                   <p className="font-bold text-[0.875rem] text-accent-aprikose-ink">
                     {trialDays} day{trialDays !== 1 ? 's' : ''} left in your free trial
                   </p>
-                  <p className="text-[0.75rem] text-accent-aprikose-ink">Keep your streak and unlock unlimited speaking</p>
+                  {/* Derived, never retyped (src/data/marketing.js): the free level stays
+                      free after the trial, and Pro's speaking is metered, never "unlimited"
+                      (tests/unlimited-claims.test.mjs). */}
+                  <p className="text-[0.75rem] text-accent-aprikose-ink">
+                    After the trial, {FREE_LEVEL_LABEL} stays free. Pro opens every level, with {SPEAKING_LINE}.
+                  </p>
                 </div>
               </div>
               <Button href="/pricing/" variant={firstRun ? 'secondary' : 'primary'} className="whitespace-nowrap">
