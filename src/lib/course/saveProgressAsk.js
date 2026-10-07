@@ -76,12 +76,15 @@ export function saveProgressSignupHref({ door, level, lektionNr = null }) {
 /**
  * Before the ask's signup door navigates: remember where to come back to and,
  * mid-Lektion, hand the run to the tab the confirmation e-mail opens.
+ * `now` is a seam for tests, like the rest of the chain (setReturnPath,
+ * handOffRun): a test that packs a run at a fixed time must hand it off at
+ * that time too, or the run ages out once the wall clock is 12 h past it.
  */
-export function rememberPlace({ level, lektionId = null, lektionNr = null }) {
+export function rememberPlace({ level, lektionId = null, lektionNr = null }, now = Date.now()) {
   if (lektionId && lektionNr) {
-    setReturnPath(lektionPath(level, lektionNr));
-    handOffRun(level, lektionId);
+    setReturnPath(lektionPath(level, lektionNr), now);
+    handOffRun(level, lektionId, now);
   } else {
-    setReturnPath(coursePath(level));
+    setReturnPath(coursePath(level), now);
   }
 }
