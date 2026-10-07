@@ -29,15 +29,25 @@ export const OUTBOX_KEY = 'dm_lesson_outbox';
 export const OUTBOX_MAX_AGE_DAYS = 30;
 const STEPS = ['attempts', 'progress', 'cards'];
 
+// When storage refuses the write (blocked, private mode, quota), the queue lives here for the rest
+// of the page's life instead — the run is still sent; it just cannot survive a reload. Without this
+// a refused write left an empty queue, the flush found nothing and the recap said "Saved to your
+// account" for a run that was never sent (Codex review, 2026-10-07).
+let memory = null;
+
 function readAll(now = Date.now()) {
-  const raw = safeGetJSON(OUTBOX_KEY, []);
+  const raw = memory || safeGetJSON(OUTBOX_KEY, []);
   const cutoff = now - OUTBOX_MAX_AGE_DAYS * 86400000;
   return (Array.isArray(raw) ? raw : [])
     .filter((e) => e && typeof e === 'object' && e.key && e.userId && e.done)
     .filter((e) => (Date.parse(e.createdAt) || 0) >= cutoff);
 }
 
-const writeAll = (list) => safeSetJSON(OUTBOX_KEY, list);
+function writeAll(list) {
+  const stored = safeSetJSON(OUTBOX_KEY, list);
+  memory = stored ? null : list;
+  return stored;
+}
 
 /** Store a finished run before anything goes over the network. A second enqueue of the same run is a no-op. */
 export function enqueueRun({ userId, level, lektionId, createdAt, attempts = [], accuracy = 0, status = 'complete' }) {
@@ -74,10 +84,14 @@ let inFlight = null;
 /**
  * Write every pending run of `userId`. Returns { state: 'idle' | 'synced' | 'failed', failed: [{ key, steps }] }.
  * One flush at a time: the recap, an `online` event and the course home can all ask at once, and two
- * overlapping flushes would each run a step the other has not marked done yet.
+ * overlapping flushes would each run a step the other has not marked done yet. A caller that arrives
+ * while a pass is running gets ANOTHER pass after it — a run enqueued meanwhile is not in the running
+ * pass's snapshot, and answering with that pass's "synced" told the recap it was saved when it was not.
  */
 export function flushOutbox(userId, deps = outboxDeps) {
-  if (inFlight) return inFlight;
+  if (inFlight) {
+    return inFlight.then((first) => flushOutbox(userId, deps).then((next) => (next.state === 'idle' ? first : next)));
+  }
   inFlight = flushOnce(userId, deps).finally(() => { inFlight = null; });
   return inFlight;
 }

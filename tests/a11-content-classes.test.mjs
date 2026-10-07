@@ -146,3 +146,20 @@ test('coverage is said, not hidden: a Lektion without a linked listening exercis
   assert.deepEqual(gaps('listeningExercise'), [2, 3, 5, 7, 11, 12]);
   assert.deepEqual(gaps('readingOrder'), [2, 6]);
 });
+
+test('5E, cards too: no rule card shows a grammatical job sentence as a mistake (Codex DaF review, 2026-10-07)', async () => {
+  const { default: OVERRIDES } = await import('../scripts/rule-card-overrides.mjs');
+  const offenders = [];
+  for (const [slug, card] of Object.entries(OVERRIDES)) {
+    for (const m of card.commonMistakes || []) {
+      // „Ich bin ein Lehrer.“ is German; the course teaches that the article is USUALLY left out.
+      if (/^(Ich bin|Du bist|Er ist|Sie ist|Sie sind|Wir sind) (ein|eine) [A-ZÄÖÜ][a-zäöüß]+\.$/.test(m.wrong)) offenders.push(`${slug}: ${m.wrong}`);
+    }
+    const text = [card.content, ...(card.commonMistakes || []).map((m) => m.explanationDe)].join('\n');
+    // Over-absolute rules the review measured as false.
+    for (const re of [/is always es/, /\bdirekt nach dem Verb\b(?<!meist direkt nach dem Verb)/, /Nomen auf -chen sind das-Wörter/, /am for days and parts of the day/]) {
+      if (re.test(text)) offenders.push(`${slug}: ${re}`);
+    }
+  }
+  assert.deepEqual(offenders, []);
+});

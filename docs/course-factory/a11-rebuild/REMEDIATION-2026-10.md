@@ -203,6 +203,31 @@ The "full suite never finishes" scare during the work was not a hang: an isolate
 exits normally (82/82, ~17 min); the runs that looked stuck spanned a wall-clock gap consistent with
 the machine sleeping.
 
+## 8b. Independent review by Codex (OpenAI's official Claude Code plugin, 2026-10-07)
+
+Run through `codex@openai-codex` 1.0.6 (Codex CLI 0.160.1): `/codex:review` and
+`/codex:adversarial-review` against `origin/main`, and a read-only Codex task reviewing the twelve
+Lektionen as a DaF teacher. Every finding was re-checked against the code before anything changed;
+each fix has a regression test that fails on the old code (verified by running it there).
+
+| Finding (Codex) | Verdict | What changed |
+|---|---|---|
+| P1/high: localStorage refusing the write lost the finished run, yet the recap said "Saved to your account" | **confirmed, fixed** | the outbox keeps the queue in memory when storage refuses it; the run is still sent |
+| P2: a Lektion finished while another flush ran got that flush's "synced" without being sent | **confirmed, fixed** | a late caller gets one more pass after the running one |
+| high: a stamped insert that committed but lost its response was inserted again unstamped (two runs) | **confirmed, fixed** | the stamp is re-checked before the unstamped fallback; an unknown state returns failure (retried with the same stamp) |
+| medium: a failed read of the stored run let a weaker repeat overwrite Gold | **confirmed, fixed** | `completeLesson` returns false on a read error; the outbox retries |
+| medium: a dictation answered after the audio failed still counted as heard | **confirmed, fixed** | listening credit needs a playback that started (`onPlayed`), in dictation and listen-and-select; the recap says "not heard — read as text or no sound" |
+| P2: a passing attempt of another exam, opened under the A1.1 test URL, completed the course | **confirmed, fixed** | the attempt's `exam_key` must equal the test's key |
+| L10 „umsteigen" translated "change to platform five" | **confirmed, fixed** | "change trains at platform five" |
+| L9 „Habt ihr auch Tee?" translated "want" | **confirmed, fixed** | "Do you all have tea too?" |
+| Rule cards still showed „Ich bin ein Lehrer." / „Ich bin eine Verkäuferin." as mistakes (class 5E, missed by the first pass) | **confirmed, fixed** | entries removed (the rule stays: "meist ohne Artikel"); the class test now covers the cards |
+| Over-absolute card rules: das Kind "always" es; "-chen" nouns; "am for parts of the day" (am Nacht); Hunger/Durst/Zeit "ohne Artikel"; subject "direkt nach dem Verb"; the short-answer explanation | **confirmed, fixed** | each reworded to what is true at A1 ("meist", scoped examples); pinned by the class test |
+| L2 "in a sentence, a nationality is a noun" (but „Meine Staatsangehörigkeit ist marokkanisch") | **confirmed, fixed** | "said of a person, a nationality is a noun" (notice, both languages, and the card) |
+| pool EN: „du kommst" called the wrong verb form | **confirmed, fixed** | "answers about the other person, not about you"; migration row regenerated |
+| 18:20 rejects „zehn vor halb sieben" | **adopted** | accepted (regional standard in the south and east); migration row regenerated |
+| 7:45 / 8:15 reject „fünfzehn vor/nach" | **not adopted** | „Viertel vor/nach" is the standard form the Lektion teaches; „fünfzehn vor acht" is not idiomatic everyday German |
+| L10 writing task `register: 'informell'` while the model text uses Sie | **real, left open — owner/DaF decision** | `tests/writing-course.test.mjs` encodes "a Kollegin on first-name terms → informell" while the curriculum comment says "die Kollegin wird gesiezt", and the grader marks greeting and sign-off against this field. Either the model switches to du (needs a du imperative L10 does not teach) or the register becomes formal (the grader then expects „Sehr geehrte … / Mit freundlichen Grüßen"). Not changed here. |
+
 ## 9. External blockers (owner actions)
 
 1. **Audio:** run `docs/owner-prompts.md` → "Run the A1.1 course audio" (needs the Azure key/region and the

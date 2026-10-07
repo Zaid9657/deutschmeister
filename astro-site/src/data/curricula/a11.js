@@ -441,8 +441,8 @@ export const CURRICULUM_A11 = {
         // the learner hears and dictates them; the notice keeps the grammar. The class is closed
         // as a rule: RULE 6c fails any notice body that carries a `Feld: Ich bin … oder …` clause.
         // 54 words, read aloud.
-        bodyDe: '**sein** ist unregelmäßig: ich **bin**, du **bist**, er/sie/es **ist**, wir **sind**, ihr **seid**, sie/Sie **sind**. Nach ich bin steht der Beruf meist ohne Artikel: Ich bin Lehrer. Aber: Das ist ein Lehrer. Staatsangehörigkeit im Satz als Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner. Im Formular als Adjektiv: Staatsangehörigkeit: marokkanisch. Geburtsdatum: Ich bin am 3.5.1998 geboren.',
-        bodyEn: '**sein** (to be) is irregular – learn the set: ich **bin**, du **bist**, er/sie/es **ist**, wir **sind**, ihr **seid**, sie/Sie **sind**. After **ich bin** a job usually has no article: **Ich bin Lehrer.** But: **Das ist ein Lehrer.** In a sentence, a nationality is a noun: **Ich komme aus Marokko und bin Marokkanerin.** **Ali ist Marokkaner.** On a form it is an adjective: **Staatsangehörigkeit: marokkanisch**. Your date of birth: **Ich bin am 3.5.1998 geboren** (I was born on …).',
+        bodyDe: '**sein** ist unregelmäßig: ich **bin**, du **bist**, er/sie/es **ist**, wir **sind**, ihr **seid**, sie/Sie **sind**. Nach ich bin steht der Beruf meist ohne Artikel: Ich bin Lehrer. Aber: Das ist ein Lehrer. Bei Personen im Satz als Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner. Im Formular als Adjektiv: Staatsangehörigkeit: marokkanisch. Geburtsdatum: Ich bin am 3.5.1998 geboren.',
+        bodyEn: '**sein** (to be) is irregular – learn the set: ich **bin**, du **bist**, er/sie/es **ist**, wir **sind**, ihr **seid**, sie/Sie **sind**. After **ich bin** a job usually has no article: **Ich bin Lehrer.** But: **Das ist ein Lehrer.** Said of a person, a nationality is a noun: **Ich komme aus Marokko und bin Marokkanerin.** **Ali ist Marokkaner.** On a form it is an adjective: **Staatsangehörigkeit: marokkanisch**. Your date of birth: **Ich bin am 3.5.1998 geboren** (I was born on …).',
         examples: ['Was sind Sie von Beruf?', 'Ich bin Studentin.'],
         ruleSlug: 'verb-sein',
       },
@@ -1396,7 +1396,7 @@ export const CURRICULUM_A11 = {
           // rather than given its own speaker, because a dialogue has exactly two speakers
           // (scripts/validate-curriculum.mjs RULE 5). It is now the dictation line (review #2, L10, §A).
           { speaker: 'Ana', de: 'Danke! Und wann ist die Ankunft?', en: 'Thank you! And when is the arrival?' },
-          { speaker: 'Herr Schmidt', de: 'Durchsage: Der Zug hat Verspätung. Bitte an Gleis fünf umsteigen!', en: 'Announcement: the train is delayed. Please change to platform five!' },
+          { speaker: 'Herr Schmidt', de: 'Durchsage: Der Zug hat Verspätung. Bitte an Gleis fünf umsteigen!', en: 'Announcement: the train is delayed. Please change trains at platform five!' },
         ],
       },
       pretest: {

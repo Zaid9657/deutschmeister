@@ -188,3 +188,90 @@ test('the recap stores the run before sending it, says where it is saved, and th
   assert.match(recap, /role="status"[\s\S]{0,300}t\(`sync\.\$\{sync\}`, lang\)/, 'the save state is announced in words');
   assert.match(read('src/pages/CurriculumHomePage.jsx'), /\.then\(\(\) => flushOutbox\(user\.id\)\)/, 'the course home sends waiting runs');
 });
+
+// ── Regressions found by the Codex review (2026-10-07), each reproduced before the fix ──────────
+
+test('storage that refuses the write does not lose the run: it is still sent, and only "synced" when it was', async () => {
+  reset();
+  const ls = globalThis.window.localStorage;
+  const realSet = ls.setItem;
+  ls.setItem = () => { throw new Error('QuotaExceededError'); };
+  try {
+    const entry = enqueueRun(run({ createdAt: new Date().toISOString() }));
+    assert.ok(entry, 'the run is accepted');
+    assert.equal(pendingRuns('u1').length, 1, 'kept in memory when storage refuses it');
+    const { deps, calls } = writers({ progress: (n) => n > 1 });
+    assert.equal((await flushOutbox('u1', deps)).state, 'failed', 'a failed step is reported, not "saved"');
+    assert.equal((await flushOutbox('u1', deps)).state, 'synced');
+    assert.deepEqual(calls, { attempts: 1, progress: 2, cards: 1 }, 'every step reached the server');
+  } finally {
+    ls.setItem = realSet;
+  }
+});
+
+test('a run finished while another flush is running is sent before its caller hears "synced"', async () => {
+  reset();
+  enqueueRun(run({ lektionId: 'a1.1-l01', createdAt: '2026-10-07T10:00:00.000Z' }));
+  let release;
+  const gate = new Promise((r) => { release = r; });
+  const sent = [];
+  const deps = {
+    logAttempts: async (_u, r) => { sent.push(r.lektionId); if (r.lektionId === 'a1.1-l01') await gate; return true; },
+    completeLesson: async () => true,
+    seedCards: async () => true,
+  };
+  const first = flushOutbox('u1', deps);
+  enqueueRun(run({ lektionId: 'a1.1-l02', createdAt: '2026-10-07T10:05:00.000Z' }));
+  const second = flushOutbox('u1', deps);
+  release();
+  const [a, b] = await Promise.all([first, second]);
+  assert.equal(a.state, 'synced');
+  assert.equal(b.state, 'synced');
+  assert.ok(sent.includes('a1.1-l02'), 'the second Lektion was written');
+  assert.equal(pendingRuns('u1').length, 0, 'nothing left behind');
+});
+
+test('a stamped insert that committed but lost its response is not written a second time', async () => {
+  const db = fakeSupabase();
+  const realFrom = db.from.bind(db);
+  let failOnce = true;
+  db.from = (t) => {
+    const q = realFrom(t);
+    const insert = q.insert;
+    q.insert = async (batch) => { await insert(batch); if (failOnce) { failOnce = false; return { error: { message: 'network reset after commit' } }; } return { error: null }; };
+    return q;
+  };
+  const ok = await logAttempts('u1', { level: 'a1.1', lektionId: 'a1.1-l03', createdAt: STAMP }, [{ itemId: 'p1', stage: 'practice', correct: true }], db);
+  assert.equal(ok, true, 'the committed batch is recognised');
+  assert.equal(db.rows.length, 1, 'no unstamped duplicate');
+  assert.equal(await countCompletedRuns('u1', { level: 'a1.1', lektionId: 'a1.1-l03' }, db), 1);
+});
+
+test('a failed read of the stored run never overwrites it — the outbox keeps the run and retries', async () => {
+  const { completeLesson } = await import('../src/services/lessonService.js');
+  let wrote = false;
+  const client = {
+    from() {
+      const q = {
+        select: () => q, eq: () => q,
+        maybeSingle: async () => ({ data: null, error: { message: 'timeout' } }),
+        upsert: async () => { wrote = true; return { error: null }; },
+      };
+      return q;
+    },
+  };
+  assert.equal(await completeLesson('u1', { level: 'a1.1', lektionId: 'a1.1-l01', accuracy: 0.4, status: 'complete' }, client), false);
+  assert.equal(wrote, false, 'a weaker repeat cannot replace a Gold it could not see');
+});
+
+test('listening credit needs sound that played; a passing attempt of another exam completes nothing', () => {
+  const dictation = read('src/components/lesson/DictationItem.jsx');
+  assert.match(dictation, /listened: heard && !readInstead/);
+  assert.match(dictation, /onPlayed=\{\(\) => setHeard\(true\)\}/);
+  const listen = read('src/components/lesson/ListenSelectItem.jsx');
+  assert.match(listen, /listened: heard \}\)/);
+  assert.match(listen, /onPlayed=\{\(\) => setHeard\(true\)\}/);
+  const result = read('src/pages/Modelltest/ModelltestResult.jsx');
+  assert.match(result, /const attemptIsThisTest = !!resolved && !!attempt && attempt\.exam_key === resolved\.key;/);
+  assert.match(result, /if \(!attemptIsThisTest\) return;\s*const curriculum = curriculumForTestSlug\(examSlug\);/);
+});

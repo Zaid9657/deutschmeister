@@ -19,11 +19,15 @@ export default function ListenSelectItem({ item, lektionId, index, total, onResu
   const [lang] = useLessonLang();
   const [picked, setPicked] = useState(null);
   const [state, setState] = useState(null);
+  // A choice made without the line ever playing is a guess between written lines, not listening:
+  // it is recorded `listened: false` and left out of the practice score (mastery.isFirstPass).
+  const [heard, setHeard] = useState(false);
   const key = `line-${item.lineIndex}`;
 
   useEffect(() => {
     setPicked(null);
     setState(null);
+    setHeard(false);
   }, [item.id]);
 
   const canSubmit = !!picked;
@@ -34,7 +38,7 @@ export default function ListenSelectItem({ item, lektionId, index, total, onResu
     const { result, expected } = checkAnswer(picked, accepted, checkOptionsFor(item));
     const correct = result !== RESULT.WRONG;
     setState({ result, expected });
-    onResult(item, { result, correct, errorTag: correct ? null : tagError(item, picked, item.answer) });
+    onResult(item, { result, correct, errorTag: correct ? null : tagError(item, picked, item.answer), listened: heard });
   };
 
   return (
@@ -47,7 +51,7 @@ export default function ListenSelectItem({ item, lektionId, index, total, onResu
         {/* No sound, no item: showing the text would hand over the answer, so a learner who cannot
             hear the line skips it — nothing is recorded, it is neither right nor wrong. */}
         <div className="mt-4">
-          <PlayButton lektionId={lektionId} audioKey={key} text={item.answer} rate={0.9} label={t('action.listen', lang)} onFallback={onNext} fallbackLabel={t('audio.skipItem', lang)} />
+          <PlayButton lektionId={lektionId} audioKey={key} text={item.answer} rate={0.9} label={t('action.listen', lang)} onFallback={onNext} fallbackLabel={t('audio.skipItem', lang)} onPlayed={() => setHeard(true)} />
         </div>
 
         <div className="mt-5 flex flex-col gap-2">

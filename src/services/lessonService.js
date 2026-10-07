@@ -60,18 +60,24 @@ export const startLesson = async (userId, level, lektionId) => {
  * overwrites a Gold run's status and accuracy (2026-10 review, finding C). True
  * only when both writes landed — the sync outbox retries on false.
  */
-export const completeLesson = async (userId, { level, lektionId, accuracy = 0, status = 'complete' }) => {
+export const completeLesson = async (userId, { level, lektionId, accuracy = 0, status = 'complete' }, client = supabase) => {
   if (!userId || !lektionId) return false;
   const lvl = String(level).toLowerCase();
-  const { data: prev } = await supabase
+  const { data: prev, error: readError } = await client
     .from('lesson_progress')
     .select('status, accuracy')
     .eq('user_id', userId)
     .eq('lektion_id', lektionId)
     .maybeSingle();
+  // Without the stored run we cannot know which run is better; writing anyway could replace a Gold
+  // with a weaker repeat. Report failure so the outbox keeps the run and retries (Codex review).
+  if (readError) {
+    console.error('[lessonService] completeLesson read:', readError.message);
+    return false;
+  }
   const stored = prev && prev.status && prev.status !== 'started' ? { status: prev.status, accuracy: Number(prev.accuracy) || 0 } : null;
   const kept = betterRun(stored, { status, accuracy });
-  const { error } = await supabase
+  const { error } = await client
     .from('lesson_progress')
     .upsert(
       {
@@ -109,8 +115,9 @@ export const completeLesson = async (userId, { level, lektionId, accuracy = 0, s
  * IDEMPOTENT for a stamped batch (2026-10): a batch whose (user, Lektion,
  * created_at) is already in the table is not written again, so the sync outbox
  * can retry after a lost response without adding a phantom "completed run".
- * ponytail: the unstamped fallback below is not idempotent — it only runs if a
- * policy ever refuses the stamp, which none does today.
+ * The same check runs again after a FAILED stamped insert, before the unstamped
+ * fallback: an insert that committed but whose response was lost must not be
+ * written a second time with a server timestamp (Codex review, 2026-10-07).
  *
  * `client` is a seam for tests only; production always passes the real one.
  */
@@ -137,6 +144,14 @@ export const logAttempts = async (userId, { level, lektionId, createdAt = null }
   const rows = createdAt ? base.map((r) => ({ ...r, created_at: createdAt })) : base;
   const { error } = await client.from('lesson_attempts').insert(rows);
   if (error && createdAt) {
+    const { data: landed, error: recheckError } = await client
+      .from('lesson_attempts')
+      .select('created_at')
+      .eq('user_id', userId)
+      .eq('lektion_id', lektionId)
+      .eq('created_at', createdAt);
+    if (recheckError) return false; // unknown: retry later with the same stamp, never a second batch
+    if (landed && landed.length) return true;
     const retry = await client.from('lesson_attempts').insert(base);
     if (retry.error) console.error('[lessonService] logAttempts:', retry.error.message);
     return !retry.error;

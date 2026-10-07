@@ -18,7 +18,7 @@
    ],
    "questionEn": "Answer yes and repeat the statement: Kommst du aus Italien?",
    "explanationDe": "Ja + die Aussage in der ich-Form: Ja, ich komme aus Italien.",
-   "explanationEn": "Say **Ja** and repeat the statement in the ich-form: **Ja, ich komme aus Italien.** \"Ja, komme.\" has no subject; \"ich kommst\" and \"du kommst\" use the wrong verb form.",
+   "explanationEn": "Say **Ja** and repeat the statement in the ich-form: **Ja, ich komme aus Italien.** \"Ja, komme.\" has no subject; \"ich kommst\" has the wrong verb ending, and \"du kommst\" answers about the other person, not about you.",
    "reason": "A correct sentence („Ja, ich bin aus Italien.“) was a wrong option; „Kurzantwort“ was the wrong term (2026-10 review)."
   },
   "1ed2c78f-8f65-52e3-9e63-97f2a5b0663b": {
@@ -47,9 +47,10 @@
   "827c155d-7b87-53a3-b047-d53ab532f296": {
    "accepted": [
     "zwanzig nach sechs",
-    "zwanzig nach 6"
+    "zwanzig nach 6",
+    "zehn vor halb sieben"
    ],
-   "reason": "The task asks for colloquial time; „sechs Uhr zwanzig“ is the official form the notice keeps apart."
+   "reason": "The task asks for colloquial time; „sechs Uhr zwanzig“ is the official form the notice keeps apart. „zehn vor halb sieben“ is the same time in the south and east (Codex DaF review, 2026-10-07)."
   },
   "8970aaea-186c-58b0-bcf2-fdc7bbc3a632": {
    "explanationDe": "am + Tageszeit: am Morgen, am Abend (aber: in der Nacht).",

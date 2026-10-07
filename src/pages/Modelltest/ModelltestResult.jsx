@@ -139,14 +139,18 @@ const ModelltestResult = () => {
 
   // A pass on a course's own final test completes that course's path (and so
   // opens its certificate). Upserted, so a revisit is harmless.
+  // The attempt is loaded by id alone: a passing attempt of ANOTHER exam opened under this test's
+  // URL must not complete this course (Codex review, 2026-10-07).
+  const attemptIsThisTest = !!resolved && !!attempt && attempt.exam_key === resolved.key;
   useEffect(() => {
     if (!user || !attempt || attempt.status !== 'completed' || !attempt.max_score || !mock) return;
+    if (!attemptIsThisTest) return;
     const curriculum = curriculumForTestSlug(examSlug);
     if (!curriculum) return;
     const percent = Math.round((attempt.score / attempt.max_score) * 100);
     if (verdictFor(percent, mock.passPercent) === 'nicht-bereit') return;
     completeLevelTest(user.id, curriculum.level, levelTestNodeId(curriculum));
-  }, [user, attempt, mock, examSlug]);
+  }, [user, attempt, mock, examSlug, attemptIsThisTest]);
 
   // The one confetti burst for the readiness moment — separate from, and
   // never doubling, the pass-moment burst CompletionMoment fires below.

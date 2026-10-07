@@ -171,17 +171,12 @@ const RULE_CARD_OVERRIDES = {
       // (Ana, feminine) and its comment claimed this card said „Er ist Marokkaner.“ — it did not,
       // and neither did the notice. The masculine is now on both, in the same sentence, and the
       // commonMistakes entry below corrects the swapped gender for the learner who is not Ana.
-      'Im Satz steht die Staatsangehörigkeit als Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner.',
+      'Bei Personen steht die Staatsangehörigkeit als Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner.',
       'Im Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch.',
       'In der Ja/Nein-Frage steht sein vorn: Ist das Formular für die Adresse?',
       'English: sein is irregular — learn the six forms as whole words, not from a stem.',
     ].join('\n'),
     commonMistakes: [
-      {
-        wrong: 'Ich bin ein Lehrer.',
-        correct: 'Ich bin Lehrer.',
-        explanationDe: 'Nach ich bin steht der Beruf meist ohne Artikel: Ich bin Lehrer.',
-      },
       {
         wrong: 'Ana bin Studentin.',
         correct: 'Ana ist Studentin.',
@@ -195,7 +190,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Ich bin marokkanisch.',
         correct: 'Ich bin Marokkanerin.',
-        explanationDe: 'Im Satz steht die Staatsangehörigkeit als Nomen: Ich bin Marokkanerin. Im Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch.',
+        explanationDe: 'Bei Personen steht die Staatsangehörigkeit als Nomen: Ich bin Marokkanerin. Im Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch.',
       },
       {
         wrong: 'Ali ist Marokkanerin.',
@@ -215,7 +210,7 @@ const RULE_CARD_OVERRIDES = {
       'Beispiele: Wie alt ist er? Er ist zwanzig.',
       'Bei sprechen wechselt der Vokal: er spricht. Mehr dazu in Lektion 7.',
       'Ja, er spricht Englisch und Deutsch. Sie sprechen Arabisch und Deutsch.',
-      'English: the pronoun follows the article of the noun — das Kind is always es.',
+      'English: the pronoun follows the article of the noun: das Kind → es.',
     ].join('\n'),
     commonMistakes: [
       {
@@ -259,7 +254,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Die Mädchen ist jung.',
         correct: 'Das Mädchen ist jung.',
-        explanationDe: 'Nomen auf -chen sind das-Wörter, auch bei Personen.',
+        explanationDe: 'Bei Mädchen steht das, auch bei Personen: das Mädchen.',
       },
       {
         wrong: 'Die Lehrer kauft den Stuhl.',
@@ -314,11 +309,6 @@ const RULE_CARD_OVERRIDES = {
       'English: after ich bin or er ist a job usually stands without an article — Ich bin Ingenieurin.',
     ].join('\n'),
     commonMistakes: [
-      {
-        wrong: 'Ich bin eine Verkäuferin.',
-        correct: 'Ich bin Verkäuferin.',
-        explanationDe: 'Nach ich bin steht der Beruf meist ohne Artikel: Ich bin Verkäuferin.',
-      },
       {
         wrong: 'Ich brauche ein Computer.',
         correct: 'Ich brauche einen Computer.',
@@ -376,7 +366,7 @@ const RULE_CARD_OVERRIDES = {
       'Feste Wendung: Hast du Zeit? Am Dienstag habe ich abends Zeit.',
       'im steht vor Monaten: im Mai.',
       'Die Ordnungszahl für das Datum lernt man erst in A1.2.',
-      'English: um for clock times, am for days and parts of the day, im for months.',
+      'English: um for clock times, am for days and for Morgen, Mittag and Abend, im for months.',
     ].join('\n'),
     commonMistakes: [
       {
@@ -424,7 +414,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Ich habe einen Hunger.',
         correct: 'Ich habe Hunger.',
-        explanationDe: 'Nach haben stehen Hunger, Durst und Zeit ohne Artikel.',
+        explanationDe: 'In Hunger haben, Durst haben und Zeit haben steht meist kein Artikel: Ich habe Hunger.',
       },
     ],
   },
@@ -434,7 +424,7 @@ const RULE_CARD_OVERRIDES = {
     titleDe: 'Ja/Nein-Fragen: das Verb steht vorn',
     content: [
       'Bei der Ja/Nein-Frage steht das Verb auf Position 1: Der Zug fährt. → Fährt der Zug?',
-      'Das Subjekt steht direkt nach dem Verb.',
+      'Das Subjekt steht meist direkt nach dem Verb.',
       'Die Antwort ist ja oder nein. Die Satzmelodie steigt am Ende.',
       'Das Verb fahren ist unregelmäßig mit den Formen ich fahre, du fährst, er fährt.',
       'Beispiele: Fährt der Zug nach Österreich? Kostet die Fahrkarte zwanzig Euro?',
@@ -450,12 +440,12 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Kommen aus Österreich Sie?',
         correct: 'Kommen Sie aus Österreich?',
-        explanationDe: 'Das Subjekt steht direkt nach dem Verb, nicht am Satzende.',
+        explanationDe: 'Das Subjekt steht meist direkt nach dem Verb, nicht am Satzende.',
       },
       {
         wrong: 'Sind Sie Frau Meier? — Ja, ich bin.',
         correct: 'Ja, ich bin Frau Meier.',
-        explanationDe: 'Die Kurzantwort wiederholt die Aussage, nicht nur Ja und das Verb.',
+        explanationDe: 'Ja, ich bin. ist zu kurz. Man sagt: Ja. Oder: Ja, ich bin Frau Meier.',
       },
     ],
   },

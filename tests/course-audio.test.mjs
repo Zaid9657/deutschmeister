@@ -395,7 +395,7 @@ test('an engine that accepts the line and never speaks is a failure, not a succe
 test('listening items: no sound offers a way on, and reading the line is recorded as read, not heard', () => {
   const dictation = read('src/components/lesson/DictationItem.jsx');
   assert.match(dictation, /<PlayButton[^>]*onFallback=\{\(\) => setReadInstead\(true\)\}/);
-  assert.match(dictation, /listened: !readInstead/);
+  assert.match(dictation, /listened: heard && !readInstead/);
   const listen = read('src/components/lesson/ListenSelectItem.jsx');
   assert.match(listen, /<PlayButton[^>]*onFallback=\{onNext\}/, 'no sound: skip, never show the answer');
   for (const f of ['DialogStage', 'PhonetikStage', 'PretestStage', 'DictationItem', 'ListenSelectItem']) {

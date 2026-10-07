@@ -138,11 +138,6 @@ export const RULE_CARDS = {
     "content": "Neu oder unbekannt? Dann ein (der/das) oder eine (die): ein Computer, eine Lampe.\nNach Verben wie brauchen, haben, kaufen wird maskulin ein → einen: Ich brauche einen Computer.\nDie Regel dahinter (Akkusativ) kommt in A1.2.\nVerneinung mit kein: Wir haben kein Handy.\nNach er ist steht der Beruf meist ohne Artikel: Ihr Kollege ist Ingenieur.\nDie Uhrzeit um eins folgt in Lektion 8.\nEnglish: after ich bin or er ist a job usually stands without an article — Ich bin Ingenieurin.",
     "commonMistakes": [
       {
-        "wrong": "Ich bin eine Verkäuferin.",
-        "correct": "Ich bin Verkäuferin.",
-        "explanationDe": "Nach ich bin steht der Beruf meist ohne Artikel: Ich bin Verkäuferin."
-      },
-      {
         "wrong": "Ich brauche ein Computer.",
         "correct": "Ich brauche einen Computer.",
         "explanationDe": "Nach brauchen wird maskulin ein zu einen: einen Computer, einen Stuhl."
@@ -229,7 +224,7 @@ export const RULE_CARDS = {
       {
         "wrong": "Die Mädchen ist jung.",
         "correct": "Das Mädchen ist jung.",
-        "explanationDe": "Nomen auf -chen sind das-Wörter, auch bei Personen."
+        "explanationDe": "Bei Mädchen steht das, auch bei Personen: das Mädchen."
       },
       {
         "wrong": "Die Lehrer kauft den Stuhl.",
@@ -282,7 +277,7 @@ export const RULE_CARDS = {
   },
   "personal-pronouns": {
     "titleDe": "er, sie, es – die Personalpronomen",
-    "content": "Das Pronomen richtet sich nach dem Nomen: der Bruder → er, die Schwester → sie, das Kind → es.\nFür mehrere Personen stehen die Formen wir, ihr, sie.\nSie mit großem S ist die höfliche Form.\nBeispiele: Wie alt ist er? Er ist zwanzig.\nBei sprechen wechselt der Vokal: er spricht. Mehr dazu in Lektion 7.\nJa, er spricht Englisch und Deutsch. Sie sprechen Arabisch und Deutsch.\nEnglish: the pronoun follows the article of the noun — das Kind is always es.",
+    "content": "Das Pronomen richtet sich nach dem Nomen: der Bruder → er, die Schwester → sie, das Kind → es.\nFür mehrere Personen stehen die Formen wir, ihr, sie.\nSie mit großem S ist die höfliche Form.\nBeispiele: Wie alt ist er? Er ist zwanzig.\nBei sprechen wechselt der Vokal: er spricht. Mehr dazu in Lektion 7.\nJa, er spricht Englisch und Deutsch. Sie sprechen Arabisch und Deutsch.\nEnglish: the pronoun follows the article of the noun: das Kind → es.",
     "commonMistakes": [
       {
         "wrong": "Das Kind ist jung. Er ist zwei.",
@@ -429,7 +424,7 @@ export const RULE_CARDS = {
   },
   "time-and-dates": {
     "titleDe": "um, am – die Uhrzeit sagen",
-    "content": "Uhrzeit mit um: um acht Uhr. Wochentag mit am: am Montag.\nAber: Es ist acht Uhr (ohne um).\nUmgangssprachlich: Viertel nach acht, Viertel vor neun, halb neun (= 8.30!).\nDie Uhrzeit halb neun ist 8.30 und nicht 9.30.\nOffiziell lautet die Uhrzeit acht Uhr dreißig.\nDie Frage lautet: Wie spät ist es?\nFeste Wendung: Hast du Zeit? Am Dienstag habe ich abends Zeit.\nim steht vor Monaten: im Mai.\nDie Ordnungszahl für das Datum lernt man erst in A1.2.\nEnglish: um for clock times, am for days and parts of the day, im for months.",
+    "content": "Uhrzeit mit um: um acht Uhr. Wochentag mit am: am Montag.\nAber: Es ist acht Uhr (ohne um).\nUmgangssprachlich: Viertel nach acht, Viertel vor neun, halb neun (= 8.30!).\nDie Uhrzeit halb neun ist 8.30 und nicht 9.30.\nOffiziell lautet die Uhrzeit acht Uhr dreißig.\nDie Frage lautet: Wie spät ist es?\nFeste Wendung: Hast du Zeit? Am Dienstag habe ich abends Zeit.\nim steht vor Monaten: im Mai.\nDie Ordnungszahl für das Datum lernt man erst in A1.2.\nEnglish: um for clock times, am for days and for Morgen, Mittag and Abend, im for months.",
     "commonMistakes": [
       {
         "wrong": "halb neun ist 9:30.",
@@ -465,19 +460,14 @@ export const RULE_CARDS = {
       {
         "wrong": "Ich habe einen Hunger.",
         "correct": "Ich habe Hunger.",
-        "explanationDe": "Nach haben stehen Hunger, Durst und Zeit ohne Artikel."
+        "explanationDe": "In Hunger haben, Durst haben und Zeit haben steht meist kein Artikel: Ich habe Hunger."
       }
     ]
   },
   "verb-sein": {
     "titleDe": "sein: ich bin, du bist, Sie sind",
-    "content": "sein ist unregelmäßig:\nich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.\nNach ich bin steht der Beruf meist ohne Artikel: Ich bin Lehrer.\nDer Beruf in der Frage: Was sind Sie von Beruf? — Ich bin Studentin.\nBeispiele: Ich bin Ana. Ich bin Studentin.\nIm Satz steht die Staatsangehörigkeit als Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner.\nIm Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch.\nIn der Ja/Nein-Frage steht sein vorn: Ist das Formular für die Adresse?\nEnglish: sein is irregular — learn the six forms as whole words, not from a stem.",
+    "content": "sein ist unregelmäßig:\nich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.\nNach ich bin steht der Beruf meist ohne Artikel: Ich bin Lehrer.\nDer Beruf in der Frage: Was sind Sie von Beruf? — Ich bin Studentin.\nBeispiele: Ich bin Ana. Ich bin Studentin.\nBei Personen steht die Staatsangehörigkeit als Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner.\nIm Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch.\nIn der Ja/Nein-Frage steht sein vorn: Ist das Formular für die Adresse?\nEnglish: sein is irregular — learn the six forms as whole words, not from a stem.",
     "commonMistakes": [
-      {
-        "wrong": "Ich bin ein Lehrer.",
-        "correct": "Ich bin Lehrer.",
-        "explanationDe": "Nach ich bin steht der Beruf meist ohne Artikel: Ich bin Lehrer."
-      },
       {
         "wrong": "Ana bin Studentin.",
         "correct": "Ana ist Studentin.",
@@ -491,7 +481,7 @@ export const RULE_CARDS = {
       {
         "wrong": "Ich bin marokkanisch.",
         "correct": "Ich bin Marokkanerin.",
-        "explanationDe": "Im Satz steht die Staatsangehörigkeit als Nomen: Ich bin Marokkanerin. Im Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch."
+        "explanationDe": "Bei Personen steht die Staatsangehörigkeit als Nomen: Ich bin Marokkanerin. Im Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch."
       },
       {
         "wrong": "Ali ist Marokkanerin.",
@@ -502,7 +492,7 @@ export const RULE_CARDS = {
   },
   "yes-no-questions": {
     "titleDe": "Ja/Nein-Fragen: das Verb steht vorn",
-    "content": "Bei der Ja/Nein-Frage steht das Verb auf Position 1: Der Zug fährt. → Fährt der Zug?\nDas Subjekt steht direkt nach dem Verb.\nDie Antwort ist ja oder nein. Die Satzmelodie steigt am Ende.\nDas Verb fahren ist unregelmäßig mit den Formen ich fahre, du fährst, er fährt.\nBeispiele: Fährt der Zug nach Österreich? Kostet die Fahrkarte zwanzig Euro?\nIst das Gleis weit? Hat der Zug Verspätung?\nEnglish: in a written yes/no question the verb comes first and the subject second.",
+    "content": "Bei der Ja/Nein-Frage steht das Verb auf Position 1: Der Zug fährt. → Fährt der Zug?\nDas Subjekt steht meist direkt nach dem Verb.\nDie Antwort ist ja oder nein. Die Satzmelodie steigt am Ende.\nDas Verb fahren ist unregelmäßig mit den Formen ich fahre, du fährst, er fährt.\nBeispiele: Fährt der Zug nach Österreich? Kostet die Fahrkarte zwanzig Euro?\nIst das Gleis weit? Hat der Zug Verspätung?\nEnglish: in a written yes/no question the verb comes first and the subject second.",
     "commonMistakes": [
       {
         "wrong": "Sie kommen aus Österreich?",
@@ -512,12 +502,12 @@ export const RULE_CARDS = {
       {
         "wrong": "Kommen aus Österreich Sie?",
         "correct": "Kommen Sie aus Österreich?",
-        "explanationDe": "Das Subjekt steht direkt nach dem Verb, nicht am Satzende."
+        "explanationDe": "Das Subjekt steht meist direkt nach dem Verb, nicht am Satzende."
       },
       {
         "wrong": "Sind Sie Frau Meier? — Ja, ich bin.",
         "correct": "Ja, ich bin Frau Meier.",
-        "explanationDe": "Die Kurzantwort wiederholt die Aussage, nicht nur Ja und das Verb."
+        "explanationDe": "Ja, ich bin. ist zu kurz. Man sagt: Ja. Oder: Ja, ich bin Frau Meier."
       }
     ]
   }

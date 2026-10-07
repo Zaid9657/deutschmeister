@@ -24,13 +24,16 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
   // The learner chose to READ the line (the audio failed, or they asked for the text): the answer
   // is still checked, but it is recorded as read, not heard — never as listening evidence.
   const [readInstead, setReadInstead] = useState(false);
+  // Listening evidence is a playback that STARTED (PlayButton's onPlayed), not the absence of a
+  // "read" click: an answer typed after the audio failed is not a dictation (Codex review).
+  const [heard, setHeard] = useState(false);
   const ref = useRef(null);
   const id = lektionId || line.lektionId || null;
   const key = `line-${line.index}`;
   const [lang] = useLessonLang();
 
   useEffect(() => {
-    setValue(''); setState(null); setReadInstead(false);
+    setValue(''); setState(null); setReadInstead(false); setHeard(false);
     if (ref.current) ref.current.focus();
   }, [line.index]);
 
@@ -48,7 +51,7 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
     const { result, expected } = checkAnswer(value, item.accepted, checkOptionsFor(item));
     const correct = result !== RESULT.WRONG;
     setState({ result, expected });
-    onResult(item, { result, correct, errorTag: correct ? null : tagError(item, value, line.de), listened: !readInstead });
+    onResult(item, { result, correct, errorTag: correct ? null : tagError(item, value, line.de), listened: heard && !readInstead });
   };
 
   return (
@@ -59,7 +62,7 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
       <Card className="mt-4 p-5 sm:p-6">
         <p className="text-[0.9375rem] text-graphite">{t('dictation.lead', lang)}</p>
         <div className="mt-4">
-          <PlayButton lektionId={id} audioKey={key} text={line.de} rate={0.85} onFallback={() => setReadInstead(true)} />
+          <PlayButton lektionId={id} audioKey={key} text={line.de} rate={0.85} onFallback={() => setReadInstead(true)} onPlayed={() => setHeard(true)} />
         </div>
         {readInstead && (
           <p className="mt-3 rounded-clay border border-rule bg-paper-sunk p-3 text-[0.9375rem]">

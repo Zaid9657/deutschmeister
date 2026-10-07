@@ -1903,7 +1903,7 @@
    "difficulty": 2,
    "order": 197,
    "questionDe": "___ ihr auch Tee? (haben)",
-   "questionEn": "Do you all want tea too?",
+   "questionEn": "Do you all have tea too?",
    "options": null,
    "answer": "Habt",
    "accepted": ["Habt", "habt"],

@@ -5835,12 +5835,13 @@
    "answer": "zwanzig nach sechs",
    "accepted": [
     "zwanzig nach sechs",
-    "zwanzig nach 6"
+    "zwanzig nach 6",
+    "zehn vor halb sieben"
    ],
    "explanationDe": "18:20 umgangssprachlich: zwanzig nach sechs.",
    "explanationEn": "Everyday German uses the 12-hour clock and counts minutes past the hour with nach: 18:20 = **zwanzig nach sechs**.",
    "hint": null,
-   "minLektion": 2
+   "minLektion": 8
   },
   {
    "id": "ffb96fdf-5140-582a-bc5a-b3d17e131ea3",
@@ -6399,7 +6400,7 @@
    "difficulty": 2,
    "order": 197,
    "questionDe": "___ ihr auch Tee? (haben)",
-   "questionEn": "Do you all want tea too?",
+   "questionEn": "Do you all have tea too?",
    "options": null,
    "answer": "Habt",
    "accepted": [
@@ -7038,7 +7039,7 @@
    "answer": "Ja, ich komme aus Italien.",
    "accepted": [],
    "explanationDe": "Ja + die Aussage in der ich-Form: Ja, ich komme aus Italien.",
-   "explanationEn": "Say **Ja** and repeat the statement in the ich-form: **Ja, ich komme aus Italien.** \"Ja, komme.\" has no subject; \"ich kommst\" and \"du kommst\" use the wrong verb form.",
+   "explanationEn": "Say **Ja** and repeat the statement in the ich-form: **Ja, ich komme aus Italien.** \"Ja, komme.\" has no subject; \"ich kommst\" has the wrong verb ending, and \"du kommst\" answers about the other person, not about you.",
    "hint": null,
    "minLektion": 2
   },
