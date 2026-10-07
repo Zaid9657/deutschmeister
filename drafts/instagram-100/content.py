@@ -12,6 +12,13 @@ CTA = {  # link_path prefix -> (image footer, caption CTA)
   '/speaking/': ('Sprechen üben → Link in Bio', 'Sprechen üben ohne Partner'),
   '/level-test/': ('Einstufungstest → Link in Bio', 'Wo stehst du wirklich? Gratis-Einstufungstest'),
 }
+# Above the free level a grammar page's rule text is public but its exercises are locked
+# without a trial, Pro or a bought course (astro-site/src/components/ExercisePlayer.jsx,
+# decision 2026-09-03: "The rules are free. The practice is part of A2.1."), so the caption
+# promises only the rule there. FREE_LEVEL mirrors FREE_LEVEL_LABEL in src/data/marketing.js;
+# tests/social-pack.test.mjs reads that constant and fails on drift.
+FREE_LEVEL = 'a1.1'
+CTA_GRAMMAR_LOCKED = 'Die ganze Regel, kostenlos'
 SERIES = {  # series -> (accent, hashtags)
   'Satz des Tages': ('limette', '#deutschlernen #deutschgrammatik #learngerman #deutschalsfremdsprache #daf'),
   'Fehler-Check':   ('aprikose', '#deutschlernen #deutschfehler #learngerman #deutschgrammatik #daf'),
@@ -210,6 +217,8 @@ for i, p in enumerate(posts):
   p.setdefault('hashtags', SERIES[p['series']][1])
   key = next(k for k in CTA if p['link_path'].startswith(k))
   foot, cta = CTA[key]
+  if key == '/grammar/' and p['link_path'].split('/')[2] != FREE_LEVEL:
+    cta = CTA_GRAMMAR_LOCKED
   if 'footer' not in p: p['footer'] = foot
   if 'cta_ig' not in p:
     p['cta_ig'] = f'{cta}: Link in Bio.'
