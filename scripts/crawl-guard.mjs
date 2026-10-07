@@ -25,6 +25,7 @@
 // check-built-html.mjs calls; nothing here writes to disk.
 
 import { readFileSync, existsSync } from 'node:fs';
+import { readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
 export const SITE = 'https://deutsch-meister.de';
@@ -154,6 +155,160 @@ export function headSignals(html) {
   return { canonicals, robots };
 }
 
+// --- internal links (2026-10-07) ---------------------------------------------
+// The sitemap half above asks whether Google can index every URL we advertise.
+// The links half asks whether every same-site <a href> on every built page
+// reaches a page WITHOUT a hop. CLAUDE.md's trailing-slash rule ("get them
+// right or every link 301-hops") and its three-place route rule (a SPA route
+// missing from the netlify.toml allow-list "returns a hard 404 in production")
+// were pinned only for the guide registry (tests/guides.test.mjs) and the nav
+// (tests/navigation.test.mjs); a link in a grammar lesson, a comparison page,
+// the footer or a prerendered SPA page could 301 or 404 and ship green.
+// Measured on the built dist of d7a70b04 (2026-10-07): 13,612 same-site links
+// on 140 pages, 0 hops, 0 dead ends, so this is a rule at zero, not a list.
+//
+// Only real anchors count: <script> and <template> bodies are dropped before
+// matching, because inline scripts build markup in strings (Layout.astro's
+// course return bar writes '<a href="/course/' + level + '"…' on 130 pages),
+// and such a fragment is not a link a crawler or a visitor follows.
+//
+// A link is resolved the way Netlify serves it: a built file first (also
+// "/x" for a built x.html; a slashless link to a built directory is Netlify's
+// pretty-URL 301), then the first netlify.toml [[redirects]] rule that matches
+// (a 200 rewrite serves; a 301 or 302 is a hop; the 404 catch-all or no rule
+// is a dead end). Paths under /.netlify/ (functions, Netlify's own endpoints)
+// are not files in the build and are out of scope. Rules are matched leniently
+// (trailing slash optional, ":name" one segment, "*" any rest, query
+// conditions ignored), so an exotic rule can be missed. Known gap, left as is:
+// an absolute link to http:// or www.deutsch-meister.de is checked by its path
+// only, so the host hop (www -> apex, http -> https) itself is not reported.
+
+/** netlify.toml [[redirects]] rules in file order, without host-qualified ones. */
+export function redirectRules(tomlText = '') {
+  const rules = [];
+  for (const block of tomlText.split(/^\s*\[\[redirects\]\]\s*$/m).slice(1)) {
+    const body = block.split(/^\s*\[\[?[a-z]/im)[0];
+    const from = body.match(/^\s*from\s*=\s*"([^"]+)"/m)?.[1];
+    const to = body.match(/^\s*to\s*=\s*"([^"]+)"/m)?.[1] || '';
+    const status = Number(body.match(/^\s*status\s*=\s*(\d+)/m)?.[1] || 301);
+    if (from && from.startsWith('/')) rules.push({ from, to, status });
+  }
+  return rules;
+}
+
+/** Netlify redirect matching: "*" is the rest of the path, ":name" one segment, trailing slash optional. */
+export function redirectMatches(from, path) {
+  const trimmed = from.length > 1 ? from.replace(/\/$/, '') : from;
+  const body = trimmed
+    .split('*')
+    .map((s) => s.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/:[A-Za-z_]\w*/g, '[^/]+'))
+    .join('.*');
+  const splat = trimmed.endsWith('/*') ? `|^${body.slice(0, -('/.*'.length))}/?$` : '';
+  return new RegExp(`^${body}/?$${splat}`).test(path);
+}
+
+/** A page without comments and without <script>/<template> bodies: what is left is markup a browser renders as is. */
+const stripInert = (html) =>
+  stripComments(html)
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script\s*>/gi, ' ')
+    .replace(/<template\b[^>]*>[\s\S]*?<\/template\s*>/gi, ' ');
+
+/** Same-site paths of every <a href> in a page (comments, scripts and templates ignored), resolved against the page's own path. */
+export function linkPaths(html, pagePath = '/') {
+  const out = [];
+  for (const m of stripInert(html).matchAll(/<a\b[^>]*?\shref\s*=\s*("([^"]*)"|'([^']*)')/gi)) {
+    const href = (m[2] ?? m[3] ?? '').replace(/&amp;/g, '&').trim();
+    if (!href || /^(#|mailto:|tel:|javascript:|data:|sms:)/i.test(href)) continue;
+    let url;
+    try {
+      url = new URL(href, `${SITE}${pagePath}`);
+    } catch {
+      continue;
+    }
+    if (url.hostname !== 'deutsch-meister.de' && url.hostname !== 'www.deutsch-meister.de') continue;
+    let path = url.pathname;
+    try {
+      path = decodeURI(path);
+    } catch {
+      // keep the encoded form
+    }
+    out.push(path);
+  }
+  return out;
+}
+
+/**
+ * How Netlify answers a same-site path: { ok: true, via } when it serves a page
+ * without a hop, else { ok: false, why }.
+ */
+export function resolveLink(dist, rules, path) {
+  const isFile = (rel) => {
+    try {
+      return statSync(join(dist, rel)).isFile();
+    } catch {
+      return false;
+    }
+  };
+  if (path.startsWith('/.netlify/')) return { ok: true, via: 'netlify (out of scope)' };
+  if (path === '/' || path.endsWith('/')) {
+    if (isFile(join(path, 'index.html'))) return { ok: true, via: 'page' };
+  } else {
+    if (isFile(path)) return { ok: true, via: 'file' };
+    if (isFile(`${path}.html`)) return { ok: true, via: 'file (.html)' };
+    if (isFile(join(path, 'index.html'))) return { ok: false, why: `301-hops to ${path}/ (a built page needs its trailing slash)` };
+  }
+  const rule = rules.find((r) => redirectMatches(r.from, path));
+  if (!rule) return { ok: false, why: 'is served by nothing (no built page, no netlify.toml rule)' };
+  if (rule.status === 200) return { ok: true, via: `rewrite ${rule.from}` };
+  if (rule.status === 404) return { ok: false, why: `is a 404 (netlify.toml ${rule.from} -> ${rule.to})` };
+  return { ok: false, why: `${rule.status}-hops to ${rule.to} (netlify.toml ${rule.from})` };
+}
+
+/** Every HTML file under dist, as paths relative to it. */
+function htmlFiles(dist, rel = '') {
+  let entries = [];
+  try {
+    entries = readdirSync(join(dist, rel), { withFileTypes: true });
+  } catch {
+    return [];
+  }
+  return entries.flatMap((e) => {
+    const child = rel ? `${rel}/${e.name}` : e.name;
+    if (e.isDirectory()) return htmlFiles(dist, child);
+    return e.name.endsWith('.html') ? [child] : [];
+  });
+}
+
+/**
+ * Check every same-site link on every built page. Returns
+ * { fail: string[], pages, links } — one failure per distinct (target, reason),
+ * naming up to three pages that carry it.
+ */
+export function checkInternalLinks(dist, { tomlText = '' } = {}) {
+  const rules = redirectRules(tomlText);
+  const verdicts = new Map();
+  const bad = new Map();
+  let links = 0;
+  const pages = htmlFiles(dist);
+  for (const rel of pages) {
+    const pagePath = rel === 'index.html' ? '/' : `/${rel.replace(/(^|\/)index\.html$/, '$1')}`;
+    for (const path of linkPaths(readFileSync(join(dist, rel), 'utf8'), pagePath)) {
+      links += 1;
+      if (!verdicts.has(path)) verdicts.set(path, resolveLink(dist, rules, path));
+      const v = verdicts.get(path);
+      if (v.ok) continue;
+      if (!bad.has(path)) bad.set(path, { why: v.why, on: new Set() });
+      bad.get(path).on.add(pagePath);
+    }
+  }
+  const fail = [...bad.entries()].map(([path, { why, on }]) => {
+    const list = [...on];
+    const more = list.length > 3 ? ` and ${list.length - 3} more` : '';
+    return `internal link ${path} ${why}; linked from ${list.slice(0, 3).join(', ')}${more}`;
+  });
+  return { fail, pages: pages.length, links };
+}
+
 /** dist file for a same-site URL ("/a/" -> a/index.html, "/" -> index.html). */
 export function fileForUrl(dist, url) {
   const path = url.slice(SITE.length) || '/';
@@ -234,5 +389,7 @@ export function checkCrawlability(dist, { tomlText = '' } = {}) {
     }
   }
   if (urlsets.length && checked === 0) note('sitemaps', 'list no URLs');
+  // Every same-site link on every built page reaches a page without a hop (above).
+  for (const msg of checkInternalLinks(dist, { tomlText }).fail) fail.push(msg);
   return { fail, checked };
 }
