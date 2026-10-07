@@ -17,9 +17,9 @@ or reloads their page behind their back.
 
 | Finding | Status |
 |---|---|
-| F1 signup_attempts leak | Migration written: `migrations/2026-10-06-signup-attempts-no-client-read.sql`. **Not applied yet**: the owner applies it, or approves an agent applying it through the connector. |
+| F1 signup_attempts leak | Migration written: `migrations/2026-10-06-signup-attempts-no-client-read.sql`. **Not applied yet.** The owner approved it on 2026-10-07, but the Supabase connector's `apply_migration` timed out twice (60 s each, nothing applied, no query waiting on a lock). The owner pastes it into the SQL editor. |
 | F2 fake delete | Fixed: the button now opens a filled-in deletion email (`src/lib/accountDeletion.js`). |
-| F3 paywall after login | **Owner decided: land on the free course.** The guard change (`/dashboard` → `courseHomeFor()` when there is no trial or plan, `/profile` behind `ProtectedRoute`) was blocked by the agent's safety check because it loosens an access guard, so it is not in this PR and needs an explicit go. |
+| F3 paywall after login | Fixed (owner decision 2026-10-07): `/dashboard` uses `<SubscriptionGuard freeHome>`, which sends a signed-in learner without a trial or plan to `courseHomeFor()` (the free A1.1 course, or a course they bought) instead of `/subscription`. `/profile` is behind `ProtectedRoute`, so password, deletion and support are reachable without a plan. The other paid routes keep the paywall. |
 | F4 idle global sign-out | Fixed: `useSessionTimeout` and its modal removed. |
 | F5 page remounts | Fixed: `AuthContext` keeps the user object when an event carries the same person (`src/lib/authUser.js`); `SubscriptionContext` reloads the account on screen without flipping `loading`. |
 | F6 audit rows | Corrected below; no code change. |

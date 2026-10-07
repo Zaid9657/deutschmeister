@@ -311,7 +311,7 @@ function Shell() {
                     <Route
                       path="/dashboard"
                       element={
-                        <SubscriptionGuard>
+                        <SubscriptionGuard freeHome>
                           <EmailVerificationGate>
                             <OnboardingGate>
                               <DashboardPage />
@@ -323,13 +323,13 @@ function Shell() {
                     <Route
                       path="/profile"
                       element={
-                        <SubscriptionGuard>
+                        <ProtectedRoute>
                           <EmailVerificationGate>
                             <OnboardingGate>
                               <ProfilePage />
                             </OnboardingGate>
                           </EmailVerificationGate>
-                        </SubscriptionGuard>
+                        </ProtectedRoute>
                       }
                     />
 

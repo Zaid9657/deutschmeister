@@ -97,6 +97,36 @@ test('only the explicit sign-out (AuthContext) and the admin client sign out', (
   assert.deepEqual(offenders, [], `supabase.auth.signOut() defaults to scope 'global' (every device): ${offenders.join(', ')}`);
 });
 
+// ─── F3: a login without a trial lands on the free course, not the paywall ───
+// Owner decision 2026-10-07. postAuthPath() sends every login without a pending
+// checkout to /dashboard; 1,149 of 1,166 confirmed accounts had no trial left on
+// 2026-10-06, so that route's guard sent them to /subscription.
+
+const routeElement = (app, path) => {
+  const at = app.indexOf(`path="${path}"`);
+  assert.ok(at > 0, `${path} route not found in src/App.jsx`);
+  return app.slice(at, app.indexOf('/>\n', app.indexOf('element={', at)));
+};
+
+test('/dashboard sends a signed-in learner without a plan to their course home', () => {
+  const app = read('src/App.jsx');
+  assert.match(routeElement(app, '/dashboard'), /<SubscriptionGuard freeHome>/);
+  const guard = read('src/components/SubscriptionGuard.jsx');
+  assert.match(guard, /from '\.\.\/lib\/courseEntry\.js'/);
+  assert.match(guard, /if \(freeHome\) \{\s*return <Navigate to=\{courseHomeFor\(\{ level: profile\?\.current_level, hasLevelAccess \}\)\} replace \/>;/,
+    'freeHome must resolve the course the same way the bottom nav does');
+  assert.match(guard, /if \(!freeHome\) trackPaywallShown/, 'a course redirect is not a paywall view');
+  // Every other SubscriptionGuard route keeps the paywall.
+  const plain = [...app.matchAll(/<SubscriptionGuard>/g)].length;
+  assert.ok(plain >= 1, 'the paid routes (e.g. /modelltest) still use the plain guard');
+});
+
+test('/profile is open to every signed-in account', () => {
+  const profile = routeElement(read('src/App.jsx'), '/profile');
+  assert.match(profile, /<ProtectedRoute>/, 'password, deletion and support live there');
+  assert.doesNotMatch(profile, /SubscriptionGuard/);
+});
+
 // ─── F2: account deletion is a real request ──────────────────────────────────
 
 test('deletionMailto writes to the published contact point with the account address', () => {
