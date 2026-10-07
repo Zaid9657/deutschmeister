@@ -67,6 +67,16 @@ export const FAQ_CATEGORIES = [
         q: 'What is the Sentence X-Ray tool?',
         a: 'Enter a German sentence and the tool breaks it into cases, sentence roles, and parts of speech with colour-coded explanations. It helps you understand, for example, why a sentence uses “dem” instead of “den”.',
       },
+      // Podcasts (support, 2026-10-07): one of the first two in-app tickets (2026-10-04)
+      // asked for podcast transcripts, and the AI draft for it said there were no podcasts.
+      // The page exists (SEO_ROUTES '/podcasts'); every published episode's
+      // transcript_de and transcript_en is empty (measured 2026-10-07: 14 of 14). No
+      // episode count and no level range here: the "24 episodes, A1 to B2" claim against
+      // 14 published (A1.1-B1.1) is an open owner decision. tests/faq-podcasts.test.mjs.
+      {
+        q: 'Are there German podcasts, and do they have transcripts?',
+        a: 'Yes, there are podcasts: the podcasts page (deutsch-meister.de/podcasts/) has audio episodes for learners, each labelled with its CEFR level. The episodes have no transcripts at the moment, neither in German nor in English.',
+      },
       {
         q: 'How much time should I study each day?',
         a: 'A consistent 15–20 minutes can be useful: one grammar lesson, a few exercises, and a short speaking session. A little every day is usually more sustainable than one long weekly session.',
