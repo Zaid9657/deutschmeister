@@ -21,6 +21,7 @@ import { fileURLToPath } from 'node:url';
 import {
   SITE, parseRobots, isDisallowed, noindexHeaderRules, headerPathMatches, headSignals, checkCrawlability,
 } from '../scripts/crawl-guard.mjs';
+import { redirectRules, redirectMatches, linkPaths, resolveLink, checkInternalLinks } from '../scripts/crawl-guard.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -211,4 +212,165 @@ test('check-built-html runs the guard in full mode', () => {
   assert.match(src, /import \{ checkCrawlability \} from '\.\/crawl-guard\.mjs';/);
   assert.match(src, /if \(!SPA_ONLY\) \{\s*\n[^]*?checkCrawlability\(DIST/);
   assert.match(src, /for \(const msg of crawl\.fail\) fail\.push\(msg\);/);
+});
+
+// --- internal links (2026-10-07) ---------------------------------------------------------------
+// Every same-site <a href> on every built page must reach a page without a hop: CLAUDE.md's
+// trailing-slash cases (a slashless link to a built page 301-hops) and the three-place route rule
+// (a SPA route missing from netlify.toml is a hard 404). Measured on the built dist of 772a91d3:
+// 13,872 same-site links on 140 pages, 0 failures, so the class is at zero and each case below is
+// a rule, not a list of known links.
+
+const LINK_TOML = `[[redirects]]
+  from = "https://www.deutsch-meister.de/*"
+  to = "https://deutsch-meister.de/:splat"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/grammar/A1.1"
+  to = "/grammar/a1.1/"
+  status = 301
+[[redirects]]
+  from = "/signup"
+  to = "/app.html"
+  status = 200
+[[redirects]]
+  from = "/course/*"
+  to = "/app.html"
+  status = 200
+[[redirects]]
+  from = "/vocabulary/:level"
+  to = "/app.html"
+  status = 200
+[[redirects]]
+  from = "/podcast-feed.xml"
+  to = "/.netlify/functions/podcast-feed"
+  status = 200
+[[headers]]
+  for = "/app.html"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
+`;
+
+/** Write a tiny built site; `files` maps dist paths to HTML. Returns checkInternalLinks' result. */
+function linkSite(files, tomlText = LINK_TOML) {
+  const dir = mkdtempSync(join(tmpdir(), 'link-guard-'));
+  try {
+    for (const [rel, body] of Object.entries(files)) {
+      mkdirSync(dirname(join(dir, rel)), { recursive: true });
+      writeFileSync(join(dir, rel), body);
+    }
+    return checkInternalLinks(dir, { tomlText });
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+/** A built site whose home page carries `links`, beside a few real pages. */
+const linkFixture = (links, tomlText) =>
+  linkSite(
+    {
+      'index.html': `<!doctype html><html><head><title>home</title></head><body>${links}</body></html>`,
+      'grammar/a1.1/index.html': '<!doctype html><title>grammar</title><a href="articles/">relative</a>',
+      'grammar/a1.1/articles/index.html': '<!doctype html><title>articles</title><a href="../">up</a>',
+      'analyze/index.html': '<!doctype html><title>analyze</title>',
+      'robots.txt': 'User-agent: *\nAllow: /\n',
+      '404.html': '<!doctype html><title>404</title><a href="/">home</a>',
+    },
+    tomlText,
+  );
+
+test('links that Netlify serves without a hop pass: built pages, files, rewrites, splats, placeholders, off-site, relative', () => {
+  const r = linkFixture([
+    '<a href="/">home</a>',
+    '<a href="/grammar/a1.1/">page</a>',
+    '<a href="https://deutsch-meister.de/grammar/a1.1/articles/#top">absolute</a>',
+    '<a href="/analyze/?s=Ich%20bin">query</a>',
+    '<a href="/robots.txt">file</a>',
+    '<a href="/signup?ref=grammar&amp;utm_medium=onsite">rewrite</a>',
+    '<a href="/course/a1.1">splat</a>',
+    '<a href="/course/a1.1/l/1">deep splat</a>',
+    '<a href="/vocabulary/b1">placeholder</a>',
+    '<a href="/podcast-feed.xml">feed</a>',
+    '<a href="https://www.youtube.com/@deutschmeister_de">off-site</a>',
+    '<a href="mailto:kontakt@deutsch-meister.de">mail</a><a href="#main">anchor</a><a href="tel:+49">tel</a>',
+  ].join(''));
+  assert.deepEqual(r.fail, []);
+  assert.equal(r.pages, 5);
+  assert.equal(r.links, 13, 'ten same-site links on the home page, plus relative, up and the 404 page home link');
+});
+
+test('a slashless link to a built page fails: it 301-hops (CLAUDE.md trailing-slash cases 1 and 2)', () => {
+  const r = linkFixture('<a href="/grammar/a1.1">astro</a><a href="https://deutsch-meister.de/analyze">prerendered</a>');
+  assert.equal(r.fail.length, 2);
+  assert.match(r.fail[0], /^internal link \/grammar\/a1\.1 301-hops to \/grammar\/a1\.1\/ .*linked from \/$/);
+  assert.match(r.fail[1], /^internal link \/analyze 301-hops to \/analyze\//);
+});
+
+test('a link that only a 301 rule serves fails, and names the rule', () => {
+  const r = linkFixture('<a href="/grammar/A1.1">old case</a>');
+  assert.deepEqual(r.fail, ['internal link /grammar/A1.1 301-hops to /grammar/a1.1/ (netlify.toml /grammar/A1.1); linked from /']);
+});
+
+test('a link to a route nothing serves fails: the 404 catch-all, or no rule at all (three-place route rule)', () => {
+  const r = linkFixture('<a href="/dashboard">SPA route missing from netlify.toml</a><a href="/leitfaden/none/">gone</a>');
+  assert.equal(r.fail.length, 2);
+  assert.match(r.fail[0], /^internal link \/dashboard is a 404 \(netlify\.toml \/\* -> \/404\.html\)/);
+  assert.match(r.fail[1], /^internal link \/leitfaden\/none\/ is a 404/);
+  const withoutCatchAll = LINK_TOML.split('[[redirects]]\n  from = "/*"')[0];
+  const bare = linkFixture('<a href="/dashboard">x</a>', withoutCatchAll);
+  assert.deepEqual(bare.fail, ['internal link /dashboard is served by nothing (no built page, no netlify.toml rule); linked from /']);
+});
+
+test('relative links resolve against the page that carries them; commented-out links do not count', () => {
+  const ok = linkFixture('<!-- <a href="/nowhere">old</a> -->');
+  assert.deepEqual(ok.fail, [], 'grammar/a1.1 links articles/ and articles links ../, both built');
+  const r = linkFixture('<a href="grammar/a1.1/missing/">relative from /</a>');
+  assert.deepEqual(r.fail, ['internal link /grammar/a1.1/missing/ is a 404 (netlify.toml /* -> /404.html); linked from /']);
+});
+
+test('one failure per broken target, naming at most three of the pages that carry it', () => {
+  const files = {};
+  for (const p of ['a', 'b', 'c', 'd', 'e']) files[`${p}/index.html`] = '<a href="/gone/">x</a><a href="/gone/">again</a>';
+  const r = linkSite(files);
+  assert.equal(r.fail.length, 1);
+  assert.match(r.fail[0], /^internal link \/gone\/ is a 404 .*linked from \/a\/, \/b\/, \/c\/ and 2 more$/);
+  assert.equal(r.links, 10);
+});
+
+test('redirect matching follows Netlify: trailing slash optional, * the rest, :name one segment', () => {
+  assert.equal(redirectMatches('/signup', '/signup'), true);
+  assert.equal(redirectMatches('/signup', '/signup/'), true);
+  assert.equal(redirectMatches('/signup', '/signup/x'), false);
+  assert.equal(redirectMatches('/course/*', '/course/a1.1/l/1'), true);
+  assert.equal(redirectMatches('/course/*', '/course'), true);
+  assert.equal(redirectMatches('/course/*', '/courses/a1-1/'), false);
+  assert.equal(redirectMatches('/vocabulary/:level', '/vocabulary/b1'), true);
+  assert.equal(redirectMatches('/vocabulary/:level', '/vocabulary/b1/words'), false);
+  assert.equal(redirectMatches('/podcast-feed.xml', '/podcast-feedxxml'), false, 'the dot is literal');
+  const rules = redirectRules(LINK_TOML);
+  assert.equal(rules.length, 6, 'the host-qualified www rule is not a path rule');
+  assert.deepEqual(rules[0], { from: '/grammar/A1.1', to: '/grammar/a1.1/', status: 301 });
+  assert.deepEqual(rules.at(-1), { from: '/*', to: '/404.html', status: 404 });
+});
+
+test('link extraction reads both quote styles, decodes &amp;, keeps the www host and drops other hosts', () => {
+  assert.deepEqual(
+    linkPaths(`<a class="x" href='/pricing/'>p</a><A HREF="/signup?a=1&amp;b=2">s</A><a href="//example.com/x">o</a><a href="http://www.deutsch-meister.de/faq/">w</a>`, '/grammar/'),
+    ['/pricing/', '/signup', '/faq/'],
+  );
+  assert.deepEqual(resolveLink('/nonexistent-dist', redirectRules(LINK_TOML), '/course/a1.1'), { ok: true, via: 'rewrite /course/*' });
+});
+
+test('the crawl guard runs the link check, so check-built-html fails a release on a hopping link', () => {
+  const r = fixture(({ write }) => {
+    write('index.html', page(`${SITE}/`).replace('</body>', '<a href="/grammar/a1.1/articles">no slash</a></body>'));
+    return TOML_OK;
+  });
+  assert.equal(r.checked, 3);
+  assert.deepEqual(r.fail, ['internal link /grammar/a1.1/articles 301-hops to /grammar/a1.1/articles/ (a built page needs its trailing slash); linked from /']);
 });
