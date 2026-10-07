@@ -191,7 +191,7 @@ test('mid-Lektion, the run crosses into the tab the confirmation e-mail opens, o
   const run = packRun({ stageKey: 'practice', stageIndex: 5, itemIndex: 1, attempts: [{ itemId: 'p1', stage: 'practice', correct: true }] }, NOW);
   inWindow(tabA, () => {
     saveRun('a1.1', 'a1.1-l01', run);
-    ask.rememberPlace({ level: 'a1.1', lektionId: 'a1.1-l01', lektionNr: 1 });
+    ask.rememberPlace({ level: 'a1.1', lektionId: 'a1.1-l01', lektionNr: 1 }, NOW);
   });
   assert.ok(b.localStorage.map.has(HANDOFF_KEY), 'the click hands the run off');
 
@@ -211,7 +211,7 @@ test('mid-Lektion, the run crosses into the tab the confirmation e-mail opens, o
   // The original tab keeps its own run (it may have moved on since).
   inWindow(tabA, () => assert.equal(readRun('a1.1', 'a1.1-l01', NOW + 1000).itemIndex, 1));
   // A hand-off older than a sitting starts fresh, like any run.
-  inWindow(tabA, () => ask.rememberPlace({ level: 'a1.1', lektionId: 'a1.1-l01', lektionNr: 1 }));
+  inWindow(tabA, () => ask.rememberPlace({ level: 'a1.1', lektionId: 'a1.1-l01', lektionNr: 1 }, NOW));
   inWindow(b.tab(), () => assert.equal(readRun('a1.1', 'a1.1-l01', NOW + 13 * 3600_000), null));
 });
 
@@ -222,7 +222,7 @@ test('a run finished in the saving tab takes its hand-off with it: a later tab c
   const run = packRun({ stageKey: 'practice', stageIndex: 5, itemIndex: 1, attempts: [{ itemId: 'p1', stage: 'practice', correct: true }] }, NOW);
   inWindow(tabA, () => {
     saveRun('a1.1', 'a1.1-l01', run);
-    ask.rememberPlace({ level: 'a1.1', lektionId: 'a1.1-l01', lektionNr: 1 });
+    ask.rememberPlace({ level: 'a1.1', lektionId: 'a1.1-l01', lektionNr: 1 }, NOW);
     clearRun('a1.1', 'a1.1-l02');
   });
   assert.ok(b.localStorage.map.has(HANDOFF_KEY), 'ending ANOTHER Lektion leaves this hand-off alone');
