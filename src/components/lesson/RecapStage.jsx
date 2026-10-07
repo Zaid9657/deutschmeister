@@ -180,7 +180,7 @@ export default function RecapStage({ stage, accuracy, status, skills = [], sync 
         {/* Where this run is saved (syncOutbox.js) — said in words, and never a reason to stop: Continue works either way. */}
         <p role="status" className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.8125rem] leading-snug text-graphite">
           {sync && <span>{t(`sync.${sync}`, lang)}</span>}
-          {sync === 'failed' && onRetrySync && (
+          {(sync === 'failed' || sync === 'failedTemp') && onRetrySync && (
             <button type="button" onClick={onRetrySync} className="min-h-11 font-bold text-siegel-deep underline underline-offset-2 hover:text-ink">
               {t('sync.retry', lang)}
             </button>

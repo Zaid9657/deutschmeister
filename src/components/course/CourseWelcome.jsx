@@ -67,29 +67,21 @@ export default function CourseWelcome({ curriculum, meta, startHref, placementHr
           <h2 id="dm-how-it-works" className="font-display text-xl font-semibold leading-tight text-ink">How a Lektion works</h2>
           <p className="font-data text-[0.75rem] text-graphite">about {how.minutesEstimate.lo}–{how.minutesEstimate.hi} min each (estimate)</p>
         </div>
-        {/* A scrolling strip a keyboard can reach: focusable, named, and Arrow keys scroll it. */}
-        {/* The region is the scroller; the <ol> inside keeps its list role (a role on the <ol> itself
-            orphaned every <li> — Lighthouse `listitem`). */}
-        <div
-          tabIndex={0}
-          role="region"
-          aria-label="How a Lektion works — the steps, scrollable"
-          className="mt-4 snap-x overflow-x-auto pb-2 [scrollbar-width:thin] [overscroll-behavior-x:contain] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-siegel"
-        >
-        <ol className="flex gap-3">
+        {/* A wrapping grid, not a sideways strip: the ten steps are an ordinary list, and at 320 px a
+            horizontal scroller inside a vertical page failed reflow (WCAG 1.4.10; Codex review). */}
+        <ol className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
           {how.steps.map((step, i) => (
-            <li key={step.key} className="flex w-36 shrink-0 snap-start flex-col rounded-clay border border-rule bg-white p-3">
+            <li key={step.key} className="flex min-w-0 flex-col rounded-clay border border-rule bg-white p-3">
               <span className="font-data text-[0.625rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">
                 {String(i + 1).padStart(2, '0')}
               </span>
-              <span className="mt-1 font-bold text-ink">{step.label}</span>
+              <span className="mt-1 font-bold text-ink [overflow-wrap:anywhere]">{step.label}</span>
               <span className="mt-1 text-[0.8125rem] leading-snug text-graphite">{step.descriptionEn}</span>
             </li>
           ))}
         </ol>
-        </div>
         <p className="mt-2 font-data text-[0.6875rem] text-graphite">
-          Swipe or scroll for the rest (Tab to the list, then the arrow keys). The warm-up appears once you have review cards due.
+          The warm-up appears once you have review cards due.
         </p>
       </Reveal>
 

@@ -11,7 +11,7 @@ import { countCompletedRuns, fetchWordsByIds, getLessonProgress, startLesson } f
 import { courseHome } from '../../lib/courseFlow.js';
 import { hasLocalProgress, localRunCount, mergeLocalProgress, recordLocalLesson } from '../../lib/course/localProgress.js';
 import { buildCardIndex, fetchDueCards } from '../../services/reviewService.js';
-import { enqueueRun, flushOutbox } from '../../lib/course/syncOutbox.js';
+import { enqueueRun, flushOutbox, outboxIsDurable, pendingRuns } from '../../lib/course/syncOutbox.js';
 import { clearRun, packRun, readRun, resumeStageIndex, saveRun } from '../../lib/lesson/runState.js';
 import LessonProgressBar from '../../components/lesson/LessonProgressBar.jsx';
 import ComboChip, { nextCombo } from '../../components/lesson/ComboChip.jsx';
@@ -73,7 +73,9 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   const { user } = useAuth();
   const [lang] = useLessonLang();
   // The run this tab was in the middle of, if any (read once, on mount).
-  const [resumed] = useState(() => (preview ? null : readRun(curriculum.level, lektion.id)));
+  // The route waits for auth (LevelSubscriptionGuard), so `user` is settled here: the snapshot read is the owner's own.
+  const owner = user ? user.id : null;
+  const [resumed] = useState(() => (preview ? null : readRun(curriculum.level, lektion.id, Date.now(), owner)));
   // The DRAW attempt, derived from how often this learner has already finished
   // this Lektion — never a constant. It was `useState(1)` with no setter, which
   // meant the repeat that the standard makes the remediation path handed back
@@ -266,7 +268,7 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
     const heading = root.querySelector('h1, h2');
     if (!heading) return;
     if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');
-    heading.focus({ preventScroll: true });
+    heading.focus(); // scrolls it into view: after a long item the next one starts on screen
   }, [stageIndex, itemIndex, introDone]);
 
   const goStage = useCallback((next) => {
@@ -299,11 +301,11 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   // second time (one attempt batch is one finished run, lessonService.js).
   useEffect(() => {
     if (preview || !introDone || !stage) return;
-    if (saved || stage.kind === 'recap') { clearRun(curriculum.level, lektion.id); return; }
+    if (saved || stage.kind === 'recap') { clearRun(curriculum.level, lektion.id, owner); return; }
     saveRun(curriculum.level, lektion.id, packRun({
       runId, stageKey: stage.key, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards: dueCards || [], skills,
-    }));
-  }, [preview, introDone, saved, stage, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, curriculum.level, lektion.id, runId]);
+    }), owner);
+  }, [preview, introDone, saved, stage, stageIndex, itemIndex, attempt, attempts, misses, requeued, combo, dueCards, skills, curriculum.level, lektion.id, runId, owner]);
 
   // Where learners stop: each stage once per run (a resumed run re-reports the stage it reopens on).
   const viewedStages = useRef(new Set());
@@ -317,11 +319,16 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   // goes to localStorage instead of Supabase — never nowhere. Signed in, the run
   // goes into the sync outbox FIRST and is then flushed (syncOutbox.js), so a
   // failed or interrupted write is kept, retried, and said out loud on the recap.
+  // "Saved to your account" only once THIS run has left the outbox — never on another run's success.
+  // A queue that storage refused lives in memory: then the learner is told to keep the page open,
+  // not that the lesson is kept on this device (Codex review, 2026-10-07).
+  const runEntryKey = useRef(null);
   const flush = useCallback(() => {
     if (!user) return;
     setSync('syncing');
     flushOutbox(user.id).then((r) => {
-      setSync(r.state === 'failed' ? 'failed' : 'synced');
+      const pending = pendingRuns(user.id).some((e) => e.key === runEntryKey.current);
+      setSync(pending ? (outboxIsDurable() ? 'failed' : 'failedTemp') : 'synced');
       if (r.state === 'failed') for (const step of r.failed[0].steps) trackLessonSyncFailed(curriculum.level, lektion.id, step);
     });
   }, [user, curriculum.level, lektion.id]);
@@ -335,13 +342,14 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
       setSync('local');
       return;
     }
-    enqueueRun({ userId: user.id, level: curriculum.level, lektionId: lektion.id, createdAt: new Date().toISOString(), attempts, accuracy, status });
+    const entry = enqueueRun({ userId: user.id, level: curriculum.level, lektionId: lektion.id, createdAt: new Date().toISOString(), attempts, accuracy, status });
+    runEntryKey.current = entry ? entry.key : null;
     flush();
   }, [preview, saved, stage, user, curriculum.level, lektion, attempts, accuracy, status, runId, flush]);
 
   // Back online after a failed save: send it again without asking.
   useEffect(() => {
-    if (sync !== 'failed' || typeof window === 'undefined') return undefined;
+    if ((sync !== 'failed' && sync !== 'failedTemp') || typeof window === 'undefined') return undefined;
     window.addEventListener('online', flush);
     return () => window.removeEventListener('online', flush);
   }, [sync, flush]);
@@ -484,9 +492,8 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
           <Link
             to={courseHome(curriculum.level)}
             className="inline-flex items-center gap-1 text-sm font-bold text-siegel hover:text-siegel-deep"
-            aria-label={t('player.backToCourse', lang)}
           >
-            <ArrowLeft className="h-4 w-4" /> {curriculum.code}
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" /> <span className="sr-only">{t('player.backToCourse', lang)}: </span>{curriculum.code}
           </Link>
           <LessonProgressBar
             step={step}

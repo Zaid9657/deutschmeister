@@ -81,6 +81,7 @@ export const STRINGS = {
     'sync.syncing': 'Saving to your account …',
     'sync.synced': 'Saved to your account.',
     'sync.failed': 'Not saved to your account yet — your lesson is kept on this device and will be sent again.',
+    'sync.failedTemp': 'Not saved to your account yet, and this browser cannot store it — keep this page open while we try again.',
     'sync.retry': 'Try again now',
     'audio.synthetic': 'Computer voice',
 
@@ -130,7 +131,7 @@ export const STRINGS = {
     'wortfeld.en': 'EN',
     'wortfeld.showAllEnglish': 'Show all English',
     'wortfeld.hideAllEnglish': 'Hide all English',
-    'wortfeld.flipHint': '{word}, English shown',
+    'wortfeld.flipHint': '{word}: {en}',
     'wortfeld.audioBadge.computer': 'Audio: computer voice',
     'wortfeld.audioBadge.recordings': 'Audio: recordings',
     'wortfeld.audioBadge.mixed': 'Audio: mixed',
@@ -422,6 +423,7 @@ export const STRINGS = {
     'sync.syncing': 'Wird in Ihrem Konto gespeichert …',
     'sync.synced': 'In Ihrem Konto gespeichert.',
     'sync.failed': 'Noch nicht in Ihrem Konto gespeichert — die Lektion bleibt auf diesem Gerät und wird erneut gesendet.',
+    'sync.failedTemp': 'Noch nicht in Ihrem Konto gespeichert, und dieser Browser kann die Lektion nicht speichern. Lassen Sie die Seite offen, wir versuchen es weiter.',
     'sync.retry': 'Jetzt erneut versuchen',
     'audio.synthetic': 'Computerstimme',
 
@@ -471,7 +473,7 @@ export const STRINGS = {
     'wortfeld.en': 'EN',
     'wortfeld.showAllEnglish': 'Alle Übersetzungen zeigen',
     'wortfeld.hideAllEnglish': 'Alle Übersetzungen verbergen',
-    'wortfeld.flipHint': '{word}, Übersetzung angezeigt',
+    'wortfeld.flipHint': '{word}: {en}',
     'wortfeld.audioBadge.computer': 'Audio: Computerstimme',
     'wortfeld.audioBadge.recordings': 'Audio: Aufnahmen',
     'wortfeld.audioBadge.mixed': 'Audio: gemischt',

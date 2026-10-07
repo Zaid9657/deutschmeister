@@ -79,7 +79,7 @@ function WordCard({ w, lang, flipped, onToggle, line }) {
         type="button"
         onClick={onToggle}
         aria-pressed={flipped}
-        aria-label={flipped ? t('wortfeld.flipHint', lang, { word: spoken }) : spoken}
+        aria-label={flipped ? t('wortfeld.flipHint', lang, { word: spoken, en: english }) : spoken}
         className="flex min-h-11 w-full flex-1 flex-col items-center gap-2 rounded-clay outline-none focus-visible:ring-2 focus-visible:ring-siegel"
       >
         <span
@@ -173,8 +173,11 @@ export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
   const from = groups.slice(0, group).reduce((n, g) => n + g.length, 0) + 1;
 
   // A new group is a new screen: the learner hears where they are.
+  // Paging (forward OR back to group one) moves focus to the group heading; the first render does not.
+  const paged = useRef(false);
+  const goGroup = (n) => { paged.current = true; setGroup(n); };
   useEffect(() => {
-    if (group > 0 && headingRef.current) headingRef.current.focus({ preventScroll: false });
+    if (paged.current && headingRef.current) headingRef.current.focus({ preventScroll: false });
   }, [group]);
 
   const toggle = (i) =>
@@ -206,9 +209,9 @@ export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
       eyebrow={t('stage.wortfeld.eyebrow', lang)}
       title={t('stage.wortfeld.title', lang, { n: words.length })}
       lead={t('stage.wortfeld.lead', lang)}
-      onBack={group > 0 ? () => setGroup(group - 1) : onBack}
+      onBack={group > 0 ? () => goGroup(group - 1) : onBack}
       primaryLabel={last ? t('action.next', lang) : t('wortfeld.nextGroup', lang)}
-      onPrimary={last ? onDone : () => setGroup(group + 1)}
+      onPrimary={last ? onDone : () => goGroup(group + 1)}
     >
       {id && group === 0 && (
         <SituationScene lektionId={id} className="mb-4 h-32 w-full rounded-clay border border-rule object-cover sm:h-40" />

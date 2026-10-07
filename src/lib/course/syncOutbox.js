@@ -65,6 +65,9 @@ export function enqueueRun({ userId, level, lektionId, createdAt, attempts = [],
   return entry;
 }
 
+/** False while the queue lives only in memory (storage refused it): a reload would lose it. */
+export const outboxIsDurable = () => memory === null;
+
 /** Runs this account still has to write. */
 export const pendingRuns = (userId) => readAll().filter((e) => e.userId === userId);
 

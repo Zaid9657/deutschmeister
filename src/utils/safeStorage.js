@@ -23,9 +23,13 @@ export function safeGet(key, { session = false } = {}) {
   }
 }
 
+// No storage object at all (the getter itself threw) is a FAILED write, not a successful no-op:
+// callers that keep data only here (the lesson outbox) must know it was not kept (Codex review).
 export function safeSet(key, value, { session = false } = {}) {
   try {
-    pick(session ? 'session' : 'local')?.setItem(key, value);
+    const store = pick(session ? 'session' : 'local');
+    if (!store) return false;
+    store.setItem(key, value);
     return true;
   } catch {
     return false;
@@ -34,7 +38,9 @@ export function safeSet(key, value, { session = false } = {}) {
 
 export function safeRemove(key, { session = false } = {}) {
   try {
-    pick(session ? 'session' : 'local')?.removeItem(key);
+    const store = pick(session ? 'session' : 'local');
+    if (!store) return false;
+    store.removeItem(key);
     return true;
   } catch {
     return false;

@@ -228,6 +228,39 @@ each fix has a regression test that fails on the old code (verified by running i
 | 7:45 / 8:15 reject „fünfzehn vor/nach" | **not adopted** | „Viertel vor/nach" is the standard form the Lektion teaches; „fünfzehn vor acht" is not idiomatic everyday German |
 | L10 writing task `register: 'informell'` while the model text uses Sie | **real, left open — owner/DaF decision** | `tests/writing-course.test.mjs` encodes "a Kollegin on first-name terms → informell" while the curriculum comment says "die Kollegin wird gesiezt", and the grader marks greeting and sign-off against this field. Either the model switches to du (needs a du imperative L10 does not teach) or the register becomes formal (the grader then expects „Sehr geehrte … / Mit freundlichen Grüßen"). Not changed here. |
 
+## 8c. Second Codex review, all aspects (2026-10-07)
+
+Four Codex jobs through the official plugin: `/codex:review` and `/codex:adversarial-review` of the whole
+branch (learner and buyer side), and two read-only tasks — the assessments (checkpoints, final test,
+writing grader, read-aloud, certificate) and accessibility / mobile / test quality. Each finding was
+checked against the code; "verified" below means re-read or reproduced here, not only by Codex.
+
+**Defects in this chat's own work — fixed, each with a test that fails on the previous code**
+
+| Finding | Fix |
+|---|---|
+| `safeSet` reported success when the storage object could not even be opened, so the outbox believed a run was stored that was not (high) | `safeSet`/`safeRemove` return false without storage — the shared root cause, not a caller patch |
+| The 7-day run snapshot was shared by every account on a browser: learner B resumed — and submitted — learner A's answers (both reviews) | snapshots are keyed by user id; a guest's run can still be continued after signing in, never another account's |
+| The unstamped insert fallback gave a run a second identity; a retry after reload wrote it again (two runs) (both reviews) | fallback removed: a refused or failed stamped insert is a visible, retried failure with the same stamp |
+| A pass on the final test whose completion write failed left the certificate locked with no retry | the course home completes the final-test step from a saved passing attempt when it is the only open step |
+| The recap could say "Saved to your account" from another run's success, and promised "kept on this device" while the run lived only in memory | success only when THIS run left the outbox; memory-only says "keep this page open" |
+| Accessibility: mobile feedback sheet taller than the screen; flipped word card named without its English; typed answer field not tied to its question; focused heading left off-screen; Back to the first word group lost focus; header back link label-in-name; eyebrow 4.2:1 on wash grounds; the "How a Lektion works" steps scrolled sideways at 320 px | each fixed (scrolling sheet, `{word}: {en}` name, `aria-describedby`, focus with scroll, focus on every group change, visible text in the name, `siegel-deep`, wrapping grid) |
+
+**Assessment problems that predate this chat — verified, NOT fixed here (the next work)**
+
+| Severity | Finding | Verified how |
+|---|---|---|
+| BLOCKER | A final-test attempt resumed after the listening section loses the listening answer keys (registered only while that section is on screen), so listening drops out of the denominator and a reading-only score can pass | code read: `ModelltestRun.jsx` `listeningKeysRef` + `mergeListeningResult` returns the objective score when `listening.max` is 0 |
+| BLOCKER | Self-confirming a read-aloud line after a measured mic attempt overwrites the result with "no mic", and Sprechen is scored only when every item has a mic result — a failed speaking section disappears from the checkpoint score | code read: `ReadAloudLine.jsx` `selfConfirm` → `{ pct: null, usedMic: false }`; `buildCheckpoint.js` `scored = inSection.every(itemIsScored …)` |
+| MAJOR | Reading items are always two „richtig" and two „falsch": answering „Richtig" everywhere scores 50 % and clears the 40 % section floor | code read: `shuffle([true, true, false, false])` |
+| MAJOR | Checkpoint dictation rejects „Chakiri" for the spelled line „C-H-A-K-I-R-I." (the full stop defeats spelling detection) and „042 3381" for a spoken phone number | reproduced with `checkAnswer` |
+| MAJOR | (Codex, not yet re-verified here) the Schreiben section can pass on two sentence-building drills with a 0 % writing task; checkpoints reuse the Lektion's writing task after its model text was shown; retakes only reshuffle the revealed items; the writing rubric weights task fulfilment at 25 %; the final test uses untaught words (Aufzug, Treppe, gefährlich, anlassen); its instructions switch to du; word-order variants („Zusammen tanzen wir.") are rejected in two checkpoint items | see the Codex output in this branch's history |
+
+What this means: the lesson engine is now honest about what it measured, but the checkpoints and the
+final test are not yet dependable evidence of competence. The certificate already disclaims any
+Goethe/telc result; it should not be promoted as proof of A1.1 until the two BLOCKERs and the reading
+floor are fixed.
+
 ## 9. External blockers (owner actions)
 
 1. **Audio:** run `docs/owner-prompts.md` → "Run the A1.1 course audio" (needs the Azure key/region and the

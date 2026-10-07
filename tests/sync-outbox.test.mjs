@@ -275,3 +275,64 @@ test('listening credit needs sound that played; a passing attempt of another exa
   assert.match(result, /const attemptIsThisTest = !!resolved && !!attempt && attempt\.exam_key === resolved\.key;/);
   assert.match(result, /if \(!attemptIsThisTest\) return;\s*const curriculum = curriculumForTestSlug\(examSlug\);/);
 });
+
+// ── Second Codex review (2026-10-07): code review + adversarial review, reproduced before the fix ──
+
+test('storage that cannot even be opened is a failed write — the run stays in memory and is still sent', async () => {
+  const { safeSet } = await import('../src/utils/safeStorage.js');
+  const { outboxIsDurable } = await import('../src/lib/course/syncOutbox.js');
+  reset();
+  const realWindow = globalThis.window;
+  globalThis.window = Object.defineProperty({}, 'localStorage', { get() { throw new Error('SecurityError'); } });
+  try {
+    assert.equal(safeSet('k', 'v'), false, 'no storage object is not a successful no-op');
+    enqueueRun(run({ lektionId: 'a1.1-l05', createdAt: new Date().toISOString() }));
+    assert.equal(outboxIsDurable(), false, 'the recap must not promise "kept on this device"');
+    assert.equal(pendingRuns('u1').length, 1);
+    const { deps, calls } = writers();
+    assert.equal((await flushOutbox('u1', deps)).state, 'synced');
+    assert.deepEqual(calls, { attempts: 1, progress: 1, cards: 1 });
+  } finally {
+    globalThis.window = realWindow;
+  }
+});
+
+test('a stamped insert that failed before committing is retried with the SAME stamp — one run, never two', async () => {
+  const db = fakeSupabase();
+  const realFrom = db.from.bind(db);
+  let failNext = true;
+  db.from = (t) => {
+    const q = realFrom(t);
+    const insert = q.insert;
+    q.insert = async (batch) => (failNext ? ((failNext = false), { error: { message: 'network down before commit' } }) : insert(batch));
+    return q;
+  };
+  const opts = { level: 'a1.1', lektionId: 'a1.1-l04', createdAt: STAMP };
+  const batch = [{ itemId: 'p1', stage: 'practice', correct: true }];
+  assert.equal(await logAttempts('u1', opts, batch, db), false, 'a failure is reported, not papered over with a server timestamp');
+  assert.equal(db.rows.length, 0, 'no unstamped batch');
+  assert.equal(await logAttempts('u1', opts, batch, db), true, 'the outbox retry lands');
+  assert.equal(await logAttempts('u1', opts, batch, db), true, 'and a replay after reload is a no-op');
+  assert.equal(await countCompletedRuns('u1', { level: 'a1.1', lektionId: 'a1.1-l04' }, db), 1);
+});
+
+test('a pass whose completion write failed is completed from the saved attempt when the final test is the only open step', async () => {
+  const { onlyFinalTestOpen, reconcileLevelTest } = await import('../src/lib/course/levelTestReconcile.js');
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  const { curriculumPath, levelTestNodeId } = await import('../src/data/curricula/index.js');
+  const path = curriculumPath(CURRICULUM_A11);
+  const allButTest = new Set(path.filter((n) => n.kind !== 'leveltest').map((n) => n.id));
+  assert.equal(onlyFinalTestOpen(path, allButTest, CURRICULUM_A11), true);
+  assert.equal(onlyFinalTestOpen(path, new Set([...allButTest].slice(1)), CURRICULUM_A11), false, 'not while other steps are open');
+  const completed = [];
+  const deps = (attempts) => ({
+    resolveModelltest: () => ({ key: 'abschlusstest_a1_1', mock: { passPercent: 60 } }),
+    listAttempts: async () => attempts,
+    verdictFor: (pct, pass) => (pct >= pass ? 'knapp' : 'nicht-bereit'),
+    completeLevelTest: async (_u, level, node) => { completed.push([level, node]); return true; },
+  });
+  assert.equal(await reconcileLevelTest('u1', CURRICULUM_A11, deps([{ status: 'completed', score: 40, max_score: 100 }])), false, 'a fail completes nothing');
+  assert.equal(await reconcileLevelTest('u1', CURRICULUM_A11, deps([{ status: 'started', score: 90, max_score: 100 }])), false, 'an unfinished attempt completes nothing');
+  assert.equal(await reconcileLevelTest('u1', CURRICULUM_A11, deps([{ status: 'completed', score: 70, max_score: 100 }])), true);
+  assert.deepEqual(completed, [['a1.1', levelTestNodeId(CURRICULUM_A11)]]);
+});

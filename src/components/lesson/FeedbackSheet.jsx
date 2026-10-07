@@ -90,8 +90,8 @@ export default function FeedbackSheet({ result, expected, hint, explanation, oth
         <div
           className={
             // bottom: above the cookie banner while it is open (public/consent.js sets --dm-consent-h).
-            `fixed inset-x-0 bottom-[var(--dm-consent-h,0px)] z-40 animate-feedback-sheet motion-reduce:animate-none border-t p-4 ` +
-            `pb-[calc(1rem+env(safe-area-inset-bottom))] sm:static sm:z-auto sm:mt-4 sm:rounded-clay sm:border ` +
+            `fixed inset-x-0 bottom-[var(--dm-consent-h,0px)] z-40 max-h-[calc(100dvh-var(--dm-consent-h,0px)-0.5rem)] overflow-y-auto animate-feedback-sheet motion-reduce:animate-none border-t p-4 ` +
+            `pb-[calc(1rem+env(safe-area-inset-bottom))] sm:static sm:z-auto sm:mt-4 sm:max-h-none sm:overflow-visible sm:rounded-clay sm:border ` +
             `${tone.className}`
           }
         >

@@ -742,3 +742,20 @@ test('a revealed item never extends the combo: requeue is excluded from the comb
   const nextCombo = new Function('combo', 'correct', 'return correct ? combo + 1 : 0;');
   assert.equal(nextCombo(3, false), 0, 'a reveal reports correct:false, which nextCombo hard-resets to zero');
 });
+
+test('second Codex review, accessibility: names match what is shown, focus lands on screen, nothing scrolls sideways', () => {
+  const sheet = read('src/components/lesson/FeedbackSheet.jsx');
+  assert.match(sheet, /max-h-\[calc\(100dvh-var\(--dm-consent-h,0px\)-0\.5rem\)\] overflow-y-auto/, 'the mobile sheet never grows taller than the screen');
+  const wort = read('src/components/lesson/WortfeldStage.jsx');
+  assert.match(wort, /t\('wortfeld\.flipHint', lang, \{ word: spoken, en: english \}\)/, 'a flipped card is named by the English it shows');
+  assert.match(wort, /onBack=\{group > 0 \? \(\) => goGroup\(group - 1\) : onBack\}/, 'going back a group moves focus too');
+  const practice = read('src/components/lesson/PracticeItem.jsx');
+  assert.match(practice, /aria-describedby=\{\[`question-\$\{item\.id\}`/, 'the answer field is described by its question');
+  const player = read('src/pages/lesson/LessonPlayerPage.jsx');
+  assert.doesNotMatch(player, /aria-label=\{t\('player\.backToCourse', lang\)\}/, 'the back link names itself with its visible text');
+  assert.match(player, /heading\.focus\(\);/, 'the focused heading scrolls into view');
+  assert.match(read('src/components/lesson/StageShell.jsx'), /tracking-\[0\.13em\] text-siegel-deep">\{eyebrow\}/, 'eyebrows meet 4.5:1 on the wash grounds');
+  const welcome = read('src/components/course/CourseWelcome.jsx');
+  assert.doesNotMatch(welcome, /overflow-x-auto|role="region"/, 'the steps wrap instead of scrolling sideways');
+  for (const lang of ['en', 'de']) assert.ok(read('src/lib/lesson/strings.js').includes("'wortfeld.flipHint': '{word}: {en}',"), lang);
+});

@@ -7,12 +7,13 @@ import { LEVEL_ORDER } from '../config/levels.js';
 import { A11_META, lektionMinutesEstimate } from '../data/curricula/a11.meta.js';
 import { getProgramProgress } from '../services/programProgress';
 import { loadDashboardStats } from '../services/dashboardStats';
-import { curriculumPath } from '../data/curricula/index.js';
+import { curriculumPath, levelTestNodeId } from '../data/curricula/index.js';
 import { SUPPORT_LINK } from '../data/navigation.js';
 import { isLevelFree } from '../config/freeTier.js';
 import { hasLocalProgress, localDoneIds, mergeLocalProgress } from '../lib/course/localProgress.js';
 import { flushOutbox } from '../lib/course/syncOutbox.js';
 import { latestRun } from '../lib/lesson/runState.js';
+import { onlyFinalTestOpen, reconcileLevelTest } from '../lib/course/levelTestReconcile.js';
 import ExamDatePlan from '../components/course/ExamDatePlan.jsx';
 import CourseWelcome from '../components/course/CourseWelcome.jsx';
 import FirstRunTour from '../components/course/FirstRunTour.jsx';
@@ -118,7 +119,7 @@ export default function CurriculumHomePage({ curriculum }) {
   };
   // A Lektion left half-way (runState.js keeps it 7 days): offered by name, so stopping is never losing.
   const [unfinished] = useState(() => {
-    const run = latestRun(curriculum.level, curriculum.lektionen.map((l) => l.id));
+    const run = latestRun(curriculum.level, curriculum.lektionen.map((l) => l.id), Date.now(), user ? user.id : null);
     return run ? curriculum.lektionen.find((l) => l.id === run.lektionId) || null : null;
   });
 
@@ -129,7 +130,12 @@ export default function CurriculumHomePage({ curriculum }) {
     if (!user) { setDone(localDoneIds(level)); setLoaded(true); return; }
     let cancelled = false;
     const load = () => {
-      getProgramProgress(user.id, programKey).then((set) => { if (!cancelled) { setDone(set); setLoaded(true); } });
+      getProgramProgress(user.id, programKey)
+        // A pass whose completion write failed on the result screen is completed from the saved attempt.
+        .then(async (set) => (onlyFinalTestOpen(path, set, curriculum) && (await reconcileLevelTest(user.id, curriculum))
+          ? new Set(set).add(levelTestNodeId(curriculum))
+          : set))
+        .then((set) => { if (!cancelled) { setDone(set); setLoaded(true); } });
       loadDashboardStats(user.id)
         .then((s) => { if (!cancelled && s) setStreak(s.streakForgiving ?? s.streak ?? 0); })
         .catch(() => {});
@@ -141,7 +147,7 @@ export default function CurriculumHomePage({ curriculum }) {
       .then(() => flushOutbox(user.id))
       .finally(load);
     return () => { cancelled = true; };
-  }, [user, programKey, level]);
+  }, [user, programKey, level, curriculum, path]);
 
   const firstOpenIndex = path.findIndex((n) => !done.has(n.id));
   const current = firstOpenIndex === -1 ? null : path[firstOpenIndex];

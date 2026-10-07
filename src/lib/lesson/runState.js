@@ -37,7 +37,12 @@ export const RUN_VERSION = 1;
 /** Older than this, a snapshot is a different sitting: start the Lektion fresh. */
 export const RUN_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 
-export const runKey = (level, lektionId) => `${RUN_KEY_PREFIX}${String(level || '').toLowerCase()}:${lektionId}`;
+// One key per OWNER (2026-10-07, Codex review): a signed-in learner's run lives under their user id,
+// so on a shared browser the next account never resumes — and submits — someone else's answers. A
+// guest's run keeps the plain key; a learner who signs in mid-Lektion continues it (readRun falls back
+// to the guest key for a signed-in owner), and the guest copy is cleared with the owner's.
+export const runKey = (level, lektionId, owner = null) =>
+  `${RUN_KEY_PREFIX}${String(level || '').toLowerCase()}:${lektionId}${owner ? `:${owner}` : ''}`;
 
 const asIndex = (n) => {
   const v = Math.floor(Number(n));
@@ -91,15 +96,20 @@ export function resumeStageIndex(stages, run) {
   return found > 0 ? found : 0;
 }
 
-export const saveRun = (level, lektionId, run) => safeSetJSON(runKey(level, lektionId), run);
-export const readRun = (level, lektionId, now = Date.now()) => unpackRun(safeGetJSON(runKey(level, lektionId), null), now);
-export const clearRun = (level, lektionId) => safeRemove(runKey(level, lektionId));
+export const saveRun = (level, lektionId, run, owner = null) => safeSetJSON(runKey(level, lektionId, owner), run);
+export const readRun = (level, lektionId, now = Date.now(), owner = null) =>
+  unpackRun(safeGetJSON(runKey(level, lektionId, owner), null), now)
+  || (owner ? unpackRun(safeGetJSON(runKey(level, lektionId), null), now) : null);
+export const clearRun = (level, lektionId, owner = null) => {
+  if (owner) safeRemove(runKey(level, lektionId, owner));
+  return safeRemove(runKey(level, lektionId));
+};
 
 /** The most recently saved unfinished run among `lektionIds` — what the course home offers to continue. */
-export function latestRun(level, lektionIds = [], now = Date.now()) {
+export function latestRun(level, lektionIds = [], now = Date.now(), owner = null) {
   let best = null;
   for (const lektionId of lektionIds) {
-    const run = readRun(level, lektionId, now);
+    const run = readRun(level, lektionId, now, owner);
     if (run && (!best || run.savedAt > best.savedAt)) best = { lektionId, ...run };
   }
   return best;

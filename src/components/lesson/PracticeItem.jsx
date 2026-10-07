@@ -112,7 +112,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
         {t(eyebrowKey, lang, { n: index + 1, total })}
       </h2>
       <Card className="mt-4 p-5 sm:p-6">
-        <p className="font-display text-[1.25rem] font-semibold leading-snug text-ink sm:text-[1.375rem]" lang="de">{item.questionDe}</p>
+        <p id={`question-${item.id}`} className="font-display text-[1.25rem] font-semibold leading-snug text-ink sm:text-[1.375rem]" lang="de">{item.questionDe}</p>
         {item.questionEn && <p className="mt-1.5 text-[0.875rem] leading-snug text-graphite">{item.questionEn}</p>}
 
         {chips ? (
@@ -146,6 +146,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
             </label>
             <input
               id={`answer-${item.id}`}
+              aria-describedby={[`question-${item.id}`, item.hint && !state ? `hint-${item.id}` : null].filter(Boolean).join(' ')}
               ref={inputRef}
               type="text"
               value={value}
@@ -158,7 +159,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
               className="mt-2 w-full rounded-clay border border-rule bg-white px-4 py-3 text-[1.0625rem] text-ink outline-none focus:border-siegel disabled:bg-paper-sunk"
               placeholder={item.type === 'sentence_building' ? t('practice.wholeSentence', lang) : '…'}
             />
-            {item.hint && !state && <p className="mt-2 text-[0.8125rem] text-graphite">{t('practice.tip', lang, { hint: item.hint })}</p>}
+            {item.hint && !state && <p id={`hint-${item.id}`} className="mt-2 text-[0.8125rem] text-graphite">{t('practice.tip', lang, { hint: item.hint })}</p>}
           </div>
         )}
 

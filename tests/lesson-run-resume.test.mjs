@@ -134,7 +134,7 @@ test('storage that throws costs the resume, never the lesson', () => {
 
 test('LessonPlayerPage restores the run on mount, saves it on every change, and the recap clears it', () => {
   const src = read('src/pages/lesson/LessonPlayerPage.jsx');
-  assert.match(src, /useState\(\(\) => \(preview \? null : readRun\(curriculum\.level, lektion\.id\)\)\)/, 'the run is read once, on mount');
+  assert.match(src, /useState\(\(\) => \(preview \? null : readRun\(curriculum\.level, lektion\.id, Date\.now\(\), owner\)\)\)/, 'the run is read once, on mount, as its owner');
   assert.match(src, /useState\(preview \|\| !!resumed\)/, 'a resumed run skips the intro');
   assert.match(src, /resumeStageIndex\(buildLesson\(\{ curriculum, lektion, pool, dueCards: resumed\.dueCards, attempt: resumed\.attempt \}\)\.stages, resumed\)/,
     'the stage is restored against the stage list rebuilt from the snapshot');
@@ -142,7 +142,7 @@ test('LessonPlayerPage restores the run on mount, saves it on every change, and 
     assert.ok(src.includes(field), `the saved run lacks ${field}`);
   }
   assert.ok(src.includes('saveRun(curriculum.level, lektion.id, packRun({'), 'the player saves a packed run');
-  assert.match(src, /if \(saved \|\| stage\.kind === 'recap'\) \{ clearRun\(curriculum\.level, lektion\.id\); return; \}/,
+  assert.match(src, /if \(saved \|\| stage\.kind === 'recap'\) \{ clearRun\(curriculum\.level, lektion\.id, owner\); return; \}/,
     'the recap clears the run, and a run past the recap is never saved again');
   assert.match(src, /if \(!cancelled && !resumed\) setAttempt/, 'a resumed run keeps its draw');
   assert.match(src, /if \(resumed\) return undefined;/, 'a resumed run keeps its warm-up cards');
@@ -154,4 +154,19 @@ test('every full-page exit from a lesson stage returns to the Lektion URL the pl
   assert.ok(stage.includes('returnTo: `/course/${level}/l/${lektion.nr}`'), 'the coach bar returns to the player route');
   const app = read('src/App.jsx');
   assert.ok(app.includes('/course/:level/l/:nr'), 'the player route the return bar links to');
+});
+
+test('a run belongs to its account: another learner on the same browser never resumes it (Codex review, 2026-10-07)', () => {
+  const storage = fakeSessionStorage();
+  withWindow(storage, () => {
+    saveRun('a1.1', 'a1.1-l03', packRun({ runId: 'A', stageKey: 'practice', attempts: [{ itemId: 'x', correct: true }] }, NOW), 'user-a');
+    assert.equal(readRun('a1.1', 'a1.1-l03', NOW, 'user-b'), null, "learner B does not get A's answers");
+    assert.equal(readRun('a1.1', 'a1.1-l03', NOW, null), null, 'nor does a guest');
+    assert.equal(readRun('a1.1', 'a1.1-l03', NOW, 'user-a').runId, 'A');
+    saveRun('a1.1', 'a1.1-l04', packRun({ runId: 'G', stageKey: 'dialog' }, NOW));
+    assert.equal(readRun('a1.1', 'a1.1-l04', NOW, 'user-a').runId, 'G', 'a guest who signs in mid-Lektion continues it');
+    assert.equal(latestRun('a1.1', ['a1.1-l03', 'a1.1-l04'], NOW, 'user-b').lektionId, 'a1.1-l04', "B is offered the guest run, never A's");
+    clearRun('a1.1', 'a1.1-l04', 'user-a');
+    assert.equal(readRun('a1.1', 'a1.1-l04', NOW, 'user-a'), null, 'finishing clears the guest copy too');
+  });
 });

@@ -107,17 +107,16 @@ export const completeLesson = async (userId, { level, lektionId, accuracy = 0, s
  * merged runs three runs instead of one. The column has a plain `now()`
  * DEFAULT and the INSERT policy on `lesson_attempts` only checks
  * `auth.uid() = user_id` (migrations/2026-09-12-lesson-engine.sql), so an
- * explicit value is allowed — but if a future policy or trigger ever refuses
- * it, the batch is retried WITHOUT the stamp rather than lost: separate
- * awaited INSERTs still get distinct `now()` values, so the run count survives
- * either way.
+ * explicit value is allowed.
  *
  * IDEMPOTENT for a stamped batch (2026-10): a batch whose (user, Lektion,
  * created_at) is already in the table is not written again, so the sync outbox
  * can retry after a lost response without adding a phantom "completed run".
- * The same check runs again after a FAILED stamped insert, before the unstamped
- * fallback: an insert that committed but whose response was lost must not be
- * written a second time with a server timestamp (Codex review, 2026-10-07).
+ * The same check runs again after a FAILED stamped insert (it may have committed
+ * before its response was lost). There is no unstamped fallback any more: a batch
+ * written with a server timestamp has lost its identity, and the outbox's retry with
+ * the original stamp could not find it and wrote it again — two runs for one
+ * (Codex review, 2026-10-07). A refused stamp is now a visible, retried failure.
  *
  * `client` is a seam for tests only; production always passes the real one.
  */
@@ -150,11 +149,9 @@ export const logAttempts = async (userId, { level, lektionId, createdAt = null }
       .eq('user_id', userId)
       .eq('lektion_id', lektionId)
       .eq('created_at', createdAt);
-    if (recheckError) return false; // unknown: retry later with the same stamp, never a second batch
-    if (landed && landed.length) return true;
-    const retry = await client.from('lesson_attempts').insert(base);
-    if (retry.error) console.error('[lessonService] logAttempts:', retry.error.message);
-    return !retry.error;
+    if (!recheckError && landed && landed.length) return true;
+    console.error('[lessonService] logAttempts:', error.message);
+    return false; // retried later with the SAME stamp, never as a second batch
   }
   if (error) console.error('[lessonService] logAttempts:', error.message);
   return !error;
