@@ -11,8 +11,8 @@ import {
   advanceSectionDeadline,
   completeAttempt,
 } from '../../services/examService';
-import { scoreObjectiveSections, mergeListeningResult } from '../../services/examScoring';
-import { useExerciseDetails } from '../../hooks/useListening';
+import { scoreObjectiveSections, mergeListeningResult, scoreListeningAnswers } from '../../services/examScoring';
+import { useExerciseDetails, fetchExerciseQuestions } from '../../hooks/useListening';
 import { selectListeningQuestions } from '../../data/courseTests/listeningQuestions.js';
 import { getAudioUrl } from '../../utils/listeningHelpers';
 import SEO from '../../components/SEO';
@@ -157,6 +157,7 @@ const ModelltestRun = () => {
   const [remaining, setRemaining] = useState(null);
   const [loading, setLoading] = useState(true);
   const [finishing, setFinishing] = useState(false);
+  const [finishError, setFinishError] = useState(null);
   const listeningKeysRef = useRef({});
   const saveTimerRef = useRef(null);
 
@@ -200,7 +201,11 @@ const ModelltestRun = () => {
   const section = mock?.sections[sectionIndex];
   const isLast = mock ? sectionIndex >= mock.sections.length - 1 : false;
 
+  // Once the learner submits (or time runs out) the answers are FROZEN: a retry after a failed
+  // submission scores the same snapshot, and nothing typed after the deadline can enter it.
+  const frozenRef = useRef(null);
   const setAnswer = (key, value) => {
+    if (frozenRef.current) return;
     setAnswers((prev) => {
       const next = { ...prev, [key]: value, _meta: { sectionIndex } };
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
@@ -211,25 +216,35 @@ const ModelltestRun = () => {
     });
   };
 
-  const scoreListening = () => {
-    let score = 0;
-    let max = 0;
-    for (const [partKey, items] of Object.entries(listeningKeysRef.current)) {
-      for (const item of items) {
-        max += 1;
-        if (answers[`listening:${partKey}:${item.id}`] === item.correct) score += 1;
-      }
+  // A listening part registers its keys only while it is ON SCREEN. An attempt resumed after the
+  // Hören section never mounted it, so the keys are loaded here before scoring — and without them
+  // the attempt is not submitted at all: listening may never silently leave the score.
+  const loadMissingListeningKeys = async (snapshot) => {
+    const { missing } = scoreListeningAnswers(mock, listeningKeysRef.current, snapshot);
+    for (const key of missing) {
+      const part = mock.sections.flatMap((sec) => sec.parts).find((p) => p.key === key);
+      const questions = selectListeningQuestions(await fetchExerciseQuestions(part.level, String(part.exerciseNumber)), part);
+      if (questions.length) registerListeningKey(key, questions.map((q) => ({ id: q.id || q.question_number, correct: q.correct_answer })));
     }
-    return { score, max };
   };
 
   const finish = useCallback(async () => {
     if (!attempt || finishing) return;
+    if (!frozenRef.current) frozenRef.current = answers;
+    const snapshot = frozenRef.current;
     setFinishing(true);
-    const objective = scoreObjectiveSections(mock, answers);
-    const result = mergeListeningResult(objective, scoreListening());
+    setFinishError(null);
+    try { await loadMissingListeningKeys(snapshot); } catch (err) { console.error('[ModelltestRun] listening keys:', err?.message); }
+    const listening = scoreListeningAnswers(mock, listeningKeysRef.current, snapshot);
+    if (!listening.complete) {
+      setFinishing(false);
+      setFinishError('Die Hörfragen konnten nicht geladen werden, darum ist der Test noch nicht ausgewertet. Bitte prüfen Sie die Verbindung und versuchen Sie es erneut.');
+      return;
+    }
+    const objective = scoreObjectiveSections(mock, snapshot);
+    const result = mergeListeningResult(objective, listening);
     await completeAttempt(attempt.id, {
-      answers: { ...answers, _meta: { sectionIndex } },
+      answers: { ...snapshot, _meta: { sectionIndex } },
       score: result.score,
       maxScore: result.maxScore,
       sectionScores: result.sectionScores,
@@ -448,6 +463,7 @@ const ModelltestRun = () => {
           ))}
         </div>
 
+        {finishError && <p role="alert" className="mt-8 rounded-clay border border-accent-aprikose bg-accent-aprikose-wash p-3 text-sm font-bold text-accent-aprikose-ink">{finishError}</p>}
         <Button size="lg" className="mt-8 w-full" onClick={nextSection} disabled={finishing}>
           {finishing ? 'Wird ausgewertet…' : isLast ? 'Test abschließen' : `Weiter zu: ${mock.sections[sectionIndex + 1].title}`}
           <ChevronRight className="w-4 h-4" />

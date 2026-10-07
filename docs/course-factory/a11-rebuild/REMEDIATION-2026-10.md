@@ -261,6 +261,30 @@ final test are not yet dependable evidence of competence. The certificate alread
 Goethe/telc result; it should not be promoted as proof of A1.1 until the two BLOCKERs and the reading
 floor are fixed.
 
+## 8d. Assessment fixes (2026-10-07), reviewed by Codex
+
+The four verified assessment defects of §8c are fixed, each with a test in
+`tests/assessment-integrity.test.mjs` that failed on the code before the fix:
+
+| Defect | Fix |
+|---|---|
+| Final test resumed after Hören dropped listening from the score | `scoreListeningAnswers` knows every listening part; the runner loads keys for parts never shown and does not submit without them (a retry message instead). The first submit freezes one answer snapshot — no edit after the deadline enters it, and every retry scores the same answers; both key requests are time-bounded. |
+| Read-aloud self-confirm erased a measured result, removing a failed Sprechen section | `selfConfirmedResult` keeps a measured score (marked self-confirmed); only a never-measured line reports "no mic". |
+| Always-„Richtig" cleared the reading floor | a section must also beat its best constant-answer score (`guessCeiling`); with 2/2 reading items that is 3 of 4. The result row and the pass-rule text say so (EN/DE). |
+| Dictation rejected „Chakiri" (spelled line ending in a full stop) and „042 3381" | final punctuation no longer hides a spelled word; in dictation only, German number words — including umlaut-free spellings and compounds — become digits on both sides; a different number is never a typo; a decimal comma is kept („2,0 Euro" ≠ „zwanzig Euro"). |
+
+Codex reviewed the fixes twice (`/codex:review` and `/codex:adversarial-review`, working tree). The first
+pass found two regressions in the first dictation change (a different number forgiven as a typo;
+„fuenfzehn" no longer matching) and three robustness gaps in the final-test runner (edits after expiry,
+an unbounded request, decimal prices) — all fixed and pinned; the second pass approved with no material
+findings. Still open from §8c (Codex-reported, not yet re-verified): Schreiben passable on drills alone,
+checkpoints reusing the Lektion's writing task, retakes that only reshuffle, the grader's weighting of
+task fulfilment, untaught words and du-instructions in the final test, rejected word-order variants.
+
+**Not this branch, but found by the review:** the untracked `scripts/reprocess_webhook_logs.sql` would
+re-grant Pro to expired/unpaid subscriptions and mark refunds and failed payments as processed without
+acting on them. It was never staged; do not run it as written.
+
 ## 9. External blockers (owner actions)
 
 1. **Audio:** run `docs/owner-prompts.md` → "Run the A1.1 course audio" (needs the Azure key/region and the

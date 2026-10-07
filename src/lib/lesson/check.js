@@ -64,8 +64,39 @@ const stripPunct = (s) =>
  * inside a run of digits are removed, and the run is compared as one number.
  * Typographic quotes are folded by stripPunct above, for every check.
  */
+// German number words → digits, for dictation only (2026-10-07, Codex review): „042 3381" is how
+// anyone writes a phone number they heard as „null vier zwei – drei drei acht eins", and „20" is
+// „zwanzig". Applied to the expected line AND the answer, so both meet as digits. „ein/eine" (the
+// article) is never touched — only „eins", the counting form.
+const DICTATION_NUMBERS = {
+  null: 0, eins: 1, zwei: 2, drei: 3, vier: 4, fünf: 5, sechs: 6, sieben: 7, acht: 8, neun: 9,
+  zehn: 10, elf: 11, zwölf: 12, dreizehn: 13, vierzehn: 14, fünfzehn: 15, sechzehn: 16, siebzehn: 17,
+  achtzehn: 18, neunzehn: 19, zwanzig: 20, dreißig: 30, vierzig: 40, fünfzig: 50, sechzig: 60,
+  siebzig: 70, achtzig: 80, neunzig: 90, hundert: 100,
+};
+const COMPOUND_UNITS = { ein: 1, zwei: 2, drei: 3, vier: 4, fünf: 5, sechs: 6, sieben: 7, acht: 8, neun: 9 };
+const TENS = ['zwanzig', 'dreißig', 'vierzig', 'fünfzig', 'sechzig', 'siebzig', 'achtzig', 'neunzig'];
+// The umlaut-free keyboard spellings (zwoelf, fuenfzehn, dreissig) are the same numbers — the
+// fold normalizeAnswer applies later, applied here first so both spellings meet (Codex review).
+const asciiFold = (w) => w.toLowerCase().replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
+const withAscii = (words) => [...new Set(words.flatMap((w) => [w, asciiFold(w)]))];
+const NUMBER_VALUE = new Map(Object.entries(DICTATION_NUMBERS).map(([w, v]) => [asciiFold(w), v]));
+const UNIT_VALUE = new Map(Object.entries(COMPOUND_UNITS).map(([w, v]) => [asciiFold(w), v]));
+const NUMBER_RE = new RegExp(
+  `(?<!\\p{L})(?:(${withAscii(Object.keys(COMPOUND_UNITS)).join('|')})und(${withAscii(TENS).join('|')})|(${withAscii(Object.keys(DICTATION_NUMBERS)).join('|')}))(?!\\p{L})`,
+  'giu',
+);
+export const numberWordsToDigits = (text) => String(text ?? '').replace(NUMBER_RE, (m, unit, ten, word) => (
+  word
+    ? String(NUMBER_VALUE.get(asciiFold(word)))
+    : String(UNIT_VALUE.get(asciiFold(unit)) + NUMBER_VALUE.get(asciiFold(ten)))
+));
+
 export function normalizeDictation(text) {
-  return String(text ?? '')
+  return numberWordsToDigits(text)
+    // A decimal comma is a value, not punctuation: „2,0 Euro" must not become „20 Euro" when the
+    // later punctuation strip removes the comma (Codex review). The marker survives stripPunct.
+    .replace(/(\d),(?=\d)/g, '$1§')
     .replace(/[\u2010-\u2015\u2212\uFF0D-]/g, ' ')
     .replace(/(\d)[\s./]+(?=\d)/g, '$1')
     .replace(/\s+/g, ' ')
@@ -94,8 +125,11 @@ export const SPELLED_OUT_RE = /^\p{L}([-\s]\p{L})+$/u;
 /** True when any accepted answer is a spelled-out letter sequence. */
 export function spellingApplies(expected) {
   const list = Array.isArray(expected) ? expected : [expected];
-  return list.some((a) => SPELLED_OUT_RE.test(String(a ?? '').trim()));
+  // A dictated line ends like a sentence: „C-H-A-K-I-R-I." is still a spelled word (Codex review).
+  return list.some((a) => SPELLED_OUT_RE.test(String(a ?? '').trim().replace(/[.!?]+$/, '')));
 }
+
+const numbersIn = (s) => (String(s).match(/\d+/g) || []).join(',');
 
 function endingDiffers(user, expected) {
   const u = user.split(' '); const e = expected.split(' ');
@@ -167,7 +201,7 @@ export function checkAnswer(userInput, expected, {
   const fold = (s) => {
     let t = String(s ?? '');
     if (dictation) t = normalizeDictation(t);
-    if (spellingMode) t = normalizeSpelling(t);
+    if (spellingMode) t = normalizeSpelling(t.trim().replace(/[.!?]+$/, ''));
     return t;
   };
   // Raw = trimmed, whitespace-collapsed, punctuation-folded — but case and
@@ -193,6 +227,8 @@ export function checkAnswer(userInput, expected, {
     const norm = prepare(a);
     const shortFunctionWord = norm.length <= 4 && !norm.includes(' ');
     if (shortFunctionWord) continue;
+    // A different number is a different answer, never a typo: „90" for „20" is one character off.
+    if (numbersIn(user) !== numbersIn(norm)) continue;
     if (norm.length >= 5 && levenshtein(user, norm) === 1 && !endingDiffers(user, norm)) {
       return { result: RESULT.TYPO, expected: a };
     }

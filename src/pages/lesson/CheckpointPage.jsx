@@ -265,7 +265,10 @@ function PracticeItem({ item, onAnswer }) {
 /** A per-section result row: label, text score, number — and a bar behind it. */
 function SectionRow({ name, section }) {
   const [lang] = useLessonLang();
-  const ok = !section.scored || section.pct >= PASS_SECTION_PCT;
+  // The same two conditions scoreCheckpoint passes a section on — never a row that looks fine while
+  // the checkpoint fails because the part did not beat answering the same option everywhere.
+  const aboveGuess = !section.guessCeiling || section.correct > section.guessCeiling;
+  const ok = !section.scored || (section.pct >= PASS_SECTION_PCT && aboveGuess);
   return (
     <li className="py-2">
       <div className="flex items-baseline justify-between gap-3">
@@ -278,7 +281,7 @@ function SectionRow({ name, section }) {
       <div className="mt-1.5 h-2 overflow-hidden rounded-pill bg-paper-sunk" role="img" aria-label={t('checkpoint.sectionAria', lang, { name: SECTION_LABELS[name] || name, pct: section.pct })}>
         <div className={`h-full ${ok ? 'bg-siegel' : 'bg-accent-himbeer'}`} style={{ width: `${section.pct}%` }} />
       </div>
-      {section.scored && !ok && <p className="mt-1 text-xs text-accent-himbeer-ink">{t('checkpoint.sectionBelow', lang, { pct: PASS_SECTION_PCT })}</p>}
+      {section.scored && !ok && <p className="mt-1 text-xs text-accent-himbeer-ink">{section.pct >= PASS_SECTION_PCT ? t('checkpoint.sectionGuess', lang) : t('checkpoint.sectionBelow', lang, { pct: PASS_SECTION_PCT })}</p>}
     </li>
   );
 }

@@ -141,3 +141,17 @@ export function alignTranscript(expected, transcript) {
 
   return { words, pct: Math.round((hits / n) * 100) / 100 };
 }
+
+/**
+ * What "I said it" reports for a read-aloud line (2026-10-07, Codex review). Self-confirming never
+ * discards a measurement: a line the speech recognition already scored keeps that score (marked
+ * self-confirmed), and only a line that was never measured — no microphone, no allowance — reports
+ * "no mic". It used to report { pct: null, usedMic: false } over a measured failure, and because a
+ * checkpoint scores Sprechen only when every line came back from the mic, a failed section vanished.
+ */
+export function selfConfirmedResult(measured, attempts = 0) {
+  if (measured && typeof measured.pct === 'number') {
+    return { pct: measured.pct, attempts, usedMic: true, selfConfirmed: true };
+  }
+  return { pct: null, attempts, usedMic: false, selfConfirmed: true };
+}

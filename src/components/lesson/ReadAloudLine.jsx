@@ -4,7 +4,7 @@ import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import { useAuth } from '../../contexts/AuthContext';
 import { playLine } from '../../lib/lesson/speech.js';
-import { alignTranscript } from '../../lib/lesson/readaloud.js';
+import { alignTranscript, selfConfirmedResult } from '../../lib/lesson/readaloud.js';
 import { getAuthHeaders } from '../../utils/supabase';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 import {
@@ -148,7 +148,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
 
   const selfConfirm = () => {
     setConfirmed(true);
-    onResultRef.current?.({ pct: null, attempts, usedMic: false });
+    onResultRef.current?.(selfConfirmedResult(result, attempts));
   };
 
   const canRetry = phase === 'scored' && attempts < MAX_ATTEMPTS;

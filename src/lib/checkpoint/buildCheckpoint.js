@@ -2289,6 +2289,20 @@ export function isItemCorrect(item, answer) {
  * evaluate-writing it is one scored Schreiben item, without one it leaves the
  * section (total 3 → 2) instead of counting as a miss.
  */
+/**
+ * The most a section's closed-choice items give to ONE answer repeated everywhere (the best
+ * constant strategy). Open, typed items add nothing to it — a constant cannot answer them.
+ */
+export function guessCeiling(items) {
+  const counts = new Map();
+  for (const i of items) {
+    if (!Array.isArray(i.options) || !i.options.length) continue;
+    const key = String(i.answer);
+    counts.set(key, (counts.get(key) || 0) + 1);
+  }
+  return counts.size ? Math.max(...counts.values()) : 0;
+}
+
 export function scoreCheckpoint(items, answers = {}) {
   const sections = {};
   const errorTags = {};
@@ -2321,7 +2335,7 @@ export function scoreCheckpoint(items, answers = {}) {
     const total = inSection.length;
     // Sprechen is scored only when EVERY item of it came back from the mic.
     const scored = inSection.every((i) => itemIsScored(i, answers[i.id]));
-    sections[section] = { correct, total, pct: total ? Math.round((correct / total) * 100) : 0, scored };
+    sections[section] = { correct, total, pct: total ? Math.round((correct / total) * 100) : 0, scored, guessCeiling: guessCeiling(inSection) };
     if (scored) {
       scoredCorrect += correct;
       scoredTotal += total;
@@ -2330,8 +2344,12 @@ export function scoreCheckpoint(items, answers = {}) {
 
   const overall = scoredTotal ? Math.round((scoredCorrect / scoredTotal) * 100) : 0;
   const weakest = Object.values(sections).filter((s) => s.scored);
+  // A section must also beat the score of answering the same option everywhere: reading is two
+  // „richtig" and two „falsch", so always-„Richtig" scored 50 % and cleared the 40 % floor without
+  // reading a word (Codex review, 2026-10-07). With 2/2 that now means 3 of 4.
   const passed =
-    scoredTotal > 0 && overall >= PASS_OVERALL_PCT && weakest.every((s) => s.pct >= PASS_SECTION_PCT);
+    scoredTotal > 0 && overall >= PASS_OVERALL_PCT
+    && weakest.every((s) => s.pct >= PASS_SECTION_PCT && (!s.guessCeiling || s.correct > s.guessCeiling));
 
   return { overall, correct: scoredCorrect, total: scoredTotal, sections, passed, errorTags };
 }
