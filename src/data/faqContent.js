@@ -1,5 +1,5 @@
 // The FAQ content, shared between the /faq page (src/pages/FAQPage.jsx) and the
-// prerender (scripts/prerender-spa-routes.mjs) — 21 answers of real copy that
+// prerender (scripts/prerender-spa-routes.mjs) — 22 answers of real copy that
 // used to exist only inside the accordion component, where a crawler saw the
 // questions but never the answers (they render on click), even though the
 // FAQPage JSON-LD promised all of them.
