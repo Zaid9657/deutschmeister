@@ -440,7 +440,11 @@ test('a checkpoint result names what it assessed: perfect objective answers with
   assert.deepEqual(full.notAssessed, []);
   assert.equal(full.writing, 'graded');
   const page = readFileSync(new URL('../src/pages/lesson/CheckpointPage.jsx', import.meta.url), 'utf8');
-  assert.match(page, /assessedParts\(scoredItems, result\)/, 'the result card states its scope');
+  // Read from the WHOLE paper: a part whose items were all read instead of heard is „not assessed",
+  // never silently absent (Codex rescore, 2026-10-08).
+  assert.match(page, /assessedParts\(items, result\)/, 'the result card states its scope');
+  const allRead = scoreCheckpoint(items.filter((i) => i.section !== 'hoeren'), objective);
+  assert.ok(assessedParts(items, allRead).notAssessed.includes('hoeren'), 'Hören unheard is Hören not assessed');
 });
 
 test('the A1.1 final-test result speaks Sie and names what its score covers', async () => {

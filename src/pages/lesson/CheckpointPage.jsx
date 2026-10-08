@@ -344,7 +344,7 @@ export default function CheckpointPage() {
   const scoredItems = useMemo(() => items.filter((i) => !notHeard.has(i.id)), [items, notHeard]);
   const result = useMemo(() => (scoredItems.length ? scoreCheckpoint(scoredItems, answers) : null), [scoredItems, answers]);
   // What this result covers — said on the card, so a pass without graded production is not read as more.
-  const scope = useMemo(() => (result ? assessedParts(scoredItems, result) : null), [scoredItems, result]);
+  const scope = useMemo(() => (result ? assessedParts(items, result) : null), [items, result]);
 
   // One stamped attempt per finished paper, so „Try again" after a failed save finds what already
   // landed instead of counting a second attempt (Codex score review, 2026-10-08). The attempt count
