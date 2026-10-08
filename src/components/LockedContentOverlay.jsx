@@ -9,6 +9,7 @@ import Chip from './ui/Chip.jsx';
 import Aurora from './ui/Aurora.jsx';
 import { TRIAL_DAYS } from '../data/marketing.js';
 import { FREE_COURSE_HREF } from '../data/offers.js';
+import { levelLockSignupHref } from '../lib/lockDoor.js';
 
 const LockedContentOverlay = ({ level }) => {
   const { i18n } = useTranslation();
@@ -56,7 +57,12 @@ const LockedContentOverlay = ({ level }) => {
         </p>
 
         <div className="flex flex-col gap-3">
-          <Button to="/signup" shimmer size="lg" className="w-full">
+          {/* An on-site door (ref=level-lock): a plain href, because
+              public/attribution.js records the tag only on a page load, so a
+              signup from this lock is countable in
+              profiles.acquisition_last_source. src/lib/lockDoor.js,
+              tests/lock-signup-door.test.mjs. */}
+          <Button href={levelLockSignupHref(level)} shimmer size="lg" className="w-full">
             {isGerman ? 'Kostenlos registrieren' : 'Sign Up Free'}
           </Button>
 
