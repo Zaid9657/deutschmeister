@@ -55,7 +55,9 @@ select
 
 -- seo (run by acquisition while SEO is folded into it; the seo agent itself runs on Wednesdays) --
 select coalesce(acquisition_landing,'(none)') landing, count(*) n
-from profiles where created_at >= '2026-09-20' and acquisition_source is not null group by 1 order by 2 desc;
+from profiles where created_at >= '2026-09-20' and acquisition_source is not null
+  and coalesce(acquisition_medium,'') <> 'onsite' group by 1 order by 2 desc;
+-- On-site doors (medium 'onsite') land on /signup and are pages, not channels: left out here.
 -- Search Console / DataForSEO: not reachable yet (roadmap r12). Record "not measured".
 
 -- retention -------------------------------------------------------------------------------
