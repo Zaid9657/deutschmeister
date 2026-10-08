@@ -425,7 +425,7 @@ const SpeakingPage = () => {
                 <h2 className="font-semibold text-ink text-sm mb-1.5">Feedback you can use</h2>
                 <p className="text-sm text-graphite leading-relaxed">
                   After each session: grammar, vocabulary and clarity, with
-                  concrete corrections — like a patient tutor with unlimited time.
+                  concrete corrections — like a patient tutor who never rushes you.
                 </p>
               </Card>
             </Reveal>

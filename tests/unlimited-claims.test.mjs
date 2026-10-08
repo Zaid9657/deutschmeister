@@ -15,6 +15,12 @@
 // trees. Where the class is not at zero yet, a ratchet holds it at its measured
 // count: lower MAX_UNLIMITED_AI_LINES in the same commit that fixes a line, never
 // raise it. The fixes belong to the screens' owners (handoff 2026-10-06).
+//
+// It also reads the prerender script. The prerendered SPA routes (/speaking/,
+// /analyze/, /level-test/ ...) ship the copy written THERE in
+// dist/<route>/index.html, which is what a crawler and a visitor see before
+// hydration. The /speaking/ line below stood in both the page and its prerender
+// mirror, and the source walk saw only the page.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
@@ -46,6 +52,8 @@ const SKIP = [
   'src/pages/admin',
   'src/components/admin',
 ];
+// Shipped HTML written outside the source trees (see the header).
+const PRERENDERED_COPY = ['scripts/prerender-spa-routes.mjs'];
 const isStaffFunction = (rel) => /^netlify\/functions\/(admin-[^/]+|_shared\/admin[^/]*)\.mjs$/.test(rel);
 const copyFiles = () => {
   const out = [];
@@ -59,7 +67,7 @@ const copyFiles = () => {
     }
   };
   COPY_ROOTS.forEach(walk);
-  return out;
+  return [...out, ...PRERENDERED_COPY];
 };
 
 // "Unlimited", in either language and its usual paraphrases.
@@ -80,8 +88,10 @@ const UNLIMITED_METERED = new RegExp(
 
 // Measured 2026-10-06 on origin/main 8e28547d: src/pages/DashboardPage.jsx (the
 // trial strip) and src/pages/SpeakingPage.jsx ("like a patient tutor with
-// unlimited time", the /speaking/ page). Both are product's screens.
-const MAX_UNLIMITED_AI_LINES = 2;
+// unlimited time", the /speaking/ page), plus that line's prerender mirror once
+// the script was read (3). All three fixed 2026-10-07 (product): the class is at
+// zero, so this is now a plain rule.
+const MAX_UNLIMITED_AI_LINES = 0;
 
 test('the pattern catches unlimited AI claims and leaves the true content claim alone', () => {
   for (const claim of [

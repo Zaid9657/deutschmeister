@@ -8,6 +8,7 @@ import Card from './ui/Card.jsx';
 import Chip from './ui/Chip.jsx';
 import Aurora from './ui/Aurora.jsx';
 import { TRIAL_DAYS } from '../data/marketing.js';
+import { FREE_COURSE_HREF } from '../data/offers.js';
 
 const LockedContentOverlay = ({ level }) => {
   const { i18n } = useTranslation();
@@ -63,8 +64,13 @@ const LockedContentOverlay = ({ level }) => {
             {isGerman ? 'Anmelden' : 'Log In'}
           </Button>
 
+          {/* The free first stop is the guided course, the door every other
+              "A1.1 free" link opens (offers.js FREE_COURSE_HREF). Until
+              2026-10-07 this one opened the /level/a1.1 topic library: one
+              more hop from Lektion 1, and none of the lesson player's
+              save-progress asks. tests/free-door.test.mjs. */}
           <Link
-            to="/level/a1.1"
+            to={FREE_COURSE_HREF}
             className="inline-flex items-center justify-center gap-2 text-sm font-bold text-siegel transition-colors hover:text-siegel-deep mt-2"
           >
             <Sparkles size={14} aria-hidden="true" />
