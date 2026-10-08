@@ -136,6 +136,17 @@ export default function CurriculumHomePage({ curriculum }) {
         .then(async (set) => (onlyFinalTestOpen(path, set, curriculum) && (await reconcileLevelTest(user.id, curriculum))
           ? new Set(set).add(levelTestNodeId(curriculum))
           : set))
+        // …and a checkpoint pass whose completion write failed, from its saved attempt row. Only a
+        // checkpoint the learner has reached (its Lektionen done) can hold one, so the service loads
+        // only then.
+        .then(async (set) => {
+          const reached = curriculum.checkpoints.some((cp) => !set.has(cp.id)
+            && curriculum.lektionen.every((l) => l.nr > cp.afterLektion || set.has(l.id)));
+          if (!reached) return set;
+          const { reconcileCheckpoints } = await import('../services/checkpointService.js');
+          const fixed = await reconcileCheckpoints(user.id, curriculum, set);
+          return fixed.length ? new Set([...set, ...fixed]) : set;
+        })
         .then((set) => { if (!cancelled) { setDone(set); setLoaded(true); } });
       loadDashboardStats(user.id)
         .then((s) => { if (!cancelled && s) setStreak(s.streakForgiving ?? s.streak ?? 0); })
@@ -204,7 +215,7 @@ export default function CurriculumHomePage({ curriculum }) {
               German {curriculum.code}
             </Reveal>
             <Reveal as="p" delay={100} className="mt-2 text-[0.9375rem] text-graphite sm:text-base">
-              {curriculum.lektionen.length} Lektionen · {curriculum.checkpoints.length} checkpoints · {wordsTotal} words · ends with the {curriculum.examName} final test
+              {curriculum.lektionen.length} Lektionen · {curriculum.checkpoints.length} checkpoints · {wordsTotal} words · ends with a shortened practice test in the {curriculum.examName} format
             </Reveal>
 
             <Reveal delay={140} className="mt-5 grid grid-cols-3 gap-3">

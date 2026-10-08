@@ -118,12 +118,20 @@ export async function fetchCheckpointStatus(userId, checkpointId) {
  * limit counts, and — when it passed — completion in lesson_progress and
  * program_progress. Returns true when the remote write succeeded.
  */
-export async function recordAttempt(userId, { level, checkpointId, items, answers = {}, result }) {
-  pushLocalAttempt(checkpointId);
+export async function recordAttempt(userId, { level, checkpointId, items, answers = {}, result, stamp = null, retry = false }, client = supabase, complete = completeCheckpoint) {
+  if (!retry) pushLocalAttempt(checkpointId);
   if (!userId) return false;
 
   const lvl = String(level || '').toLowerCase();
-  const nowIso = new Date().toISOString();
+  // One stamp per finished paper (the page keeps it), so a retry finds the attempt it already
+  // wrote instead of counting a second one (Codex score review, 2026-10-08).
+  const nowIso = stamp || new Date().toISOString();
+  const landed = async () => {
+    if (!stamp) return false;
+    const { data, error } = await client.from('lesson_attempts').select('created_at')
+      .eq('user_id', userId).eq('lektion_id', checkpointId).eq('item_id', checkpointId).eq('created_at', nowIso);
+    return !error && Array.isArray(data) && data.length > 0;
+  };
   const rows = (items || [])
     .filter((item) => item.scored)
     .map((item) => {
@@ -157,16 +165,38 @@ export async function recordAttempt(userId, { level, checkpointId, items, answer
     created_at: nowIso,
   });
 
-  const { error } = await supabase.from('lesson_attempts').insert(rows);
-  if (error) {
-    console.error('[checkpointService] recordAttempt:', error.message);
-    return false;
+  if (!(await landed())) {
+    const { error } = await client.from('lesson_attempts').insert(rows);
+    if (error && !(await landed())) {
+      console.error('[checkpointService] recordAttempt:', error.message);
+      return false;
+    }
   }
   // lesson_progress.accuracy is 0…1 (migrations/2026-09-12-lesson-engine.sql);
   // scoreCheckpoint's `overall` is a percent. Rows written before 2026-10-05
-  // hold the percent and are left as written.
-  if (result?.passed) await completeCheckpoint(userId, { level: lvl, checkpointId, accuracy: result.overall / 100 });
+  // hold the percent and are left as written. A pass is saved only when its completion landed —
+  // `true` used to come back with both writes failed.
+  if (result?.passed) return (await complete(userId, { level: lvl, checkpointId, accuracy: result.overall / 100 })) === true;
   return true;
+}
+
+/**
+ * A pass whose completion never landed (the result screen closed, the network dropped): its
+ * summary row is in lesson_attempts, so the course home completes the node from it — the same
+ * repair levelTestReconcile.js does for the final test. Resolves the ids it completed.
+ */
+export async function reconcileCheckpoints(userId, curriculum, done, { client = supabase, complete = completeCheckpoint } = {}) {
+  const open = (curriculum?.checkpoints || []).map((c) => c.id).filter((id) => !done.has(id));
+  if (!userId || !open.length) return [];
+  const { data, error } = await client.from('lesson_attempts').select('lektion_id, item_id')
+    .eq('user_id', userId).eq('stage', 'checkpoint').eq('correct', true).in('item_id', open);
+  if (error || !Array.isArray(data)) return [];
+  const passed = [...new Set(data.filter((r) => r.item_id === r.lektion_id).map((r) => r.lektion_id))];
+  const out = [];
+  for (const checkpointId of passed) {
+    if ((await complete(userId, { level: curriculum.level, checkpointId })) === true) out.push(checkpointId);
+  }
+  return out;
 }
 
 /** Mark the checkpoint complete in both ledgers (idempotent). */
@@ -179,7 +209,8 @@ export async function completeCheckpoint(userId, { level, checkpointId, accuracy
       level: lvl,
       lektion_id: checkpointId,
       status: 'complete',
-      accuracy: typeof accuracy === 'number' ? accuracy : null,
+      // A reconciled pass knows no accuracy: leave the stored one alone rather than null it.
+      ...(typeof accuracy === 'number' ? { accuracy } : {}),
       completed_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     },

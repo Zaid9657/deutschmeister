@@ -243,12 +243,19 @@ const ModelltestRun = () => {
     }
     const objective = scoreObjectiveSections(mock, snapshot);
     const result = mergeListeningResult(objective, listening);
-    await completeAttempt(attempt.id, {
+    const saved = await completeAttempt(attempt.id, {
       answers: { ...snapshot, _meta: { sectionIndex } },
       score: result.score,
       maxScore: result.maxScore,
       sectionScores: result.sectionScores,
     });
+    // An unsaved result is not a result: the pass would be lost (Codex score review, 2026-10-08).
+    // The frozen snapshot makes the retry score exactly the same answers.
+    if (!saved) {
+      setFinishing(false);
+      setFinishError('Ihr Ergebnis konnte nicht gespeichert werden. Bitte prüfen Sie die Verbindung und versuchen Sie es erneut — Ihre Antworten bleiben erhalten.');
+      return;
+    }
     navigate(`/modelltest/${examSlug}/result/${attempt.id}`, { replace: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [attempt, finishing, answers, sectionIndex]);

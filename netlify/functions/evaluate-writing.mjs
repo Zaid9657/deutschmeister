@@ -128,6 +128,21 @@ export function copiedShare(task, text) {
   return own.length ? own.filter((g) => source.has(g)).length / own.length : 0;
 }
 
+/**
+ * Is the model's result complete enough to score? Four 0–5 criteria, a numeric total and one
+ * true/false per Leitpunkt. Anything less is UNASSESSED, never a score: `leitpunkt_check: []` used
+ * to leave coverage unknown, skip the cap and score 20/20 (Codex score review, 2026-10-08).
+ */
+export function validEvaluation(task, ev) {
+  if (!ev || typeof ev !== 'object' || typeof ev.total_score !== 'number' || !Number.isFinite(ev.total_score)) return false;
+  const s = ev.scores || {};
+  const inRange = (n) => typeof n === 'number' && n >= 0 && n <= 5;
+  if (!['task', 'structure', 'accuracy', 'vocabulary'].every((k) => inRange(s[k]))) return false;
+  const checks = ev.leitpunkt_check;
+  return Array.isArray(checks) && checks.length === (task.leitpunkte || []).length
+    && checks.every((c) => c === true || c === false || c === 'true' || c === 'false');
+}
+
 /** The model's evaluation with both rules applied; `gate` says what changed. */
 export function gateEvaluation(task, text, evaluation) {
   const s = evaluation.scores || {};
@@ -342,11 +357,11 @@ export const handler = async (event) => {
 
     const prompt = buildWritingPrompt(task, text);
     let evaluation = tryParse(await callClaude(prompt));
-    if (!evaluation) {
-      console.warn('evaluate-writing: first parse failed, retrying');
-      evaluation = tryParse(await callClaude(prompt + '\n\nWICHTIG: Antworte NUR mit validem JSON.'));
+    if (!validEvaluation(task, evaluation)) {
+      console.warn('evaluate-writing: first result unusable, retrying');
+      evaluation = tryParse(await callClaude(prompt + '\n\nWICHTIG: Antworte NUR mit validem JSON im verlangten Format.'));
     }
-    if (!evaluation || typeof evaluation.total_score !== 'number') {
+    if (!validEvaluation(task, evaluation)) {
       return {
         statusCode: 200,
         headers,

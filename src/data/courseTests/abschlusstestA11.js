@@ -62,6 +62,22 @@ export const abschlusstestA11 = {
     'bestehen Sie ab 60 % der bewerteten Aufgaben. Sprechen üben Sie im Speaking-Missions-Trainer, nicht hier. Wenn Sie bestehen, geht ' +
     'es weiter mit A1.2 und später mit der vollständigen Übungsprüfung im Start-Deutsch-1-Format.',
   passPercent: 60,
+  // The result page shares its verdict copy with the exam mocks, which duzen; the course says Sie,
+  // and names the two parts the score covers (Codex score review, 2026-10-08).
+  verdictCopyDe: {
+    solide: {
+      title: 'Über der Bestehensgrenze — mit Puffer',
+      body: 'In den automatisch ausgewerteten Teilen (Hören und Lesen) liegen Sie deutlich über der 60%-Grenze dieses Tests. Üben Sie weiter Schreiben und Sprechen — die zählen in der echten Prüfung mit.',
+    },
+    knapp: {
+      title: 'Über der Grenze — aber ohne Puffer',
+      body: 'In Hören und Lesen liegen Sie über der 60%-Grenze dieses Tests, aber knapp. Ziel für die echte Prüfung: 70–75 %, damit ein schwacher Tag Sie nicht unter die Grenze drückt.',
+    },
+    'nicht-bereit': {
+      title: 'Noch unter der Grenze',
+      body: 'In den automatisch ausgewerteten Teilen (Hören und Lesen) liegen Sie unter der 60%-Grenze dieses Tests. Das ist eine Standortbestimmung, kein Urteil — sehen Sie sich unten an, welcher Teil die meisten Punkte gekostet hat.',
+    },
+  },
 
   sections: [
     {

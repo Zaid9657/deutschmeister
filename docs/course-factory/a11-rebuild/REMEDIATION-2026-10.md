@@ -301,6 +301,29 @@ Each item below was verified against the code first, then fixed with a test in
 | Word-order variants rejected | REVIEW #12/#13 pin objects and modal adverbs as NOT derived into answer keys (`fd-n2`, `fd-n5`). So instead of widening keys, a build repair names the opening in the prompt when an object or a modal adverb could open the sentence: „Bilden Sie den Satz (Beginnen Sie mit „Die Firma"): […]". 10 shipped prompts changed; no `answer`/`accepted` changed. | built-pool diff; class test over the pool and three papers per checkpoint |
 | Grader: task fulfilment did not decide | `gateEvaluation()` in `evaluate-writing.mjs`, applied to whatever the model returns: `task` ≤ the share of Leitpunkte the model marked covered, total ≤ 4 × task, and a Mitteilung whose word trigrams are ≥ 60 % the task's own wording scores 0 (course model texts measure ≤ 0.38, a copied task 1.00; Formulare are exempt). This also applies to the exam-training tasks on /schreiben. | grader test |
 
+## 8f. Codex score review (2026-10-08): 6.1/10, and what was closed in the repository
+
+Asked for an unprimed 0–10 rating, Codex scored the course **6.1/10** and judged a 10 **not
+reachable without outside evidence** (recordings, a learner study, independent grading calibration,
+device and assistive-technology sessions), with a ceiling of about 8 after the repository fixes.
+Every repository item it reproduced was then fixed with a test that fails on the old code
+(`tests/assessment-integrity.test.mjs`):
+
+| Finding | Fix |
+|---|---|
+| A graded checkpoint accepted „Ich ein von Beruf Lehrer."; „ein" for „kein" was a typo | A one-edit change to a short word (≤ 4 letters, unless one stray key was added) or to any negation is WRONG, never TYPO — one rule in `check.js`. |
+| A malformed AI result (`leitpunkt_check: []`) scored 20/20 | `validEvaluation()`: four 0–5 scores, a numeric total, one true/false per Leitpunkt — else one retry, then "evaluation failed" (unassessed). |
+| Checkpoint completion failures returned success; the final test navigated on after a failed save; writing drafts were lost on reload | Stamped, idempotent `recordAttempt` that reports a failed completion; a retry on the result card; the course home completes a saved pass whose node is missing; the final test stays with a retry; drafts per learner and task for 7 days. |
+| An inserted „nicht" scored 100 % on read-aloud | Heard words beyond the line count against the score (fillers excepted); the learner sees how many. |
+| Checkpoint audio used unchecked playback | PlayButton (checked) on checkpoints and the read-aloud model; an item read instead of heard leaves the score. |
+| A pass did not say what it covered | The result card names the parts assessed and not assessed, and when Schreiben counted only the drills; the final-test verdicts say Sie and name Hören and Lesen. |
+| Checkpoint feedback had no announcement; coverage icons had no text | The verdict takes focus; ticks and crosses have „Covered"/„Not covered". |
+| „ends with the Start Deutsch 1 final test"; „sign up only to save progress" | „a shortened practice test in the Start Deutsch 1 format — our own, not an official exam"; an account is also needed for AI feedback. |
+
+Not done in this round, from the same review: the 57 Wortfeld entries without context and the
+23 grammar notices without examples (content authoring, RULE 23/6b ratchets), analytics events
+that carry per-skill assessment status, and the review deck's playback (still `playLine`).
+
 ## 9. External blockers (owner actions)
 
 1. **Audio:** run `docs/owner-prompts.md` → "Run the A1.1 course audio" (needs the Azure key/region and the

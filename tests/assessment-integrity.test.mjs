@@ -267,3 +267,219 @@ test('writing grader: task fulfilment decides — off-topic and copied texts can
   const src = readFileSync(new URL('../netlify/functions/evaluate-writing.mjs', import.meta.url), 'utf8');
   assert.match(src, /evaluation = gateEvaluation\(task, text, evaluation\);\s*const wordCount/, 'the handler stores the gated score');
 });
+
+test('typo forgiveness never covers a changed short word inside a sentence — „ein" is not „bin" or „kein"', async () => {
+  // Codex score review, 2026-10-08: the graded checkpoint item „Ich bin von Beruf Lehrer." accepted
+  // „Ich ein von Beruf Lehrer." as a typo, and „Wir haben ein Handy." passed for „kein Handy".
+  // The short-word guard only protected one-word answers; the changed WORD decides now.
+  const { checkAnswer, checkOptionsFor, RESULT } = await import('../src/lib/lesson/check.js');
+  const run = (answer, input, type = 'sentence_building') => {
+    const item = { id: 'x', type, answer, accepted: [answer] };
+    return checkAnswer(input, item.accepted, checkOptionsFor(item)).result;
+  };
+  assert.equal(run('Ich bin von Beruf Lehrer.', 'Ich ein von Beruf Lehrer.'), RESULT.WRONG);
+  assert.equal(run('Wir haben kein Handy.', 'Wir haben ein Handy.'), RESULT.WRONG);
+  assert.equal(run('Ich sehe den Mann.', 'Ich sehe dem Mann.'), RESULT.WRONG, 'a case ending is grammar');
+  assert.equal(run('Das ist nicht teuer.', 'Das ist nich teuer.'), RESULT.WRONG, 'negation is meaning');
+  assert.equal(run('Wir haben kein Handy.', 'Wir haben ein Handy.', 'dictation'), RESULT.WRONG, 'in dictation too');
+  // A slip in a longer word is still a typo, one retry, as before.
+  assert.equal(run('Ich wohne in der Hauptstraße.', 'Ich wohne in der Hauptstrase.'), RESULT.TYPO);
+  assert.equal(run('Er kommt aus Marokko.', 'Er kommt aus Marocko.'), RESULT.TYPO);
+  assert.equal(run('Er kommt aus Marokko.', 'Er komt aus Marokko.'), RESULT.TYPO, 'a slip in a verb of five letters');
+  assert.equal(run('Ich heiße Ana.', 'Ich heise Ana.'), RESULT.TYPO);
+  assert.equal(run('Du bist hier.', 'Du bistt hier.'), RESULT.TYPO, 'a short word typed whole plus one stray key');
+  assert.equal(run('Ich habe eine Frage.', 'Ich habe keine Frage.'), RESULT.WRONG, 'an added negation is not a stray key');
+});
+
+test('writing grader: a malformed AI result is unassessed, never a score (empty coverage once scored 20/20)', async () => {
+  // Codex score review, 2026-10-08: `leitpunkt_check: []` made coverage unknown, the cap was
+  // skipped and the text scored 20/20.
+  const { validEvaluation } = await import('../netlify/functions/evaluate-writing.mjs');
+  const { writingTaskByKey } = await import('../src/data/writingTasks.js');
+  const task = writingTaskByKey('goethe_a1', 'a11-l10');
+  const good = { scores: { task: 5, structure: 4, accuracy: 4, vocabulary: 4 }, total_score: 17, leitpunkt_check: [true, true, false] };
+  assert.equal(validEvaluation(task, good), true);
+  assert.equal(validEvaluation(task, { ...good, leitpunkt_check: ['true', 'false', 'true'] }), true, 'JSON booleans as strings');
+  for (const [why, bad] of [
+    ['no coverage', { ...good, leitpunkt_check: [] }],
+    ['wrong length', { ...good, leitpunkt_check: [true, true] }],
+    ['not booleans', { ...good, leitpunkt_check: [1, 0, 1] }],
+    ['coverage missing', { scores: good.scores, total_score: 17 }],
+    ['a score missing', { ...good, scores: { task: 5, structure: 4, accuracy: 4 } }],
+    ['a score out of range', { ...good, scores: { ...good.scores, task: 9 } }],
+    ['total not a number', { ...good, total_score: '17' }],
+    ['nothing', null],
+  ]) assert.equal(validEvaluation(task, bad), false, why);
+  const { readFileSync } = await import('node:fs');
+  const src = readFileSync(new URL('../netlify/functions/evaluate-writing.mjs', import.meta.url), 'utf8');
+  assert.match(src, /if \(!validEvaluation\(task, evaluation\)\) \{\s*return \{/, 'an invalid result returns evaluation_failed, after one retry');
+});
+
+/** A Supabase stand-in: chainable filters over an in-memory table, inserts that can fail. */
+function fakeAttemptsClient({ rows = [], failInsert = false } = {}) {
+  const inserted = [];
+  return {
+    rows,
+    inserted,
+    from: () => {
+      const filters = [];
+      const q = {
+        select: () => q,
+        eq: (k, v) => { filters.push((r) => r[k] === v); return q; },
+        in: (k, vs) => { filters.push((r) => vs.includes(r[k])); return q; },
+        insert: async (rs) => {
+          if (failInsert) return { error: { message: 'offline' } };
+          inserted.push(...rs); rows.push(...rs); return { error: null };
+        },
+        then: (resolve) => resolve({ data: rows.filter((r) => filters.every((f) => f(r))), error: null }),
+      };
+      return q;
+    },
+  };
+}
+
+test('checkpoint save: a failed completion is reported, a retry with the same stamp adds no attempt, the course home completes a saved pass', async () => {
+  // Codex score review, 2026-10-08: recordAttempt returned true although both completion writes
+  // failed — the pass sat in lesson_attempts while the course path stayed one node short.
+  const { recordAttempt, reconcileCheckpoints } = await import('../src/services/checkpointService.js');
+  const args = { level: 'a1.1', checkpointId: 'a1.1-cp1', items: [], answers: {}, result: { passed: true, overall: 80 }, stamp: '2026-10-08T10:00:00.000Z' };
+  const client = fakeAttemptsClient();
+  assert.equal(await recordAttempt('u1', args, client, async () => false), false, 'completion failed → not saved');
+  assert.equal(client.inserted.length, 1, 'the summary row landed');
+  let completed = 0;
+  assert.equal(await recordAttempt('u1', args, client, async () => { completed += 1; return true; }), true, 'the retry completes');
+  assert.equal(client.inserted.length, 1, 'and does not count a second attempt');
+  assert.equal(completed, 1);
+  const down = fakeAttemptsClient({ failInsert: true });
+  assert.equal(await recordAttempt('u1', args, down, async () => true), false, 'an insert that did not land is not saved');
+  // The course home: a saved pass whose node is missing is completed; a failed attempt is not.
+  const ledger = fakeAttemptsClient({ rows: [
+    { user_id: 'u1', lektion_id: 'a1.1-cp1', item_id: 'a1.1-cp1', stage: 'checkpoint', correct: true },
+    { user_id: 'u1', lektion_id: 'a1.1-cp2', item_id: 'a1.1-cp2', stage: 'checkpoint', correct: false },
+    { user_id: 'u1', lektion_id: 'a1.1-cp2', item_id: 'a1.1-cp2-lesen-1', stage: 'checkpoint', correct: true },
+  ] });
+  const done = [];
+  const curriculum = { level: 'a1.1', checkpoints: [{ id: 'a1.1-cp1' }, { id: 'a1.1-cp2' }] };
+  const fixed = await reconcileCheckpoints('u1', curriculum, new Set(), { client: ledger, complete: async (_, { checkpointId }) => { done.push(checkpointId); return true; } });
+  assert.deepEqual(fixed, ['a1.1-cp1']);
+  assert.deepEqual(done, ['a1.1-cp1'], 'a correct ITEM row of a failed paper is not a pass');
+  const { readFileSync } = await import('node:fs');
+  const page = readFileSync(new URL('../src/pages/lesson/CheckpointPage.jsx', import.meta.url), 'utf8');
+  assert.match(page, /stamp: saveRef\.current\.stamp/, 'the page saves one stamped attempt per paper');
+  assert.match(page, /t\('checkpoint\.saveFailed', lang\)/, 'and says so when it did not land');
+  const home = readFileSync(new URL('../src/pages/CurriculumHomePage.jsx', import.meta.url), 'utf8');
+  assert.match(home, /reconcileCheckpoints\(user\.id, curriculum, set\)/);
+});
+
+test('final test: a completion that did not save keeps the learner on the test with a retry, never a result page', async () => {
+  // Codex score review, 2026-10-08: finish() ignored completeAttempt's false and navigated on.
+  const { readFileSync } = await import('node:fs');
+  const run = readFileSync(new URL('../src/pages/Modelltest/ModelltestRun.jsx', import.meta.url), 'utf8');
+  assert.match(run, /const saved = await completeAttempt\(attempt\.id, \{[\s\S]*?\}\);(?:\s*\/\/[^\n]*)*\s*if \(!saved\) \{\s*setFinishing\(false\);\s*setFinishError\(/);
+});
+
+test('writing: a draft survives a reload, per learner and task, and is dropped on submit', async () => {
+  // Codex score review, 2026-10-08: the learner's text lived in component state only.
+  const { readFileSync } = await import('node:fs');
+  const src = readFileSync(new URL('../src/components/lesson/GradedWriting.jsx', import.meta.url), 'utf8');
+  assert.match(src, /dm_writing_draft:\$\{userId \|\| 'guest'\}:\$\{taskKey \|\| ''\}/, 'scoped to the learner and the task');
+  assert.match(src, /useState\(\(\) => readDraft\(key\)\?\.text \|\| ''\)/, 'restored on mount');
+  assert.match(src, /safeSetJSON\(key, \{ text, fields, savedAt: Date\.now\(\) \}\)/, 'saved as typed');
+  assert.match(src, /const finish = \(r, noteText\) => \{\s*safeRemove\(key\);/, 'dropped once handed in');
+  assert.match(src, /DRAFT_MAX_AGE_MS = 7 \* 24 \* 60 \* 60 \* 1000/);
+});
+
+test('read-aloud: words that are not in the line count against the score — „Ich bin nicht Ana." is not „Ich bin Ana."', async () => {
+  // Codex score review, 2026-10-08: the score was hits / expected words, so an inserted negation
+  // scored 100 %. Hesitation fillers are not words of the answer and cost nothing.
+  const { alignTranscript } = await import('../src/lib/lesson/readaloud.js');
+  const negated = alignTranscript('Ich bin Ana.', 'Ich bin nicht Ana.');
+  assert.equal(negated.extra, 1);
+  assert.equal(negated.pct, 0.75);
+  assert.ok(negated.pct < 0.8, 'below the line logged as correct');
+  const um = alignTranscript('Ich bin Ana.', 'Ähm ich bin äh Ana.');
+  assert.deepEqual([um.extra, um.pct], [0, 1], 'fillers are free');
+  assert.equal(alignTranscript('Ich bin Ana.', 'Ich bin Ana.').pct, 1);
+  assert.equal(alignTranscript('Ich wohne in Berlin.', 'Ich wohne Berlin.').pct, 0.75, 'a missing word, as before');
+  const { readFileSync } = await import('node:fs');
+  const twin = readFileSync(new URL('../netlify/functions/_shared/readaloud.mjs', import.meta.url), 'utf8');
+  assert.equal(twin, readFileSync(new URL('../src/lib/lesson/readaloud.js', import.meta.url), 'utf8'), 'the server scores with the same rule');
+  const line = readFileSync(new URL('../src/components/lesson/ReadAloudLine.jsx', import.meta.url), 'utf8');
+  assert.match(line, /t\('speaking\.extraWords', lang, \{ n: result\.extra \}\)/, 'and the learner is told why the number dropped');
+});
+
+test('checkpoint and read-aloud audio use checked playback; an item read instead of heard leaves the score', async () => {
+  // Codex score review, 2026-10-08: checkpoint listening played through playLine, whose success
+  // means "queued", so silence looked like playback — and a learner who could not hear was scored.
+  const { readFileSync } = await import('node:fs');
+  const page = readFileSync(new URL('../src/pages/lesson/CheckpointPage.jsx', import.meta.url), 'utf8');
+  assert.doesNotMatch(page, /\bplayLine\b/, 'no unchecked playback in an assessment');
+  assert.match(page, /<PlayButton[^>]*onFallback=\{\(\) => \{ setShownText\(true\); onReadInstead\(item\.id\); \}\}/);
+  assert.match(page, /const scoredItems = useMemo\(\(\) => items\.filter\(\(i\) => !notHeard\.has\(i\.id\)\), \[items, notHeard\]\)/);
+  assert.match(page, /scoreCheckpoint\(scoredItems, finalAnswers\)/, 'the result and the saved attempt leave it out');
+  const line = readFileSync(new URL('../src/components/lesson/ReadAloudLine.jsx', import.meta.url), 'utf8');
+  assert.doesNotMatch(line, /\bplayLine\b/, 'the model line is checked too');
+  assert.match(line, /<PlayButton /);
+});
+
+test('a checkpoint result names what it assessed: perfect objective answers with ungraded production are not an all-skills pass', async () => {
+  // Codex score review, 2026-10-08: all four checkpoints returned „passed" at 100 % with the
+  // text ungraded and speaking self-confirmed, and nothing said the result was narrower.
+  const { buildCheckpoint, scoreCheckpoint, assessedParts } = await import('../src/lib/checkpoint/buildCheckpoint.js');
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  const { readFileSync } = await import('node:fs');
+  const pool = JSON.parse(readFileSync(new URL('../src/data/lessonPools/a11.json', import.meta.url), 'utf8'));
+  const items = buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: CURRICULUM_A11.checkpoints[0], pool });
+  const objective = Object.fromEntries(items.filter((i) => i.kind !== 'gradedWriting' && i.kind !== 'readAloud').map((i) => [i.id, i.answer]));
+  const narrow = assessedParts(items, scoreCheckpoint(items, objective));
+  assert.ok(narrow.notAssessed.includes('sprechen'), 'a self-confirmed read-aloud is not assessed speaking');
+  assert.equal(narrow.writing, 'drills', 'two drills are not a graded text');
+  const graded = items.find((i) => i.kind === 'gradedWriting');
+  const mic = Object.fromEntries(items.filter((i) => i.kind === 'readAloud').map((i) => [i.id, { pct: 0.9, usedMic: true }]));
+  const full = assessedParts(items, scoreCheckpoint(items, { ...objective, ...mic, [graded.id]: { graded: true, pct: 0.8 } }));
+  assert.deepEqual(full.notAssessed, []);
+  assert.equal(full.writing, 'graded');
+  const page = readFileSync(new URL('../src/pages/lesson/CheckpointPage.jsx', import.meta.url), 'utf8');
+  assert.match(page, /assessedParts\(scoredItems, result\)/, 'the result card states its scope');
+});
+
+test('the A1.1 final-test result speaks Sie and names what its score covers', async () => {
+  // Codex score review, 2026-10-08 (honesty of claims): the result page shared the exam mocks' du copy.
+  const { abschlusstestA11: t } = await import('../src/data/courseTests/abschlusstestA11.js');
+  for (const key of ['solide', 'knapp', 'nicht-bereit']) {
+    const copy = t.verdictCopyDe?.[key];
+    assert.ok(copy && copy.title && copy.body, key);
+    assert.doesNotMatch(`${copy.title} ${copy.body}`, /\b(du|dich|dir|dein\w*|Du|Dein\w*)\b|\bsieh\b|\bHalte\b|\büb(e|t)\b/, key);
+  }
+  assert.match(t.verdictCopyDe.solide.body, /Hören und Lesen/, 'the score covers the two automatically scored parts');
+  const { readFileSync } = await import('node:fs');
+  const page = readFileSync(new URL('../src/pages/Modelltest/ModelltestResult.jsx', import.meta.url), 'utf8');
+  assert.match(page, /return `Ihre letzten zwei Abschlusstests liegen bei/);
+});
+
+test('assessment a11y: a checkpoint verdict takes focus, and the writing coverage icons have words', async () => {
+  // Codex score review, 2026-10-08: checkpoint feedback appeared with no announcement and focus
+  // stayed behind; the Leitpunkt ticks and crosses were aria-hidden icons with no text.
+  const { readFileSync } = await import('node:fs');
+  const page = readFileSync(new URL('../src/pages/lesson/CheckpointPage.jsx', import.meta.url), 'utf8');
+  assert.match(page, /<p ref=\{verdictRef\} tabIndex=\{-1\}/, 'the verdict line is focusable');
+  assert.match(page, /useEffect\(\(\) => \{\s*if \(feedback\) verdictRef\.current\?\.focus\(\);\s*\}, \[feedback\]\);/, 'and takes focus once checked');
+  const gw = readFileSync(new URL('../src/components/lesson/GradedWriting.jsx', import.meta.url), 'utf8');
+  assert.match(gw, /<span className="sr-only">\{t\(outcome\.leitpunktCheck\[i\] \? 'writing\.covered' : 'writing\.notCovered', lang\)\}/);
+  const { t } = await import('../src/lib/lesson/strings.js');
+  for (const lang of ['en', 'de']) for (const k of ['writing.covered', 'writing.notCovered']) assert.notEqual(t(k, lang), k, `${k} (${lang})`);
+});
+
+test('the course says what its final test is and what an account is for', async () => {
+  // Codex score review, 2026-10-08: „ends with the Start Deutsch 1 final test" (it is our shortened
+  // practice test in that format), and „sign up only to save your progress" (AI feedback needs it too).
+  const { readFileSync } = await import('node:fs');
+  const home = readFileSync(new URL('../src/pages/CurriculumHomePage.jsx', import.meta.url), 'utf8');
+  assert.doesNotMatch(home, /ends with the \{curriculum\.examName\} final test/);
+  assert.match(home, /ends with a shortened practice test in the \{curriculum\.examName\} format/);
+  const { A11_META } = await import('../src/data/curricula/a11.meta.js');
+  assert.match(A11_META.aboutEn, /shortened practice test in the Start Deutsch 1 format/);
+  assert.match(A11_META.aboutEn, /not an official exam/);
+  assert.match(A11_META.aboutEn, /AI feedback/);
+  assert.doesNotMatch(A11_META.aboutEn, /only if you want to save/);
+});

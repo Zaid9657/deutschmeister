@@ -99,7 +99,7 @@ const readyBody = (resolved, lastTwo) => {
   const [recent, prior] = lastTwo; // lastTwo[0] is most recent
   const pctLine = `${prior.pct} % und ${recent.pct} %`;
   if (resolved.kind === 'course') {
-    return `Deine letzten zwei Abschlusstests liegen bei ${pctLine}. ${courseNext(resolved).body} (Richtwert, keine offizielle Bewertung.)`;
+    return `Ihre letzten zwei Abschlusstests liegen bei ${pctLine}. ${courseNext(resolved).body} (Richtwert, keine offizielle Bewertung.)`;
   }
   return `Deine letzten zwei Übungstests liegen bei ${pctLine}. Melde dich zur Prüfung an und übe mit einem offiziellen Modellsatz. (Richtwert, keine offizielle Bewertung.)`;
 };

@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Check, Loader2, Mic, Play, RotateCcw, Square, X } from 'lucide-react';
+import { Check, Loader2, Mic, RotateCcw, Square, X } from 'lucide-react';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import { useAuth } from '../../contexts/AuthContext';
-import { playLine } from '../../lib/lesson/speech.js';
+import PlayButton from './PlayButton.jsx';
 import { alignTranscript, selfConfirmedResult } from '../../lib/lesson/readaloud.js';
 import { getAuthHeaders } from '../../utils/supabase';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
@@ -185,18 +185,13 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
           {t('speaking.intelligibility', lang, { pct: pctLabel })}
           <span className="ml-2 font-normal text-graphite">
             {t('speaking.wordsHeard', lang, { hit: result.words.filter((w) => w.hit).length, total: result.words.length })}
+            {result.extra > 0 && <> · {t('speaking.extraWords', lang, { n: result.extra })}</>}
           </span>
         </p>
       )}
 
       <div className="mt-3 flex flex-wrap items-center gap-2">
-        <button
-          type="button"
-          onClick={() => playLine(lektionId, lineKey, text, { rate: 0.85 })}
-          className="inline-flex items-center gap-1.5 rounded-pill border border-rule bg-white px-3 py-1.5 text-[0.8125rem] font-bold text-ink hover:border-siegel"
-        >
-          <Play className="h-4 w-4" aria-hidden="true" /> {t('speaking.model', lang)}
-        </button>
+        <PlayButton lektionId={lektionId} audioKey={lineKey} text={text} rate={0.85} label={t('speaking.model', lang)} />
 
         {scoringPossible && phase === 'idle' && attempts === 0 && (
           <Button size="sm" onClick={startRecording}>

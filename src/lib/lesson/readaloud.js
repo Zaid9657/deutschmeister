@@ -89,6 +89,9 @@ export function levenshtein(a, b) {
   return prev[n];
 }
 
+/** Hesitation sounds a recogniser writes down; they are not words of the answer. */
+const FILLER_RE = /^(?:ah|aeh|aehm|eh|ehm|hm|hmm|mhm|oeh|oehm|uh|um|uhm)$/;
+
 /** Equal, or one edit apart on a word long enough for that to be a slip. */
 export function tokensMatch(expected, heard) {
   if (!expected || !heard) return false;
@@ -98,11 +101,14 @@ export function tokensMatch(expected, heard) {
 }
 
 /**
- * alignTranscript(expected, transcript) → { words: [{ word, hit }], pct }
+ * alignTranscript(expected, transcript) → { words: [{ word, hit }], pct, extra }
  *
  * `words` keeps the expected line's own spelling and order — that is what the
- * UI renders — with `hit` saying whether the STT heard that word. `pct` is
- * hits / expected tokens, 0…1 rounded to two decimals.
+ * UI renders — with `hit` saying whether the STT heard that word. `extra` is the
+ * heard words that are not in the line (hesitation fillers excepted). `pct` is
+ * hits / (expected tokens + extra), 0…1 rounded to two decimals: an inserted word
+ * counts, so „Ich bin nicht Ana." for „Ich bin Ana." is 0.75, not 1 (Codex score
+ * review, 2026-10-08). It measures recognised words, never pronunciation.
  */
 export function alignTranscript(expected, transcript) {
   const want = tokenize(expected);
@@ -110,7 +116,7 @@ export function alignTranscript(expected, transcript) {
   const n = want.length;
   const m = heard.length;
   if (!n) return { words: [], pct: 0 };
-  if (!m) return { words: want.map((t) => ({ word: t.raw, hit: false })), pct: 0 };
+  if (!m) return { words: want.map((t) => ({ word: t.raw, hit: false })), pct: 0, extra: 0 };
 
   // dp[i][j] = length of the longest common subsequence of want[i…] / heard[j…]
   const dp = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
@@ -139,7 +145,9 @@ export function alignTranscript(expected, transcript) {
     }
   }
 
-  return { words, pct: Math.round((hits / n) * 100) / 100 };
+  // Insertions only: a heard word standing in for an expected one is that word's miss already.
+  const extra = Math.max(0, heard.filter((t) => !FILLER_RE.test(t.norm)).length - n);
+  return { words, pct: Math.round((hits / (n + extra)) * 100) / 100, extra };
 }
 
 /**

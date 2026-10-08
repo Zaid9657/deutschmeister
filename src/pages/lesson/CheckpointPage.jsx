@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, Check, RotateCcw, Volume2, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, RotateCcw, X } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { curriculumFor, curriculumPath } from '../../data/curricula/index.js';
 import {
@@ -13,11 +13,12 @@ import {
   PASS_OVERALL_PCT,
   PASS_SECTION_PCT,
   sectionPasses,
+  assessedParts,
   WRITING_PASS_PCT,
 } from '../../lib/checkpoint/buildCheckpoint.js';
 import GradedWriting from '../../components/lesson/GradedWriting.jsx';
 import ReadAloudLine from '../../components/lesson/ReadAloudLine.jsx';
-import { playLine } from '../../lib/lesson/speech.js';
+import PlayButton from '../../components/lesson/PlayButton.jsx';
 import {
   fetchAttemptState,
   recordAttempt,
@@ -52,32 +53,36 @@ const POOL_LOADERS = {
 };
 
 /**
- * Play a checkpoint item's audio: the recorded line when the manifest has one
- * (playLine → src/data/curricula/<level>.audio.js), the browser voice when not.
- * Items carry lektionId + lineKey from buildCheckpoint for exactly this.
+ * One item, one screen. Typed input, option chips, dictation or self-confirm.
+ * Audio plays through PlayButton (checked: "playing" only once sound started, a failure said in
+ * words), the recorded line when the manifest has one, the browser voice when not — items carry
+ * lektionId + lineKey from buildCheckpoint for exactly this. A learner who cannot hear it may read
+ * it instead, and that item then leaves the score (`onReadInstead`): reading is not listening, and
+ * missing audio is not the learner's failure (Codex score review, 2026-10-08).
  */
-function speak(text, lektionId = null, lineKey = null) {
-  if (!text) return;
-  playLine(lektionId, lineKey, text, { rate: 0.9 });
-}
-
-/** One item, one screen. Typed input, option chips, dictation or self-confirm. */
-function PracticeItem({ item, onAnswer }) {
+function PracticeItem({ item, onAnswer, onReadInstead = () => {} }) {
   const [lang] = useLessonLang();
   const [value, setValue] = useState('');
   const [feedback, setFeedback] = useState(null);
   // A read-aloud or graded-writing result: the machine's verdict, or the
   // learner's own confirm when the machine was unavailable.
   const [pending, setPending] = useState(null);
+  const [shownText, setShownText] = useState(false);
   const inputRef = useRef(null);
+  // The verdict takes focus once an answer is checked: a screen reader reads it, and a held Enter
+  // cannot skip past it the way a focused Next button could (Codex score review, 2026-10-08).
+  const verdictRef = useRef(null);
+  useEffect(() => {
+    if (feedback) verdictRef.current?.focus();
+  }, [feedback]);
 
   useEffect(() => {
     setValue('');
     setFeedback(null);
     setPending(null);
-    if (item.audioText && item.kind !== 'readAloud') speak(item.audioText, item.lektionId, item.lineKey);
+    setShownText(false);
     if (item.mode === 'typed') inputRef.current?.focus();
-  }, [item.id, item.audioText, item.mode, item.kind, item.lektionId, item.lineKey]);
+  }, [item.id, item.mode]);
 
   const submit = (answer) => {
     if (feedback) return;
@@ -171,10 +176,13 @@ function PracticeItem({ item, onAnswer }) {
 
       {isAudio && (
         <div className="mt-4">
-          <Button variant="secondary" onClick={() => speak(item.audioText, item.lektionId, item.lineKey)}>
-            <Volume2 className="h-4 w-4" aria-hidden="true" />
-            {t('action.listenAgain', lang)}
-          </Button>
+          <PlayButton lektionId={item.lektionId} audioKey={item.lineKey} text={item.audioText} rate={0.9} onFallback={() => { setShownText(true); onReadInstead(item.id); }} />
+          {shownText && (
+            <>
+              <Card tone="sunk" className="mt-3 p-4 text-[0.9375rem] leading-relaxed text-ink" lang="de">{item.audioText}</Card>
+              <p className="mt-2 text-xs text-graphite">{t('checkpoint.readInstead', lang)}</p>
+            </>
+          )}
         </div>
       )}
 
@@ -243,7 +251,7 @@ function PracticeItem({ item, onAnswer }) {
 
       {feedback && (
         <div className="mt-5 border-t border-rule pt-4">
-          <p className={`flex items-center gap-2 text-sm font-bold ${feedback.correct ? 'text-accent-limette-ink' : 'text-accent-himbeer-ink'}`}>
+          <p ref={verdictRef} tabIndex={-1} className={`flex items-center gap-2 text-sm font-bold outline-none ${feedback.correct ? 'text-accent-limette-ink' : 'text-accent-himbeer-ink'}`}>
             {feedback.correct ? <Check className="h-4 w-4" aria-hidden="true" /> : <X className="h-4 w-4" aria-hidden="true" />}
             {t(item.mode === 'confirm' ? 'checkpoint.doneLabel' : feedback.correct ? 'feedback.correct' : 'checkpoint.wrong', lang)}
           </p>
@@ -303,6 +311,11 @@ export default function CheckpointPage() {
   const [answers, setAnswers] = useState({});
   const [attempts, setAttempts] = useState(null);
   const [remediation, setRemediation] = useState([]);
+  // Where the finished paper is saved: null (signed out) | 'saving' | 'saved' | 'failed'.
+  const [saveState, setSaveState] = useState(null);
+  // Items read instead of heard (audio failed): they leave the score — see PracticeItem.
+  const [notHeard, setNotHeard] = useState(() => new Set());
+  const saveRef = useRef(null);
 
   useEffect(() => {
     const load = POOL_LOADERS[String(level || '').toLowerCase()];
@@ -328,25 +341,42 @@ export default function CheckpointPage() {
     return buildCheckpoint({ curriculum, checkpoint, pool, seed: round ? `${checkpoint.id}-round-${round}` : undefined });
   }, [curriculum, checkpoint, pool, round]);
 
-  const result = useMemo(() => (items.length ? scoreCheckpoint(items, answers) : null), [items, answers]);
+  const scoredItems = useMemo(() => items.filter((i) => !notHeard.has(i.id)), [items, notHeard]);
+  const result = useMemo(() => (scoredItems.length ? scoreCheckpoint(scoredItems, answers) : null), [scoredItems, answers]);
+  // What this result covers — said on the card, so a pass without graded production is not read as more.
+  const scope = useMemo(() => (result ? assessedParts(scoredItems, result) : null), [scoredItems, result]);
+
+  // One stamped attempt per finished paper, so „Try again" after a failed save finds what already
+  // landed instead of counting a second attempt (Codex score review, 2026-10-08). The attempt count
+  // is read AFTER the attempt is written — reading it in parallel showed the count from before it.
+  const save = useCallback((retry = false) => {
+    if (!saveRef.current) return;
+    if (user) setSaveState('saving');
+    recordAttempt(user?.id, { ...saveRef.current.args, stamp: saveRef.current.stamp, retry })
+      .catch(() => false)
+      .then((ok) => {
+        if (user) setSaveState(ok ? 'saved' : 'failed');
+        return fetchAttemptState(user?.id, checkpoint.id);
+      })
+      .then(setAttempts);
+  }, [user, checkpoint]);
 
   const finish = useCallback(
     (finalAnswers) => {
-      const scored = scoreCheckpoint(items, finalAnswers);
+      const scored = scoreCheckpoint(scoredItems, finalAnswers);
       setPhase('result');
-      // The attempt count is read AFTER the attempt is written — reading it in
-      // parallel showed the count from before this attempt.
-      recordAttempt(user?.id, { level, checkpointId: checkpoint.id, items, answers: finalAnswers, result: scored })
-        .catch(() => false)
-        .then(() => fetchAttemptState(user?.id, checkpoint.id))
-        .then(setAttempts);
+      saveRef.current = {
+        args: { level, checkpointId: checkpoint.id, items: scoredItems, answers: finalAnswers, result: scored },
+        stamp: new Date().toISOString(),
+      };
+      save();
       // The bound the paper itself was drawn under (see servableBy): a remediation
       // item must not be the first place the learner meets a word.
       if (!scored.passed && pool) {
-        setRemediation(remediationSet(items, finalAnswers, pool, { afterLektion: checkpoint.afterLektion }));
+        setRemediation(remediationSet(scoredItems, finalAnswers, pool, { afterLektion: checkpoint.afterLektion }));
       }
     },
-    [items, user, level, checkpoint, pool],
+    [scoredItems, level, checkpoint, pool, save],
   );
 
   const onAnswer = (item, answer) => {
@@ -404,7 +434,7 @@ export default function CheckpointPage() {
                 : t('checkpoint.limit', lang, { limit: ATTEMPT_LIMIT, hours: ATTEMPT_WINDOW_HOURS })}
             </p>
             <div className="mt-6">
-              <Button disabled={!items.length || Boolean(attempts?.blocked)} onClick={() => { setRound(attempts?.used || 0); setPhase('run'); setIndex(0); setAnswers({}); }}>
+              <Button disabled={!items.length || Boolean(attempts?.blocked)} onClick={() => { setRound(attempts?.used || 0); setPhase('run'); setIndex(0); setAnswers({}); setNotHeard(new Set()); }}>
                 {t('checkpoint.start', lang)} <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Button>
               {!items.length && <p className="mt-2 text-sm text-graphite">{t('checkpoint.loadingItems', lang)}</p>}
@@ -412,7 +442,7 @@ export default function CheckpointPage() {
           </Card>
         )}
 
-        {phase === 'run' && current && <PracticeItem key={current.id} item={current} onAnswer={onAnswer} />}
+        {phase === 'run' && current && <PracticeItem key={current.id} item={current} onAnswer={onAnswer} onReadInstead={(id) => setNotHeard((prev) => new Set(prev).add(id))} />}
 
         {phase === 'result' && result && (
           <>
@@ -428,6 +458,15 @@ export default function CheckpointPage() {
                   <SectionRow key={s} name={s} section={result.sections[s]} />
                 ))}
               </ul>
+              {scope && (
+                <div className="mt-4 space-y-1 text-sm text-graphite">
+                  <p>{t('checkpoint.assessed', lang, { list: scope.assessed.map((s) => SECTION_LABELS[s]).join(' · ') })}</p>
+                  {scope.notAssessed.length > 0 && (
+                    <p>{t('checkpoint.notAssessed', lang, { list: scope.notAssessed.map((s) => SECTION_LABELS[s]).join(' · ') })}</p>
+                  )}
+                  {scope.writing === 'drills' && <p>{t('checkpoint.drillsOnly', lang)}</p>}
+                </div>
+              )}
               {Object.keys(result.errorTags).length > 0 && (
                 <div className="mt-5">
                   <p className="font-data text-[0.6875rem] uppercase tracking-[0.13em] text-graphite">{t('checkpoint.whyTitle', lang)}</p>
@@ -440,6 +479,16 @@ export default function CheckpointPage() {
                   </div>
                 </div>
               )}
+              <p className="mt-4 text-sm text-graphite" role="status">
+                {saveState === 'failed' ? (
+                  <>
+                    {t('checkpoint.saveFailed', lang)}{' '}
+                    <button type="button" className="font-bold text-siegel-deep underline underline-offset-2" onClick={() => save(true)}>
+                      {t('sync.retry', lang)}
+                    </button>
+                  </>
+                ) : saveState ? t(saveState === 'saved' ? 'sync.synced' : 'sync.syncing', lang) : null}
+              </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 {result.passed ? (
                   <Button to={nextHref}>
@@ -448,7 +497,7 @@ export default function CheckpointPage() {
                 ) : (
                   <Button
                     disabled={Boolean(attempts?.blocked)}
-                    onClick={() => { setRound(Math.max(round + 1, attempts?.used || 0)); setAnswers({}); setIndex(0); setRemediation([]); setPhase('run'); }}
+                    onClick={() => { setRound(Math.max(round + 1, attempts?.used || 0)); setAnswers({}); setNotHeard(new Set()); setIndex(0); setRemediation([]); setSaveState(null); setPhase('run'); }}
                   >
                     <RotateCcw className="h-4 w-4" aria-hidden="true" /> {t('action.again', lang)}
                   </Button>

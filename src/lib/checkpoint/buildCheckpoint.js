@@ -2370,6 +2370,21 @@ export function scoreCheckpoint(items, answers = {}) {
 }
 
 /**
+ * What a result can claim: the parts it assessed this time and the parts it did not. A pass on
+ * Hören, Lesen and Bausteine with an ungraded text and a self-confirmed read-aloud is narrower than
+ * „all five skills", and the result card says so (Codex score review, 2026-10-08). `writing` is
+ * 'graded' (the text had a grader verdict), 'drills' (only the two sentence exercises counted) or
+ * null (Schreiben not assessed at all).
+ */
+export function assessedParts(items, result) {
+  const present = SECTION_ORDER.filter((s) => items.some((i) => i.section === s));
+  const assessed = present.filter((s) => result?.sections?.[s]?.scored);
+  const w = result?.sections?.schreiben;
+  const writing = !w?.scored ? null : w.realTask == null ? 'drills' : 'graded';
+  return { assessed, notAssessed: present.filter((s) => !assessed.includes(s)), writing };
+}
+
+/**
  * Does one scored section pass? The ONE rule scoreCheckpoint and the result row both read.
  *  - at least PASS_SECTION_PCT;
  *  - more than answering the same option everywhere: reading is two „richtig" and two „falsch", so

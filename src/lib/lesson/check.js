@@ -131,6 +131,23 @@ export function spellingApplies(expected) {
 
 const numbersIn = (s) => (String(s).match(/\d+/g) || []).join(',');
 
+/** Negation, at any length: „keine" → „eine" is one edit and the opposite meaning. */
+const NEGATION_RE = /^(?:nicht|nie|kein|keine|keinen|keinem|keiner|keines)$/;
+
+/** The one word two prepared answers differ in, when both have the same number of words; else null. */
+function changedWord(given, expected) {
+  const g = given.split(' ');
+  const e = expected.split(' ');
+  if (g.length !== e.length) return null;
+  const at = e.findIndex((w, i) => w !== g[i]);
+  return at < 0 ? null : { expected: e[at], given: g[at] };
+}
+
+/** `given` is `expected` with exactly one extra character somewhere („bistt" for „bist"). */
+const oneKeyAdded = (given, expected) =>
+  given.length === expected.length + 1
+  && [...given].some((_, i) => given.slice(0, i) + given.slice(i + 1) === expected);
+
 function endingDiffers(user, expected) {
   const u = user.split(' '); const e = expected.split(' ');
   if (u.length !== e.length) return true;
@@ -229,6 +246,13 @@ export function checkAnswer(userInput, expected, {
     if (shortFunctionWord) continue;
     // A different number is a different answer, never a typo: „90" for „20" is one character off.
     if (numbersIn(user) !== numbersIn(norm)) continue;
+    // So is a changed SHORT word inside a sentence: „ein" for „bin" or „kein", „dem" for „den" are
+    // grammar and meaning, and so is any change to a negation (Codex score review, 2026-10-08 — a
+    // graded checkpoint accepted „Ich ein von Beruf Lehrer."). The guard above only covers one-word
+    // answers. A short word typed whole plus one stray key („bistt") is still a slip.
+    const changed = changedWord(user, norm);
+    if (changed && (NEGATION_RE.test(changed.expected) || NEGATION_RE.test(changed.given)
+      || (changed.expected.length <= 4 && !oneKeyAdded(changed.given, changed.expected)))) continue;
     if (norm.length >= 5 && levenshtein(user, norm) === 1 && !endingDiffers(user, norm)) {
       return { result: RESULT.TYPO, expected: a };
     }

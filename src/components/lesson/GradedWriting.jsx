@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Check, X, Loader2, CheckCircle, XCircle, PenTool, Sparkles } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { getAuthHeaders } from '../../utils/supabase';
@@ -7,6 +7,7 @@ import { scoreWriting, countWords, formularText } from '../../lib/lesson/writing
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { safeGetJSON, safeRemove, safeSetJSON } from '../../utils/safeStorage.js';
 
 /**
  * The graded writing exercise, reusable by any stage that has a task.
@@ -99,17 +100,44 @@ function Checklist({ checks, mode, signedIn, lang }) {
   );
 }
 
+// A draft survives a reload or a closed tab for 7 days, per learner and task, and is dropped on
+// submit (Codex score review, 2026-10-08: the text lived in component state only).
+const DRAFT_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
+const draftKey = (userId, taskKey, lektionId) => `dm_writing_draft:${userId || 'guest'}:${taskKey || ''}:${lektionId || ''}`;
+const readDraft = (key) => {
+  const d = safeGetJSON(key, null);
+  return d && typeof d === 'object' && Date.now() - Number(d.savedAt) < DRAFT_MAX_AGE_MS ? d : null;
+};
+
 export default function GradedWriting({ task, lektionId = null, onResult }) {
   const { user } = useAuth();
   const [lang] = useLessonLang();
   const isFormular = task?.kind === 'formular';
   const points = (isFormular ? task?.fields : task?.leitpunkte) || [];
 
-  const [text, setText] = useState('');
-  const [fields, setFields] = useState({});
+  const key = draftKey(user?.id, task?.taskKey, lektionId);
+  const [text, setText] = useState(() => readDraft(key)?.text || '');
+  const [fields, setFields] = useState(() => readDraft(key)?.fields || {});
   const [busy, setBusy] = useState(false);
   const [outcome, setOutcome] = useState(null); // the r object, once submitted
   const [note, setNote] = useState(null); // honest one-liner about the fallback
+
+  // The account resolves after the first render: then take that learner's draft, if nothing is typed.
+  const loadedKey = useRef(key);
+  useEffect(() => {
+    if (loadedKey.current === key) return;
+    loadedKey.current = key;
+    const d = readDraft(key);
+    if (!d) return;
+    setText((prev) => prev || d.text || '');
+    setFields((prev) => (Object.keys(prev).length ? prev : d.fields || {}));
+  }, [key]);
+  useEffect(() => {
+    if (outcome) return;
+    const empty = !text.trim() && !Object.values(fields).some((v) => String(v ?? '').trim());
+    if (empty) safeRemove(key);
+    else safeSetJSON(key, { text, fields, savedAt: Date.now() });
+  }, [key, text, fields, outcome]);
 
   const value = isFormular ? fields : text;
   const check = scoreWriting(task, value);
@@ -140,6 +168,7 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
   });
 
   const finish = (r, noteText) => {
+    safeRemove(key);
     setOutcome(r);
     setNote(noteText || null);
     if (typeof onResult === 'function') onResult(r);
@@ -320,7 +349,10 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
                     {outcome.leitpunktCheck[i]
                       ? <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-accent-limette-ink" aria-hidden="true" />
                       : <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-accent-himbeer-ink" aria-hidden="true" />}
-                    <span className="text-graphite">{p}</span>
+                    <span className="text-graphite">
+                      <span className="sr-only">{t(outcome.leitpunktCheck[i] ? 'writing.covered' : 'writing.notCovered', lang)}: </span>
+                      {p}
+                    </span>
                   </li>
                 ))}
               </ul>

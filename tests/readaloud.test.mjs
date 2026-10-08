@@ -49,7 +49,10 @@ test('a perfect read marks every word and scores 1', () => {
 test('words keep the expected line, not the transcript', () => {
   const r = alignTranscript('Ich komme aus Marokko', 'ich komme aus marokko und wohne in berlin');
   assert.equal(r.words.length, 4, 'extra words the learner said add no entries');
-  assert.equal(r.pct, 1);
+  // …but they count against the score since 2026-10-08 (Codex score review): reading the line plus
+  // four words of one's own is not reading the line, and an inserted „nicht" used to score 100 %.
+  assert.equal(r.extra, 4);
+  assert.equal(r.pct, 0.5);
 });
 
 test('punctuation is never a miss and never its own word', () => {
