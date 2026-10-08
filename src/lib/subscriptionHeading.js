@@ -42,13 +42,13 @@ export function subscriptionHeadingCopy({ isSubscribed, inTrial, daysLeft, canBu
       ? {
           title: 'Ihr Plan',
           lead: canBuyLevel
-            ? 'Pro ist aktiv. Sie können zusätzlich einen Kurs für eine Stufe kaufen – er gehört Ihnen für immer, was auch immer mit dem Abo passiert.'
+            ? 'Pro ist aktiv. Sie können zusätzlich einen Kurs für eine Stufe kaufen – er bleibt Ihnen dauerhaft erhalten.'
             : 'Pro ist aktiv.',
         }
       : {
           title: 'Your plan',
           lead: canBuyLevel
-            ? 'Pro is active. You can also add a level course — it stays yours for life, whatever happens to the subscription.'
+            ? 'Pro is active. You can also add a level course — it stays yours for life.'
             : 'Pro is active.',
         };
   }
@@ -59,7 +59,7 @@ export function subscriptionHeadingCopy({ isSubscribed, inTrial, daysLeft, canBu
           title: 'Wählen Sie, wie es weitergeht',
           lead: `Ihre kostenlose Testphase läuft (noch ${daysLeft} ${daysLeft === 1 ? 'Tag' : 'Tage'}). `
             + (canBuyLevel
-              ? 'Kaufen Sie die Stufe, die Sie brauchen, einmal und behalten Sie sie, oder wählen Sie Pro für jede Stufe und das volle KI-Kontingent.'
+              ? 'Kaufen Sie die Stufe, die Sie brauchen, einmalig und dauerhaft – oder wählen Sie Pro für jede Stufe und das volle KI-Kontingent.'
               : 'Danach haben Sie mit Pro jede Stufe und das volle KI-Kontingent.'),
         }
       : {
@@ -76,7 +76,7 @@ export function subscriptionHeadingCopy({ isSubscribed, inTrial, daysLeft, canBu
         title: 'Machen Sie dort weiter, wo Sie aufgehört haben',
         lead: 'Ihre Testphase ist vorbei, Ihr Fortschritt bleibt. '
           + (canBuyLevel
-            ? 'Kaufen Sie die Stufe, die Sie brauchen, einmal und behalten Sie sie, oder wählen Sie Pro für jede Stufe und das volle KI-Kontingent.'
+            ? 'Kaufen Sie die Stufe, die Sie brauchen, einmalig und dauerhaft – oder wählen Sie Pro für jede Stufe und das volle KI-Kontingent.'
             : 'Mit Pro haben Sie jede Stufe und das volle KI-Kontingent.'),
       }
     : {
