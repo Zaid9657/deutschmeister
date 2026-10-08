@@ -29,8 +29,9 @@ memory is `agents/conversion` in the team artifact; your `owns`, goals and guard
 - **Reported jointly with revenue.** End `last_report` with the same line the revenue agent
   writes: `rev_30d · new payers 30 d · signups 30 d · per 100`, all from this run's pulse.
 - PostHog funnels are not readable server-side yet, so write "not measured" rather than
-  guessing checkout rates. An in-app door (a level lock, a paywall) cannot be measured through
-  `profiles.acquisition_*`.
+  guessing checkout rates. An in-app door is measurable through `profiles.acquisition_last_source`
+  only when its signup link is a tagged plain href (the level lock is `level-lock` since 2026-10-08,
+  `src/lib/lockDoor.js`); an untagged door cannot be measured there.
 
 ## Levers
 
