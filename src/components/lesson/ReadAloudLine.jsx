@@ -91,10 +91,12 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
       const words = Array.isArray(data.words) && data.words.length
         ? data.words
         : alignTranscript(text, data.transcript || '').words;
-      const pct = typeof data.pct === 'number' ? data.pct : alignTranscript(text, data.transcript || '').pct;
+      const local = alignTranscript(text, data.transcript || '');
+      const pct = typeof data.pct === 'number' ? data.pct : local.pct;
+      const extra = typeof data.extra === 'number' ? data.extra : local.extra;
 
       const nextAttempts = attempts + 1;
-      setResult({ words, pct });
+      setResult({ words, pct, extra });
       setAttempts(nextAttempts);
       setPhase('scored');
       onResultRef.current?.({ pct, attempts: nextAttempts, usedMic: true });

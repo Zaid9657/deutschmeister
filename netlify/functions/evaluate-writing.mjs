@@ -163,6 +163,8 @@ export function gateEvaluation(task, text, evaluation) {
     scores,
     total_score: total,
     improvements: copied ? ['Schreiben Sie eigene Sätze – nicht die Aufgabe abschreiben.', ...improvements] : improvements,
+    // Real booleans: a „false" string would read as covered on the client (`!!value`).
+    leitpunkt_check: checks.map((c) => c === true || c === 'true'),
     gate: { copied, covered, reported_total: reported },
   };
 }

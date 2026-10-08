@@ -487,3 +487,20 @@ test('the course says what its final test is and what an account is for', async 
   assert.match(A11_META.aboutEn, /AI feedback/);
   assert.doesNotMatch(A11_META.aboutEn, /only if you want to save/);
 });
+
+test('the grader returns real booleans, and the read-aloud extra-word count reaches the learner (Codex rescore)', async () => {
+  // A „false" string passed validation and the client's !!value showed it as covered; the server
+  // dropped `extra`, so the new „words not in the line" note could never appear.
+  const { gateEvaluation } = await import('../netlify/functions/evaluate-writing.mjs');
+  const { writingTaskByKey } = await import('../src/data/writingTasks.js');
+  const task = writingTaskByKey('goethe_a1', 'a11-l10');
+  const out = gateEvaluation(task, 'Guten Tag, Frau Kaya! Der Zug hat Verspätung. Viele Grüße, Ana',
+    { scores: { task: 1, structure: 4, accuracy: 4, vocabulary: 4 }, total_score: 13, leitpunkt_check: ['false', 'true', 'false'] });
+  assert.deepEqual(out.leitpunkt_check, [false, true, false]);
+  const { readFileSync } = await import('node:fs');
+  const fn = readFileSync(new URL('../netlify/functions/score-readaloud.mjs', import.meta.url), 'utf8');
+  assert.match(fn, /const \{ words, pct, extra \} = alignTranscript\(expected, transcript\);/);
+  assert.match(fn, /body: JSON\.stringify\(\{ transcript, words, pct, extra,/);
+  const line = readFileSync(new URL('../src/components/lesson/ReadAloudLine.jsx', import.meta.url), 'utf8');
+  assert.match(line, /setResult\(\{ words, pct, extra \}\)/);
+});

@@ -104,7 +104,7 @@ export const handler = async (event) => {
       throw aiErr;
     }
 
-    const { words, pct } = alignTranscript(expected, transcript);
+    const { words, pct, extra } = alignTranscript(expected, transcript);
     const correct = pct >= CORRECT_PCT;
 
     // One row per clip: it is both the attempt record the error report reads
@@ -128,7 +128,7 @@ export const handler = async (event) => {
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify({ transcript, words, pct, used: used + 1, limit: READALOUD_DAILY_LIMIT }),
+      body: JSON.stringify({ transcript, words, pct, extra, used: used + 1, limit: READALOUD_DAILY_LIMIT }),
     };
   } catch (error) {
     console.error('score-readaloud error:', error.message, error.stack);
