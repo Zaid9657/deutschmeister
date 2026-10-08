@@ -11,6 +11,7 @@ import { clearBuyIntent } from '../lib/buyIntent';
 import { subscriptionPortalAction } from '../lib/billingPortal.js';
 import { planStatusCopy } from '../lib/planStatus.js';
 import { proPlanLines } from '../lib/proPlanLines.js';
+import { subscriptionHeadingCopy } from '../lib/subscriptionHeading.js';
 import { markCheckoutStarted, consumeCheckoutSuccess } from '../lib/funnelTracking';
 import { PLANS, num, levelsForProduct } from '../data/pricing.js';
 import { LEVEL_COUNT, READING_LESSON_COUNT, TRIAL_DAYS } from '../data/marketing.js';
@@ -140,6 +141,13 @@ const SubscriptionPage = () => {
   // A coming-soon course is listed (priced, no checkout) so the ladder reads
   // complete; a live course needs its checkout id or an existing purchase.
   const visibleLevelCourses = levelCourses.filter((c) => c.variantId || c.comingSoon || hasProduct(c.key));
+  // The H1 lead offers a level only when a card below shows its Buy button: a
+  // live course (checkout id, not coming soon) the learner does not own yet,
+  // the same tests the card applies (lib/subscriptionHeading.js).
+  const canBuyLevel = levelCourses.some(
+    (c) => c.variantId && !c.comingSoon && !(hasProduct(c.key) || ownsBundle || ownsLevel(c.levels[0]))
+  );
+  const heading = subscriptionHeadingCopy({ isSubscribed, inTrial, daysLeft, canBuyLevel }, isGerman);
 
   const startPurchase = (productKey, variantId, price) => {
     const checkoutUrl = LEMONSQUEEZY_CONFIG.getCheckoutUrl(
@@ -240,14 +248,8 @@ const SubscriptionPage = () => {
             level={1}
             size="page"
             align="center"
-            title={isSubscribed ? 'Your plan' : inTrial ? 'Choose how you want to keep going' : 'Pick up where you left off'}
-            lead={
-              isSubscribed
-                ? 'Pro is active. You can also add a level course — it stays yours for life, whatever happens to the subscription.'
-                : inTrial
-                  ? `Your free trial is running (${daysLeft} ${daysLeft === 1 ? 'day' : 'days'} left). Buy the level you need once and keep it, or go Pro for the AI tools every month.`
-                  : 'Your trial is over, but your progress stays. Choose a plan and keep learning without limits.'
-            }
+            title={heading.title}
+            lead={heading.lead}
           />
         </div>
 
