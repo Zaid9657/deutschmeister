@@ -87,3 +87,74 @@ test('the send script guards the live send; the retired START49 script cannot ru
   assert.match(firstCommand, /^echo "RETIRED/);
   assert.ok(retired.indexOf('\nexit 1\n') < retired.indexOf('curl '), 'exits before any request');
 });
+
+// ---------------------------------------------------------------------------
+// The whole sendable copy (2026-10-09): every email body AND every Telegram post,
+// i.e. the draft from "## Email 1" to "## After the sends", plus the canonical
+// Email 1 template. The Telegram posts had escaped the rules above: they typed
+// three prices and the Pro window, said the level test takes "~10 Minuten"
+// (its landing page says 15-20), opened with an unsourced "weil es immer wieder
+// gefragt wird", and promised "nichts läuft ab" next to a Pro window that does
+// end. Each class is closed by a rule over the copy, not by a list of old lines.
+const sendable = draft.slice(draft.indexOf('## Email 1'), draft.indexOf('## After the sends'));
+const sendableTexts = [['draft (emails + Telegram)', sendable], ['launch-sublevel-1.mjs', TEMPLATE]];
+const blocks = (text) => text.split(/\n\s*\n/);
+
+test('the sendable copy is the emails and the Telegram posts', () => {
+  assert.ok(draft.indexOf('## Email 1') > 0 && draft.indexOf('## After the sends') > draft.indexOf('## Telegram'));
+  for (const post of ['TG1', 'TG2', 'TG3', 'TG4', 'TG5']) assert.ok(sendable.includes(`### ${post} `), post);
+});
+
+test('no price literal and no typed month count anywhere in the sendable copy', () => {
+  const priceLiteral = /(?:€|&euro;)\s?\d|\d\s?(?:€|&euro;)|\b\d+(?:[.,]\d+)?\s?(?:EUR|Euro)\b/;
+  const monthCount = /\b\d+\s*(?:months?|Monaten?)\b/i;
+  for (const [name, text] of sendableTexts) {
+    assert.doesNotMatch(text, priceLiteral, `${name}: prices are {{…}} tokens filled from pricing.js`);
+    assert.doesNotMatch(text, monthCount, `${name}: the included Pro window is {{COURSE_PRO_MONTHS}}`);
+  }
+});
+
+test('every price token names its source and only levels that can be bought', () => {
+  const sellable = new Set(SELLABLE_LEVELS);
+  const tokens = [...sendable.matchAll(/\{\{([^}]*)\}\}/g)].map((m) => m[1]).filter((t) => /price/i.test(t));
+  assert.ok(tokens.length >= 4, `expected the price tokens of Emails 1-3 and TG5, found ${tokens.length}`);
+  for (const t of tokens) {
+    assert.match(t, /SUBLEVEL_PRICES_EUR/, `price token names its source: {{${t}}}`);
+    for (const [, band, half] of t.matchAll(/\b([ab][12])(?:\.([12]))?\b/gi)) {
+      const b = band.toLowerCase();
+      if (half) assert.ok(sellable.has(`${b}.${half}`), `{{${t}}} prices ${b}.${half}, which cannot be bought`);
+      else assert.ok([1, 2].some((h) => sellable.has(`${b}.${h}`)), `{{${t}}} prices ${b}, which has no buyable half`);
+    }
+  }
+});
+
+test('every level-test duration in the sendable copy is the one its landing page states', () => {
+  const stated = read('src/components/LevelTest/LevelTestLanding.jsx').match(/key:\s*'minutes'[^}]*value:\s*'([^']+)'/);
+  assert.ok(stated, 'LevelTestLanding.jsx states the duration in FACTS');
+  const norm = (s) => s.replace(/&ndash;|–|—/g, '-').replace(/\s+/g, '');
+  const want = norm(stated[1]);
+  const duration = /(~\s*)?(\d+(?:\s*(?:-|–|&ndash;)\s*\d+)?)\s*(?:min|mins|minutes|Minuten)\b/gi;
+  let found = 0;
+  for (const [name, text] of sendableTexts) {
+    for (const block of blocks(text)) {
+      if (!/level[- ]test|Einstufungstest/i.test(block)) continue;
+      for (const [whole, tilde, value] of block.matchAll(duration)) {
+        found += 1;
+        assert.equal(norm(value), want, `${name}: "${whole.trim()}" next to the level test; its landing page says ${stated[1]}`);
+        assert.equal(tilde, undefined, `${name}: "${whole.trim()}" rounds the stated range`);
+      }
+    }
+  }
+  assert.ok(found >= 3, `expected the durations in Email 1 (draft + template) and TG4, found ${found}`);
+});
+
+test('the sendable copy claims nothing about what people ask, and no Pro window that never ends', () => {
+  const asks = /\b(?:told us|you told|asked us|wrote to us|(?:users|learners|customers) (?:say|tell)|gefragt wird|fragt ihr|fragen (?:uns|mich)|(?:habt|haben) (?:uns|mich) gefragt|schreibt uns|als man denkt)\b/i;
+  const neverEnds = /nichts läuft ab|läuft nie ab|kein Ablauf|nothing expires|never expires|no expiry/i;
+  for (const [name, text] of sendableTexts) {
+    assert.doesNotMatch(text, asks, `${name}: a claim about what people ask needs a source (there are no tickets or survey answers to quote)`);
+    // A course stays unlocked for good; its included Pro window ends after
+    // COURSE_PRO_MONTHS (SubscriptionContext: a course is lifetime, its Pro can expire).
+    assert.doesNotMatch(text, neverEnds, `${name}: the included Pro window ends, so "nothing expires" is false`);
+  }
+});

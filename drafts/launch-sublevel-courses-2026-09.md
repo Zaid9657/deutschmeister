@@ -132,7 +132,7 @@ Pricing page: `https://deutsch-meister.de/pricing/?utm_source=email&utm_medium=l
 
 <p>There is no discount code and no countdown in this email. The price is the price; it is the same next month. I am writing because three things are worth knowing before you decide:</p>
 
-<p><strong>It is yours for good.</strong> Not a subscription. If you stop for two months, nothing expires.</p>
+<p><strong>It is yours for good.</strong> Not a subscription. If you stop for a while, the level stays unlocked; only the {{COURSE_PRO_MONTHS}} months of included Pro run on the calendar.</p>
 
 <p><strong>You can buy half a level.</strong> If the level test puts you at A2.2, you do not pay for A2.1.</p>
 
@@ -151,6 +151,14 @@ Pricing page: `https://deutsch-meister.de/pricing/?utm_source=email&utm_medium=l
 Cadence: one every second day, in the general topic. No two product posts in a row.
 Link for the telc course: `https://deutsch-meister.de/telc-b1-komplettvorbereitung/?utm_source=telegram&utm_medium=post&utm_campaign=sublevel-2026-09`
 Link for the level test: `https://deutsch-meister.de/level-test/?utm_source=telegram&utm_medium=post&utm_campaign=sublevel-2026-09`
+Prices and the included Pro window are `{{…}}` placeholders here too (since 2026-10-09): fill
+them from `src/data/pricing.js` before posting, the way `launch-sublevel-1.mjs` fills Email 1.
+`tests/launch-email.test.mjs` holds the whole sendable copy, emails and posts, to the same
+rules: no typed price or month count, a price token names only sellable levels, the
+level-test duration is the one its landing page states, no claim about what people ask, and
+no promise that nothing ends (the level stays unlocked; the included Pro window ends).
+Post TG2 only once the telc page shows its Buy button, and TG5 only after the work-order #2
+proof (a card whose checkout id is unset is hidden, so the post would point at nothing).
 
 ### TG1 · Value — der Genitiv, den die Prüfer hören wollen
 Kurzer Test für heute: Welche Version klingt nach B1, welche nach A2?
@@ -160,8 +168,8 @@ Kurzer Test für heute: Welche Version klingt nach B1, welche nach A2?
 Wer das in 5 Minuten üben will: Genitiv-Präpositionen mit Tipp-Übungen (nicht ankreuzen – schreiben) gibt's bei deutsch-meister.de unter Grammatik → B1.1. Regeln sind frei.
 
 ### TG2 · Product — für alle mit B1-Termin
-Falls dein Arbeitgeber oder das Amt **telc B1** von dir will (Partner, Ehegatte, Einbürgerung – kommt in dieser Gruppe öfter vor als man denkt):
-Wir haben eine feste 4-Wochen-Vorbereitung gebaut. Ein Task pro Tag, in der Reihenfolge, die zur Prüfung führt, mit einem zeitgesteuerten telc-Modelltest und KI-Feedback auf deine Briefe. Einmalzahlung, 3 Monate Pro inklusive.
+Falls dein Arbeitgeber oder das Amt **telc B1** von dir will (Partner, Ehegatte, Einbürgerung):
+Wir haben eine feste 4-Wochen-Vorbereitung gebaut. Ein Task pro Tag, in der Reihenfolge, die zur Prüfung führt, mit einem zeitgesteuerten telc-Modelltest und KI-Feedback auf deine Briefe. Einmalzahlung, {{COURSE_PRO_MONTHS}} Monate Pro inklusive.
 👉 {telc link}
 Nichts für dich, wenn du auf B2/C1 lernst – dann einfach weiterscrollen.
 
@@ -174,15 +182,15 @@ Drei Sätze, die du dir heute merkst:
 • Wäre es möglich, das zu verschieben?
 Mehr davon (mit Tipp-Übungen): deutsch-meister.de → Grammatik → B1.1 → Konjunktiv II.
 
-### TG4 · Free surface — 10 Minuten, dann weißt du dein Level
+### TG4 · Free surface — 15–20 Minuten, dann weißt du dein Level
 Ehrliche Frage: Weißt du, ob du B1 oder B2 bist – oder schätzt du?
-Der Einstufungstest bei DeutschMeister ist kostenlos, dauert ~10 Minuten und sagt dir nicht nur die Stufe, sondern die Teilstufe (z. B. B1.2). Ohne Konto.
+Der Einstufungstest bei DeutschMeister ist kostenlos, dauert 15–20 Minuten und sagt dir nicht nur die Stufe, sondern die Teilstufe (z. B. B1.2). Ohne Konto.
 👉 {level test link}
 Screenshot vom Ergebnis gern hier in den Kommentaren – wir schauen, wo die Lücken bei den meisten liegen.
 
 ### TG5 · Footnote — für Partner und Familie
-Kurz, weil es immer wieder gefragt wird: Für Partnerinnen und Partner, die *gerade erst anfangen* – A1/A2 – gibt es bei DeutschMeister jetzt einzelne Stufen zum Einmalkauf (A1.1 frei, A1.2 40 €, A2 je Teilstufe 50 €, Pro 3 Monate inklusive). B1/B2 stehen als „bald verfügbar" drauf und sind bewusst noch nicht kaufbar.
-Kein Abo, nichts läuft ab. Alles unter deutsch-meister.de/pricing/. Für euch selbst (FSP/KP) bleibt MedMeister der Weg – das hier ist für die, die zu Hause mitlernen.
+Kurz, für eure Partnerinnen und Partner, die *gerade erst anfangen* (A1/A2): Bei DeutschMeister gibt es jetzt einzelne Stufen zum Einmalkauf ({{FREE_LEVELS}} frei, {{one clause per sellable level: code price, from SUBLEVEL_PRICES_EUR}}, {{COURSE_PRO_MONTHS}} Monate Pro inklusive). {{coming-soon bands}} stehen als „bald verfügbar" drauf und sind bewusst noch nicht kaufbar.
+Kein Abo: Die gekaufte Stufe bleibt freigeschaltet, nur das inklusive Pro endet nach diesen Monaten. Alles unter deutsch-meister.de/pricing/. Für euch selbst (FSP/KP) bleibt MedMeister der Weg – das hier ist für die, die zu Hause mitlernen.
 
 ---
 
