@@ -11,7 +11,7 @@
 // Vite and Astro alike; byte-identical twin at astro-site/src/data/ guarded by
 // scripts/check-duplicates.mjs.
 
-import { YOUTUBE_CHANNEL_URL } from './navigation.js';
+import { SOCIAL_LINKS } from './navigation.js';
 
 export const ORG_ID = 'https://deutsch-meister.de/#organization';
 
@@ -29,7 +29,7 @@ export const ORGANIZATION_FULL = {
   url: 'https://deutsch-meister.de',
   logo: 'https://deutsch-meister.de/logo.png',
   description: 'A German language learning platform covering CEFR levels A1.1 to B2.2',
-  sameAs: [YOUTUBE_CHANNEL_URL],
+  sameAs: SOCIAL_LINKS.map((item) => item.href),
   foundingDate: '2024',
   founder: { '@type': 'Person', name: 'Zaid', jobTitle: 'Arzt & Gründer' },
   contactPoint: {

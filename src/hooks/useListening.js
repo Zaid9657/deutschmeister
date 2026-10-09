@@ -3,6 +3,7 @@ import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { withTimeout } from '../utils/withTimeout';
 import { LEVEL_ORDER } from '../config/levels';
+import { isListeningDone } from '../lib/listeningProgress.js';
 
 
 export function useListeningLevels() {
@@ -30,7 +31,7 @@ export function useListeningLevels() {
         if (user) {
           const { data: progress } = await supabase
             .from('user_listening_progress')
-            .select('exercise_id, completed, score')
+            .select('exercise_id, completed_at, score')
             .eq('user_id', user.id);
           progress?.forEach((p) => { progressMap[p.exercise_id] = p; });
         }
@@ -43,7 +44,7 @@ export function useListeningLevels() {
         exercises?.forEach((ex) => {
           if (levelData[ex.level]) {
             levelData[ex.level].totalExercises++;
-            if (progressMap[ex.id]?.completed) levelData[ex.level].completedExercises++;
+            if (isListeningDone(progressMap[ex.id])) levelData[ex.level].completedExercises++;
           }
         });
 
@@ -161,13 +162,14 @@ export function useSaveProgress() {
 
   const saveProgress = async (exerciseId, score, answers, playsUsed) => {
     if (!user) return { success: false };
+    // No `completed` flag: the row itself plus completed_at IS the completion
+    // (src/lib/listeningProgress.js). Sending one made every save a 400.
     const { error } = await supabase
       .from('user_listening_progress')
       .upsert(
         {
           user_id: user.id,
           exercise_id: exerciseId,
-          completed: true,
           score,
           answers,
           plays_used: playsUsed,
@@ -175,6 +177,8 @@ export function useSaveProgress() {
         },
         { onConflict: 'user_id,exercise_id' }
       );
+    // supabase-js resolves on a REST error; the caller's try/catch never sees it.
+    if (error) console.error('[useListening] saveProgress:', error.message);
     return { success: !error, error };
   };
 

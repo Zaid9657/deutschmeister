@@ -4,7 +4,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "dataforseo-mcp-server"
+        "dataforseo-mcp-server@3.1.1"
       ],
       "env": {
         "DATAFORSEO_USERNAME": "${DATAFORSEO_USERNAME}",
@@ -15,7 +15,7 @@
     "gsc": {
       "command": "uvx",
       "args": [
-        "mcp-search-console"
+        "mcp-search-console@0.4.1"
       ],
       "env": {
         "GSC_CREDENTIALS_PATH": "${HOME}/.gsc-credentials.json",
@@ -26,7 +26,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "@executeautomation/playwright-mcp-server"
+        "@executeautomation/playwright-mcp-server@1.0.12"
       ]
     }
   }

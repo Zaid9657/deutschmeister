@@ -1,0 +1,65 @@
+---
+// Proof without invented proof. No testimonials, learner counts or pass rates
+// exist that could be stated honestly, so the product proves itself: what is
+// inside (counted against live tables, marketing.js), how an answer is judged
+// (src/lib/lesson/check.js — the same rules the demo above just applied), and
+// where the facts come from. Reference material: flat, hairline-ruled (rule 3).
+import {
+  GRAMMAR_TOPIC_COUNT, GRAMMAR_EXERCISE_COUNT, LISTENING_DIALOGUE_COUNT, READING_LESSON_COUNT, VOCAB_WORD_COUNT,
+  LEVEL_COUNT, FOUNDER_LINE_EN,
+} from '../../data/marketing.js';
+
+const nf = (n) => n.toLocaleString('en-US');
+const COUNTS = [
+  { n: GRAMMAR_TOPIC_COUNT, label: 'grammar topics', note: `all ${LEVEL_COUNT} levels` },
+  { n: GRAMMAR_EXERCISE_COUNT, label: 'grammar exercises', note: 'checked as you answer' },
+  { n: LISTENING_DIALOGUE_COUNT, label: 'native-speaker dialogue lines', note: 'with listening questions' },
+  { n: READING_LESSON_COUNT, label: 'reading lessons', note: 'with comprehension checks' },
+  { n: VOCAB_WORD_COUNT, label: 'words', note: 'in spaced review' },
+];
+---
+
+<section class="dm-defer bg-paper" aria-labelledby="proof-h">
+  <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
+    <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Why the line holds</p>
+    <h2 id="proof-h" class="sign-head mt-3 text-[clamp(2.125rem,5.2vw,3.5rem)]">
+      <span class="block">Judge it by what’s inside,</span>
+      <span class="block">not by what we say.</span>
+    </h2>
+
+    <dl class="mt-12 grid grid-cols-2 border-t border-ink sm:grid-cols-3 lg:grid-cols-5">
+      {COUNTS.map((c) => (
+        <div class="flex flex-col border-b border-rule py-5 pr-4">
+          <dt class="order-2 mt-1 text-[0.9375rem] font-semibold text-ink">{c.label}</dt>
+          <dd class="sign-code order-1 text-[2.5rem] leading-none text-ink sm:text-[3rem]">{nf(c.n)}</dd>
+          <dd class="order-3 mt-1 font-data text-[0.75rem] text-graphite">{c.note}</dd>
+        </div>
+      ))}
+    </dl>
+
+    <div class="mt-12 grid gap-10 lg:grid-cols-3">
+      <div>
+        <h3 class="sign-label text-[1.25rem] text-ink">Answers judged like a teacher would</h3>
+        <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">
+          When you spell, <span lang="de">HALLO</span>, <span lang="de">H A L L O</span> and <span lang="de">H-A-L-L-O</span> all count. A slip in capital letters gets one more try — except where the capital is the lesson, like the polite <span lang="de">Ihnen</span>. The first stop above runs on exactly these rules.
+        </p>
+      </div>
+      <div>
+        <h3 class="sign-label text-[1.25rem] text-ink">Built on the official levels</h3>
+        <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">
+          The line follows the CEFR levels the telc, Goethe and DTZ exams use. The final tests use those exams’ formats, and every exam fact in our guides names its source and the date it was checked.
+          <a href="/leitfaden/" class="dm-link" hreflang="de">Exam guides · DE</a>
+        </p>
+      </div>
+      <div>
+        <h3 class="sign-label text-[1.25rem] text-ink">Made by someone who did it</h3>
+        <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">
+          {FOUNDER_LINE_EN} <a href="/ueber-uns/" class="dm-link">About us</a>
+        </p>
+        <p class="mt-3 text-[0.9375rem] leading-relaxed text-graphite">
+          Learning with DeutschMeister? <a href="/share-your-story/" class="dm-link">Share your experience</a> — stories are published only with your permission.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

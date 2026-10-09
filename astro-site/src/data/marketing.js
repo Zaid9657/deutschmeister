@@ -218,6 +218,14 @@ export const FOUNDER_LINE_DE =
   'Gegründet von einem Arzt in Deutschland — kennt den Lernweg aus eigener Erfahrung.';
 
 /**
+ * The same sanctioned line for the English pages (homepage proof section,
+ * 2026-10-04): a translation of FOUNDER_LINE_DE, adding no fact to it. Same
+ * rules — anonymous, no name, no Person schema; link to /ueber-uns/ for the story.
+ */
+export const FOUNDER_LINE_EN =
+  'Founded by a doctor in Germany who knows this learning path from experience.';
+
+/**
  * Price + what it buys, in one string, so the two can never be separated by a
  * later edit. This is the MedMeister `priceLine()` pattern: quoting the price
  * alone is not something an edit can do by accident.

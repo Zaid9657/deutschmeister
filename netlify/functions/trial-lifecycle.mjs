@@ -11,7 +11,7 @@
 //
 // The two closing mails offer Pro AND, where one is buyable, the one-time
 // course for the learner's level (see "the course offer" below). Every site
-// link carries utm_source=email&utm_medium=lifecycle&utm_campaign=<kind>.
+// link carries the lifecycle UTM tags (see "links" below).
 //
 // Safe to re-run: every send is recorded in `lifecycle_emails` with a
 // UNIQUE(user_id, kind), and the insert happens BEFORE the send, so a crash
@@ -30,6 +30,8 @@ import {
   productKeyForLevel,
 } from './_shared/pricing.mjs';
 import { BRAND } from './_shared/brand.mjs';
+import { tagEmailLink } from './_shared/emailLinks.mjs';
+import { socialFooterLine } from './_shared/socialLinks.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -53,22 +55,15 @@ function unsubscribeUrl(userId) {
 
 // ─── links ───────────────────────────────────────────────────────────────────
 
-/**
- * A site link as it appears in these mails, tagged with the mail's kind so a
- * click lands in attribution (public/attribution.js) and PostHog as
- * source=email, medium=lifecycle, campaign=<kind>. The unsubscribe link is
- * built by unsubscribeUrl() above and is never tagged.
- */
-export const trackedUrl = (path, kind) => {
-  const url = new URL(path, BASE_URL);
-  url.searchParams.set('utm_source', 'email');
-  url.searchParams.set('utm_medium', 'lifecycle');
-  url.searchParams.set('utm_campaign', kind);
-  return url.toString();
-};
-
-/** An href value with `&` escaped, as an HTML attribute requires. */
-const attr = (url) => url.replace(/&/g, '&amp;');
+// Every link into the site carries the lifecycle UTM tags, so a click reaches
+// dm_attribution as source "email" instead of untracked or a webmail host
+// (docs/tracking-links.md, "Our own email"). The campaign is the kind with
+// hyphens (trial_day6 -> trial-day6); utm_content names the link: 'cta' (the
+// Pro or X-Ray button), 'course' (the course button), 'all-courses' (the
+// every-level link) and 'footer'. The unsubscribe link is built by
+// unsubscribeUrl() above and is never tagged.
+const siteLink = (path, kind, content) =>
+  tagEmailLink(`${BASE_URL}${path}`, { medium: 'lifecycle', campaign: kind.replaceAll('_', '-'), content });
 
 // ─── the course offer ────────────────────────────────────────────────────────
 //
@@ -130,7 +125,7 @@ export function courseOfferFor(currentLevel, env = process.env) {
 
 // ─── copy ────────────────────────────────────────────────────────────────────
 
-const SHELL = ({ heading, body, homeHref, unsubUrl }) => `<!DOCTYPE html>
+const SHELL = ({ heading, body, footerHref, unsubUrl }) => `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${heading}</title></head>
 <body style="margin:0;padding:0;background:#f8fafc;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
@@ -154,7 +149,7 @@ const SHELL = ({ heading, body, homeHref, unsubUrl }) => `<!DOCTYPE html>
         <tr>
           <td style="padding:20px 32px;border-top:1px solid #f1f5f9;text-align:center;">
             <p style="margin:0;font-size:12px;color:#94a3b8;line-height:1.6;">
-              DeutschMeister · <a href="${attr(homeHref)}" style="color:#94a3b8;">deutsch-meister.de</a><br>
+              DeutschMeister · <a href="${footerHref}" style="color:#94a3b8;">deutsch-meister.de</a>${socialFooterLine('#94a3b8')}<br>
               <a href="${unsubUrl}" style="color:#94a3b8;">Unsubscribe from these emails</a>
             </p>
           </td>
@@ -172,7 +167,7 @@ const BUTTON = (href, label, { outline = false } = {}) => `
             <table cellpadding="0" cellspacing="0" style="margin:8px 0 28px;">
               <tr>
                 <td style="border-radius:10px;${outline ? `background:${BRAND.white};border:2px solid ${BRAND.siegel};` : `background:${BRAND.siegel};`}">
-                  <a href="${attr(href)}" style="display:inline-block;padding:${outline ? '12px 26px' : '14px 28px'};color:${outline ? BRAND.siegel : BRAND.white};font-size:15px;font-weight:600;text-decoration:none;letter-spacing:-0.2px;">${label}</a>
+                  <a href="${href}" style="display:inline-block;padding:${outline ? '12px 26px' : '14px 28px'};color:${outline ? BRAND.siegel : BRAND.white};font-size:15px;font-weight:600;text-decoration:none;letter-spacing:-0.2px;">${label}</a>
                 </td>
               </tr>
             </table>`;
@@ -188,10 +183,10 @@ function courseBlock(kind, offer) {
     : `and ${COURSE_PRO_MONTHS} months of Pro are included`;
   const everyLevel = offer.placed
     ? ''
-    : P(`Not a beginner? <a href="${attr(trackedUrl('/courses/', kind))}" style="color:${BRAND.siegel};">See the course for every level</a>.`);
+    : P(`Not a beginner? <a href="${siteLink('/courses/', kind, 'all-courses')}" style="color:${BRAND.siegel};">See the course for every level</a>.`);
   return (
     P(`<strong style="color:#1e293b;">Rather pay once?</strong> ${lead} The ${offer.code} course is ${eur(offer.price)}, paid one time: lifetime access to the level, no subscription, ${pro}.`) +
-    BUTTON(trackedUrl(offer.path, kind), `See the ${offer.code} course →`, { outline: true }) +
+    BUTTON(siteLink(offer.path, kind, 'course'), `See the ${offer.code} course →`, { outline: true }) +
     everyLevel
   );
 }
@@ -207,7 +202,7 @@ const TEMPLATES = {
       P('<strong style="color:#1e293b;">Sentence X-Ray</strong> — paste any German sentence and see what every word is doing: the cases, the roles, and <em>why</em>. It takes about three seconds and it\'s the fastest way to stop guessing.') +
       P('<strong style="color:#1e293b;">Listening</strong> — short native-speaker dialogues graded to your level, so you understand most of what you hear instead of drowning in it.') +
       P('<strong style="color:#1e293b;">Speaking</strong> — a two-minute conversation with an AI partner that corrects you as you go.') +
-      BUTTON(trackedUrl('/analyze/', kind), 'Analyze a sentence →'),
+      BUTTON(siteLink('/analyze/', kind, 'cta'), 'Analyze a sentence →'),
   },
   trial_day6: {
     subject: 'Your DeutschMeister trial ends tomorrow',
@@ -215,7 +210,7 @@ const TEMPLATES = {
     body: (kind, offer) =>
       P('Quick heads-up: your Pro trial ends tomorrow.') +
       P(`If you keep it, you stay on 50 sentence analyses a day, the full grammar library through B2, listening, reading, and AI speaking practice. That's ${eur(MONTHLY_PRICE_EUR)} a month — less than one hour with a tutor.`) +
-      BUTTON(trackedUrl('/pricing/', kind), `Keep Pro — ${eur(MONTHLY_PRICE_EUR)}/month →`) +
+      BUTTON(siteLink('/pricing/', kind, 'cta'), `Keep Pro — ${eur(MONTHLY_PRICE_EUR)}/month →`) +
       courseBlock(kind, offer) +
       P(`If you ${offer ? 'pick neither' : 'don\'t'}, nothing dramatic happens: your account stays, your progress stays, and you drop to the free tier. You can come back whenever.`),
   },
@@ -225,60 +220,73 @@ const TEMPLATES = {
     body: (kind, offer) =>
       P('Your trial ended yesterday — so this is the last you\'ll hear from me about it.') +
       P('Everything you did is still there: your topics, your streak, your history. Nothing was deleted, and one click puts it all back within reach.') +
-      BUTTON(trackedUrl('/pricing/', kind), 'Restore Pro access →') +
+      BUTTON(siteLink('/pricing/', kind, 'cta'), 'Restore Pro access →') +
       courseBlock(kind, offer) +
       P('And if the timing just isn\'t right, that\'s genuinely fine. The free tier and the daily sentence keep working, and German isn\'t going anywhere.'),
   },
 };
 
-export const KINDS = Object.keys(TEMPLATES);
-
-/**
- * One rendered message. `offer` is courseOfferFor()'s result; it is ignored
- * for a kind that does not carry the course offer.
- */
-export function renderEmail(kind, { offer = null, unsubUrl }) {
-  const tpl = TEMPLATES[kind];
-  if (!tpl) throw new Error(`unknown trial-lifecycle kind: ${kind}`);
-  return {
-    subject: tpl.subject,
-    html: SHELL({
-      heading: tpl.subject,
-      body: tpl.body(kind, tpl.offersCourse ? offer : null),
-      homeHref: trackedUrl('/', kind),
-      unsubUrl,
-    }),
-  };
-}
-
 /** Does this kind carry the course offer? */
 export const offersCourse = (kind) => Boolean(TEMPLATES[kind]?.offersCourse);
 
+/**
+ * One rendered message (exported for tests/lifecycle-links.test.mjs and
+ * tests/lifecycle.test.mjs). `offer` is courseOfferFor()'s result; it is
+ * ignored for a kind that does not carry the course offer, and without one the
+ * closing mails are the Pro-only mails.
+ */
+export function renderHtml(kind, userId, offer = null) {
+  const tpl = TEMPLATES[kind];
+  if (!tpl) throw new Error(`unknown trial-lifecycle kind: ${kind}`);
+  return SHELL({
+    heading: tpl.subject,
+    body: tpl.body(kind, tpl.offersCourse ? offer : null),
+    footerHref: siteLink('/', kind, 'footer'),
+    unsubUrl: unsubscribeUrl(userId),
+  });
+}
+
 // ─── selection ───────────────────────────────────────────────────────────────
+
+export const TRIAL_KINDS = ['trial_day3', 'trial_day6', 'trial_ended'];
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+// Each window is expressed directly as [lower, upper) offsets in days from the
+// run, because the sign conventions are easy to get backwards: day 6 and the
+// post-trial mail look FORWARD and BACKWARD from the run respectively.
+export const TRIAL_WINDOWS = {
+  // Day 3 of a 7-day trial: it started between 4 and 3 days ago.
+  trial_day3: { col: 'trial_started_at', lowerDays: -4, upperDays: -3 },
+  // The day before it ends: trial_ends_at falls within the next 24 hours.
+  trial_day6: { col: 'trial_ends_at', lowerDays: 0, upperDays: 1 },
+  // The day after it ended: trial_ends_at was 1-2 days ago.
+  trial_ended: { col: 'trial_ends_at', lowerDays: -2, upperDays: -1 },
+};
 
 // Users whose trial day matches, who haven't already had this message, aren't
 // paying, and haven't opted out.
-async function selectRecipients(kind) {
-  // Each window is expressed directly as [lower, upper) offsets in days from
-  // now, because the sign conventions are easy to get backwards: day 6 and the
-  // post-trial mail look FORWARD and BACKWARD from now respectively.
-  const day = 24 * 60 * 60 * 1000;
+//
+// ONE definition of "who is due", read by this job and by the sentinel
+// (sentinel.mjs asks it whether a quiet day was really quiet). The job passes
+// nothing and gets today's run. The sentinel passes `span` = { first, last },
+// the scheduled runs since the job's last ledger row: the window then covers
+// every one of those runs ([first + lower, last + upper)), and a user counts
+// only if their address was confirmed by the time their window opened — so
+// nobody who became due (or confirmed) after a run is counted as missed; the
+// next run mails them.
+export async function selectRecipients(kind, { client = supabase, span = null } = {}) {
   const now = Date.now();
-  const windows = {
-    // Day 3 of a 7-day trial: it started between 4 and 3 days ago.
-    trial_day3: { col: 'trial_started_at', lower: now - 4 * day, upper: now - 3 * day },
-    // The day before it ends: trial_ends_at falls within the next 24 hours.
-    trial_day6: { col: 'trial_ends_at', lower: now, upper: now + day },
-    // The day after it ended: trial_ends_at was 1-2 days ago.
-    trial_ended: { col: 'trial_ends_at', lower: now - 2 * day, upper: now - day },
-  }[kind];
+  const first = span ? span.first : now;
+  const last = span ? span.last : now;
+  const windows = TRIAL_WINDOWS[kind];
 
-  const lower = new Date(windows.lower).toISOString();
-  const upper = new Date(windows.upper).toISOString();
+  const lower = new Date(first + windows.lowerDays * DAY_MS).toISOString();
+  const upper = new Date(last + windows.upperDays * DAY_MS).toISOString();
 
-  const { data: profiles, error } = await supabase
+  const { data: profiles, error } = await client
     .from('profiles')
-    .select('id, email_daily_sentence, is_subscribed, current_level')
+    .select('id, email_daily_sentence, is_subscribed, trial_started_at, trial_ends_at, current_level')
     .gte(windows.col, lower)
     .lt(windows.col, upper);
   if (error) throw new Error(`profiles query failed: ${error.message}`);
@@ -286,29 +294,42 @@ async function selectRecipients(kind) {
   const candidates = (profiles || []).filter((p) => p.is_subscribed !== true && p.email_daily_sentence !== false);
   if (candidates.length === 0) return [];
 
+  // A failed ledger read must stop the run: read as "nobody was mailed", it
+  // would re-send to everyone already mailed (the claim upsert ignores
+  // duplicates, the send does not).
   const ids = candidates.map((p) => p.id);
-  const { data: already } = await supabase
+  const { data: already, error: ledgerError } = await client
     .from('lifecycle_emails')
     .select('user_id')
     .eq('kind', kind)
     .in('user_id', ids);
+  if (ledgerError) throw new Error(`ledger read failed: ${ledgerError.message}`);
   const sentAlready = new Set((already || []).map((r) => r.user_id));
 
   // Resolve addresses, and only mail confirmed ones.
   const emails = new Map();
+  const confirmedAt = new Map();
   let page = 1;
   while (true) {
-    const { data, error: authError } = await supabase.auth.admin.listUsers({ page, perPage: 1000 });
+    const { data, error: authError } = await client.auth.admin.listUsers({ page, perPage: 1000 });
     if (authError) throw new Error(`listUsers: ${authError.message}`);
     for (const u of data.users) {
-      if (u.email && u.email_confirmed_at) emails.set(u.id, u.email.trim().toLowerCase());
+      if (u.email && u.email_confirmed_at) {
+        emails.set(u.id, u.email.trim().toLowerCase());
+        confirmedAt.set(u.id, Date.parse(u.email_confirmed_at));
+      }
     }
     if (data.users.length < 1000) break;
     page++;
   }
 
+  // Over a span, due at a run means confirmed at it: the run that selects a
+  // user comes after their window opens (col − upper), so an address confirmed
+  // by then was confirmed at that run. Without a span (the job) this is moot.
+  const confirmedInTime = (p) => !span || confirmedAt.get(p.id) <= Date.parse(p[windows.col]) - windows.upperDays * DAY_MS;
+
   return candidates
-    .filter((p) => !sentAlready.has(p.id) && emails.has(p.id))
+    .filter((p) => !sentAlready.has(p.id) && emails.has(p.id) && confirmedInTime(p))
     .map((p) => ({ id: p.id, email: emails.get(p.id), currentLevel: p.current_level }));
 }
 
@@ -325,6 +346,7 @@ async function sendKind(resendKey, kind) {
   const recipients = await selectRecipients(kind);
   if (recipients.length === 0) return { kind, sent: 0, failed: 0, offered: {} };
 
+  const tpl = TEMPLATES[kind];
   let sent = 0;
   let failed = 0;
   // Course offers actually mailed, by product key: how the owner reads what
@@ -346,16 +368,13 @@ async function sendKind(resendKey, kind) {
     }
 
     const offers = slice.map((r) => (offersCourse(kind) ? courseOfferFor(r.currentLevel) : null));
-    const items = slice.map((r, j) => {
-      const { subject, html } = renderEmail(kind, { offer: offers[j], unsubUrl: unsubscribeUrl(r.id) });
-      return {
-        from: FROM_ADDRESS,
-        to: [r.email],
-        reply_to: 'zaid@deutsch-meister.de',
-        subject,
-        html,
-      };
-    });
+    const items = slice.map((r, j) => ({
+      from: FROM_ADDRESS,
+      to: [r.email],
+      reply_to: 'zaid@deutsch-meister.de',
+      subject: tpl.subject,
+      html: renderHtml(kind, r.id, offers[j]),
+    }));
 
     try {
       await sendBatch(resendKey, items);
@@ -421,7 +440,7 @@ const innerHandler = async (event) => {
   }
 
   const results = [];
-  for (const kind of KINDS) {
+  for (const kind of TRIAL_KINDS) {
     try {
       results.push(await sendKind(resendKey, kind));
     } catch (err) {

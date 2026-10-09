@@ -35,7 +35,9 @@ import { schedule } from '@netlify/functions';
 import { createClient } from '@supabase/supabase-js';
 import { BRAND, emailHeader, ctaCell } from './_shared/brand.mjs';
 import { isBlockedEmail } from './_shared/emailHygiene.mjs';
+import { fetchOptedOutIds } from './_shared/emailOptOut.mjs';
 import { continueToken, TOKEN_TTL_DAYS } from './confirm-continue.mjs';
+import { tagEmailLink } from './_shared/emailLinks.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -65,6 +67,11 @@ const SUBJECT = 'Your DeutschMeister account is one click from ready';
 
 const P = (text) => `<p style="margin:0 0 16px;font-size:16px;color:${BRAND.graphite};line-height:1.6;">${text}</p>`;
 
+// Only the footer is a site link, so only the footer is tagged
+// (docs/tracking-links.md). The button is a function URL carrying a signed,
+// expiring token: it is not a page and is never tagged.
+export const FOOTER_HREF = tagEmailLink(`${BASE_URL}/`, { medium: 'lifecycle', campaign: 'confirm-nudge', content: 'footer' });
+
 export const bodyHtml = (continueUrl) => `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${SUBJECT}</title></head>
@@ -87,7 +94,7 @@ export const bodyHtml = (continueUrl) => `<!DOCTYPE html>
         <tr>
           <td style="padding:20px 32px;border-top:1px solid ${BRAND.rule};text-align:center;">
             <p style="margin:0;font-size:12px;color:${BRAND.graphite};line-height:1.6;">
-              DeutschMeister · <a href="${BASE_URL}" style="color:${BRAND.graphite};">deutsch-meister.de</a><br>
+              DeutschMeister · <a href="${FOOTER_HREF}" style="color:${BRAND.graphite};">deutsch-meister.de</a><br>
               You're receiving this once because this address was used to sign up at deutsch-meister.de.
             </p>
           </td>
@@ -103,16 +110,24 @@ export const bodyHtml = (continueUrl) => `<!DOCTYPE html>
 // Unconfirmed, email-provider, aged [MIN_AGE_DAYS, MAX_AGE_DAYS), address not
 // disposable, profile not opted out, never claimed. Oldest first, so the
 // backlog drains from the stale end toward fresh signups.
-async function selectCandidates() {
+//
+// ONE definition of "who is due", read by this job and by the sentinel. The
+// job passes nothing: today's run, at most PER_RUN. The sentinel passes
+// `span` = { first, last }, the scheduled runs since the last confirm_nudge
+// row, and `limit: Infinity`: the age window then covers all of those runs
+// (created in [first - MAX_AGE_DAYS, last - MIN_AGE_DAYS)), so an account that
+// turned two days old after the last run — the next run's work — is not
+// counted as missed.
+export async function selectCandidates(client = supabase, { span = null, limit = PER_RUN } = {}) {
   const day = 24 * 60 * 60 * 1000;
   const now = Date.now();
-  const newest = new Date(now - MIN_AGE_DAYS * day).toISOString();
-  const oldest = new Date(now - MAX_AGE_DAYS * day).toISOString();
+  const newest = new Date((span ? span.last : now) - MIN_AGE_DAYS * day).toISOString();
+  const oldest = new Date((span ? span.first : now) - MAX_AGE_DAYS * day).toISOString();
 
   const unconfirmed = [];
   let page = 1;
   while (true) {
-    const { data, error } = await supabase.auth.admin.listUsers({ page, perPage: 1000 });
+    const { data, error } = await client.auth.admin.listUsers({ page, perPage: 1000 });
     if (error) throw new Error(`listUsers: ${error.message}`);
     for (const u of data.users) {
       if (
@@ -136,17 +151,22 @@ async function selectCandidates() {
   // Opt-out lives as profiles.email_daily_sentence = false — the same
   // definition lifecycle_customer_state uses (the view itself can't serve
   // here: it deliberately covers confirmed funnel states, not this cohort).
-  const [{ data: already }, { data: optedOut }] = await Promise.all([
-    supabase.from('lifecycle_emails').select('user_id').eq('kind', 'confirm_nudge').in('user_id', ids),
-    supabase.from('profiles').select('id').eq('email_daily_sentence', false).in('id', ids),
+  // Read through the shared reader, which throws on error: this read used to
+  // ignore its error and filter the cohort by an id list in the URL, the shape
+  // that stopped the daily sentence honouring unsubscribes (2026-09-28).
+  // A failed ledger read must stop the run: read as "nobody was nudged", it
+  // would nudge again the accounts the ledger promises one mail, ever.
+  const [{ data: already, error: ledgerError }, out] = await Promise.all([
+    client.from('lifecycle_emails').select('user_id').eq('kind', 'confirm_nudge').in('user_id', ids),
+    fetchOptedOutIds(client),
   ]);
+  if (ledgerError) throw new Error(`ledger read failed: ${ledgerError.message}`);
   const claimed = new Set((already || []).map((r) => r.user_id));
-  const out = new Set((optedOut || []).map((r) => r.id));
 
   return unconfirmed
     .filter((r) => !claimed.has(r.id) && !out.has(r.id))
     .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
-    .slice(0, PER_RUN);
+    .slice(0, limit);
 }
 
 function continueUrl(userId) {

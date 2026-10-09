@@ -185,7 +185,7 @@ const VideoDetailPage = () => {
             >
               <source src={activeUrl} type="video/mp4" />
               {isGerman
-                ? 'Dein Browser unterstützt kein Video.'
+                ? 'Ihr Browser unterstützt kein Video.'
                 : 'Your browser does not support video.'}
             </video>
           </div>

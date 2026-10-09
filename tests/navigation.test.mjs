@@ -19,7 +19,8 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-import { NAV_GROUPS, FOOTER_GROUPS, LEGAL_LINKS, ALL_NAV_ITEMS, SOCIAL_LINKS, YOUTUBE_CHANNEL_URL } from '../src/data/navigation.js';
+import { NAV_GROUPS, FOOTER_GROUPS, LEGAL_LINKS, ALL_NAV_ITEMS, SOCIAL_LINKS, YOUTUBE_CHANNEL_URL, INSTAGRAM_URL, FACEBOOK_URL } from '../src/data/navigation.js';
+import { ORGANIZATION_FULL } from '../src/data/organization.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const appSrc = readFileSync(join(root, 'src/App.jsx'), 'utf8');
@@ -142,6 +143,36 @@ test('the YouTube channel URL is canonical and tracker-free', () => {
   assert.ok(yt.labelEn && yt.labelDe, 'YouTube link needs both labels');
 });
 
+test('Instagram and Facebook are listed, canonical and tracker-free', () => {
+  assert.equal(INSTAGRAM_URL, 'https://www.instagram.com/deutschmeisterde/');
+  assert.equal(FACEBOOK_URL, 'https://www.facebook.com/1232346926638010');
+  for (const [key, url] of [['instagram', INSTAGRAM_URL], ['facebook', FACEBOOK_URL]]) {
+    assert.ok(!url.includes('?'), `${key} URL carries a query string (igsh=/mibextid= trackers) — strip it`);
+    const item = SOCIAL_LINKS.find((i) => i.key === key);
+    assert.ok(item, `SOCIAL_LINKS lost ${key}`);
+    assert.equal(item.href, url);
+    assert.equal(item.kind, 'external');
+    assert.ok(item.labelEn && item.labelDe, `${key} link needs both labels`);
+  }
+});
+
+test('every off-site channel has a footer icon on both front ends', () => {
+  const iconsSrc = readFileSync(join(root, 'src/components/socialIcons.js'), 'utf8');
+  assert.match(footerSrc, /SOCIAL_ICONS\[item\.key\]/, 'Footer.jsx draws the shared icon map');
+  for (const { key } of SOCIAL_LINKS) {
+    assert.match(iconsSrc, new RegExp(`\\b${key}:`), `socialIcons.js SOCIAL_ICONS has no icon for ${key}`);
+    assert.match(layoutSrc, new RegExp(`item\\.key === '${key}'`), `Layout.astro draws no icon for ${key}`);
+  }
+});
+
+test('the Organization sameAs lists every off-site channel', () => {
+  const html = readFileSync(join(root, 'index.html'), 'utf8');
+  for (const { href } of SOCIAL_LINKS) {
+    assert.ok(ORGANIZATION_FULL.sameAs.includes(href), `organization.js sameAs is missing ${href}`);
+    assert.ok(html.includes(`"${href}"`), `index.html Organization JSON-LD is missing ${href}`);
+  }
+});
+
 test('SOCIAL_LINKS stays out of ALL_NAV_ITEMS (those are root-relative only)', () => {
   for (const item of ALL_NAV_ITEMS) {
     assert.ok(item.kind !== 'external', `external link ${item.href} must not be in ALL_NAV_ITEMS`);
@@ -153,7 +184,7 @@ test('both footers render the off-site channels', () => {
   assert.match(layoutSrc, /SOCIAL_LINKS/, 'Layout.astro must render SOCIAL_LINKS');
 });
 
-test('no source file retypes the YouTube URL (registry + index.html only)', () => {
+test('no source file retypes a channel URL (registry + index.html only)', () => {
   const scan = ['src', 'astro-site/src'];
   const allowed = new Set(['src/data/navigation.js', 'astro-site/src/data/navigation.js']);
   const offenders = [];
@@ -163,11 +194,12 @@ test('no source file retypes the YouTube URL (registry + index.html only)', () =
       if (entry.isDirectory()) { walk(rel); continue; }
       if (!/\.(js|jsx|astro|mjs|ts)$/.test(entry.name)) continue;
       if (allowed.has(rel)) continue;
-      if (readFileSync(join(root, rel), 'utf8').includes('youtube.com/@')) offenders.push(rel);
+      const src = readFileSync(join(root, rel), 'utf8');
+      if (/youtube\.com\/@|instagram\.com\/deutschmeister|facebook\.com\/1232346926638010/.test(src)) offenders.push(rel);
     }
   };
   scan.forEach(walk);
-  assert.deepEqual(offenders, [], `import YOUTUBE_CHANNEL_URL instead of retyping it: ${offenders.join(', ')}`);
+  assert.deepEqual(offenders, [], `import the channel URL from navigation.js instead of retyping it: ${offenders.join(', ')}`);
 });
 
 // ─── The mobile bottom nav (Wave 0, the free A1.1 front door) ────────────────

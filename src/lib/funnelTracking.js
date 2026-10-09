@@ -43,12 +43,14 @@ export const consumeCheckoutSuccess = () => {
   return true;
 };
 
-export const trackPaywallShown = (feature) => track('paywall_shown', { feature });
+export const trackPaywallShown = (feature, props = {}) => track('paywall_shown', { ...props, feature });
 export const trackPaywallDismissed = (feature) => track('paywall_dismissed', { feature });
 
 export const trackFAQViewed = () => track('faq_viewed');
 
 export const trackAboutViewed = () => track('about_viewed');
+
+export const trackSocialClicked = (channel, surface) => track('social_clicked', { channel, surface });
 
 export const trackVerificationPageViewed = () => track('verification_page_viewed');
 export const trackVerificationEmailResent = () => track('verification_email_resent');

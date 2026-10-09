@@ -19,22 +19,30 @@
 //      "unlimited", and CTA links to prerendered routes must carry their
 //      trailing slash (CLAUDE.md's three-slash-case rule).
 //
-//   6. THE TRIAL-END COURSE OFFER. The day-6 and trial-ended mails offer the
+//   6. THE AUDIENCE COUNTS EVERY LESSON. The activation mail goes to status
+//      'new' in lifecycle_customer_state. Until 2026-09-28 that view counted
+//      three progress tables, and the A1.1 course player writes none of them,
+//      so learners in the middle of a Lektion were mailed (scorecard §3 #8c:
+//      6 of 160 mails in 30 days; 30 across every uncounted source). The class
+//      is closed here: every table the app writes is classified as a lesson
+//      source or not, and the newest view must list exactly the sources.
+//
+//   7. THE TRIAL-END COURSE OFFER. The day-6 and trial-ended mails offer the
 //      one-time course for the learner's level beside Pro (2026-09-27, after
 //      0 of 180 ended trials converted on a Pro-only offer). Pinned: only a
 //      buyable course is ever offered, its price and Pro window are the data
-//      layer's, every site link carries utm_*=email/lifecycle/<kind> and the
-//      unsubscribe link is untouched, and the trial windows plus
-//      claim-before-send are what section 1's table says they are.
+//      layer's, the placement it reads is selected, every site link carries
+//      the lifecycle tags (campaign = the kind, hyphenated; one utm_content
+//      per link) and the unsubscribe link is untouched, and the trial windows
+//      plus claim-before-send are what section 1's table says they are.
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 import { WINDOWS, TEMPLATES } from '../netlify/functions/activation-lifecycle.mjs';
-import * as trial from '../netlify/functions/trial-lifecycle.mjs';
 import {
   ALL_LEVELS,
   SUBLEVEL_PRICES_EUR,
@@ -46,6 +54,13 @@ import {
   productKeyForLevel,
 } from '../src/data/pricing.js';
 import { levelToSlug } from '../astro-site/src/data/courseContents.js';
+import { isSocialHref } from '../netlify/functions/_shared/socialLinks.mjs';
+
+// trial-lifecycle.mjs reads its unsubscribe secret at import time and fails
+// closed without it; no live client in tests. Ids below are synthetic.
+process.env.UNSUB_SECRET = 'test-only-unsub-secret';
+delete process.env.SUPABASE_SERVICE_ROLE_KEY;
+const trial = await import('../netlify/functions/trial-lifecycle.mjs');
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -162,7 +177,10 @@ test('the nudge ships off, claims before sending, and mails only unconfirmed acc
   // Hygiene: disposable domains and opted-out profiles are excluded, the
   // per-run cap exists, and the copy's "only reminder" promise is structural.
   assert.ok(src.includes('isBlockedEmail'), 'disposable-domain hygiene missing');
-  assert.ok(src.includes(`eq('email_daily_sentence', false)`), 'opt-out exclusion missing');
+  // Opt-outs go through the one shared reader (which filters
+  // email_daily_sentence = false and throws on error); tests/email-opt-out.test.mjs
+  // runs this selection against it and proves an opted-out account is left out.
+  assert.ok(src.includes('fetchOptedOutIds(client)'), 'opt-out exclusion missing');
   assert.ok(/PER_RUN\s*=\s*\d+/.test(src), 'per-run send cap missing');
 });
 
@@ -217,17 +235,187 @@ test('activation copy carries no figures, no unlimited claims, and slashed CTAs'
 });
 
 // ---------------------------------------------------------------------------
-// 6. The trial-end course offer (trial-lifecycle.mjs)
+// 6. The activation audience counts every kind of lesson activity (#8c)
+// ---------------------------------------------------------------------------
+//
+// A lesson-activity source is a table where a row means the learner opened or
+// answered teaching content. The activation copy assumes the reader has none,
+// so every such table must feed lifecycle_customer_state.status. Add a table
+// the app writes and this suite makes you decide which list it belongs in.
+
+const LESSON_ACTIVITY_SOURCES = {
+  user_grammar_progress: 'a grammar lesson opened or finished',
+  user_listening_progress: 'a listening lesson finished',
+  user_reading_progress: 'a reading lesson read',
+  lesson_progress: 'course player: a Lektion opened or finished (/course/:level/l/:nr)',
+  lesson_attempts: 'course player or checkpoint: an answered item',
+  review_cards: 'course spaced review, seeded by a finished Lektion',
+  program_progress: 'a course or program item ticked done',
+  writing_submissions: 'an AI-graded writing task',
+  exam_attempts: 'a mock exam or Abschlusstest section',
+  vocab_srs_cards: 'a word in the vocabulary trainer',
+  speaking_sessions: 'an AI speaking session (the SQL leaves out the placement check)',
+};
+
+// Written by the app or a function, but a row does NOT mean a lesson.
+const NOT_LESSON_ACTIVITY = {
+  profiles: 'account and settings',
+  signup_attempts: 'written before the account exists',
+  audit_logs: 'logins and other events; a login is not a lesson',
+  subscriptions: 'money',
+  purchases: 'money',
+  payment_failures: 'money',
+  webhook_logs: 'money',
+  coupons: 'admin: discount governance',
+  coupon_redemptions: 'money',
+  lifecycle_emails: 'our own mail ledger',
+  weekly_metrics: 'our own metrics',
+  agent_incidents: 'the hourly sentinel’s incident ledger (ops, no learner row)',
+  support_tickets: 'support',
+  support_ticket_messages: 'support',
+  admin_audit_log: 'admin',
+  video_library: 'admin content',
+  xray_usage: 'Sentence X-Ray is a tool, used signed out too; the d4 mail recommends it',
+  speaking_messages: 'exists only inside a speaking_sessions row, which is counted',
+  speaking_evaluations: 'exists only after a speaking_sessions row, which is counted',
+  speaking_usage: 'the allowance meter of a speaking session, which is counted',
+  speaking_wallet: 'credit balance',
+  speaking_wallet_transactions: 'credit ledger',
+};
+
+// The only files allowed to write through a table name held in a lowercase
+// variable, which the scan below cannot resolve. They edit content rows, never
+// a learner's. A learner-progress write must name its table literally or
+// through an UPPER_CASE const.
+const DYNAMIC_WRITE_FILES = ['netlify/functions/admin-content.mjs'];
+
+const walk = (dir, out = []) => {
+  for (const name of readdirSync(dir)) {
+    if (name === 'node_modules') continue;
+    const p = join(dir, name);
+    if (statSync(p).isDirectory()) walk(p, out);
+    else if (/\.(m?js|jsx)$/.test(name)) out.push(p);
+  }
+  return out;
+};
+
+// Every table written (insert/upsert/update) by the SPA or a Netlify function.
+// A chain runs from `.from(...)` to the next `.from(` or statement end.
+function writtenTables() {
+  const written = new Map();
+  const dynamic = [];
+  for (const file of [...walk(join(ROOT, 'src')), ...walk(join(ROOT, 'netlify/functions'))]) {
+    const rel = file.slice(ROOT.length + 1);
+    const src = readFileSync(file, 'utf8');
+    const consts = new Map([...src.matchAll(/const\s+([A-Z_][A-Z0-9_]*)\s*=\s*'([a-z_]+)'/g)].map((m) => [m[1], m[2]]));
+    for (const m of src.matchAll(/\.from\(\s*(?:'([a-z_]+)'|([A-Za-z_][A-Za-z0-9_]*))\s*\)/g)) {
+      const rest = src.slice(m.index + m[0].length, m.index + m[0].length + 300);
+      const stop = rest.search(/\.from\(|;\s*\n/);
+      const chain = stop === -1 ? rest : rest.slice(0, stop);
+      if (!/\.(insert|upsert|update)\(/.test(chain)) continue;
+      const table = m[1] || consts.get(m[2]);
+      if (!table) {
+        dynamic.push(rel);
+        continue;
+      }
+      if (!written.has(table)) written.set(table, new Set());
+      written.get(table).add(rel);
+    }
+  }
+  return { written, dynamic };
+}
+
+// The newest migration that (re)defines the view is the definition once it is
+// applied; migrations/README.md says which ones are.
+function newestViewMigration() {
+  const files = readdirSync(join(ROOT, 'migrations'))
+    .filter((f) => f.endsWith('.sql'))
+    .sort()
+    .filter((f) => /CREATE OR REPLACE VIEW public\.lifecycle_customer_state/.test(read(`migrations/${f}`)));
+  assert.ok(files.length > 0, 'no migration defines lifecycle_customer_state');
+  const file = files[files.length - 1];
+  return { file, sql: read(`migrations/${file}`) };
+}
+
+const stripSqlComments = (s) => s.replace(/--[^\n]*/g, '');
+
+test('every table the app writes is classified as a lesson source or not', () => {
+  const { written, dynamic } = writtenTables();
+
+  const both = Object.keys(LESSON_ACTIVITY_SOURCES).filter((t) => t in NOT_LESSON_ACTIVITY);
+  assert.deepEqual(both, [], `classified both ways: ${both.join(', ')}`);
+
+  const unclassified = [...written.keys()]
+    .filter((t) => !(t in LESSON_ACTIVITY_SOURCES) && !(t in NOT_LESSON_ACTIVITY))
+    .map((t) => `${t} (${[...written.get(t)].join(', ')})`);
+  assert.deepEqual(
+    unclassified,
+    [],
+    'new written table(s). If a row means the learner opened or answered teaching content, add it to ' +
+      'LESSON_ACTIVITY_SOURCES and to lifecycle_customer_state in a new migration; otherwise add it to ' +
+      `NOT_LESSON_ACTIVITY with the reason: ${unclassified.join('; ')}`,
+  );
+
+  // Scanner sanity: it must see every source being written, including the
+  // course player's (review_cards is written through a TABLE const).
+  const unseen = Object.keys(LESSON_ACTIVITY_SOURCES).filter((t) => !written.has(t));
+  assert.deepEqual(unseen, [], `scan no longer sees writes to: ${unseen.join(', ')} (scanner broken, or the source is gone)`);
+
+  const hidden = [...new Set(dynamic)].filter((f) => !DYNAMIC_WRITE_FILES.includes(f));
+  assert.deepEqual(hidden, [], `write through an unresolvable table variable in: ${hidden.join(', ')}. Name the table literally or via an UPPER_CASE const`);
+});
+
+test('the newest lifecycle_customer_state counts exactly the lesson sources', () => {
+  const { file, sql } = newestViewMigration();
+  const begin = sql.indexOf('-- lesson-activity sources: begin');
+  const end = sql.indexOf('-- lesson-activity sources: end');
+  assert.ok(begin !== -1 && end > begin, `${file}: lesson-activity source markers missing`);
+
+  const block = stripSqlComments(sql.slice(begin, end));
+  const inView = new Set([...block.matchAll(/FROM\s+public\.([a-z_]+)/g)].map((m) => m[1]));
+  const missing = Object.keys(LESSON_ACTIVITY_SOURCES).filter((t) => !inView.has(t));
+  const extra = [...inView].filter((t) => !(t in LESSON_ACTIVITY_SOURCES));
+  assert.deepEqual(missing, [], `${file}: lesson source(s) missing from the view, so their learners stay 'new' and get mailed: ${missing.join(', ')}`);
+  assert.deepEqual(extra, [], `${file}: table(s) in the view that are not listed as sources: ${extra.join(', ')}`);
+
+  // The block is the has_lesson_activity expression, and status reads it:
+  // the only way to 'activated'.
+  assert.match(sql.slice(end), /^-- lesson-activity sources: end\s*\)\s*AS has_lesson_activity/, `${file}: the source block must close into has_lesson_activity`);
+  const view = stripSqlComments(sql.slice(sql.indexOf('CREATE OR REPLACE VIEW public.lifecycle_customer_state')));
+  assert.match(view, /WHEN\s+a\.has_lesson_activity\s+THEN\s+'activated'/, `${file}: status must read has_lesson_activity`);
+  assert.equal((view.match(/THEN\s+'activated'/g) || []).length, 1, `${file}: a second path to 'activated' bypasses the source list`);
+
+  // Posture: no privilege added, service role only.
+  assert.match(sql, /WITH \(security_invoker = true\)/, `${file}: the view must stay security_invoker`);
+  assert.match(sql, /REVOKE ALL ON public\.lifecycle_customer_state FROM PUBLIC, anon, authenticated/, `${file}: view must not be client-readable (name PUBLIC too)`);
+  assert.match(sql, /GRANT SELECT ON public\.lifecycle_customer_state TO service_role/, `${file}: service role must keep SELECT`);
+});
+
+test('the activation mailer reads the one definition and never re-derives it', () => {
+  const src = read('netlify/functions/activation-lifecycle.mjs');
+  for (const table of Object.keys(LESSON_ACTIVITY_SOURCES)) {
+    assert.ok(!src.includes(`from('${table}')`), `activation-lifecycle.mjs queries ${table} itself; read lifecycle_customer_state instead`);
+  }
+  // Both reads, selection and the pre-claim re-read, require the column only
+  // the 2026-09-28 view has, so an unmigrated view fails closed.
+  assert.ok(src.includes(`.eq('has_lesson_activity', false)`), 'selection must require has_lesson_activity = false');
+  const recheck = src.slice(src.indexOf('async function recheckStillNew'), src.indexOf('async function sendBatch'));
+  assert.ok(recheck.includes('has_lesson_activity === false'), 'the pre-claim re-read must require has_lesson_activity = false');
+});
+
+// ---------------------------------------------------------------------------
+// 7. The trial-end course offer (trial-lifecycle.mjs)
 // ---------------------------------------------------------------------------
 
 const SITE = 'https://deutsch-meister.de';
-const UNSUB = `${SITE}/.netlify/functions/unsubscribe?uid=u1&token=t1`;
+const USER_ID = '00000000-0000-4000-8000-000000000007';
 /** Every buyable course's webhook variant set — production once all of them are live. */
 const ENV_ALL = Object.fromEntries(SELLABLE_LEVELS.map((l) => [trial.courseVariantEnv(l), 'variant-id']));
 /** The first priced level on the ladder: the step after the free course. */
 const FIRST_PAID = ALL_LEVELS.find((l) => SUBLEVEL_PRICES_EUR[l] !== undefined);
 const hrefs = (html) => [...html.matchAll(/href="([^"]+)"/g)].map((m) => m[1].replace(/&amp;/g, '&'));
-const render = (kind, offer) => trial.renderEmail(kind, { offer, unsubUrl: UNSUB }).html;
+const render = (kind, offer) => trial.renderHtml(kind, USER_ID, offer);
+const isUnsubscribe = (href) => href.startsWith(SITE) && new URL(href).pathname === '/.netlify/functions/unsubscribe';
 
 test('the trial-end offer is the course for the learner\'s level, and only ever a buyable one', () => {
   for (const level of ALL_LEVELS) {
@@ -325,38 +513,81 @@ test('no buyable course → the Pro-only mail, and day 3 never sells a course', 
   assert.ok(!hrefs(day3).some((h) => h.includes('/courses/')), 'day 3 must not carry the course offer');
 });
 
-test('every site link in every trial mail carries utm email/lifecycle/<kind>; unsubscribe is untouched', () => {
-  assert.deepEqual(trial.KINDS, ['trial_day3', 'trial_day6', 'trial_ended']);
-  for (const kind of trial.KINDS) {
-    for (const offer of [null, trial.courseOfferFor('a1', ENV_ALL)]) {
-      const links = hrefs(render(kind, offer));
-      assert.ok(links.includes(UNSUB), `${kind}: the unsubscribe link changed`);
-      const site = links.filter((h) => h !== UNSUB);
+test('every site link in every trial mail carries the lifecycle tags; unsubscribe is untouched', () => {
+  assert.deepEqual(trial.TRIAL_KINDS, ['trial_day3', 'trial_day6', 'trial_ended']);
+  for (const kind of trial.TRIAL_KINDS) {
+    for (const offer of [null, trial.courseOfferFor('a1', ENV_ALL), trial.courseOfferFor('A2.1', ENV_ALL)]) {
+      const links = hrefs(render(kind, offer)).filter((h) => !isSocialHref(h));
+      const unsub = links.filter(isUnsubscribe);
+      assert.equal(unsub.length, 1, `${kind}: one unsubscribe link`);
+      assert.ok(!unsub[0].includes('utm_'), `${kind}: the unsubscribe link is never tagged`);
+      const site = links.filter((h) => !isUnsubscribe(h));
       assert.ok(site.length >= 2, `${kind}: expected a CTA and the footer link`);
+      const contents = [];
       for (const href of site) {
         const url = new URL(href);
         assert.equal(url.origin, SITE, `${kind}: off-site link ${href}`);
         assert.equal(url.searchParams.get('utm_source'), 'email', `${kind}: ${href}`);
         assert.equal(url.searchParams.get('utm_medium'), 'lifecycle', `${kind}: ${href}`);
-        assert.equal(url.searchParams.get('utm_campaign'), kind, `${kind}: ${href}`);
+        assert.equal(url.searchParams.get('utm_campaign'), kind.replaceAll('_', '-'), `${kind}: ${href}`);
+        contents.push(url.searchParams.get('utm_content'));
         // Every target is an Astro or prerendered route: slash, or a 301 per click.
         assert.ok(url.pathname.endsWith('/'), `${kind}: ${url.pathname} missing its trailing slash`);
+      }
+      assert.equal(new Set(contents).size, contents.length, `${kind}: each link names itself (${contents.join(', ')})`);
+      if (offer && trial.offersCourse(kind)) {
+        const course = site.find((h) => new URL(h).searchParams.get('utm_content') === 'course');
+        assert.equal(new URL(course).pathname, offer.path, `${kind}: the course button opens ${offer.path}`);
       }
     }
   }
 });
 
+test('the selection reads the placement the offer is chosen by', async () => {
+  // PostgREST returns only the selected columns. Were current_level left out
+  // of the select, every learner would silently get the unplaced offer.
+  const now = Date.now();
+  const profile = {
+    id: USER_ID,
+    email_daily_sentence: true,
+    is_subscribed: false,
+    trial_started_at: new Date(now - 6.5 * 86400000).toISOString(),
+    trial_ends_at: new Date(now + 0.5 * 86400000).toISOString(),
+    current_level: 'A2.1',
+  };
+  const query = (rows) => {
+    let cols = null;
+    const q = {
+      select(c) { cols = c.split(',').map((x) => x.trim()); return q; },
+      gte() { return q; },
+      lt() { return q; },
+      eq() { return q; },
+      in() { return q; },
+      then(resolve) {
+        resolve({ data: rows.map((r) => Object.fromEntries(cols.filter((c) => c in r).map((c) => [c, r[c]]))), error: null });
+      },
+    };
+    return q;
+  };
+  const client = {
+    from: (table) => query(table === 'profiles' ? [profile] : []),
+    auth: { admin: { listUsers: async () => ({ data: { users: [{ id: USER_ID, email: 'learner@example.com', email_confirmed_at: new Date(now - 7 * 86400000).toISOString() }] }, error: null }) } },
+  };
+  const [r] = await trial.selectRecipients('trial_day6', { client });
+  assert.equal(r?.id, USER_ID, 'the due learner was not selected');
+  assert.equal(r.currentLevel, 'A2.1', 'current_level must be selected and passed on');
+  assert.equal(trial.courseOfferFor(r.currentLevel, ENV_ALL)?.level, 'a2.1');
+});
+
 test('the trial windows and claim-before-send are what section 1 says they are', () => {
   const src = read('netlify/functions/trial-lifecycle.mjs');
-  // TRIAL_OCCUPIED above is derived from these three lines; if one moves, the
+  // TRIAL_OCCUPIED above is derived from these windows; if one moves, the
   // table (and the activation disjointness it guards) must move with it.
-  for (const line of [
-    `trial_day3: { col: 'trial_started_at', lower: now - 4 * day, upper: now - 3 * day }`,
-    `trial_day6: { col: 'trial_ends_at', lower: now, upper: now + day }`,
-    `trial_ended: { col: 'trial_ends_at', lower: now - 2 * day, upper: now - day }`,
-  ]) {
-    assert.ok(src.includes(line), `trial window changed — update TRIAL_OCCUPIED: ${line}`);
-  }
+  assert.deepEqual(trial.TRIAL_WINDOWS, {
+    trial_day3: { col: 'trial_started_at', lowerDays: -4, upperDays: -3 },
+    trial_day6: { col: 'trial_ends_at', lowerDays: 0, upperDays: 1 },
+    trial_ended: { col: 'trial_ends_at', lowerDays: -2, upperDays: -1 },
+  }, 'trial window changed — update TRIAL_OCCUPIED');
   assert.ok(src.includes(`onConflict: 'user_id,kind'`), 'claim must use the lifecycle_emails unique key');
   const loop = src.slice(src.indexOf('async function sendKind'));
   assert.ok(loop.indexOf('.upsert(') !== -1, 'claim missing from the send loop');

@@ -14,17 +14,18 @@ export const MONTHLY_PRICE_EUR = 9.99;
 /** English price convention: €9.99 (mirrors pricing.js `eur`). */
 export const eur = (v) => `€${v.toFixed(2)}`;
 
-// ─── one-time level courses (mirrors pricing.js, same names) ────────────────
-// The trial-end emails offer the course for the learner's level
-// (netlify/functions/trial-lifecycle.mjs). Only the values that offer needs are
-// copied; SELLABLE_LEVELS is DERIVED here exactly as it is in the data layer,
-// so a level moving out of COMING_SOON_LEVELS there fails the test until it
-// moves here too.
+// ─── The catalogue, for the support agent ────────────────────────────────────
+// support-agent.mjs may quote a price only if it is one of these, and its
+// reply validator rejects any euro amount that is not (CATALOGUE_EURO_AMOUNTS).
+// Same synced-copy doctrine as above: tests/claims.test.mjs compares every
+// value here against src/data/pricing.js.
 
-export const ALL_LEVELS = ['a1.1', 'a1.2', 'a2.1', 'a2.2', 'b1.1', 'b1.2', 'b2.1', 'b2.2'];
+export const YEARLY_PRICE_EUR = 79.99;
+export const COURSE_TELC_B1_PRICE_EUR = 89;
+export const COURSE_PRO_DAYS = 90;
 
 /** Gross one-time price in EUR per sub-level. A1.1 is free and has no product. */
-export const SUBLEVEL_PRICES_EUR = {
+export const SUBLEVEL_PRICES_EUR = Object.freeze({
   'a1.2': 40,
   'a2.1': 50,
   'a2.2': 50,
@@ -32,17 +33,69 @@ export const SUBLEVEL_PRICES_EUR = {
   'b1.2': 60,
   'b2.1': 65,
   'b2.2': 65,
-};
+});
 
-/** Listed, priced, not yet buyable. */
-export const COMING_SOON_LEVELS = ['b1.1', 'b1.2', 'b2.1', 'b2.2'];
+/** Listed, priced, not yet buyable ("Coming soon", no checkout). */
+export const COMING_SOON_LEVELS = Object.freeze(['b1.1', 'b1.2', 'b2.1', 'b2.2']);
+
+export const ALL_LEVELS = Object.freeze(['a1.1', 'a1.2', 'a2.1', 'a2.2', 'b1.1', 'b1.2', 'b2.1', 'b2.2']);
+
+// The trial-end mails offer the course for the learner's level
+// (netlify/functions/trial-lifecycle.mjs). SELLABLE_LEVELS is DERIVED here
+// exactly as it is in the data layer, so a level moving out of
+// COMING_SOON_LEVELS there fails the claims test until it moves here too.
 
 /** Sub-levels a visitor can buy today (priced and not coming soon). */
-export const SELLABLE_LEVELS = Object.keys(SUBLEVEL_PRICES_EUR).filter((l) => !COMING_SOON_LEVELS.includes(l));
+export const SELLABLE_LEVELS = Object.freeze(Object.keys(SUBLEVEL_PRICES_EUR).filter((l) => !COMING_SOON_LEVELS.includes(l)));
 
-/** The included Pro window a course purchase grants (the webhook's proDays). */
-export const COURSE_PRO_DAYS = 90;
+/** The included Pro window a course purchase grants, in whole months (pricing.js COURSE_PRO_MONTHS). */
 export const COURSE_PRO_MONTHS = Math.floor(COURSE_PRO_DAYS / 30);
 
-/** Product key for a sub-level: 'a1.2' → 'course_a1_2' (env vars are COURSE_A1_2). */
+const cents = (n) => Math.round(n * 100) / 100;
+
+/** Derived exactly as pricing.js derives them — never typed. */
+export const YEARLY_AS_MONTHLY_EUR = cents(YEARLY_PRICE_EUR / 12);
+export const MONTHLY_PER_DAY_EUR = cents(MONTHLY_PRICE_EUR / 30);
+export const YEARLY_PER_DAY_EUR = cents(YEARLY_PRICE_EUR / 365);
+
+/** German price convention: 9,99 € (mirrors pricing.js `deEur`). */
+export const deEur = (v) => `${cents(v).toFixed(2).replace('.', ',')} €`;
+
+/** 'a1.2' → 'course_a1_2' (mirrors pricing.js productKeyForLevel). */
 export const productKeyForLevel = (level) => `course_${String(level).toLowerCase().replace('.', '_')}`;
+
+// The retired band keys an old purchase can still carry (pricing.js
+// LEGACY_LEVEL_COURSES): not for sale, but a purchases row with one of them
+// still unlocks these levels.
+const LEGACY_PRODUCTS = Object.freeze({
+  course_a1: { name: 'Deutsch A1 Kurs', levels: ['a1.1', 'a1.2'] },
+  course_a2: { name: 'Deutsch A2 Kurs', levels: ['a2.1', 'a2.2'] },
+  course_b1: { name: 'Deutsch B1 Kurs', levels: ['b1.1', 'b1.2'] },
+  course_b2: { name: 'Deutsch B2 Kurs', levels: ['b2.1', 'b2.2'] },
+  course_alle: { name: 'Deutsch Komplettkurs (A1–B2)', levels: ALL_LEVELS },
+});
+
+/**
+ * What a purchases.product_key is called and unlocks (mirrors pricing.js
+ * courseForProduct + levelsForProduct). The telc course unlocks no level;
+ * an unknown key is null.
+ */
+export function productInfo(productKey) {
+  const key = String(productKey || '');
+  if (key === 'telc_b1_komplett') return { key, name: 'telc B1 Komplettvorbereitung', levels: [] };
+  const level = Object.keys(SUBLEVEL_PRICES_EUR).find((l) => productKeyForLevel(l) === key);
+  if (level) return { key, name: `Deutsch ${level.toUpperCase()} Kurs`, levels: [level] };
+  const legacy = LEGACY_PRODUCTS[key];
+  return legacy ? { key, name: legacy.name, levels: [...legacy.levels] } : null;
+}
+
+/** Every euro figure the product states — the only amounts a support reply may contain. */
+export const CATALOGUE_EURO_AMOUNTS = Object.freeze([
+  MONTHLY_PRICE_EUR,
+  YEARLY_PRICE_EUR,
+  YEARLY_AS_MONTHLY_EUR,
+  MONTHLY_PER_DAY_EUR,
+  YEARLY_PER_DAY_EUR,
+  COURSE_TELC_B1_PRICE_EUR,
+  ...Object.values(SUBLEVEL_PRICES_EUR),
+]);

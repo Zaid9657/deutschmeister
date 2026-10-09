@@ -160,14 +160,14 @@ const VideoLibraryPage = () => {
                 </Reveal>
                 <Reveal as="p" delay={60} className="mt-2 text-[0.9375rem] text-graphite">
                   {isGerman
-                    ? 'Lerne Deutsch mit Videozusammenfassungen und Folien'
+                    ? 'Deutsch lernen mit Videozusammenfassungen und Folien'
                     : 'Learn German with video summaries and slides'}
                 </Reveal>
               </div>
             </div>
             <Reveal as="p" delay={120} className="max-w-2xl text-[0.9375rem] leading-relaxed text-graphite sm:text-base">
               {isGerman
-                ? 'Jedes Video fasst ein Grammatik- oder Vokabelthema zusammen. Schau dir das Video an, lade die Folien herunter und lerne in deinem eigenen Tempo.'
+                ? 'Jedes Video fasst ein Grammatik- oder Vokabelthema zusammen. Sehen Sie sich das Video an, laden Sie die Folien herunter und lernen Sie in Ihrem eigenen Tempo.'
                 : 'Each video summarizes a grammar or vocabulary topic. Watch the video, download the slides, and learn at your own pace.'}
             </Reveal>
             {/* The video surface is where someone looking for more video will
@@ -223,7 +223,7 @@ const VideoLibraryPage = () => {
             <p className="text-graphite max-w-sm mx-auto">
               {levelFilter !== 'all'
                 ? (isGerman
-                  ? `Noch keine Videos für ${levelFilter} verfügbar. Schau dir die anderen Stufen an!`
+                  ? `Noch keine Videos für ${levelFilter} verfügbar. Sehen Sie sich die anderen Stufen an!`
                   : `No ${levelFilter} videos available yet. Check out other levels!`)
                 : (isGerman
                   ? 'Neue Videos werden bald hinzugefügt.'

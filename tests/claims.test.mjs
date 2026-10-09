@@ -26,7 +26,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -69,6 +69,7 @@ import {
   COURSE_WRITING_FREE_TOTAL_A11,
   READALOUD_DAILY_LIMIT,
   READING_LESSON_COUNT,
+  TRIAL_DAYS,
 } from '../src/data/marketing.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -188,6 +189,25 @@ const PRICE_FREE_SURFACES = [
   // Sentence X-Ray carries the signed-out conversion offer and the Pro upsell
   // at the daily limit (docs/SCORECARD.md work order #3, 2026-09-27).
   'src/pages/SentenceXRay.jsx',
+  // The offer at the free-speaking limit quotes the level course and Pro
+  // (docs/SCORECARD.md work order #7b, 2026-09-28).
+  'src/components/speaking/SpeakingLimitOffer.jsx',
+  // The /pricing/ Pro button's label and note (conversion agent, 2026-09-30).
+  'astro-site/src/lib/proCta.js',
+  // The support agent quotes prices to customers: only through the synced
+  // pricing copy (_shared/pricing.mjs), never typed (2026-09-30).
+  'netlify/functions/support-agent.mjs',
+  'netlify/functions/_shared/supportAgentLib.mjs',
+  'netlify/functions/_shared/supportCatalog.mjs',
+  // v4 "Die Linie" (2026-10-04): the offer layer and every surface that renders it.
+  'src/data/offers.js',
+  'astro-site/src/data/offers.js',
+  'astro-site/src/data/homepage.js',
+  'astro-site/src/components/linie/LineSection.astro',
+  'astro-site/src/components/linie/FitChooser.astro',
+  'astro-site/src/components/linie/Ticket.astro',
+  'astro-site/src/components/linie/Progression.astro',
+  'astro-site/src/components/linie/OfferFaq.astro',
 ];
 
 test('no page source retypes a price literal', () => {
@@ -249,6 +269,143 @@ test('no surface claims unlimited AI usage', () => {
   assert.deepEqual(failures, [], `unlimited claims on metered surfaces:\n  ${failures.join('\n  ')}`);
 });
 
+test('no surface says the paid plans include a free trial', () => {
+  // The free trial belongs to the ACCOUNT: signup grants it, and it ends on its
+  // own. The plans carry no trial of their own; Lemon Squeezy charges a plan the
+  // moment it is bought (12 of 12 subscription_created webhooks were 'active'
+  // with no trial_ends_at, measured 2026-10-01). /subscription told every
+  // visitor, including those whose trial had already ended, that "all plans
+  // include" one — a buyer who believed it would be charged on day one of
+  // what they took for a free week. Say what the trial is (an account trial,
+  // TRIAL_DAYS from marketing.js), never that a plan comes with one.
+  const banned = [
+    /\b(all|every|each|both)\s+(of\s+the\s+|our\s+)?(paid\s+)?plans?\s+(include|includes|come\s+with|comes\s+with|start\s+with|starts\s+with)\b[^\n]{0,40}\btrial/i,
+    /\b(alle|jeder|jede|beide)\s+(unsere\s+)?(Pläne|Plan|Tarife|Tarif|Abos|Abo)\s+(beinhalten|beinhaltet|enthalten|enthält|umfassen|umfasst|starten|startet|beginnen|beginnt)\b[^\n]{0,40}\b(Testphase|Probezeit|Test)/i,
+  ];
+  const failures = [];
+  let seen = 0;
+  for (const file of PRICE_FREE_SURFACES) {
+    seen += 1;
+    const body = rendered(read(file));
+    for (const line of body.split('\n')) {
+      if (banned.some((re) => re.test(line))) failures.push(`${file}: ${line.trim().slice(0, 120)}`);
+    }
+  }
+  assert.ok(seen === PRICE_FREE_SURFACES.length && seen > 0, 'no surfaces were checked');
+  assert.deepEqual(failures, [], `plan-trial claims:\n  ${failures.join('\n  ')}`);
+});
+
+// ---------------------------------------------------------------------------
+// 2b. The account trial: what it opens, and for how long
+// ---------------------------------------------------------------------------
+//
+// Signup grants every level for TRIAL_DAYS; after that only FREE_LEVELS
+// (src/config/freeTier.js) stay open. Measured 2026-10-01: 152 of 152 signups
+// in 30 days got a trial of exactly 7.000 days, stamped at the signup instant
+// (including the 50 who never signed in), so the trial is the account's, it is
+// server-granted, and it ends on its own.
+//
+// Until 2026-10-01 the signed-out level lock (LockedContentOverlay) said
+// "Create a free account to unlock all levels beyond A1.1" over a retyped
+// "7-day free trial": a permanent unlock on one line, a seven-day one on the
+// next, and the seven typed by hand. These rules walk the source trees rather
+// than a file list, so a new screen is covered the day it is written.
+
+const COPY_ROOTS = ['src', 'astro-site/src', 'netlify/functions'];
+const copyFiles = () => {
+  const out = [];
+  const walk = (dir) => {
+    for (const entry of readdirSync(join(ROOT, dir), { withFileTypes: true })) {
+      if (entry.name === 'node_modules') continue;
+      const rel = `${dir}/${entry.name}`;
+      if (entry.isDirectory()) walk(rel);
+      else if (/\.(jsx?|mjs|astro)$/.test(entry.name)) out.push(rel);
+    }
+  };
+  COPY_ROOTS.forEach(walk);
+  return out;
+};
+/** rendered(), plus the HTML comments an .astro template can carry. */
+const renderedCopy = (src) => rendered(src.replace(/<!--[\s\S]*?-->/g, ' '));
+
+/** The trial length typed as a figure or a word ("7-day", "7 Tage", "sieben Tage"). */
+const SPELLED = {
+  en: ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen'],
+  de: ['null', 'ein', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn', 'elf', 'zwölf', 'dreizehn', 'vierzehn'],
+};
+const spelledTrial = [SPELLED.en[TRIAL_DAYS], SPELLED.de[TRIAL_DAYS]].filter(Boolean);
+const RETYPED_TRIAL_LENGTH = new RegExp(
+  `(?:(?<![\\w.,$€])${TRIAL_DAYS}${spelledTrial.length ? `|\\b(?:${spelledTrial.join('|')})` : ''})` +
+    '[\\s\\u00a0-]*(?:days?|Tag(?:e|en)?|tägig\\w*)\\b',
+  'i',
+);
+/**
+ * A line that is about the trial or the free offer, not "the last 7 days".
+ * No bare "pro": in German it is "per" ("Anmeldungen pro Tag, rollierend 7 Tage").
+ */
+const TRIAL_CONTEXT = /\b(trial|test\w*|probe\w*|kostenlos\w*|free|gratis)\b/i;
+
+test('no surface says a free account opens every level without saying for how long', () => {
+  // The free account opens every level for TRIAL_DAYS, not for good. A line
+  // that ties the account to all levels must carry its time bound on the same
+  // line: the derived TRIAL_DAYS, or the word trial / Testphase.
+  const ACCOUNT = /\b(free\s+account|sign(ing)?[\s-]?up|register(ing)?|registrier(en|e|st|t)|create\s+an?\s+account|kostenlos\w*\s+Konto|Konto\s+(erstellen|anlegen))\b/i;
+  const ALL_LEVELS = /\b((all|every)\s+(\$\{\w+\}\s+|\d+\s+|of\s+the\s+)?(CEFR\s+)?levels?|alle\s+(\$\{\w+\}\s+|\d+\s+)?(Stufen|Level|Niveaus?|Niveaustufen)|jede\s+Stufe|jedes\s+(Level|Niveau))\b/i;
+  const BOUND = /TRIAL_DAYS|\btrial\b|Testphase|Probezeit/i;
+  const files = copyFiles();
+  const failures = [];
+  for (const file of files) {
+    for (const line of renderedCopy(read(file)).split('\n')) {
+      if (ACCOUNT.test(line) && ALL_LEVELS.test(line) && !BOUND.test(line)) {
+        failures.push(`${file}: ${line.trim().slice(0, 120)}`);
+      }
+    }
+  }
+  assert.ok(files.length > 100, `only ${files.length} source files were walked`);
+  assert.deepEqual(failures, [], `free-account claims with no time bound:\n  ${failures.join('\n  ')}`);
+});
+
+test('no paywall retypes the trial length', () => {
+  // A paywall is any surface that reports itself as one (calls
+  // trackPaywallShown). It is the moment of intent, and the place a stale
+  // "7" would cost the most: it must say ${TRIAL_DAYS}, never the digit.
+  const paywalls = copyFiles().filter((f) => /\btrackPaywallShown\(/.test(renderedCopy(read(f))));
+  const failures = [];
+  for (const file of paywalls) {
+    for (const line of renderedCopy(read(file)).split('\n')) {
+      // Trial lines only: a "7-day money-back guarantee" is not a trial length.
+      if (RETYPED_TRIAL_LENGTH.test(line) && TRIAL_CONTEXT.test(line)) failures.push(`${file}: ${line.trim().slice(0, 120)}`);
+    }
+  }
+  assert.ok(paywalls.length > 0, 'no paywall surfaces were found — did trackPaywallShown get renamed?');
+  assert.deepEqual(failures, [], `retyped trial length on a paywall:\n  ${failures.join('\n  ')}`);
+});
+
+/**
+ * Files anywhere that still type the trial length into trial copy. May only go
+ * down. 2026-10-01: 4. 2026-10-02: 0 — the nav's trial button in both front
+ * ends (Navbar.jsx, Layout.astro, #177) and the "Pro-Testphase" rows in both
+ * twins of competitorComparisons.js now derive the length from TRIAL_DAYS.
+ * At 0 any retyped trial length anywhere fails the suite.
+ */
+const MAX_RETYPED_TRIAL_LENGTH_FILES = 0;
+
+test('retyped trial lengths are receding, never spreading', () => {
+  const files = copyFiles().filter((f) =>
+    renderedCopy(read(f))
+      .split('\n')
+      .some((line) => RETYPED_TRIAL_LENGTH.test(line) && TRIAL_CONTEXT.test(line)),
+  );
+  // A ratchet equals its measurement (CLAUDE.md): above it the retype spread,
+  // below it a fix landed and the ceiling must come down in the same commit.
+  assert.equal(
+    files.length,
+    MAX_RETYPED_TRIAL_LENGTH_FILES,
+    `${files.length} files retype the trial length; MAX_RETYPED_TRIAL_LENGTH_FILES is ${MAX_RETYPED_TRIAL_LENGTH_FILES} — ` +
+      `above it the retype spread, below it lower the ceiling:\n  ${files.join('\n  ')}`,
+  );
+});
+
 // ---------------------------------------------------------------------------
 // 3. Agreement with the servers that enforce the limits
 // ---------------------------------------------------------------------------
@@ -296,12 +453,34 @@ test('the functions\' synced pricing copy matches the data layer', async () => {
   const shared = await import('../netlify/functions/_shared/pricing.mjs');
   assert.equal(shared.MONTHLY_PRICE_EUR, MONTHLY_PRICE_EUR, 'functions pricing copy drifted from src/data/pricing.js');
   assert.equal(shared.eur(shared.MONTHLY_PRICE_EUR), eur(MONTHLY_PRICE_EUR), 'functions eur() formats differently than the data layer');
-  // The course values the trial-end offer quotes (trial-lifecycle.mjs).
-  assert.deepEqual(shared.ALL_LEVELS, ALL_LEVELS, 'functions level ladder drifted');
-  assert.deepEqual(shared.SUBLEVEL_PRICES_EUR, SUBLEVEL_PRICES_EUR, 'functions course prices drifted from src/data/pricing.js');
-  assert.deepEqual(shared.COMING_SOON_LEVELS, COMING_SOON_LEVELS, 'functions coming-soon list drifted — an email could offer a course that is not for sale');
-  assert.deepEqual(shared.SELLABLE_LEVELS, SELLABLE_LEVELS, 'functions sellable levels drifted');
-  assert.equal(shared.COURSE_PRO_DAYS, COURSE_PRO_DAYS, 'functions Pro window drifted');
+
+  // The catalogue the support agent may quote (and its reply validator allows).
+  assert.equal(shared.YEARLY_PRICE_EUR, YEARLY_PRICE_EUR);
+  assert.equal(shared.COURSE_TELC_B1_PRICE_EUR, COURSE_TELC_B1_PRICE_EUR);
+  assert.equal(shared.COURSE_PRO_DAYS, COURSE_PRO_DAYS);
+  assert.deepEqual({ ...shared.SUBLEVEL_PRICES_EUR }, SUBLEVEL_PRICES_EUR);
+  assert.deepEqual([...shared.COMING_SOON_LEVELS], COMING_SOON_LEVELS);
+  assert.deepEqual([...shared.ALL_LEVELS], ALL_LEVELS);
+  assert.equal(shared.YEARLY_AS_MONTHLY_EUR, YEARLY_AS_MONTHLY_EUR);
+  assert.equal(shared.MONTHLY_PER_DAY_EUR, MONTHLY_PER_DAY_EUR);
+  assert.equal(shared.YEARLY_PER_DAY_EUR, YEARLY_PER_DAY_EUR);
+  for (const p of [MONTHLY_PRICE_EUR, YEARLY_PRICE_EUR, COURSE_TELC_B1_PRICE_EUR, 40]) {
+    assert.equal(shared.deEur(p), deEur(p), `functions deEur(${p}) formats differently than the data layer`);
+  }
+  // Every product key a purchases row can carry resolves to the same levels.
+  const keys = [...Object.keys(COURSES), ...Object.keys(LEVEL_COURSES), ...Object.keys(LEGACY_LEVEL_COURSES)];
+  for (const key of keys) {
+    assert.deepEqual(shared.productInfo(key)?.levels, levelsForProduct(key), `productInfo(${key}).levels drifted`);
+    assert.equal(shared.productKeyForLevel(key.replace(/^course_/, '').replace('_', '.')), productKeyForLevel(key.replace(/^course_/, '').replace('_', '.')));
+  }
+  assert.equal(shared.productInfo('nope'), null);
+  // The allow-list holds every figure a page may state, and nothing else.
+  const pagePrices = [MONTHLY_PRICE_EUR, YEARLY_PRICE_EUR, YEARLY_AS_MONTHLY_EUR, MONTHLY_PER_DAY_EUR, YEARLY_PER_DAY_EUR, COURSE_TELC_B1_PRICE_EUR, ...Object.values(SUBLEVEL_PRICES_EUR)];
+  assert.deepEqual([...shared.CATALOGUE_EURO_AMOUNTS].sort((a, b) => a - b), pagePrices.sort((a, b) => a - b));
+  // The course values the trial-end offer quotes (trial-lifecycle.mjs): what is
+  // buyable, the included Pro window in months, the key the webhook maps, and
+  // the price as the mail prints it.
+  assert.deepEqual([...shared.SELLABLE_LEVELS], SELLABLE_LEVELS, 'functions sellable levels drifted — an email could offer a course that is not for sale');
   assert.equal(shared.COURSE_PRO_MONTHS, LEVEL_COURSES[productKeyForLevel(SELLABLE_LEVELS[0])].proMonths, 'functions Pro months drifted');
   for (const level of ALL_LEVELS) {
     assert.equal(shared.productKeyForLevel(level), productKeyForLevel(level), `functions product key for ${level} drifted`);

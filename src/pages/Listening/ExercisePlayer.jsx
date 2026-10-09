@@ -146,7 +146,7 @@ const ExercisePlayer = () => {
               />
               <p className="font-data text-[0.6875rem] text-graphite mt-2 text-center">
                 {isGerman
-                  ? 'Höre dir den Dialog an und beantworte die Fragen unten.'
+                  ? 'Hören Sie sich den Dialog an und beantworten Sie die Fragen unten.'
                   : 'Listen to the dialogue and answer the questions below.'}
               </p>
             </Reveal>

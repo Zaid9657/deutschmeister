@@ -56,7 +56,7 @@ const ListeningHome = () => {
               align="center"
               title={isGerman ? 'Hörverständnis' : 'Listening Comprehension'}
               lead={isGerman
-                ? 'Verbessere dein Hörverständnis mit authentischen Dialogen und Übungen.'
+                ? 'Verbessern Sie Ihr Hörverständnis mit authentischen Dialogen und Übungen.'
                 : 'Improve your listening skills with authentic dialogues and exercises.'}
             />
           </div>

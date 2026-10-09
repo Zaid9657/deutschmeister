@@ -1,5 +1,21 @@
 #!/usr/bin/env bash
-# Launch email 1 (Day 0 announcement) — READY TO RUN, staged 2026-09-02.
+# ============================================================================
+# RETIRED 2026-09-27 — NEVER RUN THIS SCRIPT.
+#
+# It is the telc B1 launch email with code START49, which expired in Lemon
+# Squeezy on 2026-09-14. Sent today it would promise every confirmed account a
+# €49 price the checkout no longer charges (irreführende Werbung, UWG §5), for
+# a product that is not the current offer. It was never sent.
+#
+# The current launch email is drafts/send-launch-sublevel-1.sh (work order #2
+# in docs/SCORECARD.md). This file is kept only as history of the mechanics
+# that script copies; the guard below makes it refuse to run.
+# ============================================================================
+echo "RETIRED: drafts/send-launch-email-1.sh is the expired START49 email and must never be sent." >&2
+echo "Use drafts/send-launch-sublevel-1.sh (see docs/SCORECARD.md work order #2)." >&2
+exit 1
+
+# Launch email 1 (Day 0 announcement) — staged 2026-09-02, never sent, retired 2026-09-27.
 #
 # Why this and not a Resend broadcast: the Resend audience is empty, and the
 # site's own send-campaign function is the engineered path — it derives the

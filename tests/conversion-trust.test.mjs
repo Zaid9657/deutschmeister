@@ -13,9 +13,11 @@ test('desktop navigation uses grouped disclosures in both renderers', () => {
 
   assert.match(spa, /visibleGroups[\s\S]*?<details/);
   assert.match(astro, /NAV_GROUPS\.map[\s\S]*?<details/);
-  assert.match(spa, /A1\.1 · no account/);
-  assert.match(spa, /Start 7-day trial/);
-  assert.match(astro, /Start 7-day trial/);
+  // The free first stop's key, same words as the Astro bar (copy.md CTA vocabulary).
+  assert.match(spa, /Start A1\.1 free/);
+  assert.match(astro, /Start A1\.1 free/);
+  assert.match(spa, /Start \$\{TRIAL_DAYS\}-day trial/);
+  assert.match(astro, /Start \{TRIAL_DAYS\}-day trial/);
 });
 
 test('pricing separates no-account exploration, account trial, and paid Pro', () => {

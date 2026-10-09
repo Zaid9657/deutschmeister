@@ -7,9 +7,16 @@
 // destination that resumes it: /subscription?buy=<key>, which opens the
 // checkout once and clears the intent. Only known product keys are honoured.
 import { safeGet, safeSet, safeRemove } from '../utils/safeStorage';
+import { peekReturnPath } from './returnPath.js';
 
 const KEY = 'dm_buy_intent';
-const VALID = /^(monthly|yearly|telc_b1_komplett|course_[a-z0-9]+)$/;
+// Sub-level keys carry a second underscore (course_a1_2). The pattern used to
+// be `course_[a-z0-9]+`, written in the band era (course_a1, course_alle). From
+// the 2026-09-08 sub-level re-cut until 2026-09-28 it refused every course on
+// sale, so a signed-out Buy click on /pricing/ or /courses/ landed on
+// /dashboard after signup with no checkout. tests/speaking-offer.test.mjs runs
+// every product key through this exact pattern.
+const VALID = /^(monthly|yearly|telc_b1_komplett|course_[a-z0-9]+(?:_[0-9])?)$/;
 
 export const setBuyIntent = (productKey) => {
   if (VALID.test(productKey || '')) safeSet(KEY, productKey);
@@ -22,8 +29,9 @@ export const peekBuyIntent = () => {
 
 export const clearBuyIntent = () => safeRemove(KEY);
 
-/** Where to send a user once they are authenticated: the pending checkout, else the dashboard. */
+/** Where to send a user once they are authenticated: the pending checkout, else the course step they left, else the dashboard. */
 export const postAuthPath = () => {
   const key = peekBuyIntent();
-  return key ? `/subscription?buy=${encodeURIComponent(key)}` : '/dashboard';
+  if (key) return `/subscription?buy=${encodeURIComponent(key)}`;
+  return peekReturnPath() || '/dashboard';
 };

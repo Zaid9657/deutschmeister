@@ -184,7 +184,7 @@ const ReadingLessonsPage = () => {
           <Card tone="sunk" className="mt-8 p-4">
             <p className="text-xs text-graphite text-center">
               {isGerman
-                ? 'Schließe jede Lektion ab, um die nächste freizuschalten. Jede Lektion enthält Text, Vokabular und Verständnisfragen.'
+                ? 'Schließen Sie jede Lektion ab, um die nächste freizuschalten. Jede Lektion enthält Text, Vokabular und Verständnisfragen.'
                 : 'Complete each lesson to unlock the next one. Each lesson includes text, vocabulary, and comprehension questions.'}
             </p>
           </Card>

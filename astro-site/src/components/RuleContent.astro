@@ -161,7 +161,7 @@ const headingSize = depth === 0 ? 'text-base' : 'text-sm';
         )}
       </div>
     )}
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto" tabindex="0" role="region" aria-label="Tabelle">
       <table class="w-full border-collapse text-left text-sm">
         <thead>
           <tr class="border-b border-ink bg-paper-sunk">
@@ -293,7 +293,7 @@ const headingSize = depth === 0 ? 'text-base' : 'text-sm';
 
 {/* --- Array of flat objects → table --- */}
 {kindOf === 'array' && arrType === 'objtable' && (
-  <div class="overflow-x-auto">
+  <div class="overflow-x-auto" tabindex="0" role="region" aria-label="Tabelle">
     <table class="w-full border-collapse text-left text-sm">
       <thead>
         <tr class="border-b border-ink bg-paper-sunk">

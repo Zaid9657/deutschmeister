@@ -1,9 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { trackSignupStarted } from '../lib/funnelTracking';
+import {
+  trackSignupStarted,
+  trackVerificationPageViewed,
+  trackVerificationEmailResent,
+} from '../lib/funnelTracking';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Mail, Lock, Eye, EyeOff, AlertCircle, Loader2, Check } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, AlertCircle, Loader2, Check, RefreshCw, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../utils/supabase';
 import SEO from '../components/SEO';
@@ -19,6 +23,27 @@ import {
   TRIAL_SPEAKING_SESSIONS,
   TRIAL_WRITING_EVALUATIONS,
 } from '../data/marketing.js';
+import { pendingPlacement } from '../lib/placement.js';
+import { postAuthPath } from '../lib/buyIntent';
+import { peekBuyIntent } from '../lib/buyIntent.js';
+import { COURSES, PLANS, courseForProduct, eur } from '../data/pricing.js';
+
+// A signed-out Buy click (/pricing/, /courses/, the homepage line) stored what
+// the visitor wanted before sending them here (lib/buyIntent.js). Say so: the
+// account is step one of two, and the checkout resumes on its own afterwards —
+// otherwise a buyer reads "Start your Pro trial" and thinks the purchase was lost.
+const pendingPurchase = () => {
+  const key = peekBuyIntent();
+  if (!key) return null;
+  const course = courseForProduct(key);
+  if (course) return { label: `Deutsch ${course.code}`, price: course.price, once: true };
+  if (key === 'telc_b1_komplett') return { label: COURSES.telc_b1_komplett.name, price: COURSES.telc_b1_komplett.price, once: true };
+  const plan = PLANS[key];
+  if (plan) return { label: plan.name, price: plan.price, once: false, interval: plan.interval };
+  return null;
+};
+import { signupOutcome, resendRefusal, signedInAs, RESEND_COOLDOWN_SECONDS } from '../lib/signupConfirmation.js';
+import { existingAccount } from '../lib/signupConfirmation.js';
 
 // The playbook form field (docs/design/playbook.md §1), with room for the
 // leading icon. The focus ring comes from the global *:focus-visible rule.
@@ -47,6 +72,12 @@ const SignupPage = () => {
 
   useEffect(() => { trackSignupStarted(); }, []);
 
+  // A level-test result taken signed out on this browser, waiting to be saved
+  // (src/lib/placement.js). Read once: the line below names the level the
+  // visitor came here to keep.
+  const [placedLevel] = useState(() => pendingPlacement());
+  const [purchase] = useState(() => pendingPurchase());
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -54,9 +85,57 @@ const SignupPage = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Set once signUp answers without a session: the address the confirmation
+  // link went to. It swaps the form for the check-your-inbox panel, because
+  // /verify-email needs a session and would bounce the learner to /login
+  // (src/lib/signupConfirmation.js has the evidence).
+  const [sentTo, setSentTo] = useState('');
+  const [resendState, setResendState] = useState('idle'); // 'idle' | 'sending' | 'sent'
+  const [cooldown, setCooldown] = useState(0);
+  // Refusals in a row that named no wait, and whether that reached the notice
+  // (the hourly cap, not the 60 s window: src/lib/signupConfirmation.js).
+  const [untimedRefusals, setUntimedRefusals] = useState(0);
+  const [limitReached, setLimitReached] = useState(false);
+  // Set when signUp answered for an address that already has an account:
+  // Supabase sent no mail, so the inbox panel would promise one that never
+  // comes (existingAccount in src/lib/signupConfirmation.js).
+  const [knownAddress, setKnownAddress] = useState('');
+  const knownHeading = useRef(null);
+  const inboxHeading = useRef(null);
+
+  useEffect(() => {
+    if (cooldown <= 0) return undefined;
+    const tick = setTimeout(() => setCooldown((s) => s - 1), 1000);
+    return () => clearTimeout(tick);
+  }, [cooldown]);
+
+  // The panel replaces the form the learner just submitted; move focus to its
+  // heading so a screen reader announces it and a phone scrolls to it.
+  useEffect(() => {
+    if (sentTo) inboxHeading.current?.focus();
+  }, [sentTo]);
+
+  // Same for the has-an-account notice: it sits above the form, out of view on
+  // a phone whose learner just pressed the button at the bottom.
+  useEffect(() => {
+    if (knownAddress) knownHeading.current?.focus();
+  }, [knownAddress]);
+
+  // Confirmed in another tab: supabase-js signs this tab in too (SIGNED_IN over
+  // its BroadcastChannel), so the panel moves on to where a login would have
+  // gone. Only a session of the address the link went to counts.
+  useEffect(() => {
+    if (!sentTo) return undefined;
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (signedInAs(session, sentTo)) navigate(postAuthPath(), { replace: true });
+    });
+    return () => subscription.unsubscribe();
+  }, [sentTo, navigate]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setKnownAddress('');
 
     if (password !== confirmPassword) {
       setError('Passwords do not match');
@@ -71,13 +150,28 @@ const SignupPage = () => {
     setLoading(true);
 
     try {
-      const { error } = await signUp(email, password);
-      if (error) {
+      const { data, error } = await signUp(email, password);
+      const outcome = signupOutcome({ data, error });
+      if (outcome === 'error') {
         setError(error.message);
         logFailedSignup(email, error);
-      } else {
+      } else if (outcome === 'signed-in') {
         navigate('/verify-email', { replace: true });
         return;
+      } else if (existingAccount({ data, error })) {
+        // No mail went out, so no inbox panel: say where the account is.
+        setKnownAddress(email.trim());
+        setPassword('');
+        setConfirmPassword('');
+      } else {
+        // The event /verify-email fired on mount for this step, kept so the
+        // signup funnel reads the same before and after.
+        trackVerificationPageViewed();
+        setSentTo(email.trim());
+        setPassword('');
+        setConfirmPassword('');
+        setResendState('idle');
+        setCooldown(RESEND_COOLDOWN_SECONDS);
       }
     } catch (err) {
       setError('An unexpected error occurred');
@@ -87,8 +181,50 @@ const SignupPage = () => {
     }
   };
 
+  // Session-less resend: supabase.auth.resend needs only the address. The link
+  // goes to /login like the first one (AuthContext signUp's emailRedirectTo),
+  // which forwards a visitor who arrives signed in.
+  const handleResend = async () => {
+    if (!sentTo || cooldown > 0 || resendState === 'sending') return;
+    setError('');
+    setResendState('sending');
+    const { error: resendError } = await supabase.auth.resend({
+      type: 'signup',
+      email: sentTo,
+      options: { emailRedirectTo: `${window.location.origin}/login` },
+    });
+    if (resendError) {
+      const refusal = resendRefusal(resendError, untimedRefusals);
+      if (refusal) {
+        setCooldown(refusal.wait);
+        setUntimedRefusals(refusal.untimed);
+        setLimitReached(refusal.limitReached);
+      } else {
+        setUntimedRefusals(0);
+        setLimitReached(false);
+        setError(resendError.message);
+      }
+      setResendState('idle');
+    } else {
+      trackVerificationEmailResent();
+      setUntimedRefusals(0);
+      setLimitReached(false);
+      setResendState('sent');
+      setCooldown(RESEND_COOLDOWN_SECONDS);
+    }
+  };
+
+  const changeAddress = () => {
+    setSentTo('');
+    setResendState('idle');
+    setCooldown(0);
+    setUntimedRefusals(0);
+    setLimitReached(false);
+    setError('');
+  };
+
   return (
-    <div className="relative min-h-screen overflow-hidden flex items-center justify-center bg-paper px-4 py-12">
+    <div className="relative min-h-screen overflow-hidden flex items-center justify-center bg-paper px-4 pb-12 pt-24 font-body">
       <SEO title="Sign Up Free" description="Create a free DeutschMeister account and start mastering German grammar with clear English explanations." path="/signup" />
       <Aurora />
       <motion.div
@@ -98,6 +234,15 @@ const SignupPage = () => {
       >
         {/* Header */}
         <div className="text-center mb-8">
+          {purchase && (
+            <div className="mb-6 rounded-clay border border-ink bg-linie-wash px-4 py-3 text-left shadow-raise-linie" role="status">
+              <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-ink">Step 1 of 2 · your account</p>
+              <p className="mt-1 text-[0.9375rem] leading-relaxed text-ink">
+                Then your checkout for <strong>{purchase.label}</strong> — {eur(purchase.price)}
+                {purchase.once ? ', one payment' : ` a ${purchase.interval}`} — opens on its own when you are back on this browser after confirming your email.
+              </p>
+            </div>
+          )}
           {/* The Meister-Siegel, not a "D" tile: the D was the retired identity, and
               a second mark beside the seal in the nav reads as two products. Logo
               renders a plain <a>, which matters — "/" is served by the Astro build,
@@ -135,6 +280,12 @@ const SignupPage = () => {
 
         {/* Form */}
         <Card raised className="p-8">
+          {placedLevel && (
+            <p className="mb-6 rounded-clay border border-rule bg-siegel-wash px-4 py-3 text-sm leading-relaxed text-ink">
+              Your level test result, <span className="font-bold">{placedLevel}</span>, is saved to your
+              account the first time you sign in on this browser.
+            </p>
+          )}
           {error && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
@@ -146,6 +297,97 @@ const SignupPage = () => {
             </motion.div>
           )}
 
+          {knownAddress && (
+            <div role="status" className="mb-6 rounded-clay border border-rule bg-siegel-wash px-4 py-3 text-left text-sm leading-relaxed text-ink">
+              <p ref={knownHeading} tabIndex={-1} className="font-bold">
+                This address already has an account
+              </p>
+              <p className="mt-1 font-data text-[0.8125rem] font-semibold text-siegel-deep break-all">{knownAddress}</p>
+              <p className="mt-2 text-graphite">
+                No new email was sent. Log in with your password, or set a new one if you have forgotten it.
+              </p>
+              <p className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
+                <Link to="/login" className={TEXT_LINK}>
+                  Log in
+                </Link>
+                <Link to="/reset-password" className={TEXT_LINK}>
+                  Reset your password
+                </Link>
+              </p>
+            </div>
+          )}
+
+          {sentTo ? (
+            <div className="text-center">
+              <div className="w-14 h-14 mx-auto mb-5 rounded-full bg-siegel-wash flex items-center justify-center">
+                <Mail className="w-7 h-7 text-siegel" aria-hidden="true" />
+              </div>
+              <h2
+                ref={inboxHeading}
+                tabIndex={-1}
+                className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink mb-3"
+              >
+                Check your inbox
+              </h2>
+              <p className="text-graphite mb-1">We sent a confirmation link to:</p>
+              <p className="font-data text-[0.8125rem] font-semibold text-siegel-deep mb-5 break-all">{sentTo}</p>
+              <p className="text-left text-sm leading-relaxed text-graphite mb-6">
+                Open the email with the subject{' '}
+                <span className="font-semibold text-ink">&ldquo;Confirm your DeutschMeister account&rdquo;</span> and
+                click its link. It activates your account and signs you in. If a welcome email arrives too, the link
+                you need is still in the confirmation email. Check your spam folder as well.
+              </p>
+
+              {resendState === 'sent' && (
+                <p
+                  role="status"
+                  className="mb-4 flex items-center justify-center gap-2 rounded-clay bg-accent-limette-wash px-4 py-3 text-sm font-semibold text-accent-limette-ink"
+                >
+                  <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
+                  Sent again. Use the link in the newest email.
+                </p>
+              )}
+
+              {limitReached && (
+                <p
+                  role="status"
+                  className="mb-4 rounded-clay bg-accent-aprikose-wash px-4 py-3 text-left text-sm font-semibold text-accent-aprikose-ink"
+                >
+                  The limit for confirmation emails is reached for now, so we cannot send another one. Please try again
+                  later, and look in your spam folder for the email we already sent.
+                </p>
+              )}
+
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={handleResend}
+                disabled={cooldown > 0 || resendState === 'sending'}
+              >
+                {resendState === 'sending' ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <RefreshCw className="w-4 h-4" />
+                )}
+                {cooldown > 0 ? `Send it again in ${cooldown} s` : 'Send it again'}
+              </Button>
+
+              <p className="mt-6 text-sm text-graphite">
+                Wrong address?{' '}
+                <button type="button" onClick={changeAddress} className={TEXT_LINK}>
+                  Use a different email
+                </button>
+              </p>
+              <p className="mt-2 text-sm text-graphite">
+                Signed up with this address before?{' '}
+                <Link to="/login" className={TEXT_LINK}>
+                  Log in
+                </Link>
+              </p>
+            </div>
+          ) : (
+            <>
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email */}
             <div>
@@ -245,6 +487,8 @@ const SignupPage = () => {
               {t('auth.login')}
             </Link>
           </p>
+            </>
+          )}
         </Card>
       </motion.div>
     </div>

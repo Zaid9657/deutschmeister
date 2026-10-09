@@ -3,6 +3,7 @@ import { supabase } from '../utils/supabase';
 import { signupAttributionMetadata } from '../lib/attribution';
 import { identify, resetAnalytics } from '../lib/analytics';
 import { trackSignupCompleted } from '../lib/funnelTracking';
+import { claimSignupCompletion } from '../lib/signupCompletion';
 import { logAuditEvent, AUDIT_EVENTS } from '../lib/auditLogger';
 import { withTimeout } from '../utils/withTimeout';
 
@@ -46,9 +47,12 @@ export const AuthProvider = ({ children }) => {
         }
 
         if (event === 'SIGNED_IN' && session?.user?.created_at) {
+          // The analytics event follows the confirmation-aware rule in
+          // lib/signupCompletion.js (the 60 s window alone missed every
+          // confirmed signup). The audit log keeps its original rule.
+          if (claimSignupCompletion(session.user)) trackSignupCompleted();
           const createdAt = new Date(session.user.created_at);
           if (Date.now() - createdAt.getTime() < 60_000) {
-            trackSignupCompleted();
             logAuditEvent(AUDIT_EVENTS.SIGNUP);
           } else {
             logAuditEvent(AUDIT_EVENTS.LOGIN);

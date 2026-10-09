@@ -228,7 +228,7 @@ const ROUTES = [
     </div>
     <div class="${CARD_FLAT} p-5">
       <h2 class="${H_CARD}">Feedback you can use</h2>
-      <p class="mt-2 ${SMALL}">After each session: grammar, vocabulary and pronunciation, with concrete corrections — like a patient tutor with unlimited time.</p>
+      <p class="mt-2 ${SMALL}">After each session: grammar, vocabulary and pronunciation, with concrete corrections — like a patient tutor who never rushes you.</p>
     </div>
   </div>
   <p class="mt-10"><a href="/signup" class="${BTN_PRIMARY}">Sign up free</a></p>

@@ -8,9 +8,13 @@ import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy';
 import SEO from '../components/SEO';
 import { openCheckout } from '../utils/openCheckout';
 import { clearBuyIntent } from '../lib/buyIntent';
+import { subscriptionPortalAction } from '../lib/billingPortal.js';
+import { planStatusCopy } from '../lib/planStatus.js';
+import { proPlanLines } from '../lib/proPlanLines.js';
+import { subscriptionHeadingCopy } from '../lib/subscriptionHeading.js';
 import { markCheckoutStarted, consumeCheckoutSuccess } from '../lib/funnelTracking';
 import { PLANS, num, levelsForProduct } from '../data/pricing.js';
-import { LEVEL_COUNT, READING_LESSON_COUNT } from '../data/marketing.js';
+import { LEVEL_COUNT, READING_LESSON_COUNT, TRIAL_DAYS } from '../data/marketing.js';
 import Button from '../components/ui/Button.jsx';
 import CouponField from '../components/CouponField.jsx';
 import ReportProblemLink from '../components/ReportProblemLink.jsx';
@@ -45,6 +49,12 @@ const SubscriptionPage = () => {
   const inTrial = isInFreeTrial();
   const daysLeft = getTrialDaysRemaining();
   const isSubscribed = hasActiveSubscription();
+  // Card, invoices, cancelling: the Lemon Squeezy portal, for a live LS
+  // subscription only (lib/billingPortal.js, tests/subscription-portal-link.test.mjs).
+  const portal = subscriptionPortalAction(isSubscribed, subscription, isGerman);
+  // What the status card calls the row: a course row is Pro included with the
+  // course, not a monthly plan (lib/planStatus.js, tests/plan-status.test.mjs).
+  const planStatus = planStatusCopy(subscription, isGerman);
 
   // Safe end-date label: null / unparseable → null (caller hides the line),
   // never the literal string "Invalid Date".
@@ -131,6 +141,13 @@ const SubscriptionPage = () => {
   // A coming-soon course is listed (priced, no checkout) so the ladder reads
   // complete; a live course needs its checkout id or an existing purchase.
   const visibleLevelCourses = levelCourses.filter((c) => c.variantId || c.comingSoon || hasProduct(c.key));
+  // The H1 lead offers a level only when a card below shows its Buy button: a
+  // live course (checkout id, not coming soon) the learner does not own yet,
+  // the same tests the card applies (lib/subscriptionHeading.js).
+  const canBuyLevel = levelCourses.some(
+    (c) => c.variantId && !c.comingSoon && !(hasProduct(c.key) || ownsBundle || ownsLevel(c.levels[0]))
+  );
+  const heading = subscriptionHeadingCopy({ isSubscribed, inTrial, daysLeft, canBuyLevel }, isGerman);
 
   const startPurchase = (productKey, variantId, price) => {
     const checkoutUrl = LEMONSQUEEZY_CONFIG.getCheckoutUrl(
@@ -198,23 +215,9 @@ const SubscriptionPage = () => {
       name: isGerman ? PLANS.monthly.nameDe : PLANS.monthly.name,
       price: num(PLANS.monthly.price),
       period: isGerman ? '/Monat' : '/month',
-      features: isGerman
-        ? [
-            `Zugang zu allen ${LEVEL_COUNT} Stufen (A1.1–B2.2)`,
-            'Alle Grammatiklektionen mit Übungen',
-            'Hörverständnisübungen',
-            'Podcasts & Video-Inhalte',
-            'Fortschrittsverfolgung',
-            'Jederzeit kündbar',
-          ]
-        : [
-            `Full access to all ${LEVEL_COUNT} levels (A1.1–B2.2)`,
-            'All grammar lessons with exercises',
-            'Listening comprehension exercises',
-            'Podcasts & video content',
-            'Progress tracking',
-            'Cancel anytime',
-          ],
+      // One Pro, two billings: both cards render the same lines, built from
+      // the marketing.js claims (lib/proPlanLines.js, tests/subscription-plan-lines.test.mjs).
+      features: proPlanLines(isGerman),
       highlight: false,
     },
     {
@@ -223,32 +226,16 @@ const SubscriptionPage = () => {
       price: num(PLANS.yearly.price),
       period: isGerman ? '/Jahr' : '/year',
       savings: isGerman
-        ? `Spare ${PLANS.yearly.savingPercent}%`
+        ? `Sie sparen ${PLANS.yearly.savingPercent} %`
         : `Save ${PLANS.yearly.savingPercent}%`,
       monthlyEquiv: num(PLANS.yearly.asMonthly),
-      features: isGerman
-        ? [
-            'Alles im Monatsplan',
-            `${PLANS.yearly.savingPercent}% günstiger als monatlich`,
-            'Prioritäts-Support',
-            'Frühzeitiger Zugang zu neuen Inhalten',
-            'Fortschrittsverfolgung',
-            'Jederzeit kündbar',
-          ]
-        : [
-            'Everything in Monthly',
-            `Save ${PLANS.yearly.savingPercent}% compared to monthly`,
-            'Priority support',
-            'Early access to new content',
-            'Progress tracking',
-            'Cancel anytime',
-          ],
+      features: proPlanLines(isGerman),
       highlight: true,
     },
   ];
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-paper pt-24 pb-12 px-4">
+    <div className="relative min-h-screen overflow-hidden bg-paper pt-24 pb-12 px-4 font-body">
       <SEO title="Subscription" description="Manage your DeutschMeister subscription." path="/subscription" noindex />
       <Aurora />
       <div className="relative max-w-4xl mx-auto">
@@ -261,14 +248,8 @@ const SubscriptionPage = () => {
             level={1}
             size="page"
             align="center"
-            title={isSubscribed ? 'Your plan' : inTrial ? 'Choose how you want to keep going' : 'Pick up where you left off'}
-            lead={
-              isSubscribed
-                ? 'Pro is active. You can also add a level course — it stays yours for life, whatever happens to the subscription.'
-                : inTrial
-                  ? `Your free trial is running (${daysLeft} ${daysLeft === 1 ? 'day' : 'days'} left). Buy the level you need once and keep it, or go Pro for the AI tools every month.`
-                  : 'Your trial is over, but your progress stays. Choose a plan and keep learning without limits.'
-            }
+            title={heading.title}
+            lead={heading.lead}
           />
         </div>
 
@@ -307,12 +288,10 @@ const SubscriptionPage = () => {
                   <Shield className="w-5 h-5 text-accent-limette-ink flex-shrink-0" aria-hidden="true" />
                   <div>
                     <p className="font-bold text-accent-limette-ink">
-                      {isGerman ? 'Aktives Abonnement' : 'Active Subscription'}
+                      {planStatus.title}
                     </p>
                     <p className="text-sm text-accent-limette-ink">
-                      {subscription?.plan_type === 'yearly'
-                        ? isGerman ? 'Jahresplan' : 'Yearly Plan'
-                        : isGerman ? 'Monatsplan' : 'Monthly Plan'}
+                      {planStatus.plan}
                       {validUntil && (
                         <>
                           {' — '}
@@ -321,6 +300,16 @@ const SubscriptionPage = () => {
                         </>
                       )}
                     </p>
+                    {portal && (
+                      <>
+                        <p className="mt-2 text-sm">
+                          <a href={portal.href} className="font-bold text-siegel transition-colors hover:text-siegel-deep">
+                            {portal.label} →
+                          </a>
+                        </p>
+                        <p className="mt-1 text-xs text-accent-limette-ink">{portal.hint}</p>
+                      </>
+                    )}
                   </div>
                 </>
               ) : (
@@ -353,7 +342,7 @@ const SubscriptionPage = () => {
                 </p>
                 <p className="text-sm text-accent-himbeer-ink">
                   {isGerman
-                    ? 'Abonniere jetzt, um weiter auf alle Inhalte zuzugreifen.'
+                    ? 'Abonnieren Sie jetzt, um weiter auf alle Inhalte zuzugreifen.'
                     : 'Subscribe now to continue accessing all content.'}
                 </p>
               </div>
@@ -387,6 +376,80 @@ const SubscriptionPage = () => {
           </div>
         )}
 
+        {/* Level courses — own a level (v4 "Die Linie": the product comes first,
+            Pro second). Rendered only when the LS products exist (variant
+            configured) or the buyer already owns one. */}
+        {visibleLevelCourses.length > 0 && (
+          <Reveal className="mb-12">
+            <SectionHeading
+              level={2}
+              align="center"
+              title={isGerman ? 'Eine Stufe besitzen: einmal zahlen, behalten' : 'Own a level: pay once, keep it'}
+              lead={isGerman
+                ? `Eine Teilstufe für immer, plus ${course.proMonths} Monate Pro (KI-Sprechen, Schreibkorrektur, Satz-Röntgen) inklusive. Danach bleibt die Stufe Ihre, und nichts verlängert sich.`
+                : `One sub-level for good, plus ${course.proMonths} months of Pro (AI speaking, writing feedback, Sentence X-Ray) included. After that the level stays yours, and nothing renews.`}
+            />
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {visibleLevelCourses.map((c) => {
+                const firstLevel = c.levels[0];
+                const owned = hasProduct(c.key) || ownsBundle || ownsLevel(firstLevel);
+                return (
+                  <Card
+                    key={c.key}
+                    raised
+                    edge="paper"
+                    className={`relative flex flex-col p-5 ${c.comingSoon ? 'opacity-80' : ''}`}
+                  >
+                    {c.comingSoon && (
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                        <span className="inline-flex items-center rounded-pill bg-paper-sunk px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite shadow-raise">
+                          {isGerman ? 'Bald verfügbar' : 'Coming soon'}
+                        </span>
+                      </div>
+                    )}
+                    <Chip tone="label" className="mb-2 self-start">{c.code}</Chip>
+                    <h3 className="text-[1.0625rem] font-bold leading-tight text-ink">{isGerman ? c.nameDe : c.name}</h3>
+                    <p className="mt-2 font-display text-[1.75rem] font-semibold leading-none tracking-[-0.02em] text-ink">
+                      €{num(c.price)}
+                      <span className="ml-1 font-body text-xs font-normal tracking-normal text-graphite">
+                        {isGerman ? 'einmalig' : 'one time'}
+                      </span>
+                    </p>
+                    <p className="mt-2 text-xs text-graphite">
+                      {isGerman ? `${c.code} · lebenslang` : `${c.code} · lifetime`}
+                    </p>
+                    {owned ? (
+                      <Button to={`/level/${firstLevel}`} variant="secondary" size="md" className="mt-4 w-full">
+                        {isGerman ? 'Gekauft · öffnen →' : 'Owned · open →'}
+                      </Button>
+                    ) : c.comingSoon || !c.variantId ? (
+                      <Button variant="secondary" size="md" className="mt-4 w-full" disabled aria-disabled="true">
+                        {isGerman ? 'Bald verfügbar' : 'Coming soon'}
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={() => startPurchase(c.key, c.variantId, c.price)}
+                        variant="secondary"
+                        size="md"
+                        className="mt-4 w-full"
+                      >
+                        {isGerman ? 'Kaufen' : 'Buy'}
+                      </Button>
+                    )}
+                  </Card>
+                );
+              })}
+            </div>
+          </Reveal>
+        )}
+
+        {/* Pro — rent the whole line. */}
+        <SectionHeading
+          level={2}
+          align="center"
+          title={isGerman ? 'Oder die ganze Linie mieten: Pro' : 'Or rent the whole line: Pro'}
+          lead={isGerman ? 'Jede Stufe und das volle KI-Kontingent, solange Sie zahlen. Jederzeit kündbar.' : 'Every level and the full AI allowance while you pay. Cancel anytime.'}
+        />
         {/* Plan Cards — the grid a learner chooses from, so they tilt. The
             featured plan rests on a siegel edge and carries the page's one
             gold marker (design-tokens.js rule 2). */}
@@ -454,77 +517,18 @@ const SubscriptionPage = () => {
           ))}
         </div>
 
-        {/* Trial info */}
-        <Reveal as="p" className="text-center text-sm text-graphite mb-8">
-          {isGerman
-            ? 'Alle Pläne beinhalten eine 7-tägige kostenlose Testphase. Jederzeit kündbar.'
-            : 'All plans include a 7-day free trial. Cancel anytime.'}
-        </Reveal>
-
-        {/* Level courses — buy a band once, keep it. The bundle is the
-            featured card. Rendered only when the LS products exist (variant
-            configured) or the buyer already owns one. */}
-        {visibleLevelCourses.length > 0 && (
-          <Reveal className="mb-12">
-            <SectionHeading
-              level={2}
-              align="center"
-              title={isGerman ? 'Oder: eine Stufe kaufen und behalten' : 'Or: buy a level and keep it'}
-              lead={isGerman
-                ? `Einmal zahlen, für immer lernen — eine Teilstufe, plus ${course.proMonths} Monate Pro (KI-Sprechen, Schreibkorrektur, Satz-Röntgen) inklusive.`
-                : `Pay once, learn forever — one sub-level, plus ${course.proMonths} months of Pro (AI speaking, writing feedback, Sentence X-Ray) included.`}
-            />
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {visibleLevelCourses.map((c) => {
-                const firstLevel = c.levels[0];
-                const owned = hasProduct(c.key) || ownsBundle || ownsLevel(firstLevel);
-                return (
-                  <Card
-                    key={c.key}
-                    raised
-                    edge="paper"
-                    className={`relative flex flex-col p-5 ${c.comingSoon ? 'opacity-80' : ''}`}
-                  >
-                    {c.comingSoon && (
-                      <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                        <span className="inline-flex items-center rounded-pill bg-paper-sunk px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite shadow-raise">
-                          {isGerman ? 'Bald verfügbar' : 'Coming soon'}
-                        </span>
-                      </div>
-                    )}
-                    <Chip tone="label" className="mb-2 self-start">{c.code}</Chip>
-                    <h3 className="text-[1.0625rem] font-bold leading-tight text-ink">{isGerman ? c.nameDe : c.name}</h3>
-                    <p className="mt-2 font-display text-[1.75rem] font-semibold leading-none tracking-[-0.02em] text-ink">
-                      €{num(c.price)}
-                      <span className="ml-1 font-body text-xs font-normal tracking-normal text-graphite">
-                        {isGerman ? 'einmalig' : 'one time'}
-                      </span>
-                    </p>
-                    <p className="mt-2 text-xs text-graphite">
-                      {isGerman ? `${c.code} · lebenslang` : `${c.code} · lifetime`}
-                    </p>
-                    {owned ? (
-                      <Button to={`/level/${firstLevel}`} variant="secondary" size="md" className="mt-4 w-full">
-                        {isGerman ? 'Gekauft · öffnen →' : 'Owned · open →'}
-                      </Button>
-                    ) : c.comingSoon || !c.variantId ? (
-                      <Button variant="secondary" size="md" className="mt-4 w-full" disabled aria-disabled="true">
-                        {isGerman ? 'Bald verfügbar' : 'Coming soon'}
-                      </Button>
-                    ) : (
-                      <Button
-                        onClick={() => startPurchase(c.key, c.variantId, c.price)}
-                        variant="secondary"
-                        size="md"
-                        className="mt-4 w-full"
-                      >
-                        {isGerman ? 'Kaufen' : 'Buy'}
-                      </Button>
-                    )}
-                  </Card>
-                );
-              })}
-            </div>
+        {/* Trial info. The trial belongs to the ACCOUNT (granted at signup); the
+            plans carry none of their own — Lemon Squeezy charges a plan the
+            moment it is bought (12 of 12 subscription_created events were
+            'active' with no trial_ends_at, measured 2026-10-01). Until then this
+            line told every visitor, including those whose trial had ended, that
+            the plans included a free trial. So: said only during the trial, and
+            it says what is true then. tests/claims.test.mjs bans the old claim. */}
+        {inTrial && !isSubscribed && (
+          <Reveal as="p" className="text-center text-sm text-graphite mb-8">
+            {isGerman
+              ? `Ihre ${TRIAL_DAYS}-tägige Testphase gehört zu Ihrem Konto. Ein Plan wird berechnet, sobald Sie ihn abschließen, auch während der Testphase. Jederzeit kündbar.`
+              : `Your ${TRIAL_DAYS}-day trial is on your account. A plan is charged as soon as you buy it, even during the trial. Cancel anytime.`}
           </Reveal>
         )}
 
@@ -542,7 +546,7 @@ const SubscriptionPage = () => {
                 <>
                   <p className="text-sm text-graphite mt-2">
                     {isGerman
-                      ? 'Du hast den Kurs. Dein 4-Wochen-Plan wartet.'
+                      ? 'Sie haben den Kurs. Ihr 4-Wochen-Plan wartet.'
                       : 'You own this course. Your 4-week plan is waiting.'}
                   </p>
                   <Button to="/telc-b1-kurs" size="lg" className="mt-4">
@@ -579,13 +583,13 @@ const SubscriptionPage = () => {
         {/* Features grid — reference cards, flat */}
         <div className="text-center">
           <Reveal as="h2" className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink mb-6">
-            {isGerman ? 'Was du bekommst' : 'What You Get'}
+            {isGerman ? 'Was Sie bekommen' : 'What You Get'}
           </Reveal>
           <div className="grid sm:grid-cols-3 gap-4">
             {[
               {
                 icon: '📚',
-                title: isGerman ? '8 Stufen' : '8 Levels',
+                title: isGerman ? `${LEVEL_COUNT} Stufen` : `${LEVEL_COUNT} Levels`,
                 desc: isGerman ? 'Von A1.1 bis B2.2' : 'From A1.1 to B2.2',
               },
               {

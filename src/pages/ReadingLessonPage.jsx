@@ -288,7 +288,7 @@ const ReadingLessonPage = () => {
                   headline={isGerman ? 'Lektion abgeschlossen!' : 'Lesson complete!'}
                   detail={
                     isGerman
-                      ? 'Das zählt für deinen Streak und dein Tagesziel.'
+                      ? 'Das zählt für Ihren Streak und Ihr Tagesziel.'
                       : 'That counts toward your streak and daily goal.'
                   }
                   nextLabel={

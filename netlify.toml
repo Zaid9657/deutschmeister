@@ -5,6 +5,12 @@
   command = "npm run build && cd astro-site && npm install && npm run build && cd .. && node scripts/merge-site-builds.mjs && node scripts/prerender-spa-routes.mjs && (node scripts/ping-indexnow.mjs || true)"
   publish = "dist"
   functions = "netlify/functions"
+  # Skip the build when a push touches only files the site never reads. Every
+  # production deploy costs 15 Netlify credits (the team's Pro plan includes
+  # 3,000/month, shared with medmeister). Exit 0 = skip. An unknown
+  # CACHED_COMMIT_REF (first build, shallow history) makes git diff exit 128,
+  # which builds, so an error never skips a real change. Build hooks ignore it.
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ':(exclude)*.md' ':(exclude)docs' ':(exclude)drafts' ':(exclude)migrations' ':(exclude).claude' ':(exclude).github'"
 
 [functions]
   node_bundler = "esbuild"
@@ -47,6 +53,26 @@
 # wrapper in the function is authoritative; this mirrors it.
 [functions."speaking-closeout"]
   schedule = "20 * * * *"
+
+# Sentinel (hourly, :50): the watchdog — key pages, payment webhooks, signup
+# drop, scheduled-job evidence, support SLA, speaking flow. Records incidents in
+# public.agent_incidents and mails ONE digest of new ones to OWNER_ALERT_EMAIL.
+# SHIPS OFF — no-op unless SENTINEL_ENABLED=true, and sends no digest until
+# migrations/2026-09-29-agent-incidents.sql is applied (no claim, no digest);
+# an unreachable ledger sends one stateless "Supabase unreachable" mail instead.
+# The schedule() wrapper in the function is authoritative; this mirrors it.
+[functions."sentinel"]
+  schedule = "50 * * * *"
+
+# Support agent (every 5 minutes): drafts replies to open support tickets from
+# verified facts, holds each one SUPPORT_AGENT_HOLD_MINUTES (default 10) so a
+# person can stop it, never answers cancellation/refund/deletion/billing
+# disputes/legal/abuse, and mails OWNER_ALERT_EMAIL one message per event.
+# SHIPS OFF — no-op unless SUPPORT_AGENT_MODE is 'draft' (never mails a
+# customer) or 'send'; inert without OWNER_ALERT_EMAIL and RESEND_API_KEY.
+# The schedule() wrapper in the function is authoritative; this mirrors it.
+[functions."support-agent"]
+  schedule = "*/5 * * * *"
 
 # Security headers for all pages
 [[headers]]

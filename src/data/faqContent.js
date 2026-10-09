@@ -1,5 +1,5 @@
 // The FAQ content, shared between the /faq page (src/pages/FAQPage.jsx) and the
-// prerender (scripts/prerender-spa-routes.mjs) — 21 answers of real copy that
+// prerender (scripts/prerender-spa-routes.mjs) — 22 answers of real copy that
 // used to exist only inside the accordion component, where a crawler saw the
 // questions but never the answers (they render on click), even though the
 // FAQPage JSON-LD promised all of them.
@@ -17,6 +17,14 @@ import {
   FREE_LEVEL_LABEL,
   GRAMMAR_TOPIC_COUNT,
 } from './marketing.js';
+import { BILLING_PORTAL_URL } from '../lib/billingPortal.js';
+
+// Where a subscriber cancels: the Lemon Squeezy customer portal (content agent,
+// 2026-10-02, from support's handoff). The answer used to say you can cancel but
+// not where; the app holds no cancel control. The address is derived from the
+// SPA's one copy (src/lib/billingPortal.js, pinned to the mailed one), shown
+// without the scheme like the /pricing/ answer. tests/cancel-path.test.mjs.
+const BILLING_PORTAL_LABEL = BILLING_PORTAL_URL.replace(/^https:\/\//, '');
 
 export const FAQ_CATEGORIES = [
   {
@@ -59,6 +67,16 @@ export const FAQ_CATEGORIES = [
         q: 'What is the Sentence X-Ray tool?',
         a: 'Enter a German sentence and the tool breaks it into cases, sentence roles, and parts of speech with colour-coded explanations. It helps you understand, for example, why a sentence uses “dem” instead of “den”.',
       },
+      // Podcasts (support, 2026-10-07): one of the first two in-app tickets (2026-10-04)
+      // asked for podcast transcripts, and the AI draft for it said there were no podcasts.
+      // The page exists (SEO_ROUTES '/podcasts'); every published episode's
+      // transcript_de and transcript_en is empty (measured 2026-10-07: 14 of 14). No
+      // episode count and no level range here: the "24 episodes, A1 to B2" claim against
+      // 14 published (A1.1-B1.1) is an open owner decision. tests/faq-podcasts.test.mjs.
+      {
+        q: 'Are there German podcasts, and do they have transcripts?',
+        a: 'Yes, there are podcasts: the podcasts page (deutsch-meister.de/podcasts/) has audio episodes for learners, each labelled with its CEFR level. The episodes have no transcripts at the moment, neither in German nor in English.',
+      },
       {
         q: 'How much time should I study each day?',
         a: 'A consistent 15–20 minutes can be useful: one grammar lesson, a few exercises, and a short speaking session. A little every day is usually more sustainable than one long weekly session.',
@@ -78,11 +96,11 @@ export const FAQ_CATEGORIES = [
       },
       {
         q: 'Can I cancel at any time?',
-        a: 'Yes. You keep access through the end of the paid billing period, and the subscription does not renew after cancellation.',
+        a: `Yes. You cancel in the Lemon Squeezy customer portal (${BILLING_PORTAL_LABEL}), where you sign in with the email address you subscribed with. You keep Pro until the end of the period you have already paid for, and the subscription does not renew.`,
       },
       {
         q: 'Can I request a refund?',
-        a: 'Deutschmeister advertises a 7-day money-back guarantee. Contact support within that period so the request can be reviewed and processed under the applicable purchase terms.',
+        a: 'Write to support with the email address you paid with, and the request will be reviewed. Payments are processed by Lemon Squeezy, and your statutory rights as a consumer are not affected.',
       },
       {
         q: 'Which payment methods are available?',

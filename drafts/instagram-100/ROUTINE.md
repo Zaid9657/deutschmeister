@@ -4,8 +4,20 @@ Kept in the repo (not only in the Routines UI) so it cannot drift silently — s
 rule as `docs/seo-routines/`. One fire = one post on up to three channels, through
 the owner's existing Zapier connections. Nothing else.
 
-Schedule: `CRON_TZ=Europe/Berlin 52 17 * * *` (17:52 — off the hour, per the
-scheduler's advice; the post is timestamped for 18:00 in the sheet only for humans).
+Live Routine: **`trig_01T4HY5Q35TXnUj1qnk33Pp4`** "DeutschMeister daily post (50 days from 2026-09-28)",
+schedule `CRON_TZ=Europe/Berlin 52 17 * 9,10,11 *` (17:52 Berlin). The owner moved the start up to
+2026-09-28 (live test that day = post 001), so the Routine posts row N = days since 2026-09-28 + 1
+and stops after 050 on 2026-11-16. The
+Routine's own prompt is the source that runs; keep this file in step with it.
+
+The owner attached the **Zapier** connector and the **Zaid9657/deutschmeister** repository in
+the Routines UI on 2026-09-28 (the API could not attach them).
+
+Target IDs (checked 2026-09-27 through the Zapier connector):
+- Facebook: connection `66517282`, page `1232346926638010` "Deutsch Meister". **Live.**
+- Instagram: connection `66517288`, account `17841425239004659` "DeutschMeister | Deutsch
+  lernen" (@deutschmeisterde), linked to the Deutsch Meister page on 2026-09-28. **Live.**
+- Telegram: deferred by the owner until the week of 2026-10-05.
 
 ---
 

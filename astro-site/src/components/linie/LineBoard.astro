@@ -1,0 +1,96 @@
+---
+// The line board — the hero's motion graphic (2026-10-04, owner: "use hyperframes
+// to include motion graphics"). A silent HyperFrames loop: the line draws itself,
+// a little train rides A1.1 → B2.2, and at each stop a speech bubble shows a
+// sentence of THAT level, so the visitor sees the progress the line promises.
+//
+// Source: videos/hero-line (1600×560, desktop) and videos/hero-line-mobile
+// (1080×1350, phone) — HyperFrames compositions in the repo; rendered MP4s and
+// their poster stills live in public/motion/. Re-render with `npm run render` in
+// each project and copy the outputs over (docs/redesign-2026-10/README.md).
+//
+// Loading: each video carries only a poster until it is on screen AND the visitor
+// has not asked for reduced motion; then the src is attached and it plays. The
+// one for the other breakpoint is never fetched. No JS: the poster still shows.
+// The sentences are content, so a visually hidden list carries them for screen
+// readers; the video itself is decorative.
+import { STATIONS } from '../../data/offers.js';
+
+const LINE_SENTENCES = [
+  'Guten Tag! Ich heiße Ana.',
+  'Was kostet das Brot?',
+  'Gestern war ich beim Arzt.',
+  'Ich hätte gern einen Termin.',
+  'Ich glaube, dass es klappt.',
+  'Obwohl es regnet, fahre ich.',
+  'Hätte ich Zeit, würde ich kommen.',
+  'Einerseits ist es teuer, andererseits lohnt es sich.',
+];
+---
+
+<figure class="relative mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8" aria-labelledby="line-board-cap">
+  <div class="overflow-hidden rounded-[1.5rem] border border-nacht-rule bg-white shadow-overlay">
+    <video
+      class="hidden aspect-[1600/560] w-full lg:block"
+      width="1600"
+      height="560"
+      muted
+      loop
+      playsinline
+      preload="none"
+      poster="/motion/hero-line-poster.webp"
+      data-src="/motion/hero-line.mp4"
+      data-webm="/motion/hero-line.webm"
+      data-line-video
+      aria-hidden="true"
+      tabindex="-1"
+    ></video>
+    <video
+      class="block aspect-[1080/1350] w-full lg:hidden"
+      width="1080"
+      height="1350"
+      muted
+      loop
+      playsinline
+      preload="none"
+      poster="/motion/hero-line-mobile-poster.webp"
+      data-src="/motion/hero-line-mobile.mp4"
+      data-webm="/motion/hero-line-mobile.webm"
+      data-line-video
+      aria-hidden="true"
+      tabindex="-1"
+    ></video>
+  </div>
+  <figcaption id="line-board-cap" class="sr-only">
+    The line from A1.1 to B2.2, one sentence per stop:
+    <ol>
+      {STATIONS.map((st, i) => <li lang="de">{st.code}: {LINE_SENTENCES[i]}</li>)}
+    </ol>
+  </figcaption>
+</figure>
+
+<script>
+  // Attach and play only the visible video, only when the visitor allows motion.
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const videos = Array.from(document.querySelectorAll<HTMLVideoElement>('[data-line-video]'));
+  const visible = (v: HTMLVideoElement) => v.offsetParent !== null;
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      const v = e.target as HTMLVideoElement;
+      if (!visible(v) || reduce.matches) continue;
+      if (e.isIntersecting) {
+        if (!v.src && v.dataset.src) {
+          // The MP4 (H.264) is the smaller file; VP9/WebM only where H.264 is missing
+          // (open-source Chromium builds).
+          const mp4 = v.canPlayType('video/mp4; codecs="avc1.640028"');
+          v.src = !mp4 && v.dataset.webm ? v.dataset.webm : v.dataset.src;
+        }
+        v.play().catch(() => {});
+      } else if (!v.paused) {
+        v.pause();
+      }
+    }
+  }, { rootMargin: '120px 0px' });
+  videos.forEach((v) => io.observe(v));
+  reduce.addEventListener?.('change', () => { if (reduce.matches) videos.forEach((v) => v.pause()); });
+</script>

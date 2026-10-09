@@ -1,0 +1,37 @@
+---
+// The questions that stop a purchase, answered from the data (offers.js
+// OFFER_FAQ) plus the two doors every buyer needs: the billing portal for Pro
+// and the human help link. Native <details>: keyboard and screen-reader ready,
+// works without JS. Emits FAQPage JSON-LD through the page, not here.
+import { OFFER_FAQ } from '../../data/offers.js';
+import { BILLING_PORTAL_URL, BILLING_PORTAL_LABEL } from '../../lib/billingPortal.js';
+import { SUPPORT_LINK } from '../../data/navigation.js';
+---
+
+<section class="dm-defer bg-paper" aria-labelledby="faq-h">
+  <div class="mx-auto grid max-w-7xl gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16 lg:px-8 lg:py-24">
+    <div>
+      <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Before you buy</p>
+      <h2 id="faq-h" class="sign-head mt-3 text-[clamp(2.125rem,5.2vw,3.5rem)]">
+        <span class="block">Questions people</span>
+        <span class="block">ask at the platform.</span>
+      </h2>
+      <p class="mt-5 max-w-md text-[1rem] leading-relaxed text-graphite">
+        Pro can be cancelled anytime at <a href={BILLING_PORTAL_URL} class="dm-link" rel="noopener">{BILLING_PORTAL_LABEL}</a>. Anything else: <a href={SUPPORT_LINK.href} class="dm-link">{SUPPORT_LINK.labelEn}</a>.
+      </p>
+    </div>
+    <div class="border-t border-ink">
+      {OFFER_FAQ.map((item) => (
+        <details class="group border-b border-rule">
+          <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-4 sign-label text-[1.0625rem] text-ink [&::-webkit-details-marker]:hidden">
+            {item.q}
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-rule transition-transform duration-control ease-out-strong group-open:rotate-45" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+            </span>
+          </summary>
+          <p class="pb-5 pr-12 text-[0.9375rem] leading-relaxed text-graphite">{item.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

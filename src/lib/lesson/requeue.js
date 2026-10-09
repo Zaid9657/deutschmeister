@@ -43,4 +43,20 @@ export function requeueFor(missedItems = [], pool = [], usedIds = [], { avoidIds
   return out;
 }
 
+/**
+ * prevStageIndex(stages, index, requeuedCount) → the stage "Back" opens from
+ * stage `index`, or -1 when there is none (no Back button).
+ *
+ * The player's advance() skips the requeue stage when nothing was missed, so
+ * Back skips it too. Plain `index - 1` from the recap opened a requeue stage
+ * with nothing requeued: no item to show, a blank screen with no button.
+ */
+export function prevStageIndex(stages, index, requeuedCount = 0) {
+  const list = Array.isArray(stages) ? stages : [];
+  let target = (Number.isInteger(index) ? index : 0) - 1;
+  const at = list[target];
+  if (at && at.kind === 'requeue' && !(requeuedCount > 0)) target -= 1;
+  return target >= 0 ? target : -1;
+}
+
 export default requeueFor;

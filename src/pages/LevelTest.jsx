@@ -160,9 +160,10 @@ const LevelTest = () => {
   // Persist the placement result. Without this the whole test was decorative:
   // profiles.current_level stayed at its 'a1' default for every account, and
   // SpeakingPage — the only reader — coerced that back to A1.1, so a learner
-  // placed at B1.2 was still handed A1.1 content. Anonymous testers keep their
-  // result in component state only; the landing page promises no account is
-  // required, so there is no signup gate here.
+  // placed at B1.2 was still handed A1.1 content. There is no signup gate
+  // here (the landing page promises no account is required); an anonymous
+  // tester's result is kept on the browser by LevelTestResults and written at
+  // the first profile load after sign-in (src/lib/placement.js).
   useEffect(() => {
     if (testState !== 'results' || !user || !determinedSublevel) return;
     let cancelled = false;

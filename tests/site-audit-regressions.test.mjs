@@ -58,8 +58,9 @@ test('Sentence X-Ray explains that example chips consume the daily allowance', (
 test('the SPA navigation switches at the large breakpoint and exposes 44px controls', () => {
   assert.match(navbar, /2xl:max-w-\[1536px\]/);
   assert.match(navbar, /className="hidden lg:flex items-center gap-1"/);
-  assert.match(navbar, /className="lg:hidden flex h-11 w-11/);
-  assert.match(navbar, /className="lg:hidden max-h-\[calc\(100vh-4rem\)\] overflow-y-auto bg-paper border-b border-rule"/);
+  assert.match(navbar, /className=\{?[`"]lg:hidden flex h-11 w-11/);
+  // The phone menu scrolls inside the viewport under the bar (v3: on the night ground).
+  assert.match(navbar, /className=\{?[`"]lg:hidden max-h-\[calc\(100svh-4rem\)\] overflow-y-auto border-t border-nacht-rule bg-nacht/);
   assert.match(navbar, /aria-label=\{i18n\.language === 'en' \? 'Switch to German' : 'Switch to English'\}/);
   assert.match(navbar, /w-11 h-11/);
   assert.match(button, /rounded-clay min-h-11/);
@@ -73,8 +74,16 @@ test('the full Astro navigation starts at the large breakpoint', () => {
 });
 
 test('pricing distinguishes recurring access from one-time courses in its headline and CTA', () => {
-  assert.match(pricing, /Choose recurring access or a one-time course\./);
-  assert.match(pricing, /Start \{TRIAL_DAYS\}-day Pro trial/);
+  // v4 (2026-10-04): the headline IS the fork — own a level (one-time) or rent
+  // the line (recurring) — and the lead names both payment shapes.
+  assert.match(pricing, /Own a level,<\/span>[\s\S]*?whole line\./);
+  assert.match(pricing, /one payment you keep/);
+  assert.match(pricing, /by the month or the year/);
+  // The Pro CTA's words live in astro-site/src/lib/proCta.js since 2026-09-30
+  // (signed out: the trial; signed in: "Go Pro — <price>"), pinned in
+  // tests/pro-cta.test.mjs. The page must render them from there.
+  assert.match(pricing, /\{proCta\(\)\.label\}/);
+  assert.match(read('astro-site/src/lib/proCta.js'), /label: `Start \$\{TRIAL_DAYS\}-day Pro trial`/);
 });
 
 test('AI-facing platform facts use the current measured counts and level-test duration', () => {
@@ -98,7 +107,10 @@ test('bright accent chips use dark ink instead of low-contrast white glyphs', ()
   assert.doesNotMatch(dashboard, /bg-accent-aprikose text-white/);
   assert.doesNotMatch(courseComplete, /bg-accent-himbeer text-white/);
   assert.doesNotMatch(button, /bg-accent-himbeer text-white/);
-  for (const source of [homepage, examHub, completePrep]) {
+  // The homepage stopped using the candy accents in v4 ("Die Linie", 2026-10-04):
+  // the ban on white glyphs still holds there, the presence check does not.
+  assert.doesNotMatch(homepage, /bg-accent-(?:himbeer|aprikose|limette)[^"`]*text-white/);
+  for (const source of [examHub, completePrep]) {
     assert.doesNotMatch(source, /\$\{(?:s\.accent|w\.accent|ACCENTS\[[^}]+\])\}[^"`]*text-white/);
     for (const accent of ['himbeer', 'aprikose', 'limette']) {
       assert.match(source, new RegExp(`bg-accent-${accent} text-ink`));

@@ -22,6 +22,7 @@
 
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { checkCrawlability } from './crawl-guard.mjs';
 
 const args = process.argv.slice(2);
 const SPA_ONLY = args.includes('--spa-only');
@@ -296,6 +297,18 @@ if (existsSync(sitemapSource)) {
   }
 } else {
   note(warn, 'sitemap-spa.xml', 'not found — sitemap integrity not checked');
+}
+
+// --- crawl and index guard --------------------------------------------------
+// Every URL in every sitemap robots.txt names must be built, indexable, its own
+// canonical, allowed for Googlebot and Bingbot, and free of a noindex header
+// rule (scripts/crawl-guard.mjs says why). Full mode only: --spa-only does not
+// build the Astro half, so sitemap-0.xml is absent by design.
+if (!SPA_ONLY) {
+  const tomlText = existsSync('netlify.toml') ? readFileSync('netlify.toml', 'utf8') : '';
+  const crawl = checkCrawlability(DIST, { tomlText });
+  for (const msg of crawl.fail) fail.push(msg);
+  console.log(`crawl guard: ${crawl.checked} sitemap URL(s) checked, ${crawl.fail.length} failure(s)`);
 }
 
 // --- report -----------------------------------------------------------------

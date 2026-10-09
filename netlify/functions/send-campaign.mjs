@@ -18,6 +18,7 @@ const TEST_EMAIL   = 'zaid199660@gmail.com';
 
 // Disposable-domain hygiene — shared with confirmation-nudge.mjs.
 import { isBlockedEmail } from './_shared/emailHygiene.mjs';
+import { fetchOptedOutIds, withoutOptedOut } from './_shared/emailOptOut.mjs';
 
 function unsubscribeUrl(userId) {
   const token = createHmac('sha256', UNSUB_SECRET).update(userId).digest('hex');
@@ -68,14 +69,19 @@ async function excludedUserIds(exclude) {
   return out;
 }
 
-async function fetchAllUserEmails() {
+/**
+ * Every confirmed, non-disposable account that has not opted out. Throws when
+ * the opt-out list cannot be read, and the handler then sends nothing: until
+ * 2026-09-28 a failed read mailed everyone (see _shared/emailOptOut.mjs).
+ */
+export async function fetchAllUserEmails(client = supabase) {
   // auth.admin.listUsers paginates — fetch all pages
   const users = [];
   let page = 1;
   const perPage = 1000;
 
   while (true) {
-    const { data, error } = await supabase.auth.admin.listUsers({ page, perPage });
+    const { data, error } = await client.auth.admin.listUsers({ page, perPage });
     if (error) throw new Error(`Failed to fetch users: ${error.message}`);
 
     for (const user of data.users) {
@@ -94,24 +100,14 @@ async function fetchAllUserEmails() {
 
   if (users.length === 0) return [];
 
-  // Honor opt-outs. profiles.email_daily_sentence currently doubles as the
-  // global email opt-out flag (a dedicated marketing flag is on the roadmap);
-  // if the column doesn't exist yet, log and treat everyone as opted in.
-  const { data: profiles, error: profErr } = await supabase
-    .from('profiles')
-    .select('id, email_daily_sentence')
-    .in('id', users.map((u) => u.id));
-
-  if (profErr) {
-    console.warn('profiles opt-out query error (column may not exist yet):', profErr.message);
-    return users;
-  }
-
-  const optedOut = new Set(
-    (profiles || []).filter((p) => p.email_daily_sentence === false).map((p) => p.id)
-  );
-
-  return users.filter((u) => !optedOut.has(u.id));
+  // Honor opt-outs. profiles.email_daily_sentence doubles as the global email
+  // opt-out flag (the unsubscribe footer below writes it). The shared reader
+  // throws when it cannot read the list, so a campaign never falls back to
+  // mailing everyone.
+  const optedOut = await fetchOptedOutIds(client);
+  const eligible = withoutOptedOut(users, optedOut);
+  console.log(`Opt-outs: ${users.length - eligible.length} of ${users.length} confirmed accounts excluded`);
+  return eligible;
 }
 
 const BATCH_SIZE = 100;

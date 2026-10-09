@@ -3,7 +3,7 @@
 // telemetry is `unknown` with a reason and an unblock step — never a
 // reassuring zero. Overall = the worst REAL check.
 import { adminEndpoint, fetchAll, exactCount, counting } from './_shared/adminHttp.mjs';
-import { check, notInstrumented, overallState, THRESHOLDS, STATE_LABELS } from './_shared/adminStatusLib.mjs';
+import { check, notInstrumented, overallState, THRESHOLDS, STATE_LABELS, SCHEDULED_JOBS, isJobKind, jobStaleness } from './_shared/adminStatusLib.mjs';
 import { reconcileCoverage } from './_shared/adminFunnelLib.mjs';
 import { slaState, OPEN_STATUSES } from './_shared/adminSupportLib.mjs';
 
@@ -30,19 +30,13 @@ export const handler = adminEndpoint({ capability: 'status.read' }, async ({ sup
 
   // scheduled jobs: last evidence per job
   const lifecycle = await fetchAll(() => supabase.from('lifecycle_emails').select('kind, sent_at').order('sent_at', { ascending: false }).limit(2000));
-  const lastOf = (pred) => lifecycle.find((l) => pred(l.kind))?.sent_at ?? null;
   const { data: weekly } = await supabase.from('weekly_metrics').select('measured_at').order('measured_at', { ascending: false }).limit(1).maybeSingle();
-  const jobs = [
-    { id: 'job-trial', label: 'Trial-Lifecycle (08:00 UTC)', last: lastOf((k) => k.startsWith('trial_')), kind: 'daily', caveat: 'Nur sichtbar, wenn an dem Tag jemand fällig war — ein ruhiger Tag sieht aus wie ein Ausfall.' },
-    { id: 'job-activation', label: 'Activation-Lifecycle (09:30 UTC)', last: lastOf((k) => k.startsWith('activation_')), kind: 'daily', caveat: 'Wie oben; zusätzlich no-op ohne LIFECYCLE_ACTIVATION_ENABLED=true.' },
-    { id: 'job-confirm', label: 'Bestätigungs-Erinnerung (10:30 UTC)', last: lastOf((k) => k === 'confirm_nudge'), kind: 'daily', caveat: 'Wie oben; no-op ohne CONFIRM_NUDGE_ENABLED=true.' },
-    { id: 'job-course', label: 'Kurs-Erinnerung (18:00 UTC)', last: lastOf((k) => k.startsWith('course_reminder_')), kind: 'daily', caveat: 'Wie oben; no-op ohne COURSE_REMINDER_ENABLED=true.' },
-    { id: 'job-weekly', label: 'Wöchentliche Messung (Montag 06:00 UTC)', last: weekly?.measured_at ?? null, kind: 'weekly', caveat: 'Schreibt IMMER eine Zeile — ein fehlender Lauf ist ein echter Ausfall.' },
-  ];
-  for (const j of jobs) {
-    const h = j.last ? (nowMs - Date.parse(j.last)) / 3600000 : null;
-    checks.push(j.last
-      ? check(j.id, j.label, { value: Math.round(h), thresholdKey: j.kind === 'weekly' ? 'weeklyJobStaleHours' : 'dailyJobStaleHours', unit: 'h seit letztem Nachweis', detail: `${j.caveat}`, action: { label: 'Netlify-Funktionslogs', route: null } })
+  // The job list and the staleness rule live in adminStatusLib, shared with the hourly sentinel.
+  for (const j of SCHEDULED_JOBS) {
+    const last = j.ledger ? lifecycle.find((l) => isJobKind(j, l.kind))?.sent_at ?? null : weekly?.measured_at ?? null;
+    const { hours, thresholdKey } = jobStaleness(j, last, now);
+    checks.push(hours !== null
+      ? check(j.id, j.label, { value: hours, thresholdKey, unit: 'h seit letztem Nachweis', detail: `${j.caveat}`, action: { label: 'Netlify-Funktionslogs', route: null } })
       : notInstrumented(j.id, j.label, `Kein Nachweis in der Datenbank. ${j.caveat}`, 'Netlify-Funktionslog prüfen oder einen Lauf-Ledger (letzter Start je Job) einführen.'));
   }
 

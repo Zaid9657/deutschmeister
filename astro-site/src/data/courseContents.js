@@ -1,5 +1,11 @@
 // What each sub-level course CONTAINS — the non-grammar half of the course pages
-// (/courses/ and /courses/<level>/). Grammar topics come from the content cache
+// (/courses/ and /courses/<level>/), and the facts the offer copy states
+// (src/data/offers.js).
+//
+// DUPLICATED between the SPA and the Astro site (byte-identical, enforced by
+// scripts/check-duplicates.mjs) since 2026-10-04, when the app's subscription
+// and success pages started describing the same tickets the static pages sell.
+// Grammar topics come from the content cache
 // at build time (lib/grammar.js getTopicsForLevel); reading, listening, vocabulary
 // and speaking are snapshotted here because the Astro build must work offline in
 // CI (see CLAUDE.md). Counted against the live tables on the date below — refresh
@@ -7,6 +13,20 @@
 // "Measured baseline" section, and bump countedOn. A course page never claims a
 // number that is not in this file or in the cache.
 export const COURSE_CONTENTS_COUNTED_ON = '2026-09-08';
+
+/**
+ * The guided plan each buyable course runs on — days, steps and planned minutes
+ * of its 28-day program (src/data/programs/<level>Phase.js, the sequence the
+ * course player walks). Counted from those modules on 2026-10-04;
+ * tests/offers.test.mjs recounts them and fails when a program changes and this
+ * snapshot does not.
+ */
+export const GUIDED_PLANS = {
+  'a1.1': { days: 28, steps: 99, minutes: 1800 },
+  'a1.2': { days: 28, steps: 92, minutes: 1760 },
+  'a2.1': { days: 28, steps: 93, minutes: 1782 },
+  'a2.2': { days: 28, steps: 87, minutes: 1693 },
+};
 
 export const COURSE_CONTENTS = {
   'a1.1': {

@@ -1,0 +1,30 @@
+---
+// One station's scene (data/stationArt.js). Renders nothing until the set of
+// eight is complete, so a template can place it unconditionally.
+import { artFor } from '../../data/stationArt.js';
+
+interface Props {
+  level: string;
+  class?: string;
+  eager?: boolean;
+}
+
+const { level, class: className = '', eager = false } = Astro.props;
+const art = artFor(level);
+// A caller that sets a height gets the scene contained in that band (white on a
+// white card, so the side margins vanish); otherwise it scales with its width.
+const sized = /(^|\s)(max-)?h-/.test(className);
+---
+
+{art && (
+  <img
+    src={art.src}
+    width={art.width}
+    height={art.height}
+    alt=""
+    loading={eager ? 'eager' : 'lazy'}
+    decoding="async"
+    class:list={['block max-w-none bg-white', sized ? 'object-contain' : 'h-auto', className]}
+    data-station-art={level}
+  />
+)}

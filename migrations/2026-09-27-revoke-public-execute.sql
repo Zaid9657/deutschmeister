@@ -1,6 +1,6 @@
 -- ============================================================================
 -- Revoke PUBLIC EXECUTE from the service-role-only SECURITY DEFINER functions.
--- NOT YET APPLIED — apply by hand (Supabase SQL editor, as postgres).
+-- APPLIED 2026-09-27 via the Supabase connector (see migrations/README.md). Idempotent.
 --
 -- Finding (Supabase security advisor, lints 0028 + 0029, measured 2026-09-27):
 -- public.course_reminder_candidates(int,int,int) and

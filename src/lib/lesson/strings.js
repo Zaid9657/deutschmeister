@@ -227,6 +227,8 @@ export const STRINGS = {
     'recap.vocabBridge.adding': 'Adding …',
     'recap.vocabBridge.added': 'Added to your vocab deck.',
     'recap.vocabBridge.signInHint': 'Sign in to save these words to your vocab deck.',
+    'recap.follow.title': 'German in your feed',
+    'recap.follow.body': 'One post a day: the sentence of the day, a common mistake, an exam fact.',
 
     // ── words-learned flip cards (recap) ─────────────────────────────────────
     'words.tapToFlip': 'Tap a card for the translation',
@@ -247,6 +249,12 @@ export const STRINGS = {
     'save.body': "Right now this lesson lives only in this browser. With a free account it stays with you — on your phone, on your laptop, and with review at the right time.",
     'save.cta': 'Save progress',
     'save.haveAccount': 'I already have an account',
+    // The same ask after the first checked answer (src/lib/course/saveProgressAsk.js).
+    'saveAsk.eyebrow': 'First answer done',
+    'saveAsk.title': 'Save your progress?',
+    'saveAsk.body': 'Your answers are only in this browser right now. With a free account you come back to this lesson, and every lesson you finish is saved to your account.',
+    'saveAsk.cta': 'Save my progress — create a free account',
+    'saveAsk.skip': 'Continue without saving',
 
     // ── exam-date plan ───────────────────────────────────────────────────────
     'plan.question': 'When is your exam?',
@@ -522,6 +530,8 @@ export const STRINGS = {
     'recap.vocabBridge.adding': 'Wird hinzugefügt …',
     'recap.vocabBridge.added': 'Zu Ihrem Wortschatz hinzugefügt.',
     'recap.vocabBridge.signInHint': 'Melden Sie sich an, um diese Wörter in Ihrem Wortschatz zu speichern.',
+    'recap.follow.title': 'Deutsch im Feed',
+    'recap.follow.body': 'Jeden Tag ein Post: der Satz des Tages, ein typischer Fehler, ein Prüfungsfakt.',
 
     // ── words-learned flip cards (recap) ─────────────────────────────────────
     'words.tapToFlip': 'Für die Übersetzung antippen',
@@ -542,6 +552,11 @@ export const STRINGS = {
     'save.body': 'Diese Lektion liegt gerade nur in diesem Browser. Mit einem kostenlosen Konto bleibt sie erhalten — auf dem Handy, am Laptop, und mit der Wiederholung zur richtigen Zeit.',
     'save.cta': 'Fortschritt speichern',
     'save.haveAccount': 'Ich habe schon ein Konto',
+    'saveAsk.eyebrow': 'Erste Antwort geschafft',
+    'saveAsk.title': 'Fortschritt speichern?',
+    'saveAsk.body': 'Ihre Antworten sind gerade nur in diesem Browser. Mit einem kostenlosen Konto kommen Sie zu dieser Lektion zurück, und jede Lektion, die Sie abschließen, wird in Ihrem Konto gespeichert.',
+    'saveAsk.cta': 'Fortschritt speichern — kostenloses Konto anlegen',
+    'saveAsk.skip': 'Ohne Speichern weiterlernen',
 
     // ── exam-date plan ───────────────────────────────────────────────────────
     'plan.question': 'Wann ist Ihre Prüfung?',

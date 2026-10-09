@@ -17,8 +17,17 @@
 // THE RULE THIS FUNCTION EXISTS TO KEEP: never tell someone they have not
 // used a lesson when they have. Selection reads public.lifecycle_customer_state
 // (the ONE definition of funnel status — migrations/2026-08-22-activation-
-// lifecycle.sql), and eligibility is RE-READ immediately before the claim, so
-// a user who does their first lesson between selection and send is dropped.
+// lifecycle.sql, widened by 2026-09-28-lifecycle-lesson-activity.sql to count
+// every lesson-activity source, the A1.1 course player included), and
+// eligibility is RE-READ immediately before the claim, so a user who does
+// their first lesson between selection and send is dropped. This file never
+// queries an activity table itself: which tables count is the view's job, and
+// tests/lifecycle.test.mjs fails if a source is missing from it.
+//
+// Both reads also require has_lesson_activity = false. That column exists only
+// once the 2026-09-28 migration is applied, so on the older view the query
+// errors and nothing is sent. The job fails closed and never mails on the
+// three-table definition that let A1.1 learners through.
 //
 // SHIPS OFF, twice over:
 //   1. LIFECYCLE_ACTIVATION_ENABLED must be exactly 'true' or the run no-ops
@@ -35,6 +44,8 @@ import { schedule } from '@netlify/functions';
 import { createClient } from '@supabase/supabase-js';
 import { createHmac } from 'crypto';
 import { BRAND, emailHeader, ctaCell } from './_shared/brand.mjs';
+import { tagEmailLink } from './_shared/emailLinks.mjs';
+import { socialFooterLine } from './_shared/socialLinks.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -72,7 +83,7 @@ export const WINDOWS = {
 // claim tests ban them here. Both messages assume, correctly by construction,
 // that the reader has not started a lesson.
 
-const SHELL = ({ heading, body, ctaHref, ctaLabel, unsubUrl }) => `<!DOCTYPE html>
+const SHELL = ({ heading, body, ctaHref, ctaLabel, footerHref, unsubUrl }) => `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${heading}</title></head>
 <body style="margin:0;padding:0;background:${BRAND.paper};font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
@@ -92,7 +103,7 @@ const SHELL = ({ heading, body, ctaHref, ctaLabel, unsubUrl }) => `<!DOCTYPE htm
         <tr>
           <td style="padding:20px 32px;border-top:1px solid ${BRAND.rule};text-align:center;">
             <p style="margin:0;font-size:12px;color:${BRAND.graphite};line-height:1.6;">
-              DeutschMeister · <a href="${BASE_URL}" style="color:${BRAND.graphite};">deutsch-meister.de</a><br>
+              DeutschMeister · <a href="${footerHref}" style="color:${BRAND.graphite};">deutsch-meister.de</a>${socialFooterLine(BRAND.graphite)}<br>
               <a href="${unsubUrl}" style="color:${BRAND.graphite};">Unsubscribe from these emails</a>
             </p>
           </td>
@@ -126,52 +137,95 @@ export const TEMPLATES = {
   },
 };
 
+// Every link into the site carries the lifecycle UTM tags, so a click reaches
+// dm_attribution as source "email" instead of untracked or a webmail host
+// (docs/tracking-links.md, "Our own email"). The campaign is the kind with
+// hyphens (activation_d1 -> activation-d1); utm_content names the link. The
+// CTA keeps its trailing slash before the query (test 5 in
+// tests/lifecycle.test.mjs). The unsubscribe link is never tagged. Exported
+// for tests/lifecycle-links.test.mjs.
+export function renderHtml(kind, userId) {
+  const tpl = TEMPLATES[kind];
+  const tags = { medium: 'lifecycle', campaign: kind.replaceAll('_', '-') };
+  return SHELL({
+    heading: tpl.subject,
+    body: tpl.body,
+    ctaHref: tagEmailLink(tpl.ctaHref, { ...tags, content: 'cta' }),
+    ctaLabel: tpl.ctaLabel,
+    footerHref: tagEmailLink(`${BASE_URL}/`, { ...tags, content: 'footer' }),
+    unsubUrl: unsubscribeUrl(userId),
+  });
+}
+
 // ─── selection ───────────────────────────────────────────────────────────────
 
-// Users inside the window whose funnel status is still 'new' (no lesson in any
-// of the three progress tables, not subscribed), not opted out, message not
-// yet sent.
-async function selectCandidates(kind) {
+// Users inside the window whose funnel status is still 'new' (no lesson
+// activity of any kind, not subscribed), not opted out, message not yet sent.
+//
+// ONE definition of "who is due", read by this job and by the sentinel. The
+// job passes nothing and gets today's run. The sentinel passes `span` =
+// { first, last }, the scheduled runs since the job's last ledger row: the
+// window then covers all of them ([first - upper, last - lower)), and a user
+// counts only if their address was confirmed by the time their window opened
+// — so nobody who became due (or confirmed) after a run is counted as missed;
+// the next run mails them.
+export async function selectCandidates(kind, { client = supabase, span = null } = {}) {
   const day = 24 * 60 * 60 * 1000;
   const now = Date.now();
+  const first = span ? span.first : now;
+  const last = span ? span.last : now;
   const w = WINDOWS[kind];
-  const lower = new Date(now - w.upperDays * day).toISOString();
-  const upper = new Date(now - w.lowerDays * day).toISOString();
+  const lower = new Date(first - w.upperDays * day).toISOString();
+  const upper = new Date(last - w.lowerDays * day).toISOString();
 
-  const { data: rows, error } = await supabase
+  const { data: rows, error } = await client
     .from('lifecycle_customer_state')
-    .select('user_id, status, email_opted_out')
+    .select('user_id, status, email_opted_out, has_lesson_activity, registered_at')
     .gte('registered_at', lower)
     .lt('registered_at', upper)
-    .eq('status', 'new');
-  if (error) throw new Error(`lifecycle_customer_state query failed (migration applied?): ${error.message}`);
+    .eq('status', 'new')
+    .eq('has_lesson_activity', false);
+  if (error) throw new Error(`lifecycle_customer_state query failed (2026-09-28-lifecycle-lesson-activity.sql applied?): ${error.message}`);
 
-  const candidates = (rows || []).filter((r) => !r.email_opted_out);
+  const candidates = (rows || []).filter((r) => !r.email_opted_out && r.has_lesson_activity === false);
   if (candidates.length === 0) return [];
 
+  // A failed ledger read must stop the run: read as "nobody was mailed", it
+  // would re-send to everyone already mailed (the claim upsert ignores
+  // duplicates, the send does not).
   const ids = candidates.map((r) => r.user_id);
-  const { data: already } = await supabase
+  const { data: already, error: ledgerError } = await client
     .from('lifecycle_emails')
     .select('user_id')
     .eq('kind', kind)
     .in('user_id', ids);
+  if (ledgerError) throw new Error(`ledger read failed: ${ledgerError.message}`);
   const sentAlready = new Set((already || []).map((r) => r.user_id));
 
   // Confirmed addresses only — same as trial-lifecycle.
   const emails = new Map();
+  const confirmedAt = new Map();
   let page = 1;
   while (true) {
-    const { data, error: authError } = await supabase.auth.admin.listUsers({ page, perPage: 1000 });
+    const { data, error: authError } = await client.auth.admin.listUsers({ page, perPage: 1000 });
     if (authError) throw new Error(`listUsers: ${authError.message}`);
     for (const u of data.users) {
-      if (u.email && u.email_confirmed_at) emails.set(u.id, u.email.trim().toLowerCase());
+      if (u.email && u.email_confirmed_at) {
+        emails.set(u.id, u.email.trim().toLowerCase());
+        confirmedAt.set(u.id, Date.parse(u.email_confirmed_at));
+      }
     }
     if (data.users.length < 1000) break;
     page++;
   }
 
+  // Over a span, due at a run means confirmed at it: the run that selects a
+  // user comes after their window opens (registered_at + lower), so an address
+  // confirmed by then was confirmed at that run. Without a span this is moot.
+  const confirmedInTime = (r) => !span || confirmedAt.get(r.user_id) <= Date.parse(r.registered_at) + w.lowerDays * day;
+
   return candidates
-    .filter((r) => !sentAlready.has(r.user_id) && emails.has(r.user_id))
+    .filter((r) => !sentAlready.has(r.user_id) && emails.has(r.user_id) && confirmedInTime(r))
     .map((r) => ({ id: r.user_id, email: emails.get(r.user_id) }));
 }
 
@@ -182,10 +236,12 @@ async function recheckStillNew(recipients) {
   if (recipients.length === 0) return [];
   const { data, error } = await supabase
     .from('lifecycle_customer_state')
-    .select('user_id, status')
+    .select('user_id, status, has_lesson_activity')
     .in('user_id', recipients.map((r) => r.id));
   if (error) throw new Error(`eligibility re-read failed: ${error.message}`);
-  const stillNew = new Set((data || []).filter((r) => r.status === 'new').map((r) => r.user_id));
+  const stillNew = new Set(
+    (data || []).filter((r) => r.status === 'new' && r.has_lesson_activity === false).map((r) => r.user_id),
+  );
   return recipients.filter((r) => stillNew.has(r.id));
 }
 
@@ -233,13 +289,7 @@ async function sendKind(resendKey, kind, { dry, canary }) {
       to: [r.email],
       reply_to: 'zaid@deutsch-meister.de',
       subject: tpl.subject,
-      html: SHELL({
-        heading: tpl.subject,
-        body: tpl.body,
-        ctaHref: tpl.ctaHref,
-        ctaLabel: tpl.ctaLabel,
-        unsubUrl: unsubscribeUrl(r.id),
-      }),
+      html: renderHtml(kind, r.id),
     }));
 
     try {

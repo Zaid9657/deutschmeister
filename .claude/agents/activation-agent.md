@@ -30,3 +30,8 @@ exactly (one move per run, never merge). This file adds your area's specifics.
 - The course speaks **Sie**.
 - A1.2 is PAUSED by owner decision. Never promote it or run review rounds on it.
 - Judge a change on a full-month cohort, not on n<20.
+
+## Retired in team v2 (2026-09-29)
+
+The first session is now owned by the product agent (charter key `product`). Keep this file
+only so old references resolve; new runs use `product-agent`.

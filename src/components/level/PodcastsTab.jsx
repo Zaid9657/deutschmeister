@@ -68,7 +68,7 @@ const PodcastsTab = ({ subLevel }) => {
           </h3>
           <p className="text-sm leading-relaxed text-graphite">
             {isGerman
-              ? 'Wir arbeiten an neuen Video-Lektionen für dieses Niveau. Schau bald wieder vorbei!'
+              ? 'Wir arbeiten an neuen Video-Lektionen für dieses Niveau. Schauen Sie bald wieder vorbei!'
               : "We're working on new video lessons for this level. Check back soon!"}
           </p>
           <div className="mt-6">

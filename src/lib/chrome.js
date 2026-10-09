@@ -25,3 +25,19 @@ export const chromeFor = (pathname) => {
   if (COURSE_HOME_ROUTE.test(p)) return 'course';
   return 'full';
 };
+
+// Which GROUND the top of a route stands on ("Die Linie", docs/redesign-2026-10/
+// art-direction.md). The Astro Layout takes `tone="nacht"` on pages whose first
+// screen is a night ground, so the bar and the hero read as one surface; this is
+// the SPA's half of that rule. Add a route here in the same commit that gives
+// its first screen `bg-nacht`, or a paper bar sits on a night page.
+//
+//   'nacht' — Navbar renders on night, and the Footer drops its top margin so
+//             no paper band separates the page from the (always night) footer.
+//   'paper' — every other route.
+const NACHT_ROUTES = new Set(['/subscription/success']);
+
+export const groundFor = (pathname) => {
+  const p = String(pathname || '').replace(/\/+$/, '') || '/';
+  return NACHT_ROUTES.has(p) ? 'nacht' : 'paper';
+};

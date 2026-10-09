@@ -8,6 +8,8 @@ import { getAllTopicPaths, getTopicFull, getAllTopics, SUB_LEVELS, LEVEL_META } 
 import { RELATED_TOPICS } from '../../../lib/relatedTopics.js';
 import { TOPIC_SEO } from '../../../lib/topicSeo.js';
 import { ORGANIZATION, SITE_PUBLISHED } from '../../../lib/siteMeta.js';
+import { onsiteHref } from '../../../lib/onsiteLinks.js';
+import { FREE_LEVEL_LABEL, TRIAL_DAYS } from '../../../data/marketing.js';
 import '../../../styles/global.css';
 
 // True when a rule's JSONB content (object, array, or plain string) holds
@@ -211,6 +213,17 @@ const BTN_LEARNING =
 const BTN_SECONDARY =
   'inline-flex min-h-11 select-none items-center justify-center rounded-clay border border-rule bg-white px-5 py-3 text-sm font-bold text-ink shadow-raise transition-all duration-100 ease-snap hover:border-siegel hover:text-siegel-deep active:translate-y-1 active:shadow-none';
 const CALLOUT_LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em]';
+
+// The signup doors carry the lesson with them (src/lib/onsiteLinks.js): a
+// visitor who arrived with no referrer used to reach profiles.acquisition_* as
+// NULL, so no signup could be traced to a grammar page. `utm_content` is the
+// slug (unique across all 84 topics). The anchors below call onsiteHref()
+// inline so astro-course-front-door.test.mjs can resolve where each goes; this
+// constant is the same door handed to the exercise island. The free-course
+// door is offered on the A1 pages only — the next step for a beginner, a
+// detour for a B2 reader.
+const signupHref = onsiteHref('signup', 'grammar', slug);
+const offerFreeCourse = level.startsWith('a1');
 ---
 
 <Layout title={pageTitle} description={pageDesc} canonical={canonicalUrlSlash} jsonLd={jsonLdSchemas} ogType="article">
@@ -534,6 +547,7 @@ const CALLOUT_LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[
             level={level}
             nextHref={nextGlobal ? `/grammar/${nextGlobal.sub_level}/${nextGlobal.slug}/` : undefined}
             nextTitle={nextGlobal?.title_en}
+            signupHref={signupHref}
             client:visible
           />
         </div>
@@ -606,9 +620,14 @@ const CALLOUT_LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[
         <p class="mx-auto mt-2 mb-6 max-w-md text-[0.9375rem] leading-relaxed text-graphite">
           Practice {topicTitle} in real conversations with your AI language partner.
         </p>
-        <a href="https://deutsch-meister.de/signup" class={BTN_PRIMARY}>
-          <span class="relative z-10">Get started free — 7 days of Pro included</span>
-        </a>
+        <div class="flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <a href={onsiteHref('signup', 'grammar', slug)} class={BTN_PRIMARY}>
+            <span class="relative z-10">Get started free — {TRIAL_DAYS} days of Pro included</span>
+          </a>
+          {offerFreeCourse && (
+            <a href={onsiteHref('freeCourse', 'grammar', slug)} class={BTN_SECONDARY}>Start the free {FREE_LEVEL_LABEL} course</a>
+          )}
+        </div>
       </div>
     </section>
 

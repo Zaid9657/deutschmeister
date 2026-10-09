@@ -125,7 +125,8 @@ test('IntroStage exists, the player imports it, and it is player state that prev
 
   const player = read(PLAYER);
   assert.match(player, /import IntroStage from '\.\.\/\.\.\/components\/lesson\/IntroStage\.jsx'/);
-  assert.match(player, /const \[introDone, setIntroDone\] = useState\(preview\);/, 'introDone is player state, default false, true in preview');
+  // A resumed run (tests/lesson-run-resume.test.mjs) is the one other case that skips it.
+  assert.match(player, /const \[introDone, setIntroDone\] = useState\(preview \|\| !!resumed\);/, 'introDone is player state, default false, true in preview and in a resumed run');
   assert.match(player, /if \(!introDone\) \{\s*return <IntroStage/, 'the intro renders before stage 0');
   assert.doesNotMatch(read('src/lib/lesson/buildLesson.js'), /kind: 'intro'/, 'the intro must NOT be a buildLesson stage');
 });

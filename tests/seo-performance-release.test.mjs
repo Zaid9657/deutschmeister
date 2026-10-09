@@ -40,7 +40,15 @@ test('the homepage defers below-fold rendering without blur filters', async () =
     read('astro-site/src/components/Showtime.astro'),
   ]);
 
-  assert.ok((home.match(/class="dm-defer/g) ?? []).length >= 5);
+  // v4 ("Die Linie", 2026-10-04): the homepage's below-fold sections are
+  // components; count the deferred sections across the page and the ones it renders.
+  const { readdirSync } = await import('node:fs');
+  const used = [...home.matchAll(/from '\.\.\/components\/linie\/(\w+)\.astro'/g)].map((m) => m[1]);
+  const parts = await Promise.all(readdirSync(new URL('../astro-site/src/components/linie/', import.meta.url))
+    .filter((f) => used.includes(f.replace('.astro', '')))
+    .map((f) => read(`astro-site/src/components/linie/${f}`)));
+  const deferred = [home, ...parts].reduce((n, src) => n + (src.match(/class="dm-defer/g) ?? []).length, 0);
+  assert.ok(deferred >= 5, `homepage defers ${deferred} below-fold sections`);
   assert.match(motion, /content-visibility:\s*auto/);
   assert.match(motion, /contain-intrinsic-size:\s*auto 720px/);
   assert.doesNotMatch(motion, /filter:\s*blur\((4|5)px\)/);

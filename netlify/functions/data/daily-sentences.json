@@ -12,15 +12,15 @@
     "grammar_focus": "Dative indirect object"
   },
   {
-    "sentence_de": "Das Mädchen schreibt ihrem Freund einen Brief.",
-    "hint": "Three cases again — but this time with a possessive pronoun doing the heavy lifting.",
+    "sentence_de": "Die Frau schreibt ihrem Freund einen Brief.",
+    "hint": "Three cases again: 'die Frau' is nominative, 'ihrem Freund' dative and 'einen Brief' accusative. 'ihrem' stands before a noun, so it is a possessive article (Possessivartikel): 'ihr-' means 'her', and '-em' is the dative masculine ending.",
     "level": "A2",
-    "grammar_focus": "Possessive pronouns in dative"
+    "grammar_focus": "Possessive articles in the dative"
   },
   {
     "sentence_de": "Wegen des schlechten Wetters bleiben wir zu Hause.",
-    "hint": "'Wegen' always demands the genitive — and most learners never see it coming.",
-    "level": "A2",
+    "hint": "'wegen' takes the genitive in standard German: 'des' and the '-s' on 'Wetters' mark it, and the adjective after 'des' ends in '-en'. In everyday speech you will also hear the dative ('wegen dem Wetter'); in writing, use the genitive.",
+    "level": "B1",
     "grammar_focus": "Genitive preposition: wegen"
   },
   {
@@ -31,7 +31,7 @@
   },
   {
     "sentence_de": "Sie ist seit drei Jahren in Deutschland.",
-    "hint": "'Seit' uses present tense in German — past tense would be wrong here, unlike English.",
+    "hint": "German uses 'seit' + present tense for something still going on: 'ist seit drei Jahren in Deutschland' = 'has been in Germany for three years', where English uses the present perfect. 'seit' + Perfekt is also correct, e.g. for something that has not happened since a point in time: 'Ich habe sie seit Mai nicht gesehen.'",
     "level": "A2",
     "grammar_focus": "Seit + present tense"
   },
@@ -54,14 +54,14 @@
     "grammar_focus": "Relative clauses (nominative)"
   },
   {
-    "sentence_de": "Das Buch, das ich dir empfohlen habe, ist ausverkauft.",
-    "hint": "The relative pronoun here is 'das' in accusative — its form depends on the noun and its case in the clause.",
+    "sentence_de": "Der Roman, den Anna empfohlen hat, ist sehr spannend.",
+    "hint": "'den' is accusative masculine: its gender comes from 'der Roman', its case from its role in the relative clause, where it is the object of 'empfohlen hat'. In a relative clause the conjugated verb goes to the very end: 'empfohlen hat'.",
     "level": "B1",
     "grammar_focus": "Relative clauses (accusative)"
   },
   {
     "sentence_de": "Wenn ich mehr Zeit hätte, würde ich Deutsch intensiver lernen.",
-    "hint": "Konjunktiv II: the classic 'if I had…, I would…' structure — entirely built without 'würden' in the if-clause.",
+    "hint": "Konjunktiv II for something contrary to fact: 'if I had…, I would…'. With 'haben', the wenn-clause normally uses 'hätte' rather than 'haben würde'; the main clause uses 'würde' + infinitive ('würde … lernen').",
     "level": "B1",
     "grammar_focus": "Konjunktiv II: contrary-to-fact conditionals"
   },
@@ -79,25 +79,25 @@
   },
   {
     "sentence_de": "Das Paket wird morgen geliefert.",
-    "hint": "Passive voice in Futur I — 'werden' does double duty for both future and passive here.",
+    "hint": "Vorgangspassiv in the present tense: 'wird' + past participle. 'morgen' already places it in the future, so no second 'werden' is needed.",
     "level": "B1",
     "grammar_focus": "Passive voice (Vorgangspassiv)"
   },
   {
     "sentence_de": "Je mehr er lernt, desto besser wird sein Deutsch.",
-    "hint": "'Je…desto' is a comparative intensifier — both parts need a comparative adjective or adverb.",
-    "level": "B2",
+    "hint": "'Je … desto' joins two comparatives: the more he learns, the better his German gets. The je-clause is a subordinate clause, so its verb goes to the end ('je mehr er lernt'). In the desto-clause, 'desto' + comparative comes first and the finite verb follows directly ('desto besser wird'), then the subject. 'umso' can replace 'desto'.",
+    "level": "B1",
     "grammar_focus": "Je…desto comparative"
   },
   {
     "sentence_de": "Trotz seiner Müdigkeit arbeitete er weiter.",
-    "hint": "'Trotz' takes the genitive — and 'seiner' is a genitive masculine possessive pronoun.",
-    "level": "B2",
+    "hint": "'Trotz' takes the genitive — and 'seiner' is genitive feminine, because 'Müdigkeit' is feminine (die Müdigkeit). With a masculine noun it would be 'seines': trotz seines Fehlers.",
+    "level": "B1",
     "grammar_focus": "Genitive preposition: trotz"
   },
   {
     "sentence_de": "Das Ergebnis hängt davon ab, wie viel Zeit wir investieren.",
-    "hint": "A da-compound ('davon') replaces a preposition + pronoun, followed by a full subordinate clause.",
+    "hint": "Here 'davon' is a placeholder (Korrelat) that points forward to the wie-clause, which says what the result depends on. 'abhängen' needs 'von', but 'von' cannot take a clause directly, so 'davon' fills that slot in the main clause.",
     "level": "B2",
     "grammar_focus": "Da-compounds with subordinate clauses"
   },
@@ -109,19 +109,19 @@
   },
   {
     "sentence_de": "Er behauptet, keine Zeit zu haben.",
-    "hint": "Accusative-and-infinitive — 'keine Zeit zu haben' is the whole object of 'behauptet'.",
+    "hint": "An infinitive clause as the object — 'keine Zeit zu haben' is what he claims. Both verbs share one subject (er), so German drops the second subject and uses zu + infinitive.",
     "level": "B2",
     "grammar_focus": "Infinitive clauses as objects"
   },
   {
     "sentence_de": "Das Haus, in dem wir wohnen, wurde 1920 gebaut.",
-    "hint": "A dative relative clause with a preposition — 'dem' is dative masculine because 'in' + dative = location.",
+    "hint": "A relative clause with a preposition — 'dem' is dative neuter: it refers back to 'das Haus', and 'in' takes the dative for a location (wo?).",
     "level": "B2",
     "grammar_focus": "Relative clauses with prepositions (dative)"
   },
   {
     "sentence_de": "Er kann Klavier spielen.",
-    "hint": "Modal verb 'können' + infinitive: the infinitive always goes to the end in present tense.",
+    "hint": "In a main clause, the modal 'kann' stands in second position and the infinitive 'spielen' goes to the end, without 'zu'. The Präteritum works the same way: 'Er konnte Klavier spielen.'",
     "level": "A1",
     "grammar_focus": "Modal verbs (können)"
   },
@@ -133,7 +133,7 @@
   },
   {
     "sentence_de": "Sie ist nach Berlin gefahren.",
-    "hint": "Motion verbs use 'sein' in the Perfekt, not 'haben' — a rule that trips up almost every learner.",
+    "hint": "Verbs of movement from one place to another, like 'fahren' here, form the Perfekt with 'sein': 'ist … gefahren'. When 'fahren' means driving something or someone somewhere, it takes 'haben': 'Sie hat das Auto in die Werkstatt gefahren.'",
     "level": "A2",
     "grammar_focus": "Perfekt with sein (motion verbs)"
   },
@@ -144,15 +144,15 @@
     "grammar_focus": "Genitive relative pronouns (dessen/deren)"
   },
   {
-    "sentence_de": "Er fragte, ob sie Zeit hätte.",
-    "hint": "Indirect speech with 'ob' shifts the verb to Konjunktiv I — the grammar of reported speech.",
+    "sentence_de": "Er fragte, ob sie Zeit habe.",
+    "hint": "Reported speech: 'habe' is the Konjunktiv I of 'haben' (the indicative is 'hat'). In everyday German you will also hear 'hätte' (Konjunktiv II) or plain 'hat'.",
     "level": "B2",
     "grammar_focus": "Konjunktiv I in indirect speech"
   },
   {
     "sentence_de": "Das Fenster ist geöffnet worden.",
-    "hint": "Passive perfect tense: three verbs in a row — ist + past participle + worden.",
-    "level": "B2",
+    "hint": "Passive in the Perfekt: 'ist' + past participle ('geöffnet') + 'worden'. In the passive, the participle of 'werden' is 'worden', without 'ge-'; 'geworden' is the participle of the full verb 'werden', 'to become' ('Es ist kalt geworden'). Both form the Perfekt with 'sein', not 'haben'.",
+    "level": "B1",
     "grammar_focus": "Passive Perfekt (worden)"
   },
   {
@@ -163,7 +163,7 @@
   },
   {
     "sentence_de": "Sie hat sich die Hände gewaschen.",
-    "hint": "Reflexive verb in Perfekt — 'sich' stays close to the subject, and the accusative body-part takes a definite article.",
+    "hint": "Reflexive verbs form the Perfekt with 'haben'. 'sich' is dative here, because 'die Hände' is the accusative object. 'sich' has one form for both cases, but 'ich' shows the difference: 'Ich wasche mich', but 'Ich wasche mir die Hände'. The body part normally takes 'die', not 'ihre'.",
     "level": "B1",
     "grammar_focus": "Reflexive verbs in Perfekt"
   },
@@ -175,8 +175,8 @@
   },
   {
     "sentence_de": "Obwohl das Buch schwer zu verstehen ist, liest sie es gern.",
-    "hint": "'Obwohl' sends its verb to the end — and 'zu verstehen' is an infinitive phrase within that clause.",
-    "level": "B1",
-    "grammar_focus": "Obwohl + embedded infinitive phrase"
+    "hint": "'Obwohl' sends its verb to the end, so 'ist' closes the clause. 'zu verstehen ist' is sein + zu + infinitive, which here works like 'können' + passive: the book 'kann nur schwer verstanden werden', it can only be understood with difficulty.",
+    "level": "B2",
+    "grammar_focus": "Obwohl + sein + zu + infinitive"
   }
 ]

@@ -87,6 +87,27 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   against a config that never extended `borderRadius`, so the billing toggle rendered square and
   nothing said so.** Only `pill` is wired: the token `sm`/`md`/`lg` values collide with Tailwind's
   own defaults and adopting them would reshape every `rounded-lg` in the app.
+- **"Die Linie" (v3 tokens, 2026-10 redesign, `docs/redesign-2026-10/`), in v4 colours: TÜRKIS.**
+  The owner picked türkis over night + signal yellow on 2026-10-04 (the palette they had already
+  chosen for the Course v2 player). The token NAMES stayed: `nacht` is now the light türkis feature
+  ground (hero, line section, footer, tab bar — read it as "feature ground", not night) and `linie`
+  is the same türkis as `siegel` (`#0A8276`, white text 4.7:1). Rule 2 is whole again: one action
+  colour on every ground. Never put `text-white`/inverse tones on a `nacht` ground any more — use
+  `text-nacht-text`/`-muted`. `tests/linie-design.test.mjs` pins the contrast values and
+  `linie === siegel`; `netlify/functions/_shared/brand.mjs` (email colours) must match the tokens.
+  The homepage hero carries **the line board** (`components/linie/LineBoard.astro`): a HyperFrames loop
+  whose sources are `videos/hero-line` (1600×560) and `videos/hero-line-mobile` (1080×1350). Edit the
+  composition, run `hyperframes check` + `render` there (`HYPERFRAMES_BROWSER_PATH=/opt/pw-browsers/chromium`
+  in cloud sessions; GSAP is vendored because the CDN is blocked), then `videos/encode-web.sh` writes
+  `public/motion/` (MP4 + VP9 WebM + poster). The sentences must match the plan and the page (test).
+  The `sign` face (Archivo, `sign-display/head/label/code` in `astro-site/src/styles/linie.css`) is
+  for the four marketing/commerce pages that pass `preloads={[...signFontPreloads, …]}` to `Layout`
+  (`/`, `/pricing/`, `/courses/`, `/courses/<level>/`). Every other page renders `data-sign="off"`
+  and the same roles fall back to the body face — so a page that starts using a sign role must also
+  preload the face (the test walks every page). Motion uses the token tiers (140/220/420/800 ms) and
+  the `ease-out-strong`/`in-out-strong`/`drawer` curves; only transform/opacity/clip-path move,
+  hover motion only under `(hover:hover) and (pointer:fine)`. Astro files carry no hex literals
+  (`tests/astro-hex.test.mjs`); offers and station data are `src/data/offers.js` (+ twin).
 - **The app has one button and one card: `src/components/ui/`.** Before them the primary CTA was
   `bg-gradient-to-r from-amber-500 to-rose-500 …` copy-pasted into twenty files, which is why the
   retired brand outlived its own retirement. `Button.jsx` carries the same treatment as the Astro
@@ -112,8 +133,10 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   checkout. Entitlement is `hasLevelAccess(level)` in `SubscriptionContext` (free ∨ trial/sub ∨
   bought course); every level lock must read it, and `tests/purchases.test.mjs` pins the list.
   A signed-out Buy click stores `dm_buy_intent` and resumes at `/subscription?buy=<key>`.
-  **Grammar lessons on the Astro side are ungated at every level** — the SPA lock is cosmetic;
-  see the open decision in `docs/HANDOFF-2026-09-03.md` §11 before selling grammar access.
+  **Grammar rule text on the Astro side is public at every level; the exercises above A1.1 are
+  locked client-side** by `astro-site/src/components/ExercisePlayer.jsx` (decision 2026-09-03,
+  `docs/HANDOFF-2026-09-03.md` §11) — a UX lock, not a security boundary, so never sell "grammar
+  rules" as the paid thing.
   Lemon Squeezy products, discounts and redirect URLs are **dashboard-only** (API read-only);
   paste-ready owner prompts are in `docs/owner-prompts.md`; ids in
   `docs/monetization-2026-09-03.md`.
@@ -140,6 +163,7 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   A session that needs a revenue or usage figure reads the latest row (or calls the function via
   the Supabase connector) instead of re-deriving it — the handoff had to correct a stale
   "9 subs, €75–90/mo" claim once already. `tests/weekly-truth.test.mjs` pins store-before-email.
+- **Production agents (the hourly sentinel, the support agent) are documented in `docs/agents/production-agents.md`** — env vars, checks, owners, what is mailed to `OWNER_ALERT_EMAIL`, how to mute a check; incidents live in `agent_incidents` (service role only), and the sentinel ships off (`SENTINEL_ENABLED`).
 - **The Astro build survives a Supabase outage.** Every build-time read in `astro-site/src/lib/grammar.js`
   retries three times, then serves the whole build from the committed `grammar-content-cache.json`
   with a loud warning (two deploys died on `fetch failed` on 2026-09-14, once because the Supabase
@@ -171,13 +195,23 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   `curl -sS "$HTTPS_PROXY/__agentproxy/status"`. Routine prompts live in
   `docs/seo-routines/` rather than the Routines UI, because an agent cannot edit a Routine it did not
   create and a UI-only prompt drifts from the repo silently.
+- **Social posts: carousels from the next pack on (owner decision 2026-09-27).** The first pack
+  (`drafts/instagram-100/`, 50 single-image posts, 2026-09-28 → 11-16) is the template: brand
+  tokens, 1080×1350 JPEG (4:5), exam facts only from the checked Leitfaden modules, per-channel
+  captions with UTM tags, images served from `public/social/ig/`. Every later pack uses **2–4
+  images per post where the content needs it** (hook → rule/example → practice/CTA), not one
+  card by default. Instagram (Publish Photo(s)) and Facebook (Create Page Photo) take a list of
+  up to 10 image URLs in Zapier; Zapier's Telegram action sends ONE photo, so a Telegram album
+  needs the Bot API's `sendMediaGroup` (or one photo + the rest as a follow-up). The sheet needs
+  one column per slide, not one `image_url`.
 - **Leitfäden are data, not pages.** A guide lives in
   `astro-site/src/data/guides/<slug>.js` and is rendered by
   `pages/leitfaden/[slug].astro`; the hub lists the registry. Adding one is a data module,
   a line in `GUIDES`, and a line in `scripts/check-built-html.mjs`'s MANIFEST — nothing in
   `netlify.toml` (the whole `/leitfaden/` directory is already copied) and nothing in the
   sitemap config (the filter already whitelists the prefix). A new **top-level** segment
-  would need its own `cp -r` step. Guides get **no SPA twin**: Netlify serves the static
+  needs nothing either: `scripts/merge-site-builds.mjs` copies every Astro output directory.
+  Guides get **no SPA twin**: Netlify serves the static
   page, so `src/pages/leitfaden/TelcB1Page.jsx` is dead code on the dev server only.
   `tests/guides.test.mjs` pins slug/title/description/anchor integrity, the three
   trailing-slash cases on every internal link, and the ban on outcome promises and fee
@@ -228,8 +262,9 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   identity from the verified JWT via `_shared/auth.mjs` — never from the request body.
   The scheduled function `daily-sentence` distinguishes scheduler calls by the
   `next_run` body marker.
-- The Netlify build command in `netlify.toml` is one long line that also copies Astro
-  output into `dist/` — when adding a new top-level Astro route, add its copy step there.
+- The Netlify build command in `netlify.toml` runs `scripts/merge-site-builds.mjs`, which copies
+  every Astro output directory into `dist/` (CI runs the same script) — a new top-level Astro route
+  needs no extra build step, only its `check-built-html.mjs` MANIFEST line.
 - **`public/llms.txt` and `public/llms-full.txt` are generated** — `node scripts/build-llms.mjs`
   derives them from `pricing.js`, `marketing.js`, the guide and exam registries and
   `grammar-content-cache.json`; `tests/llms.test.mjs` fails when they are stale. Never hand-edit them:
@@ -239,6 +274,21 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
 
 ## Current state / open threads
 
+- **The October redesign ("Die Linie", branch `claude/wonderful-davinci-071dhj`) is documented in
+  `docs/redesign-2026-10/`** — baseline, strategy (offers, revenue model, owner decisions), art
+  direction, copy deck and the measurement plan (event map in `src/data/events.js`, experiments
+  E1–E6). The homepage sells the level ladder as a transit line; the hero copy is data
+  (`astro-site/src/data/homepage.js`, `ACTIVE_HERO`), so a sequential test is a one-line change.
+  The SPA chrome (Navbar, Footer, BottomNav) was ported to Die Linie on 2026-10-04 without waiting
+  for Course v2: same promoted doors as `Layout.astro`, night footer with the station line, a night
+  timetable menu and tab bar, labels in the body face (the app never loads Archivo). A route whose
+  first screen is night goes in `groundFor` (`src/lib/chrome.js`). PR #149 then needs one re-merge
+  in `Navbar.jsx`: its `freeCourseHref` swap now lands on the bar key and the menu key.
+
+- **The agent team (v2, 2026-09-29) is `docs/agents/TEAM.md`.** Twelve agents (11 areas plus a
+  supervisor) follow `docs/agents/PROTOCOL.md`; their charter, rubric v2, daily snapshots and memory
+  live in the private artifact linked there, and their verified daily queries in
+  `docs/agents/pulse.sql`. `docs/SCORECARD.md` below is the v1 history.
 - **Read `docs/SCORECARD.md` before choosing any work.** It is the living business
   scorecard: 8 areas scored by a fixed rubric, the tracked metrics, the ordered work queue
   (take the top open item, one at a time), an experiments log and the score history. A PR

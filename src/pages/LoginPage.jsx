@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { postAuthPath } from '../lib/buyIntent';
+import { returnPath } from '../lib/loginReturn';
 import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -7,6 +8,7 @@ import { Mail, Lock, Eye, EyeOff, AlertCircle, Loader2, RefreshCw, CheckCircle2 
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../utils/supabase';
 import { trackVerificationEmailResent } from '../lib/funnelTracking';
+import { resendRefusal } from '../lib/signupConfirmation.js';
 import SEO from '../components/SEO';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card.jsx';
@@ -36,9 +38,27 @@ const LoginPage = () => {
   // 'idle' | 'sending' | 'sent' — the unconfirmed-account rescue path below.
   const [unconfirmed, setUnconfirmed] = useState(false);
   const [resendState, setResendState] = useState('idle');
+  // The last refused resend when the refusal was the send-rate limit (what
+  // resendRefusal returns), shown as a plain line instead of GoTrue's text.
+  const [resendRefused, setResendRefused] = useState(null);
+  // A refusal names its wait ("after 44 seconds"); the button sits that out
+  // with a countdown instead of taking clicks GoTrue will refuse again. Auth
+  // logs, 09-28: one learner was refused three times in a row (44, 42, 3 s)
+  // before the fourth click sent the mail; 6 of the 7 resends from 09-29 to
+  // 10-06 were refused. The wait is for the address it was named for, so
+  // typing another address frees the button.
+  const [cooldown, setCooldown] = useState({ to: '', seconds: 0 });
+  const waiting = cooldown.seconds > 0 && cooldown.to === email;
+
+  useEffect(() => {
+    if (cooldown.seconds <= 0) return undefined;
+    const tick = setTimeout(() => setCooldown((c) => ({ ...c, seconds: c.seconds - 1 })), 1000);
+    return () => clearTimeout(tick);
+  }, [cooldown]);
 
   // A pending checkout (set on /pricing/ before the signup detour) beats the dashboard.
-  const from = location.state?.from?.pathname || postAuthPath();
+  // The door's page comes back whole, query and hash included (src/lib/loginReturn.js).
+  const from = returnPath(location.state?.from) || postAuthPath();
 
   // The signup confirmation link lands HERE already signed in: signUp's
   // emailRedirectTo is /login (AuthContext), and supabase-js reads the session
@@ -58,6 +78,7 @@ const LoginPage = () => {
     setError('');
     setUnconfirmed(false);
     setResendState('idle');
+    setResendRefused(null);
     setLoading(true);
 
     try {
@@ -84,21 +105,39 @@ const LoginPage = () => {
   };
 
   // Session-less resend — supabase.auth.resend only needs the email address.
+  // The link goes to /login like the first one (AuthContext signUp's
+  // emailRedirectTo, and the /signup panel's resend): supabase-js reads the
+  // session out of the URL here and the effect above sends the learner on.
+  // Without it GoTrue fell back to the Site URL, the Astro homepage, which reads
+  // no session. Auth logs 2026-09-26 to 10-03: every /resend was logged with
+  // redirect https://deutsch-meister.de/, and 3 /verify 303'd there: the
+  // learner confirmed, then landed signed out. 12 of those 14 resends were refused
+  // with the send-rate limit (429): a wait, not a failure, so it gets a plain
+  // line (resendRefusal, src/lib/signupConfirmation.js), never the raw text.
   const handleResend = async () => {
-    if (!email || resendState === 'sending') return;
+    if (!email || waiting || resendState === 'sending') return;
+    setError('');
     setResendState('sending');
-    const { error: resendError } = await supabase.auth.resend({ type: 'signup', email });
+    const { error: resendError } = await supabase.auth.resend({
+      type: 'signup',
+      email,
+      options: { emailRedirectTo: `${window.location.origin}/login` },
+    });
     if (resendError) {
-      setError(resendError.message);
+      const refusal = resendRefusal(resendError, resendRefused?.untimed ?? 0);
+      setResendRefused(refusal);
+      setCooldown({ to: email, seconds: refusal?.wait ?? 0 });
+      if (!refusal) setError(resendError.message);
       setResendState('idle');
     } else {
       trackVerificationEmailResent();
+      setResendRefused(null);
       setResendState('sent');
     }
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden flex items-center justify-center bg-paper px-4 py-12">
+    <div className="relative min-h-screen overflow-hidden flex items-center justify-center bg-paper px-4 pb-12 pt-24 font-body">
       <SEO title="Log In" description="Log in to your DeutschMeister account to continue learning German grammar from A1 to B2." path="/login" />
       <Aurora />
       <motion.div
@@ -151,6 +190,13 @@ const LoginPage = () => {
                   </p>
                 </div>
               </div>
+              {resendRefused && (
+                <p role="status" className="mt-3 text-sm font-semibold">
+                  {resendRefused.limitReached
+                    ? 'The limit for confirmation emails is reached for now, so we cannot send another one. Please try again later, and look in your spam folder for the email we already sent.'
+                    : 'We can send this address only one email a minute. Look in your inbox and spam folder for the one we already sent, or ask again in a minute.'}
+                </p>
+              )}
               {resendState === 'sent' ? (
                 <p className="mt-3 flex items-center gap-2 text-sm font-semibold">
                   <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
@@ -163,14 +209,14 @@ const LoginPage = () => {
                   size="sm"
                   className="mt-3"
                   onClick={handleResend}
-                  disabled={resendState === 'sending'}
+                  disabled={waiting || resendState === 'sending'}
                 >
                   {resendState === 'sending' ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
                     <RefreshCw className="w-4 h-4" />
                   )}
-                  Send me a fresh confirmation email
+                  {waiting ? `Send a fresh email in ${cooldown.seconds} s` : 'Send me a fresh confirmation email'}
                 </Button>
               )}
             </motion.div>
@@ -226,9 +272,10 @@ const LoginPage = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 rounded-md text-graphite transition-colors hover:text-siegel-deep"
+                  className="absolute right-1 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-md text-graphite transition-colors hover:text-siegel-deep"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? <EyeOff className="w-5 h-5" aria-hidden="true" /> : <Eye className="w-5 h-5" aria-hidden="true" />}
                 </button>
               </div>
             </div>

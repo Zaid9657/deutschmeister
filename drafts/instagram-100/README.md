@@ -1,12 +1,15 @@
 # 50 posts for Instagram, Facebook and Telegram: one a day, Zapier-ready
 
-**Status: 50 posts rendered, scheduled 2026-10-01 → 2026-11-19, 18:00 Berlin.**
+**Status: 50 posts rendered, scheduled 2026-09-28 → 2026-11-16, ~18:00 Berlin (start moved up by the owner).**
 The first 3 are the samples the owner approved on 2026-09-27; the other 47 follow
-the same template and voice. Nothing self-publishes until the daily Routine
-(`ROUTINE.md`) is switched on with the target account IDs.
+the same template and voice. The daily Routine in `ROUTINE.md` publishes them to
+Instagram (@deutschmeisterde) and the Deutsch Meister Facebook page. Telegram follows later.
 
 The directory name says 100 because that was the first brief. The owner cut it to
 50 on 2026-09-27, and the name stays so earlier links still work.
+
+**Next pack (owner, 2026-09-27):** 2–4 images per post where the content needs it,
+as a carousel. See the "Social posts" line in `CLAUDE.md`.
 
 ## What is where
 | File | What |
