@@ -594,3 +594,25 @@ test('the trial windows and claim-before-send are what section 1 says they are',
   assert.ok(loop.indexOf('.upsert(') < loop.indexOf('await sendBatch(resendKey'), 'claim must come BEFORE the send');
   assert.ok(loop.indexOf('continue;') < loop.indexOf('await sendBatch(resendKey'), 'a failed claim must skip the send');
 });
+
+test('one teal per trial mail: every coloured ground and border is BRAND.siegel', async () => {
+  // #184 moved BRAND.siegel to #0A8276 while the header band still wrote the
+  // old #0F766E, so beside the offer's BRAND buttons a mail showed two teals.
+  // Rule: a trial mail's colours come from _shared/brand.mjs; only greys (the
+  // page ground, card border and rules, chroma below 0.2) are literals.
+  const { BRAND } = await import('../netlify/functions/_shared/brand.mjs');
+  const chroma = (hex) => {
+    const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+    return (Math.max(r, g, b) - Math.min(r, g, b)) / 255;
+  };
+  for (const kind of trial.TRIAL_KINDS) {
+    for (const offer of [null, trial.courseOfferFor('a1', ENV_ALL)]) {
+      const html = render(kind, offer);
+      const grounds = [...html.matchAll(/(?:background|border(?:-top)?):[^;"]*?(#[0-9a-fA-F]{6})/g)]
+        .map((m) => m[1].toLowerCase())
+        .filter((c) => chroma(c) >= 0.2);
+      assert.ok(grounds.length >= 2, `${kind}: expected the header band and a button`);
+      assert.deepEqual([...new Set(grounds)], [BRAND.siegel.toLowerCase()], `${kind}: ${[...new Set(grounds)].join(', ')}`);
+    }
+  }
+});

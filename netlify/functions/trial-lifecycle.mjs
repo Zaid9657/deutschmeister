@@ -133,7 +133,7 @@ const SHELL = ({ heading, body, footerHref, unsubUrl }) => `<!DOCTYPE html>
     <tr><td align="center">
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #e2e8f0;">
         <tr>
-          <td style="background:#0F766E;padding:32px;text-align:center;">
+          <td style="background:${BRAND.siegel};padding:32px;text-align:center;">
             <div style="display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:14px;background:rgba(255,255,255,0.2);margin-bottom:12px;">
               <span style="color:#ffffff;font-size:28px;font-weight:700;font-family:Georgia,'Times New Roman',serif;">M</span>
             </div>
