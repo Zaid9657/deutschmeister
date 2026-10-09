@@ -204,6 +204,7 @@ test('a failing lookup runs the analysis rather than refusing a person', async (
   console.error = () => {};
   try {
     const r = await analyze({ source: sent.unattended });
+    assert.equal(r.lookups, 1, 'the lookup must have run and failed, not been skipped');
     assert.equal(r.res.statusCode, 200);
     assert.equal(r.model, 1);
   } finally {
@@ -225,4 +226,9 @@ test('the page shows the answer as written, and its words name the real button',
   assert.match(UNATTENDED_RESPONSE.body.error, /\bPress Analyze\b/);
   // The ?s= link still pre-fills the sentence, so the press is one click.
   assert.match(page, /useState\(\(\) => searchParams\.get\('s'\) \?\? ''\)/);
+  // The press must arrive as 'typed', which the rule never matches: if the
+  // button ever passed the prefill's 'link' through, every no-referrer arrival
+  // would be refused on every press.
+  assert.match(page, /const analyze = async \(text, entry = 'typed'\) =>/);
+  assert.match(page, /onClick=\{\(\) => analyze\(\)\}/);
 });
