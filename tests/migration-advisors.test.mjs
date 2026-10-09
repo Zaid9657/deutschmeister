@@ -1,5 +1,6 @@
 // Guard: no migration may bring back a Supabase security-advisor finding class
-// that is at zero.
+// that is at zero, or let a client read personal data through a policy that
+// does not name the caller.
 //
 // The security goal is the advisor's ERROR + WARN count. Measured 2026-10-04
 // (get_advisors, read-only): 0 ERROR and 3 WARN, none of them a class this file
@@ -24,6 +25,24 @@
 //   0011       WARN   function_search_path_mutable        a public function with no pinned search_path
 //   0028/0029  WARN   anon/authenticated_security_        a SECURITY DEFINER function that PUBLIC,
 //                     definer_function_executable         anon or authenticated can EXECUTE
+//   PII        —      personal_data_open_read             a permissive SELECT or ALL policy for PUBLIC,
+//                                                         anon or authenticated whose USING does not
+//                                                         name the caller, on a table holding personal
+//                                                         data (an email, IP, user agent, phone, name,
+//                                                         birth date or user_id column)
+//
+// PII is not an advisor lint, which is why it is here: get_advisors raises
+// nothing for a read policy USING (true) (2026-10-09, while the content tables
+// carry several), so the advisor count cannot see an account reading other
+// people's rows. A content table may be read openly; a table that identifies a
+// person is read through auth.uid() / auth.jwt() in USING, or not at all from a
+// client (the service role needs no policy). "Names the caller" excludes the
+// two spellings that admit every account: `auth.uid() IS NOT NULL` and
+// `auth.jwt() ->> 'role'`. Which tables hold personal data comes from the
+// columns a migration declares or adds, plus the live column names in
+// tests/fixtures/db-schema.json for tables made outside migrations/. The live
+// policies themselves are measured by the security agent's weekly run
+// (pg_policies, read-only); this file keeps migrations from adding to them.
 //
 // What the replay models (each fact is pinned by a scanner test below):
 // - CREATE OR REPLACE VIEW replaces the view's options with the ones it names,
@@ -41,6 +60,13 @@
 //   function a migration here created as SECURITY INVOKER. On any other
 //   function the replay cannot tell whether it re-opens a definer function, so
 //   it refuses (deny by default).
+// - CREATE POLICY defaults to FOR ALL and TO PUBLIC; ALTER POLICY replaces
+//   only the clauses it names; DROP POLICY, DROP TABLE and a table rename carry
+//   the policies with them. A permissive policy without USING adds no qual, so
+//   it admits no row to read. A policy built in a DO block is judged on the
+//   tables the block names: an open read is allowed only if every named table
+//   is known and none holds personal data, and a block that names no known
+//   table, or splices the statement from pieces, is refused.
 // - Applied migrations are records of what ran, so a violation in one is fixed
 //   by a later file, never by an edit. The newest file has no later one, so a
 //   new migration must be complete on its own — PROTOCOL rule 4: RLS on every
@@ -233,6 +259,99 @@ function securityInvoker(options) {
 }
 
 // ---------------------------------------------------------------------------
+// policies: personal data is read through the caller, never through USING (true)
+// ---------------------------------------------------------------------------
+
+/** One identifier as Postgres stores it: quoted keeps its case, unquoted folds. */
+const ident = (s) => (s.startsWith('"') ? s.slice(1, -1).replace(/""/g, '"') : s.toLowerCase());
+
+/**
+ * A column that identifies a person: an address, a device trace, a phone
+ * number, a name, a birth date, or the account id a row belongs to.
+ */
+export const PERSONAL_COLUMN = /^(?:[a-z_]*e_?mail[a-z_]*|ip|ip_address|[a-z_]+_ip|user_agent|phone|phone_number|[a-z_]+_phone|user_id|full_name|first_name|last_name|display_name|date_of_birth|birth_?date)$/i;
+
+// `auth.uid()`, `(select auth.uid())`, and the form pg_policies stores: `( SELECT auth.uid() AS uid)`.
+const CALLER = String.raw`\(?\s*(?:SELECT\s+)?auth\s*\.\s*(?:uid|jwt|email)\s*\(\s*\)(?:\s+AS\s+\w+)?\s*\)?`;
+
+/**
+ * Does a policy's USING expression tie the row to the caller? It must read
+ * auth.uid(), auth.jwt() or auth.email(). Reading the caller only to admit
+ * every account does not count: `auth.uid() IS NOT NULL` and
+ * `auth.jwt() ->> 'role' = 'authenticated'` are USING (true) for signed-in
+ * users. An absent USING admits no row (a permissive policy without one adds
+ * no qual), so it is not an open read.
+ */
+export function namesTheCaller(using) {
+  if (using === undefined) return true;
+  const rest = using
+    .replace(new RegExp(`${CALLER}\\s*IS\\s+(?:NOT\\s+)?NULL`, 'gi'), ' ')
+    .replace(new RegExp(`${CALLER}\\s*->>?\\s*'role'(?:\\s*::\\s*text)?`, 'gi'), ' ');
+  return new RegExp(CALLER, 'i').test(rest);
+}
+
+/** The text inside the parenthesis that opens at s[open] → [inner, index of the closing paren]. */
+function balanced(s, open) {
+  let depth = 0;
+  for (let j = open; j < s.length; j += 1) {
+    const ch = s[j];
+    if (ch === "'" || ch === '"') {
+      let k = j + 1;
+      while (k < s.length && !(s[k] === ch && s[k + 1] !== ch)) k += s[k] === ch ? 2 : 1;
+      j = k;
+      continue;
+    }
+    if (ch === '(') depth += 1;
+    if (ch === ')') {
+      depth -= 1;
+      if (depth === 0) return [s.slice(open + 1, j).trim(), j];
+    }
+  }
+  return [s.slice(open + 1).trim(), s.length];
+}
+
+/**
+ * The clauses after `CREATE POLICY name ON table` or `ALTER POLICY name ON
+ * table`, in the order the grammar fixes: AS, FOR, TO, USING, WITH CHECK (or
+ * RENAME TO). A clause the statement leaves out comes back undefined.
+ */
+export function policyClauses(rest) {
+  const out = {};
+  let s = rest.trim();
+  let m;
+  if ((m = new RegExp(String.raw`^RENAME\s+TO\s+(${IDENT})`, 'i').exec(s))) {
+    out.rename = ident(m[1]);
+    return out;
+  }
+  if ((m = /^AS\s+(PERMISSIVE|RESTRICTIVE)\b\s*/i.exec(s))) {
+    out.restrictive = /^R/i.test(m[1]);
+    s = s.slice(m[0].length);
+  }
+  if ((m = /^FOR\s+(ALL|SELECT|INSERT|UPDATE|DELETE)\b\s*/i.exec(s))) {
+    out.cmd = m[1].toUpperCase();
+    s = s.slice(m[0].length);
+  }
+  if ((m = /^TO\s+([\s\S]*?)\s*(?=\bUSING\b|\bWITH\s+CHECK\b|$)/i.exec(s))) {
+    out.roles = m[1].split(',').map((r) => r.replace(/"/g, '').trim().toLowerCase()).filter(Boolean);
+    s = s.slice(m[0].length).trim();
+  }
+  if ((m = /^USING\s*\(/i.exec(s))) {
+    const [inner, end] = balanced(s, m[0].length - 1);
+    out.using = inner;
+    s = s.slice(end + 1).trim();
+  }
+  if ((m = /^WITH\s+CHECK\s*\(/i.exec(s))) out.check = balanced(s, m[0].length - 1)[0];
+  return out;
+}
+
+/** A role list a client can act under: PUBLIC, anon, authenticated, or one the replay cannot read. */
+const reachesClients = (roles) => roles.some((r) => CLIENT_ROLES.includes(r) || /%/.test(r));
+
+/** Does this policy let a client read rows the USING does not tie to the caller? */
+const opensReads = (p) => !p.restrictive && (p.cmd === 'SELECT' || p.cmd === 'ALL')
+  && reachesClients([...p.roles]) && !namesTheCaller(p.using);
+
+// ---------------------------------------------------------------------------
 // the replay
 // ---------------------------------------------------------------------------
 
@@ -246,6 +365,21 @@ const ALTER_FN = new RegExp(String.raw`^ALTER\s+(?:FUNCTION|PROCEDURE|ROUTINE)\s
 const DROP = new RegExp(String.raw`^DROP\s+(TABLE|VIEW|MATERIALIZED\s+VIEW|FUNCTION|PROCEDURE|ROUTINE)\s+(?:IF\s+EXISTS\s+)?([\s\S]+?)\s*(?:\bCASCADE\b|\bRESTRICT\b)?\s*$`, 'i');
 const PRIV_FN = /^(GRANT|REVOKE)\s+(GRANT\s+OPTION\s+FOR\s+)?([\s\S]+?)\s+ON\s+(?:(?:FUNCTION|ROUTINE|PROCEDURE)\s+([\s\S]+?)|ALL\s+(?:FUNCTIONS|ROUTINES|PROCEDURES)\s+IN\s+SCHEMA\s+([\s\S]+?))\s+(?:TO|FROM)\s+([\s\S]+)$/i;
 const PRIV_TABLE = /^(GRANT|REVOKE)\s+(GRANT\s+OPTION\s+FOR\s+)?([\s\S]+?)\s+ON\s+(?:TABLE\s+)?(?!(?:FUNCTION|ROUTINE|PROCEDURE|SEQUENCE|SCHEMA|DATABASE|DOMAIN|TYPE|LANGUAGE|LARGE|FOREIGN|TABLESPACE|PARAMETER)\b)(?:ALL\s+TABLES\s+IN\s+SCHEMA\s+([\s\S]+?)|([\s\S]+?))\s+(?:TO|FROM)\s+([\s\S]+)$/i;
+const CREATE_POLICY = new RegExp(String.raw`^CREATE\s+POLICY\s+(${IDENT})\s+ON\s+(${QNAME})\s*([\s\S]*)$`, 'i');
+const ALTER_POLICY = new RegExp(String.raw`^ALTER\s+POLICY\s+(${IDENT})\s+ON\s+(${QNAME})\s*([\s\S]*)$`, 'i');
+const DROP_POLICY = new RegExp(String.raw`^DROP\s+POLICY\s+(?:IF\s+EXISTS\s+)?(${IDENT})\s+ON\s+(${QNAME})`, 'i');
+const TABLE_ELEMENT_KEYWORD = /^(?:CONSTRAINT|PRIMARY|UNIQUE|CHECK|FOREIGN|EXCLUDE|LIKE)\b/i;
+
+/** Column names of a CREATE TABLE's element list (`code` from the table name on). */
+function declaredColumns(afterName) {
+  const open = afterName.indexOf('(');
+  if (open === -1 || /^\s*(?:AS|PARTITION\s+OF|OF)\b/i.test(afterName)) return [];
+  return splitTopLevel(balanced(afterName, open)[0])
+    .filter((el) => !TABLE_ELEMENT_KEYWORD.test(el))
+    .map((el) => new RegExp(`^${IDENT}`).exec(el)?.[0])
+    .filter(Boolean)
+    .map(ident);
+}
 
 /** Dynamic SQL in a DO block that the replay could not follow. */
 const DO_FORBIDDEN = [
@@ -290,12 +424,35 @@ function blankInertLiterals(text) {
  * a rule at the moment it ran (grants the replay cannot verify, DO blocks it
  * cannot follow).
  */
-export function replay(files) {
+export function replay(files, liveColumns = new Map()) {
   const tables = new Map(); // key -> { rls, file }
   const views = new Map(); // key -> { invoker, authUsers, materialized, select:Set, file }
   const fns = new Map(); // key -> { created, definer, path, exec:Set, file }
+  // key -> Set of column names: the live schema for tables made outside
+  // migrations/, plus every column a migration declares or adds.
+  const columns = new Map([...liveColumns].map(([k, cols]) => [k, new Set(cols)]));
+  const policies = new Map(); // `${table}\u0000${name}` -> { table, name, restrictive, cmd, roles:Set, using, file }
   const immediate = [];
   let doBlocks = 0;
+
+  const colsOf = (k) => {
+    if (!columns.has(k)) columns.set(k, new Set());
+    return columns.get(k);
+  };
+  const pkey = (table, name) => `${table}\u0000${name}`;
+  const policiesOn = (table) => [...policies.keys()].filter((pk) => pk.startsWith(`${table}\u0000`));
+  const moveTable = (from, to) => {
+    if (columns.has(from)) columns.set(to, columns.get(from));
+    columns.delete(from);
+    for (const pk of policiesOn(from)) {
+      const p = policies.get(pk);
+      policies.delete(pk);
+      if (inPublic(to)) policies.set(pkey(to, p.name), { ...p, table: to });
+    }
+  };
+  /** Tables a DO body names, among those the replay knows the columns of. */
+  const knownTablesIn = (text) => [...new Set([...text.matchAll(/[A-Za-z_][\w$]*/g)].map(([w]) => `public.${w.toLowerCase()}`))]
+    .filter((k) => columns.has(k));
 
   const fnEntry = (k, file) => {
     if (!fns.has(k)) fns.set(k, { created: false, definer: undefined, path: undefined, exec: new Set(CLIENT_ROLES), file });
@@ -328,6 +485,25 @@ export function replay(files) {
         for (const [re, what] of DO_FORBIDDEN) {
           if (re.test(text)) immediate.push(`${file}: a DO block ${what}; write it as a plain statement this guard can read`);
         }
+        // A policy built as dynamic SQL: judge it on the tables the block names.
+        // An open client read is allowed only when every table the block names
+        // is known and none holds personal data; a block that names no known
+        // table cannot be judged, so it is refused.
+        const built = [...text.matchAll(/\b(CREATE|ALTER)\s+POLICY\s+(?!')\S+\s+ON\s+(?!')\S+\s*([^';]*)/gi)];
+        if (built.length < (text.match(/\b(?:CREATE|ALTER)\s+POLICY\b/gi) ?? []).length) {
+          immediate.push(`${file}: a DO block builds a policy from pieces this guard cannot read; write it as one format() string or a plain statement`);
+        }
+        for (const [, verb, rest] of built) {
+          const c = policyClauses(rest.replace(/\s+/g, ' '));
+          const p = { restrictive: !!c.restrictive, cmd: c.cmd ?? 'ALL', roles: new Set(c.roles ?? (verb.toUpperCase() === 'CREATE' ? ['public'] : ['%'])), using: c.using };
+          if (verb.toUpperCase() === 'ALTER' && c.using === undefined) continue;
+          if (!opensReads(p)) continue;
+          const named = knownTablesIn(stripLineComments(st.body));
+          const personal = named.filter((k) => [...columns.get(k)].some((col) => PERSONAL_COLUMN.test(col)));
+          if (!named.length || personal.length) {
+            immediate.push(`${file}: a DO block builds a client read policy whose USING does not name the caller, on ${personal.length ? personal.join(', ') : 'a table this guard cannot read'}; write it as a plain CREATE POLICY`);
+          }
+        }
         continue;
       }
 
@@ -335,6 +511,51 @@ export function replay(files) {
         const k = key(m[2]);
         if (/^TEMP/i.test(m[1] ?? '') || !inPublic(k)) continue;
         if (!tables.has(k)) tables.set(k, { rls: false, file });
+        declaredColumns(code.slice(m[0].length)).forEach((col) => colsOf(k).add(col));
+        continue;
+      }
+
+      if ((m = CREATE_POLICY.exec(code))) {
+        const t = key(m[2]);
+        if (!inPublic(t)) continue;
+        const c = policyClauses(m[3]);
+        policies.set(pkey(t, ident(m[1])), {
+          table: t,
+          name: ident(m[1]),
+          restrictive: !!c.restrictive,
+          cmd: c.cmd ?? 'ALL',
+          roles: new Set(c.roles ?? ['public']),
+          using: c.using,
+          file,
+        });
+        continue;
+      }
+
+      if ((m = ALTER_POLICY.exec(code))) {
+        const t = key(m[2]);
+        if (!inPublic(t)) continue;
+        const pk = pkey(t, ident(m[1]));
+        const c = policyClauses(m[3]);
+        if (c.rename) {
+          if (policies.has(pk)) policies.set(pkey(t, c.rename), { ...policies.get(pk), name: c.rename, file });
+          policies.delete(pk);
+          continue;
+        }
+        // A policy made outside migrations/ has an unknown command and USING:
+        // it is judged once an ALTER gives it a USING, as if it were FOR ALL.
+        if (!policies.has(pk)) {
+          if (c.using === undefined) continue;
+          policies.set(pk, { table: t, name: ident(m[1]), restrictive: false, cmd: 'ALL', roles: new Set(['public']), using: undefined, file });
+        }
+        const p = policies.get(pk);
+        if (c.roles) p.roles = new Set(c.roles);
+        if (c.using !== undefined) p.using = c.using;
+        p.file = file;
+        continue;
+      }
+
+      if ((m = DROP_POLICY.exec(code))) {
+        policies.delete(pkey(key(m[2]), ident(m[1])));
         continue;
       }
 
@@ -375,6 +596,10 @@ export function replay(files) {
           applyViewOptions(views.get(k), rest, file);
           continue;
         }
+        const renamedTo = new RegExp(String.raw`^RENAME\s+TO\s+(${IDENT})\s*$`, 'i').exec(rest);
+        if (renamedTo) moveTable(k, key(renamedTo[1]));
+        else if (/^SET\s+SCHEMA\b/i.test(rest)) moveTable(k, `moved:${k}`);
+        else alterColumns(k, rest);
         if (rename(tables, k, rest)) continue;
         if (/\bENABLE\s+ROW\s+LEVEL\s+SECURITY\b/i.test(rest)) {
           if (!tables.has(k)) tables.set(k, { rls: true, file });
@@ -415,6 +640,12 @@ export function replay(files) {
         const map = kind === 'TABLE' ? tables : /VIEW/.test(kind) ? views : fns;
         const keys = /VIEW|TABLE/.test(kind) ? splitTopLevel(m[2]).map(key) : fnKeys(m[2]);
         keys.forEach((k) => map.delete(k));
+        if (kind === 'TABLE') {
+          for (const k of keys) {
+            columns.delete(k);
+            policiesOn(k).forEach((pk) => policies.delete(pk));
+          }
+        }
         continue;
       }
 
@@ -461,7 +692,23 @@ export function replay(files) {
       }
     }
   }
-  return { tables, views, fns, immediate, doBlocks };
+  return { tables, views, fns, columns, policies, immediate, doBlocks };
+
+  function alterColumns(k, rest) {
+    for (const action of splitTopLevel(rest)) {
+      let c;
+      if (/^ADD\s+/i.test(action) && TABLE_ELEMENT_KEYWORD.test(action.replace(/^ADD\s+/i, ''))) continue;
+      if (/^DROP\s+CONSTRAINT\b/i.test(action)) continue;
+      if ((c = new RegExp(String.raw`^ADD\s+(?:COLUMN\s+)?(?:IF\s+NOT\s+EXISTS\s+)?(${IDENT})`, 'i').exec(action))) {
+        colsOf(k).add(ident(c[1]));
+      } else if ((c = new RegExp(String.raw`^RENAME\s+(?:COLUMN\s+)?(${IDENT})\s+TO\s+(${IDENT})`, 'i').exec(action))) {
+        colsOf(k).delete(ident(c[1]));
+        colsOf(k).add(ident(c[2]));
+      } else if ((c = new RegExp(String.raw`^DROP\s+(?:COLUMN\s+)?(?:IF\s+EXISTS\s+)?(${IDENT})`, 'i').exec(action))) {
+        colsOf(k).delete(ident(c[1]));
+      }
+    }
+  }
 
   function applyViewOptions(v, rest, file) {
     const set = /\bSET\s*\(([^)]*)\)/i.exec(rest);
@@ -472,9 +719,15 @@ export function replay(files) {
 }
 
 /** Every advisor finding the replayed end state would raise, plus every rule broken on the way. */
-export function violations(files) {
-  const { tables, views, fns, immediate } = replay(files);
+export function violations(files, liveColumns) {
+  const { tables, views, fns, columns, policies, immediate } = replay(files, liveColumns);
   const out = [...immediate];
+  for (const p of policies.values()) {
+    const personal = [...(columns.get(p.table) ?? [])].filter((col) => PERSONAL_COLUMN.test(col)).sort();
+    if (personal.length && opensReads(p)) {
+      out.push(`PII personal_data_open_read: ${p.table} (${p.file}) policy "${p.name}" lets ${[...p.roles].join(', ')} read every row (USING ${p.using === undefined ? 'absent' : `(${p.using})`}) of a table holding ${personal.join(', ')} — tie USING to the caller (auth.uid() = user_id, or an admin check through auth.jwt()), or DROP POLICY and read it with the service role`);
+    }
+  }
   for (const [k, t] of tables) {
     if (!t.rls) out.push(`0013 rls_disabled_in_public: ${k} (${t.file}) — add ALTER TABLE ${k} ENABLE ROW LEVEL SECURITY;`);
   }
@@ -648,7 +901,7 @@ test('a DO block may not hide what the replay would judge', () => {
   assert.deepEqual(codes(T(doBlock("EXECUTE 'ALTER TABLE public.t ENABLE ROW LEVEL SECURITY';"))), ['0013']);
   for (const ok of [
     "EXECUTE format('ALTER TABLE public.%I ENABLE ROW LEVEL SECURITY', t);",
-    "EXECUTE format('CREATE POLICY %I ON public.%I FOR SELECT TO anon USING (true)', p, t);",
+    // An open read policy built in a loop is judged on the tables the loop names: see the PII test.
     "IF NOT (SELECT relrowsecurity FROM pg_class WHERE oid = 'public.t'::regclass) THEN RAISE EXCEPTION 'row level security is off'; END IF;",
     '-- CREATE TABLE in a comment is not SQL',
     // Read-only guards in the style of the agent_heartbeats/agent_incidents files (review of 49c0f639).
@@ -663,14 +916,113 @@ test('a DO block may not hide what the replay would judge', () => {
   }
 });
 
+test('PII: a client read policy on a table holding personal data must name the caller in USING', () => {
+  const P = "CREATE TABLE IF NOT EXISTS public.p (id uuid PRIMARY KEY, user_id uuid NOT NULL, note text, CONSTRAINT p_note CHECK (note <> ''));\nALTER TABLE public.p ENABLE ROW LEVEL SECURITY;\n";
+  const C = 'CREATE TABLE public.c (id int, level text);\nALTER TABLE public.c ENABLE ROW LEVEL SECURITY;\n';
+  const pol = (clauses, table = 'public.p') => `CREATE POLICY pol ON ${table} ${clauses};\n`;
+  const OPEN = pol('FOR SELECT TO authenticated USING (true)');
+
+  for (const open of [
+    'FOR SELECT TO authenticated USING (true)',
+    'FOR SELECT USING (true)', // no TO: PUBLIC
+    'USING (true)', // no FOR: ALL
+    'AS PERMISSIVE FOR ALL TO anon, authenticated USING (true) WITH CHECK (auth.uid() = user_id)',
+    'FOR SELECT TO "authenticated" USING (1 = 1)',
+    'FOR SELECT TO authenticated USING (auth.uid() IS NOT NULL)',
+    'FOR SELECT TO authenticated USING ((SELECT auth.uid()) is not null)',
+    "FOR SELECT TO authenticated USING ((auth.jwt() ->> 'role'::text) = 'authenticated'::text)",
+    "FOR SELECT TO authenticated USING (auth.role() = 'authenticated')",
+  ]) {
+    assert.deepEqual(codes(P + pol(open)), ['PII'], open);
+  }
+  for (const closed of [
+    'FOR SELECT TO authenticated USING (auth.uid() = user_id)',
+    'FOR SELECT TO authenticated USING ((select auth.uid()) = user_id)',
+    "FOR SELECT TO authenticated USING (lower((select auth.jwt()) ->> 'email') IN ('admin@example.com'))",
+    'FOR SELECT TO authenticated USING (auth.uid() IS NOT NULL AND auth.uid() = user_id)',
+    "FOR SELECT TO authenticated USING (note = 'a) or (true' AND auth.uid() = user_id)",
+    'AS RESTRICTIVE FOR SELECT TO authenticated USING (true)',
+    'FOR INSERT TO anon WITH CHECK (true)',
+    'FOR SELECT TO service_role USING (true)',
+    'FOR ALL TO authenticated WITH CHECK (auth.uid() = user_id)', // no USING: a permissive policy without one admits no row
+  ]) {
+    assert.deepEqual(one(P + pol(closed)), [], closed);
+  }
+
+  // A table with no personal column may be read openly: the content tables are.
+  assert.deepEqual(one(C + pol('FOR SELECT TO anon USING (true)', 'public.c')), []);
+  assert.deepEqual(codes(`${C}${pol('FOR SELECT TO anon USING (true)', 'c')}ALTER TABLE public.c ADD COLUMN IF NOT EXISTS contact_email text;`), ['PII'],
+    'a personal column added later makes the open read a finding');
+  assert.deepEqual(codes(`${C}${pol('FOR SELECT TO anon USING (true)', 'public.c')}ALTER TABLE public.c RENAME COLUMN level TO ip_address;`), ['PII']);
+  assert.deepEqual(one(`${P}${OPEN}ALTER TABLE public.p DROP COLUMN IF EXISTS user_id;`), [], 'the personal column is gone');
+  assert.deepEqual(one(`${C}${pol('FOR SELECT TO anon USING (true)', 'public.c')}ALTER TABLE public.c ADD CONSTRAINT user_email CHECK (level <> ''), DROP CONSTRAINT IF EXISTS email;`), [],
+    'a constraint is not a column, whatever its name');
+
+  // Later files and statements: applied records are completed, never edited.
+  assert.deepEqual(violations([['1.sql', P + OPEN], ['2.sql', 'DROP POLICY IF EXISTS pol ON public.p;']]), []);
+  assert.deepEqual(violations([['1.sql', P + OPEN], ['2.sql', 'ALTER POLICY pol ON public.p USING (auth.uid() = user_id);']]), []);
+  assert.deepEqual(violations([['1.sql', P + OPEN], ['2.sql', 'ALTER POLICY pol ON public.p TO service_role;']]), []);
+  assert.deepEqual(violations([['1.sql', P + pol('FOR SELECT TO authenticated USING (auth.uid() = user_id)')], ['2.sql', 'ALTER POLICY pol ON public.p USING (true);']]).map((v) => v.split(' ')[0]), ['PII']);
+  assert.match(violations([['1.sql', P + OPEN], ['2.sql', 'ALTER POLICY pol ON public.p RENAME TO pol2;']])[0], /policy "pol2"/, 'a rename keeps it open');
+  assert.deepEqual(one(`${P}CREATE POLICY "Only staff" ON public.p FOR SELECT TO authenticated USING (true);\nDROP POLICY IF EXISTS "Only staff" ON public.p;`), []);
+  assert.deepEqual(one(`${P}CREATE POLICY Pol ON public.p FOR SELECT USING (true);\nDROP POLICY pol ON p;`), [], 'unquoted names fold');
+  assert.deepEqual(codes(`${P}CREATE POLICY "Pol" ON public.p FOR SELECT USING (true);\nDROP POLICY pol ON public.p;`), ['PII'], 'a quoted name keeps its case');
+  assert.deepEqual(one(`${P}${OPEN}DROP TABLE public.p;`), [], 'a dropped table takes its policies with it');
+  assert.match(one(`${P}${OPEN}ALTER TABLE public.p RENAME TO q;`)[0], /^PII personal_data_open_read: public\.q /, 'policies follow a renamed table');
+  assert.deepEqual(one(`${P}-- ${OPEN}`), [], 'a commented policy is not a statement');
+
+  // A table made outside migrations/ is judged from the live schema (tests/fixtures/db-schema.json).
+  const legacy = 'CREATE POLICY "Readers" ON public.legacy FOR SELECT TO authenticated USING (true);';
+  assert.deepEqual(violations([['m.sql', legacy]], new Map([['public.legacy', ['id', 'email', 'created_at']]])).map((v) => v.split(' ')[0]), ['PII']);
+  assert.deepEqual(violations([['m.sql', legacy]], new Map([['public.legacy', ['id', 'title']]])), []);
+  assert.deepEqual(violations([['m.sql', 'ALTER POLICY "Readers" ON public.legacy USING (true);']], new Map([['public.legacy', ['email']]])).map((v) => v.split(' ')[0]), ['PII'],
+    'an ALTER that opens a policy made outside migrations/ is judged as FOR ALL TO PUBLIC');
+
+  // Dynamic SQL: an open read policy built in a DO block is judged on the tables the block names.
+  const loop = (tables, using = 'true') => `DO $$ DECLARE t text; BEGIN FOREACH t IN ARRAY ARRAY[${tables}] LOOP EXECUTE format('CREATE POLICY %I ON public.%I FOR SELECT TO anon USING (${using})', 'r_' || t, t); END LOOP; END $$;`;
+  assert.deepEqual(one(C + loop("'c'")), [], 'a loop over content tables, as in 2026-08-16-enable-rls-on-unprotected-tables.sql');
+  assert.match(one(P + C + loop("'c', 'p'")).join('\n'), /DO block builds a client read policy .* on public\.p;/);
+  assert.match(one(loop("'nowhere'")).join('\n'), /on a table this guard cannot read/, 'a block that names no known table is refused');
+  assert.deepEqual(one(P + loop("'p'", 'auth.uid() = user_id')), [], 'a DO policy that names the caller is fine');
+  assert.match(one(`${P}DO $$ BEGIN EXECUTE 'CREATE POLICY ' || quote_ident('x') || ' ON public.p FOR SELECT USING (true)'; END $$;`).join('\n'), /from pieces/);
+  assert.deepEqual(one(`${P}DO $$ BEGIN RAISE NOTICE 'CREATE POLICY x ON public.p USING (true)'; END $$;`), [], 'a message is not dynamic SQL');
+});
+
+test('PII: the clause parser and the caller test read real policy text', () => {
+  assert.deepEqual(policyClauses('AS RESTRICTIVE FOR SELECT TO anon, "authenticated" USING (a = (b)) WITH CHECK (c)'),
+    { restrictive: true, cmd: 'SELECT', roles: ['anon', 'authenticated'], using: 'a = (b)', check: 'c' });
+  assert.deepEqual(policyClauses('FOR UPDATE USING (x) WITH CHECK (y)'), { cmd: 'UPDATE', using: 'x', check: 'y' });
+  assert.deepEqual(policyClauses('RENAME TO "New Name"'), { rename: 'New Name' });
+  // Postgres stores USING normalised (pg_policies.qual); both spellings must read the same.
+  for (const [qual, names] of [
+    ['(auth.uid() = user_id)', true],
+    ["(lower((( SELECT auth.jwt() AS jwt) ->> 'email'::text)) = ANY (ARRAY['a@example.com'::text]))", true],
+    ['(( SELECT auth.uid() AS uid) IS NOT NULL)', false],
+    ['true', false],
+    [undefined, true],
+  ]) {
+    assert.equal(namesTheCaller(qual), names, String(qual));
+  }
+  for (const col of ['email', 'user_email', 'email_daily_sentence', 'ip_address', 'client_ip', 'user_agent', 'phone', 'user_id', 'full_name']) {
+    assert.ok(PERSONAL_COLUMN.test(col), col);
+  }
+  for (const col of ['id', 'level', 'title', 'status', 'created_at', 'name', 'description', 'example_sentence']) {
+    assert.ok(!PERSONAL_COLUMN.test(col), col);
+  }
+});
+
 // ---------------------------------------------------------------------------
 // the rule, over the real migrations
 // ---------------------------------------------------------------------------
 
 const REAL = FILES.map((f) => [f, read(f)]);
+// The live column names (dumped from information_schema): tables made outside
+// migrations/ are judged by what production has.
+const SCHEMA = JSON.parse(readFileSync(new URL('./fixtures/db-schema.json', import.meta.url), 'utf8'));
+const LIVE = new Map(Object.entries(SCHEMA.tables).map(([t, cols]) => [`public.${t}`, cols]));
 
 test('the replay sees the real migrations (coverage floor)', () => {
-  const { tables, views, fns, doBlocks } = replay(REAL);
+  const { tables, views, fns, columns, policies, doBlocks } = replay(REAL, LIVE);
   assert.ok(FILES.length >= 60, `expected the migrations folder, saw ${FILES.length} files`);
   assert.ok(tables.size >= 24, `expected the created and RLS-enabled tables, saw ${tables.size}`);
   assert.ok(doBlocks >= 8, `expected the DO blocks, saw ${doBlocks}`);
@@ -691,8 +1043,20 @@ test('the replay sees the real migrations (coverage floor)', () => {
   }
   for (const k of definers) assert.deepEqual([...fns.get(k).exec], [], `${k} is closed to clients`);
   assert.equal(fns.get('public.protect_profile_privileged_columns')?.definer, false, 'the privileged-column trigger stays SECURITY INVOKER');
+
+  // PII: the replay reads the policies, and the live schema tells it which
+  // tables made outside migrations/ hold personal data.
+  const personal = (t) => [...(columns.get(t) ?? [])].some((c) => PERSONAL_COLUMN.test(c));
+  const clientReads = [...policies.values()].filter((p) => personal(p.table) && !p.restrictive
+    && ['SELECT', 'ALL'].includes(p.cmd) && [...p.roles].some((r) => CLIENT_ROLES.includes(r)));
+  assert.ok(clientReads.length >= 10, `expected the own-row read policies on personal tables, saw ${clientReads.length}`);
+  for (const p of clientReads) assert.ok(namesTheCaller(p.using), `${p.table} "${p.name}" ties USING to the caller`);
+  assert.ok(clientReads.some((p) => p.table === 'public.lesson_progress'), 'the replay sees the lesson_progress own-row read');
+  assert.ok(LIVE.size >= 60 && personal('public.profiles'), 'the live schema seeds the tables made outside migrations/');
+  assert.ok(violations(REAL).some((v) => /DO block builds a client read policy/.test(v)),
+    'without the live schema the 2026-08-16 content loop names no known table and is refused, so the schema is what clears it');
 });
 
-test('no migration leaves behind an advisor finding class that is at 0', () => {
-  assert.deepEqual(violations(REAL), []);
+test('no migration leaves behind an advisor finding class that is at 0, or an open read of personal data', () => {
+  assert.deepEqual(violations(REAL, LIVE), []);
 });

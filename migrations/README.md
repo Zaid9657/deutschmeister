@@ -99,6 +99,10 @@ Some live objects were created by hand before this folder existed. They are reco
   `WITH (security_invoker = true)` (a replace drops it), a function without `SET search_path`,
   a `SECURITY DEFINER` function still executable by `PUBLIC`, `anon` or `authenticated`, or
   any of those done inside a `DO` block, which it cannot read. A new file must pass on its own.
+  It also fails on a class the advisor does not lint: a client read policy (`FOR SELECT` or
+  `ALL`, to `PUBLIC`, `anon` or `authenticated`) whose `USING` does not name the caller
+  (`auth.uid()`, `auth.jwt()`; `IS NOT NULL` does not count) on a table with an email, IP,
+  user-agent, phone, name, birth-date or `user_id` column. Content tables may be read openly.
 
 ## Legacy SQL at the repo root
 
