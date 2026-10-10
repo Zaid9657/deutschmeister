@@ -26,6 +26,12 @@ export const SubscriptionProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const lastRefreshRef = useRef(0);
   const prevUserIdRef = useRef(null);
+  // The account whose data is on screen. A reload for that same account (tab
+  // return, refreshSubscription after a save or a checkout) runs in the
+  // background: the guards render a spinner while `loading` is true, so
+  // flipping it unmounted the page underneath and reset whatever the learner
+  // was doing (docs/auth-audit-2026-10-06.md, F5).
+  const loadedForRef = useRef(null);
 
   // When user changes (login/logout), immediately set loading=true so the
   // guard never sees a stale hasAccess=false between user change and data load.
@@ -45,6 +51,7 @@ export const SubscriptionProvider = ({ children }) => {
     if (authLoading) return;
 
     if (!user) {
+      loadedForRef.current = null;
       setSubscription(null);
       setProfile(null);
       setPurchases([]);
@@ -52,7 +59,7 @@ export const SubscriptionProvider = ({ children }) => {
       return;
     }
 
-    setLoading(true);
+    if (loadedForRef.current !== user.id) setLoading(true);
 
     try {
       // Timeout so a hung network resolves to the logged-in-but-unverified
@@ -96,6 +103,7 @@ export const SubscriptionProvider = ({ children }) => {
       currentProfile = await settlePendingPlacement(user.id, currentProfile);
 
       setProfile(currentProfile);
+      loadedForRef.current = user.id;
     } catch (error) {
       console.error('Error loading subscription data:', error);
     } finally {

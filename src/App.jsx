@@ -18,8 +18,6 @@ import EmailVerificationGate from './components/EmailVerificationGate';
 import OnboardingGate from './components/onboarding/OnboardingGate';
 import TrialBanner from './components/TrialBanner';
 import FloatingIntroButton from './components/FloatingIntroButton';
-import SessionTimeoutModal from './components/SessionTimeoutModal';
-import { useSessionTimeout } from './hooks/useSessionTimeout';
 import { chromeFor } from './lib/chrome.js';
 import { Loader2 } from 'lucide-react';
 
@@ -82,11 +80,6 @@ function PageLoader() {
   );
 }
 
-function SessionTimeoutWrapper() {
-  const { showWarning, stayLoggedIn } = useSessionTimeout();
-  return <SessionTimeoutModal show={showWarning} onStay={stayLoggedIn} />;
-}
-
 /**
  * App chrome that must NOT render inside the admin panel: the panel owns its
  * own shell (sidebar, banner, filter bar) and the learner-facing floating
@@ -127,7 +120,6 @@ function Shell() {
                     FirstRunTour's first-run tooltip in the same bottom-left corner
                     (docs/evaluation/screenshots/a11-w1-home.jpg). */}
                 {!focused && chrome !== 'course' && <OutsideAdmin><FloatingIntroButton /></OutsideAdmin>}
-                <SessionTimeoutWrapper />
                 {/* min-h-screen reserves the page's height across route swaps. A
                     guard that redirects (ProtectedRoute's <Navigate>) commits an
                     EMPTY main for a frame; without the floor the footer jumped
@@ -319,7 +311,7 @@ function Shell() {
                     <Route
                       path="/dashboard"
                       element={
-                        <SubscriptionGuard>
+                        <SubscriptionGuard freeHome>
                           <EmailVerificationGate>
                             <OnboardingGate>
                               <DashboardPage />
@@ -331,13 +323,13 @@ function Shell() {
                     <Route
                       path="/profile"
                       element={
-                        <SubscriptionGuard>
+                        <ProtectedRoute>
                           <EmailVerificationGate>
                             <OnboardingGate>
                               <ProfilePage />
                             </OnboardingGate>
                           </EmailVerificationGate>
-                        </SubscriptionGuard>
+                        </ProtectedRoute>
                       }
                     />
 

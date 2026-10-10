@@ -6,6 +6,11 @@ import { trackSignupCompleted } from '../lib/funnelTracking';
 import { claimSignupCompletion } from '../lib/signupCompletion';
 import { logAuditEvent, AUDIT_EVENTS } from '../lib/auditLogger';
 import { withTimeout } from '../utils/withTimeout';
+import { sameAuthUser } from '../lib/authUser';
+
+// Keep the user on screen when an auth event carries the same person again
+// (tab return, hourly token refresh): see src/lib/authUser.js.
+const keepIfSame = (next) => (prev) => (sameAuthUser(prev, next) ? prev : next);
 
 const AuthContext = createContext({});
 
@@ -22,7 +27,7 @@ export const AuthProvider = ({ children }) => {
     const getSession = async () => {
       try {
         const { data: { session } } = await withTimeout(supabase.auth.getSession(), 8000);
-        setUser(session?.user ?? null);
+        setUser(keepIfSame(session?.user ?? null));
       } catch (err) {
         console.error('Auth session load failed:', err.message);
         setUser(null);
@@ -36,7 +41,7 @@ export const AuthProvider = ({ children }) => {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        setUser(session?.user ?? null);
+        setUser(keepIfSame(session?.user ?? null));
         setLoading(false);
 
         if (session?.user) {

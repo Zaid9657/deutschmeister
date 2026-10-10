@@ -140,7 +140,6 @@ const APP_CHROME = [
   'src/lib/confetti.js',
   'src/components/Navbar.jsx',
   'src/components/Logo.jsx',
-  'src/components/SessionTimeoutModal.jsx',
   'src/components/FloatingIntroButton.jsx',
   'src/components/LockedContentOverlay.jsx',
   'src/components/SubscriptionGuard.jsx',

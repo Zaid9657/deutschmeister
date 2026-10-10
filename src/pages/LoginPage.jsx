@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { postAuthPath } from '../lib/buyIntent';
 import { returnPath } from '../lib/loginReturn';
-import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Mail, Lock, Eye, EyeOff, AlertCircle, Loader2, RefreshCw, CheckCircle2 } from 'lucide-react';
@@ -27,8 +27,6 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { signIn, user, loading: authLoading } = useAuth();
-  const [searchParams] = useSearchParams();
-  const timedOut = searchParams.get('reason') === 'timeout';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -166,13 +164,6 @@ const LoginPage = () => {
 
         {/* Form */}
         <Card raised className="p-8">
-          {timedOut && (
-            <div className="mb-6 flex items-center gap-3 rounded-clay bg-siegel-wash px-4 py-3 text-sm text-siegel-deep">
-              <AlertCircle className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
-              You were signed out because you were inactive.
-            </div>
-          )}
-
           {unconfirmed && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}

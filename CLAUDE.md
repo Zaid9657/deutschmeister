@@ -254,6 +254,14 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   disjoint from the trial windows and `tests/lifecycle.test.mjs` pins that — move a window in
   either file and update the test's occupied-days table in the same commit. The rule the
   re-read defends: never tell someone they have not used a lesson when they have.
+- **Auth session: a background auth event must never reload the page.** supabase-js fires
+  `SIGNED_IN` on every tab return and `TOKEN_REFRESHED` about hourly. `AuthContext` keeps the same
+  `user` object unless something the app reads changed (`src/lib/authUser.js`), and
+  `SubscriptionContext` reloads the account on screen without flipping `loading`, because the
+  guards swap the page for a spinner while `loading` is true. There is no idle logout:
+  `supabase.auth.signOut()` defaults to scope `global`, so it signs the learner out on every
+  device. `tests/auth-session.test.mjs`; the full audit of the auth track is
+  `docs/auth-audit-2026-10-06.md`.
 - **DB writes to privileged columns** (`subscriptions`, `profiles.is_subscribed`, trial
   dates) go through the service role only — RLS + a trigger enforce this. Schema changes
   are hand-applied SQL in `migrations/` (see its README); legacy root `*.sql` is history,
