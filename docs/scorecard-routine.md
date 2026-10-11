@@ -10,8 +10,18 @@ A Routine that starts a fresh session cannot carry connectors on this account. M
 Routine on 2026-09-29 reported only the artifact tools, no Supabase, Resend or Netlify, and a
 blocked site. An agent in such a session would "run" every day and see nothing. So every
 Routine below wakes the orchestrating Claude Code session that holds the connectors
-(`session_014ddD3p7VmAqaTAWKQVHJBt`). That session spawns the named agent in its own git
+(`session_01Lh7GLuWHzpzXnkZTU46YyT`). That session spawns the named agent in its own git
 worktree, reviews what it built, and integrates it.
+
+**Re-homed 2026-10-10.** The first orchestrator (`session_014ddD3p7VmAqaTAWKQVHJBt`) wrote its
+last heartbeat on 2026-10-09 08:04 UTC and was then deleted, and its Routines went with it
+(`get_session` = not found, no `DM team:` Routine left in `list_triggers`). Before that it had lost
+three wakes to plan-mode holds (10-07 19:56 → 10-08 13:45, 10-08 15:52 → 19:5x, 10-08 20:30 →
+10-09 07:52). All 14 Routines (13 schedule rows below plus the 00:50 heartbeat-only wake) were
+re-created bound to the new session, and every prompt now opens with a step 0: write the start
+heartbeat first, never enter plan mode, never block on an owner answer mid-run. If this session is
+ever lost too, re-create them from any session that holds the connectors and update
+`TEAM_SESSION_ID` in `netlify/functions/_shared/sentinelLib.mjs`.
 
 ## Schedule (UTC) — v4
 

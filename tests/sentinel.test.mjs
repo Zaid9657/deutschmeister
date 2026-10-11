@@ -1159,13 +1159,13 @@ test('heartbeat: a row older than 8 h is one critical incident for the superviso
   assert.equal(i.severity, 'critical');
   assert.ok(OWNER_AGENTS.includes(i.owner_agent) && SEVERITIES.includes(i.severity));
   assert.ok(i.key.startsWith(i.check_id));
-  assert.equal(TEAM_SESSION_ID, 'session_014ddD3p7VmAqaTAWKQVHJBt');
-  assert.match(i.title, /session_014ddD3p7VmAqaTAWKQVHJBt has written no heartbeat for 9\.2 h/);
+  assert.equal(TEAM_SESSION_ID, 'session_01Lh7GLuWHzpzXnkZTU46YyT');
+  assert.match(i.title, /session_01Lh7GLuWHzpzXnkZTU46YyT has written no heartbeat for 9\.2 h/);
   assert.match(i.title, /stopped waking/);
-  assert.match(i.hint, /^Open the session session_014ddD3p7VmAqaTAWKQVHJBt .*or check the Routines/);
+  assert.match(i.hint, /^Open the session session_01Lh7GLuWHzpzXnkZTU46YyT .*or check the Routines/);
   assert.deepEqual(
     { last: i.detail.last, hours: i.detail.hours, thresholdHours: i.detail.thresholdHours, session: i.detail.session },
-    { last, hours: 9.2, thresholdHours: 8, session: 'session_014ddD3p7VmAqaTAWKQVHJBt' },
+    { last, hours: 9.2, thresholdHours: 8, session: 'session_01Lh7GLuWHzpzXnkZTU46YyT' },
   );
   assert.match(i.detail.action, /Open the session .* or check the Routines/);
   assert.equal(i.mailed_elsewhere, false, 'nothing else mails this: the digest must');
@@ -1182,7 +1182,7 @@ test('heartbeat: the hint states the start-and-end rule — a row at the START a
   const [i] = checkHeartbeat({ last: ago(9.25) }, NOW).incidents;
   assert.equal(
     i.hint,
-    'Open the session session_014ddD3p7VmAqaTAWKQVHJBt on claude.ai/code (unarchive it if archived), or check the Routines that wake it (docs/scorecard-routine.md). '
+    'Open the session session_01Lh7GLuWHzpzXnkZTU46YyT on claude.ai/code (unarchive it if archived), or check the Routines that wake it (docs/scorecard-routine.md). '
       + 'Every scheduled wake writes an agent_heartbeats row at its start and another at its end, so 8 h with no row means no wake even started.',
   );
   assert.doesNotMatch(i.hint, /\bends with\b|\bone agent_heartbeats row\b/i, 'the pre-2026-10-02 wording ("each wake ends with one row") is gone');
@@ -1190,8 +1190,8 @@ test('heartbeat: the hint states the start-and-end rule — a row at the START a
   const [ten] = checkHeartbeat({ last: ago(11) }, NOW, 10).incidents;
   assert.match(ten.hint, /, so 10 h with no row means no wake even started\.$/);
   // Copy only: the title, the action, the key, the owner and the severity are what they were.
-  assert.match(i.title, /^The agent team has stopped waking: the orchestrating session session_014ddD3p7VmAqaTAWKQVHJBt has written no heartbeat for 9\.2 h$/);
-  assert.equal(i.detail.action, 'Open the session session_014ddD3p7VmAqaTAWKQVHJBt on claude.ai/code (unarchive it if it is archived), or check the Routines that wake it.');
+  assert.match(i.title, /^The agent team has stopped waking: the orchestrating session session_01Lh7GLuWHzpzXnkZTU46YyT has written no heartbeat for 9\.2 h$/);
+  assert.equal(i.detail.action, 'Open the session session_01Lh7GLuWHzpzXnkZTU46YyT on claude.ai/code (unarchive it if it is archived), or check the Routines that wake it.');
   assert.deepEqual([i.key, i.owner_agent, i.severity, i.detail.thresholdHours], [`${HB}:stale:${DAY}`, 'supervisor', 'critical', HEARTBEAT_THRESHOLD_HOURS]);
   // The owner's mail carries the whole hint on one line.
   assert.ok(renderDigest([i], NOW).text.includes(`    what to check: ${i.hint}\n`));
@@ -1211,8 +1211,8 @@ test('heartbeat end to end: a stale row mails one critical digest line, a fresh 
   assert.equal(first.claimed, 1, JSON.stringify(first));
   assert.equal(f.mails.length, 1);
   assert.match(f.mails[0].subject, /1 new incident \(1 critical\/high\) — critical/);
-  assert.match(f.mails[0].text, /== supervisor \(1\)\n\[critical\] The agent team has stopped waking: the orchestrating session session_014ddD3p7VmAqaTAWKQVHJBt/);
-  assert.match(f.mails[0].text, /what to check: Open the session session_014ddD3p7VmAqaTAWKQVHJBt/);
+  assert.match(f.mails[0].text, /== supervisor \(1\)\n\[critical\] The agent team has stopped waking: the orchestrating session session_01Lh7GLuWHzpzXnkZTU46YyT/);
+  assert.match(f.mails[0].text, /what to check: Open the session session_01Lh7GLuWHzpzXnkZTU46YyT/);
   const row = () => db.tables.agent_incidents.find((r) => r.key === `${HB}:stale:${DAY}`);
   assert.equal(row().owner_agent, 'supervisor');
   assert.ok(row().notified_at);

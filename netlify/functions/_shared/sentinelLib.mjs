@@ -542,7 +542,7 @@ export function checkDatabase(latencyMs, now) {
 // wake, would mail the owner a false "the team is down".
 
 /** The orchestrating session every heartbeat comes from. */
-export const TEAM_SESSION_ID = 'session_014ddD3p7VmAqaTAWKQVHJBt';
+export const TEAM_SESSION_ID = 'session_01Lh7GLuWHzpzXnkZTU46YyT';
 
 // PROTOCOL v3 "Staying alive": no heartbeat for 8 hours is the alarm. It must
 // stay strictly above the longest scheduled gap between wakes (5 h since the
