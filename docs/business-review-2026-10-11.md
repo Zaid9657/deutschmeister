@@ -14,21 +14,28 @@ cross-examined each other.
 
 ## Bottom line
 
-- **€10,000 profit a month is reachable. It will not come from today's offer.** Today's products are
-  €9.99 Pro and €40–50 level tickets. Since 27 August they have sold **nothing**.
+- **€10,000 profit a month is reachable. It will not come from today's offer.** There has been no new
+  paid subscription since 27 August, and real ticket/course sales are still zero. Renewals of the 3
+  existing subscriptions are counted separately.
 - **The move:** sell an exam outcome to the learners who already ask for it. That is a **B1 exam
   rehearsal package** ("B1-Prüfungsprobe", telc first) at **€199–249**, with a 14-day refund.
   - It replaces "own a level / rent the line" as the headline offer.
   - Pro and the tickets stay as secondary products.
 - **The maths (fully loaded, adopted by both).** €10k profit needs about **161 sales a month at €199**
   or **109 at €249**. That means **~7,300–10,700 qualified visits a month** at 1.5% conversion.
-  **The bottleneck is qualified traffic, not the website.**
-- **This month:** a **10-buyer pilot at €149**. Sell it through partners and an in-app invitation,
-  with no ad spend. It proves people pay, and it roughly breaks even.
-- **Two preconditions before the first pilot sale:**
-  1. Lemon Squeezy must charge exactly the price shown (VAT-inclusive).
-  2. A written FernUSG check must confirm the product may be sold without ZFU approval, or that you
-     need it.
+  **Traffic is the biggest gap, not the only one:** it must grow alongside proven offer conversion,
+  activation and fulfilment (0 of 181 trials converted; production checkout mappings are unverified).
+- **This month:** a **10-buyer pilot at €149**, sold through partners and an in-app invitation, with no
+  ad spend. Ten completed sales would show people pay. About €50 profit is possible only with **zero
+  cash acquisition cost** (no partner commissions) and legal + build + founder + overhead costs ≤ €700;
+  those budget ceilings are unverified.
+- **Preconditions before the first paid pilot contract:**
+  1. Lemon Squeezy charges exactly the price shown (VAT-inclusive).
+  2. FernUSG is cleared. Either a product-specific legal assessment establishes that ZFU approval is
+     unnecessary, or effective ZFU approval is obtained. An assessment that says approval is needed,
+     or a pending application, does **not** authorise sale.
+  3. Payment → entitlement is verified with one real test purchase. There is no guest checkout
+     without account claiming.
 
 ## 1. Where the business stands (production data, 2026-10-11)
 
@@ -36,7 +43,7 @@ cross-examined each other.
 |---|---|
 | Paid orders, ever | 12 Pro Monthly first orders (03-10 → 08-27), about 2–3 a month. **None since 08-27.** |
 | One-time ticket / course sales, ever | 0 real (2 €0 owner tests) |
-| MRR | €32.97 from 3 payers. This is gross: `price_paid` is the order total incl. VAT (€9.99 + €11.09 + €11.89). |
+| MRR | €32.97 from 3 payers. This sums `price_paid`. VAT-inclusive totals (€9.99 + €11.09 + €11.89) reconcile it, but the actual payer composition is unverified, and the column mixes bases (item price at creation, invoice total on renewal). |
 | Signups per week | ~45 (Jun–early Sep) → **22, 31, 16, 10** in the last four weeks. 1,165 confirmed accounts. |
 | Trial → paid | 0 of 181 in September |
 | Signup → first lesson | ~10% |
@@ -103,7 +110,7 @@ Schreiben und Sprechen, und Sie wissen, was noch fehlt."
 | "Is this my exam and level?" | Fit check: exam, date, level; show exclusions before purchase | telc sales page | chooser + exclusions |
 | "Where am I weak?" | Short telc test + one writing sample → 3-priority practice card | `src/data/mockExams/telcB1.js` (Kurzversion), `evaluate-writing` | combined report |
 | "What do I do today?" | 20 training units, **exam tasks first**, grammar only when a task exposes a gap | `telcB1Komplett.js`, `ExamDatePlan.jsx` | rewrite the route |
-| "Nobody corrects my letter" | 6 writing submissions with AI feedback and revision | 3 telc prompts in `_shared/writingTasks.mjs`, `/schreiben` | place them in the route |
+| "Nobody corrects my letter" | 3 telc writing tasks, each submitted, corrected, revised and corrected again (6 AI corrections) | 3 telc prompts in `_shared/writingTasks.mjs`, `/schreiben` | place them in the route |
 | "I freeze when speaking" | 10 guided 5-minute AI rehearsals of the telc speaking tasks | speaking engine | exam-specific missions, direct links |
 | "I miss days" | Restart route: next task + minimum version | — | small branch |
 | "Did I improve?" | A second, *different* short test + before/after | 1 telc set only | **author and review a parallel set** (promise it only once ready) |
@@ -113,10 +120,11 @@ Schreiben und Sprechen, und Sie wissen, was noch fehlt."
 and a full B1 course rebuild.
 
 **Price**
-- Pilot: **€149 incl. VAT** for the first 10 buyers. This is real feedback capacity, and the page
-  says so.
-- Then test **€199 vs €249** with identical deliverables. €249 wins if it keeps ≥76% of €199's
-  conversion.
+- Pilot: **€149 incl. VAT**, with a proposed cap of 10 buyers. Describe it as capacity-based scarcity
+  only once the resources and feedback process are confirmed.
+- Then test **€199 vs €249** with identical deliverables. Under the stated cost assumptions, and
+  with equal acquisition cost per qualified visitor, €249 earns more per visitor if it keeps more than
+  ~76.45% of €199's conversion.
 
 **Guarantee stack** (both offered together). Wording proposed by Codex, adopted after
 cross-examination. It is not live until implemented and the tests are updated.
@@ -128,12 +136,13 @@ cross-examination. It is not live until implemented and the tests are updated.
    > Zahlungsmittel. Eine Begründung ist nicht erforderlich. Mit der Erstattung endet der
    > Paket-Zugang. Ihre gesetzlichen Rechte bleiben unberührt.
 2. **One bounded practice extension:**
-   > **Nach 20 Trainingseinheiten noch unsicher?** Wenn Sie alle 20 Einheiten sowie die sechs
-   > Schreibaufgaben und zehn Sprechübungen bearbeitet haben, können Sie innerhalb von sieben Tagen
-   > nach der letzten Einheit einmalig 30 zusätzliche Tage Paket-Zugang beantragen — mit fünf
-   > weiteren KI-Sprechübungen à fünf Minuten und zwei weiteren KI-Schreibkorrekturen. Die
-   > Verlängerung verspricht kein Bestehen der offiziellen Prüfung. Ihre gesetzlichen Rechte bleiben
-   > unberührt.
+   > **Nach 20 Trainingseinheiten noch unsicher?** Wenn Sie das Paket behalten (keine Erstattung) und
+   > alle 20 Einheiten, die drei Schreibaufgaben samt Überarbeitung (sechs KI-Korrekturen) und die
+   > zehn Sprechübungen bearbeitet haben, können Sie innerhalb von sieben Tagen nach der letzten
+   > Einheit per E-Mail an zaid@deutsch-meister.de (mit Bestellnummer) einmalig 30 zusätzliche Tage
+   > Zugang zu den Paket-Inhalten beantragen — mit fünf weiteren KI-Sprechübungen à fünf Minuten und
+   > zwei weiteren KI-Schreibkorrekturen. Die Verlängerung verspricht kein Bestehen der offiziellen
+   > Prüfung. Ihre gesetzlichen Rechte bleiben unberührt.
 
 Dropped by both: "money back if you fail", "free until you pass", "until your retake". These are
 outcome-linked and unbounded.
@@ -166,7 +175,7 @@ Berufstätige**". The family name is "B1-Prüfungsprobe", with an exam selector.
 
 | # | Fix | Status |
 |---|---|---|
-| 1 | **Payment → entitlement.** An unroutable paid order alerts the owner and fails the webhook (Lemon Squeezy retries; it is logged as failed). Confirm every functions-scope variant id; do one real test purchase per product. | **Code fixed in PR #202** (reviewed by Codex). Variant-id check and test purchase still to do. |
+| 1 | **Payment → entitlement.** An unroutable paid order alerts the owner and fails the webhook (Lemon Squeezy retries; it is logged as failed). Confirm every functions-scope variant id; do one real test purchase per product. | **Fixed in source in PR #202** (reviewed by Codex; deployment unverified). Variant-id check and test purchase still to do. |
 | 2 | **Prices = checkout.** Turn the store VAT-inclusive, then audit the page, schema, email and checkout prices. | Owner prompt ready (`docs/owner-prompts.md`) |
 | 3 | **AI quotas = copy.** "30 speaking sessions/month" vs the server's 2 × 5-minute sessions a day; 10/15-minute sessions hit an empty wallet. Pick one entitlement; meter the cost. | To do |
 | 4 | **Guest payment with account claiming.** Today a Buy click needs signup + email confirmation in the same browser; guest telc buyers without an account are not delivered. | To do (L) |
@@ -174,32 +183,33 @@ Berufstätige**". The family name is "B1-Prüfungsprobe", with an exam selector.
 | 6 | **First useful task before menus;** keep the return destination after confirmation. | Partly done (beginners go to Lektion 1) |
 | 7 | **Matching offers at intent moments:** anonymous lock (price + buy), placement result, exam result, trial day 6. | To do, with the offer |
 | 8 | **Record marketing consent** separately from email confirmation (opt-in at signup). | To do |
-| 9 | Exam pages: signup lock instead of a login wall. Signup has 2 fields. Buyers keep their dashboard after 90 days. Two false trial-mail claims fixed. | **Done in PR #202** |
+| 9 | Exam pages: signup lock instead of a login wall. Signup has 2 fields. Buyers keep their dashboard after 90 days. Two false trial-mail claims fixed. | **Fixed in source in PR #202** (deployment unverified until merge) |
 | 10 | **Separate the money metrics:** gross billings, VAT-exclusive revenue, refunds, channel cost, AI cost. | To do |
 
 ## 7. Copy (proposed; publish only once the package exists)
 
 **Homepage hero (DE)**
 - H1: „telc B1 bald? Üben Sie die Aufgaben, die Sie dort erwarten."
-- Sub: „Für Lernende etwa auf B1-Niveau: 20 Trainingseinheiten, sechs Schreibaufgaben mit
-  KI-Feedback und zehn Sprechübungen. Beginnen Sie mit einem Lückencheck."
+- Sub: „Für Lernende etwa auf B1-Niveau: 20 Trainingseinheiten, drei Schreibaufgaben mit jeweils einer
+  Überarbeitung (insgesamt sechs KI-Korrekturen) und zehn Sprechübungen. Beginnen Sie mit einem
+  Lückencheck."
 - CTA: „Eine Prüfungsaufgabe kostenlos ausprobieren"
 - Link: „Prüfungsplan ansehen · 149 € inkl. MwSt. (Pilot)"
 - Secondary: „Sie beginnen mit Deutsch? A1.1 kostenlos starten."
 
 **Homepage hero (EN)**
 - H1: "telc B1 coming up? Rehearse the tasks before exam day."
-- Sub: "For learners already around B1: 20 training units, six writing tasks with AI feedback, and ten
-  speaking rehearsals."
+- Sub: "For learners already around B1: 20 training units, three writing tasks with one revision each
+  (six AI corrections in total), and ten speaking rehearsals."
 - CTA: "Try an exam task free"
 - Link: "See the package · €149 incl. VAT (pilot)"
 
 **Pricing card (DE)**
 - „telc-B1-Prüfungsprobe — 149 € inkl. MwSt. · einmalig".
-- Lines: 20 Trainingseinheiten · sechs Schreibaufgaben mit KI-Feedback · zehn Sprechübungen ·
-  Lückenplan aus Ihren Ergebnissen · 90 Tage Zugang.
-- Small print: „Keine Verlängerung. Prüfung und Prüfungsgebühr nicht enthalten. KI-Feedback ersetzt
-  keine offizielle Bewertung." Then the guarantee stack.
+- Lines: 20 Trainingseinheiten · drei Schreibaufgaben mit Überarbeitung (sechs KI-Korrekturen) ·
+  zehn Sprechübungen · Lückenplan aus Ihren Ergebnissen · 90 Tage Zugang.
+- Small print: „Keine automatische Verlängerung oder weitere Abbuchung. Prüfung und Prüfungsgebühr
+  nicht enthalten. KI-Feedback ersetzt keine offizielle Bewertung." Then the guarantee stack.
 
 **Lock screen (DE)**
 - „Hier beginnt Ihre telc-B1-Übung. Mit einem kostenlosen Konto probieren Sie die Kurzversion in
@@ -240,7 +250,8 @@ Berufstätige**". The family name is "B1-Prüfungsprobe", with an exam selector.
 
 | Month | Scenario | Operating profit |
 |---|---|---:|
-| 1 (minimal) | 10 pilots × €149, no paid ads, €700 legal/founder/overhead allowance | ≈ €50 |
+| 1 (standard) | 10 pilots × €149 + 2 core × €199; €40 CAC; €1,000 overhead + €1,500 setup | ≈ −€2,014 |
+| 1 (constrained alternative) | 10 pilots × €149; **zero cash CAC** (no commissions); legal/build/founder/overhead ≤ €700 (unverified ceilings) | ≈ €50 |
 | 3 | 50 core sales at €199 | ≈ €2,400 |
 | 6 | 165 core sales at €199 (11,000 qualified visits) | ≈ €10,300 |
 
@@ -253,15 +264,17 @@ Berufstätige**". The family name is "B1-Prüfungsprobe", with an exam selector.
    - a €300 search test once delivery works.
 3. **CAC discipline.** At 1.5% conversion, €40 CAC means ≤ €0.60 per click.
 
-**Excluded from the base:** list launches, entry product, premium, B2B. None is proven or lawful yet.
+**Excluded from the base:** list launches, entry product, premium, B2B. None contributes validated
+revenue to the base model. Marketing eligibility, payment acceptance and product legality must be
+verified where they apply.
 
 ## 9. Legal preconditions (agreed; landmines with their fixes)
 
 | Landmine | Fix |
 |---|---|
 | **PAngV.** Shown prices exclude VAT today. | Turn on LS "Tax-inclusive pricing" (Settings → General). Then every shown price is the total. Do not just append "inkl. MwSt." to the current flow. |
-| **§7 UWG.** The 1,165 accounts did not opt in to marketing. | In-app invitation (no consent needed). Opt-in checkbox at signup from now on. Email only to documented opt-ins. |
-| **FernUSG.** Paid remote instruction with a contractual right to learning-success checks needs ZFU approval, or contracts are void, fees can be reclaimed and fines reach €10,000. The ZFU FAQ lists *automated correction through a learning system*, and even MC tests, as possible checks; a contractual right is enough (zfu.de/veranstaltende/faq). BGH 12.06.2025, III ZR 109/24. | **Book a written check by a FernUSG lawyer now** (fixed fee; also covers today's Pro/ticket products). It runs in parallel with the ~2-week pilot build. Sell the pilot only after the answer. If approval is needed, apply to the ZFU: approval is also a trust signal on the page. |
+| **§7 UWG.** Marketing eligibility for the 1,165 confirmed accounts has not been established. Confirmation and opt-out handling are not consent. | In-app invitation (no consent needed). Opt-in checkbox at signup from now on. Email only to documented opt-ins. |
+| **FernUSG.** Paid remote instruction with a contractual right to learning-success checks needs ZFU approval, or contracts are void, fees can be reclaimed and fines reach €10,000. The ZFU FAQ lists *automated correction through a learning system*, and even MC tests, as possible checks; a contractual right is enough (zfu.de/veranstaltende/faq). BGH 12.06.2025, III ZR 109/24. | **Book a written, product-specific check by a FernUSG lawyer now** (scope it to also cover today's Pro/ticket products). It runs in parallel with the ~2-week pilot build. **Sell only once the assessment establishes approval is unnecessary, or once effective ZFU approval exists.** An application alone does not authorise sale. Approval, if obtained, is also a trust signal on the page. |
 | **Lemon Squeezy prohibited products.** "Services of any kind." | The core stays software and digital content. Human review is sold only after a compliant payment setup. |
 | **Guarantees.** | Publish bounded terms; statutory rights stay; replace the blanket test bans (`tests/offers.test.mjs`, `tests/refund-claims.test.mjs`) with checks for the adopted wording. Don't delete them. |
 
@@ -298,12 +311,14 @@ Berufstätige**". The family name is "B1-Prüfungsprobe", with an exam selector.
 
 ## 11. Owner decisions (asked one at a time, in this order)
 
-1. **Go on the telc B1 pilot** (10 × €149, VAT-inclusive)? This unlocks the build; worth ≈ €1.5k gross
-   and the proof the €10k plan needs.
+1. **Go on the telc B1 pilot** (proposed cap 10 × €149, VAT-inclusive)? This unlocks the build: ≈ €1.5k
+   gross if all 10 sell, and the willingness-to-pay proof the €10k plan needs.
 2. **Turn the store VAT-inclusive?** This fixes PAngV and the checkout surprise; net per German sale
    drops ~16%.
 3. **The guarantee stack** as worded in §4? This lifts the test bans for this product only.
-4. **Book the FernUSG check?** One-off fee; protects every euro sold after it.
+4. **Book the FernUSG check?** A scoped legal assessment informs the classification. It does not
+   guarantee legality or remove liability, but it decides whether the pilot can be sold or needs ZFU
+   approval first.
 5. **Telegram channel** — create it now?
 6. **Opt-in checkbox at signup** for product emails? It makes future launches lawful.
 
