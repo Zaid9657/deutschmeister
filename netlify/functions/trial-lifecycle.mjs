@@ -95,15 +95,15 @@ const TEMPLATES = {
       P('Hey! You\'re three days into your trial, so here\'s the short list of what\'s actually worth your time.') +
       P('<strong style="color:#1e293b;">Sentence X-Ray</strong> — paste any German sentence and see what every word is doing: the cases, the roles, and <em>why</em>. It takes about three seconds and it\'s the fastest way to stop guessing.') +
       P('<strong style="color:#1e293b;">Listening</strong> — short native-speaker dialogues graded to your level, so you understand most of what you hear instead of drowning in it.') +
-      P('<strong style="color:#1e293b;">Speaking</strong> — a two-minute conversation with an AI partner that corrects you as you go.'),
+      P('<strong style="color:#1e293b;">Speaking</strong> — a five-minute conversation with an AI partner that corrects you as you go.'),
   },
   trial_day6: {
     subject: 'Your DeutschMeister trial ends tomorrow',
     ctaHref: `${BASE_URL}/pricing/`,
     ctaLabel: `Keep Pro — ${eur(MONTHLY_PRICE_EUR)}/month →`,
     body:
-      P('Quick heads-up: your Pro trial ends tomorrow.') +
-      P(`If you keep it, you stay on 50 sentence analyses a day, the full grammar library through B2, listening, reading, and AI speaking practice. That's ${eur(MONTHLY_PRICE_EUR)} a month — less than one hour with a tutor.`) +
+      P('Quick heads-up: your free trial ends tomorrow.') +
+      P(`With Pro you get 50 sentence analyses a day (the trial has 10), the full grammar library through B2, listening, reading, and AI speaking practice. That's ${eur(MONTHLY_PRICE_EUR)} a month — less than one hour with a tutor.`) +
       P('If you don\'t, nothing dramatic happens: your account stays, your progress stays, and you drop to the free tier. You can come back whenever.'),
   },
   trial_ended: {

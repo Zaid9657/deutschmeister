@@ -44,6 +44,41 @@ async function logWebhookEvent(eventType, payload, processed, errorMsg) {
   }
 }
 
+// One-line alert to the owner. Fail-open: an alert that cannot be sent is
+// logged, never thrown — the webhook's own outcome must not depend on mail.
+async function sendOwnerAlert(subject, text) {
+  const resendKey = process.env.RESEND_API_KEY;
+  if (!resendKey) {
+    console.error(`owner alert skipped (RESEND_API_KEY not set): ${subject}`);
+    return;
+  }
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: 'DeutschMeister Alerts <zaid@deutsch-meister.de>',
+        to: ['zaid@deutsch-meister.de'],
+        subject,
+        text,
+      }),
+    });
+    if (!res.ok) {
+      console.error(`owner alert: Resend error ${res.status}:`, (await res.text()).slice(0, 300));
+    }
+  } catch (e) {
+    console.error('owner alert threw:', e.message);
+  }
+}
+
+// The Pro subscription products are the only orders that may legitimately
+// reach the subscription lane: their subscription_created event follows and
+// carries the grant. Their product names are "Pro Monthly" / "Pro Yearly".
+function looksLikeProOrder(attributes) {
+  const item = attributes?.first_order_item || {};
+  return /\bpro\b/i.test(`${item.product_name || ''} ${item.variant_name || ''}`);
+}
+
 export const handler = async (event) => {
   const allowedOrigins = [
     'https://deutsch-meister.de',
@@ -311,6 +346,24 @@ async function handleOrderCreated(data, meta) {
   const course = courseForVariant(orderVariantId);
   if (course) {
     await handleCourseOrder({ course, orderId, customData, attributes });
+    return;
+  }
+
+  // A paid order that is neither a routed course nor the Pro subscription
+  // grants nothing below: the subscription lane only backfills price_paid.
+  // The usual cause is a one-time product whose functions-scope
+  // LEMONSQUEEZY_*_VARIANT_ID is unset or wrong. The customer has paid, so
+  // the owner hears about it now instead of from a refund request.
+  if (attributes.status === 'paid' && !looksLikeProOrder(attributes)) {
+    const item = attributes.first_order_item || {};
+    const testTag = meta?.test_mode === true ? '[TEST] ' : '';
+    console.error(
+      `order_created: UNROUTED paid order ${orderId} — variant ${orderVariantId} (${item.product_name || '?'} / ${item.variant_name || '?'}) matches no course env var`,
+    );
+    await sendOwnerAlert(
+      `${testTag}Paid order NOT delivered — order ${orderId}`,
+      `A customer paid, but the webhook could not route the order to a product, so nothing was granted.\n\nOrder: ${orderId}\nProduct: ${item.product_name || 'unknown'} / ${item.variant_name || 'unknown'}\nVariant id: ${orderVariantId || 'unknown'}\nCustomer: ${attributes.user_email || 'unknown'}\nUser ID: ${userId || 'unknown'}\nTotal: ${attributes.total_formatted || attributes.total}\n\nFix: set the matching LEMONSQUEEZY_<PRODUCT>_VARIANT_ID in the Netlify functions scope to ${orderVariantId || 'this variant id'}, then replay this order_created event from the Lemon Squeezy dashboard (Settings → Webhooks).`,
+    );
     return;
   }
 
@@ -908,23 +961,10 @@ async function handlePaymentFailed(data, meta, payload) {
   }
 
   // 2) One-line alert to the owner.
-  try {
-    const res = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        from: 'DeutschMeister Alerts <zaid@deutsch-meister.de>',
-        to: ['zaid@deutsch-meister.de'],
-        subject: `Payment failed — subscription ${subscriptionId}`,
-        text: `Renewal payment failed.\n\nSubscription: ${subscriptionId}\nCustomer: ${customerEmail || 'unknown'}\nUser ID: ${userId || 'unknown'}\nInvoice/event: ${eventId}\n\nThe customer ${customerEmail ? 'was' : 'could NOT be'} sent a dunning email (rate-limited to one per subscription per 7 days).\nUpdate-payment link source: ${linkSource} (subscription_updated = signed link, portal = ${BILLING_PORTAL_URL}).`,
-      }),
-    });
-    if (!res.ok) {
-      console.error(`payment_failed: Resend owner alert error ${res.status}:`, (await res.text()).slice(0, 300));
-    }
-  } catch (e) {
-    console.error('payment_failed: owner alert threw:', e.message);
-  }
+  await sendOwnerAlert(
+    `Payment failed — subscription ${subscriptionId}`,
+    `Renewal payment failed.\n\nSubscription: ${subscriptionId}\nCustomer: ${customerEmail || 'unknown'}\nUser ID: ${userId || 'unknown'}\nInvoice/event: ${eventId}\n\nThe customer ${customerEmail ? 'was' : 'could NOT be'} sent a dunning email (rate-limited to one per subscription per 7 days).\nUpdate-payment link source: ${linkSource} (subscription_updated = signed link, portal = ${BILLING_PORTAL_URL}).`,
+  );
 }
 
 // The signed update link for this subscription. Read-only and fail-open: any
