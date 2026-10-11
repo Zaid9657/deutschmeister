@@ -52,6 +52,22 @@ apply <CODE>, confirm €0.00, complete checkout. Then open /subscription and
 Note: a €0 order cannot be refunded in LS, so the refund → re-lock path is not covered
 by this test.
 
+**Switch the store to VAT-inclusive prices** (found 2026-10-11, business review). Every
+order so far has `tax_inclusive=false`: the site shows €9.99 / €40 / €89, and Lemon Squeezy
+adds VAT on top at checkout, so a German buyer is charged €11.89 for the "€9.99" plan. That
+surprise sits on the last step before payment, and German price law (PAngV) requires
+consumers to be shown the total price incl. VAT. One store-wide toggle fixes both:
+```
+In Lemon Squeezy store 309512 open Settings → General and turn ON "Tax-inclusive pricing"
+(the product price includes tax). Save. Do not change any product price. Screenshot the
+setting, then open https://deutsch-meister.de/pricing/ → "Go Pro" and screenshot the
+checkout total for a German address: it must read €9.99, not €11.89.
+```
+Trade-off, stated once: the net per sale drops by the VAT share (a German €9.99 becomes
+≈ €8.39 net instead of €9.99), and future renewals of the existing subscriptions follow the
+new setting. Once it is on, the agent adds "inkl. MwSt." to the price renders; until then it
+must not, because it would be untrue.
+
 ---
 
 ## Run the A1.1 course audio
