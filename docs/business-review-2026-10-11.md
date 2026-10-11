@@ -9,6 +9,9 @@ cross-examined each other.
   - `codex-pass-1.md`
   - `codex-round-1.md`
 - Every recommendation below is either **agreed** by both, or listed in §12 with both positions.
+- **Codex fact-check:** Codex raised 11 must-fix and 5 should-fix points
+  (`codex-round-2-factcheck.md`); all were applied. Its final check left one sentence, which was
+  replaced with its own wording (`codex-signoff.md`).
 - Framework: Alex Hormozi, *$100M Offers*: value equation, grand slam offer, pricing, guarantees,
   naming.
 
@@ -147,7 +150,8 @@ cross-examination. It is not live until implemented and the tests are updated.
 Dropped by both: "money back if you fail", "free until you pass", "until your retake". These are
 outcome-linked and unbounded.
 
-**Urgency and scarcity (honest only).** The real pilot capacity (10). The learner's own exam date,
+**Urgency and scarcity (honest only).** The proposed pilot cap of ten buyers may be used as
+capacity-based scarcity only after resources and the feedback process are confirmed. The learner's own exam date,
 with "days left vs. units needed" shown. No countdowns, invented stock or fake strike-through prices
 (PAngV §11).
 
