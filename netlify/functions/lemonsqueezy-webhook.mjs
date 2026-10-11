@@ -71,12 +71,23 @@ async function sendOwnerAlert(subject, text) {
   }
 }
 
-// The Pro subscription products are the only orders that may legitimately
-// reach the subscription lane: their subscription_created event follows and
-// carries the grant. Their product names are "Pro Monthly" / "Pro Yearly".
-function looksLikeProOrder(attributes) {
+// Is this order the Pro subscription? Only those may legitimately leave
+// order_created ungranted: their subscription_created event follows and
+// carries the grant. An order payload has no subscription flag, so:
+//   1. LEMONSQUEEZY_PRO_VARIANT_IDS (functions scope, comma-separated numeric
+//      variant ids) is authoritative when set;
+//   2. otherwise the product name must START with "Pro" — every subscription
+//      order so far was "Pro Monthly" (variants 1379337, 1393033). Anchored,
+//      so a one-time "B1-Prüfungsplan Pro" is not mistaken for one (Codex
+//      review of #202).
+function isSubscriptionOrder(attributes) {
   const item = attributes?.first_order_item || {};
-  return /\bpro\b/i.test(`${item.product_name || ''} ${item.variant_name || ''}`);
+  const configured = String(process.env.LEMONSQUEEZY_PRO_VARIANT_IDS || '')
+    .split(',')
+    .map((v) => v.trim())
+    .filter(Boolean);
+  if (configured.length) return configured.includes(String(item.variant_id ?? ''));
+  return /^pro\b/i.test(String(item.product_name || '').trim());
 }
 
 export const handler = async (event) => {
@@ -349,24 +360,6 @@ async function handleOrderCreated(data, meta) {
     return;
   }
 
-  // A paid order that is neither a routed course nor the Pro subscription
-  // grants nothing below: the subscription lane only backfills price_paid.
-  // The usual cause is a one-time product whose functions-scope
-  // LEMONSQUEEZY_*_VARIANT_ID is unset or wrong. The customer has paid, so
-  // the owner hears about it now instead of from a refund request.
-  if (attributes.status === 'paid' && !looksLikeProOrder(attributes)) {
-    const item = attributes.first_order_item || {};
-    const testTag = meta?.test_mode === true ? '[TEST] ' : '';
-    console.error(
-      `order_created: UNROUTED paid order ${orderId} — variant ${orderVariantId} (${item.product_name || '?'} / ${item.variant_name || '?'}) matches no course env var`,
-    );
-    await sendOwnerAlert(
-      `${testTag}Paid order NOT delivered — order ${orderId}`,
-      `A customer paid, but the webhook could not route the order to a product, so nothing was granted.\n\nOrder: ${orderId}\nProduct: ${item.product_name || 'unknown'} / ${item.variant_name || 'unknown'}\nVariant id: ${orderVariantId || 'unknown'}\nCustomer: ${attributes.user_email || 'unknown'}\nUser ID: ${userId || 'unknown'}\nTotal: ${attributes.total_formatted || attributes.total}\n\nFix: set the matching LEMONSQUEEZY_<PRODUCT>_VARIANT_ID in the Netlify functions scope to ${orderVariantId || 'this variant id'}, then replay this order_created event from the Lemon Squeezy dashboard (Settings → Webhooks).`,
-    );
-    return;
-  }
-
   // total is integer cents; write the real amount to the matching subscription row.
   if (attributes.total != null && orderId) {
     const pricePaid = Number(attributes.total) / 100;
@@ -384,6 +377,26 @@ async function handleOrderCreated(data, meta) {
     } else {
       console.log('order_created: price_paid', pricePaid, 'set for order', orderId);
     }
+  }
+
+  // A paid order that is neither a routed course nor the Pro subscription has
+  // granted nothing: the lane above only backfills price_paid. The usual cause
+  // is a one-time product whose functions-scope LEMONSQUEEZY_*_VARIANT_ID is
+  // unset or wrong. The owner is mailed, and the event then FAILS on purpose:
+  // webhook_logs records processed=false (the Monday truth mail counts failed
+  // webhooks), and the 500 makes Lemon Squeezy retry — so an alert that could
+  // not be sent is not the only trace, and once the env var is fixed a retry
+  // delivers the order by itself (Codex review of #202).
+  if (attributes.status === 'paid' && !isSubscriptionOrder(attributes)) {
+    const item = attributes.first_order_item || {};
+    const testTag = meta?.test_mode === true ? '[TEST] ' : '';
+    await sendOwnerAlert(
+      `${testTag}Paid order NOT delivered — order ${orderId}`,
+      `A customer paid, but the webhook could not route the order to a product, so nothing was granted.\n\nOrder: ${orderId}\nProduct: ${item.product_name || 'unknown'} / ${item.variant_name || 'unknown'}\nVariant id: ${orderVariantId || 'unknown'}\nCustomer: ${attributes.user_email || 'unknown'}\nUser ID: ${userId || 'unknown'}\nTotal: ${attributes.total_formatted || attributes.total}\n\nFix: set the matching LEMONSQUEEZY_<PRODUCT>_VARIANT_ID in the Netlify functions scope to ${orderVariantId || 'this variant id'}. Lemon Squeezy retries the event and delivers it once the id is set; after its retries run out, replay the order_created event from the Lemon Squeezy dashboard (Settings → Webhooks). If this order IS the Pro subscription, add ${orderVariantId || 'its variant id'} to LEMONSQUEEZY_PRO_VARIANT_IDS instead.`,
+    );
+    throw new Error(
+      `unrouted paid order ${orderId} — variant ${orderVariantId || '?'} (${item.product_name || '?'} / ${item.variant_name || '?'}) matches no course env var and is not the Pro subscription; nothing granted`,
+    );
   }
 }
 
