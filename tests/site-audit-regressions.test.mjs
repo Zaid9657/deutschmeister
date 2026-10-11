@@ -34,7 +34,9 @@ test('floating prompt controls meet the 44px touch-target minimum', () => {
 test('signup fields expose browser and assistive-technology semantics', () => {
   assert.match(signup, /name="email"[\s\S]*autoComplete="email"/);
   assert.match(signup, /name="password"[\s\S]*autoComplete="new-password"/);
-  assert.match(signup, /name="confirmPassword"[\s\S]*autoComplete="new-password"/);
+  // No confirm-password field since 2026-10-11 (one field fewer between a
+  // visitor and an account); the show-password toggle below catches typos.
+  assert.doesNotMatch(signup, /name="confirmPassword"/);
   assert.match(signup, /aria-label=\{showPassword \? 'Hide password' : 'Show password'\}/);
   assert.match(signup, /No credit card required · Cancel anytime/);
 });
