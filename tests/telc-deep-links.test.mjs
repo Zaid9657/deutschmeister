@@ -18,7 +18,9 @@
 //                                     profile fields the onboarding gate reads,
 //                                     only where they are NULL ('none' is the
 //                                     learner's "no exam" choice), and opens the
-//                                     task links only once those writes are done.
+//                                     task links once those writes are done — or
+//                                     have failed or timed out, never later
+//                                     (arrive(), tested in telc-pilot.test.mjs).
 //
 // Structural (the repo's style for React pages); the pure parts are tested
 // behaviourally in tests/telc-pilot.test.mjs.
@@ -87,12 +89,14 @@ test('arrival clears stale contexts and fills only empty profile fields', () => 
   const page = read('src/pages/TelcB1KursPage.jsx');
   const arrival = page.slice(page.indexOf('// Arrival:'), page.indexOf('// The learner\'s records'));
   assert.match(arrival, /clearCourseContext\(\);/);
-  assert.match(arrival, /update\(\{ onboarding_completed_at: now \}\)[\s\S]*?\.is\('onboarding_completed_at', null\)/,
-    'onboarding is marked done only where it is still empty');
-  assert.match(arrival, /update\(\{ exam_track: EXAM_KEY \}\)[\s\S]*?\.is\('exam_track', null\)/,
+  assert.match(arrival, /arrive\(\{\s*profile,/, 'the bounded arrival of src/lib/telcPilot.js, fed the profile the app already loaded');
+  assert.match(arrival, /update\(\{ onboarding_completed_at: [^}]+\}\)\s*\.eq\('id', user\.id\)\.is\('onboarding_completed_at', null\)/,
+    'onboarding is marked done on the learner\'s own row, only where it is still empty');
+  assert.match(arrival, /update\(\{ exam_track: EXAM_KEY \}\)\s*\.eq\('id', user\.id\)\.is\('exam_track', null\)/,
     'only an EMPTY exam_track is filled');
   assert.doesNotMatch(arrival, /exam_track\.eq\.none/, "'none' is the learner's explicit no-exam choice — never overwritten on arrival");
-  assert.match(arrival, /if \(alive\) setArrived\(true\);/);
+  assert.match(arrival, /if \(!alive\) return;\s*setArrived\(true\);/,
+    'the links open after the writes settle — written, failed or timed out');
   assert.match(page, /if \(!ready\) return <span className=\{className\}>\{children\}<\/span>;/,
     'plan items are not doors until the arrival writes are done');
   assert.match(page, /\{loaded && arrived && \(/, 'the „Heute" button waits for the arrival writes too');

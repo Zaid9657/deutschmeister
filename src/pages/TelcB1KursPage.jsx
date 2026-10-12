@@ -8,7 +8,7 @@ import { PROGRAM, PROGRAM_KEY, EXAM_KEY, BONUSES, allDays } from '../data/progra
 import { MOCK_DISCLAIMER_DE } from '../data/examTracks.js';
 import { getProgramProgress, setProgramItemDone } from '../services/programProgress';
 import { flattenCourse, currentItem, saveCourseContext, clearCourseContext, telcCourseContext } from '../lib/courseFlow.js';
-import { gapPriorities, pilotEvidence, dayDone, rehearsalTopics } from '../lib/telcPilot.js';
+import { gapPriorities, pilotEvidence, dayDone, rehearsalTopics, arrive } from '../lib/telcPilot.js';
 import ExamDatePlan from '../components/course/ExamDatePlan.jsx';
 import Button from '../components/ui/Button.jsx';
 import Card from '../components/ui/Card.jsx';
@@ -31,7 +31,10 @@ import Aurora from '../components/ui/Aurora.jsx';
 //     are filtered to NULL only — exam_track 'none' is the learner's explicit
 //     "no exam" choice and stays — and the task links go live only once the
 //     writes have finished, so a fast click cannot reach a gate that still
-//     reads the old profile (Codex review of PR B).
+//     reads the old profile (Codex review of PR B). Fields the loaded profile
+//     already shows as set are not written again, and the wait is bounded
+//     (arrive() in src/lib/telcPilot.js): a stalled write opens the plan
+//     after ARRIVAL_TIMEOUT_MS rather than never (Codex review 2).
 //
 // The numbers it shows come from the server where they can (writing and
 // speaking records) and from the learner's own ticks only for the units —
@@ -82,7 +85,7 @@ function Stat({ label, value, total }) {
 
 const TelcB1KursPage = () => {
   const { user } = useAuth();
-  const { refreshSubscription } = useSubscription();
+  const { profile, refreshSubscription } = useSubscription();
   const [done, setDone] = useState(() => new Set());
   const [loaded, setLoaded] = useState(false);
   const [attempt, setAttempt] = useState(null);
@@ -98,21 +101,23 @@ const TelcB1KursPage = () => {
     if (!user) return undefined;
     clearCourseContext();
     let alive = true;
-    (async () => {
-      const now = new Date().toISOString();
-      const onboarding = await supabase.from('profiles').update({ onboarding_completed_at: now })
-        .eq('id', user.id).is('onboarding_completed_at', null).select('id');
-      const track = await supabase.from('profiles').update({ exam_track: EXAM_KEY })
-        .eq('id', user.id).is('exam_track', null).select('id');
-      if (onboarding.error) console.error('[TelcB1KursPage] onboarding:', onboarding.error.message);
-      if (track.error) console.error('[TelcB1KursPage] exam_track:', track.error.message);
-      // Written (or failed — the gate then shows the intro, which still leads on):
-      // from here a click reaches a gate that reads the new profile.
-      if (alive) setArrived(true);
-      if (alive && (onboarding.data?.length || track.data?.length)) await refreshSubscription();
-    })();
+    arrive({
+      profile,
+      markOnboarded: () => supabase.from('profiles').update({ onboarding_completed_at: new Date().toISOString() })
+        .eq('id', user.id).is('onboarding_completed_at', null).select('id'),
+      setExamTrack: () => supabase.from('profiles').update({ exam_track: EXAM_KEY })
+        .eq('id', user.id).is('exam_track', null).select('id'),
+    }).then(({ changed, timedOut, errors }) => {
+      for (const message of errors) console.error('[TelcB1KursPage] arrival:', message);
+      if (timedOut) console.warn('[TelcB1KursPage] arrival writes still pending — opening the plan anyway');
+      // Written, failed or timed out, the links open now: a gate that still reads
+      // the old profile shows the intro, which leads on — a detour, never a lock.
+      if (!alive) return;
+      setArrived(true);
+      if (changed) refreshSubscription();
+    });
     return () => { alive = false; };
-    // refreshSubscription is a context function; the arrival work runs once per account.
+    // profile and refreshSubscription come from context; the arrival work runs once per account.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 

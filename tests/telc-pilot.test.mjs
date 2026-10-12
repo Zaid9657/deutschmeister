@@ -17,6 +17,9 @@
 //   4. MEANING — gapPriorities never calls an unanswered section "weakest";
 //      pilotEvidence counts at most two corrections per letter and each
 //      rehearsal once, by its own label.
+//   4b. ARRIVAL — arrive() writes only the profile fields still empty, never
+//      'none', and settles within its timeout even when a write never answers:
+//      a stalled request must not keep a buyer's plan shut (Codex review 2).
 //   5. RUNBOOK — the eligibility SQL in docs/telc-pilot/README.md lists exactly
 //      the route's item ids and rehearsal labels.
 
@@ -33,7 +36,7 @@ import {
 import { writingTasksForExam } from '../src/data/writingTasks.js';
 import { telcB1Mock } from '../src/data/mockExams/telcB1.js';
 import { parseCourseTask } from '../netlify/functions/_shared/speakingAI.mjs';
-import { gapPriorities, pilotEvidence, sectionAnswered, dayDone, rehearsalTopics } from '../src/lib/telcPilot.js';
+import { gapPriorities, pilotEvidence, sectionAnswered, dayDone, rehearsalTopics, arrive } from '../src/lib/telcPilot.js';
 import { telcCourseContext, normalizeCourseContext, TELC_COURSE_HOME } from '../src/lib/courseFlow.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -216,6 +219,49 @@ test('evidence: units are whole days, two corrections per letter at most, each r
 });
 
 // ── 5. runbook ──────────────────────────────────────────────────────────────
+
+test('arrival writes only the empty fields, and never "none"', async () => {
+  let calls = [];
+  const ok = (name) => () => { calls.push(name); return Promise.resolve({ data: [{ id: 'u' }], error: null }); };
+  const writers = { markOnboarded: ok('onboarding'), setExamTrack: ok('exam_track') };
+
+  const fresh = await arrive({ profile: null, ...writers });
+  assert.deepEqual(calls, ['onboarding', 'exam_track'], 'an unknown profile: both fields');
+  assert.deepEqual(fresh, { changed: true, timedOut: false, errors: [] });
+
+  calls = [];
+  const known = await arrive({ profile: { onboarding_completed_at: '2026-01-01', exam_track: 'goethe_b1' }, ...writers });
+  assert.deepEqual(calls, [], 'fields the loaded profile shows as set are not written again');
+  assert.deepEqual(known, { changed: false, timedOut: false, errors: [] });
+
+  calls = [];
+  await arrive({ profile: { onboarding_completed_at: null, exam_track: 'none' }, ...writers });
+  assert.deepEqual(calls, ['onboarding'], "'none' is the learner's no-exam choice and stays");
+
+  const empty = () => Promise.resolve({ data: [], error: null });
+  const nothingMatched = await arrive({ profile: null, markOnboarded: empty, setExamTrack: empty });
+  assert.equal(nothingMatched.changed, false, 'a filter that matched no row changed nothing — no refresh needed');
+});
+
+// Its own deadline: without the timeout this test would hang the suite rather than fail it.
+test('arrival settles even when a write never answers, fails or throws', { timeout: 2000 }, async () => {
+  const never = () => new Promise(() => {});
+  const fine = () => Promise.resolve({ data: [{ id: 'u' }], error: null });
+  const started = Date.now();
+  const stalled = await arrive({ profile: null, markOnboarded: fine, setExamTrack: never, timeoutMs: 30 });
+  assert.deepEqual(stalled, { changed: false, timedOut: true, errors: [] }, 'one stalled write must not keep the plan shut');
+  assert.ok(Date.now() - started < 1000, 'settled at the timeout, not later');
+
+  const both = (write) => ({ markOnboarded: write, setExamTrack: write });
+  const failed = await arrive({ profile: null, ...both(() => Promise.resolve({ data: null, error: { message: 'RLS' } })) });
+  assert.deepEqual(failed, { changed: false, timedOut: false, errors: ['RLS', 'RLS'] });
+
+  const rejected = await arrive({ profile: null, ...both(() => Promise.reject(new Error('offline'))) });
+  assert.deepEqual(rejected.errors, ['offline', 'offline']);
+
+  const thrown = await arrive({ profile: null, ...both(() => { throw new Error('bad client'); }) });
+  assert.deepEqual(thrown.errors, ['bad client', 'bad client'], 'a synchronous throw is a failed write, not a crash');
+});
 
 test('the eligibility SQL in the runbook lists exactly the route\'s items and rehearsal labels', () => {
   const md = read('docs/telc-pilot/README.md');

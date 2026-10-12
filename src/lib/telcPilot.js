@@ -117,3 +117,43 @@ export function pilotEvidence({ doneIds = new Set(), writingRows = [], speakingR
 
 /** The speaking-session topics of the route, for the course page's query. */
 export const rehearsalTopics = () => routeItems().filter((i) => i.type === 'speaking').map((i) => i.task.teil);
+
+/** How long the course page waits for its arrival writes before it opens the plan anyway. */
+export const ARRIVAL_TIMEOUT_MS = 5000;
+
+/**
+ * Arrival on the course page: fill the two profile fields the gates read where
+ * they are still empty, and settle within `timeoutMs` whatever the network does
+ * — a stalled write must never keep the plan's links shut (Codex review 2 of
+ * PR B). After a timeout or an error the worst case is the onboarding intro on
+ * the next task page: a detour that still leads on, never a dead end.
+ *
+ * The writes stay in the page, with their column names literal, so
+ * tests/db-columns.test.mjs can check them against the schema; each is one
+ * update of the learner's own row filtered to that column being NULL.
+ *
+ * @param {object} input
+ * @param {object|null} input.profile  the profile the app already loaded, or null.
+ *   A field it shows as set is not written again; exam_track 'none' is the
+ *   learner's "no exam" choice and counts as set.
+ * @param {() => PromiseLike<{data, error}>} input.markOnboarded
+ * @param {() => PromiseLike<{data, error}>} input.setExamTrack
+ * @returns {Promise<{changed: boolean, timedOut: boolean, errors: string[]}>}
+ */
+export async function arrive({ profile = null, markOnboarded, setExamTrack, timeoutMs = ARRIVAL_TIMEOUT_MS } = {}) {
+  const run = (write) => Promise.resolve().then(write).catch((error) => ({ data: null, error }));
+  const writes = [];
+  if (!profile?.onboarding_completed_at) writes.push(run(markOnboarded));
+  if (profile?.exam_track == null) writes.push(run(setExamTrack));
+  if (!writes.length) return { changed: false, timedOut: false, errors: [] };
+
+  let timer;
+  const timeout = new Promise((resolve) => { timer = setTimeout(() => resolve(null), timeoutMs); });
+  const results = await Promise.race([Promise.all(writes), timeout]).finally(() => clearTimeout(timer));
+  if (!results) return { changed: false, timedOut: true, errors: [] };
+  return {
+    changed: results.some((r) => r?.data?.length > 0),
+    timedOut: false,
+    errors: results.filter((r) => r?.error).map((r) => r.error.message || String(r.error)),
+  };
+}
