@@ -29,6 +29,11 @@ import { lessonDateFormat, t, useLessonLang } from '../../lib/lesson/strings.js'
 // Copy comes from the lesson string table in the chrome language (English by
 // default, Deutsch-Modus on the toggle), matching the course engine's screens.
 // No pressure language: no "only X days left", no red, no exclamation marks.
+//
+// Two optional props for a plan that is not a Lektion course (the telc B1
+// pilot, src/pages/TelcB1KursPage.jsx): `lang` pins the language of a page
+// that is German throughout, and `unit="unit"` counts Einheiten instead of
+// Lektionen. Both stay in the string table (plan.unit/plan.units/plan.leadUnits).
 
 /** Today as YYYY-MM-DD in local time — the min for the date input. */
 const todayInput = () => {
@@ -38,10 +43,11 @@ const todayInput = () => {
   return `${d.getFullYear()}-${m}-${day}`;
 };
 
-export default function ExamDatePlan({ curriculum, path = [], doneIds = new Set() }) {
+export default function ExamDatePlan({ curriculum, path = [], doneIds = new Set(), lang: langOverride = null, unit = 'lesson' }) {
   const { user } = useAuth();
   const { profile, refreshSubscription } = useSubscription();
-  const [lang] = useLessonLang();
+  const [chromeLang] = useLessonLang();
+  const lang = langOverride || chromeLang;
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState('');
   const [saving, setSaving] = useState(false);
@@ -84,7 +90,7 @@ export default function ExamDatePlan({ curriculum, path = [], doneIds = new Set(
           <div className="min-w-0 flex-1">
             <p className="font-bold text-ink">{t('plan.question', lang)}</p>
             <p className="mt-0.5 text-[0.875rem] leading-relaxed text-graphite">
-              {t('plan.lead', lang)}
+              {t(unit === 'unit' ? 'plan.leadUnits' : 'plan.lead', lang)}
             </p>
             <div className="mt-3 flex flex-wrap items-center gap-2">
               <label className="sr-only" htmlFor="dm-exam-date">{t('plan.dateLabel', lang)}</label>
@@ -128,7 +134,7 @@ export default function ExamDatePlan({ curriculum, path = [], doneIds = new Set(
   const behind = plan.status === 'behind';
   const past = plan.status === 'past';
   const Icon = behind ? Compass : CheckCircle2;
-  const lessons = (n) => t(n === 1 ? 'plan.lesson' : 'plan.lessons', lang);
+  const lessons = (n) => t(n === 1 ? `plan.${unit}` : `plan.${unit}s`, lang);
   const examDay = lessonDateFormat(lang, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(`${examDate}T12:00:00`));
   const headline = past
     ? t('plan.past', lang)

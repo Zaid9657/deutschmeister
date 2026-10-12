@@ -103,7 +103,7 @@ const ModelltestOverview = () => {
         {history.length > 0 && (
           <Reveal className="mt-8">
             <p className="flex items-center gap-2 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
-              <History className="w-3.5 h-3.5" /> Deine Versuche
+              <History className="w-3.5 h-3.5" /> Ihre Versuche
             </p>
             <ul className="mt-3 space-y-2">
               {history.map((a) => (

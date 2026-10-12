@@ -36,15 +36,15 @@ import Stat from '../../components/ui/Stat.jsx';
 const VERDICT_COPY = {
   solide: {
     title: 'Über der Bestehensgrenze — mit Puffer',
-    body: 'In den automatisch ausgewerteten Teilen liegst du deutlich über der dokumentierten 60%-Grenze. Halte das Niveau und übe weiter Schreiben und Sprechen — die zählen in der echten Prüfung mit.',
+    body: 'In den automatisch ausgewerteten Teilen liegen Sie deutlich über der dokumentierten 60%-Grenze. Halten Sie das Niveau und üben Sie weiter Schreiben und Sprechen — die zählen in der echten Prüfung mit.',
   },
   knapp: {
     title: 'Über der Grenze — aber ohne Puffer',
-    body: 'Du liegst über der dokumentierten 60%-Grenze, aber knapp. Ziel für die echte Prüfung: 70–75%, damit ein schwacher Tag dich nicht unter die Grenze drückt.',
+    body: 'Sie liegen über der dokumentierten 60%-Grenze, aber knapp. Ziel für die echte Prüfung: 70–75%, damit ein schwacher Tag Sie nicht unter die Grenze drückt.',
   },
   'nicht-bereit': {
     title: 'Noch unter der Grenze',
-    body: 'In den automatisch ausgewerteten Teilen liegst du unter der dokumentierten 60%-Grenze. Das ist eine Standortbestimmung, kein Urteil — sieh dir unten an, welcher Teil die meisten Punkte gekostet hat.',
+    body: 'In den automatisch ausgewerteten Teilen liegen Sie unter der dokumentierten 60%-Grenze. Das ist eine Standortbestimmung, kein Urteil — sehen Sie sich unten an, welcher Teil die meisten Punkte gekostet hat.',
   },
 };
 
@@ -54,7 +54,7 @@ const SECTION_HINTS = {
   hoeren: { label: 'Hörverstehen', href: '/listening/b1.1', linkLabel: 'Hörtraining öffnen' },
 };
 
-// "Du bist bereit" — a trend, not a verdict: readiness reads the last two
+// "Sie sind bereit" — a trend, not a verdict: readiness reads the last two
 // COMPLETED attempts for this key (see src/services/readiness.js), never
 // this one attempt alone. Body copy differs by resolveModelltest() kind —
 // a course test's next step is the next course level, an exam track's is
@@ -101,7 +101,7 @@ const readyBody = (resolved, lastTwo) => {
   if (resolved.kind === 'course') {
     return `Ihre letzten zwei Abschlusstests liegen bei ${pctLine}. ${courseNext(resolved).body} (Richtwert, keine offizielle Bewertung.)`;
   }
-  return `Deine letzten zwei Übungstests liegen bei ${pctLine}. Melde dich zur Prüfung an und übe mit einem offiziellen Modellsatz. (Richtwert, keine offizielle Bewertung.)`;
+  return `Ihre letzten zwei Übungstests liegen bei ${pctLine}. Melden Sie sich zur Prüfung an und üben Sie mit einem offiziellen Modellsatz. (Richtwert, keine offizielle Bewertung.)`;
 };
 
 const ModelltestResult = () => {
@@ -188,9 +188,9 @@ const ModelltestResult = () => {
 
   return (
     <div className="min-h-screen bg-paper text-ink pt-24 pb-12 px-4">
-      <SEO title="Testergebnis" description="Auswertung deines Übungstests." path={`/modelltest/${examSlug}/result`} noindex />
+      <SEO title="Testergebnis" description="Auswertung Ihres Übungstests." path={`/modelltest/${examSlug}/result`} noindex />
       <div className="max-w-2xl mx-auto">
-        <SectionHeading size="page" level={1} eyebrow={mock.title} title="Dein Ergebnis" />
+        <SectionHeading size="page" level={1} eyebrow={mock.title} title="Ihr Ergebnis" />
 
         {/* Score — the one featured card; limette edge for a pass, siegel for a calm readout */}
         <Reveal delay={120} className="mt-6">
@@ -236,7 +236,7 @@ const ModelltestResult = () => {
           <Reveal delay={280} className="mt-6">
             <CompletionMoment
               headline="Übungstest abgeschlossen!"
-              detail={`Die meisten Punkte hast du in „${SECTION_HINTS[weakest.key].label}" liegen lassen — genau da lohnt sich die nächste Einheit.`}
+              detail={`Die meisten Punkte haben Sie in „${SECTION_HINTS[weakest.key].label}" liegen lassen — genau da lohnt sich die nächste Einheit.`}
               nextLabel={SECTION_HINTS[weakest.key].linkLabel}
               nextHref={SECTION_HINTS[weakest.key].href}
               fullLoad={SECTION_HINTS[weakest.key].fullLoad}
@@ -255,7 +255,7 @@ const ModelltestResult = () => {
             {readiness.ready ? (
               <Card raised edge="limette" className="p-6 text-center">
                 <Chip tone="limette">Bereit</Chip>
-                <h2 className="mt-3 font-display text-xl font-semibold text-ink">Du bist bereit</h2>
+                <h2 className="mt-3 font-display text-xl font-semibold text-ink">Sie sind bereit</h2>
                 <p className="mt-2 text-sm text-graphite leading-relaxed">{readyBody(resolved, readiness.lastTwo)}</p>
                 <div className="mt-5 flex flex-col sm:flex-row gap-3 justify-center">
                   {resolved.kind === 'course' ? (
@@ -273,7 +273,7 @@ const ModelltestResult = () => {
             ) : (
               <Card className="p-5 text-center">
                 <p className="text-sm text-graphite">
-                  Noch nicht ganz: zwei Tests in Folge mit mindestens 70 % — dann bist du bereit.
+                  Noch nicht ganz: zwei Tests in Folge mit mindestens 70 % — dann sind Sie bereit.
                 </p>
               </Card>
             )}

@@ -100,6 +100,28 @@ export const clearCourseContext = () => {
   try { sessionStorage.removeItem(CTX_KEY); } catch { /* storage blocked */ }
 };
 
+// The telc B1 pilot (src/data/programs/telcB1Komplett.js) is a course area of
+// its own at /telc-b1-kurs, not a /course/<level> path. Its speaking
+// rehearsals carry the task like the A1.1 Lektionen above, plus two fields
+// only this shape has: `homeHref` (the return bar's way home, instead of
+// courseHome(level)) and `returnLabel` (instead of "Zurück zur Lektion").
+// There is deliberately NO itemId: astro-site's Layout.astro renders its
+// return bar only for contexts with one, and its "Done → next" link would
+// point at a /course/b1.2/… lesson that does not exist.
+export const TELC_COURSE_HOME = '/telc-b1-kurs';
+export const telcCourseContext = (item) => ({
+  level: item.level,
+  code: 'telc B1',
+  title: item.title,
+  homeHref: TELC_COURSE_HOME,
+  returnTo: TELC_COURSE_HOME,
+  returnLabel: 'Zurück zum Plan',
+  openPrompt: item.task.prompt,
+  openTeil: item.task.teil,
+  hintWords: item.task.hintWords,
+  anrede: 'Sie',
+});
+
 /** Course route helpers — the only place the /course/ URL shape is spelled. */
 export const courseHome = (level) => `/course/${level}`;
 export const courseLesson = (level, itemId) => `/course/${level}/${encodeURIComponent(itemId)}`;

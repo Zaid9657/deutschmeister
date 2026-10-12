@@ -19,19 +19,25 @@ import { readCourseContext, courseHome, courseLesson } from '../lib/courseFlow.j
 // courseLesson() produced /course/a1.1/<lektion id>?done=1 — a legacy lesson
 // page that never existed for a rebuilt level.
 
+// A third writer, the telc B1 pilot (courseFlow.js telcCourseContext), lives
+// at /telc-b1-kurs rather than /course/<level>: its context names its own way
+// home (`homeHref`) and its button label (`returnLabel`), and the bar stays
+// hidden on that home page itself.
+
 export default function CourseReturnBar() {
   const { pathname } = useLocation();
   const [ctx, setCtx] = useState(null);
   useEffect(() => { setCtx(readCourseContext()); }, [pathname]);
-  if (!ctx || pathname.startsWith('/course/')) return null;
+  if (!ctx || pathname.startsWith('/course/') || (ctx.homeHref && pathname === ctx.homeHref)) return null;
+  const home = ctx.homeHref || courseHome(ctx.level);
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-rule bg-white/95 backdrop-blur print:hidden">
       <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-2.5">
-        <Link to={courseHome(ctx.level)} className="inline-flex items-center gap-1 text-sm font-bold text-siegel hover:text-siegel-deep"><ArrowLeft className="h-4 w-4" /> {ctx.code}</Link>
+        <Link to={home} className="inline-flex items-center gap-1 text-sm font-bold text-siegel hover:text-siegel-deep"><ArrowLeft className="h-4 w-4" /> {ctx.code}</Link>
         <p className="min-w-0 flex-1 truncate text-[0.8125rem] text-graphite">{ctx.position ? <><span className="font-data">{ctx.position}/{ctx.total}</span> · </> : null}{ctx.title}</p>
         {ctx.returnTo ? (
           <Link to={ctx.returnTo} className="inline-flex items-center gap-1.5 rounded-clay bg-siegel px-4 py-2 text-sm font-bold text-white shadow-raise-siegel transition-all hover:bg-siegel-lift active:translate-y-1 active:shadow-none">
-            Zurück zur Lektion <ArrowLeft className="h-4 w-4 rotate-180" aria-hidden="true" />
+            {ctx.returnLabel || 'Zurück zur Lektion'} <ArrowLeft className="h-4 w-4 rotate-180" aria-hidden="true" />
           </Link>
         ) : (
           <Link to={`${courseLesson(ctx.level, ctx.itemId)}?done=1`} className="inline-flex items-center gap-1.5 rounded-clay bg-siegel px-4 py-2 text-sm font-bold text-white shadow-raise-siegel transition-all hover:bg-siegel-lift active:translate-y-1 active:shadow-none">

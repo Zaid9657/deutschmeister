@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { PenTool, Loader2, CheckCircle, XCircle, Sparkles, AlertTriangle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
@@ -24,8 +24,17 @@ const CRITERION_MAX = MAX_WRITING_POINTS / CRITERIA.length;
 // The grading happens server-side (netlify/functions/evaluate-writing.mjs,
 // service-role write into writing_submissions); this page renders tasks from
 // the synced task bank, submits, and shows the Richtwert feedback + history.
+//
+// Deep links (telc B1 pilot route, src/data/programs/telcB1Komplett.js):
+//   ?task=<taskKey>  opens that task — only a key of THIS exam's bank, any
+//                    other value is ignored (the first task stays selected);
+//   &revise=1        loads the learner's own latest letter for that task into
+//                    the editor and shows its correction above it, so the
+//                    revision day starts from the corrected draft.
+// The page speaks Sie, like the course (CLAUDE.md).
 const SchreibenPage = () => {
   const { examSlug } = useParams();
+  const [searchParams] = useSearchParams();
   const { user } = useAuth();
   const { profile } = useSubscription();
 
@@ -39,8 +48,12 @@ const SchreibenPage = () => {
   useEffect(() => setExamKey(defaultExamKey), [defaultExamKey]);
 
   const tasks = writingTasksForExam(examKey);
-  const [taskKey, setTaskKey] = useState(null);
+  const wantedTask = searchParams.get('task');
+  const wantsRevision = searchParams.get('revise') === '1';
+  const [taskKey, setTaskKey] = useState(() => wantedTask);
   const activeTask = tasks.find((t) => t.taskKey === taskKey) || tasks[0] || null;
+  // The revision view belongs to the task the link named, and only to it.
+  const revising = wantsRevision && !!activeTask && activeTask.taskKey === wantedTask;
 
   const [text, setText] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -49,6 +62,31 @@ const SchreibenPage = () => {
   const [history, setHistory] = useState([]);
 
   const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
+
+  // Revision day: the learner's own latest letter for this task, with its
+  // correction. Undefined while loading, null when there is none yet.
+  const [lastLetter, setLastLetter] = useState(undefined);
+  useEffect(() => {
+    if (!user || !revising) return undefined;
+    let alive = true;
+    supabase
+      .from('writing_submissions')
+      .select('submission_text, feedback, total_score, max_score, created_at')
+      .eq('user_id', user.id)
+      .eq('exam_key', examKey)
+      .eq('task_key', activeTask.taskKey)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+      .then(({ data, error }) => {
+        if (!alive) return;
+        if (error) console.error('[SchreibenPage] last letter:', error.message);
+        setLastLetter(data || null);
+        // Pre-fill only an empty editor: never overwrite what the learner typed.
+        if (data?.submission_text) setText((current) => (current.trim() ? current : data.submission_text));
+      });
+    return () => { alive = false; };
+  }, [user, revising, examKey, activeTask?.taskKey]);
 
   useEffect(() => {
     if (!user) return;
@@ -78,10 +116,10 @@ const SchreibenPage = () => {
       if (!res.ok) {
         setErrorMsg(
           data.error === 'limit_reached'
-            ? `Limit erreicht (${data.used}/${data.limit}). ${data.tier === 'free_trial' ? 'Mit Pro bekommst du mehr Bewertungen pro Monat.' : 'Nächsten Monat geht es weiter.'}`
+            ? `Limit erreicht (${data.used}/${data.limit}). ${data.tier === 'free_trial' ? 'Mit Pro bekommen Sie mehr Bewertungen pro Monat.' : 'Nächsten Monat geht es weiter.'}`
             : data.error === 'subscription_required'
-              ? 'Dein Test ist abgelaufen — mit Pro kannst du weiter Texte bewerten lassen.'
-              : 'Die Bewertung ist fehlgeschlagen. Bitte versuch es noch einmal.'
+              ? 'Ihre Testphase ist abgelaufen – mit Pro können Sie weiter Texte bewerten lassen.'
+              : 'Die Bewertung ist fehlgeschlagen. Bitte versuchen Sie es noch einmal.'
         );
       } else if (data.evaluation_failed) {
         setErrorMsg(data.message);
@@ -90,7 +128,7 @@ const SchreibenPage = () => {
       }
     } catch (e) {
       console.error('evaluate-writing call failed:', e);
-      setErrorMsg('Netzwerkfehler — bitte versuch es noch einmal.');
+      setErrorMsg('Netzwerkfehler – bitte versuchen Sie es noch einmal.');
     } finally {
       setSubmitting(false);
     }
@@ -111,8 +149,8 @@ const SchreibenPage = () => {
           size="page"
           level={1}
           eyebrow="Schreibtraining"
-          title="Der Brief, den die Prüfung von dir will"
-          lead="Schreib die Aufgabe unter echten Bedingungen, und die KI bewertet nach den vier dokumentierten Kriterien: Aufgabe, Aufbau, Korrektheit, Wortschatz — mit konkreten Korrekturen."
+          title="Der Brief, den die Prüfung von Ihnen will"
+          lead="Schreiben Sie die Aufgabe unter echten Bedingungen – die KI bewertet nach den vier dokumentierten Kriterien: Aufgabe, Aufbau, Korrektheit, Wortschatz, mit konkreten Korrekturen."
         />
 
         {/* Exam picker */}
@@ -163,6 +201,42 @@ const SchreibenPage = () => {
           </div>
         )}
 
+        {activeTask && !result && revising && lastLetter !== undefined && (
+          lastLetter ? (
+            <Card className="mt-5 p-4" aria-label="Ihre letzte Korrektur">
+              <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
+                Ihre letzte Korrektur · {new Date(lastLetter.created_at).toLocaleDateString('de-DE')} · {lastLetter.total_score}/{lastLetter.max_score}
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-ink">
+                Ihr Brief steht unten im Textfeld. Arbeiten Sie die Korrekturen ein und lassen Sie ihn neu bewerten.
+              </p>
+              {Array.isArray(lastLetter.feedback?.corrections) && lastLetter.feedback.corrections.length > 0 && (
+                <ul className="mt-3 space-y-2">
+                  {lastLetter.feedback.corrections.map((c, i) => (
+                    <li key={i} className="text-sm leading-relaxed">
+                      <span className="text-accent-himbeer-ink line-through">{c.original}</span>
+                      {' → '}
+                      <span className="text-accent-limette-ink font-bold">{c.corrected}</span>
+                      {c.note && <span className="block text-graphite text-[0.8125rem] mt-0.5">{c.note}</span>}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {Array.isArray(lastLetter.feedback?.improvements) && lastLetter.feedback.improvements.length > 0 && (
+                <ul className="mt-3 space-y-1">
+                  {lastLetter.feedback.improvements.map((line) => (
+                    <li key={line} className="text-sm text-graphite">· {line}</li>
+                  ))}
+                </ul>
+              )}
+            </Card>
+          ) : (
+            <Card tone="sunk" className="mt-5 p-4 text-sm text-ink">
+              Zu dieser Aufgabe gibt es noch keinen Entwurf. Schreiben Sie zuerst den Brief und lassen Sie ihn bewerten – überarbeitet wird danach.
+            </Card>
+          )
+        )}
+
         {activeTask && !result && (
           <>
             <Card tone="sunk" className="mt-5 p-4">
@@ -185,7 +259,7 @@ const SchreibenPage = () => {
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 rows={12}
-                placeholder="Schreib deinen Text hier…"
+                placeholder="Schreiben Sie Ihren Text hier …"
                 className={`${FIELD} p-4 leading-relaxed`}
               />
               <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
@@ -219,7 +293,7 @@ const SchreibenPage = () => {
                 </div>
                 <p className="mt-3 text-sm text-graphite leading-relaxed">{result.feedback}</p>
                 <p className="mt-3 font-data text-[0.75rem] text-graphite">
-                  Einschätzung nach Prüfungskriterien — keine offizielle Bewertung und keine Vorhersage deines Ergebnisses.
+                  Einschätzung nach Prüfungskriterien – keine offizielle Bewertung und keine Vorhersage Ihres Ergebnisses.
                 </p>
               </Card>
             </Reveal>
@@ -257,6 +331,29 @@ const SchreibenPage = () => {
               </Card>
             </Reveal>
 
+            {((Array.isArray(result.strengths) && result.strengths.length > 0) || (Array.isArray(result.improvements) && result.improvements.length > 0)) && (
+              <Reveal delay={135}>
+                <Card className="grid gap-4 p-5 sm:grid-cols-2">
+                  {Array.isArray(result.strengths) && result.strengths.length > 0 && (
+                    <div>
+                      <p className="text-sm font-bold text-ink mb-2">Das gelingt Ihnen</p>
+                      <ul className="space-y-1">
+                        {result.strengths.map((line) => <li key={line} className="text-sm text-graphite">· {line}</li>)}
+                      </ul>
+                    </div>
+                  )}
+                  {Array.isArray(result.improvements) && result.improvements.length > 0 && (
+                    <div>
+                      <p className="text-sm font-bold text-ink mb-2">Daran arbeiten Sie als Nächstes</p>
+                      <ul className="space-y-1">
+                        {result.improvements.map((line) => <li key={line} className="text-sm text-graphite">· {line}</li>)}
+                      </ul>
+                    </div>
+                  )}
+                </Card>
+              </Reveal>
+            )}
+
             {Array.isArray(result.corrections) && result.corrections.length > 0 && (
               <Reveal delay={180}>
                 <Card className="p-5">
@@ -280,7 +377,7 @@ const SchreibenPage = () => {
                 headline="Text bewertet!"
                 detail={(
                   <span className="font-data text-[0.8125rem]">
-                    {`Noch ${Math.max(0, (result.limit ?? 0) - (result.used ?? 0))} Bewertung(en) in deinem Kontingent.`}
+                    {`Noch ${Math.max(0, (result.limit ?? 0) - (result.used ?? 0))} Bewertung(en) in Ihrem Kontingent.`}
                   </span>
                 )}
                 nextLabel="Nächste Aufgabe schreiben"
@@ -293,7 +390,7 @@ const SchreibenPage = () => {
         {history.length > 0 && !result && (
           <Reveal className="mt-10">
             <p className="flex items-center gap-2 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
-              <Sparkles className="w-3.5 h-3.5" /> Deine letzten Texte
+              <Sparkles className="w-3.5 h-3.5" /> Ihre letzten Texte
             </p>
             <ul className="mt-3 space-y-2">
               {history.map((h) => (

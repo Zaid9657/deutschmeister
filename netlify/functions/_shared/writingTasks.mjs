@@ -22,12 +22,12 @@ export const WRITING_TASKS = [
     minWords: 80,
     maxWords: 140,
     task:
-      'Du hast in einem Online-Shop einen Rucksack bestellt und schon bezahlt. Nach zwei Wochen ist er immer noch nicht angekommen. ' +
-      'Schreib an den Kundenservice.',
+      'Sie haben in einem Online-Shop einen Rucksack bestellt und schon bezahlt. Nach zwei Wochen ist er immer noch nicht angekommen. ' +
+      'Schreiben Sie an den Kundenservice.',
     leitpunkte: [
-      'Beschreib das Problem (was, wann bestellt)',
-      'Sag, was du schon versucht hast',
-      'Fordere eine Lösung mit einer Frist',
+      'Beschreiben Sie das Problem (was, wann bestellt)',
+      'Sagen Sie, was Sie schon versucht haben',
+      'Fordern Sie eine Lösung mit einer Frist',
     ],
   },
   {
@@ -38,12 +38,12 @@ export const WRITING_TASKS = [
     minWords: 80,
     maxWords: 140,
     task:
-      'Eine Freundin hat dich zu ihrer Geburtstagsfeier am Samstag eingeladen, aber du kannst nicht kommen. ' +
-      'Schreib ihr eine E-Mail.',
+      'Eine Freundin hat Sie zu ihrer Geburtstagsfeier am Samstag eingeladen, aber Sie können nicht kommen. ' +
+      'Schreiben Sie ihr eine E-Mail.',
     leitpunkte: [
-      'Bedank dich für die Einladung',
-      'Erklär, warum du nicht kommen kannst',
-      'Schlag ein alternatives Treffen vor',
+      'Bedanken Sie sich für die Einladung',
+      'Erklären Sie, warum Sie nicht kommen können',
+      'Schlagen Sie ein alternatives Treffen vor',
     ],
   },
   {
@@ -54,12 +54,12 @@ export const WRITING_TASKS = [
     minWords: 80,
     maxWords: 140,
     task:
-      'Du möchtest einen Deutschkurs besuchen und hast eine Anzeige einer Sprachschule gesehen. ' +
-      'Schreib an die Schule und stell Fragen.',
+      'Sie möchten einen Deutschkurs besuchen und haben eine Anzeige einer Sprachschule gesehen. ' +
+      'Schreiben Sie an die Schule und stellen Sie Fragen.',
     leitpunkte: [
-      'Stell dich kurz vor und nenn dein Niveau',
-      'Frag nach Terminen und Preisen',
-      'Frag, wie man sich anmelden kann',
+      'Stellen Sie sich kurz vor und nennen Sie Ihr Niveau',
+      'Fragen Sie nach Terminen und Preisen',
+      'Fragen Sie, wie man sich anmelden kann',
     ],
   },
   {
