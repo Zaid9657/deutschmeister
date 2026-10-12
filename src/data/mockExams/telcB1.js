@@ -27,7 +27,7 @@ export const telcB1Mock = {
   title: 'telc B1 Übungstest (Kurzversion)',
   intro:
     'Drei Teile unter Zeitdruck: Lesen, Sprachbausteine und Hören werden automatisch ausgewertet. ' +
-    'Der Schreibteil kommt mit Aufgabe und Selbstcheck — bewerte ihn ehrlich selbst oder nutze das Schreibtraining.',
+    'Der Schreibteil kommt mit Aufgabe und Selbstcheck — bewerten Sie ihn ehrlich selbst oder nutzen Sie das Schreibtraining.',
   passPercent: 60,
 
   sections: [
@@ -36,7 +36,7 @@ export const telcB1Mock = {
       title: 'Leseverstehen',
       minutes: 25,
       instructions:
-        'Teil 1: Welche Überschrift passt zu welchem Text? Zwei Überschriften bleiben übrig. Teil 2: Lies die Texte und wähl die richtige Antwort.',
+        'Teil 1: Welche Überschrift passt zu welchem Text? Zwei Überschriften bleiben übrig. Teil 2: Lesen Sie die Texte und wählen Sie die richtige Antwort.',
       parts: [
         {
           key: 'lesen-1',
@@ -121,7 +121,7 @@ export const telcB1Mock = {
       title: 'Sprachbausteine',
       minutes: 15,
       instructions:
-        'Lies den Brief und wähl für jede Lücke die richtige Möglichkeit — genau das telc-Format: Grammatik und Wortschatz im Kontext.',
+        'Lesen Sie den Brief und wählen Sie für jede Lücke die richtige Möglichkeit — genau das telc-Format: Grammatik und Wortschatz im Kontext.',
       parts: [
         {
           key: 'sb-1',
@@ -171,7 +171,7 @@ export const telcB1Mock = {
       title: 'Hörverstehen',
       minutes: 15,
       instructions:
-        'Zwei Hörübungen mit Muttersprachler-Dialogen auf B1-Niveau. Du kannst jede Aufnahme wie in der Prüfung nur begrenzt oft abspielen.',
+        'Zwei Hörübungen mit Muttersprachler-Dialogen auf B1-Niveau. Sie können jede Aufnahme wie in der Prüfung nur begrenzt oft abspielen.',
       parts: [
         {
           key: 'hoeren-1',
@@ -200,16 +200,16 @@ export const telcB1Mock = {
       title: 'Schriftlicher Ausdruck',
       minutes: 30,
       instructions:
-        'Schreib eine halbformelle E-Mail (ca. 80–120 Wörter). Dieser Teil wird nicht automatisch bewertet — nutze den Selbstcheck.',
+        'Schreiben Sie eine halbformelle E-Mail (ca. 80–120 Wörter). Dieser Teil wird nicht automatisch bewertet — nutzen Sie den Selbstcheck.',
       parts: [
         {
           key: 'schreiben-1',
           type: 'writing',
           label: 'E-Mail schreiben',
           task:
-            'Du hast in einem Online-Shop einen Rucksack bestellt. Nach zwei Wochen ist er immer noch nicht angekommen, ' +
-            'obwohl du schon bezahlt hast. Schreib an den Kundenservice: Beschreib das Problem, sag, was du schon versucht hast, ' +
-            'und fordere eine Lösung mit einer Frist.',
+            'Sie haben in einem Online-Shop einen Rucksack bestellt. Nach zwei Wochen ist er immer noch nicht angekommen, ' +
+            'obwohl Sie schon bezahlt haben. Schreiben Sie an den Kundenservice: Beschreiben Sie das Problem, sagen Sie, was Sie schon versucht haben, ' +
+            'und fordern Sie eine Lösung mit einer Frist.',
           criteria: [
             'Passende Anrede und Schlussformel (halbformell)',
             'Alle drei Leitpunkte behandelt',

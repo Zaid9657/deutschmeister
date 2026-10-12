@@ -133,7 +133,47 @@ If any field is off, the agent revokes by hand with the same three updates `hand
   - the three writing tasks, each with its revision (six AI corrections);
   - the ten speaking rehearsals.
 - **The request:** it must arrive within 7 days of the last unit.
-- **The eligibility query** comes with the 20-unit route (PR B), whose item ids it counts.
+- **The eligibility query** checks all four at once. The two lists are the route's own item ids and
+  rehearsal labels; `tests/telc-pilot.test.mjs` fails if they ever differ from `src/data/programs/telcB1Komplett.js`.
+  The units come from the learner's own ticks; the letters and rehearsals are what the server recorded.
+
+```sql
+with route(item_id) as (
+  select unnest(array[
+    'kurztest-1', 'brief-1-entwurf', 'sprechen-1', 'brief-1-ueberarbeitung',
+    'sprechen-2', 'luecke-1', 'brief-2-entwurf', 'sprechen-3',
+    'brief-2-ueberarbeitung', 'sprechen-4', 'sprechen-5', 'luecke-2',
+    'brief-3-entwurf', 'sprechen-6', 'brief-3-ueberarbeitung', 'sprechen-7',
+    'satz-roentgen', 'sprechen-8', 'sprechen-9', 'sprechen-10',
+    'luecke-3', 'kurztest-2'
+  ])
+), rehearsals(topic) as (
+  select unnest(array[
+    'telc B1 · Teil 1 · Übung 1/3', 'telc B1 · Teil 2 · Übung 1/4',
+    'telc B1 · Teil 3 · Übung 1/3', 'telc B1 · Teil 1 · Übung 2/3',
+    'telc B1 · Teil 2 · Übung 2/4', 'telc B1 · Teil 3 · Übung 2/3',
+    'telc B1 · Teil 2 · Übung 3/4', 'telc B1 · Teil 1 · Übung 3/3',
+    'telc B1 · Teil 2 · Übung 4/4', 'telc B1 · Teil 3 · Übung 3/3'
+  ])
+)
+select
+  (select count(*) from route r where exists (
+     select 1 from program_progress p
+     where p.user_id = '<USER_ID>' and p.program_key = 'telc_b1_komplett' and p.item_id = r.item_id)
+  ) as items_done,        -- expect 22 (all 20 units)
+  (select count(*) from (
+     select task_key from writing_submissions
+     where user_id = '<USER_ID>' and exam_key = 'telc_b1'
+       and task_key in ('beschwerde-lieferung', 'einladung-absage', 'anfrage-sprachkurs')
+     group by task_key having count(*) >= 2) w
+  ) as letters_revised,   -- expect 3 (each letter written and revised: six corrections)
+  (select count(distinct s.topic) from speaking_sessions s join rehearsals r on r.topic = s.topic
+     where s.user_id = '<USER_ID>' and s.status = 'completed'
+  ) as rehearsals_done,   -- expect 10
+  (select max(completed_at) from program_progress
+     where user_id = '<USER_ID>' and program_key = 'telc_b1_komplett'
+  ) as last_unit_at;      -- the request must arrive within 7 days of this
+```
 
 **Never use the admin action „Pro-Tage gutschreiben" (`grant_pro_days`) for this.**
 - It writes a separate manual `monthly` row.
@@ -199,4 +239,18 @@ from purchases where product_key = 'telc_b1_komplett'
 group by status;
 ```
 
-**Progress and usage per buyer:** the speaking, writing and route queries come with PR B, which defines how each unit is recorded.
+**Progress per buyer** (every active pilot purchase):
+
+```sql
+select p.user_id,
+  (select count(distinct item_id) from program_progress pp
+     where pp.user_id = p.user_id and pp.program_key = 'telc_b1_komplett') as items_ticked,      -- of 22
+  (select count(*) from writing_submissions w
+     where w.user_id = p.user_id and w.exam_key = 'telc_b1') as telc_letters,                    -- route: 6
+  (select count(*) from speaking_sessions s
+     where s.user_id = p.user_id and s.status = 'completed' and s.topic like 'telc B1 · Teil %') as rehearsals,  -- route: 10
+  (select max(completed_at) from exam_attempts e
+     where e.user_id = p.user_id and e.exam_key = 'telc_b1' and e.status = 'completed') as last_short_test
+from purchases p
+where p.product_key = 'telc_b1_komplett' and p.status = 'active';
+```

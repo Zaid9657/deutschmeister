@@ -13,7 +13,12 @@
 //      subscriptions.
 //   4. PROGRAM INTEGRITY — every grammar item in the course plan must point at
 //      a real topic slug (they are derived, and this keeps it that way), and
-//      item ids must be unique or progress checkboxes collide.
+//      item ids must be unique or progress checkboxes collide. The telc B1
+//      route (2026-10-12) has no grammar items any more: every href of it is
+//      held to the route-class sweep instead (Astro page ⇔ external), which
+//      also closes the old `w4-review` bug — an Astro hub rendered as an SPA
+//      <Link>, i.e. a 404 inside the app. tests/telc-pilot.test.mjs pins the
+//      route's shape.
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -21,7 +26,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-import { PROGRAM, PROGRAM_KEY, allItemIds } from '../src/data/programs/telcB1Komplett.js';
+import { PROGRAM, PROGRAM_KEY, allItemIds, GAP_TARGETS as TELC_GAP_TARGETS, BONUSES as TELC_BONUSES } from '../src/data/programs/telcB1Komplett.js';
 import {
   PROGRAM as SD1_PROGRAM,
   PROGRAM_KEY as SD1_PROGRAM_KEY,
@@ -195,30 +200,6 @@ test('the migration widens plan_type and keeps purchases client-read-only', () =
 // 3. Program data integrity
 // ---------------------------------------------------------------------------
 
-test('program item ids are unique and grammar hrefs resolve to real topics', () => {
-  const ids = allItemIds();
-  assert.equal(new Set(ids).size, ids.length, 'duplicate item ids — progress checkboxes would collide');
-  assert.ok(ids.length >= 20, 'the 4-week plan should carry at least one item per study day');
-
-  const slugs = {
-    'b1.1': new Set(getTopicsForLevel('b1.1').map((t) => t.slug)),
-    'b1.2': new Set(getTopicsForLevel('b1.2').map((t) => t.slug)),
-  };
-  for (const week of PROGRAM.weeks) {
-    for (const day of week.days) {
-      for (const item of day.items) {
-        assert.ok(item.id && item.title && item.href, `item missing fields in ${day.label}`);
-        const m = item.href.match(/^\/grammar\/(b1\.[12])\/([a-z0-9-]+)$/);
-        if (m) {
-          assert.ok(slugs[m[1]].has(m[2]), `${item.href} does not match a real ${m[1]} topic slug`);
-        }
-      }
-    }
-  }
-  assert.equal(PROGRAM.key, PROGRAM_KEY);
-  assert.equal(PROGRAM.weeks.length, 4, 'the offer promises a 4-week plan');
-});
-
 // ---------------------------------------------------------------------------
 // 4. The three-place route rule for the course area
 // ---------------------------------------------------------------------------
@@ -332,11 +313,50 @@ test('the readiness service backs both the result screen and the dashboard exam 
 // pointing anywhere else is a dead link on the course page.
 const KNOWN_SPA_ROUTES = [
   /^\/vocabulary$/, /^\/level\/[ab][12]\.[12]$/, /^\/reading\/[ab][12]\.[12]$/,
-  /^\/listening\/[ab][12]\.[12]\/[1-6]$/, /^\/schreiben\/[a-z0-9-]+$/, /^\/modelltest\/[a-z0-9-]+$/,
+  /^\/listening\/[ab][12]\.[12]$/, /^\/listening\/[ab][12]\.[12]\/[1-6]$/,
+  /^\/schreiben\/[a-z0-9-]+$/, /^\/modelltest\/[a-z0-9-]+$/,
   /^\/start-deutsch-1-kurs$/, /^\/goethe-a2-kurs$/, /^\/a1-[12]-phase$/, /^\/a2-[12]-phase$/,
 ];
 const KNOWN_SLASH_ROUTES = [/^\/speaking\/$/, /^\/analyze\/$/]; // prerendered SPA routes (case 2)
 const KNOWN_ASTRO = [/^\/grammar\/[ab][12]\.[12]\/(?:[a-z0-9-]+\/)?$/, /^\/leitfaden\/[a-z0-9-]+\/$/]; // case 1
+
+/** Which of the three trailing-slash classes an href (query string ignored) belongs to. */
+const routeClass = (href) => {
+  const path = href.split('?')[0];
+  return {
+    astro: KNOWN_ASTRO.some((re) => re.test(path)),
+    spa: KNOWN_SPA_ROUTES.some((re) => re.test(path)) || KNOWN_SLASH_ROUTES.some((re) => re.test(path)),
+  };
+};
+
+test('telc_b1_komplett: 4 weeks, 20 days, unique ids, and every link in a known route class', () => {
+  const ids = allItemIds();
+  assert.equal(new Set(ids).size, ids.length, 'duplicate item ids — progress checkboxes would collide');
+  assert.equal(PROGRAM.key, PROGRAM_KEY);
+  assert.equal(PROGRAM.weeks.length, 4, 'the offer promises a 4-week plan');
+  assert.equal(PROGRAM.weeks.reduce((n, w) => n + w.days.length, 0), 20, '20 Trainingseinheiten, one per study day');
+
+  const links = [];
+  for (const week of PROGRAM.weeks) {
+    for (const day of week.days) {
+      for (const item of day.items) {
+        assert.ok(item.id && item.title && item.href, `item missing fields in ${day.label}`);
+        links.push({ where: `${day.label} ${item.id}`, href: item.href, external: item.external });
+      }
+    }
+  }
+  for (const [key, target] of Object.entries(TELC_GAP_TARGETS)) {
+    if (target.href) links.push({ where: `gap target ${key}`, href: target.href, external: target.external });
+  }
+  for (const bonus of TELC_BONUSES) {
+    if (bonus.link) links.push({ where: `bonus ${bonus.id}`, href: bonus.link.href, external: bonus.link.external });
+  }
+  for (const { where, href, external } of links) {
+    const { astro, spa } = routeClass(href);
+    assert.ok(astro || spa, `${where}: unknown href ${href}`);
+    assert.equal(!!external, astro, `${where} ${href}: external must be set exactly for Astro-served pages`);
+  }
+});
 
 test('a12_phase program item ids are unique and grammar hrefs resolve to real a1.2 topics', () => {
   const ids = a12AllItemIds();

@@ -453,7 +453,7 @@ const ModelltestRun = () => {
                     value={answers[`writing:${part.key}`] || ''}
                     onChange={(e) => setAnswer(`writing:${part.key}`, e.target.value)}
                     rows={10}
-                    placeholder="Schreib deine E-Mail hier…"
+                    placeholder="Schreiben Sie Ihre E-Mail hier …"
                     className={`w-full p-4 text-sm leading-relaxed ${FIELD}`}
                   />
                   <Card className="p-4">

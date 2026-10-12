@@ -27,8 +27,8 @@ const ModelltestHub = () => {
           size="page"
           level={1}
           eyebrow="Übungstests"
-          title="Prüfen, ob du bereit bist"
-          lead="Aufgaben im Stil der Prüfung, unter Zeitdruck, mit Auswertung nach den dokumentierten Bestehensgrenzen — damit dein erster Ernstfall nicht der Prüfungstag ist."
+          title="Prüfen, ob Sie bereit sind"
+          lead="Aufgaben im Stil der Prüfung, unter Zeitdruck, mit Auswertung nach den dokumentierten Bestehensgrenzen — damit Ihr erster Ernstfall nicht der Prüfungstag ist."
         />
 
         {/* The grid a learner CHOOSES from — tilt on the pickable cards only. */}
