@@ -73,6 +73,17 @@ must not, because it would be untrue.
 Run these in order. Run the first only once PR A (the sale switch) is live; until the switch is on, no
 Buy button shows the price.
 
+**0. Close the store side** (now, and again whenever the sale closes). The site switch hides the Buy
+buttons, but a checkout link copied earlier still works until the product itself is closed:
+```
+In Lemon Squeezy store 309512 set product 1329566 to Draft (unpublished). Do not delete it and do not
+change anything else. Then open https://deutsch-meister.lemonsqueezy.com/checkout/buy/<the variant's
+checkout UUID — the agent gives it to you> in a private window and report whether a payment form
+appears. Do not pay.
+```
+No payment form: closed. A payment form: tell the agent. The Lemon Squeezy docs do not say whether
+Draft blocks checkout links, which is why the link is tested.
+
 **1. Rename, reprice, redirect, report** (product 1329566, variant 2077984):
 ```
 In Lemon Squeezy store 309512 open product 1329566. Rename it to "telc-B1-Prüfungsprobe" and set
@@ -96,7 +107,7 @@ product 1329566, usage limit 2, expires <date three days from now> 23:00 UTC. Co
 **3. The test purchase.** The agent gives you the exact checkout link for the test account (its e-mail and
 user id are in the link, because the Buy buttons stay hidden until the sale opens):
 ```
-Open <the link the agent gives you>, apply TELCTEST99, confirm the total is €1.49 (or €1.49 plus VAT
+In store 309512 set product 1329566 to Published. Then open <the link the agent gives you>, apply TELCTEST99, confirm the total is €1.49 (or €1.49 plus VAT
 if the store is still tax-exclusive), complete the checkout. Report the Lemon Squeezy order number.
 ```
 

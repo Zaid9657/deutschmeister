@@ -5,17 +5,19 @@
 // upserts the purchases row with status 'active' on every order_created. Lemon
 // Squeezy re-sends that event — its own retries, and the owner's "resend" in
 // the dashboard — so a resend after a refund handed the access straight back,
-// with the money already returned. Now the payload's status (refunded,
-// partial_refund, failed, fraudulent — `refunded` is true only for a FULL
-// refund) and then the purchases row's status are checked before anything is
-// written. The second half: a paid course order with no matchable account used
-// to fail silently into webhook_logs; the owner is now mailed at once.
+// with the money already returned. Now three records are checked before
+// anything is written: the payload's status (refunded, partial_refund, failed,
+// fraudulent — `refunded` is true only for a FULL refund), the purchases row,
+// and the logged order_refunded event — the only trace of a refund that
+// arrived before the order was ever delivered (Codex review of PR A). The
+// second half: a paid course order with no matchable account used to fail
+// silently into webhook_logs; the owner is now mailed at once.
 //
 // Behavioural, not structural: the real handler runs against a stubbed fetch
 // (Supabase REST and Resend both go through global fetch). The purchases table
-// is kept in memory, so the delivered → refunded → replayed cycle runs through
-// the real order_refunded handler too. Same harness as
-// tests/webhook-unrouted-order.test.mjs.
+// and webhook_logs are kept in memory, so the delivered → refunded → replayed
+// cycle runs through the real order_refunded handler and the real event log.
+// Same harness as tests/webhook-unrouted-order.test.mjs.
 
 import { test, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
@@ -33,7 +35,9 @@ const ORDER = '888001';
 let mails = [];
 let calls = [];
 let purchases = new Map(); // lemonsqueezy_order_id → row
+let logs = []; // webhook_logs rows, as the handler writes them
 let failPurchaseLookup = false;
+let failLogLookup = false;
 
 const json = (body, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });
@@ -66,6 +70,18 @@ globalThis.fetch = async (url, init = {}) => {
       return new Response(null, { status: 204 });
     }
   }
+  if (u.pathname === '/rest/v1/webhook_logs') {
+    if (method === 'POST') {
+      logs.push(JSON.parse(init.body));
+      return new Response(null, { status: 201 });
+    }
+    if (method === 'GET') {
+      if (failLogLookup) return json({ message: 'stub log failure', code: 'XX000' }, 500);
+      const type = (u.searchParams.get('event_type') || '').replace(/^eq\./, '');
+      const id = (u.searchParams.get('payload->data->>id') || '').replace(/^eq\./, '');
+      return json(logs.filter((l) => l.event_type === type && String(l.payload?.data?.id) === id).map((_, i) => ({ id: `log-${i}` })));
+    }
+  }
   // Every other read (subscriptions, profiles, auth users) finds nothing, and
   // every other write succeeds.
   return json([]);
@@ -77,7 +93,9 @@ beforeEach(() => {
   mails = [];
   calls = [];
   purchases = new Map();
+  logs = [];
   failPurchaseLookup = false;
+  failLogLookup = false;
 });
 
 function signed(payload) {
@@ -152,6 +170,27 @@ test('the full cycle: delivered, refunded, then resent — the resend gives noth
   assert.equal((await handler(signed(orderEvent('order_created')))).statusCode, 200);
   assert.deepEqual(grantWrites(), [], 'the resend wrote a grant');
   assert.equal(purchases.get(ORDER).status, 'refunded', 'the resend re-activated a refunded purchase');
+});
+
+test('refund first: a refund that arrives before the order was delivered blocks every later delivery', async () => {
+  // order_refunded finds no purchases row (the order was never delivered —
+  // e.g. no matching account yet) and has nothing to revoke…
+  assert.equal((await handler(signed(orderEvent('order_refunded', { status: 'refunded', refunded: true })))).statusCode, 200);
+  assert.equal(purchases.size, 0);
+  // …then Lemon Squeezy retries the ORIGINAL paid order_created, after the buyer
+  // has an account. Only the logged refund knows the order was refunded.
+  calls = [];
+  const res = await handler(signed(orderEvent('order_created')));
+  assert.equal(res.statusCode, 200);
+  assert.deepEqual(grantWrites(), [], 'a refunded order was delivered by a retry');
+  assert.equal(purchases.size, 0);
+});
+
+test('a failed refund-log lookup fails the event and grants nothing', async () => {
+  failLogLookup = true;
+  const res = await handler(signed(orderEvent('order_created')));
+  assert.equal(res.statusCode, 500);
+  assert.deepEqual(grantWrites(), []);
 });
 
 test('a retry of a live, unrefunded order is still delivered (the guard is not a duplicate check)', async () => {

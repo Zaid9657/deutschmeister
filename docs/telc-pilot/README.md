@@ -40,32 +40,38 @@ The pilot is on sale only while both are true:
 
 **Changing it:** a builds-scope variable needs a **redeploy** to take effect.
 
+**The switch only controls what the site shows. Closing a sale also closes the store side.**
+- The switch hides every Buy button on the site. It cannot stop a checkout that is already open in someone's tab, or a checkout link copied earlier (the €89 guest link was public on the sales page until PR A).
+- So whenever the sale is closed, the product is closed in Lemon Squeezy too: set it to **Draft**, then open its old checkout link and check that it no longer sells (prompt *telc pilot* step 0 in `docs/owner-prompts.md`).
+- The Lemon Squeezy docs do not say whether a Draft product blocks its checkout link. That is why the link is tested, not assumed.
+
 **Guards:**
 - `tests/telc-pilot-gate.test.mjs` pins both gates, evaluated against fake envs.
 - `scripts/check-built-html.mjs` holds the built page to whichever state the build's env says.
 
 ## Owner actions, in order
 
-1. **[Agent] PR A goes live** (this switch, off). From then on nothing can be bought at a stale price.
-2. **[Owner] Rename and reprice** product 1329566 / variant 2077984 to „telc-B1-Prüfungsprobe", €149.
+1. **[Agent] PR A goes live** (this switch, off). From then on no Buy button on the site shows a stale price.
+2. **[Owner] Close the store side:** set product 1329566 to Draft and check the old checkout link no longer sells (prompt step 0).
+3. **[Owner] Rename and reprice** product 1329566 / variant 2077984 to „telc-B1-Prüfungsprobe", €149.
    Use the prompt in `docs/owner-prompts.md` → *telc pilot*; it also sets the redirect, reports the tax category and discounts, and turns on sale notifications.
-3. **[Agent] PR B and PR C go live.** These are the 20-unit route, the deep links, the €149 page and the guarantee copy.
+4. **[Agent] PR B and PR C go live.** These are the 20-unit route, the deep links, the €149 page and the guarantee copy.
    The switch stays off until the page says €149.
-4. **[Owner + Agent] Test purchase**, before the switch, with a 99 %-off code. A €0 order cannot be refunded in Lemon Squeezy; a €1.49 one can.
+5. **[Owner + Agent] Test purchase**, before the switch, with a 99 %-off code. The owner first publishes the product again; it stays published from here. A €0 order cannot be refunded in Lemon Squeezy; a €1.49 one can.
    The Buy buttons are still hidden, so the agent hands the owner a direct checkout link for the test account. That link carries the test account's user id. Then the agent verifies:
    - the purchase (*Verify a purchase* below);
    - the owner refunds in full, and the agent verifies the revocation (*Refunds*);
    - the owner resends that `order_created`, and the agent verifies that it stays refunded.
-5. **[Owner] Recommended:** turn on tax-inclusive pricing (`docs/owner-prompts.md`), so the checkout total equals the shown €149.
+6. **[Owner] Recommended:** turn on tax-inclusive pricing (`docs/owner-prompts.md`), so the checkout total equals the shown €149.
    If the store stays tax-exclusive, PR C must print „zzgl. MwSt. (an der Kasse)" next to every price.
-6. **[Owner says "open the sale"] → [Agent]** sets `PUBLIC_TELC_B1_ON_SALE=true` (builds scope) via the Netlify connector and redeploys.
+7. **[Owner says "open the sale"] → [Agent]** sets `PUBLIC_TELC_B1_ON_SALE=true` (builds scope) via the Netlify connector and redeploys.
    It then smoke-tests Buy signed out (lands on signup with the intent stored) and signed in (the overlay opens; no payment).
-7. **[Owner] Invite:**
+8. **[Owner] Invite:**
    - the waitlist below;
    - partners;
    - Telegram.
    Mailing the existing list is the owner's call. If chosen, it goes through `send-campaign` with unsubscribe links.
-8. **At 10 sales, [Agent]** sets the switch back to `false` and redeploys. The sale query below counts them.
+9. **At 10 sales, [Agent]** sets the switch back to `false` and redeploys, and **[Owner]** closes the store side again (step 2). The sale query below counts them.
 
 ## Verify a purchase
 
@@ -102,10 +108,12 @@ It revokes on **any** refund, partial ones included. That is why partial refunds
 - `sub_status = expired`;
 - `is_subscribed = false`.
 
-**A resend of `order_created` never grants a refunded order again.**
-- The webhook checks the payload's status first (`refunded`, `partial_refund`, `failed`, `fraudulent`), then the purchase row (`tests/webhook-refund-replay.test.mjs`).
-- One gap is left on purpose: an order refunded **before** it was ever delivered has no row to say so. An example is a paid order with no matching account (owner alert „Paid course order has no account").
-- **Never resend `order_created` for such an order.**
+**A resend or retry of `order_created` never grants a refunded order again.** The webhook checks three records before writing anything (`tests/webhook-refund-replay.test.mjs`):
+1. the payload's status: `refunded`, `partial_refund`, `failed` or `fraudulent`;
+2. the purchase row;
+3. the logged `order_refunded` event. This covers a refund that arrived **before** the order was ever delivered, so there was no row to mark. An example is a paid order with no matching account (owner alert „Paid course order has no account").
+
+**One case is left open on purpose:** a retry of `order_created` and the refund processed in the same instant. Closing it needs a database transaction (a migration), which is not worth it at ten orders. The check after every refund (the purchase query above) catches it. If the row does not read `refunded`, the agent revokes by hand with the same three updates `handleOrderRefunded` makes.
 
 ## The practice extension (guarantee step 2)
 
@@ -121,7 +129,20 @@ It revokes on **any** refund, partial ones included. That is why partial refunds
 - It writes a separate manual `monthly` row.
 - `subscriptions.user_id` is unique, so the buyer's `course` row and a manual row cannot both exist.
 
-**Use one transaction instead, and check every row count before `commit`.**
+**Look first.** A user has one `subscriptions` row (`user_id` is unique), and later purchases can replace it:
+
+```sql
+select plan_type, status, subscription_end, lemonsqueezy_order_id
+from subscriptions where user_id = '<USER_ID>';
+```
+
+| The row shows | Then |
+|---|---|
+| `plan_type = course` and this pilot order's id | Run the whole transaction below. |
+| A paid plan (`monthly`/`yearly`) ending at least 30 days from now | The AI tools are covered. Run only step 1. |
+| Anything else: an expired paid plan, a manual row, another course's window, no row | Stop and hand it to the agent. Do not improvise: a wrong update can break a paying subscriber's row. |
+
+**Then run one transaction, and check every row count before `commit`.**
 
 ```sql
 begin;
@@ -132,8 +153,7 @@ set access_until = greatest(coalesce(access_until, now()), now()) + interval '30
 where product_key = 'telc_b1_komplett' and lemonsqueezy_order_id = '<ORDER_ID>' and status = 'active';
 
 -- 2. The included Pro window (the AI tools). Expect: UPDATE 1.
---    UPDATE 0 means the buyer has a real paid subscription instead, so the tools are already covered.
---    Skip step 3 in that case.
+--    UPDATE 0 means the row is not this order's course window: rollback; and look again.
 update subscriptions
 set subscription_end = greatest(coalesce(subscription_end, now()), now()) + interval '30 days',
     status = 'active', updated_at = now()
