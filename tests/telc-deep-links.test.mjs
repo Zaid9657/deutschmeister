@@ -5,16 +5,20 @@
 //                                     bank only; anything else falls back to
 //                                     the first task, never an empty page;
 //   …&revise=1                        loads the learner's OWN latest letter for
-//                                     that task into the editor, without ever
-//                                     overwriting what they typed, and shows
-//                                     its correction;
+//                                     that task into an EMPTY editor and shows
+//                                     its correction; typed text is replaced only
+//                                     by an explicit „Ihren letzten Brief laden",
+//                                     and the card claims the letter is in the
+//                                     editor only for the task it was loaded for;
 //   /speaking/?level=B1.2             receives the rehearsal through the course
 //                                     context, and the return bar takes the
 //                                     learner back to /telc-b1-kurs, labelled
 //                                     „Zurück zum Plan";
 //   /telc-b1-kurs                     clears stale contexts and fills the two
 //                                     profile fields the onboarding gate reads,
-//                                     without overwriting the learner's choices.
+//                                     only where they are NULL ('none' is the
+//                                     learner's "no exam" choice), and opens the
+//                                     task links only once those writes are done.
 //
 // Structural (the repo's style for React pages); the pure parts are tested
 // behaviourally in tests/telc-pilot.test.mjs.
@@ -39,6 +43,8 @@ test('the writing page opens the named task, and only a task of this exam', () =
     'an unknown ?task= must fall back to the first task of the bank, never to nothing');
   assert.match(page, /const revising = wantsRevision && !!activeTask && activeTask\.taskKey === wantedTask;/,
     'the revision view belongs to the task the link named, and only to it');
+  assert.match(page, /useEffect\(\(\) => \{\s*if \(!wantedTask\) return;\s*setTaskKey\(wantedTask\);/,
+    'a link to another task while the page is open must select it');
 });
 
 test('revise=1 loads the learner\'s own latest letter and never overwrites typed text', () => {
@@ -46,10 +52,18 @@ test('revise=1 loads the learner\'s own latest letter and never overwrites typed
   const effect = page.slice(page.indexOf('// Revision day:'), page.indexOf('const submit = async'));
   assert.match(effect, /\.eq\('user_id', user\.id\)/, 'only the learner\'s own rows');
   assert.match(effect, /\.eq\('exam_key', examKey\)/);
-  assert.match(effect, /\.eq\('task_key', activeTask\.taskKey\)/);
+  assert.match(effect, /const forTask = activeTask\.taskKey;/, 'the task is pinned when the query starts');
+  assert.match(effect, /\.eq\('task_key', forTask\)/);
   assert.match(effect, /\.order\('created_at', \{ ascending: false \}\)\s*\.limit\(1\)/, 'the LATEST letter');
-  assert.match(effect, /setText\(\(current\) => \(current\.trim\(\) \? current : data\.submission_text\)\)/,
-    'the pre-fill must never replace text the learner already typed');
+  assert.match(effect, /setLastLetter\(undefined\);/, 'no previous task\'s correction while the next one loads');
+  assert.match(effect, /if \(data\?\.submission_text && !textRef\.current\.trim\(\)\) \{\s*setText\(data\.submission_text\);\s*setLoadedFor\(forTask\);/,
+    'the pre-fill fills only an empty editor, and records which task it filled it for');
+  assert.match(page, /\{loadedFor === activeTask\.taskKey \? \(/, 'the card claims the letter is in the editor only for that task');
+  assert.match(page, /Ihren letzten Brief laden/, 'replacing typed text is an explicit action');
+  for (const reset of ['onChange={(e) => { setExamKey(e.target.value); setTaskKey(null); setResult(null); setLoadedFor(null); }}',
+    'onClick={() => { setTaskKey(t.taskKey); setResult(null); setLoadedFor(null); }}']) {
+    assert.ok(page.includes(reset), `a task or exam switch must release the editor: ${reset}`);
+  }
   assert.match(page, /Ihre letzte Korrektur/);
 });
 
@@ -75,8 +89,14 @@ test('arrival clears stale contexts and fills only empty profile fields', () => 
   assert.match(arrival, /clearCourseContext\(\);/);
   assert.match(arrival, /update\(\{ onboarding_completed_at: now \}\)[\s\S]*?\.is\('onboarding_completed_at', null\)/,
     'onboarding is marked done only where it is still empty');
-  assert.match(arrival, /update\(\{ exam_track: EXAM_KEY \}\)[\s\S]*?\.or\('exam_track\.is\.null,exam_track\.eq\.none'\)/,
-    'a learner who chose another exam keeps it');
+  assert.match(arrival, /update\(\{ exam_track: EXAM_KEY \}\)[\s\S]*?\.is\('exam_track', null\)/,
+    'only an EMPTY exam_track is filled');
+  assert.doesNotMatch(arrival, /exam_track\.eq\.none/, "'none' is the learner's explicit no-exam choice — never overwritten on arrival");
+  assert.match(arrival, /if \(alive\) setArrived\(true\);/);
+  assert.match(page, /if \(!ready\) return <span className=\{className\}>\{children\}<\/span>;/,
+    'plan items are not doors until the arrival writes are done');
+  assert.match(page, /\{loaded && arrived && \(/, 'the „Heute" button waits for the arrival writes too');
+  assert.match(page, /ready=\{arrived\}/);
   assert.match(page, /MOCK_DISCLAIMER_DE/, 'the short test is labelled practice material');
 });
 

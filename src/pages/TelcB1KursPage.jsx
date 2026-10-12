@@ -28,7 +28,10 @@ import Aurora from '../components/ui/Aurora.jsx';
 //     empty. A buyer who came through the Buy flow skipped the intro, and the
 //     OnboardingGate on /speaking, /schreiben and /modelltest would otherwise
 //     show the intro instead of the task this page just opened. Both updates
-//     are filtered, so a learner's own choices are never overwritten.
+//     are filtered to NULL only — exam_track 'none' is the learner's explicit
+//     "no exam" choice and stays — and the task links go live only once the
+//     writes have finished, so a fast click cannot reach a gate that still
+//     reads the old profile (Codex review of PR B).
 //
 // The numbers it shows come from the server where they can (writing and
 // speaking records) and from the learner's own ticks only for the units —
@@ -44,7 +47,9 @@ const TYPE_ICON = {
 };
 
 /** One plan item as a link: speaking items hand their task to /speaking first. */
-function ItemLink({ item, gap, className, children }) {
+function ItemLink({ item, gap, ready, className, children }) {
+  // Until the arrival writes are done the title is plain text, not a door.
+  if (!ready) return <span className={className}>{children}</span>;
   if (item.type === 'gap' && gap) {
     return gap.external
       ? <a href={gap.href} className={className}>{children}</a>
@@ -83,6 +88,7 @@ const TelcB1KursPage = () => {
   const [attempt, setAttempt] = useState(null);
   const [writingRows, setWritingRows] = useState([]);
   const [speakingRows, setSpeakingRows] = useState([]);
+  const [arrived, setArrived] = useState(false);
 
   const items = useMemo(() => flattenCourse({ program: PROGRAM }), []);
   const days = useMemo(() => allDays(), []);
@@ -97,9 +103,12 @@ const TelcB1KursPage = () => {
       const onboarding = await supabase.from('profiles').update({ onboarding_completed_at: now })
         .eq('id', user.id).is('onboarding_completed_at', null).select('id');
       const track = await supabase.from('profiles').update({ exam_track: EXAM_KEY })
-        .eq('id', user.id).or('exam_track.is.null,exam_track.eq.none').select('id');
+        .eq('id', user.id).is('exam_track', null).select('id');
       if (onboarding.error) console.error('[TelcB1KursPage] onboarding:', onboarding.error.message);
       if (track.error) console.error('[TelcB1KursPage] exam_track:', track.error.message);
+      // Written (or failed — the gate then shows the intro, which still leads on):
+      // from here a click reaches a gate that reads the new profile.
+      if (alive) setArrived(true);
       if (alive && (onboarding.data?.length || track.data?.length)) await refreshSubscription();
     })();
     return () => { alive = false; };
@@ -189,7 +198,7 @@ const TelcB1KursPage = () => {
         </header>
 
         {/* Today: the first open item, with its short version for a busy day. */}
-        {loaded && (
+        {loaded && arrived && (
           <Reveal as="section" className="mb-10" aria-labelledby="heute-h">
             {current ? (
               <Card raised edge="siegel" className="p-5">
@@ -280,6 +289,7 @@ const TelcB1KursPage = () => {
                             <ItemLink
                               item={item}
                               gap={topGap}
+                              ready={arrived}
                               className={`flex-1 text-ink transition-colors hover:text-siegel-deep ${isDone ? 'line-through text-graphite' : ''}`}
                             >
                               {item.title}

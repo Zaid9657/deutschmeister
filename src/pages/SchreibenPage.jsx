@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { PenTool, Loader2, CheckCircle, XCircle, Sparkles, AlertTriangle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
@@ -29,8 +29,12 @@ const CRITERION_MAX = MAX_WRITING_POINTS / CRITERIA.length;
 //   ?task=<taskKey>  opens that task — only a key of THIS exam's bank, any
 //                    other value is ignored (the first task stays selected);
 //   &revise=1        loads the learner's own latest letter for that task into
-//                    the editor and shows its correction above it, so the
-//                    revision day starts from the corrected draft.
+//                    an EMPTY editor and shows its correction above it, so the
+//                    revision day starts from the corrected draft. Typed text is
+//                    never replaced silently: the card offers "Ihren letzten
+//                    Brief laden" instead, and it only claims the letter is in
+//                    the editor when it was loaded there for THIS task (a task
+//                    switch releases the editor) — Codex review of PR B.
 // The page speaks Sie, like the course (CLAUDE.md).
 const SchreibenPage = () => {
   const { examSlug } = useParams();
@@ -51,6 +55,13 @@ const SchreibenPage = () => {
   const wantedTask = searchParams.get('task');
   const wantsRevision = searchParams.get('revise') === '1';
   const [taskKey, setTaskKey] = useState(() => wantedTask);
+  // A link to another task while the page is open selects that task.
+  useEffect(() => {
+    if (!wantedTask) return;
+    setTaskKey(wantedTask);
+    setResult(null);
+    setLoadedFor(null);
+  }, [wantedTask]);
   const activeTask = tasks.find((t) => t.taskKey === taskKey) || tasks[0] || null;
   // The revision view belongs to the task the link named, and only to it.
   const revising = wantsRevision && !!activeTask && activeTask.taskKey === wantedTask;
@@ -65,16 +76,22 @@ const SchreibenPage = () => {
 
   // Revision day: the learner's own latest letter for this task, with its
   // correction. Undefined while loading, null when there is none yet.
+  // `loadedFor` names the task whose letter the editor holds (null: none).
   const [lastLetter, setLastLetter] = useState(undefined);
+  const [loadedFor, setLoadedFor] = useState(null);
+  const textRef = useRef(text);
+  useEffect(() => { textRef.current = text; }, [text]);
   useEffect(() => {
     if (!user || !revising) return undefined;
     let alive = true;
+    const forTask = activeTask.taskKey;
+    setLastLetter(undefined); // never show the previous task's correction while loading
     supabase
       .from('writing_submissions')
       .select('submission_text, feedback, total_score, max_score, created_at')
       .eq('user_id', user.id)
       .eq('exam_key', examKey)
-      .eq('task_key', activeTask.taskKey)
+      .eq('task_key', forTask)
       .order('created_at', { ascending: false })
       .limit(1)
       .maybeSingle()
@@ -83,7 +100,10 @@ const SchreibenPage = () => {
         if (error) console.error('[SchreibenPage] last letter:', error.message);
         setLastLetter(data || null);
         // Pre-fill only an empty editor: never overwrite what the learner typed.
-        if (data?.submission_text) setText((current) => (current.trim() ? current : data.submission_text));
+        if (data?.submission_text && !textRef.current.trim()) {
+          setText(data.submission_text);
+          setLoadedFor(forTask);
+        }
       });
     return () => { alive = false; };
   }, [user, revising, examKey, activeTask?.taskKey]);
@@ -137,6 +157,7 @@ const SchreibenPage = () => {
   const reset = () => {
     setResult(null);
     setText('');
+    setLoadedFor(null);
   };
 
   const inRange = activeTask ? wordCount >= activeTask.minWords && wordCount <= activeTask.maxWords : false;
@@ -159,7 +180,7 @@ const SchreibenPage = () => {
             <span className="block text-xs text-graphite mb-1">Prüfung</span>
             <select
               value={examKey}
-              onChange={(e) => { setExamKey(e.target.value); setTaskKey(null); setResult(null); }}
+              onChange={(e) => { setExamKey(e.target.value); setTaskKey(null); setResult(null); setLoadedFor(null); }}
               className={FIELD}
             >
               {EXAM_TRACKS.filter((t) => WRITING_TASKS.some((w) => w.examKey === t.key)).map((t) => (
@@ -187,7 +208,7 @@ const SchreibenPage = () => {
                       edge={selected ? 'siegel' : 'paper'}
                       tone={selected ? 'wash' : 'paper'}
                       className={`w-full h-full p-4 text-left ${selected ? 'border-siegel' : ''}`}
-                      onClick={() => { setTaskKey(t.taskKey); setResult(null); }}
+                      onClick={() => { setTaskKey(t.taskKey); setResult(null); setLoadedFor(null); }}
                     >
                       <span className="block font-bold text-ink">{t.title}</span>
                       <span className="mt-1 block font-data text-[0.75rem] text-graphite">
@@ -207,9 +228,22 @@ const SchreibenPage = () => {
               <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
                 Ihre letzte Korrektur · {new Date(lastLetter.created_at).toLocaleDateString('de-DE')} · {lastLetter.total_score}/{lastLetter.max_score}
               </p>
-              <p className="mt-2 text-sm leading-relaxed text-ink">
-                Ihr Brief steht unten im Textfeld. Arbeiten Sie die Korrekturen ein und lassen Sie ihn neu bewerten.
-              </p>
+              {loadedFor === activeTask.taskKey ? (
+                <p className="mt-2 text-sm leading-relaxed text-ink">
+                  Ihr Brief steht unten im Textfeld. Arbeiten Sie die Korrekturen ein und lassen Sie ihn neu bewerten.
+                </p>
+              ) : (
+                <p className="mt-2 text-sm leading-relaxed text-ink">
+                  Im Textfeld steht nicht Ihr letzter Brief zu dieser Aufgabe.{' '}
+                  <button
+                    type="button"
+                    onClick={() => { setText(lastLetter.submission_text); setLoadedFor(activeTask.taskKey); }}
+                    className="font-bold text-siegel underline underline-offset-2 hover:text-siegel-deep"
+                  >
+                    Ihren letzten Brief laden
+                  </button>
+                </p>
+              )}
               {Array.isArray(lastLetter.feedback?.corrections) && lastLetter.feedback.corrections.length > 0 && (
                 <ul className="mt-3 space-y-2">
                   {lastLetter.feedback.corrections.map((c, i) => (

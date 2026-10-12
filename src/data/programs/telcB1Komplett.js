@@ -125,13 +125,13 @@ const R1 = rehearsal(1, 1, 'Kontaktaufnahme',
   'Teil 1, Kontaktaufnahme: Sie lernen Ihr Gegenüber kennen. Stellen Sie sich vor – Name, Herkunft, Wohnort, Arbeit, Familie, Sprachen, Freizeit – und stellen Sie ebenso viele Fragen. Reagieren Sie auf die Antworten.',
   ['Woher kommen Sie?', 'Was machen Sie beruflich?', 'Seit wann lernen Sie Deutsch?', 'In meiner Freizeit …', 'Das klingt interessant.']);
 const R2 = rehearsal(2, 2, 'Reisen',
-  'Teil 2, Gespräch über ein Thema: Reisen. Erzählen Sie, wie Sie am liebsten reisen und von einer Reise, die Ihnen gefallen hat. Sagen Sie Ihre Meinung – Urlaub zu Hause oder im Ausland? – und fragen Sie nach der Meinung Ihres Gegenübers.',
+  'Teil 2, Gespräch über ein Thema: Reisen. Erzählen Sie, wie Sie am liebsten reisen. Berichten Sie von einer Reise, die Ihnen gefallen hat. Was finden Sie besser: Urlaub zu Hause oder im Ausland? Begründen Sie Ihre Meinung und fragen Sie Ihr Gegenüber nach seiner Meinung.',
   ['Ich reise am liebsten …', 'Meiner Meinung nach …', 'Einerseits …, andererseits …', 'Wie sehen Sie das?', 'Da stimme ich Ihnen zu.']);
 const R3 = rehearsal(3, 3, 'eine Abschiedsfeier planen',
   'Teil 3, gemeinsam etwas planen: Eine Kollegin verlässt die Firma. Planen Sie eine kleine Abschiedsfeier: Wann und wo? Essen und Getränke? Ein Geschenk? Wer macht was? Machen Sie Vorschläge, reagieren Sie auf Ihr Gegenüber und einigen Sie sich.',
   ['Wie wäre es mit …?', 'Ich schlage vor, dass …', 'Gute Idee, aber …', 'Wer kümmert sich um …?', 'Dann machen wir es so.']);
 const R4 = rehearsal(4, 1, 'Arbeit und Deutschlernen',
-  'Teil 1, Kontaktaufnahme: Sie treffen Ihr Gegenüber zum ersten Mal. Sprechen Sie über Ihre Arbeit oder Ausbildung, warum Sie Deutsch lernen und was Sie nach der Prüfung vorhaben. Fragen Sie Ihr Gegenüber dasselbe.',
+  'Teil 1, Kontaktaufnahme: Sie treffen Ihr Gegenüber zum ersten Mal. Sprechen Sie über Ihre Arbeit oder Ausbildung. Erzählen Sie, warum Sie Deutsch lernen und was Sie nach der Prüfung vorhaben. Stellen Sie Ihrem Gegenüber dazu Fragen.',
   ['Ich arbeite als …', 'Ich lerne Deutsch, weil …', 'Nach der Prüfung möchte ich …', 'Und wie ist das bei Ihnen?']);
 const R5 = rehearsal(5, 2, 'Gesundheit',
   'Teil 2, Gespräch über ein Thema: Gesundheit. Was tun Sie für Ihre Gesundheit? Erzählen Sie von Ihren Erfahrungen mit Sport und Ernährung, sagen Sie Ihre Meinung und reagieren Sie auf die Meinung Ihres Gegenübers.',
@@ -143,7 +143,7 @@ const R7 = rehearsal(7, 2, 'Medien',
   'Teil 2, Gespräch über ein Thema: Medien. Wie nutzen Sie Handy, Internet und Fernsehen im Alltag? Erzählen Sie von Ihren Erfahrungen, sagen Sie Ihre Meinung – Sollten Kinder ein eigenes Handy haben? – und reagieren Sie auf Ihr Gegenüber.',
   ['Ich nutze vor allem …', 'Ein Vorteil ist, dass …', 'Ein Nachteil ist, dass …', 'Was meinen Sie dazu?']);
 const R8 = rehearsal(8, 1, 'Generalprobe ohne Notizen',
-  'Teil 1, Kontaktaufnahme – diesmal wie in der Prüfung: ohne Notizen und ohne lange Pausen. Stellen Sie sich vor, stellen Sie Fragen und halten Sie das Gespräch selbst in Gang.',
+  'Teil 1, Kontaktaufnahme: Üben Sie diesmal ohne Notizen. Stellen Sie sich vor, stellen Sie Ihrem Gegenüber Fragen und reagieren Sie auf die Antworten. Halten Sie das Gespräch gemeinsam in Gang.',
   ['Erzählen Sie mal: …', 'Ach, wirklich?', 'Das kenne ich auch.', 'Und was machen Sie gern?']);
 const R9 = rehearsal(9, 2, 'Arbeit',
   'Teil 2, Gespräch über ein Thema: Arbeit. Erzählen Sie von Ihrer Arbeit oder Ihrem Wunschberuf. Sagen Sie Ihre Meinung – Homeoffice: Vorteil oder Nachteil? –, begründen Sie sie und gehen Sie auf Ihr Gegenüber ein.',
